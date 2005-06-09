@@ -1,0 +1,771 @@
+--------------------------------------------------------------------------
+---------                  Ampache -- CHANGELOG                  ---------   
+--------------------------------------------------------------------------
+
+--------------------------------------------------------------------------
+  v.3.3.1:
+  	- Fixed hardcoded HTTP reference in list_header.inc 
+		(Thx hongyi_gao)
+	- Fixed refresh javascript for main page.
+	- Fixed <html lang=> tag so that it validates (Thx XGizzmo)
+	
+
+--------------------------------------------------------------------------
+  v.3.3.1-Beta2 05/22/2005:
+  	- Included new Greyblock Theme (Thx Shieldb)
+  	- Fixed playlists if use_auth == FALSE
+  	- Tweaked CSS classing in an attempt to improve themeing. This
+		breaks all previous themes. (Thx mkeadle)
+	- Fixed problem with Color Boxes in IE (Thx rperkins)
+  	- Tweaked the Main page adding most popular albums as well as
+		spliting out the mpd control and now playing. 
+		(Thx Nedko and reflous)
+  	- Fixed a problem with directories named '0' (Thx Protagonist)
+  	- Fixed lack of seeding of RAND() which would cause Pre PHP 4.2
+		to not really have random playlists. 
+  	- Fixed a bug where guests could change their own password and 
+		control MPD
+  	- Fixed a ton of class formating inconsistencies as well as tweaked
+		a few tables. (Thx Rperkins)
+  	- Fixed some consistency issues with where the A-Z listing was 
+		between Albums and Artists, Added Bolding of currently
+		selected Letter/Number (Thx Rperkins)
+  	- Fixed a problem with the admin preferences where the theme
+		colors wouldn't reset, if the target theme is the current 
+		one of the user setting it (Thx Nedko)
+	- Fixed a problem with the CHARSET not being passed correctly
+		(Thx Nedko)
+
+
+--------------------------------------------------------------------------
+  v.3.3.1-Beta1 05/01/2005:
+  	- Added Random Play for Playlists
+  	- Added Per User config option to set ellipse thresholds as well 
+		as some index.php tweaks (Thx Nedko)
+  	- Added support for SPX files. 
+  	- Fixed a problem that occurred when a userfield contained a single
+		quote (username,fullname etc)
+  	- Turkish Translation, Charset iso-8859-9 added (Thx vireas)
+  	- Flipped Actions on MPD Control, clicking on the title now skips
+		to the song, clicking on number removes it (Thx rastan)
+  	- Tweaked Preferences look, adding color boxes showing the color
+		of the preference, and misc html/spelling fixes
+		(Thx Rperkins)
+  	- Added Random On/Off to MPD controls and truncated songs with ...
+		(Thx Orion88)
+  	- Added ability to pass a URL to MPD allowing it to be on a 
+		different computer than the MP3's this also makes setup of
+		MPD a lot easier. 
+	- Fixed Connected User Count.
+	- Fixed random HTML errors that caused custom themes to look wrong
+
+
+--------------------------------------------------------------------------
+  v.3.3.1-Alpha2 04/23/2005:
+  	- Added ability to import M3U's as playlists on catalog build and
+		from the playlist screen, note the m3u must exist on the
+		server. Uploading from client is not working
+  	- Fixed a bug that caused it always to generate a m3u file when
+		using downsampling
+  	- Added support for .mpc files
+	- Added .htaccess and renamed all /bin files to .php.inc so that
+		the webserver, even if it ignores the .htaccess won't try
+		to run the scripts
+  	- Fixed ampache.cfg and /docs references in /install.php 
+		(Thx rperkins)
+  	- Fixed a typo that caused ASX playlists to not be populated with
+		the user_id as they should (Thx weidercs)
+  	- Fixed a problem where when creating a new user it wouldn't take
+		the values from "Admin Preferences" as it should. 
+  	- Fixed catalog toolbox so it uses the classes rather than a
+		hardcoded color
+	- Fixed Installer which still had ../ references (Thx fakenick)
+	- Fixed a few more ../ references
+	- Fixed redirect to update.php on login after you've already
+		done the update. (Thx Orion88)
+	- Fixed login.php so that it loads the theme that is set in the
+		admin preferences correctly
+
+--------------------------------------------------------------------------
+  v.3.3.1-Alpha1 04/21/2005:
+  	- Added Themeing Ability to Ampache, see /themes/classic for an
+		example of how to do it
+	- Added Burgundy Theme (Thx s1amson)
+  	- Moved everything into / instead of /docs you should now be able
+		to extract ampache directly into your webroot and have it
+		work perfectly :-)
+  	- Added Config file compare to test.php 
+  	- Added config values to control allowed playback methods
+  	- Added SlimServer class *Not Finished
+	- Tweaked catalog "Total Time" so it's a little more consistent
+		(Thx Andy Morgan)
+  	- Fixed playback problem with Windows Media Player caused by a 
+		misplaced Partial-Content header entry. 
+        - Renamed ampache.cfg --> ampache.cfg.php and added <?php exit(); ?>
+                to prevent display of config file in web interface. this is
+                the first step towards moving away from the /docs style
+                (Thx s1amson)
+
+--------------------------------------------------------------------------
+  v.3.3 04/17/2005:
+  	- Fixed seeking and lack of http headers during normal playback
+		(Thx Nikk)
+	- Fixed random play bug where it wouldn't return any songs due
+		to a malformed sql statement. (Thx J) 
+	- Fixed a typo that caused the song format to be ignored by play.php
+		(Thx Nikk)
+	- Fixed lack of an error message if amazon album art was a search
+		method, but no developer key was specified
+	- Fixed the memory allocation code. 
+	- Fixed a lack of status reporting during the album art searches
+		now prints out Searched 100. . . like all other catalog
+		functions. 
+	- Added User Registration (Thx Terry) *Not Finished!
+	- Fixed problem where an error would occur if only one album 
+		art gathering method was selected. 
+	- Fixed problem where it would continue to search for album art
+		when updating multiple songs from the same album where art
+		has already been found. 
+	- Added Debug Script for Amazon Album Art search (in /bin)
+	- Cleaned up some dirty HTML, and redudant functions
+	- Fixed lack of redirect to the Install page if no config file is 
+		found 
+	- Fixed login page so it respects the values set in the database
+		for background color etc
+	- Fixed lack of cookie deletion on logout, and lack of session
+		removal...
+	- Added forced Garbage Collection at least 20% of the time. 
+	- Fixed Installation Script, admin/changeme is no longer the
+		default username/password. Installation script creates
+		initial admin user
+	- Fixed html, and lack of web_path definitions on the account
+		page, also spruced up the look a little bit
+	- Switched all short tags to long tags (<? --> <?php)
+	- Fixed preferences so that it doesn't display an input field
+		if you don't have access to change said preference
+	- Fixed album art saying it's found when it really wasn't
+	- Fixed problem where changes to preferences weren't respected
+		if use_auth = false
+	- Fixed download, and direct link, both were not respecting
+		the song->type 
+	- Tweaked m3u generation removing the \ before the filename to 
+		prevent mp3blaster from failing (Thx Rubin)
+	- Added command line script /bin/compare_config looks at 
+		ampache.cfg.dist and compares it to the ampache.cfg looking
+		for missing config values.
+	- Tweaked db update check so it does it on every page load, rather 
+		than just on login.php (so use_auth=no gets checked)
+	- Fixed problem with user create and user edit where it wasn't doing
+		any really good error checking, or notifying you when it
+		failed to update/create
+	- Tweaked now playing in an attempt to allivate some now playing
+		floods that people were seeing
+
+--------------------------------------------------------------------------
+  v.3.3-Beta4 03/27/2005:
+  	- Added Batch Download functions (Thx RosenSama)
+	- Tweaked Main Page format (Thx Nedko Arnaudov)
+	- Added Full Album/Full Artist option to Random Play
+	- Fixed Amazon Album Art gathering, changed from SOAP
+		method to REST method, now works with PHP5 and PHP4!
+	- Fixed problem with ' being escaped one to many times in a 
+		playlist name
+	- Tweaked MPD play so it uses the playlist_type and is accessed
+		by simply selecting the "Play" action
+
+
+--------------------------------------------------------------------------
+  v.3.3-Beta3 03/17/2005:
+  	- Fixed a problem with the preferences and display of the logout
+		button and inability to edit/disable songs/playlists when
+		use_auth = no
+	- Added volume controls to local play (Thx Vlad)
+	- Fixed a problem of importing comments from mp3 files (Thx Cucumber)
+	- Fixed a typo that caused the account you were logged in as to be
+		deleted rather then the account you wanted to delete. 
+	- Added pulling missing song info from filename based upon the catalogs
+		file patterns. 
+	- Improved error logging and handling.
+	- Added album art dump from database to file system (Thx Cucumber)
+	- Added show albums with no art on Albums browse page (Thx Cucumber)
+	- Fixed a problem where Localplay wouldn't return to index as it 
+		should (Thx Jason)
+	- Added Installation Script (/install.php)
+	- Fixed lack of an sql_escape on comment which could break inserts
+		if comment contained " or '
+	- Added default log_path and better error message if unable to write
+		to the file
+	- Removed _SERVER['PHP_SELF'] reference on alphabet function due
+		to the fact it doesn't always get passed. 
+	- Removed old setup.php in favor of new install.php
+	- Upgraded Moosic from 1.2.5 --> 1.5.1 which fixes some playback
+		issues (Thx soloport)
+	- Added Prev button to localplay and send the song name to the player
+		rather than simply song.mp3 (Thx jason)
+	- Added Customizable Stream Format, see config (Thx Cucumber)
+	- Added sort by Year on album page. 
+	- Fixed some minor issues with the XMLRPC code. 
+	- Fixed typo in style-sheet (Thx Nedko Arnaudov)
+	- Added cleaned up favicon (Thx Nedko Arnaudov)
+	- Added paging and sort by username/fullname & last_seen on 
+		admin user page
+	- Fixed issue with non-us chr when truncating using ... on
+		global popular and album/artist views (Thx Nedko Arnaudov)
+	- Fixed importing of non-us chr from OGG files (Thx Nedko Arnaudov)
+	- Fixed an issue were duplicate headers would be sent during 
+		downsampling, also remove extra db connection in play/index.php
+	- Fixed problem where now playing wouldn't show a username if use_auth
+		was disabled
+	- Fixed a problem which prevented you from updating a user
+	- Fixed an error in the logic that caused all art methods to be 
+		searched regardless of config settings
+	- Added ASX playlists (Thx Samir Kuthiala)
+	- Added check for Iconv in /test.php
+
+--------------------------------------------------------------------------
+  v.3.3-Beta2 02/09/2005:
+  	- Added config option for site charset defaults to iso-8859-1 
+		(Thx Nedko Arnaudov)
+	- Fixed unhandled soapclient errors with PHP5 - Note Amazon 
+		album art search still doesn't work. It just doesn't
+		return an error. 
+	- Fixed problem with winamp playback on .oggs
+	- Added "Remember Me" button that overrides local length setting
+		and sets a 1 year cookie
+	- Added new RSS page (Thx Speedy B)
+	- Changed how preferences are handled once again. In the process
+		fixed numerous bugs with preferences.
+	- Added Apply To All in admin preferences, letting a full admin
+		reset a specific pref for all users at once. 
+	- Update Catalog no longer overwrites changes made in the interface
+	- Added MPD patch (Thx RosenSama)
+	- Suppress Error in /docs/play/index.php if fopen fails
+	- Fixed Random playback, it is now actually a random number of songs
+		in a random order from said artist/album
+	- Fixed Comment not getting set during song flag (Thx RosenSama)
+	- Added gimped support for m4a (ITunes) files, Genre and Track #
+		aren't imported due to getid3() limitations
+	- Fixed some XML-RPC issues that cropped up with newer versions
+		of PHP
+	- Improved fix for Mysql 4.1 PASSWORD function, should always
+		work now. 
+	- Added basic logging functions (for debug) 
+	- Fixed downsample so it actually looks at the ampache.cfg for the
+		command to run instead of being hardcoded in
+	- Added ability to set preferred filename for folder album art search
+		along with ability to set order of search methods (Thx Mike)
+	- Started tweaking MPD patch so that it can be accessed as a 
+		play type
+
+
+--------------------------------------------------------------------------
+  v.3.3-Beta1 12/26/2004:
+  	- Fixed problem with download not detecting mime types and not seeing
+		true/false value of preference
+	- Added Patch from Shine with a _ton_ of gettext updates and an almost
+		complete German translation!
+        - Fixed automatic detection of server port (Thx Corsin)
+	- Fixed missing prefix on Albums by Artist page (Thx ianneub)
+	- Removed a large chunk of unneeded code from Main page
+	- Fixed some preferences problems which were allowing users to define
+		download/upload etc
+	- Fixed Upload functions created by Lamar to account for other changes
+		I've made to ampache, upload now shows up in menu bar
+		if you have upload enabled 
+	- Added CLI catalog_update.php file in /bin that updates all local
+		catalogs
+	- Updated nusoap library to newest version (12/15/2004)
+	- Fixed upload, now requires a readable upload dir before even attempting
+		to upload, and correctly inserts/quarantines files
+	- Fixed a problem where the catalog clean wasn't removing files from
+		playlists when they were removed from the catalog
+	- Added 'pretty' count of songs checked during catalog clean
+	- Added simple m3u playlist format and fixed a small typo in the pls 
+		playlists 
+	- Added Direct Link that can be drug to winamp to "append" to 
+		playlists (Thx jason)
+	- Fixed incorrect redirect on Disable/Enable of songs
+	- Fixed login problems due to change in HASH style with Mysql 4.1
+	- Fixed Albums with multiple artist giving incorrect song count and showing
+		single artist, rather than "Various"
+
+--------------------------------------------------------------------------
+  v.3.3-Alpha3.1 11/29/2004:
+	- Fixed two typo's in /docs/playlist.php (Thx smichaelis)
+	- Added a or die to the table drop in /update.php to prevent silent
+		failure of update.
+	- Added check for session support on /test.php
+
+--------------------------------------------------------------------------
+  v.3.3-Alpha3 11/28/2004:
+  	- Fixed duplicate web_path entry in preferences (Thx KlaasVaag)
+	- Fixed some problems with the flagging single quotes and genre 
+		should now work (Thx Cocobu)
+	- Added WMA support (Thx Ldary)
+	- Added new Getid3 version 
+	- Fixed typo that prevented play selected on artist page from 
+		working (Thx tPassive)
+	- Added WMA Album Art support... maybe
+	- Fixed problem with [Prev] & [Next] wrapping to a new line
+	- Added filename used for songs with no title
+	- Fixed ability to disable last account, or remove last admin account
+	- Added year to "Albums" view
+	- Fixed inability to delete playlists
+	- Fixed a problem introduced while cleaning up /lib/album.php
+	- Added new Stream class to make adding play types easier
+	- Added correct PLS file support. Set via a config option
+	- Added Favicon (Thx Rubin)
+	- Added German README/INSTALL/MIGRATION/ampache.cfg.dist (Thx phil)
+	- Added French Translation (Thx Cocobu)
+	- Removed defunct "findfile" script that was completely broken
+	- Added 1000 songs & All to random play (Thx clouser)
+	- Added Folder based search for any .jpg or .gif as album art only
+		works on catalog update & build (Thx dromio && roark)
+	- Added config options that define where ampache looks for art
+	- Fixed logic error on album art page, and redundant checks
+	- Fixed Non-Us CHR on ogg && id3v1 tags files importing incorrectly
+	- Fixed some web_path and prefix problems 
+	- Fixed single quotes in folder names preventing the entire directory
+		from being indexed
+	- Added New Blank Album Image (Thx Aaron La'gere)
+	- Added Per Artist & Per Album Update From Tags
+	- Added GetText to albums.php, playlist.php, lib.php, index.php and 
+		ui.php as well as new messages file. (Thx Shine)
+	- Added Album art shown on Now Playing (Thx Rubin/Shine) turned on by
+		setting play_album_art = "true" in ampache.cfg
+	- Fixed problem where flagged table wasn't getting cleared when you 
+		deleted the song that it referenced
+	- Added "Guest" user level which can view, but not play or change 
+		anything
+	- Added user_catalog table for future catalog access control, this 
+		feature is not yet implemented.
+	- Added FLAC file support
+
+--------------------------------------------------------------------------
+  v.3.3-Alpha2 11/08/2004:
+  	- Improved error checking on Mysql connection it now redirects to 
+		/test.php on failure rather than just throwing an error
+	- Added upload.php play/pupload.php & templates/show_upload.inc
+		for upload functionality (Thx Lamar!)
+	- Fixed a $dbh --> dbh() problem (Thx phil)
+	- Fixed the preferences requirement on update.php (Thx phil)
+	- Fixed "Fuzzy Counting" in the README file index.
+	- Fixed a typo in playlist that caused the header redirect
+		not to work
+	- Fixed setting of song->played value (Thx Mkeadle)
+	- Fixed Admin preferences for user 0 (what new users get)
+	- Added initial GetText, translation, support
+	- Added some of the initial French translation using to babblefish 
+	- Fixed a problem with the album art clearing from the db correctly
+	- Added initial DE translation (Thx Phil)
+	- Fixed a problem with single-quotes in filenames breaking catalog
+		builds (Thx Naund)
+	- Added initial IceCast Support (Thx Thomas)
+	- Fixed incorrect naming of Local Play variable which caused it
+		not to work at all (Thx jpolansky)
+	- Added Valid Session Checking to play code that, if require_session
+		is set prevents anyone without a valid sid from playing music
+	- Added Album Year to Albums by Artist View and album table in db
+
+--------------------------------------------------------------------------
+  v.3.3-Alpha1 10/04/2004:
+  	- Fixed non-us chr showing up incorrectly 
+	- Fixed session garbage collection
+	- Added check for function_exists iconv
+	- Added check for existence of mysql_query function to test.php
+	- Fixed a problem with verify single catalog (Thx Framercy)
+	- Reworked the Preferences, adding most of the non-critical
+		preferences from the config file and putting them into
+		the web interface
+	- Tweaked the DB to work with the new preferences
+	- Update.php now has a font size and bgcolor (defaults)
+	- Force short_tag = on in init.php
+	- Show Albums by Artist only checks DB for album art (faster)
+	- Added View Full Album Art (click on art on single album page)
+	- Removed dead code from /modules/lib.php
+	- Tweaked Personal Stats page. Moved out of lib.php into user 
+		functions and cleaned them up a bit
+	- Removed extra , from Mail function and fixed From address
+		http://bugs.ampache.org/bug_update_page.php?bug_id=1
+	- Fast Update on Update Catalog function has some "Fuzzy" logic
+	- If Fast Update isn't checked, Update Catalog looks for album art
+		in the id3 tags
+	- Update Catalog now has "Checked 100...." messages like the
+		add to catalog function
+	- Added check for soapclient class already existing. (Thx Hopson) 
+	- Tweaked Album Art on Albums by Artist Page (Thx clader)
+	- Added Play Random & Play All links to Albums By Artist Page
+	- Removed extra queries from Albumart.php
+	- Fixed Playlist Delete (Thx kellin)
+	- use_auth = "no" works as advertised
+	- Ability to import Album Art on catalog build from id3v2 tags
+
+--------------------------------------------------------------------------
+  v.3.2   08/11/2004:
+  	- Fixed XMLRPC duplicate function problems
+	- Fixed getid3() issues by manually setting memory limit for php
+		if current setting is below 16M
+	- Suppressed errors that occurred when PHP-GD tried to read a gif
+		image. 
+	- Added auto refresh of index.php (Thx vireas)
+	- Fixed a problem where saying no to a user delete deleted it
+		anyway. (Thx Dogsbody)
+	- Fixed a problem with admins updating users preferences
+	- Removed Edit button from delete confirmation for playlists
+	- Improved /test.php a tiny bit
+
+--------------------------------------------------------------------------
+  v.3.2-Beta2 07/12/2004:
+  	- Yet more improvements to album art code, now checks for 1x1 
+		images if you have GD installed (Thx mikej)
+	- Fixed a problem where \n or other whitespace would get into
+		album name
+	- Fixed catalog update destroying tags on ogg and rm files
+	- Added RSS feed page (thx speedyb) see /rss.php
+	- Fixed a problem with libglue that cropped up with 4.3.8
+	- Added install.pl (initial release)
+	- Fixed last seen again....
+	- Fixed up the test.php to it actually works correctly
+	- Added get album art from url Thx gwynnebaer
+	- Added config option to set default search type Thx gwynnebaer
+	- Tweaked headers to make them nicer with large numbers Thx gwynnebaer
+	- Tweaked preferences code so it works as advertised.
+	- Updated to GETID3() 1.7.1-b1 Woohooo!
+
+--------------------------------------------------------------------------
+  v.3.2-Beta1 07/02/2004:
+  	- Tweaked getid3 library in an attempt to prevent non-fatal
+		foreach error
+	- Replaced "no album art" image (thx Gargamale)
+	- Last Seen now actually works, can be viewed on the user
+		screen in the admin section
+	- Fixed a Artist catalog problem introduced with the new
+		getid3 library
+	- Now takes into account https vs http using _SERVER['https']
+		variable
+	- Added force_http_play which ignores https and always forms the 
+		urls in the m3u as http, default is on
+	- Added http_port in case your http server isn't running on port 80
+	- Fixed a typo that caused clean_artist not to work with mysql 3.x
+	- Logical Random play query (Thx Famercry and mikepell)
+	- Updated the XMLRPC library and hopefully improved it a little :)
+	- Improved Ampache.pm no longer requires secrets file and automatically
+		find path information (ignore errors :P)
+	- Added rename_all & sort_all to fileupdate.pl in /bin
+	- Fixed a problem where play_type == 'local_play' wouldn't actually
+		do anything
+	- Added sweet new album art code from MikeJ that searches Amazon
+		(Requires Developer Key, see config file)
+	- Applied some fixes to the album art (Thx gwynnebaer!)
+	- Added MOTD on the login page (see README)
+	- Fixed another seek problem (Thx gwynnebaer)
+	
+
+--------------------------------------------------------------------------
+  v.3.2-Alpha3 06/13/2004:
+  	- Added last_seen to user table now tracks when they last
+		visited ampache
+	- Changed the preferences table to key,value pairs makes it
+		easier to add new preferences without having to update
+		the database again
+	- Put in initial down-sampling work
+	- Updated Ampache.pm and fileupdate.pl (Thanks Matt Shaffer and Nikk)
+	- Fixed a problem with the play count when you tried to seek
+		a file. 
+	- Made the single album view a little nicer looking
+	- Added "Reset Album Art" action that removes the album art from the
+		database and re-querys the mp3s
+	- You can now select multiple genres when using Play Random
+	- Changed default action for albums/artists to browse per Alphi's 
+		recommendation. 
+	- Fixed a bug introduced into the config file. 
+	- Finally fixed web_path so that you only need to define the path
+		to ampache (ie /music) rather than the full URL such as
+		http://localhost/music. 
+	- Added another fix so that it takes into account the port when 
+		logging in (was ignoring it before) Thx DogsBody
+	- Fixed a playback problem where song would reset after the
+		php max execution time Thx Nicolas Savoret
+	- Fix for some web_path vs web_host problems Thx Nick Wilson
+	- Fixed it so that disabling a user actually works now
+	- Playback now pays attention to disabled status and make sure
+		uid ends up being a valid user
+	- Reworked preferences, adding play_type in place of multi-cast
+		down-sample and local_play
+	- Down-sampling should now work if play_type is set to down-sample
+		and you do a little manual configuration
+	- Tweaked filename passed to players so that oggs work a little
+		better - Thx Dale Cooper and Gwynnebaer.
+	- Upgrade to newest GetID3 library - Thx Gwynnebaer!
+	- Initial support for RM files (Not Tested)
+
+--------------------------------------------------------------------------
+  v.3.2-Alpha2.1 04/27/2004:
+  	- Fixed a problem with the user functions which was handling 
+		passwords in a _very_ bad way.
+	- Updated the title tag on now_playing
+
+--------------------------------------------------------------------------
+  v.3.2-Alpha2 04/24/2004:
+  	- Put Prefix back in Artist name
+	- Fixed Text echoed out during a catalog update, and made the 
+		catalog update actually work!
+	- Fixed Prefix problems on album view and simplified the code
+		for displaying albums.
+	- Albums by Artist page now shows all of the Album art. (Thx MrBlahh)
+	- New Blank Album Image
+	- Weighted Random Play (Thx Mikepell)
+	- Fixed a the removal of disabled songs. 
+	- Cleaned up and fixed basic user functions
+	- Reorganized the Main Page moving recently added albums/artists
+		on to the front page.
+	- Fixed Catalog Functions so that it removes old stats when
+		you clean/update/delete.
+	- Updated Database getting ready for XML-RPC
+	- Reintroduced Access Lists allowing for XML-RPC permissions
+		and stream/download permissions
+	- Added XML-RPC code back in (Experimental & DANGEROUS!!)
+		must be turned on in ampache.cfg 
+	- Moved Config File to $ampache/config from $ampache/modules
+		makes more sense there....
+	- First step towards quick time playback capabilities (Thx Nick) 
+	- Fixed a problem with catalog genre names that put an extra
+		slash in genres with " or '.
+	- Added Clear Now Playing under catalog tools in case you get some
+		funky data stuck in the now playing queue.
+	- Fixed user deletion. Preferences and stats were being left behind
+	- Hopefully fixed Album/Artist/Song Cleaning so that it works with
+		Mysql 3.23 (We were using 4.0+ sql syntax)
+	- Updated Now Playing to show album link and shortened song title
+		if needed
+	- User functions should always return to the user page when done.
+
+--------------------------------------------------------------------------
+  v.3.2-Alpha1 03/23/2004:
+  	- Added Now Playing
+	- Updated the migration tool (update.php)
+	- Added ability to turn on/off ability to download songs
+	- First step towards upload capabilities
+	- Early version of "Local Play"
+	- Per User preferences
+	- "Legalize" option that only allows one copy of a song to be played 
+		at any one time. 
+	- Fixes for popular songs being incorrectly reported.
+	- Fixes to Play All Songs by Artist/Album 
+	- Improvements to playlists. 
+	- Many other minor bug fixes
+
+--------------------------------------------------------------------------
+  v.3.1.3 01/11/2004:
+  	- Fixed a link problem on the logout page
+	- Fixed Full Album not being displayed in the title tag on show_songs
+	- Doesn't try to show album art for Unknown Albums
+	- Fixed a config problem introduced in 3.1.2
+	- Stops looking for album art after finding a single one (reduces load)
+	
+	
+--------------------------------------------------------------------------
+  v.3.1.2 12/30/2003:
+  	- Fixed Single Song Per Album bug if the album title contained
+		a single-quote
+	- Fixed problems with quotes, and special chr in id3 tags 
+	- Fixed a few html problems
+	- New version of Getid3() see www.getid3.org
+	- Fixed Connected user count looking incorrect
+	- Cleaned up HTML in show_songs.
+	- Now returns an error if adding a user fails
+	- Fixed Stat Clean and Catalog Delete still happening even if you 
+		clicked no
+	- Removed Clean All Catalogs and Access link because those
+		features are currently broken
+
+--------------------------------------------------------------------------
+  v.3.1.1 12/26/2003:
+  	- Fixed a problem with the clean catalog function not actually 
+		working correctly, also added a check-box to auto delete
+		dead songs
+	- Fixed a problem with readconfig not working on windows 
+	- Fixed a problem where dead songs would get added to a playlist
+	- Added a missing break in the case function of admin/catalog.php
+	- Removed preferences tab because it doesn't actually work
+	- Made Catalog Update not display errors if it can't find the file
+	- Catalog Update should no longer time out
+	- Added in some escaping for single quotes in some extra id3
+		fields
+
+--------------------------------------------------------------------------
+  v.3.1, 12/23/2003:
+	- Fixed problem with quick search on artist only allowing 1 chr
+	- Fixed broken image on albums with no art
+	- General HTML cleanup
+	- Changed link name to "Play" from m3u
+	- Ordered genre pull down by name rather than ID
+	- Make it not look for album art if it wasn't viewing an album
+	- Removed random play stuff from album page 
+
+--------------------------------------------------------------------------
+  v.3.1-Beta2, 12/16/2003:
+  	- Fixed double http:// in a few places (Thx Lamar)
+	- Typo in Form variable (Thx Lamar)
+	- Album Playlist Fixes (Thx Lamar)
+	- Added trailing slash to admin links (Thx MrBlahh)
+	- Removed from register globals requirements
+
+--------------------------------------------------------------------------
+  v.3.1-Beta1, 12/10/2003:
+	- Completed support for OGG files (Thx Hopson for original code)
+	- Fixed Viewing Albums
+	- Addtype no longer required in apache config. Headers
+		are now passed in that delicate grey zone where all the 
+		browsers we can find seem to work.. (Thx Rubin)
+	- Fixed it so that you no longer have to edit init.php (Thx Rubin)
+	- Added view all songs from this artist 
+	- Hopefully fixed libglue once and for all... 
+
+--------------------------------------------------------------------------
+  v.3.1-Alpha5, 11/29/2003:
+  	- Added Duplicate song checker to catalog tools (Thx Alphi)
+	- Fixed missing Genre check when updating id3 tags
+	- Added Disable Option for Admins when showing songs
+	- Removed some un-needed files
+	- Fixed 'Fuzzy' Math in list_header (Thx Andy)
+	- Fixed stats on the main page (Thx Andy)
+	- General Code Cleanup (Thx Andy)
+	- Fixed double login problem
+
+--------------------------------------------------------------------------
+  v.3.1-Alpha4, 11/27/2003:
+  	- Yet more search options
+	- Fixed a few more admin tool issues
+	- Added a play via Genre + Catalog (Thx Rubin)
+	- Fixed Random Play (Rubin)
+	- Fixed catalog so that if file exists but isn't readable 
+	    it doesn't add it to the catalog empty (Thx Andy Morgan)
+	- Fixed update.php to check what version of the db is being run
+	    and update accordingly (Rubin)
+	- Added bare bones for Album Art support from the mp3 files (Rubin)
+	- Fixed Play Selected from Albums/Artists
+
+--------------------------------------------------------------------------
+  v.3.1-Alpha3, 11/25/2003:
+  	- Fixed some installation problems
+	- Added a few new search options
+	- Fixed catalog delete, and other misc link problems
+	- Added migration tools (Thx Andy Morgan)
+	- Re-worked Genre
+
+--------------------------------------------------------------------------
+  v.3.1-Alpha2, 11/24/2003:
+  	- Start of complete re-write of ampache code
+	- Fixed register globals problem, should no longer be required to be on
+	- Added ID3V2 tag support
+	- Improved playlists, added track var
+	- New Looks and feel thanks to Ben Shields
+	- Completely rebuilt cataloging again... 
+	- Fixed orphaned files
+
+==========================================================================
+  v.3.0, 04/05/2002:
+  	- Added Randall Ehren to the "Ampache Development Team" :-)
+  	- Completely rebuilt catalog mechanism
+	- Remote catalog updates via XML-RPC
+	- Fixed orphaned file interface
+	- New tools to update ID3 tags easier
+	- Changed admin interface to be easier to use
+	- Many bug fixes
+
+--------------------------------------------------------------------------
+  v.2.5, 03/04/2002:
+  	- Bug fixes and code cleanup
+	- Final mod_mp3 only version
+
+  v.2.0, 02/05/2002:
+  	- Added stats page to clean up "Home"
+	- Made default album/artist view start with match=A
+	- Cleaned up admin/users interface to show who's logged on
+	- Added ability to anonymously mail all users via admin
+
+--------------------------------------------------------------------------
+  v.2.0rc2, 01/18/2002:
+  	- Fixed update catalog tools to remove songs that have changed
+	- Added support for the mod_mp3 MySQL dispatch -> you no longer need
+		to restart apache for new songs
+	- Minor interface fixes (spelling, wording, etc)
+	- Added per-user statistics
+	- Made album/artist views easier to digest
+    
+--------------------------------------------------------------------------
+  v.1.21, 07/29/2001:
+	- Minor bug fixes from various users (see readme)
+	- Updated Album and Artist views
+	- Added play all songs from artist and randomize songs from artist
+
+--------------------------------------------------------------------------
+  v.2.0rc1, 01/10/2002:
+	- User/session management for admin
+	- fix 'Greatest Hits' problem
+	- Wrote setup.php for initial setup of server
+	- Reworked administration pages
+	- Per user profile settings/updates
+	- Playlists stored per user
+	- Private/Public playlists
+	- Show most popular songs/artist
+	- Added play.php wrapper to track song play
+	- Added stats for number of times played for artist/album/song
+	- Add demo mode
+	- Tweak album view to show artist as well
+	- Change format/view of "Home" page
+	- show songs for an artist on album page
+	- fixed single song play
+	- select all feature for song view
+	- greatly enhanced search result capabilities
+	- Show how many users connected
+ 
+---------------------------------------------------------------------------
+  v.1.20, 07/22/2001:
+	- Lots and Lots of bug fixes
+	- Replaced mp3.php class with Sandy McArthur, Jr's id3 class
+	- Song editor -> update DB and/or song file -> integrate with orphan files
+	- Add genre support and allow genre playback and stats
+	- Add track support ... now should order in album order 
+		automatically if ID3v1.1 tags used
+	- ID3v1.1 support for writing/reading files
+	- Tweak filefind to make filename be name of orphaned songs
+	- Moved "Orphaned Files" into the admin section
+
+--------------------------------------------------------------------------
+  v.1.10, 05/08/2001:
+	- PHP-only version now; can catalog all MP3's via PHP
+	- Tweaked perl script to not return SQL errors
+	- More interface tweaks to make site look purdy
+
+--------------------------------------------------------------------------
+  v.1.07, 05/04/2001:
+	- Changed URL for mod_mp3 to media.tangent.org
+	- Tweaked interface even more and cleaned up build process even more.
+
+--------------------------------------------------------------------------
+  v.1.06, 05/04/2001:
+	- Many more updates to the tools and interface.
+
+--------------------------------------------------------------------------
+  v.1.04, 04/29/2001:
+	- Prettied up interface some more.
+	- Tweaked code for .pls support (added artist, album)
+	- Fixed filefind to work around .AppleDouble directories
+
+--------------------------------------------------------------------------
+  v.1.03, 04/29/2001:
+	- All kinds of build changes.
+	- Added support for .pls
+
+--------------------------------------------------------------------------
+  v.1.02, 04/29/2001:
+	- Minor build changes.
+
+--------------------------------------------------------------------------
+  v.1.01, 04/29/2001:
+	- First version.
+--------------------------------------------------------------------------
+
+

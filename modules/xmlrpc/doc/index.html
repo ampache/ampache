@@ -1,0 +1,453 @@
+<HTML
+><HEAD
+><TITLE
+>XML-RPC for PHP</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.77+"><LINK
+REV="MADE"
+HREF="edd@usefulinc.com"><LINK
+REL="NEXT"
+TITLE="Introduction"
+HREF="introduction.html"></HEAD
+><BODY
+CLASS="BOOK"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="BOOK"
+><A
+NAME="AEN1"
+></A
+><DIV
+CLASS="TITLEPAGE"
+><H1
+CLASS="TITLE"
+><A
+NAME="AEN2"
+></A
+>XML-RPC for PHP</H1
+><H2
+CLASS="SUBTITLE"
+>version 1.1</H2
+><H3
+CLASS="AUTHOR"
+><A
+NAME="AEN7"
+></A
+>Edd Dumbill</H3
+><DIV
+CLASS="AFFILIATION"
+><SPAN
+CLASS="ORGNAME"
+><A
+HREF="http://usefulinc.com/"
+TARGET="_top"
+>Useful 
+	      Information Company</A
+><BR></SPAN
+><DIV
+CLASS="ADDRESS"
+><P
+CLASS="ADDRESS"
+>	&nbsp;&nbsp;&nbsp;&nbsp;<TT
+CLASS="EMAIL"
+>&#60;<A
+HREF="mailto:edd@usefulinc.com"
+>edd@usefulinc.com</A
+>&#62;</TT
+><br>
+	&nbsp;&nbsp;</P
+></DIV
+></DIV
+><P
+CLASS="COPYRIGHT"
+>Copyright &copy; 1999,2000,2001 Edd Dumbill, Useful Information Company</P
+><DIV
+CLASS="LEGALNOTICE"
+><A
+NAME="AEN18"
+></A
+><P
+></P
+><P
+>	All rights reserved.
+      </P
+><P
+>	Redistribution and use in source and binary forms, with or without
+	modification, are permitted provided that the following conditions
+	are met:
+      </P
+><P
+>	<P
+></P
+><UL
+><LI
+><P
+>	      Redistributions of source code must retain the above copyright
+	      notice, this list of conditions and the following disclaimer.
+	    </P
+></LI
+><LI
+><P
+>	      Redistributions in binary form must reproduce the above
+	      copyright notice, this list of conditions and the following
+	      disclaimer in the documentation and/or other materials provided
+	      with the distribution.
+	    </P
+></LI
+><LI
+><P
+>	      Neither the name of the "XML-RPC for PHP" nor the names of its
+	      contributors may be used to endorse or promote products derived
+	      from this software without specific prior written permission.
+	    </P
+></LI
+></UL
+>
+      </P
+><P
+> THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND
+      CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
+      INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+      MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+      DISCLAIMED. IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE
+      LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY,
+      OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+      PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA,
+      OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+      THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
+      TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
+      OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY
+      OF SUCH DAMAGE.</P
+><P
+></P
+></DIV
+><HR></DIV
+><DIV
+CLASS="TOC"
+><DL
+><DT
+><B
+>Table of Contents</B
+></DT
+><DT
+>1. <A
+HREF="introduction.html"
+>Introduction</A
+></DT
+><DD
+><DL
+><DT
+><A
+HREF="introduction.html#AEN43"
+>Acknowledgements</A
+></DT
+></DL
+></DD
+><DT
+>2. <A
+HREF="manifest.html"
+>Files in the distribution</A
+></DT
+><DT
+>3. <A
+HREF="bugs.html"
+>Bugs</A
+></DT
+><DT
+>4. <A
+HREF="support.html"
+>Support</A
+></DT
+><DD
+><DL
+><DT
+><A
+HREF="support.html#AEN146"
+>Online Support</A
+></DT
+><DT
+><A
+HREF="jellyfish.html"
+>The Jellyfish Book</A
+></DT
+></DL
+></DD
+><DT
+>5. <A
+HREF="apidocs.html"
+>Class documentation</A
+></DT
+><DD
+><DL
+><DT
+><A
+HREF="apidocs.html#XMLRPC-CLIENT"
+>xmlrpc_client</A
+></DT
+><DD
+><DL
+><DT
+><A
+HREF="apidocs.html#AEN174"
+>Creation</A
+></DT
+><DT
+><A
+HREF="apidocs.html#AEN191"
+>Methods</A
+></DT
+></DL
+></DD
+><DT
+><A
+HREF="xmlrpcmsg.html"
+>xmlrpcmsg</A
+></DT
+><DD
+><DL
+><DT
+><A
+HREF="xmlrpcmsg.html#AEN289"
+>Creation</A
+></DT
+><DT
+><A
+HREF="xmlrpcmsg.html#AEN309"
+>Methods</A
+></DT
+></DL
+></DD
+><DT
+><A
+HREF="xmlrpcresp.html"
+>xmlrpcresp</A
+></DT
+><DD
+><DL
+><DT
+><A
+HREF="xmlrpcresp.html#AEN386"
+>Creation</A
+></DT
+><DT
+><A
+HREF="xmlrpcresp.html#AEN408"
+>Methods</A
+></DT
+></DL
+></DD
+><DT
+><A
+HREF="xmlrpcval.html"
+>xmlrpcval</A
+></DT
+><DD
+><DL
+><DT
+><A
+HREF="xmlrpcval.html#AEN452"
+>Notes on types</A
+></DT
+><DT
+><A
+HREF="xmlrpcval.html#XMLRPCVAL-CREATION"
+>Creation</A
+></DT
+><DT
+><A
+HREF="xmlrpcval.html#XMLRPCVAL-METHODS"
+>Methods</A
+></DT
+></DL
+></DD
+><DT
+><A
+HREF="xmlrpc-server.html"
+>xmlrpc_server</A
+></DT
+><DD
+><DL
+><DT
+><A
+HREF="xmlrpc-server.html#AEN658"
+>The dispatch map</A
+></DT
+><DT
+><A
+HREF="xmlrpc-server.html#SIGNATURES"
+>Method signatures</A
+></DT
+><DT
+><A
+HREF="xmlrpc-server.html#AEN686"
+>Delaying the server response</A
+></DT
+><DT
+><A
+HREF="xmlrpc-server.html#AEN692"
+>Fault reporting</A
+></DT
+></DL
+></DD
+></DL
+></DD
+><DT
+>6. <A
+HREF="helpers.html"
+>Helper functions</A
+></DT
+><DD
+><DL
+><DT
+><A
+HREF="helpers.html#AEN739"
+>Date functions</A
+></DT
+><DD
+><DL
+><DT
+><A
+HREF="helpers.html#ISO8601ENCODE"
+>iso8601_encode</A
+></DT
+><DT
+><A
+HREF="helpers.html#ISO8601DECODE"
+>iso8601_decode</A
+></DT
+></DL
+></DD
+><DT
+><A
+HREF="arrayuse.html"
+>Easy use with PHP arrays</A
+></DT
+><DD
+><DL
+><DT
+><A
+HREF="arrayuse.html#XMLRPCDECODE"
+>xmlrpc_decode</A
+></DT
+><DT
+><A
+HREF="arrayuse.html#XMLRPCENCODE"
+>xmlrpc_encode</A
+></DT
+></DL
+></DD
+><DT
+><A
+HREF="debugging.html"
+>Debugging aids</A
+></DT
+><DD
+><DL
+><DT
+><A
+HREF="debugging.html#AEN811"
+>xmlrpc_debugmsg</A
+></DT
+></DL
+></DD
+></DL
+></DD
+><DT
+>7. <A
+HREF="reserved.html"
+>Reserved methods</A
+></DT
+><DD
+><DL
+><DT
+><A
+HREF="reserved.html#AEN827"
+>system.listMethods</A
+></DT
+><DT
+><A
+HREF="sysmethodsig.html"
+>system.methodSignature</A
+></DT
+><DT
+><A
+HREF="sysmethhelp.html"
+>system.methodHelp</A
+></DT
+></DL
+></DD
+><DT
+>8. <A
+HREF="examples.html"
+>Examples</A
+></DT
+><DD
+><DL
+><DT
+><A
+HREF="examples.html#STATENAME"
+>XML-RPC client: state name query</A
+></DT
+></DL
+></DD
+></DL
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>&nbsp;</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+>&nbsp;</TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="introduction.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>&nbsp;</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+>&nbsp;</TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Introduction</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

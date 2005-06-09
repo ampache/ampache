@@ -1,0 +1,38 @@
+========================================================
+*  mpd.class.php - PHP Object Interface to the MPD Music Player Daemon
+*  CHANGELOG
+*  Copyright (C) 2003-2004 Benjamin Carlisle (bcarlisle@24oz.com)
+*  http://mpd.24oz.com/ | http://www.musicpd.org/
+========================================================
+
+v1.2 - Released 05/05/2004
+ENHANCEMENTS
+* Program version compatibility table now does not allow incompatible commands to be sent to 
+  the MPD. This is done to prevent sending outdated/incompatible commands.
+* Added new MPD v0.9.1 commands: PLMove(), SetRandom(), SeekTo()
+* Added MPD password authentication support.
+* Added GetArtists() and GetAlbums() functions.
+* Reflected 'volume' command deprecation in MPD v0.10.0
+
+BUGFIXES
+* None noted.
+
+
+v1.1 - Released 09/23/2003
+ENHANCEMENTS
+ * There is no longer the need to call RefreshInfo directly; it is automatically called upon 
+   connection to MPD. Although this may be considered a bad move by some purists, I feel that 
+   it substantially increases usability.
+ * Properties are now kept in sync with MPD. In other words, if a method call will modify a 
+   MPD stateful variable (such as AdjustVolume()), it also will modify the object's property.
+ * Methods that manually retrieve MPD settings (GetVolume(), GetStatistics(), etc.) will soon 
+   be deprecated. Instead, be a nice developer and use the object property (eg, $mpd->volume, 
+   $mpd->uptime, etc.).
+ * Added the Find() method. Syntax is similar to Search().
+ * Although the command queuing (bulk command) methods were included in v1.0, they were not 
+   documented. The QueueCommand() and SendCommandQueue() are now official methods.
+ 
+BUGFIXES
+ * None noted.
+
+v1.0 - Released 08/26/2003

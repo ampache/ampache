@@ -1,0 +1,189 @@
+-------------------------------------------------------------------------------
+------------------ INSTALL - Ampache v.3.3 - 03/27/2005 -----------------------
+-------------------------------------------------------------------------------
+
+  I'm assuming that you have Apache, PHP and MySQL running when you
+  get to this point.
+
+  If you're upgrading from 3.0 to 3.1 please refer to the MIGRATION Notes.
+  Your database can't be re-used, but fear not the Ampache guys thoughtfully 
+  included scripts to port the data from your old database to the new one.  
+  (They get an extra beer for that one)
+
+  If you're upgrading from 3.1 to a newer version refer to the MIGRATION Notes.
+  There should be an automated update script which will allow you to keep your
+  current database. 
+
+  If at any time during this install you can't figure out where you have gone
+  wrong check out /test.php for help.
+
+  1. Installing Using the Web Interface:
+
+  As of 3.3-Beta3 Ampache includes an web based installation script. In order
+  for the script to work correctly you will need a user that has Database 
+  create and modify rights for your mysql server. To use this script simply
+  visit /install.php. If you get a Access Denied make sure that your /config
+  directory does not contain an existing ampache.cfg
+
+  	Web Install: 
+		Step 1 - Inserting the database, this requires you to enter
+			a username/pass for MySQL that is able to create
+			a brand new database and insert new tables. This does
+			not have to be the user you actually run ampache as
+		Step 2 - Creating the Config file, this step asks for a 'user'
+			level account for MySQL that has full access over
+			the newly created ampache database, this can be the 
+			same as the last step, but it is not recommended. 
+			Ampache will attempt to write the config file directly
+			to the /config directory, if it isn't able to it 
+			should prompt you to download the ampache.cfg simply
+			put it into /config and then visit the login page. 
+		Step 3 - Creating the Initial User Account, you will be asked
+			for a username and password for the administrator
+			account. 
+
+  Enjoy! If you have any problems with the web installer please report them 
+  to vollmerk@ampache.org Thanks!
+  
+    
+  2. The Long of Setting Up Ampache
+
+    2.1 Configuring Apache Server
+    There are really two choices here.  You can either configure a virtual
+    server for the ampache services, or you can just configure a new directory
+    directive for ampache.  There are advantages and disadvantages for both.
+
+    If you configure a new virtual server, it has it's own log files which
+    could be useful for separating the ampache web traffic from the regular
+    web server traffic.
+
+    If you configure a new directory directive for ampache, the ampache
+    statistics will be in with all the other web traffic, but it may be a
+    little easier (but not by much).
+
+    We've included cronolog lines. These are not required, but for 
+    troubleshooting we recommend them. 
+
+    for a separate virtual server httpd.conf reads:
+
+    [snip]
+
+        <VirtualHost 192.168.100.2:80>
+           ServerName tunes.ampache.org
+
+           ServerAdmin webmaster@ampache.org
+           DocumentRoot /data/www/ampache
+
+           DirectoryIndex index.php
+
+        </VirtualHost>
+
+    [snip]
+
+    Now perform an 'apache restart' and apache should be configured.
+
+    2.2 Configuring Your MySQL Server
+    Setup a user and pass for your music db and create the music db.
+
+    Run: 'mysql -u user -p musicdb < sql/ampache.sql'
+      to create the music db and tables.
+
+    2.3 Configuring Ampache
+
+      2.3.1 Configuring motd.php
+
+        Copy config/motd.php.dist to config/motd.php
+
+        Edit this file however you like, with either php code or straight html.
+        The output will be displayed below the login box on login.php.
+
+
+  3. Running Ampache For The First Time
+
+        Point your browser at your new ampache webpage and you should get 
+        the installation page. It will run you through inserting your 
+	database, creating your config file and setting up your first user
+
+        Grab A Beer....
+
+      3.1  Setting up a catalog
+        First, create your local catalogs.  Do this my first clicking
+        `Add a catalog', and entering the path for the root of your
+        collection of MP3 files.  There is no need to enter sub directories
+	since the update tool will recursively catalog all subdirectories.
+
+        You can enter multiple paths, so this means that you can access
+        multiple directories, and hence multiple hard disks.  I solved this
+        particular problem by patching the kernel to include logical volume
+        management, but that's a completely different story.
+	
+      3.2  Updating your Catalog
+        If everything went correctly, you are now looking at an empty ampache.
+        In order to populate the database with all the tag information from
+        your MP3 files, you'll need to go to the `Admin' page, and select
+        the `Catalog' link.
+
+        Finally, you want to click the `Update All Catalogs' button in the
+        middle of the Catalog page and go for coffee (or any other beverages
+        you like) as this will take a little bit of time.  The web server
+        is now searching for and opening each of the MP3 files in your
+        collection, pulling the ID3 tag data out, and using these to populate
+        your ampache database.
+
+        Final Note on MP3 Tags:
+        Since you the value of ampache is directly related to the data in the
+        database, and this data is obtained from the ID3 tags in your MP3 files,
+        it really pays to have all your tags populated and in order.
+
+        One of the best tools that I've run across to do this is:
+        EasyTAG - Tag editor for MP3 and OGG files
+        http://easytag.sourceforge.net
+
+        It runs right on the Linux machine, and is quite a bit faster at updating
+        tags than any PC based programs that have to access the MP3 across a
+        Samba share point.  But this does not mean that you can't update tags
+        this way.  Just that the local Linux program can access the MP3 faster.
+
+        If you insist on using a windows version another good tool can also be 
+        found on sourceforge at: http://massid3lib.sourceforge.net/
+    
+      3.3  Adding Users
+	To Add Users simply click admin->users->Add a new user and enter
+	the appropriate information
+
+
+      3.4  Sorting and updating files (Under Development)
+        When updating catalog preferences new fields added in v3.1 include
+           ID3 set command
+	   Filename pattern
+	   Sort Pattern
+
+	When these fields are populated a periodic update may be performed by scheduling
+	the fileupdate.pl program to run at timed intervals.  This program will query the 
+	database and attempt any requested updates. Before fileupdate.pl can be run, the 
+	Ampache.pm file must be edited to reflect your archive information.
+	
+	Usage of fileupdate.pl is as follows:
+
+	    fileupdate [--id3|--rename|--sort|--all] [--help] [--pretend] [--verbose]
+              --pretend   Display command taken, without actually doing anything.
+              --id3       Update id3 tags for all files flagged with 'id3'
+              --rename    Rename files flagged with 'rename'
+              --sort      Sort files flagged with 'sort'
+              --all       Performs id3 update, rename, and sort
+                          for all files flagged with 'id3'
+              --verbose   Shows detailed information about what's happening.
+              --help   This message
+
+	
+	
+	An example usage would be to schedule a cron tab which will run fileupdate.pl with 
+	the appropriate arguments which runs every 6 hours.
+
+	EXAMPLE:
+        If you were to place the following line in your crontab:
+	     * 24 * * * /apache/bin/fileupdate.pl -all
+
+	any updates applied to the database would be applied at midnight everyday
+
+

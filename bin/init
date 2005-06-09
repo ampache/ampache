@@ -1,0 +1,11 @@
+#! /usr/bin/perl
+# Copyleft Ampache.org
+
+# This script loads up the path to the perl module 
+# 
+
+use FindBin qw($Bin);
+use lib "$Bin/../lib/perl/Local/Ampache/blib/lib";	
+use Local::Ampache;
+$ampache = new Local::Ampache("$Bin/..");
+

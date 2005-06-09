@@ -1,0 +1,209 @@
+<?php
+/////////////////////////////////////////////////////////////////
+/// getID3() by James Heinrich <info@getid3.org>               //
+//  available at http://getid3.sourceforge.net                 //
+//            or http://www.getid3.org                         //
+/////////////////////////////////////////////////////////////////
+// See readme.txt for more details                             //
+/////////////////////////////////////////////////////////////////
+//                                                             //
+// module.archive.gzip.php                                     //
+// written by Mike Mozolin <mmozolinØavk*ru>                   //
+// module for analyzing GZIP files                             //
+// dependencies: NONE                                          //
+//                                                            ///
+/////////////////////////////////////////////////////////////////
+
+class getid3_gzip {
+
+	function getid3_gzip(&$fd, &$ThisFileInfo) {
+		$ThisFileInfo['fileformat'] = 'gzip';
+		$this->read_gzip($fd, $ThisFileInfo);
+		return false;
+	}
+
+	// Reads the gzip-file
+	function read_gzip($fd, &$ThisFileInfo) {
+
+		$start_length = 10;
+		$unpack_header = 'a1id1/a1id2/a1cmethod/a1flags/a4mtime/a1xflags/a1os';
+		//+---+---+---+---+---+---+---+---+---+---+
+		//|ID1|ID2|CM |FLG|     MTIME     |XFL|OS |
+		//+---+---+---+---+---+---+---+---+---+---+
+		@fseek($fd, 0);
+		$buffer = @fread($fd, $ThisFileInfo['filesize']);
+
+		$arr_members = explode("\x1F\x8B\x08", $buffer);
+		$num_members = intval(count($arr_members));
+		for ($i = 0; $i < $num_members; $i++) {
+			if (strlen($arr_members[$i]) == 0) {
+				continue;
+			}
+			$thisThisFileInfo = &$ThisFileInfo['gzip']['member_header'][$i];
+
+			$buf = "\x1F\x8B\x08".$arr_members[$i];
+
+			$attr = unpack($unpack_header, substr($buf, 0, $start_length));
+			if (!$this->get_os_type(ord($attr['os']))) {
+				// Split member with previous if wrong OS type
+				$arr_members[$i - 1] .= $buf;
+				$arr_members[$i] = '';
+				continue;
+			}
+		}
+
+		$ThisFileInfo['gzip']['files'] = array();
+
+		$fpointer = 0;
+		for ($i = 0; $i < $num_members; $i++) {
+
+			if (strlen($arr_members[$i]) == 0) {
+				continue;
+			}
+			$thisThisFileInfo = &$ThisFileInfo['gzip']['member_header'][$i];
+
+			$buff = "\x1F\x8B\x08".$arr_members[$i];
+
+			$attr = unpack($unpack_header, substr($buff, 0, $start_length));
+			//$id1 = ord($attr['id1']);
+			//$id2 = ord($attr['id2']);
+			$cmethod = ord($attr['cmethod']);
+			$thisThisFileInfo['raw']['flags'] = ord($attr['flags']);
+			$thisThisFileInfo['flags']['crc16']    = (bool) ($thisThisFileInfo['raw']['flags'] & 0x02);
+			$thisThisFileInfo['flags']['extra']    = (bool) ($thisThisFileInfo['raw']['flags'] & 0x04);
+			$thisThisFileInfo['flags']['filename'] = (bool) ($thisThisFileInfo['raw']['flags'] & 0x08);
+			$thisThisFileInfo['flags']['comment']  = (bool) ($thisThisFileInfo['raw']['flags'] & 0x10);
+
+			$thisThisFileInfo['raw']['xflag'] = ord($attr['xflags']);
+			$thisThisFileInfo['compression'] = $this->get_xflag_type($thisThisFileInfo['raw']['xflag']);
+
+			$thisThisFileInfo['filemtime'] = getid3_lib::LittleEndian2Int($attr['mtime']);
+
+			$thisThisFileInfo['raw']['os'] = ord($attr['os']);
+			$thisThisFileInfo['os'] = $this->get_os_type($thisThisFileInfo['raw']['os']);
+			if (!$thisThisFileInfo['os']) {
+				$ThisFileInfo['error'][] = 'Read error on gzip file';
+				return false;
+			}
+
+			$fpointer = 10;
+			$arr_xsubfield = array();
+			// bit 2 - FLG.FEXTRA
+			//+---+---+=================================+
+			//| XLEN  |...XLEN bytes of "extra field"...|
+			//+---+---+=================================+
+			if ($thisThisFileInfo['flags']['extra']) {
+				$w_xlen = substr($buff, $fpointer, 2);
+				$xlen = getid3_lib::LittleEndian2Int($w_xlen);
+				$fpointer += 2;
+				$thisThisFileInfo['raw']['xfield'] = substr($buff, $fpointer, $xlen);
+				// Extra SubFields
+				//+---+---+---+---+==================================+
+				//|SI1|SI2|  LEN  |... LEN bytes of subfield data ...|
+				//+---+---+---+---+==================================+
+				$idx = 0;
+				while (true) {
+					if ($idx >= $xlen) {
+						break;
+					}
+					$si1 = ord(substr($buff, $fpointer+$idx, 1));
+					$idx++;
+					$si2 = ord(substr($buff, $fpointer+$idx, 1));
+					$idx++;
+					if (($si1 == 0x41) && ($si2 == 0x70)) {
+						$w_xsublen = substr($buff, $fpointer+$idx, 2);
+						$xsublen = getid3_lib::LittleEndian2Int($w_xsublen);
+						$idx += 2;
+						$arr_xsubfield[] = substr($buff, $fpointer+$idx, $xsublen);
+						$idx += $xsublen;
+					} else {
+						break;
+					}
+				}
+				$fpointer += $xlen;
+			}
+			// bit 3 - FLG.FNAME
+			//+=========================================+
+			//|...original file name, zero-terminated...|
+			//+=========================================+
+			$thisThisFileInfo['filename'] = '';
+			if ($thisThisFileInfo['flags']['filename']) {
+				while(true) {
+					if (ord($buff[$fpointer]) == 0) {
+						$fpointer++;
+						break;
+					}
+					$thisThisFileInfo['filename'] .= $buff[$fpointer];
+					$fpointer++;
+				}
+			}
+			// bit 4 - FLG.FCOMMENT
+			//+===================================+
+			//|...file comment, zero-terminated...|
+			//+===================================+
+			if ($thisThisFileInfo['flags']['comment']) {
+				while(true) {
+					if (ord($buff[$fpointer]) == 0) {
+						$fpointer++;
+						break;
+					}
+					$thisThisFileInfo['comment'] .= $buff[$fpointer];
+					$fpointer++;
+				}
+			}
+			// bit 1 - FLG.FHCRC
+			//+---+---+
+			//| CRC16 |
+			//+---+---+
+			if ($thisThisFileInfo['flags']['crc16']) {
+				$w_crc = substr($buff, $fpointer, 2);
+				$thisThisFileInfo['crc16'] = getid3_lib::LittleEndian2Int($w_crc);
+				$fpointer += 2;
+			}
+			// bit 0 - FLG.FTEXT
+			//if ($thisThisFileInfo['raw']['flags'] & 0x01) {
+			//	echo 'FTEXT<br>';
+			//}
+			// bits 5, 6, 7 - reserved
+
+			$thisThisFileInfo['crc32']    = getid3_lib::LittleEndian2Int(substr($buff, strlen($buff) - 8, 4));
+			$thisThisFileInfo['filesize'] = getid3_lib::LittleEndian2Int(substr($buff, strlen($buff) - 4));
+
+			$ThisFileInfo['gzip']['files'] = getid3_lib::array_merge_clobber($ThisFileInfo['gzip']['files'], getid3_lib::CreateDeepArray($thisThisFileInfo['filename'], '/', $thisThisFileInfo['filesize']));
+		}
+	}
+
+	// Converts the OS type
+	function get_os_type($key) {
+		static $os_type = array(
+			'0'   => 'FAT filesystem (MS-DOS, OS/2, NT/Win32)',
+			'1'   => 'Amiga',
+			'2'   => 'VMS (or OpenVMS)',
+			'3'   => 'Unix',
+			'4'   => 'VM/CMS',
+			'5'   => 'Atari TOS',
+			'6'   => 'HPFS filesystem (OS/2, NT)',
+			'7'   => 'Macintosh',
+			'8'   => 'Z-System',
+			'9'   => 'CP/M',
+			'10'  => 'TOPS-20',
+			'11'  => 'NTFS filesystem (NT)',
+			'12'  => 'QDOS',
+			'13'  => 'Acorn RISCOS',
+			'255' => 'unknown'
+		);
+		return @$os_type[$key];
+	}
+
+	// Converts the eXtra FLags
+	function get_xflag_type($key) {
+		static $xflag_type = array(
+			'0' => 'unknown',
+			'2' => 'maximum compression',
+			'4' => 'fastest algorithm'
+		);
+		return @$xflag_type[$key];
+	}
+}
+
+?>

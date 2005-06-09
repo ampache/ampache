@@ -1,0 +1,159 @@
+<HTML
+><HEAD
+><TITLE
+>Bugs</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.77+"><LINK
+REV="MADE"
+HREF="edd@usefulinc.com"><LINK
+REL="HOME"
+TITLE="XML-RPC for PHP"
+HREF="index.html"><LINK
+REL="PREVIOUS"
+TITLE="Files in the distribution"
+HREF="manifest.html"><LINK
+REL="NEXT"
+TITLE="Support"
+HREF="support.html"></HEAD
+><BODY
+CLASS="CHAPTER"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>XML-RPC for PHP: version 1.1</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="manifest.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+></TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="support.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="CHAPTER"
+><H1
+><A
+NAME="BUGS"
+></A
+>Chapter 3. Bugs</H1
+><P
+>This is a bare framework. The "nice" bits haven't been put in
+	  yet. Specifically, no HTTP response checking is performed, and no type
+	  validation or coercion has been put in.  PHP being a loosely-typed
+	  language, this is going to have to be done explicitly.</P
+><P
+>dateTime.iso8601 is supported opaquely. It can't be done
+      natively as the XML-RPC specification explictly forbids passing of
+      timezone specifiers in ISO8601 format dates. You can, however, use
+      the <A
+HREF="helpers.html#ISO8601ENCODE"
+>iso8601_encode()</A
+> and <A
+HREF="helpers.html#ISO8601DECODE"
+>iso8601_decode()</A
+> functions to do the encoding and decoding for you.</P
+><P
+>If alternative character set encoding is sent in HTTP header
+      than it will be ignored for the moment.  We speak only UTF-8...</P
+><P
+>If more than 32k of HTTP headers are encountered (like, why?) then the
+      response parsing code will break.</P
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="manifest.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+ACCESSKEY="H"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="support.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Files in the distribution</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+>&nbsp;</TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Support</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

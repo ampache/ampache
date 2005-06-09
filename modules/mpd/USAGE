@@ -1,0 +1,378 @@
+========================================================
+* mpd.class.php - PHP Object Interface to the MPD Music Player Daemon
+* USAGE Version 1.2, released 05/05/2004
+* Copyright (C) 2003-2004 Benjamin Carlisle (bcarlisle@24oz.com)
+* http://mpd.24oz.com/ | http://www.musicpd.org/
+========================================================
+
+[NOTES]
+
+The following document outlines the object properties and methods of the mpd.class.php 
+PHP class. Please note that this PHP class relies heavily on the functionality within 
+MPD, and that this document reflects the functionality as of the current release of 
+MPD (0.10.3).
+
+There are other object functions/properties that are not included in this documentation. 
+They are either unsupported, untested, or, most likely, intended for calling within the 
+object itself. You should be able to get along fine using only what is described below. 
+
+
+[OBJECT INSTANTIATION]
+
+mpd(host,port,[password])
+Object constructor. When called, it will initialize all object variables and attempt to 
+connect using the arguments supplied. If the connection attempt succeeds, data will be 
+retrieved from the server and all appropriate class properties will be set. 
+Note: if you're using MPD with a password, you must supply a password with at least read 
+access to properly connect.
+
+
+ ARGUMENTS
+    host - the hostname upon which MPD is running
+    port - the TCP port on which MPD is listening
+    password (optional) - Authentication password for MPD server
+ RETURNS
+    mpd Object, upon success
+ EXAMPLE
+    $mpdObject = new mpd('localhost',2100);
+
+
+
+[PROPERTIES]
+
+The MPD Object, once instantiated, has the following properties:
+
+  mpd_class_version - The current version of MPD-Class.
+  mpd_version - The version string as returned by MPD.
+  connected - TRUE if it has properly connected to MPD, FALSE otherwise.
+  volume - The volume setting on MPD (1-100).
+  repeat - The status of the repeat (loop) flag. Either 1 (on) or 0 (off).
+  uptime - The number of seconds since the MPD server was started.
+  playtime - The number of elapsed seconds MPD has been actively playing.
+  num_songs - The number of tracks in the MPD database.
+  num_artists - The number of artists in the MPD database.
+  num_albums - The number of albums in the MPD database.
+  playlist_count - The number of tracks in the MPD playlist.
+  state - The current state of the MPD. Use constants:
+     MPD_STATE_PLAYING, MPD_STATE_STOPPED, MPD_STATE_PAUSED
+  num_songs_played - Number of songs played since MPD was started.
+  current_track_id - The playlist index of the currently playing track.
+  current_track_length - The length, in seconds, of the playing track.
+  current_track_pos - The position, in elapsed seconds, of the playing track.
+  errStr - The last error message returned. Empty if there was no error.
+  playlist - An multidimensional array containing the current playlist.
+
+
+
+[METHODS]
+
+Methods available for this class have been classified into several groups.
+
+   - Mixer Control Methods - For configuring mixer settings
+   - Player Control Methods - For controlling playback
+   - Playlist Maintenence Methods - For maintaining the MPD playlist, as well as stored M3U playlists.
+   - Searching/Browsing Methods - For locating tracks
+   - MPD Control Methods - Miscellaneous MPD control
+   - Other/Advanced Methods - Stuff that shouldn't be necessary, but are included ;)
+
+For the most part, you will not need the Other methods. They are included for Compatibility, as well
+as for use in my own code. You can do anything you need without using them, but use at your own risk!
+
+Mixer Control Methods
+SetVolume(vol) - 
+  Sets the mixer volume on the MPD to <vol>.
+
+  RETURNS
+   NULL, upon failure
+  EXAMPLE
+   $mpdObject->SetVolume(75);
+
+
+AdjustVolume(vol) -
+   Adjusts the mixer volume on the MPD by <vol>.
+
+   RETURNS
+    NULL, upon failure
+   EXAMPLE
+    $mpdObject->AdjustVolume(-20);
+
+	
+SetRepeat(1|0) - 
+   Sets the repeat (loop) status to 1 (ON) or 0 (OFF).
+
+   RETURNS
+    NULL, upon failure
+   EXAMPLE
+    $mpdObject->SetRepeat(1);
+
+
+Player Control Methods
+Play() - 
+   Begins playing the songs in the MPD playlist. 
+
+   RETURNS
+    NULL, upon failure
+   EXAMPLE
+    $mpdObject->Play();
+
+
+Pause() - 
+   Toggles pausing on the MPD. Calling it once will pause the player, calling it again
+   will unpause.
+
+   RETURNS
+    NULL, upon failure
+   EXAMPLE
+    $mpdObject->Pause();
+
+	   
+Stop() - 
+   Stops playing the MPD.
+
+   RETURNS
+    NULL, upon failure
+   EXAMPLE
+    $mpdObject->Stop();
+
+	
+Next() - 
+   Skips to the next song in the MPD playlist. If not playing, returns an error.
+
+   RETURNS
+    NULL, upon failure
+   EXAMPLE
+    $mpdObject->Next();
+
+
+Previous() - 
+   Skips to the previous song in the MPD playlist. If not playing, returns an error.
+
+   RETURNS
+    NULL, upon failure
+   EXAMPLE
+    $mpdObject->Previous();
+
+	
+SkipTo(idx) - 
+   Skips directly to the <idx> song in the playlist.
+
+   RETURNS
+    NULL, upon failure
+   EXAMPLE
+    $mpdObject->SkipTo(4);
+
+
+Playlist Maintenence Methods
+PLAdd(file) - 
+   Adds the file <file> to the end of the playlist. <file> must be a song in the
+   MPD database.
+
+   RETURNS
+    NULL, upon failure
+   EXAMPLE
+    $mpdObject->PLAdd("U2 - Pride.mp3");
+ 
+
+PLAddBulk(fileArray) - 
+   Adds each track listed in a single-dimensional <fileArray>, which contains filenames
+   of tracks to add, to the end of the playlist. This is used to add many, many songs 
+   to the playlist in one swoop.
+
+   RETURNS
+    NULL, upon failure adding any track.
+   EXAMPLE
+    $mpdObject->PLAddBulk($songArray);
+
+
+PLRemove(idx) - 
+   Removes the track located at position <idx> from the playlist. This will shift
+   the tracks behind it up one position.
+
+   RETURNS
+    NULL, upon failure
+   EXAMPLE
+    $mpdObject->PLRemove(2);
+
+
+PLClear() - 
+   Clears the playlist entirely and stops playing MPD (if appropriate).
+
+   RETURNS
+    NULL, upon failure
+   EXAMPLE
+    $mpdObject->PLClear();
+ 
+
+PLSave(file) - 
+   Saves the playlist to <file>.m3u for later retrieval.
+
+   RETURNS
+    NULL, upon failure
+   EXAMPLE
+    $mpdObject->PLSave("mysongs");
+	
+
+PLLoad(file) - 
+   Retrieves the playlist from <file>.m3u and loads it into the current playlist.
+
+   RETURNS
+    NULL, upon failure
+   EXAMPLE
+    $mpdObject->PLLoad("mysongs");
+
+
+PLShuffle() - 
+   Randomly reorders the songs in the playlist.
+
+   RETURNS
+    NULL, upon failure
+   EXAMPLE
+    $mpdObject->PLShuffle();
+
+	
+MPD Control Methods
+Disconnect() - 
+   Close the connection to the MPD server.
+
+   RETURNS
+    Nothing
+   EXAMPLE
+    $mpdObject->Disconnect();
+
+
+Shutdown() - 
+   Shuts down the MPD server (aka sends the KILL command). This closes the current 
+   connection, and prevents future communication with the server.
+
+   RETURNS
+    NULL, upon failure
+   EXAMPLE
+    $mpdObject->Shutdown();
+
+ 
+DBRefresh() - 
+   Causes MPD to refresh the database of its tracks. 
+
+   RETURNS
+    NULL, upon failure
+   EXAMPLE
+    $mpdObject->DBRefresh();
+
+
+Searching/Browsing Methods
+Search(type,string) - 
+   Searches the MPD database. The search <type> should be one of the following:
+     &nbsp;&nbsp;&nbsp;MPD_SEARCH_ARTIST, MPD_SEARCH_TITLE, MPD_SEARCH_ALBUM
+   The search <string> is a case-insensitive locator string. Anything that
+   contains <string> will be returned in the results.
+
+   RETURNS
+    Array containing search results, upon success.
+    NULL, upon failure
+   EXAMPLE
+    $results = $mpdObject->Search(MPD_SEARCH_ARTIST,"Met");
+
+
+Find(type,string) - 
+   Similar to Search(), Find() looks for exact matches in the MPD database. The find <type> should be one of the following:
+     &nbsp;&nbsp;&nbsp;MPD_SEARCH_ARTIST, MPD_SEARCH_TITLE, MPD_SEARCH_ALBUM
+   The find <string> is a case-insensitive locator string. Anything that
+   exactly matches <string> will be returned in the results.
+
+   RETURNS
+    Array containing find results, upon success.
+    NULL, upon failure
+   EXAMPLE
+    $results = $mpdObject->Find(MPD_SEARCH_ARTIST,"Metallica");
+
+
+GetDir([dir]) - 
+   Retrieves a database directory listing of the <dir> directory. If no
+   directory is specified, the directory listing is at the base of the 
+   database directory path.
+
+   RETURNS
+    Array containing directory results, upon success.
+    NULL, upon failure
+   EXAMPLE
+    $humorArray = $mpdObject->GetDir("Humor");
+
+
+GetArtists() - 
+   Retrieves a list of all artists in the database. 
+
+   RETURNS
+    Array single-dimensional containing the list of artists, upon success.
+    NULL, upon failure
+   EXAMPLE
+    $artistArray = $mpdObject->GetArtists();
+
+
+GetAlbums([artist]) - 
+   Retrieves a list of all albums in the database by a particular <artist> If no
+   artist is specified, all albums in the database are returned. 
+
+   RETURNS
+    Array single-dimensional containing list of albums, upon success.
+    NULL, upon failure
+   EXAMPLE
+    $allAlbumArray = $mpdObject->GetAlbums();
+
+
+
+Other/Advanced Methods
+SendCommand(cmd,arg1,arg2...) - 
+   Sends a generic command to the MPD server. Several command constants
+   are pre-defined for use (see MPD_CMD_* constant definitions in 
+   mpd.class.php).
+
+   RETURNS
+    String containing server response, upon success
+    NULL, upon failure.
+   EXAMPLE
+    $response = $mpdObject->SendCommand("mycommand");
+
+
+
+QueueCommand(cmd,arg1,arg2...) - 
+   Queues a generic command for later sending to the MPD server. The CommandQueue can
+   hold as many commands as needed, and are sent all at once, in the order they are queued,
+   using the SendCommandQueue() method. The syntax for queueing
+   commands is identical to SendCommand().
+
+   RETURNS
+    NULL, upon failure.
+    TRUE, otherwise.
+   EXAMPLE
+    $response = $mpdObject->QueueCommand(MPD_CMD_ADD,"myfile.mp3");
+
+
+
+SendCommandQueue() - 
+   Sends all commands in the Command Queue to the MPD server.
+
+   RETURNS
+    NULL, upon the failure of any command in the queue.
+    TRUE, otherwise.
+   EXAMPLE
+    $mpdObject->QueueCommand(MPD_CMD_ADD,"myfile.mp3");
+	$mpdObject->QueueCommand(MPD_CMD_VOL,"+20");
+	$mpdObject->SendCommandQueue();
+
+
+
+RefreshInfo() - 
+ Retrieves all object data from the MPD and stores it in each of the object
+ properties. Note: As of version 1.1, this is automatically called upon initial connection
+ to the MPD server; there is little need to use it.
+
+ RETURNS
+   TRUE, upon success
+   NULL, upon failure
+ EXAMPLE
+   $mpdObject->RefreshInfo();
+
+
+
+
+

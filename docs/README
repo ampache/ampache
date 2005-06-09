@@ -1,0 +1,149 @@
+-------------------------------------------------------------------------------
+---------                    README - Ampache v.3.3                 -----------
+-------------------------------------------------------------------------------
+
+Contents:
+ 
+ 1. Intro
+     a) Supported File-Types
+     b) Supported Stream Methods
+     c) Current Translations
+     d) Thanx
+ 2. Getting all the components
+ 3. Setting Up
+     a) Upgrading
+ 4. License
+     a) Donations (Beer!)
+ 5. Contact info
+
+1. Intro:
+
+  Ampache is a PHP-based interface to a MySQL database 
+  where information about your audio files are stored.  The songs 
+  are streamed using PHP; older versions required mod_mp3 but this
+  version no longer does.  The songs are cataloged via PHP
+  scripts.
+
+  These tools are heavily dependent on quality tags in your audio
+  files and or the file system organization. If you've kept them 
+  up-to-date or organized this is the tool for you.  
+  
+  See CHANGELOG for version information.
+
+  A) Supported File-Types
+
+     Ampache currently supports the following audio file types. If
+     you would like ampache to support an additional file type please
+     contact us on irc, or the forums and we will investigate adding 
+     them. Thanks
+
+     	- MP3 (id3v1 && id3v2)
+	- OGG
+	- WMA
+	- FLAC
+	- RM
+	- AAC/M4A
+	- MPC
+
+  B) Supported Stream Methods
+
+     Ampache currently supports the following different methods for
+     streaming your audio files. Please contact us if you would like
+     to see additional methods. 
+
+	- Single Stream 
+		- extended m3u
+		- simple m3u
+		- standard pls
+		- ASX
+	- Realtime Downsampled
+	- Localplay using Moosic
+	- Localplay using MPD
+	- Icecast2 Stream
+	
+  C) Current Translations
+
+     Ampache is currently translated into the following languages. If
+     you are interested in updating an existing translation or adding
+     a new one please contact us at translation@ampache.org or see
+     /locale/base/TRANSLATIONS for more instructions. 
+
+     	- English	(en_US)
+	- German	(de_DE)
+	- French	(fr_FR) *Partial
+
+  D) A Special Thanks:
+     Thanx to those who've helped us make Ampache so useable:
+	 Scott Kveton - Head Nacho, inventer of all that is Ampache
+	 Robert Hopson - Libglue, Playlists, Ogg support.. and much more
+	 Andy Morgan - Protagonist
+	 RosenSama - Developer
+	 Randall Ehren (Initial XML-RPC)
+	 s1amson (lots of beta testing)
+	 Caleb Crome (bug fixes and enhancements)
+         Mike Payson 
+         Jon Disnard 
+         Adriaan Peters (numerous patches and bug fixes)
+         Rob Kaandorp (time calculation fix)
+         Ian Cote (MP3.php tweaks)
+         Kurt Lieber (random fixes)
+         Maan Bsat (random fixes)
+         latka (from media.tangent.org site) for orphaned song ideas
+	 Lamar Hansford (README/INSTALL improvements) & Upload
+	 And many many more...
+
+2. Getting all the components
+
+  Apache >= 1.3.19 http://www.apache.org OR other webserver
+  PHP >= 4.1.2 http://www.php.net
+  	PHP4-Mysql
+	PHP4-Session
+	PHP4-gd (recommended)
+	PHP4 ICONV & ZLIB support (recommended)
+  MySQL >= 3.23 http://www.mysql.com
+  Perl >= 5 (Optional)
+  16MB of Ram
+
+3. Setting Up
+
+  Ampache:
+    If you're upgrading from 3.0 to 3.1 you will not be able to re-use
+    your database or config.php files.  You will need to follow the entire 
+    Ampache install guidelines oultined in the INSTALL file.  
+
+
+3a. Upgrading Your Ampache Install
+
+  If you are upgrading from an older version of Ampache we recommend
+  moving the old directory out of the way, extracting the new copy in 
+  its place and then re-creating the config file. All database updates
+  will be handled by the /update.php script. There is no need to insert
+  the /sql/ampache.sql if you have an existing installation.
+
+
+4. License
+
+  This Application falls under the Standard GPL. See Licence 
+  included with this tar file
+
+4a. Donations
+
+  We don't want your money but we will take your beer. If you 
+  love ampache and want to encourage us to write more please
+  visit ampache.org for information on how to donate some beer
+  to our cause. If you can't send beer a postcard would also 
+  be great. E-mail beer@ampache.org for shipping address 
+
+5. Contact Info
+
+  Hate it?  Love it?  Let us know.  Let us know if you think of any
+    more features, bugs, etc.
+
+  Public SVN: https://svn.ampache.org/
+  IRC: irc.ampache.org #ampache (Freenode)
+  Forums: http://ampache.org/forums
+  Bugs: http://bugs.ampache.org
+  Demo: http://ampache.org/demo
+
+  Ampache Development Team
+  dev@ampache.org

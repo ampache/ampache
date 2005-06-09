@@ -1,0 +1,1866 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Ampache\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2005-02-05 10:43-0800\n"
+"PO-Revision-Date: 2005-04-25 21:14+0100\n"
+"Last-Translator: vireas <vireas at gmail.com>\n"
+"Language-Team: TURKISH <dev@ampache.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=iso-8859-9\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-Language: Turkish\n"
+"X-Poedit-Country: TURKEY\n"
+"X-Poedit-SourceCharset: iso-8859-9\n"
+
+#: ../../docs/admin/users.php:76
+#: ../../docs/admin/users.php:123
+msgid "Error Username Required"
+msgstr "Hata, kullanýcý ismi gerekli"
+
+#: ../../docs/admin/users.php:79
+#: ../../docs/admin/users.php:120
+msgid "Error Passwords don't match"
+msgstr "Hata, parolalar uyuþmuyor"
+
+#: ../../docs/admin/users.php:137
+msgid "Are you sure you want to permanently delete"
+msgstr "Tamamen silmek istediðinizden emin misiniz: "
+
+#: ../../docs/admin/users.php:144
+#: ../../templates/show_confirm_action.inc.php:29
+msgid "No"
+msgstr "Hayýr"
+
+#: ../../docs/admin/users.php:146
+msgid "User Deleted"
+msgstr "Kullanýcý silindi"
+
+#: ../../docs/admin/users.php:149
+msgid "Delete Error"
+msgstr "Silme hatasý"
+
+#: ../../docs/admin/users.php:149
+msgid "Unable to delete last Admin User"
+msgstr "Son yönetici silinemedi"
+
+#: ../../docs/admin/access.php:43
+msgid "Do you really want to delete this Access Record?"
+msgstr "Bu giriþ izini gerçekten silmek mi istiyorsunuz?"
+
+#: ../../docs/admin/access.php:51
+msgid "Entry Deleted"
+msgstr "Giriþ silindi"
+
+#: ../../docs/admin/access.php:51
+msgid "Your Access List Entry has been removed"
+msgstr "Eriþim listesindeki giriþiniz silindi"
+
+#: ../../docs/admin/access.php:61
+msgid "Entry Added"
+msgstr "Giriþ eklendi"
+
+#: ../../docs/admin/access.php:61
+msgid "Your new Access List Entry has been created"
+msgstr "Eriþim listesine giriþiniz eklendi"
+
+#: ../../docs/admin/catalog.php:54
+#: ../../templates/catalog.inc:66
+msgid "Add to Catalog(s)"
+msgstr "Kataloða ekle"
+
+#: ../../docs/admin/catalog.php:65
+#: ../../templates/catalog.inc:67
+msgid "Add to all Catalogs"
+msgstr "Tüm kataloglara ekle"
+
+#: ../../docs/admin/catalog.php:75
+#: ../../templates/catalog.inc:73
+msgid "Update Catalog(s)"
+msgstr "Kataloðu güncelleþtir"
+
+#: ../../docs/admin/catalog.php:86
+#: ../../templates/catalog.inc:74
+msgid "Update All Catalogs"
+msgstr "Tüm kataloglarý güncelleþtir"
+
+#: ../../docs/admin/catalog.php:118
+#: ../../templates/catalog.inc:80
+msgid "Clean Catalog(s)"
+msgstr "Kataloðu temizle"
+
+#: ../../docs/admin/catalog.php:148
+#: ../../templates/catalog.inc:81
+msgid "Clean All Catalogs"
+msgstr "Tüm kataloglarý temizle"
+
+#: ../../docs/admin/catalog.php:196
+msgid "Now Playing Cleared"
+msgstr "Þu anda çalýnanlar silindi"
+
+#: ../../docs/admin/catalog.php:196
+msgid "All now playing data has been cleared"
+msgstr "Tüm þu anda çalýnanlar silindi"
+
+#: ../../docs/admin/catalog.php:201
+msgid "Do you really want to clear your catalog?"
+msgstr "Kataloðunuzu gerçekten boþaltmak mý istiyorsunuz?"
+
+#: ../../docs/admin/catalog.php:208
+msgid "Do you really want to clear the statistics for this catalog?"
+msgstr "Bu kataloðun istatistik bilgilerini gerçekten silmek mi istiyorsunuz?"
+
+#: ../../docs/admin/catalog.php:226
+msgid "Do you really want to delete this catalog?"
+msgstr "Kataloðunuzu gerçekten silmek mi istiyorsunuz?"
+
+#: ../../docs/admin/song.php:70
+msgid "Songs Disabled"
+msgstr "Edilgenleþtirilmiþ Þarkýlar"
+
+#: ../../docs/admin/song.php:70
+msgid "The requested song(s) have been disabled"
+msgstr "Ýstenen þarký(lar) edilgenleþtirildi"
+
+#: ../../docs/admin/song.php:80
+msgid "Songs Enabled"
+msgstr "Etkinlentirilmiþ Þarkýlar"
+
+#: ../../docs/admin/song.php:80
+msgid "The requested song(s) have been enabled"
+msgstr "Ýstenen þarký(lar) etkinleþtirildi"
+
+#: ../../docs/localplay.php:79
+msgid "Unknown action requested"
+msgstr "Bilinmeyen eylem istendi"
+
+#: ../../docs/upload.php:124
+msgid "The uploaded file exceeds the upload_max_filesize directive in php.ini"
+msgstr "Gönderilen dosya daha önce php.ini'de belirlenen upload_max_filesize hattýný aþýyor."
+
+#: ../../docs/upload.php:127
+msgid "The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the HTML form."
+msgstr "Gönderilen dosya daha önce belirlenen MAX_FILE_SIZE hattýný aþýyor."
+
+#: ../../docs/upload.php:130
+msgid "The uploaded file was only partially uploaded."
+msgstr "Gönderilen dosya kýsmen yüklendi."
+
+#: ../../docs/upload.php:133
+msgid "No file was uploaded."
+msgstr "Hicbir dosya yüklenmedi."
+
+#: ../../docs/upload.php:136
+msgid "An Unknown Error has occured."
+msgstr "Bilinmeyen bir hata oluþtu."
+
+#: ../../docs/upload.php:157
+msgid "Successfully-Quarantined"
+msgstr "Baþarýyla karantinaya alýndý"
+
+#: ../../docs/upload.php:167
+msgid "Successfully-Cataloged"
+msgstr "Baþarýyla kataloglaþtýrýldý"
+
+#: ../../docs/upload.php:229
+#: ../../templates/show_artist.inc:56
+#: ../../templates/show_access_list.inc:51
+#: ../../templates/show_albums.inc:45
+#: ../../templates/show_albums.inc:73
+#: ../../templates/show_artists.inc:43
+#: ../../templates/show_artists.inc:67
+#: ../../templates/show_songs.inc:42
+msgid "Action"
+msgstr "Eylem"
+
+#: ../../docs/upload.php:230
+#: ../../templates/flag.inc:58
+#: ../../templates/list_flagged.inc:41
+msgid "Song"
+msgstr "Þarký"
+
+#: ../../docs/upload.php:231
+#: ../../modules/class/song.php:275
+#: ../../templates/show_albums.inc:40
+#: ../../templates/show_albums.inc:70
+#: ../../templates/show_artists.inc:39
+#: ../../templates/show_artists.inc:62
+#: ../../templates/show_songs.inc:34
+msgid "Artist"
+msgstr "Sanatçý"
+
+#: ../../docs/upload.php:232
+#: ../../modules/class/song.php:280
+#: ../../templates/show_albums.inc:38
+#: ../../templates/show_albums.inc:68
+#: ../../templates/show_songs.inc:35
+msgid "Album"
+msgstr "Albüm"
+
+#: ../../docs/upload.php:233
+#: ../../modules/class/song.php:293
+#: ../../templates/show_songs.inc:40
+msgid "Genre"
+msgstr "Kategori"
+
+#: ../../docs/upload.php:234
+#: ../../modules/class/song.php:262
+#: ../../templates/show_songs.inc:37
+msgid "Time"
+msgstr "Süre"
+
+#: ../../docs/upload.php:235
+#: ../../modules/class/song.php:250
+#: ../../templates/show_songs.inc:39
+msgid "Bitrate"
+msgstr "Ýkil hýzý"
+
+#: ../../docs/upload.php:236
+#: ../../templates/show_songs.inc:38
+msgid "Size"
+msgstr "Boyut"
+
+#: ../../docs/upload.php:237
+msgid "Filename"
+msgstr "Dosya adý"
+
+#: ../../docs/upload.php:238
+msgid "User"
+msgstr "Kullanýcý"
+
+#: ../../docs/upload.php:239
+msgid "Date"
+msgstr "Tarih"
+
+#: ../../docs/upload.php:267
+msgid "Unknown"
+msgstr "Bilinmeyen"
+
+#: ../../docs/upload.php:289
+msgid "Add"
+msgstr "Ekle"
+
+#: ../../docs/upload.php:290
+#: ../../modules/lib.php:1008
+#: ../../templates/catalog.inc:60
+#: ../../templates/show_users.inc:57
+msgid "Delete"
+msgstr "Sil"
+
+#: ../../docs/upload.php:294
+msgid "Quarantined"
+msgstr "Karantinaya alýnmýþ"
+
+#: ../../docs/play/index.php:46
+msgid "Session Expired: please log in again at"
+msgstr "Oturumun süresi bitmiþ: lütfen yeniden giriþ yapýn"
+
+#: ../../docs/flag.php:35
+msgid "Flagging song completed."
+msgstr "Þarký iþaretleme tamamlandý"
+
+#: ../../docs/playlist.php:71
+#: ../../templates/show_artist.inc:95
+#: ../../templates/show_songs.inc:151
+msgid "Play Selected"
+msgstr "Seçilmiþleri çal"
+
+#: ../../docs/playlist.php:89
+#: ../../templates/show_songs.inc:152
+msgid "Flag Selected"
+msgstr "Seçilmiþleri iþaretle"
+
+#: ../../docs/playlist.php:95
+#: ../../templates/show_songs.inc:153
+msgid "Edit Selected"
+msgstr "Seçilmiþleri düzenle"
+
+#: ../../docs/playlist.php:125
+#: ../../modules/lib.php:1007
+#: ../../templates/show_artist.inc:103
+#: ../../templates/show_users.inc:51
+#: ../../templates/show_songs.inc:169
+msgid "Edit"
+msgstr "Düzenle"
+
+#: ../../docs/playlist.php:128
+#: ../../modules/lib.php:1016
+#: ../../templates/show_artist.inc:79
+#: ../../templates/show_mpdplay.inc:45
+#: ../../templates/show_albums.inc:57
+#: ../../templates/show_artists.inc:54
+#: ../../templates/show_localplay.inc:41
+msgid "Play"
+msgstr "Çal"
+
+#: ../../docs/playlist.php:140
+msgid "New Playlist"
+msgstr "Yeni þarký listesi"
+
+#: ../../docs/playlist.php:198
+msgid "Playlist updated."
+msgstr "Þarký listesi güncelendi."
+
+#: ../../docs/playlist.php:305
+msgid "No songs in this playlist."
+msgstr "Bu listede þarký bulunamadý."
+
+#: ../../docs/artists.php:47
+msgid "All songs by"
+msgstr "Tüm þarkýlarý"
+
+#: ../../docs/artists.php:56
+#: ../../docs/albums.php:103
+msgid "Starting Update from Tags"
+msgstr "Etiketten güncelleþtirme baþlýyor"
+
+#: ../../docs/artists.php:61
+#: ../../docs/albums.php:108
+msgid "Update From Tags Compleate"
+msgstr "Etiketten güncelleþtirme tamamlandý"
+
+#: ../../docs/artists.php:62
+#: ../../docs/albums.php:109
+#: ../../modules/class/catalog.php:615
+msgid "Return"
+msgstr "Dön"
+
+#: ../../docs/artists.php:73
+#: ../../docs/artists.php:82
+#: ../../docs/artists.php:94
+#: ../../docs/artists.php:111
+msgid "<u>S</u>how artists starting with"
+msgstr "Ýsmi bu harfle baþlayan sanatçýlarý göster"
+
+#: ../../docs/index.php:39
+msgid "Welcome to"
+msgstr "Hoþgeldiniz"
+
+#: ../../docs/index.php:41
+msgid "you are currently logged in as"
+msgstr "Kullanýcý adýnýz"
+
+#: ../../docs/index.php:72
+msgid "Most Popular Songs"
+msgstr "En popüler þarkýlar"
+
+#: ../../docs/index.php:79
+msgid "Most Popular Artists"
+msgstr "En popüler sanatçýlar"
+
+#: ../../docs/index.php:91
+msgid "Newest Album Additions"
+msgstr "Son eklenen albümler"
+
+#: ../../docs/index.php:98
+msgid "Newest Artist Additions"
+msgstr "Son eklenen sanatçýlar"
+
+#: ../../docs/albums.php:43
+msgid "Album Art Cleared"
+msgstr "Albüm kapaðý silindi"
+
+#: ../../docs/albums.php:43
+msgid "Album Art information has been removed form the database"
+msgstr "Albüm kapaðý ile ilgili bilgiler veritabanýndan silindi"
+
+#: ../../docs/albums.php:75
+msgid "Album Art Located"
+msgstr "Albüm kapaðý bulundu"
+
+#: ../../docs/albums.php:75
+msgid "Album Art information has been located in Amazon. If incorrect, click \"Reset Album Art\" below to remove the artwork."
+msgstr "Albüm kapaðý Amazon'da bulundu. Doðru olmadýðý takdirde \"Albüm kapaðý silinsin\" i týklayarak bilgileri silin."
+
+#: ../../docs/albums.php:83
+#: ../../docs/albums.php:93
+msgid "Get Art"
+msgstr "Albüm kapaðý çaðýr"
+
+#: ../../docs/albums.php:87
+msgid "Album Art Not Located"
+msgstr "Albüm kapaðý bulunamadý"
+
+#: ../../docs/albums.php:87
+msgid "Album Art could not be located at this time. This may be due to Amazon being busy, or the album not being present in their collection."
+msgstr "Albüm kapaðý bulunamadý. Bu Amazon'un meþgul yada bu albümün orada olmayýþýndan ileri gelebilir."
+
+#: ../../docs/albums.php:123
+#: ../../docs/albums.php:138
+msgid "All Albums"
+msgstr "Tüm albümler"
+
+#: ../../docs/albums.php:124
+#: ../../docs/albums.php:131
+msgid "<u>S</u>how all albums"
+msgstr "Tüm albümleri göster"
+
+#: ../../docs/albums.php:130
+msgid "Albums with no artwork"
+msgstr "Kapaksýz Albümler"
+
+#: ../../docs/albums.php:139
+#: ../../docs/albums.php:146
+#: ../../docs/albums.php:151
+msgid "<u>S</u>how only albums starting with"
+msgstr "Ýsmi bu harfle baþlayan albümleri göster"
+
+#: ../../docs/albums.php:145
+msgid "Select a starting letter or Show all"
+msgstr "Baþlangýç harfini seç yada hepsini görüntüle"
+
+#: ../../docs/amp-mpd.php:32
+msgid "Error Connecting"
+msgstr "Baðlantý hatasý"
+
+#: ../../templates/show_user_registration.inc.php:28
+#: ../../templates/show_install_account.inc.php:60
+#: ../../templates/show_users.inc:39
+#: ../../templates/userform.inc:41
+msgid "Username"
+msgstr "Kullanýcý adý"
+
+#: ../../templates/show_user_registration.inc.php:36
+#: ../../templates/userform.inc:49
+msgid "Full Name"
+msgstr "Tam Ýsim"
+
+#: ../../templates/show_user_registration.inc.php:44
+#: ../../templates/show_user.inc.php:40
+#: ../../templates/userform.inc:56
+msgid "E-mail"
+msgstr "Elektronik posta"
+
+#: ../../templates/show_user_registration.inc.php:52
+#: ../../templates/show_install_account.inc.php:64
+#: ../../templates/show_login_form.inc:44
+#: ../../templates/userform.inc:64
+msgid "Password"
+msgstr "Parola"
+
+#: ../../templates/show_user_registration.inc.php:60
+#: ../../templates/show_user.inc.php:75
+#: ../../templates/userform.inc:73
+msgid "Confirm Password"
+msgstr "Parola doðrulama"
+
+#: ../../templates/show_user_registration.inc.php:69
+msgid "Register User"
+msgstr "Kullanýcý kaydý"
+
+#: ../../templates/show_confirmation.inc.php:30
+msgid "Continue"
+msgstr "Devam"
+
+#: ../../templates/show_install_account.inc.php:35
+#: ../../templates/show_install.inc:34
+#: ../../templates/show_install_config.inc:35
+msgid "Ampache Installation"
+msgstr "Ampache'nin Kuruluþu"
+
+#: ../../templates/show_install_account.inc.php:37
+#: ../../templates/show_install.inc:36
+#: ../../templates/show_install_config.inc:37
+msgid "This Page handles the installation of the ampache database and the creation of the ampache.cfg file. Before you continue please make sure that you have the following pre-requisits"
+msgstr "Bu sayfa Ampache veritabanýnýn ve ampache.cfg'nin kurulmasýný saðlýyor. Devam etmeden önce asaðýda istenenleri yerine getiriniz"
+
+#: ../../templates/show_install_account.inc.php:40
+#: ../../templates/show_install.inc:39
+#: ../../templates/show_install_config.inc:40
+msgid "A MySQL Server with a username and password that can create/modify databases"
+msgstr "Bir MySQL Sunucusu ve bunun veritabaný ekleyebilen ve düzenleyebilen kullanýcý giriþi ve parolasý"
+
+#: ../../templates/show_install_account.inc.php:41
+#: ../../templates/show_install_config.inc:41
+msgid "Your webserver configured so that your config directory is not visable to the web"
+msgstr "Web Sunucunuz yapýlandýrma klasörünüzün görünmeyeceði þekilde ayarlanmýþ olmalý"
+
+#: ../../templates/show_install_account.inc.php:42
+#: ../../templates/show_install.inc:41
+#: ../../templates/show_install_config.inc:42
+msgid "Your webserver has read access to the /sql/ampache.sql file and the /config/ampache.cfg.dist file"
+msgstr "Web Sunucunuz /sql/ampache.sql ve /config/ampache.cfg.dist dosyalarýný okuyabilmeli "
+
+#: ../../templates/show_install_account.inc.php:44
+#: ../../templates/show_install.inc:43
+#: ../../templates/show_install_config.inc:44
+msgid "Once you have ensured that you have the above requirements please fill out the information below. You will only be asked for the required config values. If you would like to make changes to your ampache install at a later date simply edit /config/ampache.cfg"
+msgstr "Yukarýdaki istenenleri saðladýktan sonra aþaðýda istenen verileri giriniz. Yalnýz gerekli olanlar sorulacaktýr. Ýsterseniz daha sonra /config/ampache.cfg dosyasýna deðiþiklikler yapabilirsiniz"
+
+#: ../../templates/show_install_account.inc.php:49
+#: ../../templates/show_install.inc:47
+#: ../../templates/show_install_config.inc:49
+msgid "Step 1 - Creating and Inserting the Ampache Database"
+msgstr "Ýlk Adým - Ampache veritabanýnýn kurulmasý ve doldurulmasý"
+
+#: ../../templates/show_install_account.inc.php:50
+#: ../../templates/show_install.inc:51
+#: ../../templates/show_install_config.inc:50
+msgid "Step 2 - Creating the Ampache.cfg file"
+msgstr "Ýkinci Adým - amapche.cfg'nin kurulmasý"
+
+#: ../../templates/show_install_account.inc.php:51
+#: ../../templates/show_install.inc:52
+#: ../../templates/show_install_config.inc:54
+msgid "Step 3 - Setup Initial Account"
+msgstr "Üçüncü Adým - Ýlk kullanýcýnýn kurulmasý"
+
+#: ../../templates/show_install_account.inc.php:53
+msgid "This step creates your initial Ampache admin account. Once your admin account has been created you will be directed to the login page"
+msgstr "Bu adýmda ilk yönetici hesabý oluþturuluyor.  Oluþturulduktan sonra giriþ sayfasýna yönlendirileceksiniz."
+
+#: ../../templates/show_install_account.inc.php:69
+msgid "Create Account"
+msgstr "Hesap ekle"
+
+#: ../../templates/show_user.inc.php:31
+#: ../../templates/show_access_list.inc:47
+#: ../../templates/show_add_access.inc:40
+#: ../../templates/customize_catalog.inc:29
+msgid "Name"
+msgstr "Ýsim"
+
+#: ../../templates/show_user.inc.php:48
+msgid "View Limit"
+msgstr "Sýnýrlarý görüntüle"
+
+#: ../../templates/show_user.inc.php:56
+msgid "Update Profile"
+msgstr "Profil güncelleme"
+
+#: ../../templates/show_user.inc.php:67
+msgid "Enter password"
+msgstr "Parola giriþ"
+
+#: ../../templates/show_user.inc.php:83
+msgid "Change Password"
+msgstr "Parola deðiþtirme"
+
+#: ../../templates/show_user.inc.php:91
+msgid "Clear Stats"
+msgstr "Ýstatistikleri sil"
+
+#: ../../templates/show_confirm_action.inc.php:28
+msgid "Yes"
+msgstr "Evet"
+
+#: ../../modules/class/stream.php:192
+msgid "Opened for writting"
+msgstr "Yazmak için açýldý"
+
+#: ../../modules/class/stream.php:197
+msgid "Error, cannot write"
+msgstr "Hata, yazýlamýyor"
+
+#: ../../modules/class/stream.php:208
+msgid "Error, cannot write song in file"
+msgstr "Hata, þarký dosyaya yazýlamadý"
+
+#: ../../modules/class/stream.php:214
+msgid "Closed after write"
+msgstr "Yazýldýktan sonra kapatýldý"
+
+#: ../../modules/class/album.php:126
+msgid "Various"
+msgstr "Çeþitli"
+
+#: ../../modules/class/album.php:241
+#: ../../modules/class/catalog.php:267
+#: ../../modules/class/catalog.php:527
+msgid "Error: Unable to open"
+msgstr "Hata: açýlamadý"
+
+#: ../../modules/class/catalog.php:289
+msgid "Error: Unable to change to directory"
+msgstr "Hata: klasöre geçiþ yapýlamadý"
+
+#: ../../modules/class/catalog.php:312
+msgid "Error: Unable to get filesize for"
+msgstr "Hata: dosya boyutu sorgulanamadý"
+
+#: ../../modules/class/catalog.php:332
+msgid "Added"
+msgstr "Eklendi"
+
+#: ../../modules/class/catalog.php:342
+msgid "is not readable by ampache"
+msgstr "Ampache tarafýndan okunamadý"
+
+#: ../../modules/class/catalog.php:402
+msgid "Found in ID3"
+msgstr "ID3 içinde bulundu"
+
+#: ../../modules/class/catalog.php:406
+msgid "Found on Amazon"
+msgstr "Amazon'da bulundu"
+
+#: ../../modules/class/catalog.php:410
+msgid "Found in Folder"
+msgstr "Klasörde bulundu"
+
+#: ../../modules/class/catalog.php:414
+msgid "Found"
+msgstr "Bulundu"
+
+#: ../../modules/class/catalog.php:417
+msgid "Not Found"
+msgstr "Bulunamadý"
+
+#: ../../modules/class/catalog.php:425
+msgid "Searched"
+msgstr "Arandý"
+
+#: ../../modules/class/catalog.php:578
+msgid "Starting Dump Album Art"
+msgstr "Albüm kapaðý boþaltmasý baþlýyor"
+
+#: ../../modules/class/catalog.php:598
+msgid "Written"
+msgstr "Yazýldý"
+
+#: ../../modules/class/catalog.php:607
+msgid "Error unable to open file for writting"
+msgstr "Hata: dosya yazmak için açýlamadý"
+
+#: ../../modules/class/catalog.php:614
+msgid "Album Art Dump Complete"
+msgstr "Albüm kapaðý boþaltmasý tamamlandý"
+
+#: ../../modules/class/catalog.php:681
+msgid "Starting Catalog Build"
+msgstr "Katalog yapýlandýrma baþladý"
+
+#: ../../modules/class/catalog.php:686
+msgid "Running Remote Sync"
+msgstr "Uzak anuyum sürüyor"
+
+#: ../../modules/class/catalog.php:696
+#: ../../modules/class/catalog.php:843
+msgid "Starting Album Art Search"
+msgstr "Albüm kapaðý aramasý baþlýyor"
+
+#: ../../modules/class/catalog.php:706
+msgid "Catalog Finished"
+msgstr "Katalog tamamlandý"
+
+#: ../../modules/class/catalog.php:706
+#: ../../modules/class/catalog.php:862
+msgid "Total Time"
+msgstr "Genel Süre"
+
+#: ../../modules/class/catalog.php:706
+#: ../../modules/class/catalog.php:863
+msgid "Total Songs"
+msgstr "Tüm Þarkýlar"
+
+#: ../../modules/class/catalog.php:707
+#: ../../modules/class/catalog.php:863
+msgid "Songs Per Seconds"
+msgstr "Þarký/Saniye"
+
+#: ../../modules/class/catalog.php:741
+msgid "Updated"
+msgstr "Güncelleþtirildi"
+
+#: ../../modules/class/catalog.php:748
+msgid "No Update Needed"
+msgstr "Güncelleþtirme gereksiz"
+
+#: ../../modules/class/catalog.php:823
+msgid "Starting New Song Search on"
+msgstr "Yeni þarký arama baþladý"
+
+#: ../../modules/class/catalog.php:823
+msgid "catalog"
+msgstr "Katalog"
+
+#: ../../modules/class/catalog.php:827
+msgid "Running Remote Update"
+msgstr "Uzak güncelleme sürüyor"
+
+#: ../../modules/class/catalog.php:862
+msgid "Catalog Update Finished"
+msgstr "Katalog güncelleme tamamlandý"
+
+#: ../../modules/class/catalog.php:876
+#: ../../lib/mpd.php:31
+msgid "Error"
+msgstr "Hata"
+
+#: ../../modules/class/catalog.php:876
+msgid "Unable to load XMLRPC library, make sure XML-RPC is enabled"
+msgstr "XMLRPC kitaplýðý yüklenemedi, XML-RPC'nin etkinleþtirilmiþ olduðunu kontrol edin"
+
+#: ../../modules/class/catalog.php:908
+#: ../../modules/class/catalog.php:923
+msgid "Error connecting to"
+msgstr "Hata, baðlanilamýyor: "
+
+#: ../../modules/class/catalog.php:908
+#: ../../modules/class/catalog.php:923
+msgid "Code"
+msgstr "Kod"
+
+#: ../../modules/class/catalog.php:908
+#: ../../modules/class/catalog.php:923
+msgid "Reason"
+msgstr "Neden"
+
+#: ../../modules/class/catalog.php:928
+msgid "Completed updating remote catalog(s)"
+msgstr "Uzak katalog(lar) güncellendi"
+
+#: ../../modules/class/catalog.php:1016
+msgid "Checking"
+msgstr "Saðlama yapýlýyor"
+
+#: ../../modules/class/catalog.php:1073
+msgid "Catalog Clean Done"
+msgstr "Kalalog temizleme tamamlandý"
+
+#: ../../modules/class/catalog.php:1073
+msgid "files removed"
+msgstr "dosya silindi"
+
+#: ../../modules/class/catalog.php:1313
+msgid "Updating the"
+msgstr "Güncelleþtiriliyor"
+
+#: ../../modules/class/catalog.php:1313
+#: ../../templates/admin_menu.inc:35
+#: ../../templates/show_admin_index.inc:34
+msgid "Catalog"
+msgstr "Katalog"
+
+#: ../../modules/class/catalog.php:1314
+msgid "songs found checking tag information."
+msgstr "þarký etiket bilgisi taramasý sonucu bulundu."
+
+#: ../../modules/class/song.php:246
+msgid "Title"
+msgstr "Þarký adý"
+
+#: ../../modules/class/song.php:246
+#: ../../modules/class/song.php:250
+#: ../../modules/class/song.php:254
+#: ../../modules/class/song.php:258
+#: ../../modules/class/song.php:262
+#: ../../modules/class/song.php:266
+#: ../../modules/class/song.php:270
+#: ../../modules/class/song.php:275
+#: ../../modules/class/song.php:280
+#: ../../modules/class/song.php:284
+#: ../../modules/class/song.php:288
+#: ../../modules/class/song.php:293
+msgid "updated to"
+msgstr "güncelleþtirildi"
+
+#: ../../modules/class/song.php:254
+msgid "Rate"
+msgstr "Oran"
+
+#: ../../modules/class/song.php:258
+msgid "Mode"
+msgstr "Kip"
+
+#: ../../modules/class/song.php:266
+#: ../../templates/show_songs.inc:32
+#: ../../templates/show_songs.inc:36
+msgid "Track"
+msgstr "Parça"
+
+#: ../../modules/class/song.php:270
+msgid "Filesize"
+msgstr "Dosya boyutu"
+
+#: ../../modules/class/song.php:284
+#: ../../templates/show_albums.inc:43
+#: ../../templates/show_albums.inc:72
+msgid "Year"
+msgstr "Yýl"
+
+#: ../../modules/class/song.php:288
+#: ../../templates/flag.inc:66
+#: ../../templates/list_flagged.inc:46
+msgid "Comment"
+msgstr "Yorum"
+
+#: ../../modules/lib.php:51
+msgid "day"
+msgstr "gün"
+
+#: ../../modules/lib.php:54
+msgid "days"
+msgstr "gün"
+
+#: ../../modules/lib.php:58
+msgid "hour"
+msgstr "saat"
+
+#: ../../modules/lib.php:61
+msgid "hours"
+msgstr "saat"
+
+#: ../../modules/lib.php:78
+msgid "Catalog Statistics"
+msgstr "Katalog istatistikleri"
+
+#: ../../modules/lib.php:81
+msgid "Total Users"
+msgstr "Tüm Kullanýcýlar"
+
+#: ../../modules/lib.php:85
+msgid "Connected Users"
+msgstr "Baðlanmýþ Kullanýcýlar"
+
+#: ../../modules/lib.php:89
+#: ../../templates/menu.inc:32
+#: ../../templates/show_artists.inc:42
+#: ../../templates/show_artists.inc:65
+msgid "Albums"
+msgstr "Albümler"
+
+#: ../../modules/lib.php:93
+#: ../../templates/menu.inc:33
+msgid "Artists"
+msgstr "Sanatçýlar"
+
+#: ../../modules/lib.php:97
+#: ../../templates/show_albums.inc:41
+#: ../../templates/show_albums.inc:71
+#: ../../templates/show_artists.inc:41
+#: ../../templates/show_artists.inc:64
+msgid "Songs"
+msgstr "Þarkýlar"
+
+#: ../../modules/lib.php:101
+msgid "Catalog Size"
+msgstr "Katalog boyutu"
+
+#: ../../modules/lib.php:105
+msgid "Catalog Time"
+msgstr "Katalog süresi"
+
+#: ../../modules/lib.php:159
+msgid "Play Random Selection"
+msgstr "Rasgele seçilenleri çal"
+
+#: ../../modules/lib.php:166
+msgid "Item count"
+msgstr "Öðe sayýsý"
+
+#: ../../modules/lib.php:178
+#: ../../templates/show_albums.inc:58
+#: ../../templates/show_artists.inc:55
+msgid "All"
+msgstr "Hepsi"
+
+#: ../../modules/lib.php:180
+msgid "From genre"
+msgstr "Kategoriden"
+
+#: ../../modules/lib.php:190
+msgid "Favor Unplayed"
+msgstr "Çalýnmamýþlardan"
+
+#: ../../modules/lib.php:191
+msgid "Full Albums"
+msgstr "Tüm Albümler"
+
+#: ../../modules/lib.php:192
+msgid "Full Artist"
+msgstr "Tüm Sanatçýlar"
+
+#: ../../modules/lib.php:201
+msgid "from catalog"
+msgstr "Katalogdan"
+
+#: ../../modules/lib.php:212
+msgid "Play Random Songs"
+msgstr "Rasgele þarký çal"
+
+#: ../../modules/lib.php:921
+msgid "Public"
+msgstr "Genel"
+
+#: ../../modules/lib.php:922
+msgid "Your Private"
+msgstr "Size özel"
+
+#: ../../modules/lib.php:923
+msgid "Other Private"
+msgstr "Diðerlerine özel"
+
+#: ../../modules/lib.php:1004
+#: ../../templates/show_artist.inc:102
+#: ../../templates/show_songs.inc:168
+msgid "View"
+msgstr "Görüntüle"
+
+#: ../../modules/lib.php:1022
+#: ../../templates/show_artist.inc:81
+#: ../../templates/show_albums.inc:61
+#: ../../templates/show_songs.inc:110
+#: ../../templates/show_album.inc:61
+msgid "Download"
+msgstr "Ýndirme"
+
+#: ../../modules/lib.php:1033
+msgid "There are no playlists of this type"
+msgstr "Bu çeþit bir þarký listesi bulunamadý"
+
+#: ../../modules/lib.php:1061
+msgid "Create a new playlist"
+msgstr "Þarký listesi oluþtur"
+
+#: ../../modules/admin.php:45
+msgid "Manage Users"
+msgstr "Kullanýcýlarý düzenle"
+
+#: ../../modules/admin.php:47
+msgid "Add a new user"
+msgstr "Kullanýcý ekle"
+
+#: ../../lib/search.php:52
+#: ../../lib/search.php:68
+#: ../../lib/search.php:84
+#: ../../lib/search.php:100
+#: ../../lib/search.php:116
+#: ../../lib/search.php:133
+#: ../../lib/search.php:145
+#: ../../lib/search.php:161
+#: ../../lib/search.php:177
+msgid "No Results Found"
+msgstr "Sonuç bulunamadý"
+
+#: ../../lib/ui.php:180
+#: ../../templates/show_artist.inc:100
+#: ../../templates/show_songs.inc:166
+msgid "Playlist"
+msgstr "Þarký listesi"
+
+#: ../../lib/ui.php:180
+msgid "New"
+msgstr "Yeni"
+
+#: ../../lib/ui.php:181
+msgid "View All"
+msgstr "Hepsini görüntüle"
+
+#: ../../lib/ui.php:305
+msgid "Show w/o art"
+msgstr "Kapaksýz göster"
+
+#: ../../lib/ui.php:307
+msgid "Show all"
+msgstr "Tümünü görüntüle"
+
+#: ../../lib/preferences.php:199
+msgid "Enable"
+msgstr "Etkinleþtir"
+
+#: ../../lib/preferences.php:200
+#: ../../templates/show_users.inc:63
+msgid "Disable"
+msgstr "Edilgenleþtir"
+
+#: ../../lib/preferences.php:210
+#: ../../templates/add_catalog.inc:60
+msgid "Local"
+msgstr "Yerel"
+
+#: ../../lib/preferences.php:211
+msgid "Stream"
+msgstr "Akým"
+
+#: ../../lib/preferences.php:212
+msgid "IceCast"
+msgstr "IceCast"
+
+#: ../../lib/preferences.php:213
+msgid "Downsample"
+msgstr "Kaliteyi düþür (downsample)"
+
+#: ../../lib/preferences.php:214
+msgid "Music Player Daemon"
+msgstr "Music Player Daemon"
+
+#: ../../lib/preferences.php:221
+msgid "M3U"
+msgstr "M3U"
+
+#: ../../lib/preferences.php:222
+msgid "Simple M3U"
+msgstr "Simple M3U"
+
+#: ../../lib/preferences.php:223
+msgid "PLS"
+msgstr "PLS"
+
+#: ../../lib/preferences.php:224
+msgid "Asx"
+msgstr "Asx"
+
+#: ../../lib/preferences.php:231
+msgid "English"
+msgstr "Ýngilizce"
+
+#: ../../lib/preferences.php:232
+msgid "German"
+msgstr "Almanca"
+
+#: ../../lib/preferences.php:233
+msgid "French"
+msgstr "Fransýzca"
+
+#: ../../lib/Browser.php:867
+msgid "file"
+msgstr "dosya"
+
+#: ../../lib/Browser.php:871
+msgid "File uploads not supported."
+msgstr "Dosya yükleme desteði verilmiyor."
+
+#: ../../lib/Browser.php:889
+msgid "No file uploaded"
+msgstr "Hicbir dosya yüklenmedi."
+
+#: ../../lib/Browser.php:896
+#, php-format
+msgid "There was a problem with the file upload: No %s was uploaded."
+msgstr "Dosya yüklemede sorun çýktý: %s yüklenemedi"
+
+#: ../../lib/Browser.php:901
+#, php-format
+msgid "There was a problem with the file upload: The %s was larger than the maximum allowed size (%d bytes)."
+msgstr "Dosya yüklemede sorun çýktý: %s müsaade edilen azami boyutu aþýyor (%d byte)"
+
+#: ../../lib/Browser.php:903
+#, php-format
+msgid "There was a problem with the file upload: The %s was only partially uploaded."
+msgstr "Gönderilen dosya (%s) yalnýz kýsmen yüklendi."
+
+#: ../../lib/mpd.php:31
+msgid "Could not add"
+msgstr "Eklenemedi"
+
+#: ../../templates/flag.inc:43
+msgid "Flag song"
+msgstr "Þarkýyý iþaretle"
+
+#: ../../templates/flag.inc:45
+msgid "Flag the following song as having one of the problems listed below.  Site admins will then take the appropriate action for the flagged files."
+msgstr "Þarkýyý aþaðýda gösterilen sorunlardan biriyle iliþkili olarak iþaretle. Site yöneticileri bu iþaretli dosyalar hakkýnda gereken iþlemleri yaparlar."
+
+#: ../../templates/flag.inc:62
+msgid "Reason to flag"
+msgstr "Ýþaretleme nedeni"
+
+#: ../../templates/flag.inc:73
+msgid "Flag Song"
+msgstr "Þarkýyý iþaretle"
+
+#: ../../templates/admin_menu.inc:33
+#: ../../templates/show_admin_index.inc:32
+msgid "Users"
+msgstr "Kullanýcýlar"
+
+#: ../../templates/admin_menu.inc:34
+msgid "Mail Users"
+msgstr "Kullanýcýlara mesaj"
+
+#: ../../templates/admin_menu.inc:36
+#: ../../templates/show_admin_index.inc:35
+msgid "Admin Preferences"
+msgstr "Yönetici tercihleri"
+
+#: ../../templates/admin_menu.inc:37
+#: ../../templates/show_admin_index.inc:36
+#: ../../templates/catalog.inc:98
+msgid "Access Lists"
+msgstr "Eriþim listesi"
+
+#: ../../templates/show_artist.inc:31
+msgid "Albums by"
+msgstr "Albümler"
+
+#: ../../templates/show_artist.inc:33
+msgid "Show All Songs By"
+msgstr "Tüm þarkýlarýný görüntüle: "
+
+#: ../../templates/show_artist.inc:34
+msgid "Play All Songs By"
+msgstr "Tüm þarkýlarýný çal: "
+
+#: ../../templates/show_artist.inc:35
+msgid "Play Random Songs By"
+msgstr "Rasgele þarkýlarýný çal: "
+
+#: ../../templates/show_artist.inc:37
+#: ../../templates/show_album.inc:58
+msgid "Update from tags"
+msgstr "Etiketlerden güncelle"
+
+#: ../../templates/show_artist.inc:50
+msgid "Select"
+msgstr "Seçim"
+
+#: ../../templates/show_artist.inc:52
+msgid "Cover"
+msgstr "Kapak"
+
+#: ../../templates/show_artist.inc:53
+msgid "Album Name"
+msgstr "Albüm adý"
+
+#: ../../templates/show_artist.inc:54
+msgid "Album Year"
+msgstr "Albüm yýlý"
+
+#: ../../templates/show_artist.inc:55
+msgid "Total Tracks"
+msgstr "Tüm parçalar"
+
+#: ../../templates/show_artist.inc:100
+#: ../../templates/show_songs.inc:166
+msgid "Add to"
+msgstr "Ekle"
+
+#: ../../templates/show_mpdplay.inc:33
+msgid "MPD Play Control"
+msgstr "MPD Kontrol"
+
+#: ../../templates/show_mpdplay.inc:43
+#: ../../templates/list_header.inc:69
+#: ../../templates/show_localplay.inc:39
+msgid "Prev"
+msgstr "Önceki"
+
+#: ../../templates/show_mpdplay.inc:44
+#: ../../templates/show_localplay.inc:40
+msgid "Stop"
+msgstr "Dur"
+
+#: ../../templates/show_mpdplay.inc:46
+#: ../../templates/show_localplay.inc:42
+msgid "Pause"
+msgstr "Durakla"
+
+#: ../../templates/show_mpdplay.inc:47
+#: ../../templates/list_header.inc:92
+#: ../../templates/show_localplay.inc:43
+msgid "Next"
+msgstr "Sonraki"
+
+#: ../../templates/show_mpdplay.inc:52
+msgid "Loop"
+msgstr "Döngü"
+
+#: ../../templates/show_mpdplay.inc:54
+msgid "Loop is off"
+msgstr "Döngü kapalý"
+
+#: ../../templates/show_mpdplay.inc:55
+msgid "Loop is on"
+msgstr "Döngü açýk"
+
+#: ../../templates/show_mpdplay.inc:68
+#: ../../templates/show_now_playing.inc:34
+msgid "Now Playing"
+msgstr "Þu anda çalan"
+
+#: ../../templates/show_mpdplay.inc:81
+msgid "Refresh the Playlist Window"
+msgstr "Þarký Listesi görüntüsünü yenile"
+
+#: ../../templates/show_mpdplay.inc:81
+msgid "refresh now"
+msgstr "þimdi yenile"
+
+#: ../../templates/show_mpdplay.inc:89
+msgid "Server Playlist"
+msgstr "Sunucu þarký listesi"
+
+#: ../../templates/show_mpdplay.inc:122
+msgid "Click to shuffle (randomize) the playlist"
+msgstr "Þarký Listesini karýþtýrmak (rasgele) icin týkla"
+
+#: ../../templates/show_mpdplay.inc:122
+msgid "shuffle"
+msgstr "rasgele"
+
+#: ../../templates/show_mpdplay.inc:123
+msgid "Click the clear the playlist"
+msgstr "Þarký listesini silmek için týkla"
+
+#: ../../templates/show_mpdplay.inc:123
+msgid "clear"
+msgstr "sil"
+
+#: ../../templates/show_admin_index.inc:30
+msgid "Admin Section"
+msgstr "Yönetici Kýsmý"
+
+#: ../../templates/show_admin_index.inc:32
+msgid "Create/Modify User Accounts for Ampache"
+msgstr "Ampache kullanýcý hesabý ekle/güncelle"
+
+#: ../../templates/show_admin_index.inc:33
+msgid "Mail"
+msgstr "Mesaj"
+
+#: ../../templates/show_admin_index.inc:33
+msgid "Mail your users to notfiy them of changes"
+msgstr "Kullanýcýlara mail ile yenilikleri bildir"
+
+#: ../../templates/show_admin_index.inc:34
+msgid "Create/Update/Clean your catalog here"
+msgstr "Buradan katalog ekle/güncelleþtir/sil"
+
+#: ../../templates/show_admin_index.inc:35
+msgid "Modify Site-wide preferences"
+msgstr "Site genelinde geçerli olan tercihleri düzenle"
+
+#: ../../templates/show_admin_index.inc:36
+msgid "Modify Access List Permissions"
+msgstr "Eriþim listesindeki izinleri düzenle"
+
+#: ../../templates/show_admin_index.inc:36
+msgid "Must have access_control=true in ampache.cfg"
+msgstr "Ampache.cfg'de 'access_control=true' nun bulunmasý zorunludur"
+
+#: ../../templates/show_test.inc:29
+msgid "Ampache Debug"
+msgstr "Ampache Hata Ayýklamasý"
+
+#: ../../templates/show_test.inc:30
+msgid "You've reached this page because a configuration error has occured. Debug Information below"
+msgstr "Bir yapýlandýrma hatasý yüzünden bu sayfaya yönlendirildiniz. Hata ayýklamasýný asaðýda görebilirsiniz"
+
+#: ../../templates/show_test.inc:35
+msgid "STATUS"
+msgstr "Durum"
+
+#: ../../templates/show_test.inc:39
+msgid "PHP Version"
+msgstr "PHP Version"
+
+#: ../../templates/show_test.inc:54
+msgid "This tests to make sure that you are running a version of PHP that is known to work with Ampache."
+msgstr "Bu test PHP'nin Ampache ile uyuþan bir sürümünün kullanýldýðýný tasdik ediyor."
+
+#: ../../templates/show_test.inc:58
+msgid "Mysql for PHP"
+msgstr "Mysql for PHP"
+
+#: ../../templates/show_test.inc:73
+msgid "This test checks to see if you have the mysql extensions loaded for PHP. These are required for Ampache to work."
+msgstr "Bu testler PHP'nin mysql uzantýlarýnýn varlýðýný kontrol ediyor. Bu uzantýlar olmazsa Ampache calýþmaz."
+
+#: ../../templates/show_test.inc:77
+msgid "PHP Session Support"
+msgstr "PHP Session Support"
+
+#: ../../templates/show_test.inc:92
+msgid "This test checks to make sure that you have PHP session support enabled. Sessions are required for Ampache to work."
+msgstr "Bu testler PHP'nin oturum desteðinin varlýðýný kontrol ediyor. Oturum desteði olmazsa Ampache calýþmaz."
+
+#: ../../templates/show_test.inc:96
+msgid "PHP ICONV Support"
+msgstr "PHP ICONV desteði"
+
+#: ../../templates/show_test.inc:110
+msgid "This test checks to make sure you have Iconv support installed. Iconv support is not required for Ampache, but it is highly recommended"
+msgstr "Bu testler PHP'nin ICONV desteðinin varlýðýný kontrol ediyor. ICONV Ampache'nin çalýþmasý icin gerekli olmasada tavsiyemizdir"
+
+#: ../../templates/show_test.inc:114
+#: ../../templates/show_install_config.inc:88
+msgid "Ampache.cfg Exists"
+msgstr "Ampache.cfg bulundu"
+
+#: ../../templates/show_test.inc:129
+msgid ""
+"This attempts to read /config/ampache.cfg If this fails either the ampache.cfg is not in the correct locations or\n"
+"\tit is not currently readable by your webserver."
+msgstr "Þimdi ampache.cfg okunmaya calýþýlacak. Eger baþarýsýz olunursa ya doðru yerde deðildir yada  web sunucunuz tarafýndan okunamýyordur."
+
+#: ../../templates/show_test.inc:135
+#: ../../templates/show_install_config.inc:105
+msgid "Ampache.cfg Configured?"
+msgstr "Ampache.cfg'yi yapýlandýrdýnýzmý ?"
+
+#: ../../templates/show_test.inc:152
+msgid ""
+"This test makes sure that you have set all of the required config variables and that we are able to \n"
+"\tcompleatly parse your config file"
+msgstr "Bu test gerekli tüm yapýlandýrma deðiþkenlerinin ayarlandýðýný ve yapýlandýrma dosyasýnýn ayrýþtýrýlabileceðini doðrulamak içindir"
+
+#: ../../templates/show_test.inc:159
+msgid "Ampache.cfg Up to Date?"
+msgstr "Ampache.cfg güncel mi?"
+
+#: ../../templates/show_test.inc:165
+msgid "DB Connection"
+msgstr "Veritabaný baðlantýsý"
+
+#: ../../templates/show_test.inc:181
+msgid "This attempts to connect to your database using the values from your ampache.cfg"
+msgstr "Þimdi ampache.cfg'deki verilerle veritabanýnýza ulaþmaya calýsýlacak"
+
+#: ../../templates/list_flagged.inc:42
+#: ../../templates/show_songs.inc:41
+msgid "Flag"
+msgstr "Ýþaret"
+
+#: ../../templates/list_flagged.inc:43
+msgid "New Flag"
+msgstr "Yeni iþaret"
+
+#: ../../templates/list_flagged.inc:44
+msgid "Flagged by"
+msgstr "Ýþaretleyen"
+
+#: ../../templates/list_flagged.inc:45
+msgid "ID3 Update"
+msgstr "ID3 Güncelleme"
+
+#: ../../templates/list_flagged.inc:69
+msgid "Accept"
+msgstr "Kabul"
+
+#: ../../templates/list_flagged.inc:70
+msgid "Reject"
+msgstr "Red"
+
+#: ../../templates/show_upload.inc:27
+msgid "Please Ensure All Files Are Tagged Correctly"
+msgstr "Lütfen tüm dosyalarýn doðru etiketlendirilmesini saðlayýn"
+
+#: ../../templates/show_upload.inc:30
+msgid "Ampache relies on id3 tags to sort data.  If your file is not tagged it may be deleted."
+msgstr "Ampache sýralama için ID3 etiketlerini kullanýr. Dosyanýz etiketsizse silinebilir."
+
+#: ../../templates/show_upload.inc:34
+msgid "max_upload_size"
+msgstr "max_upload_size (azami_yükleme_hacmi)"
+
+#: ../../templates/show_upload.inc:59
+#: ../../templates/menu.inc:39
+msgid "Upload"
+msgstr "Yükleme"
+
+#: ../../templates/show_access_list.inc:34
+msgid "Host Access to Your Catalog"
+msgstr "Kataloða makine eriþimi"
+
+#: ../../templates/show_access_list.inc:43
+msgid "Add Entry"
+msgstr "Giriþ ekle"
+
+#: ../../templates/show_access_list.inc:48
+msgid "Start Address"
+msgstr "Ýlk Adres"
+
+#: ../../templates/show_access_list.inc:49
+msgid "End Address"
+msgstr "Son Adres"
+
+#: ../../templates/show_access_list.inc:50
+#: ../../templates/show_add_access.inc:58
+msgid "Level"
+msgstr "Düzey"
+
+#: ../../templates/show_access_list.inc:65
+msgid "Revoke"
+msgstr "Ýptal"
+
+#: ../../templates/add_catalog.inc:28
+msgid "Add a Catalog"
+msgstr "Katalog ekle"
+
+#: ../../templates/add_catalog.inc:30
+msgid "In the form below enter either a local path (i.e. /data/music) or the URL to a remote Ampache installation (i.e http://theotherampache.com)"
+msgstr "Aþaðidaki forma ya yerel bir yol girin (örn. /data/muzik) yada uzak bir Ampache Sunucusunun adresini (örn. http://benimampachem.com)"
+
+#: ../../templates/add_catalog.inc:36
+msgid "Catalog Name"
+msgstr "Kalalog Ýsmi"
+
+#: ../../templates/add_catalog.inc:39
+#: ../../templates/customize_catalog.inc:32
+msgid "Auto-inserted Fields"
+msgstr "Özdevimli Alanlar"
+
+#: ../../templates/add_catalog.inc:40
+#: ../../templates/customize_catalog.inc:33
+msgid "album name"
+msgstr "albüm ismi"
+
+#: ../../templates/add_catalog.inc:41
+#: ../../templates/customize_catalog.inc:34
+msgid "artist name"
+msgstr "sanatçý ismi"
+
+#: ../../templates/add_catalog.inc:42
+#: ../../templates/customize_catalog.inc:36
+msgid "id3 comment"
+msgstr "id3 açýklamasý"
+
+#: ../../templates/add_catalog.inc:43
+#: ../../templates/customize_catalog.inc:37
+msgid "genre"
+msgstr "kategori"
+
+#: ../../templates/add_catalog.inc:44
+#: ../../templates/customize_catalog.inc:38
+msgid "track number (padded with leading 0)"
+msgstr "þarký numarasý (0 ile baþlar)"
+
+#: ../../templates/add_catalog.inc:45
+#: ../../templates/customize_catalog.inc:39
+msgid "song title"
+msgstr "þarký adý"
+
+#: ../../templates/add_catalog.inc:46
+#: ../../templates/customize_catalog.inc:40
+msgid "year"
+msgstr "yýl"
+
+#: ../../templates/add_catalog.inc:47
+#: ../../templates/customize_catalog.inc:41
+msgid "other"
+msgstr "baþka"
+
+#: ../../templates/add_catalog.inc:53
+msgid "Path"
+msgstr "Yol"
+
+#: ../../templates/add_catalog.inc:57
+msgid "Catalog Type"
+msgstr "Katalog türü"
+
+#: ../../templates/add_catalog.inc:61
+msgid "Remote"
+msgstr "uzaktan"
+
+#: ../../templates/add_catalog.inc:66
+msgid "ID3 Set Command"
+msgstr "ID3 ayarlama komutu"
+
+#: ../../templates/add_catalog.inc:70
+msgid "Filename Pattern"
+msgstr "Dosya adý deseni"
+
+#: ../../templates/add_catalog.inc:74
+#: ../../templates/customize_catalog.inc:58
+msgid "Folder Pattern"
+msgstr "Klasör adý deseni"
+
+#: ../../templates/add_catalog.inc:74
+#: ../../templates/customize_catalog.inc:58
+msgid "(no leading or ending '/')"
+msgstr "(baþýnda yada sonuna '/' olmaksýzýn)"
+
+#: ../../templates/add_catalog.inc:78
+msgid "Gather Album Art"
+msgstr "Albüm kapaklarýný topla"
+
+#: ../../templates/add_catalog.inc:82
+msgid "ID3V2 Tags"
+msgstr "ID3V2 Etiketleri"
+
+#: ../../templates/add_catalog.inc:85
+msgid "Amazon"
+msgstr "Amazon"
+
+#: ../../templates/add_catalog.inc:88
+msgid "File Folder"
+msgstr "Dosya klasörü"
+
+#: ../../templates/add_catalog.inc:98
+msgid "Add Catalog"
+msgstr "Kataloðu ekle"
+
+#: ../../templates/show_preferences.inc:31
+msgid "Editing"
+msgstr "Düzenleme"
+
+#: ../../templates/show_preferences.inc:31
+msgid "preferences"
+msgstr "tercihler"
+
+#: ../../templates/show_preferences.inc:33
+msgid "Rebuild Preferences"
+msgstr "Tercihleri yeniden yapýlandýr"
+
+#: ../../templates/show_preferences.inc:39
+msgid "Preference"
+msgstr "Tercih"
+
+#: ../../templates/show_preferences.inc:40
+msgid "Value"
+msgstr "Deðer"
+
+#: ../../templates/show_preferences.inc:42
+msgid "Type"
+msgstr "Türü"
+
+#: ../../templates/show_preferences.inc:43
+msgid "Apply to All"
+msgstr "Hersine uygula"
+
+#: ../../templates/show_preferences.inc:58
+msgid "Update Preferences"
+msgstr "Tercihleri güncelle"
+
+#: ../../templates/show_preferences.inc:62
+msgid "Cancel"
+msgstr "Ýptal"
+
+#: ../../templates/show_install.inc:40
+msgid "Your webserver configured so that <ampache_root>/docs is your webroot"
+msgstr "Web sunucunuz <ampache_root>/docs 'u temel olarak kullanmalý"
+
+#: ../../templates/show_install.inc:49
+msgid "This step creates and inserts the Ampache database, as such please provide a mysql account with database creation rights. This step may take a while depending upon the speed of your computer"
+msgstr "Bu adýmda Ampache veritabaný oluþturuluyor. Bunun için veritabaný kurma izni olan bir mysql giriþi gerekli. Bu adýmýn süresi bilgisayarýnýzýn hýzýna baðlýdýr "
+
+#: ../../templates/show_install.inc:58
+#: ../../templates/show_install_config.inc:64
+msgid "Desired Database Name"
+msgstr "Düþünülen Veritabaný ismi"
+
+#: ../../templates/show_install.inc:62
+#: ../../templates/show_install_config.inc:68
+msgid "MySQL Hostname"
+msgstr "MySQL makine ismi"
+
+#: ../../templates/show_install.inc:66
+msgid "MySQL Administrative Username"
+msgstr "MySQL yönetici ismi"
+
+#: ../../templates/show_install.inc:70
+msgid "MySQL Administrative Password"
+msgstr "MySQL yönetici parolasý"
+
+#: ../../templates/show_install.inc:75
+msgid "Insert Database"
+msgstr "Veritabanýný ekle"
+
+#: ../../templates/catalog.inc:33
+msgid "Error: ICONV not found, ID3V2 Tags will not import correctly. See <a href=\"http://php.oregonstate.edu/iconv\">Iconv</a> for information on getting ICONV"
+msgstr "Hata: ICONV bulunamadý, ID3V2 etiketleri doðru þekilde ithal edilemeyecek. Bu adresten <a href=\"http://php.oregonstate.edu/iconv\">Iconv</a> ICONV hakkýnda bilgi alabilirsiniz."
+
+#: ../../templates/catalog.inc:42
+msgid "Update Catalogs"
+msgstr "Kataloglarý güncelle"
+
+#: ../../templates/catalog.inc:68
+msgid "Fast Add"
+msgstr "Çabuk ekle"
+
+#: ../../templates/catalog.inc:75
+msgid "Fast Update"
+msgstr "Çabuk güncelle"
+
+#: ../../templates/catalog.inc:88
+msgid "You don't have any catalogs."
+msgstr "Sizin hiç kataloðunuz yok."
+
+#: ../../templates/catalog.inc:97
+msgid "Add a catalog"
+msgstr "Katalog ekle"
+
+#: ../../templates/catalog.inc:99
+msgid "Show Duplicate Songs"
+msgstr "Duble þarkýlarý görüntüle"
+
+#: ../../templates/catalog.inc:100
+msgid "Show Disabled Songs"
+msgstr "Edilgenleþtirilmiþ þarkýlarý görüntüle"
+
+#: ../../templates/catalog.inc:101
+msgid "Clear Catalog Stats"
+msgstr "Katalog istatistiklerini sil"
+
+#: ../../templates/catalog.inc:102
+msgid "Clear Now Playing"
+msgstr "Þu anda çalanlarý sil"
+
+#: ../../templates/catalog.inc:103
+msgid "Dump Album Art"
+msgstr "Albüm kapaðý boþalt"
+
+#: ../../templates/catalog.inc:104
+msgid "View flagged songs"
+msgstr "Ýþaretlenmiþ þarkýlarý görüntüle"
+
+#: ../../templates/catalog.inc:105
+msgid "Catalog Tools"
+msgstr "Katalog araçlarý"
+
+#: ../../templates/show_login_form.inc:40
+#: ../../templates/show_login_form.inc:54
+msgid "Login"
+msgstr "Giriþ"
+
+#: ../../templates/show_login_form.inc:50
+msgid "Remember Me"
+msgstr "Beni hatýrla"
+
+#: ../../templates/show_add_access.inc:31
+msgid "Add Access for a Host"
+msgstr "Eriþim listesine makine ekle"
+
+#: ../../templates/show_add_access.inc:33
+msgid "Use the form below to add a host that you want to have access to your Ampache catalog."
+msgstr "Aþaðýdaki formu kullanarak Ampache kataloðuna eriþmesini istediðiniz makineleri ekleyebilirsiniz."
+
+#: ../../templates/show_add_access.inc:46
+msgid "Start IP Address"
+msgstr "Ýlk ÝP-Adresi"
+
+#: ../../templates/show_add_access.inc:52
+msgid "End IP Address"
+msgstr "Son ÝP-Adresi"
+
+#: ../../templates/show_add_access.inc:72
+msgid "Add Host"
+msgstr "Makine ekle"
+
+#: ../../templates/customize_catalog.inc:24
+msgid "Settings for catalog in"
+msgstr "Katalog ayarlarý:"
+
+#: ../../templates/customize_catalog.inc:35
+msgid "catalog path"
+msgstr "katalog yolu"
+
+#: ../../templates/customize_catalog.inc:45
+msgid "ID3 set command"
+msgstr "ID3 ayarlama komutu"
+
+#: ../../templates/customize_catalog.inc:51
+msgid "Filename pattern"
+msgstr "Dosya adý deseni"
+
+#: ../../templates/customize_catalog.inc:69
+msgid "Save Catalog Settings"
+msgstr "Katalog ayarlarýný kaydet"
+
+#: ../../templates/menu.inc:31
+msgid "Home"
+msgstr "Ýlk Sayfa"
+
+#: ../../templates/menu.inc:34
+msgid "Playlists"
+msgstr "Þarký listeleri"
+
+#: ../../templates/menu.inc:35
+#: ../../templates/show_search.inc:38
+#: ../../templates/show_search.inc:84
+msgid "Search"
+msgstr "Ara"
+
+#: ../../templates/menu.inc:36
+msgid "Preferences"
+msgstr "Tercihler"
+
+#: ../../templates/menu.inc:57
+#: ../../templates/menu.inc:60
+msgid "Admin"
+msgstr "Yönetici"
+
+#: ../../templates/menu.inc:69
+#: ../../templates/menu.inc:76
+msgid "Account"
+msgstr "Hesap"
+
+#: ../../templates/menu.inc:70
+#: ../../templates/menu.inc:77
+msgid "Stats"
+msgstr "Ýstatistikler"
+
+#: ../../templates/menu.inc:71
+#: ../../templates/menu.inc:78
+#: ../../templates/menu.inc:83
+msgid "Logout"
+msgstr "Oturum Sonu"
+
+#: ../../templates/show_albums.inc:59
+#: ../../templates/show_artists.inc:56
+msgid "Random"
+msgstr "Rasgele"
+
+#: ../../templates/show_users.inc:42
+msgid "Fullname"
+msgstr "Tam Ýsim"
+
+#: ../../templates/show_users.inc:47
+msgid "Last Seen"
+msgstr "Son giriþ"
+
+#: ../../templates/show_users.inc:54
+msgid "Prefs"
+msgstr "Tercihler"
+
+#: ../../templates/show_users.inc:60
+msgid "Set Access"
+msgstr "Eriþim Ayarý"
+
+#: ../../templates/show_users.inc:66
+msgid "On-line"
+msgstr "Çevrimiçi"
+
+#: ../../templates/show_users.inc:88
+msgid "edit"
+msgstr "düzenle"
+
+#: ../../templates/show_users.inc:93
+msgid "prefs"
+msgstr "tercihler"
+
+#: ../../templates/show_users.inc:98
+msgid "delete"
+msgstr "sil"
+
+#: ../../templates/show_users.inc:104
+#: ../../templates/show_users.inc:113
+#: ../../templates/show_users.inc:116
+msgid "set to user"
+msgstr "Kullanýcý haline getir"
+
+#: ../../templates/show_users.inc:105
+#: ../../templates/show_users.inc:109
+#: ../../templates/show_users.inc:117
+msgid "disable"
+msgstr "edilgenleþtir"
+
+#: ../../templates/show_users.inc:108
+#: ../../templates/show_users.inc:112
+msgid "set to admin"
+msgstr "'admin' yap"
+
+#: ../../templates/userform.inc:25
+msgid "Adding a New User"
+msgstr "Kullanýcý ekle"
+
+#: ../../templates/userform.inc:29
+msgid "Editing existing User"
+msgstr "Kullanýcýyý düzenle"
+
+#: ../../templates/userform.inc:81
+msgid "User Access Level"
+msgstr "Kullanýcý eriþim düzeyi"
+
+#: ../../templates/userform.inc:98
+msgid "Add User"
+msgstr "Kullanýcý ekle"
+
+#: ../../templates/userform.inc:103
+msgid "Update User"
+msgstr "Kullanýcý güncelle"
+
+#: ../../templates/show_songs.inc:33
+msgid "Song title"
+msgstr "þarký adý"
+
+#: ../../templates/show_songs.inc:114
+msgid "Direct Link"
+msgstr "Doðrudan Eriþim"
+
+#: ../../templates/show_songs.inc:133
+msgid "Total"
+msgstr "Tüm"
+
+#: ../../templates/show_songs.inc:159
+msgid "Set Track Numbers"
+msgstr "Parça numaralarýný iþle"
+
+#: ../../templates/show_songs.inc:160
+msgid "Remove Selected Tracks"
+msgstr "Seçilmiþ parçalarý sil"
+
+#: ../../templates/show_album.inc:53
+msgid "Play Album"
+msgstr "Albümü çal"
+
+#: ../../templates/show_album.inc:54
+msgid "Play Random from Album"
+msgstr "Albümden rasgele çal"
+
+#: ../../templates/show_album.inc:55
+msgid "Reset Album Art"
+msgstr "Albüm kapaðý silinsin"
+
+#: ../../templates/show_album.inc:56
+msgid "Find Album Art"
+msgstr "Albüm kapaðý ara"
+
+#: ../../templates/show_search.inc:35
+msgid "Search Ampache"
+msgstr "Ampache içinde ara"
+
+#: ../../templates/show_search.inc:42
+msgid "Object Type"
+msgstr "Nesne türü"
+
+#: ../../templates/show_search.inc:75
+msgid "Search Type"
+msgstr "Arama türü"
+
+#: ../../templates/show_install_config.inc:52
+msgid "This steps takes the basic config values, and first attempts to write them out directly to your webserver. If access is denied it will prompt you to download the config file. Please put the downloaded config file in /config"
+msgstr "Bu adýmda temel veriler sorgulanýp, web sunucunuza ilk yazma denemesi yapýlacaktýr. Eðer baþarýsýz olunursa size sunulacak olan yapýlandýrma dosyasýný /config klasörüne kaydedin. "
+
+#: ../../templates/show_install_config.inc:60
+msgid "Web Path"
+msgstr "Web Yolu"
+
+#: ../../templates/show_install_config.inc:72
+msgid "MySQL Username"
+msgstr "MySQL kullanýcý adý"
+
+#: ../../templates/show_install_config.inc:76
+msgid "MySQL Password"
+msgstr "MySQL parolasý"
+
+#: ../../templates/show_install_config.inc:81
+msgid "Write Config"
+msgstr "Yapýlandýrmayý kaydet"
+
+#: ../../templates/show_install_config.inc:125
+msgid "Check for Config"
+msgstr "Yapýlandýrma doðrula"
+
+#: ../../templates/show_localplay.inc:30
+msgid "Local Play Control"
+msgstr "Yerel Çalma Düzeni"
+
+#: ../../templates/show_localplay.inc:35
+msgid "Playback"
+msgstr "Çal"
+
+#: ../../templates/show_localplay.inc:49
+msgid "Volume"
+msgstr "Ses"
+
+#: ../../templates/show_localplay.inc:53
+#: ../../templates/show_localplay.inc:54
+msgid "Increase Volume"
+msgstr "Ses aç"
+
+#: ../../templates/show_localplay.inc:55
+#: ../../templates/show_localplay.inc:56
+msgid "Decrease Volume"
+msgstr "Ses kapa"
+
+#: ../../templates/show_localplay.inc:62
+msgid "Clear queue"
+msgstr "Kuyruðu sil"
+

@@ -1,0 +1,252 @@
+-------------------------------------------------------------------------------
+------------------ INSTALL - Ampache v.3.2 - 08/11/2004 -----------------------
+-------------------------------------------------------------------------------
+
+  Ich gehe davon aus, dass Apache, PHP und MySQL bereits laufen, wenn du hier
+  angelangt bist.
+
+  Falls du von 3.0 auf 3.1 upgradest, schau dir bitte die MIGRATION Hinweise 
+  an. Die Datenbank kann nicht weitergenutzt werden, aber glücklicherweise
+  haben wir einige Scripts entwickelt, um die Datenbank in das neue Format
+  zu konvertieren. (Dafür gibts ein extra Bier :P)
+
+  Falls während der Installation irgendetwas schieflaufen sollte, schau dir
+  zunächst die /test.php an, um an Hilfe zu gelangen.
+    
+  1. Schnellinstallation:
+
+  mysql -u <Benutzername> -p <Datenbankname> < $root/ampache/sql/ampache.sql
+
+  Editiere die /etc/apache/httpd.conf
+  Lass das Webroot auf $root/ampache/docs zeigen.
+  [snip]
+  Alias /ampache/ /usr/share/ampache/docs/
+  
+  <Directory /usr/share/ampache/docs>
+  	Options Indexes MultiViews
+	AllowOverride None
+	Order allow,deny
+	Allow from all
+	</Directory>
+  [snip]
+  Starte danach Apache neu.
+  
+  Verschiebe $root/ampache/config/ampache.cfg.dist nach
+             $root/ampache/config/ampache.cfg
+  Editiere $root/ampache/config/ampache.cfg
+  Besuche $web_adresse/login.php und melde dich mit den folgenden Daten an:
+  	Benutzername: admin
+	Passwort:     changeme
+	
+  
+  2. Der längere Weg
+
+    2.1 Apache konfigurieren
+    An dieser Stelle gibt es zwei Möglichkeiten. Etnweder kannst du einen 
+    Virtual Server für Ampache konfigurieren, oder du kannst Amapche einfach
+    in ein freies Verzeichnis installieren. Beide Wege besitzen Vor- und 
+    Nachteile.
+
+    Wenn du einen Virtual Server einrichtest, besitzt er seine eigenen 
+    Logfiles, die hilfreich beim Berechnen des Traffics sein könnten 
+    (Unterscheidung von Ampache- und normalem Traffic).
+
+    Wenn du ein neues Verzeichnis für Ampache nutzt, wird der Traffic von
+    Ampache zusammen mit dem der anderen Anwendungen brechnet. Der Vorteil 
+    hier ist, dass die Installation u.U. einfacher ist.
+
+    We've included cronolog lines. These are not required, but for 
+    troubleshooting we recommend them. 
+
+    Der Eintrag für einen eigenen Virtual Server lautet folgendermaßen:
+
+    [snip]
+
+            <VirtualHost 192.168.100.2:80>
+               ServerName tunes.ampache.org
+
+                ServerAdmin webmaster@ampache.org
+                DocumentRoot /data/www/ampache/docs
+
+	        DirectoryIndex index.php
+
+            </VirtualHost>
+    [snip]
+								    
+    Nac einem Neustart sollte Ampache nun richtig konfiguriert sein.
+
+    2.2 MySQL konfigurieren
+    Wir legen an dieser Stelle einen eigenen User für Ampache an.
+    Dazu ist folgender Befehl erforderlich:
+
+    'mysql -u user -p pass < sql/ampache.sql'
+    
+    2.3 Konfiguration von Ampache
+
+      2.3.1 Konfiguration der ampache.cfg
+
+        Kopiere zuächst die config/ampache.cfg.dist nach 
+	config/ampache.cfg.
+	Öffne dann die config/ampache.cfg.dist und editiere die 
+	Vairablen:
+
+        # Hostname des Datenbankservers
+        local_host = localhost
+
+        # Datenbankname
+        local_db = ampache
+
+        # Datenbank-Benutzername
+        local_username = <mysql_login_name>
+
+        # Datenbank-Passwort
+        local_pass = <password>
+
+        # Logindauer in Sekunden
+        local_length = 900
+
+	# Dies ist die Domain, fuer die das Cookie, in dem der Sessionkey gespeichert wird,
+	# ausgestellt wird. Diese Variable muss die Domain oder der Host des Systems sein.
+	# Andernfalls wird es unmoeglich sein, sich einzuloggen.
+	# Bitte ueberpruefe, ob zu Beginn ein . steht. (erforderlich!)
+	# Dies ist jedoch nicht notwendig, solange du die libglue fuer mehr als eine Seite 
+	# nutzt.
+	# sess_domain             = .yourwebsite.com
+
+	# Name der Session/des Cookie, dass zum Browser geschickt wird.
+	sess_name               = ampache
+
+        # Lebenszeit des Cookies. 0 == Immer (bzw. bis der Browser geschlossen wird),
+	# andernfalls wird hier die Lebenszeit in Sekunden erwartet
+	sess_cookielife         = 0
+
+        # Ist das Cookie ein "sicheres" Cookie?
+	sess_cookiesecure       = 0
+
+	prefix = "/<ampache_root>" 
+	# This should not include http:// or any part of the host name
+	# ampache detects hostname and port automaticly
+	# Hier sollte kein http:// oder irgendein Teil des Hostnames 
+	# stehen. Hostname und Port werden automatisch erkannt.
+	web_path = "/<path to ampache>" 
+	site_title = "Ampache!!!" 
+
+	# Sollte ausgeschaltet bleiben, ansonsten wird die Performance sehr drunter leiden. 
+	do_mp3_md5 = "FALSE" 
+
+	# Hier wird das Interval angegeben, in dem der aktuelle Fortschritt
+	# beim Katalogisieren ausgegeben wird. Bei grossen Katalogen sollte
+	# diese Zahl moeglichst gering gehalten werden.
+	catalog_echo_count = "25" 
+
+	# Diese Option legt fest, welcher ID3 Tag bevorzugt wird.
+	# Diese Funktion wurde fuer diejenigen angelegt, die noch keine 
+	# v2-Tags angelegt haben. Somit ist es bei manchen Nutzern hilfreich,
+	# v1 zu nutzen, bis die Kataloge auf v2 umgestellt sind.
+	id3tag_order = "id3v2" 
+	id3tag_order = "id31v" 
+
+	# Kommentiere dies aus, wenn du nicht moechtest, dass Ampache 
+	# symlinks folgt.
+	#no_symlinks = "true" 
+
+	# Benutze Login-/Authentifizierungssystem? 
+	use_auth = "yes" 
+
+	# Kuenstler- & Album Zwischenspeicherlimit
+	# Um die Katalog-Aktualisierungen zu beschleunigen, und um die Last
+	# auf MySQL zu reduzieren nutzen wir eine Art Zwischenspeicher, wo
+	# anhand einer ID MySQL-Abfragen gespeichert werden.
+	# Du kannst diese Option frei nach deinem belieben abaendern ...
+	album_cache_limit = "25" 
+	artist_cache_limit = "50" 
+
+      2.3.2 Configuring motd.php
+
+        Copy config/motd.php.dist to config/motd.php
+
+        Edit this file however you like, with either php code or straight html.
+        The output will be displayed below the login box on login.php.
+
+
+  3. Der erste Start von Ampache
+
+        Besuche mit deinem Browser die frisch installierte Ampache-Seite,
+	und es sollte das Anmeldeformular erscheinen.
+	Das Passwort und der Benutzername für den ersten Login lauten:
+		Benutzer: admin
+		Passwort: changeme
+
+	Jetzt kannst du dir ein Bier holen .. ;)
+
+      3.1  Einen Katalog einrichten
+        Zunächst gilt es, einen Katalog einzurichten. Dies geschieht, indem
+	man auf "Katalog hinzufügen" klickt, und dort den Pfad zur 
+	MP3-Sammlung angibt. Es ist nicht notwendig, alle Unterverzeichnise
+	einzeln anzugeben, da die angegebenen Verzeichnise rekursiv 
+	durchsucht werden.
+	
+      3.2  Aktualisieren der Kataloge
+      	Falls alles einwandfrei gelaufen, hast du nun einen leeren Ampache
+	vor dir. Um diesen Zustand zu veraendern, gehe unter der
+	Administrationsseite auf den Katalog-Link.
+
+	Nun fehlt nur noch ein Klick auf "Alle Kataloge aktualisieren", und
+	die Datenbank wird gefuehlt. Dies kann eine Weile dauern, da der 
+	Webserver nun jede einzelne Datei auf ihren ID3-Tag hin untersucht,
+	und diese Daten in die Datenbank einspeist.
+
+        Final Note on MP3 Tags:
+	Abschliessende Bemerkung zu den ID3-Tags:
+	Da Ampache seine Daten aus den ID3-Tags bezieht, ist es wirklich
+	empfehlenswert, diese sauber und geordnet zu halten.
+
+	Eines der besten Tools für diesen Zweck ist EasyTAG, ein Tageditor
+	für MP3- und OGG-Dateien:
+	http://easytag.sourceforge.net
+
+        Es läuft direkt auf dem Linuxrechner, und ist somit ein wenig schneller,
+	als wenn man die ID3-Tags erst ueber Samba oder NFS aktualisiert. Das
+	heisst natuerlich nicht, dass dies geht .. Es geht lediglich darum, dass
+	dieses Programm schneller auf die ID3-Tags zugreifen kann.
+
+	Falls du darauf bestehen solltest, Windows zu nutzen, findet sich unter
+	http://massid3lib.sourceforge.net/ eine weitere gute Software, für den
+	selben Zweck.
+    
+      3.3  Benutzer hinzufügen
+      	Um Benutzer hinzufügen, genügt es unter Administration -> Benutzer
+	-> Benutzer hinzufügen zu gehen, und das dortige Formular mit den
+	entsprechenden Informationen zu versehen.
+
+      3.4  Sortieren und Aktualisieren der Dateien (Wird noch entwickelt)
+      	In Verbindung mit dem Update der Katalogeinstellungen, sind in v3.1
+	folgende Felder hinzugekommen:
+	   ID3-Kommando
+	   Dateinamenmuster
+	   Sortiermuster
+
+	Nachdem diese Felder mit Werten versehen wurden, steht einem regelmäßigem 
+	Update mithilfe von fileupdate.pl nichts mehr im Wege.
+	Dieses Programm fragt die Datenbank ab, und nimmt die neusten Aktualisierungen
+	vor. Bevor fileupdate.pl ausgeführt werden kann, muss die Ampache.pm editiert
+	werden, sodass sie die notwendigen Archivinformatioenen enthält.
+	
+	Benutzung von fileupdate.pl:
+
+	    fileupdate [--id3|--rename|--sort|--all] [--help] [--pretend] [--verbose]
+              --pretend   Stelle das angegebene Kommando dar, ohne etwas zu machen.
+              --id3       Aktualisiere ID3-Tags von allen mit 'id3' markierten Dateien
+              --rename    Benenne alle mit 'rename' markierten Dateien
+              --sort      Sortiere alle mit 'sort' markierten Dateien
+              --all       Nehme ID3-Update vor, bennene und sortiere alle Dateien um,
+	      		  die mit 'id3' markiert wurden.
+              --verbose   Zeige detailierte Informationen
+              --help      Diese Nachricht
+
+	
+	
+	Beispiel:
+	Folgender Eintrag nimmt regelmäßige um Mitternacht alle erforderlichen Updates
+	vor:
+	     * 24 * * * /apache/bin/fileupdate.pl -all

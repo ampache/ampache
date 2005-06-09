@@ -1,0 +1,72 @@
+<?php
+/*
+
+ Copyright (c) 2004 Ampache.org
+ All rights reserved.
+
+ $CVSHeader: ampache/modules/class/song.php,v 1.7 2004/01/12 08:27:26 vollmerk Exp $
+ $Source: /data/cvsroot/ampache/modules/class/song.php,v $
+
+ This program is free software; you can redistribute it and/or
+ modify it under the terms of the GNU General Public License
+ as published by the Free Software Foundation; either version 2
+ of the License, or (at your option) any later version.
+
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with this program; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+
+*/
+
+/*!
+	@header show access list
+	@discussion default display for access admin page
+
+*/
+$row_classes = array('even','odd');
+?>
+
+<p style="font-size: 10pt; font-weight: bold;"><?php print _("Host Access to Your Catalog"); ?></p>
+
+<p>Since your catalog can be accessed remotely you may want to limit the access from
+remote sources so you are not in violation of copyright laws.  By default your
+server will allow anyone with an account to stream music. It will not allow any
+other Ampache servers to connect to it to share catalog information.  Use tool below 
+to add any server's IP address that you want to access your Ampache catalog or be able to 
+stream from this server.</p>
+
+<p><a href="<?php print conf('web_path'); ?>/admin/access.php?action=show_add_host"><?php print _("Add Entry"); ?></a></p>
+
+<table cellspacing="1" cellpadding="3" class="border">
+	<tr class="table-header" align="center">
+		<td><?php print _("Name"); ?></td>
+		<td><?php print _("Start Address"); ?></td>
+		<td><?php print _("End Address"); ?></td>
+		<td><?php print _("Level"); ?></td>
+		<td><?php print _("Action"); ?></td>
+	</tr>
+<?php 
+if (count($list)) { 
+/* Start foreach List Item */
+foreach ($list as $access) { 
+?>
+<tr class="<?php print $row_classes[0]; ?>">
+	<td><?php print $access->name; ?></td>
+	<td><?php print int2ip($access->start); ?></td>
+	<td><?php print int2ip($access->end); ?></td>
+	<td><?php print $access->get_level_name(); ?></td>
+	<td>
+		Edit | 
+		<a href="<?php print conf('web_path'); ?>/admin/access.php?action=show_confirm_delete&amp;access_id=<?php print $access->id; ?>"><?php print _("Revoke"); ?></a>
+	</td>
+</tr>
+<?php  $row_classes = array_reverse($row_classes); ?>
+<?php  } // end foreach ?>
+<?php  } // end if count ?>
+</table>
+

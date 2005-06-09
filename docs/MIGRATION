@@ -1,0 +1,39 @@
+-------------------------------------------------------------------------------
+---------              MIGRATION - Ampache v.3.3                    -----------
+-------------------------------------------------------------------------------
+
+
+- Migrating from Ampache 3.3 --> 3.3.X+
+
+	Rename your /config/ampache.cfg to /config/ampache.cfg.php
+
+- Migrating from Ampache-3.1.0 --> 3.3
+
+	Follow the instructions found in $yourwebsite/update.php
+
+- Migrating from Ampache-3.1-Alpha2 or Alpha --> Ampache 3.1-Alpha3
+	
+	Please visit $yourwebsite/update.php to update the genre table. 
+	If you are updating from Alpha2 to Alpha3 or higher.
+	This will invalidate your current catalog.
+	
+- Migrating from Ampache-3.0 --> Ampache3.1
+
+	There are currently a few tools to help migrate your Users and your
+	playlists from Ampache 3.0 to Ampache 3.1. 
+
+	* Note these tools will _NOT_ work against 3.2 or 3.3 they are no 
+		longer maintained. 
+	
+	1. Install and setup Ampache3.1	in a new Database.
+
+	2. Edit the approiate parameters in the following files
+		
+		/bin/migrate_user.pl
+		/bin/export_playlist.pl
+		/bin/import_playlist.pl
+
+	3. Run the desired script. 
+
+	These perl scripts were created by Andy Morgan
+

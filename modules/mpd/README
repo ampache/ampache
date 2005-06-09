@@ -1,0 +1,58 @@
+========================================================
+* mpd.class.php - PHP Object Interface to the MPD Music Player Daemon
+* README Version 1.2, released 05/05/2004
+* Copyright (C) 2003-2004 Benjamin Carlisle (bcarlisle@24oz.com)
+* http://mpd.24oz.com/ | http://www.musicpd.org/
+========================================================
+[ABOUT]
+
+This class/API is a PHP interface to the MPD (http://www.musicpd.org/). Using
+this interface, you may write your own custom web-based interface to the MPD.
+
+In the event you want to talk with me, you may email bcarlisle@24oz.com. I am
+also a relatively frequent visitor of #mpd on FreeNet, under the nick of 'moot'.
+
+More information can be found at the MPD-Class Homepage, http://mpd.24oz.com/.
+
+[CONTENTS]
+The distribution contains the following files:
+
+mpd.class.php         The mpd object PHP file.
+mpd-class-example.php An example (simple!) interface using the class.
+README                This file
+USAGE                 Brief class documentation
+COPYING               GNU Public License
+
+  
+[HISTORY]
+I wrote this program in order to supplement the wonderful MPD in my own home audio 
+environment. The interface that is supplied alongside MPD, called phpMp, worked, but 
+was not as customizable as I would have liked. 
+
+I currently use Netjuke (http://netjuke.sourceforge.net/) in order to catalog and 
+locally play my MP3s, but I wanted a way to play songs through a playlist on my 
+server.
+
+This class solved that problem -- I could integrate both pieces of software from a 
+look-and-feel perspective and also allow one to talk to the other.
+
+This class has been tested with
+   PHP 4.2.1, 4.2.3
+   MPD 0.8.x, 0.9.x, 0.10.x
+
+[INSTALLATION]
+To install this php class, you simply need to place it in a directory that may be 
+include()ed by PHP, and call require('mpd.class.php'). You may also place it in your 
+PHP Include Path.
+
+[DOCUMENTATION]
+Please see the USAGE document for class methods/properties and examples on how to use 
+this class.
+
+[CREDITS]
+Thank you to the MPD folks. You've put together a very easy-to-use and stable music daemon.
+Another big thanks to Netjuke folks... absolutely great program!
+
+[LICENSE]
+MPD is released under the GNU Public License.
+

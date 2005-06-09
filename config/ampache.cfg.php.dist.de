@@ -1,0 +1,247 @@
+####################
+# Hauptkonfiguration
+####################
+[conf]
+####################
+
+####################
+# Pfadvariablen
+####################
+
+# Der Pfad zur Ampache Installation
+# WICHTIG: Kein / hinter das Ende der Adresse setzen!
+# Nehmen wir an, Ampache ist unter http://localhost
+# erreichbar, dann muss hier nichts eingegeben werden.
+# Falls Ampache jedoch z.B. unter http://localhost/music
+# liegt, so wird an dieser stelle /music angegeben.
+#web_path       = ""
+
+
+# Lang definiert die Sprache, die genutzt wird.
+#lang = "fr_FR.UTF-8"
+
+#########################
+# Die libglue Variablen #
+#########################
+[libglue]
+####################
+
+# Unterhalb sind die Variablen für die Datenbank, mit der
+# die Benutzer und auch die MP3-Informationen gespeichert werden.
+
+# Hostname des Servers (Standard ist localhost)
+local_host = localhost
+
+# Name der Datenbank (Standard ist ampache)
+local_db = ampache
+
+# Benutzername für die Ampache-Datenbank
+local_username = username
+
+# Passwort für die Datenbank von Ampache (Darf nicht leer gelassen werden!)
+local_pass = password
+
+# Dauer einer Loginsession
+local_length = 900
+
+
+# Dies ist die Domain, fuer die das Cookie, in dem der Sessionkey gespeichert wird,
+# ausgestellt wird. Diese Variable muss die Domain oder der Host des Systems sein.
+# Andernfalls wird es unmoeglich sein, sich einzuloggen.
+# Bitte ueberpruefe, ob zu Beginn ein . steht. (erforderlich!)
+# Dies ist jedoch nicht notwendig, solange du die libglue fuer mehr als eine Seite 
+# nutzt.
+# sess_domain             = .yourwebsite.com
+
+# Name der Session/des Cookie, dass zum Browser geschickt wird.
+# Der vorgebene Wert sollte ausreichen.
+sess_name               = ampache
+
+# Lebenszeit des Cookies. 0 == Immer (bzw. bis der Browser geschlossen wird),
+# andernfalls wird hier die Lebenszeit in Sekunden erwartet
+sess_cookielife         = 0
+
+# Ist das Cookie ein "sicheres" Cookie?
+sess_cookiesecure       = 0
+
+# Pfad zur libglue (ist bei Ampache dabei)
+# Kommentiere dies aus, wenn die libglue an einem anderen als dem Standardort liegt.
+#libglue_path = "/data/ampache/libglue"
+
+# Vordefinierte Fehlermeldungen.
+# Diese sollten nicht editiert werden
+empty_field = "Du hast eines oder mehrere Felder frei gelassen. Bitte gebe deinen Benutzernamen und das Passwort ein, um dich einzuloggen."
+bad_auth_cred = "Anmeldung fehlgeschlagen. Dies liegt oft an einem Konfigurationsfehler seitens des Admins"
+user_not_found = "Benutzername nicht gefunden."
+login_failed = "Falscher Benutzername oder Passwort."
+connect_error = "Konnte nicht zum Anmeldungsserver verbinden."
+
+# Falls diese Datei existiert, kann sich niemand einloggen.
+# Standard ist $prefix . /libglue/gone.fishing
+# Kommentiere dies aus, falls die Datei anders heissen soll
+#stop_auth = "/data/music/ampache/libglue/gone.fishing"
+
+#################################
+#  Die Konfigurationsvariablen  #
+#################################
+[conf]
+####################
+
+# Titel der Seite
+site_title	= "Ampache for the love of Music"
+
+# Benutzer Zugriffsliste
+# Schalte dies ein, falls Ampache auf die Zugrifssliste achten soll, und
+# Streaming/Downloading/XML-RPC nur von bekannten Hosts erlauben soll.
+# XML-RPC funktioniert nicht, ohne dass dieses angeschaltet ist.
+#access_control = "true"
+
+# Erzwinge Session
+# Falls dies Variable auf true gesetzt ist, prueft Ampache, ob die URL
+# eine gueltige Session ID besitzt. Dies hilft Einbrueche zu verhindern,
+# die durch das Erraten von Session IDs auftreten koennen.
+#require_session = "true"
+
+# Benutze XML-RPC
+# Erlaube XML-RPC Verbindungen. Falls du nicht willst, dass dein Katalog
+# von einem anderen Ort aus gestreamt wird, kommentier dies aus.
+#xml_rpc        = "true"
+
+# Sperren
+# Sperre Lieder, wenn das gleiche Lied bereits gespielt wird.
+#lock_songs	= "true"
+
+
+# Erzwinge HTTP-Abspielen
+# Diese Einstellung ist standardmaeszig an, und erzwingt, dass m3u-URLS
+# erstellt werden, selbst wenn du https nutzt. Diese Einstellung wurde
+# vorgenommen, da es unseres Wissens keine https mp3-Streamingprogramme
+# gibt ...
+force_http_play	= "true"
+
+# HTTP Port
+# Bitte setze diese Option, wenn du force_http_play nutzt, und wenn dein
+# httpd auf einem anderen Port als 80 laeuft.
+#http_port = "80"
+
+# Falls diese Funktion auf false steht, wirst du spuerbare
+# Performanceschuebe merken.
+# Es ist empfehlenswert, dies auf false zu lassen, da die Funktion eh
+# nicht genutzt wird ... :P
+do_mp3_md5	= "false"
+
+# Hier wird das Interval angegeben, in dem der aktuelle Fortschritt
+# beim Katalogisieren ausgegeben wird. Bei grossen Katalogen sollte
+# diese Zahl moeglichst gering gehalten werden.
+catalog_echo_count = "100"
+
+# Diese Option legt fest, welcher ID3 Tag bevorzugt wird.
+# Diese Funktion wurde fuer diejenigen angelegt, die noch keine 
+# v2-Tags angelegt haben. Somit ist es bei manchen Nutzern hilfreich,
+# v1 zu nutzen, bis die Kataloge auf v2 umgestellt sind.
+id3tag_order	= "id3v2"
+id3tag_order 	= "id3v1"
+
+# Kommentiere dies aus, wenn du nicht moechtest, dass Ampache 
+# symlinks folgt.
+#no_symlinks	= "true"
+
+# Benutze Authentifizierung?
+# Falls dies auf "Yes" gesetzt ist, sind zum Anmelden ein gueltiger
+# Benutzername und ein gueltiges Passwort erforderlich.
+# Falls dies auf Nein gesetzt ist, fragt Ampache nicht nach einem
+# Benutzernamen und Passwort.
+# "No" ist nur fuer Testsysteme empfehlenswert.
+use_auth	= "yes"
+
+# Kuenstler- & Album Zwischenspeicherlimit
+# Um die Katalog-Aktualisierungen zu beschleunigen, und um die Last
+# auf MySQL zu reduzieren nutzen wir eine Art Zwischenspeicher, wo
+# anhand einer ID MySQL-Abfragen gespeichert werden.
+# Du kannst diese Option frei nach deinem belieben abaendern ...
+album_cache_limit = "25"
+artist_cache_limit = "50"
+
+# Diese Option schaltet den Demomodus wahlweise an oder aus.
+# Falls der Demomodus angeschaltet ist, kannst du keine Songs
+# abspielen, oder den Katalog aktualisieren. In anderen Worten ..
+# Lass es besser auskommentiert.
+# demo_mode = "true"
+
+# Amazon Developer Key
+# Dies ist erforderlich, um die Amazon-Coversuche zu nutzen.
+# Unter https://associates.amazon.com/exec/panama/associates/join/developer/application.html 
+# bekommst du einen solchen Key.
+#amazon_developer_key = ""
+
+# Hier wird das minimale Speicherlimit fuer PHP definiert. Falls
+# PHP einen niedrigeren Wert in der php.ini hat, wird Apache den
+# hier definierten Wert nutzen.
+# Achtung: Den Wert auf keinen Fall unter 16MB setzen, sonst
+#          funktioniert getid3() nicht mehr!
+# memory_limit = 16
+
+# Aktualisierungs-Interval
+# Falls dieser Wert gesetzt ist, wird Ampache die Hauptseite
+# alle X Sekunden aktualisieren (neu laden). 
+# refresh_interval = 180
+
+
+#######################################################
+# Diese Optionen definieren, wie die Suche ablaeuft.
+# Folgende Moeglichkeiten existieren: artist,album,song_title,song_genre,song_year,song_bitrate,song_min_bitrate,song_filename
+search_field = song_title
+# Suchtypen: fuzzy und exact
+search_type  = fuzzy 
+
+#########################################################
+# Diese Optionen kontrolieren das "Downsampling" feature.
+# Jedoch sind hierzu Tools wie lame erforderlich, mit 
+# denen man mp3s umwandeln kann.
+# Wir empfehlen mp3splt und lame.
+# %f = Dateiname
+# %o = offset
+# %s = sample rate
+downsample_cmd	= mp3splt -qnf "%f" %o EOF -o - | lame --mp3input -q 3 -b %s -S - -
+# Temporaere Datei
+downsample_tmp	= /tmp/ampache.log
+
+#######################################################
+# These options control the "local play" feature. This requires
+# a playlist manager such as moosic, winamp, xmms etc which
+# can be controlled via command line.
+# The defaults below are for moosic, a python based music
+# player daemon. You must currently start the daemon
+# yourself, because it doesn't fork right for launch
+# inside apache.
+# Valid replacements are:
+#   %URL% = url to the song
+# Diese Optionen dienen der Konfiguration der "local play" Funktion.
+# Dies erfordert ein Programm, dass mit Playlisten umgehen kann, und 
+# per Kommandozeile kontrolliert werden kann. Beispiele hierfuer 
+# sind moosic, winamp oder xmms.
+# Die untenstehenden Standardwerte gelten fuer moosic, einen
+# python-basierten music-player-daemon. Jedoch ist es erforderlich,
+# den Daemon selber zu starten, da dies nicht automatisch passiert.
+# Moegliche Veraenderungsmoeglichkeiten sind:
+# %URL% = URL zum Lied
+#
+### ADD - Fuege einen Song zur Playlist hinzu
+#localplay_add   = "export HOME='/var/www'; moosic -n add %URL%"
+### STOP - Beende das Abspielen des Songs
+#localplay_stop  = "export HOME='/var/www'; moosic stop"
+### PLAY - Setze einen gestoppten Song fort, oder starte neu
+#localplay_play  = "export HOME='/var/www'; moosic play"
+### PAUSE - Pausiere den Player
+#localplay_pause = "export HOME='/var/www'; moosic pause"
+### NEXT - Waehle den naechsten Song in der Liste
+#localplay_next  = "export HOME='/var/www'; moosic next"
+### START - NICHT GENUTZT - starte den Player
+#localplay_start = "export HOME='/var/www'; moosicd &"
+### CLEAR - Alles von der Playlist loeschen und Abspielen starten
+#localplay_clear = "export HOME='/var/www'; moosic wipe"
+### KILL - Beende den Player
+#localplay_kill  = "export HOME='/var/www'; moosic die"
+### Diese Zeile sollte einen 1 Zeilen langen "Status Report" umfassen,
+### der unter den Player-Bedienelementen dargestellt wird.
+#localplay_status = "export HOME='/var/www'; moosic state|grep 'items in the'"

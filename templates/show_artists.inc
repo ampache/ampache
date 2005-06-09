@@ -1,0 +1,76 @@
+<?php
+/*
+
+ Copyright (c) 2001 - 2005 Ampache.org
+ All rights reserved.
+
+ This program is free software; you can redistribute it and/or
+ modify it under the terms of the GNU General Public License
+ as published by the Free Software Foundation; either version 2
+ of the License, or (at your option) any later version.
+
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with this program; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+*/
+
+/*!
+	@header Show Artists
+	Shows multiple artists.... takes an array of artist objects
+
+*/
+
+// Build array of the table classes we are using
+$total_items = $view->total_items;
+?>
+<table class="border" cellspacing="0" cellpadding="0" border="0">
+<tr class="even" align="center">
+	<td colspan="5">
+	<?php if ($view->offset_limit) { require (conf('prefix') . "/templates/list_header.inc"); } ?>
+	</td>
+</tr>
+<tr class="table-header">
+	<td>
+		<a href="<?php print conf('web_path'); ?>/<?php print $_SESSION['view_script']; ?>?action=<?php print $_REQUEST['action']; ?>&amp;keep_view=true&amp;sort_type=artist.name&amp;sort_order=0"> <?php print _("Artist"); ?> </a>
+	</td>
+	<td> <?php print _("Songs"); ?> </td>
+	<td> <?php print _("Albums"); ?> </td>
+	<td> <?php print _("Action"); ?> </td>
+</tr>
+<?php 
+/* Foreach through every artist that has been passed to us */
+//FIXME: These should come in as objects...
+foreach ($artists as $artist) { 
+?>
+<tr class="<?php echo flip_class(); ?>">
+	<td><?php print $artist['name']; ?></td>
+	<td><?php print $artist['songs']; ?></td>
+	<td><?php print $artist['albums']; ?></td>	
+	<td nowrap> <?php print _("Play"); ?> : 
+		<a href="<?php print conf('web_path'); ?>/song.php?action=m3u&artist=<?php print $artist['id']; ?>"><?php print _("All"); ?></a> | 
+		<a href="<?php print conf('web_path'); ?>/song.php?action=m3u&artist_random=<?php print $artist['id']; ?>"><?php print _("Random"); ?></a> 
+	</td>
+</tr>
+<?php } ?>
+<tr class="table-header">
+        <td>
+                <a href="<?php print conf('web_path'); ?>/<?php print $_SESSION['view_script']; ?>?action=<?php print $_REQUEST['action']; ?>&amp;keep_view=true&amp;sort_type=artist.name&amp;sort_order=0"> <?php print _("Artist"); ?> </a>
+        </td>
+        <td> <?php print _("Songs"); ?> </td>
+        <td> <?php print _("Albums"); ?> </td>
+
+	<td> <?php print _("Action"); ?> </td>
+
+</tr>
+<tr class="even" align="center">
+	<td colspan="4">
+	<?php if ($view->offset_limit) { require (conf('prefix') . "/templates/list_header.inc"); } ?>
+	</td>
+</tr>
+</table>
+

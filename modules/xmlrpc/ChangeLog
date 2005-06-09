@@ -1,0 +1,263 @@
+2003-01-12  Andres Salomon  <dilinger@voxel.net>
+
+	* released 1.0.99.2.
+	* Makefile: separate doc/Makefile a bit more from Makefile,
+	and add clean rules.
+
+2003-01-10  Andres Salomon  <dilinger@voxel.net>
+
+	* xmlrpc.inc: xmlrpcresp and parseResponse cleanups; variable
+	name renames ('xv' to 'val', for example), type checking, and
+	stricter default values.
+	* xmlrpc.inc: fix xmlrpcresp's faultcode; return -1 for FAULT
+	responses from the server whose faultcodes don't reflect any
+	errors.
+
+2003-01-08  Andres Salomon  <dilinger@voxel.net>
+
+	* xmlrpc.inc: rename $_xh[$parser]['ha'] to
+	$_xh[$parser]['headers'].
+	* xmlrpc.inc: fix bugs related to $_xh[$parser]['headers];
+	some places treated this as an array, others as a scalar.
+	Treat unconditionally as an array.  Also wrap header debugging
+	output in PRE tags.
+
+2002-12-17  Andres Salomon  <dilinger@voxel.net>
+	
+	* released 1.0.99.
+	* Makefile: changed the tarball format/dist rule to a more
+	conventional form, as well as normal release updates.
+	* xmlrpc.inc: added setSSLVerifyPeer and setSSLVerifyHost; as
+	of curl 7.10, various certificate checks are done (by default).
+	The default for CURLOPT_SSL_VERIFYHOST is to ensure the common
+	name on the cert matches the provided hostname.  This breaks a
+	lot of stuff, so allow users to override it.
+	* doc/xmlrpc_php.sgml: updated documentation accordingly.
+
+2002-09-06  Geoffrey T. Dairiki  <dairiki@dairiki.org>
+
+	Add support for system.multicall() to both the client
+	and the server.
+
+	* testsuite.php: Add new tests 'testServerMulticall',
+	and 'testClientMulticall'.
+	
+	* xmlrpc.inc: Added new error messages for system.multicall().
+	* xmlrpcs.inc: Added new procedure call system.multicall().
+	See http://www.xmlrpc.com/discuss/msgReader$1208 for details.
+
+	* xmlrpc.inc: Added system.multicall functionality to
+	xmlrpc_client.  xmlrpc_client::send can now take an array of
+	xmlrpcmsg's as an argument.  In that case it will attempt
+	to execute the whole array of procure calls in a single
+	HTTP request using system.multicall().  (If that attempt fails,
+	then the calls will be excuted one at a time.)  The return
+	value will be an array of xmlrpcresp's (or 0 upon transport
+	failure.)
+
+2001-11-29  Edd Dumbill  <edd@usefulinc.com>
+
+	* xmlrpc.inc: fixed problem with processing HTTP headers that
+	broke any payload with more than one consecutive newline in it.
+	also initialise the 'ac' array member to empty string at start.
+	* testsuite.php: added unit test to exercise above bug
+	* xmlrpcs.inc: fixed uninitialized variable $plist
+
+2001-09-25  Edd Dumbill  <edd@usefulinc.com>
+
+	* xmlrpc.inc: applied urgent security fixes as identified by Dan
+	Libby
+
+2001-08-27  Edd Dumbill  <edd@usefulinc.com>
+
+	* xmlrpc.inc: Merged in HTTPS support from Justin Miller, with a
+	few additions for better traceability of failure conditions. Added
+	small fix from Giancarlo Pinerolo. Bumped rev to 1.0. Changed
+	license to BSD license.
+
+2001-06-15  Edd Dumbill  <edd@usefulinc.com>
+
+	* xmlrpcs.inc: Added \r into return MIME headers for server class
+
+2001-04-25  Edd Dumbill  <edd@usefulinc.com>
+
+	* server.php: Added interop suite of methods.
+
+2001-04-24  Edd Dumbill  <edd@usefulinc.com>
+
+	* testsuite.php: added in test case for string handling bug.
+
+	* xmlrpc.inc: merged in minor fixes from G Giunta to fix
+	noninitialization. Created new method, getval(), which includes
+	experimental support for recreating nested arrays, from Giunta and
+	Sofer. Fixed string handling bug where characters after </string>
+	but before </value> weren't ignored. Added in support for native
+	boolean type into xmlrpc_encode (Giunta).
+
+	* xmlrpcs.inc: updated copyright notice
+
+2001-01-15  Edd Dumbill  <edd@usefulinc.com>
+
+	* xmlrpc.inc: fixed bug with creation of booleans. Put checks in
+	to ensure that numbers were really numeric. Fixed bug with
+	non-escaping of dollar signs in strings.
+
+	* testsuite.php: created test suite.
+
+2000-08-26  Edd Dumbill  <edd@usefulinc.com>
+
+	* xmlrpcs.inc: added xmlrpc_debugmsg() function which outputs
+	debug information in comments inside the return payload XML
+
+	* xmlrpc.inc: merged in some changes from Dan Libby which fix up
+	whitespace handling.
+	
+	* xmlrpcs.inc: added Content-length header on response (bug from
+	Jan Varga <varga@utcru.sk>. This means you can no longer print
+	during processing
+
+	* xmlrpc.inc: changed ereg_replace to str_replace in several
+	places (thanks to Dan Libby <dan@libby.com> for this).
+
+	* xmlrpc.inc: added xmlrpc_encode() and xmlrpc_decode() from Dan
+	Libby--these helper routines make it easier to work in native PHP
+	data structures.
+
+2000-07-21  Edd Dumbill  <edd@usefulinc.com>
+
+	* xmlrpc.inc: added xmlrpc_client::setCredentials method to pass
+	in authorization information, and modified sendPayload* methods to
+	send this OK. Thanks to Grant Rauscher for the impetus to do this.
+	Also, made the client send empty <params></params> if there are no
+	parameters set by the user.
+
+	* doc/xmlrpc_php.sgml: updated documentation to reflect recent
+	changes
+	
+
+2000-07-18  Edd Dumbill  <edd@usefulinc.com>
+
+	* server.php: added examples.invertBooleans method to server as a
+	useful test method for boolean values.
+
+	* xmlrpc.inc: rearranged the way booleans are handled to fix
+	outstanding problems. Fixed calling addScalar() on arrays so it
+	works. Finally fixed backslashification issues to remove the
+	problem will dollar signs disappearing.
+
+	* booltest.php: really fixed booleans this time.
+
+2000-06-03  Edd Dumbill  <edd@usefulinc.com>
+
+	* xmlrpcs.inc: made signature verification more useful - now
+	returns what it found was wrong
+
+	* xmlrpc.inc: fixed bug with decoding dateTimes. Also fixed a bug
+	which meant a PHP syntax error happened when attempting to receive
+	empty arrays or structs. Also fixed bug with booleans always being
+	interpreted as 'true'.
+
+	* server.php: Added validator1 suite of tests to test against
+	validator.xmlrpc.com
+	
+
+2000-05-06  Edd Dumbill  <edd@usefulinc.com>
+
+	* released 1.0b6
+
+	* added test.pl and test.py, Perl and Python scripts that exercise
+	server.php somewhat (but not a lot)
+	
+	* added extra fault condition for a non 200 OK response from the
+	remote server.
+
+	* added iso8601_encode() and iso8601_decode() to give some support
+	for passing dates around. They translate to and from UNIX
+	timestamps. Updated documentation accordingly.
+
+	* fixed string backslashification -- was previously a little
+	overzealous! new behavior is '\' --> '\\' and '"' -->
+	'\"'. Everything else gets left alone.
+
+2000-04-12  Edd Dumbill  <edd@usefulinc.com>
+
+	* updated and bugfixed the documentation
+
+	* fixed base 64 encoding to only happen at serialize() time,
+	rather than when a base64 value is created. This fixes the double
+	encoding bug reported by Nicolay Mausz
+	<castor@flying-dog.com>. The same approach ought to be taken with
+	encoding XML entities in the data - this is a TODO.
+
+	* integrated further code from Peter Kocks: used his new code for
+	send(), adding a second, optional, parameter which is a timeout
+	parameter to fsockopen()
+
+1999-10-11  Edd Dumbill  <edd@usefulinc.com>
+
+	* added bug fixes from Peter Kocks <peter.kocks@baygate.com>
+
+1999-10-10  Edd Dumbill  <edd@usefulinc.com>
+
+	* updated the documentation
+
+1999-10-08  Edd Dumbill  <edd@usefulinc.com>
+
+	* added system.* methods and dispatcher, plus documentation
+
+	* fixed bug which meant request::getNumParams was returning an
+	incorrect value
+
+	* added signatures into the dispatch map. This BREAKS
+	COMPATIBILITY with previous releases of this code
+
+1999-08-18  Edd Dumbill  <edd@usefulinc.com>
+
+	* made entity encoding and decoding transparent now on string
+	passing.
+
+	* de-globalised the globals in the parse routines, using an
+	associative array to hold all parser state $_xh
+
+	* changed default input encoding to be UTF-8 to match expectation
+
+	* separated out parseResponse into parseResponse and
+	parseResponseFile so that you can call parseResponse on a string
+	if you have one handy
+
+1999-07-20  Edd Dumbill  <edd@usefulinc.com>
+
+	* Moved documentation into Docbook format
+
+1999-07-19  Edd Dumbill  <edd@usefulinc.com>
+
+	* Added an echo server into server.php and echotest.php, a client
+	which will exercise the new echo routine.
+
+	* Added test for no valid value returned: in this case will now
+	throw the error "invalid payload"
+
+	* Added serialize() method to xmlrpcresp to return a string with
+	the response serialized as XML
+
+	* Added automatic encoding and decoding for base64 types
+
+	* Added setDebug() method to client to enable HTML output
+	debugging in the client
+
+1999-07-08  Edd Dumbill  <edd@usefulinc.com>
+
+	* Improved XML parse error reporting on the server side to send it
+	back in a faultCode packet. expat errors now begin at 100
+	
+1999-07-07  Edd Dumbill  <edd@usefulinc.com>
+
+	* Changed the structmem and arraymem methods of xmlrpcval to always
+	return xmlrpc vals whether they referred to scalars or complex
+	types.
+	 
+	* Added the server class and demonstrations
+       
+	* Fixed bugs in the XML parsing and reworked it
+
+$Id: ChangeLog,v 1.12 2003/01/13 08:34:18 dilinger Exp $

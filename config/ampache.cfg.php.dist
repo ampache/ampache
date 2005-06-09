@@ -1,0 +1,461 @@
+##<?php exit(); ?>##
+####################
+# General Config
+####################
+[conf]
+####################
+
+####################
+# Path Vars
+####################
+
+# The path to your ampache install
+# Do not put a trailing / on this path 
+# For example if your site is located at http://localhost
+# than you do not need to enter anything for the web_path
+# if it is located at http://localhost/music you need to 
+# set web_path to /music
+# DEFAULT: ""
+#web_path 	= ""
+
+
+# Lang (define the locale you want to use
+# this is a cheeseball fix for now it will be smarter 
+# later. 
+# DEFAULT: en_US
+#lang = "en_US"
+
+####################
+# The libglue Vars #
+####################
+[libglue]
+####################
+
+###
+# Below are the variables for the Local Database that will do Auth
+###
+
+# Hostname of your Database (default is localhost)
+# DEFAULT: localhost
+local_host = localhost
+
+# Name of your ampache database (default is ampache)
+# DEFAULT: ampache
+local_db = ampache
+
+# Username for your ampache database
+# DEFAULT: ""
+local_username = username
+
+# Password for your ampache database (can't be blank!)
+# DEFAULT: ""
+local_pass = password
+
+# Login Length in seconds for local logins
+# DEFAULT: 900
+local_length = 900
+
+# This is the DOMAIN for the cookie that stores your session key
+# this must be set to the domain of your host or you will not be
+# able to log in make sure you including the leading .
+# This is not needed unless you are using libglue for more than one 
+# website, and you are using SSO
+# DEFAULT: ""
+#sess_domain             = .yourwebsite.com
+
+# Name of the Session/Cookie that will sent to the browser
+# default should be fine
+# DEFAULT: ampache
+sess_name               = ampache
+
+# Lifetime of the Cookie, 0 == Forever (until browser close) , otherwise in terms of seconds
+# DEFAULT: 0
+sess_cookielife         = 0
+
+# Is the cookie a "secure" cookie?
+# DEFAULT: 0
+sess_cookiesecure       = 0
+
+# Path your copy of libglue (Included with Ampache)
+# Uncomment this if you have moved libglue to a non-standard location
+# DEFAULT: /libglue
+#libglue_path = "/libglue"
+
+# Pre-Defined Error messages
+# you should not need to edit these
+empty_field = "You left one or more fields empty.  Please enter both your username and password to log in."
+bad_auth_cred = "Unable to authenticate using this service: This is most likely a configuration mistake by the site administrator."
+user_not_found = "Username not found."
+login_failed = "Bad username or password."
+connect_error = "Could not connect to authentication server."
+
+####################
+#  The conf vars!  #
+####################
+[conf]
+####################
+
+# Nuff Said
+# DEFAULT: Ampache :: For The Love of Music
+site_title	= "Ampache :: For The Love Of Music"
+
+# Use Access List 
+# Toggle this on if you want ampache to pay attention to the access list
+# and only allow streaming/downloading/xml-rpc from known hosts by default
+# xml-rpc will not working without this on.
+# DEFAULT: false
+#access_control	= "false"
+
+# Require Session
+# If this is set to true ampache will make sure that the URL passed when
+# attempting to retrive a song contains a valid Session ID This prevents
+# others from guessing URL's
+# DEFAULT: true
+require_session = "true"
+
+# Use XML-RPC
+# Allow XML-RPC connections, if you don't want _any_ possibility of your
+# catalog being streamed from another location comment this out
+# DEFAULT: false
+#xml_rpc 	= "false"
+
+# This setting allows/disallows using zlib to zip up an entire
+# playlist/album for download. Even if this is turned on you will
+# still need to enabled downloading for the specific user you 
+# want to be able to use this function
+# DEFAULT: false
+#allow_zip_download = "false"
+
+# This setting turns on/off public registration. It is 
+# recommended you leave this off, as it will allow anyone to 
+# sign up for an account on your server. 
+# DEFAULT: false
+# THIS IS CURRENTLY BROKEN!
+#allow_public_registration = "false"
+
+# This sets which ID3 tag takes precedence.
+# we've found for those of you who don't have
+# good v2 tags it's sometimes nice to keep the v1
+# until you've fixed v2
+# POSSIBLE VALUES: id3v1 id3v2
+# DEFAULT: id3v2,id3v1
+id3tag_order	= "id3v2"
+id3tag_order 	= "id3v1"
+
+# Un comment if don't want ampache to follow symlinks
+# DEFAULT: false
+#no_symlinks	= "false"
+
+# Use auth?
+# If this is set to "Yes" ampache will require a valid
+# Username and password. If this is set to no then ampache
+# will not ask you for a username and password. No is only
+# recommended for internal only instances
+# DEFAULT true
+use_auth	= "yes"
+
+# This options will turn on/off Demo Mode
+# If Demo mode is on you can not play songs or update your catalog
+# in other words.. leave this commented out
+# DEFAULT: false
+#demo_mode = "false"
+
+# Memory Limit
+# This defines the "Min" memory limit for PHP if your php.ini
+# has a lower value set Ampache will set it up to this. If you
+# set it below 16MB getid3() will not work!
+# DEFAULT: 16
+#memory_limit = 16
+
+# Album Art Preferred Filename
+# Specify a filename to look for if you always give the same filename
+# i.e. "folder.jpg" Ampache currently only supports jpg/gif and png
+# Especially useful if you have a front and a back image in a folder
+# comment out if ampache should search for any jpg,gif or png
+# DEFAULT: folder.jpg
+#album_art_preferred_filename = "folder.jpg" 
+
+# Album Art Gather Order
+# Simply arrange the following in the order you would like
+# ampache to search if you want to disable one of the search
+# method simply comment it out valid values are
+# POSSIBLE VALUES: id3 folder amazon
+# DEFAULT: id3,folder,amazon
+album_art_order = "id3"
+album_art_order = "folder"
+album_art_order = "amazon"
+
+# Album Art in Now Playing
+# Set this to true if you want the now playing box to display
+# album art from said album
+# DEFAULT: true
+play_album_art = "true"
+
+# Amazon Developer Key
+# This is needed in order to actually use the amazon album art
+# DEFAULT: false
+#amazon_developer_key = ""
+
+# Debug
+# If this is enabled Ampache will get really chatty
+# warning this can crash browser during catalog builds due to 
+# the amount of text that is dummped out this will also cause 
+# ampache to write to the log file
+# DEFAULT: false
+#debug = "false"
+
+# Path to Log File
+# This defines where you want ampache to log events to
+# this will only happen if debug is turned on. Do not
+# include trailing slash. Default is /tmp
+# DEFAULT: /tmp
+#log_path = "/tmp"
+
+# Max Upload Size
+# This sets what the max filesize for an uploaded
+# file, this is good at preventing someone from
+# filling up your HDD. It is mesured in bytes
+# Example 1024 = 1K, 1048576 = 1MB
+# Default size limit is 10Mb
+# DEFAULT: 10485760
+max_upload_size = "10485760"
+
+# Charset of generated HTML pages
+# Default of iso-8859-1 should work for most poeple
+# DEFAULT: iso-8859-1
+site_charset = iso-8859-1
+
+##########################################################
+# These Option Control which playback methods are allowed
+##########################################################
+
+# Stream Playback
+# Disable this if you don't want to allow people to stream
+# using HTTP without downsampling
+# DEFAULT: true
+allow_stream_playback = true
+
+# Downsampling Playback
+# Disable this if you don't want to allow people to downsample
+# songs before they are streamed
+# DEFAULT: false
+#allow_downsample_playback = false
+
+# LocalPlay Playback
+# Disable this if you don't want to allow people to pick the 
+# local playback method
+# DEFAULT: false
+#allow_local_playback = false
+
+# MPD Playback
+# Disable this if you don't want to allow people to push things
+# to a MPD server as defined below
+# DEFAULT: false
+#allow_mpd_playback = false
+
+# Icecast Playback
+# Disable this if you don't have an IceCast server to push
+# music to
+# DEFAULT: false
+#allow_icecast_playback = false
+
+# Slim Server Playback
+# Disable this if you don't have a SlimServer to push music
+# to
+# DEFAULT: false
+#allow_slim_playback = false
+
+#######################################################
+# These options control how searching works
+#######################################################
+
+# choices are: artist,album,song_title,song_genre,song_year,song_bitrate,song_min_bitrate,song_filename
+# DEFAULT: song_title
+search_field = song_title
+
+# choices are: exact,fuzzy
+# DEFAULT: fuzzy
+search_type  = fuzzy 
+
+#######################################################
+# This option controls what Ampache sends for the Stream name. This
+# is most valuable when then 'Type of Playback' is set to downsample.
+# because lame seems to strip id3 tags. if you want the Ampache default
+# just leave this option commented out.
+#
+# the format supports the followning options:
+#
+# %A = album name
+# %a = artist name
+# %C = catalog path
+# %c = id3 comment
+# %g = genre
+# %T = track number
+# %t = song title
+# %y = year
+# %basename = current filename (just the actual filename)
+# %catalog  = catalog name
+# %filename = current filename (full path)
+# %type     = song type (mp3, ogg, ...)
+#
+# DEFAULT: %a - %A - %t
+#stream_name_format  = %a - %A - %t 
+
+
+#######################################################
+# These options control the down-sampling feature
+# this requires you to install some applications such 
+# as lame that can re-encode the mp3 for you.
+# we recommend mp3splt and lame
+# %FILE%	= filename
+# %OFFSET%	= offset
+# %SAMPLE%	= sample rate
+# %EOF%		= end of file in min.sec
+# DEFAULT: mp3splt -qnf "%FILE%" %OFFSET% %EOF% -o - | lame --mp3input -q 3 -b %SAMPLE% -S - -
+downsample_cmd	= mp3splt -qnf "%FILE%" %OFFSET% %EOF% -o - | lame --mp3input -q 3 -b %SAMPLE% -S - -
+
+#######################################################
+# These options control the "local play" feature. This requires
+# a playlist manager such as moosic, winamp, xmms etc which
+# can be controlled via command line.
+# The defaults below are for moosic, a python based music
+# player daemon. You must currently start the daemon
+# yourself, because it doesn't fork right for launch
+# inside apache.
+# Valid replacements are:
+#   %URL% 	= url to the song
+#   %AMOUNT%	= amount to increase or decrese the volume by (optional)
+#
+# HACK altert - run moosicd as www-data user, and 
+#  then set the HOME env var so moosic client 
+#  can find the folder it needs b4 every call...
+# Commenting this all out, unless you uncomment it...
+### ADD - add song to playlist
+# DEFAULT: export HOME='/var/www'; moosic -n add %URL%
+#localplay_add   = "export HOME='/var/www'; moosic -n add %URL%"
+### STOP - stop the playback.
+# DEFAULT: export HOME='/var/www'; moosic stop
+#localplay_stop  = "export HOME='/var/www'; moosic stop"
+### PLAY - begin stopped or paused playback.
+# DEFAULT: export HOME='/var/www'; moosic play
+#localplay_play  = "export HOME='/var/www'; moosic play"
+### PAUSE - pause the player
+# DEFAULT: export HOME='/var/www'; moosic pause
+#localplay_pause = "export HOME='/var/www'; moosic pause"
+### NEXT - Skip to the next song in the list
+# DEFAULT: export HOME='/var/www'; moosic next
+#localplay_next  = "export HOME='/var/www'; moosic next"
+### PREV - Skip to the next song in the list
+# DEFAULT: export HOME='/var/www'; moosic previous
+#localplay_prev  = "export HOME='/var/www'; moosic previous"
+### VOLUME UP - increase the volume
+# DEFAULT: amixer -q set Master %AMOUNT%%+
+#localplay_volplus = "amixer -q set Master %AMOUNT%%+" 
+### VOLUME DOWN - decrease the volume
+# DEFAULT: amixer -q set Master %AMOUNT%%-
+#localplay_volminus = "amixer -q set Master %AMOUNT%%-"
+### START - NOT USED - strt the player daemon.
+# DEFAULT: export HOME='/var/www'; moosicd &
+#localplay_start = "export HOME='/var/www'; moosicd &"
+### CLEAR - remove all from playlist and stop playing.
+# DEFAULT: export HOME='/var/www'; moosic wipe
+#localplay_clear = "export HOME='/var/www'; moosic wipe"
+### KILL - stop the player daemon
+# DEFAULT: export HOME='/var/www'; moosic die
+#localplay_kill  = "export HOME='/var/www'; moosic die"
+### This must return a 1 line "status report" which is
+### displayed under the player controls.
+# DEFAULT: export HOME='/var/www'; moosic state|grep 'items in the'
+#localplay_status = "export HOME='/var/www'; moosic state|grep 'items in the'"
+
+#######################################################
+# these options allow you to configure your rss-feed
+# layout. rss exists of two parts, main and song
+# main is the information about the feed
+# song is the information in the feed. can be multiple
+#      items.
+#
+#
+# rss_main_title = the title for your feed.
+# DEFAULT: Ampache for the love of Music
+rss_main_title = Ampache for the love of Music
+# rss_main_description = the description for your feed
+# DEFAULT: Rss feed for Ampache so you can monitor who is listening to what
+rss_main_description = Rss feed for Ampache so you can monitor who is listening to what
+# rss_main_copyright = here you can enter copyright information if you wish
+# DEFAULT: copyright (c) Speedy B for Ampache
+rss_main_copyright = copyright (c) Speedy B for Ampache
+# rss_main_language = the feed language. Some feed readers use this.
+# DEFAULT: nl
+rss_main_language = nl
+# rss_song_description = The description of the song.
+#                        It has to start with <![CDATA[
+#                        and end with ]]>. this is because xml wont parse if strange
+#                        characters are used in the id3-tag
+# usable items:
+# $song->f_title
+# $song->f_album
+# $user->fullname
+# $artist
+# $album
+# DEFAULT:  <![CDATA[$song->f_title @ $album played by  $user->fullname]]>
+rss_song_description = <![CDATA[$song->f_title @ $album played by  $user->fullname]]>
+######################################################
+
+#######################
+#  ICECAST2 Settings  #
+#######################
+# These settings are for the ICECAST2 support
+# built into Ampache. 
+######################################################
+# Tracklist Filename
+# This defines the file that the tracklist
+# for icecast is written to, this file must
+# be writeable by the web server process
+# DEFAULT: /tmp/tracklist.txt
+#icecast_tracklist = "/tmp/tracklist.txt"
+
+# Icecast Command
+# This is the command that is run when ampache
+# attempts to start up icecast. %FILE% represents 
+# the icecast_tracklist variable (Filename)
+# DEFAULT: /usr/local/bin/ices -c /usr/local/etc/ices.conf -F %FILE% -B
+#icecast_command = "/usr/local/bin/ices -c /usr/local/etc/ices.conf -F %FILE% -B"
+
+
+#####################################################
+
+###################
+#   MPD Settings  #
+###################
+# These settings are for the MPD support 
+# built into Ampache. 
+#####################################################
+# MPD Port
+# This defines which port that ampache attempts to 
+# connect to MPD on. 
+# DEFAULT: 6600
+#mpd_port = "6600"
+
+# MPD Hostname
+# This is the hostname of the computer running MPD
+# DEFAULT: localhost
+#mpd_host = "localhost"
+
+# MPD Password
+# This is the password for the MPD server
+# DEFAULT: ""
+#mpd_pass = ""
+
+
+# MPD Method
+# This is the method you want to use to pass your
+# music to your MPD player. Possible values are
+# file and url. I highly recommend using the URL
+# method as it requires less configuration. 
+# POSSIBLE VALUES: file url
+# DEFAULT: file
+#mpd_method = "file"
+
+
+#####################################################

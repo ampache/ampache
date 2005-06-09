@@ -1,0 +1,253 @@
+<HTML
+><HEAD
+><TITLE
+>Easy use with PHP arrays</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.77+"><LINK
+REV="MADE"
+HREF="edd@usefulinc.com"><LINK
+REL="HOME"
+TITLE="XML-RPC for PHP"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="Helper functions"
+HREF="helpers.html"><LINK
+REL="PREVIOUS"
+TITLE="Helper functions"
+HREF="helpers.html"><LINK
+REL="NEXT"
+TITLE="Debugging aids"
+HREF="debugging.html"></HEAD
+><BODY
+CLASS="SECT1"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>XML-RPC for PHP: version 1.1</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="helpers.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 6. Helper functions</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="debugging.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="SECT1"
+><H1
+CLASS="SECT1"
+><A
+NAME="ARRAYUSE"
+></A
+>Easy use with PHP arrays</H1
+><P
+>Dan Libby was kind enough to contribute two helper functions
+			that make it easier to translate to and from PHP arrays. This
+				makes it easier to deal with complex structures. At the moment
+				support is limited to <SPAN
+CLASS="TYPE"
+>int</SPAN
+>, <SPAN
+CLASS="TYPE"
+>double</SPAN
+>,
+				<SPAN
+CLASS="TYPE"
+>string</SPAN
+>, <SPAN
+CLASS="TYPE"
+>array</SPAN
+> and <SPAN
+CLASS="TYPE"
+>struct</SPAN
+>
+				datatypes; note also that all PHP arrays are encoded as structs
+				due to PHP not being able to tell the difference between a hash
+				and a linear array.</P
+><P
+>These functions reside in <TT
+CLASS="FILENAME"
+>xmlrpc.inc</TT
+>.</P
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="XMLRPCDECODE"
+></A
+>xmlrpc_decode</H2
+><DIV
+CLASS="FUNCSYNOPSIS"
+><A
+NAME="AEN791"
+></A
+><P
+></P
+><P
+><CODE
+><CODE
+CLASS="FUNCDEF"
+>$arr=xmlrpc_decode</CODE
+>($xmlrpc_val);</CODE
+></P
+><P
+></P
+></DIV
+><P
+>					Returns a PHP array stuffed with the values found in the
+					<SPAN
+CLASS="TYPE"
+>xmlrpcval</SPAN
+> <TT
+CLASS="PARAMETER"
+><I
+>$xmlrpc_val</I
+></TT
+>,
+					translated into native PHP types.
+				</P
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="XMLRPCENCODE"
+></A
+>xmlrpc_encode</H2
+><DIV
+CLASS="FUNCSYNOPSIS"
+><A
+NAME="AEN801"
+></A
+><P
+></P
+><P
+><CODE
+><CODE
+CLASS="FUNCDEF"
+>$xmlrpc_val=xmlrpc_encode</CODE
+>($phpval);</CODE
+></P
+><P
+></P
+></DIV
+><P
+>					Returns an <SPAN
+CLASS="TYPE"
+>xmlrpcval</SPAN
+> populated with the PHP
+					values in <TT
+CLASS="PARAMETER"
+><I
+>$phpval</I
+></TT
+>. Works recursively on
+					arrays and structs. Note that there's no support for non-base
+					types like base-64 values or date-times.
+				</P
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="helpers.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+ACCESSKEY="H"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="debugging.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Helper functions</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="helpers.html"
+ACCESSKEY="U"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Debugging aids</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>
