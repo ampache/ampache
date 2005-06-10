@@ -126,5 +126,4 @@ function flipField(element) {
                 echo( "<font class=\"error\">Error:\t$msg</font><br><br>" );
 		if (conf('debug')) { log_event($_SESSION['userdata']['username'],' general_error ',"Error: $msg"); }
         }
-show_clear();
 ?>
