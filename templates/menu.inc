@@ -26,9 +26,13 @@
 
 */
 
-$items = array( 
-	    _("Home")      => htmlspecialchars(conf('web_path') . "/index.php"),
-		_("Albums")    => htmlspecialchars(conf('web_path') . "/albums.php"),
+$items = array(_("Home") => htmlspecialchars(conf('web_path') . "/index.php"));
+
+if ($GLOBALS['user']->prefs['play_type'] == 'mpd' && conf('localplay_menu')) {
+	$items += array(_("Local Play") => htmlspecialchars(conf('web_path') . "/mpd.php"));
+}
+
+$items += array(_("Albums")    => htmlspecialchars(conf('web_path') . "/albums.php"),
 		_("Artists")   => htmlspecialchars(conf('web_path') . "/artists.php"),
 		_("Playlists") => htmlspecialchars(conf('web_path') . "/playlist.php"),
 		_("Search")    => htmlspecialchars(conf('web_path') . "/search.php"),

@@ -24,6 +24,15 @@
 
 require_once("modules/init.php");
 
+function mpd_redirect() {
+	if (conf('localplay_menu')) {
+		header ("Location: " . conf('web_path') . "/mpd.php");
+	}
+	else {
+		header ("Location: " . conf('web_path'));
+	}
+}
+
 // Connect to the MPD
 if (!class_exists('mpd')) { require_once(conf('prefix') . "/modules/mpd/mpd.class.php"); }
 if (!is_object($myMpd)) { $myMpd = new mpd(conf('mpd_host'),conf('mpd_port')); }
@@ -43,76 +52,76 @@ else {
 		case "rem":
 			if (!$user->has_access(25)) { break; }
 			if ( is_null($myMpd->PLRemove($_REQUEST[id])) ) echo "ERROR: " .$myMpd->errStr."\n";
-			header ("Location: " . conf('web_path'));
+			mpd_redirect();
 			break;
 		case ' > ':
 		case "play":
 			if (!$user->has_access(25)) { break; }
 			if ( is_null($myMpd->Play()) ) echo "ERROR: " .$myMpd->errStr."\n";
-			header ("Location: " . conf('web_path'));
+			mpd_redirect();
 			break;
 		case "stop":
 		case ' X ':
 			if (!$user->has_access(25)) { break; }
 			if ( is_null($myMpd->Stop()) ) echo "ERROR: " .$myMpd->errStr."\n";
-			header ("Location: " . conf('web_path'));
+			mpd_redirect();
 			break;
 		case ' = ':
 		case "pause":
 			if (!$user->has_access(25)) { break; }
 			if ( is_null($myMpd->Pause()) ) echo "ERROR: " .$myMpd->errStr."\n";
-			header ("Location: " . conf('web_path'));
+			mpd_redirect();
 			break;
 		case '|< ':
 		case "Prev":
 			if (!$user->has_access(25)) { break; }
 			if ( is_null($myMpd->Previous()) ) echo "ERROR: " . $myMpd->errStr."\n";
-			header ("Location: " . conf('web_path'));
+			mpd_redirect();
 			break;
 		case ' >|';
 		case "Next":
 			if (!$user->has_access(25)) { break; }
 			if ( is_null($myMpd->Next()) ) echo "ERROR: " . $myMpd->errStr."\n";
-			header ("Location: " . conf('web_path'));
+			mpd_redirect();
 			break;
 		case "shuffle":
 			if (!$user->has_access(25)) { break; }
 			if ( is_null($myMpd->PLShuffle()) ) echo "ERROR: " .$myMpd->errStr."\n";
-			header ("Location: " . conf('web_path'));
+			mpd_redirect();
 			break;
 		case "clear":
 			if (!$user->has_access(25)) { break; }
 			if ( is_null($myMpd->PLClear()) ) echo "ERROR: " .$myMpd->errStr."\n";
-			header ("Location: " . conf('web_path'));
+			mpd_redirect();
 			break;
 		case "loop":
 			if (!$user->has_access(25)) { break; }
 			if ($_REQUEST['val'] == "On") { $_REQUEST['val'] = '1'; }
 			else { $_REQUEST['val'] = '0'; }
 			if ( is_null($myMpd->SetRepeat($_REQUEST['val'])) ) echo "ERROR: " .$myMpd->errStr."\n";
-			header ("Location: " . conf('web_path'));
+			mpd_redirect();
 			break;
 		case "random":
 			if (!$user->has_access(25)) { break; }
                         if ($_REQUEST['val'] == "On") { $_REQUEST['val'] = '1'; }
                         else { $_REQUEST['val'] = '0'; }
 			if ( is_null($myMpd->SetRandom($_REQUEST['val']))) echo "ERROR: " .$myMpd->errStr."\n";
-                        header ("Location: " . conf('web_path'));
+                        mpd_redirect();
                         break;
 		case "adjvol":
 			if (!$user->has_access(25)) { break; }
 			if ( is_null($myMpd->AdjustVolume($_REQUEST[val])) ) echo "ERROR: " .$myMpd->errStr."\n";
-			header ("Location: " . conf('web_path'));
+			mpd_redirect();
 			break;
 		case "setvol":
 			if (!$user->has_access(25)) { break; }
 			if ( is_null($myMpd->SetVolume($_REQUEST[val])) ) echo "ERROR: " .$myMpd->errStr."\n";
-			header ("Location: " . conf('web_path'));
+			mpd_redirect();
 			break;
 		case "skipto":
 			if (!$user->has_access(25)) { break; }
 			if ( is_null($myMpd->SkipTo($_REQUEST[val])) ) echo "ERROR: " .$myMpd->errStr."\n";
-			header ("Location: " . conf('web_path'));
+			mpd_redirect();
 			break;
 		case "pladd":
 			if (!$user->has_access(25)) { break; }
@@ -130,7 +139,7 @@ else {
 			require (conf('prefix') . "/templates/show_mpdplay.inc");
 			break;
 		default:
-			header ("Location: " . conf('web_path'));
+			mpd_redirect();
 			break;
 	} // end switch
 

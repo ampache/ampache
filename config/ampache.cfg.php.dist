@@ -458,4 +458,12 @@ rss_song_description = <![CDATA[$song->f_title @ $album played by  $user->fullna
 #mpd_method = "file"
 
 
+# If set to true MPD is not displayed on the main page, but on it's
+# own distinct page. This is called localplay, because eventually
+# it will control all "LOCAL" style play methods including localplay
+# and the slimserver
+# DEFAULT: false
+#localplay_menu = true
+
+
 #####################################################

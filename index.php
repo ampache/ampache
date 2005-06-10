@@ -119,7 +119,7 @@ if (conf('refresh_limit') > 0) { show_template('javascript_refresh'); }
 		    if($user->prefs['play_type'] == 'local_play') {
 		        show_local_control();
 		        echo "<br />";
-		    } elseif ($user->prefs['play_type'] == 'mpd') { 
+		    } elseif ($user->prefs['play_type'] == 'mpd' && !conf('localplay_menu')) { 
 		    	show_mpd_control();
 			echo "<br />";
 		    } else {
