@@ -117,7 +117,7 @@ function flipField(element) {
 
 <div id="pageheader">
 <a href="http://www.ampache.org">
-        <img src="<?php echo conf('web_path'); ?><?php echo conf('theme_path'); ?>/images/ampache.gif" border="0" title="Ampache: For the love of music" alt="Ampache: For the love of music" />
+        <img class="pageheader" src="<?php echo conf('web_path'); ?><?php echo conf('theme_path'); ?>/images/ampache.gif" border="0" title="Ampache: For the love of music" alt="Ampache: For the love of music" />
 </a>
 </div>
 <?php
