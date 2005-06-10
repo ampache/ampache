@@ -43,7 +43,7 @@ $web_path = conf('web_path');
 		<input class="button" type="submit" title="<?php echo _("Prev"); ?>" name="action" value="|&lt; " />
 		<input class="button" type="submit" title="<?php echo _("Stop"); ?>" name="action" value=" X " <?php echo $stop; ?> />
 		<input class="button" type="submit" title="<?php echo _("Play"); ?>" name="action" value=" &gt; " <?php echo $play; ?> />
-		<input class="button" type="submit" title="<?php echo _("Pause"); ?>" name="action" value=" = " <?php echo $paused; ?> />
+		<input class="button" type="submit" title="<?php echo _("Pause"); ?>" name="action" value=" = " <?php echo $pause; ?> />
 		<input class="button" type="submit" title="<?php echo _("Next"); ?>" name="action" value= " &gt;|" />
 	</form>
 	</td>
