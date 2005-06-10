@@ -450,7 +450,7 @@ function show_page_footer ($menu="Home", $admin_menu='',  $display_menu=0) {
 		show_menu_items($menu);
 
 	}
-	echo "</body>";
-	echo "</html><br /><br />";
+	echo "<br /><br />\n</body>\n";
+	echo "</html>\n";
 }
 ?>
