@@ -86,7 +86,5 @@ require (conf('prefix') . "/templates/show_preferences.inc");
 
 
 // FOOTER
-show_admin_menu('Admin Preferences'); 
-show_menu_items('Admin'); 
-
+show_page_footer ('Admin', 'Admin Preferences',$user->prefs['display_menu']);
 ?>

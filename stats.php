@@ -78,6 +78,4 @@ by <a href="<?php echo conf('web_path'); ?>/user.php?action=show_edit_profile">e
 </table>
 <br />
 
-<?php show_menu_items('Stats'); ?>
-</body>
-</html>
+<?php show_page_footer ('Stats', '',$user->prefs['display_menu']);?>

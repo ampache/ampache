@@ -434,4 +434,23 @@ function show_clear() {
 
 } // show_clear
 
+/*!
+	@function show_page_footer
+	@discussion adds page footer including html and body end tags
+	@param $menu			menu item to highlight
+	@param $admin_menu		admin menu item to highlight
+	@param $display_menu		display menu or not (1 on 0 off) 
+*/
+function show_page_footer ($menu="Home", $admin_menu='',  $display_menu=0) {
+	if ($display_menu){
+		if($menu =="Admin"){
+			show_admin_menu($admin_menu);
+		}
+
+		show_menu_items($menu);
+
+	}
+	echo "</body>";
+	echo "</html><br /><br />";
+}
 ?>

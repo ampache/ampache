@@ -273,10 +273,5 @@ switch ($_REQUEST['action']) {
 
 } // end switch
 echo "<br /><br />";
-show_admin_menu('Catalog');
-show_menu_items('Admin');
-
+show_page_footer ('Admin', 'Catalog',$user->prefs['display_menu']);
 ?>
-
-</body>
-</html>

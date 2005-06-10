@@ -191,7 +191,7 @@ function create_preference_input($name,$value) {
 	} // if we don't have access to it
 
 	switch($name) {
-
+		case 'display_menu':
 		case 'download':
 		case 'quarantine':
 		case 'upload':

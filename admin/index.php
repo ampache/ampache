@@ -88,9 +88,5 @@ else {
 } // if they didn't pick anything
 
 echo "<br /><br />";
-show_admin_menu('');
-show_menu_items('Admin');
+show_page_footer ('Admin', '',$user->prefs['display_menu']);
 ?>
-
-</body>
-</html>

@@ -118,9 +118,5 @@ switch($action) {
 
 }
 echo "<br /><br />";
-show_menu_items('Artists');
+show_page_footer ('Artists', '',$user->prefs['display_menu']);
 ?>
-
-
-</body>
-</html>

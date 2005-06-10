@@ -8,6 +8,7 @@
 		(Thx hongyi_gao)
 	- Fixed refresh javascript for main page.
 	- Fixed <html lang=> tag so that it validates (Thx XGizzmo)
+	- Added show_footer_menu() funciton and preference (Thx XGizzmo)
 	
 
 --------------------------------------------------------------------------

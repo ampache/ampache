@@ -231,14 +231,7 @@ switch($action) {
 } //switch($action)
 
 echo "<br /><br />";
-show_menu_items('Playlists');
-
-?>
-</body>
-</html>
-
-
-<?php 
+show_page_footer ('Playlists', '',$user->prefs['display_menu']);
 
 /* Function definitions for this file */
 

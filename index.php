@@ -134,6 +134,4 @@ if (conf('refresh_limit') > 0) { show_template('javascript_refresh'); }
 </tr>
 </table>
 
-<?php show_menu_items('Home'); ?>
-</body>
-</html>
+<?php show_page_footer ('Home', '', $user->prefs['display_menu']); ?>

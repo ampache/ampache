@@ -131,9 +131,5 @@ show_clear();
 </form>
 <br /><br />
 <?php  
-	show_admin_menu('Mail Users');
-	show_menu_items('Admin');
+show_page_footer ('Admin', 'Mail Users',$user->prefs['display_menu']);
 ?>
-
-</body>
-</html>

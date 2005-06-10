@@ -172,10 +172,5 @@ switch ($action) {
 }
 
 echo "<br /><br />";
-show_admin_menu('Users');
-show_menu_items('Admin');
-
+show_page_footer ('Admin', 'Users',$user->prefs['display_menu']);
 ?>
-
-</body>
-</html>

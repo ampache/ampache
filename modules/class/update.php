@@ -217,6 +217,9 @@ class Update {
 
 		$version[] = array('version' => '331001', 'description' => $update_string);	
 
+		$update_string = "- Added Show bottom menu option.<br />";
+		$version[] = array('version' => '331002', 'description' => $update_string);	
+
 
 		return $version;
 
@@ -875,6 +878,26 @@ class Update {
 
 	} // update_331001
 
-} // end update class
 
+	function update_331002() { 
+
+		/* Add new preference */
+		$sql = "INSERT INTO `preferences` (`id`,`name`,`value`,`description`,`level`,`type`,`locked`) VALUES ('','display_menu','1','Show Bottom Menu','0','user','0')";
+		$db_results = mysql_query($sql, dbh());
+               /* Fix existing preferecnes */
+                $sql = "SELECT DISTINCT(user) FROM user_preference";
+                $db_results = mysql_query($sql, dbh());
+                
+                $user = new User(0);
+                
+                while ($results = mysql_fetch_array($db_results)) {
+                        $user->fix_preferences($results[0]);
+                }       
+                
+                /* Update Version */
+                $this->set_version('db_version','331002');	
+
+	} // update_331002
+
+} // end update class
 ?>

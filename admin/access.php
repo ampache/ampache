@@ -75,11 +75,5 @@ else {
 }
 echo "<br /><br />";
 
-show_admin_menu('Access Lists');
-show_menu_items('Admin');
-
+show_page_footer ('Admin', 'Access Lists',$user->prefs['display_menu']);
 ?>
-
-
-</body>
-</html>

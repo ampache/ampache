@@ -81,5 +81,5 @@ switch ($action) {
 	break;
 } // end action switch
 
-show_menu_items('Profile');
+show_page_footer ('Profile', '',$user->prefs['display_menu']);
 ?>

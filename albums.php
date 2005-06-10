@@ -174,8 +174,5 @@ else {
 } // else no album
 
 echo "<br /><br />";
-show_menu_items('Albums');
+show_page_footer ('Albums', '',$user->prefs['display_menu']);
 ?>
-
-</body>
-</html>
