@@ -15,6 +15,7 @@
 	- Fixed problem with preferences, where it would show theme change
 		until a second refresh. 
 	- Added refresh on Local Play page (Thx XGizzmo)
+	- Removed DEMO getid3() files
 	
 
 --------------------------------------------------------------------------
