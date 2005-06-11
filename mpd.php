@@ -27,7 +27,8 @@
 */
 require_once("modules/init.php");
 show_template('header');
-show_menu_items('MPD');
+if (conf('refresh_limit') > 0) { show_template('javascript_refresh'); }
+show_menu_items('Local Play');
 show_clear();
 
 if ($user->prefs['play_type'] == 'mpd') {
@@ -35,7 +36,7 @@ if ($user->prefs['play_type'] == 'mpd') {
 }
 
 show_clear();
-show_menu_items('MPD');
+show_page_footer('Local Play','',$user->prefs['display_menu'] );
 
 ?>
 </body>
