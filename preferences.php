@@ -30,11 +30,13 @@
 require('modules/init.php');
 
 switch(scrub_in($_REQUEST['action'])) { 
-
 	case 'update_preferences':
 		$user_id = scrub_in($_REQUEST['user_id']);
 		update_preferences($user_id);	
-		$preferences = $user->get_preferences();
+		$preferences = $GLOBALS['user']->get_preferences();
+		$GLOBALS['user']->set_preferences();
+		get_preferences();
+		set_theme();
 	break;
 	default:
 		$user_id = $user->id;

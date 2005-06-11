@@ -12,6 +12,8 @@
 	- Added localplay_menu config option that puts MPD on it's own 
 		page, will eventually control icecast,localplay,slimserver
 		as well (Thx Nedko)
+	- Fixed problem with preferences, where it would show theme change
+		until a second refresh. 
 	
 
 --------------------------------------------------------------------------
