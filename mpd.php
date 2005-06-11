@@ -39,5 +39,3 @@ show_clear();
 show_page_footer('Local Play','',$user->prefs['display_menu'] );
 
 ?>
-</body>
-</html>
