@@ -16,6 +16,8 @@
 		until a second refresh. 
 	- Added refresh on Local Play page (Thx XGizzmo)
 	- Removed DEMO getid3() files
+	- Fixed a problem with MPD file method and a trailing slash on 
+		the catalog name (Thx Rosensama)
 	
 
 --------------------------------------------------------------------------

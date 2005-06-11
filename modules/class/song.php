@@ -598,6 +598,7 @@ class Song {
 	        $catalog = new Catalog( $catalog_id );
                 $info = $catalog->get_info( );
                 $catalog_path = $info->path;
+		$catalog_path = rtrim($catalog_path, "/");
                 return( str_replace( $catalog_path . "/", "", $file_path ) );
 	       
        } // get_rel_path
