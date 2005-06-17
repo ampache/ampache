@@ -62,7 +62,7 @@ switch ($action) {
 if ($_REQUEST['album']) {
 	$song_ids = get_song_ids_from_album( $_REQUEST['album'] );
 }
-elseif ( $_REQUEST['playlist_id']) {
+elseif ( $_REQUEST['playlist_id'] AND $action != 'play_selected') {
 	$playlist = new Playlist($_REQUEST['playlist_id']);
 	if ($_REQUEST['action'] == "random") { 
 		$song_ids = $playlist->get_random_songs();

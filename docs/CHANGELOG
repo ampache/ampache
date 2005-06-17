@@ -18,6 +18,7 @@
 	- Removed DEMO getid3() files
 	- Fixed a problem with MPD file method and a trailing slash on 
 		the catalog name (Thx Rosensama)
+	- Fixed play_selected on Playlists
 	
 
 --------------------------------------------------------------------------
