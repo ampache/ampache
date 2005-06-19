@@ -51,9 +51,9 @@ foreach ($artists as $artist) {
 	<td><?php print $artist['name']; ?></td>
 	<td><?php print $artist['songs']; ?></td>
 	<td><?php print $artist['albums']; ?></td>	
-	<td nowrap> <?php print _("Play"); ?> : 
-		<a href="<?php print conf('web_path'); ?>/song.php?action=m3u&artist=<?php print $artist['id']; ?>"><?php print _("All"); ?></a> | 
-		<a href="<?php print conf('web_path'); ?>/song.php?action=m3u&artist_random=<?php print $artist['id']; ?>"><?php print _("Random"); ?></a> 
+	<td nowrap="nowrap"> <?php print _("Play"); ?> : 
+		<a href="<?php print conf('web_path'); ?>/song.php?action=m3u&amp;artist=<?php print $artist['id']; ?>"><?php print _("All"); ?></a> | 
+		<a href="<?php print conf('web_path'); ?>/song.php?action=m3u&amp;artist_random=<?php print $artist['id']; ?>"><?php print _("Random"); ?></a> 
 	</td>
 </tr>
 <?php } ?>

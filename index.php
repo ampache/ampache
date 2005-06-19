@@ -33,6 +33,7 @@ $action = scrub_in($_REQUEST['action']);
 
 if (conf('refresh_limit') > 0) { show_template('javascript_refresh'); }
 ?>
+
 <p style="font-size: 8pt; font-weight: bold;">
 	<?php echo _("Welcome to"); ?> <a href="http://www.ampache.org/index.php">Ampache v.<?php echo conf('version'); ?></a>
 <?php if (conf('use_auth')) { ?>

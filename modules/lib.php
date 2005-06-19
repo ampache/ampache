@@ -190,14 +190,14 @@ function show_random_play() {
 		</td>
 		</tr>
 		<tr class="even">
-                <td nowrap> ' . _("from catalog") . '</td>
+                <td nowrap="nowrap"> ' . _("from catalog") . '</td>
                 <td>
 ';
 
         show_catalog_pulldown( -1, 0);
 
 	print '
-	</tr>
+	</td></tr>
 	<tr>
 		<td colspan="4">
 			<input type="hidden" name="aaction" value="Play!" />
@@ -227,15 +227,15 @@ function show_artist_pulldown ($artist) {
 
 	$query = "SELECT id,name FROM artist ORDER BY name";
 	$db_result = mysql_query($query, $dbh);
-	echo "<select name=\"artist\">\n";
+	echo "\n<select name=\"artist\">\n";
 
 	while ( $r = mysql_fetch_row($db_result) ) {
 		// $r[0] = id, $r[1] = name
 		if ( $artist == $r[0] ) {
-			echo "<option value=\"$r[0]\" selected=\"selected\">$r[1]</option>\n";
+			echo "<option value=\"$r[0]\" selected=\"selected\">". htmlspecialchars($r[1]) ."</option>\n";
 		}
 		else {
-			echo "<option value=\"$r[0]\">$r[1]</option>\n";
+			echo "<option value=\"$r[0]\">". htmlspecialchars($r[1]) ."</option>\n";
 		}
 	}
 
@@ -256,7 +256,7 @@ function show_album_pulldown ($album) {
 	$sql = "SELECT id,name FROM album ORDER BY name";
 	$db_result = mysql_query($sql, $dbh);
 
-	echo "<select name=\"album\">\n";
+	echo "\n<select name=\"album\">\n";
 
 	while ( $r = mysql_fetch_row($db_result) ) {
 		// $r[0] = id, $r[1] = name
@@ -268,7 +268,7 @@ function show_album_pulldown ($album) {
 		}
 	}//while
 
-	echo "</select>\n";
+	echo "\n</select>\n";
 } // show_album_pulldown()
 
 
@@ -292,19 +292,19 @@ function show_flagged_popup($reason,$label='value', $name='flagged_type', $other
 	}
 	$db_result = mysql_query($query, $dbh);
 
-	echo "<select name=\"$name\" $other>\n";
+	echo "\n<select name=\"$name\" $other>\n";
 
 	while ( $r = mysql_fetch_array($db_result) ) {
 		// $r[0] = id, $r[1] = type 
 		if ( $reason === $r['type'] ) {
-			echo "\t<option value=\"".$r['type']."\" selected=\"selected\">".$r[$label]."</option>\n";
+			echo "\t<option value=\"".$r['type']."\" selected=\"selected\">".htmlspecialchars($r[$label])."</option>\n";
 		}
 		else {
-			echo "\t<option value=\"".$r['type']."\">".$r[$label]."</option>\n";
+			echo "\t<option value=\"".$r['type']."\">".htmlspecialchars($r[$label])."</option>\n";
 		}
 	}
 
-	echo "</select>\n";
+	echo "\n</select>\n";
 } // show_flagged_popup()
 
 
@@ -331,7 +331,7 @@ function show_genre_pulldown ($genre, $complete) {
 
 	$db_result = mysql_query($sql, $dbh);
 
-	echo "<select name=\"genre[]\" MULTIPLE size=\"7\">\n";
+	echo "\n<select name=\"genre\" multiple=\"multiple\" size=\"7\">\n";
 
 	if ( ! $complete ) {
 		$genre_info = get_genre_info( -1 );
@@ -355,8 +355,8 @@ function show_genre_pulldown ($genre, $complete) {
 			echo "  <option value=\"${r[0]}\">$genre_name - ($genre_count)</option>\n";
 		}
 	}
+	echo "  </select>\n";
 
-	echo "</select>";
 } // show_genre_pulldown()
 
 /*
@@ -373,7 +373,7 @@ function show_catalog_pulldown ($catalog, $complete) {
 
 	$db_result = mysql_query($sql, dbh());
 
-	echo "<select name=\"catalog\">\n";
+	echo "\n<select name=\"catalog\">\n";
 
 	echo "  <option value=\"-1\" selected=\"selected\">All</option>\n";
 
@@ -391,7 +391,7 @@ function show_catalog_pulldown ($catalog, $complete) {
 			echo "  <option value=\"${r[0]}\">$catalog_name</option>\n";
 		}
 	}
-	echo "</select>";
+	echo "\n</select>\n";
 } // show_catalog_pulldown()
 
 
@@ -989,14 +989,14 @@ ECHO;
 			list($count) = mysql_fetch_row($count_result);
 			$class = flip_class();
 			echo "  <tr class=\"$class\">\n";
-			echo "    <td><a href=\"$web_path/playlist.php?playlist_id=$plid&action=view_list\">$plname</a></td>\n";
+			echo "    <td><a href=\"$web_path/playlist.php?playlist_id=$plid&amp;action=view_list\">$plname</a></td>\n";
 			echo "    <td>$count</td>\n";
 			echo "    <td>$plfullname</td>\n"; 
-			echo "    <td><a href=\"$web_path/playlist.php?playlist_id=$plid&action=view_list\">" . _("View") . "</a></td>\n"; 
+			echo "    <td><a href=\"$web_path/playlist.php?playlist_id=$plid&amp;action=view_list\">" . _("View") . "</a></td>\n"; 
 
 			if ($user->id == $pluser->id || $user->access === 'admin') {
-				echo "    <td><a href=\"$web_path/playlist.php?playlist_id=$plid&action=edit\">" . _("Edit") . "</a></td>\n";
-				echo "    <td><a href=\"$web_path/playlist.php?playlist_id=$plid&action=delete_playlist\">" . _("Delete") . "</a></td>\n";
+				echo "    <td><a href=\"$web_path/playlist.php?playlist_id=$plid&amp;action=edit\">" . _("Edit") . "</a></td>\n";
+				echo "    <td><a href=\"$web_path/playlist.php?playlist_id=$plid&amp;action=delete_playlist\">" . _("Delete") . "</a></td>\n";
 			}
 			else {
 				echo "    <td>&nbsp;</td>\n";
@@ -1004,21 +1004,21 @@ ECHO;
 			}
 			
 			if ( $count[0] ) {
-				echo "    <td><a href=\"$web_path/song.php?action=m3u&playlist_id=$plid\">" . _("Play") . "</a> | " .
-				     "<a href=\"$web_path/song.php?action=random&playlist_id=$plid\">" . _("Random") . "</a></td>\n";				
+				echo "    <td><a href=\"$web_path/song.php?action=m3u&amp;playlist_id=$plid\">" . _("Play") . "</a> | " .
+				     "<a href=\"$web_path/song.php?action=random&amp;playlist_id=$plid\">" . _("Random") . "</a></td>\n";				
 			}
 			else {
 				echo "    <td>&nbsp;</td>\n";
 			}                       
                         if( batch_ok() ) { 
-                                echo"   <td><a href=\"$web_path/batch.php?action=pl&id=$plid\">" . _("Download") . "</a></td>\n";
+                                echo"   <td><a href=\"$web_path/batch.php?action=pl&amp;id=$plid\">" . _("Download") . "</a></td>\n";
                         } else {
                                 echo"   <td>&nbsp;</td>\n";
                         }                         
 
 			echo "  </tr>\n";
 		}
-		echo "</ul>\n";
+		echo "\n";
 	} //if rows in result
 	else { 
 		echo "  <tr class=\"even\">\n";
@@ -1027,7 +1027,7 @@ ECHO;
 	}
 
 	echo "</table>\n";
-	echo "<br>\n";
+	echo "<br />\n";
 
 }
 
@@ -1294,20 +1294,20 @@ function get_global_popular($type) {
 			$artist = $song->get_artist_name();
 			$text = "$artist - $song->title";
 			/* Add to array */
-			$items[] = "<li> <a href=\"$web_path/song.php?action=m3u&song=$song->id\" title=\"$text\">" . truncate_with_ellipse($text, conf('ellipse_threshold_title')+3) . "&nbsp;($r->count)</a> </li>";
+			$items[] = "<li> <a href=\"$web_path/song.php?action=m3u&amp;song=$song->id\" title=\"". htmlspecialchars($text) ."\">" . htmlspecialchars(truncate_with_ellipse($text, conf('ellipse_threshold_title')+3)) . "&nbsp;($r->count)</a> </li>";
 			
 		} // if it's a song
 
 		elseif ( $type == 'artist' ) {
 			$artist = get_artist_name($r->object_id);
 			if ($artist) {
-				$items[] = "<li> <a href=\"$web_path/artists.php?action=show&amp;artist=$r->object_id\" title=\"$artist\">" . truncate_with_ellipse($artist, conf('ellipse_threshold_artist')+3) . "&nbsp;($r->count)</a> </li>";
+				$items[] = "<li> <a href=\"$web_path/artists.php?action=show&amp;artist=$r->object_id\" title=\"". htmlspecialchars($artist) ."\">" . htmlspecialchars(truncate_with_ellipse($artist, conf('ellipse_threshold_artist')+3)) . "&nbsp;($r->count)</a> </li>";
 			} // if no artist found
 		} // if type isn't artist
 		elseif ( $type == 'album' ) { 
 			$album = new Album($r->object_id);
 			if ($album) { 
-				$items[] = "<li> <a href=\"$web_path/albums.php?action=show&amp;album=$r->object_id\" title=\"$album->name\">" . truncate_with_ellipse($album->name,conf('ellipse_threshold_album')+3) . "&nbsp;($r->count)</a> </li>";
+				$items[] = "<li> <a href=\"$web_path/albums.php?action=show&amp;album=$r->object_id\" title=\"". htmlspecialchars($album->name) ."\">" . htmlspecialchars(truncate_with_ellipse($album->name,conf('ellipse_threshold_album')+3)) . "&nbsp;($r->count)</a> </li>";
 			}
 		}
 	} // end while
@@ -1356,10 +1356,10 @@ function show_info_box ($title, $type, $items) {
 
 
 	if ($type == 'your_song') {
-		echo "<td>$title - <a href=\"$web_path/song.php?action=m3u&your_popular_songs=$popular_threshold\">Play</a></td>\n";
+		echo "<td>$title - <a href=\"$web_path/song.php?action=m3u&amp;your_popular_songs=$popular_threshold\">Play</a></td>\n";
 	}
 	elseif ($type == 'song') {
-		echo "<td>$title - <a href=\"$web_path/song.php?action=m3u&popular_songs=$popular_threshold\">Play</a></td>\n";
+		echo "<td>$title - <a href=\"$web_path/song.php?action=m3u&amp;popular_songs=$popular_threshold\">Play</a></td>\n";
 	}
 	else {
 		echo "<td>$title</td>\n";

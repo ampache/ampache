@@ -88,30 +88,31 @@ function show_duplicate_searchbox($search_type) {
 				$checked = "checked=\"checked\"";
 			else
 				$checked = "";
-			echo "<input type=\"radio\" name=\"search_type\" value=\"title\" ".$checked." >" . _("Title") . "<br />";
+			echo "<input type=\"radio\" name=\"search_type\" value=\"title\" ".$checked." />" . _("Title") . "<br />";
 
 			if ($search_type=="artist_title")
 						$checked = "checked=\"checked\"";
 			else
 				$checked = "";
-			echo "<input type=\"radio\" name=\"search_type\" value=\"artist_title\" ".$checked." >" . _("Artist and Title") . "<br />";
+			echo "<input type=\"radio\" name=\"search_type\" value=\"artist_title\" ".$checked." />" . _("Artist and Title") . "<br />";
 			if ($search_type=="artist_album_title"OR $search_type=="")
 						$checked = "checked=\"checked\"";
 			else
 				$checked = "";
-			echo "<input type=\"radio\" name=\"search_type\" value=\"artist_album_title\"".$checked." >" . _("Artist, Album and Title") . "<br />";
+			echo "<input type=\"radio\" name=\"search_type\" value=\"artist_album_title\"".$checked." />" . _("Artist, Album and Title") . "<br />";
 			?>
 		</td>
 	</tr>
 	<tr class="odd">
 		<td></td>
 		<td>
-			<input type="hidden" name="action" value="search">
+			<input type="hidden" name="action" value="search" />
 			<input type="submit" value="<?php echo _("Search"); ?>" />
 		</td>
 	</tr>
 </table>
-<br>
+</form>
+<br />
 <?
 } // show_duplicate_searchbox
 ?>

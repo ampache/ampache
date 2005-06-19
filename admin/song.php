@@ -107,14 +107,17 @@ echo <<<EDIT_SONG_1
   <tr class="table-header">
   	<td colspan="3"><b>Editing $info->title</b></td>
   </tr>
+
   <tr class="odd">
     <td>File:</td>
     <td colspan="2">$filename $oggwarn</td>
   </tr>
+
   <tr class="odd">
     <td>Title:</td>
-    <td colspan="2"><input type="text" name="title" size="60" value="$info->title"></td>
+    <td colspan="2"><input type="text" name="title" size="60" value="$info->title" /></td>
   </tr>
+
   <tr class="even">
     <td>Artist:</td>
     <td>
@@ -122,7 +125,7 @@ EDIT_SONG_1;
     show_artist_pulldown($info->artist);
 echo <<<EDIT_SONG_2
     </td>
-    <td>or <input type="text" name="new_artist" size="30" value=""></td>
+    <td>or <input type="text" name="new_artist" size="30" value="" /></td>
   </tr>
 
   <tr class="odd">
@@ -132,18 +135,22 @@ EDIT_SONG_2;
     show_album_pulldown($info->album);
 echo <<<EDIT_SONG_3
     </td>
-    <td>or <input type="text" name="new_album" size="30" value=""></td>
+    <td>or <input type="text" name="new_album" size="30" value="" /></td>
   </tr>
+
   <tr class="even">
     <td>Track:</td>
     <td colspan="2"><input type="text" size="4" maxlength="4" name="track" value="$info->track"></input></td>
   </tr>
+
   <tr class="odd">
     <td>Genre:</td>
     <td colspan="2">
 EDIT_SONG_3;
     show_genre_pulldown($info->genre, 1);
 echo <<<EDIT_SONG_4
+  </td>
+</tr>	
   <tr class="even">
     <td>Year</td>
     <td colspan="2"><input type="text" size="4" maxlength="4" name="year" value="$info->year"></input></td>
@@ -152,10 +159,10 @@ echo <<<EDIT_SONG_4
 EDIT_SONG_4;
 if(!$ogg)
 {
-    echo <<<EDIT_SONG_5
+echo <<<EDIT_SONG_5
   <tr class="even">
     <td>&nbsp;</td>
-    <td><input type="checkbox" name="update_id3" value="yes">&nbsp;Update id3 tags</input></td>
+    <td><input type="checkbox" name="update_id3" value="yes"></input>&nbsp; Update id3 tags </td>
     <td>&nbsp;</td>
   </tr>
 EDIT_SONG_5;
@@ -176,7 +183,8 @@ EDIT_SONG_6;
 }
 
 ?>
-<hr>
+
+<hr />
 
 </body>
 </html>

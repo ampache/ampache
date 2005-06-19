@@ -334,7 +334,7 @@ function truncate_with_ellipse($text, $max=27) {
 */
 function show_footer() {
         $class = "table-header";
-        echo "<br /><br /><br /><div class=\"$class\" style=\"border: solid thin black;\">&nbsp</div>";
+        echo "<br /><br /><br /><div class=\"$class\" style=\"border: solid thin black;\">&nbsp;</div>";
 } // show_footer
 
 /*!

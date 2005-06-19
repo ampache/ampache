@@ -25,11 +25,11 @@
 */
 ?>
 <p><font size="+1"><?php print _("Admin Section"); ?>:</font></p>
-<dl>
+<ul>
 	<li><a href="<?php echo conf('web_path'); ?>/admin/users.php"><?php print _("Users"); ?></a> - <?php print _("Create/Modify User Accounts for Ampache"); ?></li>
 	<li><a href="<?php echo conf('web_path'); ?>/admin/mail.php"><?php print _("Mail"); ?></a> - <?php print _("Mail your users to notfiy them of changes"); ?></li>
 	<li><a href="<?php echo conf('web_path'); ?>/admin/catalog.php"><?php print _("Catalog"); ?></a> - <?php print _("Create/Update/Clean your catalog here"); ?></li>
 	<li><a href="<?php echo conf('web_path'); ?>/admin/preferences.php"><?php print _("Admin Preferences"); ?></a> - <?php print _("Modify Site-wide preferences"); ?></li>
 	<li><a href="<?php echo conf('web_path'); ?>/admin/access.php"><?php print _("Access Lists"); ?></a> - <?php print _("Modify Access List Permissions"); ?> (<?php print _("Must have access_control=true in ampache.cfg") ?>)</li>
-</dl>
+</ul>
 

@@ -115,12 +115,12 @@ class Album {
 	        $web_path = conf('web_path');
 
 		/* Truncate the string if it's to long */
-		$name 		= truncate_with_ellipse($this->name,conf('ellipse_threshold_album'));
-
-	        $this->f_name	= "<a href=\"$web_path/albums.php?action=show&amp;album=" . $this->id . "\" title=\"" . $this->name . "\">" . $name . "</a>";
+		$name 		= htmlspecialchars(truncate_with_ellipse($this->name,conf('ellipse_threshold_album')));
+		$artist		= htmlspecialchars($this->artist);
+	        $this->f_name	= "<a href=\"$web_path/albums.php?action=show&amp;album=" . $this->id . "\" title=\"" . $name . "\">" . $name . "</a>";
 	        $this->f_songs	= "<div align=\"center\">" . $this->songs . "</div>";
 		if ($this->artist_count == '1') { 
-		        $this->f_artist	= "<a href=\"$web_path/artists.php?action=show&amp;artist=" . $this->artist_id . "\">" . $this->artist . "</a>";
+		        $this->f_artist	= "<a href=\"$web_path/artists.php?action=show&amp;artist=" . $this->artist_id . "\">" . $artist . "</a>";
 		}
 		else {
 			$this->f_artist = _("Various");

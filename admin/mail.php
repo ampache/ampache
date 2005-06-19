@@ -98,9 +98,9 @@ show_clear();
     <td><?php echo _("Mail to"); ?>:</td>
     <td> 
 	<select name="to">
-		<option value="all" <?php if ($to == 'all') { echo "SELECTED"; } ?>>All</option>
-		<option value="users" <?php if ($to == 'user') { echo "SELECTED"; } ?>>Users</option>
-		<option value="admins" <?php if ($to == 'admin') { echo "SELECTED"; } ?>>Admins</option>
+		<option value="all" <?php if ($to == 'all') { echo "selected=\"selected\""; } ?>>All</option>
+		<option value="users" <?php if ($to == 'user') { echo "selected=\"selected\""; } ?>>Users</option>
+		<option value="admins" <?php if ($to == 'admin') { echo "selected=\"selected\""; } ?>>Admins</option>
 	</select>
     </td>
   </tr>

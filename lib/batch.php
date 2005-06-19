@@ -32,7 +32,7 @@ function get_song_files( $song_ids ) {
 		/* Don't archive disabled songs */
 		if ($song->status != 'disabled') { 
 	                $user->update_stats( $song_id );
-	                $total_size += sprintf("%.2f",($song->size/1048576));;
+	                $total_size += sprintf("%.2f",($song->size/1048576));
 	                array_push( $song_files, $song->file );
 		} // if song isn't disabled
         }

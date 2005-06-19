@@ -27,7 +27,7 @@ $htmllang = str_replace("_","-",conf('lang'));
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "DTD/xhtml1-transitional.dtd">
 <html lang="<?php echo $htmllang; ?>">
 <head>
-<link rel="shortcut icon" href="<?php echo conf('web_path'); ?>/favicon.ico">
+<link rel="shortcut icon" href="<?php echo conf('web_path'); ?>/favicon.ico" />
 <meta http-equiv="Content-Type" content="text/html; charset=<?php echo conf('site_charset'); ?>" />
 <?php show_template('style'); ?>
 <title><?php echo conf('site_title'); ?></title>

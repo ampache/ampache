@@ -40,7 +40,7 @@ $total_items = $view->total_items;
 	<td> <?php echo _("Artist"); ?> </td>
 	<td> <?php echo _("Songs"); ?>  </td>
 	<td>
-		<a href="<?php echo conf('web_path'); ?>/<?php echo $_SESSION['view_script']; ?>?action=<?php echo $_REQUEST['action']; ?>&amp;keep_view=true&amp;sort_type=album.year&amp;sort_order=0"><?php echo _("Year"); ?></>
+		<a href="<?php echo conf('web_path'); ?>/<?php echo $_SESSION['view_script']; ?>?action=<?php echo $_REQUEST['action']; ?>&amp;keep_view=true&amp;sort_type=album.year&amp;sort_order=0"><?php echo _("Year"); ?></a>
 	</td>
 	<td> <?php echo _("Action"); ?> </td>
 
@@ -54,11 +54,11 @@ foreach ($albums as $album) {
 		<td><?php echo $album->f_artist; ?></td>
 		<td><?php echo $album->songs; ?></td>
 		<td><?php echo $album->year; ?></td>
-		<td nowrap> <?php echo _("Play"); ?> : 
-		<a href="<?php echo conf('web_path'); ?>/song.php?action=m3u&album=<?php echo $album->id; ?>"><?php echo _("All"); ?></a> | 
-		<a href="<?php echo conf('web_path'); ?>/song.php?action=m3u&album_random=<?php echo $album->id; ?>"><?php echo _("Random"); ?></a> 
+		<td nowrap="nowrap"> <?php echo _("Play"); ?> : 
+		<a href="<?php echo conf('web_path'); ?>/song.php?action=m3u&amp;album=<?php echo $album->id; ?>"><?php echo _("All"); ?></a> | 
+		<a href="<?php echo conf('web_path'); ?>/song.php?action=m3u&amp;album_random=<?php echo $album->id; ?>"><?php echo _("Random"); ?></a> 
                 <?php if( batch_ok() ) { ?>
-                        | <a href="<?php echo conf('web_path'); ?>/batch.php?action=alb&id=<?php echo $album->id; ?>"><?php echo _("Download"); ?></a>
+                        | <a href="<?php echo conf('web_path'); ?>/batch.php?action=alb&amp;id=<?php echo $album->id; ?>"><?php echo _("Download"); ?></a>
                 <?php } ?>
 		</td>
 </tr>
@@ -69,7 +69,9 @@ foreach ($albums as $album) {
         </td>
         <td> <?php echo _("Artist"); ?> </td>
         <td> <?php echo _("Songs"); ?>  </td>
-	<td> <?php echo _("Year"); ?>   </td>
+	<td>
+		<a href="<?php echo conf('web_path'); ?>/<?php echo $_SESSION['view_script']; ?>?action=<?php echo $_REQUEST['action']; ?>&amp;keep_view=true&amp;sort_type=album.year&amp;sort_order=0"><?php echo _("Year"); ?></a>
+	</td>
 	<td> <?php echo _("Action"); ?> </td>
 
 </tr>

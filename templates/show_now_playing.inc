@@ -43,13 +43,13 @@
                         if (conf('use_auth')) { 
 				echo "\t<td valign=\"center\">$np_user->fullname</td>\n"; 
 			}
-                        echo "\t<td><a title=\"$song->title\" href=\"$web_path/song.php?action=m3u&song=$song->id\">$text</a></td>\n";
-			echo "\t<td><a title=\"$song->f_artist\" href=\"$web_path/artists.php?action=show&artist=$song->artist\">$song->f_artist</a> / ";
-                        echo "\t<a title=\"$album\" href=\"$web_path/albums.php?action=show&album=$song->album\">$song->f_album</a></td>";
+                        echo "\t<td><a title=\"" . htmlspecialchars($song->title) . "\" href=\"$web_path/song.php?action=m3u&amp;song=$song->id\">$text</a></td>\n";
+			echo "\t<td><a title=\"" . htmlspecialchars($song->f_artist) . "\" href=\"$web_path/artists.php?action=show&amp;artist=$song->artist\">$song->f_artist</a> / ";
+                        echo "\t<a title=\"" . htmlspecialchars($album) . "\" href=\"$web_path/albums.php?action=show&amp;album=$song->album\">$song->f_album</a></td>";
                         if (conf('play_album_art')) {
                                 echo "\t<td align=\"center\">";
                                 echo "<a target=\"_blank\" href=\"" . conf('web_path') . "/albumart.php?id=" . $song->album . "\">";
-                                echo "<img align=\"center\" border=\"0\" src=\"" . conf('web_path') . "/albumart.php?id=" . $song->album . "&amp;fast=1\" alt=\"Album Art\" height=\"75\">";
+                                echo "<img align=\"middle\" border=\"0\" src=\"" . conf('web_path') . "/albumart.php?id=" . $song->album . "&amp;fast=1\" alt=\"Album Art\" height=\"75\" />";
                                 echo "</a>\n";
                                 echo "\t</td>\n";
                                 echo "</tr>\n";
@@ -60,6 +60,5 @@
                 } // if it's a song
         } // while we're getting songs
 ?>
-  </tr>
 </table>
 <? } ?>

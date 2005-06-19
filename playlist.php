@@ -115,11 +115,11 @@ if ( isset($playlist_id) && ($playlist_id != 0) && $_REQUEST['action'] != 'delet
 	echo "&nbsp;&nbsp;&nbsp;" . _("owned by") . " $pluser->fullname ($pluser->username)<br />";
 	echo "<ul>";
 	if ($pluser->id == $user->id || $user->access === 'admin') {
-		echo "<li><a href=\"" . conf('web_path') . "/playlist.php?action=edit&playlist_id=$playlist->id\">" . _("Edit Playlist") . "</a></li>\n";
+		echo "<li><a href=\"" . conf('web_path') . "/playlist.php?action=edit&amp;playlist_id=$playlist->id\">" . _("Edit Playlist") . "</a></li>\n";
 	}
 	if (count($playlist->get_songs()) > 0) {
-		echo "<li><a href=\"" . conf('web_path') . "/song.php?action=m3u&playlist_id=$playlist->id\">" . _("Play Full Playlist") . "</a></li>\n";
-		echo "<li><a href=\"" . conf('web_path') . "/song.php?action=random&playlist_id=$playlist->id\">" . _("Play Random") . "</a></li>\n";
+		echo "<li><a href=\"" . conf('web_path') . "/song.php?action=m3u&amp;playlist_id=$playlist->id\">" . _("Play Full Playlist") . "</a></li>\n";
+		echo "<li><a href=\"" . conf('web_path') . "/song.php?action=random&amp;playlist_id=$playlist->id\">" . _("Play Random") . "</a></li>\n";
 	}
 	echo "</ul>";
 	echo "</div>";
@@ -167,7 +167,7 @@ switch($action) {
 		else {
 			show_confirm_action("Are you sure you want to delete '$playlist->name' playlist?",
 				"playlist.php",
-				"action=delete_playlist&playlist_id=$playlist_id");
+				"action=delete_playlist&amp;playlist_id=$playlist_id");
 		}
 		break;
 

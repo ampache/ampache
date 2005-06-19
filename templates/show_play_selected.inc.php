@@ -20,7 +20,7 @@
 
 */
 ?>
-<script language=javascript>
+<script type="text/javascript" language="javascript">
 <!--
 function ToPlaylist(action)
 {

@@ -29,7 +29,7 @@
 		<?php echo _("Filename"); ?>:
 		<?php $GLOBALS['error']->print_error('filename'); ?>
 	</td>
-	<td><input type="textbox" name="filename" value="<?php echo $_REQUEST['filename']; ?>" size="45" /></td>	
+	<td><input type="text" name="filename" value="<?php echo $_REQUEST['filename']; ?>" size="45" /></td>	
 </tr>
 <tr class="<?php echo flip_class(); ?>">
 	<td>
@@ -37,7 +37,7 @@
 	</td>
 	<td>
 		<select name="playlist_type">
-			<option name="m3u">M3U</option>
+			<option value="m3u">M3U</option>
 <!--			<option name="pls">PLS</option> -->
 		</select>
 	</td>

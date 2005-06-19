@@ -50,7 +50,7 @@ function get_artists($sql, $action=0) {
 function format_artist($artist) {
 
         $web_path = conf('web_path');
-        $artist['name'] = "<a href=\"$web_path/artists.php?action=show&amp;artist=" . $artist['id'] . "\">" . $artist['prefix'] . " " . $artist['name'] . "</a>";
+        $artist['name'] = "<a href=\"$web_path/artists.php?action=show&amp;artist=" . $artist['id'] . "\">" . htmlspecialchars($artist['prefix']) . " " . htmlspecialchars($artist['name']) . "</a>";
 
 	return $artist;
 

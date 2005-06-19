@@ -81,9 +81,9 @@ if ($GLOBALS['user']->prefs['upload']) {
 		} // else
 	}  // if use_auth
 	elseif ( $GLOBALS['user']->id != '0') { 
-		print("\t\t<li bgcolor=\"" . conf('primary_color') . "\" align=\"center\">".
-			"<a href=\"".conf('web_path')."/logout.php\">" . _("Logout") . "</a> </li>\n");
+		print("\t\t<li><a href=\"".conf('web_path')."/logout.php\">" . _("Logout") . "</a> </li>\n");
 	} // else no user
 ?>
 
 	</ul>
+<br />

@@ -59,7 +59,7 @@ switch($action) {
         $catalog->update_single_item('artist',$_REQUEST['artist']);
 
         echo "<br /><b>" . _("Update From Tags Complete") . "</b> &nbsp;&nbsp;";
-        echo "<a href=\"" . conf('web_path') . "/artists.php?action=show&artist=" . $_REQUEST['artist'] . "\">[" . _("Return") . "]</a>";
+        echo "<a href=\"" . conf('web_path') . "/artists.php?action=show&amp;artist=" . $_REQUEST['artist'] . "\">[" . _("Return") . "]</a>";
 
 	break;
     case 'match':

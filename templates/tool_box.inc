@@ -27,8 +27,8 @@
 
 ?>
 
-<table class="border" cellspacing=1 cellpadding=3>
-	<tr class="table-header" align=center>
+<table class="border" cellspacing="1" cellpadding="3">
+	<tr class="table-header" align="center">
 		<td><?php echo $title; ?></td>
 	</tr>
 	<tr>

@@ -52,3 +52,4 @@ $items = array(
 
 	?>
 </ul>
+<br />

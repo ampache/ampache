@@ -170,13 +170,11 @@ class Artist {
 	function format_artist() {
 
 		/* Combine prefix and name, trim then add ... if needed */
-                $name = truncate_with_ellipse(trim($this->prefix . " " . $this->name));
-
+                $name = htmlspecialchars(truncate_with_ellipse(trim($this->prefix . " " . $this->name)));
 		$this->f_name = $this->name;
-		$this->full_name = trim($this->prefix . " " . $this->name);
+		$this->full_name = htmlspecialchars(trim($this->prefix . " " . $this->name));
 		//FIXME: This shouldn't be set like this, f_name should be like this
-	        $this->link = "<a href=\"" . conf('web_path') . "/artists.php?action=show&amp;artist=" . $this->id . "\" title=\"" . $this->full_name . "\">" . 
-				$name . "</a>";
+	        $this->link = "<a href=\"" . conf('web_path') . "/artists.php?action=show&amp;artist=" . $this->id . "\" title=\"" . $this->full_name . "\">" . $name . "</a>";
 		$this->name = $this->link;
 	        return $artist;
 

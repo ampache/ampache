@@ -30,10 +30,10 @@
 
 <?php show_duplicate_searchbox($search_type) ?>
 <?php if ( $flags ) { ?>
-</form>
+
 <form method="post" enctype="multipart/form-data" action="<?php echo  conf('web_path') . "/admin/song.php?action=disable"; ?>">
 <p style="font-size: 10pt; font-weight: bold;">Duplicate Songs</p>
-<table class="tabledata" cellspacing="0" cellpadding="0" border="1">
+<table class="tabledata" cellspacing="0" cellpadding="0" >
 	<tr class="table-header">
 		<td>Disable</td>
 		<td>Song</td>
@@ -60,8 +60,8 @@
 	foreach ($dinfolist as $dinfo)
 	{
 		echo "<tr class=\"".$class."\">".
-		"<td><input type=\"checkbox\" name=\"song_ids[]\" value=\"" . $dinfo['songid'] . "\">".
-		"<td><a href=\"".conf('web_path')."/song.php?action=m3u&song=$song->id\">$formated_title</td>".
+		"<td><input type=\"checkbox\" name=\"song_ids[]\" value=\"" . $dinfo['songid'] . "\" />".
+		"<td><a href=\"".conf('web_path')."/song.php?action=m3u&amp;song=$song->id\">$formated_title</td>".
 		"<td><a href=\"".conf('web_path')."/artists.php?action=show&amp;artist=".$dinfo['artistid']."\" title=\"".$dinfo['artist']."\">".$dinfo['artist']."</a> </td>".
 		"<td><a href=\"".conf('web_path')."/albums.php?action=show&amp;album=".$dinfo['albumid']."\" title=\"".$dinfo['album']."\">".$dinfo['album']."</a> </td>".
 		"<td>".floor($dinfo['time']/60).":".sprintf("%02d", ($dinfo['time']%60) )."</td>".
@@ -82,6 +82,6 @@
 <?php  } else { ?>
 
 <p> You don't have any duplicate songs. </p>
-
+</form>
 <?php  } ?>
 

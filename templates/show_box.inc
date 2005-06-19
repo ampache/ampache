@@ -27,8 +27,8 @@
 
 ?>
 
-<table class="border" cellspacing=1 cellpadding=3>
-	<tr align=center>
+<table class="border" cellspacing="1" cellpadding="3">
+	<tr align="center">
 		<td background="<?= conf('web_path'); ?>/images/ampache-light-bg.gif" bgcolor="#c0c0c0"><?= $title ?></td>
 	</tr>
 	<tr>

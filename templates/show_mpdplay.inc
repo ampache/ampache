@@ -32,7 +32,7 @@ $web_path = conf('web_path');
 <tr class="table-header">
 	<td colspan="2"><?php echo _("MPD Play Control"); ?></td>
 </tr>
-<tr class="even"><td>
+<tr class="even"> <td>
 	<table border="0" cellpadding="0" cellspacing="0" width="100%">
         <tr>
 		<td>
@@ -81,8 +81,8 @@ $web_path = conf('web_path');
         </td>
 </tr>
 </table>
-</tr>
-	</td>
+</td>
+	</tr>
 <?php   if ( $myMpd->state == MPD_STATE_PLAYING or $myMpd->state == MPD_STATE_PAUSED ) {  ?>
   <tr><td>
     <table border="0" cellpadding="0" cellspacing="0" width="100%">
@@ -100,14 +100,14 @@ $web_path = conf('web_path');
    <td>
     <table border="0" cellpadding="0" cellspacing="0" width="100%">
       <tr>
-      	<td align="center">[ <a title="<?php echo _("Refresh the Playlist Window"); ?>" href="<?php echo conf('web_path'); ?>"><?php echo _("refresh now"); ?></a> ]</td>
+      	<td align="center">[ <a title="<?php echo _("Refresh the Playlist Window"); ?>" href="<?php echo conf('web_path'); if ($GLOBALS['user']->prefs['play_type'] == 'mpd' && conf('localplay_menu')) {echo "/mpd.php";} ?>"><?php echo _("refresh now"); ?></a> ]</td>
       </tr>
     </table>
   </td>
 </tr>
 </table>
 <br />
-<table border="0" cellpadding="0" cellspacing="0" WIDTH=<?php  echo $PG_WIDTH ?>>
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
   <tr><td align="center"><b><?php echo _("Server Playlist"); ?></b></td></tr>
   <tr><td>
 <?php 
@@ -130,8 +130,8 @@ $web_path = conf('web_path');
  				$song_name = truncate_with_ellipse($entry['Artist'],conf('ellipse_threshold_artist')-3)  . " - " . truncate_with_ellipse($entry['Title'],conf('ellipse_threshold_title')-3);
 			
                                 echo "\t";
-                                echo "<a title=\"Click to remove'".$entry['Title']." '\" href=\"".conf('web_path')."/amp-mpd.php?action=rem&id=".$id."\">[" . $track . "]</a>"; 
-                                echo " <a title=\"Click to jump to '".$entry['Title']."'\" href='".conf('web_path')."/amp-mpd.php?action=skipto&val=".$id."'>$song_name</a>"; 
+                                echo " <a title=\"Click to remove ".htmlspecialchars($entry['Title'])."\" href=\"".conf('web_path')."/amp-mpd.php?action=rem&amp;id=".$id."\">[" . $track . "]</a>"; 
+                                echo " <a title=\"Click to jump to ".htmlspecialchars($entry['Title'])."\" href=\"".conf('web_path')."/amp-mpd.php?action=skipto&amp;val=".$id."\">$song_name</a>"; 
 				echo "<br />\n";
                         }
                 }
@@ -141,8 +141,8 @@ $web_path = conf('web_path');
 ?>
   </td></tr>
 <?php       if ( $myMpd->playlist_count > 0 ) { ?>
-<tr height="20">
-	<td align="center">
+<tr>
+	<td align="center" height="20">
   		[<a title="<?php echo _("Click to shuffle (randomize) the playlist"); ?>" href="<?php echo conf('web_path'); ?>/amp-mpd.php?action=shuffle"><?php echo _("shuffle"); ?></a>] 
 		[<a title="<?php echo _("Click the clear the playlist"); ?>" href="<?php echo conf('web_path'); ?>/amp-mpd.php?action=clear"><?php echo _("clear"); ?></a>]
 	</td>

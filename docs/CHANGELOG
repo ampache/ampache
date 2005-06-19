@@ -22,6 +22,9 @@
 	- Fixed Adding to playlist from Album (Thx rperkins)
 	- Fixed problem where attempting to view multi-artist albums would
 		only show one artists songs (exception for Unknown albums)
+	- Fixed refresh link if Local Play is on it's own page (Thx XGizzmo)
+	- Fixed a ton of HTML, and CSS errors (Thx XGizzmo)
+	- Fixed MPD so that adding songs also starts playback 
 	
 
 --------------------------------------------------------------------------

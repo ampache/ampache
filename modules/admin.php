@@ -45,7 +45,7 @@ function show_manage_users () {
 	echo "<table class=\"text-box\">\n<tr><td>\n";
 	echo "<span class=\"header2\">" . _("Manage Users") . "</span><br />\n";
 	echo "<p>Use the following tools to manage the users that access your site.</p>\n";
-	echo "<ul>\n\t<li><a href=\"".conf('web_path') . "/admin/users.php?action=show_add_user\">" . _("Add a new user") . "</a></li\n</dl>\n";
+	echo "<ul>\n\t<li><a href=\"".conf('web_path') . "/admin/users.php?action=show_add_user\">" . _("Add a new user") . "</a></li>\n</ul>\n";
 	echo "</td></tr></table>";
 	
 	show_users();

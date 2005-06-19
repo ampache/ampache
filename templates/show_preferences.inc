@@ -30,7 +30,7 @@
 <div class="header1">
 	<?php echo _("Editing"); ?> <?php echo $fullname; ?> <?php echo _("preferences"); ?> 
 	<?php if ($user->has_access(100)) { ?>
-	[<a href="<?php echo conf('web_path'); ?>/admin/preferences.php?action=fix_preferences&user_id=<?php echo $user_id; ?>"><?php echo _("Rebuild Preferences"); ?></a>]
+	[<a href="<?php echo conf('web_path'); ?>/admin/preferences.php?action=fix_preferences&amp;user_id=<?php echo $user_id; ?>"><?php echo _("Rebuild Preferences"); ?></a>]
 	<? } ?>
 </div>
 <form method="post" name="preferences" action="<?php echo conf('web_path'); ?><?php echo $target; ?>" enctype="multipart/form-data">
@@ -64,9 +64,9 @@
                <tr>
                        <td><?php create_preference_input($pref->name,$pref->value); ?></td>
                        <?php if(preg_match('/Color/',$pref->description)) { ?>
-			       <td><table width="40" height="20" border=3 bgcolor="<?php echo $pref->value;?>"><tr><td></td></tr></table></td>
+			       <td><table width="40" height="20" border="3" bgcolor="<?php echo $pref->value;?>"><tr><td></td></tr></table></td>
                        <?php } else { ?>
-                               <td><table></table></td>
+                               <td></td>
                                <?php } ?>
                </tr>
                </table>

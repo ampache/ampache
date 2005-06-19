@@ -23,7 +23,7 @@ $web_path = conf('web_path');
 ?>
 
 
-<form name="songs" method="post" enctype="multipart/form-data">
+<form name="songs" method="post" enctype="multipart/form-data" action="">
 <table border="0">
   <tr><td colspan="2">
     <table class="border" cellspacing="0" cellpadding="0" border="0">
@@ -33,7 +33,7 @@ $web_path = conf('web_path');
             <th><?php echo _("Song title"); ?></th>
             <th><?php echo _("Artist"); ?></th>
             <th><?php echo _("Album"); ?></th>
-            <th><?php echo _("Track"); ?></td>
+            <th><?php echo _("Track"); ?></th>
             <th><?php echo _("Time"); ?></th>
             <th><?php echo _("Size"); ?></th>
             <th><?php echo _("Bitrate"); ?></th>
@@ -69,13 +69,13 @@ $web_path = conf('web_path');
             }
         ?>
              <td>
-              <a href="<?php echo $web_path; ?>/song.php?action=m3u&song=<?php echo $song->id; ?>" title="<?php echo $song->title; ?>" <?php echo $text_class; ?>> <?php echo $song->f_title; ?> </a>
+              <a href="<?php echo $web_path; ?>/song.php?action=m3u&amp;song=<?php echo $song->id; ?>" title="<?php echo htmlspecialchars($song->title); ?>" <?php echo $text_class; ?>> <?php echo htmlspecialchars($song->f_title); ?> </a>
             </td>
             <td>
-              <a href="<?php echo $web_path; ?>/artists.php?action=show&amp;artist=<?php echo $song->artist; ?>" title="<?php echo $song->f_artist_full; ?>" <?php echo $text_class; ?>> <?php echo $song->f_artist; ?> </a>
+              <a href="<?php echo $web_path; ?>/artists.php?action=show&amp;artist=<?php echo htmlspecialchars($song->artist); ?>" title="<?php echo htmlspecialchars($song->f_artist_full); ?>" <?php echo $text_class; ?>> <?php echo htmlspecialchars($song->f_artist); ?> </a>
             </td>
             <td>
-              <a href="<?php echo $web_path; ?>/albums.php?album=<?php echo $song->album; ?>" title="<?php echo $song->f_album_full; ?>" <?php echo $text_class; ?>> <?php echo $song->f_album; ?> </a>
+              <a href="<?php echo $web_path; ?>/albums.php?album=<?php echo htmlspecialchars($song->album); ?>" title="<?php echo htmlspecialchars($song->f_album_full); ?>" <?php echo $text_class; ?>> <?php echo htmlspecialchars($song->f_album); ?> </a>
             </td>
             <td align="right">
               <?php echo $song->track; ?>
@@ -83,7 +83,7 @@ $web_path = conf('web_path');
             <td align="right">
               <?php echo $song->f_time; ?>
             </td>
-            <td align="right" nowrap>
+            <td align="right" nowrap="nowrap">
               <?php echo $song->f_size; ?> MB
             </td>
             <td align="right">
@@ -99,9 +99,9 @@ $web_path = conf('web_path');
               <?php if ($user->has_access('100')) { ?>
                 <a href="<?php echo $web_path; ?>/admin/song.php?action=edit&amp;song=<?php echo $song->id; ?>">Edit</a> | <a href="<?php echo $web_path; ?>/flag.php?song=<?php echo $song->id; ?>&amp;action=flag">Flag</a> | 
                   <?php if ($song->status === 'enabled') { ?>
-                    <a href="<?php echo $web_path; ?>/admin/song.php?action=disable&song_ids=<?php echo $song->id; ?>">Disable</a>
+                    <a href="<?php echo $web_path; ?>/admin/song.php?action=disable&amp;song_ids=<?php echo $song->id; ?>">Disable</a>
                   <?php } else { ?>
-                    <a href="<?php echo $web_path; ?>/admin/song.php?action=enabled&song_ids=<?php echo $song->id; ?>">Enable</a>
+                    <a href="<?php echo $web_path; ?>/admin/song.php?action=enabled&amp;song_ids=<?php echo $song->id; ?>">Enable</a>
                   <?php } //status ?>
               <?php } else { ?>
                 <a href="<?php echo $web_path; ?>/flag.php?song=<?php echo $song->id; ?>&amp;action=flag">Flag</a>
@@ -110,10 +110,8 @@ $web_path = conf('web_path');
 			| <a href="<?php echo $web_path; ?>/download/index.php?action=download&amp;song_id=<?php echo $song->id; ?>&amp;fn=<?php echo rawurlencode($song->f_artist_full . " - " . $song->title . "." . $song->type); ?>"><?php echo _("Download"); ?></a>
 		<?php } ?>
 		<?php if ($user->prefs['direct_link']) { ?>
-		| <a href="<?php echo $web_path; ?>/play/index.php?song=<?php echo $song->id; ?>&uid=<?php echo $user->id . "&sid=" . session_id(); ?>&amp;fn=<?php echo rawurlencode($song->f_artist_full . " - " . $song->title . "." . $song->type); ?>">
-			<?php echo _("Direct Link"); ?>
+		| <a href="<?php echo $web_path; ?>/play/index.php?song=<?php echo $song->id; ?>&amp;uid=<?php echo $user->id . "&amp;sid=" . session_id(); ?>&amp;fn=<?php echo rawurlencode($song->f_artist_full . " - " . $song->title . "." . $song->type); ?>"><?php echo _("Direct Link"); ?></a>
 		<?php } ?>
-		</a>	
             </td>
           </tr>
     <?
@@ -131,11 +129,11 @@ $web_path = conf('web_path');
       <td></td>
       <?php if (isset($playlist_id) && $playlist_id != 0 && ($user->id == $pluser->id || $user->access === 'admin')) { ?> <td></td> <?php } ?>
       <td><?php echo _("Total"); ?>:</td>
-      <td nowrap><?php echo $num; ?> song(s)</td>
+      <td nowrap="nowrap"><?php echo $num; ?> song(s)</td>
       <td></td>
       <td></td>
-      <td align="right" nowrap><?php echo $time; ?></td>
-      <td align="right" nowrap><?php echo $megs; ?> MB</td>
+      <td align="right" nowrap="nowrap"><?php echo $time; ?></td>
+      <td align="right" nowrap="nowrap"><?php echo $megs; ?> MB</td>
       <td></td>
       <td></td>
       <td></td>

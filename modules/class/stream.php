@@ -267,6 +267,9 @@ class Stream {
 		/* Add the files to the MPD playlist */
 		addToPlaylist($myMpd,$this->songs);
 
+		/* If we've added songs we should start playing */
+		$myMpd->Play();
+
 		header ("Location: " . return_referer());
 
 	} // create_mpd

@@ -65,7 +65,7 @@ elseif ( $action == 'show_orphan_albums' ) {
 ?>
 
 
-<hr>
+<hr />
 
 </body>
 </html>

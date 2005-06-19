@@ -69,3 +69,5 @@ require (conf('prefix') . "/templates/show_preferences.inc");
 // FOOTER
 show_page_footer ('Preferences', '',$user->prefs['display_menu']);
 ?>
+</body>
+</html>

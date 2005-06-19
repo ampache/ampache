@@ -89,7 +89,7 @@ if ( ($auth['success'] == 1)) {
 
 <?php show_template('style'); ?>
 
-<script language="javascript">
+<script type="text/javascript" language="javascript">
 function focus(){ document.login.username.focus(); }
 </script>
 

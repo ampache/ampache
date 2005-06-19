@@ -32,33 +32,33 @@
 
 <p><?php print _("Use the form below to add a host that you want to have access to your Ampache catalog."); ?></p>
 
-<p>
+
 <form name="update_catalog" method="post" enctype="multipart/form-data" action="<?= conf('web_path'); ?>/admin/access.php">
 
 <table cellpadding="5" cellspacing="0" border="0">
         <tr>
                 <td><?php print _("Name"); ?>: </td>
 		<td>
-			<input type="text" name="name" value="<?= $_REQUEST['name']; ?>" size="30">
+			<input type="text" name="name" value="<?= $_REQUEST['name']; ?>" size="30" />
 		</td>
         </tr>
         <tr>
                 <td><?php print _("Start IP Address"); ?>:</td>
 		<td>
-			<input type="text" name="start" value="<?= $_REQUEST['start']; ?>" size="20" maxlength="15">
+			<input type="text" name="start" value="<?= $_REQUEST['start']; ?>" size="20" maxlength="15" />
 		</td>
         </tr>
 	<tr>
 		<td><?php print _("End IP Address"); ?>:</td>
 		<td>
-			<input type="text" name="end" value="<?= $_REQUEST['end']; ?>" size="20" maxlength="15">
+			<input type="text" name="end" value="<?= $_REQUEST['end']; ?>" size="20" maxlength="15" />
 		</td>
 	</tr>
 	<tr>
 		<td><?php print _("Level"); ?>:</td>
 		<td>
 			<select name="level">
-				<option value="5" SELECTED>Demo</option>
+				<option selected="selected" value="5" >Demo</option>
 				<option value="25">Stream</option>
 				<option value="50">Stream/Download</option>
 				<option value="75">XML-RPC</option>
@@ -68,8 +68,8 @@
         <tr>
                 <td>&nbsp;</td>
 		<td>
-			<input type="hidden" name="action" value="add_host">
-			<input type="submit" value="<?php print _("Add Host"); ?>">
+			<input type="hidden" name="action" value="add_host" />
+			<input type="submit" value="<?php print _("Add Host"); ?>" />
 		</td>
         </tr>
 </table>

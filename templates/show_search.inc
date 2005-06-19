@@ -40,7 +40,7 @@
 <tr class="<?php echo flip_class(); ?>">
 	<td><?php echo  _("Object Type"); ?>:</td>
 	<td>
-		<?php 
+		<?php
 		$search_type = $_REQUEST['search_field'];
                if (isset($_REQUEST['search_field'])) {
                        $search_field = $_REQUEST['search_field'];
@@ -59,22 +59,22 @@
                 } 
 		?>
 		<select name="search_field">
-			<option value="artist" <?php  if ($artist) { echo "SELECTED"; } ?>>Artist</option>
-			<option value="album" <?php  if ($album) { echo "SELECTED"; } ?>>Album</option>
-			<option value="song_title" <?php  if ($song_title) { echo "SELECTED"; } ?>>Song Title</option>
-			<option value="song_genre" <?php  if ($song_genre) { echo "SELECTED"; } ?>>Song Genre</option>
-			<option value="song_year" <?php  if ($song_year) { echo "SELECTED"; } ?>>Song Year</option>
-			<option value="song_bitrate" <?php  if ($song_bitrate) { echo "SELECTED"; } ?>>Song Bitrate</option>
-			<option value="song_min_bitrate" <?php  if ($song_min_bitrate) { echo "SELECTED"; } ?>>Minimum Bitrate</option>
-			<option value="song_filename" <?php  if ($song_filename) { echo "SELECTED"; } ?>>Song Filename</option>
+			<option <?php  if ($artist) { echo "selected=\"selected\""; } ?> value="artist"  > Artist</option>
+			<option <?php  if ($album) { echo "selected=\"selected\""; } ?> value="album"  > Album</option>
+			<option <?php  if ($song_title) { echo "selected=\"selected\""; } ?> value="song_title"  > Song Title</option>
+			<option <?php  if ($song_genre) { echo "selected=\"selected\""; } ?> value="song_genre"  > Song Genre</option>
+			<option <?php  if ($song_year) { echo "selected=\"selected\""; } ?> value="song_year"  > Song Year</option>
+			<option <?php  if ($song_bitrate) { echo "selected=\"selected\""; } ?> value="song_bitrate"  > Song Bitrate</option>
+			<option <?php  if ($song_min_bitrate) { echo "selected=\"selected\""; } ?> value="song_min_bitrate"  > Minimum Bitrate</option>
+			<option <?php  if ($song_filename) { echo "selected=\"selected\""; } ?> value="song_filename"  > Song Filename</option>
 		</select>
 	</td>
 </tr>
 <tr class="<?php echo flip_class(); ?>">
 	<td><?php echo  _("Search Type"); ?>:</td>
 	<td>
-		<input type="radio" name="search_type" value="exact" <?php  if ($_REQUEST['search_type'] === 'exact') { echo "CHECKED"; } ?>>Exact<br />
-		<input type="radio" name="search_type" value="fuzzy" <?php  if ($_REQUEST['search_type'] !== 'exact') { echo "CHECKED"; } ?>>Fuzzy<br />
+		<input type="radio" name="search_type" value="exact" <?php  if ($_REQUEST['search_type'] === 'exact') { echo "checked=\"checked\"";}?> /> Exact<br />
+		<input type="radio" name="search_type" value="fuzzy" <?php  if ($_REQUEST['search_type'] !== 'exact') { echo "checked=\"checked\"";}?> /> Fuzzy<br />
 	</td>
 </tr>
 <tr class="<?php echo flip_class(); ?>">
