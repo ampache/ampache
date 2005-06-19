@@ -47,13 +47,13 @@ $artist_id = $artist->id;
 <table class="border" cellspacing="0" cellpadding="0" border="0">
         <tr class="table-header">
         <th align="center">
-	&nbsp;&nbsp;<a href="#" onclick="check_songs(); return false;"><?php print _("Select"); ?></a>
+	&nbsp;&nbsp;<a href="#" onclick="check_songs(); return false;"><?php echo _("Select"); ?></a>
 	</th>
-          <th><?php print _("Cover"); ?></th>
-          <th><?php print _("Album Name"); ?></th>
-	  <th><?php print _("Album Year"); ?></th>
-          <th><?php print _("Total Tracks"); ?></th>
-          <th><?php print _("Action"); ?></th>
+          <th><?php echo _("Cover"); ?></th>
+          <th><?php echo _("Album Name"); ?></th>
+	  <th><?php echo _("Album Year"); ?></th>
+          <th><?php echo  _("Total Tracks"); ?></th>
+          <th><?php echo _("Action"); ?></th>
         </tr>
 
 <?php
@@ -68,17 +68,17 @@ $artist_id = $artist->id;
 	  	<input name="song[]" value="<?php print $id; ?>" type="checkbox" />
 	</td>
           <td height="87">
-                <a href="<?php print $web_path; ?>/albums.php?album=<?php print $id; ?>&amp;artist=<?php print $artist_id; ?>">
-                <img border="0" src="<?php print $web_path; ?>/albumart.php?id=<?php print $id; ?>&amp;fast=1" alt="<?php print $album_name; ?>" title="<?php print $album_name; ?>" height="75" width="75">
+                <a href="<?php print $web_path; ?>/albums.php?album=<?php echo $id; ?>&amp;artist=<?php echo $artist->id; ?>">
+                <img border="0" src="<?php print $web_path; ?>/albumart.php?id=<?php print $id; ?>&amp;fast=1" alt="<?php echo $album_name; ?>" title="<?php print $album_name; ?>" height="75" width="75">
                 </a>
           </td>
-          <td><a href="<?php print $web_path; ?>/albums.php?album=<?php print $id; ?>&amp;artist=<?php print $artist_id; ?>"><?php print $album_name; ?></a></td>
+          <td><a href="<?php print $web_path; ?>/albums.php?album=<?php print $id; ?>&amp;artist=<?php echo $artist->id; ?>"><?php print $album_name; ?></a></td>
 	  <td><?php print $album->year; ?></td>
           <td><?php print $count; ?></td>
           <td>
-               <a href="<?php print $web_path; ?>/song.php?action=m3u&album=<?php print $id; ?>"><?php print _("Play"); ?></a>
+               <a href="<?php print $web_path; ?>/song.php?action=m3u&album=<?php echo $id; ?>"><?php echo _("Play"); ?></a>
                <?php if( batch_ok() ) { ?>
-        	       | <a href="<?php echo  conf('web_path'); ; ?>/batch.php?action=alb&id=<?php echo  $album->id; ; ?>"><?php echo  _("Download"); ; ?></a>
+        	       | <a href="<?php echo conf('web_path'); ?>/batch.php?action=alb&id=<?php echo $album->id; ?>"><?php echo _("Download"); ?></a>
                <?php } ?> 
        </td>
                                                               

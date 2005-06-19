@@ -19,6 +19,9 @@
 	- Fixed a problem with MPD file method and a trailing slash on 
 		the catalog name (Thx Rosensama)
 	- Fixed play_selected on Playlists
+	- Fixed Adding to playlist from Album (Thx rperkins)
+	- Fixed problem where attempting to view multi-artist albums would
+		only show one artists songs (exception for Unknown albums)
 	
 
 --------------------------------------------------------------------------

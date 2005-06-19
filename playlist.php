@@ -137,7 +137,7 @@ switch($action) {
 		}
 
 		if ($type === 'album') {
-			if ($song_ids = get_songs_from_type($type, $results, $artist_id)) {
+			if ($song_ids = get_songs_from_type($type, $song_ids, $artist_id)) {
 				$playlist->add_songs($song_ids);
 			}
 		}

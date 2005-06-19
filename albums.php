@@ -48,9 +48,11 @@ elseif (isset($album)) {
 	$album = new Album($album);
 	$album->format_album();
 
+	$artist_obj = new Artist($artist_obj);
+
 	require (conf('prefix') . "/templates/show_album.inc");
 	
-	if (isset($artist) && $artist != 0) {
+	if (isset($artist) && $artist_obj->name == "Unknown (Orphaned)" ) {
 		$song_ids = get_song_ids_from_artist_and_album($artist, $album->id);
 	}
 	else {
