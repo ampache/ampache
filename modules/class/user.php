@@ -33,6 +33,7 @@ class User {
 	var $id=0;
 	var $fullname;
 	var $access;
+	var $disabled;
 	var $offset_limit=25;
 	var $email;
 	var $last_seen;
@@ -51,6 +52,7 @@ class User {
 		$this->id 		= $info->id;
 		$this->fullname 	= $info->fullname;
 		$this->access 		= $info->access;
+		$this->disabled		= $info->disabled;
 		$this->offset_limit 	= $info->offset_limit;
 		$this->email		= $info->email;
 		$this->last_seen	= $info->last_seen;
@@ -321,7 +323,7 @@ class User {
 
 		/* Check for all disable */
 		if ($new_access == 'disabled') { 
-			$sql = "SELECT id FROM user WHERE access != 'disabled' AND id != '$this->id'";
+			$sql = "SELECT id FROM user WHERE disabled != '1' AND id != '$this->id'";
 			$db_results = mysql_query($sql,dbh());
 			if (!mysql_num_rows($db_results)) { return false; }
 		}
@@ -333,9 +335,19 @@ class User {
 			if (!mysql_num_rows($db_results)) { return false; }
 		}
 
-		$new_access = sql_escape($new_access);
-		$sql = "UPDATE user SET access='$new_access' WHERE id='$this->id'";
-		$db_results = mysql_query($sql, dbh());
+		if ($new_access == 'enabled') {
+			$new_access = sql_escape($new_access);
+			$sql = "UPDATE user SET disabled='0' WHERE id='$this->id'";
+			$db_results = mysql_query($sql, dbh());
+		} elseif ($new_access == 'disabled') {
+			$new_access = sql_escape($new_access);
+			$sql = "UPDATE user SET disabled='1' WHERE id='$this->id'";
+			$db_results = mysql_query($sql, dbh());
+		} else {
+			$new_access = sql_escape($new_access);
+			$sql = "UPDATE user SET access='$new_access' WHERE id='$this->id'";
+			$db_results = mysql_query($sql, dbh());
+		}
 
 	} // update_access
 

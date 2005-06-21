@@ -220,6 +220,10 @@ class Update {
 		$update_string = "- Added Show bottom menu option.<br />";
 		$version[] = array('version' => '331002', 'description' => $update_string);	
 
+		$update_string = "- Cleaned up user management.<br />";
+		
+		$version[] = array('version' => '331003', 'description' => $update_string);
+		
 
 		return $version;
 
@@ -898,6 +902,23 @@ class Update {
                 $this->set_version('db_version','331002');	
 
 	} // update_331002
+
+	function update_331003() {
+
+		/* Add `disabled` column to user table */
+		$sql = "ALTER TABLE `user` ADD `disabled` TINYINT( 1 ) NOT NULL DEFAULT '0' AFTER `access`";
+		$db_results = mysql_query($sql, dbh());
+
+		/* Set `disabled` to '1' to all users that have an access level of 'disabled',
+		 * then change their access level to 'user' because an access level of 'disabled'
+		 * is now going to cause problems.
+		 */
+		 $sql = "UPDATE `user` SET `disabled`='1',`access`='user' WHERE `access`='disabled'";
+		 $db_results = mysql_query($sql, dbh());
+
+		 $this->set_version('db_version','331003');
+
+	} //update 331003
 
 } // end update class
 ?>

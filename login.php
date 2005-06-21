@@ -48,7 +48,7 @@ if ( $_POST['username'] && $_POST['password'] ) {
 		$password = trim($_POST['password']);
 		$auth = authenticate($username, $password);
 		$user = new User($username); 
-		if ($user->access === 'disabled') { 
+		if ($user->disabled === '1') { 
 			$auth['success'] = false;
 			$auth['error'] = "Error: User Disabled please contact Admin";
 		} // if user disabled

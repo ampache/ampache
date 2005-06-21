@@ -25,6 +25,7 @@
 	- Fixed refresh link if Local Play is on it's own page (Thx XGizzmo)
 	- Fixed a ton of HTML, and CSS errors (Thx XGizzmo)
 	- Fixed MPD so that adding songs also starts playback 
+	- Fixed access and disabled issues on admin::users (Thx Orion88)
 	
 
 --------------------------------------------------------------------------

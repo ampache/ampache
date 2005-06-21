@@ -85,7 +85,6 @@ else {
 	    	<option value="1" <?php  if($access==='1') echo "selected=\"selected\""; ?>>Guest</option>
 	        <option value="user" <?php  if($access==='user') echo "selected=\"selected\""; ?>>User</option>
 	        <option value="admin" <?php  if($access==='admin') echo "selected=\"selected\""; ?>>Admin</option>
-        	<option value="disabled" <?php  if($access==='diabled') echo "selected=\"selected\""; ?>>Disabled</option>
 	        </select>
 	</td>
 </tr>

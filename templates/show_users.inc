@@ -55,13 +55,10 @@ $admin_menu = "admin/";
 		<b><?php echo _("Prefs"); ?></b>
 	</td>
         <td align="center">
+		<b><?php echo _("Access"); ?></b>
+	</td>
+	<td align="center">
 		<b><?php echo _("Delete"); ?></b>
-	</td>
-        <td align="center">
-		<b><?php echo _("Set Access"); ?></b>
-	</td>
-        <td align="center">
-		<b><?php echo _("Disable"); ?></b>
 	</td>
         <td align="center">
 		<b><?php echo _("On-line"); ?></b>
@@ -86,44 +83,37 @@ while ( $results = mysql_fetch_object($db_result) ) {
 	</td>
         <td>
 		<a href="<?php echo conf('web_path'); ?>/admin/users.php?action=edit&amp;user=<?php echo $user->username; ?>">
-			<?php echo _("edit"); ?>
+			<?php echo _("Edit"); ?>
 		</a>
 	</td>
         <td>
 		<a href="<?php echo conf('web_path'); ?>/admin/preferences.php?action=user&amp;user_id=<?php echo $user->id; ?>">
-			<?php echo _("prefs"); ?>
+			<?php echo _("Prefs"); ?>
 		</a>
 	</td>
-        <td>
-		<a href="<?php echo conf('web_path'); ?>/admin/users.php?action=delete&amp;user=<?php echo $user->username; ?>">
-			<?php echo _("delete"); ?>
-		</a>
-	</td>
-	<?php 
+	<?php
 			//FIXME: Fix this for the extra permission levels
-                        if ($user->access == 'admin') {
-                                echo "<td><a href=\"".conf('web_path')."/admin/users.php?action=update&amp;user=$user->username&amp;level=user\">" . _("set to user") . "</a></td>";
-                                echo "<td><a href=\"".conf('web_path')."/admin/users.php?action=update&amp;user=$user->username&amp;level=disabled\">" . _("disable") . "</a></td>";
+			if ($user->disabled == '1') { 
+				echo "<td><a href=\"".conf('web_path')."/admin/users.php?action=update&amp;user=$user->username&amp;level=enabled\">" . _("Enable") . "</a></td>";
                         }
-                        elseif ($user->access == 'user') {
-                                echo "<td><a href=\"".conf('web_path')."/admin/users.php?action=update&amp;user=$user->username&amp;level=admin\">" . _("set to admin") . "</a></td>";
-                                echo "<td><a href=\"".conf('web_path')."/admin/users.php?action=update&amp;user=$user->username&amp;level=disabled\">" . _("disable") . "</a></td>";
-                        }
-                        elseif ($user->access == 'disabled') {
-                                 echo "<td><a href=\"".conf('web_path')."/admin/users.php?action=update&user=$user->username&amp;level=admin\">" . _("set to admin") . "</a></td>";
-                                 echo "<td><a href=\"".conf('web_path')."/admin/users.php?action=update&amp;user=$user->username&amp;level=user\">" . _("set to user") . "</a></td>";
-			}
-			elseif ($user->access == '1') { 
-                                echo "<td><a href=\"".conf('web_path')."/admin/users.php?action=update&user=$user->username&amp;level=user\">" . _("set to user") . "</a></td>";
-                                echo "<td><a href=\"".conf('web_path')."/admin/users.php?action=update&amp;user=$user->username&amp;level=disabled\">" . _("disable") ."</a></td>";
+			else {
+                                 echo "<td><a href=\"".conf('web_path')."/admin/users.php?action=update&amp;user=$user->username&amp;level=disabled\">" . _("Disable") ."</a></td>";
  			}
-                        if ( $user->is_logged_in() and $user->is_online() ) {
-                                echo "<td bgcolor=\"green\"> &nbsp; </td>";
-                        }
-                        else {
-                                echo "<td bgcolor=\"red\"> &nbsp; </td>";
-                        }
 ?>
+<td>
+        <a href="<?php echo conf('web_path'); ?>/admin/users.php?action=delete&amp;user=<?php echo $user->username; ?>">
+	<?php echo _("delete"); ?>
+	</a>
+</td>
+       <?php
+               if ( $user->is_logged_in() and $user->is_online() ) {
+                       echo "<td bgcolor=\"green\"> &nbsp; </td>";
+               } elseif ( $user->disabled == 1) {
+                       echo "<td bgcolor=\"gray\"> &nbsp; </td>";
+               } else {
+                       echo "<td bgcolor=\"darkred\"> &nbsp; </td>";
+               }
+?>	
 </tr>
 <?php } ?>
 </table>
