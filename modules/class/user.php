@@ -343,6 +343,8 @@ class User {
 			$new_access = sql_escape($new_access);
 			$sql = "UPDATE user SET disabled='1' WHERE id='$this->id'";
 			$db_results = mysql_query($sql, dbh());
+			$sql = "DELETE FROM session WHERE username='" . sql_escape($this->username) . "'";
+			$db_results = mysql_query($sql, dbh());
 		} else {
 			$new_access = sql_escape($new_access);
 			$sql = "UPDATE user SET access='$new_access' WHERE id='$this->id'";
