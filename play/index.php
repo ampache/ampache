@@ -93,7 +93,7 @@ if ( isset( $uid ) ) {
 	if ($song->status === 'disabled') { 
 		exit;
 	}
-	if ($user->access === 'disabled') {
+	if ($user->disabled == '1') {
 		if (conf('debug')) { 
 			log_event($user->username,' user_disabled ',"Error $user->username is currently disabled, stream access denied");
 		}
