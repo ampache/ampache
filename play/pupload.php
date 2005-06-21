@@ -41,11 +41,11 @@ $dbh = setup_sess_db("song",
                      );
 
 /* These parameters has better come on the url. */
-$song = htmlspecialchars($_REQUEST['song']);
-$song_nm = htmlspecialchars($_REQUEST['song']);
-$action = htmlspecialchars($_REQUEST['action']);
-$uid = htmlspecialchars($_REQUEST['uid']);
-$web_path = conf('web_path');
+$song 		= htmlspecialchars($_REQUEST['song']);
+$song_nm 	= htmlspecialchars($_REQUEST['song']);
+$action 	= htmlspecialchars($_REQUEST['action']);
+$uid 		= htmlspecialchars($_REQUEST['uid']);
+$web_path 	= conf('web_path');
 
 
 /* If we are in demo mode.. die here */
@@ -62,6 +62,9 @@ if (conf('access_control') == "true") {
 	$access = new Access(0);
 	if (!$access->check("25", $_SERVER['REMOTE_ADDR'])) { 
 		echo "Error: Access Denied, Invalid Source ADDR"; 
+		if (conf('debug')) { 
+			log_event('',' acl ',"Error: Access Denied to " . $_SERVER['REMOTE_ADDR'] . " due to ACL");
+		}
 		exit();
 	}
 
@@ -100,11 +103,11 @@ foreach($order as $key) {
 }
 
 // Fetch Song Info
-$artist_name = addslashes($results[$key]['artist']);
-$album_name = addslashes($results[$key]['album']);
-$title = addslashes($results[$key]['title']);
-$song_time = intval($results['playing_time']);
-$size = filesize($song);
+$artist_name 	= addslashes($results[$key]['artist']);
+$album_name	= addslashes($results[$key]['album']);
+$title 		= addslashes($results[$key]['title']);
+$song_time 	= intval($results['playing_time']);
+$size 		= filesize($song);
 preg_match('/\.([A-Za-z0-9]+)$/', $song,$results);
 
 $type = $results[1];
@@ -116,17 +119,21 @@ switch ($type) {
 	case "mp3":
 	case "mpeg3":
 		$mime = "audio/mpeg";
+		break;
 	case "rm":
 		$mime = "audio/x-realaudio";
-	break;
-}
+		break;
+	default:
+		$mime = "audio/mpeg";
+		break;
+} // end switch type
 
 
 if ( $_REQUEST['action'] == 'm3u' ) {
 
     if($temp_user->prefs['play_type'] == 'local_play') {
 		// Play the song locally using local play configuration
-		$song_name = $artist . " - " . $title . "." . $type;;
+		$song_name = $artist . " - " . $title . "." . $type;
 		$sess = $_COOKIE[libglue_param('sess_name')];
 		//echo "Song Name: $song_name<BR>\n";
 		$url = escapeshellarg("$web_path/play/pupload.php?song=$song_nm&uid=$user->id&sid=$sess");
