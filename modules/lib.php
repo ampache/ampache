@@ -316,7 +316,7 @@ function show_flagged_popup($reason,$label='value', $name='flagged_type', $other
  */
 
 function show_genre_pulldown ($genre, $complete) {
-	global $settings;
+	
 	$dbh = dbh();
 
 	// find the genres we have in use
@@ -331,7 +331,7 @@ function show_genre_pulldown ($genre, $complete) {
 
 	$db_result = mysql_query($sql, $dbh);
 
-	echo "\n<select name=\"genre\" multiple=\"multiple\" size=\"7\">\n";
+	echo "\n<select name=\"genre[]\" multiple=\"multiple\" size=\"7\">\n";
 
 	if ( ! $complete ) {
 		$genre_info = get_genre_info( -1 );
