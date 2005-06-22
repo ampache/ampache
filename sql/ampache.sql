@@ -2,10 +2,11 @@
 --
 -- Host: localhost    Database: ampache
 -- ------------------------------------------------------
--- Server version	4.1.9-Debian_2-log
+-- Server version	4.1.12-Debian_1-log
 /*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO,MYSQL323' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
 -- Table structure for table `access_list`
@@ -386,7 +387,7 @@ CREATE TABLE `preferences` (
 
 /*!40000 ALTER TABLE `preferences` DISABLE KEYS */;
 LOCK TABLES `preferences` WRITE;
-INSERT INTO `preferences` VALUES (1,'download','0','Allow Downloads',100,'user',0),(2,'upload','0','Allow Uploads',100,'user',0),(3,'quarantine','1','Quarantine All Uploads',100,'user',0),(4,'popular_threshold','10','Popular Threshold',25,'user',0),(5,'font','Verdana, Helvetica, sans-serif','Interface Font',25,'user',0),(6,'bg_color1','#ffffff','Background Color 1',25,'user',0),(7,'bg_color2','#000000','Background Color 2',25,'user',0),(8,'base_color1','#bbbbbb','Base Color 1',25,'user',0),(9,'base_color2','#dddddd','Base Color 2',25,'user',0),(10,'font_color1','#222222','Font Color 1',25,'user',0),(11,'font_color2','#000000','Font Color 2',25,'user',0),(12,'font_color3','#ffffff','Font Color 3',25,'user',0),(13,'row_color1','#cccccc','Row Color 1',25,'user',0),(14,'row_color2','#bbbbbb','Row Color 2',25,'user',0),(15,'row_color3','#dddddd','Row Color 3',25,'user',0),(16,'error_color','#990033','Error Color',25,'user',0),(17,'font_size','10','Font Size',25,'user',0),(18,'upload_dir','/tmp','Upload Directory',25,'user',0),(19,'sample_rate','32','Downsample Bitrate',25,'user',0),(20,'refresh_limit','0','Refresh Rate for Homepage',100,'system',0),(21,'local_length','900','Session Expire in Seconds',100,'system',0),(22,'site_title','For The Love of Music','Website Title',100,'system',0),(23,'lock_songs','0','Lock Songs',100,'system',1),(24,'force_http_play','1','Forces Http play regardless of port',100,'system',1),(25,'http_port','80','Non-Standard Http Port',100,'system',1),(26,'catalog_echo_count','100','Catalog Echo Interval',100,'system',0),(27,'album_cache_limit','25','Album Cache Limit',100,'system',0),(28,'artist_cache_limit','50','Artist Cache Limit',100,'system',0),(29,'play_type','stream','Type of Playback',25,'user',0),(30,'direct_link','1','Allow Direct Links',100,'user',0),(31,'lang','en_US','Language',100,'user',0),(32,'playlist_type','m3u','Playlist Type',100,'user',0);
+INSERT INTO `preferences` VALUES (1,'download','0','Allow Downloads',100,'user',0),(2,'upload','0','Allow Uploads',100,'user',0),(3,'quarantine','1','Quarantine All Uploads',100,'user',0),(4,'popular_threshold','10','Popular Threshold',25,'user',0),(5,'font','Verdana, Helvetica, sans-serif','Interface Font',25,'user',0),(6,'bg_color1','#ffffff','Background Color 1',25,'user',0),(7,'bg_color2','#000000','Background Color 2',25,'user',0),(8,'base_color1','#bbbbbb','Base Color 1',25,'user',0),(9,'base_color2','#dddddd','Base Color 2',25,'user',0),(10,'font_color1','#222222','Font Color 1',25,'user',0),(11,'font_color2','#000000','Font Color 2',25,'user',0),(12,'font_color3','#ffffff','Font Color 3',25,'user',0),(13,'row_color1','#cccccc','Row Color 1',25,'user',0),(14,'row_color2','#bbbbbb','Row Color 2',25,'user',0),(15,'row_color3','#dddddd','Row Color 3',25,'user',0),(16,'error_color','#990033','Error Color',25,'user',0),(17,'font_size','10','Font Size',25,'user',0),(18,'upload_dir','/tmp','Upload Directory',25,'user',0),(19,'sample_rate','32','Downsample Bitrate',25,'user',0),(20,'refresh_limit','0','Refresh Rate for Homepage',100,'system',0),(21,'local_length','900','Session Expire in Seconds',100,'system',0),(22,'site_title','For The Love of Music','Website Title',100,'system',0),(23,'lock_songs','0','Lock Songs',100,'system',1),(24,'force_http_play','1','Forces Http play regardless of port',100,'system',1),(25,'http_port','80','Non-Standard Http Port',100,'system',1),(26,'catalog_echo_count','100','Catalog Echo Interval',100,'system',0),(27,'album_cache_limit','25','Album Cache Limit',100,'system',0),(28,'artist_cache_limit','50','Artist Cache Limit',100,'system',0),(29,'play_type','stream','Type of Playback',25,'user',0),(30,'direct_link','1','Allow Direct Links',100,'user',0),(31,'lang','en_US','Language',100,'user',0),(32,'playlist_type','m3u','Playlist Type',100,'user',0),(33,'theme_name','classic','Theme',0,'user',0),(34,'ellipse_threshold_album','27','Album Ellipse Threshold',0,'user',0),(35,'ellipse_threshold_artist','27','Artist Ellipse Threshold',0,'user',0),(36,'ellipse_threshold_title','27','Title Ellipse Threshold',0,'user',0),(37,'display_menu','1','Show Bottom Menu',0,'user',0);
 UNLOCK TABLES;
 /*!40000 ALTER TABLE `preferences` ENABLE KEYS */;
 
@@ -480,7 +481,7 @@ CREATE TABLE `update_info` (
 
 /*!40000 ALTER TABLE `update_info` DISABLE KEYS */;
 LOCK TABLES `update_info` WRITE;
-INSERT INTO `update_info` VALUES ('db_version','330004');
+INSERT INTO `update_info` VALUES ('db_version','331003');
 UNLOCK TABLES;
 /*!40000 ALTER TABLE `update_info` ENABLE KEYS */;
 
@@ -523,6 +524,7 @@ CREATE TABLE `user` (
   `email` varchar(128) default NULL,
   `password` varchar(64) NOT NULL default '',
   `access` varchar(64) NOT NULL default '',
+  `disabled` tinyint(1) NOT NULL default '0',
   `offset_limit` int(5) unsigned NOT NULL default '50',
   `last_seen` int(11) unsigned NOT NULL default '0',
   PRIMARY KEY  (`id`),
@@ -588,4 +590,5 @@ UNLOCK TABLES;
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
 /*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
