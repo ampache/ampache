@@ -81,10 +81,11 @@ elseif ( $_REQUEST['artist'] ) {
 		returns random songs based upong that
 */
 elseif ( $_REQUEST['random'] ) {
-	if($_REQUEST['genre'][0] != -1) {
+	
+	if($_REQUEST['genre'][0] != '-1') {
 		$matchlist['genre'] = $_REQUEST['genre'];
 	}
-	if($_REQUEST['catalog'] != -1) {
+	if($_REQUEST['catalog'] != '-1') {
 		$matchlist['catalog'] = $_REQUEST['catalog'];
 	}
 

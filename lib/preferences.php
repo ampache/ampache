@@ -258,6 +258,7 @@ function create_preference_input($name,$value) {
 			echo "\t<option value=\"de_DE\" $de_DE_lang>" . _("German") . "</option>\n";
 			echo "\t<option value=\"fr_FR\" $fr_FR_lang>" . _("French") . "</option>\n";
 			echo "\t<option value=\"tr_TR\" $tr_TR_lang>" . _("Turkish") . "</option>\n";
+			echo "\t<option value=\"es_ES\" $es_ES_lang>" . _("Spanish") . "</option>\n";
 			echo "</select>\n";
 		break;
 		case 'theme_name':

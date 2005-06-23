@@ -3,7 +3,11 @@
 --------------------------------------------------------------------------
 
 --------------------------------------------------------------------------
-  v.3.3.1:
+  v.3.3.2-Alpha1:
+  	- Added Spanish Translation (Thx ros)
+
+--------------------------------------------------------------------------
+  v.3.3.1 06/21/2005:
   	- Fixed hardcoded HTTP reference in list_header.inc 
 		(Thx hongyi_gao)
 	- Fixed refresh javascript for main page.
