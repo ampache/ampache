@@ -30,17 +30,22 @@
 <!--
 	body	
 		{ 
-		background: <?php echo conf('bg_color1'); ?>; 
+		padding: 5px 0px 5px 0px;
+		background: <?php echo conf('bg_color1'); ?>;
 		font-family: <?php echo conf('font') ?>; 
-		font-size: <?php echo conf('font_size'); ?>px; 
+		font-size: <?php echo conf('font_size'); ?>pt;
 		color: <?php echo conf('font_color2'); ?>;
+		white-space: nowrap;
+		margin: 2px;
 		}
 
 	p	
 		{ 
 		color: <?php echo conf('font_color2'); ?>; 
 		font-family: <?php echo conf('font')?>; 
-		font-size: <?php echo conf('font_size'); ?>px; 
+		font-size: <?php echo conf('font_size'); ?>pt;
+		margin: 8px;
+		white-space: normal;
 		}
 
 	a	
@@ -48,222 +53,163 @@
 		color: <?php echo conf('font_color2') ?>; 
 		font-family: <?php echo conf('font')?>; 
 		}
-
 	a:visited 
 		{ 
 		color: <?php echo conf('font_color2') ?>; 
 		font-family: <?php echo conf('font')?>; 
 		}
-
+	a:hover {
+        	text-decoration: underline;
+		}
 	a:active  
 		{ 
 		color: <?php echo conf('font_color2') ?>; 
 		font-family: <?php echo conf('font')?>; 
 		}
-
 	.text-box 
 		{
 		padding-left:5px;
 		padding-top:5px;
 		margin-bottom:10px;
-		background-color: <?php echo conf('base_color1'); ?>; 
+		background-color: <?php echo conf('base_color1'); ?>;
 		border-right:2px solid <?php echo conf('bg_color2'); ?>;
 		border-bottom:2px solid <?php echo conf('bg_color2'); ?>;
 		border-left:2px solid <?php echo conf('bg_color2'); ?>;
 		border-top:2px solid <?php echo conf('bg_color2'); ?>;
 		}
+	table.tabledata
+		{
+		border: 0;
+		}
 
-	input	
+	td
+		{
+		padding: 0px 10px 0px 10px;
+		color: <?php echo conf('font_color2') ?>; 
+		font-family: <?php echo conf('font')?>; 
+		font-size: <?php echo conf('font_size'); ?>pt;
+		white-space: nowrap;
+		}
+	th
+		{
+		padding-right: 10px;
+		}
+	input
 		{
 		color: <?php echo conf('font_color2'); ?>; 
 		font-family: <?php echo conf('font'); ?>; 
 		font-size: <?php echo conf('font_size'); ?>px; 
 		font-weight: bold; 
 		background-color: <?php echo conf('base_color2') ?>; 
-		border-style: solid;
-		border-width: 1px;
-	        border-color: <?php echo conf('bg_color2'); ?>;
 		margin: 2px 2px 2px 2px;
+		border-color: #555756;
+		cursor: pointer;
 		}
-
-	select	{ 
+	select
+		{
 		color: <?php echo conf('font_color2'); ?>; 
 		font-family: <?php echo conf('font')?>; 
-		font-size: <?php echo conf('font_size'); ?>px; 
-		background-color: <?php echo conf('base_color2') ?>; 
+		font-size: <?php echo conf('font_size'); ?>pt; 
+		background-color: <?php echo conf('base_color2'); ?>; 
+		
 		}
-
-	textarea 
-	{ 
+	textarea
+		{
+		background-color: <?php echo conf('base_color2'); ?>;
 		color: <?php echo conf('font_color2') ?>; 
 		font-family: <?php echo conf('font')?>; 
-		font-size: <?php echo conf('font_size'); ?>px; 
-	}
-	.headrow 
-		{
-		background:<?php echo conf('row_color1'); ?>;
-		font-size: <?php echo conf('font_size'); ?>px;
-		}
-	.odd 
-		{
-		background:<?php echo conf('row_color2'); ?>;
-		font-size: <?php echo conf('font_size'); ?>px;
-		}
-	.even
-		{
-		background:<?php echo conf('row_color3'); ?>;
-		font-size: <?php echo conf('font_size'); ?>px;
-		}
-	.blank
-		{
-		background: #000;
-		}
-	.border 
-		{ 
-		background:<?php echo conf('bg_color2'); ?>; 
-		border-collapse: collapse;
-		border-right: 1px solid #000;
-		border-left: 1px solid #000;
-		border-top: 1px solid #000;
-		border-bottom: 1px solid #000;
-		}
-	.header 
-		{ 
-		font-size: <?php echo conf('font_size'); ?>px; 
-		}
- 	.error	
-		{ 
-		color: <?php echo conf('error_color'); ?>; 
-		}
-	.fatalerror
-		{
-		padding-top: 3px;
-		padding-bottom: 3px;
-		color: <?php echo conf('error_color'); ?>;
-                border-right:4px solid <?php echo conf('error_color'); ?>;
-                border-bottom:4px solid <?php echo conf('error_color'); ?>;
-                border-left:4px solid <?php echo conf('error_color'); ?>;
-                border-top:4px solid <?php echo conf('error_color'); ?>;		
-		font-size: <?php echo conf('font_size')+2; ?>px;
-		font-weight: 900;
-		text-align: center;
-		}
-	.disabled
-		{
-		text-decoration: line-through;
-		}
-	.alphabet 
-		{ 
-		font-size: <?php echo conf('font_size'); ?>px; 
-		font-weight: normal; 
+		font-size: <?php echo conf('font_size'); ?>pt; 
 		}
 	.button
 		{
 		background: url(<?php echo conf('web_path'); ?><?php echo conf('theme_path'); ?>/images/tablebg.gif) <?php echo conf('base_color2')?> repeat-x;
 		padding: 2px;
-
-		}
-	.table-header
-	{
-		background: url(<?php echo conf('web_path'); ?><?php echo conf('theme_path'); ?>/images/tablebg.gif) <?php echo conf('base_color2')?> repeat-x;
-		padding: 0px;
-		border-color: black;
-		border-style: solid;
-		border-width: 8px;
-	}
-
-	tr.even
-	{ 
-		border-collapse: collapse;
-		border-right: 1px solid #000;
-		border-left: 1px solid #000;
-		border-top: 1px solid #000;
-		border-bottom: 1px solid #000;
-	}
-
-	tr.odd
-	{ 
-		border-collapse: collapse;
-		border-right: 1px solid #000;
-		border-left: 1px solid #000;
-		border-top: 1px solid #000;
-		border-bottom: 1px solid #000;
-	}
-
-	table.tabledata
-		{
-		margin-bottom:2px;
-		}
-
-	td
-		{ 
-		padding: 1px 9px 1px 9px;
-		color: <?php echo conf('font_color2') ?>; 
-		font-family: <?php echo conf('font')?>; 
-		font-size: <?php echo conf('font_size'); ?>px;
+		border: 0;
 		margin: 2px;
 		}
 
-
-	th
-        	{
-        	padding-right: 10px;
-        	}
-
+	ol li a
+		{
+		white-space: nowrap;
+		text-decoration:none;
+		font-weight: 500;
+		}
+	tr td a
+		{
+		text-decoration:none;
+		font-weight: 500;
+		}
+	.login
+		{
+		border-top: 1px solid white;
+		border-bottom: 1px solid white;
+		border-right: 1px solid white;
+		border-left: 1px solid white;
+		}
+	.table-header
+		{
+		background: url(<?php echo conf('web_path'); ?><?php echo conf('theme_path'); ?>/images/tablebg.gif) <?php echo conf('base_color2')?> repeat-x;
+		vertical-align: top;
+		text-align: center;
+		}
 /*************** Main Menu *****************/
     #mainmenu {
-        float: left;
-        width: 100%;
-        margin: 0;
-        padding: 0;
-        list-style: none;
-        border-top: 1px solid #000;
-        border-bottom: 1px solid #000;
-        background: url(<?php echo conf('web_path'); ?><?php echo conf('theme_path'); ?>/images/tablebg.gif) <?php echo conf('base_color2');?> repeat-x;
+float:left;
+	width: 1000px;
+	overflow: hidden;
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: 0;
+	margin-bottom: 0;
+	padding: 0px;
+	background: url(<?php echo conf('web_path'); ?><?php echo conf('theme_path'); ?>/images/tablebg.gif) <?php echo conf('base_color2');?> repeat-x;
     }
     #mainmenu li {
-        float: left;
-        margin: 0;
-        padding: 1px 20px 1px 20px;
-        display: inline;
+	float:left;
+	white-space: nowrap;
+	overflow: hidden;
+	margin: 0 0 0 0;
+        padding: 0 1.5em 0 1.5em;
+	list-style: none outside;
+	font-weight: 600;
         background: url(<?php echo conf('web_path'); ?><?php echo conf('theme_path'); ?>/images/tablebg.gif) <?php echo conf('base_color2');?> repeat-x;
+	font-size: <?php echo conf('font_size') - 1; ?>pt; 
     }
-
     #mainmenu li.active {
-       background: url(<?php echo conf('web_path'); ?><?php echo conf('theme_path'); ?>/images/active.tablebg.gif) <?php echo conf('base_color2');?> repeat-x;
-   }
+	white-space: nowrap;
+        background: url(<?php echo conf('web_path'); ?><?php echo conf('theme_path'); ?>/images/active.tablebg.gif) <?php echo conf('base_color2');?> repeat-x;
 
+    }
     #mainmenu a {
         text-decoration: none;
     }
-
-    #mainmenu a:hover {
-        color: #000;
-    }
-
     #mainmenu a:active {
         color: #00a;
+    }
+    #mainmenu a:hover {
+        color: #000;
     }
 
 /*************** END Main Menu *************/
 /*************** Admin Menu *************/
     #adminmenu {
-        float: left;
-        width: 100%;
-        margin: 0;
-        padding: 0;
+float:left;
+	width: 1000px;
+	overflow: hidden;
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: 0;
+	margin-bottom: 0;
+	padding: 0px;
         list-style: none;
-        border-bottom: 1px solid #000;
-        border-right: 1px solid #000;
-        border-left: 1px solid #000;
-        border-top: 1px solid #000;
+        border: 1px solid #000;
         background: url(<?php echo conf('web_path'); ?><?php echo conf('theme_path'); ?>/images/ampache-light-bg.gif) <?php echo conf('base_color2')?> repeat;
     }
     #adminmenu li {
-        float: left;
-        margin: 0;
-        padding: 0 20px 0 20px;
-        border-right: 1px solid #000;
+	white-space: nowrap;
+	float: left;
+        padding: 0 2em 0 2em;
+	border-right: 1px solid #000;
         display: inline;
         background: url(<?php echo conf('web_path'); ?><?php echo conf('theme_path'); ?>/images/ampache-light-bg.gif) <?php echo conf('base_color2');?> repeat-x;
     }
@@ -282,42 +228,90 @@
 /*************** END Main Menu *************/
 /*************** Page Header *********************/
 	#pageheader {
-		background: <?php echo conf('bgcolor1');?>;
+		background: <?php echo conf('bg_color1');?>;
 		}
 
-	img.pageheader {
+	#pageheader img {
 		display: block;
 		margin-left: auto;
 		margin-right: auto;
+		margin-bottom: 10px;
 		}
 
+
+
 /*************** END Page Header *****************/
-    .navitem
-    {
-        background: url(<?php echo conf('web_path'); ?><?php echo conf('theme_path'); ?>/images/ampache-light-bg.gif) <?php echo conf('base_color2')?> repeat-x;
-        vertical-align: top;
-        text-align: center;
-    }
-    .header1 
-    { 
-	color: <?php echo conf('font_color2'); ?>; 
-	font-family: <?php echo conf('font'); ?>; 
-	font-size: <?php echo conf('font_size') + 6; ?>px; 
-	font-weight: 900;
-    }
-    .header2
-    {
-    	color: <?php echo conf('font_color2'); ?>;
-	font-family: <?php echo conf('font'); ?>;
-	font-size: <?php echo conf('font_size') + 2; ?>px;
-	font-weight: 900;
-    }
-    .active_navitem
-    {
-        background: url(<?php echo conf('web_path'); ?><?php echo conf('theme_path'); ?>/images/ampache-dark-bg.gif) <?php echo conf('bg_color1')?> repeat-x;
-        vertical-align: top;
-        text-align: center;
-    }
+	.header1
+		{
+		color: <?php echo conf('font_color2'); ?>; 
+		font-family: <?php echo conf('font'); ?>; 
+		font-size: <?php echo conf('font_size') + 6; ?>pt; 
+		font-weight: 800;
+		}
+	.header2
+		{
+		color: <?php echo conf('font_color2'); ?>;
+		font-family: <?php echo conf('font'); ?>;
+		font-size: <?php echo conf('font_size') + 2; ?>pt;
+		font-weight: 800;
+		}
+	.headrow 
+		{
+		background:<?php echo conf('row_color1'); ?>;
+		font-size: <?php echo conf('font_size'); ?>pt;
+		}
+	.odd 
+		{
+		background:<?php echo conf('row_color2'); ?>;
+		font-size: <?php echo conf('font_size'); ?>pt;
+		padding: 0px 10px 0px 10px;
+		}
+	.even
+		{
+		background:<?php echo conf('row_color3'); ?>;
+		font-size: <?php echo conf('font_size'); ?>pt;
+		padding: 0px 10px 0px 10px;
+		}
+	.blank
+		{
+		background: #fff;
+		}
+	.border 
+		{ 
+		background:<?php echo conf('bg_color2'); ?>; 
+		}
+	.header 
+		{ 
+		font-size: <?php echo conf('font_size'); ?>pt; 
+		}
+ 	.error	
+		{ 
+		color: <?php echo conf('error_color'); ?>; 
+		}
+	.fatalerror
+		{
+		padding-top: 3px;
+		padding-bottom: 3px;
+		color: <?php echo conf('error_color'); ?>;
+		border-right:4px solid <?php echo conf('error_color'); ?>;
+		border-bottom:4px solid <?php echo conf('error_color'); ?>;
+		border-left:4px solid <?php echo conf('error_color'); ?>;
+		border-top:4px solid <?php echo conf('error_color'); ?>;		
+		font-size: <?php echo conf('font_size')+2; ?>pt;
+		font-weight: 900;
+		text-align: center;
+		}
+	.disabled
+		{
+		text-decoration: line-through;
+		}
+	.alphabet 
+		{ 
+		font-size: <?php echo conf('font_size'); ?>pt; 
+		font-weight: normal; 
+		}
 
 -->
 </style>
+
+

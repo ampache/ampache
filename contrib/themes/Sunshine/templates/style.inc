@@ -30,7 +30,8 @@
 <!--
 	body	
 		{ 
-		background: <?php echo conf('bg_color1'); ?>; 
+		background: url(<?php echo conf('web_path'); ?><?php echo conf('theme_path'); ?>/images/background.gif);?>
+
 		font-family: <?php echo conf('font') ?>; 
 		font-size: <?php echo conf('font_size'); ?>px; 
 		color: <?php echo conf('font_color2'); ?>;
@@ -90,6 +91,9 @@
 		font-size: <?php echo conf('font_size'); ?>px; 
 		font-weight: bold; 
 		background-color: <?php echo conf('base_color2') ?>; 
+	    	border-style: solid;
+	      	border-width: 1px;
+	        border-color: <?php echo conf('bg_color2'); ?>;
 		margin: 2px 2px 2px 2px;
 		}
 	select	{ 
@@ -100,7 +104,6 @@
 		}
 	textarea 
 	{ 
-		background-color: <?php echo conf('base_color2'); ?>;
 		color: <?php echo conf('font_color2') ?>; 
 		font-family: <?php echo conf('font')?>; 
 		font-size: <?php echo conf('font_size'); ?>px; 
@@ -110,6 +113,82 @@
         background: url(<?php echo conf('web_path'); ?><?php echo conf('theme_path'); ?>/images/ampache-light-bg.gif) <?php echo conf('base_color2')?> repeat-x;
         vertical-align: top;
     }
+/*************** Main Menu *****************/
+    #mainmenu {
+        float: left;
+        width: 100%;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+        border-top: 1px solid #000;
+        border-bottom: 1px solid #000;
+        border-right: 1px solid #000;
+        border-left: 1px solid #000;
+        background: url(<?php echo conf('web_path'); ?><?php echo conf('theme_path'); ?>/images/ampache-light-bg.gif) <?php echo conf('base_color2');?> repeat-x;
+peat-x;
+    }
+    #mainmenu li {
+        float: left;
+        margin: 0;
+        padding: 0 10px 0 10px;
+        border-right: 1px solid #000;
+        display: inline;
+        background: url(<?php echo conf('web_path'); ?><?php echo conf('theme_path'); ?>/images/ampache-light-bg.gif) <?php echo conf('base_color2');?> repeat-x;
+peat-x;
+    }
+    #mainmenu li.active {
+        background: url(<?php echo conf('web_path'); ?><?php echo conf('theme_path'); ?>/images/ampache-dark-bg.gif) <?php echo conf('base_color2');?> rep
+eat-x;
+    }
+    #mainmenu a {
+        text-decoration: none;
+    }
+    #mainmenu a:hover {
+        color: #000;
+    }
+    #mainmenu a:active {
+        color: #00a;
+    }
+/*************** END Main Menu *************/
+/*************** Admin Menu *************/
+    #adminmenu {
+        float: left;
+        width: 100%;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+        border-bottom: 1px solid #000;
+        border-right: 1px solid #000;
+        border-left: 1px solid #000;
+        border-top: 1px solid #000;
+        background: url(<?php echo conf('web_path'); ?><?php echo conf('theme_path'); ?>/images/ampache-light-bg.gif) <?php echo conf('base_color2')?> repeat;
+    }
+    #adminmenu li {
+        float: left;
+        margin: 0;
+        padding: 0 20px 0 20px;
+        border-right: 1px solid #000;
+        display: inline;
+        background: url(<?php echo conf('web_path'); ?><?php echo conf('theme_path'); ?>/images/ampache-light-bg.gif) <?php echo conf('base_color2');?> repeat-x;
+    }
+    #adminmenu li.active {
+        background: url(<?php echo conf('web_path'); ?><?php echo conf('theme_path'); ?>/images/ampache-dark-bg.gif) <?php echo conf('base_color2');?> repeat-x;
+    }
+    #adminmenu a {
+        text-decoration: none;
+    }
+    #adminmenu a:hover {
+        color: #000;
+    }
+    #adminmenu a:active {
+        color: #000;
+    }
+/*************** END Main Menu *************/
+/*************** Page Header *********************/
+    #pageheader {
+        background: <?php echo conf('bgcolor1');?>;
+    }
+/*************** END Page Header *****************/
     .navitem
     {
         background: url(<?php echo conf('web_path'); ?><?php echo conf('theme_path'); ?>/images/ampache-light-bg.gif) <?php echo conf('base_color2')?> repeat-x;
