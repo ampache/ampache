@@ -1,7 +1,7 @@
 <?php
 /*      
 
- Copyright (c) 2004 Ampache.org
+ Copyright (c) 2001 - 2005 Ampache.org
  All rights reserved.
 
  *Created by Lamar*
@@ -24,7 +24,7 @@
 ?>
 <center>
   <h3>
-      <?php echo _("Please Ensure All Files Are Tagged Correctly"); ?>!!<br>
+      <?php echo _("Please Ensure All Files Are Tagged Correctly"); ?>!<br />
   </h3>
   <p>
       <?php echo _("Ampache relies on id3 tags to sort data.  If your file is not tagged it may be deleted."); ?>
@@ -35,49 +35,50 @@
   <table class="tabledata" cellspacing="0" cellpadding="0" border="0" width="90%" align="center">
      <tr align="center">
           <td>
-               <input size=40 type="file" name="ul_path1" id="ul_path1">
+               <input size=40 type="file" name="ul_path1" id="ul_path1" />
           </td>
      </tr>  
      <tr align="center">
           <td>
-               <input size=40 type="file" name="ul_path2" id="ul_path2">
+               <input size=40 type="file" name="ul_path2" id="ul_path2" />
           </td>
      </tr>  
      <tr align="center">
           <td>
-               <input size=40 type="file" name="ul_path3" id="ul_path3">
+               <input size=40 type="file" name="ul_path3" id="ul_path3" />
           </td>
      </tr>  
      <tr align="center">
           <td>
-               <input size=40 type="file" name="ul_path4" id="ul_path4">
+               <input size=40 type="file" name="ul_path4" id="ul_path4" />
           </td>
      </tr>  
      <tr align="center">
           <td>	
-		<input type="hidden" name="action" value="upload_now">
-               <input type="submit" value="<?php echo _("Upload"); ?>">
+		<input type="hidden" name="action" value="upload_now" />
+               <input type="submit" value="<?php echo _("Upload"); ?>" />
           </td>
      </tr>  
   </table>
 </form>
 
-<p>
 <table align="center" border = "0">
   <tr>
    <td>
-     Acceptable formats include:
+   Acceptable formats include:
+   <ul>
      <li>.mp3</li>
      <li>.ogg</li>
      <li>.wma</li>
      <li>.flac</li>
+   </ul>
    </td>
   </tr>
 </table>
-</p>
 <!-- 
 <p> 
-  Minimum Accepted Bitrate is <?= $site->prefs['upload_bitrate'] ?> kbps
+  <?php echo _("Minimum Accepted Bitrate is"); ?> <?php echo $site->prefs['upload_bitrate'] ?> kbps
 </p>
 -->
 </center>
+

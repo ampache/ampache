@@ -25,10 +25,10 @@ $htmllang = str_replace("_","-",conf('lang'));
 ?>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "DTD/xhtml1-transitional.dtd">
-<html lang="<?php echo $htmllang; ?>">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php echo $htmllang; ?>" lang="<?php echo $htmllang; ?>">
 <head>
 <link rel="shortcut icon" href="<?php echo conf('web_path'); ?>/favicon.ico" />
-<meta http-equiv="Content-Type" content="text/html; charset=<?php echo conf('site_charset'); ?>" />
+<meta http-equiv="Content-Style-Type" content="text/html" charset="<?php echo conf('site_charset'); ?>" />
 <?php show_template('style'); ?>
 <title><?php echo conf('site_title'); ?></title>
 </head>

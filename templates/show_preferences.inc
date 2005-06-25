@@ -64,7 +64,7 @@
                <tr>
                        <td><?php create_preference_input($pref->name,$pref->value); ?></td>
                        <?php if(preg_match('/Color/',$pref->description)) { ?>
-			       <td><table width="40" height="20" border="3" bgcolor="<?php echo $pref->value;?>"><tr><td></td></tr></table></td>
+			       <td><table width="40" border="3" style="border-collapse: collapse;" bgcolor="<?php echo $pref->value;?>"><tr style="height:20px;"><td></td></tr></table></td>
                        <?php } else { ?>
                                <td></td>
                                <?php } ?>

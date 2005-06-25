@@ -35,7 +35,7 @@
 		<td class="even">
 		<?
 			foreach (array_keys($items) as $item) {
-				print("\t\t\t>> <a href=\"$items[$item]\"> $item</a><br />\n");
+				print("\t\t\t&gt;&gt; <a href=\"$items[$item]\"> $item</a><br />\n");
 			}
 		?>
 		</td>

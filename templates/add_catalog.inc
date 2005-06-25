@@ -34,7 +34,7 @@ $default_sort = "%a/%A";
 <table class="tabledata" cellpadding="0" border="0" cellspacing="0">
 <tr>
 	<td><?php echo _("Catalog Name"); ?>: </td>
-	<td><input size="60" type="text" name="name" value="<?php echo $_REQUEST['name']; ?>" size="30" /></td>
+	<td><input size="60" type="text" name="name" value="<?php echo $_REQUEST['name']; ?>" /></td>
     <td style="vertical-align:top; font-family: monospace;" rowspan="6">
     <strong><?php echo _("Auto-inserted Fields"); ?>:</strong><br />
     %A = <?php echo _("album name"); ?><br />
@@ -51,7 +51,7 @@ $default_sort = "%a/%A";
 </tr>
 <tr>
 	<td><?php echo _("Path"); ?>: </td>
-	<td><input size="60" type="text" name="path" value="<?php echo $_REQUEST['path']; ?>" size="30" /></td>
+	<td><input size="60" type="text" name="path" value="<?php echo $_REQUEST['path']; ?>" /></td>
 </tr>
 <tr>
 	<td><?php echo _("Catalog Type"); ?>: </td>
@@ -64,15 +64,15 @@ $default_sort = "%a/%A";
 </tr>
 <tr>
 	<td><?php echo _("ID3 Set Command"); ?>: </td>
-	<td><input size="60" type="text" name="id3set_command" value="<?php echo $default_id3; ?>" size="30" /></td>
+	<td><input size="60" type="text" name="id3set_command" value="<?php echo $default_id3; ?>" /></td>
 </tr>
 <tr>
 	<td><?php echo _("Filename Pattern"); ?>: </td>
-	<td><input size="60" type="text" name="rename_pattern" value="<?php echo $default_rename; ?>" size="30" /></td>
+	<td><input size="60" type="text" name="rename_pattern" value="<?php echo $default_rename; ?>" /></td>
 </tr>
 <tr>
 	<td><?php echo _("Folder Pattern"); ?>:<br /><?php echo _("(no leading or ending '/')"); ?></td>
-	<td valign="top"><input size="60" type="text" name="sort_pattern" value="<?php echo $default_sort; ?>" size="30" /></td>
+	<td valign="top"><input size="60" type="text" name="sort_pattern" value="<?php echo $default_sort; ?>" /></td>
 </tr>
 <tr>
 	<td valign="top"><?php echo _("Gather Album Art"); ?>:</td>

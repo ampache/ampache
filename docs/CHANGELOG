@@ -5,6 +5,8 @@
 --------------------------------------------------------------------------
   v.3.3.2-Alpha1:
   	- Added Spanish Translation (Thx ros)
+	- Fixed Menu Highlight when using a Translation
+	- More HTML cleanup (Thx Xgizzmo)
 
 --------------------------------------------------------------------------
   v.3.3.1 06/21/2005:

@@ -145,7 +145,7 @@ switch ($action) {
 			} // end if known
 			// If unknown filetype
 			else{
-				$message[$file['name']] .= "Error:  Unsupported File Type- $ext<br>";
+				$message[$file['name']] .= "Error:  Unsupported File Type- $ext<br />";
 				$errorenum[$file['name']]=true;
 			}
 			// foreach through files uploaded
@@ -224,7 +224,7 @@ if ( $handle = @opendir($user->prefs['upload_dir'] ) ){
 } // end if upload_dir
 ?>
 
-<table class="tabledata" cellspacing="0" cellpadding="0" border="1" align="center">
+<table class="tabledata" cellspacing="0" cellpadding="0" align="center">
 	<tr class="table-header">
 		<td><?php echo _("Action"); ?></td>
 		<td><?php echo _("Song"); ?></td>
@@ -315,5 +315,9 @@ if ( $handle = @opendir($user->prefs['upload_dir'] ) ){
 
 
 ?>
-
 	</table>
+<br />
+<br />
+<br />
+<?php> show_page_footer ('Upload', '',$user->prefs['display_menu']); ?>
+	

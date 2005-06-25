@@ -30,11 +30,11 @@
 $web_path = conf('web_path');
 
 $items = array(
-	        _("Users")          => "$web_path/admin/users.php",
-		_("Mail Users")     => "$web_path/admin/mail.php",
-		_("Catalog")        => "$web_path/admin/catalog.php",
-		_("Admin Preferences")    => "$web_path/admin/preferences.php",
-		_("Access Lists")	=>  "$web_path/admin/access.php"
+	        "Users"          => "$web_path/admin/users.php",
+		"Mail Users"     => "$web_path/admin/mail.php",
+		"Catalog"        => "$web_path/admin/catalog.php",
+		"Admin Preferences"    => "$web_path/admin/preferences.php",
+		"Access Lists"	=>  "$web_path/admin/access.php"
         );
 
 ?>
@@ -43,10 +43,10 @@ $items = array(
 	<?php
 	foreach ( array_keys($items) as $item ) {
 		if ( $admin_highlight == $item ) {
-        		echo "<li class=\"active\"><a class=\"active\" href=\"$items[$item]\">$item</a></li>\n";
+        		echo "<li class=\"active\"><a class=\"active\" href=\"$items[$item]\">" . _($item) . "</a></li>\n";
 		}
 		else {
-        		echo "<li><a href=\"$items[$item]\">$item</a></li>\n";
+        		echo "<li><a href=\"$items[$item]\">" . _($item) . "</a></li>\n";
 		}
 	}
 

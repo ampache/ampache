@@ -78,13 +78,14 @@ if ( ($auth['success'] == 1)) {
 	exit();
 } // auth success
 
-
+$htmllang = str_replace("_","-",conf('lang'));
 ?>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "DTD/xhtml1-transitional.dtd">
-<html lang="<?php echo conf('lang'); ?>">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php echo $htmllang; ?>" lang="<?php echo $htmllang; ?>">
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=<?php echo conf('site_charset'); ?>" />
+<meta http-equiv="Content-Style-Type" content="text/html" charset="<?php echo conf('site_charset'); ?>" />
+<link rel="shortcut icon" href="<?php echo conf('web_path'); ?>/favicon.ico" />
 <title> <?php echo conf('site_title'); ?> </title>
 
 <?php show_template('style'); ?>

@@ -27,7 +27,7 @@
 	<?php echo $text; ?>
 </td></tr>
 <tr><td>	
-	[ <a href="<?php echo $path; ?>"><?php echo _("Continue"); ?></a> ]
+	[ <a href="<?php echo htmlspecialchars($path); ?>"><?php echo _("Continue"); ?></a> ]
 	<br />
 </td></tr>
 </table>

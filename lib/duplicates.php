@@ -75,7 +75,7 @@ function show_duplicate_searchbox($search_type) {
 ?>
 <br />
 <form name="songs" action="<?php echo conf('web_path'); ?>/admin/duplicates.php" method="post" enctype="multipart/form-data" >
-<table class="border" cellspacing="0" cellpadding="3" border="0" width="450px">
+<table class="border" cellspacing="0" cellpadding="3" border="0" width="450">
 	<tr class="table-header">
 		<td colspan="2"><b><?php echo _("Find Duplicates"); ?></b></td>
 	</tr>

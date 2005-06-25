@@ -88,6 +88,3 @@ require (conf('prefix') . "/templates/show_preferences.inc");
 // FOOTER
 show_page_footer ('Admin', 'Admin Preferences',$user->prefs['display_menu']);
 ?>
-
-</body>
-</html>

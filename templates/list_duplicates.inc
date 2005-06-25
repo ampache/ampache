@@ -60,10 +60,10 @@
 	foreach ($dinfolist as $dinfo)
 	{
 		echo "<tr class=\"".$class."\">".
-		"<td><input type=\"checkbox\" name=\"song_ids[]\" value=\"" . $dinfo['songid'] . "\" />".
-		"<td><a href=\"".conf('web_path')."/song.php?action=m3u&amp;song=$song->id\">$formated_title</td>".
-		"<td><a href=\"".conf('web_path')."/artists.php?action=show&amp;artist=".$dinfo['artistid']."\" title=\"".$dinfo['artist']."\">".$dinfo['artist']."</a> </td>".
-		"<td><a href=\"".conf('web_path')."/albums.php?action=show&amp;album=".$dinfo['albumid']."\" title=\"".$dinfo['album']."\">".$dinfo['album']."</a> </td>".
+		"<td><input type=\"checkbox\" name=\"song_ids[]\" value=\"" . $dinfo['songid'] . "\" /></td>".
+	        "<td><a href=\"".conf('web_path')."/song.php?action=m3u&amp;song=$song->id\">".htmlspecialchars($formated_title)."</a> </td>".
+		"<td><a href=\"".conf('web_path')."/artists.php?action=show&amp;artist=".$dinfo['artistid']."\" title=\"".htmlspecialchars($dinfo['artist'])."\">".htmlspecialchars($dinfo['artist'])."</a> </td>".
+		"<td><a href=\"".conf('web_path')."/albums.php?action=show&amp;album=".$dinfo['albumid']."\" title=\"".htmlspecialchars($dinfo['album'])."\">".htmlspecialchars($dinfo['album'])."</a> </td>".
 		"<td>".floor($dinfo['time']/60).":".sprintf("%02d", ($dinfo['time']%60) )."</td>".
 		"<td>".intval($dinfo['bitrate']/1000)."</td>".
 		"<td>".sprintf("%.2f", ($dinfo['size']/1000000))."Mb</td>".
@@ -76,12 +76,11 @@
 	}
 ?>
 <tr>
-<td colspan="8" class="<?php echo $class; ?>"><input height="15px" type="submit" value="Disable Songs" /></td>
+<td colspan="8" class="<?php echo $class; ?>"><input height="15" type="submit" value="Disable Songs" /></td>
 </tr>
 </table>
 <?php  } else { ?>
 
 <p> You don't have any duplicate songs. </p>
-</form>
 <?php  } ?>
-
+</form>

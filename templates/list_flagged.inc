@@ -35,7 +35,7 @@ this list to determine what songs you need to re-rip or tags you need to update.
 <?php  if ( $flags ) { ?>
 <form name="songs" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
 
-<table class="tabledata" cellspacing="0" cellpadding="0" border="1">
+<table class="tabledata" cellspacing="0" cellpadding="0" >
 	<tr class="table-header">
         <td><a href="#" onclick="check_songs(); return false;">Select</a></td>
 		<td><?php echo _("Song"); ?></td>

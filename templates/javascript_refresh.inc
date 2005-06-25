@@ -1,4 +1,4 @@
-<script language="JavaScript">
+<script language="JavaScript" type="text/javascript">
 // Set refresh interval (in seconds)
 var refreshinterval=<?= conf('refresh_limit'); ?>
 

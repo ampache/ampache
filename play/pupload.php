@@ -160,7 +160,7 @@ if ( $_REQUEST['action'] == 'm3u' ) {
 		echo "#EXTM3U\n";
 
 		$song_name = $song . " - " . $title . "." . $type;
-		$song_name = $artist . " - " . $title . "." . $song->type;;
+		$song_name = $artist . " - " . $title . "." . $song->type;
 		echo "#EXTINF:$song_time,$title\n";
 		$sess = $_COOKIE[libglue_param('sess_name')];
 					if($temp_user->prefs['down-sample'] == 'true')

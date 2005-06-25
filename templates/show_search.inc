@@ -29,7 +29,7 @@
 
 ?>
 <form name="search" method="post" action="<?php echo  conf('web_path'); ?>/search.php" enctype="multipart/form-data" style="Display:inline">
-<table class="tabledata" cellspacing="0" cellpadding="3" border="0" width="450px" style="clear:both;">
+<table class="tabledata" cellspacing="0" cellpadding="3" border="0" width="450" style="clear:both;">
 <tr class="table-header">
 	<td colspan="2"><b><?php echo  _("Search Ampache"); ?>...</b></td>
 </tr>

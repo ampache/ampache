@@ -91,7 +91,7 @@ show_clear();
 
 <form name="mail" method="post" action="<?php echo conf('web_path'); ?>/admin/mail.php" enctype="multipart/form-data">
 
-<p><font color="<?php echo $error_color; ?>"><?php echo $complete_text; ?></font></p>
+<p><font color="<?php echo conf('error_color'); ?>"><?php echo $complete_text; ?></font></p>
 
 <table>
   <tr>

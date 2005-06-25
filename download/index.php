@@ -45,8 +45,7 @@ if ($user->prefs['download']) {
 			$song = new Song($_REQUEST['song_id']);
 			$song->format_song();
 			$song->format_type();
-			$song_name = $song->f_artist_full . " - " . $song->title . "." . $song->type;
-
+			$song_name = str_replace('"'," ",$song->f_artist_full . " - " . $song->title . "." . $song->type);
 			// Use Horde's Browser class to send the right headers for different browsers
 			// Should get the mime-type from the song rather than hard-coding it.
 			header("Content-Length: " . $song->size);

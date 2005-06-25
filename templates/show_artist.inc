@@ -76,14 +76,13 @@ $artist_id = $artist->id;
 	  <td><?php print $album->year; ?></td>
           <td><?php print $count; ?></td>
           <td>
-		<a href="<?php print $web_path; ?>/song.php?action=m3u&amp;album=<?php print $id; ?>"><?php print _("Play"); ?></a>
-               	<?php if( batch_ok() ) { ?>
-			| <a href="<?php echo  conf('web_path'); ; ?>/batch.php?action=alb&amp;id=<?php echo $album->id; ?>"><?php echo _("Download"); ?></a>
-               	<?php } ?> 
+               <a href="<?php print $web_path; ?>/song.php?action=m3u&amp;album=<?php print $id; ?>"><?php print _("Play"); ?></a>
+               <?php if( batch_ok() ) { ?>
+        	       | <a href="<?php echo conf('web_path'); ?>/batch.php?action=alb&amp;id=<?php echo $album->id; ?>"><?php echo _("Download"); ?></a>
+               <?php } ?> 
        </td>
-                                                              
-        
-       </td>      
+
+
        </tr>
 <?php  } ?>
 </table>
