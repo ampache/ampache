@@ -421,6 +421,20 @@ class User {
                         $db_result = mysql_query($sql, $dbh);
                 }
 
+		// Play count for this genre
+		$sql = "UPDATE object_count" . 
+			" SET date = '$time', count=count+1" . 
+			" WHERE object_type = 'genre'" . 
+			" AND object_id = '" . $song_info->genre."' AND userid='$user'";
+		$db_results = mysql_query($sql, $dbh);
+
+		$rows = mysql_affected_rows();
+		if (!$rows) { 
+			$sql = "INSERT INTO object_count (`object_type`,object_id`,`date`,`count`,`userid`)" . 
+				"VALUES ('genre','" . $song_info->genre."','$time','1'1,'$user')";
+			$db_results = mysql_query($sql, $dbh);
+		}
+
 
 	} // update_stats
 

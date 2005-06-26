@@ -920,5 +920,12 @@ class Update {
 
 	} //update 331003
 
+	function update_332001() { 
+
+		$sql = "ALTER TABLE `object_count` CHANGE `object_type` `object_type` ENUM( 'album', 'artist', 'song', 'playlist', 'genre', 'catalog' ) NOT NULL DEFAULT 'song'";
+		$sql = "ALTER TABLE `session` CHANGE `type` `type` ENUM( 'sso', 'mysql', 'ldap', 'http' ) NOT NULL DEFAULT 'mysql'";
+
+	} // update_332001
+
 } // end update class
 ?>

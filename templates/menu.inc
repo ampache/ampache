@@ -32,10 +32,11 @@ if ($GLOBALS['user']->prefs['play_type'] == 'mpd' && conf('localplay_menu')) {
 	$items += array(_("Local Play") => htmlspecialchars(conf('web_path') . "/mpd.php"));
 }
 
-$items += array(_("Albums")    => htmlspecialchars(conf('web_path') . "/albums.php"),
-		_("Artists")   => htmlspecialchars(conf('web_path') . "/artists.php"),
-		_("Playlists") => htmlspecialchars(conf('web_path') . "/playlist.php"),
-		_("Search")    => htmlspecialchars(conf('web_path') . "/search.php"),
+$items += array(_("Browse")	=> htmlspecialchars(conf('web_path') . "/browse.php"),
+		_("Albums")	=> htmlspecialchars(conf('web_path') . "/albums.php"),
+		_("Artists")	=> htmlspecialchars(conf('web_path') . "/artists.php"),
+		_("Playlists")	=> htmlspecialchars(conf('web_path') . "/playlist.php"),
+		_("Search")	=> htmlspecialchars(conf('web_path') . "/search.php"),
 		_("Preferences") => htmlspecialchars(conf('web_path') . "/preferences.php")
         );
 if ($GLOBALS['user']->prefs['upload']) { 

@@ -535,20 +535,169 @@ function get_random_songs( $options, $matchlist) {
 
 } // get_random_songs
 
-/*!
-	@function cleanup_and_exit
-	@discussion used specificly for the play/index.php file
-		this functions nukes now playing and then exits
-*/
+/**
+ *	cleanup_and_exit
+ *	used specificly for the play/index.php file
+ *		this functions nukes now playing and then exits
+ * 	@package Streaming
+ * 	@catagory Clean
+ */
 function cleanup_and_exit($playing_id) { 
 
 	/* Clear now playing */
 	// 900 = 15 min
 	$expire = time() - 900;
-	$sql = "DELETE FROM now_playing WHERE id='$lastid' OR start_time < $expire";
-	$db_results = mysql_query($sql, dbh());
+	$sql = "DELETE FROM now_playing WHERE now_playing.id='$lastid' OR now_playing.start_time < $expire";
+
+	$db_results = @mysql_query($sql, dbh());
+
 	exit();
 
 } // cleanup_and_exit
+
+/** 
+ * 	get_global_popular
+ *	this function gets the current globally popular items
+ * 	from the object_count table, depending on type passed
+ * 	@package Web Interface
+ * 	@catagory Get
+ */
+function get_global_popular($type) {
+
+        $dbh = dbh();
+        
+        $sql = "SELECT object_id, SUM(count) as count FROM object_count" .
+                " WHERE object_type = '$type'" .
+                " GROUP BY object_id" .
+                " ORDER BY count DESC LIMIT " . conf('popular_threshold');
+        $db_result = mysql_query($sql, $dbh);
+        
+        $items = array();
+        $web_path = conf('web_path');
+        
+        while ( $r = @mysql_fetch_object($db_result) ) {
+		/* If Songs */
+                if ( $type == 'song' ) {
+                        $song = new Song($r->object_id);
+                        $artist = $song->get_artist_name();
+                        $text = "$artist - $song->title";
+                        /* Add to array */
+                        $items[] = "<li> <a href=\"$web_path/song.php?action=m3u&amp;song=$song->id\" title=\"". htmlspecialchars($text) ."\">" .
+	                                   htmlspecialchars(truncate_with_ellipse($text, conf('ellipse_threshold_title')+3)) . "&nbsp;($r->count)</a> </li>";
+                } // if it's a song
+                
+		/* If Artist */
+                elseif ( $type == 'artist' ) {
+                        $artist  = get_artist_name($r->object_id);
+                        $items[] = "<li> <a href=\"$web_path/artists.php?action=show&amp;artist=$r->object_id\" title=\"". htmlspecialchars($artist) ."\">" .
+                        	           htmlspecialchars(truncate_with_ellipse($artist, conf('ellipse_threshold_artist')+3)) . "&nbsp;($r->count)</a> </li>";
+                } // if type isn't artist
+
+		/* If Album */
+                elseif ( $type == 'album' ) {
+                        $album   = new Album($r->object_id);
+                        $items[] = "<li> <a href=\"$web_path/albums.php?action=show&amp;album=$r->object_id\" title=\"". htmlspecialchars($album->name) ."\">" . 
+                        	           htmlspecialchars(truncate_with_ellipse($album->name,conf('ellipse_threshold_album')+3)) . "&nbsp;($r->count)</a> </li>";
+                } // else not album
+
+		elseif ($type == 'genre') { 
+			$genre 	 = new Genre($r->object_id);
+			$items[] = "<li> <a href=\"$web_path/browse.php?action=genre&amp;genre=$r->object_id\" title=\"" . htmlspecialchars($genre->name) . "\">" .
+					htmlspecialchars(truncate_with_ellipse($genre->name,conf('ellipse_threshold_title')+3)) . "&nbsp;($r->count)</a> </li>";
+		} // end if genre
+        } // end while
+       
+	if (count($items) == 0) { 
+		$items[] = "<span class=\"error\">" . _("Not Enough Data") . "</span>\n";
+	}
+ 
+        return $items;
+
+} // get_global_popular
+
+/** 
+ * gen_newest
+ * Get a list of newest $type (which can then be handed to show_info_box
+ * @package Web Interface
+ * @catagory Get
+ * @todo Add Genre
+ */
+function get_newest ($type = 'artist') {
+
+        $dbh = dbh();
+
+        if (conf('popular_threshold') < 1) { conf(array('popular_threshold'=>'10'),1); }
+
+        $sql = "SELECT DISTINCT $type FROM song ORDER BY addition_time " .
+                "DESC LIMIT " . conf('popular_threshold');
+        $db_result = mysql_query($sql, $dbh);
+
+        $items = array();
+        $web_path = conf('web_path');
+
+        while ( $item = mysql_fetch_row($db_result) ) {
+                if ( $type == 'artist' ) {
+                        $artist = new Artist($item[0]);
+                        $artist->format_artist();
+                        $items[] = "<li>" . $artist->link . "</li>\n";
+                }
+                elseif ( $type == 'album' ) {
+                        $album = new Album($item[0]);
+                        $album->format_album();
+                        $items[] = "<li>" . $album->f_name . "</li>";
+                }
+        }
+        return $items;
+} // get_newest
+
+/** 
+ * show_info_box
+ * This shows the basic box that popular and newest stuff goes into
+ * @package Web Interface
+ * @catagory Display
+ * @todo make this use a template
+ */
+function show_info_box ($title, $type, $items) {
+
+        $web_path = conf('web_path');
+        $popular_threshold = conf('popular_threshold');
+
+       echo "<table class=\"border\" cellspacing=\"1\" cellpadding=\"3\" width=\"100%\" border=\"0\">";
+       echo "   <tr class=\"table-header\">";
+
+
+        if ($type == 'your_song') {
+                echo "<td>$title - <a href=\"$web_path/song.php?action=m3u&amp;your_popular_songs=$popular_threshold\">Play</a></td>\n";
+        }
+        elseif ($type == 'song') {
+                echo "<td>$title - <a href=\"$web_path/song.php?action=m3u&amp;popular_songs=$popular_threshold\">Play</a></td>\n";
+        }
+        else {
+                echo "<td>$title</td>\n";
+        }
+
+        print <<<ECHO
+  </tr>
+  <tr class="even">
+    <td align="left">
+      <ol>
+
+ECHO;
+
+        foreach ($items as $item) {
+                echo "$item\n";
+        }
+
+        print <<<ECHO
+      </ol>
+    </td>
+  </tr>
+</table>
+
+ECHO;
+
+} // show_info_box
+
+
 
 ?>

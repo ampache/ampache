@@ -112,10 +112,10 @@ if (!$results['conf']['prefix']) {
 	$results['conf']['prefix'] = $prefix;
 }
 if (!$results['libglue']['stop_auth']) {
-        $results['libglue']['stop_auth'] = $results['conf']['prefix'] . "/libglue/gone.fishing";
+        $results['libglue']['stop_auth'] = $results['conf']['prefix'] . "/modules/libglue/gone.fishing";
 }
 if (!$results['libglue']['libglue_path']) {
-        $results['libglue']['libglue_path']= $results['conf']['prefix'] . "/libglue";
+        $results['libglue']['libglue_path']= $results['conf']['prefix'] . "/modules/libglue";
 }
 if (!$results['conf']['http_port']) { 
 	$results['conf']['http_port']	= '80';
@@ -157,8 +157,8 @@ require_once(conf('prefix') . "/lib/song.php");
 require_once(conf('prefix') . "/lib/search.php");
 require_once(conf('prefix') . "/lib/preferences.php");
 require_once(conf('prefix') . "/lib/rss.php");
-require_once(conf('prefix') . "/lib/log.php");
-require_once(conf('prefix') . "/lib/ui.php");
+require_once(conf('prefix') . "/lib/log.lib.php");
+require_once(conf('prefix') . "/lib/ui.lib.php");
 require_once(conf('prefix') . "/lib/gettext.php");
 require_once(conf('prefix') . "/lib/batch.php");
 require_once(conf('prefix') . "/lib/themes.php");

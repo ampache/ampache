@@ -19,13 +19,16 @@
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
-/*!
-	@header UI Function Library
-	This contains functions that are generic, and display information
-	things like a confirmation box, etc and so forth
-*/
 
-/*!
+/**
+ *	UI Function Library
+ *	This contains functions that are generic, and display information
+ *	things like a confirmation box, etc and so forth
+ *	@package Web Interface
+ * 	@catagory Library
+ */
+
+/**
 	@function show_confirmation
 	@discussion shows a confirmation of an action
 	@param $next_url	Where to go next
@@ -45,7 +48,7 @@ function show_confirmation($title,$text,$next_url) {
 
 } // show_confirmation
 
-/*!
+/**
 	@function set_preferences
 	@discussion legacy function...
 	//FIXME: Remove References
@@ -57,7 +60,7 @@ function set_preferences() {
 
 } // set_preferences
 
-/*!
+/**
 	@function get_preferences
 	@discussion reads this users preferences
 */
@@ -94,7 +97,7 @@ function get_preferences($username=0) {
 
 } // get_preferences
 
-/*!
+/**
 	@function flip_class
 	@discussion takes an array of 2 class names
 		and flips them back and forth and
@@ -114,7 +117,7 @@ function flip_class($array=0) {
 
 } // flip_class
 
-/*!
+/**
 	@function clear_now_playing
 	@discussion Clears the now playing information incase something has
 		gotten stuck in there
@@ -128,7 +131,7 @@ function clear_now_playing() {
 
 } // clear_now_playing
 
-/*!
+/**
 	@function show_tool_box
 	@discussion shows the toolbox
 */
@@ -138,7 +141,7 @@ function show_tool_box ($title, $items) {
 	
 }// show_tool_box
 
-/*!
+/**
 	@function show_box
 	@discussion shows a generic box
 */
@@ -148,7 +151,7 @@ function show_box($title,$items) {
 
 } // show_box
 
-/*!	
+/**	
 	@function show_menu_items
 	@discussion shows menu items
 */
@@ -158,7 +161,7 @@ function show_menu_items ($high) {
 	
 } // show_menu_items
 
-/*!
+/**
 	@function _
 	@discussion checks to see if the alias _ is defined
 		if it isn't it defines it as a simple return
@@ -171,7 +174,7 @@ if (!function_exists('_')) {
 	} // _
 } // if _ isn't defined
 
-/*!
+/**
         @function show_playlist_menu
         @discussion playlist functions
 */
@@ -184,7 +187,7 @@ function show_playlist_menu () {
 	
 } // show_playlist_menu
 
-/*!
+/**
 	@function show_admin_menu
 	@discussion shows the admin menu
 */
@@ -192,7 +195,7 @@ function show_admin_menu ($admin_highlight) {
         include(conf('prefix') . "/templates/admin_menu.inc");
 } // show_admin_menu
 
-/*!
+/**
 	@function access_denied
 	@discussion throws an error if they try to do something
 		that they aren't allowed to
@@ -208,7 +211,7 @@ function access_denied() {
 
 } // access_denied
 
-/*!
+/**
 	@function show_users
 	@discussion shows all users (admin function)
 */
@@ -240,7 +243,7 @@ function show_users () {
 } // show_users()
 
 
-/*!
+/**
 	@function return_referer
 	@discussion returns the script part of the 
 		referer address passed by the web browser
@@ -261,7 +264,7 @@ function return_referer() {
 
 } // return_referer
 
-/*!
+/**
 	@function show_alphabet_list
 	@discussion shows the A-Z,0-9 lists for 
 		albums and artist pages
@@ -289,7 +292,7 @@ function show_alphabet_list ($type,$script="artist.php",$selected="false") {
         echo "</div>\n";
 } // show_alphabet_list
 
-/*!
+/**
 	@function show_local_control
 	@discussion shows the controls
 		for localplay
@@ -300,7 +303,7 @@ function show_local_control () {
 
 } // show_local_control
 
-/*!
+/**
 	@function truncate_with_ellipse
 	@discussion truncates a text file to specified length by adding
 		thre dots (ellipse) to the end
@@ -328,7 +331,7 @@ function truncate_with_ellipse($text, $max=27) {
         return $text;
 } // truncate_with_ellipse
 
-/*!
+/**
 	@function show_footer
 	@discussion shows the footer of the page
 */
@@ -337,7 +340,7 @@ function show_footer() {
         echo "<br /><br /><br /><div class=\"$class\" style=\"border: solid thin black;\">&nbsp;</div>";
 } // show_footer
 
-/*!
+/**
 	@function show_now_playing
 	@discussion shows the now playing template
 */
@@ -350,7 +353,7 @@ function show_now_playing() {
 
 } // show_now_playing
 
-/*!
+/**
 	@function show_user_registration
 	@discussion this function is called for a new user
 		registration
@@ -364,7 +367,7 @@ function show_user_registration ($values=array()) {
 
 } // show_user_registration
 
-/*!
+/**
 	@function show_edit_profile
 	@discussion shows a single user profile for editing
 */
@@ -376,7 +379,7 @@ function show_edit_profile($username) {
 	
 } // show_edit_profile
 
-/*!
+/**
 	@function show_playlist
 	@discussion this shows the current playlist
 */
@@ -395,7 +398,7 @@ function show_playlist($playlist_id) {
 
 } // show_playlist
 
-/*!
+/**
 	@function show_play_selected
 	@discussion this shows the playselected/add to playlist 
 		box, which includes a little javascript
@@ -406,7 +409,7 @@ function show_play_selected() {
 
 } // show_play_selected
 
-/*!
+/**
 	@function get_now_playing
 	@discussion gets the now playing information
 */
@@ -424,7 +427,7 @@ function get_now_playing() {
 
 } // get_now_playing
 
-/*!
+/**
 	@function show_clear
 	@discussion this is a hack because of the float mojo
 */
@@ -434,23 +437,62 @@ function show_clear() {
 
 } // show_clear
 
-/*!
-	@function show_page_footer
-	@discussion adds page footer including html and body end tags
-	@param $menu			menu item to highlight
-	@param $admin_menu		admin menu item to highlight
-	@param $display_menu		display menu or not (1 on 0 off) 
-*/
-function show_page_footer ($menu="Home", $admin_menu='',  $display_menu=0) {
+/**
+ *	show_page_footer
+ *	adds page footer including html and body end tags
+ *	@param $menu			menu item to highlight
+ *	@param $admin_menu		admin menu item to highlight
+ *	@param $display_menu		display menu or not (1 on 0 off) 
+ * 	@package Web Interface
+ * 	@catagory Display
+ */
+function show_page_footer($menu="Home", $admin_menu='', $display_menu=0) {
+
 	if ($display_menu){
-		if($menu =="Admin"){
+		if($menu == 'Admin'){
 			show_admin_menu($admin_menu);
-		}
+		} // end if admin
 
 		show_menu_items($menu);
-
-	}
+		
+	} // end if
+	
 	echo "<br /><br />\n</body>\n";
 	echo "</html>\n";
-}
+
+} // show_page_footer
+
+/**
+ * 	Show All Popular
+ * 	This functions shows all of the possible global popular tables, this is basicly a top X where X is 
+ * 	set on a per user basis
+ *	@package Web Interface
+ *	@catagory Display
+ *	@author Karl Vollmer
+ */
+function show_all_popular() { 
+
+	$artists 	= get_global_popular('artist');
+	$albums		= get_global_popular('album');
+	$songs		= get_global_popular('song');
+	$genres		= get_global_popular('genre');
+
+	require_once(conf('prefix') . '/templates/show_all_popular.inc.php');
+
+} // show_all_popular
+
+/** 
+ * 	Show All Recent
+ * 	This function shows all of the possible "Newest" tables. The number of newest is pulled from the users
+ * 	popular threshold
+ *	@package Web Interface
+ *	@catagory Display
+ *	@author Karl Vollmer
+ */
+function show_all_recent() { 
+
+
+
+} // show_all_recent
+
 ?>
