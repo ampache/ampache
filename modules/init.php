@@ -197,6 +197,7 @@ require_once(conf('prefix') . "/modules/class/album.php");
 require_once(conf('prefix') . "/modules/class/artist.php");
 require_once(conf('prefix') . "/modules/class/access.php");
 require_once(conf('prefix') . "/modules/class/error.php");
+require_once(conf('prefix') . "/modules/class/genre.class.php");
 
 /* Some Libglue Hacks */
 $array['dbh_name'] = 'stupid_pos';

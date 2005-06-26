@@ -50,15 +50,16 @@ switch($action) {
 
 	break;
 	case 'catalog':
+	
 	break;
 	/* Throw recently added, updated here */
 	default:
 
-	/* Show Most Popular artist/album/songs */
-	show_all_popular();
+		/* Show Most Popular artist/album/songs */
+		show_all_popular();
 
-	/* Show Recent Additions */
-	show_all_recent();
+		/* Show Recent Additions */
+		show_all_recent();
 
 	break;
 
