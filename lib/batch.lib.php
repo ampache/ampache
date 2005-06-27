@@ -18,12 +18,12 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
 
-/*
-	@function               get_song_files
-	@discussion             tmakes array of song ids and returns
-	                        array of path to actual files
-	@param $song_ids        an array of song ids whose filenames you need
-*/
+/**
+ * get_song_files
+ * tmakes array of song ids and returns
+ *	array of path to actual files
+ * @param $song_ids        an array of song ids whose filenames you need
+ */
 function get_song_files( $song_ids ) {
         global $user;
         $song_files = array();
@@ -40,15 +40,17 @@ function get_song_files( $song_ids ) {
 } //get_song_files
 
 
-/*!
-        @function               send_zip
-        @discussion             takes array of full paths to songs
-                                zips them and sends them
-        @param $song_files      array of full paths to songs to zip
-                                create w/ call to get_song_files
-*/
+/**
+ * send_zip
+ * takes array of full paths to songs
+ * zips them and sends them
+ * @param $name	name of the zip file to be created
+ * @param $song_files      array of full paths to songs to zip create w/ call to get_song_files
+ */
 function send_zip( $name, $song_files ) {
-        require_once(conf('prefix') . '/lib/archive.php' );
+
+	/* Require needed library */
+        require_once(conf('prefix') . '/lib/archive.lib.php' );
         $arc = new zip_file( $name . ".zip" );
         $options = array(
                 'inmemory'      => 1,   // create archive in memory
@@ -59,5 +61,6 @@ function send_zip( $name, $song_files ) {
         $arc->add_files( $song_files );
         $arc->create_archive();
         $arc->download_file();
-}
+	
+} // send_zip
 ?>

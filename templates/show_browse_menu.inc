@@ -20,21 +20,21 @@
 
 */
 
-/*
-
- @header
- A template file
-
-*/
+/**
+ * Browse Menu
+ * This menu has all the different ways you can browse your ampache music collection
+ * This calls different options of the browse.php file
+ * @package Web Interface
+ * @catagory Browse
+ * @author Karl Vollmer
+ */
 
 $web_path = conf('web_path');
 
 $items = array(
-	        _("Users")          => "$web_path/admin/users.php",
-		_("Mail Users")     => "$web_path/admin/mail.php",
-		_("Catalog")        => "$web_path/admin/catalog.php",
-		_("Admin Preferences")    => "$web_path/admin/preferences.php",
-		_("Access Lists")	=>  "$web_path/admin/access.php"
+	        _("Artist")      => "$web_path/browse.php?action=artist",
+		_("Albums")      => "$web_path/browse.php?action=albums",
+		_("Genre")       => "$web_path/browse.php?action=genre",
         );
 
 ?>
@@ -42,7 +42,7 @@ $items = array(
 
 	<?php
 	foreach ( array_keys($items) as $item ) {
-		if ( _($admin_highlight) == $item ) {
+		if ( $admin_highlight == $item ) {
         		echo "<li class=\"active\"><a class=\"active\" href=\"$items[$item]\">" . $item . "</a></li>\n";
 		}
 		else {

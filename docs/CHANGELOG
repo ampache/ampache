@@ -9,6 +9,9 @@
 	- More HTML cleanup (Thx Xgizzmo)
 	- Added inital Browse Pages and Supporting Functions
 	- Added Genre Stats Tracking
+	- Moved files into more logical areas, added .lib and .class
+		suffix to library and class files, also started using 
+		phpdoc style documentation
 
 --------------------------------------------------------------------------
   v.3.3.1 06/21/2005:

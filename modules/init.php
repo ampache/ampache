@@ -35,7 +35,7 @@ error_reporting(E_ALL ^ E_NOTICE);
 $ampache_path = dirname(__FILE__);
 $prefix = realpath($ampache_path . "/../");
 $configfile = "$prefix/config/ampache.cfg.php";
-require_once($prefix . "/lib/general.php");
+require_once($prefix . "/lib/general.lib.php");
 
 
 /*********************STOP EDITING*********************************/
@@ -151,8 +151,8 @@ require_once(libglue_param('libglue_path') . "/session.php");
 require_once(libglue_param('libglue_path') . "/dbh.php");
 
 // Librarys
-require_once(conf('prefix') . "/lib/album.php");
-require_once(conf('prefix') . "/lib/artist.php");
+require_once(conf('prefix') . "/lib/album.lib.php");
+require_once(conf('prefix') . "/lib/artist.lib.php");
 require_once(conf('prefix') . "/lib/song.php");
 require_once(conf('prefix') . "/lib/search.php");
 require_once(conf('prefix') . "/lib/preferences.php");
@@ -160,7 +160,7 @@ require_once(conf('prefix') . "/lib/rss.php");
 require_once(conf('prefix') . "/lib/log.lib.php");
 require_once(conf('prefix') . "/lib/ui.lib.php");
 require_once(conf('prefix') . "/lib/gettext.php");
-require_once(conf('prefix') . "/lib/batch.php");
+require_once(conf('prefix') . "/lib/batch.lib.php");
 require_once(conf('prefix') . "/lib/themes.php");
 require_once(conf('prefix') . "/modules/lib.php");
 require_once(conf('prefix') . "/modules/admin.php");
@@ -186,18 +186,18 @@ if (conf('allow_mpd_playback')) {
 }
 
 // Classes
-require_once(conf('prefix') . "/modules/class/catalog.php");
-require_once(conf('prefix') . "/modules/class/stream.php");
-require_once(conf('prefix') . "/modules/class/playlist.php");
-require_once(conf('prefix') . "/modules/class/song.php");
-require_once(conf('prefix') . "/modules/class/view.php");
-require_once(conf('prefix') . "/modules/class/update.php");
-require_once(conf('prefix') . "/modules/class/user.php");
-require_once(conf('prefix') . "/modules/class/album.php");
-require_once(conf('prefix') . "/modules/class/artist.php");
-require_once(conf('prefix') . "/modules/class/access.php");
-require_once(conf('prefix') . "/modules/class/error.php");
-require_once(conf('prefix') . "/modules/class/genre.class.php");
+require_once(conf('prefix') . "/lib/class/catalog.class.php");
+require_once(conf('prefix') . "/lib/class/stream.class.php");
+require_once(conf('prefix') . "/lib/class/playlist.class.php");
+require_once(conf('prefix') . "/lib/class/song.class.php");
+require_once(conf('prefix') . "/lib/class/view.class.php");
+require_once(conf('prefix') . "/lib/class/update.class.php");
+require_once(conf('prefix') . "/lib/class/user.class.php");
+require_once(conf('prefix') . "/lib/class/album.class.php");
+require_once(conf('prefix') . "/lib/class/artist.class.php");
+require_once(conf('prefix') . "/lib/class/access.class.php");
+require_once(conf('prefix') . "/lib/class/error.class.php");
+require_once(conf('prefix') . "/lib/class/genre.class.php");
 
 /* Some Libglue Hacks */
 $array['dbh_name'] = 'stupid_pos';

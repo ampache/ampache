@@ -41,6 +41,7 @@ $action		= scrub_in($_REQUEST['action']);
 /* Display the headers and menus */
 show_template('header');
 show_menu_items('Browse'); 
+show_browse_menu($_REQUEST['action']);
 show_clear();
 
 switch($action) {

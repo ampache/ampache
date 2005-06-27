@@ -29,12 +29,12 @@
  */
 
 /**
-	@function show_confirmation
-	@discussion shows a confirmation of an action
-	@param $next_url	Where to go next
-	@param $title		The Title of the message
-	@param $text		The details of the message
-*/
+ *  show_confirmation
+ * shows a confirmation of an action
+ *	@param $next_url	Where to go next
+ *	@param $title		The Title of the message
+ *	@param $text		The details of the message
+ */
 function show_confirmation($title,$text,$next_url) {
 	
 	if (substr_count($next_url,conf('web_path'))) { 
@@ -49,10 +49,11 @@ function show_confirmation($title,$text,$next_url) {
 } // show_confirmation
 
 /**
-	@function set_preferences
-	@discussion legacy function...
-	//FIXME: Remove References
-*/
+ * set_preferences
+ * legacy function...
+ * @todo Remove References
+ * @deprecated 
+ */
 function set_preferences() { 
 
 	get_preferences();
@@ -61,9 +62,9 @@ function set_preferences() {
 } // set_preferences
 
 /**
-	@function get_preferences
-	@discussion reads this users preferences
-*/
+ *  get_preferences
+ * reads this users preferences
+ */
 function get_preferences($username=0) {
 
 	/* Get System Preferences first */
@@ -98,11 +99,11 @@ function get_preferences($username=0) {
 } // get_preferences
 
 /**
-	@function flip_class
-	@discussion takes an array of 2 class names
-		and flips them back and forth and
-		then echo's out [0]
-*/
+ *  flip_class
+ * takes an array of 2 class names
+ *		and flips them back and forth and
+ *		then echo's out [0]
+ */
 function flip_class($array=0) {
 
 	static $classes = array();
@@ -118,10 +119,10 @@ function flip_class($array=0) {
 } // flip_class
 
 /**
-	@function clear_now_playing
-	@discussion Clears the now playing information incase something has
-		gotten stuck in there
-*/
+ *  clear_now_playing
+ * Clears the now playing information incase something has
+ *		gotten stuck in there
+ */
 function clear_now_playing() { 
 
 	$sql = "DELETE FROM now_playing";
@@ -132,9 +133,9 @@ function clear_now_playing() {
 } // clear_now_playing
 
 /**
-	@function show_tool_box
-	@discussion shows the toolbox
-*/
+ *  show_tool_box
+ * shows the toolbox
+ */
 function show_tool_box ($title, $items) {
 
         include(conf('prefix') . "/templates/tool_box.inc");
@@ -142,9 +143,9 @@ function show_tool_box ($title, $items) {
 }// show_tool_box
 
 /**
-	@function show_box
-	@discussion shows a generic box
-*/
+ *  show_box
+ * shows a generic box
+ */
 function show_box($title,$items) { 
 
 	include(conf('prefix') . "/templates/show_box.inc");
@@ -152,20 +153,33 @@ function show_box($title,$items) {
 } // show_box
 
 /**	
-	@function show_menu_items
-	@discussion shows menu items
-*/
+ *  show_menu_items
+ * shows menu items
+ */
 function show_menu_items ($high) {
 
         include(conf('prefix') . "/templates/menu.inc");
 	
 } // show_menu_items
 
+/** 
+ * Show Browse Menu
+ * Shows the menu used by the browse page
+ * @package Web Interface
+ * @cataogry Menu
+ * @author Karl Vollmer
+ */
+function show_browse_menu($highlight) { 
+
+	include(conf('prefix'). "/templates/show_browse_menu.inc");
+
+} // show_browse_menu
+
 /**
-	@function _
-	@discussion checks to see if the alias _ is defined
-		if it isn't it defines it as a simple return
-*/
+ *  _
+ * checks to see if the alias _ is defined
+ *	if it isn't it defines it as a simple return
+ */
 if (!function_exists('_')) { 
 	function _($string) { 
 
@@ -175,9 +189,9 @@ if (!function_exists('_')) {
 } // if _ isn't defined
 
 /**
-        @function show_playlist_menu
-        @discussion playlist functions
-*/
+ *  show_playlist_menu
+ * playlist functions
+ */
 function show_playlist_menu () {
 
         echo "<br /><span class=\"header2\">" . _("Playlist Actions") . ": <a href=\"" . conf('web_path') . "/playlist.php?action=new\">" . _("New") ."</a> | ";
@@ -188,18 +202,18 @@ function show_playlist_menu () {
 } // show_playlist_menu
 
 /**
-	@function show_admin_menu
-	@discussion shows the admin menu
-*/
+ *  show_admin_menu
+ * shows the admin menu
+ */
 function show_admin_menu ($admin_highlight) {
         include(conf('prefix') . "/templates/admin_menu.inc");
 } // show_admin_menu
 
 /**
-	@function access_denied
-	@discussion throws an error if they try to do something
-		that they aren't allowed to
-*/
+ *  access_denied
+ * throws an error if they try to do something
+ * 	that they aren't allowed to
+ */
 function access_denied() { 
 
 	show_template('style');
@@ -212,9 +226,9 @@ function access_denied() {
 } // access_denied
 
 /**
-	@function show_users
-	@discussion shows all users (admin function)
-*/
+ *  show_users
+ * shows all users (admin function)
+ */
 function show_users () {
 
         $dbh = dbh();
@@ -244,11 +258,11 @@ function show_users () {
 
 
 /**
-	@function return_referer
-	@discussion returns the script part of the 
-		referer address passed by the web browser
-		this is not %100 accurate
-*/
+ *  return_referer
+ * returns the script part of the 
+ *	referer address passed by the web browser
+ *	this is not %100 accurate
+ */
 function return_referer() { 
 
 	$web_path = substr(conf('web_path'),0,strlen(conf('web_path'))-1-strlen($_SERVER['SERVER_PORT'])) . "/";
@@ -265,10 +279,10 @@ function return_referer() {
 } // return_referer
 
 /**
-	@function show_alphabet_list
-	@discussion shows the A-Z,0-9 lists for 
-		albums and artist pages
-*/
+ *  show_alphabet_list
+ * shows the A-Z,0-9 lists for 
+ *		albums and artist pages
+ */
 function show_alphabet_list ($type,$script="artist.php",$selected="false") {
 
         $list = array(A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z,1,2,3,4,5,6,7,8,9,"0");
@@ -293,10 +307,10 @@ function show_alphabet_list ($type,$script="artist.php",$selected="false") {
 } // show_alphabet_list
 
 /**
-	@function show_local_control
-	@discussion shows the controls
-		for localplay
-*/
+ *  show_local_control
+ * shows the controls
+ *	for localplay
+ */
 function show_local_control () {
 
         require_once(conf('prefix') . "/templates/show_localplay.inc");
@@ -304,46 +318,66 @@ function show_local_control () {
 } // show_local_control
 
 /**
-	@function truncate_with_ellipse
-	@discussion truncates a text file to specified length by adding
-		thre dots (ellipse) to the end
-		(Thx Nedko Arnaudov)
-*/
+ *  truncate_with_ellipse
+ * truncates a text file to specified length by adding
+ *	thre dots (ellipse) to the end
+ *	(Thx Nedko Arnaudov)
+ * @todo Fix Spelling!
+ * @depreciated
+ */
 function truncate_with_ellipse($text, $max=27) {
 
-	/* If we want it to be shorter than three, just throw it back */
-	if ($max > 3) {
-		/* Make sure the functions exist before doing the iconv mojo */
-		if (function_exists('iconv') && function_exists('iconv_substr') && function_exists('iconv_strlen')) {
-	                if (iconv_strlen($text, conf('site_charset')) > $max) {
-        	                $text = iconv_substr($text, 0, $max-3, conf('site_charset'));
-	                        $text .= iconv("ISO-8859-1", conf('site_charset'), "...");
-	                }
+	/* Run the function with the correct spelling */
+	return truncate_with_ellipsis($text,$max);
+
+} // truncate_with_ellipse
+
+/** 
+ * truncate_with_ellipsis
+ * Correct Spelling function that truncates text to a specific lenght
+ * and appends three dots, or an ellipsis to the end
+ * @package Web Interface
+ * @catagory General
+ * @author Nedko Arnaudov
+ */
+function truncate_with_ellipsis($text, $max=27) { 
+
+        /* If we want it to be shorter than three, just throw it back */
+        if ($max > 3) {
+
+                /* Make sure the functions exist before doing the iconv mojo */
+                if (function_exists('iconv') && function_exists('iconv_substr') && function_exists('iconv_strlen')) {
+                        if (iconv_strlen($text, conf('site_charset')) > $max) {
+                                $text = iconv_substr($text, 0, $max-3, conf('site_charset'));
+                                $text .= iconv("ISO-8859-1", conf('site_charset'), "...");
+                        }
                 }
-		/* Do normal substr if we don't have iconv */
+
+                /* Do normal substr if we don't have iconv */
                 else {
                         if (strlen($text) > $max) {
                                 $text = substr($text,0,$max-3)."...";
                         }
                 } // else no iconv
         } // else greater than 3
- 
+
         return $text;
-} // truncate_with_ellipse
+
+} // truncate_with_ellipsis
 
 /**
-	@function show_footer
-	@discussion shows the footer of the page
-*/
+ *  show_footer
+ * shows the footer of the page
+ */
 function show_footer() {
         $class = "table-header";
         echo "<br /><br /><br /><div class=\"$class\" style=\"border: solid thin black;\">&nbsp;</div>";
 } // show_footer
 
 /**
-	@function show_now_playing
-	@discussion shows the now playing template
-*/
+ *  show_now_playing
+ * shows the now playing template
+ */
 function show_now_playing() { 
 
         $dbh = dbh();
@@ -354,13 +388,12 @@ function show_now_playing() {
 } // show_now_playing
 
 /**
-	@function show_user_registration
-	@discussion this function is called for a new user
-		registration
-	@author Terry
-*/
-//function show_user_registration ($id, $username, $fullname, $email, $access, $type, $error) {
-//FIXME: See above
+ *  show_user_registration
+ * this function is called for a new user
+ * registration
+ * @author Terry
+ * @todo Fix so that it recieves an array of values for the user reg rather than seperate
+ */
 function show_user_registration ($values=array()) { 
 
 	require (conf('prefix') . "/templates/show_user_registration.inc.php");
@@ -368,9 +401,11 @@ function show_user_registration ($values=array()) {
 } // show_user_registration
 
 /**
-	@function show_edit_profile
-	@discussion shows a single user profile for editing
-*/
+ * show_edit_profile
+ * shows a single user profile for editing
+ * @package Web Interface
+ * @catagory Display
+ */
 function show_edit_profile($username) { 
 
 	$this_user = new User($username);
@@ -380,9 +415,9 @@ function show_edit_profile($username) {
 } // show_edit_profile
 
 /**
-	@function show_playlist
-	@discussion this shows the current playlist
-*/
+ *  show_playlist
+ * this shows the current playlist
+ */
 function show_playlist($playlist_id) { 
 
 	/* Create the Playlist */
@@ -399,10 +434,10 @@ function show_playlist($playlist_id) {
 } // show_playlist
 
 /**
-	@function show_play_selected
-	@discussion this shows the playselected/add to playlist 
-		box, which includes a little javascript
-*/
+ *  show_play_selected
+ * this shows the playselected/add to playlist 
+ *	box, which includes a little javascript
+ */
 function show_play_selected() { 
 
 	require (conf('prefix') . "/templates/show_play_selected.inc.php");
@@ -410,9 +445,11 @@ function show_play_selected() {
 } // show_play_selected
 
 /**
-	@function get_now_playing
-	@discussion gets the now playing information
-*/
+ *  get_now_playing
+ * gets the now playing information
+ * @package Web Interface
+ * @catagory Get
+ */
 function get_now_playing() {
 
 	$sql = "SELECT song_id,user_id FROM now_playing ORDER BY start_time DESC";
@@ -428,12 +465,15 @@ function get_now_playing() {
 } // get_now_playing
 
 /**
-	@function show_clear
-	@discussion this is a hack because of the float mojo
-*/
+ *  show_clear
+ * this is a hack because of the float mojo it clears the floats
+ * @package Web Interface
+ * @catagory Hack-o-Rama
+ * @author Karl Vollmer
+ */
 function show_clear() { 
 
-	echo "\n<div style=\"clear:both;\">&nbsp;</div>\n";
+	echo "\n<br style=\"clear:both;\" />\n";
 
 } // show_clear
 

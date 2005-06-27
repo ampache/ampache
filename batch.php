@@ -19,21 +19,20 @@
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
-/*
-	
-	creates and sends a zip of an album or playlist
-	zip is just a container w/ no compression
-
-	uses  archive.php from
-	http://phpclasses.mirrors.nyphp.org/browse/file/3191.html
-	can modify to allow user to select tar, gzip, or bzip2
-
-	I believe archive.php requires zlib support to be eanbled
-	in your PHP build.
-*/
+/**
+ *	
+ *	creates and sends a zip of an album or playlist
+ *	zip is just a container w/ no compression
+ *
+ *	uses  archive.php from
+ *	http://phpclasses.mirrors.nyphp.org/browse/file/3191.html
+ *	can modify to allow user to select tar, gzip, or bzip2
+ *
+ *	I believe archive.php requires zlib support to be eanbled
+ *	in your PHP build.
+ */
 
 	require_once('modules/init.php');
-	require_once(conf('prefix') . "/lib/batch.php");
 	//test that batch download is permitted (user or system?)
 
 	/* Drop the normal Time limit constraints, this can take a while */
