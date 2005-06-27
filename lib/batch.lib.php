@@ -50,7 +50,7 @@ function get_song_files( $song_ids ) {
 function send_zip( $name, $song_files ) {
 
 	/* Require needed library */
-        require_once(conf('prefix') . '/lib/archive.lib.php' );
+        require_once(conf('prefix') . '/modules/archive/archive.lib.php' );
         $arc = new zip_file( $name . ".zip" );
         $options = array(
                 'inmemory'      => 1,   // create archive in memory
