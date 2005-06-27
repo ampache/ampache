@@ -23,18 +23,18 @@
 // Set the Error level manualy... I'm to lazy to fix notices
 error_reporting(E_ALL ^ E_NOTICE);
 
-require_once('lib/general.php');
-require_once('lib/ui.php');
+require_once('lib/general.lib.php');
+require_once('lib/ui.lib.php');
 require_once('lib/Browser.php');
 require_once('lib/install.php');
 require_once('modules/lib.php');
 require_once('lib/debug.php');
-require_once('modules/class/user.php');
+require_once('lib/class/user.class.php');
 
 // Libglue Requires
-require_once('libglue/auth.php');
-require_once('libglue/session.php');
-require_once('libglue/dbh.php');
+require_once('modules/libglue/auth.php');
+require_once('modules/libglue/session.php');
+require_once('modules/libglue/dbh.php');
 
 
 if ($_SERVER['HTTPS'] == 'on') { $http_type = "https://"; }
