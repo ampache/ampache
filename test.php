@@ -24,8 +24,8 @@ $prefix = dirname(__FILE__);
 $configfile = "$prefix/config/ampache.cfg.php";
 
 
-require_once($prefix . "/lib/general.php");
-require_once($prefix . "/lib/ui.php");
+require_once($prefix . "/lib/general.lib.php");
+require_once($prefix . "/lib/ui.lib.php");
 require_once($prefix . "/lib/debug.php");
 
 switch ($_REQUEST['action']) { 
