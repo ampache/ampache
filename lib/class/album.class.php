@@ -158,7 +158,7 @@ class Album {
 			$album_art_order = array('id3','folder','amazon');
 		}
 		elseif (!is_array($config_value)) { 
-			$album_art_order = array_push($album_art_order,$config_value);
+			array_push($album_art_order,$config_value);
 		}
 		else { 
 			$album_art_order = array_merge($album_art_order, conf('album_art_order'));

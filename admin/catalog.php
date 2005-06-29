@@ -64,7 +64,20 @@ switch ($_REQUEST['action']) {
 	break;
 
     case _("Add to all Catalogs"):
-    	if (conf('demo_mode')) { break; }
+	if (conf('demo_mode')) { break; }
+	
+	/* If they are using the file MPD type, and it's currently enabled lets do a DBRefresh for em */
+	if (conf('mpd_method') == 'file' AND conf('allow_mpd_playback')) {
+		// Connect to the MPD
+		if (!class_exists('mpd')) { require_once(conf('prefix') . "/modules/mpd/mpd.class.php"); }
+		if (!is_object($myMpd)) { $myMpd = new mpd(conf('mpd_host'),conf('mpd_port')); }
+		if (!$myMpd->connected) {
+			echo "<font class=\"error\">" . _("Error Connecting") . ": " . $myMpd->errStr . "</font>\n";
+			log_event($_SESSION['userdata']['username'],' connection_failed ',"Error: Unable able to connect to MPD, " . $myMpd->errStr);
+		} // MPD connect failed
+		
+		 $myMpd->DBRefresh();
+	} // if MPD enabled
 	$catalogs = $catalog->get_catalogs();
 
 	foreach ($catalogs as $data) { 
