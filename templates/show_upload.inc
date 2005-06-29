@@ -35,22 +35,22 @@
   <table class="tabledata" cellspacing="0" cellpadding="0" border="0" width="90%" align="center">
      <tr align="center">
           <td>
-               <input size=40 type="file" name="ul_path1" id="ul_path1" />
+               <input size="40" type="file" name="ul_path1" id="ul_path1" />
           </td>
      </tr>  
      <tr align="center">
           <td>
-               <input size=40 type="file" name="ul_path2" id="ul_path2" />
+               <input size="40" type="file" name="ul_path2" id="ul_path2" />
           </td>
      </tr>  
      <tr align="center">
           <td>
-               <input size=40 type="file" name="ul_path3" id="ul_path3" />
+               <input size="40" type="file" name="ul_path3" id="ul_path3" />
           </td>
      </tr>  
      <tr align="center">
           <td>
-               <input size=40 type="file" name="ul_path4" id="ul_path4" />
+               <input size="40" type="file" name="ul_path4" id="ul_path4" />
           </td>
      </tr>  
      <tr align="center">

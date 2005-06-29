@@ -608,7 +608,7 @@ function get_global_popular($type) {
         } // end while
        
 	if (count($items) == 0) { 
-		$items[] = "<span class=\"error\">" . _("Not Enough Data") . "</span>\n";
+		$items[] = "<li style=\"list-style-type: none\"><span class=\"error\">" . _("Not Enough Data") . "</span></li>\n";
 	}
  
         return $items;
