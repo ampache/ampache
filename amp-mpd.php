@@ -138,6 +138,84 @@ else {
 		case "show_control":
 			require (conf('prefix') . "/templates/show_mpdplay.inc");
 			break;
+                case "mute":
+                        if (!$user->has_access(25)) { break; }
+                        if ( is_null($myMpd->SetVolume(0)) ) echo "ERROR: " .$myMpd->errStr."\n";
+			mpd_redirect();
+                        break;
+                case "condPL":
+                        if (!$user->has_access(25)) { break; }
+                        $condPL = (conf('condPL')==1 ? 0 : 1);
+                        conf(array('condPL' => $condPL),1);
+                        $db_results = mysql_query("UPDATE user_preference, preferences SET user_preference.value='$condPL' ".
+                           "WHERE preferences.name='condPL' AND preferences.id=user_preference.preference AND user ='$user->id'", dbh());
+			mpd_redirect();
+                        break;
+                case "crop":
+                        if (!$user->has_access(25)) { break; }
+                        $pl = $myMpd->playlist;
+                        $cur = $myMpd->current_track_id;
+                        foreach ($pl as $id => $entry)
+                           {
+                           if ($id != $cur)
+                              { if ( is_null($myMpd->PLRemove($id < $cur ? 0 : 1))) {echo "ERROR: " .$myMpd->errStr."\n"; } }
+                           }
+			mpd_redirect();
+                        break;
+                case "plact":
+                        if (!$user->has_access(25)) { break; }
+                        switch ($_REQUEST['todo'])
+                           {
+                           case "Delete":
+                                $shrunkby =0;
+                                foreach ($_REQUEST[song] as $id => $entry) {
+                                   if ( is_null($myMpd->PLRemove($id-$shrunkby)) ) echo "ERROR: " .$myMpd->errStr."\n";
+                                   $shrunkby++;
+                                   }
+                                break;
+                           case "Crop":
+                                $skipped=0;
+                                $upto = $myMpd->playlist_count-1;
+                                for ($count=0; $count <= $upto; $count++) {
+                                      if (!isset($_REQUEST[song][$count])) {
+                                         if ( is_null($myMpd->PLRemove($skipped)) ) echo "ERROR: " .$myMpd->errStr."\n";
+                                         }
+                                      else {$skipped++;}
+                                   }
+                                break;
+                           case "move Next":
+                /* This does not work yet */
+                                $fromabovenp = 0;
+                                $frombelownp = 0;
+                                $reversed = array_reverse ($_REQUEST[song]);
+                                foreach ($reversed as $id => $entry) {
+                                   echo "id=".$id;
+                                   if ($id > $myMpd->current_track_id) {
+                        echo " fromabovenp=".$fromabovenp." source=".$id+$fromabovenp." dest=".($myMpd->current_track_id+1)."<br>";
+                                      if (is_null($myMpd->PLMoveTrack($id+$fromabovenp,$myMpd->current_track_id+1))) echo "ERROR: ".$myMpd->errStr."\n";
+                                      $fromabovenp++;
+                                      }
+                                   elseif ($id < $myMpd->current_track_id) {
+                        echo " frombelownp=".$frombelownp." source=".$id." dest=".$myMpd->current_track_id+1-frombelownp."<br>";
+                                      if (is_null($myMpd->PLMoveTrack($id,$myMpd->current_track_id+1-frombelownp))) echo "ERROR: ".$myMpd->errStr."\n";
+                                      $frombelownp++;
+                                      }
+                                   }
+                                break;
+                           default:
+                                echo "todo='".$_REQUEST['todo']."'<br>";
+                                foreach ($_REQUEST[song] as $id => $entry)
+                                   {
+                                   echo "id=".$id." entry=".$entry."_REQUEST[song][id]=".$_REQUEST[song][$id]."<br>";
+                                   }
+                           }
+			mpd_redirect();
+                        break;
+                case "movenext":
+                        if (!$user->has_access(25)) { break; }
+                        if (is_null($myMpd->PLMoveTrack($_REQUEST[val],$myMpd->current_track_id+1))) echo "ERROR: ".$myMpd->errStr."\n";
+			mpd_redirect();
+                        break;
 		default:
 			mpd_redirect();
 			break;

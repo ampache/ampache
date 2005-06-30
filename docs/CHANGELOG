@@ -12,6 +12,7 @@
 	- Moved files into more logical areas, added .lib and .class
 		suffix to library and class files, also started using 
 		phpdoc style documentation
+	- Added Improved MPD interface (Thx Sigger)
 
 --------------------------------------------------------------------------
   v.3.3.1 06/21/2005:

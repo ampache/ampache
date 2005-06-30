@@ -26,13 +26,18 @@
 		this looks a goodbit like local_play
 */
 $web_path = conf('web_path'); 
+
+function fmt_time ($seconds) {return sprintf ("%d:%02d", $seconds/60, $seconds % 60);}
+
+global $condPL;
+
 ?>
 <div align="center">
 <table border="0" cellpadding="3" cellspacing="0">
 <tr class="table-header">
 	<td colspan="2"><?php echo _("MPD Play Control"); ?></td>
 </tr>
-<tr class="even"> <td>
+<tr class="even"><td>
 	<table border="0" cellpadding="0" cellspacing="0" width="100%">
         <tr>
 		<td>
@@ -48,6 +53,15 @@ $web_path = conf('web_path');
 	</form>
 	</td>
 </tr>
+<TR><TD CLASS="content"> 
+       Volume: <B><? echo $myMpd->volume ?>%</B> 
+</TD></TR>
+
+     <TR><TD CLASS="content" ALIGN=CENTER> 
+         [<A HREF="<?php echo $web_path; ?>/amp-mpd.php?action=setvol&val=0">mute</A>/<A HREF="<?php echo $web_path; ?>/amp-mpd.php?action=adjvol&val=-25">-25</A>/<A HREF="<?php echo $web_path; ?>/amp-mpd.php?action=adjvol&val=-10">-10</A>/<A HREF="<?php echo $web_path; ?>/amp-mpd.php?action=adjvol&val=+10">+10</A>/<A HREF="<?php echo $web_path; ?>/amp-mpd.php?action=adjvol&val=+25">+25</A>] 
+      </TD></TR> 
+<TR><TD>
+</TD></TR>
 <tr>
 	<td>
 	<?php echo _("Loop"); ?>: 
@@ -81,41 +95,68 @@ $web_path = conf('web_path');
         </td>
 </tr>
 </table>
-</td>
-	</tr>
+</tr>
+	</td>
 <?php   if ( $myMpd->state == MPD_STATE_PLAYING or $myMpd->state == MPD_STATE_PAUSED ) {  ?>
   <tr><td>
     <table border="0" cellpadding="0" cellspacing="0" width="100%">
       <tr>
-      	<td><?php echo _("Now Playing"); ?>: (<?php echo (round(($myMpd->current_track_position/$myMpd->current_track_length),2)*100) ?>% cmpl.)
-	</td>
+      	<td><b><?php echo _("Now Playing :")?><b></td>
       </tr>
       <tr>
-      	<td align="center"><?php echo $myMpd->playlist[$myMpd->current_track_id]['Artist']." - ".$myMpd->playlist[$myMpd->current_track_id]['Title'] ?></td>
+      	<td align="center"><?php echo ($myMpd->current_track_id+1).
+                          ". ".$myMpd->playlist[$myMpd->current_track_id]['Artist'].
+                          " - ".$myMpd->playlist[$myMpd->current_track_id]['Title'].
+                          " - ".$myMpd->playlist[$myMpd->current_track_id]['Album'].
+                          " - ".fmt_time($myMpd->playlist[$myMpd->current_track_id]['Time'])
+          ?></td>
+      </tr>
+     <tr> 
+      	<td align="center"><?php echo fmt_time($myMpd->current_track_position)?> (<?php echo (round(($myMpd->current_track_position/$myMpd->current_track_length),2)*100)."%) played" ?></td>
+     </tr>   
+      <tr>
+      	<td><b><?php echo _("On Deck ")?><?php echo _("(in ").
+                                   fmt_time($myMpd->current_track_length - $myMpd->current_track_position).")" ?>
+            </b>
+        </td>
+      </tr>
+      <tr>
+      	<td align="center"><?php echo ($myMpd->current_track_id+2).
+                            ". ".$myMpd->playlist[($myMpd->current_track_id+1)]['Artist'].
+                            " - ".$myMpd->playlist[($myMpd->current_track_id+1)]['Title'].
+                            " - ".$myMpd->playlist[($myMpd->current_track_id+1)]['Album'].
+                            " - ".fmt_time($myMpd->playlist[($myMpd->current_track_id+1)]['Time']);
+                            ?></td>
       </tr>
     </table>
   </td></tr>
 <?php  } ?>
-<tr>
-   <td>
-    <table border="0" cellpadding="0" cellspacing="0" width="100%">
-      <tr>
-      	<td align="center">[ <a title="<?php echo _("Refresh the Playlist Window"); ?>" href="<?php echo conf('web_path'); if ($GLOBALS['user']->prefs['play_type'] == 'mpd' && conf('localplay_menu')) {echo "/mpd.php";} ?>"><?php echo _("refresh now"); ?></a> ]</td>
-      </tr>
-    </table>
-  </td>
-</tr>
 </table>
+<?php /**************** Comment the playlist out now that the big playlist is done
+
 <br />
-<table border="0" cellpadding="0" cellspacing="0" width="100%">
+<table border="0" cellpadding="0" cellspacing="0" WIDTH=<?php  echo $PG_WIDTH ?>>
   <tr><td align="center"><b><?php echo _("Server Playlist"); ?></b></td></tr>
-  <tr><td>
+      <tr>
+      	<td align="center"><i><a title="<?php echo _("Refresh the Playlist Window"); ?>" href="<?php echo conf('web_path'); ?>"><?php echo _("[refresh]"); ?></a>
+<?php       if ( $myMpd->playlist_count > 0 ) { ?>
+  		[<a title="<?php echo _("Click to shuffle (randomize) the playlist"); ?>" href="<?php echo conf('web_path'); ?>/amp-mpd.php?action=shuffle"><?php echo _("shuffle"); ?></a>] 
+		[<a title="<?php echo _("Click the clear the playlist"); ?>" href="<?php echo conf('web_path'); ?>/amp-mpd.php?action=clear"><?php echo _("clear"); ?></a>]
+		[<a title="<?php echo _("Click the toggle condensed playlist"); ?>" href="<?php echo conf('web_path'); ?>/amp-mpd.php?action=condPL"><?php echo _("condensed"); ?></a>]
+<?php   }  ?>
+        </i></td>
+      </tr>
+  <tr><td align="left">
 <?php 
-                $pl = $myMpd->GetPlaylist();
+$condPL= conf('condPL');
+       if ($condPL) echo " ... Condensed Playlist ... <br/>";
+                $pl = $myMpd->playlist;
                 if ( is_null($pl) ) echo "ERROR: " .$myMpd->errStr."\n";
                 else {
 			$maxlen = strlen(count($pl));
                         foreach ($pl as $id => $entry) {
+                            if ( (!$condPL) or (($id >= $myMpd->current_track_id -1) && ($id <= $myMpd->current_track_id + 10)) )
+                            { 
                                 $tblClass = ( $id == $myMpd->current_track_id ? "SongPlaying" : "Song" );
 				$track = $id+1;
 				
@@ -127,12 +168,16 @@ $web_path = conf('web_path');
 					$len++;
 				}
 				
- 				$song_name = truncate_with_ellipse($entry['Artist'],conf('ellipse_threshold_artist')-3)  . " - " . truncate_with_ellipse($entry['Title'],conf('ellipse_threshold_title')-3);
+ 				$song_name = truncate_with_ellipse($entry['Artist'],conf('ellipse_threshold_artist')-3)  . " - " . truncate_with_ellipse($entry['Title'],conf('ellipse_threshold_title')-3) . " - " . $entry['Album'] . " - " . fmt_time($entry['Time']);
 			
                                 echo "\t";
-                                echo " <a title=\"Click to remove ".htmlspecialchars($entry['Title'])."\" href=\"".conf('web_path')."/amp-mpd.php?action=rem&amp;id=".$id."\">[" . $track . "]</a>"; 
-                                echo " <a title=\"Click to jump to ".htmlspecialchars($entry['Title'])."\" href=\"".conf('web_path')."/amp-mpd.php?action=skipto&amp;val=".$id."\">$song_name</a>"; 
+				if ($myMpd->current_track_id == $id) echo "<b>";
+                                echo "<a title=\"Click to remove '".$entry['Title']." '\" href=\"".conf('web_path')."/amp-mpd.php?action=rem&id=".$id."\">" . $track . ".</a>"; 
+                                echo " <a title=\"Click to jump to '".$entry['Title']."'\" href='".conf('web_path')."/amp-mpd.php?action=skipto&val=".$id."'>$song_name</a>"; 
+                                echo " <a title=\"file='".$entry['file']."'\" href=\"".conf('web_path')."\">f</a>"; 
+				if ($myMpd->current_track_id == $id) echo "</b>";
 				echo "<br />\n";
+			     }
                         }
                 }
                 if ( $myMpd->playlist_count == 0 ) {
@@ -140,13 +185,6 @@ $web_path = conf('web_path');
                 }
 ?>
   </td></tr>
-<?php       if ( $myMpd->playlist_count > 0 ) { ?>
-<tr>
-	<td align="center" height="20">
-  		[<a title="<?php echo _("Click to shuffle (randomize) the playlist"); ?>" href="<?php echo conf('web_path'); ?>/amp-mpd.php?action=shuffle"><?php echo _("shuffle"); ?></a>] 
-		[<a title="<?php echo _("Click the clear the playlist"); ?>" href="<?php echo conf('web_path'); ?>/amp-mpd.php?action=clear"><?php echo _("clear"); ?></a>]
-	</td>
-</tr>
-<?php   }  ?>
 </table>
+<?php  *********************/ ?>
 </div>

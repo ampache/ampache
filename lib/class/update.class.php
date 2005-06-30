@@ -924,6 +924,24 @@ class Update {
 
 		$sql = "ALTER TABLE `object_count` CHANGE `object_type` `object_type` ENUM( 'album', 'artist', 'song', 'playlist', 'genre', 'catalog' ) NOT NULL DEFAULT 'song'";
 		$sql = "ALTER TABLE `session` CHANGE `type` `type` ENUM( 'sso', 'mysql', 'ldap', 'http' ) NOT NULL DEFAULT 'mysql'";
+		
+                /* Add new preference */
+                $sql = "INSERT INTO `preferences` (`id`,`name`,`value`,`description`,`level`,`type`,`locked`) " . 
+				"VALUES ('','condPL','1','Condense Localplay Playlist','0','user','0')";
+
+                $db_results = mysql_query($sql, dbh());
+                
+		/* Fix existing preferecnes */
+                $sql = "SELECT DISTINCT(user) FROM user_preference";
+                $db_results = mysql_query($sql, dbh());
+
+                $user = new User(0);
+
+                while ($results = mysql_fetch_array($db_results)) {
+                        $user->fix_preferences($results[0]);
+                }
+
+		$this->set_version('db_version','332001');
 
 	} // update_332001
 
