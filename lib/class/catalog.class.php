@@ -921,7 +921,7 @@ class Catalog {
 	        $value = $response->value();
 
 	        if ( !$response->faultCode() ) {
-	                $data = old_xmlrpc_decode($value);
+	                $data = php_xmlrpc_decode($value);
 			
 			// Print out the catalogs we are going to sync
 			//FIXME: We should add catalog level access control
@@ -942,7 +942,7 @@ class Catalog {
 	        $value = $response->value();
 
 	        if ( !$response->faultCode() ) {
-	                $data = old_xmlrpc_decode($value);
+	                $data = php_xmlrpc_decode($value);
 	                $this->update_remote_catalog($data,$this->path);
 	        }
 	        else {

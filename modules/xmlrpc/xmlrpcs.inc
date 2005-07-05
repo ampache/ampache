@@ -1,7 +1,7 @@
 <?php
 // by Edd Dumbill (C) 1999-2002
 // <edd@usefulinc.com>
-// $Id: xmlrpcs.inc,v 1.7 2002/12/19 12:40:01 milosch Exp $
+// $Id: xmlrpcs.inc,v 1.17 2005/04/24 18:16:21 ggiunta Exp $
 
 // Copyright (c) 1999,2000,2002 Edd Dumbill.
 // All rights reserved.
@@ -283,7 +283,7 @@
 			global $_xmlrpc_debuginfo;
 			if ($_xmlrpc_debuginfo!='')
 			{
-				return "<!-- DEBUG INFO:\n\n" . $_xmlrpc_debuginfo . "\n-->\n";
+				return "<!-- DEBUG INFO:\n\n" . xmlrpc_encode_entitites($_xmlrpc_debuginfo) . "\n-->\n";
 			}
 			else
 			{
@@ -293,14 +293,15 @@
 
 		function service()
 		{
-			global $xmlrpc_defencoding;
+			//global $xmlrpc_defencoding;
 
 			$r=$this->parseRequest();
-			$payload='<?xml version="1.0" encoding="' . $xmlrpc_defencoding . '"?>' . "\n"
+			//$payload='<?xml version="1.0" encoding="' . $xmlrpc_defencoding . '"?' . '>' . "\n"
+			$payload='<?xml version="1.0" ?' . '>' . "\n"
 				. $this->serializeDebug()
 				. $r->serialize();
-			Header("Content-type: text/xml\r\nContent-length: " . 
-			strlen($payload));
+			header('Content-Type: text/xml');
+			header('Content-Length: ' . (int)strlen($payload));
 			print $payload;
 		}
 
@@ -347,23 +348,29 @@
 					}
 					if ($itsOK)
 					{
-						return array(1);
+						return array(1,'');
 					}
 				}
 			}
-			return array(0, "Wanted ${wanted}, got ${got} at param ${pno})");
+			if (isset($wanted))
+				return array(0, "Wanted ${wanted}, got ${got} at param ${pno})");
+			else
+				return array(0, "No method signature matches number of parameters");
 		}
 
 		function parseRequest($data='')
 		{
 			global $_xh,$HTTP_RAW_POST_DATA;
 			global $xmlrpcerr, $xmlrpcstr, $xmlrpcerrxml, $xmlrpc_defencoding,
-			$_xmlrpcs_dmap;
+			$_xmlrpcs_dmap, $xmlrpc_internalencoding;
 
 			if ($data=='')
 			{
 				$data=$HTTP_RAW_POST_DATA;
 			}
+            // G. Giunta 2005/02/13: we do NOT expect to receive html entities
+            // so we do not try to convert them into xml character entities
+			//$data = xmlrpc_html_entity_xlate($data);
 			$parser = xml_parser_create($xmlrpc_defencoding);
 
 			$_xh[$parser]=array();
@@ -376,6 +383,10 @@
 			// decompose incoming XML into request structure
 
 			xml_parser_set_option($parser, XML_OPTION_CASE_FOLDING, true);
+            // G. Giunta 2005/02/13: PHP internally uses ISO-8859-1, so we have to tell
+            // the xml parser to give us back data in the expected charset
+            xml_parser_set_option($parser, XML_OPTION_TARGET_ENCODING, $xmlrpc_internalencoding);
+
 			xml_set_element_handler($parser, 'xmlrpc_se', 'xmlrpc_ee');
 			xml_set_character_data_handler($parser, 'xmlrpc_cd');
 			xml_set_default_handler($parser, 'xmlrpc_dh');
@@ -395,16 +406,30 @@
 				$m=new xmlrpcmsg($_xh[$parser]['method']);
 				// now add parameters in
 				$plist='';
+				$allOK = 1;
 				for($i=0; $i<sizeof($_xh[$parser]['params']); $i++)
 				{
 					//print "<!-- " . $_xh[$parser]['params'][$i]. "-->\n";
-					$plist.="$i - " .  $_xh[$parser]['params'][$i]. " \n";
-					eval('$m->addParam(' . $_xh[$parser]['params'][$i]. ');');
+					$plist.="$i - " .  $_xh[$parser]['params'][$i]. ";\n";
+					$allOK = 0;
+					@eval('$m->addParam(' . $_xh[$parser]['params'][$i]. '); $allOK=1;');
+					if (!$allOK)
+					{
+						break;
+					}
 				}
 				// uncomment this to really see what the server's getting!
 				// xmlrpc_debugmsg($plist);
-
-				$r = $this->execute($m);
+				if (!$allOK)
+				{
+					$r = new xmlrpcresp(0,
+  						$xmlrpcerr['incorrect_params'],
+						$xmlrpcstr['incorrect_params'] . ": xml error in param " . $i);
+				}
+				else
+				{
+					$r = $this->execute($m);
+				}
 			}
 			return $r;
 		}
@@ -429,13 +454,15 @@
 			if (isset($dmap[$methName]['signature']))
 			{
 				$sig = $dmap[$methName]['signature'];
-				list ($ok, $errstr) = $this->verifySignature($m, $sig);
-				if (!$ok)
+				list($ok, $errstr) = $this->verifySignature($m, $sig);
+				if(!$ok)
 				{
 					// Didn't match.
-					return new xmlrpcresp(0,
+					return new xmlrpcresp(
+						0,
 						$xmlrpcerr['incorrect_params'],
-						$xmlrpcstr['incorrect_params'] . ": ${errstr}");
+						$xmlrpcstr['incorrect_params'] . ": ${errstr}"
+					);
 				}
 			}
 

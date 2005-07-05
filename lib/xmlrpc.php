@@ -103,7 +103,7 @@ function remote_song_query() {
 	} // while songs
 
 	set_time_limit(0);
-	$encoded_array = old_xmlrpc_encode($results);
+	$encoded_array = php_xmlrpc_encode($results);
 	return new xmlrpcresp($encoded_array);
 
 } // remote_song_query
@@ -119,7 +119,7 @@ function remote_server_denied() {
         $result['access_denied'] = "Access Denied: Sorry, but " . $_SERVER['REMOTE_ADDR'] . " does not have access to " .
 				"this server's catalog. Please make sure that you have been added to this server's access list.\n";
 
-        $encoded_array = old_xmlrpc_encode($result);
+        $encoded_array = php_xmlrpc_encode($result);
         return new xmlrpcresp($encoded_array);
 
 } // remote_server_deniee
