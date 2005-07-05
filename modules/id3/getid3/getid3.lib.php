@@ -513,7 +513,7 @@ class getid3_lib
 		//   $foo = array('path'=>array('to'=>'array('my'=>array('file.txt'))));
 		// or
 		//   $foo['path']['to']['my'] = 'file.txt';
-		while ($ArrayPath{0} == $Separator) {
+		while ($ArrayPath && ($ArrayPath{0} == $Separator)) {
 			$ArrayPath = substr($ArrayPath, 1);
 		}
 		if (($pos = strpos($ArrayPath, $Separator)) !== false) {
@@ -789,25 +789,25 @@ class getid3_lib
 		$offset = 0;
 		$stringlength = strlen($string);
 		while ($offset < $stringlength) {
-			if ((ord($string{$offset}) & 0x07) == 0xF7) {
+			if ((ord($string{$offset}) | 0x07) == 0xF7) {
 				// 11110bbb 10bbbbbb 10bbbbbb 10bbbbbb
 				$charval = ((ord($string{($offset + 0)}) & 0x07) << 18) &
 				           ((ord($string{($offset + 1)}) & 0x3F) << 12) &
 				           ((ord($string{($offset + 2)}) & 0x3F) <<  6) &
 				            (ord($string{($offset + 3)}) & 0x3F);
 				$offset += 4;
-			} elseif ((ord($string{$offset}) & 0x0F) == 0xEF) {
+			} elseif ((ord($string{$offset}) | 0x0F) == 0xEF) {
 				// 1110bbbb 10bbbbbb 10bbbbbb
 				$charval = ((ord($string{($offset + 0)}) & 0x0F) << 12) &
 				           ((ord($string{($offset + 1)}) & 0x3F) <<  6) &
 				            (ord($string{($offset + 2)}) & 0x3F);
 				$offset += 3;
-			} elseif ((ord($string{$offset}) & 0x1F) == 0xDF) {
+			} elseif ((ord($string{$offset}) | 0x1F) == 0xDF) {
 				// 110bbbbb 10bbbbbb
 				$charval = ((ord($string{($offset + 0)}) & 0x1F) <<  6) &
 				            (ord($string{($offset + 1)}) & 0x3F);
 				$offset += 2;
-			} elseif ((ord($string{$offset}) & 0x7F) == 0x7F) {
+			} elseif ((ord($string{$offset}) | 0x7F) == 0x7F) {
 				// 0bbbbbbb
 				$charval = ord($string{$offset});
 				$offset += 1;
@@ -832,25 +832,25 @@ class getid3_lib
 		$offset = 0;
 		$stringlength = strlen($string);
 		while ($offset < $stringlength) {
-			if ((ord($string{$offset}) & 0x07) == 0xF7) {
+			if ((ord($string{$offset}) | 0x07) == 0xF7) {
 				// 11110bbb 10bbbbbb 10bbbbbb 10bbbbbb
 				$charval = ((ord($string{($offset + 0)}) & 0x07) << 18) &
 				           ((ord($string{($offset + 1)}) & 0x3F) << 12) &
 				           ((ord($string{($offset + 2)}) & 0x3F) <<  6) &
 				            (ord($string{($offset + 3)}) & 0x3F);
 				$offset += 4;
-			} elseif ((ord($string{$offset}) & 0x0F) == 0xEF) {
+			} elseif ((ord($string{$offset}) | 0x0F) == 0xEF) {
 				// 1110bbbb 10bbbbbb 10bbbbbb
 				$charval = ((ord($string{($offset + 0)}) & 0x0F) << 12) &
 				           ((ord($string{($offset + 1)}) & 0x3F) <<  6) &
 				            (ord($string{($offset + 2)}) & 0x3F);
 				$offset += 3;
-			} elseif ((ord($string{$offset}) & 0x1F) == 0xDF) {
+			} elseif ((ord($string{$offset}) | 0x1F) == 0xDF) {
 				// 110bbbbb 10bbbbbb
 				$charval = ((ord($string{($offset + 0)}) & 0x1F) <<  6) &
 				            (ord($string{($offset + 1)}) & 0x3F);
 				$offset += 2;
-			} elseif ((ord($string{$offset}) & 0x7F) == 0x7F) {
+			} elseif ((ord($string{$offset}) | 0x7F) == 0x7F) {
 				// 0bbbbbbb
 				$charval = ord($string{$offset});
 				$offset += 1;
@@ -875,25 +875,25 @@ class getid3_lib
 		$offset = 0;
 		$stringlength = strlen($string);
 		while ($offset < $stringlength) {
-			if ((ord($string{$offset}) & 0x07) == 0xF7) {
+			if ((ord($string{$offset}) | 0x07) == 0xF7) {
 				// 11110bbb 10bbbbbb 10bbbbbb 10bbbbbb
 				$charval = ((ord($string{($offset + 0)}) & 0x07) << 18) &
 				           ((ord($string{($offset + 1)}) & 0x3F) << 12) &
 				           ((ord($string{($offset + 2)}) & 0x3F) <<  6) &
 				            (ord($string{($offset + 3)}) & 0x3F);
 				$offset += 4;
-			} elseif ((ord($string{$offset}) & 0x0F) == 0xEF) {
+			} elseif ((ord($string{$offset}) | 0x0F) == 0xEF) {
 				// 1110bbbb 10bbbbbb 10bbbbbb
 				$charval = ((ord($string{($offset + 0)}) & 0x0F) << 12) &
 				           ((ord($string{($offset + 1)}) & 0x3F) <<  6) &
 				            (ord($string{($offset + 2)}) & 0x3F);
 				$offset += 3;
-			} elseif ((ord($string{$offset}) & 0x1F) == 0xDF) {
+			} elseif ((ord($string{$offset}) | 0x1F) == 0xDF) {
 				// 110bbbbb 10bbbbbb
 				$charval = ((ord($string{($offset + 0)}) & 0x1F) <<  6) &
 				            (ord($string{($offset + 1)}) & 0x3F);
 				$offset += 2;
-			} elseif ((ord($string{$offset}) & 0x7F) == 0x7F) {
+			} elseif ((ord($string{$offset}) | 0x7F) == 0x7F) {
 				// 0bbbbbbb
 				$charval = ord($string{$offset});
 				$offset += 1;

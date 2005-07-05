@@ -49,6 +49,7 @@ class getid3_write_id3v2
 			$this->paddedlength = max(@$OldThisFileInfo['id3v2']['headerlength'], $this->paddedlength);
 
 			if ($NewID3v2Tag = $this->GenerateID3v2Tag()) {
+
 				if (file_exists($this->filename) && is_writeable($this->filename) && isset($OldThisFileInfo['id3v2']['headerlength']) && ($OldThisFileInfo['id3v2']['headerlength'] == strlen($NewID3v2Tag))) {
 
 					// best and fastest method - insert-overwrite existing tag (padded to length of old tag if neccesary)

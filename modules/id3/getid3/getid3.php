@@ -10,7 +10,7 @@
 /////////////////////////////////////////////////////////////////
 
 // Defines
-define('GETID3_VERSION', '1.7.3');
+define('GETID3_VERSION', '1.7.4');
 define('GETID3_FREAD_BUFFER_SIZE', 16384); // read buffer size in bytes
 
 

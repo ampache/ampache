@@ -280,7 +280,7 @@ class getid3_writetags
 				case 'id3v2.3':
 				case 'id3v2.4':
 					$id3v2_writer = new getid3_write_id3v2;
-					$id3v2_writer->majorversion = (int) substr($tagformat, -1);
+					$id3v2_writer->majorversion = intval(substr($tagformat, -1));
 					$id3v2_writer->paddedlength = $this->id3v2_paddedlength;
 					if (($id3v2_writer->tag_data = $this->FormatDataForID3v2($id3v2_writer->majorversion)) !== false) {
 						$id3v2_writer->filename = $this->filename;
@@ -514,6 +514,7 @@ class getid3_writetags
 								// convert data from other encoding to UTF-16
 								$tag_data_id3v2[$ID3v2_framename][$key]['encodingid'] = 1;
 								$tag_data_id3v2[$ID3v2_framename][$key]['data']       = getid3_lib::iconv_fallback($this->tag_encoding, 'UTF-16', $value);
+
 							} else {
 								// convert data from other encoding to UTF-8
 								$tag_data_id3v2[$ID3v2_framename][$key]['encodingid'] = 3;

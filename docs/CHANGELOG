@@ -15,6 +15,7 @@
 	- Added Improved MPD interface (Thx Sigger)
 	- Updated XMLRPC lib to 1.1.1 due to security issues with previous
 		versions 
+	- Updated Getid3() library to 1.7.4
 
 --------------------------------------------------------------------------
   v.3.3.1 06/21/2005:

@@ -21,6 +21,7 @@ class getid3_quicktime
 	function getid3_quicktime(&$fd, &$ThisFileInfo, $ReturnAtomData=true, $ParseAllPossibleAtoms=false) {
 
 		$ThisFileInfo['fileformat'] = 'quicktime';
+		$ThisFileInfo['quicktime']['hinting'] = false;
 
 		fseek($fd, $ThisFileInfo['avdataoffset'], SEEK_SET);
 
@@ -925,6 +926,13 @@ class getid3_quicktime
 
 			case 'pano': // PANOrama track (seen on QTVR)
 				$atomstructure['pano'] = getid3_lib::BigEndian2Int(substr($atomdata,  0, 4));
+				break;
+
+			case 'hint': // HINT track
+			case 'hinf': //
+			case 'hinv': //
+			case 'hnti': //
+				$ThisFileInfo['quicktime']['hinting'] = true;
 				break;
 
 			case 'imgt': // IMaGe Track reference (kQTVRImageTrackRefType) (seen on QTVR)

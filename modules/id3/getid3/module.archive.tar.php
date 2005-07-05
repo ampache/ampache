@@ -8,7 +8,7 @@
 /////////////////////////////////////////////////////////////////
 //                                                             //
 // module.archive.tar.php                                      //
-// written by Mike Mozolin <mmozolinØavk*ru>                   //
+// written by Mike Mozolin <teddybearØmail*ru>                 //
 // module for analyzing TAR files                              //
 // dependencies: NONE                                          //
 //                                                            ///
@@ -18,12 +18,14 @@ class getid3_tar {
 
 	function getid3_tar(&$fd, &$ThisFileInfo) {
 		$ThisFileInfo['fileformat'] = 'tar';
-		$this->read_tar($fd, $ThisFileInfo);
-		return false;
+
+		@fseek($fd, 0);
+		$filebuffer = @fread($fd, $ThisFileInfo['filesize']);
+		return $this->read_tar($filebuffer, $ThisFileInfo);
 	}
 
 	// Reads the tar-file
-	function read_tar($fd, &$ThisFileInfo) {
+	function read_tar(&$filebuffer, &$ThisFileInfo) {
 
 		$header_length = 512;
 		$unpack_header = 'a100fname/a8mode/a8uid/a8gid/a12size/a12mtime/a8chksum/a1typflag/a100lnkname/a6magic/a2ver/a32uname/a32gname/a8devmaj/a8devmin/a155/prefix';
@@ -32,9 +34,9 @@ class getid3_tar {
 
 		$ThisFileInfo['tar']['files'] = array();
 
-		@fseek($fd, 0);
-		while (!@feof($fd)) {
-			$buffer = @fread($fd, $header_length);
+		while(strlen($filebuffer) != 0) {
+			$buffer = substr($filebuffer, 0, $header_length);
+			$filebuffer = substr($filebuffer, strlen($buffer));
 			// check the block
 			$checksum = 0;
 			for ($i = 0; $i < 148; $i++) {
@@ -47,21 +49,21 @@ class getid3_tar {
 				$checksum += ord(substr($buffer, $i, 1));
 			}
 			$attr    = unpack($unpack_header, $buffer);
-			$name    =        trim($attr['fname']);
-			$mode    = octdec(trim($attr['mode']));
-			$uid     = octdec(trim($attr['uid']));
-			$gid     = octdec(trim($attr['gid']));
-			$size    = octdec(trim($attr['size']));
-			$mtime   = octdec(trim($attr['mtime']));
-			$chksum  = octdec(trim($attr['chksum']));
-			$typflag =        trim($attr['typflag']);
-			$lnkname =        trim($attr['lnkname']);
-			$magic   =        trim($attr['magic']);
-			$ver     =        trim($attr['ver']);
-			$uname   =        trim($attr['uname']);
-			$gname   =        trim($attr['gname']);
-			$devmaj  = octdec(trim($attr['devmaj']));
-			$devmin  = octdec(trim($attr['devmin']));
+			$name    =        trim(@$attr['fname']);
+			$mode    = octdec(trim(@$attr['mode']));
+			$uid     = octdec(trim(@$attr['uid']));
+			$gid     = octdec(trim(@$attr['gid']));
+			$size    = octdec(trim(@$attr['size']));
+			$mtime   = octdec(trim(@$attr['mtime']));
+			$chksum  = octdec(trim(@$attr['chksum']));
+			$typflag =        trim(@$attr['typflag']);
+			$lnkname =        trim(@$attr['lnkname']);
+			$magic   =        trim(@$attr['magic']);
+			$ver     =        trim(@$attr['ver']);
+			$uname   =        trim(@$attr['uname']);
+			$gname   =        trim(@$attr['gname']);
+			$devmaj  = octdec(trim(@$attr['devmaj']));
+			$devmin  = octdec(trim(@$attr['devmin']));
 			$prefix  =        trim(@$attr['prefix']);
 			// EOF Found
 			if (($checksum == 256) && ($chksum == 0)) {
@@ -78,16 +80,17 @@ class getid3_tar {
 				break;
 			}
 			// Read the next chunk
-			$data = @fread( $fd, $size );
+			$data = substr($filebuffer, 0, $size);
+			$filebuffer = substr($filebuffer, strlen($data));
 			if (strlen($data) != $size) {
-				@fclose($fd);
-				$ThisFileInfo['error'][] = 'Read error on TAR file';
+				$ThisFileInfo['error'][] = 'Read error on tar file';
 				return false;
 			}
 			$diff = $size % 512;
 			if ($diff != 0) {
 				// Padding, throw away
-				@fread($fd, (512 - $diff));
+				$buff = substr($filebuffer, 0, (512 - $diff));
+				$filebuffer = substr($filebuffer, strlen($buff));
 			}
 			// Protect against tar-files with garbage at the end
 			if ($name == '') {
@@ -96,13 +99,13 @@ class getid3_tar {
 			$ThisFileInfo['tar']['file_details'][$name] = array (
 				'name'     => $name,
 				'mode_raw' => $mode,
-				'mode'     => $this->display_perms($mode),
+				'mode'     => getid3_tar::display_perms($mode),
 				'uid'      => $uid,
 				'gid'      => $gid,
 				'size'     => $size,
 				'mtime'    => $mtime,
 				'chksum'   => $chksum,
-				'typeflag' => $this->get_flag_type($typflag),
+				'typeflag' => getid3_tar::get_flag_type($typflag),
 				'linkname' => $lnkname,
 				'magic'    => $magic,
 				'version'  => $ver,
@@ -114,7 +117,6 @@ class getid3_tar {
 			$ThisFileInfo['tar']['files'] = getid3_lib::array_merge_clobber($ThisFileInfo['tar']['files'], getid3_lib::CreateDeepArray($ThisFileInfo['tar']['file_details'][$name]['name'], '/', $size));
 		}
 		return true;
-
 	}
 
 	// Parses the file mode to file permissions
@@ -145,10 +147,10 @@ class getid3_tar {
 		if ($mode & 0x400) $group['execute'] = ($group['execute'] == 'x') ? 's' : 'S';
 		if ($mode & 0x200) $world['execute'] = ($world['execute'] == 'x') ? 't' : 'T';
 
-		$s  = sprintf("%1s", $type);
-		$s .= sprintf("%1s%1s%1s",   $owner['read'], $owner['write'], $owner['execute']);
-		$s .= sprintf("%1s%1s%1s",   $group['read'], $group['write'], $group['execute']);
-		$s .= sprintf("%1s%1s%1s\n", $world['read'], $world['write'], $world['execute']);
+		$s  = sprintf('%1s', $type);
+		$s .= sprintf('%1s%1s%1s',      $owner['read'], $owner['write'], $owner['execute']);
+		$s .= sprintf('%1s%1s%1s',      $group['read'], $group['write'], $group['execute']);
+		$s .= sprintf('%1s%1s%1s'."\n", $world['read'], $world['write'], $world['execute']);
 		return $s;
 	}
 
