@@ -698,6 +698,18 @@ ECHO;
 
 } // show_info_box
 
+/** 
+ * tbl_name
+ * This function takes a SQL table name and returns it with any prefix 
+ * that might be needed to make it work, 
+ * @package General
+ * @catagory Database
+ */
+function tbl_name($table) { 
 
+	/* For now we just return the table name */
+	return $table;
+
+} // table
 
 ?>

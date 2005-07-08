@@ -949,5 +949,16 @@ class Update {
 
 	} // update_332001
 
+	function update_332002() { 
+
+//		$sql = "CREATE TABLE `ip_history` (`username` VARCHAR(128), `ip` INT(11) UNSIGNED NOT NULL DEFAULT '0', " . 
+//			"`connections` INT(11) UNSIGNED NOT NULL DEFAULT '1', `date` INT(11) UNSIGNED NOT NULL DEFAULT '0')";
+		
+
+
+
+	} // update_332002
+	
+
 } // end update class
 ?>

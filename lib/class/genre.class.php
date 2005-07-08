@@ -35,10 +35,33 @@ class Genre {
 	 * @package Genre
 	 * @catagory Constructor
 	 */
-	function Genre() { 
+	function Genre($genre_id=0) { 
+
+		if ($genre_id > 0) { 
+			$this->id 	= $genre_id;
+			$info 		= $this->_get_info();
+			$this->name 	= $info['name'];
+		}
 
 
-	} // genre
+	} // Genre
+
+	/** 
+	 * Private Get Info 
+	 * This simply returns the information for this genre
+	 * @package Genre
+	 * @catagory Class
+	 */
+	function _get_info() { 
+
+		$sql = "SELECT * FROM " . tbl_name('genre') . " WHERE id='$this->id'";
+		$db_results = mysql_query($sql, dbh());
+		
+		$results = mysql_fetch_assoc($db_results);
+
+		return $results;
+
+	} // _get_info()
 
 } //end of genre class
 

@@ -66,6 +66,7 @@ switch($action) {
 
 } // end Switch $action
 
+show_clear();
 
 /* Show the Footer */
 show_page_footer('Browse', '',$user->prefs['display_menu']);
