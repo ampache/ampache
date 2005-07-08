@@ -203,6 +203,7 @@ function create_preference_input($name,$value) {
 		case 'use_auth':
 		case 'access_control':
 		case 'demo_mode':
+		case 'condPL':
 		case 'direct_link':
 			if ($value == '1') { $is_true = "selected=\"selected\""; } 
 			else { $is_false = "selected=\"selected\""; }

@@ -224,6 +224,10 @@ class Update {
 		
 		$version[] = array('version' => '331003', 'description' => $update_string);
 		
+		$update_string = "- Added Genre and Catalog to the stats tracking enum.<br />" . 
+				 "- Added CondPL preference for the new MPD playlist.<br />";
+
+		$version[] = array('version' => '332001', 'description' => $update_string);
 
 		return $version;
 
