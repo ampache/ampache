@@ -48,23 +48,23 @@ if (!$myMpd->connected)
      return; 
    }
 
-$nopad = "style='padding: 0px 0px 0px 0px'";
+$nopad  = "style='padding: 0px 0px 0px 0px'";
 $minpad = "style='padding: 0px 2px 0px 2px'";
 
 ?>
-<td colspan=2 valign="top">
+<td colspan="2" valign="top">
 
 <form action="<?php echo conf('web_path')."/amp-mpd.php"; ?>" method="post" enctype="multipart/form-data">
 
 <table class="border" border="0" cellpadding="0" cellspacing="1" width="100%">
-<tr><td align="center" class="headrow"><b>MPD Server Playlist</b><br>
+<tr><td align="center" class="headrow"><b>MPD Server Playlist</b><br />
      <i>[<a title="<?php echo _("Refresh the Playlist Window"); ?>" href="<?php echo conf('web_path'); ?>">refresh</a>]
 <?php   if ( $myMpd->playlist_count > 0 ) {
 	      $un = (conf('condPL')) ? "un" : ""; ?>
-              [<a title="<?php echo _("Click to shuffle (randomize) the playlist"); ?>" href="<?php echo conf('web_path'); ?>/amp-mpd.php?action=shuffle"><?php echo _("shuffle")?></a>]
-              [<a title="<?php echo _("Click to the clear the playlist"); ?>"        href="<?php echo conf('web_path'); ?>/amp-mpd.php?action=clear">clear</a>]
-              [<a title="<?php echo 'Click to '.$un.'condense playlist'; ?>" href="<?php echo conf('web_path'); ?>/amp-mpd.php?action=condPL"><?php echo $un?>condense</a>]
-              [<a title="<?php echo _("Click to the remove all except the Now Playing"); ?>"href="<?php echo conf('web_path'); ?>/amp-mpd.php?action=crop">crop</a>]
+              [<a title="<?php echo _("Click to shuffle (randomize) the playlist");?>" href="<?php echo conf('web_path'); ?>/amp-mpd.php?action=shuffle"><?php echo _("shuffle")?></a>]
+              [<a title="<?php echo _("Click to the clear the playlist");?>" href="<?php echo conf('web_path'); ?>/amp-mpd.php?action=clear">clear</a>]
+              [<a title="<?php echo 'Click to '.$un.'condense playlist';?>" href="<?php echo conf('web_path'); ?>/amp-mpd.php?action=condPL"><?php echo $un?>condense</a>]
+              [<a title="<?php echo _("Click to the remove all except the Now Playing");?>" href="<?php echo conf('web_path'); ?>/amp-mpd.php?action=crop">crop</a>]
 <?php   } ?> </i></td></tr>
 <tr><td <?php echo $nopad ?>>
 <table cellspacing="0" cellpadding="0" border="0" width="100%"><tr class="table-header">
@@ -72,7 +72,7 @@ $minpad = "style='padding: 0px 2px 0px 2px'";
             <th align="left"><?php echo _("Song title"); ?></th>
             <th align="left"><?php echo _("Artist"); ?></th>
             <th align="left"><?php echo _("Album"); ?></th>
-            <th align="right" <?php echo $minpad ?>><?php echo _("Track"); ?></td>
+            <th align="right" <?php echo $minpad ?>><?php echo _("Track"); ?></th>
             <th align="right" <?php echo $minpad ?>><?php echo _("Time"); ?></th>
             <th <?php echo $minpad ?>><?php echo _("Genre"); ?></th>
             <th><?php echo _("Action"); ?></th>
@@ -85,7 +85,7 @@ $minpad = "style='padding: 0px 2px 0px 2px'";
         $condPL = conf('condPL');
         if ($condPL)
            {
-           echo "<tr class=\"".flip_class()."\"><td colspan=8 align=\"center\" style=\"padding: 3px 0px 3px 0px\">... Condensed Playlist ...</td></tr>";
+           echo "<tr class=\"".flip_class()."\"><td colspan=\"8\" align=\"center\" style=\"padding: 3px 0px 3px 0px\">... Condensed Playlist ...</td></tr>";
            }
 
         foreach ($pl as $id=>$entry) {
@@ -119,54 +119,51 @@ $db_results = @mysql_query($sql,dbh());
 $count=0;
 $r = @mysql_fetch_object ($db_results);
 ?>
-          <td align="center" <?php echo $minpad ?>><input type="checkbox" name="song[<?php echo $entry['Pos']?>]" value="1" id="song_<?php echo $entry['Pos']; ?>"></input></td>
-          <td align="left" <?php echo $tdstyle ?>><?php echo $track.". ";?><a href="<?php echo $web_path; ?>/amp-mpd.php?action=skipto&val=<?php echo $entry['Pos']; ?>" title="<?php echo $entry['Title']; ?>" <?php echo $text_class; ?>><?php echo $entry['Title']; ?> </a></td>
-          <td align="left" <?php echo $tdstyle ?>><a href="<?php echo $web_path; ?>/artists.php?action=show&artist=<?php echo $r->artist; ?>" title="More from <?php echo $entry['Artist']; ?>" <?php echo $text_class; ?>> <?php echo $entry['Artist']; ?> </a></td>
-          <td align="left" <?php echo $tdstyle ?>><a href="<?php echo $web_path; ?>/albums.php?action=show&album=<?php echo $r->album; ?>" title="More on <?php echo $entry['Album']; ?>" <?php echo $text_class; ?>> <?php echo $entry['Album']; ?> </a></td>
-          <td align="right" <?php echo $tdstyle ?>><?php echo $entry['Track']; ?></td>
-          <td align="right" <?php echo $tdstyle ?>><?php echo sprintf ("%d:%02d",$entry['Time']/60,$entry['Time']%60) ?></td>
+          <td align="center" <?php echo $minpad  ?>> <input type="checkbox" name="song[<?php echo $entry['Pos']?>]" value="1" id="song_<?php echo $entry['Pos']; ?>"></input></td>
+          <td align="left"   <?php echo $tdstyle ?>> <?php echo $track.". ";?><a href="<?php echo $web_path; ?>/amp-mpd.php?action=skipto&amp;val=<?php echo $entry['Pos']; ?>" title=" <?php echo htmlspecialchars($entry['Title']); ?>"<?php echo $text_class; ?>><?php echo htmlspecialchars($entry['Title']); ?> </a></td>
+          <td align="left"   <?php echo $tdstyle ?>> <a href="<?php echo $web_path; ?>/artists.php?action=show&amp;artist=<?php echo htmlspecialchars($r->artist); ?>" title="More from <?php echo htmlspecialchars($entry['Artist']);?>"<?php echo $text_class; ?>><?php echo htmlspecialchars($entry['Artist']);?> </a></td>
+          <td align="left"   <?php echo $tdstyle ?>> <a href="<?php echo $web_path; ?>/albums.php?action=show&amp;album=<?php echo htmlspecialchars($r->album);    ?>" title="More on <?php   echo htmlspecialchars($entry['Album']); ?>"<?php echo $text_class; ?>><?php echo htmlspecialchars($entry['Album']); ?> </a></td>
+          <td align="right"  <?php echo $tdstyle ?>> <?php echo $entry['Track']; ?></td>
+          <td align="right"  <?php echo $tdstyle ?>> <?php echo sprintf ("%d:%02d",$entry['Time']/60,$entry['Time']%60) ?></td>
+	  <td align="center" <?php echo $tdstyle ?>> <?php echo $r->name ?></td>
 
-	  <td align="center" <?php echo $tdstyle.">".$r->name ?></td>
-
-              <td <?php echo $tdstyle ?>><?php echo "<a href=".$web_path."/flag.php?song=".$r->id."&action=flag title=\"Flag '".$entry['file']."' by ".$entry['Artist']."\" ".$text_class.">f</a>&nbsp".
-                  "<a href=".$web_path."/amp-mpd.php?action=movenext&val=".$entry['Pos']." title=\"Move '".$entry['Title']."' to play next\" ".$text_class.">n</a>&nbsp".
-             //     "^&nbsp".   
-             //     "v&nbsp".   
-                  "<a href=".$web_path."/amp-mpd.php?action=rem&id=".$entry['Pos']." title=\"Remove '".$entry['Title']."' from playlist\" ".$text_class.">x</a>"; ?></td>
-	    <?php if ($id==$myMpd->current_track_id) { echo "</b>"; } ?>
-            </tr>
-
-    <?
+          <td <?php echo $tdstyle ?>>
+		<a href="<?php echo $web_path;?>/flag.php?song=<?php echo $r->id;?>&amp;action=flag" title="Flag '<?php echo $entry['file'];?>' by <?php echo htmlspecialchars($entry['Artist']);?>"<?php echo $text_class;?>>f</a>&nbsp;
+		<a href="<?php echo $web_path;?>/amp-mpd.php?action=movenext&amp;val=<?php echo $entry['Pos'];?>" title="Move '<?php echo htmlspecialchars($entry['Title']);?>' to play next  "<?php echo $text_class;?>>n</a>&nbsp;
+		<a href="<?php echo $web_path;?>/amp-mpd.php?action=rem&amp;id=<?php echo $entry['Pos'];?>" title="Remove '<?php echo htmlspecialchars($entry['Title']);?>' from playlist "<?php echo $text_class;?>>x</a>
+          </td>
+       </tr>
+<?php
          }// foreach loop
         if (($condPL) && ($myMpd->current_track_id+10 <= $myMpd->playlistcount))
            {
-           echo "<tr class=\"".flip_class()."\"><td colspan=8 align=\"center\" style=\"padding: 3px 0px 3px 0px\">... Condensed Playlist ...</td></tr>";
+           echo "<tr class=\"".flip_class()."\"><td colspan=\"8\" align=\"center\" style=\"padding: 3px 0px 3px 0px\">... Condensed Playlist ...</td></tr>";
            }
      } //else
 
     $time = floor($totaltime/60) . ":" . sprintf("%02d", ($totaltime%60) );
     $num = count($pl);
+?>
 
-    ?>
-
-    <tr class="table-header" valign=middle>
-         <input type="hidden" name="action" value="plact">
-      <td><button name="submit" value="submit" type="submit" style = "font-family: <?php echo conf('font')?>; font-size: <?php echo conf('font_size')?>px" title="Take Action on the checked songs">Do</button></td>
-      <td valign=middle><select name="todo"  style = "font-family: <?php echo conf('font')?>; font-size: <?php echo conf('font_size')?>px" size=1>
-			<option>Delete
-			<!-- <option>move Next   This isn't working yet -->
-			<option>Crop</select></td>
-      <td valign=middle><?php echo _("Total"); ?>:</td>
-      <td valign=middle><?php echo $num; ?> song(s)</td>
+    <tr class="table-header" valign="middle">
+      <td><input type="hidden" name="action" value="plact" /> <button name="submit" value="submit" type="submit" style = "font-family: <?php echo conf('font')?>; font-size: <?php echo conf('font_size')?>px" title="Take Action on the checked songs">Do</button></td>
+      <td valign="middle">
+        <select name="todo"  style = "font-family: <?php echo conf('font')?>; font-size: <?php echo conf('font_size')?>px" size="1">
+		<option>Delete</option>
+		<!-- <option>move Next   This isn't working yet -->
+		<option>Crop</option>
+	</select>
+     </td>
+      <td valign="middle"><?php echo _("Total"); ?>:</td>
+      <td valign="middle"><?php echo $num; ?> song(s)</td>
       <td></td>
-      <td valign=middle align="right" <?php echo $minpad; ?> nowrap><?php echo $time; ?></td>
-      <td>&nbsp</td>
-      <td>&nbsp</td>
-<?php ?>
+      <td valign="middle" align="right" <?php echo $minpad; ?> nowrap="nowrap"><?php echo $time; ?></td>
+      <td>&nbsp;</td>
+      <td>&nbsp;</td>
     </tr>
     </table></td></tr>
 </table>
 <br />
 </form>
-</td/>
+</td>
 

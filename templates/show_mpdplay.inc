@@ -53,15 +53,15 @@ global $condPL;
 	</form>
 	</td>
 </tr>
-<TR><TD CLASS="content"> 
-       Volume: <B><? echo $myMpd->volume ?>%</B> 
-</TD></TR>
+<tr><td class="content"> 
+       Volume: <b><? echo $myMpd->volume ?>%</b> 
+</td></tr>
 
-     <TR><TD CLASS="content" ALIGN=CENTER> 
-         [<A HREF="<?php echo $web_path; ?>/amp-mpd.php?action=setvol&val=0">mute</A>/<A HREF="<?php echo $web_path; ?>/amp-mpd.php?action=adjvol&val=-25">-25</A>/<A HREF="<?php echo $web_path; ?>/amp-mpd.php?action=adjvol&val=-10">-10</A>/<A HREF="<?php echo $web_path; ?>/amp-mpd.php?action=adjvol&val=+10">+10</A>/<A HREF="<?php echo $web_path; ?>/amp-mpd.php?action=adjvol&val=+25">+25</A>] 
-      </TD></TR> 
-<TR><TD>
-</TD></TR>
+     <tr><td class="content" align="center"> 
+         [<a href="<?php echo $web_path; ?>/amp-mpd.php?action=setvol&amp;val=0">mute</a>/<a href="<?php echo $web_path; ?>/amp-mpd.php?action=adjvol&amp;val=-25">-25</a>/<a href="<?php echo $web_path; ?>/amp-mpd.php?action=adjvol&amp;val=-10">-10</a>/<a href="<?php echo $web_path; ?>/amp-mpd.php?action=adjvol&amp;val=+10">+10</a>/<a href="<?php echo $web_path; ?>/amp-mpd.php?action=adjvol&amp;val=+25">+25</a>] 
+      </td></tr> 
+<tr><td>
+</td></tr>
 <tr>
 	<td>
 	<?php echo _("Loop"); ?>: 
@@ -95,13 +95,12 @@ global $condPL;
         </td>
 </tr>
 </table>
-</tr>
-	</td>
+</td></tr>
 <?php   if ( $myMpd->state == MPD_STATE_PLAYING or $myMpd->state == MPD_STATE_PAUSED ) {  ?>
   <tr><td>
     <table border="0" cellpadding="0" cellspacing="0" width="100%">
       <tr>
-      	<td><b><?php echo _("Now Playing :")?><b></td>
+      	<td><b><?php echo _("Now Playing :")?></b></td>
       </tr>
       <tr>
       	<td align="center"><?php echo ($myMpd->current_track_id+1).
