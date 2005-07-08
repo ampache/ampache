@@ -496,9 +496,8 @@ function show_page_footer($menu="Home", $admin_menu='', $display_menu=0) {
 		show_menu_items($menu);
 		
 	} // end if
-	
-	echo "<br /><br />\n</body>\n";
-	echo "</html>\n";
+
+	show_template('footer');
 
 } // show_page_footer
 

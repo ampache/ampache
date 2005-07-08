@@ -251,13 +251,21 @@ else {
 	}
 	
 
-	while (!feof($fp) && (connection_status() == 0)) {
-		print(fread($fp, 8192));
-	}
+	/* Let's force them to actually play a portion of the song before 
+	 * we count it in the statistics
+	 * @author SH
+	 */
+       	$bytesStreamed  = 0;
+        $minBytesStreamed = $song->size / 2;
+        while (!feof($fp) && (connection_status() == 0)) {
+                $buf = fread($fp, 8192);
+                print($buf);
+                $bytesStreamed += strlen($buf);
+        }
 
-	if ( ! $start ) {
-		$user->update_stats($song_id);
-	}
+        if ($bytesStreamed > $minBytesStreamed) {
+                $user->update_stats($song_id);
+        } 
 
 	// If the played flag isn't set, set it
 	if (!$song->played) { 

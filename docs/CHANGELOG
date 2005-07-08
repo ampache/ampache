@@ -16,6 +16,10 @@
 	- Updated XMLRPC lib to 1.1.1 due to security issues with previous
 		versions 
 	- Updated Getid3() library to 1.7.4
+	- Added code to streaming that requires you to play at least half
+		the song before it's counted in the stats (Thx SH)
+	- Added Norwegian translation (Thx Ruudboy)
+	- Added a clean_catalog() to the /bin/catalog_update.php.inc script
 
 --------------------------------------------------------------------------
   v.3.3.1 06/21/2005:
