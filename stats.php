@@ -25,7 +25,7 @@
 require_once("modules/init.php");
 
 //FIXME: Remove references
-$uid = $user->id;
+$uid = $GLOBALS['user']->username;
 
 show_template('header');
 show_menu_items('Stats');

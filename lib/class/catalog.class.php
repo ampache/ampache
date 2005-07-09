@@ -891,19 +891,26 @@ class Catalog {
 	} // add_to_catalog
 
 
-	/*!
-		@function get_remote_catalog
-		@discussion get a remote catalog and runs update if needed
-	*/
+	/**
+	 * get_remote_catalog
+	 * get a remote catalog and runs update if needed
+	 * @package XMLRPC
+	 * @catagory Client
+	 * @author Karl Vollmer
+	 * @todo Add support for something besides port 80
+	 * @todo Add a Pub/Private Key swap in here for extra security
+	 */
 	function get_remote_catalog($type=0) { 
 
+		/* Make sure the xmlrpc lib is loaded */
 		if (!class_exists('xmlrpc_client')) { 
                         if (conf('debug')) { log_event($_SESSION['userdata']['username'],'xmlrpc',"Unable to load XMLRPC library"); }
 			echo "<font class=\"error\"><b>" . _("Error") . "</b>: " . _("Unable to load XMLRPC library, make sure XML-RPC is enabled") . "<br />\n";
 			return false;
-		}
+		} // end check for class
 
 	        // first, glean out the information from the path about the server and remote path
+		// this can't contain the http
 	        preg_match("/http:\/\/([^\/]+)\/*(.*)/", $this->path, $match);
 	        $server = $match[1];
 	        $path   = $match[2];
@@ -914,30 +921,40 @@ class Catalog {
 	        else {
 	                $client = new xmlrpc_client("/$path/server.php", $server, 80);
 	        }
-
-	        $f = new xmlrpcmsg('remote_server_query', array(new xmlrpcval( conf('web_path'), "string")) );
-	        //if (conf('debug')) { $client->setDebug(1); }
-	        $response = $client->send($f);
+	        
+		$f = new xmlrpcmsg('remote_server_query', array(new xmlrpcval( conf('web_path'), "string")) );
+		
+	        if (conf('debug')) { $client->setDebug(1); }
+		
+	        $response = $client->send($f,30);
 	        $value = $response->value();
 
 	        if ( !$response->faultCode() ) {
 	                $data = php_xmlrpc_decode($value);
 			
 			// Print out the catalogs we are going to sync
-			//FIXME: We should add catalog level access control
 	                foreach ($data as $vars) { 
-				$catalog_name = $vars[0];
-	                        print("<b>Reading Remote Catalog: $catalog_name</b> [$this->path]<br />\n");
+				$catalog_name 	= $vars[0];
+				$count		= $vars[1];
+	                        print("<b>Reading Remote Catalog: $catalog_name ($count Songs)</b> [$this->path]<br />\n");
 	                } 
-	        }
+			// Flush the output
+			flush();
+
+	        } // if we didn't get an error
 	        else {
 			$error_msg = _("Error connecting to") . " " . $server . " " . _("Code") . ": " . $response->faultCode() . " " . _("Reason") . ": " . $response->faultString();
-			log_event($_SESSION['userdata']['username'],'xmlrpc',$error_msg);
+			if (conf('debug')) { log_event($_SESSION['userdata']['username'],'xmlrpc',$error_msg); }
 			echo "<p class=\"error\">$error_msg</p>";
 	                return;
 	        }
 
-	        $f = new xmlrpcmsg('remote_song_query', array(new xmlrpcval( 'song', "string")) );
+	        $f = new xmlrpcmsg('remote_song_query');
+		
+                /* Depending upon the size of the target catalog this can be a very slow/long process */
+                set_time_limit(0);
+
+		// No Timeout on this one because it can be flipping huge
 	        $response = $client->send($f);
 	        $value = $response->value();
 
@@ -956,10 +973,13 @@ class Catalog {
 
 	} // get_remote_catalog
 
-	/*!
-		@function update_remote_catalog
-		@discussion actually updates from the remote data
-	*/
+	/**
+	 * update_remote_catalog
+	 * actually updates from the remote data, takes an array of songs that are base64 encoded and parses them
+	 * @package XMLRPC
+	 * @catagory Client
+	 * @todo This should be based off of seralize
+	 */
 	function update_remote_catalog($songs,$root_path) {
 	        global $settings, $dbh, $artists;
 

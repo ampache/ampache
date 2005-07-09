@@ -30,7 +30,7 @@ class Playlist {
 	// Variables from DB
 	var $id;
 	var $name;
-	var $owner;
+	var $user;
 	var $type;
 	var $time;
 	var $items;
@@ -64,13 +64,13 @@ class Playlist {
 		$dbh = dbh();
 
 		if ($this->id) {
-			$sql = "SELECT name, owner, type, date FROM playlist" .
+			$sql = "SELECT name, user, type, date FROM playlist" .
 				" WHERE id = '$this->id'";
 			$db_results = mysql_query($sql, $dbh);
 
 			if ($r = mysql_fetch_object($db_results)) {
 				$this->name = $r->name;
-				$this->owner = $r->owner;
+				$this->user = $r->user;
 				$this->type = $r->type;
 				$this->time = $r->date;
 				$this->items = array();
@@ -96,17 +96,17 @@ class Playlist {
 
 	/*!
 		@function create_playlist
-		@discussion Creates an empty playlist, given a name, owner_id, and type.
+		@discussion Creates an empty playlist, given a name, user_id, and type.
 	*/
-	function create_playlist($name, $owner_id, $type) {
+	function create_playlist($name, $user, $type) {
 
 		$dbh = dbh();
 
-		if (isset($name) && isset($owner_id) && isset($type) && $this->check_type($type)) {
+		if (isset($name) && isset($user) && isset($type) && $this->check_type($type)) {
 			$name = sql_escape($name);
 			$sql = "INSERT INTO playlist" .
-				" (name, owner, type)" .
-				" VALUES ('$name', '$owner_id', '$type')";
+				" (name, user, type)" .
+				" VALUES ('$name', '$user', '$type')";
 			$db_results = mysql_query($sql, $dbh);
 			if ($this->id = mysql_insert_id($dbh)) {
 				$this->refresh_object();

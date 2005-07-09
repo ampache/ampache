@@ -84,7 +84,7 @@ function get_preferences($username=0) {
 
 	$user = new User($username);
 
-	$sql = "SELECT preferences.name,user_preference.value FROM preferences,user_preference WHERE user_preference.user='$user->id'" .
+	$sql = "SELECT preferences.name,user_preference.value FROM preferences,user_preference WHERE user_preference.user='$user->username'" .
 		" AND user_preference.preference=preferences.id";
 	$db_results = mysql_query($sql, dbh());
 
@@ -457,7 +457,7 @@ function get_now_playing() {
 	while ($r = mysql_fetch_assoc($db_results)) { 
 		$song = new Song($r['song_id']);
 		$song->format_song();
-		$np_user = new User(0,$r['user_id']);
+		$np_user = new User($r['user_id']);
 		$results[] = array('song'=>$song,'user'=>$np_user);
 	} // end while
 	return $results;

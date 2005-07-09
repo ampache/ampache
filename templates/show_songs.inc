@@ -29,7 +29,7 @@ $web_path = conf('web_path');
     <table class="border" cellspacing="0" cellpadding="0" border="0">
     <tr class="table-header">
             <th>&nbsp;&nbsp;<a href="#" onclick="check_songs(); return false;">Select</a></th>
-            <?php if (isset($playlist_id) && $playlist_id != 0 && ($user->id == $pluser->id || $user->has_access('100'))) { $tab = 1; ?> <th><?php echo _("Track"); ?></th> <?php } ?>
+            <?php if (isset($playlist_id) && $playlist_id != 0 && ($user->username == $pluser->username || $user->has_access('100'))) { $tab = 1; ?> <th><?php echo _("Track"); ?></th> <?php } ?>
             <th><?php echo _("Song title"); ?></th>
             <th><?php echo _("Artist"); ?></th>
             <th><?php echo _("Album"); ?></th>
@@ -58,7 +58,7 @@ $web_path = conf('web_path');
               <input type="checkbox" name="song[]" value="<?php echo $song->id; ?>" id="song_<?php echo $song->id; ?>"></input>
             </td>
         <?php
-            if (isset($playlist_id) && $playlist_id != 0 && ($user->id == $pluser->id || $user->has_access('100'))) {
+            if (isset($playlist_id) && $playlist_id != 0 && ($user->username == $pluser->username || $user->has_access('100'))) {
                     $tracknum = get_playlist_track_from_song($playlist_id, $song->id);
         ?>
             <td>
@@ -110,7 +110,7 @@ $web_path = conf('web_path');
 			| <a href="<?php echo $web_path; ?>/download/index.php?action=download&amp;song_id=<?php echo $song->id; ?>&amp;fn=<?php echo rawurlencode($song->f_artist_full . " - " . $song->title . "." . $song->type); ?>"><?php echo _("Download"); ?></a>
 		<?php } ?>
 		<?php if ($user->prefs['direct_link']) { ?>
-		| <a href="<?php echo $web_path; ?>/play/index.php?song=<?php echo $song->id; ?>&amp;uid=<?php echo $user->id . "&amp;sid=" . session_id(); ?>&amp;fn=<?php echo rawurlencode($song->f_artist_full . " - " . $song->title . "." . $song->type); ?>"><?php echo _("Direct Link"); ?></a>
+		| <a href="<?php echo $web_path; ?>/play/index.php?song=<?php echo $song->id; ?>&amp;uid=<?php echo $user->username . "&amp;sid=" . session_id(); ?>&amp;fn=<?php echo rawurlencode($song->f_artist_full . " - " . $song->title . "." . $song->type); ?>"><?php echo _("Direct Link"); ?></a>
 		<?php } ?>
             </td>
           </tr>
@@ -127,7 +127,7 @@ $web_path = conf('web_path');
     ?>
     <tr class="table-header">
       <td></td>
-      <?php if (isset($playlist_id) && $playlist_id != 0 && ($user->id == $pluser->id || $user->access === 'admin')) { ?> <td></td> <?php } ?>
+      <?php if (isset($playlist_id) && $playlist_id != 0 && ($user->username == $pluser->username || $user->access === 'admin')) { ?> <td></td> <?php } ?>
       <td><?php echo _("Total"); ?>:</td>
       <td nowrap="nowrap"><?php echo $num; ?> song(s)</td>
       <td></td>

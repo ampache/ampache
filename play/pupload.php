@@ -78,13 +78,13 @@ $site->get_preferences();
 // require a uid and valid song
 if ( isset( $uid ) ) {
 	// Create the user object if possible
-	$user = new User(0,$uid);
+	$user = new User($uid);
 
 	$song = $site->prefs['upload_dir'] . $song;
 
 	if (!file_exists ( $song )) { echo "Error: No Song"; exit; }
 	if ($user->access === 'disabled') { echo "Error: User Disabled"; exit; }
-	if (!$user->id && !$user->is_xmlrpc()) { echo "Error: No User Found"; exit; }
+	if (!$user->username && !$user->is_xmlrpc()) { echo "Error: No User Found"; exit; }
 
 }
 else {
@@ -136,7 +136,7 @@ if ( $_REQUEST['action'] == 'm3u' ) {
 		$song_name = $artist . " - " . $title . "." . $type;
 		$sess = $_COOKIE[libglue_param('sess_name')];
 		//echo "Song Name: $song_name<BR>\n";
-		$url = escapeshellarg("$web_path/play/pupload.php?song=$song_nm&uid=$user->id&sid=$sess");
+		$url = escapeshellarg("$web_path/play/pupload.php?song=$song_nm&uid=$user->username&sid=$sess");
 		$localplay_add = conf('localplay_add');
 		$localplay_add = str_replace("%URL%", $url, $localplay_add);
 		//echo "Executing: $localplay_add<BR>";
@@ -165,7 +165,7 @@ if ( $_REQUEST['action'] == 'm3u' ) {
 		$sess = $_COOKIE[libglue_param('sess_name')];
 					if($temp_user->prefs['down-sample'] == 'true')
 						$ds = $temp_user->prefs['sample_rate'];
-		echo "$web_path/play/pupload.php?song=" . rawurlencode($song_nm) . "&uid=$user->id&sid=$sess";
+		echo "$web_path/play/pupload.php?song=" . rawurlencode($song_nm) . "&uid=$user->username&sid=$sess";
 
     }
 	exit;

@@ -104,7 +104,7 @@ $playlist = new Playlist($playlist_id);
 
 if ( isset($playlist_id) && ($playlist_id != 0) && $_REQUEST['action'] != 'delete_playlist' ) {
 	// Get the playlist and check access
-	$pluser = new User(0,$playlist->owner);
+	$pluser = new User($playlist->user);
 
 	if (! isset($playlist->id)) {
 		show_playlist_access_error($playlist_id, $pluser->username);
@@ -114,7 +114,7 @@ if ( isset($playlist_id) && ($playlist_id != 0) && $_REQUEST['action'] != 'delet
 	echo "<span class=\"header2\">$playlist->name</span><br />";
 	echo "&nbsp;&nbsp;&nbsp;" . _("owned by") . " $pluser->fullname ($pluser->username)<br />";
 	echo "<ul>";
-	if ($pluser->id == $user->id || $user->access === 'admin') {
+	if ($pluser->username == $user->username || $user->access === 'admin') {
 		echo "<li><a href=\"" . conf('web_path') . "/playlist.php?action=edit&amp;playlist_id=$playlist->id\">" . _("Edit Playlist") . "</a></li>\n";
 	}
 	if (count($playlist->get_songs()) > 0) {
@@ -133,7 +133,7 @@ switch($action) {
 		if ($playlist_id == 0) {
 			// Creating a new playlist
 			$playlist_name = _("New Playlist") . " - " . date("m/j/y, g:i a");
-			$playlist->create_playlist($playlist_name, $user->id, 'private');
+			$playlist->create_playlist($playlist_name, $user->username, 'private');
 		}
 
 		if ($type === 'album') {
@@ -150,7 +150,7 @@ switch($action) {
 		break;
 
 	case 'Create':
-		$playlist->create_playlist($playlist_name, $user->id, $type);
+		$playlist->create_playlist($playlist_name, $user->username, $type);
 		show_playlists();
 		break;
 

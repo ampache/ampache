@@ -87,7 +87,7 @@ function get_flag($id)
     $results = array();
     $newid = array_pop($id);
     $sql = "SELECT flagged.id,user.username,type,song,date,comment" .
-           " FROM flagged,user WHERE flagged.user = user.id AND (flagged.song = '$newid'";
+           " FROM flagged,user WHERE flagged.user = user.username AND (flagged.song = '$newid'";
     foreach($id as $num)
     {
         $sql .= " OR flagged.song = '$num'";
@@ -106,18 +106,18 @@ function get_flag($id)
 function get_flagged_songs($user = 0)
 {
     $sql = "SELECT flagged.id,user.username,type,song,date,comment" .
-           " FROM flagged,user WHERE flagged.user = user.id AND flagged.type <> 'notify' AND flagged.type <> 'done'";
+           " FROM flagged,user WHERE flagged.user = user.username AND flagged.type <> 'notify' AND flagged.type <> 'done'";
 
     // If the user is not an admin, they can only see songs they've flagged
     if($user)
     {
         if($_SESSION['userdata']['access'] === 'admin')
         {
-            $sql .= " AND user.id = '$user'";
+            $sql .= " AND user.username = '$user'";
         }
         else
         {
-            $sql .= " AND user.id = '".$_SESSION['userdata']['id']."'";
+            $sql .= " AND user.username = '".$_SESSION['userdata']['username']."'";
         }
     }
     

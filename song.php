@@ -112,7 +112,7 @@ elseif ( $_REQUEST['popular_songs'] ) {
 	$song_ids = get_popular_songs($_REQUEST['popular_songs'], 'global');
 }
 elseif ( $_REQUEST['your_popular_songs'] ) {
-	$song_ids = get_popular_songs($_REQUEST['your_popular_songs'], 'your', $user->id);
+	$song_ids = get_popular_songs($_REQUEST['your_popular_songs'], 'your', $user->username);
 }
 
 

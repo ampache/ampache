@@ -35,11 +35,11 @@ function addToPlaylist( $myMpd, $song_ids=array()) {
 			if ($GLOBALS['user']->prefs['play_type'] == 'downsample') { 
 				$ds = $GLOBALS['user']->prefs['sample_rate'];
 			}
-			$song_url = conf('web_path') . "/play/index.php?song=$song_id&uid=" . $GLOBALS['user']->id . "&sid=$sess_id&ds=$ds&name=." . $song->type;
+			$song_url = conf('web_path') . "/play/index.php?song=$song_id&uid=" . $GLOBALS['user']->username . "&sid=$sess_id&ds=$ds&name=." . $song->type;
 			if (is_null( $myMpd->PlAdd($song_url) ) ) { 
 				$log_line = _("Error") . ": " . _("Could not add") . ": " . $song_url . " : " . $myMpd->errStr;
 				echo "<font class=\"error\">$log_line</font><br />\n";
-				log_event($GLOBALS['user']->username,'add',$log_line);
+				if (conf('debug')) { log_event($GLOBALS['user']->username,'add',$log_line); }
 			} // if it's null
 		} // if we want urls
 		else {
@@ -48,7 +48,7 @@ function addToPlaylist( $myMpd, $song_ids=array()) {
 	                if( is_null( $myMpd->PLAdd( $song_filename ) ) ) {
 				$log_line =  _("Error") . ": " . _("Could not add") . ": " . $song_filename . " : " . $myMpd->errStr;
 				echo "<font class=\"error\">$log_line</font><br />\n";
-				log_event($_SESSION['userdata']['username'],'add',$log_line);
+				if (conf('debug')) { log_event($_SESSION['userdata']['username'],'add',$log_line); }
 		        } // end if it's null
 			// We still need to count if they use the file method	
 			else {

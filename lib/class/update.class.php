@@ -229,13 +229,13 @@ class Update {
 
 		$version[] = array('version' => '332001', 'description' => $update_string);
 
-		return $version;
-
 		$update_string = "- Removed every Instance of User->ID *Note* This update clears Now Playing.<br />" .
 				 "- Added field allowing for Dynamic Playlists.<br />" . 
 				 "- Added required table/fields for security related IP Tracking.<br />";
 
-		//$version[] = array('version' => '332002', 'description' => $update_string);
+		$version[] = array('version' => '332002', 'description' => $update_string);
+		
+		return $version;
 
 	} // populate_version
 
@@ -960,8 +960,18 @@ class Update {
 
 	function update_332002() { 
 
-//		$sql = "CREATE TABLE `ip_history` (`username` VARCHAR(128), `ip` INT(11) UNSIGNED NOT NULL DEFAULT '0', " . 
-//			"`connections` INT(11) UNSIGNED NOT NULL DEFAULT '1', `date` INT(11) UNSIGNED NOT NULL DEFAULT '0')";
+		$sql = "CREATE TABLE `ip_history` (`username` VARCHAR(128), `ip` INT(11) UNSIGNED NOT NULL DEFAULT '0', " . 
+			"`connections` INT(11) UNSIGNED NOT NULL DEFAULT '1', `date` INT(11) UNSIGNED NOT NULL DEFAULT '0')";
+		$db_results = mysql_query($sql, dbh());
+
+		$sql = "ALTER TABLE `ip_history` ADD INDEX ( `username` )";
+		$db_results = mysql_query($sql, dbh());
+
+		$sql = "ALTER TABLE `ip_history` ADD INDEX ( `date` )";
+		$db_results = mysql_query($sql, dbh());
+
+		$sql = "ALTER TABLE `session` ADD `ip` INT( 11 ) UNSIGNED AFTER `value`";
+		$db_results = mysql_query($sql, dbh());
 
                 $sql = "ALTER TABLE `object_count` CHANGE `object_type` `object_type` ENUM( 'album', 'artist', 'song', 'playlist', 'genre', 'catalog' ) NOT NULL DEFAULT 'song'";
                 $db_results = mysql_query($sql, dbh());
@@ -982,10 +992,10 @@ class Update {
 		}
 	
 		/* It's time for some serious DB Clean Up. Nuke this stuff from Orbit! */
-		$sql = "ALTER TABLE `catalog DROP `private`";
+		$sql = "ALTER TABLE `catalog` DROP `private`";
 		$db_results = mysql_query($sql, dbh());
 
-		$sql = "ALTER TABLE `catalog` CHANGE `enabled` `enabled` TINYINT UNSIGNED NOT NULL DEFAULT '1'";
+		$sql = "ALTER TABLE `catalog` CHANGE `enabled` `enabled` TINYINT ( 1 ) UNSIGNED NOT NULL DEFAULT '1'";
 		$db_results = mysql_query($sql, dbh());
 
 		/* 
@@ -1157,6 +1167,8 @@ class Update {
 		 */
 		$sql = "ALTER TABLE `user` DROP `id`";
 		$db_results = mysql_query($sql, dbh());
+
+		$this->set_version('db_version', '332002');
 
 	} // update_332002
 	

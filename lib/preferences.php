@@ -281,4 +281,22 @@ function create_preference_input($name,$value) {
 
 } // create_preference_input
 
+/** 
+ * get_preference_id
+ * This takes the name of a preference and returns it's id this is usefull for calling
+ * the user classes update_preference function
+ * @package Preferences
+ * @catagory Get
+ */
+function get_preference_id($name) { 
+
+	$sql = "SELECT id FROM preferences WHERE name='" . sql_escape($name) . "'";
+	$db_results = mysql_query($sql, dbh());
+
+	$results = mysql_fetch_assoc($db_results);
+
+	return $results['id'];
+
+} // get_preference_id
+
 ?>

@@ -514,7 +514,7 @@ function get_random_songs( $options, $matchlist) {
                 $query = "SELECT song.id FROM song WHERE $artists_where ORDER BY RAND()";
         }
         elseif ($options['unplayed'] == 1) {
-                $uid = $_SESSION['userdata']['id'];
+                $uid = $_SESSION['userdata']['username'];
                 $query = "SELECT song.id FROM song LEFT JOIN object_count ON song.id = object_count.object_id " .
                          "WHERE ($where) AND ((object_count.object_type='song' AND userid = '$uid') OR object_count.count IS NULL ) " .
                          "ORDER BY CASE WHEN object_count.count IS NULL THEN RAND() WHEN object_count.count > 4 THEN RAND()*RAND()*object_count.count " .

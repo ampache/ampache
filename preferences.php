@@ -39,7 +39,7 @@ switch(scrub_in($_REQUEST['action'])) {
 		set_theme();
 	break;
 	default:
-		$user_id = $user->id;
+		$user_id = $user->username;
 		$preferences = $user->get_preferences();		
 	break;
 

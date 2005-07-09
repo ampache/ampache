@@ -83,7 +83,7 @@ if (!$results['conf']['allow_stream_playback']) {
 }
 
 $results['conf']['web_path']		= $http_type . $_SERVER['HTTP_HOST'] . $results['conf']['web_path'];
-$results['conf']['version']		= '3.3.2-Alpha1 (Build 002)';
+$results['conf']['version']		= '3.3.2-Alpha1 (Build 003)';
 $results['conf']['catalog_file_pattern']= 'mp3|mpc|m4p|m4a|mp4|aac|ogg|rm|wma|asf|flac|spx';
 $results['libglue']['local_table']	= 'session';
 $results['libglue']['local_sid']	= 'id';
@@ -96,7 +96,8 @@ $results['libglue']['mysql_usercol'] 	= 'username';
 $results['libglue']['mysql_passwdcol']	= 'password';
 $results['libglue']['local_dbh_name']	= 'local_dbh';
 $results['libglue']['auth_methods']	= 'mysql';
-$results['libglue']['mysql_fields']	= 'id,username,fullname,email,access,offset_limit';
+$results['libglue']['user_username']	= 'username';
+$results['libglue']['mysql_fields']	= 'username,fullname,email,access,offset_limit';
 $results['libglue']['mysql_host']	= $results['libglue']['local_host'];
 $results['libglue']['mysql_db']		= $results['libglue']['local_db'];
 $results['libglue']['mysql_username']	= $results['libglue']['local_username'];
@@ -259,14 +260,12 @@ if (!conf('use_auth')) {
 	if (!check_session()) { make_local_session_only($auth); }
 	$user 			= new User(0);
 	$user->fullname 	= $auth['info']['fullname'];
-	$user->id		= $auth['info']['id'];
 	$user->offset_limit 	= $auth['info']['offset_limit'];
 	$user->username 	= $auth['info']['username'];
 	$user->access 		= $auth['info']['access'];
 	$_SESSION['userdata']['access'] 	= $auth['info']['access'];
 	$_SESSION['userdata']['username'] 	= $auth['info']['username'];
 	$_SESSION['userdata']['offset_limit'] 	= $auth['info']['offset_limit'];
-	$_SESSION['userdata']['id']		= $auth['info']['id'];
 	$user->set_preferences();
 	get_preferences();
 	set_theme();

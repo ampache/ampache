@@ -41,7 +41,7 @@ function remote_server_query($m) {
         $result = array();
 
         // we only want to send the local entries
-        $sql = "SELECT name FROM catalog WHERE catalog_type='local'";
+        $sql = "SELECT name,COUNT(song.id) FROM catalog LEFT JOIN song ON catalog.id = song.catalog WHERE catalog_type='local' GROUP BY catalog.id";
 	$db_result = mysql_query($sql, dbh());
 
         while ( $i = mysql_fetch_row($db_result) ) {

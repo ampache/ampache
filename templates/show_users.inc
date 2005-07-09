@@ -87,7 +87,7 @@ while ( $results = mysql_fetch_object($db_result) ) {
 		</a>
 	</td>
         <td>
-		<a href="<?php echo conf('web_path'); ?>/admin/preferences.php?action=user&amp;user_id=<?php echo $user->id; ?>">
+		<a href="<?php echo conf('web_path'); ?>/admin/preferences.php?action=user&amp;user_id=<?php echo $user->username; ?>">
 			<?php echo _("Prefs"); ?>
 		</a>
 	</td>

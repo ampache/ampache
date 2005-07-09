@@ -39,17 +39,17 @@ $subject = stripslashes(scrub_in($_POST['subject']));
 $message = stripslashes(scrub_in($_POST['message']));
 
 if ( $action == 'send_mail' && !conf('demo_mode')) {
-  $user = new User(0,$_SESSION['userdata']['id']);
-  // do the mail mojo here
-  if ( $to == 'all' ) {
-    $sql = "SELECT * FROM user WHERE email IS NOT NULL";
-  }
-  elseif ( $to == 'users' ) {
-    $sql = "SELECT * FROM user WHERE access='users' AND email IS NOT NULL";
-  }
-  elseif ( $to == 'admins' ) {
-    $sql = "SELECT * FROM user WHERE access='admin' AND email IS NOT NULL";
-  }
+	$user = $GLOBALS['user'];
+	// do the mail mojo here
+	if ( $to == 'all' ) {
+		$sql = "SELECT * FROM user WHERE email IS NOT NULL";
+	}
+	elseif ( $to == 'users' ) {
+		$sql = "SELECT * FROM user WHERE access='users' OR access='25' AND email IS NOT NULL";
+	}
+	elseif ( $to == 'admins' ) {
+		$sql = "SELECT * FROM user WHERE access='admin' OR access='100' AND email IS NOT NULL";
+	}
   
   $db_result = mysql_query($sql, dbh());
   

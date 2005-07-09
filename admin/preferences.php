@@ -20,12 +20,14 @@
 
 */
 
-/*!
-	@header Preferences page
-	Preferences page for whole site, and where
-	the admins do editing of other users preferences
-
-*/
+/**
+ * Preferences page
+ * Preferences page for whole site, and where
+ * the admins do editing of other users preferences
+ * @package Preferences
+ * @catagory Admin
+ * @author Karl Vollmer
+ */
 
 require('../modules/init.php');
 
@@ -40,8 +42,7 @@ $user_id = intval(scrub_in($_REQUEST['user_id']));
 switch(scrub_in($_REQUEST['action'])) { 
 
 	case 'user':
-		$temp_user = new User(0,$user_id);
-		$user_id = $temp_user->id;
+		$temp_user = new User($user_id);
 		$fullname = "ADMIN - " . $temp_user->fullname;
 		$preferences = $temp_user->get_preferences();
 	break;
@@ -49,7 +50,7 @@ switch(scrub_in($_REQUEST['action'])) {
 		if (conf('demo_mode')) { break; }
 		update_preferences($user_id);	
 		if ($user_id != '0') { 
-			$temp_user = new User(0,$user_id);
+			$temp_user = new User($user_id);
 			$fullname = "ADMIN - " . $temp_user->fullname;
 			$preferences = $temp_user->get_preferences();
 		}
@@ -58,7 +59,7 @@ switch(scrub_in($_REQUEST['action'])) {
 		}
 	break;
 	case 'fix_preferences':
-		$temp_user = new User(0,$user_id);
+		$temp_user = new User($user_id);
 		$temp_user->fix_preferences();
 		$preferences = $temp_user->get_preferences();
 	break;

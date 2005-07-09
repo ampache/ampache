@@ -39,7 +39,7 @@ $sid = htmlspecialchars($_REQUEST['sid']);
 
 /* Misc Housework */
 $dbh = dbh();
-$user = new User(0,$uid);
+$user = new User($uid);
 
 if (conf('require_session') && !conf('xml_rpc')) { 
 	if(!session_exists($sid)) {	
@@ -90,7 +90,10 @@ if ( isset( $uid ) ) {
 		echo "Error: No Song"; 
 		exit; 
 	}
-	if ($song->status === 'disabled') { 
+	if ($song->status == '0') { 
+		if (conf('debug')) { 
+			log_event($user->username,' song_disabled ',"Error: $song->file is currently disabled, song skipped");
+		}
 		exit;
 	}
 	if ($user->disabled == '1') {
@@ -100,9 +103,9 @@ if ( isset( $uid ) ) {
 		echo "Error: User Disabled"; 
 		exit; 
 	}
-	if (!$user->id && !$user->is_xmlrpc()) { 
+	if (!$user->username && !$user->is_xmlrpc()) { 
 		if (conf('debug')) { 
-			log_event($user->username,' user_not_found ',"Error $user->id not found, stream access denied");
+			log_event($user->username,' user_not_found ',"Error $user->username not found, stream access denied");
 		}
 		echo "Error: No User Found"; 
 		exit; 

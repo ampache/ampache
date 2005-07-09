@@ -49,7 +49,7 @@ class Stream {
 		}
 		
 		$this->sess = session_id();
-		$this->user_id = $_SESSION['userdata']['id'];
+		$this->user_id = $_SESSION['userdata']['username'];
 
 	} //constructor
 

@@ -483,7 +483,7 @@ function get_flagged() {
 
 	$sql = "SELECT flagged.id, user.username, type, song, date, comment" .
 		" FROM flagged, user" .
-		" WHERE flagged.user = user.id" .
+		" WHERE flagged.user = user.username" .
 		" ORDER BY date";
 	$db_result = mysql_query($sql, $dbh);
 
@@ -679,7 +679,7 @@ function show_songs ($song_ids, $playlist_id=0, $album=0) {
 
 	// Get info about playlist owner
 	if (isset($playlist_id) && $playlist_id != 0) {
-		$sql = "SELECT owner FROM playlist WHERE id = '$playlist_id'";
+		$sql = "SELECT user FROM playlist WHERE id = '$playlist_id'";
 		$db_result = mysql_query($sql, $dbh);
 		if ($r = mysql_fetch_array($db_result)) {
 			$pluser = get_user_byid($r[0]);
@@ -923,25 +923,25 @@ function show_playlists ($type = 'all') {
 		return true;
 	}
 	elseif ($type == 'public') {
-		$sql = "SELECT id,name,owner,date ".
+		$sql = "SELECT id,name,user,date ".
 			" FROM playlist ".
 			" WHERE type='public'".
 			" ORDER BY name";
 	}
 	elseif ($type == 'private') {
-		$sql = "SELECT id,name,owner,date ".
+		$sql = "SELECT id,name,user,date ".
 			" FROM playlist ".
 			" WHERE type='private'" .
-			" AND owner = '$user->id'" .
+			" AND user = '$user->username'" .
 			" AND name <> 'Temporary'".
 			" ORDER BY name";
 	}
 	elseif ($type == 'adminprivate') {
 		if ( $user->access === 'admin' ) {
-			$sql = "SELECT id,name,owner,date ".
+			$sql = "SELECT id,name,user,date ".
 				" FROM playlist ".
 				" WHERE type='private'" .
-				" AND owner != '$user->id'" .
+				" AND username != '$user->username'" .
 				" AND name <> 'Temporary'".
 				" ORDER BY name";
 		}
@@ -977,7 +977,7 @@ ECHO;
 		while ( $r = mysql_fetch_array($db_result) ) {
 			$plname = $r['name'];
 			$plid = $r['id'];
-			$pluser = get_user_byid($r['owner']);
+			$pluser = new User($r['user']);
 			$plfullname = $pluser->fullname;
 			$plowner = $pluser->username;
 
@@ -994,7 +994,7 @@ ECHO;
 			echo "    <td>$plfullname</td>\n"; 
 			echo "    <td><a href=\"$web_path/playlist.php?playlist_id=$plid&amp;action=view_list\">" . _("View") . "</a></td>\n"; 
 
-			if ($user->id == $pluser->id || $user->access === 'admin') {
+			if ($user->username == $pluser->username || $user->has_access(100)) {
 				echo "    <td><a href=\"$web_path/playlist.php?playlist_id=$plid&amp;action=edit\">" . _("Edit") . "</a></td>\n";
 				echo "    <td><a href=\"$web_path/playlist.php?playlist_id=$plid&amp;action=delete_playlist\">" . _("Delete") . "</a></td>\n";
 			}
@@ -1157,7 +1157,7 @@ function check_playlist_access ($playlist_id, $username) {
 
 	$sql = "SELECT playlist.id FROM playlist, user" .
 		" WHERE playlist.id = '$playlist_id'" .
-		" AND playlist.owner = user.id" .
+		" AND playlist.user = user.username" .
 		" AND user.username = '$username'";
 	$db_result = mysql_query($sql, $dbh);
 
@@ -1187,9 +1187,9 @@ function show_playlist_dropdown ($playlist_id=0) {
 	global $settings;
 	$dbh = dbh();
 
-	$userid = scrub_in($_SESSION['userdata']['id']);
+	$userid = scrub_in($_SESSION['userdata']['username']);
 	$sql = "SELECT * FROM playlist" .
-		" WHERE owner = '$userid'" .
+		" WHERE user = '$userid'" .
 		" AND name <> 'Temporary'" .
 		" ORDER BY name";
 	$db_result = @mysql_query($sql, $dbh);
@@ -1216,7 +1216,7 @@ ECHO;
 function show_playlist_access_error ($playlist, $username) {
 
 	$plname = $playlist->name;
-	$pluser = new User($playlist->owner);
+	$pluser = new User($playlist->user);
 	$plowner = $pluser->username;
 
 	print <<<ECHO

@@ -157,7 +157,7 @@ switch ($action) {
 					$message[$music] .= _("Successfully-Quarantined");
 					/* Log the upload */
 					$sql = "INSERT INTO upload (`user`,`file`,`addition_time`)" .
-						" VALUES ('$user->id','" . sql_escape($fullpath) . "','" . time() . "')";
+						" VALUES ('$user->username','" . sql_escape($fullpath) . "','" . time() . "')";
 					$db_results = mysql_query($sql, dbh());
 				} // if quarantine
 
@@ -296,7 +296,7 @@ if ( $handle = @opendir($user->prefs['upload_dir'] ) ){
 		
 			  
 			echo  "			<td><a href='" . $web_path . 
-				"/play/pupload.php?action=m3u&song=$file&uid=$user->id'>" . 
+				"/play/pupload.php?action=m3u&song=$file&uid=$user->username'>" . 
 				$results[$key][title] . "</a></td>\n";
 
 

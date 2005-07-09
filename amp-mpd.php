@@ -147,8 +147,8 @@ else {
                         if (!$user->has_access(25)) { break; }
                         $condPL = (conf('condPL')==1 ? 0 : 1);
                         conf(array('condPL' => $condPL),1);
-                        $db_results = mysql_query("UPDATE user_preference, preferences SET user_preference.value='$condPL' ".
-                           "WHERE preferences.name='condPL' AND preferences.id=user_preference.preference AND user ='$user->id'", dbh());
+			$pref_id = get_preference_id('condPL');
+			$user->update_preference($pref_id,$condPL);
 			mpd_redirect();
                         break;
                 case "crop":

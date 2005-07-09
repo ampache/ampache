@@ -35,7 +35,6 @@ else {
 <?php $GLOBALS['error']->print_error('general'); ?>
 <form name="update_user" method="post" action="<?php echo conf('web_path') . "/admin/users.php"; ?>">
 <table class="text-box" cellspacing="0" cellpadding="0" border="0">
-        
 <tr>
 	<td>
 		<?php echo  _("Username"); ; ?>:

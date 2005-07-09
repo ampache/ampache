@@ -56,7 +56,7 @@ function show_manage_users () {
 	@function show_user_form
 	@discussion shows the user form
 */
-function show_user_form ($id, $username, $fullname, $email, $access, $type, $error) {
+function show_user_form ($username, $fullname, $email, $access, $type, $error) {
 
 	require(conf('prefix').'/templates/userform.inc');
     
@@ -238,7 +238,7 @@ function delete_user ($username) {
         $db_result = mysql_query($sql, dbh());
 
 	// also delete playlists for user
-	$sql = "DELETE FROM playlist WHERE owner='$username'";
+	$sql = "DELETE FROM playlist WHERE username='$username'";
 	$db_result = mysql_query($sql, dbh());
 
 	delete_user_stats('all');

@@ -49,8 +49,7 @@ $temp_user = new User($user_id);
 switch ($action) {
     case 'edit':
         if (conf('demo_mode')) { break; }
-	show_user_form($temp_user->id, 
-		$temp_user->username, 
+	show_user_form($temp_user->username, 
 		$temp_user->fullname,
 		$temp_user->email,
 		$temp_user->access,
@@ -82,8 +81,7 @@ switch ($action) {
 
 		/* If we've got an error then break! */
 		if ($GLOBALS['error']->error_state) { 
-		        show_user_form($temp_user->id,
-		                $thisuser->username,
+		        show_user_form($thisuser->username,
 		                $thisuser->fullname,
 		                $thisuser->email,
 		                $thisuser->access,
@@ -152,7 +150,7 @@ switch ($action) {
 	break;
     case 'show_add_user':
         if (conf('demo_mode')) { break; }
-	show_user_form('','','','','','new_user','');
+	show_user_form('','','','','new_user','');
 	break;
 
     case 'update':
