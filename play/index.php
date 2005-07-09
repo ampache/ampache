@@ -80,6 +80,7 @@ if (conf('access_control')) {
 if ( isset( $uid ) ) {
 	$song = new Song($song_id);
 	$song->format_song();
+	$catalog = new Catalog($song->catalog);
 
 	// Create the user object if possible
 
