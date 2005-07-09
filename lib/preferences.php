@@ -33,7 +33,7 @@ function get_site_preferences() {
 	$results = array();
 
 	$sql = "SELECT preferences.name, preferences.type, user_preference.value, preferences.description FROM preferences,user_preference " .
-		" WHERE preferences.id=user_preference.preference AND user_preference.user = '0' ORDER BY `type`,`name`";
+		" WHERE preferences.id=user_preference.preference AND user_preference.user = '-1' ORDER BY `type`,`name`";
 	$db_results = mysql_query($sql, dbh());
 
 	while ($r = mysql_fetch_object($db_results)) { 
@@ -52,7 +52,7 @@ function set_site_preferences() {
 
 	$results = array();
 
-	$sql = "SELECT preferences.name,user_preference.value FROM preferences,user_preference WHERE user='0' AND user_preference.preference=preferences.id";
+	$sql = "SELECT preferences.name,user_preference.value FROM preferences,user_preference WHERE user='-1' AND user_preference.preference=preferences.id";
 	$db_results = @mysql_query($sql, dbh());
 
 	while ($r = @mysql_fetch_object($db_results)) { 
@@ -88,11 +88,11 @@ function clean_preference_name($name) {
 */
 function update_preferences($pref_id=0) { 
 	
-	$pref_user = new User(0,$pref_id);
+	$pref_user = new User($pref_id);
 	
 	/* Get current keys */
 	$sql = "SELECT id,name,type FROM preferences";
-	if ($pref_id != '0') { $sql .= " WHERE type='user'"; }
+	if ($pref_id != '-1') { $sql .= " WHERE type='user'"; }
 	$db_results = mysql_query($sql, dbh());
 
 	// Collect the current possible keys

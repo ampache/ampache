@@ -63,6 +63,18 @@ class Genre {
 
 	} // _get_info()
 
+	/** 
+	 * format_genre
+	 * this reformats the genre object so it's all purdy and creates a link var
+	 * @package Genre
+	 * @catagory Class
+	 */
+	function format_genre() { 
+
+
+
+	} // format_genre
+
 } //end of genre class
 
 ?>

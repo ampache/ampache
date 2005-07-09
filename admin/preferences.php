@@ -49,7 +49,7 @@ switch(scrub_in($_REQUEST['action'])) {
 	case 'update_preferences':
 		if (conf('demo_mode')) { break; }
 		update_preferences($user_id);	
-		if ($user_id != '0') { 
+		if ($user_id != '-1') { 
 			$temp_user = new User($user_id);
 			$fullname = "ADMIN - " . $temp_user->fullname;
 			$preferences = $temp_user->get_preferences();
@@ -59,12 +59,12 @@ switch(scrub_in($_REQUEST['action'])) {
 		}
 	break;
 	case 'fix_preferences':
-		$temp_user = new User($user_id);
-		$temp_user->fix_preferences();
-		$preferences = $temp_user->get_preferences();
+		$temp_user = new User();
+		$temp_user->fix_preferences($user_id);
+		$preferences = $temp_user->get_preferences($user_id);
 	break;
 	default:
-		$user_id = 0;
+		$user_id = -1;
 		$preferences = get_site_preferences();	
 		$fullname = "Site";
 	break;

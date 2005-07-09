@@ -1158,6 +1158,7 @@ class Update {
 		// Dump It!!
 		foreach ($results as $data) { 
 			$username = $username_id_map[$data['user']];
+			if ($data['user'] < 1) { $username = '-1'; }
 			$sql = "UPDATE user_preference SET user='$username' WHERE user='" . $data['user'] . "' AND preference='" . $data['preference'] . "'";
 			$db_results = mysql_query($sql, dbh());
 		} // foreach

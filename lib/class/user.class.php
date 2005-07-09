@@ -79,10 +79,14 @@ class User {
 		@discussion gets the prefs for this specific
 			user and returns them as an array
 	*/
-	function get_preferences() { 
+	function get_preferences($user_id=0) { 
+		
+		if (!$user_id) { 
+			$user_id = $this->username;
+		}
 		
 		$sql = "SELECT preferences.name, preferences.description, preferences.type, user_preference.value FROM preferences,user_preference " .
-			"WHERE user_preference.user='$this->username' AND user_preference.preference=preferences.id AND preferences.type='user'";
+			"WHERE user_preference.user='$user_id' AND user_preference.preference=preferences.id AND preferences.type='user'";
 		$db_results = mysql_query($sql, dbh());
 
 		while ($r = mysql_fetch_object($db_results)) { 
@@ -150,6 +154,14 @@ class User {
 				$data->f_name = $data->link;
 				$items[] = $data;
 			} 		 
+			/* If it's a genre */
+			elseif ($type == 'genre') { 
+				$data = new Genre($r->object_id);
+				$data->count = $r->count;
+				$data->format_genre();
+				$data->f_name = $data->link;
+				$items[] = $data;
+			}
 
 		} // end while
 		
@@ -503,22 +515,21 @@ class User {
 
 	} // format_favorites
 
-	/*!
+	/**
 	 * fix_preferences
 	 * this makes sure that the specified user
 	 *		has all the correct preferences. This function 
 	 *		should be run whenever a system preference is run
 	 *		it's a cop out... FIXME!
 	 * @todo Fix it so this isn't a hack
-	 * @pacakge User
+	 * @package User
 	 * @catagory Class
 	 */
-	function fix_preferences($user_id = 0) { 
-
+	function fix_preferences($user_id=0) { 
+	
 		if (!$user_id) { 
 			$user_id = $this->username;
 		}
-
 		/* Get All Preferences */
 		$sql = "SELECT * FROM user_preference WHERE user='$user_id'";
 		$db_results = mysql_query($sql, dbh());
@@ -539,7 +550,7 @@ class User {
 		  If we aren't the 0 user before we continue then grab the 
 		  0 user's values 
 		*/
-		if ($user_id != '0') { 
+		if ($user_id != '-1') { 
 			$sql = "SELECT user_preference.preference,user_preference.value FROM user_preference,preferences " . 
 				"WHERE user_preference.preference = preferences.id AND user_preference.user='0' AND preferences.type='user'";
 			$db_results = mysql_query($sql, dbh());
@@ -550,7 +561,7 @@ class User {
 
 
 		$sql = "SELECT * FROM preferences";
-		if ($user_id != '0') { 
+		if ($user_id != '-1') { 
 			$sql .= " WHERE type='user'";
 		}
 		$db_results = mysql_query($sql, dbh());
@@ -567,6 +578,23 @@ class User {
 				$insert_db = mysql_query($sql, dbh());
 			}
 		} // while preferences
+
+		/* Let's also clean out any preferences garbage left over */
+		$sql = "SELECT DISTINCT(user_preference.user) FROM user_preference " . 
+			"LEFT JOIN user ON user_preference.user = user.username " . 
+			"WHERE user_preference.user!='-1' AND user.username IS NULL";
+		$db_results = mysql_query($sql, dbh());
+
+		$results = array();
+	
+		while ($r = mysql_fetch_assoc($db_results)) { 
+			$results[] = $r['user'];
+		}
+		
+		foreach ($results as $data) { 
+			$sql = "DELETE FROM user_preference WHERE user='$data'";
+			$db_results = mysql_query($sql, dbh());
+		}
 
 	} // fix_preferences
 
