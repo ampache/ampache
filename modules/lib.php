@@ -104,38 +104,6 @@ function show_local_catalog_info() {
 
 
 /*
- * get_popular_songs()
- *
- */
-
-function get_popular_songs( $threshold, $type, $user_id = '' ) {
-
-	$dbh = dbh();
-
-	if ( $type == 'your' ) {
-		$sql = "SELECT object_id FROM object_count" .
-			" WHERE object_type = 'song'" .
-			" AND userid = '$user_id'" .
-			" ORDER BY count DESC LIMIT $threshold";
-	}
-	else {
-		$sql = "SELECT object_id FROM object_count" .
-			" WHERE object_type = 'song'" .
-			" ORDER BY count DESC LIMIT $threshold";
-	}
-
-	$db_result = mysql_query($sql, $dbh);
-	$songs = array();
-
-	while ( $id = mysql_fetch_array($db_result) ) {
-		$songs[] = $id[0];
-	}
-
-	return $songs;	
-} // get_popular_songs()
-
-
-/*
  * show_random_play()
  *
  */

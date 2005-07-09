@@ -44,6 +44,7 @@ class Song {
 	var $type;
 	var $mime;
 	var $played;
+	var $enabled;
 	var $addition_time;
 	var $update_time;
 
@@ -85,7 +86,7 @@ class Song {
 				$this->flaguser = $info->flaguser;
 				$this->flagtype = $info->flagtype;
 				$this->flagcomment	= $info->flagcomment;
-				$this->status 	= $info->status;
+				$this->enabled 	= $info->enabled;
 
 				// Format the Type of the song
 				$this->format_type();
@@ -105,7 +106,7 @@ class Song {
 
 		/* Grab the basic information from the catalog and return it */
 		$sql = "SELECT song.id,file,catalog,album,song.comment,year,artist,".
-			"title,bitrate,rate,mode,size,time,track,genre,played,status,update_time,".
+			"title,bitrate,rate,mode,size,time,track,genre,played,song.enabled,update_time,".
 			"addition_time,flagged.id as flagid,flagged.user as flaguser,flagged.type ".
 			"as flagtype,flagged.date as flagdate,flagged.comment as flagcomment FROM ".
 			"song LEFT JOIN flagged ON song.id = flagged.song WHERE song.id = '$this->id'";
@@ -327,7 +328,7 @@ class Song {
 		$this->update_album($new_song->album,$song_id);
 		$this->update_year($new_song->year,$song_id);
 		$this->update_comment($new_song->comment,$song_id);
-		$this->update_played('false',$song_id);
+		$this->update_played(0,$song_id);
 		$this->update_utime($song_id);
 
 	} // update_song
@@ -505,7 +506,7 @@ class Song {
 	function update_enabled($new_enabled,$song_id=0) {
 
 		if ($_SESSION['userdata']['access'] === 'admin' || $_SESSION['userdata']['access'] === '100') {
-			$this->update_item('status',$new_enabled,$song_id);
+			$this->update_item('enabled',$new_enabled,$song_id);
 		}
 
 	} // update_enabled
@@ -575,7 +576,7 @@ class Song {
 		// Set style
 		if (preg_match("/id3/", $this->flagtype)) { $this->f_style = "style=\"color: #33c;\""; }
 		elseif (preg_match("/(mp3|del|sort|ren)/", $this->flagtype)) { $this->f_style = "style=\"color: #C00;\""; }
-		if ($this->status === 'disabled') { $this->f_style = "style=\"text-decoration: line-through;\""; }
+		if (!$this->enabled) { $this->f_style = "style=\"text-decoration: line-through;\""; }
 		
 		return true;
 
