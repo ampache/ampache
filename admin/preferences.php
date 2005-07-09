@@ -36,15 +36,14 @@ if (!$user->has_access(100)) {
 	access_denied();
 }
 
-$user_id = intval(scrub_in($_REQUEST['user_id']));
-
+$user_id = scrub_in($_REQUEST['user_id']);
 
 switch(scrub_in($_REQUEST['action'])) { 
 
 	case 'user':
 		$temp_user = new User($user_id);
 		$fullname = "ADMIN - " . $temp_user->fullname;
-		$preferences = $temp_user->get_preferences();
+		$preferences = $temp_user->get_preferences($user_id);
 	break;
 	case 'update_preferences':
 		if (conf('demo_mode')) { break; }
