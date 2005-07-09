@@ -231,6 +231,12 @@ class Update {
 
 		return $version;
 
+		$update_string = "- Removed every Instance of User->ID *Note* This update clears Now Playing.<br />" .
+				 "- Added field allowing for Dynamic Playlists.<br />" . 
+				 "- Added required table/fields for security related IP Tracking.<br />";
+
+		//$version[] = array('version' => '332002', 'description' => $update_string);
+
 	} // populate_version
 
 	/*!
@@ -927,7 +933,10 @@ class Update {
 	function update_332001() { 
 
 		$sql = "ALTER TABLE `object_count` CHANGE `object_type` `object_type` ENUM( 'album', 'artist', 'song', 'playlist', 'genre', 'catalog' ) NOT NULL DEFAULT 'song'";
+		$db_results = mysql_query($sql, dbh());
+		
 		$sql = "ALTER TABLE `session` CHANGE `type` `type` ENUM( 'sso', 'mysql', 'ldap', 'http' ) NOT NULL DEFAULT 'mysql'";
+		$db_results = mysql_query($sql, dbh());
 		
                 /* Add new preference */
                 $sql = "INSERT INTO `preferences` (`id`,`name`,`value`,`description`,`level`,`type`,`locked`) " . 
@@ -953,9 +962,201 @@ class Update {
 
 //		$sql = "CREATE TABLE `ip_history` (`username` VARCHAR(128), `ip` INT(11) UNSIGNED NOT NULL DEFAULT '0', " . 
 //			"`connections` INT(11) UNSIGNED NOT NULL DEFAULT '1', `date` INT(11) UNSIGNED NOT NULL DEFAULT '0')";
+
+                $sql = "ALTER TABLE `object_count` CHANGE `object_type` `object_type` ENUM( 'album', 'artist', 'song', 'playlist', 'genre', 'catalog' ) NOT NULL DEFAULT 'song'";
+                $db_results = mysql_query($sql, dbh());
+
+                $sql = "ALTER TABLE `session` CHANGE `type` `type` ENUM( 'sso', 'mysql', 'ldap', 'http' ) NOT NULL DEFAULT 'mysql'";
+                $db_results = mysql_query($sql, dbh());
+
+	
+		/* We're gonna need a user->id => user->username mapping a few times let's get it! */
+		$sql = "SELECT id,username FROM user";
+		$db_results = mysql_query($sql, dbh());
+
+		$username_id_map = array();
+
+		while ($r = mysql_fetch_assoc($db_results)) { 
+			$id = $r['id'];
+			$username_id_map[$id] = $r['username'];
+		}
+	
+		/* It's time for some serious DB Clean Up. Nuke this stuff from Orbit! */
+		$sql = "ALTER TABLE `catalog DROP `private`";
+		$db_results = mysql_query($sql, dbh());
+
+		$sql = "ALTER TABLE `catalog` CHANGE `enabled` `enabled` TINYINT UNSIGNED NOT NULL DEFAULT '1'";
+		$db_results = mysql_query($sql, dbh());
+
+		/* 
+		 * Fix up the Flagged tables to match the current database 
+		 */
 		
+		/* We need to pull the current id's */
+		$sql = "SELECT id,user FROM flagged";
+		$db_results = mysql_query($sql, dbh());
 
+		$results = array();
 
+		while ($r = mysql_fetch_assoc($db_results)) { 
+			$results[] = $r;
+		}	
+		
+		$sql = "ALTER TABLE `flagged` CHANGE `user` `user` VARCHAR( 128 ) NOT NULL";
+		$db_results = mysql_query($sql, dbh());
+
+		foreach ($results as $flag_users) { 
+			// Reference the correct element
+			$username = $username_id_map[$flag_users['user']];
+			$sql = "UPDATE flagged SET user='$username' WHERE id='" . $flag_users['id'] . "'";
+			$db_results = mysql_query($sql, dbh());
+		} // foreach flag_users
+
+		$sql = "ALTER TABLE `flagged` CHANGE `date` `date` INT( 11 ) UNSIGNED NOT NULL DEFAULT '0'";
+		$db_results = mysql_query($sql, dbh());
+
+		$sql = "ALTER TABLE `flagged_song` CHANGE `song` `song` INT( 11 ) UNSIGNED NOT NULL DEFAULT '0'";
+		$db_results = mysql_query($sql, dbh());
+
+		$sql = "ALTER TABLE `flagged_song` CHANGE `genre` `genre` INT( 11 ) UNSIGNED NULL DEFAULT NULL";
+		$db_results = mysql_query($sql, dbh());
+
+		$sql = "ALTER TABLE `flagged_song` CHANGE `played` `played` TINYINT( 1 ) UNSIGNED NOT NULL DEFAULT '0'";
+		$db_results = mysql_query($sql, dbh());
+
+		$sql = "ALTER TABLE `flagged_song` CHANGE `enabled` `enabled` TINYINT( 1 ) UNSIGNED NOT NULL DEFAULT '1'";
+		$db_results = mysql_query($sql, dbh());
+	
+		/* We need to do some migration for this */
+		$sql = "SELECT id,access FROM flagged_types";
+		$db_results = mysql_query($sql, dbh());
+
+		$results = array();
+
+		while ($r = mysql_fetch_assoc($db_results)) { 
+			$results[] = $r;
+		} // end while results
+
+		$sql = "ALTER TABLE `flagged_types` CHANGE `access` `access` SMALLINT( 3 ) UNSIGNED NOT NULL DEFAULT '25'";
+		$db_results = mysql_query($sql, dbh());
+
+		foreach ($results as $flag_types) { 
+			if ($flag_types['access'] == 'user') { 
+				$access = '25';
+			}
+			else { 
+				$access = '100';
+			}
+			$sql = "UPDATE flagged_types SET access='$access' WHERE id='" . $flag_types['id'] . "'";
+			$db_results = mysql_query($sql, dbh());
+		} // end foreach
+		
+		/*
+		 * I'm lazy, blast now playing then fix the table 
+		 */
+		$sql = "DELETE FROM now_playing";
+		$db_results = mysql_query($sql, dbh());
+
+		$sql = "ALTER TABLE `now_playing` CHANGE `user_id` `user` VARCHAR( 128 ) NULL";
+		$db_results = mysql_query($sql, dbh());
+
+		/*
+		 * Now to Fix the Playlists
+		 */
+		
+		// First gather all the information we need
+		$sql = "SELECT id,owner FROM playlist";
+		$db_results = mysql_query($sql, dbh());
+
+		$results = array();
+
+		while ($r = mysql_fetch_assoc($db_results)) { 
+			$results[] = $r;
+		}
+
+		$sql = "ALTER TABLE `playlist` CHANGE `owner` `user` VARCHAR( 128 ) NOT NULL";
+		$db_results = mysql_query($sql, dbh());
+
+		$sql = "ALTER TABLE `playlist` CHANGE `id` `id` INT( 11 ) UNSIGNED NOT NULL AUTO_INCREMENT";
+		$db_results = mysql_query($sql, dbh());
+
+		// Re-populate!
+		foreach ($results as $data) { 
+			$username = $username_id_map[$data['owner']];
+			$sql = "UPDATE playlist SET user='$username' WHERE id='" . $data['id'] . "'";
+			$db_results = mysql_query($sql, dbh());
+		} // end foreach playlist
+
+		/* Add a dyn_song varchar to the playlist table for future use */
+		$sql = "ALTER TABLE `playlist_data` ADD `dyn_song` VARCHAR( 255 ) AFTER `song`";
+		$db_results = mysql_query($sql, dbh());
+
+		/*
+		 * Time to fix the song table 
+		 */
+
+		// First pull in a full mapping for played and status
+		$sql = "SELECT id,played,status FROM song";
+		$db_results = mysql_query($sql, dbh());
+
+		$results = array();
+
+		while ($r = mysql_fetch_assoc($db_results)) { 
+			$results[] = $r;
+		}
+
+		$sql = "ALTER TABLE `song` CHANGE `played` `played` TINYINT( 1 ) UNSIGNED NOT NULL DEFAULT '0'";
+		$db_results = mysql_query($sql, dbh());
+
+		$sql = "ALTER TABLE `song` CHANGE `status` `enabled` TINYINT( 1 ) UNSIGNED NOT NULL DEFAULT '1'";
+		$db_results = mysql_query($sql, dbh());
+
+		$sql = "ALTER TABLE `song` CHANGE `genre` `genre` INT( 11 ) UNSIGNED NULL DEFAULT NULL";
+		$db_results = mysql_query($sql, dbh());
+
+		// Now put everything back
+		foreach ($results as $data) { 
+			$played 	= '0';
+			$enabled 	= '1';
+			if ($data['played'] == 'true') { 
+				$played = '1';
+			}
+			if ($data['status'] == 'disabled') {
+				$enabled = '0';
+			}
+			$sql = "UPDATE song SET played='$played', enabled='$enabled' WHERE id='" . $data['id'] . "'";
+			$db_results = mysql_query($sql, dbh());
+		} // foreach
+
+		/* 
+		 * Again with the playing with the preferences :(
+		 */
+		
+		// Pull the User/Preference Map
+		$sql = "SELECT user,preference FROM user_preference";
+		$db_results = mysql_query($sql, dbh());
+
+		$results = array();
+
+		while ($r = mysql_fetch_assoc($db_results)) { 
+			$results[] = $r;
+		}
+
+		$sql = "ALTER TABLE `user_preference` CHANGE `user` `user` VARCHAR( 128 ) NOT NULL";
+		$db_results = mysql_query($sql, dbh());
+
+		// Dump It!!
+		foreach ($results as $data) { 
+			$username = $username_id_map[$data['user']];
+			$sql = "UPDATE user_preference SET user='$username' WHERE user='" . $data['user'] . "' AND preference='" . $data['preference'] . "'";
+			$db_results = mysql_query($sql, dbh());
+		} // foreach
+
+		/*
+		 * All of that for this....
+		 */
+		$sql = "ALTER TABLE `user` DROP `id`";
+		$db_results = mysql_query($sql, dbh());
 
 	} // update_332002
 	
