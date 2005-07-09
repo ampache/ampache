@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2004 Ampache.org
+ Copyright (c) 2001 - 2005 Ampache.org
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
@@ -20,15 +20,22 @@
 
 */
 
-/*!
-	@header XML-RPC Library
-	@discussion If you want an honest answer NFC. Copy and paste baby!
-*/
+/**
+ * XML-RPC Library
+ * If you want an honest answer NFC. Copy and paste baby!
+ * @package XMLRPC
+ * @catagory Server
+ * @author Karl Vollmer
+ * @copyright Ampache.org 2001 - 2005
+ */
 
-/*!
-	@function remote_server_query
-	@discussion don't ask don't tell
-*/
+/**
+ * remote_server_query
+ * this is the initial contact and response to a xmlrpc request from another ampache server
+ * this returns a list of catalog names 
+ * @package XMLRPC
+ * @catagory Server
+ */
 function remote_server_query($m) {
 
         $result = array();
@@ -40,43 +47,43 @@ function remote_server_query($m) {
         while ( $i = mysql_fetch_row($db_result) ) {
                 $result[] = $i;
         }
-
 	
 	set_time_limit(0);
-        $encoded_array = new xmlrpcval($result);
-	log_event($_SESSION['userdata']['username'],'xml-rpc_encoded',$encoded_array);
+        $encoded_array = php_xmlrpc_encode($result);
+	
+	if (conf('debug')) { log_event($_SESSION['userdata']['username'],'xml-rpc_encoded',$encoded_array); }
+	
         return new xmlrpcresp($encoded_array);
-	return $result;
 
 } // remote_server_query
 
-/*!
-	@function remote_song_query
-	@discussion return all local songs and their
-		information
-*/
+/**
+ * remote_song_query
+ * return all local songs and their information it pulls all local catalogs, then all enabled songs
+ * then it strings togeather their information sepearted by :: and then base64 encodes it before sending it along
+ * @package XMLRPC
+ * @catagory Server
+ * @todo Add catalog level access control 
+ * @todo fix for the smallint(1) change of song.status
+ */
 function remote_song_query() { 
 
-
-	//FIXME: We should add catalog level access control
-	
 	// Get me a list of all local catalogs
 	$sql = "SELECT catalog.id FROM catalog WHERE catalog_type='local'";
 	$db_results = mysql_query($sql, dbh());
 
 	$results = array();
-	//FIXME: enabled --> smallint(1) T/F boolean mojo
-	$sql = "SELECT song.id FROM song WHERE song.status='enabled' AND";
+	
+	$sql = "SELECT song.id FROM song WHERE song.status='enabled' AND (";
 
 	// Get the catalogs and build the query!
 	while ($r = mysql_fetch_object($db_results)) { 
-		if (preg_match("/catalog/",$sql)) { 
-			$sql .= " OR song.catalog='$r->id'";
-		}
-		else {
-			$sql .= " song.catalog='$r->id'";
-		}
+			$sql .= " song.catalog='$r->id' OR";
 	} // build query
+
+	$sql = rtrim($sql,"OR");
+
+	$sql .= ")";
 
 	$db_results = mysql_query($sql, dbh());
 	
@@ -104,14 +111,17 @@ function remote_song_query() {
 
 	set_time_limit(0);
 	$encoded_array = php_xmlrpc_encode($results);
+	if (conf('debug')) { log_event($_SESSION['userdata']['username'],' xmlrpc-server ',"Encoded: $encoded_array"); }
 	return new xmlrpcresp($encoded_array);
 
 } // remote_song_query
 
-/*!
-	@function remote_server_denied
-	@discussion Access Denied Sucka!
-*/
+/**
+ * remote_server_denied
+ * Access Denied Sucka!
+ * @package XMLRPC
+ * @catagory Server
+ */
 function remote_server_denied() { 
 
         $result = array();
@@ -120,24 +130,11 @@ function remote_server_denied() {
 				"this server's catalog. Please make sure that you have been added to this server's access list.\n";
 
         $encoded_array = php_xmlrpc_encode($result);
+
+	if (conf('debug')) { log_event($_SESSION['userdata']['username'], 'xmlrpc-server',"Access Denied: " . $_SERVER['REMOTE_ADDR']); }
+	
         return new xmlrpcresp($encoded_array);
 
-} // remote_server_deniee
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+} // remote_server_denied
 
 ?>
