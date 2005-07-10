@@ -195,9 +195,9 @@ class Stream {
 	        echo "ICECAST2<br>\n";
 	        exec("killall ices");
 	        $filename = conf('icecast_tracklist');
-	        echo "$filename " . _("Opened for writting") . "<br>\n";
+	        echo "$filename " . _("Opened for writing") . "<br>\n";
 
-		/* Open the file for writting */
+		/* Open the file for writing */
 		if (!$handle = @fopen($filename, "w")) {
 			log_event($_SESSION['userdata']['username'],"icecast","Fopen: $filename Failed");
 		        echo _("Error, cannot write") . " $filename<br>\n";

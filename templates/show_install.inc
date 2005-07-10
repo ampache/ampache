@@ -33,7 +33,7 @@
 <div class="text-box"> 
 <span class="header1"><?php echo _("Ampache Installation"); ?></span>
 <p>
-<?php echo _("This Page handles the installation of the ampache database and the creation of the ampache.cfg.php file. Before you continue please make sure that you have the following pre-requisits"); ?>
+<?php echo _("This Page handles the installation of the Ampache database and the creation of the ampache.cfg.php file. Before you continue please make sure that you have the following pre-requisites"); ?>
 </br />
 <ul>
 	<li><?php echo _("A MySQL Server with a username and password that can create/modify databases"); ?></li>
