@@ -922,7 +922,7 @@ class Catalog {
 	                $client = new xmlrpc_client("/$path/server.php", $server, 80);
 	        }
 	        
-		$f = new xmlrpcmsg('remote_server_query', array(new xmlrpcval( conf('web_path'), "string")) );
+		$f = new xmlrpcmsg('remote_catalog_query', array(new xmlrpcval( conf('web_path'), "string")) );
 		
 	        if (conf('debug')) { $client->setDebug(1); }
 		
@@ -937,6 +937,7 @@ class Catalog {
 				$catalog_name 	= $vars[0];
 				$count		= $vars[1];
 	                        print("<b>Reading Remote Catalog: $catalog_name ($count Songs)</b> [$this->path]<br />\n");
+				$total += $count;
 	                } 
 			// Flush the output
 			flush();
@@ -949,29 +950,61 @@ class Catalog {
 	                return;
 	        }
 
-	        $f = new xmlrpcmsg('remote_song_query');
-		
+		// Hardcoded for now
+		$step = '500';
+		$current = '0';
+
+		while ($total >= $current) { 
+			$start 	= $current;
+			$current += $step;
+			$this->get_remote_song($client,$start,$step);
+		}
+
+	        echo "<p>" . _("Completed updating remote catalog(s)") . ".</p><hr>\n";
+		flush();
+
+		return true;
+
+	} // get_remote_catalog
+
+	/** 
+	 * get_remote_song
+	 * This functions takes a start and end point for gathering songs from a remote server. It is broken up
+	 * in attempt to get around the problem of very large target catalogs
+	 * @package XMLRPC
+	 * @catagory Client
+	 * @todo Allow specificion of single catalog
+	 */
+	function get_remote_song($client,$start,$end) { 
+
+		$query_array = array(new xmlrpcval($start, "int"),new xmlrpcval($end,"int")); 
+
+                $f = new xmlrpcmsg('remote_song_query',$query_array);
+
                 /* Depending upon the size of the target catalog this can be a very slow/long process */
                 set_time_limit(0);
+                        
+		// Sixty Second time out per chunk
+                $response = $client->send($f,60);
+                $value = $response->value();
 
-		// No Timeout on this one because it can be flipping huge
-	        $response = $client->send($f);
-	        $value = $response->value();
-
-	        if ( !$response->faultCode() ) {
-	                $data = php_xmlrpc_decode($value);
-	                $this->update_remote_catalog($data,$this->path);
-	        }
-	        else {
+                if ( !$response->faultCode() ) {
+                        $data = php_xmlrpc_decode($value);
+                        $this->update_remote_catalog($data,$this->path);
+			$total = $start + $end;
+			echo "Added $total...<br />";
+			flush();
+                }
+                else {
                         $error_msg = _("Error connecting to") . " " . $server . " " . _("Code") . ": " . $response->faultCode() . " " . _("Reason") . ": " . $response->faultString();
                         log_event($_SESSION['userdata']['username'],'xmlrpc',$error_msg);
                         echo "<p class=\"error\">$error_msg</p>";
-	        }
+                }
 
-	        echo "<p>" . _("Completed updating remote catalog(s)") . ".</p><hr>\n";
+		return;
 
+	} // get_remote_song
 
-	} // get_remote_catalog
 
 	/**
 	 * update_remote_catalog
