@@ -30,18 +30,20 @@
  */
 
 /**
- * remote_server_query
+ * remote_catalog_query
  * this is the initial contact and response to a xmlrpc request from another ampache server
  * this returns a list of catalog names 
  * @package XMLRPC
  * @catagory Server
  */
-function remote_server_query($m) {
+function remote_catalog_query($m) {
 
         $result = array();
 
         // we only want to send the local entries
-        $sql = "SELECT name,COUNT(song.id) FROM catalog LEFT JOIN song ON catalog.id = song.catalog WHERE catalog_type='local' GROUP BY catalog.id";
+        $sql = "SELECT name,COUNT(song.id) FROM catalog " . 
+		"LEFT JOIN song ON catalog.id = song.catalog " . 
+		"WHERE catalog_type='local' GROUP BY catalog.id";
 	$db_result = mysql_query($sql, dbh());
 
         while ( $i = mysql_fetch_row($db_result) ) {
@@ -65,9 +67,13 @@ function remote_server_query($m) {
  * @catagory Server
  * @todo Add catalog level access control 
  * @todo fix for the smallint(1) change of song.status
+ * @todo serialize the information rather than cheat with the :: 
  */
-function remote_song_query() { 
+function remote_song_query($params) { 
 
+	$start	= $params->params['0']->me['int'];
+	$step 	= $params->params['1']->me['int'];
+	
 	// Get me a list of all local catalogs
 	$sql = "SELECT catalog.id FROM catalog WHERE catalog_type='local'";
 	$db_results = mysql_query($sql, dbh());
@@ -75,7 +81,7 @@ function remote_song_query() {
 	$results = array();
 	
 	$sql = "SELECT song.id FROM song WHERE song.status='enabled' AND (";
-
+	
 	// Get the catalogs and build the query!
 	while ($r = mysql_fetch_object($db_results)) { 
 			$sql .= " song.catalog='$r->id' OR";
@@ -83,8 +89,8 @@ function remote_song_query() {
 
 	$sql = rtrim($sql,"OR");
 
-	$sql .= ")";
-
+	$sql .= ") LIMIT $start,$step";
+	
 	$db_results = mysql_query($sql, dbh());
 	
 	// Recurse through the songs and build a results

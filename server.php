@@ -20,18 +20,24 @@
 $no_session = true;
 require_once('modules/init.php');
 require_once(conf('prefix') . "/modules/xmlrpc/xmlrpcs.inc");
+require_once(conf('prefix') . "/modules/xmlrpc/xmlrpc.inc");
 
 /* Setup the vars we are going to need */
 $access = new Access();
 
 // ** check that the remote server has access to this catalog
 if ($access->check('75',$_SERVER['REMOTE_ADDR'])) {
-	$s = new xmlrpc_server( array( "remote_server_query" => array("function"  => "remote_server_query"),
-				"remote_song_query" => array("function" => "remote_song_query") ) );
+
+	/* Setup Possible Actions */
+	$methods['remote_catalog_query'] 	= array('function' => 'remote_catalog_query');
+	$methods['remote_song_query']		= array('function' => 'remote_song_query');
+	$methods['remote_session_auth']		= array('function' => 'remote_session_auth');
+
+	$s = new xmlrpc_server($methods);
 }
 else {
 	// Access Denied... Sucka!!
-	$s = new xmlrpc_server( array( "remote_server_query" => array("function"  => "remote_server_denied")));
+	$s = new xmlrpc_server( array( "remote_catalog_query" => array("function"  => "remote_server_denied")));
 }
 
 ?>
