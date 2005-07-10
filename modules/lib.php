@@ -37,7 +37,7 @@ function show_local_catalog_info() {
 	$time = time();
 	$last_seen_time = $time - 1200;
 	$sql = 	"SELECT count(DISTINCT s.username) FROM session AS s " .
-		"INNER JOIN user AS u ON s.username = u.id " .
+		"INNER JOIN user AS u ON s.username = u.username " .
 		"WHERE s.expire > " . $time . " " .
 		"AND u.last_seen > " . $last_seen_time;
 	$db_result = mysql_query($sql, $dbh);
