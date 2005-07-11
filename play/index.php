@@ -136,6 +136,7 @@ if ( $catalog->catalog_type == 'remote' ) {
 	
 	$extra_info = "&xml_rpc=1&xml_path=$path&xml_server=$server&xml_port=80&sid=$sid";
 	header("Location: " . $song->file . $extra_info);
+	if (conf('debug')) { log_event($user->username,' xmlrpc-stream ',"Start XML-RPC Stream - " . $song->file . $extra_info); }
 }
 else {
 	if ($user->prefs['play_type'] == 'downsample') { 

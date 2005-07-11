@@ -15,11 +15,12 @@
  along with this program; if not, write to the Free Software
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
-/*!
-	@header Catalog Class
-	This class handles all actual work in regards to the catalog, it contains functions for creating/listing/updated the catalogs.
-*/
-
+/**
+ * Catalog Class
+ * This class handles all actual work in regards to the catalog, it contains functions for creating/listing/updated the catalogs.
+ * @package Catalog
+ * @catagory Class
+ */
 class Catalog {
 
 	var $name;
@@ -35,10 +36,11 @@ class Catalog {
 	var $artists	= array();
 	var $genres	= array();
 
-	/*!
-		@function Catalog
-		@discussion Catalog class constructor, pulls catalog information
-		@param $catalog_id 	The ID of the catalog you want to build information from
+	/**
+	 * Catalog
+	 * Catalog class constructor, pulls catalog information
+	 * @catagory Catalog
+	 * @param $catalog_id 	The ID of the catalog you want to build information from
 	 */
 	function Catalog($catalog_id = 0) {
 
@@ -499,7 +501,7 @@ class Catalog {
 		/* Use $this->id if nothing passed */
 		if (!$catalog_id) { $catalog_id = $this->id; }
 
-		$sql = "SELECT id FROM song WHERE catalog='$catalog_id' AND status='enabled'";
+		$sql = "SELECT id FROM song WHERE catalog='$catalog_id' AND enabled='1'";
 		$db_results = mysql_query($sql, dbh());
 
                 $results = array(); // return an emty array instead of nothing if no objects
@@ -522,7 +524,7 @@ class Catalog {
 
 		$results = array();
 
-		$sql = "SELECT id FROM song WHERE status='disabled'";
+		$sql = "SELECT id FROM song WHERE enabled='0'";
 		$db_results = mysql_query($sql, dbh());
 
 		while ($r = mysql_fetch_array($db_results)) {
@@ -658,10 +660,11 @@ class Catalog {
 	} // update_last_update
 
 
-	/*!
-		@function update_last_add
-		@discussion updates the last_add of the catalog
-	*/
+	/**
+	 * update_last_add
+	 * updates the last_add of the catalog
+	 * @package Catalog
+	 */
 	function update_last_add() {
 
 		$date = time();
@@ -671,12 +674,14 @@ class Catalog {
 	} // update_last_add
 
 
-	/*!
-		@function new_catalog
-		@discussion  The Main array for making a new catalog calls many other child functions within this class
-		@param $path Root path to start from for catalog
-		@param $name Name of the new catalog
-	*/
+	/**
+	 * new_catalog
+	 * The Main array for making a new catalog calls many other child functions within this class
+	 * @package Catalog
+	 * @catagory Create
+	 * @param $path Root path to start from for catalog
+	 * @param $name Name of the new catalog
+	 */
 	function new_catalog($path,$name, $id3cmd=0, $ren=0, $sort=0, $type=0,$gather_art=0,$parse_m3u=0,$art=array()) {
 
 		/* Record the time.. time the catalog gen */
@@ -945,7 +950,7 @@ class Catalog {
 	        } // if we didn't get an error
 	        else {
 			$error_msg = _("Error connecting to") . " " . $server . " " . _("Code") . ": " . $response->faultCode() . " " . _("Reason") . ": " . $response->faultString();
-			if (conf('debug')) { log_event($_SESSION['userdata']['username'],'xmlrpc',$error_msg); }
+			if (conf('debug')) { log_event($_SESSION['userdata']['username'],' xmlrpc-client ',$error_msg,'ampache-catalog'); }
 			echo "<p class=\"error\">$error_msg</p>";
 	                return;
 	        }
@@ -954,13 +959,13 @@ class Catalog {
 		$step = '500';
 		$current = '0';
 
-		while ($total >= $current) { 
+		while ($total > $current) { 
 			$start 	= $current;
 			$current += $step;
 			$this->get_remote_song($client,$start,$step);
 		}
 
-	        echo "<p>" . _("Completed updating remote catalog(s)") . ".</p><hr>\n";
+	        echo "<p>" . _("Completed updating remote catalog(s)") . ".</p><hr />\n";
 		flush();
 
 		return true;
@@ -996,7 +1001,7 @@ class Catalog {
                 }
                 else {
                         $error_msg = _("Error connecting to") . " " . $server . " " . _("Code") . ": " . $response->faultCode() . " " . _("Reason") . ": " . $response->faultString();
-                        log_event($_SESSION['userdata']['username'],'xmlrpc',$error_msg);
+                        if (conf('debug')) { log_event($_SESSION['userdata']['username'],' xmlrpc-client ',$error_msg,'ampache-catalog'); }
                         echo "<p class=\"error\">$error_msg</p>";
                 }
 
@@ -1011,10 +1016,9 @@ class Catalog {
 	 * @package XMLRPC
 	 * @catagory Client
 	 * @todo This should be based off of seralize
+	 * @todo some kind of cleanup of dead songs? 
 	 */
 	function update_remote_catalog($songs,$root_path) {
-	        global $settings, $dbh, $artists;
-
 
 		/* 
 		   We need to check the incomming songs
@@ -1044,10 +1048,10 @@ class Catalog {
 			$new_song->file		= $root_path . "/play/index.php?song=" . $data[12];
 			$new_song->catalog	= $this->id;
 	     
-			if (!$song_id = $this->check_remote_song($new_song->file)) { 
+			if (!$this->check_remote_song($new_song->file)) { 
 				$this->insert_remote_song($new_song);
 			} 
-	     
+
 		} // foreach new Songs
 
 		//FIXME: Delete Songs that were not updated (gone)
@@ -1079,7 +1083,7 @@ class Catalog {
 		flush();
 
 		/* Get all songs in this catalog */
-		$sql = "SELECT id,file FROM song WHERE catalog='$catalog_id' AND status='enabled'";
+		$sql = "SELECT id,file FROM song WHERE catalog='$catalog_id' AND enabled='1'";
 		$db_results = mysql_query($sql, dbh());
 
 		/* Recurse through files, put @ to prevent errors poping up */
@@ -1841,10 +1845,11 @@ class Catalog {
 		$url = sql_escape($url);
 
 		$sql = "SELECT id FROM song WHERE file='$url'";
+		
 		$db_results = mysql_query($sql, dbh());
 
-		if ($r = mysql_fetch_object($db_results)) { 
-			return $r->id;
+		if (mysql_num_rows($db_results)) { 
+			return true;
 		}
 		
 		return false;

@@ -53,7 +53,7 @@ function remote_catalog_query($m) {
 	set_time_limit(0);
         $encoded_array = php_xmlrpc_encode($result);
 	
-	if (conf('debug')) { log_event($_SESSION['userdata']['username'],'xml-rpc_encoded',$encoded_array); }
+	if (conf('debug')) { log_event($_SESSION['userdata']['username'],' xmlrpc-server ',"Encoded Catalogs: " . count($result)); }
 	
         return new xmlrpcresp($encoded_array);
 
@@ -117,7 +117,7 @@ function remote_song_query($params) {
 
 	set_time_limit(0);
 	$encoded_array = php_xmlrpc_encode($results);
-	if (conf('debug')) { log_event($_SESSION['userdata']['username'],' xmlrpc-server ',"Encoded Song Query Results" . count($results)); }
+	if (conf('debug')) { log_event($_SESSION['userdata']['username'],' xmlrpc-server ',"Encoded Song Query Results ($start,$step) : " . count($results)); }
 	return new xmlrpcresp($encoded_array);
 
 } // remote_song_query
@@ -142,7 +142,7 @@ function remote_session_verify($params) {
 	}
 
 	$encoded_data = php_xmlrpc_encode($data);
-	if (conf('debug')) { log_event($_SESSION['userdata']['username'],' xmlrpc-server ',"Encoded Session Verify as $data Recieved: $sid"); }
+	if (conf('debug')) { log_event($_SESSION['userdata']['username'],' xmlrpc-server ',"Encoded Session Verify: $data Recieved: $sid"); }
 	return new xmlrpcresp($encoded_data);
 
 } // remote_session_verify
