@@ -23,13 +23,24 @@
 	@header Show Admin Index
 	@discussion shows the admin index 
 */
+
+$sections 	= array(_("User Management") => conf('web_path') . "/admin/users.php",
+			_("E-mail Management") => conf('web_path') . "/admin/mail.php",
+			_("Catalog Managment") => conf('web_path') . "/admin/catalog.php",
+			_("Admin Preferences") => conf('web_path') . "/admin/preferences.php",
+			_("Access Lists") => conf('web_path') . "/admin/access.php");
+			
+$common		= array(_("Add a catalog") => conf('web_path') . "/admin/catalog.php?action=show_add_catalog",
+			_("Add a new user") => conf('web_path') . "/admin/users.php?action=show_add_user",
+			_("Clear Now Playing")   => conf('web_path') . "/admin/catalog.php?action=clear_now_playing",
+			_("Add Access List Entry") => conf('web_path') . "/admin/access.php?action=show_add_host");
 ?>
-<p><font size="+1"><?php print _("Admin Section"); ?>:</font></p>
-<ul>
-	<li><a href="<?php echo conf('web_path'); ?>/admin/users.php"><?php print _("Users"); ?></a> - <?php print _("Create/Modify User Accounts for Ampache"); ?></li>
-	<li><a href="<?php echo conf('web_path'); ?>/admin/mail.php"><?php print _("Mail"); ?></a> - <?php print _("Mail your users to notfiy them of changes"); ?></li>
-	<li><a href="<?php echo conf('web_path'); ?>/admin/catalog.php"><?php print _("Catalog"); ?></a> - <?php print _("Create/Update/Clean your catalog here"); ?></li>
-	<li><a href="<?php echo conf('web_path'); ?>/admin/preferences.php"><?php print _("Admin Preferences"); ?></a> - <?php print _("Modify Site-wide preferences"); ?></li>
-	<li><a href="<?php echo conf('web_path'); ?>/admin/access.php"><?php print _("Access Lists"); ?></a> - <?php print _("Modify Access List Permissions"); ?> (<?php print _("Must have access_control=true in ampache.cfg") ?>)</li>
-</ul>
+<table cellpadding="5" border="0" cellspacing="0">
+<tr>
+	<td valign="top"><?php show_tool_box(_("Common Functions"),$common); ?><?php show_clear(); ?></td>
+</tr>
+<tr>
+	<td valign="top"><?php show_tool_box(_("Admin Sections"),$sections); ?></td>
+</tr>
+</table>
 

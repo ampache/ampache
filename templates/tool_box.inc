@@ -27,9 +27,9 @@
 
 ?>
 
-<table class="border" cellspacing="1" cellpadding="3">
+<table class="border" cellspacing="1" cellpadding="3" >
 	<tr class="table-header" align="center">
-		<td><?php echo $title; ?></td>
+		<th><?php echo $title; ?></th>
 	</tr>
 	<tr>
 		<td class="even">

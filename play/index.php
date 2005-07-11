@@ -41,8 +41,12 @@ $sid = htmlspecialchars($_REQUEST['sid']);
 $dbh = dbh();
 $user = new User($uid);
 
-if (conf('require_session') && !conf('xml_rpc')) { 
-	if(!session_exists($sid)) {	
+if (conf('xml_rpc')) { 
+	$xml_rpc = $_GET['xml_rpc'];
+}
+
+if (conf('require_session')) { 
+	if(!session_exists($sid,$xml_rpc)) {	
     		die(_("Session Expired: please log in again at") . " " . conf('web_path') . "/login.php");
 	}
 
@@ -125,7 +129,13 @@ $catalog = new Catalog($song->catalog);
 
 if ( $catalog->catalog_type == 'remote' ) {
 	// redirect to the remote host's play path
-	header("Location: $song->file");
+	/* Break Up the Web Path */
+	preg_match("/http:\/\/([^\/]+)\/*(.*)/", conf('web_path'), $match);
+	$server = rawurlencode($match[1]);
+	$path	= rawurlencode($match[2]);
+	
+	$extra_info = "&xml_rpc=1&xml_path=$path&xml_server=$server&xml_port=80&sid=$sid";
+	header("Location: " . $song->file . $extra_info);
 }
 else {
 	if ($user->prefs['play_type'] == 'downsample') { 

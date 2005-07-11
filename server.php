@@ -31,7 +31,7 @@ if ($access->check('75',$_SERVER['REMOTE_ADDR'])) {
 	/* Setup Possible Actions */
 	$methods['remote_catalog_query'] 	= array('function' => 'remote_catalog_query');
 	$methods['remote_song_query']		= array('function' => 'remote_song_query');
-	$methods['remote_session_auth']		= array('function' => 'remote_session_auth');
+	$methods['remote_session_verify']	= array('function' => 'remote_session_verify');
 
 	$s = new xmlrpc_server($methods);
 }

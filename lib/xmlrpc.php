@@ -80,7 +80,7 @@ function remote_song_query($params) {
 
 	$results = array();
 	
-	$sql = "SELECT song.id FROM song WHERE song.status='enabled' AND (";
+	$sql = "SELECT song.id FROM song WHERE song.enabled='1' AND (";
 	
 	// Get the catalogs and build the query!
 	while ($r = mysql_fetch_object($db_results)) { 
@@ -117,10 +117,35 @@ function remote_song_query($params) {
 
 	set_time_limit(0);
 	$encoded_array = php_xmlrpc_encode($results);
-	if (conf('debug')) { log_event($_SESSION['userdata']['username'],' xmlrpc-server ',"Encoded: $encoded_array"); }
+	if (conf('debug')) { log_event($_SESSION['userdata']['username'],' xmlrpc-server ',"Encoded Song Query Results" . count($results)); }
 	return new xmlrpcresp($encoded_array);
 
 } // remote_song_query
+
+/**
+ * remote_session_verify
+ * This checks the session on THIS server and returns a true false 
+ * @package XMLRPC
+ * @catagory Server
+ * @todo Public/Private Key handshake? 
+ */
+function remote_session_verify($params) { 
+
+	/* We may need to do this correctly.. :S */
+	$sid	  	= $params->params['0']->me['string'];
+
+	if (session_exists($sid)) { 
+		$data = true;		
+	}
+	else { 
+		$data = false;
+	}
+
+	$encoded_data = php_xmlrpc_encode($data);
+	if (conf('debug')) { log_event($_SESSION['userdata']['username'],' xmlrpc-server ',"Encoded Session Verify as $data Recieved: $sid"); }
+	return new xmlrpcresp($encoded_data);
+
+} // remote_session_verify
 
 /**
  * remote_server_denied

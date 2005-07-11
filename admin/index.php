@@ -84,9 +84,10 @@ elseif ( $action == 'show_orphaned_files' ) {
         show_orphaned_files();
 }
 else {
+	show_clear();
 	require (conf('prefix') . "/templates/show_admin_index.inc");
 } // if they didn't pick anything
 
-echo "<br /><br />";
+show_clear();
 show_page_footer ('Admin', '',$user->prefs['display_menu']);
 ?>

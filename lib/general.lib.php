@@ -294,21 +294,49 @@ function fix_preferences($results) {
 
 } // fix_preferences
 
-/*!
-	@function session_exists
-	@discussion checks to make sure they've specified a 
-		valid session
-*/
-function session_exists($sid) { 
+/**
+ * session_exists
+ * checks to make sure they've specified a valid session, can handle xmlrpc
+ * @package General
+ * @cataogry Verify
+ * @todo Have XMLRPC check extend remote session 
+ * @todo actually check
+ */
+function session_exists($sid,$xml_rpc=0) { 
+
+	$found = true;
 
 	$sql = "SELECT * FROM session WHERE id = '$sid'";
 	$db_results = mysql_query($sql, dbh());
 
 	if (!mysql_num_rows($db_results)) { 
-		return false;
+		$found = false;
 	}
 
-	return true;
+	/* If we need to check the remote session */
+	if ($xml_rpc) { 
+		$server = rawurldecode($_GET['xml_server']);
+		$path	= "/" . rawurldecode($_GET['xml_path']) . "/server.php";
+		$port	= $_GET['xml_port'];
+
+		$path = str_replace("//","/",$path);
+		
+		$client = new xmlrpc_client($path,$server,$port);
+
+		$query = new xmlrpcmsg('remote_session_verify',array(new xmlrpcval($sid,"string")) );
+
+		$response = $client->send($query,30);
+
+		$value = $response->value();
+
+		if (!$response->faultCode()) { 
+			$data = php_xmlrpc_decode($value);
+			$found = $data;
+		}
+		
+	} // xml_rpc
+
+	return $found;
 
 } // session_exists
 

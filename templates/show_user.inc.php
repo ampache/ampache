@@ -23,7 +23,7 @@
 <br /><br />
 <div class="text-box">
 <form name="change_password" method="post" action="<?php echo conf('web_path'); ?>/user.php?action=update_user" enctype="multipart/form-data" >
-<p class="header2">Changing User Information for <?php echo $this_user->fullname; ?></p>
+<p class="header2"><?php echo _("Changing User Information for") . " " . $this_user->fullname; ?></p>
 <table>
 
 <tr>
@@ -86,7 +86,7 @@
 <br />
 <div class="text-box">
 <form name="clear_statistics" method="post" action="<?php echo conf('web_path'); ?>/user.php?action=clear_stats" enctype="multipart/form-data">
-<span class="header2">Delete Your Personal Statistics</span><br />
+<span class="header2"><?php echo _("Delete Your Personal Statistics"); ?></span><br />
 <input type="hidden" name="user_id" value="<?php echo $this_user->username; ?>" />
 <input type="submit" value="<?php echo _("Clear Stats"); ?>">
 </form>

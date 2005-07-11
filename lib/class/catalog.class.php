@@ -980,7 +980,6 @@ class Catalog {
 		$query_array = array(new xmlrpcval($start, "int"),new xmlrpcval($end,"int")); 
 
                 $f = new xmlrpcmsg('remote_song_query',$query_array);
-
                 /* Depending upon the size of the target catalog this can be a very slow/long process */
                 set_time_limit(0);
                         
@@ -1042,7 +1041,7 @@ class Catalog {
 			$new_song->time		= $data[9];
 			$new_song->track	= $data[10];
 			$new_song->genre	= $this->check_genre($data[11]);
-			$new_song->file		= $root_path . "/play/index.php?song=" . $data[12] . "uid=$md5_ip";
+			$new_song->file		= $root_path . "/play/index.php?song=" . $data[12];
 			$new_song->catalog	= $this->id;
 	     
 			if (!$song_id = $this->check_remote_song($new_song->file)) { 

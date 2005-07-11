@@ -24,6 +24,8 @@
 	- Improved XMLRPC client and server functions, no longer attempts
 		to pull all songs at once, pulls in 500 song chunks
 	- Added tables/fields for Dynamic Playlists and IP tracking
+	- Fixed some spelling errors
+	- Added remote session validation for XMLRPC streaming
 
 --------------------------------------------------------------------------
   v.3.3.1 06/21/2005:

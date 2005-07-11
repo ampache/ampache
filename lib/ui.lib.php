@@ -531,7 +531,76 @@ function show_all_popular() {
 function show_all_recent() { 
 
 
-
 } // show_all_recent
+
+/**
+ * show_local_catalog_info
+ * Shows the catalog stats 
+ * @package Web INterface
+ * @catagory Display
+ */
+function show_local_catalog_info() {
+
+        $dbh = dbh();
+	
+	/* Before we display anything make sure that they have a catalog */
+	$query = "SELECT * FROM catalog";
+	$db_results = mysql_query($query, $dbh);
+	if (!mysql_num_rows($db_results)) { 
+		$items[] = "<span align=\"center\" class=\"error\">" . _("No Catalogs Found!") . "</span><br />";
+		$items[] = "<a href=\"" . conf('web_path') . "/admin/catalog.php?action=show_add_catalog\">" ._("Add a Catalog") . "</a>";
+		show_info_box(_("Catalog Statistics"),'catalog',$items);
+		return false;
+	}
+
+        $query = "SELECT count(*) AS songs, SUM(size) AS size, SUM(time) as time FROM song";
+        $db_result = mysql_query($query, $dbh);
+        $songs = mysql_fetch_assoc($db_result);
+
+        $query = "SELECT count(*) FROM album";
+        $db_result = mysql_query($query, $dbh);
+        $albums = mysql_fetch_row($db_result);
+
+        $query = "SELECT count(*) FROM artist";
+        $db_result = mysql_query($query, $dbh);
+        $artists = mysql_fetch_row($db_result);
+
+        $sql = "SELECT count(*) FROM user";
+        $db_result = mysql_query($sql, $dbh);
+        $users = mysql_fetch_row($db_result);
+
+        $time = time();
+        $last_seen_time = $time - 1200;
+        $sql =  "SELECT count(DISTINCT s.username) FROM session AS s " .
+                "INNER JOIN user AS u ON s.username = u.username " .
+                "WHERE s.expire > " . $time . " " .
+                "AND u.last_seen > " . $last_seen_time;
+        $db_result = mysql_query($sql, $dbh);
+        $connected_users = mysql_fetch_row($db_result);
+
+        $hours = floor($songs['time']/3600);
+        $size = $songs['size']/1048576;
+
+        $days = floor($hours/24);
+        $hours = $hours%24;
+
+        $time_text = "$days ";
+        $time_text .= ($days == 1) ? _("day") : _("days");
+        $time_text .= ", $hours ";
+        $time_text .= ($hours == 1) ? _("hour") : _("hours");
+
+        if ( $size > 1024 ) {
+                $total_size = sprintf("%.2f", ($size/1024));
+                $size_unit = "GB";
+        }
+        else {
+                $total_size = sprintf("%.2f", $size);
+                $size_unit = "MB";
+        }
+
+	require(conf('prefix') . "/templates/show_local_catalog_info.inc.php");
+	
+} // show_local_catalog_info
+
 
 ?>
