@@ -67,7 +67,7 @@ function addToPlaylist( $myMpd, $song_ids=array()) {
 function show_mpd_control() { 
 
 	$_REQUEST['action'] = 'show_control';
-	require ('amp-mpd.php');
+	require (conf('prefix').'/amp-mpd.php');
 
 
 } // show_mpd_control

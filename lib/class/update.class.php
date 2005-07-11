@@ -258,10 +258,10 @@ class Update {
 		
 			if ($version['version'] > $current_version) {
 				$updated = true;
-				echo "<b>Version: " . $this->format_version($version['version']) . "</b><br />";
-				echo $version['description'] . "<br />\n"; 
+				echo "<li><b>Version: " . $this->format_version($version['version']) . "</b><br />";
+				echo $version['description'] . "<br /></li>\n"; 
 			} // if newer
-
+		
 		} // foreach versions
 
 		echo "</ul>\n";

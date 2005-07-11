@@ -108,7 +108,7 @@ elseif ($_REQUEST['action'] === 'update_from_tags') {
 	$catalog->update_single_item('album',$_REQUEST['album_id']);
 
 	echo "<br /><b>" . _("Update From Tags Complete") . "</b> &nbsp;&nbsp;";
-	echo "<a href=\"" . conf('web_path') . "/albums.php?action=show&album=" . $_REQUEST['album_id'] . "\">[" . _("Return") . "]</a>";
+	echo "<a href=\"" . conf('web_path') . "/albums.php?action=show&amp;album=" . $_REQUEST['album_id'] . "\">[" . _("Return") . "]</a>";
 
 } // update_from_tags
 

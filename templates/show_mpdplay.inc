@@ -58,8 +58,12 @@ global $condPL;
 </td></tr>
 
      <tr><td class="content" align="center"> 
-         [<a href="<?php echo $web_path; ?>/amp-mpd.php?action=setvol&amp;val=0">mute</a>/<a href="<?php echo $web_path; ?>/amp-mpd.php?action=adjvol&amp;val=-25">-25</a>/<a href="<?php echo $web_path; ?>/amp-mpd.php?action=adjvol&amp;val=-10">-10</a>/<a href="<?php echo $web_path; ?>/amp-mpd.php?action=adjvol&amp;val=+10">+10</a>/<a href="<?php echo $web_path; ?>/amp-mpd.php?action=adjvol&amp;val=+25">+25</a>] 
-      </td></tr> 
+         [<a href="<?php echo $web_path; ?>/amp-mpd.php?action=setvol&amp;val=0">mute</a>
+	  <a href="<?php echo $web_path; ?>/amp-mpd.php?action=adjvol&amp;val=-25">-25</a>
+	  <a href="<?php echo $web_path; ?>/amp-mpd.php?action=adjvol&amp;val=-10">-10</a>
+	  <a href="<?php echo $web_path; ?>/amp-mpd.php?action=adjvol&amp;val=+10">+10</a>
+	  <a href="<?php echo $web_path; ?>/amp-mpd.php?action=adjvol&amp;val=+25">+25</a>] 
+     </td></tr> 
 <tr><td>
 </td></tr>
 <tr>

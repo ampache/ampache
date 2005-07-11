@@ -57,20 +57,27 @@ if ($_REQUEST['action'] == 'update') {
 	$version = $update->get_version();
 
 } 
+$htmllang = str_replace("_","-",conf('lang'));
+
 ?>
-<html>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php echo $htmllang; ?>" lang="<?php echo $htmllang; ?>">
 <head>
+<link rel="shortcut icon" href="<?php echo conf('web_path'); ?>/favicon.ico" />
+<meta http-equiv="Content-Type" content="text/html; charset=<?php echo conf('site_charset'); ?>" />
+<?php  show_template('style'); ?>
 <title>Ampache - Update</title>
 </head>
 <body>
-<?php  show_template('style'); ?>
+
 <p class="header1">Ampache - Update</p>
 <p>
 This page handles all database updates to Ampache starting with 3.2. According to your database your current version is: <?php echo  $update->format_version($version); ; ?>. 
 the following updates need to be performed<br /><br />
-<?php  $update->display_update(); ?>
 </p>
-<p>
+<?php  $update->display_update(); ?>
+
 <form method="post" enctype="multipart/form-data" action="<?php echo  conf('web_path'); ; ?>/update.php?action=update">
 <?php  if ($update->need_update()) { ?><input type="submit" value="Update Now!" /> <?php  } ?>
 </form>

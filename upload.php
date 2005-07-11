@@ -319,5 +319,5 @@ if ( $handle = @opendir($user->prefs['upload_dir'] ) ){
 <br />
 <br />
 <br />
-<?php> show_page_footer ('Upload', '',$user->prefs['display_menu']); ?>
+<?php show_page_footer ('Upload', '',$user->prefs['display_menu']); ?>
 	

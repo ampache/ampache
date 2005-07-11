@@ -215,14 +215,14 @@ switch ($_REQUEST['action']) {
         if (conf('demo_mode')) { break; }
         show_confirm_action(_("Do you really want to clear your catalog?"),
 			"/admin/catalog.php", "action=really_clear_catalog");
-	print("<hr>\n");
+	print("<hr />\n");
 	break;
 
     case 'clear_stats':
         if (conf('demo_mode')) { break; }
 	show_confirm_action(_("Do you really want to clear the statistics for this catalog?"),
 			"/admin/catalog.php", "action=really_clear_stats");
-	print("<hr>\n");
+	print("<hr />\n");
 	break;
 
     case 'show_disabled':

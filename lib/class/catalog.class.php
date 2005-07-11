@@ -769,16 +769,16 @@ class Catalog {
 			$info = $this->update_song_from_tags($song);
 
                         if ($info['change']) {
-                                echo "<dl>\n\t<li>";
+                                echo "<dl>\n\t<dd>";
                                 echo "<b>$song->file " . _("Updated") . "</b>\n";
                                 echo $info['text'];
-                                echo "\t</li>\n</dl><hr align=\"left\" width=\"50%\" />";
+                                echo "\t</dd>\n</dl><hr align=\"left\" width=\"50%\" />";
                         	flush();
 	                } // if change
 			else {
-				echo"<dl>\n\t<li>";
+				echo"<dl>\n\t<dd>";
 				echo "<b>$song->file</b><br />" . _("No Update Needed") . "\n";
-				echo "\t</li>\n</dl><hr align=\"left\" width=\"50%\" />";
+				echo "\t</dd>\n</dl><hr align=\"left\" width=\"50%\" />";
 				flush();
 			}
 		} // foreach songs
