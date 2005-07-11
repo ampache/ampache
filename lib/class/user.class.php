@@ -547,17 +547,17 @@ class User {
 		} // while results
 
 		/* 
-		  If we aren't the 0 user before we continue then grab the 
-		  0 user's values 
+		  If we aren't the -1 user before we continue then grab the 
+		  -1 user's values 
 		*/
 		if ($user_id != '-1') { 
 			$sql = "SELECT user_preference.preference,user_preference.value FROM user_preference,preferences " . 
-				"WHERE user_preference.preference = preferences.id AND user_preference.user='0' AND preferences.type='user'";
+				"WHERE user_preference.preference = preferences.id AND user_preference.user='-1' AND preferences.type='user'";
 			$db_results = mysql_query($sql, dbh());
 			while ($r = mysql_fetch_object($db_results)) { 
 				$zero_results[$r->preference] = $r->value;
 			}
-		} // if not user 0
+		} // if not user -1
 
 
 		$sql = "SELECT * FROM preferences";
@@ -597,6 +597,71 @@ class User {
 		}
 
 	} // fix_preferences
+
+	/** 
+	 * This function is specificly for the update script
+	 * it's maintained simply because we have to in order to previous updates to 
+	 * work correctly
+	 * @package Update
+	 * @catagory Legacy Function
+	 * @depreciated If working with a new db please use the fix_preferences
+	 */
+	function old_fix_preferences($user_id = 0) { 
+
+                if (!$user_id) { 
+                        $user_id = $this->id;
+                }
+
+                /* Get All Preferences */
+                $sql = "SELECT * FROM user_preference WHERE user='$user_id'";
+                $db_results = mysql_query($sql, dbh());
+
+                while ($r = mysql_fetch_object($db_results)) {
+                        /* Check for duplicates */
+                        if (isset($results[$r->preference])) { 
+                                $r->value = sql_escape($r->value);
+                                $sql = "DELETE FROM user_preference WHERE user='$user_id' AND preference='$r->preference' AND value='$r->value'";
+                                $delete_results = mysql_query($sql, dbh());
+                        } // duplicate
+                        else { 
+                                $results[$r->preference] = $r;
+                        }
+                } // while results
+
+                /* 
+                  If we aren't the 0 user before we continue then grab the 
+                  0 user's values 
+                */
+                if ($user_id != '0') { 
+                        $sql = "SELECT user_preference.preference,user_preference.value FROM user_preference,preferences " . 
+                                "WHERE user_preference.preference = preferences.id AND user_preference.user='0' AND preferences.type='user'";
+                        $db_results = mysql_query($sql, dbh());
+                        while ($r = mysql_fetch_object($db_results)) { 
+                                $zero_results[$r->preference] = $r->value;
+                        }
+                } // if not user 0
+
+
+                $sql = "SELECT * FROM preferences";
+                if ($user_id != '0') { 
+                        $sql .= " WHERE type='user'";
+                }
+                $db_results = mysql_query($sql, dbh());
+
+
+                while ($r = mysql_fetch_object($db_results)) { 
+                        
+                        /* Check if this preference is set */
+                        if (!isset($results[$r->id])) { 
+                                if (isset($zero_results[$r->id])) { 
+                                        $r->value = $zero_results[$r->id];
+                                }
+                                $sql = "INSERT INTO user_preference (`user`,`preference`,`value`) VALUES ('$user_id','$r->id','$r->value')";
+                                $insert_db = mysql_query($sql, dbh());
+                        }
+                } // while preferences
+
+	} // old_fix_preferences
 
 
 	/*!

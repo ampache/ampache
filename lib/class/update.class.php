@@ -784,7 +784,7 @@ class Update {
 
 		/* Fix missing preferences */
 		foreach ($users as $userid => $data) { 
-			$user->fix_preferences($userid);
+			$user->old_fix_preferences($userid);
 		} // end foreach user
 
 		/* Update Version */
@@ -826,7 +826,7 @@ class Update {
 		$user = new User(0);
 
 		while ($results = mysql_fetch_array($db_results)) { 
-			$user->fix_preferences($results[0]);
+			$user->old_fix_preferences($results[0]);
 		}
 
                 /* Update Version */
@@ -853,7 +853,7 @@ class Update {
 		$user = new User(0);
 		
 		while ($results = mysql_fetch_array($db_results)) { 
-			$user->fix_preferences($results[0]);
+			$user->old_fix_preferences($results[0]);
 		}
 
 		/* Update Version */
@@ -884,7 +884,7 @@ class Update {
                 $user = new User(0);
                 
                 while ($results = mysql_fetch_array($db_results)) {
-                        $user->fix_preferences($results[0]);
+                        $user->old_fix_preferences($results[0]);
                 }       
                 
                 /* Update Version */
@@ -905,7 +905,7 @@ class Update {
                 $user = new User(0);
                 
                 while ($results = mysql_fetch_array($db_results)) {
-                        $user->fix_preferences($results[0]);
+                        $user->old_fix_preferences($results[0]);
                 }       
                 
                 /* Update Version */
@@ -944,16 +944,6 @@ class Update {
 
                 $db_results = mysql_query($sql, dbh());
                 
-		/* Fix existing preferecnes */
-                $sql = "SELECT DISTINCT(user) FROM user_preference";
-                $db_results = mysql_query($sql, dbh());
-
-                $user = new User(0);
-
-                while ($results = mysql_fetch_array($db_results)) {
-                        $user->fix_preferences($results[0]);
-                }
-
 		$this->set_version('db_version','332001');
 
 	} // update_332001
@@ -1143,7 +1133,7 @@ class Update {
 		 */
 		
 		// Pull the User/Preference Map
-		$sql = "SELECT user,preference FROM user_preference";
+		$sql = "SELECT * FROM user_preference";
 		$db_results = mysql_query($sql, dbh());
 
 		$results = array();
@@ -1157,9 +1147,10 @@ class Update {
 
 		// Dump It!!
 		foreach ($results as $data) { 
-			$username = $username_id_map[$data['user']];
-			if ($data['user'] < 1) { $username = '-1'; }
-			$sql = "UPDATE user_preference SET user='$username' WHERE user='" . $data['user'] . "' AND preference='" . $data['preference'] . "'";
+			$id = $data['user'];
+			$username = $username_id_map[$id];
+			if ($data['user'] == '0') { $username = '-1'; }
+			$sql = "UPDATE user_preference SET user='$username' WHERE user='$id' AND preference='" . $data['preference'] . "'";
 			$db_results = mysql_query($sql, dbh());
 		} // foreach
 
@@ -1168,6 +1159,17 @@ class Update {
 		 */
 		$sql = "ALTER TABLE `user` DROP `id`";
 		$db_results = mysql_query($sql, dbh());
+
+		/* Fix existing preferecnes */
+                $sql = "SELECT DISTINCT(user) FROM user_preference";
+                $db_results = mysql_query($sql, dbh());
+
+                $user = new User(0);
+
+                while ($results = mysql_fetch_array($db_results)) {
+                        $user->fix_preferences($results[0]);
+                }
+		
 
 		$this->set_version('db_version', '332002');
 
