@@ -45,7 +45,7 @@ if (conf('xml_rpc')) {
 	$xml_rpc = $_GET['xml_rpc'];
 }
 
-if (conf('require_session')) { 
+if (conf('require_session') OR $xml_rpc) { 
 	if(!session_exists($sid,$xml_rpc)) {	
     		die(_("Session Expired: please log in again at") . " " . conf('web_path') . "/login.php");
 	}

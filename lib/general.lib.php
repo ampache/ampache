@@ -324,6 +324,8 @@ function session_exists($sid,$xml_rpc=0) {
 		$client = new xmlrpc_client($path,$server,$port);
 
 		$query = new xmlrpcmsg('remote_session_verify',array(new xmlrpcval($sid,"string")) );
+	
+		if (conf('debug')) { log_event($_SESSION['userdata']['username'],' xmlrpc-client ',"Checking for Valid Remote Session:$sid"); }
 
 		$response = $client->send($query,30);
 
