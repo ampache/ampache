@@ -56,8 +56,8 @@ $minpad = "style='padding: 0px 2px 0px 2px'";
 
 <form action="<?php echo conf('web_path')."/amp-mpd.php"; ?>" method="post" enctype="multipart/form-data">
 
-<table class="border" border="0" cellpadding="0" cellspacing="1" width="100%">
-<tr><td align="center" class="headrow"><b>MPD Server Playlist</b><br />
+<table class="border" border="0" cellpadding="0" cellspacing="1" width="100%" class="tabledata">
+<tr><td align="center" class="table-header"><b>MPD Server Playlist</b><br />
      <i>[<a title="<?php echo _("Refresh the Playlist Window"); ?>" href="<?php echo conf('web_path'); ?>">refresh</a>]
 <?php   if ( $myMpd->playlist_count > 0 ) {
 	      $un = (conf('condPL')) ? "un" : ""; ?>
@@ -114,10 +114,18 @@ $minpad = "style='padding: 0px 2px 0px 2px'";
                else {$tdstyle = $minpad;} ?>
 <?php
 $mpddir = conf('mpd_dir')."/";
-$sql = "SELECT genre.name, song.genre, song.id, song.album, song.artist FROM song, genre WHERE file = \"".$mpddir.$entry['file']."\" AND song.genre=genre.id";
-$db_results = @mysql_query($sql,dbh());
-$count=0;
-$r = @mysql_fetch_object ($db_results);
+if ($entry['Title']) {
+	$sql = "SELECT genre.name, song.genre, song.id, song.album, song.artist FROM song, genre WHERE file = \"".$mpddir.$entry['file']."\" AND song.genre=genre.id";
+	$db_results = @mysql_query($sql,dbh());
+	$r = @mysql_fetch_object ($db_results);
+} else {
+	list($tmp, $id, $tmp) = preg_split("/(song=|&)/", $entry['file']);
+	$r = new Song($id);
+	$entry['Title'] = $r->title;
+	$entry['Artist'] = $r->get_artist_name();
+	$entry['Album'] = $r->get_album_name();
+}
+$count=0; // Didn't move this because I wasn't sure what it was for...
 ?>
           <td align="center" <?php echo $minpad  ?>> <input type="checkbox" name="song[<?php echo $entry['Pos']?>]" value="1" id="song_<?php echo $entry['Pos']; ?>"></input></td>
           <td align="left"   <?php echo $tdstyle ?>> <?php echo $track.". ";?><a href="<?php echo $web_path; ?>/amp-mpd.php?action=skipto&amp;val=<?php echo $entry['Pos']; ?>" title=" <?php echo htmlspecialchars($entry['Title']); ?>"<?php echo $text_class; ?>><?php echo htmlspecialchars($entry['Title']); ?> </a></td>

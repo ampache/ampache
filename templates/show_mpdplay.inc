@@ -33,7 +33,7 @@ global $condPL;
 
 ?>
 <div align="center">
-<table border="0" cellpadding="3" cellspacing="0">
+<table border="0" cellpadding="3" cellspacing="0" class="tabledata">
 <tr class="table-header">
 	<td colspan="2"><?php echo _("MPD Play Control"); ?></td>
 </tr>
@@ -107,7 +107,16 @@ global $condPL;
       	<td><b><?php echo _("Now Playing :")?></b></td>
       </tr>
       <tr>
-      	<td align="center"><?php echo ($myMpd->current_track_id+1).
+      	<td align="center"><?php
+	if (!$$myMpd->playlist[($myMpd->current_track_id)]['Title']) {
+		list($tmp, $id, $tmp) = preg_split("/(song=|&)/", $myMpd->playlist[($myMpd->current_track_id)]['file']);
+		$r = new Song($id);
+		$myMpd->playlist[($myMpd->current_track_id)]['Title'] = $r->title;
+		$myMpd->playlist[($myMpd->current_track_id)]['Artist'] = $r->get_artist_name();
+		$myMpd->playlist[($myMpd->current_track_id)]['Album'] = $r->get_album_name();
+	}
+
+	echo ($myMpd->current_track_id+1).
                           ". ".$myMpd->playlist[$myMpd->current_track_id]['Artist'].
                           " - ".$myMpd->playlist[$myMpd->current_track_id]['Title'].
                           " - ".$myMpd->playlist[$myMpd->current_track_id]['Album'].
@@ -124,7 +133,16 @@ global $condPL;
         </td>
       </tr>
       <tr>
-      	<td align="center"><?php echo ($myMpd->current_track_id+2).
+      	<td align="center"><?php
+	if (!$$myMpd->playlist[($myMpd->current_track_id+1)]['Title']) {
+		list($tmp, $id, $tmp) = preg_split("/(song=|&)/", $myMpd->playlist[($myMpd->current_track_id+1)]['file']);
+		$r = new Song($id);
+		$myMpd->playlist[($myMpd->current_track_id+1)]['Title'] = $r->title;
+		$myMpd->playlist[($myMpd->current_track_id+1)]['Artist'] = $r->get_artist_name();
+		$myMpd->playlist[($myMpd->current_track_id+1)]['Album'] = $r->get_album_name();
+	}
+
+	echo ($myMpd->current_track_id+2).
                             ". ".$myMpd->playlist[($myMpd->current_track_id+1)]['Artist'].
                             " - ".$myMpd->playlist[($myMpd->current_track_id+1)]['Title'].
                             " - ".$myMpd->playlist[($myMpd->current_track_id+1)]['Album'].

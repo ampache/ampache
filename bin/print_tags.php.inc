@@ -19,7 +19,7 @@
 
 
 /* Name of the filename who's tags you want to read */
-$filename = "/data/music/Upload/woo.spx";
+$filename = "/data/music/video1.avi";
 
 
 $no_session = '1';

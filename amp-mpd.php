@@ -33,15 +33,7 @@ function mpd_redirect() {
 	}
 }
 
-// Connect to the MPD
-if (!class_exists('mpd')) { require_once(conf('prefix') . "/modules/mpd/mpd.class.php"); }
-if (!is_object($myMpd)) { $myMpd = new mpd(conf('mpd_host'),conf('mpd_port')); }
-
-if (!$myMpd->connected) {
-	echo "<font class=\"error\">" . _("Error Connecting") . ": " . $myMpd->errStr . "</font><br />\n";
-	log_event($_SESSION['userdata']['username'],' connection_failed ',"Error: Unable able to connect to MPD, " . $myMpd->errStr);
-} 
-else {
+if (!init_mpd()) {
 	switch ($_REQUEST['action']) {
 		case "add":
 			if (!$user->has_access(25)) { break; }

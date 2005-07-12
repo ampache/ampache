@@ -3,6 +3,14 @@
 --------------------------------------------------------------------------
 
 --------------------------------------------------------------------------
+  v.3.3.2-Alpha2
+  	- Improved MPD URL method so it acts just like file method 
+		(Thx Sigger, Trey)
+	- Added Simplified Chinese (Thx Hongyi Gao)
+	- Fixed XMLRPC session checking
+
+
+--------------------------------------------------------------------------
   v.3.3.2-Alpha1 07/11/2005:
   	- Added Spanish Translation (Thx ros)
 	- Fixed Menu Highlight when using a Translation

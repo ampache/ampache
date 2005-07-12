@@ -26,6 +26,7 @@
 
 */
 require_once("modules/init.php");
+init_mpd();
 show_template('header');
 show_menu_items('Home');
 show_clear();

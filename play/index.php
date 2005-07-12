@@ -56,7 +56,7 @@ if (conf('require_session') OR $xml_rpc) {
 }
 
 /* If we are in demo mode.. die here */
-if (conf('demo_mode') || !$user->has_access('25')) {
+if (conf('demo_mode') || (!$user->has_access('25') && !$xml_rpc) ) {
 	if (conf('debug')) { 
 		log_event($user->username,' access_denied ', "Streaming Access Denied, " . conf('demo_mode') . "is the value of demo_mode. Current user level is $user->access");
 	}
