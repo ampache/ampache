@@ -108,7 +108,7 @@ global $condPL;
       </tr>
       <tr>
       	<td align="center"><?php
-	if (!$$myMpd->playlist[($myMpd->current_track_id)]['Title']) {
+	if (!$myMpd->playlist[($myMpd->current_track_id)]['Title']) {
 		list($tmp, $id, $tmp) = preg_split("/(song=|&)/", $myMpd->playlist[($myMpd->current_track_id)]['file']);
 		$r = new Song($id);
 		$myMpd->playlist[($myMpd->current_track_id)]['Title'] = $r->title;
@@ -134,7 +134,7 @@ global $condPL;
       </tr>
       <tr>
       	<td align="center"><?php
-	if (!$$myMpd->playlist[($myMpd->current_track_id+1)]['Title']) {
+	if (!$myMpd->playlist[($myMpd->current_track_id+1)]['Title']) {
 		list($tmp, $id, $tmp) = preg_split("/(song=|&)/", $myMpd->playlist[($myMpd->current_track_id+1)]['file']);
 		$r = new Song($id);
 		$myMpd->playlist[($myMpd->current_track_id+1)]['Title'] = $r->title;
