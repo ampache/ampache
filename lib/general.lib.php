@@ -793,8 +793,9 @@ function delete_now_playing($insert_id) {
 	$user_agent = $_SERVER['HTTP_USER_AGENT'];
 
 	if (stristr($user_agent,"Windows-Media-Player")) {
-		// Do Nothing!
-		return true;
+		// Commented out until I can figure out the
+		// trick to making this work
+		//return true;
 	}
 
 	
