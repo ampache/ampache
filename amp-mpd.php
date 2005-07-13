@@ -27,15 +27,6 @@ require_once("modules/init.php");
 /* We need to create a MPD object here */
 $myMpd = init_mpd();
 
-function mpd_redirect() {
-	if (conf('localplay_menu')) {
-		header ("Location: " . conf('web_path') . "/mpd.php");
-	}
-	else {
-		header ("Location: " . conf('web_path'));
-	}
-}
-
 if (is_object($myMpd)) {
 	switch ($_REQUEST['action']) {
 		case "add":
