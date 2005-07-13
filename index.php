@@ -26,7 +26,12 @@
 
 */
 require_once("modules/init.php");
-init_mpd();
+
+/* We need to attempt to init the mpd object */
+if (conf('mpd_method') == 'file') { 
+	$myMpd = init_mpd(); 
+}
+
 show_template('header');
 show_menu_items('Home');
 show_clear();
@@ -70,7 +75,12 @@ if (conf('refresh_limit') > 0) { show_template('javascript_refresh'); }
 	</tr>
 	<tr><td colspan="2">&nbsp;</td></tr>
 	<tr> 
-                    <?php if ($user->prefs['play_type'] == 'mpd') { show_mpd_pl(); } ?>
+                <?php 
+			if ($user->prefs['play_type'] == 'mpd') { 
+		    		show_mpd_pl(); 
+				$myMpd = init_mpd(); 
+			} 
+		?>
 	</tr>
 	<tr><td colspan="2">&nbsp;</td></tr>
 	<tr>

@@ -72,8 +72,54 @@ function show_mpd_control() {
 
 } // show_mpd_control
 
+/**
+ * show_mpd_pl
+ * Shows the MPD playlist
+ * @package Local Play
+ * @cataogyr MPD
+ */
 function show_mpd_pl() {
         require (conf('prefix').'/templates/show_mpdpl.inc');
 } // show_mpd_pl
+
+/** 
+ * mpd_redirect
+ * Redriect mojo
+ * @package Local Play
+ * @catagory MPD
+ */
+function mpd_redirect() {
+        if (conf('localplay_menu')) {
+                header ("Location: " . conf('web_path') . "/mpd.php");
+        }       
+        else {          
+                header ("Location: " . conf('web_path')); 
+        }               
+} // mpd_redirect
+
+
+/** 
+ * Init MPD - This is originally from /amp-mpd.php 
+ * This initializes MPD if it is the playback method.
+ * It checks to see if a global variable called myMpd is an object
+ * if it's not then it attempt to create one and return it
+ * @package Local Play
+ * @catagory MPD
+ */
+function init_mpd() {
+
+        if (!class_exists('mpd')) { require_once(conf('prefix')."/modules/mpd/mpd.class.php"); }
+        if (!is_object($GLOBALS['myMpd'])) {
+                $myMpd = new mpd(conf('mpd_host'),conf('mpd_port'));
+        }
+
+        if (!$myMpd->connected) {
+                if (conf('debug')) {  log_event ($_SESSION['userdata']['username'],' connection_failed ',"Error: unable to connect to MPD, ".$myMpd->errStr); }
+		return false;
+        }
+
+        return $myMpd;
+
+} // function init_mpd()
 
 ?>

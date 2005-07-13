@@ -167,7 +167,7 @@ else {
 
 	// Put this song in the now_playing table
 	$end_time = time() - $song->time;
-	$sql = "INSERT INTO now_playing (`song_id`, `user_id`, `start_time`)" .
+	$sql = "INSERT INTO now_playing (`song_id`, `user`, `start_time`)" .
 		" VALUES ('$song_id', '$uid', '$end_time')";
 	$db_result = mysql_query($sql, $dbh);
 	$lastid = mysql_insert_id($dbh);

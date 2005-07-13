@@ -24,6 +24,9 @@
 
 require_once("modules/init.php");
 
+/* We need to create a MPD object here */
+$myMpd = init_mpd();
+
 function mpd_redirect() {
 	if (conf('localplay_menu')) {
 		header ("Location: " . conf('web_path') . "/mpd.php");
@@ -33,7 +36,7 @@ function mpd_redirect() {
 	}
 }
 
-if (!init_mpd()) {
+if (is_object($myMpd)) {
 	switch ($_REQUEST['action']) {
 		case "add":
 			if (!$user->has_access(25)) { break; }

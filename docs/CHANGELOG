@@ -8,6 +8,11 @@
 		(Thx Sigger, Trey)
 	- Added Simplified Chinese (Thx Hongyi Gao)
 	- Fixed XMLRPC session checking
+	- Fixed up the init_mpd() function to prevent errors on local play
+		page
+	- Updated Now Playing to account for new db structure
+	- Fixed Now Playing so that songs played by the MPD file method
+		actually show up (Thx sigger)
 
 
 --------------------------------------------------------------------------
