@@ -13,6 +13,10 @@
 	- Updated Now Playing to account for new db structure
 	- Fixed Now Playing so that songs played by the MPD file method
 		actually show up (Thx sigger)
+	- Fixed Now Playing so that if Windows Media Player is detected
+		it handles it correctly, and doesn't remove the row after
+		the script execution has finished, and depends upon the
+		GC to catch it
 
 
 --------------------------------------------------------------------------

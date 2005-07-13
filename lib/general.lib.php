@@ -742,4 +742,83 @@ function tbl_name($table) {
 
 } // tbl_name
 
+
+/** 
+ * insert_now_playing
+ * This function takes care of inserting the now playing data
+ * we use this function because we need to do thing differently 
+ * depending upon which play is actually streaming
+ * @package General
+ * @catagory Now Playing
+ */
+function insert_now_playing($song_id,$uid,$song_length) { 
+
+	$user_agent = $_SERVER['HTTP_USER_AGENT'];
+	$time = time();
+
+	/* Windows Media Player is evil and it makes multiple requests per song */
+	if (stristr($user_agent,"NSPlayer")) { return false; }
+
+	/* Set the Expire Time */
+	
+	// If they are using Windows media player
+	if (stristr($user_agent,"Windows-Media-Player")) { 
+		// WMP does keep the session open so we need to cheat a little here
+		$expire = $time + $song_length; 
+	}
+	else { 
+		$expire = $time;
+	}
+
+        $sql = "INSERT INTO now_playing (`song_id`, `user`, `start_time`)" .
+                " VALUES ('$song_id', '$uid', '$expire')";
+
+        $db_result = mysql_query($sql, dbh());
+
+        $insert_id = mysql_insert_id(dbh());
+
+	return $insert_id;
+
+} // insert_now_playing
+
+/**
+ * delete_now_playing
+ * This function checks to see if we should delete the last now playing entry now that it's
+ * finished streaming the song. Basicly this is an exception for WMP10
+ * @package General
+ * @catagory Now Playing
+ */
+function delete_now_playing($insert_id) { 
+
+	$user_agent = $_SERVER['HTTP_USER_AGENT'];
+
+	if (stristr($user_agent,"Windows-Media-Player")) {
+		// Do Nothing!
+		return true;
+	}
+
+	
+        // Remove the song from the now_playing table
+        $sql = "DELETE FROM now_playing WHERE id = '$insert_id'";
+        $db_result = mysql_query($sql, dbh());
+
+} // delete_now_playing
+
+/** 
+ * gc_now_playing
+ * this is a garbage collection function for now playing this is called every time something
+ * is streamed
+ * @package General
+ * @catagory Now Playing
+ */
+function gc_now_playing() { 
+
+        $time = time();
+        $expire = $time - 1800;  // 86400 seconds = 1 day
+
+        $sql = "DELETE FROM now_playing WHERE start_time < $expire";
+        $db_result = mysql_query($sql, dbh());
+	
+} // gc_now_playing
+
 ?>

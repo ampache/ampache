@@ -235,6 +235,27 @@ class Song {
 		return $results['name'];
 	
 	} // get_genre_name
+
+	/**
+	 * set_played
+	 * this checks to see if the current object has been played
+	 * if not then it sets it to played
+	 * @package Song
+	 * @catagory Class
+	 */
+	function set_played() { 
+
+		if ($song->played) { 
+			return true;
+		}
+
+		/* If it hasn't been played, set it! */
+		$song->update_played('1');
+
+		return true;
+
+	} // set_played
+	
 	/*!
 		@function compare_song_information
 		@discussion this compares the new ID3 tags of a file against

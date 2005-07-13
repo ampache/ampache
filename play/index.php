@@ -146,11 +146,8 @@ else {
 	// Update the users last seen
 	$user->update_last_seen();
 
-	// Garbage collection for stale entries in the now_playing table
-	$time = time();
-	$expire = $time - 900;  // 86400 seconds = 1 day
-	$sql = "DELETE FROM now_playing WHERE start_time < $expire";
-	$db_result = mysql_query($sql, $dbh);
+	/* Run Garbage Collection on Now Playing */
+	gc_now_playing();
 
 	// If we are running in Legalize mode, don't play songs already playing
 	if (conf('lock_songs') == 'true') {
@@ -166,11 +163,7 @@ else {
 	}
 
 	// Put this song in the now_playing table
-	$end_time = time() - $song->time;
-	$sql = "INSERT INTO now_playing (`song_id`, `user`, `start_time`)" .
-		" VALUES ('$song_id', '$uid', '$end_time')";
-	$db_result = mysql_query($sql, $dbh);
-	$lastid = mysql_insert_id($dbh);
+	$lastid = insert_now_playing($song->id,$uid,$song->time);
 
 	// make fread binary safe
 	set_magic_quotes_runtime(0);
@@ -282,15 +275,11 @@ else {
                 $user->update_stats($song_id);
         } 
 
-	// If the played flag isn't set, set it
-	if (!$song->played) { 
-		$sql = "UPDATE song SET played='1' WHERE id='$song->id'";
-		$db_results = mysql_query($sql, $dbh);
-	}
+	/* Set the Song as Played if it isn't already */
+	$song->update_played();
 
-	// Remove the song from the now_playing table
-	$sql = "DELETE FROM now_playing WHERE id = '$lastid'";
-	$db_result = mysql_query($sql, $dbh);
+	/* Delete the Now Playing Entry */
+	delete_now_playing($lastid);
 
 	/* Clean up any open ends */
 	if ($ds) { 
