@@ -74,19 +74,14 @@ if (conf('refresh_limit') > 0) { show_template('javascript_refresh'); }
 		</td>	
 	</tr>
 	<tr><td colspan="2">&nbsp;</td></tr>
-
 	<tr> 
                 <?php 
-// if ($user->prefs['play_type'] == 'mpd' && !conf('localplay_menu')) { show_mpd_pl();}
-//			else { echo "<td>&nbsp;<//td>"; }
-
 			if ($user->prefs['play_type'] == 'mpd') { 
 		    		show_mpd_pl(); 
 				$myMpd = init_mpd(); 
 			} 
 		?>
 	</tr>
-
 	<tr><td colspan="2">&nbsp;</td></tr>
 	<tr>
 	        <td valign="top" align="right">
