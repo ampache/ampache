@@ -23,7 +23,6 @@
  */ 
 
 require_once("modules/init.php");
-
 /* We need to create a MPD object here */
 $myMpd = init_mpd();
 
@@ -206,7 +205,6 @@ if (is_object($myMpd)) {
 			mpd_redirect();
 			break;
 	} // end switch
-
 	// We're done let's disconnect
 	$myMpd->Disconnect();
 } // end else

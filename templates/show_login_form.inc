@@ -36,8 +36,8 @@ if (preg_match($subject,$_SERVER['HTTP_HOST'])) {
 ?>
 <br /><br />
 <p align="center">
-	<a href="http://www.ampache.org"><img src="<?php echo  conf('web_path'); ?>
-		<?php echo conf('theme_path'); ?>/images/ampache.gif" title="<?php echo conf('site_title'); ?>" border="0" alt="Ampache" />
+	<a href="http://www.ampache.org"><img src="<?php echo  conf('web_path');
+	 ?><?php echo conf('theme_path'); ?>/images/ampache.gif" title="<?php echo conf('site_title'); ?>" border="0" alt="Ampache" />
 	</a>
 </p>
 <form name="login" method="post" enctype="multipart/form-data" action="<?php echo  conf('web_path'); ; ?>/login.php" style="Display:inline">

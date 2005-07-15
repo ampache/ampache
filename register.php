@@ -56,8 +56,8 @@ switch ($action) {
 		break;
 	}
 // INSERTED BY TERRY FOR MAIL ADDRESS CHECK
-	require("../templates/validateEmailFormat.php");
-        require("../templates/validateEmail.php");
+    // require("../templates/validateEmailFormat.php");
+    // require("../templates/validateEmail.php");
     // get the address from wherever you get it ... form input, etc.
     // $email = "info@xs4all.nl";
     // $email = $_GET['email'];

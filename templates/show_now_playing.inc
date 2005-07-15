@@ -41,7 +41,7 @@
 			if (!$np_user->fullname) { $np_user->fullname = "Unknown User"; }
                         echo "<tr class=\"even\">\n";
                         if (conf('use_auth')) { 
-				echo "\t<td valign=\"center\">$np_user->fullname</td>\n"; 
+				echo "\t<td valign=\"middle\">$np_user->fullname</td>\n"; 
 			}
                         echo "\t<td><a title=\"" . htmlspecialchars($song->title) . "\" href=\"$web_path/song.php?action=m3u&amp;song=$song->id\">$text</a></td>\n";
 			echo "\t<td><a title=\"" . htmlspecialchars($song->f_artist) . "\" href=\"$web_path/artists.php?action=show&amp;artist=$song->artist\">$song->f_artist</a> / ";

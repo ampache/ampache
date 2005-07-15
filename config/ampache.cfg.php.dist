@@ -463,7 +463,7 @@ rss_song_description = <![CDATA[$song->f_title @ $album played by  $user->fullna
 # it will control all "LOCAL" style play methods including localplay
 # and the slimserver
 # DEFAULT: false
-#localplay_menu = true
+localplay_menu = true
 
 
 #####################################################

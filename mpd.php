@@ -30,9 +30,12 @@ show_template('header');
 if (conf('refresh_limit') > 0) { show_template('javascript_refresh'); }
 show_menu_items('Local Play');
 show_clear();
-
+DebugBreak();
 if ($user->prefs['play_type'] == 'mpd') {
 	show_mpd_control();
+	echo "<div align='center'> <table border='0'> <tr>";
+	show_mpd_pl();
+	echo "</tr> </table> </div>";
 }
 
 show_clear();

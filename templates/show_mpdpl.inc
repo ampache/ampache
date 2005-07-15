@@ -56,7 +56,7 @@ $minpad = "style='padding: 0px 2px 0px 2px'";
 
 <form action="<?php echo conf('web_path')."/amp-mpd.php"; ?>" method="post" enctype="multipart/form-data">
 
-<table class="border" border="0" cellpadding="0" cellspacing="1" width="100%" class="tabledata">
+<table border="0" cellpadding="0" cellspacing="1" width="100%" class="tabledata">
 <tr><td align="center" class="table-header"><b>MPD Server Playlist</b><br />
      <i>[<a title="<?php echo _("Refresh the Playlist Window"); ?>" href="<?php echo conf('web_path'); ?>">refresh</a>]
 <?php   if ( $myMpd->playlist_count > 0 ) {
@@ -87,7 +87,10 @@ $minpad = "style='padding: 0px 2px 0px 2px'";
            {
            echo "<tr class=\"".flip_class()."\"><td colspan=\"8\" align=\"center\" style=\"padding: 3px 0px 3px 0px\">... Condensed Playlist ...</td></tr>";
            }
-
+	else
+	   {
+	   echo "<tr><td>&nbsp;</td></tr>";
+	   }
         foreach ($pl as $id=>$entry) {
 
             if ( ($condPL) and (($id < $myMpd->current_track_id-1) or ($id > $myMpd->current_track_id + 10)) )
@@ -136,7 +139,7 @@ $count=0; // Didn't move this because I wasn't sure what it was for...
 	  <td align="center" <?php echo $tdstyle ?>> <?php echo $r->name ?></td>
 
           <td <?php echo $tdstyle ?>>
-		<a href="<?php echo $web_path;?>/flag.php?song=<?php echo $r->id;?>&amp;action=flag" title="Flag '<?php echo $entry['file'];?>' by <?php echo htmlspecialchars($entry['Artist']);?>"<?php echo $text_class;?>>f</a>&nbsp;
+		<a href="<?php echo $web_path;?>/flag.php?song=<?php echo $r->id;?>&amp;action=flag" title="Flag '<?php echo htmlspecialchars($entry['file']);?>' by <?php echo htmlspecialchars($entry['Artist']);?>"<?php echo $text_class;?>>f</a>&nbsp;
 		<a href="<?php echo $web_path;?>/amp-mpd.php?action=movenext&amp;val=<?php echo $entry['Pos'];?>" title="Move '<?php echo htmlspecialchars($entry['Title']);?>' to play next  "<?php echo $text_class;?>>n</a>&nbsp;
 		<a href="<?php echo $web_path;?>/amp-mpd.php?action=rem&amp;id=<?php echo $entry['Pos'];?>" title="Remove '<?php echo htmlspecialchars($entry['Title']);?>' from playlist "<?php echo $text_class;?>>x</a>
           </td>
@@ -152,7 +155,7 @@ $count=0; // Didn't move this because I wasn't sure what it was for...
     $time = floor($totaltime/60) . ":" . sprintf("%02d", ($totaltime%60) );
     $num = count($pl);
 ?>
-
+    <tr><td>&nbsp;</td></tr>
     <tr class="table-header" valign="middle">
       <td><input type="hidden" name="action" value="plact" /> <button name="submit" value="submit" type="submit" style = "font-family: <?php echo conf('font')?>; font-size: <?php echo conf('font_size')?>px" title="Take Action on the checked songs">Do</button></td>
       <td valign="middle">
