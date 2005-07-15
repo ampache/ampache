@@ -76,9 +76,12 @@ function show_mpd_control() {
  * show_mpd_pl
  * Shows the MPD playlist
  * @package Local Play
- * @cataogyr MPD
+ * @catagory MPD
  */
 function show_mpd_pl() {
+
+	$myMpd = $GLOBALS['myMpd'];
+
         require (conf('prefix').'/templates/show_mpdpl.inc');
 } // show_mpd_pl
 
