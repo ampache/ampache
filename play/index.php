@@ -138,6 +138,8 @@ if ( $catalog->catalog_type == 'remote' ) {
 	header("Location: " . $song->file . $extra_info);
 	if (conf('debug')) { log_event($user->username,' xmlrpc-stream ',"Start XML-RPC Stream - " . $song->file . $extra_info); }
 }
+
+
 else {
 	if ($user->prefs['play_type'] == 'downsample') { 
 		$ds = $user->prefs['sample_rate']; 
@@ -150,16 +152,8 @@ else {
 	gc_now_playing();
 
 	// If we are running in Legalize mode, don't play songs already playing
-	if (conf('lock_songs') == 'true') {
-		$sql = "SELECT COUNT(*) FROM now_playing" .
-			" WHERE song_id = '$song_id'";
-		$db_result = mysql_query($sql, $dbh);
-		while ($r = mysql_fetch_row($db_result)) {
-			if ($r[0] == 1) {
-				// Song is already playing, so exit without returning song
-				exit;
-			}
-		}
+	if (conf('lock_songs')) {
+		if (!check_lock_songs($song->id)) { exit(); }
 	}
 
 	// Put this song in the now_playing table
@@ -214,37 +208,11 @@ else {
 	// Prevent the script from timing out
 	set_time_limit(0);			
 	
-	if ($ds) { 
-		$ds = $user->prefs['sample_rate'];          
-		$dsratio = $ds/$song->bitrate*1024;
-		$browser->downloadHeaders($song_name, $song->mime, false,$dsratio*$song->size);
-
-		/* Get Offset */
-		$offset = ( $start*$song->time )/( $dsratio*$song->size );
-		$offsetmm = floor($offset/60);
-		$offsetss = floor($offset-$offsetmm*60);
-		$offset   = sprintf("%02d.%02d",$offsetmm,$offsetss);
+	if ($user->prefs['play_type'] == 'downsample') { 
 	
-		/* Get EOF */
-		$eofmm	= floor($song->time/60);
-		$eofss	= floor($song->time-$eofmm*60);
-		$eof	= sprintf("%02d.%02d",$eofmm,$eofss);
-		
-		/* Replace Variables */
-		$downsample_command = conf('downsample_cmd');
-		$downsample_command = str_replace("%FILE%",$song->file,$downsample_command);
-		$downsample_command = str_replace("%OFFSET%",$offset,$downsample_command);
-		$downsample_command = str_replace("%EOF%",$eof,$downsample_command);
-		$downsample_command = str_replace("%SAMPLE%",$ds,$downsample_command);
-		
-		// If we are debugging log this event
-		if (conf('debug')) { 
-			$message = "Exec: $downsample_command";
-			log_event($user->username,'downsample',$message);
-		} // if debug	
+		$fp = start_downsample($song,$lastid,$song_name);
 
-		$fp = @popen($downsample_command, 'r');
-	} // if downsampling
+	} // end if downsampling
 
 	elseif ($start) {
 		$browser->downloadHeaders($song_name, $song->mime, false, $song->size);
@@ -282,7 +250,7 @@ else {
 	delete_now_playing($lastid);
 
 	/* Clean up any open ends */
-	if ($ds) { 
+	if ($user->prefs['play_type'] == 'downsample') { 
 		@pclose($fp);
 	} 
 	else { 

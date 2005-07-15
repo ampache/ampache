@@ -83,7 +83,7 @@ if (!$results['conf']['allow_stream_playback']) {
 }
 
 $results['conf']['web_path']		= $http_type . $_SERVER['HTTP_HOST'] . $results['conf']['web_path'];
-$results['conf']['version']		= '3.3.2-Alpha2 Build (001)';
+$results['conf']['version']		= '3.3.2-Alpha2 Build (002)';
 $results['conf']['catalog_file_pattern']= 'mp3|mpc|m4p|m4a|mp4|aac|ogg|rm|wma|asf|flac|spx';
 $results['libglue']['local_table']	= 'session';
 $results['libglue']['local_sid']	= 'id';
@@ -163,6 +163,7 @@ require_once(conf('prefix') . "/lib/ui.lib.php");
 require_once(conf('prefix') . "/lib/gettext.php");
 require_once(conf('prefix') . "/lib/batch.lib.php");
 require_once(conf('prefix') . "/lib/themes.php");
+require_once(conf('prefix') . "/lib/stream.lib.php");
 require_once(conf('prefix') . "/modules/lib.php");
 require_once(conf('prefix') . "/modules/admin.php");
 require_once(conf('prefix') . "/modules/catalog.php");

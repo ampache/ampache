@@ -18,13 +18,6 @@
 # DEFAULT: ""
 #web_path 	= ""
 
-
-# Lang (define the locale you want to use
-# this is a cheeseball fix for now it will be smarter 
-# later. 
-# DEFAULT: en_US
-#lang = "en_US"
-
 ####################
 # The libglue Vars #
 ####################
@@ -266,6 +259,28 @@ allow_stream_playback = true
 #allow_slim_playback = false
 
 #######################################################
+# These options control the dynamic downsampling based
+* on current useage
+# *Note* Downsampling must be enabled and working
+#######################################################
+
+# Attempt to optimize bandwidth by dynamically downsampling
+# all connections from users to fit within a maximum bandwidth.   
+# The benefit is that it won't downsample more than it needs to.  As it only 
+# adjusts the sample rate at the beginning of a song, it may take a few 
+# minutes to reset all connections to a lower rate. This won't never go higher
+# than a user's sample rate and only applies to users who are set to 
+# the Downsample playback method
+# DEFAULT: 576
+#max_bit_rate = 576
+
+# If min_bit_rate is set then new streams will be denied if it would
+# cause all streams to be downsampled below this rate.
+# DEFAULT: 48
+#min_bit_rate = 48
+
+
+#######################################################
 # These options control how searching works
 #######################################################
 
@@ -460,7 +475,7 @@ rss_song_description = <![CDATA[$song->f_title @ $album played by  $user->fullna
 
 # If set to true MPD is not displayed on the main page, but on it's
 # own distinct page. This is called localplay, because eventually
-# it will control all "LOCAL" style play methods including localplay
+# it will control all "LOCAL" style play methods including localplay, xmms2
 # and the slimserver
 # DEFAULT: false
 #localplay_menu = true
