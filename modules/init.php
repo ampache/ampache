@@ -159,6 +159,7 @@ require_once(conf('prefix') . "/lib/search.php");
 require_once(conf('prefix') . "/lib/preferences.php");
 require_once(conf('prefix') . "/lib/rss.php");
 require_once(conf('prefix') . "/lib/log.lib.php");
+require_once(conf('prefix') . "/lib/mpd.php");
 require_once(conf('prefix') . "/lib/ui.lib.php");
 require_once(conf('prefix') . "/lib/gettext.php");
 require_once(conf('prefix') . "/lib/batch.lib.php");
@@ -184,7 +185,6 @@ if (conf('allow_slim_playback')) {
 
 if (conf('allow_mpd_playback')) { 
 	require_once(conf('prefix') . "/modules/mpd/mpd.class.php");		
-	require_once(conf('prefix') . "/lib/mpd.php");
 }
 
 // Classes

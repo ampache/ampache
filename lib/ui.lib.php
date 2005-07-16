@@ -461,7 +461,9 @@ function get_now_playing() {
 		$results[] = array('song'=>$song,'user'=>$np_user);
 	} // end while
 
-	if (is_object($GLOBALS['myMpd']) AND conf('mpd_method') == 'file') { 
+	$myMpd = init_mpd();
+
+	if (is_object($myMpd) AND conf('mpd_method') == 'file') { 
 		$sql = "SELECT song.id FROM song WHERE file = \"". conf('mpd_dir') . "/" . 
 			$myMpd->playlist[$myMpd->current_track_id]['file']. "\"";
 
