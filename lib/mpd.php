@@ -80,7 +80,7 @@ function show_mpd_control() {
  */
 function show_mpd_pl() {
 
-	$myMpd = $GLOBALS['myMpd'];
+	$myMpd = init_mpd();
 
         require (conf('prefix').'/templates/show_mpdpl.inc');
 } // show_mpd_pl
@@ -111,8 +111,11 @@ function mpd_redirect() {
  */
 function init_mpd() {
 
-        if (!class_exists('mpd')) { require_once(conf('prefix')."/modules/mpd/mpd.class.php"); }
-        if (!is_object($GLOBALS['myMpd'])) {
+	static $myMpd;
+
+	if (!conf('allow_mpd_playback')) { return false; }
+
+	if (!is_object($myMpd)) {
                 $myMpd = new mpd(conf('mpd_host'),conf('mpd_port'));
         }
 

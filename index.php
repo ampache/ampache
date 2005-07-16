@@ -28,9 +28,7 @@
 require_once("modules/init.php");
 
 /* We need to attempt to init the mpd object */
-if (conf('mpd_method') == 'file' OR $user->prefs['play_type'] == 'mpd') { 
-	$myMpd = init_mpd();
-}
+$myMpd = init_mpd();
 
 show_template('header');
 show_menu_items('Home');

@@ -30,12 +30,6 @@ TTD:
 
 */
 
-if (!$myMpd->connected)
-   {
-     echo "<font class=\"error\">" . _("Error Connecting") . ": " . $myMpd->errStr . "</font><br />\n";
-     log_event ($_SESSION['userdata']['username'],' connection_failed ',"Error: unable to connect to MPD, ".$myMpd->errStr);
-     return; 
-   }
 
 $nopad  = "style='padding: 0px 0px 0px 0px'";
 $minpad = "style='padding: 0px 2px 0px 2px'";

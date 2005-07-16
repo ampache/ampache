@@ -24,7 +24,9 @@
 
 require_once("modules/init.php");
 
+
 /* We need to create a MPD object here */
+
 $myMpd = init_mpd();
 
 if (is_object($myMpd)) {
