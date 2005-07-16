@@ -21,10 +21,6 @@
 */
 $web_path = conf('web_path');
 /*  
-Instructions on incorporating this code:
-1) You need to add a row with a name of 'condPL' into the table preferences. Initial value is 1 (condensed playlist by default)
-or 0 (not condensed by default).
-2) Insert the following function at the end of /mpd.php and change show_mpd_control() above it to "require" (instead of require_once):
 
 TTD:
 - It would be nice if flagged songs showed up in a flagged color (e.g. red).
@@ -34,13 +30,6 @@ TTD:
 
 */
 
-/*  The following mpd init code is from amp-mpd.php and should probably go into a mpdinit file that gets executed by initmpd
-since other pages or items on index.php that come before this (like an MPD control in the header!) might need myMpd.
-*/
-
-
-if (!class_exists('mpd')) { require_once(conf('prefix')."/modules/mpd/mpd.class.php"); }
-if (!is_object($myMpd)) { $myMpd = new mpd(conf('mpd_host'),conf('mpd_port')); }
 if (!$myMpd->connected)
    {
      echo "<font class=\"error\">" . _("Error Connecting") . ": " . $myMpd->errStr . "</font><br />\n";

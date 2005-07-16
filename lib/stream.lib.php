@@ -207,12 +207,14 @@ function start_downsample($song,$now_playing_id=0,$song_name=0) {
 		$sample_rate = $user_sample_rate;
 	}
 
+	$sample_ratio = $sample_rate/($song->bitrate/1000);
+	
 	/* Never Upsample a song */
 	if (($sample_rate*1000) > $song->bitrate) {
 		unset($sample_rate);
+		$sample_ratio = '1';
 	}
 
-	$sample_ratio = $sample_rate/($song->bitrate/1000);
 
         $browser->downloadHeaders($song_name, $song->mime, false,$sample_ratio*$song->size);
 
