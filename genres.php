@@ -1,4 +1,5 @@
 <?php
+
 /*
 
  Copyright (c) 2001 - 2005 Ampache.org
@@ -17,39 +18,40 @@
  You should have received a copy of the GNU General Public License
  along with this program; if not, write to the Free Software
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
-
 */
 
 /**
- * Browse Menu
- * This menu has all the different ways you can browse your ampache music collection
- * This calls different options of the browse.php file
- * @package Web Interface
- * @catagory Browse
- * @author Karl Vollmer
+ * Genres Pages
+ * Nuff Said for now
  */
+require_once("modules/init.php");
 
-$web_path = conf('web_path');
+show_template('header');
+show_menu_items('Browse'); 
+show_browse_menu('Genre');
+show_clear();
 
-$items = array(
-	        _("Artist")      => "$web_path/artists.php",
-		_("Albums")      => "$web_path/albums.php",
-		_("Genre")       => "$web_path/genres.php",
-        );
+$action = scrub_in($_REQUEST['action']);
+
+switch($action) { 
+
+	case 'show':
+	
+	break;
+	case 'match':
+
+	break;
+
+	default: 
+
+	break;
+} // action
+
+
+
+show_clear();
+
+/* Show the Footer */
+show_page_footer('Browse', '',$user->prefs['display_menu']);
 
 ?>
-<ul id="adminmenu">
-
-	<?php
-	foreach ( array_keys($items) as $item ) {
-		if ( $admin_highlight == $item ) {
-        		echo "<li class=\"active\"><a class=\"active\" href=\"$items[$item]\">" . $item . "</a></li>\n";
-		}
-		else {
-        		echo "<li><a href=\"$items[$item]\">" . $item . "</a></li>\n";
-		}
-	}
-
-	?>
-</ul>
-<br />

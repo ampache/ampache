@@ -20,6 +20,7 @@
 	- Added Optional Automatic Bandwidth management for downsampled
 		users based on defined bandwidth limits (Thx Jens)
 	- Prevented Load of XML-RPC library if xml_rpc isn't enabled
+	- Correctly deleted the session when deleting a user
 
 
 --------------------------------------------------------------------------

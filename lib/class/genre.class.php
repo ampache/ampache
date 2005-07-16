@@ -75,6 +75,54 @@ class Genre {
 
 	} // format_genre
 
+	/**
+	 * get_song_count
+	 * This returns the number of songs in said genre
+	 * @package Genre
+	 * @catagory Class
+	 */
+	function get_song_count() { 
+
+
+
+	} // get_song_count
+
+	/**
+	 * get_songs
+	 * This gets all of the songs in this genre and returns an array of song objects
+	 * @package Genre
+	 * @catagory Class
+	 */
+	function get_songs() { 
+
+
+
+	} // get_songs
+
+	/**
+	 * get_albums
+	 * This gets all of the albums that have at least one song in this genre
+	 * @package Genre
+	 * @catagory Class
+	 */
+	function get_albums() { 
+
+
+
+	} // get_albums
+
+	/**
+	 * get_artists
+	 * This gets all of the artists who have at least one song in this genre
+	 * @package Genre
+	 * @catagory Class
+	 */
+	function get_artists() { 
+
+
+
+	} // get_artists
+
 } //end of genre class
 
 ?>

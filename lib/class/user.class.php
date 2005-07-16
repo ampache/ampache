@@ -566,7 +566,6 @@ class User {
 		}
 		$db_results = mysql_query($sql, dbh());
 
-
 		while ($r = mysql_fetch_object($db_results)) { 
 			
 			/* Check if this preference is set */
@@ -707,6 +706,9 @@ class User {
 
 		// Delete the user itself
 		$sql = "DELETE FROM user WHERE username='$this->username'";
+		$db_results = mysql_query($sql, dbh());
+
+		$sql = "DELETE FROM session WHERE username='$this->username'";
 		$db_results = mysql_query($sql, dbh());
 
 		return true;
