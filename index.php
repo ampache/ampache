@@ -72,6 +72,12 @@ if (conf('refresh_limit') > 0) { show_template('javascript_refresh'); }
 		</td>	
 	</tr>
 	<tr><td colspan="2">&nbsp;</td></tr>
+	<tr>
+		<td colspan="2">
+		<?php show_template('show_search_bar'); ?>
+		</td>
+	</tr>
+	<tr><td colspan="2">&nbsp;</td></tr>
 	<tr> 
                 <?php 
 			if ($user->prefs['play_type'] == 'mpd') { 
