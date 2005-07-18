@@ -151,8 +151,8 @@ $row_classes = array('even','odd');
 	]
 	</td>
 	<td>
-	<?php echo _("This test makes sure that you have set all of the required config variables and that we are able to 
-	compleatly parse your config file"); ?>
+	<?php echo _("This test makes sure that you have set all of the required configuration variables and that we are able to 
+	completely parse your config file"); ?>
 	</td>
 </tr>
 <tr>

@@ -162,7 +162,7 @@ global $condPL;
       	<td align="center"><i><a title="<?php echo _("Refresh the Playlist Window"); ?>" href="<?php echo conf('web_path'); ?>"><?php echo _("[refresh]"); ?></a>
 <?php       if ( $myMpd->playlist_count > 0 ) { ?>
   		[<a title="<?php echo _("Click to shuffle (randomize) the playlist"); ?>" href="<?php echo conf('web_path'); ?>/amp-mpd.php?action=shuffle"><?php echo _("shuffle"); ?></a>] 
-		[<a title="<?php echo _("Click the clear the playlist"); ?>" href="<?php echo conf('web_path'); ?>/amp-mpd.php?action=clear"><?php echo _("clear"); ?></a>]
+		[<a title="<?php echo _("Click to clear the playlist"); ?>" href="<?php echo conf('web_path'); ?>/amp-mpd.php?action=clear"><?php echo _("clear"); ?></a>]
 		[<a title="<?php echo _("Click the toggle condensed playlist"); ?>" href="<?php echo conf('web_path'); ?>/amp-mpd.php?action=condPL"><?php echo _("condensed"); ?></a>]
 <?php   }  ?>
         </i></td>
