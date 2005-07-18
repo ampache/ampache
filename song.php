@@ -90,7 +90,7 @@ elseif ( $_REQUEST['random'] ) {
 	}
 
 	/* Setup the options array */
-	$options = array('limit' => $_REQUEST['random'], 'unplayed' => $_REQUEST['unplayed'], 'full_album' => $_REQUEST['full_album'], 'full_artist' => $_REQUEST['full_artist']);
+	$options = array('limit' => $_REQUEST['random'], 'random_type' => $_REQUEST['random_type']);
 	
 	
 	$song_ids = get_random_songs($options, $matchlist);

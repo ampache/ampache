@@ -499,7 +499,6 @@ function get_random_songs( $options, $matchlist) {
 
         /* Define the options */
         $limit          = $options['limit'];
-        $unplayed       = $options['unplayed'];
 
         /* If they've passed -1 as limit then don't get everything */
         if ($options['limit'] == "-1") { unset($options['limit']); }
@@ -525,7 +524,7 @@ function get_random_songs( $options, $matchlist) {
 
 
 
-        if ($options['full_album'] == 1) {
+        if ($options['random_type'] == 'full_album') {
                 $query = "SELECT album.id FROM song,album WHERE song.album=album.id AND $where GROUP BY song.album ORDER BY RAND() " . $options['limit'];
                 $db_results = mysql_query($query, $dbh);
                 while ($data = mysql_fetch_row($db_results)) {
@@ -534,7 +533,7 @@ function get_random_songs( $options, $matchlist) {
                 $albums_where = ltrim($albums_where," OR");
                 $query = "SELECT song.id FROM song WHERE $albums_where ORDER BY song.track ASC";
         }
-        elseif ($options['full_artist'] == 1) {
+        elseif ($options['random_type'] == 'full_artist') {
                 $query = "SELECT artist.id FROM song,artist WHERE song.artist=artist.id AND $where GROUP BY song.artist ORDER BY RAND() " . $options['limit'];
                 $db_results = mysql_query($query, $dbh);
                 while ($data = mysql_fetch_row($db_results)) {
@@ -543,7 +542,7 @@ function get_random_songs( $options, $matchlist) {
                 $artists_where = ltrim($artists_where," OR");
                 $query = "SELECT song.id FROM song WHERE $artists_where ORDER BY RAND()";
         }
-        elseif ($options['unplayed'] == 1) {
+        elseif ($options['random_type'] == 'unplayed') {
                 $uid = $_SESSION['userdata']['username'];
                 $query = "SELECT song.id FROM song LEFT JOIN object_count ON song.id = object_count.object_id " .
                          "WHERE ($where) AND ((object_count.object_type='song' AND userid = '$uid') OR object_count.count IS NULL ) " .
