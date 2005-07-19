@@ -240,7 +240,7 @@ switch ($_REQUEST['action']) {
         if (conf('demo_mode')) { break; }
         show_confirm_action(_("Do you really want to delete this catalog?"),
 			"admin/catalog.php",
-			"catalog_id=" . $_REQUEST['catalog_id'] . "&action=delete_catalog");
+			"catalog_id=" . $_REQUEST['catalog_id'] . "&amp;action=delete_catalog");
 	break;
 
     case 'show_flagged_songs':

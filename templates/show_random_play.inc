@@ -60,7 +60,7 @@
 					<option value="full_album"><?php echo _("Full Albums"); ?></option>
 					<option value="full_artist"><?php echo _("Full Artist"); ?></option>
 				</select>
-			</tr>
+			</td>
                 </tr>
 		<tr class="even">
                 	<td nowrap="nowrap"><?php echo _("from catalog"); ?></td>
