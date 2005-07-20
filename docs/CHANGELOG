@@ -22,6 +22,7 @@
 	- Prevented Load of XML-RPC library if xml_rpc isn't enabled
 	- Correctly deleted the session when deleting a user
 	- Added Search Bar to main page (Thx sigger)
+	- Added British English (Thx ??? <I need to look it up>)
 
 
 --------------------------------------------------------------------------

@@ -256,6 +256,7 @@ function create_preference_input($name,$value) {
 			${$var_name} = "selected=\"selected\"";
 			echo "<select name=\"$name\">\n";
 			echo "\t<option value=\"en_US\" $en_US_lang>" . _("English") . "</option>\n";
+                        echo "\t<option value=\"en_GB\" $en_GB_lang>" . _("British English") . "</option>\n";
 			echo "\t<option value=\"de_DE\" $de_DE_lang>" . _("German") . "</option>\n";
 			echo "\t<option value=\"fr_FR\" $fr_FR_lang>" . _("French") . "</option>\n";
 			echo "\t<option value=\"tr_TR\" $tr_TR_lang>" . _("Turkish") . "</option>\n";
