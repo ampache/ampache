@@ -22,7 +22,7 @@
 
 <br />
 <div class="text-box" style="margin-right:25%;text-align:center;margin-left:25%;">
-<form name="confirm" method="post" action="<?php echo $web_path; ?>/<?php echo $script; ?>?<?php echo $arg; ?>" enctype="multpart/form-data">
+<form name="confirm" method="post" action="<?php echo $web_path; ?>/<?php echo $script; ?>?<?php echo $arg; ?>" enctype="multipart/form-data">
 	<p><?php echo $text; ?></p>
 	<p>
 		<input type="submit" name="confirm" value="<?php echo _("Yes"); ?>" />
