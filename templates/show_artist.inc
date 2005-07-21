@@ -42,7 +42,7 @@ $artist_id = $artist->id;
 </table>
 <!-- *** Multi-Album Art Display Thx MrBlahh Updated by clader *** -->
 <br />
-<form name="songs" method="post" enctype="multipart/form-data" action="">
+<form name="songs" method="post" enctype="multipart/form-data" action="artists.php">
 
 <table class="border" cellspacing="0" cellpadding="0" border="0">
         <tr class="table-header">
