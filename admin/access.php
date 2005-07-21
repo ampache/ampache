@@ -40,7 +40,7 @@ show_menu_items('Admin');
 show_admin_menu('Access Lists');
 show_clear();
 if ( $action == 'show_confirm_delete' ) {
-        show_confirm_action(_("Do you really want to delete this Access Record?"), "admin/access.php", "access_id=" . $_REQUEST['access_id'] . "&action=delete_host");
+        show_confirm_action(_("Do you really want to delete this Access Record?"), "admin/access.php", "access_id=" . $_REQUEST['access_id'] . "&amp;action=delete_host");
 }
 /*!
 	@action delete_host

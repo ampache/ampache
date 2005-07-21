@@ -40,7 +40,7 @@ if ($_REQUEST['action'] === 'clear_art') {
 	if (!$user->has_access('25')) { access_denied(); } 
 	$album = new Album($_REQUEST['album_id']);
 	$album->clear_art();
-	show_confirmation(_("Album Art Cleared"),_("Album Art information has been removed form the database"),"/albums.php?action=show&album=" . $album->id);
+	show_confirmation(_("Album Art Cleared"),_("Album Art information has been removed form the database"),"/albums.php?action=show&amp;album=" . $album->id);
 
 } // clear_art
 // if we have album
@@ -74,8 +74,8 @@ elseif ($_REQUEST['action'] === 'find_art') {
         $album = new Album($_REQUEST['album_id']);
 	$result = $album->find_art($_REQUEST['cover']);
 	if ($result) {
-		show_confirmation(_("Album Art Located"),_("Album Art information has been located in Amazon. If incorrect, click \"Reset Album Art\" below to remove the artwork."),"/albums.php?action=show&album=" . $album->id);
-		echo "&nbsp;[ <a href=\"" . conf('web_path') . "/albums.php?action=clear_art&album_id=" . $album->id . "\">Reset Album Art</a> ]";
+		show_confirmation(_("Album Art Located"),_("Album Art information has been located in Amazon. If incorrect, click \"Reset Album Art\" below to remove the artwork."),"/albums.php?action=show&amp;album=" . $album->id);
+		echo "&nbsp;[ <a href=\"" . conf('web_path') . "/albums.php?action=clear_art&amp;album_id=" . $album->id . "\">Reset Album Art</a> ]";
 		echo "<p align=left><img src=\"" . conf('web_path') . "/albumart.php?id=" . $album->id . "\"></p>";
 		echo "<p><form name=\"cover\" method=\"get\" action=\"".$_SERVER['PHP_SELF']."\">";
 		echo "Enter URL to album art ";
@@ -86,7 +86,7 @@ elseif ($_REQUEST['action'] === 'find_art') {
 		echo "</form>"; 
 	}
         else {
-                show_confirmation(_("Album Art Not Located"),_("Album Art could not be located at this time. This may be due to Amazon being busy, or the album not being present in their collection."),"/albums.php?action=show&album=" . $album->id);
+                show_confirmation(_("Album Art Not Located"),_("Album Art could not be located at this time. This may be due to Amazon being busy, or the album not being present in their collection."),"/albums.php?action=show&amp;album=" . $album->id);
                 echo "<p><form name=\"cover\" method=\"get\" action=\"".$_SERVER['PHP_SELF']."\">";
                 echo "Enter URL to album art ";
                 echo "<input type=\"text\" size=\"40\" id=\"cover\" name=\"cover\" value=\"\" />";

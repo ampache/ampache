@@ -26,7 +26,7 @@ function show_access_list () {
 
 			print("\t<tr><td bgcolor=\"" . conf('secondary_color') . "\">$host->name</td>".
 				"<td bgcolor=\"" . conf('secondary_color') . "\">$ip</td>".
-				"<td bgcolor=\"" . conf('secondary_color') . "\"><a href=\"" . conf('web_path') . "/access.php?action=delete_host&id=$host->id\">Delete</td></tr>\n");
+				"<td bgcolor=\"" . conf('secondary_color') . "\"><a href=\"" . conf('web_path') . "/access.php?action=delete_host&amp;id=$host->id\">Delete</td></tr>\n");
 		}
 	}
 	else {

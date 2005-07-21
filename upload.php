@@ -286,8 +286,8 @@ if ( $handle = @opendir($user->prefs['upload_dir'] ) ){
 
 			if( $user->access === 'admin' ){
 				echo "			<td>\n" .
-					"		<a href=\"" . $web_path . "upload.php/?action=add&song=$file\">" . _("Add") . "</a><br />\n" .
-					"		<a href=\"" . $web_path . "upload.php/?action=delete&song=$file\">" . _("Delete") . "</a><br />\n" .
+					"		<a href=\"" . $web_path . "upload.php/?action=add&amp;song=$file\">" . _("Add") . "</a><br />\n" .
+					"		<a href=\"" . $web_path . "upload.php/?action=delete&amp;song=$file\">" . _("Delete") . "</a><br />\n" .
 					"			</td>\n"; 
 			}
 			else{
@@ -296,7 +296,7 @@ if ( $handle = @opendir($user->prefs['upload_dir'] ) ){
 		
 			  
 			echo  "			<td><a href='" . $web_path . 
-				"/play/pupload.php?action=m3u&song=$file&uid=$user->username'>" . 
+				"/play/pupload.php?action=m3u&amp;song=$file&amp;uid=$user->username'>" . 
 				$results[$key][title] . "</a></td>\n";
 
 

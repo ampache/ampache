@@ -135,7 +135,7 @@ switch ($action) {
         if (conf('demo_mode')) { break; }
 	show_confirm_action(_("Are you sure you want to permanently delete") . " $temp_user->fullname ($temp_user->username) ?",
 		"admin/users.php",
-		"action=confirm_delete&user=$temp_user->username");
+		"action=confirm_delete&amp;user=$temp_user->username");
 	break;
 
     case 'confirm_delete':

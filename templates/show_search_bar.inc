@@ -57,14 +57,14 @@
                 } 
 		?>
 		<select name="search_field">
-			<option value="artist" <?php  if ($artist) { echo "SELECTED"; } ?>>Artist</option>
-			<option value="album" <?php  if ($album) { echo "SELECTED"; } ?>>Album</option>
-			<option value="song_title" <?php  if ($song_title) { echo "SELECTED"; } ?>>Song Title</option>
-			<option value="song_genre" <?php  if ($song_genre) { echo "SELECTED"; } ?>>Song Genre</option>
-			<option value="song_year" <?php  if ($song_year) { echo "SELECTED"; } ?>>Song Year</option>
-			<option value="song_bitrate" <?php  if ($song_bitrate) { echo "SELECTED"; } ?>>Song Bitrate</option>
-			<option value="song_min_bitrate" <?php  if ($song_min_bitrate) { echo "SELECTED"; } ?>>Minimum Bitrate</option>
-			<option value="song_filename" <?php  if ($song_filename) { echo "SELECTED"; } ?>>Song Filename</option>
+			<option value="artist" <?php  if ($artist) { echo 'selected="selected"'; } ?>>Artist</option>
+			<option value="album" <?php  if ($album) { echo 'selected="selected"'; } ?>>Album</option>
+			<option value="song_title" <?php  if ($song_title) { echo 'selected="selected"'; } ?>>Song Title</option>
+			<option value="song_genre" <?php  if ($song_genre) { echo 'selected="selected"'; } ?>>Song Genre</option>
+			<option value="song_year" <?php  if ($song_year) { echo 'selected="selected"'; } ?>>Song Year</option>
+			<option value="song_bitrate" <?php  if ($song_bitrate) { echo 'selected="selected"'; } ?>>Song Bitrate</option>
+			<option value="song_min_bitrate" <?php  if ($song_min_bitrate) { echo 'selected="selected"'; } ?>>Minimum Bitrate</option>
+			<option value="song_filename" <?php  if ($song_filename) { echo 'selected="selected"'; } ?>>Song Filename</option>
 		</select>
 	</td>
 	<td>
