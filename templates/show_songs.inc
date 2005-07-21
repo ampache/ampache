@@ -23,7 +23,7 @@ $web_path = conf('web_path');
 ?>
 
 
-<form name="songs" method="post" enctype="multipart/form-data" action="">
+<form name="songs" method="post" enctype="multipart/form-data" action="#">
 <table border="0">
   <tr><td colspan="2">
     <table class="border" cellspacing="0" cellpadding="0" border="0">
