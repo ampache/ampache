@@ -223,7 +223,6 @@ class Update {
 		$update_string = "- Cleaned up user management.<br />";
 		
 		$version[] = array('version' => '331003', 'description' => $update_string);
-		
 		$update_string = "- Added Genre and Catalog to the stats tracking enum.<br />" . 
 				 "- Added CondPL preference for the new MPD playlist.<br />";
 
@@ -234,7 +233,15 @@ class Update {
 				 "- Added required table/fields for security related IP Tracking.<br />";
 
 		$version[] = array('version' => '332002', 'description' => $update_string);
-		
+	
+		$update_string = "- Fixed Upload system, previous uploaded files are broken by this update.<br />" . 
+				 " &bnsp;If quarantine is turned on use /bin/quarantine_migration.php.inc to move<br />" . 
+				 " &nbsp;them into place<br />" .
+				 "- Added New Fields to ACL table to allow for improved access control and XML-RPC security.<br />" . 
+				 "- Added New Field to Now Playing to Account for WMP10 and other over-zelous buffering apps.<br />";
+	
+		$version[] = array('version' => '332003', 'description' => $update_string);
+
 		return $version;
 
 	} // populate_version
@@ -943,7 +950,7 @@ class Update {
 				"VALUES ('','condPL','1','Condense Localplay Playlist','0','user','0')";
 
                 $db_results = mysql_query($sql, dbh());
-                
+		
 		$this->set_version('db_version','332001');
 
 	} // update_332001
@@ -1175,6 +1182,40 @@ class Update {
 
 	} // update_332002
 	
+	function update_332003() { 
+	
+		/* Modify the Upload table to take into account the new code */
+ 		$sql = "ALTER TABLE `upload` CHANGE `user` `user` VARCHAR( 128 ) NOT NULL";	
+		$db_results = mysql_query($sql, dbh());
+
+		/* Drop the Comment Field (we dont' use it!) */
+		$sql = "ALTER TABLE `upload` DROP `comment`";
+		$db_results = mysql_query($sql, dbh());
+
+		/* Tweak the Enum */
+		$sql = "ALTER TABLE `upload` CHANGE `action` `action` ENUM( 'add', 'delete', 'quarantine' ) NOT NULL DEFAULT 'add'";
+		$db_results = mysql_query($sql, dbh());
+
+		/* Add Session to the Now Playing so we can deal with them damn'd WMP10 people */
+		$sql = "ALTER TABLE `now_playing` ADD `session` VARCHAR( 64 )";
+		$db_results = mysql_query($sql, dbh());
+
+		/* Add in the extra Access Control fields */
+		$sql = "ALTER TABLE `access_list` ADD `user` VARCHAR( 128 ) ," .
+			"ADD `key` VARCHAR( 255 )";
+		$db_results = mysql_query($sql, dbh());
+
+		$sql = "INSERT INTO `preferences` ( `id` , `name` , `value` , `description` , `level` , `type` , `locked` )" . 
+			"VALUES ('', 'quarantine_dir', '/tmp', 'Quarantine Directory', '100', 'system', '0')";
+		$db_results = mysql_query($sql, dbh());
+
+		/* Since this is a system value we only need to rebuild the -1 users preferences */
+		$user = new User();
+		$user->fix_preferences(-1);
+
+		$this->set_version('db_version','332003');
+
+	} // update_332003
 
 } // end update class
 ?>
