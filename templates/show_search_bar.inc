@@ -68,7 +68,7 @@
 		</select>
 	</td>
 	<td>
-		<input type="submit" value="<?php echo  _("Search"); ; ?>" />&nbsp;&nbsp;
+		<input class="button" type="submit" value="<?php echo  _("Search"); ; ?>" />&nbsp;&nbsp;
 		<input type="hidden" name="action" value="search" />
 		<input type="hidden" name="search_type" value="fuzzy" />
 	</td>
