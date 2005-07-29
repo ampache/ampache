@@ -235,7 +235,7 @@ class Update {
 		$version[] = array('version' => '332002', 'description' => $update_string);
 	
 		$update_string = "- Fixed Upload system, previous uploaded files are broken by this update.<br />" . 
-				 " &bnsp;If quarantine is turned on use /bin/quarantine_migration.php.inc to move<br />" . 
+				 " &nbsp;If quarantine is turned on use /bin/quarantine_migration.php.inc to move<br />" . 
 				 " &nbsp;them into place<br />" .
 				 "- Added New Fields to ACL table to allow for improved access control and XML-RPC security.<br />" . 
 				 "- Added New Field to Now Playing to Account for WMP10 and other over-zelous buffering apps.<br />";
