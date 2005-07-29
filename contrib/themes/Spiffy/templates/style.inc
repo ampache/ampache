@@ -30,8 +30,8 @@
 <!--
 	body	
 		{ 
-		background: url(<?php echo conf('web_path'); ?><?php echo conf('theme_path'); ?>/images/Dragon.jpg);?>
-            
+		background: url(<?php echo conf('web_path'); ?><?php echo conf('theme_path'); ?>/images/background.gif);?>
+
 		font-family: <?php echo conf('font') ?>; 
 		font-size: <?php echo conf('font_size'); ?>px; 
 		color: <?php echo conf('font_color2'); ?>;
