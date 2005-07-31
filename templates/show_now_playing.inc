@@ -49,7 +49,7 @@
                         if (conf('play_album_art')) {
                                 echo "\t<td align=\"center\">";
                                 echo "<a target=\"_blank\" href=\"" . conf('web_path') . "/albumart.php?id=" . $song->album . "\">";
-                                echo "<img align=\"middle\" border=\"0\" src=\"" . conf('web_path') . "/albumart.php?id=" . $song->album . "&amp;fast=1\" alt=\"Album Art\" height=\"75\" />";
+                                echo "<img align=\"middle\" border=\"0\" src=\"" . conf('web_path') . "/albumart.php?id=" . $song->album . "&amp;fast=1&thumb=1\" alt=\"Album Art\" height=\"75\" />";
                                 echo "</a>\n";
                                 echo "\t</td>\n";
                                 echo "</tr>\n";

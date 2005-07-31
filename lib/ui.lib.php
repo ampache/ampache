@@ -625,5 +625,56 @@ function show_local_catalog_info() {
 	
 } // show_local_catalog_info
 
+/*!
+	@function img_resize
+	@discussion this automaticly resizes the image for thumbnail viewing
+		only works on gif/jpg/png this function also checks to make
+		sure php-gd is enabled
+*/
+function img_resize($image,$size,$type){
+
+	/* Make sure they even want us to resize it */
+	if (!conf('resize_images')) { 
+		return false;
+	}
+
+	/* First check for php-gd */
+	$info = gd_info();
+
+	if ($type == 'jpg' AND !$info['JPG Support']) { 
+		return false; 
+	}
+	elseif ($type == 'png' AND !$info['PNG Support']) { 
+		return false;
+	}
+	elseif ($type == 'gif' AND !$info['GIF Create Support']) { 
+		return false;
+	}
+
+        $src = imagecreatefromstring($image);
+        $width = imagesx($src);
+        $height = imagesy($src);
+
+        $new_w = $size['width'];
+        $new_h = $size['height'];
+        
+	$img = imagecreatetruecolor($new_w,$new_h);
+        imagecopyresampled($img,$src,0,0,0,0,$new_w,$new_h,$width,$height);
+        
+        // determine image type and send it to the client
+	switch ($type) { 
+		case 'jpg':
+		        imagejpeg($img,null,100);
+		break;
+		case 'gif':
+			imagegif($img,null,100);
+		break;
+		case 'png':
+			imagepng($img,null,100);
+		break;
+	}
+
+} // img_resize
+
 
 ?>

@@ -43,7 +43,7 @@ $user = new User($_SESSION['userdata']['username']);
 	<?php 
         if ($album_name != "Unknown (Orphaned)") {
                 echo "<a target=\"_blank\" href=\"" . conf('web_path') . "/albumart.php?id=" . $album->id . "\">";
-		echo "<img border=\"0\" src=\"" . conf('web_path') . "/albumart.php?id=" . $album->id . "\" alt=\"Album Art\" height=\"128\" />";
+		echo "<img border=\"0\" src=\"" . conf('web_path') . "/albumart.php?id=" . $album->id . "&thumb=2\" alt=\"Album Art\" height=\"128\" />";
 		echo "</a>\n";
         }
 	?>

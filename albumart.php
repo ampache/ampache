@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2004 Ampache.org
+ Copyright (c) 2001 - 2005 Ampache.org
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
@@ -41,19 +41,39 @@ if (isset($r->art)) {
     $found = 1;
 }
 
+/* Decide what size this image is */
+switch ($_REQUEST['thumb']) { 
+	case '1':
+		$size['height'] = '75';
+		$size['width']	= '75';
+	break;
+	case '2':
+		$size['height']	= '128';
+		$size['width']	= '128';
+	break;
+	default:
+		$size['height'] = '275';
+		$size['width']	= '275';
+	break;
+}
+
 if (!$found) {
-    // Print a transparent gif instead
-//    header('Content-type: image/jpg');
-//    readfile(conf('prefix') . "/docs/images/blankalbum.jpg");
+	// Print a transparent gif instead
 	header('Content-type: image/gif');
 	readfile(conf('prefix') . conf('theme_path') . "/images/blankalbum.gif");
 }
 else {
-    // Print the album art
-    $extension = substr($mime,strlen($mime)-3,3);
-    header("Content-type: $mime");
-    header("Content-Disposition: filename=" . $album->name . "." . $extension);
-    echo $art;
-}
+	// Print the album art
+	$extension = substr($mime,strlen($mime)-3,3);
+	header("Content-type: $mime");
+	header("Content-Disposition: filename=" . $album->name . "." . $extension);
+
+	if (!$_REQUEST['thumb']) { 
+		echo $art;
+	}
+	elseif (!img_resize($art,$size,$extension)) { 
+	    	echo $art;
+	}
+} 
 
 ?>
