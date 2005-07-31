@@ -7,7 +7,9 @@
 ###########################
 
 name = "Classic Ampache NG"
+author	= "Matt Keadle"
 maintainer = "Matt Keadle <mkeadle@mkeadle.org>"
+version = "1.0"
 
 # Theme Colors
 ###################
