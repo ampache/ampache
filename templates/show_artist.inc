@@ -69,7 +69,7 @@ $artist_id = $artist->id;
 	</td>
           <td height="87">
                 <a href="<?php print $web_path; ?>/albums.php?album=<?php echo $id; ?>&amp;artist=<?php echo $artist->id; ?>">
-                <img border="0" src="<?php print $web_path; ?>/albumart.php?id=<?php print $id; ?>&amp;fast=1" alt="<?php echo $album_name; ?>" title="<?php print $album_name; ?>" height="75" width="75" />
+                <img border="0" src="<?php print $web_path; ?>/albumart.php?id=<?php print $id; ?>&amp;fast=1" alt="<?php echo $album_name; ?>" title="<?php print $album_name; ?>&thumb=1" height="75" width="75" />
                 </a>
           </td>
           <td><a href="<?php print $web_path; ?>/albums.php?album=<?php print $id; ?>&amp;artist=<?php echo $artist->id; ?>"><?php print $album_name; ?></a></td>
