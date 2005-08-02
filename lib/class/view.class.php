@@ -4,9 +4,6 @@
  Copyright (c) 2004 Ampache.org
  All rights reserved.
 
- $CVSHeader: ampache/modules/class/artist.php,v 1.1 2004/03/25 09:12:57 vollmerk Exp $
- $Source: /data/cvsroot/ampache/modules/class/artist.php,v $
-
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2

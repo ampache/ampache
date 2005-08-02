@@ -23,6 +23,8 @@
 	- Correctly deleted the session when deleting a user
 	- Added Search Bar to main page (Thx sigger)
 	- Added British English (Thx ??? <I need to look it up>)
+	- Added optional automatic resizing of thumbnails using php-gd
+	- Improved Upload System (Thx Rosensama)
 
 
 --------------------------------------------------------------------------

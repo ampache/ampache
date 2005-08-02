@@ -1834,7 +1834,6 @@ class Catalog {
 
 	} // insert_remote_song
 
-
 	/*!
 		@function check_remote_song
 		@discussion checks to see if a remote song exists in the database or not

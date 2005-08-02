@@ -22,63 +22,57 @@
                 
 */   
 ?>
-<center>
-  <h3>
-      <?php echo _("Please Ensure All Files Are Tagged Correctly"); ?>!<br />
-  </h3>
-  <p>
-      <?php echo _("Ampache relies on id3 tags to sort data.  If your file is not tagged it may be deleted."); ?>
-  </p>
 
 <form action="<?php echo conf('web_path'); ?>/upload.php?" method="post" name="upload_form" enctype="multipart/form-data" id="upload_form">
-  <input type="hidden" name="MAX_FILE_SIZE" value="<?php echo _("max_upload_size"); ?>" />
-  <table class="tabledata" cellspacing="0" cellpadding="0" border="0" width="90%" align="center">
-     <tr align="center">
-          <td>
-               <input size="40" type="file" name="ul_path1" id="ul_path1" />
+<table class="text-box" cellspacing="0" cellpadding="0" border="0">
+<tr>
+	<td>
+		<h3><?php echo _("Uploading Music to Ampache"); ?><br></h3>
+		<p>
+		<b><?php echo _("The following Audio file formats are supported"); ?></b>
+		<ul>
+			<li>OGG</li>
+			<li>Mp3</li>
+			<li>Mpc</li>
+			<li>Flac</li>
+			<li>WMA</li>
+			<li>Mp4/M4a/AAC</li>
+		</ul>
+		</p>
+		<?php $GLOBALS['error']->print_error('general'); ?>
+	</td>
+</tr>
+<tr>
+	<td>
+               <input size=40 type="file" name="ul_path1" id="ul_path1">
+	       <?php $GLOBALS['error']->print_error('ul_path1'); ?>
+        </td>
+</tr>  
+<tr>
+	<td>
+               <input size=40 type="file" name="ul_path2" id="ul_path2">
+		<?php $GLOBALS['error']->print_error('ul_path2'); ?>
+        </td>
+</tr>  
+<tr>
+        <td>
+	        <input size=40 type="file" name="ul_path3" id="ul_path3">
+		<?php $GLOBALS['error']->print_error('ul_path3'); ?>
+	</td>
+</tr>  
+<tr>
+        <td>
+	        <input size=40 type="file" name="ul_path4" id="ul_path4">
+		<?php $GLOBALS['error']->print_error('ul_path3'); ?>
+        </td>
+</tr>  
+<tr>
+        <td>	
+		<input type="hidden" name="action" value="upload">
+  		<input type="hidden" name="MAX_FILE_SIZE" value="<?php echo _("max_upload_size"); ?>" />
+               	<input type="submit" value="<?php echo _("Upload"); ?>">
           </td>
-     </tr>  
-     <tr align="center">
-          <td>
-               <input size="40" type="file" name="ul_path2" id="ul_path2" />
-          </td>
-     </tr>  
-     <tr align="center">
-          <td>
-               <input size="40" type="file" name="ul_path3" id="ul_path3" />
-          </td>
-     </tr>  
-     <tr align="center">
-          <td>
-               <input size="40" type="file" name="ul_path4" id="ul_path4" />
-          </td>
-     </tr>  
-     <tr align="center">
-          <td>	
-		<input type="hidden" name="action" value="upload_now" />
-               <input type="submit" value="<?php echo _("Upload"); ?>" />
-          </td>
-     </tr>  
-  </table>
-</form>
-
-<table align="center" border = "0">
-  <tr>
-   <td>
-   Acceptable formats include:
-   <ul>
-     <li>.mp3</li>
-     <li>.ogg</li>
-     <li>.wma</li>
-     <li>.flac</li>
-   </ul>
-   </td>
-  </tr>
+</tr>  
 </table>
-<!-- 
-<p> 
-  <?php echo _("Minimum Accepted Bitrate is"); ?> <?php echo $site->prefs['upload_bitrate'] ?> kbps
-</p>
--->
-</center>
+</form>
 

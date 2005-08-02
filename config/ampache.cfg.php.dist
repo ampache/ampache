@@ -168,6 +168,14 @@ use_auth	= "yes"
 # DEFAULT: folder.jpg
 #album_art_preferred_filename = "folder.jpg" 
 
+# Resize Images * Requires PHP-GD *
+# Set this to true if you want Ampache to resize the Album
+# art on the fly, this increases load time and CPU useage
+# and also requires the PHP-GD library. This is very usefull
+# If you have high-quality album art and a small upload cap
+# DEFAULT: false
+#resize_images = "false"
+
 # Album Art Gather Order
 # Simply arrange the following in the order you would like
 # ampache to search if you want to disable one of the search

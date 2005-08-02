@@ -727,6 +727,21 @@ ECHO;
 
 } // show_info_box
 
+/*!
+	@function get_file_extension
+	@discussion returns all characters after the last "." in $filename
+	Should I be using pathinfo() instead?
+*/
+function get_file_extension( $filename ) {
+	$file_name_parts = explode( ".", $filename );
+	$num_parts = count( $file_name_parts );
+	if( $num_parts <= 1 ) {
+		return;
+	} else {
+		return $file_name_parts[$num_parts - 1];
+	}
+} // get_file_extension
+
 /** 
  * tbl_name
  * This function takes a SQL table name and returns it with any prefix 
@@ -740,6 +755,5 @@ function tbl_name($table) {
 	return $table;
 
 } // tbl_name
-
 
 ?>

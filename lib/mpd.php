@@ -35,7 +35,7 @@ function addToPlaylist( $myMpd, $song_ids=array()) {
 			if ($GLOBALS['user']->prefs['play_type'] == 'downsample') { 
 				$ds = $GLOBALS['user']->prefs['sample_rate'];
 			}
-			$song_url = conf('web_path') . "/play/index.php?song=$song_id&uid=" . $GLOBALS['user']->username . "&sid=$sess_id&ds=$ds&name=." . $song->type;
+			$song_url = conf('web_path') . "/play/index.php?song=$song_id&uid=" . $_SESSION['userdata']['username'] . "&sid=$sess_id&ds=$ds&name=." . $song->type;
 			if (is_null( $myMpd->PlAdd($song_url) ) ) { 
 				$log_line = _("Error") . ": " . _("Could not add") . ": " . $song_url . " : " . $myMpd->errStr;
 				echo "<font class=\"error\">$log_line</font><br />\n";

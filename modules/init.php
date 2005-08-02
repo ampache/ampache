@@ -83,7 +83,7 @@ if (!$results['conf']['allow_stream_playback']) {
 }
 
 $results['conf']['web_path']		= $http_type . $_SERVER['HTTP_HOST'] . $results['conf']['web_path'];
-$results['conf']['version']		= '3.3.2-Alpha2 Build (002)';
+$results['conf']['version']		= '3.3.2-Alpha2 Build (003)';
 $results['conf']['catalog_file_pattern']= 'mp3|mpc|m4p|m4a|mp4|aac|ogg|rm|wma|asf|flac|spx';
 $results['libglue']['local_table']	= 'session';
 $results['libglue']['local_sid']	= 'id';
@@ -173,11 +173,8 @@ require_once(conf('prefix') . "/modules/catalog.php");
 require_once(conf('prefix') . "/modules/id3/audioinfo.class.php");
 require_once(conf('prefix') . "/modules/amazon/Snoopy.class.php");
 require_once(conf('prefix') . "/modules/amazon/AmazonSearchEngine.class.php");
-
-if (conf('xml_rpc')) { 
-	require_once(conf('prefix') . "/modules/xmlrpc/xmlrpc.inc");
-	require_once(conf('prefix') . "/lib/xmlrpc.php");
-}
+require_once(conf('prefix') . "/lib/xmlrpc.php");
+require_once(conf('prefix') . "/modules/xmlrpc/xmlrpc.inc");
 
 if (conf('allow_slim_playback')) { 
 	require_once(conf('prefix') . "/modules/slimserver/slim.class.php");
@@ -185,6 +182,10 @@ if (conf('allow_slim_playback')) {
 
 if (conf('allow_mpd_playback')) { 
 	require_once(conf('prefix') . "/modules/mpd/mpd.class.php");		
+}
+
+if (conf('allow_xmms2_playback')) { 
+	require_once(conf('prefix') . "/modules/xmms2/xmms2.class.php");
 }
 
 // Classes
