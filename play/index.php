@@ -108,7 +108,7 @@ if ( isset( $uid ) ) {
 		echo "Error: User Disabled"; 
 		exit; 
 	}
-	if (!$user->username && !$user->is_xmlrpc()) { 
+	if ( conf('use_auth') AND !$user->username AND !$user->is_xmlrpc() ) {
 		if (conf('debug')) { 
 			log_event($user->username,' user_not_found ',"Error $user->username not found, stream access denied");
 		}
