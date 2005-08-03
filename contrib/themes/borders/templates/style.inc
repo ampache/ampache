@@ -130,6 +130,13 @@ $relief_border2 = "solid 1pt " . conf('row_color1');
 		# gets rid of double line on top in albums.php;
 		border-top: solid 0pt <?php echo conf('bg_color2'); ?>;
 		}
+	.login
+		{ 
+		background:<?php echo conf('bg_color2'); ?>; 
+		border-collapse: separate;
+		border: <?php echo "$border " . conf('row_color1'); ?>;
+		border-spacing: 0pt;
+		}
 	.table-header
 		{
 		background: <?php echo conf('base_color2')?> ;
@@ -140,7 +147,6 @@ $relief_border2 = "solid 1pt " . conf('row_color1');
 		border-bottom: <?php echo "$relief_border"; ?>;
 		border-top: <?php echo "$relief_border"; ?>;
 		text-align: center;
-		font-size: larger;
 		}
 	.table-header  th
 		{
@@ -207,7 +213,6 @@ $relief_border2 = "solid 1pt " . conf('row_color1');
 	border-top: <?php echo "$relief_border"; ?>;
 	border-right: <?php echo "$relief_border"; ?>;
 	text-align: center;
-	font-size: larger;
     }
 	#mainmenu  li:first-child
 		{
@@ -255,7 +260,6 @@ $relief_border2 = "solid 1pt " . conf('row_color1');
 	border-top: <?php echo "$relief_border"; ?>;
 	border-right: <?php echo "$relief_border"; ?>;
 	text-align: center;
-	font-size: larger;
         display: inline;
     }
 	#adminmenu  li:first-child

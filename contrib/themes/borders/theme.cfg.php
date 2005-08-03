@@ -25,6 +25,8 @@ author = "Randy Perkins"
 # DEFAULT: N/A
 maintainer = "Randy Perkins <randyperkins@randyperkins.com>"
 
+version = "1.1"
+
 # Theme Colors
 ###################
 [color]
