@@ -35,12 +35,22 @@ function ToSong(action)
 	document.songs.submit();			// Submit the page
 	return true;
 }
+function ToBatch(action)
+{
+	document.songs.action = "<?php echo conf('web_path'); ?>/batch.php?action=" + action;
+	document.songs.submit();
+	return true;
+}
 -->
 </script>
 <table border="0" cellpadding="14" cellspacing="0" class="text-box">
 <tr align="left">
         <td>
                 <input class="button" type="button" name="super_action" value="<?php echo _("Play Selected"); ?>" onclick="return ToSong('play_selected');" />
+		<?php if (batch_ok()) { ?>
+		&nbsp;&nbsp;
+		<input class="button" type="button" name="super_action" value="<?php echo _("Download Selected"); ?>" onclick="return ToBatch('download_selected');" />
+		<? } ?>
 <!--                <input class="button" type="button" name="super_action" value="<?php echo _("Flag Selected"); ?>" />
                 <input class="button" type="button" name="super_action" value="<?php echo _("Edit Selected"); ?>" />
 -->

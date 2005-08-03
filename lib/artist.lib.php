@@ -93,6 +93,7 @@ function show_artists ($match = '') {
                          $offset_limit = $_SESSION['userdata']['offset_limit'];
                 }
                 $view = new View($query,'artists.php','name',$total_items,$offset_limit);
+		
         } // end if creating view object
 
         if (is_array($match)) {
@@ -102,6 +103,7 @@ function show_artists ($match = '') {
 
         $db_results = mysql_query($view->sql, $dbh);
         while ($r = @mysql_fetch_array($db_results)) {
+		//FIXME: This seriously needs to be updated to use the artist object
                 $artist_info = get_artist_info($r[0]);
                 $artist = format_artist($artist_info);
 		// Only Add this artist if there is information to go along with it

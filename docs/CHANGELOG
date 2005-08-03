@@ -25,6 +25,7 @@
 	- Added British English (Thx ??? <I need to look it up>)
 	- Added optional automatic resizing of thumbnails using php-gd
 	- Improved Upload System (Thx Rosensama)
+	- Added Download Selected Option if Zip Downloads are allowed
 
 
 --------------------------------------------------------------------------

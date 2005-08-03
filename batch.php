@@ -39,8 +39,21 @@
 	set_time_limit(0);
 
 
-	if( batch_ok( ) ) {
+	if(batch_ok()) {
 		switch( scrub_in( $_REQUEST['action'] ) ) {
+			case 'download_selected':
+				$type = scrub_in($_REQUEST['type']);
+				if ($type == 'album') { 
+					$song_ids = get_songs_from_type($type,$_POST['song'],$_REQUEST['artist_id']);
+				}
+				else { 
+					$song_ids = $_POST['song'];
+				}
+				$name = "selected-" . date("m-d-Y",time());
+				$song_files = get_song_files($song_ids);
+				set_memory_limit($song_files[1]+16);
+				send_zip($name,$song_files[0]);
+				break;
 			case "pl":
 				$id = scrub_in( $_REQUEST['id'] );
 				$pl = new Playlist( $id );
