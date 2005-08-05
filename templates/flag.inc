@@ -75,7 +75,7 @@ if ( $type == 'show_flagged_form' ) {
 		</td>
 	</tr>
 </table>
-<input type="hidden" name="song" value="<?php echo  $song->id ; ?>">
+<input type="hidden" name="song" value="<?php echo  $song->id ; ?>" />
 </form>
 
 <?php 
