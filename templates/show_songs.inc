@@ -69,13 +69,13 @@ $web_path = conf('web_path');
             }
         ?>
              <td>
-              <a href="<?php echo $web_path; ?>/song.php?action=m3u&amp;song=<?php echo $song->id; ?>" title="<?php echo htmlspecialchars($song->title); ?>" <?php echo $text_class; ?>> <?php echo htmlspecialchars($song->f_title); ?> </a>
+              <a href="<?php echo $web_path; ?>/song.php?action=m3u&amp;song=<?php echo $song->id; ?>" title="<?php echo htmlspecialchars($song->title); ?>" <?php echo $text_class; ?>><?php echo htmlspecialchars($song->f_title); ?></a>
             </td>
             <td>
-              <a href="<?php echo $web_path; ?>/artists.php?action=show&amp;artist=<?php echo htmlspecialchars($song->artist); ?>" title="<?php echo htmlspecialchars($song->f_artist_full); ?>" <?php echo $text_class; ?>> <?php echo htmlspecialchars($song->f_artist); ?> </a>
+              <a href="<?php echo $web_path; ?>/artists.php?action=show&amp;artist=<?php echo htmlspecialchars($song->artist); ?>" title="<?php echo htmlspecialchars($song->f_artist_full); ?>" <?php echo $text_class; ?>><?php echo htmlspecialchars($song->f_artist); ?></a>
             </td>
             <td>
-              <a href="<?php echo $web_path; ?>/albums.php?album=<?php echo htmlspecialchars($song->album); ?>" title="<?php echo htmlspecialchars($song->f_album_full); ?>" <?php echo $text_class; ?>> <?php echo htmlspecialchars($song->f_album); ?> </a>
+              <a href="<?php echo $web_path; ?>/albums.php?album=<?php echo htmlspecialchars($song->album); ?>" title="<?php echo htmlspecialchars($song->f_album_full); ?>" <?php echo $text_class; ?>><?php echo htmlspecialchars($song->f_album); ?></a>
             </td>
             <td align="right">
               <?php echo $song->track; ?>
