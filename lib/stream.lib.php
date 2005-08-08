@@ -131,8 +131,8 @@ function check_lock_songs($song_id) {
 function start_downsample($song,$now_playing_id=0,$song_name=0) { 
 
 	/* Check to see if bitrates are set if so let's go ahead and optomize! */
-	$max_bitrate = conf('max_bitrate');
-	$min_bitrate = conf('min_bitrate');
+	$max_bitrate = conf('max_bit_rate');
+	$min_bitrate = conf('min_bit_rate');
 	$time = time();
 	$dbh = dbh();
 	$user_sample_rate = $GLOBALS['user']->prefs['sample_rate'];
@@ -160,11 +160,11 @@ function start_downsample($song,$now_playing_id=0,$song_name=0) {
 		************************************/
 		
 
-		$sql = "SELECT COUNT(*) FROM now_playing, user_preference, preferences" . 
+		$sql = "SELECT COUNT(*) FROM now_playing, user_preference, preferences " . 
 			"WHERE preferences.name = 'play_type' AND user_preference.preference = preferences.id " . 
 			"AND now_playing.user = user_preference.user AND user_preference.value='downsample'";
 		$db_results = mysql_query($sql,$dbh);
-		$results = mysql_fetch_row($db_result);
+		$results = mysql_fetch_row($db_results);
 
 		// Current number of active streams + 1 (the one we are starting)
 		$active_streams = $results[0] + 1;
@@ -211,7 +211,7 @@ function start_downsample($song,$now_playing_id=0,$song_name=0) {
 	
 	/* Never Upsample a song */
 	if (($sample_rate*1000) > $song->bitrate) {
-		unset($sample_rate);
+		$sample_rate = $song->bitrate/1000;
 		$sample_ratio = '1';
 	}
 
