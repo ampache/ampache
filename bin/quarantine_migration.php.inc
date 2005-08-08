@@ -21,61 +21,57 @@
 	
 */
 
-/* This isn't working yet, don't let em try! */
-exit();
-
 $no_session='1';
-require_once( '../modules/init.php' );
-require_once( '../lib/upload.php' );
+require_once('../modules/init.php');
+
 usage();
 
-// check for correct db version
-$sql = "SELECT value FROM update_info WHERE `key` = 'db_version'";
-$db_results = mysql_query( $sql, dbh() );
-if( mysql_num_rows( $db_results ) != 1 ) {
-	$text = _( 'expected exactly 1 row in update_info table' );
-	cli_out( $text, 0 );
-	exit;
-}
-$results = mysql_fetch_object( $db_results );
-$db_ver = $results->value;
-
-if( $db_ver < $reqd_db_ver ) {
-	$text = _( "this script requires database version $reqd_db_ver or higher" );
-	cli_out( $text, 0 );
-	exit;
-}
-
 // grab list of files from table
-$sql = "SELECT id, file, user FROM upload WHERE action = 'quarantine'";
-$db_results = mysql_query( $sql, dbh() );
-while( $results = mysql_fetch_object( $db_results ) ) {
-	$file = $results->file
-	$dir = dirname( $file );
-	$cat_id = dir_catalog( $dir );
-	if( $cat_id != -1 ) {	// then this file is is a catalog hierarchy
-		//check if it's been added to the catalog already
-		$catalog = new Catalog( $cat_id );
-		if( $catalog->check_local_mp3( $file ) ) {
-			$text = $file . _( ' is already in a catalog' );
-			cli_out( $text, 0 );
-			continue;
-		}
+$sql = "SELECT id, file, user,action FROM upload WHERE action != 'quarantine'";
+$db_results = mysql_query($sql, dbh());
+
+$files = array();
+$files['add'] = array();
+$files['delete'] = array();
+
+while ($results = mysql_fetch_assoc($db_results)) {
+
+	$action = $results['action'];
+
+	$files[$action][] = $results;
+
+} // end while
+
+/* Make sure we have write access to the upload dir */
+$upload_dir = conf('upload_dir');
+
+if (!@is_writeable($upload_dir)) { 
+	cli_out("\n" . _("Error: Unable to write to") .  $upload_dir . " \n");
+}
+
+
+/* Itterate through the files we need to move */
+$adds = &$files['add'];
+foreach ($adds as $data) { 
+
+	/* Make sure that the target filename doesn't exist */
+
+	$command = "mv " . $data['file'] . " " . $upload_dir;
+	$command = escapeshellcmd($command);
+
+	if (exec($command)) { 
+		cli_out("\n" . _("Moved") . " " . $data['file'] . "\n");
+		$sql = "DELETE FROM upload WHERE id='" . $data['id'] . "'";
+		$db_results = mysql_query($sql, dbh());
+	}
+	else { 
+		cli_out("\n" . _("Move Failed") . " " . $data['file'] . "\n");
 	}
 
-	// getting ready to move	
-	// check for each user's quar dir pref and source dir
-	// can we write to both?
-	$upload_user = new User( 0, $results->user );
-	$quar_dir = $upload_user->prefs['quarantine_dir'];
-	if( !is_writable( $quar_dir ) || !is_writable( $dir ) ) {
-		$text = $file . _( ' cannot write to file directory or quarantine directory' );
-		cli_out( $text, 0 );
-		continue;
-	}
-//	move files
-	$dest_file = $quar_dir . '/' . basename( $file );
-	$file_move_ok = rename( $file, $dest_filename );
+} // end foreach 
+
+exit();
+
 	if( !$file_move_ok ) {  
 		$text = $file . _( ' could not move file to quarantine directory ' ) . $dest_filename;
 		cli_out( $text, 0 );
@@ -87,7 +83,6 @@ while( $results = mysql_fetch_object( $db_results ) ) {
 	// update upload table
 	$sql = "UPDATE upload SET file = $dest_filename WHERE id = $results->id";
 	$db_results = mysql_query( $sql, dbh() );
-}	// while there are quarantined entries in the upload table
 
 exit;
 
@@ -98,14 +93,16 @@ exit;
 
 function usage( ) {
 	$text = _( "
-*** WARNING ***
-This script will attempt to move your music files!  
-*** WARNING ***
+	
+************* WARNING *************
+This script will move, and 
+potentially delete uploaded files.
+************* WARNING *************
 
-This script will process any pending quarantine files for the new uploads system.
-You must be running update $reqd_db_ver or higher.  Your old upload directory and 
-your new quarantine directory must be readable and writable by your webserver user.
-It must be run from the ampache/bin directory.
+All files marked for add will be moved to the upload directory. All files 
+marked for deletion will be deleted. This script must be run as a user with
+sufficient rights to perform the above two functions. 
+
 	\n" );
 	cli_out( $text, 1 );
 	
