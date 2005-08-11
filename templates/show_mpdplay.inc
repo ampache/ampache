@@ -100,6 +100,13 @@ global $condPL;
 </tr>
 </table>
 </td></tr>
+
+<?php
+echo '<script language="JavaScript" type="text/javascript"> var mpd_elapsed = '. $myMpd->current_track_position.' </script>';
+echo '<script language="JavaScript" type="text/javascript"> var mpd_song_length = '. $myMpd->current_track_length .' </script>';
+echo '<script language="JavaScript" type="text/javascript"> var mpd_state = "'. $myMpd->state .'" </script>';
+?>
+
 <?php   if ( $myMpd->state == MPD_STATE_PLAYING or $myMpd->state == MPD_STATE_PAUSED ) {  ?>
   <tr><td>
     <table border="0" cellpadding="0" cellspacing="0" width="100%">
@@ -124,14 +131,16 @@ global $condPL;
           ?></td>
       </tr>
      <tr> 
-      	<td align="center"><?php echo fmt_time($myMpd->current_track_position)?> (<?php echo (round(($myMpd->current_track_position/$myMpd->current_track_length),2)*100)."%) played" ?></td>
+      	<td align="center"><span id="mpd_cur_track_pos"><?php echo fmt_time($myMpd->current_track_position)?></span> (<?php echo (round(($myMpd->current_track_position/$myMpd->current_track_length),2)*100)."%) played" ?></td>
      </tr>   
+
       <tr>
-      	<td><b><?php echo _("On Deck ")?><?php echo _("(in ").
-                                   fmt_time($myMpd->current_track_length - $myMpd->current_track_position).")" ?>
+        <td><b><?php echo _("On Deck ")?><?php echo _("(in ").
+                       "<span id = 'mpd_on_deck_in'>".fmt_time($myMpd->current_track_length - $myMpd->current_track_position)."</span>)"?>
             </b>
         </td>
       </tr>
+
       <tr>
       	<td align="center"><?php
 	if (!$myMpd->playlist[($myMpd->current_track_id+1)]['Title']) {

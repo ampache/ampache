@@ -1,41 +1,65 @@
-<script language="JavaScript" type="text/javascript">
+<script language="JavaScript">
 // Set refresh interval (in seconds)
 var refreshinterval=<?= conf('refresh_limit'); ?>
 
 // Display the countdown inside the status bar?
 // Set "1" for yes or "0" for no
-var displaycountdown=0
+var displaycountdown=1
 
 // main-code
 var starttime
 var nowtime
 var reloadseconds=0
 var secondssinceloaded=0
+var mpd_notstoppause=1
 
 function starttime() {
-        starttime=new Date()
-        starttime=starttime.getTime()
-        countdown()
+   starttime=new Date()
+   starttime=starttime.getTime()
+   if (mpd_state == "stop" || mpd_state == "pause") { mpd_notstoppause = 0; }
+   countdown()
+}
+
+function fmt_time (timenum) {
+var min = Math.floor(timenum / 60)
+var sec = Math.floor(timenum % 60)
+var fmted = min + ':' + ((sec < 10) ? "0" : "") + sec
+return fmted
 }
 
 function countdown() {
-        nowtime= new Date()
-        nowtime=nowtime.getTime()
-        secondssinceloaded=(nowtime-starttime)/1000
+    nowtime= new Date()
+    nowtime=nowtime.getTime()
+    secondssinceloaded=(nowtime-starttime)/1000
 
-reloadseconds=Math.round(refreshinterval-secondssinceloaded)
-        if (refreshinterval>=secondssinceloaded) {
-                var timer=setTimeout("countdown()",1000)
-                if (displaycountdown=="1") {
-                        window.status="Page refreshing in "+reloadseconds+
-" seconds"
-                }
-        } else { 
-                clearTimeout(timer)
-                window.location.reload(true)
-        }                                   
+    if (mpd_notstoppause) {
+        reloadseconds = Math.round(mpd_song_length - mpd_elapsed - secondssinceloaded)
+        }
+    else
+        { reloadseconds = Math.round(refreshinterval - secondssinceloaded) }
+
+    if (displaycountdown=="1") 
+	{
+        window.status="Refreshing in "+reloadseconds+" seconds";
+        if (mpd_notstoppause) {
+            NodeList = document.getElementsByName ('mpd_cur_track_pos');
+            for (var i = 0; i < NodeList.length; i++)
+		{ NodeList.item(i).firstChild.data = fmt_time (mpd_elapsed + secondssinceloaded); }
+            NodeList = document.getElementsByName ('mpd_on_deck_in');
+            for (var i = 0; i < NodeList.length; i++)
+               	{ NodeList.item(i).firstChild.data = fmt_time (mpd_song_length - mpd_elapsed - secondssinceloaded); }
+	    }
+	if (reloadseconds > 0) {
+            var timer=setTimeout("countdown()",1000)
+            }
+	else { 
+            clearTimeout(timer)
+            window.location.reload(true)
+            } //if reloadseconds > 0
+        } // if displaycountdown
 }
  
 // start with page-load
 window.onload=starttime
 </script>
+

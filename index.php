@@ -35,7 +35,6 @@ show_menu_items('Home');
 show_clear();
 $action = scrub_in($_REQUEST['action']);
 
-if (conf('refresh_limit') > 0) { show_template('javascript_refresh'); }
 ?>
 
 <p style="font-size: 8pt; font-weight: bold;">
@@ -153,4 +152,6 @@ if (conf('refresh_limit') > 0) { show_template('javascript_refresh'); }
 </tr>
 </table>
 
-<?php show_page_footer ('Home', '', $user->prefs['display_menu']); ?>
+<?php show_page_footer ('Home', '', $user->prefs['display_menu']);
+if (conf('refresh_limit') > 0) { show_template('javascript_refresh'); }
+?>

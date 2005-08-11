@@ -270,7 +270,7 @@ class Song {
 		if ($song->title == "No Title Found") { $song->title = false; }
 	
 
-		if (trim($song->title) != trim($new_song->title) && strlen($new_song->title) > 0) { 
+		if (trim($song->title) != trim(stripslashes($new_song->title)) && strlen($new_song->title) > 0) { 
 			$array['change']	= true;
 			$array['text'] 		.= "<br />" . _("Title") . " [$song->title] " . _("updated to") . " [$new_song->title]\n";
 		} // if title
