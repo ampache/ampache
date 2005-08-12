@@ -30,7 +30,7 @@
 <!--
 	body	
 		{ 
-		background: url(<?php echo conf('web_path'); ?><?php echo conf('theme_path'); ?>/images/Dragon.jpg);?>
+		background: url(<?php echo conf('web_path'); ?><?php echo conf('theme_path'); ?>/images/Dragon.jpg);
             
 		font-family: <?php echo conf('font') ?>; 
 		font-size: <?php echo conf('font_size'); ?>px; 
