@@ -46,45 +46,63 @@ while ($results = mysql_fetch_assoc($db_results)) {
 $upload_dir = conf('upload_dir');
 
 if (!@is_writeable($upload_dir)) { 
-	cli_out("\n" . _("Error: Unable to write to") .  $upload_dir . " \n");
+	cli_out("\n" . _("Error: Unable to write to") .  $upload_dir);
+	exit;
 }
 
+$catalog_id = find_upload_catalog($upload_dir);
+
+if (!$catalog_id) { 
+	cli_out(_("Error: Upload directory not inside a catalog"));
+	exit;
+} // we must have a valid upload dir
+
+$catalog = new Catalog($catalog_id);
 
 /* Itterate through the files we need to move */
 $adds = &$files['add'];
 foreach ($adds as $data) { 
 
 	/* Make sure that the target filename doesn't exist */
-
+	
 	$command = "mv " . $data['file'] . " " . $upload_dir;
 	$command = escapeshellcmd($command);
+	
+	exec($command,$return,$error);
+	
+	if (!$error) { 
+		cli_out("\n" . _("Moved") . " " . $data['file']);
+		
+		$new_filename = $upload_dir . "/" . basename($data['file']);
 
-	if (exec($command)) { 
-		cli_out("\n" . _("Moved") . " " . $data['file'] . "\n");
+		cli_out(_("Adding") . " " . $new_filename . " " . _("to database"));
+		
+		$catalog->add_file($new_filename);
+
 		$sql = "DELETE FROM upload WHERE id='" . $data['id'] . "'";
 		$db_results = mysql_query($sql, dbh());
 	}
 	else { 
-		cli_out("\n" . _("Move Failed") . " " . $data['file'] . "\n");
+		cli_out(_("Move Failed") . " " . $data['file']);
 	}
+
 
 } // end foreach 
 
+/* Itterate through the files we need to delete */
+$deletes = &$files['delete'];
+foreach ($deletes as $data) { 
+
+	unlink($data['file']);
+	cli_out(_("Deleted") . " " . $data['file']);
+
+	$sql = "DELETE FROM upload WHERE id='" . $data['id'] . "'";
+	$db_results = mysql_query($sql, dbh());
+
+} // end foreach
+
+
 exit();
-
-	if( !$file_move_ok ) {  
-		$text = $file . _( ' could not move file to quarantine directory ' ) . $dest_filename;
-		cli_out( $text, 0 );
-		continue;
-	} else {
-		$text = _( 'Moved ' ) . $file . _( ' to ' ) . $dest_filename . ".\n";	
-		cli_out( $text, 1 );
-	}
-	// update upload table
-	$sql = "UPDATE upload SET file = $dest_filename WHERE id = $results->id";
-	$db_results = mysql_query( $sql, dbh() );
-
-exit;
 
 /*!
 	@function usage()
@@ -104,17 +122,17 @@ marked for deletion will be deleted. This script must be run as a user with
 sufficient rights to perform the above two functions. 
 
 	\n" );
-	cli_out( $text, 1 );
+	echo $text;
 	
-	$text = _( "Continue?  (Y/N):\t" );
-	cli_out( $text, 1 );
+	$text = _( "Continue?  (Y/N):" );
+	echo $text;
 	
 	// grab a character ignoring whitespace
 	do {
 		$input= fgetc( STDIN );
 	} while ( trim( $input ) == '' );
 
-	if( $input != 'Y' ) {
+	if(strcmp($input,"y") != 0 ) {
 		exit;
 	}
 }	// usage()
@@ -137,7 +155,7 @@ function cli_out( $text, $mode = 1 ) {
 		default:
 			$dest = STDOUT;
 			$pre = "";
-			$post = "";
+			$post = "\n";
 	}
 	fwrite( $dest, $pre . $text . $post );
 }	// error_out
