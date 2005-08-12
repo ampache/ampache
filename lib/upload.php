@@ -84,17 +84,18 @@ function check_upload_directory($directory) {
 		to make sure that is true. returns id of catalog found or false
 */
 function find_upload_catalog($directory) { 
-        $cat_error = -1;
-        $cat_id = $cat_error;
 
         $sql = "SELECT id, path FROM catalog";
         $db_results = mysql_query($sql, dbh());
 
-        while( $results = mysql_fetch_object($db_results)) {
+        while( $results = mysql_fetch_assoc($db_results)) {
+		
+		$catalog_path = str_replace("\\","/",$results['path']);
 
-                if( substr($dir, 0, strlen($results->path)) == $results->path ) { 
-                        return $results->id;
-                } // end if file path is in a catalog path
+		$directory = str_replace("\\","/",$directory);
+		if (strncmp($directory,$catalog_path,strlen($catalog_path)) == '0') { 
+			return $results['id'];
+		}
 
         } // end while loop through catalog records
 

@@ -241,7 +241,13 @@ class Catalog {
 			if(!$this->check_local_mp3($filename,$gather_type)) { 
 				$this->insert_local_song($filename,$file_size);
 			}
+			elseif (conf('debug')) { 
+				log_event($_SESSION['userdata']['username'], ' add_file ', "Error: File exists");
+			}
 		} // if valid file
+		elseif (conf('debug')) { 
+			log_event($_SESSION['userdata']['username'], ' add_file ', "Error: File doesn't match pattern");
+		}
 
 
 	} // add_file

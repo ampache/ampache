@@ -36,7 +36,6 @@
 */
 
 require_once( "modules/init.php" );
-require_once( "lib/upload.php" );
 // Set page header
 show_template('header');
 show_menu_items('Upload');
