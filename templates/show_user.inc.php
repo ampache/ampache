@@ -45,7 +45,7 @@
 </tr>
 <tr>
         <td>
-		<?php echo _("View Limit"); ?>:
+		<?php echo _("Results Per Page"); ?>:
 	</td>
 	<td>
 		<input type="text" name="offset_limit" size="5" value="<?php echo $this_user->offset_limit; ?>" />
