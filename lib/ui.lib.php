@@ -171,6 +171,8 @@ function show_menu_items ($high) {
  */
 function show_browse_menu($highlight) { 
 
+	$highlight = ucfirst($highlight);
+
 	include(conf('prefix'). "/templates/show_browse_menu.inc");
 
 } // show_browse_menu
@@ -283,7 +285,7 @@ function return_referer() {
  * shows the A-Z,0-9 lists for 
  *		albums and artist pages
  */
-function show_alphabet_list ($type,$script="artist.php",$selected="false") {
+function show_alphabet_list ($type,$script="artist.php",$selected="false",$action='match') {
 
         $list = array(A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z,1,2,3,4,5,6,7,8,9,"0");
 
@@ -293,18 +295,31 @@ function show_alphabet_list ($type,$script="artist.php",$selected="false") {
         echo "<div class=\"alphabet\">";
         foreach ($list as $l) {
 		$style_name = "style_" . strtolower($l);
-                echo "<a href=\"". conf('web_path') ."/$script?action=match&amp;match=$l\" " . ${$style_name} . ">$l</a> | \n";
+                echo "<a href=\"". conf('web_path') ."/$script?action=$action&amp;match=$l\" " . ${$style_name} . ">$l</a> | \n";
         }
 	
-	echo " <a href=\"". conf('web_path') ."/$script?action=match&amp;match=Browse\" $style_browse>" . _("Browse") . "</a> | \n";
+	echo " <a href=\"". conf('web_path') ."/$script?action=$action&amp;match=Browse\" $style_browse>" . _("Browse") . "</a> | \n";
         if ($script == "albums.php") {
-                echo " <a href=\"". conf('web_path') ."/$script?action=match&amp;match=Show_missing_art\" $style_show_missing_art>" . _("Show w/o art") . "</a> | \n";
+                echo " <a href=\"". conf('web_path') ."/$script?action=$action&amp;match=Show_missing_art\" $style_show_missing_art>" . _("Show w/o art") . "</a> | \n";
         } // if we are on the albums page
 	
-        echo " <a href=\"". conf('web_path') ."/$script?action=match&amp;match=Show_all\" $style_show_all>" . _("Show all") . "</a>";
+        echo " <a href=\"". conf('web_path') ."/$script?action=$action&amp;match=Show_all\" $style_show_all>" . _("Show all") . "</a>";
 	
         echo "</div>\n";
 } // show_alphabet_list
+
+/**
+ * show_alphabet_form
+ * this shows the spiffy little form that acts as a "quick search" when browsing
+ * @package General
+ * @catagory Display
+ */
+function show_alphabet_form($match, $text, $action) { 
+
+	require (conf('prefix') . '/templates/show_alphabet_form.inc.php');
+
+} // show_alphabet_form
+
 
 /**
  *  show_local_control
@@ -675,6 +690,18 @@ function img_resize($image,$size,$type){
 	}
 
 } // img_resize
+
+/**
+ * show_genres
+ * this shows the 'many' genre form, it takes an array of genre objects and the view object
+ * @package Genre
+ * @catagory Display
+ */
+function show_genres($genres,$view) { 
+
+	require (conf('prefix') . '/templates/show_genres.inc.php');
+
+} // show_genres
 
 
 ?>

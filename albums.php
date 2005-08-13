@@ -123,32 +123,30 @@ else {
 	switch($match) {
 		case 'Show_all':
 			show_alphabet_list('albums','albums.php','show_all');
-			echo "<form name=\"f\" method=\"get\" action=\"".$_SERVER['PHP_SELF']."\"><label for=\"match\" accesskey=\"S\">" . _("<u>S</u>how all albums") ."</label> <input type=\"text\" size=\"3\" id=\"match\" name=\"match\" value=\"\"></input><input type=\"hidden\" name=\"action\" value=\"match\"></input></form>\n";
+			show_alphabet_form('',_("Show Albums starting with"),"albums.php?action=match");
 			$offset_limit = 99999;
 			$sql = "SELECT id FROM album";
 			break;
                 case 'Show_missing_art':
                         show_alphabet_list('albums','albums.php','show_missing_art');
-                        echo "<form name=\"f\" method=\"get\" action=\"".$_SERVER['PHP_SELF']."\"><label for=\"match\" accesskey=\"S\">" . _("<u>S</u>how all albums") ."</label> <input type=\"text\" size=\"3\" id=\"match\" name=\"match\" value=\"\"></input><input type=\"hidden\" name=\"action\" value=\"match\"></input></form>\n";
+			show_alphabet_form('',_("Show Albums starting with"),"albums.php?action=match");
                         $offset_limit = 99999;
                         $sql = "SELECT id FROM album where art is null";
                         break; 
 		case 'Browse':
 		case 'show_albums':
 			show_alphabet_list('albums','albums.php','browse');
-			echo "<form name=\"f\" method=\"get\" action=\"".$_SERVER['PHP_SELF']."\"><label for=\"match\" accesskey=\"S\">" . _("<u>S</u>how only albums starting with") . "</label> <input type=\"text\" size=\"3\" id=\"match\" name=\"match\" value=\"\"></input><input type=\"hidden\" name=\"action\" value=\"match\"></input></form>\n";
+			show_alphabet_form('',_("Show Albums starting with"),"albums.php?action=match");
 			$sql = "SELECT id FROM album";
 			break;
 		case 'none':
 			show_alphabet_list('albums','albums.php','a');
-			echo "<p style=\"font: 10pt bold;\">".
-				_("Select a starting letter or Show all") . "</p>";
-			echo "<form name=\"f\" method=\"get\" action=\"".$_SERVER['PHP_SELF']."\"><label for=\"match\" accesskey=\"S\">" . _("<u>S</u>how only albums starting with") . "</label> <input type=\"text\" size=\"3\" id=\"match\" name=\"match\" value=\"\"></input><input type=\"hidden\" name=\"action\" value=\"match\"></input></form>\n";
+			show_alphabet_form('',_("Show Albums starting with"),"albums.php?action=match");
 			$sql = "SELECT id FROM album WHERE name LIKE 'a%'";
 			break;
 		default:
 			show_alphabet_list('albums','albums.php',$match);
-			echo "<form name=\"f\" method=\"get\" action=\"".$_SERVER['PHP_SELF']."\"><label for=\"match\" accesskey=\"S\">" . _("<u>S</u>how only albums starting with") . "<input type=\"text\" size=\"3\" id=\"match\" name=\"match\" value=\"$match\"></input><input type=\"hidden\" name=\"action\" value=\"match\"></input></p></form>\n";
+			show_alphabet_form($match,_("Show Albums starting with"),"albums.php?action=match");
 			echo "<br /><br />";
 			$sql = "SELECT id FROM album WHERE name LIKE '$match%'";
 	} // end switch

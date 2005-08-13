@@ -1066,6 +1066,7 @@ class Catalog {
 		$this->clean_albums();
 		$this->clean_stats();
 		$this->clean_artists();
+		$this->clean_genres();
 		$this->clean_flagged();
 
 	} // update_remote_catalog
@@ -1156,6 +1157,7 @@ class Catalog {
 		$this->clean_stats();
 		$this->clean_playlists();
 		$this->clean_flagged();
+		$this->clean_genres();
 
 		/* Return dead files, so they can be listed */
 		echo "<b>" . _("Catalog Clean Done") . " [" . count($dead_files) . "] " . _("files removed") . "</b><br />\n";
@@ -1163,6 +1165,39 @@ class Catalog {
 		return $dead_files;
 
 	} //clean_catalog
+
+	/**
+	 * clean_genres
+	 * This functions cleans up unused genres
+	 * @package Catalog
+	 * @catagory Clean
+	 */
+	function clean_genres() { 
+
+                /* Mysql 3.23 doesn't support our cool query so we have to do it a different way */
+                if (preg_match("/^3\./",mysql_get_server_info())) {
+                        $sql = "SELECT genre.id FROM genre LEFT JOIN song ON song.genre = genre.id WHERE song.id IS NULL";
+                        $db_results = mysql_query($sql, dbh());
+
+                        $results = array();
+
+                        while ($r = mysql_fetch_row($db_results)) {
+                                $results[] = $r;
+                        }
+
+                        foreach ($results as $dead) {
+
+                                $sql = "DELETE FROM genre WHERE id='$dead[0]'";
+                                $db_results = mysql_query($sql,dbh());
+                        }
+                        return true;
+                }
+
+                /* Do a complex delete to get albums where there are no songs */
+                $sql = "DELETE FROM genre USING genre LEFT JOIN song ON song.genre = genre.id WHERE song.id IS NULL";
+                $db_results = mysql_query($sql, dbh());
+
+	} // clean_genres
 
 
 	/*!

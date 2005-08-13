@@ -52,7 +52,17 @@ switch ($action) {
 		else { 
 			$song_ids = $_POST['song'];
 		}
-		$_REQUEST['action'] = "m3u";
+		$_REQUEST['action'] = 'm3u';
+	break;
+	case 'genre':
+		$genre = new Genre($_REQUEST['genre']);
+		$song_ids = $genre->get_songs();
+		$_REQUEST['action'] = 'm3u';
+	break;
+	case 'random_genre':
+		$genre 		= new Genre($_REQUEST['genre']);
+		$song_ids 	= $genre->get_random_songs();
+		$_REQUEST['action'] = 'm3u';
 	break;
 	default:
 	break;

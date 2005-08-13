@@ -26,6 +26,10 @@
 	- Added optional automatic resizing of thumbnails using php-gd
 	- Improved Upload System (Thx Rosensama)
 	- Added Download Selected Option if Zip Downloads are allowed
+	- Added initial Genre Browsing
+	- Fixed problem where catalog wouldn't clean unused genre
+		entries
+	- Fixed a security problem with Albums & Artists browse pages
 
 
 --------------------------------------------------------------------------
@@ -44,7 +48,7 @@
 	- Updated Getid3() library to 1.7.4
 	- Added code to streaming that requires you to play at least half
 		the song before it's counted in the stats (Thx SH)
-	- Added Norwegian translation (Thx Ruudboy)
+	- Added Dutch translation (Thx Ruudboy)
 	- Added a clean_catalog() to the /bin/catalog_update.php.inc script
 	- Removed all instances of $user->id
 	- Improved XMLRPC client and server functions, no longer attempts

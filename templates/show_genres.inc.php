@@ -39,12 +39,19 @@ $total_items = $view->total_items;
 </tr>
 <?php 
 	foreach ($genres as $genre) { 
-
+		$genre->format_genre();
 ?>
-<tr>
+<tr class="<?php echo flip_class(); ?>">
 	<td><?php echo $genre->link; ?></td>
 	<td><?php echo $genre->get_song_count(); ?></td>
-	<td>Play | Download</td>
+	<td>
+		<?php echo _("Play"); ?>:
+		<a href="<?php echo $genre->play_link; ?>">All</a> 
+		|
+		<a href="<?php echo $genre->random_link; ?>">Random</a>
+		|
+		Download
+	</td>
 </tr>
 <? } // end foreach genres ?>
 <tr class="even" align="center">

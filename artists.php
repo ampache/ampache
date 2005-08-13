@@ -68,33 +68,17 @@ switch($action) {
 	preg_match("/^(\w*)/", $match, $matches);
 	show_alphabet_list('artists','artists.php',$match);
 	if ($match === "Browse") {
-		echo "<form name=\"f\" method=\"get\" action=\"".$_SERVER['PHP_SELF']."\">\n";
-		echo "<label for=\"match\" accesskey=\"S\">";
-		echo _("<u>S</u>how artists starting with") . "</label> \n";
-		echo "<input type=\"text\" size=\"3\" id=\"match\" name=\"match\" value=\"\" />\n";
-		echo "<input type=\"hidden\" name=\"action\" value=\"match\" />\n";
-		echo "</form>\n";
+		show_alphabet_form('',_("Show Artists starting with"),"albums.php?action=match");
 		show_artists();
 	}
 	elseif ($match === "Show_all") {
-		echo "<form name=\"f\" method=\"get\" action=\"".$_SERVER['PHP_SELF']."\">\n";
-		echo "<label for=\"match\" accesskey=\"S\">";
-		echo _("<u>S</u>how artists starting with") . "</label> ";
-		echo "<input type=\"text\" size=\"3\" id=\"match\" name=\"match\" value=\"\" />\n";
-		echo "<input type=\"hidden\" name=\"action\" value=\"match\" />\n";
-		echo "</form>\n";
+		show_alphabet_form('',_("Show Artists starting with"),"albums.php?action=match");
 		$_SESSION['view_offset_limit'] = 999999;
 		show_artists();
 	}		
         else {
 		$chr = preg_replace("/[^a-zA-Z0-9]/", "", $matches[1]);
-
-		echo "<form name=\"f\" method=\"get\" action=\"".$_SERVER['PHP_SELF']."\">\n";
-		echo "<label for=\"match\" accesskey=\"S\">";
-		echo _("<u>S</u>how artists starting with") . "</label> \n";
-		echo "<input type=\"text\" size=\"3\" id=\"match\" name=\"match\" value=\"$chr\" />\n";
-		echo "<input type=\"hidden\" name=\"action\" value=\"match\" />\n";
-		echo "</p></form>\n";
+		show_alphabet_form($chr,_("Show Artists starting with"),"albums.php?action=match");
 
 		if ($chr == '') {
 			show_artists('A');
@@ -106,13 +90,8 @@ switch($action) {
 	break;
 
     default:
-	echo "<form name=\"f\" method=\"get\" action=\"".$_SERVER['PHP_SELF']."\">\n";
-	echo "<label for=\"match\" accesskey=\"S\">";
-	echo _("<u>S</u>how artists starting with") . "</label> \n";
-	echo "<input type=\"text\" size=\"3\" id=\"match\" name=\"match\" value=\"\" />\n";
-	echo "<input type=\"hidden\" name=\"action\" value=\"match\" />\n";
-	echo "</p></form>\n";
 	show_alphabet_list('artists','artists.php');
+	show_alphabet_form('',_("Show Artists starting with"),"albums.php?action=match");
 	show_artists('A');
 	break;
 

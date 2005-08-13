@@ -48,7 +48,31 @@ switch($action) {
 	case 'album':
 	case 'artist':
 	case 'genre':
+		/* Create the Needed Object */
+		$genre = new Genre();
+	
+		/* Setup the View object */
+		$view = new View();
+		$view->import_session_view();
+		$genre->show_match_list($_REQUEST['match']);
+		$sql = $genre->get_sql_from_match($_REQUEST['match']);
 
+		if ($_REQUEST['keep_view']) { 
+			$view->initialize();
+		}
+		else { 
+			$db_results = mysql_query($sql, dbh());
+			$total_items = mysql_num_rows($db_results);
+			$offset_limit = 999999;
+			if ($match != 'Show_All') { $offset_limit = $_SESSION['userdata']['offset_limit']; }
+			$view = new View($sql, 'browse.php?action=genre','name',$total_items,$offset_limit);
+		}
+	
+	        if ($view->base_sql) {
+			$genres = $genre->get_genres($view->sql);
+	                show_genres($genres,$view);
+        	}
+		
 	break;
 	case 'catalog':
 	

@@ -34,7 +34,7 @@ $web_path = conf('web_path');
 $items = array(
 	        _("Artist")      => "$web_path/artists.php",
 		_("Albums")      => "$web_path/albums.php",
-		_("Genre")       => "$web_path/genres.php",
+		_("Genre")       => "$web_path/browse.php?action=genre",
         );
 
 ?>
@@ -42,7 +42,7 @@ $items = array(
 
 	<?php
 	foreach ( array_keys($items) as $item ) {
-		if ( $admin_highlight == $item ) {
+		if ( _($highlight) == $item ) {
         		echo "<li class=\"active\"><a class=\"active\" href=\"$items[$item]\">" . $item . "</a></li>\n";
 		}
 		else {
