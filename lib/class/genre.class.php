@@ -71,7 +71,7 @@ class Genre {
 	 */
 	function format_genre() { 
 
-		$this->link = $this->name;
+		$this->link 		= "<a href=\"" . conf('web_path') . "/genre.php?action=show_genre&genre_id=" . $this->id . "\">" . $this->name . "</a>";
 		
 		$this->play_link 	= conf('web_path') . "/song.php?action=genre&genre=" . $this->id;
 		$this->random_link 	= conf('web_path') . "/song.php?action=random_genre&genre=" . $this->id; 
@@ -94,6 +94,40 @@ class Genre {
 		return $total_items[0];
 
 	} // get_song_count
+
+	/**
+	 * get_album_count
+	 * Returns the number of albums that contain a song of this genre
+	 * @package Genre
+	 * @catagory Class
+	 */
+	function get_album_count() { 
+
+		$sql = "SELECT COUNT(DISTINCT(song.album)) FROM song WHERE genre='" . $this->id . "'";
+		$db_results = mysql_query($sql, dbh());
+
+		$total_items = mysql_fetch_array($db_results); 
+
+		return $total_items[0];
+
+	} // get_album_count
+
+	/**
+	 * get_artist_count
+	 * Returns the number of artists who have at least one song in this genre
+	 * @package Genre
+	 * @catagory Class
+	 */
+	function get_artist_count() { 
+
+		$sql = "SELECT COUNT(DISTINCT(song.artist)) FROM song WHERE genre='" . $this->id . "'";
+		$db_results = mysql_query($sql, dbh());
+
+		$total_items = mysql_fetch_array($db_results);
+
+		return $total_items[0];
+
+	} // get_artist_count
 
 	/**
 	 * get_songs
@@ -148,7 +182,18 @@ class Genre {
 	 */
 	function get_albums() { 
 
+		$sql = "SELECT DISTINCT(song.album) FROM song WHERE genre='" . $this->id . "'";
+		$db_results = mysql_query($sql,dbh());
 
+		$results = array();
+
+		while ($r = mysql_fetch_assoc($db_results)) { 
+			$album = new Album($r['album']);
+			$album->format_album();
+			$results[] = $album;
+		}
+
+		return $results;
 
 	} // get_albums
 
@@ -160,7 +205,16 @@ class Genre {
 	 */
 	function get_artists() { 
 
+		$sql = "SELECT DISTINCT(song.artist) FROM song WHERE genre='" . $this->id . "'";
+		$db_results = mysql_query($sql, dbh());
 
+		$results = array();
+
+		while ($r = mysql_fetch_assoc($db_results)) { 
+			$results[] = get_artist_info($r['artist']);
+		}
+		
+		return $results;
 
 	} // get_artists
 

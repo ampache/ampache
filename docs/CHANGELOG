@@ -26,7 +26,7 @@
 	- Added optional automatic resizing of thumbnails using php-gd
 	- Improved Upload System (Thx Rosensama)
 	- Added Download Selected Option if Zip Downloads are allowed
-	- Added initial Genre Browsing
+	- Added Genre Browsing
 	- Fixed problem where catalog wouldn't clean unused genre
 		entries
 	- Fixed a security problem with Albums & Artists browse pages

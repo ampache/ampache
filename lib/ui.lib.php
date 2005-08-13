@@ -703,5 +703,18 @@ function show_genres($genres,$view) {
 
 } // show_genres
 
+/**
+ * show_genre
+ * this shows a single genre item which is basicly just a link to the albums/artists/songs of said genre
+ * @package Genre
+ * @catagory Display
+ */
+function show_genre($genre_id) { 
+
+	$genre = new Genre($genre_id);
+
+	require (conf('prefix') . '/templates/show_genre.inc.php');
+
+} // show_genre
 
 ?>

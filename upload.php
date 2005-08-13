@@ -118,13 +118,18 @@ switch( $action ) {
                                 }
                         } // if unwriteable
 
+			$catalog_id = find_upload_catalog($user->prefs['upload_dir']);
+			$catalog = new Catalog($catalog_id);
+			
+
                         /* Make sure that it's not in a catalog dir */
-                        if (!$catalog = find_upload_catalog($user->prefs['upload_dir'])) {
+                        if (!$catalog_id) {
                                 $GLOBALS['error']->add_error('general',"Error: Upload Directory not inside a catalog");
                                 if (conf('debug')) {
                                         log_event($user->username,' upload ',"Error: Upload Directory not inside a catalog");
                                 }
                         } // if in catalog dir
+
 
                         foreach ($_FILES as $key => $file) {
 

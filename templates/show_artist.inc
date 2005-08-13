@@ -29,21 +29,20 @@ $artist_id = $artist->id;
 <tr>
 	<td>
 	<span class="header1"><?php print _("Albums by") . " " . $artist->full_name; ?></span>
-<ul>
-        <li><a href="<?php print $web_path; ?>/artists.php?action=show_all_songs&amp;artist=<?php print $artist_id; ?>"><?php print _("Show All Songs By") . " " . $artist->full_name; ?></a></li>
-        <li><a href="<?php print $web_path; ?>/song.php?action=m3u&amp;artist=<?php print $artist_id; ?>"><?php print _("Play All Songs By") . " " . $artist->full_name; ?></a></li>
-        <li><a href="<?php print $web_path; ?>/song.php?action=m3u&amp;artist_random=<?php print $artist_id; ?>"><?php print _("Play Random Songs By") . " " . $artist->full_name; ?></a></li>
-	<?php  if ($user->has_access('100')) { ?> 
-		<li><a href="<?php print $web_path; ?>/artists.php?action=update_from_tags&amp;artist=<?php print $artist_id; ?>"><?php print _("Update from tags"); ?></a></li>
-	<?php } ?>
-</ul>
+	<ul>
+        	<li><a href="<?php print $web_path; ?>/artists.php?action=show_all_songs&amp;artist=<?php print $artist_id; ?>"><?php print _("Show All Songs By") . " " . $artist->full_name; ?></a></li>
+	        <li><a href="<?php print $web_path; ?>/song.php?action=m3u&amp;artist=<?php print $artist_id; ?>"><?php print _("Play All Songs By") . " " . $artist->full_name; ?></a></li>
+	        <li><a href="<?php print $web_path; ?>/song.php?action=m3u&amp;artist_random=<?php print $artist_id; ?>"><?php print _("Play Random Songs By") . " " . $artist->full_name; ?></a></li>
+		<?php  if ($user->has_access('100')) { ?> 
+			<li><a href="<?php print $web_path; ?>/artists.php?action=update_from_tags&amp;artist=<?php print $artist_id; ?>"><?php print _("Update from tags"); ?></a></li>
+		<?php } ?>
+	</ul>
 	</td>
 </tr>
 </table>
 <!-- *** Multi-Album Art Display Thx MrBlahh Updated by clader *** -->
 <br />
 <form name="songs" method="post" enctype="multipart/form-data" action="artists.php">
-
 <table class="border" cellspacing="0" cellpadding="0" border="0">
         <tr class="table-header">
         <th align="center">

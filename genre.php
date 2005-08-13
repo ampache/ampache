@@ -34,16 +34,27 @@ show_clear();
 $action = scrub_in($_REQUEST['action']);
 
 switch($action) { 
-
-	case 'show':
-	
+	case 'show_songs':
+		$genre = new Genre($_REQUEST['genre_id']);
+		show_genre($_REQUEST['genre_id']);
+		$songs = $genre->get_songs();
+		show_songs($songs);
 	break;
-	case 'match':
-
+	case 'show_albums':
+		$genre = new Genre($_REQUEST['genre_id']);
+		show_genre($_REQUEST['genre_id']);
+		$albums = $genre->get_albums();
+		show_albums($albums);
 	break;
-
+	case 'show_artists':
+		$genre = new Genre($_REQUEST['genre_id']);
+		show_genre($_REQUEST['genre_id']);
+		$artists = $genre->get_artists();
+		require (conf('prefix') . '/templates/show_artists.inc');
+	break;
+	case 'show_genre':
 	default: 
-
+		show_genre($_REQUEST['genre_id']);
 	break;
 } // action
 
