@@ -71,10 +71,10 @@ class Genre {
 	 */
 	function format_genre() { 
 
-		$this->link 		= "<a href=\"" . conf('web_path') . "/genre.php?action=show_genre&genre_id=" . $this->id . "\">" . $this->name . "</a>";
+		$this->link 		= "<a href=\"" . conf('web_path') . "/genre.php?action=show_genre&amp;genre_id=" . $this->id . "\">" . $this->name . "</a>";
 		
-		$this->play_link 	= conf('web_path') . "/song.php?action=genre&genre=" . $this->id;
-		$this->random_link 	= conf('web_path') . "/song.php?action=random_genre&genre=" . $this->id; 
+		$this->play_link 	= conf('web_path') . "/song.php?action=genre&amp;genre=" . $this->id;
+		$this->random_link 	= conf('web_path') . "/song.php?action=random_genre&amp;genre=" . $this->id; 
 		
 	} // format_genre
 
@@ -275,7 +275,7 @@ class Genre {
 	function show_match_list($match) { 
 
 		show_alphabet_list('genre','browse.php',$match,'genre');
-		show_alphabet_form($match,_("Show Genres starting with"),"browse.php?action=genre&match=$match");
+		show_alphabet_form($match,_("Show Genres starting with"),"browse.php?action=genre&amp;match=$match");
 
 	} // show_match_list
 

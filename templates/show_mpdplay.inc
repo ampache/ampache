@@ -101,11 +101,6 @@ global $condPL;
 </table>
 </td></tr>
 
-<?php
-echo '<script language="JavaScript" type="text/javascript"> var mpd_elapsed = '. $myMpd->current_track_position.' </script>';
-echo '<script language="JavaScript" type="text/javascript"> var mpd_song_length = '. $myMpd->current_track_length .' </script>';
-echo '<script language="JavaScript" type="text/javascript"> var mpd_state = "'. $myMpd->state .'" </script>';
-?>
 
 <?php   if ( $myMpd->state == MPD_STATE_PLAYING or $myMpd->state == MPD_STATE_PAUSED ) {  ?>
   <tr><td>
@@ -162,6 +157,12 @@ echo '<script language="JavaScript" type="text/javascript"> var mpd_state = "'. 
   </td></tr>
 <?php  } ?>
 </table>
+<?php
+echo '<script language="JavaScript" type="text/javascript"> var mpd_elapsed = '. $myMpd->current_track_position.' </script>';
+echo '<script language="JavaScript" type="text/javascript"> var mpd_song_length = '. $myMpd->current_track_length .' </script>';
+echo '<script language="JavaScript" type="text/javascript"> var mpd_state = "'. $myMpd->state .'" </script>';
+?>
+
 <?php /**************** Comment the playlist out now that the big playlist is done
 
 <br />

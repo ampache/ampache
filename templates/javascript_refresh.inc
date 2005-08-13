@@ -1,4 +1,5 @@
-<script language="JavaScript">
+<script type="text/javascript" language="javascript">
+<!-- Begin
 // Set refresh interval (in seconds)
 var refreshinterval=<?= conf('refresh_limit'); ?>
 
@@ -61,5 +62,6 @@ function countdown() {
  
 // start with page-load
 window.onload=starttime
+// End -->
 </script>
 

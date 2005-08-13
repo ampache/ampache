@@ -31,6 +31,7 @@ require_once("modules/init.php");
 $myMpd = init_mpd();
 
 show_template('header');
+if (conf('refresh_limit') > 0) { show_template('javascript_refresh'); }
 show_menu_items('Home');
 show_clear();
 $action = scrub_in($_REQUEST['action']);
@@ -153,6 +154,4 @@ $action = scrub_in($_REQUEST['action']);
 </tr>
 </table>
 
-<?php show_page_footer ('Home', '', $user->prefs['display_menu']);
-if (conf('refresh_limit') > 0) { show_template('javascript_refresh'); }
-?>
+<?php show_page_footer ('Home', '', $user->prefs['display_menu']);?>

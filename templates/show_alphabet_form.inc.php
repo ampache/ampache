@@ -28,7 +28,7 @@
 ?>
 
 <form name="f" method="get" action="<?php echo conf('web_path') . "/$action"; ?>" enctype="multipart/form-data">
-	<label for="match" accesskey="S"><?php echo $text; ?>
+	<label for="match" accesskey="S"><?php echo $text; ?></label> 
 	<input type="text" size="3" id="match" name="match" value="<?php echo $match; ?>" />
 	<input type="hidden" name="action" value="match" />
 </form>
