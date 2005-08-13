@@ -470,6 +470,10 @@ rss_song_description = <![CDATA[$song->f_title @ $album played by  $user->fullna
 # DEFAULT: ""
 #mpd_pass = ""
 
+# MPD base directory
+# this is the directory mpd.conf's music_directory points to, but
+# it's the path on your Ampache server, not the mpd server
+#mpd_dir = ""
 
 # MPD Method
 # This is the method you want to use to pass your

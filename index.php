@@ -63,11 +63,15 @@ $action = scrub_in($_REQUEST['action']);
 			<?php show_local_catalog_info(); ?>
 		</td>
 		<td valign="top" align="left">
-			<?php 
+    <?php 
+			if ($user->prefs['play_type'] == 'mpd' && !conf('localplay_menu')) { 
+		    		show_mpd_control(); 
+			}  else {
 				if ( $items = get_global_popular('album') ) { 
 					show_info_box(_("Most Popular Albums"), 'album',$items);
 				}
-			?>
+		  }
+		?>
 		</td>	
 	</tr>
 	<tr><td colspan="2">&nbsp;</td></tr>
@@ -77,16 +81,16 @@ $action = scrub_in($_REQUEST['action']);
 		</td>
 	</tr>
 	<tr><td colspan="2">&nbsp;</td></tr>
-	<tr> 
-                <?php 
-			if ($user->prefs['play_type'] == 'mpd') { 
-		    		show_mpd_pl(); 
-			}  else {
-			echo "<td>&nbsp;</td>";
-		    }
-		?>
-	</tr>
-	<tr><td colspan="2">&nbsp;</td></tr>
+  <tr> 
+      <?php 
+      if ($user->prefs['play_type'] == 'mpd' && !conf('localplay_menu')) { 
+        show_mpd_pl(); 
+      } else {
+        echo "<td>&nbsp;</td>";
+      }
+      ?>
+  </tr>
+  <tr><td colspan="2">&nbsp;</td></tr>  
 	<tr>
 	        <td valign="top" align="right">
 	                <?php
@@ -137,9 +141,6 @@ $action = scrub_in($_REQUEST['action']);
 		    if($user->prefs['play_type'] == 'local_play') {
 		        show_local_control();
 		        echo "<br />";
-		    } elseif ($user->prefs['play_type'] == 'mpd' && !conf('localplay_menu')) { 
-		    	show_mpd_control();
-			echo "<br />";
 		    } else {
 			echo "&nbsp;";
 		    }

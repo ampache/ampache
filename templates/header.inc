@@ -84,6 +84,12 @@ function flipField(element) {
         }
   }
 
+	function invert_songs() {
+		for( i = 0; i < document.forms.songs.elements["song[]"].length; ++i ) {
+			document.forms.songs.elements["song[]"][i].checked = !document.forms.songs.elements["song[]"][i].checked
+		}
+	}
+
   var checkflag_results = "false";
 
   function check_results() {

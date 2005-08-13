@@ -19,24 +19,11 @@
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
-
-/*!
-	@header MPD control
-	@discussion Ampache MPD control center
-
-*/
-require_once("modules/init.php");
-show_template('header');
-if (conf('refresh_limit') > 0) { show_template('javascript_refresh'); }
-show_menu_items('Local Play');
-show_clear();
-
-if ($user->prefs['play_type'] == 'mpd') {
-	show_mpd_control();
-	show_mpd_pl();
-}
-
-show_clear();
-show_page_footer('Local Play','',$user->prefs['display_menu'] );
-
 ?>
+<table border="0" cellpadding="0" cellspacing="1" class="text-box">
+<tr align="center">
+        <td >
+                <?php  show_playlist_dropdown($GLOBALS['playlist_id']); ?>
+        </td>
+</tr>
+</table>

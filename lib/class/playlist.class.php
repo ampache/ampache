@@ -186,18 +186,26 @@ class Playlist {
 	/*!
 		@function add_songs
 		@discussion Reads an array of song_ids to add to the playlist
+		@param $song_ids the array of song_ids
+		@param $is_ordered boolean, if true insert in order submitted, not by track number
 	*/
-	function add_songs($song_ids) {
+	function add_songs($song_ids, $is_ordered = false) {
 
 		$dbh = dbh();
 
 		if ($this->id && isset($song_ids) && is_array($song_ids)) {
+			$count = 0;
 			foreach ($song_ids as $song_id) {
+				if( $is_ordered ) {
+					$track_num = $count++;
+				} else {
+					$track_num = $song->track;
+				}
 				$song = new Song($song_id);
 				if (isset($song->id)) {
 					$sql = "INSERT INTO playlist_data" .
 						" (playlist, song, track)" .
-						" VALUES ('$this->id', '$song->id', '$song->track')";
+						" VALUES ('$this->id', '$song->id', '$track_num')";
 					$db_results = mysql_query($sql, $dbh);
 				}
 			}

@@ -90,10 +90,11 @@ function show_mpd_pl() {
  * Redriect mojo
  * @package Local Play
  * @catagory MPD
+ * @param $page is the URL after conf('web_path') . '/'
  */
-function mpd_redirect() {
+function mpd_redirect( $page = 'mpd.php' ) {
         if (conf('localplay_menu')) {
-                header ("Location: " . conf('web_path') . "/mpd.php");
+                header ("Location: " . conf('web_path') . '/' . $page);
         }       
         else {          
                 header ("Location: " . conf('web_path')); 
@@ -119,8 +120,15 @@ function init_mpd() {
                 $myMpd = new mpd(conf('mpd_host'),conf('mpd_port'));
         }
 
+	if (!$myMpd->connected AND is_object($myMpd)) { 
+		// Attempt to reconnect
+		$myMpd->Connect();
+	}
+
         if (!$myMpd->connected) {
-                if (conf('debug')) {  log_event ($_SESSION['userdata']['username'],' connection_failed ',"Error: unable to connect to MPD, ".$myMpd->errStr); }
+                if (conf('debug')) {  
+			log_event ($_SESSION['userdata']['username'],' connection_failed ',"Error: unable to connect to ". conf('mpd_host') . " on port " . conf('mpd_port') . " ".$myMpd->errStr); 
+		}
 		return false;
         }
 
