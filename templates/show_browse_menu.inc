@@ -32,7 +32,7 @@
 $web_path = conf('web_path');
 
 $items = array(
-	        _("Artist")      => "$web_path/artists.php",
+	        _("Artists")      => "$web_path/artists.php",
 		_("Albums")      => "$web_path/albums.php",
 		_("Genre")       => "$web_path/browse.php?action=genre",
         );

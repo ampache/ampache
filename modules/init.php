@@ -83,7 +83,7 @@ if (!$results['conf']['allow_stream_playback']) {
 }
 
 $results['conf']['web_path']		= $http_type . $_SERVER['HTTP_HOST'] . $results['conf']['web_path'];
-$results['conf']['version']		= '3.3.2-Alpha2 Build (005)';
+$results['conf']['version']		= '3.3.2-Alpha2';
 $results['conf']['catalog_file_pattern']= 'mp3|mpc|m4p|m4a|mp4|aac|ogg|rm|wma|asf|flac|spx';
 $results['libglue']['local_table']	= 'session';
 $results['libglue']['local_sid']	= 'id';
@@ -257,11 +257,11 @@ if (!conf('use_auth')) {
 	$auth['success'] = 1;
 	$auth['info']['username'] = "Ampache";
 	$auth['info']['fullname'] = "Ampache User";
-	$auth['info']['id'] = 0;
+	$auth['info']['id'] = -1;
 	$auth['info']['access'] = "admin";
 	$auth['info']['offset_limit'] = 50;
 	if (!check_session()) { make_local_session_only($auth); }
-	$user 			= new User(0);
+	$user 			= new User(-1);
 	$user->fullname 	= $auth['info']['fullname'];
 	$user->offset_limit 	= $auth['info']['offset_limit'];
 	$user->username 	= $auth['info']['username'];

@@ -261,7 +261,7 @@ function create_preference_input($name,$value) {
 			echo "\t<option value=\"fr_FR\" $fr_FR_lang>" . _("French") . "</option>\n";
 			echo "\t<option value=\"tr_TR\" $tr_TR_lang>" . _("Turkish") . "</option>\n";
 			echo "\t<option value=\"es_ES\" $es_ES_lang>" . _("Spanish") . "</option>\n";
-			echo "\t<option value=\"nl_NL\" $nl_NL_lang>" . _("Norwegian") . "</option>\n";
+			echo "\t<option value=\"nl_NL\" $nl_NL_lang>" . _("Dutch") . "</option>\n";
 			echo "\t<option value=\"zh_CN\" $zh_CN_lang>" . _("Simplified Chinese") . "</option>\n";
 			echo "</select>\n";
 		break;

@@ -30,6 +30,7 @@
 	- Fixed problem where catalog wouldn't clean unused genre
 		entries
 	- Fixed a security problem with Albums & Artists browse pages
+	- Fixed Logout button showing up when use_auth was false
 
 
 --------------------------------------------------------------------------

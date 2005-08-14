@@ -4,7 +4,6 @@
  Copyright (c) 2001 - 2005 Ampache.org
  All rights reserved.
 
-
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -21,12 +20,13 @@
 
 */
 
-
-/*!
-	@header Song Admin Files
- Edit song information.  Can be just DB or file based (update MP3 ID3 tags).
-
-*/
+/**
+ * Song Admin Document
+ * This document can update/flag disable/enable songs, it's in the admin folder
+ * because all of the above operations require elavated privs
+ * @package Song
+ * @catagory Admin
+ */
 
 require('../modules/init.php');
 require_once(conf('prefix').'/lib/flag.php');
@@ -47,42 +47,40 @@ show_admin_menu('Catalog');
 
 $song_obj = new Song($_REQUEST['song_id']);
 
-switch($action)
-{
-    case "Update":
-    case "update";
-        update_song_info($song);
-        edit_song_info($song);
-        break;
-    case "Edit":
-    case "edit":
-        edit_song_info($song);
-        break;
-    case "disable":
-    	
-	// If we pass just one, make it still work
-    	if (!is_array($_REQUEST['song_ids'])) { $song_obj->update_enabled('disabled',$_REQUEST['song_ids']); }
-	else {
-	    	foreach ($_REQUEST['song_ids'] as $song_id) {
-			$song_obj->update_enabled('disabled',$song_id);
-		} // end foreach
-	} // end else
-	show_confirmation(_("Songs Disabled"),_("The requested song(s) have been disabled"),return_referer());
+switch($action) {
+	case 'Update':
+	case 'update';
+        	update_song_info($song);
+	        edit_song_info($song);
 	break;
-    case "enabled":
-        // If we pass just one, make it still work
-        if (!is_array($_REQUEST['song_ids'])) { $song_obj->update_enabled('enabled',$_REQUEST['song_ids']); }
-	else {
-	        foreach ($_REQUEST['song_ids'] as $song_id) {
-			$song_obj->update_enabled('enabled',$song_id);
-		} // end foreach
-	} // end else
-        show_confirmation(_("Songs Enabled"),_("The requested song(s) have been enabled"),return_referer());
+	case "Edit":
+	case "edit":
+		edit_song_info($song);
         break;
-
-    default:
-        echo "Don't know what to do yet.";
-}
+	case 'disable':
+		// If we pass just one, make it still work
+	    	if (!is_array($_REQUEST['song_ids'])) { $song_obj->update_enabled(0,$_REQUEST['song_ids']); }
+		else {
+		    	foreach ($_REQUEST['song_ids'] as $song_id) {
+				$song_obj->update_enabled(0,$song_id);
+			} // end foreach
+		} // end else
+		show_confirmation(_("Songs Disabled"),_("The requested song(s) have been disabled"),return_referer());
+	break;
+	case "enabled":
+		// If we pass just one, make it still work
+	        if (!is_array($_REQUEST['song_ids'])) { $song_obj->update_enabled(1,$_REQUEST['song_ids']); }
+		else {
+		        foreach ($_REQUEST['song_ids'] as $song_id) {
+				$song_obj->update_enabled(1,$song_id);
+			} // end foreach
+		} // end else
+	        show_confirmation(_("Songs Enabled"),_("The requested song(s) have been enabled"),return_referer());
+        break;
+	default:
+	        echo "Don't know what to do yet.";
+	break;
+} // end switch
 
 
 /*

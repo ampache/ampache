@@ -57,6 +57,7 @@ Contents:
 		- standard pls
 		- ASX
 	- Realtime Downsampled
+	- Automatic Downsampling based on load
 	- Localplay using Moosic
 	- Localplay using MPD
 	- Icecast2 Stream
@@ -70,6 +71,11 @@ Contents:
 
      	- English	(en_US)
 	- German	(de_DE)
+	- Turkish	(tr_TR)
+	- Spanish	(es_ES)
+	- Dutch		(nl_NL)
+	- Chinese	(zh_CN)
+	- UK English	(en_GB)
 	- French	(fr_FR) *Partial
 
   D) A Special Thanks:
@@ -101,7 +107,6 @@ Contents:
 	PHP4-gd (recommended)
 	PHP4 ICONV & ZLIB support (recommended)
   MySQL >= 3.23 http://www.mysql.com
-  Perl >= 5 (Optional)
   16MB of Ram
 
 3. Setting Up

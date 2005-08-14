@@ -33,8 +33,8 @@ if ($GLOBALS['user']->prefs['play_type'] == 'mpd' && conf('localplay_menu')) {
 }
 
 $items += array(_("Browse")	=> htmlspecialchars(conf('web_path') . "/browse.php"),
-		_("Albums")	=> htmlspecialchars(conf('web_path') . "/albums.php"),
-		_("Artists")	=> htmlspecialchars(conf('web_path') . "/artists.php"),
+//		_("Albums")	=> htmlspecialchars(conf('web_path') . "/albums.php"),
+//		_("Artists")	=> htmlspecialchars(conf('web_path') . "/artists.php"),
 		_("Playlists")	=> htmlspecialchars(conf('web_path') . "/playlist.php"),
 		_("Search")	=> htmlspecialchars(conf('web_path') . "/search.php"),
 		_("Preferences") => htmlspecialchars(conf('web_path') . "/preferences.php")
@@ -81,7 +81,7 @@ if ($GLOBALS['user']->prefs['upload']) {
 	            " <a href=\"".conf('web_path')."/logout.php\">" . _("Logout") . "</a> </li>\n";
 		} // else
 	}  // if use_auth
-	elseif ( $GLOBALS['user']->id != '0') { 
+	elseif ( $_SESSION['userdata']['id'] != '-1') { 
 		print("\t\t<li><a href=\"".conf('web_path')."/logout.php\">" . _("Logout") . "</a> </li>\n");
 	} // else no user
 ?>

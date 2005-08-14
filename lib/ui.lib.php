@@ -568,6 +568,10 @@ function show_all_popular() {
  */
 function show_all_recent() { 
 
+	$artists	= get_newest('artist');
+	$albums		= get_newest('album');
+
+	require_once(conf('prefix') . '/templates/show_all_recent.inc.php');
 
 } // show_all_recent
 

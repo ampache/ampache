@@ -24,20 +24,10 @@
 <table class="tabledata">
 <tr>
 	<td valign="top" align="right">
-		<?php show_info_box(_("Most Popular Artists"), 'artist', $artists); ?>
+		<?php show_info_box(_("Newest Artist Additions"), '', $artists); ?>
 	</td>
 	<td valign="top" align="left">
-		<?php show_info_box(_("Most Popular Albums"), '', $albums); ?>
-	</td>
-
-</tr>
-<tr><td colspan="2">&nbsp;</td></tr>
-<tr>
-	<td valign="top" align="left">
-		<?php show_info_box(_("Most Popular Genres"), '', $genres); ?>
-	</td>
-	<td valign="top" align="right">
-		<?php show_info_box(_("Most Popular Songs"), 'song', $songs); ?>
+		<?php show_info_box(_("Newest Album Additions"), '', $albums); ?>
 	</td>
 </tr>
 </table>

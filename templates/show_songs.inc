@@ -98,7 +98,7 @@ $web_path = conf('web_path');
             <td>
               <?php if ($user->has_access('100')) { ?>
                 <a href="<?php echo $web_path; ?>/admin/song.php?action=edit&amp;song=<?php echo $song->id; ?>">Edit</a> | <a href="<?php echo $web_path; ?>/flag.php?song=<?php echo $song->id; ?>&amp;action=flag">Flag</a> | 
-                  <?php if ($song->status === 'enabled') { ?>
+                  <?php if ($song->enabled) { ?>
                     <a href="<?php echo $web_path; ?>/admin/song.php?action=disable&amp;song_ids=<?php echo $song->id; ?>">Disable</a>
                   <?php } else { ?>
                     <a href="<?php echo $web_path; ?>/admin/song.php?action=enabled&amp;song_ids=<?php echo $song->id; ?>">Enable</a>

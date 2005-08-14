@@ -33,7 +33,8 @@ if(isset($_REQUEST['artist'])) $artist = scrub_in($_REQUEST['artist']);
 $_REQUEST['artist_id'] = scrub_in($_REQUEST['artist_id']);
 
 show_template('header');
-show_menu_items('Albums');
+show_menu_items('Browse');
+show_browse_menu('Albums');
 show_clear();
 
 if ($_REQUEST['action'] === 'clear_art') { 
