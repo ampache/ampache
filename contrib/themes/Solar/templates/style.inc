@@ -131,7 +131,7 @@
         padding: 0 10px 0 10px;
         border-right: 1px solid #000;
         display: inline;
-        background: url(<?php echo conf('web_path'); ?><?php echo conf('theme_path'); ?>/images/light.jpg) <?php echo conf('base_color2');?> repeat-x;
+        background: url(<?php echo conf('web_path'); ?><?php echo conf('theme_path'); ?>/images/Light.jpg) <?php echo conf('base_color2');?> repeat-x;
     }
     #mainmenu li.active {
         background: url(<?php echo conf('web_path'); ?><?php echo conf('theme_path'); ?>/images/Dark.jpg) <?php echo conf('base_color2');?> repeat-x;
@@ -157,7 +157,7 @@
         border-right: 1px solid #000;
         border-left: 1px solid #000;
         border-top: 1px solid #000;
-        background: url(<?php echo conf('web_path'); ?><?php echo conf('theme_path'); ?>/images/light.jpg) <?php echo conf('base_color2')?> repeat;
+        background: url(<?php echo conf('web_path'); ?><?php echo conf('theme_path'); ?>/images/Light.jpg) <?php echo conf('base_color2')?> repeat;
     }
     #adminmenu li {
         float: left;
@@ -165,7 +165,7 @@
         padding: 0 20px 0 20px;
         border-right: 1px solid #000;
         display: inline;
-        background: url(<?php echo conf('web_path'); ?><?php echo conf('theme_path'); ?>/images/light.jpg) <?php echo conf('base_color2');?> repeat-x;
+        background: url(<?php echo conf('web_path'); ?><?php echo conf('theme_path'); ?>/images/Light.jpg) <?php echo conf('base_color2');?> repeat-x;
     }
     #adminmenu li.active {
         background: url(<?php echo conf('web_path'); ?><?php echo conf('theme_path'); ?>/images/Dark.jpg) <?php echo conf('base_color2');?> repeat-x;
@@ -187,7 +187,7 @@
 /*************** END Page Header *****************/
     .navitem
     {
-        background: url(<?php echo conf('web_path'); ?><?php echo conf('theme_path'); ?>/images/light.jpg) <?php echo conf('base_color2')?> repeat-x;
+        background: url(<?php echo conf('web_path'); ?><?php echo conf('theme_path'); ?>/images/Light.jpg) <?php echo conf('base_color2')?> repeat-x;
         vertical-align: top;
         text-align: center;
     }
