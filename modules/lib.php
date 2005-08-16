@@ -111,7 +111,7 @@ function show_flagged_popup($reason,$label='value', $name='flagged_type', $other
  *
  */
 
-function show_genre_pulldown ($genre, $complete) {
+function show_genre_pulldown ($genre, $complete, $lines= "10 MULTIPLE") {
 	
 	$dbh = dbh();
 
@@ -127,7 +127,7 @@ function show_genre_pulldown ($genre, $complete) {
 
 	$db_result = mysql_query($sql, $dbh);
 
-	echo "\n<select name=\"genre[]\" multiple=\"multiple\" size=\"6\">\n";
+        echo "<select name=\"genre[]\" size=".$lines.">\n";
 
 	if ( ! $complete ) {
 		$genre_info = get_genre_info( -1 );

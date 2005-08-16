@@ -721,4 +721,11 @@ function show_genre($genre_id) {
 
 } // show_genre
 
+function show_random_play_bar() {
+	
+	require (conf('prefix') . '/templates/show_random_play_bar.inc.php');
+	
+} // show_random_play_bar()
+
+
 ?>

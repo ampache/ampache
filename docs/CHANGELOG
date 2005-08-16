@@ -3,7 +3,15 @@
 --------------------------------------------------------------------------
 
 --------------------------------------------------------------------------
-  v.3.3.2-Alpha2
+  v.3.3.2-Alpha3
+	- Added 'Simple' Genre Bar (Thx sigger)
+	- Added initial TV page for viewing of nowplaying and additional 
+		information (Thx sigger)
+
+
+  
+--------------------------------------------------------------------------
+  v.3.3.2-Alpha2 08/14/2005
   	- Improved MPD URL method so it acts just like file method 
 		(Thx Sigger, Trey)
 	- Added Simplified Chinese (Thx Hongyi Gao)

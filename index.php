@@ -75,6 +75,11 @@ $action = scrub_in($_REQUEST['action']);
 		?>
 		</td>	
 	</tr>
+        <tr>
+                <td colspan="2" valign="top">
+                        <?php show_random_play_bar(); ?>
+                </td>
+        </tr>
 	<tr><td colspan="2">&nbsp;</td></tr>
 	<tr>
 		<td colspan="2">
@@ -125,12 +130,13 @@ $action = scrub_in($_REQUEST['action']);
 	                ?>
 	        </td>
 	</tr>
-	<tr><td colspan="2">&nbsp;</td></tr>
+<!--	<tr><td colspan="2">&nbsp;</td></tr>
 	<tr>
 	        <td colspan="2" valign="top">
 	                <?php show_template('show_random_play'); ?>
 	        </td>
 	</tr>
+-->
 	</table>
 	</td>
 	<td valign="top">
