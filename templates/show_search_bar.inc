@@ -75,4 +75,4 @@
 </tr>
 </table>
 </form>
-
+<script language="JavaScript" type="text/javascript"> document.search.search_string.focus(); </script>

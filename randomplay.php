@@ -36,8 +36,6 @@ if (conf('refresh_interval')) {
 	show_template('javascript_refresh');
 	}
 ?>
-<b><?php echo $user->username._(", welcome to Argyle Manor - Family Room.  "); ?></b>
-
 
 <!-- Big Daddy Table -->
 <table style="padding-left:5px;padding-right:5px;padding-top:5px;padding-bottom:5px;" >
@@ -83,31 +81,31 @@ function show_random_play() {
                 <td rowspan="3" valign="top"> ' . _("From genre") . '</td>
                 <td rowspan="4">
 ';
-        show_genre_pulldown( -1, 0, "33 MULTIPLE" );
+        show_genre_pulldown( -1, 0, "'33' multiple='multiple'" );
 
         print '
                 </td></tr>
         <tr class="even">
                 <td>
                         ' . _("Favor Unplayed") . ' <br />
-                        ' . _("Full Albums") . ' <br />
-                        ' . _("Full Artist") . '
+                        ' . _("Favor Full Albums") . ' <br />
+                        ' . _("Favor Full Artist") . ' <br />
                 </td>
                 <td>
-                        <input type="checkbox" id="unplayed" name="unplayed" value="1" onclick="flipField(\'album\');flipField(\'artist\')" />$
-                        <input type="checkbox" id="album" name="full_album" value="1" onclick="flipField(\'unplayed\');flipField(\'artist\')" $
-                        <input type="checkbox" id="artist" name="full_artist" value="1" onclick="flipField(\'unplayed\');flipField(\'album\')"$
+                        <input type="checkbox" id="unplayed" name="unplayed" value="1" onclick="flipField(\'album\');flipField(\'artist\')" /><br />
+                        <input type="checkbox" id="album" name="full_album" value="1" onclick="flipField(\'unplayed\');flipField(\'artist\')" /><br />
+                        <input type="checkbox" id="artist" name="full_artist" value="1" onclick="flipField(\'unplayed\');flipField(\'album\')" /><br />
                 </td>
                 </tr>
                 <tr class="even">
-                <td nowrap> ' . _("from catalog") . '</td>
+                <td nowrap=\'nowrap\'> ' . _("from catalog") . '</td>
                 <td>
 ';
 
         show_catalog_pulldown( -1, 0);
 
         print '
-        </tr>
+        </td></tr>
         <tr>
                 <td colspan="4">
                         <input type="hidden" name="aaction" value="Play!" />
@@ -125,11 +123,6 @@ function show_random_play() {
  */
 ?>
 
-</tr>
+</td></tr>
 </table>
-
-<?php show_menu_items('Home'); ?>
-</body>
-</html>
-<script language="javascript">document.search.search_string.focus();</script>
-
+<?php show_page_footer ('Home', '', $user->prefs['display_menu']);?>

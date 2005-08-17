@@ -111,7 +111,7 @@ function show_flagged_popup($reason,$label='value', $name='flagged_type', $other
  *
  */
 
-function show_genre_pulldown ($genre, $complete, $lines= "10 MULTIPLE") {
+function show_genre_pulldown ($genre, $complete, $lines= "'10' multiple='multiple'") {
 	
 	$dbh = dbh();
 
