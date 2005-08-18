@@ -99,8 +99,8 @@ $myMpd = init_mpd();
 						echo "<tr class=\"".flip_class()."\">";
 												
 						if ($id==$myMpd->current_track_id) {
-							$tdstyle = "style='padding: 0px 2px 0px 2px; font-weight: bold;' class='error'";
-		        			        $linkstyle = "class='error'";
+							$tdstyle = "style='padding: 0px 2px 0px 2px; font-weight: bold;' class='npsong'";
+		        			        $linkstyle = "class='npsong'";
 						}
 						else { 
 							$tdstyle = $minpad;

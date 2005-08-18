@@ -1,6 +1,9 @@
 <?php
 /*
 
+ Copyright 2001 - 2005 Ampache.org
+ All Rights Reserved
+
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -17,18 +20,41 @@
 
 */
 
-
-/* Name of the filename who's tags you want to read */
-$filename = "/data/music/video1.avi";
-
-
 $no_session = '1';
 require ("../modules/init.php");
-echo "<pre>";
+
+$filename = usage();
+
+echo "Reading: $filename\n";
+
 $info = new Audioinfo();
 $results = $info->info($filename);
+$results['file'] = $filename;
+$key = get_tag_type($results);
+$ampache_results = clean_tag_info($results,$key,$filename);
 
-
+echo "Results Seen by GetID3()\n";
 print_r($results);
+echo "\n------------------------------------------------------------------\n";
+echo "Results Seen by Ampache using $key\n";
+print_r($ampache_results);
+
+function usage( ) {
+        $text = _( "[print_tags.php.inc]
+This commandline script will display the tag information for the specified filename as it will 
+appear to Ampache. 
+        \n" );
+        echo $text;
+        
+        $text = _( "Filename:" );
+        echo $text;
+        
+        // grab a character ignoring whitespace
+	$input = trim(fgets(STDIN));
+
+	return $input;
+
+}       // usage()
+
 ?>
 

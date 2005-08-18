@@ -106,10 +106,10 @@ global $condPL;
   <tr><td>
     <table border="0" cellpadding="0" cellspacing="0" width="100%">
       <tr>
-      	<td><b><?php echo _("Now Playing :")?></b></td>
+      	<td class="npsong"><b><?php echo _("Now Playing :")?></b></td>
       </tr>
       <tr>
-      	<td align="center"><?php
+      	<td align="center" class="npsong"><?php
 	if (!$myMpd->playlist[($myMpd->current_track_id)]['Title']) {
 		list($tmp, $id, $tmp) = preg_split("/(song=|&)/", $myMpd->playlist[($myMpd->current_track_id)]['file']);
 		$r = new Song($id);
@@ -126,7 +126,7 @@ global $condPL;
           ?></td>
       </tr>
      <tr> 
-      	<td align="center"><span id="mpd_cur_track_pos"><?php echo fmt_time($myMpd->current_track_position)?></span> (<?php echo (round(($myMpd->current_track_position/$myMpd->current_track_length),2)*100)."%) played" ?></td>
+      	<td align="center" class="npsong"><span id="mpd_cur_track_pos"><?php echo fmt_time($myMpd->current_track_position)?></span> (<?php echo (round(($myMpd->current_track_position/$myMpd->current_track_length),2)*100)."%) played" ?></td>
      </tr>   
 
       <tr>
@@ -163,59 +163,4 @@ echo '<script language="JavaScript" type="text/javascript"> var mpd_song_length 
 echo '<script language="JavaScript" type="text/javascript"> var mpd_state = "'. $myMpd->state .'" </script>';
 ?>
 
-<?php /**************** Comment the playlist out now that the big playlist is done
-
-<br />
-<table border="0" cellpadding="0" cellspacing="0" WIDTH=<?php  echo $PG_WIDTH ?>>
-  <tr><td align="center"><b><?php echo _("Server Playlist"); ?></b></td></tr>
-      <tr>
-      	<td align="center"><i><a title="<?php echo _("Refresh the Playlist Window"); ?>" href="<?php echo conf('web_path'); ?>"><?php echo _("[refresh]"); ?></a>
-<?php       if ( $myMpd->playlist_count > 0 ) { ?>
-  		[<a title="<?php echo _("Click to shuffle (randomize) the playlist"); ?>" href="<?php echo conf('web_path'); ?>/amp-mpd.php?action=shuffle"><?php echo _("shuffle"); ?></a>] 
-		[<a title="<?php echo _("Click to clear the playlist"); ?>" href="<?php echo conf('web_path'); ?>/amp-mpd.php?action=clear"><?php echo _("clear"); ?></a>]
-		[<a title="<?php echo _("Click the toggle condensed playlist"); ?>" href="<?php echo conf('web_path'); ?>/amp-mpd.php?action=condPL"><?php echo _("condensed"); ?></a>]
-<?php   }  ?>
-        </i></td>
-      </tr>
-  <tr><td align="left">
-<?php 
-$condPL= conf('condPL');
-       if ($condPL) echo " ... Condensed Playlist ... <br/>";
-                $pl = $myMpd->playlist;
-                if ( is_null($pl) ) echo "ERROR: " .$myMpd->errStr."\n";
-                else {
-			$maxlen = strlen(count($pl));
-                        foreach ($pl as $id => $entry) {
-                            if ( (!$condPL) or (($id >= $myMpd->current_track_id -1) && ($id <= $myMpd->current_track_id + 10)) )
-                            { 
-                                $tblClass = ( $id == $myMpd->current_track_id ? "SongPlaying" : "Song" );
-				$track = $id+1;
-				
-				// Make all number lengths equal
-				$len = strlen($track);
-		
-				while ($len < $maxlen) {
-        	                        $track = "0" . $track;
-					$len++;
-				}
-				
- 				$song_name = truncate_with_ellipse($entry['Artist'],conf('ellipse_threshold_artist')-3)  . " - " . truncate_with_ellipse($entry['Title'],conf('ellipse_threshold_title')-3) . " - " . $entry['Album'] . " - " . fmt_time($entry['Time']);
-			
-                                echo "\t";
-				if ($myMpd->current_track_id == $id) echo "<b>";
-                                echo "<a title=\"Click to remove '".$entry['Title']." '\" href=\"".conf('web_path')."/amp-mpd.php?action=rem&id=".$id."\">" . $track . ".</a>"; 
-                                echo " <a title=\"Click to jump to '".$entry['Title']."'\" href='".conf('web_path')."/amp-mpd.php?action=skipto&val=".$id."'>$song_name</a>"; 
-                                echo " <a title=\"file='".$entry['file']."'\" href=\"".conf('web_path')."\">f</a>"; 
-				if ($myMpd->current_track_id == $id) echo "</b>";
-				echo "<br />\n";
-			     }
-                        }
-                }
-                if ( $myMpd->playlist_count == 0 ) {
-                        echo "<i>(Playlist is empty)</i><br />\n";
-                }
-?>
-  </td></tr>
-</table>
-<?php  *********************/ ?>
 </div>
