@@ -87,15 +87,15 @@ $action = scrub_in($_REQUEST['action']);
 		</td>
 	</tr>
 	<tr><td colspan="2">&nbsp;</td></tr>
-  <tr> 
+
       <?php 
       if ($user->prefs['play_type'] == 'mpd' && !conf('localplay_menu')) { 
-        show_mpd_pl(); 
-      } else {
-        echo "<td>&nbsp;</td>";
+	echo '<tr><td colspan="2" valign="top">';
+	show_mpd_pl();
+	echo '</td></tr>';
       }
       ?>
-  </tr>
+
   <tr><td colspan="2">&nbsp;</td></tr>  
 	<tr>
 	        <td valign="top" align="right">

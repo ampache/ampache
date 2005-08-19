@@ -37,13 +37,12 @@ $minpad = "style='padding: 0px 2px 0px 2px'";
 $myMpd = init_mpd();
 ?>
 
-<td colspan="2" valign="top">
 <form name="songs" action="<?php echo conf('web_path')."/amp-mpd.php"; ?>" method="post" enctype="multipart/form-data">
 <table border="0" cellpadding="0" cellspacing="1" width="100%" class="tabledata">
 <tr>
 	<td align="center" class="table-header">
-		<b><?php echo _("MPD Server Playlist"); ?></b><br />
-		<i>
+		<b><?php echo _("MPD Server Playlist"); ?></b>
+<!--		<i>
 			[<a title="<?php echo _("Refresh the Playlist Window"); ?>" href="<?php echo $_SERVER['PHP_SELF']; ?>">refresh</a>]
 			<?php if( $myMpd->playlist_count > 0  ) { $un = (conf('condPL')) ? "un" : ""; ?>
 				[<a title="<?php echo _("Click to shuffle (randomize) the playlist");?>" href="<?php echo conf('web_path'); ?>/amp-mpd.php?action=shuffle"><?php echo _("shuffle")?></a>]
@@ -54,7 +53,7 @@ $myMpd = init_mpd();
 				[<a title="<?php echo _("Click to the remove all except the Now Playing");?>" href="<?php echo conf('web_path'); ?>/amp-mpd.php?action=crop">crop</a>]
 			<?php } ?> 
 		</i>
-	</td>
+-->	</td>
 </tr>
 <tr>
 	<td <?php echo $nopad ?>>
@@ -133,7 +132,7 @@ $myMpd = init_mpd();
 							<td align="left"   <?php echo $tdstyle ?>> <?php echo $track.". ";?><a <?php echo $linkstyle ?> href="<?php echo $web_path; ?>/amp-mpd.php?action=skipto&amp;val=<?php echo $entry['Pos']; ?>" title=" <?php echo htmlspecialchars($entry['Title']); ?>"<?php echo $text_class; ?>><?php echo htmlspecialchars($entry['Title']); ?> </a></td>
 							<td align="left"   <?php echo $tdstyle ?>> <a <?php echo $linkstyle ?> href="<?php echo $web_path; ?>/artists.php?action=show&amp;artist=<?php echo htmlspecialchars($r->artist); ?>" title="More from <?php echo htmlspecialchars($entry['Artist']);?>"<?php echo $text_class; ?>><?php echo htmlspecialchars($entry['Artist']);?> </a></td>
 							<td align="left"   <?php echo $tdstyle ?>> <a <?php echo $linkstyle ?> href="<?php echo $web_path; ?>/albums.php?action=show&amp;album=<?php echo htmlspecialchars($r->album);    ?>" title="More on <?php   echo htmlspecialchars($entry['Album']); ?>"<?php echo $text_class; ?>><?php echo htmlspecialchars($entry['Album']); ?> </a></td>
-							<td align="right"  <?php echo $tdstyle ?>> <?php echo $entry['Track']; ?></td>
+							<td align="right"  <?php echo $tdstyle ?>> <?php echo $entry['Track']; ?>&nbsp;&nbsp;</td>
 							<td align="right"  <?php echo $tdstyle ?>> <?php echo sprintf ("%d:%02d",$entry['Time']/60,$entry['Time']%60) ?>&nbsp;</td>
 							<td align="left" <?php echo $tdstyle ?>> &nbsp;<?php echo $entry['genre'] ?></td>
 							<td <?php echo $tdstyle ?>>
@@ -197,5 +196,4 @@ $myMpd = init_mpd();
 </table>
 <br />
 </form>
-</td>
 
