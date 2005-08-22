@@ -69,15 +69,13 @@ switch( $action ) {
 			$catalog_id = find_upload_catalog(conf('quarantine_dir'));
 
 			/* Make sure that it's not in a catalog dir */
-			if (!$catalog_id) { 
+			if ($catalog_id) { 
 				$GLOBALS['error']->add_error('general',"Error: Quarantine Directory inside a catalog");
 				if (conf('debug')) { 
 					log_event($user->username,' upload ',"Error: Quarantine Directory inside a catalog");
 				}
 			} // if in catalog dir
 
-			$catalog = new Catalog($catalog_id);
-		
 			foreach ($_FILES as $key => $file) { 
 				
 				if (strlen($_FILES[$key]['name'])) { 
