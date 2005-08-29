@@ -255,7 +255,7 @@ if (!isset($no_session) AND conf('use_auth')) {
 }
 if (!conf('use_auth')) { 
 	$auth['success'] = 1;
-	$auth['info']['username'] = "Ampache";
+	$auth['info']['username'] = '-1';
 	$auth['info']['fullname'] = "Ampache User";
 	$auth['info']['id'] = -1;
 	$auth['info']['access'] = "admin";

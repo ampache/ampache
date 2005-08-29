@@ -84,6 +84,8 @@ class User {
 		if (!$user_id) { 
 			$user_id = $this->username;
 		}
+
+		if (!conf('use_auth')) { $user_id = '-1'; }
 		
 		$sql = "SELECT preferences.name, preferences.description, preferences.type, user_preference.value FROM preferences,user_preference " .
 			"WHERE user_preference.user='$user_id' AND user_preference.preference=preferences.id AND preferences.type='user'";
