@@ -166,8 +166,8 @@ function start_downsample($song,$now_playing_id=0,$song_name=0) {
 		$db_results = mysql_query($sql,$dbh);
 		$results = mysql_fetch_row($db_results);
 
-		// Current number of active streams + 1 (the one we are starting)
-		$active_streams = $results[0] + 1;
+		// Current number of active streams (current is already in now playing)
+		$active_streams = $results[0];
 
 
 		/* If only one user, they'll get all available.  Otherwise split up equally. */
