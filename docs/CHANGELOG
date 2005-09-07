@@ -8,6 +8,12 @@
 	- Added initial TV page for viewing of nowplaying and additional 
 		information (Thx sigger)
 	- Updated Archive library to 2.1 Released 08/13/2005
+	- Corrected math error with automagic downsampling (Thx J)
+	- Corrected some of the no_auth preference problems
+	- Fixed a problem where Clearing the catalog stats, didn't actually
+		do anything
+	- Fixed a slight logic error that could give a weird error when 
+		you attempted to create two users with the same username
 
 
   

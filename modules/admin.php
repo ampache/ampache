@@ -151,59 +151,6 @@ function show_delete_stats($username) {
 } // show_delete_stats()
 
 
-/*
- * clear_catalog_stats()
- *
- * Use this to clear the stats for the entire Ampache server.
- *
- */
- 
-function clear_catalog_stats() {
-    $dbh = dbh();
-    $sql = "DELETE FROM object_count";
-    $result = mysql_query($sql, $dbh);
-    $sql = "UPDATE song SET played = 'false'";
-    $result = mysql_query($sql, $dbh);
-} // clear_catalog_stats
-
-
-/*
- * check_user_form
- *
- */
-
-function check_user_form ($username, $fullname, $email, $pass1, $pass2, $type) {
-	global $dbh;
-
-	$sql = "SELECT * FROM user WHERE username='$username'";
-	$db_result = mysql_query($sql, $dbh);
-
-	if ( mysql_num_rows($db_result) ) {
-		return "That username is already taken, please choose another.";
-	}
-
-	if ( $type == 'new_user' ) {
-		if ( empty($username) ) {
-			return "Please fill in a username.";
-		}
-		elseif ( ($pass1 != $pass2) || (empty($pass1) || empty($pass2)) ) {
-	                return "Sorry, your passwords do no match.";
-        	}
-	}
-	elseif ( empty($fullname) ) {
-		return "Please fill in a full name.";
-	}
-	elseif ( empty($email) ) {
-		return "Please fill in an email address.";
-	}
-	elseif ( ($pass1 != $pass2) || (empty($pass1) || empty($pass2)) ) {
-		if ( $type == 'new_user' ) {
-			return "Sorry, your passwords do no match.";
-		}
-	}
-
-	return false;
-} // check_user_form()
 
 /*
  * get_user

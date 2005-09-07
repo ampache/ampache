@@ -756,4 +756,44 @@ function tbl_name($table) {
 
 } // tbl_name
 
+/**
+ * clear_catalog_stats()
+ *
+ * Use this to clear the stats for the entire Ampache server.
+ * @package Catalog
+ * @catagory Clear
+ */
+function clear_catalog_stats() {
+
+        $dbh = dbh();
+
+        /* Wipe out the object_count table */
+        $sql = "TRUNCATE object_count";
+        $results = mysql_query($sql, $dbh);
+
+        /* Set every song to unplayed */
+        $sql = "UPDATE song SET played='0'";
+        $results = mysql_query($sql, $dbh);
+     
+} // clear_catalog_stats
+
+/**
+ * check_username
+ * this function checks to make sure the specified username doesn't already exist 
+ * @package General
+ * @catagory Users
+ */
+function check_username($username) { 
+
+	$sql = "SELECT username FROM user WHERE username = '" . sql_escape($username) . "'";
+	$db_results = mysql_query($sql, dbh());
+
+	if (mysql_fetch_row($db_results)) { 
+		return fakse; 
+	}
+
+	return true;
+
+} // check_username
+
 ?>

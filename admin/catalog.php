@@ -194,8 +194,9 @@ switch ($_REQUEST['action']) {
 	break;
 
     case 'really_clear_stats':
+    
         if (conf('demo_mode')) { break; }
-    	if ($_REQUEST['confrim'] == 'Yes') {
+    	if ($_REQUEST['confirm'] == 'Yes') {
 		clear_catalog_stats();
 	} 
 	include(conf('prefix') . '/templates/catalog.inc');
@@ -214,15 +215,14 @@ switch ($_REQUEST['action']) {
     case 'Clear Catalog':
         if (conf('demo_mode')) { break; }
         show_confirm_action(_("Do you really want to clear your catalog?"),
-			"/admin/catalog.php", "action=really_clear_catalog");
+			"admin/catalog.php", "action=really_clear_catalog");
 	print("<hr />\n");
 	break;
 
     case 'clear_stats':
         if (conf('demo_mode')) { break; }
 	show_confirm_action(_("Do you really want to clear the statistics for this catalog?"),
-			"/admin/catalog.php", "action=really_clear_stats");
-	print("<hr />\n");
+			"admin/catalog.php", "action=really_clear_stats");
 	break;
 
     case 'show_disabled':

@@ -118,12 +118,25 @@ switch ($action) {
 		if (($pass1 !== $pass2)) { 
 			$GLOBALS['error']->add_error('password',_("Error Passwords don't match"));
 		}
+
 		if (empty($username)) { 
 			$GLOBALS['error']->add_error('username',_("Error Username Required"));
 		}
-		if (!$user->create($username, $fullname, $email, $pass1, $access)) {
-			$GLOBALS['error']->add_error('general',"Error: Insert Failed");
-		}
+
+		/* make sure the username doesn't already exist */
+		if (!check_username($username)) { 
+			$GLOBALS['error']->add_error('username',_("Error Username already exists"));
+		} 
+
+		if (!$GLOBALS['error']->error_state) { 
+
+			/* Attempt to create the user */
+			if (!$user->create($username, $fullname, $email, $pass1, $access)) {
+				$GLOBALS['error']->add_error('general',"Error: Insert Failed");
+			}
+			
+		} // if no errors
+		
 		/* If we end up with an error */
 		if ($GLOBALS['error']->error_state) { 
 		        show_user_form('','$username','$fullname','$email','$access','new_user','');
