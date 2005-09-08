@@ -82,7 +82,7 @@ function show_duplicate_searchbox($search_type) {
 	<tr class="even">
 		<td><?php echo _("Search Type"); ?>:</td>
 		<td>
-			<?
+			<?php
 
 			if ($search_type=="title")
 				$checked = "checked=\"checked\"";
@@ -113,6 +113,6 @@ function show_duplicate_searchbox($search_type) {
 </table>
 </form>
 <br />
-<?
+<?php
 } // show_duplicate_searchbox
 ?>
