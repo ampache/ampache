@@ -1,7 +1,7 @@
 <script type="text/javascript" language="javascript">
 <!-- Begin
 // Set refresh interval (in seconds)
-var refreshinterval=<?= conf('refresh_limit'); ?>
+var refreshinterval=<?php echo conf('refresh_limit'); ?>
 
 // Display the countdown inside the status bar?
 // Set "1" for yes or "0" for no

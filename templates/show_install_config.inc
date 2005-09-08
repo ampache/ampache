@@ -84,7 +84,7 @@
 <br />
 <table border="0" cellpadding="0">
 <tr>
-        <td valign="top"><?= _("Ampache.cfg.php Exists"); ?></td>
+        <td valign="top"><?php echo _("Ampache.cfg.php Exists"); ?></td>
         <td valign="top">[ 
         <?
                 if (!read_config_file($configfile)) {
@@ -101,7 +101,7 @@
 </tr>
 <tr>
         <td valign="top">
-                <?= _("Ampache.cfg.php Configured?"); ?>
+                <?php echo _("Ampache.cfg.php Configured?"); ?>
         </td>
         <td valign="top">[ 
         <?

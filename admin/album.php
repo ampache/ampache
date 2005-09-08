@@ -83,13 +83,13 @@ if ( $album and $action == 'View' ) {
 
 ?>
 
-<p style="color: red;"><?= $update_text ?></p>
+<p style="color: red;"><?php echo $update_text; ?></p>
 
 <form name="album_change" method=post action="album.php">
 	<table>
 		<tr>
 			<td>Album Name:</td> 
-			<td><input type=text name="new_name" value="<?= $album_name ?>" size="50"></td>
+			<td><input type=text name="new_name" value="<?php echo $album_name; ?>" size="50"></td>
 			<td> &nbsp; </td> 
 			<td><input type=submit name=action value="Change Name"></td>
 		<tr>
@@ -98,7 +98,7 @@ if ( $album and $action == 'View' ) {
                         </td>
 		</tr>
 	</table>
-	<input type=hidden name=album value="<?= $album ?>">
+	<input type=hidden name=album value="<?php echo $album; ?>">
 </form>
 
 <?php

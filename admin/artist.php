@@ -93,12 +93,12 @@ if ( $artist and $action == 'View' ) {
 
 ?>
 
-<p style="color: red;"><?= $update_text ?></p>
+<p style="color: red;"><?php echo $update_text; ?></p>
 
 <form name="artist_change" method=post action="artist.php">
 	<table>
 		<tr>
-			<td>Artist Name:</td> <td><input type=text name="new_name" value="<?= $artist_name ?>" size="50"></td>
+			<td>Artist Name:</td> <td><input type=text name="new_name" value="<?php echo $artist_name; ?>" size="50"></td>
 			<td> &nbsp; </td> <td><input type=submit name=action value="Change Name"></td>
 		</tr>
 		<tr>
@@ -107,7 +107,7 @@ if ( $artist and $action == 'View' ) {
 			</td>
 		</tr>
 	</table>
-	<input type="hidden" name="artist" value="<?= $artist ?>">
+	<input type="hidden" name="artist" value="<?php echo $artist; ?>">
 </form>
 
 <?php
