@@ -174,6 +174,6 @@ else {
 
 } // else no album
 
-echo "<br /><br />";
+show_clear();
 show_page_footer ('Albums', '',$user->prefs['display_menu']);
 ?>

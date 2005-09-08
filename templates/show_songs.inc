@@ -20,9 +20,9 @@
 
 */
 $web_path = conf('web_path');
+
+show_clear();
 ?>
-
-
 <form name="songs" method="post" enctype="multipart/form-data" action="#">
 <table border="0">
   <tr><td colspan="2">
@@ -42,12 +42,18 @@ $web_path = conf('web_path');
             <th><?php echo _("Action"); ?></th>
     </tr>
     <?php
-    foreach ($song_ids as $song_id) {
+    	/* FIXME: don't even get me started with how many things are wrong with this code */ 
+	foreach ($song_ids as $song_id) {
+	
+		if (!is_object($song_id)) { 
+			unset($text_class);
+			$song = new Song($song_id);
+		}
+		else { 
+			$song = $song_id;
+		}
 
-	    unset($text_class);
-            $song = new Song($song_id);
-            $song->format_song();
-
+		$song->format_song();
             // Still needed crap
             $totalsize += $song->size;
             $totaltime += $song->time;

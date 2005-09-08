@@ -466,6 +466,7 @@ function get_songs_from_type ($type, $results, $artist_id = 0) {
      was really handy in getting added functionality at no cost.
 /* Lets tie it to album too, so we can show art ;)       */
 /*********************************************************/
+/* One symbol, m(__)m */
 function show_songs ($song_ids, $playlist_id=0, $album=0) {
 
 	$dbh = dbh();
@@ -487,7 +488,7 @@ function show_songs ($song_ids, $playlist_id=0, $album=0) {
 
 	require (conf('prefix') . "/templates/show_songs.inc");
 
-	return TRUE;
+	return true;
 
 }// function show_songs
 
@@ -1037,44 +1038,6 @@ function show_confirm_action ($text, $script, $arg) {
 } // show_confirm_action
 
 
-// search functions
-function search_by_type ($type, $search) {
-
-	$dbh = dbh();
-
-	// supported types are album, artist and song
-	if ( $type == 'Album' ) {
-		$query = "SELECT id FROM album WHERE name LIKE '%$search%'";
-	}
-	elseif ( $type == 'Artist' ) {
-		$query = "SELECT id FROM artist WHERE name LIKE '%$search%'";
-	}
-	elseif ( $type == 'Song title' ) {
-		$query = "SELECT id FROM song WHERE title LIKE '%$search%'";
-	}
-	elseif ( $type == 'Genre' ) {
-		$query = "SELECT song.id as id FROM song, genre" .
-			" WHERE song.genre = genre.id" .
-			" AND genre.name LIKE '%$search%'";
-	}
-
-	$db_result = mysql_query($query, $dbh);
-
-	$search_result = array();
-
-	while ( $r = mysql_fetch_array($db_result) ) {
-		$search_result[] = $r; 
-	}
-
-	return ($search_result);
-}
-
-function scrub_out($str) {
-
-	return stripslashes($str);
-}
-
-
 function unhtmlentities ($string)  {
 
 	$trans_tbl = get_html_translation_table (HTML_ENTITIES);
@@ -1083,74 +1046,4 @@ function unhtmlentities ($string)  {
 	return preg_replace('/&#(\d+);/me', "chr('\\1')",$ret);
 }
 
-
-function insert_album($album) {
-
-	global $settings;
-	$dbh = dbh();
-
-	preg_match("/^(A |An |The ){0,1}(.*?)$/i",$album, $matches);
-	$album = sql_escape($matches[2]);
-
-	switch($matches[1]) {
-	    case 'The ':
-	    case 'the ':
-		$prefix = 'The';
-		break;
-	    case 'A ':
-	    case 'a ':
-		$prefix = 'A';
-		break;
-	    case 'An ':
-	    case 'an ':
-		$prefix = 'An';
-		break;
-	    default:
-		$prefix = '';
-	}
-    
-	$sql = "INSERT INTO album (name, prefix)" .
-		" VALUES ( '$album', '$prefix' )";
-	$db_result = mysql_query($sql, $dbh);
-
-	return (mysql_insert_id($dbh));
-} // insert_album
-
-
-/*
- * insert_artist()
- *
- */
-
-function insert_artist($artist) {
-
-	global $settings;
-	$dbh = dbh();
-
-	$matches = array();
-	$var = preg_match('/^(A |An |The ){0,1}(.*?)$/i',$artist, $matches);
-	$artist = sql_escape($matches[2]);
-
-	switch($matches[1]) {
-	    case 'The ':
-	    case 'the ':
-		$prefix = 'The';
-		break;
-	    case 'A ':
-	    case 'a ':
-		$prefix = 'A';
-		break;
-	    case 'An ':
-	    case 'an ':
-		$prefix = 'An';
-		break;
-	    default:
-		$prefix = '';
-	}
-    
-	$sql = "INSERT INTO artist (name, prefix)" .
-		" VALUES ( '$artist', '$prefix' )";
-	$db_result = mysql_query($sql, $dbh);
-	return (mysql_insert_id($dbh));
-} // insert_artist
 ?>

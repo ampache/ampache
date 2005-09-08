@@ -30,11 +30,39 @@ require_once("modules/init.php");
 show_template('header');
 show_menu_items('Search'); 
 show_clear();
-show_template('show_search');
+
+/* Import/Clean vars */
+$action = scrub_in($_REQUEST['action']);
+
+switch ($action) { 
+	case 'quick_search':
+		/* This needs to be done because we don't know what thing
+		 * they used the quick search to search on until after they've
+		 * submited it 
+		 */
+		$string_name = $_REQUEST['search_object'][0] . '_string';
+		$_REQUEST[$string_name] = $_REQUEST['search_string'];
+		unset($string_name);
+	case 'search':
+		show_template('show_search');
+		$results = run_search($_REQUEST);
+		show_search($_REQUEST['object_type'],$results);
+	break;
+	case 'save_as_track':
+		$playlist_id = save_search($_REQUEST);
+		$playlist = new Playlist($playlist_id);
+		show_confirmation("Search Saved","Your Search has been saved as a track in $playlist->name",conf('web_path') . "/search.php");
+	break;
+	default:
+		show_template('show_search');
+	break;
+}
 
 if ($_REQUEST['action'] === 'search') {
 	run_search($_REQUEST['search_string'], $_REQUEST['search_field'], $_REQUEST['search_type']);
 }
-echo "<br /><br />";
+
+
+show_clear();
 show_page_footer ('Search', '',$user->prefs['display_menu']);
 ?>

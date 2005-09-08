@@ -796,4 +796,17 @@ function check_username($username) {
 
 } // check_username
 
+/**
+ * scrub_out
+ * This function is used to escape user data that is getting redisplayed
+ * onto the page, it htmlentities the mojo
+ */
+function scrub_out($str) {
+
+        $str = htmlentities($str);
+
+        return $str;
+
+} // scrub_out
+
 ?>

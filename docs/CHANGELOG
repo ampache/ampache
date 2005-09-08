@@ -15,6 +15,9 @@
 	- Fixed a slight logic error that could give a weird error when 
 		you attempted to create two users with the same username
 	- Removed the last of the short php tags
+	- Reworked Search to allow for multiple searches, and eventually
+		allow you to return a list of albums,artist,genres
+		rather than a list of songs. 
 
 
   
