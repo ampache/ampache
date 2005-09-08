@@ -32,7 +32,7 @@
 <form name="search" method="post" action="<?php echo  conf('web_path'); ?>/search.php" enctype="multipart/form-data" style="Display:inline">
 <table class="tabledata" cellspacing="0" cellpadding="3" border="0">
 <tr class="table-header">
-	<th colspan="4"><?php echo _("Search Ampache"); ?>...</th
+	<th colspan="4"><?php echo _("Search Ampache"); ?>...</th>
 </tr>
 <tr class="<?php echo flip_class(); ?>">
 	<td><?php echo _("Title"); ?></td>
@@ -121,72 +121,12 @@
 <tr class="<?php echo flip_class(); ?>">
 	<td>&nbsp;</td>
 	<td>
-	        <input type="submit" value="<?php echo  _("Search"); ; ?>" />&nbsp;&nbsp;
-	        <input type="reset" value="Reset Form" />
+	        <input type="submit" value="<?php echo  _("Search");?>" />&nbsp;&nbsp;
+	        <input type="reset" value="<?php echo  _("Reset Form");?>" />
 	        <input type="hidden" name="action" value="search" />
 	</td>
 	<td colspan="2">&nbsp;</td>
 </tr>
 </table>
 </form>
-<!-- OLD SKOOL
-<form name="search" method="post" action="<?php echo  conf('web_path'); ?>/search.php" enctype="multipart/form-data" style="Display:inline">
-<table class="tabledata" cellspacing="0" cellpadding="3" border="0" width="450" style="clear:both;">
-<tr class="table-header">
-	<td colspan="2"><b><?php echo  _("Search Ampache"); ?>...</b></td>
-</tr>
-<tr class="<?php echo flip_class(); ?>">
-	<td><?php echo  _("Search"); ?>:</td>
-	<td><input type="text" name="search_string" value="<?php echo  $_REQUEST['search_string']; ?>" /></td>
-</tr>
-<tr class="<?php echo flip_class(); ?>">
-	<td><?php echo  _("Object Type"); ?>:</td>
-	<td>
-		<?php
-		$search_type = $_REQUEST['search_field'];
-               if (isset($_REQUEST['search_field'])) {
-                       $search_field = $_REQUEST['search_field'];
-                       ${$search_field} = 1;
-               } else {
-                       $search_field = conf('search_field');
-                       ${$search_field} = 1;
-               }
 
-               if (isset($_REQUEST['search_type'])) {
-                       $search_type = $_REQUEST['search_type'];
-                       ${$search_type} = 1;
-               } else {
-               		$search_type = conf('search_type');
-                	${$search_type} = 1;
-                } 
-		?>
-		<select name="search_field">
-			<option <?php  if ($artist) { echo "selected=\"selected\""; } ?> value="artist"  > Artist</option>
-			<option <?php  if ($album) { echo "selected=\"selected\""; } ?> value="album"  > Album</option>
-			<option <?php  if ($song_title) { echo "selected=\"selected\""; } ?> value="song_title"  > Song Title</option>
-			<option <?php  if ($song_genre) { echo "selected=\"selected\""; } ?> value="song_genre"  > Song Genre</option>
-			<option <?php  if ($song_year) { echo "selected=\"selected\""; } ?> value="song_year"  > Song Year</option>
-			<option <?php  if ($song_bitrate) { echo "selected=\"selected\""; } ?> value="song_bitrate"  > Song Bitrate</option>
-			<option <?php  if ($song_min_bitrate) { echo "selected=\"selected\""; } ?> value="song_min_bitrate"  > Minimum Bitrate</option>
-			<option <?php  if ($song_filename) { echo "selected=\"selected\""; } ?> value="song_filename"  > Song Filename</option>
-		</select>
-	</td>
-</tr>
-<tr class="<?php echo flip_class(); ?>">
-	<td><?php echo  _("Search Type"); ?>:</td>
-	<td>
-		<input type="radio" name="search_type" value="exact" <?php  if ($_REQUEST['search_type'] === 'exact') { echo "checked=\"checked\"";}?> /> Exact<br />
-		<input type="radio" name="search_type" value="fuzzy" <?php  if ($_REQUEST['search_type'] !== 'exact') { echo "checked=\"checked\"";}?> /> Fuzzy<br />
-	</td>
-</tr>
-<tr class="<?php echo flip_class(); ?>">
-	<td>&nbsp;</td>
-	<td>
-		<input type="submit" value="<?php echo  _("Search"); ; ?>" />&nbsp;&nbsp;
-		<input type="reset" value="Reset Form" />
-		<input type="hidden" name="action" value="search" />
-	</td>
-</tr>
-</table>
-</form>
--->
