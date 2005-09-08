@@ -128,7 +128,7 @@
 	<td colspan="2">&nbsp;</td>
 </tr>
 </table>
-
+</form>
 <!-- OLD SKOOL
 <form name="search" method="post" action="<?php echo  conf('web_path'); ?>/search.php" enctype="multipart/form-data" style="Display:inline">
 <table class="tabledata" cellspacing="0" cellpadding="3" border="0" width="450" style="clear:both;">
