@@ -267,6 +267,11 @@ function validate_bitrate($bitrate) {
 		return $sample_rate;
 	}
 
+	/* See if it's less than the lowest one */
+	if ($sample_rate < $valid_rate['0']) { 
+		return $valid_rate['0'];
+	}
+
         /* Check to see if it's over 320 */
         if ($sample_rate > 320) {
 		return '320';
