@@ -108,7 +108,7 @@ function insert_now_playing($song_id,$uid,$song_length) {
  */
 function check_lock_songs($song_id) { 
 
-	$sql = "SELECT COUNT(*) FROM now_playing " . 
+	$sql = "SELECT song_id FROM now_playing " . 
 		"WHERE song_id = '$song_id'";
 	$db_results = mysql_query($sql, dbh());
 
