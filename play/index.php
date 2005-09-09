@@ -141,9 +141,6 @@ if ( $catalog->catalog_type == 'remote' ) {
 
 
 else {
-	if ($user->prefs['play_type'] == 'downsample') { 
-		$ds = $user->prefs['sample_rate']; 
-	}
 
 	// Update the users last seen
 	$user->update_last_seen();

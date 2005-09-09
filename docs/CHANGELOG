@@ -18,6 +18,10 @@
 	- Reworked Search to allow for multiple searches, and eventually
 		allow you to return a list of albums,artist,genres
 		rather than a list of songs. 
+	- Fixed Lock Songs always returning false and thus preventing
+		any playback when enabled. (Thx J)
+	- Fixed a flaw in the downsampling which would allow you to set
+		invalid bitrates. (Thx J)
 
 
   

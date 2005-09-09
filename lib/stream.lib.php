@@ -190,10 +190,10 @@ function start_downsample($song,$now_playing_id=0,$song_name=0) {
 		else {
                		$sample_rate = floor($max_bitrate/$active_streams);
 		} // end else
-      
-		/* Round to standard bitrates */
-		$sample_rate = 8*(floor($sample_rate/8));
-	
+     
+		/* Validate the bitrate */
+		$sample_rate = validate_bitrate($sample_rate);
+ 
 		// Never go over the users sample rate 
 		if ($sample_rate > $user_sample_rate) { $sample_rate = $user_sample_rate; }	
 
@@ -247,5 +247,39 @@ function start_downsample($song,$now_playing_id=0,$song_name=0) {
 	return ($fp);
 
 } // start_downsample
+
+/** 
+ * validate_bitrate
+ * this function takes a bitrate and returns a valid one
+ * @package Stream
+ * @catagory Downsample
+ */
+function validate_bitrate($bitrate) { 
+
+
+	// Setup an array of valid bitrates for Lame (yea yea, others might be different :P)
+        $valid_rate = array('32','40','56','64','80','96','112','128','160','192','224','256','320');
+
+	/* Round to standard bitrates */
+        $sample_rate = 8*(floor($bitrate/8));
+
+	if (in_array($sample_rate,$valid_rate)) { 
+		return $sample_rate;
+	}
+
+        /* Check to see if it's over 320 */
+        if ($sample_rate > 320) {
+		return '320';
+        }
+
+        foreach ($valid_rate as $key=>$rate) {
+		$next_key = $key+1;
+                                
+                if ($sample_rate > $rate AND $sample_rate < $valid_rate[$next_key]) {
+			return $sample_rate;
+		} 
+	} // end foreach
+
+} // validate_bitrate
 
 ?>
