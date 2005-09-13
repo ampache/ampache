@@ -80,7 +80,7 @@ function run_search($data) {
 function search_song($data,$method) { 
 
 	/* Generate BASE SQL */
-	$base_sql 	= "SELECT song.id FROM song";
+	$base_sql 	= "SELECT DISTINCT(song.id) FROM song";
 	$where_sql 	= '';
 	$table_sql	= ',';
 
