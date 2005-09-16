@@ -1,5 +1,7 @@
 <script type="text/javascript" language="javascript">
 <!-- Begin
+// JS variables mpd_elapsed, mpd_song_length and mpd_state set in show_mpdplay.inc
+
 // Set refresh interval (in seconds)
 var refreshinterval=<?php echo conf('refresh_limit'); ?>
 

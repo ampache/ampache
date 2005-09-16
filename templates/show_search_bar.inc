@@ -47,8 +47,6 @@
 			<option value="minbitrate"><?php echo _("Minimum Bitrate"); ?></option>
 			<option value="filename"><?php echo _("Filename"); ?></option>
 		</select>
-	</td>
-	<td>
 		<input class="button" type="submit" value="<?php echo  _("Search"); ; ?>" />&nbsp;&nbsp;
 		<input type="hidden" name="action" value="quick_search" />
 		<input type="hidden" name="method" value="fuzzy" />

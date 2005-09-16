@@ -24,46 +24,41 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  * this is the simple random play bar, it is short sweet and to the point 
  */
 ?>
-  <form name="random" method="post" enctype="multipart/form-data" action="<?php echo conf('web_path'); ?>/song.php">
-  <input type="hidden" name="action" value="m3u" />
-  <table class="border" border="0" cellpadding="3" cellspacing="1" width="100%">
-  <tr class="table-header">
-	<td colspan="6"><?php echo _("Play Random Selection"); ?></td>
-  </tr>
-  <tr class="even">
-    <td>
-      <table border="0">
-  <tr class="even">
-<td>
-   <select name="random">
-   <option value="1">1</option>
-   <option value="5">5</option>
-   <option value="10">10</option>
-   <option value="20">20</option>
-   <option value="30">30</option>
-   <option value="50">50</option>
-   <option value="100">100</option>
-   <option value="500">500</option>
-   <option value="1000">1000</option>
-   <option value="-1"><?php echo _("All"); ?></option>
-   </select> &nbsp; &nbsp;
-  <?php show_genre_pulldown( -1, 0, "'1'" ); ?>
-   <select name="Quantifier">
-   <option value="Songs"><?php echo _("Songs"); ?></option>
-   <option value="Minutes"><?php echo _("Minutes"); ?></option>
-   <option value="Full Artists"><?php echo _("Full Artists"); ?></option>
-   <option value="Full Albums"><?php echo _("Full Albums"); ?></option>
-   <option value="Less Played"><?php echo _("Less Played"); ?></option>
-   </select>
-<?php echo _("from"); ?>
-  <?php show_catalog_pulldown( -1, 0); ?>
-   <input type="hidden" name="aaction" value="Play!" />
-   <input class="button" type="submit" name="aaction" value="<?php echo _("Enqueue"); ?>" />
-</td>
-<td><a href="<?php echo conf('web_path'); ?>/randomplay.php"><?php echo _("Advanced"); ?></a></td>
-  </tr>
-  </table>
-  </td></tr>
-  </table>
-  </form>
+<form name="random" method="post" enctype="multipart/form-data" action="<?php echo conf('web_path'); ?>/song.php" style="Display:inline">
+<input type="hidden" name="action" value="m3u" />
+<table class="border" width="100%" cellspacing="1" cellpadding="3" border="0">
+<tr class="table-header">
+   <td><?php echo _("Play Random Selection"); ?></td>
+</tr>
+<tr class="even">
+   <td>
+      <select name="random">
+         <option value="1">1</option>
+         <option value="5">5</option>
+         <option value="10">10</option>
+         <option value="20">20</option>
+         <option value="30">30</option>
+         <option value="50">50</option>
+         <option value="100">100</option>
+         <option value="500">500</option>
+         <option value="1000">1000</option>
+         <option value="-1"><?php echo _("All"); ?></option>
+      </select> &nbsp; &nbsp;
+      <?php show_genre_pulldown( -1, 0, "'1'" ); ?>
+      <select name="Quantifier">
+         <option value="Songs"><?php echo _("Songs"); ?></option>
+         <option value="Minutes"><?php echo _("Minutes"); ?></option>
+         <option value="Full Artists"><?php echo _("Full Artists"); ?></option>
+         <option value="Full Albums"><?php echo _("Full Albums"); ?></option>
+         <option value="Less Played"><?php echo _("Less Played"); ?></option>
+      </select>
+      <?php echo _("from"); ?>
+      <?php show_catalog_pulldown( -1, 0); ?>
+      <input type="hidden" name="aaction" value="Play!" />
+      <input class="button" type="submit" name="aaction" value="<?php echo _("Enqueue"); ?>" />
+      &nbsp; <a href="<?php echo conf('web_path'); ?>/randomplay.php"><?php echo _("Advanced"); ?></a>
+   </td>
+</tr>
+</table>
+</form>
 

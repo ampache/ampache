@@ -44,7 +44,7 @@ global $condPL;
 <?php
 	${$myMpd->state} = "style=\"background-color: black;color:white;\"";
 ?>
-	<form action="<?php echo $web_path; ?>/amp-mpd.php" method="post" name="playcontrol" style="display:inline;">
+	<form action="<?php echo $web_path; ?>/amp-mpd.php" method="post" name="playcontrol" style="display:inline; white-space: nowrap">
 		<input class="button" type="submit" title="<?php echo _("Prev"); ?>" name="action" value="|&lt; " />
 		<input class="button" type="submit" title="<?php echo _("Stop"); ?>" name="action" value=" X " <?php echo $stop; ?> />
 		<input class="button" type="submit" title="<?php echo _("Play"); ?>" name="action" value=" &gt; " <?php echo $play; ?> />

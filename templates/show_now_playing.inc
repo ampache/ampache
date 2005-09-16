@@ -31,31 +31,44 @@
     <td colspan="4"><?php echo _("Now Playing"); ?></td>
   </tr>
 <?php
+	$user = $GLOBALS['user'];
+        echo '<script language="JavaScript" type="text/javascript"> var mpd_state = "'. "stop" .'" </script>';
 	foreach($results as $item) { 
 		$song = $item['song'];
 		$np_user = $item['user'];
 		if (is_object($song)) {
-                        $artist = $song->f_artist;
-                        $album  = $song->get_album_name();
-                        $text = "$song->f_title";
-			if (!$np_user->fullname) { $np_user->fullname = "Unknown User"; }
-                        echo "<tr class=\"even\">\n";
-                        if (conf('use_auth')) { 
-				echo "\t<td valign=\"middle\">$np_user->fullname</td>\n"; 
-			}
-                        echo "\t<td><a title=\"" . htmlspecialchars($song->title) . "\" href=\"$web_path/song.php?action=m3u&amp;song=$song->id\">$text</a></td>\n";
-			echo "\t<td><a title=\"" . htmlspecialchars($song->f_artist) . "\" href=\"$web_path/artists.php?action=show&amp;artist=$song->artist\">$song->f_artist</a> / ";
-                        echo "\t<a title=\"" . htmlspecialchars($album) . "\" href=\"$web_path/albums.php?action=show&amp;album=$song->album\">$song->f_album</a></td>";
-                        if (conf('play_album_art')) {
-                                echo "\t<td align=\"center\">";
-                                echo "<a target=\"_blank\" href=\"" . conf('web_path') . "/albumart.php?id=" . $song->album . "\">";
-                                echo "<img align=\"middle\" border=\"0\" src=\"" . conf('web_path') . "/albumart.php?id=" . $song->album . "&amp;fast=1&amp;thumb=1\" alt=\"Album Art\" height=\"75\" />";
-                                echo "</a>\n";
-                                echo "\t</td>\n";
-                                echo "</tr>\n";
-                        } // if album art on now playing
-			else {
-				echo "\n</tr>";
+                   $artist = $song->f_artist;
+                   $album  = $song->get_album_name();
+                   $text = "$song->f_title";
+		   if (!$np_user->fullname) { $np_user->fullname = "Unknown User"; }
+		   if ($user->username == $np_user->username)
+		       {
+                       $sql = "SELECT start_time FROM now_playing WHERE user ='".$user->username."'";
+                       $db_results = mysql_query($sql, dbh());
+                       while ($r = mysql_fetch_assoc($db_results)) {
+                          echo '<script language="JavaScript" type="text/javascript"> var mpd_elapsed = '.(time() - $r['start_time']).' </script>';
+                          echo '<script language="JavaScript" type="text/javascript"> var mpd_song_length = '. $song->time .' </script>';
+                          echo '<script language="JavaScript" type="text/javascript"> var mpd_state = "'. "play" .'" </script>';
+                          } // end while
+                       echo "<tr class=\"npsong\">\n"; }
+		   else
+                       { echo "<tr class=\"even\">\n"; }
+                   if (conf('use_auth')) { 
+		       echo "\t<td valign=\"middle\">$np_user->fullname</td>\n"; 
+		       }
+                   echo "\t<td><a title=\"" . htmlspecialchars($song->title) . "\" href=\"$web_path/song.php?action=m3u&amp;song=$song->id\">$text</a></td>\n";
+		   echo "\t<td><a title=\"" . htmlspecialchars($song->f_artist) . "\" href=\"$web_path/artists.php?action=show&amp;artist=$song->artist\">$song->f_artist</a> / ";
+                   echo "\t<a title=\"" . htmlspecialchars($album) . "\" href=\"$web_path/albums.php?action=show&amp;album=$song->album\">$song->f_album</a></td>";
+                   if (conf('play_album_art')) {
+                       echo "\t<td align=\"center\">";
+                       echo "<a target=\"_blank\" href=\"" . conf('web_path') . "/albumart.php?id=" . $song->album . "\">";
+                       echo "<img align=\"middle\" border=\"0\" src=\"" . conf('web_path') . "/albumart.php?id=" . $song->album . "&amp;fast=1&amp;thumb=1\" alt=\"Album Art\" height=\"75\" />";
+                       echo "</a>\n";
+                       echo "\t</td>\n";
+                       echo "</tr>\n";
+                       } // if album art on now playing
+		   else {
+		       echo "\n</tr>";
 			}
                 } // if it's a song
         } // while we're getting songs

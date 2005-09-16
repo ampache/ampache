@@ -54,7 +54,7 @@ $action = scrub_in($_REQUEST['action']);
 		<?php show_now_playing(); ?>
 	</td>
 </tr>	
-<tr><td colspan="2">&nbsp;</td></tr>
+<!--	<tr><td colspan="2">&nbsp;</td></tr>  -->
 <tr>
 	<td valign="top">
 	<!-- Left table -->
