@@ -809,4 +809,26 @@ function scrub_out($str) {
 
 } // scrub_out
 
+/**
+ * make_bool
+ * This takes a value and returns what I consider to be the correct boolean value
+ * This is used instead of settype alone because settype considers 0 and "false" to 
+ * be true
+ * @package General
+ */
+function make_bool($string) { 
+
+	if (strcasecmp($string,'false') == 0) { 
+		return '0';
+	}
+
+	if ($string == '0') { 
+		return '0';
+	}
+
+	return settype($string,"bool");
+
+} // make_bool
+
+
 ?>

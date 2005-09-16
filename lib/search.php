@@ -40,14 +40,26 @@ function run_search($data) {
 	} // end foreach
 
 	/* Figure out if they want a AND based search or a OR based search */
-	switch($_REQUEST['method']) { 
-		case 'fuzzy':
-			$method = 'OR';
+	switch($_REQUEST['operator']) { 
+		case 'or':
+			$operator = 'OR';
 		break;
 		default:
-			$method = 'AND';
+			$operator = 'AND';
+		break;
+	} // end switch on operator
+
+	/* Figure out what type of method they would like to use, exact or fuzzy */
+	switch($_REQUEST['method']) { 
+		case 'fuzzy':
+			$method = "LIKE '%__%'";
+		break;
+		default:
+			$method = "= '__'";
 		break;
 	} // end switch on method
+
+	$limit = intval($_REQUEST['limit']);
 	
 	/* Switch, and run the correct function */
 	switch($_REQUEST['object_type']) { 
@@ -57,11 +69,11 @@ function run_search($data) {
 		case 'song':
 			$function_name = 'search_' . $_REQUEST['object_type'];
 			if (function_exists($function_name)) { 
-				$results = call_user_func($function_name,$search,$method);
+				$results = call_user_func($function_name,$search,$operator,$method,$limit);
 				return $results;
 			}
 		default:
-			$results = search_song($search,$method);
+			$results = search_song($search,$operator,$method,$limit);
 			return $results;
 		break;
 	} // end switch 
@@ -77,45 +89,53 @@ function run_search($data) {
  * @package Search
  * @catagory Search
  */
-function search_song($data,$method) { 
+function search_song($data,$operator,$method,$limit) { 
 
 	/* Generate BASE SQL */
 	$base_sql 	= "SELECT DISTINCT(song.id) FROM song";
 	$where_sql 	= '';
 	$table_sql	= ',';
 
+	if ($limit > 0) { 
+		$limit_sql = " LIMIT $limit";
+	}
+	
+
 	foreach ($data as $type=>$value) { 
-		
+	
+		/* Create correct Value statement based on method */
+		$value_string = str_replace("__",$value,$method);
+	
 		switch ($type) { 
 			case 'title':
-				$where_sql .= " song.title LIKE '%$value%' $method";
+				$where_sql .= " song.title $value_string $operator";
 			break;
 			case 'album':
-				$where_sql .= " ( song.album=album.id AND album.name LIKE '%$value%' ) $method";
+				$where_sql .= " ( song.album=album.id AND album.name $value_string ) $operator";
 				$table_sql .= "album,";
 			break;
 			case 'artist':
-				$where_sql .= " ( song.artist=artist.id AND artist.name LIKE '%$value%' ) $method";
+				$where_sql .= " ( song.artist=artist.id AND artist.name $value_string ) $operator";
 				$table_sql .= "artist,";
 			break;
 			case 'genre':
-				$where_sql .= " ( song.genre=genre.id AND genre.name LIKE '%$value%' ) $method";
+				$where_sql .= " ( song.genre=genre.id AND genre.name $value_string ) $operator";
 				$table_sql .= "genre,";
 			break;
 			case 'year':
-				$where_sql .= " song.year LIKE '%$value%' $method";
+				$where_sql .= " song.year $value_string $operator";
 			break;
 			case 'filename':
-				$where_sql .= " song.file LIKE '%$value%' $method";
+				$where_sql .= " song.file $value_string $operator";
 			break;
 			case 'played':
 				/* This is a 0/1 value so bool it */
-				$value = settype($value, "bool");
-				$where_sql .= " song.played = '$value' $method";
+				$value = make_bool($value);
+				$where_sql .= " song.played = '$value' $operator";
 			break;
 			case 'minbitrate':
 				$value = intval($value);
-				$where_sql .= " song.bitrate >= '$value' $method";
+				$where_sql .= " song.bitrate >= '$value' $operator";
 			break;
 			default:
 				// Notzing!
@@ -127,9 +147,10 @@ function search_song($data,$method) {
 
 	/* Trim off the extra $method's and ,'s then combine the sucka! */
 	$table_sql = rtrim($table_sql,',');
-	$where_sql = rtrim($where_sql,$method);
+	$where_sql = rtrim($where_sql,$operator);
 
-	$sql = $base_sql . $table_sql . " WHERE" . $where_sql;
+	$sql = $base_sql . $table_sql . " WHERE" . $where_sql . $limit_sql;
+
 	$db_results = mysql_query($sql, dbh());
 	
 	while ($r = mysql_fetch_assoc($db_results)) { 

@@ -19,7 +19,12 @@
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
-
+/* Setup the needed variables that check the correct boxes */
+foreach ($_REQUEST['search_object'] as $key) { 
+	$name = "check_" . $key;
+	$field_name = $key . "_string";
+	${$name} = "checked=\"checked\" onload=\"flipField('$field_name');\" ";
+}
 
 /**
  * search template
@@ -37,7 +42,7 @@
 <tr class="<?php echo flip_class(); ?>">
 	<td><?php echo _("Title"); ?></td>
 	<td>
-		<input type="checkbox" name="search_object[]" value="title" onclick="flipField('title_string');" />
+		<input type="checkbox" name="search_object[]" value="title" onclick="flipField('title_string');" <?php echo $check_title; ?> />
 		<input type="textbox" id="title_string" name="title_string" value="<?php echo scrub_out($_REQUEST['title_string']); ?>" disabled="disabled" />
 	</td>
 	<td><?php echo _("Artist"); ?></td>
@@ -110,11 +115,30 @@
 			<option value="genre"><?php echo _("Genres"); ?></option>
 		</select>
 	</td>
+	<td><?php echo _("Operator"); ?>:</td>
+	<td>
+		<select name="operator">
+			<option value="or"><?php echo _("OR"); ?></option>
+			<option value="and"><?php echo _("AND"); ?></option>
+		</select>
+	</td>
+</tr>
+<tr class="<?php echo flip_class(); ?>">
 	<td><?php echo _("Method"); ?>:</td>
 	<td>
 		<select name="method">
 			<option value="fuzzy"><?php echo _("Fuzzy"); ?></option>
 			<option value="exact"><?php echo _("Exact"); ?></option>
+		</select>
+	</td>
+	<td><?php echo _("Maxium Results"); ?>:</td>
+	<td>
+		<select name="limit">
+			<option value="0"><?php echo _("Unlimited"); ?></option>
+			<option value="25">25</option>
+			<option value="50">50</option>
+			<option value="100">100</option>
+			<option value="500">500</option>
 		</select>
 	</td>
 </tr>
