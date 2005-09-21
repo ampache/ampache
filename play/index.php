@@ -200,7 +200,6 @@ else {
 	// Generate browser class for sending headers
 	$browser = new Browser();
 	header("Accept-Ranges: bytes" );
-	header("Content-Length: " . $song->size);
 
 	// Prevent the script from timing out
 	set_time_limit(0);			
@@ -241,7 +240,7 @@ else {
         } 
 
 	/* Set the Song as Played if it isn't already */
-	$song->update_played();
+	$song->set_played();
 
 	/* Delete the Now Playing Entry */
 	delete_now_playing($lastid);

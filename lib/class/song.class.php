@@ -245,12 +245,12 @@ class Song {
 	 */
 	function set_played() { 
 
-		if ($song->played) { 
+		if ($this->played) { 
 			return true;
 		}
 
 		/* If it hasn't been played, set it! */
-		$song->update_played('1');
+		$this->update_played('1');
 
 		return true;
 

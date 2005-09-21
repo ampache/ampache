@@ -22,7 +22,10 @@
 		any playback when enabled. (Thx J)
 	- Fixed a flaw in the downsampling which would allow you to set
 		invalid bitrates. (Thx J)
-
+	- Fixed a few problems with WMP, downsampling and now playing
+		information. This is not a final fix for WMP but it's
+		better than before. 
+	- Fixed problem where played wasn't getting set correctly. 
 
   
 --------------------------------------------------------------------------

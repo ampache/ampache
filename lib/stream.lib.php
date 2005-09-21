@@ -31,13 +31,12 @@ function delete_now_playing($insert_id) {
 
         $user_agent = $_SERVER['HTTP_USER_AGENT'];
 
-        if (stristr($user_agent,"Windows-Media-Player")) {
+	if (stristr($user_agent,"NSPlayer")) { 
                 // Commented out until I can figure out the
                 // trick to making this work
-                //return true;
+                return true;
         }
 
-        
         // Remove the song from the now_playing table
         $sql = "DELETE FROM now_playing WHERE id = '$insert_id'";
         $db_result = mysql_query($sql, dbh());
@@ -53,10 +52,14 @@ function delete_now_playing($insert_id) {
  */
 function gc_now_playing() { 
 
-        $time = time();
-        $expire = $time - 1800;  // 86400 seconds = 1 day
+        $time 		= time();
+        $expire 	= $time - 3200;  // 86400 seconds = 1 day
+	$session_id	= sql_escape($_REQUEST['sid']);
+	if (strlen($session_id)) { 
+		$session_sql = " OR session = '$session_id'";
+	}	
 
-        $sql = "DELETE FROM now_playing WHERE start_time < $expire";
+        $sql = "DELETE FROM now_playing WHERE start_time < $expire" . $session_sql;
         $db_result = mysql_query($sql, dbh());
         
 } // gc_now_playing
@@ -75,21 +78,21 @@ function insert_now_playing($song_id,$uid,$song_length) {
         $time = time();
 
         /* Windows Media Player is evil and it makes multiple requests per song */
-        if (stristr($user_agent,"NSPlayer")) { return false; }
+        if (stristr($user_agent,"Windows-Media-Player")) { return false; }
 
         /* Set the Expire Time */
 
         // If they are using Windows media player
-        if (stristr($user_agent,"Windows-Media-Player")) {
+	if (stristr($user_agent,"NSPlayer")) { 
                 // WMP does keep the session open so we need to cheat a little here
-                $expire = $time + $song_length;
-        }
-        else {
-                $expire = $time;
+		$session_id 	= sql_escape($_REQUEST['sid']); 
         }
 
-        $sql = "INSERT INTO now_playing (`song_id`, `user`, `start_time`)" .
-                " VALUES ('$song_id', '$uid', '$expire')";
+	/* Set expire time for worst case clean up */
+	$expire = $time;
+
+        $sql = "INSERT INTO now_playing (`song_id`, `user`, `start_time`,`session`)" .
+                " VALUES ('$song_id', '$uid', '$expire','$session_id')";
 
         $db_result = mysql_query($sql, dbh());
 
