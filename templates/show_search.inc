@@ -20,11 +20,16 @@
 
 */
 /* Setup the needed variables that check the correct boxes */
+$final_javascript = "<script type=\"text/javascript\" language=\"javascript\">\n<!-- Begin \n";
+
 foreach ($_REQUEST['search_object'] as $key) { 
 	$name = "check_" . $key;
 	$field_name = $key . "_string";
-	${$name} = "checked=\"checked\" onload=\"flipField('$field_name');\" ";
+	${$name} = "checked=\"checked\"";
+	$final_javascript .= "flipField('$field_name'); \n";
 }
+
+$final_javascript .= " // END-->\n </script>";
 
 /**
  * search template
@@ -153,4 +158,6 @@ foreach ($_REQUEST['search_object'] as $key) {
 </tr>
 </table>
 </form>
+
+<?php echo $final_javascript; ?>
 

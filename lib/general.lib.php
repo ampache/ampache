@@ -803,6 +803,10 @@ function check_username($username) {
  */
 function scrub_out($str) {
 
+	if (get_magic_quotes_gpc()) { 
+		$str = stripslashes($str);
+	}
+
         $str = htmlentities($str);
 
         return $str;
