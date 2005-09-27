@@ -219,6 +219,7 @@ else {
 	}
 	/* Last but not least pump em out */
 	else {
+		header("Content-Length: $song->size");
 		$browser->downloadHeaders($song_name, $song->mime, false, $song->size);
 	}
 	
