@@ -220,6 +220,7 @@ function start_downsample($song,$now_playing_id=0,$song_name=0) {
 	/* Set the Sample Ratio */
 	$sample_ratio = $sample_rate/($song->bitrate/1000);
 
+	header("Content-Length: " . $sample_ratio*$song->size);
         $browser->downloadHeaders($song_name, $song->mime, false,$sample_ratio*$song->size);
 
         /* Get Offset */
@@ -232,6 +233,7 @@ function start_downsample($song,$now_playing_id=0,$song_name=0) {
 	$eofmm  = floor($song->time/60);
         $eofss  = floor($song->time-$eofmm*60);
         $eof    = sprintf("%02d.%02d",$eofmm,$eofss);
+
 
         /* Replace Variables */
         $downsample_command = conf('downsample_cmd');
