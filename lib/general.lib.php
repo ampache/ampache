@@ -364,13 +364,16 @@ function extend_session($sid) {
 */
 function get_tag_type($results) {
 
+
+	
+
          // Check and see if we are dealing with an ogg
          // If so order will be a little different
          if ($results['ogg']) {
         	$order[0] = 'ogg';
          } // end if ogg
-         elseif ($results['rm']) {
-		$order[0] = 'rm';
+         elseif ($results['rm'] OR $results['format_name'] == 'Real') {
+		$order[0] = 'real';
          }
 	 elseif ($results['flac']) { 
 	 	$order[0] = 'flac';
@@ -409,6 +412,17 @@ function get_tag_type($results) {
 	@discussion cleans up the tag information
 */
 function clean_tag_info($results,$key,$filename) { 
+
+	if ($key == 'real') { 
+		$results['real'] = $results['tags']['real'];
+	}
+
+	/* Flatten any arrayed results */
+	foreach ($results[$key] as $field=>$data) { 
+		if (is_array($data)) { 
+			$results[$key][$field] = array_pop($data);
+		}
+	}
 
 	$info = array();
 
