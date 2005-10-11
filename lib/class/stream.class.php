@@ -287,6 +287,22 @@ class Stream {
 
 
 	} // create_slim
+
+	/*!
+		@function create_ram
+		@discussion this functions creates a RAM file for use by Real Player
+	*/
+	function create_ram() { 
+
+                header("Cache-control: public");
+                header("Content-Disposition: filename=playlist.ram");
+                header("Content-Type: audio/x-pn-realaudio ram;");
+                foreach ($this->songs as $song_id) {
+                        $song = new Song($song_id);
+ 			echo "$this->web_path/play/index.php?song=$song_id&uid=$this->user_id&sid=$this->sess&stupidwinamp=." . $song->type . "\n";	
+		} // foreach songs
+
+	} // create_ram
 	
 
 } //end of stream class
