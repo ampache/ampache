@@ -50,7 +50,7 @@
                           echo '<script language="JavaScript" type="text/javascript"> var mpd_song_length = '. $song->time .' </script>';
                           echo '<script language="JavaScript" type="text/javascript"> var mpd_state = "'. "play" .'" </script>';
                           } // end while
-                       echo "<tr class=\"npsong\">\n"; }
+                       echo "<tr class=\"even\">\n"; }
 		   else
                        { echo "<tr class=\"even\">\n"; }
                    if (conf('use_auth')) { 

@@ -287,7 +287,7 @@ function validate_bitrate($bitrate) {
 		$next_key = $key+1;
                                 
                 if ($sample_rate > $rate AND $sample_rate < $valid_rate[$next_key]) {
-			return $sample_rate;
+			return $rate;
 		} 
 	} // end foreach
 

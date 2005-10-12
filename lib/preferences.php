@@ -92,42 +92,76 @@ function update_preferences($pref_id=0) {
 	
 	/* Get current keys */
 	$sql = "SELECT id,name,type FROM preferences";
+
+	/* If it isn't the System Account's preferences */
 	if ($pref_id != '-1') { $sql .= " WHERE type='user'"; }
+	
 	$db_results = mysql_query($sql, dbh());
 
 	// Collect the current possible keys
-	while ($r = mysql_fetch_object($db_results)) { 
-		$results[] = array('id' => $r->id, 'name' => $r->name,'type' => $r->type);
-	} 
+	while ($r = mysql_fetch_assoc($db_results)) { 
+		$results[] = array('id' => $r['id'], 'name' => $r['name'],'type' => $r['type']);
+	} // end collecting keys
 
+	/* Foreach through possible keys and assign them */
 	foreach ($results as $data) { 
 		/* Get the Value from POST/GET var called $data */
-		//FIXME: Do this right....
 		$type 		= $data['type'];
 		$name 		= $data['name'];
 		$apply_to_all	= "check_" . $data['name'];
 		$id		= $data['id'];
 		$value 		= sql_escape(scrub_in($_REQUEST[$name]));
 
-		if (has_preference_access($name) AND isset($_REQUEST[$name])) { 
-			$sql = "UPDATE user_preference SET `value`='$value' WHERE preference='$id' AND user='$pref_id'";
-			$db_results = mysql_query($sql, dbh());
-			
-			/* Check to see if this is a theme, and if so run the theme updater */
-			if ($name == "theme_name" AND $pref_user->prefs['theme_name'] != $_REQUEST[$name]) { 
-				set_theme_colors($value,$pref_id);
-			} // run theme updater
-			
-		} // if access
-		
-		if ($GLOBALS['user']->has_access(100) AND $_REQUEST[$apply_to_all] =='1') { 
-			$sql = "UPDATE user_preference SET `value`='$value' WHERE preference='$id'";
-			$db_results = mysql_query($sql, dbh());
-		} 
+		/* Some preferences require some extra checks to be performed */
+		switch ($name) { 
+			case 'theme_name':
+				// If the theme exists and it's different then our current one reset the colors
+				if (theme_exists($value) AND $pref_user->prefs['theme_name'] != $value) { 
+					set_theme_colors($value,$pref_id);
+				}
+			break;
+			case 'sample_rate':
+				$value = validate_bitrate($value);
+			break;
+			default: 
+			break;
+		}
+
+		/* Run the update for this preference */
+		update_preference($pref_id,$name,$id,$value);
+
 	} // end foreach preferences
 
 
 } // update_preferences
+
+/**
+ * update_preference
+ * This function updates a single preference and is called by the update_preferences function
+ * @package Preferences
+ * @catagory Update
+ */
+function update_preference($username,$name,$pref_id,$value) { 
+
+	$apply_check = "check_" . $name;
+
+	/* First see if they are an administrator and we are applying this to everything */
+	if ($GLOBALS['user']->has_access(100) AND make_bool($_REQUEST[$apply_check])) { 
+		$sql = "UPDATE user_preference SET `value`,'$value' WHERE preference='$pref_id'";
+		$db_results = mysql_query($sql, dbh());
+		return true;
+	}
+	
+	/* Else make sure that the current users has the right to do this */
+	if (has_preference_access($name)) { 
+		$sql = "UPDATE user_preference SET `value`='$value' WHERE preference='$pref_id' AND user='$username'";
+		$db_resutls = mysql_query($sql, dbh());
+		return true;
+	}
+
+	return false;
+
+} // update_preference
 
 /*!
 	@function has_preference_access
@@ -138,7 +172,6 @@ function update_preferences($pref_id=0) {
 	// This is no longer needed, we just need to check against preferences.level
 */
 function has_preference_access($name) { 
-	global $user;
 
         if (conf('demo_mode')) {
 	        return false;
@@ -158,7 +191,9 @@ function has_preference_access($name) {
 			$level = 1;
 		break;
 	} // end switch key
-	if ($user->has_access($level)) { 
+
+
+	if ($GLOBALS['user']->has_access($level)) { 
 		return true;
 	}
 

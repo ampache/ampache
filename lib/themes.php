@@ -121,4 +121,21 @@ function get_theme_author($theme_name) {
 	return $results['author'];
 
 } // get_theme_author
+
+/*!
+	@function theme_exists
+	@discussion this function checks to make sure that a theme actually exists
+*/
+function theme_exists($theme_name) { 
+
+	$theme_path = conf('prefix') . "/themes/" . $theme_name . "/theme.cfg.php";
+
+	if (!file_exists($theme_path)) { 
+		return false; 
+	}
+
+	return true;
+
+} // theme_exists
+
 ?>

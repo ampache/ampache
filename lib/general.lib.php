@@ -844,6 +844,10 @@ function make_bool($string) {
 		return '0';
 	}
 
+	if (strlen($string) < 1) { 
+		return '0';
+	}
+	
 	return settype($string,"bool");
 
 } // make_bool

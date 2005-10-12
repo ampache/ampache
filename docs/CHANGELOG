@@ -26,6 +26,9 @@
 		information. This is not a final fix for WMP but it's
 		better than before. 
 	- Fixed problem where played wasn't getting set correctly. 
+	- Fixed a problem where you could enter invalid bitrates into 
+		the preferences, and cleaned up logic
+	- Fixed a problem with Real Player Tag detection (hack)
 
   
 --------------------------------------------------------------------------

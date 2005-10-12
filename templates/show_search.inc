@@ -52,38 +52,38 @@ $final_javascript .= " // END-->\n </script>";
 	</td>
 	<td><?php echo _("Artist"); ?></td>
 	<td>
-		<input type="checkbox" name="search_object[]" value="artist" onclick="flipField('artist_string');" />
+		<input type="checkbox" name="search_object[]" value="artist" onclick="flipField('artist_string');" <?php echo $check_artist; ?> />
 		<input type="textbox" id="artist_string" name="artist_string" value="<?Php echo scrub_out($_REQUEST['artist_string']); ?>" disabled="disabled" />
 	</td>
 </tr>
 <tr class="<?php echo flip_class(); ?>">
 	<td><?php echo _("Album"); ?></td>
 	<td>
-		<input type="checkbox" name="search_object[]" value="album" onclick="flipField('album_string');" />
+		<input type="checkbox" name="search_object[]" value="album" onclick="flipField('album_string');" <?php echo $check_album; ?> />
 		<input type="textbox" id="album_string" name="album_string" value="<?php echo scrub_out($_REQUEST['album_string']); ?>" disabled="disabled" />
 	</td>
 	<td><?php echo _("Genre"); ?></td>
 	<td>
-		<input type="checkbox" name="search_object[]" value="genre" onclick="flipField('genre_string');" />
+		<input type="checkbox" name="search_object[]" value="genre" onclick="flipField('genre_string');" <?php echo $check_genre; ?> />
 		<input type="textbox" id="genre_string" name="genre_string" value="<?php echo scrub_out($_REQUEST['genre_string']); ?>" disabled="disabled" />
 	</td>
 </tr>
 <tr class="<?php echo flip_class(); ?>">
 	<td><?php echo _("Year"); ?></td>
 	<td>
-		<input type="checkbox" name="search_object[]" value="year" onclick="flipField('year_string');" />
+		<input type="checkbox" name="search_object[]" value="year" onclick="flipField('year_string');" <?php echo $check_year; ?> />
 		<input type="textbox" id="year_string" name="year_string" value="<?php echo scrub_out($_REQUEST['year_string']); ?>" disabled="disabled" />
 	</td>
 	<td><?php echo _("Filename"); ?></td>
 	<td>
-		<input type="checkbox" name="search_object[]" value="filename" onclick="flipField('filename_string');" />
+		<input type="checkbox" name="search_object[]" value="filename" onclick="flipField('filename_string');" <?php echo $check_filename; ?> />
 		<input type="textbox" id="filename_string" name="filename_string" value="<?php echo scrub_out($_REQUEST['filename_string']); ?>" disabled="disabled" />
 	</td>
 </tr>
 <tr class="<?php echo flip_class(); ?>">
 	<td><?php echo _("Played"); ?></td>
 	<td>
-		<input type="checkbox" name="search_object[]" value="played" onclick="flipField('played_string');" />
+		<input type="checkbox" name="search_object[]" value="played" onclick="flipField('played_string');" <?php echo $check_played; ?> />
 		<select id="played_string" name="played_string" disabled="disabled">
 			<option value="1"><?php echo _("Yes"); ?></option>
 			<option value="0"><?php echo _("No"); ?></option>
@@ -91,7 +91,7 @@ $final_javascript .= " // END-->\n </script>";
 	</td>
 	<td><?php echo _("Min Bitrate"); ?></td>
 	<td>
-		<input type="checkbox" name="search_object[]" value="minbitrate" onclick="flipField('minbitrate_string');" />
+		<input type="checkbox" name="search_object[]" value="minbitrate" onclick="flipField('minbitrate_string');" <?php echo $check_minbitrate; ?> />
 		<select id="minbitrate_string" name="minbitrate_string" disabled="disabled">
 			<option value="32">32</option>
 			<option value="40">40</option>
