@@ -25,26 +25,33 @@
 	@discussion shows edit page for preferences
 
 */
+
+/* I'm cheating a little hear, check to see if we want to show the
+ * Apply to All button on this page 
+ */
+if ($GLOBALS['user']->has_access(100) AND $user_id == '-1' AND conf('use_auth')) { 
+	$show_apply_to_all = true;
+}
+
 ?>
 
 <div class="header1">
 	<?php echo _("Editing"); ?> <?php echo $fullname; ?> <?php echo _("preferences"); ?> 
 	<?php if ($user->has_access(100)) { ?>
 	[<a href="<?php echo conf('web_path'); ?>/admin/preferences.php?action=fix_preferences&amp;user_id=<?php echo $user_id; ?>"><?php echo _("Rebuild Preferences"); ?></a>]
-	<? } ?>
+	<?php } ?>
 </div>
 <form method="post" name="preferences" action="<?php echo conf('web_path'); ?><?php echo $target; ?>" enctype="multipart/form-data">
 <table class="border" border="0" cellpadding="0" cellspacing="0">
 <tr class="table-header">
 	<th><?php echo _("Preference"); ?></th>
 	<th><?php echo _("Value"); ?></th>
-	<?php if ($user->has_access(100) AND $user_id == '0') { ?>
+	<?php if ($show_apply_to_all) { ?>
 		<th><?php echo _("Type"); ?></th>
 		<th><?php echo _("Apply to All"); ?></th>
 	<?php } ?>
 </tr>
 <?php 
-
 	foreach ($preferences as $pref) { 
 		if ($pref->type == "system") { 
 			$table_break = 1;
@@ -72,7 +79,7 @@
                </table>
        </td>
  
-	<?php if ($user->has_access(100) AND $user_id == '0') { ?>
+	<?php if ($show_apply_to_all) { ?>
 		<td><?php echo $pref->type; ?></td>
 		<td align="center"><input type="checkbox" name="check_<?php echo $pref->name; ?>" value="1" /></td>
 	<?php } ?>
