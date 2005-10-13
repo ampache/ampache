@@ -26,7 +26,7 @@
 
 */
 
-/* I'm cheating a little hear, check to see if we want to show the
+/* I'm cheating a little here, check to see if we want to show the
  * Apply to All button on this page 
  */
 if ($GLOBALS['user']->has_access(100) AND $user_id == '-1' AND conf('use_auth')) { 
