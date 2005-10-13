@@ -24,15 +24,20 @@
 */
 require_once("modules/init.php");
 
-//FIXME: Remove references
-$uid = $GLOBALS['user']->username;
+/* If we are a full admin then we can see other peoples stats! */
+if ($GLOBALS['user']->has_access(100) AND isset($_REQUEST['user_id'])) { 
+	$working_user = new User($_REQUEST['user_id']);
+}
+else { 
+	$working_user = $GLOBALS['user'];
+}
 
 show_template('header');
 show_menu_items('Stats');
 show_clear();
 ?>
 
-<div class="header1"><?php echo  $user->fullname; ; ?>'s Favorites:</div>
+<div class="header1"><?php echo  $working_user->fullname; ; ?>'s Favorites:</div>
 
 <p> Below is a list of what you have been listening to the most.  You can clear these statistics
 by <a href="<?php echo conf('web_path'); ?>/user.php?action=show_edit_profile">editing your profile.</a></p>
@@ -41,8 +46,8 @@ by <a href="<?php echo conf('web_path'); ?>/user.php?action=show_edit_profile">e
 	<tr>
 		<td valign="top">
 		<?php
-			if ( $items = $user->get_favorites('artist') ) {
-				$items = $user->format_favorites($items);
+			if ( $items = $working_user->get_favorites('artist') ) {
+				$items = $working_user->format_favorites($items);
 				show_info_box('Your Favorite Artists', 'artist', $items);
 			}
 			else {
@@ -53,8 +58,8 @@ by <a href="<?php echo conf('web_path'); ?>/user.php?action=show_edit_profile">e
 
                 <td valign="top">
                 <?php
-                        if ( $items = $user->get_favorites('song') ) { 
-				$items = $user->format_favorites($items);
+                        if ( $items = $working_user->get_favorites('song') ) { 
+				$items = $working_user->format_favorites($items);
                                 show_info_box('Your Favorite Songs', 'your_song', $items);
                         }             
                         else {
@@ -65,8 +70,8 @@ by <a href="<?php echo conf('web_path'); ?>/user.php?action=show_edit_profile">e
 
                 <td valign="top">
                 <?php
-                        if ( $items = $user->get_favorites('album') ) { 
-				$items = $user->format_favorites($items);
+                        if ( $items = $working_user->get_favorites('album') ) { 
+				$items = $working_user->format_favorites($items);
                                 show_info_box('Your Favorite Albums', 'album', $items);
                         }             
                         else {
@@ -78,4 +83,4 @@ by <a href="<?php echo conf('web_path'); ?>/user.php?action=show_edit_profile">e
 </table>
 <br />
 
-<?php show_page_footer ('Stats', '',$user->prefs['display_menu']);?>
+<?php show_page_footer ('Stats', '',$working_user->prefs['display_menu']);?>

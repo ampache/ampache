@@ -30,6 +30,9 @@
 		the preferences, and cleaned up logic
 	- Fixed a problem with Real Player Tag detection (hack)
 	- Added RAM playlist type
+	- Added ability for Admin's to view other users personal stats
+	- Fixed a problem with the Apply to All checkbox on admin
+		preferences
 
   
 --------------------------------------------------------------------------

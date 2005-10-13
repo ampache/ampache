@@ -54,6 +54,9 @@ $admin_menu = "admin/";
         <td align="center">
 		<b><?php echo _("Prefs"); ?></b>
 	</td>
+	<td align="center">
+		<b><?php echo _("Stats"); ?></b>
+	</td>
         <td align="center">
 		<b><?php echo _("Access"); ?></b>
 	</td>
@@ -89,6 +92,11 @@ while ( $results = mysql_fetch_object($db_result) ) {
         <td>
 		<a href="<?php echo conf('web_path'); ?>/admin/preferences.php?action=user&amp;user_id=<?php echo $user->username; ?>">
 			<?php echo _("Prefs"); ?>
+		</a>
+	</td>
+	<td>
+		<a href="<?php echo conf('web_path'); ?>/stats.php?user_id=<?php echo $user->username; ?>">
+			<?php echo _("Stats"); ?>
 		</a>
 	</td>
 	<?php
