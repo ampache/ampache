@@ -610,7 +610,7 @@ class Catalog {
 	        // Get all of the albums in this catalog
 	        $albums = $this->get_catalog_albums($catalog_id);
 
-		echo "<br /><b>" . _("Starting Dump Album Art") . ". . .</b><br><br />\n";
+		echo "<br /><b>" . _("Starting Dump Album Art") . ". . .</b><br /><br />\n";
 
 		// Run through them an get the art!
 		foreach ($albums as $album) {

@@ -44,25 +44,25 @@
 </tr>
 <tr>
 	<td>
-               <input size=40 type="file" name="ul_path1" id="ul_path1" />
+               <input size="40" type="file" name="ul_path1" id="ul_path1" />
 	       <?php $GLOBALS['error']->print_error('ul_path1'); ?>
         </td>
 </tr>  
 <tr>
 	<td>
-               <input size=40 type="file" name="ul_path2" id="ul_path2" />
+               <input size="40" type="file" name="ul_path2" id="ul_path2" />
 		<?php $GLOBALS['error']->print_error('ul_path2'); ?>
         </td>
 </tr>  
 <tr>
         <td>
-	        <input size=40 type="file" name="ul_path3" id="ul_path3" />
+	        <input size="40" type="file" name="ul_path3" id="ul_path3" />
 		<?php $GLOBALS['error']->print_error('ul_path3'); ?>
 	</td>
 </tr>  
 <tr>
         <td>
-	        <input size=40 type="file" name="ul_path4" id="ul_path4" />
+	        <input size="40" type="file" name="ul_path4" id="ul_path4" />
 		<?php $GLOBALS['error']->print_error('ul_path3'); ?>
         </td>
 </tr>  

@@ -225,5 +225,7 @@ if( $status ) {
 	print( "</table>\n" );
 } // end if any messages
  
+show_clear();
+show_page_footer ('Upload', '',$user->prefs['display_menu']);
 
 ?>

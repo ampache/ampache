@@ -48,36 +48,36 @@ $final_javascript .= " // END-->\n </script>";
 	<td><?php echo _("Title"); ?></td>
 	<td>
 		<input type="checkbox" name="search_object[]" value="title" onclick="flipField('title_string');" <?php echo $check_title; ?> />
-		<input type="textbox" id="title_string" name="title_string" value="<?php echo scrub_out($_REQUEST['title_string']); ?>" disabled="disabled" />
+		<input type="text" id="title_string" name="title_string" value="<?php echo scrub_out($_REQUEST['title_string']); ?>" disabled="disabled" />
 	</td>
 	<td><?php echo _("Artist"); ?></td>
 	<td>
 		<input type="checkbox" name="search_object[]" value="artist" onclick="flipField('artist_string');" <?php echo $check_artist; ?> />
-		<input type="textbox" id="artist_string" name="artist_string" value="<?Php echo scrub_out($_REQUEST['artist_string']); ?>" disabled="disabled" />
+		<input type="text" id="artist_string" name="artist_string" value="<?Php echo scrub_out($_REQUEST['artist_string']); ?>" disabled="disabled" />
 	</td>
 </tr>
 <tr class="<?php echo flip_class(); ?>">
 	<td><?php echo _("Album"); ?></td>
 	<td>
 		<input type="checkbox" name="search_object[]" value="album" onclick="flipField('album_string');" <?php echo $check_album; ?> />
-		<input type="textbox" id="album_string" name="album_string" value="<?php echo scrub_out($_REQUEST['album_string']); ?>" disabled="disabled" />
+		<input type="text" id="album_string" name="album_string" value="<?php echo scrub_out($_REQUEST['album_string']); ?>" disabled="disabled" />
 	</td>
 	<td><?php echo _("Genre"); ?></td>
 	<td>
 		<input type="checkbox" name="search_object[]" value="genre" onclick="flipField('genre_string');" <?php echo $check_genre; ?> />
-		<input type="textbox" id="genre_string" name="genre_string" value="<?php echo scrub_out($_REQUEST['genre_string']); ?>" disabled="disabled" />
+		<input type="text" id="genre_string" name="genre_string" value="<?php echo scrub_out($_REQUEST['genre_string']); ?>" disabled="disabled" />
 	</td>
 </tr>
 <tr class="<?php echo flip_class(); ?>">
 	<td><?php echo _("Year"); ?></td>
 	<td>
 		<input type="checkbox" name="search_object[]" value="year" onclick="flipField('year_string');" <?php echo $check_year; ?> />
-		<input type="textbox" id="year_string" name="year_string" value="<?php echo scrub_out($_REQUEST['year_string']); ?>" disabled="disabled" />
+		<input type="text" id="year_string" name="year_string" value="<?php echo scrub_out($_REQUEST['year_string']); ?>" disabled="disabled" />
 	</td>
 	<td><?php echo _("Filename"); ?></td>
 	<td>
 		<input type="checkbox" name="search_object[]" value="filename" onclick="flipField('filename_string');" <?php echo $check_filename; ?> />
-		<input type="textbox" id="filename_string" name="filename_string" value="<?php echo scrub_out($_REQUEST['filename_string']); ?>" disabled="disabled" />
+		<input type="text" id="filename_string" name="filename_string" value="<?php echo scrub_out($_REQUEST['filename_string']); ?>" disabled="disabled" />
 	</td>
 </tr>
 <tr class="<?php echo flip_class(); ?>">

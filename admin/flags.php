@@ -38,7 +38,7 @@ $action = scrub_in($_REQUEST['action']);
 show_template('header');
 
 show_menu_items('Admin');
-show_admin_menu('Users');
+show_admin_menu('Catalog');
 
 switch ($action)
 {
@@ -85,7 +85,6 @@ switch ($action)
 }
 
 show_footer();
-?>
+show_page_footer ('Admin', 'Catalog',$user->prefs['display_menu']);
 
-</body>
-</html>
+?>
