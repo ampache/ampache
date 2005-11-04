@@ -797,6 +797,9 @@ class Catalog {
         */
         function update_song_from_tags($song) {
 
+
+		if (conf('debug')) { log_event($_SESSION['userdata']['username'],' update-check ',"Starting work on $song->file",'ampache-catalog'); }
+		
                 $info = new Audioinfo();
                 $results = $info->Info($song->file);
 
@@ -843,8 +846,12 @@ class Catalog {
                 $info = $song->compare_song_information($song,$new_song);
 
                 if ($info['change']) {
+			if (conf('debug')) { log_event($_SESSION['userdata']['username'],' update ',"$song->file difference found, updating database",'ampache-catalog'); }
                         $song->update_song($song->id,$new_song);
                 }
+		else { 
+			if (conf('debug')) { log_event($_SESSION['userdata']['username'],' update ',"$song->file no difference found returning",'ampache-catalog'); }
+		}
 
                 return $info;
 
@@ -1447,8 +1454,11 @@ class Catalog {
 		 */
 		while ($results = mysql_fetch_object($db_results)) {
 
+			/* Create the object from the existing database information */
 			$song = new Song($results->id);
 
+			if (conf('debug')) { log_event($_SESSION['userdata']['username'],' verify ',"Starting work on $song->file",'ampache-catalog'); }
+			
 			if (is_readable($song->file)) {
 				unset($skip);
 
@@ -1497,6 +1507,10 @@ class Catalog {
 
 				} // end skip
 
+				if ($skip) { 
+					if (conf('debug')) { log_event($_SESSION['userdata']['username'],' skip ',"$song->file has been skipped due to newer local update or file mod time",'ampache-catalog'); }
+				}
+	
                                 /* Stupid little cutesie thing */
                                 $this->count++;
                                 if ( !($this->count%conf('catalog_echo_count')) ) {
@@ -1510,6 +1524,9 @@ class Catalog {
 				echo "<dl>\n  <li>";
 				echo "<b>$song->file does not exist or is not readable</b>\n";
 				echo "  </li>\n</dl>\n<hr align=\"left\" width=\"50%\" />\n";
+				
+				if (conf('debug')) { log_event($_SESSION['userdata']['username'],' read-error ',"$song->file does not exist or is not readable",'ampache-catalog'); }
+				
 				// Should we remove it from catalog?
 			}
 
