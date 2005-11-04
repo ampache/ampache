@@ -798,7 +798,7 @@ class Catalog {
         function update_song_from_tags($song) {
 
 
-		if (conf('debug')) { log_event($_SESSION['userdata']['username'],' update-check ',"Starting work on $song->file",'ampache-catalog'); }
+		if (conf('debug')) { log_event($_SESSION['userdata']['username'],' tag-read ',"Reading Tags from $song->file",'ampache-catalog'); }
 		
                 $info = new Audioinfo();
                 $results = $info->Info($song->file);
