@@ -61,7 +61,7 @@ show_clear();
     ?>
     <tr class="<?php echo flip_class(); ?>">
             <td align="center">
-              <input type="checkbox" name="song[]" value="<?php echo $song->id; ?>" id="song_<?php echo $song->id; ?>"></input>
+              <input type="checkbox" name="song[]" value="<?php echo $song->id; ?>" id="song_<?php echo $song->id; ?>" />
             </td>
         <?php
             if (isset($playlist_id) && $playlist_id != 0 && ($user->username == $pluser->username || $user->has_access('100'))) {
