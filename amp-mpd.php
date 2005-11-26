@@ -163,12 +163,7 @@ if (is_object($myMpd)) {
                               } else {
                                 $mpd_dir = conf('mpd_dir') . '/';
                                 $pl_ids = scrub_in( $_REQUEST['song'] );
-                                foreach( $pl as $id => $entry ) {
-                                  // remember in_array( needle, haystack )
-                                  if( in_array( $id,  $pl_ids ) ) {
-                                    $song_files[] = $mpd_dir . $entry['file'];
-                                  }
-                                }
+
                                 // basically copied from playlist.php Add to case
                                 $pl_id = scrub_in( $_REQUEST['playlist_id'] );
                                 $playlist = new Playlist($pl_id);
@@ -177,13 +172,32 @@ if (is_object($myMpd)) {
                                   $playlist->create_playlist($playlist_name, $user->username, 'private');
                                   $pl_id = $playlist->id;
                                 }
-                                foreach( $song_files as $song_file ) {
-                                  $song_file = sql_escape( $song_file );
-                                  $sql = "SELECT id FROM song WHERE `file` = '$song_file'";
-                                  $db_results = mysql_query( $sql, dbh() );
-                                  $results = mysql_fetch_object( $db_results );
-                                  $song_ids[] = $results->id;
-                                }
+
+                                // need to detect file or URL method to get id's differently
+                                if( conf('mpd_method') == 'file' ) {
+                                       foreach( $pl as $id => $entry ) {
+                                         // remember in_array( needle, haystack )
+                                         if( in_array( $id,  $pl_ids ) ) {
+                                           $song_files[] = $mpd_dir . $entry['file'];
+                                         }
+                                       }
+                                       foreach( $song_files as $song_file ) {
+                                         $song_file = sql_escape( $song_file );
+                                         $sql = "SELECT id FROM song WHERE `file` = '$song_file'";
+                                         $db_results = mysql_query( $sql, dbh() );
+                                         $results = mysql_fetch_object( $db_results );
+                                         $song_ids[] = $results->id;
+                                       }
+                                   } else {
+                                       //      left edge @ song= and right at &
+                                                                       foreach( $pl as $id => $entry ) {
+                                                                               if( in_array( $id, $pl_ids ) ) {
+                                                                                       $temp_split_array = split( 'song=', $entry['file'] );
+                                                                                       $temp_split_array = split( '&', $temp_split_array[1] );
+                                                                                       $song_ids[] = $temp_split_array[0];
+                                                                               }
+                                                                       }
+                                   }
                                 if (isset($song_ids) && is_array($song_ids)) {
                                   $playlist->add_songs($song_ids, true);  // $is_ordered = true
                                 }
