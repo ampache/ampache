@@ -338,6 +338,13 @@ search_type  = fuzzy
 downsample_cmd	= mp3splt -qnf "%FILE%" %OFFSET% %EOF% -o - | lame --mp3input -q 3 -b %SAMPLE% -S - -
 
 #######################################################
+# These are commands used to transcode non-streaming
+# formats to mp3 for streaming.  Very similar to 
+# downsampling, but requires something that can play
+# the various file formats.  
+stream_cmd_m4a = faad -f 2 -w "%FILE%" | lame -r -b %SAMPLE% -S - -
+
+#######################################################
 # These options control the "local play" feature. This requires
 # a playlist manager such as moosic, winamp, xmms etc which
 # can be controlled via command line.

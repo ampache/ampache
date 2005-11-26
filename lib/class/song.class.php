@@ -674,6 +674,45 @@ class Song {
 		return stripslashes($matches[1]);
 
 	} // get_info_from_filename
+	
+	/*!
+		@function native_stream
+		@discussion returns true if the $song->type streams ok, false if it must be transcoded to stream
+	*/
+	function native_stream() {
+		$return = true;
+		
+		switch ($this->type) {
+			//TODO: fill out these cases once we have it working for m4a
+			case "m4a":
+				$return = false;
+				break;
+			default:
+				break;
+		}	// end switch
+		
+		return $return;
+	}	// end native_stream
+	
+	/*! 
+		@function stream_cmd
+		@discussion test if the song type streams natively and if not returns a transcoding command from the config
+	*/
+	function stream_cmd() {
+		$return = NULL;
+		if (!$this->native_stream()) {
+			switch ($this->type) {
+				case "m4a":
+					$return = "stream_cmd_m4a";
+					break;
+				default:
+					$return = "downsample_cmd";
+					break;
+			}	// end switch
+		}	// end if not native_stream
+		
+		return $return;
+	}	// end stream_cmd
 
 } //end of song class
 

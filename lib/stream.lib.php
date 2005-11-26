@@ -236,7 +236,7 @@ function start_downsample($song,$now_playing_id=0,$song_name=0) {
 
 
         /* Replace Variables */
-        $downsample_command = conf('downsample_cmd');
+        $downsample_command = conf($song->stream_cmd());
         $downsample_command = str_replace("%FILE%",$song->file,$downsample_command);
         $downsample_command = str_replace("%OFFSET%",$offset,$downsample_command);
         $downsample_command = str_replace("%EOF%",$eof,$downsample_command);

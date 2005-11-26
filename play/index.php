@@ -204,7 +204,7 @@ else {
 	// Prevent the script from timing out
 	set_time_limit(0);			
 	
-	if ($user->prefs['play_type'] == 'downsample') { 
+	if ($user->prefs['play_type'] == 'downsample' || !$song->native_stream()) { 
 	
 		$fp = start_downsample($song,$lastid,$song_name);
 
@@ -247,7 +247,7 @@ else {
 	delete_now_playing($lastid);
 
 	/* Clean up any open ends */
-	if ($user->prefs['play_type'] == 'downsample') { 
+	if ($user->prefs['play_type'] == 'downsample' || !$song->native_stream()) { 
 		@pclose($fp);
 	} 
 	else { 
