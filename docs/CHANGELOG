@@ -4,6 +4,9 @@
 
 --------------------------------------------------------------------------
   v.3.3.2-Alpha3
+  	- Updated included Snoopy class due to vulenerability
+		http://seclists.org/lists/fulldisclosure/2005/Oct/0536.html
+		(Thx marineam)
   	- Added transcoding of m4a files so they stream properly 
 		(Thx Rosensama)
 	- Fixed problem where Add to Playlist from mpd.php only works for 
