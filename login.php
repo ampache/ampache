@@ -69,10 +69,18 @@ if ( ($auth['success'] == 1)) {
 	//   but naming this 'user' didn't work at all
 	//
 	$_SESSION['userdata'] = $auth['info'];
-	// Make sure they are actually trying to get to this site
-	if (strstr($_POST['referrer'], conf('web_path')) AND !strstr($_POST['referrer'],"install.php") AND !strstr($_POST['referrer'],"login.php") AND !strstr($_POST['referrer'],"update.php")) { 
-		header("Location: " . $_POST['referrer']);
-		exit();
+	
+	/* Make sure they are actually trying to get to this site and don't try to redirect them back into 
+	 * an admin section
+	**/
+	if (strstr($_POST['referrer'], conf('web_path')) AND 
+		!strstr($_POST['referrer'],"install.php") AND 
+		!strstr($_POST['referrer'],"login.php") AND 
+		!strstr($_POST['referrer'],"update.php") AND
+		!strstr($_POST['referrer'],"admin")) { 
+		
+			header("Location: " . $_POST['referrer']);
+			exit();
 	} // if we've got a referrer
 	header("Location: " . conf('web_path') . "/index.php");
 	exit();

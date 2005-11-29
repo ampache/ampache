@@ -3,10 +3,15 @@
 --------------------------------------------------------------------------
 
 --------------------------------------------------------------------------
-  v.3.3.2-Alpha3
+  v.3.3.2-Alpha3 11/29/2005
+  	- Added marineam's patch to the Snoopy class which fixes a flaw
+		in the new version which fails to escape single quotes
   	- Updated included Snoopy class due to vulenerability
 		http://seclists.org/lists/fulldisclosure/2005/Oct/0536.html
 		(Thx marineam)
+	- Fixed a problem where it would attempt to redirect back to the
+		admin section regardless of rights giving a access denied
+		message. 
   	- Added transcoding of m4a files so they stream properly 
 		(Thx Rosensama)
 	- Fixed problem where Add to Playlist from mpd.php only works for 
