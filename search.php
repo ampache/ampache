@@ -58,11 +58,6 @@ switch ($action) {
 	break;
 }
 
-if ($_REQUEST['action'] === 'search') {
-	run_search($_REQUEST['search_string'], $_REQUEST['search_field'], $_REQUEST['search_type']);
-}
-
-
 show_clear();
 show_page_footer ('Search', '',$user->prefs['display_menu']);
 ?>
