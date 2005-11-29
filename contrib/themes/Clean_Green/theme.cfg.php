@@ -10,7 +10,7 @@
 # This is the actual name of the theme that
 # will be displayed in the preferences screen
 # DEFAULT: ampache-theme
-name = "Clean Ampache"
+name = "Clean(green) Ampache"
 
 # Theme Author
 # This is just a way of giving credit to the
@@ -37,7 +37,7 @@ maintainer = "J <jumperooter@yahoo.com>"
 bg_color1 = "#FFFFFF"
 
 # Background Color 2
-bg_color2 = "#D1D8D5"
+bg_color2 = "#E6EAC6"
 
 # Base Color 1
 base_color1 = "#bbbbbb"
@@ -57,8 +57,8 @@ font_color3 = "#666666"
 # Row Color 1-
 row_color1 = "#ffffff"
 
-# Row Color 2-FCFCF8 -"#F7FAFF"
-row_color2 = "#FAFAF8"
+# Row Color 2-FCFCF8
+row_color2 = "#E6E9EA"
 
 # Row Color 3
 row_color3 = "#E6EAC6"
