@@ -344,12 +344,10 @@ class Playlist {
 
 		$total_songs = mysql_fetch_row($db_results);
 		
-		$limit = rand(1,$total_songs[0]);
-
 	        // Fetch playlist items
                 $sql = "SELECT song, track FROM playlist_data" .
         	        " WHERE playlist = '$this->id'" .
-                        " ORDER BY RAND() LIMIT $limit";
+                        " ORDER BY RAND()";
                 $db_results = mysql_query($sql, dbh());
                 while ($r = mysql_fetch_object($db_results)) {
 	                $song_ids[] = $r->song;

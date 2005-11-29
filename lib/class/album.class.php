@@ -326,7 +326,7 @@ class Album {
 
 		$results = array();
 
-		$sql = "SELECT id FROM song WHERE album='$this->id' ORDER BY RAND() LIMIT " . rand(1,$this->songs);
+		$sql = "SELECT id FROM song WHERE album='$this->id' ORDER BY RAND()";
 		$db_results = mysql_query($sql, dbh());
 
 		while ($r = mysql_fetch_array($db_results)) { 
