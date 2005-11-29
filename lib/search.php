@@ -150,7 +150,7 @@ function search_song($data,$operator,$method,$limit) {
 	$where_sql = rtrim($where_sql,$operator);
 
 	$sql = $base_sql . $table_sql . " WHERE" . $where_sql . $limit_sql;
-
+	
 	$db_results = mysql_query($sql, dbh());
 	
 	while ($r = mysql_fetch_assoc($db_results)) { 

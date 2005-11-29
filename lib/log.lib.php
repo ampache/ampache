@@ -43,9 +43,11 @@ function log_event($username='Unknown',$event_name,$event_description,$log_name=
 		as many errors as it can and logs em
 */
 function ampache_error_handler($errno, $errstr, $errfile, $errline) { 
-
+	
 	switch ($errno) { 
 		case '2':
+			$error_name = "Runtime Error";
+			break;
 		case '128':
 		case '8':
 		case '32':
@@ -69,7 +71,7 @@ function ampache_error_handler($errno, $errstr, $errfile, $errline) {
 	} // end switch
 
 
-	$log_line = "[$errstr] $error_name on line $errline in $errfile";
+	$log_line = "[$error_name] $errstr on line $errline in $errfile";
 	log_event($_SESSION['userdata']['username'],'error',$log_line,'ampache-error');
 	
 } // ampache_error_handler
