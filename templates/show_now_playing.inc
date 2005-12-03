@@ -74,4 +74,4 @@
         } // while we're getting songs
 ?>
 </table>
-<? } ?>
+<?php } ?>

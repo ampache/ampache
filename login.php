@@ -105,7 +105,7 @@ function focus(){ document.login.username.focus(); }
 </head>
 <body bgcolor="<?php echo conf('bg_color1'); ?>" onload="focus();">
 
-<?
+<?php
 
 require(conf('prefix') . "/templates/show_login_form.inc");
 

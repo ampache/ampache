@@ -47,7 +47,7 @@ if ($GLOBALS['user']->prefs['upload']) {
 ?>
 
 <ul id="mainmenu">
-<?
+<?php
 	foreach ( array_keys($items) as $item ) {
 		if ( _($high) == $item ) {
 			print("\t\t<li class=\"active\"><a class=\"active\" href=\"$items[$item]\">$item</a></li>\n");
@@ -85,6 +85,5 @@ if ($GLOBALS['user']->prefs['upload']) {
 		print("\t\t<li><a href=\"".conf('web_path')."/logout.php\">" . _("Logout") . "</a> </li>\n");
 	} // else no user
 ?>
-
 	</ul>
 <br />

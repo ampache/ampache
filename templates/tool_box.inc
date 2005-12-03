@@ -33,7 +33,7 @@
 	</tr>
 	<tr>
 		<td class="even">
-		<?
+		<?php
 			foreach (array_keys($items) as $item) {
 				print("\t\t\t&gt;&gt; <a href=\"$items[$item]\"> $item</a><br />\n");
 			}

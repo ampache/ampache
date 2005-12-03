@@ -50,7 +50,7 @@ function ToBatch(action)
 		<?php if (batch_ok()) { ?>
 		&nbsp;&nbsp;
 		<input class="button" type="button" name="super_action" value="<?php echo _("Download Selected"); ?>" onclick="return ToBatch('download_selected');" />
-		<? } ?>
+		<?php } ?>
 <!--
                 <input class="button" type="button" name="super_action" value="<?php echo _("Flag Selected"); ?>" />
                 <input class="button" type="button" name="super_action" value="<?php echo _("Edit Selected"); ?>" />

@@ -1,4 +1,4 @@
-<?
+<?php
 /* ------------------- CVS INFO ----------------------
  *
  *	$Source: /data/cvsroot/ampache/libglue/session.php,v $

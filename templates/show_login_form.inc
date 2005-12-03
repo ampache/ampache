@@ -75,9 +75,9 @@ if (preg_match($subject,$_SERVER['HTTP_HOST'])) {
 		All Rights Reserved, Copyright &copy; 2005<br />
 	</font>
 </p>
-<? } ?>
-<?php  if (isset($auth['error'])) { ?>
+<?php } ?>
+<?php if (isset($auth['error'])) { ?>
 <p align="center">
 	<font color="red"><?php echo trim($auth['error']); ?></font>
 </p>
-<?php  } ?>
+<?php } ?>

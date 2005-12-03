@@ -120,7 +120,7 @@ show_clear();
 		<?php } ?>
             </td>
           </tr>
-    <?
+    <?php
     }// foreach loop
 
     //

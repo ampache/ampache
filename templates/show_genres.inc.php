@@ -53,7 +53,7 @@ $total_items = $view->total_items;
 		Download
 	</td>
 </tr>
-<? } // end foreach genres ?>
+<?php } // end foreach genres ?>
 <tr class="even" align="center">
         <td colspan="5">
         <?php if ($view->offset_limit) { require (conf('prefix') . "/templates/list_header.inc"); } ?>
