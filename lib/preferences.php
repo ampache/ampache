@@ -127,8 +127,10 @@ function update_preferences($pref_id=0) {
 			break;
 		}
 
-		/* Run the update for this preference */
-		update_preference($pref_id,$name,$id,$value);
+		/* Run the update for this preference only if it's set */
+		if (isset($_REQUEST[$name])) { 
+			update_preference($pref_id,$name,$id,$value);
+		}
 
 	} // end foreach preferences
 
