@@ -1217,5 +1217,20 @@ class Update {
 
 	} // update_332003
 
+	/*!
+		@function update_332004
+		@discussion adds a id to the playlist_data field because of a problem
+			with updating the same song on the same playlist being basicly
+			impossible...Also re-works the indexing on the tables
+	*/
+	function update_332004() { 
+
+		$sql = "ALTER TABLE `playlist_data` ADD `id` INT( 11 ) UNSIGNED NOT NULL AUTO_INCREMENT FIRST";
+		$db_results = mysql_query($sql, dbh());
+
+		$this->set_version('db_version','332004');
+
+	} // update_332004
+
 } // end update class
 ?>

@@ -3,6 +3,15 @@
 --------------------------------------------------------------------------
 
 --------------------------------------------------------------------------
+  v.3.3.2-Alpha4 
+  	- Fixed a logic flaw where it would attempt to parse the m3u
+		before all songs were cataloged 
+		https://ampache.bountysource.com/Task.View?task_id=122
+  	- Fixed a problem where updating your normal preferences when
+		use_auth was off would clear admin prefs
+	- Found a few more <? and replaced them with <?php
+
+--------------------------------------------------------------------------
   v.3.3.2-Alpha3 11/29/2005
   	- Added marineam's patch to the Snoopy class which fixes a flaw
 		in the new version which fails to escape single quotes

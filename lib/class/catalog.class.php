@@ -31,6 +31,9 @@ class Catalog {
 	var $sort_pattern;
 	var $catalog_type;
 
+	/* This is a private var that's used during catalog builds */
+	var $_playlists = array();
+
 	// Used in functions
 	var $albums	= array();
 	var $artists	= array();
@@ -336,10 +339,7 @@ class Catalog {
 						if (is_readable($full_file)) {
 
 							if (substr($file,-3,3) == 'm3u') { 
-								if ($this->import_m3u($full_file)) { 
-									echo "&nbsp;&nbsp;&nbsp;" . _("Added Playlist From") . " $file . . . .<br />\n";
-									flush();
-								}
+								$this->_playlists[] = $full_file;
 							} // if it's an m3u
 
 							else {
@@ -726,8 +726,17 @@ class Catalog {
                         $this->get_remote_catalog($type=0);
                         return true;
                 }
+		
 		/* Get the songs and then insert them into the db */
 		$this->add_files($this->path,$type,$parse_m3u);
+
+		foreach ($this->_playlists as $full_file) { 
+	                if ($this->import_m3u($full_file)) {
+				$file = basename($full_file);
+	                        echo "&nbsp;&nbsp;&nbsp;" . _("Added Playlist From") . " $file . . . .<br />\n";
+		                flush();
+			} // end if import worked
+                } // end foreach playlist files
 
 		/* Now Adding Album Art? */
 		if ($gather_art) { 
@@ -879,6 +888,14 @@ class Catalog {
 
 		/* Get the songs and then insert them into the db */
 		$this->add_files($this->path,$type);
+
+                foreach ($this->_playlists as $full_file) {
+                        if ($this->import_m3u($full_file)) {
+				$file = basename($full_file);
+                                echo "&nbsp;&nbsp;&nbsp;" . _("Added Playlist From") . " $file . . . .<br />\n";
+                                flush();
+                        } // end if import worked
+                } // end foreach playlist files
 
 		/* Do a little stats mojo here */
 		$current_time = time();
@@ -1972,12 +1989,12 @@ class Catalog {
 
 		} // end foreach line
 
-		if (conf('debug')) { log_event($GLOBALS['user']->username,' m3u_parse ',"Parsing $filename - Found: " . count($songs) . " Songs"); }
+		if (conf('debug')) { log_event($GLOBALS['user']->username,'m3u_parse',"Parsing $filename - Found: " . count($songs) . " Songs"); }
 
 		if (count($songs)) { 
 			$playlist = new Playlist();
 			$playlist_name = "M3U - " . basename($filename);
-			$playlist->create_playlist($playlist_name,$GLOBALS['user']->id,'public');
+			$playlist->create_playlist($playlist_name,$GLOBALS['user']->username,'public');
 			$playlist->add_songs($songs);
 			return true;
 		}

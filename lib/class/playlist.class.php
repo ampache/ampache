@@ -104,19 +104,27 @@ class Playlist {
 
 		if (isset($name) && isset($user) && isset($type) && $this->check_type($type)) {
 			$name = sql_escape($name);
-			$sql = "INSERT INTO playlist" .
-				" (name, user, type)" .
+			$user = sql_escape($user);
+			$type = sql_escape($type);
+			
+			$sql = "INSERT INTO playlist (name, user, type)" .
 				" VALUES ('$name', '$user', '$type')";
 			$db_results = mysql_query($sql, $dbh);
+			
 			if ($this->id = mysql_insert_id($dbh)) {
 				$this->refresh_object();
-				return TRUE;
-			}
+				return true;
+			} // end if it created correctly
+			
+		} // end if this is a valid playlist entry
+
+		if (conf('debug')) { 
+			log_event($GLOBALS['user']->username,'playlist_create',"Failed to Create Playlist of $type Type named $name for $user"); 
 		}
 
-		return FALSE;
+		return false;
 
-	}
+	} // create_playlist
 
 
 	/*!
@@ -136,17 +144,16 @@ class Playlist {
 				" WHERE id = '$this->id'";
 			$db_results = mysql_query($sql, $dbh);
 
-			// Clean up this object
-			foreach (get_object_vars($this) as $var) {
-				unset($var);
-			}
+			$sql = "DELETE FROM playlist_permission" . 
+				" WHERE playlist = '$this->id'";
+			$db_results = mysql_query($sql, $dbh);
 
-			return TRUE;
-		}
+			return true;
+		} // if we've got a valid playlist
 
-		return FALSE;
+		return false;
 
-	}
+	} // delete
 
 
 	/*!
@@ -218,7 +225,7 @@ class Playlist {
 
 		return FALSE;
 
-	}
+	} // add_songs
 
 
 	/*!
@@ -313,6 +320,38 @@ class Playlist {
 
 	}
 
+	/*!
+		@function normalize_tracks
+		@discussion this takes the crazy out of order tracks
+			and numbers them in a liner fashion, not allowing for
+			the same track # twice, this is an optional funcition
+	*/
+	function normalize_tracks() { 
+
+		/* First get all of the songs in order of their tracks */
+		$sql = "SELECT id FROM playlist_data WHERE playlist='$this->id' ORDER BY track ASC";
+		$db_results = mysql_query($sql, dbh());
+
+		$i = 1;
+
+		while ($r = mysql_fetch_assoc($db_results)) { 
+			$new_data = array();
+			$new_data['id']		= $r['id'];
+			$new_data['track']	= $i;
+			$results[] = $new_data;
+			$i++;
+		} // end while results
+
+		foreach($results as $data) { 
+			$sql = "UPDATE playlist_data SET track='" . $data['track'] . "' WHERE" . 
+					" id='" . $data['id'] . "'";
+			$db_results = mysql_query($sql, dbh());
+		} // foreach re-ordered results
+
+		return true;
+
+	} // normalize_tracks
+	
 
 	/*!
 		@function get_songs
@@ -365,7 +404,6 @@ class Playlist {
 		require (conf('prefix') . "/templates/show_import_playlist.inc.php");
 
 	} // show_import
-
 
 } //end of playlist class
 
