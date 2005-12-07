@@ -1,4 +1,4 @@
-<?
+<?php
 /*
 
  Copyright (c) 2001 - 2005 Ampache.org

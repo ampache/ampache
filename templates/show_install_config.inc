@@ -86,7 +86,7 @@
 <tr>
         <td valign="top"><?php echo _("Ampache.cfg.php Exists"); ?></td>
         <td valign="top">[ 
-        <?
+        <?php
                 if (!read_config_file($configfile)) {
                         $status['read_config'] = 'false';
                         echo " <font color=\"red\">ERROR</font> "; 
