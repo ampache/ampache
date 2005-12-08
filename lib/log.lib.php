@@ -33,7 +33,7 @@ function log_event($username='Unknown',$event_name,$event_description,$log_name=
         $log_line       = date("Y-m-d H:i:s",$log_time) . " { $username } ( $event_name ) - $event_description \n";  
 
 
-	error_log($log_line, 3, $log_filename) or die("Error: Unable to write to log ($log_filename)");
+	error_log($log_line, 3, $log_filename) or die("Error: Unable to write to log ($log_filename) Please check your log_path variable in ampache.cfg.php");
 
 } // log_event
 

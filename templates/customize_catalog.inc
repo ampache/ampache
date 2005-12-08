@@ -27,7 +27,7 @@
 <table class="tabledata" cellspacing="0" cellpadding="0" border="0">
 <tr>
 	<td><?php echo _("Name"); ?>:</td>
-	<td><input size="60" type="text" name="name" value="<?= htmlspecialchars($catalog->name);?>"></input></td>
+	<td><input size="60" type="text" name="name" value="<?php echo scrub_out($catalog->name); ?>"></input></td>
 	<td style="vertical-align:top; font-family: monospace;" rowspan="5">
 	<strong><?php echo _("Auto-inserted Fields"); ?>:</strong><br />
 	%A = <?php echo _("album name"); ?><br />

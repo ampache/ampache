@@ -54,7 +54,7 @@ global $condPL;
 	</td>
 </tr>
 <tr><td class="content"> 
-       Volume: <b><? echo $myMpd->volume ?>%</b> 
+       Volume: <b><?php echo $myMpd->volume ?>%</b> 
 </td></tr>
 
      <tr><td class="content" align="center"> 

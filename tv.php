@@ -106,5 +106,5 @@ foreach($results as $item) {
 } // while we're getting songs
 ?>
 </table>
-<? } ?>
+<?php } ?>
 
