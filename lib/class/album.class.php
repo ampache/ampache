@@ -353,16 +353,35 @@ class Album {
 		@discussion searches amazon or a url
 			for the album art
 		//FIXME: Rename this POS 
+		
+		// csammis:  To facilitate solution of https://ampache.bountysource.com/Task.View?task_id=86,
+		// added $artist and $albumname parameters to the method, and reworked the guts of the amazon
+		// search a little; replaced $this->name with $albumname and $this->artist with $artist.
+		// See /albums.php, ~line 80, for where these values are coming from.
 	*/
-	function find_art($coverurl = '') {
+	function find_art($coverurl = '', $artist = '', $albumname = '') {
 
 		// No coverurl specified search amazon
 	        if (empty($coverurl)) { 
+
+			// Prevent the script from timing out
+			set_time_limit(0);
+			
+			// csammis: Assign defaults to the arguments if they are empty
+			if(empty($artist)) {
+				$artist = $this->artist;
+			}
+			if(empty($albumname)) {
+				$albumname = $this->name;
+			}
+	            
+		    	// Create the Search Object
 	        	$amazon = new AmazonSearch(conf('amazon_developer_key'));
-                        // Prevent the script from timing out
-                        set_time_limit(0);
-			$search_term = $this->artist . " " . $this->name;
-		        $amazon->search(array('artist' => $this->artist, 'album' => $this->name, 'keywords' => $serch_term));
+			
+			$search_term = $artist . " " . $albumname;
+			
+		        $amazon->search(array('artist' => $artist, 'album' => $albumname, 'keywords' => $serch_term));
+			
 			// Only do the second search if the first actually returns something
 			if (count($amazon->results)) { 
 				$amazon->lookup($amazon->results);
@@ -377,9 +396,10 @@ class Album {
 			foreach ($amazon->results as $key=>$value) { 
 				$results = $value;
 				break;
-			} //FIXME: 
+			} //FIXME 
 			
 		} // if no cover
+		
 		// If we've specified a coverurl, create a fake Amazon array with it
 		else {
 			$results = array('LargeImage' => $coverurl);
@@ -436,26 +456,29 @@ class Album {
 		/* Default to false */
 		return false;
 
-        } // find_art 
+	} // find_art 
 
-       /*!
+	/*!
                @function       get_song_ids
                @discussion     returns a list of song_ids on the album
                                get_songs returns a list of song objects
-       */
-
-       // it seems get_songs really should call this, 
-       // but I don't feel comfortable imposing that - RCR
-       function get_song_ids( $limit = 0 ) {
-                $results = array();
-               $sql = "SELECT id FROM song WHERE album='$this->id' ORDER BY track, title";
+	*/
+	// it seems get_songs really should call this, 
+	// but I don't feel comfortable imposing that - RCR
+	function get_song_ids( $limit = 0 ) {
+		
+		$results = array();
+		$sql = "SELECT id FROM song WHERE album='$this->id' ORDER BY track, title";
+		
                 if ($limit) { $sql .= " LIMIT $limit"; }
-                $db_results = mysql_query($sql, dbh());
- 
+                
+		$db_results = mysql_query($sql, dbh());
+
                 while ($r = mysql_fetch_object($db_results)) {
  			$results[] = $r->id;
  		}
-               return( $results );
+		
+		return $results;
        } // get_song_ids
 	
 } //end of album class

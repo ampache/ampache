@@ -66,36 +66,42 @@ elseif (isset($album)) {
 elseif ($_REQUEST['action'] === 'find_art') {
 
 	if (!$user->has_access('25')) { access_denied(); }
+	
+	// csammis:  In response to https://ampache.bountysource.com/Task.View?task_id=86,
+	// adding retry to album art searching. I hope my PHP style doesn't make vollmer cry,
+	// because that would make me cry...then my girlfriend would cry...then my cat would laugh.
+	// She's such a little trouper!
+
 
 	/* Echo notice if no amazon token is found, but it's enabled */
 	if (in_array('amazon',conf('album_art_order')) AND !conf('amazon_developer_key')) { 
-		echo "<br /><div class=\"fatalerror\">Error: No Amazon Developer Key set, amazon album art searching will not work</div>";
+		echo "<br /><div class=\"fatalerror\">" . _("Error") . ": " . _("No Amazon Developer Key set, amazon album art searching will not work")  . "</div>";
 	}
 
+	// get the Album information
         $album = new Album($_REQUEST['album_id']);
-	$result = $album->find_art($_REQUEST['cover']);
+	
+	// Attempt to find the art with what we've got
+	$result = $album->find_art($_REQUEST['cover'], $_REQUEST['artist_name'], $_REQUEST['album_name']);
+	
 	if ($result) {
 		show_confirmation(_("Album Art Located"),_("Album Art information has been located in Amazon. If incorrect, click \"Reset Album Art\" below to remove the artwork."),"/albums.php?action=show&amp;album=" . $album->id);
 		echo "&nbsp;[ <a href=\"" . conf('web_path') . "/albums.php?action=clear_art&amp;album_id=" . $album->id . "\">Reset Album Art</a> ]";
 		echo "<p align=left><img src=\"" . conf('web_path') . "/albumart.php?id=" . $album->id . "\" /></p>";
-		echo "<form name=\"coverart\" method=\"get\" action=\"".$_SERVER['PHP_SELF']."\">";
-		echo "Enter URL to album art ";
-		echo "<input type=\"text\" size=\"40\" id=\"cover\" name=\"cover\" value=\"\" />\n";
-		echo "<input type=\"hidden\" name=\"action\" value=\"find_art\" />\n";
-		echo "<input type=\"hidden\" name=\"album_id\" value=\"$album->id\" />\n";
-		echo "<input type=\"submit\" value=\"" . _("Get Art") . "\" />\n";
-		echo "</form>"; 
 	}
-        else {
-                show_confirmation(_("Album Art Not Located"),_("Album Art could not be located at this time. This may be due to Amazon being busy, or the album not being present in their collection."),"/albums.php?action=show&amp;album=" . $album->id);
-                echo "<form name=\"coverart\" method=\"get\" action=\"".$_SERVER['PHP_SELF']."\">";
-                echo "Enter URL to album art ";
-                echo "<input type=\"text\" size=\"40\" id=\"cover\" name=\"cover\" value=\"\" />";
-                echo "<input type=\"hidden\" name=\"action\" value=\"find_art\" />";
-                echo "<input type=\"hidden\" name=\"album_id\" value=\"$album->id\" />&nbsp;&nbsp;&nbsp;";
-		echo "<input type=\"submit\" value=\"" . _("Get Art") . "\" />\n";
-                echo "</form>";
-	}
+	else {
+		show_confirmation(_("Album Art Not Located"),_("Album Art could not be located at this time. This may be due to Amazon being busy, or the album not being present in their collection."),"/albums.php?action=show&amp;album=" . $album->id);
+  	}
+  
+	$albumname = $album->name;
+	$artistname = $album->artist;
+	
+	// Remember the last typed entry, if there was one
+	if (isset($_REQUEST['album_name'])) {   $albumname = scrub_in($_REQUEST['album_name']); }
+	if (isset($_REQUEST['artist_name'])) {  $artistname = scrub_in($_REQUEST['artist_name']); }
+	
+	include(conf('prefix') . '/templates/show_get_albumart.inc.php');
+
 } // find_art 
 
 // Updates Album from tags

@@ -4,6 +4,8 @@
 
 --------------------------------------------------------------------------
   v.3.3.2-Alpha4 
+  	- Added ability to re-define album art search (Thx csammis)
+		https://ampache.bountysource.com/Task.View?task_id=86
   	- Fixed a logic flaw where it would attempt to parse the m3u
 		before all songs were cataloged 
 		https://ampache.bountysource.com/Task.View?task_id=122

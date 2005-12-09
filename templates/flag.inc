@@ -48,7 +48,7 @@ if ( $type == 'show_flagged_form' ) {
 <p style="color: red;"><?php echo  $flag_text ; ?></p>
 <?php  } ?>
 
-<form name="flag_song" method="post" action="<?php echo $_SERVER['PHP_SELF'];; ?>">
+<form name="flag_song" method="post" action="<?php echo conf('web_path'); ?>/flag.php">
 <table class="tabledata" cellpadding="3" cellspacing="1">
     <tr class="even">
         <td>File:</td>
@@ -91,7 +91,7 @@ elseif ( $type == 'show_flagged_songs' ) {
 this list to determine what songs you need to re-rip or tags you need to update.</p>
 
 <?php  if ( $flags ) { ?>
-<form name="flag_update" action="<?php echo $_SERVER['PHP_SELF'];; ?>" method="post">
+<form name="flag_update" action="<?php echo conf('web_path'); ?>/flag.php" method="post">
 
 <table class="tabledata" cellspacing="0" cellpadding="0" border="1">
 	<tr class="table-header">
