@@ -81,22 +81,24 @@ elseif ($_REQUEST['action'] === 'find_art') {
 	// get the Album information
         $album = new Album($_REQUEST['album_id']);
 	
-	if ($_REQUEST['artist_name']) { 
+	if (isset($_REQUEST['artist_name'])) { 
 		$artist = scrub_in($_REQUEST['artist_name']);
 	} 
 	else { 
 		$artist = $album->artist;
 	}
 
-	if ($_REQUEST['album_name']) { 
+	if (isset($_REQUEST['album_name'])) { 
 		$album_name = scrub_in($_REQUEST['album_name']);
 	}
 	else { 
 		$album_name = $album->name;
 	}
 	
+	$search = $artist . " " . $album_name;
+
 	// Attempt to find the art with what we've got
-	$images = $album->find_art($_REQUEST['cover'], $artist . " " . $album_name);
+	$images = $album->find_art($_REQUEST['cover'], $search);
 	$_SESSION['form']['images'] = $images;
 
 	if (count($images)) {
