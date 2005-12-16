@@ -205,10 +205,7 @@ class Album {
 		                $mime = $image['mime'];
 
 		                // Stick it in the db for next time
-				$sql = "UPDATE album SET art = '" . sql_escape($art) . "'," .
-			                " art_mime = '" . sql_escape($mime) . "'" .
-			        	" WHERE id = '" . $this->id . "'";
-			        $db_result = mysql_query($sql, dbh());
+				$this->insert_art($art,$mime);
 	
 				return true;
 			} // end if image
@@ -239,7 +236,7 @@ class Album {
 
                 	if (!is_resource($handle)) {
 	                        echo "<font class=\"error\">" . _("Error: Unable to open") . " $dir</font><br />\n";
-				if (conf('debug')) { log_event($GLOBALS['user']->username,' read ',"Error: Unable to open $dir for album art read"); }
+				if (conf('debug')) { log_event($GLOBALS['user']->username,'read',"Error: Unable to open $dir for album art read"); }
 	                }
 
 	                /* Recurse through this dir and create the files array */
@@ -277,10 +274,7 @@ class Album {
 					$art .= fread($handle, 1024);
 				}
 				fclose($handle);
-		                $sql = "UPDATE album SET art = '" . sql_escape($art) . "'," .
-		                        " art_mime = '" . sql_escape($mime) . "'" .
-		                        " WHERE id = '$this->id'";
-		                $db_results = mysql_query($sql, dbh());
+				$this->insert_art($art,$mime);
 	                	return true; 
 			} // if found
 		} // end foreach songs
@@ -312,7 +306,17 @@ class Album {
 	*/
 	function get_amazon_art() { 
 
-		return $this->find_art();
+		$results = $this->find_art();
+
+		if (count($results) < 1) { return false; }
+
+		$snoopy = new Snoopy();
+		$snoopy->fetch($results['0']['url']);
+		$data = $snoopy->results;
+
+		$this->insert_art($data,$results['0']['mime']);
+
+		return true;
 
 	} // get_amazon_art
 
@@ -349,6 +353,32 @@ class Album {
 	} // clear_art
 
 	/*!
+		@function insert_art
+		@discussion this takes a string representation of an image
+			and inserts it into the database. You must pass the
+			mime type as well
+	*/
+	function insert_art($image, $mime) { 
+
+                // Check for PHP:GD and if we have it make sure this image is of some size
+        	if (function_exists('ImageCreateFromString')) {
+			$im = @ImageCreateFromString($image);
+			if (@imagesx($im) == 1 || @imagesy($im) == 1 && $im) {
+	                	return false;
+	               	}
+		} // if we have PHP:GD
+
+                // Push the image into the database
+                $sql = "UPDATE album SET art = '" . sql_escape($image) . "'," .
+                        " art_mime = '" . sql_escape($mime) . "'" .
+        	        " WHERE id = '$this->id'";
+	        $db_results = mysql_query($sql, dbh());
+
+		return true;
+
+	} // insert_art
+
+	/*!
 		@function find_art
 		@discussion searches amazon or a url
 			for the album art
@@ -359,102 +389,79 @@ class Album {
 		// search a little; replaced $this->name with $albumname and $this->artist with $artist.
 		// See /albums.php, ~line 80, for where these values are coming from.
 	*/
-	function find_art($coverurl = '', $artist = '', $albumname = '') {
+	function find_art($coverurl = '', $keywords = '') {
+
+		$images 	= array();
+		$final_results 	= array();
+		$possible_keys = array("LargeImage","MediumImage","SmallImage");
+	
+		/* We're gonna need this object */	
+		$snoopy = new Snoopy();
+		
+		// Prevent the script from timing out
+		set_time_limit(0);
 
 		// No coverurl specified search amazon
 	        if (empty($coverurl)) { 
 
-			// Prevent the script from timing out
-			set_time_limit(0);
-			
-			// csammis: Assign defaults to the arguments if they are empty
-			if(empty($artist)) {
-				$artist = $this->artist;
+			if (empty($keywords)) { 
+				$keywords = $this->name . ' ' . $this->artist;
 			}
-			if(empty($albumname)) {
-				$albumname = $this->name;
-			}
-	            
+
 		    	// Create the Search Object
 	        	$amazon = new AmazonSearch(conf('amazon_developer_key'));
-			
-			$search_term = $artist . " " . $albumname;
-			
-		        $amazon->search(array('artist' => $artist, 'album' => $albumname, 'keywords' => $serch_term));
+		
+		        $search_results = $amazon->search(array('artist' => $artist, 'album' => $albumname, 'keywords' => $keywords));
 			
 			// Only do the second search if the first actually returns something
-			if (count($amazon->results)) { 
-				$amazon->lookup($amazon->results);
+			if (count($search_results)) { 
+				$final_results = $amazon->lookup($search_results);
 			}
 		
 			/* Log this if we're doin debug */
 			if (conf('debug')) { 
-				log_event($_SESSION['userdata']['username'],' amazon-xml ',"Searched using $search_term with " . conf('amazon_developer_key') . " as key " . count($amazon->results) . " results found");
+				log_event($GLOBALS['user']->username,'amazon-xml',"Searched using $search_term with " . conf('amazon_developer_key') . " as key " . count($final_results) . " results found");
 			}
 
-			//FIXME: For now just pull the first one we find
-			foreach ($amazon->results as $key=>$value) { 
-				$results = $value;
-				break;
-			} //FIXME 
-			
 		} // if no cover
 		
 		// If we've specified a coverurl, create a fake Amazon array with it
 		else {
-			$results = array('LargeImage' => $coverurl);
+			$final_results = array(array('LargeImage' => $coverurl));
 		}
 		
-		// If we have results of some kind
-                if (is_array($results)) {
+		/* Foreach through what we've found */
+		foreach ($final_results as $result) { 
 
 			/* Recurse through the images found */
-			$possible_keys = array("LargeImage","MediumImage","SmallImage");
-
 			foreach ($possible_keys as $key) { 
-				if (strlen($results[$key])) { 
+				if (strlen($result[$key])) { 
 					break;
 				} 
-				
-
 			} // foreach
 
 			// Rudimentary image type detection, only JPG and GIF allowed.
-			if (substr($results[$key], -4 == ".jpg")) {
+			if (substr($result[$key], -4 == ".jpg")) {
 				$mime = "image/jpg";
 			}
-			elseif (substr($results[$key], -4 == ".gif")) { 
+			elseif (substr($result[$key], -4 == ".gif")) { 
 				$mime = "image/gif";
 			}
 			else {
-				return false;
+				/* Just go to the next result */
+				continue;
 			}
 
-			/* Create Snoopy Object and pull info */
-			$snoopy = new Snoopy;
-	                $snoopy->fetch($results[$key]);
-	                $art = $snoopy->results;
-
-			// Skip 1x1 size images
-			if (function_exists('ImageCreateFromString')) {
-				$im = @ImageCreateFromString($art);
-				if (@imagesx($im) == 1 || @imagesy($im) == 1 && $im) {
-					return false;
-				}
-			}
-
-			// Push the image into the database
-			$sql = "UPDATE album SET art = '" . sql_escape($art) . "'," .
-				" art_mime = '" . sql_escape($mime) . "'" .
-				" WHERE id = '$this->id'";
-			$db_results = mysql_query($sql, dbh());
-
-			return true;
+//	                $snoopy->fetch($results[$key]);
+	                $data['url'] 	= $result[$key];
+			$data['mime']	= $mime;
 			
-                } // if we've got something
+			$images[] = $data;
 
+                } // if we've got something
+		
 		/* Default to false */
-		return false;
+		return $images;
 
 	} // find_art 
 

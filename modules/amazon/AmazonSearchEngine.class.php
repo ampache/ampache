@@ -91,7 +91,7 @@ class AmazonSearch {
 		
 		xml_parser_free($this->_parser);
 	
-	} // search
+	} // run_search
     
 	/*!
 		@function search
@@ -106,6 +106,8 @@ class AmazonSearch {
 		$this->run_search($url);
 
 		unset($this->results['ASIN']);
+
+		return $this->results;
 
 	} // search
     
@@ -131,6 +133,8 @@ class AmazonSearch {
 		} // else
 
 		unset($this->results['ASIN']);
+
+		return $this->results;
 
 	} // lookup
     
