@@ -73,6 +73,8 @@ $playlist = new Playlist(scrub_in($_REQUEST['playlist_id']));
 /* First Switch */
 // Have to handle this here, since we use this file
 //   for playback of the "Play Selected Stuff" and display (for now)
+//   and this has to be done with a header redirection before the actuall top
+//   of the page is shown
 switch ($action) { 
 	case _("Flag Selected"):
 	        require_once(conf('prefix').'/lib/flag.php');
@@ -175,7 +177,6 @@ switch($action) {
 	case 'Edit':
 		show_playlist_edit($playlist);
 		break;
-
 	case 'new':
 		show_playlist_create();
 		break;

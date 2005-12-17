@@ -888,20 +888,21 @@ ECHO;
 
 function show_playlist_edit ( $playlist ) {
 
-	$username = $_SESSION['userdata']['username'];
+	$username = $GLOBALS['user']->username;
+	
 	if (check_playlist_access($playlist->id,$username) == false) {
 		show_playlist_access_error($playlist, $username);
 		return;
 	}
 
 	$plname = $playlist->name;
-	$self = $_SERVER['PHP_SELF'];
+	$self = conf('web_path') . "/playlist.php";
 	
 	print <<<ECHO
 <form name="songs" method="post" action="$self">
 <input type="hidden" name="playlist_id" value="$playlist->id" />
-<table class="border">
-  <tr class="table-header">
+<table class="text-box">
+  <tr class="header2">
 	<td colspan="2">Editing Playlist</td>
   </tr>
   <tr>
