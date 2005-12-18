@@ -728,4 +728,34 @@ function show_random_play_bar() {
 } // show_random_play_bar()
 
 
+/*
+ * show_artist_pulldown()
+ *
+ * Helper functions for album and artist functions
+ *
+ */
+function show_artist_pulldown ($artist_id,$select_name='artist') {
+
+        $query = "SELECT id FROM artist ORDER BY name";
+        $db_result = mysql_query($query, dbh());
+
+        echo "\n<select name=\"$select_name\">\n";
+
+        while ($r = mysql_fetch_assoc($db_result)) {
+		
+		$artist = new Artist($r['id']);
+		$artist->get_count();
+
+                if ( $artist_id == $r['id'] ) {
+                        echo "\t<option value=\"" . $artist->id . "\" selected=\"selected\">". scrub_out($artist->name) . " (" . $artist->songs . ")</option>\n";
+                }
+                else {
+                        echo "\t<option value=\"" . $artist->id . "\">". scrub_out($artist->name) ."</option>\n";
+                }
+
+        } // end while fetching artists 
+
+        echo "</select>\n";
+
+} // show_artist_pulldown
 ?>

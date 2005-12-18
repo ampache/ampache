@@ -24,8 +24,6 @@
 	@header Error handler requires error_results() function
 
 */
-
-
 class Error {
 
 	//Basic Componets

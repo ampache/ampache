@@ -10,36 +10,6 @@
 */
 
 /*
- * show_artist_pulldown()
- *
- * Helper functions for album and artist functions
- *
- */
-
-function show_artist_pulldown ($artist) {
-
-	global $settings;
-	$dbh = dbh();
-
-	$query = "SELECT id,name FROM artist ORDER BY name";
-	$db_result = mysql_query($query, $dbh);
-	echo "\n<select name=\"artist\">\n";
-
-	while ( $r = mysql_fetch_row($db_result) ) {
-		// $r[0] = id, $r[1] = name
-		if ( $artist == $r[0] ) {
-			echo "<option value=\"$r[0]\" selected=\"selected\">". htmlspecialchars($r[1]) ."</option>\n";
-		}
-		else {
-			echo "<option value=\"$r[0]\">". htmlspecialchars($r[1]) ."</option>\n";
-		}
-	}
-
-	echo "  </select>";
-} // show_artist_pulldown()
-
-
-/*
  * show_album_pulldown()
  *
  */

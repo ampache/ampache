@@ -180,6 +180,87 @@ class Artist {
 
 	} // format_artist
 	
+        /*!
+                @function rename
+                @discussion changes the name of the artist in the db,
+                        and then merge()s songs
+                @param $newname the artist's new name, either a new
+                        artist will be created or songs added to existing
+                        artist if name exists already
+                @return the id of the new artist
+        */
+        function rename($newname) {
+
+                /* 
+		 * There is this nifty function called check_artists in catalog that does exactly what we want it to do
+                 * to use it, we first have to hax us a catalog
+		 */
+                $catalog = new Catalog();
+
+                /* now we can get the new artist id in question */
+                $newid = $catalog->check_artist($newname);
+
+                /* check that it wasn't just whitespace that we were called to change */
+                if ($newid == $this->id) {
+			$GLOBALS['error']->add_error('artist_name',_("Error: Name Identical"));
+                        return $newid;
+                }
+
+                /* now we can just call merge */
+                $this->merge($newid);
+
+                //now return id
+                return $newid;
+
+        } // rename
+
+        /*!
+                @function merge
+                @discussion changes the artist id of all songs by this artist
+                        to the given id and deletes self from db
+                @param $newid the new artist id that this artist's songs should have
+        */
+        function merge($newid) {
+
+		$catalog = new Catalog();
+
+		/* Make sure this is a valid ID */
+                if (!is_numeric($newid)) {
+			$GLOBALS['error']->add_error('general',"Error: Invalid Artist ID");
+                        return false;
+		} 
+
+                // First check newid exists
+                $check_exists_qstring = "SELECT name FROM artist WHERE id='" . sql_escape($newid) . "'";
+                $check_exists_query = mysql_query($check_exists_qstring, dbh());
+
+                if (mysql_num_rows($check_exists_query)) {
+
+                        // Get the name, for use in output
+                        $check_exists_result = mysql_fetch_assoc($check_exists_query);
+
+                        $NewName = $check_exists_result['name'];
+
+                        // Now the query
+                        $sql = "UPDATE song SET artist='" . sql_escape($newid) . "' " . 
+				"WHERE artist='" . sql_escape($this->id) . "'";
+                        $db_results = mysql_query($sql, dbh());
+
+                        $num_stats_changed = $catalog->merge_stats("artist",$this->id,$newid);
+			
+			/* If we've done the merege we need to clean up
+			$catalog->clean_artists();
+			$catalog->clean_albums();
+			
+                } 
+		
+		else {
+			$GLOBALS['error']->add_error('general',"Error: Invalid Artist ID");
+                        return false;
+                }
+
+        } // merge
+	
 
 	/*!
 		@function show_albums

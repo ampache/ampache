@@ -4,6 +4,7 @@
 
 --------------------------------------------------------------------------
   v.3.3.2-Alpha4 
+  	- Added ability to Rename/Merge artists (Thx SpComb)
   	- Fixed a flaw in album art search which only returned a single
 		result, now shows all results and allows you to pick
 		the correct one. 

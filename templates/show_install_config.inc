@@ -104,7 +104,7 @@
                 <?php echo _("Ampache.cfg.php Configured?"); ?>
         </td>
         <td valign="top">[ 
-        <?
+        <?php
                 $results = read_config($configfile, 0, 0);
                 if (!check_config_values($results)) { 
                         $status['parse_config'] = 'false';

@@ -23,6 +23,7 @@
 //FIXME: I don't like having to re-create this friggin object.. :(
 global $user;
 $artist_id = $artist->id;
+$web_path = conf('web_path');
 ?>
 <br />
 <table class="text-box">
@@ -34,7 +35,8 @@ $artist_id = $artist->id;
 	        <li><a href="<?php print $web_path; ?>/song.php?action=m3u&amp;artist=<?php print $artist_id; ?>"><?php print _("Play All Songs By") . " " . $artist->full_name; ?></a></li>
 	        <li><a href="<?php print $web_path; ?>/song.php?action=m3u&amp;artist_random=<?php print $artist_id; ?>"><?php print _("Play Random Songs By") . " " . $artist->full_name; ?></a></li>
 		<?php  if ($user->has_access('100')) { ?> 
-			<li><a href="<?php print $web_path; ?>/artists.php?action=update_from_tags&amp;artist=<?php print $artist_id; ?>"><?php print _("Update from tags"); ?></a></li>
+			<li><a href="<?php echo $web_path; ?>/artists.php?action=update_from_tags&amp;artist=<?php print $artist_id; ?>"><?php print _("Update from tags"); ?></a></li>
+			<li><a href="<?php echo $web_path; ?>/artists.php?action=show_rename&amp;artist=<?php echo $artist_id; ?>"><?php echo _("Rename Artist"); ?></a></li>
 		<?php } ?>
 	</ul>
 	</td>
