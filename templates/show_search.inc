@@ -58,7 +58,7 @@ $final_javascript .= " // END-->\n </script>";
         <td>
             <input type="checkbox" name="search_object[]" value="all" onclick="flipField('all_string');" <?php echo $check_all; ?> />
             <input type="text" id="all_string" name="all_string" value="<?php echo scrub_out($_REQUEST['all_string']); ?>" disabled="disabled" />
-        <td></td>
+        </td>
         <td></td>
 </tr>
 <tr class="<?php echo flip_class(); ?>">
