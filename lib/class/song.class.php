@@ -312,7 +312,7 @@ class Song {
 			$array['change']	= true;
 			$array['text']		.= "<br />" . _("Year") . " [$song->year] " . _("updated to") . " [$new_song->year]\n";
 		} // if year
-		if (trim($song->comment) != trim(stripslashes($new_song->comment))) { 
+		if (trim(stripslashes($song->comment)) != trim(stripslashes($new_song->comment))) { 
 			$array['change']	= true;
 			$array['text']		.= "<br />" . _("Comment") . " [$song->comment] " . _("updated to") . " [$new_song->comment]\n";
 		} // if comment
