@@ -155,12 +155,14 @@ class AudioInfo {
 			$this->result['ogg']['artist']  = iconv("UTF-8",conf('site_charset') . "//TRANSLIT", $this->info['ogg']['comments']['artist'][0]);
 			$this->result['ogg']['album']   = iconv("UTF-8",conf('site_charset') . "//TRANSLIT", $this->info['ogg']['comments']['album'][0]);
 			$this->result['ogg']['author']	= iconv("UTF-8",conf('site_charset') . "//TRANSLIT", $this->info['ogg']['comments']['author'][0]);
+			$this->result['ogg']['genre'] = iconv("UTF-8",conf('site_charset') . "//TRANSLIT", $this->info['ogg']['comments']['genre'][0]); 
 		}
 		else {
 			$this->result['ogg']['title'] 	= $this->info['ogg']['comments']['title'][0];
 		        $this->result['ogg']['artist'] 	= $this->info['ogg']['comments']['artist'][0];
 		        $this->result['ogg']['album'] 	= $this->info['ogg']['comments']['album'][0];
 			$this->result['ogg']['author']	= $this->info['ogg']['comments']['author'][0];
+			$this->result['ogg']['genre'] = $this->info['ogg']['comments']['genre'][0]; 
 		}
 
 		$this->result['ogg']['year'] 	= $this->info['ogg']['comments']['date'][0];

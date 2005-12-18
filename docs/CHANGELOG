@@ -4,6 +4,8 @@
 
 --------------------------------------------------------------------------
   v.3.3.2-Alpha4 
+  	- Fixed problem where Genre on OGG was not being correctly 
+		picked up by catalog (Thx redswami)
   	- Added "Keyword" search which searches title, artist name
 		and album name, also forced 'quick search' to always
 		use Keyword (Thx Rubin)
