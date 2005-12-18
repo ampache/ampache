@@ -4,6 +4,9 @@
 
 --------------------------------------------------------------------------
   v.3.3.2-Alpha4 
+  	- Fixed a problem with the no_symlinks setting which could
+		cause some files to be missed regardless 
+		(Thx solarium_rider)
   	- Fixed problem where Genre on OGG was not being correctly 
 		picked up by catalog (Thx redswami)
   	- Added "Keyword" search which searches title, artist name

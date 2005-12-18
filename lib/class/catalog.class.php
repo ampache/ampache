@@ -305,6 +305,10 @@ class Catalog {
 				$full_file = stripslashes($path."/".$file);
 				$full_file = str_replace("//","/",$full_file);
 			
+				// Incase this is the second time through clear this variable 
+				// if it was set the day before
+				unset($failed_check);
+				
 				if (conf('no_symlinks')) {
 					if (is_link($full_file)) { $failed_check = 1; }
 				}
@@ -312,7 +316,6 @@ class Catalog {
 				/* If it's a dir run this function again! */
 				if (is_dir($full_file) AND !$failed_check) {
 					$this->add_files($full_file,$gather_type,$parse_m3u);
-					unset($failed_check);
 				} //it's a directory
 
 				/* If it's not a dir let's roll with it */
@@ -569,6 +572,9 @@ class Catalog {
 
 			$full_file = stripslashes($path . "/" . $file);
 			$full_file = str_replace("//","/",$full_file);
+
+			/* Incase this is the second time through, unset it before checking */
+			unset($failed_check);
 
 			if (conf('no_symlinks')) {
 				if (is_link($full_file)) { $failed_check = true; }
