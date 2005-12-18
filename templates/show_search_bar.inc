@@ -38,19 +38,11 @@
 <tr class="<?php echo flip_class(); ?>">
 	<td><input type="text" name="search_string" value="<?php echo  $_REQUEST['search_string']; ?>" /></td>
 	<td>
-		<select name="search_object[]">
-			<option value="title"><?php echo _("Song Title"); ?></option>
-			<option value="artist"><?php echo _("Artist"); ?></option>
-			<option value="album"><?php echo _("Album"); ?></option>
-			<option value="genre"><?php echo _("Song Genre"); ?></option>
-			<option value="year"><?php echo _("Song Year"); ?></option>
-			<option value="minbitrate"><?php echo _("Minimum Bitrate"); ?></option>
-			<option value="filename"><?php echo _("Filename"); ?></option>
-		</select>
 		<input class="button" type="submit" value="<?php echo  _("Search"); ; ?>" />&nbsp;&nbsp;
 		<input type="hidden" name="action" value="quick_search" />
 		<input type="hidden" name="method" value="fuzzy" />
 		<input type="hidden" name="object_type" value="song" />
+		<input type="hidden" name="search_object[]" value="all" />
 	</td>
 </tr>
 </table>

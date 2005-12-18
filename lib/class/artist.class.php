@@ -234,10 +234,7 @@ class Artist {
                 $check_exists_qstring = "SELECT name FROM artist WHERE id='" . sql_escape($newid) . "'";
                 $check_exists_query = mysql_query($check_exists_qstring, dbh());
 
-                if (mysql_num_rows($check_exists_query)) {
-
-                        // Get the name, for use in output
-                        $check_exists_result = mysql_fetch_assoc($check_exists_query);
+                if ($check_exists_results = mysql_fetch_assoc($check_exists_query)) {
 
                         $NewName = $check_exists_result['name'];
 
@@ -246,19 +243,16 @@ class Artist {
 				"WHERE artist='" . sql_escape($this->id) . "'";
                         $db_results = mysql_query($sql, dbh());
 
-                        $num_stats_changed = $catalog->merge_stats("artist",$this->id,$newid);
+                        $num_stats_changed = $catalog->merge_stats('artist',$this->id,$newid);
 			
-			/* If we've done the merege we need to clean up
+			/* If we've done the merege we need to clean up */
 			$catalog->clean_artists();
 			$catalog->clean_albums();
-			
                 } 
-		
 		else {
 			$GLOBALS['error']->add_error('general',"Error: Invalid Artist ID");
                         return false;
                 }
-
         } // merge
 	
 

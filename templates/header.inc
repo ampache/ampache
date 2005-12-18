@@ -55,6 +55,11 @@ function flipField(element) {
                 element_id.disabled=false;
         }
 }
+function selectField(element)
+{
+    var element_id = document.getElementById(element);
+    element_id.focus();
+}
   var checkflag_song = "false";
 
   function check_songs() {

@@ -22,11 +22,20 @@
 /* Setup the needed variables that check the correct boxes */
 $final_javascript = "<script type=\"text/javascript\" language=\"javascript\">\n<!-- Begin \n";
 
+$i = 0;
 foreach ($_REQUEST['search_object'] as $key) { 
 	$name = "check_" . $key;
 	$field_name = $key . "_string";
 	${$name} = "checked=\"checked\"";
 	$final_javascript .= "flipField('$field_name'); \n";
+        if($i++ == 0) /* Focus the first checked field */
+            $final_javascript .= "selectField('$field_name'); \n";
+}
+if($i == 0) /* Select the artist/title/album one by default */
+{
+    $final_javascript .= "flipField('all_string'); \n";
+    $final_javascript .= "selectField('all_string'); \n";
+    $check_all = "checked=\"checked\"";
 }
 
 $final_javascript .= " // END-->\n </script>";
@@ -43,6 +52,14 @@ $final_javascript .= " // END-->\n </script>";
 <table class="tabledata" cellspacing="0" cellpadding="3" border="0">
 <tr class="table-header">
 	<th colspan="4"><?php echo _("Search Ampache"); ?>...</th>
+</tr>
+<tr class="<?php echo flip_class(); ?>">
+        <td><?php echo _("Keywords") ?></td>
+        <td>
+            <input type="checkbox" name="search_object[]" value="all" onclick="flipField('all_string');" <?php echo $check_all; ?> />
+            <input type="text" id="all_string" name="all_string" value="<?php echo scrub_out($_REQUEST['all_string']); ?>" disabled="disabled" />
+        <td></td>
+        <td></td>
 </tr>
 <tr class="<?php echo flip_class(); ?>">
 	<td><?php echo _("Title"); ?></td>

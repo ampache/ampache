@@ -72,7 +72,8 @@ function run_search($data) {
 				$results = call_user_func($function_name,$search,$operator,$method,$limit);
 				return $results;
 			}
-		default:
+                break;
+                default:
 			$results = search_song($search,$operator,$method,$limit);
 			return $results;
 		break;
@@ -93,33 +94,60 @@ function search_song($data,$operator,$method,$limit) {
 
 	/* Generate BASE SQL */
 	$base_sql 	= "SELECT DISTINCT(song.id) FROM song";
+
 	$where_sql 	= '';
 	$table_sql	= ',';
+        $join_sql       = '';
 
 	if ($limit > 0) { 
 		$limit_sql = " LIMIT $limit";
 	}
 	
-
 	foreach ($data as $type=>$value) { 
 	
 		/* Create correct Value statement based on method */
+
 		$value_string = str_replace("__",$value,$method);
 	
 		switch ($type) { 
+                        case 'all': /* artist, title, and album, anyway.. */
+                                $value_words = explode(' ', $value);
+                                $where_sql .= " ( ";
+                                $ii == 0;
+                                foreach($value_words as $word)
+                                {
+                                    if($ii++ > 0)
+                                        $where_sql .= " AND ";
+                                    $where_sql .= "
+                                                 ( 
+                                                    song.title LIKE '%$word%' OR
+                                                    album2.name LIKE '%$word%' OR
+                                                    artist2.name LIKE '%$word%' OR
+                                                    genre2.name LIKE '%$word%' OR
+                                                    song.year LIKE '%$word%' OR
+                                                    song.file LIKE '%$word%'
+                                                  ) ";
+                                }
+                                $where_sql .= " ) $operator";
+                                $join_sql  .= "song.album=album2.id AND song.artist=artist2.id AND song.genre=genre2.id AND ";
+                                $table_sql .= "album as album2,artist as artist2, genre as genre2";
+                        break;
 			case 'title':
 				$where_sql .= " song.title $value_string $operator";
 			break;
 			case 'album':
-				$where_sql .= " ( song.album=album.id AND album.name $value_string ) $operator";
+				$where_sql .= " album.name $value_string $operator";
+                                $join_sql  .= "song.album=album.id AND ";
 				$table_sql .= "album,";
 			break;
 			case 'artist':
-				$where_sql .= " ( song.artist=artist.id AND artist.name $value_string ) $operator";
+				$where_sql .= " artist.name $value_string $operator";
+                                $join_sql  .= "song.artist=artist.id AND ";
 				$table_sql .= "artist,";
 			break;
 			case 'genre':
-				$where_sql .= " ( song.genre=genre.id AND genre.name $value_string ) $operator";
+				$where_sql .= " genre.name $value_string $operator";
+                                $join_qsl  .= "song.genre=genre.id AND ";
 				$table_sql .= "genre,";
 			break;
 			case 'year':
@@ -149,7 +177,7 @@ function search_song($data,$operator,$method,$limit) {
 	$table_sql = rtrim($table_sql,',');
 	$where_sql = rtrim($where_sql,$operator);
 
-	$sql = $base_sql . $table_sql . " WHERE" . $where_sql . $limit_sql;
+	$sql = $base_sql . $table_sql . " WHERE " . $join_sql . "(" . $where_sql . ")" . $limit_sql;
 	
 	$db_results = mysql_query($sql, dbh());
 	
