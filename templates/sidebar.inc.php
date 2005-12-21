@@ -72,22 +72,25 @@ $browse_items[] = array('title'=>'Genre','url'=>'browse.php?action=genre','activ
 		<li>
 			<a href="<?php echo conf('web_path'); ?>/search.php"><?php echo _("Search"); ?></a>
 		</li>
-		<ul id="subnavside">
+	</ul>
+	<ul class="subnavside">
 		<li class="subnavbutton">
-			<form name="search" method="post" action="<?php echo conf('web_path'); ?>/search.php" enctype="multipart/form-data" style="Display:inline">
+			<form name="sub_search" method="post" action="<?php echo conf('web_path'); ?>/search.php" enctype="multipart/form-data" style="Display:inline">
 			<input type="text" name="search_string" value="<?php echo scrub_out($_REQUEST['search_string']); ?>" size="8" />
-	                <input class="smallbutton" type="submit" value="<?php echo _("Search"); ?>" />
-	                <input type="hidden" name="action" value="quick_search" />
-	                <input type="hidden" name="method" value="fuzzy" />
-	                <input type="hidden" name="object_type" value="song" />
-	                <input type="hidden" name="search_object[]" value="all" />		
+        	        <input class="smallbutton" type="submit" value="<?php echo _("Search"); ?>" />
+        	        <input type="hidden" name="action" value="quick_search" />
+        	        <input type="hidden" name="method" value="fuzzy" />
+        	        <input type="hidden" name="object_type" value="song" />
+        	        <input type="hidden" name="search_object[]" value="all" />		
 			</form>
 		</li>
-		</ul>
+	</ul>
+	<ul>
 		<li>
 			<a href="<?php echo conf('web_path'); ?>/randomplay.php"><?php echo _("Random Play"); ?></a>
 		</li>
-		<ul id="subnavside">
+	</ul>
+	<ul class="subnavside">
 		<li class="subnavbutton">
 			<form name="random" method="post" enctype="multipart/form-data" action="<?php echo conf('web_path'); ?>/song.php" style="Display:inline">
 			<input type="hidden" name="action" value="m3u" />
@@ -118,9 +121,9 @@ $browse_items[] = array('title'=>'Genre','url'=>'browse.php?action=genre','activ
 			<input class="smallbutton" type="submit" name="aaction" value="<?php echo _("Enqueue"); ?>" />
 			</form>
 		</li>
-		</ul>
-		<?php if (conf('use_auth')) { ?>
-			<li><a href="<?php echo conf('web_path'); ?>/logout.php">Logout</a></li>
-		<?php } ?>
 	</ul>
+		<?php if (conf('use_auth')) { ?>
+			<ul><li><a href="<?php echo conf('web_path'); ?>/logout.php">Logout</a></li></ul>
+		<?php } ?>
+	
 </div>

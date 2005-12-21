@@ -95,6 +95,7 @@
 		font-weight: bold; 
 		background-color: <?php echo conf('base_color2') ?>; 
 		margin: 2px 2px 2px 2px;
+		cursor: pointer;
 		}
 	select	{ 
 		color: <?php echo conf('font_color2'); ?>; 

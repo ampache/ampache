@@ -33,7 +33,7 @@ $location = get_location();
 <title><?php echo conf('site_title'); ?> - <?php echo $location['title']; ?></title>
 </head>
 <body>
-<script src="<?php echo conf('web_path'); ?>/lib/general.js" language="javascript"></script>
+<script src="<?php echo conf('web_path'); ?>/lib/general.js" language="javascript" type="text/javascript"></script>
 
 
 <table border="0" cellpadding="0" cellspacing="0" style="margin:0px;" width="100%" >
@@ -42,7 +42,7 @@ $location = get_location();
 	<td colspan="2">
 	<div style="float:left;margin-top:3px;">
 	<a href="http://www.ampache.org">
-        <img class="pageheader" src="<?php echo conf('web_path'); ?><?php echo conf('theme_path'); ?>/images/ampache.gif" border="0" title="Ampache: For the love of music" />
+        <img class="pageheader" src="<?php echo conf('web_path'); ?><?php echo conf('theme_path'); ?>/images/ampache.gif" border="0" title="Ampache: For the love of music" alt="Ampache: For the love of music" />
 	</a>
 	</div>
 		<div style="float:right;">
