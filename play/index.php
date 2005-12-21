@@ -206,7 +206,10 @@ else {
 	
 	if ($user->prefs['play_type'] == 'downsample' || !$song->native_stream()) { 
 	
-		$fp = start_downsample($song,$lastid,$song_name);
+		$results = start_downsample($song,$lastid,$song_name);
+
+		$fp = $results['handle'];
+		$song->size = $results['size'];
 
 	} // end if downsampling
 

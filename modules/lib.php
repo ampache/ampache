@@ -125,21 +125,22 @@ function show_genre_pulldown ($genre, $complete, $lines= "'10' multiple='multipl
 
 } // show_genre_pulldown()
 
-/*
- * show_catalog_pulldown()
- *
- * Set complete=1 if you want the entire catalog list (including disabled)
+/**
+ * show_catalog_pulldown
+ * This has been changed, first is the name of the 
+ * dropdown select, the second is the style to be applied
  *
  */
 
-function show_catalog_pulldown ($catalog, $complete) {
-	global $settings;
+function show_catalog_pulldown ($name='catalog',$style) {
+	
+	
 	// find the genres we have in use
         $sql = "SELECT id,name FROM catalog ORDER BY name";
 
 	$db_result = mysql_query($sql, dbh());
 
-	echo "\n<select name=\"catalog\">\n";
+	echo "\n<select name=\"" . $name . "\" style=\"" . $style . "\">\n";
 
 	echo "  <option value=\"-1\" selected=\"selected\">All</option>\n";
 

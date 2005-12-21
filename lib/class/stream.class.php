@@ -270,7 +270,7 @@ class Stream {
 		/* If we've added songs we should start playing */
 		$myMpd->Play();
 
-		header ("Location: " . return_referer());
+		header ("Location: " . conf('web_path') . "/index.php");
 
 	} // create_mpd
 

@@ -4,6 +4,10 @@
 
 --------------------------------------------------------------------------
   v.3.3.2-Alpha4 
+  	- Introduced initial new interface 
+	- Fixed a problem where downsampled songs wouldn't get recorded
+		in stats due to their diminished size
+	- Fixed column typo on Admin User page
   	- Fixed a problem with the no_symlinks setting which could
 		cause some files to be missed regardless 
 		(Thx solarium_rider)
@@ -29,7 +33,7 @@
   v.3.3.2-Alpha3 11/29/2005
   	- Added marineam's patch to the Snoopy class which fixes a flaw
 		in the new version which fails to escape single quotes
-  	- Updated included Snoopy class due to vulenerability
+  	- Updated included Snoopy class due to vulnerability
 		http://seclists.org/lists/fulldisclosure/2005/Oct/0536.html
 		(Thx marineam)
 	- Fixed a problem where it would attempt to redirect back to the
@@ -132,7 +136,7 @@
 		(Thx hongyi_gao)
 	- Fixed refresh javascript for main page.
 	- Fixed <html lang=> tag so that it validates (Thx XGizzmo)
-	- Added show_footer_menu() funciton and preference (Thx XGizzmo)
+	- Added show_footer_menu() function and preference (Thx XGizzmo)
 	- Added localplay_menu config option that puts MPD on it's own 
 		page, will eventually control icecast,localplay,slimserver
 		as well (Thx Nedko)
@@ -161,7 +165,7 @@
 		breaks all previous themes. (Thx mkeadle)
 	- Fixed problem with Color Boxes in IE (Thx rperkins)
   	- Tweaked the Main page adding most popular albums as well as
-		spliting out the mpd control and now playing. 
+		splitting out the mpd control and now playing. 
 		(Thx Nedko and reflous)
   	- Fixed a problem with directories named '0' (Thx Protagonist)
   	- Fixed lack of seeding of RAND() which would cause Pre PHP 4.2
@@ -270,7 +274,7 @@
 		when updating multiple songs from the same album where art
 		has already been found. 
 	- Added Debug Script for Amazon Album Art search (in /bin)
-	- Cleaned up some dirty HTML, and redudant functions
+	- Cleaned up some dirty HTML, and redundant functions
 	- Fixed lack of redirect to the Install page if no config file is 
 		found 
 	- Fixed login page so it respects the values set in the database

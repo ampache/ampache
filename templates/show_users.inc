@@ -36,11 +36,11 @@ $admin_menu = "admin/";
 </tr>
 <tr class="table-header">
 	<td align="center">
-		<a href="<?php echo conf('web_path'); ?>/<?php echo $_SESSION['view_script']; ?>?action=<?php echo $_REQUEST['action']; ?>&amp;keep_view=true&amp;sort_type=username&amp;sort_order=0">
-		<b><?php echo _("Username"); ?></b>
-		</a> 
 		<a href="<?php echo conf('web_path'); ?>/<?php echo $_SESSION['view_script']; ?>?action=<?php echo $_REQUEST['action']; ?>&amp;keep_view=true&amp;sort_type=fullname&amp;sort_order=0">
-		<b>(<?php echo _("Fullname"); ?>)</b>
+		<b><?php echo _("Fullname"); ?></b>
+		</a>
+		<a href="<?php echo conf('web_path'); ?>/<?php echo $_SESSION['view_script']; ?>?action=<?php echo $_REQUEST['action']; ?>&amp;keep_view=true&amp;sort_type=username&amp;sort_order=0">
+		<b>(<?php echo _("Username"); ?>)</b>
 		</a>
 	</td>
         <td align="center">

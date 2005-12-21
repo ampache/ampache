@@ -39,10 +39,6 @@ $action = scrub_in($_REQUEST['action']);
 
 show_template('header');
 
-show_menu_items('Admin');
-show_admin_menu('Users');
-show_clear();
-
 $user_id = scrub_in($_REQUEST['user']);
 $temp_user = new User($user_id);
  
@@ -182,6 +178,7 @@ switch ($action) {
 
 }
 
-echo "<br /><br />";
-show_page_footer ('Admin', 'Users',$user->prefs['display_menu']);
+/* Show the footer */
+show_footer();
+
 ?>

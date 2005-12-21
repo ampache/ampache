@@ -31,21 +31,15 @@ require_once("modules/init.php");
 $myMpd = init_mpd();
 
 show_template('header');
+
+
 if (conf('refresh_limit') > 0) { show_template('javascript_refresh'); }
-show_menu_items('Home');
-show_clear();
 $action = scrub_in($_REQUEST['action']);
 
 ?>
 
 <p style="font-size: 8pt; font-weight: bold;">
 	<?php echo _("Welcome to"); ?> <a href="http://www.ampache.org/index.php">Ampache v.<?php echo conf('version'); ?></a>
-<?php if (conf('use_auth')) { ?>
-	<?php echo _("you are currently logged in as") . " " . $user->fullname ." (". $user->username .")"; ?>
-<?php } ?>
-<?php if (conf('theme_name')) { ?>
-<!--	Theme: <?php echo conf('theme_name'); ?> (<?php echo get_theme_author(conf('theme_name')); ?>) -->
-<?php } ?>
 </p>
 <!-- Big Daddy Table -->
 <table style="padding-left:5px;padding-right:5px;padding-top:5px;padding-bottom:5px;" >
@@ -74,17 +68,6 @@ $action = scrub_in($_REQUEST['action']);
 		  }
 		?>
 		</td>	
-	</tr>
-        <tr>
-                <td colspan="2" valign="top">
-                        <?php show_random_play_bar(); ?>
-                </td>
-        </tr>
-	<tr><td colspan="2">&nbsp;</td></tr>
-	<tr>
-		<td colspan="2">
-		<?php show_template('show_search_bar'); ?>
-		</td>
 	</tr>
 	<tr><td colspan="2">&nbsp;</td></tr>
 
@@ -130,13 +113,6 @@ $action = scrub_in($_REQUEST['action']);
 	                ?>
 	        </td>
 	</tr>
-<!--	<tr><td colspan="2">&nbsp;</td></tr>
-	<tr>
-	        <td colspan="2" valign="top">
-	                <?php show_template('show_random_play'); ?>
-	        </td>
-	</tr>
--->
 	</table>
 	</td>
 	<td valign="top">
@@ -160,4 +136,4 @@ $action = scrub_in($_REQUEST['action']);
 </tr>
 </table>
 
-<?php show_page_footer ('Home', '', $user->prefs['display_menu']);?>
+<?php show_footer(); ?>

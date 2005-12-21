@@ -21,7 +21,7 @@
 */
 
 $htmllang = str_replace("_","-",conf('lang'));
-
+$location = get_location();
 ?>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "DTD/xhtml1-transitional.dtd">
@@ -30,111 +30,42 @@ $htmllang = str_replace("_","-",conf('lang'));
 <link rel="shortcut icon" href="<?php echo conf('web_path'); ?>/favicon.ico" />
 <meta http-equiv="Content-Type" content="text/html; charset=<?php echo conf('site_charset'); ?>" />
 <?php show_template('style'); ?>
-<title><?php echo conf('site_title'); ?></title>
+<title><?php echo conf('site_title'); ?> - <?php echo $location['title']; ?></title>
 </head>
 <body>
-<script type="text/javascript" language="javascript">
-<!-- Begin
-function disableField(element) {
-        var element_id = document.getElementById(element);
-        element_id.disabled=true;
-        element_id.value='';
-        element_id.checked=false;
-}
-function enableField(element) {
-        var element_id = document.getElementById(element);
-        element_id.disabled=false;
-        
-}
-function flipField(element) {
-        var element_id = document.getElementById(element);
-        if (element_id.disabled == false) {
-                element_id.disabled=true;
-        }
-        else {
-                element_id.disabled=false;
-        }
-}
-function selectField(element)
-{
-    var element_id = document.getElementById(element);
-    element_id.focus();
-}
-  var checkflag_song = "false";
+<script src="<?php echo conf('web_path'); ?>/lib/general.js" language="javascript"></script>
 
-  function check_songs() {
-        if (checkflag_song == "false") {
-                if (document.forms.songs.elements["song[]"].length == undefined) {
-                        document.forms.songs.elements["song[]"].checked = true;
-                }
-                else {
-                        for (i = 0; i < document.forms.songs.elements["song[]"].length; i++) {
-                                document.forms.songs.elements["song[]"][i].checked = true;
-                        }
-                }
-                checkflag_song = "true";
-                return "Unselect All";
-        }
-        else {
-                if (document.forms.songs.elements["song[]"].length == undefined) {
-                        document.forms.songs.elements["song[]"].checked = false;
-                }
-                else {
-                        for (i = 0; i < document.forms.songs.elements["song[]"].length; i++) {
-                                document.forms.songs.elements["song[]"][i].checked = false;
-                        }
-                }
-                checkflag_song = "false";
-                return "Select All";
-        }
-  }
 
-	function invert_songs() {
-		for( i = 0; i < document.forms.songs.elements["song[]"].length; ++i ) {
-			document.forms.songs.elements["song[]"][i].checked = !document.forms.songs.elements["song[]"][i].checked
-		}
-	}
-
-  var checkflag_results = "false";
-
-  function check_results() {
-        if (checkflag_results == "false") {
-                if (document.results.elements["results[]"].length == undefined) {
-                        document.results.elements["results[]"].checked = true;
-                }
-                else {
-                        for (i = 0; i < document.results.elements["results[]"].length; i++) {
-                                document.results.elements["results[]"][i].checked = true;
-                        }
-                }
-                checkflag_results = "true";
-                return "Unselect All";
-        }
-        else {
-                if (document.results.elements["results[]"].length == undefined) {
-                        document.results.elements["results[]"].checked = false;
-                }
-                else {
-                        for (i = 0; i < document.results.elements["results[]"].length; i++) {
-                                document.results.elements["results[]"][i].checked = false;
-                        }
-                }
-                checkflag_results = "false";
-                return "Select All";
-        }
-  }
-// End -->
-</script>
-
-<div id="pageheader">
-<a href="http://www.ampache.org">
-        <img class="pageheader" src="<?php echo conf('web_path'); ?><?php echo conf('theme_path'); ?>/images/ampache.gif" border="0" title="Ampache: For the love of music" alt="Ampache: For the love of music" />
-</a>
-</div>
-<?php
-        if( isset( $_REQUEST['amp_error'] ) ) {
-                $msg = scrub_in( $_REQUEST['amp_error'] );
-                echo( "<font class=\"error\">Error:\t$msg</font><br><br>" );
-		if (conf('debug')) { log_event($_SESSION['userdata']['username'],' general_error ',"Error: $msg"); }
-        }
-?>
+<table border="0" cellpadding="0" cellspacing="0" style="margin:0px;" width="100%" >
+<!-- This is the topbar row -->
+<tr id="pageheader">
+	<td colspan="2">
+	<div style="float:left;margin-top:3px;">
+	<a href="http://www.ampache.org">
+        <img class="pageheader" src="<?php echo conf('web_path'); ?><?php echo conf('theme_path'); ?>/images/ampache.gif" border="0" title="Ampache: For the love of music" />
+	</a>
+	</div>
+		<div style="float:right;">
+			<a href="http://www.ampache.org/index.php">Ampache v.<?php echo conf('version'); ?></a><br />
+			<b><?php echo _("You are currently logged in as") . " " . $GLOBALS['user']->username; ?></b>
+			<br />
+		<?php echo _("Browse"); ?>:
+		<form method="post" action="<?php echo conf('web_path'); ?>/browse.php" enctype="multipart/form-data" style="Display:inline;">
+		<select name="action">
+			<option value="album">Album</option>
+			<option value="artist">Artist</option>
+			<option value="genre">Genre</option>
+		</select>
+		<input type="submit" value="<?php echo _("Go!"); ?>" class="button" />
+		</form>
+		</div>
+	</td>
+</tr>
+<!-- This is the row for body + sidebar -->
+<tr>
+	<!-- This is the sidebar -->
+	<td valign="top" class="sidebar">
+	<?php require_once(conf('prefix') . '/templates/sidebar.inc.php'); ?>
+	</td>
+	<td width="100%" valign="top" style="padding-top:10px;padding-left:10px;">
+	<!-- Start Main Page -->

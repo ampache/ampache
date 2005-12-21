@@ -30,7 +30,10 @@
 <!--
 	body	
 		{ 
-		padding-top: 5px;
+		padding-top: 0px;
+		margin-top: 0px;
+		margin-left: 0px;
+		margin-right: 0px;
 		background: <?php echo conf('bg_color1'); ?>; 
 		font-family: <?php echo conf('font') ?>; 
 		font-size: <?php echo conf('font_size'); ?>px; 
@@ -181,7 +184,7 @@
 /*************** END Main Menu *************/
 /*************** Page Header *********************/
     #pageheader {
-        background: <?php echo conf('bg_color1');?>;
+        background: #8B8B8B;
     }
 /*************** END Page Header *****************/
     .header1 
@@ -251,6 +254,74 @@
 		font-size: <?php echo conf('font_size'); ?>px; 
 		font-weight: normal; 
 		}
+	.smallbutton
+		{
+		border:0px;
+		padding-left:1px;
+		padding-right:1px;
+		font-size: <?php echo conf('font_size') - 1; ?>px;
+		}
+	.sidebar 
+		{
+		margin-left:0px;
+		margin-top:0px;
+		margin-right:0px;
+		padding-right:0px;
+		padding-top: 0px;
+		padding-left: 0px;
+		width:160px;
+		background: <?php echo conf('base_color2'); ?>;
+		}
+	
+	#sidecontainer 
+		{ 
+			margin-left: 0px; 
+		}
+
+	#navcontainer ul
+		{
+		margin: 0;
+		padding: 0;
+		list-style-type: none;
+		font-family: verdana, arial, Helvetica, sans-serif;
+		}
+
+	#navcontainer li { margin: 0 0 1px 0; }
+
+	#navcontainer a, .navbutton
+		{
+		display: block;
+		padding: 5px 10px;
+		width: 140px;
+		color: #000;
+		background-color: #666;
+		text-decoration: none;
+		}
+
+	#navcontainer a:hover
+		{
+		color: #000;
+		background-color: #ccc;
+		text-decoration: none;
+		}
+		
+	#navcontainer ul ul li { margin: 0 0 1px 0; }
+
+	#navcontainer ul ul a, .subnavbutton
+		{
+		display: block;
+		padding: 5px 5px 5px 30px;
+		width: 125px;
+		color: #000;
+		background-color: #ccc;
+		text-decoration: none;
+		}
+
+	#navcontainer ul ul a:hover
+		{
+		color: #000;
+		background-color: #ddd;
+		text-decoration: none;
+		}
 -->
 </style>
-

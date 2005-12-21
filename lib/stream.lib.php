@@ -250,7 +250,11 @@ function start_downsample($song,$now_playing_id=0,$song_name=0) {
 
 	$fp = @popen($downsample_command, 'r');
 
-	return ($fp);
+	/* We need more than just the handle here */
+	$return_array['handle'] = $fp;
+	$return_array['size']	= $sample_ration*$song->size;
+
+	return ($return_array);
 
 } // start_downsample
 

@@ -38,8 +38,6 @@
 require_once( "modules/init.php" );
 // Set page header
 show_template('header');
-show_menu_items('Upload');
-show_clear();
 
 // Access Control
 if(!$user->prefs['upload'] || conf('demo_mode'))  {
@@ -225,7 +223,6 @@ if( $status ) {
 	print( "</table>\n" );
 } // end if any messages
  
-show_clear();
-show_page_footer ('Upload', '',$user->prefs['display_menu']);
-
+/* Show the Page Footer */
+show_footer();
 ?>

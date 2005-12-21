@@ -83,10 +83,6 @@ if ( empty($subject) ) {
 }
 
 show_template('header');
-
-show_menu_items('Admin');
-show_admin_menu('Mail Users');
-show_clear();
 ?>
 
 <form name="mail" method="post" action="<?php echo conf('web_path'); ?>/admin/mail.php" enctype="multipart/form-data">
@@ -130,6 +126,4 @@ show_clear();
 
 </form>
 <br /><br />
-<?php  
-show_page_footer ('Admin', 'Mail Users',$user->prefs['display_menu']);
-?>
+<?php show_footer(); ?>

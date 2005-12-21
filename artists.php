@@ -30,9 +30,6 @@ if (!isset($_REQUEST['action'])) { $_REQUEST['action'] = "match"; }
 $action = scrub_in($_REQUEST['action']);
 
 show_template('header');
-show_menu_items('Browse'); 
-show_browse_menu('Artists');
-show_clear();
 
 
 switch($action) {
@@ -145,13 +142,12 @@ switch($action) {
 		}
 	break;	
 	default:
+		//FIXME: This is being moved to browse
 		show_alphabet_list('artists','artists.php');
 		show_alphabet_form('',_("Show Artists starting with"),"artists.php?action=match");
 		show_artists('A');
 	break;
 } // end switch
 
-
-show_clear();
-show_page_footer ('Artists', '',$user->prefs['display_menu']);
+show_footer();
 ?>

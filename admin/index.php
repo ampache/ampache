@@ -48,20 +48,6 @@ if ( $action == 'Update Preferences' ) {
 }
 
 show_template('header'); 
-show_menu_items('Admin');
-
-if ( $action == 'show_site_preferences' ) {
-	show_admin_menu('Site Preferences');
-}
-elseif ( ($action == 'show_users') || ($action == 'show_new_user')) {
-	show_admin_menu('Users');
-}
-elseif ( $action == 'show_update_catalog' ) {
-	show_admin_menu('Catalog'); 
-}
-else {
-	show_admin_menu('...');
-}
 
 if ( $action == 'Update Preferences' ) {
 	$action = 'show_preferences';
@@ -88,6 +74,5 @@ else {
 	require (conf('prefix') . "/templates/show_admin_index.inc");
 } // if they didn't pick anything
 
-show_clear();
-show_page_footer ('Admin', '',$user->prefs['display_menu']);
+show_footer();
 ?>

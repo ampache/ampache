@@ -97,11 +97,6 @@ switch ($action) {
 
 show_template('header');
 
-show_menu_items('Playlists'); 
-
-show_playlist_menu(); 
-
-
 $playlist = new Playlist($playlist_id);
 
 if ( isset($playlist_id) && ($playlist_id != 0) && $_REQUEST['action'] != 'delete_playlist' ) {
@@ -229,13 +224,12 @@ switch($action) {
 	default:
 		show_playlists();
 
-} //switch($action)
+} //switch on action
 
-echo "<br /><br />";
-show_page_footer ('Playlists', '',$user->prefs['display_menu']);
+show_footer();
 
 /* Function definitions for this file */
-
+/* GET THIS OUTTA HERE!!!! FIXME */
 /*************************/
 function pl_update_selected() {
 

@@ -36,9 +36,6 @@ if (!$user->has_access(100)) {
 
 show_template('header');
 
-show_menu_items('Admin');
-show_admin_menu('Access Lists');
-show_clear();
 if ( $action == 'show_confirm_delete' ) {
         show_confirm_action(_("Do you really want to delete this Access Record?"), "admin/access.php", "access_id=" . $_REQUEST['access_id'] . "&amp;action=delete_host");
 }
@@ -73,7 +70,6 @@ else {
 	$list = $access->get_access_list();
 	include(conf('prefix') ."/templates/show_access_list.inc");
 }
-echo "<br /><br />";
 
-show_page_footer ('Admin', 'Access Lists',$user->prefs['display_menu']);
+show_footer();
 ?>

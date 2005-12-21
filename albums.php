@@ -25,17 +25,14 @@
 
 require_once("modules/init.php");
 
+show_template('header');
+
 // We'll set any input parameters here
 if(!isset($_REQUEST['match'])) { $_REQUEST['match'] = "Browse"; }
 if(isset($_REQUEST['match'])) $match = scrub_in($_REQUEST['match']);
 if(isset($_REQUEST['album'])) $album = scrub_in($_REQUEST['album']);
 if(isset($_REQUEST['artist'])) $artist = scrub_in($_REQUEST['artist']);
 $_REQUEST['artist_id'] = scrub_in($_REQUEST['artist_id']);
-
-show_template('header');
-show_menu_items('Browse');
-show_browse_menu('Albums');
-show_clear();
 
 if ($_REQUEST['action'] === 'clear_art') { 
 	if (!$user->has_access('25')) { access_denied(); } 
@@ -191,6 +188,7 @@ else {
 			$sql = "SELECT id FROM album WHERE name LIKE 'a%'";
 			break;
 		default:
+			//FIXME: This is the old way of doing it, move this to browse 
 			show_alphabet_list('albums','albums.php',$match);
 			show_alphabet_form($match,_("Show Albums starting with"),"albums.php?action=match");
 			echo "<br /><br />";
@@ -219,6 +217,5 @@ else {
 
 } // else no album
 
-show_clear();
-show_page_footer ('Albums', '',$user->prefs['display_menu']);
+show_footer();
 ?>

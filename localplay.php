@@ -37,7 +37,9 @@ if (conf('demo_mode')) {
 $web_path = conf('web_path');
 
 if($user->prefs['play_type'] != 'local_play') {
-    echo "You dont have local play enabled!";
+    show_template('header');
+    echo "<span align=\"center\" class=\"fatalerror\">Localplay Currently Disabled</span>";
+    show_footer();
     exit;
 }
 

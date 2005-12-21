@@ -218,10 +218,8 @@ function show_admin_menu ($admin_highlight) {
  */
 function access_denied() { 
 
-	show_template('style');
-	show_footer();
 	echo "<br /><br /><br />";
-        echo "<div class=\"fatalerror\">Error Access Denied</div>\n";
+        echo "<div class=\"fatalerror\">" . _("Error Access Denied") . "</div>\n";
 	show_footer();
 	exit();
 
@@ -385,8 +383,9 @@ function truncate_with_ellipsis($text, $max=27) {
  * shows the footer of the page
  */
 function show_footer() {
-        $class = "table-header";
-        echo "<br /><br /><br /><div class=\"$class\" style=\"border: solid thin black;\">&nbsp;</div>";
+
+	require_once(conf('prefix') . '/templates/footer.inc');
+	
 } // show_footer
 
 /**
@@ -758,4 +757,95 @@ function show_artist_pulldown ($artist_id,$select_name='artist') {
         echo "</select>\n";
 
 } // show_artist_pulldown
+
+/**
+ * show_submenu
+ * This shows the submenu mojo for the sidebar, and I guess honestly anything
+ * else you would want it to... takes an array of items which have ['url'] ['title']
+ * and ['active']
+ */
+function show_submenu($items) { 
+
+	require (conf('prefix') . '/templates/subnavbar.inc.php');
+
+} // show_submenu
+
+
+/**
+ * get_location
+ * This function gets the information about said persons currently location
+ * this is used for A) Sidebar highlighting & submenu showing and B) Titlebar information 
+ * it returns an array of information about what they are currently doing
+ * Possible array elements
+ * ['title']	Text name for the page
+ * ['page']	actual page name
+ * ['section']	name of the section we are in, admin, browse etc (submenu control)
+ * @package General
+ */ 
+function get_location() { 
+
+	$location = array();
+
+	/* Sanatize the $_SERVER['PHP_SELF'] variable */
+	$location['page'] = preg_replace("/^\/(.+\.php)\/?.*/","$1",$_SERVER['PHP_SELF']);
+	
+	switch ($location['page']) { 
+		case 'index.php': 
+			$location['title'] 	= 'Home'; 
+		break;
+		case 'search.php': 
+			$location['title'] 	= 'Search'; 		
+		break;
+		case 'preferences.php': 
+			$location['title'] 	= 'Preferences'; 
+		break;
+		case 'admin/index.php': 
+			$location['title'] 	= 'Admin'; 
+			$location['section']	= 'admin';
+		break;
+		case 'admin/catalog.php': 
+			$location['title'] 	= 'Catalog'; 
+			$location['section']	= 'admin';
+		break;
+		case 'admin/users.php':
+			$location['title']	= 'User Management';
+			$location['section']	= 'admin';
+		break;
+		case 'admin/mail.php':
+			$location['title']	= 'Mail Users';
+			$location['section']	= 'admin';
+		break;
+		case 'admin/access.php':
+			$location['title']	= 'Manage Access Lists';
+			$location['section']	= 'admin';
+		break;
+		case 'admin/preferences.php':
+			$location['title']	= 'Site Preferences';
+			$location['section']	= 'admin';
+		break;
+		case 'browse.php':
+			$location['title']	= 'Browse Music';
+			$location['section']	= 'browse';
+		break;
+		case 'albums.php':
+			$location['title']	= 'Albums';
+			$location['section']	= 'browse';
+		break;
+		case 'artists.php':
+			$location['title']	= 'Artists';
+			$location['section']	= 'browse';
+		break;
+		case 'genre.php':
+			$location['title']	= 'Genre';
+			$location['section']	= 'browse';
+		break;
+		default: 
+			$location['title'] = ''; 
+		break;
+	} // switch on raw page location
+	
+	return $location;
+
+} // get_location
+
 ?>

@@ -28,8 +28,6 @@
 require_once("modules/init.php");
 
 show_template('header');
-show_menu_items('Search'); 
-show_clear();
 
 /* Import/Clean vars */
 $action = scrub_in($_REQUEST['action']);
@@ -43,6 +41,11 @@ switch ($action) {
 		$string_name = $_REQUEST['search_object'][0] . '_string';
 		$_REQUEST[$string_name] = $_REQUEST['search_string'];
 		unset($string_name);
+		if (strlen($_REQUEST['search_string']) < 1) { 
+			$GLOBALS['error']->add_error('keyword',_("Error: No Keyword Entered"));
+			show_template('show_search');
+			break;
+		}
 	case 'search':
 		show_template('show_search');
 		$results = run_search($_REQUEST);
@@ -58,6 +61,6 @@ switch ($action) {
 	break;
 }
 
-show_clear();
-show_page_footer ('Search', '',$user->prefs['display_menu']);
+/* Show the Footer */
+show_footer();
 ?>

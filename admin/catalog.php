@@ -38,12 +38,6 @@ $catalog = new Catalog($_REQUEST['catalog_id']);
 
 show_template('header');
 
-/* Generate the menus */
-show_menu_items('Admin');
-show_admin_menu('Catalog');
-show_clear();
-
-
 /* Big switch statement to handle various actions */
 switch ($_REQUEST['action']) {
     case 'fixed':
@@ -285,6 +279,8 @@ switch ($_REQUEST['action']) {
 	include(conf('prefix') . '/templates/catalog.inc');
 
 } // end switch
-echo "<br /><br />";
-show_page_footer ('Admin', 'Catalog',$user->prefs['display_menu']);
+
+/* Show the Footer */
+show_footer();
+
 ?>

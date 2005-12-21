@@ -27,9 +27,6 @@
 require_once("modules/init.php");
 
 show_template('header');
-show_menu_items('Browse'); 
-show_browse_menu('Genre');
-show_clear();
 
 $action = scrub_in($_REQUEST['action']);
 
@@ -58,9 +55,7 @@ switch($action) {
 
 
 
-show_clear();
-
 /* Show the Footer */
-show_page_footer('Browse', '',$user->prefs['display_menu']);
+show_footer();
 
 ?>

@@ -40,13 +40,44 @@ $action		= scrub_in($_REQUEST['action']);
 
 /* Display the headers and menus */
 show_template('header');
-show_menu_items('Browse'); 
-show_browse_menu($_REQUEST['action']);
-show_clear();
 
 switch($action) {
+	case 'file':
 	case 'album':
+		show_alphabet_list('albums','albums.php',$match);
+		show_alphabet_form($match,_("Show Albums starting with"),"albums.php?action=match");
+
+		/* Get the results and show them */
+		$sql = "SELECT id FROM album WHERE name LIKE '$match%'";
+
+		$view = new View();
+		$view->import_session_view();
+
+	        // if we are returning
+	        if ($_REQUEST['keep_view']) {
+	                $view->initialize();
+	        }
+
+	        // If we aren't keeping the view then initlize it
+	        elseif ($sql) {
+	                $db_results = mysql_query($sql, dbh());
+	                $total_items = mysql_num_rows($db_results);
+	                if ($match != "Show_all") { $offset_limit = $_SESSION['userdata']['offset_limit']; }
+	                $view = new View($sql, 'albums.php','name',$total_items,$offset_limit);
+	        }
+
+	        else { $view = false; }
+
+	        if ($view->base_sql) {
+	                $albums = get_albums($view->sql);
+                	show_albums($albums,$view);
+		}		
+	break;
 	case 'artist':
+                show_alphabet_list('artists','artists.php');
+                show_alphabet_form('',_("Show Artists starting with"),"artists.php?action=match");
+                show_artists();
+	break;
 	case 'genre':
 		/* Create the Needed Object */
 		$genre = new Genre();
@@ -74,6 +105,7 @@ switch($action) {
         	}
 		
 	break;
+
 	case 'catalog':
 	
 	break;
@@ -90,9 +122,6 @@ switch($action) {
 
 } // end Switch $action
 
-show_clear();
-
 /* Show the Footer */
-show_page_footer('Browse', '',$user->prefs['display_menu']);
-
+show_footer();
 ?>

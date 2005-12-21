@@ -58,8 +58,9 @@ $final_javascript .= " // END-->\n </script>";
         <td>
             <input type="checkbox" name="search_object[]" value="all" onclick="flipField('all_string');" <?php echo $check_all; ?> />
             <input type="text" id="all_string" name="all_string" value="<?php echo scrub_out($_REQUEST['all_string']); ?>" disabled="disabled" />
+	    <?php $GLOBALS['error']->print_error('keyword'); ?>
         </td>
-        <td></td>
+        <td>&nbsp;</td>
 </tr>
 <tr class="<?php echo flip_class(); ?>">
 	<td><?php echo _("Title"); ?></td>

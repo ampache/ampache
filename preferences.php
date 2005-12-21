@@ -55,8 +55,6 @@ else {
 
 // HEADER
 show_template('header');
-show_menu_items('Preferences');
-show_clear();
 // HEADER
 
 // Set Target
@@ -67,5 +65,5 @@ require (conf('prefix') . "/templates/show_preferences.inc");
 
 
 // FOOTER
-show_page_footer ('Preferences', '',$user->prefs['display_menu']);
+show_footer();
 ?>

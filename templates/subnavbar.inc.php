@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2005 Ampache.org
+ Copyright (c) 2001 - 2006 Ampache.org
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
@@ -20,19 +20,20 @@
 
 */
 
-/*!
-	@header MPD control
-	@discussion Ampache MPD control center
+/**
+ * This file expect an array of 'items' which have ['0']['url'] ['0']['title']
+ * and a ['0']['active'] == true/false this is called from show_submenu($items);
+ */
 
-*/
-require_once("modules/init.php");
-show_template('header');
-if (conf('refresh_limit') > 0) { show_template('javascript_refresh'); }
-
-if ($user->prefs['play_type'] == 'mpd') {
-	show_mpd_control();
-	show_mpd_pl();
-}
-
-show_footer();
 ?>
+	<ul id="subnavside">
+<?php 
+	foreach ($items as $item) { 
+		if ($item['active']) { 
+			$li_id 	= "id=\"subactive\"";
+			$a_id	= "id=\"subcurrent\"";
+		} 
+?>
+		<li <?php echo $li_id; ?>><a href="<?php echo conf('web_path') . "/" .  $item['url']; ?>" <?php echo $a_id; ?>><?php echo $item['title']; ?></a></li>
+<?php unset($li_id,$a_id); } ?>
+	</ul>

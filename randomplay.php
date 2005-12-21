@@ -28,8 +28,6 @@
 require_once("modules/init.php");
 show_template('header');
 init_mpd();
-show_menu_items('Home');
-show_clear();
 $action = scrub_in($_REQUEST['action']);
 
 if (conf('refresh_interval')) { 
@@ -125,4 +123,4 @@ function show_random_play() {
 
 </td></tr>
 </table>
-<?php show_page_footer ('Home', '', $user->prefs['display_menu']);?>
+<?php show_footer(); ?>
