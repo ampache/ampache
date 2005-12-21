@@ -36,11 +36,11 @@ $web_path = conf('web_path');
 	</td>
 	<td>
         	<form action="<?php echo $web_path; ?>/localplay.php" method="post" name="playcontrol" style="display:inline;">
-		<input type="submit" title="<?php echo _("Prev"); ?>" name="submit" value="|&lt; ">
-                <input type="submit" title="<?php echo _("Stop"); ?>" name="submit" value=" X ">
-                <input type="submit" title="<?php echo _("Play"); ?>" name="submit" value=" &gt; ">
-                <input type="submit" title="<?php echo _("Pause"); ?>" name="submit" value=" = ">
-                <input type="submit" title="<?php echo _("Next"); ?>" name="submit" value=" &gt;|">
+		<input type="submit" title="<?php echo _("Prev"); ?>" name="submit" value="|&lt; " />
+                <input type="submit" title="<?php echo _("Stop"); ?>" name="submit" value=" X " />
+                <input type="submit" title="<?php echo _("Play"); ?>" name="submit" value=" &gt; " />
+                <input type="submit" title="<?php echo _("Pause"); ?>" name="submit" value=" = " />
+                <input type="submit" title="<?php echo _("Next"); ?>" name="submit" value=" &gt;|" />
 		</form>
 	</td>
 	</tr>
@@ -50,10 +50,10 @@ $web_path = conf('web_path');
 	</td>
 	<td>
         	<form action="<?php echo $web_path; ?>/localplay.php" method="post" name="playcontrol" style="display:inline;">
-		<input type="submit" title="<?php echo _("Increase Volume"); ?>" name="submit" value=" +1 ">
-		<input type="submit" title="<?php echo _("Increase Volume"); ?>" name="submit" value=" +5 ">
-		<input type="submit" title="<?php echo _("Decrease Volume"); ?>" name="submit" value=" -1 "> 
-		<input type="submit" title="<?php echo _("Decrease Volume"); ?>" name="submit" value=" -5 ">
+		<input type="submit" title="<?php echo _("Increase Volume"); ?>" name="submit" value=" +1 " />
+		<input type="submit" title="<?php echo _("Increase Volume"); ?>" name="submit" value=" +5 " />
+		<input type="submit" title="<?php echo _("Decrease Volume"); ?>" name="submit" value=" -1 " /> 
+		<input type="submit" title="<?php echo _("Decrease Volume"); ?>" name="submit" value=" -5 " />
                 </form>
         </td>
 	</tr>
