@@ -2,7 +2,7 @@
 
 
 ?>
-<table align="left" width="100%" class="border" cellpadding="0" cellspacing="0"> 
+<table width="100%" class="border" cellpadding="0" cellspacing="0"> 
 <tr class="table-header">
 	<th colspan="2"><?php echo _("Catalog Statistics"); ?> </th>
 </tr>
