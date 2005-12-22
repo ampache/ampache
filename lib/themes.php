@@ -79,6 +79,7 @@ function set_theme_colors($theme_name,$user_id) {
 	   This could be dangerous but eah!
 	*/
 	$theme = get_theme($theme_name);	
+	$GLOBALS['theme'] = $theme;
 	if (!count($theme['color'])) { return false; }
 
 	foreach ($theme['color'] as $key=>$color) { 

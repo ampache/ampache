@@ -25,6 +25,8 @@ author = "S1amson"
 # DEFAULT: N/A
 #maintainer = "Ben Shields <foo@ampache.org>"
 
+orientation = "horizontal"
+
 # Theme Colors
 ###################
 [color]

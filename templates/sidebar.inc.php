@@ -46,16 +46,33 @@ $browse_items[] = array('title'=>'Genre','url'=>'browse.php?action=genre','activ
 		<?php if ($GLOBALS['user']->has_access(100)) { ?>
 		<li>
 			<a href="<?php echo conf('web_path'); ?>/admin/index.php"><?php echo _("Admin"); ?></a>
-		</li>
-		<?php if ($location['section'] == 'admin') { show_submenu($admin_items); } ?>
-		<? } ?>
+		<?php 
+			if ($location['section'] == 'admin') {  
+                                if ($GLOBALS['theme']['orientation'] == 'vertical') { echo "\t</li>"; }
+                                show_submenu($admin_items);
+                                if ($GLOBALS['theme']['orientation'] != 'vertical') { echo "\t</li>"; }
+                        } // end if browse sub menu
+                        else {
+                                echo "\t</li>";
+                        }	
+		
+		} // end if access 
+		?>
 		<li>
 			<a href="<?php echo conf('web_path'); ?>/preferences.php"><?php echo _("Preferences"); ?></a>
 		</li>
 		<li>
 			<a href="<?php echo conf('web_path'); ?>/browse.php"><?php echo _("Browse"); ?></a>
-		</li>
-		<?php if ($location['section'] == 'browse') { show_submenu($browse_items); } ?>
+		<?php 
+			if ($location['section'] == 'browse') { 
+				if ($GLOBALS['theme']['orientation'] == 'vertical') { echo "\t</li>"; }
+				show_submenu($browse_items);
+				if ($GLOBALS['theme']['orientation'] != 'vertical') { echo "\t</li>"; }
+			} // end if browse sub menu
+			else {
+				echo "\t</li>";
+			}
+		?>
 		<?php if ($GLOBALS['user']->prefs['upload']) { ?>
 		<li>
 			<a href="<?php echo conf('web_path'); ?>/upload.php"><?php echo _("Upload"); ?></a>
@@ -73,6 +90,7 @@ $browse_items[] = array('title'=>'Genre','url'=>'browse.php?action=genre','activ
 			<a href="<?php echo conf('web_path'); ?>/search.php"><?php echo _("Search"); ?></a>
 		</li>
 	</ul>
+	<?php if ($GLOBALS['theme']['orientation'] != 'horizontal') { ?>
 	<ul class="subnavside">
 		<li class="subnavbutton">
 			<form name="sub_search" method="post" action="<?php echo conf('web_path'); ?>/search.php" enctype="multipart/form-data" style="Display:inline">
@@ -85,11 +103,13 @@ $browse_items[] = array('title'=>'Genre','url'=>'browse.php?action=genre','activ
 			</form>
 		</li>
 	</ul>
+	<?php } ?>
 	<ul>
 		<li>
 			<a href="<?php echo conf('web_path'); ?>/randomplay.php"><?php echo _("Random Play"); ?></a>
 		</li>
 	</ul>
+	<?php if ($GLOBALS['theme']['orientation'] != 'horizontal') { ?>
 	<ul class="subnavside">
 		<li class="subnavbutton">
 			<form name="random" method="post" enctype="multipart/form-data" action="<?php echo conf('web_path'); ?>/song.php" style="Display:inline">
@@ -122,6 +142,7 @@ $browse_items[] = array('title'=>'Genre','url'=>'browse.php?action=genre','activ
 			</form>
 		</li>
 	</ul>
+	<?php } ?>
 		<?php if (conf('use_auth')) { ?>
 			<ul><li><a href="<?php echo conf('web_path'); ?>/logout.php">Logout</a></li></ul>
 		<?php } ?>

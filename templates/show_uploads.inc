@@ -27,7 +27,7 @@ $uploads = get_uploads();
 
 if (count($uploads)) { 
 ?>
-<table class="tabledata" cellspacing="0" cellpadding="0" border="1" align="center">
+<table class="tabledata" cellspacing="0" cellpadding="0" border="1">
 <tr class="table-header">
 	<td><?php echo _('Action'); ?></td>
 	<td><?php echo _('Status'); ?></td>

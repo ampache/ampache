@@ -35,17 +35,15 @@ $location = get_location();
 <body>
 <script src="<?php echo conf('web_path'); ?>/lib/general.js" language="javascript" type="text/javascript"></script>
 
-
-<table border="0" cellpadding="0" cellspacing="0" style="margin:0px;" width="100%" >
+<div id="maincontainer">
 <!-- This is the topbar row -->
-<tr id="pageheader">
-	<td colspan="2">
-	<div style="float:left;margin-top:3px;">
+<div id="topbar">
+	<div id="topbarleft">
 	<a href="http://www.ampache.org">
         <img class="pageheader" src="<?php echo conf('web_path'); ?><?php echo conf('theme_path'); ?>/images/ampache.gif" border="0" title="Ampache: For the love of music" alt="Ampache: For the love of music" />
 	</a>
 	</div>
-		<div style="float:right;">
+	<div id="topbarright">
 			<a href="http://www.ampache.org/index.php">Ampache v.<?php echo conf('version'); ?></a><br />
 			<b><?php echo _("You are currently logged in as") . " " . $GLOBALS['user']->username; ?></b>
 			<br />
@@ -58,14 +56,12 @@ $location = get_location();
 		</select>
 		<input type="submit" value="<?php echo _("Go!"); ?>" class="button" />
 		</form>
-		</div>
-	</td>
-</tr>
+	</div>
+</div>
 <!-- This is the row for body + sidebar -->
-<tr>
+<div id="sidebar">
 	<!-- This is the sidebar -->
-	<td valign="top" class="sidebar">
 	<?php require_once(conf('prefix') . '/templates/sidebar.inc.php'); ?>
-	</td>
-	<td width="100%" valign="top" style="padding-top:10px;padding-left:10px;">
+</div>
+	<div id="content" width="100%" valign="top" style="padding-top:10px;padding-left:10px;">
 	<!-- Start Main Page -->

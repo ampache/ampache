@@ -60,7 +60,7 @@ $final_javascript .= " // END-->\n </script>";
             <input type="text" id="all_string" name="all_string" value="<?php echo scrub_out($_REQUEST['all_string']); ?>" disabled="disabled" />
 	    <?php $GLOBALS['error']->print_error('keyword'); ?>
         </td>
-        <td>&nbsp;</td>
+        <td colspan="2">&nbsp;</td>
 </tr>
 <tr class="<?php echo flip_class(); ?>">
 	<td><?php echo _("Title"); ?></td>

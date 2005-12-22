@@ -30,6 +30,10 @@
 <!--
 	body	
 		{ 
+		padding-top: 0px;
+		margin-top: 0px;
+		margin-left: 0px;
+		margin-right: 0px;
 		background: <?php echo conf('bg_color1'); ?>; 
 		font-family: <?php echo conf('font') ?>; 
 		font-size: <?php echo conf('font_size'); ?>px; 
@@ -90,109 +94,26 @@
 		font-size: <?php echo conf('font_size'); ?>px; 
 		font-weight: bold; 
 		background-color: <?php echo conf('base_color2') ?>; 
-	    	border-style: solid;
-	      	border-width: 1px;
-	        border-color: <?php echo conf('bg_color2'); ?>;
 		margin: 2px 2px 2px 2px;
+		cursor: pointer;
 		}
 	select	{ 
 		color: <?php echo conf('font_color2'); ?>; 
 		font-family: <?php echo conf('font')?>; 
 		font-size: <?php echo conf('font_size'); ?>px; 
-		background-color: <?php echo conf('base_color2') ?>; 
+		background-color: <?php echo conf('base_color2'); ?>; 
 		}
 	textarea 
-	{ 
+		{ 
+		background-color: <?php echo conf('base_color2'); ?>;
 		color: <?php echo conf('font_color2') ?>; 
 		font-family: <?php echo conf('font')?>; 
 		font-size: <?php echo conf('font_size'); ?>px; 
-	}
+		}
     .table-header
     {
         background: url(<?php echo conf('web_path'); ?><?php echo conf('theme_path'); ?>/images/ampache-light-bg.gif) <?php echo conf('base_color2')?> repeat-x;
         vertical-align: top;
-    }
-/*************** Main Menu *****************/
-    #mainmenu {
-        float: left;
-        width: 100%;
-        margin: 0;
-        padding: 0;
-        list-style: none;
-        border-top: 0px solid #000;
-        border-bottom: 0px solid #000;
-        border-right: 0px solid #000;
-        border-left: 0px solid #000;
-        background: url(<?php echo conf('web_path'); ?><?php echo conf('theme_path'); ?>/images/ampache-light-bg.gif) <?php echo conf('base_color2');?> repeat-x;
-peat-x;
-    }
-    #mainmenu li {
-        float: left;
-        margin: 0;
-        padding: 0 10px 0 10px;
-        border-right: 0px solid #000;
-        display: inline;
-        background: url(<?php echo conf('web_path'); ?><?php echo conf('theme_path'); ?>/images/ampache-light-bg.gif) <?php echo conf('base_color2');?> repeat-x;
-peat-x;
-    }
-    #mainmenu li.active {
-        background: url(<?php echo conf('web_path'); ?><?php echo conf('theme_path'); ?>/images/ampache-dark-bg.gif) <?php echo conf('base_color2');?> rep
-eat-x;
-    }
-    #mainmenu a {
-        text-decoration: none;
-    }
-    #mainmenu a:hover {
-        color: #000;
-    }
-    #mainmenu a:active {
-        color: #00a;
-    }
-/*************** END Main Menu *************/
-/*************** Admin Menu *************/
-    #adminmenu {
-        float: left;
-        width: 100%;
-        margin: 0;
-        padding: 0;
-        list-style: none;
-        border-bottom: 0px solid #000;
-        border-right: 0px solid #000;
-        border-left: 0px solid #000;
-        border-top: 0px solid #000;
-        background: url(<?php echo conf('web_path'); ?><?php echo conf('theme_path'); ?>/images/ampache-light-bg.gif) <?php echo conf('base_color2')?> repeat;
-    }
-    #adminmenu li {
-        float: left;
-        margin: 0;
-        padding: 0 20px 0 20px;
-        border-right: 0px solid #000;
-        display: inline;
-        background: url(<?php echo conf('web_path'); ?><?php echo conf('theme_path'); ?>/images/ampache-light-bg.gif) <?php echo conf('base_color2');?> repeat-x;
-    }
-    #adminmenu li.active {
-        background: url(<?php echo conf('web_path'); ?><?php echo conf('theme_path'); ?>/images/ampache-dark-bg.gif) <?php echo conf('base_color2');?> repeat-x;
-    }
-    #adminmenu a {
-        text-decoration: none;
-    }
-    #adminmenu a:hover {
-        color: #000;
-    }
-    #adminmenu a:active {
-        color: #000;
-    }
-/*************** END Main Menu *************/
-/*************** Page Header *********************/
-    #pageheader {
-        background: <?php echo conf('bg_color1');?>;
-    }
-/*************** END Page Header *****************/
-    .navitem
-    {
-        background: url(<?php echo conf('web_path'); ?><?php echo conf('theme_path'); ?>/images/ampache-light-bg.gif) <?php echo conf('base_color2')?> repeat-x;
-        vertical-align: top;
-        text-align: center;
     }
     .header1 
     { 
@@ -207,12 +128,6 @@ eat-x;
 	font-family: <?php echo conf('font'); ?>;
 	font-size: <?php echo conf('font_size') + 2; ?>px;
 	font-weight: 900;
-    }
-    .active_navitem
-    {
-        background: url(<?php echo conf('web_path'); ?><?php echo conf('theme_path'); ?>/images/ampache-dark-bg.gif) <?php echo conf('bg_color1')?> repeat-x;
-        vertical-align: top;
-        text-align: center;
     }
 	.headrow 
 		{
@@ -267,5 +182,131 @@ eat-x;
 		font-size: <?php echo conf('font_size'); ?>px; 
 		font-weight: normal; 
 		}
+	.smallbutton
+		{
+		border:0px;
+		padding-left:1px;
+		padding-right:1px;
+		font-size: <?php echo conf('font_size') - 1; ?>px;
+		}
+	.sidebar 
+		{
+		margin-left:0px;
+		margin-top:0px;
+		margin-right:0px;
+		padding-right:0px;
+		padding-top: 0px;
+		padding-left: 0px;
+		width:160px;
+		background: <?php echo conf('base_color2'); ?>;
+		}
+/**
+ * Div Definitions
+ * These define how the page is layed out, be careful with these as changes to them
+ * can cause drastic layout changes
+ */
+	#maincontrainer
+		{
+			margin: 0px;
+		} 	
+	#topbar
+		{
+			height: 80px;
+			background-color: <?php echo conf('bg_color1'); ?>;
+		}
+	#topbarright
+		{
+			float: right;
+		}
+	#topbarleft
+		{
+			float: left;
+		}
+	#sidebar
+		{ 
+		position: relative;
+		clear: right;
+		height: 100%;
+		margin-left: 0px; 
+		float: left;
+		width: 100%;
+		list-style: none;
+		}
+
+	#sidebar ul
+		{
+		margin-left:0px;
+		margin-top:0px;
+		margin-bottom:0px;
+		margin-right: 3px;
+		padding: 0px;
+		list-style-type: none;
+		font-family: verdana, arial, Helvetica, sans-serif;
+		}
+
+	#sidebar li 
+		{ 
+	        float: left;
+	        margin: 0;
+		margin-left:2px;
+	        padding: 0 3px 0 0px;
+	        display: inline;
+		}
+
+	#sidebar a, .navbutton
+		{
+		padding: 5px 5px;
+		color: <?php echo conf('font_color2'); ?>;
+		background-color: <?php echo conf('row_color3'); ?>;
+		text-decoration: none;
+		}
+
+	#sidebar a:hover
+		{
+		color: <?php echo conf('font_color1'); ?>;
+		background-color: <?php echo conf('row_color1'); ?>;
+		text-decoration: none;
+		}
+	#sidebar ul ul {
+		width: 100%;
+		position: absolute;
+		left: 0;
+		top: 20px;
+		margin: 0;
+		padding: 0;
+		white-space: nowrap;
+		}	
+	
+	#sidebar ul ul li { 
+		padding: 2px;
+		margin: 0;
+		border: 0;
+		}
+
+	#sidebar ul ul a, .subnavbutton
+		{
+		display: block;
+		padding: 3px 3px 3px 3px;
+		color: <?php echo conf('font_color2'); ?>;
+		background-color: <?php echo conf('row_color2'); ?>;
+		text-decoration: none;
+		}
+
+	#sidebar ul ul a:hover
+		{
+		color: <?php echo conf('font_color1'); ?>;
+		background-color: <?php echo conf('row_color1'); ?>;
+		text-decoration: none;
+		}
+	#content
+		{ 
+		float: left;	
+		margin-left:0px;
+		margin-top: 35px;
+		}
+/**
+ * End Div Definitions
+ * This is the end of the main structure def's
+ */
 -->
 </style>

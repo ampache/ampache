@@ -289,6 +289,7 @@ flip_class(array('odd','even'));
 
 /* Setup the Error Class */
 $error = new Error();
+$theme = get_theme(conf('theme_name'));
 
 if (! preg_match('/update\.php/', $_SERVER['PHP_SELF'])) {
 	$update = new Update();

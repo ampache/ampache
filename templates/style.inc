@@ -95,7 +95,6 @@
 		font-weight: bold; 
 		background-color: <?php echo conf('base_color2') ?>; 
 		margin: 2px 2px 2px 2px;
-		cursor: pointer;
 		}
 	select	{ 
 		color: <?php echo conf('font_color2'); ?>; 
@@ -261,6 +260,7 @@
 		padding-left:1px;
 		padding-right:1px;
 		font-size: <?php echo conf('font_size') - 1; ?>px;
+		cursor: pointer;
 		}
 	.sidebar 
 		{
@@ -273,42 +273,74 @@
 		width:160px;
 		background: <?php echo conf('base_color2'); ?>;
 		}
-	
-	#sidecontainer 
+/**
+ * Div Definitions
+ * These define how the page is layed out, be careful with these as changes to them
+ * can cause drastic layout changes
+ */
+	#maincontrainer
+		{
+			margin: 0px;
+		} 	
+	#topbar
+		{
+			height: 80px;
+			background-color: #888888;
+		}
+	#topbarright
+		{
+			float: right;
+		}
+	#topbarleft
+		{
+			float: left;
+		}
+	#sidebar
 		{ 
+			clear: both;
+			height: 100%;
 			margin-left: 0px; 
+			margin-top:0px;
+			float: left;
+			width: 170px;
 		}
 
-	#navcontainer ul
+	#sidebar ul
 		{
-		margin: 0;
-		padding: 0;
+		margin-left:0px;
+		margin-top:0px;
+		margin-bottom:0px;
+		margin-right: 10px;
+		padding: 0px;
 		list-style-type: none;
 		font-family: verdana, arial, Helvetica, sans-serif;
 		}
 
-	#navcontainer li { margin: 0 0 1px 0; }
+	#sidebar li { 
+		margin: 0 0 1px 0;  
+		padding-top:0px;
+		padding-bottom:0px;
+	}
 
-	#navcontainer a, .navbutton
+	#sidebar a, .navbutton
 		{
 		display: block;
 		padding: 5px 10px;
-		width: 140px;
 		color: #000;
 		background-color: #666;
 		text-decoration: none;
 		}
 
-	#navcontainer a:hover
+	#sidebar a:hover
 		{
 		color: #000;
 		background-color: #ccc;
 		text-decoration: none;
 		}
 		
-	#navcontainer ul ul li { margin: 0 0 1px 0; }
+	#sidebar ul ul li { margin: 0 0 1px 0; }
 
-	#navcontainer ul ul a, .subnavbutton
+	#sidebar ul ul a, .subnavbutton
 		{
 		display: block;
 		padding: 5px 5px 5px 30px;
@@ -318,11 +350,20 @@
 		text-decoration: none;
 		}
 
-	#navcontainer ul ul a:hover
+	#sidebar ul ul a:hover
 		{
 		color: #000;
 		background-color: #ddd;
 		text-decoration: none;
 		}
+	#content
+		{ 
+		float: left;	
+		margin-left:0px;
+		}
+/**
+ * End Div Definitions
+ * This is the end of the main structure def's
+ */
 -->
 </style>
