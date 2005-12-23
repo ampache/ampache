@@ -340,7 +340,7 @@
 		
 	#sidebar ul ul li { margin: 0 0 1px 0; }
 
-	#sidebar ul ul a, .subnavbutton
+	#sidebar ul ul a
 		{
 		display: block;
 		padding: 5px 5px 5px 30px;
@@ -348,6 +348,20 @@
 		color: #000;
 		background-color: #ccc;
 		text-decoration: none;
+		}
+
+	/*#navcontainer ul li
+		{
+		float:left; 
+		}
+*/
+	.subnavbutton 
+		{
+		background-color: #ddd;
+		padding: 5px 5px 5px 30px;
+		text-decoration: none;
+		color: #000;
+		width: 125px;
 		}
 
 	#sidebar ul ul a:hover

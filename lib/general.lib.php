@@ -468,13 +468,15 @@ function scrub_in($str) {
 /*!
        @function batch_ok()
        @discussion return boolean if user can batch download
+       //FIXME: This needs to be fixed, it shouldn't be an independent function
+       //FIXME: It should reference a central one maybe the access object? 
 */
 function batch_ok( ) {
-	global $user;
+
 	// i check this before showing any link
 	// should make it easy to tie to a new pref if you choose to add it
-	if (conf('allow_zip_download')) { 
-		return( $user->prefs['download'] );
+	if (conf('allow_zip_download') AND $GLOBALS['user']->has_access(25)) { 
+		return( $GLOBALS['user']->prefs['download'] );
 	} // if allowed zip downloads
 
 	return false;

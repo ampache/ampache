@@ -4,6 +4,7 @@
 
 --------------------------------------------------------------------------
   v.3.3.2-Alpha4 
+  	- Added initial Italian translation (Thx Michele)
   	- Updated Burgundy theme to take advantage of div format so that 
 		it acts like the old 'horizontal' menu
   	- Introduced new 'vertical' interface that uses <divs>
