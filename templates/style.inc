@@ -350,18 +350,18 @@
 		text-decoration: none;
 		}
 
-	/*#navcontainer ul li
+	#navcontainer ul li
 		{
 		float:left; 
+		width:100%;
 		}
-*/
+
 	.subnavbutton 
 		{
 		background-color: #ddd;
-		padding: 5px 5px 5px 30px;
+		text-align:center;
 		text-decoration: none;
 		color: #000;
-		width: 125px;
 		}
 
 	#sidebar ul ul a:hover

@@ -4,6 +4,9 @@
 
 --------------------------------------------------------------------------
   v.3.3.2-Alpha4 
+  	- Fixed Classic Theme view in IE (had spaces)
+	- Fixed permission bug with guest users when batch download was
+		enabled
   	- Added initial Italian translation (Thx Michele)
   	- Updated Burgundy theme to take advantage of div format so that 
 		it acts like the old 'horizontal' menu
