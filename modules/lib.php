@@ -125,43 +125,6 @@ function show_genre_pulldown ($genre, $complete, $lines= "'10' multiple='multipl
 
 } // show_genre_pulldown()
 
-/**
- * show_catalog_pulldown
- * This has been changed, first is the name of the 
- * dropdown select, the second is the style to be applied
- *
- */
-
-function show_catalog_pulldown ($name='catalog',$style) {
-	
-	
-	// find the genres we have in use
-        $sql = "SELECT id,name FROM catalog ORDER BY name";
-
-	$db_result = mysql_query($sql, dbh());
-
-	echo "\n<select name=\"" . $name . "\" style=\"" . $style . "\">\n";
-
-	echo "  <option value=\"-1\" selected=\"selected\">All</option>\n";
-
-	while ( $r = mysql_fetch_row($db_result) ) 
-	{
-		// $r[0] = genre id
-		$catalog_name = htmlspecialchars($r[1]);
-
-		if ( $catalog == $r[0] ) 
-		{
-			echo "  <option value=\"${r[0]}\" selected=\"selected\">$catalog_name</option>\n";
-		}
-		else
-		{
-			echo "  <option value=\"${r[0]}\">$catalog_name</option>\n";
-		}
-	}
-	echo "\n</select>\n";
-} // show_catalog_pulldown()
-
-
 /*
  * update_counter()
  *
