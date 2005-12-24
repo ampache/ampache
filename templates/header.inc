@@ -63,5 +63,5 @@ $location = get_location();
 	<!-- This is the sidebar -->
 	<?php require_once(conf('prefix') . '/templates/sidebar.inc.php'); ?>
 </div>
-	<div id="content" style="padding-top:10px;padding-left:10px;width='100%'; valign='top'; ">
+	<div id="content">
 	<!-- Start Main Page -->

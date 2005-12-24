@@ -320,7 +320,7 @@
 		margin: 0 0 1px 0;  
 		padding-top:0px;
 		padding-bottom:0px;
-	}
+		}
 
 	#sidebar a, .navbutton
 		{
@@ -372,8 +372,10 @@
 		}
 	#content
 		{ 
-		float: left;	
 		margin-left:0px;
+		padding-top:10px;
+		padding-left:10px;
+		vertical-align:top; 
 		}
 /**
  * End Div Definitions
