@@ -567,8 +567,8 @@ function get_random_songs( $options, $matchlist) {
         else {
                 $query = "SELECT id FROM song WHERE $where ORDER BY RAND() " . $options['limit'];
         }
-	echo $query;
-        $db_result = mysql_query($query, $dbh);
+        
+	$db_result = mysql_query($query, $dbh);
 
         $songs = array();
 
