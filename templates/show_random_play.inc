@@ -23,7 +23,7 @@
 
 ?>
 <form name="random" method="post" enctype="multipart/form-data" action="<?php echo conf('web_path'); ?>/song.php">
-<table class="border" border="0" cellpadding="3" cellspacing="1" width="100%">
+<table class="border" border="0" cellpadding="3" cellspacing="1">
 <tr class="table-header">
 	<td colspan="4"><?php echo _("Play Random Selection"); ?></td>
 </tr>
@@ -65,7 +65,7 @@
 		<tr class="even">
                 	<td nowrap="nowrap"><?php echo _("from catalog"); ?></td>
 			<td>
-			<?php show_catalog_pulldown( -1, 0); ?>
+			<?php show_catalog_pulldown('catalog',''); ?>
 		        </td>
 		</tr>
 		<tr>

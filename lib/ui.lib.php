@@ -987,6 +987,36 @@ function show_artist_pulldown ($artist_id,$select_name='artist') {
 } // show_artist_pulldown
 
 /**
+ * show_catalog_pulldown
+ * This has been changed, first is the name of the
+ * dropdown select, the second is the style to be applied
+ *
+ */
+function show_catalog_pulldown ($name='catalog',$style) {
+
+        $sql = "SELECT id,name FROM catalog ORDER BY name";
+        $db_result = mysql_query($sql, dbh());
+
+        echo "\n<select name=\"" . $name . "\" style=\"" . $style . "\">\n";
+
+        echo "<option value=\"-1\">All</option>\n";
+
+        while ($r = mysql_fetch_assoc($db_result)) {
+                $catalog_name = scrub_out($r['name']);
+
+                if ( $catalog == $r['id'] ) {
+                        echo "  <option value=\"" .$r['id'] . "\" selected=\"selected\">$catalog_name</option>\n";
+                }
+                else {
+                        echo "  <option value=\"" . $r['id'] . "\">$catalog_name</option>\n";
+                }
+        }
+        echo "\n</select>\n";
+
+} // show_catalog_pulldown
+
+
+/**
  * show_submenu
  * This shows the submenu mojo for the sidebar, and I guess honestly anything
  * else you would want it to... takes an array of items which have ['url'] ['title']

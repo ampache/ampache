@@ -512,7 +512,6 @@ function set_memory_limit($new_limit) {
 function get_random_songs( $options, $matchlist) {
 
         $dbh = dbh();
-
         /* Define the options */
         $limit          = $options['limit'];
 
@@ -532,7 +531,7 @@ function get_random_songs( $options, $matchlist) {
                                 }
                                 $where .= " ) ";
                         }
-                        else {
+                        elseif (strlen($value)) {
                                 $value = sql_escape($value);
                                 $where .= " AND $type='$value' ";
                         }
@@ -568,6 +567,7 @@ function get_random_songs( $options, $matchlist) {
         else {
                 $query = "SELECT id FROM song WHERE $where ORDER BY RAND() " . $options['limit'];
         }
+	echo $query;
         $db_result = mysql_query($query, $dbh);
 
         $songs = array();
