@@ -36,8 +36,8 @@
  *	@param $text		The details of the message
  */
 function show_confirmation($title,$text,$next_url) {
-	
-	if (substr_count($next_url,conf('web_path'))) { 
+
+	if (substr_count($next_url,conf('web_path'))) {
 		$path = $next_url;
 	}
 	else {
@@ -52,9 +52,9 @@ function show_confirmation($title,$text,$next_url) {
  * set_preferences
  * legacy function...
  * @todo Remove References
- * @deprecated 
+ * @deprecated
  */
-function set_preferences() { 
+function set_preferences() {
 
 	get_preferences();
 	return true;
@@ -72,14 +72,14 @@ function get_preferences($username=0) {
 		" AND user_preference.preference = preferences.id AND preferences.type='system'";
 	$db_results = mysql_query($sql, dbh());
 
-	while ($r = mysql_fetch_object($db_results)) { 
+	while ($r = mysql_fetch_object($db_results)) {
 		$results[$r->name] = $r->value;
 	} // end while sys prefs
 
 	conf($results, 1);
 
 	unset($results);
-	
+
 	if (!$username) { $username = $_SESSION['userdata']['username']; }
 
 	$user = new User($username);
@@ -88,7 +88,7 @@ function get_preferences($username=0) {
 		" AND user_preference.preference=preferences.id";
 	$db_results = mysql_query($sql, dbh());
 
-	while ($r = mysql_fetch_object($db_results)) { 
+	while ($r = mysql_fetch_object($db_results)) {
 		$results[$r->name] = $r->value;
 	}
 
@@ -108,7 +108,7 @@ function flip_class($array=0) {
 
 	static $classes = array();
 
-	if ($array) { 
+	if ($array) {
 		$classes = $array;
 	}
 	else {
@@ -123,11 +123,11 @@ function flip_class($array=0) {
  * Clears the now playing information incase something has
  *		gotten stuck in there
  */
-function clear_now_playing() { 
+function clear_now_playing() {
 
 	$sql = "DELETE FROM now_playing";
 	$db_results = mysql_query($sql, dbh());
-	
+
 	return true;
 
 } // clear_now_playing
@@ -139,37 +139,37 @@ function clear_now_playing() {
 function show_tool_box ($title, $items) {
 
         include(conf('prefix') . "/templates/tool_box.inc");
-	
+
 }// show_tool_box
 
 /**
  *  show_box
  * shows a generic box
  */
-function show_box($title,$items) { 
+function show_box($title,$items) {
 
 	include(conf('prefix') . "/templates/show_box.inc");
 
 } // show_box
 
-/**	
+/**
  *  show_menu_items
  * shows menu items
  */
 function show_menu_items ($high) {
 
         include(conf('prefix') . "/templates/menu.inc");
-	
+
 } // show_menu_items
 
-/** 
+/**
  * Show Browse Menu
  * Shows the menu used by the browse page
  * @package Web Interface
  * @cataogry Menu
  * @author Karl Vollmer
  */
-function show_browse_menu($highlight) { 
+function show_browse_menu($highlight) {
 
 	$highlight = ucfirst($highlight);
 
@@ -182,8 +182,8 @@ function show_browse_menu($highlight) {
  * checks to see if the alias _ is defined
  *	if it isn't it defines it as a simple return
  */
-if (!function_exists('_')) { 
-	function _($string) { 
+if (!function_exists('_')) {
+	function _($string) {
 
 		return $string;
 
@@ -200,7 +200,7 @@ function show_playlist_menu () {
         echo "<a href=\"" . conf('web_path') . "/playlist.php\"> " . _("View All") . "</a> | ";
 	echo "<a href=\"" . conf('web_path') . "/playlist.php?action=show_import_playlist\"> " . _("Import") . "</a>";
         echo "</span><br /><br />";
-	
+
 } // show_playlist_menu
 
 /**
@@ -216,7 +216,7 @@ function show_admin_menu ($admin_highlight) {
  * throws an error if they try to do something
  * 	that they aren't allowed to
  */
-function access_denied() { 
+function access_denied() {
 
 	echo "<br /><br /><br />";
         echo "<div class=\"fatalerror\">" . _("Error Access Denied") . "</div>\n";
@@ -238,7 +238,7 @@ function show_users () {
         $view->import_session_view();
 
         // if we are returning
-        if ($_REQUEST['keep_view']) { 
+        if ($_REQUEST['keep_view']) {
                 $view->initialize();
         }
         // If we aren't keeping the view then initlize it
@@ -247,8 +247,8 @@ function show_users () {
                 $db_results = mysql_query($sql, $dbh);
                 $total_items = mysql_num_rows($db_results);
                 if ($match != "Show_all") { $offset_limit = $_SESSION['userdata']['offset_limit']; }
-                $view = new View($sql, 'admin/users.php','fullname',$total_items,$offset_limit); 
-        } 
+                $view = new View($sql, 'admin/users.php','fullname',$total_items,$offset_limit);
+        }
 
         $db_result = mysql_query($view->sql, $dbh);
 
@@ -259,18 +259,18 @@ function show_users () {
 
 /**
  *  return_referer
- * returns the script part of the 
+ * returns the script part of the
  *	referer address passed by the web browser
  *	this is not %100 accurate
  */
-function return_referer() { 
+function return_referer() {
 
 	$web_path = substr(conf('web_path'),0,strlen(conf('web_path'))-1-strlen($_SERVER['SERVER_PORT'])) . "/";
 	$next = str_replace($web_path,"",$_SERVER['HTTP_REFERER']);
 
 	// If there is more than one :// we know it's fudged
 	// and just return the index
-	if (substr_count($next,"://") > 1) { 
+	if (substr_count($next,"://") > 1) {
 		return "index.php";
 	}
 
@@ -280,7 +280,7 @@ function return_referer() {
 
 /**
  *  show_alphabet_list
- * shows the A-Z,0-9 lists for 
+ * shows the A-Z,0-9 lists for
  *		albums and artist pages
  */
 function show_alphabet_list ($type,$script="artist.php",$selected="false",$action='match') {
@@ -295,14 +295,14 @@ function show_alphabet_list ($type,$script="artist.php",$selected="false",$actio
 		$style_name = "style_" . strtolower($l);
                 echo "<a href=\"". conf('web_path') ."/$script?action=$action&amp;match=$l\" " . ${$style_name} . ">$l</a> | \n";
         }
-	
+
 	echo " <a href=\"". conf('web_path') ."/$script?action=$action&amp;match=Browse\" $style_browse>" . _("Browse") . "</a> | \n";
         if ($script == "albums.php") {
                 echo " <a href=\"". conf('web_path') ."/$script?action=$action&amp;match=Show_missing_art\" $style_show_missing_art>" . _("Show w/o art") . "</a> | \n";
         } // if we are on the albums page
-	
+
         echo " <a href=\"". conf('web_path') ."/$script?action=$action&amp;match=Show_all\" $style_show_all>" . _("Show all") . "</a>";
-	
+
         echo "</div>\n";
 } // show_alphabet_list
 
@@ -312,7 +312,7 @@ function show_alphabet_list ($type,$script="artist.php",$selected="false",$actio
  * @package General
  * @catagory Display
  */
-function show_alphabet_form($match, $text, $action) { 
+function show_alphabet_form($match, $text, $action) {
 
 	require (conf('prefix') . '/templates/show_alphabet_form.inc.php');
 
@@ -345,7 +345,7 @@ function truncate_with_ellipse($text, $max=27) {
 
 } // truncate_with_ellipse
 
-/** 
+/**
  * truncate_with_ellipsis
  * Correct Spelling function that truncates text to a specific lenght
  * and appends three dots, or an ellipsis to the end
@@ -353,7 +353,7 @@ function truncate_with_ellipse($text, $max=27) {
  * @catagory General
  * @author Nedko Arnaudov
  */
-function truncate_with_ellipsis($text, $max=27) { 
+function truncate_with_ellipsis($text, $max=27) {
 
         /* If we want it to be shorter than three, just throw it back */
         if ($max > 3) {
@@ -385,14 +385,14 @@ function truncate_with_ellipsis($text, $max=27) {
 function show_footer() {
 
 	require_once(conf('prefix') . '/templates/footer.inc');
-	
+
 } // show_footer
 
 /**
  *  show_now_playing
  * shows the now playing template
  */
-function show_now_playing() { 
+function show_now_playing() {
 
         $dbh = dbh();
         $web_path = conf('web_path');
@@ -408,7 +408,7 @@ function show_now_playing() {
  * @author Terry
  * @todo Fix so that it recieves an array of values for the user reg rather than seperate
  */
-function show_user_registration ($values=array()) { 
+function show_user_registration ($values=array()) {
 
 	require (conf('prefix') . "/templates/show_user_registration.inc.php");
 
@@ -420,19 +420,19 @@ function show_user_registration ($values=array()) {
  * @package Web Interface
  * @catagory Display
  */
-function show_edit_profile($username) { 
+function show_edit_profile($username) {
 
 	$this_user = new User($username);
 
 	require (conf('prefix') . "/templates/show_user.inc.php");
-	
+
 } // show_edit_profile
 
 /**
  *  show_playlist
  * this shows the current playlist
  */
-function show_playlist($playlist_id) { 
+function show_playlist($playlist_id) {
 
 	/* Create the Playlist */
 	$playlist = new Playlist($playlist_id);
@@ -449,10 +449,10 @@ function show_playlist($playlist_id) {
 
 /**
  *  show_play_selected
- * this shows the playselected/add to playlist 
+ * this shows the playselected/add to playlist
  *	box, which includes a little javascript
  */
-function show_play_selected() { 
+function show_play_selected() {
 
 	require (conf('prefix') . "/templates/show_play_selected.inc.php");
 
@@ -468,7 +468,7 @@ function get_now_playing() {
 
 	$sql = "SELECT song_id,user FROM now_playing ORDER BY start_time DESC";
 	$db_results = mysql_query($sql, dbh());
-	while ($r = mysql_fetch_assoc($db_results)) { 
+	while ($r = mysql_fetch_assoc($db_results)) {
 		$song = new Song($r['song_id']);
 		$song->format_song();
 		$np_user = new User($r['user']);
@@ -477,8 +477,8 @@ function get_now_playing() {
 
 	$myMpd = init_mpd();
 
-	if (is_object($myMpd) AND conf('mpd_method') == 'file') { 
-		$sql = "SELECT song.id FROM song WHERE file = \"". conf('mpd_dir') . "/" . 
+	if (is_object($myMpd) AND conf('mpd_method') == 'file') {
+		$sql = "SELECT song.id FROM song WHERE file = \"". conf('mpd_dir') . "/" .
 			$myMpd->playlist[$myMpd->current_track_id]['file']. "\"";
 
 	        $db_results = @mysql_query($sql,dbh());
@@ -496,10 +496,238 @@ function get_now_playing() {
 
 	} // end if we have a MPD object
 
-	
+
 	return $results;
 
 } // get_now_playing
+
+/**
+ *  get_all_ratings() - Implemented by SoundOfEmotion
+ *
+ *  Concept design to show a user ALL of his ratings, and sort by
+ *  highest to lowest (will be sortable by multiple fields later)
+ *
+ */
+
+function get_all_ratings($rate_user,$sort_by) {;
+
+  $sql       = "SELECT * FROM ratings WHERE user='$rate_user' AND object_type='$sort_by' ORDER BY user_rating DESC";
+  $db_result = mysql_query( $sql, dbh() );
+
+  while($row = mysql_fetch_assoc($db_result))
+  {
+      $type=$row['object_type'];
+      $id=$row['object_id'];
+      $rating=$row['user_rating'];
+      $art_image="<img border=\"0\" src=\"" . conf('web_path') . "/albumart.php?id=" . $id . "\" alt=\"Album Art\" height=\"100\" />";
+      $art_link="<a href='http://24.4.10.233/ampache/albums.php?action=show&album=$id'>$art_image</a>";
+      $artist_name=$album->f_artist;
+      $album_name=$album->name;
+	if($type=="album"){
+      echo ("<table width=400>" .
+            "<tr>" .
+            "<td width=100 align=center>$artLink</td>" .
+            "<td width=* align=left>".ucfirst($type)." #$id<br>" .
+            "Rating: $rating</td>" .
+            "</tr>" .
+            "</table>");
+    }
+    else{
+      $artistLink="<a href='http://24.4.10.233/ampache/artists.php?action=show&artist=$id'>Artist $id</a>";
+      echo ("<table width=150>" .
+            "<tr>" .
+            "<td align=left>$artist_link<br>" .
+            "Rating: $rating" .
+            "</td>" .
+            "</tr>" .
+            "</table>");
+    }
+
+  }
+
+} // get_artist_rating()
+
+/**
+ *  get_artist_rating() - Implemented by SoundOfEmotion
+ *
+ * given an artist id (string) it will return:
+ *  false: if there is no current rating
+ *  true: if there is a rating and will then display the rating
+ *
+ */
+
+function get_artist_rating($artist_id, $rate_user) {
+
+  $artist_id = sql_escape($artist_id);
+
+  $sql       = "SELECT `user_rating` FROM ratings WHERE user='$rate_user' AND object_type='artist' AND object_id='$artist_id'";
+  $db_result = mysql_query( $sql, dbh() );
+  $r         = mysql_fetch_row( $db_result );
+
+  if ( $r[0] ) {
+    return ($r[0]);
+  }
+
+  else{
+    return "NA";
+  }
+} // get_artist_rating()
+
+/**
+ *  get_album_rating() - Implemented by SoundOfEmotion
+ *
+ * given an album id (string) it will return:
+ *  false: if there is no current rating
+ *  true: if there is a rating and will then display
+ *  the rating
+ *
+ */
+
+function get_album_rating($album_id, $rate_user) {
+
+  $album_id = sql_escape($album_id);
+
+  $sql       = "SELECT `user_rating` FROM ratings WHERE user='$rate_user' AND object_type='album' AND object_id='$album_id'";
+  $db_result = mysql_query( $sql, dbh() );
+  $r         = mysql_fetch_row( $db_result );
+
+  if ( $r[0] ) {
+    return ($r[0]);
+  }
+
+  else {
+    return "NA";
+  }
+} // get_album_rating()
+
+/**
+ *  get_song_rating() - Implemented by SoundOfEmotion
+ *
+ * given a song id (string) it will return:
+ *  false: if there is no current rating
+ *  true: if there is a rating and will then display the rating
+ *
+ */
+
+function get_song_rating($song_id, $rate_user) {
+
+  $song_id = sql_escape($song_id);
+
+  $sql       = "SELECT `user_rating` FROM ratings WHERE user='$rate_user' AND object_type='song' AND object_id='$song_id'";
+  $db_result = mysql_query( $sql, dbh() );
+  $r         = mysql_fetch_row( $db_result );
+
+  if ( $r[0] ) {
+    return ($r[0]);
+  }
+
+  else{
+    return "NA";
+  }
+} // get_song_rating()
+
+/*
+ * Artist Ratings - Implemented by SoundOfEmotion
+ *
+ * set_artist_rating()
+ *
+ * check to see if the ratings exist
+ * if they do: update them
+ * if they don't: insert them
+ *
+ */
+
+function set_artist_rating($artist_id, $rate_user, $rating) {
+  $artist_id = sql_escape($artist_id);
+
+  $sql	     = "SELECT * FROM ratings WHERE user='$rate_user' AND object_type='artist' AND object_id='$artist_id'";
+  $db_result = mysql_query( $sql, dbh() );
+  $r         = mysql_fetch_row( $db_result );
+
+  if($r[0]) {
+    $sql2       = "UPDATE ratings SET user_rating='$rating' WHERE object_id='$artist_id' AND user='$rate_user' AND object_type='artist'";
+    $db_result2 = mysql_query( $sql2, dbh() );
+    $r          = mysql_fetch_row( $db_result2 );
+    return mysql_insert_id( dbh() );
+  }
+  else if(!$r[0]) {
+    $sql2       = "INSERT INTO ratings (id,user,object_type,object_id,user_rating) ".
+                  "VALUES ('','$rate_user','artist','$artist_id','$rating')";
+    $db_result2 = mysql_query( $sql2, dbh() );
+    return mysql_insert_id(dbh() );
+  }
+  else{
+    return "NA";
+  }
+} // set_artist_rating()
+
+/*
+ * Album Ratings - Implemented by SoundOfEmotion
+ *
+ * set_album_rating()
+ *
+ * check to see if the ratings exist
+ * if they do: update them
+ * if they don't: insert them
+ *
+ */
+
+function set_album_rating($album_id, $rate_user, $rating) {
+  $album_id = sql_escape($album_id);
+
+  $sql       = "SELECT * FROM ratings WHERE user='$rate_user' AND object_type='album' AND object_id='$album_id'";
+  $db_result = mysql_query( $sql, dbh() );
+  $r         = mysql_fetch_row( $db_result );
+
+  if($r[0]) {
+    $sql2       = "UPDATE ratings SET user_rating='$rating' WHERE object_id='$album_id' AND user='$rate_user' AND object_type='album'";
+    $db_result2 = mysql_query( $sql2, dbh() );
+    return mysql_insert_id( dbh() );
+  }
+  else if(!$r[0]) {
+    $sql2       = "INSERT INTO ratings (id,user,object_type,object_id,user_rating) ".
+                  "VALUES ('','$rate_user','album','$album_id','$rating')";
+    $db_result2 = mysql_query( $sql2, dbh() );
+    return mysql_insert_id( dbh() );
+  }
+  else{
+    return "NA";
+  }
+} // set_album_rating()
+
+/*
+ * Song Ratings - Implemented by SoundOfEmotion
+ *
+ * set_song_rating()
+ *
+ * check to see if the ratings exist
+ * if they do: update them
+ * if they don't: insert them
+ *
+ */
+
+function set_song_rating($song_id, $rate_user, $rating) {
+  $song_id = sql_escape($song_id);
+
+  $sql       = "SELECT * FROM ratings WHERE user='$rate_user' AND object_type='song' AND object_id='$song_id'";
+  $db_result = mysql_query( $sql, dbh() );
+  $r         = mysql_fetch_row( $db_result );
+
+  if($r[0]){
+    $sql2       = "UPDATE ratings SET user_rating='$rating' WHERE object_id='$song_id' AND user='$rate_user' AND object_type='song'";
+    $db_result2 = mysql_query( $sql2, dbh() );
+    return mysql_insert_id( dbh() );
+  }
+  else if(!$r[0]){
+    $sql2       = "INSERT INTO ratings (id,user,object_type,object_id,user_rating) ".
+                  "VALUES ('','$rate_user','song','$song_id','$rating')";
+    $db_result2 = mysql_query( $sql2, dbh() );
+    return mysql_insert_id( dbh() );
+  }
+  else{
+    return "NA";
+  }
+} // set_song_rating()
 
 /**
  *  show_clear
@@ -508,7 +736,7 @@ function get_now_playing() {
  * @catagory Hack-o-Rama
  * @author Karl Vollmer
  */
-function show_clear() { 
+function show_clear() {
 
 	echo "\n<br style=\"clear:both;\" />\n";
 
@@ -519,7 +747,7 @@ function show_clear() {
  *	adds page footer including html and body end tags
  *	@param $menu			menu item to highlight
  *	@param $admin_menu		admin menu item to highlight
- *	@param $display_menu		display menu or not (1 on 0 off) 
+ *	@param $display_menu		display menu or not (1 on 0 off)
  * 	@package Web Interface
  * 	@catagory Display
  */
@@ -531,7 +759,7 @@ function show_page_footer($menu="Home", $admin_menu='', $display_menu=0) {
 		} // end if admin
 
 		show_menu_items($menu);
-		
+
 	} // end if
 
 	show_template('footer');
@@ -540,13 +768,13 @@ function show_page_footer($menu="Home", $admin_menu='', $display_menu=0) {
 
 /**
  * 	Show All Popular
- * 	This functions shows all of the possible global popular tables, this is basicly a top X where X is 
+ * 	This functions shows all of the possible global popular tables, this is basicly a top X where X is
  * 	set on a per user basis
  *	@package Web Interface
  *	@catagory Display
  *	@author Karl Vollmer
  */
-function show_all_popular() { 
+function show_all_popular() {
 
 	$artists 	= get_global_popular('artist');
 	$albums		= get_global_popular('album');
@@ -557,7 +785,7 @@ function show_all_popular() {
 
 } // show_all_popular
 
-/** 
+/**
  * 	Show All Recent
  * 	This function shows all of the possible "Newest" tables. The number of newest is pulled from the users
  * 	popular threshold
@@ -565,7 +793,7 @@ function show_all_popular() {
  *	@catagory Display
  *	@author Karl Vollmer
  */
-function show_all_recent() { 
+function show_all_recent() {
 
 	$artists	= get_newest('artist');
 	$albums		= get_newest('album');
@@ -576,18 +804,18 @@ function show_all_recent() {
 
 /**
  * show_local_catalog_info
- * Shows the catalog stats 
+ * Shows the catalog stats
  * @package Web INterface
  * @catagory Display
  */
 function show_local_catalog_info() {
 
         $dbh = dbh();
-	
+
 	/* Before we display anything make sure that they have a catalog */
 	$query = "SELECT * FROM catalog";
 	$db_results = mysql_query($query, $dbh);
-	if (!mysql_num_rows($db_results)) { 
+	if (!mysql_num_rows($db_results)) {
 		$items[] = "<span align=\"center\" class=\"error\">" . _("No Catalogs Found!") . "</span><br />";
 		$items[] = "<a href=\"" . conf('web_path') . "/admin/catalog.php?action=show_add_catalog\">" ._("Add a Catalog") . "</a>";
 		show_info_box(_("Catalog Statistics"),'catalog',$items);
@@ -640,7 +868,7 @@ function show_local_catalog_info() {
         }
 
 	require(conf('prefix') . "/templates/show_local_catalog_info.inc.php");
-	
+
 } // show_local_catalog_info
 
 /*!
@@ -652,20 +880,20 @@ function show_local_catalog_info() {
 function img_resize($image,$size,$type){
 
 	/* Make sure they even want us to resize it */
-	if (!conf('resize_images')) { 
+	if (!conf('resize_images')) {
 		return false;
 	}
 
 	/* First check for php-gd */
 	$info = gd_info();
 
-	if ($type == 'jpg' AND !$info['JPG Support']) { 
-		return false; 
-	}
-	elseif ($type == 'png' AND !$info['PNG Support']) { 
+	if ($type == 'jpg' AND !$info['JPG Support']) {
 		return false;
 	}
-	elseif ($type == 'gif' AND !$info['GIF Create Support']) { 
+	elseif ($type == 'png' AND !$info['PNG Support']) {
+		return false;
+	}
+	elseif ($type == 'gif' AND !$info['GIF Create Support']) {
 		return false;
 	}
 
@@ -675,12 +903,12 @@ function img_resize($image,$size,$type){
 
         $new_w = $size['width'];
         $new_h = $size['height'];
-        
+
 	$img = imagecreatetruecolor($new_w,$new_h);
         imagecopyresampled($img,$src,0,0,0,0,$new_w,$new_h,$width,$height);
-        
+
         // determine image type and send it to the client
-	switch ($type) { 
+	switch ($type) {
 		case 'jpg':
 		        imagejpeg($img,null,100);
 		break;
@@ -700,7 +928,7 @@ function img_resize($image,$size,$type){
  * @package Genre
  * @catagory Display
  */
-function show_genres($genres,$view) { 
+function show_genres($genres,$view) {
 
 	require (conf('prefix') . '/templates/show_genres.inc.php');
 
@@ -712,7 +940,7 @@ function show_genres($genres,$view) {
  * @package Genre
  * @catagory Display
  */
-function show_genre($genre_id) { 
+function show_genre($genre_id) {
 
 	$genre = new Genre($genre_id);
 
@@ -721,9 +949,9 @@ function show_genre($genre_id) {
 } // show_genre
 
 function show_random_play_bar() {
-	
+
 	require (conf('prefix') . '/templates/show_random_play_bar.inc.php');
-	
+
 } // show_random_play_bar()
 
 
@@ -741,7 +969,7 @@ function show_artist_pulldown ($artist_id,$select_name='artist') {
         echo "\n<select name=\"$select_name\">\n";
 
         while ($r = mysql_fetch_assoc($db_result)) {
-		
+
 		$artist = new Artist($r['id']);
 		$artist->get_count();
 
@@ -752,7 +980,7 @@ function show_artist_pulldown ($artist_id,$select_name='artist') {
                         echo "\t<option value=\"" . $artist->id . "\">". scrub_out($artist->name) ."</option>\n";
                 }
 
-        } // end while fetching artists 
+        } // end while fetching artists
 
         echo "</select>\n";
 
@@ -764,7 +992,7 @@ function show_artist_pulldown ($artist_id,$select_name='artist') {
  * else you would want it to... takes an array of items which have ['url'] ['title']
  * and ['active']
  */
-function show_submenu($items) { 
+function show_submenu($items) {
 
 	require (conf('prefix') . '/templates/subnavbar.inc.php');
 
@@ -774,37 +1002,44 @@ function show_submenu($items) {
 /**
  * get_location
  * This function gets the information about said persons currently location
- * this is used for A) Sidebar highlighting & submenu showing and B) Titlebar information 
+ * this is used for A) Sidebar highlighting & submenu showing and B) Titlebar information
  * it returns an array of information about what they are currently doing
  * Possible array elements
  * ['title']	Text name for the page
  * ['page']	actual page name
  * ['section']	name of the section we are in, admin, browse etc (submenu control)
  * @package General
- */ 
-function get_location() { 
+ */
+function get_location() {
 
 	$location = array();
 
+	if (strlen($_SERVER['PHP_SELF'])) { 
+		$source = $_SERVER['PHP_SELF'];
+	}
+	else { 
+		$source = $_SERVER['REQUEST_URI'];
+	}
+
 	/* Sanatize the $_SERVER['PHP_SELF'] variable */
-	$location['page'] = preg_replace("/^\/(.+\.php)\/?.*/","$1",$_SERVER['PHP_SELF']);
-	
-	switch ($location['page']) { 
-		case 'index.php': 
-			$location['title'] 	= 'Home'; 
+	$location['page'] = preg_replace("/^\/(.+\.php)\/?.*/","$1",$source);
+
+	switch ($location['page']) {
+		case 'index.php':
+			$location['title'] 	= 'Home';
 		break;
-		case 'search.php': 
-			$location['title'] 	= 'Search'; 		
+		case 'search.php':
+			$location['title'] 	= 'Search';
 		break;
-		case 'preferences.php': 
-			$location['title'] 	= 'Preferences'; 
+		case 'preferences.php':
+			$location['title'] 	= 'Preferences';
 		break;
-		case 'admin/index.php': 
-			$location['title'] 	= 'Admin'; 
+		case 'admin/index.php':
+			$location['title'] 	= 'Admin';
 			$location['section']	= 'admin';
 		break;
-		case 'admin/catalog.php': 
-			$location['title'] 	= 'Catalog'; 
+		case 'admin/catalog.php':
+			$location['title'] 	= 'Catalog';
 			$location['section']	= 'admin';
 		break;
 		case 'admin/users.php':
@@ -839,11 +1074,11 @@ function get_location() {
 			$location['title']	= 'Genre';
 			$location['section']	= 'browse';
 		break;
-		default: 
-			$location['title'] = ''; 
+		default:
+			$location['title'] = '';
 		break;
 	} // switch on raw page location
-	
+
 	return $location;
 
 } // get_location
