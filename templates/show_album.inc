@@ -28,7 +28,14 @@
 $row_classes = array('even','odd');
 
 //FIXME: I hate having to create this here again... LAME
-$user = new User($_SESSION['userdata']['username']);
+$user = $GLOBALS['user'];
+
+// Generate variables for the flash ratings
+//FIXME:
+$album_id=$album->id;
+$artist_id=$album->artist_id;
+$username=$user->username;
+
 ?>
 <br />
 <table class="border" cellspacing="1" cellpadding="3" border="0">
@@ -49,6 +56,12 @@ $user = new User($_SESSION['userdata']['username']);
 	?>
 	</td>
 	<td valign="top">
+		<?php
+		if (conf('ratings')) { 
+			show_rating($album->id,'artist');
+		} // end if flash
+		echo "<br />\n";
+		?>
 		<b>Actions:</b><br />
 		&nbsp;&nbsp;<a href="<?php echo  conf('web_path'); ; ?>/song.php?action=m3u&amp;album=<?php echo  $album->id; ; ?>"><?php echo  _("Play Album"); ; ?></a><br />
 		&nbsp;&nbsp;<a href="<?php echo  conf('web_path'); ; ?>/song.php?action=m3u&amp;album_random=<?php echo  $album->id; ; ?>"><?php echo  _("Play Random from Album"); ; ?></a><br />
@@ -60,7 +73,6 @@ $user = new User($_SESSION['userdata']['username']);
 		<?php if( batch_ok() ) { ?>
 	        &nbsp;&nbsp;<a href="<?php echo  conf('web_path'); ; ?>/batch.php?action=alb&amp;id=<?php echo  $album->id; ; ?>"><?php echo _("Download"); ?></a><br />
                 <?php } ?>
-						     
 	</td>
 </tr>
 </table>

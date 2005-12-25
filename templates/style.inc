@@ -280,12 +280,14 @@
  */
 	#maincontrainer
 		{
-			margin: 0px;
+			margin:0px;
 		} 	
 	#topbar
 		{
+			margin-left: 5px;
+			margin-top: 5px;
 			height: 80px;
-			background-color: #888888;
+			background-color: <?php echo conf('bg_color1'); ?>;
 		}
 	#topbarright
 		{
@@ -299,7 +301,7 @@
 		{ 
 			clear: both;
 			height: 100%;
-			margin-left: 0px; 
+			margin-left: 5px; 
 			margin-top:0px;
 			float: left;
 			width: 170px;
@@ -326,15 +328,15 @@
 		{
 		display: block;
 		padding: 5px 10px;
-		color: #000;
-		background-color: #666;
+		color: <?php echo conf('font_color1'); ?>;
+		background-color: <?php echo conf('row_color2'); ?>;
 		text-decoration: none;
 		}
 
 	#sidebar a:hover
 		{
-		color: #000;
-		background-color: #ccc;
+		color: <?php echo conf('font_color1'); ?>;
+		background-color: <?php echo conf('row_color3'); ?>;
 		text-decoration: none;
 		}
 		
@@ -345,8 +347,8 @@
 		display: block;
 		padding: 5px 5px 5px 30px;
 		width: 125px;
-		color: #000;
-		background-color: #ccc;
+		color: <?php echo conf('font_color1'); ?>;
+		background-color: <?php echo conf('row_color1'); ?>;
 		text-decoration: none;
 		}
 
@@ -358,16 +360,16 @@
 
 	.subnavbutton 
 		{
-		background-color: #ddd;
+		background-color: <?php echo conf('row_color1'); ?>;
 		text-align:center;
 		text-decoration: none;
-		color: #000;
+		color: <?php echo conf('font_color2'); ?>;
 		}
 
 	#sidebar ul ul a:hover
 		{
-		color: #000;
-		background-color: #ddd;
+		color: <?php echo conf('font_color2'); ?>;
+		background-color: <?php echo conf('row_color3'); ?>;
 		text-decoration: none;
 		}
 	#content

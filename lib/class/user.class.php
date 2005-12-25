@@ -74,11 +74,14 @@ class User {
 
 	} // get_info
 
-	/*!
-		@function get_preferences
-		@discussion gets the prefs for this specific
-			user and returns them as an array
-	*/
+	/**
+	 * get_preferences
+	 * This is a little more complicate now that we've got many types of preferences
+	 * This funtions pulls all of them an arranges them into a spiffy little array
+	 * []['title'] = ucased type name
+	 * []['prefs'] = array(array('name','display','value'));
+	 * []['admin'] = t/f value if this is an admin only section
+	 */
 	function get_preferences($user_id=0) { 
 		
 		if (!$user_id) { 
@@ -86,14 +89,25 @@ class User {
 		}
 
 		if (!conf('use_auth')) { $user_id = '-1'; }
-		
+
+		if ($user_id != '-1') { 
+			$user_limit = "AND preferences.type != 'system'";
+		}
+
+	
 		$sql = "SELECT preferences.name, preferences.description, preferences.type, user_preference.value FROM preferences,user_preference " .
-			"WHERE user_preference.user='$user_id' AND user_preference.preference=preferences.id AND preferences.type='user'";
+			"WHERE user_preference.user='$user_id' AND user_preference.preference=preferences.id $user_limit";
 		$db_results = mysql_query($sql, dbh());
 
-		while ($r = mysql_fetch_object($db_results)) { 
-			$results[] = $r;
-		}
+		/* Ok this is crapy, need to clean this up or improve the code FIXME */
+		while ($r = mysql_fetch_assoc($db_results)) { 
+			$type = $r['type'];
+			$admin = false;
+			if ($type == 'system') { $admin = true; }
+			$type_array[$type][] = array('name'=>$r['name'],'description'=>$r['description'],'value'=>$r['value']);
+			$results[$type] = array ('title'=>ucwords($type),'admin'=>$admin,'prefs'=>$type_array[$type]);
+		} // end while
+
 
 		return $results;
 	

@@ -22,6 +22,10 @@
 $web_path = conf('web_path');
 
 show_clear();
+
+// Need to set the username for the song ratings.
+$username=$GLOBALS['user']->username;
+
 ?>
 <form name="songs" method="post" enctype="multipart/form-data" action="#">
 <table border="0">
@@ -40,6 +44,9 @@ show_clear();
             <th><?php echo _("Genre"); ?></th>
             <th><?php echo _("Flag"); ?></th>
             <th><?php echo _("Action"); ?></th>
+	    <?php if (conf('ratings') || conf('ratings')=="false") { ?>
+            <th><?php echo _("Rating"); ?></th>
+            <? } ?>            
     </tr>
     <?php
     	/* FIXME: don't even get me started with how many things are wrong with this code */ 
@@ -57,7 +64,8 @@ show_clear();
             // Still needed crap
             $totalsize += $song->size;
             $totaltime += $song->time;
-	    if ($song->status == "disabled") { $text_class = "class=\"disabled\""; } 
+	    if ($song->status == "disabled") { $text_class = "class=\"disabled\""; }
+	    include("get_song_ratings.inc");
     ?>
     <tr class="<?php echo flip_class(); ?>">
             <td align="center">
@@ -119,6 +127,11 @@ show_clear();
 		| <a href="<?php echo $web_path; ?>/play/index.php?song=<?php echo $song->id; ?>&amp;uid=<?php echo $user->username . "&amp;sid=" . session_id(); ?>&amp;fn=<?php echo rawurlencode($song->f_artist_full . " - " . $song->title . "." . $song->type); ?>"><?php echo _("Direct Link"); ?></a>
 		<?php } ?>
             </td>
+            <?php if(conf('ratings')) { ?>
+            <td>
+            <?php show_rating($song->id,'song'); ?>
+	    </td>
+            <? } ?>            
           </tr>
     <?php
     }// foreach loop

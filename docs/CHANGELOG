@@ -4,6 +4,8 @@
 
 --------------------------------------------------------------------------
   v.3.3.2-Alpha4 
+  	- Updated Preferences (yet again) maybe it's better, maybe it's not
+		we'll never know...
   	- Fixed Classic Theme view in IE (had spaces)
 	- Fixed permission bug with guest users when batch download was
 		enabled

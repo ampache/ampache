@@ -75,6 +75,13 @@ function get_theme($name) {
 */
 function set_theme_colors($theme_name,$user_id) { 
 
+	
+
+	if (make_bool($user_id)) { 
+		$user_sql = "`user`='$user_id' AND";
+	}
+
+
 	/* We assume if we've made it this far we've got the right to do it 
 	   This could be dangerous but eah!
 	*/
@@ -89,7 +96,7 @@ function set_theme_colors($theme_name,$user_id) {
 
 		$results = mysql_fetch_array($db_results);
 
-		$sql = "UPDATE user_preference SET `value`='" . sql_escape($color) . "' WHERE `user`='" . $user_id . "' AND " . 
+		$sql = "UPDATE user_preference SET `value`='" . sql_escape($color) . "' WHERE $user_sql " . 
 			" preference='" . $results[0] . "'";
 		$db_results = mysql_query($sql, dbh());
 

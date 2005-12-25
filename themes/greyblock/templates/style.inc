@@ -264,5 +264,113 @@
 		font-size: <?php echo conf('font_size'); ?>px; 
 		font-weight: normal; 
 		}
+        #sidebar a:hover
+                {
+                color: #000;
+                background-color: #ccc;
+                text-decoration: none;
+                }
+                
+        #sidebar ul ul li { margin: 0 0 1px 0; }
+        
+        #sidebar ul ul a
+                {
+                display: block;
+                padding: 5px 5px 5px 30px;
+                width: 125px;
+                color: #000;
+                background-color: #ccc;
+                text-decoration: none;
+                }
+
+        #sidebar ul
+                {
+                margin-left:0px;
+                margin-top:0px;
+                margin-bottom:0px;
+                margin-right: 10px;
+                padding: 0px;
+                list-style-type: none;
+                font-family: verdana, arial, Helvetica, sans-serif;
+                }
+
+        #sidebar li {
+                margin: 0 0 1px 0;
+                padding-top:0px;
+                padding-bottom:0px;
+                }
+
+        #sidebar a, .navbutton
+                {
+                display: block;
+                padding: 5px 10px;
+                color: #000; 
+                background-color: #666;
+                text-decoration: none;
+                }
+                
+/**
+ * Div Definitions
+ * These define how the page is layed out, be careful with these as changes to them
+ * can cause drastic layout changes
+ */
+        #maincontrainer
+                {
+                        margin: 0px;
+                }
+        #topbar
+                {
+                        height: 80px;
+                        background-color: <?php echo conf('bg_color1'); ?>;
+                }
+        #topbarright
+                {
+                        float: right;
+                }
+        #topbarleft
+                {
+                        float: left;
+                }
+        #sidebar
+                {
+                        clear: both;
+                        height: 100%;
+                        margin-left: 0px;
+                        margin-top:0px;
+                        float: left;
+                        width: 170px;
+                }
+        #navcontainer ul li
+                {
+                float:left;
+                width:100%;
+                }
+
+        .subnavbutton
+                {
+                background-color: <?php echo conf('row_color1'); ?>;
+                text-align:center;
+                text-decoration: none;
+                color: #000;
+                }
+
+        #sidebar ul ul a:hover
+                {
+                color: <?php echo conf('font_color3'); ?>;
+                background-color: <?php echo conf('row_color2'); ?>;
+                text-decoration: none;
+                }
+        #content
+                {
+                margin-left:0px;
+                padding-top:10px;
+                padding-left:10px;
+                vertical-align:top;
+                }
+/**
+ * End Div Definitions
+ * This is the end of the main structure def's
+ */
+
 -->
 </style>

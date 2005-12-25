@@ -64,4 +64,5 @@ $location = get_location();
 	<?php require_once(conf('prefix') . '/templates/sidebar.inc.php'); ?>
 </div>
 	<div id="content">
+	<table><tr><td>
 	<!-- Start Main Page -->

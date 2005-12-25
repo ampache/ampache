@@ -35,65 +35,47 @@ if ($GLOBALS['user']->has_access(100) AND $user_id == '-1' AND conf('use_auth'))
 
 ?>
 
-<div class="header1">
+
+<table class="text-box">
+<tr><td>
+<span class="header1">
 	<?php echo _("Editing"); ?> <?php echo $fullname; ?> <?php echo _("preferences"); ?> 
-	<?php if ($user->has_access(100)) { ?>
+	<?php if ($GLOBALS['user']->has_access(100)) { ?>
 	[<a href="<?php echo conf('web_path'); ?>/admin/preferences.php?action=fix_preferences&amp;user_id=<?php echo $user_id; ?>"><?php echo _("Rebuild Preferences"); ?></a>]
 	<?php } ?>
-</div>
+</span>
+
+
 <form method="post" name="preferences" action="<?php echo conf('web_path'); ?><?php echo $target; ?>" enctype="multipart/form-data">
-<table class="border" border="0" cellpadding="0" cellspacing="0">
-<tr class="table-header">
-	<th><?php echo _("Preference"); ?></th>
-	<th><?php echo _("Value"); ?></th>
-	<?php if ($show_apply_to_all) { ?>
-		<th><?php echo _("Type"); ?></th>
-		<th><?php echo _("Apply to All"); ?></th>
+<table cellspacing="10">
+<tr>
+	<td valign="top"><?php show_preference_box($preferences['theme']); ?></td>
+	<?php if (isset($preferences['system'])) { ?>
+	<td valign="top"><?php show_preference_box($preferences['system']); ?></td>
+	<?php } else { ?>
+	<td valign="top">&nbsp;</td>
 	<?php } ?>
 </tr>
-<?php 
-	foreach ($preferences as $pref) { 
-		if ($pref->type == "system") { 
-			$table_break = 1;
-		}
-		if ($pref->type == "user" AND $table_break == '1') { 
-			$table_break = 0;
-		?>
-		<tr class="table-header">
-		        <td colspan="4" style="background:<?php echo conf('bg_color1'); ?>;">&nbsp;</td>
-		</tr>
-		<?php
-		} 
-?>
-<tr class="<?php echo flip_class(); ?>">
-	<td><?php echo _($pref->description); ?></td>
-       <td><table>
-               <tr>
-                       <td><?php create_preference_input($pref->name,$pref->value); ?></td>
-                       <?php if(preg_match('/Color/',$pref->description)) { ?>
-			       <td><table width="40" border="3" style="border-collapse: collapse;" bgcolor="<?php echo $pref->value;?>"><tr style="height:20px;"><td></td></tr></table></td>
-                       <?php } else { ?>
-                               <td></td>
-                               <?php } ?>
-               </tr>
-               </table>
-       </td>
- 
-	<?php if ($show_apply_to_all) { ?>
-		<td><?php echo $pref->type; ?></td>
-		<td align="center"><input type="checkbox" name="check_<?php echo $pref->name; ?>" value="1" /></td>
-	<?php } ?>
+<tr>
+	<td valign="top"><?php show_preference_box($preferences['streaming']); ?></td>
+	<td>&nbsp;</td>
 </tr>
-<?php } ?>
-<tr class="<?php echo flip_class(); ?>">
-	<td colspan="4">
-		<input class="button" type="submit" value="<?php echo _("Update Preferences"); ?>" />
-		<input type="hidden" name="action" value="update_preferences" />
-		<input type="hidden" name="user_id" value="<?php echo $user_id; ?>" />
-		&nbsp;&nbsp;
-		<input class="button" type="submit" name="action" value="<?php echo _("Cancel"); ?>" />
-	</td>
+<tr>
+	<td valign="top"><?php show_preference_box($preferences['interface']); ?></td>
+	<td>&nbsp;</td>
+</tr>
+<tr>
+	<td valign="top"><?php show_preference_box($preferences['options']); ?></td>
+	<td>&nbsp;</td>
 </tr>
 </table>
-</form>
-<br /><br />
+
+	<input class="button" type="submit" value="<?php echo _("Update Preferences"); ?>" />
+	<input type="hidden" name="action" value="update_preferences" />
+	<input type="hidden" name="user_id" value="<?php echo $user_id; ?>" />
+	&nbsp;&nbsp;
+	<input class="button" type="submit" name="action" value="<?php echo _("Cancel"); ?>" />
+
+	</form>
+</td></tr>
+</table>

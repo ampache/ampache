@@ -37,34 +37,37 @@ if (!$user->has_access(100)) {
 }
 
 $user_id = scrub_in($_REQUEST['user_id']);
+if (!$user_id) { $user_id ='-1'; } 
+
+$temp_user = new User($user_id);
+$temp_user->username = $user_id;
 
 switch(scrub_in($_REQUEST['action'])) { 
 
 	case 'user':
-		$temp_user = new User($user_id);
 		$fullname = "ADMIN - " . $temp_user->fullname;
-		$preferences = $temp_user->get_preferences($user_id);
+		$preferences = $temp_user->get_preferences();
 	break;
 	case 'update_preferences':
 		if (conf('demo_mode')) { break; }
 		update_preferences($user_id);	
 		if ($user_id != '-1') { 
-			$temp_user = new User($user_id);
 			$fullname = "ADMIN - " . $temp_user->fullname;
 			$preferences = $temp_user->get_preferences();
 		}
 		else {
-			$preferences = get_site_preferences();
+			init_preferences();
+			$GLOBALS['user']->set_preferences();
+			set_theme();
+			$preferences = $temp_user->get_preferences();
 		}
 	break;
 	case 'fix_preferences':
-		$temp_user = new User();
 		$temp_user->fix_preferences($user_id);
 		$preferences = $temp_user->get_preferences($user_id);
 	break;
 	default:
-		$user_id = -1;
-		$preferences = get_site_preferences();	
+		$preferences = $temp_user->get_preferences();
 		$fullname = "Site";
 	break;
 

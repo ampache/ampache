@@ -83,7 +83,7 @@ if (!$results['conf']['allow_stream_playback']) {
 }
 
 $results['conf']['web_path']		= $http_type . $_SERVER['HTTP_HOST'] . $results['conf']['web_path'];
-$results['conf']['version']		= '3.3.2-Alpha4 (Build 003)';
+$results['conf']['version']		= '3.3.2-Alpha4 (Build 004)';
 $results['conf']['catalog_file_pattern']= 'mp3|mpc|m4p|m4a|mp4|aac|ogg|rm|wma|asf|flac|spx';
 $results['libglue']['local_table']	= 'session';
 $results['libglue']['local_sid']	= 'id';
@@ -189,6 +189,11 @@ if (conf('allow_xmms2_playback')) {
 	require_once(conf('prefix') . "/modules/xmms2/xmms2.class.php");
 }
 
+if (conf('ratings')) { 
+	require_once(conf('prefix') . '/lib/class/rating.class.php');
+	require_once(conf('prefix') . '/lib/rating.lib.php');
+}
+
 // Classes
 require_once(conf('prefix') . "/lib/class/catalog.class.php");
 require_once(conf('prefix') . "/lib/class/stream.class.php");
@@ -248,7 +253,7 @@ srand((double) microtime() * 1000003);
 // If we don't want a session
 if (!isset($no_session) AND conf('use_auth')) { 
 	if (!check_session()) { logout(); exit(); }
-	get_preferences();
+	init_preferences();
 	set_theme();	
 	$user = new User($_SESSION['userdata']['username']);
 	$user->update_last_seen();
@@ -270,7 +275,7 @@ if (!conf('use_auth')) {
 	$_SESSION['userdata']['username'] 	= $auth['info']['username'];
 	$_SESSION['userdata']['offset_limit'] 	= $auth['info']['offset_limit'];
 	$user->set_preferences();
-	get_preferences();
+	init_preferences();
 	set_theme();
 }
 

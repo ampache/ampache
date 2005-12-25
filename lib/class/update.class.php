@@ -242,6 +242,12 @@ class Update {
 	
 		$version[] = array('version' => '332003', 'description' => $update_string);
 
+		$update_string = "- Added ID to playlist_data so that duplicate songs on the same playlist can actually work.<br />" . 
+				 "- Re-worked Preferences, again :'(, hopefully making them better.<br />" . 
+				 "- Added rating table for SoundOfEmotions Rating system.<br />";
+
+		$version[] = array('version' => '332004', 'description' => $update_string);
+
 		return $version;
 
 	} // populate_version
@@ -1221,11 +1227,68 @@ class Update {
 		@function update_332004
 		@discussion adds a id to the playlist_data field because of a problem
 			with updating the same song on the same playlist being basicly
-			impossible...Also re-works the indexing on the tables
+			impossible...Adds rating table and general clean up 
 	*/
 	function update_332004() { 
 
 		$sql = "ALTER TABLE `playlist_data` ADD `id` INT( 11 ) UNSIGNED NOT NULL AUTO_INCREMENT FIRST";
+		$db_results = mysql_query($sql, dbh());
+
+		/* Create the ratings table */
+		$sql = " CREATE TABLE `ratings` (`id` int(11) unsigned NOT NULL auto_increment," . 
+			" `user` varchar(128) NOT NULL default ''," . 
+			" `object_type` enum('artist','album','song') NOT NULL default 'artist'," . 
+			" `object_id` int(11) unsigned NOT NULL default '0'," . 
+			" `rating` enum('00','0','1','2','3','4','5') NOT NULL default '0'," . 
+			" PRIMARY KEY (`id`))";
+		$db_results = mysql_query($sql, dbh());	
+
+		/* Add an index for the object ID */
+		$sql = "ALTER TABLE `ratings` ADD INDEX ( `object_id` ) ";
+		$db_results = mysql_query($sql, dbh());
+
+		/**
+		 * Update the Type designation on the preference table 
+		 * possible types are 
+		 * system, theme, interface, options, streaming
+		 * users get everything but site, admins get the whole kit and kabodle
+		 */
+
+		/* Set the Theme preferences */
+		$sql = "UPDATE preferences SET type='theme' WHERE name='font' OR name='bg_color1' OR name='bg_color2' " . 
+				" OR name='base_color1' OR name='base_color2' OR name='font_color1' OR name='font_color2' " . 
+				" OR name='font_color3' OR name='row_color1' OR name='row_color2' OR name='row_color3' " . 
+				" OR name='error_color' OR name='theme_name' OR name='font' OR name='font_size'";
+		$db_results = mysql_query($sql, dbh());
+
+		/* Set the Interface preferences */
+		$sql = "UPDATE preferences SET type='interface' WHERE name='refresh_limit' OR name='lang' OR name='condPL' " . 
+				" OR name='popular_threshold' OR name='ellipse_threshold_album' OR name='ellipse_threshold_artist' " . 
+				" OR name='ellipse_threshold_title'";
+		$db_results = mysql_query($sql, dbh());
+
+		/* Set the Options Preferences */
+		$sql = "UPDATE preferences SET type='options' WHERE name='download' OR name='upload' OR name='quarantine' " . 
+				" OR name='direct_link' OR name='upload_dir'";
+		$db_results = mysql_query($sql, dbh()); 
+
+		/* Set the Streaming Preferences */
+		$sql = "UPDATE preferences SET type='streaming' WHERE name='sample_rate' OR name='play_type' " . 
+				" OR name='playlist_type'";
+		$db_results = mysql_query($sql, dbh());
+
+		/* Get the ID */
+		$sql = "SELECT id FROM preferences WHERE name='display_menu'";
+		$db_results = mysql_query($sql, dbh());
+
+		$result = mysql_fetch_assoc($db_results);
+
+		/* Kill the bottom menu preference as its no longer needed */
+		$sql = "DELETE FROM preferences WHERE name='display_menu'";
+		$db_results = mysql_query($sql, dbh());
+
+		/* Kill the user pref references */
+		$sql = "DELETE FROM user_preference WHERE preference='" . $result['id'] . "'";
 		$db_results = mysql_query($sql, dbh());
 
 		$this->set_version('db_version','332004');

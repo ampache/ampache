@@ -56,47 +56,60 @@ function show_confirmation($title,$text,$next_url) {
  */
 function set_preferences() {
 
-	get_preferences();
+	init_preferences();
 	return true;
 
 } // set_preferences
 
 /**
  *  get_preferences
- * reads this users preferences
+ * WTF was I thinking, this should be set or ini not get.. it doesn't get anything.. sigh anyway I'll
+ * leave this be for now.
+ * @deprecated
  */
 function get_preferences($username=0) {
 
-	/* Get System Preferences first */
-	$sql = "SELECT preferences.name,user_preference.value FROM preferences,user_preference WHERE user_preference.user='0' " .
-		" AND user_preference.preference = preferences.id AND preferences.type='system'";
-	$db_results = mysql_query($sql, dbh());
-
-	while ($r = mysql_fetch_object($db_results)) {
-		$results[$r->name] = $r->value;
-	} // end while sys prefs
-
-	conf($results, 1);
-
-	unset($results);
-
-	if (!$username) { $username = $_SESSION['userdata']['username']; }
-
-	$user = new User($username);
-
-	$sql = "SELECT preferences.name,user_preference.value FROM preferences,user_preference WHERE user_preference.user='$user->username'" .
-		" AND user_preference.preference=preferences.id";
-	$db_results = mysql_query($sql, dbh());
-
-	while ($r = mysql_fetch_object($db_results)) {
-		$results[$r->name] = $r->value;
-	}
-
-	unset($results['user'], $results['id']);
-
-	conf($results, 1);
+	init_preferences(); 
+	return true;
 
 } // get_preferences
+
+/**
+ * init_preferences
+ * Third times the charm, why rename a function once when you can do it three times :( 
+ * This grabs the preferences and then loads them into conf it should be run on page load
+ * to initialize the needed variables
+ */
+function init_preferences() { 
+
+
+        /* Get Global Preferences */
+        $sql = "SELECT preferences.name,user_preference.value FROM preferences,user_preference WHERE user_preference.user='-1' " .
+                " AND user_preference.preference = preferences.id AND preferences.type='system'";
+        $db_results = mysql_query($sql, dbh());
+
+        while ($r = mysql_fetch_assoc($db_results)) {
+		$name = $r['name'];
+                $results[$name] = $r['value'];
+        } // end while sys prefs
+
+	/* Now we need to allow the user to override some stuff that's been set by the above */
+	$username = $_SESSION['userdata']['username'];
+
+	$sql = "SELECT preferences.name,user_preference.value FROM preferences,user_preference WHERE user_preference.user='$username' " . 
+		" AND user_preference.preference = preferences.id AND preferences.type != 'system'";
+	$db_results = mysql_query($sql, dbh());
+
+	while ($r = mysql_fetch_assoc($db_results)) { 
+		$name = $r['name'];
+		$results[$name] = $r['value'];
+	} // end while
+
+	conf($results,1);
+
+	return true;
+
+} // init_preferences
 
 /**
  *  flip_class
@@ -520,7 +533,7 @@ function get_all_ratings($rate_user,$sort_by) {;
       $id=$row['object_id'];
       $rating=$row['user_rating'];
       $art_image="<img border=\"0\" src=\"" . conf('web_path') . "/albumart.php?id=" . $id . "\" alt=\"Album Art\" height=\"100\" />";
-      $art_link="<a href='http://24.4.10.233/ampache/albums.php?action=show&album=$id'>$art_image</a>";
+      $art_link="<a href='http://" . conf('web_path') . "/ampache/albums.php?action=show&album=$id'>$art_image</a>";
       $artist_name=$album->f_artist;
       $album_name=$album->name;
 	if($type=="album"){
@@ -533,7 +546,7 @@ function get_all_ratings($rate_user,$sort_by) {;
             "</table>");
     }
     else{
-      $artistLink="<a href='http://24.4.10.233/ampache/artists.php?action=show&artist=$id'>Artist $id</a>";
+      $artistLink="<a href='" . conf('web_path') . "/ampache/artists.php?action=show&artist=$id'>Artist $id</a>";
       echo ("<table width=150>" .
             "<tr>" .
             "<td align=left>$artist_link<br>" .
@@ -546,85 +559,6 @@ function get_all_ratings($rate_user,$sort_by) {;
   }
 
 } // get_artist_rating()
-
-/**
- *  get_artist_rating() - Implemented by SoundOfEmotion
- *
- * given an artist id (string) it will return:
- *  false: if there is no current rating
- *  true: if there is a rating and will then display the rating
- *
- */
-
-function get_artist_rating($artist_id, $rate_user) {
-
-  $artist_id = sql_escape($artist_id);
-
-  $sql       = "SELECT `user_rating` FROM ratings WHERE user='$rate_user' AND object_type='artist' AND object_id='$artist_id'";
-  $db_result = mysql_query( $sql, dbh() );
-  $r         = mysql_fetch_row( $db_result );
-
-  if ( $r[0] ) {
-    return ($r[0]);
-  }
-
-  else{
-    return "NA";
-  }
-} // get_artist_rating()
-
-/**
- *  get_album_rating() - Implemented by SoundOfEmotion
- *
- * given an album id (string) it will return:
- *  false: if there is no current rating
- *  true: if there is a rating and will then display
- *  the rating
- *
- */
-
-function get_album_rating($album_id, $rate_user) {
-
-  $album_id = sql_escape($album_id);
-
-  $sql       = "SELECT `user_rating` FROM ratings WHERE user='$rate_user' AND object_type='album' AND object_id='$album_id'";
-  $db_result = mysql_query( $sql, dbh() );
-  $r         = mysql_fetch_row( $db_result );
-
-  if ( $r[0] ) {
-    return ($r[0]);
-  }
-
-  else {
-    return "NA";
-  }
-} // get_album_rating()
-
-/**
- *  get_song_rating() - Implemented by SoundOfEmotion
- *
- * given a song id (string) it will return:
- *  false: if there is no current rating
- *  true: if there is a rating and will then display the rating
- *
- */
-
-function get_song_rating($song_id, $rate_user) {
-
-  $song_id = sql_escape($song_id);
-
-  $sql       = "SELECT `user_rating` FROM ratings WHERE user='$rate_user' AND object_type='song' AND object_id='$song_id'";
-  $db_result = mysql_query( $sql, dbh() );
-  $r         = mysql_fetch_row( $db_result );
-
-  if ( $r[0] ) {
-    return ($r[0]);
-  }
-
-  else{
-    return "NA";
-  }
-} // get_song_rating()
 
 /*
  * Artist Ratings - Implemented by SoundOfEmotion
@@ -1112,5 +1046,18 @@ function get_location() {
 	return $location;
 
 } // get_location
+
+/**
+ * show_preference_box
+ * This shows the preference box for the preferences pages
+ * it takes a chunck of the crazy preference array and then displays it out
+ * it does not contain the <form> </form> tags
+ */
+function show_preference_box($preferences) { 
+
+	include (conf('prefix') . '/templates/show_preference_box.inc.php');
+
+} // show_preference_box
+
 
 ?>

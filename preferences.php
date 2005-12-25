@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2004 Ampache.org
+ Copyright (c) 2001 - 2006 Ampache.org
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
@@ -32,12 +32,18 @@ require('modules/init.php');
 switch(scrub_in($_REQUEST['action'])) { 
 	case 'update_preferences':
 		$user_id = scrub_in($_REQUEST['user_id']);
+		
+		/* Do the work */
 		update_preferences($user_id);	
-		$preferences = $GLOBALS['user']->get_preferences();
+		
+		/* Reload the Preferences */
 		$GLOBALS['user']->set_preferences();
-		get_preferences();
+
+		/* Reset the conf values */
+		init_preferences();
+
+		/* Reset the Theme */
 		set_theme();
-	break;
 	default:
 		$user_id = $user->username;
 		$preferences = $user->get_preferences();		

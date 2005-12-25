@@ -147,6 +147,21 @@ id3tag_order 	= "id3v1"
 # DEFAULT true
 use_auth	= "yes"
 
+# 5 Star Ratings
+# CURRENTLY BROKEN!!!!!
+# These are disabled by default, to turn them on remove the
+# comment before the value flash requires flash player and
+# will cause longer load times. 
+# POSSIBLE VALUES: false normal
+# DEFAULT: normal
+#ratings = "normal"
+
+# This enables the ability to use custom colors for the ratings.
+# This option MUST be set in order to use custom colors.
+# DEFAULT: false, use the default colorset
+# true: use custom colors, loaded from /templates/ratings_colors.php
+#custom_ratings_colors = "false"
+
 # This options will turn on/off Demo Mode
 # If Demo mode is on you can not play songs or update your catalog
 # in other words.. leave this commented out

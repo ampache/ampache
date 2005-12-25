@@ -94,7 +94,7 @@ function update_preferences($pref_id=0) {
 	$sql = "SELECT id,name,type FROM preferences";
 
 	/* If it isn't the System Account's preferences */
-	if ($pref_id != '-1') { $sql .= " WHERE type='user'"; }
+	if ($pref_id != '-1') { $sql .= " WHERE type!='system'"; }
 	
 	$db_results = mysql_query($sql, dbh());
 
@@ -149,8 +149,12 @@ function update_preference($username,$name,$pref_id,$value) {
 
 	/* First see if they are an administrator and we are applying this to everything */
 	if ($GLOBALS['user']->has_access(100) AND make_bool($_REQUEST[$apply_check])) { 
-		$sql = "UPDATE user_preference SET `value`,'$value' WHERE preference='$pref_id'";
+		$sql = "UPDATE user_preference SET `value`='$value' WHERE preference='$pref_id'";
 		$db_results = mysql_query($sql, dbh());
+		/* Reset everyones colors! */
+		if ($name =='theme_name') { 
+			set_theme_colors($value,0);
+		}
 		return true;
 	}
 	
@@ -190,7 +194,7 @@ function has_preference_access($name) {
 			$level = 100;
 		break;
 		default:
-			$level = 1;
+			$level = 25;
 		break;
 	} // end switch key
 
@@ -290,18 +294,17 @@ function create_preference_input($name,$value) {
 			echo "</select>\n";
 		break;
 		case 'lang':
+			$languages = get_languages();
 			$var_name = $value . "_lang";
 			${$var_name} = "selected=\"selected\"";
+			
 			echo "<select name=\"$name\">\n";
-			echo "\t<option value=\"de_DE\" $de_DE_lang>" . _("German") . "</option>\n";
-			echo "\t<option value=\"en_US\" $en_US_lang>" . _("English") . "</option>\n";
-                        echo "\t<option value=\"en_GB\" $en_GB_lang>" . _("British English") . "</option>\n";
-			echo "\t<option value=\"es_ES\" $es_ES_lang>" . _("Spanish") . "</option>\n";
-			echo "\t<option value=\"fr_FR\" $fr_FR_lang>" . _("French") . "</option>\n";
-			echo "\t<option value=\"it_IT\" $it_IT_lang>" . _("Italian") . "</option>\n";
-			echo "\t<option value=\"nl_NL\" $nl_NL_lang>" . _("Dutch") . "</option>\n";
-			echo "\t<option value=\"tr_TR\" $tr_TR_lang>" . _("Turkish") . "</option>\n";
-			echo "\t<option value=\"zh_CN\" $zh_CN_lang>" . _("Simplified Chinese") . "</option>\n";
+			
+			foreach ($languages as $lang=>$name) { 
+				$var_name = $lang . "_lang";
+				
+				echo "\t<option value=\"$lang\" " . ${$var_name} . ">$name</option>\n";
+			} // end foreach
 			echo "</select>\n";
 		break;
 		case 'theme_name':

@@ -32,8 +32,7 @@ class Rating {
 	var $type; 	// The type of object we want
 
 	/* Generated vars */
-	var $rating;		// The rating as set by this user
-	var $average_rating;	// The average rating as set by all users
+	var $rating;	// The average rating as set by all users
 
 	/**
 	 * Constructor
@@ -42,19 +41,31 @@ class Rating {
 	 */
 	function Rating($id,$type) { 
 
+		$this->id 	= $id;
+		$this->type 	= $type;
 
 
+		if (intval($id) > 1) { 
+			$this->get_average();
+		}
 
 	} // Rating
 
 	/**
 	 * get_user
 	 * Get the user's rating this is based off the currently logged
-	 * in user. It sets the $this->rating and returns the value
+	 * in user. It returns the value
 	 */
-	function get_user() { 
+	function get_user($username) { 
 
+		$username = sql_escape($username);
 
+		$sql = "SELECT rating FROM ratings WHERE user='$username' AND object_id='$this->id' AND object_type='$this->type'";
+		$db_results = mysql_query($sql, dbh());
+		
+		$results = mysql_fetch_assoc($db_results);
+
+		return $results['rating'];
 
 	} // get_user
 
@@ -67,6 +78,21 @@ class Rating {
 	 */
 	function get_average() { 
 
+		$sql = "SELECT rating FROM ratings WHERE object_id='$this->id' AND object_type='$this->type'";
+		$db_results = mysql_fetch_assoc($db_results);
+
+		$i = 0;
+
+		while ($r = mysql_fetch_assoc($db_results)) { 
+			$i++;
+			$total = $r['rating'];
+		} // while we're pulling results
+
+		$average = floor($total/$i);
+
+		$this->rating = $average;
+
+		return $average;
 
 	} // get_average
 

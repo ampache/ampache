@@ -69,14 +69,10 @@ if (preg_match($subject,$_SERVER['HTTP_HOST'])) {
 </form>
 <p align="center">
 		  <a href="http://validator.w3.org/check/referer">
-		   <img style="padding:0;border:0;width:68px;height:19px"
-		        src="http://www.w3.org/Icons/valid-xhtml10"
-		        alt="Valid XHTML 1.0!" />
+		   <img style="padding:0;border:0;" src="http://www.w3.org/Icons/valid-xhtml10" alt="Valid XHTML 1.0!" />
 		 </a>
 		 <a href="http://jigsaw.w3.org/css-validator/check/referer">
-		  <img style="padding:0;border:0;width:68px;height:19px"
-		       src="http://jigsaw.w3.org/css-validator/images/vcss" 
-		       alt="Valid CSS!" />
+		  <img style="padding:0;border:0;" src="http://jigsaw.w3.org/css-validator/images/vcss" alt="Valid CSS!" />
 		 </a>
 </p>
 <?php if ($show_copyright == 1) { ?>

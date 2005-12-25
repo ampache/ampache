@@ -33,14 +33,9 @@ else {
 }
 
 show_template('header');
-show_menu_items('Stats');
-show_clear();
 ?>
 
-<div class="header1"><?php echo  $working_user->fullname; ; ?>'s Favorites:</div>
-
-<p> Below is a list of what you have been listening to the most.  You can clear these statistics
-by <a href="<?php echo conf('web_path'); ?>/user.php?action=show_edit_profile">editing your profile.</a></p>
+<span class="header1"><?php echo  $working_user->fullname; ; ?>'s Favorites:</span>
 
 <table cellpadding="5" cellspacing="5" border="0" width="100%">
 	<tr>
@@ -48,7 +43,7 @@ by <a href="<?php echo conf('web_path'); ?>/user.php?action=show_edit_profile">e
 		<?php
 			if ( $items = $working_user->get_favorites('artist') ) {
 				$items = $working_user->format_favorites($items);
-				show_info_box('Your Favorite Artists', 'artist', $items);
+				show_info_box('Favorite Artists', 'artist', $items);
 			}
 			else {
 				print("<p> Not enough data for favorite artists.</p>");
@@ -60,7 +55,7 @@ by <a href="<?php echo conf('web_path'); ?>/user.php?action=show_edit_profile">e
                 <?php
                         if ( $items = $working_user->get_favorites('song') ) { 
 				$items = $working_user->format_favorites($items);
-                                show_info_box('Your Favorite Songs', 'your_song', $items);
+                                show_info_box('Favorite Songs', 'your_song', $items);
                         }             
                         else {
                                 print("<p> Not enough data for favorite songs.</p>");
@@ -72,7 +67,7 @@ by <a href="<?php echo conf('web_path'); ?>/user.php?action=show_edit_profile">e
                 <?php
                         if ( $items = $working_user->get_favorites('album') ) { 
 				$items = $working_user->format_favorites($items);
-                                show_info_box('Your Favorite Albums', 'album', $items);
+                                show_info_box('Favorite Albums', 'album', $items);
                         }             
                         else {
                                 print("<p> Not enough data for favorite albums.</p>");
