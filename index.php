@@ -35,12 +35,8 @@ show_template('header');
 
 if (conf('refresh_limit') > 0) { show_template('javascript_refresh'); }
 $action = scrub_in($_REQUEST['action']);
-
 ?>
 
-<p style="font-size: 8pt; font-weight: bold;">
-	<?php echo _("Welcome to"); ?> <a href="http://www.ampache.org/index.php">Ampache v.<?php echo conf('version'); ?></a>
-</p>
 <!-- Big Daddy Table -->
 <table style="padding-left:5px;padding-right:5px;padding-top:5px;padding-bottom:5px;" >
 <tr>
@@ -48,7 +44,6 @@ $action = scrub_in($_REQUEST['action']);
 		<?php show_now_playing(); ?>
 	</td>
 </tr>	
-<!--	<tr><td colspan="2">&nbsp;</td></tr>  -->
 <tr>
 	<td valign="top">
 	<!-- Left table -->

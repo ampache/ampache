@@ -256,6 +256,7 @@ if (!isset($no_session) AND conf('use_auth')) {
 	init_preferences();
 	set_theme();	
 	$user = new User($_SESSION['userdata']['username']);
+	$user->set_preferences();
 	$user->update_last_seen();
 }
 if (!conf('use_auth')) { 

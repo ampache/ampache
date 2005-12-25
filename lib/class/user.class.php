@@ -121,7 +121,7 @@ class User {
 	function set_preferences() {
 
 		$sql = "SELECT preferences.name,user_preference.value FROM preferences,user_preference WHERE user_preference.user='$this->username' " .
-			"AND user_preference.preference=preferences.id AND preferences.type='user'";
+			"AND user_preference.preference=preferences.id AND preferences.type != 'system'";
 		$db_results = mysql_query($sql, dbh());
 
 		while ($r = mysql_fetch_object($db_results)) {
