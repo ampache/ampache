@@ -48,7 +48,7 @@
 			</td>
 	                <td rowspan="3" valign="top"><?php echo  _("From genre"); ?></td>
 	                <td rowspan="3">
-			<?php show_genre_pulldown( -1, 0 ); ?>
+			<?php show_genre_pulldown('genre','','5'); ?>
                 	</td>
 		</tr>
 		<tr class="even">

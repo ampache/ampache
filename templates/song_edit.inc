@@ -56,7 +56,7 @@ $target = conf('web_path').'/admin/flags.php';
 
   <tr>
     <td>Genre:</td>
-    <td> <?php show_genre_pulldown($song->genre, 1); ?> </td>
+    <td> <?php show_genre_pulldown('genre',$song-genre); ?> </td>
   </tr>
 
   <tr>

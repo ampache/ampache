@@ -145,7 +145,7 @@ echo <<<EDIT_SONG_3
     <td>Genre:</td>
     <td colspan="2">
 EDIT_SONG_3;
-    show_genre_pulldown($info->genre, 1);
+    show_genre_pulldown('genre',$info->genre);
 echo <<<EDIT_SONG_4
   </td>
 </tr>	

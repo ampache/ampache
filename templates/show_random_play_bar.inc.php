@@ -44,7 +44,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
          <option value="1000">1000</option>
          <option value="-1"><?php echo _("All"); ?></option>
       </select> &nbsp; &nbsp;
-      <?php show_genre_pulldown( -1, 0, "'1'" ); ?>
+      <?php show_genre_pulldown('genre'); ?>
       <select name="Quantifier">
          <option value="Songs"><?php echo _("Songs"); ?></option>
          <option value="Minutes"><?php echo _("Minutes"); ?></option>
