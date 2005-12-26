@@ -98,16 +98,11 @@ elseif ( $_REQUEST['random'] ) {
 	if($_REQUEST['catalog'] != '-1') {
 		$matchlist['catalog'] = $_REQUEST['catalog'];
 	}
-	$_REQUEST['random'] = '100';
-	$_REQUEST['random_type'] = 'normal';
-	unset($matchlist['genre']);
-	unset($matchlist['catalog']);
 	/* Setup the options array */
 	$options = array('limit' => $_REQUEST['random'], 'random_type' => $_REQUEST['random_type']);
-	
-	
 	$song_ids = get_random_songs($options, $matchlist);
 }
+
 elseif ( $_REQUEST['artist_random'] ) {
 	$artist = new Artist($_REQUEST['artist_random']);
 	$artist->get_count();

@@ -112,7 +112,7 @@ $browse_items[] = array('title'=>'Genre','url'=>'browse.php?action=genre','activ
 	<?php if ($GLOBALS['theme']['orientation'] != 'horizontal') { ?>
 	<ul class="subnavside">
 		<li class="subnavbutton">
-			<form name="random" method="post" enctype="multipart/form-data" action="<?php echo conf('web_path'); ?>/song.php" style="Display:inline">
+			<form name="sub_random" method="post" enctype="multipart/form-data" action="<?php echo conf('web_path'); ?>/song.php" style="Display:inline">
 			<input type="hidden" name="action" value="m3u" />
 			<select name="random" style="width:110px;">
 				<option value="1">1</option>
@@ -146,5 +146,4 @@ $browse_items[] = array('title'=>'Genre','url'=>'browse.php?action=genre','activ
 		<?php if (conf('use_auth')) { ?>
 			<ul><li><a href="<?php echo conf('web_path'); ?>/logout.php">Logout</a></li></ul>
 		<?php } ?>
-	
 </div>
