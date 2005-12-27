@@ -280,14 +280,14 @@ if (window.attachEvent) window.attachEvent("onload", sfHover);
         padding: 0;
         list-style: none;
         border: 1px solid #000;
-	line-height: 1;
+	line-height: 1.0;
     }
     #sidebar ul {
 	margin: 0px;
 	list-style: none;
 	padding: 0px;
         font-family: verdana, arial, Helvetica, sans-serif;
-	line-height: 1;
+	line-height: 1.0;
     }
     #sidebar li {
 /*        margin: 0 0 1px 0; */

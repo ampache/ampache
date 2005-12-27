@@ -61,6 +61,7 @@ $browse_items[] = array('title'=>'Lists','url'=>'browse.php','active'=>'');
 		
 		} // end if access 
 		?>
+		
 		<li>
 			<a href="<?php echo conf('web_path'); ?>/preferences.php"><?php echo _("Preferences"); ?></a>
 		</li>
@@ -78,6 +79,7 @@ $browse_items[] = array('title'=>'Lists','url'=>'browse.php','active'=>'');
 				}
 			}
 		?>
+		
 		<?php if ($GLOBALS['user']->prefs['upload']) { ?>
 		<li>
 			<a href="<?php echo conf('web_path'); ?>/upload.php"><?php echo _("Upload"); ?></a>
@@ -93,8 +95,9 @@ $browse_items[] = array('title'=>'Lists','url'=>'browse.php','active'=>'');
 		<?php } ?>
 		<li>
 			<a href="<?php echo conf('web_path'); ?>/search.php"><?php echo _("Search"); ?></a>
+		</li>
 	<?php if ($GLOBALS['theme']['orientation'] != 'horizontal') { ?>
-	<li>
+		<li>
 			<form name="sub_search" method="post" action="<?php echo conf('web_path'); ?>/search.php" enctype="multipart/form-data" style="Display:inline">
 			<input type="text" name="search_string" value="<?php echo scrub_out($_REQUEST['search_string']); ?>" size="5" />
         	        <input class="smallbutton" type="submit" value="<?php echo _("Search"); ?>" /> 
@@ -110,7 +113,7 @@ $browse_items[] = array('title'=>'Lists','url'=>'browse.php','active'=>'');
 		</li>
 	<?php if ($GLOBALS['theme']['orientation'] != 'horizontal') { ?> 
 		<li>
-			<form name="random" method="post" enctype="multipart/form-data" action="<?php echo conf('web_path'); ?>/song.php" style="Display:inline">
+			<form name="sub_random" method="post" enctype="multipart/form-data" action="<?php echo conf('web_path'); ?>/song.php" style="Display:inline">
 			<input type="hidden" name="action" value="m3u" />
 			<select name="random" style="width:110px;">
 				<option value="1">1</option>
@@ -142,6 +145,6 @@ $browse_items[] = array('title'=>'Lists','url'=>'browse.php','active'=>'');
 		<?php if (conf('use_auth')) { ?>
 			<li><a href="<?php echo conf('web_path'); ?>/logout.php">Logout</a></li>
 		<?php } ?>
-	</li> </ul>
+	</ul>
 	
 <!-- </div> -->

@@ -26,7 +26,7 @@
  */
 
 ?>
-	<ul id="subnavside">
+	<ul class="subnavside">
 <?php 
 	foreach ($items as $item) { 
 		if ($item['active']) { 
