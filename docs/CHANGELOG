@@ -3,6 +3,11 @@
 --------------------------------------------------------------------------
 
 --------------------------------------------------------------------------
+  v.3.3.2-Beta1
+  	- Fixed wrap-around text by removing float:left; on #content
+		(Thx Sigger)
+
+--------------------------------------------------------------------------
   v.3.3.2-Alpha4 12/27/2005 
   	- Fixed Registration system sort of. It still needs massive 
 		improvement, but it works.. kinda (Thx SoundOfEmotion)

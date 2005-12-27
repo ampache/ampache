@@ -263,7 +263,6 @@ if (window.attachEvent) window.attachEvent("onload", sfHover);
 
 	#content
 		{ 
-		float: left;	
 		margin-left:0px;
 		}
 /**
