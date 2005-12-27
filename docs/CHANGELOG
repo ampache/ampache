@@ -4,6 +4,9 @@
 
 --------------------------------------------------------------------------
   v.3.3.2-Beta1
+  	- Fixed a logic problem with the rating system where it would
+		show a star for the 0 value when it should always show
+		the 0 or don't play symbol
   	- Fixed drop-downs on sidebar not resizing with fontsize
 		(Thx SoundOfEmotion)
   	- Fixed wrap-around text by removing float:left; on #content

@@ -41,6 +41,11 @@ while ($score < 6) {
 		echo "<img src=\"" . conf('web_path') . "/images/ratings/x_off.gif\" border=\"0\" alt=\"" . get_rating_name($score) . "\">\n";
 		$found_on = true;
 	}
+	elseif ($score == '0') { 
+		echo "<a href=\"" . $base_url . "&rating=$score\">\n\t";
+		echo "<img src=\"" . conf('web_path') . "/images/ratings/x_off.gif\" border=\"0\" alt=\"" . get_rating_name($score) . "\">\n";
+		echo "</a>";
+	}
 	elseif ($score == $rating->rating) { 
 		echo "<img src=\"" . conf('web_path') . "/images/ratings/star.gif\" border=\"0\" alt=\"" . get_rating_name($score) . "\">\n";
 		$found_on = true;
