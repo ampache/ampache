@@ -65,7 +65,6 @@ $username=$GLOBALS['user']->username;
             $totalsize += $song->size;
             $totaltime += $song->time;
 	    if ($song->status == "disabled") { $text_class = "class=\"disabled\""; }
-	    include("get_song_ratings.inc");
     ?>
     <tr class="<?php echo flip_class(); ?>">
             <td align="center">

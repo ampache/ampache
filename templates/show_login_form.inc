@@ -65,6 +65,13 @@ if (preg_match($subject,$_SERVER['HTTP_HOST'])) {
 			<input type="hidden" name="action" value="login" />
 		</td>
 	</tr>
+	<?php if(conf('allow_public_registration')==true){ ?>
+	<tr>
+		<td colspan=3 height=25 align=center>
+			<a href='register.php'>Register</a><br>
+		</td>
+	</tr>
+	<?php } ?>	
 </table>
 </form>
 <p align="center">

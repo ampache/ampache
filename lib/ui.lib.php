@@ -1067,19 +1067,30 @@ function show_preference_box($preferences) {
  *
  */
 
-function show_genre_pulldown ($name,$selected='',$size=1) {
+function show_genre_pulldown ($name,$selected='',$size=1,$width=0,$style='') {
 
 	/* Get them genre hippies */        
 	$sql = "SELECT genre.id,genre.name FROM genre ORDER BY genre.name";
         $db_result = mysql_query($sql, dbh());
 
-        echo "<select name=\"" . $name . "[]\" multiple=\"multiple\" size=\"$size\">\n";
+	if ($size > 0) { 
+		$multiple_txt = "multiple=\"multiple\" size=\"$size\"";
+	}
+	if ($style) { 
+		$style_txt = "style=\"$style\"";
+	}
+
+        echo "<select name=\"" . $name . "[]\" $multiple_txt $style_txt>\n";
 	echo "\t<option value=\"-1\">" . _("All") . "</option>\n";
 
         while ($r = mysql_fetch_assoc($db_result)) {
-
+		
 		$r['name'] = scrub_out($r['name']);
 
+		if ($width > 0) { 
+			$r['name'] = truncate_with_ellipsis($r['name'],$width);
+		}
+		
                 if ( $selected == $r['id'] ) {
                         echo "\t<option value=\"" . $r['id'] . "\" selected=\"selected\">" . $r['name'] . "</option>\n";
                 }

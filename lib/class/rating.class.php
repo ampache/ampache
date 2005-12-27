@@ -78,17 +78,19 @@ class Rating {
 	 */
 	function get_average() { 
 
-		$sql = "SELECT rating FROM ratings WHERE object_id='$this->id' AND object_type='$this->type'";
-		$db_results = mysql_fetch_assoc($db_results);
+		$sql = "SELECT user_rating as rating FROM ratings WHERE object_id='$this->id' AND object_type='$this->type'";
+		$db_results = mysql_query($sql, dbh());
 
 		$i = 0;
 
 		while ($r = mysql_fetch_assoc($db_results)) { 
 			$i++;
-			$total = $r['rating'];
+			$total += $r['rating'];
 		} // while we're pulling results
 
-		$average = floor($total/$i);
+		if ($total > 0) { 
+			$average = floor($total/$i);
+		}
 
 		$this->rating = $average;
 

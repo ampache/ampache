@@ -83,7 +83,7 @@ if (!$results['conf']['allow_stream_playback']) {
 }
 
 $results['conf']['web_path']		= $http_type . $_SERVER['HTTP_HOST'] . $results['conf']['web_path'];
-$results['conf']['version']		= '3.3.2-Alpha4 (Build 004)';
+$results['conf']['version']		= '3.3.2-Alpha4 (Build 005)';
 $results['conf']['catalog_file_pattern']= 'mp3|mpc|m4p|m4a|mp4|aac|ogg|rm|wma|asf|flac|spx';
 $results['libglue']['local_table']	= 'session';
 $results['libglue']['local_sid']	= 'id';
@@ -235,6 +235,9 @@ $gc_divisor     = @ini_get('session.gc_divisor');
 
 if (!$gc_divisor) { 
 	$gc_divisor = '100';
+}
+if (!$gc_probability) { 
+	$gc_probability = '1';
 }
 
 // Force GC on 1:5 page loads 

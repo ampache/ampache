@@ -1239,7 +1239,7 @@ class Update {
 			" `user` varchar(128) NOT NULL default ''," . 
 			" `object_type` enum('artist','album','song') NOT NULL default 'artist'," . 
 			" `object_id` int(11) unsigned NOT NULL default '0'," . 
-			" `rating` enum('00','0','1','2','3','4','5') NOT NULL default '0'," . 
+			" `user_rating` enum('00','0','1','2','3','4','5') NOT NULL default '0'," . 
 			" PRIMARY KEY (`id`))";
 		$db_results = mysql_query($sql, dbh());	
 

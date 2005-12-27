@@ -26,10 +26,33 @@
  	ampache, mod this to change the look and feel of the site
 */
 ?>
+
+<script type="text/javascript" language="javascript">
+<!-- Begin Suckerfish hover menu JS
+// function needed for IE.  attaches mouseover/out events to give/remove css class .sfhover (fake hover)
+sfHover = function(navlist) {
+var sfEls = document.getElementById("navlist").getElementsByTagName("LI");
+for (var i=0; i <sfEls.length; i++) {
+    sfEls[i].onmouseover=function() {
+        this.className+=" sfhover";
+    }
+    sfEls[i].onmouseout=function() {
+        this.className=this.className.replace(new RegExp("sfhover\\b"), "");
+    }
+} // end for
+} // end function for sfHover
+if (window.attachEvent) window.attachEvent("onload", sfHover);
+// End Suckerfish hover menu JS-->
+</script>
+
 <style type="text/css">
 <!--
 	body	
 		{ 
+		padding-top: 0px;
+		margin-top: 0px;
+		margin-left: 0px;
+		margin-right: 0px;
 		background: <?php echo conf('bg_color1'); ?>; 
 		font-family: <?php echo conf('font') ?>; 
 		font-size: <?php echo conf('font_size'); ?>px; 
@@ -68,6 +91,11 @@
 		border-left:2px solid <?php echo conf('bg_color2'); ?>;
 		border-top:2px solid <?php echo conf('bg_color2'); ?>;
 		}
+
+	.npsong
+		{
+		background-color: #FFFF66;
+		}
     table.tabledata
     {
     }
@@ -90,106 +118,25 @@
 		font-size: <?php echo conf('font_size'); ?>px; 
 		font-weight: bold; 
 		background-color: <?php echo conf('base_color2') ?>; 
-	    	border-style: solid;
-	      	border-width: 1px;
-	        border-color: <?php echo conf('bg_color2'); ?>;
 		margin: 2px 2px 2px 2px;
 		}
 	select	{ 
 		color: <?php echo conf('font_color2'); ?>; 
 		font-family: <?php echo conf('font')?>; 
 		font-size: <?php echo conf('font_size'); ?>px; 
-		background-color: <?php echo conf('base_color2') ?>; 
+		background-color: <?php echo conf('base_color2'); ?>; 
 		}
 	textarea 
-	{ 
+		{ 
+		background-color: <?php echo conf('base_color2'); ?>;
 		color: <?php echo conf('font_color2') ?>; 
 		font-family: <?php echo conf('font')?>; 
 		font-size: <?php echo conf('font_size'); ?>px; 
-	}
+		}
     .table-header
     {
         background: url(<?php echo conf('web_path'); ?><?php echo conf('theme_path'); ?>/images/ampache-light-bg.gif) <?php echo conf('base_color2')?> repeat-x;
         vertical-align: top;
-    }
-/*************** Main Menu *****************/
-    #mainmenu {
-        float: left;
-        width: 100%;
-        margin: 0;
-        padding: 0;
-        list-style: none;
-        border-top: 1px solid #000;
-        border-bottom: 1px solid #000;
-        border-right: 1px solid #000;
-        border-left: 1px solid #000;
-        background: url(<?php echo conf('web_path'); ?><?php echo conf('theme_path'); ?>/images/ampache-light-bg.gif) <?php echo conf('base_color2');?> repeat-x;
-    }
-    #mainmenu li {
-        float: left;
-        margin: 0;
-        padding: 0 10px 0 10px;
-        border-right: 1px solid #000;
-        display: inline;
-        background: url(<?php echo conf('web_path'); ?><?php echo conf('theme_path'); ?>/images/ampache-light-bg.gif) <?php echo conf('base_color2');?> repeat-x;
-    }
-    #mainmenu li.active {
-        background: url(<?php echo conf('web_path'); ?><?php echo conf('theme_path'); ?>/images/ampache-dark-bg.gif) <?php echo conf('base_color2');?> repeat-x;
-    }
-    #mainmenu a {
-        text-decoration: none;
-    }
-    #mainmenu a:hover {
-        color: #000;
-    }
-    #mainmenu a:active {
-        color: #00a;
-    }
-/*************** END Main Menu *************/
-/*************** Admin Menu *************/
-    #adminmenu {
-        float: left;
-        width: 100%;
-        margin: 0;
-        padding: 0;
-        list-style: none;
-        border-bottom: 1px solid #000;
-        border-right: 1px solid #000;
-        border-left: 1px solid #000;
-        border-top: 1px solid #000;
-        background: url(<?php echo conf('web_path'); ?><?php echo conf('theme_path'); ?>/images/ampache-light-bg.gif) <?php echo conf('base_color2')?> repeat;
-    }
-    #adminmenu li {
-        float: left;
-        margin: 0;
-        padding: 0 20px 0 20px;
-        border-right: 1px solid #000;
-        display: inline;
-        background: url(<?php echo conf('web_path'); ?><?php echo conf('theme_path'); ?>/images/ampache-light-bg.gif) <?php echo conf('base_color2');?> repeat-x;
-    }
-    #adminmenu li.active {
-        background: url(<?php echo conf('web_path'); ?><?php echo conf('theme_path'); ?>/images/ampache-dark-bg.gif) <?php echo conf('base_color2');?> repeat-x;
-    }
-    #adminmenu a {
-        text-decoration: none;
-    }
-    #adminmenu a:hover {
-        color: #000;
-    }
-    #adminmenu a:active {
-        color: #000;
-    }
-/*************** END Main Menu *************/
-/*************** Page Header *********************/
-    #pageheader {
-        background: <?php echo conf('bg_color1');?>;
-    }
-/*************** END Page Header *****************/
-    .navitem
-    {
-        background: url(<?php echo conf('web_path'); ?><?php echo conf('theme_path'); ?>/images/ampache-light-bg.gif) <?php echo conf('base_color2')?> repeat-x;
-        vertical-align: top;
-        text-align: center;
     }
     .header1 
     { 
@@ -204,12 +151,6 @@
 	font-family: <?php echo conf('font'); ?>;
 	font-size: <?php echo conf('font_size') + 2; ?>px;
 	font-weight: 900;
-    }
-    .active_navitem
-    {
-        background: url(<?php echo conf('web_path'); ?><?php echo conf('theme_path'); ?>/images/ampache-dark-bg.gif) <?php echo conf('bg_color1')?> repeat-x;
-        vertical-align: top;
-        text-align: center;
     }
 	.headrow 
 		{
@@ -264,113 +205,126 @@
 		font-size: <?php echo conf('font_size'); ?>px; 
 		font-weight: normal; 
 		}
-        #sidebar a:hover
-                {
-                color: #000;
-                background-color: #ccc;
-                text-decoration: none;
-                }
-                
-        #sidebar ul ul li { margin: 0 0 1px 0; }
-        
-        #sidebar ul ul a
-                {
-                display: block;
-                padding: 5px 5px 5px 30px;
-                width: 125px;
-                color: #000;
-                background-color: #ccc;
-                text-decoration: none;
-                }
-
-        #sidebar ul
-                {
-                margin-left:0px;
-                margin-top:0px;
-                margin-bottom:0px;
-                margin-right: 10px;
-                padding: 0px;
-                list-style-type: none;
-                font-family: verdana, arial, Helvetica, sans-serif;
-                }
-
-        #sidebar li {
-                margin: 0 0 1px 0;
-                padding-top:0px;
-                padding-bottom:0px;
-                }
-
-        #sidebar a, .navbutton
-                {
-                display: block;
-                padding: 5px 10px;
-                color: #000; 
-                background-color: #666;
-                text-decoration: none;
-                }
-                
+	.smallbutton
+		{
+		border:0px;
+		padding-left:1px;
+		padding-right:1px;
+		font-size: <?php echo conf('font_size') - 1; ?>px;
+		cursor: pointer;
+		}
+	.sidebar 
+		{
+		margin-left:0px;
+		margin-top:0px;
+		margin-right:0px;
+		padding-right:0px;
+		padding-top: 0px;
+		padding-left: 0px;
+		background: <?php echo conf('base_color2'); ?>;
+		}
 /**
  * Div Definitions
  * These define how the page is layed out, be careful with these as changes to them
  * can cause drastic layout changes
  */
-        #maincontrainer
-                {
-                        margin: 0px;
-                }
-        #topbar
-                {
-                        height: 80px;
-                        background-color: <?php echo conf('bg_color1'); ?>;
-                }
-        #topbarright
-                {
-                        float: right;
-                }
-        #topbarleft
-                {
-                        float: left;
-                }
-        #sidebar
-                {
-                        clear: both;
-                        height: 100%;
-                        margin-left: 0px;
-                        margin-top:0px;
-                        float: left;
-                        width: 170px;
-                }
-        #navcontainer ul li
-                {
-                float:left;
-                width:100%;
-                }
+	#maincontainer
+		{
+			margin: 0px;
+		} 	
+	#topbar
+		{
+			height: 80px;
+			padding-top:10px;
+			padding-left:10px;
+			background-color: <?php echo conf('bg_color1'); ?>;
+		}
+	#topbarright
+		{
+			float: right;
+		}
+	#topbarleft
+		{
+			float: left;
+		}
+	#navcontainer ul li
+		{
+			float:left; 
+			width:100%;
+		}
 
-        .subnavbutton
-                {
-                background-color: <?php echo conf('row_color1'); ?>;
-                text-align:center;
-                text-decoration: none;
-                color: #000;
-                }
+	.subnavbutton 
+		{
+			background-color: <?php echo conf('row_color1'); ?>;
+			text-align:center;
+			text-decoration: none;
+			color: <?php echo conf('font_color2'); ?>;
+		}
 
-        #sidebar ul ul a:hover
-                {
-                color: <?php echo conf('font_color3'); ?>;
-                background-color: <?php echo conf('row_color2'); ?>;
-                text-decoration: none;
-                }
-        #content
-                {
-                margin-left:0px;
-                padding-top:10px;
-                padding-left:10px;
-                vertical-align:top;
-                }
+	#content
+		{ 
+		float: left;	
+		margin-left:0px;
+		}
+/**
+ * Experimental for menus (Thx Sigger)
+ * TO DO: Fill in 1px border around menus & submenu items 
+ * Make padding appply to the li, not just an a.  Moving paddng: to li throws off the dropdown menu alignment.
+ */
+    #sidebar {
+	clear: both;
+	height: 100%;
+        margin: 0;
+        float: left;
+ /*       width: 110px;  /* this controls the width of the sidebar.  horizontal menu needs more width */
+        padding: 0;
+        list-style: none;
+        border: 1px solid #000;
+	line-height: 1;
+    }
+    #sidebar ul {
+	margin: 0px;
+	list-style: none;
+	padding: 0px;
+        font-family: verdana, arial, Helvetica, sans-serif;
+	line-height: 1;
+    }
+    #sidebar li {
+/*        margin: 0 0 1px 0; */
+	margin: 0;
+        display: block;   
+	border-bottom: 1px solid white;
+	border-left: 1px solid white;
+	border-right: 1px solid white;
+	padding: 5px 0px 5px 10px;   
+	width: 10em;
+	background-color: <?php echo conf('row_color2'); ?>;
+    }
+    #sidebar a, .navbutton {
+	display: block;  /*Not sure why this is neccesary, but it is for IE*/
+	text-decoration: none;
+	}
+    #sidebar li:hover, #sidebar li.sfhover {
+        color: <?php echo conf('font_color2'); ?>;
+	background-color: <?php echo conf('row_color3'); ?>;
+    }
+    #sidebar li:active {
+        background-color: <?php echo conf('row_color1'); ?>;
+    }
+    #sidebar li ul {
+	float: left;
+	position: absolute;	
+	width: 12em; 
+	margin: -1.5em 0 0 10em;  
+/* -2em 0 0 10em for vertical menu puts the submenu back up and to the right of the hovered menu item by "the right amount"*/
+	left: -999em;  /* this puts the submenu item way off to the left until it's called back by a hover (below) */
+    }
+    #sidebar li:hover ul, #sidebar li.sfhover ul {
+	left: auto;  /* this calls the submenu back when the parent li is hovered. */
+    }
 /**
  * End Div Definitions
  * This is the end of the main structure def's
  */
-
 -->
 </style>

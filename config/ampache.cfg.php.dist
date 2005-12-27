@@ -119,12 +119,22 @@ require_session = "true"
 # DEFAULT: false
 #allow_zip_download = "false"
 
-# This setting turns on/off public registration. It is 
-# recommended you leave this off, as it will allow anyone to 
-# sign up for an account on your server. 
+# This setting turns on/off public registration. It is
+# recommended you leave this off, as it will allow anyone to
+# sign up for an account on your server.
 # DEFAULT: false
-# THIS IS CURRENTLY BROKEN!
 #allow_public_registration = "false"
+
+# This setting will allow all registrants to be auto-approved
+# as a user. By default, they will be added as a guest and
+# must be "promoted" by the admin.
+# DEFAULT: false
+#auto_user = "false"
+
+# This will display the user agreement when registering
+# For agreement text, edit templates/user_agreement.php
+# User will need to accept the agreement before they can register
+#user_agreement = "false"
 
 # This sets which ID3 tag takes precedence.
 # we've found for those of you who don't have
