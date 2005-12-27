@@ -117,9 +117,5 @@ switch ($action) {
 
 }
 
-echo "<br /><br />";
 
 ?>
-
-</body>
-</html>

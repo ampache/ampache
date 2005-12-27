@@ -56,8 +56,10 @@ Contents:
 		- simple m3u
 		- standard pls
 		- ASX
+		- RAM
 	- Realtime Downsampled
 	- Automatic Downsampling based on load
+	- On the Fly Transcoding
 	- Localplay using Moosic
 	- Localplay using MPD
 	- Icecast2 Stream
@@ -76,6 +78,7 @@ Contents:
 	- Dutch		(nl_NL)
 	- Chinese	(zh_CN)
 	- UK English	(en_GB)
+	- Italian	(it_IT)
 	- French	(fr_FR) *Partial
 
   D) A Special Thanks:
@@ -83,7 +86,8 @@ Contents:
 	 Scott Kveton - Head Nacho, inventer of all that is Ampache
 	 Robert Hopson - Libglue, Playlists, Ogg support.. and much more
 	 Andy Morgan - Protagonist
-	 RosenSama - Developer
+	 RosenSama - Previous Developer
+	 Ben Shields - Graphics Boy
 	 Randall Ehren (Initial XML-RPC)
 	 s1amson (lots of beta testing)
 	 Caleb Crome (bug fixes and enhancements)
@@ -101,12 +105,12 @@ Contents:
 2. Getting all the components
 
   Apache >= 1.3.19 http://www.apache.org OR other webserver
-  PHP >= 4.1.2 http://www.php.net
+  PHP >= 4.3.x http://www.php.net
   	PHP4-Mysql
 	PHP4-Session
 	PHP4-gd (recommended)
 	PHP4 ICONV & ZLIB support (recommended)
-  MySQL >= 3.23 http://www.mysql.com
+  MySQL >= 4.x http://www.mysql.com
   16MB of Ram
 
 3. Setting Up
@@ -124,7 +128,6 @@ Contents:
   its place and then re-creating the config file. All database updates
   will be handled by the /update.php script. There is no need to insert
   the /sql/ampache.sql if you have an existing installation.
-
 
 4. License
 
@@ -147,7 +150,8 @@ Contents:
   Public SVN: https://svn.ampache.org/
   IRC: irc.ampache.org #ampache (Freenode)
   Forums: http://ampache.org/forums
-  Bugs: http://bugs.ampache.org
+  Bugs: https://ampache.bountysource.com
+  Wiki: https://ampache.bountysource.com/wiki/
   Demo: http://ampache.org/demo
 
   Ampache Development Team

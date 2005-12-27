@@ -3,11 +3,13 @@
 --------------------------------------------------------------------------
 
 --------------------------------------------------------------------------
-  v.3.3.2-Alpha4 
+  v.3.3.2-Alpha4 12/27/2005 
+  	- Fixed Registration system sort of. It still needs massive 
+		improvement, but it works.. kinda (Thx SoundOfEmotion)
   	- Added Rating system, currently only non-flash works. 
-		(Thx SoundOfEmotion for origional code)
-  	- Added pop-up submenus to classic Theme (Thx Sigger)
-	- Fixed genre pulldown so it's a good bit faster (1/2 the sql calls)
+		(Thx SoundOfEmotion for original code)
+  	- Added pop-up sub-menus to classic Theme (Thx Sigger)
+	- Fixed genre pull-down so it's a good bit faster (1/2 the sql calls)
   	- Updated Preferences (yet again) maybe it's better, maybe it's not
 		we'll never know...
   	- Fixed Classic Theme view in IE (had spaces)
@@ -16,8 +18,9 @@
   	- Added initial Italian translation (Thx Michele)
   	- Updated Burgundy theme to take advantage of div format so that 
 		it acts like the old 'horizontal' menu
-  	- Introduced new 'vertical' interface that uses <divs>
-	- Fixed a problem where downsampled songs wouldn't get recorded
+  	- Introduced new 'vertical' interface that uses <divs>. Interface
+		should load a faster now. 
+	- Fixed a problem where down-sampled songs wouldn't get recorded
 		in stats due to their diminished size
 	- Fixed column typo on Admin User page
   	- Fixed a problem with the no_symlinks setting which could
@@ -56,10 +59,10 @@
 	- Fixed problem where Add to Playlist from mpd.php only works for 
 		file method (Thx Rosensama)
 	- Added 'Simple' Genre Bar (Thx sigger)
-	- Added initial TV page for viewing of nowplaying and additional 
+	- Added initial TV page for viewing of now playing and additional 
 		information (Thx sigger)
 	- Updated Archive library to 2.1 Released 08/13/2005
-	- Corrected math error with automagic downsampling (Thx J)
+	- Corrected math error with automatic down-sampling (Thx J)
 	- Corrected some of the no_auth preference problems
 	- Fixed a problem where Clearing the catalog stats, didn't actually
 		do anything
@@ -71,9 +74,9 @@
 		rather than a list of songs. 
 	- Fixed Lock Songs always returning false and thus preventing
 		any playback when enabled. (Thx J)
-	- Fixed a flaw in the downsampling which would allow you to set
+	- Fixed a flaw in the down-sampling which would allow you to set
 		invalid bitrates. (Thx J)
-	- Fixed a few problems with WMP, downsampling and now playing
+	- Fixed a few problems with WMP, down-sampling and now playing
 		information. This is not a final fix for WMP but it's
 		better than before. 
 	- Fixed problem where played wasn't getting set correctly. 
@@ -122,7 +125,7 @@
   	- Added Spanish Translation (Thx ros)
 	- Fixed Menu Highlight when using a Translation
 	- More HTML cleanup (Thx Xgizzmo)
-	- Added inital Browse Pages and Supporting Functions
+	- Added initial Browse Pages and Supporting Functions
 	- Added Genre Stats Tracking
 	- Moved files into more logical areas, added .lib and .class
 		suffix to library and class files, also started using 

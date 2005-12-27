@@ -158,7 +158,6 @@ id3tag_order 	= "id3v1"
 use_auth	= "yes"
 
 # 5 Star Ratings
-# CURRENTLY BROKEN!!!!!
 # These are disabled by default, to turn them on remove the
 # comment before the value flash requires flash player and
 # will cause longer load times. 

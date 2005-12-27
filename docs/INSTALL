@@ -152,7 +152,7 @@
 	the appropriate information
 
 
-      3.4  Sorting and updating files (Under Development)
+      3.4  Sorting and updating files *EXPERIMENTAL* (Use this at your own risk)
         When updating catalog preferences new fields added in v3.1 include
            ID3 set command
 	   Filename pattern

@@ -1,6 +1,6 @@
 <?php
 /*
- Copyright (c) 2001 - 2005 Ampache.org
+ Copyright (c) 2001 - 2006 Ampache.org
  All Rights Reserved
 
  This program is free software; you can redistribute it and/or
@@ -24,10 +24,10 @@
 Login Template
 
 */
+$subject = "/ampache\.com/";
 
 $referrer = $_SERVER['HTTP_REFERER'];
 
-$subject = "/ampache.com/";
 
 if (preg_match($subject,$_SERVER['HTTP_HOST'])) { 
 	$show_copyright = 1;
@@ -65,15 +65,15 @@ if (preg_match($subject,$_SERVER['HTTP_HOST'])) {
 			<input type="hidden" name="action" value="login" />
 		</td>
 	</tr>
-	<?php if(conf('allow_public_registration')==true){ ?>
-	<tr>
-		<td colspan=3 height=25 align=center>
-			<a href='register.php'>Register</a><br>
-		</td>
-	</tr>
-	<?php } ?>	
 </table>
 </form>
+	<?php if(conf('allow_public_registration')){ ?>
+		<p align="center">
+			[<a class="header2" href="<?php echo conf('web_path'); ?>/register.php"><?php echo _("Register"); ?></a>]
+		</p>
+	<?php } ?>	
+
+<!--
 <p align="center">
 		  <a href="http://validator.w3.org/check/referer">
 		   <img style="padding:0;border:0;" src="http://www.w3.org/Icons/valid-xhtml10" alt="Valid XHTML 1.0!" />
@@ -82,12 +82,13 @@ if (preg_match($subject,$_SERVER['HTTP_HOST'])) {
 		  <img style="padding:0;border:0;" src="http://jigsaw.w3.org/css-validator/images/vcss" alt="Valid CSS!" />
 		 </a>
 </p>
+-->
 <?php if ($show_copyright == 1) { ?>
 <p align="center">
 	<font color="red" size="+2">
 		<a href="http://www.ampache.org/donations.php">Ampache.org</a><br />
 		Ampache.com Domain Squatter<br />
-		All Rights Reserved, Copyright &copy; 2005<br />
+		All Rights Reserved, Copyright &copy; 2006<br />
 	</font>
 </p>
 <?php } ?>
