@@ -115,7 +115,7 @@ $browse_items[] = array('title'=>'Lists','url'=>'browse.php','active'=>'');
 		<li>
 			<form name="sub_random" method="post" enctype="multipart/form-data" action="<?php echo conf('web_path'); ?>/song.php" style="Display:inline">
 			<input type="hidden" name="action" value="m3u" />
-			<select name="random" style="width:110px;">
+			<select name="random" style="width:9em;">
 				<option value="1">1</option>
 				<option value="5">5</option>
 				<option value="10">10</option>
@@ -127,9 +127,9 @@ $browse_items[] = array('title'=>'Lists','url'=>'browse.php','active'=>'');
 				<option value="1000">1000</option>
 				<option value="-1"><?php echo _("All"); ?></option>
 			</select>
-		        <?php show_genre_pulldown('genre','','','13','width:110px;'); ?>
+		        <?php show_genre_pulldown('genre','','','13','width:9em;'); ?>
 						<br />  
-			<select name="Quantifier" style="width:110px;">
+			<select name="random_type" style="width:9em;">
 				<option value="Songs"><?php echo _("Songs"); ?></option>
 				<option value="Minutes"><?php echo _("Minutes"); ?></option>
 				<option value="Artists"><?php echo _("Artists"); ?></option>

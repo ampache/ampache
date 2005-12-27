@@ -4,6 +4,8 @@
 
 --------------------------------------------------------------------------
   v.3.3.2-Beta1
+  	- Fixed drop-downs on sidebar not resizing with fontsize
+		(Thx SoundOfEmotion)
   	- Fixed wrap-around text by removing float:left; on #content
 		(Thx Sigger)
 
