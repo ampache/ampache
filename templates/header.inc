@@ -45,7 +45,7 @@ $location = get_location();
 	</div>
 	<div id="topbarright">
 			<a href="http://www.ampache.org/index.php">Ampache v.<?php echo conf('version'); ?></a><br />
-			<b><?php echo _("You are currently logged in as") . " " . $GLOBALS['user']->username; ?></b>
+			<b><?php echo _("You are currently logged in as") . " " . $GLOBALS['user']->fullname; ?></b>
 			<br />
 		<?php echo _("Browse"); ?>:
 		<form method="post" action="<?php echo conf('web_path'); ?>/browse.php" enctype="multipart/form-data" style="Display:inline;">

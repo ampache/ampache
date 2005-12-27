@@ -29,19 +29,24 @@ if ($type != 'song') {
 $base_url 	= conf('web_path') . '/ratings.php?action=set_rating&mode=' . conf('flash') . '&rating_type=' . $rating->type . '&object_id=' . $rating->id . '&username=' . $GLOBALS['user']->username;
 $score		= '0';
 
+
 /* count up to 6 */
 while ($score < 6) { 
 	/* Handle the "Not rated" possibility */
-	if ($score == '0' AND $score === $rating->rating) { 
+	if ($score == '0' AND $rating->rating == '-1') { 
 		echo "<img src=\"" . conf('web_path') . "/images/ratings/x.gif\" border=\"0\" alt=\"" . get_rating_name($score) . "\">\n";
+		$found_on = true;
 	}
-	elseif ($score == '0') { 
-		echo "<a href=\"" . $base_url . "&rating=$score\">\n";
-		echo "\t<img src=\"" . conf('web_path') . "/images/ratings/x_off.gif\" border=\"0\" alt=\"" . get_rating_name($score) . "\">\n";
-		echo "</a>";
+	elseif ($score == '0' AND $rating->rating == '0') { 
+		echo "<img src=\"" . conf('web_path') . "/images/ratings/x_off.gif\" border=\"0\" alt=\"" . get_rating_name($score) . "\">\n";
+		$found_on = true;
 	}
-	elseif ($score === $rating->rating) { 
+	elseif ($score == $rating->rating) { 
 		echo "<img src=\"" . conf('web_path') . "/images/ratings/star.gif\" border=\"0\" alt=\"" . get_rating_name($score) . "\">\n";
+		$found_on = true;
+	}
+	elseif (!$found_on) { 
+		echo "<a href=\"" . $base_url . "&rating=$score\">\n\t<img src=\"" . conf('web_path') . "/images/ratings/star.gif\" border=\"0\" alt=\"" . get_rating_name($score) . "\">\n</a>\n";
 	}
 	else { 
 		echo "<a href=\"" . $base_url . "&rating=$score\">\n\t<img src=\"" . conf('web_path') . "/images/ratings/star_off.gif\" border=\"0\" alt=\"" . get_rating_name($score) . "\">\n</a>\n";

@@ -90,10 +90,15 @@ class Rating {
 
 		if ($total > 0) { 
 			$average = floor($total/$i);
+			$this->rating = $average;
 		}
-
-		$this->rating = $average;
-
+		elseif ($i >= '1' AND $total == '0') { 
+			$this->rating = '-1';
+		}
+		else { 
+			$this->rating = '0';
+		}
+		
 		return $average;
 
 	} // get_average
@@ -104,9 +109,25 @@ class Rating {
 	 * This uses the currently logged in user for the 'user' who is rating
 	 * the object. Returns true on success, false on failure
 	 */
-	function set_rating() { 
+	function set_rating($score) { 
+		
+		$score = sql_escape($score);
 
+		/* Check if it exists */
+		$sql = "SELECT id FROM ratings WHERE object_id='$this->id' AND object_type='$this->type' AND `user`='" . sql_escape($GLOBALS['user']->username) . "'";
+		$db_results = mysql_query($sql, dbh());
 
+		if ($existing = mysql_fetch_assoc($db_results)) { 
+			$sql = "UPDATE ratings SET user_rating='$score' WHERE id='" . $existing['id'] . "'";
+			$db_results = mysql_query($sql, dbh());
+		}
+		else { 
+			$sql = "INSERT INTO ratings (`object_id`,`object_type`,`user_rating`,`user`) VALUES " . 
+				" ('$this->id','$this->type','$score','" . sql_escape($GLOBALS['user']->username) . "')";
+			$db_results = mysql_query($sql, dbh());
+		} 
+
+		return true;
 
 	} // set_rating
 
