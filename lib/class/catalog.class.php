@@ -1983,7 +1983,7 @@ class Catalog {
 		foreach ($results as $value) {
 			// Remove extra whitespace
 			$value = trim($value);
-			if (preg_match("/\.[A-Za-z0-9]{3}$/",$value)) { 
+			if (preg_match("/\.[A-Za-z0-9]{3,4}$/",$value)) { 
 				$file[0] = str_replace("/","\\",$value);
 				$file[1] = str_replace("\\","/",$value);
 				/* Search for this filename, cause it's a audio file */

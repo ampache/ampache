@@ -248,6 +248,12 @@ class Update {
 
 		$version[] = array('version' => '332004', 'description' => $update_string);
 
+		$update_string = "- Verify Previous Update, I dropped the ball and allowed a nightly to be built with an invalid Update function " . 
+				 "this update simply verifies that the previous database upgrade worked correctly and corrects it if it didn't. I appologize " . 
+				 "for the mistake and will do my best to make sure it never happens again. - Karl Vollmer<br />";
+
+		$version[] = array('version' => '332005','description' => $update_string);
+
 		return $version;
 
 	} // populate_version
@@ -1231,7 +1237,7 @@ class Update {
 	*/
 	function update_332004() { 
 
-		$sql = "ALTER TABLE `playlist_data` ADD `id` INT( 11 ) UNSIGNED NOT NULL AUTO_INCREMENT FIRST";
+		$sql = "ALTER TABLE `playlist_data` ADD `id` INT( 11 ) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY FIRST";
 		$db_results = mysql_query($sql, dbh());
 
 		/* Create the ratings table */
@@ -1294,6 +1300,69 @@ class Update {
 		$this->set_version('db_version','332004');
 
 	} // update_332004
+	
+	/**
+	 * update_332005
+	 * I tottaly messed up the 332004 update so I've gotta go back and verify what
+	 * happened and didn't happen and then fix that which didn't happen 
+	 * Doublecheck the playlist_data entry
+	 * Check the ratings table to make sure it's correct
+	 */
+	function update_332005() { 
+
+		/* Check Playlist_Data */
+		$sql = "DESCRIBE playlist_data";
+		$db_results = mysql_query($sql, dbh());
+
+		while ($r = mysql_fetch_assoc($db_results)) { 
+			$key = $r['Field'];
+			$results[$key] = $r['Key'];
+		}
+
+		/* If $results['id'] != PRI then we're screwed and we need to try again */
+		if ($results['id'] != 'PRI') { 
+			/* Try again!!!! */
+			$sql = "ALTER TABLE `playlist_data` ADD `id` INT( 11 ) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY FIRST";
+			$db_results = mysql_query($sql, dbh());
+		}
+
+		/* Next verify the setup of the ratings table */
+		$sql = "DESCRIBE ratings";
+		$db_results = mysql_query($sql, dbh());
+
+		$results = array();
+
+		/* it fails horribly? */
+		if (!$db_results) { 
+			/* Try to create the table again */
+			$sql =  "CREATE TABLE `ratings` (`id` int(11) unsigned NOT NULL auto_increment," .
+	                        " `user` varchar(128) NOT NULL default ''," .
+	                        " `object_type` enum('artist','album','song') NOT NULL default 'artist'," .
+	                        " `object_id` int(11) unsigned NOT NULL default '0'," .
+	                        " `user_rating` enum('00','0','1','2','3','4','5') NOT NULL default '0'," .
+	                        " PRIMARY KEY (`id`))";
+			$db_results = mysql_query($sql, dbh());
+		} 
+		else { 
+			/* Go through the friggin results */
+			while ($r = mysql_fetch_assoc($db_results)) { 
+				$key = $r['Field'];
+				$results[$key] = $r['Type'];
+			}
+			if ($results['rating']) { 
+				$sql = "ALTER TABLE `ratings` CHANGE `rating` `user_rating` ENUM( '00', '0', '1', '2', '3', '4', '5' ) NOT NULL DEFAULT '0'";
+				$db_results = mysql_query($sql, dbh());
+			}
+
+		} // end else
+
+		/* One more thing I pooched */
+		$sql = "ALTER TABLE `playlist_data` CHANGE `song` `song` INT( 11 ) UNSIGNED NULL DEFAULT NULL";
+		$db_results = mysql_query($sql, dbh());
+
+		$this->set_version('db_version','332005');
+
+	} // update_332005
 
 } // end update class
 ?>

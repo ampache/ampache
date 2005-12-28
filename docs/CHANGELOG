@@ -4,6 +4,11 @@
 
 --------------------------------------------------------------------------
   v.3.3.2-Beta1
+  	- Fixed a botched change to the database (No Data loss!) but I 
+		still feel stupid (Blame Vollmer)
+  	- Fixed a problem where .flac files wouldn't get reconized by
+		the regular expresison that pulls in files from m3u's
+		(Thx nhorlock)
   	- Fixed a logic problem with the rating system where it would
 		show a star for the 0 value when it should always show
 		the 0 or don't play symbol
