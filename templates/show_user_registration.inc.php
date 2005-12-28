@@ -19,6 +19,7 @@
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
+$htmllang = str_replace("_","-",conf('lang'));
 ?>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "DTD/xhtml1-transitional.dtd">
@@ -41,7 +42,7 @@
 	</a>
 	</div>
 </div>
-<br><br>
+<br /><br />
 <?php
 
 $action = scrub_in($_REQUEST['action']);
@@ -53,25 +54,25 @@ echo "$password";
 ?>
 
 <div align="center">
-    <table class="border" width=600 cellpadding=0 cellspacing=0 border=0>
+<form name="update_user" method="post" action="<?php echo conf('web_path'); ?>/register.php" enctype="multipart/form-data">
+    <table class="border" width='600' cellpadding='0' cellspacing='0' border='0'>
     	<tr class="table-header">
     		<td>
     			<font size="2"><b><u>Ampache New User Registration</u></b></font>
     		</td>
     	</tr>
-				<form name="update_user" method="post" action="<?php echo conf('web_path'); ?>/register.php" enctype="multipart/form-data">
 	<?php
 	// USER AGREEMENT
 	if(conf('user_agreement')==true){ ?>
     	<tr>
-    		<td height=15 bgcolor="<?php print conf('base_color2'); ?>">
+    		<td height='15' bgcolor="<?php print conf('base_color2'); ?>">
     		</td>
     	</tr>
 	<tr>
-		<td bgcolor="<?php print conf('base_color2'); ?>" align=center valign=top>
-			<table width=100% border=0 cellpadding=0 cellspacing=0>
+		<td bgcolor="<?php print conf('base_color2'); ?>" align='center' valign='top'>
+			<table width='100%' border='0' cellpadding='0' cellspacing='0'>
 				<tr class="table-header">
-					<td align=center>
+					<td align='center'>
 						<font size="1"><b><u>User Agreement</u></b></font>
 					</td>
 				</tr>
@@ -81,7 +82,7 @@ echo "$password";
 					</td>
 				</tr>
 				<tr>
-					<td align=center height=35 valign=center>
+					<td align='center' height='35' valign='center'>
 						<input type='checkbox' name='accept_agreement'> I Accept
 					</td>
 				</tr>
@@ -90,75 +91,78 @@ echo "$password";
 	</tr>
 	<? } ?>
 	<tr>
-		<td height=15 bgcolor="<?php print conf('base_color2'); ?>">
+		<td height='15' bgcolor="<?php print conf('base_color2'); ?>">
 		</td>
 	</tr>
 	<tr>
-		<td bgcolor="<?php print conf('base_color2'); ?>" align=center valign=top>
-			<table width=100% cellpadding=0 cellspacing=0 border=0>
+		<td bgcolor="<?php print conf('base_color2'); ?>" align='center' valign='top'>
+			<table width='100%' cellpadding='0' cellspacing='0' border='0'>
 				<tr class="table-header">
-					<td align=center>
+					<td align='center'>
 						<font size="1"><b><u>User Information</u></b></font>
 					</td>
 				</tr>
 			</table>
-			<br>
-			<table width=60% cellpadding=0 cellspacing=0 border=0>
+			<br />
+			<table width='60%' cellpadding='0' cellspacing='0' border='0'>
 				<tr>
-					<td align=right>
+					<td align='right'>
 						<?php echo _("Username"); ?>:
 					</td>
 					<td>
-						<font color=red>*</font> <input type='text' name='username' id='username'>
+						<font color='red'>*</font> <input type='text' name='username' id='username' />
 					</td>
 				</tr>
 				<tr>
-					<td align=right>
+					<td align='right'>
 						<?php echo _("Full Name"); ?>:
 					</td>
 					<td>
-						<font color=red>*</font> <input type='text' name='fullname' id='fullname'>
+						<font color='red'>*</font> <input type='text' name='fullname' id='fullname' />
 					</td>
 				</tr>
 				<tr>
-					<td align=right>
+					<td align='right'>
 						<?php echo _("E-mail"); ?>:
 					</td>
 					<td>
-						<font color=red>*</font> <input type='text' name='email' id='email'>
+						<font color='red'>*</font> <input type='text' name='email' id='email' />
 					</td>
 				</tr>
 				<tr>
-					<td align=right>
+					<td align='right'>
 						<?php echo _("Password"); ?>:
 					</td>
 					<td>
-						<font color=red>*</font> <input type='password' name='password_1' id='password_1'>
+						<font color='red'>*</font> <input type='password' name='password_1' id='password_1' />
 					</td>
 				</tr>
 				<tr>
-					<td align=right>
+					<td align='right'>
 						<?php echo _("Confirm Password"); ?>:
 					</td>
 					<td>
-						<font color=red>*</font> <input type='password' name='password_2' id='password_2'>
+						<font color='red'>*</font> <input type='password' name='password_2' id='password_2' />
 					</td>
 				</tr>
 				<tr>
-					<td colspan=2 align=center height=20>
-						<font color=red>*</font>Required fields
+					<td colspan='2' align='center' height='20'>
+						<font color='red'>*</font>Required fields
 					</td>
 				</tr>
 				<tr>
-					<td colspan=2 align=center height=50>
+					<td colspan='2' align='center' height='50'>
 						<input type="hidden" name="action" value="add_user" />
-						<input type='reset' name='clear_info' id='clear_info' value='Clear Info'>
-						<input type='submit' name='submit_registration' id='submit_registration' value='<?php echo _("Register User"); ?>'>
+						<input type='reset' name='clear_info' id='clear_info' value='Clear Info' />
+						<input type='submit' name='submit_registration' id='submit_registration' value='<?php echo _("Register User"); ?>' />
 					</td>
 				</tr>
-				</form>
 			</table>
 		</td>
 	 </tr>
   </table>
+</form>
 </div>
+</div><!--end <div>id="maincontainer-->
+</body>
+</html>

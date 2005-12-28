@@ -119,7 +119,7 @@ while ( $results = mysql_fetch_object($db_result) ) {
                } elseif ( $user->disabled == 1) {
                        echo "<td bgcolor=\"gray\"> &nbsp; </td>";
                } else {
-                       echo "<td bgcolor=\"darkred\"> &nbsp; </td>";
+                       echo "<td bgcolor=\"#7f0000\"> &nbsp; </td>";
                }
 ?>	
 </tr>
