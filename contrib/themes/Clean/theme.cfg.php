@@ -57,11 +57,12 @@ font_color3 = "#666666"
 # Row Color 1-
 row_color1 = "#ffffff"
 
-# Row Color 2-FCFCF8 -"#F7FAFF"
+# Row Color 2-FCFCF8
+ -"#F7FAFF"
 row_color2 = "#FAFAF8"
 
 # Row Color 3
-row_color3 = "#E6EAC6"
+row_color3 = "#D1D8D5"
 
 # Error Color
 error_color = "#990033"

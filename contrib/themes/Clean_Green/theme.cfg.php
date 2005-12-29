@@ -61,7 +61,7 @@ row_color1 = "#ffffff"
 row_color2 = "#E6E9EA"
 
 # Row Color 3
-row_color3 = "#E6EAC6"
+row_color3 = "#8E9A9A"
 
 # Error Color
 error_color = "#990033"

@@ -30,8 +30,25 @@
 	browswer compatible as possible.  If someone actually knew what they were doing 
 	with css, I'm sure this could be done much more effeciently...
 */
-$border2="1pt solid Silver";
+$border2="1px solid Silver";
 ?>
+<script type="text/javascript" language="javascript">
+<!-- Begin Suckerfish hover menu JS
+// function needed for IE.  attaches mouseover/out events to give/remove css class .sfhover (fake hover)
+sfHover = function(navlist) {
+var sfEls = document.getElementById("navlist").getElementsByTagName("LI");
+for (var i=0; i <sfEls.length; i++) {
+    sfEls[i].onmouseover=function() {
+        this.className+=" sfhover";
+    }
+    sfEls[i].onmouseout=function() {
+        this.className=this.className.replace(new RegExp("sfhover\\b"), "");
+    }
+} // end for
+} // end function for sfHover
+if (window.attachEvent) window.attachEvent("onload", sfHover);
+// End Suckerfish hover menu JS-->
+</script>
 <style type="text/css">
 <!--
 body{
@@ -40,7 +57,7 @@ body{
 	font-size: <?php echo conf('font_size'); ?>px;
 }
 p{
-    	font-family: Arial,Helvetica,sans-serif;
+    font-family: Arial,Helvetica,sans-serif;
    	color: <?php echo conf('font_color1'); ?>;
 	font-size: <?php echo conf('font_size'); ?>px;
 }
@@ -48,15 +65,15 @@ ol{list-style:decimal;}
 ul{list-style:disc;}
 a{
 	color: <?php echo conf('font_color2'); ?>;
-	font-weigth:bolder;
+	font-weight:bolder;
 }
 a:link {text-decoration: none;}
 a:visited {text-decoration: none;}
 a:hover {text-decoration: underline;}
 a:active {text-decoration: underline;}
 
-img{border: 2px outset silver;}
-p img{border: none;}/*no border for ampache logo */
+img{border: thin outset Silver;}
+p img{border:none;}/*no border on login page logo.*/
 .text-box{border: thin outset;}
 H3{font-size: <?php echo conf('font_size')+2; ?>px;}
 TABLE{
@@ -92,7 +109,7 @@ textarea{
 	text-align: center;
 	border: <?php echo $border2;?>;
 }
-.table-header td{border: <?php echo $border2;?>;}/*override td and add border on all fields.
+.table-header td{border: <?php echo $border2;?>;}/*override td and add border on all fields.*/
 
 .navitem{/*compatiblity with older version*/
 	background: url(<?php echo conf('web_path'); ?><?php echo conf('theme_path'); ?>/images/ampache-light-bg.gif)  <?php echo conf('base_color2')?> repeat-x;
@@ -122,7 +139,7 @@ textarea{
 .headrow {
 	background:<?php echo conf('row_color3'); ?>;
 	font-size: <?php echo conf('font_size'); ?>px;
-	border: <?php echo $border;?>;	
+	border: <?php echo $border2;?>;	
 }
 
 .odd {/*odd rows in multi lined tables.*/
@@ -244,7 +261,7 @@ textarea{
         list-style: none;
         border-bottom: <?php echo $border2;?>;
         border-right: <?php echo $border2;?>;
-	border-left: <?php echo $border2;?>;
+		border-left: <?php echo $border2;?>;
         background: url(<?php echo conf('web_path'); ?><?php echo conf('theme_path'); ?>/images/ampache-light-bg.gif) <?php echo conf('base_color2')?> repeat;
     }
     #adminmenu li {
@@ -270,12 +287,109 @@ textarea{
         text-decoration: underline;
     }
 /*************** END Main Menu *************/
+/*New Menu (3.3.2 alpha 4+)*/
+/**
+ * Div Definitions
+ * These define how the page is layed out, be careful with these as changes to them
+ * can cause drastic layout changes
+ */
+	#maincontainer{
+			margin: 0px;
+	} 	
+	#topbar{
+			height: 60px;
+			padding-top:10px;
+			padding-left:10px;
+			background-color: <?php echo conf('bg_color1'); ?>;
+	}
+	#topbarright{
+			float: right;
+	}
+	#topbarleft{
+			float: left;
+	}
+	#topbarleft img{border:none;}/*ampache logo*/
+	#navcontainer ul li{
+			float:left; 
+			width:100%;
+	}
+	.subnavbutton{
+			background-color: <?php echo conf('row_color1'); ?>;
+			text-align:center;
+			text-decoration: none;
+			color: <?php echo conf('font_color2'); ?>;
+	}
+	#content{ 
+		margin-left:0px;
+	}
+/**
+ * Experimental for menus (Thx Sigger)
+ * TO DO: Fill in 1px border around menus & submenu items 
+ * Make padding appply to the li, not just an a.  Moving paddng: to li throws off the dropdown menu alignment.
+ */
+    #sidebar {
+		clear: both;
+		height: 100%;
+        margin: 0;
+        float: left;
+ /*       width: 110px;  /* this controls the width of the sidebar.  horizontal menu needs more width */
+        padding: 0;
+		border-top: <?php echo $border2;?>;
+		list-style: none;
+        line-height: 1.0;
+	}
+    #sidebar ul {
+		margin: 0px;
+		list-style: none;
+		padding: 0px;
+        font-family: verdana, arial, Helvetica, sans-serif;
+		line-height: 1.0;
+    }
+    #sidebar li {
+/*        margin: 0 0 1px 0; */
+		margin: 0px;
+        display: block;   
+		border-bottom:<?php echo $border2;?>;
+		border-left: <?php echo $border2;?>;
+		border-right: <?php echo $border2;?>;
+		padding: 5px 0px 5px 10px;   
+		width: 10em;
+		background-color: <?php echo conf('row_color2'); ?>;
+	}
+    #sidebar a, .navbutton {
+		display: block;  /*Not sure why this is neccesary, but it is for IE*/
+		text-decoration: none;
+	}
+    #sidebar li:hover, #sidebar li.sfhover {
+        color: <?php echo conf('font_color2'); ?>;
+		background-color: <?php echo conf('row_color3'); ?>;
+    }
+    #sidebar li:active {
+        background-color: <?php echo conf('row_color1'); ?>;
+    }
+    #sidebar li ul {
+		float: left;
+		position: absolute;	
+		width: 11em; 
+		border: <?php echo $border2;?>;
+		margin: -1.5em 0 0 10em;
+/* -2em 0 0 10em for vertical menu puts the submenu back up and to the right of the hovered menu item by "the right amount"*/
+		left: -999em;  /* this puts the submenu item way off to the left until it's called back by a hover (below) */
+    }
+    #sidebar li:hover ul, #sidebar li.sfhover ul {
+		left: auto;  /* this calls the submenu back when the parent li is hovered. */
+    }
+/**
+ * End Div Definitions
+ * This is the end of the main structure def's
+ */
+/*****/
 /*************** Page Header *********************/
     #pageheader {
-        background: <?php echo conf('bgcolor1');?>;
-    	
-    }
+        background-color: <?php echo conf('bg_color1'); ?>;   
+	}
     #pageheader img{border: none;}
 /*************** END Page Header *****************/
 -->
+
 </style>
