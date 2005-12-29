@@ -568,7 +568,7 @@ class User {
 		*/
 		if ($user_id != '-1') { 
 			$sql = "SELECT user_preference.preference,user_preference.value FROM user_preference,preferences " . 
-				"WHERE user_preference.preference = preferences.id AND user_preference.user='-1' AND preferences.type='user'";
+				"WHERE user_preference.preference = preferences.id AND user_preference.user='-1' AND preferences.type !='system'";
 			$db_results = mysql_query($sql, dbh());
 			while ($r = mysql_fetch_object($db_results)) { 
 				$zero_results[$r->preference] = $r->value;
@@ -578,7 +578,7 @@ class User {
 
 		$sql = "SELECT * FROM preferences";
 		if ($user_id != '-1') { 
-			$sql .= " WHERE type='user'";
+			$sql .= " WHERE type !='system'";
 		}
 		$db_results = mysql_query($sql, dbh());
 
