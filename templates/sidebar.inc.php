@@ -26,16 +26,16 @@
  * that have ['title'] ['url'] and ['active'] url assumes no conf('web_path')
  */
 
-$admin_items[] = array('title'=>'Users','url'=>'admin/users.php','active'=>'');
-$admin_items[] = array('title'=>'Mail Users','url'=>'admin/mail.php','active'=>'');
-$admin_items[] = array('title'=>'Catalog','url'=>'admin/catalog.php','active'=>'');
-$admin_items[] = array('title'=>'Site Preferences','url'=>'admin/preferences.php','active'=>'');
-$admin_items[] = array('title'=>'Access List','url'=>'admin/access.php','active'=>'');
+$admin_items[] = array('title'=>_("Users"),'url'=>'admin/users.php','active'=>'');
+$admin_items[] = array('title'=>_("Mail Users"),'url'=>'admin/mail.php','active'=>'');
+$admin_items[] = array('title'=>_("Catalog"),'url'=>'admin/catalog.php','active'=>'');
+$admin_items[] = array('title'=>_("Site Preferences"),'url'=>'admin/preferences.php','active'=>'');
+$admin_items[] = array('title'=>_("Access List"),'url'=>'admin/access.php','active'=>'');
 
-$browse_items[] = array('title'=>'Albums','url'=>'albums.php','active'=>'');
-$browse_items[] = array('title'=>'Artists','url'=>'artists.php','active'=>'');
-$browse_items[] = array('title'=>'Genre','url'=>'browse.php?action=genre','active'=>'');
-$browse_items[] = array('title'=>'Lists','url'=>'browse.php','active'=>'');
+$browse_items[] = array('title'=>_("Albums"),'url'=>'albums.php','active'=>'');
+$browse_items[] = array('title'=>_("Artists"),'url'=>'artists.php','active'=>'');
+$browse_items[] = array('title'=>_("Genre"),'url'=>'browse.php?action=genre','active'=>'');
+$browse_items[] = array('title'=>_("Lists"),'url'=>'browse.php','active'=>'');
 //$browse_items[] = array('title'=>'File','url'=>'files.php','active'=>'');
 
 ?>
@@ -143,7 +143,7 @@ $browse_items[] = array('title'=>'Lists','url'=>'browse.php','active'=>'');
 		</li>
 	<?php } ?> 
 		<?php if (conf('use_auth')) { ?>
-			<li><a href="<?php echo conf('web_path'); ?>/logout.php">Logout</a></li>
+			<li><a href="<?php echo conf('web_path'); ?>/logout.php"><?php echo _("Logout"); ?></a></li>
 		<?php } ?>
 	</ul>
 	
