@@ -31,6 +31,12 @@ $web_path = conf('web_path');
 	<td>
 	<span class="header1"><?php print _("Albums by") . " " . $artist->full_name; ?></span>
 	<ul>
+		<?php 
+			if (conf('ratings')) { 
+				show_rating($artist->id,'artist');
+			} // end if ratings
+		echo "<br />\n";
+		?>
         	<li><a href="<?php print $web_path; ?>/artists.php?action=show_all_songs&amp;artist=<?php print $artist_id; ?>"><?php print _("Show All Songs By") . " " . $artist->full_name; ?></a></li>
 	        <li><a href="<?php print $web_path; ?>/song.php?action=m3u&amp;artist=<?php print $artist_id; ?>"><?php print _("Play All Songs By") . " " . $artist->full_name; ?></a></li>
 	        <li><a href="<?php print $web_path; ?>/song.php?action=m3u&amp;artist_random=<?php print $artist_id; ?>"><?php print _("Play Random Songs By") . " " . $artist->full_name; ?></a></li>

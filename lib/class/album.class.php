@@ -420,7 +420,7 @@ class Album {
 		
 			/* Log this if we're doin debug */
 			if (conf('debug')) { 
-				log_event($GLOBALS['user']->username,'amazon-xml',"Searched using $search_term with " . conf('amazon_developer_key') . " as key " . count($final_results) . " results found");
+				log_event($GLOBALS['user']->username,'amazon-xml',"Searched using $keywords with " . conf('amazon_developer_key') . " as key " . count($final_results) . " results found");
 			}
 
 		} // if no cover

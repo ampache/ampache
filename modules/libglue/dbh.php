@@ -27,7 +27,7 @@
 
 function setup_sess_db($name, $host, $db, $username, $password) 
 {
-	$dbh = @mysql_connect($host, $username, $password) or header("Location:" . conf('web_path') . "/test.php");
+	$dbh = mysql_connect($host, $username, $password) or header("Location:" . conf('web_path') . "/test.php");
 	if ( !is_resource($dbh) )
 	{
 		echo "Unable to connect to \"". $host ."\" in order to \n" .   

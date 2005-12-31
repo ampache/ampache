@@ -37,7 +37,6 @@ $prefix = realpath($ampache_path . "/../");
 $configfile = "$prefix/config/ampache.cfg.php";
 require_once($prefix . "/lib/general.lib.php");
 
-
 /*********************STOP EDITING*********************************/
 
 /*
@@ -82,6 +81,7 @@ if (!$results['conf']['allow_stream_playback']) {
 	$results['conf']['allow_stream_playback'] = "true";
 }
 
+$results['conf']['raw_web_path']	= $results['conf']['web_path'];
 $results['conf']['web_path']		= $http_type . $_SERVER['HTTP_HOST'] . $results['conf']['web_path'];
 $results['conf']['version']		= '3.3.2-Beta1 (Build 001)';
 $results['conf']['catalog_file_pattern']= 'mp3|mpc|m4p|m4a|mp4|aac|ogg|rm|wma|asf|flac|spx';
@@ -208,14 +208,15 @@ require_once(conf('prefix') . "/lib/class/access.class.php");
 require_once(conf('prefix') . "/lib/class/error.class.php");
 require_once(conf('prefix') . "/lib/class/genre.class.php");
 
+
+/* Set a new Error Handler */
+$old_error_handler = set_error_handler("ampache_error_handler");
+
 /* Some Libglue Hacks */
 $array['dbh_name'] = 'stupid_pos';
 $array['stupid_pos'] = check_sess_db('local');
 libglue_param($array);
 /*  End Libglue Hacks */
-
-/* Set a new Error Handler */
-$old_error_handler = set_error_handler("ampache_error_handler");
 
 
 

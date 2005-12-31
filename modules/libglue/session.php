@@ -14,10 +14,9 @@
  */
 
 
-function check_sess_db($dbtype = 'local')
-{
-    if($dbtype === 'sso')
-    {
+function check_sess_db($dbtype = 'local') {
+
+    if($dbtype === 'sso') {
         $dbh = libglue_param(libglue_param('sso_dbh_name'));
         if(is_resource($dbh)) return $dbh;
         $dbh_name = libglue_param('sso_dbh_name');

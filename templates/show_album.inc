@@ -58,8 +58,8 @@ $username=$user->username;
 	<td valign="top">
 		<?php
 		if (conf('ratings')) { 
-			show_rating($album->id,'artist');
-		} // end if flash
+			show_rating($album->id,'album');
+		} // end if ratings
 		echo "<br />\n";
 		?>
 		<b>Actions:</b><br />
