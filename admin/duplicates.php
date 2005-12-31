@@ -38,10 +38,6 @@ $search_type = scrub_in($_REQUEST['search_type']);
 
 show_template('header');
 
-show_menu_items('Admin');
-show_admin_menu('Catalog');
-
-
 switch ($action)
 {
     case 'search':
@@ -52,7 +48,4 @@ switch ($action)
         show_duplicate_searchbox($search_type);
 }
 show_footer();
-show_clear();
-show_page_footer ('Admin', 'Catalog',$user->prefs['display_menu']);
-
 ?>

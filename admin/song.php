@@ -42,9 +42,6 @@ $song = scrub_in($_REQUEST['song']);
 
 show_template('header');
 
-show_menu_items('Admin');
-show_admin_menu('Catalog');
-
 $song_obj = new Song($_REQUEST['song_id']);
 
 switch($action) {
@@ -180,9 +177,6 @@ echo <<<EDIT_SONG_6
 EDIT_SONG_6;
 }
 
+show_footer();
 ?>
 
-<hr />
-
-</body>
-</html>
