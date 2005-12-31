@@ -51,15 +51,23 @@ while ($r = mysql_fetch_row($db_results)) {
 	$catalog = new Catalog($r['0']);
 	$songs = $catalog->get_catalog_files();
 
+	echo "Starting Catalog: $catalog->name\n";
+
 	/* Foreach through each file and find it a home! */
 	foreach ($songs as $song) { 
 		/* Find this poor song a home */
 		$song->format_song();
 		$directory 	= sort_find_home($song,$catalog->sort_pattern,$catalog->path);
 		$filename 	= sort_find_filename($song,$catalog->rename_pattern);
-	
-		echo $directory . "/" . $filename . "\n";
-		flush();
+
+		$fullpath = $directory . "/" . $filename;
+
+		/* Check for Demo Mode */
+		if ($test_mode) { 
+			/* We're just talking here... no work */
+			echo "Moving File:\n\tSource: $song->file\n\tDest: $fullpath\n";
+			flush();
+		}
 	} // end foreach song
 
 } // end foreach catalogs
@@ -72,6 +80,8 @@ while ($r = mysql_fetch_row($db_results)) {
  * along with the song object. Nothing Special Here
  */
 function sort_find_filename($song,$rename_pattern) { 
+	
+	$extension = ltrim(substr($song->file,strlen($song->file)-4,4),".");
 
 	/* Create the filename that this file should have */
 	$album 	= $song->f_album_full;
@@ -87,9 +97,9 @@ function sort_find_filename($song,$rename_pattern) {
 
 	$rename_pattern = str_replace($replace_array,$content_array,$rename_pattern);
 
-	$rename_pattern = preg_replace("/[^A-Za-z0-9\-\_\ \'\,]/","_",$rename_pattern);
+	$rename_pattern = preg_replace("[^A-Za-z0-9\-\_\ \'\,\(\)]","_",$rename_pattern);
 
-	return $rename_pattern;
+	return $rename_pattern . "." . $extension;
 
 } // sort_find_filename
 
@@ -110,7 +120,6 @@ function sort_find_home($song,$sort_pattern,$base) {
 	$track	= $song->track;
 	$title	= $song->title;
 	$year	= $song->year;
-
 
 	/* Do the various check */
 	$album_object = new Album($song->album);
@@ -135,7 +144,7 @@ function sort_find_home($song,$sort_pattern,$base) {
 	$sort_pattern = str_replace($replace_array,$content_array,$sort_pattern);
 
 	/* Remove non A-Z0-9 chars */
-	$sort_pattern = preg_replace("/[^A-Za-z0-9\-\_\ \'\,]/","_",$sort_pattern);
+	$sort_pattern = preg_replace("[^\\\/A-Za-z0-9\-\_\ \'\,\(\)]","_",$sort_pattern);
 	
 	$home .= "/$sort_pattern";
 
