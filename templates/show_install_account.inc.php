@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2005 Ampache.org
+ Copyright (c) 2001 - 2006 Ampache.org
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
@@ -53,7 +53,8 @@
 </dl>
 <br /><br />
 <span class="header2">Create Admin Account</span>
-<form method="post" action="<?php echo $_SERVER['PHP_SELF'] . "?action=create_account"; ?>" enctype="multipart/form-data" >
+<?php echo $GLOBALS['error']->print_error('general'); ?>
+<form method="post" action="<?php echo $GLOBALS['php_self'] . "?action=create_account"; ?>" enctype="multipart/form-data" >
 <table cellpadding="5" cellspacing="0" border="0">
 <tr>
 	<td><?php echo _("Username"); ?></td>

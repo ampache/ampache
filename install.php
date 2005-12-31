@@ -30,6 +30,7 @@ require_once('lib/install.php');
 require_once('modules/lib.php');
 require_once('lib/debug.php');
 require_once('lib/class/user.class.php');
+require_once('lib/class/error.class.php');
 
 // Libglue Requires
 require_once('modules/libglue/auth.php');
@@ -63,6 +64,8 @@ $username = scrub_in($_REQUEST['local_username']);
 $password = scrub_in($_REQUEST['local_pass']);
 $hostname = scrub_in($_REQUEST['local_host']);
 $database = scrub_in($_REQUEST['local_db']);
+$php_self = preg_replace("/^\/(.+\.php)\/?.*/","$1",$_SERVER['PHP_SELF']);
+$error	  = new Error();
 
 /* Catch the Current Action */
 switch ($action) { 
@@ -73,7 +76,7 @@ switch ($action) {
 			break;
 		}
 		
-		header ("Location: " . $_SERVER['PHP_SELF'] . "?action=show_create_config&local_db=$database&local_host=$hostname");
+		header ("Location: " . $php_self . "?action=show_create_config&local_db=$database&local_host=$hostname");
 		
 		break;
 	case 'create_config':

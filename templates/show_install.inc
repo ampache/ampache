@@ -29,6 +29,7 @@
 <title>Ampache :: For The Love Of Music - Install</title>
 </head>
 <body>
+<script src="lib/general.js" language="javascript" type="text/javascript"></script>
 <?php require_once(conf('prefix') . "/templates/style.inc"); ?>
 <div class="text-box"> 
 <span class="header1"><?php echo _("Ampache Installation"); ?></span>
@@ -51,6 +52,7 @@
 <?php echo _("Step 3 - Setup Initial Account"); ?><br />
 <br /><br />
 <span class="header2">Insert Ampache Database</span>
+<?php echo $GLOBALS['error']->print_error('general'); ?>
 <form method="post" action="<?php echo $http_type . $_SERVER['HTTP_HOST'] .  $_SERVER['PHP_SELF'] . "?action=create_db"; ?>" enctype="multipart/form-data" >
 <table cellpadding="5" cellspacing="0" border="0">
 <tr>
@@ -68,6 +70,19 @@
 <tr>
 	<td><?php echo _("MySQL Administrative Password"); ?></td>
 	<td><input type="password" name="local_pass" /></td>
+</tr>
+<tr>
+	<td><?php echo _("Create Database User for New Database"); ?>? </td>
+	<td>
+		<input type="checkbox" value="create_db_user" name="db_user" onclick="flipField('db_username');flipField('db_password');">
+	</td>
+<tr>
+	<td><?php echo _("Ampache Database Username"); ?></td>
+	<td><input type="textbox" id="db_username" name="db_username" value="ampache" disabled="disabled" /></td>
+</tr>
+<tr>
+	<td><?php echo _("Ampache Database User Password"); ?></td>
+	<td><input type="password" id="db_password" name="db_password" value="" disabled="disabled" /></td>
 </tr>
 <tr>
 	<td>&nbsp;</td>

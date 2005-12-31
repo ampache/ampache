@@ -110,17 +110,28 @@ function install_insert_db($username,$password,$hostname,$database) {
 	/* Attempt to make DB connection */
 	$dbh = @mysql_pconnect($hostname,$username,$password);
 	
-
 	/* Check/Create Database as needed */
 	$db_selected = @mysql_select_db($database, $dbh);
 	if (!$db_selected) { 
 		$sql = "CREATE DATABASE `" . $database . "`";
 		if (!$db_results = @mysql_query($sql, $dbh)) { 
+			$GLOBALS['error']->add_error('general',"Error: Unable to Create Database " . mysql_error());
 			return false;
 		}
 		@mysql_select_db($database, $dbh);
 	} // if db can't be selected
-		
+	/* Check and see if we should create a user here */
+	if ($_REQUEST['db_user'] == 'create_db_user') { 
+		$db_user = scrub_in($_REQUEST['db_username']);
+		$db_pass = scrub_in($_REQUEST['db_password']);
+		$sql = "GRANT ALL PRIVILEGES ON " . sql_escape($database,$dbh) . ".* TO " .
+			"'" . sql_escape($db_user,$dbh) . "'@'" . sql_escape($hostname,$dbh) . "' IDENTIFIED BY '" . sql_escape($db_pass,$dbh) . "' WITH GRANT OPTION";	
+
+		if (!$db_results = @mysql_query($sql, $dbh)) { 
+			$GLOBALS['error']->add_error('general',"Error: Unable to Insert $db_user with permissions to $database on $hostname " . mysql_error());
+			return false;
+		}
+	} // end if we are creating a user
 
 	/* Attempt to insert database */
          $query = fread(fopen("sql/ampache.sql", "r"), filesize("sql/ampache.sql"));
@@ -154,9 +165,11 @@ function install_create_config($web_path,$username,$password,$hostname,$database
 	*/
 	// Connect to the DB
 	if(!$dbh = @mysql_pconnect($hostname,$username,$password)) { 
+		$GLOBALS['error']->add_error('general',"Database Connection Failed Check Hostname, Username and Password");
 		return false;
 	}
 	if (!$db_selected = @mysql_select_db($database, $dbh)) { 
+		$GLOBALS['error']->add_error('general',"Database Selection Failure Check Existance of $database");
 		return false;
 	}
 
@@ -197,12 +210,12 @@ function install_create_config($web_path,$username,$password,$hostname,$database
 	if (!$config_handle = @fopen("config/ampache.cfg.php",'w')) { 
 		$browser = new Browser();
 		$browser->downloadHeaders("ampache.cfg.php","text/plain",false,filesize("config/ampache.cfg.php.dist"));
-
 		echo $config_data;
 		exit();
 		
 	}
 	if (!@fwrite($config_handle,$config_data)) {
+		$GLOBALS['error']->add_error('general',"Error: Unable to write Config File but file writeable?");
 		return false;
 	}
 
@@ -229,7 +242,10 @@ function install_create_account($username,$password) {
 	
 	$insert_id = mysql_insert_id($dbh);
 	
-	if (!$insert_id) { return false; }
+	if (!$insert_id) { 
+		$GLOBALS['error']->add_error('general',"Insert of Base User Failed, Check test.php");
+		return false; 
+	}
 
 	return true;
 		

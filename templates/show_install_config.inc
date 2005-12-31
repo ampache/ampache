@@ -53,6 +53,7 @@
 <?php echo _("Step 3 - Setup Initial Account"); ?></a><br />
 <br /><br />
 <span class="header2">Generate Config File</span>
+<?php echo $GLOBALS['error']->print_error('general'); ?>
 <form method="post" action="<?php echo $_SERVER['PHP_SELF'] . "?action=create_config"; ?>" enctype="multipart/form-data" >
 <table cellpadding="5" cellspacing="0" border="0">
 <tr>
@@ -61,15 +62,15 @@
 </tr>
 <tr>
 	<td><?php echo _("Desired Database Name"); ?></td>
-	<td><input type="textbox" name="local_db" value="<?php echo $_REQUEST['local_db']; ?>" /></td>
+	<td><input type="textbox" name="local_db" value="<?php echo scrub_out($_REQUEST['local_db']); ?>" /></td>
 </tr>
 <tr>
 	<td><?php echo _("MySQL Hostname"); ?></td>
-	<td><input type="textbox" name="local_host" value="<?php echo $_REQUEST['local_host']; ?>" /></td>
+	<td><input type="textbox" name="local_host" value="<?php echo scrub_out($_REQUEST['local_host']); ?>" /></td>
 </tr>
 <tr>
 	<td><?php echo _("MySQL Username"); ?></td>
-	<td><input type="textbox" name="local_username" value="username" /></td>
+	<td><input type="textbox" name="local_username" value="<?php echo scrub_out($_REQUEST['local_username']); ?>" /></td>
 </tr>
 <tr>
 	<td><?php echo _("MySQL Password"); ?></td>
@@ -121,12 +122,12 @@
 <tr>
 	<td>&nbsp;</td>
 	<td>
-	<a href="<?php echo $http_type . $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF']; ?>?action=show_create_config&local_db=<?php echo $_REQUEST['local_db']; ?>&local_host=<?php echo $_REQUEST['local_host']; ?>">[<?php echo _("Check for Config"); ?>]</a>
+	<a href="<?php echo $http_type . $_SERVER['HTTP_HOST'] . $GLOBALS['php_self']; ?>?action=show_create_config&local_db=<?php echo $_REQUEST['local_db']; ?>&local_host=<?php echo $_REQUEST['local_host']; ?>">[<?php echo _("Check for Config"); ?>]</a>
 	</td>
 </tr>
 </table>
 <br />
-<form method="post" action="<?php echo $_SERVER['PHP_SELF'] . "?action=show_create_account"; ?>" enctype="multipart/form-data">
+<form method="post" action="<?php echo $GLOBALS['php_self'] . "?action=show_create_account"; ?>" enctype="multipart/form-data">
 <input type="Submit" value="Continue to Step 3" />
 </form>
 </div>

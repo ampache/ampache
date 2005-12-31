@@ -4,6 +4,9 @@
 
 --------------------------------------------------------------------------
   v.3.3.2-Beta1
+  	- Updated SQL file
+	- Fixed Install script so it throws errors and is now able to
+		if specified create the database user for you
   	- Added Popup Album Art (Thx Di-Fosfor)
   	- Fixed Typo in Amazon Search debug statement
   	- Added sort_files.php.inc to /bin 

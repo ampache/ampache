@@ -19,6 +19,8 @@ CREATE TABLE `access_list` (
   `start` int(11) unsigned NOT NULL default '0',
   `end` int(11) unsigned NOT NULL default '0',
   `level` smallint(3) unsigned NOT NULL default '5',
+  `user` varchar(128) default NULL,
+  `key` varchar(255) default NULL,
   PRIMARY KEY  (`id`),
   KEY `ip` (`start`)
 ) TYPE=MyISAM;
@@ -96,8 +98,7 @@ CREATE TABLE `catalog` (
   `catalog_type` enum('local','remote') NOT NULL default 'local',
   `last_update` int(11) unsigned NOT NULL default '0',
   `last_add` int(11) unsigned NOT NULL default '0',
-  `enabled` enum('true','false') NOT NULL default 'true',
-  `private` int(1) unsigned NOT NULL default '0',
+  `enabled` tinyint(1) unsigned NOT NULL default '1',
   `id3_set_command` varchar(255) NOT NULL default '/usr/bin/id3v2 -a "%a" -A "%A" -t "%t" -g %g -y %y -T %T -c "%c" "%filename"',
   `rename_pattern` varchar(255) NOT NULL default '%a - %T - %t.mp3',
   `sort_pattern` varchar(255) NOT NULL default '%C/%a/%A',
@@ -123,10 +124,10 @@ UNLOCK TABLES;
 DROP TABLE IF EXISTS `flagged`;
 CREATE TABLE `flagged` (
   `id` int(11) NOT NULL auto_increment,
-  `user` int(10) unsigned NOT NULL default '0',
+  `user` varchar(128) NOT NULL default '',
   `type` enum('badmp3','badid3','newid3','setid3','del','sort','ren','notify','done') NOT NULL default 'badid3',
   `song` int(11) unsigned NOT NULL default '0',
-  `date` int(10) unsigned NOT NULL default '0',
+  `date` int(11) unsigned NOT NULL default '0',
   `comment` text,
   UNIQUE KEY `id` (`id`),
   UNIQUE KEY `song` (`song`),
@@ -150,7 +151,7 @@ UNLOCK TABLES;
 DROP TABLE IF EXISTS `flagged_song`;
 CREATE TABLE `flagged_song` (
   `id` int(11) unsigned NOT NULL auto_increment,
-  `song` int(10) unsigned NOT NULL default '0',
+  `song` int(11) unsigned NOT NULL default '0',
   `file` varchar(255) NOT NULL default '',
   `catalog` int(11) unsigned NOT NULL default '0',
   `album` int(11) unsigned NOT NULL default '0',
@@ -166,9 +167,9 @@ CREATE TABLE `flagged_song` (
   `size` mediumint(4) unsigned NOT NULL default '0',
   `time` mediumint(5) NOT NULL default '0',
   `track` int(11) unsigned default NULL,
-  `genre` int(10) default NULL,
-  `played` enum('true','false') NOT NULL default 'false',
-  `enabled` enum('true','false') NOT NULL default 'true',
+  `genre` int(11) unsigned default NULL,
+  `played` tinyint(1) unsigned NOT NULL default '0',
+  `enabled` tinyint(1) unsigned NOT NULL default '1',
   `update_time` int(11) unsigned default '0',
   `addition_time` int(11) unsigned default '0',
   PRIMARY KEY  (`id`),
@@ -203,7 +204,7 @@ CREATE TABLE `flagged_types` (
   `id` int(11) NOT NULL auto_increment,
   `type` varchar(32) NOT NULL default '',
   `value` varchar(128) NOT NULL default '',
-  `access` enum('user','admin') NOT NULL default 'user',
+  `access` smallint(3) unsigned NOT NULL default '25',
   PRIMARY KEY  (`id`)
 ) TYPE=MyISAM;
 
@@ -214,7 +215,7 @@ CREATE TABLE `flagged_types` (
 
 /*!40000 ALTER TABLE `flagged_types` DISABLE KEYS */;
 LOCK TABLES `flagged_types` WRITE;
-INSERT INTO `flagged_types` VALUES (1,'badmp3','Corrupt or low-quality mp3','user'),(2,'badid3','Incomplete or incorrect song information','user'),(3,'newid3','Updated id3 information is available','admin'),(4,'del','Remove this file','admin'),(5,'sort','Put this file in a directory matching the conventions of its catalog','admin'),(6,'ren','Rename this file from id3 info','admin'),(7,'notify','Notify the user who flagged this song that it has been updated.','admin'),(8,'done','Take no action on this song.','admin'),(9,'setid3','Schedule file for id3 update','admin'),(10,'disabled','Disabled this song','admin');
+INSERT INTO `flagged_types` VALUES (1,'badmp3','Corrupt or low-quality mp3',25),(2,'badid3','Incomplete or incorrect song information',25),(3,'newid3','Updated id3 information is available',100),(4,'del','Remove this file',100),(5,'sort','Put this file in a directory matching the conventions of its catalog',100),(6,'ren','Rename this file from id3 info',100),(7,'notify','Notify the user who flagged this song that it has been updated.',100),(8,'done','Take no action on this song.',100),(9,'setid3','Schedule file for id3 update',100),(10,'disabled','Disabled this song',100);
 UNLOCK TABLES;
 /*!40000 ALTER TABLE `flagged_types` ENABLE KEYS */;
 
@@ -240,6 +241,30 @@ UNLOCK TABLES;
 /*!40000 ALTER TABLE `genre` ENABLE KEYS */;
 
 --
+-- Table structure for table `ip_history`
+--
+
+DROP TABLE IF EXISTS `ip_history`;
+CREATE TABLE `ip_history` (
+  `username` varchar(128) default NULL,
+  `ip` int(11) unsigned NOT NULL default '0',
+  `connections` int(11) unsigned NOT NULL default '1',
+  `date` int(11) unsigned NOT NULL default '0',
+  KEY `username` (`username`),
+  KEY `date` (`date`)
+) TYPE=MyISAM;
+
+--
+-- Dumping data for table `ip_history`
+--
+
+
+/*!40000 ALTER TABLE `ip_history` DISABLE KEYS */;
+LOCK TABLES `ip_history` WRITE;
+UNLOCK TABLES;
+/*!40000 ALTER TABLE `ip_history` ENABLE KEYS */;
+
+--
 -- Table structure for table `now_playing`
 --
 
@@ -247,8 +272,9 @@ DROP TABLE IF EXISTS `now_playing`;
 CREATE TABLE `now_playing` (
   `id` int(11) unsigned NOT NULL auto_increment,
   `song_id` int(11) unsigned NOT NULL default '0',
-  `user_id` int(11) unsigned default NULL,
+  `user` varchar(128) default NULL,
   `start_time` int(11) unsigned NOT NULL default '0',
+  `session` varchar(64) default NULL,
   PRIMARY KEY  (`id`)
 ) TYPE=MyISAM;
 
@@ -269,7 +295,7 @@ UNLOCK TABLES;
 DROP TABLE IF EXISTS `object_count`;
 CREATE TABLE `object_count` (
   `id` int(11) unsigned NOT NULL auto_increment,
-  `object_type` enum('album','artist','song','playlist') NOT NULL default 'song',
+  `object_type` enum('album','artist','song','playlist','genre','catalog') NOT NULL default 'song',
   `object_id` int(11) unsigned NOT NULL default '0',
   `date` int(11) unsigned NOT NULL default '0',
   `count` int(11) unsigned NOT NULL default '0',
@@ -297,9 +323,9 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `playlist`;
 CREATE TABLE `playlist` (
-  `id` int(10) unsigned NOT NULL auto_increment,
+  `id` int(11) unsigned NOT NULL auto_increment,
   `name` varchar(128) NOT NULL default '',
-  `owner` int(10) unsigned NOT NULL default '0',
+  `user` varchar(128) NOT NULL default '',
   `type` enum('private','public') NOT NULL default 'private',
   `date` timestamp NOT NULL,
   PRIMARY KEY  (`id`),
@@ -323,9 +349,12 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `playlist_data`;
 CREATE TABLE `playlist_data` (
+  `id` int(11) unsigned NOT NULL auto_increment,
   `playlist` int(11) unsigned NOT NULL default '0',
-  `song` int(11) unsigned NOT NULL default '0',
+  `song` int(11) unsigned default NULL,
+  `dyn_song` varchar(255) default NULL,
   `track` int(11) unsigned NOT NULL default '0',
+  PRIMARY KEY  (`id`),
   KEY `playlist` (`playlist`)
 ) TYPE=MyISAM;
 
@@ -387,9 +416,34 @@ CREATE TABLE `preferences` (
 
 /*!40000 ALTER TABLE `preferences` DISABLE KEYS */;
 LOCK TABLES `preferences` WRITE;
-INSERT INTO `preferences` VALUES (1,'download','0','Allow Downloads',100,'user',0),(2,'upload','0','Allow Uploads',100,'user',0),(3,'quarantine','1','Quarantine All Uploads',100,'user',0),(4,'popular_threshold','10','Popular Threshold',25,'user',0),(5,'font','Verdana, Helvetica, sans-serif','Interface Font',25,'user',0),(6,'bg_color1','#ffffff','Background Color 1',25,'user',0),(7,'bg_color2','#000000','Background Color 2',25,'user',0),(8,'base_color1','#bbbbbb','Base Color 1',25,'user',0),(9,'base_color2','#dddddd','Base Color 2',25,'user',0),(10,'font_color1','#222222','Font Color 1',25,'user',0),(11,'font_color2','#000000','Font Color 2',25,'user',0),(12,'font_color3','#ffffff','Font Color 3',25,'user',0),(13,'row_color1','#cccccc','Row Color 1',25,'user',0),(14,'row_color2','#bbbbbb','Row Color 2',25,'user',0),(15,'row_color3','#dddddd','Row Color 3',25,'user',0),(16,'error_color','#990033','Error Color',25,'user',0),(17,'font_size','10','Font Size',25,'user',0),(18,'upload_dir','/tmp','Upload Directory',25,'user',0),(19,'sample_rate','32','Downsample Bitrate',25,'user',0),(20,'refresh_limit','0','Refresh Rate for Homepage',100,'system',0),(21,'local_length','900','Session Expire in Seconds',100,'system',0),(22,'site_title','For The Love of Music','Website Title',100,'system',0),(23,'lock_songs','0','Lock Songs',100,'system',1),(24,'force_http_play','1','Forces Http play regardless of port',100,'system',1),(25,'http_port','80','Non-Standard Http Port',100,'system',1),(26,'catalog_echo_count','100','Catalog Echo Interval',100,'system',0),(27,'album_cache_limit','25','Album Cache Limit',100,'system',0),(28,'artist_cache_limit','50','Artist Cache Limit',100,'system',0),(29,'play_type','stream','Type of Playback',25,'user',0),(30,'direct_link','1','Allow Direct Links',100,'user',0),(31,'lang','en_US','Language',100,'user',0),(32,'playlist_type','m3u','Playlist Type',100,'user',0),(33,'theme_name','classic','Theme',0,'user',0),(34,'ellipse_threshold_album','27','Album Ellipse Threshold',0,'user',0),(35,'ellipse_threshold_artist','27','Artist Ellipse Threshold',0,'user',0),(36,'ellipse_threshold_title','27','Title Ellipse Threshold',0,'user',0),(37,'display_menu','1','Show Bottom Menu',0,'user',0);
+INSERT INTO `preferences` VALUES (1,'download','0','Allow Downloads',100,'options',0),(2,'upload','0','Allow Uploads',100,'options',0),(3,'quarantine','1','Quarantine All Uploads',100,'options',0),(4,'popular_threshold','10','Popular Threshold',25,'interface',0),(5,'font','Verdana, Helvetica, sans-serif','Interface Font',25,'theme',0),(6,'bg_color1','#ffffff','Background Color 1',25,'theme',0),(7,'bg_color2','#000000','Background Color 2',25,'theme',0),(8,'base_color1','#bbbbbb','Base Color 1',25,'theme',0),(9,'base_color2','#dddddd','Base Color 2',25,'theme',0),(10,'font_color1','#222222','Font Color 1',25,'theme',0),(11,'font_color2','#000000','Font Color 2',25,'theme',0),(12,'font_color3','#ffffff','Font Color 3',25,'theme',0),(13,'row_color1','#cccccc','Row Color 1',25,'theme',0),(14,'row_color2','#bbbbbb','Row Color 2',25,'theme',0),(15,'row_color3','#dddddd','Row Color 3',25,'theme',0),(16,'error_color','#990033','Error Color',25,'theme',0),(17,'font_size','10','Font Size',25,'theme',0),(18,'upload_dir','/tmp','Upload Directory',25,'options',0),(19,'sample_rate','32','Downsample Bitrate',25,'streaming',0),(20,'refresh_limit','0','Refresh Rate for Homepage',100,'interface',0),(21,'local_length','900','Session Expire in Seconds',100,'system',0),(22,'site_title','For The Love of Music','Website Title',100,'system',0),(23,'lock_songs','0','Lock Songs',100,'system',1),(24,'force_http_play','1','Forces Http play regardless of port',100,'system',1),(25,'http_port','80','Non-Standard Http Port',100,'system',1),(26,'catalog_echo_count','100','Catalog Echo Interval',100,'system',0),(27,'album_cache_limit','25','Album Cache Limit',100,'system',0),(28,'artist_cache_limit','50','Artist Cache Limit',100,'system',0),(29,'play_type','stream','Type of Playback',25,'streaming',0),(30,'direct_link','1','Allow Direct Links',100,'options',0),(31,'lang','en_US','Language',100,'interface',0),(32,'playlist_type','m3u','Playlist Type',100,'streaming',0),(33,'theme_name','classic','Theme',0,'theme',0),(34,'ellipse_threshold_album','27','Album Ellipse Threshold',0,'interface',0),(35,'ellipse_threshold_artist','27','Artist Ellipse Threshold',0,'interface',0),(36,'ellipse_threshold_title','27','Title Ellipse Threshold',0,'interface',0),(38,'condPL','1','Condense Localplay Playlist',0,'interface',0),(39,'quarantine_dir','/tmp','Quarantine Directory',100,'system',0);
 UNLOCK TABLES;
 /*!40000 ALTER TABLE `preferences` ENABLE KEYS */;
+
+--
+-- Table structure for table `ratings`
+--
+
+DROP TABLE IF EXISTS `ratings`;
+CREATE TABLE `ratings` (
+  `id` int(11) unsigned NOT NULL auto_increment,
+  `user` varchar(128) NOT NULL default '',
+  `object_type` enum('artist','album','song') NOT NULL default 'artist',
+  `object_id` int(11) unsigned NOT NULL default '0',
+  `user_rating` enum('00','0','1','2','3','4','5') NOT NULL default '0',
+  PRIMARY KEY  (`id`),
+  KEY `object_id` (`object_id`)
+) TYPE=MyISAM;
+
+--
+-- Dumping data for table `ratings`
+--
+
+
+/*!40000 ALTER TABLE `ratings` DISABLE KEYS */;
+LOCK TABLES `ratings` WRITE;
+UNLOCK TABLES;
+/*!40000 ALTER TABLE `ratings` ENABLE KEYS */;
 
 --
 -- Table structure for table `session`
@@ -401,7 +455,8 @@ CREATE TABLE `session` (
   `username` varchar(16) NOT NULL default '',
   `expire` int(11) unsigned NOT NULL default '0',
   `value` text NOT NULL,
-  `type` enum('sso','mysql','ldap') NOT NULL default 'mysql',
+  `ip` int(11) unsigned default NULL,
+  `type` enum('sso','mysql','ldap','http') NOT NULL default 'mysql',
   PRIMARY KEY  (`id`)
 ) TYPE=MyISAM;
 
@@ -435,9 +490,9 @@ CREATE TABLE `song` (
   `size` int(11) unsigned NOT NULL default '0',
   `time` mediumint(5) NOT NULL default '0',
   `track` int(11) unsigned default NULL,
-  `genre` int(10) default NULL,
-  `played` enum('true','false') NOT NULL default 'false',
-  `status` enum('disabled','enabled') NOT NULL default 'enabled',
+  `genre` int(11) unsigned default NULL,
+  `played` tinyint(1) unsigned NOT NULL default '0',
+  `enabled` tinyint(1) unsigned NOT NULL default '1',
   `update_time` int(11) unsigned default '0',
   `addition_time` int(11) unsigned default '0',
   PRIMARY KEY  (`id`),
@@ -450,7 +505,7 @@ CREATE TABLE `song` (
   KEY `addition_time` (`addition_time`),
   KEY `catalog` (`catalog`),
   KEY `played` (`played`),
-  KEY `enabled` (`status`)
+  KEY `enabled` (`enabled`)
 ) TYPE=MyISAM;
 
 --
@@ -481,7 +536,7 @@ CREATE TABLE `update_info` (
 
 /*!40000 ALTER TABLE `update_info` DISABLE KEYS */;
 LOCK TABLES `update_info` WRITE;
-INSERT INTO `update_info` VALUES ('db_version','331003');
+INSERT INTO `update_info` VALUES ('db_version','332005');
 UNLOCK TABLES;
 /*!40000 ALTER TABLE `update_info` ENABLE KEYS */;
 
@@ -492,10 +547,9 @@ UNLOCK TABLES;
 DROP TABLE IF EXISTS `upload`;
 CREATE TABLE `upload` (
   `id` int(11) unsigned NOT NULL auto_increment,
-  `user` int(11) unsigned NOT NULL default '0',
+  `user` varchar(128) NOT NULL default '',
   `file` varchar(255) NOT NULL default '',
-  `comment` varchar(255) NOT NULL default '',
-  `action` enum('add','quarantine','delete') NOT NULL default 'quarantine',
+  `action` enum('add','delete','quarantine') NOT NULL default 'add',
   `addition_time` int(11) unsigned default '0',
   PRIMARY KEY  (`id`),
   KEY `action` (`action`),
@@ -518,7 +572,6 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `user`;
 CREATE TABLE `user` (
-  `id` int(11) unsigned NOT NULL auto_increment,
   `username` varchar(128) NOT NULL default '',
   `fullname` varchar(128) NOT NULL default '',
   `email` varchar(128) default NULL,
@@ -527,7 +580,6 @@ CREATE TABLE `user` (
   `disabled` tinyint(1) NOT NULL default '0',
   `offset_limit` int(5) unsigned NOT NULL default '50',
   `last_seen` int(11) unsigned NOT NULL default '0',
-  PRIMARY KEY  (`id`),
   UNIQUE KEY `username` (`username`)
 ) TYPE=MyISAM;
 
@@ -568,7 +620,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `user_preference`;
 CREATE TABLE `user_preference` (
-  `user` int(11) unsigned NOT NULL default '0',
+  `user` varchar(128) NOT NULL default '',
   `preference` int(11) unsigned NOT NULL default '0',
   `value` varchar(255) NOT NULL default '',
   KEY `user` (`user`),

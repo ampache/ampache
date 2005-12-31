@@ -29,21 +29,6 @@ and dumps it to the browser as an image mime type.
 
 require('modules/init.php');
 
-$album = new Album($_REQUEST['id']);
-
-// Check db first
-$r = $album->get_art($_REQUEST['fast']);
-
-if (isset($r->art)) {
-    $art = $r->art;
-    $mime = $r->art_mime;
-    $found = 1;
-}
-else { 
-	header('Content-type: image/gif');
-	readfile(conf('prefix') . conf('theme_path') . "/images/blankalbum.gif");
-} // else no image
-
 /* Decide what size this image is */
 switch ($_REQUEST['thumb']) { 
 	case '1':
@@ -65,6 +50,21 @@ switch ($_REQUEST['type']) {
 		show_template('show_big_art');
 	break;
 	default: 
+		$album = new Album($_REQUEST['id']);
+
+		// Check db first
+		$r = $album->get_art($_REQUEST['fast']);
+
+		if (isset($r->art)) {
+		    $art = $r->art;
+		    $mime = $r->art_mime;
+		}
+		else { 
+			header('Content-type: image/gif');
+			readfile(conf('prefix') . conf('theme_path') . "/images/blankalbum.gif");
+			break;
+		} // else no image
+
 		// Print the album art
 		$extension = substr($mime,strlen($mime)-3,3);
 		header("Content-type: $mime");
