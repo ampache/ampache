@@ -105,7 +105,8 @@ switch ($action) {
 		/* Setup Preferences */
 		$temp_user = new User($username);
 		$temp_user->fix_preferences();
-		$temp_user = new User(0);
+		$temp_user = new User(-1);
+		$temp_user->username = '-1';
 		$temp_user->fix_preferences();
 
 	

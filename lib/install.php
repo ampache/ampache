@@ -240,10 +240,8 @@ function install_create_account($username,$password) {
 	$sql = "INSERT INTO user (`username`,`password`,`offset_limit`,`access`) VALUES ('$username',PASSWORD('$password'),'50','admin')";
 	$db_results = mysql_query($sql, $dbh);
 	
-	$insert_id = mysql_insert_id($dbh);
-	
-	if (!$insert_id) { 
-		$GLOBALS['error']->add_error('general',"Insert of Base User Failed, Check test.php");
+	if (!$db_results) { 
+		$GLOBALS['error']->add_error('general',"Insert of Base User Failed " . mysql_error());
 		return false; 
 	}
 
