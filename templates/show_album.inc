@@ -49,7 +49,7 @@ $username=$user->username;
 	<td width="140" align="center">
 	<?php 
         if ($album_name != "Unknown (Orphaned)") {
-                echo "<a target=\"_blank\" href=\"" . conf('web_path') . "/albumart.php?id=" . $album->id . "\">";
+                echo "<a target=\"_blank\" href=\"" . conf('web_path') . "/albumart.php?id=" . $album->id . "&amp;type=popup\">";
 		echo "<img border=\"0\" src=\"" . conf('web_path') . "/albumart.php?id=" . $album->id . "&amp;thumb=2\" alt=\"Album Art\" height=\"128\" />";
 		echo "</a>\n";
         }

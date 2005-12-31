@@ -29,7 +29,6 @@ and dumps it to the browser as an image mime type.
 
 require('modules/init.php');
 
-
 $album = new Album($_REQUEST['id']);
 
 // Check db first
@@ -40,6 +39,10 @@ if (isset($r->art)) {
     $mime = $r->art_mime;
     $found = 1;
 }
+else { 
+	header('Content-type: image/gif');
+	readfile(conf('prefix') . conf('theme_path') . "/images/blankalbum.gif");
+} // else no image
 
 /* Decide what size this image is */
 switch ($_REQUEST['thumb']) { 
@@ -57,23 +60,22 @@ switch ($_REQUEST['thumb']) {
 	break;
 }
 
-if (!$found) {
-	// Print a transparent gif instead
-	header('Content-type: image/gif');
-	readfile(conf('prefix') . conf('theme_path') . "/images/blankalbum.gif");
-}
-else {
-	// Print the album art
-	$extension = substr($mime,strlen($mime)-3,3);
-	header("Content-type: $mime");
-	header("Content-Disposition: filename=" . $album->name . "." . $extension);
-
-	if (!$_REQUEST['thumb']) { 
-		echo $art;
-	}
-	elseif (!img_resize($art,$size,$extension)) { 
-	    	echo $art;
-	}
-} 
+switch ($_REQUEST['type']) { 
+	case 'popup':
+		show_template('show_big_art');
+	break;
+	default: 
+		// Print the album art
+		$extension = substr($mime,strlen($mime)-3,3);
+		header("Content-type: $mime");
+		header("Content-Disposition: filename=" . $album->name . "." . $extension);	
+		if (!$_REQUEST['thumb']) { 
+			echo $art;
+		}
+		elseif (!img_resize($art,$size,$extension)) { 
+		    	echo $art;
+		}
+	break;
+} // end switch type
 
 ?>

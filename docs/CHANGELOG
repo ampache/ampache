@@ -4,6 +4,12 @@
 
 --------------------------------------------------------------------------
   v.3.3.2-Beta1
+  	- Added Popup Album Art (Thx Di-Fosfor)
+  	- Fixed Typo in Amazon Search debug statement
+  	- Added sort_files.php.inc to /bin 
+  	- Fixed Ratings designation mistake and added it to artist view
+  	- Fixed location detection for contextual titls and browse
+		on the simple menu's (Thx SoundOfEmotion)
   	- Fixed a botched change to the database (No Data loss!) but I 
 		still feel stupid (Blame Vollmer)
   	- Fixed a problem where .flac files wouldn't get reconized by

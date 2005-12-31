@@ -19,7 +19,6 @@
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
-
 $no_session = '1';
 require ("../modules/init.php");
 
