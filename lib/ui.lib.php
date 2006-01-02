@@ -1,7 +1,7 @@
 <?php
 /*
 
-   Copyright (c) 2001 - 2005 Ampache.org
+   Copyright (c) 2001 - 2006 Ampache.org
    All rights reserved.
 
    This program is free software; you can redistribute it and/or
@@ -1132,6 +1132,7 @@ function new_user($username, $fullname, $email, $password) {
 	$username       = sql_escape($username);
 	$fullname       = sql_escape($fullname);
 	$email          = sql_escape($email);
+	$validation	= str_rand(20);
 	$access         = '5';
 	if(conf('auto_user')){
         	$access='25';
@@ -1146,11 +1147,12 @@ function new_user($username, $fullname, $email, $password) {
 	/* Uhh let's not auto-pass through in this fashion FIXME */
 	else {
 		/* Apparently it's a new user, now insert the user into the database*/
-		$sql = "INSERT INTO user (username, fullname, email, password, access) VALUES" .
-			" ('$username','$fullname','$email',PASSWORD('$password'),'$access')";
+		$sql = "INSERT INTO user (username, fullname, email, password, access, disabled, reg_date, validation) VALUES" .
+			" ('$username','$fullname','$email',PASSWORD('$password'),'$access', '1', unix_timestamp(), '$validation')";
 		$db_results = mysql_query($sql, dbh());
 		show_template('style');
-		show_confirmation('Registration Complete','You have registered succesfully','/login.php');
+		show_confirmation('Registration Complete','Your account has been created. However, this forum requires account activation. An activation key has been sent to the e-mail address you provided. Please check your e-mail for further information','/login.php');
+		send_confirmation($username, $fullname, $email, $password, $validation);
 	}
 
 	return true;
@@ -1191,6 +1193,60 @@ function good_email($email) {
 	}
 	return true;
 } //good_email
+
+/**
+ * str_rand
+ *
+ *
+ */
+function str_rand($length = 8, $seeds = 'abcdefghijklmnopqrstuvwxyz0123456789'){
+    $str = '';
+    $seeds_count = strlen($seeds);
+
+    // Seed
+    list($usec, $sec) = explode(' ', microtime());
+    $seed = (float) $sec + ((float) $usec * 100000);
+    mt_srand($seed);
+
+    // Generate
+    for ($i = 0; $length > $i; $i++) {
+        $str .= $seeds{mt_rand(0, $seeds_count - 1)};
+    }
+
+    return $str;
+} //str_rand
+
+/**
+ * send_confirmation
+ *
+ *
+ */
+function send_confirmation($username, $fullname, $email, $password, $validation) {
+
+$title = conf('site_title');
+$from = "From: Ampache <".conf('mail_from').">";
+$body = "Welcome to $title
+
+Please keep this email for your records. Your account information is as follows: 
+
+----------------------------
+Username: $username
+Password: $password
+----------------------------
+
+Your account is currently inactive. You cannot use it until you visit the following link:
+"
+. conf('web_path'). "/activate.php?mode=activate&u=$username&act_key=$validation
+
+Please do not forget your password as it has been encrypted in our database and we cannot retrieve it for you. However, should you forget your password you can request a new one which will be activated in the same way as this account.
+
+Thank you for registering.";
+
+
+mail($email, "Welcome to $title" , $body, $from);
+
+} //send_confirmation
+
 
 
 

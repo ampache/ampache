@@ -320,8 +320,9 @@ class getid3_mp3
 									'fast standard|19000' => 19000,
 									'r3mix|19500'         => 19500,  // 3.90,   3.90.1, 3.92
 									'r3mix|19600'         => 19600,  // 3.90.2, 3.90.3, 3.91
-									'r3mix|18000'         => 18000); // 3.94,   3.95
-							if (!isset($ExpectedLowpass[$ExplodedOptions[1].'|'.$thisfile_mpeg_audio_lame['lowpass_frequency']])) {
+									'r3mix|18000'         => 18000,  // 3.94,   3.95
+								);
+							if (!isset($ExpectedLowpass[$ExplodedOptions[1].'|'.$thisfile_mpeg_audio_lame['lowpass_frequency']]) && ($thisfile_mpeg_audio_lame['lowpass_frequency'] < 22050) && (round($thisfile_mpeg_audio_lame['lowpass_frequency'] / 1000) < round($thisfile_mpeg_audio['sample_rate'] / 2000))) {
 								$encoder_options .= ' --lowpass '.$thisfile_mpeg_audio_lame['lowpass_frequency'];
 							}
 							break;
@@ -1636,23 +1637,17 @@ class getid3_mp3
 		if (isset($MPEGaudioVersionLookup[$rawarray['version']])) {
 			$decodedVersion = $MPEGaudioVersionLookup[$rawarray['version']];
 		} else {
-			if ($echoerrors) {
-				echo "\n".'invalid Version ('.$rawarray['version'].')';
-			}
+			echo ($echoerrors ? "\n".'invalid Version ('.$rawarray['version'].')' : '');
 			return false;
 		}
 		if (isset($MPEGaudioLayerLookup[$rawarray['layer']])) {
 			$decodedLayer = $MPEGaudioLayerLookup[$rawarray['layer']];
 		} else {
-			if ($echoerrors) {
-				echo "\n".'invalid Layer ('.$rawarray['layer'].')';
-			}
+			echo ($echoerrors ? "\n".'invalid Layer ('.$rawarray['layer'].')' : '');
 			return false;
 		}
 		if (!isset($MPEGaudioBitrateLookup[$decodedVersion][$decodedLayer][$rawarray['bitrate']])) {
-			if ($echoerrors) {
-				echo "\n".'invalid Bitrate ('.$rawarray['bitrate'].')';
-			}
+			echo ($echoerrors ? "\n".'invalid Bitrate ('.$rawarray['bitrate'].')' : '');
 			if ($rawarray['bitrate'] == 15) {
 				// known issue in LAME 3.90 - 3.93.1 where free-format has bitrate ID of 15 instead of 0
 				// let it go through here otherwise file will not be identified
@@ -1664,27 +1659,19 @@ class getid3_mp3
 			}
 		}
 		if (!isset($MPEGaudioFrequencyLookup[$decodedVersion][$rawarray['sample_rate']])) {
-			if ($echoerrors) {
-				echo "\n".'invalid Frequency ('.$rawarray['sample_rate'].')';
-			}
+			echo ($echoerrors ? "\n".'invalid Frequency ('.$rawarray['sample_rate'].')' : '');
 			return false;
 		}
 		if (!isset($MPEGaudioChannelModeLookup[$rawarray['channelmode']])) {
-			if ($echoerrors) {
-				echo "\n".'invalid ChannelMode ('.$rawarray['channelmode'].')';
-			}
+			echo ($echoerrors ? "\n".'invalid ChannelMode ('.$rawarray['channelmode'].')' : '');
 			return false;
 		}
 		if (!isset($MPEGaudioModeExtensionLookup[$decodedLayer][$rawarray['modeextension']])) {
-			if ($echoerrors) {
-				echo "\n".'invalid Mode Extension ('.$rawarray['modeextension'].')';
-			}
+			echo ($echoerrors ? "\n".'invalid Mode Extension ('.$rawarray['modeextension'].')' : '');
 			return false;
 		}
 		if (!isset($MPEGaudioEmphasisLookup[$rawarray['emphasis']])) {
-			if ($echoerrors) {
-				echo "\n".'invalid Emphasis ('.$rawarray['emphasis'].')';
-			}
+			echo ($echoerrors ? "\n".'invalid Emphasis ('.$rawarray['emphasis'].')' : '');
 			return false;
 		}
 		// These are just either set or not set, you can't mess that up :)

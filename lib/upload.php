@@ -1,5 +1,8 @@
 <?php
 /*
+ 
+ Copyright (c) 2001 - 2006 Ampache.org
+ All Rights Reserved
 
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License

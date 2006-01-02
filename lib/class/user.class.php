@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2005 Ampache.org
+ Copyright (c) 2001 - 2006 Ampache.org
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
@@ -36,6 +36,8 @@ class User {
 	var $offset_limit=25;
 	var $email;
 	var $last_seen;
+	var $reg_date;
+	var $validation;
 	
 	function User($username=0) {
 
@@ -52,6 +54,8 @@ class User {
 		$this->offset_limit 	= $info->offset_limit;
 		$this->email		= $info->email;
 		$this->last_seen	= $info->last_seen;
+		$this->reg_date		= $info->reg_date;
+		$this->validation	= $info->validation;
 		$this->set_preferences();
 
 		// Make sure the Full name is always filled
@@ -476,10 +480,9 @@ class User {
 		$username	= sql_escape($username);
 		$fullname	= sql_escape($fullname);
 		$email		= sql_escape($email);
-
 		/* Now Insert this new user */
-		$sql = "INSERT INTO user (username, fullname, email, password, access) VALUES" .
-			" ('$username','$fullname','$email',PASSWORD('$password'),'$access')";
+		$sql = "INSERT INTO user (username, fullname, email, password, access, reg_date) VALUES" .
+			" ('$username','$fullname','$email',PASSWORD('$password'),'$access', unix_timestamp())";
 		$db_results = mysql_query($sql, dbh());
 		if (!$db_results) { return false; }
 
@@ -737,9 +740,31 @@ class User {
 		@description  calcs difference between now and last_seen
 			if less than delay, we consider them still online
 	*/
+	
 	function is_online( $delay = 1200 ) {
 		return time() - $this->last_seen <= $delay;
 	}
 
+	/*!
+		@function get_user_validation
+		@check if user exists before activation can be done.
+	*/
+	function get_user_validation($username,$validation){
+		$sql = "SELECT validation FROM user where username='$username'";
+		$db_results = mysql_query($sql, dbh());
+		$row = mysql_fetch_array($db_results);
+		$val = $row[validation];
+		return $val;
+	} // get_user_validation
+
+	/*!
+		@function activate_user
+		@activates the user from public_registration
+	*/
+	function activate_user($username) {
+		$sql = "UPDATE user SET disabled='0' WHERE username='$username'";
+		$db_results = mysql_query($sql, dbh());
+	} // activate_user
 } //end class
+
 ?>

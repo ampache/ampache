@@ -122,8 +122,20 @@ require_session = "true"
 # This setting turns on/off public registration. It is
 # recommended you leave this off, as it will allow anyone to
 # sign up for an account on your server.
+# REMEMBER: don't forget to set the mail from address futher down in the config.
 # DEFAULT: false
 #allow_public_registration = "false"
+
+# This setting defines the mail domain your in.
+# It tries to deliver a test mail before the user can register and uses
+# the from address info@"domain.tld". No mail is send from this address it's
+# only used to test the existense of a mailbox before accepting user registration.
+# DEFAULT: domain.tld
+#mail_domain = "domain.tld"
+
+# This settting will be used as mail from address.
+# You need to change this when you activate public_registration.
+mail_from = "info@domain.tld"
 
 # This setting will allow all registrants to be auto-approved
 # as a user. By default, they will be added as a guest and

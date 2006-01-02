@@ -4,6 +4,8 @@
 
 --------------------------------------------------------------------------
   v.3.3.2-Beta1
+  	- Updated Registration code (Thx pb1dft)
+  	- Updated GetId3() Library to v.1.7.5
   	- Updated SQL file
 	- Fixed Install script so it throws errors and is now able to
 		if specified create the database user for you

@@ -101,6 +101,7 @@ class getid3_write_id3v2
 								fclose($fp_source);
 								copy($tempfilename, $this->filename);
 								unlink($tempfilename);
+								ob_end_clean();
 								return true;
 
 							} else {

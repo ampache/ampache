@@ -101,45 +101,49 @@ class getid3_id3v2
 		$thisfile_id3v2['tag_offset_start'] = $StartingOffset;
 		$thisfile_id3v2['tag_offset_end']   = $thisfile_id3v2['tag_offset_start'] + $thisfile_id3v2['headerlength'];
 
-	//    Extended Header
+		//    Extended Header
 		if (isset($thisfile_id3v2_flags['exthead']) && $thisfile_id3v2_flags['exthead']) {
-	//            Extended header size   4 * %0xxxxxxx
-	//            Number of flag bytes       $01
-	//            Extended Flags             $xx
-	//            Where the 'Extended header size' is the size of the whole extended header, stored as a 32 bit synchsafe integer.
-			$extheader = fread ($fd, 4);
-			$thisfile_id3v2['extheaderlength'] = getid3_lib::BigEndian2Int($extheader, 1);
+			// Extended header size   4 * %0xxxxxxx
+			// Number of flag bytes       $01
+			// Extended Flags             $xx
+			// Where the 'Extended header size' is the size of the whole extended header, stored as a 32 bit synchsafe integer.
+			$thisfile_id3v2['exthead_length'] = getid3_lib::BigEndian2Int(fread($fd, 4), 1);
 
-	//            The extended flags field, with its size described by 'number of flag  bytes', is defined as:
-	//                %0bcd0000
-	//            b - Tag is an update
-	//                Flag data length       $00
-	//            c - CRC data present
-	//                Flag data length       $05
-	//                Total frame CRC    5 * %0xxxxxxx
-	//            d - Tag restrictions
-	//                Flag data length       $01
-			$extheaderflagbytes = fread ($fd, 1);
-			$extheaderflags     = fread ($fd, $extheaderflagbytes);
-			$id3_exthead_flags = getid3_lib::BigEndian2Bin(substr($header, 5, 1));
-			$thisfile_id3v2['exthead_flags']['update']       = substr($id3_exthead_flags, 1, 1);
-			$thisfile_id3v2['exthead_flags']['CRC']          = substr($id3_exthead_flags, 2, 1);
-			if ($thisfile_id3v2['exthead_flags']['CRC']) {
-				$extheaderrawCRC = fread ($fd, 5);
-				$thisfile_id3v2['exthead_flags']['CRC'] = getid3_lib::BigEndian2Int($extheaderrawCRC, 1);
-			}
-			$thisfile_id3v2['exthead_flags']['restrictions'] = substr($id3_exthead_flags, 3, 1);
-			if ($thisfile_id3v2['exthead_flags']['restrictions']) {
-				// Restrictions           %ppqrrstt
-				$extheaderrawrestrictions = fread ($fd, 1);
-				$thisfile_id3v2['exthead_flags']['restrictions_tagsize']  = (bindec('11000000') & ord($extheaderrawrestrictions)) >> 6; // p - Tag size restrictions
-				$thisfile_id3v2['exthead_flags']['restrictions_textenc']  = (bindec('00100000') & ord($extheaderrawrestrictions)) >> 5; // q - Text encoding restrictions
-				$thisfile_id3v2['exthead_flags']['restrictions_textsize'] = (bindec('00011000') & ord($extheaderrawrestrictions)) >> 3; // r - Text fields size restrictions
-				$thisfile_id3v2['exthead_flags']['restrictions_imgenc']   = (bindec('00000100') & ord($extheaderrawrestrictions)) >> 2; // s - Image encoding restrictions
-				$thisfile_id3v2['exthead_flags']['restrictions_imgsize']  = (bindec('00000011') & ord($extheaderrawrestrictions)) >> 0; // t - Image size restrictions
+			$thisfile_id3v2['exthead_flag_bytes'] = ord(fread($fd, 1));
+			if ($thisfile_id3v2['exthead_flag_bytes'] == 1) {
+				// The extended flags field, with its size described by 'number of flag  bytes', is defined as:
+				//     %0bcd0000
+				// b - Tag is an update
+				//     Flag data length       $00
+				// c - CRC data present
+				//     Flag data length       $05
+				//     Total frame CRC    5 * %0xxxxxxx
+				// d - Tag restrictions
+				//     Flag data length       $01
+				$extheaderflags    = fread($fd, $thisfile_id3v2['exthead_flag_bytes']);
+				$id3_exthead_flags = getid3_lib::BigEndian2Bin(substr($header, 5, 1));
+				$thisfile_id3v2['exthead_flags']['update']       = substr($id3_exthead_flags, 1, 1);
+				$thisfile_id3v2['exthead_flags']['CRC']          = substr($id3_exthead_flags, 2, 1);
+				if ($thisfile_id3v2['exthead_flags']['CRC']) {
+					$extheaderrawCRC = fread($fd, 5);
+					$thisfile_id3v2['exthead_flags']['CRC'] = getid3_lib::BigEndian2Int($extheaderrawCRC, 1);
+				}
+				$thisfile_id3v2['exthead_flags']['restrictions'] = substr($id3_exthead_flags, 3, 1);
+				if ($thisfile_id3v2['exthead_flags']['restrictions']) {
+					// Restrictions           %ppqrrstt
+					$extheaderrawrestrictions = fread($fd, 1);
+					$thisfile_id3v2['exthead_flags']['restrictions_tagsize']  = (bindec('11000000') & ord($extheaderrawrestrictions)) >> 6; // p - Tag size restrictions
+					$thisfile_id3v2['exthead_flags']['restrictions_textenc']  = (bindec('00100000') & ord($extheaderrawrestrictions)) >> 5; // q - Text encoding restrictions
+					$thisfile_id3v2['exthead_flags']['restrictions_textsize'] = (bindec('00011000') & ord($extheaderrawrestrictions)) >> 3; // r - Text fields size restrictions
+					$thisfile_id3v2['exthead_flags']['restrictions_imgenc']   = (bindec('00000100') & ord($extheaderrawrestrictions)) >> 2; // s - Image encoding restrictions
+					$thisfile_id3v2['exthead_flags']['restrictions_imgsize']  = (bindec('00000011') & ord($extheaderrawrestrictions)) >> 0; // t - Image size restrictions
+				}
+			} else {
+				$ThisFileInfo['warning'][] = '$thisfile_id3v2[exthead_flag_bytes] = "'.$thisfile_id3v2['exthead_flag_bytes'].'" (expecting "1")';
+				fseek($fd, $thisfile_id3v2['exthead_length'] - 1, SEEK_CUR);
+				//return false;
 			}
 		} // end extended header
-
 
 
 		// create 'encoding' key - used by getid3::HandleAllTags()
@@ -159,10 +163,10 @@ class getid3_id3v2
 	//        Flags         $xx xx
 
 		$sizeofframes = $thisfile_id3v2['headerlength'] - 10; // not including 10-byte initial header
-		if (isset($thisfile_id3v2['extheaderlength'])) {
-			$sizeofframes -= $thisfile_id3v2['extheaderlength'];
+		if (@$thisfile_id3v2['exthead_length']) {
+			$sizeofframes -= ($thisfile_id3v2['exthead_length'] + 4);
 		}
-		if (isset($thisfile_id3v2_flags['isfooter']) && $thisfile_id3v2_flags['isfooter']) {
+		if (@$thisfile_id3v2_flags['isfooter']) {
 			$sizeofframes -= 10; // footer takes last 10 bytes of ID3v2 header, after frame data, before audio
 		}
 		if ($sizeofframes > 0) {
@@ -170,7 +174,7 @@ class getid3_id3v2
 			$framedata = fread($fd, $sizeofframes); // read all frames from file into $framedata variable
 
 			//    if entire frame data is unsynched, de-unsynch it now (ID3v2.3.x)
-			if (isset($thisfile_id3v2_flags['unsynch']) && $thisfile_id3v2_flags['unsynch'] && ($id3v2_majorversion <= 3)) {
+			if (@$thisfile_id3v2_flags['unsynch'] && ($id3v2_majorversion <= 3)) {
 				$framedata = $this->DeUnsynchronise($framedata);
 			}
 			//        [in ID3v2.4.0] Unsynchronisation [S:6.1] is done on frame level, instead
@@ -179,7 +183,7 @@ class getid3_id3v2
 			//        there exists an unsynchronised frame, while the new unsynchronisation flag in
 			//        the frame header [S:4.1.2] indicates unsynchronisation.
 
-			$framedataoffset = 10; // how many bytes into the stream - start from after the 10-byte header
+			$framedataoffset = 10 + (@$thisfile_id3v2['exthead_length'] ? $thisfile_id3v2['exthead_length'] + 4 : 0); // how many bytes into the stream - start from after the 10-byte header (and extended header length+4, if present)
 			while (isset($framedata) && (strlen($framedata) > 0)) { // cycle through until no more frame data is left to parse
 				if (strlen($framedata) <= $this->ID3v2HeaderLength($id3v2_majorversion)) {
 					// insufficient room left in ID3v2 header for actual data - must be padding
@@ -350,7 +354,7 @@ class getid3_id3v2
 	//        ID3v2 size             4 * %0xxxxxxx
 
 		if (isset($thisfile_id3v2_flags['isfooter']) && $thisfile_id3v2_flags['isfooter']) {
-			$footer = fread ($fd, 10);
+			$footer = fread($fd, 10);
 			if (substr($footer, 0, 3) == '3DI') {
 				$thisfile_id3v2['footer'] = true;
 				$thisfile_id3v2['majorversion_footer'] = ord($footer{3});

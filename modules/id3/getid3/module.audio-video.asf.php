@@ -754,6 +754,11 @@ class getid3_asf
 								$thisfile_asf_comments['year'] = array( $this->TrimTerm($thisfile_asf_extendedcontentdescriptionobject_contentdescriptor_current['value']));
 								break;
 
+							case 'wm/lyrics':
+							case 'lyrics':
+								$thisfile_asf_comments['lyrics'] = array($this->TrimTerm($thisfile_asf_extendedcontentdescriptionobject_contentdescriptor_current['value']));
+								break;
+
 							case 'isvbr':
 								if ($thisfile_asf_extendedcontentdescriptionobject_contentdescriptor_current['value']) {
 									$thisfile_audio['bitrate_mode'] = 'vbr';
@@ -769,12 +774,12 @@ class getid3_asf
 									$tempThisfileInfo = array('encoding'=>$ThisFileInfo['encoding']);
 									fwrite($tempfilehandle, $thisfile_asf_extendedcontentdescriptionobject_contentdescriptor_current['value']);
 									fclose($tempfilehandle);
-									
+
 									$tempfilehandle = fopen($tempfile, "rb");
 									$id3 = new getid3_id3v2($tempfilehandle, $tempThisfileInfo);
 									fclose($tempfilehandle);
 									unlink($tempfile);
-									
+
 									$ThisFileInfo['id3v2'] = $tempThisfileInfo['id3v2'];
 								}
 								break;

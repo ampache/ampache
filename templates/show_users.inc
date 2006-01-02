@@ -49,6 +49,12 @@ $admin_menu = "admin/";
 		</a>
 	</td>
         <td align="center">
+		<a href="<?php echo conf('web_path'); ?>/<?php echo $_SESSION['view_script']; ?>?action=<?php echo $_REQUEST['action']; ?>&amp;keep_view=true&amp;sort_type=last_seen&amp;sort_order=0">
+		<b><?php echo _("Registration Date"); ?></b>
+		</a>
+	</td>
+
+        <td align="center">
 		<b><?php echo _("Edit"); ?></b>
 	</td>
         <td align="center">
@@ -74,6 +80,9 @@ while ( $results = mysql_fetch_object($db_result) ) {
         $last_seen = date("m\/d\/Y - H:i",$user->last_seen);
         if (!$user->last_seen) { $last_seen = "Never"; }
 
+        $reg_date = date("m\/d\/Y - H:i",$user->reg_date);
+        if (!$user->reg_date) { $reg_date = "Unknown"; }
+
 ?>
 <tr class="even">
 	<td>
@@ -84,6 +93,10 @@ while ( $results = mysql_fetch_object($db_result) ) {
         <td align="center">
 		<?php echo $last_seen; ?>
 	</td>
+        <td align="center">
+		<?php echo $reg_date; ?>
+	</td>
+
         <td>
 		<a href="<?php echo conf('web_path'); ?>/admin/users.php?action=edit&amp;user=<?php echo $user->username; ?>">
 			<?php echo _("Edit"); ?>

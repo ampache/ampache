@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2005 Ampache.org
+ Copyright (c) 2001 - 2006 Ampache.org
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
@@ -30,6 +30,14 @@
 $no_session = true;
 require_once ("modules/init.php");
 
+//Captcha
+
+define ("CAPTCHA_INVERSE, 1");
+include ("modules/captcha/captcha.php");
+require ("modules/validatemail/validateEmailFormat.php");
+require ("modules/validatemail/validateEmail.php");
+
+
 /* Check Perms */
 if (!conf('allow_public_registration')) {
 	access_denied();
@@ -53,57 +61,84 @@ switch ($action) {
     // possibly by logging them in right then and there with their current info
     // and 'click here to login' would just be a link back to index.php
     if (conf('demo_mode')) { break; }
+    $captcha = captcha::check(); 
     $accept_agreement = scrub_in($_REQUEST['accept_agreement']);
 	$fullname = scrub_in($_REQUEST['fullname']);
 	$username = scrub_in($_REQUEST['username']);
 	$email = scrub_in($_REQUEST['email']);
 	$pass1 = scrub_in($_REQUEST['password_1']);
 	$pass2 = scrub_in($_REQUEST['password_2']);
+
+	if(!isset ($captcha)){
+		$GLOBALS['error']->add_error('captcha',_("Error Captcha Required"));
+	}	
+	if (isset ($captcha)){
+		if ($captcha) {
+			$msg="SUCCESS";
+		}
+    		else {
+	    		$GLOBALS['error']->add_error('captcha',_("Error Captcha Failed"));
+    		}
+	}
+
 	if(conf('user_agreement')==true){
 		if(!$accept_agreement){
-			echo("<center><b>You <u>must</u> accept the user agreement</b><br>");
-			echo("Click <b><a href=\"javascript:history.back(1)\">here</a></b> to go back");
-			break;
+		$GLOBALS['error']->add_error('user_agreement',_("You <U>must</U> accept the user agreement"));
 		}
 	}
 
 	if(!$username){
-		echo("<center><b>You did not enter a username</b><br>");
-		echo("Click <b><a href=\"javascript:history.back(1)\">here</a></b> to go back");
-		break;
+		$GLOBALS['error']->add_error('username',_("You did not enter a username"));
 	}
 
 	if(!$fullname){
-		echo("<center><b>Please enter your full name</b><br>");
-		echo("Click <b><a href=\"javascript:history.back(1)\">here</a></b> to go back");
-		break;
+		$GLOBALS['error']->add_error('fullname',_("Please fill in your full name (Firstname Lastname)"));
 	}
 
-	if(!good_email($email)){
-		echo("<center><b>You must enter a valid email address</b><br>");
-		echo("Click <b><a href=\"javascript:history.back(1)\">here</a></b> to go back");
-		break;
-	}
+//Check the mail for correct address formation.
 
+    $attempt = 0;
+    $max_attempts = 3;
+    $response_code = "";
+
+    while ( $response_code == "" || strstr( $response_code, "fsockopen error" )) {
+        $validate_results = validateEmail( $email );
+
+        $response_code = $validate_results[1];
+        if($attempt == $max_attempts) break;
+        $attempt++;
+    }
+
+    if ( $validate_results[0] ) {
+		$mmsg = "MAILOK";
+        }
+        else {
+                $GLOBALS['error']->add_error('email',_("Error Email address not confirmed<br>$validate_results[1]"));
+        }
+// End of mailcheck
 	if(!$pass1){
-		echo("<center><b>You must enter a password</b><br>");
-		echo("Click <b><a href=\"javascript:history.back(1)\">here</a></b> to go back");
-		break;
+		$GLOBALS['error']->add_error('password',_("You must enter a password"));
 	}
 
 	if ( $pass1 != $pass2 ) {
-		echo("<center><b>Your passwords do not match</b><br>");
-		echo("Click <b><a href=\"javascript:history.back(1)\">here</a></b> to go back");
+		$GLOBALS['error']->add_error('password',_("Your passwords do not match"));
+	}
+
+	if($GLOBALS['error']->error_state){
+		show_user_registration($values);
 		break;
 	}
+
 	$new_user = new_user("$username", "$fullname", "$email", "$pass1");
 	if(!$new_user){
-		echo("<center><b>That username already exists</b><br>");
-		echo("Click <b><a href=\"javascript:history.back(1)\">here</a></b> to go back");
+		$GLOBALS['error']->add_error('duplicate_user',_("That username already exists"));
+	}
+	if($GLOBALS['error']->error_state){
+		show_user_registration($values);
 		break;
 	}
-	break;
 
+break;
     // This is the default action.
     case 'show_add_user':
     default:

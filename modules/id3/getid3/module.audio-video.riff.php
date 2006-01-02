@@ -1953,8 +1953,6 @@ class getid3_riff
 			XMPG	Xing MPEG (I-Frame only)
 			XVID	XviD MPEG-4 (www.xvid.org)
 			XXAN	?XXAN?
-			Y422	ADS Technologies Copy of UYVY used in Pyro WebCam firewire camera
-			Y800	Simple, single Y plane for monochrome images
 			YU92	Intel YUV (YU92)
 			YUNV	Nvidia Uncompressed YUV 4:2:2
 			YUVP	Extended PAL format YUV palette (www.riff.org)
@@ -1965,6 +1963,8 @@ class getid3_riff
 			Y41T	Brooktree PC1 YUV 4:1:1 with transparency
 			Y42B	Weitek YUV 4:2:2 Planar
 			Y42T	Brooktree UYUV 4:2:2 with transparency
+			Y422	ADS Technologies Copy of UYVY used in Pyro WebCam firewire camera
+			Y800	Simple, single Y plane for monochrome images
 			Y8  	Grayscale video
 			YC12	Intel YUV 12 codec
 			YUV8	Winnov Caviar YUV8

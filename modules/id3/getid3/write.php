@@ -394,6 +394,14 @@ class getid3_writetags
 					}
 					break;
 
+				case 'real':
+					$real_writer = new getid3_write_real;
+					$real_writer->filename = $this->filename;
+					if (($success = $real_writer->RemoveReal()) === false) {
+						$this->errors[] = 'RemoveReal() failed with message(s):<PRE><UL><LI>'.trim(implode('</LI><LI>', $real_writer->errors)).'</LI></UL></PRE>';
+					}
+					break;
+
 				default:
 					$this->errors[] = 'Invalid tag format to delete: "'.$tagformat.'"';
 					return false;

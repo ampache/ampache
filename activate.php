@@ -20,20 +20,30 @@
 
 */
 
-/*!
-	@function load_gettext
-	@discussion sets the local
-*/
-function load_gettext() { 
-	/* If we have gettext */
-	if (function_exists('bindtextdomain')) { 
-		bindtextdomain('messages', conf('prefix') . "/locale/");
-		textdomain('messages');
-		putenv("LANG=" . conf('lang'));
-		setlocale(LC_ALL, conf('lang'));
-	}
+$no_session = true;
+require_once( "modules/init.php" );
+if(conf('demo_mode'))  {
+	access_denied();
+}
 
-} // load_gettext
+// Access Control
+echo "<html><head>";
+show_template('style');
+echo "<head><body>";
 
+
+$username = $_GET['u'];
+$validation  = $_GET['act_key'];
+$user = new User($username);
+$val1 = $GLOBALS['user']->get_user_validation($username,$validation);
+if (!$val1){
+    $GLOBALS['error']->add_error('no_such_user',_("No user with this name registered"));    
+    $GLOBALS['error']->print_error('no_such_user');    
+    echo "</body></html>";
+    break;
+    }
+$activate = $GLOBALS['user']->activate_user($username);
+show_confirmation('User activated','This User ID is activated and can be used','/login.php');
+echo "</body></html>";
 
 ?>
