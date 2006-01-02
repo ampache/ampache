@@ -364,9 +364,6 @@ function extend_session($sid) {
 */
 function get_tag_type($results) {
 
-
-	
-
          // Check and see if we are dealing with an ogg
          // If so order will be a little different
          if ($results['ogg']) {
