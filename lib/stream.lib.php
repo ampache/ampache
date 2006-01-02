@@ -234,19 +234,20 @@ function start_downsample($song,$now_playing_id=0,$song_name=0) {
         $eofss  = floor($song->time-$eofmm*60);
         $eof    = sprintf("%02d.%02d",$eofmm,$eofss);
 
+	$song_file = escapeshellarg($song->file);
 
         /* Replace Variables */
         $downsample_command = conf($song->stream_cmd());
-        $downsample_command = str_replace("%FILE%",$song->file,$downsample_command);
+        $downsample_command = str_replace("%FILE%",$song_file,$downsample_command);
         $downsample_command = str_replace("%OFFSET%",$offset,$downsample_command);
         $downsample_command = str_replace("%EOF%",$eof,$downsample_command);
         $downsample_command = str_replace("%SAMPLE%",$sample_rate,$downsample_command);
 
         // If we are debugging log this event
-        if (conf('debug')) {
+        //if (conf('debug')) {
 		$message = "Start Downsample: $downsample_command";
                 log_event($GLOBALS['user']->username,' downsample ',$message);
-	} // if debug
+	//} // if debug
 
 	$fp = @popen($downsample_command, 'r');
 

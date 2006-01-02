@@ -371,7 +371,7 @@ search_type  = fuzzy
 # %SAMPLE%	= sample rate
 # %EOF%		= end of file in min.sec
 # DEFAULT: mp3splt -qnf "%FILE%" %OFFSET% %EOF% -o - | lame --mp3input -q 3 -b %SAMPLE% -S - -
-downsample_cmd	= mp3splt -qnf "%FILE%" %OFFSET% %EOF% -o - | lame --mp3input -q 3 -b %SAMPLE% -S - -
+downsample_cmd	= mp3splt -qnf %FILE% %OFFSET% %EOF% -o - | lame --mp3input -q 3 -b %SAMPLE% -S - -
 
 #######################################################
 # These are commands used to transcode non-streaming
