@@ -26,25 +26,6 @@
  	ampache, mod this to change the look and feel of the site
 */
 ?>
-
-<script type="text/javascript" language="javascript">
-<!-- Begin Suckerfish hover menu JS
-// function needed for IE.  attaches mouseover/out events to give/remove css class .sfhover (fake hover)
-sfHover = function(navlist) {
-var sfEls = document.getElementById("navlist").getElementsByTagName("LI");
-for (var i=0; i <sfEls.length; i++) {
-    sfEls[i].onmouseover=function() {
-        this.className+=" sfhover";
-    }
-    sfEls[i].onmouseout=function() {
-        this.className=this.className.replace(new RegExp("sfhover\\b"), "");
-    }
-} // end for
-} // end function for sfHover
-if (window.attachEvent) window.attachEvent("onload", sfHover);
-// End Suckerfish hover menu JS-->
-</script>
-
 <style type="text/css">
 <!--
 	body	
@@ -91,14 +72,27 @@ if (window.attachEvent) window.attachEvent("onload", sfHover);
 		border-left:2px solid <?php echo conf('bg_color2'); ?>;
 		border-top:2px solid <?php echo conf('bg_color2'); ?>;
 		}
-
+	.selected_button
+        	{
+		background-color: black;color:white;
+		}
+	.unselected_button
+        	{
+		/* there really isn't anything for this */
+		}
+	.nodisplay { display: none;}
+	.display {}
 	.npsong
 		{
-		background-color: #FFFF66;
+		background: #FFFF66;
+		font-weight: bold;
 		}
-    table.tabledata
-    {
-    }
+	#mpdpl td {
+		padding: 0px 2px 0px 2px;
+		}
+    table.tabledata 
+	{
+	}
 
 	td	
 		{ 

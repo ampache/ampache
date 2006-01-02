@@ -32,13 +32,12 @@ TTD:
 
 
 $nopad  = "style='padding: 0px 0px 0px 0px'";
-$minpad = "style='padding: 0px 2px 0px 2px'";
 
 $myMpd = init_mpd();
 ?>
 
 <form name="songs" action="<?php echo conf('web_path')."/amp-mpd.php"; ?>" method="post" enctype="multipart/form-data">
-<table border="0" cellpadding="0" cellspacing="1" width="100%" class="tabledata">
+<table id= "mpdpl" border="0" cellpadding="0" cellspacing="1" width="100%" class="tabledata">
 <tr>
 	<td align="center" class="table-header">
 		<b><?php echo _("MPD Server Playlist"); ?></b>
@@ -59,13 +58,13 @@ $myMpd = init_mpd();
 	<td <?php echo $nopad ?>>
 		<table cellspacing="0" cellpadding="0" border="0" width="100%">
 			<tr class="table-header">
-				<th <?php echo $minpad ?>><a href="#" onclick="check_songs(); return false;">Select</a> - <a href="#" onclick="invert_songs(); return false;">Invert</a></th>
+				<th><a href="#" onclick="check_songs(); return false;">Select</a> - <a href="#" onclick="invert_songs(); return false;">Invert</a></th>
 				<th align="left"><?php echo _("Song title"); ?></th>
 				<th align="left"><?php echo _("Artist"); ?></th>
 				<th align="left"><?php echo _("Album"); ?></th>
-				<th align="right" <?php echo $minpad ?>><?php echo _("Track"); ?></th>
-				<th align="right" <?php echo $minpad ?>><?php echo _("Time"); ?></th>
-				<th <?php echo $minpad ?>><?php echo _("Genre"); ?></th>
+				<th align="right"><?php echo _("Track"); ?></th>
+				<th align="right"><?php echo _("Time"); ?></th>
+				<th><?php echo _("Genre"); ?></th>
 				<th><?php echo _("Action"); ?></th>
 			</tr>
 			<?php
@@ -85,27 +84,20 @@ $myMpd = init_mpd();
 						if ( ($condPL) and (($id < $myMpd->current_track_id-1) or ($id > $myMpd->current_track_id + 10)) ) {
 							continue; 
 						}
-												
+
 						unset($text_class);
 						$track = $id+1;
 						$len=strlen($track);
-												
+
 						while ($len < $maxlen) {
 							$track = "0".$track;
 							$len++;
 						}
-							
-						echo "<tr class=\"".flip_class()."\">";
+
+						$flip = flip_class();
+                                                echo '<tr id="mpd_row'.$id .'" class ="'.
+                                                      ($id==$myMpd->current_track_id ? 'npsong': $flip). '">';
 												
-						if ($id==$myMpd->current_track_id) {
-							$tdstyle = "style='padding: 0px 2px 0px 2px; font-weight: bold;' class='npsong'";
-		        			        $linkstyle = "class='npsong'";
-						}
-						else { 
-							$tdstyle = $minpad;
-							$linkstyle = ""; 
-						}
-							 
 						$mpddir = conf('mpd_dir')."/";
 						
 						if (strtolower(conf('mpd_method')) == 'file') { 
@@ -126,16 +118,15 @@ $myMpd = init_mpd();
 						}
 							
 						$totaltime += $entry['Time']; 
-						$count=0; // Didn't move this because I wasn't sure what it was for...
 			?>
-							<td align="center" <?php echo $minpad  ?>> <input type="checkbox" name="song[]" value="<?php echo $entry['Pos']?>" id="song_<?php echo $entry['Pos']; ?>"></input></td>
-							<td align="left"   <?php echo $tdstyle ?>> <?php echo $track.". ";?><a <?php echo $linkstyle ?> href="<?php echo $web_path; ?>/amp-mpd.php?action=skipto&amp;val=<?php echo $entry['Pos']; ?>" title=" <?php echo htmlspecialchars($entry['Title']); ?>"<?php echo $text_class; ?>><?php echo htmlspecialchars($entry['Title']); ?> </a></td>
-							<td align="left"   <?php echo $tdstyle ?>> <a <?php echo $linkstyle ?> href="<?php echo $web_path; ?>/artists.php?action=show&amp;artist=<?php echo htmlspecialchars($r->artist); ?>" title="More from <?php echo htmlspecialchars($entry['Artist']);?>"<?php echo $text_class; ?>><?php echo htmlspecialchars($entry['Artist']);?> </a></td>
-							<td align="left"   <?php echo $tdstyle ?>> <a <?php echo $linkstyle ?> href="<?php echo $web_path; ?>/albums.php?action=show&amp;album=<?php echo htmlspecialchars($r->album);    ?>" title="More on <?php   echo htmlspecialchars($entry['Album']); ?>"<?php echo $text_class; ?>><?php echo htmlspecialchars($entry['Album']); ?> </a></td>
-							<td align="right"  <?php echo $tdstyle ?>> <?php echo $entry['Track']; ?>&nbsp;&nbsp;</td>
-							<td align="right"  <?php echo $tdstyle ?>> <?php echo sprintf ("%d:%02d",$entry['Time']/60,$entry['Time']%60) ?>&nbsp;</td>
-							<td align="left" <?php echo $tdstyle ?>> &nbsp;<?php echo $entry['genre'] ?></td>
-							<td <?php echo $tdstyle ?>>
+							<td align="center"> <input type="checkbox" name="song[]" value="<?php echo $entry['Pos']?>" id="song_<?php echo $entry['Pos']; ?>"></input></td>
+							<td align="left"> <?php echo $track.". ";?><a href="<?php echo $web_path; ?>/amp-mpd.php?action=skipto&amp;val=<?php echo $entry['Pos']; ?>" title=" <?php echo htmlspecialchars($entry['Title']); ?>"<?php echo $text_class; ?>><?php echo htmlspecialchars($entry['Title']); ?> </a></td>
+							<td align="left"> <a href="<?php echo $web_path; ?>/artists.php?action=show&amp;artist=<?php echo htmlspecialchars($r->artist); ?>" title="More from <?php echo htmlspecialchars($entry['Artist']);?>"<?php echo $text_class; ?>><?php echo htmlspecialchars($entry['Artist']);?> </a></td>
+							<td align="left"> <a href="<?php echo $web_path; ?>/albums.php?action=show&amp;album=<?php echo htmlspecialchars($r->album);    ?>" title="More on <?php   echo htmlspecialchars($entry['Album']); ?>"<?php echo $text_class; ?>><?php echo htmlspecialchars($entry['Album']); ?> </a></td>
+							<td align="right"> <?php echo $entry['Track']; ?>&nbsp;&nbsp;</td>
+							<td align="right"> <?php echo sprintf ("%d:%02d",$entry['Time']/60,$entry['Time']%60) ?>&nbsp;</td>
+							<td align="left"> &nbsp;<?php echo $entry['genre'] ?></td>
+							<td>
 								<a href="<?php echo $web_path;?>/flag.php?song=<?php echo $r->id;?>&amp;action=flag" title="Flag '<?php echo htmlspecialchars($entry['file']);?>' by <?php echo htmlspecialchars($entry['Artist']);?>"<?php echo $text_class;?>>f</a>&nbsp;
 								<a href="<?php echo $web_path;?>/amp-mpd.php?action=movenext&amp;val=<?php echo $entry['Pos'];?>" title="Move '<?php echo htmlspecialchars($entry['Title']);?>' to play next  "<?php echo $text_class;?>>n</a>&nbsp;
 								<a href="<?php echo $web_path;?>/amp-mpd.php?action=rem&amp;id=<?php echo $entry['Pos'];?>" title="Remove '<?php echo htmlspecialchars($entry['Title']);?>' from playlist "<?php echo $text_class;?>>x</a>
@@ -171,7 +162,7 @@ $myMpd = init_mpd();
 				<td valign="middle"><?php show_playlist_dropdown($GLOBALS['playlist_id']);  ?></td>
 				<td valign="middle"><?php echo $num; ?> song(s)</td>
 				<td>&nbsp;</td>
-				<td valign="middle" align="right" <?php echo $minpad; ?> nowrap="nowrap"><?php echo $time; ?></td>
+				<td valign="middle" align="right" nowrap="nowrap"><?php echo $time; ?></td>
 				<td>&nbsp;</td>
 				<td>&nbsp;</td>
 			</tr>
