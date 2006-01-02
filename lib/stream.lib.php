@@ -207,18 +207,18 @@ function start_downsample($song,$now_playing_id=0,$song_name=0) {
 		$sample_rate = $user_sample_rate;
 	}
 
-	
+	/* Validate the bitrate */
+	$sample_rate = validate_bitrate($sample_rate);
+ 
 	/* Never Upsample a song */
 	if (($sample_rate*1000) > $song->bitrate) {
 		$sample_rate = $song->bitrate/1000;
 		$sample_ratio = '1';
 	}
-
-	/* Validate the bitrate */
-	$sample_rate = validate_bitrate($sample_rate);
- 
-	/* Set the Sample Ratio */
-	$sample_ratio = $sample_rate/($song->bitrate/1000);
+	else { 
+		/* Set the Sample Ratio */
+		$sample_ratio = $sample_rate/($song->bitrate/1000);
+	}
 
 	header("Content-Length: " . $sample_ratio*$song->size);
         $browser->downloadHeaders($song_name, $song->mime, false,$sample_ratio*$song->size);
@@ -244,10 +244,10 @@ function start_downsample($song,$now_playing_id=0,$song_name=0) {
         $downsample_command = str_replace("%SAMPLE%",$sample_rate,$downsample_command);
 
         // If we are debugging log this event
-        //if (conf('debug')) {
+        if (conf('debug')) {
 		$message = "Start Downsample: $downsample_command";
                 log_event($GLOBALS['user']->username,' downsample ',$message);
-	//} // if debug
+	} // if debug
 
 	$fp = @popen($downsample_command, 'r');
 

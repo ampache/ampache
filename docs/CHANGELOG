@@ -4,6 +4,7 @@
 
 --------------------------------------------------------------------------
   v.3.3.2-Beta1
+  	- Fixed some logic errors in Downsampling code
   	- Updated Registration code (Thx pb1dft)
   	- Updated GetId3() Library to v.1.7.5
   	- Updated SQL file
