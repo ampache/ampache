@@ -39,7 +39,7 @@ require ("modules/validatemail/validateEmail.php");
 
 
 /* Check Perms */
-if (!conf('allow_public_registration')) {
+if (!conf('allow_public_registration') || conf('demo_mode')) {
 	access_denied();
 }
 

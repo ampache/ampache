@@ -22,7 +22,7 @@
 
 $no_session = true;
 require_once( "modules/init.php" );
-if(conf('demo_mode'))  {
+if(!conf('allow_public_registration') || conf('demo_mode'))  {
 	access_denied();
 }
 
@@ -39,6 +39,12 @@ $val1 = $GLOBALS['user']->get_user_validation($username,$validation);
 if (!$val1){
     $GLOBALS['error']->add_error('no_such_user',_("No user with this name registered"));    
     $GLOBALS['error']->print_error('no_such_user');    
+    echo "</body></html>";
+    break;
+    }
+if ($val1 != $validation) {
+    $GLOBALS['error']->add_error('validation_failed',_("The validation key used isn't correct."));    
+    $GLOBALS['error']->print_error('validation_failed');    
     echo "</body></html>";
     break;
     }

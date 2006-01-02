@@ -80,6 +80,7 @@ if ( ($auth['success'] == 1)) {
 		!strstr($_POST['referrer'],"install.php") AND 
 		!strstr($_POST['referrer'],"login.php") AND 
 		!strstr($_POST['referrer'],"update.php") AND
+		!strstr($_POST['referrer'],"activate.php") AND
 		!strstr($_POST['referrer'],"admin")) { 
 		
 			header("Location: " . $_POST['referrer']);
