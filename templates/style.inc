@@ -89,6 +89,7 @@
 		}
 	#mpdpl td {
 		padding: 0px 2px 0px 2px;
+		text-align: left;
 		}
     table.tabledata 
 	{

@@ -110,24 +110,24 @@ $action = scrub_in($_REQUEST['action']);
 	</tr>
 	</table>
 	</td>
+		<?php 
+		    if($user->prefs['play_type'] == 'local_play') {
+	?>
 	<td valign="top">
 	<!-- Right table -->
 	<table border="0">
 	<tr>
 		<td valign="top" rowspan="7">
-		<?php 
-		    if($user->prefs['play_type'] == 'local_play') {
-		        show_local_control();
+		        <?php show_local_control(); ?>
 		        echo "<br />";
-		    } else {
-			echo "&nbsp;";
-		    }
-		?>
 		</td>
 	</tr>
-	</table>
+	</table>'
 	</td>
 	<!-- End Right Table -->
+        <?php
+		    } 
+	?>
 </tr>
 </table>
 

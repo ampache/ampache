@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2005 Ampache.org
+ Copyright (c) 2001 - 2006 Ampache.org
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
@@ -124,8 +124,8 @@ $myMpd = init_mpd();
 							<td align="left"> <a href="<?php echo $web_path; ?>/artists.php?action=show&amp;artist=<?php echo htmlspecialchars($r->artist); ?>" title="More from <?php echo htmlspecialchars($entry['Artist']);?>"<?php echo $text_class; ?>><?php echo htmlspecialchars($entry['Artist']);?> </a></td>
 							<td align="left"> <a href="<?php echo $web_path; ?>/albums.php?action=show&amp;album=<?php echo htmlspecialchars($r->album);    ?>" title="More on <?php   echo htmlspecialchars($entry['Album']); ?>"<?php echo $text_class; ?>><?php echo htmlspecialchars($entry['Album']); ?> </a></td>
 							<td align="right"> <?php echo $entry['Track']; ?>&nbsp;&nbsp;</td>
-							<td align="right"> <?php echo sprintf ("%d:%02d",$entry['Time']/60,$entry['Time']%60) ?>&nbsp;</td>
-							<td align="left"> &nbsp;<?php echo $entry['genre'] ?></td>
+							<td align="right"> <?php echo sprintf ("%d:%02d",$entry['Time']/60,$entry['Time']%60); ?>&nbsp;</td>
+							<td align="left"> &nbsp;<?php echo $entry['genre']; ?></td>
 							<td>
 								<a href="<?php echo $web_path;?>/flag.php?song=<?php echo $r->id;?>&amp;action=flag" title="Flag '<?php echo htmlspecialchars($entry['file']);?>' by <?php echo htmlspecialchars($entry['Artist']);?>"<?php echo $text_class;?>>f</a>&nbsp;
 								<a href="<?php echo $web_path;?>/amp-mpd.php?action=movenext&amp;val=<?php echo $entry['Pos'];?>" title="Move '<?php echo htmlspecialchars($entry['Title']);?>' to play next  "<?php echo $text_class;?>>n</a>&nbsp;
