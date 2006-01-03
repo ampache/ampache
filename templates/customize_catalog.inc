@@ -64,7 +64,7 @@
 <tr>
 	<td>&nbsp;</td>
 	<td>
-	<input type="hidden" name="catalog_id" value="<?php echo $catalog->id; ?>">
+	<input type="hidden" name="catalog_id" value="<?php echo $catalog->id; ?>" />
 	<input type="hidden" name="action" value="update_catalog_settings" />
 	<input type="submit" value="<?php echo _("Save Catalog Settings"); ?>" />
 	</td>

@@ -76,11 +76,11 @@ else  {
 <?php
 if (true)  /* rigged to do AJAX for now; change to conf('AJAX') later */ {
 ?> 
-<input type="button" value="0" onclick="startRequest('action=setvol&param1=0');"/>
-<input type="button" value="-25" onclick="startRequest('action=adjvol&param1=-25');"/>
-<input type="button" value="-10" onclick="startRequest('action=adjvol&param1=-10');"/>
-<input type="button" value="+10" onclick="startRequest('action=adjvol&param1=10');"/>
-<input type="button" value="+25" onclick="startRequest('action=adjvol&param1=25');"/>
+<input type="button" value="0"   onclick="startRequest('action=setvol&amp;param1=0');"/>
+<input type="button" value="-25" onclick="startRequest('action=adjvol&amp;param1=-25');"/>
+<input type="button" value="-10" onclick="startRequest('action=adjvol&amp;param1=-10');"/>
+<input type="button" value="+10" onclick="startRequest('action=adjvol&amp;param1=10');"/>
+<input type="button" value="+25" onclick="startRequest('action=adjvol&amp;param1=25');"/>
 <?php
 }
 else  {
