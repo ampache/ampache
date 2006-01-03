@@ -264,7 +264,7 @@ if (!isset($no_session) AND conf('use_auth')) {
 	$user->set_preferences();
 	$user->update_last_seen();
 }
-if (!conf('use_auth')) { 
+elseif (!conf('use_auth')) { 
 	$auth['success'] = 1;
 	$auth['info']['username'] = '-1';
 	$auth['info']['fullname'] = "Ampache User";
@@ -283,6 +283,9 @@ if (!conf('use_auth')) {
 	$user->set_preferences();
 	init_preferences();
 	set_theme();
+}
+else { 
+	$user = new user();
 }
 
 // Load gettext mojo
