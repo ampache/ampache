@@ -310,6 +310,5 @@ if (! preg_match('/update\.php/', $_SERVER['PHP_SELF'])) {
 	}
 }
 
-
 unset($update);
 ?>

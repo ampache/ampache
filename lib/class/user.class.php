@@ -36,7 +36,7 @@ class User {
 	var $offset_limit=25;
 	var $email;
 	var $last_seen;
-	var $reg_date;
+	var $create_date;
 	var $validation;
 	
 	function User($username=0) {
@@ -54,7 +54,7 @@ class User {
 		$this->offset_limit 	= $info->offset_limit;
 		$this->email		= $info->email;
 		$this->last_seen	= $info->last_seen;
-		$this->reg_date		= $info->reg_date;
+		$this->create_date	= $info->create_date;
 		$this->validation	= $info->validation;
 		$this->set_preferences();
 
