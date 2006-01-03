@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2005 Ampache.org
+ Copyright (c) 2001 - 2006 Ampache.org
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
@@ -21,38 +21,53 @@
 */
 $web_path = conf('web_path');
 
-show_clear();
-
 // Need to set the username for the song ratings.
-$username=$GLOBALS['user']->username;
+$username = $GLOBALS['user']->username;
+
+/* If it's a playlist and they've got rights */
+if (isset($playlist_id) && ($GLOBALS['user']->username == $playlist->user || $GLOBALS['user']->has_access('100'))) { 
+	$tab = 1;
+	$playlist_owner = true;
+}
 
 ?>
-<form name="songs" method="post" enctype="multipart/form-data" action="#">
-<table border="0">
-  <tr><td colspan="2">
-    <table class="border" cellspacing="0" cellpadding="0" border="0">
-    <tr class="table-header">
-            <th>&nbsp;&nbsp;<a href="#" onclick="check_songs(); return false;">Select</a></th>
-            <?php if (isset($playlist_id) && $playlist_id != 0 && ($user->username == $pluser->username || $user->has_access('100'))) { $tab = 1; ?> <th><?php echo _("Track"); ?></th> <?php } ?>
-            <th><?php echo _("Song title"); ?></th>
-            <th><?php echo _("Artist"); ?></th>
-            <th><?php echo _("Album"); ?></th>
-            <th><?php echo _("Track"); ?></th>
-            <th><?php echo _("Time"); ?></th>
-            <th><?php echo _("Size"); ?></th>
-            <th><?php echo _("Bitrate"); ?></th>
-            <th><?php echo _("Genre"); ?></th>
-            <th><?php echo _("Flag"); ?></th>
-            <th><?php echo _("Action"); ?></th>
-	    <?php if (conf('ratings') || conf('ratings')=="false") { ?>
-            <th><?php echo _("Rating"); ?></th>
-            <? } ?>            
-    </tr>
-    <?php
-    	/* FIXME: don't even get me started with how many things are wrong with this code */ 
+<form name="songs" method="post" enctype="multipart/form-data" action="#" style="Display:inline;">
+<table class="border" cellspacing="0" cellpadding="0" border="0">
+<tr class="table-header">
+	<th>&nbsp;&nbsp;<a href="#" onclick="check_songs(); return false;">Select</a></th>
+        <?php if ($playlist_owner) { ?> 
+		<th><?php echo _("Track"); ?></th> 
+	<?php } ?>
+	<th><?php echo _("Song title"); ?></th>
+        <th><?php echo _("Artist"); ?></th>
+        <th><?php echo _("Album"); ?></th>
+        <th><?php echo _("Track"); ?></th>
+        <th><?php echo _("Time"); ?></th>
+        <th><?php echo _("Size"); ?></th>
+        <th><?php echo _("Bitrate"); ?></th>
+        <th><?php echo _("Genre"); ?></th>
+        <th><?php echo _("Flag"); ?></th>
+        <th><?php echo _("Action"); ?></th>
+	<?php if (conf('ratings') || conf('ratings')=="false") { ?>
+        	<th><?php echo _("Rating"); ?></th>
+        <? } ?>            
+</tr>
+<?php
+	/* FIXME: don't even get me started with how many things are wrong with this code */ 
 	foreach ($song_ids as $song_id) {
-	
-		if (!is_object($song_id)) { 
+
+		/* Arr matey crapy code abounds! */
+		if ($playlist_owner) { 
+			if ($song_id['song']) { 
+				$song = new Song($song_id['song']);
+			}
+			else { 
+				$song = new Song();
+				$song->title = 'Dynamic Song';
+			}
+			$song_id = $song_id['id'];
+		} // end if playlist
+		elseif (!is_object($song_id)) { 
 			unset($text_class);
 			$song = new Song($song_id);
 		}
@@ -60,16 +75,18 @@ $username=$GLOBALS['user']->username;
 			$song = $song_id;
 		}
 
+
 		$song->format_song();
-            // Still needed crap
-            $totalsize += $song->size;
-            $totaltime += $song->time;
-	    if ($song->status == "disabled") { $text_class = "class=\"disabled\""; }
-    ?>
-    <tr class="<?php echo flip_class(); ?>">
-            <td align="center">
-              <input type="checkbox" name="song[]" value="<?php echo $song->id; ?>" id="song_<?php echo $song->id; ?>" />
-            </td>
+		// Still needed crap
+		$totalsize += $song->size;
+		$totaltime += $song->time;
+		/* If it's disabled */
+		if ($song->status == "disabled") { $text_class = "class=\"disabled\""; }
+?>
+<tr class="<?php echo flip_class(); ?>">
+	<td align="center">
+        	<input type="checkbox" name="song[]" value="<?php echo $song->id; ?>" id="song_<?php echo $song->id; ?>" />
+        </td>
         <?php
             if (isset($playlist_id) && $playlist_id != 0 && ($user->username == $pluser->username || $user->has_access('100'))) {
                     $tracknum = get_playlist_track_from_song($playlist_id, $song->id);
@@ -158,8 +175,6 @@ $username=$GLOBALS['user']->username;
       <td colspan="2"></td>
     </tr>
     </table>
-</td></tr>
-</table>
 <br />
 <?php show_play_selected(); ?>
 </form>

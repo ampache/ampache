@@ -25,7 +25,7 @@
  * /playlists.php $type is always passed
  */
 ?>
-<h3><?php echo $type; . ' ' . _('Playlists'); ?></h3>
+<h3><?php echo $type . ' ' . _('Playlists'); ?></h3>
 <table class="tabledata" cellspacing="0" cellpadding="0" border="0">
 <tr class="table-header">
 	<th><?php echo _('Playlist Name'); ?></th>
@@ -45,7 +45,7 @@
 		</a>
 	</td>
 	<td><?php echo $count; ?></td>
-	<td><?php echo scrub_out($playlist_user->name); ?></td>
+	<td><?php echo scrub_out($playlist_user->fullname); ?></td>
 	<td>
 		| <a href="<?php echo conf('web_path'); ?>/playlist.php?action=show_playlist&amp;playlist_id=<?php echo $playlist->id; ?>">
 		<?php echo _('View'); ?>

@@ -442,20 +442,20 @@ function show_edit_profile($username) {
 } // show_edit_profile
 
 /**
- *  show_playlist
- * this shows the current playlist
+ * show_playlist
+ * This function takes a playlist object and calls show_songs after
+ * runing get_items()
  */
-function show_playlist($playlist_id) {
+function show_playlist($playlist) {
 
 	/* Create the Playlist */
-	$playlist = new Playlist($playlist_id);
-	$song_ids = $playlist->get_songs();
+	$song_ids = $playlist->get_items();
 
 	if (count($song_ids) > 0) {
 		show_songs($song_ids, $playlist->id);
 	}
 	else {
-		echo "<p>" . _("No songs in this playlist.") . "</p>\n";
+		echo "<div class=\"text-box\">" . _("No songs in this playlist.") . "</div>\n";
 	}
 
 } // show_playlist
@@ -1212,5 +1212,16 @@ function show_registration_agreement() {
 	echo scrub_out($data);
 		
 } // show_registration_agreement
+
+
+/**
+ * show_playlist_import
+ * This shows the playlist import templates
+ */
+function show_playlist_import() { 
+
+	require (conf('prefix') . '/templates/show_import_playlist.inc.php');
+
+} // show_playlist_import
 
 ?>

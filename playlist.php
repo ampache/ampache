@@ -2,7 +2,7 @@
 /*
 
  Copyright (c) 2001 - 2006 Ampache.org
- All Rights Reserved
+ All rights reserved.
 
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
@@ -19,269 +19,146 @@
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
-
-/*
-
- Playlist mojo for adding, viewing, deleting, etc.
-
-*/
+/**
+ * Playlist Document
+ * This is the playlist document, it handles all things playlist.
+ */
 
 require_once("modules/init.php");
 
-// Get user object for later
-
-if (isset($_REQUEST['action'])) {
-	$action = scrub_in($_REQUEST['action']);
-}
-
-$type = scrub_in($_REQUEST['type']);
-
-if (isset($_REQUEST['results'])) {
-	$results = scrub_in($_REQUEST['results']);
-}
-else {
-	$results = array();
-}
-
-if (isset($_REQUEST['artist_id'])) {
-	$artist_id = scrub_in($_REQUEST['artist_id']);
-}
-
-if (isset($_REQUEST['playlist_name'])) {
-	$playlist_name = scrub_in($_REQUEST['playlist_name']);
-}
-
-if (isset($_REQUEST['new_playlist_name'])) {
-	$new_playlist_name = scrub_in($_REQUEST['new_playlist_name']);
-}
-
-if (isset($_REQUEST['playlist_id'])) {
-	$playlist_id = scrub_in($_REQUEST['playlist_id']);
-}
-
-if (isset($_REQUEST['confirm'])) {
-	$confirm = scrub_in($_REQUEST['confirm']);
-}
-
-if (isset($_REQUEST['song'])) {
-	$song_ids = scrub_in($_REQUEST['song']);
-}
-
-/* Prepare the Variables */
-$playlist = new Playlist(scrub_in($_REQUEST['playlist_id']));
-
-/* First Switch */
-// Have to handle this here, since we use this file
-//   for playback of the "Play Selected Stuff" and display (for now)
-//   and this has to be done with a header redirection before the actuall top
-//   of the page is shown
-switch ($action) { 
-	case _("Flag Selected"):
-	        require_once(conf('prefix').'/lib/flag.php');
-	        $flags = scrub_in($_REQUEST['song']);
-	        set_flag_value($flags, 'badid3','');
-	        header("Location:" . conf('web_path')."/admin/flags.php" );
-	break;
-	case _("Edit Selected"):
-	        require_once(conf('prefix').'/lib/flag.php');
-	        $flags = scrub_in($_REQUEST['song']);
-	        set_flag_value($flags, 'badid3','');
-	        $count = add_to_edit_queue($flags);
-	        session_write_close();
-	        header( 'Location: '.conf('web_path').'/admin/flags.php?action='.urlencode($action) );
-	        exit();
-	break;
-	default:
-	break;
-} // end first action switch
 
 show_template('header');
 
-$playlist = new Playlist($playlist_id);
+/* Get the Vars we need for later cleaned up */
+$action 	= strtolower(scrub_in($_REQUEST['action']));
+$playlist	= new Playlist(scrub_in($_REQUEST['playlist_id']));
 
-if ( isset($playlist_id) && ($playlist_id != 0) && $_REQUEST['action'] != 'delete_playlist' ) {
-	// Get the playlist and check access
-	$pluser = new User($playlist->user);
-
-	if (! isset($playlist->id)) {
-		show_playlist_access_error($playlist_id, $pluser->username);
-	}
-
-	echo "<div style=\"width:50%;\" class=\"text-box\">\n";
-	echo "<span class=\"header2\">$playlist->name</span><br />";
-	echo "&nbsp;&nbsp;&nbsp;" . _("owned by") . " $pluser->fullname ($pluser->username)<br />";
-	echo "<ul>";
-	if ($pluser->username == $user->username || $user->access === 'admin') {
-		echo "<li><a href=\"" . conf('web_path') . "/playlist.php?action=edit&amp;playlist_id=$playlist->id\">" . _("Edit Playlist") . "</a></li>\n";
-	}
-	if (count($playlist->get_songs()) > 0) {
-		echo "<li><a href=\"" . conf('web_path') . "/song.php?action=m3u&amp;playlist_id=$playlist->id\">" . _("Play Full Playlist") . "</a></li>\n";
-		echo "<li><a href=\"" . conf('web_path') . "/song.php?action=random&amp;playlist_id=$playlist->id\">" . _("Play Random") . "</a></li>\n";
-	}
-	echo "</ul>";
-	echo "</div>";
-}
-
-
-switch($action) {
-	// Add to a playlist
-	case 'Add to':
+/* Switch on the action passed in */
+switch ($action) { 
+	case 'delete_playlist': 
+		/* Make sure they have the rights */
+		if (!$GLOBALS['user']->has_access(100) AND $GLOBALS['user']->username != $playlist->user) { 
+			access_denied();
+			break;
+		}
+		/* Go for it! */
+		$playlist->delete();
+		show_confirmation(_('Playlist Deleted'),_('The Requested Playlist has been deleted'),'/playlist.php');
+	break;
+	case 'show_delete_playlist':
+		/* Make sure they have the rights */
+                if (!$GLOBALS['user']->has_access(100) AND $GLOBALS['user']->username != $playlist->user) {
+                        access_denied();
+                        break;
+                }
+	
+		/* Show Confirmation Question */
+		$message = _('Are you sure you want to delete this playlist') . " " . $playlist->name . "?";
+		show_confirm_action(_('Confirm Delete Request'),$message,'playlist.php','action=delete_playlist&amp;playlist_id=' . $playlist->id);
+	break;
 	case 'add_to':
-		if ($playlist_id == 0) {
-			// Creating a new playlist
-			$playlist_name = _("New Playlist") . " - " . date("m/j/y, g:i a");
-			$playlist->create_playlist($playlist_name, $user->username, 'private');
+	case 'add to':
+		/* Check to make sure they've got rights */
+		if (!$GLOBALS['user']->has_access(25)) { 
+			access_denied();
+			break;
+		} 
+		/* If we don't already have a playlist */
+		if (!$playlist->id) { 
+			$playlist_name = _('New Playlist') . " - " . date('m/j/y, g:i a');
+			$id = $playlist->create($playlist_name, 'private');
+			$playlist = new Playlist($id);
 		}
 
-		if ($type === 'album') {
-			if ($song_ids = get_songs_from_type($type, $song_ids, $artist_id)) {
-				$playlist->add_songs($song_ids);
-			}
+		/* Must be admin or person who created this playlist */
+		if ($GLOBALS['user']->username != $playlist->user && !$GLOBALS['user']->has_access(100)) { 
+			access_denied();
 		}
-		else {
-			if (isset($song_ids) && is_array($song_ids)) {
-				$playlist->add_songs($song_ids);
-			}
+
+		if ($_REQUEST['type'] == 'album') { 
+			$song_ids = get_songs_from_type($_REQUEST['type'],$_REQUEST['song_ids'],$_REQUEST['artist_id']);
 		}
-		show_playlist($playlist->id);
-		break;
+		else { 	
+			$song_ids = $_REQUEST['song_ids'];
+		}	
 
-	case 'Create':
-		$playlist->create_playlist($playlist_name, $user->username, $type);
-		show_playlists();
-		break;
+		/* Add the songs */
+		$playlist->add_songs($song_ids);
 
-	case 'delete_playlist':
-		if ($_REQUEST['confirm'] === 'Yes') {
+		/* Show the Playlist */
+		show_playlist($playlist);
+	break;	
+	case 'create_playlist':
+	case 'create':
+		/* Check rights */
+		if (!$GLOBALS['user']->has_access(25)) { 
+			access_denied();
+			break;
+		} 
 		
-			$playlist->playlist($_REQUEST['playlist_id']);
-			$playlist->delete();
-			show_confirmation("Playlist Deleted","The $playlist->name Playlist has been deleted","playlist.php");
-		}
-		elseif ($_REQUEST['confirm'] === 'No') {
-			show_songs($playlist->get_songs(), $_REQUEST['playlist_id']);
-		}
-		else {
-			show_confirm_action("Are you sure you want to delete '$playlist->name' playlist?",
-				"playlist.php",
-				"action=delete_playlist&amp;playlist_id=$playlist_id");
-		}
-		break;
+		$playlist_name	= scrub_in($_REQUEST['playlist_name']);
+		$playlist_type	= scrub_in($_REQUEST['type']);
 
+		$playlist->create($playlist_name,$playlist_type);	
+		show_confirmation(_('Playlist Created'),$playlist_name . ' (' . $playlist_type . ') ' . _(' has been created'),'playlist.php');
+	break;
 	case 'edit':
-	case 'Edit':
-		show_playlist_edit($playlist);
-		break;
+		show_playlist_edit($playlist);	
+	break;
 	case 'new':
 		show_playlist_create();
-		break;
-
+	break;
 	case 'remove_song':
-	case 'Remove Selected Tracks':
-		$playlist->remove_songs($song_ids);
-		show_songs($playlist->get_songs(), $playlist_id);
-		break;
-
-	case 'Update':
-		$playlist->update_type($type);
-		$playlist->update_name($new_playlist_name);
-		echo _("Playlist updated.");
-		break;
-
-	case 'Update Selected':
-		pl_update_selected();
-		break;
-	case 'import_playlist':
-		$filename = scrub_in($_REQUEST['filename']);
-		$catalog = new Catalog();
-		if ($catalog->import_m3u($filename)) { 
-			show_confirmation($_REQUEST['playlist_type'] . " Imported",$filename . " was imported as a playlist","playlist.php");	
-		} // it worked
-		else { 
-			show_confirmation("Import Failure",$filename . " failed to import correctly, this can be because the file wasn't found or no songs were matched","playlist.php");
-		} // it didnt' work
-		break;
-	case 'view_list':
-	case 'view':
-        case 'View':
-		show_playlist($playlist->id);
-		break;
-	case 'show_import_playlist':
-		$playlist->show_import(); 
-		break;
-	case 'set_track_numbers':
-	case 'Set Track Numbers':
-		$song_ids = scrub_in($_REQUEST['song']);
-		foreach ($song_ids as $song_id) {
-			$track = scrub_in($_REQUEST['tr_' . $song_id]);
-			$changes[] = array('song_id' => $song_id, 'track' => $track);
+	case _('Remote Selected Tracks'):
+		/* Check em for rights */
+		if (!$GLOBALS['user']->has_access(100) && $GLOBALS['user']->username != $playlist->user) { 
+			access_denied();
+			break;
+		}
+		$playlist->remove_songs($_REQUEST['song_ids']);
+		show_playlist($playlist);
+	break;
+	case 'update':
+		/* Make sure they've got thems rights */
+		if (!$GLOBALS['user']->has_access(100) && $GLOBALS['user']->username != $playlist->user) { 
+			access_denied();
+			break;
 		}
 
-		$playlist->update_track_numbers($changes);
-		show_playlist($playlist->id);
-		break;
+		$playlist->update_type($_REQUEST['type']);
+		$playlist->update_name($_REQUEST['new_playlist_name']);
+		show_confirmation(_('Playlist Updated'),$playlist_name . ' (' . $playlist_type . ') ' . _(' has been updated'),'playlist.php?action=show_playlist&amp;playlist_id=' . $playlist->id);	
+	break;
+	//FIXME: WTF Mate? 
+	case _('Update Selected'):
+	
+	break;
+	case 'show_playlist':
+		show_playlist($playlist);
+	break;
+	case 'show_import_playlist':
+		show_import_playlist();
+	break;
+	case 'set_track_numbers':
+		/* Make sure they have permission */
+		if (!$GLOBALS['user']->has_access(100) && $GLOBALS['user']->username != $playlist->user) { 
+			access_denied();
+			break;
+		}
+                $song_ids = scrub_in($_REQUEST['song']);
+                foreach ($song_ids as $song_id) {
+                        $track = scrub_in($_REQUEST['tr_' . $song_id]);
+                        $changes[] = array('song_id' => $song_id, 'track' => $track);
+                }
 
+                $playlist->update_track_numbers($changes);
+
+                show_playlist($playlist);
+        break;
 	default:
 		show_playlists();
+	break;
+} // switch on the action
 
-} //switch on action
-
-show_footer();
-
-/* Function definitions for this file */
-/* GET THIS OUTTA HERE!!!! FIXME */
-/*************************/
-function pl_update_selected() {
-
-	$username = scrub_in($_SESSION['userdata']['id']);
-	if ($user->has_access(100)) {
-		// we have to update the current numbers for the artist these were
-		//   for and who they will become
-		$artists_to_update = array();
-		$artists_to_update[] = $artist;
-
-		while ( list($index, $s) = each($song) ) {
-			$info = get_song_info($s);
-			$artists_to_update[] = $info->artist;
-
-			if ( $update_artist ) {
-				$info->artist = $artist;
-			}
-
-			if ( $update_album ) {
-				$info->album = $album;
-			}
-
-			if ( $update_genre ) {
-				$info->genre = $genre;
-			}
-
-			// now just update the song in the db and you're good to go
-			update_song($info->id, $info->title, 
-					$info->artist, $info->album, $info->genre);
-
-			// let's update the local file (if we can)
-			if ( is_writable($info->file) ) {
-				$id3 = new id3( $info->file );
-				$id3->artists = get_artist_name($info->artist);
-				$id3->album   = get_album_name($info->album);
-				$genre_info   = get_genre($info->genre);
-				$id3->genre   = $genre_info->name;
-				$id3->genreno = $genre_info->id;
-				$id3->write();
-			}
-		}
-
-		$artists_to_update = array_unique($artists_to_update);
-
-		foreach ($artists_to_update as $art) {
-			update_artist_info($art);
-		}
-
-		header("Location:" . $HTTP_REFERER );
-	}//admin access
-	else {
-		header("Location:" . conf('web_path') . "/index.php?access=denied" );
-	}
-} //function pl_update_selected
+show_footer(); 
 ?>

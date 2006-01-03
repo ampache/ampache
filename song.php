@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2005 ampache.org
+ Copyright (c) 2001 - 2006 ampache.org
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
@@ -26,6 +26,7 @@
 	a bunch of id's.
 	Special thanx goes to Mike Payson and Jon Disnard for the means
 	to do this.
+	FIXME: don't get me started... :(
 */
 
 require('modules/init.php');
@@ -64,9 +65,17 @@ switch ($action) {
 		$song_ids 	= $genre->get_random_songs();
 		$_REQUEST['action'] = 'm3u';
 	break;
+	case 'playlist':
+		$playlist	= new Playlist($_REQUEST['playlist_id']);
+		$song_ids	= $playlist->get_songs();
+		$_REQUEST['action'] = 'm3u';
+	case 'playlist_random':
+		$playlist	= new Playlist($_REQUEST['playlist_id']);
+		$song_ids	= $playlist->get_random_songs();
+		$_REQUEST['action'] = 'm3u';
+	break;
 	default:
 	break;
-
 } // end action switch
 
 if ($_REQUEST['album']) {

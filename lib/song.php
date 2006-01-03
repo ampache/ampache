@@ -19,12 +19,13 @@
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
-/*
-	@header Song Library
- 	@discussion This library handles song related functions.... woohoo!
-		This library is defunt, please try use the song class if possible
 
-*/
+/**
+ * Song Library
+ * This is for functions that don't make sense in the class because we aren't looking
+ * at a specific song... these should be general function that return arrays of songs
+ * and the like
+ */
 
 /*!
 	@function get_songs
@@ -35,9 +36,6 @@ function get_songs($sql, $action=0) {
 
 	$db_results = mysql_query($sql, dbh());
 	while ($r = mysql_fetch_array($db_results)) {
-//		$song_info = get_songinfo($r['id']);
-//		if ($action === 'format') { $song = format_song($song_info); }
-//		else { $song = $song_info; }
 		$results[] = $r['id'];
 	}
 
@@ -88,7 +86,5 @@ function get_popular_songs( $threshold, $type, $user_id = '' ) {
         return $songs;  
 
 } // get_popular_songs()
-
-
 
 ?>

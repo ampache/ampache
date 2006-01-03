@@ -18,393 +18,375 @@
  along with this program; if not, write to the Free Software
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
-
 */
-/*!
-	@header Playlist Class
-	This class handles all actual work in regards to playlists.
-*/
+/**
+ * Playlist Class
+ * This class handles playlists in ampache. it references the playlist* tables
+ */
+class Playlist { 
 
-class Playlist {
-
-	// Variables from DB
+	/* Variables from the Datbase */
 	var $id;
 	var $name;
 	var $user;
 	var $type;
-	var $time;
-	var $items;
+	var $date;
 
-	/*!
-		@function Playlist
-		@discussion Playlist class
-		@param $playlist_id 	The ID of the playlist
+	/* Generated Elements */
+	var $items = array();
+
+
+	/**
+	 * Constructor 
+	 * This takes a playlist_id as an optional argument and gathers the information
+	 * if not playlist_id is passed returns false (or if it isn't found 
 	 */
-	function Playlist($playlist_id = 0) {
+	function Playlist($playlist_id = 0) { 
 
-		/* If we have an id then do something */
-		if ($playlist_id) { 
-			// Assign id
-			$this->id = $playlist_id;
-
-			// Get the information from the db
-			$this->refresh_object();
-		}
+		if (!$playlist_id) { return false; }
 		
-	}
-
-
-
-	/*!
-		@function refresh_object
-		@discussion Reads playlist information from the db and updates the Playlist object with it
-	*/
-	function refresh_object() {
-
-		$dbh = dbh();
-
-		if ($this->id) {
-			$sql = "SELECT name, user, type, date FROM playlist" .
-				" WHERE id = '$this->id'";
-			$db_results = mysql_query($sql, $dbh);
-
-			if ($r = mysql_fetch_object($db_results)) {
-				$this->name = $r->name;
-				$this->user = $r->user;
-				$this->type = $r->type;
-				$this->time = $r->date;
-				$this->items = array();
-
-				// Fetch playlist items
-				$sql = "SELECT song, track FROM playlist_data" .
-					" WHERE playlist = '$this->id'" .
-					" ORDER BY track";
-				$db_results = mysql_query($sql, $dbh);
-
-				while ($r = mysql_fetch_object($db_results)) {
-					$this->items[] = array("song_id" => $r->song, "track" => $r->track);
-				}
-			}
-
-			return TRUE;
-		}
-
-		return FALSE;
-
-	}
-
-
-	/*!
-		@function create_playlist
-		@discussion Creates an empty playlist, given a name, user_id, and type.
-	*/
-	function create_playlist($name, $user, $type) {
-
-		$dbh = dbh();
-
-		if (isset($name) && isset($user) && isset($type) && $this->check_type($type)) {
-			$name = sql_escape($name);
-			$user = sql_escape($user);
-			$type = sql_escape($type);
-			
-			$sql = "INSERT INTO playlist (name, user, type)" .
-				" VALUES ('$name', '$user', '$type')";
-			$db_results = mysql_query($sql, $dbh);
-			
-			if ($this->id = mysql_insert_id($dbh)) {
-				$this->refresh_object();
-				return true;
-			} // end if it created correctly
-			
-		} // end if this is a valid playlist entry
-
-		if (conf('debug')) { 
-			log_event($GLOBALS['user']->username,'playlist_create',"Failed to Create Playlist of $type Type named $name for $user"); 
-		}
-
-		return false;
-
-	} // create_playlist
-
-
-	/*!
-		@function delete
-		@discussion Deletes the playlist.
-	*/
-	function delete() {
-
-		$dbh = dbh();
-
-		if ($this->id) {
-			$sql = "DELETE FROM playlist_data" .
-				" WHERE playlist = '$this->id'";
-			$db_results = mysql_query($sql, $dbh);
-
-			$sql = "DELETE FROM playlist" .
-				" WHERE id = '$this->id'";
-			$db_results = mysql_query($sql, $dbh);
-
-			$sql = "DELETE FROM playlist_permission" . 
-				" WHERE playlist = '$this->id'";
-			$db_results = mysql_query($sql, $dbh);
-
-			return true;
-		} // if we've got a valid playlist
-
-		return false;
-
-	} // delete
-
-
-	/*!
-		@function update_track_numbers
-		@discussion Reads an array of song_ids and track numbers to update
-	*/
-	function update_track_numbers($changes) {
-
-		$dbh = dbh();
-
-		if ($this->id && isset($changes) && is_array($changes)) {
-			foreach ($changes as $change) {
-				// Check for valid song_id
-				$sql = "SELECT count(*) FROM song WHERE id = '" . $change['song_id'] . "'";
-				$db_results = mysql_query($sql, $dbh);
-				$r = mysql_fetch_row($db_results);
-				if ($r[0] == 1) {
-					$sql = "UPDATE playlist_data SET" .
-						" track = '" . $change['track'] . "'" .
-						" WHERE playlist = '$this->id'".
-						" AND song = '" . $change['song_id'] . "'";
-					$db_results = mysql_query($sql, $dbh);
-				}
-			}
-
-			// Refresh the playlist object
-			$this->refresh_object();
-
-			return TRUE;
-		}
-
-		return FALSE;
-
-	}
-
-
-	/*!
-		@function add_songs
-		@discussion Reads an array of song_ids to add to the playlist
-		@param $song_ids the array of song_ids
-		@param $is_ordered boolean, if true insert in order submitted, not by track number
-	*/
-	function add_songs($song_ids, $is_ordered = false) {
-
-		$dbh = dbh();
-
-		if ($this->id && isset($song_ids) && is_array($song_ids)) {
-			$count = 0;
-			foreach ($song_ids as $song_id) {
-				if( $is_ordered ) {
-					$track_num = $count++;
-				} else {
-					$track_num = $song->track;
-				}
-				$song = new Song($song_id);
-				if (isset($song->id)) {
-					$sql = "INSERT INTO playlist_data" .
-						" (playlist, song, track)" .
-						" VALUES ('$this->id', '$song->id', '$track_num')";
-					$db_results = mysql_query($sql, $dbh);
-				}
-			}
-
-			// Refresh the playlist object
-			$this->refresh_object();
-
-			return TRUE;
-		}
-
-		return FALSE;
-
-	} // add_songs
-
-
-	/*!
-		@function remove_songs
-		@discussion Reads an array of song_ids to remove from the playlist
-	*/
-	function remove_songs($song_ids) {
-
-		$dbh = dbh();
-
-		if ($this->id && isset($song_ids) && is_array($song_ids)) {
-			foreach ($song_ids as $song_id) {
-				$sql = "DELETE FROM playlist_data" .
-					" WHERE song = '$song_id'" .
-					" AND playlist = '$this->id'";
-				$db_results = mysql_query($sql, $dbh);
-			}
-
-			// Refresh the playlist object
-			$this->refresh_object();
-
-			return TRUE;
-		}
-
-		return FALSE;
-
-	}
-
-
-	/*!
-		@function check_type
-		@discussion Checks for a valid playlist type
-	*/
-	function check_type($type) {
-
-		if (isset($type)) {
-			if ($type === 'public' || $type === 'private') {
-				return TRUE;
-			}
-		}
-
-		return FALSE;
-
-	}
-
-
-	/*!
-		@function update_type
-		@discussion Updates the playlist type
-	*/
-	function update_type($type) {
-
-		$dbh = dbh();
-
-		if ($this->id && isset($type) && $this->check_type($type)) {
-			$sql = "UPDATE playlist SET type = '$type'" .
-				" WHERE id = '$this->id'";
-			$db_results = mysql_query($sql, $dbh);
-
-			// Refresh the playlist object
-			$this->refresh_object();
-
-			return TRUE;
-		}
-
-		return FALSE;
-
-	}
-
-
-	/*!
-		@function update_name
-		@discussion Updates the playlist name
-	*/
-	function update_name($name) {
-
-		$dbh = dbh();
-
-		if ($this->id && isset($name)) {
-			$name = sql_escape($name);
-			$sql = "UPDATE playlist SET name = '$name'" .
-				" WHERE id = '$this->id'";
-			$db_results = mysql_query($sql, $dbh);
-
-			// Refresh the playlist object
-			$this->refresh_object();
-
-			return TRUE;
-		}
-
-		return FALSE;
-
-	}
-
-	/*!
-		@function normalize_tracks
-		@discussion this takes the crazy out of order tracks
-			and numbers them in a liner fashion, not allowing for
-			the same track # twice, this is an optional funcition
-	*/
-	function normalize_tracks() { 
-
-		/* First get all of the songs in order of their tracks */
-		$sql = "SELECT id FROM playlist_data WHERE playlist='$this->id' ORDER BY track ASC";
+		$this->id 	= $playlist_id;
+		$info 		= $this->_get_info();
+		$this->name	= $info['name'];
+		$this->user	= $info['user'];
+		$this->type	= $info['type'];
+		$this->date	= $info['date'];
+	
+	} // Playlist
+
+	/** 
+	 * _get_info
+	 * This is an internal (private) function that gathers the information for this object from the 
+	 * playlist_id that was passed in. 
+	 */
+	function _get_info() { 
+
+		$sql = "SELECT * FROM playlist WHERE id='" . sql_escape($this->id) . "'";	
 		$db_results = mysql_query($sql, dbh());
 
-		$i = 1;
+		$results = mysql_fetch_assoc($db_results);
+
+		return $results;
+
+	} // _get_info
+
+	/**
+	 * get_items
+	 * This returns an array of playlist songs that are in this playlist. Because the same
+	 * song can be on the same playlist twice they are key'd by the uid from playlist_data
+	 */
+	function get_items() { 
+
+		$sql = "SELECT * FROM playlist_data WHERE playlist='" . sql_escape($this->id) . "'";
+		$db_results = mysql_query($sql, dbh());
 
 		while ($r = mysql_fetch_assoc($db_results)) { 
-			$new_data = array();
-			$new_data['id']		= $r['id'];
-			$new_data['track']	= $i;
-			$results[] = $new_data;
-			$i++;
-		} // end while results
 
-		foreach($results as $data) { 
-			$sql = "UPDATE playlist_data SET track='" . $data['track'] . "' WHERE" . 
-					" id='" . $data['id'] . "'";
-			$db_results = mysql_query($sql, dbh());
-		} // foreach re-ordered results
+			$key = $r['id'];
+			$results[$key] = $r;
 
-		return true;
+		} // end while
 
-	} // normalize_tracks
-	
+		return $results;
 
-	/*!
-		@function get_songs
-		@discussion Returns an array of song_ids for the playlist
-	*/
-	function get_songs() {
+	} // get_items
 
-		$song_ids = array();
+	/**
+	 * get_songs
+	 * This returns an array of song_ids accounting for any dyn_song entries this playlist
+	 * may have. This is what should be called when trying to generate a m3u or other playlist
+	 */
+	function get_songs() { 
 
-		if ($this->id && is_array($this->items)) {
-			foreach ($this->items as $item) {
-				$song_ids[] = $item['song_id'];
+		$sql = "SELECT * FROM playlist_data WHERE playlist='" . sql_escape($this->id) . "'";
+		$db_results = mysql_query($sql, dbh());
+
+		$results = array();
+
+		while ($r = mysql_fetch_assoc($db_results)) { 
+
+			if ($r['dyn_song']) { 
+				$array = $this->get_dyn_songs($r['dyn_song']);
+				$results = array_merge($array,$results);
 			}
-		}
+			else { 
+				$results[] = $r['song'];
+			} 
 
-		return $song_ids;
+		} // end while
+
+		return $results;
 
 	} // get_songs
 
-	/*!
-		@function get_random_songs
-		@discussion gets a random set of the songs in this
-			playlist
-	*/
+	/**
+	 * get_random_songs
+	 * This returns all of the songs in a random order, except those
+	 * pulled from dyn_songs
+	 */
 	function get_random_songs() { 
 
-		$sql = "SELECT COUNT(song) FROM playlist_data WHERE playlist = '$this->id'";
+		$sql = "SELECT * FROM playlist_data WHERE playlist='" . sql_escape($this->id) . "'" . 
+			" ORDER BY RAND()";
 		$db_results = mysql_query($sql, dbh());
 
-		$total_songs = mysql_fetch_row($db_results);
-		
-	        // Fetch playlist items
-                $sql = "SELECT song, track FROM playlist_data" .
-        	        " WHERE playlist = '$this->id'" .
-                        " ORDER BY RAND()";
-                $db_results = mysql_query($sql, dbh());
-                while ($r = mysql_fetch_object($db_results)) {
-	                $song_ids[] = $r->song;
-                }
+		$results = array();
 
-		return $song_ids;
+		while ($r = mysql_fetch_assoc($db_results)) { 
+			if ($r['dyn_song']) { 
+				$array = $this->get_dyn_songs($r['dyn_song']);
+				$results = array_merge($array,$results);
+			}
+			else { 
+				$results[] = $r['song'];
+			}
+		} // end while
+
+		return $results;
+
 	} // get_random_songs
 
-	/*!
-		@function show_import
-		@discussion shows the import from file template
-	*/
-	function show_import() { 
+	/**
+ 	 * get_dyn_songs
+	 * This returns an array of song_ids for a single dynamic playlist entry
+	 */
+	function get_dyn_songs($dyn_string) { 
 
-		require (conf('prefix') . "/templates/show_import_playlist.inc.php");
+		/* Ok honestly I know this is risky, so we have to be
+		 * 100% sure that the user never got to touch this. This
+		 * Query has to return id which must be a song.id
+		 */
+		$db_results = mysql_query($dyn_string, dbh());
 
-	} // show_import
+		$results = array();
 
-} //end of playlist class
+		while ($r = mysql_fetch_assoc($db_results)) { 
+			$results[] = $r['id'];
+		} // end while
 
-?>
+		return $results;
+
+	} // get_dyn_songs
+
+	/**
+	 * get_song_count
+	 * This simply returns a int of how many song elements exist in this playlist
+	 * For now let's consider a dyn_song a single entry
+	 */
+	function get_song_count() { 
+
+		$sql = "SELECT COUNT(id) FROM playlist_data WHERE playlist='" . sql_escape($this->id) . "'";
+		$db_results = mysql_query($sql, dbh());
+
+		$results = mysql_fetch_row($db_results);
+
+		return $results['0'];
+
+	} // get_song_count
+
+	/**
+	 * update_type
+	 * This updates the playlist type, it calls the generic update_item function 
+	 */
+	function update_type($new_type) { 
+
+		if ($this->_update_item('type',$new_type,'100')) { 
+			$this->type = $new_type;
+		}
+
+	} // update_type
+
+	/**
+	 * update_name
+	 * This updates the playlist name, it calls the generic update_item function
+	 */
+	function update_name($new_name) { 
+
+		if ($this->_update_item('name',$new_name,'100')) { 
+			$this->name = $new_name;
+		}
+
+	} // update_name
+
+	/**
+	 * update_item
+	 * This is the generic update function, it does the escaping and error checking
+	 */
+	function update_item($field,$value,$level) { 
+
+		if ($GLOBALS['user']->username != $this->user AND !$GLOBALS['user']->has_access($level)) { 
+			return false; 
+		}
+
+		$value = sql_escape($value);
+
+		$sql = "UPDATE playlist SET $field='$value' WHERE id='" . sql_escape($this->id) . "'";
+		$db_results = mysql_query($sql, dbh());
+
+		return $db_results;
+
+	} // update_item
+
+	/**
+	 * update_track_numbers
+	 
+	 * This function takes an array of $array['song_id'] $array['track'] where song_id is really the
+	 * playlist_data.id and updates them
+	 */
+	function update_track_numbers($data) { 
+
+		foreach ($data as $change) { 
+		
+			$track 	= sql_escape($change['track']);
+			$id	= sql_escape($change['song_id']);
+
+			$sql = "UPDATE playlist_data SET track='$track' WHERE id='$id'";
+			$db_results = mysql_query($sql, dbh());
+
+		} // end foreach
+
+	} // update_track_numbers
+
+	/**
+	 * add_songs
+	 * This takes an array of song_ids and then adds it to the playlist
+	 * if you want to add a dyn_song you need to use the one shot function
+	 * add_dyn_song
+	 */
+	function add_songs($song_ids=array()) { 
+
+		foreach ($song_ids as $song_id) { 
+			/* We need the songs track */
+			$song = new Song($song_id);
+
+			$track	= sql_escape($song->track);
+			$id	= sql_escape($song->id);
+			$pl_id	= sql_escape($this->id);
+
+			/* Don't insert dead songs */
+			if ($id) { 
+				$sql = "INSERT INTO playlist_data (`playlist`,`song`,`track`) " . 
+					" VALUES ('$pl_id','$id','$track')";
+				$db_results = mysql_query($sql, dbh());
+			} // if valid id
+
+		} // end foreach songs
+
+	} // add_songs
+
+	/**
+	 * create
+	 * This function creates an empty playlist, gives it a name and type
+	 * Assumes $GLOBALS['user']->username as the user
+	 */
+	function create($name,$type) { 
+
+		$name = sql_escape($name);
+		$type = sql_escape($type);
+		$user = sql_escape($GLOBALS['user']->username);
+		$date = time();
+
+		$sql = "INSERT INTO playlist (`name`,`user`,`type`,`date`) " . 
+			" VALUES ('$name','$user','$type','$date')";
+		$db_results = mysql_query($sql, dbh());
+
+		$insert_id = mysql_insert_id(dbh());
+
+		return $insert_id;
+
+	} //create_paylist
+
+	/**
+	 * set_items
+	 * This calles the get_items function and sets it to $this->items which is an array in this object
+	 */
+	function set_items() { 
+
+		$this->items = $this->get_items();
+
+	} // set_items
+
+        /**
+         * normalize_tracks
+         * this takes the crazy out of order tracks
+         * and numbers them in a liner fashion, not allowing for
+	 * the same track # twice, this is an optional funcition
+	 */
+        function normalize_tracks() { 
+
+                /* First get all of the songs in order of their tracks */
+                $sql = "SELECT id FROM playlist_data WHERE playlist='" . sql_escape($this->id) . "' ORDER BY track ASC";
+                $db_results = mysql_query($sql, dbh());
+
+                $i = 1;
+
+                while ($r = mysql_fetch_assoc($db_results)) { 
+                        $new_data = array();
+                        $new_data['id']         = $r['id'];
+                        $new_data['track']      = $i;
+                        $results[] = $new_data;
+                        $i++;
+                } // end while results
+
+                foreach($results as $data) { 
+                        $sql = "UPDATE playlist_data SET track='" . $data['track'] . "' WHERE" . 
+                                        " id='" . $data['id'] . "'";
+                        $db_results = mysql_query($sql, dbh());
+                } // foreach re-ordered results
+
+                return true;
+
+        } // normalize_tracks
+	
+	/**
+	 * check_type
+	 * This validates a type to make sure it's legit
+	 */
+	function check_type($type) { 
+
+		if ($type == 'public' || $type == 'private') { return true; }
+		
+		return false; 
+
+	} // check_type
+
+	/**
+	 * remove_songs
+	 * This is the polar opposite of the add_songs function... with one little 
+	 * change. it works off of the playlist_data.id rather then song_id
+	 */
+	function remove_songs($data) { 
+
+		foreach ($data as $value) { 
+		
+			$id = sql_escape($value);
+			
+			$sql = "DELETE FROM playlist_data WHERE id='$id'";
+			$db_results = mysql_query($sql, dbh());
+
+		} // end foreach dead songs
+
+	} // remove_songs
+
+	/**
+	 * delete
+	 * This deletes the current playlist and all assoicated data
+	 */
+	function delete() { 
+
+		$id = sql_escape($this->id);
+
+		$sql = "DELETE FROM playlist_data WHERE playlist = '$id'";
+		$db_results = mysql_query($sql, dbh());
+
+		$sql = "DELETE FROM playlist WHERE id='$id'";
+		$db_results = mysql_query($sql, dbh());
+
+		$sql = "DELETE FROM playlist_permission WHERE playlist='$id'";
+		$db_results = mysql_query($sql, dbh());
+
+		return true;
+	
+	} // delete
+
+} // class Playlist

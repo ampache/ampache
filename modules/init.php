@@ -152,23 +152,24 @@ require_once(libglue_param('libglue_path') . "/session.php");
 require_once(libglue_param('libglue_path') . "/dbh.php");
 
 // Librarys
-require_once(conf('prefix') . "/lib/album.lib.php");
-require_once(conf('prefix') . "/lib/artist.lib.php");
-require_once(conf('prefix') . "/lib/song.php");
-require_once(conf('prefix') . "/lib/search.php");
-require_once(conf('prefix') . "/lib/preferences.php");
-require_once(conf('prefix') . "/lib/rss.php");
-require_once(conf('prefix') . "/lib/log.lib.php");
-require_once(conf('prefix') . "/lib/mpd.php");
-require_once(conf('prefix') . "/lib/ui.lib.php");
-require_once(conf('prefix') . "/lib/gettext.php");
-require_once(conf('prefix') . "/lib/batch.lib.php");
-require_once(conf('prefix') . "/lib/themes.php");
-require_once(conf('prefix') . "/lib/stream.lib.php");
-require_once(conf('prefix') . "/modules/lib.php");
-require_once(conf('prefix') . "/modules/admin.php");
-require_once(conf('prefix') . "/modules/catalog.php");
-require_once(conf('prefix') . "/lib/upload.php");
+require_once(conf('prefix') . '/lib/album.lib.php');
+require_once(conf('prefix') . '/lib/artist.lib.php');
+require_once(conf('prefix') . '/lib/song.php');
+require_once(conf('prefix') . '/lib/search.php');
+require_once(conf('prefix') . '/lib/preferences.php');
+require_once(conf('prefix') . '/lib/rss.php');
+require_once(conf('prefix') . '/lib/log.lib.php');
+require_once(conf('prefix') . '/lib/mpd.php');
+require_once(conf('prefix') . '/lib/ui.lib.php');
+require_once(conf('prefix') . '/lib/gettext.php');
+require_once(conf('prefix') . '/lib/batch.lib.php');
+require_once(conf('prefix') . '/lib/themes.php');
+require_once(conf('prefix') . '/lib/stream.lib.php');
+require_once(conf('prefix') . '/lib/playlist.lib.php');
+require_once(conf('prefix') . '/modules/lib.php');
+require_once(conf('prefix') . '/modules/admin.php');
+require_once(conf('prefix') . '/modules/catalog.php');
+require_once(conf('prefix') . '/lib/upload.php');
 
 // Modules (These are conditionaly included depending upon config values)
 require_once(conf('prefix') . "/modules/id3/audioinfo.class.php");
