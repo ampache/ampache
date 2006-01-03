@@ -4,6 +4,8 @@
 
 --------------------------------------------------------------------------
   v.3.3.2-Beta1
+  	- Fixed Album Art Search so that it doesn't include the artist
+		if there is more then one artist on the album
   	- Fixed Registration code so that it used existing functions and
 		added default to off config option for captcha because
 		its hard to detect compatiblity

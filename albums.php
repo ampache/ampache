@@ -84,7 +84,7 @@ elseif ($_REQUEST['action'] === 'find_art') {
 	if (isset($_REQUEST['artist_name'])) { 
 		$artist = scrub_in($_REQUEST['artist_name']);
 	} 
-	else { 
+	elseif ($album->artist_count == '1') { 
 		$artist = $album->artist;
 	}
 
@@ -109,7 +109,7 @@ elseif ($_REQUEST['action'] === 'find_art') {
   	}
   
 	$albumname = $album->name;
-	$artistname = $album->artist;
+	$artistname = $artist;
 	
 	// Remember the last typed entry, if there was one
 	if (isset($_REQUEST['album_name'])) {   $albumname = scrub_in($_REQUEST['album_name']); }

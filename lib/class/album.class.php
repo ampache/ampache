@@ -396,9 +396,6 @@ class Album {
 		$final_results 	= array();
 		$possible_keys = array("LargeImage","MediumImage","SmallImage");
 	
-		/* We're gonna need this object */	
-		$snoopy = new Snoopy();
-		
 		// Prevent the script from timing out
 		set_time_limit(0);
 
@@ -406,7 +403,10 @@ class Album {
 	        if (empty($coverurl)) { 
 
 			if (empty($keywords)) { 
-				$keywords = $this->name . ' ' . $this->artist;
+				
+				$keywords = $this->name;
+				/* If this isn't a various album combine with artist name */
+				if ($this->artist_count == '1') { $keywords .= ' ' . $this->artist; }
 			}
 
 		    	// Create the Search Object
