@@ -36,7 +36,7 @@
 <?php 
 	foreach ($playlists as $playlist) { 
 		$playlist_user = new User($playlist->user);
-		$count	= $playlist->get_song_count(); 
+		$count = $playlist->get_song_count(); 
 ?>
 <tr class="<?php echo flip_class(); ?>">
 	<td>
@@ -51,7 +51,7 @@
 		<?php echo _('View'); ?>
 		</a>	
 		<?php if ($GLOBALS['user']->username == $playlist->user || $GLOBALS['user']->has_access(100)) { ?>
-			| <a href=<?php echo conf('web_path'); ?>/playlist.php?action=edit&amplplaylist_id=<?php echo $playlist->id; ?>">
+			| <a href="<?php echo conf('web_path'); ?>/playlist.php?action=edit&amp;playlist_id=<?php echo $playlist->id; ?>">
 			<?php echo _('Edit'); ?>
 			</a>
 			| <a href="<?php echo conf('web_path'); ?>/playlist.php?action=show_delete_playlist&amp;playlist_id=<?php echo $playlist->id; ?>">
@@ -59,10 +59,10 @@
 			</a>
 		<?php } ?>
 		<?php if ($count > 1) { ?>
-			| <a href="<?php echo conf('web_path'); ?>/song.php?action=playlist&playlist_id=<?php echo $playlist->id; ?>">
+			| <a href="<?php echo conf('web_path'); ?>/song.php?action=playlist&amp;playlist_id=<?php echo $playlist->id; ?>">
 			<?php echo _('Play'); ?>
 			</a>
-			| <a href="<?php echo conf('web_path'); ?>/song.php?action=playlist_random&playlist_id=<?php echo $playlist->id; ?>">
+			| <a href="<?php echo conf('web_path'); ?>/song.php?action=playlist_random&amp;playlist_id=<?php echo $playlist->id; ?>">
 			<?php echo _('Random'); ?>
 			</a>
 		<?php } ?>
