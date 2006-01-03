@@ -49,9 +49,9 @@ if (true)  /* rigged to do AJAX for now; change to conf('AJAX') later*/ {
 ?>
 <!--   <input type="button" class="unselected_button" value="times" onclick="timestuff();"/> -->
    <input type="button" class="unselected_button" value="|&lt; " onclick="startRequest('action=Prev');"/>
-   <input type="button" class=<?php echo ($stop ? "selected_button" : "unselected_button") ?> id="stop_button" value=" X " onclick="startRequest('action=stop');"/>
-   <input type="button" class=<?php echo ($play ? "selected_button" : "unselected_button") ?> id="play_button" value=" &gt; " onclick="startRequest('action=play');"/>
-   <input type="button" class=<?php echo ($pause ? "selected_button" : "unselected_button") ?> id="pause_button" value=" | | "  onclick="startRequest('action=pause');"/>
+   <input type="button" class=<?php echo ($stop ? "'selected_button'" : "'unselected_button'") ?> id="stop_button" value=" X " onclick="startRequest('action=stop');"/>
+   <input type="button" class=<?php echo ($play ? "'selected_button'" : "'unselected_button'") ?> id="play_button" value=" &gt; " onclick="startRequest('action=play');"/>
+   <input type="button" class=<?php echo ($pause ? "'selected_button'" : "'unselected_button'") ?> id="pause_button" value=" | | "  onclick="startRequest('action=pause');"/>
    <input type="button" class="unselected_button" value=" &gt;|" onclick="startRequest('action=Next');"/>
 <?php
 }
