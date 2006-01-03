@@ -25,7 +25,7 @@ $web_path = conf('web_path');
 $username = $GLOBALS['user']->username;
 
 /* If it's a playlist and they've got rights */
-if (isset($playlist_id) && ($GLOBALS['user']->username == $playlist->user || $GLOBALS['user']->has_access('100'))) { 
+if (is_object($playlist) && ($GLOBALS['user']->username == $playlist->user || $GLOBALS['user']->has_access('100'))) { 
 	$tab = 1;
 	$playlist_owner = true;
 }
@@ -64,15 +64,17 @@ if (isset($playlist_id) && ($GLOBALS['user']->username == $playlist->user || $GL
 			else { 
 				$song = new Song();
 				$song->title = 'Dynamic Song';
+				$track_id = $song_id['id'];
 			}
-			$song_id = $song_id['id'];
 		} // end if playlist
 		elseif (!is_object($song_id)) { 
 			unset($text_class);
 			$song = new Song($song_id);
+			$track_id = $song->id;
 		}
 		else { 
 			$song = $song_id;
+			$track_id = $song->id;
 		}
 
 
@@ -87,19 +89,16 @@ if (isset($playlist_id) && ($GLOBALS['user']->username == $playlist->user || $GL
 	<td align="center">
         	<input type="checkbox" name="song[]" value="<?php echo $song->id; ?>" id="song_<?php echo $song->id; ?>" />
         </td>
-        <?php
-            if (isset($playlist_id) && $playlist_id != 0 && ($user->username == $pluser->username || $user->has_access('100'))) {
-                    $tracknum = get_playlist_track_from_song($playlist_id, $song->id);
-        ?>
+		<?php
+		if (is_object($playlist) && ($GLOBALS['user']->username == $playlist->user || $GLOBALS['user']->has_access('100'))) {
+			/* $tracknum = $playlist->get_track($track_id); */
+		?>
             <td>
-              <input type="text" tabindex="<?php echo $tab; ?>" size="3" name="<?php echo "tr_" . $song->id; ?>" value="<?php echo $tracknum ?>" onchange="<?php echo "document.getElementById('song_" . $song->id . "').checked='checked';"; ?>" />
+              <input type="text" tabindex="<?php echo $tab; ?>" size="3" name="<?php echo "tr_" . $song->id; ?>" value="<?php echo $tracknum ?>" onchange="<?php echo "document.getElementById('song_" . $track_id . "').checked='checked';"; ?>" />
             </td>
-        <?php
-                    $tab++;
-            }
-        ?>
+		<?php $tab++; } ?>
              <td>
-              <a href="<?php echo $web_path; ?>/song.php?action=m3u&amp;song=<?php echo $song->id; ?>" title="<?php echo htmlspecialchars($song->title); ?>" <?php echo $text_class; ?>><?php echo htmlspecialchars($song->f_title); ?></a>
+              <a href="<?php echo $web_path; ?>/song.php?action=m3u&amp;song=<?php echo $song->id; ?>" title="<?php echo scrub_out($song->title); ?>" <?php echo $text_class; ?>><?php echo scrub_out($song->f_title); ?></a>
             </td>
             <td>
               <a href="<?php echo $web_path; ?>/artists.php?action=show&amp;artist=<?php echo htmlspecialchars($song->artist); ?>" title="<?php echo htmlspecialchars($song->f_artist_full); ?>" <?php echo $text_class; ?>><?php echo htmlspecialchars($song->f_artist); ?></a>

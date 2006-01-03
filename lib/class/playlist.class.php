@@ -71,6 +71,17 @@ class Playlist {
 	} // _get_info
 
 	/**
+	 * get_track
+	 * Takes a playlist_data.id and returns the current track value for said entry
+	 */
+	function get_track($id) { 
+
+
+
+
+	} // get_track
+
+	/**
 	 * get_items
 	 * This returns an array of playlist songs that are in this playlist. Because the same
 	 * song can be on the same playlist twice they are key'd by the uid from playlist_data
