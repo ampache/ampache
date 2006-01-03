@@ -68,7 +68,7 @@ else  {
 <?php } ?>
 	    </td>
          </tr>
-         <tr><td class="content"> Volume: <b><span name='volume' id='volume'><?php echo $myMpd->volume ?></span>%</b> 
+         <tr><td class="content"> Volume: <b><span id='volume'><?php echo $myMpd->volume ?></span>%</b> 
             </td>
          </tr>
 
