@@ -1192,7 +1192,25 @@ mail($email, "Welcome to $title" , $body, $from);
 
 } //send_confirmation
 
+/**
+ * show_registration_agreement
+ * This function reads in /config/registration_agreement.php
+ * Plaintext Only
+ */
+function show_registration_agreement() { 
 
+	$filename = conf('prefix') . '/config/registration_agreement.php';
 
+	/* Check for existance */
+	$fp = fopen($filename,'r');
+
+	if (!$fp) { return false; }
+
+	$data = fread($fp,filesize($filename));
+
+	/* Scrub and show */
+	echo scrub_out($data);
+		
+} // show_registration_agreement
 
 ?>

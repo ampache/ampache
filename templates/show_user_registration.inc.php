@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2005 Ampache.org
+ Copyright (c) 2001 - 2006 Ampache.org
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
@@ -49,10 +49,6 @@ $action = scrub_in($_REQUEST['action']);
 $fullname = scrub_in($_REQUEST['fullname']);
 $username = scrub_in($_REQUEST['username']);
 $email = scrub_in($_REQUEST['email']);
-/*
-$password = scrub_in($_REQUEST['password']);
-echo "$password";
-*/
 ?>
 
 <div align="center">
@@ -60,12 +56,12 @@ echo "$password";
     <table class="border" width='700' cellpadding='0' cellspacing='0' border='0'>
     	<tr class="table-header">
     		<td>
-    			<font size="2"><b><u>Ampache New User Registration</u></b></font>
+    			<font size="2"><b><u><?php echo _("Ampache New User Registration"); ?></u></b></font>
     		</td>
     	</tr>
 	<?php
-	// USER AGREEMENT
-	if(conf('user_agreement')==true){ ?>
+	/*  If we should show the user agreement */
+	if(conf('user_agreement')){ ?>
     	<tr>
     		<td height='15' bgcolor="<?php print conf('base_color2'); ?>">
     		</td>
@@ -75,17 +71,17 @@ echo "$password";
 			<table width='100%' border='0' cellpadding='0' cellspacing='0'>
 				<tr class="table-header">
 					<td align='center'>
-						<font size="1"><b><u>User Agreement</u></b></font>
+						<font size="1"><b><u><?php echo _('User Agreement'); ?></u></b></font>
 					</td>
 				</tr>
 				<tr>
 					<td>
-						<?php include("templates/user_agreement.php"); ?>
+						<?php show_registration_agreement(); ?>
 					</td>
 				</tr>
 				<tr>
 					<td align='center' height='35' valign='center'>
-						<input type='checkbox' name='accept_agreement'> I Accept
+						<input type='checkbox' name='accept_agreement'> <?php echo _('I Accept'); ?>
 						<?php $GLOBALS['error']->print_error('user_agreement'); ?>
 					</td>
 				</tr>
@@ -98,11 +94,11 @@ echo "$password";
 		</td>
 	</tr>
 	<tr>
-		<td bgcolor="<?php print conf('base_color2'); ?>" align='center' valign='top'>
-			<table width='100%' cellpadding='0' cellspacing='0' border='0'>
+		<td bgcolor="<?php print conf('base_color2'); ?>" align="center" valign="top">
+			<table width="100%" cellpadding="0" cellspacing="0" border="0">
 				<tr class="table-header">
 					<td align='center'>
-						<font size="1"><b><u>User Information</u></b></font>
+						<font size="1"><b><u><?php echo _('User Information'); ?></u></b></font>
 					</td>
 				</tr>
 			</table>
@@ -113,7 +109,7 @@ echo "$password";
 						<?php echo _("Username"); ?>:
 					</td>
 					<td>
-						<font color='red'>*</font> <input type='text' name='username' id='username' value='<?php echo "$username"; ?>' />
+						<font color='red'>*</font> <input type='text' name='username' id='username' value='<?php echo scrub_out($username); ?>' />
 						<?php $GLOBALS['error']->print_error('username'); ?>
 						<?php $GLOBALS['error']->print_error('duplicate_user'); ?>
 					</td>
@@ -123,7 +119,7 @@ echo "$password";
 						<?php echo _("Full Name"); ?>:
 					</td>
 					<td>
-						<font color='red'>*</font> <input type='text' name='fullname' id='fullname' value='<?php echo "$fullname"; ?>' />
+						<font color='red'>*</font> <input type='text' name='fullname' id='fullname' value='<?php echo scrub_out($fullname); ?>' />
 						<?php $GLOBALS['error']->print_error('fullname'); ?>
 					</td>
 				</tr>
@@ -132,7 +128,7 @@ echo "$password";
 						<?php echo _("E-mail"); ?>:
 					</td>
 					<td>
-						<font color='red'>*</font> <input type='text' name='email' id='email' value='<?php echo "$email"; ?>' />
+						<font color='red'>*</font> <input type='text' name='email' id='email' value='<?php echo scrub_out($email); ?>' />
 						<?php $GLOBALS['error']->print_error('email'); ?>
 					</td>
 				</tr>
@@ -153,10 +149,12 @@ echo "$password";
 						<font color='red'>*</font> <input type='password' name='password_2' id='password_2' />
 					</td>
 				</tr>
+				<?php if (conf('captcha_public_reg')) { ?>
 				<tr>
 						<?php echo captcha::form(); ?>
 						<?php $GLOBALS['error']->print_error('captcha'); ?>
 				</tr>
+				<?php } ?>
 				<tr>
 					<td colspan='2' bgcolor="<?php print conf('base_color2'); ?>" align='center' height='20'>
 						<font color='red'>*</font>Required fields
@@ -165,7 +163,7 @@ echo "$password";
 				<tr>
 					<td colspan='2' bgcolor="<?php print conf('base_color2'); ?>" align='center' height='50'>
 						<input type="hidden" name="action" value="add_user" />
-						<input type='reset' name='clear_info' id='clear_info' value='Clear Info' />
+						<input type='reset' name='clear_info' id='clear_info' value='<?php echo _('Clear Info'); ?>' />
 						<input type='submit' name='submit_registration' id='submit_registration' value='<?php echo _("Register User"); ?>' />
 					</td>
 				</tr>

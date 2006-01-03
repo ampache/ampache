@@ -22,34 +22,34 @@
 
 $no_session = true;
 require_once( "modules/init.php" );
+
+/* Keep them out if they shouldn't be here */
 if(!conf('allow_public_registration') || conf('demo_mode'))  {
 	access_denied();
 }
 
-// Access Control
-echo "<html><head>";
-show_template('style');
-echo "<head><body>";
-
-
-$username = $_GET['u'];
-$validation  = $_GET['act_key'];
-$user = new User($username);
-$val1 = $GLOBALS['user']->get_user_validation($username,$validation);
-if (!$val1){
-    $GLOBALS['error']->add_error('no_such_user',_("No user with this name registered"));    
-    $GLOBALS['error']->print_error('no_such_user');    
-    echo "</body></html>";
-    break;
-    }
-if ($val1 != $validation) {
-    $GLOBALS['error']->add_error('validation_failed',_("The validation key used isn't correct."));    
-    $GLOBALS['error']->print_error('validation_failed');    
-    echo "</body></html>";
-    break;
-    }
-$activate = $GLOBALS['user']->activate_user($username);
-show_confirmation('User activated','This User ID is activated and can be used','/login.php');
-echo "</body></html>";
-
 ?>
+<html><head>
+show_template('style');
+<head><body>
+<?php 
+
+$username 	= scrub_in($_GET['u']);
+$validation  	= scrub_in($_GET['act_key']);
+$val1 		= $GLOBALS['user']->get_user_validation($username,$validation);
+
+if (!$val1) {
+	    $GLOBALS['error']->add_error('no_such_user',_("No user with this name registered"));    
+	    $GLOBALS['error']->print_error('no_such_user');    
+    }
+elseif ($val1 != $validation) {
+	    $GLOBALS['error']->add_error('validation_failed',_("The validation key used isn't correct."));    
+	    $GLOBALS['error']->print_error('validation_failed');    
+    }
+else { 
+	$activate = $GLOBALS['user']->activate_user($username);
+	show_confirmation(_('User activated'),_('This User ID is activated and can be used'),'/login.php');
+}
+?>
+</body>
+</html>

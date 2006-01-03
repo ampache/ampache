@@ -389,12 +389,12 @@ class User {
 			
 		} 
 		elseif ($new_access == 'disabled') {
-			$new_access = sql_escape($new_access);
 			$sql = "UPDATE user SET disabled='1' WHERE username='$this->username'";
 			$db_results = mysql_query($sql, dbh());
 			$sql = "DELETE FROM session WHERE username='" . sql_escape($this->username) . "'";
 			$db_results = mysql_query($sql, dbh());
-		} else {
+		} 
+		else {
 			$new_access = sql_escape($new_access);
 			$sql = "UPDATE user SET access='$new_access' WHERE username='$this->username'";
 			$db_results = mysql_query($sql, dbh());
@@ -768,12 +768,18 @@ class User {
 		@function get_user_validation
 		@check if user exists before activation can be done.
 	*/
-	function get_user_validation($username,$validation){
+	function get_user_validation($username,$validation) {
+	
+		$usename = sql_escape($username);
+	
 		$sql = "SELECT validation FROM user where username='$username'";
 		$db_results = mysql_query($sql, dbh());
-		$row = mysql_fetch_array($db_results);
-		$val = $row[validation];
+		
+		$row = mysql_fetch_assoc($db_results);
+		$val = $row['validation'];
+
 		return $val;
+
 	} // get_user_validation
 
 	/*!
@@ -781,9 +787,14 @@ class User {
 		@activates the user from public_registration
 	*/
 	function activate_user($username) {
+	
+		$username = sql_escape($username);
+	
 		$sql = "UPDATE user SET disabled='0' WHERE username='$username'";
 		$db_results = mysql_query($sql, dbh());
+		
 	} // activate_user
+	
 } //end class
 
 ?>

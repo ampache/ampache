@@ -142,7 +142,7 @@ switch ($action) {
 		}
 
 		/* Attempt to create the new user */
-		$access = '0';
+		$access = 'disabled';
 		if (conf('auto_user')) { $access = '5'; }
 		$new_user = $GLOBALS['user']->create($username,$fullname,$email,$pass1,$access);
 
@@ -162,9 +162,6 @@ switch ($action) {
 		send_confirmation($username, $fullname, $email, $password, $validation);
 		show_template('style');
 		show_confirmation(_('Registration Complete'),$message,'/login.php');	
-	break;
-	case 'new_user':
-		include("templates/show_new_user.inc");
 	break;
 	case 'show_add_user':
 	default:
