@@ -254,6 +254,11 @@ class Update {
 
 		$version[] = array('version' => '332005','description' => $update_string);
 
+
+		$update_string = '- Adds Create Date to User table to track registration and user creation time.';
+
+		$version[] = array('version' => '332006','description' => $update_string);
+
 		return $version;
 
 	} // populate_version
@@ -1363,6 +1368,23 @@ class Update {
 		$this->set_version('db_version','332005');
 
 	} // update_332005
+
+	/**
+	 * update_332006
+	 * Hmm 2006 perfect for the new year.. anyway this just adds the create_date on the account
+	 * so that you know when they were registered/created 
+	 */
+	function update_332006() { 
+
+		$sql = "ALTER TABLE `user` ADD `create_date` INT ( 11 ) UNSIGNED NULL DEFAULT NULL";
+		$db_results = mysql_query($sql, dbh());
+		
+		$sql = "ALTER TABLE `user` ADD `validation` VARCHAR ( 128 )";
+		$db_results = mysql_query($sql, dbh());
+		
+		$this->set_version('db_version','332006');
+
+	} // update_332006
 
 } // end update class
 ?>

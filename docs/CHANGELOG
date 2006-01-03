@@ -4,6 +4,9 @@
 
 --------------------------------------------------------------------------
   v.3.3.2-Beta1
+  	- Fixed Registration code so that it used existing functions and
+		added default to off config option for captcha because
+		its hard to detect compatiblity
   	- Fixed some logic errors in Downsampling code
   	- Updated Registration code (Thx pb1dft)
   	- Updated GetId3() Library to v.1.7.5

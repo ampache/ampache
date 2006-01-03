@@ -119,35 +119,6 @@ require_session = "true"
 # DEFAULT: false
 #allow_zip_download = "false"
 
-# This setting turns on/off public registration. It is
-# recommended you leave this off, as it will allow anyone to
-# sign up for an account on your server.
-# REMEMBER: don't forget to set the mail from address futher down in the config.
-# DEFAULT: false
-#allow_public_registration = "false"
-
-# This setting defines the mail domain your in.
-# It tries to deliver a test mail before the user can register and uses
-# the from address info@"domain.tld". No mail is send from this address it's
-# only used to test the existense of a mailbox before accepting user registration.
-# DEFAULT: domain.tld
-#mail_domain = "domain.tld"
-
-# This settting will be used as mail from address.
-# You need to change this when you activate public_registration.
-mail_from = "info@domain.tld"
-
-# This setting will allow all registrants to be auto-approved
-# as a user. By default, they will be added as a guest and
-# must be "promoted" by the admin.
-# DEFAULT: false
-#auto_user = "false"
-
-# This will display the user agreement when registering
-# For agreement text, edit templates/user_agreement.php
-# User will need to accept the agreement before they can register
-#user_agreement = "false"
-
 # This sets which ID3 tag takes precedence.
 # we've found for those of you who don't have
 # good v2 tags it's sometimes nice to keep the v1
@@ -261,6 +232,48 @@ max_upload_size = "10485760"
 # Default of iso-8859-1 should work for most poeple
 # DEFAULT: iso-8859-1
 site_charset = iso-8859-1
+
+
+##########################################################
+# Public Registration settings, defaults to disabled 
+##########################################################
+
+# This setting turns on/off public registration. It is
+# recommended you leave this off, as it will allow anyone to
+# sign up for an account on your server.
+# REMEMBER: don't forget to set the mail from address futher down in the config.
+# DEFAULT: false
+#allow_public_registration = "false"
+
+# Require Captcha Text on Image confirmation
+# Turning this on requires the user to correctly
+# type in the letters in the image created by Captcha
+# Default is off because its very hard to detect if it failed
+# to draw, or they failed to enter it.
+# DEFAULT: false
+#captcha_public_reg = "false"
+
+# This setting defines the mail domain your in.
+# It tries to deliver a test mail before the user can register and uses
+# the from address info@"domain.tld". No mail is send from this address it's
+# only used to test the existense of a mailbox before accepting user registration.
+# DEFAULT: domain.tld
+#mail_domain = "domain.tld"
+
+# This settting will be used as mail from address.
+# You need to change this when you activate public_registration.
+#mail_from = "info@domain.tld"
+
+# This setting will allow all registrants to be auto-approved
+# as a user. By default, they will be added as a guest and
+# must be "promoted" by the admin.
+# DEFAULT: false
+#auto_user = "false"
+
+# This will display the user agreement when registering
+# For agreement text, edit templates/user_agreement.php
+# User will need to accept the agreement before they can register
+#user_agreement = "false"
 
 ##########################################################
 # These Option Control which playback methods are allowed

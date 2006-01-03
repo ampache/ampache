@@ -1104,61 +1104,6 @@ function show_genre_pulldown ($name,$selected='',$size=1,$width=0,$style='') {
 
 } // show_genre_pulldown
 
-function username_exists($check_user){
-
-	$check_user = sql_escape($check_user);
-
-	$sql = "SELECT * FROM user WHERE username='$check_user'";
-	$db_results = mysql_query($sql, dbh());
- 
-	if ($r = mysql_fetch_assoc($db_results)) {
-		return true;
-	}
-	else {
-		return false;
-	}
-} // username_exists
-
-/**
- * new_user
- * FIXME: This needs to be done right... I don't know how right is
- * but my guess is this isn't it, so anyway this just creates a new user
- * this should really use the built in functions rather than creating
- * a new one
- */
-function new_user($username, $fullname, $email, $password) {
-
-	/* First lets clean up the fields... */
-	$username       = sql_escape($username);
-	$fullname       = sql_escape($fullname);
-	$email          = sql_escape($email);
-	$validation	= str_rand(20);
-	$access         = '5';
-	if(conf('auto_user')){
-        	$access='25';
-	}
-
-	/* Check to see if the user exists... */
-	//FIXME: Use the error class 
-	if(username_exists($username)){
-	        return false;
-	}
-
-	/* Uhh let's not auto-pass through in this fashion FIXME */
-	else {
-		/* Apparently it's a new user, now insert the user into the database*/
-		$sql = "INSERT INTO user (username, fullname, email, password, access, disabled, reg_date, validation) VALUES" .
-			" ('$username','$fullname','$email',PASSWORD('$password'),'$access', '1', unix_timestamp(), '$validation')";
-		$db_results = mysql_query($sql, dbh());
-		show_template('style');
-		show_confirmation('Registration Complete','Your account has been created. However, this forum requires account activation. An activation key has been sent to the e-mail address you provided. Please check your e-mail for further information','/login.php');
-		send_confirmation($username, $fullname, $email, $password, $validation);
-	}
-
-	return true;
- 
-} // new_user
-
 /**
  * good_email
  * Don't get me started... I'm sure the indenting is still wrong on this

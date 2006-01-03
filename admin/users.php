@@ -135,7 +135,7 @@ switch ($action) {
 		
 		/* If we end up with an error */
 		if ($GLOBALS['error']->error_state) { 
-		        show_user_form('','$username','$fullname','$email','$access','new_user','');
+		        show_user_form('','$username','$fullname','$email','new_user','');
 			break;
 		}	
 		show_confirmation("New User Added",$username . " has been created with an access level of " . $access,"admin/users.php");	

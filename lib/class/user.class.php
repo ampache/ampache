@@ -308,6 +308,23 @@ class User {
 
 	} // update_username
 
+	/**
+	 * update_validation
+	 * This is used by the registration mumbojumbo
+	 * Use this function to update the validation key
+	 * NOTE: crap this doesn't have update_item the humanity of it all 
+	 */
+	function update_validation($new_validation) { 
+
+		$new_validation = sql_escape($new_validation);
+		$sql = "UPDATE user SET validation='$new_validation' WHERE username='$this->username'";
+		$this->validation = $new_validation;
+		$db_results = mysql_query($sql, dbh());
+
+		return $db_results;
+
+	} // update_validation
+
 	/*!
 		@function update_fullname
 		@discussion updates their fullname
@@ -470,20 +487,22 @@ class User {
 
 	} // update_stats
 
-	/*!
-		@function create
-		@discussion inserts a new user into ampache
-	*/
+	/**
+	 * create
+	 * inserts a new user into ampache
+	 */
 	function create($username, $fullname, $email, $password, $access) { 
 
 		/* Lets clean up the fields... */
 		$username	= sql_escape($username);
 		$fullname	= sql_escape($fullname);
 		$email		= sql_escape($email);
+		
 		/* Now Insert this new user */
-		$sql = "INSERT INTO user (username, fullname, email, password, access, reg_date) VALUES" .
-			" ('$username','$fullname','$email',PASSWORD('$password'),'$access', unix_timestamp())";
+		$sql = "INSERT INTO user (username, fullname, email, password, access, create_date) VALUES" .
+			" ('$username','$fullname','$email',PASSWORD('$password'),'$access','" . time() ."')";
 		$db_results = mysql_query($sql, dbh());
+		
 		if (!$db_results) { return false; }
 
 		/* Populates any missing preferences, in this case all of them */
@@ -491,7 +510,7 @@ class User {
 
 		return $username;
 
-	} // new
+	} // create
 	
 	/*!
 		@function update_password

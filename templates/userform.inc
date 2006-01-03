@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2005 Ampache.org
+ Copyright (c) 2001 - 2006 Ampache.org
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
@@ -25,7 +25,7 @@ if ($type === 'new_user') {
 	$title = _("Adding a New User");
 }
 else {
-	$userfield = "$username";
+	$userfield = "$username;
 	$title = _("Editing existing User");
 }
 ?>
