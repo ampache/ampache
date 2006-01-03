@@ -160,7 +160,7 @@ switch ($action) {
 				' An activation key has been sent to the e-mail address you provided. ' .
 				'Please check your e-mail for further information';
 
-		send_confirmation($username, $fullname, $email, $password, $validation);
+		send_confirmation($username, $fullname, $email, $pass1, $validation);
 		show_template('style');
 		show_confirmation(_('Registration Complete'),$message,'/login.php');	
 	break;
