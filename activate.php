@@ -30,7 +30,7 @@ if(!conf('allow_public_registration') || conf('demo_mode'))  {
 
 ?>
 <html><head>
-show_template('style');
+<?php show_template('style'); ?>
 <head><body>
 <?php 
 
