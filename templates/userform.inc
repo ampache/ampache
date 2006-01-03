@@ -25,7 +25,7 @@ if ($type === 'new_user') {
 	$title = _("Adding a New User");
 }
 else {
-	$userfield = "$username;
+	$userfield = $username;
 	$title = _("Editing existing User");
 }
 ?>

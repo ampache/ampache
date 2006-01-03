@@ -32,27 +32,20 @@ $action = scrub_in($_REQUEST['action']);
 $song = scrub_in($_REQUEST['song']);
 
 if ( $action == 'flag_song') {
-    $flagged_type = scrub_in($_REQUEST['flagged_type']);
-    	$comment = scrub_in($_REQUEST['comment']);
+	$flagged_type = scrub_in($_REQUEST['flagged_type']);
+	$comment = scrub_in($_REQUEST['comment']);
 	insert_flagged_song($song, $flagged_type, $comment);
 	$flag_text = _("Flagging song completed.");
 	$action = 'flag';
 }
 
-?>
-<?php  show_template('header'); ?>
-<?php 
-	$highlight = "Home";
-	show_menu_items($highlight);
+show_template('header');
 
-	if ( $action == 'flag' ) {
-		$type = 'show_flagged_form';
-		$song_id = $song;
-
-		include(conf('prefix') . "/templates/flag.inc");
-	}
+if ( $action == 'flag' ) {
+	$type = 'show_flagged_form';
+	$song_id = $song;
+	include(conf('prefix') . "/templates/flag.inc");
+}
 
 show_footer();
 ?>
-</body>
-</html>

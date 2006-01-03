@@ -39,7 +39,7 @@ if (!$user->has_access('100')) {
 $action = scrub_in($_REQUEST['action']);
 $song = scrub_in($_REQUEST['song']);
 
-
+$return_referer = return_referer();
 show_template('header');
 
 $song_obj = new Song($_REQUEST['song_id']);
@@ -62,7 +62,7 @@ switch($action) {
 				$song_obj->update_enabled(0,$song_id);
 			} // end foreach
 		} // end else
-		show_confirmation(_("Songs Disabled"),_("The requested song(s) have been disabled"),return_referer());
+		show_confirmation(_("Songs Disabled"),_("The requested song(s) have been disabled"),htmlspecialchars($return_referer));
 	break;
 	case "enabled":
 		// If we pass just one, make it still work
@@ -72,7 +72,7 @@ switch($action) {
 				$song_obj->update_enabled(1,$song_id);
 			} // end foreach
 		} // end else
-	        show_confirmation(_("Songs Enabled"),_("The requested song(s) have been enabled"),return_referer());
+	        show_confirmation(_("Songs Enabled"),_("The requested song(s) have been enabled"),htmlspecialchars($return_referer));
         break;
 	default:
 	        echo "Don't know what to do yet.";
