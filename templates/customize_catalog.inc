@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2005 Ampache.org
+ Copyright (c) 2001 - 2006 Ampache.org
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
@@ -44,13 +44,13 @@
 <tr>
 	<td><?php echo _("ID3 set command"); ?>:</td>
 	<td>
-	    	<input size="60" type="text" name="id3_set_command" value="<?php echo htmlspecialchars($catalog->id3_set_command); ?>" />
+	    	<input size="60" type="text" name="id3_set_command" value="<?php echo scrub_out($catalog->id3_set_command); ?>" />
 	</td>
 </tr>
 <tr>
 	<td><?php echo _("Filename pattern"); ?>:</td>
 	<td>
-		<input size="60" type="text" name="rename_pattern" value="<?php echo htmlspecialchars($catalog->rename_pattern); ?>" />
+		<input size="60" type="text" name="rename_pattern" value="<?php echo scrub_out($catalog->rename_pattern); ?>" />
 	</td>
 </tr>
 <tr>
@@ -58,7 +58,7 @@
 		<?php echo _("Folder Pattern"); ?>:<br /><?php echo _("(no leading or ending '/')"); ?>
 	</td>
 	<td>
-		<input size="60" type="text" name="sort_pattern" value="<?php echo htmlspecialchars($catalog->sort_pattern);?>" />
+		<input size="60" type="text" name="sort_pattern" value="<?php echo scrub_out($catalog->sort_pattern);?>" />
 	</td>
 </tr>
 <tr>

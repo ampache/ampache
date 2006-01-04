@@ -54,7 +54,7 @@ switch ($action) {
 	
 		/* Show Confirmation Question */
 		$message = _('Are you sure you want to delete this playlist') . " " . $playlist->name . "?";
-		show_confirm_action(_('Confirm Delete Request'),$message,'playlist.php','action=delete_playlist&amp;playlist_id=' . $playlist->id);
+		show_confirm_action($message,'playlist.php','action=delete_playlist&amp;playlist_id=' . $playlist->id);
 	break;
 	case 'add_to':
 	case 'add to':
@@ -74,12 +74,11 @@ switch ($action) {
 		if ($GLOBALS['user']->username != $playlist->user && !$GLOBALS['user']->has_access(100)) { 
 			access_denied();
 		}
-
 		if ($_REQUEST['type'] == 'album') { 
 			$song_ids = get_songs_from_type($_REQUEST['type'],$_REQUEST['song_ids'],$_REQUEST['artist_id']);
 		}
 		else { 	
-			$song_ids = $_REQUEST['song_ids'];
+			$song_ids = $_REQUEST['song'];
 		}	
 
 		/* Add the songs */

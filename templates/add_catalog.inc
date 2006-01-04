@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2005 Ampache.org
+ Copyright (c) 2001 - 2006 Ampache.org
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
@@ -19,6 +19,7 @@
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
+
 $default_id3 = "/usr/bin/id3v2 -a &quot;%a&quot; -A &quot;%A&quot; -t &quot;%t&quot; -g %g -y %y -T %T -c &quot;%c&quot; %filename";
 $default_rename = "%a - %T - %t";
 $default_sort = "%a/%A";

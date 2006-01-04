@@ -6,7 +6,8 @@
   v.3.3.2-Beta1
   	- Added the Import From File action for playlists back. The link
 		was just missing
-  	- Fixed SQL errors with Windows + Mysql5.x (Thx WarrenG)
+  	- Fixed SQL errors with Windows + Mysql5.x songs with empty 
+		genres, are now given a Unknown genre value (Thx WarrenG)
   	- Rewrote entire Playlist class and document to use the new id
 		field in database, also added support for playlist tracks
 		that are based on search critera. NOT FINISHED!

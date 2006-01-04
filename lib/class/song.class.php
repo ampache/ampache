@@ -109,7 +109,7 @@ class Song {
 			"title,bitrate,rate,mode,size,time,track,genre,played,song.enabled,update_time,".
 			"addition_time,flagged.id as flagid,flagged.user as flaguser,flagged.type ".
 			"as flagtype,flagged.date as flagdate,flagged.comment as flagcomment FROM ".
-			"song LEFT JOIN flagged ON song.id = flagged.song WHERE song.id = '$this->id'";
+			"song LEFT JOIN flagged ON song.id = flagged.song WHERE song.id = '" . sql_escape($this->id) . "'";
 		$db_results = mysql_query($sql, dbh());
 
 		$results = mysql_fetch_object($db_results);

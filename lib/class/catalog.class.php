@@ -856,7 +856,7 @@ class Catalog {
                 $new_song->artist       = $this->check_artist($artist);
                 $new_song->f_artist     = $artist;
                 $new_song->genre        = $this->check_genre($genre);
-                $new_song->f_genre      = $genre;
+                $new_song->f_genre      = $new_song->get_genre_name();
                 $new_song->album        = $this->check_album($album,$new_song->year);
                 $new_song->f_album      = $album . " - " . $new_song->year;
                 $new_song->title        = $this->check_title($new_song->title,$new_song->file);
@@ -1793,7 +1793,7 @@ class Catalog {
 	function check_genre($genre) {
 	
 		/* If a genre isn't specified force one */
-		if (strlen($genre) < 1) {
+		if (strlen(trim($genre)) < 1) {
 			$genre = "Unknown (Orphaned)";
 		}
 

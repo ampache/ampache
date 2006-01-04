@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2005 Ampache.org
+ Copyright (c) 2001 - 2006 Ampache.org
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
@@ -19,15 +19,12 @@
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
-/*
-
- @header
- A template file
-
-*/
-
+/**
+ * Catalog Display
+ * This template displays all of the catalogs... Currently it's a little cluttered
+ * It would be great if someone cleaned this up
+ */
 ?>
-
 <br />
 <?php  if (!function_exists('iconv')) { ?>
         <div class="fatalerror"><?php echo  _("Error: ICONV not found, ID3V2 Tags will not import correctly. See <a href=\"http://php.oregonstate.edu/iconv\">Iconv</a> for information on getting ICONV"); ?></div>

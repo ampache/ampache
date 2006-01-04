@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2005 Ampache.org
+ Copyright (c) 2001 - 2006 Ampache.org
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
@@ -19,37 +19,28 @@
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
-
-
-/*!
-	@header
-  A template file for listing duplicate songs
-
-*/
 ?>
 
 <?php show_duplicate_searchbox($search_type) ?>
 <?php if ( $flags ) { ?>
 
 <form method="post" enctype="multipart/form-data" action="<?php echo  conf('web_path') . "/admin/song.php?action=disable"; ?>">
-<p style="font-size: 10pt; font-weight: bold;">Duplicate Songs</p>
+<p class="header1"><?php echo _('Duplicate Songs'); ?></p>
 <table class="tabledata" cellspacing="0" cellpadding="0" >
 	<tr class="table-header">
-		<td>Disable</td>
-		<td>Song</td>
-		<td>Artist</td>
-		<td>Album</td>
-		<td>Length</td>
-		<td>Bitrate</td>
-		<td>Size</td>
-		<td>Filename</td>
+		<td><?php echo _('Disable'); ?></td>
+		<td><?php echo _('Song'); ?></td>
+		<td><?php echo _('Artist'); ?></td>
+		<td><?php echo _('Album'); ?></td>
+		<td><?php echo _('Length'); ?></td>
+		<td><?php echo _('Bitrate'); ?></td>
+		<td><?php echo _('Size'); ?></td>
+		<td><?php echo _('Filename'); ?></td>
 	</tr>
 <?php 
-	$class="odd";
 	foreach ($flags as $flag) {
 		$song = new Song($flag['song']);
 		$song->format_song();
-		$class = (++$i%2)?'odd':'even';
 		$alt_title = $song->title;
 	        $formated_title = $song->f_title;
 
@@ -59,11 +50,11 @@
 		$dinfolist = get_duplicate_info($song,$search_type);
 	foreach ($dinfolist as $dinfo)
 	{
-		echo "<tr class=\"".$class."\">".
+		echo "<tr class=\"".flip_class()."\">".
 		"<td><input type=\"checkbox\" name=\"song_ids[]\" value=\"" . $dinfo['songid'] . "\" /></td>".
-	        "<td><a href=\"".conf('web_path')."/song.php?action=m3u&amp;song=$song->id\">".htmlspecialchars($formated_title)."</a> </td>".
-		"<td><a href=\"".conf('web_path')."/artists.php?action=show&amp;artist=".$dinfo['artistid']."\" title=\"".htmlspecialchars($dinfo['artist'])."\">".htmlspecialchars($dinfo['artist'])."</a> </td>".
-		"<td><a href=\"".conf('web_path')."/albums.php?action=show&amp;album=".$dinfo['albumid']."\" title=\"".htmlspecialchars($dinfo['album'])."\">".htmlspecialchars($dinfo['album'])."</a> </td>".
+	        "<td><a href=\"".conf('web_path')."/song.php?action=m3u&amp;song=$song->id\">".scrub_out($formated_title)."</a> </td>".
+		"<td><a href=\"".conf('web_path')."/artists.php?action=show&amp;artist=".$dinfo['artistid']."\" title=\"".scrub_out($dinfo['artist'])."\">".scrub_out($dinfo['artist'])."</a> </td>".
+		"<td><a href=\"".conf('web_path')."/albums.php?action=show&amp;album=".$dinfo['albumid']."\" title=\"".scrub_out($dinfo['album'])."\">".scrub_out($dinfo['album'])."</a> </td>".
 		"<td>".floor($dinfo['time']/60).":".sprintf("%02d", ($dinfo['time']%60) )."</td>".
 		"<td>".intval($dinfo['bitrate']/1000)."</td>".
 		"<td>".sprintf("%.2f", ($dinfo['size']/1000000))."Mb</td>".
@@ -76,11 +67,10 @@
 	}
 ?>
 <tr>
-<td colspan="8" class="<?php echo $class; ?>"><input height="15" type="submit" value="Disable Songs" /></td>
+<td colspan="8" class="<?php echo flip_class(); ?>"><input height="15" type="submit" value="Disable Songs" /></td>
 </tr>
 </table>
 <?php  } else { ?>
-
-<p> You don't have any duplicate songs. </p>
+<p><?php _('You don't have any duplicate songs.'); ?></p>
 <?php  } ?>
 </form>

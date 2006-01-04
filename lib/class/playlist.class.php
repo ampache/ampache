@@ -224,10 +224,10 @@ class Playlist {
 	} // update_name
 
 	/**
-	 * update_item
+	 * _update_item
 	 * This is the generic update function, it does the escaping and error checking
 	 */
-	function update_item($field,$value,$level) { 
+	function _update_item($field,$value,$level) { 
 
 		if ($GLOBALS['user']->username != $this->user AND !$GLOBALS['user']->has_access($level)) { 
 			return false; 
