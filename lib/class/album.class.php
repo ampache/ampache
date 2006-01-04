@@ -105,6 +105,30 @@ class Album {
 
 	} // get_songs
 
+	/**
+	 * get_song_ids
+	 * This returns an array of the song id's that are on this album. This is used by the
+	 * show_songs function and can be pased and artist if you so desire to limit it to that
+	 */
+	function get_song_ids($artist='') { 
+
+		/* If they pass an artist then constrain it based on the artist as well */
+		if ($artist) { 
+			$artist_sql = " AND artist='" . sql_escape($artist) . "'";
+		}
+		
+		$sql = "SELECT id FROM song WHERE album='" . sql_escape($this->id) . "' $artist_sql ORDER BY track";
+		$db_results = mysql_query($sql, dbh());
+
+		$results = array();
+
+		while ($r = mysql_fetch_assoc($db_results)) { 
+			$results[] = $r['id'];
+		}
+
+		return $results;
+
+	} // get_song_ids
 
 	/*!
 		@function format_album
@@ -466,29 +490,6 @@ class Album {
 
 	} // find_art 
 
-	/*!
-               @function       get_song_ids
-               @discussion     returns a list of song_ids on the album
-                               get_songs returns a list of song objects
-	*/
-	// it seems get_songs really should call this, 
-	// but I don't feel comfortable imposing that - RCR
-	function get_song_ids( $limit = 0 ) {
-		
-		$results = array();
-		$sql = "SELECT id FROM song WHERE album='$this->id' ORDER BY track, title";
-		
-                if ($limit) { $sql .= " LIMIT $limit"; }
-                
-		$db_results = mysql_query($sql, dbh());
-
-                while ($r = mysql_fetch_object($db_results)) {
- 			$results[] = $r->id;
- 		}
-		
-		return $results;
-       } // get_song_ids
-	
 } //end of album class
 
 ?>

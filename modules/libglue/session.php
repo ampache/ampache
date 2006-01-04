@@ -147,8 +147,8 @@ function make_local_session_only($data,$id=0)
     $local_expirecol = libglue_param('local_expirecol');
     $local_typecol = libglue_param('local_typecol');
     $sql= "INSERT INTO $local_table ".
-          " ($local_sid,$local_usercol,$local_typecol)".
-          " VALUES ('$id','$username','$type')";
+          " ($local_sid,$local_usercol,$local_typecol,value)".
+          " VALUES ('$id','$username','$type','')";
     $db_result = mysql_query($sql, $local_dbh);
 
     if($db_result) return TRUE;

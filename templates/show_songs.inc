@@ -55,11 +55,12 @@ if (is_object($playlist) && ($GLOBALS['user']->username == $playlist->user || $G
 <?php
 	/* FIXME: don't even get me started with how many things are wrong with this code */ 
 	foreach ($song_ids as $song_id) {
-
+		
 		/* Arr matey crapy code abounds! */
-		if ($playlist_owner) { 
+		if (is_object($playlist)) { 
 			if ($song_id['song']) { 
 				$song = new Song($song_id['song']);
+				$track_id = $song_id['id'];
 			}
 			else { 
 				$song = new Song();
@@ -90,11 +91,11 @@ if (is_object($playlist) && ($GLOBALS['user']->username == $playlist->user || $G
         	<input type="checkbox" name="song[]" value="<?php echo $song->id; ?>" id="song_<?php echo $song->id; ?>" />
         </td>
 		<?php
-		if (is_object($playlist) && ($GLOBALS['user']->username == $playlist->user || $GLOBALS['user']->has_access('100'))) {
-			/* $tracknum = $playlist->get_track($track_id); */
+		if ($playlist_owner) {
+			$tracknum = $playlist->get_track($track_id);
 		?>
             <td>
-              <input type="text" tabindex="<?php echo $tab; ?>" size="3" name="<?php echo "tr_" . $song->id; ?>" value="<?php echo $tracknum ?>" onchange="<?php echo "document.getElementById('song_" . $track_id . "').checked='checked';"; ?>" />
+              <input type="text" tabindex="<?php echo $tab; ?>" size="3" name="<?php echo "tr_" . $song->id; ?>" value="<?php echo $tracknum; ?>" onchange="<?php echo "document.getElementById('song_" . $track_id . "').checked='checked';"; ?>" />
             </td>
 		<?php $tab++; } ?>
              <td>
@@ -161,7 +162,7 @@ if (is_object($playlist) && ($GLOBALS['user']->username == $playlist->user || $G
     ?>
     <tr class="table-header">
       <td></td>
-      <?php if (isset($playlist_id) && $playlist_id != 0 && ($user->username == $pluser->username || $user->access === 'admin')) { ?> <td></td> <?php } ?>
+      <?php if (is_object($playlist)) { ?> <td></td> <?php } ?>
       <td><?php echo _("Total"); ?>:</td>
       <td nowrap="nowrap"><?php echo $num; ?> song(s)</td>
       <td></td>

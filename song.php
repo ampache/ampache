@@ -92,7 +92,8 @@ elseif ( $_REQUEST['playlist_id'] AND $action != 'play_selected') {
 	}
 }
 elseif ( $_REQUEST['artist'] ) {
-	$song_ids = get_song_ids_from_artist( $_REQUEST['artist'] );
+	$artist = new Artist($_REQUEST['artist']);
+	$song_ids = $artist->get_song_ids();
 }
 /*! 
 	@action Random Song

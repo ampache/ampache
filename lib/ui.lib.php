@@ -204,19 +204,6 @@ if (!function_exists('_')) {
 } // if _ isn't defined
 
 /**
- *  show_playlist_menu
- * playlist functions
- */
-function show_playlist_menu () {
-
-	echo "<br /><span class=\"header2\">" . _("Playlist Actions") . ": <a href=\"" . conf('web_path') . "/playlist.php?action=new\">" . _("New") ."</a> | ";
-	echo "<a href=\"" . conf('web_path') . "/playlist.php\"> " . _("View All") . "</a> | ";
-	echo "<a href=\"" . conf('web_path') . "/playlist.php?action=show_import_playlist\"> " . _("Import") . "</a>";
-	echo "</span><br /><br />";
-
-} // show_playlist_menu
-
-/**
  *  show_admin_menu
  * shows the admin menu
  */
@@ -440,25 +427,6 @@ function show_edit_profile($username) {
 	require (conf('prefix') . "/templates/show_user.inc.php");
 
 } // show_edit_profile
-
-/**
- * show_playlist
- * This function takes a playlist object and calls show_songs after
- * runing get_items()
- */
-function show_playlist($playlist) {
-
-	/* Create the Playlist */
-	$song_ids = $playlist->get_items();
-
-	if (count($song_ids) > 0) {
-		show_songs($song_ids, $playlist->id);
-	}
-	else {
-		echo "<div class=\"text-box\">" . _("No songs in this playlist.") . "</div>\n";
-	}
-
-} // show_playlist
 
 /**
  *  show_play_selected

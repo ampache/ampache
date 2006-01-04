@@ -39,14 +39,15 @@ switch($action) {
     case 'show':
     case 'Show':
 	show_alphabet_list('artists','artists.php');
-	$artist = new Artist(scrub_in($_REQUEST['artist']));
+	$artist = new Artist($_REQUEST['artist']);
 	$artist->show_albums();
 	break;
 
     case 'show_all_songs':
-        $artist = get_artist_name(scrub_in($_REQUEST['artist']));
-        echo "<h2>" . _("All songs by") . " $artist</h2>";
-	$song_ids = get_song_ids_from_artist($_REQUEST['artist']);
+    	$artist = new Artist($_REQUEST['artist']);
+	$artist->format_artist();
+	$song_ids = $artist->get_song_ids();
+	require(conf('prefix') . '/templates/show_artist_box.inc.php');
         show_songs($song_ids);
         break;
 

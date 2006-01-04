@@ -1668,7 +1668,13 @@ class Catalog {
 		/* If not found create */
 		else {
 
-			$sql = "INSERT INTO artist (name, prefix) VALUES ('$artist', '$prefix')";
+			$prefix_txt = 'NULL';
+
+			if ($prefix) {
+				$prefix_txt = "'$prefix'";
+			}
+		
+			$sql = "INSERT INTO artist (name, prefix) VALUES ('$artist', $prefix_txt)";
 			$db_results = mysql_query($sql, dbh());
 			$artist_id = mysql_insert_id(dbh());
 
@@ -1744,8 +1750,13 @@ class Catalog {
 
 		/* If not found create */
 		else {
+                        $prefix_txt = 'NULL';
 
-			$sql = "INSERT INTO album (name, prefix,year) VALUES ('$album', '$prefix','$album_year')";
+                        if ($prefix) {
+                                $prefix_txt = "'$prefix'";
+                        }
+
+			$sql = "INSERT INTO album (name, prefix,year) VALUES ('$album',$prefix_txt,'$album_year')";
 			$db_results = mysql_query($sql, dbh());
 			$album_id = mysql_insert_id(dbh());
 
@@ -1780,9 +1791,10 @@ class Catalog {
 		@param $genre The name of the genre
 	*/
 	function check_genre($genre) {
-
-		if (!$genre) {
-			return false;
+	
+		/* If a genre isn't specified force one */
+		if (strlen($genre) < 1) {
+			$genre = "Unknown (Orphaned)";
 		}
 
 		if ($this->genres[$genre]) {

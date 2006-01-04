@@ -46,20 +46,16 @@ if ($_REQUEST['action'] === 'clear_art') {
 } // clear_art
 // if we have album
 elseif (isset($album)) { 
-	$album = new Album($album);
+	$album = new Album($_REQUEST['album']);
 	$album->format_album();
-
-	$artist_obj = new Artist($artist_obj);
 
 	require (conf('prefix') . "/templates/show_album.inc");
 	
-	if (isset($artist) && $artist_obj->name == "Unknown (Orphaned)" ) {
-		$song_ids = get_song_ids_from_artist_and_album($artist, $album->id);
-	}
-	else {
-		$song_ids = get_song_ids_from_album($album->id);
-	}
+	/* Get the song ids for this album */
+	$song_ids = $album->get_song_ids($_REQUEST['artist']);
+	
 	show_songs($song_ids,0,$album);
+	
 } // isset(album)
 
 // Finds the Album art from amazon

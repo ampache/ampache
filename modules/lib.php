@@ -228,28 +228,6 @@ function get_song_ids_from_album ($album) {
 }
 
 
-function get_song_ids_from_artist ($artist) {
-
-	global $settings;
-	$dbh = dbh();
-
-	$song_ids = array();
-	$artist = sql_escape($artist);
-
-	$query = "SELECT id FROM song" .
-		" WHERE artist = '$artist'" .
-		" ORDER BY album, track";
-
-	$db_result = mysql_query($query, $dbh);
-
-	while ( $r = mysql_fetch_object($db_result) ) {
-		$song_ids[] = $r->id;
-	}
-
-	return $song_ids;
-}
-
-
 /*
  * get_song_ids_from_artist_and_album();
  *
@@ -313,21 +291,12 @@ function get_songs_from_type ($type, $results, $artist_id = 0) {
 /* Lets tie it to album too, so we can show art ;)       */
 /*********************************************************/
 /* One symbol, m(__)m */
-function show_songs ($song_ids, $playlist_id=0, $album=0) {
+function show_songs ($song_ids, $playlist, $album=0) {
 
 	$dbh = dbh();
 
 	// Get info about current user
-	$user = new User($_SESSION['userdata']['username']);
-
-	// Get info about playlist owner
-	if (isset($playlist_id) && $playlist_id != 0) {
-		$sql = "SELECT user FROM playlist WHERE id = '$playlist_id'";
-		$db_result = mysql_query($sql, $dbh);
-		if ($r = mysql_fetch_array($db_result)) {
-			$pluser = get_user_byid($r[0]);
-		}
-	}
+	$user = $GLOBALS['user'];
 
 	$totaltime = 0;
 	$totalsize = 0;
@@ -336,7 +305,7 @@ function show_songs ($song_ids, $playlist_id=0, $album=0) {
 
 	return true;
 
-}// function show_songs
+} // function show_songs
 
 
 

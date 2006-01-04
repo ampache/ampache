@@ -76,8 +76,12 @@ class Playlist {
 	 */
 	function get_track($id) { 
 
+		$sql = "SELECT track FROM playlist_data WHERE id='" . sql_escape($id) . "'";
+		$db_results = mysql_query($sql, dbh());
 
+		$result = mysql_fetch_assoc($db_results);
 
+		return $result['track'];
 
 	} // get_track
 

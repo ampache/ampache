@@ -44,9 +44,11 @@ class Rating {
 		$this->id 	= $id;
 		$this->type 	= $type;
 
-
 		if (intval($id) > 1) { 
 			$this->get_average();
+		}
+		else {
+			$this->rating='0';
 		}
 
 	} // Rating

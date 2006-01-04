@@ -67,7 +67,7 @@ class Artist {
 	function get_info() {
 
 		/* Grab the basic information from the catalog and return it */
-		$sql = "SELECT * FROM artist WHERE id='$this->id'";
+		$sql = "SELECT * FROM artist WHERE id='" . sql_escape($this->id) . "'";
 		$db_results = mysql_query($sql, dbh());
 
 		$results = mysql_fetch_object($db_results);
@@ -111,6 +111,24 @@ class Artist {
 		return $results;
 
 	} // get_songs
+
+	/**
+	 * get_song_ids
+	 * This gets an array of song ids that are assoicated with this artist. This is great for using
+	 * with the show_songs function
+	 */
+	function get_song_ids() { 
+
+		$sql = "SELECT id FROM song WHERE artist='" . sql_escape($this->id) . "' ORDER BY album, track";
+		$db_results = mysql_query($sql, dbh());
+
+		while ($r = mysql_fetch_assoc($db_results)) { 
+			$results[] = $r['id'];
+		}
+
+		return $results;
+
+	} // get_song_ids
 
         /*!
                 @function get_random_songs
@@ -264,7 +282,6 @@ class Artist {
 
 	        /* Set Vars */
 	        $web_path = conf('web_path');
-
 
 	        $albums = $this->get_albums();
 	        $this->format_artist();
