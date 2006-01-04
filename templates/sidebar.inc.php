@@ -109,7 +109,7 @@ $browse_items[] = array('title'=>_("Lists"),'url'=>'browse.php','active'=>'');
 		</li>
 	<?php } ?>
 		<li>
-			<a href="<?php echo conf('web_path'); ?>/randomplay.php"><?php echo _("Random Play"); ?></a>
+			<a href="<?php echo conf('web_path'); ?>/randomplay.php"><?php echo _('Random'); ?></a>
 		</li>
 	<?php if ($GLOBALS['theme']['orientation'] != 'horizontal') { ?> 
 		<li>
