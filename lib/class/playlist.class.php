@@ -377,6 +377,7 @@ class Playlist {
 			$id = sql_escape($value);
 			
 			$sql = "DELETE FROM playlist_data WHERE id='$id'";
+			echo $sql;
 			$db_results = mysql_query($sql, dbh());
 
 		} // end foreach dead songs

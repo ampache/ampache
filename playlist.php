@@ -114,7 +114,7 @@ switch ($action) {
 			access_denied();
 			break;
 		}
-		$playlist->remove_songs($_REQUEST['song_ids']);
+		$playlist->remove_songs($_REQUEST['song']);
 		show_playlist($playlist);
 	break;
 	case 'update':
@@ -139,6 +139,7 @@ switch ($action) {
 		show_import_playlist();
 	break;
 	case 'set_track_numbers':
+		print_r($_REQUEST);
 		/* Make sure they have permission */
 		if (!$GLOBALS['user']->has_access(100) && $GLOBALS['user']->username != $playlist->user) { 
 			access_denied();

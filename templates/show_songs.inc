@@ -88,14 +88,14 @@ if (is_object($playlist) && ($GLOBALS['user']->username == $playlist->user || $G
 ?>
 <tr class="<?php echo flip_class(); ?>">
 	<td align="center">
-        	<input type="checkbox" name="song[]" value="<?php echo $song->id; ?>" id="song_<?php echo $song->id; ?>" />
+        	<input type="checkbox" name="song[]" value="<?php echo $track_id; ?>" id="song_<?php echo $track_id; ?>" />
         </td>
 		<?php
 		if ($playlist_owner) {
 			$tracknum = $playlist->get_track($track_id);
 		?>
             <td>
-              <input type="text" tabindex="<?php echo $tab; ?>" size="3" name="<?php echo "tr_" . $song->id; ?>" value="<?php echo $tracknum; ?>" onchange="<?php echo "document.getElementById('song_" . $track_id . "').checked='checked';"; ?>" />
+              <input type="text" tabindex="<?php echo $tab; ?>" size="3" name="<?php echo "tr_" . $track_id; ?>" value="<?php echo $tracknum; ?>" onchange="<?php echo "document.getElementById('song_" . $track_id . "').checked='checked';"; ?>" />
             </td>
 		<?php $tab++; } ?>
              <td>

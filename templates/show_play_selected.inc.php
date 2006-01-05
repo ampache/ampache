@@ -57,14 +57,15 @@ function ToBatch(action)
 -->
         </td>
 </tr>
-<?php  if ($GLOBALS['playlist_id']) { ?>
+<?php  if (is_object($GLOBALS['playlist'])) { ?>
 <tr>
         <td>
+		<input type="hidden" name="playlist_id" value="<?php echo $GLOBALS['playlist']->id; ?>" />
                 <input class="button" type="button" name="super_action" value="<?php echo _("Set Track Numbers"); ?>" onclick="return ToPlaylist('set_track_numbers');" />
                 <input class="button" type="button" name="super_action" value="<?php echo _("Remove Selected Tracks"); ?>" onclick="return ToPlaylist('remove_song');" />
         </td>
 </tr>
-<?php  } ?>
+<?php  } else { ?>
 <tr align="center">
         <td colspan="2">
                 <?php echo _("Playlist"); ?>: <input type="button" name="super_action" value="<?php echo _("Add to"); ?>" onclick="return ToPlaylist('add_to');" />
@@ -73,4 +74,5 @@ function ToBatch(action)
                 <input class="button" type="button" name="super_action" value="<?php echo _("Edit"); ?>" onclick="return ToPlaylist('edit');" />
         </td>
 </tr>
+<?php } ?>
 </table>
