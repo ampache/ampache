@@ -119,7 +119,6 @@ class Playlist {
 		$results = array();
 
 		while ($r = mysql_fetch_assoc($db_results)) { 
-
 			if ($r['dyn_song']) { 
 				$array = $this->get_dyn_songs($r['dyn_song']);
 				$results = array_merge($array,$results);
@@ -172,7 +171,6 @@ class Playlist {
 		 * Query has to return id which must be a song.id
 		 */
 		$db_results = mysql_query($dyn_string, dbh());
-
 		$results = array();
 
 		while ($r = mysql_fetch_assoc($db_results)) { 

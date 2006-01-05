@@ -259,6 +259,10 @@ class Update {
 
 		$version[] = array('version' => '332006','description' => $update_string);
 
+		$update_string = '- Alters the Dynamic Song field to be TEXT instead of Varchar (varchar was not long enough).';
+		
+		$version[] = array('version' => '332007','description' => $update_string);
+
 		return $version;
 
 	} // populate_version
@@ -1385,6 +1389,20 @@ class Update {
 		$this->set_version('db_version','332006');
 
 	} // update_332006
+
+	/**
+	 * update_332007
+	 * Arg... I'm tried of writting these updates
+	 * If I would only get it right the first time I wouldn't have to do this
+	 */
+	function update_332007() { 
+
+		$sql = "ALTER TABLE `playlist_data` CHANGE `dyn_song` `dyn_song` TEXT NULL DEFAULT NULL";
+		$db_results = mysql_query($sql, dbh());
+
+		$this->set_version('db_version','332007');
+
+	} // update_332007
 
 } // end update class
 ?>
