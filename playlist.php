@@ -87,6 +87,16 @@ switch ($action) {
 		/* Show the Playlist */
 		show_playlist($playlist);
 	break;	
+	case 'add_dyn_song':
+		/* Check Rights */
+		if (!$GLOBALS['user']->has_access(100) && $GLOBALS['user']->username != $playlist->username) { 
+			access_denied();
+			break;
+		}
+		
+		$playlist->add_dyn_song();
+		show_playlist($playlist);
+	break;
 	case 'create_playlist':
 	case 'create':
 		/* Check rights */
@@ -139,7 +149,6 @@ switch ($action) {
 		show_import_playlist();
 	break;
 	case 'set_track_numbers':
-		print_r($_REQUEST);
 		/* Make sure they have permission */
 		if (!$GLOBALS['user']->has_access(100) && $GLOBALS['user']->username != $playlist->user) { 
 			access_denied();

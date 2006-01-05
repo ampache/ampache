@@ -290,6 +290,33 @@ class Playlist {
 	} // add_songs
 
 	/**
+	 * add_dyn_song
+	 * This adds a dynamic song to a specified playlist this is just called as the
+	 * song its self is stored in the session to keep it away from evil users
+	 */
+	function add_dyn_song() { 
+	
+		$dyn_song = $_SESSION['userdata']['stored_search'];
+
+		if (strlen($dyn_song) < 1) { echo "FAILED1"; return false; }
+
+		if (substr($dyn_song,0,6) != 'SELECT') { echo "$dyn_song"; return false; }
+
+		/* Test the query before we put it in */
+		$db_results = @mysql_query($dyn_song, dbh());
+
+		if (!$db_results) { return false; }
+
+		/* Ok now let's add it */
+		$sql = "INSERT INTO playlist_data (`playlist`,`dyn_song`,`track`) " . 
+			" VALUES ('" . sql_escape($this->id) . "','" . sql_escape($dyn_song) . "','0')";
+		$db_results = mysql_query($sql, dbh());
+
+		return true;
+
+	} // add_dyn_song
+
+	/**
 	 * create
 	 * This function creates an empty playlist, gives it a name and type
 	 * Assumes $GLOBALS['user']->username as the user
@@ -377,7 +404,6 @@ class Playlist {
 			$id = sql_escape($value);
 			
 			$sql = "DELETE FROM playlist_data WHERE id='$id'";
-			echo $sql;
 			$db_results = mysql_query($sql, dbh());
 
 		} // end foreach dead songs

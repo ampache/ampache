@@ -178,7 +178,14 @@ function search_song($data,$operator,$method,$limit) {
 	$where_sql = rtrim($where_sql,$operator);
 
 	$sql = $base_sql . $table_sql . " WHERE " . $join_sql . "(" . $where_sql . ")" . $limit_sql;
-	
+
+	/**
+	 * Because we might need this for Dynamic Playlist Action 
+	 * but we don't trust users to provide this store it in the
+	 * session where they can't get to it!
+	 */
+	$_SESSION['userdata']['stored_search'] = $sql;
+
 	$db_results = mysql_query($sql, dbh());
 	
 	while ($r = mysql_fetch_assoc($db_results)) { 
