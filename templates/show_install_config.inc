@@ -122,7 +122,7 @@
 <tr>
 	<td>&nbsp;</td>
 	<td>
-	<a href="<?php echo $http_type . $_SERVER['HTTP_HOST'] . "/" . $GLOBALS['php_self']; ?>?action=show_create_config&local_db=<?php echo $_REQUEST['local_db']; ?>&local_host=<?php echo $_REQUEST['local_host']; ?>">[<?php echo _("Check for Config"); ?>]</a>
+	<a href="<?php echo $GLOBALS['php_self']; ?>?action=show_create_config&local_db=<?php echo $_REQUEST['local_db']; ?>&local_host=<?php echo $_REQUEST['local_host']; ?>">[<?php echo _("Check for Config"); ?>]</a>
 	</td>
 </tr>
 </table>

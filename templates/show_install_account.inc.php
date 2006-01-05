@@ -52,7 +52,7 @@
 	<dd><?php echo _("This step creates your initial Ampache admin account. Once your admin account has been created you will be directed to the login page"); ?></dd>
 </dl>
 <br /><br />
-<span class="header2">Create Admin Account</span>
+<span class="header2"><?php echo _('Create Admin Account'); ?></span>
 <?php echo $GLOBALS['error']->print_error('general'); ?>
 <form method="post" action="<?php echo $GLOBALS['php_self'] . "?action=create_account"; ?>" enctype="multipart/form-data" >
 <table cellpadding="5" cellspacing="0" border="0">

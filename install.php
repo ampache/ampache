@@ -64,7 +64,9 @@ $username = scrub_in($_REQUEST['local_username']);
 $password = scrub_in($_REQUEST['local_pass']);
 $hostname = scrub_in($_REQUEST['local_host']);
 $database = scrub_in($_REQUEST['local_db']);
-$php_self = preg_replace("/^\/(.+\.php)\/?.*/","$1",$_SERVER['PHP_SELF']);
+if ($_SERVER['HTTPS'] == 'on') { $http_type = "https://"; }
+else { $http_type = "http://"; }
+$php_self = $http_type . $_SERVER['HTTP_HOST'] . "/" . preg_replace("/^\/(.+\.php)\/?.*/","$1",$_SERVER['PHP_SELF']);
 $error	  = new Error();
 
 /* Catch the Current Action */
