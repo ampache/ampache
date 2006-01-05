@@ -58,7 +58,7 @@
 			<?php echo _('Delete'); ?>
 			</a>
 		<?php } ?>
-		<?php if ($count > 1) { ?>
+		<?php if ($count > 0) { ?>
 			| <a href="<?php echo conf('web_path'); ?>/song.php?action=playlist&amp;playlist_id=<?php echo $playlist->id; ?>">
 			<?php echo _('Play'); ?>
 			</a>
