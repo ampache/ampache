@@ -10,7 +10,7 @@
 		genres, are now given a Unknown genre value (Thx WarrenG)
   	- Rewrote entire Playlist class and document to use the new id
 		field in database, also added support for playlist tracks
-		that are based on search critera. NOT FINISHED!
+		that are based on search critera.
   	- Fixed Album Art Search so that it doesn't include the artist
 		if there is more then one artist on the album
   	- Fixed Registration code so that it used existing functions and

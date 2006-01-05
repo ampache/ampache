@@ -659,8 +659,11 @@ function check_playlist_access ($playlist_id, $username) {
 
 }
 
-
-function show_playlist_dropdown ($playlist_id=0) {
+/**
+ * show_playlist_dropdown
+ * Hacking this for now... will fix tomorrow evening 
+ */
+function show_playlist_dropdown ($playlist_id=0,$no_new=false) {
 
 	global $settings;
 	$dbh = dbh();
@@ -672,11 +675,8 @@ function show_playlist_dropdown ($playlist_id=0) {
 		" ORDER BY name";
 	$db_result = @mysql_query($sql, $dbh);
 
-	print <<<ECHO
-<select name="playlist_id">
-<option value="0"> -New Playlist- </option>
-
-ECHO;
+	echo "<select name=\"playlist_id\">\n";
+	if (!$no_new) { echo "<option value=\"0\"> -New Playlist- </option>\n"; }
 
 	while ( $r = @mysql_fetch_object($db_result) ) {
 		if ( $playlist_id == $r->id ) {

@@ -182,7 +182,7 @@ $final_javascript .= " // END-->\n </script>";
 <br />
 <form method="post" action="<?php echo conf('web_path'); ?>/playlist.php?action=add_dyn_song">
 <?php echo _('Save Search As Track on'); ?>:
-<?php show_playlist_dropdown(); ?>
+<?php show_playlist_dropdown('',true); ?>
 <input type="submit" value="<?php echo _('Save'); ?>" /></form>
 <?php } ?>
 <br />
