@@ -97,7 +97,7 @@
         border-right: 1px solid white;
 /*        float: left;                /*          use for horizontal menu; comment out otherwise */
         padding: 5px 0px 5px 10px;
-        width: 12em;
+        width: 10.5em;
         background-color: <?php echo conf('row_color2'); ?>;
     }
     #sidebar a, .navbutton {
@@ -115,7 +115,7 @@
         float: left;
         position: absolute;
         width: 9em;
-	margin: -1.5em 0 0 9em;  /* for vertical menu; comment out otherwise */
+	margin: -1.5em 0 0 10.5em;  /* for vertical menu; comment out otherwise */
 /*	margin: 0.5em 0 0 -1.1em;  /* for horizontal menu;  comment out otherwise */
 
         left: -999em;  /* this -999em puts the submenu item way off to the left until it's called back by a hover (below) */

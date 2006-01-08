@@ -4,6 +4,7 @@
 
 --------------------------------------------------------------------------
   v.3.3.2-Beta1
+  	- Fixed some minor theme issues with the built in themes
   	- Fixed some RSS problems, and linked it on header (Thx pb1dft)
   	- Fixed bug where you couldn't delete admin users because of an
 		overzelous permission check

@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2005 Ampache.org
+ Copyright (c) 2001 - 2006 Ampache.org
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
@@ -201,7 +201,7 @@
 		background: <?php echo conf('base_color2'); ?>;
 		}
 /* These three lines make a menu horizontal */
-	#content { float: left; }
+	#content { float: left; clear: both;}
 	#sidebar li { float: left; }
 	#sidebar li ul { margin: 0.5em 0 0 -1.1em; }
 /**

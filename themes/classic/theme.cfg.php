@@ -35,7 +35,7 @@ orientation = "vertical"
 # If this is set to simple the sub menu's will only be shown when you're on one of the
 # respective pages. If you want to make the menu's something like the classic theme
 # comment this out
-submenu = "simple"
+#submenu = "simple"
 
 # Theme Colors
 ###################
