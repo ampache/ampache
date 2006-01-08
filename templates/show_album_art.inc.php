@@ -22,51 +22,35 @@
 
 // Gotta do some math here!
 $total_images = count($images);
+$rows = floor($total_images/3);
 
-$rows 	= floor($total_images/6);
-$spare 	= $total_images - ($rows * 6);
 
 $i = 0;
 ?>
 
 <table class="text-box"> 
+<tr>
 <?php 
 while ($i <= $rows) { 
-	$images[$i];
-	$ii = $i+1;
-	$iii = $i+2;
+	$j=0;
+	while ($j < 3) { 
+		$key = $i*3+$j;
+		if (!isset($images[$key])) { echo "<td>&nbsp;</td>\n"; } 
+		else { 
 ?>
-	<tr>
 	<td align="center">
-		<a href="<?php echo $images[$i]['url']; ?>" target="_blank">
-		<img src="<?php echo scrub_out($images[$i]['url']); ?>" border="0" height="175" width="175" /><br />
+		<a href="<?php echo $images[$key]['url']; ?>" target="_blank">
+		<img src="<?php echo scrub_out($images[$key]['url']); ?>" border="0" height="175" width="175" /><br />
 		</a>
 		<p align="center">
 			[<a href="<?php echo conf('web_path'); ?>/albums.php?action=select_art&amp;image=<?php echo $i; ?>&amp;album_id=<?php echo urlencode($_REQUEST['album_id']); ?>">Select</a>]
 		</p>
 	</td>
-	<td align="center">
-		<?php if (isset($images[$ii])) { ?>
-		<a href="<?php echo $images[$ii]['url']; ?>" target="_blank">
-		<img src="<?php echo scrub_out($images[$ii]['url']); ?>" border="0" height="175" width="175" /><br />
-		</a>
-		<p align="center">
-			[<a href="<?php echo conf('web_path'); ?>/albums.php?action=select_art&amp;image=<?php echo $ii; ?>&amp;album_id=<?php echo urlencode($_REQUEST['album_id']); ?>">Select</a>]
-		</p>
-		<?php } ?>
-	</td>
-	<td align="center">
-		<?php if (isset($images[$iii])) { ?>
-		<a href="<?php echo $images[$iii]['url']; ?>" target="_blank">
-		<img src="<?php echo scrub_out($images[$iii]['url']); ?>" border="0" height="175" width="175" /><br />
-		</a>
-		<p align="center">
-			[<a href="<?php echo conf('web_path'); ?>/albums.php?action=select_art&amp;image=<?php echo $iii; ?>&amp;album_id=<?php echo urlencode($_REQUEST['album_id']); ?>">Select</a>]
-		</p>
-		<?php } ?>
-	</td>
-	</tr>
 <?php 
+		} // end else
+		$j++;
+	} // end while cells
+	echo "</tr>\n<tr>";
 	$i++;
 } // end while
 ?>

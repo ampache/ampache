@@ -19,13 +19,25 @@
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
+/**
+ * Playlist Box
+ * This box is used for actions on the main screen and on a specific playlist page
+ * It changes depending on where it is 
+ */
+
+$web_path = conf('web_path'); 
 ?>
 
 <table class="text-box">
 <tr><td>
-	<span class="header1"><?php echo _('Playlist Actions'); ?></span><br />
-	&nbsp;&nbsp;&nbsp;<a href="<?php echo conf('web_path'); ?>/playlist.php?action=new"><?php echo _('Create New Playlist'); ?></a><br />
-	&nbsp;&nbsp;&nbsp;<a href="<?php echo conf('web_path'); ?>/playlist.php"><?php echo _('View All Playlists'); ?></a><br />
-	&nbsp;&nbsp;&nbsp;<a href="<?php echo conf('web_path'); ?>/playlist.php?action=show_import_playlist"><?php echo _('Import From File'); ?></a><br />
+	<span class="header1"><?php echo _('Playlist Actions'); ?></span><br /><br />
+	&nbsp;&nbsp;&nbsp;&nbsp;<a href="<?php echo $web_path; ?>/playlist.php?action=new"><?php echo _('Create New Playlist'); ?></a><br />
+	&nbsp;&nbsp;&nbsp;&nbsp;<a href="<?php echo $web_path; ?>/playlist.php"><?php echo _('View All Playlists'); ?></a><br />
+	&nbsp;&nbsp;&nbsp;&nbsp;<a href="<?php echo $web_path; ?>/playlist.php?action=show_import_playlist"><?php echo _('Import From File'); ?></a><br />
+	<?php if ($_REQUEST['playlist_id']) { ?>
+	&nbsp;&nbsp;&nbsp;&nbsp;<a href="<?php echo $web_path; ?>/playlist.php?action=normalize_tracks"><?php echo _('Normalize Tracks'); ?></a><br />
+	&nbsp;&nbsp;&nbsp;&nbsp;<a href="<?php echo $web_path; ?>/song.php?action=play_selected&amp;playlist_id=<?php echo $_REQUEST['playlist_id']; ?>"><?php echo _('Play This Playlist'); ?></a><br />
+	<?php } ?>
 </td></tr>
 </table>
+<br />

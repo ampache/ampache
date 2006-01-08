@@ -92,7 +92,7 @@ class Playlist {
 	 */
 	function get_items() { 
 
-		$sql = "SELECT * FROM playlist_data WHERE playlist='" . sql_escape($this->id) . "'";
+		$sql = "SELECT * FROM playlist_data WHERE playlist='" . sql_escape($this->id) . "' ORDER BY track";
 		$db_results = mysql_query($sql, dbh());
 
 		while ($r = mysql_fetch_assoc($db_results)) { 
@@ -196,6 +196,34 @@ class Playlist {
 		return $results['0'];
 
 	} // get_song_count
+
+	/**
+	 * has_access
+	 * This takes no arguments. It looks at the currently logged in user (_SESSION)
+	 * This accounts for admin powers and the access on a per list basis
+	 */
+	function has_access() { 
+
+		if (!$GLOBALS['user']->has_access(25)) { return false; }  
+
+		/* If they are a full admin, then they always get rights */
+		if ($GLOBALS['user']->has_access(100)) { return true; } 
+
+		if ($this->user == $GLOBALS['user']->username) { return true; } 
+
+		/* Check the Playlist_permission table */
+		$sql = "SELECT id FROM playlist_permission WHERE " . 
+			"playlist='" . sql_escape($this->id) . "' AND userid='" . sql_escape($GLOBALS['user']->username) . "'" . 
+			" AND level >= '25'";
+		$db_results = mysql_query($sql, dbh());
+
+		$results = mysql_fetch_row($db_results);
+
+		if ($results) { return true; }
+
+		return false;
+
+	} // has_access
 
 	/**
 	 * update_type

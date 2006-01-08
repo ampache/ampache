@@ -37,7 +37,7 @@ $playlist	= new Playlist(scrub_in($_REQUEST['playlist_id']));
 switch ($action) { 
 	case 'delete_playlist': 
 		/* Make sure they have the rights */
-		if (!$GLOBALS['user']->has_access(100) AND $GLOBALS['user']->username != $playlist->user) { 
+		if (!$playlist->has_access()) { 
 			access_denied();
 			break;
 		}
@@ -47,7 +47,7 @@ switch ($action) {
 	break;
 	case 'show_delete_playlist':
 		/* Make sure they have the rights */
-                if (!$GLOBALS['user']->has_access(100) AND $GLOBALS['user']->username != $playlist->user) {
+                if (!$playlist->has_access()) {
                         access_denied();
                         break;
                 }
@@ -58,16 +58,16 @@ switch ($action) {
 	break;
 	case 'add_to':
 	case 'add to':
-		/* Check to make sure they've got rights */
-		if (!$GLOBALS['user']->has_access(25)) { 
-			access_denied();
-			break;
-		} 
 		/* If we don't already have a playlist */
-		if (!$playlist->id) { 
+		if (!$playlist->id && $GLOBALS['user']->has_access(25)) { 
 			$playlist_name = _('New Playlist') . " - " . date('m/j/y, g:i a');
 			$id = $playlist->create($playlist_name, 'private');
 			$playlist = new Playlist($id);
+		}
+
+		if (!$playlist->has_access()) { 
+			access_denied();
+			break;
 		}
 
 		/* Must be admin or person who created this playlist */
@@ -89,7 +89,7 @@ switch ($action) {
 	break;	
 	case 'add_dyn_song':
 		/* Check Rights */
-		if (!$GLOBALS['user']->has_access(100) && $GLOBALS['user']->username != $playlist->username) { 
+		if (!$playlist->has_access()) { 
 			access_denied();
 			break;
 		}
@@ -120,7 +120,7 @@ switch ($action) {
 	case 'remove_song':
 	case _('Remote Selected Tracks'):
 		/* Check em for rights */
-		if (!$GLOBALS['user']->has_access(100) && $GLOBALS['user']->username != $playlist->user) { 
+		if (!$playlist->has_access) { 
 			access_denied();
 			break;
 		}
@@ -129,7 +129,7 @@ switch ($action) {
 	break;
 	case 'update':
 		/* Make sure they've got thems rights */
-		if (!$GLOBALS['user']->has_access(100) && $GLOBALS['user']->username != $playlist->user) { 
+		if (!$playlist->has_access()) { 
 			access_denied();
 			break;
 		}
@@ -137,10 +137,6 @@ switch ($action) {
 		$playlist->update_type($_REQUEST['type']);
 		$playlist->update_name($_REQUEST['new_playlist_name']);
 		show_confirmation(_('Playlist Updated'),$playlist_name . ' (' . $playlist_type . ') ' . _(' has been updated'),'playlist.php?action=show_playlist&amp;playlist_id=' . $playlist->id);	
-	break;
-	//FIXME: WTF Mate? 
-	case _('Update Selected'):
-	
 	break;
 	case 'show_playlist':
 		show_playlist($playlist);
@@ -150,7 +146,7 @@ switch ($action) {
 	break;
 	case 'set_track_numbers':
 		/* Make sure they have permission */
-		if (!$GLOBALS['user']->has_access(100) && $GLOBALS['user']->username != $playlist->user) { 
+		if (!$playlist->has_access()) { 
 			access_denied();
 			break;
 		}
@@ -164,6 +160,19 @@ switch ($action) {
 
                 show_playlist($playlist);
         break;
+	case 'normalize_tracks':
+		/* Make sure they have permission */
+		if (!$playlist->has_access()) { 
+			access_denied();
+			break;
+		}
+		
+		/* Normalize the tracks */
+		$playlist->normalize_tracks();
+
+		/* Show our wonderful work */
+		show_playlist($playlist);
+	break;
 	default:
 		show_playlists();
 	break;

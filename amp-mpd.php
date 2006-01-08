@@ -169,7 +169,7 @@ if (is_object($myMpd)) {
                                 $playlist = new Playlist($pl_id);
                                 if( $pl_id == 0 ) { // new playlist
                                   $playlist_name = _("New Playlist") . " - " . date("m/j/y, g:i a");
-                                  $playlist->create_playlist($playlist_name, $user->username, 'private');
+                                  $playlist->create($playlist_name, $user->username, 'private');
                                   $pl_id = $playlist->id;
                                 }
 

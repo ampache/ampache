@@ -477,7 +477,6 @@ class Album {
 				continue;
 			}
 
-//	                $snoopy->fetch($results[$key]);
 	                $data['url'] 	= $result[$key];
 			$data['mime']	= $mime;
 			

@@ -102,7 +102,7 @@ function delete_user_stats ($user) {
 
 function insert_flagged_song($song, $reason, $comment) {
 
-	$user = $_SESSION['userdata']['id'];
+	$user = $_SESSION['userdata']['username'];
 	$time = time();
 	$sql = "INSERT INTO flagged (user,song,type,comment,date)" .
 		" VALUES ('$user','$song', '$reason', '$comment', '$time')";

@@ -723,7 +723,7 @@ class User {
 		  admin
 		*/
 		if ($this->has_access(100)) { 
-			$sql = "SELECT * FROM user WHERE (level='admin' OR level='100') AND username!='" . $this->username . "'";
+			$sql = "SELECT username FROM user WHERE (access='admin' OR access='100') AND username !='" . sql_escape($this->username) . "'";
 			$db_results = mysql_query($sql, dbh());
 			if (!mysql_num_rows($db_results)) { 
 				return false;

@@ -4,18 +4,26 @@
 
 --------------------------------------------------------------------------
   v.3.3.2-Beta1
+  	- Fixed bug where you couldn't delete admin users because of an
+		overzelous permission check
+  	- Fixed Search Album art page so it correctly shows results
+		(Thx nhorlock)
+  	- Fixed stylesheet so all old Themes work again (Thx Sigger)
+  	- Added Normalize Tracks function to playlist which makes track
+		numbers contiguous
+	- Fixed ordering on Playlists under new code
   	- Added the Import From File action for playlists back. The link
 		was just missing
   	- Fixed SQL errors with Windows + Mysql5.x songs with empty 
 		genres, are now given a Unknown genre value (Thx WarrenG)
   	- Rewrote entire Playlist class and document to use the new id
 		field in database, also added support for playlist tracks
-		that are based on search critera.
+		that are based on search criteria.
   	- Fixed Album Art Search so that it doesn't include the artist
 		if there is more then one artist on the album
   	- Fixed Registration code so that it used existing functions and
 		added default to off config option for captcha because
-		its hard to detect compatiblity
+		its hard to detect compatibility
   	- Fixed some logic errors in Downsampling code
   	- Updated Registration code (Thx pb1dft)
   	- Updated GetId3() Library to v.1.7.5
@@ -26,12 +34,12 @@
   	- Fixed Typo in Amazon Search debug statement
   	- Added sort_files.php.inc to /bin 
   	- Fixed Ratings designation mistake and added it to artist view
-  	- Fixed location detection for contextual titls and browse
+  	- Fixed location detection for contextual titles and browse
 		on the simple menu's (Thx SoundOfEmotion)
   	- Fixed a botched change to the database (No Data loss!) but I 
 		still feel stupid (Blame Vollmer)
-  	- Fixed a problem where .flac files wouldn't get reconized by
-		the regular expresison that pulls in files from m3u's
+  	- Fixed a problem where .flac files wouldn't get recognized by
+		the regular expression that pulls in files from m3u's
 		(Thx nhorlock)
   	- Fixed a logic problem with the rating system where it would
 		show a star for the 0 value when it should always show
