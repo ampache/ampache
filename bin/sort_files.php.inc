@@ -208,6 +208,8 @@ function sort_clean_name($string) {
 	/* First remove any / or \ chars */
 	$string = preg_replace("/[\/\\\]/","-",$string);
 
+	$string = str_replace(":"," ",$string);
+
 	return $string;
 
 } // sort_clean_name
@@ -237,7 +239,7 @@ function sort_move_file($song,$fullname) {
 	unset($data[0]);
 
 	foreach ($data as $dir) { 
-	
+
 		$path .= "/" . $dir;
 
 		/* We need to check for the existance of this directory */
@@ -264,6 +266,14 @@ function sort_move_file($song,$fullname) {
 		echo "\tSQL: $sql\n";
 	}
 	else { 
+
+		/* Check for file existance */
+		if (file_exists($fullname)) { 
+			if (conf('debug')) { log_event('commandline','file exists','Error: $fullname already exists'); }
+			echo "Error: $fullname already exists\n"; 
+			return false;
+		}
+	
 		$results = copy($song->file,$fullname);
 		if (conf('debug')) { log_event('commandline','copy','Copied ' . $song->file . ' to ' . $fullname); }
 	

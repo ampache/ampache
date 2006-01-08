@@ -1190,12 +1190,14 @@ class Catalog {
 		$this->clean_stats();
 		$this->clean_playlists();
 		$this->clean_flagged();
-		$this->clean_genres();
-
+		;$this->clean_genres();
+		
 		/* Return dead files, so they can be listed */
 		echo "<b>" . _("Catalog Clean Done") . " [" . count($dead_files) . "] " . _("files removed") . "</b><br />\n";
 		flush();
 		return $dead_files;
+
+		$this->count = 0;
 
 	} //clean_catalog
 
@@ -1570,6 +1572,10 @@ class Catalog {
 		$this->update_last_update();
 
 		echo "Update Finished. Checked $this->count. $total_updated songs updated.<br /><br />";
+
+		$this->count = 0;
+
+		return true;
 
 	} //verify_catalog
 
