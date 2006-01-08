@@ -58,7 +58,7 @@ function countdown() {
 
     if (displaycountdown==1) {
         window.status="Refreshing in "+reloadseconds+" seconds";
-        if ((player == 'mpd') && (player_state = 'play')) {
+        if ((player == 'mpd') && (player_state == 'play')) {
             NodeList = document.getElementById ('mpd_cur_track_pos');
 		{ NodeList.firstChild.data = fmt_time((mpd_elapsed) + (secondssinceloaded)); }
             NodeList = document.getElementById ('mpd_on_deck_in');
