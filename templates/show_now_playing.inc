@@ -32,7 +32,6 @@
   </tr>
 <?php
 	$user = $GLOBALS['user'];
-        echo '<script language="JavaScript" type="text/javascript"> var mpd_state = "'. "stop" .'" </script>';
 	foreach($results as $item) { 
 		$song = $item['song'];
 		$np_user = $item['user'];

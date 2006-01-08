@@ -1,11 +1,25 @@
 <script type="text/javascript" language="javascript">
 <!-- Begin
-// JS variables mpd_elapsed, mpd_song_length and mpd_state set in show_mpdplay.inc
 // when a page/song is loaded, we get starttime and mpd_elapsed.
 // mpd_elapsed is # of seconds elapsed in the now playing song when the page/song was refreshed
+// secondssinceloaded is the calculated number of seconds since mpd_elapsed was set (less some load & execute lag).
 
 // Set refresh interval (in seconds)
 var refreshinterval=<?php echo conf('refresh_limit'); ?>
+
+<?php 
+if ($user->prefs['play_type'] == 'mpd') {
+	echo 'var player = "mpd"' .
+		'; var mpd_elapsed = '. $myMpd->current_track_position .
+		'; var mpd_song_length = '. $myMpd->current_track_length .
+		'; var mpd_songid = '.$myMpd->current_track_id.
+		'; var player_state = "'. $myMpd->state .'";';
+} else {
+	echo 'var player = "'. $user->prefs['play_type'] .
+		'"; var player_state = "";';
+}
+?>
+
 
 // Display the countdown inside the status bar?
 // Set "1" for yes or "0" for no
@@ -16,20 +30,17 @@ var starttime
 var nowtime
 var reloadseconds=0
 var secondssinceloaded=0
-var mpd_notstoppause=1
+//var mpd_notstoppause=1
 
 function starttime() {
    starttime=new Date()
    starttime=starttime.getTime()
-   if (mpd_state == "stop" || mpd_state == "pause") { mpd_notstoppause = 0; }
+//   if (player_state == "stop" || player_state == "pause") { mpd_notstoppause = 0; }
    countdown()
 }
 
 function fmt_time (timenum) {
 var sec = Math.floor(timenum % 60);
-/*var min = Math.floor(timenum / 60);
-var fmted = min + ':' + ((sec < 10) ? "0" : "") + sec ;
-return fmted;*/
 return  Math.floor((1/60) * timenum) + ':' + ((sec < 10) ? '0' : '') + sec; 
 
 }
@@ -39,7 +50,7 @@ function countdown() {
     nowtime=nowtime.getTime()
     secondssinceloaded=(nowtime-starttime)/1000
 
-    if (mpd_notstoppause) {
+    if (player_state == 'play') {
         reloadseconds = Math.round(mpd_song_length - mpd_elapsed - secondssinceloaded)
         }
     else
@@ -47,7 +58,7 @@ function countdown() {
 
     if (displaycountdown==1) {
         window.status="Refreshing in "+reloadseconds+" seconds";
-        if (mpd_notstoppause) {
+        if ((player == 'mpd') && (player_state = 'play')) {
             NodeList = document.getElementById ('mpd_cur_track_pos');
 		{ NodeList.firstChild.data = fmt_time((mpd_elapsed) + (secondssinceloaded)); }
             NodeList = document.getElementById ('mpd_on_deck_in');

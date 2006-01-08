@@ -81,6 +81,7 @@ function int2ip($i) {
 	@param 	$template	Name of Template
 */
 function show_template($template) {
+global $myMpd, $user;
 
 	/* Check for a 'Theme' template */
 	if (is_readable(conf('prefix') . conf('theme_path') . "/templates/$template".".inc")) { 

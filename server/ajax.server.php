@@ -102,8 +102,8 @@ case 'adjvol' :
 } //end switch
 
 
-echo '<properties>
-	<action>' . $action .'</action>' .
+echo '<properties>' .
+	'<action>' . $action .'</action>' .
 	$result .
 '</properties>';
 ?>

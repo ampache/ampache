@@ -26,6 +26,7 @@
 
 */
 require_once("modules/init.php");
+$myMpd = init_mpd();
 show_template('header');
 if (conf('refresh_limit') > 0) { show_template('javascript_refresh'); }
 
