@@ -60,14 +60,18 @@ while ($r = mysql_fetch_row($db_results)) {
 		$directory 	= sort_find_home($song,$catalog->sort_pattern,$catalog->path);
 		$filename 	= sort_find_filename($song,$catalog->rename_pattern);
 
-		$fullpath = $directory . "/" . $filename;
-
 		/* Check for Demo Mode */
 		if ($test_mode) { 
 			/* We're just talking here... no work */
 			echo "Moving File:\n\tSource: $song->file\n\tDest: $fullpath\n";
 			flush();
 		}
+		/* We need to actually do the moving (fake it if we are testing) */
+		sort_move_file($song,$fullpath);
+
+		$fullpath = $directory . "/" . $filename;
+
+
 	} // end foreach song
 
 } // end foreach catalogs
@@ -178,12 +182,88 @@ function sort_element_name($key) {
 			return 'genre';
 		break;
 		default: 
-
+			return 'album';
 		break;
 	} // switch on key
 
 	return false;
 
 } // sort_element_name
+
+/**
+ * sort_move_file
+ * All this function does is, move the friggin file and then update the database 
+ * We can't use the rename() function of PHP because it's functionality depends on the
+ * current phase of the moon, the alignment of the planets and my current BAL
+ * Instead we cheeseball it and walk through the new dir structure and make
+ * sure that the directories exist, once the dirs exist then we do a copy
+ * and unlink.. This is a little unsafe, and as such it verifys the copy
+ * worked by doing a filesize() before unlinking. 
+ */
+function sort_move_file($song,$fullname) { 
+
+	$info = pathinfo($fullname);
+
+	$directory 	= $info['dirname'];
+	$file		= $info['basename'];
+	$data = preg_split("/[\/\\\]/",$directory);
+	$path = '';
+
+	/* We not need the leading / */
+	unset($data[0]);
+
+	foreach ($data as $dir) { 
+	
+	
+		$path .= "/" . $dir;
+
+		/* We need to check for the existance of this directory */
+		if (!is_dir($path)) { 
+			if ($GLOBALS['test_mode']) { 
+				echo "\tMaking $path Directory\n";
+			}
+			else { 
+				$results = mkdir($path);	
+				if (!$results) { 
+					echo "Error: Unable to create $path move failed\n";
+					return false;
+				}
+			} // else we aren't in test mode
+		} // if it's not a dir
+
+	} // foreach dir
+
+	/* Now that we've got the correct directory structure let's try to copy it */
+	if ($GLOBALS['test_mode']) { 
+		echo "\tCopying $file to $directory\n";
+		$sql = "UPDATE song SET file='" . sql_escape($fullname) . "' WHERE id='" . sql_escape($song->id) . "'";
+		echo "\tSQL: $sql\n";
+	}
+	else { 
+		$results = copy($song->file,$fullname);
+		if (!$results) { echo "Error: Unable to copy file to $fullname\n"; return false; }
+
+		/* Check the md5sums */
+		$new_sum = filesize($fullname);
+		$old_sum = filesize($song->file);
+
+		if ($new_sum != $old_sum OR !$new_sum) { 
+			echo "Error: Size Inconsistency, not deleting " . $song->file . "\n"; 
+			return false; 
+		} // end if sum's don't match
+		
+		/* If we've made it this far it should be safe */
+		$results = unlink($song->file);
+		if (!$results) { echo "Error: Unable to delete " . $song->file . "\n"; }
+
+		/* Update the catalog */
+		$sql = "UPDATE song SET file='" . sql_escape($fullname) . "' WHERE id='" . sql_escape($song->id) . "'";
+		$db_results = mysql_query($sql, dbh());
+
+	} // end else
+
+	return true;
+
+} // sort_move_file
 
 ?>
