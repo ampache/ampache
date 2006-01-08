@@ -265,6 +265,7 @@ if (window.attachEvent) window.attachEvent("onload", sfHover);
 	#content
 		{ 
 		float:left;
+		clear: both;
 		margin-left:0px;
 		}
 /**
@@ -276,6 +277,7 @@ if (window.attachEvent) window.attachEvent("onload", sfHover);
 	clear: both;
 	height: 100%;
         margin: 0;
+	border: 0px;
         float: left;
  /*       width: 110px;  /* this controls the width of the sidebar.  horizontal menu needs more width */
         padding: 0px 0px 0px 5px;
