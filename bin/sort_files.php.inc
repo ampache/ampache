@@ -136,15 +136,16 @@ function sort_find_home($song,$sort_pattern,$base) {
 		$sort_pattern = preg_replace("/\/?%o\//","",$sort_pattern);
 		$first_element = substr($sort_pattern,0,2);
 		$element = sort_element_name($first_element);
-		$alphabet = strtoupper(substr(${$element},0,1));
+		if (!$element) { $alphabet = 'ZZ'; }
+		else { 	$alphabet = strtoupper(substr(${$element},0,1)); } 
 		$alphabet = preg_replace("/[^A-Za-z0-9]/","ZZ",$alphabet);
 
 		$home .= "/$alphabet";
 	}
 
 	/* Replace everything we can find */
-	$replace_array = array('%a','%A','%t','%T','%y','%g');
-	$content_array = array($artist,$album,$title,$track,$year,$genre);
+	$replace_array = array('%a','%A','%t','%T','%y','%g','%C');
+	$content_array = array($artist,$album,$title,$track,$year,$genre,'C');
 	$sort_pattern = str_replace($replace_array,$content_array,$sort_pattern);
 
 	/* Remove non A-Z0-9 chars */
@@ -182,7 +183,6 @@ function sort_element_name($key) {
 			return 'genre';
 		break;
 		default: 
-			return 'album';
 		break;
 	} // switch on key
 
