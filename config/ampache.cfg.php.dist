@@ -454,6 +454,11 @@ stream_cmd_m4a = faad -f 2 -w "%FILE%" | lame -r -b %SAMPLE% -S - -
 # song is the information in the feed. can be multiple
 #      items.
 #
+# use_rss = false (values true | false)
+#
+#DEFAULT: use_rss = false 
+#use_rss = false
+#
 #
 # rss_main_title = the title for your feed.
 # DEFAULT: Ampache for the love of Music
@@ -478,7 +483,8 @@ rss_main_language = nl
 # $artist
 # $album
 # DEFAULT:  <![CDATA[$song->f_title @ $album played by  $user->fullname]]>
-rss_song_description = <![CDATA[$song->f_title @ $album played by  $user->fullname]]>
+# FIXME it's hardcoded in lib/rss.lib.php now
+#rss_song_description = <![CDATA[$song->f_title @ $album played by  $user->fullname]]>
 ######################################################
 
 #######################

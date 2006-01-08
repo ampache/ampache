@@ -28,6 +28,12 @@ $location = get_location();
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php echo $htmllang; ?>" lang="<?php echo $htmllang; ?>">
 <head>
 <link rel="shortcut icon" href="<?php echo conf('web_path'); ?>/favicon.ico" />
+<?php
+if (conf('use_rss')){
+?>
+<link rel="alternate" type="application/rss+xml" title="<?php echo conf('rss_main_title'); ?>" href="<?php echo conf('web_path'); ?>/rss.php" />
+<?php } ?>
+
 <meta http-equiv="Content-Type" content="text/html; charset=<?php echo conf('site_charset'); ?>" />
 <?php show_template('menustyle'); ?>
 <?php show_template('style'); ?>

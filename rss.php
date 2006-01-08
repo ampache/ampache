@@ -23,6 +23,11 @@
 $no_session = 1;
 require('modules/init.php');
 
-echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
+/* Check Perms */
+if (!conf('use_rss') || conf('demo_mode')) {
+        access_denied();
+}
+
+
 show_now_playingRSS();
 ?>
