@@ -1,0 +1,128 @@
+<?php
+/*
+
+ Copyright (c) 2001 - 2006 Ampache.org
+ All rights reserved.
+
+ This program is free software; you can redistribute it and/or
+ modify it under the terms of the GNU General Public License
+ as published by the Free Software Foundation; either version 2
+ of the License, or (at your option) any later version.
+
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with this program; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+
+*/
+
+/*!
+ @header Style File
+ @discussion this is the css that handles the menu mojo (#sidebar, etc) and the 
+        outer layer of layout (#maincontainer, #topbar, #content, etc
+*/
+?>
+<style type="text/css">
+<!--
+/**
+ * Div Definitions
+ * These define how the page is laid out, be careful with these as changes to them
+ * can cause drastic layout changes
+ */
+        #maincontainer
+                {
+                        margin: 0px;
+                }
+        #topbar
+                {
+                        height: 80px;
+                        padding-top:10px;
+                        padding-left:10px;
+                        background-color: <?php echo conf('bg_color1'); ?>;
+                }
+        #topbarright
+                {
+                        float: right;
+                }
+        #topbarleft
+                {
+                        float: left;
+                }
+        .nodisplay { display: none;}
+        .display {}
+        #mpdpl td {
+                padding: 0px 2px 0px 2px;
+                text-align: left;
+                }
+/**
+ * End Div Definitions
+ * This is the end of the main structure def's
+ */
+
+/**
+ * Experimental for menus (Thx Sigger)
+ * TO DO: Fill in 1px border around menus & submenu items
+ * Make padding appply to the li, not just an a.  Moving paddng: to li throws off the dropdown menu alignment.
+ */
+	#content {
+/*                float: left;    /*                      use for horizontal menu; comment out otherwise */
+                margin-left:0px;
+	}
+    #sidebar {
+        clear: both;
+        height: 100%;
+        margin: 0;
+        float: left;
+        padding: 0;
+        list-style: none;
+        border: 1px solid #000;
+        line-height: 1.0;
+    }
+    #sidebar ul {
+        margin: 0px;
+        list-style: none;
+        padding: 0px;
+        font-family: verdana, arial, Helvetica, sans-serif;
+        line-height: 1.0;
+    }
+    #sidebar li {
+        margin: 0;
+        display: block;
+        border-bottom: 1px solid white;
+        border-left: 1px solid white;
+        border-right: 1px solid white;
+/*        float: left;                /*          use for horizontal menu; comment out otherwise */
+        padding: 5px 0px 5px 10px;
+        width: 12em;
+        background-color: <?php echo conf('row_color2'); ?>;
+    }
+    #sidebar a, .navbutton {
+        display: block;  /*Not sure why this is neccesary, but it is for IE*/
+        text-decoration: none;
+        }
+    #sidebar li:hover, #sidebar li.sfhover {
+        color: <?php echo conf('font_color2'); ?>;
+        background-color: <?php echo conf('row_color3'); ?>;
+    }
+    #sidebar li:active {
+        background-color: <?php echo conf('row_color1'); ?>;
+    }
+    #sidebar li ul {
+        float: left;
+        position: absolute;
+        width: 9em;
+	margin: -1.5em 0 0 9em;  /* for vertical menu; comment out otherwise */
+/*	margin: 0.5em 0 0 -1.1em;  /* for horizontal menu;  comment out otherwise */
+
+        left: -999em;  /* this -999em puts the submenu item way off to the left until it's called back by a hover (below) */
+    }
+    #sidebar li:hover ul, #sidebar li.sfhover ul {
+        left: auto;  /* this calls the submenu back when the parent li is hovered. */
+    }
+
+-->
+</style>

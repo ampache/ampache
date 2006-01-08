@@ -200,11 +200,15 @@
 		width:160px;
 		background: <?php echo conf('base_color2'); ?>;
 		}
+/* These three lines make a menu horizontal */
+	#content { float: left; }
+	#sidebar li { float: left; }
+	#sidebar li ul { margin: 0.5em 0 0 -1.1em; }
 /**
  * Div Definitions
  * These define how the page is layed out, be careful with these as changes to them
  * can cause drastic layout changes
- */
+
 	#maincontrainer
 		{
 			margin: 0px;
@@ -304,7 +308,7 @@
 		margin-left:0px;
 		margin-top: 35px;
 		}
-/**
+
  * End Div Definitions
  * This is the end of the main structure def's
  */

@@ -80,13 +80,13 @@
         	{
 		/* there really isn't anything for this */
 		}
-	.nodisplay { display: none;}
-	.display {}
 	.npsong
 		{
 		background: #FFFF66;
 		font-weight: bold;
 		}
+	.nodisplay { display: none;}
+	.display {}
 	#mpdpl td {
 		padding: 0px 2px 0px 2px;
 		text-align: left;
@@ -208,117 +208,10 @@
 		font-size: <?php echo conf('font_size') - 1; ?>px;
 		cursor: pointer;
 		}
-	.sidebar 
-		{
-		margin-left:0px;
-		margin-top:0px;
-		margin-right:0px;
-		padding-right:0px;
-		padding-top: 0px;
-		padding-left: 0px;
-		background: <?php echo conf('base_color2'); ?>;
-		}
-/**
- * Div Definitions
- * These define how the page is layed out, be careful with these as changes to them
- * can cause drastic layout changes
- */
-	#maincontainer
-		{
-			margin: 0px;
-		} 	
-	#topbar
-		{
-			height: 80px;
-			padding-top:10px;
-			padding-left:10px;
-			background-color: <?php echo conf('bg_color1'); ?>;
-		}
-	#topbarright
-		{
-			float: right;
-		}
-	#topbarleft
-		{
-			float: left;
-		}
-	#navcontainer ul li
-		{
-			float:left; 
-			width:100%;
-		}
+/* These three lines make a menu vertical */
+        #content { float: none; }
+        #sidebar li { float: none; }
+        #sidebar li ul { margin: -1.5em 0 0 9em; }
 
-	.subnavbutton 
-		{
-			background-color: <?php echo conf('row_color1'); ?>;
-			text-align:center;
-			text-decoration: none;
-			color: <?php echo conf('font_color2'); ?>;
-		}
-
-	#content
-		{ 
-		margin-left:0px;
-		}
-/**
- * Experimental for menus (Thx Sigger)
- * TO DO: Fill in 1px border around menus & submenu items 
- * Make padding appply to the li, not just an a.  Moving paddng: to li throws off the dropdown menu alignment.
- */
-    #sidebar {
-	clear: both;
-	height: 100%;
-        margin: 0;
-        float: left;
- /*       width: 110px;  /* this controls the width of the sidebar.  horizontal menu needs more width */
-        padding: 0;
-        list-style: none;
-        border: 1px solid #000;
-	line-height: 1.0;
-    }
-    #sidebar ul {
-	margin: 0px;
-	list-style: none;
-	padding: 0px;
-        font-family: verdana, arial, Helvetica, sans-serif;
-	line-height: 1.0;
-    }
-    #sidebar li {
-/*        margin: 0 0 1px 0; */
-	margin: 0;
-        display: block;   
-	border-bottom: 1px solid white;
-	border-left: 1px solid white;
-	border-right: 1px solid white;
-	padding: 5px 0px 5px 10px;   
-	width: 10em;
-	background-color: <?php echo conf('row_color2'); ?>;
-    }
-    #sidebar a, .navbutton {
-	display: block;  /*Not sure why this is neccesary, but it is for IE*/
-	text-decoration: none;
-	}
-    #sidebar li:hover, #sidebar li.sfhover {
-        color: <?php echo conf('font_color2'); ?>;
-	background-color: <?php echo conf('row_color3'); ?>;
-    }
-    #sidebar li:active {
-        background-color: <?php echo conf('row_color1'); ?>;
-    }
-    #sidebar li ul {
-	float: left;
-	position: absolute;	
-	width: 12em; 
-	margin: -1.5em 0 0 10em;  
-/* -2em 0 0 10em for vertical menu puts the submenu back up and to the right of the hovered menu item by "the right amount"*/
-	left: -999em;  /* this puts the submenu item way off to the left until it's called back by a hover (below) */
-    }
-    #sidebar li:hover ul, #sidebar li.sfhover ul {
-	left: auto;  /* this calls the submenu back when the parent li is hovered. */
-    }
-/**
- * End Div Definitions
- * This is the end of the main structure def's
- */
 -->
 </style>

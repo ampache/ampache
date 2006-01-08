@@ -29,6 +29,7 @@ $location = get_location();
 <head>
 <link rel="shortcut icon" href="<?php echo conf('web_path'); ?>/favicon.ico" />
 <meta http-equiv="Content-Type" content="text/html; charset=<?php echo conf('site_charset'); ?>" />
+<?php show_template('menustyle'); ?>
 <?php show_template('style'); ?>
 <title><?php echo conf('site_title'); ?> - <?php echo $location['title']; ?></title>
 </head>

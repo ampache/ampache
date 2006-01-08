@@ -39,7 +39,7 @@ $myMpd = init_mpd();
 <form name="songs" action="<?php echo conf('web_path')."/amp-mpd.php"; ?>" method="post" enctype="multipart/form-data">
 <table id= "mpdpl" border="0" cellpadding="0" cellspacing="1" width="100%" class="tabledata">
 <tr>
-	<td align="center" class="table-header">
+	<td style="text-align:center" class="table-header">
 		<b><?php echo _("MPD Server Playlist"); ?></b>
 <!--		<i>
 			[<a title="<?php echo _("Refresh the Playlist Window"); ?>" href="<?php echo $_SERVER['PHP_SELF']; ?>">refresh</a>]
@@ -58,7 +58,7 @@ $myMpd = init_mpd();
 	<td <?php echo $nopad ?>>
 		<table cellspacing="0" cellpadding="0" border="0" width="100%">
 			<tr class="table-header">
-				<th><a href="#" onclick="check_songs(); return false;">Select</a> - <a href="#" onclick="invert_songs(); return false;">Invert</a></th>
+				<th><a href="#" onclick="check_songs(); return false;">Select</a>/<br><a href="#" onclick="invert_songs(); return false;">Invert</a></th>
 				<th align="left"><?php echo _("Song title"); ?></th>
 				<th align="left"><?php echo _("Artist"); ?></th>
 				<th align="left"><?php echo _("Album"); ?></th>
