@@ -20,6 +20,7 @@
 
 */
 /**
+ * DON'T USE ME! THIS SCRIPT _WILL_ MESS UP YOUR AUDIO FILES!!! 
  * sort_files
  * This script has a lot of stuff to worry about. It's primary duty is to re-organize
  * your files based on some sane, and predefined (in the interface) order using the
@@ -28,6 +29,7 @@
  * to do both or neither. Oooh and allow you to sort with A,B,C,D prefix
  * 
  * Attempt 1 - Do each file one by one and satisfy the needs of each file by its self (this is going to be slow)
+ * Cache information so we don't have to check for every file! 
  */
 
 /* Don't do anything just tell me what you would do */
@@ -51,7 +53,7 @@ while ($r = mysql_fetch_row($db_results)) {
 	$catalog = new Catalog($r['0']);
 	$songs = $catalog->get_catalog_files();
 
-	echo "Starting Catalog: $catalog->name\n";
+	echo "Starting Catalog: " . stripslashes($catalog->name) . "\n";
 
 	/* Foreach through each file and find it a home! */
 	foreach ($songs as $song) { 
@@ -59,6 +61,7 @@ while ($r = mysql_fetch_row($db_results)) {
 		$song->format_song();
 		$directory 	= sort_find_home($song,$catalog->sort_pattern,$catalog->path);
 		$filename 	= sort_find_filename($song,$catalog->rename_pattern);
+		$fullpath = $directory . "/" . $filename;
 
 		/* Check for Demo Mode */
 		if ($test_mode) { 
@@ -69,11 +72,10 @@ while ($r = mysql_fetch_row($db_results)) {
 		/* We need to actually do the moving (fake it if we are testing) 
 		 * Don't try to move it, if it's already the same friggin thing!
 		 */
-		if ($song->file != $fullpath) { 
+		if ($song->file != $fullpath && strlen($fullpath)) { 
 			sort_move_file($song,$fullpath);
 		}
 
-		$fullpath = $directory . "/" . $filename;
 
 
 	} // end foreach song
@@ -92,12 +94,12 @@ function sort_find_filename($song,$rename_pattern) {
 	$extension = ltrim(substr($song->file,strlen($song->file)-4,4),".");
 
 	/* Create the filename that this file should have */
-	$album 	= $song->f_album_full;
-	$artist = $song->f_artist_full;
-	$genre 	= $song->f_genre;
-	$track	= $song->track;
-	$title	= $song->title;
-	$year	= $song->year;
+	$album 	= sort_clean_name($song->f_album_full);
+	$artist = sort_clean_name($song->f_artist_full);
+	$genre 	= sort_clean_name($song->f_genre);
+	$track	= sort_clean_name($song->track);
+	$title	= sort_clean_name($song->title);
+	$year	= sort_clean_name($song->year);
         
 	/* Start replacing stuff */
 	$replace_array = array('%a','%A','%t','%T','%y','%g');
@@ -122,12 +124,12 @@ function sort_find_home($song,$sort_pattern,$base) {
 	$home = rtrim($home,"\\");
 
 	/* Create the filename that this file should have */
-	$album 	= $song->f_album_full;
-	$artist = $song->f_artist_full;
-	$genre 	= $song->f_genre;
-	$track	= $song->track;
-	$title	= $song->title;
-	$year	= $song->year;
+	$album 	= sort_clean_name($song->f_album_full);
+	$artist = sort_clean_name($song->f_artist_full);
+	$genre 	= sort_clean_name($song->f_genre);
+	$track	= sort_clean_name($song->track);
+	$title	= sort_clean_name($song->title);
+	$year	= sort_clean_name($song->year);
 
 	/* Do the various check */
 	$album_object = new Album($song->album);
@@ -195,6 +197,22 @@ function sort_element_name($key) {
 } // sort_element_name
 
 /**
+ * sort_clean_name
+ * We have to have some special rules here
+ * This is run on every individual element of the search
+ * Before it is put togeather, this removes / and \ and also
+ * once I figure it out, it'll clean other stuff
+ */
+function sort_clean_name($string) { 
+
+	/* First remove any / or \ chars */
+	$string = preg_replace("/[\/\\\]/","-",$string);
+
+	return $string;
+
+} // sort_clean_name
+
+/**
  * sort_move_file
  * All this function does is, move the friggin file and then update the database 
  * We can't use the rename() function of PHP because it's functionality depends on the
@@ -228,6 +246,7 @@ function sort_move_file($song,$fullname) {
 				echo "\tMaking $path Directory\n";
 			}
 			else { 
+				if (conf('debug')) { log_event('commandline','mkdir',"Creating $path directory"); }
 				$results = mkdir($path);	
 				if (!$results) { 
 					echo "Error: Unable to create $path move failed\n";
@@ -246,6 +265,7 @@ function sort_move_file($song,$fullname) {
 	}
 	else { 
 		$results = copy($song->file,$fullname);
+		if (conf('debug')) { log_event('commandline','copy','Copied ' . $song->file . ' to ' . $fullname); }
 	
 		
 		/* Look for the folder art and copy that as well */
@@ -258,6 +278,7 @@ function sort_move_file($song,$fullname) {
 			$old_art 	= $old_dir . "/" . conf('album_art_preferred_filename');
 		}
 
+		if (conf('debug')) { log_event('commandline','copy_art','Copied ' . $old_art . ' to ' . $folder_art); }
 		@copy($old_art,$folder_art);
 		
 		if (!$results) { echo "Error: Unable to copy file to $fullname\n"; return false; }
