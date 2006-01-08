@@ -66,8 +66,12 @@ while ($r = mysql_fetch_row($db_results)) {
 			echo "Moving File:\n\tSource: $song->file\n\tDest: $fullpath\n";
 			flush();
 		}
-		/* We need to actually do the moving (fake it if we are testing) */
-		sort_move_file($song,$fullpath);
+		/* We need to actually do the moving (fake it if we are testing) 
+		 * Don't try to move it, if it's already the same friggin thing!
+		 */
+		if ($song->file != $fullpath) { 
+			sort_move_file($song,$fullpath);
+		}
 
 		$fullpath = $directory . "/" . $filename;
 
@@ -202,6 +206,8 @@ function sort_element_name($key) {
  */
 function sort_move_file($song,$fullname) { 
 
+	$old_dir	= dirname($song->file);
+
 	$info = pathinfo($fullname);
 
 	$directory 	= $info['dirname'];
@@ -213,7 +219,6 @@ function sort_move_file($song,$fullname) {
 	unset($data[0]);
 
 	foreach ($data as $dir) { 
-	
 	
 		$path .= "/" . $dir;
 
@@ -241,6 +246,20 @@ function sort_move_file($song,$fullname) {
 	}
 	else { 
 		$results = copy($song->file,$fullname);
+	
+		
+		/* Look for the folder art and copy that as well */
+		if (!conf('album_art_preferred_filename')) { 
+			$folder_art 	= $directory . '/folder.jpg';
+			$old_art 	= $old_dir . '/folder.jpg';
+		}
+		else { 
+			$folder_art 	= $directory . "/" . conf('album_art_preferred_filename'); 
+			$old_art 	= $old_dir . "/" . conf('album_art_preferred_filename');
+		}
+
+		@copy($old_art,$folder_art);
+		
 		if (!$results) { echo "Error: Unable to copy file to $fullname\n"; return false; }
 
 		/* Check the md5sums */
