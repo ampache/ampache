@@ -204,6 +204,30 @@ play_album_art = "true"
 # DEFAULT: false
 #amazon_developer_key = ""
 
+# Amazon base urls
+# An array of Amazon sites to search.
+# NOTE: This will search each of these sites in turn so don't expect it
+# to be lightening fast!
+# It is strongly recommended that only one of these is selected at any
+# one time
+# Default: Just the US (.com)
+amazon_base_urls = "http://webservices.amazon.com"
+#amazon_base_urls = "http://webservices.amazon.co.uk"
+#amazon_base_urls = "http://webservices.amazon.de"
+#amazon_base_urls = "http://webservices.amazon.co.jp"
+#amazon_base_urls = "http://webservices.amazon.fr"
+#amazon_base_urls = "http://webservices.amazon.ca"
+
+# max_amazon_results_pages
+# The maximum number of results pages to pull from EACH amazon site
+# NOTE: The art search pages through the results returned by your search
+# up to this number of pages. As with the base_urls above, this is going
+# to take more time, the more pages you ask it to process.
+# Of course a good search will return only a few matches anyway.
+# It is strongly recommended that you do _not_ change this value
+# DEFAULT: 1 page (10 items)
+max_amazon_results_pages = 1
+
 # Debug
 # If this is enabled Ampache will get really chatty
 # warning this can crash browser during catalog builds due to 
@@ -317,7 +341,7 @@ allow_stream_playback = true
 
 #######################################################
 # These options control the dynamic downsampling based
-* on current useage
+# on current useage
 # *Note* Downsampling must be enabled and working
 #######################################################
 
@@ -405,7 +429,7 @@ stream_cmd_m4a = faad -f 2 -w "%FILE%" | lame -r -b %SAMPLE% -S - -
 #   %URL% 	= url to the song
 #   %AMOUNT%	= amount to increase or decrese the volume by (optional)
 #
-# HACK altert - run moosicd as www-data user, and 
+# HACK alert - run moosicd as www-data user, and 
 #  then set the HOME env var so moosic client 
 #  can find the folder it needs b4 every call...
 # Commenting this all out, unless you uncomment it...

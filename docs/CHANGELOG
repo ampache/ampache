@@ -3,6 +3,11 @@
 --------------------------------------------------------------------------
 
 --------------------------------------------------------------------------
+  v.3.3.2-Beta2 
+  	- Added ability to search from non-us amazon webservices website
+		and retrive more then one page (Thx nhorloc)
+
+--------------------------------------------------------------------------
   v.3.3.2-Beta1 01/08/2006
   	- Fixed lack of Access List check on download 
   	- Fixed Access List so that you can edit existing records

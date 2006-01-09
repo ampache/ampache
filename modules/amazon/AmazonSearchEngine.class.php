@@ -30,7 +30,9 @@
 */
 class AmazonSearch {
 
-	var $base_url = "http://webservices.amazon.com/onca/xml?";
+	var $base_url_default = "http://webservices.amazon.com";
+	var $url_suffix = "/onca/xml?";
+	var $base_url;
 	var $search;
 	var $token;
 	var $results=array();  // Array of results
@@ -40,9 +42,23 @@ class AmazonSearch {
 	var $_subTag; // Stupid hack to make things come our right
 	var $_currentTag; // Stupid hack to make things come out right
 	var $_currentTagContents;
+	var $_currentPage=0;
+	var $_maxPage=1;
+	var $_default_results_pages=1;
     
-	function AmazonSearch($token, $associates_id = 'none') {
-    
+	function AmazonSearch($token,  $base_url_param = '', $associates_id = 'none') {
+	  //	  log_event($GLOBALS['user']->username,'amazon-search-results',"base_url_param='$base_url_param'");
+	  
+   		if($base_url_param != ''){$this->base_url = $base_url_param . $this->url_suffix; 
+		  if (conf('debug')) { 
+		    log_event($GLOBALS['user']->username,'amazon-search-results',"Retrieving from " . $base_url_param . $this->url_suffix);
+		  }
+		}
+		else{ $this->base_url=$this->base_url_default . $this->url_suffix;
+		  if (conf('debug')) { 
+		    log_event($GLOBALS['user']->username,'amazon-search-results',"Retrieving from DEFAULT");
+		  }
+		};
 		$this->token = $token;
 		$this->associates_id = $associates_id;
 	
@@ -84,7 +100,10 @@ class AmazonSearch {
 		$snoopy->fetch($url);
 		$contents = $snoopy->results;
 	
-	
+                if (conf('debug')) { 
+                        log_event($GLOBALS['user']->username,'amazon-search-results',"Retrieved $contents");
+                }
+					        		
 		if (!xml_parse($this->_parser, $contents)) {
 			die(sprintf('XML error: %s at line %d',xml_error_string(xml_get_error_code($this->_parser)),xml_get_current_line_number($this->_parser)));
 		}
@@ -103,6 +122,10 @@ class AmazonSearch {
 			"&Operation=ItemSearch&Artist=" . urlencode($terms['artist']) . "&Title=" . urlencode($terms['album']) . 
 			"&Keywords=" . urlencode($terms['keywords']) . "&SearchIndex=" . $type;
 			
+		log_event($GLOBALS['user']->username,'amazon-search-results',"_currentPage = " .  $this->_currentPage);
+		if($this->_currentPage != 0){
+		  $url = $url . "&ItemPage=" . ($this->_currentPage+1);
+		}
 		$this->run_search($url);
 
 		unset($this->results['ASIN']);
@@ -152,9 +175,13 @@ class AmazonSearch {
 			$this->_currentTag = $tag;		
 		} 
 		else {
+		  if($tag != "TotalPages"){
         	    $this->_currentTag = '';
-	        }
-		
+		  }else{
+		    $this->_currentTag = $tag;		
+
+		  }
+		}
 
     } // start_element
     
@@ -171,9 +198,15 @@ class AmazonSearch {
 		case 'ASIN':
 			$this->_sourceTag = trim($cdata);
 			break;
+         	case 'TotalPages':
+                        if(conf('debug')){
+			  log_event($GLOBALS['user']->username,'amazon-search-results',"TotalPages= ". trim($cdata));
+			}
+			$this->_maxPage = trim($cdata);
+                        break;
 		default:
 			if (strlen($tag)) { 
-				$this->results[$source][$tag] = trim($cdata);
+			  $this->results[$source][$tag] = trim($cdata);
 			}
 			break;
 	} // end switch

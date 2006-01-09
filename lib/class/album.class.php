@@ -407,12 +407,8 @@ class Album {
 		@function find_art
 		@discussion searches amazon or a url
 			for the album art
-		//FIXME: Rename this POS 
-		
-		// csammis:  To facilitate solution of https://ampache.bountysource.com/Task.View?task_id=86,
-		// added $artist and $albumname parameters to the method, and reworked the guts of the amazon
-		// search a little; replaced $this->name with $albumname and $this->artist with $artist.
-		// See /albums.php, ~line 80, for where these values are coming from.
+		@patch Added Keyword Support (csammis)
+		@patch Added Variable Root Amazon Search (nhorloc)
 	*/
 	function find_art($coverurl = '', $keywords = '') {
 
@@ -432,11 +428,40 @@ class Album {
 				/* If this isn't a various album combine with artist name */
 				if ($this->artist_count == '1') { $keywords .= ' ' . $this->artist; }
 			}
+               /* Create Base Vars */
+               $amazon_base_urls = array();
+
+               /* Attempt to retrive the album art order */
+               $config_value = conf('amazon_base_urls');
+
+               /* If it's not set */
+               if (empty($config_value)) { 
+		       /* do nothing for now */
+               }
+               elseif (!is_array($config_value)) { 
+	               array_push($amazon_base_urls,$config_value);
+               }
+               else { 
+                       $amazon_base_urls = array_merge($amazon_base_urls, conf('amazon_base_urls'));
+               }
+
+	       /* Foreach through the base urls that we should check */
+               foreach ($amazon_base_urls AS $amazon_base) { 
 
 		    	// Create the Search Object
-	        	$amazon = new AmazonSearch(conf('amazon_developer_key'));
-		
-		        $search_results = $amazon->search(array('artist' => $artist, 'album' => $albumname, 'keywords' => $keywords));
+	        	$amazon = new AmazonSearch(conf('amazon_developer_key'), $amazon_base);
+
+			/* Setup the needed variables */
+			$max_pages_to_search = max(conf('max_amazon_results_pages'),$amazon->_default_results_pages);
+			$pages_to_search = $max_pages_to_search; //init to max until we know better.
+			do {
+				$search_results = array_merge($search_results, $amazon->search(array('artist' => $artist, 'album' => $albumname, 'keywords' => $keywords)));
+				$pages_to_search = min($max_pages_to_search, $amazon->_maxPage);
+				if(conf('debug')){
+					log_event($GLOBALS['user']->username,'amazon-xml', "Searched results page " . ($amazon->_currentPage+1) . "/" . $pages_to_search);
+				}
+				$amazon->_currentPage++;
+			} while($amazon->_currentPage < $pages_to_search);
 			
 			// Only do the second search if the first actually returns something
 			if (count($search_results)) { 
@@ -447,12 +472,12 @@ class Album {
 			if (conf('debug')) { 
 				log_event($GLOBALS['user']->username,'amazon-xml',"Searched using $keywords with " . conf('amazon_developer_key') . " as key " . count($final_results) . " results found");
 			}
-
+		} // end foreach
 		} // if no cover
 		
 		// If we've specified a coverurl, create a fake Amazon array with it
 		else {
-			$final_results = array(array('LargeImage' => $coverurl));
+			$final_results = array_merge($final_results, array(array('LargeImage' => $coverurl)));
 		}
 		
 		/* Foreach through what we've found */
