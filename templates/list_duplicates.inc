@@ -71,6 +71,6 @@
 </tr>
 </table>
 <?php  } else { ?>
-<p><?php _('You don't have any duplicate songs.'); ?></p>
+<p><?php _('You don\'t have any duplicate songs.'); ?></p>
 <?php  } ?>
 </form>

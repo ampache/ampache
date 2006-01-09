@@ -4,6 +4,7 @@
 
 --------------------------------------------------------------------------
   v.3.3.2-Beta1
+  	- Fixed Access List so that you can edit existing records
   	- Fixed counting error when using the /bin/catalog_update.php.inc
 		script
   	- Fixed some minor theme issues with the built in themes

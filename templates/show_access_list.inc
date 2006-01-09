@@ -31,7 +31,7 @@
 $row_classes = array('even','odd');
 ?>
 
-<p style="font-size: 10pt; font-weight: bold;"><?php print _("Host Access to Your Catalog"); ?></p>
+<p class="header1"><?php print _("Host Access to Your Catalog"); ?></p>
 
 <p>Since your catalog can be accessed remotely you may want to limit the access from
 remote sources so you are not in violation of copyright laws.  By default your
@@ -56,13 +56,14 @@ if (count($list)) {
 foreach ($list as $access) { 
 ?>
 <tr class="<?php print $row_classes[0]; ?>">
-	<td><?php print $access->name; ?></td>
+	<td><?php print scrub_out($access->name); ?></td>
 	<td><?php print int2ip($access->start); ?></td>
 	<td><?php print int2ip($access->end); ?></td>
 	<td><?php print $access->get_level_name(); ?></td>
 	<td>
-		Edit | 
-		<a href="<?php print conf('web_path'); ?>/admin/access.php?action=show_confirm_delete&amp;access_id=<?php print $access->id; ?>"><?php print _("Revoke"); ?></a>
+		<a href="<?php echo conf('web_path'); ?>/admin/access.php?action=show_edit_host&amp;access_id=<?php echo scrub_out($access->id); ?>"><?php echo _('Edit'); ?></a>
+		| 
+		<a href="<?php echo conf('web_path'); ?>/admin/access.php?action=show_confirm_delete&amp;access_id=<?php print scrub_out($access->id); ?>"><?php print _("Revoke"); ?></a>
 	</td>
 </tr>
 <?php  $row_classes = array_reverse($row_classes); ?>

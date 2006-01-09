@@ -36,40 +36,34 @@ if (!$user->has_access(100)) {
 
 show_template('header');
 
-if ( $action == 'show_confirm_delete' ) {
-        show_confirm_action(_("Do you really want to delete this Access Record?"), "admin/access.php", "access_id=" . $_REQUEST['access_id'] . "&amp;action=delete_host");
-}
-/*!
-	@action delete_host
-	@discussion deletes an access list entry
-*/
-elseif ( $action == 'delete_host' ) {
-	$access->delete($_REQUEST['access_id']);
-	show_confirmation(_("Entry Deleted"),_("Your Access List Entry has been removed"),"admin/access.php");
 
-} // delete_host
-/*!
-	@action add_host
-	@discussion add a new access list entry
-*/
-elseif ($action == 'add_host') { 
-
-	$access->create($_REQUEST['name'], $_REQUEST['start'],$_REQUEST['end'],$_REQUEST['level']);
-	show_confirmation(_("Entry Added"),_("Your new Access List Entry has been created"),"admin/access.php");
-
-} // add_host
-/*!
-	@action show_add_host
-	@discussion show the add host box
-*/
-elseif ( $action == 'show_add_host' ) {
-	include(conf('prefix') . "/templates/show_add_access.inc");
-}
-else { 
-	$list = array();
-	$list = $access->get_access_list();
-	include(conf('prefix') ."/templates/show_access_list.inc");
-}
-
+switch ($action ) { 
+	case 'show_confirm_delete':
+		show_confim_action(_('Do you really want to delete this Access Reocrd?'),'admin/access.php','access_id=' . scrub_out($_REQUEST['access_id']) . '&amp;action=delete_host');
+	break;
+	case 'delete_host':
+		$access->delete($_REQUEST['access_id']);
+		show_confirmation(_('Entry Deleted'),_('Your Access List Entry has been removed'),'admin/access.php');
+	break;
+	case 'add_host':
+		$access->create($_REQUEST['name'],$_REQUEST['start'],$_REQUEST['end'],$_REQUEST['level']);
+		show_confirmation(_('Entry Added'),_('Your new Access List Entry has been created'),'admin/access.php');
+	break;
+	case 'update_host':
+		$access->update($_REQUEST);
+		show_confirmation(_('Entry Updated'),_('Access List Entry updated'),'admin/access.php');
+	break;
+	case 'show_add_host':
+		include(conf('prefix') . '/templates/show_add_access.inc');
+	break;
+	case 'show_edit_host':
+		include(conf('prefix') . '/templates/show_edit_access.inc');
+	break;
+	default:
+		$list = array();
+		$list = $access->get_access_list();
+		include(conf('prefix') ."/templates/show_access_list.inc");
+	break;
+} // end switch on action
 show_footer();
 ?>

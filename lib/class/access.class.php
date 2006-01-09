@@ -19,9 +19,10 @@
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA. 
 
 */
-
-/*!
-	@header Access Class
+/** 
+ * Access Class
+ * This class handles the access list mojo for Ampache, it is ment to restrict
+ * access based on IP and maybe something else in the future
 */
 
 class Access {
@@ -40,25 +41,21 @@ class Access {
 	 */
 	function Access($access_id = 0) {
 
-		/* If we have passed an id then do something */
-		if ($access_id) { 
+		if (!$access_id) { return false; }
 
-			/* Assign id for use in get_info() */
-			$this->id = $access_id;
 
-			/* Get the information from the db */
-			if ($info = $this->get_info()) {
+		/* Assign id for use in get_info() */
+		$this->id = $access_id;
 
-				/* Assign Vars */
-				$this->name 	= $info->name;
-				$this->start 	= $info->start;
-				$this->end	= $info->end;
-				$this->level	= $info->level;
-			} // if info
+		$info = $this->get_info();
+		$this->name 	= $info->name;
+		$this->start 	= $info->start;
+		$this->end	= $info->end;
+		$this->level	= $info->level;
 
-		} // if access_id
+		return true;
 
-	} //constructor
+	} //Access
 
 	/*!
 		@function get_info
@@ -68,7 +65,7 @@ class Access {
 	function get_info() {
 
 		/* Grab the basic information from the catalog and return it */
-		$sql = "SELECT * FROM access_list WHERE id='$this->id'";
+		$sql = "SELECT * FROM access_list WHERE id='" . sql_escape($this->id) . "'";
 		$db_results = mysql_query($sql, dbh());
 
 		$results = mysql_fetch_object($db_results);
@@ -76,6 +73,23 @@ class Access {
 		return $results;
 
 	} //get_info
+
+	/**
+	 * update
+	 * This function takes a named array as a datasource and updates the current access list entry
+	 */
+	function update($data) { 
+
+		$start 	= ip2int($data['start']);
+		$end	= ip2int($data['end']);
+		$level	= sql_escape($data['level']);
+		
+		$sql = "UPDATE access_list SET start='$start', end='$end', level='$level' WHERE id='" . sql_escape($this->id) . "'";
+		$db_results = mysql_query($sql, dbh());
+
+		return true;
+
+	} // update
 
 	/*!
 		@function create
@@ -104,7 +118,7 @@ class Access {
 			$access_id = $this->id;
 		}
 
-		$sql = "DELETE FROM access_list WHERE id='$access_id'";
+		$sql = "DELETE FROM access_list WHERE id='" . sql_escape($access_id) . "'";
 		$db_results = mysql_query($sql, dbh());
 
 	} // delete
