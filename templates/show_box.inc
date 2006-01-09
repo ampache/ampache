@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2004 Ampache.org
+ Copyright (c) 2001 - 2006 Ampache.org
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
@@ -19,14 +19,7 @@
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
-/*!
- @header
- A template file
-
-*/
-
 ?>
-
 <table class="border" cellspacing="1" cellpadding="3">
 	<tr align="center">
 		<td background="<?php echo conf('web_path'); ?>/images/ampache-light-bg.gif" bgcolor="#c0c0c0"><?php echo $title; ?></td>

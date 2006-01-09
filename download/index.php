@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2005 Ampache.org
+ Copyright (c) 2001 - 2006 Ampache.org
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
@@ -36,8 +36,21 @@ if (conf('demo_mode') || !$user->has_access('25')) {
 	access_denied();
 }
 
+/*
+   If they are using access lists let's make sure
+   that they have enough access to play this mojo
+*/
+if (conf('access_control')) {
 
+        $access = new Access(0);
+        if (!$access->check('50', $_SERVER['REMOTE_ADDR'])) {
+                if (conf('debug')) {
+                        log_event($user->username,' access_denied ', "Download Access Denied, " . $_SERVER['REMOTE_ADDR'] . " does not have download level
+                }
+                access_denied();
+        }
 
+} // access_control is enabled
 
 if ($user->prefs['download']) {
 	if ($_REQUEST['song_id']) {

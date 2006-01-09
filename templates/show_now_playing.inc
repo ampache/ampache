@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2005 Ampache.org
+ Copyright (c) 2001 - 2006 Ampache.org
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
@@ -19,16 +19,11 @@
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
-/*!
- @header Show Now Playing
-
-*/
-
 ?>
 <?php if (count($results)) { ?>
 <table class="border" cellspacing="1" cellpadding="3" border="0" width="100%">
   <tr class="table-header">
-    <td colspan="4"><?php echo _("Now Playing"); ?></td>
+    <td colspan="4"><?php echo _('Now Playing'); ?></td>
   </tr>
 <?php
 	$user = $GLOBALS['user'];
@@ -40,7 +35,7 @@
                    $album  = $song->get_album_name();
                    $text = "$song->f_title";
 		   if (!$np_user->fullname) { $np_user->fullname = "Unknown User"; }
-		   if ($user->username == $np_user->username)
+		   if ($GLOBALS['user']->username == $np_user->username)
 		       {
                        $sql = "SELECT start_time FROM now_playing WHERE user ='".$user->username."'";
                        $db_results = mysql_query($sql, dbh());
@@ -55,9 +50,9 @@
                    if (conf('use_auth')) { 
 		       echo "\t<td valign=\"middle\">$np_user->fullname</td>\n"; 
 		       }
-                   echo "\t<td><a title=\"" . htmlspecialchars($song->title) . "\" href=\"$web_path/song.php?action=m3u&amp;song=$song->id\">$text</a></td>\n";
-		   echo "\t<td><a title=\"" . htmlspecialchars($song->f_artist) . "\" href=\"$web_path/artists.php?action=show&amp;artist=$song->artist\">$song->f_artist</a> / ";
-                   echo "\t<a title=\"" . htmlspecialchars($album) . "\" href=\"$web_path/albums.php?action=show&amp;album=$song->album\">$song->f_album</a></td>";
+                   echo "\t<td><a title=\"" . scrub_out($song->title) . "\" href=\"$web_path/song.php?action=m3u&amp;song=$song->id\">$text</a></td>\n";
+		   echo "\t<td><a title=\"" . scrub_out($song->f_artist) . "\" href=\"$web_path/artists.php?action=show&amp;artist=$song->artist\">$song->f_artist</a> / ";
+                   echo "\t<a title=\"" . scrub_out($album) . "\" href=\"$web_path/albums.php?action=show&amp;album=$song->album\">$song->f_album</a></td>";
                    if (conf('play_album_art')) {
                        echo "\t<td align=\"center\">";
 		       $aa_url = conf('web_path') . "/albumart.php?id=" . $song->album . "&amp;type=popup";

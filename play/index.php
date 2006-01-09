@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2005 Ampache.org
+ Copyright (c) 2001 - 2006 Ampache.org
  All rights reserved.  
 
  This program is free software; you can redistribute it and/or
@@ -32,10 +32,10 @@ require_once('../modules/init.php');
 require_once(conf('prefix') . '/lib/Browser.php');
 
 
-/* These parameters has better come on the url. */
-$uid = htmlspecialchars($_REQUEST['uid']);
-$song_id = htmlspecialchars($_REQUEST['song']);
-$sid = htmlspecialchars($_REQUEST['sid']);
+/* These parameters had better come in on the url. */
+$uid = scrub_out($_REQUEST['uid']);
+$song_id = scrub_out($_REQUEST['song']);
+$sid = scrub_out($_REQUEST['sid']);
 
 /* Misc Housework */
 $dbh = dbh();

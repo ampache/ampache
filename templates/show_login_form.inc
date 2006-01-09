@@ -19,11 +19,6 @@
 
 */
 
-/*!
-	@header Login Template
-Login Template
-
-*/
 $subject = "/ampache\.com/";
 
 $referrer = $_SERVER['HTTP_REFERER'];

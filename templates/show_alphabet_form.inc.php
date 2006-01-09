@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2005 Ampache.org
+ Copyright (c) 2001 - 2006 Ampache.org
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
@@ -19,20 +19,10 @@
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
-/*!
- @header
- A template file
-
-*/
-
 ?>
-
 <form name="f" method="get" action="<?php echo conf('web_path') . "/$action"; ?>" enctype="multipart/form-data">
 	<label for="match" accesskey="S"><?php echo $text; ?></label> 
 	<input type="text" size="3" id="match" name="match" value="<?php echo $match; ?>" />
 	<input type="hidden" name="action" value="match" />
 </form>
 <br />
-
-
-

@@ -3,7 +3,8 @@
 --------------------------------------------------------------------------
 
 --------------------------------------------------------------------------
-  v.3.3.2-Beta1
+  v.3.3.2-Beta1 01/08/2006
+  	- Fixed lack of Access List check on download 
   	- Fixed Access List so that you can edit existing records
   	- Fixed counting error when using the /bin/catalog_update.php.inc
 		script

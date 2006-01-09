@@ -236,6 +236,7 @@ function start_downsample($song,$now_playing_id=0,$song_name=0) {
 
 	$song_file = escapeshellarg($song->file);
 
+
         /* Replace Variables */
         $downsample_command = conf($song->stream_cmd());
         $downsample_command = str_replace("%FILE%",$song_file,$downsample_command);
