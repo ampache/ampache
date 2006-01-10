@@ -24,7 +24,7 @@
 	Shows multiple artists.... takes an array of artist objects
 
 */
-
+$web_path = conf('web_path');
 // Build array of the table classes we are using
 $total_items = $view->total_items;
 ?>
@@ -36,35 +36,33 @@ $total_items = $view->total_items;
 </tr>
 <tr class="table-header">
 	<td>
-		<a href="<?php print conf('web_path'); ?>/<?php print $_SESSION['view_script']; ?>?action=<?php print $_REQUEST['action']; ?>&amp;keep_view=true&amp;sort_type=artist.name&amp;sort_order=0"> <?php print _("Artist"); ?> </a>
+		<a href="<?php echo $web_path; ?>/<?php echo $_SESSION['view_script']; ?>?action=<?php echo $_REQUEST['action']; ?>&amp;keep_view=true&amp;sort_type=artist.name&amp;sort_order=0"> <?php echo _("Artist"); ?> </a>
 	</td>
-	<td> <?php print _("Songs"); ?> </td>
-	<td> <?php print _("Albums"); ?> </td>
-	<td> <?php print _("Action"); ?> </td>
+	<td> <?php echo _("Songs");  ?> </td>
+	<td> <?php echo _("Albums"); ?> </td>
+	<td> <?php echo _("Action"); ?> </td>
 </tr>
 <?php 
 /* Foreach through every artist that has been passed to us */
 //FIXME: These should come in as objects...
-foreach ($artists as $artist) { 
-?>
-<tr class="<?php echo flip_class(); ?>">
-	<td><?php print $artist['name']; ?></td>
-	<td><?php print $artist['songs']; ?></td>
-	<td><?php print $artist['albums']; ?></td>	
-	<td nowrap="nowrap"> <?php print _("Play"); ?> : 
-		<a href="<?php print conf('web_path'); ?>/song.php?action=m3u&amp;artist=<?php print $artist['id']; ?>"><?php print _("All"); ?></a> | 
-		<a href="<?php print conf('web_path'); ?>/song.php?action=m3u&amp;artist_random=<?php print $artist['id']; ?>"><?php print _("Random"); ?></a> 
-	</td>
-</tr>
-<?php } ?>
+foreach ($artists as $artist) { ?>
+	<tr class="<?php echo flip_class(); ?>">
+		<td><?php echo $artist['name']; ?></td>
+		<td><?php echo $artist['songs']; ?></td>
+		<td><?php echo $artist['albums']; ?></td>	
+		<td nowrap="nowrap"> <?php echo _("Play"); ?> : 
+			<a href="<?php echo $web_path; ?>/song.php?action=m3u&amp;artist=<?php echo $artist['id']; ?>"><?php echo _("All"); ?></a> | 
+			<a href="<?php echo $web_path; ?>/song.php?action=m3u&amp;artist_random=<?php echo $artist['id']; ?>"><?php echo _("Random"); ?></a> 
+		</td>
+	</tr>
+<?php } //end foreach ($artists as $artist) ?>
 <tr class="table-header">
         <td>
-                <a href="<?php print conf('web_path'); ?>/<?php print $_SESSION['view_script']; ?>?action=<?php print $_REQUEST['action']; ?>&amp;keep_view=true&amp;sort_type=artist.name&amp;sort_order=0"> <?php print _("Artist"); ?> </a>
+                <a href="<?php echo $web_path; ?>/<?php echo $_SESSION['view_script']; ?>?action=<?php echo $_REQUEST['action']; ?>&amp;keep_view=true&amp;sort_type=artist.name&amp;sort_order=0"> <?php echo _("Artist"); ?> </a>
         </td>
-        <td> <?php print _("Songs"); ?> </td>
-        <td> <?php print _("Albums"); ?> </td>
-
-	<td> <?php print _("Action"); ?> </td>
+        <td><?php echo _("Songs");  ?></td>
+        <td><?php echo _("Albums"); ?></td>
+	<td><?php echo _("Action"); ?></td>
 
 </tr>
 <tr class="even" align="center">

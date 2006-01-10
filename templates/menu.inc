@@ -25,65 +25,62 @@
  A template file
 
 */
-
-$items = array(_("Home") => htmlspecialchars(conf('web_path') . "/index.php"));
+$web_path = conf('web_path');
+$items = array(_("Home") => htmlspecialchars($web_path . "/index.php"));
 
 if ($GLOBALS['user']->prefs['play_type'] == 'mpd' && conf('localplay_menu')) {
-	$items += array(_("Local Play") => htmlspecialchars(conf('web_path') . "/mpd.php"));
+	$items += array(_("Local Play") => htmlspecialchars($web_path . "/mpd.php"));
 }
 
-$items += array(_("Browse")	=> htmlspecialchars(conf('web_path') . "/browse.php"),
-//		_("Albums")	=> htmlspecialchars(conf('web_path') . "/albums.php"),
-//		_("Artists")	=> htmlspecialchars(conf('web_path') . "/artists.php"),
-		_("Playlists")	=> htmlspecialchars(conf('web_path') . "/playlist.php"),
-		_("Search")	=> htmlspecialchars(conf('web_path') . "/search.php"),
-		_("Preferences") => htmlspecialchars(conf('web_path') . "/preferences.php")
+$items += array(_("Browse")	=> htmlspecialchars($web_path . "/browse.php"),
+//		_("Albums")	=> htmlspecialchars($web_path . "/albums.php"),
+//		_("Artists")	=> htmlspecialchars($web_path . "/artists.php"),
+		_("Playlists")	=> htmlspecialchars($web_path . "/playlist.php"),
+		_("Search")	=> htmlspecialchars($web_path . "/search.php"),
+		_("Preferences") => htmlspecialchars($web_path . "/preferences.php")
         );
 if ($GLOBALS['user']->prefs['upload']) { 
-	$items = array_merge($items, array(_("Upload") => conf('web_path') . "/upload.php"));
+	$items = array_merge($items, array(_("Upload") => $web_path . "/upload.php"));
 }
-
-
 ?>
 
 <ul id="mainmenu">
 <?php
-	foreach ( array_keys($items) as $item ) {
-		if ( _($high) == $item ) {
-			print("\t\t<li class=\"active\"><a class=\"active\" href=\"$items[$item]\">$item</a></li>\n");
-		}
-		else {
-			print("\t\t<li><a href=\"$items[$item]\">$item</a></li>\n");
-		}
-	} // end foreach items
+foreach (array_keys($items) as $item) {
+	if (_($high) == $item) {
+		print("\t\t<li class=\"active\"><a class=\"active\" href=\"$items[$item]\">$item</a></li>\n");
+	}
+	else {
+		print("\t\t<li><a href=\"$items[$item]\">$item</a></li>\n");
+	}
+} // end foreach items
 
+if ((!conf('use_auth')) || ($GLOBALS['user']->has_access(100))) {
+	if ($high == 'Admin') {
+		print("\t\t<li class=\"active\"><a class=\"active\" href=\"" . $web_path . "/admin/\">" . _("Admin") . "</a></li>\n");
+	}
+	else {
+		print("\t\t<li><a href=\"" . $web_path . "/admin/\">" . _("Admin") . "</a></li>\n");
+	}
+} // if we aren't using auth or 100
 
-	if (!conf('use_auth') || $GLOBALS['user']->has_access(100) ) {
-		if ( $high == 'Admin' ) {
-	                print("\t\t<li class=\"active\"><a class=\"active\" href=\"" . conf('web_path') . "/admin/\">" . _("Admin") . "</a></li>\n");
-		}
-		else {
-	                print("\t\t<li><a href=\"" . conf('web_path') . "/admin/\">" . _("Admin") . "</a></li>\n");
-		}
-	} // if we aren't using auth or 100
-
-	// now do the user specific stuff
-	if (conf('use_auth')) {
-		if ( $high == 'Stats' || $high == 'Profile' ) {
-		    print("\t\t<li class=\"active\">".$GLOBALS['user']->username.": <a class=\"active\" href=\"".conf('web_path')."/user.php?action=show_edit_profile\">" . _("Account") . "</a> |".
-			" <a class=\"active\" href=\"".conf('web_path')."/stats.php\">" . _("Stats") . "</a> |".
-			" <a class=\"active\" href=\"".conf('web_path')."/logout.php\">" . _("Logout") . "</a> </li>\n");
-		} // if stats or profile
-		else {
-	            echo "\t\t<li>".$GLOBALS['user']->username.": " .
-	                 "<a href=\"".conf('web_path')."/user.php?action=show_edit_profile\">" . _("Account") . "</a> |".
-	            " <a href=\"".conf('web_path')."/stats.php\">" . _("Stats") . "</a> |".
-	            " <a href=\"".conf('web_path')."/logout.php\">" . _("Logout") . "</a> </li>\n";
-		} // else
-	}  // if use_auth
-	elseif ( $_SESSION['userdata']['id'] != '-1') { 
-		print("\t\t<li><a href=\"".conf('web_path')."/logout.php\">" . _("Logout") . "</a> </li>\n");
-	} // else no user
+// now do the user specific stuff
+if (conf('use_auth')) {
+	if (($high == 'Stats') || ($high == 'Profile')) {
+		print("\t\t<li class=\"active\">".$GLOBALS['user']->username.": <a class=\"active\" href=\"".$web_path."/user.php?action=show_edit_profile\">" . _("Account") . "</a> |".
+		"<a class=\"active\" href=\"".$web_path."/stats.php\">" . _("Stats") . "</a> |".
+		"<a class=\"active\" href=\"".$web_path."/logout.php\">" . _("Logout") . "</a> </li>\n");
+	} // if stats or profile
+	else {
+		echo "\t\t<li>".$GLOBALS['user']->username.": " .
+		"<a href=\"".$web_path."/user.php?action=show_edit_profile\">" . _("Account") . "</a> |".
+		"<a href=\"".$web_path."/stats.php\">" . _("Stats") . "</a> |".
+		"<a href=\"".$web_path."/logout.php\">" . _("Logout") . "</a> </li>\n";
+	} // else
+}  // if use_auth
+elseif ($_SESSION['userdata']['id'] != '-1') { 
+	print("\t\t<li><a href=\"".$web_path."/logout.php\">" . _("Logout") . "</a> </li>\n");
+} // else no user
 ?>
-	</ul>
+</ul>
 <br />

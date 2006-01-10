@@ -20,8 +20,9 @@
 
 */
 ?>
+
 <br />
-<div class="header2"><?php echo _("Settings for catalog in"); ?> <?php echo $catalog->path; ?></div><br />
+<div class="header2"><?php echo _("Settings for catalog in"); echo $catalog->path; ?></div><br />
 <div class="text-box">
 <form method="get" action="<?php echo conf('web_path'); ?>/admin/catalog.php" enctype="multipart/form-data">
 <table class="tabledata" cellspacing="0" cellpadding="0" border="0">
@@ -29,22 +30,22 @@
 	<td><?php echo _("Name"); ?>:</td>
 	<td><input size="60" type="text" name="name" value="<?php echo scrub_out($catalog->name); ?>"></input></td>
 	<td style="vertical-align:top; font-family: monospace;" rowspan="5">
-	<strong><?php echo _("Auto-inserted Fields"); ?>:</strong><br />
-	%A = <?php echo _("album name"); ?><br />
-	%a = <?php echo _("artist name"); ?><br />
-	%C = <?php echo _("catalog path"); ?><br />
-	%c = <?php echo _("id3 comment"); ?><br />
-	%g = <?php echo _("genre"); ?><br />
-	%T = <?php echo _("track number (padded with leading 0)"); ?><br />
-	%t = <?php echo _("song title"); ?><br />
-	%y = <?php echo _("year"); ?><br />
-	%o = <?php echo _("other"); ?><br /> 
+		<strong><?php echo _("Auto-inserted Fields"); ?>:</strong><br />
+		%A = <?php echo _("album name"); ?><br />
+		%a = <?php echo _("artist name"); ?><br />
+		%C = <?php echo _("catalog path"); ?><br />
+		%c = <?php echo _("id3 comment"); ?><br />
+		%g = <?php echo _("genre"); ?><br />
+		%T = <?php echo _("track number (padded with leading 0)"); ?><br />
+		%t = <?php echo _("song title"); ?><br />
+		%y = <?php echo _("year"); ?><br />
+		%o = <?php echo _("other"); ?><br /> 
 	</td>
 </tr>
 <tr>
 	<td><?php echo _("ID3 set command"); ?>:</td>
 	<td>
-	    	<input size="60" type="text" name="id3_set_command" value="<?php echo scrub_out($catalog->id3_set_command); ?>" />
+		<input size="60" type="text" name="id3_set_command" value="<?php echo scrub_out($catalog->id3_set_command); ?>" />
 	</td>
 </tr>
 <tr>

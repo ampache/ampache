@@ -29,6 +29,7 @@
 
 */
 $row_classes = array('even','odd');
+$web_path = conf('web_path');
 ?>
 
 <p class="header1"><?php print _("Host Access to Your Catalog"); ?></p>
@@ -40,34 +41,34 @@ other Ampache servers to connect to it to share catalog information.  Use tool b
 to add any server's IP address that you want to access your Ampache catalog or be able to 
 stream from this server.</p>
 
-<p><a href="<?php print conf('web_path'); ?>/admin/access.php?action=show_add_host"><?php print _("Add Entry"); ?></a></p>
+<p><a href="<?php echo $web_path; ?>/admin/access.php?action=show_add_host"><?php echo _("Add Entry"); ?></a></p>
 
 <table cellspacing="1" cellpadding="3" class="border">
-	<tr class="table-header" align="center">
-		<td><?php print _("Name"); ?></td>
-		<td><?php print _("Start Address"); ?></td>
-		<td><?php print _("End Address"); ?></td>
-		<td><?php print _("Level"); ?></td>
-		<td><?php print _("Action"); ?></td>
-	</tr>
+<tr class="table-header" align="center">
+	<td><?php print _("Name"); ?></td>
+	<td><?php print _("Start Address"); ?></td>
+	<td><?php print _("End Address"); ?></td>
+	<td><?php print _("Level"); ?></td>
+	<td><?php print _("Action"); ?></td>
+</tr>
 <?php 
 if (count($list)) { 
-/* Start foreach List Item */
-foreach ($list as $access) { 
+	/* Start foreach List Item */
+	foreach ($list as $access) { 
 ?>
-<tr class="<?php print $row_classes[0]; ?>">
-	<td><?php print scrub_out($access->name); ?></td>
-	<td><?php print int2ip($access->start); ?></td>
-	<td><?php print int2ip($access->end); ?></td>
-	<td><?php print $access->get_level_name(); ?></td>
-	<td>
-		<a href="<?php echo conf('web_path'); ?>/admin/access.php?action=show_edit_host&amp;access_id=<?php echo scrub_out($access->id); ?>"><?php echo _('Edit'); ?></a>
-		| 
-		<a href="<?php echo conf('web_path'); ?>/admin/access.php?action=show_confirm_delete&amp;access_id=<?php print scrub_out($access->id); ?>"><?php print _("Revoke"); ?></a>
-	</td>
-</tr>
-<?php  $row_classes = array_reverse($row_classes); ?>
-<?php  } // end foreach ?>
+		<tr class="<?php print $row_classes[0]; ?>">
+			<td><?php print scrub_out($access->name); ?></td>
+			<td><?php print int2ip($access->start); ?></td>
+			<td><?php print int2ip($access->end); ?></td>
+			<td><?php print $access->get_level_name(); ?></td>
+			<td>
+				<a href="<?php echo $web_path; ?>/admin/access.php?action=show_edit_host&amp;access_id=<?php echo scrub_out($access->id); ?>"><?php echo _('Edit'); ?></a>
+				| 
+				<a href="<?php echo $web_path; ?>/admin/access.php?action=show_confirm_delete&amp;access_id=<?php print scrub_out($access->id); ?>"><?php print _("Revoke"); ?></a>
+			</td>
+		</tr>
+		<?php  $row_classes = array_reverse($row_classes); ?>
+	<?php  } // end foreach ?>
 <?php  } // end if count ?>
 </table>
 

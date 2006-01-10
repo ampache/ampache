@@ -24,84 +24,81 @@
  * This template displays all of the catalogs... Currently it's a little cluttered
  * It would be great if someone cleaned this up
  */
+$web_path = conf('web_path');
+$tools = array( _("Add a catalog") => $web_path . "/admin/catalog.php?action=show_add_catalog",
+		_("Access Lists") => $web_path . "/admin/access.php",
+		_("Show Duplicate Songs") => $web_path . "/admin/duplicates.php",
+		_("Show Disabled Songs") => $web_path . "/admin/catalog.php?action=show_disabled",
+		_("Clear Catalog Stats") => $web_path . "/admin/catalog.php?action=clear_stats",
+		_("Clear Now Playing")   => $web_path . "/admin/catalog.php?action=clear_now_playing",
+		_("Dump Album Art")   => $web_path . "/admin/catalog.php?action=dump_album_art", 
+		_("Gather Album Art") => $web_path . "/admin/catalog.php?action=gather_album_art",
+		_("View flagged songs") => $web_path . "/admin/flags.php");
 ?>
+
 <br />
 <?php  if (!function_exists('iconv')) { ?>
         <div class="fatalerror"><?php echo  _("Error: ICONV not found, ID3V2 Tags will not import correctly. See <a href=\"http://php.oregonstate.edu/iconv\">Iconv</a> for information on getting ICONV"); ?></div>
 <?php  } ?>
-<table cellpadding="5" border="0" cellspacing="0">
+<table cellpadding="5" border="0" cellspacing="0"> 
 <tr>
 	<td valign="top"><?php show_local_catalog_info(); ?></td>
-        <td valign="top">
-        	<form name="catalog" method="post" action="<?php echo  conf('web_path'); ?>/admin/catalog.php" enctype="multipart/form-data">
-                <table class="border" cellspacing="1" cellpadding="3">
-                <tr class="table-header" align="center">
-                	<td colspan="4"><?php echo  _("Update Catalogs"); ?></td>
-                </tr>
-                <?php
+	<td valign="top">
+		<form name="catalog" method="post" action="<?php echo  $web_path; ?>/admin/catalog.php" enctype="multipart/form-data">
+		<table class="border" cellspacing="1" cellpadding="3">
+		<tr class="table-header" align="center">
+			<td colspan="4"><?php echo  _("Update Catalogs"); ?></td>
+		</tr>
+		<?php
 		$catalogs = $catalog->get_catalogs();
-
-			if ( $catalogs ) {
-                        	foreach ($catalogs as $catalog) {
-		                        print("<tr class=\"even\"><td>".
-                                        "<input type=\"checkbox\" name=\"catalogs[]\" value=\"$catalog->id\"></input></td>".
-                                        "<td>".
-                                        "<a href=\"". conf('web_path') ."/admin/catalog.php?action=show_customize_catalog&amp;catalog_id=$catalog->id\">".
-                                        "$catalog->path".
-                                        "</a>".
-                                        "</td>".
-                                        "<td>".
-                                        date("H:i - m/d/y",$catalog->last_update).
-                                        "</td>".
-                                        "<td>".
-                                        "<a href=\"" . conf('web_path') . "/admin/catalog.php?action=show_delete_catalog&amp;catalog_id=$catalog->id\">" . _("Delete") . "</a>".
-                                        "</td></tr>\n");
-				} // end foreach
-		?>				
-                <tr>
-			<td class="even" colspan="4">
-				<input class="button" type="submit" name="action" value="<?php echo  _("Add to Catalog(s)"); ; ?>" />&nbsp;&nbsp;
-                                <input class="button" type="submit" name="action" value="<?php echo  _("Add to all Catalogs"); ; ?>" /><br />
-				<?php echo  _("Fast Add"); ; ?>:<input type="checkbox" name="update_type" value="fast_add" />
-			</td>
-		</tr>
-		<tr>
-			<td class="even" colspan="4">
-				<input class="button" type="submit" name="action" value="<?php echo  _("Update Catalog(s)"); ; ?>" />&nbsp;&nbsp;&nbsp;
-				<input class="button" type="submit" name="action" value="<?php echo  _("Update All Catalogs"); ; ?>" /><br />
-				<?php echo  _("Fast Update"); ; ?>:<input type="checkbox" name="update_type" value="fast_update" /><br />
-			</td>
-		</tr>
-		<tr>
-			<td class="even" colspan="4">
-				<input class="button" type="submit" name="action" value="<?php echo  _("Clean Catalog(s)"); ; ?>" />&nbsp;&nbsp;&nbsp;
-				<input class="button" type="submit" name="action" value="<?php echo  _("Clean All Catalogs"); ; ?>" /><br />
-			</td>
-		</tr>
+		if ($catalogs) {
+			foreach ($catalogs as $catalog) {
+				print("<tr class=\"even\"><td>".
+				"<input type=\"checkbox\" name=\"catalogs[]\" value=\"$catalog->id\"></input></td>".
+				"<td>".
+				"<a href=\"". $web_path ."/admin/catalog.php?action=show_customize_catalog&amp;catalog_id=$catalog->id\">".
+				"$catalog->path".
+				"</a>".
+				"</td>".
+				"<td>".
+				date("H:i - m/d/y",$catalog->last_update).
+				"</td>".
+				"<td>".
+				"<a href=\"" . $web_path . "/admin/catalog.php?action=show_delete_catalog&amp;catalog_id=$catalog->id\">" . _("Delete") . "</a>".
+				"</td></tr>\n");
+			} // end foreach
+		?>
+			<tr>
+				<td class="even" colspan="4">
+					<input class="button" type="submit" name="action" value="<?php echo  _("Add to Catalog(s)"); ?>" />&nbsp;&nbsp;&nbsp;
+					<input class="button" type="submit" name="action" value="<?php echo  _("Add to all Catalogs"); ?>" /><br />
+					<?php echo  _("Fast Add"); ?>:<input type="checkbox" name="update_type" value="fast_add" /><br />
+				</td>
+			</tr>
+			<tr>
+				<td class="even" colspan="4">
+					<input class="button" type="submit" name="action" value="<?php echo  _("Update Catalog(s)"); ?>" />&nbsp;&nbsp;&nbsp;
+					<input class="button" type="submit" name="action" value="<?php echo  _("Update All Catalogs"); ?>" /><br />
+					<?php echo  _("Fast Update"); ?>:<input type="checkbox" name="update_type" value="fast_update" /><br />
+				</td>
+			</tr>
+			<tr>
+				<td class="even" colspan="4">
+					<input class="button" type="submit" name="action" value="<?php echo  _("Clean Catalog(s)"); ?>" />&nbsp;&nbsp;&nbsp;
+					<input class="button" type="submit" name="action" value="<?php echo  _("Clean All Catalogs"); ?>" /><br />
+				</td>
+			</tr>
 		<?php 
-                                                } // end if catalogs
-                                                else {
-                                                        print("<tr class=\"even\"><td colspan=\"4\" >".
-                                                                _("You don't have any catalogs.") .
-                                                                "</td></tr>");
-                                                }
-                                        ?>
-                        </table>
-                        </form>
-                </td>
-                <td valign="top">
-                        <?php 
-                                $tools = array(_("Add a catalog") => conf('web_path') . "/admin/catalog.php?action=show_add_catalog",
-                                                _("Access Lists") => conf('web_path') . "/admin/access.php",
-						_("Show Duplicate Songs") => conf('web_path') . "/admin/duplicates.php",
-						_("Show Disabled Songs") => conf('web_path') . "/admin/catalog.php?action=show_disabled",
-                                                _("Clear Catalog Stats") => conf('web_path') . "/admin/catalog.php?action=clear_stats",
-						_("Clear Now Playing")   => conf('web_path') . "/admin/catalog.php?action=clear_now_playing",
-                                                _("Dump Album Art")   => conf('web_path') . "/admin/catalog.php?action=dump_album_art", 
-						_("Gather Album Art") => conf('web_path') . "/admin/catalog.php?action=gather_album_art",
-						_("View flagged songs") => conf('web_path') . "/admin/flags.php");
-                                show_tool_box(_("Catalog Tools"), $tools);
-                        ?>
-                </td>
-        </tr>
+		} // end if catalogs
+		else {
+			print("<tr class=\"even\"><td colspan=\"4\" >" . _("You don't have any catalogs.") . "</td></tr>");
+		} // end else
+		?>
+		</table>
+		</form>
+	</td>
+	<td valign="top">
+		<?php show_tool_box(_("Catalog Tools"), $tools); ?>
+	</td>
+</tr>
 </table>

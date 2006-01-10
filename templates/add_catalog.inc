@@ -36,20 +36,19 @@ $default_sort = "%a/%A";
 <tr>
 	<td><?php echo _("Catalog Name"); ?>: </td>
 	<td><input size="60" type="text" name="name" value="<?php echo $_REQUEST['name']; ?>" /></td>
-    <td style="vertical-align:top; font-family: monospace;" rowspan="6">
-    <strong><?php echo _("Auto-inserted Fields"); ?>:</strong><br />
-    %A = <?php echo _("album name"); ?><br />
-    %a = <?php echo _("artist name"); ?><br />
-    %c = <?php echo _("id3 comment"); ?><br />
-    %g = <?php echo _("genre"); ?><br />
-    %T = <?php echo _("track number (padded with leading 0)"); ?><br />
-    %t = <?php echo _("song title"); ?><br />
-    %y = <?php echo _("year"); ?><br />
-    %o = <?php echo _("other"); ?><br />
-    
-    </td>
-
+	<td style="vertical-align:top; font-family: monospace;" rowspan="6">
+		<strong><?php echo _("Auto-inserted Fields"); ?>:</strong><br />
+		%A = <?php echo _("album name"); ?><br />
+		%a = <?php echo _("artist name"); ?><br />
+		%c = <?php echo _("id3 comment"); ?><br />
+		%g = <?php echo _("genre"); ?><br />
+		%T = <?php echo _("track number (padded with leading 0)"); ?><br />
+		%t = <?php echo _("song title"); ?><br />
+		%y = <?php echo _("year"); ?><br />
+		%o = <?php echo _("other"); ?><br />
+	</td>
 </tr>
+
 <tr>
 	<td><?php echo _("Path"); ?>: </td>
 	<td><input size="60" type="text" name="path" value="<?php echo $_REQUEST['path']; ?>" /></td>
@@ -63,31 +62,38 @@ $default_sort = "%a/%A";
 		</select>
 	</td>
 </tr>
+
 <tr>
 	<td><?php echo _("ID3 Set Command"); ?>: </td>
 	<td><input size="60" type="text" name="id3set_command" value="<?php echo $default_id3; ?>" /></td>
 </tr>
+
 <tr>
 	<td><?php echo _("Filename Pattern"); ?>: </td>
 	<td><input size="60" type="text" name="rename_pattern" value="<?php echo $default_rename; ?>" /></td>
 </tr>
+
 <tr>
 	<td><?php echo _("Folder Pattern"); ?>:<br /><?php echo _("(no leading or ending '/')"); ?></td>
 	<td valign="top"><input size="60" type="text" name="sort_pattern" value="<?php echo $default_sort; ?>" /></td>
 </tr>
+
 <tr>
 	<td valign="top"><?php echo _("Gather Album Art"); ?>:</td>
 	<td><input type="checkbox" onclick="flipField('artextra1');flipField('artextra2');flipField('artextra3');" name="gather_art" value="1" /><br />
 		<table border="0" width="100%" cellpadding="0" cellspacing="0">
 		<tr class="even">
 			<td><?php echo _("ID3V2 Tags"); ?>:</td>
-			<td><input id="artextra1" disabled="disabled" type="checkbox" name="art_id3v2" value="1" /></td></tr>
+			<td><input id="artextra1" disabled="disabled" type="checkbox" name="art_id3v2" value="1" /></td>
+		</tr>
 		<tr class="even">
 			<td><?php echo _("Amazon"); ?>:</td>
-			<td><input id="artextra2" disabled="disabled" type="checkbox" name="art_amazon" value="1" /></td></tr>
+			<td><input id="artextra2" disabled="disabled" type="checkbox" name="art_amazon" value="1" /></td>
+		</tr>
 		<tr class="even">
 			<td><?php echo _("File Folder"); ?>:</td>
-			<td><input id="artextra3" disabled="disabled" type="checkbox" name="art_folder" value="1" /></td></tr>
+			<td><input id="artextra3" disabled="disabled" type="checkbox" name="art_folder" value="1" /></td>
+		</tr>
 		</table>
 		<br />
 	</td>
@@ -96,6 +102,7 @@ $default_sort = "%a/%A";
 	<td valign="top"><?php echo _("Build Playlists from m3u Files"); ?>:</td>
 	<td><input type="checkbox" name="parse_m3u" value="1" /></td>
 </tr>
+
 <tr>	
 	<td>&nbsp;</td>
 	<td>
@@ -104,6 +111,7 @@ $default_sort = "%a/%A";
 		<input class="button" type="submit" name="action" value="Cancel" />
 	</td>
 </tr>
+
 </table>
 </form>
 </div>

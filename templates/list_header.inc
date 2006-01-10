@@ -31,7 +31,7 @@
 
 if (!$total_items) { $total_items = $_SESSION['view_total_items']; }
 // do some math here
-if ( $view->offset >= $view->offset_limit ) {
+if ($view->offset >= $view->offset_limit) {
 	$offset2 = $view->offset - 25;
 }
 else {
@@ -43,10 +43,8 @@ else {
 $offset1 = $view->offset - $view->offset_limit;
 if ($offset1 < 1) { $offset1 = 0; }
 
-
 // since we have an array of objects, let's build a purdy thingie
 $pages  = ceil($total_items/$view->offset_limit);
-
 $offset4 = ($pages - 1);
 $offset4 = ($offset4 * $view->offset_limit);
 
@@ -56,44 +54,39 @@ if ($offset3 >= $offset4) { $offset3 = $offset4; }
 
 
 //setup the next action
-preg_match("/.*\/(.+\.php)$/",$_SERVER['SCRIPT_NAME'],$matches);
-
+preg_match("/.*\/(.+\.php)$/", $_SERVER['SCRIPT_NAME'], $matches);
 $action = "action=" . scrub_in($_REQUEST['action']);
 $script = conf('web_path') . "/" . $admin_menu . $matches[1];
 
 // are there enough items to even need this view?
-if ( $pages > 1 && $_SESSION['view_script']) {
+if (($pages > 1) && ($_SESSION['view_script'])) {
 ?>
-
-<table border="0" cellpadding="2" cellspacing="0" width="100%">
+	<table border="0" cellpadding="2" cellspacing="0" width="100%">
 	<tr>
 		<td align="center" valign="top">
-		<a href="<?php echo $script; ?>?<?php echo $action; ?>&amp;offset=<?php echo $offset1; ?>&amp;keep_view=true">[&nbsp;<?php echo  _("Prev"); ?>&nbsp;]</a>&nbsp;
+			<a href="<?php echo $script; ?>?<?php echo $action; ?>&amp;offset=<?php echo $offset1; ?>&amp;keep_view=true">[&nbsp;<?php echo  _("Prev"); ?>&nbsp;]</a>&nbsp;
 		</td>
 		<td align="center">
-			<?php  
-				$counter = 1;
-				$offset_pages = 0;
-
-				while ( $counter <= $pages ) {
-					if ( $view->offset == $offset_pages ) {	
-			?>
-				<a href="<?php echo $script; ?>?<?php echo  $action ; ?>&amp;sort_type=<?php echo  $view->sort_type ; ?>&amp;offset=<?php echo  $offset_pages ; ?>&amp;keep_view=true"><b><?php echo $counter; ?></b></a>&nbsp;
-			<?php 
-					} else {
-			?>
-				<a href="<?php echo $script; ?>?<?php echo $action; ?>&amp;sort_type=<?php echo $view->sort_type;  ?>&amp;offset=<?php echo $offset_pages; ?>&amp;keep_view=true"><?php echo $counter; ?></a>&nbsp;
-			<?php 
-					}
-					$offset_pages += $view->offset_limit;
-					$counter++;
-				}
-			?>
+		<?php 
+			$counter = 1;
+			$offset_pages = 0;
+			while ($counter <= $pages) {
+				if ($view->offset == $offset_pages) {	
+		?>			<a href="<?php echo $script; ?>?<?php echo  $action ; ?>&amp;sort_type=<?php echo  $view->sort_type ; ?>&amp;offset=<?php echo  $offset_pages ; ?>&amp;keep_view=true"><b><?php echo $counter; ?></b></a>&nbsp;
+				<?php 
+				} else { ?>
+					<a href="<?php echo $script; ?>?<?php echo $action; ?>&amp;sort_type=<?php echo $view->sort_type;  ?>&amp;offset=<?php echo $offset_pages; ?>&amp;keep_view=true"><?php echo $counter; ?></a>&nbsp;
+				<?php 
+				} // end if ($view->offset == $offset_pages) and else
+				$offset_pages += $view->offset_limit;
+				$counter++;
+			} // end while ($counter <= $pages) ?>
 		</td>
 		<td align="center" valign="top">
 			<a href="<?php echo $script; ?>?<?php echo $action; ?>&amp;offset=<?php echo $offset3; ?>&amp;keep_view=true">[&nbsp;<?php echo _("Next"); ?>&nbsp;]</a>&nbsp;
 		</td>
 	</tr>
-</table>
-
-<?php  } // if ?>
+	</table>
+<?php
+} // if (($pages > 1) && ($_SESSION['view_script']))
+?>

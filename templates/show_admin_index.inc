@@ -23,24 +23,24 @@
 	@header Show Admin Index
 	@discussion shows the admin index 
 */
-
-$sections 	= array(_("User Management") => conf('web_path') . "/admin/users.php",
-			_("E-mail Management") => conf('web_path') . "/admin/mail.php",
-			_("Catalog Managment") => conf('web_path') . "/admin/catalog.php",
-			_("Admin Preferences") => conf('web_path') . "/admin/preferences.php",
-			_("Access Lists") => conf('web_path') . "/admin/access.php");
+$web_path = conf('web_path');
+$sections 	= array(_("User Management") => $web_path . "/admin/users.php",
+			_("E-mail Management") => $web_path . "/admin/mail.php",
+			_("Catalog Managment") => $web_path . "/admin/catalog.php",
+			_("Admin Preferences") => $web_path . "/admin/preferences.php",
+			_("Access Lists") => $web_path . "/admin/access.php");
 			
-$common		= array(_("Add a catalog") => conf('web_path') . "/admin/catalog.php?action=show_add_catalog",
-			_("Add a new user") => conf('web_path') . "/admin/users.php?action=show_add_user",
-			_("Clear Now Playing")   => conf('web_path') . "/admin/catalog.php?action=clear_now_playing",
-			_("Add Access List Entry") => conf('web_path') . "/admin/access.php?action=show_add_host");
+$common		= array(_("Add a catalog") => $web_path . "/admin/catalog.php?action=show_add_catalog",
+			_("Add a new user") => $web_path . "/admin/users.php?action=show_add_user",
+			_("Clear Now Playing")   => $web_path . "/admin/catalog.php?action=clear_now_playing",
+			_("Add Access List Entry") => $web_path . "/admin/access.php?action=show_add_host");
 ?>
 <table cellpadding="5" border="0" cellspacing="0">
 <tr>
-	<td valign="top"><?php show_tool_box(_("Common Functions"),$common); ?><?php show_clear(); ?></td>
+	<td valign="top"><?php show_tool_box(_("Common Functions"), $common); ?><?php show_clear(); ?></td>
 </tr>
 <tr>
-	<td valign="top"><?php show_tool_box(_("Admin Sections"),$sections); ?></td>
+	<td valign="top"><?php show_tool_box(_("Admin Sections"), $sections); ?></td>
 </tr>
 </table>
 

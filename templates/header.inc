@@ -19,57 +19,51 @@
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
-
+$web_path = conf('web_path');
 $htmllang = str_replace("_","-",conf('lang'));
 $location = get_location();
 ?>
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php echo $htmllang; ?>" lang="<?php echo $htmllang; ?>">
-<head>
-<link rel="shortcut icon" href="<?php echo conf('web_path'); ?>/favicon.ico" />
-<?php
-if (conf('use_rss')){
-?>
-<link rel="alternate" type="application/rss+xml" title="<?php echo conf('rss_main_title'); ?>" href="<?php echo conf('web_path'); ?>/rss.php" />
-<?php } ?>
 
+<head>
+<link rel="shortcut icon" href="<?php echo $web_path; ?>/favicon.ico" />
+<?php
+if (conf('use_rss')) { ?>
+<link rel="alternate" type="application/rss+xml" title="<?php echo conf('rss_main_title'); ?>" href="<?php echo $web_path; ?>/rss.php" />
+<?php } ?>
 <meta http-equiv="Content-Type" content="text/html; charset=<?php echo conf('site_charset'); ?>" />
-<?php show_template('menustyle'); ?>
-<?php show_template('style'); ?>
+<?php show_template('menustyle'); show_template('style'); ?>
 <title><?php echo conf('site_title'); ?> - <?php echo $location['title']; ?></title>
 </head>
-<body>
-<script src="<?php echo conf('web_path'); ?>/lib/general.js" language="javascript" type="text/javascript"></script>
 
+<body>
+<script src="<?php echo $web_path; ?>/lib/general.js" language="javascript" type="text/javascript"></script>
 <div id="maincontainer">
-<!-- This is the topbar row -->
-<div id="topbar">
-	<div id="topbarleft">
-	<a href="http://www.ampache.org">
-        <img class="pageheader" src="<?php echo conf('web_path'); ?><?php echo conf('theme_path'); ?>/images/ampache.gif" border="0" title="Ampache: For the love of music" alt="Ampache: For the love of music" />
-	</a>
-	</div>
-	<div id="topbarright">
+	<div id="topbar"><!-- This is the topbar row -->
+		<div id="topbarleft">
+		<a href="http://www.ampache.org">
+		<img class="pageheader" src="<?php echo $web_path; ?><?php echo conf('theme_path'); ?>/images/ampache.gif" border="0" title="Ampache: For the love of music" alt="Ampache: For the love of music" />
+		</a>
+		</div><!--End topbarleft -->
+		<div id="topbarright">
 			<a href="http://www.ampache.org/index.php">Ampache v.<?php echo conf('version'); ?></a><br />
 			<b><?php echo _("You are currently logged in as") . " " . $GLOBALS['user']->fullname; ?></b>
 			<br />
-		<?php echo _("Browse"); ?>:
-		<form method="post" action="<?php echo conf('web_path'); ?>/browse.php" enctype="multipart/form-data" style="Display:inline;">
-		<select name="action">
-			<option value="album">Album</option>
-			<option value="artist">Artist</option>
-			<option value="genre">Genre</option>
-		</select>
-		<input type="submit" value="<?php echo _("Go!"); ?>" class="button" />
-		</form>
-	</div>
-</div>
-<!-- This is the row for body + sidebar -->
-<div id="sidebar">
-	<!-- This is the sidebar -->
-	<?php require_once(conf('prefix') . '/templates/sidebar.inc.php'); ?>
-</div>
+			<?php echo _("Browse"); ?>:
+			<form method="post" action="<?php echo $web_path; ?>/browse.php" enctype="multipart/form-data" style="Display:inline;">
+			<select name="action">
+				<option value="album">Album</option>
+				<option value="artist">Artist</option>
+				<option value="genre">Genre</option>
+			</select>
+			<input type="submit" value="<?php echo _("Go!"); ?>" class="button" />
+			</form>
+		</div><!-- End topbarright -->
+	</div><!-- End topbar -->
+	<div id="sidebar"><!-- This is the sidebar -->
+		<?php require_once(conf('prefix') . '/templates/sidebar.inc.php'); ?>
+	</div><!-- End sidebar -->
 	<div id="content">
-	<table><tr><td>
-	<!-- Start Main Page -->
+	<table>	<!-- Start Main Page Table-->
+<tr><td>

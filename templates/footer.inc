@@ -20,7 +20,7 @@
 
 */
 ?>
-</td></tr></table>
+</td></tr></table><!-- End Main Page Table-->
 </div> <!-- end id="content"-->
 </div> <!-- end id="maincontainer"-->
 </body>

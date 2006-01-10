@@ -23,7 +23,7 @@
 	@header Show Album
 	@discussion shows a single album
 */
-
+$web_path = conf('web_path');
 // Build array of the table classes we are using
 $row_classes = array('even','odd');
 
@@ -49,31 +49,29 @@ $username=$user->username;
 	<td width="140" align="center">
 	<?php 
         if ($album_name != "Unknown (Orphaned)") {
-		$aa_url = conf('web_path') . "/albumart.php?id=" . $album->id . "&amp;type=popup";
+		$aa_url = $web_path . "/albumart.php?id=" . $album->id . "&amp;type=popup";
 		echo "<a target=\"_blank\" href=\"$aa_url\" onclick=\"popup_art('$aa_url'); return false;\">";
-		echo "<img border=\"0\" src=\"" . conf('web_path') . "/albumart.php?id=" . $album->id . "&amp;thumb=2\" alt=\"Album Art\" height=\"128\" />";
+		echo "<img border=\"0\" src=\"" . $web_path . "/albumart.php?id=" . $album->id . "&amp;thumb=2\" alt=\"Album Art\" height=\"128\" />";
 		echo "</a>\n";
         }
 	?>
 	</td>
 	<td valign="top">
 		<?php
-		if (conf('ratings')) { 
-			show_rating($album->id,'album');
-		} // end if ratings
+		if (conf('ratings')) {	show_rating($album->id, 'album');} // end if ratings
 		echo "<br />\n";
 		?>
 		<b>Actions:</b><br />
-		&nbsp;&nbsp;<a href="<?php echo  conf('web_path'); ; ?>/song.php?action=m3u&amp;album=<?php echo  $album->id; ; ?>"><?php echo  _("Play Album"); ; ?></a><br />
-		&nbsp;&nbsp;<a href="<?php echo  conf('web_path'); ; ?>/song.php?action=m3u&amp;album_random=<?php echo  $album->id; ; ?>"><?php echo  _("Play Random from Album"); ; ?></a><br />
-		&nbsp;&nbsp;<a href="<?php echo  conf('web_path'); ; ?>/albums.php?action=clear_art&amp;album_id=<?php echo  $album->id; ; ?>"><?php echo  _("Reset Album Art"); ; ?></a><br />
-		&nbsp;&nbsp;<a href="<?php echo  conf('web_path'); ; ?>/albums.php?action=find_art&amp;album_id=<?php echo  $album->id; ; ?>"><?php echo  _("Find Album Art"); ; ?></a><br />
-		<?php  if ($user->has_access('100') || !conf('use_auth')) { ?>
-		&nbsp;&nbsp;<a href="<?php echo  conf('web_path'); ; ?>/albums.php?action=update_from_tags&amp;album_id=<?php echo  $album->id; ; ?>"><?php echo  _("Update from tags"); ; ?></a><br />
+		&nbsp;&nbsp;<a href="<?php echo  $web_path; ?>/song.php?action=m3u&amp;album=<?php echo  $album->id; ; ?>"><?php echo  _("Play Album"); ; ?></a><br />
+		&nbsp;&nbsp;<a href="<?php echo  $web_path; ?>/song.php?action=m3u&amp;album_random=<?php echo  $album->id; ; ?>"><?php echo  _("Play Random from Album"); ; ?></a><br />
+		&nbsp;&nbsp;<a href="<?php echo  $web_path; ?>/albums.php?action=clear_art&amp;album_id=<?php echo  $album->id; ; ?>"><?php echo  _("Reset Album Art"); ; ?></a><br />
+		&nbsp;&nbsp;<a href="<?php echo  $web_path; ?>/albums.php?action=find_art&amp;album_id=<?php echo  $album->id; ; ?>"><?php echo  _("Find Album Art"); ; ?></a><br />
+		<?php  if (($user->has_access('100')) || (!conf('use_auth'))) { ?>
+		&nbsp;&nbsp;<a href="<?php echo  $web_path; ?>/albums.php?action=update_from_tags&amp;album_id=<?php echo  $album->id; ; ?>"><?php echo  _("Update from tags"); ?></a><br />
 		<?php  } ?>
-		<?php if( batch_ok() ) { ?>
-	        &nbsp;&nbsp;<a href="<?php echo  conf('web_path'); ; ?>/batch.php?action=alb&amp;id=<?php echo  $album->id; ; ?>"><?php echo _("Download"); ?></a><br />
-                <?php } ?>
+		<?php if (batch_ok()) { ?>
+		&nbsp;&nbsp;<a href="<?php echo  $web_path; ?>/batch.php?action=alb&amp;id=<?php echo  $album->id; ; ?>"><?php echo _("Download"); ?></a><br />
+		<?php } ?>
 	</td>
 </tr>
 </table>

@@ -23,8 +23,6 @@
 // Gotta do some math here!
 $total_images = count($images);
 $rows = floor($total_images/3);
-
-
 $i = 0;
 ?>
 
@@ -38,14 +36,14 @@ while ($i <= $rows) {
 		if (!isset($images[$key])) { echo "<td>&nbsp;</td>\n"; } 
 		else { 
 ?>
-	<td align="center">
-		<a href="<?php echo $images[$key]['url']; ?>" target="_blank">
-		<img src="<?php echo scrub_out($images[$key]['url']); ?>" border="0" height="175" width="175" /><br />
-		</a>
-		<p align="center">
-			[<a href="<?php echo conf('web_path'); ?>/albums.php?action=select_art&amp;image=<?php echo $i; ?>&amp;album_id=<?php echo urlencode($_REQUEST['album_id']); ?>">Select</a>]
-		</p>
-	</td>
+			<td align="center">
+				<a href="<?php echo $images[$key]['url']; ?>" target="_blank">
+				<img src="<?php echo scrub_out($images[$key]['url']); ?>" border="0" height="175" width="175" /><br />
+				</a>
+				<p align="center">
+				[<a href="<?php echo conf('web_path'); ?>/albums.php?action=select_art&amp;image=<?php echo $i; ?>&amp;album_id=<?php echo urlencode($_REQUEST['album_id']); ?>">Select</a>]
+				</p>
+			</td>
 <?php 
 		} // end else
 		$j++;

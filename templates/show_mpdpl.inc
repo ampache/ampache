@@ -58,7 +58,7 @@ $myMpd = init_mpd();
 	<td <?php echo $nopad ?>>
 		<table cellspacing="0" cellpadding="0" border="0" width="100%">
 			<tr class="table-header">
-				<th><a href="#" onclick="check_songs(); return false;">Select</a>/<br><a href="#" onclick="invert_songs(); return false;">Invert</a></th>
+				<th><a href="#" onclick="check_songs(); return false;">Select</a>/<br /><a href="#" onclick="invert_songs(); return false;">Invert</a></th>
 				<th align="left"><?php echo _("Song title"); ?></th>
 				<th align="left"><?php echo _("Artist"); ?></th>
 				<th align="left"><?php echo _("Album"); ?></th>

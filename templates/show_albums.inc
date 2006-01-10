@@ -23,7 +23,7 @@
 	@header Show Albums
 	@discussion shows a list of albums
 */
-
+$web_path = conf('web_path');
 // Build array of the table classes we are using
 $total_items = $view->total_items;
 ?>
@@ -35,45 +35,44 @@ $total_items = $view->total_items;
 </tr>
 <tr class="table-header">
 	<td>
-		<a href="<?php echo conf('web_path'); ?>/<?php echo $_SESSION['view_script']; ?>?action=<?php echo $_REQUEST['action']; ?>&amp;keep_view=true&amp;sort_type=album.name&amp;sort_order=0"><?php echo _("Album"); ?></a>
+		<a href="<?php echo $web_path; ?>/<?php echo $_SESSION['view_script']; ?>?action=<?php echo $_REQUEST['action']; ?>&amp;keep_view=true&amp;sort_type=album.name&amp;sort_order=0"><?php echo _("Album"); ?></a>
 	</td>
 	<td> <?php echo _("Artist"); ?> </td>
 	<td> <?php echo _("Songs"); ?>  </td>
 	<td>
-		<a href="<?php echo conf('web_path'); ?>/<?php echo $_SESSION['view_script']; ?>?action=<?php echo $_REQUEST['action']; ?>&amp;keep_view=true&amp;sort_type=album.year&amp;sort_order=0"><?php echo _("Year"); ?></a>
+		<a href="<?php echo $web_path; ?>/<?php echo $_SESSION['view_script']; ?>?action=<?php echo $_REQUEST['action']; ?>&amp;keep_view=true&amp;sort_type=album.year&amp;sort_order=0"><?php echo _("Year"); ?></a>
 	</td>
 	<td> <?php echo _("Action"); ?> </td>
-
 </tr>
+
 <?php 
 /* Foreach through the albums */
 foreach ($albums as $album) { 
 ?>
-<tr class="<?php echo flip_class(); ?>">
-		<td><?php echo $album->f_name; ?></td>
-		<td><?php echo $album->f_artist; ?></td>
-		<td><?php echo $album->songs; ?></td>
-		<td><?php echo $album->year; ?></td>
-		<td nowrap="nowrap"> <?php echo _("Play"); ?> : 
-		<a href="<?php echo conf('web_path'); ?>/song.php?action=m3u&amp;album=<?php echo $album->id; ?>"><?php echo _("All"); ?></a> | 
-		<a href="<?php echo conf('web_path'); ?>/song.php?action=m3u&amp;album_random=<?php echo $album->id; ?>"><?php echo _("Random"); ?></a> 
-                <?php if( batch_ok() ) { ?>
-                        | <a href="<?php echo conf('web_path'); ?>/batch.php?action=alb&amp;id=<?php echo $album->id; ?>"><?php echo _("Download"); ?></a>
-                <?php } ?>
-		</td>
-</tr>
-<?php } ?>
+	<tr class="<?php echo flip_class(); ?>">
+			<td><?php echo $album->f_name; ?></td>
+			<td><?php echo $album->f_artist; ?></td>
+			<td><?php echo $album->songs; ?></td>
+			<td><?php echo $album->year; ?></td>
+			<td nowrap="nowrap"> <?php echo _("Play"); ?> : 
+			<a href="<?php echo $web_path; ?>/song.php?action=m3u&amp;album=<?php echo $album->id; ?>"><?php echo _("All"); ?></a> | 
+			<a href="<?php echo $web_path; ?>/song.php?action=m3u&amp;album_random=<?php echo $album->id; ?>"><?php echo _("Random"); ?></a> 
+			<?php if (batch_ok()) { ?>
+				| <a href="<?php echo $web_path; ?>/batch.php?action=alb&amp;id=<?php echo $album->id; ?>"><?php echo _("Download"); ?></a>
+			<?php } ?>
+			</td>
+	</tr>
+<?php } //end foreach ($albums as $album) ?>
 <tr class="table-header">
-        <td>
-                <a href="<?php echo conf('web_path'); ?>/<?php echo $_SESSION['view_script']; ?>?action=<?php echo $_REQUEST['action']; ?>&amp;keep_view=true&amp;sort_type=album.name&amp;sort_order=0"><?php echo _("Album"); ?></a>
-        </td>
-        <td> <?php echo _("Artist"); ?> </td>
-        <td> <?php echo _("Songs"); ?>  </td>
 	<td>
-		<a href="<?php echo conf('web_path'); ?>/<?php echo $_SESSION['view_script']; ?>?action=<?php echo $_REQUEST['action']; ?>&amp;keep_view=true&amp;sort_type=album.year&amp;sort_order=0"><?php echo _("Year"); ?></a>
+		<a href="<?php echo $web_path; ?>/<?php echo $_SESSION['view_script']; ?>?action=<?php echo $_REQUEST['action']; ?>&amp;keep_view=true&amp;sort_type=album.name&amp;sort_order=0"><?php echo _("Album"); ?></a>
+	</td>
+	<td> <?php echo _("Artist"); ?> </td>
+	<td> <?php echo _("Songs"); ?>  </td>
+	<td>
+		<a href="<?php echo $web_path; ?>/<?php echo $_SESSION['view_script']; ?>?action=<?php echo $_REQUEST['action']; ?>&amp;keep_view=true&amp;sort_type=album.year&amp;sort_order=0"><?php echo _("Year"); ?></a>
 	</td>
 	<td> <?php echo _("Action"); ?> </td>
-
 </tr>
 <tr class="even" align="center">
 	<td colspan="5">
