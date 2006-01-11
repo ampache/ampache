@@ -4,6 +4,9 @@
 
 --------------------------------------------------------------------------
   v.3.3.2-Beta2 
+  	- Moved xml-rpc server file to /server/xmlrpc.server.php keeping 
+		with the location of the ajax server mojo.. This will 
+		break compatiblity with previous versions, sorry!
   	- Added ability to search from non-us amazon webservices website
 		and retrive more then one page (Thx nhorloc)
 

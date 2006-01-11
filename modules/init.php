@@ -83,8 +83,8 @@ if (!$results['conf']['allow_stream_playback']) {
 
 $results['conf']['raw_web_path']	= $results['conf']['web_path'];
 $results['conf']['web_path']		= $http_type . $_SERVER['HTTP_HOST'] . $results['conf']['web_path'];
-$results['conf']['version']		= '3.3.2-Beta1';
-$results['conf']['catalog_file_pattern']= 'mp3|mpc|m4p|m4a|mp4|aac|ogg|rm|wma|asf|flac|spx';
+$results['conf']['version']		= '3.3.2-Beta2 (Build 001)';
+$results['conf']['catalog_file_pattern']= 'mp3|mpc|m4p|m4a|mp4|aac|ogg|rm|wma|asf|flac|spx|ra';
 $results['libglue']['local_table']	= 'session';
 $results['libglue']['local_sid']	= 'id';
 $results['libglue']['local_expirecol']	= 'expire';

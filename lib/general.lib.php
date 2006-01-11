@@ -339,7 +339,7 @@ function session_exists($sid,$xml_rpc=0) {
 	/* If we need to check the remote session */
 	if ($xml_rpc) { 
 		$server = rawurldecode($_GET['xml_server']);
-		$path	= "/" . rawurldecode($_GET['xml_path']) . "/server.php";
+		$path	= "/" . rawurldecode($_GET['xml_path']) . "/server/xmlrpc.server.php";
 		$port	= $_GET['xml_port'];
 
 		$path = str_replace("//","/",$path);

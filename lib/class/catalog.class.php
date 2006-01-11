@@ -960,10 +960,10 @@ class Catalog {
 	        $path   = $match[2];
 	
 	        if ( ! $path ) {
-	                $client = new xmlrpc_client("/server.php", $server, 80);
+	                $client = new xmlrpc_client("/server/xmlrpc.server.php", $server, 80);
 	        }
 	        else {
-	                $client = new xmlrpc_client("/$path/server.php", $server, 80);
+	                $client = new xmlrpc_client("/$path/server/xmlrpc.server.php", $server, 80);
 	        }
 	        
 		$f = new xmlrpcmsg('remote_catalog_query', array(new xmlrpcval( conf('web_path'), "string")) );
