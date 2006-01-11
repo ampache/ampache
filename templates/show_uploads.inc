@@ -45,12 +45,12 @@ if (count($uploads)) {
 <?php foreach ($uploads as $upload) { ?>
 <tr class="<?php echo flip_class(); ?>">
 	<?php if($GLOBALS['user']->has_access(100)) { ?>
-	<td>
-		<a href="<?php echo conf('web_path'); ?>/upload.php?action=add&id=<?php echo $upload['id']; ?>"><?php echo _('Add'); ?></a>&nbsp;|&nbsp;
-		<a href="<?php echo conf('web_path'); ?>/upload.php?action=delete&id=<?php echo $upload['id']; ?>"><?php echo _('Delete'); ?></a>
-	</td>
+		<td>
+			<a href="<?php echo conf('web_path'); ?>/upload.php?action=add&amp;id=<?php echo $upload['id']; ?>"><?php echo _('Add'); ?></a>&nbsp;|&nbsp;
+			<a href="<?php echo conf('web_path'); ?>/upload.php?action=delete&amp;id=<?php echo $upload['id']; ?>"><?php echo _('Delete'); ?></a>
+		</td>
 	<?php } else { ?>
-	<td>N/A</td>
+		<td>N/A</td>
 	<?php } ?>
 	<td><?php echo ucfirst($upload['action']); ?></td>
 	<td><?php echo $upload['title']; ?></td>

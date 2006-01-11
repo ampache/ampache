@@ -36,23 +36,12 @@ $nopad  = "style='padding: 0px 0px 0px 0px'";
 $myMpd = init_mpd();
 ?>
 
-<form name="songs" action="<?php echo conf('web_path')."/amp-mpd.php"; ?>" method="post" enctype="multipart/form-data">
+<form name="songs" action="<?php echo $web_path."/amp-mpd.php"; ?>" method="post" enctype="multipart/form-data">
 <table id= "mpdpl" border="0" cellpadding="0" cellspacing="1" width="100%" class="tabledata">
 <tr>
 	<td style="text-align:center" class="table-header">
 		<b><?php echo _("MPD Server Playlist"); ?></b>
-<!--		<i>
-			[<a title="<?php echo _("Refresh the Playlist Window"); ?>" href="<?php echo $_SERVER['PHP_SELF']; ?>">refresh</a>]
-			<?php if( $myMpd->playlist_count > 0  ) { $un = (conf('condPL')) ? "un" : ""; ?>
-				[<a title="<?php echo _("Click to shuffle (randomize) the playlist");?>" href="<?php echo conf('web_path'); ?>/amp-mpd.php?action=shuffle"><?php echo _("shuffle")?></a>]
-				[<a title="<?php echo _("Click to the clear the playlist");?>" href="<?php echo conf('web_path'); ?>/amp-mpd.php?action=clear">clear</a>]
-			<?php if( $myMpd->playlist_count > 10 ) { ?>
-				[<a title="<?php echo 'Click to '.$un.'condense playlist';?>" href="<?php echo conf('web_path'); ?>/amp-mpd.php?action=condPL"><?php echo $un?>condense</a>]
-			<?php } ?>
-				[<a title="<?php echo _("Click to the remove all except the Now Playing");?>" href="<?php echo conf('web_path'); ?>/amp-mpd.php?action=crop">crop</a>]
-			<?php } ?> 
-		</i>
--->	</td>
+	</td>
 </tr>
 <tr>
 	<td <?php echo $nopad ?>>
@@ -69,7 +58,7 @@ $myMpd = init_mpd();
 			</tr>
 			<?php
 				$pl = $myMpd->playlist;
-				if (is_null($pl)) echo "ERROR: ".$myMpd->errStr."\n";
+				if (is_null($pl)) { echo "ERROR: ".$myMpd->errStr."\n"; }
 				else {
 					$maxlen = strlen (count($pl));
 					$condPL = conf('condPL');
@@ -174,12 +163,12 @@ $myMpd = init_mpd();
 		<i>
 			[<a title="<?php echo _("Refresh the Playlist Window"); ?>" href="<?php echo $_SERVER['PHP_SELF']; ?>">refresh</a>]
 			<?php if($myMpd->playlist_count > 0 ) {$un = (conf('condPL')) ? "un" : ""; ?>
-					[<a title="<?php echo _("Click to shuffle (randomize) the playlist");?>" href="<?php echo conf('web_path'); ?>/amp-mpd.php?action=shuffle"><?php echo _("shuffle")?></a>]
-					[<a title="<?php echo _("Click to the clear the playlist");?>" href="<?php echo conf('web_path'); ?>/amp-mpd.php?action=clear">clear</a>]
+					[<a title="<?php echo _("Click to shuffle (randomize) the playlist");?>" href="<?php echo $web_path; ?>/amp-mpd.php?action=shuffle"><?php echo _("shuffle")?></a>]
+					[<a title="<?php echo _("Click to the clear the playlist");?>" href="<?php echo $web_path; ?>/amp-mpd.php?action=clear">clear</a>]
 			<?php if($myMpd->playlist_count > 10) { ?>
-					[<a title="<?php echo 'Click to '.$un.'condense playlist';?>" href="<?php echo conf('web_path'); ?>/amp-mpd.php?action=condPL"><?php echo $un?>condense</a>]
+					[<a title="<?php echo 'Click to '.$un.'condense playlist';?>" href="<?php echo $web_path; ?>/amp-mpd.php?action=condPL"><?php echo $un?>condense</a>]
 			<?php } ?>
-					[<a title="<?php echo _("Click to the remove all except the Now Playing");?>" href="<?php echo conf('web_path'); ?>/amp-mpd.php?action=crop">crop</a>]
+					[<a title="<?php echo _("Click to the remove all except the Now Playing");?>" href="<?php echo $web_path; ?>/amp-mpd.php?action=crop">crop</a>]
 			<?php } ?>
 		</i>
 	</td>

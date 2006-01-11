@@ -1,6 +1,5 @@
 <?php
 /*
-
  Copyright 2001 - 2006 Ampache.org
  All Rights Reserved
 
@@ -19,45 +18,43 @@
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
-
-
 if ($type != 'song') { 
 	echo "<strong>" . _("Rating") . ":</strong>";
 }
 
 /* Create some variables we are going to need */
-$base_url 	= conf('web_path') . '/ratings.php?action=set_rating&amp;mode=' . conf('flash') . '&amp;rating_type=' . $rating->type . '&amp;object_id=' . $rating->id . '&amp;username=' . $GLOBALS['user']->username;
-$score		= '0';
-
+$web_path = conf('web_path');
+$base_url = $web_path . '/ratings.php?action=set_rating&amp;mode=' . conf('flash') . '&amp;rating_type=' . $rating->type . '&amp;object_id=' . $rating->id . '&amp;username=' . $GLOBALS['user']->username;
+$score = '0';
 
 /* count up to 6 */
 while ($score < 6) { 
 	/* Handle the "Not rated" possibility */
 	if ($score == '0' AND $rating->rating == '-1') { 
-		echo "<img src=\"" . conf('web_path') . "/images/ratings/x.gif\" border=\"0\" alt=\"" . get_rating_name($score) . "\" />\n";
+		echo "<img src=\"" . $web_path . "/images/ratings/x.gif\" border=\"0\" alt=\"" . get_rating_name($score) . "\" />\n";
 		$found_on = true;
 	}
 	elseif ($score == '0' AND $rating->rating == '0') { 
-		echo "<img src=\"" . conf('web_path') . "/images/ratings/x_off.gif\" border=\"0\" alt=\"" . get_rating_name($score) . "\" />\n";
+		echo "<img src=\"" . $web_path . "/images/ratings/x_off.gif\" border=\"0\" alt=\"" . get_rating_name($score) . "\" />\n";
 		$found_on = true;
 	}
 	elseif ($score == '0') { 
 		echo "<a href=\"" . $base_url . "&amp;rating=$score\">\n\t";
-		echo "<img src=\"" . conf('web_path') . "/images/ratings/x_off.gif\" border=\"0\" alt=\"" . get_rating_name($score) . "\" />\n";
+		echo "<img src=\"" . $web_path . "/images/ratings/x_off.gif\" border=\"0\" alt=\"" . get_rating_name($score) . "\" />\n";
 		echo "</a>";
 	}
 	elseif ($score == $rating->rating) { 
-		echo "<img src=\"" . conf('web_path') . "/images/ratings/star.gif\" border=\"0\" alt=\"" . get_rating_name($score) . "\" />\n";
+		echo "<img src=\"" . $web_path . "/images/ratings/star.gif\" border=\"0\" alt=\"" . get_rating_name($score) . "\" />\n";
 		$found_on = true;
 	}
 	elseif (!$found_on) { 
-		echo "<a href=\"" . $base_url . "&amp;rating=$score\">\n\t<img src=\"" . conf('web_path') . "/images/ratings/star.gif\" border=\"0\" alt=\"" . get_rating_name($score) . "\" />\n</a>\n";
+		echo "<a href=\"" . $base_url . "&amp;rating=$score\">\n\t<img src=\"" . $web_path . "/images/ratings/star.gif\" border=\"0\" alt=\"" . get_rating_name($score) . "\" />\n</a>\n";
 	}
 	else { 
-		echo "<a href=\"" . $base_url . "&amp;rating=$score\">\n\t<img src=\"" . conf('web_path') . "/images/ratings/star_off.gif\" border=\"0\" alt=\"" . get_rating_name($score) . "\" />\n</a>\n";
+		echo "<a href=\"" . $base_url . "&amp;rating=$score\">\n\t<img src=\"" . $web_path . "/images/ratings/star_off.gif\" border=\"0\" alt=\"" . get_rating_name($score) . "\" />\n</a>\n";
 	}
 	/* Next! */
 	$score++;
 } // end while
-
 ?>
+

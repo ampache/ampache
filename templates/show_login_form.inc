@@ -20,7 +20,6 @@
 */
 
 $subject = "/ampache\.com/";
-
 $referrer = $_SERVER['HTTP_REFERER'];
 
 
@@ -37,58 +36,48 @@ if (preg_match($subject,$_SERVER['HTTP_HOST'])) {
 </p>
 <form name="login" method="post" enctype="multipart/form-data" action="<?php echo  conf('web_path'); ; ?>/login.php" style="Display:inline">
 <table class="login" bgcolor="<?php echo conf('base_color2'); ?>" border="0" align="center">
-	<tr>
-		<td align="center" colspan="2"><?php echo  conf('login_message'); ; ?>&nbsp;</td>
-	</tr>
-	<tr>
-		<td><?php echo  _("Login"); ; ?>:</td>
-		<td><input type="text" name="username" value="<?php echo  $_REQUEST['username']; ; ?>" /></td>
-	</tr>
-	<tr>
-		<td><?php echo  _("Password"); ; ?>:</td>
-		<td><input type="password" name="password" value="" /></td>
-	</tr>
-        <tr>
-		<td>&nbsp;</td>
-                <td><input type="checkbox" name="rememberme" />
-                <?php echo _("Remember Me"); ?></td>
-        </tr>
-	<tr>
-		<td colspan="2" align="center">
-			<input class="button" type="submit" value="<?php echo _("Login"); ?>" />
-			<input type="hidden" name="referrer" value="<?php echo $referrer; ?>" />
-			<input type="hidden" name="action" value="login" />
-		</td>
-	</tr>
+<tr>
+	<td align="center" colspan="2"><?php echo  conf('login_message'); ; ?>&nbsp;</td>
+</tr>
+<tr>
+	<td><?php echo  _("Login"); ; ?>:</td>
+	<td><input type="text" name="username" value="<?php echo  $_REQUEST['username']; ; ?>" /></td>
+</tr>
+<tr>
+	<td><?php echo  _("Password"); ; ?>:</td>
+	<td><input type="password" name="password" value="" /></td>
+</tr>
+<tr>
+	<td>&nbsp;</td>
+	<td><input type="checkbox" name="rememberme" />
+	<?php echo _("Remember Me"); ?></td>
+</tr>
+<tr>
+	<td colspan="2" align="center">
+		<input class="button" type="submit" value="<?php echo _("Login"); ?>" />
+		<input type="hidden" name="referrer" value="<?php echo $referrer; ?>" />
+		<input type="hidden" name="action" value="login" />
+	</td>
+</tr>
 </table>
 </form>
-	<?php if(conf('allow_public_registration')){ ?>
-		<p align="center">
-			[<a class="header2" href="<?php echo conf('web_path'); ?>/register.php"><?php echo _("Register"); ?></a>]
-		</p>
-	<?php } ?>	
-
-<!--
-<p align="center">
-		  <a href="http://validator.w3.org/check/referer">
-		   <img style="padding:0;border:0;" src="http://www.w3.org/Icons/valid-xhtml10" alt="Valid XHTML 1.0!" />
-		 </a>
-		 <a href="http://jigsaw.w3.org/css-validator/check/referer">
-		  <img style="padding:0;border:0;" src="http://jigsaw.w3.org/css-validator/images/vcss" alt="Valid CSS!" />
-		 </a>
-</p>
--->
-<?php if ($show_copyright == 1) { ?>
-<p align="center">
-	<font color="red" size="+2">
-		<a href="http://www.ampache.org/donations.php">Ampache.org</a><br />
-		Ampache.com Domain Squatter<br />
-		All Rights Reserved, Copyright &copy; 2006<br />
-	</font>
-</p>
-<?php } ?>
-<?php if (isset($auth['error'])) { ?>
-<p align="center">
-	<font color="red"><?php echo trim($auth['error']); ?></font>
-</p>
-<?php } ?>
+<?php
+if (conf('allow_public_registration')) { ?>
+	<p align="center">
+		[<a class="header2" href="<?php echo conf('web_path'); ?>/register.php"><?php echo _("Register"); ?></a>]
+	</p>
+<?php } // end if (conf('allow_public_registration'))
+if ($show_copyright == 1) { ?>
+	<p align="center">
+		<font color="red" size="+2">
+			<a href="http://www.ampache.org/donations.php">Ampache.org</a><br />
+			Ampache.com Domain Squatter<br />
+			All Rights Reserved, Copyright &copy; 2006<br />
+		</font>
+	</p>
+<?php } // end if ($show_copyright == 1)
+if (isset($auth['error'])) { ?>
+	<p align="center">
+		<font color="red"><?php echo trim($auth['error']); ?></font>
+	</p>
+<?php } // end if (isset($auth['error'])) ?>

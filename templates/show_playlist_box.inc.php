@@ -28,16 +28,18 @@
 $web_path = conf('web_path'); 
 ?>
 
-<table class="text-box">
-<tr><td>
-	<span class="header1"><?php echo _('Playlist Actions'); ?></span><br /><br />
-	&nbsp;&nbsp;&nbsp;&nbsp;<a href="<?php echo $web_path; ?>/playlist.php?action=new"><?php echo _('Create New Playlist'); ?></a><br />
-	&nbsp;&nbsp;&nbsp;&nbsp;<a href="<?php echo $web_path; ?>/playlist.php"><?php echo _('View All Playlists'); ?></a><br />
-	&nbsp;&nbsp;&nbsp;&nbsp;<a href="<?php echo $web_path; ?>/playlist.php?action=show_import_playlist"><?php echo _('Import From File'); ?></a><br />
-	<?php if ($_REQUEST['playlist_id']) { ?>
-	&nbsp;&nbsp;&nbsp;&nbsp;<a href="<?php echo $web_path; ?>/playlist.php?action=normalize_tracks"><?php echo _('Normalize Tracks'); ?></a><br />
-	&nbsp;&nbsp;&nbsp;&nbsp;<a href="<?php echo $web_path; ?>/song.php?action=play_selected&amp;playlist_id=<?php echo $_REQUEST['playlist_id']; ?>"><?php echo _('Play This Playlist'); ?></a><br />
-	<?php } ?>
-</td></tr>
-</table>
+<table class="text-box"> <!-- Playlist Table -->
+<tr>
+	<td>
+		<span class="header1"><?php echo _('Playlist Actions'); ?></span><br /><br />
+		&nbsp;&nbsp;&nbsp;&nbsp;<a href="<?php echo $web_path; ?>/playlist.php?action=new"><?php echo _('Create New Playlist'); ?></a><br />
+		&nbsp;&nbsp;&nbsp;&nbsp;<a href="<?php echo $web_path; ?>/playlist.php"><?php echo _('View All Playlists'); ?></a><br />
+		&nbsp;&nbsp;&nbsp;&nbsp;<a href="<?php echo $web_path; ?>/playlist.php?action=show_import_playlist"><?php echo _('Import From File'); ?></a><br />
+		<?php if ($_REQUEST['playlist_id']) { ?>
+		&nbsp;&nbsp;&nbsp;&nbsp;<a href="<?php echo $web_path; ?>/playlist.php?action=normalize_tracks"><?php echo _('Normalize Tracks'); ?></a><br />
+		&nbsp;&nbsp;&nbsp;&nbsp;<a href="<?php echo $web_path; ?>/song.php?action=play_selected&amp;playlist_id=<?php echo $_REQUEST['playlist_id']; ?>"><?php echo _('Play This Playlist'); ?></a><br />
+		<?php } ?>
+	</td>
+</tr>
+</table><!-- End Playlist Table -->
 <br />

@@ -23,36 +23,36 @@
 
 ?>
 <form name="random" method="post" enctype="multipart/form-data" action="<?php echo conf('web_path'); ?>/song.php">
-<table class="border" border="0" cellpadding="3" cellspacing="1">
+<table class="border" border="0" cellpadding="3" cellspacing="1"><!-- Random Play Table -->
 <tr class="table-header">
 	<td colspan="4"><?php echo _("Play Random Selection"); ?></td>
 </tr>
 <tr class="even">
-	<td>
-		<table border="0">
-                <tr class="even">
-	                <td><?php echo _("Item count"); ?></td>
-	                <td>
-	                        <select name="random">
-	                        <option value="1">1</option>
-	                        <option value="5">5</option>
-	                        <option value="10">10</option>
-	                        <option value="20">20</option>
-	                        <option value="30">30</option>
-	                        <option value="50">50</option>
-	                        <option value="100">100</option>
-	                        <option value="500">500</option>
-        	                <option value="1000">1000</option>
-	                        <option value="-1"><?php echo _("All"); ?></option>
-                        	</select>
+<td>
+	<table border="0">
+		<tr class="even">
+			<td><?php echo _("Item count"); ?></td>
+			<td>
+				<select name="random">
+				<option value="1">1</option>
+				<option value="5">5</option>
+				<option value="10">10</option>
+				<option value="20">20</option>
+				<option value="30">30</option>
+				<option value="50">50</option>
+				<option value="100">100</option>
+				<option value="500">500</option>
+				<option value="1000">1000</option>
+				<option value="-1"><?php echo _("All"); ?></option>
+				</select>
 			</td>
-	                <td rowspan="3" valign="top"><?php echo  _("From genre"); ?></td>
-	                <td rowspan="3">
+			<td rowspan="3" valign="top"><?php echo  _("From genre"); ?></td>
+			<td rowspan="3">
 			<?php show_genre_pulldown('genre','','5'); ?>
-                	</td>
+			</td>
 		</tr>
 		<tr class="even">
-                	<td colspan="2">
+			<td colspan="2">
 				Type:
 				<select name="random_type">
 					<option value="normal"><?php echo _("Standard"); ?></option>
@@ -61,22 +61,22 @@
 					<option value="full_artist"><?php echo _("Full Artist"); ?></option>
 				</select>
 			</td>
-                </tr>
+		</tr>
 		<tr class="even">
-                	<td nowrap="nowrap"><?php echo _("from catalog"); ?></td>
+			<td nowrap="nowrap"><?php echo _("from catalog"); ?></td>
 			<td>
 			<?php show_catalog_pulldown('catalog',''); ?>
-		        </td>
+			</td>
 		</tr>
 		<tr>
-                	<td colspan="4">
-	                        <input type="hidden" name="aaction" value="Play!" />
+			<td colspan="4">
+				<input type="hidden" name="aaction" value="Play!" />
 				<input type="hidden" name="action" value="m3u" />
-	                        <input class="button" type="submit" name="aaction" value="<?php echo _("Play Random Songs"); ?>" />
-	                </td>
+				<input class="button" type="submit" name="aaction" value="<?php echo _("Play Random Songs"); ?>" />
+			</td>
 		</tr>
-	        </table>
-	</td>
+	</table>
+</td>
 </tr>
-</table>
+</table><!-- End Random Play Table -->
 </form>

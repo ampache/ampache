@@ -26,7 +26,7 @@
 </tr>
 <tr class="<?php echo flip_class(); ?>">
 	<td><?php echo _("Total Users"); ?></td>
-	<td> <b><?php echo $users[0]; ?></b> </td>
+	<td><b><?php echo $users[0]; ?></b></td>
   </tr>
 <tr class="<?php echo flip_class(); ?>">
 	<td><?php echo _("Connected Users"); ?></td>
@@ -49,7 +49,7 @@
 	<td><b><?php echo $total_size; ?> <?php echo $size_unit; ?></b></td>
 </tr>
 <tr class="<?php echo flip_class(); ?>">
-	<td> <?php echo _("Catalog Time"); ?></td>
+	<td><?php echo _("Catalog Time"); ?></td>
 	<td><b><?php echo $time_text; ?></b></td>
 </tr>
 </table>

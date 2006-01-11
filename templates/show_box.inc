@@ -21,16 +21,16 @@
 */
 ?>
 <table class="border" cellspacing="1" cellpadding="3">
-	<tr align="center">
-		<td background="<?php echo conf('web_path'); ?>/images/ampache-light-bg.gif" bgcolor="#c0c0c0"><?php echo $title; ?></td>
-	</tr>
-	<tr>
-		<td class="even">
-		<?
-			foreach ($items as $item) {
-				echo $item;
-			}
-		?>
-		</td>
-	</tr>
+<tr align="center">
+	<td background="<?php echo conf('web_path'); ?>/images/ampache-light-bg.gif" bgcolor="#c0c0c0"><?php echo $title; ?></td>
+</tr>
+<tr>
+	<td class="even">
+	<?php
+		foreach ($items as $item) {
+			echo $item;
+		}
+	?>
+	</td>
+</tr>
 </table>

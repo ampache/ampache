@@ -21,9 +21,10 @@
 */
 ?>
 <script language='javascript'>
-	function insert () {
-		document.getElementById('artist_name').value = '<?php echo $artist->name; ?>';
-	}
+function insert()
+{
+	document.getElementById('artist_name').value = '<?php echo $artist->name; ?>';
+}
 </script>
 
 <form name="rename_artist" method="post" action="<?php echo conf('web_path'); ?>/artists.php?action=rename&amp;artist=<?php echo $artist->id; ?>" style="Display:inline;">
@@ -35,7 +36,7 @@
 </tr>
 <tr>
 	<td>
-        	<?php show_artist_pulldown($artist->id,"artist_id",4); ?>
+        	<?php show_artist_pulldown($artist->id, "artist_id", 4); ?>
 		<br />
 		<?php echo _("OR"); ?><br />
 		<input type="text" name="artist_name" size="30" value="<?php echo scrub_out($_REQUEST['artist_name']); ?>" id="artist_name" />

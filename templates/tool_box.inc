@@ -28,16 +28,16 @@
 ?>
 
 <table class="border" cellspacing="1" cellpadding="3" >
-	<tr class="table-header" align="center">
-		<th><?php echo $title; ?></th>
-	</tr>
-	<tr>
-		<td class="even">
-		<?php
-			foreach (array_keys($items) as $item) {
-				print("\t\t\t&gt;&gt; <a href=\"$items[$item]\"> $item</a><br />\n");
-			}
-		?>
-		</td>
-	</tr>
+<tr class="table-header" align="center">
+	<th><?php echo $title; ?></th>
+</tr>
+<tr>
+	<td class="even">
+	<?php
+	foreach (array_keys($items) as $item) {
+		print("\t\t\t&gt;&gt; <a href=\"$items[$item]\"> $item</a><br />\n");
+	}
+	?>
+	</td>
+</tr>
 </table>

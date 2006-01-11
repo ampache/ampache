@@ -23,6 +23,7 @@
  @header Show Users (admin section)
 
 */
+$web_path = conf('web_path');
 $total_items = $view->total_items;
 $admin_menu = "admin/";
 ?>
@@ -36,20 +37,20 @@ $admin_menu = "admin/";
 </tr>
 <tr class="table-header">
 	<td align="center">
-		<a href="<?php echo conf('web_path'); ?>/<?php echo $_SESSION['view_script']; ?>?action=<?php echo $_REQUEST['action']; ?>&amp;keep_view=true&amp;sort_type=fullname&amp;sort_order=0">
+		<a href="<?php echo $web_path; ?>/<?php echo $_SESSION['view_script']; ?>?action=<?php echo $_REQUEST['action']; ?>&amp;keep_view=true&amp;sort_type=fullname&amp;sort_order=0">
 		<b><?php echo _("Fullname"); ?></b>
 		</a>
-		<a href="<?php echo conf('web_path'); ?>/<?php echo $_SESSION['view_script']; ?>?action=<?php echo $_REQUEST['action']; ?>&amp;keep_view=true&amp;sort_type=username&amp;sort_order=0">
+		<a href="<?php echo $web_path; ?>/<?php echo $_SESSION['view_script']; ?>?action=<?php echo $_REQUEST['action']; ?>&amp;keep_view=true&amp;sort_type=username&amp;sort_order=0">
 		<b>(<?php echo _("Username"); ?>)</b>
 		</a>
 	</td>
         <td align="center">
-		<a href="<?php echo conf('web_path'); ?>/<?php echo $_SESSION['view_script']; ?>?action=<?php echo $_REQUEST['action']; ?>&amp;keep_view=true&amp;sort_type=last_seen&amp;sort_order=0">
+		<a href="<?php echo $web_path; ?>/<?php echo $_SESSION['view_script']; ?>?action=<?php echo $_REQUEST['action']; ?>&amp;keep_view=true&amp;sort_type=last_seen&amp;sort_order=0">
 		<b><?php echo _("Last Seen"); ?></b>
 		</a>
 	</td>
         <td align="center">
-		<a href="<?php echo conf('web_path'); ?>/<?php echo $_SESSION['view_script']; ?>?action=<?php echo $_REQUEST['action']; ?>&amp;keep_view=true&amp;sort_type=last_seen&amp;sort_order=0">
+		<a href="<?php echo $web_path; ?>/<?php echo $_SESSION['view_script']; ?>?action=<?php echo $_REQUEST['action']; ?>&amp;keep_view=true&amp;sort_type=last_seen&amp;sort_order=0">
 		<b><?php echo _("Registration Date"); ?></b>
 		</a>
 	</td>
@@ -74,19 +75,17 @@ $admin_menu = "admin/";
 	</td>
 </tr>
 <?php
-
-while ( $results = mysql_fetch_object($db_result) ) {
+while ($results = mysql_fetch_object($db_result)) {
 	$user = new User($results->username);
         $last_seen = date("m\/d\/Y - H:i",$user->last_seen);
         if (!$user->last_seen) { $last_seen = "Never"; }
-
         $create_date = date("m\/d\/Y - H:i",$user->create_date);
         if (!$user->create_date) { $create_date = "Unknown"; }
-
 ?>
+
 <tr class="even">
 	<td>
-		<a href="<?php echo conf('web_path'); ?>/admin/users.php?action=edit&amp;user=<?php echo $user->username; ?>">
+		<a href="<?php echo $web_path; ?>/admin/users.php?action=edit&amp;user=<?php echo $user->username; ?>">
 			<?php echo $user->fullname; ?> (<?php echo $user->username; ?>)
 		</a>
 	</td>
@@ -98,43 +97,43 @@ while ( $results = mysql_fetch_object($db_result) ) {
 	</td>
 
         <td>
-		<a href="<?php echo conf('web_path'); ?>/admin/users.php?action=edit&amp;user=<?php echo $user->username; ?>">
+		<a href="<?php echo $web_path; ?>/admin/users.php?action=edit&amp;user=<?php echo $user->username; ?>">
 			<?php echo _("Edit"); ?>
 		</a>
 	</td>
         <td>
-		<a href="<?php echo conf('web_path'); ?>/admin/preferences.php?action=user&amp;user_id=<?php echo $user->username; ?>">
+		<a href="<?php echo $web_path; ?>/admin/preferences.php?action=user&amp;user_id=<?php echo $user->username; ?>">
 			<?php echo _("Prefs"); ?>
 		</a>
 	</td>
 	<td>
-		<a href="<?php echo conf('web_path'); ?>/stats.php?user_id=<?php echo $user->username; ?>">
+		<a href="<?php echo $web_path; ?>/stats.php?user_id=<?php echo $user->username; ?>">
 			<?php echo _("Stats"); ?>
 		</a>
 	</td>
 	<?php
-			//FIXME: Fix this for the extra permission levels
-			if ($user->disabled == '1') { 
-				echo "<td><a href=\"".conf('web_path')."/admin/users.php?action=update&amp;user=$user->username&amp;level=enabled\">" . _("Enable") . "</a></td>";
-                        }
-			else {
-                                 echo "<td><a href=\"".conf('web_path')."/admin/users.php?action=update&amp;user=$user->username&amp;level=disabled\">" . _("Disable") ."</a></td>";
- 			}
-?>
-<td>
-        <a href="<?php echo conf('web_path'); ?>/admin/users.php?action=delete&amp;user=<?php echo $user->username; ?>">
-	<?php echo _("delete"); ?>
-	</a>
-</td>
+	//FIXME: Fix this for the extra permission levels
+	if ($user->disabled == '1') { 
+		echo "<td><a href=\"".$web_path."/admin/users.php?action=update&amp;user=$user->username&amp;level=enabled\">" . _("Enable") . "</a></td>";
+	}
+	else {
+		echo "<td><a href=\"".$web_path."/admin/users.php?action=update&amp;user=$user->username&amp;level=disabled\">" . _("Disable") ."</a></td>";
+	}
+	?>
+	<td>
+		<a href="<?php echo $web_path; ?>/admin/users.php?action=delete&amp;user=<?php echo $user->username; ?>">
+		<?php echo _("delete"); ?>
+		</a>
+	</td>
        <?php
-               if ( $user->is_logged_in() and $user->is_online() ) {
-                       echo "<td bgcolor=\"green\"> &nbsp; </td>";
-               } elseif ( $user->disabled == 1) {
-                       echo "<td bgcolor=\"gray\"> &nbsp; </td>";
-               } else {
-                       echo "<td bgcolor=\"#7f0000\"> &nbsp; </td>";
-               }
+	if (($user->is_logged_in()) and ($user->is_online())) {
+		echo "<td bgcolor=\"green\"> &nbsp; </td>";
+	} elseif ($user->disabled == 1) {
+		echo "<td bgcolor=\"gray\"> &nbsp; </td>";
+	} else {
+		echo "<td bgcolor=\"#7f0000\"> &nbsp; </td>";
+	}
 ?>	
 </tr>
-<?php } ?>
+<?php } //end while ($results = mysql_fetch_object($db_result)) ?>
 </table>

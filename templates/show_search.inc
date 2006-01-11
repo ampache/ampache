@@ -28,11 +28,11 @@ foreach ($_REQUEST['search_object'] as $key) {
 	$field_name = $key . "_string";
 	${$name} = "checked=\"checked\"";
 	$final_javascript .= "flipField('$field_name'); \n";
-        if($i++ == 0) /* Focus the first checked field */
+        if ($i++ == 0) { /* Focus the first checked field */
             $final_javascript .= "selectField('$field_name'); \n";
-}
-if($i == 0) /* Select the artist/title/album one by default */
-{
+	}
+} /* end foreach ($_REQUEST['search_object'] as $key) */
+if ($i == 0) { /* Select the artist/title/album one by default */
     $final_javascript .= "flipField('all_string'); \n";
     $final_javascript .= "selectField('all_string'); \n";
     $check_all = "checked=\"checked\"";
@@ -182,7 +182,7 @@ $final_javascript .= " // END-->\n </script>";
 <br />
 <form method="post" action="<?php echo conf('web_path'); ?>/playlist.php?action=add_dyn_song">
 <?php echo _('Save Search As Track on'); ?>:
-<?php show_playlist_dropdown('',true); ?>
+<?php show_playlist_dropdown('', true); ?>
 <input type="submit" value="<?php echo _('Save'); ?>" /></form>
 <?php } ?>
 <br />

@@ -23,7 +23,8 @@
 <form method="post" name="import_playlist" action="<?php echo conf('web_path'); ?>/playlist.php" enctype="multipart/form-data">
 <table border="0" cellpadding="0" cellspacing="0" class="border">
 <tr class="table-header" >
-	<td colspan="2" align="center"><?php echo _("Importing a Playlist from a File"); ?></td></tr>
+	<td colspan="2" align="center"><?php echo _("Importing a Playlist from a File"); ?></td>
+</tr>
 <tr class="<?php echo flip_class(); ?>">
         <td>
 		<?php echo _("Filename"); ?>:

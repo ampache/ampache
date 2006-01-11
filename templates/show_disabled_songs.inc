@@ -30,20 +30,22 @@
 	<td>Filename</td>
 	<td>Addition Time</td>
 </tr>
-<?php foreach ($songs as $song) { 
-	$class = (++$i%2)?'odd':'even';		    
+<?php
+foreach ($songs as $song) { 
+	$class = (++$i%2)?'odd':'even';
 ?>
-<tr class="<?php echo $class; ?>">
-	<td><input type="checkbox" name="song[]" value="<?php echo $song->id; ?>" /></td>
-	<td><?php echo $song->title; ?></td>
-	<td><?php echo $song->get_album_name($song->album); ?></td>
-	<td><?php echo $song->get_artist_name($song->album); ?></td>
-	<td><?php echo $song->file; ?></td>
-	<td><?php echo date("h:i:s, m/d/y",$song->addition_time); ?></td>
-
-</tr>
-<?php } ?>
-<?php $class = (++$i%2)?'odd':'even'; ?>
+	<tr class="<?php echo $class; ?>">
+		<td><input type="checkbox" name="song[]" value="<?php echo $song->id; ?>" /></td>
+		<td><?php echo $song->title; ?></td>
+		<td><?php echo $song->get_album_name($song->album); ?></td>
+		<td><?php echo $song->get_artist_name($song->album); ?></td>
+		<td><?php echo $song->file; ?></td>
+		<td><?php echo date("h:i:s, m/d/y",$song->addition_time); ?></td>
+	
+	</tr>
+<?php } // end foreach ($songs as $song)
+$class = (++$i%2)?'odd':'even';
+?>
 <tr class="<?php echo $class; ?>">
 	<td>&nbsp;</td>
 	<td colspan="10">

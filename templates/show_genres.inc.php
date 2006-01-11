@@ -28,9 +28,9 @@ $total_items = $view->total_items;
 ?>
 <table class="border" cellspacing="0" cellpadding="0" border="0">
 <tr class="even" align="center">
-        <td colspan="5">
-        <?php if ($view->offset_limit) { require (conf('prefix') . "/templates/list_header.inc"); } ?>
-        </td>
+	<td colspan="5">
+		<?php if ($view->offset_limit) { require (conf('prefix') . "/templates/list_header.inc"); } ?>
+	</td>
 </tr>
 <tr class="table-header">
 	<td><?php echo _("Genre"); ?></td>
@@ -38,25 +38,24 @@ $total_items = $view->total_items;
 	<td><?php echo _("Action"); ?></td>
 </tr>
 <?php 
-	foreach ($genres as $genre) { 
-		$genre->format_genre();
-?>
-<tr class="<?php echo flip_class(); ?>">
-	<td><?php echo $genre->link; ?></td>
-	<td><?php echo $genre->get_song_count(); ?></td>
-	<td>
-		<?php echo _("Play"); ?>:
-		<a href="<?php echo $genre->play_link; ?>">All</a> 
-		|
-		<a href="<?php echo $genre->random_link; ?>">Random</a>
-		|
-		Download
-	</td>
-</tr>
+foreach ($genres as $genre) { 
+	$genre->format_genre();?>
+	<tr class="<?php echo flip_class(); ?>">
+		<td><?php echo $genre->link; ?></td>
+		<td><?php echo $genre->get_song_count(); ?></td>
+		<td>
+			<?php echo _("Play"); ?>:
+			<a href="<?php echo $genre->play_link; ?>">All</a> 
+			|
+			<a href="<?php echo $genre->random_link; ?>">Random</a>
+			|
+			Download
+		</td>
+	</tr>
 <?php } // end foreach genres ?>
 <tr class="even" align="center">
-        <td colspan="5">
-        <?php if ($view->offset_limit) { require (conf('prefix') . "/templates/list_header.inc"); } ?>
-        </td>
+	<td colspan="5">
+		<?php if ($view->offset_limit) { require (conf('prefix') . "/templates/list_header.inc"); } ?>
+	</td>
 </tr>
 </table>

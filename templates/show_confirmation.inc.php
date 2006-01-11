@@ -21,13 +21,15 @@
 ?>
 <br />
 <table class="text-box" align="center" cellspacing="7">
-<tr><td align="center">
-	<span class="header1"><?php echo $title; ?></span>
-	<br />
-	<?php echo $text; ?>
-</td></tr>
-<tr><td>	
-	[ <a href="<?php echo $path; ?>"><?php echo _("Continue"); ?></a> ]
-	<br />
-</td></tr>
+<tr>
+	<td align="center">
+		<span class="header1"><?php echo $title; ?></span><br />
+		<?php echo $text; ?>
+	</td>
+</tr>
+<tr>
+	<td>	
+		[ <a href="<?php echo $path; ?>"><?php echo _("Continue"); ?></a> ]<br />
+	</td>
+</tr>
 </table>

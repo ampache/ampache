@@ -45,34 +45,36 @@ function ToBatch(action)
 </script>
 <table border="0" cellpadding="14" cellspacing="0" class="text-box">
 <tr align="left">
-        <td>
-               <input class="button" type="button" name="super_action" value="<?php echo _("Play Selected"); ?>" onclick="return ToSong('play_selected');" />
+	<td>
+		<input class="button" type="button" name="super_action" value="<?php echo _("Play Selected"); ?>" onclick="return ToSong('play_selected');" />
 		<?php if (batch_ok()) { ?>
-		&nbsp;&nbsp;
-		<input class="button" type="button" name="super_action" value="<?php echo _("Download Selected"); ?>" onclick="return ToBatch('download_selected');" />
+			&nbsp;&nbsp;
+			<input class="button" type="button" name="super_action" value="<?php echo _("Download Selected"); ?>" onclick="return ToBatch('download_selected');" />
 		<?php } ?>
 <!--
                 <input class="button" type="button" name="super_action" value="<?php echo _("Flag Selected"); ?>" />
                 <input class="button" type="button" name="super_action" value="<?php echo _("Edit Selected"); ?>" />
 -->
-        </td>
+	</td>
 </tr>
-<?php  if (is_object($GLOBALS['playlist'])) { ?>
+<?php 
+if (is_object($GLOBALS['playlist'])) { ?>
 <tr>
-        <td>
+	<td>
 		<input type="hidden" name="playlist_id" value="<?php echo $GLOBALS['playlist']->id; ?>" />
-                <input class="button" type="button" name="super_action" value="<?php echo _("Set Track Numbers"); ?>" onclick="return ToPlaylist('set_track_numbers');" />
-                <input class="button" type="button" name="super_action" value="<?php echo _("Remove Selected Tracks"); ?>" onclick="return ToPlaylist('remove_song');" />
-        </td>
+		<input class="button" type="button" name="super_action" value="<?php echo _("Set Track Numbers"); ?>" onclick="return ToPlaylist('set_track_numbers');" />
+		<input class="button" type="button" name="super_action" value="<?php echo _("Remove Selected Tracks"); ?>" onclick="return ToPlaylist('remove_song');" />
+	</td>
 </tr>
-<?php  } else { ?>
+<?php
+} else { ?>
 <tr align="center">
-        <td colspan="2">
-                <?php echo _("Playlist"); ?>: <input type="button" name="super_action" value="<?php echo _("Add to"); ?>" onclick="return ToPlaylist('add_to');" />
-                <?php  show_playlist_dropdown($GLOBALS['playlist_id']); ?>
-                <input class="button" type="button" name="super_action" value="<?php echo _("View"); ?>" onclick="return ToPlaylist('view');" />
-                <input class="button" type="button" name="super_action" value="<?php echo _("Edit"); ?>" onclick="return ToPlaylist('edit');" />
-        </td>
+	<td colspan="2">
+		<?php echo _("Playlist"); ?>: <input type="button" name="super_action" value="<?php echo _("Add to"); ?>" onclick="return ToPlaylist('add_to');" />
+		<?php  show_playlist_dropdown($GLOBALS['playlist_id']); ?>
+		<input class="button" type="button" name="super_action" value="<?php echo _("View"); ?>" onclick="return ToPlaylist('view');" />
+		<input class="button" type="button" name="super_action" value="<?php echo _("Edit"); ?>" onclick="return ToPlaylist('edit');" />
+	</td>
 </tr>
 <?php } ?>
 </table>

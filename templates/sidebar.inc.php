@@ -38,113 +38,113 @@ $browse_items[] = array('title'=>_("Genre"),'url'=>'browse.php?action=genre','ac
 $browse_items[] = array('title'=>_("Lists"),'url'=>'browse.php','active'=>'');
 //$browse_items[] = array('title'=>'File','url'=>'files.php','active'=>'');
 
+$web_path = conf('web_path');
 ?>
 <!-- <div id="navcontainer">  --> <!--sigger: appears this div is not neccesary and duplicates #sidebar -->
-	<ul id="navlist">
-		<li id="active">
-			<a href="<?php echo conf('web_path'); ?>/index.php" id="current"><?php echo _("Home"); ?></a>
-		</li>
-		<?php if ($GLOBALS['user']->has_access(100)) { ?>
-		<li>
-			<a href="<?php echo conf('web_path'); ?>/admin/index.php"><?php echo _("Admin"); ?></a>
-		<?php
-			if ($GLOBALS['theme']['submenu'] != 'simple') {
-				show_submenu($admin_items); 
+<ul id="navlist">
+	<li id="active">
+		<a href="<?php echo $web_path; ?>/index.php" id="current"><?php echo _("Home"); ?></a>
+	</li>
+<?php if ($GLOBALS['user']->has_access(100)) { ?>
+	<li>
+		<a href="<?php echo $web_path; ?>/admin/index.php"><?php echo _("Admin"); ?></a>
+	<?php
+		if ($GLOBALS['theme']['submenu'] != 'simple') {
+			show_submenu($admin_items); 
+			echo "\t</li>\n";
+		} 
+		else { 
+			if ($location['section'] == 'admin') {
 				echo "\t</li>\n";
+				show_submenu($admin_items);
 			} 
-			else { 
-				if ($location['section'] == 'admin') {  
-					echo "\t</li>\n";
-	                                show_submenu($admin_items);
-				} 
-                        } // end if browse sub menu
-		
-		} // end if access 
-		?>
-		
-		<li>
-			<a href="<?php echo conf('web_path'); ?>/preferences.php"><?php echo _("Preferences"); ?></a>
-		</li>
-		<li>
-			<a href="<?php echo conf('web_path'); ?>/browse.php"><?php echo _("Browse"); ?></a> 
+		} // end if browse sub menu
+} // end if access 
+	?>
+	
+	<li>
+		<a href="<?php echo $web_path; ?>/preferences.php"><?php echo _("Preferences"); ?></a>
+	</li>
+	<li>
+		<a href="<?php echo $web_path; ?>/browse.php"><?php echo _("Browse"); ?></a> 
 		<?php 
-			if ($GLOBALS['theme']['submenu'] != 'simple') { 
-				show_submenu($browse_items);
+		if ($GLOBALS['theme']['submenu'] != 'simple') { 
+			show_submenu($browse_items);
+			echo "\t</li>\n";
+		}
+		else { 
+			if ($location['section'] == 'browse') { 
 				echo "\t</li>\n";
+				show_submenu($browse_items);
 			}
-			else { 
-				if ($location['section'] == 'browse') { 
-					echo "\t</li>\n";
-					show_submenu($browse_items);
-				}
-			}
+		}
 		?>
-		
-		<?php if ($GLOBALS['user']->prefs['upload']) { ?>
-		<li>
-			<a href="<?php echo conf('web_path'); ?>/upload.php"><?php echo _("Upload"); ?></a>
-		</li>
-		<?php } ?>
-		<li>
-			<a href="<?php echo conf('web_path'); ?>/playlist.php"><?php echo _("Playlists"); ?></a>
-		</li>
-		<?php if ($GLOBALS['user']->prefs['play_type'] == 'mpd') { ?>
-		<li>
-			<a href="<?php echo conf('web_path'); ?>/mpd.php"><?php echo _("Local Play"); ?></a>
-		</li>
-		<?php } ?>
-		<li>
-			<a href="<?php echo conf('web_path'); ?>/search.php"><?php echo _("Search"); ?></a>
-		</li>
-	<?php if ($GLOBALS['theme']['orientation'] != 'horizontal') { ?>
-		<li>
-			<form name="sub_search" method="post" action="<?php echo conf('web_path'); ?>/search.php" enctype="multipart/form-data" style="Display:inline">
-			<input type="text" name="search_string" value="<?php echo scrub_out($_REQUEST['search_string']); ?>" size="5" />
-        	        <input class="smallbutton" type="submit" value="<?php echo _("Search"); ?>" /> 
-        	        <input type="hidden" name="action" value="quick_search" />
-        	        <input type="hidden" name="method" value="fuzzy" />
-        	        <input type="hidden" name="object_type" value="song" />
-        	        <input type="hidden" name="search_object[]" value="all" />		
-			</form>
-		</li>
-	<?php } ?>
-		<li>
-			<a href="<?php echo conf('web_path'); ?>/randomplay.php"><?php echo _('Random'); ?></a>
-		</li>
-	<?php if ($GLOBALS['theme']['orientation'] != 'horizontal') { ?> 
-		<li>
-			<form name="sub_random" method="post" enctype="multipart/form-data" action="<?php echo conf('web_path'); ?>/song.php" style="Display:inline">
-			<input type="hidden" name="action" value="m3u" />
-			<select name="random" style="width:9em;">
-				<option value="1">1</option>
-				<option value="5">5</option>
-				<option value="10">10</option>
-				<option value="20">20</option>
-				<option value="30">30</option>
-				<option value="50">50</option>
-				<option value="100">100</option>
-				<option value="500">500</option>
-				<option value="1000">1000</option>
-				<option value="-1"><?php echo _("All"); ?></option>
-			</select>
-		        <?php show_genre_pulldown('genre','','','13','width:9em;'); ?>
-						<br />  
-			<select name="random_type" style="width:9em;">
-				<option value="Songs"><?php echo _("Songs"); ?></option>
-				<option value="Minutes"><?php echo _("Minutes"); ?></option>
-				<option value="Artists"><?php echo _("Artists"); ?></option>
-				<option value="Albums"><?php echo _("Albums"); ?></option>
-				<option value="Less Played"><?php echo _("Less Played"); ?></option>
-			</select>
-			<br /> 
-			<input type="hidden" name="aaction" value="Play!" />
-			<input class="smallbutton" type="submit" name="aaction" value="<?php echo _("Enqueue"); ?>" />
-			</form>
-		</li>
-	<?php } ?> 
-		<?php if (conf('use_auth')) { ?>
-			<li><a href="<?php echo conf('web_path'); ?>/logout.php"><?php echo _("Logout"); ?></a></li>
-		<?php } ?>
-	</ul>
+
+<?php if ($GLOBALS['user']->prefs['upload']) { ?>
+	<li>
+		<a href="<?php echo $web_path; ?>/upload.php"><?php echo _("Upload"); ?></a>
+	</li>
+<?php } // end if ($GLOBALS['user']->prefs['upload']) ?>
+	<li>
+		<a href="<?php echo $web_path; ?>/playlist.php"><?php echo _("Playlists"); ?></a>
+	</li>
+<?php if ($GLOBALS['user']->prefs['play_type'] == 'mpd') { ?>
+	<li>
+		<a href="<?php echo $web_path; ?>/mpd.php"><?php echo _("Local Play"); ?></a>
+	</li>
+<?php } // end if ($GLOBALS['user']->prefs['play_type'] == 'mpd') ?>
+	<li>
+		<a href="<?php echo $web_path; ?>/search.php"><?php echo _("Search"); ?></a>
+	</li>
+<?php if ($GLOBALS['theme']['orientation'] != 'horizontal') { ?>
+	<li>
+		<form name="sub_search" method="post" action="<?php echo $web_path; ?>/search.php" enctype="multipart/form-data" style="Display:inline">
+		<input type="text" name="search_string" value="<?php echo scrub_out($_REQUEST['search_string']); ?>" size="5" />
+		<input class="smallbutton" type="submit" value="<?php echo _("Search"); ?>" /> 
+		<input type="hidden" name="action" value="quick_search" />
+		<input type="hidden" name="method" value="fuzzy" />
+		<input type="hidden" name="object_type" value="song" />
+		<input type="hidden" name="search_object[]" value="all" />		
+		</form>
+	</li>
+<?php } // end if ($GLOBALS['theme']['orientation'] != 'horizontal')?>
+	<li>
+		<a href="<?php echo $web_path; ?>/randomplay.php"><?php echo _('Random'); ?></a>
+	</li>
+<?php if ($GLOBALS['theme']['orientation'] != 'horizontal') { ?> 
+	<li>
+		<form name="sub_random" method="post" enctype="multipart/form-data" action="<?php echo $web_path; ?>/song.php" style="Display:inline">
+		<input type="hidden" name="action" value="m3u" />
+		<select name="random" style="width:9em;">
+			<option value="1">1</option>
+			<option value="5">5</option>
+			<option value="10">10</option>
+			<option value="20">20</option>
+			<option value="30">30</option>
+			<option value="50">50</option>
+			<option value="100">100</option>
+			<option value="500">500</option>
+			<option value="1000">1000</option>
+			<option value="-1"><?php echo _("All"); ?></option>
+		</select>
+		<?php show_genre_pulldown('genre','','','13','width:9em;'); ?>
+					<br />  
+		<select name="random_type" style="width:9em;">
+			<option value="Songs"><?php echo _("Songs"); ?></option>
+			<option value="Minutes"><?php echo _("Minutes"); ?></option>
+			<option value="Artists"><?php echo _("Artists"); ?></option>
+			<option value="Albums"><?php echo _("Albums"); ?></option>
+			<option value="Less Played"><?php echo _("Less Played"); ?></option>
+		</select>
+		<br /> 
+		<input type="hidden" name="aaction" value="Play!" />
+		<input class="smallbutton" type="submit" name="aaction" value="<?php echo _("Enqueue"); ?>" />
+		</form>
+	</li>
+<?php } // end if ($GLOBALS['theme']['orientation'] != 'horizontal') ?> 
+<?php if (conf('use_auth')) { ?>
+	<li><a href="<?php echo $web_path; ?>/logout.php"><?php echo _("Logout"); ?></a></li>
+<?php } // end (conf('use_auth'))?>
+</ul>
 	
 <!-- </div> -->

@@ -46,7 +46,7 @@ else {
 </tr>
 <tr>
 	<td><?php echo  _("Full Name"); ; ?>:</td>
- 	<td>
+	<td>
 		<input type="text" name="new_fullname" size="30" value="<?php echo $fullname; ?>" />
 	</td>
 </tr>
@@ -81,26 +81,22 @@ else {
 	</td>
 	<td>
 		<select name="user_access">
-	    	<option value="1" <?php  if($access==='1') echo "selected=\"selected\""; ?>>Guest</option>
-	        <option value="user" <?php  if($access==='user') echo "selected=\"selected\""; ?>>User</option>
-	        <option value="admin" <?php  if($access==='admin') echo "selected=\"selected\""; ?>>Admin</option>
-	        </select>
+		<option value="1" <?php  if($access==='1') echo "selected=\"selected\""; ?>>Guest</option>
+		<option value="user" <?php  if($access==='user') echo "selected=\"selected\""; ?>>User</option>
+		<option value="admin" <?php  if($access==='admin') echo "selected=\"selected\""; ?>>Admin</option>
+		</select>
 	</td>
 </tr>
 </table>
 <?php
-
-    if ( $type == 'new_user' ) 
-    {
-    	echo "<input type=\"hidden\" name=\"action\" value=\"add_user\" />";
-        echo "<input type=\"submit\" value=\"" . _("Add User") . "\" />";
-    }
-    else 
-    {
-    	echo "<input type=\"hidden\" name=\"action\" value=\"update_user\" />\n";
-        echo "<input type=\"submit\" value=\"" . _("Update User") . "\" />\n";
-        echo "<input type=\"hidden\" name=\"new_username\" value=\"$username\" />";
-    }
-
+if ($type == 'new_user') {
+	echo "<input type=\"hidden\" name=\"action\" value=\"add_user\" />";
+	echo "<input type=\"submit\" value=\"" . _("Add User") . "\" />";
+}
+else {
+	echo "<input type=\"hidden\" name=\"action\" value=\"update_user\" />\n";
+	echo "<input type=\"submit\" value=\"" . _("Update User") . "\" />\n";
+	echo "<input type=\"hidden\" name=\"new_username\" value=\"$username\" />";
+}
 ?>
 </form>

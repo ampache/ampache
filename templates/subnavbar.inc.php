@@ -26,14 +26,13 @@
  */
 
 ?>
-	<ul class="subnavside">
+<ul class="subnavside">
 <?php 
 	foreach ($items as $item) { 
 		if ($item['active']) { 
 			$li_id 	= "id=\"subactive\"";
 			$a_id	= "id=\"subcurrent\"";
-		} 
-?>
+		} ?>
 		<li <?php echo $li_id; ?>><a href="<?php echo conf('web_path') . "/" .  $item['url']; ?>" <?php echo $a_id; ?>><?php echo $item['title']; ?></a></li>
-<?php unset($li_id,$a_id); } ?>
-	</ul>
+	<?php unset($li_id,$a_id); } // END foreach ($items as $item) ?>
+</ul>

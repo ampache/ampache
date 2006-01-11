@@ -23,35 +23,34 @@
 <br /><br />
 <div class="text-box">
 <form name="update_user" method="post" action="<?php echo conf('web_path'); ?>/user.php?action=update_user" enctype="multipart/form-data" >
-<p class="header2"><?php echo _("Changing User Information for") . " " . $this_user->fullname; ?></p>
-<table>
-
-<tr>
-        <td>
-		<?php echo _("Name"); ?>:
-	</td>
-        <td>
-		<input type="text" name="fullname" size="30" value="<?php echo $this_user->fullname; ?>" />
-	</td>
-        </tr>
-
-<tr>
-	<td>
-		<?php echo _("E-mail"); ?>:
-	</td>
-        <td>
-		<input type="text" name="email" size="30" value="<?php echo $this_user->email; ?>" />
-	</td>
-</tr>
-<tr>
-        <td>
-		<?php echo _("Results Per Page"); ?>:
-	</td>
-	<td>
-		<input type="text" name="offset_limit" size="5" value="<?php echo $this_user->offset_limit; ?>" />
-	</td>
-</tr>
-</table>
+	<p class="header2"><?php echo _("Changing User Information for") . " " . $this_user->fullname; ?></p>
+	<table>
+	<tr>
+		<td>
+			<?php echo _("Name"); ?>:
+		</td>
+		<td>
+			<input type="text" name="fullname" size="30" value="<?php echo $this_user->fullname; ?>" />
+		</td>
+		</tr>
+	
+	<tr>
+		<td>
+			<?php echo _("E-mail"); ?>:
+		</td>
+		<td>
+			<input type="text" name="email" size="30" value="<?php echo $this_user->email; ?>" />
+		</td>
+	</tr>
+	<tr>
+		<td>
+			<?php echo _("Results Per Page"); ?>:
+		</td>
+		<td>
+			<input type="text" name="offset_limit" size="5" value="<?php echo $this_user->offset_limit; ?>" />
+		</td>
+	</tr>
+	</table>
 	<input type="hidden" name="user_id" value="<?php echo $this_user->username; ?>" />
 	<input type="submit" name="action" value="<?php echo _("Update Profile"); ?>" />
 </form>
@@ -59,35 +58,35 @@
 <br />
 <div class="text-box">
 <form name="change_password" method="post" action="<?php echo conf('web_path'); ?>/user.php?action=change_password" enctype="multipart/form-data" >
-<span class="header2">Changing User Password</span>
-<?php $GLOBALS['error']->print_error('password'); ?>
-<table border="0" cellpadding="5" cellspacing="0">
-<tr>
-        <td>
-		<?php echo _("Enter password"); ?>:
-	</td>
-	<td>
-		<input type="password" name="password" size="30" />
-	</td>
-</tr>
-<tr>
-        <td>
-		<?php echo _("Confirm Password"); ?>:
-	</td>
-        <td>
-		<input type="password" name="confirm_password" size="30" />	
-	</td>
-</tr>
-</table>
-		<input type="hidden" name="user_id" value="<?php echo $this_user->username; ?>" />
-	        <input type="submit" name="action" value="<?php echo _("Change Password"); ?>" />
+	<span class="header2">Changing User Password</span>
+	<?php $GLOBALS['error']->print_error('password'); ?>
+	<table border="0" cellpadding="5" cellspacing="0">
+	<tr>
+		<td>
+			<?php echo _("Enter password"); ?>:
+		</td>
+		<td>
+			<input type="password" name="password" size="30" />
+		</td>
+	</tr>
+	<tr>
+		<td>
+			<?php echo _("Confirm Password"); ?>:
+		</td>
+		<td>
+			<input type="password" name="confirm_password" size="30" />	
+		</td>
+	</tr>
+	</table>
+	<input type="hidden" name="user_id" value="<?php echo $this_user->username; ?>" />
+	<input type="submit" name="action" value="<?php echo _("Change Password"); ?>" />
 </form>
 </div>
 <br />
 <div class="text-box">
 <form name="clear_statistics" method="post" action="<?php echo conf('web_path'); ?>/user.php?action=clear_stats" enctype="multipart/form-data">
-<span class="header2"><?php echo _("Delete Your Personal Statistics"); ?></span><br />
-<input type="hidden" name="user_id" value="<?php echo $this_user->username; ?>" />
-<input type="submit" value="<?php echo _("Clear Stats"); ?>" />
+	<span class="header2"><?php echo _("Delete Your Personal Statistics"); ?></span><br />
+	<input type="hidden" name="user_id" value="<?php echo $this_user->username; ?>" />
+	<input type="submit" value="<?php echo _("Clear Stats"); ?>" />
 </form>
 </div>
