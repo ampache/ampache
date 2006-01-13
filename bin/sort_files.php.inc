@@ -33,7 +33,7 @@
  */
 
 /* Don't do anything just tell me what you would do */
-$test_mode = true;
+/* $test_mode = true; */
 
 /* m(__)m */
 $alphabet_prefix = true;
@@ -104,6 +104,7 @@ function sort_find_filename($song,$rename_pattern) {
 	/* Start replacing stuff */
 	$replace_array = array('%a','%A','%t','%T','%y','%g');
 	$content_array = array($artist,$album,$title,$track,$year,$genre);
+	
 
 	$rename_pattern = str_replace($replace_array,$content_array,$rename_pattern);
 

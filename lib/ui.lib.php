@@ -786,9 +786,11 @@ function img_resize($image,$size,$type){
 		return false;
 	}
 
+	if (!function_exists('gd_info')) { return false; }
+
 	/* First check for php-gd */
 	$info = gd_info();
-
+	
 	if ($type == 'jpg' AND !$info['JPG Support']) {
 		return false;
 	}

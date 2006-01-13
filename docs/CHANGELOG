@@ -4,6 +4,8 @@
 
 --------------------------------------------------------------------------
   v.3.3.2-Beta2 
+  	- Fixed a problem with the Image Resize code which wasn't correctly
+		detecting the lack of GD causing no art to be displayed
   	- Fixed Remember Me button (part of the vauth)
   	- Added new Session Handling code called vauth (Vollmer's Auth)
   	- Moved xml-rpc server file to /server/xmlrpc.server.php keeping 
