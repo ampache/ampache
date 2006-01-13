@@ -70,7 +70,7 @@ function vauth_mysql_auth($username,$password) {
 	        $password_check_sql = "OLD_PASSWORD('$password')";
         }
 
-	$sql = "SELECT username FROM user WHERE username='$username' AND $password_check_sql";
+	$sql = "SELECT username FROM user WHERE username='$username' AND password=$password_check_sql";
 	$db_results = mysql_query($sql, vauth_dbh());
 
 	$results = mysql_fetch_assoc($db_results);
