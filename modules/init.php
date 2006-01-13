@@ -76,47 +76,21 @@ if (!$results = read_config($configfile,0)) {
 
 // Cheat a little to setup the extra vars needed by libglue
 
-//FIXME: Untile we have a config updater force stream as allowed playback method
+//FIXME: Until we have a config updater force stream as allowed playback method
 if (!$results['conf']['allow_stream_playback']) { 
 	$results['conf']['allow_stream_playback'] = "true";
 }
 
 $results['conf']['raw_web_path']	= $results['conf']['web_path'];
 $results['conf']['web_path']		= $http_type . $_SERVER['HTTP_HOST'] . $results['conf']['web_path'];
-$results['conf']['version']		= '3.3.2-Beta2 (Build 001)';
+$results['conf']['version']		= '3.3.2-Beta2 (Build 002)';
 $results['conf']['catalog_file_pattern']= 'mp3|mpc|m4p|m4a|mp4|aac|ogg|rm|wma|asf|flac|spx|ra';
-$results['libglue']['local_table']	= 'session';
-$results['libglue']['local_sid']	= 'id';
-$results['libglue']['local_expirecol']	= 'expire';
-$results['libglue']['local_usercol']	= 'username';
-$results['libglue']['local_typecol']	= 'type';
-$results['libglue']['local_datacol']	= 'value';
-$results['libglue']['mysql_table']	= 'user';
-$results['libglue']['mysql_usercol'] 	= 'username';
-$results['libglue']['mysql_passwdcol']	= 'password';
-$results['libglue']['local_dbh_name']	= 'local_dbh';
-$results['libglue']['auth_methods']	= 'mysql';
-$results['libglue']['user_username']	= 'username';
-$results['libglue']['mysql_fields']	= 'username,fullname,email,access,offset_limit';
-$results['libglue']['mysql_host']	= $results['libglue']['local_host'];
-$results['libglue']['mysql_db']		= $results['libglue']['local_db'];
-$results['libglue']['mysql_username']	= $results['libglue']['local_username'];
-$results['libglue']['mysql_user']	= $results['libglue']['local_username'];
-$results['libglue']['mysql_passwd']	= $results['libglue']['local_pass'];
-$results['libglue']['mysql_pass']	= $results['libglue']['local_pass'];
-$results['libglue']['mysql_passcol']	= 'password';
-$results['libglue']['dbh']		= $results['libglue']['local_dbh_name'];
-$results['libglue']['auth_page']	= $results['conf']['web_path'];
-$results['libglue']['login_page']	= $results['conf']['web_path'] . "/login.php";
 $results['conf']['http_port']		= $_SERVER['SERVER_PORT'];
 if (!$results['conf']['prefix']) { 
 	$results['conf']['prefix'] = $prefix;
 }
 if (!$results['libglue']['stop_auth']) {
-        $results['libglue']['stop_auth'] = $results['conf']['prefix'] . "/modules/libglue/gone.fishing";
-}
-if (!$results['libglue']['libglue_path']) {
-        $results['libglue']['libglue_path']= $results['conf']['prefix'] . "/modules/libglue";
+        $results['libglue']['stop_auth'] = $results['conf']['prefix'] . "/modules/vauth/gone.fishing";
 }
 if (!$results['conf']['http_port']) { 
 	$results['conf']['http_port']	= '80';
@@ -136,20 +110,31 @@ if (!$results['conf']['ellipse_threshold_artist']) {
 if (!$results['conf']['ellipse_threshold_title']) { 
 	$results['conf']['ellipse_threshold_title'] = 27;
 }
+if (!$results['conf']['raw_web_path']) { 
+	$results['conf']['raw_web_path'] = '/';
+}
 
+/* Variables needed for vauth Module */
+//FIXME: Rename this array as we are no longer using libglue
+$results['libglue']['cookie_path'] 	= $results['conf']['raw_web_path'];
+$results['libglue']['cookie_domain']	= $_SERVER['HTTP_HOST'];
+$results['libglue']['cookie_life']	= $results['libglue']['sess_cookielife'];
+$results['libglue']['session_name']	= $results['libglue']['sess_name'];
+$results['libglue']['cookie_secure']	= '0';
+$results['libglue']['session_length']	= '9000';
+$results['libglue']['mysql_password']	= $results['libglue']['local_pass'];
+$results['libglue']['mysql_username']	= $results['libglue']['local_username'];
+$results['libglue']['mysql_hostname']	= $results['libglue']['local_host'];
+$results['libglue']['mysql_db']		= $results['libglue']['local_db'];
 
 /* Temp Fixes */
 $results['conf'] = fix_preferences($results['conf']);
 
-
 // Setup Static Arrays
-libglue_param($results['libglue']);
 conf($results['conf']);
 
-// Libglue Requires
-require_once(libglue_param('libglue_path') . "/auth.php");
-require_once(libglue_param('libglue_path') . "/session.php");
-require_once(libglue_param('libglue_path') . "/dbh.php");
+// Vauth Requires
+require_once(conf('prefix') . '/modules/vauth/init.php');
 
 // Librarys
 require_once(conf('prefix') . '/lib/album.lib.php');
@@ -209,17 +194,11 @@ require_once(conf('prefix') . "/lib/class/access.class.php");
 require_once(conf('prefix') . "/lib/class/error.class.php");
 require_once(conf('prefix') . "/lib/class/genre.class.php");
 
-
 /* Set a new Error Handler */
 $old_error_handler = set_error_handler("ampache_error_handler");
 
-/* Some Libglue Hacks */
-$array['dbh_name'] = 'stupid_pos';
-$array['stupid_pos'] = check_sess_db('local');
-libglue_param($array);
-/*  End Libglue Hacks */
-
-
+/* Initilize the Vauth Library */
+vauth_init($results['libglue']);
 
 /* Check their PHP Vars to make sure we're cool here */
 if ($results['conf']['memory_limit'] < 16) { 
@@ -257,7 +236,7 @@ srand((double) microtime() * 1000003);
 
 // If we don't want a session
 if (!isset($no_session) AND conf('use_auth')) { 
-	if (!check_session()) { logout(); exit(); }
+	if (!vauth_check_session()) { logout(); exit(); }
 	init_preferences();
 	set_theme();	
 	$user = new User($_SESSION['userdata']['username']);
@@ -271,7 +250,7 @@ elseif (!conf('use_auth')) {
 	$auth['info']['id'] = -1;
 	$auth['info']['access'] = "admin";
 	$auth['info']['offset_limit'] = 50;
-	if (!check_session()) { make_local_session_only($auth); }
+	if (!vauth_check_session()) { vauth_session_create($auth); }
 	$user 			= new User(-1);
 	$user->fullname 	= $auth['info']['fullname'];
 	$user->offset_limit 	= $auth['info']['offset_limit'];

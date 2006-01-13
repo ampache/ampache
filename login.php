@@ -36,7 +36,11 @@ set_site_preferences();
 if ( $_POST['username'] && $_POST['password'] ) {
 
         if ($_POST['rememberme']) {
-        	setcookie('amp_longsess', '1', time()+3600*24*30*120);
+		$month = 86400*30;
+		vauth_conf(array('cookie_life'=>$month),1);
+		$cookie_name = vauth_conf('session_name') . "_remember";
+		$cookie_life = time() + $month;
+		setcookie($cookie_name, '1', $cookie_life,'/',vauth_conf('cookie_domain'));
         } 
 
 	/* If we are in demo mode let's force auth success */
@@ -47,8 +51,8 @@ if ( $_POST['username'] && $_POST['password'] ) {
 		$auth['info']['offset_limit']	= 25;
 	}
 	else {
-		$username = trim($_POST['username']);
-		$password = trim($_POST['password']);
+		$username = scrub_in($_POST['username']);
+		$password = scrub_in($_POST['password']);
 		$auth = authenticate($username, $password);
 		$user = new User($username); 
 		if ($user->disabled === '1') { 
@@ -61,17 +65,17 @@ if ( $_POST['username'] && $_POST['password'] ) {
 //
 // If we succeeded in authenticating, create a session
 //
-if ( ($auth['success'] == 1)) {
+if ($auth['success']) {
 
     // $auth->info are the fields specified in the config file
     //   to retrieve for each user
-    make_local_session_only($auth);
+    vauth_session_create($auth);
 
 	//
 	// Not sure if it was me or php tripping out,
 	//   but naming this 'user' didn't work at all
 	//
-	$_SESSION['userdata'] = $auth['info'];
+	$_SESSION['userdata'] = $auth;
 	
 	/* Make sure they are actually trying to get to this site and don't try to redirect them back into 
 	 * an admin section

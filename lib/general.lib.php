@@ -291,11 +291,15 @@ function error_results($param,$clobber=0)
 } //error_results
 
 
-/*!
-	@function dbh
-	@discussion retrieves the DBH 
-*/
-function dbh() { return check_sess_db('local'); }
+/**
+ * dbh
+ * Alias for the vauth_dbh function
+ */
+function dbh() {  
+
+	return vauth_dbh();
+
+} // dbh
 
 /*!
 	@function fix_preferences
@@ -927,5 +931,20 @@ function get_languages() {
 
 } // get_languages
 
+/**
+ * logout
+ * This is the function that is called to log a user out! 
+ */
+function logout() { 
+
+	/* First destory their session */
+	vauth_logout(session_id());
+
+	/* Redirect them to the login page */
+	header ('Location: ' . conf('web_path') . '/login.php');
+	
+	return true;
+
+} // logout
 
 ?>
