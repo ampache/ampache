@@ -120,7 +120,7 @@ switch ($action) {
 	case 'remove_song':
 	case _('Remote Selected Tracks'):
 		/* Check em for rights */
-		if (!$playlist->has_access) { 
+		if (!$playlist->has_access()) { 
 			access_denied();
 			break;
 		}

@@ -216,9 +216,10 @@ else {
 	elseif ($start) {
 		$browser->downloadHeaders($song_name, $song->mime, false, $song->size);
 		fseek( $fp, $start );
-		$range = $start ."-". $song->size . "/" . $song->size;
+		$range = $start ."-". ($song->size-1) . "/" . $song->size;
 		header("HTTP/1.1 206 Partial Content");
 		header("Content-Range: bytes=$range");
+		header("Content-Length: ".($song->size-$start));
 	}
 	/* Last but not least pump em out */
 	else {
