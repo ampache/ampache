@@ -111,12 +111,35 @@ class Playlist {
 	 * This returns an array of song_ids accounting for any dyn_song entries this playlist
 	 * may have. This is what should be called when trying to generate a m3u or other playlist
 	 */
-	function get_songs() { 
+	function get_songs($array=array()) { 
+
+		$results = array();
+
+		/* If we've passed in some songs */
+		if (count($array)) { 
+		
+			foreach ($array as $data) { 
+				
+				$sql = "SELECT song,dyn_song FROM playlist_data WHERE id='" . sql_escape($data) . "'";
+				$db_results = mysql_query($sql, dbh());
+
+				$r = mysql_fetch_assoc($db_results);
+				if ($r['dyn_song']) { 
+					$array = $this->get_dyn_songs($r['dyn_song']);
+					$results = array_merge($array,$results);
+				}
+				else { 
+					$results[] = $r['song'];
+				}
+				
+			} // end foreach songs
+			
+			return $results;
+
+		} // end if we were passed some data
 
 		$sql = "SELECT * FROM playlist_data WHERE playlist='" . sql_escape($this->id) . "'";
 		$db_results = mysql_query($sql, dbh());
-
-		$results = array();
 
 		while ($r = mysql_fetch_assoc($db_results)) { 
 			if ($r['dyn_song']) { 

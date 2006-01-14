@@ -43,7 +43,6 @@ $song_ids = array();
 $web_path = conf('web_path');
 
 $action = scrub_in($_REQUEST['action']);
-
 switch ($action) { 
 	case 'play_selected':
 		$type = scrub_in($_REQUEST['type']);
@@ -52,7 +51,7 @@ switch ($action) {
 		} 
 		elseif ($_REQUEST['playlist_id']) { 
 			$playlist = new Playlist($_REQUEST['playlist_id']);
-			$song_ids = $playlist->get_songs();
+			$song_ids = $playlist->get_songs($_REQUEST['song']);
 		}
 		else { 
 			$song_ids = $_POST['song'];
@@ -71,7 +70,7 @@ switch ($action) {
 	break;
 	case 'playlist':
 		$playlist	= new Playlist($_REQUEST['playlist_id']);
-		$song_ids	= $playlist->get_songs();
+		$song_ids	= $playlist->get_songs($_REQUEST['song']);
 		$_REQUEST['action'] = 'm3u';
 	case 'playlist_random':
 		$playlist	= new Playlist($_REQUEST['playlist_id']);
@@ -84,16 +83,6 @@ switch ($action) {
 
 if ($_REQUEST['album']) {
 	$song_ids = get_song_ids_from_album( $_REQUEST['album'] );
-}
-elseif ( $_REQUEST['playlist_id'] AND $action != 'play_selected') {
-	$playlist = new Playlist($_REQUEST['playlist_id']);
-	if ($_REQUEST['action'] == "random") { 
-		$song_ids = $playlist->get_random_songs();
-		$_REQUEST['action'] = "m3u";
-	}
-	else {
-		$song_ids = $playlist->get_songs();
-	}
 }
 elseif ( $_REQUEST['artist'] ) {
 	$artist = new Artist($_REQUEST['artist']);
