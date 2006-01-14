@@ -30,7 +30,7 @@ switch ($action) {
 	case 'set_rating':
 		$rating = new Rating($_REQUEST['object_id'],$_REQUEST['rating_type']);
 		$rating->set_rating($_REQUEST['rating']);
-		show_confirmation(_("Rating Updated"),_("Your rating for this object has been updated"),"/index.php");
+		show_confirmation(_("Rating Updated"),_("Your rating for this object has been updated"),return_referer());
 	break;
 	default:
 

@@ -259,22 +259,24 @@ function show_users () {
 
 /**
  *  return_referer
- * returns the script part of the
- *	referer address passed by the web browser
- *	this is not %100 accurate
+ * returns the script part of the referer address passed by the web browser
+ * this is not %100 accurate. Also because this is not passed by us we need
+ * to clean it up, take the filename then check for a /admin/ and dump the rest
  */
 function return_referer() {
 
-	$web_path = substr(conf('web_path'),0,strlen(conf('web_path'))-1-strlen($_SERVER['SERVER_PORT'])) . "/";
-	$next = str_replace($web_path,"",$_SERVER['HTTP_REFERER']);
+	$referer = $_SERVER['HTTP_REFERER'];
 
-	// If there is more than one :// we know it's fudged
-	// and just return the index
-	if (substr_count($next,"://") > 1) {
-		return "index.php";
+	$file = basename($referer);
+	
+	/* Strip off the filename */
+	$referer = substr($referer,0,strlen($referer)-strlen($file));
+
+	if (substr($referer,strlen($referer)-6,6) == 'admin/') { 
+		$file = 'admin/' . $file;
 	}
 
-	return $next;
+	return $file;
 
 } // return_referer
 
@@ -790,7 +792,7 @@ function img_resize($image,$size,$type){
 
 	/* First check for php-gd */
 	$info = gd_info();
-	
+
 	if ($type == 'jpg' AND !$info['JPG Support']) {
 		return false;
 	}

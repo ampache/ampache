@@ -4,6 +4,7 @@
 
 --------------------------------------------------------------------------
   v.3.3.2-Beta2 
+  	- Fixed redirection after applying a rating to an album
   	- Fixed a few typos in the xmlrpc code and playlists and fixed the
 		weird skipping when seeking using some players (Thx Sven)
   	- Fixed a problem with the Image Resize code which wasn't correctly
