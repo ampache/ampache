@@ -143,7 +143,6 @@ class Update {
 
 	} // need_update
 
-
 	/*!
 		@function populate_version
 		@discussion just sets an array the current differences
@@ -255,13 +254,18 @@ class Update {
 		$version[] = array('version' => '332005','description' => $update_string);
 
 
-		$update_string = '- Adds Create Date to User table to track registration and user creation time.';
+		$update_string = '- Adds Create Date to User table to track registration and user creation time.<br />';
 
 		$version[] = array('version' => '332006','description' => $update_string);
 
-		$update_string = '- Alters the Dynamic Song field to be TEXT instead of Varchar (varchar was not long enough).';
+		$update_string = '- Alters the Dynamic Song field to be TEXT instead of Varchar (varchar was not long enough).<br />';
 		
 		$version[] = array('version' => '332007','description' => $update_string);
+
+		$update_string = '- Drop All 3 Flagging Tables and recreate the Flagged table, this will remove all previous flagging records.<br />' .
+				 '&nbsp;&nbsp;&nbsp; the code has changed enough to make it useless to migrate old data.<br />';
+
+		$version[] = array('version' => '332008','description' => $update_string);
 
 		return $version;
 
@@ -1403,6 +1407,37 @@ class Update {
 		$this->set_version('db_version','332007');
 
 	} // update_332007
+
+	/**
+	 * update_332008
+	 * Re-combobulating Flaging Mojo
+	 * Nuf Said...
+	 */
+	function update_332008() { 
+
+		/* First drop the existing tables */
+		$sql = "DROP TABLE flagged_song";
+		$db_results = mysql_query($sql, dbh());
+
+		$sql = "DROP TABLE flagged_types";
+		$db_results = mysql_query($sql, dbh());
+
+		$sql = "DROP TABLE flagged";
+		$db_results = mysql_query($sql, dbh());
+
+		/* Add in the spiffy new Flagged table */
+		$sql = "CREATE TABLE `flagged` (`id` int(11) unsigned NOT NULL auto_increment," .
+                                " `object_id` int(11) unsigned NOT NULL default '0'," .
+                                " `object_type` enum('artist','album','song') NOT NULL default 'song'," .
+                                " `user` varchar(128) NOT NULL default ''," .
+                                " `flag` enum('delete','retag','reencode','other') NOT NULL default 'other'," .
+				" `comment` varchar(255) NOT NULL default''," .
+                                " PRIMARY KEY (`id`))";
+		$db_results = mysql_query($sql, dbh());
+
+		$this->set_version('db_version','332008');
+
+	} // update_332008
 
 } // end update class
 ?>

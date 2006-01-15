@@ -117,7 +117,7 @@ if (!$results['conf']['raw_web_path']) {
 /* Variables needed for vauth Module */
 //FIXME: Rename this array as we are no longer using libglue
 $results['libglue']['cookie_path'] 	= $results['conf']['raw_web_path'];
-$results['libglue']['cookie_domain']	= $_SERVER['HTTP_HOST'];
+$results['libglue']['cookie_domain']	= $_SERVER['SERVER_NAME'];
 $results['libglue']['cookie_life']	= $results['libglue']['sess_cookielife'];
 $results['libglue']['session_name']	= $results['libglue']['sess_name'];
 $results['libglue']['cookie_secure']	= '0';

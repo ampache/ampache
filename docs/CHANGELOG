@@ -4,6 +4,8 @@
 
 --------------------------------------------------------------------------
   v.3.3.2-Beta2 
+  	- Removed old flagging tables and added a new one as part of
+		full flagging rewrite. 
   	- Fixed play selected on playlists, it no longer always plays
 		everything. 
   	- Fixed redirection after applying a rating to an album

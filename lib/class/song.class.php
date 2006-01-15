@@ -107,9 +107,8 @@ class Song {
 		/* Grab the basic information from the catalog and return it */
 		$sql = "SELECT song.id,file,catalog,album,song.comment,year,artist,".
 			"title,bitrate,rate,mode,size,time,track,genre,played,song.enabled,update_time,".
-			"addition_time,flagged.id as flagid,flagged.user as flaguser,flagged.type ".
-			"as flagtype,flagged.date as flagdate,flagged.comment as flagcomment FROM ".
-			"song LEFT JOIN flagged ON song.id = flagged.song WHERE song.id = '" . sql_escape($this->id) . "'";
+			"addition_time FROM song WHERE song.id = '" . sql_escape($this->id) . "'";
+			
 		$db_results = mysql_query($sql, dbh());
 
 		$results = mysql_fetch_object($db_results);
