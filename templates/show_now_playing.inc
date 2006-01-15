@@ -19,47 +19,97 @@
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
+/*!
+ @header Show Now Playing Ajax
+*/
+
+
+// would change this to input some with the current now playing data.
+// so this same script can be used even if the ajax doesnt refresh it.
 ?>
-<?php if (count($results)) { ?>
+<?php $c=0; if (count($results)) {
+	foreach($results as $item) {
+		$song = $item['song'];
+		$np_user = $item['user'];
+
+		if (is_object($song)) {
+			$result = $result.'<song>';
+		if (!$np_user->fullname) { $np_user->fullname = "Unknown User"; }
+		if (conf('use_auth')) {
+                	$result = $result.'<fullname>'.$np_user->fullname.'</fullname>';
+		} 
+		else {
+                	$result = $result.'<fullname></fullname>';
+		}
+?>
+<div id='np_container_<?php echo $c; ?>' style="display: block; z-index: -10000;">
+<?php if ($c==0) { ?>
 <table class="border" cellspacing="1" cellpadding="3" border="0" width="100%">
 <tr class="table-header">
-	<td colspan="4"><?php echo _('Now Playing'); ?></td>
+	<td><?php echo _('Now Playing'); ?></td>
 </tr>
-<?php
-$user = $GLOBALS['user'];
-foreach($results as $item) { 
-	$song = $item['song'];
-	$np_user = $item['user'];
-	if (is_object($song)) {
-		$artist = $song->f_artist;
-		$album  = $song->get_album_name();
-		$text = "$song->f_title";
-		if (!$np_user->fullname) { $np_user->fullname = "Unknown User"; }
-		if ($GLOBALS['user']->username == $np_user->username) {
-			$sql = "SELECT start_time FROM now_playing WHERE user ='".$user->username."'";
-			$db_results = mysql_query($sql, dbh());
-			echo "<tr class=\"even\">\n"; 
-		} else {
-			echo "<tr class=\"even\">\n";
-		}
-		if (conf('use_auth')) {
-			 echo "\t<td valign=\"middle\">$np_user->fullname</td>\n";
-		}
-		echo "\t<td><a title=\"" . scrub_out($song->title) . "\" href=\"$web_path/song.php?action=m3u&amp;song=$song->id\">$text</a></td>\n";
-		echo "\t<td><a title=\"" . scrub_out($song->f_artist) . "\" href=\"$web_path/artists.php?action=show&amp;artist=$song->artist\">$song->f_artist</a> / ";
-		echo "\t<a title=\"" . scrub_out($album) . "\" href=\"$web_path/albums.php?action=show&amp;album=$song->album\">$song->f_album</a></td>";
-		if (conf('play_album_art')) {
-			echo "\t<td align=\"center\">";
-			$aa_url = $web_path . "/albumart.php?id=$song->album&amp;type=popup";
-			echo "<a target=\"_blank\" href=\"$aa_url\" onclick=\"popup_art('$aa_url'); return false;\">";
-			echo "<img align=\"middle\" border=\"0\" src=\"$web_path/albumart.php?id=$song->album&amp;fast=1&amp;thumb=1\" alt=\"Album Art\" height=\"75\" />";
-			echo "</a>\n";
-			echo "\t</td>\n";
-			echo "</tr>\n";
-		} // if album art on now playing
-		else { echo "\n</tr>"; }
-	} // if it's a song
-} // while we're getting songs
-?>
 </table>
 <?php } ?>
+<table class="border" cellspacing="1" cellpadding="3" border="0" width="100%">
+<tr class="even">
+	<td>
+        <div id="np_songid_<?php echo $c; ?>_holder" style="visibility: hidden; position:absolute; z-index: 10000;">
+        <?php echo $song->id; ?>
+        </div>
+        <div id="np_fullname_<?php echo $c; ?>">
+        <?php if (conf('use_auth')) { echo $np_user->fullname; } ?></div>
+        </td>
+	<td>
+        <div id="np_song_<?php echo $c; ?>">
+	<a title="<?php echo scrub_out($song->f_title); ?>" href="<?php echo $web_path; ?>/song.php?action=m3u&amp;song=<?php echo $song->id; ?>">
+        	<?php echo $song->f_title; ?>
+	</a>
+        </div>
+	</td>
+	<td>
+	<div id="np_albumartist_<?php echo $c; ?>">
+	<a title="<?php echo scrub_out($song->f_album); ?>" href="<?php echo $web_path; ?>/albums.php?action=show&amp;album=<?php echo $song->album; ?>">
+	<?php echo $song->f_album; ?>
+	</a> /
+	<a title="<?php echo scrub_out($song->f_artist); ?>" href="<?php echo $web_path; ?>/artists.php?action=show&amp;artist=<?php echo $song->artist; ?>">
+        <?php echo $song->f_artist; ?>
+        </a>
+	</div>
+	</td>
+	<td>
+	<div id="np_img_<?php echo $c; ?>">
+	<a target="_blank" href="<?php echo $web_path; ?>/albumart.php?id=<?php echo $song->album; ?>&amp;type=popup" onclick="popup_art('<?php echo $web_path; ?>/albumart.php?id=<?php echo $song->album; ?>&amp;type=popup'); return false;">
+	<img align="middle" border="0" src="albumart.php?id=<?php echo $song->album; ?>&amp;fast=1&amp;thumb=1" alt="Album Art" height="75" />
+	</a>
+	</div>
+        </td>
+</tr>
+</table>
+</div>
+<?    }
+      }
+} ?>
+<?php for ($x=$c; $x<5; $x++) { ?>
+	<div id='np_container_<?php echo $x; ?>' style="display: none; z-index: -10000;">
+	<?php if ($x==0) { ?>
+<table class="border" cellspacing="1" cellpadding="3" border="0" width="100%">
+<tr class="table-header">
+<td><?php echo _('Now Playing'); ?></td>
+</tr>
+</table>
+<?php } ?>
+<table class="border" cellspacing="1" cellpadding="3" border="0" width="100%">
+<tr class="even">
+	<td>
+		<div id="np_songid_<?php echo $x; ?>_holder" style="visibility: hidden; position:absolute; z-index: 10000;"></div>
+		<div id="np_fullname_<?php echo $x; ?>"></div>
+	</td>
+	<td><div id="np_song_<?php echo $x; ?>"></div></td>
+	<td><div id="np_albumartist_<?php echo $x; ?>"></div></td>
+	<td><div id="np_img_<?php echo $x; ?>"></div></td>
+</tr>
+</table>
+</div>
+<?php } ?>
+<br>
+</table>
