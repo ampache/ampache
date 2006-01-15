@@ -39,7 +39,7 @@ show_template('header');
 
 switch ($action ) { 
 	case 'show_confirm_delete':
-		show_confim_action(_('Do you really want to delete this Access Reocrd?'),'admin/access.php','access_id=' . scrub_out($_REQUEST['access_id']) . '&amp;action=delete_host');
+		show_confirm_action(_('Do you really want to delete this Access Reocrd?'),'admin/access.php','access_id=' . scrub_out($_REQUEST['access_id']) . '&amp;action=delete_host');
 	break;
 	case 'delete_host':
 		$access->delete($_REQUEST['access_id']);
