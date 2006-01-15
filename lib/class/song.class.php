@@ -59,34 +59,30 @@ class Song {
 		if ($song_id) { 
 
 			/* Assign id for use in get_info() */
-			$this->id = $song_id;
+			$this->id = sql_escape($song_id);
 
 			/* Get the information from the db */
 			if ($info = $this->get_info()) {
 
 				/* Assign Vars */
-				$this->file	= $info->file;
-				$this->album 	= $info->album;
-				$this->artist	= $info->artist;
-				$this->title	= $info->title;
-				$this->comment	= $info->comment;
-				$this->year	= $info->year;
-				$this->bitrate	= $info->bitrate;
-				$this->rate	= $info->rate;
-				$this->mode	= $info->mode;
-				$this->size	= $info->size;
-				$this->time	= $info->time;
-				$this->track	= $info->track;
-				$this->genre	= $info->genre;
+				$this->file		= $info->file;
+				$this->album 		= $info->album;
+				$this->artist		= $info->artist;
+				$this->title		= $info->title;
+				$this->comment		= $info->comment;
+				$this->year		= $info->year;
+				$this->bitrate		= $info->bitrate;
+				$this->rate		= $info->rate;
+				$this->mode		= $info->mode;
+				$this->size		= $info->size;
+				$this->time		= $info->time;
+				$this->track		= $info->track;
+				$this->genre		= $info->genre;
 				$this->addition_time	= $info->addition_time;
-				$this->catalog	= $info->catalog;
-				$this->played   = $info->played;
+				$this->catalog		= $info->catalog;
+				$this->played   	= $info->played;
 				$this->update_time 	= $info->update_time;
-				$this->flagid	= $info->flagid;
-				$this->flaguser = $info->flaguser;
-				$this->flagtype = $info->flagtype;
-				$this->flagcomment	= $info->flagcomment;
-				$this->enabled 	= $info->enabled;
+				$this->enabled 		= $info->enabled;
 
 				// Format the Type of the song
 				$this->format_type();
@@ -107,7 +103,7 @@ class Song {
 		/* Grab the basic information from the catalog and return it */
 		$sql = "SELECT song.id,file,catalog,album,song.comment,year,artist,".
 			"title,bitrate,rate,mode,size,time,track,genre,played,song.enabled,update_time,".
-			"addition_time FROM song WHERE song.id = '" . sql_escape($this->id) . "'";
+			"addition_time FROM song WHERE song.id = '$this->id'";
 			
 		$db_results = mysql_query($sql, dbh());
 
@@ -115,7 +111,7 @@ class Song {
 
 		return $results;
 
-	} //get_info
+	} // get_info
 
 	/*!
 		@function format_type
@@ -144,6 +140,7 @@ class Song {
 				$this->mime = "audio/mpeg";
 				break;
 			case "rm":
+			case "ra":
 				$this->mime = "audio/x-realaudio";
 				break;
 			case "flac";
@@ -163,6 +160,7 @@ class Song {
 		}
 
 	} // get_type
+	
 	/*!
 		@function get_album_songs
 		@discussion gets an array of song objects based on album
@@ -170,7 +168,7 @@ class Song {
 	function get_album_songs($album_id) {
 
 		$sql = "SELECT id FROM song WHERE album='$album_id'";
-		$db_results = mysql_query($sql, libglue_param(libglue_param('dbh_name')));
+		$db_results = mysql_query($sql, dbh());
 
 		while ($r = mysql_fetch_object($db_results)) {
 			$results[] = new Song($r->id);
@@ -234,6 +232,45 @@ class Song {
 		return $results['name'];
 	
 	} // get_genre_name
+
+	/**
+	 * get_flags
+	 * This gets any flag information this song may have, it always
+	 * returns an array as it may be possible to have more then
+	 * one flag
+	 */
+	function get_flags() { 
+
+		$sql = "SELECT id,flag,comment FROM flagged WHERE object_type='song' AND object_id='$this->id'";
+		$db_results = mysql_query($sql, dbh());
+
+		$results = array();
+
+		while ($r = mysql_fetch_assoc($db_results)) { 
+			$results[] = $r;
+		}
+
+		return $results;
+		
+	} // get_flag
+
+	/**
+	 * has_flag
+	 * This just returns true or false depending on if this song is flagged for something
+	 * We don't care what so we limit the SELECT to 1
+	 */
+	function has_flag() { 
+
+		$sql = "SELECT id FROM flagged WHERE object_type='song' AND object_id='$this->id' LIMIT 1";
+		$db_results = mysql_query($sql, dbh());
+
+		if (mysql_fetch_assoc($db_results)) { 
+			return true;
+		}
+
+		return false;
+
+	} // has_flag
 
 	/**
 	 * set_played
@@ -684,20 +721,21 @@ class Song {
 			//TODO: fill out these cases once we have it working for m4a
 			case "m4a":
 				$return = false;
-				break;
+			break;
 			default:
 				$return = true;
-				break;
+			break;
 		}	// end switch
 		
 		return $return;
 
-	}	// end native_stream
+	} // end native_stream
 	
-	/*! 
-		@function stream_cmd
-		@discussion test if the song type streams natively and if not returns a transcoding command from the config
-	*/
+	/**
+	 * stream_cmd
+	 * test if the song type streams natively and 
+	 * if not returns a transcoding command from the config
+	 */
 	function stream_cmd() {
 	
 		$return = 'downsample_cmd';
@@ -706,16 +744,16 @@ class Song {
 			switch ($this->type) {
 				case "m4a":
 					$return = "stream_cmd_m4a";
-					break;
+				break;
 				default:
 					$return = "downsample_cmd";
-					break;
-			}	// end switch
-		}	// end if not native_stream
+				break;
+			} // end switch
+		} // end if not native_stream
 		
 		return $return;
-	}	// end stream_cmd
+	} // end stream_cmd
 
-} //end of song class
+} // end of song class
 
 ?>

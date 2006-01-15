@@ -21,9 +21,6 @@
 */
 $web_path = conf('web_path');
 
-// Need to set the username for the song ratings.
-$username = $GLOBALS['user']->username;
-
 /* If it's a playlist and they've got rights */
 if (is_object($playlist) && ($GLOBALS['user']->username == $playlist->user || $GLOBALS['user']->has_access('100'))) { 
 	$tab = 1;
@@ -46,7 +43,6 @@ if (is_object($playlist) && ($GLOBALS['user']->username == $playlist->user || $G
 	<th><?php echo _("Size"); ?></th>
 	<th><?php echo _("Bitrate"); ?></th>
 	<th><?php echo _("Genre"); ?></th>
-	<th><?php echo _("Flag"); ?></th>
 	<th><?php echo _("Action"); ?></th>
 	<?php if (conf('ratings') || conf('ratings')=="false") { ?>
 		<th><?php echo _("Rating"); ?></th>
@@ -97,6 +93,7 @@ foreach ($song_ids as $song_id) {
 			<?php $tab++;
 		} ?>
 	<td>
+		<?php if ($song->has_flag()) { echo "<strong>**</strong>"; } ?>
 		<a href="<?php echo $web_path; ?>/song.php?action=m3u&amp;song=<?php echo $song->id; ?>" title="<?php echo scrub_out($song->title); ?>" <?php echo $text_class; ?>><?php echo scrub_out($song->f_title); ?></a>
 	</td>
 	<td>
@@ -120,25 +117,21 @@ foreach ($song_ids as $song_id) {
 	<td>
 		<?php echo $song->f_genre; ?>
 	</td>
-	<td <?php echo $song->f_style; ?> title="<?php echo $song->flagcomment; ?>">
-		<?php echo $song->flagtype; ?>
-	</td>
 	<td>
-		<?php if ($user->has_access('100')) { ?>
-				<a href="<?php echo $web_path; ?>/admin/song.php?action=edit&amp;song=<?php echo $song->id; ?>">Edit</a> | <a href="<?php echo $web_path; ?>/flag.php?song=<?php echo $song->id; ?>&amp;action=flag">Flag</a> | 
+		<a href="<?php echo $web_path; ?>/flag.php?action=show_flag&amp;type=song&amp;id=<?php echo $song->id; ?>">Flag</a>
+		<?php if ($GLOBALS['user']->has_access('100')) { ?>
+				| <a href="<?php echo $web_path; ?>/admin/song.php?action=edit&amp;song=<?php echo $song->id; ?>">Edit</a> | 
 				<?php if ($song->enabled) { ?>
 				<a href="<?php echo $web_path; ?>/admin/song.php?action=disable&amp;song_ids=<?php echo $song->id; ?>">Disable</a>
 				<?php } else { ?>
 				<a href="<?php echo $web_path; ?>/admin/song.php?action=enabled&amp;song_ids=<?php echo $song->id; ?>">Enable</a>
 				<?php } //status ?>
-		<?php } else { ?>
-				<a href="<?php echo $web_path; ?>/flag.php?song=<?php echo $song->id; ?>&amp;action=flag">Flag</a>
 		<?php } //access ?>
-		<?php if ($user->prefs['download']) { ?>
+		<?php if ($GLOBALS['user']->prefs['download']) { ?>
 				| <a href="<?php echo $web_path; ?>/download/index.php?action=download&amp;song_id=<?php echo $song->id; ?>&amp;fn=<?php echo rawurlencode($song->f_artist_full . " - " . $song->title . "." . $song->type); ?>"><?php echo _("Download"); ?></a>
 		<?php } ?>
-		<?php if ($user->prefs['direct_link']) { ?>
-			| <a href="<?php echo $web_path; ?>/play/index.php?song=<?php echo $song->id; ?>&amp;uid=<?php echo $user->username . "&amp;sid=" . session_id(); ?>&amp;fn=<?php echo rawurlencode($song->f_artist_full . " - " . $song->title . "." . $song->type); ?>"><?php echo _("Direct Link"); ?></a>
+		<?php if ($GLOBALS['user']->prefs['direct_link']) { ?>
+			| <a href="<?php echo $web_path; ?>/play/index.php?song=<?php echo $song->id; ?>&amp;uid=<?php echo $GLOBALS['user']->username . "&amp;sid=" . session_id(); ?>&amp;fn=<?php echo rawurlencode($song->f_artist_full . " - " . $song->title . "." . $song->type); ?>"><?php echo _("Direct Link"); ?></a>
 		<?php } ?>
 	</td>
 	<?php if(conf('ratings')) { ?>
@@ -150,9 +143,6 @@ foreach ($song_ids as $song_id) {
 <?php
 }// foreach loop
 
-//
-// Another here doc
-//
 $time = floor($totaltime/60) . ":" . sprintf("%02d", ($totaltime%60) );
 $megs = sprintf("%.2f", ($totalsize/1048576));
 $num = count($song_ids);
@@ -168,10 +158,10 @@ $num = count($song_ids);
 	<td align="right" nowrap="nowrap"><?php echo $megs; ?> MB</td>
 	<td></td>
 	<td></td>
-	<td></td>
 	<td colspan="2"></td>
 </tr>
 </table>
+<p class="header2"><?php echo _('** Indicates flagged songs'); ?></p>
 <br />
 <?php show_play_selected(); ?>
 </form>

@@ -1196,4 +1196,22 @@ function show_playlist_import() {
 
 } // show_playlist_import
 
+/**
+ * show_songs
+ * Still not happy with this function, but at least it's in the right 
+ * place now
+ */
+function show_songs ($song_ids, $playlist, $album=0) {
+
+        $dbh = dbh();
+
+        $totaltime = 0;
+        $totalsize = 0;
+
+        require (conf('prefix') . "/templates/show_songs.inc");
+
+        return true;
+
+} // show_songs
+
 ?>

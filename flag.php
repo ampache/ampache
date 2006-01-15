@@ -20,32 +20,43 @@
 
 */
 
-/*
+/**
+ * Flag Document
+ * This is called for all of our flagging needs
+ */
 
- This will allow users to flag songs for having broken tags or bad rips.
 
-*/
-
-require_once("modules/init.php");
-
-$action = scrub_in($_REQUEST['action']);
-$song = scrub_in($_REQUEST['song']);
-
-if ( $action == 'flag_song') {
-	$flagged_type = scrub_in($_REQUEST['flagged_type']);
-	$comment = scrub_in($_REQUEST['comment']);
-	insert_flagged_song($song, $flagged_type, $comment);
-	$flag_text = _("Flagging song completed.");
-	$action = 'flag';
-}
+require_once('modules/init.php');
 
 show_template('header');
 
-if ( $action == 'flag' ) {
-	$type = 'show_flagged_form';
-	$song_id = $song;
-	include(conf('prefix') . "/templates/flag.inc");
-}
+$action = scrub_in($_REQUEST['action']);
+$flag = new Flag($_REQUEST['flag_id']);
+
+/* Switch on the action */
+switch ($action) { 
+	case 'remove_flag':
+	break;
+	case 'flag':
+		$id 		= scrub_in($_REQUEST['id']);
+		$type		= scrub_in($_REQUEST['type']);
+		$flag_type	= scrub_in($_REQUEST['flag_type']);
+		$comment	= scrub_in($_REQUEST['comment']);
+		$flag->add($id,$type,$flag_type,$comment);		
+		show_confirmation(_('Item Flagged'),_('The specified item has been flagged'),$_SESSION['source_page']);
+	break;
+	case 'show_flag':
+		/* Store where they came from */
+		$_SESSION['source_page'] = return_referer();
+		include(conf('prefix') . '/templates/show_flag.inc.php');
+	break;
+	case 'show_remove_flag':
+	
+	break;
+	default:
+	
+	break;
+} // end action switch
 
 show_footer();
 ?>

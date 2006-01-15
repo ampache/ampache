@@ -83,7 +83,7 @@ if (!$results['conf']['allow_stream_playback']) {
 
 $results['conf']['raw_web_path']	= $results['conf']['web_path'];
 $results['conf']['web_path']		= $http_type . $_SERVER['HTTP_HOST'] . $results['conf']['web_path'];
-$results['conf']['version']		= '3.3.2-Beta2 (Build 002)';
+$results['conf']['version']		= '3.3.2-Beta2 (Build 003)';
 $results['conf']['catalog_file_pattern']= 'mp3|mpc|m4p|m4a|mp4|aac|ogg|rm|wma|asf|flac|spx|ra';
 $results['conf']['http_port']		= $_SERVER['SERVER_PORT'];
 if (!$results['conf']['prefix']) { 
@@ -164,15 +164,11 @@ require_once(conf('prefix') . "/lib/xmlrpc.php");
 require_once(conf('prefix') . "/modules/xmlrpc/xmlrpc.inc");
 
 if (conf('allow_slim_playback')) { 
-	require_once(conf('prefix') . "/modules/slimserver/slim.class.php");
+	require_once(conf('prefix') . '/modules/slimserver/slim.class.php');
 }
 
 if (conf('allow_mpd_playback')) { 
-	require_once(conf('prefix') . "/modules/mpd/mpd.class.php");		
-}
-
-if (conf('allow_xmms2_playback')) { 
-	require_once(conf('prefix') . "/modules/xmms2/xmms2.class.php");
+	require_once(conf('prefix') . '/modules/mpd/mpd.class.php');		
 }
 
 if (conf('ratings')) { 
@@ -181,18 +177,19 @@ if (conf('ratings')) {
 }
 
 // Classes
-require_once(conf('prefix') . "/lib/class/catalog.class.php");
-require_once(conf('prefix') . "/lib/class/stream.class.php");
-require_once(conf('prefix') . "/lib/class/playlist.class.php");
-require_once(conf('prefix') . "/lib/class/song.class.php");
-require_once(conf('prefix') . "/lib/class/view.class.php");
-require_once(conf('prefix') . "/lib/class/update.class.php");
-require_once(conf('prefix') . "/lib/class/user.class.php");
-require_once(conf('prefix') . "/lib/class/album.class.php");
-require_once(conf('prefix') . "/lib/class/artist.class.php");
-require_once(conf('prefix') . "/lib/class/access.class.php");
-require_once(conf('prefix') . "/lib/class/error.class.php");
-require_once(conf('prefix') . "/lib/class/genre.class.php");
+require_once(conf('prefix') . '/lib/class/catalog.class.php');
+require_once(conf('prefix') . '/lib/class/stream.class.php');
+require_once(conf('prefix') . '/lib/class/playlist.class.php');
+require_once(conf('prefix') . '/lib/class/song.class.php');
+require_once(conf('prefix') . '/lib/class/view.class.php');
+require_once(conf('prefix') . '/lib/class/update.class.php');
+require_once(conf('prefix') . '/lib/class/user.class.php');
+require_once(conf('prefix') . '/lib/class/album.class.php');
+require_once(conf('prefix') . '/lib/class/artist.class.php');
+require_once(conf('prefix') . '/lib/class/access.class.php');
+require_once(conf('prefix') . '/lib/class/error.class.php');
+require_once(conf('prefix') . '/lib/class/genre.class.php');
+require_once(conf('prefix') . '/lib/class/flag.class.php');
 
 /* Set a new Error Handler */
 $old_error_handler = set_error_handler("ampache_error_handler");

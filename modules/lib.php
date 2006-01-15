@@ -39,42 +39,6 @@ function show_album_pulldown ($album) {
 
 
 /*
- * show_flagged_popup($reason);
- * 
- * Shows a listing of the flagged_types for when people want to mark
- *   a song as being broken in some way.
- */
-
-function show_flagged_popup($reason,$label='value', $name='flagged_type', $other='') {
-
-	global $settings;
-	$dbh = dbh();
-
-	$access = $_SESSION['userdata']['access'];
-
-	$query = "SELECT type,value FROM flagged_types";
-	if ($access !== 'admin') {
-		$query .= " WHERE access = '$access'";
-	}
-	$db_result = mysql_query($query, $dbh);
-
-	echo "\n<select name=\"$name\" $other>\n";
-
-	while ( $r = mysql_fetch_array($db_result) ) {
-		// $r[0] = id, $r[1] = type 
-		if ( $reason === $r['type'] ) {
-			echo "\t<option value=\"".$r['type']."\" selected=\"selected\">".htmlspecialchars($r[$label])."</option>\n";
-		}
-		else {
-			echo "\t<option value=\"".$r['type']."\">".htmlspecialchars($r[$label])."</option>\n";
-		}
-	}
-
-	echo "\n</select>\n";
-} // show_flagged_popup()
-
-
-/*
  * delete_user_stats()
  *
  * just delete stats for specific users or all of them
@@ -93,87 +57,6 @@ function delete_user_stats ($user) {
 	}
 	$db_result = mysql_query($sql, $dbh);
 } // delete_user_stats()
-
-
-/*
- * insert_flagged_song()
- *
- */
-
-function insert_flagged_song($song, $reason, $comment) {
-
-	$user = $_SESSION['userdata']['username'];
-	$time = time();
-	$sql = "INSERT INTO flagged (user,song,type,comment,date)" .
-		" VALUES ('$user','$song', '$reason', '$comment', '$time')";
-	$db_result = mysql_query($sql, dbh());
-
-} // insert_flagged_song()
-
-
-/*
- * get_flagged();
- *
- * Get all of the songs from the flagged table.  These are songs that
- *  may or may not be broken.
- * Deprecated by hopson on 7/27
- */
-
-function get_flagged() {
-
-	$dbh = dbh();
-
-	$sql = "SELECT flagged.id, user.username, type, song, date, comment" .
-		" FROM flagged, user" .
-		" WHERE flagged.user = user.username" .
-		" ORDER BY date";
-	$db_result = mysql_query($sql, $dbh);
-
-	$arr = array();
-
-	while ( $flag = mysql_fetch_object($db_result) ) {
-		$arr[] = $flag;
-	}
-
-	return $arr;
-} // get_flagged()
-
-
-/*
- * get_flagged_type($type);
- *
- * Return the text associated with this type.
- */
-
-function get_flagged_type($type) {
-
-	$dbh = dbh();
-
-	$sql = "SELECT value FROM flagged_types WHERE type = '$type'";
-	echo $sql;
-	$db_result = mysql_query($sql, $dbh);
-
-	if ($flagged_type = mysql_fetch_object($db_result)) {
-		return $flagged_type->value;
-	}
-	else {
-		return FALSE;
-	}
-} // get_flagged_type()
-
-
-/*
- * delete_flagged( $flag );
- *
- */
-
-function delete_flagged($flag) {
-
-        $dbh = dbh();
-
-        $sql = "DELETE FROM flagged WHERE id = '$flag'";
-        $db_result = mysql_query($sql, $dbh);
-} // delete_flagged()
 
 
 /*********************************************************/
@@ -283,30 +166,6 @@ function get_songs_from_type ($type, $results, $artist_id = 0) {
 	}
 	return $song;
 }
-
-
-/*********************************************************/
-/* This is the main song display function.  I found tieing it to the playlist functions
-     was really handy in getting added functionality at no cost.
-/* Lets tie it to album too, so we can show art ;)       */
-/*********************************************************/
-/* One symbol, m(__)m */
-function show_songs ($song_ids, $playlist, $album=0) {
-
-	$dbh = dbh();
-
-	// Get info about current user
-	$user = $GLOBALS['user'];
-
-	$totaltime = 0;
-	$totalsize = 0;
-
-	require (conf('prefix') . "/templates/show_songs.inc");
-
-	return true;
-
-} // function show_songs
-
 
 
 function show_playlist_form () {
