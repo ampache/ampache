@@ -2,8 +2,6 @@
 ####################
 # General Config
 ####################
-[conf]
-####################
 
 ####################
 # Path Vars
@@ -20,8 +18,6 @@
 
 ####################
 # The libglue Vars #
-####################
-[libglue]
 ####################
 
 ###
@@ -84,8 +80,6 @@ connect_error = "Could not connect to authentication server."
 
 ####################
 #  The conf vars!  #
-####################
-[conf]
 ####################
 
 # Nuff Said

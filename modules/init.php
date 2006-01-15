@@ -73,65 +73,61 @@ if (!$results = read_config($configfile,0)) {
 } 
 
 
-
-// Cheat a little to setup the extra vars needed by libglue
-
 //FIXME: Until we have a config updater force stream as allowed playback method
-if (!$results['conf']['allow_stream_playback']) { 
-	$results['conf']['allow_stream_playback'] = "true";
+if (!$results['allow_stream_playback']) { 
+	$results['allow_stream_playback'] = "true";
 }
 
-$results['conf']['raw_web_path']	= $results['conf']['web_path'];
-$results['conf']['web_path']		= $http_type . $_SERVER['HTTP_HOST'] . $results['conf']['web_path'];
-$results['conf']['version']		= '3.3.2-Beta2 (Build 003)';
-$results['conf']['catalog_file_pattern']= 'mp3|mpc|m4p|m4a|mp4|aac|ogg|rm|wma|asf|flac|spx|ra';
-$results['conf']['http_port']		= $_SERVER['SERVER_PORT'];
-if (!$results['conf']['prefix']) { 
-	$results['conf']['prefix'] = $prefix;
+$results['raw_web_path']	= $results['web_path'];
+$results['web_path']		= $http_type . $_SERVER['HTTP_HOST'] . $results['web_path'];
+$results['version']		= '3.3.2-Beta2 (Build 003)';
+$results['catalog_file_pattern']= 'mp3|mpc|m4p|m4a|mp4|aac|ogg|rm|wma|asf|flac|spx|ra';
+$results['http_port']		= $_SERVER['SERVER_PORT'];
+if (!$results['prefix']) { 
+	$results['prefix'] = $prefix;
 }
-if (!$results['libglue']['stop_auth']) {
-        $results['libglue']['stop_auth'] = $results['conf']['prefix'] . "/modules/vauth/gone.fishing";
+if (!$results['stop_auth']) {
+        $results['stop_auth'] = $results['prefix'] . "/modules/vauth/gone.fishing";
 }
-if (!$results['conf']['http_port']) { 
-	$results['conf']['http_port']	= '80';
+if (!$results['http_port']) { 
+	$results['http_port']	= '80';
 } 
-if (!$results['conf']['site_charset']) { 
-	$results['conf']['site_charset'] = "iso-8859-1";
+if (!$results['site_charset']) { 
+	$results['site_charset'] = "iso-8859-1";
 }
-if (!$results['conf']['log_path']) { 
-	$results['conf']['log_path']		= '/tmp';
+if (!$results['log_path']) { 
+	$results['log_path']		= '/tmp';
 }
-if (!$results['conf']['ellipse_threshold_album']) { 
-	$results['conf']['ellipse_threshold_album'] = 27;
+if (!$results['ellipse_threshold_album']) { 
+	$results['ellipse_threshold_album'] = 27;
 }
-if (!$results['conf']['ellipse_threshold_artist']) { 
-	$results['conf']['ellipse_threshold_artist'] = 27;
+if (!$results['ellipse_threshold_artist']) { 
+	$results['ellipse_threshold_artist'] = 27;
 }
-if (!$results['conf']['ellipse_threshold_title']) { 
-	$results['conf']['ellipse_threshold_title'] = 27;
+if (!$results['ellipse_threshold_title']) { 
+	$results['ellipse_threshold_title'] = 27;
 }
-if (!$results['conf']['raw_web_path']) { 
-	$results['conf']['raw_web_path'] = '/';
+if (!$results['raw_web_path']) { 
+	$results['raw_web_path'] = '/';
 }
 
 /* Variables needed for vauth Module */
-//FIXME: Rename this array as we are no longer using libglue
-$results['libglue']['cookie_path'] 	= $results['conf']['raw_web_path'];
-$results['libglue']['cookie_domain']	= $_SERVER['SERVER_NAME'];
-$results['libglue']['cookie_life']	= $results['libglue']['sess_cookielife'];
-$results['libglue']['session_name']	= $results['libglue']['sess_name'];
-$results['libglue']['cookie_secure']	= '0';
-$results['libglue']['session_length']	= '9000';
-$results['libglue']['mysql_password']	= $results['libglue']['local_pass'];
-$results['libglue']['mysql_username']	= $results['libglue']['local_username'];
-$results['libglue']['mysql_hostname']	= $results['libglue']['local_host'];
-$results['libglue']['mysql_db']		= $results['libglue']['local_db'];
+$results['cookie_path'] 	= $results['raw_web_path'];
+$results['cookie_domain']	= $_SERVER['SERVER_NAME'];
+$results['cookie_life']		= $results['sess_cookielife'];
+$results['session_name']	= $results['sess_name'];
+$results['cookie_secure']	= '0';
+$results['session_length']	= '9000';
+$results['mysql_password']	= $results['local_pass'];
+$results['mysql_username']	= $results['local_username'];
+$results['mysql_hostname']	= $results['local_host'];
+$results['mysql_db']		= $results['local_db'];
 
 /* Temp Fixes */
-$results['conf'] = fix_preferences($results['conf']);
+$results = fix_preferences($results);
 
 // Setup Static Arrays
-conf($results['conf']);
+conf($results);
 
 // Vauth Requires
 require_once(conf('prefix') . '/modules/vauth/init.php');
@@ -195,13 +191,13 @@ require_once(conf('prefix') . '/lib/class/flag.class.php');
 $old_error_handler = set_error_handler("ampache_error_handler");
 
 /* Initilize the Vauth Library */
-vauth_init($results['libglue']);
+vauth_init($results);
 
 /* Check their PHP Vars to make sure we're cool here */
-if ($results['conf']['memory_limit'] < 16) { 
-	$results['conf']['memory_limit'] = 16;
+if ($results['memory_limit'] < 16) { 
+	$results['memory_limit'] = 16;
 }
-set_memory_limit($results['conf']['memory_limit']);
+set_memory_limit($results['memory_limit']);
 
 if (ini_get('short_open_tag') != "On") { 
 	ini_set (short_open_tag, "On");
@@ -242,20 +238,20 @@ if (!isset($no_session) AND conf('use_auth')) {
 }
 elseif (!conf('use_auth')) { 
 	$auth['success'] = 1;
-	$auth['info']['username'] = '-1';
-	$auth['info']['fullname'] = "Ampache User";
-	$auth['info']['id'] = -1;
-	$auth['info']['access'] = "admin";
-	$auth['info']['offset_limit'] = 50;
+	$auth['username'] = '-1';
+	$auth['fullname'] = "Ampache User";
+	$auth['id'] = -1;
+	$auth['access'] = "admin";
+	$auth['offset_limit'] = 50;
 	if (!vauth_check_session()) { vauth_session_create($auth); }
 	$user 			= new User(-1);
-	$user->fullname 	= $auth['info']['fullname'];
-	$user->offset_limit 	= $auth['info']['offset_limit'];
-	$user->username 	= $auth['info']['username'];
-	$user->access 		= $auth['info']['access'];
-	$_SESSION['userdata']['access'] 	= $auth['info']['access'];
-	$_SESSION['userdata']['username'] 	= $auth['info']['username'];
-	$_SESSION['userdata']['offset_limit'] 	= $auth['info']['offset_limit'];
+	$user->fullname 	= $auth['fullname'];
+	$user->offset_limit 	= $auth['offset_limit'];
+	$user->username 	= $auth['username'];
+	$user->access 		= $auth['access'];
+	$_SESSION['userdata']['access'] 	= $auth['access'];
+	$_SESSION['userdata']['username'] 	= $auth['username'];
+	$_SESSION['userdata']['offset_limit'] 	= $auth['offset_limit'];
 	$user->set_preferences();
 	init_preferences();
 	set_theme();

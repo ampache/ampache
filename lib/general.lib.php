@@ -116,53 +116,9 @@ function read_config($config_file, $debug=0, $test=0) {
 
         $value = trim($value);
 
-        if (preg_match("/^\[([A-Za-z]+)\]$/",$value,$matches)) {
-                // If we have previous data put it into $results...
-                if (isset($config_name) && isset(${$config_name}) && count(${$config_name})) {
-                                $results[$config_name] = ${$config_name};
-                }
+	if (substr($value,0,1) == '#') { continue; } 
 
-                $config_name = $matches[1];
-
-        } // if it is a [section] name
-
-
-        elseif (isset($config_name)) {
-
-                // if it's not a comment
-                if (preg_match("/^([\w\d]+)\s+=\s+[\"]{1}(.*?)[\"]{1}$/",$value,$matches)
-                        || preg_match("/^([\w\d]+)\s+=\s+[\']{1}(.*?)[\']{1}$/", $value, $matches)
-                        || preg_match("/^([\w\d]+)\s+=\s+[\'\"]{0}(.*)[\'\"]{0}$/",$value,$matches)) {
-
-                    if (isset(${$config_name}[$matches[1]]) && is_array(${$config_name}[$matches[1]]) && isset($matches[2]) ) {
-                        if($debug) echo "Adding value <strong>$matches[2]</strong> to existing key <strong>$matches[1]</strong>\n";
-                        array_push(${$config_name}[$matches[1]], $matches[2]);
-                    }
-
-                    elseif (isset(${$config_name}[$matches[1]]) && isset($matches[2]) ) {
-                        if($debug) echo "Adding value <strong>$matches[2]</strong> to existing key $matches[1]</strong>\n";
-                        ${$config_name}[$matches[1]] = array(${$config_name}[$matches[1]],$matches[2]);
-                    }
-
-                    elseif ($matches[2] !== "") {
-                        if($debug) echo "Adding value <strong>$matches[2]</strong> for key <strong>$matches[1]</strong>\n";
-                        ${$config_name}[$matches[1]] = $matches[2];
-                    }
-
-                    // if there is something there and it's not a comment
-                    elseif ($value{0} !== "#" AND strlen(trim($value)) > 0 AND !$test AND strlen($matches[2]) > 0) {
-                        echo "Error Invalid Config Entry --> Line:$count"; return false;
-                    } // elseif it's not a comment and there is something there
-
-                    else {
-                        if($debug) echo "Key <strong>$matches[1]</strong> defined, but no value set\n";
-                    }
-                } // end if it's not a comment
-
-        } // elseif no config_name
-
-
-        elseif (preg_match("/^([\w\d]+)\s+=\s+[\"]{1}(.*?)[\"]{1}$/",$value,$matches)
+        if (preg_match("/^([\w\d]+)\s+=\s+[\"]{1}(.*?)[\"]{1}$/",$value,$matches)
                         || preg_match("/^([\w\d]+)\s+=\s+[\']{1}(.*?)[\']{1}$/", $value, $matches)
                         || preg_match("/^([\w\d]+)\s+=\s+[\'\"]{0}(.*)[\'\"]{0}$/",$value,$matches)) {
 

@@ -70,7 +70,7 @@ if ($auth['success']) {
     // $auth->info are the fields specified in the config file
     //   to retrieve for each user
     vauth_session_create($auth);
-
+	
 	//
 	// Not sure if it was me or php tripping out,
 	//   but naming this 'user' didn't work at all
