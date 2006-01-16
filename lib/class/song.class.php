@@ -561,10 +561,11 @@ class Song {
 		@discussion sets the enabled flag
 	*/
 	function update_enabled($new_enabled,$song_id=0) {
+		
+		/* This should really be integrated into the update_item thing */
+		if (!$GLOBALS['user']->has_access(100)) { return false; }
 
-		if ($_SESSION['userdata']['access'] === 'admin' || $_SESSION['userdata']['access'] === '100') {
-			$this->update_item('enabled',$new_enabled,$song_id);
-		}
+		$this->update_item('enabled',$new_enabled,$song_id);
 
 	} // update_enabled
 

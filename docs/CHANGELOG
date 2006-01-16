@@ -4,6 +4,8 @@
 
 --------------------------------------------------------------------------
   v.3.3.2-Beta2 
+  	- Fixed disable/enable functions which were incorrectly referencing
+		session variables to check for permission (always failed)
   	- Fixed lack of default amazon web url which prevented searching
 		from working at all if you had not updated yoru config 
 		file

@@ -126,7 +126,7 @@ elseif ( $_REQUEST['your_popular_songs'] ) {
 	$song_ids = get_popular_songs($_REQUEST['your_popular_songs'], 'your', $user->username);
 }
 
-
+/* FIXME! */
 if ( !$_REQUEST['action'] or $_REQUEST['action'] == 'm3u' ) {
 
 	$stream_type = conf('playlist_type');
@@ -138,10 +138,4 @@ if ( !$_REQUEST['action'] or $_REQUEST['action'] == 'm3u' ) {
 	$stream->start();
 } // if streaming
 
-elseif ( $_REQUEST['action'] == 'show' ) {
-    // Show the song details, or the list
-    // of songs.
-    // TODO
-}
-
-
+?>
