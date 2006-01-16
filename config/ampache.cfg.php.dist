@@ -47,8 +47,6 @@ local_length = 900
 # This is the DOMAIN for the cookie that stores your session key
 # this must be set to the domain of your host or you will not be
 # able to log in make sure you including the leading .
-# This is not needed unless you are using libglue for more than one 
-# website, and you are using SSO
 # DEFAULT: ""
 #sess_domain             = .yourwebsite.com
 
@@ -64,19 +62,6 @@ sess_cookielife         = 0
 # Is the cookie a "secure" cookie?
 # DEFAULT: 0
 sess_cookiesecure       = 0
-
-# Path your copy of libglue (Included with Ampache)
-# Uncomment this if you have moved libglue to a non-standard location
-# DEFAULT: /libglue
-#libglue_path = "/libglue"
-
-# Pre-Defined Error messages
-# you should not need to edit these
-empty_field = "You left one or more fields empty.  Please enter both your username and password to log in."
-bad_auth_cred = "Unable to authenticate using this service: This is most likely a configuration mistake by the site administrator."
-user_not_found = "Username not found."
-login_failed = "Bad username or password."
-connect_error = "Could not connect to authentication server."
 
 ####################
 #  The conf vars!  #

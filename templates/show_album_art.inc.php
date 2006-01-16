@@ -41,7 +41,7 @@ while ($i <= $rows) {
 				<img src="<?php echo scrub_out($images[$key]['url']); ?>" border="0" height="175" width="175" /><br />
 				</a>
 				<p align="center">
-				[<a href="<?php echo conf('web_path'); ?>/albums.php?action=select_art&amp;image=<?php echo $i; ?>&amp;album_id=<?php echo urlencode($_REQUEST['album_id']); ?>">Select</a>]
+				[<a href="<?php echo conf('web_path'); ?>/albums.php?action=select_art&amp;image=<?php echo $key; ?>&amp;album_id=<?php echo urlencode($_REQUEST['album_id']); ?>">Select</a>]
 				</p>
 			</td>
 <?php 

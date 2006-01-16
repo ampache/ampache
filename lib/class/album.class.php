@@ -422,34 +422,35 @@ class Album {
 		// No coverurl specified search amazon
 	        if (empty($coverurl)) { 
 
-			if (empty($keywords)) { 
-				
-				$keywords = $this->name;
-				/* If this isn't a various album combine with artist name */
-				if ($this->artist_count == '1') { $keywords .= ' ' . $this->artist; }
-			}
-               /* Create Base Vars */
-               $amazon_base_urls = array();
+		if (empty($keywords)) { 		
+			$keywords = $this->name;
+			/* If this isn't a various album combine with artist name */
+			if ($this->artist_count == '1') { $keywords .= ' ' . $this->artist; }
+		}
+			
+		/* Create Base Vars */
+		$amazon_base_urls = array();
 
-               /* Attempt to retrive the album art order */
-               $config_value = conf('amazon_base_urls');
-
-               /* If it's not set */
-               if (empty($config_value)) { 
-		       /* do nothing for now */
-               }
-               elseif (!is_array($config_value)) { 
-	               array_push($amazon_base_urls,$config_value);
-               }
-               else { 
-                       $amazon_base_urls = array_merge($amazon_base_urls, conf('amazon_base_urls'));
-               }
+		/* Attempt to retrive the album art order */
+		$config_value = conf('amazon_base_urls');
+               
+		/* If it's not set */
+		if (empty($config_value)) { 
+			$amazon_base_urls = array('http://webservices.amazon.com');
+		}
+		elseif (!is_array($config_value)) { 
+	        	array_push($amazon_base_urls,$config_value);
+		}
+		else { 
+			$amazon_base_urls = array_merge($amazon_base_urls, conf('amazon_base_urls'));
+		}
 
 	       /* Foreach through the base urls that we should check */
                foreach ($amazon_base_urls AS $amazon_base) { 
 
 		    	// Create the Search Object
 	        	$amazon = new AmazonSearch(conf('amazon_developer_key'), $amazon_base);
+			$search_results = array();
 
 			/* Setup the needed variables */
 			$max_pages_to_search = max(conf('max_amazon_results_pages'),$amazon->_default_results_pages);

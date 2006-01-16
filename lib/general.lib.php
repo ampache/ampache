@@ -151,14 +151,9 @@ function read_config($config_file, $debug=0, $test=0) {
 
     } // foreach
 
-    if (isset($config_name) && isset(${$config_name}) && count(${$config_name})) {
-        $results[$config_name] = ${$config_name};
-    }
-
-    if($debug) echo "</pre>";
+    if ($debug) { echo "</pre>\n"; }
 
     return $results;
-
 
 } // read_config
 

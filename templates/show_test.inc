@@ -29,19 +29,19 @@ $row_classes = array('even','odd');
 <title>Ampache -- Debug Page</title>
 </head>
 <body bgcolor="#f0f0f0">
-<h2><?php echo _("Ampache Debug"); ?></h2>
-<p><?php echo _("You've reached this page because a configuration error has occured. Debug Information below"); ?></p>
+<h2><?php echo _('Ampache Debug'); ?></h2>
+<p><?php echo _('You\'ve reached this page because a configuration error has occured. Debug Information below'); ?></p>
 
 <table border="0" cellpadding="3" cellspacing="0">
 <tr>
-	<td><font size="+1"><?php echo _("CHECK"); ?></font></td>
+	<td><font size="+1"><?php echo _('CHECK'); ?></font></td>
 	<td>
-		<font size="+1"><?php echo _("STATUS"); ?></font>	
+		<font size="+1"><?php echo _('STATUS'); ?></font>	
 	</td>
-	<td><font size="+1"><?php echo _("DESCRIPTION"); ?></font></td>
+	<td><font size="+1"><?php echo _('DESCRIPTION'); ?></font></td>
 </tr>
 <tr>
-	<td valign="top"><?php echo _("PHP Version"); ?></td>
+	<td valign="top"><?php echo _('PHP Version'); ?></td>
 	<td valign="top">[
 	<?
 		if (!check_php_ver()) { 
@@ -56,11 +56,11 @@ $row_classes = array('even','odd');
 	]
 	</td>
 	<td>
-	<?php echo _("This tests to make sure that you are running a version of PHP that is known to work with Ampache."); ?>
+	<?php echo _('This tests to make sure that you are running a version of PHP that is known to work with Ampache.'); ?>
 	</td>
 </tr>
 <tr>
-        <td valign="top"><?php echo _("Mysql for PHP"); ?></td>
+        <td valign="top"><?php echo _('Mysql for PHP'); ?></td>
         <td valign="top">[
         <?
                 if (!check_php_mysql()) {
@@ -75,11 +75,11 @@ $row_classes = array('even','odd');
         ]
         </td>
         <td>
-	<?php echo _("This test checks to see if you have the mysql extensions loaded for PHP. These are required for Ampache to work."); ?>
+	<?php echo _('This test checks to see if you have the mysql extensions loaded for PHP. These are required for Ampache to work.'); ?>
         </td>
 </tr>
 <tr>
-	<td valign="top"><?php echo _("PHP Session Support"); ?></td>
+	<td valign="top"><?php echo _('PHP Session Support'); ?></td>
 	<td valign="top">[
 	<?
 		if (!check_php_session()) { 
@@ -94,12 +94,12 @@ $row_classes = array('even','odd');
 	]
 	</td>
 	<td>
-	<?php echo _("This test checks to make sure that you have PHP session support enabled. Sessions are required for Ampache to work."); ?>
+	<?php echo _('This test checks to make sure that you have PHP session support enabled. Sessions are required for Ampache to work.'); ?>
 	</td>
 </tr>
 <tr>
-	<td valing="top"><?php echo _("PHP ICONV Support"); ?></td>
-	<td valing="top">[
+	<td valign="top"><?php echo _('PHP ICONV Support'); ?></td>
+	<td valign="top">[
 	<?
 		if (!check_php_iconv()) { 
 			$status['iconv_php'] = 'false';
@@ -112,11 +112,11 @@ $row_classes = array('even','odd');
 	?>]
 	</td>
 	<td>
-	<?php echo _("This test checks to make sure you have Iconv support installed. Iconv support is not required for Ampache, but it is highly recommended"); ?>
+	<?php echo _('This test checks to make sure you have Iconv support installed. Iconv support is not required for Ampache, but it is highly recommended'); ?>
 	</td>
 </tr>
 <tr>
-	<td valign="top"><?php echo _("Ampache.cfg.php Exists"); ?></td>
+	<td valign="top"><?php echo _('Ampache.cfg.php Exists'); ?></td>
 	<td valign="top">[ 
 	<?
 		if (!read_config_file($configfile)) {
@@ -131,13 +131,13 @@ $row_classes = array('even','odd');
 	]
 	</td>
 	<td width="350px">
-	<?php echo _("This attempts to read /config/ampache.cfg.php If this fails either the ampache.cfg.php is not in the correct locations or
-	it is not currently readable by your webserver."); ?>
+	<?php echo _('This attempts to read /config/ampache.cfg.php If this fails either the ampache.cfg.php is not in the correct locations or
+	it is not currently readable by your webserver.'); ?>
 	</td>
 </tr>
 <tr>
 	<td valign="top">
-		<?php echo _("Ampache.cfg.php Configured?"); ?>
+		<?php echo _('Ampache.cfg.php Configured?'); ?>
 	</td>
 	<td valign="top">[ 
 	<?
@@ -178,15 +178,9 @@ $row_classes = array('even','odd');
 	</td>
 	<td>
 	<?php if (count($difference)) {
-		if (!count($difference['conf'])) { $difference['conf'] = array(); }
-		if (!count($difference['libglue'])) { $difference['libglue'] = array(); }
-		echo _("Ampache.cfg.php is missing the following:");
-		echo "<br />" . _("Under CONF") . "<br /><dl>\n";
-		foreach ($difference['conf'] as $key=>$value) { 
-			echo "\t<dd>$key = \"$value\"</dd>\n";
-		}
-		echo "</dl>\n<br />" . _("Under LIBGLUE") . "<br /><dl>\n";
-		foreach ($difference['libglue'] as $key=>$value) { 
+		echo _('Ampache.cfg.php is missing the following:');
+		echo "<br /><dl>\n";
+		foreach ($difference as $key=>$value) { 
 			echo "\t<dd>$key = \"$value\"</dd>\n";
 		}
 		echo "</dl><br />\n";
@@ -199,7 +193,7 @@ $row_classes = array('even','odd');
 	<td valign="top"><?php echo _("DB Connection"); ?></td>
 	<td valign="top">[
 	<?
-		$db = check_database($results['libglue']['local_host'], $results['libglue']['local_username'], $results['libglue']['local_pass'],$results['libglue']['local_db']);
+		$db = check_database($results['local_host'], $results['local_username'], $results['local_pass'],$results['local_db']);
 		if (!$db) { 
 			$status['check_db'] = 'false';
 			echo " <font color=\"red\">ERROR</font> ";
@@ -219,7 +213,7 @@ $row_classes = array('even','odd');
 	<td valign="top">DB Inserted</td>
 	<td valign="top">[
 	<?
-		$db_inserted = check_database_inserted($db,$results['libglue']['local_db']);
+		$db_inserted = check_database_inserted($db,$results['local_db']);
 		if (!$db_inserted) { 
 			$status['check_db_insert'] = 'false';
 			echo " <font color=\"red\">ERROR</font> ";

@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2005 Ampache.org
+ Copyright (c) 2001 - 2006 Ampache.org
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
@@ -47,7 +47,6 @@ class AmazonSearch {
 	var $_default_results_pages=1;
     
 	function AmazonSearch($token,  $base_url_param = '', $associates_id = 'none') {
-	  //	  log_event($GLOBALS['user']->username,'amazon-search-results',"base_url_param='$base_url_param'");
 	  
    		if($base_url_param != ''){$this->base_url = $base_url_param . $this->url_suffix; 
 		  if (conf('debug')) { 

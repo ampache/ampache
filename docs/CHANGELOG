@@ -4,6 +4,11 @@
 
 --------------------------------------------------------------------------
   v.3.3.2-Beta2 
+  	- Fixed lack of default amazon web url which prevented searching
+		from working at all if you had not updated yoru config 
+		file
+  	- Fixed read_config so that it loads faster, removed ~1500 
+		preg_match calls per page (Thx XGizzmo)
   	- Rewrote entire Flag method, this includes the edit functionality
 	- Fixed play selected on playlists, it no longer always plays
 		everything. 

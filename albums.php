@@ -61,7 +61,7 @@ elseif (isset($album)) {
 // Finds the Album art from amazon
 elseif ($_REQUEST['action'] === 'find_art') {
 
-	if (!$user->has_access('25')) { access_denied(); }
+	if (!$GLOBALS['user']->has_access('25')) { access_denied(); }
 	
 	// csammis:  In response to https://ampache.bountysource.com/Task.View?task_id=86,
 	// adding retry to album art searching. I hope my PHP style doesn't make vollmer cry,
@@ -70,7 +70,8 @@ elseif ($_REQUEST['action'] === 'find_art') {
 	// *NOTE* I knocked it up a notch with some more horrible code :S - Vollmer
 
 	/* Echo notice if no amazon token is found, but it's enabled */
-	if (in_array('amazon',conf('album_art_order')) AND !conf('amazon_developer_key')) { 
+		
+	if (!conf('amazon_developer_key')) { 
 		echo "<br /><div class=\"fatalerror\">" . _("Error") . ": " . _("No Amazon Developer Key set, amazon album art searching will not work")  . "</div>";
 	}
 
@@ -101,7 +102,7 @@ elseif ($_REQUEST['action'] === 'find_art') {
 		include(conf('prefix') . '/templates/show_album_art.inc.php');
 	}
 	else {
-		show_confirmation(_("Album Art Not Located"),_("Album Art could not be located at this time. This may be due to Amazon being busy, or the album not being present in their collection."),"/albums.php?action=show&amp;album=" . $album->id);
+		show_confirmation(_('Album Art Not Located'),_('Album Art could not be located at this time. This may be due to Amazon being busy, or the album not being present in their collection.'),"/albums.php?action=show&amp;album=" . $album->id);
   	}
   
 	$albumname = $album->name;

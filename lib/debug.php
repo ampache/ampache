@@ -170,21 +170,30 @@ function check_php_iconv() {
 */
 function check_config_values($conf) { 
         
-        if (!$conf['libglue']['local_host']) { 
+	if (!$conf['local_host']) { 
                 return false;
         }
-        if (!$conf['libglue']['local_db']) { 
+        if (!$conf['local_db']) { 
                 return false;
         } 
-        if (!$conf['libglue']['local_username']) { 
+        if (!$conf['local_username']) { 
                 return false;
         } 
-        if (!$conf['libglue']['local_pass']) { 
+        if (!$conf['local_pass']) { 
                 return false;
         }
-        if (!$conf['libglue']['local_length']) { 
+        if (!$conf['local_length']) { 
                 return false;
         }
+	if (!$conf['sess_name']) { 
+		return false;
+	}
+	if (!isset($conf['sess_cookielife'])) { 
+		return false;
+	}
+	if (!isset($conf['sess_cookiesecure'])) { 
+		return false;
+	}
 
         return true;
 
@@ -196,7 +205,6 @@ function check_config_values($conf) {
 		and ampache.cfg.dst
 */
 function show_compare_config($prefix) { 
-
 
 	// Live Config File
 	$live_config = $prefix . "/config/ampache.cfg.php";
@@ -225,58 +233,17 @@ function debug_read_config($config_file,$debug) {
     $data = explode("\n",$file_data);
     if($debug) echo "<pre>";
     $count = 0;
+
+    $results = array();
     
     foreach($data as $value) {
         $count++;
         
         $value = trim($value);
-        
-        if (preg_match("/^\[([A-Za-z]+)\]$/",$value,$matches)) {
-                // If we have previous data put it into $results...
-                if (isset($config_name) && isset(${$config_name}) && count(${$config_name})) {
-                                $results[$config_name] = ${$config_name};
-                }
-                
-                $config_name = $matches[1];
-        
-        } // if it is a [section] name
+       
+       	if (substr($value,0,1) == '#') { continue; } 
 
-        
-        elseif (isset($config_name)) {
-                
-                // if it's not a comment
-                if (preg_match("/^#?([\w\d]+)\s+=\s+[\"]{1}(.*?)[\"]{1}$/",$value,$matches)
-                        || preg_match("/^#?([\w\d]+)\s+=\s+[\']{1}(.*?)[\']{1}$/", $value, $matches)
-                        || preg_match("/^#?([\w\d]+)\s+=\s+[\'\"]{0}(.*)[\'\"]{0}$/",$value,$matches)) {
-                    
-                    if (isset(${$config_name}[$matches[1]]) && is_array(${$config_name}[$matches[1]]) && isset($matches[2]) ) {
-                        if($debug) echo "Adding value <strong>$matches[2]</strong> to existing key <strong>$matches[1]</strong>\n";
-                        array_push(${$config_name}[$matches[1]], $matches[2]);
-                    }
-                    
-                    elseif (isset(${$config_name}[$matches[1]]) && isset($matches[2]) ) {
-                        if($debug) echo "Adding value <strong>$matches[2]</strong> to existing key $matches[1]</strong>\n";
-                        ${$config_name}[$matches[1]] = array(${$config_name}[$matches[1]],$matches[2]);
-                    }
-
-                    elseif ($matches[2] !== "") {
-                        if($debug) echo "Adding value <strong>$matches[2]</strong> for key <strong>$matches[1]</strong>\n";
-                        ${$config_name}[$matches[1]] = $matches[2];
-                    }
-
-                    // if there is something there and it's not a comment
-                    elseif ($value{0} !== "#" AND strlen(trim($value)) > 0 AND !$test AND strlen($matches[2]) > 0) {
-                        echo "Error Invalid Config Entry --> Line:$count"; return false;
-                    } // elseif it's not a comment and there is something there
-
-                    else {
-                        if($debug) echo "Key <strong>$matches[1]</strong> defined, but no value set\n";
-                    }
-                } // end if it's not a comment
-
-        } // elseif no config_name
-
-        elseif (preg_match("/^#?([\w\d]+)\s+=\s+[\"]{1}(.*?)[\"]{1}$/",$value,$matches)
+        if (preg_match("/^#?([\w\d]+)\s+=\s+[\"]{1}(.*?)[\"]{1}$/",$value,$matches)
                         || preg_match("/^#?([\w\d]+)\s+=\s+[\']{1}(.*?)[\']{1}$/", $value, $matches)
                         || preg_match("/^#?([\w\d]+)\s+=\s+[\'\"]{0}(.*)[\'\"]{0}$/",$value,$matches)) {
 
@@ -334,24 +301,14 @@ function debug_compare_configs($config,$dist_config) {
 	$dist_results 	= debug_read_config($dist_config,0);
 
 	$missing = array();
-	if (!count($dist_results['conf'])) { $dist_results['conf'] = array(); }
-	if (!count($dist_results['libglue'])) { $dist_results['libglue'] = array(); }
 
-	foreach ($dist_results['conf'] as $key=>$value) { 
+	foreach ($dist_results as $key=>$value) { 
 
-		if (!isset($results['conf'][$key])) { 
-			$missing['conf'][$key] = $value;
+		if (!isset($results[$key])) { 
+			$missing[$key] = $value;
 		}
 		
 	} // end foreach conf
-
-	foreach ($dist_results['libglue'] as $key=>$value) { 
-
-		if (!isset($results['libglue'][$key])) { 
-			$missing['libglue'][$key] = $value;
-		} 
-		
-	} // end foreach libglue
 
 	return $missing;
 
