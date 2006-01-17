@@ -110,6 +110,9 @@ if (!$results['ellipse_threshold_title']) {
 if (!$results['raw_web_path']) { 
 	$results['raw_web_path'] = '/';
 }
+if (!$_SERVER['SERVER_NAME']) { 
+	$_SERVER['SERVER_NAME'] = '';
+}
 
 /* Variables needed for vauth Module */
 $results['cookie_path'] 	= $results['raw_web_path'];
