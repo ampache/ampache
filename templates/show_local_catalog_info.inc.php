@@ -20,9 +20,9 @@
 
 */
 ?>
-<table width="100%" class="border" cellpadding="0" cellspacing="0"> 
+<table class="border" cellspacing="1" cellpadding="3" width="100%" border="0"> 
 <tr class="table-header">
-	<th colspan="2"><?php echo _("Catalog Statistics"); ?> </th>
+	<td class="table-header" colspan="2"><?php echo _("Catalog Statistics"); ?> </td>
 </tr>
 <tr class="<?php echo flip_class(); ?>">
 	<td><?php echo _("Total Users"); ?></td>
