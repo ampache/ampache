@@ -30,7 +30,7 @@ function fmt_time($seconds) {return sprintf ("%d:%02d", $seconds/60, $seconds % 
 global $condPL;
 ?>
 
-<div align="center">
+<div align="center"><!--  Is this div neccesary??? -->
 <table border="0" cellpadding="3" cellspacing="0" class="tabledata"><!-- MPD Control table -->
 <tr class="table-header">
 	<td colspan="2"><?php echo _("MPD Play Control"); ?></td>

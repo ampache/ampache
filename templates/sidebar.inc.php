@@ -42,11 +42,22 @@ $web_path = conf('web_path');
 ?>
 <!-- <div id="navcontainer">  --> <!--sigger: appears this div is not neccesary and duplicates #sidebar -->
 <ul id="navlist">
-	<li id="active">
+	<li<?php
+                if ($location['page'] == "index.php"){
+                    echo " id=\"activetopmenu\" ";
+                    }?>>
 		<a href="<?php echo $web_path; ?>/index.php" id="current"><?php echo _("Home"); ?></a>
 	</li>
 <?php if ($GLOBALS['user']->has_access(100)) { ?>
-	<li>
+	<li<?php
+                if ($location['page'] == "admin/index.php" ||
+                    $location['page'] == "admin/users.php" ||
+                    $location['page'] == "admin/mail.php" ||
+                    $location['page'] == "admin/catalog.php" ||
+                    $location['page'] == "admin/preferences.php" ||
+                    $location['page'] == "admin/access.php" ){
+                    echo " id=\"activetopmenu\" ";
+                    }?>>
 		<a href="<?php echo $web_path; ?>/admin/index.php"><?php echo _("Admin"); ?></a>
 	<?php
 		if ($GLOBALS['theme']['submenu'] != 'simple') {
@@ -62,10 +73,18 @@ $web_path = conf('web_path');
 } // end if access 
 	?>
 	
-	<li>
+	<li<?php
+                if ($location['page'] == "preferences.php" ){
+                    echo " id=\"activetopmenu\" ";
+                    }?>>
 		<a href="<?php echo $web_path; ?>/preferences.php"><?php echo _("Preferences"); ?></a>
 	</li>
-	<li>
+	<li<?php
+                if ($location['page'] == "browse.php" ||
+                    $location['page'] == "artists.php" ||
+                    $location['page'] == "albums.php" ){
+                    echo " id=\"activetopmenu\" ";
+                    }?>>
 		<a href="<?php echo $web_path; ?>/browse.php"><?php echo _("Browse"); ?></a> 
 		<?php 
 		if ($GLOBALS['theme']['submenu'] != 'simple') { 
@@ -81,19 +100,31 @@ $web_path = conf('web_path');
 		?>
 
 <?php if ($GLOBALS['user']->prefs['upload']) { ?>
-	<li>
+	<li<?php
+                if ($location['page'] == "upload.php"){
+                    echo " id=\"activetopmenu\" ";
+                    }?>>
 		<a href="<?php echo $web_path; ?>/upload.php"><?php echo _("Upload"); ?></a>
 	</li>
 <?php } // end if ($GLOBALS['user']->prefs['upload']) ?>
-	<li>
+	<li<?php
+                if ($location['page'] == "playlist.php"){
+                    echo " id=\"activetopmenu\" ";
+                    }?>>
 		<a href="<?php echo $web_path; ?>/playlist.php"><?php echo _("Playlists"); ?></a>
 	</li>
 <?php if ($GLOBALS['user']->prefs['play_type'] == 'mpd') { ?>
-	<li>
+	<li<?php
+                if ($location['page'] == "mpd.php"){
+                    echo " id=\"activetopmenu\" ";
+                    }?>>
 		<a href="<?php echo $web_path; ?>/mpd.php"><?php echo _("Local Play"); ?></a>
 	</li>
 <?php } // end if ($GLOBALS['user']->prefs['play_type'] == 'mpd') ?>
-	<li>
+	<li<?php
+                if ($location['page'] == "search.php"){
+                    echo " id=\"activetopmenu\" ";
+                    }?>>
 		<a href="<?php echo $web_path; ?>/search.php"><?php echo _("Search"); ?></a>
 	</li>
 <?php if ($GLOBALS['theme']['orientation'] != 'horizontal') { ?>
@@ -108,7 +139,10 @@ $web_path = conf('web_path');
 		</form>
 	</li>
 <?php } // end if ($GLOBALS['theme']['orientation'] != 'horizontal')?>
-	<li>
+	<li<?php
+                if ($location['page'] == "randomplay.php"){
+                    echo " id=\"activetopmenu\" ";
+                    }?>>
 		<a href="<?php echo $web_path; ?>/randomplay.php"><?php echo _('Random'); ?></a>
 	</li>
 <?php if ($GLOBALS['theme']['orientation'] != 'horizontal') { ?> 
