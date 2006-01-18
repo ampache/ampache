@@ -75,8 +75,6 @@ function get_theme($name) {
 */
 function set_theme_colors($theme_name,$user_id) { 
 
-	
-
 	if (make_bool($user_id)) { 
 		$user_sql = "`user`='$user_id' AND";
 	}
@@ -87,18 +85,20 @@ function set_theme_colors($theme_name,$user_id) {
 	*/
 	$theme = get_theme($theme_name);	
 	$GLOBALS['theme'] = $theme;
-	if (!count($theme['color'])) { return false; }
+	if (!count($theme)) { return false; }
 
-	foreach ($theme['color'] as $key=>$color) { 
+	foreach ($theme as $key=>$color) { 
 
 		$sql = "SELECT id FROM preferences WHERE name='" . sql_escape($key) . "'";
 		$db_results = mysql_query($sql, dbh());
 
 		$results = mysql_fetch_array($db_results);
-
-		$sql = "UPDATE user_preference SET `value`='" . sql_escape($color) . "' WHERE $user_sql " . 
-			" preference='" . $results[0] . "'";
-		$db_results = mysql_query($sql, dbh());
+		// Quick hack this needs to be fixed
+		if ($results) { 
+			$sql = "UPDATE user_preference SET `value`='" . sql_escape($color) . "' WHERE $user_sql " . 
+				" preference='" . $results[0] . "'";
+			$db_results = mysql_query($sql, dbh());
+		}
 
 	} // theme colors
 

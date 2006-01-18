@@ -31,10 +31,10 @@ echo "<ul class=\"star-rating\">\n";
 
 /* Handle the "Not rated" possibility */
 if ($rating->rating == '-1') { 
-	echo "<li><a href=\"" . $base_url . "&amp;rating=-1\" title=\"don't play\" class=\"zero-stars\">-1</a></li>\n";
+	echo "<li class=\"zero-stars\"><a href=\"" . $base_url . "&amp;rating=-1\" title=\"don't play\" class=\"zero-stars\">-1</a></li>\n";
 }
 else { 
-	echo "<li><a href=\"" . $base_url . "&amp;rating=-1\" title=\"remove rating\" class=\"zero-stars\">-1</a></li>\n";
+	echo "<li class=\"zero-stars\"><a href=\"" . $base_url . "&amp;rating=-1\" title=\"remove rating\" class=\"zero-stars\">-1</a></li>\n";
 }
 // decide width of rating. image is 16 px wide
 $width = $rating->rating*16;

@@ -26,17 +26,17 @@
  * that have ['title'] ['url'] and ['active'] url assumes no conf('web_path')
  */
 
-$admin_items[] = array('title'=>_("Users"),'url'=>'admin/users.php','active'=>'');
-$admin_items[] = array('title'=>_("Mail Users"),'url'=>'admin/mail.php','active'=>'');
-$admin_items[] = array('title'=>_("Catalog"),'url'=>'admin/catalog.php','active'=>'');
-$admin_items[] = array('title'=>_("Site Preferences"),'url'=>'admin/preferences.php','active'=>'');
-$admin_items[] = array('title'=>_("Access List"),'url'=>'admin/access.php','active'=>'');
+$admin_items[] = array('title'=>_("Users"),'url'=>'admin/users.php','active'=>$location['page']);
+$admin_items[] = array('title'=>_("Mail Users"),'url'=>'admin/mail.php','active'=>$location['page']);
+$admin_items[] = array('title'=>_("Catalog"),'url'=>'admin/catalog.php','active'=>$location['page']);
+$admin_items[] = array('title'=>_("Site Preferences"),'url'=>'admin/preferences.php','active'=>$location['page']);
+$admin_items[] = array('title'=>_("Access List"),'url'=>'admin/access.php','active'=>$location['page']);
 
-$browse_items[] = array('title'=>_("Albums"),'url'=>'albums.php','active'=>'');
-$browse_items[] = array('title'=>_("Artists"),'url'=>'artists.php','active'=>'');
-$browse_items[] = array('title'=>_("Genre"),'url'=>'browse.php?action=genre','active'=>'');
-$browse_items[] = array('title'=>_("Lists"),'url'=>'browse.php','active'=>'');
-//$browse_items[] = array('title'=>'File','url'=>'files.php','active'=>'');
+$browse_items[] = array('title'=>_("Albums"),'url'=>'albums.php','active'=>$location['page']);
+$browse_items[] = array('title'=>_("Artists"),'url'=>'artists.php','active'=>$location['page']);
+$browse_items[] = array('title'=>_("Genre"),'url'=>'browse.php?action=genre','active'=>$location['page']);
+$browse_items[] = array('title'=>_("Lists"),'url'=>'browse.php','active'=>$location['page']);
+//$browse_items[] = array('title'=>'File','url'=>'files.php','active'=>''); <!--pb1dft: this can be cleaned up -->
 
 $web_path = conf('web_path');
 ?>
@@ -46,7 +46,7 @@ $web_path = conf('web_path');
                 if ($location['page'] == "index.php"){
                     echo " id=\"activetopmenu\" ";
                     }?>>
-		<a href="<?php echo $web_path; ?>/index.php" id="current"><?php echo _("Home"); ?></a>
+		<a href="<?php echo $web_path; ?>/index.php"><?php echo _("Home"); ?></a>
 	</li>
 <?php if ($GLOBALS['user']->has_access(100)) { ?>
 	<li<?php
