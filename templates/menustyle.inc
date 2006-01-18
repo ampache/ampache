@@ -123,6 +123,83 @@
     #sidebar li:hover ul, #sidebar li.sfhover ul {
         left: auto;  /* this calls the submenu back when the parent li is hovered. */
     }
+/*star rating styles */
+       /*             styles for the star rater                */      
 
+       .star-rating{
+               list-style:none;
+               margin: 0px;
+               padding:0px;
+               width: 80px;
+               height: 15px;
+               position: relative;
+               background: url(<?php echo conf('web_path'); ?>/images/ratings/star_rating.gif) top left repeat-x;                
+       }
+       .star-rating li{
+               padding:0px;
+               margin:0px;
+               /*\*/
+               float: right;
+              /* */
+       }
+       .star-rating li a{
+               display:block;
+               width:16px;
+               height: 15px;
+               text-decoration: none;
+               text-indent: -9000px;
+               z-index: 20;
+               position: absolute;
+               padding: 0px;
+       }
+       .star-rating li a:hover{
+               background: url(<?php echo conf('web_path'); ?>/images/ratings/star_rating.gif) left center;
+               z-index: 2;
+               left: 0px;
+       }
+       .star-rating a.zero-stars {
+	       background: url(<?php echo conf('web_path'); ?>/images/ratings/x_off.gif);
+	       position: absolute;
+	       height: 15px;
+	       display: block;
+	}
+       .star-rating a.one-stars{
+               left: 0px;
+       }
+       .star-rating a.one-stars:hover{
+               width:16px;
+       }
+       .star-rating a.two-stars{
+               left:16px;
+       }
+       .star-rating a.two-stars:hover{
+               width: 32px;
+       }
+       .star-rating a.three-stars{
+               left: 32px;
+       }
+       .star-rating a.three-stars:hover{
+               width: 48px;
+       }
+       .star-rating a.four-stars{
+               left: 48px;
+       }       
+       .star-rating a.four-stars:hover{
+               width: 64px;
+       }
+       .star-rating a.five-stars{
+               left: 64px;
+       }
+       .star-rating a.five-stars:hover{
+               width: 80px;
+       }
+       .star-rating li.current-rating{
+               background: url(<?php echo conf('web_path'); ?>/images/ratings/star_rating.gif) left bottom;
+               position: absolute;
+               height: 15px;
+               display: block;
+               text-indent: -9000px;
+               z-index: 1;
+       }               
 -->
 </style>

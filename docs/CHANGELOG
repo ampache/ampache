@@ -4,6 +4,7 @@
 
 --------------------------------------------------------------------------
   v.3.3.2-Beta2 
+  	- Fixed ratings images to use Javascript hotness (Thx burnsides)
   	- Fixed a catalog update bug that was introduced when I switched 
 		over to vauth. 
 	- Fixed some minor Local Play display/consistency issues (Thx Morgan)
