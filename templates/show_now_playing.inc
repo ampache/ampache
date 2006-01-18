@@ -83,6 +83,7 @@ foreach ($results as $item) {
 		</table>
 		</div>
 <?php
+	$c++;
 	} // end if (is_object($song))
 } // end foreach($results as $item)
 } // end if (count($results))
