@@ -47,7 +47,7 @@ foreach ($results as $item) {
 		<?php } ?>
 		<table class="border" cellspacing="1" cellpadding="3" border="0" width="100%">
 		<tr class="even">
-			<td>
+			<td width="20%">
 				<div id="np_songid_<?php echo $c; ?>_holder" style="visibility: hidden; position:absolute; z-index: 10000;">
 				<?php echo $song->id; ?>
 				</div>
@@ -55,14 +55,14 @@ foreach ($results as $item) {
 				<?php if (conf('use_auth')) { echo $np_user->fullname; } ?>
 				</div>
 			</td>
-			<td>
+			<td width="30%">
 				<div id="np_song_<?php echo $c; ?>">
 				<a title="<?php echo scrub_out($song->f_title); ?>" href="<?php echo $web_path; ?>/song.php?action=m3u&amp;song=<?php echo $song->id; ?>">
 				<?php echo $song->f_title; ?>
 				</a>
 				</div>
 			</td>
-			<td>
+			<td width="30%">
 				<div id="np_albumartist_<?php echo $c; ?>">
 				<a title="<?php echo scrub_out($song->f_album); ?>" href="<?php echo $web_path; ?>/albums.php?action=show&amp;album=<?php echo $song->album; ?>">
 				<?php echo $song->f_album; ?>
@@ -72,7 +72,7 @@ foreach ($results as $item) {
 				</a>
 				</div>
 			</td>
-			<td>
+			<td width="20%">
 				<div id="np_img_<?php echo $c; ?>">
 				<a target="_blank" href="<?php echo $web_path; ?>/albumart.php?id=<?php echo $song->album; ?>&amp;type=popup" onclick="popup_art('<?php echo $web_path; ?>/albumart.php?id=<?php echo $song->album; ?>&amp;type=popup'); return false;">
 				<img align="middle" border="0" src="albumart.php?id=<?php echo $song->album; ?>&amp;fast=1&amp;thumb=1" alt="Album Art" height="75" />
@@ -100,13 +100,13 @@ for ($x=$c; $x<5; $x++) {
 	<?php } // end if ($x==0)?>
 		<table class="border" cellspacing="1" cellpadding="3" border="0" width="100%">
 		<tr class="even">
-			<td>
+			<td width="20%">
 				<div id="np_songid_<?php echo $x; ?>_holder" style="visibility: hidden; position:absolute; z-index: 10000;"></div>
 				<div id="np_fullname_<?php echo $x; ?>"></div>
 			</td>
-			<td><div id="np_song_<?php echo $x; ?>"></div></td>
-			<td><div id="np_albumartist_<?php echo $x; ?>"></div></td>
-			<td><div id="np_img_<?php echo $x; ?>"></div></td>
+			<td width="30%"><div id="np_song_<?php echo $x; ?>"></div></td>
+			<td width="30%"><div id="np_albumartist_<?php echo $x; ?>"></div></td>
+			<td width="20%"><div id="np_img_<?php echo $x; ?>"></div></td>
 		</tr>
 		</table>
 	</div>
