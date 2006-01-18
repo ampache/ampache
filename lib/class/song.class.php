@@ -396,9 +396,8 @@ class Song {
 	*/
 	function update_year($new_year,$song_id=0) {
 		
-		if ($_SESSION['userdata']['access'] === 'admin') {
-			$this->update_item('year',$new_year,$song_id);
-		}
+		$this->_update_item('year',$new_year,$song_id,'100'); 
+		
 	} // update_year
 
 	/*!
@@ -407,9 +406,8 @@ class Song {
 	*/
 	function update_comment($new_comment,$song_id=0) { 
 		
-		if ($_SESSION['userdata']['access'] === 'admin') {
-			$this->update_item('comment',$new_comment,$song_id);
-		}
+		$this->_update_item('comment',$new_comment,$song_id,'100');
+		
 	} // update_comment
 
 	/*!
@@ -418,9 +416,8 @@ class Song {
 	*/
 	function update_title($new_title,$song_id=0) {
 	
-		if ($_SESSION['userdata']['access'] === 'admin') { 
-			$this->update_item('title',$new_title,$song_id);
-		}
+		$this->_update_item('title',$new_title,$song_id,'100');
+			
 	} // update_title
 
 	/*!
@@ -429,9 +426,7 @@ class Song {
 	*/
 	function update_bitrate($new_bitrate,$song_id=0) {
 		
-		if ($_SESSION['userdata']['access'] === 'admin') {
-			$this->update_item('bitrate',$new_bitrate,$song_id);
-		}
+		$this->_update_item('bitrate',$new_bitrate,$song_id,'100');
 
 	} // update_bitrate
 
@@ -441,9 +436,7 @@ class Song {
 	*/
 	function update_rate($new_rate,$song_id=0) {
 		
-		if ($_SESSION['userdata']['access'] === 'admin') {
-			$this->update_item('rate',$new_rate,$song_id);
-		}
+		$this->_update_item('rate',$new_rate,$song_id,'100');
 
 	} // update_rate
 
@@ -453,9 +446,7 @@ class Song {
 	*/
 	function update_mode($new_mode,$song_id=0) {
 
-		if ($_SESSION['userdata']['access'] === 'admin') {
-			$this->update_item('mode',$new_mode,$song_id);
-		}
+		$this->_update_item('mode',$new_mode,$song_id,'100');
 
 	} // update_mode
 
@@ -465,9 +456,7 @@ class Song {
 	*/
 	function update_size($new_size,$song_id=0) { 
 		
-		if ($_SESSION['userdata']['access'] === 'admin') { 
-			$this->update_item('size',$new_size,$song_id);
-		}
+		$this->_update_item('size',$new_size,$song_id,'100');
 
 	} // update_size
 
@@ -477,9 +466,7 @@ class Song {
 	*/
 	function update_time($new_time,$song_id=0) { 
 		
-		if ($_SESSION['userdata']['access'] === 'admin') { 
-			$this->update_item('time',$new_time,$song_id);
-		}
+		$this->_update_item('time',$new_time,$song_id,'100');
 
 	} // update_time
 
@@ -489,9 +476,7 @@ class Song {
 	*/
 	function update_track($new_track,$song_id=0) { 
 
-		if ($_SESSION['userdata']['access'] === 'admin') { 
-			$this->update_item('track',$new_track,$song_id);
-		}
+			$this->_update_item('track',$new_track,$song_id,'100');
 
 	} // update_track
 
@@ -501,9 +486,7 @@ class Song {
 	*/
 	function update_artist($new_artist,$song_id=0) {
 
-		if ($_SESSION['userdata']['access'] === 'admin') { 
-			$this->update_item('artist',$new_artist,$song_id);
-		} 
+		$this->_update_item('artist',$new_artist,$song_id,'100');
 
 	} // update_artist
 
@@ -513,9 +496,7 @@ class Song {
 	*/
 	function update_genre($new_genre,$song_id=0) { 
 
-		if ($_SESSION['userdata']['access'] === 'admin') { 
-			$this->update_item('genre',$new_genre,$song_id);
-		}
+		$this->_update_item('genre',$new_genre,$song_id,'100');
 
 	} // update_genre
 
@@ -525,9 +506,7 @@ class Song {
 	*/
 	function update_album($new_album,$song_id=0) { 
 
-		if ($_SESSION['userdata']['access'] === 'admin') {
-			$this->update_item('album',$new_album,$song_id);
-		}
+		$this->_update_item('album',$new_album,$song_id,'100');
 
 	} // update_album
 
@@ -539,9 +518,7 @@ class Song {
 
 		if (!$time) { $time = time(); }
 
-		if ($_SESSION['userdata']['access'] === 'admin') { 
-			$this->update_item('update_time',$time,$song_id);
-		}
+		$this->_update_item('update_time',$time,$song_id,'100');
 
 	} // update_utime
 
@@ -551,7 +528,7 @@ class Song {
 	*/
 	function update_played($new_played,$song_id=0) { 
 
-		$this->update_item('played',$new_played,$song_id);
+		$this->_update_item('played',$new_played,$song_id,'25');
 
 	} // update_played
 
@@ -562,22 +539,21 @@ class Song {
 	*/
 	function update_enabled($new_enabled,$song_id=0) {
 		
-		/* This should really be integrated into the update_item thing */
-		if (!$GLOBALS['user']->has_access(100)) { return false; }
-
-		$this->update_item('enabled',$new_enabled,$song_id);
+		$this->_update_item('enabled',$new_enabled,$song_id,'100');
 
 	} // update_enabled
 
-	/*!
-		@function update_item
-		@discussion this is a generic function that is called
-			    by all the other update functions... 
-		@param $field	The field we are updating
-		@param $value	The new value for said field
-		@param $song_id	ID of the song, uses $this->id by default
-	*/
-	function update_item($field,$value,$song_id=0) {
+	/**
+	 * _update_item
+	 * This is a private function that should only be called from within the song class. 
+	 * It takes a field, value song id and level. first and foremost it checks the level
+	 * against $GLOBALS['user'] to make sure they are allowed to update this record
+	 * it then updates it and sets $this->{$field} to the new value
+	 */
+	function _update_item($field,$value,$song_id=0,$level) {
+
+		/* Check them Rights! */
+		if (!$GLOBALS['user']->has_access($level)) { return false; }
 
 		if (!$song_id) { $song_id = $this->id; }
 
@@ -585,10 +561,11 @@ class Song {
 
 		$sql = "UPDATE song SET $field='$value' WHERE id='$song_id'";
 		$db_results = mysql_query($sql, dbh());
-	
 		$this->{$field} = $value;
 
-	} //update_item
+		return true;
+
+	} // update_item
 
 
 	/*!

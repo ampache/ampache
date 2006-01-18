@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2005 Ampache.org
+ Copyright (c) 2001 - 2006 Ampache.org
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
@@ -21,38 +21,61 @@
 */
 
 /**
- * Song Admin Document
- * This document can update/flag disable/enable songs, it's in the admin folder
- * because all of the above operations require elavated privs
- * @package Song
- * @catagory Admin
+ * Flag Admin Document
+ * This document handles the administrative aspects of 
+ * flagging. 
  */
 
 require('../modules/init.php');
-require_once(conf('prefix').'/lib/flag.php');
 
-if (!$user->has_access('100')) { 
+if (!$GLOBALS['user']->has_access('100')) { 
 	access_denied();
+	exit();
 }
 
-
-$action = scrub_in($_REQUEST['action']);
-$song = scrub_in($_REQUEST['song']);
-
-$return_referer = return_referer();
 show_template('header');
 
-$song_obj = new Song($_REQUEST['song_id']);
+$action = scrub_in($_REQUEST['action']);
 
-switch($action) {
-	case 'Update':
-	case 'update';
-        	update_song_info($song);
-	        edit_song_info($song);
+switch ($action) {
+	case 'edit_song':
+		$catalog = new Catalog();
+		$song = new Song($_REQUEST['song_id']);
+		$new_song = $song; 
+	
+		/* Setup the vars so we can use the update_song function */ 
+		$new_song->title 	= scrub_in($_REQUEST['title']);
+		$new_song->track 	= scrub_in($_REQUEST['track']);
+		$new_song->year  	= scrub_in($_REQUEST['year']);
+		$new_song->comment	= scrub_in($_REQUEST['comment']);
+		$new_song->genre	= scrub_in($_REQUEST['genre']);
+		$new_song->album	= scrub_in($_REQUEST['album']);
+		$new_song->artist	= scrub_in($_REQUEST['artist']);
+		/* Check the drop down vs string bs */
+		if (strlen($_REQUEST['genre_string'])) { 
+			$new_song->genre = $catalog->check_genre($_REQUEST['genre_string']);
+		}
+		if (strlen($_REQUEST['album_string'])) { 
+			$new_song->album = $catalog->check_album($_REQUEST['album_string']);
+		}
+		if (strlen($_REQUEST['artist_string'])) { 
+			$new_song->artist = $catalog->check_artist($_REQUEST['artist_string']);
+		}
+		/* Update this mofo */
+		$song->update_song($song->id,$new_song);
+		
+		/* Add a tagging record of this so we can fix the file */
+		if ($_REQUEST['flag']) { 
+			$flag = new Flag();
+			$flag->add($song->id,'song','retag','Edited Song, auto-tag');
+		}
+		show_confirmation(_('Song Updated'),_('The requested song has been updated'),$_SESSION['source']);
 	break;
-	case "Edit":
-	case "edit":
-		edit_song_info($song);
+	case 'show_edit_song':
+		$_SESSION['source'] = return_referer();
+		$song = new Song($_REQUEST['song']);
+		$song->format_song();
+		require_once (conf('prefix') . '/templates/show_edit_song.inc.php');
         break;
 	case 'disable':
 		// If we pass just one, make it still work
@@ -62,7 +85,7 @@ switch($action) {
 				$song_obj->update_enabled(0,$song_id);
 			} // end foreach
 		} // end else
-		show_confirmation(_("Songs Disabled"),_("The requested song(s) have been disabled"),htmlspecialchars($return_referer));
+		show_confirmation(_('Songs Disabled'),_('The requested song(s) have been disabled'),return_referer());
 	break;
 	case "enabled":
 		// If we pass just one, make it still work
@@ -72,10 +95,9 @@ switch($action) {
 				$song_obj->update_enabled(1,$song_id);
 			} // end foreach
 		} // end else
-	        show_confirmation(_("Songs Enabled"),_("The requested song(s) have been enabled"),htmlspecialchars($return_referer));
+	        show_confirmation(_('Songs Enabled'),_('The requested song(s) have been enabled'),return_referer());
         break;
 	default:
-	        echo "Don't know what to do yet.";
 	break;
 } // end switch
 

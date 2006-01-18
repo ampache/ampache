@@ -11,7 +11,7 @@
 
 /*
  * show_album_pulldown()
- *
+ * OLD FUNCTION!! use show_album_select($name,$selected)
  */
 
 function show_album_pulldown ($album) {

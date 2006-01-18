@@ -1214,4 +1214,84 @@ function show_songs ($song_ids, $playlist, $album=0) {
 
 } // show_songs
 
+/**
+ * show_album_select
+ * This displays a select of every album that we've got in Ampache, (it can be hella long) it's used
+ * by the Edit page, it takes a $name and a $album_id 
+ */
+function show_album_select($name='album',$album_id=0) { 
+
+	echo "<select name=\"$name\">\n";
+
+	$sql = "SELECT id, name, prefix FROM album ORDER BY name";
+	$db_results = mysql_query($sql, dbh());
+
+	while ($r = mysql_fetch_assoc($db_results)) { 
+		$selected = '';
+		$album_name = trim($r['prefix'] . " " . $r['name']);
+		if ($r['id'] == $album_id) { 
+			$selected = "selected=\"selected\"";
+		}
+
+		echo "\t<option value=\"" . $r['id'] . "\" $selected>" . scrub_out($album_name) . "</option>\n";
+		
+	} // end while
+
+	echo "</select>\n";
+
+} // show_album_select
+
+/**
+ * show_artist_select
+ * This is the same as the album select except it's *gasp* for artists how inventive!
+ */
+function show_artist_select($name='artist', $artist_id=0) { 
+
+	echo "<select name=\"$name\">\n";
+	
+	$sql = "SELECT id, name, prefix FROM artist ORDER BY name";
+	$db_results = mysql_query($sql, dbh());
+	
+	while ($r = mysql_fetch_assoc($db_results)) { 
+		$selected = '';
+		$artist_name = trim($r['prefix'] . " " . $r['name']);
+		if ($r['id'] == $artist_id) { 
+			$selected = "selected=\"selected\"";
+		}
+
+		echo "\t<option value=\"" . $r['id'] . "\" $selected>" . scrub_out($artist_name) . "</option>\n";
+
+	} // end while
+
+	echo "</select>\n";
+
+} // show_artist_select
+
+/**
+ * show_genre_select
+ * It's amazing we have three of these funtions now, this one shows a select of genres and take s name
+ * and a selected genre... Woot!
+ */
+function show_genre_select($name='genre',$genre_id=0) { 
+
+	echo "<select name=\"$name\">\n";
+
+	$sql = "SELECT id, name FROM genre ORDER BY name";
+	$db_results = mysql_query($sql, dbh());
+
+	while ($r = mysql_fetch_assoc($db_results)) { 
+		$selected = '';
+		$genre_name = $r['name'];
+		if ($r['id'] == $genre_id) { 
+			$selected = "selected=\"selected\"";
+		}
+	
+		echo "\t<option value=\"" . $r['id'] . "\" $selected>" . scrub_out($genre_name) . "</option>\n";
+	
+	} // end while
+
+	echo "</select>\n";
+
+} // show_genre_select
+
 ?>

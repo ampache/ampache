@@ -1093,8 +1093,6 @@ class Catalog {
 
 		} // foreach new Songs
 
-		//FIXME: Delete Songs that were not updated (gone)
-
 	        // now delete invalid entries
 		$this->clean_albums();
 		$this->clean_stats();
@@ -1119,7 +1117,7 @@ class Catalog {
 
 		if (!$catalog_id) { $catalog_id = $this->id; }
 
-		echo "Cleaning the <b>[" . $this->name . "]</b> Catalog...<br /><br />";
+		echo "\nCleaning the <b>[" . $this->name . "]</b> Catalog...<br /><br />\n";
 		flush();
 
 		/* Get all songs in this catalog */
@@ -1135,7 +1133,7 @@ class Catalog {
                         /* Stupid little cutesie thing */
                         $this->count++;
                         if ( !($this->count%conf('catalog_echo_count')) ) {
-                                echo _("Checking") . " $this->count. . . . <br />\n";
+                                echo _('Checking') . " $this->count. . . . <br />\n";
 	                        flush();
                         } //echos song count
 
@@ -2053,7 +2051,7 @@ class Catalog {
                 $stats_query = mysql_query($stats_qstring,dbh());
                 $oldstats = array();
                 //now collect needed data into a array
-                while ($stats_result = mysql_fetch_array($stats_query,MYSQL_ASSOC)) {
+                while ($stats_result = mysql_fetch_assoc($stats_query)) {
                         $userid = $stats_result['userid'];
                         $oldstats[$userid]['id'] = $stats_result['id'];
                         $oldstats[$userid]['count'] = $stats_result['count'];
