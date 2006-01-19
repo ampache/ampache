@@ -252,9 +252,7 @@ elseif (!conf('use_auth')) {
 	$user->offset_limit 	= $auth['offset_limit'];
 	$user->username 	= $auth['username'];
 	$user->access 		= $auth['access'];
-	$_SESSION['userdata']['access'] 	= $auth['access'];
 	$_SESSION['userdata']['username'] 	= $auth['username'];
-	$_SESSION['userdata']['offset_limit'] 	= $auth['offset_limit'];
 	$user->set_preferences();
 	init_preferences();
 	set_theme();

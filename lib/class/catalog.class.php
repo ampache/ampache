@@ -248,11 +248,11 @@ class Catalog {
 				$this->insert_local_song($filename,$file_size);
 			}
 			elseif (conf('debug')) { 
-				log_event($_SESSION['userdata']['username'], ' add_file ', "Error: File exists");
+				log_event($GLOBALS['user']->username, 'add_file', "Error: File exists",'ampache-catalog');
 			}
 		} // if valid file
 		elseif (conf('debug')) { 
-			log_event($_SESSION['userdata']['username'], ' add_file ', "Error: File doesn't match pattern");
+			log_event($GLOBALS['user']->username, 'add_file', "Error: File doesn't match pattern",'ampache-catalog');
 		}
 
 
@@ -267,7 +267,7 @@ class Catalog {
 		@param $path 		The root path you want to start grabing files from
 		@param $gather_type=0   Determins if we need to check the id3 tags of the file or not
 	 */
-	function add_files($path,$gather_type=0,$parse_m3u=0) {
+	function add_files($path,$gather_type='',$parse_m3u='') {
 		/* Strip existing escape slashes and then add them again 
 		   This is done because we keep adding to the dir (slashed) + (non slashed)
 		   and a double addslashes would pooch things
@@ -295,13 +295,13 @@ class Catalog {
 			if ($file != "." AND $file != "..") {
 
 				if (conf('debug')) { 
-					log_event($_SESSION['userdata']['username'],'read',"Starting work on $file inside $path",'ampache-catalog');
+					log_event($GLOBALS['user']->username,'read',"Starting work on $file inside $path",'ampache-catalog');
 				}
 
 				/* Change the dir so is_dir works correctly */
 				if (!@chdir(stripslashes($path))) {
-					if (conf('debug')) { log_event($_SESSION['userdata']['username'],'read',"Unable to chdir $path",'ampache-catalog'); }
-					echo "<font class=\"error\">" . _("Error: Unable to change to directory") . " $path</font><br />\n";
+					if (conf('debug')) { log_event($GLOBALS['user']->username,'read',"Unable to chdir $path",'ampache-catalog'); }
+					echo "<font class=\"error\">" . _('Error: Unable to change to directory') . " $path</font><br />\n";
 				}
 
 				/* Create the new path */
@@ -313,7 +313,10 @@ class Catalog {
 				unset($failed_check);
 				
 				if (conf('no_symlinks')) {
-					if (is_link($full_file)) { $failed_check = 1; }
+					if (is_link($full_file)) { 
+						$failed_check = 1; 
+						if (conf('debug')) { log_event($GLOBALS['user']->username,'read',"Skipping Symbolic Link $path",'ampache-catalog'); }
+					}
 				}
 
 				/* If it's a dir run this function again! */
@@ -880,13 +883,13 @@ class Catalog {
 		@discussion this function adds new files to an
 			existing catalog
 	*/
-	function add_to_catalog($type=0) { 
+	function add_to_catalog($type='') { 
 
-		echo _("Starting New Song Search on") . " <b>[$this->name]</b> " . _("catalog") . "<br /><br />\n";
+		echo "\n" . _('Starting New Song Search on') . " <b>[$this->name]</b> " . _('catalog') . "<br /><br />\n";
 		flush();
 
 		if ($this->catalog_type == 'remote') { 
-			echo _("Running Remote Update") . ". . .<br /><br />";
+			echo _('Running Remote Update') . ". . .<br /><br />";
 			flush();
 			$this->get_remote_catalog($type=0);
 			return true;
@@ -901,16 +904,16 @@ class Catalog {
                 foreach ($this->_playlists as $full_file) {
                         if ($this->import_m3u($full_file)) {
 				$file = basename($full_file);
-                                echo "&nbsp;&nbsp;&nbsp;" . _("Added Playlist From") . " $file . . . .<br />\n";
+                                echo "&nbsp;&nbsp;&nbsp;" . _('Added Playlist From') . " $file . . . .<br />\n";
                                 flush();
                         } // end if import worked
                 } // end foreach playlist files
 
 		/* Do a little stats mojo here */
 		$current_time = time();
-
-		if ($type != "fast_add") { 	
-			echo "<b>" . _("Starting Album Art Search") . ". . .</b><br />\n"; 
+		
+		if ($type != 'fast_add') { 	
+			echo "\n<b>" . _('Starting Album Art Search') . ". . .</b><br />\n"; 
 			flush();
 			$this->get_album_art(); 
 		} 
@@ -1451,7 +1454,7 @@ class Catalog {
 		@discussion This function compares the DB's information with the ID3 tags
 		@param $catalog_id The ID of the catalog to compare
 	*/
-	function verify_catalog($catalog_id=0,$gather_type=0) {
+	function verify_catalog($catalog_id=0,$gather_type='') {
 
 		/* Create and empty song for us to use */
 		$total_updated = 0;
@@ -1492,7 +1495,7 @@ class Catalog {
 				   filemtime to make sure the file has actually 
 				   changed
 				*/
-				if ($gather_type === "fast_update") {
+				if ($gather_type == 'fast_update') {
 					$file_date = filemtime($song->file);
 					if ($file_date < $this->last_update) { $skip = true; }
 				} // if gather_type
@@ -1508,11 +1511,11 @@ class Catalog {
 					$info = $this->update_song_from_tags($song);
 					$album_id = $song->album;
 					if ($info['change']) {
-						echo "<dl>\n\t<li>";
+						echo "<dl style=\"list-style-type:none;\">\n\t<li>";
 						echo "<b>$song->file " . _("Updated") . "</b>\n";
 						echo $info['text'];
 					/* If we aren't doing a fast update re-gather album art */
-						if ($gather_type !== "fast_update" AND !isset($searched_albums[$album_id])) { 
+						if ($gather_type != 'fast_update' AND !isset($searched_albums[$album_id])) { 
 							$album = new Album($song->album);
 							$searched_albums[$album_id] = 1;
 							$found = $album->get_art();
@@ -1962,7 +1965,7 @@ class Catalog {
 		@param $full_file The full file name that we are checking
 		@param $gather_type=0 If we need to check id3 tags or not
 	*/
-	function check_local_mp3($full_file, $gather_type=0) {
+	function check_local_mp3($full_file, $gather_type='') {
 
 		if ($gather_type == 'fast_add') {
 			$file_date = filemtime($full_file);

@@ -20,13 +20,7 @@
 
 */
 
-/*
-
- Do most of the dirty work of displaying the mp3 catalog
-
-*/
-
-require_once("modules/init.php");
+require_once('modules/init.php');
 
 show_template('header');
 
@@ -41,7 +35,7 @@ if ($_REQUEST['action'] === 'clear_art') {
 	if (!$user->has_access('25')) { access_denied(); } 
 	$album = new Album($_REQUEST['album_id']);
 	$album->clear_art();
-	show_confirmation(_("Album Art Cleared"),_("Album Art information has been removed from the database"),"/albums.php?action=show&amp;album=" . $album->id);
+	show_confirmation(_('Album Art Cleared'),_('Album Art information has been removed from the database'),"/albums.php?action=show&amp;album=" . $album->id);
 
 } // clear_art
 // if we have album
@@ -69,8 +63,6 @@ elseif ($_REQUEST['action'] === 'find_art') {
 	// She's such a little trouper!
 	// *NOTE* I knocked it up a notch with some more horrible code :S - Vollmer
 
-	/* Echo notice if no amazon token is found, but it's enabled */
-		
 	if (!conf('amazon_developer_key')) { 
 		echo "<br /><div class=\"fatalerror\">" . _("Error") . ": " . _("No Amazon Developer Key set, amazon album art searching will not work")  . "</div>";
 	}

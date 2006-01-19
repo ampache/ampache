@@ -66,7 +66,6 @@ function format_artist($artist) {
 */
 function show_artists ($match = '') {
 
-        global $settings;
         $dbh = dbh();
 
         $view = new View();

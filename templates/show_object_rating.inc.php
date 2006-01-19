@@ -18,9 +18,6 @@
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
-if ($type != 'song') { 
-	echo _('Rating') . ":";
-}
 
 /* Create some variables we are going to need */
 $web_path = conf('web_path');
