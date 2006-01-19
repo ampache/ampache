@@ -78,6 +78,7 @@ switch ($action) {
 		require_once (conf('prefix') . '/templates/show_edit_song.inc.php');
         break;
 	case 'disable':
+		$song_obj = new Song();
 		// If we pass just one, make it still work
 	    	if (!is_array($_REQUEST['song_ids'])) { $song_obj->update_enabled(0,$_REQUEST['song_ids']); }
 		else {
@@ -88,6 +89,7 @@ switch ($action) {
 		show_confirmation(_('Songs Disabled'),_('The requested song(s) have been disabled'),return_referer());
 	break;
 	case "enabled":
+		$song_obj = new Song();
 		// If we pass just one, make it still work
 	        if (!is_array($_REQUEST['song_ids'])) { $song_obj->update_enabled(1,$_REQUEST['song_ids']); }
 		else {
