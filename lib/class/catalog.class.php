@@ -2019,7 +2019,7 @@ class Catalog {
 		if (count($songs)) { 
 			$playlist = new Playlist();
 			$playlist_name = "M3U - " . basename($filename);
-			$playlist->create_playlist($playlist_name,$GLOBALS['user']->username,'public');
+			$playlist->create($playlist_name,'public');
 			$playlist->add_songs($songs);
 			return true;
 		}

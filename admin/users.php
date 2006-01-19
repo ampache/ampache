@@ -167,7 +167,7 @@ switch ($action) {
         if (conf('demo_mode')) { break; }
 	$level = scrub_in($_REQUEST['level']);
 	$thisuser = new User($_REQUEST['user']);
-	if ($_SESSION['userdata']['access'] == 'admin') {
+	if ($GLOBALS['user']->has_access(100)) { 
 		$thisuser->update_access($level);
 	} 
 	show_manage_users();
