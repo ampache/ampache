@@ -45,7 +45,7 @@ if (conf('access_control')) {
         $access = new Access(0);
         if (!$access->check('50', $_SERVER['REMOTE_ADDR'])) {
                 if (conf('debug')) {
-                        log_event($user->username,' access_denied ', "Download Access Denied, " . $_SERVER['REMOTE_ADDR'] . " does not have download level
+                        log_event($user->username,' access_denied ', "Download Access Denied, " . $_SERVER['REMOTE_ADDR'] . " does not have download level");
                 }
                 access_denied();
         }
