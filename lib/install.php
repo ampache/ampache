@@ -82,10 +82,10 @@ function install_check_status($configfile) {
 	  if they don't then they're cool
 	*/
 	$results = read_config($GLOBALS['configfile'], 0, 0);
-	$dbh = check_database($results['libglue']['local_host'],$results['libglue']['local_username'],$results['libglue']['local_pass'],$results['libglue']['local_db']);	
+	$dbh = check_database($results['local_host'],$results['local_username'],$results['local_pass']);	
 		
 	if (is_resource($dbh)) { 
-		mysql_select_db($results['libglue']['local_db'],$dbh);
+		mysql_select_db($results['local_db'],$dbh);
 		$sql = "SELECT * FROM user";
 		$db_results = @mysql_query($sql, $dbh);
 		if (!@mysql_num_rows($db_results)) { 
@@ -230,9 +230,9 @@ function install_create_config($web_path,$username,$password,$hostname,$database
 function install_create_account($username,$password) { 
 
         $results = read_config($GLOBALS['configfile'], 0, 0);
-	$dbh = check_database($results['libglue']['local_host'],$results['libglue']['local_username'],$results['libglue']['local_pass'],$results['libglue']['local_db']);
+	$dbh = check_database($results['local_host'],$results['local_username'],$results['local_pass']);
 		
-	@mysql_select_db($results['libglue']['local_db'],$dbh);
+	@mysql_select_db($results['local_db'],$dbh);
 
 	$username = sql_escape($username,$dbh);
 	$password = sql_escape($password,$dbh);

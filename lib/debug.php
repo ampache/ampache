@@ -50,7 +50,7 @@ function read_config_file($file,$level=0) {
 	@discussion checks the local mysql db
 		and make sure life is good
 */
-function check_database($host,$username,$pass,$db,$level=0) {
+function check_database($host,$username,$pass,$level=0) {
 	
 	$dbh = @mysql_connect($host, $username, $pass);
 
@@ -62,9 +62,8 @@ function check_database($host,$username,$pass,$db,$level=0) {
 		$error['error_state'] = true;
 		$error['mysql_error'] .= "<br />HOST:$host<br />User:$username<br />Pass:$pass<br />";
 	}
-print_r($error);	
+	
 	if ($error['error_state']) { return false; }		
-
 
 	return $dbh; 
 

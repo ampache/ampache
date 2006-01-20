@@ -32,14 +32,12 @@ require_once('lib/debug.php');
 require_once('lib/class/user.class.php');
 require_once('lib/class/error.class.php');
 
-// Libglue Requires
-require_once('modules/libglue/auth.php');
-require_once('modules/libglue/session.php');
-require_once('modules/libglue/dbh.php');
-
+require_once('modules/vauth/dbh.lib.php');
+require_once('modules/vauth/init.php');
 
 if ($_SERVER['HTTPS'] == 'on') { $http_type = "https://"; }
 else { $http_type = "http://"; }
+
 
 
 $prefix = dirname(__FILE__); 
@@ -100,10 +98,16 @@ switch ($action) {
 			break;
 		}
 		$results = read_config($configfile, 0, 0);
+
+		$results['mysql_hostname'] = $results['local_host'];
+		$results['mysql_username'] = $results['local_username'];
+		$results['mysql_password'] = $results['local_pass'];
+		$results['mysql_db']	   = $results['local_db'];
+			
 		if ($_SERVER['HTTPS'] == 'on') { $http_type = "https://"; }
 		else { $http_type = "http://"; }
-	
-		libglue_param($results['libglue']);
+
+		vauth_conf($results);
 		/* Setup Preferences */
 		$temp_user = new User($username);
 		$temp_user->fix_preferences();
@@ -112,7 +116,7 @@ switch ($action) {
 		$temp_user->fix_preferences();
 
 	
-		$web_path = $http_type . $_SERVER['HTTP_HOST'] . $results['conf']['web_path'];
+		$web_path = $http_type . $_SERVER['HTTP_HOST'] . $results['web_path'];
 
 		header ("Location: " . $web_path . "/login.php");
 	
