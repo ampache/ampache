@@ -31,7 +31,7 @@
 <!--
 	body	
 		{ 
-                background: url(<?php echo conf('web_path'); ?><?php echo conf('theme_path'); ?>/images/Lightning.jpg);
+            	background: url(<?php echo conf('web_path'); ?><?php echo conf('theme_path'); ?>/images/lightning.jpg);?>
 		font-family: <?php echo conf('font') ?>; 
 		font-size: <?php echo conf('font_size'); ?>px; 
 		color: <?php echo conf('font_color2'); ?>;
@@ -186,15 +186,16 @@ eat-x;
 /*************** END Main Menu *************/
 /*************** Page Header *********************/
     
-        #pageheader {
+        #topbar {
 	background: url(<?php echo conf('web_path'); ?><?php echo conf('theme_path'); ?>/images/filling.jpg) <?php echo conf('base_color2')?> repeat-x;
+	height: 125px;
 }
 
 #pageheader img {
 	text-align: left;
 	border: 0px;
 }
-    }
+    
 /*************** END Page Header *****************/
     .navitem
     {
