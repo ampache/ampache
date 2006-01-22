@@ -117,7 +117,7 @@ if ($user->prefs['play_type'] == 'local_play') {
 		<tr>
 			<td valign="top" rowspan="7">
 				<?php show_local_control(); ?>
-				echo "<br />";
+				<br />
 			</td>
 		</tr>
 		</table> <!-- End Right Table -->

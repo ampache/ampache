@@ -4,6 +4,8 @@
 
 --------------------------------------------------------------------------
   v.3.3.2-Beta2 
+  	- Fixed a few more Search snafu's that caused it to not remember
+		what you had selected after performing a search (Thx Rubin)
   	- Fixed ordering of playlist m3u generation
   	- Fixed ratings images to use Javascript hotness (Thx burnsides)
   	- Fixed a catalog update bug that was introduced when I switched 

@@ -103,28 +103,17 @@ $final_javascript .= " // END-->\n </script>";
 	<td>
 		<input type="checkbox" name="search_object[]" value="played" onclick="flipField('played_string');" <?php echo $check_played; ?> />
 		<select id="played_string" name="played_string" disabled="disabled">
-			<option value="1"><?php echo _("Yes"); ?></option>
-			<option value="0"><?php echo _("No"); ?></option>
+			<option value="1" <?php if($_REQUEST['played_string']=="1") echo "selected=\"selected\""?>><?php echo _("Yes"); ?></option>
+			<option value="0" <?php if($_REQUEST['played_string']=="0") echo "selected=\"selected\""?>><?php echo _("No"); ?></option>
 		</select>
 	</td>
 	<td><?php echo _("Min Bitrate"); ?></td>
 	<td>
 		<input type="checkbox" name="search_object[]" value="minbitrate" onclick="flipField('minbitrate_string');" <?php echo $check_minbitrate; ?> />
 		<select id="minbitrate_string" name="minbitrate_string" disabled="disabled">
-			<option value="32">32</option>
-			<option value="40">40</option>
-			<option value="48">48</option>
-			<option value="56">56</option>
-			<option value="64">64</option>
-			<option value="80">80</option>
-			<option value="96">96</option>
-			<option value="112">112</option>
-			<option value="128">128</option>
-			<option value="160">160</option>
-			<option value="192">192</option>
-			<option value="224">224</option>
-			<option value="256">256</option>
-			<option value="320">320</option>
+                 <?php foreach(array(32,40,48,56,64,80,96,112,128,160,192,224,256,320) as $val) { ?>
+                            <option value="<?php echo $val?>" <?php if($_REQUEST['minbitrate_string']==$val) echo "selected=\"selected\""?>><?php echo $val?></option>
+                 <?php  } ?>
 		</select>
 	</td>
 </tr>		
@@ -132,17 +121,17 @@ $final_javascript .= " // END-->\n </script>";
 	<td><?php echo _("Object Type"); ?>:</td>
 	<td>
 		<select name="object_type">
-			<option value="song"><?php echo _("Songs"); ?></option>
-			<option value="album"><?php echo _("Albums"); ?></option>
-			<option value="artist"><?php echo _("Artists"); ?></option>
-			<option value="genre"><?php echo _("Genres"); ?></option>
+			<option value="song" <?php if($_REQUEST['object_type']=="song") echo "selected=\"selected\""?>><?php echo _("Songs"); ?></option>
+			<option value="album" <?php if($_REQUEST['object_type']=="album") echo "selected=\"selected\""?>><?php echo _("Albums"); ?></option>
+			<option value="artist" <?php if($_REQUEST['object_type']=="artist") echo "selected=\"selected\""?>><?php echo _("Artists"); ?></option>
+			<option value="genre" <?php if($_REQUEST['object_type']=="genre") echo "selected=\"selected\""?>><?php echo _("Genres"); ?></option>
 		</select>
 	</td>
 	<td><?php echo _("Operator"); ?>:</td>
 	<td>
 		<select name="operator">
-			<option value="or"><?php echo _("OR"); ?></option>
-			<option value="and"><?php echo _("AND"); ?></option>
+			<option value="and" <?php if($_REQUEST['operator']=="and") echo "selected=\"selected\""?>><?php echo _("AND"); ?></option>
+			<option value="or"  <?php if($_REQUEST['operator']=="or") echo "selected=\"selected\""?>><?php echo _("OR"); ?></option>
 		</select>
 	</td>
 </tr>
@@ -150,18 +139,18 @@ $final_javascript .= " // END-->\n </script>";
 	<td><?php echo _("Method"); ?>:</td>
 	<td>
 		<select name="method">
-			<option value="fuzzy"><?php echo _("Fuzzy"); ?></option>
-			<option value="exact"><?php echo _("Exact"); ?></option>
+			<option value="fuzzy" <?php if($_REQUEST['method']=="fuzzy") echo "selected=\"selected\""?>><?php echo _("Fuzzy"); ?></option>
+			<option value="exact" <?php if($_REQUEST['method']=="exact") echo "selected=\"selected\""?>><?php echo _("Exact"); ?></option>
 		</select>
 	</td>
 	<td><?php echo _("Maxium Results"); ?>:</td>
 	<td>
 		<select name="limit">
 			<option value="0"><?php echo _("Unlimited"); ?></option>
-			<option value="25">25</option>
-			<option value="50">50</option>
-			<option value="100">100</option>
-			<option value="500">500</option>
+			<option value="25" <?php if($_REQUEST['limit']=="25") echo "selected=\"selected\""?>>25</option>
+			<option value="50" <?php if($_REQUEST['limit']=="50") echo "selected=\"selected\""?>>50</option>
+			<option value="100" <?php if($_REQUEST['limit']=="100") echo "selected=\"selected\""?>>100</option>
+			<option value="500" <?php if($_REQUEST['limit']=="500") echo "selected=\"selected\""?>>500</option>
 		</select>
 	</td>
 </tr>

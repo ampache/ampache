@@ -163,7 +163,7 @@ function search_song($data,$operator,$method,$limit) {
 			break;
 			case 'minbitrate':
 				$value = intval($value);
-				$where_sql .= " song.bitrate >= '$value' $operator";
+				$where_sql .= " song.bitrate >= ('$value'*1000) $operator";
 			break;
 			default:
 				// Notzing!
@@ -186,6 +186,7 @@ function search_song($data,$operator,$method,$limit) {
 	 */
 	$_SESSION['userdata']['stored_search'] = $sql;
 
+        //echo "DEBUG: $sql<BR>"; flush();
 	$db_results = mysql_query($sql, dbh());
 	
 	while ($r = mysql_fetch_assoc($db_results)) { 
