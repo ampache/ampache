@@ -72,6 +72,7 @@ switch ($action) {
 		$playlist	= new Playlist($_REQUEST['playlist_id']);
 		$song_ids	= $playlist->get_songs($_REQUEST['song']);
 		$_REQUEST['action'] = 'm3u';
+	break;
 	case 'playlist_random':
 		$playlist	= new Playlist($_REQUEST['playlist_id']);
 		$song_ids	= $playlist->get_random_songs();

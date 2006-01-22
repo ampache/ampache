@@ -120,7 +120,7 @@ class Playlist {
 		
 			foreach ($array as $data) { 
 				
-				$sql = "SELECT song,dyn_song FROM playlist_data WHERE id='" . sql_escape($data) . "'";
+				$sql = "SELECT song,dyn_song FROM playlist_data WHERE id='" . sql_escape($data) . "' ORDER BY track";
 				$db_results = mysql_query($sql, dbh());
 
 				$r = mysql_fetch_assoc($db_results);
