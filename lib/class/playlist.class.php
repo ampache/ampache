@@ -138,7 +138,7 @@ class Playlist {
 
 		} // end if we were passed some data
 
-		$sql = "SELECT * FROM playlist_data WHERE playlist='" . sql_escape($this->id) . "'";
+		$sql = "SELECT * FROM playlist_data WHERE playlist='" . sql_escape($this->id) . "' ORDER BY track";
 		$db_results = mysql_query($sql, dbh());
 
 		while ($r = mysql_fetch_assoc($db_results)) { 
