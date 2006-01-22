@@ -30,24 +30,22 @@ function fmt_time($seconds) {return sprintf ("%d:%02d", $seconds/60, $seconds % 
 global $condPL;
 ?>
 
-<div align="center"><!--  Is this div neccesary??? -->
-<table border="0" cellpadding="3" cellspacing="0" class="tabledata"><!-- MPD Control table -->
-<tr class="table-header">
-	<td colspan="2"><?php echo _("MPD Play Control"); ?></td>
-</tr>
-<tr class="even">
+<div align="center"><!--  Is this div neccesary??? or is the below table not needed???-->
+<table border="0" cellpadding="3" cellspacing="0"><!-- MPD Control table -->
+<tr>
 <td>
-	<table border="0" cellpadding="0" cellspacing="0" width="100%">
+	<table border="0" cellpadding="0" cellspacing="0" class="even" align="center">
+	<th id="mpd_control" class="table-header"><?php echo _("MPD Play Control"); ?></th>
 	<tr>
 		<td>
-			<?php ${$myMpd->state} = "'selected_button'";
+			<?php ${$myMpd->state} = "class='selected_button'";
 			if (true)  /* rigged to do AJAX for now; change to conf('AJAX') later*/ { ?>
-				<!--   <input type="button" class="unselected_button" value="times" onclick="timestuff();"/> -->
-				<input type="button" class="unselected_button" value="|&lt; " onclick="startRequest('action=Prev');"/>
-				<input type="button" class=<?php echo ($stop ? "'selected_button'" : "'unselected_button'") ?> id="stop_button" value=" X " onclick="startRequest('action=stop');"/>
-				<input type="button" class=<?php echo ($play ? "'selected_button'" : "'unselected_button'") ?> id="play_button" value=" &gt; " onclick="startRequest('action=play');"/>
-				<input type="button" class=<?php echo ($pause ? "'selected_button'" : "'unselected_button'") ?> id="pause_button" value=" | | "  onclick="startRequest('action=pause');"/>
-				<input type="button" class="unselected_button" value=" &gt;|" onclick="startRequest('action=Next');"/>
+				<!--  for testing <input type="button" value="times" onclick="timestuff();"/> -->
+				<input type="button" value="|&lt; " onclick="startRequest('action=Prev');"/>
+				<input type="button" <?php echo $stop ?> id="stop_button" value=" X " onclick="startRequest('action=stop');"/>
+				<input type="button" <?php echo $play ?> id="play_button" value=" &gt; " onclick="startRequest('action=play');"/>
+				<input type="button" <?php echo $pause ?> id="pause_button" value=" | | "  onclick="startRequest('action=pause');"/>
+				<input type="button" value=" &gt;|" onclick="startRequest('action=Next');"/>
 				<?php
 			}
 			else  { ?>
@@ -66,7 +64,7 @@ global $condPL;
 		<td class="content"> Volume: <b><span id='volume'><?php echo $myMpd->volume ?></span>%</b></td>
 	</tr>
 	<tr>
-		<td class="content" align="center"> 
+		<td class="content"> 
 			<?php
 			if (true)  /* rigged to do AJAX for now; change to conf('AJAX') later */ { ?> 
 			<input type="button" value="0"   onclick="startRequest('action=setvol&amp;param1=0');"/>
@@ -119,7 +117,7 @@ global $condPL;
 </tr>
 <tr>
 <td>
-	<table id="mpd_np" <?php   if (($myMpd->state == "stop") or ($myMpd->state == "pause")) { echo 'class="nodisplay"'; } ?> border="0" cellpadding="0" cellspacing="0" width="100%">
+	<table id="mpd_np" <?php   if (($myMpd->state == "stop") or ($myMpd->state == "pause")) { echo 'class="nodisplay"'; } ?> border="0" cellpadding="0" cellspacing="0">
 	<tr>
 		<td class="npsong"><b><?php echo _("Now Playing :")?></b></td>
 	</tr>
