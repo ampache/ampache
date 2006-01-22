@@ -29,7 +29,7 @@
 require_once("modules/init.php");
 
 /* We need to attempt to init the mpd object */
-if ($user->prefs['play_type']) { $myMpd = init_mpd(); }
+if ($user->prefs['play_type']=='mpd') { $myMpd = init_mpd(); }
 
 show_template('header');
 
@@ -48,10 +48,10 @@ $action = scrub_in($_REQUEST['action']);
 	<td valign="top">
 		<table border="0"><!-- Left table -->
 		<tr>
-			<td valign="top" align="right" width="50%">
+			<td valign="top" align="right">  <!-- sigger: why is it a problem to set width=50% -->
 				<?php show_local_catalog_info(); ?>
 			</td>
-			<td valign="top" align="left" width="50%">
+			<td valign="top" align="left">   <!-- sigger: why is it a problem to set width=50% -->
 			<?php 
 				if ($user->prefs['play_type'] == 'mpd' && !conf('localplay_menu')) { 
 					show_mpd_control(); 

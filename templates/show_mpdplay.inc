@@ -34,8 +34,8 @@ global $condPL;
 <table border="0" cellpadding="3" cellspacing="0"><!-- MPD Control table -->
 <tr>
 <td>
-	<table border="0" cellpadding="0" cellspacing="0" class="even" align="center">
-	<th id="mpd_control" class="table-header"><?php echo _("MPD Play Control"); ?></th>
+	<table id="mpd_control" border="0" cellpadding="0" cellspacing="0" class="even" align="center">
+	<th class="table-header"><?php echo _("MPD Play Control"); ?></th>
 	<tr>
 		<td>
 			<?php ${$myMpd->state} = "class='selected_button'";
