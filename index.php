@@ -29,7 +29,7 @@
 require_once("modules/init.php");
 
 /* We need to attempt to init the mpd object */
-$myMpd = init_mpd();
+if ($user->prefs['play_type']) { $myMpd = init_mpd(); }
 
 show_template('header');
 
@@ -38,7 +38,7 @@ $action = scrub_in($_REQUEST['action']);
 ?>
 
 <!-- Big Daddy Table -->
-<table style="padding-left:5px;padding-right:5px;padding-top:5px;padding-bottom:5px;" >
+<table id="bigdaddy" style="padding-left:5px;padding-right:5px;padding-top:5px;padding-bottom:5px;" width="100%">
 <tr>
 	<td style="padding-left:17px;" valign="top" colspan="2">
 		<?php show_now_playing(); ?>
@@ -48,10 +48,10 @@ $action = scrub_in($_REQUEST['action']);
 	<td valign="top">
 		<table border="0"><!-- Left table -->
 		<tr>
-			<td valign="top" align="right">
+			<td valign="top" align="right" width="50%">
 				<?php show_local_catalog_info(); ?>
 			</td>
-			<td valign="top" align="left">
+			<td valign="top" align="left" width="50%">
 			<?php 
 				if ($user->prefs['play_type'] == 'mpd' && !conf('localplay_menu')) { 
 					show_mpd_control(); 

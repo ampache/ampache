@@ -37,7 +37,7 @@ $myMpd = init_mpd();
 ?>
 
 <form name="songs" action="<?php echo $web_path."/amp-mpd.php"; ?>" method="post" enctype="multipart/form-data">
-<table id= "mpdpl" border="0" cellpadding="0" cellspacing="1" width="100%" class="tabledata">
+<table id= "mpdpl" border="0" cellpadding="0" cellspacing="1" class="tabledata">
 <tr>
 	<td style="text-align:center" class="table-header">
 		<b><?php echo _("MPD Server Playlist"); ?></b>
