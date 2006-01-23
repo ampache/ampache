@@ -95,6 +95,7 @@
         border-bottom: 1px solid white;
         border-left: 1px solid white;
         border-right: 1px solid white;
+	border-top: 1px solid white;
 /*        float: left;                /*          use for horizontal menu; comment out otherwise */
         padding: 5px 0px 5px 10px;
         width: 10.5em;
