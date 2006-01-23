@@ -16,7 +16,7 @@ name = "Simple Matrix"
 # This is just a way of giving credit to the 
 # person who actually created this theme
 # DEFAULT: N/A
-author = "ORIGINAL: Nedko Arnaudov EDITED BY: Marno van der Molen"
+author = "Marno van der Molen"
 #FULL CREDIT goes to Nedko Arnaudov for supplying the base for this theme.
 
 # Theme Maintainer
@@ -29,7 +29,7 @@ maintainer = "Marno van der Molen <marno.vandermolen@gmail.com>"
 # Version
 # This is the revision for this theme, It's up to the maintainer
 # or author to decide how they want to format this
-version = "1.3"
+version = "1.1"
 
 # Theme Colors
 ###################

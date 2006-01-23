@@ -39,7 +39,7 @@ body
   background-position: right top;
   background-repeat: repeat-y;
   background-attachment: scroll;
-  margin-right: 128px;
+  margin-right: 100px;
   margin-left: 3%;
   margin-top: 3%;
 }
@@ -276,7 +276,7 @@ textarea
 /*************** END Main Menu *************/
 
 /*************** Page Header *********************/
-
+#topbar { height: 150px; }
 #pageheader {
 }
 
