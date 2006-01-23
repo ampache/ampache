@@ -138,6 +138,7 @@ case 'adjvol' :
       if ( is_null($myMpd->Pause()) ) echo "ERROR: " .$myMpd->errStr."\n";
         mpd_cur_track_pos();
         state();
+        now_playing();
         break;
     case '|< ':
     case "Prev":

@@ -172,16 +172,4 @@ global $condPL;
 </td>
 </tr>
 </table>
-<?php
-/***** moving this into javascript_refresh.js
-
-echo '<script language="JavaScript" type="text/javascript"> var mpd_elapsed = '. $myMpd->current_track_position.
-     ';  var mpd_song_length = '. $myMpd->current_track_length .
-     ';  var mpd_songid = '.$myMpd->current_track_id. 
-     ';  var mpd_state = "'. $myMpd->state .'"; </script>';
-
-****** end move
-******/
-
-?>
 </div>
