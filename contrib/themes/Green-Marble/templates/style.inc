@@ -36,11 +36,11 @@ body {
 	font-family: Verdana, Helvetica, sans-serif; 
 	font-size: 10px; 
 	color: #00ff00;
-	background: url(<?php echo conf('web_path'); ?><?php echo conf('theme_path'); ?>/images/background.jpg) #000000 repeat;
+	background: url(<?php echo conf('web_path'); ?>/themes/Green-Marble/images/background.jpg) #000000 repeat;
 }
 #maincontainer {
 	margin: 0px;
-	background: url(<?php echo conf('web_path'); ?><?php echo conf('theme_path'); ?>/images/background.jpg) #000000 repeat;
+	background: url(<?php echo conf('web_path'); ?>/themes/Green-Marble/images/background.jpg) #000000 repeat;
 }
 #topbar {
 	margin: 0px;
@@ -48,7 +48,7 @@ body {
 	padding-top:10px;
 	padding-left:10px;
 	padding-bottom: 10px;
-	background: url(<?php echo conf('web_path'); ?><?php echo conf('theme_path'); ?>/images/background.jpg) #000000 repeat;
+	background: url(<?php echo conf('web_path'); ?>/themes/Green-Marble/images/background.jpg) #000000 repeat;
 	border: 2px black;
 }
 #topbarright {
@@ -89,13 +89,15 @@ a:active {
 	border-top:2px solid #000000;
 }
 td {
-	padding: 0px 15px 0px 10px;
+/* padding top right bottom left */
+	padding: 0px 10px 0px 10px;
 	color: #00ff00; 
 	font-family: Verdana, Helvetica, sans-serif; 
 	font-size: 10px;
 }
 th {
 	padding-right: 10px;
+	padding-left: 10px;
 }
 input {
 	color: #00ff00; 
@@ -121,13 +123,14 @@ textarea {
 	font-size: 10px; 
 }
 .button {
-	background: url(<?php echo conf('web_path'); ?><?php echo conf('theme_path'); ?>/images/tablebg.gif) #716F6B repeat-x;
+	background: url(<?php echo conf('web_path'); ?>/themes/Green-Marble/images/tablebg.gif) #716F6B repeat-x;
 	padding: 2px;
 	border: 0;
 	margin: 2px;
 }
 
 tr td a {
+	text-align: center;
 	text-decoration:none;
 	
 }
@@ -138,7 +141,7 @@ tr td a {
 	border-left: 1px solid black;
 }
 .table-header {
-	background: url(<?php echo conf('web_path'); ?><?php echo conf('theme_path'); ?>/images/tablebg.gif) #716F6B repeat-x;
+	background: url(<?php echo conf('web_path'); ?>/themes/Green-Marble/images/tablebg.gif) #716F6B repeat-x;
 	vertical-align: top;
 	text-align: center;
 }
@@ -201,10 +204,11 @@ tr td a {
 }
 .smallbutton {
 	border:0px;
-	padding-left:1px;
-	padding-right:1px;
+	margin-left: 10px;
+	margin-right: 10px;
 	font-size: 9px;
 	cursor: pointer;
+	background: url(<?php echo conf('web_path'); ?>/themes/Green-Marble/images/tablebg.gif) #716F6B repeat-x;
 }
 /* These three lines make a menu vertical */
 #content {
@@ -245,7 +249,7 @@ tr td a {
 	display: block;
 	padding: 5px 0px 5px 10px;
 	width: 10.5em;
-	background: url(<?php echo conf('web_path'); ?><?php echo conf('theme_path'); ?>/images/menu.jpg) #000000 repeat-y;
+	background: url(<?php echo conf('web_path'); ?>/themes/Green-Marble/images/menu.jpg) #000000 repeat-y;
 	border: 1px solid black;
 }
 #sidebar a, .navbutton {
@@ -254,10 +258,13 @@ tr td a {
 	text-decoration: none;
 	}
 #sidebar li:hover, #sidebar li.sfhover {
-	background: url(<?php echo conf('web_path'); ?><?php echo conf('theme_path'); ?>/images/menu-active.jpg) #000000 repeat-y;
+	background: url(<?php echo conf('web_path'); ?>/themes/Green-Marble/images/menu-active.jpg) #000000 repeat-y;
+}
+#sidebar #activetopmenu, #sidebar #activesubmenu {
+	background: url(<?php echo conf('web_path'); ?>/themes/Green-Marble/images/menu-active.jpg) #000000 repeat-y;
 }
 #sidebar li:active {
-	background: url(<?php echo conf('web_path'); ?><?php echo conf('theme_path'); ?>/images/menu-active.jpg) #000000 repeat-y;
+	background: url(<?php echo conf('web_path'); ?>/themes/Green-Marble/images/menu-active.jpg) #000000 repeat-y;
 }
 #sidebar li ul {
 	float: left;
@@ -350,6 +357,13 @@ li.current-rating {
 	display: block;
 	text-indent: -9000px;
 	z-index: 1;
+}
+#sidebar li input {
+	padding: 0px 10px 0px 10px;
+	display: inline-table;
+}
+#sidebar li select {
+	display: inline-table;
 }
 -->
 </style>
