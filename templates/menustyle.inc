@@ -111,6 +111,7 @@
     }
     #sidebar li:active {
         background-color: <?php echo conf('row_color1'); ?>;
+	z-index:30;
     }
     #sidebar li ul {
         float: left;
@@ -120,6 +121,7 @@
 /*	margin: 0.5em 0 0 -1.1em;  /* for horizontal menu;  comment out otherwise */
 
         left: -999em;  /* this -999em puts the submenu item way off to the left until it's called back by a hover (below) */
+	z-index:30;
     }
     #sidebar li:hover ul, #sidebar li.sfhover ul {
         left: auto;  /* this calls the submenu back when the parent li is hovered. */
