@@ -140,9 +140,9 @@ class Album {
 	        $web_path = conf('web_path');
 
 		/* Truncate the string if it's to long */
-		$name 		= htmlspecialchars(truncate_with_ellipse($this->name,conf('ellipse_threshold_album')));
-		$artist		= htmlspecialchars($this->artist);
-	        $this->f_name	= "<a href=\"$web_path/albums.php?action=show&amp;album=" . $this->id . "\" title=\"" . $name . "\">" . $name . "</a>";
+		$name 		= scrub_out(truncate_with_ellipse($this->name,conf('ellipse_threshold_album')));
+		$artist		= scrub_out($this->artist);
+	        $this->f_name	= "<a href=\"$web_path/albums.php?action=show&amp;album=" . $this->id . "\" title=\"" . scrub_out($this->name) . "\">" . $name . "</a>";
 	        $this->f_songs	= "<div align=\"center\">" . $this->songs . "</div>";
 		if ($this->artist_count == '1') { 
 		        $this->f_artist	= "<a href=\"$web_path/artists.php?action=show&amp;artist=" . $this->artist_id . "\">" . $artist . "</a>";
