@@ -87,6 +87,12 @@ function vauth_sess_write($key,$value) {
 	$value 		= sql_escape($value);
 	$key		= sql_escape($key);
 
+        /* Check for Rememeber Me */
+        $cookie_name = vauth_conf('session_name') . "_remember";
+        if ($_COOKIE[$cookie_name]) {
+		$expire = time() + vauth_conf('remember_length');		
+	}
+
 	$sql = "UPDATE session SET value='$value', expire='$expire'" . 
 		" WHERE id='$key'";
 	$db_results = mysql_query($sql, vauth_dbh());
@@ -183,10 +189,11 @@ function vauth_session_create($data) {
 	$username 	= sql_escape($data['username']);
 	$type		= sql_escape($data['type']);
 	$value		= sql_escape($data['value']);
+	$expire		= sql_escape(vauth_conf('session_length'));
 
 	/* Insert the row */
-	$sql = "INSERT INTO session (`id`,`username`,`type`,`value`) " . 
-		" VALUES ('$key','$username','$type','$value')";
+	$sql = "INSERT INTO session (`id`,`username`,`type`,`value`,`expire`) " . 
+		" VALUES ('$key','$username','$type','$value','$expire')";
 	$db_results = mysql_query($sql, vauth_dbh());
 
 	return $db_results;
@@ -213,8 +220,9 @@ function vauth_check_session() {
 	/* Check for Rememeber Me */
 	$cookie_name = vauth_conf('session_name') . "_remember";
 	if ($_COOKIE[$cookie_name]) { 
-		$month = 86400*30;
-		vauth_conf(array('cookie_life'=>$month),1);
+		$extended = vauth_conf('remember_length');
+		vauth_conf(array('cookie_life'=>$extended),1);
+		setcookie($cookie_name, '1', time() + $extended,'/',vauth_conf('cookie_domain'));
 	}
 
 	/* Set the Cookie Paramaters */

@@ -4,6 +4,8 @@
 
 --------------------------------------------------------------------------
   v.3.3.2-Beta2 
+  	- Added remember_length which defines the length that a 'remember me'
+		session will last, default is 900 or 15 min
   	- Fixed truncated names on tool-tip text (Thx Patrik)
   	- Fixed a few more Search snafu's that caused it to not remember
 		what you had selected after performing a search (Thx Rubin)

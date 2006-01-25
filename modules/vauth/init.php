@@ -100,6 +100,11 @@ function vauth_init($data) {
 		vauth_error('Cookie Domain Not Defined [cookie_domain]');
 		$error_status = true;
 	}
+
+	/* For now we won't require it */
+	if (!isset($data['remember_length'])) { 
+		$data['remember_length'] = '900';
+	}
 	
 	/* If an error has occured then return false */
 	if ($error_status) { return false; }

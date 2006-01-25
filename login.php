@@ -30,16 +30,14 @@ $no_session = true;
 require_once("modules/init.php");
 set_site_preferences();
 
-//
-// So we check for a username and password first
-//
-if ( $_POST['username'] && $_POST['password'] ) {
+/* Check for posted username and password */
+if ($_POST['username'] && $_POST['password']) {
 
         if ($_POST['rememberme']) {
-		$month = 86400*30;
-		vauth_conf(array('cookie_life'=>$month),1);
+		$extended = vauth_conf('remember_length');
+		vauth_conf(array('cookie_life'=>$extended),1);
 		$cookie_name = vauth_conf('session_name') . "_remember";
-		$cookie_life = time() + $month;
+		$cookie_life = time() + $extended;
 		setcookie($cookie_name, '1', $cookie_life,'/',vauth_conf('cookie_domain'));
         } 
 
@@ -62,9 +60,7 @@ if ( $_POST['username'] && $_POST['password'] ) {
 	} // if we aren't in demo mode
 }
 
-//
-// If we succeeded in authenticating, create a session
-//
+/* If the authentication was a success */
 if ($auth['success']) {
 
     // $auth->info are the fields specified in the config file
@@ -93,10 +89,13 @@ if ($auth['success']) {
 	header("Location: " . conf('web_path') . "/index.php");
 	exit();
 } // auth success
+/* If auth failed then setup the error */
+else { 
+	$GLOBALS['error']->add_error('general',$auth['error']);
+}
 
 $htmllang = str_replace("_","-",conf('lang'));
 ?>
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php echo $htmllang; ?>" lang="<?php echo $htmllang; ?>">
 <head>

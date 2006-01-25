@@ -76,7 +76,9 @@ function vauth_mysql_auth($username,$password) {
 	$results = mysql_fetch_assoc($db_results);
 
 	if (!$results) { 
-		return false;
+		$results['success'] = false;
+		$results['error'] = 'Error Username or Password incorrect, please try again';
+		return $results;
 	}
 
 	$results['type'] 	= 'mysql';

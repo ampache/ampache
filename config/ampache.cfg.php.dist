@@ -16,19 +16,15 @@
 # DEFAULT: ""
 #web_path 	= ""
 
-####################
-# The libglue Vars #
-####################
+###############################
+# Session and Login Variables #
+###############################
 
-###
-# Below are the variables for the Local Database that will do Auth
-###
-
-# Hostname of your Database (default is localhost)
+# Hostname of your Database
 # DEFAULT: localhost
 local_host = localhost
 
-# Name of your ampache database (default is ampache)
+# Name of your ampache database
 # DEFAULT: ampache
 local_db = ampache
 
@@ -36,13 +32,23 @@ local_db = ampache
 # DEFAULT: ""
 local_username = username
 
-# Password for your ampache database (can't be blank!)
+# Password for your ampache database, this can not be blank
+# this is a 'forced' security precaution, the default value
+# will not work
 # DEFAULT: ""
 local_pass = password
 
-# Login Length in seconds for local logins
+# Length that a session will last, the default is very restrictive
+# at 15min
 # DEFAULT: 900
 local_length = 900
+
+# This length defines how long a 'remember me' session and cookie will 
+# last, the default is 900, same as length. It is up to the administrator
+# of the box to increase this, for reference 86400 = 1 day 
+# 604800 = 1 week and 2419200 = 1 month
+# DEAFULT: 900
+remember_length = 900
 
 # This is the DOMAIN for the cookie that stores your session key
 # this must be set to the domain of your host or you will not be
