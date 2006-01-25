@@ -4,6 +4,8 @@
 
 --------------------------------------------------------------------------
   v.3.3.2-Beta2 
+  	- Fixed verification of Batch Downloading, if ZLIB isn't detected it
+		will not even give you the link
   	- Added remember_length which defines the length that a 'remember me'
 		session will last, default is 900 or 15 min
   	- Fixed truncated names on tool-tip text (Thx Patrik)

@@ -448,6 +448,9 @@ function scrub_in($str) {
 */
 function batch_ok( ) {
 
+	/* Also make sure that they have ZLIB */
+	if (!function_exists('gzcompress')) { return false; }
+
 	// i check this before showing any link
 	// should make it easy to tie to a new pref if you choose to add it
 	if (conf('allow_zip_download') AND $GLOBALS['user']->has_access(25)) { 
