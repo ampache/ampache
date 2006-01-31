@@ -188,12 +188,15 @@ function vauth_session_create($data) {
 
 	$username 	= sql_escape($data['username']);
 	$type		= sql_escape($data['type']);
-	$value		= sql_escape($data['value']);
+	$value		= "'" . sql_escape($data['value']) . "'";
 	$expire		= sql_escape(vauth_conf('session_length'));
+
+	/* We can't have null things here people */
+	if (strlen($value) == 2) { $value = 'NULL'; } 
 
 	/* Insert the row */
 	$sql = "INSERT INTO session (`id`,`username`,`type`,`value`,`expire`) " . 
-		" VALUES ('$key','$username','$type','$value','$expire')";
+		" VALUES ('$key','$username','$type',$value,'$expire')";
 	$db_results = mysql_query($sql, vauth_dbh());
 
 	return $db_results;
