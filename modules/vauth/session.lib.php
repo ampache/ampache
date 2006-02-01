@@ -157,6 +157,10 @@ function vauth_get_session($key) {
 
 	$results = mysql_fetch_assoc($db_results);
 
+	if (!count($results)) { 
+		vauth_error("Query: $sql failed to return results " . mysql_error());
+	}
+
 	return $results;
 
 } // vauth_get_session
@@ -188,16 +192,20 @@ function vauth_session_create($data) {
 
 	$username 	= sql_escape($data['username']);
 	$type		= sql_escape($data['type']);
-	$value		= "'" . sql_escape($data['value']) . "'";
+	$value		= sql_escape($data['value']);
 	$expire		= sql_escape(vauth_conf('session_length'));
 
 	/* We can't have null things here people */
-	if (strlen($value) == 2) { $value = 'NULL'; } 
+	if (strlen($value) == 2) { $value = ' '; } 
 
 	/* Insert the row */
 	$sql = "INSERT INTO session (`id`,`username`,`type`,`value`,`expire`) " . 
-		" VALUES ('$key','$username','$type',$value,'$expire')";
+		" VALUES ('$key','$username','$type','$value','$expire')";
 	$db_results = mysql_query($sql, vauth_dbh());
+
+	if (!$db_results) { 
+		vauth_error("Session Creation Failed with Query: $sql and " . mysql_error());
+	}
 
 	return $db_results;
 
