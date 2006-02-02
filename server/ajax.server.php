@@ -42,10 +42,10 @@ global $result, $myMpd;
       }
       $result = $result.'<now_playing>'.
                 '<songid>'.$myMpd->current_track_id.'</songid>'.
-                '<songtitle>'.$myMpd->playlist[$myMpd->current_track_id]['Title'].'</songtitle>'.
-                '<songartist>'.$myMpd->playlist[$myMpd->current_track_id]['Artist'].'</songartist>'.
-                '<songalbum>'.$myMpd->playlist[$myMpd->current_track_id]['Album'].'</songalbum>'.
-                '<songlength>'.$myMpd->playlist[($myMpd->current_track_id)]['Time'].'</songlength>'.
+                '<songtitle>'.htmlspecialchars($myMpd->playlist[$myMpd->current_track_id]['Title']).'</songtitle>'.
+                '<songartist>'.htmlspecialchars($myMpd->playlist[$myMpd->current_track_id]['Artist']).'</songartist>'.
+                '<songalbum>'.htmlspecialchars($myMpd->playlist[$myMpd->current_track_id]['Album']).'</songalbum>'.
+                '<songlength>'.htmlspecialchars($myMpd->playlist[($myMpd->current_track_id)]['Time']).'</songlength>'.
                 '</now_playing>';
    } //end if player == mpd
 now_playing_display();

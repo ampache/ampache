@@ -838,11 +838,15 @@ class mpd {
 
         // Set Misc Other Variables
 		$this->state = $status['state'];
-		if ( ($this->state == MPD_STATE_PLAYING) || ($this->state == MPD_STATE_PAUSED) ) {
+		if ($status['playlistlength']>0) {
 			$this->current_track_id = $status['song'];
-			list ($this->current_track_position, $this->current_track_length ) = split(":",$status['time']);
 		} else {
 			$this->current_track_id = -1;
+		}
+		if ( ($this->state == MPD_STATE_PLAYING) || ($this->state == MPD_STATE_PAUSED) ) {
+			list ($this->current_track_position, $this->current_track_length ) = split(":",$status['time']);
+		} else {
+//			$this->current_track_id = -1;
 			$this->current_track_position = -1;
 			$this->current_track_length = -1;
 		}

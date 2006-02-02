@@ -28,12 +28,14 @@
 
 require_once("modules/init.php");
 
-/* We need to attempt to init the mpd object */
+/* We need to attempt to init the mpd object 
 if ($user->prefs['play_type']=='mpd') { $myMpd = init_mpd(); }
+* Happening in header.inc now 
+*/
 
 show_template('header');
 
-if (conf('refresh_limit') > 0) { show_template('javascript_refresh'); }
+if (conf('refresh_limit') > 0) { require_once ("templates/javascript_refresh.inc"); }
 $action = scrub_in($_REQUEST['action']);
 ?>
 
@@ -53,7 +55,8 @@ $action = scrub_in($_REQUEST['action']);
 			</td>
 			<td valign="top" align="left">   <!-- sigger: why is it a problem to set width=50% -->
 			<?php 
-				if ($user->prefs['play_type'] == 'mpd' && !conf('localplay_menu')) { 
+				if (false) // $user->prefs['play_type'] == 'mpd' && !conf('localplay_menu')) 
+{ 
 					show_mpd_control(); 
 				}
 				else {

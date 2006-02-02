@@ -61,11 +61,11 @@ function countdown() {
     if (displaycountdown==1) {
         window.status="Refreshing in "+reloadseconds+" seconds";
         if ((player == 'mpd') && (player_state == 'play')) {
-            NodeList = document.getElementById ('mpd_cur_track_pos');
+            if (NodeList = document.getElementById ('mpd_cur_track_pos'))
 		{ NodeList.firstChild.data = fmt_time((mpd_elapsed) + (secondssinceloaded)); }
-            NodeList = document.getElementById ('mpd_on_deck_in');
+            if (NodeList = document.getElementById ('mpd_on_deck_in'))
 		{ NodeList.firstChild.data = fmt_time (mpd_song_length - mpd_elapsed - secondssinceloaded); }
-            NodeList = document.getElementById ('mpd_pctplayed');
+            if (NodeList = document.getElementById ('mpd_pctplayed'))
 		{ NodeList.firstChild.data = Math.floor (100*(mpd_elapsed + secondssinceloaded)/mpd_song_length); }
 	    }
 	if (reloadseconds > 0) {

@@ -901,4 +901,15 @@ function logout() {
 
 } // logout
 
+/**
+ * format_time
+ * This formats seconds into minutes:seconds
+ */
+
+function format_time($seconds) {
+
+return sprintf ("%d:%02d", $seconds/60, $seconds % 60);
+
+} //format_time
+
 ?>

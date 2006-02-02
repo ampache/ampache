@@ -26,7 +26,6 @@
 		this looks a goodbit like local_play
 */
 $web_path = conf('web_path'); 
-function fmt_time($seconds) {return sprintf ("%d:%02d", $seconds/60, $seconds % 60);}
 global $condPL;
 ?>
 
@@ -135,20 +134,20 @@ global $condPL;
 			". ".$myMpd->playlist[$myMpd->current_track_id]['Artist'].
 			" - ".$myMpd->playlist[$myMpd->current_track_id]['Title'].
 			" - ".$myMpd->playlist[$myMpd->current_track_id]['Album'].
-			" - ".fmt_time($myMpd->playlist[$myMpd->current_track_id]['Time']);
+			" - ".format_time($myMpd->playlist[$myMpd->current_track_id]['Time']);
 			echo "</span>";	?>
 		</td>
 	</tr>
 	<tr> 
 		<td align="center" class="npsong">
-			<span id="mpd_cur_track_pos"><?php echo fmt_time($myMpd->current_track_position)?></span>
+			<span id="mpd_cur_track_pos"><?php echo format_time($myMpd->current_track_position)?></span>
 			(<span id="mpd_pctplayed"><?php echo (round(($myMpd->current_track_position/$myMpd->current_track_length),2)*100)."</span>%) played" ?>
 		</td>
 	</tr>
 	<tr>
 		<td>
 			<b><?php echo _("On Deck ")?><?php echo _("(in ").
-			"<span id = 'mpd_on_deck_in'>".fmt_time($myMpd->current_track_length - $myMpd->current_track_position)."</span>)"?>
+			"<span id = 'mpd_on_deck_in'>".format_time($myMpd->current_track_length - $myMpd->current_track_position)."</span>)"?>
 			</b>
 		</td>
 	</tr>
@@ -165,7 +164,7 @@ global $condPL;
 			". ".$myMpd->playlist[($myMpd->current_track_id+1)]['Artist'].
 			" - ".$myMpd->playlist[($myMpd->current_track_id+1)]['Title'].
 			" - ".$myMpd->playlist[($myMpd->current_track_id+1)]['Album'].
-			" - ".fmt_time($myMpd->playlist[($myMpd->current_track_id+1)]['Time']);?>
+			" - ".format_time($myMpd->playlist[($myMpd->current_track_id+1)]['Time']);?>
 		</td>
 	</tr>
 	</table>
