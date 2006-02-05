@@ -165,6 +165,28 @@ function vauth_get_session($key) {
 
 } // vauth_get_session
 
+/**
+ * vauth_session_cookie
+ * This is seperated into it's own cookie because of some flaws in specific
+ * webservers *cough* IIS *cough* which prevent us from setting at cookie
+ * at the same time as a header redirect. As such on login view a cookie is set
+ */
+function vauth_session_cookie() { 
+
+        /* Set the Cookies Paramaters, this is very very important */
+        $cookie_life    = vauth_conf('cookie_life');
+        $cookie_path    = vauth_conf('cookie_path');
+        $cookie_domain  = vauth_conf('cookie_domain');
+        $cookie_secure  = vauth_conf('cookkie_secure');
+        
+        session_set_cookie_params($cookie_life,$cookie_path,$cookie_domain,$cookie_secure);
+
+        session_name(vauth_conf('session_name'));
+
+        /* Start the Session */
+        session_start(); 	
+
+} // vauth_session_cookie
 
 /**
  * vauth_session_create
@@ -174,18 +196,8 @@ function vauth_get_session($key) {
  */
 function vauth_session_create($data) { 
 
-	/* Set the Cookies Paramaters, this is very very important */
-	$cookie_life 	= vauth_conf('cookie_life');
-	$cookie_path 	= vauth_conf('cookie_path');
-	$cookie_domain	= vauth_conf('cookie_domain');
-	$cookie_secure	= vauth_conf('cookkie_secure');
-
-	session_set_cookie_params($cookie_life,$cookie_path,$cookie_domain,$cookie_secure);
-
-	session_name(vauth_conf('session_name'));
-
-	/* Start the Session */
-	session_start();
+	/* function that creates the cookie for us */
+	vauth_session_cookie();
 
 	/* Before a refresh we don't have the cookie, so use session_id() */
 	$key = session_id();
