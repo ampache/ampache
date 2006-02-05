@@ -60,8 +60,8 @@ function show_playlists() {
  * runing get_items()
  */
 function show_playlist($playlist) {
-
-        /* Create the Playlist */
+        
+	/* Create the Playlist */
         $song_ids = $playlist->get_items();
 
 	show_playlist_menu();
