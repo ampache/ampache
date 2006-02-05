@@ -27,12 +27,12 @@
 */
 
 require('../modules/init.php');
-require(conf('prefix') . '/lib/Browser.php');
+require(conf('prefix') . '/modules/horde/Browser.php');
 
 $browser = new Browser();
 
 /* If we are running a demo, quick while you still can! */
-if (conf('demo_mode') || !$user->has_access('25')) {
+if (conf('demo_mode') || !$GLOBALS['user']->has_access('25') || !$GLOBALS['user']->prefs['download']) {
 	access_denied();
 }
 
@@ -52,22 +52,24 @@ if (conf('access_control')) {
 
 } // access_control is enabled
 
-if ($user->prefs['download']) {
-	if ($_REQUEST['song_id']) {
-		if ($_REQUEST['action'] == 'download') {
-			$song = new Song($_REQUEST['song_id']);
-			$song->format_song();
-			$song->format_type();
-			$song_name = str_replace('"'," ",$song->f_artist_full . " - " . $song->title . "." . $song->type);
-			// Use Horde's Browser class to send the right headers for different browsers
-			// Should get the mime-type from the song rather than hard-coding it.
-			header("Content-Length: " . $song->size);
-			$browser->downloadHeaders($song_name, $song->mime, false, $song->size);
-
-			$fp = fopen($song->file, 'r');
-			fpassthru($fp);
-			fclose($fp);
-		}
+if ($_REQUEST['song_id']) {
+	if ($_REQUEST['action'] == 'download') {
+		$song = new Song($_REQUEST['song_id']);
+		$song->format_song();
+		$song->format_type();
+		$song_name = str_replace('"'," ",$song->f_artist_full . " - " . $song->title . "." . $song->type);
+		// Use Horde's Browser class to send the right headers for different browsers
+		// Should get the mime-type from the song rather than hard-coding it.
+		header("Content-Length: " . $song->size);
+		$browser->downloadHeaders($song_name, $song->mime, false, $song->size);
+		$fp = fopen($song->file, 'r');
+		fpassthru($fp);
+		fclose($fp);
 	}
 }
-
+else { 
+	if (conf('debug')) { 
+		log_event($GLOBALS['user']->username,'download','No Song found, download failed');
+	}
+	echo "Error: No Song found, download failed";
+}

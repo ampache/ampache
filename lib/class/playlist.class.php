@@ -410,6 +410,7 @@ class Playlist {
                 $db_results = mysql_query($sql, dbh());
 
                 $i = 1;
+		$results = array();
 
                 while ($r = mysql_fetch_assoc($db_results)) { 
                         $new_data = array();

@@ -29,7 +29,7 @@
 
 $no_session = true;
 require_once('../modules/init.php');
-require_once(conf('prefix') . '/lib/Browser.php');
+require_once(conf('prefix') . '/modules/horde/Browser.php');
 
 
 /* These parameters had better come in on the url. */
