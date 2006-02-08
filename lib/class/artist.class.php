@@ -35,16 +35,17 @@ class Artist {
 
 	/*!
 		@function Artist
-		@discussion Song class, for modifing a song.
-		@param $song_id 	The ID of the song
+		@discussion Artist class, for modifing a artist
+		@param $artist_id 	The ID of the artist
 	 */
-	function Artist($song_id = 0) {
+	function Artist($artist_id = 0) {
 
+		
 		/* If we have passed an id then do something */
-		if ($song_id) { 
+		if ($artist_id) { 
 
 			/* Assign id for use in get_info() */
-			$this->id = $song_id;
+			$this->id = intval($artist_id);
 
 			/* Get the information from the db */
 			if ($info = $this->get_info()) {
@@ -54,10 +55,9 @@ class Artist {
 				$this->prefix = $info->prefix;
 			} // if info
 
-		} // if song_id
+		} // if artist_id
 
 	} //constructor
-
 
 	/*!
 		@function get_info
