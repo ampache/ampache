@@ -53,7 +53,7 @@ class Catalog {
 		/* If we have passed an id then do something */
 		if ($catalog_id) {
 			/* Assign id for use in get_info() */
-			$this->id = $catalog_id;
+			$this->id = intval($catalog_id);
 
 			/* Get the information from the db */
 			$info = $this->get_info();

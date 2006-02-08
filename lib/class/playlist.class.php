@@ -45,7 +45,7 @@ class Playlist {
 
 		if (!$playlist_id) { return false; }
 		
-		$this->id 	= $playlist_id;
+		$this->id 	= intval($playlist_id);
 		$info 		= $this->_get_info();
 		$this->name	= $info['name'];
 		$this->user	= $info['user'];

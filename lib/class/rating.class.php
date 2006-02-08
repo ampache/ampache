@@ -41,8 +41,8 @@ class Rating {
 	 */
 	function Rating($id,$type) { 
 
-		$this->id 	= $id;
-		$this->type 	= $type;
+		$this->id 	= intval($id);
+		$this->type 	= sql_escape($type);
 
 		if (intval($id) > 1) { 
 			$this->get_average();

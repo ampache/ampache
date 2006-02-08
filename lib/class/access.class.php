@@ -45,7 +45,7 @@ class Access {
 
 
 		/* Assign id for use in get_info() */
-		$this->id = $access_id;
+		$this->id = intval($access_id);
 
 		$info = $this->get_info();
 		$this->name 	= $info->name;

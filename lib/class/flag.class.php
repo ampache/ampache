@@ -40,7 +40,7 @@ class Flag {
 	 */
 	function Flag($flag_id=0) { 
 
-		$this->id = $flag_id;
+		$this->id = intval($flag_id);
 
 		if (!$this->id) { return false; }
 

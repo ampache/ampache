@@ -43,7 +43,7 @@ class Album {
 		if ($album_id) { 
 
 			/* Assign id for use in get_info() */
-			$this->id = $album_id;
+			$this->id = intval($album_id);
 
 			/* Get the information from the db */
 			if ($info = $this->get_info()) {

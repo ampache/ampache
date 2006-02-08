@@ -38,7 +38,7 @@ class Genre {
 	function Genre($genre_id=0) { 
 
 		if ($genre_id > 0) { 
-			$this->id 	= $genre_id;
+			$this->id 	= intval($genre_id);
 			$info 		= $this->_get_info();
 			$this->name 	= $info['name'];
 		}

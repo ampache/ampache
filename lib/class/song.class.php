@@ -59,7 +59,7 @@ class Song {
 		if ($song_id) { 
 
 			/* Assign id for use in get_info() */
-			$this->id = sql_escape($song_id);
+			$this->id = intval($song_id);
 
 			/* Get the information from the db */
 			if ($info = $this->get_info()) {

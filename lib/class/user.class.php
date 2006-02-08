@@ -45,7 +45,7 @@ class User {
 			return true;
 		}
 
-		$this->username 	= $username;
+		$this->username 	= sql_escape($username);
 		$info 			= $this->get_info();
 		$this->username 	= $info->username;
 		$this->fullname 	= $info->fullname;
