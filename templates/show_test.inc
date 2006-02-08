@@ -244,9 +244,9 @@ $row_classes = array('even','odd');
 	 	else { 
 	        	$http_type = "http://";
 		}
-		$results['conf']['web_path'] = $http_type . $_SERVER['SERVER_NAME'] . ":" . $_SERVER['SERVER_PORT'] . $results['conf']['web_path'];
+		$results['web_path'] = $http_type . $_SERVER['SERVER_NAME'] . ":" . $_SERVER['SERVER_PORT'] . $results['web_path'];
 		if ($status['parse_config']) { 
-			echo "<img src=\"" . $results['conf']['web_path'] ."/images/ampache.gif\" width=\"80\" height=\"15\"/>";
+			echo "<img src=\"" . $results['web_path'] ."/images/ampache.gif\" width=\"80\" height=\"15\"/>";
 		}
 		else {
 			$status['check_webpath'] = false;
