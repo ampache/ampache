@@ -679,7 +679,7 @@ class Song {
 	*/
 	function get_info_from_filename($file,$pattern,$tag) { 
 
-                $preg_pattern = preg_replace("/$tag/","(.+)",$pattern);
+                $preg_pattern = str_replace("$tag","(.+)",$pattern);
                 $preg_pattern = preg_replace("/\%\w/",".+",$preg_pattern);
                 $preg_pattern = "/" . str_replace("/","\/",$preg_pattern) . "\..+/";
 

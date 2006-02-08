@@ -221,6 +221,18 @@ max_amazon_results_pages = 1
 # DEFAULT: false
 #debug = "false"
 
+# Debug Level
+# This should always be set in conjunction with the
+# debug option, it defines how prolific you want the
+# debugging in ampache to be. values are 1-5. 
+# 1 == Errors only
+# 2 == Error + Failures (login attempts etc.)
+# 3 == ??
+# 4 == ?? (Profit!)
+# 5 == Information (cataloging progress etc.)
+# DEFAULT: 5
+debug_level = 5
+
 # Path to Log File
 # This defines where you want ampache to log events to
 # this will only happen if debug is turned on. Do not

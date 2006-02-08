@@ -273,11 +273,14 @@ class Catalog {
 		   and a double addslashes would pooch things
 		*/
 
+		// Prevent the script from timing out
+		set_time_limit(0);
+			
 		/* Open up the directory */
 		$handle = opendir(stripslashes($path));
 
 		if (!is_resource($handle)) {
-                        if (conf('debug')) { log_event($_SESSION['userdata']['username'],'read',"Unable to Open $path",'ampache-catalog'); }
+                        debug_event('read',"Unable to Open $path",'5','ampache-catalog'); 
 			echo "<font class=\"error\">" . _("Error: Unable to open") . " $path</font><br />\n";
 		}
 
@@ -287,117 +290,121 @@ class Catalog {
 			// Fix Found by Naund
 			// Needed to protect from ' in filenames
 			$file = sql_escape($file);
-			
-			// Prevent the script from timing out
-			set_time_limit(0);
-			
-			/* if not .. or . */
-			if ($file != "." AND $file != "..") {
 
-				if (conf('debug')) { 
-					log_event($GLOBALS['user']->username,'read',"Starting work on $file inside $path",'ampache-catalog');
-				}
+			/* Skip to next if we've got . or .. */
+			if ($file == '.' || $file == '..') { continue; } 
 
-				/* Change the dir so is_dir works correctly */
-				if (!@chdir(stripslashes($path))) {
-					if (conf('debug')) { log_event($GLOBALS['user']->username,'read',"Unable to chdir $path",'ampache-catalog'); }
-					echo "<font class=\"error\">" . _('Error: Unable to change to directory') . " $path</font><br />\n";
-				}
-
-				/* Create the new path */
-				$full_file = stripslashes($path."/".$file);
-				$full_file = str_replace("//","/",$full_file);
+			debug_event('read',"Starting work on $file inside $path",'5','ampache-catalog');
 			
-				// Incase this is the second time through clear this variable 
-				// if it was set the day before
-				unset($failed_check);
+			/* Change the dir so is_dir works correctly */
+			if (!@chdir(stripslashes($path))) {
+				debug_event('read',"Unable to chdir $path",'2','ampache-catalog'); 
+				echo "<font class=\"error\">" . _('Error: Unable to change to directory') . " $path</font><br />\n";
+			}
+
+			/* Create the new path */
+			$full_file = stripslashes($path."/".$file);
+			$full_file = str_replace("//","/",$full_file);
+			
+			// Incase this is the second time through clear this variable 
+			// if it was set the day before
+			unset($failed_check);
 				
-				if (conf('no_symlinks')) {
-					if (is_link($full_file)) { 
-						$failed_check = 1; 
-						if (conf('debug')) { log_event($GLOBALS['user']->username,'read',"Skipping Symbolic Link $path",'ampache-catalog'); }
-					}
+			if (conf('no_symlinks')) {
+				if (is_link($full_file)) { 
+					debug_event('read',"Skipping Symbolic Link $path",'5','ampache-catalog'); 
+					continue;
 				}
+			}
 
-				/* If it's a dir run this function again! */
-				if (is_dir($full_file) AND !$failed_check) {
-					$this->add_files($full_file,$gather_type,$parse_m3u);
-				} //it's a directory
+			/* If it's a dir run this function again! */
+			if (is_dir($full_file)) {
+				$this->add_files($full_file,$gather_type,$parse_m3u);
+				/* Skip to the next file */
+				continue;
+			} //it's a directory
 
-				/* If it's not a dir let's roll with it */
-				else {
-					/* Get the file information */
-					$file_size = @filesize($full_file);
-
-					if (!$file_size && $file_size != '0') { 
-						echo "<font class=\"error\">" . _("Error: Unable to get filesize for") . " $full_file <br />";
-						if (conf('debug')) { log_event($GLOBALS['user']->username,' read ',"Error: Unable to get filesize for $full_file",'ampache-catalog'); }
-					} // if no filesize
-
-					$pattern = "/\.(" . conf('catalog_file_pattern');
-					if ($parse_m3u) { 
-						$pattern .= "|m3u)$/i";
-					}
-					else { 
-						$pattern .= ")$/i";
-					}
+			/* If it's not a dir let's roll with it 
+			 * next we need to build the pattern that we will use
+			 * to detect if it's a audio file for now the source for
+			 * this is in the /modules/init.php file
+			 */
+			$pattern = "/\.(" . conf('catalog_file_pattern');
+			if ($parse_m3u) { 
+				$pattern .= "|m3u)$/i";
+			}
+			else { 
+				$pattern .= ")$/i";
+			}
 					
-					/* see if this is an mp3 file and if it is greater than 0 bytes */
-					if ( preg_match($pattern ,$file) && ($file_size > 0) && (!preg_match('/\.AppleDouble/', $file))  ) {
+			/* see if this is a valid audio file or playlist file */
+			if (preg_match($pattern ,$file)) {
 
-						if (is_readable($full_file)) {
+				/* Once we're sure that it is a valid file 
+				 * we need to check to see if it's new, only
+				 * if we're doing a fast add
+				 */
+				if ($gather_type == 'fast_add') { 
+					$file_time = filemtime($full_file);
+					if ($file_time < $this->last_add) {
+						debug_event('fast_add',"Skipping $full_file because last add is newer then file mod time",'5','ampache-catalog'); 
+						continue;
+					} 
+				} // if fast_add
+			
+				/* Now that we're sure its a file get filesize  */
+				$file_size = @filesize($full_file);
 
-							if (substr($file,-3,3) == 'm3u') { 
-								$this->_playlists[] = $full_file;
-							} // if it's an m3u
+				if (!$file_size) { 
+					debug_event('read',"Unable to get filesize for $full_file",'2','ampache-catalog'); 
+					echo "<font class=\"error\">" . _("Error: Unable to get filesize for") . " $full_file <br />";
+				} // file_size check
+		
+				if (is_readable($full_file)) {
 
-							else {
-						
-							/* see if the current song is in the catalog */
-							$found = $this->check_local_mp3($full_file,$gather_type);
-
-							/* If not found then insert, gets id3 information
-							 * and then inserts it into the database
-							 */
-							if (!$found) {
-								$this->insert_local_song($full_file,$file_size);
-
-								/* Stupid little cutesie thing */
-								$this->count++;
-								if ( !($this->count%conf('catalog_echo_count')) ) {
-									echo _("Added") . " $this->count. . . . <br />\n";
-									flush();
-								} //echos song count
-
-							} // not found
-
-							} // if it's not an m3u
-						
-						} // is readable
-						else {
-							// not readable, warn user
-				                        if (conf('debug')) { log_event($_SESSION['userdata']['username'],'read',"$full_file is not readable by ampache",'ampache-catalog'); }
-							echo "$full_file " . _("is not readable by ampache") . ".<br />\n";
-
-						}
-
-					} //if it's a mp3 and is greater than 0 bytes
+					if (substr($file,-3,3) == 'm3u') { 
+						$this->_playlists[] = $full_file;
+					} // if it's an m3u
 
 					else {
-						if (conf('debug')) { 
-							log_event($_SESSION['userdata']['username'],'read',"$full_file ignored, non audio file or 0 bytes",'ampache-catalog');
-						}
-					} // else not an audio file or 0 size
+						
+						/* see if the current song is in the catalog */
+						$found = $this->check_local_mp3($full_file);
 
-				} //else it's not a directory
+						/* If not found then insert, gets id3 information
+						 * and then inserts it into the database
+						 */
+						if (!$found) {
+							$this->insert_local_song($full_file,$file_size);
 
-			} //end if not . or ..
+							/* Stupid little cutesie thing */
+							$this->count++;
+							if ( !($this->count%conf('catalog_echo_count')) ) {
+								echo _("Added") . " $this->count. . . . <br />\n";
+								flush();
+							} //echos song count
 
-		} //end while
+						} // not found
 
-		if (conf('debug')) { 
-			log_event($_SESSION['userdata']['username'],' closedir ',"Finished reading $path closing handle",'ampache-catalog');
-		}
+						} // if it's not an m3u
+						
+					} // is readable
+					else {
+						// not readable, warn user
+			                        debug_event('read',"$full_file is not readable by ampache",'2','ampache-catalog'); 
+						echo "$full_file " . _("is not readable by ampache") . ".<br />\n";
+
+					}
+
+				} //if it's a mp3 and is greater than 0 bytes
+
+				else {
+					debug_event('read',"$full_file ignored, non audio file or 0 bytes",'5','ampache-catalog');
+				} // else not an audio file or 0 size
+
+		} // end while reading directory 
+
+		debug_event('closedir',"Finished reading $path closing handle",'5','ampache-catalog');
 
 		/* Close the dir handle */
 		@closedir($handle);

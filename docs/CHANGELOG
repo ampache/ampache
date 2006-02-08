@@ -4,6 +4,9 @@
 
 --------------------------------------------------------------------------
   v.3.3.2-Beta2 
+  	- Added debug_level config option to allow fine tunning of logging
+  	- Fixed catalog functions hopefully increasing speed and removing a bug
+		with fast search
   	- Fixed cookie code to account for violation of RFC's by IIS 5 where
 		in IIS 5 fails to send cookie header on a header redirect
 		(Thx Paul Webb)

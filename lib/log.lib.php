@@ -79,4 +79,24 @@ function ampache_error_handler($errno, $errstr, $errfile, $errline) {
 	
 } // ampache_error_handler
 
+/**
+ * debug_event
+ * This function is called inside ampache, it's actually a wrapper for the
+ * log_event. It checks for conf('debug') and conf('debug_level') and only
+ * calls log event if both requirements are met.
+ */
+function debug_event($type,$message,$level,$file='',$username='') { 
+
+	if (!conf('debug') || $level > conf('debug_level')) { 
+		return false;
+	}
+
+	if (!$username) { 
+		$username = $GLOBALS['user']->username;
+	}
+
+	log_event($username,$type,$message,$file);
+
+} // debug_event
+
 ?>
