@@ -412,7 +412,16 @@ downsample_cmd	= mp3splt -qnf %FILE% %OFFSET% %EOF% -o - | lame --mp3input -q 3 
 # formats to mp3 for streaming.  Very similar to 
 # downsampling, but requires something that can play
 # the various file formats.  
-stream_cmd_m4a = faad -f 2 -w "%FILE%" | lame -r -b %SAMPLE% -S - -
+
+# List of filetypes to transcode
+transcode_m4a 	= true
+#transcode_flac = false
+#transcode_mpc  = false
+
+# These are the commands that will be run to transcode the file
+#stream_cmd_flac 	= 
+#stream_cmd_m4a 	= faad -f 2 -w "%FILE%" | lame -r -b %SAMPLE% -S - -
+#stream_cmd_mpc		= 
 
 #######################################################
 # These options control the "local play" feature. This requires

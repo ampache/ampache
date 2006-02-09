@@ -698,7 +698,13 @@ class Song {
 		switch ($this->type) {
 			//TODO: fill out these cases once we have it working for m4a
 			case "m4a":
-				$return = false;
+				$return = conf('transcode_m4a');
+			break;
+			case 'flac':
+				$return = conf('transcode_flac');
+			break;
+			case 'mpc':
+				$return = conf('transcode_mpc');
 			break;
 			default:
 				$return = true;
