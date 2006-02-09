@@ -75,7 +75,7 @@ foreach ($results as $item) {
 			<td width="20%">
 				<div id="np_img_<?php echo $c; ?>">
 				<a target="_blank" href="<?php echo $web_path; ?>/albumart.php?id=<?php echo $song->album; ?>&amp;type=popup" onclick="popup_art('<?php echo $web_path; ?>/albumart.php?id=<?php echo $song->album; ?>&amp;type=popup'); return false;">
-				<img align="middle" border="0" src="albumart.php?id=<?php echo $song->album; ?>&amp;fast=1&amp;thumb=1" alt="Album Art" height="75" />
+				<img align="middle" border="0" src="<?php echo $web_path; ?>/albumart.php?id=<?php echo $song->album; ?>&amp;fast=1&amp;thumb=1" alt="Album Art" height="75" />
 				</a>
 				</div>
 			</td>

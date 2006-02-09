@@ -4,6 +4,9 @@
 
 --------------------------------------------------------------------------
   v.3.3.2-Beta2 
+  	- Fixed a problem with browsing genres that would incorrectly put
+		'Browse' in the Showing Genres Starting With: box
+  	- Fixed some unescaped ID's in class constructors. 
   	- Added debug_level config option to allow fine tunning of logging
   	- Fixed catalog functions hopefully increasing speed and removing a bug
 		with fast search
