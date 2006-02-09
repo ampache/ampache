@@ -72,6 +72,7 @@ foreach ($results as $item) {
 				</a>
 				</div>
 			</td>
+			<?php if (conf('play_album_art')) { ?>
 			<td width="20%">
 				<div id="np_img_<?php echo $c; ?>">
 				<a target="_blank" href="<?php echo $web_path; ?>/albumart.php?id=<?php echo $song->album; ?>&amp;type=popup" onclick="popup_art('<?php echo $web_path; ?>/albumart.php?id=<?php echo $song->album; ?>&amp;type=popup'); return false;">
@@ -79,6 +80,7 @@ foreach ($results as $item) {
 				</a>
 				</div>
 			</td>
+			<?php } ?>
 		</tr>
 		</table>
 		</div>
