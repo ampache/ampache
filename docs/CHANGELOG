@@ -4,6 +4,8 @@
 
 --------------------------------------------------------------------------
   v.3.3.2-Beta2 
+  	- Fixed a problem with not being able to add Albums to a playlist
+		(Thx eudaimon)
   	- Fixed a problem with browsing genres that would incorrectly put
 		'Browse' in the Showing Genres Starting With: box
   	- Fixed some unescaped ID's in class constructors. 

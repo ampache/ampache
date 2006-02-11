@@ -75,7 +75,7 @@ switch ($action) {
 			access_denied();
 		}
 		if ($_REQUEST['type'] == 'album') { 
-			$song_ids = get_songs_from_type($_REQUEST['type'],$_REQUEST['song_ids'],$_REQUEST['artist_id']);
+			$song_ids = get_songs_from_type($_REQUEST['type'],$_REQUEST['song'],$_REQUEST['artist_id']);
 		}
 		else { 	
 			$song_ids = $_REQUEST['song'];
