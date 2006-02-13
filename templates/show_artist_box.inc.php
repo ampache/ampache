@@ -33,6 +33,7 @@ $web_path = conf('web_path');
 			<?php  if ($user->has_access('100')) { ?>
 				<li><a href="<?php echo $web_path; ?>/artists.php?action=update_from_tags&amp;artist=<?php echo $artist_id; ?>"><?php echo _("Update from tags"); ?></a></li>
 				<li><a href="<?php echo $web_path; ?>/artists.php?action=show_rename&amp;artist=<?php echo $artist_id; ?>"><?php echo _("Rename Artist"); ?></a></li>
+				<li><a href="<?php echo $web_path; ?>/artists.php?action=show_similar&amp;artist=<?php echo $artist_id; ?>"><?php echo _("Find duplicate artists"); ?></a></li>
 			<?php } ?>
 		</ul>
 	</td>

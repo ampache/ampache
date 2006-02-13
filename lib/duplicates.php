@@ -42,8 +42,6 @@ function get_duplicate_songs($search_type) {
 	$sql = $sql." HAVING count(title) > 1";
 	$sql = $sql." ORDER BY ctitle";
 
-	//echo $sql."<BR>";
-
     $result = mysql_query($sql, dbh());
 
     $arr = array();

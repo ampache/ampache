@@ -47,6 +47,7 @@ switch($action) {
     	$artist = new Artist($_REQUEST['artist']);
 	$artist->format_artist();
 	$song_ids = $artist->get_song_ids();
+	$artist_id = $artist->id;
 	require(conf('prefix') . '/templates/show_artist_box.inc.php');
         show_songs($song_ids);
         break;
@@ -64,6 +65,62 @@ switch($action) {
         echo "<a href=\"" . conf('web_path') . "/artists.php?action=show&amp;artist=" . $_REQUEST['artist'] . "\">[" . _("Return") . "]</a>";
 
 	break;
+	case 'rename_similar':
+		if (!$user->has_access('100')) { access_denied(); }
+		$count = 0;
+		if (isset($_REQUEST['artist']) && is_numeric($_REQUEST['artist']) && isset($_REQUEST['artists']) && is_array($_REQUEST['artists'])) {
+			$artist = new Artist($_REQUEST['artist']);
+			if ($artist->id)
+			foreach ($_REQUEST['artists'] as $artist_id) {
+				if (is_numeric($artist_id)) {
+					$that_artist = new Artist($artist_id);
+					if ($that_artist->id) {
+						$that_artist->merge($artist->id);
+						$count++;
+					} else
+						$GLOBALS['error']->add_error('general',"Error: No such artist '$artist_id'");
+				} else {
+					$GLOBALS['error']->add_error('general',"Error: '$artist_id' is not a valid ID");
+				}
+			}
+			else
+				$GLOBALS['error']->add_error('general',"Error: No such artist '" . $_REQUEST['artist'] . "'");
+		} else {
+			$GLOBALS['error']->add_error('general',"Error: Errenous request");
+		}
+		if ($count > 0) {
+			show_confirmation (
+				"Renamed artist(s)",
+				"$count artists have been merged with " . $artist->name,
+				conf('web_path') . "/artists.php?action=show&artist=" . $artist->id
+			);
+		} else {
+			$GLOBALS['error']->print_error('general');
+		}
+		
+	break;
+	case 'show_similar':
+		if (!$user->has_access('100')) { access_denied(); }
+	
+		if (isset($_REQUEST['artist'])) {
+			$artist = new Artist($_REQUEST['artist']);
+			//options
+			$similar_artists = $artist->get_similar_artists(
+							make_bool($_POST['n_rep_uml']),
+							$_POST['n_filter'],
+							$_POST['n_ignore'],
+							$_POST['c_mode'],
+							$_POST['c_count_w'],
+							$_POST['c_percent_w'],
+							$_POST['c_distance_l'],
+							make_bool($_POST['c_ignins_l']));
+			$artist_id = $artist->id;
+			$artist_name = $artist->name;
+			require (conf('prefix') . '/templates/show_similar_artists.inc');
+		} else {
+			$GLOBALS['error']->add_error('general',"Error: No artist given");
+		} 
+	break;
 	case 'rename':
 		//die if not enough permissions
 		if (!$user->has_access('100')) { access_denied(); }
@@ -78,39 +135,50 @@ switch($action) {
 			//if we want to update id3 tags, then get the array of ids now, it's too late afterwards
 			if (make_bool($_POST['update_id3']))
 				$songs = $artist->get_songs(); 
-		
-			//the manual rename takes priority	
-			if ($_POST['artist_name'] != "") {
+			
+			$ret = 0;
+			//the manual rename takes priority, but if they tested out the insert thing ignore
+			if ($_POST['artist_name'] != "" && $_POST['artist_name'] != $artist->name) {
 				//then just change the name of the artist in the db
-				$newid = $artist->rename($_POST['artist_name']);
-			
+				$ret = $artist->rename($_POST['artist_name']);
+				$newid = $ret;
+				$newname = $_POST['artist_name'];
 			}
+			//new id?
 			elseif ($_POST['artist_id'] != $artist->id) {
-				if ($_POST['test_stats'] == 'yes') {
-					$catalog->merge_stats("artist",$artist->id,$_POST['artist_id']);
-				} 
-				else {
 				//merge with other artist
-					$artist->merge($_POST['artist_id']);
-					$newid = $_POST['artist_id'];
-				}
+				$ret = $artist->merge($_POST['artist_id']);
+				$newid = $_POST['artist_id'];
+				$newname = $ret;
 			} // elseif different artist and id 
+			//if no changes, no changes
 			
-			//now flag for id3tag update if selected, and song id changed
-			if ($_POST['update_id3'] == "yes" && $newid != $artist->id) {
+			//now flag for id3tag update if selected, and something actually happaned
+			if ($ret && make_bool($_POST['update_id3'])) {
 			
 				/* Set the rename information in the db */
 				foreach ($songs as $song) {
+					$flag = new Flag();
+					$flag->add($song->id,"song","retag","Renamed artist, retag");
 					$flag_qstring = "REPLACE INTO flagged " . 
 						"SET type = 'setid3', song = '" . $song->id . "', date = '" . time() . "', user = '" . $GLOBALS['user']->username . "'";
 	            			mysql_query($flag_qstring, dbh()); 
 	    			}
 				
 			} // end if they wanted to update
+			
+			// show something other than a blank screen after this			
+			if ($ret) {
+				show_confirmation (
+					"Renamed artist",
+					$artist->name . " is now known as " . $newname,
+					conf('web_path') . "/artists.php?action=show&artist=" . $newid
+				);
+			}
 		
 		}  // if we've got the needed variables
 
-		/* Else we've got an error! */
+		/* Else we've got an error! But be lenient, and just show the form again */
 		else { 
 			require (conf('prefix') . '/templates/show_rename_artist.inc.php');
 		}

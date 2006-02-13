@@ -880,7 +880,7 @@ function show_artist_pulldown ($artist_id,$select_name='artist') {
 		$artist->get_count();
 
 		if ( $artist_id == $r['id'] ) {
-			echo "\t<option value=\"" . $artist->id . "\" selected=\"selected\">". scrub_out($artist->name) . " (" . $artist->songs . ")</option>\n";
+			echo "\t<option value=\"" . $artist->id . "\" selected=\"selected\">". scrub_out($artist->name) . "</option>\n";
 		}
 		else {
 			echo "\t<option value=\"" . $artist->id . "\">". scrub_out($artist->name) ."</option>\n";

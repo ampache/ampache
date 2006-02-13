@@ -45,7 +45,7 @@ function insert()
 	</td>
 </tr>
 <tr>
-	<td><input type="checkbox" name="update_id3" value="1" />&nbsp; <?php echo _("Update id3 tags"); ?></td>
+	<td><input type="checkbox" name="update_id3" value="yes" />&nbsp; <?php echo _("Update id3 tags"); ?></td>
 </tr>
 <tr>
 	<td>
