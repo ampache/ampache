@@ -41,35 +41,41 @@ if (conf('demo_mode') || !$GLOBALS['user']->has_access('25') || !$GLOBALS['user'
    that they have enough access to play this mojo
 */
 if (conf('access_control')) {
-
         $access = new Access(0);
         if (!$access->check('50', $_SERVER['REMOTE_ADDR'])) {
-                if (conf('debug')) {
-                        log_event($user->username,' access_denied ', "Download Access Denied, " . $_SERVER['REMOTE_ADDR'] . " does not have download level");
-                }
+                debug_event('access_denied', "Download Access Denied, " . $_SERVER['REMOTE_ADDR'] . " does not have download level",'3');
                 access_denied();
         }
-
 } // access_control is enabled
 
-if ($_REQUEST['song_id']) {
-	if ($_REQUEST['action'] == 'download') {
-		$song = new Song($_REQUEST['song_id']);
-		$song->format_song();
-		$song->format_type();
-		$song_name = str_replace('"'," ",$song->f_artist_full . " - " . $song->title . "." . $song->type);
-		// Use Horde's Browser class to send the right headers for different browsers
-		// Should get the mime-type from the song rather than hard-coding it.
-		header("Content-Length: " . $song->size);
-		$browser->downloadHeaders($song_name, $song->mime, false, $song->size);
-		$fp = fopen($song->file, 'r');
-		fpassthru($fp);
-		fclose($fp);
-	}
-}
-else { 
-	if (conf('debug')) { 
-		log_event($GLOBALS['user']->username,'download','No Song found, download failed');
-	}
+/* Check for a song id */
+if (!$_REQUEST['song_id']) { 
 	echo "Error: No Song found, download failed";
+	debug_event('download','No Song found, download failed','2');
 }
+
+/* If we're got require_session check for a valid session */
+if (conf('require_session')) { 
+	if (!session_exists(scrub_in($_REQUEST['sid']))) { 
+		die(_("Session Expired: please log in again at") . " " . conf('web_path') . "/login.php");
+		debug_event('session_expired',"Download Access Denied: " . $GLOBALS['user']->username . "'s session has expired",'3');
+	}
+} // if require_session
+	
+
+/* If the request is to download it... why is this here? */
+if ($_REQUEST['action'] == 'download') {
+	$song = new Song($_REQUEST['song_id']);
+	$song->format_song();
+	$song->format_type();
+	$song_name = str_replace('"'," ",$song->f_artist_full . " - " . $song->title . "." . $song->type);
+	// Use Horde's Browser class to send the right headers for different browsers
+	// Should get the mime-type from the song rather than hard-coding it.
+	header("Content-Length: " . $song->size);
+	$browser->downloadHeaders($song_name, $song->mime, false, $song->size);
+	$fp = fopen($song->file, 'r');
+	fpassthru($fp);
+	fclose($fp);
+}
+
+?>

@@ -128,10 +128,10 @@ foreach ($song_ids as $song_id) {
 				<?php } //status ?>
 		<?php } //access ?>
 		<?php if ($GLOBALS['user']->prefs['download']) { ?>
-				| <a href="<?php echo $web_path; ?>/download/index.php?action=download&amp;song_id=<?php echo $song->id; ?>&amp;fn=<?php echo rawurlencode($song->f_artist_full . " - " . $song->title . "." . $song->type); ?>"><?php echo _('Download'); ?></a>
+				| <a href="<?php echo $web_path; ?>/download/index.php?action=download&amp;song_id=<?php echo $song->id; ?>&amp;sid=<?php echo scrub_out(session_id()); ?>&amp;fn=<?php echo rawurlencode($song->f_artist_full . " - " . $song->title . "." . $song->type); ?>"><?php echo _('Download'); ?></a>
 		<?php } ?>
 		<?php if ($GLOBALS['user']->prefs['direct_link']) { ?>
-			| <a href="<?php echo $web_path; ?>/play/index.php?song=<?php echo $song->id; ?>&amp;uid=<?php echo $GLOBALS['user']->username . "&amp;sid=" . session_id(); ?>&amp;fn=<?php echo rawurlencode($song->f_artist_full . " - " . $song->title . "." . $song->type); ?>"><?php echo _('Direct Link'); ?></a>
+			| <a href="<?php echo $web_path; ?>/play/index.php?song=<?php echo $song->id; ?>&amp;uid=<?php echo $GLOBALS['user']->username . "&amp;sid=" . scrub_out(session_id()); ?>&amp;fn=<?php echo rawurlencode($song->f_artist_full . " - " . $song->title . "." . $song->type); ?>"><?php echo _('Direct Link'); ?></a>
 		<?php } ?>
 	</td>
 	<?php if(conf('ratings')) { ?>
