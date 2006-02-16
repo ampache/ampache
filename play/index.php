@@ -54,7 +54,7 @@ if (conf('xml_rpc')) {
 if (conf('require_session') OR $xml_rpc) { 
 	if(!session_exists($sid,$xml_rpc)) {	
     		die(_("Session Expired: please log in again at") . " " . conf('web_path') . "/login.php");
-		debug_event('session_expired',"Streaming Access Denied: " . $GLOBALS['user']->username . "'s session has expired",'4');
+		debug_event('session_expired',"Streaming Access Denied: " . $GLOBALS['user']->username . "'s session has expired",'3');
 	}
 
 	// Now that we've confirmed the session is valid
