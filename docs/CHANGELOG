@@ -4,6 +4,9 @@
 
 --------------------------------------------------------------------------
   v.3.3.2-Beta2 
+  	- Added catalog drop down back to quick random play form
+  	- Added bandwidth throttling to downloads, must be enabled in config
+		(Thx pb1dft)
   	- Added loose name compare and rename functions to help with sorting
 		similar artist names (Thx SpComb)
   	- Fixed a problem with not being able to add Albums to a playlist

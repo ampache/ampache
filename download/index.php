@@ -33,6 +33,7 @@ $browser = new Browser();
 
 /* If we are running a demo, quick while you still can! */
 if (conf('demo_mode') || !$GLOBALS['user']->has_access('25') || !$GLOBALS['user']->prefs['download']) {
+	debug_event('access_denied',"Download Access Denied, " . $GLOBALS['user']->username . " doesn't have sufficent rights",'3');
 	access_denied();
 }
 
@@ -69,13 +70,30 @@ if ($_REQUEST['action'] == 'download') {
 	$song->format_song();
 	$song->format_type();
 	$song_name = str_replace('"'," ",$song->f_artist_full . " - " . $song->title . "." . $song->type);
+
+	
 	// Use Horde's Browser class to send the right headers for different browsers
 	// Should get the mime-type from the song rather than hard-coding it.
 	header("Content-Length: " . $song->size);
 	$browser->downloadHeaders($song_name, $song->mime, false, $song->size);
 	$fp = fopen($song->file, 'r');
-	fpassthru($fp);
+	
+	/* We need to check and see if throttling is enabled */
+	$speed = intval(conf('throttle_download'));
+	if ($speed > 0) { 
+		while(!feof($fp)) {
+			echo fread($fp, round($speed*1024));
+			flush();
+			sleep(1);
+		}
+	} // if limiting 
+	/* Otherwise just pump it out as fast as you can */	
+	else { 	
+		fpassthru($fp);
+	} // else no limit
+
 	fclose($fp);
-}
+
+} // If they've requested a download
 
 ?>

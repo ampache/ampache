@@ -1294,4 +1294,29 @@ function show_genre_select($name='genre',$genre_id=0) {
 
 } // show_genre_select
 
+/**
+ * show_catalog_select
+ * Yet another one of these buggers. this shows a drop down of all of your catalogs 
+ */
+function show_catalog_select($name='catalog',$catalog_id=0,$style='') { 
+
+	echo "<select name=\"$name\" style=\"$style\">\n";
+
+	$sql = "SELECT id, name FROM catalog ORDER BY name";
+	$db_results = mysql_query($sql, dbh());
+
+	while ($r = mysql_fetch_assoc($db_results)) { 
+		$selected = '';
+		if ($r['id'] == $catalog_id) { 
+			$selected = "selected=\"selected\"";
+		}
+
+		echo "\t<option value=\"" . $r['id'] . "\" $selected>" . scrub_out($r['name']) . "</option>\n";
+
+	} // end while
+
+	echo "</select>\n";
+
+} // show_catalog_select
+
 ?>

@@ -151,7 +151,7 @@ $web_path = conf('web_path');
 		<input type="hidden" name="action" value="m3u" />
 		<select name="random" style="width:9em;">
 			<option value="1">1</option>
-			<option value="5">5</option>
+			<option value="5" selected="selected">5</option>
 			<option value="10">10</option>
 			<option value="20">20</option>
 			<option value="30">30</option>
@@ -171,6 +171,8 @@ $web_path = conf('web_path');
 			<option value="Less Played"><?php echo _("Less Played"); ?></option>
 		</select>
 		<br /> 
+		<?php show_catalog_select('catalog','','width:9em;'); ?>
+		<br />
 		<input type="hidden" name="aaction" value="Play!" />
 		<input class="smallbutton" type="submit" name="aaction" value="<?php echo _("Enqueue"); ?>" />
 		</form>

@@ -78,9 +78,14 @@ if (!$results['allow_stream_playback']) {
 	$results['allow_stream_playback'] = "true";
 }
 
+
+/** This is the version.... fluf nothing more... **/
+$results['version']		= '3.3.2-Beta2 (Build 007)';
+
+
+
 $results['raw_web_path']	= $results['web_path'];
 $results['web_path']		= $http_type . $_SERVER['HTTP_HOST'] . $results['web_path'];
-$results['version']		= '3.3.2-Beta2 (Build 006)';
 $results['catalog_file_pattern']= 'mp3|mpc|m4p|m4a|mp4|aac|ogg|rm|wma|asf|flac|spx|ra';
 $results['http_port']		= $_SERVER['SERVER_PORT'];
 if (!$results['prefix']) { 

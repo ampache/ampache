@@ -86,7 +86,7 @@ site_title	= "Ampache :: For The Love Of Music"
 
 # Require Session
 # If this is set to true ampache will make sure that the URL passed when
-# attempting to retrive a song contains a valid Session ID This prevents
+# attempting to retrieve a song contains a valid Session ID This prevents
 # others from guessing URL's
 # DEFAULT: true
 require_session = "true"
@@ -103,6 +103,14 @@ require_session = "true"
 # want to be able to use this function
 # DEFAULT: false
 #allow_zip_download = "false"
+
+# This setting throttles a persons downloading to the specified
+# bytes per second. This is not a 100% guaranteed function, and 
+# you should really use a server based rate limiter if you want
+# to do this correctly. 
+# DEFAULT: off
+# VALUES: any whole number (in bytes per second)
+#throttle_download = 10
 
 # This sets which ID3 tag takes precedence.
 # we've found for those of you who don't have
@@ -162,8 +170,8 @@ use_auth	= "yes"
 
 # Resize Images * Requires PHP-GD *
 # Set this to true if you want Ampache to resize the Album
-# art on the fly, this increases load time and CPU useage
-# and also requires the PHP-GD library. This is very usefull
+# art on the fly, this increases load time and CPU usage
+# and also requires the PHP-GD library. This is very useful
 # If you have high-quality album art and a small upload cap
 # DEFAULT: false
 #resize_images = "false"
@@ -216,7 +224,7 @@ max_amazon_results_pages = 1
 # Debug
 # If this is enabled Ampache will get really chatty
 # warning this can crash browser during catalog builds due to 
-# the amount of text that is dummped out this will also cause 
+# the amount of text that is dumped out this will also cause 
 # ampache to write to the log file
 # DEFAULT: false
 #debug = "false"
@@ -241,9 +249,9 @@ debug_level = 5
 #log_path = "/tmp"
 
 # Max Upload Size
-# This sets what the max filesize for an uploaded
+# This sets what the max file-size for an uploaded
 # file, this is good at preventing someone from
-# filling up your HDD. It is mesured in bytes
+# filling up your HDD. It is measured in bytes
 # Example 1024 = 1K, 1048576 = 1MB
 # Default size limit is 10Mb
 # DEFAULT: 10485760
@@ -262,7 +270,7 @@ site_charset = iso-8859-1
 # This setting turns on/off public registration. It is
 # recommended you leave this off, as it will allow anyone to
 # sign up for an account on your server.
-# REMEMBER: don't forget to set the mail from address futher down in the config.
+# REMEMBER: don't forget to set the mail from address further down in the config.
 # DEFAULT: false
 #allow_public_registration = "false"
 
@@ -277,11 +285,11 @@ site_charset = iso-8859-1
 # This setting defines the mail domain your in.
 # It tries to deliver a test mail before the user can register and uses
 # the from address info@"domain.tld". No mail is send from this address it's
-# only used to test the existense of a mailbox before accepting user registration.
+# only used to test the existence of a mailbox before accepting user registration.
 # DEFAULT: domain.tld
 #mail_domain = "domain.tld"
 
-# This settting will be used as mail from address.
+# This setting will be used as mail from address.
 # You need to change this when you activate public_registration.
 #mail_from = "info@domain.tld"
 
@@ -302,12 +310,12 @@ site_charset = iso-8859-1
 
 # Stream Playback
 # Disable this if you don't want to allow people to stream
-# using HTTP without downsampling
+# using HTTP without down-sampling
 # DEFAULT: true
 allow_stream_playback = true
 
-# Downsampling Playback
-# Disable this if you don't want to allow people to downsample
+# Down-sampling Playback
+# Disable this if you don't want to allow people to down-sample
 # songs before they are streamed
 # DEFAULT: false
 #allow_downsample_playback = false
@@ -337,12 +345,12 @@ allow_stream_playback = true
 #allow_slim_playback = false
 
 #######################################################
-# These options control the dynamic downsampling based
-# on current useage
-# *Note* Downsampling must be enabled and working
+# These options control the dynamic down-sampling based
+# on current usage
+# *Note* Down-sampling must be enabled and working
 #######################################################
 
-# Attempt to optimize bandwidth by dynamically downsampling
+# Attempt to optimize bandwidth by dynamically down-sampling
 # all connections from users to fit within a maximum bandwidth.   
 # The benefit is that it won't downsample more than it needs to.  As it only 
 # adjusts the sample rate at the beginning of a song, it may take a few 
@@ -353,7 +361,7 @@ allow_stream_playback = true
 #max_bit_rate = 576
 
 # If min_bit_rate is set then new streams will be denied if it would
-# cause all streams to be downsampled below this rate.
+# cause all streams to be down-sampled below this rate.
 # DEFAULT: 48
 #min_bit_rate = 48
 
@@ -376,7 +384,7 @@ search_type  = fuzzy
 # because lame seems to strip id3 tags. if you want the Ampache default
 # just leave this option commented out.
 #
-# the format supports the followning options:
+# the format supports the following options:
 #
 # %A = album name
 # %a = artist name
@@ -526,7 +534,7 @@ rss_main_language = nl
 # Tracklist Filename
 # This defines the file that the tracklist
 # for icecast is written to, this file must
-# be writeable by the web server process
+# be writable by the web server process
 # DEFAULT: /tmp/tracklist.txt
 #icecast_tracklist = "/tmp/tracklist.txt"
 
