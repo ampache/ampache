@@ -100,9 +100,6 @@ if (!$results['http_port']) {
 if (!$results['site_charset']) { 
 	$results['site_charset'] = "iso-8859-1";
 }
-if (!$results['log_path']) { 
-	$results['log_path']		= '/tmp';
-}
 if (!$results['ellipse_threshold_album']) { 
 	$results['ellipse_threshold_album'] = 27;
 }

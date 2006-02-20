@@ -138,14 +138,8 @@ use_auth	= "yes"
 # comment before the value flash requires flash player and
 # will cause longer load times. 
 # POSSIBLE VALUES: false normal
-# DEFAULT: normal
+# DEFAULT: false
 #ratings = "normal"
-
-# This enables the ability to use custom colors for the ratings.
-# This option MUST be set in order to use custom colors.
-# DEFAULT: false, use the default colorset
-# true: use custom colors, loaded from /templates/ratings_colors.php
-#custom_ratings_colors = "false"
 
 # This options will turn on/off Demo Mode
 # If Demo mode is on you can not play songs or update your catalog
@@ -244,9 +238,10 @@ debug_level = 5
 # Path to Log File
 # This defines where you want ampache to log events to
 # this will only happen if debug is turned on. Do not
-# include trailing slash. Default is /tmp
-# DEFAULT: /tmp
-#log_path = "/tmp"
+# include trailing slash. You will need to make sure that
+# your HTTP server has write access to the specified directory
+# DEFAULT: /var/log/ampache
+#log_path = "/var/log/ampache"
 
 # Max Upload Size
 # This sets what the max file-size for an uploaded
@@ -535,8 +530,8 @@ rss_main_language = nl
 # This defines the file that the tracklist
 # for icecast is written to, this file must
 # be writable by the web server process
-# DEFAULT: /tmp/tracklist.txt
-#icecast_tracklist = "/tmp/tracklist.txt"
+# DEFAULT: /private/ampache/icecast/tracklist.txt
+#icecast_tracklist = "/private/ampache/icecast/tracklist.txt"
 
 # Icecast Command
 # This is the command that is run when ampache

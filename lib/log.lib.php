@@ -30,13 +30,14 @@ function log_event($username='Unknown',$event_name,$event_description,$log_name=
 	/* Set it up here to make sure it's _always_ the same */
         $log_time = time();
 
-	set_time_limit(0);
-
         $log_filename   = conf('log_path') . "/$log_name." . date("Ymd",$log_time) . ".log";
         $log_line       = date("Y-m-d H:i:s",$log_time) . " { $username } ( $event_name ) - $event_description \n";  
 
-
-	error_log($log_line, 3, $log_filename) or die("Error: Unable to write to log ($log_filename) Please check your log_path variable in ampache.cfg.php");
+	$log_write = error_log($log_line, 3, $log_filename);
+	
+	if (!$log_write) { 
+		echo "Error: Unable to write to log ($log_filename) Please check your log_path variable in ampache.cfg.php";
+	}
 
 } // log_event
 
@@ -46,6 +47,9 @@ function log_event($username='Unknown',$event_name,$event_description,$log_name=
 		as many errors as it can and logs em
 */
 function ampache_error_handler($errno, $errstr, $errfile, $errline) { 
+	
+	/* Default level of 1 */
+	$level = 1;
 	
 	switch ($errno) { 
 		case '2':
@@ -70,12 +74,13 @@ function ampache_error_handler($errno, $errstr, $errfile, $errline) {
 			break;
 		default:
 			$error_name = "Error";
+			$level = 2;
 			break;
 	} // end switch
 
 
 	$log_line = "[$error_name] $errstr on line $errline in $errfile";
-	log_event($_SESSION['userdata']['username'],'error',$log_line,'ampache-error');
+	debug_event('error',$log_line,$level);
 	
 } // ampache_error_handler
 
