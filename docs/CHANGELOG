@@ -4,6 +4,8 @@
 
 --------------------------------------------------------------------------
   v.3.3.2-Beta2 
+  	- Fixed popen in downsample, forcing binary mode, so that windows
+		works correctly (Thx SoundOfEmotion)
   	- Tweaked some defaults in .dist config file as well as the error 
 		handler, in order to account for debug_level
   	- Added catalog drop down back to quick random play form

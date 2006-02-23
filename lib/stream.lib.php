@@ -250,7 +250,7 @@ function start_downsample($song,$now_playing_id=0,$song_name=0) {
                 log_event($GLOBALS['user']->username,' downsample ',$message);
 	} // if debug
 
-	$fp = @popen($downsample_command, 'r');
+	$fp = @popen($downsample_command, 'rb');
 
 	/* We need more than just the handle here */
 	$return_array['handle'] = $fp;

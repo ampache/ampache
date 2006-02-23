@@ -778,7 +778,7 @@ class Update {
 			$new_prefs[] = array('name' => 'row_color3', 'value' => '#dddddd', 'description' => 'Row Color 3', 'level' => '25', 'locked' => '0', 'type' => 'user');
 			$new_prefs[] = array('name' => 'error_color', 'value' => '#990033', 'description' => 'Error Color', 'level' => '25', 'locked' => '0', 'type' => 'user');
 			$new_prefs[] = array('name' => 'font_size', 'value' => '10', 'description' => 'Font Size', 'level' => '25', 'locked' => '0', 'type' => 'user');
-			$new_prefs[] = array('name' => 'upload_dir', 'value' => '/tmp', 'description' => 'Upload Directory', 'level' => '25', 'locked' => '0', 'type' => 'user');
+			$new_prefs[] = array('name' => 'upload_dir', 'value' => '', 'description' => 'Upload Directory', 'level' => '25', 'locked' => '0', 'type' => 'user');
 			$new_prefs[] = array('name' => 'sample_rate', 'value' => '32', 'description' => 'Downsample Bitrate', 'level' => '25', 'locked' => '0', 'type' => 'user');
 			$new_prefs[] = array('name' => 'refresh_limit', 'value' => '0', 'description' => 'Refresh Rate for Homepage', 'level' => '100', 'locked' => '0', 'type' => 'system');
 			$new_prefs[] = array('name' => 'local_length', 'value' => '900', 'description' => 'Session Expire in Seconds', 'level' => '100', 'locked' => '0', 'type' => 'system');
@@ -1231,7 +1231,7 @@ class Update {
 		$db_results = mysql_query($sql, dbh());
 
 		$sql = "INSERT INTO `preferences` ( `id` , `name` , `value` , `description` , `level` , `type` , `locked` )" . 
-			"VALUES ('', 'quarantine_dir', '/tmp', 'Quarantine Directory', '100', 'system', '0')";
+			"VALUES ('', 'quarantine_dir', '', 'Quarantine Directory', '100', 'system', '0')";
 		$db_results = mysql_query($sql, dbh());
 
 		/* Since this is a system value we only need to rebuild the -1 users preferences */
