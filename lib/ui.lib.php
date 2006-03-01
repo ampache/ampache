@@ -965,6 +965,18 @@ function get_location() {
 		case 'index.php':
 			$location['title'] 	= 'Home';
 			break;
+		case 'upload.php':
+			$location['title'] 	= 'Upload';
+			break;
+		case 'mpd.php':
+			$location['title'] 	= 'Local Play';
+			break;
+		case 'randomplay.php':
+			$location['title'] 	= 'Random Play';
+			break;
+		case 'playlist.php':
+			$location['title'] 	= 'Playlist';
+			break;
 		case 'search.php':
 			$location['title'] 	= 'Search';
 			break;
