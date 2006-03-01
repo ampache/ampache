@@ -5,7 +5,8 @@
 // secondssinceloaded is the calculated number of seconds since mpd_elapsed was set (less some load & execute lag).
 
 // Set refresh interval (in seconds)
-var refreshinterval=<?php echo conf('refresh_limit'); ?>
+var refreshinterval=<?php echo conf('refresh_limit'); ?>;
+var web_path = "<?php echo conf('web_path');?>";
 
 <?php 
 if ($user->prefs['play_type'] == 'mpd') {
