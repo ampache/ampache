@@ -213,7 +213,7 @@
 	#tablist {
 		padding: 3px 0;
 		margin-left: 0;
-		border-bottom: 1px solid #778;
+		border-bottom: 1px solid <?php echo conf('bg_color2'); ?>;
 		font: bold 12px Verdana, sans-serif;
 	}
 
@@ -226,24 +226,26 @@
 	#tablist li a {
 		padding: 3px 0.5em;
 		margin-left: 3px;
-		border: 1px solid #778;
+		border: 1px solid <?php echo conf('row_color1'); ?>;
 		border-bottom: none;
-		background: #DDE;
+		background: <?php echo conf('row_color3'); ?>;
 		text-decoration: none;
 	}
 
-	#tablist li a:link { color: #448; }
-	#tablist li a:visited { color: #667; }
+	#tablist li a:link { color: <?php echo conf('font_color1'); ?>; }
+	#tablist li a:visited { color: <?php echo conf('bg_color2'); ?>; }
 
 	#tablist li a:hover {
-		color: #000;
-		background: #AAE;
-		border-color: #227;
+		color: <?php echo conf('font_color2'); ?>;
+		background: <?php echo conf('row_color2'); ?>;
+		border-color: <?php echo conf('bg_color2'); ?>;
 	}
 
 	#tablist li a#current {
-		background: white;
-		border-bottom: 1px solid white;
+		color: <?php echo conf('font_color2'); ?>;
+		background: <?php echo conf('row_color2'); ?>;
+		border-color: <?php echo conf('bg_color2'); ?>;
+		border-bottom: 1px solid <?php echo conf('bg_color2'); ?>;
 	}
 -->
 </style>
