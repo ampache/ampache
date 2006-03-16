@@ -46,25 +46,16 @@ if (conf('use_rss')) { ?>
 		<img class="pageheader" src="<?php echo $web_path; ?><?php echo conf('theme_path'); ?>/images/ampache.gif" border="0" title="Ampache: For the love of music" alt="Ampache: For the love of music" />
 		</a>
 		</div><!--End topbarleft -->
+		<div id="topbarright">
 		<?php if (($user->prefs['play_type']=='mpd') && ($location['page'] != 'mpd.php')) { 
 			$myMpd = init_mpd();
 			show_template ('show_mpdminicontrol');
 		} else { ?>
-		<div id="topbarright">
 			<a href="http://www.ampache.org/index.php">Ampache v.<?php echo conf('version'); ?></a><br />
 			<b><?php echo _("You are currently logged in as") . " " . $GLOBALS['user']->fullname; ?></b>
 			<br />
-			<?php echo _("Browse"); ?>:
-			<form method="post" action="<?php echo $web_path; ?>/browse.php" enctype="multipart/form-data" style="Display:inline;">
-			<select name="action">
-				<option value="album">Album</option>
-				<option value="artist">Artist</option>
-				<option value="genre">Genre</option>
-			</select>
-			<input type="submit" value="<?php echo _("Go!"); ?>" class="button" />
-			</form>
-		</div> <!-- End topbarright -->
 		<?php } ?>
+		</div> <!-- End topbarright -->
 	</div><!-- End topbar -->
 	<div id="sidebar"><!-- This is the sidebar -->
 		<?php require_once(conf('prefix') . '/templates/sidebar.inc.php'); ?>

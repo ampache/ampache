@@ -210,5 +210,40 @@
                text-indent: -9000px;
                z-index: 1;
        }               
+	#tablist {
+		padding: 3px 0;
+		margin-left: 0;
+		border-bottom: 1px solid #778;
+		font: bold 12px Verdana, sans-serif;
+	}
+
+	#tablist li {
+		list-style: none;
+		margin: 0;
+		display: inline;
+	}
+
+	#tablist li a {
+		padding: 3px 0.5em;
+		margin-left: 3px;
+		border: 1px solid #778;
+		border-bottom: none;
+		background: #DDE;
+		text-decoration: none;
+	}
+
+	#tablist li a:link { color: #448; }
+	#tablist li a:visited { color: #667; }
+
+	#tablist li a:hover {
+		color: #000;
+		background: #AAE;
+		border-color: #227;
+	}
+
+	#tablist li a#current {
+		background: white;
+		border-bottom: 1px solid white;
+	}
 -->
 </style>

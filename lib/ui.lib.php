@@ -417,20 +417,6 @@ function show_user_registration ($values=array()) {
 } // show_user_registration
 
 /**
- * show_edit_profile
- * shows a single user profile for editing
- * @package Web Interface
- * @catagory Display
- */
-function show_edit_profile($username) {
-
-	$this_user = new User($username);
-
-	require (conf('prefix') . "/templates/show_user.inc.php");
-
-} // show_edit_profile
-
-/**
  *  show_play_selected
  * this shows the playselected/add to playlist
  *	box, which includes a little javascript
@@ -1039,7 +1025,7 @@ function get_location() {
  * it does not contain the <form> </form> tags
  */
 function show_preference_box($preferences) { 
-
+	
 	include (conf('prefix') . '/templates/show_preference_box.inc.php');
 
 } // show_preference_box

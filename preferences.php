@@ -29,9 +29,44 @@
 
 require('modules/init.php');
 
+/* Scrub in the needed mojo */
+if (!$_REQUEST['tab']) { $_REQUEST['tab'] = 'theme'; } 
+$user_id = scrub_in($_REQUEST['user_id']);
+
+
 switch(scrub_in($_REQUEST['action'])) { 
+	case 'update_user':
+		/* Verify permissions */
+		if (!$GLOBALS['user']->has_access(25) || conf('demo_mode') || ($GLOBALS['user']->id != $user_id && !$GLOBALS['user']->has_access(100))) { 
+			show_access_denied(); 
+			exit();
+		}
+		
+		/* Go ahead and update normal stuff */
+		$this_user = new User($user_id);
+		$this_user->update_fullname($_REQUEST['fullname']);
+		$this_user->update_email($_REQUEST['email']);
+		$this_user->update_offset($_REQUEST['offset_limit']);
+		
+		/* Check for password change */
+		if ($_REQUEST['password1'] !== $_REQUEST['password2'] && !empty($_REQUEST['password1'])) { 
+			$GLOBALS['error']->add_error('password',_('Error: Password Does Not Match or Empty'));
+			break;
+		}
+		elseif (!empty($_REQUEST['password1'])) { 	
+			/* We're good change the mofo! */
+			$this_user->update_password($_REQUEST['password1']);
+		
+			/* Haha I'm fired... it's not an error but screw it */
+			$GLOBALS['error']->add_error('password',_('Password Updated'));
+		}
+
+		/* Check for stats */
+		if ($_REQUEST['clear_stats'] == '1') { 
+			$this_user->delete_stats();
+		}
+	break;
 	case 'update_preferences':
-		$user_id = scrub_in($_REQUEST['user_id']);
 		
 		/* Do the work */
 		update_preferences($user_id);	
@@ -45,17 +80,17 @@ switch(scrub_in($_REQUEST['action'])) {
 		/* Reset the Theme */
 		set_theme();
 	default:
-		$user_id = $user->username;
-		$preferences = $user->get_preferences();		
+		if (!$user_id) { $user_id = $GLOBALS['user']->id; }
+		$preferences = $GLOBALS['user']->get_preferences(0,$_REQUEST['tab']);		
 	break;
 
 } // End Switch Action
 
-if (!$user->fullname) { 
+if (!$GLOBALS['user']->fullname) { 
 	$fullname = "Site";
 }
 else {
-	$fullname = $user->fullname;
+	$fullname = $GLOBALS['user']->fullname;
 }
 
 

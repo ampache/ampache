@@ -80,7 +80,7 @@ if (!$results['allow_stream_playback']) {
 
 
 /** This is the version.... fluf nothing more... **/
-$results['version']		= '3.3.2-Beta2 (Build 007)';
+$results['version']		= '3.3.2-Beta2 (Build 008)';
 
 
 

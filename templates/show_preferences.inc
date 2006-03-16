@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2005 Ampache.org
+ Copyright (c) 2001 - 2006 Ampache.org
  All rights reserved
 
  This program is free software; you can redistribute it and/or
@@ -26,6 +26,20 @@
 
 */
 
+/**
+ * This page has a few tabs, as such we need to figure out which tab we are on 
+ * and display the information accordingly 
+ */
+$current_tab 	= scrub_in($_REQUEST['tab']);
+if (!$current_tab) { $current_tab = 'theme'; } 
+$link		= conf('web_path') . $target;
+
+/* CSS construction bs */
+$link_active	= "a_" . $current_tab;
+${$link_active} = "id=\"current\"";
+$tab_active	= "tab_" .$current_tab;
+${$tab_active}  = "id=\"tabactive\"";
+
 /* I'm cheating a little here, check to see if we want to show the
  * Apply to All button on this page 
  */
@@ -33,43 +47,58 @@ if (($GLOBALS['user']->has_access(100)) AND ($user_id == '-1' AND conf('use_auth
 	$show_apply_to_all = true;
 }
 ?>
-<table class="text-box">
-<tr>
-	<td>
-		<span class="header1">
-			<?php echo _("Editing"); ?> <?php echo $fullname; ?> <?php echo _("preferences"); ?> 
-			<?php if ($GLOBALS['user']->has_access(100)) { ?>
-			[<a href="<?php echo conf('web_path'); ?>/admin/preferences.php?action=fix_preferences&amp;user_id=<?php echo $user_id; ?>"><?php echo _("Rebuild Preferences"); ?></a>]
-			<?php } ?>
-		</span>
-		<form method="post" name="preferences" action="<?php echo conf('web_path'); ?><?php echo $target; ?>" enctype="multipart/form-data">
-			<table cellspacing="10">
-			<tr>
-				<td valign="top"><?php show_preference_box($preferences['theme']); ?></td>
-				<?php if (isset($preferences['system'])) { ?>
-				<td valign="top"><?php show_preference_box($preferences['system']); ?></td>
-				<?php } else { ?>
-				<td valign="top">&nbsp;</td>
-				<?php } ?>
-			</tr>
-			<tr>
-				<td valign="top"><?php show_preference_box($preferences['streaming']); ?></td>
-				<td>&nbsp;</td>
-			</tr>
-			<tr>
-				<td valign="top"><?php show_preference_box($preferences['interface']); ?></td>
-				<td>&nbsp;</td>
-			</tr>
-			<tr>
-				<td valign="top"><?php show_preference_box($preferences['options']); ?></td>
-				<td>&nbsp;</td>
-			</tr>
-			</table>
-			<input class="button" type="submit" value="<?php echo _("Update Preferences"); ?>" />
-			<input type="hidden" name="action" value="update_preferences" />
-			<input type="hidden" name="user_id" value="<?php echo $user_id; ?>" />&nbsp;&nbsp;
-			<input class="button" type="submit" name="action" value="<?php echo _("Cancel"); ?>" />
-		</form>
-	</td>
-</tr>
-</table>
+<span class="header1">
+<?php echo _("Editing"); ?> <?php echo $fullname; ?> <?php echo _("preferences"); ?> 
+<?php if ($GLOBALS['user']->has_access(100)) { ?>
+[<a href="<?php echo conf('web_path'); ?>/admin/preferences.php?action=fix_preferences&amp;user_id=<?php echo $user_id; ?>"><?php echo _("Rebuild Preferences"); ?></a>]
+<?php } ?>
+</span>
+
+
+<ul>
+<div id="tabcontainer">
+<ul id="tablist">
+<li <?php echo $tab_theme; ?>>
+	<a href="<?php echo $link; ?>?tab=theme&amp;user_id=<?php echo $user_id; ?>" <?php echo $a_theme; ?>>Theme</a>
+</li>
+<li <?php echo $tab_streaming; ?>>
+	<a href="<?php echo $link; ?>?tab=streaming&amp;user_id=<?php echo $user_id; ?>" <?php echo $a_streaming; ?>>Streaming</a>
+</li>
+<li <?php echo $tab_interface; ?>>
+	<a href="<?php echo $link; ?>?tab=interface&amp;user_id=<?php echo $user_id; ?>" <?php echo $a_interface; ?>>Interface</a>
+</li>
+<li <?php echo $tab_options; ?>>
+	<a href="<?php echo $link; ?>?tab=options&amp;user_id=<?php echo $user_id; ?>" <?php echo $a_options; ?>>Options</a>
+</li>
+<?php if ($user_id != '-1') { ?>
+<li <?php echo $tab_account; ?>>
+	<a href="<?php echo $link; ?>?tab=account&amp;user_id=<?php echo $user_id; ?>" <?php echo $a_account; ?>>Account</a>
+</li>
+<?php } else { ?>
+<li <?php echo $tab_system; ?>>
+	<a href="<?php echo $link; ?>?tab=system&amp;user_id=<?php echo $user_id; ?>" <?php echo $a_system; ?>>System</a>
+</li>
+<?php } ?>
+</ul>
+</div>
+<div class="text-box">
+<form method="post" name="preferences" action="<?php echo conf('web_path'); ?><?php echo $target; ?>" enctype="multipart/form-data">
+<?php 
+if ($current_tab != 'account') { 
+	show_preference_box($preferences[$current_tab]); 
+?>
+	<input class="button" type="submit" value="<?php echo _("Update Preferences"); ?>" />
+	<input type="hidden" name="action" value="update_preferences" />
+	<input type="hidden" name="user_id" value="<?php echo $user_id; ?>" />&nbsp;&nbsp;
+	<input type="hidden" name="tab" value="<?php echo scrub_out($current_tab); ?>" />
+	<input class="button" type="submit" name="action" value="<?php echo _("Cancel"); ?>" />
+<?php
+	} 
+
+	else { 
+		$this_user = new User($user_id);
+		require (conf('prefix') . '/templates/show_user.inc.php');
+	}
+?>
+</form>
+</div>

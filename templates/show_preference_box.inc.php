@@ -32,7 +32,6 @@
 if ($GLOBALS['user']->has_access(100) AND conf('use_auth')) { 
 	$show_apply_to_all = true;
 }
-
 ?>
 
 

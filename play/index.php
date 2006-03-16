@@ -1,4 +1,5 @@
 <?php
+if (1==1) { }
 /*
 
  Copyright (c) 2001 - 2006 Ampache.org

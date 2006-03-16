@@ -29,6 +29,7 @@
 class User {
 
 	//Basic Componets
+	var $id;
 	var $username;
 	var $fullname;
 	var $access;
@@ -46,6 +47,7 @@ class User {
 		}
 
 		$this->username 	= sql_escape($username);
+		$this->id		= $this->username;
 		$info 			= $this->get_info();
 		$this->username 	= $info->username;
 		$this->fullname 	= $info->fullname;
@@ -82,11 +84,12 @@ class User {
 	 * get_preferences
 	 * This is a little more complicate now that we've got many types of preferences
 	 * This funtions pulls all of them an arranges them into a spiffy little array
+	 * You can specify a type to limit it to a single type of preference
 	 * []['title'] = ucased type name
 	 * []['prefs'] = array(array('name','display','value'));
 	 * []['admin'] = t/f value if this is an admin only section
 	 */
-	function get_preferences($user_id=0) { 
+	function get_preferences($user_id=0,$type=0) { 
 		
 		if (!$user_id) { 
 			$user_id = $this->username;
@@ -96,6 +99,10 @@ class User {
 
 		if ($user_id != '-1') { 
 			$user_limit = "AND preferences.type != 'system'";
+		}
+		
+		if ($type != '0') { 
+			$user_limit = "AND preferences.type = '" . sql_escape($type) . "'";
 		}
 
 	
@@ -332,7 +339,7 @@ class User {
 	function update_fullname($new_fullname) {
 		
 		$new_fullname = sql_escape($new_fullname);
-		$sql = "UPDATE user SET fullname='$new_fullname' WHERE username='$this->username'";
+		$sql = "UPDATE user SET fullname='$new_fullname' WHERE username='$this->id'";
 		$db_results = mysql_query($sql, dbh());
 
 	} // update_username
@@ -344,7 +351,7 @@ class User {
 	function update_email($new_email) {
 
 		$new_email = sql_escape($new_email);
-		$sql = "UPDATE user SET email='$new_email' WHERE username='$this->username'";
+		$sql = "UPDATE user SET email='$new_email' WHERE username='$this->id'";
 		$db_results = mysql_query($sql, dbh());
 
 	} // update_email
@@ -356,7 +363,7 @@ class User {
 	function update_offset($new_offset) { 
 
 		$new_offset = sql_escape($new_offset);
-		$sql = "UPDATE user SET offset_limit='$new_offset' WHERE username='$this->username'";
+		$sql = "UPDATE user SET offset_limit='$new_offset' WHERE username='$this->id'";
 		$db_results = mysql_query($sql, dbh());
 
 	} // update_offset
