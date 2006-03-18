@@ -54,8 +54,6 @@ if (($GLOBALS['user']->has_access(100)) AND ($user_id == '-1' AND conf('use_auth
 <?php } ?>
 </span>
 
-
-<ul>
 <div id="tabcontainer">
 <ul id="tablist">
 <li <?php echo $tab_theme; ?>>

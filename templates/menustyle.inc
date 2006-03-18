@@ -212,7 +212,7 @@
        }               
 	#tablist {
 		padding: 3px 0;
-		margin-left: 0;
+		margin: 12px 0 0 0;
 		border-bottom: 1px solid <?php echo conf('bg_color2'); ?>;
 		font: bold 12px Verdana, sans-serif;
 	}

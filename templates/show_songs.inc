@@ -45,7 +45,7 @@ if (is_object($playlist) && ($GLOBALS['user']->username == $playlist->user || $G
 	<th><?php echo _("Genre"); ?></th>
 	<th><?php echo _("Action"); ?></th>
 	<?php if (conf('ratings') || conf('ratings')=="false") { ?>
-		<th width="90px"><?php echo _("Rating"); ?></th>
+		<th width="90"><?php echo _("Rating"); ?></th>
 	<?php } ?>            
 </tr>
 <?php
