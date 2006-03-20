@@ -74,7 +74,10 @@ a:active {text-decoration: underline;}
 
 img{border: thin outset Silver;}
 p img{border:none;}/*no border on login page logo.*/
-.text-box{border: thin outset;}
+.text-box{
+	border: thin outset; 
+	display: table-cell;
+}
 H3{font-size: <?php echo conf('font_size')+2; ?>px;}
 TABLE{
 	border-collapse: separate;

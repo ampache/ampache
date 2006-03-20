@@ -62,6 +62,7 @@ a:active
   padding-left:5px;
   padding-top:5px;
   margin-bottom:10px;
+  display: table-cell;
   background-color: <?php echo conf('base_color1'); ?>;
   border-right:2px solid <?php echo conf('bg_color2'); ?>;
   border-bottom:2px solid <?php echo conf('bg_color2'); ?>;
