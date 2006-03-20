@@ -45,16 +45,22 @@ switch ($_REQUEST['action']) {
 		$type = 'show_flagged_songs';
 		include(conf('prefix') . '/templates/flag.inc');
 	break;
-	case _("Add to Catalog(s)"):
+	case 'add_to_all_catalogs':
+		$_REQUEST['catalogs'] = Catalog::get_catalog_ids();
 	case 'add_to_catalog':
 	    	if (conf('demo_mode')) { break; }
 		if ($_REQUEST['catalogs'] ) {
 			foreach ($_REQUEST['catalogs'] as $catalog_id) {
+				echo "<div class=\"confirmation-box\">";
 				$catalog = new Catalog($catalog_id);
 				$catalog->add_to_catalog($_REQUEST['update_type']);
+				echo "</div>";
 			}
 	       	}
-		include(conf('prefix') . '/templates/catalog.inc');
+		$url 	= conf('web_path') . '/admin/index.php';
+		$title 	= _('Catalog Updated');
+		$body	= '';
+		show_confirmation($title,$body,$url);
 	break;
 	case _("Add to all Catalogs"):
 		if (conf('demo_mode')) { break; }
@@ -78,49 +84,43 @@ switch ($_REQUEST['action']) {
 		}
 		include(conf('prefix') . '/templates/catalog.inc');
 	break;
-	case _("Update Catalog(s)"):
+	case 'update_all_catalogs':
+		$_REQUEST['catalogs'] = Catalog::get_catalog_ids();
 	case 'update_catalog':
 	    	/* If they are in demo mode stop here */
 	        if (conf('demo_mode')) { break; }
 
 		if (isset($_REQUEST['catalogs'])) {
 			foreach ($_REQUEST['catalogs'] as $catalog_id) {
+				echo "<div class=\"confirmation-box\">";
 				$catalog = new Catalog($catalog_id);
 				$catalog->verify_catalog($catalog_id->id,$_REQUEST['update_type']);
+				echo "</div>\n";
 			}
 		}
-		include(conf('prefix') . '/templates/catalog.inc');
-	break;
-	case _("Update All Catalogs"):
-	        if (conf('demo_mode')) { break; }
-		$catalogs = $catalog->get_catalogs();
-
-		foreach ($catalogs as $data) {
-			$data->verify_catalog($data->id,$_REQUEST['update_type']);
-		}
-		include(conf('prefix') . '/templates/catalog.inc');
+		$url	= conf('web_path') . '/admin/index.php';
+		$title	= _('Catalog Updated');
+		$body	= '';
+		show_confirmation($title,$body,$url);
 	break;
 	case 'full_service':
 		/* Make sure they aren't in demo mode */
 		if (conf('demo_mode')) { break; } 
 
 		if (!$_REQUEST['catalogs']) { 
-			$_REQUEST['catalogs'] = array();
-			$catalogs = Catalog::get_catalogs();
+			$_REQUEST['catalogs'] = Catalog::get_catalog_ids();
 		}
 
 		/* This runs the clean/verify/add in that order */
 		foreach ($_REQUEST['catalogs'] as $catalog_id) { 
+			echo "<div class=\"confirmation-box\">";
 			$catalog = new Catalog($catalog_id);
-			$catalogs[] = $catalog;
-		}
-
-		foreach ($catalogs as $catalog) { 
 			$catalog->clean_catalog();
 			$catalog->count = 0;
 			$catalog->verify_catalog();
 			$catalog->count = 0;
 			$catalog->add_to_catalog();
+			echo "</div>";
 		} 		
 	break;
 	case 'delete_catalog':
@@ -145,7 +145,8 @@ switch ($_REQUEST['action']) {
 		}
 		include(conf('prefix') . '/templates/catalog.inc');
 	break;
-	case _('Clean Catalog(s)'):
+	case 'clean_all_catalogs':
+		$_REQUEST['catalogs'] = Catalog::get_catalog_ids();
 	case 'clean_catalog':
 	    	/* If they are in demo mode stop them here */
 	        if (conf('demo_mode')) { break; }
@@ -153,39 +154,29 @@ switch ($_REQUEST['action']) {
 		// Make sure they checked something
 		if (isset($_REQUEST['catalogs'])) {	
 			foreach($_REQUEST['catalogs'] as $catalog_id) { 
+				echo "<div class=\"confirmation-box\">";
 				$catalog = new Catalog($catalog_id);
 				$catalog->clean_catalog(0,1);
+				echo "</div>";
 			} // end foreach catalogs
 		}
-		include(conf('prefix') . '/templates/catalog.inc');
+		
+		$url 	= conf('web_path') . '/admin/index.php';
+		$title	= _('Catalog Cleaned');
+		$body	= '';
+		show_confirmation($title,$body,$url);
 	break;
 	case 'update_catalog_settings':
+		/* No Demo Here! */
         	if (conf('demo_mode')) { break; }
-		$id 	= strip_tags($_REQUEST['catalog_id']);
-		$name 	= strip_tags($_REQUEST['name']);
-		$id3cmd = strip_tags($_REQUEST['id3_set_command']);
-		$rename = strip_tags($_REQUEST['rename_pattern']);
-		$sort 	= strip_tags($_REQUEST['sort_pattern']);
-		/* Setup SQL */
-		$sql = "UPDATE catalog SET " .
-			" name = '$name'," .
-			" id3_set_command = '$id3cmd'," .
-			" rename_pattern = '$rename'," .
-			" sort_pattern = '$sort'" .
-			" WHERE id = '$id'";
-		$result = mysql_query($sql, dbh());
-		include(conf('prefix') . '/templates/catalog.inc');
-	break;
-	case _("Clean All Catalogs"):
-	        if (conf('demo_mode')) { break; }
-		$catalogs = $catalog->get_catalogs();
-		$dead_files = array();	
-	
-		foreach ($catalogs as $catalog) {
-			$catalog->clean_catalog(0,$_REQUEST['update_type']);
-		}
-	
-		include(conf('prefix') . '/templates/catalog.inc');
+
+		/* Update the catalog */
+		Catalog::update_settings($_REQUEST);
+		
+		$url 	= conf('web_path') . '/admin/index.php';
+		$title 	= _('Catalog Updated');
+		$body	= '';
+		show_confirmation($title,$body,$url);
 	break;
 	// FIXME!
 	case 'add_catalog':
@@ -195,6 +186,10 @@ switch ($_REQUEST['action']) {
 		if ($_REQUEST['path'] AND $_REQUEST['name']) { 
 			/* Throw all of the album art types into an array */
 			$art = array('id3'=>$_REQUEST['art_id3v2'],'amazon'=>$_REQUEST['art_amazon'],'folder'=>$_REQUEST['art_folder']);
+
+			/* Enclose it in a purrty box! */
+			echo "<div class=\"confirmation-box\">";
+			
 			/* Create the Catalog */
 			$catalog->new_catalog($_REQUEST['path'],
 					$_REQUEST['name'],
@@ -205,6 +200,9 @@ switch ($_REQUEST['action']) {
 					$_REQUEST['gather_art'],
 					$_REQUEST['parse_m3u'],
 					$art);
+
+			echo "</div>\n";
+
 			$url = conf('web_path') . '/admin/index.php';
 			$title = _('Catalog Created');
 			$body  = _('Catalog Created and Songs Indexed');
@@ -243,12 +241,13 @@ switch ($_REQUEST['action']) {
 	break;
 	case 'show_disabled':
 	        if (conf('demo_mode')) { break; }
+		
 		$songs = $catalog->get_disabled();
 		if (count($songs)) { 
 			require (conf('prefix') . '/templates/show_disabled_songs.inc');
 		}
 		else {
-			echo "<p class=\"error\" align=\"center\">No Disabled songs found</p>";
+			echo "<div class=\"error\" align=\"center\">No Disabled songs found</div>";
 		}
 	break;
 	case 'show_delete_catalog':
@@ -258,28 +257,26 @@ switch ($_REQUEST['action']) {
 		$nexturl = conf('web_path') . '/admin/catalog.php?action=delete_catalog&amp;catalog_id=' . scrub_out($_REQUEST['catalog_id']);
 		show_confirmation(_('Delete Catalog'),_('Do you really want to delete this catalog?'),$nexturl,1);
 	break;
-	case 'show_flagged_songs':
-	        if (conf('demo_mode')) { break; }
-		$type = $_REQUEST['action'];
-		include (conf('prefix') . '/templates/flag.inc');
-	break;
 	case 'show_customize_catalog':
 		include(conf('prefix') . '/templates/customize_catalog.inc');
 	break;
 	case 'gather_album_art':
-	        echo "<b>" . _("Starting Album Art Search") . ". . .</b><br /><br />\n";
 	        flush();
 
 		$catalogs = $catalog->get_catalogs();
 		foreach ($catalogs as $data) { 
+	        	echo "<div class=\"confirmation-box\"><b>" . _("Starting Album Art Search") . ". . .</b><br /><br />\n";
+			echo _('Searched') . ": <span id=\"count_art_" . $data->id . "\">" . _('None') . "</span><br />";
 			$data->get_album_art();
+			echo "<b>" . _("Album Art Search Finished") . ". . .</b></div>\n";
 		}
-
-		echo "<b>" . _("Album Art Search Finished") . ". . .</b><br />\n";
-
+		$url 	= conf('web_path') . '/admin/index.php';
+		$title 	= _('Album Art Search Finished');
+		$body	= '';
+		show_confirmation($title,$body,$url);
         break;
 	default:
-		include(conf('prefix') . '/templates/catalog.inc');
+		/* Not sure what to put here anymore */
 	break;
 } // end switch
 

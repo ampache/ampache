@@ -272,7 +272,7 @@ function return_referer() {
 	
 	/* Strip off the filename */
 	$referer = substr($referer,0,strlen($referer)-strlen($file));
-
+	
 	if (substr($referer,strlen($referer)-6,6) == 'admin/') { 
 		$file = 'admin/' . $file;
 	}

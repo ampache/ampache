@@ -33,10 +33,9 @@ if (conf('use_rss')) { ?>
 <link rel="alternate" type="application/rss+xml" title="<?php echo conf('rss_main_title'); ?>" href="<?php echo $web_path; ?>/rss.php" />
 <?php } ?>
 <meta http-equiv="Content-Type" content="text/html; charset=<?php echo conf('site_charset'); ?>" />
-<?php show_template('menustyle'); show_template('style'); ?>
+<?php require (conf('prefix') . '/templates/basestyle.inc.php'); show_template('style'); ?>
 <title><?php echo conf('site_title'); ?> - <?php echo $location['title']; ?></title>
 </head>
-
 <body>
 <script src="<?php echo $web_path; ?>/lib/general.js" language="javascript" type="text/javascript"></script>
 <div id="maincontainer">

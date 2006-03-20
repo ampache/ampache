@@ -107,6 +107,22 @@ class Catalog {
 
 	} // get_catalogs
 
+	/**
+	 * get_catalog_ids
+	 * This returns an array of all catalog ids
+	 */
+	function get_catalog_ids() { 
+
+		$sql = "SELECT id FROM catalog";
+		$db_results = mysql_query($sql, dbh());
+
+		while ($r = mysql_fetch_assoc($db_results)) { 
+			$results[] = $r['id'];
+		}
+
+		return $results;
+
+	} // get_catalog_ids
 
 	/*!
 		@function get_catalog_stats
@@ -382,7 +398,7 @@ class Catalog {
 							$this->count++;
 							if ( !($this->count%conf('catalog_echo_count')) ) {
 							        echo "<script language=\"JavaScript\">";
-								echo "update_txt('" . $this->count . "','count');";
+								echo "update_txt('" . $this->count . "','count_add_" . $this->id ."');";
 								echo "</script>\n";
 								flush();
 							} //echos song count
@@ -474,7 +490,9 @@ class Catalog {
 			/* Stupid little cutesie thing */
                         $search_count++;
                         if ( !($search_count%conf('catalog_echo_count')) ) {
-                                echo _("Searched") . " $search_count. . . . <br />\n";
+                                echo "<script language=\"JavaScript\">";
+                                echo "update_txt('" . $search_count ."','count_art_" . $this->id . "');";
+                                echo "</script>\n"; 
 	                        flush();
                         } //echos song count
 
@@ -701,6 +719,25 @@ class Catalog {
 
 	} // update_last_add
 
+	/**
+	 * update_settings
+	 * This function updates the basic setting of the catalog
+	 */
+	function update_settings($data) { 
+
+		$id	= sql_escape($data['catalog_id']);
+		$name	= sql_escape($data['name']);
+		$id3cmd	= sql_escape($data['id3cmd']);
+		$rename	= sql_escape($data['rename_pattern']);
+		$sort	= sql_escape($data['sort_pattern']);
+		
+		$sql = "UPDATE catalog SET name='$name', id3_set_command='$id3cmd', rename_pattern='$rename', " . 
+			"sort_pattern='$sort' WHERE id = '$id'";
+		$db_results = mysql_query($sql, dbh());
+
+		return true;
+
+	} // update_settings
 
 	/**
 	 * new_catalog
@@ -764,6 +801,7 @@ class Catalog {
 		/* Now Adding Album Art? */
 		if ($gather_art) { 
                         echo "<br />\n<b>" . _("Starting Album Art Search") . ". . .</b><br />\n";
+			echo _('Searched') . ": <span id=\"count_art_" . $this->id . "\">" . _('None') . "</span>";
                         flush();
                         $this->get_album_art(0,$art);
 		} // if we want to gather album art
@@ -906,7 +944,7 @@ class Catalog {
 			return true;
 		} 
 		
-		echo _('Found') . ": <span id=\"count\">" . _('None') . "</span><br />\n";
+		echo _('Found') . ": <span id=\"count_add_" . $this->id ."\">" . _('None') . "</span><br />\n";
 		flush();
 
 		/* Set the Start time */
@@ -931,6 +969,7 @@ class Catalog {
 		if ($type != 'fast_add') { 	
 			if ($verbose) { 
 				echo "\n<b>" . _('Starting Album Art Search') . ". . .</b><br />\n"; 
+				echo _('Searched') . ": <span id=\"count_art_" . $this->id . "\">" . _('None') . "</span>";
 				flush();
 			}
 			$this->get_album_art(); 
@@ -1139,7 +1178,7 @@ class Catalog {
 
 		if ($verbose) { 
 			echo "\n" . _('Cleaning the') . " <b>[" . $this->name . "]</b> " . _('Catalog') . "...<br />\n";
-			echo _('Checking') . ": <span id=\"count\"></span>\n<br />";
+			echo _('Checking') . ": <span id=\"count_clean_" . $this->id . "\"></span>\n<br />";
 			flush();
 		}
 
@@ -1157,7 +1196,7 @@ class Catalog {
                         $this->count++;
                         if ( !($this->count%conf('catalog_echo_count')) && $verbose) {
 			        echo "<script language=\"JavaScript\">";
-			        echo "update_txt('" . $this->count ."','count');";
+			        echo "update_txt('" . $this->count ."','count_clean_" . $this->id . "');";
 			        echo "</script>\n";	
 	                        flush();
                         } //echos song count
@@ -1485,7 +1524,7 @@ class Catalog {
 		if ($verbose) { 
 			echo _("Updating the") . " <b>[ $this->name ]</b> " . _("Catalog") . "<br />\n";
 			echo $number . " " . _("songs found checking tag information.") . "<br />\n\n";
-			echo _('Verifed') . ": <span=\"count\">None</span><br />\n";
+			echo _('Verifed') . ": <span id=\"count_verify_" . $this->id . "\">None</span><br />\n";
 			flush();
 		}
 
@@ -1502,7 +1541,7 @@ class Catalog {
 			/* Create the object from the existing database information */
 			$song = new Song($results->id);
 
-			if (conf('debug')) { log_event($_SESSION['userdata']['username'],' verify ',"Starting work on $song->file",'ampache-catalog'); }
+			debug_event('verify',"Starting work on $song->file",'5','ampache-catalog');
 			
 			if (is_readable($song->file)) {
 				unset($skip);
@@ -1537,11 +1576,11 @@ class Catalog {
 							$found = $album->get_art();
 							unset($album);
 							if ($found) { $is_found = _(" FOUND"); }
-							echo "<br /><b>" . _("Searching for new Album Art") . ". . .$is_found</b><br />\n";
+							echo "<br /><b>" . _('Searching for new Album Art') . ". . .$is_found</b><br />\n";
 							unset($found,$is_found);
 						}
 						elseif (isset($searched_albums[$album_id])) { 
-							echo "<br /><b>" . _("Album Art Already Found") . ". . .</b><br />\n";
+							echo "<br /><b>" . _('Album Art Already Found') . ". . .</b><br />\n";
 						}
 						echo "\t</li>\n</dl>\n<hr align=\"left\" width=\"50%\" />\n";
 						flush();
@@ -1553,14 +1592,14 @@ class Catalog {
 				} // end skip
 
 				if ($skip) { 
-					if (conf('debug')) { log_event($_SESSION['userdata']['username'],' skip ',"$song->file has been skipped due to newer local update or file mod time",'ampache-catalog'); }
+					debug_event('skip',"$song->file has been skipped due to newer local update or file mod time",'5','ampache-catalog'); 
 				}
 	
                                 /* Stupid little cutesie thing */
                                 $this->count++;
-                                if ( !($this->count%conf('catalog_echo_count')) ) {
+                                if (!($this->count%conf('catalog_echo_count')) ) {
                                         echo "<script language=\"JavaScript\">";
-                                        echo "update_txt('" . $this->count . "','count');";
+                                        echo "update_txt('" . $this->count . "','count_verify_" . $this->id . "');";
                                         echo "</script>\n";
                                         flush();
                                 } //echos song count
@@ -1570,16 +1609,12 @@ class Catalog {
 			else {
 				echo "<dl>\n  <li>";
 				echo "<b>$song->file does not exist or is not readable</b>\n";
-				echo "  </li>\n</dl>\n<hr align=\"left\" width=\"50%\" />\n";
+				echo "</li>\n</dl>\n<hr align=\"left\" width=\"50%\" />\n";
 				
-				if (conf('debug')) { log_event($_SESSION['userdata']['username'],' read-error ',"$song->file does not exist or is not readable",'ampache-catalog'); }
-				
-				// Should we remove it from catalog?
+				debug_event('read-error',"$song->file does not exist or is not readable",'5','ampache-catalog'); 
 			}
 
-
 		} //end foreach
-
 
 		/* After we have updated all the songs with the new information clear any empty albums/artists */
 		$this->clean_albums();
@@ -1590,7 +1625,7 @@ class Catalog {
 		// Update the last_update
 		$this->update_last_update();
 
-		echo "Update Finished. Checked $this->count. $total_updated songs updated.<br /><br />";
+		echo _('Update Finished.') . _('Checked') . " $this->count. $total_updated " . _('songs updated.') . "<br /><br />";
 
 		$this->count = 0;
 
@@ -1717,7 +1752,7 @@ class Catalog {
 			if ($artist_count == $cache_limit) {
 				$this->artists = array_slice($this->artists,1);
 			}
-			if (conf('debug')) { log_event($_SESSION['userdata']['username'],'cache',"Adding $artist with $artist_id to Cache",'ampache-catalog'); }
+			debug_event('cache',"Adding $artist with $artist_id to Cache",'5','ampache-catalog'); 
 			$array = array($artist => $artist_id);
 			$this->artists = array_merge($this->artists, $array);
 			unset($array);
@@ -1919,7 +1954,7 @@ class Catalog {
 		$db_results = mysql_query($sql, dbh());
 
 		if (!$db_results) {
-			if (conf('debug')) { log_event($_SESSION['userdata']['username'],'insert',"Unable to insert $file -- $sql",'ampache-catalog'); }
+			debug_event('insert',"Unable to insert $file -- $sql",'5','ampache-catalog'); 
 			echo "<span style=\"color: #F00;\">Error Adding $file </span><br />$sql<br />";
 			flush();
 		}
@@ -1948,7 +1983,7 @@ class Catalog {
 		$db_results = mysql_query($sql, dbh());
 
 		if (!$db_results) { 
-                        if (conf('debug')) { log_event($_SESSION['userdata']['username'],'insert',"Unable to Add Remote $url -- $sql",'ampache-catalog'); }
+                        debug_event('insert',"Unable to Add Remote $url -- $sql",'5','ampache-catalog');
 			echo "<span style=\"color: #FOO;\">Error Adding Remote $url </span><br />$sql<br />\n";
 			flush();
 		}
@@ -1998,7 +2033,7 @@ class Catalog {
 		$db_results = mysql_query($sql, dbh());
 
 		//If it's found then return true
-		if (@mysql_fetch_row($db_results)) {
+		if (mysql_fetch_row($db_results)) {
 			return true;
 		}
 
@@ -2035,7 +2070,7 @@ class Catalog {
 
 		} // end foreach line
 
-		if (conf('debug')) { log_event($GLOBALS['user']->username,'m3u_parse',"Parsing $filename - Found: " . count($songs) . " Songs"); }
+		debug_event('m3u_parse',"Parsing $filename - Found: " . count($songs) . " Songs",'5'); 
 
 		if (count($songs)) { 
 			$playlist = new Playlist();
@@ -2143,6 +2178,7 @@ class Catalog {
 		$this->clean_stats();
 		$this->clean_playlists();
 		$this->clean_flagged();
+		$this->clean_genre();
 
 	} // delete_catalog
 

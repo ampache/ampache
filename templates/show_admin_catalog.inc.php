@@ -42,7 +42,7 @@ $catalogs 	= Catalog::get_catalogs();
 		<a href="<?php echo $web_path; ?>/admin/catalog.php?action=add_to_catalog&amp;catalogs[]=<?php echo $catalog->id; ?>">
 		<?php echo _('Add'); ?></a>&nbsp;|&nbsp;
 		<a href="<?php echo $web_path; ?>/admin/catalog.php?action=update_catalog&amp;catalogs[]=<?php echo $catalog->id; ?>">
-		<?php echo _('Update'); ?></a>&nbsp;|&nbsp;
+		<?php echo _('Verify'); ?></a>&nbsp;|&nbsp;
 		<a href="<?php echo $web_path; ?>/admin/catalog.php?action=clean_catalog&amp;catalogs[]=<?php echo $catalog->id; ?>">
 		<?php echo _('Clean'); ?></a>&nbsp;|&nbsp;
 		<a href="<?php echo $web_path; ?>/admin/catalog.php?action=full_service&amp;catalogs[]=<?php echo $catalog->id; ?>">
@@ -60,9 +60,22 @@ $catalogs 	= Catalog::get_catalogs();
 </tr>
 <?php } // end if no catalogs ?>
 </table>
-<form method="post" enctype="multipart/form-data" action="<?php echo $web_path; ?>/admin/catalog.php?action=full_service">
-<input class="button" type="submit" value="<?php echo _('Update Everything'); ?>" />
-</form>
+<script type="text/javascript" language="javascript">
+<!--
+function ToCatalog(action)
+{
+        document.catalog.action = "<?php echo conf('web_path'); ?>/admin/catalog.php?action=" + action;
+        document.catalog.submit();                        // Submit the page
+        return true;
+}
+
+-->
+</script>
+<form name="catalog" method="post" enctype="multipart/form-data" style="Display:inline;">
+<input class="button" type="button" value="<?php echo _('Clean Everything'); ?>" onclick="return ToCatalog('clean_all_catalogs');" />
+<input class="button" type="button" value="<?php echo _('Verify Everything'); ?>" onclick="return ToCatalog('update_all_catalogs');" />
+<input class="button" type="button" value="<?php echo _('Add to Everything'); ?>" onclick="return ToCatalog('add_to_all_catalogs');" />
+<input class="button" type="button" value="<?php echo _('Update Everything'); ?>" onclick="return ToCatalog('full_service');" />
 </div>
 <div class="text-box">
 <span class="header2"><?php echo _('Other Tools'); ?></span><br />
