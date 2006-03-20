@@ -266,8 +266,9 @@ class Catalog {
 			     information against the db.
 		@param $path 		The root path you want to start grabing files from
 		@param $gather_type=0   Determins if we need to check the id3 tags of the file or not
+		@param $parse_m3u	Tells Ampache to look at m3us
 	 */
-	function add_files($path,$gather_type='',$parse_m3u='') {
+	function add_files($path,$gather_type='',$parse_m3u='',$verbose=1) {
 		/* Strip existing escape slashes and then add them again 
 		   This is done because we keep adding to the dir (slashed) + (non slashed)
 		   and a double addslashes would pooch things
@@ -380,7 +381,9 @@ class Catalog {
 							/* Stupid little cutesie thing */
 							$this->count++;
 							if ( !($this->count%conf('catalog_echo_count')) ) {
-								echo _("Added") . " $this->count. . . . <br />\n";
+							        echo "<script language=\"JavaScript\">";
+								echo "update_txt('" . $this->count . "','count');";
+								echo "</script>\n";
 								flush();
 							} //echos song count
 
@@ -736,15 +739,16 @@ class Catalog {
 
 		/* Fluf */
 		echo _("Starting Catalog Build") . " [$name]<br />\n";
-		flush();
 
 
 	       if ($this->catalog_type == 'remote') {
                         echo _("Running Remote Sync") . ". . .<br /><br />";
-                        flush();
                         $this->get_remote_catalog($type=0);
                         return true;
                 }
+		
+		echo _('Found') . ": <span id=\"count\">" . _('None') . "</span><br />\n";
+		flush();
 		
 		/* Get the songs and then insert them into the db */
 		$this->add_files($this->path,$type,$parse_m3u);
@@ -890,29 +894,34 @@ class Catalog {
 		@discussion this function adds new files to an
 			existing catalog
 	*/
-	function add_to_catalog($type='') { 
+	function add_to_catalog($type='',$verbose=1) { 
 
-		echo "\n" . _('Starting New Song Search on') . " <b>[$this->name]</b> " . _('catalog') . "<br /><br />\n";
-		flush();
+		if ($verbose) { 
+			echo "\n" . _('Starting New Song Search on') . " <b>[$this->name]</b> " . _('catalog') . "<br />\n";
+		}
 
 		if ($this->catalog_type == 'remote') { 
-			echo _('Running Remote Update') . ". . .<br /><br />";
-			flush();
+			echo _('Running Remote Update') . ". . .<br />";
 			$this->get_remote_catalog($type=0);
 			return true;
 		} 
+		
+		echo _('Found') . ": <span id=\"count\">" . _('None') . "</span><br />\n";
+		flush();
 
 		/* Set the Start time */
 		$start_time = time();
 
 		/* Get the songs and then insert them into the db */
-		$this->add_files($this->path,$type);
+		$this->add_files($this->path,$type,1,$verbose);
 
                 foreach ($this->_playlists as $full_file) {
                         if ($this->import_m3u($full_file)) {
 				$file = basename($full_file);
-                                echo "&nbsp;&nbsp;&nbsp;" . _('Added Playlist From') . " $file . . . .<br />\n";
-                                flush();
+				if ($verbose) { 
+        	                        echo "&nbsp;&nbsp;&nbsp;" . _('Added Playlist From') . " $file . . . .<br />\n";
+	                                flush();
+				}
                         } // end if import worked
                 } // end foreach playlist files
 
@@ -920,8 +929,10 @@ class Catalog {
 		$current_time = time();
 		
 		if ($type != 'fast_add') { 	
-			echo "\n<b>" . _('Starting Album Art Search') . ". . .</b><br />\n"; 
-			flush();
+			if ($verbose) { 
+				echo "\n<b>" . _('Starting Album Art Search') . ". . .</b><br />\n"; 
+				flush();
+			}
 			$this->get_album_art(); 
 		} 
 
@@ -1118,17 +1129,19 @@ class Catalog {
 		@discussion  Cleans the Catalog of files that no longer exist grabs from $this->id or $id passed 
   	  		     Doesn't actually delete anything, disables errored files, and returns them in an array
 		@param $catalog_id=0	Take the ID of the catalog you want to clean
-		@param $action=0	Delete/Disable, default is disable
 	*/
-	function clean_catalog($catalog_id=0,$action=0) {
+	function clean_catalog($catalog_id=0,$verbose=1) {
 
 		/* Define the Arrays we will need */
 		$dead_files = array();
 
 		if (!$catalog_id) { $catalog_id = $this->id; }
 
-		echo "\nCleaning the <b>[" . $this->name . "]</b> Catalog...<br /><br />\n";
-		flush();
+		if ($verbose) { 
+			echo "\n" . _('Cleaning the') . " <b>[" . $this->name . "]</b> " . _('Catalog') . "...<br />\n";
+			echo _('Checking') . ": <span id=\"count\"></span>\n<br />";
+			flush();
+		}
 
 		/* Get all songs in this catalog */
 		$sql = "SELECT id,file FROM song WHERE catalog='$catalog_id' AND enabled='1'";
@@ -1142,8 +1155,10 @@ class Catalog {
 
                         /* Stupid little cutesie thing */
                         $this->count++;
-                        if ( !($this->count%conf('catalog_echo_count')) ) {
-                                echo _('Checking') . " $this->count. . . . <br />\n";
+                        if ( !($this->count%conf('catalog_echo_count')) && $verbose) {
+			        echo "<script language=\"JavaScript\">";
+			        echo "update_txt('" . $this->count ."','count');";
+			        echo "</script>\n";	
 	                        flush();
                         } //echos song count
 
@@ -1154,8 +1169,10 @@ class Catalog {
 			if (!file_exists($results->file) OR $file_info < 1) {
 			
 				/* Add Error */
-				echo "<font class=\"error\">Error File Not Found or 0 Bytes: " . $results->file . "</font><br />";
-				flush();
+				if ($verbose) { 
+					echo "<font class=\"error\">Error File Not Found or 0 Bytes: " . $results->file . "</font><br />";
+					flush();
+				}
 
 				/* Add this file to the list for removal from the db */
 				$dead_files[] = $results;
@@ -1169,21 +1186,8 @@ class Catalog {
 		if (count($dead_files)) {
 			foreach ($dead_files as $data) {
 
-				//FIXME: Until I fix the form, assume delete
-				//if ($action === 'delete_dead') { 
-					$sql = "DELETE FROM song WHERE id='$data->id'";
-				//} 
-				//
-				//else {
-				//	$sql = "UPDATE song SET status='disabled' WHERE id='$data->id'";
-				//}
-
+				$sql = "DELETE FROM song WHERE id='$data->id'";
 				$db_results = mysql_query($sql, dbh());
-
-				/* DB Error occured */
-				if (!$db_results) {
-					/* Add Error */
-				} //if error
 
 			} //end foreach
 
@@ -1198,11 +1202,13 @@ class Catalog {
 		$this->clean_stats();
 		$this->clean_playlists();
 		$this->clean_flagged();
-		;$this->clean_genres();
+		$this->clean_genres();
 		
 		/* Return dead files, so they can be listed */
-		echo "<b>" . _("Catalog Clean Done") . " [" . count($dead_files) . "] " . _("files removed") . "</b><br />\n";
-		flush();
+		if ($verbose) { 
+			echo "<b>" . _("Catalog Clean Done") . " [" . count($dead_files) . "] " . _("files removed") . "</b><br />\n";
+			flush();
+		}
 		return $dead_files;
 
 		$this->count = 0;
@@ -1461,7 +1467,7 @@ class Catalog {
 		@discussion This function compares the DB's information with the ID3 tags
 		@param $catalog_id The ID of the catalog to compare
 	*/
-	function verify_catalog($catalog_id=0,$gather_type='') {
+	function verify_catalog($catalog_id=0,$gather_type='',$verbose=1) {
 
 		/* Create and empty song for us to use */
 		$total_updated = 0;
@@ -1476,9 +1482,12 @@ class Catalog {
 		$db_results = mysql_query($sql, dbh());
 		$number = mysql_num_rows($db_results);
 		
-		echo _("Updating the") . " <b>[ $this->name ]</b> " . _("Catalog") . "<br />\n";
-		echo $number . " " . _("songs found checking tag information.") . "<br /><br />\n\n";
-		flush();
+		if ($verbose) { 
+			echo _("Updating the") . " <b>[ $this->name ]</b> " . _("Catalog") . "<br />\n";
+			echo $number . " " . _("songs found checking tag information.") . "<br />\n\n";
+			echo _('Verifed') . ": <span=\"count\">None</span><br />\n";
+			flush();
+		}
 
 		/* Magical Fix so we don't run out of time */
 		set_time_limit(0);
@@ -1550,7 +1559,9 @@ class Catalog {
                                 /* Stupid little cutesie thing */
                                 $this->count++;
                                 if ( !($this->count%conf('catalog_echo_count')) ) {
-                                	echo "Checked $this->count. . . . <br />\n";
+                                        echo "<script language=\"JavaScript\">";
+                                        echo "update_txt('" . $this->count . "','count');";
+                                        echo "</script>\n";
                                         flush();
                                 } //echos song count
 				

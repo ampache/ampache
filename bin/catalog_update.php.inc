@@ -34,12 +34,12 @@ while ($r = mysql_fetch_row($db_results)) {
 	$catalog = new Catalog($r[0]);
 	
 	// Clean out dead files
-	$catalog->clean_catalog();
+	$catalog->clean_catalog(0,0);
 
 	$catalog->count = 0;
 
 	// Verify Existing
-	$catalog->verify_catalog();
+	$catalog->verify_catalog(0,0,0);
 
 	$catalog->count = 0;
 	

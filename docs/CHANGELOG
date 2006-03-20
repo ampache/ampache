@@ -4,6 +4,8 @@
 
 --------------------------------------------------------------------------
   v.3.3.2-Beta2 
+  	- Added dump album art command line script and tweaked catalog
+		build display.
   	- Tweaked preferences adding tab'd views rather then all on one
 		page, also added account page back in. 
   	- Fixed popen in downsample, forcing binary mode, so that windows

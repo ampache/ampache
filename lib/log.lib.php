@@ -30,6 +30,9 @@ function log_event($username='Unknown',$event_name,$event_description,$log_name=
 	/* Set it up here to make sure it's _always_ the same */
         $log_time = time();
 
+	/* must have some name */
+	if (!strlen($log_name)) { $log_name = 'ampache'; } 
+
         $log_filename   = conf('log_path') . "/$log_name." . date("Ymd",$log_time) . ".log";
         $log_line       = date("Y-m-d H:i:s",$log_time) . " { $username } ( $event_name ) - $event_description \n";  
 

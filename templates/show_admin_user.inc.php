@@ -19,32 +19,9 @@
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
+$web_path = conf('web_path');
 
-require ('../modules/init.php');
-
-$action = scrub_in($_REQUEST['action']);
-
-if (!$GLOBALS['user']->has_access(100)) { 
-	access_denied();
-	exit();
-}
-
-
-show_template('header'); 
 ?>
-<!-- Big Daddy Table --> 
-<table>
-<tr>
-	<!-- Needs Attention Cell -->
-	<td rowspan="2" valign="top" width="50%">
-	<?php require (conf('prefix') . '/templates/show_admin_info.inc.php'); ?>
-	</td>
-	<!-- Catalog Cell -->
-	<td width="50%"><?php require (conf('prefix') . '/templates/show_admin_catalog.inc.php'); ?></td>
-</tr>
-<tr>
-	<!-- Users Cell -->
-	<td><?php require (conf('prefix') . '/templates/show_admin_user.inc.php'); ?></td>
-</tr>
-</table>
-<?php show_footer(); ?>
+<div class="text-box"> 
+<span class="header2"><?php echo _('Users'); ?></span><br />
+</div>
