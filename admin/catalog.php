@@ -104,12 +104,21 @@ switch ($_REQUEST['action']) {
 		/* Make sure they aren't in demo mode */
 		if (conf('demo_mode')) { break; } 
 
+		if (!$_REQUEST['catalogs']) { 
+			$_REQUEST['catalogs'] = array();
+			$catalogs = Catalog::get_catalogs();
+		}
+
 		/* This runs the clean/verify/add in that order */
 		foreach ($_REQUEST['catalogs'] as $catalog_id) { 
 			$catalog = new Catalog($catalog_id);
+			$catalogs[] = $catalog;
+		}
+
+		foreach ($catalogs as $catalog) { 
 			$catalog->clean_catalog();
 			$catalog->count = 0;
-			$catalog->update_catalog();
+			$catalog->verify_catalog();
 			$catalog->count = 0;
 			$catalog->add_to_catalog();
 		} 		

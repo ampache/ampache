@@ -65,6 +65,7 @@
 		{
 		padding-left:5px;
 		padding-top:5px;
+		padding-right:5px;
 		margin-bottom:10px;
 		background-color: <?php echo conf('base_color1'); ?>;
 		border-right:2px solid <?php echo conf('bg_color2'); ?>;

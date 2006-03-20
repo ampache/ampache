@@ -40,7 +40,6 @@ $browse_items[] = array('title'=>_("Lists"),'url'=>'browse.php','active'=>$locat
 
 $web_path = conf('web_path');
 ?>
-<!-- <div id="navcontainer">  --> <!--sigger: appears this div is not neccesary and duplicates #sidebar -->
 <ul id="navlist">
 	<li<?php
                 if ($location['page'] == "index.php"){
@@ -182,5 +181,3 @@ $web_path = conf('web_path');
 	<li><a href="<?php echo $web_path; ?>/logout.php"><?php echo _("Logout"); ?></a></li>
 <?php } // end (conf('use_auth'))?>
 </ul>
-	
-<!-- </div> -->

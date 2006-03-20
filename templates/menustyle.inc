@@ -70,12 +70,13 @@
  */
 	#content {
 /*                float: left;    /*                      use for horizontal menu; comment out otherwise */
-                margin-left:0px;
+           padding-left:155px;
+           padding-right:5px;
 	}
     #sidebar {
         clear: both;
         height: 100%;
-        margin: 0;
+        margin-right: 5px;
         float: left;
         padding: 0;
         list-style: none;

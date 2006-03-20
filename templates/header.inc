@@ -61,5 +61,3 @@ if (conf('use_rss')) { ?>
 		<?php require_once(conf('prefix') . '/templates/sidebar.inc.php'); ?>
 	</div><!-- End sidebar -->
 	<div id="content">
-	<table>	 <!-- Start Main Page Table -->
-<tr><td>
