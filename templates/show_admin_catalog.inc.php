@@ -30,6 +30,7 @@ $catalogs 	= Catalog::get_catalogs();
 <tr class="table-header">
 	<td><?php echo _('Name'); ?></td>
 	<td align="center"><?php echo _('Action'); ?></td>
+</tr>
 <?php foreach ($catalogs as $catalog) { ?>
 <tr class="<?php echo flip_class(); ?>">
 	<td>
@@ -45,18 +46,30 @@ $catalogs 	= Catalog::get_catalogs();
 		<a href="<?php echo $web_path; ?>/admin/catalog.php?action=clean_catalog&amp;catalogs[]=<?php echo $catalog->id; ?>">
 		<?php echo _('Clean'); ?></a>&nbsp;|&nbsp;
 		<a href="<?php echo $web_path; ?>/admin/catalog.php?action=full_service&amp;catalogs[]=<?php echo $catalog->id; ?>">
-		<?php echo _('All'); ?></a>
+		<?php echo _('All'); ?></a>&nbsp;|&nbsp;
+		<a href="<?php echo $web_path; ?>/admin/catalog.php?action=show_delete_catalog&amp;catalog_id=<?php echo $catalog->id; ?>">
+		<?php echo _('Delete'); ?></a>
 	</td>
 </tr>
 <?php } // end foreach ?>
+<?php if (!count($catalogs)) { ?>
+<tr>
+	<td colspan="2">
+	<?php echo _('No Catalogs Found'); ?>
+	</td>
+</tr>
+<?php } // end if no catalogs ?>
 </table>
 <form method="post" enctype="multipart/form-data" action="<?php echo $web_path; ?>/admin/catalog.php?action=full_service">
 <input class="button" type="submit" value="<?php echo _('Update Everything'); ?>" />
 </form>
+</div>
+<div class="text-box">
 <span class="header2"><?php echo _('Other Tools'); ?></span><br />
-<ul style="list-style:none;">
-	<li><a href="<?php echo $web_path; ?>/admin/catalog.php?action=show_add_catalog"><?php echo _('Add a Catalog'); ?></a></li>
-	<li><a href="<?php echo $web_path; ?>/admin/duplicates.php"><?php echo _('Show Duplicate Songs'); ?></a></li>
-	<li><a href="<?php echo $web_path; ?>/admin/catalog.php?show_disabled"><?php echo _('Show Disabled Songs'); ?></a></li>
-</ul>
+<a href="<?php echo $web_path; ?>/admin/catalog.php?action=show_add_catalog"><?php echo _('Add a Catalog'); ?></a><br />
+<a href="<?php echo $web_path; ?>/admin/duplicates.php"><?php echo _('Show Duplicate Songs'); ?></a><br />
+<a href="<?php echo $web_path; ?>/admin/catalog.php?action=show_disabled"><?php echo _('Show Disabled Songs'); ?></a><br />
+<a href="<?php echo $web_path; ?>/admin/catalog.php?action=show_clear_stats"><?php echo _('Clear Catalog Stats'); ?></a><br />
+<a href="<?php echo $web_path; ?>/admin/catalog.php?action=clear_now_playing"><?php echo _('Clear Now Playing'); ?></a><br />
+<a href="<?php echo $web_path; ?>/admin/catalog.php?action=gather_album_art"><?php echo _('Gather Album Art'); ?></a><br />
 </div>

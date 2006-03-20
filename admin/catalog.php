@@ -124,12 +124,14 @@ switch ($_REQUEST['action']) {
 		} 		
 	break;
 	case 'delete_catalog':
+		/* Make sure they aren't in demo mode */
 	        if (conf('demo_mode')) { break; }
-		if ($_REQUEST['confirm'] === 'Yes') {
-			$catalog = new Catalog($_REQUEST['catalog_id']);
-			$catalog->delete_catalog();
-		}
-		include(conf('prefix') . '/templates/catalog.inc');
+	
+		/* Delete the sucker, we don't need to check perms as thats done above */
+		$catalog = new Catalog($_REQUEST['catalog_id']);
+		$catalog->delete_catalog();
+		$next_url = conf('web_path') . '/admin/index.php';
+		show_confirmation(_('Catalog Deleted'),_('The Catalog and all assoicated records has been deleted'),$nexturl);
 	break;
 	case 'remove_disabled':
 	        if (conf('demo_mode')) { break; }
@@ -185,8 +187,11 @@ switch ($_REQUEST['action']) {
 	
 		include(conf('prefix') . '/templates/catalog.inc');
 	break;
+	// FIXME!
 	case 'add_catalog':
+		/* Wah Demo! */
 		if (conf('demo_mode')) { break; }
+		
 		if ($_REQUEST['path'] AND $_REQUEST['name']) { 
 			/* Throw all of the album art types into an array */
 			$art = array('id3'=>$_REQUEST['art_id3v2'],'amazon'=>$_REQUEST['art_amazon'],'folder'=>$_REQUEST['art_folder']);
@@ -200,19 +205,24 @@ switch ($_REQUEST['action']) {
 					$_REQUEST['gather_art'],
 					$_REQUEST['parse_m3u'],
 					$art);
-			include(conf('prefix') . '/templates/catalog.inc');
+			$url = conf('web_path') . '/admin/index.php';
+			$title = _('Catalog Created');
+			$body  = _('Catalog Created and Songs Indexed');
+			show_confirmation($title,$body,$url);
 		}
 		else {
 			$error = "Please complete the form.";
 			include(conf('prefix') . '/templates/add_catalog.inc');
 		}
 	break;
-	case 'really_clear_stats':
+	case 'clear_stats':
     		if (conf('demo_mode')) { break; }
-	    	if ($_REQUEST['confirm'] == 'Yes') {
-			clear_catalog_stats();
-		} 
-		include(conf('prefix') . '/templates/catalog.inc');
+		
+		clear_catalog_stats();
+		$url	= conf('web_path') . '/admin/index.php';
+		$title	= _('Catalog statistics cleared');
+		$body	= '';
+		show_confirmation($title,$body,$url);
 	break;
 	case 'show_add_catalog':
 		include(conf('prefix') . '/templates/add_catalog.inc');
@@ -220,18 +230,16 @@ switch ($_REQUEST['action']) {
 	case 'clear_now_playing':
 	        if (conf('demo_mode')) { break; }
 	    	clear_now_playing();
-		show_confirmation(_("Now Playing Cleared"),_("All now playing data has been cleared"),"/admin/catalog.php");
+		show_confirmation(_('Now Playing Cleared'),_('All now playing data has been cleared'),conf('web_path') . '/admin/index.php');
 	break;
-	case 'Clear Catalog':
+	case 'show_clear_stats':
+		/* Demo Bad! */
 	        if (conf('demo_mode')) { break; }
-	        show_confirm_action(_("Do you really want to clear your catalog?"),
-				"admin/catalog.php", "action=really_clear_catalog");
-		print("<hr />\n");
-	break;
-	case 'clear_stats':
-	        if (conf('demo_mode')) { break; }
-		show_confirm_action(_("Do you really want to clear the statistics for this catalog?"),
-				"admin/catalog.php", "action=really_clear_stats");
+
+		$url 	= conf('web_path') . '/admin/catalog.php?action=clear_stats';
+		$body	= _('Do you really want to clear the statistics for this catalog?');
+		$title	= _('Clear Catalog Stats'); 
+		show_confirmation($title,$body,$url,1);
 	break;
 	case 'show_disabled':
 	        if (conf('demo_mode')) { break; }
@@ -244,10 +252,11 @@ switch ($_REQUEST['action']) {
 		}
 	break;
 	case 'show_delete_catalog':
+		/* Stop the demo hippies */
 	        if (conf('demo_mode')) { break; }
-	        show_confirm_action(_("Do you really want to delete this catalog?"),
-				"admin/catalog.php",
-				"catalog_id=" . $_REQUEST['catalog_id'] . "&amp;action=delete_catalog");
+		
+		$nexturl = conf('web_path') . '/admin/catalog.php?action=delete_catalog&amp;catalog_id=' . scrub_out($_REQUEST['catalog_id']);
+		show_confirmation(_('Delete Catalog'),_('Do you really want to delete this catalog?'),$nexturl,1);
 	break;
 	case 'show_flagged_songs':
 	        if (conf('demo_mode')) { break; }

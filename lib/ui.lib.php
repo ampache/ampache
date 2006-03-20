@@ -31,11 +31,12 @@
 /**
  *  show_confirmation
  * shows a confirmation of an action
- *	@param $next_url	Where to go next
- *	@param $title		The Title of the message
- *	@param $text		The details of the message
+ * $next_url	Where to go next
+ * $title	The Title of the message
+ * $text	The details of the message
+ * $cancel	T/F show a cancel button that uses return_referrer()
  */
-function show_confirmation($title,$text,$next_url) {
+function show_confirmation($title,$text,$next_url,$cancel=0) {
 
 	if (substr_count($next_url,conf('web_path'))) {
 		$path = $next_url;

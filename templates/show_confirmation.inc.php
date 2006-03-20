@@ -19,17 +19,12 @@
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 ?>
-<br />
-<table class="text-box" align="center" cellspacing="7">
-<tr>
-	<td align="center">
-		<span class="header1"><?php echo $title; ?></span><br />
-		<?php echo $text; ?>
-	</td>
-</tr>
-<tr>
-	<td>	
-		[ <a href="<?php echo $path; ?>"><?php echo _("Continue"); ?></a> ]<br />
-	</td>
-</tr>
-</table>
+<div class="text-box" style="width:35em;">
+<span class="header1"><?php echo scrub_out($title); ?></span><br />
+<?php echo scrub_out($text); ?>
+<br /><br />
+[ <a href="<?php echo $path; ?>"><?php echo _('Continue'); ?></a> ]
+<?php if ($cancel) { ?>
+	[ <a href="<?php echo return_referer(); ?>"><?php echo _('Cancel'); ?></a> ]<br />
+<?php } ?>
+</div>
