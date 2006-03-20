@@ -4,6 +4,7 @@
 
 --------------------------------------------------------------------------
   v.3.3.2-Beta2 
+  	- Fixed css issues with preferences (Thx WarrenG) 
   	- Added dump album art command line script and tweaked catalog
 		build display.
   	- Tweaked preferences adding tab'd views rather then all on one

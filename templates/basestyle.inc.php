@@ -214,7 +214,6 @@
 	#tablist {
 		padding: 3px 0;
 		margin: 12px 0 0 0;
-		border-bottom: 1px solid <?php echo conf('bg_color2'); ?>;
 		font: bold 12px Verdana, sans-serif;
 	}
 
@@ -246,7 +245,7 @@
 		color: <?php echo conf('font_color2'); ?>;
 		background: <?php echo conf('row_color2'); ?>;
 		border-color: <?php echo conf('bg_color2'); ?>;
-		border-bottom: 1px solid <?php echo conf('bg_color2'); ?>;
+		border-bottom: 1px solid <?php echo conf('bg_color2'); ?>; 
 	}
 /* Other Required Styles */
         .confirmation-box {
@@ -254,7 +253,7 @@
                 padding-top:5px;
                 padding-right:5px;
                 margin-bottom:10px;
-                width:40em;
+		display: table-cell;
                 background-color: <?php echo conf('base_color1'); ?>;
                 border-right:2px solid <?php echo conf('bg_color2'); ?>;
                 border-bottom:2px solid <?php echo conf('bg_color2'); ?>;
