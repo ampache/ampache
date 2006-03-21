@@ -63,8 +63,8 @@ $catalogs 	= Catalog::get_catalogs();
 <form id="catalog_tools" method="post" enctype="multipart/form-data" style="Display:inline;">
 <input class="button" type="button" value="<?php echo _('Clean All'); ?>" onclick="return SubmitToPage('catalog_tools','<?php echo $web_path; ?>/admin/catalog.php?action=clean_all_catalogs');" />
 <input class="button" type="button" value="<?php echo _('Verify All'); ?>" onclick="return SubmitToPage('catalog_tools','<?php echo $web_path; ?>/admin/catalog.php?action=update_all_catalogs');" />
-<input class="button" type="button" value="<?php echo _('Add to All'); ?>" onclick="return SubmitToPage('catalog_tools',<?php echo $web_path; ?>/admin/catalog.php?action=add_to_all_catalogs');" />
-<input class="button" type="button" value="<?php echo _('Update All'); ?>" onclick="return SubmitToPage('catalog_tools',<?php echo $web_path; ?>/admin/catalog.php?action=full_service');" />
+<input class="button" type="button" value="<?php echo _('Add to All'); ?>" onclick="return SubmitToPage('catalog_tools','<?php echo $web_path; ?>/admin/catalog.php?action=add_to_all_catalogs');" />
+<input class="button" type="button" value="<?php echo _('Update All'); ?>" onclick="return SubmitToPage('catalog_tools','<?php echo $web_path; ?>/admin/catalog.php?action=full_service');" />
 </div><br />
 <span class="header1"><?php echo _('Other Tools'); ?></span><br />
 <div class="text-box">
