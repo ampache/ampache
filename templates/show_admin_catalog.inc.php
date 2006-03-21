@@ -23,8 +23,8 @@ $web_path 	= conf('web_path');
 $catalogs 	= Catalog::get_catalogs();
 
 ?>
+<span class="header1"><?php echo _('Catalogs'); ?></span>
 <div class="text-box"> 
-<span class="header2"><?php echo _('Catalogs'); ?></span>
 <!-- Current Catalogs -->
 <table border="0" cellpadding="0" cellspacing="0">
 <tr class="table-header">
@@ -60,24 +60,12 @@ $catalogs 	= Catalog::get_catalogs();
 </tr>
 <?php } // end if no catalogs ?>
 </table>
-<script type="text/javascript" language="javascript">
-<!--
-function ToCatalog(action)
-{
-        document.catalog.action = "<?php echo conf('web_path'); ?>/admin/catalog.php?action=" + action;
-        document.catalog.submit();                        // Submit the page
-        return true;
-}
-
--->
-</script>
-<form name="catalog" method="post" enctype="multipart/form-data" style="Display:inline;">
-<input class="button" type="button" value="<?php echo _('Clean Everything'); ?>" onclick="return ToCatalog('clean_all_catalogs');" />
-<input class="button" type="button" value="<?php echo _('Verify Everything'); ?>" onclick="return ToCatalog('update_all_catalogs');" />
-<input class="button" type="button" value="<?php echo _('Add to Everything'); ?>" onclick="return ToCatalog('add_to_all_catalogs');" />
-<input class="button" type="button" value="<?php echo _('Update Everything'); ?>" onclick="return ToCatalog('full_service');" />
-</div>
-<div class="text-box">
+<form id="catalog_tools" method="post" enctype="multipart/form-data" style="Display:inline;">
+<input class="button" type="button" value="<?php echo _('Clean Everything'); ?>" onclick="return SubmitToPage('catalog_tools','<?php echo $web_path; ?>/admin/catalog.php?action=clean_all_catalogs');" />
+<input class="button" type="button" value="<?php echo _('Verify Everything'); ?>" onclick="return SubmitToPage('catalog_tools','<?php echo $web_path; ?>/admin/catalog.php?action=update_all_catalogs');" />
+<input class="button" type="button" value="<?php echo _('Add to Everything'); ?>" onclick="return SubmitToPage('catalog_tools',<?php echo $web_path; ?>/admin/catalog.php?action=add_to_all_catalogs');" />
+<input class="button" type="button" value="<?php echo _('Update Everything'); ?>" onclick="return SubmitToPage('catalog_tools',<?php echo $web_path; ?>/admin/catalog.php?action=full_service');" />
+<br />
 <span class="header2"><?php echo _('Other Tools'); ?></span><br />
 <a href="<?php echo $web_path; ?>/admin/catalog.php?action=show_add_catalog"><?php echo _('Add a Catalog'); ?></a><br />
 <a href="<?php echo $web_path; ?>/admin/duplicates.php"><?php echo _('Show Duplicate Songs'); ?></a><br />
@@ -86,3 +74,4 @@ function ToCatalog(action)
 <a href="<?php echo $web_path; ?>/admin/catalog.php?action=clear_now_playing"><?php echo _('Clear Now Playing'); ?></a><br />
 <a href="<?php echo $web_path; ?>/admin/catalog.php?action=gather_album_art"><?php echo _('Gather Album Art'); ?></a><br />
 </div>
+<br />

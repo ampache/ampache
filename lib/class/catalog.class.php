@@ -2178,7 +2178,7 @@ class Catalog {
 		$this->clean_stats();
 		$this->clean_playlists();
 		$this->clean_flagged();
-		$this->clean_genre();
+		$this->clean_genres();
 
 	} // delete_catalog
 

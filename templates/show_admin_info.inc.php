@@ -22,6 +22,13 @@
 $web_path = conf('web_path');
 
 ?>
+<span class="header1"><?php echo _('Information'); ?></span><br />
 <div class="text-box"> 
-<span class="header2"><?php echo _('Information'); ?></span><br />
+<span class="header2"><?php echo _('Flagged Songs'); ?></span><br />
+<!-- Show Last 10 Flagged Songs -->
+<span class="header2"><?php echo _('Disabled Songs'); ?></span><br />
+<!-- Show Last 10 Disabled Songs -->
+<span class="header2"><?php echo _('Active Users'); ?></span><br />
+<!-- Show Last 10 Active Users (Bandwidth Usage guess) -->
+
 </div>
