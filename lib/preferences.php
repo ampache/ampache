@@ -53,9 +53,9 @@ function set_site_preferences() {
 	$results = array();
 
 	$sql = "SELECT preferences.name,user_preference.value FROM preferences,user_preference WHERE user='-1' AND user_preference.preference=preferences.id";
-	$db_results = @mysql_query($sql, dbh());
+	$db_results = mysql_query($sql, dbh());
 
-	while ($r = @mysql_fetch_object($db_results)) { 
+	while ($r = mysql_fetch_object($db_results)) { 
 		$results[$r->name] = $r->value;
 	} // db results
 

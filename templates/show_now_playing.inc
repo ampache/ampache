@@ -37,7 +37,7 @@ foreach ($results as $item) {
 		if (conf('use_auth')) { $result = $result.'<fullname>'.$np_user->fullname.'</fullname>';} 
 		else { $result = $result.'<fullname></fullname>'; }
 ?>
-		<div id='np_container_<?php echo $c; ?>' style="display: block; z-index: -10000;">
+		<div id='np_container_<?php echo $c; ?>' style="width:43.5em; display: block; z-index: -10000;">
 		<?php if ($c==0) { ?>
 			<table class="border" cellspacing="1" cellpadding="3" border="0" width="100%">
 			<tr class="table-header">
