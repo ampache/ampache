@@ -87,7 +87,9 @@ a:active {
 	border-bottom:2px solid #000000;
 	border-left:2px solid #000000;
 	border-top:2px solid #000000;
+	display: table-cell;
 }
+
 td {
 /* padding top right bottom left */
 	padding: 0px 10px 0px 10px;
@@ -364,6 +366,21 @@ li.current-rating {
 }
 #sidebar li select {
 	display: inline-table;
+}
+#tablist li a {
+	padding: 3px 0.5em;
+	margin-left: 3px;
+	border: 1px solid <?php echo conf('row_color1'); ?>;
+	border-bottom: none;
+	background: <?php echo conf('row_color3'); ?>;
+	text-decoration: none;
+}
+#tablist li a:link { color: #B2B2B2; }
+#tablist li a:visited { color: #B2B2B2; }
+#tablist li a:hover {
+	color: <?php echo conf('font_color2'); ?>;
+	background: <?php echo conf('row_color2'); ?>;
+	border-color: <?php echo conf('bg_color2'); ?>;
 }
 -->
 </style>
