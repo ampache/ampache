@@ -267,6 +267,10 @@ class Update {
 
 		$version[] = array('version' => '332008','description' => $update_string);
 
+		$update_string = "- Add missing date and approval fields to Flagged table, can't belive I forgot these.<br />";
+
+		$version[] = array('version' => '332009','description' => $update_string);
+
 		return $version;
 
 	} // populate_version
@@ -1438,6 +1442,29 @@ class Update {
 		$this->set_version('db_version','332008');
 
 	} // update_332008
+
+	/**
+	 * update_332009
+	 * Wonderfull another update, this one adds the missing date and approved fields to flagged
+	 * which I can't belive I forgot, and adds id back to the user table because warreng said so
+	 */
+	function update_332009() { 
+
+		/* Add the missing fields */
+		$sql = "ALTER TABLE `flagged` ADD `date` INT( 11 ) UNSIGNED NOT NULL AFTER `flag` ," . 
+			"ADD `approved` TINYINT( 1 ) UNSIGNED NOT NULL DEFAULT '0' AFTER `date`";
+		$db_results = mysql_query($sql, dbh());
+
+		$sql = "ALTER TABLE `flagged` ADD INDEX ( `date` , `approved` )";
+		$db_results = mysql_query($sql, dbh());
+
+		/* Add the ID back to the user table because warreng said so */
+		$sql = "ALTER TABLE `user` ADD `id` INT( 11 ) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY FIRST";
+		$db_results = mysql_query($sql, dbh());
+
+		$this->set_version('db_version','332009');
+
+	} // update_332009
 
 } // end update class
 ?>

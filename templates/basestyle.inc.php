@@ -260,5 +260,16 @@
                 border-left:2px solid <?php echo conf('bg_color2'); ?>;
                 border-top:2px solid <?php echo conf('bg_color2'); ?>;
 	}
+	.text-action { 
+		list-style: none;
+		margin-top:5px;
+		margin-bottom:5px;
+	}
+	.text-action a { 
+		border:1px solid <?php echo conf('bg_color2'); ?>;	
+		padding-left:2px;
+		padding-right:2px;
+		text-decoration: none;
+	} 
 -->
 </style>

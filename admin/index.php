@@ -36,15 +36,13 @@ show_template('header');
 <table>
 <tr>
 	<!-- Needs Attention Cell -->
-	<td rowspan="2" valign="top" width="50%">
+	<td valign="top">
 	<?php require (conf('prefix') . '/templates/show_admin_info.inc.php'); ?>
 	</td>
 	<!-- Catalog Cell -->
-	<td width="50%"><?php require (conf('prefix') . '/templates/show_admin_catalog.inc.php'); ?></td>
-</tr>
-<tr>
-	<!-- Users Cell -->
-	<td><?php require (conf('prefix') . '/templates/show_admin_user.inc.php'); ?></td>
+	<td valign="top">
+	<?php require (conf('prefix') . '/templates/show_admin_tools.inc.php'); ?>
+	</td>
 </tr>
 </table>
 <?php show_footer(); ?>

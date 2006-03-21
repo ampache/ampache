@@ -33,6 +33,8 @@ class Flag {
 	var $object_type;
 	var $comment;
 	var $flag;
+	var $date;
+	var $approved=0;
 
 	/**
 	 * Constructor
@@ -51,6 +53,8 @@ class Flag {
 		$this->object_type	= $info['object_type'];
 		$this->comment		= $info['comment'];
 		$this->flag		= $info['flag'];
+		$this->date		= $info['date'];
+		$this->approved		= $info['approved'];
 
 		return true;
 
@@ -74,6 +78,41 @@ class Flag {
 	} // _get_info
 
 	/**
+	 * get_recent
+	 * This returns the id's of the most recently flagged songs, it takes an int
+	 * as an argument which is the count of the object you want to return
+	 */
+	function get_recent($count=0) { 
+
+		if ($count) { $limit = " LIMIT " . intval($count);  } 
+
+		$sql = "SELECT id FROM flagged ORDER BY date " . $limit;
+		$db_results = mysql_query($sql, dbh());
+
+		while ($r = mysql_fetch_assoc($db_results)) { 
+			$results[] = $r;
+		}
+
+		return $results;
+
+	} // get_recent
+
+	/**
+	 * get_total
+	 * Returns the total number of flagged objects
+	 */
+	function get_total() { 
+
+		$sql = "SELECT COUNT(id) FROM flagged";
+		$db_results = mysql_query($sql, dbh());
+
+		$results = mysql_fetch_row($db_results);
+
+		return $results['0'];
+
+	} // get_total
+
+	/**
 	 * add
 	 * This adds a flag entry for an item, it takes an id, a type, the flag type
 	 * and a comment and then inserts the mofo
@@ -84,14 +123,83 @@ class Flag {
 		$type		= sql_escape($type);
 		$flag		= sql_escape($flag);
 		$comment	= sql_escape($comment);
+		$time		= time();
+		$approved	= '0';
 
-		$sql = "INSERT INTO flagged (`object_id`,`object_type`,`flag`,`comment`) VALUES " . 
-			" ('$id','$type','$flag','$comment')";
+		/* If they are an admin, it's auto approved */
+		if ($GLOBALS['user']->has_access('100')) { $approved = '1'; } 
+
+		$sql = "INSERT INTO flagged (`object_id`,`object_type`,`flag`,`comment`,`date`,`approved`) VALUES " . 
+			" ('$id','$type','$flag','$comment','$time','$approved')";
 		$db_results = mysql_query($sql, dbh());
 
 		return true;
 
 	} // add
+
+	/**
+	 * print_name
+	 * This function formats and prints out a userfriendly name of the flagged
+	 * object
+	 */
+	function print_name() { 
+
+		switch ($this->object_type) { 
+			case 'song':
+				$song = new Song($this->object_id);
+				$song->format_song();
+				$name 	= $song->f_title . " - " . $song->f_artist;
+				$title	= $song->title . " - " . $song->get_artist_name();
+			break;
+			default: 
+			
+			break;
+		} // end switch on object type
+
+		echo "<span title=\"$title\">$name</span>";
+
+	} // print_name
+
+
+	/**
+	 * print_status
+	 * This prints out a userfriendly version of the current status for this flagged
+	 * object
+	 */
+	function print_status() { 
+
+		if ($this->approved) { echo _('Approved'); }
+		else { echo _('Pending'); }
+
+	} // print_status
+
+	/**
+	 * print_flag
+	 * This prints out a userfriendly version of the current flag type
+	 */
+	function print_flag() { 
+
+		switch ($this->flag) { 
+			case 'delete':
+				$name = _('Delete');
+			break;
+			case 'retag':
+				$name = _('Re-Tag'); 
+			break;
+			case 'reencode':
+				$name = _('Re-encode');
+			break;
+			case 'other':
+				$name = _('Other'); 
+			break;
+			default:
+				$name = _('Unknown');
+			break;
+		} // end switch
+
+		echo $name;
+		
+	} // print_flag
 
 } //end of flag class
 
