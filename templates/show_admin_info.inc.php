@@ -30,7 +30,9 @@ $total_flagged	= Flag::get_total();
 <div class="text-box"> 
 <span class="header2"><?php echo _('Last Ten Flagged Songs'); ?></span><br />
 <?php require (conf('prefix') . '/templates/show_flagged.inc.php'); ?>
-<li class="text-action"><a href="<?php echo $web_path; ?>/admin/flag.php?action=show_flagged"><?php echo _('Show All'); ?>...</a></li>
+<div class="text-action">
+<a href="<?php echo $web_path; ?>/admin/flag.php?action=show_flagged"><?php echo _('Show All'); ?>...</a>
+</div>
 </div><br />
 <span class="header2"><?php echo _('Disabled Songs'); ?></span><br />
 <div class="text-box">	

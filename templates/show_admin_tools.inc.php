@@ -25,6 +25,11 @@ $catalogs 	= Catalog::get_catalogs();
 ?>
 <span class="header1"><?php echo _('Catalogs'); ?></span>
 <div class="text-box"> 
+<div class="text-action">
+<a href="<?php echo $web_path; ?>/admin/catalog.php?action=show_add_catalog"><?php echo _('Add a Catalog'); ?></a>
+<a href="<?php echo $web_path; ?>/admin/catalog.php?action=show_clear_stats"><?php echo _('Clear Catalog Stats'); ?></a>
+<a href="<?php echo $web_path; ?>/admin/catalog.php?action=gather_album_art"><?php echo _('Gather Album Art'); ?></a>
+</div>
 <!-- Current Catalogs -->
 <table border="0" cellpadding="0" cellspacing="0">
 <tr class="table-header">
@@ -60,32 +65,20 @@ $catalogs 	= Catalog::get_catalogs();
 </tr>
 <?php } // end if no catalogs ?>
 </table>
-<form id="catalog_tools" method="post" enctype="multipart/form-data" style="Display:inline;">
-<input class="button" type="button" value="<?php echo _('Clean All'); ?>" onclick="return SubmitToPage('catalog_tools','<?php echo $web_path; ?>/admin/catalog.php?action=clean_all_catalogs');" />
-<input class="button" type="button" value="<?php echo _('Verify All'); ?>" onclick="return SubmitToPage('catalog_tools','<?php echo $web_path; ?>/admin/catalog.php?action=update_all_catalogs');" />
-<input class="button" type="button" value="<?php echo _('Add to All'); ?>" onclick="return SubmitToPage('catalog_tools','<?php echo $web_path; ?>/admin/catalog.php?action=add_to_all_catalogs');" />
-<input class="button" type="button" value="<?php echo _('Update All'); ?>" onclick="return SubmitToPage('catalog_tools','<?php echo $web_path; ?>/admin/catalog.php?action=full_service');" />
+<div class="text-action">
+<a href="<?php echo $web_path; ?>/admin/catalog.php?action=clean_all_catalogs"><?php echo _('Clean All'); ?></a>&nbsp;
+<a href="<?php echo $web_path; ?>/admin/catalog.php?action=update_all_catalogs"><?php echo _('Verify All'); ?></a>&nbsp;
+<a href="<?php echo $web_path; ?>/admin/catalog.php?action=add_to_all_catalogs"><?php echo _('Add to All'); ?></a>&nbsp;
+<a href="<?php echo $web_path; ?>/admin/catalog.php?action=full_service"><?php echo _('Update All'); ?></a>&nbsp;
+</div>
 </div><br />
 <span class="header1"><?php echo _('Other Tools'); ?></span><br />
 <div class="text-box">
-<li class="text-action">
-	<a href="<?php echo $web_path; ?>/admin/catalog.php?action=show_add_catalog"><?php echo _('Add a Catalog'); ?></a>
-</li>
-<li class="text-action">
-	<a href="<?php echo $web_path; ?>/admin/duplicates.php"><?php echo _('Show Duplicate Songs'); ?></a><br />
-</li>
-<li class="text-action">
+<div class="text-action">
+	<a href="<?php echo $web_path; ?>/admin/duplicates.php"><?php echo _('Show Duplicate Songs'); ?></a>
 	<a href="<?php echo $web_path; ?>/admin/catalog.php?action=show_disabled"><?php echo _('Show Disabled Songs'); ?></a>
-</li>
-<li class="text-action">
-	<a href="<?php echo $web_path; ?>/admin/catalog.php?action=show_clear_stats"><?php echo _('Clear Catalog Stats'); ?></a>
-</li>
-<li class="text-action">
 	<a href="<?php echo $web_path; ?>/admin/catalog.php?action=clear_now_playing"><?php echo _('Clear Now Playing'); ?></a>
-</li>
-<li class="text-action">
-	<a href="<?php echo $web_path; ?>/admin/catalog.php?action=gather_album_art"><?php echo _('Gather Album Art'); ?></a>
-</li>
+</div>
 </div><br />
 <span class="header1"><?php echo _('Manage Users'); ?></span>
 <div class="text-box">

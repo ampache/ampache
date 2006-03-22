@@ -170,7 +170,7 @@ $web_path = conf('web_path');
 			<option value="Less Played"><?php echo _("Less Played"); ?></option>
 		</select>
 		<br /> 
-		<?php show_catalog_select('catalog','','width:9em;'); ?>
+		<?php show_catalog_pulldown('catalog','width:9em;'); ?>
 		<br />
 		<input type="hidden" name="aaction" value="Play!" />
 		<input class="smallbutton" type="submit" name="aaction" value="<?php echo _("Enqueue"); ?>" />

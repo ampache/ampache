@@ -261,11 +261,11 @@
                 border-top:2px solid <?php echo conf('bg_color2'); ?>;
 	}
 	.text-action { 
-		list-style: none;
 		margin-top:5px;
 		margin-bottom:5px;
 	}
 	.text-action a { 
+		background: <?php echo conf('base_color2'); ?>;
 		border:1px solid <?php echo conf('bg_color2'); ?>;	
 		padding-left:2px;
 		padding-right:2px;
