@@ -49,27 +49,21 @@ foreach ($playlists as $playlist) {
 		<td><?php echo scrub_out($playlist_user->fullname); ?></td>
 		<td>
 			| <a href="<?php echo $web_path; ?>/playlist.php?action=show_playlist&amp;playlist_id=<?php echo $playlist->id; ?>">
-			<?php echo _('View'); ?>
-			</a>	
+			<?php echo _('View'); ?></a>	
 			<?php if (($GLOBALS['user']->username == $playlist->user) || ($GLOBALS['user']->has_access(100))) { ?>
 				| <a href="<?php echo $web_path; ?>/playlist.php?action=edit&amp;playlist_id=<?php echo $playlist->id; ?>">
-				<?php echo _('Edit'); ?>
-				</a>
+				<?php echo _('Edit'); ?></a>
 				| <a href="<?php echo $web_path; ?>/playlist.php?action=show_delete_playlist&amp;playlist_id=<?php echo $playlist->id; ?>">
-				<?php echo _('Delete'); ?>
-				</a>
+				<?php echo _('Delete'); ?></a>
 			<?php } ?>
 			<?php if ($count > 0) { ?>
 				| <a href="<?php echo $web_path; ?>/song.php?action=playlist&amp;playlist_id=<?php echo $playlist->id; ?>">
-				<?php echo _('Play'); ?>
-				</a>
+				<?php echo _('Play'); ?></a>
 				| <a href="<?php echo $web_path; ?>/song.php?action=playlist_random&amp;playlist_id=<?php echo $playlist->id; ?>">
-				<?php echo _('Random'); ?>
-				</a>
+				<?php echo _('Random'); ?></a>
 			<?php if (batch_ok()) { ?>
 				| <a href="<?php echo $web_path; ?>/batch.php?action=pl&amp;id=<?php echo $playlist->id; ?>">
-				<?php echo _('Download'); ?>
-				</a>
+				<?php echo _('Download'); ?></a>
 			<?php } ?>
 			<?php } ?>
 		|

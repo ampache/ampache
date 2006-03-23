@@ -112,7 +112,7 @@ switch ($action) {
 		show_confirmation(_('Playlist Created'),$playlist_name . ' (' . $playlist_type . ') ' . _(' has been created'),'playlist.php');
 	break;
 	case 'edit':
-		show_playlist_edit($playlist);	
+		show_playlist_edit($_REQUEST['playlist_id']);	
 	break;
 	case 'new':
 		show_playlist_create();
@@ -127,7 +127,7 @@ switch ($action) {
 		$playlist->remove_songs($_REQUEST['song']);
 		show_playlist($playlist);
 	break;
-	case 'update':
+	case 'update_playlist':
 		/* Make sure they've got thems rights */
 		if (!$playlist->has_access()) { 
 			access_denied();
@@ -135,8 +135,11 @@ switch ($action) {
 		}
 
 		$playlist->update_type($_REQUEST['type']);
-		$playlist->update_name($_REQUEST['new_playlist_name']);
-		show_confirmation(_('Playlist Updated'),$playlist_name . ' (' . $playlist_type . ') ' . _(' has been updated'),'playlist.php?action=show_playlist&amp;playlist_id=' . $playlist->id);	
+		$playlist->update_name($_REQUEST['playlist_name']);
+		$url 	= conf('web_path') . '/playlist.php?action=show_playlist&amp;playlist_id=' . $playlist->id;
+		$title	= _('Playlist Updated');
+		$body	= "$playlist->name " . _('has been updated and is now') . " $playlist->type";
+		show_confirmation($title,$body,$url);
 	break;
 	case 'show_playlist':
 		show_playlist($playlist);

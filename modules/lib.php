@@ -424,103 +424,10 @@ ECHO;
 
 }
 
-
-function show_playlist_edit ( $playlist ) {
-
-	$username = $GLOBALS['user']->username;
-	
-	if (check_playlist_access($playlist->id,$username) == false) {
-		show_playlist_access_error($playlist, $username);
-		return;
-	}
-
-	$plname = $playlist->name;
-	$self = conf('web_path') . "/playlist.php";
-	
-	print <<<ECHO
-<form name="songs" method="post" action="$self">
-<input type="hidden" name="playlist_id" value="$playlist->id" />
-<table class="text-box">
-  <tr class="header2">
-	<td colspan="2">Editing Playlist</td>
-  </tr>
-  <tr>
-    <td align="left"> Name: </td>
-    <td align="left">
-      <input type="text" name="new_playlist_name" value="$plname" size="20" />
-    </td>
-  </tr>
-  <tr>
-    <td align="left"> Type: </td>
-    <td align="left">
-      <select name="type">
-ECHO;
-
-	if ($playlist->type == 'public') {
-		echo "<option value=\"public\" selected=\"selected\">Public</option>";
-	}
-	else {
-		echo "<option value=\"public\">Public</option>";
-	}
-			
-	if ($playlist->type == 'private') {
-		echo "<option value=\"private\" selected=\"selected\">Private</option>";
-	}
-	else {
-		echo "<option value=\"private\">Private</option>";
-	}
-
-	print <<<ECHO
-      </select>
-    </td>
-  </tr>
-  <tr>
-    <td align="left"> &nbsp; </td>
-    <td align="left">
-      <input type="submit" name="action" value="Update" />
-    </td>
-  </tr>
-</table>
-</form>
-ECHO;
-
-}
-
-
-// See if this user has access to work on this list
-function check_playlist_access ($playlist_id, $username) {
-
-	$dbh = dbh();
-
-	$sql = "SELECT playlist.id FROM playlist, user" .
-		" WHERE playlist.id = '$playlist_id'" .
-		" AND playlist.user = user.username" .
-		" AND user.username = '$username'";
-	$db_result = mysql_query($sql, $dbh);
-
-	if ( mysql_num_rows($db_result) == 1) {
-		return TRUE;
-	}
-	else {
-		if (!conf('use_auth')) { 
-			return TRUE;
-		}
-		// check to see if this user is an admin
-		if ($user = get_user($username)) {
-			if ( $user->access == 'admin' ) {
-				return TRUE;
-			}
-		}
-	}
-
-	// If we get here, access is denied
-	return FALSE;
-
-}
-
 /**
  * show_playlist_dropdown
  * Hacking this for now... will fix tomorrow evening 
+ * Hmm Vollmer Lies... it's been a lot longer then said tomorrow evening...
  */
 function show_playlist_dropdown ($playlist_id=0,$no_new=false) {
 

@@ -86,6 +86,20 @@ function show_playlist_menu() {
 } // show_playlist_menu
 
 /**
+ * show_playlist_edit
+ * This function shows the edit form for a playlist, nothing special here
+ */
+function show_playlist_edit($playlist_id) { 
+
+	$playlist = new Playlist($playlist_id);
+	/* Chuck em out if they don't have the rights */
+	if (!$playlist->has_access()) { access_denied(); return false; }
+
+	require_once (conf('prefix') . '/templates/show_playlist_edit.inc.php');
+
+} // show_playlist_edit
+
+/**
  * get_playlists
  * This function takes private,adminprivate or public and returns an array of playlist objects
  * that match, it checks permission
