@@ -263,13 +263,10 @@ class Catalog {
 			if(!$this->check_local_mp3($filename,$gather_type)) { 
 				$this->insert_local_song($filename,$file_size);
 			}
-			elseif (conf('debug')) { 
-				log_event($GLOBALS['user']->username, 'add_file', "Error: File exists",'ampache-catalog');
-			}
+			debug_event('add_file', "Error: File exists",'2','ampache-catalog');
 		} // if valid file
-		elseif (conf('debug')) { 
-			log_event($GLOBALS['user']->username, 'add_file', "Error: File doesn't match pattern",'ampache-catalog');
-		}
+
+		debug_event('add_file', "Error: File doesn't match pattern",'2','ampache-catalog');
 
 
 	} // add_file
@@ -673,12 +670,12 @@ class Catalog {
 	                	                        echo _("Written") . " $i. . . <br />\n";
 				                        flush();
 	                                        } //echos song count
-						if (conf('debug')) { log_event($_SESSION['userdata']['username'],'art_write',"$album->name Art written to $file"); }
+						debug_event('art_write',"$album->name Art written to $file",'5'); 
 	                                }
 	                                        fclose($file_handle);
 	                       	} // end if fopen
 				else {
-					if (conf('debug')) { log_event($_SESSION['userdata']['username'],'art_write',"Unable to open $file for writting"); }
+					debug_event('art_write',"Unable to open $file for writting",'5'); 
 					echo "<font class=\"error\">" . _("Error unable to open file for writting") . " [$file] </font><br />\n";
 				}
 
@@ -868,7 +865,7 @@ class Catalog {
         function update_song_from_tags($song) {
 
 
-		if (conf('debug')) { log_event($_SESSION['userdata']['username'],' tag-read ',"Reading Tags from $song->file",'ampache-catalog'); }
+		debug_event('tag-read',"Reading Tags from $song->file",'5','ampache-catalog');
 		
                 $info = new Audioinfo();
                 $results = $info->Info($song->file);
@@ -916,11 +913,11 @@ class Catalog {
                 $info = $song->compare_song_information($song,$new_song);
 
                 if ($info['change']) {
-			if (conf('debug')) { log_event($_SESSION['userdata']['username'],' update ',"$song->file difference found, updating database",'ampache-catalog'); }
+			debug_event('update',"$song->file difference found, updating database",'5','ampache-catalog'); 
                         $song->update_song($song->id,$new_song);
                 }
 		else { 
-			if (conf('debug')) { log_event($_SESSION['userdata']['username'],' update ',"$song->file no difference found returning",'ampache-catalog'); }
+			debug_event('update',"$song->file no difference found returning",'5','ampache-catalog');
 		}
 
                 return $info;
@@ -1008,7 +1005,7 @@ class Catalog {
 
 		/* Make sure the xmlrpc lib is loaded */
 		if (!class_exists('xmlrpc_client')) { 
-                        if (conf('debug')) { log_event($_SESSION['userdata']['username'],'xmlrpc',"Unable to load XMLRPC library"); }
+                        debug_event('xmlrpc',"Unable to load XMLRPC library",'1'); 
 			echo "<font class=\"error\"><b>" . _("Error") . "</b>: " . _("Unable to load XMLRPC library, make sure XML-RPC is enabled") . "<br />\n";
 			return false;
 		} // end check for class
@@ -1049,7 +1046,7 @@ class Catalog {
 	        } // if we didn't get an error
 	        else {
 			$error_msg = _("Error connecting to") . " " . $server . " " . _("Code") . ": " . $response->faultCode() . " " . _("Reason") . ": " . $response->faultString();
-			if (conf('debug')) { log_event($_SESSION['userdata']['username'],' xmlrpc-client ',$error_msg,'ampache-catalog'); }
+			debug_event('xmlrpc-client',$error_msg,'1','ampache-catalog');
 			echo "<p class=\"error\">$error_msg</p>";
 	                return;
 	        }
@@ -1100,7 +1097,7 @@ class Catalog {
                 }
                 else {
                         $error_msg = _("Error connecting to") . " " . $server . " " . _("Code") . ": " . $response->faultCode() . " " . _("Reason") . ": " . $response->faultString();
-                        if (conf('debug')) { log_event($_SESSION['userdata']['username'],' xmlrpc-client ',$error_msg,'ampache-catalog'); }
+                        debug_event('xmlrpc-client',$error_msg,'1','ampache-catalog');
                         echo "<p class=\"error\">$error_msg</p>";
                 }
 

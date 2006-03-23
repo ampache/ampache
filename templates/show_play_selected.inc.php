@@ -20,61 +20,33 @@
 
 */
 ?>
-<script type="text/javascript" language="javascript">
-<!--
-function ToPlaylist(action)
-{
-	document.songs.action = "<?php echo conf('web_path'); ?>/playlist.php?action=" + action;
-	document.songs.submit();			// Submit the page
-	return true;
-}
-
-function ToSong(action)
-{
-	document.songs.action = "<?php echo conf('web_path'); ?>/song.php?action=" + action;
-	document.songs.submit();			// Submit the page
-	return true;
-}
-function ToBatch(action)
-{
-	document.songs.action = "<?php echo conf('web_path'); ?>/batch.php?action=" + action;
-	document.songs.submit();
-	return true;
-}
--->
-</script>
 <table border="0" cellpadding="14" cellspacing="0" class="text-box">
 <tr align="left">
-	<td>
-		<input class="button" type="button" name="super_action" value="<?php echo _("Play Selected"); ?>" onclick="return ToSong('play_selected');" />
-		<?php if (batch_ok()) { ?>
-			&nbsp;&nbsp;
-			<input class="button" type="button" name="super_action" value="<?php echo _("Download Selected"); ?>" onclick="return ToBatch('download_selected');" />
-		<?php } ?>
-<!--
-                <input class="button" type="button" name="super_action" value="<?php echo _("Flag Selected"); ?>" />
-                <input class="button" type="button" name="super_action" value="<?php echo _("Edit Selected"); ?>" />
--->
-	</td>
+<td>
+	<input class="button" type="button" value="<?php echo _('Play Selected'); ?>" onclick="return SubmitToPage('songs','<?php echo $web_path; ?>/song.php?action=play_selected');" />
+	<?php if (batch_ok()) { ?>
+		&nbsp;&nbsp;
+		<input class="button" type="button" value="<?php echo _('Download Selected'); ?>" onclick="return SubmitToPage('songs','<?php echo $web_path; ?>/batch.php?action=download_selected');" />
+	<?php } ?>
+</td>
 </tr>
 <?php 
 if (is_object($GLOBALS['playlist'])) { ?>
 <tr>
-	<td>
-		<input type="hidden" name="playlist_id" value="<?php echo $GLOBALS['playlist']->id; ?>" />
-		<input class="button" type="button" name="super_action" value="<?php echo _("Set Track Numbers"); ?>" onclick="return ToPlaylist('set_track_numbers');" />
-		<input class="button" type="button" name="super_action" value="<?php echo _("Remove Selected Tracks"); ?>" onclick="return ToPlaylist('remove_song');" />
-	</td>
+<td>
+	<input type="hidden" name="playlist_id" value="<?php echo $GLOBALS['playlist']->id; ?>" />
+	<input class="button" type="button" value="<?php echo _('Set Track Numbers'); ?>" onclick="return SubmitToPage('songs','<?php echo $web_path; ?>/playlist.php?action=set_track_numbers');" />
+	<input class="button" type="button" value="<?php echo _('Remove Selected Tracks'); ?>" onclick="return SubmitToPage('songs','<?php echo $web_path; ?>/playlist.php?action=remove_song');" />
+</td>
 </tr>
-<?php
-} else { ?>
+<?php } else { ?>
 <tr align="center">
-	<td colspan="2">
-		<?php echo _("Playlist"); ?>: <input type="button" name="super_action" value="<?php echo _("Add to"); ?>" onclick="return ToPlaylist('add_to');" />
-		<?php  show_playlist_dropdown($GLOBALS['playlist_id']); ?>
-		<input class="button" type="button" name="super_action" value="<?php echo _("View"); ?>" onclick="return ToPlaylist('view');" />
-		<input class="button" type="button" name="super_action" value="<?php echo _("Edit"); ?>" onclick="return ToPlaylist('edit');" />
-	</td>
+<td colspan="2">
+	<?php echo _('Playlist'); ?>: <input type="button" value="<?php echo _('Add to'); ?>" onclick="return SubmitToPage('songs','<?php echo $web_path; ?>/playlist.php?action=add_to');" />
+	<?php  show_playlist_dropdown($GLOBALS['playlist_id']); ?>
+	<input class="button" type="button" value="<?php echo _('View'); ?>" onclick="return SubmitToPage('songs','<?php echo $web_path; ?>/playlist.php?action=view');" />
+	<input class="button" type="button" value="<?php echo _('Edit'); ?>" onclick="return SubmitToPage('songs','<?php echo $web_path; ?>/playlist.php?action=edit');" />
+</td>
 </tr>
 <?php } ?>
 </table>

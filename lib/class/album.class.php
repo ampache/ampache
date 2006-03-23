@@ -261,7 +261,7 @@ class Album {
 
                 	if (!is_resource($handle)) {
 	                        echo "<font class=\"error\">" . _("Error: Unable to open") . " $dir</font><br />\n";
-				if (conf('debug')) { log_event($GLOBALS['user']->username,'read',"Error: Unable to open $dir for album art read"); }
+				debug_event('read',"Error: Unable to open $dir for album art read",'2');
 	                }
 
 	                /* Recurse through this dir and create the files array */
@@ -458,9 +458,7 @@ class Album {
 			do {
 				$search_results = array_merge($search_results, $amazon->search(array('artist' => $artist, 'album' => $albumname, 'keywords' => $keywords)));
 				$pages_to_search = min($max_pages_to_search, $amazon->_maxPage);
-				if(conf('debug')){
-					log_event($GLOBALS['user']->username,'amazon-xml', "Searched results page " . ($amazon->_currentPage+1) . "/" . $pages_to_search);
-				}
+				debug_event('amazon-xml', "Searched results page " . ($amazon->_currentPage+1) . "/" . $pages_to_search,'5');
 				$amazon->_currentPage++;
 			} while($amazon->_currentPage < $pages_to_search);
 			
@@ -470,9 +468,7 @@ class Album {
 			}
 		
 			/* Log this if we're doin debug */
-			if (conf('debug')) { 
-				log_event($GLOBALS['user']->username,'amazon-xml',"Searched using $keywords with " . conf('amazon_developer_key') . " as key " . count($final_results) . " results found");
-			}
+			debug_event('amazon-xml',"Searched using $keywords with " . conf('amazon_developer_key') . " as key " . count($final_results) . " results found",'5');
 		} // end foreach
 		} // if no cover
 		

@@ -33,14 +33,16 @@ $playlist_id = scrub_out($_REQUEST['playlist_id']);
 <tr>
 	<td>
 		<span class="header1"><?php echo _('Playlist Actions'); ?></span><br />
-		&nbsp;&nbsp;&nbsp;&nbsp;<a href="<?php echo $web_path; ?>/playlist.php?action=new"><?php echo _('Create New Playlist'); ?></a><br />
-		&nbsp;&nbsp;&nbsp;&nbsp;<a href="<?php echo $web_path; ?>/playlist.php"><?php echo _('View All Playlists'); ?></a><br />
-		&nbsp;&nbsp;&nbsp;&nbsp;<a href="<?php echo $web_path; ?>/playlist.php?action=show_import_playlist"><?php echo _('Import From File'); ?></a><br />
+		<ul class="text-action">
+		<li><a href="<?php echo $web_path; ?>/playlist.php?action=new"><?php echo _('Create New Playlist'); ?></a></li>
+		<li><a href="<?php echo $web_path; ?>/playlist.php"><?php echo _('View All Playlists'); ?></a></li>
+		<li><a href="<?php echo $web_path; ?>/playlist.php?action=show_import_playlist"><?php echo _('Import From File'); ?></a></li>
 		<?php if ($_REQUEST['playlist_id']) { ?>
-		&nbsp;&nbsp;&nbsp;&nbsp;<a href="<?php echo $web_path; ?>/playlist.php?action=normalize_tracks&amp;playlist_id=<?php echo $playlist_id; ?>"><?php echo _('Normalize Tracks'); ?></a><br />
-		&nbsp;&nbsp;&nbsp;&nbsp;<a href="<?php echo $web_path; ?>/song.php?action=play_selected&amp;playlist_id=<?php echo $playlist_id; ?>"><?php echo _('Play This Playlist'); ?></a><br />
-		&nbsp;&nbsp;&nbsp;&nbsp;<a href="<?php echo $web_path; ?>/playlist.php?action=show_delete_playlist&amp;playlist_id=<?php echo $playlist_id; ?>"><?php echo _('Delete This Playlist'); ?></a><br />
+		<li><a href="<?php echo $web_path; ?>/playlist.php?action=normalize_tracks&amp;playlist_id=<?php echo $playlist_id; ?>"><?php echo _('Normalize Tracks'); ?></a></li>
+		<li><a href="<?php echo $web_path; ?>/song.php?action=play_selected&amp;playlist_id=<?php echo $playlist_id; ?>"><?php echo _('Play This Playlist'); ?></a></li>
+		<li><a href="<?php echo $web_path; ?>/playlist.php?action=show_delete_playlist&amp;playlist_id=<?php echo $playlist_id; ?>"><?php echo _('Delete This Playlist'); ?></a></li>
 		<?php } ?>
+		</ul>
 	</td>
 </tr>
 </table><!-- End Playlist Table -->

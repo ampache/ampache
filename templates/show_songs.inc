@@ -28,7 +28,7 @@ if (is_object($playlist) && ($GLOBALS['user']->username == $playlist->user || $G
 }
 
 ?>
-<form name="songs" method="post" enctype="multipart/form-data" action="#" style="Display:inline;">
+<form id="songs" method="post" enctype="multipart/form-data" action="#" style="Display:inline;">
 <table class="border" cellspacing="0" cellpadding="0" border="0">
 <tr class="table-header">
 	<th>&nbsp;&nbsp;<a href="#" onclick="check_songs(); return false;">Select</a></th>

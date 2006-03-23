@@ -21,21 +21,17 @@
 */ 
 $web_path = conf('web_path');
 ?>
-<table class="text-box">
-<tr>
-	<td>
-		<span class="header1"><?php echo _("Albums by") . " " . $artist->full_name; ?></span>
-		<br /><?php if (conf('ratings')) { show_rating($artist->id, 'artist'); } // end if ratings ?><br />
-		<ul>
+<div class="text-box">
+		<span class="header1"><?php echo _('Albums by') . " " . $artist->full_name; ?></span>
+		<br /><?php if (conf('ratings')) { show_rating($artist->id, 'artist'); } // end if ratings ?>
+		<ul class="text-action">
 			<li><a href="<?php echo $web_path; ?>/artists.php?action=show_all_songs&amp;artist=<?php echo $artist_id; ?>"><?php echo _("Show All Songs By") . " " . $artist->full_name; ?></a></li>
 			<li><a href="<?php echo $web_path; ?>/song.php?action=m3u&amp;artist=<?php echo $artist_id; ?>"><?php echo _("Play All Songs By") . " " . $artist->full_name; ?></a></li>
 			<li><a href="<?php echo $web_path; ?>/song.php?action=m3u&amp;artist_random=<?php echo $artist_id; ?>"><?php echo _("Play Random Songs By") . " " . $artist->full_name; ?></a></li>
-			<?php  if ($user->has_access('100')) { ?>
+			<?php  if ($GLOBALS['user']->has_access('100')) { ?>
 				<li><a href="<?php echo $web_path; ?>/artists.php?action=update_from_tags&amp;artist=<?php echo $artist_id; ?>"><?php echo _("Update from tags"); ?></a></li>
 				<li><a href="<?php echo $web_path; ?>/artists.php?action=show_rename&amp;artist=<?php echo $artist_id; ?>"><?php echo _("Rename Artist"); ?></a></li>
 				<li><a href="<?php echo $web_path; ?>/artists.php?action=show_similar&amp;artist=<?php echo $artist_id; ?>"><?php echo _("Find duplicate artists"); ?></a></li>
 			<?php } ?>
 		</ul>
-	</td>
-</tr>
-</table>
+</div>

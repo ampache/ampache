@@ -29,17 +29,17 @@ $web_path = conf('web_path');
 <?php require (conf('prefix') . '/templates/show_artist_box.inc.php'); ?>
 <!-- *** Multi-Album Art Display Thx MrBlahh Updated by clader *** -->
 <br />
-<form name="songs" method="post" enctype="multipart/form-data" action="artists.php">
+<form id="songs" method="post" enctype="multipart/form-data" action="artists.php">
 <table class="border" cellspacing="0" cellpadding="0" border="0">
 <tr class="table-header">
 	<th align="center">
-	&nbsp;&nbsp;<a href="#" onclick="check_songs(); return false;"><?php echo _("Select"); ?></a>
+	&nbsp;&nbsp;<a href="#" onclick="check_songs(); return false;"><?php echo _('Select'); ?></a>
 	</th>
-	<th><?php echo _("Cover"); ?></th>
-	<th><?php echo _("Album Name"); ?></th>
-	<th><?php echo _("Album Year"); ?></th>
-	<th><?php echo _("Total Tracks"); ?></th>
-	<th><?php echo _("Action"); ?></th>
+	<th><?php echo _('Cover'); ?></th>
+	<th><?php echo _('Album Name'); ?></th>
+	<th><?php echo _('Album Year'); ?></th>
+	<th><?php echo _('Total Tracks'); ?></th>
+	<th><?php echo _('Action'); ?></th>
 </tr>
 <?php
 foreach ($albums as $album) {

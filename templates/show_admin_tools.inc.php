@@ -26,15 +26,11 @@ $catalogs 	= Catalog::get_catalogs();
 <span class="header1"><?php echo _('Catalogs'); ?></span>
 <div class="text-box"> 
 <div class="text-action">
-<a href="<?php echo $web_path; ?>/admin/catalog.php?action=show_add_catalog"><?php echo _('Add a Catalog'); ?></a>
-<a href="<?php echo $web_path; ?>/admin/catalog.php?action=show_clear_stats"><?php echo _('Clear Catalog Stats'); ?></a>
-<a href="<?php echo $web_path; ?>/admin/catalog.php?action=gather_album_art"><?php echo _('Gather Album Art'); ?></a>
 </div>
-<!-- Current Catalogs -->
 <table border="0" cellpadding="0" cellspacing="0">
 <tr class="table-header">
-	<td><?php echo _('Name'); ?></td>
-	<td align="center"><?php echo _('Action'); ?></td>
+	<th><?php echo _('Name'); ?></th>
+	<th align="center"><?php echo _('Action'); ?></th>
 </tr>
 <?php foreach ($catalogs as $catalog) { ?>
 <tr class="<?php echo flip_class(); ?>">
@@ -69,7 +65,11 @@ $catalogs 	= Catalog::get_catalogs();
 <a href="<?php echo $web_path; ?>/admin/catalog.php?action=clean_all_catalogs"><?php echo _('Clean All'); ?></a>&nbsp;
 <a href="<?php echo $web_path; ?>/admin/catalog.php?action=update_all_catalogs"><?php echo _('Verify All'); ?></a>&nbsp;
 <a href="<?php echo $web_path; ?>/admin/catalog.php?action=add_to_all_catalogs"><?php echo _('Add to All'); ?></a>&nbsp;
-<a href="<?php echo $web_path; ?>/admin/catalog.php?action=full_service"><?php echo _('Update All'); ?></a>&nbsp;
+<a href="<?php echo $web_path; ?>/admin/catalog.php?action=full_service"><?php echo _('Update All'); ?></a>&nbsp;<hr height="5px" />
+<a href="<?php echo $web_path; ?>/admin/catalog.php?action=show_add_catalog"><?php echo _('Add a Catalog'); ?></a>
+<a href="<?php echo $web_path; ?>/admin/catalog.php?action=show_clear_stats"><?php echo _('Clear Catalog Stats'); ?></a>
+<a href="<?php echo $web_path; ?>/admin/catalog.php?action=gather_album_art"><?php echo _('Gather Album Art'); ?></a>
+
 </div>
 </div><br />
 <span class="header1"><?php echo _('Other Tools'); ?></span><br />

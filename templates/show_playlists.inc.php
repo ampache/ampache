@@ -66,14 +66,19 @@ foreach ($playlists as $playlist) {
 				| <a href="<?php echo $web_path; ?>/song.php?action=playlist_random&amp;playlist_id=<?php echo $playlist->id; ?>">
 				<?php echo _('Random'); ?>
 				</a>
-			<?php } ?>
 			<?php if (batch_ok()) { ?>
 				| <a href="<?php echo $web_path; ?>/batch.php?action=pl&amp;id=<?php echo $playlist->id; ?>">
 				<?php echo _('Download'); ?>
 				</a>
 			<?php } ?>
-			|
+			<?php } ?>
+		|
 		</td>
 	</tr>
 <?php } // end foreach ($playlists as $playlist) ?>
+<?php if (!count($playlists)) { ?>
+<tr class="<?php echo flip_class(); ?>">
+	<td colspan="4"><?php echo _('No Playlists Found'); ?></td>
+</tr>
+<?php } ?>
 </table> <!-- End Playlist Table -->

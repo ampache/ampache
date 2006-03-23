@@ -260,9 +260,11 @@
                 border-left:2px solid <?php echo conf('bg_color2'); ?>;
                 border-top:2px solid <?php echo conf('bg_color2'); ?>;
 	}
-	.text-action { 
+	.text-action, .text-action li { 
 		margin-top:5px;
+		list-style: none;
 		margin-bottom:5px;
+		padding-left:0px;
 	}
 	.text-action a { 
 		background: <?php echo conf('base_color2'); ?>;
