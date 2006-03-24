@@ -4,6 +4,8 @@
 
 --------------------------------------------------------------------------
   v.3.3.2-Beta2 
+  	- Added horrible hack to make Artist sorting work in the Album 
+		browse page, this is temp until Ampache 3.4
   	- Fixed a problem with the playlist update confirmation page
   	- Fixed css issues with preferences (Thx WarrenG) 
   	- Added dump album art command line script and tweaked catalog

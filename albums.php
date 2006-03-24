@@ -187,6 +187,22 @@ else {
 			$sql = "SELECT id FROM album WHERE name LIKE '$match%'";
 	} // end switch
 
+	switch ($_REQUEST['type']) { 
+		case 'album_sort':
+			if ($match != 'Browse' && $match != 'Show_missing_art' && $match != 'Show_all') { 
+				$match_string = " AND album.name LIKE '$match%'";
+			}
+			unset($_REQUEST['keep_view']);
+			$sql = "SELECT album.id, IF(COUNT(DISTINCT(song.artist)) > 1,'Various', artist.name) AS artist_name " . 
+				"FROM song,artist,album WHERE song.album=album.id AND song.artist=artist.id $match_string" . 
+				"GROUP BY album.name,album.year"; 
+			$sort_order = 'artist.name';
+		break;
+		default:
+
+		break;
+	} // switch on special sort types
+
 	// if we are returning
 	if ($_REQUEST['keep_view']) { 
                 $view->initialize();
@@ -194,10 +210,11 @@ else {
 
 	// If we aren't keeping the view then initlize it
 	elseif ($sql) {
+		if (!$sort_order) { $sort_order = 'name'; } 
 		$db_results = mysql_query($sql, dbh());
 		$total_items = mysql_num_rows($db_results);
 		if ($match != "Show_all") { $offset_limit = $_SESSION['userdata']['offset_limit']; }
-		$view = new View($sql, 'albums.php','name',$total_items,$offset_limit);	
+		$view = new View($sql, 'albums.php',$sort_order,$total_items,$offset_limit);	
 	} 
 
 	else { $view = false; }

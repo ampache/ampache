@@ -224,6 +224,7 @@ if (($gc_divisor / $gc_probability) > 5) {
 	$new_gc_probability = $gc_divisor * .2;
 	ini_set('session.gc_probability',$new_gc_probability);
 }
+
 /* END Set PHP Vars */
 
 /* Overwrite them with the DB preferences */

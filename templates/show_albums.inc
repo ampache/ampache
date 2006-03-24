@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2005 Ampache.org
+ Copyright (c) 2001 - 2006 Ampache.org
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
@@ -37,8 +37,10 @@ $total_items = $view->total_items;
 	<td>
 		<a href="<?php echo $web_path; ?>/<?php echo $_SESSION['view_script']; ?>?action=<?php echo $_REQUEST['action']; ?>&amp;keep_view=true&amp;sort_type=album.name&amp;sort_order=0"><?php echo _("Album"); ?></a>
 	</td>
-	<td> <?php echo _("Artist"); ?> </td>
-	<td> <?php echo _("Songs"); ?>  </td>
+	<td>
+		<a href="<?php echo $web_path; ?>/<?php echo $_SESSION['view_script']; ?>?action=<?php echo $_REQUEST['action']; ?>&amp;keep_view=true&amp;sort_type=artist.name&amp;type=album_sort"><?php echo _('Artist'); ?></a>
+	</td>
+	<td> <?php echo _('Songs'); ?>  </td>
 	<td>
 		<a href="<?php echo $web_path; ?>/<?php echo $_SESSION['view_script']; ?>?action=<?php echo $_REQUEST['action']; ?>&amp;keep_view=true&amp;sort_type=album.year&amp;sort_order=0"><?php echo _("Year"); ?></a>
 	</td>
@@ -67,12 +69,14 @@ foreach ($albums as $album) {
 	<td>
 		<a href="<?php echo $web_path; ?>/<?php echo $_SESSION['view_script']; ?>?action=<?php echo $_REQUEST['action']; ?>&amp;keep_view=true&amp;sort_type=album.name&amp;sort_order=0"><?php echo _("Album"); ?></a>
 	</td>
-	<td> <?php echo _("Artist"); ?> </td>
-	<td> <?php echo _("Songs"); ?>  </td>
+	<td>
+		<a href="<?php echo $web_path; ?>/<?php echo $_SESSION['view_script']; ?>?action=<?php echo $_REQUEST['action']; ?>&amp;keep_view=true&amp;sort_type=artist.name&amp;type=album_sort"><?php echo _('Artist'); ?></a>
+	</td>
+	<td><?php echo _('Songs'); ?></td>
 	<td>
 		<a href="<?php echo $web_path; ?>/<?php echo $_SESSION['view_script']; ?>?action=<?php echo $_REQUEST['action']; ?>&amp;keep_view=true&amp;sort_type=album.year&amp;sort_order=0"><?php echo _("Year"); ?></a>
 	</td>
-	<td> <?php echo _("Action"); ?> </td>
+	<td><?php echo _('Action'); ?></td>
 </tr>
 <tr class="even" align="center">
 	<td colspan="5">

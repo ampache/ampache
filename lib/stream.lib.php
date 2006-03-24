@@ -180,9 +180,7 @@ function start_downsample($song,$now_playing_id=0,$song_name=0) {
 		if ($min_bitrate > 1 AND ($max_bitrate/$active_streams) < $min_bitrate) {
                
 			/* Log the failure */
-			if (conf('debug')) { 
-				log_event($user->username,' downsample ',"Error: Max bandwidith already allocated. $active_streams Active Streams"); 
-			}
+			debug_event('downsample',"Error: Max bandwidith already allocated. $active_streams Active Streams",'2'); 
 			
 			/* Toast the now playing entry, then tell em to try again later */
 			delete_now_playing($now_playing_id);
@@ -197,9 +195,7 @@ function start_downsample($song,$now_playing_id=0,$song_name=0) {
 		// Never go over the users sample rate 
 		if ($sample_rate > $user_sample_rate) { $sample_rate = $user_sample_rate; }	
 
-		if (conf('debug')) { 
-			log_event($GLOBALS['user']->username, ' downsample ',"Downsampled: $active_streams current active streams, downsampling to $sample_rate");
-		}
+		debug_event('downsample',"Downsampled: $active_streams current active streams, downsampling to $sample_rate",'2');
 
 	} // end if we've got bitrates
 

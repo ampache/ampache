@@ -83,7 +83,7 @@ while ($results = mysql_fetch_object($db_result)) {
         if (!$user->create_date) { $create_date = "Unknown"; }
 ?>
 
-<tr class="even">
+<tr class="<?php echo flip_class(); ?>">
 	<td>
 		<a href="<?php echo $web_path; ?>/admin/users.php?action=edit&amp;user=<?php echo $user->username; ?>">
 			<?php echo $user->fullname; ?> (<?php echo $user->username; ?>)
