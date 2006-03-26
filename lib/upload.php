@@ -38,9 +38,7 @@ function check_upload_extension($name='file') {
                 return true;
         }
 
-	if (conf('debug')) { 
-		log_event($_SESSION['userdata']['username'],' upload ',"Error: Invalid Extension $extension");
-	}
+	debug_event('upload',"Error: Invalid Extension $extension",'2');
 
 	return false;
 
@@ -51,16 +49,21 @@ function check_upload_extension($name='file') {
         @discussion checks the filesize of the upload
 */
 function check_upload_size($name='file') { 
-
+	static $total_size;
 
         $size = $_FILES[$name]['size'];
-        
+	
+	$total_size = $total_size + $size;
+
         if ($size > conf('max_upload_size')) { 
-		if (conf('debug')) { 
-			log_event($_SESSION['userdata']['username'],' upload ',"Error: Upload to large, $size");
-		}
+		debug_event('upload',"Error: Upload to large, $size",'2');
 		return false;
         }
+
+	if ($total_size > conf('max_upload_size')) { 
+		debug_event('upload',"Error: Total Upload to large, $total_size",'2');
+		return false;
+	}
         
         return true;
 

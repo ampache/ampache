@@ -24,12 +24,12 @@
 ?>
 
 <form action="<?php echo conf('web_path'); ?>/upload.php?" method="post" name="upload_form" enctype="multipart/form-data" id="upload_form">
-<table class="text-box" cellspacing="0" cellpadding="0" border="0">
+<table class="text-box">
 <tr>
 	<td>
-		<h3><?php echo _("Uploading Music to Ampache"); ?><br /></h3>
+		<h3><?php echo _('Uploading Music to Ampache'); ?><br /></h3>
 		<p>
-		<b><?php echo _("The following Audio file formats are supported"); ?></b>
+		<b><?php echo _('The following Audio file formats are supported'); ?></b>
 		</p>
 		<ul>
 			<li>OGG</li>
@@ -69,8 +69,8 @@
 <tr>
 	<td>
 		<input type="hidden" name="action" value="upload" />
-		<input type="hidden" name="MAX_FILE_SIZE" value="<?php echo _("max_upload_size"); ?>" />
-		<input class='button' type="submit" value="<?php echo _("Upload"); ?>" />
+		<input type="hidden" name="MAX_FILE_SIZE" value="<?php echo _('max_upload_size'); ?>" />
+		<input class='button' type="submit" value="<?php echo _('Upload'); ?>" />
 	</td>
 </tr>
 </table>

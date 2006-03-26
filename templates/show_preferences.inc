@@ -79,7 +79,7 @@ if (($GLOBALS['user']->has_access(100)) AND ($user_id == '-1' AND conf('use_auth
 <?php } ?>
 </ul>
 </div>
-<div class="text-box">
+<div class="text-box" style="width:35em;">
 <form method="post" name="preferences" action="<?php echo conf('web_path'); ?><?php echo $target; ?>" enctype="multipart/form-data">
 <?php 
 if ($current_tab != 'account') { 

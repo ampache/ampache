@@ -51,7 +51,7 @@ class Error {
 
 		$array = array($name=>$description);
 
-		error_results($array);
+		error_results($array,1);
 		$this->error_state = 1;
 
 		return true;

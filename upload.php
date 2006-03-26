@@ -36,11 +36,12 @@
 */
 
 require_once( "modules/init.php" );
+
 // Set page header
 show_template('header');
 
 // Access Control
-if(!$user->prefs['upload'] || conf('demo_mode'))  {
+if(!$GLOBALS['user']->prefs['upload'] || conf('demo_mode'))  {
 	access_denied();
 }
 
@@ -48,20 +49,17 @@ $action = scrub_in( $_REQUEST['action'] );
 
 switch( $action ) {
 	case 'upload':
-
 		/* Break if they don't have rights */
-		if (!$user->prefs['upload'] OR !$user->has_access(25)) { 
+		if (!$GLOBALS['user']->prefs['upload'] OR !$GLOBALS['user']->has_access(25)) { 
 			break;
 		}
 	
 		/* IF we need to quarantine this */
-		if ($user->prefs['quarantine']) { 
+		if ($GLOBALS['user']->prefs['quarantine']) { 
 			/* Make sure the quarantine dir is writeable */
 			if (!check_upload_directory(conf('quarantine_dir'))) { 
 				$GLOBALS['error']->add_error('general',"Error: Quarantine Directory isn't writeable");
-				if (conf('debug')) { 
-					log_event($user->username,' upload ',"Error: Quarantine Directory isn't writeable");
-				}
+				debug_event('upload',"Error: Quarantine Directory isn't writeable",'2');
 			} // if unwriteable
 
 			$catalog_id = find_upload_catalog(conf('quarantine_dir'));
@@ -69,9 +67,7 @@ switch( $action ) {
 			/* Make sure that it's not in a catalog dir */
 			if ($catalog_id) { 
 				$GLOBALS['error']->add_error('general',"Error: Quarantine Directory inside a catalog");
-				if (conf('debug')) { 
-					log_event($user->username,' upload ',"Error: Quarantine Directory inside a catalog");
-				}
+				debug_event('upload',"Error: Quarantine Directory inside a catalog",'2');
 			} // if in catalog dir
 
 			foreach ($_FILES as $key => $file) { 
@@ -99,7 +95,7 @@ switch( $action ) {
 				show_upload(); 
 			}
 			else { 
-				show_confirmation("Upload Quarantined", "Your Upload(s) have been quarantined and will be reviewed for addition","upload.php");
+				show_confirmation(_('Upload Quarantined'), _('Your Upload(s) have been quarantined and will be reviewed for addition'),'upload.php');
 			}
 
 		} // if quarantine
@@ -107,29 +103,24 @@ switch( $action ) {
 		/* Else direct upload time baby! */
 		else { 
                         /* Make sure the quarantine dir is writeable */
-                        if (!check_upload_directory($user->prefs['upload_dir'])) {
+                        if (!check_upload_directory($GLOBALS['user']->prefs['upload_dir'])) {
                                 $GLOBALS['error']->add_error('general',"Error: Upload Directory isn't writeable");
-                                if (conf('debug')) {
-                                        log_event($user->username,' upload ',"Error: Upload Directory isn't writeable");
-                                }
+                                debug_event('upload',"Error: Upload Directory isn't writeable",'2');
                         } // if unwriteable
 
 			$catalog_id = find_upload_catalog($user->prefs['upload_dir']);
 			$catalog = new Catalog($catalog_id);
 			
-
                         /* Make sure that it's not in a catalog dir */
                         if (!$catalog_id) {
                                 $GLOBALS['error']->add_error('general',"Error: Upload Directory not inside a catalog");
-                                if (conf('debug')) {
-                                        log_event($user->username,' upload ',"Error: Upload Directory not inside a catalog");
-                                }
+                                debug_event('upload',"Error: Upload Directory not inside a catalog",'2');
                         } // if in catalog dir
 
-
+			/* Foreach through the post files */
                         foreach ($_FILES as $key => $file) {
 
-                                if (strlen($_FILES[$key]['name'])) {
+                                if (strlen($_FILES[$key]['name']) && strlen($_FILES[$key]['tmp_name'])) {
                                         /* Check size and extension */
                                         if (!check_upload_extension($key)) {
                                                 $GLOBALS['error']->add_error($key,"Error: Invalid Extension");
@@ -140,12 +131,16 @@ switch( $action ) {
 
                                         if (!$GLOBALS['error']->error_state) {
  						$new_filename = upload_file($key,$user->prefs['upload_dir']);
-
+						
 						/* We aren't doing the quarantine thing, so just insert it */
 						if ($new_filename) { $catalog->insert_local_song($new_filename,filesize($new_filename)); }
                                         } // if we havn't had an error
 
 				} // if there is a file to check
+
+				elseif (strlen($_FILES[$key]['name'])) { 
+					$GLOBALS['error']->add_error($key,'Error: Total Filesize to large, file not uploaded');
+				}
 
                         } // end foreach files
 
@@ -153,18 +148,17 @@ switch( $action ) {
                                 show_upload();
                         }
                         else {
-                                show_confirmation("Files Uploaded", "Your Upload(s) have been inserted into Ampache and are now live","upload.php");
+                                show_confirmation(_('Files Uploaded'), _('Your Upload(s) have been inserted into Ampache and are now live'),"upload.php");
                         }
 
 		} // man this is a bad idea, the catch all should be the conservative option... oooh well
-		
 	break;
 	case 'add':
 		/* Make sure they have access */
-		if($user->has_access(100)) {
+		if($GLOBALS['user']->has_access(100)) {
 			$id = scrub_in($_REQUEST['id']);
 			update_quarantine_record($id,'add');
-			show_confirmation("Upload Added","The Upload has been scheduled for a catalog add, please run command line script to add file","upload.php");
+			show_confirmation(_('Upload Added'),_('The Upload has been scheduled for a catalog add, please run command line script to add file'),"upload.php");
 		} 
 		else { 
 			access_denied();
@@ -172,11 +166,10 @@ switch( $action ) {
 		break;
 	case 'delete':
 		/* Make sure they got them rights */
-		if($user->has_access(100)) {
+		if($GLOBALS['user']->has_access(100)) {
 			$id = scrub_in($_REQUEST['id']);
 			update_quarantine_record($id,'delete');
-                        show_confirmation("Upload Deleted","The Upload has been scheduled for deletion, please run command line script to permently delete this file","upload.php");
-						
+                        show_confirmation(_('Upload Deleted'),_('The Upload has been scheduled for deletion, please run command line script to permently delete this file'),"upload.php");
 		} 
 		else { 
 			access_denied();
@@ -184,8 +177,8 @@ switch( $action ) {
 		break;
 	case 'ack':
 		// everything is ready to bulk ack once we pass multiple ids and put them in $id[]
-		if( $user->has_access( 100 ) ) {
-			$id[] = scrub_in( $_REQUEST['id'] );
+		if($GLOBALS['user']->has_access(100)) {
+			$id[] = scrub_in($_REQUEST['id']);
 			$status = upload_ack( $id );
 		} else {
 			access_denied();
@@ -193,7 +186,7 @@ switch( $action ) {
 		break;
 
 	case 'purge':
-		if( $user->has_access( 100 ) ) {
+		if($GLOBALS['user']->has_access(100)) {
 			$status = upload_purge();
 		} else {
 			access_denied();

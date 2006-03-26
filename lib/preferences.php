@@ -225,6 +225,10 @@ function create_preference_input($name,$value) {
 		elseif ($value == '0') { 
 			echo "Disabled";
 		}
+		elseif ($name == 'upload_dir' || $name == 'quarantine_dir') { 
+			/* Show Nothing */
+			echo "&nbsp;";
+		}
 		else {
 			echo $value; 
 		}
@@ -317,6 +321,11 @@ function create_preference_input($name,$value) {
 			} // foreach themes
 			echo "</select>\n";
 			break;
+		case 'quarantine_dir':
+		case 'upload_dir':
+			if (!$GLOBALS['user']->has_access(100)) { 
+				break;
+			}
 		default:
 			echo "<input type=\"text\" size=\"$len\" name=\"$name\" value=\"$value\" />";
 		break;

@@ -183,6 +183,9 @@
 	.fatalerror
 		{
 		padding-top: 3px;
+		padding-left: 3px;
+		padding-right: 3px;
+		display: table-cell;
 		padding-bottom: 3px;
 		color: <?php echo conf('error_color'); ?>;
                 border-right:4px solid <?php echo conf('error_color'); ?>;

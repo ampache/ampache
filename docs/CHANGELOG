@@ -4,6 +4,8 @@
 
 --------------------------------------------------------------------------
   v.3.3.2-Beta2 
+  	- Improved Upload Error Messages and blanked up upload and 
+		quarantine directories for non-admin users
   	- Added horrible hack to make Artist sorting work in the Album 
 		browse page, this is temp until Ampache 3.4
   	- Fixed a problem with the playlist update confirmation page
