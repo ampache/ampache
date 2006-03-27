@@ -1263,6 +1263,8 @@ class Catalog {
 	 */
 	function clean_single_song($song) { 
 
+		$results = array();
+
 		/* A'right let's check genre first */
 		$sql = "SELECT song.genre FROM song WHERE genre='" . $song->genre . "'";
 		$db_results = mysql_query($sql, dbh());
@@ -1270,6 +1272,7 @@ class Catalog {
 		if (!mysql_num_rows($db_results)) { 
 			$sql = "DELETE FROM genre WHERE id='" . $song->genre . "'";
 			$db_results = mysql_query($sql, dbh());
+			$results['genre'] = true;
 		}
 
 		/* Now for the artist */
@@ -1279,6 +1282,7 @@ class Catalog {
 		if (!mysql_num_rows($db_results)) { 
 			$sql = "DELETE FROM artist WHERE id='" . $song->artist . "'";
 			$db_results = mysql_query($sql, dbh());
+			$results['artist'] = true;
 		}
 
 		/* Now for the album */
@@ -1288,9 +1292,10 @@ class Catalog {
 		if (!mysql_num_rows($db_results)) { 
 			$sql = "DELETE FROM album WHERE id='" . $song->album . "'";
 			$db_results = mysql_query($sql, dbh());
+			$results['album'] = true;
 		}
 
-		return true;
+		return $results;
 
 	} // clean_single_song
 

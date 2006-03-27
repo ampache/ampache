@@ -85,13 +85,16 @@ switch ($action) {
 
 		/* Now that it's been updated clean old junk entries */
 		$catalog = new Catalog(); 
-		$catalog->clean_single_song($old_song);
+		$cleaned = $catalog->clean_single_song($old_song);
 		
 		/* Add a tagging record of this so we can fix the file */
 		if ($_REQUEST['flag']) { 
 			$flag = new Flag();
 			$flag->add($song->id,'song','retag','Edited Song, auto-tag');
 		}
+
+		if (isset($cleaned['artist']) || isset($cleaned['album'])) { $_SESSION['source'] = conf('web_path') . '/index.php'; } 
+		
 		show_confirmation(_('Song Updated'),_('The requested song has been updated'),$_SESSION['source']);
 	break;
 	case 'reject_flag':
