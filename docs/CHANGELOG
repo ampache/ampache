@@ -4,6 +4,8 @@
 
 --------------------------------------------------------------------------
   v.3.3.2-Beta2 
+  	- Fixed some Charset problems with htmlentities (Thx Nikk)
+	- Fixed some issues with IE and session caching (Thx wishbone)
   	- Improved Upload Error Messages and blanked up upload and 
 		quarantine directories for non-admin users
   	- Added horrible hack to make Artist sorting work in the Album 

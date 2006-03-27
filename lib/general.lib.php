@@ -801,7 +801,7 @@ function scrub_out($str) {
 		$str = stripslashes($str);
 	}
 
-        $str = htmlentities($str);
+        $str = htmlentities($str,ENT_QUOTES,conf('site_charset'));
 
         return $str;
 

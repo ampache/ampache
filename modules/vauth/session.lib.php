@@ -184,6 +184,7 @@ function vauth_session_cookie() {
         session_name(vauth_conf('session_name'));
 
         /* Start the Session */
+	vauth_ungimp_ie();
         session_start(); 	
 
 } // vauth_session_cookie
@@ -258,10 +259,32 @@ function vauth_check_session() {
 	/* Set Session name so it knows what cookie to get */
 	session_name($session_name);
 
+	vauth_ungimp_ie();
 	session_start();
 
 	return true;
 
 } // vauth_check_session
+
+/**
+ * vauth_ungimp_ie
+ * This function sets the cache limiting to public if you are running 
+ * some flavor of IE. The detection used here is very conservative so feel free
+ * to fix it. This only has to be done if we're rolling HTTPS
+ */
+function vauth_ungimp_ie() { 
+
+	if ($_SERVER['HTTPS'] != 'on') { return true; } 
+
+	/* Now try to detect IE */
+	$agent = trim($_SERVER['HTTP_USER_AGENT']);
+	
+	if ((preg_match('|MSIE ([0-9.]+)|', $agent)) || (preg_match('|Internet Explorer/([0-9.]+)|', $agent))) {
+		session_cache_limiter('public');
+	}
+		      
+	return true;
+
+} // vauth_ungimp_ie
 
 ?>
