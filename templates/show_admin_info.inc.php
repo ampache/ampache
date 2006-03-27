@@ -22,24 +22,25 @@
 $web_path = conf('web_path');
 
 /* Setup the needed objects */
-$flagged	= Flag::get_recent('10');
-$total_flagged	= Flag::get_total();
+$flag = new Flag();
+$flagged	= $flag->get_recent('10');
+$total_flagged	= $flag->get_total();
 
 ?>
 <span class="header1"><?php echo _('Information'); ?></span><br />
 <div class="text-box"> 
-<span class="header2"><?php echo _('Last Ten Flagged Songs'); ?></span><br />
-<?php require (conf('prefix') . '/templates/show_flagged.inc.php'); ?>
-<div class="text-action">
-<a href="<?php echo $web_path; ?>/admin/flag.php?action=show_flagged"><?php echo _('Show All'); ?>...</a>
-</div>
+<span class="header2"><?php echo _('Last Ten Flagged Records'); ?></span><br />
+	<?php require (conf('prefix') . '/templates/show_flagged.inc.php'); ?>
+	<div class="text-action">
+	<a href="<?php echo $web_path; ?>/admin/flag.php?action=show_flagged"><?php echo _('Show All'); ?>...</a>
+	</div>
 </div><br />
 <span class="header2"><?php echo _('Disabled Songs'); ?></span><br />
 <div class="text-box">	
-<!-- Show Last 10 Disabled Songs -->&nbsp;
+	<!-- Show Last 10 Disabled Songs -->&nbsp;
 </div><br />
 <span class="header2"><?php echo _('User Activity'); ?></span><br />
 <div class="text-box">
-<!-- Show Last 10 Active Users (Bandwidth Usage guess) -->
+	<!-- Show Last 10 Active Users (Bandwidth Usage guess) -->
 &nbsp;
 </div>

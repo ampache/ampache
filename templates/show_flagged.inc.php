@@ -47,5 +47,9 @@ $web_path = conf('web_path');
 	<?php } ?>
 	</td>
 </tr>
+<?php } if (!count($flagged)) { ?>
+<tr class="<?php echo flip_class(); ?>">
+	<td colspan="4" class="error"><?php echo _('No Records Found'); ?></td>
+</tr>
 <?php } ?>
 </table>

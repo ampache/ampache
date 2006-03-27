@@ -71,6 +71,15 @@ switch ($action) {
 		}
 		show_confirmation(_('Song Updated'),_('The requested song has been updated'),$_SESSION['source']);
 	break;
+	case 'reject_flag':
+		$flag_id = scrub_in($_REQUEST['flag_id']);
+		$flag = new Flag($flag_id);
+		$flag->delete_flag(); 
+		$url = return_referer(); 
+		$title = _('Flag Removed');
+		$body = _('Flag Removed from') . " " . $flag->print_name();
+		show_confirmation($title,$body,$url);
+	break;
 	case 'show_edit_song':
 		$_SESSION['source'] = return_referer();
 		$song = new Song($_REQUEST['song']);
@@ -88,7 +97,7 @@ switch ($action) {
 		} // end else
 		show_confirmation(_('Songs Disabled'),_('The requested song(s) have been disabled'),return_referer());
 	break;
-	case "enabled":
+	case 'enabled':
 		$song_obj = new Song();
 		// If we pass just one, make it still work
 	        if (!is_array($_REQUEST['song_ids'])) { $song_obj->update_enabled(1,$_REQUEST['song_ids']); }
@@ -99,6 +108,12 @@ switch ($action) {
 		} // end else
 	        show_confirmation(_('Songs Enabled'),_('The requested song(s) have been enabled'),return_referer());
         break;
+	case 'show_flagged':
+		$flag 		= new Flag();
+		$flagged 	= $flag->get_flagged();
+		echo "<span class=\"header1\">" . _('Flagged Records') . "</span>\n";
+		require (conf('prefix') . '/templates/show_flagged.inc.php'); 
+	break;
 	default:
 	break;
 } // end switch

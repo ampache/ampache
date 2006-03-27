@@ -22,9 +22,11 @@
 <div class="confirmation-box">
 <span class="header1"><?php echo scrub_out($title); ?></span><br />
 <?php echo scrub_out($text); ?>
-<br /><br />
-[ <a href="<?php echo $path; ?>"><?php echo _('Continue'); ?></a> ]
+<br />
+<div class="text-action">
+	<a href="<?php echo $path; ?>"><?php echo _('Continue'); ?></a>
 <?php if ($cancel) { ?>
-	[ <a href="<?php echo conf('web_path') . "/" . return_referer(); ?>"><?php echo _('Cancel'); ?></a> ]<br />
+	<a href="<?php echo conf('web_path') . "/" . return_referer(); ?>"><?php echo _('Cancel'); ?></a>
 <?php } ?>
+</div>
 </div>

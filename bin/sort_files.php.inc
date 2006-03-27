@@ -249,7 +249,7 @@ function sort_move_file($song,$fullname) {
 				echo "\tMaking $path Directory\n";
 			}
 			else { 
-				if (conf('debug')) { log_event('commandline','mkdir',"Creating $path directory"); }
+				debug_event('mkdir',"Creating $path directory",'5'); 
 				$results = mkdir($path);	
 				if (!$results) { 
 					echo "Error: Unable to create $path move failed\n";
@@ -270,14 +270,13 @@ function sort_move_file($song,$fullname) {
 
 		/* Check for file existance */
 		if (file_exists($fullname)) { 
-			if (conf('debug')) { log_event('commandline','file exists','Error: $fullname already exists'); }
+			debug_event('file exists','Error: $fullname already exists','1'); 
 			echo "Error: $fullname already exists\n"; 
 			return false;
 		}
 	
 		$results = copy($song->file,$fullname);
-		if (conf('debug')) { log_event('commandline','copy','Copied ' . $song->file . ' to ' . $fullname); }
-	
+		debug_event('copy','Copied ' . $song->file . ' to ' . $fullname,'5'); 
 		
 		/* Look for the folder art and copy that as well */
 		if (!conf('album_art_preferred_filename')) { 
@@ -289,12 +288,12 @@ function sort_move_file($song,$fullname) {
 			$old_art 	= $old_dir . "/" . conf('album_art_preferred_filename');
 		}
 
-		if (conf('debug')) { log_event('commandline','copy_art','Copied ' . $old_art . ' to ' . $folder_art); }
+		debug_event('copy_art','Copied ' . $old_art . ' to ' . $folder_art,'5');
 		@copy($old_art,$folder_art);
 		
 		if (!$results) { echo "Error: Unable to copy file to $fullname\n"; return false; }
 
-		/* Check the md5sums */
+		/* Check the filesize */
 		$new_sum = filesize($fullname);
 		$old_sum = filesize($song->file);
 

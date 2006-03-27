@@ -240,4 +240,25 @@ function report_file_error( $error_code ) {
 
 } // report_file_error
 
+
+/**
+ * show_upload_status_style
+ * Pure fluf, it shows Grey for 'unknown' Green for Add and Red for delete
+ */
+function show_upload_status_style($action) { 
+
+	switch ($action) { 
+		case 'add':
+			return 'width:10px;background:green;';
+		break;
+		case 'delete':
+			return 'width:10px;background:red;';
+		break;
+		default: 
+			return 'width:10px;';
+		break;
+	} // end switch
+
+} // show_upload_status_style
+
 ?>

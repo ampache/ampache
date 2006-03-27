@@ -1,6 +1,9 @@
 <?php
 /*
 
+ Copyright 2001 - 2006 Ampache.org
+ All Rights Reserved
+
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -15,10 +18,9 @@
  along with this program; if not, write to the Free Software
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
-	created by RosenSama 2005
+ created by RosenSama 2005
 	
-	call: php quarantine_migration.php
-	
+ call: php quarantine_migration.php	
 */
 
 $no_session='1';
@@ -46,7 +48,7 @@ while ($results = mysql_fetch_assoc($db_results)) {
 $upload_dir = conf('upload_dir');
 
 if (!@is_writeable($upload_dir)) { 
-	cli_out("\n" . _("Error: Unable to write to") .  $upload_dir);
+	echo "\n" . _('Error: Unable to write to') .  " $upload_dir ". "\n";
 	exit;
 }
 
@@ -60,47 +62,56 @@ if (!$catalog_id) {
 $catalog = new Catalog($catalog_id);
 
 /* Itterate through the files we need to move */
-$adds = &$files['add'];
-foreach ($adds as $data) { 
+foreach ($files['add'] as $data) { 
 
 	/* Make sure that the target filename doesn't exist */
-	
-	$command = "mv " . $data['file'] . " " . $upload_dir;
-	$command = escapeshellcmd($command);
-	
-	exec($command,$return,$error);
-	
-	if (!$error) { 
-		cli_out("\n" . _("Moved") . " " . $data['file']);
-		
-		$new_filename = $upload_dir . "/" . basename($data['file']);
+	$target_file = $upload_dir . "/" . basename($data['file']);
 
-		cli_out(_("Adding") . " " . $new_filename . " " . _("to database"));
-		
-		$catalog->add_file($new_filename);
+	if (file_exists($target_file)) { 
+		echo 'Error: File Exists';
+		debug_event('file_exists','Error: $target_file already exist','1');
+		continue;
+	}
 
+	$results = copy($data['file'],$target_file);
+	if (!$results) { echo "Error: Unable to copy " . $data['file'] . " skipping...\n"; continue; } 
+	
+	/* Check the filesize to make sure it copied */
+	$new_sum = filesize($target_file);
+	$old_sum = filesize($data['file']);
+
+	if ($new_sum != $old_sum || !$new_sum) { 
+		echo "Error: Size Inconsistency, not deleting " . $data['file'] . "\n";
+		continue;
+	}
+
+	$results = unlink($data['file']);
+	if (!$results) { echo "Error: Unable to delete " . $data['file'] . "\n";}
+	
+	else { 
+		echo _('Adding') . " " . $target_file . " " . _('to database') . "\n";
+		
+		$catalog->add_file($target_file);
+		
+		/* Remove it from the catalog */
 		$sql = "DELETE FROM upload WHERE id='" . $data['id'] . "'";
 		$db_results = mysql_query($sql, dbh());
 	}
-	else { 
-		cli_out(_("Move Failed") . " " . $data['file']);
-	}
-
-
+	
 } // end foreach 
 
 /* Itterate through the files we need to delete */
-$deletes = &$files['delete'];
-foreach ($deletes as $data) { 
+foreach ($files['delete'] as $data) { 
 
-	unlink($data['file']);
-	cli_out(_("Deleted") . " " . $data['file']);
-
-	$sql = "DELETE FROM upload WHERE id='" . $data['id'] . "'";
-	$db_results = mysql_query($sql, dbh());
+	$results = unlink($data['file']);
+	if (!$results) { echo "Error: Unable to Delete File\n"; } 
+	else { 
+		echo _('Deleted') . " " . $data['file'] . "\n"; 
+		$sql = "DELETE FROM upload WHERE id='" . $data['id'] . "'";
+		$db_results = mysql_query($sql, dbh());
+	}
 
 } // end foreach
-
 
 exit();
 
@@ -132,7 +143,8 @@ sufficient rights to perform the above two functions.
 		$input= fgetc( STDIN );
 	} while ( trim( $input ) == '' );
 
-	if(strcmp($input,"y") != 0 ) {
+	if(strcasecmp($input,"y") != 0 ) {
+		echo "\nExiting...\n";
 		exit;
 	}
 }	// usage()

@@ -113,6 +113,30 @@ class Flag {
 	} // get_total
 
 	/**
+	 * get_flagged
+	 * This returns an array of ids of flagged songs if no limit is passed
+	 * it gets everything
+	 */
+	function get_flagged($count=0) { 
+
+		if ($count) { $limit_clause = "LIMIT " . intval($count); } 
+		
+		$sql = "SELECT id FROM flagged ORDER BY id $limit_clause";
+		$db_results = mysql_query($sql, dbh());
+
+		/* Default it to an array */
+		$results = array();
+
+		/* While the query */
+		while ($r = mysql_fetch_assoc($db_results)) { 
+			$results[] = $r['id'];
+		}
+
+		return $results;
+
+	} // get_flagged
+
+	/**
 	 * add
 	 * This adds a flag entry for an item, it takes an id, a type, the flag type
 	 * and a comment and then inserts the mofo
@@ -136,6 +160,34 @@ class Flag {
 		return true;
 
 	} // add
+
+	/**
+	 * delete_flag
+	 * This deletes the flagged entry and rescans the file to revert to the origional
+	 * state, in a perfect world, I could just roll the changes back... not until 3.4
+	 */
+	function delete_flag() { 
+
+		$sql = "DELETE FROM flagged WHERE id='$this->id'";
+		$db_results = mysql_query($sql, dbh());
+
+		return true;
+
+	} // reject
+
+	/**
+	 * approve
+	 * This approves the current flag object ($this->id) by setting approved to
+	 * 1
+	 */
+	 function approve() { 
+
+		$sql = "UPDATE flagged SET approved='1' WHERE id='$this->id'";
+		$db_results = mysql_query($sql, dbh());
+
+		return true;
+	
+	 } // approve
 
 	/**
 	 * print_name

@@ -45,14 +45,19 @@ if (count($uploads)) {
 <?php foreach ($uploads as $upload) { ?>
 <tr class="<?php echo flip_class(); ?>">
 	<?php if($GLOBALS['user']->has_access(100)) { ?>
-		<td>
-			<a href="<?php echo conf('web_path'); ?>/upload.php?action=add&amp;id=<?php echo $upload['id']; ?>"><?php echo _('Add'); ?></a>&nbsp;|&nbsp;
+		<td align="center">
+		<div class="text-action">
+		<?php if ($upload['action'] != 'add') { ?>
+			<a href="<?php echo conf('web_path'); ?>/upload.php?action=add&amp;id=<?php echo $upload['id']; ?>"><?php echo _('Add'); ?></a>
+		<?php } elseif ($upload['action'] != 'delete') { ?>
 			<a href="<?php echo conf('web_path'); ?>/upload.php?action=delete&amp;id=<?php echo $upload['id']; ?>"><?php echo _('Delete'); ?></a>
+		<?php } ?>
+		</div>
 		</td>
 	<?php } else { ?>
 		<td>N/A</td>
 	<?php } ?>
-	<td><?php echo ucfirst($upload['action']); ?></td>
+	<td style="<?php echo show_upload_status_style($upload['action']); ?>">&nbsp;</td>
 	<td><?php echo $upload['title']; ?></td>
 	<td><?php echo $upload['artist']; ?></td>
 	<td><?php echo $upload['album']; ?></td>
