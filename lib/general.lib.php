@@ -808,6 +808,18 @@ function scrub_out($str) {
 } // scrub_out
 
 /**
+ * revert_string
+ * This returns a scrubed string to it's most normal state
+ * Uhh yea better way to do this please? 
+ */
+function revert_string($string) { 
+
+	$string = unhtmlentities($string,ENT_QUOTES,conf('site_charset'));
+	return $string;
+
+} // revert_string
+
+/**
  * make_bool
  * This takes a value and returns what I consider to be the correct boolean value
  * This is used instead of settype alone because settype considers 0 and "false" to 

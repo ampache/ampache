@@ -41,28 +41,51 @@ switch ($action) {
 	case 'edit_song':
 		$catalog = new Catalog();
 		$song = new Song($_REQUEST['song_id']);
-		$new_song = $song; 
+		$new_song = new Song();
 	
 		/* Setup the vars so we can use the update_song function */ 
-		$new_song->title 	= scrub_in($_REQUEST['title']);
-		$new_song->track 	= scrub_in($_REQUEST['track']);
-		$new_song->year  	= scrub_in($_REQUEST['year']);
-		$new_song->comment	= scrub_in($_REQUEST['comment']);
-		$new_song->genre	= scrub_in($_REQUEST['genre']);
-		$new_song->album	= scrub_in($_REQUEST['album']);
-		$new_song->artist	= scrub_in($_REQUEST['artist']);
-		/* Check the drop down vs string bs */
-		if (strlen($_REQUEST['genre_string'])) { 
-			$new_song->genre = $catalog->check_genre($_REQUEST['genre_string']);
+		$new_song->title 	= revert_string(scrub_in($_REQUEST['title']));
+		$new_song->track 	= revert_string(scrub_in($_REQUEST['track']));
+		$new_song->year  	= revert_string(scrub_in($_REQUEST['year']));
+		$new_song->comment	= revert_string(scrub_in($_REQUEST['comment']));
+
+		/* If no change in string take Drop down */
+		if (strcasecmp(stripslashes($_REQUEST['genre_string']),$song->get_genre_name()) == 0) { 
+			$genre = $song->get_genre_name($_REQUEST['genre']);
 		}
-		if (strlen($_REQUEST['album_string'])) { 
-			$new_song->album = $catalog->check_album($_REQUEST['album_string']);
+		else { 
+			$genre = scrub_in($_REQUEST['genre_string']);
 		}
-		if (strlen($_REQUEST['artist_string'])) { 
-			$new_song->artist = $catalog->check_artist($_REQUEST['artist_string']);
+		
+		if (strcasecmp(stripslashes($_REQUEST['album_string']),$song->get_album_name()) == 0) { 
+			$album = $song->get_album_name($_REQUEST['album']);
 		}
-		/* Update this mofo */
+		else { 
+			$album = scrub_in($_REQUEST['album_string']);
+		}
+		
+		if (strcasecmp(stripslashes($_REQUEST['artist_string']),$song->get_artist_name()) == 0) { 
+			$artist = $song->get_artist_name($_REQUEST['artist']);
+		}
+		else { 
+			$artist = scrub_in($_REQUEST['artist_string']);
+		}
+	
+		/* Use the check functions to get / create ids for this info */
+		$new_song->genre = $catalog->check_genre(revert_string($genre));
+		$new_song->album = $catalog->check_album(revert_string($album));
+		$new_song->artist = $catalog->check_artist(revert_string($artist));
+		
+		/* Update this mofo, store an old copy for cleaning */
+		$old_song 		= new Song();
+		$old_song->artist 	= $song->artist;
+		$old_song->album	= $song->album;
+		$old_song->genre	= $song->genre;
 		$song->update_song($song->id,$new_song);
+
+		/* Now that it's been updated clean old junk entries */
+		$catalog = new Catalog(); 
+		$catalog->clean_single_song($old_song);
 		
 		/* Add a tagging record of this so we can fix the file */
 		if ($_REQUEST['flag']) { 
@@ -75,9 +98,10 @@ switch ($action) {
 		$flag_id = scrub_in($_REQUEST['flag_id']);
 		$flag = new Flag($flag_id);
 		$flag->delete_flag(); 
+		$flag->format_name();
 		$url = return_referer(); 
 		$title = _('Flag Removed');
-		$body = _('Flag Removed from') . " " . $flag->print_name();
+		$body = _('Flag Removed from') . " " . $flag->name;
 		show_confirmation($title,$body,$url);
 	break;
 	case 'show_edit_song':

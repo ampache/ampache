@@ -21,10 +21,9 @@
 */
 ?>
 
-<p class="header1"><?php echo _('Edit Song'); ?></p>
-
+<span class="header1"><?php echo _('Edit Song'); ?></span>
 <form name="edit_song" method="post" enctype="multipart/form-data" action="<?php echo conf('web_path'); ?>/admin/flag.php">
-<table>
+<table class="text-box">
 <tr class="<?php echo flip_class(); ?>">
 	<td><?php echo _('File'); ?>:</td>
 	<td><?php echo scrub_out($song->file); ?></td>
@@ -56,7 +55,7 @@
 	<td>
 		<?php show_genre_select('genre',$song->genre); ?>
 		<br /><?php echo _('OR'); ?><br />
-		<input type="textbox" name="genre_string" value="<?php echo scrub_out($song->get_genre_name()); ?>" />
+		<input type="textbox" name="genre_string" value="<?php echo scrub_out($song->f_genre); ?>" />
 	</td>
 </tr>
 <tr class="<?php echo flip_class(); ?>">
@@ -74,7 +73,7 @@
 <tr class="<?php echo flip_class(); ?>">
 	<td><?php echo _('Comment'); ?></td>
 	<td>
-		<input type="textbox" name="comment" value="<?Php echo scrub_out($song->comment); ?>" size="45" />
+		<input type="textbox" name="comment" value="<?php echo scrub_out($song->comment); ?>" size="45" />
 	</td>
 </tr>
 <tr class="<?php echo flip_class(); ?>">

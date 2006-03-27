@@ -18,6 +18,7 @@
  along with this program; if not, write to the Free Software
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
+
 /**
  * Catalog Class
  * This class handles all actual work in regards to the catalog, it contains functions for creating/listing/updated the catalogs.
@@ -1250,6 +1251,48 @@ class Catalog {
 		$this->count = 0;
 
 	} //clean_catalog
+
+	/**
+	 * clean_single_song
+	 * This function takes the elements of a single song object
+	 * And checks to see if those specific elements are now orphaned
+	 * this is often used in flagging, and is a faster way then calling
+	 * the normal clean functions. The assumption is made that this is
+	 * an old song object whoes information has already been updated in the 
+	 * database
+	 */
+	function clean_single_song($song) { 
+
+		/* A'right let's check genre first */
+		$sql = "SELECT song.genre FROM song WHERE genre='" . $song->genre . "'";
+		$db_results = mysql_query($sql, dbh());
+
+		if (!mysql_num_rows($db_results)) { 
+			$sql = "DELETE FROM genre WHERE id='" . $song->genre . "'";
+			$db_results = mysql_query($sql, dbh());
+		}
+
+		/* Now for the artist */
+		$sql = "SELECT song.artist FROM song WHERE artist='" . $song->artist . "'";
+		$db_results = mysql_query($sql, dbh());
+
+		if (!mysql_num_rows($db_results)) { 
+			$sql = "DELETE FROM artist WHERE id='" . $song->artist . "'";
+			$db_results = mysql_query($sql, dbh());
+		}
+
+		/* Now for the album */
+		$sql = "SELECT song.album FROM song WHERE album='" . $song->album . "'";
+		$db_results = mysql_query($sql, dbh());
+
+		if (!mysql_num_rows($db_results)) { 
+			$sql = "DELETE FROM album WHERE id='" . $song->album . "'";
+			$db_results = mysql_query($sql, dbh());
+		}
+
+		return true;
+
+	} // clean_single_song
 
 	/**
 	 * clean_genres

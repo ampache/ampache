@@ -36,6 +36,10 @@ class Flag {
 	var $date;
 	var $approved=0;
 
+	/* Generated Values */
+	var $name; // Blank
+	var $title; // Blank
+
 	/**
 	 * Constructor
 	 * This takes a flagged.id and then pulls in the information for said flag entry
@@ -190,11 +194,10 @@ class Flag {
 	 } // approve
 
 	/**
-	 * print_name
-	 * This function formats and prints out a userfriendly name of the flagged
-	 * object
+	 * format_name
+	 * This function formats and sets the $this->name variable and $this->title 
 	 */
-	function print_name() { 
+	function format_name() { 
 
 		switch ($this->object_type) { 
 			case 'song':
@@ -208,7 +211,20 @@ class Flag {
 			break;
 		} // end switch on object type
 
-		echo "<span title=\"$title\">$name</span>";
+		$this->title = $title; 
+		$this->name = $name;
+
+	} // format_name()
+	
+	/**
+	 * print_name
+	 * This function formats and prints out a userfriendly name of the flagged
+	 * object
+	 */
+	function print_name() { 
+
+		$this->format_name();
+		echo "<span title=\"" . $this->title . "\">" . $this->name . "</span>";
 
 	} // print_name
 

@@ -29,8 +29,8 @@ class Song {
 	/* Variables from DB */
 	var $id;
 	var $file;
-	var $album;
-	var $artist;
+	var $album; // album.id (Int)
+	var $artist; // artist.id (Int)
 	var $title;
 	var $year;
 	var $comment;
@@ -40,7 +40,7 @@ class Song {
 	var $size;
 	var $time;
 	var $track;
-	var $genre;
+	var $genre; // genre.id (Int)
 	var $type;
 	var $mime;
 	var $played;
@@ -178,16 +178,18 @@ class Song {
 
 	} // get_album_songs
 
-	/*!
-		@function get_album_name
-		@discussion gets the name of $this->album
-	*/
-	function get_album_name() {
+	/**
+	 * get_album_name
+	 * gets the name of $this->album, allows passing of id 
+	 */
+	function get_album_name($album_id=0) {
 
-		$sql = "SELECT name,prefix FROM album WHERE id='$this->album'";
+		if (!$album_id) { $album_id = $this->album; } 
+
+		$sql = "SELECT name,prefix FROM album WHERE id='" . sql_escape($album_id) . "'";
 		$db_results = mysql_query($sql, dbh());
 
-		$results = mysql_fetch_array($db_results);
+		$results = mysql_fetch_assoc($db_results);
 
 		if ($results['prefix']) { 
 			return $results['prefix'] . " " .$results['name'];
@@ -198,16 +200,18 @@ class Song {
 
 	} // get_album_name
 
-	/*!
-		@function get_artist_name
-		@discussion gets the name of $this->artist
-	*/
-	function get_artist_name() {
+	/**
+	 * get_artist_name
+	 * gets the name of $this->artist, allows passing of id
+	 */
+	function get_artist_name($artist_id=0) {
 
-		$sql = "SELECT name,prefix FROM artist WHERE id='$this->artist'";
+		if (!$artist_id) { $artist_id = $this->artist; } 
+
+		$sql = "SELECT name,prefix FROM artist WHERE id='" . sql_escape($artist_id) . "'";
 		$db_results = mysql_query($sql, dbh());
 
-		$results = mysql_fetch_array($db_results);
+		$results = mysql_fetch_assoc($db_results);
 
 		if ($results['prefix']) {
 			return $results['prefix'] . " " . $results['name'];
@@ -218,16 +222,19 @@ class Song {
 
 	} // get_album_name
 
-	/*!
-		@function get_genre_name
-		@discussion gets the name of the genre
-	*/
-	function get_genre_name() {
+	/**
+	 * get_genre_name
+	 * gets the name of the genre, allow passing of a specified
+	 * id
+	 */
+	function get_genre_name($genre_id=0) {
 
-		$sql = "SELECT name FROM genre WHERE id='$this->genre'";
+		if (!$genre_id) { $genre_id = $this->genre; } 
+
+		$sql = "SELECT name FROM genre WHERE id='" . sql_escape($genre_id) . "'";
 		$db_results = mysql_query($sql, dbh());
 
-		$results = mysql_fetch_array($db_results);
+		$results = mysql_fetch_assoc($db_results);
 
 		return $results['name'];
 	
@@ -556,6 +563,9 @@ class Song {
 		if (!$GLOBALS['user']->has_access($level)) { return false; }
 
 		if (!$song_id) { $song_id = $this->id; }
+
+		/* Can't update to blank */
+		if (!strlen(trim($value)) && $field != 'comment') { return false; } 
 
 		$value = sql_escape($value);
 
