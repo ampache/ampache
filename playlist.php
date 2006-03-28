@@ -85,6 +85,7 @@ switch ($action) {
 		$playlist->add_songs($song_ids);
 
 		/* Show the Playlist */
+		$_REQUEST['playlist_id'] = $playlist->id;
 		show_playlist($playlist);
 	break;	
 	case 'add_dyn_song':

@@ -96,8 +96,8 @@ class Flag {
 		while ($r = mysql_fetch_assoc($db_results)) { 
 			$results[] = $r;
 		}
-
-		return $results;
+		
+		return $results['id'];
 
 	} // get_recent
 

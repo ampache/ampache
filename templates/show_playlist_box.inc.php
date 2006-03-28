@@ -39,10 +39,10 @@ $playlist_id = scrub_out($_REQUEST['playlist_id']);
 		<li><a href="<?php echo $web_path; ?>/playlist.php?action=normalize_tracks&amp;playlist_id=<?php echo $playlist_id; ?>"><?php echo _('Normalize Tracks'); ?></a></li>
 		<li><a href="<?php echo $web_path; ?>/song.php?action=play_selected&amp;playlist_id=<?php echo $playlist_id; ?>"><?php echo _('Play This Playlist'); ?></a></li>
 		<li><a href="<?php echo $web_path; ?>/playlist.php?action=show_delete_playlist&amp;playlist_id=<?php echo $playlist_id; ?>"><?php echo _('Delete This Playlist'); ?></a></li>
-		<?php } ?>
-		<li><a href="<?php echo $web_path; ?>/playlist.php?action=new"><?php echo _('Create New Playlist'); ?></a></li>
-		<li><a href="<?php echo $web_path; ?>/playlist.php"><?php echo _('View All Playlists'); ?></a></li>
+		<?php } else { ?>
 		<li><a href="<?php echo $web_path; ?>/playlist.php?action=show_import_playlist"><?php echo _('Import From File'); ?></a></li>
+		<li><a href="<?php echo $web_path; ?>/playlist.php?action=new"><?php echo _('Create New Playlist'); ?></a></li>
+		<?php } ?>	
 		</ul>
 	</td>
 </tr>

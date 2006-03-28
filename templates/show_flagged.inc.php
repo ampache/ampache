@@ -30,7 +30,7 @@ $web_path = conf('web_path');
 	<th><?php echo _('Status'); ?></th>
 	<th><?php echo _('Action'); ?></th>
 </tr>
-<?php foreach ($flagged as $flag_id) { $flag = new Flag($flag_id); ?>
+<?php foreach ($flagged as $data) { $flag = new Flag($data); ?>
 <tr class="<?php echo flip_class(); ?>">
 	<td><?php $flag->print_name(); ?></td>
 	<td><?php $flag->print_flag(); ?></td>
