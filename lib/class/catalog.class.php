@@ -555,17 +555,18 @@ class Catalog {
 	} //get_catalog_files
 
 
-	/*!
-		@function get_disabled
-		@discussion Gets an array of the disabled songs for all catalogs
-			and returns full song objects with them
-	*/
-	function get_disabled() {
-		global $conf;
+	/**
+	 * get_disabled
+	 * Gets an array of the disabled songs for all catalogs
+	 * and returns full song objects with them
+	 */
+	function get_disabled($count=0) {
 
 		$results = array();
 
-		$sql = "SELECT id FROM song WHERE enabled='0'";
+		if ($count) { $limit_clause = " LIMIT $count"; } 
+
+		$sql = "SELECT id FROM song WHERE enabled='0' $limit_clause";
 		$db_results = mysql_query($sql, dbh());
 
 		while ($r = mysql_fetch_array($db_results)) {

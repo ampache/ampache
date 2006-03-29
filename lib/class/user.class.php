@@ -531,6 +531,49 @@ class User {
 		return true;
 	} // update_password 
 
+	/**
+	 * format_user
+	 * This function sets up the extra variables we need when we are displaying a
+	 * user for an admin, these should not be normally called when creating a 
+	 * user object
+	 */
+	function format_user() { 
+
+		/* If they have a last seen date */
+		if (!$this->last_seen) { $this->f_last_seen = "Never"; }
+		else { $this->f_last_seen = date("m\/d\/Y - H:i",$this->last_seen); }
+
+		/* If they have a create date */
+        	if (!$this->create_date) { $this->f_create_date = "Unknown"; }
+		else { $this->f_create_date = date("m\/d\/Y - H:i",$user->create_date); }
+
+		/* Calculate their total Bandwidth Useage */
+		$sql = "SELECT song.size FROM object_count LEFT JOIN song ON song.id=object_count.object_id " . 
+			"WHERE object_count.userid='$this->id' AND object_count.object_type='song'";
+		$db_results = mysql_query($sql, dbh());
+
+		while ($r = mysql_fetch_assoc($db_results)) { 
+			$total = $total + $r['size'];
+		}		
+
+		$divided = 0;
+	
+		while (strlen(floor($total)) > 3) { 
+			$total = ($total / 1024);
+			$divided++;
+		}
+
+		switch ($divided) { 
+			case '1': $name = "KB"; break;
+			case '2': $name = "MB"; break;
+			case '3': $name = "GB"; break;
+			case '4': $name = "TB"; break;
+			case '5': $name = "PB"; break;
+		} // end switch
+
+		$this->f_useage = round($total,2) . $name;
+
+	} // format_user
 
 	/*!
 		@function format_favorites
@@ -788,6 +831,27 @@ class User {
 		return $val;
 
 	} // get_user_validation
+
+	/**
+ 	 * get_recent
+	 * This returns users by thier last login date
+	 */
+	function get_recent($count=0) { 
+
+		if ($count) { $limit_clause = " LIMIT $count"; } 
+	
+		$results = array();		
+
+		$sql = "SELECT username FROM user ORDER BY last_seen $limit_clause";
+		$db_results = mysql_query($sql, dbh());
+
+		while ($r = mysql_fetch_assoc($db_results)) { 
+			$results[] = $r['username'];
+		} 
+
+		return $results;
+
+	} // get_recent
 
 	/*!
 		@function activate_user

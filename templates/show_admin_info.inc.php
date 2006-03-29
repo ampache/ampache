@@ -21,10 +21,17 @@
 */
 $web_path = conf('web_path');
 
-/* Setup the needed objects */
+/* Flagged Information Gathering */
 $flag = new Flag();
-$flagged	= $flag->get_recent('10');
+$flagged	= $flag->get_recent(10);
 $total_flagged	= $flag->get_total();
+
+/* Disabled Information Gathering */
+$catalog = new Catalog(); 
+$songs = $catalog->get_disabled(10);
+
+/* User Information */
+$users = $GLOBALS['user']->get_recent(10);
 
 ?>
 <span class="header1"><?php echo _('Information'); ?></span><br />
@@ -38,9 +45,8 @@ $total_flagged	= $flag->get_total();
 <span class="header2"><?php echo _('Disabled Songs'); ?></span><br />
 <div class="text-box">	
 	<!-- Show Last 10 Disabled Songs -->&nbsp;
-</div><br />
-<span class="header2"><?php echo _('User Activity'); ?></span><br />
-<div class="text-box">
-	<!-- Show Last 10 Active Users (Bandwidth Usage guess) -->
-&nbsp;
+	<?php require (conf('prefix') . '/templates/show_disabled_songs.inc'); ?>
+	<div class="text-action">
+	<a href="<?php echo $web_path; ?>/admin/catalog.php?action=show_disabled"><?php echo _('Show All'); ?>...</a>
+	</div>
 </div>

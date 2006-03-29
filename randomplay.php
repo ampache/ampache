@@ -34,5 +34,4 @@ $action = scrub_in($_REQUEST['action']);
 show_template('show_random_play');
 show_footer(); 
 
-
 ?>

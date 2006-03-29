@@ -225,6 +225,9 @@ if (($gc_divisor / $gc_probability) > 5) {
 	ini_set('session.gc_probability',$new_gc_probability);
 }
 
+/* PHP5 Date problem solved.. ya'll GMT now! */
+putenv("TZ=GMT");
+
 /* END Set PHP Vars */
 
 /* Overwrite them with the DB preferences */

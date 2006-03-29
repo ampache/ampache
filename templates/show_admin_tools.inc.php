@@ -20,7 +20,8 @@
 
 */
 $web_path 	= conf('web_path');
-$catalogs 	= Catalog::get_catalogs();
+$catalog	= new Catalog(); 
+$catalogs 	= $catalog->get_catalogs();
 
 ?>
 <span class="header1"><?php echo _('Catalogs'); ?></span>
@@ -76,11 +77,13 @@ $catalogs 	= Catalog::get_catalogs();
 <div class="text-box">
 <div class="text-action">
 	<a href="<?php echo $web_path; ?>/admin/duplicates.php"><?php echo _('Show Duplicate Songs'); ?></a>
-	<a href="<?php echo $web_path; ?>/admin/catalog.php?action=show_disabled"><?php echo _('Show Disabled Songs'); ?></a>
 	<a href="<?php echo $web_path; ?>/admin/catalog.php?action=clear_now_playing"><?php echo _('Clear Now Playing'); ?></a>
 </div>
 </div><br />
-<span class="header1"><?php echo _('Manage Users'); ?></span>
+<span class="header2"><?php echo _('User Activity'); ?></span><br />
 <div class="text-box">
-&nbsp;
+        <?php require (conf('prefix') . '/templates/show_users_info.inc.php'); ?>
+        <div class="text-action">
+        <a href="<?php echo $web_path; ?>/admin/users.php"><?php echo _('Show All'); ?>...</a>
+        </div>
 </div>

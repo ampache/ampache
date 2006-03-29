@@ -90,14 +90,16 @@ class Flag {
 
 		if ($count) { $limit = " LIMIT " . intval($count);  } 
 
+		$results = array();
+
 		$sql = "SELECT id FROM flagged ORDER BY date " . $limit;
 		$db_results = mysql_query($sql, dbh());
 
 		while ($r = mysql_fetch_assoc($db_results)) { 
-			$results[] = $r;
+			$results[] = $r['id'];
 		}
 		
-		return $results['id'];
+		return $results;
 
 	} // get_recent
 
