@@ -135,7 +135,10 @@ switch ($_REQUEST['action']) {
 	break;
 	case 'remove_disabled':
 	        if (conf('demo_mode')) { break; }
+
 		$song = $_REQUEST['song'];
+
+		echo "<div class=\"confirmation-box\">";
 		if (count($song)) { 
 			$catalog->remove_songs($song);
 			echo "<p align=\"center\">Songs Removed... </p>";
@@ -143,7 +146,12 @@ switch ($_REQUEST['action']) {
 		else {
 			echo "<p align=\"center\">No Songs Removed... </p>";
 		}
-		include(conf('prefix') . '/templates/catalog.inc');
+		echo "</div><br />\n";
+		$url	= conf('web_path') . '/admin/index.php';
+		$title	= _('Disabled Songs Processed');
+		$body	= '';
+		show_confirmation($title,$body,$url);
+		# include(conf('prefix') . '/templates/catalog.inc');
 	break;
 	case 'clean_all_catalogs':
 		$_REQUEST['catalogs'] = Catalog::get_catalog_ids();
