@@ -123,7 +123,7 @@ class Song {
 
 		preg_match('/\.([A-Za-z0-9]+)$/', $this->file,$results);
 
-		$this->type = strtolower(results[1]);
+		$this->type = strtolower($results['1']);
 
 		switch ($this->type) { 
 			case "spx":
