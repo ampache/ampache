@@ -151,7 +151,6 @@ switch ($_REQUEST['action']) {
 		$title	= _('Disabled Songs Processed');
 		$body	= '';
 		show_confirmation($title,$body,$url);
-		# include(conf('prefix') . '/templates/catalog.inc');
 	break;
 	case 'clean_all_catalogs':
 		$_REQUEST['catalogs'] = Catalog::get_catalog_ids();
