@@ -3,6 +3,10 @@
 --------------------------------------------------------------------------
 
 --------------------------------------------------------------------------
+  v.3.3.2-Beta3
+  	- Fixed mime detection, wasn't strtolowering the value
+
+--------------------------------------------------------------------------
   v.3.3.2-Beta2 
   	- Fixed some Charset problems with htmlentities (Thx Nikk)
 	- Fixed some issues with IE and session caching (Thx wishbone)
