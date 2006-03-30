@@ -29,8 +29,10 @@ function load_gettext() {
 	if (function_exists('bindtextdomain')) { 
 		bindtextdomain('messages', conf('prefix') . "/locale/");
 		textdomain('messages');
-		putenv("LANG=" . conf('lang'));
-		setlocale(LC_ALL, conf('lang'));
+		$lang = conf('lang');
+		putenv("LANG=" . $lang);
+		/* Try lang, lang + charset and lang + utf-8 */
+		setlocale(LC_ALL, $lang,$lang . '_'. conf('site_charset'),$lang . '_UTF-8');
 	}
 
 } // load_gettext

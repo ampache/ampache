@@ -30,9 +30,6 @@ $total_flagged	= $flag->get_total();
 $catalog = new Catalog(); 
 $songs = $catalog->get_disabled(10);
 
-/* User Information */
-$users = $GLOBALS['user']->get_recent(10);
-
 ?>
 <span class="header1"><?php echo _('Information'); ?></span><br />
 <div class="text-box"> 

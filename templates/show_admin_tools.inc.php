@@ -22,6 +22,7 @@
 $web_path 	= conf('web_path');
 $catalog	= new Catalog(); 
 $catalogs 	= $catalog->get_catalogs();
+$users		= $GLOBALS['user']->get_recent(10);
 
 ?>
 <span class="header1"><?php echo _('Catalogs'); ?></span>
