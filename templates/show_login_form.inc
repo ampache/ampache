@@ -18,15 +18,6 @@
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
-
-$subject = "/ampache\.com/";
-$referrer = $_SERVER['HTTP_REFERER'];
-
-
-if (preg_match($subject,$_SERVER['HTTP_HOST'])) { 
-	$show_copyright = 1;
-}
-
 ?>
 <br /><br />
 <p align="center">
@@ -70,12 +61,3 @@ if (conf('allow_public_registration')) { ?>
 		[<a class="header2" href="<?php echo conf('web_path'); ?>/register.php"><?php echo _("Register"); ?></a>]
 	</p>
 <?php } // end if (conf('allow_public_registration'))
-if ($show_copyright == 1) { ?>
-	<p align="center">
-		<font color="red" size="+2">
-			<a href="http://www.ampache.org/donations.php">Ampache.org</a><br />
-			Ampache.com Domain Squatter<br />
-			All Rights Reserved, Copyright &copy; 2006<br />
-		</font>
-	</p>
-<?php } // end if ($show_copyright == 1) ?>
