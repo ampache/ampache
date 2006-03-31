@@ -32,7 +32,7 @@ function load_gettext() {
 		$lang = conf('lang');
 		putenv("LANG=" . $lang);
 		/* Try lang, lang + charset and lang + utf-8 */
-		setlocale(LC_ALL, $lang,$lang . '_'. conf('site_charset'),$lang . '_UTF-8');
+		setlocale(LC_ALL, $lang,$lang . '.'. conf('site_charset'),$lang . '.UTF-8',$lang . '.' . conf('lc_charset'));
 	}
 
 } // load_gettext

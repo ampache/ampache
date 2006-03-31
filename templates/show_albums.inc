@@ -57,8 +57,8 @@ foreach ($albums as $album) {
 			<td><?php echo $album->songs; ?></td>
 			<td><?php echo $album->year; ?></td>
 			<td nowrap="nowrap"> <?php echo _("Play"); ?> : 
-			<a href="<?php echo $web_path; ?>/song.php?action=m3u&amp;album=<?php echo $album->id; ?>"><?php echo _("All"); ?></a> | 
-			<a href="<?php echo $web_path; ?>/song.php?action=m3u&amp;album_random=<?php echo $album->id; ?>"><?php echo _("Random"); ?></a> 
+			<a href="<?php echo $web_path; ?>/song.php?action=album&amp;album_id=<?php echo $album->id; ?>"><?php echo _("All"); ?></a> | 
+			<a href="<?php echo $web_path; ?>/song.php?action=album_random&amp;album_id=<?php echo $album->id; ?>"><?php echo _("Random"); ?></a> 
 			<?php if (batch_ok()) { ?>
 				| <a href="<?php echo $web_path; ?>/batch.php?action=alb&amp;id=<?php echo $album->id; ?>"><?php echo _("Download"); ?></a>
 			<?php } ?>

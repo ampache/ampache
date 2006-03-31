@@ -26,8 +26,8 @@ $web_path = conf('web_path');
 		<br /><?php if (conf('ratings')) { show_rating($artist->id, 'artist'); } // end if ratings ?>
 		<ul class="text-action">
 			<li><a href="<?php echo $web_path; ?>/artists.php?action=show_all_songs&amp;artist=<?php echo $artist_id; ?>"><?php echo _("Show All Songs By") . " " . $artist->full_name; ?></a></li>
-			<li><a href="<?php echo $web_path; ?>/song.php?action=m3u&amp;artist=<?php echo $artist_id; ?>"><?php echo _("Play All Songs By") . " " . $artist->full_name; ?></a></li>
-			<li><a href="<?php echo $web_path; ?>/song.php?action=m3u&amp;artist_random=<?php echo $artist_id; ?>"><?php echo _("Play Random Songs By") . " " . $artist->full_name; ?></a></li>
+			<li><a href="<?php echo $web_path; ?>/song.php?action=artist&amp;artist_id=<?php echo $artist_id; ?>"><?php echo _("Play All Songs By") . " " . $artist->full_name; ?></a></li>
+			<li><a href="<?php echo $web_path; ?>/song.php?action=artist_random&amp;artist_id=<?php echo $artist_id; ?>"><?php echo _("Play Random Songs By") . " " . $artist->full_name; ?></a></li>
 			<?php  if ($GLOBALS['user']->has_access('100')) { ?>
 				<li><a href="<?php echo $web_path; ?>/artists.php?action=update_from_tags&amp;artist=<?php echo $artist_id; ?>"><?php echo _("Update from tags"); ?></a></li>
 				<li><a href="<?php echo $web_path; ?>/artists.php?action=show_rename&amp;artist=<?php echo $artist_id; ?>"><?php echo _("Rename Artist"); ?></a></li>

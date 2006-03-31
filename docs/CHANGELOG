@@ -4,7 +4,12 @@
 
 --------------------------------------------------------------------------
   v.3.3.2-Beta3
+  	- Added Download to Random play along with Size limitation
+		usefull for downloading a set amount of music for your
+		mp3 player.
   	- Fixed mime detection, wasn't strtolowering the value
+	- Fixed a few more Charset issues specificaly with Russian 
+		(Thx Nikk)
 
 --------------------------------------------------------------------------
   v.3.3.2-Beta2 

@@ -132,11 +132,6 @@ function get_flagged_songs($user = 0)
     return $arr;
 }
 
-function show_flagged_songs($flags)
-{
-   require_once(conf('prefix').'/templates/list_flagged.inc'); 
-}
-
 function accept_new_tags($flags)
 {
     if(!is_array($flags)) $flags = array($flags);

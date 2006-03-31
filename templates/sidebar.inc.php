@@ -146,8 +146,7 @@ $web_path = conf('web_path');
 	</li>
 <?php if ($GLOBALS['theme']['orientation'] != 'horizontal') { ?> 
 	<li>
-		<form name="sub_random" method="post" enctype="multipart/form-data" action="<?php echo $web_path; ?>/song.php" style="Display:inline">
-		<input type="hidden" name="action" value="m3u" />
+		<form name="sub_random" method="post" enctype="multipart/form-data" action="<?php echo $web_path; ?>/song.php?action=random&amp;method=stream" style="Display:inline">
 		<select name="random" style="width:9em;">
 			<option value="1">1</option>
 			<option value="5" selected="selected">5</option>
@@ -172,8 +171,7 @@ $web_path = conf('web_path');
 		<br /> 
 		<?php show_catalog_pulldown('catalog','width:9em;'); ?>
 		<br />
-		<input type="hidden" name="aaction" value="Play!" />
-		<input class="smallbutton" type="submit" name="aaction" value="<?php echo _("Enqueue"); ?>" />
+		<input class="smallbutton" type="submit" value="<?php echo _('Enqueue'); ?>" />
 		</form>
 	</li>
 <?php } // end if ($GLOBALS['theme']['orientation'] != 'horizontal') ?> 

@@ -490,8 +490,9 @@ function set_memory_limit($new_limit) {
 function get_random_songs( $options, $matchlist) {
 
         $dbh = dbh();
+	
         /* Define the options */
-        $limit          = $options['limit'];
+        $limit          = intval($options['limit']);
 
         /* If they've passed -1 as limit then don't get everything */
         if ($options['limit'] == "-1") { unset($options['limit']); }
@@ -524,7 +525,7 @@ function get_random_songs( $options, $matchlist) {
                         $albums_where .= " OR song.album=" . $data[0];
                 }
                 $albums_where = ltrim($albums_where," OR");
-                $query = "SELECT song.id FROM song WHERE $albums_where ORDER BY song.track ASC";
+                $query = "SELECT song.id,song.size FROM song WHERE $albums_where ORDER BY song.track ASC";
         }
         elseif ($options['random_type'] == 'full_artist') {
                 $query = "SELECT artist.id FROM song,artist WHERE song.artist=artist.id AND $where GROUP BY song.artist ORDER BY RAND() " . $options['limit'];
@@ -533,17 +534,17 @@ function get_random_songs( $options, $matchlist) {
                         $artists_where .= " OR song.artist=" . $data[0];
                 }
                 $artists_where = ltrim($artists_where," OR");
-                $query = "SELECT song.id FROM song WHERE $artists_where ORDER BY RAND()";
+                $query = "SELECT song.id,song.size FROM song WHERE $artists_where ORDER BY RAND()";
         }
         elseif ($options['random_type'] == 'unplayed') {
-                $uid = $_SESSION['userdata']['username'];
-                $query = "SELECT song.id FROM song LEFT JOIN object_count ON song.id = object_count.object_id " .
+                $uid = $GLOBALS['user']->id;
+                $query = "SELECT song.id,song.size FROM song LEFT JOIN object_count ON song.id = object_count.object_id " .
                          "WHERE ($where) AND ((object_count.object_type='song' AND userid = '$uid') OR object_count.count IS NULL ) " .
                          "ORDER BY CASE WHEN object_count.count IS NULL THEN RAND() WHEN object_count.count > 4 THEN RAND()*RAND()*object_count.count " .
                          "ELSE RAND()*object_count.count END " . $options['limit'];
         } // If unplayed
         else {
-                $query = "SELECT id FROM song WHERE $where ORDER BY RAND() " . $options['limit'];
+                $query = "SELECT id,size FROM song WHERE $where ORDER BY RAND() " . $options['limit'];
         }
         
 	$db_result = mysql_query($query, $dbh);
@@ -551,10 +552,29 @@ function get_random_songs( $options, $matchlist) {
         $songs = array();
 
         while ( $r = mysql_fetch_array($db_result) ) {
-                $songs[] = $r[0];
-        }
+		/* If they've specified a filesize limit */
+		if ($options['size_limit']) { 
+			/* Turn it into MB */
+			$new_size = ($r['1'] / 1024) / 1024;
 
-        return ($songs);
+			/* If we would go over the allowed size skip to the next song */
+			if (($total + $new_size) > $options['size_limit']) { continue; }
+			
+			$total = $total + $new_size;
+			$songs[] = $r[0]; 
+
+			/* If we are within 4mb then that's good enough for Vollmer work */
+			if (($options['size_limit'] - floor($total)) < 4) { return $songs; }
+
+		} // end if we are defining a size limit
+
+		/* If we aren't using a limit */
+		else { 
+	                $songs[] = $r[0];
+		}
+        } // while we fetch results
+
+        return $songs;
 
 } // get_random_songs
 
@@ -690,10 +710,10 @@ function show_info_box ($title, $type, $items) {
 
 
         if ($type == 'your_song') {
-                echo "<td>$title - <a href=\"$web_path/song.php?action=m3u&amp;your_popular_songs=$popular_threshold\">Play</a></td>\n";
+                echo "<td>$title - <a href=\"$web_path/song.php?action=your_popular_songs&amp;limit=$popular_threshold\">" . _('Play') . "</a></td>\n";
         }
         elseif ($type == 'song') {
-                echo "<td>$title - <a href=\"$web_path/song.php?action=m3u&amp;popular_songs=$popular_threshold\">Play</a></td>\n";
+                echo "<td>$title - <a href=\"$web_path/song.php?action=popular_songs&amp;limit=$popular_threshold\">" . _('Play') . "</a></td>\n";
         }
         else {
                 echo "<td>$title</td>\n";
