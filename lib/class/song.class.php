@@ -601,7 +601,7 @@ class Song {
 		$this->f_title = truncate_with_ellipse($this->title,conf('ellipse_threshold_title'));
 
 		// Create A link inclduing the title
-		$this->f_link = "<a href=\"" . conf('web_path') . "/song.php?action=m3u&amp;song=" . $this->id . "\">$this->f_title</a>";
+		$this->f_link = "<a href=\"" . conf('web_path') . "/song.php?action=single_song&amp;song_id=" . $this->id . "\">$this->f_title</a>";
 
 		// Format the Bitrate
 		$this->f_bitrate = intval($this->bitrate/1000) . "-" . strtoupper($this->mode);

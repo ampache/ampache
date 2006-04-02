@@ -57,7 +57,7 @@ foreach ($results as $item) {
 			</td>
 			<td width="30%">
 				<div id="np_song_<?php echo $c; ?>">
-				<a title="<?php echo scrub_out($song->f_title); ?>" href="<?php echo $web_path; ?>/song.php?action=m3u&amp;song=<?php echo $song->id; ?>">
+				<a title="<?php echo scrub_out($song->f_title); ?>" href="<?php echo $web_path; ?>/song.php?action=single_song&amp;song_id=<?php echo $song->id; ?>">
 				<?php echo $song->f_title; ?>
 				</a>
 				</div>

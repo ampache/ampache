@@ -33,19 +33,19 @@ if (is_object($playlist) && ($GLOBALS['user']->username == $playlist->user || $G
 <tr class="table-header">
 	<th>&nbsp;&nbsp;<a href="#" onclick="check_songs(); return false;">Select</a></th>
 	<?php if ($playlist_owner) { ?> 
-		<th><?php echo _("Track"); ?></th> 
+		<th><?php echo _('Track'); ?></th> 
 	<?php } ?>
-	<th><?php echo _("Song title"); ?></th>
-	<th><?php echo _("Artist"); ?></th>
-	<th><?php echo _("Album"); ?></th>
-	<th><?php echo _("Track"); ?></th>
-	<th><?php echo _("Time"); ?></th>
-	<th><?php echo _("Size"); ?></th>
-	<th><?php echo _("Bitrate"); ?></th>
-	<th><?php echo _("Genre"); ?></th>
-	<th><?php echo _("Action"); ?></th>
+	<th><?php echo _('Song title'); ?></th>
+	<th><?php echo _('Artist'); ?></th>
+	<th><?php echo _('Album'); ?></th>
+	<th><?php echo _('Track'); ?></th>
+	<th><?php echo _('Time'); ?></th>
+	<th><?php echo _('Size'); ?></th>
+	<th><?php echo _('Bitrate'); ?></th>
+	<th><?php echo _('Genre'); ?></th>
+	<th><?php echo _('Action'); ?></th>
 	<?php if (conf('ratings') || conf('ratings')=="false") { ?>
-		<th width="90"><?php echo _("Rating"); ?></th>
+		<th width="90"><?php echo _('Rating'); ?></th>
 	<?php } ?>            
 </tr>
 <?php
@@ -94,13 +94,13 @@ foreach ($song_ids as $song_id) {
 		} ?>
 	<td>
 		<?php if ($song->has_flag()) { echo "<strong>**</strong>"; } ?>
-		<a href="<?php echo $web_path; ?>/song.php?action=m3u&amp;song=<?php echo $song->id; ?>" title="<?php echo scrub_out($song->title); ?>" <?php echo $text_class; ?>><?php echo scrub_out($song->f_title); ?></a>
+		<a href="<?php echo $web_path; ?>/song.php?action=single_song&amp;song_id=<?php echo $song->id; ?>" title="<?php echo scrub_out($song->title); ?>" <?php echo $text_class; ?>><?php echo scrub_out($song->f_title); ?></a>
 	</td>
 	<td>
-		<a href="<?php echo $web_path; ?>/artists.php?action=show&amp;artist=<?php echo htmlspecialchars($song->artist); ?>" title="<?php echo htmlspecialchars($song->f_artist_full); ?>" <?php echo $text_class; ?>><?php echo htmlspecialchars($song->f_artist); ?></a>
+		<a href="<?php echo $web_path; ?>/artists.php?action=show&amp;artist=<?php echo scrub_out($song->artist); ?>" title="<?php echo scrub_out($song->f_artist_full); ?>" <?php echo $text_class; ?>><?php echo scrub_out($song->f_artist); ?></a>
 	</td>
 	<td>
-		<a href="<?php echo $web_path; ?>/albums.php?album=<?php echo htmlspecialchars($song->album); ?>" title="<?php echo htmlspecialchars($song->f_album_full); ?>" <?php echo $text_class; ?>><?php echo htmlspecialchars($song->f_album); ?></a>
+		<a href="<?php echo $web_path; ?>/albums.php?album=<?php echo scrub_out($song->album); ?>" title="<?php echo scrub_out($song->f_album_full); ?>" <?php echo $text_class; ?>><?php echo scrub_out($song->f_album); ?></a>
 	</td>
 	<td align="right">
 		<?php echo $song->track; ?>

@@ -62,7 +62,7 @@ foreach ($albums as $album) {
 		<td><?php echo $album->year; ?></td>
 		<td><?php echo $count; ?></td>
 		<td>
-		<a href="<?php echo $web_path; ?>/song.php?action=m3u&amp;album=<?php echo $id; ?>"><?php echo _("Play"); ?></a>
+		<a href="<?php echo $web_path; ?>/song.php?action=album&amp;album_id=<?php echo $id; ?>"><?php echo _('Play'); ?></a>
 		<?php if (batch_ok()) { ?>
 			| <a href="<?php echo $web_path; ?>/batch.php?action=alb&amp;id=<?php echo $album->id; ?>"><?php echo _("Download"); ?></a>
 		<?php } ?> 

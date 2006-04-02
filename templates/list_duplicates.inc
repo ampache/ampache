@@ -50,7 +50,7 @@ if ($flags) { ?>
 		foreach ($dinfolist as $dinfo) {
 			echo "<tr class=\"".flip_class()."\">".
 			"<td><input type=\"checkbox\" name=\"song_ids[]\" value=\"" . $dinfo['songid'] . "\" /></td>".
-			"<td><a href=\"".$web_path."/song.php?action=m3u&amp;song=$song->id\">".scrub_out($formated_title)."</a> </td>".
+			"<td><a href=\"".$web_path."/song.php?action=single_song&amp;song_id=$song->id\">".scrub_out($formated_title)."</a> </td>".
 			"<td><a href=\"".$web_path."/artists.php?action=show&amp;artist=".$dinfo['artistid']."\" title=\"".scrub_out($dinfo['artist'])."\">".scrub_out($dinfo['artist'])."</a> </td>".
 			"<td><a href=\"".$web_path."/albums.php?action=show&amp;album=".$dinfo['albumid']."\" title=\"".scrub_out($dinfo['album'])."\">".scrub_out($dinfo['album'])."</a> </td>".
 			"<td>".floor($dinfo['time']/60).":".sprintf("%02d", ($dinfo['time']%60) )."</td>".

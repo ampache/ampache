@@ -625,7 +625,7 @@ function get_global_popular($type) {
                         $artist = $song->get_artist_name();
                         $text = "$artist - $song->title";
                         /* Add to array */
-                        $items[] = "<li> <a href=\"$web_path/song.php?action=m3u&amp;song=$song->id\" title=\"". htmlspecialchars($text) ."\">" .
+                        $items[] = "<li> <a href=\"$web_path/song.php?action=single_song&amp;song_id=$song->id\" title=\"". htmlspecialchars($text) ."\">" .
 	                                   htmlspecialchars(truncate_with_ellipse($text, conf('ellipse_threshold_title')+3)) . "&nbsp;($r->count)</a> </li>";
                 } // if it's a song
                 

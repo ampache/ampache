@@ -61,6 +61,9 @@ switch ($action) {
 			$song_ids = $_POST['song'];
 		}
 	break;
+	case 'single_song':
+		$song_ids[] = scrub_in($_REQUEST['song_id']);
+	break;
 	case 'your_popular_songs':
 		$song_ids = get_popular_songs($_REQUEST['limit'], 'your', $GLOBALS['user']->id);
 	break;
