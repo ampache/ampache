@@ -65,6 +65,28 @@ class Localplay {
 
 
 	/**
+	 * _load_player
+	 * This function attempts to load the player class that localplay
+	 * Will interface with in order to make all this magical stuf work
+	 * all LocalPlay modules should be located in /modules/<name>/<name>.class.php
+	 */
+	function _load_player() { 
+
+		$filename = conf('prefix') . '/modules/localplay/' . $this->type . '.controller.php';
+		$include = require_once ($filename);
+		
+		if (!$include) { 
+			/* Throw Error Here */
+
+		} // include
+		else { 
+			$class_name = $this->type;
+			$this->_player = new $class_name();
+		}
+		
+	} // _load_player
+
+	/**
 	 * has_function
 	 * This is used to check the function map and see if the current
 	 * player type supports the indicated function. 

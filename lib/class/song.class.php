@@ -697,7 +697,34 @@ class Song {
 		return stripslashes($matches[1]);
 
 	} // get_info_from_filename
-	
+
+	/**
+	 * get_url
+	 * This function takes all the song information and correctly formats
+	 * a stream URL taking into account the downsampling mojo and everything
+	 * else, this is used or will be used by _EVERYTHING_ 
+	 */
+	function get_url() { 
+
+		/* Define Variables we are going to need */
+		$username 	= $GLOBALS['user']->username;
+		$song_id	= $this->id;
+		$session	= session_id();
+		$type		= $this->type;
+
+		if ($GLOBALS['user']->prefs['play_type'] == 'downsample') { 
+			$ds_string = "&ds=" . $GLOBALS['user']->prefs['sample_rate'];
+		}
+
+		/* Account for retarded players */
+		if ($song->type == 'flac') { $type = 'ogg'; } 
+		
+		$url = conf('web_path') . "/play/index.php?song=$song_id&uid=$username&sid=$session$ds_string&name=$type";
+
+		return $url;
+
+	} // get_url
+
 	/*!
 		@function native_stream
 		@discussion returns true if the $song->type streams ok, false if it must be transcoded to stream
