@@ -43,19 +43,29 @@ class AmpacheMpd {
 		/* Do a Require Once On the needed Libraries */
 		require_once(conf('prefix') . '/modules/mpd/mpd.class.php');
 
-		$map = array(); 
-
-		$map['add'] 		= 'add_songs';
-		$map['delete']		= 'delete_songs';
-		$map['play']		= 'play';
-		$map['stop']		= 'stop';
-		$map['get']		= 'get_songs';
-		$map['connect']		= 'connect';
-
-		return $map;
-
 	} // AmpacheMpd
 
+
+	/**
+	 * function_map
+	 * This function returns a named array of the functions
+	 * that this player supports and their names in this local
+	 * class. This is a REQUIRED function
+	 */
+	function function_map() { 
+
+                $map = array();
+
+                $map['add']             = 'add_songs';
+                $map['delete']          = 'delete_songs';
+                $map['play']            = 'play';
+                $map['stop']            = 'stop';
+                $map['get']             = 'get_songs';
+                $map['connect']         = 'connect';
+
+                return $map;
+
+	} // function_map
 
 	/**
 	 * preference
