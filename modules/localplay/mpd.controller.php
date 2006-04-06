@@ -211,7 +211,7 @@ class AmpacheMpd {
 	 */
 	function connect() { 
 
-		$this->_mpd = new mpd(conf('localplay_mpd_hostnmae'),conf('localplay_mpd_port'));
+		$this->_mpd = new mpd(conf('localplay_mpd_hostname'),conf('localplay_mpd_port'));
 
 		if ($this->_mpd->connected) { return true; } 
 

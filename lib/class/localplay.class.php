@@ -47,6 +47,9 @@ class Localplay {
 
 		$this->_get_info();
 
+		/* Test for a connection */
+		$this->connect(); 
+
 
 	} // Localplay
 
@@ -82,8 +85,10 @@ class Localplay {
 
 		} // include
 		else { 
-			$class_name = $this->type;
+			$class_name = "Ampache" . $this->type;
 			$this->_player = new $class_name();
+			$function_map = $this->_player->function_map();
+			$this->_map_functions($function_map);
 		}
 		
 	} // _load_player
@@ -95,8 +100,12 @@ class Localplay {
 	 */
 	function has_function($function_name) { 
 
+		/* Check the function map, if it's got a value it must 
+		 * be possible 
+		 */
+		if (strlen($this->_function_map) > 0) { return true; } 
 
-
+		return false;
 
 	} // has_function
 
@@ -117,6 +126,7 @@ class Localplay {
 		$this->_function_map['delete']	= $data['delete'];
 		$this->_function_map['play']	= $data['play'];
 		$this->_function_map['stop']	= $data['stop'];
+		$this->_function_map['connect'] = $data['connect'];
 
 		/* Recommended Functions */
 		$this->_function_map['next']		= $data['next'];
@@ -130,6 +140,61 @@ class Localplay {
 		$this->_function_map['volume_down']	= $data['volume_down'];
 
 	} // _map_functions
+
+	/**
+	 * connect
+	 * This function attempts to connect to the localplay 
+	 * player that we are using
+	 */
+	function connect() { 
+
+		
+		$function = $this->_function_map['connect'];
+		
+		if (!$this->_player->$function()) { 
+			debug_event('localplay','Error Unable to connect, check ' . $this->type . ' controller','1');
+			return false;
+		}
+
+		return true;
+	
+	} // connect
+
+	/**
+	 * play
+	 * This function passes NULL and calls the play function of the player
+	 * object
+	 */
+	function play() { 
+	
+		$function = $this->_function_map['play'];
+
+		if (!$this->_player->$function()) { 
+			debug_event('localplay','Error Unable to start playback, check ' . $this->type . ' controller','1');
+			return false;
+		}
+		
+		return true;
+
+	} // play
+
+	/**
+	 * stop
+	 * This functions passes NULl and calls the stop function of the player
+	 * object, it should recieve a true/false boolean value
+	 */
+	function stop() { 
+
+		$function = $this->_function_map['stop'];
+
+		if (!$this->_player->$function()) { 
+			debug_event('localplay','Error Unable to stop playback, check ' . $this->type . ' controller','1');
+			return false;
+		}
+
+		return true;
+
+	} // stop
 
 	/**
 	 * add

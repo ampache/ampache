@@ -19,6 +19,9 @@
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
+
+$web_path = conf('web_path');
+
 ?>
 <form method="post" action="<?php echo $web_path; ?>/playlist.php" enctype="multipart/form-data">
 <table class="text-box">

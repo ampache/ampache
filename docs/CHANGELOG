@@ -4,6 +4,9 @@
 
 --------------------------------------------------------------------------
   v.3.3.2-Beta3
+  	- Fixed a missing web_path reference on playlist edit page
+	- Added Localplay API, check the wiki for more information
+		https://ampache.bountysource.com/wiki/Localplay
   	- Added Download to Random play along with Size limitation
 		usefull for downloading a set amount of music for your
 		mp3 player.
