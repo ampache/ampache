@@ -31,7 +31,7 @@ class AmpacheMpd {
 	
 
 	/* Constructed variables */
-	$_mpd;
+	var $_mpd;
 
 	/**
 	 * Constructor
@@ -88,7 +88,7 @@ class AmpacheMpd {
 		foreach ($songs as $song_id) { 
 			$song = new Song($song_id);
 			$url = $song->get_url();
-			if (is_null($this->_mpd->PlAdd($url)) { 
+			if (is_null($this->_mpd->PlAdd($url))) { 
 				debug_event('mpd_add','Error: Unable to add $url to MPD ' . $this->_mpd->errStr,'1');
 			}
 
@@ -117,7 +117,7 @@ class AmpacheMpd {
 		 */
 		foreach ($songs as $uid) { 
 
-			if (is_null($this->_mpd->PLRemove($uid)) { $return = false; } 
+			if (is_null($this->_mpd->PLRemove($uid))) { $return = false; } 
 
 		} // foreach of songs
 
@@ -133,7 +133,7 @@ class AmpacheMpd {
 	 */
 	function play() { 
 
-		if (is_null($this->_mpd->Play()) { return false; } 
+		if (is_null($this->_mpd->Play())) { return false; } 
 
 		return true;
 
@@ -146,7 +146,7 @@ class AmpacheMpd {
 	 */
 	function stop() { 
 
-		if (is_null($this->_mpd->Stop()) { return false; } 
+		if (is_null($this->_mpd->Stop())) { return false; } 
 
 		return true;
 

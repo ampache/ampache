@@ -178,6 +178,7 @@ if (conf('ratings')) {
 }
 
 // Classes
+require_once(conf('prefix') . '/lib/class/localplay.class.php');
 require_once(conf('prefix') . '/lib/class/catalog.class.php');
 require_once(conf('prefix') . '/lib/class/stream.class.php');
 require_once(conf('prefix') . '/lib/class/playlist.class.php');

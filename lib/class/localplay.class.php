@@ -43,7 +43,9 @@ class Localplay {
 	function Localplay($type) { 
 
 
+		$this->type = $type;
 
+		$this->_get_info();
 
 
 	} // Localplay
@@ -58,7 +60,7 @@ class Localplay {
 	 */
 	function _get_info() { 
 
-
+		$this->_load_player();
 
 
 	} // _get_info
