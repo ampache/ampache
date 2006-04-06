@@ -125,9 +125,7 @@ elseif ($_REQUEST['action'] === 'select_art') {
 	$album = new Album($album_id);
 	$album->insert_art($image_data,$mime);
 
-	$msg = "<br />\n<img src=\"" . conf('web_path') . "/albumart.php?id=$album_id\" width=\"175\" height=\"175\" /><br />";
-
-	show_confirmation(_("Album Art Inserted"),$msg,"/albums.php?action=show&album=$album_id");
+	show_confirmation(_("Album Art Inserted"),"","/albums.php?action=show&album=$album_id");
 
 
 } // end select art
