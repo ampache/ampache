@@ -40,10 +40,10 @@ if ($GLOBALS['user']->has_access(100) AND conf('use_auth')) {
 	<th colspan="3" class="header2" align="left"><?php echo $preferences['title']; ?></th>
 </tr>
 <tr class="table-header">
-	<th><?php echo _("Preference"); ?></th>
-	<th><?php echo _("Value"); ?></th>
+	<th><?php echo _('Preference'); ?></th>
+	<th><?php echo _('Value'); ?></th>
 	<?php if ($show_apply_to_all) { ?>
-		<th><?php echo _("Apply to All"); ?></th>
+		<th><?php echo _('Apply to All'); ?></th>
 	<?php } ?>
 </tr>
 <?php 

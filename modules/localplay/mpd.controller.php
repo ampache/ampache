@@ -56,12 +56,19 @@ class AmpacheMpd {
 
                 $map = array();
 
+		/* Required Functions */
                 $map['add']             = 'add_songs';
                 $map['delete']          = 'delete_songs';
                 $map['play']            = 'play';
                 $map['stop']            = 'stop';
                 $map['get']             = 'get_songs';
+		$map['status']		= 'get_status';
                 $map['connect']         = 'connect';
+		
+		/* Optional Functions */
+		$map['next']		= 'next';
+		$map['prev']		= 'prev';
+		$map['pause']		= 'pause';
 
                 return $map;
 
@@ -79,9 +86,9 @@ class AmpacheMpd {
 
 		$preferences = array(); 
 
-		$preferences[] = array('name'=>'hostname','default'=>'localhost','type'=>'string');
-		$preferences[] = array('name'=>'port','default'=>'6600','type'=>'integer');
-		$preferences[] = array('name'=>'password','default'=>'','type'=>'string');
+		$preferences[] = array('name'=>'hostname','default'=>'localhost','type'=>'string','description'=>'MPD Hostname');
+		$preferences[] = array('name'=>'port','default'=>'6600','type'=>'integer','description'=>'MPD Port');
+		$preferences[] = array('name'=>'password','default'=>'','type'=>'string','description'=>'MPD Password');
 
 		return $preferences;
 
@@ -164,6 +171,42 @@ class AmpacheMpd {
 
 
 	/**
+	 * next
+	 * This just tells MPD to skip to the next song 
+	 */
+	function next() { 
+
+		if (is_null($this->_mpd->Next())) { return false; } 
+
+		return true;
+
+	} // next
+
+	/**
+	 * prev
+	 * This just tells MPD to skip to the prev song
+	 */
+	function prev() { 
+
+		if (is_null($this->_mpd->Previous())) { return false; } 
+	
+		return true;
+	
+	} // prev
+
+	/**
+	 * pause
+	 * This tells MPD to pause the current song 
+	 */
+	function pause() { 
+		
+		if (is_null($this->_mpd->Pause())) { return false; } 
+
+		return true;
+
+	} // pause 
+
+	/**
 	 * get_songs
 	 * This functions returns an array containing information about
 	 * The songs that MPD currently has in it's playlist. This must be
@@ -174,8 +217,7 @@ class AmpacheMpd {
 		/* Get the Current Playlist */
 		$playlist = $this->_mpd->playlist;
 
-		foreach ($playlist as $key=>$entry) { 
-		
+		foreach ($playlist as $entry) { 
 			$data = array();
 
 			/* Required Elements */
@@ -189,6 +231,8 @@ class AmpacheMpd {
 
 		} // foreach playlist items
 
+		return $results;
+
 	} // get_songs
 
 	/**
@@ -198,8 +242,13 @@ class AmpacheMpd {
 	 */
 	function get_status() { 
 
+		/* Construct the Array */
+		$array['state'] 	= $this->_mpd->state;
+		$array['volume']	= $this->_mpd->volume;
+		$array['repeat']	= $this->_mpd->repeat;
+		$array['random']	= $this->_mpd->random;
 
-
+		return $array;
 
 	} // get_status
 

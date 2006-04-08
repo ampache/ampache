@@ -1,4 +1,3 @@
-<script type="text/javascript">
 	//var xmlDoc = null;
 	var http_request = false;
 	var IE = true;
@@ -38,8 +37,7 @@
     function ajaxPut(url,getTerms,uid) {
 	makeRequest(url,getTerms);
 	
-	data = http_request.responseTXT;
+	data = http_request.responseText;
 	document.getElementById(uid).innerHTML = data;
     }
 
-</script>

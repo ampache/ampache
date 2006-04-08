@@ -1,8 +1,8 @@
 <?php
 /*
 
- Copyright 2001 - 2006 Ampache.org
- All Rights Reserved
+ Copyright (c) 2001 - 2006 Ampache.org
+ All rights reserved.
 
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
@@ -19,30 +19,35 @@
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
-// Set the Error level manualy... I'm to lazy to fix notices
-error_reporting(E_ALL ^ E_NOTICE);
+
+require('../modules/init.php');
+
+if (!$GLOBALS['user']->has_access(100)) {
+	access_denied();
+	exit();
+}
 
 
-$prefix = dirname(__FILE__);
-$configfile = "$prefix/config/ampache.cfg.php";
+$action = scrub_in($_REQUEST['action']);
+
+/* Always show the header */
+show_template('header');
+
+switch ($action) { 
+	case 'insert_localplay_preferences':
+		$type = scrub_in($_REQUEST['type']);
+		insert_localplay_preferences($type);
+		$url 	= conf('web_path') . '/admin/modules.php';
+		$title 	= _('Module Activated');
+		$body	= '';
+		show_confirmation($title,$body,$url);
+	break;
+	default: 
+		require_once (conf('prefix') . '/templates/show_modules.inc.php');
+	break;
+} // end switch
+
+show_footer(); 
 
 
-require_once($prefix . "/lib/general.lib.php");
-require_once($prefix . "/lib/ui.lib.php");
-require_once($prefix . "/lib/debug.php");
-
-switch ($_REQUEST['action']) { 
-
-	case 'verify_config':
-		// This reads the ampache.cfg and compares the potential options against
-		// those in ampache.cfg.dst
-		show_compare_config($prefix); 
-		break;
-	default:
-		require_once($prefix . "/templates/show_test.inc");
-		break;
-} // end switch on action
-
-
-
-?> 
+?>

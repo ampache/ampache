@@ -98,21 +98,21 @@ class User {
 		if (!conf('use_auth')) { $user_id = '-1'; }
 
 		if ($user_id != '-1') { 
-			$user_limit = "AND preferences.type != 'system'";
+			$user_limit = "AND preferences.catagory != 'system'";
 		}
 		
 		if ($type != '0') { 
-			$user_limit = "AND preferences.type = '" . sql_escape($type) . "'";
+			$user_limit = "AND preferences.catagory = '" . sql_escape($type) . "'";
 		}
 
 	
-		$sql = "SELECT preferences.name, preferences.description, preferences.type, user_preference.value FROM preferences,user_preference " .
+		$sql = "SELECT preferences.name, preferences.description, preferences.catagory, user_preference.value FROM preferences,user_preference " .
 			"WHERE user_preference.user='$user_id' AND user_preference.preference=preferences.id $user_limit";
 		$db_results = mysql_query($sql, dbh());
 
 		/* Ok this is crapy, need to clean this up or improve the code FIXME */
 		while ($r = mysql_fetch_assoc($db_results)) { 
-			$type = $r['type'];
+			$type = $r['catagory'];
 			$admin = false;
 			if ($type == 'system') { $admin = true; }
 			$type_array[$type][] = array('name'=>$r['name'],'description'=>$r['description'],'value'=>$r['value']);
@@ -131,7 +131,7 @@ class User {
 	*/
 	function set_preferences() {
 
-		$sql = "SELECT preferences.name,user_preference.value FROM preferences,user_preference WHERE user_preference.user='$this->username' " .
+		$sql = "SELECT preferences.name,user_preference.value FROM preferences,user_preference WHERE user_preference.user='$this->id' " .
 			"AND user_preference.preference=preferences.id AND preferences.type != 'system'";
 		$db_results = mysql_query($sql, dbh());
 
@@ -274,7 +274,7 @@ class User {
 	} // update_preference
 
 	/**
-	 * add_preference
+	 * legacy_add_preference
 	 * adds a new preference
 	 * @package User
 	 * @catagory Class
@@ -640,7 +640,7 @@ class User {
 		*/
 		if ($user_id != '-1') { 
 			$sql = "SELECT user_preference.preference,user_preference.value FROM user_preference,preferences " . 
-				"WHERE user_preference.preference = preferences.id AND user_preference.user='-1' AND preferences.type !='system'";
+				"WHERE user_preference.preference = preferences.id AND user_preference.user='-1' AND preferences.catagory !='system'";
 			$db_results = mysql_query($sql, dbh());
 			while ($r = mysql_fetch_object($db_results)) { 
 				$zero_results[$r->preference] = $r->value;
@@ -650,7 +650,7 @@ class User {
 
 		$sql = "SELECT * FROM preferences";
 		if ($user_id != '-1') { 
-			$sql .= " WHERE type !='system'";
+			$sql .= " WHERE catagory !='system'";
 		}
 		$db_results = mysql_query($sql, dbh());
 

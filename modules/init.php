@@ -80,9 +80,7 @@ if (!$results['allow_stream_playback']) {
 
 
 /** This is the version.... fluf nothing more... **/
-$results['version']		= '3.3.2-Beta3 (Build 002)';
-
-
+$results['version']		= '3.3.2-Beta3 (Build 003)';
 
 $results['raw_web_path']	= $results['web_path'];
 $results['web_path']		= $http_type . $_SERVER['HTTP_HOST'] . $results['web_path'];
@@ -145,33 +143,24 @@ require_once(conf('prefix') . '/lib/search.php');
 require_once(conf('prefix') . '/lib/preferences.php');
 require_once(conf('prefix') . '/lib/rss.php');
 require_once(conf('prefix') . '/lib/log.lib.php');
-require_once(conf('prefix') . '/lib/mpd.php');
+require_once(conf('prefix') . '/lib/localplay.lib.php');
 require_once(conf('prefix') . '/lib/ui.lib.php');
 require_once(conf('prefix') . '/lib/gettext.php');
 require_once(conf('prefix') . '/lib/batch.lib.php');
 require_once(conf('prefix') . '/lib/themes.php');
 require_once(conf('prefix') . '/lib/stream.lib.php');
 require_once(conf('prefix') . '/lib/playlist.lib.php');
+require_once(conf('prefix') . '/lib/upload.php');
 require_once(conf('prefix') . '/modules/lib.php');
 require_once(conf('prefix') . '/modules/admin.php');
 require_once(conf('prefix') . '/modules/catalog.php');
-require_once(conf('prefix') . '/lib/upload.php');
-
-// Modules (These are conditionaly included depending upon config values)
 require_once(conf('prefix') . "/modules/id3/audioinfo.class.php");
 require_once(conf('prefix') . "/modules/amazon/Snoopy.class.php");
 require_once(conf('prefix') . "/modules/amazon/AmazonSearchEngine.class.php");
 require_once(conf('prefix') . "/lib/xmlrpc.php");
 require_once(conf('prefix') . "/modules/xmlrpc/xmlrpc.inc");
 
-if (conf('allow_slim_playback')) { 
-	require_once(conf('prefix') . '/modules/slimserver/slim.class.php');
-}
-
-if (conf('allow_mpd_playback')) { 
-	require_once(conf('prefix') . '/modules/mpd/mpd.class.php');		
-}
-
+// Modules (These are conditionaly included depending upon config values)
 if (conf('ratings')) { 
 	require_once(conf('prefix') . '/lib/class/rating.class.php');
 	require_once(conf('prefix') . '/lib/rating.lib.php');
@@ -229,20 +218,17 @@ if (($gc_divisor / $gc_probability) > 5) {
 /* PHP5 Date problem solved.. ya'll GMT now! */
 putenv("TZ=GMT");
 
-/* END Set PHP Vars */
-
-/* Overwrite them with the DB preferences */
-set_site_preferences();
-
 /* Seed the random number */
 srand((double) microtime() * 1000003);
+
+/**** END Set PHP Vars ****/
 
 // If we don't want a session
 if (!isset($no_session) AND conf('use_auth')) { 
 	if (!vauth_check_session()) { logout(); exit(); }
+	$user = new User($_SESSION['userdata']['username']);
 	init_preferences();
 	set_theme();	
-	$user = new User($_SESSION['userdata']['username']);
 	$user->set_preferences();
 	$user->update_last_seen();
 }
@@ -283,6 +269,8 @@ flip_class(array('odd','even'));
 
 /* Setup the Error Class */
 $error = new Error();
+
+/* Set the Theme */
 $theme = get_theme(conf('theme_name'));
 
 if (! preg_match('/update\.php/', $_SERVER['PHP_SELF'])) {

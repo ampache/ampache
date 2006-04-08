@@ -137,7 +137,7 @@ switch ($method) {
 		$stream_type = conf('playlist_type');
 
 		if ($GLOBALS['user']->prefs['play_type'] != "stream" AND $GLOBALS['user']->prefs['play_type'] != "downsample") { 
-			$stream_type = $user->prefs['play_type'];
+			$stream_type = $GLOBALS['user']->prefs['play_type'];
 		}
 
 		/* Start the Stream */

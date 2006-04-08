@@ -38,6 +38,7 @@ if (conf('use_rss')) { ?>
 </head>
 <body>
 <script src="<?php echo $web_path; ?>/lib/general.js" language="javascript" type="text/javascript"></script>
+<script src="<?php echo $web_path; ?>/modules/kajax/ajax.js" language="javascript" type="text/javascript"></script>
 <div id="maincontainer">
 	<div id="topbar"><!-- This is the topbar row -->
 		<div id="topbarleft">
@@ -58,5 +59,10 @@ if (conf('use_rss')) { ?>
 	</div><!-- End topbar -->
 	<div id="sidebar"><!-- This is the sidebar -->
 		<?php require_once(conf('prefix') . '/templates/sidebar.inc.php'); ?>
+		<?php if ($localplay = init_localplay()) { ?>
+		<?php require_once(conf('prefix') . '/templates/show_localplay_control.inc.php'); ?>
+		<?php } ?>
 	</div><!-- End sidebar -->
 	<div id="content">
+<!-- I hate IE... --> 
+<table><tr><td>

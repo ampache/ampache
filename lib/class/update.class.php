@@ -271,6 +271,11 @@ class Update {
 
 		$version[] = array('version' => '332009','description' => $update_string);
 
+		$update_string = '- Reconfigure preferences to account for the new Localplay API, this also removes some preferences' . 
+				' from the web interface, see /test.php for any setting you may be missing';
+
+		$version[] = array('version' => '332010','description' => $update_string);
+
 		return $version;
 
 	} // populate_version
@@ -1465,6 +1470,124 @@ class Update {
 		$this->set_version('db_version','332009');
 
 	} // update_332009
+
+	/**
+	 * update_332010
+	 * This update changes the preferences table yet again... :(
+	 */
+	function update_332010() { 
+
+		/* Drop the Locked option */
+		$sql = "ALTER TABLE `preferences` DROP `locked`";
+		$db_results = mysql_query($sql, dbh());
+
+		/* Add the New catagory field */
+		$sql = "ALTER TABLE `preferences` ADD `catagory` VARCHAR( 128 ) NOT NULL AFTER `type`";
+		$db_results = mysql_query($sql, dbh());
+
+		/* Grab all of the Types and populate it into the catagory */
+		$sql = "SELECT id,type FROM preferences";
+		$db_results = mysql_query($sql, dbh());
+
+		while ($r = mysql_fetch_assoc($db_results)) { 
+			$key = $r['id'];
+			$results[$key] = $r['type'];
+		}
+
+		foreach ($results as $key=>$catagory) { 
+
+			$sql = "UPDATE preferences SET catagory='" . $catagory . "' WHERE id='$key'";
+			$db_results = mysql_query($sql, dbh());
+
+		} // foreach preferences
+		
+		/* Drop the Refresh Limit Option */
+		$sql = "DELETE FROM preferences WHERE name='refresh_limit'";
+		$db_results = mysql_query($sql, dbh());
+
+		/* Drop the Local Length */
+		$sql = "DELETE FROM preferences WHERE name='local_length'";
+		$db_results = mysql_query($sql, dbh());
+
+		/* Drop The cache limits */
+		$sql = "DELETE FROM preferences WHERE name='album_cache_limit'";
+		$db_results = mysql_query($sql, dbh());
+
+		$sql = "DELETE FROM preferences WHERE name='artist_cache_limit'";
+		$db_results = mysql_query($sql, dbh());
+
+		$sql = "DELETE FROM preferences WHERE name='condPL'";
+		$db_results = mysql_query($sql, dbh());
+
+		/* Insert the new Localplay Level */
+		$sql = "INSERT INTO preferences (`name`,`value`,`description`,`level`,`type`,`catagory`) " . 
+			" VALUES ('localplay_level','0','Localplay Access Level','100','special','streaming')";
+		$db_results = mysql_query($sql, dbh());
+
+		/* Inser the new Localplay Controller */
+		$sql = "INSERT INTO preferences (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
+			" VALUES ('localplay_controller','0','Localplay Type','100','special','streaming')";
+		$db_results = mysql_query($sql, dbh());
+
+		/* Set the Types for everything */
+		$types['download']		= 'boolean';
+		$types['upload']		= 'boolean';
+		$types['quarantine']		= 'boolean';
+		$types['popular_threshold']	= 'integer';
+		$types['font']			= 'string';
+		$types['bg_color1']		= 'string';
+		$types['bg_color2']		= 'string';
+		$types['base_color1']		= 'string';
+		$types['base_color2']		= 'string';
+		$types['font_color1']		= 'string';
+		$types['font_color2']		= 'string';
+		$types['font_color3']		= 'string';
+		$types['row_color1']		= 'string';
+		$types['row_color2']		= 'string';
+		$types['row_color3']		= 'string';
+		$types['error_color']		= 'string';
+		$types['font_size']		= 'integer';
+		$types['upload_dir']		= 'string';
+		$types['sample_rate']		= 'string';
+		$types['site_title']		= 'string';
+		$types['lock_songs']		= 'boolean';
+		$types['force_http_play']	= 'boolean';
+		$types['http_port']		= 'integer';
+		$types['catalog_echo_count']	= 'integer';
+		$types['play_type']		= 'special';
+		$types['direct_link']		= 'boolean';
+		$types['lang']			= 'special';
+		$types['playlist_type']		= 'special';
+		$types['theme_name']		= 'special';
+		$types['ellipse_threshold_album'] 	= 'integer';
+		$types['ellipse_threshold_artist']	= 'integer';
+		$types['ellipse_threshold_title']	= 'integer';
+		$types['quarantine_dir']		= 'string';
+		$types['localplay_level']		= 'special';
+		$types['localplay_controller']		= 'special';
+
+		/* Now we need to insert this crap */
+		foreach ($types as $key=>$type) { 
+
+			$sql = "UPDATE preferences SET type='$type' WHERE name='$key'";
+			$db_results = mysql_query($sql, dbh());
+
+		} // foreach types
+
+		/* Fix every users preferences */
+		$sql = "SELECT * FROM user";
+		$db_results = mysql_query($sql, dbh());
+
+		$user = new User();
+		$user->fix_preferences('-1');
+
+		while ($r = mysql_fetch_assoc($db_results)) { 
+			$user->fix_preferences($r['username']);
+		} // while results
+
+		$this->set_version('db_version','332010');
+
+	} // update_332010
 
 } // end update class
 ?>

@@ -48,7 +48,7 @@ if (($GLOBALS['user']->has_access(100)) AND ($user_id == '-1' AND conf('use_auth
 }
 ?>
 <span class="header1">
-<?php echo _("Editing"); ?> <?php echo $fullname; ?> <?php echo _("preferences"); ?> 
+<?php echo _("Editing"); ?> <?php echo $fullname; ?> <?php echo _('preferences'); ?> 
 <?php if ($GLOBALS['user']->has_access(100)) { ?>
 [<a href="<?php echo conf('web_path'); ?>/admin/preferences.php?action=fix_preferences&amp;user_id=<?php echo $user_id; ?>"><?php echo _("Rebuild Preferences"); ?></a>]
 <?php } ?>
@@ -79,7 +79,7 @@ if (($GLOBALS['user']->has_access(100)) AND ($user_id == '-1' AND conf('use_auth
 <?php } ?>
 </ul>
 </div>
-<div class="text-box" style="width:35em;">
+<div class="text-box" style="width:45em;">
 <form method="post" name="preferences" action="<?php echo conf('web_path'); ?><?php echo $target; ?>" enctype="multipart/form-data">
 <?php 
 if ($current_tab != 'account') { 

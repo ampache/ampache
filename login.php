@@ -27,9 +27,9 @@
 */
 
 $no_session = true;
-require_once("modules/init.php");
+require_once('modules/init.php');
 vauth_session_cookie();
-set_site_preferences();
+init_preferences();
 
 /* Check for posted username and password */
 if ($_POST['username'] && $_POST['password']) {

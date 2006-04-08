@@ -258,32 +258,17 @@ function create_preference_input($name,$value) {
 			echo "</select>\n";
 		break;
 		case 'play_type':
-			if ($value == 'local_play') { $is_local = "selected=\"selected\""; }
-			elseif ($value == 'icecast2') { $is_ice = "selected=\"selected\""; }
-			elseif ($value == 'downsample') { $is_down = "selected=\"selected\""; }
-			elseif ($value == 'mpd') { $is_mpd = "selected=\"selected\""; }
-			elseif ($value == 'slim') { $is_slim = "selected=\"selected\""; }
+			if ($value == 'downsample') { $is_down = 'selected="selected"'; }
+			elseif ($value == 'localplay') { $is_local = 'selected="selected"'; } 
 			else { $is_stream = "selected=\"selected\""; } 
 			echo "<select name=\"$name\">\n";
-			if (conf('allow_local_playback')) { 
-				echo "\t<option value=\"local_play\" $is_local>" . _("Local") . "</option>\n";
-			}
 			if (conf('allow_stream_playback')) { 
-				echo "\t<option value=\"stream\" $is_stream>" . _("Stream") . "</option>\n";
-			}
-			if (conf('allow_icecast_playback')) { 
-				echo "\t<option value=\"icecast2\" $is_ice>" . _("IceCast") . "</option>\n";
+				echo "\t<option value=\"stream\" $is_stream>" . _('Stream') . "</option>\n";
 			}
 			if (conf('allow_downsample_playback')) { 
-				echo "\t<option value=\"downsample\" $is_down>" . _("Downsample") . "</option>\n";
+				echo "\t<option value=\"downsample\" $is_down>" . _('Downsample') . "</option>\n";
 			}
-			if (conf('allow_mpd_playback')) { 
-				echo "\t<option value=\"mpd\" $is_mpd>" . _("Music Player Daemon") . "</option>\n";
-			}
-			if (conf('allow_slim_playback')) { 
-				echo "\t<option value=\"slim\" $is_slim>" . _("SlimServer") . "</option>\n";
-			}
-			
+			echo "\t<option value=\"localplay\" $is_local>" . _('Localplay') . "</option>\n";	
 			echo "</select>\n";
 		break;
 		case 'playlist_type':
@@ -311,6 +296,25 @@ function create_preference_input($name,$value) {
 			} // end foreach
 			echo "</select>\n";
 		break;
+		case 'localplay_controller':
+			$controllers = get_localplay_controllers();
+			echo "<select name=\"$name\">\n";
+			foreach ($controllers as $controller) { 
+				$is_selected = '';
+				if ($value == $controller) { $is_selected = 'selected="selected"'; } 
+				echo "\t<option value=\"" . $controller . "\" $is_selected>" . ucfirst($controller) . "</option>\n";
+			} // end foreach
+			echo "</select>\n";
+		break;
+		case 'localplay_level':
+			if ($GLOBALS['user']->prefs['localplay_level'] == '2') { $is_full = 'selected="selected"'; } 
+			elseif ($GLOBALS['user']->prefs['localplay_level'] == '1') { $is_global = 'selected="selected"'; } 
+			echo "<select name=\"$name\">\n";
+			echo "<option value=\"0\">" . _('Disabled') . "</option>\n";
+			echo "<option value=\"1\" $is_global>" . _('Global') . "</option>\n";
+			echo "<option value=\"2\" $is_full>" . _('Full') . "</option>\n";
+			echo "</select>\n";
+		break;
 		case 'theme_name':
 			$themes = get_themes();
 			echo "<select name=\"$name\">\n";
@@ -320,7 +324,7 @@ function create_preference_input($name,$value) {
 				echo "\t<option value=\"" . $theme['path'] . "\" $is_selected>" . $theme['name'] . "</option>\n";
 			} // foreach themes
 			echo "</select>\n";
-			break;
+		break;
 		case 'quarantine_dir':
 		case 'upload_dir':
 			if (!$GLOBALS['user']->has_access(100)) { 
@@ -351,5 +355,32 @@ function get_preference_id($name) {
 	return $results['id'];
 
 } // get_preference_id
+
+/**
+ * insert_preference
+ * This creates a new preference record in the
+ * preferences table this is used by the modules
+ */
+function insert_preference($name,$description,$default,$level,$type,$catagory) { 
+
+	/* Clean the incomming variables */
+	$name		= sql_escape($name);
+	$description 	= sql_escape($description);
+	$default	= sql_escape($default);
+	$level		= sql_escape($level);
+	$type		= sql_escape($type);
+	$catagory	= sql_escape($catagory);
+
+
+	/* Form the sql statement */
+	$sql = "INSERT INTO preferences (`name`,`description`,`value`,`type`,`level`,`catagory`) VALUES " . 
+		" ('$name','$description','$default','$type','$level','$catagory')";
+	$db_results = mysql_query($sql, dbh());
+
+	if ($db_results) { return true; }
+
+	return false;
+
+} // insert_preference
 
 ?>

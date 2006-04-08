@@ -232,25 +232,19 @@ class Stream {
 
 	} // create_icecast2
 
-	/*!
-		@function create_local_play
-		@discussion pushes out localplay mojo
-	*/
-	function create_local_play() { 
+	/**
+	 * create_localplay
+	 * This calls the Localplay API and attempts to 
+	 * add, and then start playback
+	 */
+	function create_localplay() { 
 
-                foreach($this->songs as $song_id) {
-                        $song = new Song($song_id);
-                        $song->format_song();
-                        $song_name = $song->f_artist_full . " - " . $song->title . "." . $song->type;
-                        $url = escapeshellarg("$this->web_path/play/?song=$song_id&uid=$this->user_id&sid=$this->sess&name=" . rawurlencode($song_name));
-                        $localplay_add = conf('localplay_add');
-                        $localplay_add = str_replace("%URL%", $url, $localplay_add);
-                        if (conf('debug')) { 
-				log_event($_SESSION['userdata']['username'],"localplay","Exec: $localplay_add"); 
-			}
-                        exec($localplay_add);
-                        header("Location: " . conf('web_path') . "/index.php");
-                }
+		$localplay = init_localplay();
+		$localplay->connect(); 
+		$localplay->add($this->songs);
+		$localplay->play();
+
+                header("Location: " . return_referer());
 
 	} // create_localplay
 

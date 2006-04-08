@@ -66,7 +66,7 @@ function vauth_sess_close() {
 function vauth_sess_read($key) { 
 
 	$results = vauth_get_session($key);
-	if (!is_array($results)) { 
+	if (isset($results['value']) AND strlen($results['value']) < 1) { 
 		vauth_error('Unable to read session data');
 		return '';
 	}

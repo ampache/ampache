@@ -1,10 +1,10 @@
 ##<?php exit(); ?>##
 ####################
-# General Config
+# General Config   #
 ####################
 
 ####################
-# Path Vars
+# Path Vars        #
 ####################
 
 # The path to your ampache install
@@ -69,9 +69,9 @@ sess_cookielife         = 0
 # DEFAULT: 0
 sess_cookiesecure       = 0
 
-####################
-#  The conf vars!  #
-####################
+######################
+#  Program Settings  #
+######################
 
 # Nuff Said
 # DEFAULT: Ampache :: For The Love of Music
@@ -266,9 +266,8 @@ site_charset = iso-8859-1
 # Default: cp1251
 #lc_charset = cp1251
 
-
 ##########################################################
-# Public Registration settings, defaults to disabled 
+# Public Registration settings, defaults to disabled     #
 ##########################################################
 
 # This setting turns on/off public registration. It is
@@ -308,9 +307,9 @@ site_charset = iso-8859-1
 # User will need to accept the agreement before they can register
 #user_agreement = "false"
 
-##########################################################
-# These Option Control which playback methods are allowed
-##########################################################
+###########################################################
+# These Option Control which playback methods are allowed #
+###########################################################
 
 # Stream Playback
 # Disable this if you don't want to allow people to stream
@@ -330,29 +329,11 @@ allow_stream_playback = true
 # DEFAULT: false
 #allow_local_playback = false
 
-# MPD Playback
-# Disable this if you don't want to allow people to push things
-# to a MPD server as defined below
-# DEFAULT: false
-#allow_mpd_playback = false
-
-# Icecast Playback
-# Disable this if you don't have an IceCast server to push
-# music to
-# DEFAULT: false
-#allow_icecast_playback = false
-
-# Slim Server Playback
-# Disable this if you don't have a SlimServer to push music
-# to
-# DEFAULT: false
-#allow_slim_playback = false
-
-#######################################################
-# These options control the dynamic down-sampling based
-# on current usage
-# *Note* Down-sampling must be enabled and working
-#######################################################
+#########################################################
+# These options control the dynamic down-sampling based #
+# on current usage                                      #
+# *Note* Down-sampling must be enabled and working      #
+#########################################################
 
 # Attempt to optimize bandwidth by dynamically down-sampling
 # all connections from users to fit within a maximum bandwidth.   
@@ -371,7 +352,7 @@ allow_stream_playback = true
 
 
 #######################################################
-# These options control how searching works
+# These options control how searching works           #
 #######################################################
 
 # choices are: artist,album,song_title,song_genre,song_year,song_bitrate,song_min_bitrate,song_filename
@@ -553,36 +534,6 @@ rss_main_language = nl
 ###################
 #   MPD Settings  #
 ###################
-# These settings are for the MPD support 
-# built into Ampache. 
-#####################################################
-# MPD Port
-# This defines which port that ampache attempts to 
-# connect to MPD on. The standard port is 6600
-# DEFAULT: ""
-#mpd_port = "6600"
-
-# MPD Hostname
-# This is the hostname of the computer running MPD
-# DEFAULT: ""
-#mpd_host = "localhost"
-
-# MPD Password
-# This is the password for the MPD server
-# DEFAULT: ""
-#mpd_pass = ""
-
-# MPD base directory
-# this is the directory mpd.conf's music_directory points to, but
-# it's the path on your Ampache server, not the mpd server
-#mpd_dir = ""
-
-# MPD Method
-# This is the method you want to use to pass your
-# music to your MPD player. Possible values are
-# file and url. I highly recommend using the URL
-# method as it requires less configuration. 
-# POSSIBLE VALUES: file url
-# DEFAULT: file
-#mpd_method = "file"
+# These settings have been moved into the database
+# Defaults can be found in /modules/localplay/mpd.readme
 #####################################################

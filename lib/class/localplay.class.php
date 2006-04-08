@@ -47,10 +47,6 @@ class Localplay {
 
 		$this->_get_info();
 
-		/* Test for a connection */
-		$this->connect(); 
-
-
 	} // Localplay
 
 
@@ -103,7 +99,7 @@ class Localplay {
 		/* Check the function map, if it's got a value it must 
 		 * be possible 
 		 */
-		if (strlen($this->_function_map) > 0) { return true; } 
+		if (strlen($this->_function_map[$function_name]) > 0) { return true; } 
 
 		return false;
 
@@ -120,15 +116,18 @@ class Localplay {
 	 * be function names that are called on the action in question
 	 */
 	function _map_functions($data) { 
-
+		
 		/* Required Functions */
 		$this->_function_map['add']	= $data['add'];
 		$this->_function_map['delete']	= $data['delete'];
 		$this->_function_map['play']	= $data['play'];
 		$this->_function_map['stop']	= $data['stop'];
+		$this->_function_map['get']	= $data['get'];
 		$this->_function_map['connect'] = $data['connect'];
 
 		/* Recommended Functions */
+		$this->_function_map['status']		= $data['status'];
+		$this->_function_map['pause']		= $data['pause'];
 		$this->_function_map['next']		= $data['next'];
 		$this->_function_map['prev']		= $data['prev'];
 		$this->_function_map['get_playlist']	= $data['get_playlist'];
@@ -205,9 +204,117 @@ class Localplay {
 
 
 		/* Call the Function Specified in the Function Map */
+		$function = $this->_function_map['add'];
 
+		if (!$this->_player->$function($songs)) { 
+			debug_event('localplay','Error Unable to add songs, check ' . $this->type . ' controller','1');
+			return false;
+		}
+
+		
+		return true;
 
 	} // add
+
+
+	/**
+	 * status
+	 * This returns current information about the state of the player
+	 * There is an expected array format
+	 */
+	function status() { 
+
+		$function = $this->_function_map['status'];
+
+		$data = $this->_player->$function();
+
+		if (!count($data)) { 
+			debug_event('localplay','Error Unable to get status, check ' . $this->type . ' controller','1');
+			return false;
+		}
+
+		return $data;
+
+	} // status
+
+	/**
+	 * get
+	 * This calls the get function of the player and then returns
+	 * the array of current songs for display or whatever
+	 */
+	function get() { 
+
+		$function = $this->_function_map['get'];
+
+		$data = $this->_player->$function();
+
+		if (!count($data)) { 
+			debug_event('localplay','Error Unable to get song info, check ' . $this->type . ' controller','1');
+			return false; 
+		}
+		
+		return $data;
+
+	} // get
+
+	/**
+	 * next
+	 * This isn't a required function, it tells the daemon to go to the next 
+	 * song
+	 */
+	function next() { 
+
+		$function = $this->_function_map['next'];
+		
+		if (!$this->_player->$function()) { 
+			debug_event('localplay','Error: Unable to skip to next song, check ' . $this->type . ' controller','1');
+			return false; 
+		}
+
+		return true;
+
+	} // next
+
+	/**
+	 * prev
+	 * This isn't a required function, it tells the daemon to go the the previous
+	 * song
+	 */
+	function prev() { 
+		
+		$function = $this->_function_map['prev'];
+
+		if (!$this->_player->$function()) { 
+			debug_event('localplay','Error: Unable to skip to previous song, check ' . $this->type . ' controller','1');
+			return false;
+		}
+
+		return true;
+
+	} // prev
+
+	/**
+	 * get_preferences
+	 * This functions returns an array of the preferences that the localplay 
+	 * controller needs in order to actually work
+	 */
+	function get_preferences() { 
+
+		$preferences = $this->_player->preferences();
+		
+		return $preferences;
+
+	} // get_preferences
+
+	/**
+	 * delete
+	 * This removes songs from the players playlist as defined get function
+	 */
+	function delete($songs) { 
+
+
+
+	} // delete
 
 
 } //end localplay class
