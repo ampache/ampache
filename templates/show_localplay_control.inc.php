@@ -21,12 +21,13 @@
 */
 
 $web_path = conf('web_path'); 
-$data = $localplay->status();
+$localplay = init_localplay();
 
 $required_info 	= "&amp;user_id=" . $GLOBALS['user']->id . "&amp;sessid=" . session_id(); 
 $ajax_url	= $web_path . '/server/ajax.server.php';
 
 ?>
+<div style="background:white;display:table-cell;cursor:pointer;border:1px solid black;padding-top:2px;padding-left:5px;padding-right:5px;">
 <?php if ($localplay->has_function('prev')) { ?>
 <span id="prev_button" onclick="ajaxPut('<?php echo $ajax_url; ?>','action=localplay&amp;cmd=prev<?php echo $required_info; ?>','localplay_state');return true;">
 	<img src="<?php echo $web_path; ?>/images/localplay/prev.gif" alt="prev" />
@@ -37,7 +38,7 @@ $ajax_url	= $web_path . '/server/ajax.server.php';
 </span>
 <?php if ($localplay->has_function('pause')) { ?>
 <span id="pause_button" onclick="ajaxPut('<?php echo $ajax_url; ?>','action=localplay&amp;cmd=pause<?php echo $requird_info; ?>','localplay_state');return true;">
-	<img src="<?Php echo $web_path; ?>/images/localplay/pause.gif" alt="pause" />
+	<img src="<?php echo $web_path; ?>/images/localplay/pause.gif" alt="pause" />
 </span>
 <?php } ?>
 <span id="play_button" onclick="ajaxPut('<?php echo $ajax_url; ?>','action=localplay&amp;cmd=play<?php echo $required_info; ?>','localplay_state');return true;">
@@ -48,16 +49,4 @@ $ajax_url	= $web_path . '/server/ajax.server.php';
 	<img src="<?php echo $web_path; ?>/images/localplay/next.gif" alt="next" />
 </span>
 <?php } ?>
-<br />
-Current State:<span id="localplay_state"><?php echo $data['state']; ?></span><br />
-<span id="play_type">
-<?php if (conf('play_type') == 'localplay' AND strlen($_SESSION['data']['old_play_type'])) { ?>
-<span style="text-decoration:underline;cursor:pointer;" onclick="ajaxPut('<?php echo $ajax_url; ?>','action=change_play_type&amp;type=<?php echo $_SESSION['data']['old_play_type'] . $required_info; ?>','play_type');return true;">
-	<?php echo ucfirst($_SESSION['data']['old_play_type']) . ' ' . _('Mode'); ?>
-</span>
-<?php } else { ?>
-<span style="text-decoration:underline;cursor:pointer;"  onclick="ajaxPut('<?php echo $ajax_url; ?>','action=change_play_type&amp;type=localplay<?php echo $required_info; ?>','play_type');return true;">
-	<?php echo _('Localplay Mode'); ?>
-</span>
-<?php } ?>
-</span><br />
+</div>

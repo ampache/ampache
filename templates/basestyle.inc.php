@@ -266,12 +266,17 @@
 		margin-bottom:5px;
 		padding-left:0px;
 	}
-	.text-action a { 
+	.text-action a, .text-action span { 
 		background: <?php echo conf('base_color2'); ?>;
 		border:1px solid <?php echo conf('bg_color2'); ?>;	
 		padding-left:2px;
 		padding-right:2px;
 		text-decoration: none;
 	} 
+	.text-action #pt_active {
+		background: <?php echo conf('bg_color2'); ?>;
+		color: <?php echo conf('font_color3'); ?>;
+		border:1px solid <?php echo conf('base_color2'); ?>;
+	}
 -->
 </style>

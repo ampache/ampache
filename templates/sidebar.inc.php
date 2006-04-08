@@ -177,6 +177,26 @@ $web_path = conf('web_path');
 		</form>
 	</li>
 <?php } // end if ($GLOBALS['theme']['orientation'] != 'horizontal') ?> 
+<?php if ($GLOBALS['user']->prefs['localplay_level'] > 0) { ?>
+	<li>
+		<a href="<?php echo $web_path; ?>/localplay.php"><?php echo _('Localplay'); ?></a>
+	</li>
+<?php if ($GLOBALS['theme']['orientation'] != 'horizontal') { ?>
+	<li>
+		<?php require_once(conf('prefix') . '/templates/show_localplay_control.inc.php'); ?>
+		<br />
+		<?php $type = conf('play_type'); ${$type} = 'id="pt_active"'; ?>
+		<span class="text-action" style="cursor:pointer;" id="play_type">
+		<span <?php echo $stream; ?> onclick="ajaxPut('<?php echo $ajax_url; ?>','action=change_play_type&type=stream<?php echo $required_info; ?>','play_type');return true;">
+        		<?php echo _('Stream') ?>
+		</span>&nbsp;&nbsp;
+		<span <?php echo $localplay; ?> onclick="ajaxPut('<?php echo $ajax_url; ?>','action=change_play_type&type=localplay<?php echo $required_info; ?>','play_type');return true;">
+		        <?php echo _('Localplay'); ?>
+		</span>
+		</span>
+	</li>
+<?php } // if horizontal orientation ?>
+<?php } // if localplay access ?>
 <?php if (conf('use_auth')) { ?>
 	<li><a href="<?php echo $web_path; ?>/logout.php"><?php echo _("Logout"); ?></a></li>
 <?php } // end (conf('use_auth'))?>

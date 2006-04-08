@@ -53,15 +53,15 @@ switch ($action) {
 		/* Now Replace the text as you should */
 		$ajax_url       = conf('web_path') . '/server/ajax.server.php';
 		$required_info  = "&user_id=" . $GLOBALS['user']->id . "&sessid=" . session_id();
-		if ($_GET['type'] == 'localplay') { ?>
-			<span style="text-decoration:underline;cursor:pointer;" onclick="ajaxPut('<?php echo $ajax_url; ?>','action=change_play_type&type=<?php echo $_SESSION['data']['old_play_type'] . $required_info; ?>','play_type');return true;">
-			        <?php echo ucfirst($_SESSION['data']['old_play_type']) . ' ' . _('Mode'); ?>
-			</span>
-		<?php } else { ?>
-			<span style="text-decoration:underline;cursor:pointer;"  onclick="ajaxPut('<?php echo $ajax_url; ?>','action=change_play_type&type=localplay<?php echo $required_info; ?>','play_type');return true;">
-			        <?php echo _('Localplay Mode'); ?>
-			</span>
-		<?php }
+		${$_GET['type']} = 'id="pt_active"';
+		?>
+                <span <?php echo $stream; ?> onclick="ajaxPut('<?php echo $ajax_url; ?>','action=change_play_type&type=stream<?php echo $required_info; ?>','play_type');return true;">
+                        <?php echo _('Stream') ?>
+                </span>&nbsp;&nbsp;
+                <span <?php echo $localplay; ?> onclick="ajaxPut('<?php echo $ajax_url; ?>','action=change_play_type&type=localplay<?php echo $required_info; ?>','play_type');return true;">
+                        <?php echo _('Localplay'); ?>
+                </span>
+		<?php 
 	break;
 	default:
 		echo "Default Action";
