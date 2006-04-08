@@ -215,5 +215,13 @@
 		font-size: 12px; 
 		font-weight: normal; 
 		}
+        #topbar
+                {
+                        height: 130px;
+                        padding-top:10px;
+                        padding-left:10px;
+                        background-color: <?php echo conf('bg_color1'); ?>;
+                }
+	
 -->
 </style>

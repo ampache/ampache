@@ -16,7 +16,7 @@ name = "Total_Blue"
 # This is just a way of giving credit to the 
 # person who actually created this theme
 # DEFAULT: N/A
-author = "Ripmaster TS"
+#author = "Ripmaster TS"
 
 # Theme Maintainer
 # This is just a way of listing who is responsible for
@@ -25,7 +25,17 @@ author = "Ripmaster TS"
 # DEFAULT: N/A
 #maintainer = "no@mail!"
 
-version = "1.0"
+# Orientation
+# This was added as of 3.3.2-Alpha4, this tells Ampache if this theme
+# uses vertical or horizontal orientation of the menu, if this is a horizontal
+# theme then it will not show the quick search and quick random play forms
+orientation = "vertical"
+
+# Submenu
+# If this is set to simple the sub menu's will only be shown when you're on one of the
+# respective pages. If you want to make the menu's something like the classic theme
+# comment this out
+submenu = "simple"
 
 # Theme Colors
 ###################
