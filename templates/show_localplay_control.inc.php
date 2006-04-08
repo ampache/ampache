@@ -23,40 +23,40 @@
 $web_path = conf('web_path'); 
 $data = $localplay->status();
 
-$required_info 	= "&user_id=" . $GLOBALS['user']->id . "&sessid=" . session_id(); 
+$required_info 	= "&amp;user_id=" . $GLOBALS['user']->id . "&amp;sessid=" . session_id(); 
 $ajax_url	= $web_path . '/server/ajax.server.php';
 
 ?>
 <?php if ($localplay->has_function('prev')) { ?>
-<span id="prev_button" onclick="ajaxPut('<?php echo $ajax_url; ?>','action=localplay&cmd=prev<?php echo $required_info; ?>','localplay_state');return true;">
-	<img src="<?php echo $web_path; ?>/images/localplay/prev.gif">
+<span id="prev_button" onclick="ajaxPut('<?php echo $ajax_url; ?>','action=localplay&amp;cmd=prev<?php echo $required_info; ?>','localplay_state');return true;">
+	<img src="<?php echo $web_path; ?>/images/localplay/prev.gif" alt="prev" />
 </span>
 <?php } ?>
-<span id="stop_button" onclick="ajaxPut('<?php echo $ajax_url; ?>','action=localplay&cmd=stop<?php echo $required_info; ?>','localplay_state');return true;">
-	<img src="<?php echo $web_path; ?>/images/localplay/stop.gif">
+<span id="stop_button" onclick="ajaxPut('<?php echo $ajax_url; ?>','action=localplay&amp;cmd=stop<?php echo $required_info; ?>','localplay_state');return true;">
+	<img src="<?php echo $web_path; ?>/images/localplay/stop.gif" alt="stop" />
 </span>
 <?php if ($localplay->has_function('pause')) { ?>
-<span id="pause_button" onclick="ajaxPut('<?php echo $ajax_url; ?>','action=localplay&cmd=pause<?php echo $requird_info; ?>','localplay_state');return true;">
-	<img src="<?Php echo $web_path; ?>/images/localplay/pause.gif">
+<span id="pause_button" onclick="ajaxPut('<?php echo $ajax_url; ?>','action=localplay&amp;cmd=pause<?php echo $requird_info; ?>','localplay_state');return true;">
+	<img src="<?Php echo $web_path; ?>/images/localplay/pause.gif" alt="pause" />
 </span>
 <?php } ?>
-<span id="play_button" onclick="ajaxPut('<?php echo $ajax_url; ?>','action=localplay&cmd=play<?php echo $required_info; ?>','localplay_state');return true;">
-	<img src="<?php echo $web_path; ?>/images/localplay/play.gif">
+<span id="play_button" onclick="ajaxPut('<?php echo $ajax_url; ?>','action=localplay&amp;cmd=play<?php echo $required_info; ?>','localplay_state');return true;">
+	<img src="<?php echo $web_path; ?>/images/localplay/play.gif" alt="play" />
 </span>
 <?php if ($localplay->has_function('next')) { ?>
-<span id="next_button" onclick="ajaxPut('<?php echo $ajax_url; ?>','action=localplay&cmd=next<?php echo $required_info; ?>','localplay_state');return true;">
-	<img src="<?php echo $web_path; ?>/images/localplay/next.gif">
+<span id="next_button" onclick="ajaxPut('<?php echo $ajax_url; ?>','action=localplay&amp;cmd=next<?php echo $required_info; ?>','localplay_state');return true;">
+	<img src="<?php echo $web_path; ?>/images/localplay/next.gif" alt="next" />
 </span>
 <?php } ?>
 <br />
 Current State:<span id="localplay_state"><?php echo $data['state']; ?></span><br />
 <span id="play_type">
 <?php if (conf('play_type') == 'localplay' AND strlen($_SESSION['data']['old_play_type'])) { ?>
-<span style="text-decoration:underline;cursor:pointer;" onclick="ajaxPut('<?php echo $ajax_url; ?>','action=change_play_type&type=<?php echo $_SESSION['data']['old_play_type'] . $required_info; ?>','play_type');return true;">
+<span style="text-decoration:underline;cursor:pointer;" onclick="ajaxPut('<?php echo $ajax_url; ?>','action=change_play_type&amp;type=<?php echo $_SESSION['data']['old_play_type'] . $required_info; ?>','play_type');return true;">
 	<?php echo ucfirst($_SESSION['data']['old_play_type']) . ' ' . _('Mode'); ?>
 </span>
 <?php } else { ?>
-<span style="text-decoration:underline;cursor:pointer;"  onclick="ajaxPut('<?php echo $ajax_url; ?>','action=change_play_type&type=localplay<?php echo $required_info; ?>','play_type');return true;">
+<span style="text-decoration:underline;cursor:pointer;"  onclick="ajaxPut('<?php echo $ajax_url; ?>','action=change_play_type&amp;type=localplay<?php echo $required_info; ?>','play_type');return true;">
 	<?php echo _('Localplay Mode'); ?>
 </span>
 <?php } ?>

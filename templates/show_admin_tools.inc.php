@@ -67,7 +67,7 @@ $users		= $GLOBALS['user']->get_recent(10);
 <a href="<?php echo $web_path; ?>/admin/catalog.php?action=clean_all_catalogs"><?php echo _('Clean All'); ?></a>&nbsp;
 <a href="<?php echo $web_path; ?>/admin/catalog.php?action=update_all_catalogs"><?php echo _('Verify All'); ?></a>&nbsp;
 <a href="<?php echo $web_path; ?>/admin/catalog.php?action=add_to_all_catalogs"><?php echo _('Add to All'); ?></a>&nbsp;
-<a href="<?php echo $web_path; ?>/admin/catalog.php?action=full_service"><?php echo _('Update All'); ?></a>&nbsp;<hr height="5px" />
+<a href="<?php echo $web_path; ?>/admin/catalog.php?action=full_service"><?php echo _('Update All'); ?></a>&nbsp;<hr noshade="noshade" size="3" />
 <a href="<?php echo $web_path; ?>/admin/catalog.php?action=show_add_catalog"><?php echo _('Add a Catalog'); ?></a>
 <a href="<?php echo $web_path; ?>/admin/catalog.php?action=show_clear_stats"><?php echo _('Clear Catalog Stats'); ?></a>
 <a href="<?php echo $web_path; ?>/admin/catalog.php?action=gather_album_art"><?php echo _('Gather Album Art'); ?></a>
