@@ -47,14 +47,9 @@ if (conf('use_rss')) { ?>
 		</a>
 		</div><!--End topbarleft -->
 		<div id="topbarright">
-		<?php if (($user->prefs['play_type']=='mpd') && ($location['page'] != 'mpd.php')) { 
-			$myMpd = init_mpd();
-			show_template ('show_mpdminicontrol');
-		} else { ?>
 			<a href="http://www.ampache.org/index.php">Ampache v.<?php echo conf('version'); ?></a><br />
 			<b><?php echo _("You are currently logged in as") . " " . $GLOBALS['user']->fullname; ?></b>
 			<br />
-		<?php } ?>
 		</div> <!-- End topbarright -->
 	</div><!-- End topbar -->
 	<div id="sidebar"><!-- This is the sidebar -->

@@ -803,7 +803,7 @@ function check_username($username) {
 	$db_results = mysql_query($sql, dbh());
 
 	if (mysql_fetch_row($db_results)) { 
-		return fakse; 
+		return false; 
 	}
 
 	return true;

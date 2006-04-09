@@ -1585,6 +1585,17 @@ class Update {
 			$user->fix_preferences($r['username']);
 		} // while results
 
+		/* Last but not least revert play types to downsample or stream */
+		$sql = "SELECT id FROM preferences WHERE name='play_type'";
+		$db_results = mysql_query($sql, dbh());
+
+		$results = mysql_fetch_assoc($db_results);
+
+		$pref_id = $results['id'];
+
+		$sql = "UPDATE user_preference SET value='stream' WHERE preference='$pref_id' AND value != 'downsample' AND value != 'stream'";
+		$db_results = mysql_query($sql, dbh());
+
 		$this->set_version('db_version','332010');
 
 	} // update_332010

@@ -377,7 +377,7 @@ class Catalog {
 		
 				if (is_readable($full_file)) {
 
-					if (substr($file,-3,3) == 'm3u') { 
+					if (substr($file,-3,3) == 'm3u' AND $parse_m3u) { 
 						$this->_playlists[] = $full_file;
 					} // if it's an m3u
 
@@ -774,7 +774,7 @@ class Catalog {
 		$this->catalog_type = $type;
 
 		/* Fluf */
-		echo _("Starting Catalog Build") . " [$name]<br />\n";
+		echo _('Starting Catalog Build') . " [$name]<br />\n";
 
 
 	       if ($this->catalog_type == 'remote') {

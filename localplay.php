@@ -20,15 +20,9 @@
 
 */
 
-/*!
-        @header Song Document
-        @discussion Actually play files from albums, artists or just given
-        a bunch of id's.
-        Special thanx goes to Mike Payson and Jon Disnard for the means
-        to do this.
-*/
 
 require('modules/init.php');
+
 /* If we are running a demo, quick while you still can! */
 if (conf('demo_mode')) {
         exit();
@@ -36,59 +30,29 @@ if (conf('demo_mode')) {
 
 $web_path = conf('web_path');
 
-if($user->prefs['play_type'] != 'local_play') {
-    show_template('header');
-    echo "<span align=\"center\" class=\"fatalerror\">Localplay Currently Disabled</span>";
-    show_footer();
-    exit;
+if($GLOBALS['user']->prefs['localplay_level'] < 1) {
+	access_denied();
+	exit();
 }
 
-switch($_REQUEST['submit'])
-{
-    case ' X ':
-        $action = "stop";
-        break;
-    case ' > ':
-        $action = "play";
-        break;
-    case ' = ': 
-        $action = "pause";
-        break;
-    case '|< ':
-        $action = "prev";
-        break;
-    case ' >|':
-        $action = "next";
-        break;
-    case (substr_count($_REQUEST['submit'],"+") == '1'):
-    	$amount = trim(substr($_REQUEST['submit'],2,strlen($_REQUEST['submit']-2)));
-	$action = "volplus";
+/* Scrub in the action */
+$action = scrub_in($_REQUEST['action']);
+
+show_template('header');
+
+
+switch ($action) { 
+	case 'delete_songs':
+
+
 	break;
-    case (substr_count($_REQUEST['submit'],"-") == '1'):
-    	$amount = trim(substr($_REQUEST['submit'],2,strlen($_REQUEST['submit']-2)));
-	$action = "volminus";
-	break; 
-    case 'clear':
-        $action = "clear";
-        break;
-    case 'start':
-        $action = "start";
-        break;
-    case 'kill':
-        $action = "kill";
-        break;
-    default:
-        echo _("Unknown action requested") . ": '$_REQUEST[submit]'<br />";
-        exit;
-}
-$systr = conf('localplay_'.$action);
-$systr = str_replace("%AMOUNT%",$amount,$systr);
-if (conf('debug')) { log_event($user->username,'localplay',"Exec: $systr"); }
-@exec($systr, $output);
-$web_path = conf('web_path');
-if($output)
-    print_r($output);
-else
-    header("Location: $web_path");
+	default: 
+		require_once (conf('prefix') . '/templates/show_localplay.inc.php');
+	break;
+} // end switch action
+
+
+
+show_footer();
 
 ?>
