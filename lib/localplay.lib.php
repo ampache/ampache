@@ -100,8 +100,38 @@ function insert_localplay_preferences($type) {
  */
 function remove_localplay_preferences($type=0) { 
 
+	/* If we've gotten a type wipe and go! */
+	if ($type) { 
+		$sql = "DELETE FROM preferences WHERE name LIKE 'localplay_" . sql_escape($type) . "_%'";
+		$db_results = mysql_query($sql, dbh());
+		return true;
+	}
 
 
+	/* Select everything but our two built-in ones
+	$sql = "SELECT * FROM preferences WHERE name != 'localplay_level' AND name != 'localplay_controller' AND name LIKE 'localplay_%'";
+	$db_results = mysql_query($sql, dbh());
+
+	$results = array();
+
+	/* We need to organize by module to make it easy 
+	 * to figure out which modules no longer exist 
+	 * and wack the preferences... unless we've
+	 * specified a name then just wack those 
+	 * preferences
+	 */
+	while ($r = mysql_fetch_assoc($db_results)) { 
+
+		$name = $r['name']; 
+		preg_match("/localplay_([\w\d\-\]+)_.+/",$name,$matches);
+		$key = $matches['1'];
+
+		$results[$key] = $r;
+
+	} // end while
+
+	/* If we've got a type */
+	//FIXME!!!	
 
 
 } // remove_localplay_preferences

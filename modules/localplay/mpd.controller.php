@@ -75,6 +75,7 @@ class AmpacheMpd {
 
 		/* Optional Functions */
 		$map['move']		= 'move';
+		//$map['delete_all']	= 'clear_playlist';
 
                 return $map;
 
@@ -263,21 +264,32 @@ class AmpacheMpd {
 
 		/* Get the Current Playlist */
 		$playlist = $this->_mpd->playlist;
-
+		
 		foreach ($playlist as $entry) { 
 			$data = array();
 
 			/* Required Elements */
 			$data['id'] 	= $entry['Pos'];
-			$data['raw']	= $entry['file'];
+			$data['raw']	= $entry['file'];		
+
+			/* Parse out the song ID and then create the song object */
+			preg_match("/song=(\d+)\&/",$entry['file'],$matches);
+			
+			$song = new Song($matches['1']);
+			$song->format_song();
+			$data['name']	= $song->f_title . ' - ' . $song->f_album . ' - ' . $song->f_artist;
+
+			/* Just incase prevent emtpy names */
+			if (!$song->title) { $data['name'] = _('Unknown'); }
 
 			/* Optional Elements */
-			$data['name']	= '';
+			$data['link']   = '';
+			$data['track']	= $entry['Pos'];
 
 			$results[] = $data;
 
 		} // foreach playlist items
-
+		
 		return $results;
 
 	} // get_songs

@@ -137,6 +137,7 @@ class Localplay {
 		$this->_function_map['volume_set']	= $data['volume_set'];
 		$this->_function_map['volume_up']	= $data['volume_up'];
 		$this->_function_map['volume_down']	= $data['volume_down'];
+		$this->_function_map['delete_all']	= $data['delete_all'];
 
 	} // _map_functions
 
@@ -241,6 +242,8 @@ class Localplay {
 	 * get
 	 * This calls the get function of the player and then returns
 	 * the array of current songs for display or whatever
+	 * Null is returned on failure here because the PHP count() 
+	 * function will return 1 on a value of 'false'
 	 */
 	function get() { 
 
@@ -248,9 +251,9 @@ class Localplay {
 
 		$data = $this->_player->$function();
 
-		if (!count($data)) { 
+		if (!count($data) OR !is_array($data)) { 
 			debug_event('localplay','Error Unable to get song info, check ' . $this->type . ' controller','1');
-			return false; 
+			return NULL; 
 		}
 		
 		return $data;
@@ -312,7 +315,15 @@ class Localplay {
 	 */
 	function delete($songs) { 
 
+		$function = $this->_function_map['delete'];
 
+		if (!$this->_player->$function($songs)) { 
+			debug_event('localplay','Error: Unable to remove songs, check ' . $this->type . ' controller','1');
+			return false;
+		}
+
+
+		return true;
 
 	} // delete
 

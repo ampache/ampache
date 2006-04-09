@@ -44,7 +44,7 @@ switch ($action) {
 	break;
 	case 'confirm_remove_localplay_preferences':
 		$type = scrub_in($_REQUEST['type']);
-		$url	= conf('web_path') . '/admin/modules.php?action=remove_localplay_preferences&amp;' . $type;
+		$url	= conf('web_path') . '/admin/modules.php?action=remove_localplay_preferences&amp;type=' . $type;
 		$title	= _('Are you sure you want to remove this module?');
 		$body	= '';
 		show_confirmation($title,$body,$url,1);

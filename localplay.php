@@ -42,9 +42,15 @@ show_template('header');
 
 
 switch ($action) { 
-	case 'delete_songs':
-
-
+	case 'delete_song':
+		$song_id = scrub_in($_REQUEST['song_id']);
+		$songs = array($song_id);
+		$localplay = init_localplay(); 
+		$localplay->delete($songs);
+		$url 	= $web_path . '/localplay.php';
+		$title	= _('Song Removed from Playlist'); 
+		$body	= '';
+		show_confirmation($title,$body,$url);
 	break;
 	default: 
 		require_once (conf('prefix') . '/templates/show_localplay.inc.php');

@@ -21,5 +21,37 @@
 */
 
 $web_path = conf('web_path'); 
-
+$localplay = init_localplay();
+$songs = $localplay->get();
 ?>
+
+<div class="text-box">
+<span class="header2"><?php echo _('Localplay'); ?></span>
+<!-- Yea I don't know what to put here... yet.. -->
+</div>
+<br />
+<div class="text-box">
+<table class="border" cellspacing="0" border="0">
+<tr class="table-header">
+	<th><?php echo _('Track'); ?></th>
+	<th><?php echo _('Name'); ?></th>
+	<th><?php echo _('Action'); ?></th>
+</tr>
+<?php foreach ($songs as $song) { ?>
+<tr class="<?php echo flip_class(); ?>">
+	<td>
+		<?php echo scrub_out($song['track']); ?>
+	</td>
+	<td>
+		<?php echo scrub_out($song['name']); ?>
+	</td>
+	<td>
+	<a href="<?php echo $web_path; ?>/localplay.php?action=delete_song&amp;song_id=<?php echo $song['id']; ?>"><?php echo _('Delete'); ?></a>
+	</td>
+</tr>
+<?php } if (!count($songs)) { ?>
+<tr class="<?php echo flip_class(); ?>">
+	<td colspan="2"><span class="error"><?php echo _('No Records Found'); ?></span></td>
+</tr>
+<?php } ?>
+</table>
