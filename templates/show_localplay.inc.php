@@ -55,3 +55,4 @@ $songs = $localplay->get();
 </tr>
 <?php } ?>
 </table>
+</div>
