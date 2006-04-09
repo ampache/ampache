@@ -20,90 +20,6 @@
 
 */
 
-/*!
-	@function addToPlaylist() 
-	@discussion adds a bunch of songs to the mpd playlist
-		this takes a mpd object, and an array of songs
-*/
-function addToPlaylist( $myMpd, $song_ids=array()) {
-
-       	foreach( $song_ids as $song_id ) {
-
-		/* There are two ways to do this, filename or URL */
-		if (conf('mpd_method') == 'url') { 
-			// We just need to generate a standard stream URL and pass that
-			$song = new Song($song_id);
-			$sess_id = session_id();
-			if ($song->type == ".flac") { $song->type = ".ogg"; }
-			if ($GLOBALS['user']->prefs['play_type'] == 'downsample') { 
-				$ds = $GLOBALS['user']->prefs['sample_rate'];
-			}
-			$song_url = conf('web_path') . "/play/index.php?song=$song_id&uid=" . $_SESSION['userdata']['username'] . "&sid=$sess_id&ds=$ds&name=." . $song->type;
-			if (is_null( $myMpd->PlAdd($song_url) ) ) { 
-				$log_line = _("Error") . ": " . _("Could not add") . ": " . $song_url . " : " . $myMpd->errStr;
-				echo "<font class=\"error\">$log_line</font><br />\n";
-				if (conf('debug')) { log_event($GLOBALS['user']->username,'add',$log_line); }
-			} // if it's null
-		} // if we want urls
-		else {
-	                $song = new Song( $song_id );
-	                $song_filename = $song->get_rel_path();
-	                if( is_null( $myMpd->PLAdd( $song_filename ) ) ) {
-				$log_line =  _("Error") . ": " . _("Could not add") . ": " . $song_filename . " : " . $myMpd->errStr;
-				echo "<font class=\"error\">$log_line</font><br />\n";
-				if (conf('debug')) { log_event($_SESSION['userdata']['username'],'add',$log_line); }
-		        } // end if it's null
-			// We still need to count if they use the file method	
-			else {
-	                        $GLOBALS['user']->update_stats( $song_id );
-	               	} // end else
-
-		} // end else not url method
-       	} // end foreach 
-
-} // addToPlaylist
-
-/*!
-	@function show_mpd_control
-	@discussion shows the mpd controls
-*/
-function show_mpd_control() { 
-
-	$_REQUEST['action'] = 'show_control';
-	require (conf('prefix').'/amp-mpd.php');
-
-
-} // show_mpd_control
-
-/**
- * show_mpd_pl
- * Shows the MPD playlist
- * @package Local Play
- * @catagory MPD
- */
-function show_mpd_pl() {
-
-	$myMpd = init_mpd();
-
-        require (conf('prefix').'/templates/show_mpdpl.inc');
-} // show_mpd_pl
-
-/** 
- * mpd_redirect
- * Redriect mojo
- * @package Local Play
- * @catagory MPD
- * @param $page is the URL after conf('web_path') . '/'
- */
-function mpd_redirect( $page = 'mpd.php' ) {
-        if (conf('localplay_menu')) {
-                header ("Location: " . conf('web_path') . '/' . $page);
-        }       
-        else {          
-                header ("Location: " . conf('web_path')); 
-        }               
-} // mpd_redirect
-
 /**
  * verify_localplay_prefrences
  * This takes a type of localplay and then
@@ -175,6 +91,20 @@ function insert_localplay_preferences($type) {
 
 } // insert_localplay_preferences
 
+/**
+ * remove_localplay_preferences
+ * This function has two uses, if it is called with a specific type then it 
+ * just removes the preferences for that type, however it if its called with
+ * nothing then it removes any set of preferences where the module no longer
+ * exists
+ */
+function remove_localplay_preferences($type=0) { 
+
+
+
+
+
+} // remove_localplay_preferences
 
 /**
  * get_localplay_controllers

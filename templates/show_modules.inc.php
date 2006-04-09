@@ -30,25 +30,29 @@
 $localplay_modules = get_localplay_controllers(); 
 $web_path = conf('web_path'); 
 ?>
-<table class="text-box">
+<span class="header2"><?php echo _('Modules'); ?></span>
+<table class="border" border="0" cellspacing="0">
 <tr class="table-header">
 	<th><?php echo _('Module Name'); ?></th>
 	<th><?php echo _('Action'); ?></th>
 </tr>
 <?php 
 foreach ($localplay_modules as $module) { 
-	$action = _('Active');
 	if (!verify_localplay_preferences($module)) { 
 		$action = "<a href=\"" . $web_path . "/admin/modules.php?action=insert_localplay_preferences&amp;type=" . $module . "\">" . 
 			_('Activate') . "</a>";
 	}
+	else { 
+		$action = "<a href=\"" . $web_path . "/admin/modules.php?action=confirm_remove_localplay_preferences&amp;type=" . $module . "\">" . 
+			_('Deactivate') . "</a>";
+	}
 ?>
-<tr>
+<tr class="<?php echo flip_class(); ?>">
 	<td><?php echo scrub_out($module); ?></td>
 	<td><?php echo $action; ?></td>
 </tr>
 <?php } if (!count($localplay_modules)) { ?>
-<tr>
+<tr class="<?php echo flip_class(); ?>">
 	<td colspan="2"><span class="error"><?php echo _('No Records Found'); ?></span></td>
 </tr>
 <?php } ?>

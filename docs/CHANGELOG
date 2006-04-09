@@ -4,7 +4,7 @@
 
 --------------------------------------------------------------------------
   v.3.3.2-Beta3
-  	- Fixed a glitch that was causing m3u's to be build on every 
+  	- Fixed a glitch that was causing m3u's to be built on every 
 		catalog add, rather then just on creation
   	- Full re-write of Localplay, MPD controller added
 	- Tweaked Preferences once more

@@ -42,6 +42,21 @@ switch ($action) {
 		$body	= '';
 		show_confirmation($title,$body,$url);
 	break;
+	case 'confirm_remove_localplay_preferences':
+		$type = scrub_in($_REQUEST['type']);
+		$url	= conf('web_path') . '/admin/modules.php?action=remove_localplay_preferences&amp;' . $type;
+		$title	= _('Are you sure you want to remove this module?');
+		$body	= '';
+		show_confirmation($title,$body,$url,1);
+	break;
+	case 'remove_localplay_preferences':
+		$type = scrub_in($_REQUEST['type']);
+		remove_localplay_preferences($type);
+		$url	= conf('web_path') . '/admin/modules.php';
+		$title	= _('Module Deactivated');
+		$body	= '';
+		show_confirmation($title,$body,$url);
+	break;
 	default: 
 		require_once (conf('prefix') . '/templates/show_modules.inc.php');
 	break;

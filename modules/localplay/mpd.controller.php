@@ -65,10 +65,16 @@ class AmpacheMpd {
 		$map['status']		= 'get_status';
                 $map['connect']         = 'connect';
 		
-		/* Optional Functions */
+		/* Recommended Functions */
 		$map['next']		= 'next';
 		$map['prev']		= 'prev';
 		$map['pause']		= 'pause';
+		$map['volume']          = 'volume';
+		$map['loop']            = 'loop';
+		$map['random']          = 'random';
+
+		/* Optional Functions */
+		$map['move']		= 'move';
 
                 return $map;
 
@@ -151,7 +157,6 @@ class AmpacheMpd {
 	function play() { 
 
 		if (is_null($this->_mpd->Play())) { return false; } 
-
 		return true;
 
 	} // play
@@ -164,7 +169,6 @@ class AmpacheMpd {
 	function stop() { 
 
 		if (is_null($this->_mpd->Stop())) { return false; } 
-
 		return true;
 
 	} // stop
@@ -177,7 +181,6 @@ class AmpacheMpd {
 	function next() { 
 
 		if (is_null($this->_mpd->Next())) { return false; } 
-
 		return true;
 
 	} // next
@@ -189,7 +192,6 @@ class AmpacheMpd {
 	function prev() { 
 
 		if (is_null($this->_mpd->Previous())) { return false; } 
-	
 		return true;
 	
 	} // prev
@@ -201,10 +203,55 @@ class AmpacheMpd {
 	function pause() { 
 		
 		if (is_null($this->_mpd->Pause())) { return false; } 
-
 		return true;
 
 	} // pause 
+
+
+        /**
+        * volume
+        * This tells MPD to set the volume to the parameter
+        */
+       function volume($volume) {
+
+               if (is_null($this->_mpd->SetVolume($volume))) { return false; }
+               return true;
+
+       } // volume
+
+       /**
+        * loop
+        * This tells MPD to set the repeating the playlist (i.e. loop) to either on or off
+        */
+       function loop($onoff) {
+
+               if (is_null($this->_mpd->SetRepeat($onoff))) { return false; }
+               return true;
+
+       } // loop
+
+
+       /**
+        * random
+        * This tells MPD to turn on or off the playing of songs from the playlist in random order
+        */
+       function random($onoff) {
+
+               if (is_null($this->_mpd->SetRandom($onoff))) { return false; }
+               return true;
+
+       } // random
+
+       /**
+        * move
+        * This tells MPD to move song from SrcPos to DestPos
+        */
+       function move($SrcPos, $DestPos) {
+
+		if (is_null($this->_mpd->PLMoveTrack($SrcPos, $DestPos))) { return false; }
+
+        	return true;
+	} // move
 
 	/**
 	 * get_songs
