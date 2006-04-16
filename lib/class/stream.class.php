@@ -114,7 +114,7 @@ class Stream {
 	                if($GLOBALS['user']->prefs['play_type'] == 'downsample') {
 	                	$ds = $GLOBALS['user']->prefs['sample_rate'];
 			}
-                        echo "$this->web_path/play/index.php?song=$song_id&uid=$this->user_id&sid=$this->sess&ds=$ds&name=/" . rawurlencode($song_name) . "\n";
+			echo $song->get_url();
                 } // end foreach
 
 	} // create_m3u
@@ -135,12 +135,8 @@ class Stream {
 			$i++;
 			$song = new Song($song_id);
 			$song->format_song();
-			if ($song->type == ".flac") { $song->type = ".ogg"; }
 			$song_name = $song->f_artist_full . " - " . $song->title . "." . $song->type;
-                        if($GLOBALS['user']->prefs['play_type'] == 'downsample') {
-                                $ds = $GLOBALS['user']->prefs['sample_rate'];
-                        }
-			$song_url = $this->web_path . "/play/index.php?song=$song_id&uid=$this->user_id&sid=$this->sess&ds=$ds&stupidwinamp=." . $song->type; 
+			$song_url = $song->get_url();
 			echo "File" . $i . "=$song_url\n";
 			echo "Title" . $i . "=$song_name\n";
 			echo "Length" . $i . "=-1\n";
@@ -165,15 +161,13 @@ class Stream {
 		foreach ($this->songs as $song_id) {
                 	$song = new Song($song_id);
                         $song->format_song();   
+			$url = $song->get_url();
                         $song_name = $song->f_artist_full . " - " . $song->title . "." . $song->type;
+			
                         echo "<ENTRY>\n";
                         echo "<TITLE>".$song->f_album_full ." - ". $song->f_artist_full ." - ". $song->title ."</TITLE>\n";
                         echo "<AUTHOR>".$song->f_artist_full."</AUTHOR>\n";
-                        $sess = $_COOKIE[libglue_param('sess_name')];
-                        if ($GLOBALS['user']->prefs['play_type'] == 'downsample') {
-	                        $ds = $GLOBALS['user']->prefs['sample_rate'];
-			}
-        	        echo "<REF HREF = \"". conf('web_path') . "/play/index.php?song=$song_id&uid=$this->user_id&sid=$sess&ds=$ds&name=/" . rawurlencode($song_name) . "\" />\n";
+        	        echo "<REF HREF = \"". $url . "\" />\n";
                         echo "</ENTRY>\n";
 			
                 } // end foreach
