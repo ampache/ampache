@@ -152,6 +152,7 @@ class Song {
 				break;
 			case 'mpc':
 				$this->mime = "audio/x-musepack";
+				$this->type = "MPC";
 				break;
 			default:
 				$this->mime = "audio/mpeg";

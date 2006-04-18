@@ -762,7 +762,7 @@ function img_resize($image,$size,$type){
 	/* First check for php-gd */
 	$info = gd_info();
 
-	if ($type == 'jpg' AND !$info['JPG Support']) {
+	if ( ($type == 'jpg' OR $type == 'jpeg') AND !$info['JPG Support']) {
 		return false;
 	}
 	elseif ($type == 'png' AND !$info['PNG Support']) {
@@ -785,6 +785,7 @@ function img_resize($image,$size,$type){
 	// determine image type and send it to the client
 	switch ($type) {
 		case 'jpg':
+		case 'jpeg':
 			imagejpeg($img,null,100);
 			break;
 		case 'gif':

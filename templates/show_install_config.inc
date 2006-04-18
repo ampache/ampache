@@ -30,90 +30,93 @@
 <title>Ampache :: For The Love Of Music - Install</title>
 </head>
 <body>
-<?php require_once(conf('prefix') . "/templates/style.inc"); ?>
-<div class="text-box">
-<span class="header1"><?php echo _("Ampache Installation"); ?></span>
-<p>
-<?php echo _("This Page handles the installation of the Ampache database and the creation of the ampache.cfg.php file. Before you continue please make sure that you have the following pre-requisites"); ?>
-</br />
-<ul>
-        <li><?php echo _("A MySQL Server with a username and password that can create/modify databases"); ?></li>
-        <li><?php echo _("Your webserver has read access to the /sql/ampache.sql file and the /config/ampache.cfg.php.dist file"); ?></li>
-</ul>
-<?php echo _("Once you have ensured that you have the above requirements please fill out the information below. You will only be asked for the required config values. If you would like to make changes to your ampache install at a later date simply edit /config/ampache.cfg.php"); ?>
-</p>
+<?php require_once(conf('prefix') . "/templates/install.css"); ?>
+<div id="header"> 
+<h1><?php echo _("Ampache Installation"); ?></h1>
+<p>For the love of Music</p>
 </div>
+<div id="text-box">
 
-<div class="text-box">
-<?php echo _("Step 1 - Creating and Inserting the Ampache Database"); ?><br />
-<b><?php echo _("Step 2 - Creating the Ampache.cfg.php file"); ?></b><br />
-<dl>
-	<dd><?php echo _("This steps takes the basic config values, and first attempts to write them out directly to your webserver. If access is denied it will prompt you to download the config file. Please put the downloaded config file in /config"); ?></dd>
-</dl>
-<?php echo _("Step 3 - Setup Initial Account"); ?></a><br />
-<br /><br />
-<span class="header2">Generate Config File</span>
-<?php echo $GLOBALS['error']->print_error('general'); ?>
-<form method="post" action="<?php echo $_SERVER['PHP_SELF'] . "?action=create_config"; ?>" enctype="multipart/form-data" >
-<table cellpadding="5" cellspacing="0" border="0">
+	<div class="notify">
+		<?php echo _("This Page handles the installation of the Ampache database and the creation of the ampache.cfg.php file. Before you continue please make sure that you have the following pre-requisites"); ?>
+		<br />
+		<ul>
+        	<li><?php echo _("A MySQL Server with a username and password that can create/modify databases"); ?></li>
+        	<li><?php echo _("Your webserver has read access to the /sql/ampache.sql file and the /config/ampache.cfg.php.dist file"); ?></li>
+		</ul>
+		<?php echo _("Once you have ensured that you have the above requirements please fill out the information below. You will only be asked for the required config values. If you would like to make changes to your ampache install at a later date simply edit /config/ampache.cfg.php"); ?>
+	</div>
+
+	<div class="content">
+		<?php echo _("Step 1 - Creating and Inserting the Ampache Database"); ?><br />
+		<b><?php echo _("Step 2 - Creating the Ampache.cfg.php file"); ?></b><br />
+		<dl>
+		<dd><?php echo _("This steps takes the basic config values, and first attempts to write them out directly to your webserver. If access is denied it will prompt you to download the config file. Please put the downloaded config file in /config"); ?></dd>
+		</dl>
+		<?php echo _("Step 3 - Setup Initial Account"); ?></a><br />
+		<br /><br />
+		<span class="header2">Generate Config File</span>
+		<?php echo $GLOBALS['error']->print_error('general'); ?>
+		<form method="post" action="<?php echo $_SERVER['PHP_SELF'] . "?action=create_config"; ?>" enctype="multipart/form-data" >
+		<table>
 <tr>
-	<td><?php echo _("Web Path"); ?></td>
-	<td><input type="textbox" name="web_path" value="<?php echo $web_path; ?>" /></td>
+	<td class="align"><?php echo _("Web Path"); ?></td>
+	<td class="align"><input type="textbox" name="web_path" value="<?php echo $web_path; ?>" /></td>
 </tr>
 <tr>
-	<td><?php echo _("Desired Database Name"); ?></td>
-	<td><input type="textbox" name="local_db" value="<?php echo scrub_out($_REQUEST['local_db']); ?>" /></td>
+	<td class="align"><?php echo _("Desired Database Name"); ?></td>
+	<td class="align"><input type="textbox" name="local_db" value="<?php echo scrub_out($_REQUEST['local_db']); ?>" /></td>
 </tr>
 <tr>
-	<td><?php echo _("MySQL Hostname"); ?></td>
-	<td><input type="textbox" name="local_host" value="<?php echo scrub_out($_REQUEST['local_host']); ?>" /></td>
+	<td class="align"><?php echo _("MySQL Hostname"); ?></td>
+	<td class="align"><input type="textbox" name="local_host" value="<?php echo scrub_out($_REQUEST['local_host']); ?>" /></td>
 </tr>
 <tr>
-	<td><?php echo _("MySQL Username"); ?></td>
-	<td><input type="textbox" name="local_username" value="<?php echo scrub_out($_REQUEST['local_username']); ?>" /></td>
+	<td class="align"><?php echo _("MySQL Username"); ?></td>
+	<td class="align"><input type="textbox" name="local_username" value="<?php echo scrub_out($_REQUEST['local_username']); ?>" /></td>
 </tr>
 <tr>
-	<td><?php echo _("MySQL Password"); ?></td>
-	<td><input type="password" name="local_pass" value="" /></td>
+	<td class="align"><?php echo _("MySQL Password"); ?></td>
+	<td class="align"><input type="password" name="local_pass" value="" /></td>
 </tr>
 <tr>
 	<td>&nbsp;</td>
 	<td><input type="submit" value="<?php echo _("Write Config"); ?>" /></td>
 </tr>
-</table>
-</form>
-<br />
-<table border="0" cellpadding="0">
+		</table>
+		</form>
+		<br />
+		<table>
 <tr>
-        <td valign="top"><?php echo _("Ampache.cfg.php Exists"); ?></td>
-        <td valign="top">[ 
+        <td class="align"><?php echo _("Ampache.cfg.php Exists"); ?></td>
+        <td>[ 
         <?php
                 if (!read_config_file($configfile)) {
                         $status['read_config'] = 'false';
-                        echo " <font color=\"red\">ERROR</font> "; 
+                        echo " <span class=\"notok\">ERROR</span> "; 
                 }
                 else {
                         $status['read_config'] = 'true';
-                        echo " <font color=\"green\">&nbsp;&nbsp;&nbsp;OK&nbsp;&nbsp&nbsp;&nbsp;</font> ";
+                        echo " <span class=\"ok\">OK</span> ";
                 }
         ?>
         ]
         </td>
 </tr>
 <tr>
-        <td valign="top">
+        <td class="align">
                 <?php echo _("Ampache.cfg.php Configured?"); ?>
         </td>
-        <td valign="top">[ 
+        <td>[ 
         <?php
                 $results = read_config($configfile, 0, 0);
                 if (!check_config_values($results)) { 
                         $status['parse_config'] = 'false';
-                        echo " <font color=\"red\">ERROR</font> ";
+                        echo " <span class=\"notok\">ERROR</span> ";
                 }
                 else {
                         $status['parse_config'] = 'true';
-                        echo " <font color=\"green\">&nbsp;&nbsp;&nbsp;OK&nbsp;&nbsp;&nbsp;&nbsp;</font> ";
+                        echo " <span class=\"ok\">OK</span> ";
                 }
         ?>
         ]
@@ -124,12 +127,17 @@
 	<td>
 	<a href="<?php echo $GLOBALS['php_self']; ?>?action=show_create_config&local_db=<?php echo $_REQUEST['local_db']; ?>&local_host=<?php echo $_REQUEST['local_host']; ?>">[<?php echo _("Check for Config"); ?>]</a>
 	</td>
-</tr>
-</table>
-<br />
-<form method="post" action="<?php echo $GLOBALS['php_self'] . "?action=show_create_account"; ?>" enctype="multipart/form-data">
-<input type="Submit" value="Continue to Step 3" />
-</form>
+		</tr>
+		</table>
+		<br />
+		<form method="post" action="<?php echo $GLOBALS['php_self'] . "?action=show_create_account"; ?>" enctype="multipart/form-data">
+		<input type="Submit" value="Continue to Step 3" />
+		</form>
+	</div>
+	<div id="bottom">
+    	<p><b>Ampache Installation.</b><br />
+    	For the love of Music.</p>
+	</div>
 </div>
 
 </body>

@@ -66,7 +66,8 @@ switch ($_REQUEST['type']) {
 		} // else no image
 
 		// Print the album art
-		$extension = substr($mime,strlen($mime)-3,3);
+		$extension= explode("/",$mime);
+		$extension = $data['1'];
 		header("Content-type: $mime");
 		header("Content-Disposition: filename=" . $album->name . "." . $extension);	
 		if (!$_REQUEST['thumb']) { 

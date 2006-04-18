@@ -4,6 +4,8 @@
 
 --------------------------------------------------------------------------
   v.3.3.2-Beta3
+  	- Fixed problem where jpegs wouldn't get resized (Thx blueorder)
+  	- New Install and Update screen styles (Thx Ros)
   	- Fixed a glitch that was causing m3u's to be built on every 
 		catalog add, rather then just on creation
   	- Full re-write of Localplay, MPD controller added

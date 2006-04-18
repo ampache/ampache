@@ -66,21 +66,31 @@ $htmllang = str_replace("_","-",conf('lang'));
 <head>
 <link rel="shortcut icon" href="<?php echo conf('web_path'); ?>/favicon.ico" />
 <meta http-equiv="Content-Type" content="text/html; charset=<?php echo conf('site_charset'); ?>" />
-<?php  show_template('style'); ?>
+<?php require_once(conf('prefix') . "/templates/install.css"); ?>
 <title>Ampache - Update</title>
 </head>
 <body>
-
-<p class="header1">Ampache - Update</p>
-<p>
+<div id="header"> 
+<h1><?php echo _("Ampache Update"); ?></h1>
+<p>For the love of Music</p>
+</div>
+<div id="text-box">
+	<div class="notify">
 This page handles all database updates to Ampache starting with 3.2. According to your database your current version is: <?php echo  $update->format_version($version); ; ?>. 
 the following updates need to be performed<br /><br />
-</p>
+	</div>
+	<div class="content">
 <?php  $update->display_update(); ?>
 
 <form method="post" enctype="multipart/form-data" action="<?php echo  conf('web_path'); ; ?>/update.php?action=update">
 <?php  if ($update->need_update()) { ?><input type="submit" value="Update Now!" /> <?php  } ?>
 </form>
+	</div>
+	<div id="bottom">
+    	<p><b>Ampache Installation.</b><br />
+    	For the love of Music.</p>
+   </div>
+</div>
 </body>
 </html>
 
