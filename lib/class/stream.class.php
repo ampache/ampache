@@ -114,7 +114,7 @@ class Stream {
 	                if($GLOBALS['user']->prefs['play_type'] == 'downsample') {
 	                	$ds = $GLOBALS['user']->prefs['sample_rate'];
 			}
-			echo $song->get_url();
+			echo $song->get_url() . "\n";
                 } // end foreach
 
 	} // create_m3u

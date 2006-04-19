@@ -719,8 +719,9 @@ class Song {
 
 		/* Account for retarded players */
 		if ($song->type == 'flac') { $type = 'ogg'; } 
+		$song_name = rawurlencode($song->f_artist_full . " - " . $song->title . "." . $song->type);
 		
-		$url = conf('web_path') . "/play/index.php?song=$song_id&uid=$username&sid=$session$ds_string&name=$type";
+		$url = conf('web_path') . "/play/index.php?song=$song_id&uid=$username&sid=$session$ds_string&name=$song_name";
 
 		return $url;
 
