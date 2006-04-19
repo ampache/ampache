@@ -4,6 +4,8 @@
 
 --------------------------------------------------------------------------
   v.3.3.2-Beta3
+  	- Fixed a problem where if require_session was disabled it would
+		still pass the sid with the urls
   	- Fixed problem where jpegs wouldn't get resized (Thx blueorder)
   	- New Install and Update screen styles (Thx Ros)
   	- Fixed a glitch that was causing m3u's to be built on every 

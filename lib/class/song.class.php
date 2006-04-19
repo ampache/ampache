@@ -126,37 +126,37 @@ class Song {
 		$this->type = strtolower($results['1']);
 
 		switch ($this->type) { 
-			case "spx":
-			case "ogg":
+			case 'spx':
+			case 'ogg':
 				$this->mime = "application/x-ogg";
-				break;
-			case "wma":
-			case "asf":
+			break;
+			case 'wma':
+			case 'asf':
 				$this->mime = "audio/x-ms-wma";
-				break;
-			case "mp3":
-			case "mpeg3":
+			break;
+			case 'mp3':
+			case 'mpeg3':
 				$this->mime = "audio/mpeg";
-				break;
-			case "rm":
-			case "ra":
+			break;
+			case 'rm':
+			case 'ra':
 				$this->mime = "audio/x-realaudio";
-				break;
-			case "flac";
+			break;
+			case 'flac';
 				$this->mime = "audio/x-flac";
-				break;
+			break;
 			case 'aac':
 			case 'mp4':
 			case 'm4a':
 				$this->mime = "audio/mp4";
-				break;
+			break;
 			case 'mpc':
 				$this->mime = "audio/x-musepack";
 				$this->type = "MPC";
-				break;
+			break;
 			default:
 				$this->mime = "audio/mpeg";
-				break;
+			break;
 		}
 
 	} // get_type
@@ -710,7 +710,9 @@ class Song {
 		/* Define Variables we are going to need */
 		$username 	= $GLOBALS['user']->username;
 		$song_id	= $this->id;
-		$session	= session_id();
+		if (conf('require_session')) { 
+			$session_string	= "&sid=" . session_id();
+		} // if they are requiring a session
 		$type		= $this->type;
 
 		if ($GLOBALS['user']->prefs['play_type'] == 'downsample') { 
@@ -719,9 +721,10 @@ class Song {
 
 		/* Account for retarded players */
 		if ($song->type == 'flac') { $type = 'ogg'; } 
-		$song_name = rawurlencode($song->f_artist_full . " - " . $song->title . "." . $song->type);
+		$this->format_song();
+		$song_name = rawurlencode($this->f_artist_full . " - " . $this->title . "." . $this->type);
 		
-		$url = conf('web_path') . "/play/index.php?song=$song_id&uid=$username&sid=$session$ds_string&name=$song_name";
+		$url = conf('web_path') . "/play/index.php?song=$song_id&uid=$username$session_string$ds_string&name=$song_name";
 
 		return $url;
 
