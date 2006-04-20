@@ -87,4 +87,28 @@ function get_popular_songs( $threshold, $type, $user_id = '' ) {
 
 } // get_popular_songs()
 
+
+/**
+ * get_song_id_from_file
+ * This function takes a filename and returns it's best guess for a song id
+ */
+function get_song_id_from_file($filename) { 
+
+	$filename = sql_escape($filename);
+
+	$sql = "SELECT id FROM song WHERE file='$filename'";
+	$db_results = mysql_query($sql, dbh());
+
+	$results = mysql_fetch_assoc($db_results);
+
+	if (!$results['id']) { 
+		$sql = "SELECT id FROM song WHERE file='%$filename%'";
+		$db_results = mysql_query($sql, dbh());
+		$results = mysql_fetch_assoc($db_results);
+	}
+
+	return $results['id'];
+
+} // get_song_id_from_file
+
 ?>
