@@ -219,7 +219,7 @@ function show_search($type,$results) {
 		break;
 		case 'song':
 		default:
-			show_songs($results);
+			show_songs($results,0);
 		break;
 	} // end type switch
 
