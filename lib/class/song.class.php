@@ -711,12 +711,12 @@ class Song {
 		$username 	= $GLOBALS['user']->username;
 		$song_id	= $this->id;
 		if (conf('require_session')) { 
-			$session_string	= "&sid=" . session_id();
+			$session_string	= "&amp;sid=" . session_id();
 		} // if they are requiring a session
 		$type		= $this->type;
 
 		if ($GLOBALS['user']->prefs['play_type'] == 'downsample') { 
-			$ds_string = "&ds=" . $GLOBALS['user']->prefs['sample_rate'];
+			$ds_string = "&amp;ds=" . $GLOBALS['user']->prefs['sample_rate'];
 		}
 
 		/* Account for retarded players */
@@ -724,7 +724,7 @@ class Song {
 		$this->format_song();
 		$song_name = rawurlencode($this->f_artist_full . " - " . $this->title . "." . $this->type);
 		
-		$url = conf('web_path') . "/play/index.php?song=$song_id&uid=$username$session_string$ds_string&name=$song_name";
+		$url = conf('web_path') . "/play/index.php?song=$song_id&amp;uid=$username$session_string$ds_string&amp;name=$song_name";
 
 		return $url;
 
