@@ -1212,24 +1212,12 @@ class Catalog {
 					flush();
 				}
 
-				/* Add this file to the list for removal from the db */
-				$dead_files[] = $results;
+				$sql = "DELETE FROM song WHERE id='" . $results->id . "'";
+				$db_results = mysql_query($sql, dbh());
+
 			} //if error
 
 		} //while gettings songs
-
-		/* Incase there's been a snafo with a mount point on something
-		 * don't actually delete from DB here, simply disable and list
-		 */
-		if (count($dead_files)) {
-			foreach ($dead_files as $data) {
-
-				$sql = "DELETE FROM song WHERE id='$data->id'";
-				$db_results = mysql_query($sql, dbh());
-
-			} //end foreach
-
-		} // end if dead files
 
 		/* Step two find orphaned Arists/Albums
 		 * This finds artists and albums that no
