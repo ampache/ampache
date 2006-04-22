@@ -4,6 +4,7 @@
 
 --------------------------------------------------------------------------
   v.3.3.2-Beta3
+  	- Added xbmc controller (Thx Infamy)
   	- Fixed a problem where if require_session was disabled it would
 		still pass the sid with the urls
   	- Fixed problem where jpegs wouldn't get resized (Thx blueorder)
