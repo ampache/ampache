@@ -27,7 +27,7 @@ $required_info 	= "&amp;user_id=" . $GLOBALS['user']->id . "&amp;sessid=" . sess
 $ajax_url	= $web_path . '/server/ajax.server.php';
 
 ?>
-<div style="background:white;display:table-cell;cursor:pointer;border:1px solid black;padding-top:2px;padding-left:5px;padding-right:5px;">
+<div class="localplaycontrol" style="display:table-cell;cursor:pointer;border:1px solid black;padding:2px;">
 <?php if ($localplay->has_function('prev')) { ?>
 <span id="prev_button" onclick="ajaxPut('<?php echo $ajax_url; ?>','action=localplay&amp;cmd=prev<?php echo $required_info; ?>','localplay_state');return true;">
 	<img src="<?php echo $web_path; ?>/images/localplay/prev.gif" alt="prev" />
