@@ -493,7 +493,7 @@ class Catalog {
                                 echo "</script>\n"; 
 	                        flush();
                         } //echos song count
-
+			
 			
 			// Prevent the script from timing out
 			set_time_limit(0);
@@ -501,8 +501,7 @@ class Catalog {
 			unset($found);
 
 		} // foreach albums
-		
-		echo "$art_found album's with art. . .<br />\n";
+		echo "<br />$art_found " . _('album\'s with art') . ". . .<br />\n";
 		flush();
 
 	} // get_album_art
@@ -649,7 +648,7 @@ class Catalog {
 	        // Get all of the albums in this catalog
 	        $albums = $this->get_catalog_albums($catalog_id);
 
-		echo "<br /><b>" . _("Starting Dump Album Art") . ". . .</b><br /><br />\n";
+		echo "<br /><b>" . _('Starting Dump Album Art') . ". . .</b><br /><br />\n";
 
 		// Run through them an get the art!
 		foreach ($albums as $album) {
@@ -789,6 +788,12 @@ class Catalog {
 		/* Get the songs and then insert them into the db */
 		$this->add_files($this->path,$type,$parse_m3u);
 
+                echo "<script language=\"JavaScript\">";
+                echo "update_txt('" . $this->count . "','count_add_" . $this->id ."');";
+                echo "</script>\n";
+                flush();
+
+
 		foreach ($this->_playlists as $full_file) { 
 	                if ($this->import_m3u($full_file)) {
 				$file = basename($full_file);
@@ -799,7 +804,7 @@ class Catalog {
 
 		/* Now Adding Album Art? */
 		if ($gather_art) { 
-                        echo "<br />\n<b>" . _("Starting Album Art Search") . ". . .</b><br />\n";
+                        echo "<br />\n<b>" . _('Starting Album Art Search') . ". . .</b><br />\n";
 			echo _('Searched') . ": <span id=\"count_art_" . $this->id . "\">" . _('None') . "</span>";
                         flush();
                         $this->get_album_art(0,$art);
@@ -951,6 +956,11 @@ class Catalog {
 
 		/* Get the songs and then insert them into the db */
 		$this->add_files($this->path,$type,1,$verbose);
+
+                echo "<script language=\"JavaScript\">";
+                echo "update_txt('" . $this->count . "','count_add_" . $this->id ."');";
+                echo "</script>\n";
+                flush();
 
                 foreach ($this->_playlists as $full_file) {
                         if ($this->import_m3u($full_file)) {
@@ -1212,12 +1222,25 @@ class Catalog {
 					flush();
 				}
 
-				$sql = "DELETE FROM song WHERE id='" . $results->id . "'";
-				$db_results = mysql_query($sql, dbh());
-
+				/* Add this file to the list for removal from the db */
+				$dead_files[] = $results;
 			} //if error
 
 		} //while gettings songs
+	
+		/* Unfortuantly it has to be done this way 
+		 * you can't delete a row at the same time you're 
+		 * doing a select on said table 
+		 */
+		if (count($dead_files)) {
+			foreach ($dead_files as $data) {
+
+				$sql = "DELETE FROM song WHERE id='$data->id'";
+				$db_results = mysql_query($sql, dbh());
+
+			} //end foreach
+
+		} // end if dead files
 
 		/* Step two find orphaned Arists/Albums
 		 * This finds artists and albums that no
@@ -1232,6 +1255,9 @@ class Catalog {
 		
 		/* Return dead files, so they can be listed */
 		if ($verbose) { 
+                        echo "<script language=\"JavaScript\">";
+                        echo "update_txt('" . $this->count ."','count_clean_" . $this->id . "');";
+                        echo "</script>\n";
 			echo "<b>" . _("Catalog Clean Done") . " [" . count($dead_files) . "] " . _("files removed") . "</b><br />\n";
 			flush();
 		}
@@ -1658,6 +1684,13 @@ class Catalog {
 
 		// Update the last_update
 		$this->update_last_update();
+
+		if ($verbose) { 
+                        echo "<script language=\"JavaScript\">";
+                        echo "update_txt('" . $this->count . "','count_verify_" . $this->id . "');";
+                        echo "</script>\n";
+                        flush();
+		}
 
 		echo _('Update Finished.') . _('Checked') . " $this->count. $total_updated " . _('songs updated.') . "<br /><br />";
 

@@ -75,7 +75,7 @@ class AmpacheMpd {
 
 		/* Optional Functions */
 		$map['move']		= 'move';
-		//$map['delete_all']	= 'clear_playlist';
+		$map['delete_all']	= 'clear_playlist';
 
                 return $map;
 
@@ -149,6 +149,18 @@ class AmpacheMpd {
 
 	} // delete_songs
 	
+
+	/**
+	 * clear_playlist
+	 * This deletes the entire MPD playlist... nuff said
+	 */
+	function clear_playlist() { 
+
+		if (is_null($this->_mpd->PLClear())) { return false; }
+
+		return true;
+
+	} // clear_playlist
 
 	/**
 	 * play

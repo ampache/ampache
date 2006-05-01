@@ -122,6 +122,10 @@ switch ($_REQUEST['action']) {
 			$catalog->add_to_catalog();
 			echo "</div>";
 		} 		
+		$url	= conf('web_path') . '/admin/index.php';
+		$title	= _('Catalog Updated');
+		$body	= '';
+		show_confirmation($title,$body,$url);
 	break;
 	case 'delete_catalog':
 		/* Make sure they aren't in demo mode */

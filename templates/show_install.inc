@@ -1,4 +1,4 @@
-<html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php echo $htmllang; ?>" lang="<?php echo $htmllang; ?>">
 <head>
 <title>Ampache :: For The Love Of Music - Install</title>
 </head>
@@ -34,7 +34,7 @@
 		<br /><br />
 		<span class="header2">Insert Ampache Database</span>
 		<?php echo $GLOBALS['error']->print_error('general'); ?>
-		<form method="post" action="<?php echo $http_type . $_SERVER['HTTP_HOST'] .  $_SERVER['PHP_SELF'] . "?action=create_db"; ?>" enctype="multipart/form-data" >
+		<form method="post" action="<?php echo $http_type . $_SERVER['HTTP_HOST'] .  $_SERVER['PHP_SELF'] . "?action=create_db&htmllang=$htmllang&charset=$charset"; ?>" enctype="multipart/form-data" >
 <table>
 <tr>
 	<td class="align"><?php echo _("Desired Database Name"); ?></td>

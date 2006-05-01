@@ -31,6 +31,7 @@ require_once('modules/lib.php');
 require_once('lib/debug.php');
 require_once('lib/class/user.class.php');
 require_once('lib/class/error.class.php');
+require_once('lib/gettext.php');
 
 require_once('modules/vauth/dbh.lib.php');
 require_once('modules/vauth/init.php');
@@ -75,8 +76,12 @@ switch ($action) {
 			require_once('templates/show_install.inc.php');
 			break;
 		}
+
+		/* Get the variables for the language */
+		$htmllang = $_REQUEST['htmllang'];
+		$charset  = $_REQUEST['charset'];
 		
-		header ("Location: " . $php_self . "?action=show_create_config&local_db=$database&local_host=$hostname");
+		header ("Location: " . $php_self . "?action=show_create_config&local_db=$database&local_host=$hostname&htmllang=$htmllang&charset=$charset");
 		
 		break;
 	case 'create_config':
@@ -89,7 +94,33 @@ switch ($action) {
                 /* Attempt to Guess the Web_path */
 		$web_path = dirname($_SERVER['PHP_SELF']);
 		$web_path = rtrim($web_path,"\/");
-	
+
+		/* Get the variables for the language */
+		$htmllang = $_REQUEST['htmllang'];
+		$charset  = $_REQUEST['charset'];
+
+		// Set the lang in the conf array
+		conf(array('lang'=>$htmllang));
+
+		// We need the charset for the different languages
+		$charsets = array('de_DE' => 'ISO-8859-15',
+				  'en_US' => 'iso-8859-1',
+				  'en_GB' => 'UTF-8',
+				  'es_ES' => 'iso-8859-1',
+				  'fr_FR' => 'iso-8859-1',
+				  'it_IT' => 'UTF-8',
+				  'nl_NL' => 'ISO-8859-15',
+				  'tr_TR' => 'iso-8859-9',
+				  'zh_CN' => 'GBK');
+		$charset = $charsets[$_REQUEST['htmllang']];
+		
+		// Set the site_charset in the conf array
+		conf(array('site_charset'=>$charsets[$_REQUEST['htmllang']]));
+		
+		/* load_gettext mojo */
+		load_gettext();
+		header ("Content-Type: text/html; charset=" . conf('site_charset'));
+		
 		require_once('templates/show_install_config.inc');
 		break;
 	case 'create_account':
@@ -130,11 +161,73 @@ switch ($action) {
 			break;
 		}
 	
+
+		/* Get the variables for the language */
+		$htmllang = $_REQUEST['htmllang'];
+		$charset  = $_REQUEST['charset'];
+
+		
+		// Set the lang in the conf array
+		conf(array('lang'=>$htmllang));
+
+		// We need the charset for the different languages
+		$charsets = array('de_DE' => 'ISO-8859-15',
+				  'en_US' => 'iso-8859-1',
+				  'en_GB' => 'UTF-8',
+				  'es_ES' => 'iso-8859-1',
+				  'fr_FR' => 'iso-8859-1',
+				  'it_IT' => 'UTF-8',
+				  'nl_NL' => 'ISO-8859-15',
+				  'tr_TR' => 'iso-8859-9',
+				  'zh_CN' => 'GBK');
+		$charset = $charsets[$_REQUEST['htmllang']];
+		
+		// Set the site_charset in the conf array
+		conf(array('site_charset'=>$charsets[$_REQUEST['htmllang']]));
+		
+		/* load_gettext mojo */
+		load_gettext();
+		header ("Content-Type: text/html; charset=" . conf('site_charset'));
+		
 		require_once('templates/show_install_account.inc.php');
 		break;
-	default:
+
+        case 'init':
+		/* First step of installation */
+		// Get the language
+		$htmllang = $_REQUEST['htmllang'];
+
+		// Set the lang in the conf array
+		conf(array('lang'=>$htmllang));
+
+		// We need the charset for the different languages
+		$charsets = array('de_DE' => 'ISO-8859-15',
+				  'en_US' => 'iso-8859-1',
+				  'en_GB' => 'UTF-8',
+				  'es_ES' => 'iso-8859-1',
+				  'fr_FR' => 'iso-8859-1',
+				  'it_IT' => 'UTF-8',
+				  'nl_NL' => 'ISO-8859-15',
+				  'tr_TR' => 'iso-8859-9',
+				  'zh_CN' => 'GBK');
+		$charset = $charsets[$_REQUEST['htmllang']];
+		
+		// Set the site_charset in the conf array
+ 	        conf(array('site_charset'=>$charsets[$_REQUEST['htmllang']]));
+			
+		// Now we make voodoo with the Load gettext mojo
+		load_gettext();
+
+		// Page ready  :)
+		header ("Content-Type: text/html; charset=" . conf('site_charset'));
 		require_once('templates/show_install.inc');
 		break;
+		
+        default:
+		/* Show the language options first */
+		require_once('templates/show_install_lang.inc.php');
+	break;
+
 
 } // end action switch
 

@@ -877,9 +877,7 @@ function get_languages() {
 	$handle	= @opendir(conf('prefix') . '/locale');
 
 	if (!is_resource($handle)) { 
-		if (conf('debug')) { 
-			log_event($GLOBALS['user']->username,'language',"Error unable to open locale directory"); 
-		}
+		debug_event('language','Error unable to open locale directory','1'); 
 	}
 
 	$results = array(); 
@@ -895,15 +893,16 @@ function get_languages() {
 		if (is_dir($full_file) AND substr($file,0,1) != '.' AND $file != 'base') { 
 				
 			switch($file) { 
-				case 'de_DE'; $name = _('German'); break;
+				case 'de_DE'; $name = 'Deutsch'; break;
 				case 'en_US'; $name = _('English'); break;
 				case 'en_GB'; $name = _('British English'); break;
-				case 'es_ES'; $name = _('Spanish'); break;
-				case 'fr_FR'; $name = _('French'); break;
-				case 'it_IT'; $name = _('Italian'); break;
-				case 'nl_NL'; $name = _('Dutch'); break;
+				case 'es_ES'; $name = 'Espa&ntilde;ol'; break;
+				case 'fr_FR'; $name = 'Fran&ccedil;ais'; break;
+				case 'it_IT'; $name = 'Italiano'; break;
+				case 'nl_NL'; $name = 'Nederlands'; break;
 				case 'tr_TR'; $name = _('Turkish'); break;
-				case 'zh_CN'; $name = _('Simplified Chinese'); break;
+				case 'zh_CN'; $name = _('Simplified Chinese') . " (&#x7b80;&#x4f53;&#x4e2d;&#x6587;)"; break;
+				case 'ru_RU'; $name = 'Russian (&#x0420;&#x0443;&#x0441;&#x0441;&#x043a;&#x0438;&#x0439;)'; break;
 				default: $name = _('Unknown'); break;
 			} // end switch
 

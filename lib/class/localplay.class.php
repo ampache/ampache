@@ -23,7 +23,7 @@
 class Localplay {
 
 	/* Base Variables */
-
+	var $type;
 
 
 
@@ -326,6 +326,25 @@ class Localplay {
 		return true;
 
 	} // delete
+
+	/**
+	 * delete_all
+	 * This removes every song from the players playlist as defined by the delete_all function
+	 * map
+	 */
+	function delete_all() { 
+
+
+		$function = $this->_function_map['delete_all'];
+
+		if (!$this->_player->$function($songs)) { 
+			debug_event('localplay','Error: Unable to delete entire playlist, check ' . $this->type . ' controller','1');
+			return false; 
+		}
+
+		return true;
+
+	} // delete_all
 
 
 } //end localplay class

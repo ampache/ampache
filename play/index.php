@@ -118,6 +118,9 @@ $catalog = new Catalog($song->catalog);
 /* Update the users last seen information */
 $GLOBALS['user']->update_last_seen();
 
+/* Run Garbage Collection on Now Playing */
+gc_now_playing();
+
 /* Check to see if this is a 'remote' catalog */
 if ($catalog->catalog_type == 'remote') {
 	// redirect to the remote host's play path
@@ -132,9 +135,6 @@ if ($catalog->catalog_type == 'remote') {
 	exit;
 } // end if remote catalog
 
-
-/* Run Garbage Collection on Now Playing */
-gc_now_playing();
 
 // If we are running in Legalize mode, don't play songs already playing
 if (conf('lock_songs')) {

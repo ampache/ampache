@@ -4,6 +4,8 @@
 
 --------------------------------------------------------------------------
   v.3.3.2-Beta3
+  	- Added Clear Playlist Functionality to Localplay
+  	- Added Language selection to Installer (Thx Ros)
   	- Added xbmc controller (Thx Infamy)
   	- Fixed a problem where if require_session was disabled it would
 		still pass the sid with the urls
@@ -11,9 +13,9 @@
   	- New Install and Update screen styles (Thx Ros)
   	- Fixed a glitch that was causing m3u's to be built on every 
 		catalog add, rather then just on creation
-  	- Full re-write of Localplay, MPD controller added
 	- Tweaked Preferences once more
-	- Added Modules Page
+	- Added Modules Page, used for enabling/disabling localplay
+		types
   	- Fixed a missing web_path reference on playlist edit page
 	- Added Localplay API, check the wiki for more information
 		https://ampache.bountysource.com/wiki/Localplay

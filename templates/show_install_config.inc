@@ -6,7 +6,7 @@
 
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
- as published by the Free Software Foundation; either version 2
+1 as published by the Free Software Foundation; either version 2
  of the License, or (at your option) any later version.
 
  This program is distributed in the hope that it will be useful,
@@ -25,7 +25,7 @@
 */
 
 ?>
-<html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php echo $htmllang; ?>" lang="<?php echo $htmllang; ?>">
 <head>
 <title>Ampache :: For The Love Of Music - Install</title>
 </head>
@@ -125,12 +125,13 @@
 <tr>
 	<td>&nbsp;</td>
 	<td>
-	<a href="<?php echo $GLOBALS['php_self']; ?>?action=show_create_config&local_db=<?php echo $_REQUEST['local_db']; ?>&local_host=<?php echo $_REQUEST['local_host']; ?>">[<?php echo _("Check for Config"); ?>]</a>
+	<?php $check_url = $GLOBALS['php_self'] . "?action=show_create_config&amp;htmllang=$htmllang&amp;charset=$charset&amp;local_db=" . $_REQUEST['local_db'] . "&amp;local_host=" . $_REQUEST['local_host']; ?>
+	<a href="<?php echo $check_url; ?>">[<?php echo _('Check for Config'); ?>]</a>
 	</td>
 		</tr>
 		</table>
 		<br />
-		<form method="post" action="<?php echo $GLOBALS['php_self'] . "?action=show_create_account"; ?>" enctype="multipart/form-data">
+		<form method="post" action="<?php echo $GLOBALS['php_self'] . "?action=show_create_account&htmllang=$htmllang&charset=$charset"; ?>" enctype="multipart/form-data">
 		<input type="Submit" value="Continue to Step 3" />
 		</form>
 	</div>

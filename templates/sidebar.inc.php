@@ -186,6 +186,10 @@ $web_path = conf('web_path');
 		<?php require_once(conf('prefix') . '/templates/show_localplay_control.inc.php'); ?>
 		<br />
 		<?php $type = conf('play_type'); ${$type} = 'id="pt_active"'; ?>
+		<?php 
+			$required_info  = "&amp;user_id=" . $GLOBALS['user']->id . "&amp;sessid=" . session_id();
+			$ajax_url       = $web_path . '/server/ajax.server.php'; 
+		?>
 		<span class="text-action" style="cursor:pointer;" id="play_type">
 		<span <?php echo $stream; ?> onclick="ajaxPut('<?php echo $ajax_url; ?>','action=change_play_type&amp;type=stream<?php echo $required_info; ?>','play_type');return true;">
         		<?php echo _('Stream') ?>

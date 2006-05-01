@@ -26,8 +26,12 @@ $songs = $localplay->get();
 ?>
 
 <div class="text-box">
-<span class="header2"><?php echo _('Localplay'); ?></span>
-<!-- Yea I don't know what to put here... yet.. -->
+<span class="header2"><?php echo ucfirst($localplay->type); ?> <?php echo _('Localplay'); ?></span>
+<ul class="text-action">
+<?php if ($localplay->has_function('delete_all')) { ?>
+	<li><a href="<?php echo $web_path; ?>/localplay.php?action=delete_all"><?php echo _('Clear Playlist'); ?></a></li>
+<?php } ?>
+</ul>
 </div>
 <br />
 <div class="text-box">
@@ -51,7 +55,7 @@ $songs = $localplay->get();
 </tr>
 <?php } if (!count($songs)) { ?>
 <tr class="<?php echo flip_class(); ?>">
-	<td colspan="2"><span class="error"><?php echo _('No Records Found'); ?></span></td>
+	<td colspan="3"><span class="error"><?php echo _('No Records Found'); ?></span></td>
 </tr>
 <?php } ?>
 </table>
