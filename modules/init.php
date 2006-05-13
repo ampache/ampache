@@ -154,11 +154,12 @@ require_once(conf('prefix') . '/lib/upload.php');
 require_once(conf('prefix') . '/modules/lib.php');
 require_once(conf('prefix') . '/modules/admin.php');
 require_once(conf('prefix') . '/modules/catalog.php');
-require_once(conf('prefix') . "/modules/id3/audioinfo.class.php");
-require_once(conf('prefix') . "/modules/amazon/Snoopy.class.php");
-require_once(conf('prefix') . "/modules/amazon/AmazonSearchEngine.class.php");
-require_once(conf('prefix') . "/lib/xmlrpc.php");
-require_once(conf('prefix') . "/modules/xmlrpc/xmlrpc.inc");
+require_once(conf('prefix') . '/modules/id3/audioinfo.class.php');
+require_once(conf('prefix') . '/modules/id3/vainfo.class.php');
+require_once(conf('prefix') . '/modules/amazon/Snoopy.class.php');
+require_once(conf('prefix') . '/modules/amazon/AmazonSearchEngine.class.php');
+require_once(conf('prefix') . '/lib/xmlrpc.php');
+require_once(conf('prefix') . '/modules/xmlrpc/xmlrpc.inc');
 
 // Modules (These are conditionaly included depending upon config values)
 if (conf('ratings')) { 
@@ -241,9 +242,9 @@ elseif (!conf('use_auth')) {
 	$auth['offset_limit'] = 50;
 	if (!vauth_check_session()) { vauth_session_create($auth); }
 	$user 			= new User(-1);
-	$user->fullname 	= $auth['fullname'];
+	$user->fullname 	= 'Ampache User';
 	$user->offset_limit 	= $auth['offset_limit'];
-	$user->username 	= $auth['username'];
+	$user->username 	= '-1';
 	$user->access 		= $auth['access'];
 	$_SESSION['userdata']['username'] 	= $auth['username'];
 	$user->set_preferences();

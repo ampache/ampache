@@ -191,12 +191,7 @@ $web_path = conf('web_path');
 			$ajax_url       = $web_path . '/server/ajax.server.php'; 
 		?>
 		<span class="text-action" style="cursor:pointer;" id="play_type">
-		<span <?php echo $stream; ?> onclick="ajaxPut('<?php echo $ajax_url; ?>','action=change_play_type&amp;type=stream<?php echo $required_info; ?>','play_type');return true;">
-        		<?php echo _('Stream') ?>
-		</span>&nbsp;&nbsp;
-		<span <?php echo $localplay; ?> onclick="ajaxPut('<?php echo $ajax_url; ?>','action=change_play_type&amp;type=localplay<?php echo $required_info; ?>','play_type');return true;">
-		        <?php echo _('Localplay'); ?>
-		</span>
+		<?php require_once(conf('prefix') . '/templates/show_localplay_switch.inc.php'); ?>
 		</span>
 	</li>
 <?php } // if horizontal orientation ?>

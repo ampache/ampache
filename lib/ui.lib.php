@@ -50,51 +50,6 @@ function show_confirmation($title,$text,$next_url,$cancel=0) {
 } // show_confirmation
 
 /**
- * init_preferences
- * Third times the charm, why rename a function once when you can do it three times :( 
- * This grabs the preferences and then loads them into conf it should be run on page load
- * to initialize the needed variables
- */
-function init_preferences() { 
-
-
-	/* Get Global Preferences */
-	$sql = "SELECT preferences.name,user_preference.value FROM preferences,user_preference WHERE user_preference.user='-1' " .
-		" AND user_preference.preference = preferences.id AND preferences.catagory='system'";
-	$db_results = mysql_query($sql, dbh());
-
-	while ($r = mysql_fetch_assoc($db_results)) {
-		$name = $r['name'];
-		$results[$name] = $r['value'];
-	} // end while sys prefs
-
-	/* Now we need to allow the user to override some stuff that's been set by the above */
-	$user_id = '-1';
-	if ($GLOBALS['user']->username) { 
-		$user_id = sql_escape($GLOBALS['user']->id);
-	}
-
-	$sql = "SELECT preferences.name,user_preference.value FROM preferences,user_preference WHERE user_preference.user='$user_id' " . 
-		" AND user_preference.preference = preferences.id AND preferences.catagory != 'system'";
-	$db_results = mysql_query($sql, dbh());
-
-	while ($r = mysql_fetch_assoc($db_results)) { 
-		$name = $r['name'];
-		$results[$name] = $r['value'];
-	} // end while
-
-	/* Set the Theme mojo */
-	if (strlen($results['theme_name']) > 0) { 
-		$results['theme_path'] = '/themes/' . $results['theme_name'];
-	}
-	
-	conf($results,1);
-
-	return true;
-
-} // init_preferences
-
-/**
  *  flip_class
  * takes an array of 2 class names
  *		and flips them back and forth and

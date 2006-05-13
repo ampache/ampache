@@ -266,6 +266,8 @@ class User {
 			$username = $this->username;
 		}
 
+		if (!conf('use_auth')) { $username = '-1'; }
+
 		$value = sql_escape($value);
 		$sql = "UPDATE user_preference SET value='$value' WHERE user='$username' AND preference='$preference_id'";
 

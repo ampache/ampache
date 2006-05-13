@@ -4,6 +4,10 @@
 
 --------------------------------------------------------------------------
   v.3.3.2-Beta3
+  	- Fixed Access Control List so that it prevents Login if you are
+		not inside the allowed range. 
+  	- Fixed Localplay/Stream Buttons so that they also work if you
+		have use_auth disabled
   	- Added Icecast Controller (Thx Nikk)
   	- Added Clear Playlist Functionality to Localplay
   	- Added Language selection to Installer (Thx Ros)

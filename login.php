@@ -31,6 +31,20 @@ require_once('modules/init.php');
 vauth_session_cookie();
 init_preferences();
 
+/**
+ * If Access Control is turned on then we don't
+ * even want them to be able to get to the login 
+ * page if they aren't in the ACL
+ */
+if (conf('access_control')) { 
+        $access = new Access(0);
+        if (!$access->check("25", $_SERVER['REMOTE_ADDR'])) {
+                debug_event('access_denied','Access Denied:' . $_SERVER['REMOTE_ADDR'] . ' is not in the Access list','3');
+                access_denied();
+        }
+} // access_control is enabled
+
+
 /* Check for posted username and password */
 if ($_POST['username'] && $_POST['password']) {
 

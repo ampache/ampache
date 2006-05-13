@@ -54,14 +54,8 @@ switch ($action) {
 		$ajax_url       = conf('web_path') . '/server/ajax.server.php';
 		$required_info  = "&user_id=" . $GLOBALS['user']->id . "&sessid=" . session_id();
 		${$_GET['type']} = 'id="pt_active"';
-		?>
-                <span <?php echo $stream; ?> onclick="ajaxPut('<?php echo $ajax_url; ?>','action=change_play_type&type=stream<?php echo $required_info; ?>','play_type');return true;">
-                        <?php echo _('Stream') ?>
-                </span>&nbsp;&nbsp;
-                <span <?php echo $localplay; ?> onclick="ajaxPut('<?php echo $ajax_url; ?>','action=change_play_type&type=localplay<?php echo $required_info; ?>','play_type');return true;">
-                        <?php echo _('Localplay'); ?>
-                </span>
-		<?php 
+		
+		require_once(conf('prefix') . '/templates/show_localplay_switch.inc.php'); 
 	break;
 	default:
 		echo "Default Action";
