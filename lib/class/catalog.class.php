@@ -2130,9 +2130,11 @@ class Catalog {
 			// Remove extra whitespace
 			$value = trim($value);
 			if (preg_match($pattern,$value)) { 
-				$filename = basename($value);
+				/* Translate from \ to / so basename works */
+				$value = str_replace("\\","/",$value);
+				$file = basename($value);
 				/* Search for this filename, cause it's a audio file */
-				$sql = "SELECT id FROM song WHERE file LIKE '%" . sql_escape($filename) . "'";
+				$sql = "SELECT id FROM song WHERE file LIKE '%" . sql_escape($file) . "'";
 				$db_results = mysql_query($sql, dbh());
 				$results = mysql_fetch_assoc($db_results);
 				$song_id = $results['id'];
@@ -2142,11 +2144,15 @@ class Catalog {
 		} // end foreach line
 
 		debug_event('m3u_parse',"Parsing $filename - Found: " . count($songs) . " Songs",'5'); 
-
 		if (count($songs)) { 
 			$playlist = new Playlist();
-			$playlist_name = "M3U - " . basename($filename);
-			$playlist->create($playlist_name,'public');
+			$value = str_replace("\\","/",$filename);
+			$playlist_name = "M3U - " . basename($filename,'.m3u');
+			
+			$playlist_id = $playlist->create($playlist_name,'public');
+
+			/* Recreate the Playlist */
+			$playlist = new Playlist($playlist_id);
 			$playlist->add_songs($songs);
 			return true;
 		}
