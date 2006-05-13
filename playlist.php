@@ -148,6 +148,15 @@ switch ($action) {
 	case 'show_import_playlist':
 		show_import_playlist();
 	break;
+	case 'import_playlist':
+		$catalog = new Catalog();
+		$catalog->import_m3u(scrub_in($_REQUEST['filename']));
+
+		$url	= conf('web_path') . '/playlist.php';
+		$title = _('Playlist Imported');
+		$body  = '';
+		show_confirmation($title,$body,$url);
+	break;
 	case 'set_track_numbers':
 		/* Make sure they have permission */
 		if (!$playlist->has_access()) { 

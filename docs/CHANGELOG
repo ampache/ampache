@@ -4,6 +4,10 @@
 
 --------------------------------------------------------------------------
   v.3.3.2-Beta3
+  	- Supressed deprecated var warnings in PHP5
+  	- Fixed link to playlist import
+	- Fixed playlist add on every catalog add (I'm not kidding this 
+		time... really..)
   	- Fixed Access Control List so that it prevents Login if you are
 		not inside the allowed range. 
   	- Fixed Localplay/Stream Buttons so that they also work if you

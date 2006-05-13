@@ -282,7 +282,7 @@ class Catalog {
 		@param $gather_type=0   Determins if we need to check the id3 tags of the file or not
 		@param $parse_m3u	Tells Ampache to look at m3us
 	 */
-	function add_files($path,$gather_type='',$parse_m3u='',$verbose=1) {
+	function add_files($path,$gather_type='',$parse_m3u=0,$verbose=1) {
 		/* Strip existing escape slashes and then add them again 
 		   This is done because we keep adding to the dir (slashed) + (non slashed)
 		   and a double addslashes would pooch things
@@ -377,7 +377,7 @@ class Catalog {
 		
 				if (is_readable($full_file)) {
 
-					if (substr($file,-3,3) == 'm3u' AND $parse_m3u) { 
+					if (substr($file,-3,3) == 'm3u' AND $parse_m3u > 0) { 
 						$this->_playlists[] = $full_file;
 					} // if it's an m3u
 
@@ -955,7 +955,7 @@ class Catalog {
 		$start_time = time();
 
 		/* Get the songs and then insert them into the db */
-		$this->add_files($this->path,$type,1,$verbose);
+		$this->add_files($this->path,$type,0,$verbose);
 
                 echo "<script language=\"JavaScript\">";
                 echo "update_txt('" . $this->count . "','count_add_" . $this->id ."');";
@@ -1933,17 +1933,18 @@ class Catalog {
 		$sql = "SELECT id FROM genre WHERE name LIKE '$genre'";	
 		$db_results = mysql_query($sql, dbh());
 
-		$results = mysql_fetch_object($db_results);
+		$results = mysql_fetch_assoc($db_results);
 
-		if (!$results->id) { 
+		if (!$results['id']) { 
 			$sql = "INSERT INTO genre (name) VALUES ('$genre')";
 			$db_results = mysql_query($sql, dbh());
-			$results->id = mysql_insert_id(dbh());
+			$insert_id = mysql_insert_id(dbh());
 		}
+		else { $insert_id = $results['id']; }
 
-		$this->genres[$genre] = $results->id;
+		$this->genres[$genre] = $insert_id;
 
-		return $results->id;
+		return $insert_id;
 
 	} //check_genre
 
@@ -2122,16 +2123,19 @@ class Catalog {
 		
 		$results = explode("\n",$data);
 
+                $pattern = "/\.(" . conf('catalog_file_pattern');
+                $pattern .= ")$/i";
+
 		foreach ($results as $value) {
 			// Remove extra whitespace
 			$value = trim($value);
-			if (preg_match("/\.[A-Za-z0-9]{3,4}$/",$value)) { 
-				$file[0] = str_replace("/","\\",$value);
-				$file[1] = str_replace("\\","/",$value);
+			if (preg_match($pattern,$value)) { 
+				$filename = basename($value);
 				/* Search for this filename, cause it's a audio file */
-				$sql = "SELECT id FROM song WHERE file LIKE '%" . sql_escape($file[0]) . "' OR file LIKE '%" . sql_escape($file[1]) . "'";
+				$sql = "SELECT id FROM song WHERE file LIKE '%" . sql_escape($filename) . "'";
 				$db_results = mysql_query($sql, dbh());
-				$song_id = mysql_result($db_results,'id');
+				$results = mysql_fetch_assoc($db_results);
+				$song_id = $results['id'];
 				if ($song_id) { $songs[] = $song_id; }
 			} // if it's a file
 

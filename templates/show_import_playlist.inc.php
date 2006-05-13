@@ -21,20 +21,18 @@
 */
 ?>
 <form method="post" name="import_playlist" action="<?php echo conf('web_path'); ?>/playlist.php" enctype="multipart/form-data">
-<table border="0" cellpadding="0" cellspacing="0" class="border">
-<tr class="table-header" >
-	<td colspan="2" align="center"><?php echo _("Importing a Playlist from a File"); ?></td>
-</tr>
+<span class="header2"><?php echo _('Importing a Playlist from a File'); ?></span>
+<table border="0" cellpadding="0" cellspacing="0" class="border" style="border: 1px solid black;">
 <tr class="<?php echo flip_class(); ?>">
         <td>
-		<?php echo _("Filename"); ?>:
+		<?php echo _('Filename'); ?>:
 		<?php $GLOBALS['error']->print_error('filename'); ?>
 	</td>
-	<td><input type="text" name="filename" value="<?php echo $_REQUEST['filename']; ?>" size="45" /></td>	
+	<td><input type="text" name="filename" value="<?php echo scrub_out($_REQUEST['filename']); ?>" size="45" /></td>	
 </tr>
 <tr class="<?php echo flip_class(); ?>">
 	<td>
-		<?php echo _("Playlist Type"); ?>
+		<?php echo _('Playlist Type'); ?>
 	</td>
 	<td>
 		<select name="playlist_type">
@@ -47,7 +45,7 @@
 	<td>&nbsp;</td>
 	<td>
 		<input type="hidden" name="action" value="import_playlist" />
-		<input type="submit" value="<?php echo _("Import Playlist"); ?>" />
+		<input type="submit" value="<?php echo _('Import Playlist'); ?>" />
 	</td>
 </tr>
 </table>

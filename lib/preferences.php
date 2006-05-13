@@ -428,4 +428,15 @@ function init_preferences() {
 
 } // init_preferences
 
+/**
+ * show_import_playlist
+ * This just shows the template for importing playlists
+ * from something outside Ampache such as a m3u
+ */
+function show_import_playlist() { 
+
+	require_once(conf('prefix') . '/templates/show_import_playlist.inc.php');
+
+} // show_import_playlist
+
 ?>

@@ -48,16 +48,17 @@ class AmazonSearch {
     
 	function AmazonSearch($token,  $base_url_param = '', $associates_id = 'none') {
 	  
-   		if($base_url_param != ''){$this->base_url = $base_url_param . $this->url_suffix; 
-		  if (conf('debug')) { 
-		    log_event($GLOBALS['user']->username,'amazon-search-results',"Retrieving from " . $base_url_param . $this->url_suffix);
-		  }
+	  	/* If we have a base url then use it */
+   		if ($base_url_param != '') {
+			$this->base_url = $base_url_param . $this->url_suffix; 
+			debug_event('amazon-search-results','Retrieving from ' . $base_url_param . $this->url_suffix,'5');
 		}
-		else{ $this->base_url=$this->base_url_default . $this->url_suffix;
-		  if (conf('debug')) { 
-		    log_event($GLOBALS['user']->username,'amazon-search-results',"Retrieving from DEFAULT");
-		  }
-		};
+		/* Default Operation */
+		else { 
+			$this->base_url=$this->base_url_default . $this->url_suffix;
+		    	debug_event('amazon-search-results','Retrieving from DEFAULT','5');
+		}
+		
 		$this->token = $token;
 		$this->associates_id = $associates_id;
 	
@@ -99,12 +100,10 @@ class AmazonSearch {
 		$snoopy->fetch($url);
 		$contents = $snoopy->results;
 	
-                if (conf('debug')) { 
-                        log_event($GLOBALS['user']->username,'amazon-search-results',"Retrieved $contents");
-                }
+                debug_event('amazon-search-results','Retrieved ' . strlen($contents) . ' chars','5');
 					        		
 		if (!xml_parse($this->_parser, $contents)) {
-			die(sprintf('XML error: %s at line %d',xml_error_string(xml_get_error_code($this->_parser)),xml_get_current_line_number($this->_parser)));
+			debug_event('amazon-search-results','Error:' . sprintf('XML error: %s at line %d',xml_error_string(xml_get_error_code($this->_parser)),xml_get_current_line_number($this->_parser)),'1');
 		}
 		
 		xml_parser_free($this->_parser);

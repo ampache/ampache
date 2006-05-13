@@ -46,7 +46,8 @@ switch ($_REQUEST['action']) {
 		include(conf('prefix') . '/templates/flag.inc');
 	break;
 	case 'add_to_all_catalogs':
-		$_REQUEST['catalogs'] = Catalog::get_catalog_ids();
+		$catalog = new Catalog();
+		$_REQUEST['catalogs'] = $catalog->get_catalog_ids();
 	case 'add_to_catalog':
 	    	if (conf('demo_mode')) { break; }
 		if ($_REQUEST['catalogs'] ) {
@@ -65,7 +66,7 @@ switch ($_REQUEST['action']) {
 	case _("Add to all Catalogs"):
 		if (conf('demo_mode')) { break; }
 	
-		/* If they are using the file MPD type, and it's currently enabled lets do a DBRefresh for em */
+		/* If they are using the file MPD type, and it's currently enabled lets do a DBRefresh for em 
 		if (conf('mpd_method') == 'file' AND conf('allow_mpd_playback')) {
 			// Connect to the MPD
 			if (!class_exists('mpd')) { require_once(conf('prefix') . "/modules/mpd/mpd.class.php"); }
@@ -77,6 +78,8 @@ switch ($_REQUEST['action']) {
 			
 		 $myMpd->DBRefresh();
 		} // if MPD enabled
+		//FIXME: File Method no longer exists... leaving this in for a bit
+		*/
 		$catalogs = $catalog->get_catalogs();
 
 		foreach ($catalogs as $data) { 
@@ -85,7 +88,8 @@ switch ($_REQUEST['action']) {
 		include(conf('prefix') . '/templates/catalog.inc');
 	break;
 	case 'update_all_catalogs':
-		$_REQUEST['catalogs'] = Catalog::get_catalog_ids();
+		$catalog = new Catalog();
+		$_REQUEST['catalogs'] = $catalog->get_catalog_ids();
 	case 'update_catalog':
 	    	/* If they are in demo mode stop here */
 	        if (conf('demo_mode')) { break; }
@@ -104,11 +108,12 @@ switch ($_REQUEST['action']) {
 		show_confirmation($title,$body,$url);
 	break;
 	case 'full_service':
+		$catalog = new Catalog();
 		/* Make sure they aren't in demo mode */
 		if (conf('demo_mode')) { break; } 
 
 		if (!$_REQUEST['catalogs']) { 
-			$_REQUEST['catalogs'] = Catalog::get_catalog_ids();
+			$_REQUEST['catalogs'] = $catalog->get_catalog_ids();
 		}
 
 		/* This runs the clean/verify/add in that order */
@@ -157,7 +162,8 @@ switch ($_REQUEST['action']) {
 		show_confirmation($title,$body,$url);
 	break;
 	case 'clean_all_catalogs':
-		$_REQUEST['catalogs'] = Catalog::get_catalog_ids();
+		$catalog = new Catalog(); 
+		$_REQUEST['catalogs'] = $catalog->get_catalog_ids();
 	case 'clean_catalog':
 	    	/* If they are in demo mode stop them here */
 	        if (conf('demo_mode')) { break; }

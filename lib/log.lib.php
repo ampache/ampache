@@ -81,6 +81,10 @@ function ampache_error_handler($errno, $errstr, $errfile, $errline) {
 			break;
 	} // end switch
 
+	/* Don't log var: Deprecated we know shutup! */
+	if (strstr($errstr,"var: Deprecated. Please use the public/private/protected modifiers")) { 
+		return false; 
+	}
 
 	$log_line = "[$error_name] $errstr on line $errline in $errfile";
 	debug_event('error',$log_line,$level);
