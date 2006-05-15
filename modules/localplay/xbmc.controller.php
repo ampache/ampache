@@ -49,7 +49,7 @@ class AmpacheXBMC {
 
 		/* Required Functions */
          $map['add']             = 'add_songs'; //done
-         $map['delete']          = 'delete_songs';
+         $map['delete']          = 'delete_songs'; //done
          $map['play']            = 'play'; //done
          $map['stop']            = 'stop'; //done
          $map['get']             = 'get_songs';
@@ -200,9 +200,21 @@ class AmpacheXBMC {
 		 * the songs, then however ya'll have stored them
 		 * in this controller 
 		 */
-		foreach ($songs as $uid) { 
+		 
+		 //RemoveFromPlaylist
+		foreach ($songs as $song_id) { 
 
-			if (is_null($this->_mpd->PLRemove($uid))) { $return = false; } 
+			$song = new Song($song_id);
+			
+			$url = conf('localplay_xbmc_smbpath') . $song->get_rel_path();
+			
+			$ret = $this->XBMCCmd("RemoveFromPlaylist",urlencode($url . ";0"));
+			
+			if ($ret != "OK") { 
+				$return = false; 
+				debug_event('xbmc_del','Error: Unable to del $url from xbmc ' . $ret,'1');
+			}
+			 
 
 		} // foreach of songs
 
@@ -299,7 +311,7 @@ class AmpacheXBMC {
         */
        function clear_playlist() {
 
-               if ($this->XBMCCmd("clearplaylist","1")!="OK") { return false; }
+               if ($this->XBMCCmd("clearplaylist","0")!="OK") { return false; }
                return true;
 
        } // clear_playlist
