@@ -178,7 +178,6 @@ function get_localplay_controllers() {
 function init_localplay($reload=0) {
 
 	static $localplay;
-
 	if ($GLOBALS['user']->prefs['localplay_level'] == '0') { return false; }
 
 	if ($GLOBALS['user']->prefs['localplay_level'] == '1' AND !is_object($localplay)) { 

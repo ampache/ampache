@@ -4,6 +4,11 @@
 
 --------------------------------------------------------------------------
   v.3.3.2-Beta3
+  	- Fixed error on /login.php when theme isn't set which caused
+		a fopen failure to show up in the logs
+  	- Improved MPD class to use PHP 4.3+ socket timeout settings so
+		that if your MPD server goes down while in MPD mode it
+		doesn't hard-lock ampache. 
   	- Supressed deprecated var warnings in PHP5
   	- Fixed link to playlist import
 	- Fixed playlist add on every catalog add (I'm not kidding this 

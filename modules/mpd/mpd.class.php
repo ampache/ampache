@@ -120,7 +120,7 @@ class mpd {
 		$this->host = $srv;
 		$this->port = $port;
         $this->password = $pwd;
-
+		
 		$resp = $this->Connect();
 		if ( is_null($resp) ) {
             $this->errStr = "Could not connect";
@@ -150,18 +150,36 @@ class mpd {
 	/* Connect()
 	 * 
 	 * Connects to the MPD server. 
-     * 
+	 * 
 	 * NOTE: This is called automatically upon object instantiation; you should not need to call this directly.
 	 */
 	function Connect() {
 		if ( $this->debugging ) echo "mpd->Connect() / host: ".$this->host.", port: ".$this->port."\n";
-		$this->mpd_sock = fsockopen($this->host,$this->port,$errNo,$errStr,10);
+		$this->mpd_sock = fsockopen($this->host,$this->port,$errNo,$errStr,3);
+		/* Vollmerize this bizatch, if we've got php4.3+ we should 
+		 * have these functions and we need them
+		 */
+		if (function_exists('stream_set_timeout')) { 
+		
+			/* Set the timeout on the connection */
+			stream_set_timeout($this->mpd_sock,2);
+			
+			/* We want blocking, cause otherwise it doesn't
+			 * timeout, and feof just keeps on spinning 
+			 */
+			stream_set_blocking($this->mpd_sock,TRUE);
+			$status = socket_get_status($this->mpd_sock);
+		}
+		
 		if (!$this->mpd_sock) {
 			$this->errStr = "Socket Error: $errStr ($errNo)";
 			return NULL;
 		} else {
-			while(!feof($this->mpd_sock)) {
+			while(!feof($this->mpd_sock) && !$status['timed_out']) {
 				$response =  fgets($this->mpd_sock,1024);
+				if (function_exists('socket_get_status')) { 
+					$status = socket_get_status($this->mpd_sock);
+				}
 				if (strncmp(MPD_RESPONSE_OK,$response,strlen(MPD_RESPONSE_OK)) == 0) {
 					$this->connected = TRUE;
 					return $response;
@@ -171,7 +189,9 @@ class mpd {
 					$this->errStr = "Server responded with: $response";
 					return NULL;
 				}
-			}
+
+				
+			} // end while
 			// Generic response
 			$this->errStr = "Connection not available";
 			return NULL;

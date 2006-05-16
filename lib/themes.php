@@ -32,7 +32,7 @@ function get_themes() {
 	$handle = @opendir(conf('prefix') . "/themes");
 
 	if (!is_resource($handle)) { 
-		if (conf('debug')) { log_event($_SESSION['userdata']['username'],'theme',"Error unable to open Themes Directory"); } 
+	 debug_event('theme',"Error unable to open Themes Directory",'2'); 
 	}
 
 	$results = array(); 
@@ -61,6 +61,8 @@ function get_themes() {
 		then return the results
 */
 function get_theme($name) { 
+
+	if (strlen($name) < 1) { return false; }
 
 	$config_file = conf('prefix') . "/themes/" . $name . "/theme.cfg.php";
 	$results = read_config($config_file);
