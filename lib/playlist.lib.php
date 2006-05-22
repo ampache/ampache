@@ -135,4 +135,33 @@ function get_playlists($type) {
 
 } // get_playlists
 
+/**
+ * prune_empty_playlists
+ * This function goes through and deletes any playlists which have
+ * no songs in them. This can only be done by a full admin
+ */
+function prune_empty_playlists() { 
+
+
+	$sql = "SELECT playlist.id FROM playlist LEFT JOIN playlist_data ON playlist.id=playlist_data.playlist " . 
+		"WHERE playlist_data.id IS NULL";
+	$db_results = mysql_query($sql, dbh());
+
+	$results = array();
+
+	while ($r = mysql_fetch_assoc($db_results)) { 
+		$results[] = $r['id'];
+	}
+
+	/* Delete the Playlists */
+	foreach ($results as $playlist_id) { 
+		$playlist = new Playlist($playlist_id);
+		$playlist->delete();
+	}
+	
+	return true;
+
+} // prune_empty_playlists
+
+
 ?>

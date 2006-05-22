@@ -173,6 +173,19 @@ switch ($action) {
 
                 show_playlist($playlist);
         break;
+	case 'prune_empty':
+		/* Make sure they have permission */
+		if (!$GLOBALS['user']->has_access(100)) { 
+			access_denied(); 
+			break;
+		}
+
+		prune_empty_playlists(); 
+		$url = conf('web_path') . '/playlist.php';
+		$title = _('Empty Playlists Deleted'); 
+		$body  = '';
+		show_confirmation($title,$body,$url);
+	break;
 	case 'normalize_tracks':
 		/* Make sure they have permission */
 		if (!$playlist->has_access()) { 

@@ -20,13 +20,21 @@
 
 */
 
-
 $no_session='1';
 require ("../modules/init.php");
 
 echo "[catalog_update.php.inc]\nStarting Catalog Clean/Update And Add\n\n";
 
-$sql = "SELECT id FROM catalog WHERE catalog_type='local'";
+if (count($_SERVER['argv']) > 1) {
+       for ($x = 1; $x < count($_SERVER['argv']); $x++) {
+               if ($where) $where .= " OR ";
+               $where .= "name LIKE '%" . preg_replace("/[^a-z0-9\. -]/i", "", $_SERVER['argv'][$x]) . "%'";
+       }
+}
+if ($where) $where = "($where) AND catalog_type='local'";
+else $where = "catalog_type='local'";
+$sql = "SELECT id FROM catalog";
+if ($where) $sql .= " WHERE $where";
 $db_results = mysql_query($sql, dbh());
 
 while ($r = mysql_fetch_row($db_results)) { 

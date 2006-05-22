@@ -4,6 +4,7 @@
 
 --------------------------------------------------------------------------
   v.3.3.2-Beta3
+  	- Added pruning of empty playlists (Admin Only)
   	- Fixed error on /login.php when theme isn't set which caused
 		a fopen failure to show up in the logs
   	- Improved MPD class to use PHP 4.3+ socket timeout settings so
