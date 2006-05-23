@@ -29,9 +29,11 @@ $row_classes = array('even','odd');
 <title>Ampache -- Debug Page</title>
 </head>
 <body bgcolor="#f0f0f0">
-<h2><?php echo _('Ampache Debug'); ?></h2>
+<?php require_once('templates/install.css'); ?>
+<div id="header">
+<h1><?php echo _('Ampache Debug'); ?></h1>
 <p><?php echo _('You\'ve reached this page because a configuration error has occured. Debug Information below'); ?></p>
-
+</div>
 <table border="0" cellpadding="3" cellspacing="0">
 <tr>
 	<td><font size="+1"><?php echo _('CHECK'); ?></font></td>
@@ -100,7 +102,7 @@ $row_classes = array('even','odd');
 <tr>
 	<td valign="top"><?php echo _('PHP ICONV Support'); ?></td>
 	<td valign="top">[
-	<?
+	<?php
 		if (!check_php_iconv()) { 
 			$status['iconv_php'] = 'false';
 			echo " <font color=\"red\">ERROR</font> ";
@@ -116,9 +118,26 @@ $row_classes = array('even','odd');
 	</td>
 </tr>
 <tr>
+	<td valign="top"><?php echo _('PHP PCRE Support'); ?></td>
+	<td valign="top">[
+	<?php
+		if (!check_php_pcre()) { 
+			$status['pcre_php'] = 'false';
+			echo " <font color=\"red\">ERROR</font> ";
+		}
+		else { 
+			echo "<font color=\"green\">&nbsp;&nbsp;&nbsp;OK&nbsp;&nbsp;&nbsp;&nbsp;</font> ";
+		}
+	?>]
+	</td>
+	<td>
+	<?php echo _('This test makes sure you have PCRE support compiled into your version of PHP, this is required for Ampache.'); ?>
+	</td>
+</tr>
+<tr>
 	<td valign="top"><?php echo _('Ampache.cfg.php Exists'); ?></td>
 	<td valign="top">[ 
-	<?
+	<?php
 		if (!read_config_file($configfile)) {
 			$status['read_config'] = 'false';
 			echo " <font color=\"red\">ERROR</font> "; 
@@ -261,8 +280,11 @@ $row_classes = array('even','odd');
 	logo here then your web_path is not set correctly. 
 	</td>
 </tr>
-
 </table>
- 
-
-
+</div>
+<div id="bottom">
+<p><b>Ampache Debug.</b><br />
+For the love of Music.</p>
+</div>
+</body>
+</html>

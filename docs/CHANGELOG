@@ -4,6 +4,8 @@
 
 --------------------------------------------------------------------------
   v.3.3.2-Beta3
+  	- Added PCRE check on /test.php and updated to use Ros's new
+		spiffy theme
   	- Added pruning of empty playlists (Admin Only)
   	- Fixed error on /login.php when theme isn't set which caused
 		a fopen failure to show up in the logs

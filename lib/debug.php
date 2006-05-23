@@ -162,6 +162,24 @@ function check_php_iconv() {
 
 } // check_php_iconv
 
+/**
+ * check_php_pcre
+ * This makes sure they have pcre (preg_???) support
+ * compiled into PHP this is required!
+ */
+function check_php_pcre() { 
+
+	if (!function_exists('preg_match')) { 
+		$error['error_state']	= true;
+		$error['php_pcre']	= false;
+	}
+
+	if ($error['error_state']) { return false; } 
+
+	return true; 
+
+} // check_php_pcre
+
 /*!
         @function check_config_values()
         @discussion checks to make sure that they have at 
