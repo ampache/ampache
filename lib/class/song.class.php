@@ -723,8 +723,16 @@ class Song {
 		if ($song->type == 'flac') { $type = 'ogg'; } 
 		$this->format_song();
 		$song_name = rawurlencode($this->f_artist_full . " - " . $this->title . "." . $this->type);
-		
-		$url = conf('web_path') . "/play/index.php?song=$song_id&uid=$username$session_string$ds_string&name=$song_name";
+	
+		$web_path = conf('web_path');
+
+                if (conf('force_http_play')) {
+                        $port = conf('http_port');
+                        $web_path = preg_replace("/https/", "http",$web_path);
+                        $web_path = preg_replace("/:\d+/",":$port",$web_path);
+                }
+	
+		$url = $web_path . "/play/index.php?song=$song_id&uid=$username$session_string$ds_string&name=$song_name";
 
 		return $url;
 
