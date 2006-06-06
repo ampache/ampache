@@ -66,6 +66,7 @@ class AmpacheMpd {
                 $map['connect']         = 'connect';
 		
 		/* Recommended Functions */
+		$map['skip']		= 'skip';
 		$map['next']		= 'next';
 		$map['prev']		= 'prev';
 		$map['pause']		= 'pause';
@@ -186,6 +187,16 @@ class AmpacheMpd {
 
 	} // stop
 
+	/**
+	 * skip
+	 * This tells MPD to skip to the specified song
+	 */
+	function skip($song) { 
+
+		if (is_null($this->_mpd->SkipTo($song))) { return false; }
+		return true; 
+
+	} // skip
 
 	/**
 	 * next

@@ -47,7 +47,7 @@ $songs = $localplay->get();
 		<?php echo scrub_out($song['track']); ?>
 	</td>
 	<td>
-		<?php echo scrub_out($song['name']); ?>
+		<?php echo $localplay->format_name($song['name'],$song['id']); ?>
 	</td>
 	<td>
 	<a href="<?php echo $web_path; ?>/localplay.php?action=delete_song&amp;song_id=<?php echo $song['id']; ?>"><?php echo _('Delete'); ?></a>

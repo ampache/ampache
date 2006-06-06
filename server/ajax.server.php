@@ -38,9 +38,9 @@ switch ($action) {
 		init_preferences();
 		$localplay = init_localplay();
 		$localplay->connect();
-		$function = scrub_in($_GET['cmd']);
-		$localplay->$function(); 
-		echo $function;
+		$function 	= scrub_in($_GET['cmd']);
+		$value		= scrub_in($_GET['value']);
+		$localplay->$function($value); 
 	break;
 	case 'change_play_type':
 		init_preferences();

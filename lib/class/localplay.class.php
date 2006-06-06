@@ -105,6 +105,25 @@ class Localplay {
 
 	} // has_function
 
+	/**
+	 * format_name
+	 * This function takes the track name and checks to see if 'skip' 
+	 * is supported in the current player, if so it returns a 'skip to'
+	 * link, otherwise it returns just the text
+	 */
+	function format_name($name,$id) { 
+
+		$name = scrub_out($name);
+
+		if ($this->has_function('skip')) { 
+			$url = conf('web_path') . '/server/ajax.server.php?action=localplay&amp;cmd=skip&amp;value=' . $id;
+			
+			$name = "<span style=\"cursor:pointer;text-decoration:underline;\" onclick=\"ajaxRequest('$url');\">$name</span>";
+		}
+
+		return $name;
+
+	} // format_name
 
 	/**
 	 * _map_functions
@@ -130,6 +149,7 @@ class Localplay {
 		$this->_function_map['pause']		= $data['pause'];
 		$this->_function_map['next']		= $data['next'];
 		$this->_function_map['prev']		= $data['prev'];
+		$this->_function_map['skip']		= $data['skip'];
 		$this->_function_map['get_playlist']	= $data['get_playlist'];
 		$this->_function_map['get_playing']	= $data['get_playing'];
 
@@ -259,6 +279,23 @@ class Localplay {
 		return $data;
 
 	} // get
+
+	/**
+	 * skip
+	 * This isn't a required function, it tells the daemon to skip to the specified song
+	 */
+	function skip($song_id) { 
+
+		$function = $this->_function_map['skip'];
+
+		if (!$this->_player->$function($song_id)) { 
+			debug_event('localplay','Error: Unable to skip to next song, check ' . $this->type . ' controller','1');
+			return false; 
+		}
+
+		return true;
+
+	} // skip
 
 	/**
 	 * next
