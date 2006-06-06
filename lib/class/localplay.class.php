@@ -281,6 +281,85 @@ class Localplay {
 	} // get
 
 	/**
+	 * volume_set
+	 * This isn't a required function, it sets the volume to a specified value
+	 * as passed in the variable it is a 0 - 100 scale the controller is 
+	 * responsible for adjusting the scale if nessecary
+	 */
+	function volume_set($value) { 
+		
+		/* Make sure it's int and 0 - 100 */
+		$value = int($value);
+
+		/* Make sure that it's between 0 and 100 */
+		if ($value > 100 OR $value < 0) { return false; }
+
+		$function = $this->_function_map['volume_set'];
+		
+		if (!$this->_player->$function($value)) { 
+			debug_event('localplay','Error: Unable to set volume, check ' . $this->type . ' controller','1');
+			return false;
+		}
+
+		return true;
+
+	} // volume_set
+
+	/**
+	 * volume_up
+	 * This function isn't required. It tells the daemon to increase the volume
+	 * by a pre-defined amount controlled by the controller
+	 */
+	function volume_up() { 
+
+		$function = $this->_function_map['volume_up'];
+
+		if (!$this->_player->$function()) { 
+			debug_event('localplay','Error: Unable to increase volume, check ' . $this->type . ' controller','1');
+			return false; 
+		}
+
+		return true;
+
+	} // volume_up
+
+	/**
+	 * volume_down
+	 * This function isn't required. It tells the daemon to decrese the volume
+	 * by a pre-defined amount controlled by the controller.
+	 */
+	function volume_down() { 
+
+		$function = $this->_function_map['volume_down'];
+
+		if (!$this->_player->$function()) { 
+			debug_event('localplay','Error: Unable to decrese volume, check ' . $this->type . ' controller','1');
+			return false; 
+		} 
+
+		return true;
+
+	} // volume_down
+
+	/**
+	 * volume_mute
+	 * This function isn't required, It tells the daemon to mute all output
+	 * It's up to the controller to decide what that actually entails
+	 */
+	function volume_mute() { 
+
+		$function = $this->_function_map['volume_mute'];
+
+		if (!$this->_player->$function()){ 
+			debug_event('localplay','Error: Unable to mute volume, check ' . $this->type . ' controller','1');
+			return false; 
+		}
+
+		return true; 
+
+	} // volume_mute
+
+	/**
 	 * skip
 	 * This isn't a required function, it tells the daemon to skip to the specified song
 	 */

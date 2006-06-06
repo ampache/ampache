@@ -70,7 +70,8 @@ class AmpacheMpd {
 		$map['next']		= 'next';
 		$map['prev']		= 'prev';
 		$map['pause']		= 'pause';
-		$map['volume']          = 'volume';
+		$map['volume_up']       = 'volume_up';
+		$map['volume_down']	= 'volume_down';
 		$map['loop']            = 'loop';
 		$map['random']          = 'random';
 
@@ -197,6 +198,26 @@ class AmpacheMpd {
 		return true; 
 
 	} // skip
+
+	/**
+	 * This tells MPD to increase the volume by 5
+	 */
+	function volume_up() { 
+
+		if (is_null($this->_mpd->AdjustVolume('5'))) { return false; } 
+		return true;
+
+	} // volume_up
+
+	/**
+	 * This tells MPD to decrese the volume by 5
+	 */
+	function volume_down() { 
+
+		if (is_null($this->_mpd->AdjustVolume('-5'))) { return false; }
+		return true;
+		
+	} // volume_down
 
 	/**
 	 * next

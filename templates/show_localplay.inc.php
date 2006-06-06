@@ -35,6 +35,13 @@ $songs = $localplay->get();
 </div>
 <br />
 <div class="text-box">
+<h2>Debug Status Information (Temp!)</h2>
+<pre>
+<?php print_r($localplay->status()); ?>
+</pre>
+</div>
+<br />
+<div class="text-box">
 <table class="border" cellspacing="0" border="0">
 <tr class="table-header">
 	<th><?php echo _('Track'); ?></th>
