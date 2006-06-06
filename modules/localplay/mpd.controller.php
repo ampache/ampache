@@ -345,11 +345,15 @@ class AmpacheMpd {
 	 */
 	function get_status() { 
 
+		$track = $this->_mpd->current_track_id;
+
 		/* Construct the Array */
 		$array['state'] 	= $this->_mpd->state;
 		$array['volume']	= $this->_mpd->volume;
 		$array['repeat']	= $this->_mpd->repeat;
 		$array['random']	= $this->_mpd->random;
+		$array['track']		= $track;
+		$array['track_title']	= $this->_mpd->playlist[$track]['Title'];
 
 		return $array;
 
