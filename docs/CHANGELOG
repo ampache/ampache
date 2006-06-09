@@ -4,6 +4,7 @@
 
 --------------------------------------------------------------------------
   v.3.3.2-Beta3
+  	- Upgraded to Getid3() 1.7.6
   	- Fixed an issue where the new song->get_url() wasn't respecting
 		the force_http_play, this also fixes a long outstanding
 		bug with localplay + https + force_http_play

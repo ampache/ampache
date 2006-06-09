@@ -122,8 +122,9 @@ class getid3_write_apetag
 				return true;
 
 			}
+			return false;
 		}
-		return false;
+		return true;
 	}
 
 

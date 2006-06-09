@@ -48,6 +48,9 @@ class Song {
 	var $addition_time;
 	var $update_time;
 
+	/* Setting Variables */
+	var $_transcoded = false;
+
 	/*!
 		@function Song
 		@discussion Song class, for modifing a song.
@@ -744,23 +747,32 @@ class Song {
 	*/
 	function native_stream() {
 		
+		if ($this->_transcode) { return false; }
+		
 		switch ($this->type) {
 			//TODO: fill out these cases once we have it working for m4a
-			case "m4a":
-				$return = conf('transcode_m4a');
+			case 'm4a':
+				if (conf('transcode_m4a')) { break; }
+				return true;
 			break;
 			case 'flac':
-				$return = conf('transcode_flac');
+				if (conf('transcode_flac')) { break; }
+				return true;
 			break;
 			case 'mpc':
-				$return = conf('transcode_mpc');
+				if (conf('transcode_mpc')) { break; }
+				return true;
 			break;
 			default:
-				$return = true;
+				return true;
 			break;
 		}	// end switch
 		
-		return $return;
+		/* If we've made it this far then we must be trying to transcode */
+		$this->_transcode = true;
+		$this->format_type();
+		
+		return false;
 
 	} // end native_stream
 	
@@ -775,16 +787,23 @@ class Song {
 		
 		if (!$this->native_stream()) {
 			switch ($this->type) {
-				case "m4a":
-					$return = "stream_cmd_m4a";
+				case 'm4a':
+					$return = 'stream_cmd_m4a';
+				break;
+				case 'flac':
+					$return = 'stream_cmd_flac';
+				break;
+				case 'mpc':
+					$return = 'stream_cmd_mpc';
 				break;
 				default:
-					$return = "downsample_cmd";
+					$return = 'downsample_cmd';
 				break;
 			} // end switch
 		} // end if not native_stream
 		
 		return $return;
+		
 	} // end stream_cmd
 
 } // end of song class

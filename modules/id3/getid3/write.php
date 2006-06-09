@@ -83,6 +83,7 @@ class getid3_writetags
 			return false;
 		}
 
+		$TagFormatsToRemove = array();
 		if (filesize($this->filename) == 0) {
 
 			// empty file special case - allow any tag format, don't check existing format
@@ -150,7 +151,6 @@ class getid3_writetags
 			}
 
 			// List of other tag formats, removed if requested
-			$TagFormatsToRemove = array();
 			if ($this->remove_other_tags) {
 				foreach ($AllowedTagFormats as $AllowedTagFormat) {
 					switch ($AllowedTagFormat) {

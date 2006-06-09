@@ -19,7 +19,9 @@ class vainfo {
 	/* Loaded Variables */
 	var $filename = '';
 	var $_getID3 = '';
-	
+	var $type = '';
+	var $tags = array();
+	var $info = array();
 
 	/* Returned Variables */
 	var $_info = array();
@@ -53,9 +55,12 @@ class vainfo {
 	 */
 	function get_info() {
 
-                $raw_array = $this->_getID3->analyze($this->filename);
+		/* Get the Raw file information */
+		$raw_array = $this->_getID3->analyze($this->filename);
 
-		print_r($raw_array);
+		/* Figure out what type of file we are dealing with */
+		 
+
 
 	} // get_info
 

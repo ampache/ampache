@@ -7,52 +7,8 @@
 //                                                             //
 // getid3.lib.php - part of getID3()                           //
 // See readme.txt for more details                             //
-//                                                             //
-/////////////////////////////////////////////////////////////////
-// getid3_lib::GetURLImageSize( $urlpic ) determines the       //
-// dimensions of local/remote URL pictures.                    //
-// returns array with ($width, $height, $type)                 //
-//                                                             //
-// Thanks to: Oyvind Hallsteinsen aka Gosub / ELq -            //
-// gosubÿelq*org  for the original size determining code       //
-//                                                             //
-// PHP Hack by Filipe Laborde-Basto Oct 21/2000                //
-// FREELY DISTRIBUTABLE -- use at your sole discretion! :)     //
-// Enjoy. (Not to be sold in commercial packages though,       //
-// keep it free!) Feel free to contact me at filÿrezox*com     //
-// (http://www.rezox.com)                                      //
-//                                                             //
-// Modified by James Heinrich <getid3ÿusers*sourceforge*net>   //
-// June 1, 2001 - created GetDataImageSize($imgData) by        //
-// seperating the fopen() stuff to GetURLImageSize($urlpic)    //
-// which then calls GetDataImageSize($imgData). The idea being //
-// you can call GetDataImageSize($imgData) with image data     //
-// from a database etc.                                        //
 //                                                            ///
 /////////////////////////////////////////////////////////////////
-
-
-define('GETID3_GIF_SIG',     "\x47\x49\x46");  // 'GIF'
-define('GETID3_PNG_SIG',     "\x89\x50\x4E\x47\x0D\x0A\x1A\x0A");
-define('GETID3_JPG_SIG',     "\xFF\xD8\xFF");
-define('GETID3_JPG_SOS',     "\xDA"); // Start Of Scan - image data start
-define('GETID3_JPG_SOF0',    "\xC0"); // Start Of Frame N
-define('GETID3_JPG_SOF1',    "\xC1"); // N indicates which compression process
-define('GETID3_JPG_SOF2',    "\xC2"); // Only SOF0-SOF2 are now in common use
-define('GETID3_JPG_SOF3',    "\xC3");
-// NB: codes C4 and CC are *not* SOF markers
-define('GETID3_JPG_SOF5',    "\xC5");
-define('GETID3_JPG_SOF6',    "\xC6");
-define('GETID3_JPG_SOF7',    "\xC7");
-define('GETID3_JPG_SOF9',    "\xC9");
-define('GETID3_JPG_SOF10',   "\xCA");
-define('GETID3_JPG_SOF11',   "\xCB");
-// NB: codes C4 and CC are *not* SOF markers
-define('GETID3_JPG_SOF13',   "\xCD");
-define('GETID3_JPG_SOF14',   "\xCE");
-define('GETID3_JPG_SOF15',   "\xCF");
-define('GETID3_JPG_EOI',     "\xD9"); // End Of Image (end of datastream)
-
 
 
 class getid3_lib
@@ -1211,83 +1167,18 @@ class getid3_lib
 	}
 
 
-	function GetURLImageSize($urlpic) {
-		if ($fd = @fopen($urlpic, 'rb')){
-			$imgData = fread($fd, filesize($urlpic));
-			fclose($fd);
-			return getid3_lib::GetDataImageSize($imgData);
-		}
-		return array('', '', '');
-	}
-
-
 	function GetDataImageSize($imgData) {
-		$height = '';
-		$width  = '';
-		$type   = '';
-		if ((substr($imgData, 0, 3) == GETID3_GIF_SIG) && (strlen($imgData) > 10)) {
-			$dim = unpack('v2dim', substr($imgData, 6, 4));
-			$width  = $dim['dim1'];
-			$height = $dim['dim2'];
-			$type = 1;
-		} elseif ((substr($imgData, 0, 8) == GETID3_PNG_SIG) && (strlen($imgData) > 24)) {
-			$dim = unpack('N2dim', substr($imgData, 16, 8));
-			$width  = $dim['dim1'];
-			$height = $dim['dim2'];
-			$type = 3;
-		} elseif ((substr($imgData, 0, 3) == GETID3_JPG_SIG) && (strlen($imgData) > 4)) {
-			///////////////// JPG CHUNK SCAN ////////////////////
-			$imgPos = 2;
-			$type = 2;
-			$buffer = strlen($imgData) - 2;
-			while ($imgPos < strlen($imgData)) {
-				// synchronize to the marker 0xFF
-				$imgPos = strpos($imgData, 0xFF, $imgPos) + 1;
-				$marker = $imgData[$imgPos];
-				do {
-					$marker = ord($imgData[$imgPos++]);
-				} while ($marker == 255);
-				// find dimensions of block
-				switch (chr($marker)) {
-					// Grab width/height from SOF segment (these are acceptable chunk types)
-					case GETID3_JPG_SOF0:
-					case GETID3_JPG_SOF1:
-					case GETID3_JPG_SOF2:
-					case GETID3_JPG_SOF3:
-					case GETID3_JPG_SOF5:
-					case GETID3_JPG_SOF6:
-					case GETID3_JPG_SOF7:
-					case GETID3_JPG_SOF9:
-					case GETID3_JPG_SOF10:
-					case GETID3_JPG_SOF11:
-					case GETID3_JPG_SOF13:
-					case GETID3_JPG_SOF14:
-					case GETID3_JPG_SOF15:
-						$dim = unpack('n2dim', substr($imgData, $imgPos + 3, 4));
-						$height = $dim['dim1'];
-						$width  = $dim['dim2'];
-						break 2; // found it so exit
-					case GETID3_JPG_EOI:
-					case GETID3_JPG_SOS:
-						return false;       // End loop in case we find one of these markers
-					default:            // We're not interested in other markers
-						$skiplen = (ord($imgData[$imgPos++]) << 8) + ord($imgData[$imgPos++]) - 2;
-						// if the skip is more than what we've read in, read more
-						$buffer -= $skiplen;
-						if ($buffer < 512) { // if the buffer of data is too low, read more file.
-							// $imgData .= fread($fd, $skiplen + 1024);
-							// $buffer += $skiplen + 1024;
-							return false; // End loop in case we find run out of data
-						}
-						$imgPos += $skiplen;
-						break;
-				} // endswitch check marker type
-			} // endif loop through JPG chunks
-		} // endif chk for valid file types
-
-		return array($width, $height, $type);
-	} // end function
-
+		$GetDataImageSize = false;
+		if ($tempfilename = tempnam('*', 'getID3')) {
+			if ($tmp = @fopen($tempfilename, 'rb')) {
+				fwrite($tmp, $imgData);
+				fclose($tmp);
+				$GetDataImageSize = @GetImageSize($tempfilename);
+			}
+			unlink($tempfilename);
+		}
+		return $GetDataImageSize;
+	}
 
 	function ImageTypesLookup($imagetypeid) {
 		static $ImageTypesLookup = array();

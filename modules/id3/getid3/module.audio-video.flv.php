@@ -5,9 +5,16 @@
 //            or http://www.getid3.org                         //
 //                                                             //
 //  FLV module by Seth Kaufman <seth@whirl-i-gig.com>          //
+//                                                             //
 //  * version 0.1 (26 June 2005)                               //
+//                                                             //
 //  minor modifications by James Heinrich <info@getid3.org>    //
 //  * version 0.1.1 (15 July 2005)                             //
+//                                                             //
+//  Support for On2 VP6 codec and meta information by          //
+//  Steve Webster <steve.webster@featurecreep.com>             //
+//  * version 0.2 (22 February 2006)                           //
+//                                                             //
 /////////////////////////////////////////////////////////////////
 //                                                             //
 // module.audio-video.flv.php                                  //
@@ -16,6 +23,13 @@
 //                                                            ///
 /////////////////////////////////////////////////////////////////
 
+define('GETID3_FLV_TAG_AUDIO', 8);
+define('GETID3_FLV_TAG_VIDEO', 9);
+define('GETID3_FLV_TAG_META', 18);
+
+define('GETID3_FLV_VIDEO_H263',   2);
+define('GETID3_FLV_VIDEO_SCREEN', 3);
+define('GETID3_FLV_VIDEO_VP6',    4);
 
 class getid3_flv
 {
@@ -60,7 +74,7 @@ class getid3_flv
 			$Timestamp  = getid3_lib::BigEndian2Int(substr($FLVfileData, $CurrentOffset + 4, 3));
 
 			switch ($TagType) {
-				case 8:
+				case GETID3_FLV_TAG_AUDIO:
 					if (is_null($SoundFormat)) {
 						$SoundInfo = ord(substr($FLVfileData, $CurrentOffset + 11, 1));
 						$SoundFormat = $SoundInfo & 0x07;
@@ -71,67 +85,85 @@ class getid3_flv
 					}
 					break;
 
-				case 9:
+				case GETID3_FLV_TAG_VIDEO:
 					if (is_null($VideoFormat)) {
 						$VideoInfo = ord(substr($FLVfileData, $CurrentOffset + 11, 1));
 						$VideoFormat = $VideoInfo & 0x07;
 						$ThisFileInfo['flv']['video']['videoCodec'] = $VideoFormat;
 
-						$PictureSizeType = (getid3_lib::BigEndian2Int(substr($FLVfileData, $CurrentOffset + 15, 2))) >> 7;
-						$PictureSizeType = $PictureSizeType & 0x0007;
-						$ThisFileInfo['flv']['header']['videoSizeType'] = $PictureSizeType;
-						switch ($PictureSizeType) {
-							case 0:
-								$PictureSizeEnc = getid3_lib::BigEndian2Int(substr($FLVfileData, $CurrentOffset + 16, 2));
-								$PictureSizeEnc <<= 1;
-								$ThisFileInfo['video']['resolution_x'] = ($PictureSizeEnc & 0xFF00) >> 8;
-								$PictureSizeEnc = getid3_lib::BigEndian2Int(substr($FLVfileData, $CurrentOffset + 17, 2));
-								$PictureSizeEnc <<= 1;
-								$ThisFileInfo['video']['resolution_y'] = ($PictureSizeEnc & 0xFF00) >> 8;
-								break;
+						if ($VideoFormat != GETID3_FLV_VIDEO_VP6) {
 
-							case 1:
-								$PictureSizeEnc = getid3_lib::BigEndian2Int(substr($FLVfileData, $CurrentOffset + 16, 4));
-								$PictureSizeEnc <<= 1;
-								$ThisFileInfo['video']['resolution_x'] = ($PictureSizeEnc & 0xFFFF0000) >> 16;
+							$PictureSizeType = (getid3_lib::BigEndian2Int(substr($FLVfileData, $CurrentOffset + 15, 2))) >> 7;
+							$PictureSizeType = $PictureSizeType & 0x0007;
+							$ThisFileInfo['flv']['header']['videoSizeType'] = $PictureSizeType;
+							switch ($PictureSizeType) {
+								case 0:
+									$PictureSizeEnc = getid3_lib::BigEndian2Int(substr($FLVfileData, $CurrentOffset + 16, 2));
+									$PictureSizeEnc <<= 1;
+									$ThisFileInfo['video']['resolution_x'] = ($PictureSizeEnc & 0xFF00) >> 8;
+									$PictureSizeEnc = getid3_lib::BigEndian2Int(substr($FLVfileData, $CurrentOffset + 17, 2));
+									$PictureSizeEnc <<= 1;
+									$ThisFileInfo['video']['resolution_y'] = ($PictureSizeEnc & 0xFF00) >> 8;
+									break;
 
-								$PictureSizeEnc = getid3_lib::BigEndian2Int(substr($FLVfileData, $CurrentOffset + 18, 4));
-								$PictureSizeEnc <<= 1;
-								$ThisFileInfo['video']['resolution_y'] = ($PictureSizeEnc & 0xFFFF0000) >> 16;
-								break;
+								case 1:
+									$PictureSizeEnc = getid3_lib::BigEndian2Int(substr($FLVfileData, $CurrentOffset + 16, 4));
+									$PictureSizeEnc <<= 1;
+									$ThisFileInfo['video']['resolution_x'] = ($PictureSizeEnc & 0xFFFF0000) >> 16;
 
-							case 2:
-								$ThisFileInfo['video']['resolution_x'] = 352;
-								$ThisFileInfo['video']['resolution_y'] = 288;
-								break;
+									$PictureSizeEnc = getid3_lib::BigEndian2Int(substr($FLVfileData, $CurrentOffset + 18, 4));
+									$PictureSizeEnc <<= 1;
+									$ThisFileInfo['video']['resolution_y'] = ($PictureSizeEnc & 0xFFFF0000) >> 16;
+									break;
 
-							case 3:
-								$ThisFileInfo['video']['resolution_x'] = 176;
-								$ThisFileInfo['video']['resolution_y'] = 144;
-								break;
+								case 2:
+									$ThisFileInfo['video']['resolution_x'] = 352;
+									$ThisFileInfo['video']['resolution_y'] = 288;
+									break;
 
-							case 4:
-								$ThisFileInfo['video']['resolution_x'] = 128;
-								$ThisFileInfo['video']['resolution_y'] = 96;
-								break;
+								case 3:
+									$ThisFileInfo['video']['resolution_x'] = 176;
+									$ThisFileInfo['video']['resolution_y'] = 144;
+									break;
 
-							case 5:
-								$ThisFileInfo['video']['resolution_x'] = 320;
-								$ThisFileInfo['video']['resolution_y'] = 240;
-								break;
+								case 4:
+									$ThisFileInfo['video']['resolution_x'] = 128;
+									$ThisFileInfo['video']['resolution_y'] = 96;
+									break;
 
-							case 6:
-								$ThisFileInfo['video']['resolution_x'] = 160;
-								$ThisFileInfo['video']['resolution_y'] = 120;
-								break;
+								case 5:
+									$ThisFileInfo['video']['resolution_x'] = 320;
+									$ThisFileInfo['video']['resolution_y'] = 240;
+									break;
 
-							default:
-								$ThisFileInfo['video']['resolution_x'] = 0;
-								$ThisFileInfo['video']['resolution_y'] = 0;
-								break;
+								case 6:
+									$ThisFileInfo['video']['resolution_x'] = 160;
+									$ThisFileInfo['video']['resolution_y'] = 120;
+									break;
 
+								default:
+									$ThisFileInfo['video']['resolution_x'] = 0;
+									$ThisFileInfo['video']['resolution_y'] = 0;
+									break;
+
+							}
 						}
 					}
+					break;
+
+				// Meta tag
+				case GETID3_FLV_TAG_META:
+
+					$reader = new AMFReader(new AMFStream(substr($FLVfileData, $CurrentOffset + 11, $DataLength)));
+					$eventName = $reader->readData();
+					$ThisFileInfo['meta'][$eventName] = $reader->readData();
+
+					unset($reader);
+
+					$ThisFileInfo['video']['frame_rate']         = $ThisFileInfo['meta']['onMetaData']['framerate'];
+					$ThisFileInfo['video']['resolution_x']       = $ThisFileInfo['meta']['onMetaData']['width'];
+					$ThisFileInfo['video']['resolution_y']       = $ThisFileInfo['meta']['onMetaData']['height'];
+
 					break;
 
 				default:
@@ -181,7 +213,7 @@ class getid3_flv
 
 	function FLVaudioRate($id) {
 		$FLVaudioRate = array(
-			0 => 5500,
+			0 =>  5500,
 			1 => 11025,
 			2 => 22050,
 			3 => 44100,
@@ -191,20 +223,269 @@ class getid3_flv
 
 	function FLVaudioBitDepth($id) {
 		$FLVaudioBitDepth = array(
-			0 => 8,
+			0 =>  8,
 			1 => 16,
 		);
 		return (@$FLVaudioBitDepth[$id] ? @$FLVaudioBitDepth[$id] : false);
 	}
 
 	function FLVvideoCodec($id) {
-		$FLVaudioBitDepth = array(
-			2 => 'Sorenson H.263',
-			3 => 'Screen video',
+		$FLVvideoCodec = array(
+			GETID3_FLV_VIDEO_H263   => 'Sorenson H.263',
+			GETID3_FLV_VIDEO_SCREEN => 'Screen video',
+			GETID3_FLV_VIDEO_VP6    => 'On2 VP6',
 		);
-		return (@$FLVaudioBitDepth[$id] ? @$FLVaudioBitDepth[$id] : false);
+		return (@$FLVvideoCodec[$id] ? @$FLVvideoCodec[$id] : false);
+	}
+}
+
+class AMFStream {
+	var $bytes;
+	var $pos;
+
+	function AMFStream(&$bytes) {
+		$this->bytes =& $bytes;
+		$this->pos = 0;
 	}
 
+	function readByte() {
+		return getid3_lib::BigEndian2Int(substr($this->bytes, $this->pos++, 1));
+	}
+
+	function readInt() {
+		return ($this->readByte() << 8) + $this->readByte();
+	}
+
+	function readLong() {
+		return ($this->readByte() << 24) + ($this->readByte() << 16) + ($this->readByte() << 8) + $this->readByte();
+	}
+
+	function readDouble() {
+		return getid3_lib::BigEndian2Float($this->read(8));
+	}
+
+	function readUTF() {
+		$length = $this->readInt();
+		return $this->read($length);
+	}
+
+	function readLongUTF() {
+		$length = $this->readLong();
+		return $this->read($length);
+	}
+
+	function read($length) {
+		$val = substr($this->bytes, $this->pos, $length);
+		$this->pos += $length;
+		return $val;
+	}
+
+	function peekByte() {
+		$pos = $this->pos;
+		$val = $this->readByte();
+		$this->pos = $pos;
+		return $val;
+	}
+
+	function peekInt() {
+		$pos = $this->pos;
+		$val = $this->readInt();
+		$this->pos = $pos;
+		return $val;
+	}
+
+	function peekLong() {
+		$pos = $this->pos;
+		$val = $this->readLong();
+		$this->pos = $pos;
+		return $val;
+	}
+
+	function peekDouble() {
+		$pos = $this->pos;
+		$val = $this->readDouble();
+		$this->pos = $pos;
+		return $val;
+	}
+
+	function peekUTF() {
+		$pos = $this->pos;
+		$val = $this->readUTF();
+		$this->pos = $pos;
+		return $val;
+	}
+
+	function peekLongUTF() {
+		$pos = $this->pos;
+		$val = $this->readLongUTF();
+		$this->pos = $pos;
+		return $val;
+	}
+}
+
+class AMFReader {
+	var $stream;
+
+	function AMFReader(&$stream) {
+		$this->stream =& $stream;
+	}
+
+	function readData() {
+		$value = null;
+
+		$type = $this->stream->readByte();
+
+		switch($type) {
+			// Double
+			case 0:
+				$value = $this->readDouble();
+			break;
+
+			// Boolean
+			case 1:
+				$value = $this->readBoolean();
+				break;
+
+			// String
+			case 2:
+				$value = $this->readString();
+				break;
+
+			// Object
+			case 3:
+				$value = $this->readObject();
+				break;
+
+			// null
+			case 6:
+				return null;
+				break;
+
+			// Mixed array
+			case 8:
+				$value = $this->readMixedArray();
+				break;
+
+			// Array
+			case 10:
+				$value = $this->readArray();
+				break;
+
+			// Date
+			case 11:
+				$value = $this->readDate();
+				break;
+
+			// Long string
+			case 13:
+				$value = $this->readLongString();
+				break;
+
+			// XML (handled as string)
+			case 15:
+				$value = $this->readXML();
+				break;
+
+			// Typed object (handled as object)
+			case 16:
+				$value = $this->readTypedObject();
+				break;
+
+			// Long string
+			default:
+				$value = '(unknown or unsupported data type)';
+			break;
+		}
+
+		return $value;
+	}
+
+	function readDouble() {
+		return $this->stream->readDouble();
+	}
+
+	function readBoolean() {
+		return $this->stream->readByte() == 1;
+	}
+
+	function readString() {
+		return $this->stream->readUTF();
+	}
+
+	function readObject() {
+		// Get highest numerical index - ignored
+		$highestIndex = $this->stream->readLong();
+
+		$data = array();
+
+		while ($key = $this->stream->readUTF()) {
+			// Mixed array record ends with empty string (0x00 0x00) and 0x09
+			if (($key == '') && ($this->stream->peekByte() == 0x09)) {
+				// Consume byte
+				$this->stream->readByte();
+				break;
+			}
+
+			$data[$key] = $this->readData();
+		}
+
+		return $data;
+	}
+
+	function readMixedArray() {
+		// Get highest numerical index - ignored
+		$highestIndex = $this->stream->readLong();
+
+		$data = array();
+
+		while ($key = $this->stream->readUTF()) {
+			// Mixed array record ends with empty string (0x00 0x00) and 0x09
+			if (($key == '') && ($this->stream->peekByte() == 0x09)) {
+				// Consume byte
+				$this->stream->readByte();
+				break;
+			}
+
+			if (is_numeric($key)) {
+				$key = (float) $key;
+			}
+
+			$data[$key] = $this->readData();
+		}
+
+		return $data;
+	}
+
+	function readArray() {
+		$length = $this->stream->readLong();
+
+		$data = array();
+
+		for ($i = 0; $i < count($length); $i++) {
+			$data[] = $this->readData();
+		}
+
+		return $data;
+	}
+
+	function readDate() {
+		$timestamp = $this->stream->readDouble();
+		$timezone = $this->stream->readInt();
+		return $timestamp;
+	}
+
+	function readLongString() {
+		return $this->stream->readLongUTF();
+	}
+
+	function readXML() {
+		return $this->stream->readLongUTF();
+	}
+
+	function readTypedObject() {
+		$className = $this->stream->readUTF();
+		return $this->readObject();
+	}
 }
 
 ?>
