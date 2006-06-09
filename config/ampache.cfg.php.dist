@@ -412,63 +412,9 @@ transcode_m4a 	= true
 #transcode_mpc  = false
 
 # These are the commands that will be run to transcode the file
-#stream_cmd_flac 	= 
-#stream_cmd_m4a 	= faad -f 2 -w "%FILE%" | lame -r -b %SAMPLE% -S - -
+#stream_cmd_flac 	= flac -dc %FILE% | lame -r -b 128 -S - - 
+#stream_cmd_m4a 	= faad -f 2 -w "%FILE%" | lame -r -b 128 -S - -
 #stream_cmd_mpc		= 
-
-#######################################################
-# These options control the "local play" feature. This requires
-# a playlist manager such as moosic, winamp, xmms etc which
-# can be controlled via command line.
-# The defaults below are for moosic, a python based music
-# player daemon. You must currently start the daemon
-# yourself, because it doesn't fork right for launch
-# inside apache.
-# Valid replacements are:
-#   %URL% 	= url to the song
-#   %AMOUNT%	= amount to increase or decrese the volume by (optional)
-#
-# HACK alert - run moosicd as www-data user, and 
-#  then set the HOME env var so moosic client 
-#  can find the folder it needs b4 every call...
-# Commenting this all out, unless you uncomment it...
-### ADD - add song to playlist
-# DEFAULT: export HOME='/var/www'; moosic -n add %URL%
-#localplay_add   = "export HOME='/var/www'; moosic -n add %URL%"
-### STOP - stop the playback.
-# DEFAULT: export HOME='/var/www'; moosic stop
-#localplay_stop  = "export HOME='/var/www'; moosic stop"
-### PLAY - begin stopped or paused playback.
-# DEFAULT: export HOME='/var/www'; moosic play
-#localplay_play  = "export HOME='/var/www'; moosic play"
-### PAUSE - pause the player
-# DEFAULT: export HOME='/var/www'; moosic pause
-#localplay_pause = "export HOME='/var/www'; moosic pause"
-### NEXT - Skip to the next song in the list
-# DEFAULT: export HOME='/var/www'; moosic next
-#localplay_next  = "export HOME='/var/www'; moosic next"
-### PREV - Skip to the next song in the list
-# DEFAULT: export HOME='/var/www'; moosic previous
-#localplay_prev  = "export HOME='/var/www'; moosic previous"
-### VOLUME UP - increase the volume
-# DEFAULT: amixer -q set Master %AMOUNT%%+
-#localplay_volplus = "amixer -q set Master %AMOUNT%%+" 
-### VOLUME DOWN - decrease the volume
-# DEFAULT: amixer -q set Master %AMOUNT%%-
-#localplay_volminus = "amixer -q set Master %AMOUNT%%-"
-### START - NOT USED - strt the player daemon.
-# DEFAULT: export HOME='/var/www'; moosicd &
-#localplay_start = "export HOME='/var/www'; moosicd &"
-### CLEAR - remove all from playlist and stop playing.
-# DEFAULT: export HOME='/var/www'; moosic wipe
-#localplay_clear = "export HOME='/var/www'; moosic wipe"
-### KILL - stop the player daemon
-# DEFAULT: export HOME='/var/www'; moosic die
-#localplay_kill  = "export HOME='/var/www'; moosic die"
-### This must return a 1 line "status report" which is
-### displayed under the player controls.
-# DEFAULT: export HOME='/var/www'; moosic state|grep 'items in the'
-#localplay_status = "export HOME='/var/www'; moosic state|grep 'items in the'"
 
 #######################################################
 # these options allow you to configure your rss-feed
@@ -509,31 +455,3 @@ rss_main_language = nl
 # FIXME it's hardcoded in lib/rss.lib.php now
 #rss_song_description = <![CDATA[$song->f_title @ $album played by  $user->fullname]]>
 ######################################################
-
-#######################
-#  ICECAST2 Settings  #
-#######################
-# These settings are for the ICECAST2 support
-# built into Ampache. 
-######################################################
-# Tracklist Filename
-# This defines the file that the tracklist
-# for icecast is written to, this file must
-# be writable by the web server process
-# DEFAULT: /private/ampache/icecast/tracklist.txt
-#icecast_tracklist = "/private/ampache/icecast/tracklist.txt"
-
-# Icecast Command
-# This is the command that is run when ampache
-# attempts to start up icecast. %FILE% represents 
-# the icecast_tracklist variable (Filename)
-# DEFAULT: /usr/local/bin/ices -c /usr/local/etc/ices.conf -F %FILE% -B
-#icecast_command = "/usr/local/bin/ices -c /usr/local/etc/ices.conf -F %FILE% -B"
-
-#####################################################
-###################
-#   MPD Settings  #
-###################
-# These settings have been moved into the database
-# Defaults can be found in /modules/localplay/mpd.readme
-#####################################################
