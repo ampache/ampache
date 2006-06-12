@@ -4,6 +4,8 @@
 
 --------------------------------------------------------------------------
   v.3.3.2-Beta3
+  	- Fixed Transcoding logic issue and added preset line for
+		transcoding flac files in .dist file (Defaulted to Off)
   	- Upgraded to Getid3() 1.7.6
   	- Fixed an issue where the new song->get_url() wasn't respecting
 		the force_http_play, this also fixes a long outstanding
