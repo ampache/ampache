@@ -1,9 +1,24 @@
 <?php
-/**
- * Load the Getid3 Library
- */
-require_once(conf('prefix') . '/modules/id3/getid3/getid3.php');
+/*
 
+ Copyright (c) 2001 - 2006 Ampache.org
+ All rights reserved.
+
+ This program is free software; you can redistribute it and/or
+ modify it under the terms of the GNU General Public License
+ as published by the Free Software Foundation; either version 2
+ of the License, or (at your option) any later version.
+
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with this program; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+
+*/
 
 /**
  * vainfo
@@ -23,21 +38,30 @@ class vainfo {
 
 
 	/* Internal Information */
-	var $_raw 	= array();
-	var $_getID3 	= '';
-	var $_iconv	= false; 
+	var $_raw 		= array();
+	var $_getID3 		= '';
+	var $_iconv		= false; 
+	var $_file_pattern	= '';
+	var $_dir_pattern	= '';
 
 	/**
 	 * Constructor
 	 * This function just sets up the class, it doesn't
 	 * actually pull the information
 	 */
-	function vainfo($file,$encoding='') { 
+	function vainfo($file,$encoding='',$dir_pattern,$file_pattern) { 
 
 		$this->filename = stripslashes($file);
 		if ($encoding) { 
 			$this->encoding = $encoding;
 		}
+		else { 
+			$this->encoding = conf('site_charset');
+		}
+
+		/* These are needed for the filename mojo */
+		$this->_file_pattern = $file_pattern;
+		$this->_dir_pattern  = $dir_pattern;
 
                 // Initialize getID3 engine
                 $this->_getID3 = new getID3();
@@ -70,14 +94,14 @@ class vainfo {
 		$this->type = $this->_get_type();
 
 		/* Get the general information about this file */
-		$this->info = $this->_get_info();
+		$info = $this->_get_info();
 
 		/* Gets the Tags */
 		$this->tags = $this->_get_tags();
+		$this->tags['info'] = $info;
 
 		unset($this->_raw);
-
-print_r($this);
+	
 	} // get_info
 
 	/**
@@ -145,6 +169,9 @@ print_r($this);
 
 		} // end foreach
 
+		/* Gather Tag information from the filenames */
+		$results['file']	= $this->_parse_filename($this->filename);
+
 		return $results;
 
 	} // _get_tags
@@ -205,6 +232,9 @@ print_r($this);
 			case 'flac':
 				return 'flac';
 			break;
+			case 'vorbis':
+				return 'ogg';
+			break;
 			default: 
 				/* Log the fact that we couldn't figure it out */
 				debug_event('vainfo','Unable to determine file type from ' . $type . ' on file ' . $this->filename,'5');
@@ -233,6 +263,9 @@ print_r($this);
 				case 'tracknumber':
 					$array['track']	= $this->_clean_tag($data['0']);
 				break;
+				case 'date':
+					$array['year']	= $this->_clean_tag($data['0']);
+				break;
 			} // end switch
 
 			$array[$tag] = $this->_clean_tag($data['0']);
@@ -251,7 +284,19 @@ print_r($this);
 	 */
 	function _parse_id3v1($tags) { 
 
+		$array = array();
 
+		/* Go through all the tags */
+		foreach ($tags as $tag=>$data) { 
+
+			/* This is our baseline for naming 
+			 * so no translation needed 
+			 */
+			$array[$tag]	= $this->_clean_tag($data['0']);
+			
+		} // end foreach
+
+		return $array;
 
 	} // _parse_id3v1
 
@@ -262,9 +307,20 @@ print_r($this);
 	 * pretty little format
 	 */
 	function _parse_id3v2($tags) { 
+	
+		$array = array();
 
+		/* Go through the tags */
+		foreach ($tags as $tag=>$data) { 
+			
+			/* This is our baseline for naming so
+			 * no translation is needed
+			 */
+			$array[$tag]	= $this->_clean_tag($data['0']);
+		
+		} // end foreach
 
-
+		return $array;
 
 	} // _parse_id3v2
 
@@ -292,15 +348,41 @@ print_r($this);
 
 	} // _parse_quicktime
 
+
+	/**
+	 * _parse_filename
+	 * This function uses the passed file and dir patterns
+	 * To pull out extra tag information and populate it into 
+	 * it's own array
+	 */
+	function _parse_filename($filename) { 
+
+		/* Currently Broken */
+		return array();
+
+		$pattern = $this->_dir_pattern . $this->_file_pattern;
+		preg_match_all("/\%\w/",$pattern,$elements);
+
+		$preg_pattern = preg_replace("/\%\w/","(.+)",$pattern);
+		$preg_pattern .= "\..+$";	
+		preg_match($preg_pattern,$filename,$matches);
+
+
+	} // _parse_filename
+
 	/**
 	 * _clean_tag
 	 * This function cleans up the tag that it's passed using Iconv
-	 * if we've got it
+	 * if we've got it. It also takes an optional encoding param
+	 * for the cases where we know what the tags source encoding
+	 * is, and or if it's different then the encoding recorded
+	 * in the file
 	 */
-	function _clean_tag($tag) { 
+	function _clean_tag($tag,$encoding='') { 
 
-		if ($this->_iconv) { 
-			
+
+		if ($this->_iconv AND $this->encoding != $encoding) { 
+			$tag = iconv('UTF-8','ISO-8859-1',$tag);
 		}
 
 		return $tag;

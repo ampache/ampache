@@ -335,69 +335,53 @@ function extend_session($sid) {
 
 } // extend_session
 
-/*!
-	@function get_tag_type
-	@discussion finds out what tag the audioinfo
-		results returned
-*/
+/**
+ * get_tag_type
+ * This takes the result set, and the the tag_order
+ * As defined by your config file and trys to figure out
+ * which tag type it should use, if your tag_order
+ * doesn't match anything then it just takes the first one
+ * it finds in the results. 
+ */
 function get_tag_type($results) {
 
-         // Check and see if we are dealing with an ogg
-         // If so order will be a little different
-         if ($results['ogg']) {
-        	$order[0] = 'ogg';
-         } // end if ogg
-         elseif ($results['rm'] OR $results['format_name'] == 'Real') {
-		$order[0] = 'real';
-         }
-	 elseif ($results['flac']) { 
-	 	$order[0] = 'flac';
-	 }
-         elseif ($results['asf']) {
-                $order[0] = 'asf';
-         }
-	 elseif ($results['m4a']) { 
-	 	$order[0] = 'm4a';
-	 }
-	 elseif ($results['mpc']) { 
-	 	$order[0] = 'mpc';
-	 }
-         else {
-	        $order = conf('id3tag_order');
-         } // end else
+	/* Pull In the config option */
+	$order = conf('tag_order');
 
-         if (!is_array($order)) {
-	         $order = array($order);
-         }
+        if (!is_array($order)) {
+		$order = array($order);
+        }
 
-        // set the $key to the first found tag style (according to their prefs)
+	/* Foreach through the defined key order
+	 * the first one we find is the first one we use 
+	 */
         foreach($order as $key) {
                 if ($results[$key]) {
+			$returned_key = $key;
                 	break;
         	}
 	}
 
-	return $key;
+	/* If we didn't find anything then default it to the
+	 * first in the results set
+	 */
+	if (!isset($returned_key)) { 
+		$keys = array_keys($results);
+		$returned_key = $keys['0'];
+	}
+
+	return $returned_key;
 
 } // get_tag_type
 
 
-/*!
-	@function clean_tag_info
-	@discussion cleans up the tag information
-*/
+/**
+ * clean_tag_info
+ * This function takes the array from vainfo along with the 
+ * key we've decided on and the filename and returns it in a 
+ * sanatized format that ampache can actually use
+ */
 function clean_tag_info($results,$key,$filename) { 
-
-	if ($key == 'real') { 
-		$results['real'] = $results['tags']['real'];
-	}
-
-	/* Flatten any arrayed results */
-	foreach ($results[$key] as $field=>$data) { 
-		if (is_array($data)) { 
-			$results[$key][$field] = array_pop($data);
-		}
-	}
 
 	$info = array();
 
@@ -407,13 +391,18 @@ function clean_tag_info($results,$key,$filename) {
 	$info['file']		= $filename;
 	$info['title']        	= stripslashes(trim($results[$key]['title']));
 	$info['year']         	= intval($results[$key]['year']);
-	$info['comment']      	= sql_escape(str_replace($clean_array,$wipe_array,$results[$key]['comment']));
-	$info['bitrate']      	= intval($results['avg_bit_rate']);
-	$info['rate']         	= intval($results['sample_rate']);
-	$info['mode']         	= $results['bitrate_mode'];
-	$info['size']         	= filesize($filename); 
-	$info['time']         	= intval($results['playing_time']);
 	$info['track']		= intval($results[$key]['track']);
+	$info['comment']      	= sql_escape(str_replace($clean_array,$wipe_array,$results[$key]['comment']));
+
+	/* This are pulled from the info array */
+	$info['bitrate']      	= intval($results['info']['bitrate']);
+	$info['rate']         	= intval($results['info']['sample_rate']);
+	$info['mode']         	= $results['info']['bitrate_mode'];
+	$info['size']         	= $results['info']['filesize']; 
+	$info['mime']		= $results['info']['mime'];
+	$into['encoding']	= $results['info']['encoding'];
+	$info['time']         	= intval($results['info']['playing_time']);
+	$info['channels']	= intval($results['info']['channels']);
 
         /* These are used to generate the correct ID's later */
         $info['artist'] 	= trim($results[$key]['artist']);

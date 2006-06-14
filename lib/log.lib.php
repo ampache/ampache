@@ -81,8 +81,11 @@ function ampache_error_handler($errno, $errstr, $errfile, $errline) {
 			break;
 	} // end switch
 
-	/* Don't log var: Deprecated we know shutup! */
-	if (strstr($errstr,"var: Deprecated. Please use the public/private/protected modifiers")) { 
+	/* Don't log var: Deprecated we know shutup!
+	 * Yea now getid3() spews errors I love it :(
+	 */
+	if (strstr($errstr,"var: Deprecated. Please use the public/private/protected modifiers") OR
+	    strstr($errstr,"getimagesize() [")) { 
 		return false; 
 	}
 

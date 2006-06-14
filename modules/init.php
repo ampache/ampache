@@ -80,7 +80,7 @@ if (!$results['allow_stream_playback']) {
 
 
 /** This is the version.... fluf nothing more... **/
-$results['version']		= '3.3.2-Beta3 (Build 007)';
+$results['version']		= '3.3.2-Beta3 (Build 008)';
 
 $results['raw_web_path']	= $results['web_path'];
 $results['web_path']		= $http_type . $_SERVER['HTTP_HOST'] . $results['web_path'];
@@ -154,7 +154,7 @@ require_once(conf('prefix') . '/lib/upload.php');
 require_once(conf('prefix') . '/modules/lib.php');
 require_once(conf('prefix') . '/modules/admin.php');
 require_once(conf('prefix') . '/modules/catalog.php');
-require_once(conf('prefix') . '/modules/id3/audioinfo.class.php');
+require_once(conf('prefix') . "/modules/id3/getid3/getid3.php");
 require_once(conf('prefix') . '/modules/id3/vainfo.class.php');
 require_once(conf('prefix') . '/modules/amazon/Snoopy.class.php');
 require_once(conf('prefix') . '/modules/amazon/AmazonSearchEngine.class.php');

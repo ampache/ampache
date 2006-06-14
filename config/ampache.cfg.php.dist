@@ -50,12 +50,6 @@ local_length = 900
 # DEAFULT: 900
 remember_length = 900
 
-# This is the DOMAIN for the cookie that stores your session key
-# this must be set to the domain of your host or you will not be
-# able to log in make sure you including the leading .
-# DEFAULT: ""
-#sess_domain             = .yourwebsite.com
-
 # Name of the Session/Cookie that will sent to the browser
 # default should be fine
 # DEFAULT: ampache
@@ -112,14 +106,16 @@ require_session = "true"
 # VALUES: any whole number (in bytes per second)
 #throttle_download = 10
 
-# This sets which ID3 tag takes precedence.
-# we've found for those of you who don't have
-# good v2 tags it's sometimes nice to keep the v1
-# until you've fixed v2
-# POSSIBLE VALUES: id3v1 id3v2
+# This determines the tag order for all cataloged
+# music. If none of the listed tags are found then
+# ampache will default to the first tag format
+# that was found. 
+# POSSIBLE VALUES: id3v1 id3v2 file vorbiscomment 
+#                  quicktime ape
 # DEFAULT: id3v2,id3v1
-id3tag_order	= "id3v2"
-id3tag_order 	= "id3v1"
+tag_order	= "id3v2"
+tag_order	= "id3v1"
+tag_order	= "file"
 
 # Un comment if don't want ampache to follow symlinks
 # DEFAULT: false
@@ -240,7 +236,7 @@ debug_level = 5
 # this will only happen if debug is turned on. Do not
 # include trailing slash. You will need to make sure that
 # your HTTP server has write access to the specified directory
-# DEFAULT: /var/log/ampache
+# DEFAULT: NULL
 #log_path = "/var/log/ampache"
 
 # Max Upload Size

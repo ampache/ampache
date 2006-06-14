@@ -871,20 +871,17 @@ class Catalog {
         */
         function update_song_from_tags($song) {
 
-
+		/* Record the reading of these tags */
 		debug_event('tag-read',"Reading Tags from $song->file",'5','ampache-catalog');
 		
-                $info = new Audioinfo();
-                $results = $info->Info($song->file);
+		$vainfo = new vainfo($song->file,'',$this->sort_pattern,$this->rename_pattern);
+		$vainfo->get_info();
 
                 /* Find the correct key */
-                $key = get_tag_type($results);
-
-		/* Fill Missing Information */
-		$results = $song->fill_info($results,$this->sort_pattern . "/" . $this->rename_pattern, $this->id, $key);
+                $key = get_tag_type($vainfo->tags);
 
                 /* Clean up the tags */
-                $results = clean_tag_info($results,$key,$song->file);
+                $results = clean_tag_info($vainfo->tags,$key,$song->file);
 
                 /* Setup the vars */
 		$new_song 		= new Song();
@@ -903,7 +900,7 @@ class Catalog {
                 $genre                  = $results['genre'];
 
 		/* Clean up Old Vars */
-		unset($results,$key,$info);
+		unset($vainfo,$key);
 
                 /*
                 * We have the artist/genre/album name need to check it in the tables
@@ -1977,19 +1974,15 @@ class Catalog {
 	*/
 	function insert_local_song($file,$file_info) {
 
-		/* Create the Audioinfo object and get info */
-		$audio_info 	 = new Audioinfo();
+		/* Create the vainfo object and get info */
+		$vainfo		= new vainfo($file,'',$this->sort_pattern,$this->rename_pattern);
+		$vainfo->get_info();
 		$song_obj	 = new Song();
-		$results 	 = $audio_info->Info($file);
-		$results['file'] = $file;
 
-		$key = get_tag_type($results);
-
-		/* Fill Empty info from filename/path */
-		$results = $song_obj->fill_info($results,$this->sort_pattern . "/" . $this->rename_pattern,$this->id,$key);
+		$key = get_tag_type($vainfo->tags);
 
 		/* Clean Up the tags */
-		$results = clean_tag_info($results,$key,$file);
+		$results = clean_tag_info($vainfo->tags,$key,$file);
 	
 		/* Set the vars here... so we don't have to do the '" . $blah['asd'] . "' */
 		$title 		= sql_escape($results['title']);
@@ -2023,7 +2016,7 @@ class Catalog {
 
 		if (!$db_results) {
 			debug_event('insert',"Unable to insert $file -- $sql",'5','ampache-catalog'); 
-			echo "<span style=\"color: #F00;\">Error Adding $file </span><br />$sql<br />";
+			echo "<span style=\"color: #F00;\">Error Adding $file </span><hr />$sql<hr />";
 			flush();
 		}
 

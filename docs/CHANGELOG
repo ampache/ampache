@@ -4,6 +4,10 @@
 
 --------------------------------------------------------------------------
   v.3.3.2-Beta3
+  	- Added new getid3() wrapper (vainfo) should resolve the
+		id3 tags in oggs issue that some people were having
+		and makes file only tag basis possible. requires
+		and update to your ampache.cfg.php
   	- Fixed Transcoding logic issue and added preset line for
 		transcoding flac files in .dist file (Defaulted to Off)
   	- Upgraded to Getid3() 1.7.6
