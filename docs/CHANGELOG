@@ -4,6 +4,10 @@
 
 --------------------------------------------------------------------------
   v.3.3.2-Beta3
+  	- Fixed a missing close tag on the catalog build if ampache was
+		unable to get the filesize of a file
+  	- Fixed link to Statistics page, user link has been missing
+		since the new interface was put into place
   	- Added new getid3() wrapper (vainfo) should resolve the
 		id3 tags in oggs issue that some people were having
 		and makes file only tag basis possible. requires

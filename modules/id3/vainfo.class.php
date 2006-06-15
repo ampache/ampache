@@ -381,8 +381,8 @@ class vainfo {
 	function _clean_tag($tag,$encoding='') { 
 
 
-		if ($this->_iconv AND $this->encoding != $encoding) { 
-			$tag = iconv('UTF-8','ISO-8859-1',$tag);
+		if ($this->_iconv) { 
+			$tag = iconv('UTF-8',conf('site_charset'),$tag);
 		}
 
 		return $tag;

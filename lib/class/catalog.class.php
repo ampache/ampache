@@ -372,7 +372,7 @@ class Catalog {
 
 				if (!$file_size) { 
 					debug_event('read',"Unable to get filesize for $full_file",'2','ampache-catalog'); 
-					echo "<font class=\"error\">" . _("Error: Unable to get filesize for") . " $full_file <br />";
+					echo "<span class=\"error\">" . _("Error: Unable to get filesize for") . " $full_file</span><br />";
 				} // file_size check
 		
 				if (is_readable($full_file)) {
@@ -394,7 +394,7 @@ class Catalog {
 
 							/* Stupid little cutesie thing */
 							$this->count++;
-							if ( !($this->count%conf('catalog_echo_count')) ) {
+							if ( !($this->count%conf('catalog_echo_count')) AND $verbose) {
 							        echo "<script language=\"JavaScript\">";
 								echo "update_txt('" . $this->count . "','count_add_" . $this->id ."');";
 								echo "</script>\n";
@@ -487,7 +487,7 @@ class Catalog {
 
 			/* Stupid little cutesie thing */
                         $search_count++;
-                        if ( !($search_count%conf('catalog_echo_count')) ) {
+                        if ( !($search_count%conf('catalog_echo_count'))) {
                                 echo "<script language=\"JavaScript\">";
                                 echo "update_txt('" . $search_count ."','count_art_" . $this->id . "');";
                                 echo "</script>\n"; 
@@ -782,7 +782,7 @@ class Catalog {
                         return true;
                 }
 		
-		echo _('Found') . ": <span id=\"count\">" . _('None') . "</span><br />\n";
+		echo _('Found') . ": <span id=\"count_add_" . $this->id . "\">" . _('None') . "</span><br />\n";
 		flush();
 		
 		/* Get the songs and then insert them into the db */

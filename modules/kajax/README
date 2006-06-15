@@ -1,4 +1,3 @@
-<?php
 /*
 
  Copyright (c) 2001 - 2006 Ampache.org
@@ -19,21 +18,7 @@
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
-
-/*!
-	@header MPD control
-	@discussion Ampache MPD control center
-
-*/
-require_once("modules/init.php");
-$myMpd = init_mpd();
-show_template('header');
-if (conf('refresh_limit') > 0) { show_template('javascript_refresh'); }
-
-if ($user->prefs['play_type'] == 'mpd') {
-	show_mpd_control();
-	show_mpd_pl();
-}
-
-show_footer();
-?>
+/**
+ * Library Created by Kevin Riker
+ * Modified by Karl Vollmer
+ */

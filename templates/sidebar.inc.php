@@ -40,6 +40,17 @@ $browse_items[] = array('title'=>_("Lists"),'url'=>'browse.php','active'=>$locat
 //$browse_items[] = array('title'=>'File','url'=>'files.php','active'=>''); <!--pb1dft: this can be cleaned up -->
 
 $web_path = conf('web_path');
+
+/* Setup the Location page mojo for setting
+ * the active LI here 
+ */
+switch ($location['page']) { 
+
+
+
+
+} // end switch on location page thingy
+
 ?>
 <ul id="navlist">
 	<li<?php
@@ -114,14 +125,9 @@ $web_path = conf('web_path');
                     }?>>
 		<a href="<?php echo $web_path; ?>/playlist.php"><?php echo _("Playlists"); ?></a>
 	</li>
-<?php if ($GLOBALS['user']->prefs['play_type'] == 'mpd') { ?>
-	<li<?php
-                if ($location['page'] == "mpd.php"){
-                    echo " id=\"activetopmenu\" ";
-                    }?>>
-		<a href="<?php echo $web_path; ?>/mpd.php"><?php echo _("Local Play"); ?></a>
+	<li>
+		<a href="<?php echo $web_path; ?>/stats.php"><?php echo _('Statistics'); ?></a>
 	</li>
-<?php } // end if ($GLOBALS['user']->prefs['play_type'] == 'mpd') ?>
 	<li<?php
                 if ($location['page'] == "search.php"){
                     echo " id=\"activetopmenu\" ";

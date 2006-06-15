@@ -1,6 +1,9 @@
 <?php
 /*
 
+ Copyright (c) 2001 - 2006 Ampache.org
+ All Rights Reserved.
+
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -22,7 +25,7 @@
  Show us the stats for the server and this user
 
 */
-require_once("modules/init.php");
+require_once('modules/init.php');
 
 /* If we are a full admin then we can see other peoples stats! */
 if ($GLOBALS['user']->has_access(100) AND isset($_REQUEST['user_id'])) { 
@@ -35,7 +38,7 @@ else {
 show_template('header');
 ?>
 
-<span class="header1"><?php echo  $working_user->fullname; ; ?>'s Favorites:</span>
+<span class="header1"><?php echo $working_user->fullname; ?><?php echo _('Favorites'); ?>:</span>
 
 <table cellpadding="5" cellspacing="5" border="0" width="100%">
 	<tr>
@@ -46,7 +49,7 @@ show_template('header');
 				show_info_box('Favorite Artists', 'artist', $items);
 			}
 			else {
-				print("<p> Not enough data for favorite artists.</p>");
+				echo "<span class=\"error\">" . _('Not Enough Data') . "</span>";
 			}
 		?>
 		</td>
@@ -58,7 +61,7 @@ show_template('header');
                                 show_info_box('Favorite Songs', 'your_song', $items);
                         }             
                         else {
-                                print("<p> Not enough data for favorite songs.</p>");
+				echo "<span class=\"error\">" . _('Not Enough Data') . "</span>";
                         }
                 ?>
                 </td>
@@ -70,12 +73,10 @@ show_template('header');
                                 show_info_box('Favorite Albums', 'album', $items);
                         }             
                         else {
-                                print("<p> Not enough data for favorite albums.</p>");
+				echo "<span class=\"error\">" . _('Not Enough Data') . "</span>";
                         }
                 ?>
                 </td>
 	</tr>
 </table>
-<br />
-
-<?php show_page_footer ('Stats', '',$working_user->prefs['display_menu']);?>
+<?php show_footer(); ?>
