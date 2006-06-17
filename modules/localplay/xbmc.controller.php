@@ -48,24 +48,24 @@ class AmpacheXBMC {
                 $map = array();
 
 		/* Required Functions */
-         $map['add']             = 'add_songs'; //done
-         $map['delete']          = 'delete_songs'; //done
-         $map['play']            = 'play'; //done
-         $map['stop']            = 'stop'; //done
-         $map['get']             = 'get_songs';
-         $map['status']		= 'get_status'; //done
-         $map['connect']         = 'connect'; //done
+         $map['add']            = 'add_songs';
+         $map['delete']         = 'delete_songs';
+         $map['play']           = 'play';
+         $map['stop']           = 'stop';
+         $map['get']            = 'get_songs';
+         $map['status']			= 'get_status';
+         $map['connect']        = 'connect';
 		 
 		
 		/* Recommended Functions */
-		$map['next']		= 'next'; //done
-		$map['prev']		= 'prev'; //done
-		$map['pause']		= 'pause'; //done
-		$map['volume']          = 'volume'; //done
+		$map['next']			= 'next';
+		$map['prev']			= 'prev';
+		$map['pause']			= 'pause';
+		$map['volume_set']      = 'volume_set';
 	
 		/* Optional Functions */
-		$map['delete_all']    = 'clear_playlist';//done
-		$map['shutdown']    = 'xbmc_shutdown';//done
+		$map['delete_all']   	= 'clear_playlist';
+		$map['shutdown']    	= 'xbmc_shutdown';
 
         return $map;
 
@@ -135,8 +135,8 @@ class AmpacheXBMC {
 
 		$preferences = array(); 
 
-		$preferences[] = array('name'=>'hostname','default'=>'localhost','type'=>'string','description'=>'XBOX Hostname');
-		$preferences[] = array('name'=>'smbpath','default'=>'smb://athena/public2/mp3/sorted/','type'=>'string','description'=>'Samba share path to mp3s');
+		$preferences[] = array('name'=>'hostname','default'=>'xbox','type'=>'string','description'=>'XBOX Hostname');
+		$preferences[] = array('name'=>'smbpath','default'=>'smb://hostname/mp3/','type'=>'string','description'=>'Samba share path to mp3s');
 		
 		//needed to add basic authentication support later
 		//$preferences[] = array('name'=>'username','default'=>'xbox','type'=>'string','description'=>'XBMC Username');
@@ -287,7 +287,7 @@ class AmpacheXBMC {
         * volume
         * This tells XBMC to set the volume to the parameter
         */
-       function volume($volume) {
+       function volume_set($volume) {
 
                if ($this->XBMCCmd("SetVolume",$volume)!="OK") { return false; }
                return true;
