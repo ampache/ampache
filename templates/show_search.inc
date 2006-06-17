@@ -82,7 +82,7 @@
 	<td><?php echo _('Min Bitrate'); ?></td>
 	<td>
 		<select id="s_minbitrate" name="s_minbitrate" >
-			<option vlaue="">&nbsp;</option>
+			<option value="">&nbsp;</option>
                  <?php foreach(array(32,40,48,56,64,80,96,112,128,160,192,224,256,320) as $val) { ?>
                             <option value="<?php echo $val?>" <?php if($_REQUEST['s_minbitrate']==$val) echo "selected=\"selected\""?>><?php echo $val?></option>
                  <?php  } ?>
