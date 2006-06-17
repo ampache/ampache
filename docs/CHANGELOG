@@ -40,7 +40,8 @@
   	- Added Icecast Controller (Thx Nikk)
   	- Added Clear Playlist Functionality to Localplay
   	- Added Language selection to Installer (Thx Ros)
-  	- Added xbmc controller (Thx Infamy)
+  	- Added xbmc controller, restricted to playback of mp3s shared 
+		over samba (Thx Infamy)
   	- Fixed a problem where if require_session was disabled it would
 		still pass the sid with the urls
   	- Fixed problem where jpegs wouldn't get resized (Thx blueorder)
