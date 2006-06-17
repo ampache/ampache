@@ -51,7 +51,6 @@ switch ($action) {
 		}
 	case 'search':
 		show_template('show_search');
-		print_r($_REQUEST);
 		$results = run_search($_REQUEST);
 		show_search($_REQUEST['object_type'],$results);
 	break;

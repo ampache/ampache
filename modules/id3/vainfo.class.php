@@ -120,13 +120,13 @@ class vainfo {
 		/* Switch on the file type */
 		switch ($this->type) { 
 			case 'mp3':
+			case 'ogg':
+			case 'flac':
+			default: 
 				$this->_file_encoding = $this->_raw['encoding'];
 			break;
-			default: 
-				$this->_file_encoding = 'UTF-8';
-			break;
 		} // end switch
-
+	
 	} // _get_encoding
 
 	/**
