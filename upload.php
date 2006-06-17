@@ -35,7 +35,7 @@
 	--TEST!
 */
 
-require_once( "modules/init.php" );
+require_once('lib/init.php');
 
 // Set page header
 show_template('header');

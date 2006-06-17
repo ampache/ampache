@@ -28,7 +28,7 @@
 
 */
 $no_session = true;
-require_once ("modules/init.php");
+require_once ('lib/init.php');
 
 
 /* Check Perms */

@@ -32,7 +32,7 @@
  *	in your PHP build.
  */
 
-	require_once('modules/init.php');
+	require_once('lib/init.php');
 	//test that batch download is permitted (user or system?)
 
 	/* Drop the normal Time limit constraints, this can take a while */

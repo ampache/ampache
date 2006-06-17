@@ -25,7 +25,7 @@
  Show us the stats for the server and this user
 
 */
-require_once('modules/init.php');
+require_once('lib/init.php');
 
 /* If we are a full admin then we can see other peoples stats! */
 if ($GLOBALS['user']->has_access(100) AND isset($_REQUEST['user_id'])) { 

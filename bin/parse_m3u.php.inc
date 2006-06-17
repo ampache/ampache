@@ -23,7 +23,7 @@ $filename = "/data/music/Live/L/Life'll Kill Ya/Warren Zevon.m3u";
 
 
 $no_session = '1';
-require ("../modules/init.php");
+require ("../lib/init.php");
 
 $handle = fopen($filename,'r');
 

@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2005 Ampache.org
+ Copyright (c) 2001 - 2006 Ampache.org
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
@@ -20,7 +20,7 @@
 
 */
 
-require('../modules/init.php');
+require('../lib/init.php');
 
 
 /* Scrub in the Needed vars */
@@ -28,8 +28,8 @@ $action = scrub_in($_REQUEST['action']);
 $access_id = scrub_in($_REQUEST['access_id']);
 $access = new Access($access_id);
 
-if (!$user->has_access(100)) { 
-	header("Location: http://" . conf('web_path') . "/index.php?access=denied");
+if (!$GLOBALS['user']->has_access(100)) { 
+	access_denied();
 	exit();
 }
 
@@ -39,7 +39,7 @@ show_template('header');
 
 switch ($action ) { 
 	case 'show_confirm_delete':
-		show_confirm_action(_('Do you really want to delete this Access Reocrd?'),'admin/access.php','access_id=' . scrub_out($_REQUEST['access_id']) . '&amp;action=delete_host');
+		show_confirmation(_('Confirm Delete'),_('Do you really want to delete this Access Record?'),'admin/access.php?access_id=' . scrub_out($_REQUEST['access_id']) . '&amp;action=delete_host','1');
 	break;
 	case 'delete_host':
 		$access->delete($_REQUEST['access_id']);
@@ -62,7 +62,7 @@ switch ($action ) {
 	default:
 		$list = array();
 		$list = $access->get_access_list();
-		include(conf('prefix') ."/templates/show_access_list.inc");
+		include(conf('prefix') .'/templates/show_access_list.inc');
 	break;
 } // end switch on action
 show_footer();

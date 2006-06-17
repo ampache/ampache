@@ -26,7 +26,7 @@
 
 */
 
-require_once("modules/init.php");
+require_once('lib/init.php');
 
 if (!isset($_REQUEST['match'])) { $_REQUEST['match'] = "Browse"; }
 if (!isset($_REQUEST['action'])) { $_REQUEST['action'] = "match"; }

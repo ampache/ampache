@@ -26,7 +26,7 @@
 	Special thanks to the Horde project for their Browser class that makes this so easy.
 */
 
-require('../modules/init.php');
+require('../lib/init.php');
 require(conf('prefix') . '/modules/horde/Browser.php');
 
 $browser = new Browser();

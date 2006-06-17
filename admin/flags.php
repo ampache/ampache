@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2005 Ampache.org
+ Copyright (c) 2001 - 2006 Ampache.org
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
@@ -25,7 +25,7 @@
 	@header Flags Mojo
 */
 
-require_once ("../modules/init.php");
+require_once ("../lib/init.php");
 require_once( conf('prefix').'/lib/flag.php');
 
 if (!$user->has_access(100)) { 

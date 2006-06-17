@@ -21,13 +21,12 @@
 */
 
 $no_session = true;
-require_once( "modules/init.php" );
+require_once('lib/init.php');
 
 /* Keep them out if they shouldn't be here */
 if(!conf('allow_public_registration') || conf('demo_mode'))  {
 	access_denied();
 }
-
 ?>
 <html><head>
 <?php show_template('style'); ?>

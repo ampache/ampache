@@ -25,7 +25,7 @@
  */
 
 $no_session = true;
-require_once('../modules/init.php');
+require_once('../lib/init.php');
 
 /* Verify the existance of the Session they passed in */
 if (!session_exists($_REQUEST['sessid'])) { exit(); }

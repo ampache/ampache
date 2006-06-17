@@ -33,12 +33,20 @@
 function run_search($data) { 
 
 	/* Create an array of the object we need to search on */
-	foreach ($data['search_object'] as $type) { 
-		/* generate the full name of the textbox */
-		$fullname = $type . "_string";
-		$search[$type] = sql_escape($data[$fullname]);
+	foreach ($data as $key=>$value) { 
+		/* Get the first two chars to check
+		 * and see if it's s_
+		 */
+		$prefix = substr($key,0,2);
+		$value = trim($value);
+		
+		if ($prefix == 's_' AND strlen($value)) { 
+			$true_name = substr($key,2,strlen($key));
+			$search[$true_name] = sql_escape($value);
+		}
+		
 	} // end foreach
-
+	
 	/* Figure out if they want a AND based search or a OR based search */
 	switch($_REQUEST['operator']) { 
 		case 'or':
@@ -155,6 +163,9 @@ function search_song($data,$operator,$method,$limit) {
 			break;
 			case 'filename':
 				$where_sql .= " song.file $value_string $operator";
+			break;
+			case 'comment':
+				$where_sql .= " song.comment $value_string $operator";
 			break;
 			case 'played':
 				/* This is a 0/1 value so bool it */

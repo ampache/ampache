@@ -1,6 +1,9 @@
 <?php
 /*
 
+ Copyright (c) 2001 - 2006 Ampache.org
+ All Rights Reserved
+
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -25,7 +28,7 @@
 
 */
 
-require_once("modules/init.php");
+require_once('lib/init.php');
 
 show_template('header');
 
@@ -48,6 +51,7 @@ switch ($action) {
 		}
 	case 'search':
 		show_template('show_search');
+		print_r($_REQUEST);
 		$results = run_search($_REQUEST);
 		show_search($_REQUEST['object_type'],$results);
 	break;

@@ -22,7 +22,7 @@
 
 
 $no_session = '1';
-require ("../modules/init.php");
+require ("../lib/init.php");
 
 $catalogs = Catalog::get_catalogs();
 

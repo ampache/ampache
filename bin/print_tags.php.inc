@@ -20,13 +20,14 @@
 
 */
 $no_session = '1';
-require ("../modules/init.php");
+require ("../lib/init.php");
 
 $filename = usage();
 
 echo "Reading: $filename\n";
 
-$info = new Audioinfo();
+$info = new vainfo();
+$info->get_info();
 $results = $info->info($filename);
 $results['file'] = $filename;
 $key = get_tag_type($results);

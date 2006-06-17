@@ -24,8 +24,7 @@
  * This is the logout page, it kills any cookies you have in your browser kills
  * your session in the database and then redirects you to the login page
  */
-
-require_once("modules/init.php");
+require_once('lib/init.php');
 // To end a legitimate session, just call logout.
 setcookie("amp_longsess","",null); 
 logout();

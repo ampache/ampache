@@ -27,7 +27,7 @@
 
 */
 
-require('modules/init.php');
+require('lib/init.php');
 
 /* Scrub in the needed mojo */
 if (!$_REQUEST['tab']) { $_REQUEST['tab'] = 'theme'; } 

@@ -1,8 +1,7 @@
 <?php
-
 /*
 
- Copyright (c) 2001 - 2005 Ampache.org
+ Copyright (c) 2001 - 2006 Ampache.org
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
@@ -24,7 +23,7 @@
 
 // Allows users to search for duplicate songs in their catalogs
 
-require_once ("../modules/init.php");
+require_once ('../lib/init.php');
 require_once( conf('prefix').'/lib/duplicates.php');
 
 

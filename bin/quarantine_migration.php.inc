@@ -24,7 +24,7 @@
 */
 
 $no_session='1';
-require_once('../modules/init.php');
+require_once('../lib/init.php');
 
 usage();
 

@@ -21,7 +21,7 @@
 */
 
 
-require('modules/init.php');
+require('lib/init.php');
 
 /* If we are running a demo, quick while you still can! */
 if (conf('demo_mode')) {

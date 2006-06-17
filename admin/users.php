@@ -27,7 +27,7 @@
 
 */
 
-require_once ("../modules/init.php");
+require_once ('../lib/init.php');
 
 if (!$user->has_access(100)) { 
 	access_denied();

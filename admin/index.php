@@ -20,7 +20,7 @@
 
 */
 
-require ('../modules/init.php');
+require ('../lib/init.php');
 
 $action = scrub_in($_REQUEST['action']);
 

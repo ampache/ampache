@@ -33,7 +33,7 @@
  */
 
 /* Base Require */
-require_once("modules/init.php");
+require_once('lib/init.php');
 
 /* Clean up incomming variables */
 $action		= scrub_in($_REQUEST['action']);

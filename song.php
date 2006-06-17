@@ -29,7 +29,7 @@
 	FIXME: don't get me started... :(
 */
 
-require('modules/init.php');
+require('lib/init.php');
 
 /* If we are running a demo, quick while you still can! */
 if (conf('demo_mode') || !$user->has_access('25')) {

@@ -26,7 +26,7 @@
 	This document handles actions for catalog creation and passes them off to the catalog class
 */
 
-require('../modules/init.php');
+require('../lib/init.php');
 
 if (!$GLOBALS['user']->has_access(100)) {
 	access_denied();

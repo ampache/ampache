@@ -20,14 +20,13 @@
 
 */
 /*
-
     @header Album Art
 This pulls album art out of the file using the getid3 library
 and dumps it to the browser as an image mime type.
 
 */
 
-require('modules/init.php');
+require('lib/init.php');
 
 /* Decide what size this image is */
 switch ($_REQUEST['thumb']) { 

@@ -39,7 +39,7 @@
 $alphabet_prefix = true;
  
 $no_session = '1';
-require ("../modules/init.php");
+require ("../lib/init.php");
 
 /* First Clean the catalog to we don't try to write anything we shouldn't */
 

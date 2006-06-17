@@ -21,7 +21,7 @@
 */
 
 $no_session='1';
-require ("../modules/init.php");
+require ('../lib/init.php');
 
 echo "[catalog_update.php.inc]\nStarting Catalog Clean/Update And Add\n\n";
 

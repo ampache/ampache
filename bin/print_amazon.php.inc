@@ -25,7 +25,7 @@ $search['artist_name'] 	= "Bent";
 
 
 $no_session = '1';
-require ("../modules/init.php");
+require ("../lib/init.php");
 echo "<pre>\n";
 $amazon = new AmazonSearch(conf('amazon_developer_key'));
 // Prevent the script from timing out

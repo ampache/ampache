@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2004 Ampache.org
+ Copyright (c) 2001 - 2006 Ampache.org
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
@@ -21,7 +21,7 @@
 */
 
 $no_session = 1;
-require('modules/init.php');
+require('lib/init.php');
 
 /* Check Perms */
 if (!conf('use_rss') || conf('demo_mode')) {

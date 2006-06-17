@@ -29,7 +29,7 @@
  * @author Karl Vollmer
  */
 
-require('../modules/init.php');
+require('../lib/init.php');
 
 
 if (!$user->has_access(100)) {

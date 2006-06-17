@@ -28,19 +28,18 @@
 class vainfo { 
 
 	/* Default Encoding */
-	var $encoding = 'UTF-8';
+	var $encoding = '';
 	
 	/* Loaded Variables */
 	var $filename = '';
 	var $type = '';
 	var $tags = array();
-	var $info = array();
-
 
 	/* Internal Information */
 	var $_raw 		= array();
 	var $_getID3 		= '';
 	var $_iconv		= false; 
+	var $_file_encoding	= '';
 	var $_file_pattern	= '';
 	var $_dir_pattern	= '';
 
@@ -93,8 +92,14 @@ class vainfo {
 		/* Figure out what type of file we are dealing with */
 		$this->type = $this->_get_type();
 
+		/* This is very important, figure out th encoding of the
+		 * file 
+		 */
+		$this->_set_encoding();
+
 		/* Get the general information about this file */
 		$info = $this->_get_info();
+
 
 		/* Gets the Tags */
 		$this->tags = $this->_get_tags();
@@ -103,6 +108,26 @@ class vainfo {
 		unset($this->_raw);
 	
 	} // get_info
+
+	/**
+	 * _set_encoding
+	 * This function trys to figure out what the encoding 
+	 * is based on the file type and sets the _file_encoding
+	 * var to whatever it finds, the default is UTF-8 if we
+	 * can't find anything
+	 */
+	function _set_encoding() { 
+		/* Switch on the file type */
+		switch ($this->type) { 
+			case 'mp3':
+				$this->_file_encoding = $this->_raw['encoding'];
+			break;
+			default: 
+				$this->_file_encoding = 'UTF-8';
+			break;
+		} // end switch
+
+	} // _get_encoding
 
 	/**
 	 * _get_type
@@ -285,14 +310,14 @@ class vainfo {
 	function _parse_id3v1($tags) { 
 
 		$array = array();
-
+		
 		/* Go through all the tags */
 		foreach ($tags as $tag=>$data) { 
 
 			/* This is our baseline for naming 
 			 * so no translation needed 
 			 */
-			$array[$tag]	= $this->_clean_tag($data['0']);
+			$array[$tag]	= $this->_clean_tag($data['0'],$this->_file_encoding);
 			
 		} // end foreach
 
@@ -316,7 +341,7 @@ class vainfo {
 			/* This is our baseline for naming so
 			 * no translation is needed
 			 */
-			$array[$tag]	= $this->_clean_tag($data['0']);
+			$array[$tag]	= $this->_clean_tag($data['0'],$this->_file_encoding);
 		
 		} // end foreach
 
@@ -379,10 +404,13 @@ class vainfo {
 	 * in the file
 	 */
 	function _clean_tag($tag,$encoding='') { 
+		
+		/* Guess that it's UTF-8 */
+		if (!$encoding) { $encoding = 'UTF-8'; }
 
-
-		if ($this->_iconv) { 
-			$tag = iconv('UTF-8',conf('site_charset'),$tag);
+		if ($this->_iconv AND strcasecmp($encoding,$this->encoding) != 0) { 
+			$charset = $this->encoding . '//TRANSLIT';
+			$tag = iconv($encoding,$charset,$tag);
 		}
 
 		return $tag;

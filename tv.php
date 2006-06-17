@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2005 Ampache.org
+ Copyright (c) 2001 - 2006 Ampache.org
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
@@ -24,8 +24,7 @@
 	@header TV Display for Ampache
 	@discussion BIG now playing and (soon) on deck
 */
-require("modules/init.php");
-init_mpd();
+require_once('lib/init.php');
 show_template('style');
 
 if (conf('refresh_interval')) { 

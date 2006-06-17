@@ -23,7 +23,7 @@
  * Genres Pages
  * Nuff Said for now
  */
-require_once("modules/init.php");
+require_once('lib/init.php');
 
 show_template('header');
 

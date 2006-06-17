@@ -25,13 +25,13 @@
 	@discussion Do most of the dirty work of displaying the mp3 catalog
 
 */
-require_once("modules/init.php");
+require_once('lib/init.php');
 
 
 show_template('header');
 $action = scrub_in($_REQUEST['action']);
 
 show_template('show_random_play');
-show_footer(); 
 
+show_footer(); 
 ?>

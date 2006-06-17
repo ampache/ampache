@@ -26,16 +26,10 @@
 
 */
 
-require_once("modules/init.php");
-
-/* We need to attempt to init the mpd object 
-if ($user->prefs['play_type']=='mpd') { $myMpd = init_mpd(); }
-* Happening in header.inc now 
-*/
+require_once('lib/init.php');
 
 show_template('header');
 
-if (conf('refresh_limit') > 0) { require_once ("templates/javascript_refresh.inc"); }
 $action = scrub_in($_REQUEST['action']);
 ?>
 
@@ -55,40 +49,26 @@ $action = scrub_in($_REQUEST['action']);
 			</td>
 			<td valign="top" align="left">   <!-- sigger: why is it a problem to set width=50% -->
 			<?php 
-				if (false) // $user->prefs['play_type'] == 'mpd' && !conf('localplay_menu')) 
-{ 
-					show_mpd_control(); 
-				}
-				else {
-					if ($items = get_global_popular('album')) { 
-						show_info_box(_("Most Popular Albums"), 'album',$items);
-					}
+				if ($items = get_global_popular('album')) { 
+					show_info_box(_('Most Popular Albums'), 'album',$items);
 				}
 			?>
 			</td>	
 		</tr>
 		<tr><td colspan="2">&nbsp;</td></tr>
-		<?php 
-		if ($user->prefs['play_type'] == 'mpd' && !conf('localplay_menu')) { 
-			echo '<tr><td colspan="2" valign="top">';
-			show_mpd_pl();
-			echo '</td></tr>';
-		}
-		?>
-	
 		<tr><td colspan="2">&nbsp;</td></tr>
 		<tr>
 			<td valign="top" align="right">
 			<?php
 				if ($items = get_global_popular('artist')) {
-					show_info_box(_("Most Popular Artists"), 'artist', $items);
+					show_info_box(_('Most Popular Artists'), 'artist', $items);
 				}
 			?>
 			</td>
 			<td valign="top" align="left">
 			<?php
 				if ($items = get_global_popular('song')) {
-					show_info_box(_("Most Popular Songs"), 'song', $items);
+					show_info_box(_('Most Popular Songs'), 'song', $items);
 				}
 			?>
 			</td>
@@ -98,36 +78,20 @@ $action = scrub_in($_REQUEST['action']);
 			<td valign="top" align="right">
 			<?php
 				if ($items = get_newest('artist')) {
-					show_info_box(_("Newest Artist Additions"), '', $items);
+					show_info_box(_('Newest Artist Additions'), '', $items);
 				}
 			?>
 			</td>
 			<td valign="top" align="left">
 			<?php
 				if ($items = get_newest('album')) {
-					show_info_box(_("Newest Album Additions"), '', $items);
+					show_info_box(_('Newest Album Additions'), '', $items);
 				}
 			?>
 			</td>
 		</tr>
 		</table><!-- End Left table -->
 	</td>
-<?php 
-if ($user->prefs['play_type'] == 'local_play') {
-?>
-	<td valign="top">
-		<table border="0"> <!-- Right table -->
-		<tr>
-			<td valign="top" rowspan="7">
-				<?php show_local_control(); ?>
-				<br />
-			</td>
-		</tr>
-		</table> <!-- End Right Table -->
-	</td>
-<?php
-}
-?>
 </tr>
 </table>
 <!-- End Big Daddy Table -->

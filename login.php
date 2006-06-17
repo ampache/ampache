@@ -27,7 +27,11 @@
 */
 
 $no_session = true;
-require_once('modules/init.php');
+require_once('lib/init.php');
+
+/* We have to create a cookie here because IIS
+ * can't handle Cookie + Redirect 
+ */
 vauth_session_cookie();
 init_preferences();
 
