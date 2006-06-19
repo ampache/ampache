@@ -180,19 +180,19 @@ function get_uploads() {
 	$sql = "SELECT * FROM " . tbl_name('upload');
 	$db_results = mysql_query($sql, dbh());
 	
-	$audio_info = new Audioinfo();
 	$results = array();
 
 	while ($r = mysql_fetch_assoc($db_results)) { 
 
-                /* Create the Audioinfo object and get info */
-                $data         = $audio_info->Info($r['file']);
-                $data['file'] = $r['file'];
+                /* Create the vainfo object and get info */
+		$vainfo	      = new vainfo($r['file']);
+		$vainfo->get_info();
+                $data         = $vainfo->tags;
 
-                $key = get_tag_type($data);
+                $key = get_tag_type($vainfo->tags);
 
                 /* Fill Empty info from filename/path */
-		$data = clean_tag_info($data,$key,$data['file']);
+		$data = clean_tag_info($vainfo->tags,$key,$r['file']);
 
 		$data['id'] 		= $r['id'];
 		$data['user']		= $r['user'];

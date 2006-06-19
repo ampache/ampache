@@ -184,11 +184,12 @@ class vainfo {
 				case 'id3v2':
 					$results[$key] = $this->_parse_id3v2($tag_array);
 				break;
-				case 'ape':
-					$results[$key] = $this->_parse_ape($tag_array);
+//				case 'ape':
+//					$results[$key] = $this->_parse_ape($tag_array);
 				break;
 				default: 
-					debug_event('vainfo','Error: Unable to determine tag type of ' . $key . ' for file ' . $this->filename,'5');
+					debug_event('vainfo','Error: Unable to determine tag type of ' . $key . ' for file ' . $this->filename . ' Assuming id3v2','5');
+					$results[$key] = $this->_parse_id3v2($tag_array);
 				break;
 			} // end switch
 
