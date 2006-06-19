@@ -26,9 +26,9 @@ $filename = usage();
 
 echo "Reading: $filename\n";
 
-$info = new vainfo();
+$info = new vainfo($filename);
 $info->get_info();
-$results = $info->info($filename);
+$results = $info->tags;
 $results['file'] = $filename;
 $key = get_tag_type($results);
 $ampache_results = clean_tag_info($results,$key,$filename);
