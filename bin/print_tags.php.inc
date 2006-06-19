@@ -34,7 +34,7 @@ $key = get_tag_type($results);
 $ampache_results = clean_tag_info($results,$key,$filename);
 
 echo "Results Seen by GetID3()\n";
-print_r($results);
+print_r($info);
 echo "\n------------------------------------------------------------------\n";
 echo "Results Seen by Ampache using $key\n";
 print_r($ampache_results);
