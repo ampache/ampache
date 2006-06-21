@@ -278,5 +278,9 @@
 		color: <?php echo conf('font_color3'); ?>;
 		border:1px solid <?php echo conf('base_color2'); ?>;
 	}
+	.np_cell { 
+		float: left;
+		margin: 10px;
+	}
 -->
 </style>

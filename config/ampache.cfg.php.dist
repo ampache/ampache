@@ -259,8 +259,15 @@ site_charset = iso-8859-1
 # This is disabled by default, enabled only 
 # if needed. It's specifically needed for Russian
 # so that is the default
-# Default: cp1251
+# DEFAULT: cp1251
 #lc_charset = cp1251
+
+# Refresh Limit
+# This defines the default refresh limit in seconds for 
+# pages with dynamic content, such as now playing
+# DEFAULT: 60
+# Possible Values: Int > 5
+refresh_limit = "60"
 
 ##########################################################
 # Public Registration settings, defaults to disabled     #

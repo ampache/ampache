@@ -57,6 +57,9 @@ switch ($action) {
 		
 		require_once(conf('prefix') . '/templates/show_localplay_switch.inc.php'); 
 	break;
+	case 'reloadnp':
+		show_now_playing();	
+	break;
 	default:
 		echo "Default Action";
 	break;

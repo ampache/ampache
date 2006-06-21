@@ -4,6 +4,8 @@
 
 --------------------------------------------------------------------------
   v.3.3.2-Beta3
+  	- Fixed Nowplaying, now div based layout and AJAX refreshed
+		based on config files refresh_limit
   	- Moved /modules/init.php to /lib/init.php
 	- Removed Checkboxes from Search page and added ability to 
 		search on Comment and Rating

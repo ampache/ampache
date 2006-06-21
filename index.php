@@ -31,6 +31,18 @@ require_once('lib/init.php');
 show_template('header');
 
 $action = scrub_in($_REQUEST['action']);
+
+/**
+ * Check for the refresh mojo, if it's there then require the
+ * refresh_javascript include. Must be greater then 5, I'm not
+ * going to let them break their servers
+ */
+if (conf('refresh_limit') > 5) { 
+	$ajax_url = conf('web_path') . '/server/ajax.server.php?action=reloadnp&user_id=' . $GLOBALS['user']->id . 
+			'&sessid=' . session_id();
+	$ajax_object = 'nowplaying';
+	require_once(conf('prefix') . '/templates/javascript_refresh.inc.php');
+}
 ?>
 
 <!-- Big Daddy Table -->
