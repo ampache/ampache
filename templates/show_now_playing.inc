@@ -29,6 +29,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 if (count($results)) {
 ?>
+	<!-- Start Now Playing -->
 	<div id="nowplaying">
 		<div id="np_title">
 			<h1><?php echo _('Now Playing'); ?></h1>
@@ -46,7 +47,6 @@ foreach ($results as $item) {
 
 } // end foreach
 ?>
-	<!-- End Now Playing -->
 	</div>
-<br />
+	<!-- End Now Playing -->
 <?php } // end if count results ?>
