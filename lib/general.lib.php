@@ -932,4 +932,29 @@ return sprintf ("%d:%02d", $seconds/60, $seconds % 60);
 
 } //format_time
 
+/**
+ * translate_pattern_code
+ * This just contains a key'd array which it checks against to give you the 'tag' name
+ * that said pattern code corrasponds to, it returns false if nothing is found
+ */
+function translate_pattern_code($code) { 
+
+	$code_array = array('%A'=>'album',
+			'%a'=>'artist',
+			'%c'=>'comment',
+			'%g'=>'genre',
+			'%T'=>'track',
+			'%t'=>'title',
+			'%y'=>'year',
+			'%o'=>'zz_other');
+	
+	if (isset($code_array[$code])) { 
+		return $code_array[$code];
+	}
+	
+
+	return false;
+	
+} // translate_pattern_code
+
 ?>

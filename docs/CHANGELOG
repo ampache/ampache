@@ -4,6 +4,9 @@
 
 --------------------------------------------------------------------------
   v.3.3.2-Beta3
+  	- Fixed file-based parsing so that it can now be given priority
+		over the tags in the files using tag_order in the config
+		file
   	- Fixed Nowplaying, now div based layout and AJAX refreshed
 		based on config files refresh_limit
   	- Moved /modules/init.php to /lib/init.php

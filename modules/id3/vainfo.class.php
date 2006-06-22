@@ -383,16 +383,28 @@ class vainfo {
 	 */
 	function _parse_filename($filename) { 
 
-		/* Currently Broken */
-		return array();
+		$results = array();
 
 		$pattern = $this->_dir_pattern . $this->_file_pattern;
 		preg_match_all("/\%\w/",$pattern,$elements);
-
-		$preg_pattern = preg_replace("/\%\w/","(.+)",$pattern);
-		$preg_pattern .= "\..+$";	
+		
+		$preg_pattern = preg_quote($pattern);
+		$preg_pattern = preg_replace("/\%\w/","(.+)",$preg_pattern);
+		$preg_pattern = str_replace("/","\/",$preg_pattern);
+		$preg_pattern = "/" . $preg_pattern . "\..+$/";
 		preg_match($preg_pattern,$filename,$matches);
+		/* Cut out the Full line, we don't need that */
+		array_shift($matches);
 
+		/* Foreach through what we've found */
+		foreach ($matches as $key=>$value) { 
+			$new_key = translate_pattern_code($elements['0'][$key]);
+			if ($new_key) { 
+				$results[$new_key] = $value;
+			}
+		} // end foreach matches 
+
+		return $results;
 
 	} // _parse_filename
 
