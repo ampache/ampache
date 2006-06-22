@@ -596,13 +596,12 @@ function cleanup_and_exit($playing_id) {
  */
 function get_global_popular($type) {
 
-        $dbh = dbh();
-        
+	/* Select out the most popular based on object_count */
         $sql = "SELECT object_id, SUM(count) as count FROM object_count" .
                 " WHERE object_type = '$type'" .
                 " GROUP BY object_id" .
                 " ORDER BY count DESC LIMIT " . conf('popular_threshold');
-        $db_result = mysql_query($sql, $dbh);
+        $db_result = mysql_query($sql,dbh());
         
         $items = array();
         $web_path = conf('web_path');
@@ -614,33 +613,33 @@ function get_global_popular($type) {
                         $artist = $song->get_artist_name();
                         $text = "$artist - $song->title";
                         /* Add to array */
-                        $items[] = "<li> <a href=\"$web_path/song.php?action=single_song&amp;song_id=$song->id\" title=\"". htmlspecialchars($text) ."\">" .
-	                                   htmlspecialchars(truncate_with_ellipse($text, conf('ellipse_threshold_title')+3)) . "&nbsp;($r->count)</a> </li>";
+                        $items[] = "<li> <a href=\"$web_path/song.php?action=single_song&amp;song_id=$song->id\" title=\"". scrub_out($text) ."\">" .
+	                           	scrub_out(truncate_with_ellipse($text, conf('ellipse_threshold_title')+3)) . "&nbsp;($r->count)</a> </li>";
                 } // if it's a song
                 
 		/* If Artist */
                 elseif ( $type == 'artist' ) {
                         $artist  = get_artist_name($r->object_id);
-                        $items[] = "<li> <a href=\"$web_path/artists.php?action=show&amp;artist=$r->object_id\" title=\"". htmlspecialchars($artist) ."\">" .
-                        	           htmlspecialchars(truncate_with_ellipse($artist, conf('ellipse_threshold_artist')+3)) . "&nbsp;($r->count)</a> </li>";
+                        $items[] = "<li> <a href=\"$web_path/artists.php?action=show&amp;artist=$r->object_id\" title=\"". scrub_out($artist) ."\">" .
+                        	           scrub_out(truncate_with_ellipse($artist, conf('ellipse_threshold_artist')+3)) . "&nbsp;($r->count)</a> </li>";
                 } // if type isn't artist
 
 		/* If Album */
                 elseif ( $type == 'album' ) {
                         $album   = new Album($r->object_id);
-                        $items[] = "<li> <a href=\"$web_path/albums.php?action=show&amp;album=$r->object_id\" title=\"". htmlspecialchars($album->name) ."\">" . 
-                        	           htmlspecialchars(truncate_with_ellipse($album->name,conf('ellipse_threshold_album')+3)) . "&nbsp;($r->count)</a> </li>";
+                        $items[] = "<li> <a href=\"$web_path/albums.php?action=show&amp;album=$r->object_id\" title=\"". scrub_out($album->name) ."\">" . 
+                        	           scrub_out(truncate_with_ellipse($album->name,conf('ellipse_threshold_album')+3)) . "&nbsp;($r->count)</a> </li>";
                 } // else not album
 
 		elseif ($type == 'genre') { 
 			$genre 	 = new Genre($r->object_id);
-			$items[] = "<li> <a href=\"$web_path/browse.php?action=genre&amp;genre=$r->object_id\" title=\"" . htmlspecialchars($genre->name) . "\">" .
-					htmlspecialchars(truncate_with_ellipse($genre->name,conf('ellipse_threshold_title')+3)) . "&nbsp;($r->count)</a> </li>";
+			$items[] = "<li> <a href=\"$web_path/browse.php?action=genre&amp;genre=$r->object_id\" title=\"" . scrub_out($genre->name) . "\">" .
+					scrub_out(truncate_with_ellipse($genre->name,conf('ellipse_threshold_title')+3)) . "&nbsp;($r->count)</a> </li>";
 		} // end if genre
         } // end while
        
 	if (count($items) == 0) { 
-		$items[] = "<li style=\"list-style-type: none\"><span class=\"error\">" . _("Not Enough Data") . "</span></li>\n";
+		$items[] = "<li style=\"list-style-type: none\"><span class=\"error\">" . _('Not Enough Data') . "</span></li>\n";
 	}
  
         return $items;

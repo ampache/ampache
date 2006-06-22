@@ -33,7 +33,7 @@
 <tr class="<?php echo flip_class(); ?>">
         <td><?php echo _('Keywords') ?></td>
         <td>
-            <input type="text" id="s_keywords" name="s_keywords" value="<?php echo scrub_out($_REQUEST['s_keywords']); ?>"/>
+            <input type="text" id="s_all" name="s_all" value="<?php echo scrub_out($_REQUEST['s_keywords']); ?>"/>
         </td>
 	<td><?php echo _('Comment'); ?></td>
         <td>

@@ -137,12 +137,11 @@ switch ($location['page']) {
 <?php if ($GLOBALS['theme']['orientation'] != 'horizontal') { ?>
 	<li>
 		<form name="sub_search" method="post" action="<?php echo $web_path; ?>/search.php" enctype="multipart/form-data" style="Display:inline">
-		<input type="text" name="search_string" value="<?php echo scrub_out($_REQUEST['search_string']); ?>" size="5" />
-		<input class="smallbutton" type="submit" value="<?php echo _("Search"); ?>" /> 
+		<input type="text" name="search_string" value="" size="5" />
+		<input class="smallbutton" type="submit" value="<?php echo _('Search'); ?>" /> 
 		<input type="hidden" name="action" value="quick_search" />
 		<input type="hidden" name="method" value="fuzzy" />
 		<input type="hidden" name="object_type" value="song" />
-		<input type="hidden" name="search_object[]" value="all" />		
 		</form>
 	</li>
 <?php } // end if ($GLOBALS['theme']['orientation'] != 'horizontal')?>

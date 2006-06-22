@@ -3,6 +3,11 @@
 --------------------------------------------------------------------------
 
 --------------------------------------------------------------------------
+  v.3.3.2
+  	- Fixed issue with Keywords search that cropped up when I removed
+		the checkboxes. 
+
+--------------------------------------------------------------------------
   v.3.3.2-Beta3
   	- Fixed file-based parsing so that it can now be given priority
 		over the tags in the files using tag_order in the config

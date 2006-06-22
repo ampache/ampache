@@ -41,9 +41,8 @@ switch ($action) {
 		 * they used the quick search to search on until after they've
 		 * submited it 
 		 */
-		$string_name = $_REQUEST['search_object'][0] . '_string';
-		$_REQUEST[$string_name] = $_REQUEST['search_string'];
-		unset($string_name);
+		$_REQUEST['s_all'] = $_REQUEST['search_string'];
+		
 		if (strlen($_REQUEST['search_string']) < 1) { 
 			$GLOBALS['error']->add_error('keyword',_("Error: No Keyword Entered"));
 			show_template('show_search');
