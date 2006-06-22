@@ -3,37 +3,35 @@
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
+#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: Ampache\n"
+"Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2006-01-07 22:47-0800\n"
-"PO-Revision-Date: 2005-04-25 21:14+0100\n"
-"Last-Translator: vireas <vireas at gmail.com>\n"
-"Language-Team: TURKISH <dev@ampache.org>\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=iso-8859-9\n"
+"Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Poedit-Language: Turkish\n"
-"X-Poedit-Country: TURKEY\n"
-"X-Poedit-SourceCharset: iso-8859-9\n"
 
 #: ../../play/index.php:50
 msgid "Session Expired: please log in again at"
-msgstr "Oturumun süresi bitmiþ: lütfen yeniden giriþ yapýn"
+msgstr ""
 
 #: ../../lib/class/catalog.class.php:281 ../../lib/class/catalog.class.php:566
 #: ../../lib/class/album.class.php:263
 msgid "Error: Unable to open"
-msgstr "Hata: açýlamadý"
+msgstr ""
 
 #: ../../lib/class/catalog.class.php:304
 msgid "Error: Unable to change to directory"
-msgstr "Hata: klasöre geçiþ yapýlamadý"
+msgstr ""
 
 #: ../../lib/class/catalog.class.php:330
 msgid "Error: Unable to get filesize for"
-msgstr "Hata: dosya boyutu sorgulanamadý"
+msgstr ""
 
 #: ../../lib/class/catalog.class.php:365
 msgid "Added"
@@ -41,179 +39,174 @@ msgstr "Eklendi"
 
 #: ../../lib/class/catalog.class.php:377
 msgid "is not readable by ampache"
-msgstr "Ampache tarafýndan okunamadý"
+msgstr ""
 
 #: ../../lib/class/catalog.class.php:441
 msgid "Found in ID3"
-msgstr "ID3 içinde bulundu"
+msgstr ""
 
 #: ../../lib/class/catalog.class.php:445
 msgid "Found on Amazon"
-msgstr "Amazon'da bulundu"
+msgstr ""
 
 #: ../../lib/class/catalog.class.php:449
 msgid "Found in Folder"
-msgstr "Klasörde bulundu"
+msgstr ""
 
 #: ../../lib/class/catalog.class.php:453
 msgid "Found"
-msgstr "Bulundu"
+msgstr ""
 
 #: ../../lib/class/catalog.class.php:456
 msgid "Not Found"
-msgstr "Bulunamadý"
+msgstr ""
 
 #: ../../lib/class/catalog.class.php:464
 msgid "Searched"
-msgstr "Arandý"
+msgstr ""
 
 #: ../../lib/class/catalog.class.php:622
 msgid "Starting Dump Album Art"
-msgstr "Albüm kapaðý boþaltmasý baþlýyor"
+msgstr ""
 
 #: ../../lib/class/catalog.class.php:642
 msgid "Written"
-msgstr "Yazýldý"
+msgstr ""
 
 #: ../../lib/class/catalog.class.php:651
 msgid "Error unable to open file for writting"
-msgstr "Hata: dosya yazmak için açýlamadý"
+msgstr ""
 
 #: ../../lib/class/catalog.class.php:658
 msgid "Album Art Dump Complete"
-msgstr "Albüm kapaðý boþaltmasý tamamlandý"
+msgstr ""
 
 #: ../../lib/class/catalog.class.php:659 ../../artists.php:64
 #: ../../albums.php:153
 msgid "Return"
-msgstr "Dön"
+msgstr ""
 
 #: ../../lib/class/catalog.class.php:728
 msgid "Starting Catalog Build"
-msgstr "Katalog yapýlandýrma baþladý"
+msgstr ""
 
 #: ../../lib/class/catalog.class.php:733
 msgid "Running Remote Sync"
-msgstr "Uzak anuyum sürüyor"
+msgstr ""
 
 #: ../../lib/class/catalog.class.php:745 ../../lib/class/catalog.class.php:904
-#, fuzzy
 msgid "Added Playlist From"
-msgstr "Yeni þarký listesi"
+msgstr ""
 
 #: ../../lib/class/catalog.class.php:752 ../../lib/class/catalog.class.php:913
 #: ../../admin/catalog.php:258
 msgid "Starting Album Art Search"
-msgstr "Albüm kapaðý aramasý baþlýyor"
+msgstr ""
 
 #: ../../lib/class/catalog.class.php:762
 msgid "Catalog Finished"
-msgstr "Katalog tamamlandý"
+msgstr ""
 
 #: ../../lib/class/catalog.class.php:762 ../../lib/class/catalog.class.php:932
 msgid "Total Time"
-msgstr "Genel Süre"
+msgstr ""
 
 #: ../../lib/class/catalog.class.php:762 ../../lib/class/catalog.class.php:933
 msgid "Total Songs"
-msgstr "Tüm Þarkýlar"
+msgstr ""
 
 #: ../../lib/class/catalog.class.php:763 ../../lib/class/catalog.class.php:933
 msgid "Songs Per Seconds"
-msgstr "Þarký/Saniye"
+msgstr ""
 
 #: ../../lib/class/catalog.class.php:797
 #: ../../lib/class/catalog.class.php:1512
 msgid "Updated"
-msgstr "Güncelleþtirildi"
+msgstr ""
 
 #: ../../lib/class/catalog.class.php:804
 msgid "No Update Needed"
-msgstr "Güncelleþtirme gereksiz"
+msgstr ""
 
 #: ../../lib/class/catalog.class.php:885
 msgid "Starting New Song Search on"
-msgstr "Yeni þarký arama baþladý"
+msgstr ""
 
 #: ../../lib/class/catalog.class.php:885
 msgid "catalog"
-msgstr "Katalog"
+msgstr ""
 
 #: ../../lib/class/catalog.class.php:889
 msgid "Running Remote Update"
-msgstr "Uzak güncelleme sürüyor"
+msgstr ""
 
 #: ../../lib/class/catalog.class.php:932
 msgid "Catalog Update Finished"
-msgstr "Katalog güncelleme tamamlandý"
+msgstr ""
 
 #: ../../lib/class/catalog.class.php:952 ../../lib/mpd.php:43
 #: ../../lib/mpd.php:52 ../../albums.php:74
 msgid "Error"
-msgstr "Hata"
+msgstr ""
 
 #: ../../lib/class/catalog.class.php:952
 msgid "Unable to load XMLRPC library, make sure XML-RPC is enabled"
 msgstr ""
-"XMLRPC kitaplýðý yüklenemedi, XML-RPC'nin etkinleþtirilmiþ olduðunu kontrol "
-"edin"
 
 #: ../../lib/class/catalog.class.php:991
 #: ../../lib/class/catalog.class.php:1042
 msgid "Error connecting to"
-msgstr "Hata, baðlanilamýyor: "
+msgstr ""
 
 #: ../../lib/class/catalog.class.php:991
 #: ../../lib/class/catalog.class.php:1042
 msgid "Code"
-msgstr "Kod"
+msgstr ""
 
 #: ../../lib/class/catalog.class.php:991
 #: ../../lib/class/catalog.class.php:1042
 msgid "Reason"
-msgstr "Neden"
+msgstr ""
 
 #: ../../lib/class/catalog.class.php:1007
 msgid "Completed updating remote catalog(s)"
-msgstr "Uzak katalog(lar) güncellendi"
+msgstr ""
 
 #: ../../lib/class/catalog.class.php:1138
 msgid "Checking"
-msgstr "Saðlama yapýlýyor"
+msgstr ""
 
 #: ../../lib/class/catalog.class.php:1196
 msgid "Catalog Clean Done"
-msgstr "Kalalog temizleme tamamlandý"
+msgstr ""
 
 #: ../../lib/class/catalog.class.php:1196
 msgid "files removed"
-msgstr "dosya silindi"
+msgstr ""
 
 #: ../../lib/class/catalog.class.php:1469
 msgid "Updating the"
-msgstr "Güncelleþtiriliyor"
+msgstr ""
 
 #: ../../lib/class/catalog.class.php:1469 ../../templates/sidebar.inc.php:31
 msgid "Catalog"
-msgstr "Katalog"
+msgstr ""
 
 #: ../../lib/class/catalog.class.php:1470
 msgid "songs found checking tag information."
-msgstr "þarký etiket bilgisi taramasý sonucu bulundu."
+msgstr ""
 
 #: ../../lib/class/catalog.class.php:1520
 msgid " FOUND"
 msgstr ""
 
 #: ../../lib/class/catalog.class.php:1521
-#, fuzzy
 msgid "Searching for new Album Art"
-msgstr "Albüm kapaðý boþaltmasý baþlýyor"
+msgstr ""
 
 #: ../../lib/class/catalog.class.php:1525
-#, fuzzy
 msgid "Album Art Already Found"
-msgstr "Albüm kapaðý silindi"
+msgstr ""
 
 #: ../../lib/class/artist.class.php:223
 msgid "Error: Name Identical"
@@ -222,7 +215,7 @@ msgstr ""
 #: ../../lib/class/song.class.php:275 ../../lib/duplicates.php:113
 #: ../../templates/show_search.inc:66
 msgid "Title"
-msgstr "Þarký adý"
+msgstr ""
 
 #: ../../lib/class/song.class.php:275 ../../lib/class/song.class.php:279
 #: ../../lib/class/song.class.php:283 ../../lib/class/song.class.php:287
@@ -231,34 +224,34 @@ msgstr "Þarký adý"
 #: ../../lib/class/song.class.php:309 ../../lib/class/song.class.php:313
 #: ../../lib/class/song.class.php:317 ../../lib/class/song.class.php:322
 msgid "updated to"
-msgstr "güncelleþtirildi"
+msgstr ""
 
 #: ../../lib/class/song.class.php:279 ../../templates/show_uploads.inc:39
 #: ../../templates/show_songs.inc:47 ../../templates/list_duplicates.inc:36
 msgid "Bitrate"
-msgstr "Ýkil hýzý"
+msgstr ""
 
 #: ../../lib/class/song.class.php:283
 msgid "Rate"
-msgstr "Oran"
+msgstr ""
 
 #: ../../lib/class/song.class.php:287
 msgid "Mode"
-msgstr "Kip"
+msgstr ""
 
 #: ../../lib/class/song.class.php:291 ../../templates/show_uploads.inc:38
 #: ../../templates/show_mpdpl.inc:66 ../../templates/show_songs.inc:45
 msgid "Time"
-msgstr "Süre"
+msgstr ""
 
 #: ../../lib/class/song.class.php:295 ../../templates/show_mpdpl.inc:65
 #: ../../templates/show_songs.inc:39 ../../templates/show_songs.inc:44
 msgid "Track"
-msgstr "Parça"
+msgstr ""
 
 #: ../../lib/class/song.class.php:299
 msgid "Filesize"
-msgstr "Dosya boyutu"
+msgstr ""
 
 #: ../../lib/class/song.class.php:304
 #: ../../templates/show_get_albumart.inc.php:33
@@ -268,7 +261,7 @@ msgstr "Dosya boyutu"
 #: ../../templates/show_albums.inc:70 ../../templates/list_duplicates.inc:33
 #: ../../templates/show_search.inc:71
 msgid "Artist"
-msgstr "Sanatçý"
+msgstr ""
 
 #: ../../lib/class/song.class.php:309
 #: ../../templates/show_get_albumart.inc.php:41
@@ -277,17 +270,17 @@ msgstr "Sanatçý"
 #: ../../templates/show_albums.inc:68 ../../templates/list_duplicates.inc:34
 #: ../../templates/show_search.inc:78
 msgid "Album"
-msgstr "Albüm"
+msgstr ""
 
 #: ../../lib/class/song.class.php:313 ../../templates/show_albums.inc:43
 #: ../../templates/show_albums.inc:73 ../../templates/show_search.inc:90
 msgid "Year"
-msgstr "Yýl"
+msgstr ""
 
 #: ../../lib/class/song.class.php:317 ../../templates/flag.inc:66
 #: ../../templates/list_flagged.inc:46
 msgid "Comment"
-msgstr "Yorum"
+msgstr ""
 
 #: ../../lib/class/song.class.php:322 ../../templates/show_genre.inc.php:32
 #: ../../templates/show_genres.inc.php:36 ../../templates/sidebar.inc.php:37
@@ -295,42 +288,39 @@ msgstr "Yorum"
 #: ../../templates/show_songs.inc:48 ../../templates/show_browse_menu.inc:37
 #: ../../templates/show_search.inc:83
 msgid "Genre"
-msgstr "Kategori"
+msgstr ""
 
 #: ../../lib/class/stream.class.php:198
-#, fuzzy
 msgid "Opened for writing"
-msgstr "Yazmak için açýldý"
+msgstr ""
 
 #: ../../lib/class/stream.class.php:203
 msgid "Error, cannot write"
-msgstr "Hata, yazýlamýyor"
+msgstr ""
 
 #: ../../lib/class/stream.class.php:214
 msgid "Error, cannot write song in file"
-msgstr "Hata, þarký dosyaya yazýlamadý"
+msgstr ""
 
 #: ../../lib/class/stream.class.php:220
 msgid "Closed after write"
-msgstr "Yazýldýktan sonra kapatýldý"
+msgstr ""
 
 #: ../../lib/class/genre.class.php:278
-#, fuzzy
 msgid "Show Genres starting with"
-msgstr "Ýsmi bu harfle baþlayan sanatçýlarý göster"
+msgstr ""
 
 #: ../../lib/class/album.class.php:151
 msgid "Various"
-msgstr "Çeþitli"
+msgstr ""
 
 #: ../../lib/duplicates.php:102
-#, fuzzy
 msgid "Find Duplicates"
-msgstr "Duble þarkýlarý görüntüle"
+msgstr ""
 
 #: ../../lib/duplicates.php:105
 msgid "Search Type"
-msgstr "Arama türü"
+msgstr ""
 
 #: ../../lib/duplicates.php:119
 msgid "Artist and Title"
@@ -344,24 +334,24 @@ msgstr ""
 #: ../../templates/sidebar.inc.php:103 ../../templates/show_search_bar.inc:41
 #: ../../templates/menu.inc:39 ../../templates/show_search.inc:171
 msgid "Search"
-msgstr "Ara"
+msgstr ""
 
 #: ../../lib/preferences.php:252 ../../templates/show_users.inc:118
 msgid "Enable"
-msgstr "Etkinleþtir"
+msgstr ""
 
 #: ../../lib/preferences.php:253 ../../templates/show_users.inc:121
 #: ../../templates/list_duplicates.inc:31
 msgid "Disable"
-msgstr "Edilgenleþtir"
+msgstr ""
 
 #: ../../lib/preferences.php:265 ../../templates/add_catalog.inc:61
 msgid "Local"
-msgstr "Yerel"
+msgstr ""
 
 #: ../../lib/preferences.php:268
 msgid "Stream"
-msgstr "Akým"
+msgstr ""
 
 #: ../../lib/preferences.php:271
 msgid "IceCast"
@@ -369,7 +359,7 @@ msgstr "IceCast"
 
 #: ../../lib/preferences.php:274
 msgid "Downsample"
-msgstr "Kaliteyi düþür (downsample)"
+msgstr ""
 
 #: ../../lib/preferences.php:277
 msgid "Music Player Daemon"
@@ -381,19 +371,19 @@ msgstr ""
 
 #: ../../lib/preferences.php:289
 msgid "M3U"
-msgstr "M3U"
+msgstr ""
 
 #: ../../lib/preferences.php:290
 msgid "Simple M3U"
-msgstr "Simple M3U"
+msgstr ""
 
 #: ../../lib/preferences.php:291
 msgid "PLS"
-msgstr "PLS"
+msgstr ""
 
 #: ../../lib/preferences.php:292
 msgid "Asx"
-msgstr "Asx"
+msgstr ""
 
 #: ../../lib/preferences.php:293
 msgid "RAM"
@@ -409,16 +399,15 @@ msgstr ""
 
 #: ../../lib/general.lib.php:897 ../../lib/general.lib.php:908
 msgid "English"
-msgstr "Ýngilizce"
+msgstr ""
 
 #: ../../lib/general.lib.php:907
 msgid "German"
 msgstr "Almanca"
 
 #: ../../lib/general.lib.php:909
-#, fuzzy
 msgid "British English"
-msgstr "Ýngilizce"
+msgstr ""
 
 #: ../../lib/general.lib.php:910
 msgid "Spanish"
@@ -426,7 +415,7 @@ msgstr ""
 
 #: ../../lib/general.lib.php:911
 msgid "French"
-msgstr "Fransýzca"
+msgstr "Franszca"
 
 #: ../../lib/general.lib.php:912
 msgid "Italian"
@@ -446,12 +435,11 @@ msgstr ""
 
 #: ../../lib/general.lib.php:916
 msgid "Unknown"
-msgstr "Bilinmeyen"
+msgstr ""
 
 #: ../../lib/ui.lib.php:222
-#, fuzzy
 msgid "Error Access Denied"
-msgstr "Kullanýcý eriþim düzeyi"
+msgstr ""
 
 #: ../../lib/ui.lib.php:299 ../../templates/sidebar.inc.php:69
 #: ../../templates/header.inc:51 ../../templates/menu.inc:35
@@ -460,64 +448,63 @@ msgstr ""
 
 #: ../../lib/ui.lib.php:301
 msgid "Show w/o art"
-msgstr "Kapaksýz göster"
+msgstr ""
 
 #: ../../lib/ui.lib.php:304
 msgid "Show all"
-msgstr "Tümünü görüntüle"
+msgstr ""
 
 #: ../../lib/ui.lib.php:721
-#, fuzzy
 msgid "No Catalogs Found!"
-msgstr "Bulunamadý"
+msgstr ""
 
 #: ../../lib/ui.lib.php:722 ../../templates/add_catalog.inc:29
 msgid "Add a Catalog"
-msgstr "Katalog ekle"
+msgstr ""
 
 #: ../../lib/ui.lib.php:723 ../../templates/show_local_catalog_info.inc.php:7
 msgid "Catalog Statistics"
-msgstr "Katalog istatistikleri"
+msgstr ""
 
 #: ../../lib/ui.lib.php:759
 msgid "day"
-msgstr "gün"
+msgstr ""
 
 #: ../../lib/ui.lib.php:759
 msgid "days"
-msgstr "gün"
+msgstr ""
 
 #: ../../lib/ui.lib.php:761
 msgid "hour"
-msgstr "saat"
+msgstr ""
 
 #: ../../lib/ui.lib.php:761
 msgid "hours"
-msgstr "saat"
+msgstr ""
 
 #: ../../lib/ui.lib.php:1053 ../../templates/sidebar.inc.php:128
 #: ../../templates/show_random_play_bar.inc.php:45
 #: ../../templates/show_artists.inc:55 ../../templates/show_random_play.inc:46
 #: ../../templates/show_albums.inc:58
 msgid "All"
-msgstr "Hepsi"
+msgstr ""
 
 #: ../../lib/Browser.php:867
 msgid "file"
-msgstr "dosya"
+msgstr ""
 
 #: ../../lib/Browser.php:871
 msgid "File uploads not supported."
-msgstr "Dosya yükleme desteði verilmiyor."
+msgstr ""
 
 #: ../../lib/Browser.php:889
 msgid "No file uploaded"
-msgstr "Hicbir dosya yüklenmedi."
+msgstr ""
 
 #: ../../lib/Browser.php:896
 #, php-format
 msgid "There was a problem with the file upload: No %s was uploaded."
-msgstr "Dosya yüklemede sorun çýktý: %s yüklenemedi"
+msgstr ""
 
 #: ../../lib/Browser.php:901
 #, php-format
@@ -525,50 +512,42 @@ msgid ""
 "There was a problem with the file upload: The %s was larger than the maximum "
 "allowed size (%d bytes)."
 msgstr ""
-"Dosya yüklemede sorun çýktý: %s müsaade edilen azami boyutu aþýyor (%d byte)"
 
 #: ../../lib/Browser.php:903
 #, php-format
 msgid ""
 "There was a problem with the file upload: The %s was only partially uploaded."
-msgstr "Gönderilen dosya (%s) yalnýz kýsmen yüklendi."
+msgstr ""
 
 #: ../../lib/upload.php:228
-#, fuzzy
 msgid "The file uploaded successfully"
-msgstr "Hicbir dosya yüklenmedi."
+msgstr ""
 
 #: ../../lib/upload.php:229
 msgid "The uploaded file exceeds the upload_max_filesize directive in php.ini"
 msgstr ""
-"Gönderilen dosya daha önce php.ini'de belirlenen upload_max_filesize hattýný "
-"aþýyor."
 
 #: ../../lib/upload.php:230
-#, fuzzy
 msgid ""
 "The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in "
 "the HTML form"
-msgstr "Gönderilen dosya daha önce belirlenen MAX_FILE_SIZE hattýný aþýyor."
+msgstr ""
 
 #: ../../lib/upload.php:231
-#, fuzzy
 msgid "The uploaded file was only partially uploaded"
-msgstr "Gönderilen dosya kýsmen yüklendi."
+msgstr ""
 
 #: ../../lib/upload.php:232
-#, fuzzy
 msgid "No file was uploaded"
-msgstr "Hicbir dosya yüklenmedi."
+msgstr ""
 
 #: ../../lib/upload.php:233
 msgid "Missing a temporary folder"
 msgstr ""
 
 #: ../../lib/rating.lib.php:55
-#, fuzzy
 msgid "Don't Play"
-msgstr "Yerel Çalma Düzeni"
+msgstr ""
 
 #: ../../lib/rating.lib.php:58
 msgid "It's Pretty Bad"
@@ -596,179 +575,171 @@ msgstr ""
 
 #: ../../lib/playlist.lib.php:73
 msgid "No songs in this playlist."
-msgstr "Bu listede þarký bulunamadý."
+msgstr ""
 
 #: ../../modules/lib.php:537
 msgid "Create a new playlist"
-msgstr "Þarký listesi oluþtur"
+msgstr ""
 
 #: ../../modules/admin.php:46
 msgid "Manage Users"
-msgstr "Kullanýcýlarý düzenle"
+msgstr ""
 
 #: ../../modules/admin.php:48 ../../templates/show_admin_index.inc:34
 msgid "Add a new user"
-msgstr "Kullanýcý ekle"
+msgstr ""
 
 #: ../../admin/catalog.php:49 ../../templates/catalog.inc:63
 msgid "Add to Catalog(s)"
-msgstr "Kataloða ekle"
+msgstr ""
 
 #: ../../admin/catalog.php:60 ../../templates/catalog.inc:64
 msgid "Add to all Catalogs"
-msgstr "Tüm kataloglara ekle"
+msgstr ""
 
 #: ../../admin/catalog.php:69
 msgid "Error Connecting"
-msgstr "Baðlantý hatasý"
+msgstr "Balant hatas"
 
 #: ../../admin/catalog.php:83 ../../templates/catalog.inc:70
 msgid "Update Catalog(s)"
-msgstr "Kataloðu güncelleþtir"
+msgstr ""
 
 #: ../../admin/catalog.php:94 ../../templates/catalog.inc:71
 msgid "Update All Catalogs"
-msgstr "Tüm kataloglarý güncelleþtir"
+msgstr ""
 
 #: ../../admin/catalog.php:126 ../../templates/catalog.inc:77
 msgid "Clean Catalog(s)"
-msgstr "Kataloðu temizle"
+msgstr ""
 
 #: ../../admin/catalog.php:156 ../../templates/catalog.inc:78
 msgid "Clean All Catalogs"
-msgstr "Tüm kataloglarý temizle"
+msgstr ""
 
 #: ../../admin/catalog.php:206
 msgid "Now Playing Cleared"
-msgstr "Þu anda çalýnanlar silindi"
+msgstr ""
 
 #: ../../admin/catalog.php:206
 msgid "All now playing data has been cleared"
-msgstr "Tüm þu anda çalýnanlar silindi"
+msgstr ""
 
 #: ../../admin/catalog.php:211
 msgid "Do you really want to clear your catalog?"
-msgstr "Kataloðunuzu gerçekten boþaltmak mý istiyorsunuz?"
+msgstr "Katalounuzu gerekten boaltmak m istiyorsunuz?"
 
 #: ../../admin/catalog.php:218
 msgid "Do you really want to clear the statistics for this catalog?"
-msgstr "Bu kataloðun istatistik bilgilerini gerçekten silmek mi istiyorsunuz?"
+msgstr ""
 
 #: ../../admin/catalog.php:235
 msgid "Do you really want to delete this catalog?"
-msgstr "Kataloðunuzu gerçekten silmek mi istiyorsunuz?"
+msgstr ""
 
 #: ../../admin/catalog.php:266
-#, fuzzy
 msgid "Album Art Search Finished"
-msgstr "Albüm kapaðý silindi"
+msgstr ""
 
 #: ../../admin/users.php:72 ../../admin/users.php:119
 msgid "Error Username Required"
-msgstr "Hata, kullanýcý ismi gerekli"
+msgstr ""
 
 #: ../../admin/users.php:75 ../../admin/users.php:115
 msgid "Error Passwords don't match"
-msgstr "Hata, parolalar uyuþmuyor"
+msgstr ""
 
 #: ../../admin/users.php:124 ../../register.php:136
-#, fuzzy
 msgid "Error Username already exists"
-msgstr "Hata, kullanýcý ismi gerekli"
+msgstr ""
 
 #: ../../admin/users.php:145
 msgid "Are you sure you want to permanently delete"
-msgstr "Tamamen silmek istediðinizden emin misiniz: "
+msgstr ""
 
 #: ../../admin/users.php:152 ../../templates/show_confirm_action.inc.php:29
 #: ../../templates/show_search.inc:107
 msgid "No"
-msgstr "Hayýr"
+msgstr ""
 
 #: ../../admin/users.php:154
 msgid "User Deleted"
-msgstr "Kullanýcý silindi"
+msgstr ""
 
 #: ../../admin/users.php:157
 msgid "Delete Error"
-msgstr "Silme hatasý"
+msgstr ""
 
 #: ../../admin/users.php:157
 msgid "Unable to delete last Admin User"
-msgstr "Son yönetici silinemedi"
+msgstr ""
 
 #: ../../admin/access.php:40
 msgid "Do you really want to delete this Access Record?"
-msgstr "Bu giriþ izini gerçekten silmek mi istiyorsunuz?"
+msgstr ""
 
 #: ../../admin/access.php:48
 msgid "Entry Deleted"
-msgstr "Giriþ silindi"
+msgstr ""
 
 #: ../../admin/access.php:48
 msgid "Your Access List Entry has been removed"
-msgstr "Eriþim listesindeki giriþiniz silindi"
+msgstr ""
 
 #: ../../admin/access.php:58
 msgid "Entry Added"
-msgstr "Giriþ eklendi"
+msgstr ""
 
 #: ../../admin/access.php:58
 msgid "Your new Access List Entry has been created"
-msgstr "Eriþim listesine giriþiniz eklendi"
+msgstr ""
 
 #: ../../admin/mail.php:94
-#, fuzzy
 msgid "Mail to"
-msgstr "Mesaj"
+msgstr ""
 
 #: ../../admin/mail.php:105
-#, fuzzy
 msgid "Subject"
-msgstr "Seçim"
+msgstr ""
 
 #: ../../admin/mail.php:112
 msgid "Message"
 msgstr ""
 
 #: ../../admin/mail.php:122
-#, fuzzy
 msgid "Send Mail"
-msgstr "Mesaj"
+msgstr ""
 
 #: ../../admin/song.php:65
 msgid "Songs Disabled"
-msgstr "Edilgenleþtirilmiþ Þarkýlar"
+msgstr ""
 
 #: ../../admin/song.php:65
 msgid "The requested song(s) have been disabled"
-msgstr "Ýstenen þarký(lar) edilgenleþtirildi"
+msgstr ""
 
 #: ../../admin/song.php:75
 msgid "Songs Enabled"
-msgstr "Etkinlentirilmiþ Þarkýlar"
+msgstr ""
 
 #: ../../admin/song.php:75
 msgid "The requested song(s) have been enabled"
-msgstr "Ýstenen þarký(lar) etkinleþtirildi"
+msgstr ""
 
 #: ../../templates/show_install_account.inc.php:35
 #: ../../templates/show_install_config.inc:35
 #: ../../templates/show_install.inc:35
 msgid "Ampache Installation"
-msgstr "Ampache'nin Kuruluþu"
+msgstr ""
 
 #: ../../templates/show_install_account.inc.php:37
 #: ../../templates/show_install_config.inc:37
 #: ../../templates/show_install.inc:37
-#, fuzzy
 msgid ""
 "This Page handles the installation of the Ampache database and the creation "
 "of the ampache.cfg.php file. Before you continue please make sure that you "
 "have the following pre-requisites"
 msgstr ""
-"Bu sayfa Ampache veritabanýnýn ve ampache.cfg'nin kurulmasýný saðlýyor. "
-"Devam etmeden önce asaðýda istenenleri yerine getiriniz"
 
 #: ../../templates/show_install_account.inc.php:40
 #: ../../templates/show_install_config.inc:40
@@ -776,92 +747,76 @@ msgstr ""
 msgid ""
 "A MySQL Server with a username and password that can create/modify databases"
 msgstr ""
-"Bir MySQL Sunucusu ve bunun veritabaný ekleyebilen ve düzenleyebilen "
-"kullanýcý giriþi ve parolasý"
 
 #: ../../templates/show_install_account.inc.php:41
-#, fuzzy
 msgid ""
 "Your webserver has read access to the /sql/ampache.sql file and the /config/"
 "ampache.cfg.dist.php file"
 msgstr ""
-"Web Sunucunuz /sql/ampache.sql ve /config/ampache.cfg.dist dosyalarýný "
-"okuyabilmeli "
 
 #: ../../templates/show_install_account.inc.php:43
 #: ../../templates/show_install_config.inc:43
 #: ../../templates/show_install.inc:43
-#, fuzzy
 msgid ""
 "Once you have ensured that you have the above requirements please fill out "
 "the information below. You will only be asked for the required config "
 "values. If you would like to make changes to your ampache install at a later "
 "date simply edit /config/ampache.cfg.php"
 msgstr ""
-"Yukarýdaki istenenleri saðladýktan sonra aþaðýda istenen verileri giriniz. "
-"Yalnýz gerekli olanlar sorulacaktýr. Ýsterseniz daha sonra /config/ampache."
-"cfg dosyasýna deðiþiklikler yapabilirsiniz"
 
 #: ../../templates/show_install_account.inc.php:48
 #: ../../templates/show_install_config.inc:48
 #: ../../templates/show_install.inc:47
 msgid "Step 1 - Creating and Inserting the Ampache Database"
-msgstr "Ýlk Adým - Ampache veritabanýnýn kurulmasý ve doldurulmasý"
+msgstr ""
 
 #: ../../templates/show_install_account.inc.php:49
-#, fuzzy
 msgid "Step 2 - Creating the ampache.cfg.php file"
-msgstr "Ýkinci Adým - amapche.cfg'nin kurulmasý"
+msgstr ""
 
 #: ../../templates/show_install_account.inc.php:50
 #: ../../templates/show_install_config.inc:53
 #: ../../templates/show_install.inc:52
 msgid "Step 3 - Setup Initial Account"
-msgstr "Üçüncü Adým - Ýlk kullanýcýnýn kurulmasý"
+msgstr ""
 
 #: ../../templates/show_install_account.inc.php:52
 msgid ""
 "This step creates your initial Ampache admin account. Once your admin "
 "account has been created you will be directed to the login page"
 msgstr ""
-"Bu adýmda ilk yönetici hesabý oluþturuluyor.  Oluþturulduktan sonra giriþ "
-"sayfasýna yönlendirileceksiniz."
 
 #: ../../templates/show_install_account.inc.php:55
-#, fuzzy
 msgid "Create Admin Account"
-msgstr "Hesap ekle"
+msgstr ""
 
 #: ../../templates/show_install_account.inc.php:60
 #: ../../templates/show_user_registration.inc.php:109
 #: ../../templates/userform.inc:40 ../../templates/show_users.inc:43
 msgid "Username"
-msgstr "Kullanýcý adý"
+msgstr ""
 
 #: ../../templates/show_install_account.inc.php:64
 #: ../../templates/show_user_registration.inc.php:137
 #: ../../templates/userform.inc:63 ../../templates/show_login_form.inc:53
 msgid "Password"
-msgstr "Parola"
+msgstr ""
 
 #: ../../templates/show_install_account.inc.php:69
 msgid "Create Account"
-msgstr "Hesap ekle"
+msgstr ""
 
 #: ../../templates/show_user_registration.inc.php:59
-#, fuzzy
 msgid "Ampache New User Registration"
-msgstr "Ampache'nin Kuruluþu"
+msgstr ""
 
 #: ../../templates/show_user_registration.inc.php:74
-#, fuzzy
 msgid "User Agreement"
-msgstr "Kullanýcý adý"
+msgstr ""
 
 #: ../../templates/show_user_registration.inc.php:84
-#, fuzzy
 msgid "I Accept"
-msgstr "Kabul"
+msgstr ""
 
 #: ../../templates/show_user_registration.inc.php:101
 msgid "User Information"
@@ -870,17 +825,17 @@ msgstr ""
 #: ../../templates/show_user_registration.inc.php:119
 #: ../../templates/userform.inc:48
 msgid "Full Name"
-msgstr "Tam Ýsim"
+msgstr ""
 
 #: ../../templates/show_user_registration.inc.php:128
 #: ../../templates/show_user.inc.php:40 ../../templates/userform.inc:55
 msgid "E-mail"
-msgstr "Elektronik posta"
+msgstr ""
 
 #: ../../templates/show_user_registration.inc.php:146
 #: ../../templates/show_user.inc.php:75 ../../templates/userform.inc:72
 msgid "Confirm Password"
-msgstr "Parola doðrulama"
+msgstr ""
 
 #: ../../templates/show_user_registration.inc.php:166
 msgid "Clear Info"
@@ -888,12 +843,12 @@ msgstr ""
 
 #: ../../templates/show_user_registration.inc.php:167
 msgid "Register User"
-msgstr "Kullanýcý kaydý"
+msgstr ""
 
 #: ../../templates/show_confirm_action.inc.php:28
 #: ../../templates/show_search.inc:106
 msgid "Yes"
-msgstr "Evet"
+msgstr ""
 
 #: ../../templates/show_import_playlist.inc.php:26
 msgid "Importing a Playlist from a File"
@@ -903,22 +858,19 @@ msgstr ""
 #: ../../templates/show_uploads.inc:41 ../../templates/list_duplicates.inc:38
 #: ../../templates/show_search.inc:95
 msgid "Filename"
-msgstr "Dosya adý"
+msgstr ""
 
 #: ../../templates/show_import_playlist.inc.php:36
-#, fuzzy
 msgid "Playlist Type"
-msgstr "Þarký listesi"
+msgstr ""
 
 #: ../../templates/show_import_playlist.inc.php:49
-#, fuzzy
 msgid "Import Playlist"
-msgstr "Þarký listesi"
+msgstr ""
 
 #: ../../templates/show_genre.inc.php:32
-#, fuzzy
 msgid "Viewing"
-msgstr "Görüntüle"
+msgstr ""
 
 #: ../../templates/show_genre.inc.php:36 ../../templates/sidebar.inc.php:35
 #: ../../templates/sidebar.inc.php:136
@@ -926,14 +878,14 @@ msgstr "Görüntüle"
 #: ../../templates/show_artists.inc:42 ../../templates/show_artists.inc:65
 #: ../../templates/show_browse_menu.inc:36 ../../templates/show_search.inc:136
 msgid "Albums"
-msgstr "Albümler"
+msgstr ""
 
 #: ../../templates/show_genre.inc.php:41 ../../templates/sidebar.inc.php:36
 #: ../../templates/sidebar.inc.php:135
 #: ../../templates/show_local_catalog_info.inc.php:22
 #: ../../templates/show_browse_menu.inc:35 ../../templates/show_search.inc:137
 msgid "Artists"
-msgstr "Sanatçýlar"
+msgstr ""
 
 #: ../../templates/show_genre.inc.php:46
 #: ../../templates/show_genres.inc.php:37 ../../templates/sidebar.inc.php:133
@@ -943,7 +895,7 @@ msgstr "Sanatçýlar"
 #: ../../templates/show_albums.inc:41 ../../templates/show_albums.inc:71
 #: ../../templates/show_search.inc:135
 msgid "Songs"
-msgstr "Þarkýlar"
+msgstr ""
 
 #: ../../templates/show_user.inc.php:26
 msgid "Changing User Information for"
@@ -954,7 +906,7 @@ msgstr ""
 #: ../../templates/show_add_access.inc:40
 #: ../../templates/show_access_list.inc:47
 msgid "Name"
-msgstr "Ýsim"
+msgstr ""
 
 #: ../../templates/show_user.inc.php:48
 msgid "Results Per Page"
@@ -962,15 +914,15 @@ msgstr ""
 
 #: ../../templates/show_user.inc.php:56
 msgid "Update Profile"
-msgstr "Profil güncelleme"
+msgstr "Profil gncelleme"
 
 #: ../../templates/show_user.inc.php:67
 msgid "Enter password"
-msgstr "Parola giriþ"
+msgstr "Parola giri"
 
 #: ../../templates/show_user.inc.php:83
 msgid "Change Password"
-msgstr "Parola deðiþtirme"
+msgstr "Parola deitirme"
 
 #: ../../templates/show_user.inc.php:89
 msgid "Delete Your Personal Statistics"
@@ -978,7 +930,7 @@ msgstr ""
 
 #: ../../templates/show_user.inc.php:91
 msgid "Clear Stats"
-msgstr "Ýstatistikleri sil"
+msgstr ""
 
 #: ../../templates/show_genres.inc.php:38 ../../templates/show_uploads.inc:32
 #: ../../templates/show_mpdpl.inc:68 ../../templates/show_songs.inc:50
@@ -986,7 +938,7 @@ msgstr "Ýstatistikleri sil"
 #: ../../templates/show_albums.inc:45 ../../templates/show_albums.inc:75
 #: ../../templates/show_access_list.inc:51 ../../templates/show_artist.inc:42
 msgid "Action"
-msgstr "Eylem"
+msgstr ""
 
 #: ../../templates/show_genres.inc.php:48
 #: ../../templates/show_playlists.inc.php:63
@@ -994,65 +946,61 @@ msgstr "Eylem"
 #: ../../templates/show_albums.inc:57 ../../templates/show_mpdplay.inc:64
 #: ../../templates/show_artist.inc:67
 msgid "Play"
-msgstr "Çal"
+msgstr ""
 
 #: ../../templates/sidebar.inc.php:29
 msgid "Users"
-msgstr "Kullanýcýlar"
+msgstr ""
 
 #: ../../templates/sidebar.inc.php:30
 msgid "Mail Users"
-msgstr "Kullanýcýlara mesaj"
+msgstr ""
 
 #: ../../templates/sidebar.inc.php:32
-#, fuzzy
 msgid "Site Preferences"
-msgstr "Tercihleri güncelle"
+msgstr ""
 
 #: ../../templates/sidebar.inc.php:33
-#, fuzzy
 msgid "Access List"
-msgstr "Eriþim listesi"
+msgstr ""
 
 #: ../../templates/sidebar.inc.php:38
-#, fuzzy
 msgid "Lists"
-msgstr "Sanatçýlar"
+msgstr ""
 
 #: ../../templates/sidebar.inc.php:45 ../../templates/menu.inc:29
 msgid "Home"
-msgstr "Ýlk Sayfa"
+msgstr ""
 
 #: ../../templates/sidebar.inc.php:49 ../../templates/menu.inc:63
 #: ../../templates/menu.inc:66
 msgid "Admin"
-msgstr "Yönetici"
+msgstr ""
 
 #: ../../templates/sidebar.inc.php:66 ../../templates/menu.inc:40
 msgid "Preferences"
-msgstr "Tercihler"
+msgstr ""
 
 #: ../../templates/sidebar.inc.php:85 ../../templates/menu.inc:43
 #: ../../templates/show_upload.inc:73
 msgid "Upload"
-msgstr "Yükleme"
+msgstr ""
 
 #: ../../templates/sidebar.inc.php:89
 #: ../../templates/show_playlists.inc.php:28 ../../templates/menu.inc:38
 msgid "Playlists"
-msgstr "Þarký listeleri"
+msgstr ""
 
 #: ../../templates/sidebar.inc.php:93 ../../templates/menu.inc:32
-#, fuzzy
 msgid "Local Play"
-msgstr "Yerel Çalma Düzeni"
+msgstr ""
 
 #: ../../templates/sidebar.inc.php:112
 #: ../../templates/show_playlists.inc.php:66
 #: ../../templates/show_artists.inc:56 ../../templates/show_albums.inc:59
 #: ../../templates/show_mpdplay.inc:114
 msgid "Random"
-msgstr "Rasgele"
+msgstr ""
 
 #: ../../templates/sidebar.inc.php:134
 #: ../../templates/show_random_play_bar.inc.php:50
@@ -1072,26 +1020,26 @@ msgstr ""
 #: ../../templates/sidebar.inc.php:146 ../../templates/menu.inc:75
 #: ../../templates/menu.inc:81 ../../templates/menu.inc:85
 msgid "Logout"
-msgstr "Oturum Sonu"
+msgstr ""
 
 #: ../../templates/show_confirmation.inc.php:30
 msgid "Continue"
-msgstr "Devam"
+msgstr ""
 
 #: ../../templates/show_random_play_bar.inc.php:31
 #: ../../templates/show_random_play.inc:28
 msgid "Play Random Selection"
-msgstr "Rasgele seçilenleri çal"
+msgstr ""
 
 #: ../../templates/show_random_play_bar.inc.php:51
 #, fuzzy
 msgid "Full Artists"
-msgstr "Tüm Sanatçýlar"
+msgstr "Tm Sanatlar"
 
 #: ../../templates/show_random_play_bar.inc.php:52
 #: ../../templates/show_random_play.inc:60
 msgid "Full Albums"
-msgstr "Tüm Albümler"
+msgstr ""
 
 #: ../../templates/show_random_play_bar.inc.php:55
 msgid "from"
@@ -1104,89 +1052,86 @@ msgstr "Eklendi"
 
 #: ../../templates/show_local_catalog_info.inc.php:10
 msgid "Total Users"
-msgstr "Tüm Kullanýcýlar"
+msgstr ""
 
 #: ../../templates/show_local_catalog_info.inc.php:14
 msgid "Connected Users"
-msgstr "Baðlanmýþ Kullanýcýlar"
+msgstr ""
 
 #: ../../templates/show_local_catalog_info.inc.php:30
 msgid "Catalog Size"
-msgstr "Katalog boyutu"
+msgstr ""
 
 #: ../../templates/show_local_catalog_info.inc.php:34
 msgid "Catalog Time"
-msgstr "Katalog süresi"
+msgstr ""
 
 #: ../../templates/show_play_selected.inc.php:49
 msgid "Play Selected"
-msgstr "Seçilmiþleri çal"
+msgstr ""
 
 #: ../../templates/show_play_selected.inc.php:52
-#, fuzzy
 msgid "Download Selected"
-msgstr "Seçilmiþleri iþaretle"
+msgstr ""
 
 #: ../../templates/show_play_selected.inc.php:55
 msgid "Flag Selected"
-msgstr "Seçilmiþleri iþaretle"
+msgstr "Seilmileri iaretle"
 
 #: ../../templates/show_play_selected.inc.php:56
 msgid "Edit Selected"
-msgstr "Seçilmiþleri düzenle"
+msgstr "Seilmileri dzenle"
 
 #: ../../templates/show_play_selected.inc.php:64
 msgid "Set Track Numbers"
-msgstr "Parça numaralarýný iþle"
+msgstr ""
 
 #: ../../templates/show_play_selected.inc.php:65
 msgid "Remove Selected Tracks"
-msgstr "Seçilmiþ parçalarý sil"
+msgstr ""
 
 #: ../../templates/show_play_selected.inc.php:71
 msgid "Playlist"
-msgstr "Þarký listesi"
+msgstr ""
 
 #: ../../templates/show_play_selected.inc.php:71
 msgid "Add to"
-msgstr "Ekle"
+msgstr ""
 
 #: ../../templates/show_play_selected.inc.php:73
 #: ../../templates/show_playlists.inc.php:51
 msgid "View"
-msgstr "Görüntüle"
+msgstr ""
 
 #: ../../templates/show_play_selected.inc.php:74
 #: ../../templates/show_playlists.inc.php:55 ../../templates/show_users.inc:58
 #: ../../templates/show_users.inc:102
 msgid "Edit"
-msgstr "Düzenle"
+msgstr ""
 
 #: ../../templates/show_all_recent.inc.php:27 ../../index.php:99
 msgid "Newest Artist Additions"
-msgstr "Son eklenen sanatçýlar"
+msgstr ""
 
 #: ../../templates/show_all_recent.inc.php:30 ../../index.php:106
 msgid "Newest Album Additions"
-msgstr "Son eklenen albümler"
+msgstr ""
 
 #: ../../templates/show_all_popular.inc.php:27 ../../index.php:82
 msgid "Most Popular Artists"
-msgstr "En popüler sanatçýlar"
+msgstr ""
 
 #: ../../templates/show_all_popular.inc.php:30 ../../index.php:61
-#, fuzzy
 msgid "Most Popular Albums"
-msgstr "En popüler sanatçýlar"
+msgstr ""
 
 #: ../../templates/show_all_popular.inc.php:37
-#, fuzzy
 msgid "Most Popular Genres"
-msgstr "En popüler þarkýlar"
+msgstr ""
 
 #: ../../templates/show_all_popular.inc.php:40 ../../index.php:89
 msgid "Most Popular Songs"
-msgstr "En popüler þarkýlar"
+msgstr ""
 
 #: ../../templates/show_get_albumart.inc.php:28
 msgid "Customize Search"
@@ -1198,18 +1143,16 @@ msgstr ""
 
 #: ../../templates/show_get_albumart.inc.php:59
 msgid "Get Art"
-msgstr "Albüm kapaðý çaðýr"
+msgstr ""
 
 #: ../../templates/show_rename_artist.inc.php:33
 #: ../../templates/show_rename_artist.inc.php:51
-#, fuzzy
 msgid "Rename"
-msgstr "Kullanýcý adý"
+msgstr ""
 
 #: ../../templates/show_rename_artist.inc.php:33
-#, fuzzy
 msgid "to"
-msgstr "Dur"
+msgstr ""
 
 #: ../../templates/show_rename_artist.inc.php:40
 #: ../../templates/show_search.inc:144
@@ -1221,107 +1164,98 @@ msgid "Insert current"
 msgstr ""
 
 #: ../../templates/show_rename_artist.inc.php:47
-#, fuzzy
 msgid "Update id3 tags"
-msgstr "Etiketlerden güncelle"
+msgstr ""
 
 #: ../../templates/show_artist_box.inc.php:26
 msgid "Albums by"
-msgstr "Albümler"
+msgstr ""
 
 #: ../../templates/show_artist_box.inc.php:34
 msgid "Show All Songs By"
-msgstr "Tüm þarkýlarýný görüntüle: "
+msgstr ""
 
 #: ../../templates/show_artist_box.inc.php:35
 msgid "Play All Songs By"
-msgstr "Tüm þarkýlarýný çal: "
+msgstr ""
 
 #: ../../templates/show_artist_box.inc.php:36
 msgid "Play Random Songs By"
-msgstr "Rasgele þarkýlarýný çal: "
+msgstr ""
 
 #: ../../templates/show_artist_box.inc.php:38
 #: ../../templates/show_album.inc:72
 msgid "Update from tags"
-msgstr "Etiketlerden güncelle"
+msgstr ""
 
 #: ../../templates/show_artist_box.inc.php:39
-#, fuzzy
 msgid "Rename Artist"
-msgstr "Sanatçý"
+msgstr ""
 
 #: ../../templates/show_playlists.inc.php:31
-#, fuzzy
 msgid "Playlist Name"
-msgstr "Þarký listesi"
+msgstr ""
 
 #: ../../templates/show_playlists.inc.php:32
-#, fuzzy
 msgid "# Songs"
-msgstr "Þarkýlar"
+msgstr ""
 
 #: ../../templates/show_playlists.inc.php:33
 msgid "Owner"
 msgstr ""
 
 #: ../../templates/show_playlists.inc.php:34
-#, fuzzy
 msgid "Actions"
-msgstr "Eylem"
+msgstr ""
 
 #: ../../templates/show_playlists.inc.php:58
 #: ../../templates/show_uploads.inc:50 ../../templates/catalog.inc:57
 #: ../../templates/show_users.inc:70
 msgid "Delete"
-msgstr "Sil"
+msgstr ""
 
 #: ../../templates/show_playlists.inc.php:71
 #: ../../templates/show_songs.inc:140 ../../templates/show_album.inc:75
 #: ../../templates/show_albums.inc:61 ../../templates/show_artist.inc:69
 msgid "Download"
-msgstr "Ýndirme"
+msgstr ""
 
 #: ../../templates/show_playlist_box.inc.php:33
-#, fuzzy
 msgid "Playlist Actions"
-msgstr "Þarký listeleri"
+msgstr ""
 
 #: ../../templates/show_playlist_box.inc.php:34
-#, fuzzy
 msgid "Create New Playlist"
-msgstr "Þarký listesi oluþtur"
+msgstr ""
 
 #: ../../templates/show_playlist_box.inc.php:35
 #, fuzzy
 msgid "View All Playlists"
-msgstr "Yeni þarký listesi"
+msgstr "Yeni ark listesi"
 
 #: ../../templates/show_playlist_box.inc.php:36
 msgid "Import From File"
 msgstr ""
 
 #: ../../templates/show_playlist_box.inc.php:38
-#, fuzzy
 msgid "Normalize Tracks"
-msgstr "Tüm parçalar"
+msgstr ""
 
 #: ../../templates/show_playlist_box.inc.php:39
-#, fuzzy
 msgid "Play This Playlist"
-msgstr "Þarký listesi"
+msgstr ""
 
 #: ../../templates/show_preference_box.inc.php:44
 msgid "Preference"
-msgstr "Tercih"
+msgstr ""
 
 #: ../../templates/show_preference_box.inc.php:45
 msgid "Value"
-msgstr "Deðer"
+msgstr ""
 
 #: ../../templates/show_preference_box.inc.php:47
 msgid "Apply to All"
-msgstr "Hersine uygula"
+msgstr ""
 
 #: ../../templates/show_preference_box.inc.php:54
 msgid "description"
@@ -1329,9 +1263,8 @@ msgstr ""
 
 #: ../../templates/show_object_rating.inc.php:25
 #: ../../templates/show_songs.inc:52
-#, fuzzy
 msgid "Rating"
-msgstr "Düzenleme"
+msgstr ""
 
 #: ../../localplay.php:81
 msgid "Unknown action requested"
@@ -1339,15 +1272,13 @@ msgstr "Bilinmeyen eylem istendi"
 
 #: ../../browse.php:48 ../../albums.php:168 ../../albums.php:174
 #: ../../albums.php:181 ../../albums.php:186 ../../albums.php:192
-#, fuzzy
 msgid "Show Albums starting with"
-msgstr "Ýsmi bu harfle baþlayan albümleri göster"
+msgstr ""
 
 #: ../../browse.php:78 ../../artists.php:128 ../../artists.php:132
 #: ../../artists.php:138 ../../artists.php:151
-#, fuzzy
 msgid "Show Artists starting with"
-msgstr "Ýsmi bu harfle baþlayan sanatçýlarý göster"
+msgstr ""
 
 #: ../../search.php:45
 msgid "Error: No Keyword Entered"
@@ -1355,54 +1286,47 @@ msgstr ""
 
 #: ../../tv.php:76 ../../templates/show_now_playing.inc:31
 msgid "Now Playing"
-msgstr "Þu anda çalan"
+msgstr ""
 
 #: ../../artists.php:58 ../../albums.php:147
 msgid "Starting Update from Tags"
-msgstr "Etiketten güncelleþtirme baþlýyor"
+msgstr ""
 
 #: ../../artists.php:63 ../../albums.php:152
-#, fuzzy
 msgid "Update From Tags Complete"
-msgstr "Etiketten güncelleþtirme tamamlandý"
+msgstr ""
 
 #: ../../amp-mpd.php:171 ../../playlist.php:63
 msgid "New Playlist"
-msgstr "Yeni þarký listesi"
+msgstr ""
 
 #: ../../playlist.php:46
-#, fuzzy
 msgid "Playlist Deleted"
-msgstr "Seçilmiþleri çal"
+msgstr ""
 
 #: ../../playlist.php:46
-#, fuzzy
 msgid "The Requested Playlist has been deleted"
-msgstr "Ýstenen þarký(lar) etkinleþtirildi"
+msgstr ""
 
 #: ../../playlist.php:56
-#, fuzzy
 msgid "Are you sure you want to delete this playlist"
-msgstr "Tamamen silmek istediðinizden emin misiniz: "
+msgstr ""
 
 #: ../../playlist.php:112
-#, fuzzy
 msgid "Playlist Created"
-msgstr "Þarký listesi güncelendi."
+msgstr ""
 
 #: ../../playlist.php:112
 msgid " has been created"
 msgstr ""
 
 #: ../../playlist.php:121
-#, fuzzy
 msgid "Remote Selected Tracks"
-msgstr "Seçilmiþ parçalarý sil"
+msgstr ""
 
 #: ../../playlist.php:139
-#, fuzzy
 msgid "Playlist Updated"
-msgstr "Þarký listesi güncelendi."
+msgstr ""
 
 #: ../../playlist.php:139
 msgid " has been updated"
@@ -1410,12 +1334,11 @@ msgstr ""
 
 #: ../../flag.php:38
 msgid "Flagging song completed."
-msgstr "Þarký iþaretleme tamamlandý"
+msgstr "ark iaretleme tamamland"
 
 #: ../../user.php:45
-#, fuzzy
 msgid "Error: Password Does Not Match or Empty"
-msgstr "Hata, parolalar uyuþmuyor"
+msgstr ""
 
 #: ../../user.php:51 ../../user.php:62
 msgid "Error: Insufficient Rights"
@@ -1423,11 +1346,11 @@ msgstr ""
 
 #: ../../albums.php:44
 msgid "Album Art Cleared"
-msgstr "Albüm kapaðý silindi"
+msgstr ""
 
 #: ../../albums.php:44
 msgid "Album Art information has been removed form the database"
-msgstr "Albüm kapaðý ile ilgili bilgiler veritabanýndan silindi"
+msgstr "Albm kapa ile ilgili bilgiler veritabanndan silindi"
 
 #: ../../albums.php:74
 msgid "No Amazon Developer Key set, amazon album art searching will not work"
@@ -1435,34 +1358,29 @@ msgstr ""
 
 #: ../../albums.php:104
 msgid "Album Art Not Located"
-msgstr "Albüm kapaðý bulunamadý"
+msgstr ""
 
 #: ../../albums.php:104
 msgid ""
 "Album Art could not be located at this time. This may be due to Amazon being "
 "busy, or the album not being present in their collection."
 msgstr ""
-"Albüm kapaðý bulunamadý. Bu Amazon'un meþgul yada bu albümün orada "
-"olmayýþýndan ileri gelebilir."
 
 #: ../../albums.php:137
-#, fuzzy
 msgid "Album Art Inserted"
-msgstr "Albüm kapaðý silindi"
+msgstr ""
 
 #: ../../ratings.php:33
-#, fuzzy
 msgid "Rating Updated"
-msgstr "Çabuk güncelle"
+msgstr ""
 
 #: ../../ratings.php:33
 msgid "Your rating for this object has been updated"
 msgstr ""
 
 #: ../../register.php:79
-#, fuzzy
 msgid "Error Captcha Required"
-msgstr "Hata, kullanýcý ismi gerekli"
+msgstr ""
 
 #: ../../register.php:86
 msgid "Error Captcha Failed"
@@ -1481,19 +1399,16 @@ msgid "Please fill in your full name (Firstname Lastname)"
 msgstr ""
 
 #: ../../register.php:128
-#, fuzzy
 msgid "You must enter a password"
-msgstr "Parola giriþ"
+msgstr ""
 
 #: ../../register.php:132
-#, fuzzy
 msgid "Your passwords do not match"
-msgstr "Hata, parolalar uyuþmuyor"
+msgstr ""
 
 #: ../../register.php:150
-#, fuzzy
 msgid "Error: Insert Failed"
-msgstr "Hata, kullanýcý ismi gerekli"
+msgstr ""
 
 #: ../../register.php:165
 msgid "Registration Complete"
@@ -1508,9 +1423,8 @@ msgid "The validation key used isn't correct."
 msgstr ""
 
 #: ../../activate.php:51
-#, fuzzy
 msgid "User activated"
-msgstr "Kullanýcý silindi"
+msgstr ""
 
 #: ../../activate.php:51
 msgid "This User ID is activated and can be used"
@@ -1526,14 +1440,12 @@ msgid ""
 msgstr ""
 
 #: ../../bin/print_tags.php.inc:48
-#, fuzzy
 msgid "Filename:"
-msgstr "Dosya adý"
+msgstr ""
 
 #: ../../bin/quarantine_migration.php.inc:49
-#, fuzzy
 msgid "Error: Unable to write to"
-msgstr "Hata: açýlamadý"
+msgstr ""
 
 #: ../../bin/quarantine_migration.php.inc:56
 msgid "Error: Upload directory not inside a catalog"
@@ -1545,23 +1457,20 @@ msgid "Moved"
 msgstr "Kip"
 
 #: ../../bin/quarantine_migration.php.inc:78
-#, fuzzy
 msgid "Adding"
-msgstr "Yönetici"
+msgstr ""
 
 #: ../../bin/quarantine_migration.php.inc:78
-#, fuzzy
 msgid "to database"
-msgstr "Veritabanýný ekle"
+msgstr ""
 
 #: ../../bin/quarantine_migration.php.inc:86
 msgid "Move Failed"
 msgstr ""
 
 #: ../../bin/quarantine_migration.php.inc:97
-#, fuzzy
 msgid "Deleted"
-msgstr "Sil"
+msgstr ""
 
 #: ../../bin/quarantine_migration.php.inc:113
 msgid ""
@@ -1580,14 +1489,12 @@ msgid ""
 msgstr ""
 
 #: ../../bin/quarantine_migration.php.inc:127
-#, fuzzy
 msgid "Continue?  (Y/N):"
-msgstr "Devam"
+msgstr ""
 
 #: ../../bin/quarantine_migration.php.inc:151
-#, fuzzy
 msgid "Error:  "
-msgstr "Hata"
+msgstr ""
 
 #: ../../bin/quarantine_migration.php.inc:152
 msgid "!\n"
@@ -1596,7 +1503,7 @@ msgstr ""
 #: ../../templates/show_admin_index.inc:27
 #, fuzzy
 msgid "User Management"
-msgstr "Kullanýcý adý"
+msgstr "Kullanc ad"
 
 #: ../../templates/show_admin_index.inc:28
 msgid "E-mail Management"
@@ -1605,87 +1512,84 @@ msgstr ""
 #: ../../templates/show_admin_index.inc:29
 #, fuzzy
 msgid "Catalog Managment"
-msgstr "Kalalog Ýsmi"
+msgstr "Kalalog smi"
 
 #: ../../templates/show_admin_index.inc:30
 msgid "Admin Preferences"
-msgstr "Yönetici tercihleri"
+msgstr "Ynetici tercihleri"
 
 #: ../../templates/show_admin_index.inc:31 ../../templates/catalog.inc:95
 msgid "Access Lists"
-msgstr "Eriþim listesi"
+msgstr ""
 
 #: ../../templates/show_admin_index.inc:33 ../../templates/catalog.inc:94
 msgid "Add a catalog"
-msgstr "Katalog ekle"
+msgstr ""
 
 #: ../../templates/show_admin_index.inc:35 ../../templates/catalog.inc:99
 msgid "Clear Now Playing"
-msgstr "Þu anda çalanlarý sil"
+msgstr ""
 
 #: ../../templates/show_admin_index.inc:36
 #, fuzzy
 msgid "Add Access List Entry"
-msgstr "Eriþim listesi"
+msgstr "Eriim listesi"
 
 #: ../../templates/show_admin_index.inc:40
 #, fuzzy
 msgid "Common Functions"
-msgstr "Veritabaný baðlantýsý"
+msgstr "Veritaban balants"
 
 #: ../../templates/show_admin_index.inc:43
 #, fuzzy
 msgid "Admin Sections"
-msgstr "Yönetici Kýsmý"
+msgstr "Ynetici Ksm"
 
 #: ../../templates/show_uploads.inc:33
-#, fuzzy
 msgid "Status"
-msgstr "Ýstatistikler"
+msgstr ""
 
 #: ../../templates/show_uploads.inc:34 ../../templates/flag.inc:58
 #: ../../templates/list_flagged.inc:41 ../../templates/list_duplicates.inc:32
 msgid "Song"
-msgstr "Þarký"
+msgstr ""
 
 #: ../../templates/show_uploads.inc:40 ../../templates/show_songs.inc:46
 #: ../../templates/list_duplicates.inc:37
 msgid "Size"
-msgstr "Boyut"
+msgstr ""
 
 #: ../../templates/show_uploads.inc:42
 msgid "User"
-msgstr "Kullanýcý"
+msgstr ""
 
 #: ../../templates/show_uploads.inc:43
 msgid "Date"
-msgstr "Tarih"
+msgstr ""
 
 #: ../../templates/show_uploads.inc:49
 msgid "Add"
-msgstr "Ekle"
+msgstr ""
 
 #: ../../templates/show_mpdpl.inc:43
-#, fuzzy
 msgid "MPD Server Playlist"
-msgstr "Sunucu þarký listesi"
+msgstr ""
 
 #: ../../templates/show_mpdpl.inc:45 ../../templates/show_mpdpl.inc:175
 msgid "Refresh the Playlist Window"
-msgstr "Þarký Listesi görüntüsünü yenile"
+msgstr ""
 
 #: ../../templates/show_mpdpl.inc:47 ../../templates/show_mpdpl.inc:177
 msgid "Click to shuffle (randomize) the playlist"
-msgstr "Þarký Listesini karýþtýrmak (rasgele) icin týkla"
+msgstr ""
 
 #: ../../templates/show_mpdpl.inc:47 ../../templates/show_mpdpl.inc:177
 msgid "shuffle"
-msgstr "rasgele"
+msgstr ""
 
 #: ../../templates/show_mpdpl.inc:48 ../../templates/show_mpdpl.inc:178
-#, fuzzy
 msgid "Click to the clear the playlist"
-msgstr "Þarký listesini silmek için týkla"
+msgstr ""
 
 #: ../../templates/show_mpdpl.inc:52 ../../templates/show_mpdpl.inc:182
 msgid "Click to the remove all except the Now Playing"
@@ -1693,103 +1597,99 @@ msgstr ""
 
 #: ../../templates/show_mpdpl.inc:62 ../../templates/show_songs.inc:41
 msgid "Song title"
-msgstr "þarký adý"
+msgstr ""
 
 #: ../../templates/flag.inc:43
 msgid "Flag song"
-msgstr "Þarkýyý iþaretle"
+msgstr ""
 
 #: ../../templates/flag.inc:45
 msgid ""
 "Flag the following song as having one of the problems listed below.  Site "
 "admins will then take the appropriate action for the flagged files."
 msgstr ""
-"Þarkýyý aþaðýda gösterilen sorunlardan biriyle iliþkili olarak iþaretle. "
-"Site yöneticileri bu iþaretli dosyalar hakkýnda gereken iþlemleri yaparlar."
 
 #: ../../templates/flag.inc:62
 msgid "Reason to flag"
-msgstr "Ýþaretleme nedeni"
+msgstr ""
 
 #: ../../templates/flag.inc:73
 msgid "Flag Song"
-msgstr "Þarkýyý iþaretle"
+msgstr "arky iaretle"
 
 #: ../../templates/customize_catalog.inc:24
 msgid "Settings for catalog in"
-msgstr "Katalog ayarlarý:"
+msgstr ""
 
 #: ../../templates/customize_catalog.inc:32 ../../templates/add_catalog.inc:40
 msgid "Auto-inserted Fields"
-msgstr "Özdevimli Alanlar"
+msgstr ""
 
 #: ../../templates/customize_catalog.inc:33 ../../templates/add_catalog.inc:41
 msgid "album name"
-msgstr "albüm ismi"
+msgstr ""
 
 #: ../../templates/customize_catalog.inc:34 ../../templates/add_catalog.inc:42
 msgid "artist name"
-msgstr "sanatçý ismi"
+msgstr ""
 
 #: ../../templates/customize_catalog.inc:35
 msgid "catalog path"
-msgstr "katalog yolu"
+msgstr ""
 
 #: ../../templates/customize_catalog.inc:36 ../../templates/add_catalog.inc:43
 msgid "id3 comment"
-msgstr "id3 açýklamasý"
+msgstr ""
 
 #: ../../templates/customize_catalog.inc:37 ../../templates/add_catalog.inc:44
 msgid "genre"
-msgstr "kategori"
+msgstr ""
 
 #: ../../templates/customize_catalog.inc:38 ../../templates/add_catalog.inc:45
 msgid "track number (padded with leading 0)"
-msgstr "þarký numarasý (0 ile baþlar)"
+msgstr ""
 
 #: ../../templates/customize_catalog.inc:39 ../../templates/add_catalog.inc:46
 msgid "song title"
-msgstr "þarký adý"
+msgstr ""
 
 #: ../../templates/customize_catalog.inc:40 ../../templates/add_catalog.inc:47
 msgid "year"
-msgstr "yýl"
+msgstr ""
 
 #: ../../templates/customize_catalog.inc:41 ../../templates/add_catalog.inc:48
 msgid "other"
-msgstr "baþka"
+msgstr ""
 
 #: ../../templates/customize_catalog.inc:45
 msgid "ID3 set command"
-msgstr "ID3 ayarlama komutu"
+msgstr ""
 
 #: ../../templates/customize_catalog.inc:51
 msgid "Filename pattern"
-msgstr "Dosya adý deseni"
+msgstr ""
 
 #: ../../templates/customize_catalog.inc:58 ../../templates/add_catalog.inc:75
 msgid "Folder Pattern"
-msgstr "Klasör adý deseni"
+msgstr ""
 
 #: ../../templates/customize_catalog.inc:58 ../../templates/add_catalog.inc:75
 msgid "(no leading or ending '/')"
-msgstr "(baþýnda yada sonuna '/' olmaksýzýn)"
+msgstr ""
 
 #: ../../templates/customize_catalog.inc:69
 msgid "Save Catalog Settings"
-msgstr "Katalog ayarlarýný kaydet"
+msgstr ""
 
 #: ../../templates/show_test.inc:29
 msgid "Ampache Debug"
-msgstr "Ampache Hata Ayýklamasý"
+msgstr ""
 
 #: ../../templates/show_test.inc:30
 msgid ""
 "You've reached this page because a configuration error has occured. Debug "
 "Information below"
 msgstr ""
-"Bir yapýlandýrma hatasý yüzünden bu sayfaya yönlendirildiniz. Hata "
-"ayýklamasýný asaðýda görebilirsiniz"
 
 #: ../../templates/show_test.inc:34
 msgid "CHECK"
@@ -1797,7 +1697,7 @@ msgstr ""
 
 #: ../../templates/show_test.inc:36
 msgid "STATUS"
-msgstr "Durum"
+msgstr ""
 
 #: ../../templates/show_test.inc:38
 msgid "DESCRIPTION"
@@ -1805,88 +1705,71 @@ msgstr ""
 
 #: ../../templates/show_test.inc:41
 msgid "PHP Version"
-msgstr "PHP Version"
+msgstr ""
 
 #: ../../templates/show_test.inc:56
 msgid ""
 "This tests to make sure that you are running a version of PHP that is known "
 "to work with Ampache."
 msgstr ""
-"Bu test PHP'nin Ampache ile uyuþan bir sürümünün kullanýldýðýný tasdik "
-"ediyor."
 
 #: ../../templates/show_test.inc:60
 msgid "Mysql for PHP"
-msgstr "Mysql for PHP"
+msgstr ""
 
 #: ../../templates/show_test.inc:75
 msgid ""
 "This test checks to see if you have the mysql extensions loaded for PHP. "
 "These are required for Ampache to work."
 msgstr ""
-"Bu testler PHP'nin mysql uzantýlarýnýn varlýðýný kontrol ediyor. Bu "
-"uzantýlar olmazsa Ampache calýþmaz."
 
 #: ../../templates/show_test.inc:79
 msgid "PHP Session Support"
-msgstr "PHP Session Support"
+msgstr ""
 
 #: ../../templates/show_test.inc:94
 msgid ""
 "This test checks to make sure that you have PHP session support enabled. "
 "Sessions are required for Ampache to work."
 msgstr ""
-"Bu testler PHP'nin oturum desteðinin varlýðýný kontrol ediyor. Oturum "
-"desteði olmazsa Ampache calýþmaz."
 
 #: ../../templates/show_test.inc:98
 msgid "PHP ICONV Support"
-msgstr "PHP ICONV desteði"
+msgstr ""
 
 #: ../../templates/show_test.inc:112
 msgid ""
 "This test checks to make sure you have Iconv support installed. Iconv "
 "support is not required for Ampache, but it is highly recommended"
 msgstr ""
-"Bu testler PHP'nin ICONV desteðinin varlýðýný kontrol ediyor. ICONV "
-"Ampache'nin çalýþmasý icin gerekli olmasada tavsiyemizdir"
 
 #: ../../templates/show_test.inc:116
 #: ../../templates/show_install_config.inc:88
-#, fuzzy
 msgid "Ampache.cfg.php Exists"
-msgstr "Ampache.cfg bulundu"
+msgstr ""
 
 #: ../../templates/show_test.inc:131
-#, fuzzy
 msgid ""
 "This attempts to read /config/ampache.cfg.php If this fails either the "
 "ampache.cfg.php is not in the correct locations or\n"
 "\tit is not currently readable by your webserver."
 msgstr ""
-"Þimdi ampache.cfg okunmaya calýþýlacak. Eger baþarýsýz olunursa ya doðru "
-"yerde deðildir yada  web sunucunuz tarafýndan okunamýyordur."
 
 #: ../../templates/show_test.inc:137
 #: ../../templates/show_install_config.inc:105
-#, fuzzy
 msgid "Ampache.cfg.php Configured?"
-msgstr "Ampache.cfg'yi yapýlandýrdýnýzmý ?"
+msgstr ""
 
 #: ../../templates/show_test.inc:154
-#, fuzzy
 msgid ""
 "This test makes sure that you have set all of the required configuration "
 "variables and that we are able to \n"
 "\tcompletely parse your config file"
 msgstr ""
-"Bu test gerekli tüm yapýlandýrma deðiþkenlerinin ayarlandýðýný ve "
-"yapýlandýrma dosyasýnýn ayrýþtýrýlabileceðini doðrulamak içindir"
 
 #: ../../templates/show_test.inc:160
-#, fuzzy
 msgid "Ampache.cfg.php Up to Date?"
-msgstr "Ampache.cfg güncel mi?"
+msgstr ""
 
 #: ../../templates/show_test.inc:180
 msgid "Ampache.cfg.php is missing the following:"
@@ -1902,40 +1785,39 @@ msgstr ""
 
 #: ../../templates/show_test.inc:196
 msgid "DB Connection"
-msgstr "Veritabaný baðlantýsý"
+msgstr ""
 
 #: ../../templates/show_test.inc:212
-#, fuzzy
 msgid ""
 "This attempts to connect to your database using the values from your ampache."
 "cfg.php"
-msgstr "Þimdi ampache.cfg'deki verilerle veritabanýnýza ulaþmaya calýsýlacak"
+msgstr ""
 
 #: ../../templates/show_localplay.inc:30
 msgid "Local Play Control"
-msgstr "Yerel Çalma Düzeni"
+msgstr "Yerel alma Dzeni"
 
 #: ../../templates/show_localplay.inc:35
 msgid "Playback"
-msgstr "Çal"
+msgstr "al"
 
 #: ../../templates/show_localplay.inc:39 ../../templates/list_header.inc:71
 #: ../../templates/show_mpdplay.inc:62
 msgid "Prev"
-msgstr "Önceki"
+msgstr ""
 
 #: ../../templates/show_localplay.inc:40 ../../templates/show_mpdplay.inc:63
 msgid "Stop"
-msgstr "Dur"
+msgstr ""
 
 #: ../../templates/show_localplay.inc:42 ../../templates/show_mpdplay.inc:65
 msgid "Pause"
-msgstr "Durakla"
+msgstr ""
 
 #: ../../templates/show_localplay.inc:43 ../../templates/list_header.inc:94
 #: ../../templates/show_mpdplay.inc:66
 msgid "Next"
-msgstr "Sonraki"
+msgstr ""
 
 #: ../../templates/show_localplay.inc:49
 msgid "Volume"
@@ -1943,7 +1825,7 @@ msgstr "Ses"
 
 #: ../../templates/show_localplay.inc:53 ../../templates/show_localplay.inc:54
 msgid "Increase Volume"
-msgstr "Ses aç"
+msgstr "Ses a"
 
 #: ../../templates/show_localplay.inc:55 ../../templates/show_localplay.inc:56
 msgid "Decrease Volume"
@@ -1951,55 +1833,53 @@ msgstr "Ses kapa"
 
 #: ../../templates/show_localplay.inc:62
 msgid "Clear queue"
-msgstr "Kuyruðu sil"
+msgstr "Kuyruu sil"
 
 #: ../../templates/add_catalog.inc:31
 msgid ""
 "In the form below enter either a local path (i.e. /data/music) or the URL to "
 "a remote Ampache installation (i.e http://theotherampache.com)"
 msgstr ""
-"Aþaðidaki forma ya yerel bir yol girin (örn. /data/muzik) yada uzak bir "
-"Ampache Sunucusunun adresini (örn. http://benimampachem.com)"
 
 #: ../../templates/add_catalog.inc:37
 msgid "Catalog Name"
-msgstr "Kalalog Ýsmi"
+msgstr ""
 
 #: ../../templates/add_catalog.inc:54
 msgid "Path"
-msgstr "Yol"
+msgstr ""
 
 #: ../../templates/add_catalog.inc:58
 msgid "Catalog Type"
-msgstr "Katalog türü"
+msgstr ""
 
 #: ../../templates/add_catalog.inc:62
 msgid "Remote"
-msgstr "uzaktan"
+msgstr ""
 
 #: ../../templates/add_catalog.inc:67
 msgid "ID3 Set Command"
-msgstr "ID3 ayarlama komutu"
+msgstr ""
 
 #: ../../templates/add_catalog.inc:71
 msgid "Filename Pattern"
-msgstr "Dosya adý deseni"
+msgstr ""
 
 #: ../../templates/add_catalog.inc:79 ../../templates/catalog.inc:101
 msgid "Gather Album Art"
-msgstr "Albüm kapaklarýný topla"
+msgstr ""
 
 #: ../../templates/add_catalog.inc:83
 msgid "ID3V2 Tags"
-msgstr "ID3V2 Etiketleri"
+msgstr ""
 
 #: ../../templates/add_catalog.inc:86
 msgid "Amazon"
-msgstr "Amazon"
+msgstr ""
 
 #: ../../templates/add_catalog.inc:89
 msgid "File Folder"
-msgstr "Dosya klasörü"
+msgstr ""
 
 #: ../../templates/add_catalog.inc:96
 msgid "Build Playlists from m3u Files"
@@ -2007,23 +1887,23 @@ msgstr ""
 
 #: ../../templates/add_catalog.inc:103
 msgid "Add Catalog"
-msgstr "Kataloðu ekle"
+msgstr ""
 
 #: ../../templates/list_flagged.inc:42 ../../templates/show_songs.inc:49
 msgid "Flag"
-msgstr "Ýþaret"
+msgstr ""
 
 #: ../../templates/list_flagged.inc:43
 msgid "New Flag"
-msgstr "Yeni iþaret"
+msgstr "Yeni iaret"
 
 #: ../../templates/list_flagged.inc:44
 msgid "Flagged by"
-msgstr "Ýþaretleyen"
+msgstr "aretleyen"
 
 #: ../../templates/list_flagged.inc:45
 msgid "ID3 Update"
-msgstr "ID3 Güncelleme"
+msgstr "ID3 Gncelleme"
 
 #: ../../templates/list_flagged.inc:69
 msgid "Accept"
@@ -2031,12 +1911,11 @@ msgstr "Kabul"
 
 #: ../../templates/list_flagged.inc:70
 msgid "Reject"
-msgstr "Red"
+msgstr ""
 
 #: ../../templates/header.inc:49
-#, fuzzy
 msgid "You are currently logged in as"
-msgstr "Kullanýcý adýnýz"
+msgstr ""
 
 #: ../../templates/header.inc:58
 msgid "Go!"
@@ -2044,31 +1923,27 @@ msgstr ""
 
 #: ../../templates/show_songs.inc:143
 msgid "Direct Link"
-msgstr "Doðrudan Eriþim"
+msgstr ""
 
 #: ../../templates/show_songs.inc:166
 msgid "Total"
-msgstr "Tüm"
+msgstr ""
 
 #: ../../templates/show_search_bar.inc:36 ../../templates/show_search.inc:54
 msgid "Search Ampache"
-msgstr "Ampache içinde ara"
+msgstr ""
 
 #: ../../templates/show_install_config.inc:41
 #: ../../templates/show_install.inc:41
-#, fuzzy
 msgid ""
 "Your webserver has read access to the /sql/ampache.sql file and the /config/"
 "ampache.cfg.php.dist file"
 msgstr ""
-"Web Sunucunuz /sql/ampache.sql ve /config/ampache.cfg.dist dosyalarýný "
-"okuyabilmeli "
 
 #: ../../templates/show_install_config.inc:49
 #: ../../templates/show_install.inc:51
-#, fuzzy
 msgid "Step 2 - Creating the Ampache.cfg.php file"
-msgstr "Ýkinci Adým - amapche.cfg'nin kurulmasý"
+msgstr ""
 
 #: ../../templates/show_install_config.inc:51
 msgid ""
@@ -2076,103 +1951,100 @@ msgid ""
 "out directly to your webserver. If access is denied it will prompt you to "
 "download the config file. Please put the downloaded config file in /config"
 msgstr ""
-"Bu adýmda temel veriler sorgulanýp, web sunucunuza ilk yazma denemesi "
-"yapýlacaktýr. Eðer baþarýsýz olunursa size sunulacak olan yapýlandýrma "
-"dosyasýný /config klasörüne kaydedin. "
 
 #: ../../templates/show_install_config.inc:60
 msgid "Web Path"
-msgstr "Web Yolu"
+msgstr ""
 
 #: ../../templates/show_install_config.inc:64
 #: ../../templates/show_install.inc:59
 msgid "Desired Database Name"
-msgstr "Düþünülen Veritabaný ismi"
+msgstr ""
 
 #: ../../templates/show_install_config.inc:68
 #: ../../templates/show_install.inc:63
 msgid "MySQL Hostname"
-msgstr "MySQL makine ismi"
+msgstr ""
 
 #: ../../templates/show_install_config.inc:72
 msgid "MySQL Username"
-msgstr "MySQL kullanýcý adý"
+msgstr ""
 
 #: ../../templates/show_install_config.inc:76
 msgid "MySQL Password"
-msgstr "MySQL parolasý"
+msgstr ""
 
 #: ../../templates/show_install_config.inc:81
 msgid "Write Config"
-msgstr "Yapýlandýrmayý kaydet"
+msgstr ""
 
 #: ../../templates/show_install_config.inc:125
 msgid "Check for Config"
-msgstr "Yapýlandýrma doðrula"
+msgstr ""
 
 #: ../../templates/show_album.inc:67
 msgid "Play Album"
-msgstr "Albümü çal"
+msgstr ""
 
 #: ../../templates/show_album.inc:68
 msgid "Play Random from Album"
-msgstr "Albümden rasgele çal"
+msgstr ""
 
 #: ../../templates/show_album.inc:69
 msgid "Reset Album Art"
-msgstr "Albüm kapaðý silinsin"
+msgstr ""
 
 #: ../../templates/show_album.inc:70
 msgid "Find Album Art"
-msgstr "Albüm kapaðý ara"
+msgstr ""
 
 #: ../../templates/show_preferences.inc:42
 msgid "Editing"
-msgstr "Düzenleme"
+msgstr ""
 
 #: ../../templates/show_preferences.inc:42
 msgid "preferences"
-msgstr "tercihler"
+msgstr ""
 
 #: ../../templates/show_preferences.inc:44
 msgid "Rebuild Preferences"
-msgstr "Tercihleri yeniden yapýlandýr"
+msgstr ""
 
 #: ../../templates/show_preferences.inc:73
 msgid "Update Preferences"
-msgstr "Tercihleri güncelle"
+msgstr ""
 
 #: ../../templates/show_preferences.inc:77
 msgid "Cancel"
-msgstr "Ýptal"
+msgstr ""
 
 #: ../../templates/userform.inc:25
 msgid "Adding a New User"
-msgstr "Kullanýcý ekle"
+msgstr ""
 
 #: ../../templates/userform.inc:29
 msgid "Editing existing User"
-msgstr "Kullanýcýyý düzenle"
+msgstr ""
 
 #: ../../templates/userform.inc:80
 msgid "User Access Level"
-msgstr "Kullanýcý eriþim düzeyi"
+msgstr ""
 
 #: ../../templates/userform.inc:96
 msgid "Add User"
-msgstr "Kullanýcý ekle"
+msgstr ""
 
 #: ../../templates/userform.inc:101
 msgid "Update User"
-msgstr "Kullanýcý güncelle"
+msgstr ""
 
 #: ../../templates/show_random_play.inc:34
 msgid "Item count"
-msgstr "Öðe sayýsý"
+msgstr ""
 
 #: ../../templates/show_random_play.inc:49
 msgid "From genre"
-msgstr "Kategoriden"
+msgstr ""
 
 #: ../../templates/show_random_play.inc:58
 msgid "Standard"
@@ -2180,11 +2052,11 @@ msgstr ""
 
 #: ../../templates/show_random_play.inc:59
 msgid "Favor Unplayed"
-msgstr "Çalýnmamýþlardan"
+msgstr ""
 
 #: ../../templates/show_random_play.inc:61
 msgid "Full Artist"
-msgstr "Tüm Sanatçýlar"
+msgstr ""
 
 #: ../../templates/show_random_play.inc:66
 msgid "from catalog"
@@ -2192,7 +2064,7 @@ msgstr "Katalogdan"
 
 #: ../../templates/show_random_play.inc:75
 msgid "Play Random Songs"
-msgstr "Rasgele þarký çal"
+msgstr "Rasgele ark al"
 
 #: ../../templates/show_install.inc:49
 msgid ""
@@ -2200,26 +2072,22 @@ msgid ""
 "mysql account with database creation rights. This step may take a while "
 "depending upon the speed of your computer"
 msgstr ""
-"Bu adýmda Ampache veritabaný oluþturuluyor. Bunun için veritabaný kurma izni "
-"olan bir mysql giriþi gerekli. Bu adýmýn süresi bilgisayarýnýzýn hýzýna "
-"baðlýdýr "
 
 #: ../../templates/show_install.inc:67
 msgid "MySQL Administrative Username"
-msgstr "MySQL yönetici ismi"
+msgstr ""
 
 #: ../../templates/show_install.inc:71
 msgid "MySQL Administrative Password"
-msgstr "MySQL yönetici parolasý"
+msgstr ""
 
 #: ../../templates/show_install.inc:75
 msgid "Create Database User for New Database"
 msgstr ""
 
 #: ../../templates/show_install.inc:80
-#, fuzzy
 msgid "Ampache Database Username"
-msgstr "Düþünülen Veritabaný ismi"
+msgstr ""
 
 #: ../../templates/show_install.inc:84
 msgid "Ampache Database User Password"
@@ -2227,36 +2095,34 @@ msgstr ""
 
 #: ../../templates/show_install.inc:89
 msgid "Insert Database"
-msgstr "Veritabanýný ekle"
+msgstr ""
 
 #: ../../templates/show_add_access.inc:31
 msgid "Add Access for a Host"
-msgstr "Eriþim listesine makine ekle"
+msgstr ""
 
 #: ../../templates/show_add_access.inc:33
 msgid ""
 "Use the form below to add a host that you want to have access to your "
 "Ampache catalog."
 msgstr ""
-"Aþaðýdaki formu kullanarak Ampache kataloðuna eriþmesini istediðiniz "
-"makineleri ekleyebilirsiniz."
 
 #: ../../templates/show_add_access.inc:46
 msgid "Start IP Address"
-msgstr "Ýlk ÝP-Adresi"
+msgstr ""
 
 #: ../../templates/show_add_access.inc:52
 msgid "End IP Address"
-msgstr "Son ÝP-Adresi"
+msgstr ""
 
 #: ../../templates/show_add_access.inc:58
 #: ../../templates/show_access_list.inc:50
 msgid "Level"
-msgstr "Düzey"
+msgstr ""
 
 #: ../../templates/show_add_access.inc:72
 msgid "Add Host"
-msgstr "Makine ekle"
+msgstr ""
 
 #: ../../templates/catalog.inc:30
 msgid ""
@@ -2264,58 +2130,55 @@ msgid ""
 "\"http://php.oregonstate.edu/iconv\">Iconv</a> for information on getting "
 "ICONV"
 msgstr ""
-"Hata: ICONV bulunamadý, ID3V2 etiketleri doðru þekilde ithal edilemeyecek. "
-"Bu adresten <a href=\"http://php.oregonstate.edu/iconv\">Iconv</a> ICONV "
-"hakkýnda bilgi alabilirsiniz."
 
 #: ../../templates/catalog.inc:39
 msgid "Update Catalogs"
-msgstr "Kataloglarý güncelle"
+msgstr ""
 
 #: ../../templates/catalog.inc:65
 msgid "Fast Add"
-msgstr "Çabuk ekle"
+msgstr ""
 
 #: ../../templates/catalog.inc:72
 msgid "Fast Update"
-msgstr "Çabuk güncelle"
+msgstr ""
 
 #: ../../templates/catalog.inc:85
 msgid "You don't have any catalogs."
-msgstr "Sizin hiç kataloðunuz yok."
+msgstr ""
 
 #: ../../templates/catalog.inc:96
 msgid "Show Duplicate Songs"
-msgstr "Duble þarkýlarý görüntüle"
+msgstr ""
 
 #: ../../templates/catalog.inc:97
 msgid "Show Disabled Songs"
-msgstr "Edilgenleþtirilmiþ þarkýlarý görüntüle"
+msgstr ""
 
 #: ../../templates/catalog.inc:98
 msgid "Clear Catalog Stats"
-msgstr "Katalog istatistiklerini sil"
+msgstr ""
 
 #: ../../templates/catalog.inc:100
 msgid "Dump Album Art"
-msgstr "Albüm kapaðý boþalt"
+msgstr ""
 
 #: ../../templates/catalog.inc:102
 msgid "View flagged songs"
-msgstr "Ýþaretlenmiþ þarkýlarý görüntüle"
+msgstr ""
 
 #: ../../templates/catalog.inc:103
 msgid "Catalog Tools"
-msgstr "Katalog araçlarý"
+msgstr ""
 
 #: ../../templates/menu.inc:73 ../../templates/menu.inc:79
 msgid "Account"
-msgstr "Hesap"
+msgstr ""
 
 #: ../../templates/menu.inc:74 ../../templates/menu.inc:80
 #: ../../templates/show_users.inc:64 ../../templates/show_users.inc:112
 msgid "Stats"
-msgstr "Ýstatistikler"
+msgstr ""
 
 #: ../../templates/show_upload.inc:30
 msgid "Uploading Music to Ampache"
@@ -2327,42 +2190,39 @@ msgstr ""
 
 #: ../../templates/show_upload.inc:72
 msgid "max_upload_size"
-msgstr "max_upload_size (azami_yükleme_hacmi)"
+msgstr ""
 
 #: ../../templates/show_users.inc:40
 msgid "Fullname"
-msgstr "Tam Ýsim"
+msgstr ""
 
 #: ../../templates/show_users.inc:48
 msgid "Last Seen"
-msgstr "Son giriþ"
+msgstr ""
 
 #: ../../templates/show_users.inc:53
-#, fuzzy
 msgid "Registration Date"
-msgstr "Kullanýcý kaydý"
+msgstr ""
 
 #: ../../templates/show_users.inc:61 ../../templates/show_users.inc:107
 msgid "Prefs"
-msgstr "Tercihler"
+msgstr ""
 
 #: ../../templates/show_users.inc:67
-#, fuzzy
 msgid "Access"
-msgstr "Eriþim Ayarý"
+msgstr ""
 
 #: ../../templates/show_users.inc:73
 msgid "On-line"
-msgstr "Çevrimiçi"
+msgstr ""
 
 #: ../../templates/show_users.inc:126
 msgid "delete"
-msgstr "sil"
+msgstr ""
 
 #: ../../templates/list_duplicates.inc:28
-#, fuzzy
 msgid "Duplicate Songs"
-msgstr "Duble þarkýlarý görüntüle"
+msgstr ""
 
 #: ../../templates/list_duplicates.inc:35
 msgid "Length"
@@ -2382,54 +2242,51 @@ msgstr ""
 #: ../../templates/show_login_form.inc:49
 #: ../../templates/show_login_form.inc:63
 msgid "Login"
-msgstr "Giriþ"
+msgstr ""
 
 #: ../../templates/show_login_form.inc:59
 msgid "Remember Me"
-msgstr "Beni hatýrla"
+msgstr ""
 
 #: ../../templates/show_login_form.inc:72
-#, fuzzy
 msgid "Register"
-msgstr "Kullanýcý kaydý"
+msgstr ""
 
 #: ../../templates/show_access_list.inc:34
 msgid "Host Access to Your Catalog"
-msgstr "Kataloða makine eriþimi"
+msgstr ""
 
 #: ../../templates/show_access_list.inc:43
 msgid "Add Entry"
-msgstr "Giriþ ekle"
+msgstr ""
 
 #: ../../templates/show_access_list.inc:48
 msgid "Start Address"
-msgstr "Ýlk Adres"
+msgstr ""
 
 #: ../../templates/show_access_list.inc:49
 msgid "End Address"
-msgstr "Son Adres"
+msgstr ""
 
 #: ../../templates/show_access_list.inc:65
 msgid "Revoke"
-msgstr "Ýptal"
+msgstr ""
 
 #: ../../templates/show_search.inc:57
 msgid "Keywords"
 msgstr ""
 
 #: ../../templates/show_search.inc:102
-#, fuzzy
 msgid "Played"
-msgstr "Çal"
+msgstr ""
 
 #: ../../templates/show_search.inc:110
-#, fuzzy
 msgid "Min Bitrate"
-msgstr "Ýkil hýzý"
+msgstr ""
 
 #: ../../templates/show_search.inc:132
 msgid "Object Type"
-msgstr "Nesne türü"
+msgstr "Nesne tr"
 
 #: ../../templates/show_search.inc:138
 #, fuzzy
@@ -2445,9 +2302,8 @@ msgid "AND"
 msgstr ""
 
 #: ../../templates/show_search.inc:150
-#, fuzzy
 msgid "Method"
-msgstr "Kip"
+msgstr ""
 
 #: ../../templates/show_search.inc:153
 msgid "Fuzzy"
@@ -2479,11 +2335,11 @@ msgstr ""
 
 #: ../../templates/show_mpdplay.inc:39
 msgid "MPD Play Control"
-msgstr "MPD Kontrol"
+msgstr ""
 
 #: ../../templates/show_mpdplay.inc:100
 msgid "Loop"
-msgstr "Döngü"
+msgstr ""
 
 #: ../../templates/show_mpdplay.inc:107 ../../templates/show_mpdplay.inc:120
 msgid "On"
@@ -2494,9 +2350,8 @@ msgid "Off"
 msgstr ""
 
 #: ../../templates/show_mpdplay.inc:134
-#, fuzzy
 msgid "Now Playing :"
-msgstr "Þu anda çalan"
+msgstr ""
 
 #: ../../templates/show_mpdplay.inc:163
 msgid "On Deck "
@@ -2508,170 +2363,164 @@ msgstr ""
 
 #: ../../templates/show_artist.inc:36
 msgid "Select"
-msgstr "Seçim"
+msgstr ""
 
 #: ../../templates/show_artist.inc:38
 msgid "Cover"
-msgstr "Kapak"
+msgstr ""
 
 #: ../../templates/show_artist.inc:39
 msgid "Album Name"
-msgstr "Albüm adý"
+msgstr ""
 
 #: ../../templates/show_artist.inc:40
 msgid "Album Year"
-msgstr "Albüm yýlý"
+msgstr ""
 
 #: ../../templates/show_artist.inc:41
 msgid "Total Tracks"
-msgstr "Tüm parçalar"
+msgstr ""
 
 #: ../../templates/show_big_art.inc:31
-#, fuzzy
 msgid "Album Art"
-msgstr "Albüm kapaðý ara"
+msgstr ""
 
 #: ../../templates/show_big_art.inc:35
 msgid "Click to close window"
 msgstr ""
 
-#~ msgid "No Results Found"
-#~ msgstr "Sonuç bulunamadý"
+msgid "No Results Found"
+msgstr "Sonu bulunamad"
 
-#~ msgid "New"
-#~ msgstr "Yeni"
+msgid "New"
+msgstr "Yeni"
 
-#~ msgid "View All"
-#~ msgstr "Hepsini görüntüle"
+msgid "View All"
+msgstr "Hepsini grntle"
 
-#~ msgid "Public"
-#~ msgstr "Genel"
+msgid "Public"
+msgstr ""
 
-#~ msgid "Your Private"
-#~ msgstr "Size özel"
+msgid "Your Private"
+msgstr "Size zel"
 
-#~ msgid "Other Private"
-#~ msgstr "Diðerlerine özel"
+msgid "Other Private"
+msgstr "Dierlerine zel"
 
-#~ msgid "There are no playlists of this type"
-#~ msgstr "Bu çeþit bir þarký listesi bulunamadý"
+msgid "There are no playlists of this type"
+msgstr "Bu eit bir ark listesi bulunamad"
 
-#~ msgid "All songs by"
-#~ msgstr "Tüm þarkýlarý"
+msgid "All songs by"
+msgstr "Tm arklar"
 
-#, fuzzy
-#~ msgid "Edit Playlist"
-#~ msgstr "Þarký listesi"
+msgid "Edit Playlist"
+msgstr ""
 
-#, fuzzy
-#~ msgid "Play Random"
-#~ msgstr "Rasgele þarký çal"
+msgid "Play Random"
+msgstr ""
 
-#~ msgid "Welcome to"
-#~ msgstr "Hoþgeldiniz"
+msgid "Welcome to"
+msgstr "Hogeldiniz"
 
-#~ msgid "Album Art Located"
-#~ msgstr "Albüm kapaðý bulundu"
+msgid "Album Art Located"
+msgstr "Albm kapa bulundu"
 
-#~ msgid ""
-#~ "Album Art information has been located in Amazon. If incorrect, click "
-#~ "\"Reset Album Art\" below to remove the artwork."
-#~ msgstr ""
-#~ "Albüm kapaðý Amazon'da bulundu. Doðru olmadýðý takdirde \"Albüm kapaðý "
-#~ "silinsin\" i týklayarak bilgileri silin."
+msgid ""
+"Album Art information has been located in Amazon. If incorrect, click "
+"\"Reset Album Art\" below to remove the artwork."
+msgstr ""
+"Albm kapa Amazon'da bulundu. Doru olmad takdirde \"Albm kapa silinsin\" i "
+"tklayarak bilgileri silin."
 
-#~ msgid "Type"
-#~ msgstr "Türü"
+msgid "Type"
+msgstr ""
 
-#~ msgid "An Unknown Error has occured."
-#~ msgstr "Bilinmeyen bir hata oluþtu."
+msgid "An Unknown Error has occured."
+msgstr "Bilinmeyen bir hata olutu."
 
-#~ msgid "Successfully-Quarantined"
-#~ msgstr "Baþarýyla karantinaya alýndý"
+msgid "Successfully-Quarantined"
+msgstr "Baaryla karantinaya alnd"
 
-#~ msgid "Successfully-Cataloged"
-#~ msgstr "Baþarýyla kataloglaþtýrýldý"
+msgid "Successfully-Cataloged"
+msgstr "Baaryla kataloglatrld"
 
-#~ msgid "Quarantined"
-#~ msgstr "Karantinaya alýnmýþ"
+msgid "Quarantined"
+msgstr "Karantinaya alnm"
 
-#~ msgid "All Albums"
-#~ msgstr "Tüm albümler"
+msgid "All Albums"
+msgstr "Tm albmler"
 
-#~ msgid "<u>S</u>how all albums"
-#~ msgstr "Tüm albümleri göster"
+msgid "<u>S</u>how all albums"
+msgstr "Tm albmleri gster"
 
-#~ msgid "Albums with no artwork"
-#~ msgstr "Kapaksýz Albümler"
+msgid "Albums with no artwork"
+msgstr "Kapaksz Albmler"
 
-#~ msgid "Select a starting letter or Show all"
-#~ msgstr "Baþlangýç harfini seç yada hepsini görüntüle"
+msgid "Select a starting letter or Show all"
+msgstr "Balang harfini se yada hepsini grntle"
 
-#~ msgid ""
-#~ "Your webserver configured so that your config directory is not visable to "
-#~ "the web"
-#~ msgstr ""
-#~ "Web Sunucunuz yapýlandýrma klasörünüzün görünmeyeceði þekilde ayarlanmýþ "
-#~ "olmalý"
+msgid ""
+"Your webserver configured so that your config directory is not visable to "
+"the web"
+msgstr "Web Sunucunuz yaplandrma klasrnzn grnmeyecei ekilde ayarlanm olmal"
 
-#~ msgid "View Limit"
-#~ msgstr "Sýnýrlarý görüntüle"
+msgid "View Limit"
+msgstr "Snrlar grntle"
 
-#~ msgid "Loop is off"
-#~ msgstr "Döngü kapalý"
+msgid "Loop is off"
+msgstr "Dng kapal"
 
-#~ msgid "Loop is on"
-#~ msgstr "Döngü açýk"
+msgid "Loop is on"
+msgstr "Dng ak"
 
-#~ msgid "refresh now"
-#~ msgstr "þimdi yenile"
+msgid "refresh now"
+msgstr "imdi yenile"
 
-#~ msgid "clear"
-#~ msgstr "sil"
+msgid "clear"
+msgstr "sil"
 
-#~ msgid "Create/Modify User Accounts for Ampache"
-#~ msgstr "Ampache kullanýcý hesabý ekle/güncelle"
+msgid "Create/Modify User Accounts for Ampache"
+msgstr "Ampache kullanc hesab ekle/gncelle"
 
-#~ msgid "Mail your users to notfiy them of changes"
-#~ msgstr "Kullanýcýlara mail ile yenilikleri bildir"
+msgid "Mail your users to notfiy them of changes"
+msgstr "Kullanclara mail ile yenilikleri bildir"
 
-#~ msgid "Create/Update/Clean your catalog here"
-#~ msgstr "Buradan katalog ekle/güncelleþtir/sil"
+msgid "Create/Update/Clean your catalog here"
+msgstr "Buradan katalog ekle/gncelletir/sil"
 
-#~ msgid "Modify Site-wide preferences"
-#~ msgstr "Site genelinde geçerli olan tercihleri düzenle"
+msgid "Modify Site-wide preferences"
+msgstr "Site genelinde geerli olan tercihleri dzenle"
 
-#~ msgid "Modify Access List Permissions"
-#~ msgstr "Eriþim listesindeki izinleri düzenle"
+msgid "Modify Access List Permissions"
+msgstr "Eriim listesindeki izinleri dzenle"
 
-#~ msgid "Must have access_control=true in ampache.cfg"
-#~ msgstr "Ampache.cfg'de 'access_control=true' nun bulunmasý zorunludur"
+msgid "Must have access_control=true in ampache.cfg"
+msgstr "Ampache.cfg'de 'access_control=true' nun bulunmas zorunludur"
 
-#~ msgid "Please Ensure All Files Are Tagged Correctly"
-#~ msgstr "Lütfen tüm dosyalarýn doðru etiketlendirilmesini saðlayýn"
+msgid "Please Ensure All Files Are Tagged Correctly"
+msgstr "Ltfen tm dosyalarn doru etiketlendirilmesini salayn"
 
-#~ msgid ""
-#~ "Ampache relies on id3 tags to sort data.  If your file is not tagged it "
-#~ "may be deleted."
-#~ msgstr ""
-#~ "Ampache sýralama için ID3 etiketlerini kullanýr. Dosyanýz etiketsizse "
-#~ "silinebilir."
+msgid ""
+"Ampache relies on id3 tags to sort data.  If your file is not tagged it may "
+"be deleted."
+msgstr ""
+"Ampache sralama iin ID3 etiketlerini kullanr. Dosyanz etiketsizse "
+"silinebilir."
 
-#~ msgid ""
-#~ "Your webserver configured so that <ampache_root>/docs is your webroot"
-#~ msgstr "Web sunucunuz <ampache_root>/docs 'u temel olarak kullanmalý"
+msgid "Your webserver configured so that <ampache_root>/docs is your webroot"
+msgstr "Web sunucunuz <ampache_root>/docs 'u temel olarak kullanmal"
 
-#~ msgid "edit"
-#~ msgstr "düzenle"
+msgid "edit"
+msgstr "dzenle"
 
-#~ msgid "prefs"
-#~ msgstr "tercihler"
+msgid "prefs"
+msgstr "tercihler"
 
-#~ msgid "set to user"
-#~ msgstr "Kullanýcý haline getir"
+msgid "set to user"
+msgstr "Kullanc haline getir"
 
-#~ msgid "disable"
-#~ msgstr "edilgenleþtir"
+msgid "disable"
+msgstr "edilgenletir"
 
-#~ msgid "set to admin"
-#~ msgstr "'admin' yap"
+msgid "set to admin"
+msgstr "'admin' yap"

@@ -29,8 +29,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 	</div>
 	<div class="np_cell">
 	<a title="<?php echo scrub_out($song->f_album); ?>" href="<?php echo $web_path; ?>/albums.php?action=show&amp;album=<?php echo $song->album; ?>">
-		<?php echo scrub_out($song->f_album); ?>
-	</a> /
+		<?php echo scrub_out($song->f_album); ?></a> /
 	<a title="<?php echo scrub_out($song->f_artist); ?>" href="<?php echo $web_path; ?>/artists.php?action=show&amp;artist=<?php echo $song->artist; ?>">
 		<?php echo scrub_out($song->f_artist); ?>
 	</a>

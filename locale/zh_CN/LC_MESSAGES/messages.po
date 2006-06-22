@@ -6,207 +6,207 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: v1.0a\n"
+"Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2006-01-07 22:47-0800\n"
-"PO-Revision-Date: 2005-07-11 09:08-0600\n"
-"Last-Translator: Hongyi_Gao <hongyi_gao@hotmail.com>\n"
-"Language-Team: CHINESE <hongyi_gao@hotmail.com>\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=GBK\n"
+"Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
 #: ../../play/index.php:50
 msgid "Session Expired: please log in again at"
-msgstr "会话过期：请重新登录"
+msgstr ""
 
 #: ../../lib/class/catalog.class.php:281 ../../lib/class/catalog.class.php:566
 #: ../../lib/class/album.class.php:263
 msgid "Error: Unable to open"
-msgstr "错误：无法打开"
+msgstr ""
 
 #: ../../lib/class/catalog.class.php:304
 msgid "Error: Unable to change to directory"
-msgstr "错误：无法操作目录"
+msgstr ""
 
 #: ../../lib/class/catalog.class.php:330
 msgid "Error: Unable to get filesize for"
-msgstr "错误：无法获得文件大小"
+msgstr ""
 
 #: ../../lib/class/catalog.class.php:365
 msgid "Added"
-msgstr "已添加"
+msgstr ""
 
 #: ../../lib/class/catalog.class.php:377
 msgid "is not readable by ampache"
-msgstr "无法读取"
+msgstr ""
 
 #: ../../lib/class/catalog.class.php:441
 msgid "Found in ID3"
-msgstr "在ID3中找到"
+msgstr ""
 
 #: ../../lib/class/catalog.class.php:445
 msgid "Found on Amazon"
-msgstr "在Amazon找到"
+msgstr ""
 
 #: ../../lib/class/catalog.class.php:449
 msgid "Found in Folder"
-msgstr "在目录里找到"
+msgstr ""
 
 #: ../../lib/class/catalog.class.php:453
 msgid "Found"
-msgstr "找到"
+msgstr ""
 
 #: ../../lib/class/catalog.class.php:456
 msgid "Not Found"
-msgstr "没有找到"
+msgstr ""
 
 #: ../../lib/class/catalog.class.php:464
 msgid "Searched"
-msgstr "已搜索"
+msgstr ""
 
 #: ../../lib/class/catalog.class.php:622
 msgid "Starting Dump Album Art"
-msgstr "开始导出歌曲歌手"
+msgstr ""
 
 #: ../../lib/class/catalog.class.php:642
 msgid "Written"
-msgstr "已写入"
+msgstr ""
 
 #: ../../lib/class/catalog.class.php:651
 msgid "Error unable to open file for writting"
-msgstr "错误：无法写入文件"
+msgstr ""
 
 #: ../../lib/class/catalog.class.php:658
 msgid "Album Art Dump Complete"
-msgstr "歌曲歌手导出结束"
+msgstr ""
 
 #: ../../lib/class/catalog.class.php:659 ../../artists.php:64
 #: ../../albums.php:153
 msgid "Return"
-msgstr "返回"
+msgstr ""
 
 #: ../../lib/class/catalog.class.php:728
 msgid "Starting Catalog Build"
-msgstr "开始重建曲库"
+msgstr ""
 
 #: ../../lib/class/catalog.class.php:733
 msgid "Running Remote Sync"
-msgstr "运行远程同步"
+msgstr ""
 
 #: ../../lib/class/catalog.class.php:745 ../../lib/class/catalog.class.php:904
 msgid "Added Playlist From"
-msgstr "添加自定义歌曲列表"
+msgstr ""
 
 #: ../../lib/class/catalog.class.php:752 ../../lib/class/catalog.class.php:913
 #: ../../admin/catalog.php:258
 msgid "Starting Album Art Search"
-msgstr "开始搜索歌曲歌手"
+msgstr ""
 
 #: ../../lib/class/catalog.class.php:762
 msgid "Catalog Finished"
-msgstr "曲库建立结束"
+msgstr ""
 
 #: ../../lib/class/catalog.class.php:762 ../../lib/class/catalog.class.php:932
 msgid "Total Time"
-msgstr "总时间"
+msgstr ""
 
 #: ../../lib/class/catalog.class.php:762 ../../lib/class/catalog.class.php:933
 msgid "Total Songs"
-msgstr "全部歌曲"
+msgstr ""
 
 #: ../../lib/class/catalog.class.php:763 ../../lib/class/catalog.class.php:933
 msgid "Songs Per Seconds"
-msgstr "首歌／秒"
+msgstr ""
 
 #: ../../lib/class/catalog.class.php:797
 #: ../../lib/class/catalog.class.php:1512
 msgid "Updated"
-msgstr "已更新"
+msgstr ""
 
 #: ../../lib/class/catalog.class.php:804
 msgid "No Update Needed"
-msgstr "不用更新"
+msgstr ""
 
 #: ../../lib/class/catalog.class.php:885
 msgid "Starting New Song Search on"
-msgstr "开始搜索新歌曲"
+msgstr ""
 
 #: ../../lib/class/catalog.class.php:885
 msgid "catalog"
-msgstr "曲库"
+msgstr ""
 
 #: ../../lib/class/catalog.class.php:889
 msgid "Running Remote Update"
-msgstr "运行远程更新"
+msgstr ""
 
 #: ../../lib/class/catalog.class.php:932
 msgid "Catalog Update Finished"
-msgstr "曲库更新结束"
+msgstr ""
 
 #: ../../lib/class/catalog.class.php:952 ../../lib/mpd.php:43
 #: ../../lib/mpd.php:52 ../../albums.php:74
 msgid "Error"
-msgstr "错误"
+msgstr ""
 
 #: ../../lib/class/catalog.class.php:952
 msgid "Unable to load XMLRPC library, make sure XML-RPC is enabled"
-msgstr "无法载入XMLRPC库，请确认是否允许XML-RPC"
+msgstr ""
 
 #: ../../lib/class/catalog.class.php:991
 #: ../../lib/class/catalog.class.php:1042
 msgid "Error connecting to"
-msgstr "错误：连接"
+msgstr ""
 
 #: ../../lib/class/catalog.class.php:991
 #: ../../lib/class/catalog.class.php:1042
 msgid "Code"
-msgstr "代码"
+msgstr ""
 
 #: ../../lib/class/catalog.class.php:991
 #: ../../lib/class/catalog.class.php:1042
 msgid "Reason"
-msgstr "原因"
+msgstr ""
 
 #: ../../lib/class/catalog.class.php:1007
 msgid "Completed updating remote catalog(s)"
-msgstr "远程曲库更新结束"
+msgstr ""
 
 #: ../../lib/class/catalog.class.php:1138
 msgid "Checking"
-msgstr "检查"
+msgstr ""
 
 #: ../../lib/class/catalog.class.php:1196
 msgid "Catalog Clean Done"
-msgstr "曲库被清空"
+msgstr ""
 
 #: ../../lib/class/catalog.class.php:1196
 msgid "files removed"
-msgstr "文件被删除"
+msgstr ""
 
 #: ../../lib/class/catalog.class.php:1469
 msgid "Updating the"
-msgstr "更新"
+msgstr ""
 
 #: ../../lib/class/catalog.class.php:1469 ../../templates/sidebar.inc.php:31
 msgid "Catalog"
-msgstr "曲库"
+msgstr ""
 
 #: ../../lib/class/catalog.class.php:1470
 msgid "songs found checking tag information."
-msgstr "找到歌曲检查标记信息"
+msgstr ""
 
 #: ../../lib/class/catalog.class.php:1520
 msgid " FOUND"
-msgstr "找到"
+msgstr ""
 
 #: ../../lib/class/catalog.class.php:1521
 msgid "Searching for new Album Art"
-msgstr "查找新歌曲歌手"
+msgstr ""
 
 #: ../../lib/class/catalog.class.php:1525
 msgid "Album Art Already Found"
-msgstr "已找到歌曲歌手"
+msgstr ""
 
 #: ../../lib/class/artist.class.php:223
 msgid "Error: Name Identical"
@@ -215,7 +215,7 @@ msgstr ""
 #: ../../lib/class/song.class.php:275 ../../lib/duplicates.php:113
 #: ../../templates/show_search.inc:66
 msgid "Title"
-msgstr "歌名"
+msgstr ""
 
 #: ../../lib/class/song.class.php:275 ../../lib/class/song.class.php:279
 #: ../../lib/class/song.class.php:283 ../../lib/class/song.class.php:287
@@ -224,34 +224,34 @@ msgstr "歌名"
 #: ../../lib/class/song.class.php:309 ../../lib/class/song.class.php:313
 #: ../../lib/class/song.class.php:317 ../../lib/class/song.class.php:322
 msgid "updated to"
-msgstr "更新"
+msgstr ""
 
 #: ../../lib/class/song.class.php:279 ../../templates/show_uploads.inc:39
 #: ../../templates/show_songs.inc:47 ../../templates/list_duplicates.inc:36
 msgid "Bitrate"
-msgstr "码率"
+msgstr ""
 
 #: ../../lib/class/song.class.php:283
 msgid "Rate"
-msgstr "级别"
+msgstr ""
 
 #: ../../lib/class/song.class.php:287
 msgid "Mode"
-msgstr "模式"
+msgstr ""
 
 #: ../../lib/class/song.class.php:291 ../../templates/show_uploads.inc:38
 #: ../../templates/show_mpdpl.inc:66 ../../templates/show_songs.inc:45
 msgid "Time"
-msgstr "时间"
+msgstr ""
 
 #: ../../lib/class/song.class.php:295 ../../templates/show_mpdpl.inc:65
 #: ../../templates/show_songs.inc:39 ../../templates/show_songs.inc:44
 msgid "Track"
-msgstr "音轨"
+msgstr ""
 
 #: ../../lib/class/song.class.php:299
 msgid "Filesize"
-msgstr "文件大小"
+msgstr ""
 
 #: ../../lib/class/song.class.php:304
 #: ../../templates/show_get_albumart.inc.php:33
@@ -261,7 +261,7 @@ msgstr "文件大小"
 #: ../../templates/show_albums.inc:70 ../../templates/list_duplicates.inc:33
 #: ../../templates/show_search.inc:71
 msgid "Artist"
-msgstr "歌手"
+msgstr ""
 
 #: ../../lib/class/song.class.php:309
 #: ../../templates/show_get_albumart.inc.php:41
@@ -270,17 +270,17 @@ msgstr "歌手"
 #: ../../templates/show_albums.inc:68 ../../templates/list_duplicates.inc:34
 #: ../../templates/show_search.inc:78
 msgid "Album"
-msgstr "专辑"
+msgstr ""
 
 #: ../../lib/class/song.class.php:313 ../../templates/show_albums.inc:43
 #: ../../templates/show_albums.inc:73 ../../templates/show_search.inc:90
 msgid "Year"
-msgstr "年代"
+msgstr ""
 
 #: ../../lib/class/song.class.php:317 ../../templates/flag.inc:66
 #: ../../templates/list_flagged.inc:46
 msgid "Comment"
-msgstr "说明"
+msgstr ""
 
 #: ../../lib/class/song.class.php:322 ../../templates/show_genre.inc.php:32
 #: ../../templates/show_genres.inc.php:36 ../../templates/sidebar.inc.php:37
@@ -288,64 +288,62 @@ msgstr "说明"
 #: ../../templates/show_songs.inc:48 ../../templates/show_browse_menu.inc:37
 #: ../../templates/show_search.inc:83
 msgid "Genre"
-msgstr "类别"
+msgstr ""
 
 #: ../../lib/class/stream.class.php:198
-#, fuzzy
 msgid "Opened for writing"
-msgstr "准备写入"
+msgstr ""
 
 #: ../../lib/class/stream.class.php:203
 msgid "Error, cannot write"
-msgstr "错误：无法写入"
+msgstr ""
 
 #: ../../lib/class/stream.class.php:214
 msgid "Error, cannot write song in file"
-msgstr "错误：无法写入文件"
+msgstr ""
 
 #: ../../lib/class/stream.class.php:220
 msgid "Closed after write"
-msgstr "关闭"
+msgstr ""
 
 #: ../../lib/class/genre.class.php:278
-#, fuzzy
 msgid "Show Genres starting with"
-msgstr "<u>S</u>显示歌手名字前几位字符是"
+msgstr ""
 
 #: ../../lib/class/album.class.php:151
 msgid "Various"
-msgstr "群星"
+msgstr ""
 
 #: ../../lib/duplicates.php:102
 msgid "Find Duplicates"
-msgstr "查找重复文件"
+msgstr ""
 
 #: ../../lib/duplicates.php:105
 msgid "Search Type"
-msgstr "搜索方式"
+msgstr ""
 
 #: ../../lib/duplicates.php:119
 msgid "Artist and Title"
-msgstr "歌手和歌名"
+msgstr ""
 
 #: ../../lib/duplicates.php:124
 msgid "Artist, Album and Title"
-msgstr "歌手，歌名和专辑"
+msgstr ""
 
 #: ../../lib/duplicates.php:132 ../../templates/sidebar.inc.php:97
 #: ../../templates/sidebar.inc.php:103 ../../templates/show_search_bar.inc:41
 #: ../../templates/menu.inc:39 ../../templates/show_search.inc:171
 msgid "Search"
-msgstr "搜索"
+msgstr ""
 
 #: ../../lib/preferences.php:252 ../../templates/show_users.inc:118
 msgid "Enable"
-msgstr "允许"
+msgstr ""
 
 #: ../../lib/preferences.php:253 ../../templates/show_users.inc:121
 #: ../../templates/list_duplicates.inc:31
 msgid "Disable"
-msgstr "禁止"
+msgstr ""
 
 #: ../../lib/preferences.php:265 ../../templates/add_catalog.inc:61
 msgid "Local"
@@ -393,7 +391,7 @@ msgstr ""
 
 #: ../../lib/mpd.php:43 ../../lib/mpd.php:52
 msgid "Could not add"
-msgstr "无法添加"
+msgstr ""
 
 #: ../../lib/general.lib.php:675
 msgid "Not Enough Data"
@@ -401,16 +399,15 @@ msgstr ""
 
 #: ../../lib/general.lib.php:897 ../../lib/general.lib.php:908
 msgid "English"
-msgstr "英文"
+msgstr ""
 
 #: ../../lib/general.lib.php:907
 msgid "German"
-msgstr "德文"
+msgstr ""
 
 #: ../../lib/general.lib.php:909
-#, fuzzy
 msgid "British English"
-msgstr "英文"
+msgstr ""
 
 #: ../../lib/general.lib.php:910
 msgid "Spanish"
@@ -418,7 +415,7 @@ msgstr ""
 
 #: ../../lib/general.lib.php:911
 msgid "French"
-msgstr "法文"
+msgstr ""
 
 #: ../../lib/general.lib.php:912
 msgid "Italian"
@@ -430,7 +427,7 @@ msgstr ""
 
 #: ../../lib/general.lib.php:914
 msgid "Turkish"
-msgstr "土耳其语"
+msgstr ""
 
 #: ../../lib/general.lib.php:915
 msgid "Simplified Chinese"
@@ -438,126 +435,119 @@ msgstr ""
 
 #: ../../lib/general.lib.php:916
 msgid "Unknown"
-msgstr "未知"
+msgstr ""
 
 #: ../../lib/ui.lib.php:222
-#, fuzzy
 msgid "Error Access Denied"
-msgstr "用户访问控制级别"
+msgstr ""
 
 #: ../../lib/ui.lib.php:299 ../../templates/sidebar.inc.php:69
 #: ../../templates/header.inc:51 ../../templates/menu.inc:35
 msgid "Browse"
-msgstr "浏览"
+msgstr ""
 
 #: ../../lib/ui.lib.php:301
 msgid "Show w/o art"
-msgstr "不显示歌手"
+msgstr ""
 
 #: ../../lib/ui.lib.php:304
 msgid "Show all"
-msgstr "全部显示"
+msgstr ""
 
 #: ../../lib/ui.lib.php:721
-#, fuzzy
 msgid "No Catalogs Found!"
-msgstr "没有找到"
+msgstr ""
 
 #: ../../lib/ui.lib.php:722 ../../templates/add_catalog.inc:29
 msgid "Add a Catalog"
-msgstr "添加曲库"
+msgstr ""
 
 #: ../../lib/ui.lib.php:723 ../../templates/show_local_catalog_info.inc.php:7
 msgid "Catalog Statistics"
-msgstr "曲库统计信息"
+msgstr ""
 
 #: ../../lib/ui.lib.php:759
 msgid "day"
-msgstr "天"
+msgstr ""
 
 #: ../../lib/ui.lib.php:759
 msgid "days"
-msgstr "天"
+msgstr ""
 
 #: ../../lib/ui.lib.php:761
 msgid "hour"
-msgstr "小时"
+msgstr ""
 
 #: ../../lib/ui.lib.php:761
 msgid "hours"
-msgstr "小时"
+msgstr ""
 
 #: ../../lib/ui.lib.php:1053 ../../templates/sidebar.inc.php:128
 #: ../../templates/show_random_play_bar.inc.php:45
 #: ../../templates/show_artists.inc:55 ../../templates/show_random_play.inc:46
 #: ../../templates/show_albums.inc:58
 msgid "All"
-msgstr "全部"
+msgstr ""
 
 #: ../../lib/Browser.php:867
 msgid "file"
-msgstr "文件"
+msgstr ""
 
 #: ../../lib/Browser.php:871
 msgid "File uploads not supported."
-msgstr "不支持文件上传"
+msgstr ""
 
 #: ../../lib/Browser.php:889
 msgid "No file uploaded"
-msgstr "没有上传文件"
+msgstr ""
 
 #: ../../lib/Browser.php:896
 #, php-format
 msgid "There was a problem with the file upload: No %s was uploaded."
-msgstr "文件上传错误：没有上传 %s"
+msgstr ""
 
 #: ../../lib/Browser.php:901
 #, php-format
 msgid ""
 "There was a problem with the file upload: The %s was larger than the maximum "
 "allowed size (%d bytes)."
-msgstr "文件上传错误：%s 大于最大允许上传大小（%d 字节）"
+msgstr ""
 
 #: ../../lib/Browser.php:903
 #, php-format
 msgid ""
 "There was a problem with the file upload: The %s was only partially uploaded."
-msgstr "文件上传错误：%s 只上传了部分文件"
+msgstr ""
 
 #: ../../lib/upload.php:228
-#, fuzzy
 msgid "The file uploaded successfully"
-msgstr "没有上传文件"
+msgstr ""
 
 #: ../../lib/upload.php:229
 msgid "The uploaded file exceeds the upload_max_filesize directive in php.ini"
-msgstr "上传文件大小超过php.ini里面max_filesize的限制"
+msgstr ""
 
 #: ../../lib/upload.php:230
-#, fuzzy
 msgid ""
 "The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in "
 "the HTML form"
-msgstr "上传文件大小超过HTML表单里面MAX_FILE_SIZE的限制"
+msgstr ""
 
 #: ../../lib/upload.php:231
-#, fuzzy
 msgid "The uploaded file was only partially uploaded"
-msgstr "只上传了文件的部分内容"
+msgstr ""
 
 #: ../../lib/upload.php:232
-#, fuzzy
 msgid "No file was uploaded"
-msgstr "文件没有上传"
+msgstr ""
 
 #: ../../lib/upload.php:233
 msgid "Missing a temporary folder"
 msgstr ""
 
 #: ../../lib/rating.lib.php:55
-#, fuzzy
 msgid "Don't Play"
-msgstr "本地播放"
+msgstr ""
 
 #: ../../lib/rating.lib.php:58
 msgid "It's Pretty Bad"
@@ -585,190 +575,184 @@ msgstr ""
 
 #: ../../lib/playlist.lib.php:73
 msgid "No songs in this playlist."
-msgstr "此自选列表没有歌曲"
+msgstr ""
 
 #: ../../modules/lib.php:537
 msgid "Create a new playlist"
-msgstr "新建自定义播放列表"
+msgstr ""
 
 #: ../../modules/admin.php:46
 msgid "Manage Users"
-msgstr "管理用户"
+msgstr ""
 
 #: ../../modules/admin.php:48 ../../templates/show_admin_index.inc:34
 msgid "Add a new user"
-msgstr "添加新用户"
+msgstr ""
 
 #: ../../admin/catalog.php:49 ../../templates/catalog.inc:63
 msgid "Add to Catalog(s)"
-msgstr "添加到曲库"
+msgstr ""
 
 #: ../../admin/catalog.php:60 ../../templates/catalog.inc:64
 msgid "Add to all Catalogs"
-msgstr "添加所有到曲库"
+msgstr ""
 
 #: ../../admin/catalog.php:69
 msgid "Error Connecting"
-msgstr "连接错误"
+msgstr ""
 
 #: ../../admin/catalog.php:83 ../../templates/catalog.inc:70
 msgid "Update Catalog(s)"
-msgstr "更新曲库"
+msgstr ""
 
 #: ../../admin/catalog.php:94 ../../templates/catalog.inc:71
 msgid "Update All Catalogs"
-msgstr "更新所有曲库"
+msgstr ""
 
 #: ../../admin/catalog.php:126 ../../templates/catalog.inc:77
 msgid "Clean Catalog(s)"
-msgstr "清除曲库"
+msgstr ""
 
 #: ../../admin/catalog.php:156 ../../templates/catalog.inc:78
 msgid "Clean All Catalogs"
-msgstr "清除所有曲库"
+msgstr ""
 
 #: ../../admin/catalog.php:206
 msgid "Now Playing Cleared"
-msgstr "正在播放被取消"
+msgstr ""
 
 #: ../../admin/catalog.php:206
 msgid "All now playing data has been cleared"
-msgstr "所有正在播放的数据被取消"
+msgstr ""
 
 #: ../../admin/catalog.php:211
 msgid "Do you really want to clear your catalog?"
-msgstr "真的要清除曲库吗？"
+msgstr ""
 
 #: ../../admin/catalog.php:218
 msgid "Do you really want to clear the statistics for this catalog?"
-msgstr "真的要清除这个曲库的统计信息吗？"
+msgstr ""
 
 #: ../../admin/catalog.php:235
 msgid "Do you really want to delete this catalog?"
-msgstr "真的要删除曲库吗？"
+msgstr ""
 
 #: ../../admin/catalog.php:266
 msgid "Album Art Search Finished"
-msgstr "歌曲歌手搜索结束"
+msgstr ""
 
 #: ../../admin/users.php:72 ../../admin/users.php:119
 msgid "Error Username Required"
-msgstr "错误：请输入用户名"
+msgstr ""
 
 #: ../../admin/users.php:75 ../../admin/users.php:115
 msgid "Error Passwords don't match"
-msgstr "错误：密码不匹配"
+msgstr ""
 
 #: ../../admin/users.php:124 ../../register.php:136
-#, fuzzy
 msgid "Error Username already exists"
-msgstr "错误：请输入用户名"
+msgstr ""
 
 #: ../../admin/users.php:145
 msgid "Are you sure you want to permanently delete"
-msgstr "确定要永久删除？"
+msgstr ""
 
 #: ../../admin/users.php:152 ../../templates/show_confirm_action.inc.php:29
 #: ../../templates/show_search.inc:107
 msgid "No"
-msgstr "否"
+msgstr ""
 
 #: ../../admin/users.php:154
 msgid "User Deleted"
-msgstr "用户已删除"
+msgstr ""
 
 #: ../../admin/users.php:157
 msgid "Delete Error"
-msgstr "删除错误"
+msgstr ""
 
 #: ../../admin/users.php:157
 msgid "Unable to delete last Admin User"
-msgstr "不能删除唯一的管理员"
+msgstr ""
 
 #: ../../admin/access.php:40
 msgid "Do you really want to delete this Access Record?"
-msgstr "真的要删除这个访问许可吗？"
+msgstr ""
 
 #: ../../admin/access.php:48
 msgid "Entry Deleted"
-msgstr "数据被删除"
+msgstr ""
 
 #: ../../admin/access.php:48
 msgid "Your Access List Entry has been removed"
-msgstr "访问许可被删除"
+msgstr ""
 
 #: ../../admin/access.php:58
 msgid "Entry Added"
-msgstr "记录被添加"
+msgstr ""
 
 #: ../../admin/access.php:58
 msgid "Your new Access List Entry has been created"
-msgstr "新访问许可被添加"
+msgstr ""
 
 #: ../../admin/mail.php:94
 msgid "Mail to"
-msgstr "发电子邮件给"
+msgstr ""
 
 #: ../../admin/mail.php:105
 msgid "Subject"
-msgstr "标题"
+msgstr ""
 
 #: ../../admin/mail.php:112
 msgid "Message"
-msgstr "正文"
+msgstr ""
 
 #: ../../admin/mail.php:122
 msgid "Send Mail"
-msgstr "发送"
+msgstr ""
 
 #: ../../admin/song.php:65
 msgid "Songs Disabled"
-msgstr "歌曲被禁止播放"
+msgstr ""
 
 #: ../../admin/song.php:65
 msgid "The requested song(s) have been disabled"
-msgstr "请求的歌曲被禁止播放"
+msgstr ""
 
 #: ../../admin/song.php:75
 msgid "Songs Enabled"
-msgstr "歌曲被允许播放"
+msgstr ""
 
 #: ../../admin/song.php:75
 msgid "The requested song(s) have been enabled"
-msgstr "请求的歌曲被允许播放"
+msgstr ""
 
 #: ../../templates/show_install_account.inc.php:35
 #: ../../templates/show_install_config.inc:35
 #: ../../templates/show_install.inc:35
 msgid "Ampache Installation"
-msgstr "Ampache 安装"
+msgstr ""
 
 #: ../../templates/show_install_account.inc.php:37
 #: ../../templates/show_install_config.inc:37
 #: ../../templates/show_install.inc:37
-#, fuzzy
 msgid ""
 "This Page handles the installation of the Ampache database and the creation "
 "of the ampache.cfg.php file. Before you continue please make sure that you "
 "have the following pre-requisites"
 msgstr ""
-"本页负责ampache数据库的安装和ampache.cfg.php配置文件的建立。在继续下一步以"
-"前，请确认你满足以下先决条件"
 
 #: ../../templates/show_install_account.inc.php:40
 #: ../../templates/show_install_config.inc:40
 #: ../../templates/show_install.inc:40
 msgid ""
 "A MySQL Server with a username and password that can create/modify databases"
-msgstr "已安装MySQL数据库，有能创建和更改数据库的用户帐号"
+msgstr ""
 
 #: ../../templates/show_install_account.inc.php:41
 msgid ""
 "Your webserver has read access to the /sql/ampache.sql file and the /config/"
 "ampache.cfg.dist.php file"
 msgstr ""
-"你的WWW服务器能用只读方式访问/sql/ampache.sql文件，以及/config/ampache.cfg."
-"dist.php文件"
 
 #: ../../templates/show_install_account.inc.php:43
 #: ../../templates/show_install_config.inc:43
@@ -779,66 +763,60 @@ msgid ""
 "values. If you would like to make changes to your ampache install at a later "
 "date simply edit /config/ampache.cfg.php"
 msgstr ""
-"如果你确信满足以上要求，请填写以下信息。以下只是必须的配置。更详细的设置可以"
-"通过直接修改 /config/ampache.cfg.php 来实现"
 
 #: ../../templates/show_install_account.inc.php:48
 #: ../../templates/show_install_config.inc:48
 #: ../../templates/show_install.inc:47
 msgid "Step 1 - Creating and Inserting the Ampache Database"
-msgstr "第一步 - 创建Ampache数据库并添加系统数据"
+msgstr ""
 
 #: ../../templates/show_install_account.inc.php:49
 msgid "Step 2 - Creating the ampache.cfg.php file"
-msgstr "第二步 - 创建ampache.cfg.php配置文件"
+msgstr ""
 
 #: ../../templates/show_install_account.inc.php:50
 #: ../../templates/show_install_config.inc:53
 #: ../../templates/show_install.inc:52
 msgid "Step 3 - Setup Initial Account"
-msgstr "第三步 - 初始化帐号"
+msgstr ""
 
 #: ../../templates/show_install_account.inc.php:52
 msgid ""
 "This step creates your initial Ampache admin account. Once your admin "
 "account has been created you will be directed to the login page"
-msgstr "这一步创建初始管理员帐号。帐号创建完毕会转到登录页"
+msgstr ""
 
 #: ../../templates/show_install_account.inc.php:55
-#, fuzzy
 msgid "Create Admin Account"
-msgstr "新建帐号"
+msgstr ""
 
 #: ../../templates/show_install_account.inc.php:60
 #: ../../templates/show_user_registration.inc.php:109
 #: ../../templates/userform.inc:40 ../../templates/show_users.inc:43
 msgid "Username"
-msgstr "用户名"
+msgstr ""
 
 #: ../../templates/show_install_account.inc.php:64
 #: ../../templates/show_user_registration.inc.php:137
 #: ../../templates/userform.inc:63 ../../templates/show_login_form.inc:53
 msgid "Password"
-msgstr "密码"
+msgstr ""
 
 #: ../../templates/show_install_account.inc.php:69
 msgid "Create Account"
-msgstr "新建帐号"
+msgstr ""
 
 #: ../../templates/show_user_registration.inc.php:59
-#, fuzzy
 msgid "Ampache New User Registration"
-msgstr "Ampache 安装"
+msgstr ""
 
 #: ../../templates/show_user_registration.inc.php:74
-#, fuzzy
 msgid "User Agreement"
-msgstr "用户名"
+msgstr ""
 
 #: ../../templates/show_user_registration.inc.php:84
-#, fuzzy
 msgid "I Accept"
-msgstr "接受"
+msgstr ""
 
 #: ../../templates/show_user_registration.inc.php:101
 msgid "User Information"
@@ -847,17 +825,17 @@ msgstr ""
 #: ../../templates/show_user_registration.inc.php:119
 #: ../../templates/userform.inc:48
 msgid "Full Name"
-msgstr "全名"
+msgstr ""
 
 #: ../../templates/show_user_registration.inc.php:128
 #: ../../templates/show_user.inc.php:40 ../../templates/userform.inc:55
 msgid "E-mail"
-msgstr "电子邮件"
+msgstr ""
 
 #: ../../templates/show_user_registration.inc.php:146
 #: ../../templates/show_user.inc.php:75 ../../templates/userform.inc:72
 msgid "Confirm Password"
-msgstr "确认密码"
+msgstr ""
 
 #: ../../templates/show_user_registration.inc.php:166
 msgid "Clear Info"
@@ -865,35 +843,34 @@ msgstr ""
 
 #: ../../templates/show_user_registration.inc.php:167
 msgid "Register User"
-msgstr "注册用户"
+msgstr ""
 
 #: ../../templates/show_confirm_action.inc.php:28
 #: ../../templates/show_search.inc:106
 msgid "Yes"
-msgstr "是"
+msgstr ""
 
 #: ../../templates/show_import_playlist.inc.php:26
 msgid "Importing a Playlist from a File"
-msgstr "从文件导入自定义播放列表"
+msgstr ""
 
 #: ../../templates/show_import_playlist.inc.php:29
 #: ../../templates/show_uploads.inc:41 ../../templates/list_duplicates.inc:38
 #: ../../templates/show_search.inc:95
 msgid "Filename"
-msgstr "文件名"
+msgstr ""
 
 #: ../../templates/show_import_playlist.inc.php:36
 msgid "Playlist Type"
-msgstr "自定义播放列表类型"
+msgstr ""
 
 #: ../../templates/show_import_playlist.inc.php:49
 msgid "Import Playlist"
-msgstr "导入播放列表"
+msgstr ""
 
 #: ../../templates/show_genre.inc.php:32
-#, fuzzy
 msgid "Viewing"
-msgstr "显示"
+msgstr ""
 
 #: ../../templates/show_genre.inc.php:36 ../../templates/sidebar.inc.php:35
 #: ../../templates/sidebar.inc.php:136
@@ -901,14 +878,14 @@ msgstr "显示"
 #: ../../templates/show_artists.inc:42 ../../templates/show_artists.inc:65
 #: ../../templates/show_browse_menu.inc:36 ../../templates/show_search.inc:136
 msgid "Albums"
-msgstr "专辑"
+msgstr ""
 
 #: ../../templates/show_genre.inc.php:41 ../../templates/sidebar.inc.php:36
 #: ../../templates/sidebar.inc.php:135
 #: ../../templates/show_local_catalog_info.inc.php:22
 #: ../../templates/show_browse_menu.inc:35 ../../templates/show_search.inc:137
 msgid "Artists"
-msgstr "歌手"
+msgstr ""
 
 #: ../../templates/show_genre.inc.php:46
 #: ../../templates/show_genres.inc.php:37 ../../templates/sidebar.inc.php:133
@@ -918,7 +895,7 @@ msgstr "歌手"
 #: ../../templates/show_albums.inc:41 ../../templates/show_albums.inc:71
 #: ../../templates/show_search.inc:135
 msgid "Songs"
-msgstr "歌曲"
+msgstr ""
 
 #: ../../templates/show_user.inc.php:26
 msgid "Changing User Information for"
@@ -929,7 +906,7 @@ msgstr ""
 #: ../../templates/show_add_access.inc:40
 #: ../../templates/show_access_list.inc:47
 msgid "Name"
-msgstr "名字"
+msgstr ""
 
 #: ../../templates/show_user.inc.php:48
 msgid "Results Per Page"
@@ -937,15 +914,15 @@ msgstr ""
 
 #: ../../templates/show_user.inc.php:56
 msgid "Update Profile"
-msgstr "更改信息"
+msgstr ""
 
 #: ../../templates/show_user.inc.php:67
 msgid "Enter password"
-msgstr "输入密码"
+msgstr ""
 
 #: ../../templates/show_user.inc.php:83
 msgid "Change Password"
-msgstr "更改密码"
+msgstr ""
 
 #: ../../templates/show_user.inc.php:89
 msgid "Delete Your Personal Statistics"
@@ -953,7 +930,7 @@ msgstr ""
 
 #: ../../templates/show_user.inc.php:91
 msgid "Clear Stats"
-msgstr "清除状态"
+msgstr ""
 
 #: ../../templates/show_genres.inc.php:38 ../../templates/show_uploads.inc:32
 #: ../../templates/show_mpdpl.inc:68 ../../templates/show_songs.inc:50
@@ -961,7 +938,7 @@ msgstr "清除状态"
 #: ../../templates/show_albums.inc:45 ../../templates/show_albums.inc:75
 #: ../../templates/show_access_list.inc:51 ../../templates/show_artist.inc:42
 msgid "Action"
-msgstr "操作"
+msgstr ""
 
 #: ../../templates/show_genres.inc.php:48
 #: ../../templates/show_playlists.inc.php:63
@@ -969,64 +946,61 @@ msgstr "操作"
 #: ../../templates/show_albums.inc:57 ../../templates/show_mpdplay.inc:64
 #: ../../templates/show_artist.inc:67
 msgid "Play"
-msgstr "播放"
+msgstr ""
 
 #: ../../templates/sidebar.inc.php:29
 msgid "Users"
-msgstr "用户"
+msgstr ""
 
 #: ../../templates/sidebar.inc.php:30
 msgid "Mail Users"
-msgstr "向用户发送邮件"
+msgstr ""
 
 #: ../../templates/sidebar.inc.php:32
-#, fuzzy
 msgid "Site Preferences"
-msgstr "更新设置"
+msgstr ""
 
 #: ../../templates/sidebar.inc.php:33
-#, fuzzy
 msgid "Access List"
-msgstr "访问控制列表"
+msgstr ""
 
 #: ../../templates/sidebar.inc.php:38
-#, fuzzy
 msgid "Lists"
-msgstr "歌手"
+msgstr ""
 
 #: ../../templates/sidebar.inc.php:45 ../../templates/menu.inc:29
 msgid "Home"
-msgstr "首页"
+msgstr ""
 
 #: ../../templates/sidebar.inc.php:49 ../../templates/menu.inc:63
 #: ../../templates/menu.inc:66
 msgid "Admin"
-msgstr "管理"
+msgstr ""
 
 #: ../../templates/sidebar.inc.php:66 ../../templates/menu.inc:40
 msgid "Preferences"
-msgstr "设置"
+msgstr ""
 
 #: ../../templates/sidebar.inc.php:85 ../../templates/menu.inc:43
 #: ../../templates/show_upload.inc:73
 msgid "Upload"
-msgstr "上传"
+msgstr ""
 
 #: ../../templates/sidebar.inc.php:89
 #: ../../templates/show_playlists.inc.php:28 ../../templates/menu.inc:38
 msgid "Playlists"
-msgstr "自定义文件列表"
+msgstr ""
 
 #: ../../templates/sidebar.inc.php:93 ../../templates/menu.inc:32
 msgid "Local Play"
-msgstr "本地播放"
+msgstr ""
 
 #: ../../templates/sidebar.inc.php:112
 #: ../../templates/show_playlists.inc.php:66
 #: ../../templates/show_artists.inc:56 ../../templates/show_albums.inc:59
 #: ../../templates/show_mpdplay.inc:114
 msgid "Random"
-msgstr "随机"
+msgstr ""
 
 #: ../../templates/sidebar.inc.php:134
 #: ../../templates/show_random_play_bar.inc.php:50
@@ -1046,26 +1020,26 @@ msgstr ""
 #: ../../templates/sidebar.inc.php:146 ../../templates/menu.inc:75
 #: ../../templates/menu.inc:81 ../../templates/menu.inc:85
 msgid "Logout"
-msgstr "退出"
+msgstr ""
 
 #: ../../templates/show_confirmation.inc.php:30
 msgid "Continue"
-msgstr "继续"
+msgstr ""
 
 #: ../../templates/show_random_play_bar.inc.php:31
 #: ../../templates/show_random_play.inc:28
 msgid "Play Random Selection"
-msgstr "随机播放"
+msgstr ""
 
 #: ../../templates/show_random_play_bar.inc.php:51
 #, fuzzy
 msgid "Full Artists"
-msgstr "全部歌手"
+msgstr ""
 
 #: ../../templates/show_random_play_bar.inc.php:52
 #: ../../templates/show_random_play.inc:60
 msgid "Full Albums"
-msgstr "全部专辑"
+msgstr ""
 
 #: ../../templates/show_random_play_bar.inc.php:55
 msgid "from"
@@ -1074,92 +1048,90 @@ msgstr ""
 #: ../../templates/show_random_play_bar.inc.php:59
 #, fuzzy
 msgid "Advanced"
-msgstr "已添加"
+msgstr ""
 
 #: ../../templates/show_local_catalog_info.inc.php:10
 msgid "Total Users"
-msgstr "用户总数"
+msgstr ""
 
 #: ../../templates/show_local_catalog_info.inc.php:14
 msgid "Connected Users"
-msgstr "在线用户"
+msgstr ""
 
 #: ../../templates/show_local_catalog_info.inc.php:30
 msgid "Catalog Size"
-msgstr "曲库大小"
+msgstr ""
 
 #: ../../templates/show_local_catalog_info.inc.php:34
 msgid "Catalog Time"
-msgstr "曲库时间"
+msgstr ""
 
 #: ../../templates/show_play_selected.inc.php:49
 msgid "Play Selected"
-msgstr "播放选择的歌曲"
+msgstr ""
 
 #: ../../templates/show_play_selected.inc.php:52
-#, fuzzy
 msgid "Download Selected"
-msgstr "播放选择的歌曲"
+msgstr ""
 
 #: ../../templates/show_play_selected.inc.php:55
 msgid "Flag Selected"
-msgstr "标记选择"
+msgstr ""
 
 #: ../../templates/show_play_selected.inc.php:56
 msgid "Edit Selected"
-msgstr "编辑选择"
+msgstr ""
 
 #: ../../templates/show_play_selected.inc.php:64
 msgid "Set Track Numbers"
-msgstr "设置音轨号"
+msgstr ""
 
 #: ../../templates/show_play_selected.inc.php:65
 msgid "Remove Selected Tracks"
-msgstr "清除音轨号"
+msgstr ""
 
 #: ../../templates/show_play_selected.inc.php:71
 msgid "Playlist"
-msgstr "播放列表"
+msgstr ""
 
 #: ../../templates/show_play_selected.inc.php:71
 msgid "Add to"
-msgstr "添加到"
+msgstr ""
 
 #: ../../templates/show_play_selected.inc.php:73
 #: ../../templates/show_playlists.inc.php:51
 msgid "View"
-msgstr "显示"
+msgstr ""
 
 #: ../../templates/show_play_selected.inc.php:74
 #: ../../templates/show_playlists.inc.php:55 ../../templates/show_users.inc:58
 #: ../../templates/show_users.inc:102
 msgid "Edit"
-msgstr "编辑"
+msgstr ""
 
 #: ../../templates/show_all_recent.inc.php:27 ../../index.php:99
 msgid "Newest Artist Additions"
-msgstr "最新添加的歌手"
+msgstr ""
 
 #: ../../templates/show_all_recent.inc.php:30 ../../index.php:106
 msgid "Newest Album Additions"
-msgstr "最新添加的专辑"
+msgstr ""
 
 #: ../../templates/show_all_popular.inc.php:27 ../../index.php:82
 msgid "Most Popular Artists"
-msgstr "最流行的歌手"
+msgstr ""
 
 #: ../../templates/show_all_popular.inc.php:30 ../../index.php:61
 msgid "Most Popular Albums"
-msgstr "最流行的专辑"
+msgstr ""
 
 #: ../../templates/show_all_popular.inc.php:37
-#, fuzzy
 msgid "Most Popular Genres"
-msgstr "最流行的歌曲"
+msgstr ""
 
 #: ../../templates/show_all_popular.inc.php:40 ../../index.php:89
 msgid "Most Popular Songs"
-msgstr "最流行的歌曲"
+msgstr ""
 
 #: ../../templates/show_get_albumart.inc.php:28
 msgid "Customize Search"
@@ -1171,18 +1143,16 @@ msgstr ""
 
 #: ../../templates/show_get_albumart.inc.php:59
 msgid "Get Art"
-msgstr "获取歌手信息"
+msgstr ""
 
 #: ../../templates/show_rename_artist.inc.php:33
 #: ../../templates/show_rename_artist.inc.php:51
-#, fuzzy
 msgid "Rename"
-msgstr "用户名"
+msgstr ""
 
 #: ../../templates/show_rename_artist.inc.php:33
-#, fuzzy
 msgid "to"
-msgstr "停止"
+msgstr ""
 
 #: ../../templates/show_rename_artist.inc.php:40
 #: ../../templates/show_search.inc:144
@@ -1194,107 +1164,98 @@ msgid "Insert current"
 msgstr ""
 
 #: ../../templates/show_rename_artist.inc.php:47
-#, fuzzy
 msgid "Update id3 tags"
-msgstr "从标记更新"
+msgstr ""
 
 #: ../../templates/show_artist_box.inc.php:26
 msgid "Albums by"
-msgstr "专辑"
+msgstr ""
 
 #: ../../templates/show_artist_box.inc.php:34
 msgid "Show All Songs By"
-msgstr "显示所有歌曲"
+msgstr ""
 
 #: ../../templates/show_artist_box.inc.php:35
 msgid "Play All Songs By"
-msgstr "播放所有歌曲"
+msgstr ""
 
 #: ../../templates/show_artist_box.inc.php:36
 msgid "Play Random Songs By"
-msgstr "随机播放歌曲"
+msgstr ""
 
 #: ../../templates/show_artist_box.inc.php:38
 #: ../../templates/show_album.inc:72
 msgid "Update from tags"
-msgstr "从标记更新"
+msgstr ""
 
 #: ../../templates/show_artist_box.inc.php:39
-#, fuzzy
 msgid "Rename Artist"
-msgstr "歌手"
+msgstr ""
 
 #: ../../templates/show_playlists.inc.php:31
-#, fuzzy
 msgid "Playlist Name"
-msgstr "自定义播放列表类型"
+msgstr ""
 
 #: ../../templates/show_playlists.inc.php:32
-#, fuzzy
 msgid "# Songs"
-msgstr "歌曲"
+msgstr ""
 
 #: ../../templates/show_playlists.inc.php:33
 msgid "Owner"
 msgstr ""
 
 #: ../../templates/show_playlists.inc.php:34
-#, fuzzy
 msgid "Actions"
-msgstr "操作"
+msgstr ""
 
 #: ../../templates/show_playlists.inc.php:58
 #: ../../templates/show_uploads.inc:50 ../../templates/catalog.inc:57
 #: ../../templates/show_users.inc:70
 msgid "Delete"
-msgstr "删除"
+msgstr ""
 
 #: ../../templates/show_playlists.inc.php:71
 #: ../../templates/show_songs.inc:140 ../../templates/show_album.inc:75
 #: ../../templates/show_albums.inc:61 ../../templates/show_artist.inc:69
 msgid "Download"
-msgstr "下载"
+msgstr ""
 
 #: ../../templates/show_playlist_box.inc.php:33
 msgid "Playlist Actions"
-msgstr "自选歌曲列表操作"
+msgstr ""
 
 #: ../../templates/show_playlist_box.inc.php:34
-#, fuzzy
 msgid "Create New Playlist"
-msgstr "新建自定义播放列表"
+msgstr ""
 
 #: ../../templates/show_playlist_box.inc.php:35
 #, fuzzy
 msgid "View All Playlists"
-msgstr "新建自定义播放列表"
+msgstr ""
 
 #: ../../templates/show_playlist_box.inc.php:36
-#, fuzzy
 msgid "Import From File"
-msgstr "从文件导入自定义播放列表"
+msgstr ""
 
 #: ../../templates/show_playlist_box.inc.php:38
-#, fuzzy
 msgid "Normalize Tracks"
-msgstr "总音轨数"
+msgstr ""
 
 #: ../../templates/show_playlist_box.inc.php:39
-#, fuzzy
 msgid "Play This Playlist"
-msgstr "播放自定义列表"
+msgstr ""
 
 #: ../../templates/show_preference_box.inc.php:44
 msgid "Preference"
-msgstr "设置"
+msgstr ""
 
 #: ../../templates/show_preference_box.inc.php:45
 msgid "Value"
-msgstr "值"
+msgstr ""
 
 #: ../../templates/show_preference_box.inc.php:47
 msgid "Apply to All"
-msgstr "全部应用"
+msgstr ""
 
 #: ../../templates/show_preference_box.inc.php:54
 msgid "description"
@@ -1302,25 +1263,22 @@ msgstr ""
 
 #: ../../templates/show_object_rating.inc.php:25
 #: ../../templates/show_songs.inc:52
-#, fuzzy
 msgid "Rating"
-msgstr "编辑中"
+msgstr ""
 
 #: ../../localplay.php:81
 msgid "Unknown action requested"
-msgstr "未知操作"
+msgstr ""
 
 #: ../../browse.php:48 ../../albums.php:168 ../../albums.php:174
 #: ../../albums.php:181 ../../albums.php:186 ../../albums.php:192
-#, fuzzy
 msgid "Show Albums starting with"
-msgstr "<u>S</u>只显示如下开头的专辑："
+msgstr ""
 
 #: ../../browse.php:78 ../../artists.php:128 ../../artists.php:132
 #: ../../artists.php:138 ../../artists.php:151
-#, fuzzy
 msgid "Show Artists starting with"
-msgstr "<u>S</u>显示歌手名字前几位字符是"
+msgstr ""
 
 #: ../../search.php:45
 msgid "Error: No Keyword Entered"
@@ -1328,53 +1286,47 @@ msgstr ""
 
 #: ../../tv.php:76 ../../templates/show_now_playing.inc:31
 msgid "Now Playing"
-msgstr "正在播放"
+msgstr ""
 
 #: ../../artists.php:58 ../../albums.php:147
 msgid "Starting Update from Tags"
-msgstr "开始从文件标记获取信息"
+msgstr ""
 
 #: ../../artists.php:63 ../../albums.php:152
 msgid "Update From Tags Complete"
-msgstr "从标记信息更新结束"
+msgstr ""
 
 #: ../../amp-mpd.php:171 ../../playlist.php:63
 msgid "New Playlist"
-msgstr "新建自定义播放列表"
+msgstr ""
 
 #: ../../playlist.php:46
-#, fuzzy
 msgid "Playlist Deleted"
-msgstr "播放选择的歌曲"
+msgstr ""
 
 #: ../../playlist.php:46
-#, fuzzy
 msgid "The Requested Playlist has been deleted"
-msgstr "请求的歌曲被允许播放"
+msgstr ""
 
 #: ../../playlist.php:56
-#, fuzzy
 msgid "Are you sure you want to delete this playlist"
-msgstr "确定要永久删除？"
+msgstr ""
 
 #: ../../playlist.php:112
-#, fuzzy
 msgid "Playlist Created"
-msgstr "自定义播放列表已更新"
+msgstr ""
 
 #: ../../playlist.php:112
 msgid " has been created"
 msgstr ""
 
 #: ../../playlist.php:121
-#, fuzzy
 msgid "Remote Selected Tracks"
-msgstr "清除音轨号"
+msgstr ""
 
 #: ../../playlist.php:139
-#, fuzzy
 msgid "Playlist Updated"
-msgstr "自定义播放列表已更新"
+msgstr ""
 
 #: ../../playlist.php:139
 msgid " has been updated"
@@ -1382,23 +1334,23 @@ msgstr ""
 
 #: ../../flag.php:38
 msgid "Flagging song completed."
-msgstr "标记完成"
+msgstr ""
 
 #: ../../user.php:45
 msgid "Error: Password Does Not Match or Empty"
-msgstr "错误：无效或空密码"
+msgstr ""
 
 #: ../../user.php:51 ../../user.php:62
 msgid "Error: Insufficient Rights"
-msgstr "错误：没有足够权限"
+msgstr ""
 
 #: ../../albums.php:44
 msgid "Album Art Cleared"
-msgstr "歌曲歌手被删除"
+msgstr ""
 
 #: ../../albums.php:44
 msgid "Album Art information has been removed form the database"
-msgstr "歌曲歌手信息被从数据库消除"
+msgstr ""
 
 #: ../../albums.php:74
 msgid "No Amazon Developer Key set, amazon album art searching will not work"
@@ -1406,32 +1358,29 @@ msgstr ""
 
 #: ../../albums.php:104
 msgid "Album Art Not Located"
-msgstr "找不到歌曲歌手信息"
+msgstr ""
 
 #: ../../albums.php:104
 msgid ""
 "Album Art could not be located at this time. This may be due to Amazon being "
 "busy, or the album not being present in their collection."
-msgstr "现在无法找到歌曲歌手信息。"
+msgstr ""
 
 #: ../../albums.php:137
-#, fuzzy
 msgid "Album Art Inserted"
-msgstr "歌曲歌手被删除"
+msgstr ""
 
 #: ../../ratings.php:33
-#, fuzzy
 msgid "Rating Updated"
-msgstr "快速更新"
+msgstr ""
 
 #: ../../ratings.php:33
 msgid "Your rating for this object has been updated"
 msgstr ""
 
 #: ../../register.php:79
-#, fuzzy
 msgid "Error Captcha Required"
-msgstr "错误：请输入用户名"
+msgstr ""
 
 #: ../../register.php:86
 msgid "Error Captcha Failed"
@@ -1450,19 +1399,16 @@ msgid "Please fill in your full name (Firstname Lastname)"
 msgstr ""
 
 #: ../../register.php:128
-#, fuzzy
 msgid "You must enter a password"
-msgstr "输入密码"
+msgstr ""
 
 #: ../../register.php:132
-#, fuzzy
 msgid "Your passwords do not match"
-msgstr "错误：密码不匹配"
+msgstr ""
 
 #: ../../register.php:150
-#, fuzzy
 msgid "Error: Insert Failed"
-msgstr "错误：没有足够权限"
+msgstr ""
 
 #: ../../register.php:165
 msgid "Registration Complete"
@@ -1477,9 +1423,8 @@ msgid "The validation key used isn't correct."
 msgstr ""
 
 #: ../../activate.php:51
-#, fuzzy
 msgid "User activated"
-msgstr "用户已删除"
+msgstr ""
 
 #: ../../activate.php:51
 msgid "This User ID is activated and can be used"
@@ -1495,14 +1440,12 @@ msgid ""
 msgstr ""
 
 #: ../../bin/print_tags.php.inc:48
-#, fuzzy
 msgid "Filename:"
-msgstr "文件名"
+msgstr ""
 
 #: ../../bin/quarantine_migration.php.inc:49
-#, fuzzy
 msgid "Error: Unable to write to"
-msgstr "错误：无法打开"
+msgstr ""
 
 #: ../../bin/quarantine_migration.php.inc:56
 msgid "Error: Upload directory not inside a catalog"
@@ -1511,26 +1454,23 @@ msgstr ""
 #: ../../bin/quarantine_migration.php.inc:74
 #, fuzzy
 msgid "Moved"
-msgstr "模式"
+msgstr ""
 
 #: ../../bin/quarantine_migration.php.inc:78
-#, fuzzy
 msgid "Adding"
-msgstr "管理"
+msgstr ""
 
 #: ../../bin/quarantine_migration.php.inc:78
-#, fuzzy
 msgid "to database"
-msgstr "添加数据库"
+msgstr ""
 
 #: ../../bin/quarantine_migration.php.inc:86
 msgid "Move Failed"
 msgstr ""
 
 #: ../../bin/quarantine_migration.php.inc:97
-#, fuzzy
 msgid "Deleted"
-msgstr "删除"
+msgstr ""
 
 #: ../../bin/quarantine_migration.php.inc:113
 msgid ""
@@ -1549,14 +1489,12 @@ msgid ""
 msgstr ""
 
 #: ../../bin/quarantine_migration.php.inc:127
-#, fuzzy
 msgid "Continue?  (Y/N):"
-msgstr "继续"
+msgstr ""
 
 #: ../../bin/quarantine_migration.php.inc:151
-#, fuzzy
 msgid "Error:  "
-msgstr "错误"
+msgstr ""
 
 #: ../../bin/quarantine_migration.php.inc:152
 msgid "!\n"
@@ -1565,7 +1503,7 @@ msgstr ""
 #: ../../templates/show_admin_index.inc:27
 #, fuzzy
 msgid "User Management"
-msgstr "用户名"
+msgstr ""
 
 #: ../../templates/show_admin_index.inc:28
 msgid "E-mail Management"
@@ -1574,28 +1512,28 @@ msgstr ""
 #: ../../templates/show_admin_index.inc:29
 #, fuzzy
 msgid "Catalog Managment"
-msgstr "曲库名"
+msgstr ""
 
 #: ../../templates/show_admin_index.inc:30
 msgid "Admin Preferences"
-msgstr "管理员设置"
+msgstr ""
 
 #: ../../templates/show_admin_index.inc:31 ../../templates/catalog.inc:95
 msgid "Access Lists"
-msgstr "访问控制列表"
+msgstr ""
 
 #: ../../templates/show_admin_index.inc:33 ../../templates/catalog.inc:94
 msgid "Add a catalog"
-msgstr "添加曲库"
+msgstr ""
 
 #: ../../templates/show_admin_index.inc:35 ../../templates/catalog.inc:99
 msgid "Clear Now Playing"
-msgstr "清除正在播放信息"
+msgstr ""
 
 #: ../../templates/show_admin_index.inc:36
 #, fuzzy
 msgid "Add Access List Entry"
-msgstr "访问控制列表"
+msgstr ""
 
 #: ../../templates/show_admin_index.inc:40
 msgid "Common Functions"
@@ -1604,56 +1542,53 @@ msgstr ""
 #: ../../templates/show_admin_index.inc:43
 #, fuzzy
 msgid "Admin Sections"
-msgstr "管理区"
+msgstr ""
 
 #: ../../templates/show_uploads.inc:33
-#, fuzzy
 msgid "Status"
-msgstr "状态"
+msgstr ""
 
 #: ../../templates/show_uploads.inc:34 ../../templates/flag.inc:58
 #: ../../templates/list_flagged.inc:41 ../../templates/list_duplicates.inc:32
 msgid "Song"
-msgstr "歌曲"
+msgstr ""
 
 #: ../../templates/show_uploads.inc:40 ../../templates/show_songs.inc:46
 #: ../../templates/list_duplicates.inc:37
 msgid "Size"
-msgstr "大小"
+msgstr ""
 
 #: ../../templates/show_uploads.inc:42
 msgid "User"
-msgstr "用户"
+msgstr ""
 
 #: ../../templates/show_uploads.inc:43
 msgid "Date"
-msgstr "日期"
+msgstr ""
 
 #: ../../templates/show_uploads.inc:49
 msgid "Add"
-msgstr "添加"
+msgstr ""
 
 #: ../../templates/show_mpdpl.inc:43
-#, fuzzy
 msgid "MPD Server Playlist"
-msgstr "服务器播放列表"
+msgstr ""
 
 #: ../../templates/show_mpdpl.inc:45 ../../templates/show_mpdpl.inc:175
 msgid "Refresh the Playlist Window"
-msgstr "刷新列表窗口"
+msgstr ""
 
 #: ../../templates/show_mpdpl.inc:47 ../../templates/show_mpdpl.inc:177
 msgid "Click to shuffle (randomize) the playlist"
-msgstr "点击随机（乱序）播放列表"
+msgstr ""
 
 #: ../../templates/show_mpdpl.inc:47 ../../templates/show_mpdpl.inc:177
 msgid "shuffle"
-msgstr "乱序"
+msgstr ""
 
 #: ../../templates/show_mpdpl.inc:48 ../../templates/show_mpdpl.inc:178
-#, fuzzy
 msgid "Click to the clear the playlist"
-msgstr "点击清除播放列表"
+msgstr ""
 
 #: ../../templates/show_mpdpl.inc:52 ../../templates/show_mpdpl.inc:182
 msgid "Click to the remove all except the Now Playing"
@@ -1661,89 +1596,89 @@ msgstr ""
 
 #: ../../templates/show_mpdpl.inc:62 ../../templates/show_songs.inc:41
 msgid "Song title"
-msgstr "歌曲名"
+msgstr ""
 
 #: ../../templates/flag.inc:43
 msgid "Flag song"
-msgstr "标记歌曲"
+msgstr ""
 
 #: ../../templates/flag.inc:45
 msgid ""
 "Flag the following song as having one of the problems listed below.  Site "
 "admins will then take the appropriate action for the flagged files."
-msgstr "把下面的歌曲标记成某个如下列表显示的问题之一，以便管理员采取相应动作。"
+msgstr ""
 
 #: ../../templates/flag.inc:62
 msgid "Reason to flag"
-msgstr "标记原因"
+msgstr ""
 
 #: ../../templates/flag.inc:73
 msgid "Flag Song"
-msgstr "标记歌曲"
+msgstr ""
 
 #: ../../templates/customize_catalog.inc:24
 msgid "Settings for catalog in"
-msgstr "曲库设置在"
+msgstr ""
 
 #: ../../templates/customize_catalog.inc:32 ../../templates/add_catalog.inc:40
 msgid "Auto-inserted Fields"
-msgstr "自动添加的字段"
+msgstr ""
 
 #: ../../templates/customize_catalog.inc:33 ../../templates/add_catalog.inc:41
 msgid "album name"
-msgstr "专辑名"
+msgstr ""
 
 #: ../../templates/customize_catalog.inc:34 ../../templates/add_catalog.inc:42
 msgid "artist name"
-msgstr "歌手名"
+msgstr ""
 
 #: ../../templates/customize_catalog.inc:35
 msgid "catalog path"
-msgstr "曲库路径"
+msgstr ""
 
 #: ../../templates/customize_catalog.inc:36 ../../templates/add_catalog.inc:43
 msgid "id3 comment"
-msgstr "id3 说明"
+msgstr ""
 
 #: ../../templates/customize_catalog.inc:37 ../../templates/add_catalog.inc:44
 msgid "genre"
-msgstr "类型"
+msgstr ""
 
 #: ../../templates/customize_catalog.inc:38 ../../templates/add_catalog.inc:45
 msgid "track number (padded with leading 0)"
-msgstr "音轨号（前面用0补足）"
+msgstr ""
 
 #: ../../templates/customize_catalog.inc:39 ../../templates/add_catalog.inc:46
 msgid "song title"
-msgstr "歌曲名"
+msgstr ""
 
 #: ../../templates/customize_catalog.inc:40 ../../templates/add_catalog.inc:47
 msgid "year"
-msgstr "年代"
+msgstr ""
 
 #: ../../templates/customize_catalog.inc:41 ../../templates/add_catalog.inc:48
 msgid "other"
-msgstr "其他"
+msgstr ""
 
 #: ../../templates/customize_catalog.inc:45
 msgid "ID3 set command"
-msgstr "ID3 设置命令"
+msgstr ""
 
 #: ../../templates/customize_catalog.inc:51
 msgid "Filename pattern"
-msgstr "文件模板"
+msgstr ""
 
 #: ../../templates/customize_catalog.inc:58 ../../templates/add_catalog.inc:75
 msgid "Folder Pattern"
-msgstr "目录模板"
+msgstr ""
 
 #: ../../templates/customize_catalog.inc:58 ../../templates/add_catalog.inc:75
 msgid "(no leading or ending '/')"
-msgstr "(开头和结束不要带'/')"
+msgstr ""
 
 #: ../../templates/customize_catalog.inc:69
 msgid "Save Catalog Settings"
-msgstr "保存曲库设置信息"
+msgstr ""
 
 #: ../../templates/show_test.inc:29
 msgid "Ampache Debug"
@@ -1810,7 +1745,7 @@ msgstr ""
 #: ../../templates/show_test.inc:116
 #: ../../templates/show_install_config.inc:88
 msgid "Ampache.cfg.php Exists"
-msgstr "Ampache.cfg.php已存在"
+msgstr ""
 
 #: ../../templates/show_test.inc:131
 msgid ""
@@ -1822,7 +1757,7 @@ msgstr ""
 #: ../../templates/show_test.inc:137
 #: ../../templates/show_install_config.inc:105
 msgid "Ampache.cfg.php Configured?"
-msgstr "Ampache.cfg.php已配置？"
+msgstr ""
 
 #: ../../templates/show_test.inc:154
 msgid ""
@@ -1859,85 +1794,83 @@ msgstr ""
 
 #: ../../templates/show_localplay.inc:30
 msgid "Local Play Control"
-msgstr "本地播放控制"
+msgstr ""
 
 #: ../../templates/show_localplay.inc:35
 msgid "Playback"
-msgstr "播放"
+msgstr ""
 
 #: ../../templates/show_localplay.inc:39 ../../templates/list_header.inc:71
 #: ../../templates/show_mpdplay.inc:62
 msgid "Prev"
-msgstr "后退"
+msgstr ""
 
 #: ../../templates/show_localplay.inc:40 ../../templates/show_mpdplay.inc:63
 msgid "Stop"
-msgstr "停止"
+msgstr ""
 
 #: ../../templates/show_localplay.inc:42 ../../templates/show_mpdplay.inc:65
 msgid "Pause"
-msgstr "暂停"
+msgstr ""
 
 #: ../../templates/show_localplay.inc:43 ../../templates/list_header.inc:94
 #: ../../templates/show_mpdplay.inc:66
 msgid "Next"
-msgstr "前进"
+msgstr ""
 
 #: ../../templates/show_localplay.inc:49
 msgid "Volume"
-msgstr "音量"
+msgstr ""
 
 #: ../../templates/show_localplay.inc:53 ../../templates/show_localplay.inc:54
 msgid "Increase Volume"
-msgstr "增加音量"
+msgstr ""
 
 #: ../../templates/show_localplay.inc:55 ../../templates/show_localplay.inc:56
 msgid "Decrease Volume"
-msgstr "减少音量"
+msgstr ""
 
 #: ../../templates/show_localplay.inc:62
 msgid "Clear queue"
-msgstr "清除队列"
+msgstr ""
 
 #: ../../templates/add_catalog.inc:31
 msgid ""
 "In the form below enter either a local path (i.e. /data/music) or the URL to "
 "a remote Ampache installation (i.e http://theotherampache.com)"
 msgstr ""
-"请在如下表单里面填入本地路径（例如 /data/music），或者指向远程Ampache的一个"
-"URL（例如 http://theotherampache.com）"
 
 #: ../../templates/add_catalog.inc:37
 msgid "Catalog Name"
-msgstr "曲库名"
+msgstr ""
 
 #: ../../templates/add_catalog.inc:54
 msgid "Path"
-msgstr "路径"
+msgstr ""
 
 #: ../../templates/add_catalog.inc:58
 msgid "Catalog Type"
-msgstr "曲库类型"
+msgstr ""
 
 #: ../../templates/add_catalog.inc:62
 msgid "Remote"
-msgstr "远程"
+msgstr ""
 
 #: ../../templates/add_catalog.inc:67
 msgid "ID3 Set Command"
-msgstr "ID3 设置命令"
+msgstr ""
 
 #: ../../templates/add_catalog.inc:71
 msgid "Filename Pattern"
-msgstr "文件模板"
+msgstr ""
 
 #: ../../templates/add_catalog.inc:79 ../../templates/catalog.inc:101
 msgid "Gather Album Art"
-msgstr "搜集歌曲歌手"
+msgstr ""
 
 #: ../../templates/add_catalog.inc:83
 msgid "ID3V2 Tags"
-msgstr "ID3V2 标记"
+msgstr ""
 
 #: ../../templates/add_catalog.inc:86
 msgid "Amazon"
@@ -1945,44 +1878,43 @@ msgstr ""
 
 #: ../../templates/add_catalog.inc:89
 msgid "File Folder"
-msgstr "文件目录"
+msgstr ""
 
 #: ../../templates/add_catalog.inc:96
 msgid "Build Playlists from m3u Files"
-msgstr "从m3u文件建立自定义播放列表"
+msgstr ""
 
 #: ../../templates/add_catalog.inc:103
 msgid "Add Catalog"
-msgstr "添加曲库"
+msgstr ""
 
 #: ../../templates/list_flagged.inc:42 ../../templates/show_songs.inc:49
 msgid "Flag"
-msgstr "标记"
+msgstr ""
 
 #: ../../templates/list_flagged.inc:43
 msgid "New Flag"
-msgstr "新标记"
+msgstr ""
 
 #: ../../templates/list_flagged.inc:44
 msgid "Flagged by"
-msgstr "标记为"
+msgstr ""
 
 #: ../../templates/list_flagged.inc:45
 msgid "ID3 Update"
-msgstr "ID3 更新"
+msgstr "ID3 "
 
 #: ../../templates/list_flagged.inc:69
 msgid "Accept"
-msgstr "接受"
+msgstr ""
 
 #: ../../templates/list_flagged.inc:70
 msgid "Reject"
-msgstr "拒绝"
+msgstr ""
 
 #: ../../templates/header.inc:49
-#, fuzzy
 msgid "You are currently logged in as"
-msgstr "你登录为用户"
+msgstr ""
 
 #: ../../templates/header.inc:58
 msgid "Go!"
@@ -1990,15 +1922,15 @@ msgstr ""
 
 #: ../../templates/show_songs.inc:143
 msgid "Direct Link"
-msgstr "直接下载"
+msgstr ""
 
 #: ../../templates/show_songs.inc:166
 msgid "Total"
-msgstr "总共"
+msgstr ""
 
 #: ../../templates/show_search_bar.inc:36 ../../templates/show_search.inc:54
 msgid "Search Ampache"
-msgstr "搜索"
+msgstr ""
 
 #: ../../templates/show_install_config.inc:41
 #: ../../templates/show_install.inc:41
@@ -2006,12 +1938,11 @@ msgid ""
 "Your webserver has read access to the /sql/ampache.sql file and the /config/"
 "ampache.cfg.php.dist file"
 msgstr ""
-"你的WWW服务器能读取/sql/ampache.sql文件，以及/config/ampache.cfg.php.dist文件"
 
 #: ../../templates/show_install_config.inc:49
 #: ../../templates/show_install.inc:51
 msgid "Step 2 - Creating the Ampache.cfg.php file"
-msgstr "第二步 - 创建ampache.cfg.php配置文件"
+msgstr ""
 
 #: ../../templates/show_install_config.inc:51
 msgid ""
@@ -2019,102 +1950,100 @@ msgid ""
 "out directly to your webserver. If access is denied it will prompt you to "
 "download the config file. Please put the downloaded config file in /config"
 msgstr ""
-"这一步创建基本配置信息。会首先尝试直接写到你的WWW服务器上。如果访问拒绝，会提"
-"示你下载这个配置文件保存到/config目录去。"
 
 #: ../../templates/show_install_config.inc:60
 msgid "Web Path"
-msgstr "网页路径"
+msgstr ""
 
 #: ../../templates/show_install_config.inc:64
 #: ../../templates/show_install.inc:59
 msgid "Desired Database Name"
-msgstr "数据库名"
+msgstr ""
 
 #: ../../templates/show_install_config.inc:68
 #: ../../templates/show_install.inc:63
 msgid "MySQL Hostname"
-msgstr "MySQL主机"
+msgstr ""
 
 #: ../../templates/show_install_config.inc:72
 msgid "MySQL Username"
-msgstr "MySQL用户"
+msgstr ""
 
 #: ../../templates/show_install_config.inc:76
 msgid "MySQL Password"
-msgstr "MySQL密码"
+msgstr ""
 
 #: ../../templates/show_install_config.inc:81
 msgid "Write Config"
-msgstr "写入配置"
+msgstr ""
 
 #: ../../templates/show_install_config.inc:125
 msgid "Check for Config"
-msgstr "检查配置"
+msgstr ""
 
 #: ../../templates/show_album.inc:67
 msgid "Play Album"
-msgstr "播放专辑"
+msgstr ""
 
 #: ../../templates/show_album.inc:68
 msgid "Play Random from Album"
-msgstr "随机从专辑播放"
+msgstr ""
 
 #: ../../templates/show_album.inc:69
 msgid "Reset Album Art"
-msgstr "重置歌曲歌手"
+msgstr ""
 
 #: ../../templates/show_album.inc:70
 msgid "Find Album Art"
-msgstr "查找歌曲歌手"
+msgstr ""
 
 #: ../../templates/show_preferences.inc:42
 msgid "Editing"
-msgstr "编辑中"
+msgstr ""
 
 #: ../../templates/show_preferences.inc:42
 msgid "preferences"
-msgstr "设置"
+msgstr ""
 
 #: ../../templates/show_preferences.inc:44
 msgid "Rebuild Preferences"
-msgstr "重建设置"
+msgstr ""
 
 #: ../../templates/show_preferences.inc:73
 msgid "Update Preferences"
-msgstr "更新设置"
+msgstr ""
 
 #: ../../templates/show_preferences.inc:77
 msgid "Cancel"
-msgstr "取消"
+msgstr ""
 
 #: ../../templates/userform.inc:25
 msgid "Adding a New User"
-msgstr "添加新用户"
+msgstr ""
 
 #: ../../templates/userform.inc:29
 msgid "Editing existing User"
-msgstr "编辑已有用户"
+msgstr ""
 
 #: ../../templates/userform.inc:80
 msgid "User Access Level"
-msgstr "用户访问控制级别"
+msgstr ""
 
 #: ../../templates/userform.inc:96
 msgid "Add User"
-msgstr "添加用户"
+msgstr ""
 
 #: ../../templates/userform.inc:101
 msgid "Update User"
-msgstr "更新用户"
+msgstr ""
 
 #: ../../templates/show_random_play.inc:34
 msgid "Item count"
-msgstr "数量"
+msgstr ""
 
 #: ../../templates/show_random_play.inc:49
 msgid "From genre"
-msgstr "类型"
+msgstr ""
 
 #: ../../templates/show_random_play.inc:58
 msgid "Standard"
@@ -2122,19 +2051,19 @@ msgstr ""
 
 #: ../../templates/show_random_play.inc:59
 msgid "Favor Unplayed"
-msgstr "没播放过的优先"
+msgstr ""
 
 #: ../../templates/show_random_play.inc:61
 msgid "Full Artist"
-msgstr "全部歌手"
+msgstr ""
 
 #: ../../templates/show_random_play.inc:66
 msgid "from catalog"
-msgstr "曲库"
+msgstr ""
 
 #: ../../templates/show_random_play.inc:75
 msgid "Play Random Songs"
-msgstr "随机播放"
+msgstr ""
 
 #: ../../templates/show_install.inc:49
 msgid ""
@@ -2142,25 +2071,22 @@ msgid ""
 "mysql account with database creation rights. This step may take a while "
 "depending upon the speed of your computer"
 msgstr ""
-"这一步创建Ampache数据库并初始化数据。请提供一个有建立数据库权限的MySQL帐号。"
-"这一步可能会需要比较长一段时间，就看你机器快不快了"
 
 #: ../../templates/show_install.inc:67
 msgid "MySQL Administrative Username"
-msgstr "MySQL管理用户名"
+msgstr ""
 
 #: ../../templates/show_install.inc:71
 msgid "MySQL Administrative Password"
-msgstr "MySQL管理用户密码"
+msgstr ""
 
 #: ../../templates/show_install.inc:75
 msgid "Create Database User for New Database"
 msgstr ""
 
 #: ../../templates/show_install.inc:80
-#, fuzzy
 msgid "Ampache Database Username"
-msgstr "数据库名"
+msgstr ""
 
 #: ../../templates/show_install.inc:84
 msgid "Ampache Database User Password"
@@ -2168,34 +2094,34 @@ msgstr ""
 
 #: ../../templates/show_install.inc:89
 msgid "Insert Database"
-msgstr "添加数据库"
+msgstr ""
 
 #: ../../templates/show_add_access.inc:31
 msgid "Add Access for a Host"
-msgstr "添加访问控制"
+msgstr ""
 
 #: ../../templates/show_add_access.inc:33
 msgid ""
 "Use the form below to add a host that you want to have access to your "
 "Ampache catalog."
-msgstr "用下面的表单添加你需要允许访问曲库的机器地址"
+msgstr ""
 
 #: ../../templates/show_add_access.inc:46
 msgid "Start IP Address"
-msgstr "起始IP地址"
+msgstr ""
 
 #: ../../templates/show_add_access.inc:52
 msgid "End IP Address"
-msgstr "结束IP地址"
+msgstr ""
 
 #: ../../templates/show_add_access.inc:58
 #: ../../templates/show_access_list.inc:50
 msgid "Level"
-msgstr "等级"
+msgstr ""
 
 #: ../../templates/show_add_access.inc:72
 msgid "Add Host"
-msgstr "添加主机"
+msgstr ""
 
 #: ../../templates/catalog.inc:30
 msgid ""
@@ -2206,52 +2132,52 @@ msgstr ""
 
 #: ../../templates/catalog.inc:39
 msgid "Update Catalogs"
-msgstr "更新曲库"
+msgstr ""
 
 #: ../../templates/catalog.inc:65
 msgid "Fast Add"
-msgstr "快速添加"
+msgstr ""
 
 #: ../../templates/catalog.inc:72
 msgid "Fast Update"
-msgstr "快速更新"
+msgstr ""
 
 #: ../../templates/catalog.inc:85
 msgid "You don't have any catalogs."
-msgstr "你没有任何曲库"
+msgstr ""
 
 #: ../../templates/catalog.inc:96
 msgid "Show Duplicate Songs"
-msgstr "显示重复的歌曲"
+msgstr ""
 
 #: ../../templates/catalog.inc:97
 msgid "Show Disabled Songs"
-msgstr "显示被禁止的歌曲"
+msgstr ""
 
 #: ../../templates/catalog.inc:98
 msgid "Clear Catalog Stats"
-msgstr "清除曲库统计信息"
+msgstr ""
 
 #: ../../templates/catalog.inc:100
 msgid "Dump Album Art"
-msgstr "删除歌曲歌手"
+msgstr ""
 
 #: ../../templates/catalog.inc:102
 msgid "View flagged songs"
-msgstr "显示已标记的歌曲"
+msgstr ""
 
 #: ../../templates/catalog.inc:103
 msgid "Catalog Tools"
-msgstr "曲库工具"
+msgstr ""
 
 #: ../../templates/menu.inc:73 ../../templates/menu.inc:79
 msgid "Account"
-msgstr "帐号"
+msgstr ""
 
 #: ../../templates/menu.inc:74 ../../templates/menu.inc:80
 #: ../../templates/show_users.inc:64 ../../templates/show_users.inc:112
 msgid "Stats"
-msgstr "状态"
+msgstr ""
 
 #: ../../templates/show_upload.inc:30
 msgid "Uploading Music to Ampache"
@@ -2267,37 +2193,35 @@ msgstr ""
 
 #: ../../templates/show_users.inc:40
 msgid "Fullname"
-msgstr "全名"
+msgstr ""
 
 #: ../../templates/show_users.inc:48
 msgid "Last Seen"
-msgstr "最后一次"
+msgstr ""
 
 #: ../../templates/show_users.inc:53
-#, fuzzy
 msgid "Registration Date"
-msgstr "注册用户"
+msgstr ""
 
 #: ../../templates/show_users.inc:61 ../../templates/show_users.inc:107
 msgid "Prefs"
-msgstr "设置"
+msgstr ""
 
 #: ../../templates/show_users.inc:67
 msgid "Access"
-msgstr "权限"
+msgstr ""
 
 #: ../../templates/show_users.inc:73
 msgid "On-line"
-msgstr "在线"
+msgstr ""
 
 #: ../../templates/show_users.inc:126
 msgid "delete"
-msgstr "删除"
+msgstr ""
 
 #: ../../templates/list_duplicates.inc:28
-#, fuzzy
 msgid "Duplicate Songs"
-msgstr "显示重复的歌曲"
+msgstr ""
 
 #: ../../templates/list_duplicates.inc:35
 msgid "Length"
@@ -2317,59 +2241,56 @@ msgstr ""
 #: ../../templates/show_login_form.inc:49
 #: ../../templates/show_login_form.inc:63
 msgid "Login"
-msgstr "登录"
+msgstr ""
 
 #: ../../templates/show_login_form.inc:59
 msgid "Remember Me"
-msgstr "登录保留直到关闭"
+msgstr ""
 
 #: ../../templates/show_login_form.inc:72
-#, fuzzy
 msgid "Register"
-msgstr "注册用户"
+msgstr ""
 
 #: ../../templates/show_access_list.inc:34
 msgid "Host Access to Your Catalog"
-msgstr "曲库访问权限"
+msgstr ""
 
 #: ../../templates/show_access_list.inc:43
 msgid "Add Entry"
-msgstr "添加"
+msgstr ""
 
 #: ../../templates/show_access_list.inc:48
 msgid "Start Address"
-msgstr "开始地址"
+msgstr ""
 
 #: ../../templates/show_access_list.inc:49
 msgid "End Address"
-msgstr "结束地址"
+msgstr ""
 
 #: ../../templates/show_access_list.inc:65
 msgid "Revoke"
-msgstr "收回"
+msgstr ""
 
 #: ../../templates/show_search.inc:57
 msgid "Keywords"
 msgstr ""
 
 #: ../../templates/show_search.inc:102
-#, fuzzy
 msgid "Played"
-msgstr "播放"
+msgstr ""
 
 #: ../../templates/show_search.inc:110
-#, fuzzy
 msgid "Min Bitrate"
-msgstr "码率"
+msgstr ""
 
 #: ../../templates/show_search.inc:132
 msgid "Object Type"
-msgstr "目标类型"
+msgstr ""
 
 #: ../../templates/show_search.inc:138
 #, fuzzy
 msgid "Genres"
-msgstr "类别"
+msgstr ""
 
 #: ../../templates/show_search.inc:141
 msgid "Operator"
@@ -2380,9 +2301,8 @@ msgid "AND"
 msgstr ""
 
 #: ../../templates/show_search.inc:150
-#, fuzzy
 msgid "Method"
-msgstr "模式"
+msgstr ""
 
 #: ../../templates/show_search.inc:153
 msgid "Fuzzy"
@@ -2414,24 +2334,23 @@ msgstr ""
 
 #: ../../templates/show_mpdplay.inc:39
 msgid "MPD Play Control"
-msgstr "MPD播放控制"
+msgstr ""
 
 #: ../../templates/show_mpdplay.inc:100
 msgid "Loop"
-msgstr "循环"
+msgstr ""
 
 #: ../../templates/show_mpdplay.inc:107 ../../templates/show_mpdplay.inc:120
 msgid "On"
-msgstr "开"
+msgstr ""
 
 #: ../../templates/show_mpdplay.inc:108 ../../templates/show_mpdplay.inc:121
 msgid "Off"
-msgstr "关"
+msgstr ""
 
 #: ../../templates/show_mpdplay.inc:134
-#, fuzzy
 msgid "Now Playing :"
-msgstr "正在播放"
+msgstr ""
 
 #: ../../templates/show_mpdplay.inc:163
 msgid "On Deck "
@@ -2443,135 +2362,134 @@ msgstr ""
 
 #: ../../templates/show_artist.inc:36
 msgid "Select"
-msgstr "选择"
+msgstr ""
 
 #: ../../templates/show_artist.inc:38
 msgid "Cover"
-msgstr "封面"
+msgstr ""
 
 #: ../../templates/show_artist.inc:39
 msgid "Album Name"
-msgstr "专辑名"
+msgstr ""
 
 #: ../../templates/show_artist.inc:40
 msgid "Album Year"
-msgstr "专辑年代"
+msgstr ""
 
 #: ../../templates/show_artist.inc:41
 msgid "Total Tracks"
-msgstr "总音轨数"
+msgstr ""
 
 #: ../../templates/show_big_art.inc:31
-#, fuzzy
 msgid "Album Art"
-msgstr "查找歌曲歌手"
+msgstr ""
 
 #: ../../templates/show_big_art.inc:35
 msgid "Click to close window"
 msgstr ""
 
-#~ msgid "No Results Found"
-#~ msgstr "没有找到"
+msgid "No Results Found"
+msgstr ""
 
-#~ msgid "New"
-#~ msgstr "新建"
+msgid "New"
+msgstr ""
 
-#~ msgid "View All"
-#~ msgstr "全部显示"
+msgid "View All"
+msgstr ""
 
-#~ msgid "Import"
-#~ msgstr "导入"
+msgid "Import"
+msgstr ""
 
-#~ msgid "Public"
-#~ msgstr "公开"
+msgid "Public"
+msgstr ""
 
-#~ msgid "Your Private"
-#~ msgstr "私人"
+msgid "Your Private"
+msgstr ""
 
-#~ msgid "Other Private"
-#~ msgstr "其他"
+msgid "Other Private"
+msgstr ""
 
-#~ msgid "There are no playlists of this type"
-#~ msgstr "没有自定义播放列表"
+msgid "There are no playlists of this type"
+msgstr ""
 
-#~ msgid "All songs by"
-#~ msgstr "全部歌曲"
+msgid "All songs by"
+msgstr ""
 
-#~ msgid "owned by"
-#~ msgstr "所有者 "
+msgid "owned by"
+msgstr " "
 
-#~ msgid "Edit Playlist"
-#~ msgstr "编辑自定义播放列表"
+msgid "Edit Playlist"
+msgstr ""
 
-#~ msgid "Play Random"
-#~ msgstr "随机播放"
+msgid "Play Random"
+msgstr ""
 
-#~ msgid "Welcome to"
-#~ msgstr "欢迎来到"
+msgid "Welcome to"
+msgstr ""
 
-#~ msgid "Album Art Located"
-#~ msgstr "找到歌曲歌手信息"
+msgid "Album Art Located"
+msgstr ""
 
-#~ msgid ""
-#~ "Album Art information has been located in Amazon. If incorrect, click "
-#~ "\"Reset Album Art\" below to remove the artwork."
-#~ msgstr "在Amazon找到歌曲歌手信息。如果正确，请按下面的\"重置歌曲歌手\""
+msgid ""
+"Album Art information has been located in Amazon. If incorrect, click "
+"\"Reset Album Art\" below to remove the artwork."
+msgstr "Amazon\"\""
 
-#~ msgid "Type"
-#~ msgstr "类型"
+msgid "Type"
+msgstr ""
 
-#~ msgid "<u>S</u>how all albums"
-#~ msgstr "<u>S</u>显示所有专辑"
+msgid "<u>S</u>how all albums"
+msgstr "<u>S</u>"
 
-#~ msgid "Select a starting letter or Show all"
-#~ msgstr "选择首字符或者显示所有的"
+msgid "Select a starting letter or Show all"
+msgstr ""
 
-#~ msgid "An Unknown Error has occured."
-#~ msgstr "发生未知错误"
+msgid "An Unknown Error has occured."
+msgstr ""
 
-#~ msgid "Successfully-Quarantined"
-#~ msgstr "成功－等待批准"
+msgid "Successfully-Quarantined"
+msgstr ""
 
-#~ msgid "Successfully-Cataloged"
-#~ msgstr "成功－加入曲库"
+msgid "Successfully-Cataloged"
+msgstr ""
 
-#~ msgid "Quarantined"
-#~ msgstr "隔离"
+msgid "Quarantined"
+msgstr ""
 
-#~ msgid "View Limit"
-#~ msgstr "显示限制"
+msgid "View Limit"
+msgstr ""
 
-#~ msgid "Create/Modify User Accounts for Ampache"
-#~ msgstr "创建／修改用户帐号"
+msgid "Create/Modify User Accounts for Ampache"
+msgstr ""
 
-#~ msgid "Mail"
-#~ msgstr "邮件"
+msgid "Mail"
+msgstr ""
 
-#~ msgid "Mail your users to notfiy them of changes"
-#~ msgstr "给你的用户发邮件提醒"
+msgid "Mail your users to notfiy them of changes"
+msgstr ""
 
-#~ msgid "Create/Update/Clean your catalog here"
-#~ msgstr "添加／更新／清除曲库"
+msgid "Create/Update/Clean your catalog here"
+msgstr ""
 
-#~ msgid "Modify Site-wide preferences"
-#~ msgstr "全站设置修改"
+msgid "Modify Site-wide preferences"
+msgstr ""
 
-#~ msgid "Modify Access List Permissions"
-#~ msgstr "修改访问权限列表"
+msgid "Modify Access List Permissions"
+msgstr ""
 
-#~ msgid "Must have access_control=true in ampache.cfg"
-#~ msgstr "必须在ampache.cfg里有access_control=true"
+msgid "Must have access_control=true in ampache.cfg"
+msgstr "ampache.cfgaccess_control=true"
 
-#~ msgid "Please Ensure All Files Are Tagged Correctly"
-#~ msgstr "请确定所有文件都正确标记了"
+msgid "Please Ensure All Files Are Tagged Correctly"
+msgstr ""
 
-#~ msgid ""
-#~ "Ampache relies on id3 tags to sort data.  If your file is not tagged it "
-#~ "may be deleted."
-#~ msgstr "系统利用id3信息来索引文件，如果你的文件没有标记，可能会被删除。"
+msgid ""
+"Ampache relies on id3 tags to sort data.  If your file is not tagged it may "
+"be deleted."
+msgstr "id3"
 
-#~ msgid "refresh now"
-#~ msgstr "立即刷新"
+msgid "refresh now"
+msgstr ""
 
-#~ msgid "clear"
-#~ msgstr "清除"
+msgid "clear"
+msgstr ""
