@@ -278,11 +278,15 @@
 		color: <?php echo conf('font_color3'); ?>;
 		border:1px solid <?php echo conf('base_color2'); ?>;
 	}
+	#nowplaying { 
+		background: <?php echo conf('base_color1'); ?>;
+	}
 	.np_row { 
-		clear: both;
+		display:block;
+		background: <?php echo conf('base_color2'); ?>;
 	}
 	.np_cell { 
-		float: left;
+		display: inline;
 		margin: 10px;
 	}
 -->
