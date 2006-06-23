@@ -189,7 +189,7 @@ function search_song($data,$operator,$method,$limit) {
 	$where_sql = rtrim($where_sql,$operator);
 
 	$sql = $base_sql . $table_sql . " WHERE " . $join_sql . "(" . $where_sql . ")" . $limit_sql;
-
+	
 	/**
 	 * Because we might need this for Dynamic Playlist Action 
 	 * but we don't trust users to provide this store it in the

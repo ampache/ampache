@@ -169,6 +169,13 @@ class vainfo {
 
 		$results = array();
 
+		/* Return false if we don't have 
+		 * any tags to look at 
+		 */
+		if (!is_array($this->_raw['tags'])) { 
+			return false; 
+		}
+
 		/* The tags can come in many different shapes and colors 
 		 * depending on the encoding time of day and phase of the
 		 * moon
@@ -186,6 +193,9 @@ class vainfo {
 				break;
 //				case 'ape':
 //					$results[$key] = $this->_parse_ape($tag_array);
+				break;
+				case 'quicktime':
+					$results[$key] = $this->_parse_quicktime($tag_array);
 				break;
 				default: 
 					debug_event('vainfo','Error: Unable to determine tag type of ' . $key . ' for file ' . $this->filename . ' Assuming id3v2','5');
@@ -369,8 +379,24 @@ class vainfo {
 	 */
 	function _parse_quicktime($tags) { 
 
+                /* Results array */
+                $array = array();
 
+                /* go through them all! */
+                foreach ($tags as $tag=>$data) {
 
+                        /* We need to translate a few of these tags */
+                        switch ($tag) {
+                                case 'creation_date':
+                                        $array['year']  = $this->_clean_tag($data['0']);
+                                break;
+                        } // end switch
+
+                        $array[$tag] = $this->_clean_tag($data['0']);
+
+                } // end foreach
+
+                return $array;
 
 	} // _parse_quicktime
 
