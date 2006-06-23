@@ -37,8 +37,6 @@ if (conf('demo_mode') || !$user->has_access('25')) {
 }
 
 
-$web_path = conf('web_path');
-
 $song_ids = array();
 $web_path = conf('web_path');
 

@@ -76,6 +76,7 @@
 			<option value="1024">1024MB</option>
 		</select>
 	</td>
+</tr>
 <tr>
 	<td colspan="4">
 		<input type="hidden" name="action" value="random" />

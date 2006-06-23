@@ -893,7 +893,7 @@ function get_location() {
 		case 'upload.php':
 			$location['title'] 	= 'Upload';
 			break;
-		case 'mpd.php':
+		case 'localplay.php':
 			$location['title'] 	= 'Local Play';
 			break;
 		case 'randomplay.php':
@@ -932,6 +932,10 @@ function get_location() {
 			$location['title']	= 'Site Preferences';
 			$location['section']	= 'admin';
 			break;
+		case 'admin/modules.php':
+			$location['title']	= 'Manage Modules';
+			$location['section']	= 'admin';
+			break;
 		case 'browse.php':
 			$location['title']	= 'Browse Music';
 			$location['section']	= 'browse';
@@ -947,6 +951,9 @@ function get_location() {
 		case 'genre.php':
 			$location['title']	= 'Genre';
 			$location['section']	= 'browse';
+			break;
+		case 'stats.php':
+			$location['title']	= 'Statistics';
 			break;
 		default:
 			$location['title'] = '';

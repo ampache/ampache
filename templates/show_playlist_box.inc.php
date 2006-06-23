@@ -44,7 +44,7 @@ $playlist_id = scrub_out($_REQUEST['playlist_id']);
 		<li><a href="<?php echo $web_path; ?>/playlist.php?action=show_import_playlist"><?php echo _('Import From File'); ?></a></li>
 		<li><a href="<?php echo $web_path; ?>/playlist.php?action=new"><?php echo _('Create New Playlist'); ?></a></li>
 		<?php if ($GLOBALS['user']->has_access(100)) { ?>
-		<li><a href="<?php echo $web_path; ?>/playlist.php?action=prune_empty"><?php echo _('Delete Empty Playlists'); ?></a</li>
+		<li><a href="<?php echo $web_path; ?>/playlist.php?action=prune_empty"><?php echo _('Delete Empty Playlists'); ?></a></li>
 		<?php } ?>
 		<?php } ?>	
 		</ul>
