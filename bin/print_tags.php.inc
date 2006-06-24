@@ -22,6 +22,13 @@
 $no_session = '1';
 require ("../lib/init.php");
 
+/**
+ * Set this to true if you want it to e-mail a report
+ * to tags@ampache.org (usefull for troubleshooting
+ */
+//$send_mail = true;
+
+
 $filename = usage();
 
 echo "Reading: $filename\n";
@@ -32,6 +39,15 @@ $results = $info->tags;
 $results['file'] = $filename;
 $key = get_tag_type($results);
 $ampache_results = clean_tag_info($results,$key,$filename);
+
+if ($send_mail) { 
+	$getid3_results = print_r($info,1);
+	$amp_results = print_r($ampache_results,1);
+	$body = $getid3_results . "\n-----\n\n" . $amp_results;
+	$subject = "[Ampache] Print Tags - $filename";
+	mail('tags@ampache.org',$subject,$body);
+}
+
 
 echo "Results Seen by GetID3()\n";
 print_r($info);

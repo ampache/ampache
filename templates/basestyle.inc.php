@@ -284,10 +284,15 @@
 	.np_row { 
 		display:block;
 		background: <?php echo conf('base_color2'); ?>;
+		padding-top: 3px;
+		padding-bottom: 3px;
 	}
 	.np_cell { 
 		display: inline;
 		margin: 10px;
+	}
+	#bigdaddy { 
+		padding: 5px;
 	}
 -->
 </style>

@@ -45,15 +45,12 @@ if (conf('refresh_limit') > 5) {
 }
 ?>
 
+<div id="nowplaying" style="margin-left:25px;">
+	<?php show_now_playing(); ?>
+</div> <!-- Close Now Playing Div -->
+
 <!-- Big Daddy Table -->
-<table id="bigdaddy" style="padding-left:5px;padding-right:5px;padding-top:5px;padding-bottom:5px;" width="100%">
-<tr>
-	<td style="padding-left:17px;" valign="top" colspan="2">
-	<div id="nowplaying">
-		<?php show_now_playing(); ?>
-	</div> <!-- Close Now Playing Div -->
-	</td>
-</tr>	
+<table id="bigdaddy">
 <tr>
 	<td valign="top">
 		<table border="0"><!-- Left table -->

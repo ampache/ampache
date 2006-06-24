@@ -37,8 +37,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 	<?php if (conf('play_album_art')) { ?>
 	<div class="np_cell">
 	<a target="_blank" href="<?php echo $web_path; ?>/albumart.php?id=<?php echo $song->album; ?>&amp;type=popup" onclick="popup_art('<?php echo $web_path; ?>/albumart.php?id=<?php echo $song->album; ?>&amp;type=popup'); return false;">
-		<img align="middle" border="0" src="<?php echo $web_path; ?>/albumart.php?id=<?php echo $song->album; ?>&amp;fast=1&amp;thumb=1" alt="Album Art" height="75" />				
-	</a>
+	<img align="middle" border="0" src="<?php echo $web_path; ?>/albumart.php?id=<?php echo $song->album; ?>&amp;fast=1&amp;thumb=1" alt="Album Art" height="75" /></a>
 	</div>
 	<?php } // end play album art ?>
 </div>
