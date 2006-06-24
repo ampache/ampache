@@ -133,6 +133,18 @@ function check_lock_songs($song_id) {
  */
 function start_downsample($song,$now_playing_id=0,$song_name=0) { 
 
+	/** 
+	 * Extra check, for now hardcode it to mp3 but if
+	 * we are transcoding we need to fix the mime type
+	 * and let the user define what file type it's switching
+	 * to. 
+	 */
+	if (!$song->native_stream()) { 
+		$song->mime = 'audio/mpeg';
+		$song_name = $song->f_artist_full . " - " . $song->title . ".mp3";
+	}
+
+
 	/* Check to see if bitrates are set if so let's go ahead and optomize! */
 	$max_bitrate = conf('max_bit_rate');
 	$min_bitrate = conf('min_bit_rate');
@@ -215,6 +227,7 @@ function start_downsample($song,$now_playing_id=0,$song_name=0) {
 		/* Set the Sample Ratio */
 		$sample_ratio = $sample_rate/($song->bitrate/1000);
 	}
+
 
 	header("Content-Length: " . $sample_ratio*$song->size);
         $browser->downloadHeaders($song_name, $song->mime, false,$sample_ratio*$song->size);
