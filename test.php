@@ -29,7 +29,11 @@ $configfile = "$prefix/config/ampache.cfg.php";
 
 require_once($prefix . "/lib/general.lib.php");
 require_once($prefix . "/lib/ui.lib.php");
+require_once($prefix . "/lib/class/error.class.php");
+$error = new error();
 require_once($prefix . "/lib/debug.php");
+
+
 
 switch ($_REQUEST['action']) { 
 
