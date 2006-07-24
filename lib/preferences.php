@@ -280,6 +280,7 @@ function create_preference_input($name,$value) {
 			echo "\t<option value=\"pls\" $pls_type>" . _("PLS") . "</option>\n";
 			echo "\t<option value=\"asx\" $asx_type>" . _("Asx") . "</option>\n";
 			echo "\t<option value=\"ram\" $ram_type>" . _("RAM") . "</option>\n";
+			echo "\t<option value=\"xspf\" $xspf_type>" . _("XSPF") . "</option>\n";
 			echo "</select>\n";
 		break;
 		case 'lang':

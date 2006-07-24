@@ -176,6 +176,45 @@ class Stream {
 
 	} // create_asx
 
+	/*!
+		@function create_xspf
+		@discussion creates an XSPF playlist (Thx PB1DFT)
+	*/
+	function create_xspf() { 
+
+	        header("Cache-control: public");
+        	header("Content-Disposition: filename=playlist.xspf");
+		header("Content-Type: application/xspf+xml;");
+		echo "<?xml version=\"1.0\" encoding=\"iso-8859-1\" ?>\n";
+		echo "<playlist version = \"1\" \n		xmlns=\"http://xspf.org/ns/0/\">\n";
+                echo "		<title>Ampache XSPF Playlist</title>\n";
+                echo "		<creator>" . htmlspecialchars(conf('site_title')) . "</creator>\n";
+		echo "		<annotation>" . htmlspecialchars(conf('site_title')) . "</annotation>\n";
+		echo "		<info>". conf('web_path') ."</info>\n";
+		echo "		<trackList>\n\n\n\n";
+		
+		foreach ($this->songs as $song_id) {
+                	$song = new Song($song_id);
+                        $song->format_song();
+			$url = htmlspecialchars($song->get_url());
+                        $song_name = $song->f_artist_full . " - " . $song->title . "." . $song->type;
+			echo "		<track>\n";
+			echo "			<location>$url</location>\n";
+			echo "			<identifier>$url</identifier>\n";
+			echo "			<title>" . htmlspecialchars($song->title) . "</title>\n";
+			echo "			<creator>" . htmlspecialchars($song->f_artist_full) . "</creator>\n";
+			echo "			<annotation></annotation>\n";
+			echo "			<info>" . conf('web_path') . htmlspecialchars("/albums.php?action=show&album=") . htmlspecialchars($song->album)  . "</info>";
+			echo "			<image>" . conf('web_path') . "/albumart.php?id=" . htmlspecialchars($song->album) . htmlspecialchars("&thumb=2") . "</image>\n";
+			echo "			<album>" . htmlspecialchars($song->f_album_full) . "</album>\n";
+			echo "			<duration>" . $song->time  . "</duration>\n"; 
+			echo "		</track>\n\n\n";
+                } // end foreach
+		echo "		</trackList>\n";
+                echo "</playlist>\n";
+
+	} // create_xspf
+
 	/*! 
 		@function create_icecast2
 		@discussion pushes an icecast stream
