@@ -143,7 +143,7 @@ switch ($action) {
 
 		/* Attempt to create the new user */
 		$access = 'disabled';
-		if (conf('auto_user')) { $access = '5'; }
+		if (conf('auto_user')) { $access = conf('auto_user'); }
 		$new_user = $GLOBALS['user']->create($username,$fullname,$email,$pass1,$access);
 
 		if (!$new_user) {

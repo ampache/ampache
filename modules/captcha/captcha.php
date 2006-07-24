@@ -46,8 +46,7 @@ class captcha {
    function form($title="&rarr; retype that here", $more="<small><br>Enter the correct letters and numbers from the image into the text box. <br>This small test serves as access restriction against malicious bots. <br>Simply reload the page if this graphic is too hard to read.</small>") {
       $pw = captcha::mkpass();
       $hash = captcha::hash($pw);
-//      $maxsize = (strpos("MSIE", $_SERVER["HTTP_USER_AGENT"]) ? 1000 : 6000);
-      $maxsize = 100;
+     $maxsize = (strpos("MSIE", $_SERVER["HTTP_USER_AGENT"]) ? 1000 : 6000);
       @header("Vary: User-Agent");
       $img = "data:image/jpeg;base64,"
            . base64_encode(captcha::image($pw, 200, 60, CAPTCHA_INVERSE, $maxsize));
@@ -61,20 +60,10 @@ class captcha {
       . '</td><td>'.$more.'</td>'
       . '</tr></table>';
 
-//        '<table border="0" summary="captcha input"><tr>'
-//       '<img name="captcha_image" id="captcha_image" src="'.$img. '" height="60" width="200" alt="'.$alt. '" /></td>'
-//      . '<td><img name="captcha_image" id="captcha_image" src="'.$img.'" height="60" width="200" alt="'.$alt. '" /></td>'
-//      . '<td>'.$title. '<br/><input name="captcha_hash" type="hidden" value="'.$hash. '" />'
-//       ''.$title. '<br/><input name="captcha_hash" type="hidden" value="'.$hash. '" />'
-//      . '<input name="captcha_input" type="text" size="7" maxlength="16" style="height:23px; font-size:16px; font-weight:450;" />'
-//      . '<td width="80%">'.$more.'</td>'
-//      . '</tr></table>';
-
       #-- js/html fix if ("MSIE")
       {
-         $base = "http://$_SERVER[SERVER_NAME]:$_SERVER[SERVER_PORT]/ampache/captcha.php";
-//	          $base = "http://10.60.60.16/ampache/captcha.php";
-//               . substr(realpath(__FILE__), strlen($_SERVER["DOCUMENT_ROOT"]));
+//         $base = "http://$_SERVER[SERVER_NAME]:$_SERVER[SERVER_PORT]".$conf('web_path')."/modules/captcha/captcha.php";
+	 $base = $_SERVER['PHP_SELF'];
          $html .= <<<END
 <script language="Javascript"><!--
 if (/Microsoft/.test(navigator.appName)) {
@@ -90,12 +79,6 @@ END;
       $html = "<div class=\"captcha\">$html</div>";
       return($html);
    }
-/*<script language="Javascript"><!--
-if (/Microsoft/.test(navigator.appName)) {
-   var img = document.captcha_image;
-  img.src = "$base?_ddu=" + img.src.substr(23); 
-    }
---></script>/*
 
 
    /* generates alternative (non-graphic), human-understandable
@@ -245,8 +228,13 @@ if (/Microsoft/.test(navigator.appName)) {
       }
 
       #-- let JFIF stream be generated
-//      $quality = 67;
+/* Drop down quality if browser is MSIE */
+if (preg_match('|MSIE ([0-9].[0-9]{1,2})|',$_SERVER["HTTP_USER_AGENT"],$matched)){
       $quality = 8;
+      } else {
+      $quality = 100;
+      }
+
       $s = array();
       do {
          ob_start(); ob_implicit_flush(0);

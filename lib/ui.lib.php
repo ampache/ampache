@@ -1106,6 +1106,26 @@ Thank you for registering.";
 
 mail($email, "Welcome to $title" , $body, $from);
 
+if (conf('admin_notify_reg')){
+
+$admin_body = "A new user has registered at $title
+
+The following values where entered;
+
+Username: $username
+Fullname: $fullname
+E-Mail: $email
+
+Click here to view user:
+"
+ . conf('web_path') . "/admin/users.php?action=edit&user=$username";
+
+
+
+mail (conf('mail_from'), "New user registration at $title", $admin_body, $from);
+}
+
+
 } //send_confirmation
 
 /**

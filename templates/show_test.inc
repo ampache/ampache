@@ -174,7 +174,11 @@ $row_classes = array('even','odd');
 	</td>
 	<td>
 	<?php echo _("This test makes sure that you have set all of the required configuration variables and that we are able to 
-	completely parse your config file"); ?>
+	completely parse your config file");
+	echo " <font color=\"red\">";
+	$error->print_error('log_path');
+	echo " </font> ";
+	?>
 	</td>
 </tr>
 <tr>

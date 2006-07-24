@@ -296,14 +296,20 @@ refresh_limit = "60"
 #mail_domain = "domain.tld"
 
 # This setting will be used as mail from address.
+# It will also be used to notify if a registration occured.
 # You need to change this when you activate public_registration.
 #mail_from = "info@domain.tld"
+
+# This setting turns on/off admin notify off registration.
+# DEFAULT: false
+#admin_notify_reg = "false"
 
 # This setting will allow all registrants to be auto-approved
 # as a user. By default, they will be added as a guest and
 # must be "promoted" by the admin.
-# DEFAULT: false
-#auto_user = "false"
+# POSSIBLE VALUES: guest, user, admin
+# DEFAULT: guest
+#auto_user = "guest"
 
 # This will display the user agreement when registering
 # For agreement text, edit templates/user_agreement.php

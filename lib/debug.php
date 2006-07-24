@@ -34,6 +34,8 @@
 		file is readable, overkill I know..
 	@param level	0 is readable, 1 detailed info
 */
+
+
 function read_config_file($file,$level=0) { 
 
 	$fp = @fopen($file, 'r');
@@ -186,7 +188,7 @@ function check_php_pcre() {
                 least set the needed variables
 */
 function check_config_values($conf) { 
-        
+		$error = new Error();        
 	if (!$conf['local_host']) { 
                 return false;
         }
@@ -211,7 +213,13 @@ function check_config_values($conf) {
 	if (!isset($conf['sess_cookiesecure'])) { 
 		return false;
 	}
-
+	if (isset($conf['debug'])) {
+	    if (!isset($conf['log_path'])) {
+		$error->add_error('log_path',_("You defined the option \"debug = on\" but didn't define a log path for the log to be stored"));
+		return false;
+	    }
+	}
+	
         return true;
 
 } // check_config_values
