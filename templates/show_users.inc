@@ -50,7 +50,7 @@ $admin_menu = "admin/";
 		</a>
 	</td>
         <td align="center">
-		<a href="<?php echo $web_path; ?>/<?php echo $_SESSION['view_script']; ?>?action=<?php echo $_REQUEST['action']; ?>&amp;keep_view=true&amp;sort_type=last_seen&amp;sort_order=0">
+		<a href="<?php echo $web_path; ?>/<?php echo $_SESSION['view_script']; ?>?action=<?php echo $_REQUEST['action']; ?>&amp;keep_view=true&amp;sort_type=create_date&amp;sort_order=0">
 		<b><?php echo _("Registration Date"); ?></b>
 		</a>
 	</td>
