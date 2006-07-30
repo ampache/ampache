@@ -60,9 +60,10 @@ Contents:
 	- Realtime Downsampled
 	- Automatic Downsampling based on load
 	- On the Fly Transcoding
-	- Localplay using Moosic
-	- Localplay using MPD
-	- Icecast2 Stream
+	- Localplay
+		- Music Player Daemon (MPD)
+		- Xbox Media Center (XMBC)
+		- Icecast2
 	
   C) Current Translations
 
@@ -79,7 +80,7 @@ Contents:
 	- Chinese	(zh_CN)
 	- UK English	(en_GB)
 	- Italian	(it_IT)
-	- French	(fr_FR) *Partial
+	- French	(fr_FR) 
 
   D) A Special Thanks:
      Thanx to those who've helped us make Ampache so useable:

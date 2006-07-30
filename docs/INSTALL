@@ -26,11 +26,21 @@
   directory does not contain an existing ampache.cfg
 
   	Web Install: 
-		Step 1 - Inserting the database, this requires you to enter
-			a username/pass for MySQL that is able to create
-			a brand new database and insert new tables. This does
-			not have to be the user you actually run ampache as
-		Step 2 - Creating the Config file, this step asks for a 'user'
+		Step 1 - Chosing your Language: 
+			Ampache is translated into many different languages you 
+			can pick the language that you would like to install Ampache
+			in from the drop down provided. 
+
+		Step 2 - Inserting the database:
+			This requires you to enter a username/pass for MySQL that 
+			is able to create a new database and insert new tables. 
+			This should not be the user you actually run ampache as. 
+			You can also create MySQL user at this point which will 
+			have the correct permissions to the newly created Ampache 
+			database.
+
+		Step 3 - Creating the Config file:
+			This step asks for a 'user'
 			level account for MySQL that has full access over
 			the newly created ampache database, this can be the 
 			same as the last step, but it is not recommended. 
@@ -38,12 +48,18 @@
 			to the /config directory, if it isn't able to it 
 			should prompt you to download the ampache.cfg simply
 			put it into /config and then visit the login page. 
-		Step 3 - Creating the Initial User Account, you will be asked
-			for a username and password for the administrator
-			account. 
+
+		Step 4 - Creating the Initial User Account:
+			You will be asked for a username and password for the 
+			initial administrator account. If at any time you 
+			forget your admin password you can simply turn of 
+			authentication by editing your /config/ampache.cfg.php
+			and setting use_auth = "false". This will allow you
+			to get into your ampache install to reset your admin
+			password. 
 
   Enjoy! If you have any problems with the web installer please report them 
-  to vollmerk@ampache.org Thanks!
+  to vollmer@ampache.org Thanks!
   
     
   2. The Long of Setting Up Ampache
@@ -97,8 +113,40 @@
         Edit this file however you like, with either php code or straight html.
         The output will be displayed below the login box on login.php.
 
+      2.3.2 Configuring the Ampache (config.php.inc)
+	
+	Copy /config/ampache.cfg.php.dist to /config/ampache.cfg.php
+
+	You will need to manually enter the following variables before ampache 
+	will work. 
+
+		web_path
+		local_host
+		local_db
+		local_username
+		local_pass
+
+	It is strongly recommended that you read through the entire Ampache config
+	file as there are many different options that you may want to change. By 
+	defualt Ampache attempts to present you with a secure, yet useable 
+	configuration. If you have and recommendations in regards to the defaults
+	provided in Ampache.cfg.php.dist please let us know. 
+
+      2.3.3 Creating your First User
+
+	If you don't use the web installer your Ampache installation comes 
+	without a default administrator. You will need to edit your 
+	/config/ampache.cfg.php and set use_auth = "false" then visit your
+	ampache installation, you will not be prompted for a username/password.
+	Go to admin --> users and create a Admin level user. Make sure that you
+	set use_auth = "true" otherwise your Ampache install will be open to 
+	the world. 
+
 
   3. Running Ampache For The First Time
+
+	* If you have performed a manual installation you can skip to 3.1,
+	setting up the catalog. 
 
         Point your browser at your new ampache webpage and you should get 
         the installation page. It will run you through inserting your 
@@ -107,9 +155,9 @@
         Grab A Beer....
 
       3.1  Setting up a catalog
-        First, create your local catalogs.  Do this my first clicking
+        First, create your local catalogs.  Do this by first clicking
         `Add a catalog', and entering the path for the root of your
-        collection of MP3 files.  There is no need to enter sub directories
+        collection of audio files.  There is no need to enter sub directories
 	since the update tool will recursively catalog all subdirectories.
 
         You can enter multiple paths, so this means that you can access
@@ -160,30 +208,8 @@
 
 	When these fields are populated a periodic update may be performed by scheduling
 	the fileupdate.pl program to run at timed intervals.  This program will query the 
-	database and attempt any requested updates. Before fileupdate.pl can be run, the 
-	Ampache.pm file must be edited to reflect your archive information.
+	database and attempt to sort and rename your files based on the patterns you have
+	specified and the tag information in the database. 
 	
-	Usage of fileupdate.pl is as follows:
-
-	    fileupdate [--id3|--rename|--sort|--all] [--help] [--pretend] [--verbose]
-              --pretend   Display command taken, without actually doing anything.
-              --id3       Update id3 tags for all files flagged with 'id3'
-              --rename    Rename files flagged with 'rename'
-              --sort      Sort files flagged with 'sort'
-              --all       Performs id3 update, rename, and sort
-                          for all files flagged with 'id3'
-              --verbose   Shows detailed information about what's happening.
-              --help   This message
-
-	
-	
-	An example usage would be to schedule a cron tab which will run fileupdate.pl with 
-	the appropriate arguments which runs every 6 hours.
-
-	EXAMPLE:
-        If you were to place the following line in your crontab:
-	     * 24 * * * /apache/bin/fileupdate.pl -all
-
-	any updates applied to the database would be applied at midnight everyday
 
 

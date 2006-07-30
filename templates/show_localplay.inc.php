@@ -34,12 +34,7 @@ $songs = $localplay->get();
 </ul>
 </div>
 <br />
-<div class="text-box">
-<h2>Debug Status Information (Temp!)</h2>
-<pre>
-<?php print_r($localplay->status()); ?>
-</pre>
-</div>
+<?php require_once(conf('prefix') . '/templates/show_localplay_status.inc.php'); ?>
 <br />
 <div class="text-box">
 <table class="border" cellspacing="0" border="0">

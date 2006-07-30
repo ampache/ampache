@@ -956,4 +956,25 @@ function translate_pattern_code($code) {
 	
 } // translate_pattern_code
 
+
+/**
+ * print_boolean
+ * This function takes a boolean value and then print out  a friendly
+ * text message, usefull if you have a 0/1 that you need to turn into 
+ * a "Off" "On"
+ */
+function print_boolean($value) { 
+
+
+	if ($value) { 
+		$string = '<span class="item_on">' . _('On') . '</span>'; 
+	} 
+	else { 
+		$string = '<span class="item_off">' . _('Off') . '</span>';
+	}	
+
+	return $string;
+
+} // print_boolean
+
 ?>

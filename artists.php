@@ -193,11 +193,11 @@ switch($action) {
 		preg_match("/^(\w*)/", $match, $matches);
 		show_alphabet_list('artists','artists.php',$match);
 		if ($match === "Browse") {
-			show_alphabet_form('',_("Show Artists starting with"),"artists.php?action=match");
+			show_alphabet_form('',_('Show Artists starting with'),"artists.php?action=match");
 			show_artists();
 		}
 		elseif ($match === "Show_all") {
-			show_alphabet_form('',_("Show Artists starting with"),"artists.php?action=match");
+			show_alphabet_form('',_('Show Artists starting with'),"artists.php?action=match");
 			$_SESSION['view_offset_limit'] = 999999;
 			show_artists();
 		}		
