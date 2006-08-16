@@ -37,7 +37,7 @@ $ajax_url	= $web_path . '/server/ajax.server.php';
 	<img src="<?php echo $web_path; ?>/images/localplay/stop.gif" alt="stop" />
 </span>
 <?php if ($localplay->has_function('pause')) { ?>
-<span id="pause_button" onclick="ajaxPut('<?php echo $ajax_url; ?>?action=localplay&amp;cmd=pause<?php echo $requird_info; ?>','localplay_state');return true;">
+<span id="pause_button" onclick="ajaxPut('<?php echo $ajax_url; ?>?action=localplay&amp;cmd=pause<?php echo $required_info; ?>','localplay_state');return true;">
 	<img src="<?php echo $web_path; ?>/images/localplay/pause.gif" alt="pause" />
 </span>
 <?php } ?>

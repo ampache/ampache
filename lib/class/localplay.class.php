@@ -412,6 +412,24 @@ class Localplay {
 
 	} // prev
 
+       /**
+        * pause
+        * This isn't a required function, it tells the daemon to pause the
+        * song
+        */
+        function pause() {
+
+                $function = $this->_function_map['pause'];
+
+                if (!$this->_player->$function()) {
+                        debug_event('localplay','Error: Unable to pause song, check ' . $this->type . ' controller','1');
+                        return false;
+                }
+
+                return true;
+
+        } // pause
+
 	/**
 	 * get_preferences
 	 * This functions returns an array of the preferences that the localplay 
