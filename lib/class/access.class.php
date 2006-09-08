@@ -97,6 +97,10 @@ class Access {
 	*/
 	function create($name,$start,$end,$level) { 
 
+		/* We need to verify the incomming data a littlebit */
+		$start = intval($start);
+		$end   = intval($end);
+
 		$start 	= ip2int($start);
 		$end 	= ip2int($end);
 		$name	= sql_escape($name);

@@ -43,11 +43,13 @@ switch ($action ) {
 	break;
 	case 'delete_host':
 		$access->delete($_REQUEST['access_id']);
-		show_confirmation(_('Entry Deleted'),_('Your Access List Entry has been removed'),'admin/access.php');
+		$url = conf('web_path') . '/admin/access.php';
+		show_confirmation(_('Entry Deleted'),_('Your Access List Entry has been removed'),$url);
 	break;
 	case 'add_host':
 		$access->create($_REQUEST['name'],$_REQUEST['start'],$_REQUEST['end'],$_REQUEST['level']);
-		show_confirmation(_('Entry Added'),_('Your new Access List Entry has been created'),'admin/access.php');
+		$url = conf('web_path') . '/admin/access.php';
+		show_confirmation(_('Entry Added'),_('Your new Access List Entry has been created'),$url);
 	break;
 	case 'update_host':
 		$access->update($_REQUEST);

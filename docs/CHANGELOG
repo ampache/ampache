@@ -4,6 +4,8 @@
 
 --------------------------------------------------------------------------
   v.3.3.2
+	- Cleaned up some Formating issues with the Access control 
+		interface
 	- Fixed an issue with the MPD Controller not passing the password
 		to the MPD class causing flames to shoot out if your MPD
 		had a password set
