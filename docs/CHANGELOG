@@ -4,6 +4,9 @@
 
 --------------------------------------------------------------------------
   v.3.3.2
+	- Fixed an issue with the MPD Controller not passing the password
+		to the MPD class causing flames to shoot out if your MPD
+		had a password set
   	- Fixed issue with transcoding not changing the mime type or the
 		filename, currently hardcodes to mp3 and audio/mpeg
   	- Updated Spanish Translation (Thx Bgordon)

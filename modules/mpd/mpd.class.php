@@ -74,7 +74,7 @@ class mpd {
 	// TCP/Connection variables
 	var $host;
 	var $port;
-    var $password;
+        var $password;
 
 	var $mpd_sock   = NULL;
 	var $connected  = FALSE;
@@ -119,20 +119,23 @@ class mpd {
 	function mpd($srv,$port,$pwd = NULL) {
 		$this->host = $srv;
 		$this->port = $port;
-        $this->password = $pwd;
+        	$this->password = $pwd;
 		
 		$resp = $this->Connect();
 		if ( is_null($resp) ) {
-            $this->errStr = "Could not connect";
+       			$this->errStr = "Could not connect";
 			return;
-		} else {
-			list ( $this->mpd_version ) = sscanf($resp, MPD_RESPONSE_OK . " MPD %s\n");
-            if ( ! is_null($pwd) ) {
+		} 
+		else {	list ( $this->mpd_version ) = sscanf($resp, MPD_RESPONSE_OK . " MPD %s\n");
+                
+		if ( ! is_null($pwd) ) {
                 if ( is_null($this->SendCommand(MPD_CMD_PASSWORD,$pwd)) ) {
                     $this->connected = FALSE;
+		    $this->errStr = "Password supplied is incorrect or Invalid Command";
                     return;  // bad password or command
                 }
-    			if ( is_null($this->RefreshInfo()) ) { // no read access -- might as well be disconnected!
+    			
+		if ( is_null($this->RefreshInfo()) ) { // no read access -- might as well be disconnected!
                     $this->connected = FALSE;
                     $this->errStr = "Password supplied does not have read access";
                     return;
@@ -156,6 +159,7 @@ class mpd {
 	function Connect() {
 		if ( $this->debugging ) echo "mpd->Connect() / host: ".$this->host.", port: ".$this->port."\n";
 		$this->mpd_sock = fsockopen($this->host,$this->port,$errNo,$errStr,3);
+		
 		/* Vollmerize this bizatch, if we've got php4.3+ we should 
 		 * have these functions and we need them
 		 */
@@ -170,7 +174,6 @@ class mpd {
 			stream_set_blocking($this->mpd_sock,TRUE);
 			$status = socket_get_status($this->mpd_sock);
 		}
-		
 		if (!$this->mpd_sock) {
 			$this->errStr = "Socket Error: $errStr ($errNo)";
 			return NULL;

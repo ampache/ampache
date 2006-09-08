@@ -373,7 +373,7 @@ class AmpacheMpd {
 	 */
 	function connect() { 
 		
-		$this->_mpd = new mpd(conf('localplay_mpd_hostname'),conf('localplay_mpd_port'));
+		$this->_mpd = new mpd(conf('localplay_mpd_hostname'),conf('localplay_mpd_port'),conf('localplay_mpd_password'));
 
 		if ($this->_mpd->connected) { return true; } 
 
