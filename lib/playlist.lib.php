@@ -64,6 +64,11 @@ function show_playlist($playlist) {
 	/* Create the Playlist */
         $song_ids = $playlist->get_items();
 
+	/* Store this new id in the session for later 
+	 * use
+	 */
+	$_SESSION['data']['playlist_id']	= $playlist->id;
+
 	show_playlist_menu();
 
         if (count($song_ids) > 0) {

@@ -319,11 +319,20 @@ class Playlist {
 	 */
 	function add_songs($song_ids=array()) { 
 
+		/* We need to pull the current 'end' track and then use that to
+		 * append, rather then integrate take end track # and add it to 
+		 * $song->track add one to make sure it really is 'next'
+		 */
+		$sql = "SELECT `track` FROM playlist_data WHERE `playlist`='" . $this->id . "' ORDER BY `track` DESC LIMIT 1";
+		$db_results = mysql_query($sql, dbh());
+		$data = mysql_fetch_assoc($db_results);
+		$base_track = $data['track'];
+
 		foreach ($song_ids as $song_id) { 
 			/* We need the songs track */
 			$song = new Song($song_id);
-
-			$track	= sql_escape($song->track);
+			
+			$track	= sql_escape($song->track+$base_track);
 			$id	= sql_escape($song->id);
 			$pl_id	= sql_escape($this->id);
 

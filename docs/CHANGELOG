@@ -4,16 +4,19 @@
 
 --------------------------------------------------------------------------
   v.3.3.2
+	- When adding to a playlist by default it 'appends' rather then
+		integrating (Thx Salguod)
+	- Now Remembers the Last used playlist correctly. (Thx Salguod)
 	- Cleaned up some Formating issues with the Access control 
-		interface
+		interface.
 	- Fixed an issue with the MPD Controller not passing the password
 		to the MPD class causing flames to shoot out if your MPD
-		had a password set
+		had a password set.
   	- Fixed issue with transcoding not changing the mime type or the
-		filename, currently hardcodes to mp3 and audio/mpeg
+		filename, currently hardcodes to mp3 and audio/mpeg.
   	- Updated Spanish Translation (Thx Bgordon)
 	- Fixed potential for a foreach() error on vainfo if no tags are
-		found, and fixed quicktime (mp4) tag reading
+		found, and fixed quicktime (mp4) tag reading.
   	- Fixed the CSS for now playing, with multiple entries it turned
 		into modern art. 
   	- Fixed issue with Keywords search that cropped up when I removed

@@ -86,6 +86,8 @@ switch ($action) {
 
 		/* Show the Playlist */
 		$_REQUEST['playlist_id'] = $playlist->id;
+		/* Store this new id in the session for later use */
+		$_SESSION['data']['playlist_id']        = $playlist->id;
 		show_playlist($playlist);
 	break;	
 	case 'add_dyn_song':
@@ -96,6 +98,7 @@ switch ($action) {
 		}
 		
 		$playlist->add_dyn_song();
+		$_SESSION['data']['playlist_id']        = $playlist->id;
 		show_playlist($playlist);
 	break;
 	case 'create_playlist':
@@ -110,6 +113,7 @@ switch ($action) {
 		$playlist_type	= scrub_in($_REQUEST['type']);
 
 		$playlist->create($playlist_name,$playlist_type);	
+		$_SESSION['data']['playlist_id']        = $playlist->id;
 		show_confirmation(_('Playlist Created'),$playlist_name . ' (' . $playlist_type . ') ' . _(' has been created'),'playlist.php');
 	break;
 	case 'edit':
