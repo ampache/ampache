@@ -45,6 +45,10 @@
 				if ($type == 'album') { 
 					$song_ids = get_songs_from_type($type,$_POST['song'],$_REQUEST['artist_id']);
 				}
+		                elseif ($_REQUEST['playlist_id']) { 
+		                        $playlist = new Playlist($_REQUEST['playlist_id']);
+		                        $song_ids = $playlist->get_songs($_REQUEST['song']);
+		                }
 				else { 
 					$song_ids = $_POST['song'];
 				}

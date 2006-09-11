@@ -4,6 +4,8 @@
 
 --------------------------------------------------------------------------
   v.3.3.2
+	- Fixed an issue with 'Download Selected' from playlists passing
+		the incorrect songs
 	- When adding to a playlist by default it 'appends' rather then
 		integrating (Thx Salguod)
 	- Now Remembers the Last used playlist correctly. (Thx Salguod)
