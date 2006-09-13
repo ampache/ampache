@@ -276,6 +276,11 @@ class Update {
 
 		$version[] = array('version' => '332010','description' => $update_string);
 
+		$update_string = '- Add Min album size to preferences.';
+
+		$version[] = array('version' => '332011','description' => $update_string);
+
+
 		return $version;
 
 	} // populate_version
@@ -1599,6 +1604,31 @@ class Update {
 		$this->set_version('db_version','332010');
 
 	} // update_332010
+
+        /**
+         * update_332011
+         *   Add min album size pref
+         */
+        function update_332011() {
+                /* Inser the new Localplay Controller */
+                $sql = "INSERT INTO preferences (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
+                        " VALUES ('min_album_size','0','Min Album Size','0','integer','interface')";
+                $db_results = mysql_query($sql, dbh());
+
+		/* Fix every users preferences */
+		$sql = "SELECT * FROM user";
+		$db_results = mysql_query($sql, dbh());
+
+		$user = new User();
+		$user->fix_preferences('-1');
+
+		while ($r = mysql_fetch_assoc($db_results)) { 
+			$user->fix_preferences($r['username']);
+		} // while results
+
+                $this->set_version('db_version','332011');
+
+        } // update_332011
 
 } // end update class
 ?>

@@ -30,6 +30,10 @@ if(isset($_REQUEST['match'])) $match = scrub_in($_REQUEST['match']);
 if(isset($_REQUEST['album'])) $album = scrub_in($_REQUEST['album']);
 if(isset($_REQUEST['artist'])) $artist = scrub_in($_REQUEST['artist']);
 $_REQUEST['artist_id'] = scrub_in($_REQUEST['artist_id']);
+$min_album_size = conf('min_album_size');
+if ($min_album_size == '') { 
+	$min_album_size = '0';
+}
 
 if ($_REQUEST['action'] === 'clear_art') { 
 	if (!$GLOBALS['user']->has_access('75')) { access_denied(); } 
@@ -158,31 +162,49 @@ else {
 			show_alphabet_list('albums','albums.php','show_all');
 			show_alphabet_form('',_("Show Albums starting with"),"albums.php?action=match");
 			$offset_limit = 99999;
-			$sql = "SELECT id FROM album";
+                        $sql = "SELECT album.id FROM song,album ".
+                               " WHERE song.album=album.id ".
+                               "GROUP BY song.album ".
+                               "  HAVING COUNT(song.id) > $min_album_size ";
 			break;
                 case 'Show_missing_art':
                         show_alphabet_list('albums','albums.php','show_missing_art');
 			show_alphabet_form('',_("Show Albums starting with"),"albums.php?action=match");
                         $offset_limit = 99999;
-                        $sql = "SELECT id FROM album where art is null";
+                        $sql = "SELECT album.id FROM song,album ".
+                               " WHERE song.album=album.id ".
+                               "   AND album.art is null ".
+                               "GROUP BY song.album ".
+                               "  HAVING COUNT(song.id) > $min_album_size ";
                         break; 
 		case 'Browse':
 		case 'show_albums':
 			show_alphabet_list('albums','albums.php','browse');
 			show_alphabet_form('',_("Show Albums starting with"),"albums.php?action=match");
-			$sql = "SELECT id FROM album";
+                        $sql = "SELECT album.id FROM song,album ".
+                               " WHERE song.album=album.id ".
+                               "GROUP BY song.album ".
+                               "  HAVING COUNT(song.id) > $min_album_size ";
 			break;
 		case 'none':
 			show_alphabet_list('albums','albums.php','a');
 			show_alphabet_form('',_("Show Albums starting with"),"albums.php?action=match");
-			$sql = "SELECT id FROM album WHERE name LIKE 'a%'";
+                        $sql = "SELECT album.id FROM song,album ".
+                               " WHERE song.album=album.id ".
+                               "   AND album.name LIKE 'a%'".
+                               "GROUP BY song.album ".
+                               "  HAVING COUNT(song.id) > $min_album_size ";
 			break;
 		default:
 			//FIXME: This is the old way of doing it, move this to browse 
 			show_alphabet_list('albums','albums.php',$match);
 			show_alphabet_form($match,_("Show Albums starting with"),"albums.php?action=match");
 			echo "<br /><br />";
-			$sql = "SELECT id FROM album WHERE name LIKE '$match%'";
+                        $sql = "SELECT album.id FROM song,album ".
+                               " WHERE song.album=album.id ".
+                               "   AND album.name LIKE '$match%'".
+                               "GROUP BY song.album ".
+                               "  HAVING COUNT(song.id) > $min_album_size ";
 	} // end switch
 
 	switch ($_REQUEST['type']) { 
@@ -193,7 +215,8 @@ else {
 			unset($_REQUEST['keep_view']);
 			$sql = "SELECT album.id, IF(COUNT(DISTINCT(song.artist)) > 1,'Various', artist.name) AS artist_name " . 
 				"FROM song,artist,album WHERE song.album=album.id AND song.artist=artist.id $match_string" . 
-				"GROUP BY album.name,album.year"; 
+				"GROUP BY album.name,album.year ".
+                                "HAVING COUNT(song.id) > $min_album_size ";
 			$sort_order = 'artist.name';
 		break;
 		default:
