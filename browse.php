@@ -105,7 +105,34 @@ switch($action) {
         	}
 		
 	break;
+	case 'song_title':
+		/* Create the Needed Object */
+		$song = new Song();
 
+
+		/* Setup the View Object */
+		$view = new View();
+		$view->import_session_view();
+		
+		$song->show_match_list($_REQUEST['match']);
+		$sql = $song->get_sql_from_match($_REQUEST['match']);
+
+		if ($_REQUEST['keep_view']) { 
+			$view->initialize();
+		}
+		else { 
+			$db_results = mysql_query($sql, dbh());
+			$total_items = mysql_num_rows($db_results);
+			$offset_limit = 999999;
+			if ($match != 'Show All') { $offset_limit = $_SESSION['userdata']['offset_limit']; } 
+			$view = new View($sql, 'browse.php?action=song_title','title',$total_items,$offset_limit);
+		}
+
+		if ($view->base_sql) { 
+			$songs = $song->get_songs($view->sql);
+			show_songs($songs,$view);
+		}
+	break;
 	case 'catalog':
 	
 	break;

@@ -32,7 +32,7 @@ if(isset($_REQUEST['artist'])) $artist = scrub_in($_REQUEST['artist']);
 $_REQUEST['artist_id'] = scrub_in($_REQUEST['artist_id']);
 
 if ($_REQUEST['action'] === 'clear_art') { 
-	if (!$user->has_access('25')) { access_denied(); } 
+	if (!$GLOBALS['user']->has_access('75')) { access_denied(); } 
 	$album = new Album($_REQUEST['album_id']);
 	$album->clear_art();
 	show_confirmation(_('Album Art Cleared'),_('Album Art information has been removed from the database'),"/albums.php?action=show&amp;album=" . $album->id);

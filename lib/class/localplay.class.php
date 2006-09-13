@@ -143,21 +143,26 @@ class Localplay {
 		$this->_function_map['stop']	= $data['stop'];
 		$this->_function_map['get']	= $data['get'];
 		$this->_function_map['connect'] = $data['connect'];
+		$this->_function_map['status']		= $data['status'];
 
 		/* Recommended Functions */
-		$this->_function_map['status']		= $data['status'];
 		$this->_function_map['pause']		= $data['pause'];
 		$this->_function_map['next']		= $data['next'];
 		$this->_function_map['prev']		= $data['prev'];
 		$this->_function_map['skip']		= $data['skip'];
 		$this->_function_map['get_playlist']	= $data['get_playlist'];
 		$this->_function_map['get_playing']	= $data['get_playing'];
+		$this->_function_map['repeat']		= $data['repeat'];
+		$this->_function_map['random']		= $data['random'];
+		$this->_function_map['loop']		= $data['loop'];
 
 		/* Optional Functions */
 		$this->_function_map['volume_set']	= $data['volume_set'];
 		$this->_function_map['volume_up']	= $data['volume_up'];
 		$this->_function_map['volume_down']	= $data['volume_down'];
 		$this->_function_map['delete_all']	= $data['delete_all'];
+		$this->_function_map['randomize']	= $data['randomize'];
+		$this->_function_map['move']		= $data['move'];
 
 	} // _map_functions
 
