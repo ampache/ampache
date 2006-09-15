@@ -38,6 +38,7 @@ else {
 	$offset2 = $GLOBALS['view']->offset;
 	if (!$GLOBALS['view']->offset) { $offset2 = "0"; }
 }
+
 // Get the prev page offset
 $offset1 = $GLOBALS['view']->offset - $GLOBALS['view']->offset_limit;
 if ($offset1 < 1) { $offset1 = 0; }
@@ -67,7 +68,6 @@ if (($pages > 1) && ($_SESSION['view_script'])) {
 		</td>
 		<td align="center">
 		<?php 
-			$page_limit = '10';
 			$counter = 1;
 			$offset_pages = 0;
 			while ($counter <= $pages) {
@@ -79,25 +79,8 @@ if (($pages > 1) && ($_SESSION['view_script'])) {
 				<?php 
 				} // end if ($GLOBALS['view']->offset == $offset_pages) and else
 				$offset_pages += $GLOBALS['view']->offset_limit;
-				if ($counter == $page_limit AND $pages > ($page_limit*2)) { break; }
 				$counter++;
-			} // end while ($counter <= $pages) 
-
-			if ($counter < $pages) { 
-				echo "[.....]"; 
-				$counter = $pages - $page_limit;
-	                        while ($counter <= $pages) {
-	                                if ($GLOBALS['view']->offset == $offset_pages) { ?>
-			                      <a href="<?php echo $script; ?>?<?php echo  $action ; ?>&amp;sort_type=<?php echo  $GLOBALS['view']->sort_type ; ?>&amp;offset=<?php echo  $offset_pages ; ?>&amp;keep_view=true"><b><?php echo $counter; ?></b></a>&nbsp;
-	                                <?php } else { ?>
-	                                        <a href="<?php echo $script; ?>?<?php echo $action; ?>&amp;sort_type=<?php echo $GLOBALS['view']->sort_type;  ?>&amp;offset=<?php echo $offset_pages; ?>&amp;keep_view=true"><?php echo $counter; ?></a>&nbsp;
-	                                <?php
-	                                } // end if ($GLOBALS['view']->offset == $offset_pages) and else
-                        	        $offset_pages += $GLOBALS['view']->offset_limit;
-                	                $counter++;
-	                        } // end while ($counter <= $pages)
-			} // end while if we had to do a second half
-		?>
+			} // end while ($counter <= $pages) ?>
 		</td>
 		<td align="center" valign="top">
 			<a href="<?php echo $script; ?>?<?php echo $action; ?>&amp;offset=<?php echo $offset3; ?>&amp;keep_view=true">[&nbsp;<?php echo _("Next"); ?>&nbsp;]</a>&nbsp;
