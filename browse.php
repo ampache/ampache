@@ -113,8 +113,14 @@ switch($action) {
 		/* Setup the View Object */
 		$view = new View();
 		$view->import_session_view();
-		
-		$song->show_match_list($_REQUEST['match']);
+
+		$match = scrub_in($_REQUEST['match']);
+
+	        show_alphabet_list('song_title','browse.php',$match,'song_title');
+                /* Detect if it's Browse, and if so don't fill it in */
+                if ($match == 'Browse') { $match = ''; }
+                show_alphabet_form($match,_('Show Titles Starting With'),"browse.php?action=song_title&amp;match=$match");
+	
 		$sql = $song->get_sql_from_match($_REQUEST['match']);
 
 		if ($_REQUEST['keep_view']) { 
@@ -130,7 +136,7 @@ switch($action) {
 
 		if ($view->base_sql) { 
 			$songs = $song->get_songs($view->sql);
-			show_songs($songs,$view);
+			show_songs($songs);
 		}
 	break;
 	case 'catalog':

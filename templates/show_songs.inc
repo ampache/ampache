@@ -30,6 +30,13 @@ if (is_object($playlist) && ($GLOBALS['user']->username == $playlist->user || $G
 ?>
 <form id="songs" method="post" enctype="multipart/form-data" action="#" style="Display:inline;">
 <table class="border" cellspacing="0" cellpadding="0" border="0">
+<?php if (is_object($GLOBALS['view'])) { ?>
+<tr class="even" align="center">
+        <td colspan="12">
+        <?php if ($GLOBALS['view']->offset_limit) { require (conf('prefix') . "/templates/list_header.inc"); } ?>
+        </td>
+</tr>
+<?php } ?>
 <tr class="table-header">
 	<th>&nbsp;&nbsp;<a href="#" onclick="check_songs(); return false;">Select</a></th>
 	<?php if ($playlist_owner) { ?> 
@@ -160,6 +167,13 @@ $num = count($song_ids);
 	<td></td>
 	<td colspan="2"></td>
 </tr>
+<?php if (is_object($GLOBALS['view'])) { ?>
+<tr class="even" align="center">
+        <td colspan="12">
+        <?php if ($GLOBALS['view']->offset_limit) { require (conf('prefix') . "/templates/list_header.inc"); } ?>
+        </td>
+</tr>
+<?php } ?>
 </table>
 <p class="header2"><?php echo _('** Indicates flagged songs'); ?></p>
 <br />

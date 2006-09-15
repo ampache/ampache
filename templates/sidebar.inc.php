@@ -36,6 +36,7 @@ $admin_items[] = array('title'=>_('Modules'),'url'=>'admin/modules.php','active'
 $browse_items[] = array('title'=>_("Albums"),'url'=>'albums.php','active'=>$location['page']);
 $browse_items[] = array('title'=>_("Artists"),'url'=>'artists.php','active'=>$location['page']);
 $browse_items[] = array('title'=>_("Genre"),'url'=>'browse.php?action=genre','active'=>$location['page']);
+$browse_items[] = array('title'=>_('Song Title'),'url'=>'browse.php?action=song_title','active'=>$location['page']);
 $browse_items[] = array('title'=>_("Lists"),'url'=>'browse.php','active'=>$location['page']);
 //$browse_items[] = array('title'=>'File','url'=>'files.php','active'=>''); <!--pb1dft: this can be cleaned up -->
 

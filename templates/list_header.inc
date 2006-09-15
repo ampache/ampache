@@ -31,25 +31,24 @@
 
 if (!$total_items) { $total_items = $_SESSION['view_total_items']; }
 // do some math here
-if ($view->offset >= $view->offset_limit) {
-	$offset2 = $view->offset - 25;
+if ($GLOBALS['view']->offset >= $GLOBALS['view']->offset_limit) {
+	$offset2 = $GLOBALS['view']->offset - 25;
 }
 else {
-	$offset2 = $view->offset;
-	if (!$view->offset) { $offset2 = "0"; }
+	$offset2 = $GLOBALS['view']->offset;
+	if (!$GLOBALS['view']->offset) { $offset2 = "0"; }
 }
-
 // Get the prev page offset
-$offset1 = $view->offset - $view->offset_limit;
+$offset1 = $GLOBALS['view']->offset - $GLOBALS['view']->offset_limit;
 if ($offset1 < 1) { $offset1 = 0; }
 
 // since we have an array of objects, let's build a purdy thingie
-$pages  = ceil($total_items/$view->offset_limit);
+$pages  = ceil($total_items/$GLOBALS['view']->offset_limit);
 $offset4 = ($pages - 1);
-$offset4 = ($offset4 * $view->offset_limit);
+$offset4 = ($offset4 * $GLOBALS['view']->offset_limit);
 
 //We do this one last to make sure we don't go beyond offset4
-$offset3 = $view->offset + $view->offset_limit;
+$offset3 = $GLOBALS['view']->offset + $GLOBALS['view']->offset_limit;
 if ($offset3 >= $offset4) { $offset3 = $offset4; } 
 
 
@@ -68,19 +67,37 @@ if (($pages > 1) && ($_SESSION['view_script'])) {
 		</td>
 		<td align="center">
 		<?php 
+			$page_limit = '10';
 			$counter = 1;
 			$offset_pages = 0;
 			while ($counter <= $pages) {
-				if ($view->offset == $offset_pages) {	
-		?>			<a href="<?php echo $script; ?>?<?php echo  $action ; ?>&amp;sort_type=<?php echo  $view->sort_type ; ?>&amp;offset=<?php echo  $offset_pages ; ?>&amp;keep_view=true"><b><?php echo $counter; ?></b></a>&nbsp;
+				if ($GLOBALS['view']->offset == $offset_pages) {	
+		?>			<a href="<?php echo $script; ?>?<?php echo  $action ; ?>&amp;sort_type=<?php echo  $GLOBALS['view']->sort_type ; ?>&amp;offset=<?php echo  $offset_pages ; ?>&amp;keep_view=true"><b><?php echo $counter; ?></b></a>&nbsp;
 				<?php 
 				} else { ?>
-					<a href="<?php echo $script; ?>?<?php echo $action; ?>&amp;sort_type=<?php echo $view->sort_type;  ?>&amp;offset=<?php echo $offset_pages; ?>&amp;keep_view=true"><?php echo $counter; ?></a>&nbsp;
+					<a href="<?php echo $script; ?>?<?php echo $action; ?>&amp;sort_type=<?php echo $GLOBALS['view']->sort_type;  ?>&amp;offset=<?php echo $offset_pages; ?>&amp;keep_view=true"><?php echo $counter; ?></a>&nbsp;
 				<?php 
-				} // end if ($view->offset == $offset_pages) and else
-				$offset_pages += $view->offset_limit;
+				} // end if ($GLOBALS['view']->offset == $offset_pages) and else
+				$offset_pages += $GLOBALS['view']->offset_limit;
+				if ($counter == $page_limit AND $pages > ($page_limit*2)) { break; }
 				$counter++;
-			} // end while ($counter <= $pages) ?>
+			} // end while ($counter <= $pages) 
+
+			if ($counter < $pages) { 
+				echo "[.....]"; 
+				$counter = $pages - $page_limit;
+	                        while ($counter <= $pages) {
+	                                if ($GLOBALS['view']->offset == $offset_pages) { ?>
+			                      <a href="<?php echo $script; ?>?<?php echo  $action ; ?>&amp;sort_type=<?php echo  $GLOBALS['view']->sort_type ; ?>&amp;offset=<?php echo  $offset_pages ; ?>&amp;keep_view=true"><b><?php echo $counter; ?></b></a>&nbsp;
+	                                <?php } else { ?>
+	                                        <a href="<?php echo $script; ?>?<?php echo $action; ?>&amp;sort_type=<?php echo $GLOBALS['view']->sort_type;  ?>&amp;offset=<?php echo $offset_pages; ?>&amp;keep_view=true"><?php echo $counter; ?></a>&nbsp;
+	                                <?php
+	                                } // end if ($GLOBALS['view']->offset == $offset_pages) and else
+                        	        $offset_pages += $GLOBALS['view']->offset_limit;
+                	                $counter++;
+	                        } // end while ($counter <= $pages)
+			} // end while if we had to do a second half
+		?>
 		</td>
 		<td align="center" valign="top">
 			<a href="<?php echo $script; ?>?<?php echo $action; ?>&amp;offset=<?php echo $offset3; ?>&amp;keep_view=true">[&nbsp;<?php echo _("Next"); ?>&nbsp;]</a>&nbsp;

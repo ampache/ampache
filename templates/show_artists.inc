@@ -32,7 +32,7 @@ $total_items = $view->total_items;
 <table class="border" cellspacing="0" cellpadding="0" border="0">
 <tr class="even" align="center">
 	<td colspan="5">
-	<?php if ($view->offset_limit) { require (conf('prefix') . "/templates/list_header.inc"); } ?>
+	<?php if ($GLOBALS['view']->offset_limit) { require (conf('prefix') . "/templates/list_header.inc"); } ?>
 	</td>
 </tr>
 <tr class="table-header">

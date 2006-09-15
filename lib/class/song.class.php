@@ -806,6 +806,54 @@ class Song {
 		
 	} // end stream_cmd
 
+        /**
+         * get_sql_from_match
+         * This is specificly for browsing it takes the match and returns the sql call that we want to use
+         * @package Song
+         * @catagory Class
+         */
+        function get_sql_from_match($match) {
+
+                switch ($match) {
+                        case 'Show_All':
+                        case 'show_all':
+                                $sql = "SELECT id FROM song";
+                        break;
+                        case 'Browse':
+                        case 'show_genres':
+                                $sql = "SELECT id FROM song";
+                        break;
+                        default:
+                                $sql = "SELECT id FROM song WHERE title LIKE '" . sql_escape($match) . "%'";
+                        break;
+                } // end switch on match
+
+                return $sql;
+
+        } // get_sql_from_match
+
+        /**
+         * get_genres
+         * this returns an array of songs based on a sql statement that's passed
+         * @package songs
+         * @catagory Class
+         */
+        function get_songs($sql) {
+
+                $db_results = mysql_query($sql, dbh());
+
+                $results = array();
+
+                while ($r = mysql_fetch_assoc($db_results)) {
+                        $results[] = $r['id'];
+                }
+
+                return $results;
+
+        } // get_genres
+
+
+
 } // end of song class
 
 ?>

@@ -115,6 +115,8 @@ function show_artists ($match = '') {
         }
 
         if (count($artists)) {
+		/* Ack horrible hack :( */
+		$GLOBALS['view'] = $view;
                 require ( conf('prefix') . "/templates/show_artists.inc");
         }
 

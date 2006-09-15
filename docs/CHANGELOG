@@ -4,6 +4,9 @@
 
 --------------------------------------------------------------------------
   v.3.3.2
+	- Page headers now limited to 20 pages with [....] between top
+		and bottom 10.
+	- Added Browse by Title functionality (Thx Rubin)
 	- Added Min Album size as preference, defaults to 0 (Thx Rubin)
 	- Fixed a problem with the automatic registration sorting on user
 		lists and admin notification of new users (Thx pb1dft)
