@@ -28,8 +28,8 @@ require ("../lib/init.php");
  */
 //$send_mail = true;
 
-
-$filename = usage();
+if (count($GLOBALS['argv']) == '1') { $filename = usage(); }
+else { $filename = $GLOBALS['argv']['1']; }
 
 echo "Reading: $filename\n";
 
