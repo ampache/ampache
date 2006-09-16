@@ -388,6 +388,10 @@ class vainfo {
                         /* We need to translate a few of these tags */
                         switch ($tag) {
                                 case 'creation_date':
+					if (strlen($data['0']) > 4) { 
+						/* Weird Date format, attempt to normalize */
+						$data['0'] = date("Y",strtotime($data['0']));
+					}
                                         $array['year']  = $this->_clean_tag($data['0']);
                                 break;
                         } // end switch
