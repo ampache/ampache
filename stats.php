@@ -38,7 +38,7 @@ else {
 show_template('header');
 ?>
 
-<span class="header1"><?php echo $working_user->fullname; ?><?php echo _('Favorites'); ?>:</span>
+<span class="header1"><?php echo $working_user->fullname; ?> <?php echo _('Favorites'); ?>:</span>
 
 <table cellpadding="5" cellspacing="5" border="0" width="100%">
 	<tr>

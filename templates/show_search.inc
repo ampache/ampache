@@ -92,7 +92,6 @@
 <tr class="<?php echo flip_class(); ?>">
 	<td><?php echo _('Rating'); ?>:</td>
 	<td>
-	<!-- Broken for now 
 		<select id="s_rating" name="s_rating">
 			<option value="">&nbsp;</option>
 			<option value="1"><?php echo _('One Star'); ?></option>
@@ -101,7 +100,6 @@
 			<option value="4"><?php echo _('Four Stars'); ?></option>
 			<option value="5"><?php echo _('Five Stars'); ?></option>
 		</select>
-	--> Currently Broken
 	</td>
 	<td><?php echo _('Operator'); ?>:</td>
 	<td>

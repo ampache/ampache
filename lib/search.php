@@ -101,11 +101,12 @@ function run_search($data) {
 function search_song($data,$operator,$method,$limit) { 
 
 	/* Generate BASE SQL */
-	$base_sql 	= "SELECT DISTINCT(song.id) FROM song";
 
 	$where_sql 	= '';
 	$table_sql	= ',';
         $join_sql       = '';
+	$group_sql 	= ' GROUP BY';
+	$select_sql	= ',';
 
 	if ($limit > 0) { 
 		$limit_sql = " LIMIT $limit";
@@ -155,7 +156,7 @@ function search_song($data,$operator,$method,$limit) {
 			break;
 			case 'genre':
 				$where_sql .= " genre.name $value_string $operator";
-                                $join_qsl  .= "song.genre=genre.id AND ";
+                                $join_sql  .= "song.genre=genre.id AND ";
 				$table_sql .= "genre,";
 			break;
 			case 'year':
@@ -176,6 +177,14 @@ function search_song($data,$operator,$method,$limit) {
 				$value = intval($value);
 				$where_sql .= " song.bitrate >= ('$value'*1000) $operator";
 			break;
+			case 'rating':
+				$value = intval($value);
+				$select_sql .= "SUM(ratings.user_rating)/(SELECT COUNT(song.id) FROM song,ratings WHERE ratings.object_id=song.id AND ratings.object_type='song' AND ratings.user_rating >= '$value') AS avgrating,";
+				$group_sql .= " ratings.user_rating,";
+				$where_sql .= " (ratings.user_rating >= '$value' AND ratings.object_type='song')";
+				$table_sql .= "ratings,";
+				$join_sql  .= "ratings.object_id=song.id AND";
+				$limit_sql .= " ORDER BY avgrating DESC";
 			default:
 				// Notzing!
 			break;
@@ -187,8 +196,14 @@ function search_song($data,$operator,$method,$limit) {
 	/* Trim off the extra $method's and ,'s then combine the sucka! */
 	$table_sql = rtrim($table_sql,',');
 	$where_sql = rtrim($where_sql,$operator);
+	$group_sql = rtrim($group_sql,',');
+	$select_sql = rtrim($select_sql,',');
 
-	$sql = $base_sql . $table_sql . " WHERE " . $join_sql . "(" . $where_sql . ")" . $limit_sql;
+	if ($group_sql == ' GROUP BY') { $group_sql = ''; } 
+	
+	$base_sql 	= "SELECT DISTINCT(song.id) $select_sql FROM song";
+
+	$sql = $base_sql . $table_sql . " WHERE " . $join_sql . "(" . $where_sql . ")" . $group_sql . $limit_sql;
 	
 	/**
 	 * Because we might need this for Dynamic Playlist Action 

@@ -4,6 +4,7 @@
 
 --------------------------------------------------------------------------
   v.3.3.2
+	- Added ability to search by Rating, requires MySQL 4.0 or above
 	- Page headers now limited to 20 pages with [....] between top
 		and bottom 10.
 	- Added Browse by Title functionality (Thx Rubin)
