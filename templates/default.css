@@ -92,7 +92,7 @@ textarea {
 	font-size: 12px; 
 }
 .table-header {
-	background: url(/themes/classic/images/ampache-light-bg.gif) #dddddd repeat-x;
+	background: url(themes/classic/images/ampache-light-bg.gif) #dddddd repeat-x;
 	vertical-align: top;
 }
     .header1 
@@ -159,7 +159,6 @@ textarea {
 	cursor: pointer;
 }
 /* These three lines make a menu vertical */
- #content { float: none; }
  #sidebar li { float: none; }
  #sidebar li ul { margin: -1.5em 0 0 9em; }
 	
@@ -189,10 +188,11 @@ body{
 /* Content block */
 #content {
 	top:90px;
+	float: none;
 	margin-top:7px;
 	margin-left:135px;
 	/*float:left;  use for horizontal menu; comment out otherwise */
-	background:#fff url("/themes/classic/images/bg_content.gif") repeat-y right top;
+	/* background:#fff url("themes/classic/images/bg_content.gif") repeat-y right top; */
 }
 
 h3#content_title{
@@ -202,7 +202,7 @@ h3#content_title{
 	color:#fff;
 	margin:0px;
 	padding:0px;
-	background:#8B8B8B url("/themes/classic/images/content_corner.gif") no-repeat right top;
+	background:#8B8B8B url("themes/classic/images/content_corner.gif") no-repeat right top;
 }
 
 h3#content_title span {
@@ -217,7 +217,7 @@ div#Header{
 }
 
 #Header h1 { 
-	background: transparent url("/themes/classic/images/bg_login_0.jpg") no-repeat top left; 
+	background: transparent url("themes/classic/images/bg_login_0.jpg") no-repeat top left; 
 	border:0px; 
 	width: 439px; 
 	height: 84px; 
@@ -231,7 +231,7 @@ div#Header{
 }
 
 #Header h2 { 
-	background: transparent url(/001/h2.gif) no-repeat top left; 
+	background: transparent url(001/h2.gif) no-repeat top left; 
 	margin-top: 75px;  
 	width: 200px; 
 	height: 18px; 
@@ -256,7 +256,7 @@ div#sidebar{
 	position:absolute;
 	left:5px;
 	top:87px;
-	background:url("/themes/classic/images/bg_navigation.gif") repeat-y left;	
+	background:url("themes/classic/images/bg_navigation.gif") repeat-y left;	
 }
 
 #sidebar h3 {
@@ -265,7 +265,7 @@ div#sidebar{
 	height: 28px; 
 	margin:0px;
 	padding:0px; 
-	background: transparent url("/themes/classic/images/sidebar_top.jpg") no-repeat left; 
+	background: transparent url("themes/classic/images/sidebar_top.jpg") no-repeat left; 
 
 }
 	
@@ -335,7 +335,7 @@ div#sidebar{
 	height: 18px;
 	padding: 0px;
 	margin: 0px;
-	background: #fff url("/themes/classic/images/tb_tab.jpg") no-repeat top left;
+	background: #fff url("themes/classic/images/tb_tab.jpg") no-repeat top left;
 }
 
 #np_container1 h1{
@@ -353,7 +353,7 @@ div#sidebar{
 	font-size: 10px;
 	line-height: 12px;
 	color: #000;
-	background: #D6D6D4 url("/themes/classic/images/bg_row.jpg") repeat top left;
+	background: #D6D6D4 url("themes/classic/images/bg_row.jpg") repeat top left;
 }
 
 	
@@ -365,7 +365,7 @@ div#sidebar{
 	text-align:center;
 }
 #container h1{
-	background:url("/themes/classic/images/bg_login_0.jpg") no-repeat;
+	background:url("themes/classic/images/bg_login_0.jpg") no-repeat;
 	height:81px;
 	margin-bottom:8px;
 }
@@ -373,7 +373,7 @@ div#sidebar{
 	display:none;
 }
 #container div{
-	background:url("/themes/classic/images/bg_login_1.jpg") no-repeat;
+	background:url("themes/classic/images/bg_login_1.jpg") no-repeat;
 	height:285px;
 }
 #loginp_0{
@@ -427,7 +427,7 @@ margin-right:5em;
 	width: 80px;
 	height: 15px;
 	position: relative;
-	background: url(/images/ratings/star_rating.gif) top left repeat-x;        
+	background: url(images/ratings/star_rating.gif) top left repeat-x;        
 }
 .star-rating li{
 	padding:0px;
@@ -445,18 +445,18 @@ margin-right:5em;
 	padding: 0px;
 }
 .star-rating li a:hover{
-	background: url(/images/ratings/star_rating.gif) left center;
+	background: url(images/ratings/star_rating.gif) left center;
 	z-index: 2;
 	left: 0px;
 }
 li.zero-stars a:hover {
-	background: url(/images/ratings/x.gif);
+	background: url(images/ratings/x.gif);
 	height: 15px;
 	left: 80px;
 	display: block;
 }
 a.zero-stars {
-	background: url(/images/ratings/x_off.gif);
+	background: url(images/ratings/x_off.gif);
 	height: 15px;
 	left: 80px;
 	display: block;
@@ -492,12 +492,31 @@ a.five-stars:hover{
 	width: 80px;
 }
 li.current-rating{
-	background: url(/images/ratings/star_rating.gif) left bottom;
+	background: url(images/ratings/star_rating.gif) left bottom;
 	position: absolute;
 	height: 15px;
 	display: block;
 	text-indent: -9000px;
 	z-index: 1;
+}
+/* Box Related Styles */
+.box-left-top { 
+	background: url(themes/classic/images/topleft.gif) no-repeat;
+	height:16px;
+}
+.box-left-bottom {
+        background: url(themes/classic/images/bottomleft.gif) no-repeat;
+	height:18px;
+}
+.box-left { 
+	background: url(themes/classic/images/left.gif);
+}
+.box-bottom { 
+	background: url(themes/classic/images/bottom.gif);
+	height:18px;
+}
+.box-right-bottom { 
+	background: url(themes/classic/images/bottomright.gif) no-repeat;
 }
 .confirmation-box {
 	padding-left:5px;
