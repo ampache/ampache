@@ -27,7 +27,7 @@
 
 ?>
 
-<table class="border" cellspacing="1" cellpadding="3" >
+<table class="box">
 <tr class="box-top">
         <td class="box-left-top"></td>
         <td class="box-center-top"></td>
@@ -37,7 +37,7 @@
 	<th><?php echo $title; ?></th>
 </tr>
 <tr>
-	<td class="even">
+	<td>
 	<?php
 	foreach (array_keys($items) as $item) {
 		print("\t\t\t&gt;&gt; <a href=\"$items[$item]\"> $item</a><br />\n");

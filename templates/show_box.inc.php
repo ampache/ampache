@@ -20,7 +20,7 @@
 
 */
 ?>
-<table class="border" cellspacing="0" cellpadding="0">
+<table class="box" cellspacing="0" cellpadding="0">
 <tr>
 	<td class="box-left-top"></td>
 	<td class="box-top"></td>
@@ -28,11 +28,11 @@
 </tr>
 <tr>
 	<td class="box-left" rowspan="2"></td>
-	<td background="<?php echo conf('web_path'); ?>/images/ampache-light-bg.gif" bgcolor="#c0c0c0"><?php echo $title; ?></td>
+	<td><?php echo $title; ?></td>
 	<td class="box-right" rowspan="2"></td>
 </tr>
 <tr>
-	<td class="even">
+	<td>
 	<ol>
 	<?php
 		foreach ($items as $item) {

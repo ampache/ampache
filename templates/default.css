@@ -500,6 +500,10 @@ li.current-rating{
 	z-index: 1;
 }
 /* Box Related Styles */
+.box { 
+	padding:0px;
+	background: #fff;
+}
 .box-left-top { 
 	background: url(../themes/classic/images/topleft.gif) no-repeat;
 	height:16px;
@@ -517,6 +521,15 @@ li.current-rating{
 }
 .box-right-bottom { 
 	background: url(../themes/classic/images/bottomright.gif) no-repeat;
+}
+.box-right-top {
+	background: url(../themes/classic/images/topright.gif) no-repeat;
+}
+.box-right { 
+	background: url(../themes/classic/images/right.gif);
+}
+.box-top { 
+	background: url(../themes/classic/images/top.gif);
 }
 .confirmation-box {
 	padding-left:5px;
