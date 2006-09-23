@@ -280,6 +280,13 @@ class Update {
 
 		$version[] = array('version' => '332011','description' => $update_string);
 
+		$update_string = '- Reworked All Indexes on tables, hopefully leading to performance improvements.<br />' .
+				'- Added live_stream table for radio station support.<br />' . 
+				'- Added id int(11) UNSIGNED fields to a few tables missing it.<br />' . 
+				'- Removed DB Based color/font preferences and Theme preferences catagory.<br />';
+
+		$version[] = array('version' => '332012','description' => $update_string);
+
 
 		return $version;
 
@@ -1629,6 +1636,155 @@ class Update {
                 $this->set_version('db_version','332011');
 
         } // update_332011
+
+	/**
+ 	 * update_332012
+	 * Add live_stream table
+	 */
+	function update_332012() { 
+
+		$sql = "CREATE TABLE `live_stream` (" . 
+		"`id` INT( 11 ) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY ," . 
+		"`name` VARCHAR( 128 ) NOT NULL ," . 
+		"`site_url` VARCHAR( 255 ) NOT NULL ," . 
+		"`url` VARCHAR( 255 ) NOT NULL ," . 
+		"`genre` INT( 11 ) UNSIGNED NOT NULL ," . 
+		"`catalog` INT( 11 ) UNSIGNED NOT NULL ," . 
+		"`frequency` VARCHAR( 32 ) NOT NULL ," . 
+		"`call_sign` VARCHAR( 32 ) NOT NULL" . 
+		") ENGINE = MYISAM";
+
+		/* Clean Up Indexes */
+
+		// Access List
+		$sql = "ALTER TABLE `access_list` DROP INDEX `ip`";
+		$db_results = mysql_query($sql, dbh());
+
+		$sql = "ALTER TABLE `access_list` ADD INDEX `start` (`start`)";
+		$db_results = mysql_query($sql, dbh());
+		
+		$sql = "ALTER TABLE `access_list` ADD INDEX `end` (`end`)"; 
+		$db_results = mysql_query($sql, dbh());
+
+		$sql = "ALTER TABLE `access_list` ADD INDEX `level` (`level`)";
+		$db_results = mysql_query($sql, dbh());
+
+		$sql = "ALTER TABLE `access_list` ADD `type` VARCHAR( 64 ) NOT NULL AFTER `level`";
+		$db_results = mysql_query($sql, dbh());
+
+		// Album Table
+		$sql = "ALTER TABLE `album` DROP INDEX `id`";
+		$db_results = mysql_query($sql, dbh());
+	
+		$sql = "ALTER TABLE `album` ADD INDEX `year` (`year`)";
+		$db_results = mysql_query($sql, dbh());
+
+		// Artist Table
+		$sql = "ALTER TABLE `artist` DROP INDEX `id`";
+		$db_results = mysql_query($sql, dbh()); 
+
+		// Flagged
+		$sql = "ALTER TABLE `flagged` ADD INDEX `object_id` (`object_id`)";
+		$db_results = mysql_query($sql, dbh());
+
+		$sql = "ALTER TABLE `flagged` ADD INDEX `object_type` (`object_type`)";
+		$db_results = mysql_query($sql, dbh());
+
+		$sql = "ALTER TABLE `flagged` ADD INDEX `user` (`user`)";
+		$db_results = mysql_query($sql, dbh());
+
+		// Genre
+		$sql = "ALTER TABLE `genre` ADD INDEX `name` (`name`)";
+		$db_results = mysql_query($sql, dbh());
+
+		// IP Tracking
+		$sql = "ALTER TABLE `ip_history` ADD INDEX `ip` (`ip`)";
+		$db_results = mysql_query($sql,dbh());
+
+		$sql = "ALTER TABLE `ip_history` CHANGE `username` `user` VARCHAR( 128 ) NULL DEFAULT NULL";
+		$db_results = mysql_query($sql, dbh());
+
+		$sql = "ALTER TABLE `ip_history` ADD `id` INT( 11 ) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY FIRST";
+		$db_results = mysql_query($sql, dbh());
+
+		$sql = "ALTER TABLE `ip_history` DROP `connections`";
+		$db_results = mysql_query($sql, dbh());
+
+
+		// Live Stream
+		$sql = "ALTER TABLE `live_stream` ADD INDEX `name` (`name`)";
+		$db_results = mysql_query($sql, dbh());
+
+		$sql = "ALTER TABLE `live_stream` ADD INDEX `genre` (`genre`)";
+		$db_results = mysql_query($sql, dbh());
+
+		$sql = "ALTER TABLE `live_stream` ADD INDEX `catalog` (`catalog`)";
+		$db_results = mysql_query($sql, dbh());
+
+		// Object_count
+		$sql = "ALTER TABLE `object_count` CHANGE `object_type` `object_type` ENUM( 'album', 'artist', 'song', 'playlist', 'genre', 'catalog', 'live_stream', 'video' ) NOT NULL DEFAULT 'song'";
+		$db_results = mysql_query($sql, dbh());
+
+		// Playlist
+		$sql = "ALTER TABLE `playlist` DROP INDEX `id`";
+		$db_results = mysql_query($sql, dbh());
+
+		$sql = "ALTER TABLE `playlist` ADD INDEX `type` (`type`)";
+		$db_results = mysql_query($sql, dbh());
+
+		// Preferences
+		$sql = "ALTER TABLE `preferences` ADD INDEX `catagory` (`catagory`)";
+		$db_results = mysql_query($sql, dbh());
+
+		$sql = "ALTER TABLE `preferences` ADD INDEX `name` (`name`)";
+		$db_results = mysql_query($sql, dbh());
+
+		// Session
+		$sql = "ALTER TABLE `session` ADD INDEX `expire` (`expire`)";
+		$db_results = mysql_query($sql, dbh());
+
+		// Song
+		$sql = "ALTER TABLE `song` DROP INDEX `id`";
+		$db_results = mysql_query($sql, dbh());
+
+		// User_catalog
+		$sql = "ALTER TABLE `user_catalog` ADD `id` INT( 11 ) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY FIRST";
+		$db_results = mysql_query($sql, dbh());
+
+		$sql = "ALTER TABLE `user_catalog` ADD INDEX `user` (`user`)";
+		$db_results = mysql_query($sql, dbh());
+
+		$sql = "ALTER TABLE `user_catalog` ADD INDEX `catalog` (`catalog`)";
+		$db_results = mysql_query($sql, dbh());
+
+		// User_preference
+		$sql = "ALTER TABLE `user_preference` DROP INDEX `user_2`";
+		$db_results = mysql_query($sql, dbh());
+
+		$sql = "ALTER TABLE `user_preference` DROP INDEX `preference_2`";
+		$db_results = mysql_query($sql, dbh());
+
+		// Preferences, remove colors,font,font-size
+		$sql = "DELETE FROM preferences WHERE `catagory`='theme' AND `name` !='theme_name'";
+		$db_results = mysql_query($sql, dbh());
+
+		$sql = "UPDATE preferences SET `catagory`='interface' WHERE `catagory`='theme'";
+		$db_results = mysql_query($sql, dbh());
+
+                /* Fix every users preferences */
+                $sql = "SELECT * FROM user";
+                $db_results = mysql_query($sql, dbh());
+
+                $user = new User();
+                $user->fix_preferences('-1');
+
+                while ($r = mysql_fetch_assoc($db_results)) {
+                        $user->fix_preferences($r['username']);
+                } // while results
+
+		$this->set_version('db_version','332012');
+
+	} // update_332012
 
 } // end update class
 ?>

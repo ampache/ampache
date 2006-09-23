@@ -33,23 +33,22 @@ if (conf('use_rss')) { ?>
 <link rel="alternate" type="application/rss+xml" title="<?php echo conf('rss_main_title'); ?>" href="<?php echo $web_path; ?>/rss.php" />
 <?php } ?>
 <meta http-equiv="Content-Type" content="text/html; charset=<?php echo conf('site_charset'); ?>" />
-<?php require (conf('prefix') . '/templates/basestyle.inc.php'); show_template('style'); ?>
 <title><?php echo conf('site_title'); ?> - <?php echo $location['title']; ?></title>
 </head>
 <body>
+<link rel="stylesheet" href="<?php echo $web_path; ?>/templates/default.css" type="text/css">
 <script src="<?php echo $web_path; ?>/lib/general.js" language="javascript" type="text/javascript"></script>
 <script src="<?php echo $web_path; ?>/modules/kajax/ajax.js" language="javascript" type="text/javascript"></script>
 <div id="maincontainer">
 	<div id="topbar"><!-- This is the topbar row -->
 		<div id="topbarleft">
 		<a href="http://www.ampache.org">
-		<img class="pageheader" src="<?php echo $web_path; ?><?php echo conf('theme_path'); ?>/images/ampache.gif" border="0" title="Ampache: For the love of music" alt="Ampache: For the love of music" />
+		<img src="<?php echo $web_path; ?><?php echo conf('theme_path'); ?>/images/ampache.gif" border="0" title="Ampache: For the love of music" alt="Ampache: For the love of music" />
 		</a>
 		</div><!--End topbarleft -->
 		<div id="topbarright">
 			<a href="http://www.ampache.org/index.php">Ampache v.<?php echo conf('version'); ?></a><br />
-			<b><?php echo _("You are currently logged in as") . " " . $GLOBALS['user']->fullname; ?></b>
-			<br />
+			<b><?php echo _('You are currently logged in as') . " " . $GLOBALS['user']->fullname; ?></b>
 		</div> <!-- End topbarright -->
 	</div><!-- End topbar -->
 	<div id="sidebar"><!-- This is the sidebar -->

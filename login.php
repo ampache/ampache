@@ -121,22 +121,20 @@ $htmllang = str_replace("_","-",conf('lang'));
 <meta http-equiv="Content-Type" content="text/html; charset=<?php echo conf('site_charset'); ?>" />
 <link rel="shortcut icon" href="<?php echo conf('web_path'); ?>/favicon.ico" />
 <title> <?php echo conf('site_title'); ?> </title>
-
-<?php show_template('style'); ?>
-
 <script type="text/javascript" language="javascript">
 function focus(){ document.login.username.focus(); }
 </script>
 
 </head>
-<body bgcolor="<?php echo conf('bg_color1'); ?>" onload="focus();">
+<body bgcolor="#D3D3D3" onload="focus();">
+<link rel="stylesheet" href="templates/default.css" type="text/css">
 
 <?php
 
 require(conf('prefix') . "/templates/show_login_form.inc");
 
 if (@is_readable(conf('prefix') . '/config/motd.php')) {
-	include conf('prefix') . '/config/motd.php';
+        include conf('prefix') . '/config/motd.php';
 }
 
 ?>

@@ -30,7 +30,7 @@
 require('lib/init.php');
 
 /* Scrub in the needed mojo */
-if (!$_REQUEST['tab']) { $_REQUEST['tab'] = 'theme'; } 
+if (!$_REQUEST['tab']) { $_REQUEST['tab'] = 'interface'; } 
 $user_id = scrub_in($_REQUEST['user_id']);
 
 

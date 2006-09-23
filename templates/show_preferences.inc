@@ -31,7 +31,7 @@
  * and display the information accordingly 
  */
 $current_tab 	= scrub_in($_REQUEST['tab']);
-if (!$current_tab) { $current_tab = 'theme'; } 
+if (!$current_tab) { $current_tab = 'interface'; } 
 $link		= conf('web_path') . $target;
 
 /* CSS construction bs */
@@ -56,14 +56,11 @@ if (($GLOBALS['user']->has_access(100)) AND ($user_id == '-1' AND conf('use_auth
 
 <div id="tabcontainer">
 <ul id="tablist">
-<li <?php echo $tab_theme; ?>>
-	<a href="<?php echo $link; ?>?tab=theme&amp;user_id=<?php echo $user_id; ?>" <?php echo $a_theme; ?>>Theme</a>
+<li <?php echo $tab_interface; ?>>
+	<a href="<?php echo $link; ?>?tab=interface&amp;user_id=<?php echo $user_id; ?>" <?php echo $a_interface; ?>>Interface</a>
 </li>
 <li <?php echo $tab_streaming; ?>>
 	<a href="<?php echo $link; ?>?tab=streaming&amp;user_id=<?php echo $user_id; ?>" <?php echo $a_streaming; ?>>Streaming</a>
-</li>
-<li <?php echo $tab_interface; ?>>
-	<a href="<?php echo $link; ?>?tab=interface&amp;user_id=<?php echo $user_id; ?>" <?php echo $a_interface; ?>>Interface</a>
 </li>
 <li <?php echo $tab_options; ?>>
 	<a href="<?php echo $link; ?>?tab=options&amp;user_id=<?php echo $user_id; ?>" <?php echo $a_options; ?>>Options</a>

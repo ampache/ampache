@@ -19,6 +19,37 @@
 
 */
 ?>
+
+<div id="container">
+	<h1><span><?php echo conf('site_title'); ?></span></h1>
+	<div>
+		<p id="loginp_0"><?php echo conf('site_title'); ?></p>
+		<form name="login" method="post" enctype="multipart/form-data" action="<?php echo  conf('web_path'); ; ?>/login.php" style="Display:inline">
+			<p class="loginp_1"><span><?php echo  _('Login'); ; ?>:</span> 
+			<input class="text_input" type="text" name="username" value="<?php echo  $_REQUEST['username']; ; ?>" /></p>
+			<p class="loginp_1"><span><?php echo  _('Password'); ; ?>:</span> 
+			<input class="text_input" type="password" name="password" value="" /></p>
+			<p class="loginp_1"><?php echo _('Remember Me'); ?><input class="check_input" type="checkbox" name="rememberme" /></p>
+			<?php echo  conf('login_message'); ; ?>
+			<?php $GLOBALS['error']->print_error('general'); ?>
+			<p><input class="button" type="submit" value="<?php echo _('Login'); ?>" /></p>
+			<input type="hidden" name="referrer" value="<?php echo $referrer; ?>" />
+			<input type="hidden" name="action" value="login" />
+		</form>
+	</div>
+</div>
+
+
+<?php
+if (conf('allow_public_registration')) { ?>
+	<p align="center">
+		[<a class="header2" href="<?php echo conf('web_path'); ?>/register.php"><?php echo _('Register'); ?></a>]
+	</p>
+<?php } // end if (conf('allow_public_registration'))
+
+
+exit();
+?>
 <br /><br />
 <p align="center">
 	<a href="http://www.ampache.org"><img src="<?php echo  conf('web_path'); ?><?php echo conf('theme_path'); ?>/images/ampache.gif" title="<?php echo conf('site_title'); ?>" border="0" alt="Ampache" />
