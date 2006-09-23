@@ -27,7 +27,10 @@ if (is_object($playlist) && ($GLOBALS['user']->username == $playlist->user || $G
 	$playlist_owner = true;
 }
 
+// Title of this page
+
 ?>
+<?php require(conf('prefix') . '/templates/show_box_top.inc.php'); ?>
 <form id="songs" method="post" enctype="multipart/form-data" action="#" style="Display:inline;">
 <table class="border" cellspacing="0" cellpadding="0" border="0">
 <?php if (is_object($GLOBALS['view'])) { ?>
@@ -179,4 +182,5 @@ $num = count($song_ids);
 <br />
 <?php show_play_selected(); ?>
 </form>
+<?php require(conf('prefix') . '/templates/show_box_bottom.inc.php'); ?>
 

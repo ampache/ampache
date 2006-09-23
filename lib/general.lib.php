@@ -692,41 +692,7 @@ function show_info_box ($title, $type, $items) {
 
         $web_path = conf('web_path');
         $popular_threshold = conf('popular_threshold');
-require (conf('prefix') . '/templates/show_box.inc.php');
-return true;
-       echo "<table class=\"border\" cellspacing=\"1\" cellpadding=\"3\" width=\"100%\" border=\"0\">";
-       echo "   <tr class=\"table-header\">";
-
-
-        if ($type == 'your_song') {
-                echo "<td>$title - <a href=\"$web_path/song.php?action=your_popular_songs&amp;limit=$popular_threshold\">" . _('Play') . "</a></td>\n";
-        }
-        elseif ($type == 'song') {
-                echo "<td>$title - <a href=\"$web_path/song.php?action=popular_songs&amp;limit=$popular_threshold\">" . _('Play') . "</a></td>\n";
-        }
-        else {
-                echo "<td>$title</td>\n";
-        }
-
-        print <<<ECHO
-  </tr>
-  <tr class="even">
-    <td align="left">
-      <ol>
-
-ECHO;
-
-        foreach ($items as $item) {
-                echo "$item\n";
-        }
-
-        print <<<ECHO
-      </ol>
-    </td>
-  </tr>
-</table>
-
-ECHO;
+	require (conf('prefix') . '/templates/show_box.inc.php');
 
 } // show_info_box
 

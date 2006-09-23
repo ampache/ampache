@@ -331,7 +331,7 @@ div#sidebar{
 }
 
 #np_container1{
-	width: 250px;
+	width: 260px;
 	height: 18px;
 	padding: 0px;
 	margin: 0px;
@@ -502,7 +502,11 @@ li.current-rating{
 /* Box Related Styles */
 .box { 
 	padding:0px;
-	background: #fff;
+	background: #f7f7f7;
+}
+.box #box-title { 
+	border-bottom: solid 1px; #000000;
+	font-weight: bold;
 }
 .box-left-top { 
 	background: url(../themes/classic/images/topleft.gif) no-repeat;
@@ -561,11 +565,9 @@ li.current-rating{
 	border:1px solid #dddddd;
 }
 #nowplaying {
-	background: #bbbbbb;
+	width:600px;
 }
 .np_row {
-	display:block;
-	background: #dddddd;
 	padding-top: 3px;
 	padding-bottom: 3px;
 }

@@ -20,18 +20,18 @@
 
 */ 
 $web_path = conf('web_path');
+$title = _('Albums by') . " " . $artist->full_name; 
 ?>
-<div class="text-box">
-		<span class="header1"><?php echo _('Albums by') . " " . $artist->full_name; ?></span>
-		<br /><?php if (conf('ratings')) { show_rating($artist->id, 'artist'); } // end if ratings ?>
-		<ul class="text-action">
-			<li><a href="<?php echo $web_path; ?>/artists.php?action=show_all_songs&amp;artist=<?php echo $artist_id; ?>"><?php echo _("Show All Songs By") . " " . $artist->full_name; ?></a></li>
-			<li><a href="<?php echo $web_path; ?>/song.php?action=artist&amp;artist_id=<?php echo $artist_id; ?>"><?php echo _("Play All Songs By") . " " . $artist->full_name; ?></a></li>
-			<li><a href="<?php echo $web_path; ?>/song.php?action=artist_random&amp;artist_id=<?php echo $artist_id; ?>"><?php echo _("Play Random Songs By") . " " . $artist->full_name; ?></a></li>
-			<?php  if ($GLOBALS['user']->has_access('100')) { ?>
-				<li><a href="<?php echo $web_path; ?>/artists.php?action=update_from_tags&amp;artist=<?php echo $artist_id; ?>"><?php echo _("Update from tags"); ?></a></li>
-				<li><a href="<?php echo $web_path; ?>/artists.php?action=show_rename&amp;artist=<?php echo $artist_id; ?>"><?php echo _("Rename Artist"); ?></a></li>
-				<li><a href="<?php echo $web_path; ?>/artists.php?action=show_similar&amp;artist=<?php echo $artist_id; ?>"><?php echo _("Find duplicate artists"); ?></a></li>
-			<?php } ?>
-		</ul>
-</div>
+<?php require (conf('prefix') . '/templates/show_box_top.inc.php'); ?>
+<?php if (conf('ratings')) { show_rating($artist->id, 'artist'); } // end if ratings ?>
+<strong><?php echo _('Actions'); ?>:</strong><br />
+&nbsp;&nbsp;<a href="<?php echo $web_path; ?>/artists.php?action=show_all_songs&amp;artist=<?php echo $artist_id; ?>"><?php echo _("Show All Songs By") . " " . $artist->full_name; ?></a><br />
+&nbsp;&nbsp;<a href="<?php echo $web_path; ?>/song.php?action=artist&amp;artist_id=<?php echo $artist_id; ?>"><?php echo _("Play All Songs By") . " " . $artist->full_name; ?></a><br />
+&nbsp;&nbsp;<a href="<?php echo $web_path; ?>/song.php?action=artist_random&amp;artist_id=<?php echo $artist_id; ?>"><?php echo _("Play Random Songs By") . " " . $artist->full_name; ?></a><br />
+<?php  if ($GLOBALS['user']->has_access('100')) { ?>
+	&nbsp;&nbsp;<a href="<?php echo $web_path; ?>/artists.php?action=update_from_tags&amp;artist=<?php echo $artist_id; ?>"><?php echo _("Update from tags"); ?></a><br />
+	&nbsp;&nbsp;<a href="<?php echo $web_path; ?>/artists.php?action=show_rename&amp;artist=<?php echo $artist_id; ?>"><?php echo _("Rename Artist"); ?></a><br />
+	&nbsp;&nbsp;<a href="<?php echo $web_path; ?>/artists.php?action=show_similar&amp;artist=<?php echo $artist_id; ?>"><?php echo _("Find duplicate artists"); ?></a><br />
+<?php } ?>
+<?php require (conf('prefix') . '/templates/show_box_bottom.inc.php'); ?>
+<?php unset($title); ?>

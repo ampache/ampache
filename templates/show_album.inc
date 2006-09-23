@@ -32,18 +32,10 @@ $row_classes = array('even','odd');
 $album_id	= $album->id;
 $artist_id	= $album->artist_id;
 $username	= $GLOBALS['user']->username;
-
+$title		= scrub_out($album->name) . ' -- ' . $album->f_artist; 
 ?>
-<br />
-<table class="border" cellspacing="1" cellpadding="3" border="0">
-<tr class="table-header">
-	<td colspan="2">
-		<font size="+1"><?php echo scrub_out($album->name); ?> -- 
-		<?php echo $album->f_artist; ?></font>
-	</td>
-</tr>
-<tr class="even">
-	<td width="140" align="center">
+<?php require (conf('prefix') . '/templates/show_box_top.inc.php'); ?>
+	<div style="display:table-cell;width:140px;">
 	<?php 
         if ($album_name != "Unknown (Orphaned)") {
 		$aa_url = $web_path . "/albumart.php?id=" . $album->id . "&amp;type=popup";
@@ -52,13 +44,13 @@ $username	= $GLOBALS['user']->username;
 		echo "</a>\n";
         }
 	?>
-	</td>
-	<td valign="top">
+	</div>
+	<div style="display:table-cell;vertical-align:top;">
 		<?php
 		if (conf('ratings')) {	show_rating($album->id, 'album');} // end if ratings
 		echo "<br />\n";
 		?>
-		<b>Actions:</b><br />
+		<strong><?php echo _('Actions'); ?>:</strong><br />
 		&nbsp;&nbsp;<a href="<?php echo $web_path; ?>/song.php?action=album&amp;album_id=<?php echo $album->id; ?>"><?php echo  _("Play Album"); ; ?></a><br />
 		&nbsp;&nbsp;<a href="<?php echo $web_path; ?>/song.php?action=album_random&amp;album_id=<?php echo  $album->id; ; ?>"><?php echo  _("Play Random from Album"); ; ?></a><br />
 		<?php if ( ($GLOBALS['user']->has_access('75')) || (!conf('use_auth'))) { ?>
@@ -71,7 +63,5 @@ $username	= $GLOBALS['user']->username;
 		<?php if (batch_ok()) { ?>
 		&nbsp;&nbsp;<a href="<?php echo $web_path; ?>/batch.php?action=alb&amp;id=<?php echo  $album->id; ; ?>"><?php echo _('Download'); ?></a><br />
 		<?php } ?>
-	</td>
-</tr>
-</table>
-<br />
+	</div>
+<?php require (conf('prefix') . '/templates/show_box_bottom.inc.php'); ?>

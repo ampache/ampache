@@ -20,12 +20,11 @@
 
 */
 ?>
-<?php require(conf('prefix') . '/templates/show_box_top.inc.php'); ?>
-	<ol>
-	<?php
-		foreach ($items as $item) {
-			echo $item;
-		}
-	?>
-	</ol>
-<?php require(conf('prefix') . '/templates/show_box_bottom.inc.php'); ?>
+	</td>
+</tr>
+<tr>
+        <td class="box-left-bottom"></td>
+        <td class="box-bottom"></td>
+        <td class="box-right-bottom"></td>
+</tr>
+</table>

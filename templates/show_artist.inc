@@ -29,7 +29,7 @@ $web_path = conf('web_path');
 <br />
 <?php require (conf('prefix') . '/templates/show_artist_box.inc.php'); ?>
 <!-- *** Multi-Album Art Display Thx MrBlahh Updated by clader *** -->
-<br />
+<?php require(conf('prefix') . '/templates/show_box_top.inc.php'); ?>
 <form id="songs" method="post" enctype="multipart/form-data" action="artists.php">
 <table class="border" cellspacing="0" cellpadding="0" border="0">
 <tr class="table-header">
@@ -77,4 +77,4 @@ foreach ($albums as $album) {
 <input type="hidden" name="type" value="album" />
 <input type="hidden" name="artist_id" value="<?php echo $artist_id; ?>" />
 </form>
-
+<?php require(conf('prefix') . '/templates/show_box_bottom.inc.php'); ?>

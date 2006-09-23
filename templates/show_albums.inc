@@ -27,6 +27,7 @@ $web_path = conf('web_path');
 // Build array of the table classes we are using
 $total_items = $view->total_items;
 ?>
+<?php require(conf('prefix') . '/templates/show_box_top.inc.php'); ?>
 <table class="border" cellspacing="0" cellpadding="0" border="0">
 <tr class="even" align="center">
 	<td colspan="5">
@@ -84,4 +85,4 @@ foreach ($albums as $album) {
 	</td>
 </tr>
 </table>
-<br />
+<?php require(conf('prefix') . '/templates/show_box_bottom.inc.php'); ?>

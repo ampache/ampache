@@ -84,26 +84,6 @@ function clear_now_playing() {
 } // clear_now_playing
 
 /**
- *  show_tool_box
- * shows the toolbox
- */
-function show_tool_box ($title, $items) {
-
-	include(conf('prefix') . "/templates/tool_box.inc");
-
-}// show_tool_box
-
-/**
- *  show_box
- * shows a generic box
- */
-function show_box($title,$items) {
-
-	include(conf('prefix') . "/templates/show_box.inc");
-
-} // show_box
-
-/**
  *  show_menu_items
  * shows menu items
  */
@@ -229,7 +209,8 @@ function show_alphabet_list ($type,$script="artist.php",$selected="false",$actio
 
 	$style_name = "style_" . strtolower($selected);
 	${$style_name} = "style=\"font-weight:bold;\"";
-
+	unset($title);
+	require (conf('prefix') . '/templates/show_box_top.inc.php'); 
 	echo "<div class=\"alphabet\">";
 	foreach ($list as $l) {
 		$style_name = "style_" . strtolower($l);
@@ -242,8 +223,8 @@ function show_alphabet_list ($type,$script="artist.php",$selected="false",$actio
 	} // if we are on the albums page
 
 	echo " <a href=\"". conf('web_path') ."/$script?action=$action&amp;match=Show_all\" $style_show_all>" . _("Show all") . "</a>";
-
 	echo "</div>\n";
+	require (conf('prefix') . '/templates/show_box_bottom.inc.php');
 } // show_alphabet_list
 
 /**

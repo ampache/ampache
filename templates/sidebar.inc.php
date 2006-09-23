@@ -155,7 +155,7 @@ switch ($location['page']) {
 <?php if ($GLOBALS['theme']['orientation'] != 'horizontal') { ?> 
 	<li>
 		<form name="sub_random" method="post" enctype="multipart/form-data" action="<?php echo $web_path; ?>/song.php?action=random&amp;method=stream" style="Display:inline">
-		<select name="random" style="width:9em;">
+		<select name="random" style="width:8.7em;">
 			<option value="1">1</option>
 			<option value="5" selected="selected">5</option>
 			<option value="10">10</option>
@@ -167,9 +167,9 @@ switch ($location['page']) {
 			<option value="1000">1000</option>
 			<option value="-1"><?php echo _("All"); ?></option>
 		</select>
-		<?php show_genre_pulldown('genre','','','13','width:9em;'); ?>
+		<?php show_genre_pulldown('genre','','','13','width:8.7em;'); ?>
 					<br />  
-		<select name="random_type" style="width:9em;">
+		<select name="random_type" style="width:8.7em;">
 			<option value="Songs"><?php echo _("Songs"); ?></option>
 			<option value="Minutes"><?php echo _("Minutes"); ?></option>
 			<option value="Artists"><?php echo _("Artists"); ?></option>
@@ -177,7 +177,7 @@ switch ($location['page']) {
 			<option value="Less Played"><?php echo _("Less Played"); ?></option>
 		</select>
 		<br /> 
-		<?php show_catalog_pulldown('catalog','width:9em;'); ?>
+		<?php show_catalog_pulldown('catalog','width:8.7em;'); ?>
 		<br />
 		<input class="smallbutton" type="submit" value="<?php echo _('Enqueue'); ?>" />
 		</form>

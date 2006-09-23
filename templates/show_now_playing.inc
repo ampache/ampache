@@ -29,9 +29,18 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 if (count($results)) {
 ?>
-		<div id="np_title">
-			<h1><?php echo _('Now Playing'); ?></h1>
-		</div>
+<table class="box" cellspacing="0" cellpadding="0">
+<tr>
+        <td class="box-left-top"></td>
+        <td class="box-top"></td>
+        <td class="box-right-top"></td>
+</tr>
+<tr>
+        <td class="box-left" rowspan="2"></td>
+        <td id="box-title"><?php echo _('Now Playing'); ?></td>
+        <td class="box-right" rowspan="2"></td>
+</tr>
+<tr><td style="padding-top:3px;">
 <?php 
 foreach ($results as $item) {
 	$song = $item['song'];
@@ -45,4 +54,11 @@ foreach ($results as $item) {
 
 } // end foreach
 ?>
+</td></tr>
+<tr>
+        <td class="box-left-bottom"></td>
+        <td class="box-bottom"></td>
+        <td class="box-right-bottom"></td>
+</tr>
+</table>
 <?php } // end if count results ?>

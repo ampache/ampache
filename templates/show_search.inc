@@ -24,7 +24,7 @@
  * This is the template for the searches... amazing!
  */
 ?>
-
+<?php require (conf('prefix') . '/templates/show_box_top.inc.php'); ?>
 <form name="search" method="post" action="<?php echo  conf('web_path'); ?>/search.php" enctype="multipart/form-data" style="Display:inline">
 <table class="tabledata" cellspacing="0" cellpadding="3" border="0">
 <tr class="table-header">
@@ -147,5 +147,4 @@
 <?php show_playlist_dropdown('', true); ?>
 <input class="button" type="submit" value="<?php echo _('Save'); ?>" /></form>
 <?php } ?>
-<br />
-
+<?php require (conf('prefix') . '/templates/show_box_bottom.inc.php'); ?>

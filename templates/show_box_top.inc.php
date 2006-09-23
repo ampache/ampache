@@ -19,30 +19,21 @@
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
-/*!
- @header
- A template file
-
-*/
-
 ?>
-
-<table class="box">
-<tr class="box-top">
-        <td class="box-left-top"></td>
-        <td class="box-center-top"></td>
-        <td class="box-right-top"></td>
-</tr>
-<tr class="table-header" align="center">
-	<th><?php echo $title; ?></th>
+<table class="box" cellspacing="0" cellpadding="0">
+<tr>
+	<td class="box-left-top"></td>
+	<td class="box-top"></td>
+	<td class="box-right-top"></td>
 </tr>
 <tr>
-	<td>
-	<?php
-	foreach (array_keys($items) as $item) {
-		print("\t\t\t&gt;&gt; <a href=\"$items[$item]\"> $item</a><br />\n");
-	}
-	?>
-	</td>
+	<td class="box-left" rowspan="2"></td>
+<?php if ($title) { ?>
+	<td id="box-title"><?php echo $title; ?></td>
+<?php } else { ?>
+	<td></td>
+<?php } ?>
+	<td class="box-right" rowspan="2"></td>
 </tr>
-</table>
+<tr>
+	<td style="padding-top:3px;">

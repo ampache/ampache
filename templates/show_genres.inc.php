@@ -26,6 +26,7 @@
  */
 $total_items = $view->total_items;
 ?>
+<?php require(conf('prefix') . '/templates/show_box_top.inc.php'); ?>
 <table class="border" cellspacing="0" cellpadding="0" border="0">
 <tr class="even" align="center">
 	<td colspan="5">
@@ -59,3 +60,4 @@ foreach ($genres as $genre) {
 	</td>
 </tr>
 </table>
+<?php require(conf('prefix') . '/templates/show_box_bottom.inc.php'); ?>
