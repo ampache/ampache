@@ -20,17 +20,31 @@
 
 */
 ?>
-<table class="border" cellspacing="1" cellpadding="3">
-<tr align="center">
+<table class="border" cellspacing="0" cellpadding="0">
+<tr>
+	<td class="box-left-top"></td>
+	<td class="box-top"></td>
+	<td class="box-right-top"></td>
+</tr>
+<tr>
+	<td class="box-left" rowspan="2"></td>
 	<td background="<?php echo conf('web_path'); ?>/images/ampache-light-bg.gif" bgcolor="#c0c0c0"><?php echo $title; ?></td>
+	<td class="box-right" rowspan="2"></td>
 </tr>
 <tr>
 	<td class="even">
+	<ol>
 	<?php
 		foreach ($items as $item) {
 			echo $item;
 		}
 	?>
+	</ol>
 	</td>
+</tr>
+<tr>
+        <td class="box-left-bottom"></td>
+        <td class="box-bottom"></td>
+        <td class="box-right-bottom"></td>
 </tr>
 </table>

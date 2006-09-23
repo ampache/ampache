@@ -28,6 +28,11 @@
 ?>
 
 <table class="border" cellspacing="1" cellpadding="3" >
+<tr class="box-top">
+        <td class="box-left-top"></td>
+        <td class="box-center-top"></td>
+        <td class="box-right-top"></td>
+</tr>
 <tr class="table-header" align="center">
 	<th><?php echo $title; ?></th>
 </tr>

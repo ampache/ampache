@@ -692,7 +692,8 @@ function show_info_box ($title, $type, $items) {
 
         $web_path = conf('web_path');
         $popular_threshold = conf('popular_threshold');
-
+require (conf('prefix') . '/templates/show_box.inc.php');
+return true;
        echo "<table class=\"border\" cellspacing=\"1\" cellpadding=\"3\" width=\"100%\" border=\"0\">";
        echo "   <tr class=\"table-header\">";
 
