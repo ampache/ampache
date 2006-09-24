@@ -20,40 +20,75 @@
 
 */
 
-/*!
-	@header
- The default pager widget for moving through a list of many items.
+/**
+ * List Header
+ * The default pager widget for moving through a list of many items.
+ * This relies heavily on the View object to get pieces about how
+ * to layout this page.
+ */
 
- This relies heavily on the View object to get pieces about how
-   to layout this page.
-
-*/
-
+/* We must have Some Items, if none passed use sesison information */
 if (!$total_items) { $total_items = $_SESSION['view_total_items']; }
-// do some math here
-if ($GLOBALS['view']->offset >= $GLOBALS['view']->offset_limit) {
-	$offset2 = $GLOBALS['view']->offset - 25;
-}
-else {
-	$offset2 = $GLOBALS['view']->offset;
-	if (!$GLOBALS['view']->offset) { $offset2 = "0"; }
-}
 
-// Get the prev page offset
-$offset1 = $GLOBALS['view']->offset - $GLOBALS['view']->offset_limit;
-if ($offset1 < 1) { $offset1 = 0; }
 
-// since we have an array of objects, let's build a purdy thingie
+/* Calculate the Next/Prev Pages */
+
+// Next
+$next_offset = $GLOBALS['view']->offset + $GLOBALS['view']->offset_limit;
+if ($next_offset > $total_items) { $next_offset = $GLOBALS['view']->offset; }
+
+// Prev
+$prev_offset = $GLOBALS['view']->offset - $GLOBALS['view']->offset_limit; 
+if ($prev_offset < 0) { $prev_offset = '0'; } 
+
+/* Calculate how many pages total exist */
 $pages  = ceil($total_items/$GLOBALS['view']->offset_limit);
-$offset4 = ($pages - 1);
-$offset4 = ($offset4 * $GLOBALS['view']->offset_limit);
 
-//We do this one last to make sure we don't go beyond offset4
-$offset3 = $GLOBALS['view']->offset + $GLOBALS['view']->offset_limit;
-if ($offset3 >= $offset4) { $offset3 = $offset4; } 
+/* Calculate current page and how many we have on each side */
+$page_data = array();
 
+// Can't Divide by 0
+if ($GLOBALS['view']->offset > 0) { 
+	$current_page = floor($GLOBALS['view']->offset/$GLOBALS['view']->offset_limit);
+}
+else { 
+	$current_page = 0;
+}
 
-//setup the next action
+/* Create 10 pages in either direction */
+// Down First
+$page = $current_page;
+$i = 0;
+/* While we have pages left */
+while ($page > 0) { 
+	if ($i == '15') { $page_data['down'][1] = '...'; $page_data['down'][0] = '0'; break; } 
+	$i++;
+	$page = $page - 1;
+	$page_data['down'][$page] = $page * $GLOBALS['view']->offset_limit;
+} // while page > 0
+
+// Up Next
+$page = $current_page+1; 
+$i = 0;
+/* While we have pages left */
+while ($page <= $pages) { 
+	if ($page * $GLOBALS['view']->offset_limit > $total_items) { break; }
+	if ($i == '15') { 
+		$key = $pages - 1;
+		if (!$page_data['up'][$key]) { $page_data['up'][$key] = '...'; }
+		$page_data['up'][$pages] = ($pages-1) * $GLOBALS['view']->offset_limit;
+		break;
+	}
+	$i++;
+	$page = $page + 1;
+	$page_data['up'][$page] = ($page-1) * $GLOBALS['view']->offset_limit;
+} // end while
+
+// Sort These Arrays of Hotness
+ksort($page_data['up']);
+ksort($page_data['down']);
+
+/* Take the script name and passed action and setup the next action */
 preg_match("/.*\/(.+\.php)$/", $_SERVER['SCRIPT_NAME'], $matches);
 $action = "action=" . scrub_in($_REQUEST['action']);
 $script = conf('web_path') . "/" . $admin_menu . $matches[1];
@@ -61,32 +96,59 @@ $script = conf('web_path') . "/" . $admin_menu . $matches[1];
 // are there enough items to even need this view?
 if (($pages > 1) && ($_SESSION['view_script'])) {
 ?>
-	<table border="0" cellpadding="2" cellspacing="0" width="100%">
-	<tr>
-		<td align="center" valign="top">
-			<a href="<?php echo $script; ?>?<?php echo $action; ?>&amp;offset=<?php echo $offset1; ?>&amp;keep_view=true">[&nbsp;<?php echo  _("Prev"); ?>&nbsp;]</a>&nbsp;
-		</td>
-		<td align="center">
-		<?php 
-			$counter = 1;
-			$offset_pages = 0;
-			while ($counter <= $pages) {
-				if ($GLOBALS['view']->offset == $offset_pages) {	
-		?>			<a href="<?php echo $script; ?>?<?php echo  $action ; ?>&amp;sort_type=<?php echo  $GLOBALS['view']->sort_type ; ?>&amp;offset=<?php echo  $offset_pages ; ?>&amp;keep_view=true"><b><?php echo $counter; ?></b></a>&nbsp;
-				<?php 
-				} else { ?>
-					<a href="<?php echo $script; ?>?<?php echo $action; ?>&amp;sort_type=<?php echo $GLOBALS['view']->sort_type;  ?>&amp;offset=<?php echo $offset_pages; ?>&amp;keep_view=true"><?php echo $counter; ?></a>&nbsp;
-				<?php 
-				} // end if ($GLOBALS['view']->offset == $offset_pages) and else
-				$offset_pages += $GLOBALS['view']->offset_limit;
-				$counter++;
-			} // end while ($counter <= $pages) ?>
-		</td>
-		<td align="center" valign="top">
-			<a href="<?php echo $script; ?>?<?php echo $action; ?>&amp;offset=<?php echo $offset3; ?>&amp;keep_view=true">[&nbsp;<?php echo _("Next"); ?>&nbsp;]</a>&nbsp;
-		</td>
-	</tr>
-	</table>
+<table cellpadding="1" cellspacing="0" width="100%">
+<tr>
+	<td valign="top">
+	<a class="list-header" href="<?php echo $script; ?>?<?php echo $action; ?>&amp;offset=<?php echo $prev_offset; ?>&amp;keep_view=true">[<?php echo _('Prev'); ?>]</a>&nbsp;
+	</td>
+	<td align="center">
+	<?php 
+		/* Echo Everything below us */
+		foreach ($page_data['down'] as $page => $offset) { 
+			if ($offset === '...') { echo '...&nbsp;'; } 
+			else { 
+			// Hack Alert
+			$page++;
+	?>
+	<a class="list-header" href="<?php echo $script; ?>?<?php echo $action; ?>&amp;sort_type=<?php echo $GLOBALS['view']->sort_type;  ?>&amp;offset=<?php echo $offset; ?>&amp;keep_view=true"><?php echo $page; ?></a>&nbsp;
+	<?php	
+			}
+		} // end foreach down
+
+		/* Echo Out current Page */
+		$current_page = $current_page +1;
+	?>
+	<span class="list-header"><strong><?php echo $current_page; ?></strong></span>&nbsp;
+	<?php
+		
+		/* Echo Out Everything Above Us */
+		foreach ($page_data['up'] as $page=>$offset) { 
+			if ($offset === '...') { echo '...&nbsp;'; } 
+			else { 
+	?>
+	<a class="list-header" href="<?php echo $script; ?>?<?php echo $action; ?>&amp;sort_type=<?php echo $GLOBALS['view']->sort_type;  ?>&amp;offset=<?php echo $offset; ?>&amp;keep_view=true"><?php echo $page; ?></a>&nbsp;
+	<?php
+			} // end else
+		} // end foreach up
+		/*
+		$counter = 1;
+		$offset_pages = 0;
+		while ($counter <= $pages) {
+		if ($GLOBALS['view']->offset == $offset_pages) { ?>
+		<?php } else { ?>
+		<?php 	
+		} // end if ($GLOBALS['view']->offset == $offset_pages) and else
+			$offset_pages += $GLOBALS['view']->offset_limit;
+			$counter++;
+		} // end while ($counter <= $pages) 
+		*/
+	?>
+	</td>
+	<td valign="top">
+		<a class="list-header" href="<?php echo $script; ?>?<?php echo $action; ?>&amp;offset=<?php echo $next_offset; ?>&amp;keep_view=true">[<?php echo _('Next'); ?>]</a>&nbsp;
+	</td>
+</tr>
+</table>
 <?php
 } // if (($pages > 1) && ($_SESSION['view_script']))
 ?>

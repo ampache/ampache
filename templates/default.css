@@ -535,6 +535,15 @@ li.current-rating{
 .box-top { 
 	background: url(../themes/classic/images/top.gif);
 }
+/* List Header Styles */
+.list-header { 
+	text-decoration: none;
+} 
+.list-header:hover { 
+	color:#071fd4;
+}
+
+
 .confirmation-box {
 	padding-left:5px;
 	padding-top:5px;
