@@ -25,10 +25,7 @@ $catalogs 	= $catalog->get_catalogs();
 $users		= $GLOBALS['user']->get_recent(10);
 
 ?>
-<span class="header1"><?php echo _('Catalogs'); ?></span>
-<div class="text-box"> 
-<div class="text-action">
-</div>
+<?php show_box_top(_('Catalogs')); ?>
 <table border="0" cellpadding="0" cellspacing="0">
 <tr class="table-header">
 	<th><?php echo _('Name'); ?></th>
@@ -73,18 +70,16 @@ $users		= $GLOBALS['user']->get_recent(10);
 <a href="<?php echo $web_path; ?>/admin/catalog.php?action=gather_album_art"><?php echo _('Gather Album Art'); ?></a>
 
 </div>
-</div><br />
-<span class="header1"><?php echo _('Other Tools'); ?></span><br />
-<div class="text-box">
+<?php show_box_bottom(); ?>
+<?php show_box_top(_('Other Tools')); ?>
 <div class="text-action">
 	<a href="<?php echo $web_path; ?>/admin/duplicates.php"><?php echo _('Show Duplicate Songs'); ?></a>
 	<a href="<?php echo $web_path; ?>/admin/catalog.php?action=clear_now_playing"><?php echo _('Clear Now Playing'); ?></a>
 </div>
-</div><br />
-<span class="header2"><?php echo _('User Activity'); ?></span><br />
-<div class="text-box">
+<?php show_box_bottom(); ?>
+<?php show_box_top(_('User Activity')); ?>
         <?php require (conf('prefix') . '/templates/show_users_info.inc.php'); ?>
         <div class="text-action">
         <a href="<?php echo $web_path; ?>/admin/users.php"><?php echo _('Show All'); ?>...</a>
         </div>
-</div>
+<?php show_box_bottom(); ?>

@@ -25,18 +25,15 @@ $localplay = init_localplay();
 $songs = $localplay->get();
 ?>
 
-<div class="text-box">
-<span class="header2"><?php echo ucfirst($localplay->type); ?> <?php echo _('Localplay'); ?></span>
+<?php show_box_top(ucfirst($localplay->type) . ' ' . _('Localplay')); ?>
 <ul class="text-action">
 <?php if ($localplay->has_function('delete_all')) { ?>
 	<li><a href="<?php echo $web_path; ?>/localplay.php?action=delete_all"><?php echo _('Clear Playlist'); ?></a></li>
 <?php } ?>
 </ul>
-</div>
-<br />
 <?php require_once(conf('prefix') . '/templates/show_localplay_status.inc.php'); ?>
-<br />
-<div class="text-box">
+<?php show_box_bottom(); ?>
+<?php show_box_top(_('Current Playlist')); ?>
 <table class="border" cellspacing="0" border="0">
 <tr class="table-header">
 	<th><?php echo _('Track'); ?></th>
@@ -61,4 +58,4 @@ $songs = $localplay->get();
 </tr>
 <?php } ?>
 </table>
-</div>
+<?php show_box_bottom(); ?>

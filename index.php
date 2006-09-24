@@ -45,20 +45,21 @@ if (conf('refresh_limit') > 5) {
 }
 ?>
 
-<div id="nowplaying" style="margin-left:25px;">
+<div id="nowplaying">
 	<?php show_now_playing(); ?>
 </div> <!-- Close Now Playing Div -->
 
 <!-- Big Daddy Table -->
+<?php show_box_top(); ?>
 <table id="bigdaddy">
 <tr>
 	<td valign="top">
 		<table border="0"><!-- Left table -->
 		<tr>
-			<td valign="top" align="right">  <!-- sigger: why is it a problem to set width=50% -->
+			<td valign="top"> 
 				<?php show_local_catalog_info(); ?>
 			</td>
-			<td valign="top" align="left">   <!-- sigger: why is it a problem to set width=50% -->
+			<td valign="top">
 			<?php 
 				if ($items = get_global_popular('album')) { 
 					show_info_box(_('Most Popular Albums'), 'album',$items);
@@ -69,14 +70,14 @@ if (conf('refresh_limit') > 5) {
 		<tr><td colspan="2">&nbsp;</td></tr>
 		<tr><td colspan="2">&nbsp;</td></tr>
 		<tr>
-			<td valign="top" align="right">
+			<td valign="top">
 			<?php
 				if ($items = get_global_popular('artist')) {
 					show_info_box(_('Most Popular Artists'), 'artist', $items);
 				}
 			?>
 			</td>
-			<td valign="top" align="left">
+			<td valign="top">
 			<?php
 				if ($items = get_global_popular('song')) {
 					show_info_box(_('Most Popular Songs'), 'song', $items);
@@ -86,14 +87,14 @@ if (conf('refresh_limit') > 5) {
 		</tr>
 		<tr><td colspan="2">&nbsp;</td></tr>
 		<tr>
-			<td valign="top" align="right">
+			<td valign="top">
 			<?php
 				if ($items = get_newest('artist')) {
 					show_info_box(_('Newest Artist Additions'), '', $items);
 				}
 			?>
 			</td>
-			<td valign="top" align="left">
+			<td valign="top">
 			<?php
 				if ($items = get_newest('album')) {
 					show_info_box(_('Newest Album Additions'), '', $items);
@@ -105,5 +106,6 @@ if (conf('refresh_limit') > 5) {
 	</td>
 </tr>
 </table>
+<?php show_box_bottom(); ?>
 <!-- End Big Daddy Table -->
 <?php show_footer(); ?>

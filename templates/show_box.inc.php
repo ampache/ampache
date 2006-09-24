@@ -20,7 +20,7 @@
 
 */
 ?>
-<?php require(conf('prefix') . '/templates/show_box_top.inc.php'); ?>
+	<span class="box-title"><?php echo $title; ?></span>
 	<ol>
 	<?php
 		foreach ($items as $item) {
@@ -28,4 +28,3 @@
 		}
 	?>
 	</ol>
-<?php require(conf('prefix') . '/templates/show_box_bottom.inc.php'); ?>

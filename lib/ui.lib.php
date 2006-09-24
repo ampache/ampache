@@ -210,7 +210,6 @@ function show_alphabet_list ($type,$script="artist.php",$selected="false",$actio
 	$style_name = "style_" . strtolower($selected);
 	${$style_name} = "style=\"font-weight:bold;\"";
 	unset($title);
-	require (conf('prefix') . '/templates/show_box_top.inc.php'); 
 	echo "<div class=\"alphabet\">";
 	foreach ($list as $l) {
 		$style_name = "style_" . strtolower($l);
@@ -224,7 +223,7 @@ function show_alphabet_list ($type,$script="artist.php",$selected="false",$actio
 
 	echo " <a href=\"". conf('web_path') ."/$script?action=$action&amp;match=Show_all\" $style_show_all>" . _("Show all") . "</a>";
 	echo "</div>\n";
-	require (conf('prefix') . '/templates/show_box_bottom.inc.php');
+
 } // show_alphabet_list
 
 /**
@@ -627,7 +626,7 @@ function show_local_catalog_info() {
 	if (!mysql_num_rows($db_results)) {
 		$items[] = "<span align=\"center\" class=\"error\">" . _("No Catalogs Found!") . "</span><br />";
 		$items[] = "<a href=\"" . conf('web_path') . "/admin/catalog.php?action=show_add_catalog\">" ._("Add a Catalog") . "</a>";
-		show_info_box(_("Catalog Statistics"),'catalog',$items);
+		show_info_box(_('Catalog Statistics'),'catalog',$items);
 		return false;
 	}
 
@@ -1263,5 +1262,27 @@ function show_catalog_select($name='catalog',$catalog_id=0,$style='') {
 	echo "</select>\n";
 
 } // show_catalog_select
+
+/**
+ * show_box_top
+ * This function requires the top part of the box
+ * it takes title as an optional argument
+ */
+function show_box_top($title='') { 
+
+	require (conf('prefix') . '/templates/show_box_top.inc.php');	
+
+} // show_box_top
+
+/**
+ * show_box_bottom
+ * This function requires the bottom part of the box
+ * it does not take any arguments
+ */
+function show_box_bottom() { 
+
+	require (conf('prefix') . '/templates/show_box_bottom.inc.php');
+
+} // show_box_bottom
 
 ?>

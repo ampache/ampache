@@ -29,7 +29,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 if (count($results)) {
 ?>
-<table class="box" cellspacing="0" cellpadding="0">
+<table class="box" cellspacing="0" cellpadding="0" style="width:625px;">
 <tr>
         <td class="box-left-top"></td>
         <td class="box-top"></td>
@@ -37,7 +37,7 @@ if (count($results)) {
 </tr>
 <tr>
         <td class="box-left" rowspan="2"></td>
-        <td id="box-title"><?php echo _('Now Playing'); ?></td>
+        <td class="box-title"><?php echo _('Now Playing'); ?></td>
         <td class="box-right" rowspan="2"></td>
 </tr>
 <tr><td style="padding-top:3px;">
@@ -57,7 +57,7 @@ foreach ($results as $item) {
 </td></tr>
 <tr>
         <td class="box-left-bottom"></td>
-        <td class="box-bottom"></td>
+        <td class="box-bottom" style="width:100%;"></td>
         <td class="box-right-bottom"></td>
 </tr>
 </table>

@@ -20,35 +20,33 @@
 
 */
 ?>
-<table class="border" cellspacing="1" cellpadding="3" width="100%" border="0"> 
-<tr class="table-header">
-	<td class="table-header" colspan="2"><?php echo _("Catalog Statistics"); ?> </td>
-</tr>
-<tr class="<?php echo flip_class(); ?>">
+<span class="box-title"><?php echo _("Catalog Statistics"); ?></span>
+<table cellspacing="1" cellpadding="3" width="100%" border="0"> 
+<tr>
 	<td><?php echo _("Total Users"); ?></td>
 	<td><b><?php echo $users[0]; ?></b></td>
-  </tr>
-<tr class="<?php echo flip_class(); ?>">
+</tr>
+<tr>
 	<td><?php echo _("Connected Users"); ?></td>
 	<td><b><?php echo $connected_users[0]; ?></b></td>
 </tr>
-<tr class="<?php echo flip_class(); ?>">
+<tr>
 	<td><?php echo _("Albums"); ?></td>
 	<td><b><?php echo $albums[0]; ?></b></td>
 </tr>
-<tr class="<?php echo flip_class(); ?>">
+<tr>
 	<td><?php echo _("Artists"); ?></td>
 	<td><b><?php echo $artists[0]; ?></b></td>
 </tr>
-<tr class="<?php echo flip_class(); ?>">
+<tr>
 	<td><?php echo _("Songs"); ?></td>
 	<td><b><?php echo $songs['songs']; ?></b></td>
 </tr>
-<tr class="<?php echo flip_class(); ?>">
+<tr>
 	<td><?php echo _("Catalog Size"); ?></td>
 	<td><b><?php echo $total_size; ?> <?php echo $size_unit; ?></b></td>
 </tr>
-<tr class="<?php echo flip_class(); ?>">
+<tr>
 	<td><?php echo _("Catalog Time"); ?></td>
 	<td><b><?php echo $time_text; ?></b></td>
 </tr>

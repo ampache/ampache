@@ -30,7 +30,7 @@
 $localplay_modules = get_localplay_controllers(); 
 $web_path = conf('web_path'); 
 ?>
-<span class="header1"><?php echo _('Modules'); ?></span>
+<?php show_box_top(_('Modules')); ?>
 <table class="border" border="0" cellspacing="0">
 <tr class="table-header">
 	<th><?php echo _('Module Name'); ?></th>
@@ -57,3 +57,4 @@ foreach ($localplay_modules as $module) {
 </tr>
 <?php } ?>
 </table>
+<?php show_box_bottom(); ?>

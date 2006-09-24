@@ -31,9 +31,7 @@
 $row_classes = array('even','odd');
 $web_path = conf('web_path');
 ?>
-
-<p class="header1"><?php print _("Host Access to Your Catalog"); ?></p>
-
+<?php show_box_top(_('Host Access to Your Catalog')); ?>
 <p>Since your catalog can be accessed remotely you may want to limit the access from
 remote sources so you are not in violation of copyright laws.  By default your
 server will allow anyone with an account to stream music. It will not allow any
@@ -41,7 +39,11 @@ other Ampache servers to connect to it to share catalog information.  Use tool b
 to add any server's IP address that you want to access your Ampache catalog or be able to 
 stream from this server.</p>
 
-<p><a href="<?php echo $web_path; ?>/admin/access.php?action=show_add_host"><?php echo _("Add Entry"); ?></a></p>
+<p>
+<span class="text-action">
+<a href="<?php echo $web_path; ?>/admin/access.php?action=show_add_host"><?php echo _('Add Entry'); ?></a>
+</span>
+</p>
 
 <table cellspacing="1" cellpadding="3" class="border">
 <tr class="table-header" align="center">
@@ -71,4 +73,5 @@ if (count($list)) {
 	<?php  } // end foreach ?>
 <?php  } // end if count ?>
 </table>
+<?php show_box_bottom(); ?>
 

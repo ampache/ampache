@@ -29,21 +29,19 @@ $total_flagged	= $flag->get_total();
 /* Disabled Information Gathering */
 $catalog = new Catalog(); 
 $songs = $catalog->get_disabled(10);
-
 ?>
-<span class="header1"><?php echo _('Information'); ?></span><br />
-<div class="text-box"> 
-<span class="header2"><?php echo _('Last Ten Flagged Records'); ?></span><br />
+
+<?php show_box_top(_('Last Ten Flagged Records')); ?>
 	<?php require (conf('prefix') . '/templates/show_flagged.inc.php'); ?>
 	<div class="text-action">
 	<a href="<?php echo $web_path; ?>/admin/flag.php?action=show_flagged"><?php echo _('Show All'); ?>...</a>
 	</div>
-</div><br />
-<span class="header2"><?php echo _('Disabled Songs'); ?></span><br />
-<div class="text-box">	
+<?php show_box_bottom(); ?>
+
+<?php show_box_top(_('Disabled Songs')); ?>
 	<!-- Show Last 10 Disabled Songs -->&nbsp;
 	<?php require (conf('prefix') . '/templates/show_disabled_songs.inc'); ?>
 	<div class="text-action">
 	<a href="<?php echo $web_path; ?>/admin/catalog.php?action=show_disabled"><?php echo _('Show All'); ?>...</a>
 	</div>
-</div>
+<?php show_box_bottom(); ?>

@@ -19,8 +19,7 @@
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 ?>
-<div class="confirmation-box">
-<span class="header1"><?php echo scrub_out($title); ?></span><br />
+<?php show_box_top(scrub_out($title)); ?>
 <?php echo scrub_out($text); ?>
 <br />
 <div class="text-action">
@@ -29,4 +28,4 @@
 	<a href="<?php echo conf('web_path') . "/" . return_referer(); ?>"><?php echo _('Cancel'); ?></a>
 <?php } ?>
 </div>
-</div>
+<?php show_box_bottom(); ?>

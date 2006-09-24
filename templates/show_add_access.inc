@@ -24,8 +24,7 @@
 	@header Add Access List Entry
 */
 ?>
-<div class="text-box">
-<p style="font-size: 10pt; font-weight: bold;"><?php echo _('Add Access for a Host'); ?></p>
+<?php show_box_top(_('Add Access for a Host')); ?>
 <p><?php echo _('Use the form below to add a host that you want to have access to your Ampache catalog.'); ?></p>
 
 
@@ -69,4 +68,4 @@
 </tr>
 </table>
 </form>
-</div>
+<?php show_box_bottom(); ?>

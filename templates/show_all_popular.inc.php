@@ -23,7 +23,7 @@
 ?>
 <table class="tabledata">
 <tr>
-	<td valign="top" align="right">
+	<td valign="top" >
 		<?php show_info_box(_("Most Popular Artists"), 'artist', $artists); ?>
 	</td>
 	<td valign="top" align="left">
@@ -36,7 +36,7 @@
 	<td valign="top" align="left">
 		<?php show_info_box(_("Most Popular Genres"), '', $genres); ?>
 	</td>
-	<td valign="top" align="right">
+	<td valign="top" >
 		<?php show_info_box(_("Most Popular Songs"), 'song', $songs); ?>
 	</td>
 </tr>

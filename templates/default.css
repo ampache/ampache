@@ -327,7 +327,7 @@ div#sidebar{
 /* Styles for Now Playing */
 #nowplaying{
 	clear: all;
-	margin: 10px;
+	width: 625px;
 }
 
 #np_container1{
@@ -427,7 +427,7 @@ margin-right:5em;
 	width: 80px;
 	height: 15px;
 	position: relative;
-	background: url(images/ratings/star_rating.gif) top left repeat-x;        
+	background: url(../images/ratings/star_rating.gif) top left repeat-x;        
 }
 .star-rating li{
 	padding:0px;
@@ -445,18 +445,18 @@ margin-right:5em;
 	padding: 0px;
 }
 .star-rating li a:hover{
-	background: url(images/ratings/star_rating.gif) left center;
+	background: url(../images/ratings/star_rating.gif) left center;
 	z-index: 2;
 	left: 0px;
 }
 li.zero-stars a:hover {
-	background: url(images/ratings/x.gif);
+	background: url(../images/ratings/x.gif);
 	height: 15px;
 	left: 80px;
 	display: block;
 }
 a.zero-stars {
-	background: url(images/ratings/x_off.gif);
+	background: url(../images/ratings/x_off.gif);
 	height: 15px;
 	left: 80px;
 	display: block;
@@ -492,7 +492,7 @@ a.five-stars:hover{
 	width: 80px;
 }
 li.current-rating{
-	background: url(images/ratings/star_rating.gif) left bottom;
+	background: url(../images/ratings/star_rating.gif) left bottom;
 	position: absolute;
 	height: 15px;
 	display: block;
@@ -504,7 +504,7 @@ li.current-rating{
 	padding:0px;
 	background: #f7f7f7;
 }
-.box #box-title { 
+.box-title { 
 	border-bottom: solid 1px; #000000;
 	font-weight: bold;
 }

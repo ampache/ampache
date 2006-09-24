@@ -116,10 +116,12 @@ switch($action) {
 
 		$match = scrub_in($_REQUEST['match']);
 
+		require (conf('prefix') . '/templates/show_box_top.inc.php');
 	        show_alphabet_list('song_title','browse.php',$match,'song_title');
                 /* Detect if it's Browse, and if so don't fill it in */
                 if ($match == 'Browse') { $match = ''; }
                 show_alphabet_form($match,_('Show Titles Starting With'),"browse.php?action=song_title&amp;match=$match");
+		require (conf('prefix') . '/templates/show_box_bottom.inc.php');
 	
 		$sql = $song->get_sql_from_match($_REQUEST['match']);
 
@@ -144,12 +146,13 @@ switch($action) {
 	break;
 	/* Throw recently added, updated here */
 	default:
-
+		show_box_top(); 
 		/* Show Most Popular artist/album/songs */
 		show_all_popular();
 
 		/* Show Recent Additions */
 		show_all_recent();
+		show_box_bottom();
 
 	break;
 

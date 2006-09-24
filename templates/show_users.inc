@@ -28,7 +28,7 @@ $total_items = $view->total_items;
 $admin_menu = "admin/";
 ?>
 
-
+<?php show_box_top(); ?>
 <table class="tabledata" cellpadding="0" cellspacing="0" border="0">
 <tr class="even" align="center">
         <td colspan="8">
@@ -137,3 +137,4 @@ while ($results = mysql_fetch_object($db_result)) {
 </tr>
 <?php } //end while ($results = mysql_fetch_object($db_result)) ?>
 </table>
+<?php show_box_bottom(); ?>

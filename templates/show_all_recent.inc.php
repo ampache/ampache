@@ -23,10 +23,10 @@
 ?>
 <table class="tabledata">
 <tr>
-	<td valign="top" align="right">
+	<td valign="top">
 		<?php show_info_box(_("Newest Artist Additions"), '', $artists); ?>
 	</td>
-	<td valign="top" align="left">
+	<td valign="top">
 		<?php show_info_box(_("Newest Album Additions"), '', $albums); ?>
 	</td>
 </tr>

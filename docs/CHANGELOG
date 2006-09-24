@@ -4,6 +4,8 @@
 
 --------------------------------------------------------------------------
   v.3.3.2
+	- Introduced new Theming method and 'migrated' all old themes in
+		/contrib results may vary. (Thx Ros)
 	- Added ability to search by Rating, requires MySQL 4.0 or above
 	- Page headers now limited to 20 pages with [....] between top
 		and bottom 10.

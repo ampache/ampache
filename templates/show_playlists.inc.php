@@ -25,9 +25,9 @@
  * /playlists.php $type is always passed
  */
 $web_path = conf('web_path');
-
+$title = $type . ' ' . _('Playlists'); 
 ?>
-<h3><?php echo $type . ' ' . _('Playlists'); ?></h3>
+<?php show_box_top($title); ?>
 <table class="tabledata" cellspacing="0" cellpadding="0" border="0"> <!-- Playlist Table -->
 <tr class="table-header">
 	<th><?php echo _('Playlist Name'); ?></th>
@@ -75,4 +75,6 @@ foreach ($playlists as $playlist) {
 	<td colspan="4"><?php echo _('No Playlists Found'); ?></td>
 </tr>
 <?php } ?>
-</table> <!-- End Playlist Table -->
+</table>
+<?php show_box_bottom(); ?>
+

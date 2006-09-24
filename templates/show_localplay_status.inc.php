@@ -36,11 +36,9 @@ $track_name = $status['track_artist'] . ' - ' . $status['track_album'] . ' - ' .
 $track_name = ltrim(ltrim($track_name,' - '));
 
 ?>
-<div class="text-box">
 <?php echo _('State') .": ". ucfirst($status['state']); ?><br />
 <?php echo _('Repeat') . ":" . print_boolean($status['repeat']); ?>&nbsp;|&nbsp;
 <?php echo _('Random') . ":" . print_boolean($status['random']); ?><br />
 <?php echo _('Volume') . ":" . $status['volume']; ?><br />
 <br />
 <span class="header2"><?php echo _('Now Playing') . '</span><br />[' . $status['track'] . '] - ' . $track_name . '<br />'; ?>
-</div>

@@ -36,10 +36,9 @@ else {
 }
 
 show_template('header');
+$title = $working_user->fullname . ' ' .  _('Favorites') . ':';
 ?>
-
-<span class="header1"><?php echo $working_user->fullname; ?> <?php echo _('Favorites'); ?>:</span>
-
+<?php require (conf('prefix') . '/templates/show_box_top.inc.php'); ?>
 <table cellpadding="5" cellspacing="5" border="0" width="100%">
 	<tr>
 		<td valign="top">
@@ -79,4 +78,5 @@ show_template('header');
                 </td>
 	</tr>
 </table>
+<?php require (conf('prefix') . '/templates/show_box_bottom.inc.php'); ?>
 <?php show_footer(); ?>

@@ -29,7 +29,7 @@
 <tr>
 	<td class="box-left" rowspan="2"></td>
 <?php if ($title) { ?>
-	<td id="box-title"><?php echo $title; ?></td>
+	<td class="box-title"><?php echo $title; ?></td>
 <?php } else { ?>
 	<td></td>
 <?php } ?>

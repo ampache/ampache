@@ -23,8 +23,7 @@
 
 ?>
 <form id="random" method="post" enctype="multipart/form-data" action="<?php echo conf('web_path'); ?>/song.php">
-<div class="text-box">
-<span class="header2"><?php echo _('Play Random Selection'); ?></span>
+<?php show_box_top(_('Play Random Selection')); ?>
 <table>
 <tr>
 	<td><?php echo _("Item count"); ?></td>
@@ -87,5 +86,5 @@
 	</td>
 </tr>
 </table>
-</div>
+<?php show_box_bottom(); ?>
 </form>

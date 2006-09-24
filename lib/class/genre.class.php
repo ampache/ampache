@@ -274,10 +274,12 @@ class Genre {
 	 */
 	function show_match_list($match) { 
 
+		require (conf('prefix') . '/templates/show_box_top.inc.php');
 		show_alphabet_list('genre','browse.php',$match,'genre');
 		/* Detect if it's Browse, and if so don't fill it in */
 		if ($match == 'Browse') { $match = ''; } 
-		show_alphabet_form($match,_("Show Genres starting with"),"browse.php?action=genre&amp;match=$match");
+		show_alphabet_form($match,_('Show Genres starting with'),"browse.php?action=genre&amp;match=$match");
+		require (conf('prefix') . '/templates/show_box_bottom.inc.php');
 
 	} // show_match_list
 

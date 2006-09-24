@@ -27,12 +27,9 @@
 
 $web_path = conf('web_path'); 
 $playlist_id = scrub_out($_REQUEST['playlist_id']);
+$title = _('Playist Actions');
 ?>
-
-<table class="text-box"> <!-- Playlist Table -->
-<tr>
-	<td>
-		<span class="header1"><?php echo _('Playlist Actions'); ?></span><br />
+<?php require (conf('prefix') . '/templates/show_box_top.inc.php'); ?>
 		<ul class="text-action">
 		<?php if ($_REQUEST['playlist_id']) { ?>
 		<li><a href="<?php echo $web_path; ?>/playlist.php?action=edit&amp;playlist_id=<?php echo $playlist_id; ?>"><?php echo _('Edit Playlist'); ?></a></li>
@@ -48,7 +45,4 @@ $playlist_id = scrub_out($_REQUEST['playlist_id']);
 		<?php } ?>
 		<?php } ?>	
 		</ul>
-	</td>
-</tr>
-</table><!-- End Playlist Table -->
-<br />
+<?php require (conf('prefix') . '/templates/show_box_bottom.inc.php'); ?>

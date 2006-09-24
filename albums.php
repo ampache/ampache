@@ -151,16 +151,22 @@ elseif ($_REQUEST['action'] === 'update_from_tags') {
 
 else {
 
-	if (strlen($_REQUEST['match']) < '1') { $match = 'none'; }
+	if (strlen($_REQUEST['match']) < '1') { $match = 'a'; }
 
 	// Setup the View Ojbect
         $view = new View();
         $view->import_session_view();
 
+	if ($match == 'Show_all' || $match == 'Show_missing_art' || $match == 'Browse') { $chr = ''; } 
+	else { $chr = $match; } 
+
+	require (conf('prefix') . '/templates/show_box_top.inc.php');
+	show_alphabet_list('albums','albums.php',$match);
+	show_alphabet_form($chr,_('Show Albums starting with'),"albums.php?action=match");
+	require (conf('prefix') . '/templates/show_box_bottom.inc.php');
+
 	switch($match) {
 		case 'Show_all':
-			show_alphabet_list('albums','albums.php','show_all');
-			show_alphabet_form('',_("Show Albums starting with"),"albums.php?action=match");
 			$offset_limit = 99999;
                         $sql = "SELECT album.id FROM song,album ".
                                " WHERE song.album=album.id ".
@@ -168,8 +174,6 @@ else {
                                "  HAVING COUNT(song.id) > $min_album_size ";
 			break;
                 case 'Show_missing_art':
-                        show_alphabet_list('albums','albums.php','show_missing_art');
-			show_alphabet_form('',_("Show Albums starting with"),"albums.php?action=match");
                         $offset_limit = 99999;
                         $sql = "SELECT album.id FROM song,album ".
                                " WHERE song.album=album.id ".
@@ -179,27 +183,12 @@ else {
                         break; 
 		case 'Browse':
 		case 'show_albums':
-			show_alphabet_list('albums','albums.php','browse');
-			show_alphabet_form('',_("Show Albums starting with"),"albums.php?action=match");
                         $sql = "SELECT album.id FROM song,album ".
                                " WHERE song.album=album.id ".
-                               "GROUP BY song.album ".
-                               "  HAVING COUNT(song.id) > $min_album_size ";
-			break;
-		case 'none':
-			show_alphabet_list('albums','albums.php','a');
-			show_alphabet_form('',_("Show Albums starting with"),"albums.php?action=match");
-                        $sql = "SELECT album.id FROM song,album ".
-                               " WHERE song.album=album.id ".
-                               "   AND album.name LIKE 'a%'".
                                "GROUP BY song.album ".
                                "  HAVING COUNT(song.id) > $min_album_size ";
 			break;
 		default:
-			//FIXME: This is the old way of doing it, move this to browse 
-			show_alphabet_list('albums','albums.php',$match);
-			show_alphabet_form($match,_("Show Albums starting with"),"albums.php?action=match");
-			echo "<br /><br />";
                         $sql = "SELECT album.id FROM song,album ".
                                " WHERE song.album=album.id ".
                                "   AND album.name LIKE '$match%'".

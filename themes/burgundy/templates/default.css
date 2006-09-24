@@ -34,43 +34,43 @@
 		margin-top: 0px;
 		margin-left: 0px;
 		margin-right: 0px;
-		background: <?php echo conf('bg_color1'); ?>; 
-		font-family: <?php echo conf('font') ?>; 
-		font-size: <?php echo conf('font_size'); ?>px; 
-		color: <?php echo conf('font_color2'); ?>;
+		background: #320000; 
+		font-family: Verdana; 
+		font-size: 12px; 
+		color: #ffffcc;
 		}
 
 	p	
 		{ 
-		color: <?php echo conf('font_color2'); ?>; 
-		font-family: <?php echo conf('font')?>; 
-		font-size: <?php echo conf('font_size'); ?>px; 
+		color: #ffffcc; 
+		font-family: Verdana; 
+		font-size: 12px; 
 		}
 	a	
 		{ 
-		color: <?php echo conf('font_color2') ?>; 
-		font-family: <?php echo conf('font')?>; 
+		color: #ffffcc; 
+		font-family: Verdana; 
 		}
 	a:visited 
 		{ 
-		color: <?php echo conf('font_color2') ?>; 
-		font-family: <?php echo conf('font')?>; 
+		color: #ffffcc; 
+		font-family: Verdana; 
 		}
 	a:active  
 		{ 
-		color: <?php echo conf('font_color2') ?>; 
-		font-family: <?php echo conf('font')?>; 
+		color: #ffffcc; 
+		font-family: Verdana; 
 		}
 	.text-box 
 		{
 		padding-left:5px;
 		padding-top:5px;
 		margin-bottom:10px;
-		background-color: <?php echo conf('base_color1'); ?>;
-		border-right:2px solid <?php echo conf('bg_color2'); ?>;
-		border-bottom:2px solid <?php echo conf('bg_color2'); ?>;
-		border-left:2px solid <?php echo conf('bg_color2'); ?>;
-		border-top:2px solid <?php echo conf('bg_color2'); ?>;
+		background-color: #320000;
+		border-right:2px solid #7A0000;
+		border-bottom:2px solid #7A0000;
+		border-left:2px solid #7A0000;
+		border-top:2px solid #7A0000;
 		}
     table.tabledata
     {
@@ -79,9 +79,9 @@
 	td	
 		{ 
         padding: 0px 8px 0px 8px;
-		color: <?php echo conf('font_color2') ?>; 
-		font-family: <?php echo conf('font')?>; 
-		font-size: <?php echo conf('font_size'); ?>px;
+		color: #ffffcc; 
+		font-family: Verdana; 
+		font-size: 12px;
 		}
     th
         {
@@ -89,60 +89,60 @@
         }
 	input	
 		{
-		color: <?php echo conf('font_color2'); ?>; 
-		font-family: <?php echo conf('font'); ?>; 
-		font-size: <?php echo conf('font_size'); ?>px; 
+		color: #ffffcc; 
+		font-family: Verdana; 
+		font-size: 12px; 
 		font-weight: bold; 
-		background-color: <?php echo conf('base_color2') ?>; 
+		background-color: #9F0000; 
 		margin: 2px 2px 2px 2px;
 		cursor: pointer;
 		}
 	select	{ 
-		color: <?php echo conf('font_color2'); ?>; 
-		font-family: <?php echo conf('font')?>; 
-		font-size: <?php echo conf('font_size'); ?>px; 
-		background-color: <?php echo conf('base_color2'); ?>; 
+		color: #ffffcc; 
+		font-family: Verdana; 
+		font-size: 12px; 
+		background-color: #9F0000; 
 		}
 	textarea 
 		{ 
-		background-color: <?php echo conf('base_color2'); ?>;
-		color: <?php echo conf('font_color2') ?>; 
-		font-family: <?php echo conf('font')?>; 
-		font-size: <?php echo conf('font_size'); ?>px; 
+		background-color: #9F0000;
+		color: #ffffcc; 
+		font-family: Verdana; 
+		font-size: 12px; 
 		}
     .table-header
     {
-        background: url(<?php echo conf('web_path'); ?><?php echo conf('theme_path'); ?>/images/ampache-light-bg.gif) <?php echo conf('base_color2')?> repeat-x;
+        background: url(../burgundy/images/ampache-light-bg.gif) #9F0000 repeat-x;
         vertical-align: top;
     }
     .header1 
     { 
-	color: <?php echo conf('font_color2'); ?>; 
-	font-family: <?php echo conf('font'); ?>; 
+	color: #ffffcc; 
+	font-family: Verdana; 
 	font-size: <?php echo conf('font_size') + 6; ?>px; 
 	font-weight: 900;
     }
     .header2
     {
-    	color: <?php echo conf('font_color2'); ?>;
-	font-family: <?php echo conf('font'); ?>;
+    	color: #ffffcc;
+	font-family: Verdana;
 	font-size: <?php echo conf('font_size') + 2; ?>px;
 	font-weight: 900;
     }
 	.headrow 
 		{
-		background:<?php echo conf('row_color1'); ?>;
-		font-size: <?php echo conf('font_size'); ?>px;
+		background:#ffffcc;
+		font-size: 12px;
 		}
 	.odd 
 		{
-		background:<?php echo conf('row_color2'); ?>;
-		font-size: <?php echo conf('font_size'); ?>px;
+		background:#9F0000;
+		font-size: 12px;
 		}
 	.even
 		{
-		background:<?php echo conf('row_color3'); ?>;
-		font-size: <?php echo conf('font_size'); ?>px;
+		background:#7A0000;
+		font-size: 12px;
 		}
     .blank
         {
@@ -150,25 +150,25 @@
         }
 	.border 
 		{ 
-		background:<?php echo conf('bg_color2'); ?>; 
+		background:#7A0000; 
 		}
 	.header 
 		{ 
-		font-size: <?php echo conf('font_size'); ?>px; 
+		font-size: 12px; 
 		}
  	.error	
 		{ 
-		color: <?php echo conf('error_color'); ?>; 
+		color: #ffffcc; 
 		}
 	.fatalerror
 		{
 		padding-top: 3px;
 		padding-bottom: 3px;
-		color: <?php echo conf('error_color'); ?>;
-                border-right:4px solid <?php echo conf('error_color'); ?>;
-                border-bottom:4px solid <?php echo conf('error_color'); ?>;
-                border-left:4px solid <?php echo conf('error_color'); ?>;
-                border-top:4px solid <?php echo conf('error_color'); ?>;		
+		color: #ffffcc;
+                border-right:4px solid #ffffcc;
+                border-bottom:4px solid #ffffcc;
+                border-left:4px solid #ffffcc;
+                border-top:4px solid #ffffcc;		
 		font-size: <?php echo conf('font_size')+2; ?>px;
 		font-weight: 900;
 		text-align: center;
@@ -179,7 +179,7 @@
 		}
 	.alphabet 
 		{ 
-		font-size: <?php echo conf('font_size'); ?>px; 
+		font-size: 12px; 
 		font-weight: normal; 
 		}
 	.smallbutton
@@ -198,7 +198,7 @@
 		padding-top: 0px;
 		padding-left: 0px;
 		width:160px;
-		background: <?php echo conf('base_color2'); ?>;
+		background: #9F0000;
 		}
 /* These three lines make a menu horizontal */
 	#content { float: left; clear: both;}
@@ -216,7 +216,7 @@
 	#topbar
 		{
 			height: 80px;
-			background-color: <?php echo conf('bg_color1'); ?>;
+			background-color: #320000;
 		}
 	#topbarright
 		{
@@ -260,15 +260,15 @@
 	#sidebar a, .navbutton
 		{
 		padding: 5px 5px;
-		color: <?php echo conf('font_color2'); ?>;
-		background-color: <?php echo conf('row_color3'); ?>;
+		color: #ffffcc;
+		background-color: #7A0000;
 		text-decoration: none;
 		}
 
 	#sidebar a:hover
 		{
-		color: <?php echo conf('font_color1'); ?>;
-		background-color: <?php echo conf('row_color1'); ?>;
+		color: #222222;
+		background-color: #ffffcc;
 		text-decoration: none;
 		}
 	#sidebar ul ul {
@@ -291,15 +291,15 @@
 		{
 		display: block;
 		padding: 3px 3px 3px 3px;
-		color: <?php echo conf('font_color2'); ?>;
-		background-color: <?php echo conf('row_color2'); ?>;
+		color: #ffffcc;
+		background-color: #9F0000;
 		text-decoration: none;
 		}
 
 	#sidebar ul ul a:hover
 		{
-		color: <?php echo conf('font_color1'); ?>;
-		background-color: <?php echo conf('row_color1'); ?>;
+		color: #222222;
+		background-color: #ffffcc;
 		text-decoration: none;
 		}
 	#content

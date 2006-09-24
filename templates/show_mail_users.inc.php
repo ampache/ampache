@@ -20,9 +20,10 @@
 
 */
 ?>
+
 <form name="mail" method="post" action="<?php echo conf('web_path'); ?>/admin/mail.php" enctype="multipart/form-data">
-<span class="header1"><?php echo _('Send E-mail to Users'); ?></span>
-<table class="text-box">
+<?php show_box_top(_('Send E-mail to Users')); ?>
+<table>
   <tr>
     <td><?php echo _('Mail to'); ?>:</td>
     <td>
@@ -56,4 +57,5 @@
     </td>
   </tr>
 </table>
+<?php show_box_bottom(); ?>
 </form>
