@@ -383,47 +383,6 @@ function get_playlist_track_from_song ( $playlist_id, $song_id ) {
 	}
 }
 
-//FIXME: Pull this and put it in a template
-function show_playlist_create () {
-
-	$web_path = conf('web_path');
-
-	print <<<ECHO
-<form name="songs" method="post" action="$web_path/playlist.php">
-<table class="border"><tr class="table-header"><td colspan="2" align="center">
-ECHO;
-
-print _("Create a new playlist");
-	print <<<ECHO
-   </td>
-  </tr>
-  <tr class="even">
-    <td align="left"> Name: </td>
-    <td align="left"><input type="text" name="playlist_name" size="20" /></td>
-  </tr>
-  <tr class="odd">
-    <td align="left"> Type: </td>
-    <td align="left">
-      <select name="type">
-      <option value="private"> Private </option>
-      <option value="public"> Public </option>
-      </select>
-    </td>
-  </tr>
-  <tr class="even">
-    <td align="left"> &nbsp; </td>
-    <td align="left">
-      <input type="submit" name="action" value="Create" />
-      <input type="reset" name="Reset" />
-    </td>
-  </tr>
-</table>
-</form>
-
-ECHO;
-
-}
-
 /**
  * show_playlist_dropdown
  * Hacking this for now... will fix tomorrow evening 

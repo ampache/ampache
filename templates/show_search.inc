@@ -24,12 +24,9 @@
  * This is the template for the searches... amazing!
  */
 ?>
-<?php require (conf('prefix') . '/templates/show_box_top.inc.php'); ?>
+<?php show_box_top(_('Search Ampache') . "..."); ?>
 <form name="search" method="post" action="<?php echo  conf('web_path'); ?>/search.php" enctype="multipart/form-data" style="Display:inline">
 <table class="tabledata" cellspacing="0" cellpadding="3" border="0">
-<tr class="table-header">
-	<th colspan="4"><?php echo _('Search Ampache'); ?>...</th>
-</tr>
 <tr class="<?php echo flip_class(); ?>">
         <td><?php echo _('Keywords') ?></td>
         <td>

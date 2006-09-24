@@ -120,7 +120,7 @@ switch ($action) {
 		show_playlist_edit($_REQUEST['playlist_id']);	
 	break;
 	case 'new':
-		show_playlist_create();
+		require (conf('prefix') . '/templates/show_add_playlist.inc.php');
 	break;
 	case 'remove_song':
 	case _('Remote Selected Tracks'):

@@ -24,10 +24,8 @@ $web_path = conf('web_path');
 
 ?>
 <form method="post" action="<?php echo $web_path; ?>/playlist.php" enctype="multipart/form-data">
-<table class="text-box">
-<tr>
-	<td colspan="2" class="header2"><?php echo _('Editing Playlist'); ?></td>
-</tr>
+<?php show_box_top(_('Editing Playlist')); ?>
+<table>
 <tr>
 	<td><?php echo _('Name'); ?>:</td>
 	<td align="left">
@@ -51,4 +49,5 @@ $web_path = conf('web_path');
 	</td>
 </tr>
 </table>
+<?php show_box_bottom(); ?>
 </form>
