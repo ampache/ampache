@@ -30,7 +30,7 @@
 <!--
 	body	
 		{ 
-		background: <?php echo conf('bg_color1'); ?>; 
+		background: #ffffff; 
 		font-family: Verdana, Helvetica, sans-serif; 
 		font-size: 12px; 
 		color: #333;
@@ -106,7 +106,7 @@
 	}
     .table-header
     {
-        background: transparent url(<?php echo conf('web_path'); ?>/<?php echo conf('theme_path'); ?>/images/bside.side.png) repeat-x top center;
+        background: transparent url(<?php echo conf('web_path'); ?>/theBside/images/bside.side.png) repeat-x top center;
         vertical-align: top;
     }
     .navitem
@@ -114,7 +114,7 @@
         margin: 0;
 	padding:5px;
 	color: #333;
-        background: transparent url(<?php echo conf('web_path'); ?>/<?php echo conf('theme_path'); ?>/images/sidetitle.png) repeat-x top center;
+        background: transparent url(<?php echo conf('web_path'); ?>/theBside/images/sidetitle.png) repeat-x top center;
 	text-align: center;
 	text-decoration: none;
     }
@@ -147,7 +147,7 @@
     {
         margin: 0;
 	padding:5px;
-	background: transparent url(<?php echo conf('web_path'); ?>/<?php echo conf('theme_path'); ?>/images/bside.side.png) repeat-x top center;
+	background: transparent url(<?php echo conf('web_path'); ?>/theBside/images/bside.side.png) repeat-x top center;
         text-align: center;
     }
     .active_navitem a
@@ -163,7 +163,7 @@
     }
 	.headrow 
 		{
-		background:<?php echo conf('row_color1'); ?>;
+		background:#cccccc;
 		font-size: 12px;
 		}
 	.odd 
@@ -191,17 +191,17 @@
 		}
  	.error	
 		{ 
-		color: <?php echo conf('error_color'); ?>; 
+		color: #990033; 
 		}
 	.fatalerror
 		{
 		padding-top: 3px;
 		padding-bottom: 3px;
-		color: <?php echo conf('error_color'); ?>;
-                border-right:4px solid <?php echo conf('error_color'); ?>;
-                border-bottom:4px solid <?php echo conf('error_color'); ?>;
-                border-left:4px solid <?php echo conf('error_color'); ?>;
-                border-top:4px solid <?php echo conf('error_color'); ?>;		
+		color: #990033;
+                border-right:4px solid #990033;
+                border-bottom:4px solid #990033;
+                border-left:4px solid #990033;
+                border-top:4px solid #990033;		
 		font-size: 14px;
 		font-weight: 900;
 		text-align: center;
@@ -220,7 +220,7 @@
                         height: 130px;
                         padding-top:10px;
                         padding-left:10px;
-                        background-color: <?php echo conf('bg_color1'); ?>;
+                        background-color: #ffffff;
                 }
 	
 -->

@@ -31,51 +31,51 @@
 	body	
 		{ 
 		padding: 5px 0px 5px 0px;
-		background: <?php echo conf('bg_color1'); ?>;
-		font-family: <?php echo conf('font') ?>; 
-		font-size: <?php echo conf('font_size'); ?>pt;
-		color: <?php echo conf('font_color2'); ?>;
+		background: #000000;
+		font-family: Verdana; 
+		font-size: 12pt;
+		color: #00ff00;
 		white-space: nowrap;
 		margin: 2px;
 		}
 
 	p	
 		{ 
-		color: <?php echo conf('font_color2'); ?>; 
-		font-family: <?php echo conf('font')?>; 
-		font-size: <?php echo conf('font_size'); ?>pt;
+		color: #00ff00; 
+		font-family: Verdana; 
+		font-size: 12pt;
 		margin: 8px;
 		white-space: normal;
 		}
 
 	a	
 		{ 
-		color: <?php echo conf('font_color2') ?>; 
-		font-family: <?php echo conf('font')?>; 
+		color: #00ff00; 
+		font-family: Verdana; 
 		}
 	a:visited 
 		{ 
-		color: <?php echo conf('font_color2') ?>; 
-		font-family: <?php echo conf('font')?>; 
+		color: #00ff00; 
+		font-family: Verdana; 
 		}
 	a:hover {
         	text-decoration: underline;
 		}
 	a:active  
 		{ 
-		color: <?php echo conf('font_color2') ?>; 
-		font-family: <?php echo conf('font')?>; 
+		color: #00ff00; 
+		font-family: Verdana; 
 		}
 	.text-box 
 		{
 		padding-left:5px;
 		padding-top:5px;
 		margin-bottom:10px;
-		background-color: <?php echo conf('base_color1'); ?>;
-		border-right:2px solid <?php echo conf('bg_color2'); ?>;
-		border-bottom:2px solid <?php echo conf('bg_color2'); ?>;
-		border-left:2px solid <?php echo conf('bg_color2'); ?>;
-		border-top:2px solid <?php echo conf('bg_color2'); ?>;
+		background-color: #000000;
+		border-right:2px solid #000000;
+		border-bottom:2px solid #000000;
+		border-left:2px solid #000000;
+		border-top:2px solid #000000;
 		}
 	table.tabledata
 		{
@@ -85,9 +85,9 @@
 	td
 		{
 		padding: 0px 10px 0px 10px;
-		color: <?php echo conf('font_color2') ?>; 
-		font-family: <?php echo conf('font')?>; 
-		font-size: <?php echo conf('font_size'); ?>pt;
+		color: #00ff00; 
+		font-family: Verdana; 
+		font-size: 12pt;
 		white-space: nowrap;
 		}
 	th
@@ -96,33 +96,33 @@
 		}
 	input
 		{
-		color: <?php echo conf('font_color2'); ?>; 
-		font-family: <?php echo conf('font'); ?>; 
-		font-size: <?php echo conf('font_size'); ?>px; 
+		color: #00ff00; 
+		font-family: Verdana; 
+		font-size: 12px; 
 		font-weight: bold; 
-		background-color: <?php echo conf('base_color2') ?>; 
+		background-color: #716F6B; 
 		margin: 2px 2px 2px 2px;
 		border-color: #555756;
 		cursor: pointer;
 		}
 	select
 		{
-		color: <?php echo conf('font_color2'); ?>; 
-		font-family: <?php echo conf('font')?>; 
-		font-size: <?php echo conf('font_size'); ?>pt; 
-		background-color: <?php echo conf('base_color2'); ?>; 
+		color: #00ff00; 
+		font-family: Verdana; 
+		font-size: 12pt; 
+		background-color: #716F6B; 
 		
 		}
 	textarea
 		{
-		background-color: <?php echo conf('base_color2'); ?>;
-		color: <?php echo conf('font_color2') ?>; 
-		font-family: <?php echo conf('font')?>; 
-		font-size: <?php echo conf('font_size'); ?>pt; 
+		background-color: #716F6B;
+		color: #00ff00; 
+		font-family: Verdana; 
+		font-size: 12pt; 
 		}
 	.button
 		{
-		background: url(<?php echo conf('web_path'); ?><?php echo conf('theme_path'); ?>/images/tablebg.gif) <?php echo conf('base_color2')?> repeat-x;
+		background: url(<?php echo conf('web_path'); ?><?php echo conf('theme_path'); ?>/images/tablebg.gif) #716F6B repeat-x;
 		padding: 2px;
 		border: 0;
 		margin: 2px;
@@ -148,7 +148,7 @@
 		}
 	.table-header
 		{
-		background: url(<?php echo conf('web_path'); ?><?php echo conf('theme_path'); ?>/images/tablebg.gif) <?php echo conf('base_color2')?> repeat-x;
+		background: url(<?php echo conf('web_path'); ?><?php echo conf('theme_path'); ?>/images/tablebg.gif) #716F6B repeat-x;
 		vertical-align: top;
 		text-align: center;
 		}
@@ -162,7 +162,7 @@ float:left;
 	margin-top: 0;
 	margin-bottom: 0;
 	padding: 0px;
-	background: url(<?php echo conf('web_path'); ?><?php echo conf('theme_path'); ?>/images/tablebg.gif) <?php echo conf('base_color2');?> repeat-x;
+	background: url(<?php echo conf('web_path'); ?><?php echo conf('theme_path'); ?>/images/tablebg.gif) #716F6B repeat-x;
     }
     #mainmenu li {
 	float:left;
@@ -172,12 +172,12 @@ float:left;
         padding: 0 1.5em 0 1.5em;
 	list-style: none outside;
 	font-weight: 600;
-        background: url(<?php echo conf('web_path'); ?><?php echo conf('theme_path'); ?>/images/tablebg.gif) <?php echo conf('base_color2');?> repeat-x;
+        background: url(<?php echo conf('web_path'); ?><?php echo conf('theme_path'); ?>/images/tablebg.gif) #716F6B repeat-x;
 	font-size: <?php echo conf('font_size') - 1; ?>pt; 
     }
     #mainmenu li.active {
 	white-space: nowrap;
-        background: url(<?php echo conf('web_path'); ?><?php echo conf('theme_path'); ?>/images/active.tablebg.gif) <?php echo conf('base_color2');?> repeat-x;
+        background: url(<?php echo conf('web_path'); ?><?php echo conf('theme_path'); ?>/images/active.tablebg.gif) #716F6B repeat-x;
 
     }
     #mainmenu a {
@@ -203,7 +203,7 @@ float:left;
 	padding: 0px;
         list-style: none;
         border: 1px solid #000;
-        background: url(<?php echo conf('web_path'); ?><?php echo conf('theme_path'); ?>/images/ampache-light-bg.gif) <?php echo conf('base_color2')?> repeat;
+        background: url(<?php echo conf('web_path'); ?><?php echo conf('theme_path'); ?>/images/ampache-light-bg.gif) #716F6B repeat;
     }
     #adminmenu li {
 	white-space: nowrap;
@@ -211,10 +211,10 @@ float:left;
         padding: 0 2em 0 2em;
 	border-right: 1px solid #000;
         display: inline;
-        background: url(<?php echo conf('web_path'); ?><?php echo conf('theme_path'); ?>/images/ampache-light-bg.gif) <?php echo conf('base_color2');?> repeat-x;
+        background: url(<?php echo conf('web_path'); ?><?php echo conf('theme_path'); ?>/images/ampache-light-bg.gif) #716F6B repeat-x;
     }
     #adminmenu li.active {
-        background: url(<?php echo conf('web_path'); ?><?php echo conf('theme_path'); ?>/images/ampache-dark-bg.gif) <?php echo conf('base_color2');?> repeat-x;
+        background: url(<?php echo conf('web_path'); ?><?php echo conf('theme_path'); ?>/images/ampache-dark-bg.gif) #716F6B repeat-x;
     }
     #adminmenu a {
         text-decoration: none;
@@ -228,7 +228,7 @@ float:left;
 /*************** END Main Menu *************/
 /*************** Page Header *********************/
 	#pageheader {
-		background: <?php echo conf('bg_color1');?>;
+		background: #000000;
 		}
 
 	#pageheader img {
@@ -243,33 +243,33 @@ float:left;
 /*************** END Page Header *****************/
 	.header1
 		{
-		color: <?php echo conf('font_color2'); ?>; 
-		font-family: <?php echo conf('font'); ?>; 
+		color: #00ff00; 
+		font-family: Verdana; 
 		font-size: <?php echo conf('font_size') + 6; ?>pt; 
 		font-weight: 800;
 		}
 	.header2
 		{
-		color: <?php echo conf('font_color2'); ?>;
-		font-family: <?php echo conf('font'); ?>;
+		color: #00ff00;
+		font-family: Verdana;
 		font-size: <?php echo conf('font_size') + 2; ?>pt;
 		font-weight: 800;
 		}
 	.headrow 
 		{
-		background:<?php echo conf('row_color1'); ?>;
-		font-size: <?php echo conf('font_size'); ?>pt;
+		background:#000000;
+		font-size: 12pt;
 		}
 	.odd 
 		{
-		background:<?php echo conf('row_color2'); ?>;
-		font-size: <?php echo conf('font_size'); ?>pt;
+		background:#000000;
+		font-size: 12pt;
 		padding: 0px 10px 0px 10px;
 		}
 	.even
 		{
-		background:<?php echo conf('row_color3'); ?>;
-		font-size: <?php echo conf('font_size'); ?>pt;
+		background:#000000;
+		font-size: 12pt;
 		padding: 0px 10px 0px 10px;
 		}
 	.blank
@@ -278,25 +278,25 @@ float:left;
 		}
 	.border 
 		{ 
-		background:<?php echo conf('bg_color2'); ?>; 
+		background:#000000; 
 		}
 	.header 
 		{ 
-		font-size: <?php echo conf('font_size'); ?>pt; 
+		font-size: 12pt; 
 		}
  	.error	
 		{ 
-		color: <?php echo conf('error_color'); ?>; 
+		color: #990033; 
 		}
 	.fatalerror
 		{
 		padding-top: 3px;
 		padding-bottom: 3px;
-		color: <?php echo conf('error_color'); ?>;
-		border-right:4px solid <?php echo conf('error_color'); ?>;
-		border-bottom:4px solid <?php echo conf('error_color'); ?>;
-		border-left:4px solid <?php echo conf('error_color'); ?>;
-		border-top:4px solid <?php echo conf('error_color'); ?>;		
+		color: #990033;
+		border-right:4px solid #990033;
+		border-bottom:4px solid #990033;
+		border-left:4px solid #990033;
+		border-top:4px solid #990033;		
 		font-size: <?php echo conf('font_size')+2; ?>pt;
 		font-weight: 900;
 		text-align: center;
@@ -307,7 +307,7 @@ float:left;
 		}
 	.alphabet 
 		{ 
-		font-size: <?php echo conf('font_size'); ?>pt; 
+		font-size: 12pt; 
 		font-weight: normal; 
 		}
 

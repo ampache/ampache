@@ -1,0 +1,160 @@
+	body	
+		{ 
+		background: #1100D0; 
+		font-family: Verdana; 
+		font-size: 12px; 
+		color: #C5F5FF;
+		}
+
+	p	
+		{ 
+		color: #C5F5FF; 
+		font-family: Verdana; 
+		font-size: 12px; 
+		}
+	a	
+		{ 
+		color: #C5F5FF; 
+		font-family: Verdana; 
+		}
+	a:visited 
+		{ 
+		color: #C5F5FF; 
+		font-family: Verdana; 
+		}
+	a:active  
+		{ 
+		color: #C5F5FF; 
+		font-family: Verdana; 
+		}
+	.text-box 
+		{
+		padding-left:5px;
+		padding-top:5px;
+		margin-bottom:10px;
+		background-color: #1100D0;
+		border-right:2px solid #0000C1;
+		border-bottom:2px solid #0000C1;
+		border-left:2px solid #0000C1;
+		border-top:2px solid #0000C1;
+		}
+    table.tabledata
+    {
+    }
+
+	td	
+		{ 
+        padding: 0px 8px 0px 8px;
+		color: #C5F5FF; 
+		font-family: Verdana; 
+		font-size: 12px;
+		}
+    th
+        {
+        padding-right: 10px;
+        }
+	input	
+		{
+		color: #C5F5FF; 
+		font-family: Verdana; 
+		font-size: 12px; 
+		font-weight: bold; 
+		background-color: #0000C1; 
+		}
+	select	{ 
+		color: #C5F5FF; 
+		font-family: Verdana; 
+		font-size: 12px; 
+		background-color: #0000C1; 
+		}
+	textarea
+		{ 
+                background-color: #0000C1;
+		color: #C5F5FF; 
+		font-family: Verdana; 
+		font-size: 12px; 
+		}
+    .table-header
+    {
+        background: url(../images/ampache-light-bg.gif) #0000C1 repeat-x;
+        vertical-align: top;
+    }
+    .navitem
+    {
+        background: url(../images/ampache-light-bg.gif) #0000C1 repeat-x;
+        vertical-align: top;
+        text-align: center;
+    }
+    .header1 
+    { 
+	color: #C5F5FF; 
+	font-family: Verdana; 
+	font-size: <?php echo conf('font_size') + 6; ?>px; 
+	font-weight: 900;
+    }
+    .header2
+    {
+    	color: #C5F5FF;
+	font-family: Verdana;
+	font-size: <?php echo conf('font_size') + 2; ?>px;
+	font-weight: 900;
+    }
+    .active_navitem
+    {
+        background: url(../images/ampache-dark-bg.gif) #1100D0 repeat-x;
+        vertical-align: top;
+        text-align: center;
+    }
+	.headrow 
+		{
+		background:#1100D0;
+		font-size: 12px;
+		}
+	.odd 
+		{
+		background:#1100D0;
+		font-size: 12px;
+		}
+	.even
+		{
+		background:#0000C1;
+		font-size: 12px;
+		}
+    .blank
+        {
+        background: #fff;
+        }
+	.border 
+		{ 
+		background:#0000C1; 
+		}
+	.header 
+		{ 
+		font-size: 12px; 
+		}
+ 	.error	
+		{ 
+		color: #FF0000; 
+		}
+	.fatalerror
+		{
+		padding-top: 3px;
+		padding-bottom: 3px;
+		color: #FF0000;
+                border-right:4px solid #FF0000;
+                border-bottom:4px solid #FF0000;
+                border-left:4px solid #FF0000;
+                border-top:4px solid #FF0000;		
+		font-size: 14px;
+		font-weight: 900;
+		text-align: center;
+		}
+	.disabled
+		{
+		text-decoration: line-through;
+		}
+	.alphabet 
+		{ 
+		font-size: 12px; 
+		font-weight: normal; 
+		}

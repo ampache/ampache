@@ -46,7 +46,7 @@ body {
 table.border {
 	padding-left: 5px;
 	border: 1px solid #ccc;
-	background-image: url(<?php echo conf('web_path'); ?>/themes/tangens/images/topbg.gif);
+	background-image: url(..//themes/tangens/images/topbg.gif);
 	background-repeat: repeat-x;
 }
 
@@ -71,7 +71,7 @@ th, tr.table-header td {
     padding: 2px;
   }
   input.smallbutton, input.button {
-  	background: url(<?php echo conf('web_path'); ?>/themes/tangens/images/topbg.gif);
+  	background: url(..//themes/tangens/images/topbg.gif);
   }
 
   select { 
@@ -159,7 +159,7 @@ th, tr.table-header td {
 	padding-top: 0px;
 	padding-left: 10px;
 	background-color: #ffffff;
-	background-image: url(<?php echo conf('web_path'); ?>/themes/tangens/images/topbg.gif);
+	background-image: url(..//themes/tangens/images/topbg.gif);
 	border: 0px solid #cccccc;
 	border-bottom-width: 1px;
 }

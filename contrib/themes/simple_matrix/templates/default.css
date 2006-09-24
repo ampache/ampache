@@ -30,10 +30,10 @@
 <!--
 body	
 { 
-  background: <?php echo conf('bg_color1'); ?>; 
-  font-family: <?php echo conf('font') ?>; 
-  font-size: <?php echo conf('font_size'); ?>px; 
-  color: <?php echo conf('font_color2'); ?>;
+  background: #000000; 
+  font-family: Verdana; 
+  font-size: 12px; 
+  color: #ffffff;
   background-color: black;
   background-image:url(/image/WebDesign3.jpg);
   background-position: right top;
@@ -50,24 +50,24 @@ margin-bottom: 5px;
 }
 p	
 { 
-  color: <?php echo conf('font_color2'); ?>; 
-  font-family: <?php echo conf('font')?>; 
-  font-size: <?php echo conf('font_size'); ?>px; 
+  color: #ffffff; 
+  font-family: Verdana; 
+  font-size: 12px; 
 }
 a	
 { 
-  color: <?php echo conf('font_color2') ?>; 
-  font-family: <?php echo conf('font')?>; 
+  color: #ffffff; 
+  font-family: Verdana; 
 }
 a:visited 
 { 
-  color: <?php echo conf('font_color2') ?>; 
-  font-family: <?php echo conf('font')?>; 
+  color: #ffffff; 
+  font-family: Verdana; 
 }
 a:active  
 { 
-  color: <?php echo conf('font_color2') ?>; 
-  font-family: <?php echo conf('font')?>; 
+  color: #ffffff; 
+  font-family: Verdana; 
 }
 .text-box 
 {
@@ -75,11 +75,11 @@ a:active
   padding-top:5px;
   display: table-cell;
   margin-bottom:10px;
-  background-color: <?php echo conf('base_color1'); ?>;
-  border-right:2px solid <?php echo conf('bg_color2'); ?>;
-  border-bottom:2px solid <?php echo conf('bg_color2'); ?>;
-  border-left:2px solid <?php echo conf('bg_color2'); ?>;
-  border-top:2px solid <?php echo conf('bg_color2'); ?>;
+  background-color: #000000;
+  border-right:2px solid ;
+  border-bottom:2px solid ;
+  border-left:2px solid ;
+  border-top:2px solid ;
 }
 table.tabledata
 {
@@ -93,9 +93,9 @@ table.login
 td	
 { 
   padding: 0px 8px 0px 8px;
-  color: <?php echo conf('font_color2') ?>; 
-  font-family: <?php echo conf('font')?>; 
-  font-size: <?php echo conf('font_size'); ?>px;
+  color: #ffffff; 
+  font-family: Verdana; 
+  font-size: 12px;
 }
 th
 {
@@ -103,28 +103,28 @@ th
 }
 input	
 {
-  color: <?php echo conf('font_color2'); ?>; 
-  font-family: <?php echo conf('font'); ?>; 
-  font-size: <?php echo conf('font_size'); ?>px; 
+  color: #ffffff; 
+  font-family: Verdana; 
+  font-size: 12px; 
   font-weight: bold; 
-  background-color: <?php echo conf('base_color2') ?>; 
+  background-color: #000000; 
   border-style: solid;
   border-width: 1px;
-  border-color: <?php echo conf('bg_color2'); ?>;
+  border-color: ;
   margin: 3px 3px 3px 3px;
 }
 select	{ 
-  color: <?php echo conf('font_color2'); ?>; 
-  font-family: <?php echo conf('font')?>; 
-  font-size: <?php echo conf('font_size'); ?>px; 
-  background-color: <?php echo conf('base_color2') ?>; 
+  color: #ffffff; 
+  font-family: Verdana; 
+  font-size: 12px; 
+  background-color: #000000; 
 }
 textarea 
 { 
-  background-color: <?php echo conf('base_color2'); ?>;
-  color: <?php echo conf('font_color2') ?>; 
-  font-family: <?php echo conf('font')?>; 
-  font-size: <?php echo conf('font_size'); ?>px; 
+  background-color: #000000;
+  color: #ffffff; 
+  font-family: Verdana; 
+  font-size: 12px; 
 }
 .table-header
 {
@@ -133,32 +133,32 @@ textarea
 }
 .header1 
 { 
-  color: <?php echo conf('font_color2'); ?>; 
-  font-family: <?php echo conf('font'); ?>; 
+  color: #ffffff; 
+  font-family: Verdana; 
   font-size: <?php echo conf('font_size') + 6; ?>px; 
   font-weight: 900;
 }
 .header2
 {
-  color: <?php echo conf('font_color2'); ?>;
-  font-family: <?php echo conf('font'); ?>;
+  color: #ffffff;
+  font-family: Verdana;
   font-size: <?php echo conf('font_size') + 2; ?>px;
   font-weight: 900;
 }
 .headrow 
 {
-  background:<?php echo conf('row_color1'); ?>;
-  font-size: <?php echo conf('font_size'); ?>px;
+  background:#000000;
+  font-size: 12px;
 }
 .odd 
 {
-  background:<?php echo conf('row_color2'); ?>;
-  font-size: <?php echo conf('font_size'); ?>px;
+  background:#202020;
+  font-size: 12px;
 }
 .even
 {
-  background:<?php echo conf('row_color3'); ?>;
-  font-size: <?php echo conf('font_size'); ?>px;
+  background:#000000;
+  font-size: 12px;
 }
 .blank
 {
@@ -166,26 +166,26 @@ textarea
 }
 .border 
 { 
-  background:<?php echo conf('bg_color2'); ?>; 
+  background:; 
 }
 .header 
 { 
-  font-size: <?php echo conf('font_size'); ?>px; 
+  font-size: 12px; 
 }
 .error	
 { 
-  color: <?php echo conf('error_color'); ?>; 
+  color: ; 
   font-weight: bold; 
 }
 .fatalerror
 {
   padding-top: 3px;
   padding-bottom: 3px;
-  color: <?php echo conf('error_color'); ?>;
-  border-right:4px solid <?php echo conf('error_color'); ?>;
-  border-bottom:4px solid <?php echo conf('error_color'); ?>;
-  border-left:4px solid <?php echo conf('error_color'); ?>;
-  border-top:4px solid <?php echo conf('error_color'); ?>;		
+  color: ;
+  border-right:4px solid ;
+  border-bottom:4px solid ;
+  border-left:4px solid ;
+  border-top:4px solid ;		
   font-size: <?php echo conf('font_size')+2; ?>px;
   font-weight: 900;
   text-align: center;
@@ -196,7 +196,7 @@ textarea
 }
 .alphabet 
 { 
-  font-size: <?php echo conf('font_size'); ?>px; 
+  font-size: 12px; 
   font-weight: normal; 
 }
 
@@ -208,7 +208,7 @@ textarea
   margin: 0;
   padding: 0;
   list-style: none;
-  border: 1px solid <?php echo conf('bg_color2'); ?>;
+  border: 1px solid ;
   background: #282828;
 }
 
@@ -216,7 +216,7 @@ textarea
   float: left;
   margin: 0;
   padding: 0 10px 0 10px;
-  border-right: 1px solid <?php echo conf('bg_color2'); ?>;
+  border-right: 1px solid ;
   display: inline;
   background: #282828;
 }
@@ -246,7 +246,7 @@ textarea
   margin: 0;
   padding: 0;
   list-style: none;
-  border: 1px solid <?php echo conf('bg_color2'); ?>;
+  border: 1px solid ;
   background: #282828;
 }
 
@@ -254,7 +254,7 @@ textarea
   float: left;
   margin: 0;
   padding: 0 10px 0 10px;
-  border-right: 1px solid <?php echo conf('bg_color2'); ?>;
+  border-right: 1px solid ;
   display: inline;
   background: #282828;
 }

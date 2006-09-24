@@ -53,18 +53,18 @@ if (window.attachEvent) window.attachEvent("onload", sfHover);
 <!--
 body{
 	font-family: Arial,Helvetica,sans-serif;
-   	color: <?php echo conf('font_color1'); ?>;
-	font-size: <?php echo conf('font_size'); ?>px;
+   	color: #666666;
+	font-size: 12px;
 }
 p{
     font-family: Arial,Helvetica,sans-serif;
-   	color: <?php echo conf('font_color1'); ?>;
-	font-size: <?php echo conf('font_size'); ?>px;
+   	color: #666666;
+	font-size: 12px;
 }
 ol{list-style:decimal;}
 ul{list-style:disc;}
 a{
-	color: <?php echo conf('font_color2'); ?>;
+	color: #3F5F5E;
 	font-weight:bolder;
 }
 a:link {text-decoration: none;}
@@ -83,7 +83,7 @@ TABLE{
 	border-collapse: separate;
 	empty-cells:show;
 }
-td{color: <?php echo conf('font_color3'); ?>;padding: 0px 8px 0px 8px;}
+td{color: #666666;padding: 0px 8px 0px 8px;}
 th{
 	border: <?php echo $border2;?>;
 	padding: 0px 8px 0px 8px;
@@ -92,22 +92,22 @@ th{
 	font-weight: normal;/*override default bolding on th's*/
 }
 input{
-	color: <?php echo conf('font_color3'); ?>;
-	font-size: <?php echo conf('font_size'); ?>px;
+	color: #666666;
+	font-size: 12px;
 }
 select{ 
-	color: <?php echo conf('font_color3'); ?>;
-	font-size: <?php echo conf('font_size'); ?>px;
+	color: #666666;
+	font-size: 12px;
 }
 textarea{ 
-	color: <?php echo conf('font_color3'); ?>;
-	font-size: <?php echo conf('font_size'); ?>px;
+	color: #666666;
+	font-size: 12px;
 }
 .login{border: 2px ridge Silver;}
 .npsong td{border-bottom: <?php echo $border2;?>;border-top: <?php echo $border2;?>;}
 .tabledata{border-collapse: collapse;border: <?php echo $border2;?>;}
 .table-header{
-	background: url(<?php echo conf('web_path'); ?><?php echo conf('theme_path'); ?>/images/ampache-light-bg.gif)  <?php echo conf('base_color2')?> repeat-x;
+	background: url(<?php echo conf('web_path'); ?><?php echo conf('theme_path'); ?>/images/ampache-light-bg.gif)  #E1E9EE repeat-x;
 	vertical-align: top;
 	text-align: center;
 	border: <?php echo $border2;?>;
@@ -115,38 +115,38 @@ textarea{
 .table-header td{border: <?php echo $border2;?>;}/*override td and add border on all fields.*/
 
 .navitem{/*compatiblity with older version*/
-	background: url(<?php echo conf('web_path'); ?><?php echo conf('theme_path'); ?>/images/ampache-light-bg.gif)  <?php echo conf('base_color2')?> repeat-x;
+	background: url(<?php echo conf('web_path'); ?><?php echo conf('theme_path'); ?>/images/ampache-light-bg.gif)  #E1E9EE repeat-x;
 	vertical-align: top;
 	text-align: center;
 	border: <?php echo $border2;?>;
 }
 .active_navitem{/*compatiblity with older version*/
-	background: url(<?php echo conf('web_path'); ?><?php echo conf('theme_path'); ?>/images/ampache-dark-bg.gif) <?php echo conf('bg_color1')?> repeat-x;
+	background: url(<?php echo conf('web_path'); ?><?php echo conf('theme_path'); ?>/images/ampache-dark-bg.gif) #FFFFFF repeat-x;
 	vertical-align: top;
 	text-align: center;
 	border: <?php echo $border2;?>;
 }
 .header1{ 
-	color:  <?php echo conf('font_color2'); ?>;
-	font-family: <?php echo conf('font'); ?>; 
+	color:  #3F5F5E;
+	font-family: Verdana; 
 	font-size: <?php echo conf('font_size') + 3; ?>px; 
 	font-weight: 900;
 }
 .header2{
-    	color: <?php echo conf('font_color2'); ?>;
-	font-family: <?php echo conf('font'); ?>;
+    	color: #3F5F5E;
+	font-family: Verdana;
 	font-size: <?php echo conf('font_size') + 2; ?>px;
 	font-weight: 900;
 }
 
 .headrow {
-	background:<?php echo conf('row_color3'); ?>;
-	font-size: <?php echo conf('font_size'); ?>px;
+	background:#D1D8D5;
+	font-size: 12px;
 	border: <?php echo $border2;?>;	
 }
 
 .odd {/*odd rows in multi lined tables.*/
-	background: <?php echo conf('row_color1'); ?>;
+	background: #ffffff;
 	border:none;
 	text-align: left;
 }
@@ -165,7 +165,7 @@ textarea{
 
 
 .even{
-        background:<?php echo conf('row_color2'); ?>;
+        background:#FAFAF8;
         text-align: left;/*for lists on homepage*/
         border:none;
 }
@@ -196,28 +196,28 @@ textarea{
 .border .odd td table td:first-child{border:none;}
 .border .odd td table td:last-child{border:none;}
 .border .table-header:first-child td font{/*override with defaults because  album header is hardcoded to big*/
-	font-size: <?php echo conf('font_size'); ?>px;
+	font-size: 12px;
 	font-weight: bolder;
 }
 
 .blank{	background: #fff;}
-.header{font-size: <?php echo conf('font_size'); ?>px;}
-.error{	color: <?php echo conf('error_color'); ?>;}
+.header{font-size: 12px;}
+.error{	color: #990033;}
 .fatalerror{
 	padding-top: 3px;
 	padding-bottom: 3px;
-	color: <?php echo conf('error_color'); ?>;
-    border-right:4px solid <?php echo conf('error_color'); ?>;
-    border-bottom:4px solid <?php echo conf('error_color'); ?>;
-    border-left:4px solid <?php echo conf('error_color'); ?>;
-    border-top:4px solid <?php echo conf('error_color'); ?>;		
+	color: #990033;
+    border-right:4px solid #990033;
+    border-bottom:4px solid #990033;
+    border-left:4px solid #990033;
+    border-top:4px solid #990033;		
 	font-size: <?php echo conf('font_size')+2; ?>px;
 	font-weight: 900;
 	text-align: center;
 }
 .disabled{text-decoration: line-through;}
 .alphabet{
-	font-size: <?php echo conf('font_size'); ?>px; 
+	font-size: 12px; 
 	font-weight: normal; 
 }
 /*************** Main Menu *****************/
@@ -231,7 +231,7 @@ textarea{
         border-bottom: <?php echo $border2;?>;
         border-right: <?php echo $border2;?>;
         border-left: <?php echo $border2;?>;
-        background: url(<?php echo conf('web_path'); ?><?php echo conf('theme_path'); ?>/images/ampache-light-bg.gif) <?php echo conf('base_color2');?> repeat-x;
+        background: url(<?php echo conf('web_path'); ?><?php echo conf('theme_path'); ?>/images/ampache-light-bg.gif) #E1E9EE repeat-x;
     }
     #mainmenu li {
         float: left;
@@ -241,7 +241,7 @@ textarea{
         display: inline;
     }
     #mainmenu li.active {
-        background: url(<?php echo conf('web_path'); ?><?php echo conf('theme_path'); ?>/images/ampache-dark-bg.gif) <?php echo conf('base_color2');?> repeat-x;
+        background: url(<?php echo conf('web_path'); ?><?php echo conf('theme_path'); ?>/images/ampache-dark-bg.gif) #E1E9EE repeat-x;
     }
     #mainmenu a {
         text-decoration: none;
@@ -265,7 +265,7 @@ textarea{
         border-bottom: <?php echo $border2;?>;
         border-right: <?php echo $border2;?>;
 		border-left: <?php echo $border2;?>;
-        background: url(<?php echo conf('web_path'); ?><?php echo conf('theme_path'); ?>/images/ampache-light-bg.gif) <?php echo conf('base_color2')?> repeat;
+        background: url(<?php echo conf('web_path'); ?><?php echo conf('theme_path'); ?>/images/ampache-light-bg.gif) #E1E9EE repeat;
     }
     #adminmenu li {
 	float: left;
@@ -273,10 +273,10 @@ textarea{
         padding: 0 10px 0 10px;
 	border-right: <?php echo $border2;?>;
         display: inline;
-        background: url(<?php echo conf('web_path'); ?><?php echo conf('theme_path'); ?>/images/ampache-light-bg.gif) <?php echo conf('base_color2');?> repeat-x;
+        background: url(<?php echo conf('web_path'); ?><?php echo conf('theme_path'); ?>/images/ampache-light-bg.gif) #E1E9EE repeat-x;
     }
     #adminmenu li.active {
-        background: url(<?php echo conf('web_path'); ?><?php echo conf('theme_path'); ?>/images/ampache-dark-bg.gif) <?php echo conf('base_color2');?> repeat-x;
+        background: url(<?php echo conf('web_path'); ?><?php echo conf('theme_path'); ?>/images/ampache-dark-bg.gif) #E1E9EE repeat-x;
     }
     #adminmenu a {
         text-decoration: none;
@@ -303,7 +303,7 @@ textarea{
 			height: 60px;
 			padding-top:10px;
 			padding-left:10px;
-			background-color: <?php echo conf('bg_color1'); ?>;
+			background-color: #FFFFFF;
 	}
 	#topbarright{
 			float: right;
@@ -317,10 +317,10 @@ textarea{
 			width:100%;
 	}
 	.subnavbutton{
-			background-color: <?php echo conf('row_color1'); ?>;
+			background-color: #ffffff;
 			text-align:center;
 			text-decoration: none;
-			color: <?php echo conf('font_color2'); ?>;
+			color: #3F5F5E;
 	}
 	#content{ 
 		margin-left:0px;
@@ -357,18 +357,18 @@ textarea{
 		border-right: <?php echo $border2;?>;
 		padding: 5px 0px 5px 10px;   
 		width: 10em;
-		background-color: <?php echo conf('row_color2'); ?>;
+		background-color: #FAFAF8;
 	}
     #sidebar a, .navbutton {
 		display: block;  /*Not sure why this is neccesary, but it is for IE*/
 		text-decoration: none;
 	}
     #sidebar li:hover, #sidebar li.sfhover {
-        color: <?php echo conf('font_color2'); ?>;
-		background-color: <?php echo conf('row_color3'); ?>;
+        color: #3F5F5E;
+		background-color: #D1D8D5;
     }
     #sidebar li:active {
-        background-color: <?php echo conf('row_color1'); ?>;
+        background-color: #ffffff;
     }
     #sidebar li ul {
 		float: left;
@@ -389,7 +389,7 @@ textarea{
 /*****/
 /*************** Page Header *********************/
     #pageheader {
-        background-color: <?php echo conf('bg_color1'); ?>;   
+        background-color: #FFFFFF;   
 	}
     #pageheader img{border: none;}
 /*************** END Page Header *****************/

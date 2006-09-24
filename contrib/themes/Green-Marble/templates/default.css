@@ -36,11 +36,11 @@ body {
 	font-family: Verdana, Helvetica, sans-serif; 
 	font-size: 10px; 
 	color: #00ff00;
-	background: url(<?php echo conf('web_path'); ?>/themes/Green-Marble/images/background.jpg) #000000 repeat;
+	background: url(..//themes/Green-Marble/images/background.jpg) #000000 repeat;
 }
 #maincontainer {
 	margin: 0px;
-	background: url(<?php echo conf('web_path'); ?>/themes/Green-Marble/images/background.jpg) #000000 repeat;
+	background: url(..//themes/Green-Marble/images/background.jpg) #000000 repeat;
 }
 #topbar {
 	margin: 0px;
@@ -48,7 +48,7 @@ body {
 	padding-top:10px;
 	padding-left:10px;
 	padding-bottom: 10px;
-	background: url(<?php echo conf('web_path'); ?>/themes/Green-Marble/images/background.jpg) #000000 repeat;
+	background: url(..//themes/Green-Marble/images/background.jpg) #000000 repeat;
 	border: 2px black;
 }
 #topbarright {
@@ -125,7 +125,7 @@ textarea {
 	font-size: 10px; 
 }
 .button {
-	background: url(<?php echo conf('web_path'); ?>/themes/Green-Marble/images/tablebg.gif) #716F6B repeat-x;
+	background: url(..//themes/Green-Marble/images/tablebg.gif) #716F6B repeat-x;
 	padding: 2px;
 	border: 0;
 	margin: 2px;
@@ -143,7 +143,7 @@ tr td a {
 	border-left: 1px solid black;
 }
 .table-header {
-	background: url(<?php echo conf('web_path'); ?>/themes/Green-Marble/images/tablebg.gif) #716F6B repeat-x;
+	background: url(..//themes/Green-Marble/images/tablebg.gif) #716F6B repeat-x;
 	vertical-align: top;
 	text-align: center;
 }
@@ -210,7 +210,7 @@ tr td a {
 	margin-right: 10px;
 	font-size: 9px;
 	cursor: pointer;
-	background: url(<?php echo conf('web_path'); ?>/themes/Green-Marble/images/tablebg.gif) #716F6B repeat-x;
+	background: url(..//themes/Green-Marble/images/tablebg.gif) #716F6B repeat-x;
 }
 /* These three lines make a menu vertical */
 #content {
@@ -251,7 +251,7 @@ tr td a {
 	display: block;
 	padding: 5px 0px 5px 10px;
 	width: 10.5em;
-	background: url(<?php echo conf('web_path'); ?>/themes/Green-Marble/images/menu.jpg) #000000 repeat-y;
+	background: url(..//themes/Green-Marble/images/menu.jpg) #000000 repeat-y;
 	border: 1px solid black;
 }
 #sidebar a, .navbutton {
@@ -260,13 +260,13 @@ tr td a {
 	text-decoration: none;
 	}
 #sidebar li:hover, #sidebar li.sfhover {
-	background: url(<?php echo conf('web_path'); ?>/themes/Green-Marble/images/menu-active.jpg) #000000 repeat-y;
+	background: url(..//themes/Green-Marble/images/menu-active.jpg) #000000 repeat-y;
 }
 #sidebar #activetopmenu, #sidebar #activesubmenu {
-	background: url(<?php echo conf('web_path'); ?>/themes/Green-Marble/images/menu-active.jpg) #000000 repeat-y;
+	background: url(..//themes/Green-Marble/images/menu-active.jpg) #000000 repeat-y;
 }
 #sidebar li:active {
-	background: url(<?php echo conf('web_path'); ?>/themes/Green-Marble/images/menu-active.jpg) #000000 repeat-y;
+	background: url(..//themes/Green-Marble/images/menu-active.jpg) #000000 repeat-y;
 }
 #sidebar li ul {
 	float: left;
@@ -370,17 +370,17 @@ li.current-rating {
 #tablist li a {
 	padding: 3px 0.5em;
 	margin-left: 3px;
-	border: 1px solid <?php echo conf('row_color1'); ?>;
+	border: 1px solid #000000;
 	border-bottom: none;
-	background: <?php echo conf('row_color3'); ?>;
+	background: #000000;
 	text-decoration: none;
 }
 #tablist li a:link { color: #B2B2B2; }
 #tablist li a:visited { color: #B2B2B2; }
 #tablist li a:hover {
-	color: <?php echo conf('font_color2'); ?>;
-	background: <?php echo conf('row_color2'); ?>;
-	border-color: <?php echo conf('bg_color2'); ?>;
+	color: #00ff00;
+	background: #000000;
+	border-color: #000000;
 }
 -->
 </style>

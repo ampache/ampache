@@ -32,30 +32,30 @@
 /* Main
 ---------------------------------*/
 body {
-	background: <?php echo conf('bg_color1'); ?>;
-	font-family: <?php echo conf('font') ?>; 
-	font-size: <?php echo conf('font_size'); ?>px; 
-	color: <?php echo conf('font_color2'); ?>;
+	background: #4B67A0;
+	font-family: Verdana; 
+	font-size: 12px; 
+	color: #000000;
 	padding: 0; 
 	margin: 0;
 }
 
 p {
-	color: <?php echo conf('font_color2'); ?>; 
-	font-family: <?php echo conf('font')?>; 
-	font-size: <?php echo conf('font_size'); ?>pt;
+	color: #000000; 
+	font-family: Verdana; 
+	font-size: 12pt;
 	margin: 8px;
 	white-space: normal;
 }
 
 a {
-	color: <?php echo conf('font_color2') ?>; 
-	font-family: <?php echo conf('font')?>; 
+	color: #000000; 
+	font-family: Verdana; 
 }
 
 a:visited { 
-	color: <?php echo conf('font_color2') ?>; 
-	font-family: <?php echo conf('font')?>; 
+	color: #000000; 
+	font-family: Verdana; 
 }
 
 a:hover {
@@ -63,14 +63,14 @@ a:hover {
 }
 
 a:active {
-	color: <?php echo conf('font_color2') ?>; 
-	font-family: <?php echo conf('font')?>; 
+	color: #000000; 
+	font-family: Verdana; 
 }
 
 /* Page Header 
 ---------------------------------*/
 #pageheader {
-	background: url(<?php echo conf('web_path'); ?><?php echo conf('theme_path'); ?>/images/top_fill.jpg) <?php echo conf('base_color2')?> repeat-x;
+	background: url(<?php echo conf('web_path'); ?><?php echo conf('theme_path'); ?>/images/top_fill.jpg) #F5F5F5 repeat-x;
 }
 
 #pageheader img {
@@ -89,7 +89,7 @@ a:active {
 	margin-top: 0;
 	padding: 6px 0 0 0;
 	float: left;
-	background: url(<?php echo conf('web_path'); ?><?php echo conf('theme_path'); ?>/images/bg_menubar.jpg) top repeat-x;
+	background: url(<?php echo conf('web_path'); ?>IL01/images/bg_menubar.jpg) top repeat-x;
 }
 
 #mainmenu li {
@@ -101,7 +101,7 @@ a:active {
 	padding: 10px 8px 10px 5px;
 	text-align: center;
 	vertical-align: middle;
-    background: url(<?php echo conf('web_path'); ?><?php echo conf('theme_path'); ?>/images/button_sep.jpg) bottom right no-repeat;
+    background: url(<?php echo conf('web_path'); ?>IL01/images/button_sep.jpg) bottom right no-repeat;
 	font-size: <?php echo conf('font_size') - 1; ?>pt; 
 }
 
@@ -134,7 +134,7 @@ a:active {
 	margin-top: 0;
 	padding: 6px 0 0 0;
 	float: left;
-	background: url(<?php echo conf('web_path'); ?><?php echo conf('theme_path'); ?>/images/tablebg.jpg) top repeat-x;
+	background: url(<?php echo conf('web_path'); ?>IL01/images/tablebg.jpg) top repeat-x;
 }
 
 #adminmenu li {
@@ -169,21 +169,21 @@ table.tabledata {
 
 .table-header {
 	height: 20px;
-	background: url(<?php echo conf('web_path'); ?><?php echo conf('theme_path'); ?>/images/tablebg.jpg) <?php echo conf('base_color2')?> repeat-x;
+	background: url(<?php echo conf('web_path'); ?><?php echo conf('theme_path'); ?>/images/tablebg.jpg) #F5F5F5 repeat-x;
 	vertical-align: top;
 	text-align: center;
 }
 
 .border {
-	background:<?php echo conf('bg_color2'); ?>;
+	background:#D1D0D1;
 	margin-left: 12px;
 }
 
 td {
 	padding: 2px 10px 2px 10px;
-	color: <?php echo conf('font_color2') ?>; 
-	font-family: <?php echo conf('font')?>; 
-	font-size: <?php echo conf('font_size'); ?>pt;
+	color: #000000; 
+	font-family: Verdana; 
+	font-size: 12pt;
 	white-space: nowrap;
 }
 
@@ -200,7 +200,7 @@ tr td a {
 /* alphabet styles
 ---------------------------------*/
 .alphabet {
-	font-size: <?php echo conf('font_size'); ?>pt; 
+	font-size: 12pt; 
 	font-weight: normal;
 	margin-left: 10px;
 	margin-right: 10px;
@@ -241,7 +241,7 @@ tr td a {
 }
 
 .text-box li {
-	background:  url(<?php echo conf('web_path'); ?><?php echo conf('theme_path'); ?>/images/vineta.gif) no-repeat 3px 4px;
+	background:  url(<?php echo conf('web_path'); ?>IL01/images/vineta.gif) no-repeat 3px 4px;
 	list-style: none;
 	margin: 0px;
 	padding: 0 0 0 13px;
@@ -254,7 +254,7 @@ tr td a {
 	margin-left: 12px;
 	margin-bottom: 5px;
 	color: #FFFFFF;
-	font-family: <?php echo conf('font'); ?>; 
+	font-family: Verdana; 
 	font-size: <?php echo conf('font_size') + 3; ?>pt;
 	font-weight: 500;
 }
@@ -265,20 +265,20 @@ tr td a {
 }
 
 .header2 {
-	background: url(<?php echo conf('web_path'); ?><?php echo conf('theme_path'); ?>/images/y_bg.jpg) no-repeat;
+	background: url(<?php echo conf('web_path'); ?>IL01/images/y_bg.jpg) no-repeat;
 	height: 55px;
 	width: 580px;
 	margin: 8px;
 	padding: 18px 30px 10px 19px;
-	color: <?php echo conf('font_color2'); ?>;
-	font-family: <?php echo conf('font'); ?>;
+	color: #000000;
+	font-family: Verdana;
 	font-size: <?php echo conf('font_size') + 1; ?>pt;
 	font-weight: 500;
 }
 
 .error { 
-	color: <?php echo conf('error_color'); ?>;
-	background: url(<?php echo conf('web_path'); ?><?php echo conf('theme_path'); ?>/images/exclamation_20.gif) top no-repeat;
+	color: #990033;
+	background: url(<?php echo conf('web_path'); ?>IL01/images/exclamation_20.gif) top no-repeat;
 	background-color: #FFFFFF;
 	width: 200px;
 	padding: 20px 10px 5px 20px; 
@@ -286,15 +286,15 @@ tr td a {
 }
 
 input {
-	color: <?php echo conf('font_color2'); ?>; 
-	font-family: <?php echo conf('font'); ?>; 
-	font-size: <?php echo conf('font_size'); ?>px; 
+	color: #000000; 
+	font-family: Verdana; 
+	font-size: 12px; 
 	font-weight: bold; 
-	background-color: <?php echo conf('base_color2') ?>; 
+	background-color: #F5F5F5; 
 	padding: 1px;
 	margin: 1px;
 	vertical-align: middle;
-	border: 1px solid <?php echo conf('bg_color1'); ?>;
+	border: 1px solid #4B67A0;
 	cursor: pointer;
 }
 
@@ -308,31 +308,31 @@ input.button {
 
 input.button:hover {
 	color: #ffffff;
-	background-color: <?php echo conf('bg_color1'); ?>;
-	border: 1px solid <?php echo conf('bg_color1'); ?>;
+	background-color: #4B67A0;
+	border: 1px solid #4B67A0;
 }
 
 select {	
 	padding: 1px;
-	border: 1px solid <?php echo conf('bg_color1'); ?>;
+	border: 1px solid #4B67A0;
 	margin: 1px;
 	vertical-align: middle;
-	color: <?php echo conf('font_color2'); ?>; 
-	font-family: <?php echo conf('font'); ?>; 
-	font-size: <?php echo conf('font_size'); ?>px; 
+	color: #000000; 
+	font-family: Verdana; 
+	font-size: 12px; 
 	font-weight: bold; 
-	background-color: <?php echo conf('base_color2') ?>; 
+	background-color: #F5F5F5; 
 }
 
 textarea {
-	background-color: <?php echo conf('base_color2'); ?>;
-	color: <?php echo conf('font_color2') ?>; 
-	font-family: <?php echo conf('font')?>; 
-	font-size: <?php echo conf('font_size'); ?>pt; 
+	background-color: #F5F5F5;
+	color: #000000; 
+	font-family: Verdana; 
+	font-size: 12pt; 
 }
 
 .button {
-	background: url(<?php echo conf('web_path'); ?><?php echo conf('theme_path'); ?>/images/tablebg.gif) <?php echo conf('base_color2')?> repeat-x;
+	background: url(<?php echo conf('web_path'); ?><?php echo conf('theme_path'); ?>/images/tablebg.gif) #F5F5F5 repeat-x;
 	padding: 2px;
 	border: 0;
 	margin: 2px;
@@ -352,20 +352,20 @@ ol li a {
 }
 
 .odd {
-	background:<?php echo conf('row_color2'); ?>;
-	font-size: <?php echo conf('font_size'); ?>pt;
+	background:#EDEDED;
+	font-size: 12pt;
 	padding: 10px;
 }
 
 .even {
-	background:<?php echo conf('row_color3'); ?>;
-	font-size: <?php echo conf('font_size'); ?>pt;
+	background:#F9F9F9;
+	font-size: 12pt;
 	padding: 10px;
 }
 
 .headrow {
-	background:<?php echo conf('row_color1'); ?>;
-	font-size: <?php echo conf('font_size'); ?>pt;
+	background:#f3f3f3;
+	font-size: 12pt;
 }
 
 .blank {
@@ -373,17 +373,17 @@ ol li a {
 }
 
 .header {
-	font-size: <?php echo conf('font_size'); ?>pt; 
+	font-size: 12pt; 
 }
 
 .fatalerror {
 	padding-top: 3px;
 	padding-bottom: 3px;
-	color: <?php echo conf('error_color'); ?>;
-	border-right:4px solid <?php echo conf('error_color'); ?>;
-	border-bottom:4px solid <?php echo conf('error_color'); ?>;
-	border-left:4px solid <?php echo conf('error_color'); ?>;
-	border-top:4px solid <?php echo conf('error_color'); ?>;		
+	color: #990033;
+	border-right:4px solid #990033;
+	border-bottom:4px solid #990033;
+	border-left:4px solid #990033;
+	border-top:4px solid #990033;		
 	font-size: <?php echo conf('font_size')+2; ?>pt;
 	font-weight: 900;
 	text-align: center;
