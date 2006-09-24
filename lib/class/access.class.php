@@ -33,6 +33,9 @@ class Access {
 	var $start;
 	var $end;
 	var $level;
+	var $user;
+	var $type;
+	var $key;
 
 	/*!
 		@function Access
@@ -52,6 +55,9 @@ class Access {
 		$this->start 	= $info->start;
 		$this->end	= $info->end;
 		$this->level	= $info->level;
+		$this->key	= $info->key;
+		$this->user	= $info->user;
+		$this->type	= $info->type;
 
 		return true;
 
@@ -95,7 +101,7 @@ class Access {
 		@function create
 		@discussion creates a new entry
 	*/
-	function create($name,$start,$end,$level) { 
+	function create($name,$start,$end,$level,$user,$key,$type) { 
 
 		/* We need to verify the incomming data a littlebit */
 		$start = intval($start);
@@ -104,7 +110,10 @@ class Access {
 		$start 	= ip2int($start);
 		$end 	= ip2int($end);
 		$name	= sql_escape($name);
+		$key	= sql_escape($key);
+		$user	= sql_escape($user);
 		$level	= intval($level);
+		$type	= $this->validate_type($type);
 
 		$sql = "INSERT INTO access_list (`name`,`level`,`start`,`end`) VALUES ".
 			"('$name','$level','$start','$end')";
@@ -156,6 +165,24 @@ class Access {
 
 	} // check
 
+	/**
+	 * validate_type
+	 * This cleans up and validates the specified type
+	 */
+	function validate_type($type) { 
+
+		switch($type) { 
+			case 'xml-rpc':
+			case 'interface':
+			case 'network':
+				return $type;
+			break;
+			default: 
+				return 'stream';
+			break;
+		} // end switch
+	} // validate_type
+
 	/*!
 		@function get_access_list
 		@discussion returns a full listing of all access
@@ -166,7 +193,7 @@ class Access {
 		$sql = "SELECT * FROM access_list";
 		$db_results = mysql_query($sql, dbh());
 		
-		
+		// Man this is the wrong way to do it...
 		while ($r = mysql_fetch_object($db_results)) {
 			$obj = new Access();
 			$obj->id 	= $r->id;
@@ -174,6 +201,9 @@ class Access {
 			$obj->end	= $r->end;
 			$obj->name	= $r->name;
 			$obj->level	= $r->level;
+			$obj->user	= $r->user;
+			$obj->key	= $r->key;
+			$obj->type	= $r->type;
 			$results[] = $obj;
 		} // end while access list mojo
 
@@ -190,20 +220,54 @@ class Access {
 	function get_level_name() { 
 
 		if ($this->level == '75') { 
-			return "Full Access";
+			return "Read/Write/Modify";
 		}
 		if ($this->level == '5') { 
-			return "Demo";
+			return "View";
 		}
 		if ($this->level == '25') { 
-			return "Stream";
+			return "Read";
 		}
 		if ($this->level == '50') { 
-			return "Stream/Download";
+			return "Read/Write";
 		}
 
 
 	} // get_level_name
+
+	/**
+ 	 * get_user_name
+	 * Take a user and return their full name
+	 */
+	function get_user_name() { 
+
+		$user = new User($this->user);
+		return $user->name;
+
+	} // get_user_name
+
+	/**
+	 * get_type_name
+	 * This function returns the pretty name for our current type
+	 */
+	function get_type_name() { 
+
+		switch ($this->type) { 
+			case 'xml-rpc':
+				return 'XML-RPC';
+			break;
+			case 'network':
+				return 'Local Network Definition';
+			break;
+			case 'interface':
+				return 'Web Interface';
+			break;
+			case 'stream':
+			default: 
+				return 'Stream Access';
+			break;
+		} // end switch
+	} // get_type_name
 
 } //end of access class
 

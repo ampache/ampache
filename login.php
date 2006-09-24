@@ -134,7 +134,11 @@ function focus(){ document.login.username.focus(); }
 require(conf('prefix') . "/templates/show_login_form.inc");
 
 if (@is_readable(conf('prefix') . '/config/motd.php')) {
+	echo "<div align=\"center\">\n";
+	show_box_top(_('Message of the Day')); 
         include conf('prefix') . '/config/motd.php';
+	show_box_bottom();
+	echo "</div>\n";
 }
 
 ?>

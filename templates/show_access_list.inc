@@ -47,26 +47,32 @@ stream from this server.</p>
 
 <table cellspacing="1" cellpadding="3" class="border">
 <tr class="table-header" align="center">
-	<td><?php print _("Name"); ?></td>
-	<td><?php print _("Start Address"); ?></td>
-	<td><?php print _("End Address"); ?></td>
-	<td><?php print _("Level"); ?></td>
-	<td><?php print _("Action"); ?></td>
+	<td><?php echo _('Name'); ?></td>
+	<td><?php echo _('Start Address'); ?></td>
+	<td><?php echo _('End Address'); ?></td>
+	<td><?php echo _('Level'); ?></td>
+	<td><?php echo _('User'); ?></td>
+	<td><?php echo _('Key'); ?></td>
+	<td><?php echo _('Type'); ?></td>
+	<td><?php echo _('Action'); ?></td>
 </tr>
 <?php 
 if (count($list)) { 
 	/* Start foreach List Item */
 	foreach ($list as $access) { 
 ?>
-		<tr class="<?php print $row_classes[0]; ?>">
-			<td><?php print scrub_out($access->name); ?></td>
-			<td><?php print int2ip($access->start); ?></td>
-			<td><?php print int2ip($access->end); ?></td>
-			<td><?php print $access->get_level_name(); ?></td>
+		<tr class="<?php echo $row_classes[0]; ?>">
+			<td><?php echo scrub_out($access->name); ?></td>
+			<td><?php echo int2ip($access->start); ?></td>
+			<td><?php echo int2ip($access->end); ?></td>
+			<td><?php echo $access->get_level_name(); ?></td>
+			<td><?php echo $access->get_user_name(); ?></td>
+			<td><?php echo $access->key; ?></td>
+			<td><?php echo $access->get_type_name(); ?></td>
 			<td>
 				<a href="<?php echo $web_path; ?>/admin/access.php?action=show_edit_host&amp;access_id=<?php echo scrub_out($access->id); ?>"><?php echo _('Edit'); ?></a>
 				| 
-				<a href="<?php echo $web_path; ?>/admin/access.php?action=show_confirm_delete&amp;access_id=<?php print scrub_out($access->id); ?>"><?php print _("Revoke"); ?></a>
+				<a href="<?php echo $web_path; ?>/admin/access.php?action=show_confirm_delete&amp;access_id=<?php echo scrub_out($access->id); ?>"><?php print _("Revoke"); ?></a>
 			</td>
 		</tr>
 		<?php  $row_classes = array_reverse($row_classes); ?>

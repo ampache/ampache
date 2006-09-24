@@ -39,56 +39,13 @@
 	</div>
 </div>
 
-
 <?php
 if (conf('allow_public_registration')) { ?>
-	<p align="center">
-		[<a class="header2" href="<?php echo conf('web_path'); ?>/register.php"><?php echo _('Register'); ?></a>]
-	</p>
-<?php } // end if (conf('allow_public_registration'))
-
-
-exit();
-?>
-<br /><br />
-<p align="center">
-	<a href="http://www.ampache.org"><img src="<?php echo  conf('web_path'); ?><?php echo conf('theme_path'); ?>/images/ampache.gif" title="<?php echo conf('site_title'); ?>" border="0" alt="Ampache" />
-	</a>
-</p>
-<form name="login" method="post" enctype="multipart/form-data" action="<?php echo  conf('web_path'); ; ?>/login.php" style="Display:inline">
-<table class="login" bgcolor="<?php echo conf('base_color2'); ?>" border="0" align="center">
-<tr>
-	<td align="center" colspan="2">
-	<?php echo  conf('login_message'); ; ?>&nbsp;
-	<?php $GLOBALS['error']->print_error('general'); ?>
-	</td>
-
-	</tr>
-<tr>
-	<td><?php echo  _("Login"); ; ?>:</td>
-	<td><input type="text" name="username" value="<?php echo  $_REQUEST['username']; ; ?>" /></td>
-</tr>
-<tr>
-	<td><?php echo  _("Password"); ; ?>:</td>
-	<td><input type="password" name="password" value="" /></td>
-</tr>
-<tr>
-	<td>&nbsp;</td>
-	<td><input type="checkbox" name="rememberme" />
-	<?php echo _("Remember Me"); ?></td>
-</tr>
-<tr>
-	<td colspan="2" align="center">
-		<input class="button" type="submit" value="<?php echo _("Login"); ?>" />
-		<input type="hidden" name="referrer" value="<?php echo $referrer; ?>" />
-		<input type="hidden" name="action" value="login" />
-	</td>
-</tr>
-</table>
-</form>
-<?php
-if (conf('allow_public_registration')) { ?>
-	<p align="center">
-		[<a class="header2" href="<?php echo conf('web_path'); ?>/register.php"><?php echo _("Register"); ?></a>]
-	</p>
-<?php } // end if (conf('allow_public_registration'))
+<div align="center">
+	<?php show_box_top(); ?>
+	<span class="text-action">
+		<a href="<?php echo conf('web_path'); ?>/register.php"><?php echo _('Register'); ?></a>
+	</span>
+	<?php show_box_bottom(); ?>
+</div>
+<?php } // end if (conf('allow_public_registration')) ?>

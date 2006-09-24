@@ -27,7 +27,8 @@ $htmllang = str_replace("_","-",conf('lang'));
 <head>
 <link rel="shortcut icon" href="<?php echo conf('web_path'); ?>/favicon.ico" />
 <meta http-equiv="Content-Type" content="text/html; charset=<?php echo conf('site_charset'); ?>" />
-<?php show_template('style'); ?>
+<link rel="stylesheet" href="<?php echo $web_path; ?>/templates/default.css" type="text/css" />
+<link rel="stylesheet" href="<?php echo $web_path; ?><?php echo conf('theme_path'); ?>/templates/default.css" type="text/css" />
 <title><?php echo conf('site_title'); ?> - <?php echo $location['title']; ?></title>
 </head>
 <body>
@@ -36,9 +37,9 @@ $htmllang = str_replace("_","-",conf('lang'));
 <div id="maincontainer">
 <!-- This is the topbar row -->
 <div id="topbar">
-	<div id="topbarleft">
-	<a href="http://www.ampache.org">
-        <img class="pageheader" src="<?php echo conf('web_path'); ?><?php echo conf('theme_path'); ?>/images/ampache.gif" border="0" title="Ampache: For the love of music" alt="Ampache: For the love of music" />
+	<div align="center">
+	<a href="http://www.ampache.org/">
+        <img src="<?php echo conf('web_path'); ?><?php echo conf('theme_path'); ?>/images/ampache.gif" border="0" title="Ampache: For the love of music" alt="Ampache: For the love of music" />
 	</a>
 	</div>
 </div>
@@ -50,24 +51,19 @@ $fullname = scrub_in($_REQUEST['fullname']);
 $username = scrub_in($_REQUEST['username']);
 $email = scrub_in($_REQUEST['email']);
 ?>
-
 <div align="center">
+<?php show_box_top(_('Ampache New User Registration')); ?>
 <form name="update_user" method="post" action="<?php echo conf('web_path'); ?>/register.php" enctype="multipart/form-data">
-<table class="border" width='700' cellpadding='0' cellspacing='0' border='0'>
-<tr class="table-header">
-	<td>
-		<font size="2"><b><u><?php echo _("Ampache New User Registration"); ?></u></b></font>
-	</td>
-</tr>
+<table width='700px' cellpadding='0' cellspacing='0' border='0'>
 <?php
 /*  If we should show the user agreement */
 if(conf('user_agreement')){ ?>
 	<tr>
-		<td height='15' bgcolor="<?php print conf('base_color2'); ?>">
+		<td height='15'>
 		</td>
 	</tr>
 	<tr>
-		<td bgcolor="<?php print conf('base_color2'); ?>" align='center' valign='top'>
+		<td align='center' valign='top'>
 			<table width='100%' border='0' cellpadding='0' cellspacing='0'>
 			<tr class="table-header">
 				<td align='center'>
@@ -90,23 +86,17 @@ if(conf('user_agreement')){ ?>
 	</tr>
 <? } // end if(conf('user_agreement')) ?>
 <tr>
-	<td height='15' bgcolor="<?php print conf('base_color2'); ?>">
+	<td height='15'>
 	</td>
 </tr>
 <tr>
-	<td bgcolor="<?php print conf('base_color2'); ?>" align="center" valign="top">
-		<table width="100%" cellpadding="0" cellspacing="0" border="0">
-		<tr class="table-header">
-			<td align='center'>
-				<font size="1"><b><u><?php echo _('User Information'); ?></u></b></font>
-			</td>
-		</tr>
-		</table>
-		<br />
+	<td valign="top">
+		<p class="box-title"><?php echo _('User Information'); ?></p>
+
 		<table width='99%' cellpadding='0' cellspacing='0' border='0'>
 		<tr>
 			<td align='right'>
-				<?php echo _("Username"); ?>:
+				<?php echo _('Username'); ?>:
 			</td>
 			<td>
 				<font color='red'>*</font> <input type='text' name='username' id='username' value='<?php echo scrub_out($username); ?>' />
@@ -116,7 +106,7 @@ if(conf('user_agreement')){ ?>
 		</tr>
 		<tr>
 			<td align='right'>
-				<?php echo _("Full Name"); ?>:
+				<?php echo _('Full Name'); ?>:
 			</td>
 			<td>
 				<font color='red'>*</font> <input type='text' name='fullname' id='fullname' value='<?php echo scrub_out($fullname); ?>' />
@@ -125,7 +115,7 @@ if(conf('user_agreement')){ ?>
 		</tr>
 		<tr>
 			<td align='right'>
-				<?php echo _("E-mail"); ?>:
+				<?php echo _('E-mail'); ?>:
 			</td>
 			<td>
 				<font color='red'>*</font> <input type='text' name='email' id='email' value='<?php echo scrub_out($email); ?>' />
@@ -134,7 +124,7 @@ if(conf('user_agreement')){ ?>
 		</tr>
 		<tr>
 			<td align='right'>
-				<?php echo _("Password"); ?>:
+				<?php echo _('Password'); ?>:
 			</td>
 			<td>
 				<font color='red'>*</font> <input type='password' name='password_1' id='password_1' />
@@ -143,7 +133,7 @@ if(conf('user_agreement')){ ?>
 		</tr>
 		<tr>
 			<td align='right'>
-				<?php echo _("Confirm Password"); ?>:
+				<?php echo _('Confirm Password'); ?>:
 			</td>
 			<td>
 				<font color='red'>*</font> <input type='password' name='password_2' id='password_2' />
@@ -156,15 +146,15 @@ if(conf('user_agreement')){ ?>
 			</tr>
 		<?php } ?>
 		<tr>
-			<td colspan='2' bgcolor="<?php print conf('base_color2'); ?>" align='center' height='20'>
+			<td colspan='2' align='center' height='20'>
 				<font color='red'>*</font>Required fields
 			</td>
 		</tr>
 		<tr>
-			<td colspan='2' bgcolor="<?php print conf('base_color2'); ?>" align='center' height='50'>
+			<td colspan='2' align='center' height='50'>
 				<input type="hidden" name="action" value="add_user" />
 				<input type='reset' name='clear_info' id='clear_info' value='<?php echo _('Clear Info'); ?>' />
-				<input type='submit' name='submit_registration' id='submit_registration' value='<?php echo _("Register User"); ?>' />
+				<input type='submit' name='submit_registration' id='submit_registration' value='<?php echo _('Register User'); ?>' />
 			</td>
 		</tr>
 		</table>
@@ -172,6 +162,7 @@ if(conf('user_agreement')){ ?>
 </tr>
 </table>
 </form>
+<?php show_box_bottom(); ?>
 </div>
 </div><!--end <div>id="maincontainer-->
 </body>
