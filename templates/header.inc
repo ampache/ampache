@@ -34,10 +34,10 @@ if (conf('use_rss')) { ?>
 <?php } ?>
 <meta http-equiv="Content-Type" content="text/html; charset=<?php echo conf('site_charset'); ?>" />
 <title><?php echo conf('site_title'); ?> - <?php echo $location['title']; ?></title>
+<link rel="stylesheet" href="<?php echo $web_path; ?>/templates/default.css" type="text/css" />
+<link rel="stylesheet" href="<?php echo $web_path; ?><?php echo conf('theme_path'); ?>/templates/default.css" type="text/css" />
 </head>
 <body>
-<link rel="stylesheet" href="<?php echo $web_path; ?>/templates/default.css" type="text/css">
-<link rel="stylesheet" href="<?php echo $web_path; ?><?php echo conf('theme_path'); ?>/templates/default.css" type="text/css">
 <script src="<?php echo $web_path; ?>/lib/general.js" language="javascript" type="text/javascript"></script>
 <script src="<?php echo $web_path; ?>/modules/kajax/ajax.js" language="javascript" type="text/javascript"></script>
 <div id="maincontainer">

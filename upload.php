@@ -200,6 +200,7 @@ switch( $action ) {
 
 // display any messages
 if( $status ) {
+	show_box_top(); 
 	print( "<table align='center'>\n" );
 	print( "<th>Filename</th><th>Result</th>\n" );
 	foreach( $status as $status_row ) {
@@ -214,6 +215,7 @@ if( $status ) {
 		print( "</tr>\n");
 	} // end for each status element
 	print( "</table>\n" );
+	show_box_bottom();
 } // end if any messages
  
 /* Show the Page Footer */

@@ -24,11 +24,10 @@
 ?>
 
 <form action="<?php echo conf('web_path'); ?>/upload.php?" method="post" name="upload_form" enctype="multipart/form-data" id="upload_form">
-<table class="text-box">
+<?php show_box_top(_('Uploading Music to Ampache')); ?>
+<table>
 <tr>
 	<td>
-		<h3><?php echo _('Uploading Music to Ampache'); ?><br /></h3>
-		<p>
 		<b><?php echo _('The following Audio file formats are supported'); ?></b>
 		</p>
 		<ul>
@@ -50,29 +49,12 @@
 </tr>
 <tr>
 	<td>
-	<input size="40" type="file" name="ul_path2" id="ul_path2" />
-		<?php $GLOBALS['error']->print_error('ul_path2'); ?>
-	</td>
-</tr>
-<tr>
-	<td>
-		<input size="40" type="file" name="ul_path3" id="ul_path3" />
-		<?php $GLOBALS['error']->print_error('ul_path3'); ?>
-	</td>
-</tr>
-<tr>
-	<td>
-		<input size="40" type="file" name="ul_path4" id="ul_path4" />
-		<?php $GLOBALS['error']->print_error('ul_path3'); ?>
-	</td>
-</tr>
-<tr>
-	<td>
 		<input type="hidden" name="action" value="upload" />
 		<input type="hidden" name="MAX_FILE_SIZE" value="<?php echo _('max_upload_size'); ?>" />
 		<input class='button' type="submit" value="<?php echo _('Upload'); ?>" />
 	</td>
 </tr>
 </table>
+<?php show_box_bottom(); ?>
 </form>
 

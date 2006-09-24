@@ -1,4 +1,4 @@
-<?php
+<!--
 /*
 
  Copyright (c) 2001 - 2006 Ampache.org
@@ -19,298 +19,595 @@
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
+-->
+p { 
+	color: #ffffcc;
+}
 
-/*!
- @header Style File
- @discussion this is the css that is included on every page of
- 	ampache, mod this to change the look and feel of the site
-*/
-?>
-<style type="text/css">
-<!--
-	body	
-		{ 
-		padding-top: 0px;
-		margin-top: 0px;
-		margin-left: 0px;
-		margin-right: 0px;
-		background: #320000; 
-		font-family: Verdana; 
-		font-size: 12px; 
-		color: #ffffcc;
-		}
+a { 
+	color: #ffffcc; 
+	font-family: Verdana, Helvetica, sans-serif; 
+}
+a:visited 
+	{ 
+	color: #ffffcc; 	
+	font-family: Verdana, Helvetica, sans-serif; 
+	}
+a:active  { 
+	color: #ffffcc; 
+	font-family: Verdana, Helvetica, sans-serif; 
+}
+.text-box {
+	display: table-cell;
+	padding-left:5px;
+	padding-top:5px;
+	padding-right:5px;
+	margin-bottom:10px;
+	background-color: #320000;
+	border-right:2px solid #ffffcc;
+	border-bottom:2px solid #ffffcc;
+	border-left:2px solid #ffffcc;
+	border-top:2px solid #ffffcc;
+}
+.selected_button {
+	background-color: black;color:white;
+}
+.unselected_button {
+	/* there really isn't anything for this */
+}
+.display {}
 
-	p	
-		{ 
-		color: #ffffcc; 
-		font-family: Verdana; 
-		font-size: 12px; 
-		}
-	a	
-		{ 
-		color: #ffffcc; 
-		font-family: Verdana; 
-		}
-	a:visited 
-		{ 
-		color: #ffffcc; 
-		font-family: Verdana; 
-		}
-	a:active  
-		{ 
-		color: #ffffcc; 
-		font-family: Verdana; 
-		}
-	.text-box 
-		{
-		padding-left:5px;
-		padding-top:5px;
-		margin-bottom:10px;
-		background-color: #320000;
-		border-right:2px solid #7A0000;
-		border-bottom:2px solid #7A0000;
-		border-left:2px solid #7A0000;
-		border-top:2px solid #7A0000;
-		}
-    table.tabledata
-    {
-    }
-
-	td	
-		{ 
-        padding: 0px 8px 0px 8px;
-		color: #ffffcc; 
-		font-family: Verdana; 
-		font-size: 12px;
-		}
-    th
-        {
-        padding-right: 10px;
-        }
-	input	
-		{
-		color: #ffffcc; 
-		font-family: Verdana; 
-		font-size: 12px; 
-		font-weight: bold; 
-		background-color: #9F0000; 
-		margin: 2px 2px 2px 2px;
-		cursor: pointer;
-		}
-	select	{ 
-		color: #ffffcc; 
-		font-family: Verdana; 
-		font-size: 12px; 
-		background-color: #9F0000; 
-		}
-	textarea 
-		{ 
-		background-color: #9F0000;
-		color: #ffffcc; 
-		font-family: Verdana; 
-		font-size: 12px; 
-		}
-    .table-header
-    {
-        background: url(../burgundy/images/ampache-light-bg.gif) #9F0000 repeat-x;
-        vertical-align: top;
-    }
+#mpdpl td {
+	padding: 0px 2px 0px 2px;
+	text-align: left;
+}
+table.tabledata {}
+td { 
+	padding: 0px 8px 0px 8px;
+	color: #ffffcc; 
+	font-family: Verdana, Helvetica, sans-serif; 
+	font-size: 12px;
+}
+th {
+	padding-right: 10px;
+}
+input {
+	color: #ffffcc; 
+	font-family: Verdana, Helvetica, sans-serif; 
+	font-size: 12px; 
+	font-weight: bold; 
+	background-color: #9F0000; 
+	margin: 2px 2px 2px 2px;
+}
+select	{ 
+	color: #ffffcc; 
+	font-family: Verdana, Helvetica, sans-serif; 
+	font-size: 12px; 
+	background-color: #9F0000; 
+}
+textarea { 
+	background-color: #9F0000;
+	color: #ffffcc; 
+	font-family: Verdana, Helvetica, sans-serif; 
+	font-size: 12px; 
+}
+.table-header {
+	background: url(../themes/classic/images/ampache-light-bg.gif) #9F0000 repeat-x;
+	vertical-align: top;
+}
     .header1 
     { 
 	color: #ffffcc; 
-	font-family: Verdana; 
-	font-size: <?php echo conf('font_size') + 6; ?>px; 
+	font-family: Verdana, Helvetica, sans-serif; 
+	font-size: 18px; 
 	font-weight: 900;
     }
     .header2
     {
     	color: #ffffcc;
-	font-family: Verdana;
-	font-size: <?php echo conf('font_size') + 2; ?>px;
+	font-family: Verdana, Helvetica, sans-serif;
+	font-size: 14px;
 	font-weight: 900;
     }
 	.headrow 
 		{
-		background:#ffffcc;
+		background:#cccccc;
 		font-size: 12px;
 		}
 	.odd 
 		{
-		background:#9F0000;
+		background:#320000;
 		font-size: 12px;
 		}
 	.even
 		{
-		background:#7A0000;
+		background:#9F0000;
 		font-size: 12px;
 		}
-    .blank
-        {
-        background: #fff;
-        }
-	.border 
-		{ 
-		background:#7A0000; 
-		}
-	.header 
-		{ 
-		font-size: 12px; 
-		}
- 	.error	
-		{ 
-		color: #ffffcc; 
-		}
-	.fatalerror
-		{
-		padding-top: 3px;
-		padding-bottom: 3px;
-		color: #ffffcc;
-                border-right:4px solid #ffffcc;
-                border-bottom:4px solid #ffffcc;
-                border-left:4px solid #ffffcc;
-                border-top:4px solid #ffffcc;		
-		font-size: <?php echo conf('font_size')+2; ?>px;
-		font-weight: 900;
-		text-align: center;
-		}
-	.disabled
-		{
-		text-decoration: line-through;
-		}
-	.alphabet 
-		{ 
-		font-size: 12px; 
-		font-weight: normal; 
-		}
-	.smallbutton
-		{
-		border:0px;
-		padding-left:1px;
-		padding-right:1px;
-		font-size: <?php echo conf('font_size') - 1; ?>px;
-		}
-	.sidebar 
-		{
-		margin-left:0px;
-		margin-top:0px;
-		margin-right:0px;
-		padding-right:0px;
-		padding-top: 0px;
-		padding-left: 0px;
-		width:160px;
-		background: #9F0000;
-		}
-/* These three lines make a menu horizontal */
-	#content { float: left; clear: both;}
-	#sidebar li { float: left; }
-	#sidebar li ul { margin: 0.5em 0 0 -1.1em; }
-/**
- * Div Definitions
- * These define how the page is layed out, be careful with these as changes to them
- * can cause drastic layout changes
+.blank {
+	background: #fff;
+}
+.border { 
+	background:#ffffcc; 
+}
+.header { 
+	font-size: 12px; 
+}
+.error { 
+	color: #990033; 
+}
+.fatalerror {
+	padding-top: 3px;
+	padding-left: 3px;
+	padding-right: 3px;
+	display: table-cell;
+	padding-bottom: 3px;
+	color: #990033;
+ border-right:4px solid #990033;
+ border-bottom:4px solid #990033;
+ border-left:4px solid #990033;
+ border-top:4px solid #990033;		
+}
+.disabled {
+	text-decoration: line-through;
+}
+.smallbutton {
+	border:0px;
+	padding-left:1px;
+	padding-right:1px;
+	font-size: 11px;
+	cursor: pointer;
+}
+/* ////////////////////////////////////////////////////////////////*/	
+/* De aqui pa'bajo, ros esta creando una hoja de estilos unica para todo Ampache  */
 
-	#maincontrainer
-		{
-			margin: 0px;
-		} 	
-	#topbar
-		{
-			height: 80px;
-			background-color: #320000;
-		}
-	#topbarright
-		{
-			float: right;
-		}
-	#topbarleft
-		{
-			float: left;
-		}
-	#sidebar
-		{ 
-		position: relative;
-		clear: right;
-		height: 100%;
-		margin-left: 0px; 
-		float: left;
-		width: 100%;
-		list-style: none;
-		}
+/* General style rules  */
+body{ 
+	padding-top: 0px;
+	margin-top: 0px;
+	margin-left: 0px;
+	margin-right: 0px; 
+	background-color:#320000;
+	font-family:Arial, Helvetica, Sans-Serif;
+	color: #ffffcc;
+}
 
-	#sidebar ul
-		{
-		margin-left:0px;
-		margin-top:0px;
-		margin-bottom:0px;
-		margin-right: 3px;
-		padding: 0px;
-		list-style-type: none;
-		font-family: verdana, arial, Helvetica, sans-serif;
-		}
+#maincontainer{
+	margin: 0px;
+}
 
-	#sidebar li 
-		{ 
-	        float: left;
-	        margin: 0;
-		margin-left:2px;
-	        padding: 0 3px 0 0px;
-	        display: inline;
-		}
+.alphabet { 
+	margin: 10px;
+	font-size: 10px; 
+	font-weight: normal; 
+}
 
-	#sidebar a, .navbutton
-		{
-		padding: 5px 5px;
-		color: #ffffcc;
-		background-color: #7A0000;
-		text-decoration: none;
-		}
+/* Content block */
+#content {
+	top:90px;
+	float: left;
+	clear: both;
+	margin-top:-10px;
+	margin-left:15px;
+	/*float:left;  use for horizontal menu; comment out otherwise */
+	/* background:#fff url("../themes/classic/images/bg_content.gif") repeat-y right top; */
+}
 
-	#sidebar a:hover
-		{
-		color: #222222;
-		background-color: #ffffcc;
-		text-decoration: none;
-		}
-	#sidebar ul ul {
-		width: 100%;
-		position: absolute;
-		left: 0;
-		top: 20px;
-		margin: 0;
-		padding: 0;
-		white-space: nowrap;
-		}	
+h3#content_title{
+	font-family:Arial,Helvetica,Sans-Serif;
+	font-size:12px;
+	line-height:32px;
+	color:#fff;
+	margin:0px;
+	padding:0px;
+	background:#8B8B8B url("../themes/classic/images/content_corner.gif") no-repeat right top;
+}
+
+h3#content_title span {
+	text-align:left;
+}
+			
+/* Styles for Header */
+div#Header{
+	height:80px;
+	margin-bottom:3px;
+	padding:0px;
+}
+
+#Header h1 { 
+	background: transparent url("../themes/classic/images/bg_login_0.jpg") no-repeat top left; 
+	border:0px; 
+	width: 439px; 
+	height: 84px; 
+	float: left;
+	margin:0px;
+	padding:0px;
+}
 	
-	#sidebar ul ul li { 
-		padding: 2px;
-		margin: 0;
-		border: 0;
-		}
+#Header h1 span {
+	display:none
+}
 
-	#sidebar ul ul a, .subnavbutton
-		{
-		display: block;
-		padding: 3px 3px 3px 3px;
-		color: #ffffcc;
-		background-color: #9F0000;
-		text-decoration: none;
-		}
+#Header h2 { 
+	background: transparent url(001/h2.gif) no-repeat top left; 
+	margin-top: 75px;  
+	width: 200px; 
+	height: 18px; 
+	float: right;
+}
 
-	#sidebar ul ul a:hover
-		{
-		color: #222222;
-		background-color: #ffffcc;
-		text-decoration: none;
-		}
-	#content
-		{ 
-		float: left;	
-		margin-left:0px;
-		margin-top: 35px;
-		}
+#Header h2 span {
+	font-size:10px;
+	margin-left:10px;
+}
 
- * End Div Definitions
- * This is the end of the main structure def's
+
+/* Sidebar */
+/**
+ * Experimental for menus (Thx Sigger)
+ * TO DO: Fill in 1px border around menus & submenu items
+ * Make padding apply to the li, not just an a.  Moving padding: to li throws off the dropdown menu alignment.
  */
--->
-</style>
+ 
+div#sidebar{
+	clear:both;
+	position:absolute;
+	left:5px;
+	top:55px;
+	background:url("../themes/classic/images/bg_navigation.gif") repeat-y left;	
+}
+
+#sidebar h3 {
+	border:0px; 
+	width: 120px; 
+	height: 28px; 
+	margin:0px;
+	padding:0px; 
+	background: transparent url("../themes/classic/images/sidebar_top.jpg") no-repeat left; 
+
+}
+	
+#sidebar h3 span {
+	display:none
+}
+
+#sidebar ul {
+	margin: 0px;
+	list-style: none;
+	font-family:Arial, Helvetica, Sans-Serif;
+	font-size:10px;
+	padding: 0px;
+	line-height: 1.0;
+	background-color:#320000;
+}
+
+#sidebar li {
+    margin: 0;
+    float: left;
+    display: block;
+    border-bottom: 1px solid #8B8B8B;
+    border-left: 1px solid #8B8B8B;
+    border-right: 1px solid #8B8B8B;
+    border-top: 1px solid #8B8B8B;
+    padding: 5px 0px 5px 10px;
+    width: 10.5em;
+    background-color:#320000;
+}
+
+#sidebar a, .navbutton {
+    display: block;  /*Not sure why this is neccesary, but it is for IE*/
+    text-decoration: none;
+}
+
+#sidebar li:hover, #sidebar li.sfhover {
+	color: #000000;
+	background-color:#ffffcc;
+}
+
+#sidebar li:active {
+	background-color:#320000;
+	z-index:30;
+}
+   
+#sidebar li ul {
+    float: left;
+    position: absolute;
+    width: 9em;
+/*	margin: -1.5em 0 0 10.5em; /* for vertical menu; comment out otherwise */
+	margin: 0.5em 0 0 -1.1em;  /* for horizontal menu;  comment out otherwise */ 
+    left: -999em;  /* this -999em puts the submenu item way off to the left until it's called back by a hover (below) */
+	z-index:30;
+}
+
+#sidebar li:hover ul, #sidebar li.sfhover ul {
+	left: auto;  /* this calls the submenu back when the parent li is hovered. */
+}
+
+/* Styles for Now Playing */
+#nowplaying{
+	clear: all;
+	width: 625px;
+}
+
+#np_container1{
+	width: 260px;
+	height: 18px;
+	padding: 0px;
+	margin: 0px;
+	background: #fff url("../themes/classic/images/tb_tab.jpg") no-repeat top left;
+}
+
+#np_container1 h1{
+	font-size: 10px;
+	font-weight: bold;
+	padding: 2px;
+}
+
+#np_container2{
+	border-width: 1px 1px 1px 1px;
+	border-style: solid;
+	border-color:#ddd #999 #999 #ccc;
+	padding: 6px;
+	font-family: Verdana, sans-serif;
+	font-size: 10px;
+	line-height: 12px;
+	color: #000;
+	background: #D6D6D4 url("../themes/classic/images/bg_row.jpg") repeat top left;
+}
+
+	
+/* Styles for Login template  */
+#container{
+	margin:100px auto 0px auto;
+	width:437px;
+	font-size: 12px;
+	text-align:center;
+}
+#container h1{
+	background:url("../themes/classic/images/bg_login_0.jpg") no-repeat;
+	height:81px;
+	margin-bottom:8px;
+}
+#container h1 span{
+	display:none;
+}
+#container div{
+	background:url("../themes/classic/images/bg_login_1.jpg") no-repeat;
+	height:285px;
+}
+#loginp_0{
+	color:#333;
+	margin-top:0px;
+	padding-top:60px;
+}
+.loginp_1{
+	text-align:right;
+	padding-right:100px;
+}
+.loginp_1 span{
+	font-weight:bold;
+}
+.loginp_1 input{
+	border:1px solid #999;
+}
+input.text_input {
+width:12em;
+}
+.loginp_1 input.check_input {
+margin-right:5em;
+} 
+/* Footer */
+#footer {
+	margin-left: 150px;
+	margin-bottom: 10px;
+}
+
+#footer p {
+	color:#999999;
+	font-size:10px;
+}
+#topbar { 
+	height: 80px;
+	padding-top:3px;
+	padding-left:10px;
+}
+#topbarright { 
+	float: right;
+	font-size: 10px;
+}
+#topbarleft, #topbarleft a{ 
+	float: left;
+}
+/* styles for the star ratings */
+.star-rating{
+	list-style:none;
+	margin: 0px;
+	padding:0px;
+	width: 80px;
+	height: 15px;
+	position: relative;
+	background: url(../images/ratings/star_rating.gif) top left repeat-x;        
+}
+.star-rating li{
+	padding:0px;
+	margin:0px;
+	float: right;
+}
+.star-rating li a{
+	display:block;
+	width:16px;
+	height: 15px;
+	text-decoration: none;
+	text-indent: -9000px;
+	z-index: 20;
+	position: absolute;
+	padding: 0px;
+}
+.star-rating li a:hover{
+	background: url(../images/ratings/star_rating.gif) left center;
+	z-index: 2;
+	left: 0px;
+}
+li.zero-stars a:hover {
+	background: url(../images/ratings/x.gif);
+	height: 15px;
+	left: 80px;
+	display: block;
+}
+a.zero-stars {
+	background: url(../images/ratings/x_off.gif);
+	height: 15px;
+	left: 80px;
+	display: block;
+}
+a.one-stars{
+	left: 0px;
+}
+a.one-stars:hover{
+	width:16px;
+}
+a.two-stars{
+	left:16px;
+}
+a.two-stars:hover{
+	width: 32px;
+}
+a.three-stars{
+	left: 32px;
+}
+a.three-stars:hover{
+	width: 48px;
+}
+a.four-stars{
+	left: 48px;
+}
+a.four-stars:hover{
+	width: 64px;
+}
+a.five-stars{
+	left: 64px;
+}
+a.five-stars:hover{
+	width: 80px;
+}
+li.current-rating{
+	background: url(../images/ratings/star_rating.gif) left bottom;
+	position: absolute;
+	height: 15px;
+	display: block;
+	text-indent: -9000px;
+	z-index: 1;
+}
+/* Box Related Styles */
+.box { 
+	padding:0px;
+	background: #320000;
+}
+.box-title { 
+	border-bottom: solid 1px; #ffffcc;
+	font-weight: bold;
+}
+.box-left-top { 
+	background: url(../themes/classic/images/topleft.gif) no-repeat;
+	height:16px;
+}
+.box-left-bottom {
+        background: url(../themes/classic/images/bottomleft.gif) no-repeat;
+	height:18px;
+}
+.box-left { 
+	background: url(../themes/classic/images/left.gif);
+}
+.box-bottom { 
+	background: url(../themes/classic/images/bottom.gif);
+	height:18px;
+}
+.box-right-bottom { 
+	background: url(../themes/classic/images/bottomright.gif) no-repeat;
+}
+.box-right-top {
+	background: url(../themes/classic/images/topright.gif) no-repeat;
+}
+.box-right { 
+	background: url(../themes/classic/images/right.gif);
+}
+.box-top { 
+	background: url(../themes/classic/images/top.gif);
+}
+.confirmation-box {
+	padding-left:5px;
+	padding-top:5px;
+ 	padding-right:5px;
+	margin-bottom:10px;
+	display: table-cell;
+	background-color: #320000;
+	border-right:2px solid #ffffcc;
+	border-bottom:2px solid #ffffcc;
+	border-left:2px solid #ffffcc;
+	border-top:2px solid #ffffcc;}
+.text-action, .text-action li {
+	margin-top:5px;
+	list-style: none;
+	margin-bottom:5px;
+	padding-left:0px;
+}
+.text-action a, .text-action span {
+	background: #9F0000;
+	border:1px solid #ffffcc;
+ 	padding-left:2px;
+	padding-right:2px;
+	text-decoration: none;
+}
+.text-action #pt_active {
+	background: #ffffcc;
+	color: #ffffff;
+	border:1px solid #9F0000;
+}
+#nowplaying {
+	width:600px;
+}
+.np_row {
+	padding-top: 3px;
+	padding-bottom: 3px;
+}
+.np_cell {
+	display: inline;
+	margin: 10px;
+}
+#tablist {
+        padding: 3px 0;
+        margin: 12px 0 0 0;
+        font: bold 12px Verdana, sans-serif;
+}
+
+#tablist li {
+        list-style: none;
+        margin: 0;
+        display: inline;
+}
+
+#tablist li a {
+        padding: 3px 0.5em;
+        margin-left: 3px;
+        border: 1px solid #cccccc;
+        border-bottom: none;
+        background: #9F0000;
+        text-decoration: none;
+}
+
+#tablist li a:link { color: #222222; }
+#tablist li a:visited { color: #ffffcc; }
+
+#tablist li a:hover {
+        color: #ffffcc;
+        background: #320000;
+        border-color: #ffffcc;
+}
+
+#tablist li a#current {
+        color: #ffffcc;
+        background: #320000;
+        border-color: #ffffcc;
+        border-bottom: 1px solid #ffffcc;
+}
+
