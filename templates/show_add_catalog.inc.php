@@ -26,11 +26,10 @@ $default_sort = "%a/%A";
 
 ?>
 
-<p class="header2"><?php echo _("Add a Catalog"); ?></p>
+<?php show_box_top(_('Add a Catalog')); ?>
 
 <p><?php echo _("In the form below enter either a local path (i.e. /data/music) or the URL to a remote Ampache installation (i.e http://theotherampache.com)"); ?></p>
 
-<div class="text-box">
 <form name="update_catalog" method="post" action="<?php echo conf('web_path'); ?>/admin/catalog.php" enctype="multipart/form-data">
 <table class="tabledata" cellpadding="0" border="0" cellspacing="0">
 <tr>
@@ -61,11 +60,6 @@ $default_sort = "%a/%A";
 			<option value="remote"><?php echo _("Remote"); ?></option>
 		</select>
 	</td>
-</tr>
-
-<tr>
-	<td><?php echo _("ID3 Set Command"); ?>: </td>
-	<td><input size="60" type="text" name="id3set_command" value="<?php echo $default_id3; ?>" /></td>
 </tr>
 
 <tr>
@@ -114,5 +108,4 @@ $default_sort = "%a/%A";
 
 </table>
 </form>
-</div>
-
+<?php show_box_bottom(); ?>

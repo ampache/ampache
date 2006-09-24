@@ -47,6 +47,7 @@ if (($GLOBALS['user']->has_access(100)) AND ($user_id == '-1' AND conf('use_auth
 	$show_apply_to_all = true;
 }
 ?>
+<?php show_box_top(); ?>
 <span class="header1">
 <?php echo _("Editing"); ?> <?php echo $fullname; ?> <?php echo _('preferences'); ?> 
 <?php if ($GLOBALS['user']->has_access(100)) { ?>
@@ -97,3 +98,4 @@ if ($current_tab != 'account') {
 ?>
 </form>
 </div>
+<?php show_box_bottom(); ?>

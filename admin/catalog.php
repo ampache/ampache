@@ -240,7 +240,7 @@ switch ($_REQUEST['action']) {
 		show_confirmation($title,$body,$url);
 	break;
 	case 'show_add_catalog':
-		include(conf('prefix') . '/templates/add_catalog.inc');
+		include(conf('prefix') . '/templates/show_add_catalog.inc.php');
 	break;
 	case 'clear_now_playing':
 	        if (conf('demo_mode')) { break; }
