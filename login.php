@@ -42,7 +42,7 @@ init_preferences();
  */
 if (conf('access_control')) { 
         $access = new Access(0);
-        if (!$access->check('interface',$_SERVER['REMOTE_ADDR'],'','25')) {
+        if (!$access->check('interface',$_SERVER['REMOTE_ADDR'],'','5')) {
                 debug_event('access_denied','Access Denied:' . $_SERVER['REMOTE_ADDR'] . ' is not in the Access list','3');
                 access_denied();
         }
