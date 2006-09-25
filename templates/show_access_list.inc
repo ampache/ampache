@@ -44,7 +44,7 @@ stream from this server.</p>
 <a href="<?php echo $web_path; ?>/admin/access.php?action=show_add_host"><?php echo _('Add Entry'); ?></a>
 </span>
 </p>
-
+<?php if (count($list)) { ?>
 <table cellspacing="1" cellpadding="3" class="border">
 <tr class="table-header" align="center">
 	<td><?php echo _('Name'); ?></td>
@@ -57,7 +57,6 @@ stream from this server.</p>
 	<td><?php echo _('Action'); ?></td>
 </tr>
 <?php 
-if (count($list)) { 
 	/* Start foreach List Item */
 	foreach ($list as $access) { 
 ?>
@@ -77,7 +76,7 @@ if (count($list)) {
 		</tr>
 		<?php  $row_classes = array_reverse($row_classes); ?>
 	<?php  } // end foreach ?>
-<?php  } // end if count ?>
 </table>
+<?php  } // end if count ?>
 <?php show_box_bottom(); ?>
 

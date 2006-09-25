@@ -89,8 +89,13 @@ class Access {
 		$start 	= ip2int($data['start']);
 		$end	= ip2int($data['end']);
 		$level	= sql_escape($data['level']);
-		
-		$sql = "UPDATE access_list SET start='$start', end='$end', level='$level' WHERE id='" . sql_escape($this->id) . "'";
+		$user	= sql_escape($data['user']);
+		$key	= sql_escape($data['key']);
+			
+		$sql = "UPDATE access_list " . 
+			"SET start='$start', end='$end', level='$level', user='$user' " . 
+			"WHERE id='" . sql_escape($this->id) . "'";
+
 		$db_results = mysql_query($sql, dbh());
 
 		return true;
@@ -115,9 +120,11 @@ class Access {
 		$level	= intval($level);
 		$type	= $this->validate_type($type);
 
-		$sql = "INSERT INTO access_list (`name`,`level`,`start`,`end`) VALUES ".
-			"('$name','$level','$start','$end')";
+		$sql = "INSERT INTO access_list (`name`,`level`,`start`,`end`,`key`,`user`,`type`) " . 
+			"VALUES ('$name','$level','$start','$end','$key','$user','$type')";
 		$db_results = mysql_query($sql, dbh());
+
+		return true;
 
 	} // create
 
@@ -140,7 +147,7 @@ class Access {
 		@function check
 		@discussion check to see if they have rights
 	*/
-	function check($needed, $ip) { 
+	function check($type,$ip,$user,$level,$key='') { 
 
 		// They aren't using access control 
 		// lets just keep on trucking
@@ -148,9 +155,29 @@ class Access {
 			return true;
 		} 
 
-		$ip = ip2int($ip);
+		// Clean incomming variables
+		$ip 	= ip2int(intval($ip));
+		$user 	= sql_escape($user);
+		$key 	= sql_escape($key);
+		$level	= sql_escape($level);
 
-		$sql = "SELECT id FROM access_list WHERE start<='$ip' AND end>='$ip' AND level>='$needed'";
+		switch ($type) { 
+			case 'xml-rpc':
+				$sql = "SELECT id FROM access_list" . 
+					" WHERE `start` <= '$ip' AND `end` >= '$ip'" . 
+					" AND  `key` = '$key' AND `level` >= '$level'";
+			break;
+			case 'network':
+			case 'interface':
+			case 'stream':
+			default:
+				$sql = "SELECT id FROM access_list" . 
+					" WHERE `start` <= '$ip' AND `end` >= '$ip'" .
+					" AND `level` >= '$level' AND `type` = '$type'";
+				if (strlen($user)) { $sql .= " AND (`user` = '$user' OR `user` IS NULL)"; }
+				else { $sql .= " AND `user` IS NULL"; }
+			break;
+		} // end switch on type
 		$db_results = mysql_query($sql, dbh());
 
 		// Yah they have access they can use the mojo
@@ -240,9 +267,13 @@ class Access {
 	 * Take a user and return their full name
 	 */
 	function get_user_name() { 
-
+		
 		$user = new User($this->user);
-		return $user->name;
+		if ($user->username) { 
+			return $user->fullname . " (" . $user->username . ")";
+		}
+		
+		return false;
 
 	} // get_user_name
 

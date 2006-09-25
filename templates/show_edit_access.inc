@@ -20,14 +20,16 @@
 
 */
 ?>
-
-<p class="header1"><?php echo _('Edit Access List'); ?></p>
-
+<?php show_box_top(_('Edit Access List')); ?>
 <form name="edit_access" method="post" enctype="multipart/form-data" action="<?php echo conf('web_path'); ?>/admin/access.php">
-<table class="text-box">
+<table>
 <tr>
 	<td><?php echo _('Name'); ?>: </td>
 	<td><?php echo scrub_out($access->name); ?></td>
+</tr>
+<tr>
+	<td><?php echo _('ACL Type'); ?>: </td>
+	<td><?php echo scrub_out($access->get_type_name()); ?></td>
 </tr>
 <tr>
 	<td><?php echo _('Start IP Address'); ?>:</td>
@@ -42,14 +44,29 @@
 	</td>
 </tr>
 <tr>
+	<td><?php echo _('User'); ?>:</td>
+	<td>
+		<?php show_user_select('user',$access->user); ?>
+	</td>
+</tr>
+<?php if ($access->type == 'xml-rpc') { ?>
+<tr>
+	<td><?php echo _('Remote Key'); ?></td>
+	<td>
+		<input type="text" name="key" value="<?php echo scrub_out($access->key); ?>" size="32" maxlength="32" />
+	</td>
+</tr>
+<?php } ?>
+</tr>
+<tr>
 	<td><?php echo _('Level'); ?>:</td>
 	<td>
 		<select name="level">
 			<?php $name = 'level_' . $access->level; ${$name} = 'selected="selected"'; ?>
-			<option value="5"  <?php echo $level_5;  ?>><?php echo _('Demo'); ?></option>
-			<option value="25" <?php echo $level_25; ?>><?php echo _('Stream'); ?></option>
-			<option value="50" <?php echo $level_50; ?>><?php echo _('Stream/Download'); ?></option>
-			<option value="75" <?php echo $level_75; ?>><?php echo _('XML-RPC'); ?></option>
+			<option value="5"  <?php echo $level_5;  ?>><?php echo _('View'); ?></option>
+			<option value="25" <?php echo $level_25; ?>><?php echo _('Read'); ?></option>
+			<option value="50" <?php echo $level_50; ?>><?php echo _('Read/Write'); ?></option>
+			<option value="75" <?php echo $level_75; ?>><?php echo _('All'); ?></option>
 		</select>
 	</td>
 </tr>
@@ -63,3 +80,4 @@
 </tr>
 </table>
 </form>
+<?php show_box_bottom(); ?>

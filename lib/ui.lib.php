@@ -888,31 +888,31 @@ function get_location() {
 		case 'preferences.php':
 			$location['title'] 	= 'Preferences';
 			break;
-		case 'admin/index.php':
+		case 'adminindex.php':
 			$location['title'] 	= 'Admin';
 			$location['section']	= 'admin';
 			break;
-		case 'admin/catalog.php':
+		case 'admincatalog.php':
 			$location['title'] 	= 'Catalog';
 			$location['section']	= 'admin';
 			break;
-		case 'admin/users.php':
+		case 'adminusers.php':
 			$location['title']	= 'User Management';
 			$location['section']	= 'admin';
 			break;
-		case 'admin/mail.php':
+		case 'adminmail.php':
 			$location['title']	= 'Mail Users';
 			$location['section']	= 'admin';
 			break;
-		case 'admin/access.php':
+		case 'adminaccess.php':
 			$location['title']	= 'Manage Access Lists';
 			$location['section']	= 'admin';
 			break;
-		case 'admin/preferences.php':
+		case 'adminpreferences.php':
 			$location['title']	= 'Site Preferences';
 			$location['section']	= 'admin';
 			break;
-		case 'admin/modules.php':
+		case 'adminmodules.php':
 			$location['title']	= 'Manage Modules';
 			$location['section']	= 'admin';
 			break;
@@ -1262,6 +1262,32 @@ function show_catalog_select($name='catalog',$catalog_id=0,$style='') {
 	echo "</select>\n";
 
 } // show_catalog_select
+
+
+/**
+ * show_user_select
+ * This one is for users! shows a select/option statement so you can pick a user
+ * to blame
+ */
+function show_user_select($name,$selected='',$style='') { 
+
+	echo "<select name=\"$name\" style=\"$style\">\n";
+	echo "\t<option value=\"\">" . _('None') . "</option>\n";
+
+	$sql = "SELECT username as id,fullname FROM user ORDER BY fullname";
+	$db_results = mysql_query($sql, dbh());
+
+	while ($r = mysql_fetch_assoc($db_results)) { 
+		$select_txt = '';
+		if ($r['id'] == $selected) { 
+			$select_txt = 'selected="selected"';
+		}
+
+		echo "\t<option value=\"" . $r['id'] . "\" $select_txt>" . scrub_out($r['fullname']) . "</option>\n";
+		
+	} // end while users
+
+} // show_user_select
 
 /**
  * show_box_top

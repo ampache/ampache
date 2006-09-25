@@ -80,7 +80,7 @@ if (!$results['allow_stream_playback']) {
 
 
 /** This is the version.... fluf nothing more... **/
-$results['version']		= '3.3.2 Build (003)';
+$results['version']		= '3.3.2 Build (004)';
 
 $results['raw_web_path']	= $results['web_path'];
 $results['web_path']		= $http_type . $_SERVER['HTTP_HOST'] . $results['web_path'];

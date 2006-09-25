@@ -74,7 +74,8 @@ if (conf('demo_mode') || (!$GLOBALS['user']->has_access('25') && !$xml_rpc) ) {
 */
 if (conf('access_control')) { 
 	$access = new Access(0);
-	if (!$access->check("25", $_SERVER['REMOTE_ADDR'])) { 
+	if (!$access->check('stream',$_SERVER['REMOTE_ADDR'],$GLOBALS['user']->username,'25') AND
+		!$access->check('network',$_SERVER['REMOTE_ADDR'],$GLOBALS['user']->username,'25')) { 
 		debug_event('access_denied', "Streaming Access Denied: " . $_SERVER['REMOTE_ADDR'] . " does not have stream level access",'3');
 		access_denied();
 	}
@@ -189,8 +190,15 @@ header("Accept-Ranges: bytes" );
 
 // Prevent the script from timing out
 set_time_limit(0);			
+
+/* If access control is on and they aren't local, downsample! */
+if (conf('access_control')) { 
+	if (!$access->check('network',$_SERVER['REMOTE_ADDR'],$GLOBALS['user']->username,'25')) { 
+		$not_local = true;
+	}
+} // if access_control
 	
-if ($GLOBALS['user']->prefs['play_type'] == 'downsample' || !$song->native_stream()) { 
+if ($GLOBALS['user']->prefs['play_type'] == 'downsample' || !$song->native_stream() || $not_local) { 
 	$results = start_downsample($song,$lastid,$song_name);
 	$fp = $results['handle'];
 	$song->size = $results['size'];

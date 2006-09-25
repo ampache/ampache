@@ -4,11 +4,14 @@
 
 --------------------------------------------------------------------------
   v.3.3.2
+	- Added New ACL system which allows user based ACL's  and 
+		introduces shared keys for xml-rpc communication and 
+		local/remote network definitions for auto-downsampling
 	- Introduced new Theming method and 'migrated' all old themes in
 		/contrib results may vary. (Thx Ros)
 	- Added ability to search by Rating, requires MySQL 4.0 or above
-	- Page headers now limited to 20 pages with [....] between top
-		and bottom 10.
+	- Page headers now limited to 30 pages with [....] between top
+		and bottom 15.
 	- Added Browse by Title functionality (Thx Rubin)
 	- Added Min Album size as preference, defaults to 0 (Thx Rubin)
 	- Fixed a problem with the automatic registration sorting on user

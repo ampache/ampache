@@ -281,11 +281,12 @@ class Update {
 		$version[] = array('version' => '332011','description' => $update_string);
 
 		$update_string = '- Reworked All Indexes on tables, hopefully leading to performance improvements.<br />' .
-				'- Added live_stream table for radio station support.<br />' . 
 				'- Added id int(11) UNSIGNED fields to a few tables missing it.<br />' . 
 				'- Removed DB Based color/font preferences and Theme preferences catagory.<br />';
 
 		$version[] = array('version' => '332012','description' => $update_string);
+
+		$update_string = '- Added live_stream table for radio station support.<br />';
 
 
 		return $version;
@@ -1643,17 +1644,6 @@ class Update {
 	 */
 	function update_332012() { 
 
-		$sql = "CREATE TABLE `live_stream` (" . 
-		"`id` INT( 11 ) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY ," . 
-		"`name` VARCHAR( 128 ) NOT NULL ," . 
-		"`site_url` VARCHAR( 255 ) NOT NULL ," . 
-		"`url` VARCHAR( 255 ) NOT NULL ," . 
-		"`genre` INT( 11 ) UNSIGNED NOT NULL ," . 
-		"`catalog` INT( 11 ) UNSIGNED NOT NULL ," . 
-		"`frequency` VARCHAR( 32 ) NOT NULL ," . 
-		"`call_sign` VARCHAR( 32 ) NOT NULL" . 
-		") ENGINE = MYISAM";
-
 		/* Clean Up Indexes */
 
 		// Access List
@@ -1785,6 +1775,25 @@ class Update {
 		$this->set_version('db_version','332012');
 
 	} // update_332012
+	
+	/**
+ 	 * update_332013
+	 * OMG BeatingsForVollmer++
+	 */
+	function update_332013() { 
+
+                $sql = "CREATE TABLE `live_stream` (" .
+                "`id` INT( 11 ) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY ," .
+                "`name` VARCHAR( 128 ) NOT NULL ," .
+                "`site_url` VARCHAR( 255 ) NOT NULL ," .
+                "`url` VARCHAR( 255 ) NOT NULL ," .
+                "`genre` INT( 11 ) UNSIGNED NOT NULL ," .
+                "`catalog` INT( 11 ) UNSIGNED NOT NULL ," .
+                "`frequency` VARCHAR( 32 ) NOT NULL ," .
+                "`call_sign` VARCHAR( 32 ) NOT NULL" .
+                ")";
+
+	} // update_332013
 
 } // end update class
 ?>

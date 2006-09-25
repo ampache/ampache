@@ -506,6 +506,7 @@ li.current-rating{
 }
 .box-title { 
 	border-bottom: solid 1px; #000000;
+	font-size: 1.05em;
 	font-weight: bold;
 }
 .box-left-top { 
