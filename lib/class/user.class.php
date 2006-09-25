@@ -497,6 +497,24 @@ class User {
 	} // update_stats
 
 	/**
+	 * insert_ip_history
+	 * This inserts a row into the IP History recording this user at this
+	 * address at this time in this place, doing this thing.. you get the point
+	 */
+	function insert_ip_history() { 
+
+		$ip = ip2int($_SERVER['REMOTE_ADDR']);
+		$date = time(); 
+		$user = $this->id;
+
+		$sql = "INSERT INTO ip_history (`ip`,`user`,`date`) VALUES ('$ip','$user','$date')";
+		$db_results = mysql_query($sql, dbh());
+
+		return true;
+
+	} // insert_ip_history
+
+	/**
 	 * create
 	 * inserts a new user into ampache
 	 */

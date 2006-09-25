@@ -42,7 +42,7 @@ init_preferences();
  */
 if (conf('access_control')) { 
         $access = new Access(0);
-        if (!$access->check("25", $_SERVER['REMOTE_ADDR'])) {
+        if (!$access->check('interface',$_SERVER['REMOTE_ADDR'],'','25')) {
                 debug_event('access_denied','Access Denied:' . $_SERVER['REMOTE_ADDR'] . ' is not in the Access list','3');
                 access_denied();
         }
@@ -92,6 +92,15 @@ if ($auth['success']) {
 	//
 	$_SESSION['userdata'] = $auth;
 	
+	// 
+	// Record the IP of this person!
+	// 
+	if (conf('track_user_ip')) { 
+		$user = new User($_POST['username']);
+		$user->insert_ip_history();	
+		unset($user);
+	}
+
 	/* Make sure they are actually trying to get to this site and don't try to redirect them back into 
 	 * an admin section
 	**/

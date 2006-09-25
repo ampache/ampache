@@ -169,7 +169,8 @@ function show_users () {
 	}
 
 	$db_result = mysql_query($view->sql, $dbh);
-
+	// wow this is stupid 
+	$GLOBALS['view'] = $view;
 	require(conf('prefix') . "/templates/show_users.inc");
 
 } // show_users()

@@ -45,7 +45,7 @@ if ($prev_offset < 0) { $prev_offset = '0'; }
 $pages  = ceil($total_items/$GLOBALS['view']->offset_limit);
 
 /* Calculate current page and how many we have on each side */
-$page_data = array();
+$page_data = array('up'=>array(),'down'=>array());
 
 // Can't Divide by 0
 if ($GLOBALS['view']->offset > 0) { 

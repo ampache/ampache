@@ -85,6 +85,20 @@ site_title	= "Ampache :: For The Love Of Music"
 # DEFAULT: true
 require_session = "true"
 
+# Track User IPs
+# If this is enabled Ampache will log the IP of every completed login
+# it will store user,ip,time at one row per login. The results are 
+# displayed in Admin --> Users
+# DEFAULT: false
+#track_user_ip = "false"
+
+# User IP Cardinality
+# This defines how many days worth of IP history Ampache will track
+# As it is one row per login on high volume sites you will want to 
+# clear it every now and then. 
+# DEFAULT: 42 days
+#user_ip_cardinality = "42"
+
 # Use XML-RPC
 # Allow XML-RPC connections, if you don't want _any_ possibility of your
 # catalog being streamed from another location comment this out
@@ -332,12 +346,6 @@ allow_stream_playback = true
 # DEFAULT: false
 #allow_downsample_playback = false
 
-# LocalPlay Playback
-# Disable this if you don't want to allow people to pick the 
-# local playback method
-# DEFAULT: false
-#allow_local_playback = false
-
 #########################################################
 # These options control the dynamic down-sampling based #
 # on current usage                                      #
@@ -422,7 +430,7 @@ transcode_m4a 	= true
 
 # These are the commands that will be run to transcode the file
 #stream_cmd_flac 	= flac -dc %FILE% | lame -r -b 128 -S - - 
-#stream_cmd_m4a 	= faad -f 2 -w "%FILE%" | lame -r -b 128 -S - -
+stream_cmd_m4a 	= faad -f 2 -w "%FILE%" | lame -r -b 128 -S - -
 #stream_cmd_mpc		= 
 
 #######################################################

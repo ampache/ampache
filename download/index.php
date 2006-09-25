@@ -43,7 +43,8 @@ if (conf('demo_mode') || !$GLOBALS['user']->has_access('25') || !$GLOBALS['user'
 */
 if (conf('access_control')) {
         $access = new Access(0);
-        if (!$access->check('50', $_SERVER['REMOTE_ADDR'])) {
+        if (!$access->check('stream', $_SERVER['REMOTE_ADDR'],$GLOBALS['user']->id,'50') ||
+		!$access->check('network', $_SERVER['REMOTE_ADDR'],$GLOBALS['user']->id,'50')) {
                 debug_event('access_denied', "Download Access Denied, " . $_SERVER['REMOTE_ADDR'] . " does not have download level",'3');
                 access_denied();
         }
@@ -71,6 +72,8 @@ if ($_REQUEST['action'] == 'download') {
 	$song->format_type();
 	$song_name = str_replace('"'," ",$song->f_artist_full . " - " . $song->title . "." . $song->type);
 
+	/* Because of some issues with IE remove ? and / from the filename */
+	$song_name = str_replace(array('?','/','\\'),"_",$song_name);
 	
 	// Use Horde's Browser class to send the right headers for different browsers
 	// Should get the mime-type from the song rather than hard-coding it.

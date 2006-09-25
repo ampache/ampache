@@ -4,6 +4,11 @@
 
 --------------------------------------------------------------------------
   v.3.3.2
+	- Fixed a problem with pagination on the admin/users.php page
+	- Added ability to turn on User/IP/Date Login history tracking 
+		viewable only by Administrators
+	- Fixed issue with IE not being able to download files with ? or
+		/ or \ in their filenames, replaced with _
 	- Added New ACL system which allows user based ACL's  and 
 		introduces shared keys for xml-rpc communication and 
 		local/remote network definitions for auto-downsampling
