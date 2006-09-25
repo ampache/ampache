@@ -174,8 +174,8 @@ class Access {
 				$sql = "SELECT id FROM access_list" . 
 					" WHERE `start` <= '$ip' AND `end` >= '$ip'" .
 					" AND `level` >= '$level' AND `type` = '$type'";
-				if (strlen($user)) { $sql .= " AND (`user` = '$user' OR `user` IS NULL)"; }
-				else { $sql .= " AND `user` IS NULL"; }
+				if (strlen($user)) { $sql .= " AND (`user` = '$user' OR `user` < '1')"; }
+				else { $sql .= " AND `user` < '1'"; }
 			break;
 		} // end switch on type
 		$db_results = mysql_query($sql, dbh());
