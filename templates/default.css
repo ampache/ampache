@@ -326,7 +326,7 @@ div#sidebar{
 
 /* Styles for Now Playing */
 #nowplaying{
-	clear: all;
+	clear: both;
 	width: 625px;
 }
 
@@ -505,7 +505,7 @@ li.current-rating{
 	background: #f7f7f7;
 }
 .box-title { 
-	border-bottom: solid 1px; #000000;
+	border-bottom: solid 1px #000000;
 	font-size: 1.05em;
 	font-weight: bold;
 }
