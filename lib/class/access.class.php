@@ -177,7 +177,7 @@ class Access {
 					" WHERE `start` <= '$ip' AND `end` >= '$ip'" .
 					" AND `level` >= '$level' AND `type` = '$type'";
 				if (strlen($user)) { $sql .= " AND (`user` = '$user' OR `user` = '-1')"; }
-				else { $sql .= " AND `user` = '0'"; }
+				else { $sql .= " AND `user` = '-1'"; }
 			break;
 		} // end switch on type
 
