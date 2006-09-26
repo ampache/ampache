@@ -23,7 +23,7 @@
 		lists and admin notification of new users (Thx pb1dft)
 	- Fixed 'auto_user' config option on automatic registration it
 		wasn't actually respecting the config option (Thx pb1dft)
-	- Fixed a typo on the XSPF playlist generation (Thx pb1dft)
+	- Fixed Implemented XSPF playlist generation (Thx pb1dft)
 	- Fixed an issue with 'Download Selected' from playlists passing
 		the incorrect songs
 	- When adding to a playlist by default it 'appends' rather then
