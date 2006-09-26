@@ -25,8 +25,8 @@ $total_images = count($images);
 $rows = floor($total_images/3);
 $i = 0;
 ?>
-
-<table class="text-box"> 
+<?php show_box_top(); ?>
+<table>
 <tr>
 <?php 
 while ($i <= $rows) { 
@@ -53,3 +53,4 @@ while ($i <= $rows) {
 } // end while
 ?>
 </table>
+<?php show_box_bottom(); ?>

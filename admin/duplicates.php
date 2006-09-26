@@ -26,7 +26,6 @@
 require_once ('../lib/init.php');
 require_once( conf('prefix').'/lib/duplicates.php');
 
-
 if (!$user->has_access(100)) {
 	header ("Location: " . conf('web_path') . "/index.php?access=denied");
 	exit();

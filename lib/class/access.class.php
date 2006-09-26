@@ -91,7 +91,9 @@ class Access {
 		$level	= sql_escape($data['level']);
 		$user	= sql_escape($data['user']);
 		$key	= sql_escape($data['key']);
-			
+		
+		if (!$user) { $user = '-1'; } 
+		
 		$sql = "UPDATE access_list " . 
 			"SET start='$start', end='$end', level='$level', user='$user' " . 
 			"WHERE id='" . sql_escape($this->id) . "'";
@@ -109,8 +111,6 @@ class Access {
 	function create($name,$start,$end,$level,$user,$key,$type) { 
 
 		/* We need to verify the incomming data a littlebit */
-		$start = intval($start);
-		$end   = intval($end);
 
 		$start 	= ip2int($start);
 		$end 	= ip2int($end);
@@ -119,6 +119,8 @@ class Access {
 		$user	= sql_escape($user);
 		$level	= intval($level);
 		$type	= $this->validate_type($type);
+
+		if (!$user) { $user = '-1'; } 
 
 		$sql = "INSERT INTO access_list (`name`,`level`,`start`,`end`,`key`,`user`,`type`) " . 
 			"VALUES ('$name','$level','$start','$end','$key','$user','$type')";
@@ -174,10 +176,11 @@ class Access {
 				$sql = "SELECT id FROM access_list" . 
 					" WHERE `start` <= '$ip' AND `end` >= '$ip'" .
 					" AND `level` >= '$level' AND `type` = '$type'";
-				if (strlen($user)) { $sql .= " AND (`user` = '$user' OR `user` < '1')"; }
-				else { $sql .= " AND `user` < '1'"; }
+				if (strlen($user)) { $sql .= " AND (`user` = '$user' OR `user` = '-1')"; }
+				else { $sql .= " AND `user` = '0'"; }
 			break;
 		} // end switch on type
+
 		$db_results = mysql_query($sql, dbh());
 
 		// Yah they have access they can use the mojo

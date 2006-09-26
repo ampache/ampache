@@ -250,7 +250,7 @@ div#Header{
  * TO DO: Fill in 1px border around menus & submenu items
  * Make padding apply to the li, not just an a.  Moving padding: to li throws off the dropdown menu alignment.
  */
- 
+
 div#sidebar{
 	clear:both;
 	position:absolute;
@@ -287,12 +287,16 @@ div#sidebar{
     display: block;
     border-bottom: 1px solid #8B8B8B;
     border-left: 1px solid #8B8B8B;
-    border-right: 1px solid #8B8B8B;
+    border-right: 4px solid #B4B4B4;
     border-top: 1px solid #8B8B8B;
     /* float: left; /* use for horizontal menu; comment out otherwise */
     padding: 5px 0px 5px 10px;
     width: 10.5em;
     background-color:#FFFFFF;
+}
+
+#sidebar ul.subnavside li { 
+    border-right: 1px solid #B4B4B4;
 }
 
 #sidebar a, .navbutton {

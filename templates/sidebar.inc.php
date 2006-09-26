@@ -42,23 +42,14 @@ $browse_items[] = array('title'=>_("Lists"),'url'=>'browse.php','active'=>$locat
 
 $web_path = conf('web_path');
 
-/* Setup the Location page mojo for setting
- * the active LI here 
- */
-switch ($location['page']) { 
-
-
-
-
-} // end switch on location page thingy
-
 ?>
 <ul id="navlist">
+	<h3></h3>
 	<li<?php
                 if ($location['page'] == "index.php"){
                     echo " id=\"activetopmenu\" ";
                     }?>>
-		<a href="<?php echo $web_path; ?>/index.php"><?php echo _("Home"); ?></a>
+		<a href="<?php echo $web_path; ?>/index.php"><?php echo _('Home'); ?></a>
 	</li>
 <?php if ($GLOBALS['user']->has_access(100)) { ?>
 	<li<?php
@@ -71,7 +62,7 @@ switch ($location['page']) {
                     $location['page'] == 'admin/access.php' ){
                     echo " id=\"activetopmenu\" ";
                     }?>>
-		<a href="<?php echo $web_path; ?>/admin/index.php"><?php echo _("Admin"); ?></a>
+		<a href="<?php echo $web_path; ?>/admin/index.php"><?php echo _('Admin'); ?></a>
 	<?php
 		if ($GLOBALS['theme']['submenu'] != 'simple') {
 			show_submenu($admin_items); 

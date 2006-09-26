@@ -26,31 +26,15 @@ function insert()
 	document.getElementById('artist_name').value = '<?php echo $artist->name; ?>';
 }
 </script>
-
+<?php show_box_top(_('Rename') . " " . $artist->name); ?>
 <form name="rename_artist" method="post" action="<?php echo conf('web_path'); ?>/artists.php?action=rename&amp;artist=<?php echo $artist->id; ?>" style="Display:inline;">
-<table class="text-box" cellspacing="0">
-<tr>
-	<th align="left">
-	<span class="header2"><?php echo _("Rename") . " " . $artist->name . " " . _("to"); ?></span>
-	</th>
-</tr>
-<tr>
-	<td>
-        	<?php show_artist_pulldown($artist->id, "artist_id", 4); ?>
-		<br />
-		<?php echo _("OR"); ?><br />
-		<input type="text" name="artist_name" size="30" value="<?php echo scrub_out($_REQUEST['artist_name']); ?>" id="artist_name" />
-		<a href="javascript:insert()">[<?php echo _("Insert current"); ?>]</a>
-		<?php $GLOBALS['error']->print_error('artist_name'); ?>
-	</td>
-</tr>
-<tr>
-	<td><input type="checkbox" name="update_id3" value="yes" />&nbsp; <?php echo _("Update id3 tags"); ?></td>
-</tr>
-<tr>
-	<td>
-		<input type="submit" value="<?php echo _("Rename"); ?>" />
-	</td>
-</tr>
-</table>
+        <?php show_artist_pulldown($artist->id, "artist_id", 4); ?>
+	<br />
+	<?php echo _('OR'); ?><br />
+	<input type="text" name="artist_name" size="30" value="<?php echo scrub_out($_REQUEST['artist_name']); ?>" id="artist_name" />
+	<a href="javascript:insert()">[<?php echo _('Insert current'); ?>]</a><br />
+	<?php $GLOBALS['error']->print_error('artist_name'); ?>
+	<input type="checkbox" name="update_id3" value="yes" />&nbsp; <?php echo _('Update id3 tags') ?><br />
+	<input type="submit" value="<?php echo _('Rename'); ?>" /><br />
 </form>
+<?php show_box_bottom(); ?>

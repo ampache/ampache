@@ -192,11 +192,11 @@ header("Accept-Ranges: bytes" );
 set_time_limit(0);			
 
 /* If access control is on and they aren't local, downsample! */
-if (conf('access_control')) { 
+//if (conf('access_control') AND conf('downsample_remote')) { 
 	if (!$access->check('network',$_SERVER['REMOTE_ADDR'],$GLOBALS['user']->username,'25')) { 
 		$not_local = true;
 	}
-} // if access_control
+//} // if access_control
 	
 if ($GLOBALS['user']->prefs['play_type'] == 'downsample' || !$song->native_stream() || $not_local) { 
 	$results = start_downsample($song,$lastid,$song_name);

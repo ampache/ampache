@@ -26,19 +26,14 @@
 */
 $web_path = conf('web_path');
 ?>
-<table class="text-box">
-<tr>
-	<td>
-		<span class="header1"><?php echo _("Viewing") . " " . $genre->name . " " . _("Genre"); ?></span><br />
+<?php show_box_top(_('Viewing') . " " . $genre->name . " " . _('Genre')); ?>
 		[<?php echo $genre->get_album_count(); ?>] 
 		<a href="<?php echo $web_path; ?>/genre.php?action=show_albums&amp;genre_id=<?php echo $genre->id; ?>">
-			<?php echo _("Albums"); ?></a><br />
+			<?php echo _('Albums'); ?></a><br />
 		[<?php echo $genre->get_artist_count(); ?>]
 		<a href="<?php echo $web_path; ?>/genre.php?action=show_artists&amp;genre_id=<?php echo $genre->id; ?>">
-			<?php echo _("Artists"); ?></a><br />
+			<?php echo _('Artists'); ?></a><br />
 		[<?php echo $genre->get_song_count(); ?>]
 		<a href="<?php echo $web_path; ?>/genre.php?action=show_songs&amp;genre_id=<?php echo $genre->id; ?>">
-			<?php echo _("Songs"); ?></a><br />
-	</td>
-</tr>
-</table>
+			<?php echo _('Songs'); ?></a><br />
+<?php show_box_bottom(); ?>

@@ -85,6 +85,13 @@ site_title	= "Ampache :: For The Love Of Music"
 # DEFAULT: true
 require_session = "true"
 
+# Downsample Remote
+# If this is set to true and access control is on any users who are not
+# comming from a defined localnet will be automatically downsampled
+# regardless of their preferences
+# DEFAULT: false
+#downsample_remote = "false"
+
 # Track User IPs
 # If this is enabled Ampache will log the IP of every completed login
 # it will store user,ip,time at one row per login. The results are 
@@ -144,12 +151,10 @@ tag_order	= "file"
 use_auth	= "yes"
 
 # 5 Star Ratings
-# These are disabled by default, to turn them on remove the
-# comment before the value flash requires flash player and
-# will cause longer load times. 
-# POSSIBLE VALUES: false normal
+# This allows rattings for almost any object in ampache
+# POSSIBLE VALUES: false true
 # DEFAULT: false
-#ratings = "normal"
+#ratings = "false"
 
 # This options will turn on/off Demo Mode
 # If Demo mode is on you can not play songs or update your catalog

@@ -20,33 +20,30 @@
 
 */
 ?>
-
+<?php show_box_top(_('Customize Search')); ?>
 <form name="coverart" method="get" action="<?php echo conf('web_path'); ?>/albums.php" style="Displain:inline;">
-<table class="text-box">
+<table>
+<tr>
+</tr>
 <tr>
 	<td>
-		<span class="header1"><?php echo _("Customize Search"); ?></span>
+		<?php echo _('Artist'); ?>&nbsp;
+	</td>
+	<td>
+		<input type="text" size="20" id="artist_name" name="artist_name" value="<?php echo scrub_out($artistname); ?>" />
 	</td>
 </tr>
 <tr>
 	<td>
-		<?php echo _("Artist"); ?>&nbsp;
+	 	<?php echo _('Album'); ?>&nbsp;
 	</td>
 	<td>
-		<input type="text" size="20" id="artist_name" name="artist_name" value="<?php echo $artistname; ?>" />
-	</td>
-</tr>
-<tr>
-	<td>
-	 	<?php echo _("Album"); ?>&nbsp;
-	</td>
-	<td>
-		<input type="text" size="20" id="album_name" name="album_name" value="<?php echo $albumname; ?>" />
+		<input type="text" size="20" id="album_name" name="album_name" value="<?php echo scrub_out($albumname); ?>" />
 	</td>
 </tr>
 <tr>
 	<td>
-		<?php echo _("Direct URL to Image"); ?>
+		<?php echo _('Direct URL to Image'); ?>
 	</td>
 	<td>
 		<input type="text" size="40" id="cover" name="cover" value="" />
@@ -56,8 +53,9 @@
 	<td>
 		<input type="hidden" name="action" value="find_art" />
 		<input type="hidden" name="album_id" value="<?php echo $album->id; ?>" />
-		<input type="submit" value="<?php echo _("Get Art"); ?>" />
+		<input type="submit" value="<?php echo _('Get Art'); ?>" />
 	</td>
 </tr>
 </table>
 </form>
+<?php show_box_bottom(); ?>
