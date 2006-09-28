@@ -64,12 +64,12 @@ $web_path = conf('web_path');
                     }?>>
 		<a href="<?php echo $web_path; ?>/admin/index.php"><?php echo _('Admin'); ?></a>
 	<?php
-		if ($GLOBALS['theme']['submenu'] != 'simple') {
+		if ($GLOBALS['theme']['submenu'] != 'simple' AND $GLOBALS['theme']['submenu'] != 'full') {
 			show_submenu($admin_items); 
 			echo "\t</li>\n";
 		} 
 		else { 
-			if ($location['section'] == 'admin') {
+			if ($location['section'] == 'admin' || $GLOBALS['theme']['submenu'] == 'full') {
 				echo "\t</li>\n";
 				show_submenu($admin_items);
 			} 
@@ -91,12 +91,12 @@ $web_path = conf('web_path');
                     }?>>
 		<a href="<?php echo $web_path; ?>/browse.php"><?php echo _("Browse"); ?></a> 
 		<?php 
-		if ($GLOBALS['theme']['submenu'] != 'simple') { 
+		if ($GLOBALS['theme']['submenu'] != 'simple' AND $GLOBALS['theme']['submenu'] != 'full') { 
 			show_submenu($browse_items);
 			echo "\t</li>\n";
 		}
 		else { 
-			if ($location['section'] == 'browse') { 
+			if ($location['section'] == 'browse' || $GLOBALS['theme']['submenu'] == 'full') { 
 				echo "\t</li>\n";
 				show_submenu($browse_items);
 			}
