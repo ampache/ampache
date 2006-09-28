@@ -54,7 +54,8 @@ $admin_menu = "admin/";
 		<b><?php echo _("Registration Date"); ?></b>
 		</a>
 	</td>
-
+	<td colspan="5">&nbsp;</td>
+	<!--
         <td align="center">
 		<b><?php echo _("Edit"); ?></b>
 	</td>
@@ -70,6 +71,7 @@ $admin_menu = "admin/";
 	<td align="center">
 		<b><?php echo _("Delete"); ?></b>
 	</td>
+	-->
         <td align="center">
 		<b><?php echo _("On-line"); ?></b>
 	</td>
@@ -83,46 +85,46 @@ while ($results = mysql_fetch_object($db_result)) {
         if (!$user->create_date) { $create_date = "Unknown"; }
 ?>
 
-<tr class="<?php echo flip_class(); ?>">
-	<td>
-		<a href="<?php echo $web_path; ?>/admin/users.php?action=edit&amp;user=<?php echo $user->username; ?>">
+<tr class="<?php echo flip_class(); ?>" align="center">
+	<td align="left">
+		<a href="<?php echo $web_path; ?>/admin/users.php?action=edit&amp;user=<?php echo $user->id; ?>">
 			<?php echo $user->fullname; ?> (<?php echo $user->username; ?>)
 		</a>
 	</td>
-        <td align="center">
+        <td>
 		<?php echo $last_seen; ?>
 	</td>
-        <td align="center">
+        <td>
 		<?php echo $create_date; ?>
 	</td>
 
         <td>
 		<a href="<?php echo $web_path; ?>/admin/users.php?action=edit&amp;user=<?php echo $user->username; ?>">
-			<?php echo _("Edit"); ?>
+			<?php echo get_user_icon('edit'); ?>
 		</a>
 	</td>
         <td>
 		<a href="<?php echo $web_path; ?>/admin/preferences.php?action=user&amp;user_id=<?php echo $user->username; ?>">
-			<?php echo _("Prefs"); ?>
+			<?php echo get_user_icon('preferences'); ?>
 		</a>
 	</td>
 	<td>
 		<a href="<?php echo $web_path; ?>/stats.php?user_id=<?php echo $user->username; ?>">
-			<?php echo _("Stats"); ?>
+			<?php echo get_user_icon('statistics'); ?>
 		</a>
 	</td>
 	<?php
 	//FIXME: Fix this for the extra permission levels
 	if ($user->disabled == '1') { 
-		echo "<td><a href=\"".$web_path."/admin/users.php?action=update&amp;user=$user->username&amp;level=enabled\">" . _("Enable") . "</a></td>";
+		echo "<td><a href=\"".$web_path."/admin/users.php?action=update&amp;user=$user->username&amp;level=enabled\">" . get_user_icon('enable') . "</a></td>";
 	}
 	else {
-		echo "<td><a href=\"".$web_path."/admin/users.php?action=update&amp;user=$user->username&amp;level=disabled\">" . _("Disable") ."</a></td>";
+		echo "<td><a href=\"".$web_path."/admin/users.php?action=update&amp;user=$user->username&amp;level=disabled\">" . get_user_icon('disable') ."</a></td>";
 	}
 	?>
 	<td>
 		<a href="<?php echo $web_path; ?>/admin/users.php?action=delete&amp;user=<?php echo $user->username; ?>">
-		<?php echo _("delete"); ?>
+		<?php echo get_user_icon('delete'); ?>
 		</a>
 	</td>
        <?php

@@ -1312,4 +1312,27 @@ function show_box_bottom() {
 
 } // show_box_bottom
 
+/**
+ * get_user_icon
+ * this function takes a name and a returns either a text representation
+ * or an <img /> tag 
+ */
+function get_user_icon($name) { 
+
+	$icon_name = 'icon_' . $name . '.gif';
+
+	if (file_exists(conf('prefix') . '/themes/' . $GLOBALS['theme']['path'] . '/images/' . $icon_name)) { 
+		$img_url = conf('web_path') . conf('theme_path') . '/images/' . $icon_name;
+	}
+	else { 
+		$img_url = conf('web_path') . '/images/' . $icon_name; 
+	}
+
+	$string = "<img src=\"$img_url\" border=\"0\" alt=\"$name\" title=\"$name\" />";
+
+	return $string;
+
+} // show_icon
+
+
 ?>

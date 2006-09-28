@@ -51,17 +51,6 @@ function show_manage_users () {
 } // show_manage_users()
 
 
-/*!
-	@function show_user_form
-	@discussion shows the user form
-*/
-function show_user_form ($username, $fullname, $email, $access, $type, $error) {
-
-	require(conf('prefix').'/templates/userform.inc');
-    
-} // show_user_form()
-
-
 /*
  * show_change_password
  *

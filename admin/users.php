@@ -1,8 +1,7 @@
 <?php
-
 /*
 
- Copyright (c) 2001 - 2005 Ampache.org
+ Copyright (c) 2001 - 2006 Ampache.org
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
@@ -29,7 +28,7 @@
 
 require_once ('../lib/init.php');
 
-if (!$user->has_access(100)) { 
+if (!$GLOBALS['user']->has_access(100)) { 
 	access_denied();
 }
 
@@ -43,17 +42,16 @@ $user_id = scrub_in($_REQUEST['user']);
 $temp_user = new User($user_id);
  
 switch ($action) {
-    case 'edit':
-        if (conf('demo_mode')) { break; }
-	show_user_form($temp_user->username, 
-		$temp_user->fullname,
-		$temp_user->email,
-		$temp_user->access,
-		'edit_user',
-		'');
+	case 'edit':
+        	if (conf('demo_mode')) { break; }
+		$username	= $temp_user->username;
+		$fullname	= $temp_user->fullname;
+		$email		= $temp_user->email;
+		$access		= $temp_user->access;
+		$id		= $temp_user->id;
+		require_once(conf('prefix') . '/templates/show_edit_user.inc.php');
 	break;
-
-    case 'update_user':
+	case 'update_user':
 	        if (conf('demo_mode')) { break; }
 
 		/* Clean up the variables */
@@ -162,20 +160,19 @@ switch ($action) {
 	show_user_form('','','','','new_user','');
 	break;
 
-    case 'update':
-    case 'disabled':
-        if (conf('demo_mode')) { break; }
-	$level = scrub_in($_REQUEST['level']);
-	$thisuser = new User($_REQUEST['user']);
-	if ($GLOBALS['user']->has_access(100)) { 
-		$thisuser->update_access($level);
-	} 
-	show_manage_users();
+	case 'update':
+	case 'disabled':
+	        if (conf('demo_mode')) { break; }
+		$level = scrub_in($_REQUEST['level']);
+		$thisuser = new User($_REQUEST['user']);
+		if ($GLOBALS['user']->has_access(100)) { 
+			$thisuser->update_access($level);
+		} 
+		show_manage_users();
 	break;
-
-    default:
-	show_manage_users();
-
+	default:
+		show_manage_users();
+	break;
 }
 
 /* Show the footer */

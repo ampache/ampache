@@ -21,23 +21,23 @@
 */
 
 if ($type === 'new_user') { 
-	$userfield = "<input type=\"text\" name=\"new_username\" size=\"30\" value=\"$username\" />";
-	$title = _("Adding a New User");
+	$userfield = "<input type=\"text\" name=\"new_username\" size=\"30\" value=\"" . scrub_out($username) . "\" />";
+	$title = _('Adding a New User');
 }
 else {
-	$userfield = $username;
-	$title = _("Editing existing User");
+	$userfield = scrub_out($username);
+	$title = _('Editing existing User');
 }
 ?>
 
 <br />
-<div class="header2"><?php echo $title; ?></div>
+<?php show_box_top($title); ?>
 <?php $GLOBALS['error']->print_error('general'); ?>
 <form name="update_user" method="post" action="<?php echo conf('web_path') . "/admin/users.php"; ?>">
-<table class="text-box" cellspacing="0" cellpadding="0" border="0">
+<table cellspacing="0" cellpadding="0" border="0">
 <tr>
 	<td>
-		<?php echo  _("Username"); ; ?>:
+		<?php echo  _('Username'); ?>:
 	</td>
 	<td>
 		<?php echo $userfield; ?>
@@ -45,22 +45,22 @@ else {
 	</td>
 </tr>
 <tr>
-	<td><?php echo  _("Full Name"); ; ?>:</td>
+	<td><?php echo  _('Full Name'); ?>:</td>
 	<td>
-		<input type="text" name="new_fullname" size="30" value="<?php echo $fullname; ?>" />
+		<input type="text" name="new_fullname" size="30" value="<?php echo scrub_out($fullname); ?>" />
 	</td>
 </tr>
 <tr>
 	<td>
-		<?php echo  _("E-mail"); ?>:
+		<?php echo  _('E-mail'); ?>:
 	</td>
 	<td>
-		<input type="text" name="new_email" size="30" value="<?php echo $email; ?>" />
+		<input type="text" name="new_email" size="30" value="<?php echo scrub_out($email); ?>" />
 	</td>
 </tr>
 <tr>
 	<td>
-		<?php echo  _("Password"); ?> :
+		<?php echo  _('Password'); ?> :
 	</td>
 	<td>
 		<input type="password" name="new_password_1" size="30" value="" />
@@ -69,7 +69,7 @@ else {
 </tr>
 <tr>
 	<td>
-		<?php echo  _("Confirm Password"); ?>:
+		<?php echo  _('Confirm Password'); ?>:
 	</td>
 	<td>
 		<input type="password" name="new_password_2" size="30" value="" />
@@ -77,7 +77,7 @@ else {
 </tr>
 <tr>
 	<td>
-		<?php echo  _("User Access Level"); ; ?>:
+		<?php echo  _('User Access Level'); ?>:
 	</td>
 	<td>
 		<select name="user_access">
@@ -91,12 +91,13 @@ else {
 <?php
 if ($type == 'new_user') {
 	echo "<input type=\"hidden\" name=\"action\" value=\"add_user\" />";
-	echo "<input type=\"submit\" value=\"" . _("Add User") . "\" />";
+	echo "<input type=\"submit\" value=\"" . _('Add User') . "\" />";
 }
 else {
 	echo "<input type=\"hidden\" name=\"action\" value=\"update_user\" />\n";
-	echo "<input type=\"submit\" value=\"" . _("Update User") . "\" />\n";
-	echo "<input type=\"hidden\" name=\"new_username\" value=\"$username\" />";
+	echo "<input type=\"submit\" value=\"" . _('Update User') . "\" />\n";
+	echo "<input type=\"hidden\" name=\"new_username\" value=\"$id\" />";
 }
 ?>
 </form>
+<?php show_box_bottom(); ?>
