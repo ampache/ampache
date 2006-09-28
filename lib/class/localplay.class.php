@@ -242,6 +242,43 @@ class Localplay {
 
 	} // add
 
+	/**
+	 * repeat
+	 * This turns the repeat feature of a localplay method on or 
+	 * off, takes a 0/1 value
+	 */
+	function repeat($state) { 
+
+		$function = $this->_function_map['repeat'];
+
+		$data = $this->_player->$function($state);
+
+		if (!$data) { 
+			debug_event('localplay',"Error Unable to set Repeat to $state",'1');
+		}
+
+		return $data;
+
+	} // repeat
+
+	/**
+ 	 * random
+	 * This turns on the random feature of a localplay method
+	 * It takes a 0/1 value 
+	 */
+	function random($state) { 
+		
+		$function = $this->_function_map['random'];
+
+		$data = $this->_player->$function($state); 
+
+		if (!$data) { 
+			debug_event('localplay',"Error Unable to set Random to $state",'1');
+		}
+	
+		return $data;
+
+	} // random
 
 	/**
 	 * status
@@ -484,6 +521,30 @@ class Localplay {
 		return true;
 
 	} // delete_all
+
+	/**
+	 * get_user_state
+	 * This function returns a user friendly version
+	 * of the current player state
+	 */
+	function get_user_state($state) { 
+	
+		switch ($state) { 
+			case 'play':
+				return _('Now Playing');
+			break;
+			case 'stop':
+				return _('Stopped');
+			break;
+			case 'pause':
+				return _('Paused');
+			break;
+			default:
+				return _('Unknown');
+			break;
+		} // switch on state	
+
+	} // get_user_state
 
 
 } //end localplay class

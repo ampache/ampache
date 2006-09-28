@@ -224,6 +224,12 @@ switch ($action) {
 		break;
 		
         default:
+		/* Do some basic tests here... most common error, no mysql */
+		if (!function_exists('mysql_query')) { 
+			header ("Location: test.php");
+		}
+
+
 		/* Show the language options first */
 		require_once('templates/show_install_lang.inc.php');
 	break;

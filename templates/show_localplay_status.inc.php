@@ -36,9 +36,38 @@ $track_name = $status['track_artist'] . ' - ' . $status['track_album'] . ' - ' .
 $track_name = ltrim(ltrim($track_name,' - '));
 
 ?>
-<?php echo _('State') .": ". ucfirst($status['state']); ?><br />
-<?php echo _('Repeat') . ":" . print_boolean($status['repeat']); ?>&nbsp;|&nbsp;
-<?php echo _('Random') . ":" . print_boolean($status['random']); ?><br />
-<?php echo _('Volume') . ":" . $status['volume']; ?><br />
+<strong><?php echo $localplay->get_user_state($status['state']) ?></strong><br />
+&nbsp;&nbsp;<?php echo '[' . $status['track'] . '] - ' . $track_name . '<br />'; ?>
+<div align="center"><?php require (conf('prefix') . '/templates/show_localplay_control.inc.php'); ?></div>
+<div align="center">
+	<?php if ($localplay->has_function('volume_up')) { ?>
+	<span id="up_button" onclick="ajaxPut('<?php echo $ajax_url; ?>?action=localplay&amp;cmd=volume_up<?php echo $required_info; ?>','localplay_state');return true;">
+	        <img src="<?php echo $web_path; ?>/images/localplay/volup.gif" alt="volume up" />
+	</span>
+	<?php } ?>
+	<?php if ($localplay->has_function('volume_down')) { ?>
+	<span id="down_button" onclick="ajaxPut('<?php echo $ajax_url; ?>?action=localplay&amp;cmd=volume_down<?php echo $required_info; ?>','localplay_state');return true;">
+	        <img src="<?php echo $web_path; ?>/images/localplay/voldn.gif" alt="volume down" />
+	</span>
+	<?php } ?>
+	<?php if ($localplay->has_function('volume_mute')) { ?>
+	<span id="mute_button" onclick="ajaxPut('<?php echo $ajax_url; ?>?action=localplay&amp;cmd=volume_mute<?php echo $required_info; ?>','localplay_state');return true;">
+	        <img src="<?php echo $web_path; ?>/images/localplay/volmute.gif" alt="volume mute" />
+	</span>
+	<?php } ?>
+	<br />
+	<?php echo _('Volume') . ":" . $status['volume']; ?>
+</div>
 <br />
-<span class="header2"><?php echo _('Now Playing') . '</span><br />[' . $status['track'] . '] - ' . $track_name . '<br />'; ?>
+<?php if ($localplay->has_function('repeat')) { ?>
+	<?php echo _('Repeat') . ":" . print_boolean($status['repeat']); ?> | 
+	<a href="<?php echo $web_path; ?>/localplay.php?action=repeat&value=<?php echo invert_boolean($status['repeat']); ?>">
+		<?php echo print_boolean(invert_boolean($status['repeat'])); ?>
+	</a><br />
+	<?php } ?>
+<?php if ($localplay->has_function('random')) { ?>
+	<?php echo _('Random') . ":" . print_boolean($status['random']); ?> | 
+	<a href="<?php echo $web_path; ?>/localplay.php?action=random&value=<?php echo invert_boolean($status['random']); ?>">
+		<?php echo print_boolean(invert_boolean($status['random'])); ?>
+	</a><br />
+<?php } ?>

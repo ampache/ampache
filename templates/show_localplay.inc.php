@@ -24,15 +24,22 @@ $web_path = conf('web_path');
 $localplay = init_localplay();
 $songs = $localplay->get();
 ?>
-
 <?php show_box_top(ucfirst($localplay->type) . ' ' . _('Localplay')); ?>
-<ul class="text-action">
-<?php if ($localplay->has_function('delete_all')) { ?>
-	<li><a href="<?php echo $web_path; ?>/localplay.php?action=delete_all"><?php echo _('Clear Playlist'); ?></a></li>
-<?php } ?>
-</ul>
-<?php require_once(conf('prefix') . '/templates/show_localplay_status.inc.php'); ?>
+<table>
+<tr>
+	<td valign="top">
+		<strong><?php echo _('Actions'); ?>:</strong><br />
+		<?php if ($localplay->has_function('delete_all')) { ?>
+			&nbsp;&nbsp;&nbsp;<a href="<?php echo $web_path; ?>/localplay.php?action=delete_all"><?php echo _('Clear Playlist'); ?></a>
+		<?php } ?>
+	</td><td>
+		<?php require_once(conf('prefix') . '/templates/show_localplay_status.inc.php'); ?>
+	</td>
+</tr>
+</table>
 <?php show_box_bottom(); ?>
+
+
 <?php show_box_top(_('Current Playlist')); ?>
 <table class="border" cellspacing="0" border="0">
 <tr class="table-header">

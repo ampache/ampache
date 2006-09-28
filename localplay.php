@@ -60,6 +60,16 @@ switch ($action) {
 		$body	= '';
 		show_confirmation($title,$body,$url);
 	break;
+	case 'repeat':
+		$localplay = init_localplay(); 
+		$localplay->repeat(make_bool($_REQUEST['value']));
+		require_once (conf('prefix') . '/templates/show_localplay.inc.php');
+	break;
+	case 'random':
+		$localplay = init_localplay(); 
+		$localplay->random(make_bool($_REQUEST['value']));
+		require_once (conf('prefix') . '/templates/show_localplay.inc.php');
+	break;
 	default: 
 		require_once (conf('prefix') . '/templates/show_localplay.inc.php');
 	break;

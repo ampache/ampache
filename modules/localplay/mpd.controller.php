@@ -72,8 +72,8 @@ class AmpacheMpd {
 		$map['pause']		= 'pause';
 		$map['volume_up']       = 'volume_up';
 		$map['volume_down']	= 'volume_down';
-		$map['loop']            = 'loop';
 		$map['random']          = 'random';
+		$map['repeat']		= 'loop';
 
 		/* Optional Functions */
 		$map['move']		= 'move';
@@ -268,10 +268,10 @@ class AmpacheMpd {
         * loop
         * This tells MPD to set the repeating the playlist (i.e. loop) to either on or off
         */
-       function loop($onoff) {
-
-               if (is_null($this->_mpd->SetRepeat($onoff))) { return false; }
-               return true;
+       function loop($state) {
+	
+		if (is_null($this->_mpd->SetRepeat($state))) { return false; }
+       		return true;
 
        } // loop
 

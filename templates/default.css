@@ -584,6 +584,7 @@ li.current-rating{
 .np_row {
 	padding-top: 3px;
 	padding-bottom: 3px;
+	display: block;
 }
 .np_cell {
 	display: inline;

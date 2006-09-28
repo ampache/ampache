@@ -27,7 +27,7 @@ $required_info 	= "&amp;user_id=" . $GLOBALS['user']->id . "&amp;sessid=" . sess
 $ajax_url	= $web_path . '/server/ajax.server.php';
 
 ?>
-<div class="localplaycontrol" style="display:table-cell;cursor:pointer;border:1px solid black;padding:2px;">
+<div class="localplaycontrol" style="display:table-cell;cursor:pointer;padding:2px;">
 <?php if ($localplay->has_function('prev')) { ?>
 <span id="prev_button" onclick="ajaxPut('<?php echo $ajax_url; ?>?action=localplay&amp;cmd=prev<?php echo $required_info; ?>','localplay_state');return true;">
 	<img src="<?php echo $web_path; ?>/images/localplay/prev.gif" alt="prev" />
@@ -47,22 +47,6 @@ $ajax_url	= $web_path . '/server/ajax.server.php';
 <?php if ($localplay->has_function('next')) { ?>
 <span id="next_button" onclick="ajaxPut('<?php echo $ajax_url; ?>?action=localplay&amp;cmd=next<?php echo $required_info; ?>','localplay_state');return true;">
 	<img src="<?php echo $web_path; ?>/images/localplay/next.gif" alt="next" />
-</span>
-<?php } ?>
-<br />
-<?php if ($localplay->has_function('volume_up')) { ?>
-<span id="up_button" onclick="ajaxPut('<?php echo $ajax_url; ?>?action=localplay&amp;cmd=volume_up<?php echo $required_info; ?>','localplay_state');return true;">
-	<img src="<?php echo $web_path; ?>/images/localplay/volup.gif" alt="volume up" />
-</span>
-<?php } ?>
-<?php if ($localplay->has_function('volume_down')) { ?>
-<span id="down_button" onclick="ajaxPut('<?php echo $ajax_url; ?>?action=localplay&amp;cmd=volume_down<?php echo $required_info; ?>','localplay_state');return true;">
-	<img src="<?php echo $web_path; ?>/images/localplay/voldn.gif" alt="volume down" />
-</span>
-<?php } ?>
-<?php if ($localplay->has_function('volume_mute')) { ?>
-<span id="mute_button" onclick="ajaxPut('<?php echo $ajax_url; ?>?action=localplay&amp;cmd=volume_mute<?php echo $required_info; ?>','localplay_state');return true;">
-	<img src="<?php echo $web_path; ?>/images/localplay/volmute.gif" alt="volume mute" />
 </span>
 <?php } ?>
 </div>

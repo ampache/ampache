@@ -944,4 +944,19 @@ function print_boolean($value) {
 
 } // print_boolean
 
+/**
+ * invert_boolean
+ * This returns the opposite of what you've got
+ */
+function invert_boolean($value) { 
+	
+	if (make_bool($value)) { 
+		return '0';
+	}
+	else { 
+		return '1';
+	}
+
+} // invert_boolean
+
 ?>

@@ -4,6 +4,10 @@
 
 --------------------------------------------------------------------------
   v.3.3.2
+	- Added check for MySQL support to first install page, redirects
+		to /test.php if mysql support is non-existant
+	- Added ability to turn Random/Repeat on and off in localplay
+		and also improved localplay page a tiny bit.
 	- Fixed a problem with pagination on the admin/users.php page
 	- Added ability to turn on User/IP/Date Login history tracking 
 		viewable only by Administrators
