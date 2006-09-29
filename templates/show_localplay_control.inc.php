@@ -29,23 +29,23 @@ $ajax_url	= $web_path . '/server/ajax.server.php';
 ?>
 <div class="localplaycontrol" style="display:table-cell;cursor:pointer;padding:2px;">
 <?php if ($localplay->has_function('prev')) { ?>
-<span id="prev_button" onclick="ajaxPut('<?php echo $ajax_url; ?>?action=localplay&amp;cmd=prev<?php echo $required_info; ?>','localplay_state');return true;">
+<span class="prev_button" onclick="ajaxPut('<?php echo $ajax_url; ?>?action=localplay&amp;cmd=prev<?php echo $required_info; ?>','localplay_state');return true;">
 	<img src="<?php echo $web_path; ?>/images/localplay/prev.gif" alt="prev" />
 </span>
 <?php } ?>
-<span id="stop_button" onclick="ajaxPut('<?php echo $ajax_url; ?>?action=localplay&amp;cmd=stop<?php echo $required_info; ?>','localplay_state');return true;">
+<span class="stop_button" onclick="ajaxPut('<?php echo $ajax_url; ?>?action=localplay&amp;cmd=stop<?php echo $required_info; ?>','localplay_state');return true;">
 	<img src="<?php echo $web_path; ?>/images/localplay/stop.gif" alt="stop" />
 </span>
 <?php if ($localplay->has_function('pause')) { ?>
-<span id="pause_button" onclick="ajaxPut('<?php echo $ajax_url; ?>?action=localplay&amp;cmd=pause<?php echo $required_info; ?>','localplay_state');return true;">
+<span class="pause_button" onclick="ajaxPut('<?php echo $ajax_url; ?>?action=localplay&amp;cmd=pause<?php echo $required_info; ?>','localplay_state');return true;">
 	<img src="<?php echo $web_path; ?>/images/localplay/pause.gif" alt="pause" />
 </span>
 <?php } ?>
-<span id="play_button" onclick="ajaxPut('<?php echo $ajax_url; ?>?action=localplay&amp;cmd=play<?php echo $required_info; ?>','localplay_state');return true;">
+<span class="play_button" onclick="ajaxPut('<?php echo $ajax_url; ?>?action=localplay&amp;cmd=play<?php echo $required_info; ?>','localplay_state');return true;">
 	<img src="<?php echo $web_path; ?>/images/localplay/play.gif" alt="play" />
 </span>
 <?php if ($localplay->has_function('next')) { ?>
-<span id="next_button" onclick="ajaxPut('<?php echo $ajax_url; ?>?action=localplay&amp;cmd=next<?php echo $required_info; ?>','localplay_state');return true;">
+<span class="next_button" onclick="ajaxPut('<?php echo $ajax_url; ?>?action=localplay&amp;cmd=next<?php echo $required_info; ?>','localplay_state');return true;">
 	<img src="<?php echo $web_path; ?>/images/localplay/next.gif" alt="next" />
 </span>
 <?php } ?>

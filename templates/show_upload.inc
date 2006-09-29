@@ -29,7 +29,6 @@
 <tr>
 	<td>
 		<b><?php echo _('The following Audio file formats are supported'); ?></b>
-		</p>
 		<ul>
 			<li>OGG</li>
 			<li>Mp3</li>
