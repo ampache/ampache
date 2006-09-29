@@ -23,13 +23,16 @@
 $no_session = true;
 require_once('lib/init.php');
 
+$web_path = conf('web_path');
+
 /* Keep them out if they shouldn't be here */
 if(!conf('allow_public_registration') || conf('demo_mode'))  {
 	access_denied();
 }
 ?>
 <html><head>
-<?php show_template('style'); ?>
+<link rel="stylesheet" href="<?php echo $web_path; ?>/templates/default.css" type="text/css" />
+<link rel="stylesheet" href="<?php echo $web_path; ?><?php echo conf('theme_path'); ?>/templates/default.css" type="text/css" />
 <head><body>
 <?php 
 

@@ -25,13 +25,12 @@
 	@discussion BIG now playing and (soon) on deck
 */
 require_once('lib/init.php');
-show_template('style');
+
 
 if (conf('refresh_interval')) { 
 	echo '<script language="JavaScript" type="text/javascript"> var mpd_elapsed = '.$myMpd->current_track_position." </script>\n";
 	echo '<script language="JavaScript" type="text/javascript"> var mpd_song_length = '.$myMpd->current_track_length." </script>\n";
 	echo '<script language="JavaScript" type="text/javascript"> var mpd_state = "'.$myMpd->state.'" </script>';
-	show_template('javascript_refresh'); 
 	}
 ?>
 

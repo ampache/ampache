@@ -30,6 +30,7 @@
 $no_session = true;
 require_once ('lib/init.php');
 
+$web_path = conf('web_path');
 
 /* Check Perms */
 if (!conf('allow_public_registration') || conf('demo_mode')) {
@@ -161,7 +162,10 @@ switch ($action) {
 				'Please check your e-mail for further information';
 
 		send_confirmation($username, $fullname, $email, $pass1, $validation);
-		show_template('style');
+		?>
+		<link rel="stylesheet" href="<?php echo $web_path; ?>/templates/default.css" type="text/css" />
+		<link rel="stylesheet" href="<?php echo $web_path; ?><?php echo conf('theme_path'); ?>/templates/default.css" type="text/css" />
+		<?php
 		show_confirmation(_('Registration Complete'),$message,'/login.php');	
 	break;
 	case 'show_add_user':
