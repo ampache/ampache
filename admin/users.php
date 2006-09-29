@@ -158,6 +158,7 @@ switch ($action) {
 	break;
     case 'show_add_user':
         if (conf('demo_mode')) { break; }
+	$type = 'new_user';
 	require_once(conf('prefix') . '/templates/show_edit_user.inc.php');
 	break;
 
