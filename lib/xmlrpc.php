@@ -26,7 +26,7 @@
  * @package XMLRPC
  * @catagory Server
  * @author Karl Vollmer
- * @copyright Ampache.org 2001 - 2005
+ * @copyright Ampache.org 2001 - 2006
  */
 
 /**
@@ -38,6 +38,14 @@
  */
 function remote_catalog_query($m) {
 
+	$var = $m->getParam(0);
+	$key = $var->scalarval();
+
+	/* Verify the KEY */
+	if (!remote_key_verify($key,$_SERVER['REMOTE_ADDR'],'5')) { 
+		return new xmlrpcresp(0,'503','Key/IP Mis-match Access Denied');			
+	}
+	
         $result = array();
 
         // we only want to send the local entries
@@ -53,7 +61,7 @@ function remote_catalog_query($m) {
 	set_time_limit(0);
         $encoded_array = php_xmlrpc_encode($result);
 	
-	if (conf('debug')) { log_event($_SESSION['userdata']['username'],' xmlrpc-server ',"Encoded Catalogs: " . count($result)); }
+	debug_event('xmlrpc-server',"Encoded Catalogs: " . count($result),'3');
 	
         return new xmlrpcresp($encoded_array);
 
@@ -71,8 +79,16 @@ function remote_catalog_query($m) {
  */
 function remote_song_query($params) { 
 
-	$start	= $params->params['0']->me['int'];
-	$step 	= $params->params['1']->me['int'];
+        $var = $parms->getParam(0);
+        $key = $var->scalarval();
+
+        /* Verify the KEY */
+        if (!remote_key_verify($key,$_SERVER['REMOTE_ADDR'],'5')) {           
+                return new xmlrpcresp(0,'503','Key/IP Mis-match Access Denied');
+        }
+
+	$start	= $params->params['1']->me['int'];
+	$step 	= $params->params['2']->me['int'];
 	
 	// Get me a list of all local catalogs
 	$sql = "SELECT catalog.id FROM catalog WHERE catalog_type='local'";
@@ -131,8 +147,18 @@ function remote_song_query($params) {
  */
 function remote_session_verify($params) { 
 
+        $var = $parms->getParam(0);
+        $key = $var->scalarval();
+
+        /* Verify the KEY */
+        if (!remote_key_verify($key,$_SERVER['REMOTE_ADDR'],'5')) {           
+                return new xmlrpcresp(0,'503','Key/IP Mis-match Access Denied');
+        }
+
+
 	/* We may need to do this correctly.. :S */
-	$sid	  	= $params->params['0']->me['string'];
+	$var	= $params->getParam(1);
+	$sid	= $var->scalarval();
 
 	if (session_exists($sid)) { 
 		$data = true;		
@@ -167,5 +193,24 @@ function remote_server_denied() {
         return new xmlrpcresp($encoded_array);
 
 } // remote_server_denied
+
+/**
+ * remote_key_verify
+ * This does a ACCESS control check against
+ * the incomming xml-rpc request. it takes the 
+ * passed key and makes sure the IP+KEY+LEVEL 
+ * matches in the local ACL
+ */
+function remote_key_verify($ip,$key,$level) { 
+
+	$access = new Access();
+	if ($access->check('xml-rpc',$ip,'',$key,$level)) { 
+		return true;
+	}
+
+	return false;
+
+} // remote_key_verify
+
 
 ?>

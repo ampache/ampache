@@ -164,10 +164,17 @@ class Access {
 		$level	= sql_escape($level);
 
 		switch ($type) { 
+			/* This is here because we want to at least check IP before even creating the xml-rpc server
+			 * however we don't have the key that was passed yet so we've got to do just ip
+			 */
+			case 'init-xml-rpc':
+				$sql = "SELECT id FROM access_list" .
+					" WHERE `start` <= '$ip' AND `end` >= '$ip' AND `type`='xml-rpc' AND `level` >= '$level'";
+			break;
 			case 'xml-rpc':
 				$sql = "SELECT id FROM access_list" . 
 					" WHERE `start` <= '$ip' AND `end` >= '$ip'" . 
-					" AND  `key` = '$key' AND `level` >= '$level'";
+					" AND  `key` = '$key' AND `level` >= '$level' AND `type`='xml-rpc'";
 			break;
 			case 'network':
 			case 'interface':

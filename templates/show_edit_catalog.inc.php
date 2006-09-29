@@ -20,14 +20,11 @@
 
 */
 ?>
-
-<br />
-<div class="header2"><?php echo _("Settings for catalog in"); echo $catalog->path; ?></div><br />
-<div class="text-box">
-<form method="get" action="<?php echo conf('web_path'); ?>/admin/catalog.php" enctype="multipart/form-data">
-<table class="tabledata" cellspacing="0" cellpadding="0" border="0">
+<?php show_box_top(_('Settings for') . ' ' . $catalog->name . ' (' . $catalog->path . ')'); ?>
+<form method="post" action="<?php echo conf('web_path'); ?>/admin/catalog.php" enctype="multipart/form-data">
+<table cellspacing="0" cellpadding="0" border="0">
 <tr>
-	<td><?php echo _("Name"); ?>:</td>
+	<td><?php echo _('Name'); ?>:</td>
 	<td><input size="60" type="text" name="name" value="<?php echo scrub_out($catalog->name); ?>"></input></td>
 	<td style="vertical-align:top; font-family: monospace;" rowspan="5">
 		<strong><?php echo _("Auto-inserted Fields"); ?>:</strong><br />
@@ -43,20 +40,20 @@
 	</td>
 </tr>
 <tr>
-	<td><?php echo _("ID3 set command"); ?>:</td>
+	<td><?php echo _('XML-RPC Key'); ?>:</td>
 	<td>
-		<input size="60" type="text" name="id3_set_command" value="<?php echo scrub_out($catalog->id3_set_command); ?>" />
+		<input size="30" type="text" name="key" value="<?php echo scrub_out($catalog->key); ?>" />*<span class="error">Required for Remote Catalogs</span>
 	</td>
 </tr>
 <tr>
-	<td><?php echo _("Filename pattern"); ?>:</td>
+	<td><?php echo _('Filename pattern'); ?>:</td>
 	<td>
 		<input size="60" type="text" name="rename_pattern" value="<?php echo scrub_out($catalog->rename_pattern); ?>" />
 	</td>
 </tr>
 <tr>
 	<td>
-		<?php echo _("Folder Pattern"); ?>:<br /><?php echo _("(no leading or ending '/')"); ?>
+		<?php echo _('Folder Pattern'); ?>:<br /><?php echo _('(no leading or ending \'/\')'); ?>
 	</td>
 	<td>
 		<input size="60" type="text" name="sort_pattern" value="<?php echo scrub_out($catalog->sort_pattern);?>" />
@@ -67,9 +64,9 @@
 	<td>
 	<input type="hidden" name="catalog_id" value="<?php echo $catalog->id; ?>" />
 	<input type="hidden" name="action" value="update_catalog_settings" />
-	<input type="submit" value="<?php echo _("Save Catalog Settings"); ?>" />
+	<input type="submit" value="<?php echo _('Save Catalog Settings'); ?>" />
 	</td>
 </tr>
 </table>
 </form>
-</div>
+<?php show_box_bottom(); ?>

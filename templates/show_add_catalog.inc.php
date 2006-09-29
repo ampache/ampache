@@ -20,7 +20,6 @@
 
 */
 
-$default_id3 = "/usr/bin/id3v2 -a &quot;%a&quot; -A &quot;%A&quot; -t &quot;%t&quot; -g %g -y %y -T %T -c &quot;%c&quot; %filename";
 $default_rename = "%a - %T - %t";
 $default_sort = "%a/%A";
 
@@ -61,7 +60,10 @@ $default_sort = "%a/%A";
 		</select>
 	</td>
 </tr>
-
+<tr>
+	<td><?php echo _('XML-RPC Key'); ?>: </td>
+	<td><input size="30" type="text" name="key" value="" /><span class="error">*<?php echo _('Required for Remote Catalogs'); ?></span></td>
+</tr>
 <tr>
 	<td><?php echo _("Filename Pattern"); ?>: </td>
 	<td><input size="60" type="text" name="rename_pattern" value="<?php echo $default_rename; ?>" /></td>

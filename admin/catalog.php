@@ -188,7 +188,8 @@ switch ($_REQUEST['action']) {
         	if (conf('demo_mode')) { break; }
 
 		/* Update the catalog */
-		Catalog::update_settings($_REQUEST);
+		$catalog = new Catalog();
+		$catalog->update_settings($_REQUEST);
 		
 		$url 	= conf('web_path') . '/admin/index.php';
 		$title 	= _('Catalog Updated');
@@ -210,7 +211,7 @@ switch ($_REQUEST['action']) {
 			/* Create the Catalog */
 			$catalog->new_catalog($_REQUEST['path'],
 					$_REQUEST['name'],
-					$_REQUEST['id3set_command'],
+					$_REQUEST['key'],
 					$_REQUEST['rename_pattern'],
 					$_REQUEST['sort_pattern'],
 					$_REQUEST['type'],
@@ -227,7 +228,7 @@ switch ($_REQUEST['action']) {
 		}
 		else {
 			$error = "Please complete the form.";
-			include(conf('prefix') . '/templates/add_catalog.inc');
+			include(conf('prefix') . '/templates/show_add_catalog.inc.php');
 		}
 	break;
 	case 'clear_stats':
@@ -275,7 +276,7 @@ switch ($_REQUEST['action']) {
 		show_confirmation(_('Delete Catalog'),_('Do you really want to delete this catalog?'),$nexturl,1);
 	break;
 	case 'show_customize_catalog':
-		include(conf('prefix') . '/templates/customize_catalog.inc');
+		include(conf('prefix') . '/templates/show_edit_catalog.inc.php');
 	break;
 	case 'gather_album_art':
 	        flush();

@@ -92,15 +92,13 @@ function show_duplicate_songs($flags,$search_type) {
 	@discussion
 */
 function show_duplicate_searchbox($search_type) {
+// OMFG KillingVollmer++ needs to be fixed in a desperate way
 ?>
-<br />
+<?php show_box_top(_('Find Duplicates')); ?>
 <form name="songs" action="<?php echo conf('web_path'); ?>/admin/duplicates.php" method="post" enctype="multipart/form-data" >
-<table class="border" cellspacing="0" cellpadding="3" border="0" width="450">
-	<tr class="table-header">
-		<td colspan="2"><b><?php echo _("Find Duplicates"); ?></b></td>
-	</tr>
-	<tr class="even">
-		<td><?php echo _("Search Type"); ?>:</td>
+<table cellspacing="0" cellpadding="3" border="0" width="450">
+	<tr>
+		<td valign="top"><?php echo _('Search Type'); ?>:</td>
 		<td>
 			<?php
 
@@ -123,16 +121,16 @@ function show_duplicate_searchbox($search_type) {
 			?>
 		</td>
 	</tr>
-	<tr class="odd">
+	<tr>
 		<td></td>
 		<td>
 			<input type="hidden" name="action" value="search" />
-			<input type="submit" value="<?php echo _("Search"); ?>" />
+			<input type="submit" value="<?php echo _('Search'); ?>" />
 		</td>
 	</tr>
 </table>
 </form>
-<br />
+<?php show_box_bottom(); ?>
 <?php
 } // show_duplicate_searchbox
 ?>

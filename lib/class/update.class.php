@@ -282,11 +282,16 @@ class Update {
 
 		$update_string = '- Reworked All Indexes on tables, hopefully leading to performance improvements.<br />' .
 				'- Added id int(11) UNSIGNED fields to a few tables missing it.<br />' . 
+				'- Reworked Access Lists, adding type based ACL\'s and a key for xml-rpc communication.<br />' . 
 				'- Removed DB Based color/font preferences and Theme preferences catagory.<br />';
 
 		$version[] = array('version' => '332012','description' => $update_string);
 
-		$update_string = '- Added live_stream table for radio station support.<br />';
+		$update_string = '- Added live_stream table for radio station support.<br />' .
+				'- Removed id3_set_command from catalog and added xml-rpc key for remote catalogs.<br />' . 
+				'- Added stream/video to enum of object_count for future support.<br />';
+		
+		$version[] = array('version' => '332013','description' => $update_string);
 
 
 		return $version;
@@ -1782,6 +1787,7 @@ class Update {
 	 */
 	function update_332013() { 
 
+		/* Add Live Stream Table */
                 $sql = "CREATE TABLE `live_stream` (" .
                 "`id` INT( 11 ) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY ," .
                 "`name` VARCHAR( 128 ) NOT NULL ," .
@@ -1792,6 +1798,30 @@ class Update {
                 "`frequency` VARCHAR( 32 ) NOT NULL ," .
                 "`call_sign` VARCHAR( 32 ) NOT NULL" .
                 ")";
+		$db_results = mysql_query($sql, dbh());
+
+		/* Add Indexes for this new table */
+		$sql = "ALTER TABLE `live_stream` ADD INDEX `catalog` (`catalog`)";
+		$db_results = mysql_query($sql, dbh());
+
+		$sql = "ALTER TABLE `live_stream` ADD INDEX `genre` (`genre`)";
+		$db_results = mysql_query($sql, dbh());
+
+		$sql = "ALTER TABLE `live_stream` ADD INDEX `name` (`name`)";
+		$db_results = mysql_query($sql,dbh());
+
+		/* Drop id3 set command */
+		$sql = "ALTER TABLE `catalog` DROP `id3_set_command`";
+		$db_results = mysql_query($sql, dbh());
+	
+		$sql = "ALTER TABLE `catalog` ADD `key` VARCHAR( 255 ) NOT NULL";	
+		$db_results = mysql_query($sql, dbh());
+
+		/* Prepare for Video and Stream (comming in next version) */
+		$sql = "ALTER TABLE `ratings` CHANGE `object_type` `object_type` ENUM( 'artist', 'album', 'song', 'steam', 'video' ) NOT NULL DEFAULT 'artist'";
+		$db_results = mysql_query($sql, dbh());
+
+		$this->set_version('db_version','332013');
 
 	} // update_332013
 

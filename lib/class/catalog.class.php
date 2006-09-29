@@ -30,7 +30,7 @@ class Catalog {
 	var $name;
 	var $last_update;
 	var $last_add;
-	var $id3_set_command;
+	var $key;
 	var $rename_pattern;
 	var $sort_pattern;
 	var $catalog_type;
@@ -64,7 +64,7 @@ class Catalog {
 			$this->name        	= $info->name;
 			$this->last_update 	= $info->last_update;
 			$this->last_add	   	= $info->last_add;
-			$this->id3_set_command 	= $info->id3_set_command;
+			$this->key		= $info->key;
 			$this->rename_pattern 	= $info->rename_pattern;
 			$this->sort_pattern 	= $info->sort_pattern;
 			$this->catalog_type	= $info->catalog_type;
@@ -725,11 +725,11 @@ class Catalog {
 
 		$id	= sql_escape($data['catalog_id']);
 		$name	= sql_escape($data['name']);
-		$id3cmd	= sql_escape($data['id3cmd']);
+		$key	= sql_escape($data['key']);
 		$rename	= sql_escape($data['rename_pattern']);
 		$sort	= sql_escape($data['sort_pattern']);
 		
-		$sql = "UPDATE catalog SET name='$name', id3_set_command='$id3cmd', rename_pattern='$rename', " . 
+		$sql = "UPDATE catalog SET name='$name', `key`='$key', rename_pattern='$rename', " . 
 			"sort_pattern='$sort' WHERE id = '$id'";
 		$db_results = mysql_query($sql, dbh());
 
@@ -745,7 +745,7 @@ class Catalog {
 	 * @param $path Root path to start from for catalog
 	 * @param $name Name of the new catalog
 	 */
-	function new_catalog($path,$name, $id3cmd=0, $ren=0, $sort=0, $type=0,$gather_art=0,$parse_m3u=0,$art=array()) {
+	function new_catalog($path,$name, $key=0, $ren=0, $sort=0, $type=0,$gather_art=0,$parse_m3u=0,$art=array()) {
 
 		/* Record the time.. time the catalog gen */
 		$start_time = time();
@@ -760,17 +760,17 @@ class Catalog {
 		$catalog_id = $this->check_catalog($path);
 
 		if (!$catalog_id) {
-			$catalog_id = $this->create_catalog_entry($path,$name,$id3cmd, $ren, $sort, $type);
+			$catalog_id = $this->create_catalog_entry($path,$name,$key, $ren, $sort, $type);
 		}
 
 		/* Setup the $this with the new information */
-		$this->id = $catalog_id;
-		$this->path = $path;
-		$this->name = $name;
-		$this->id3_set_command = ($id3cmd)?$id3cmd:'';
-		$this->rename_pattern = ($ren)?$ren:'';
-		$this->sort_pattern = ($sort)?$sort:'';
-		$this->catalog_type = $type;
+		$this->id 		= $catalog_id;
+		$this->path 		= $path;
+		$this->name 		= $name;
+		$this->key		= $key;
+		$this->rename_pattern 	= ($ren)?$ren:'';
+		$this->sort_pattern 	= ($sort)?$sort:'';
+		$this->catalog_type 	= $type;
 
 		/* Fluf */
 		echo _('Starting Catalog Build') . " [$name]<br />\n";
@@ -1704,7 +1704,7 @@ class Catalog {
 		@param $path The root path for this catalog
 		@param $name The name of the new catalog
 	*/
-	function create_catalog_entry($path,$name,$id3cmd=0,$ren=0,$sort=0, $type='local') {
+	function create_catalog_entry($path,$name,$key=0,$ren=0,$sort=0, $type='local') {
 
 		// Current time
 		$date = time();
@@ -1713,8 +1713,8 @@ class Catalog {
 		$name = sql_escape($name);
 
 		if($id3cmd && $ren && $sort) {
-			$sql = "INSERT INTO catalog (path,name,last_update,id3_set_command,rename_pattern,sort_pattern,catalog_type) " .
-				" VALUES ('$path','$name','$date', '$id3cmd', '$ren', '$sort','$type')";
+			$sql = "INSERT INTO catalog (path,name,last_update,`key`,rename_pattern,sort_pattern,catalog_type) " .
+				" VALUES ('$path','$name','$date', '$key', '$ren', '$sort','$type')";
 		}
 		else {
 			$sql = "INSERT INTO catalog (path,name,last_update) VALUES ('$path','$name','$date')";
