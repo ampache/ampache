@@ -73,7 +73,7 @@ switch ($action) {
 
 	case 'create_db':
 		if (!install_insert_db($username,$password,$hostname,$database)) { 
-			require_once('templates/show_install.inc.php');
+			require_once('templates/show_install.inc');
 			break;
 		}
 
