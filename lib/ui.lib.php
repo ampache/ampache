@@ -869,72 +869,72 @@ function get_location() {
 
 	switch ($location['page']) {
 		case 'index.php':
-			$location['title'] 	= 'Home';
+			$location['title'] 	= _('Home');
 			break;
 		case 'upload.php':
-			$location['title'] 	= 'Upload';
+			$location['title'] 	= _('Upload');
 			break;
 		case 'localplay.php':
-			$location['title'] 	= 'Local Play';
+			$location['title'] 	= _('Local Play');
 			break;
 		case 'randomplay.php':
-			$location['title'] 	= 'Random Play';
+			$location['title'] 	= _('Random Play');
 			break;
 		case 'playlist.php':
-			$location['title'] 	= 'Playlist';
+			$location['title'] 	= _('Playlist');
 			break;
 		case 'search.php':
-			$location['title'] 	= 'Search';
+			$location['title'] 	= _('Search');
 			break;
 		case 'preferences.php':
-			$location['title'] 	= 'Preferences';
+			$location['title'] 	= _('Preferences');
 			break;
-		case 'adminindex.php':
-			$location['title'] 	= 'Admin';
+		case 'admin/index.php':
+			$location['title'] 	= _('Admin-Catalog');
 			$location['section']	= 'admin';
 			break;
-		case 'admincatalog.php':
-			$location['title'] 	= 'Catalog';
+		case 'admin/catalog.php':
+			$location['title'] 	= _('Admin-Catalog');
 			$location['section']	= 'admin';
 			break;
-		case 'adminusers.php':
-			$location['title']	= 'User Management';
+		case 'admin/users.php':
+			$location['title']	= _('Admin-User Management');
 			$location['section']	= 'admin';
 			break;
-		case 'adminmail.php':
-			$location['title']	= 'Mail Users';
+		case 'admin/mail.php':
+			$location['title']	= _('Admin-Mail Users');
 			$location['section']	= 'admin';
 			break;
-		case 'adminaccess.php':
-			$location['title']	= 'Manage Access Lists';
+		case 'admin/access.php':
+			$location['title']	= _('Admin-Manage Access Lists');
 			$location['section']	= 'admin';
 			break;
-		case 'adminpreferences.php':
-			$location['title']	= 'Site Preferences';
+		case 'admin/preferences.php':
+			$location['title']	= _('Admin-Site Preferences');
 			$location['section']	= 'admin';
 			break;
-		case 'adminmodules.php':
-			$location['title']	= 'Manage Modules';
+		case 'admin/modules.php':
+			$location['title']	= _('Admin-Manage Modules');
 			$location['section']	= 'admin';
 			break;
 		case 'browse.php':
-			$location['title']	= 'Browse Music';
+			$location['title']	= _('Browse Music');
 			$location['section']	= 'browse';
 			break;
 		case 'albums.php':
-			$location['title']	= 'Albums';
+			$location['title']	= _('Albums');
 			$location['section']	= 'browse';
 			break;
 		case 'artists.php':
-			$location['title']	= 'Artists';
+			$location['title']	= _('Artists');
 			$location['section']	= 'browse';
 			break;
 		case 'genre.php':
-			$location['title']	= 'Genre';
+			$location['title']	= _('Genre');
 			$location['section']	= 'browse';
 			break;
 		case 'stats.php':
-			$location['title']	= 'Statistics';
+			$location['title']	= _('Statistics');
 			break;
 		default:
 			$location['title'] = '';
