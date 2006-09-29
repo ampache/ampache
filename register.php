@@ -157,7 +157,7 @@ switch ($action) {
 		$validation = str_rand(20);
 		$user_object->update_validation($validation);
 
-		$message = 'Your account has been created. However, this forum requires account activation.' .
+		$message = 'Your account has been created. However, this application requires account activation.' .
 				' An activation key has been sent to the e-mail address you provided. ' .
 				'Please check your e-mail for further information';
 
