@@ -75,12 +75,12 @@ switch ($action) {
 
 		/* If we've got an error then break! */
 		if ($GLOBALS['error']->error_state) { 
-		        show_user_form($thisuser->username,
-		                $thisuser->fullname,
-		                $thisuser->email,
-		                $thisuser->access,
-		                'edit_user',
-		                '');
+			$username = $thisuser->username;
+			$fullname = $thisuser->fullname;
+			$email	  = $thisuser->email;
+			$access   = $thisuser->access;
+			$type = 'edit_user';
+			require_once(conf('prefix') . '/templates/show_edit_user.inc.php');
 			break;
 		} // if we've had an oops!
 
@@ -133,7 +133,8 @@ switch ($action) {
 		
 		/* If we end up with an error */
 		if ($GLOBALS['error']->error_state) { 
-		        show_user_form('','$username','$fullname','$email','new_user','');
+			$type = 'new_user';
+			require_once(conf('prefix') . '/templates/show_edit_user.inc.php');
 			break;
 		}	
 		show_confirmation("New User Added",$username . " has been created with an access level of " . $access,"admin/users.php");	
@@ -157,7 +158,7 @@ switch ($action) {
 	break;
     case 'show_add_user':
         if (conf('demo_mode')) { break; }
-	show_user_form('','','','','new_user','');
+	require_once(conf('prefix') . '/templates/show_edit_user.inc.php');
 	break;
 
 	case 'update':
