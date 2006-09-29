@@ -43,8 +43,8 @@ $browse_items[] = array('title'=>_("Lists"),'url'=>'browse.php','active'=>$locat
 $web_path = conf('web_path');
 
 ?>
+<h3>&nbsp;</h3>
 <ul id="navlist">
-	<h3></h3>
 	<li<?php
                 if ($location['page'] == "index.php"){
                     echo " id=\"activetopmenu\" ";
