@@ -129,8 +129,12 @@ if ($catalog->catalog_type == 'remote') {
 	preg_match("/http:\/\/([^\/]+)\/*(.*)/", conf('web_path'), $match);
 	$server = rawurlencode($match[1]);
 	$path	= rawurlencode($match[2]);
+	$port 	= $_SERVER['SERVER_PORT'];
+	if ($_SERVER['HTTPS'] == 'on') { $ssl='1'; }
+	else { $ssl = '0'; }  
+	$catalog = $catalog->id;
 	
-	$extra_info = "&xml_rpc=1&xml_path=$path&xml_server=$server&xml_port=80&sid=$sid";
+	$extra_info = "&xml_rpc=1&xml_path=$path&xml_server=$server&xml_port=$port&ssl=$ssl&catalog=$catalog&sid=$sid";
 	header("Location: " . $song->file . $extra_info);
 	debug_event('xmlrpc-stream',"Start XML-RPC Stream - " . $song->file . $extra_info,'5');
 	exit;

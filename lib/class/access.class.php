@@ -158,7 +158,7 @@ class Access {
 		} 
 
 		// Clean incomming variables
-		$ip 	= ip2int(intval($ip));
+		$ip 	= ip2int($ip);
 		$user 	= sql_escape($user);
 		$key 	= sql_escape($key);
 		$level	= sql_escape($level);
@@ -187,7 +187,7 @@ class Access {
 				else { $sql .= " AND `user` = '-1'"; }
 			break;
 		} // end switch on type
-
+		
 		$db_results = mysql_query($sql, dbh());
 
 		// Yah they have access they can use the mojo

@@ -34,7 +34,7 @@ else { exit(); }
 $access = new Access();
 
 // ** check that the remote server has access to this catalog
-if ($access->check('init-xml-rpc',$_SERVER['REMOTE_ADDR'],'','','5')) {
+if ($access->check('init-xml-rpc',$_SERVER['REMOTE_ADDR'],'','5','')) {
 
 	/* Setup Possible Actions */
 	$methods['remote_catalog_query'] 	= array('function' => 'remote_catalog_query');

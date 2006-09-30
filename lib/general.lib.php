@@ -299,11 +299,16 @@ function session_exists($sid,$xml_rpc=0) {
 
 		$path = str_replace("//","/",$path);
 		
+		/* Create the XMLRPC client */
 		$client = new xmlrpc_client($path,$server,$port);
 
-		$query = new xmlrpcmsg('remote_session_verify',array(new xmlrpcval($sid,"string")) );
-	
-		if (conf('debug')) { log_event($_SESSION['userdata']['username'],' xmlrpc-client ',"Checking for Valid Remote Session:$sid"); }
+		/* Encode the SID of the incomming client */
+		$encoded_sid 		= new xmlrpcval($sid,"string");
+
+		$query = new xmlrpcmsg('remote_session_verify',array($encoded_sid) );
+
+		/* Log this event */	
+		debug_event('xmlrpc-client',"Checking for Valid Remote Session:$sid",'3'); 
 
 		$response = $client->send($query,30);
 

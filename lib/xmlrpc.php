@@ -37,6 +37,7 @@
  * @catagory Server
  */
 function remote_catalog_query($m) {
+	
 
 	$var = $m->getParam(0);
 	$key = $var->scalarval();
@@ -79,7 +80,7 @@ function remote_catalog_query($m) {
  */
 function remote_song_query($params) { 
 
-        $var = $parms->getParam(0);
+        $var = $params->getParam(0);
         $key = $var->scalarval();
 
         /* Verify the KEY */
@@ -90,6 +91,7 @@ function remote_song_query($params) {
 	$start	= $params->params['1']->me['int'];
 	$step 	= $params->params['2']->me['int'];
 	
+
 	// Get me a list of all local catalogs
 	$sql = "SELECT catalog.id FROM catalog WHERE catalog_type='local'";
 	$db_results = mysql_query($sql, dbh());
@@ -133,7 +135,9 @@ function remote_song_query($params) {
 
 	set_time_limit(0);
 	$encoded_array = php_xmlrpc_encode($results);
-	if (conf('debug')) { log_event($_SESSION['userdata']['username'],' xmlrpc-server ',"Encoded Song Query Results ($start,$step) : " . count($results)); }
+
+	debug_event('xmlrpc-server',"Encoded Song Query Results ($start,$step):" . count($results),'3');
+
 	return new xmlrpcresp($encoded_array);
 
 } // remote_song_query
@@ -141,23 +145,16 @@ function remote_song_query($params) {
 /**
  * remote_session_verify
  * This checks the session on THIS server and returns a true false 
+ * The problem with this funcion is that we don't have the key from 
+ * the other server... this needs to be fixed potential security flaw
+ * Other server still needs read xml-rpc permissions, but no key
  * @package XMLRPC
  * @catagory Server
- * @todo Public/Private Key handshake? 
  */
 function remote_session_verify($params) { 
 
-        $var = $parms->getParam(0);
-        $key = $var->scalarval();
-
-        /* Verify the KEY */
-        if (!remote_key_verify($key,$_SERVER['REMOTE_ADDR'],'5')) {           
-                return new xmlrpcresp(0,'503','Key/IP Mis-match Access Denied');
-        }
-
-
 	/* We may need to do this correctly.. :S */
-	$var	= $params->getParam(1);
+	$var	= $params->getParam(0);
 	$sid	= $var->scalarval();
 
 	if (session_exists($sid)) { 
@@ -201,10 +198,10 @@ function remote_server_denied() {
  * passed key and makes sure the IP+KEY+LEVEL 
  * matches in the local ACL
  */
-function remote_key_verify($ip,$key,$level) { 
+function remote_key_verify($key,$ip,$level) { 
 
 	$access = new Access();
-	if ($access->check('xml-rpc',$ip,'',$key,$level)) { 
+	if ($access->check('xml-rpc',$ip,'',$level,$key)) { 
 		return true;
 	}
 

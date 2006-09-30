@@ -89,6 +89,13 @@ function ampache_error_handler($errno, $errstr, $errfile, $errline) {
 		return false; 
 	}
 
+	/* The XML-RPC lib is broken, well kind of 
+	 * shut your pie hole 
+	 */
+	if (strstr($errstr,"used as offset, casting to integer")) { 
+		return false; 
+	}
+
 	$log_line = "[$error_name] $errstr on line $errline in $errfile";
 	debug_event('error',$log_line,$level);
 	
