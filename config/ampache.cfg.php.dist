@@ -67,10 +67,6 @@ sess_cookiesecure       = 0
 #  Program Settings  #
 ######################
 
-# Nuff Said
-# DEFAULT: Ampache :: For The Love of Music
-site_title	= "Ampache :: For The Love Of Music"
-
 # Use Access List 
 # Toggle this on if you want ampache to pay attention to the access list
 # and only allow streaming/downloading/xml-rpc from known hosts by default

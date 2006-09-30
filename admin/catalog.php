@@ -147,18 +147,15 @@ switch ($_REQUEST['action']) {
 
 		$song = $_REQUEST['song'];
 
-		echo "<div class=\"confirmation-box\">";
 		if (count($song)) { 
 			$catalog->remove_songs($song);
-			echo "<p align=\"center\">Songs Removed... </p>";
+			$body = _('Songs Removed');
 		}
 		else {
-			echo "<p align=\"center\">No Songs Removed... </p>";
+			$body = _('No Songs Removed');
 		}
-		echo "</div><br />\n";
 		$url	= conf('web_path') . '/admin/index.php';
 		$title	= _('Disabled Songs Processed');
-		$body	= '';
 		show_confirmation($title,$body,$url);
 	break;
 	case 'clean_all_catalogs':
@@ -265,7 +262,7 @@ switch ($_REQUEST['action']) {
 			require (conf('prefix') . '/templates/show_disabled_songs.inc');
 		}
 		else {
-			echo "<div class=\"error\" align=\"center\">No Disabled songs found</div>";
+			echo "<div class=\"error\" align=\"center\">" . _('No Disabled songs found') . "</div>";
 		}
 	break;
 	case 'show_delete_catalog':

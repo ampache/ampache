@@ -26,7 +26,7 @@ $web_path = conf('web_path');
 show_duplicate_searchbox($search_type);
 if ($flags) { ?>
 	<?php show_box_top(_('Duplicate Songs')); ?>
-	<form method="post" enctype="multipart/form-data" action="<?php echo  $web_path . "/admin/song.php?action=disable"; ?>">
+	<form method="post" enctype="multipart/form-data" action="<?php echo $web_path; ?>/admin/flag.php?action=disable">
 	<table class="tabledata" cellspacing="0" cellpadding="0" >
 	<tr class="table-header">
 		<td><?php echo _('Disable'); ?></td>

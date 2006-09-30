@@ -141,11 +141,10 @@ switch ($action) {
 	break;
     case 'delete':
         if (conf('demo_mode')) { break; }
-	show_confirm_action(_("Are you sure you want to permanently delete") . " $temp_user->fullname ($temp_user->username) ?",
-		"admin/users.php",
-		"action=confirm_delete&amp;user=$temp_user->username");
+	show_confirmation(_('Deletion Request'),
+		_("Are you sure you want to permanently delete") . " $temp_user->fullname ($temp_user->username) ?",
+		"admin/users.php?action=confirm_delete&amp;user=$temp_user->id");
 	break;
-
     case 'confirm_delete':
         if (conf('demo_mode')) { break; }
     	if ($_REQUEST['confirm'] == _("No")) { show_manage_users(); break; }

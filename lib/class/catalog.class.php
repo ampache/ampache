@@ -1032,7 +1032,11 @@ class Catalog {
 	                $client = new xmlrpc_client("/$path/server/xmlrpc.server.php", $server, 80);
 	        }
 	        
-		$f = new xmlrpcmsg('remote_catalog_query', array(new xmlrpcval( conf('web_path'), "string")) );
+		/* encode the variables we need to send over */
+		$encoded_key	= new xmlrpcval($this->key,"string");
+		$encoded_path	= new xmlrpcval(conf('web_path'),"string");
+
+		$f = new xmlrpcmsg('remote_catalog_query', array($encoded_key,$encoded_path));
 		
 	        if (conf('debug')) { $client->setDebug(1); }
 		
@@ -1070,7 +1074,7 @@ class Catalog {
 			$this->get_remote_song($client,$start,$step);
 		}
 
-	        echo "<p>" . _("Completed updating remote catalog(s)") . ".</p><hr />\n";
+	        echo "<p>" . _('Completed updating remote catalog(s)') . ".</p><hr />\n";
 		flush();
 
 		return true;
@@ -1087,7 +1091,11 @@ class Catalog {
 	 */
 	function get_remote_song($client,$start,$end) { 
 
-		$query_array = array(new xmlrpcval($start, "int"),new xmlrpcval($end,"int")); 
+		$encoded_start 	= new xmlrpcval($start,"int");
+		$encoded_end	= new xmlrpcval($end,"int");
+		$encoded_key	= new xmlrpcval($this->key,"string");
+
+		$query_array = array($encoded_key,$encoded_start,$encoded_end); 
 
                 $f = new xmlrpcmsg('remote_song_query',$query_array);
                 /* Depending upon the size of the target catalog this can be a very slow/long process */
@@ -1101,11 +1109,11 @@ class Catalog {
                         $data = php_xmlrpc_decode($value);
                         $this->update_remote_catalog($data,$this->path);
 			$total = $start + $end;
-			echo "Added $total...<br />";
+			echo _('Added') . " $total...<br />";
 			flush();
                 }
                 else {
-                        $error_msg = _("Error connecting to") . " " . $server . " " . _("Code") . ": " . $response->faultCode() . " " . _("Reason") . ": " . $response->faultString();
+                        $error_msg = _('Error connecting to') . " " . $server . " " . _("Code") . ": " . $response->faultCode() . " " . _("Reason") . ": " . $response->faultString();
                         debug_event('xmlrpc-client',$error_msg,'1','ampache-catalog');
                         echo "<p class=\"error\">$error_msg</p>";
                 }

@@ -4,6 +4,9 @@
 
 --------------------------------------------------------------------------
   v.3.3.2
+	- Fixed Duplicate Songs functions that have been broken for a 
+		while
+	- Fixed some Install issues with incorrectly named templates
 	- Added check for MySQL support to first install page, redirects
 		to /test.php if mysql support is non-existant
 	- Added ability to turn Random/Repeat on and off in localplay

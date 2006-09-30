@@ -57,10 +57,6 @@ a:active  {
 }
 .display {}
 
-#mpdpl td {
-	padding: 0px 2px 0px 2px;
-	text-align: left;
-}
 table.tabledata {}
 td { 
 	padding: 0px 8px 0px 8px;
@@ -184,10 +180,9 @@ body{
 
 /* Content block */
 #content {
-	top:90px;
+	postion:absolute;
 	float: left;
 	clear: both;
-	margin-top:-10px;
 	margin-left:15px;
 	/*float:left;  use for horizontal menu; comment out otherwise */
 	/* background:#fff url("../themes/classic/images/bg_content.gif") repeat-y right top; */
@@ -253,7 +248,7 @@ div#sidebar{
 	clear:both;
 	position:absolute;
 	left:5px;
-	top:55px;
+	top:20px;
 	background:url("../themes/classic/images/bg_navigation.gif") repeat-y left;	
 }
 
@@ -301,7 +296,7 @@ div#sidebar{
 
 #sidebar li:hover, #sidebar li.sfhover {
 	color: #000000;
-	background-color:#ffffcc;
+       background-color: #8f0000;
 }
 
 #sidebar li:active {
@@ -321,13 +316,15 @@ div#sidebar{
 
 #sidebar li:hover ul, #sidebar li.sfhover ul {
 	left: auto;  /* this calls the submenu back when the parent li is hovered. */
+       background-color: #8f0000;
+}
+
+#navlist ul li:hover {
+       background-color: #8f0000;
+
 }
 
 /* Styles for Now Playing */
-#nowplaying{
-	clear: all;
-	width: 625px;
-}
 
 #np_container1{
 	width: 260px;
@@ -418,122 +415,26 @@ margin-right:5em;
 #topbarleft, #topbarleft a{ 
 	float: left;
 }
-/* styles for the star ratings */
-.star-rating{
-	list-style:none;
-	margin: 0px;
-	padding:0px;
-	width: 80px;
-	height: 15px;
-	position: relative;
-	background: url(../images/ratings/star_rating.gif) top left repeat-x;        
-}
-.star-rating li{
-	padding:0px;
-	margin:0px;
-	float: right;
-}
-.star-rating li a{
-	display:block;
-	width:16px;
-	height: 15px;
-	text-decoration: none;
-	text-indent: -9000px;
-	z-index: 20;
-	position: absolute;
-	padding: 0px;
-}
-.star-rating li a:hover{
-	background: url(../images/ratings/star_rating.gif) left center;
-	z-index: 2;
-	left: 0px;
-}
-li.zero-stars a:hover {
-	background: url(../images/ratings/x.gif);
-	height: 15px;
-	left: 80px;
-	display: block;
-}
-a.zero-stars {
-	background: url(../images/ratings/x_off.gif);
-	height: 15px;
-	left: 80px;
-	display: block;
-}
-a.one-stars{
-	left: 0px;
-}
-a.one-stars:hover{
-	width:16px;
-}
-a.two-stars{
-	left:16px;
-}
-a.two-stars:hover{
-	width: 32px;
-}
-a.three-stars{
-	left: 32px;
-}
-a.three-stars:hover{
-	width: 48px;
-}
-a.four-stars{
-	left: 48px;
-}
-a.four-stars:hover{
-	width: 64px;
-}
-a.five-stars{
-	left: 64px;
-}
-a.five-stars:hover{
-	width: 80px;
-}
-li.current-rating{
-	background: url(../images/ratings/star_rating.gif) left bottom;
-	position: absolute;
-	height: 15px;
-	display: block;
-	text-indent: -9000px;
-	z-index: 1;
-}
+
 /* Box Related Styles */
 .box { 
 	padding:0px;
-	background: #320000;
+	background: #8f0000;
+	margin:10px;
 }
 .box-title { 
-	border-bottom: solid 1px; #ffffcc;
+	border-bottom: solid 1px #320000;
 	font-weight: bold;
 }
-.box-left-top { 
-	background: url(../themes/classic/images/topleft.gif) no-repeat;
-	height:16px;
-}
-.box-left-bottom {
-        background: url(../themes/classic/images/bottomleft.gif) no-repeat;
-	height:18px;
-}
-.box-left { 
-	background: url(../themes/classic/images/left.gif);
-}
-.box-bottom { 
-	background: url(../themes/classic/images/bottom.gif);
-	height:18px;
-}
-.box-right-bottom { 
-	background: url(../themes/classic/images/bottomright.gif) no-repeat;
-}
-.box-right-top {
-	background: url(../themes/classic/images/topright.gif) no-repeat;
-}
-.box-right { 
-	background: url(../themes/classic/images/right.gif);
-}
-.box-top { 
-	background: url(../themes/classic/images/top.gif);
-}
+.box-left-top { display:none; }
+.box-left-bottom { display:none; }
+.box-left { display:none; }
+.box-bottom { display:none; }
+.box-right-bottom { display:none; }
+.box-right-top { display:none; }
+.box-right { display:none; }
+.box-top { display:none; }
+
 .confirmation-box {
 	padding-left:5px;
 	padding-top:5px;
@@ -545,6 +446,7 @@ li.current-rating{
 	border-bottom:2px solid #ffffcc;
 	border-left:2px solid #ffffcc;
 	border-top:2px solid #ffffcc;}
+
 .text-action, .text-action li {
 	margin-top:5px;
 	list-style: none;
@@ -564,7 +466,8 @@ li.current-rating{
 	border:1px solid #9F0000;
 }
 #nowplaying {
-	width:600px;
+	width:650px;
+	background: #8f0000;
 }
 .np_row {
 	padding-top: 3px;

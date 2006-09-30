@@ -36,8 +36,8 @@ $search_type = scrub_in($_REQUEST['search_type']);
 
 show_template('header');
 
-switch ($action)
-{
+/* Switch on Action */
+switch ($action) {
     case 'search':
         $flags = get_duplicate_songs($search_type);
         show_duplicate_songs($flags,$search_type);
@@ -45,5 +45,6 @@ switch ($action)
     default:
         show_duplicate_searchbox($search_type);
 }
+
 show_footer();
 ?>
