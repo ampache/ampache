@@ -143,10 +143,18 @@ textarea {
 	display: table-cell;
 	padding-bottom: 3px;
 	color: #990033;
- border-right:4px solid #990033;
- border-bottom:4px solid #990033;
- border-left:4px solid #990033;
- border-top:4px solid #990033;		
+	font-weight:bold;
+ 	border-right:2px solid #990033;
+	border-bottom:2px solid #990033;
+	border-left:2px solid #990033;
+ 	border-top:2px solid #990033;		
+}
+#container div.fatalerror {
+	background:none;
+	height:auto;
+	padding:5px;
+	margin:10px;
+	display:block;
 }
 .disabled {
 	text-decoration: line-through;
