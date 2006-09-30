@@ -19,7 +19,7 @@ CREATE TABLE `access_list` (
   `start` int(11) unsigned NOT NULL default '0',
   `end` int(11) unsigned NOT NULL default '0',
   `level` smallint(3) unsigned NOT NULL default '5',
-  `type` varchar(64) NOT NULL default '',
+  `type` varchar(64) NOT NULL default 'interface',
   `user` varchar(128) default NULL,
   `key` varchar(255) default NULL,
   PRIMARY KEY  (`id`),

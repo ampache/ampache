@@ -1664,7 +1664,7 @@ class Update {
 		$sql = "ALTER TABLE `access_list` ADD INDEX `level` (`level`)";
 		$db_results = mysql_query($sql, dbh());
 
-		$sql = "ALTER TABLE `access_list` ADD `type` VARCHAR( 64 ) NOT NULL AFTER `level`";
+		$Sql = "ALTER TABLE `access_list` ADD `type` VARCHAR( 64 ) NOT NULL DEFAULT 'interface' AFTER `level`";
 		$db_results = mysql_query($sql, dbh());
 
 		// Album Table
