@@ -165,7 +165,9 @@ function remote_session_verify($params) {
 	}
 
 	$encoded_data = php_xmlrpc_encode($data);
-	if (conf('debug')) { log_event($_SESSION['userdata']['username'],' xmlrpc-server ',"Encoded Session Verify: $data Recieved: $sid"); }
+	
+	debug_event('xmlrpc-server',"Encoded Session Verify: $data Recieved: $sid",'3'); 
+	
 	return new xmlrpcresp($encoded_data);
 
 } // remote_session_verify
@@ -185,7 +187,7 @@ function remote_server_denied() {
 
         $encoded_array = php_xmlrpc_encode($result);
 
-	if (conf('debug')) { log_event($_SESSION['userdata']['username'], 'xmlrpc-server',"Access Denied: " . $_SERVER['REMOTE_ADDR']); }
+	debug_event('xmlrpc-server',"Access Denied: " . $_SERVER['REMOTE_ADDR'],'3');
 	
         return new xmlrpcresp($encoded_array);
 

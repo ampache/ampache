@@ -254,10 +254,8 @@ function start_downsample($song,$now_playing_id=0,$song_name=0) {
         $downsample_command = str_replace("%SAMPLE%",$sample_rate,$downsample_command);
 
         // If we are debugging log this event
-        if (conf('debug')) {
-		$message = "Start Downsample: $downsample_command";
-                log_event($GLOBALS['user']->username,' downsample ',$message);
-	} // if debug
+	$message = "Start Downsample: $downsample_command";
+        debug_event('downsample',$message,'3');
 
 	$fp = @popen($downsample_command, 'rb');
 

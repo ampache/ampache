@@ -45,7 +45,11 @@ if ($access->check('init-xml-rpc',$_SERVER['REMOTE_ADDR'],'','5','')) {
 }
 else {
 	// Access Denied... Sucka!!
-	$s = new xmlrpc_server( array( "remote_catalog_query" => array("function"  => "remote_server_denied")));
+        $methods['remote_catalog_query']        = array('function' => 'remote_server_denied');
+        $methods['remote_song_query']           = array('function' => 'remote_server_denied');
+        $methods['remote_session_verify']       = array('function' => 'remote_server_denied');
+		
+	$s = new xmlrpc_server($methods);
 }
 
 ?>

@@ -64,16 +64,11 @@ function send_zip( $name, $song_files ) {
         $arc->set_options( $options );
         $arc->add_files( $song_files );
 	if (count($arc->error)) { 
-		if (conf('debug')) { 
-			log_event($GLOBALS['user']->username,'archive',"Error: unable to add songs");
-
-		}
+		debug_event('archive',"Error: unable to add songs",'3');
 	} // if failed to add songs
 	
         if (!$arc->create_archive()) { 
-		if (conf('debug')) { 
-			log_event($GLOBALS['user']->username,'archive',"Error: unable to create archive");
-		}
+		debug_event('archive',"Error: unable to create archive",'3');
 	} // if failed to create archive
 	
         $arc->download_file();

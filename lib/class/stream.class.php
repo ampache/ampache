@@ -232,7 +232,7 @@ class Stream {
 
 		/* Open the file for writing */
 		if (!$handle = @fopen($filename, "w")) {
-			log_event($_SESSION['userdata']['username'],"icecast","Fopen: $filename Failed");
+			debug_event("icecast","Fopen: $filename Failed",'3');
 		        echo _("Error, cannot write") . " $filename<br>\n";
 	        	exit;
 		}
@@ -243,7 +243,7 @@ class Stream {
 	        	echo "$song->file<br>\n";
 	        	$line = "$song->file\n";
 	                if (!fwrite($handle, $line)) {
-				log_event($_SESSION['userdata']['username'],"icecast","Fwrite: Unabled to write $line into $filename");
+				debug_event("icecast","Fwrite: Unabled to write $line into $filename",'3');
 	                	echo _("Error, cannot write song in file") . " $song->file --&gt; $filename";
 				exit;
 			} // if write fails
@@ -254,9 +254,7 @@ class Stream {
 		fclose($handle);
 		$cmd = conf('icecast_command');
                 $cmd = str_replace("%FILE%", $filename, $cmd);
-		if (conf('debug')) { 
-			log_event($_SESSION['userdata']['username'],"icecast","Exec: $cmd");
-		} 
+		debug_event("icecast","Exec: $cmd",'3');
 		exec($cmd);
 		exit;
 	

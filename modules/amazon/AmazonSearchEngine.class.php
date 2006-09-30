@@ -120,7 +120,7 @@ class AmazonSearch {
 			"&Operation=ItemSearch&Artist=" . urlencode($terms['artist']) . "&Title=" . urlencode($terms['album']) . 
 			"&Keywords=" . urlencode($terms['keywords']) . "&SearchIndex=" . $type;
 			
-		log_event($GLOBALS['user']->username,'amazon-search-results',"_currentPage = " .  $this->_currentPage);
+		debug_event('amazon-search-results',"_currentPage = " .  $this->_currentPage,'3');
 		if($this->_currentPage != 0){
 		  $url = $url . "&ItemPage=" . ($this->_currentPage+1);
 		}
@@ -197,9 +197,7 @@ class AmazonSearch {
 			$this->_sourceTag = trim($cdata);
 			break;
          	case 'TotalPages':
-                        if(conf('debug')){
-			  log_event($GLOBALS['user']->username,'amazon-search-results',"TotalPages= ". trim($cdata));
-			}
+			debug_event('amazon-search-results',"TotalPages= ". trim($cdata),'5');
 			$this->_maxPage = trim($cdata);
                         break;
 		default:

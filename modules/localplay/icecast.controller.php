@@ -113,8 +113,7 @@ class AmpacheIcecast {
 
 		/* Open the file for writing */
                 if (!$handle = @fopen($filename, "w")) {
-                        log_event($_SESSION['userdata']['username'],"icecast","Fopen: $filename Failed");
-                        //echo _("Error, cannot write") . " $filename<br>\n";
+                        debug_event('icecast',"Fopen: $filename Failed",'3');
                         return false;
                 }
 
@@ -125,8 +124,7 @@ class AmpacheIcecast {
 		        //echo "$song->file<br>\n";
                         $line = "$song->file\n";
                         if (!fwrite($handle, $line)) {
-                                log_event($_SESSION['userdata']['username'],"icecast","Fwrite: Unabled to write $line into $filename");
-                                //echo _("Error, cannot write song in file") . " $song->file --&gt; $filename";
+                                debug_event('icecast',"Fwrite: Unabled to write $line into $filename",'3');
                                 return false;
                         } // if write fails
 
@@ -197,9 +195,7 @@ class AmpacheIcecast {
        			//echo "Starting Server...\n";
 			
 			$cmd = conf('localplay_icecast_command') . " -c " . conf('localplay_icecast_config') . " -F " . conf('localplay_icecast_tracklist') . " -B";
-                	if (conf('debug')) {
-                        	log_event($_SESSION['userdata']['username'],"icecast","Exec: $cmd");
-                	}
+                        debug_event('icecast',"Exec: $cmd",'5');
                 	exec($cmd);
 
    		}
