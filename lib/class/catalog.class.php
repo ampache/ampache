@@ -1015,7 +1015,7 @@ class Catalog {
 		/* Make sure the xmlrpc lib is loaded */
 		if (!class_exists('xmlrpc_client')) { 
                         debug_event('xmlrpc',"Unable to load XMLRPC library",'1'); 
-			echo "<font class=\"error\"><b>" . _("Error") . "</b>: " . _("Unable to load XMLRPC library, make sure XML-RPC is enabled") . "<br />\n";
+			echo "<span class=\"error\"><b>" . _("Error") . "</b>: " . _('Unable to load XMLRPC library, make sure XML-RPC is enabled') . "</span><br />\n";
 			return false;
 		} // end check for class
 
@@ -1035,7 +1035,7 @@ class Catalog {
 		/* encode the variables we need to send over */
 		$encoded_key	= new xmlrpcval($this->key,"string");
 		$encoded_path	= new xmlrpcval(conf('web_path'),"string");
-
+		
 		$f = new xmlrpcmsg('remote_catalog_query', array($encoded_key,$encoded_path));
 		
 	        if (conf('debug')) { $client->setDebug(1); }
@@ -1712,22 +1712,28 @@ class Catalog {
 		@param $path The root path for this catalog
 		@param $name The name of the new catalog
 	*/
-	function create_catalog_entry($path,$name,$key=0,$ren=0,$sort=0, $type='local') {
+	function create_catalog_entry($path,$name,$key=0,$ren=0,$sort=0, $type='') {
+
+		if (!$type) { $type = 'local'; } 
 
 		// Current time
 		$date = time();
 
 		$path = sql_escape($path);
 		$name = sql_escape($name);
+		$key  = sql_escape($key);
+		$ren  = sql_escape($ren);
+		$sort = sql_escape($sort);
+		$type = sql_escape($type);
 
-		if($id3cmd && $ren && $sort) {
+		if($ren && $sort) {
 			$sql = "INSERT INTO catalog (path,name,last_update,`key`,rename_pattern,sort_pattern,catalog_type) " .
 				" VALUES ('$path','$name','$date', '$key', '$ren', '$sort','$type')";
 		}
 		else {
-			$sql = "INSERT INTO catalog (path,name,last_update) VALUES ('$path','$name','$date')";
+			$sql = "INSERT INTO catalog (path,name,`key`,`catalog_type`,last_update) VALUES ('$path','$name','$key','$type','$date')";
 		}
-
+		
 		$db_results = mysql_query($sql, dbh());
 		$catalog_id = mysql_insert_id(dbh());
 

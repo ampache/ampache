@@ -59,15 +59,15 @@ $email = scrub_in($_REQUEST['email']);
 /*  If we should show the user agreement */
 if(conf('user_agreement')){ ?>
 	<tr>
-		<td height='15'>
+		<td height="15px">
 		</td>
 	</tr>
 	<tr>
-		<td align='center' valign='top'>
-			<table width='100%' border='0' cellpadding='0' cellspacing='0'>
-			<tr class="table-header">
-				<td align='center'>
-					<font size="1"><b><u><?php echo _('User Agreement'); ?></u></b></font>
+		<td>
+			<table border="0" cellpadding="2" cellspacing="0">
+			<tr>
+				<td>
+					<span class="box-title"><?php echo _('User Agreement'); ?></span>
 				</td>
 			</tr>
 			<tr>
@@ -76,7 +76,7 @@ if(conf('user_agreement')){ ?>
 				</td>
 			</tr>
 			<tr>
-				<td align='center' height='35' valign='center'>
+				<td>
 					<input type='checkbox' name='accept_agreement'> <?php echo _('I Accept'); ?>
 					<?php $GLOBALS['error']->print_error('user_agreement'); ?>
 				</td>

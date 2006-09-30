@@ -63,30 +63,6 @@ switch ($_REQUEST['action']) {
 		$body	= '';
 		show_confirmation($title,$body,$url);
 	break;
-	case _("Add to all Catalogs"):
-		if (conf('demo_mode')) { break; }
-	
-		/* If they are using the file MPD type, and it's currently enabled lets do a DBRefresh for em 
-		if (conf('mpd_method') == 'file' AND conf('allow_mpd_playback')) {
-			// Connect to the MPD
-			if (!class_exists('mpd')) { require_once(conf('prefix') . "/modules/mpd/mpd.class.php"); }
-			if (!is_object($myMpd)) { $myMpd = new mpd(conf('mpd_host'),conf('mpd_port')); }
-			if (!$myMpd->connected) {
-				echo "<font class=\"error\">" . _("Error Connecting") . ": " . $myMpd->errStr . "</font>\n";
-				log_event($_SESSION['userdata']['username'],' connection_failed ',"Error: Unable able to connect to MPD, " . $myMpd->errStr);
-			} // MPD connect failed
-			
-		 $myMpd->DBRefresh();
-		} // if MPD enabled
-		//FIXME: File Method no longer exists... leaving this in for a bit
-		*/
-		$catalogs = $catalog->get_catalogs();
-
-		foreach ($catalogs as $data) { 
-			$data->add_to_catalog($_REQUEST['update_type']);
-		}
-		include(conf('prefix') . '/templates/catalog.inc');
-	break;
 	case 'update_all_catalogs':
 		$catalog = new Catalog();
 		$_REQUEST['catalogs'] = $catalog->get_catalog_ids();

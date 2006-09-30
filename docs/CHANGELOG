@@ -4,6 +4,7 @@
 
 --------------------------------------------------------------------------
   v.3.3.2
+	- Updated SQL file, changed default site title
 	- Fixed Duplicate Songs functions that have been broken for a 
 		while
 	- Fixed some Install issues with incorrectly named templates

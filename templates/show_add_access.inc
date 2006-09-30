@@ -68,7 +68,7 @@
 			<option selected="selected" value="stream"><?php echo _('Stream Access'); ?></option>
 			<option value="interface"><?php echo _('Web Interface'); ?></option>
 			<option value="network"><?php echo _('Local Network Definition'); ?></option>
-			<option vlaue="xml-rpc"><?php echo _('XML-RPC'); ?></option>
+			<option value="xml-rpc"><?php echo _('XML-RPC'); ?></option>
 		</select>
 	</td>
 </tr>

@@ -329,6 +329,7 @@ refresh_limit = "60"
 # This will display the user agreement when registering
 # For agreement text, edit templates/user_agreement.php
 # User will need to accept the agreement before they can register
+# DEFAULT: false
 #user_agreement = "false"
 
 ###########################################################
