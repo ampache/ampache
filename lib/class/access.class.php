@@ -95,7 +95,7 @@ class Access {
 		if (!$user) { $user = '-1'; } 
 		
 		$sql = "UPDATE access_list " . 
-			"SET start='$start', end='$end', level='$level', user='$user' " . 
+			"SET start='$start', end='$end', level='$level', user='$user', `key`='$key' " . 
 			"WHERE id='" . sql_escape($this->id) . "'";
 
 		$db_results = mysql_query($sql, dbh());
