@@ -129,17 +129,16 @@ $htmllang = str_replace("_","-",conf('lang'));
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=<?php echo conf('site_charset'); ?>" />
 <link rel="shortcut icon" href="<?php echo conf('web_path'); ?>/favicon.ico" />
+<link rel="stylesheet" href="templates/default.css" type="text/css" />
 <title> <?php echo conf('site_title'); ?> </title>
 <script type="text/javascript" language="javascript">
 function focus(){ document.login.username.focus(); }
 </script>
-
 </head>
+
 <body bgcolor="#D3D3D3" onload="focus();">
-<link rel="stylesheet" href="templates/default.css" type="text/css">
 
 <?php
-
 require(conf('prefix') . "/templates/show_login_form.inc");
 
 if (@is_readable(conf('prefix') . '/config/motd.php')) {
