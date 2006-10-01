@@ -395,7 +395,7 @@ class Catalog {
 							/* Stupid little cutesie thing */
 							$this->count++;
 							if ( !($this->count%conf('catalog_echo_count')) AND $verbose) {
-							        echo "<script language=\"JavaScript\">";
+							        echo "<script type=\"text/javascript\">";
 								echo "update_txt('" . $this->count . "','count_add_" . $this->id ."');";
 								echo "</script>\n";
 								flush();
@@ -488,7 +488,7 @@ class Catalog {
 			/* Stupid little cutesie thing */
                         $search_count++;
                         if ( !($search_count%conf('catalog_echo_count'))) {
-                                echo "<script language=\"JavaScript\">";
+                                echo "<script type=\"text/javascript\">";
                                 echo "update_txt('" . $search_count ."','count_art_" . $this->id . "');";
                                 echo "</script>\n"; 
 	                        flush();
@@ -788,7 +788,7 @@ class Catalog {
 		/* Get the songs and then insert them into the db */
 		$this->add_files($this->path,$type,$parse_m3u);
 
-                echo "<script language=\"JavaScript\">";
+                echo "<script type=\"text/javascript\">";
                 echo "update_txt('" . $this->count . "','count_add_" . $this->id ."');";
                 echo "</script>\n";
                 flush();
@@ -954,7 +954,7 @@ class Catalog {
 		/* Get the songs and then insert them into the db */
 		$this->add_files($this->path,$type,0,$verbose);
 
-                echo "<script language=\"JavaScript\">";
+                echo "<script type=\"text/javascript\">";
                 echo "update_txt('" . $this->count . "','count_add_" . $this->id ."');";
                 echo "</script>\n";
                 flush();
@@ -1209,7 +1209,7 @@ class Catalog {
                         /* Stupid little cutesie thing */
                         $this->count++;
                         if ( !($this->count%conf('catalog_echo_count')) && $verbose) {
-			        echo "<script language=\"JavaScript\">";
+			        echo "<script type=\"text/javascript\">";
 			        echo "update_txt('" . $this->count ."','count_clean_" . $this->id . "');";
 			        echo "</script>\n";	
 	                        flush();
@@ -1260,7 +1260,7 @@ class Catalog {
 		
 		/* Return dead files, so they can be listed */
 		if ($verbose) { 
-                        echo "<script language=\"JavaScript\">";
+                        echo "<script type=\"text/javascript\">";
                         echo "update_txt('" . $this->count ."','count_clean_" . $this->id . "');";
                         echo "</script>\n";
 			echo "<b>" . _("Catalog Clean Done") . " [" . count($dead_files) . "] " . _("files removed") . "</b><br />\n";
@@ -1663,7 +1663,7 @@ class Catalog {
                                 /* Stupid little cutesie thing */
                                 $this->count++;
                                 if (!($this->count%conf('catalog_echo_count')) ) {
-                                        echo "<script language=\"JavaScript\">";
+                                        echo "<script type=\"text/javascript\">";
                                         echo "update_txt('" . $this->count . "','count_verify_" . $this->id . "');";
                                         echo "</script>\n";
                                         flush();
@@ -1691,7 +1691,7 @@ class Catalog {
 		$this->update_last_update();
 
 		if ($verbose) { 
-                        echo "<script language=\"JavaScript\">";
+                        echo "<script type=\"text/javascript\">";
                         echo "update_txt('" . $this->count . "','count_verify_" . $this->id . "');";
                         echo "</script>\n";
                         flush();

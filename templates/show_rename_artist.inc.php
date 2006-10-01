@@ -20,7 +20,7 @@
 
 */
 ?>
-<script language='javascript'>
+<script type='text/javascript'>
 function insert()
 {
 	document.getElementById('artist_name').value = '<?php echo $artist->name; ?>';
