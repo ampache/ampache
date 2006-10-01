@@ -3,7 +3,7 @@
 --------------------------------------------------------------------------
 
 --------------------------------------------------------------------------
-  v.3.3.2
+  v.3.3.2 10/01/2006
 	- Updated SQL file, changed default site title
 	- Fixed Duplicate Songs functions that have been broken for a 
 		while
@@ -53,7 +53,7 @@
 		the checkboxes. 
 
 --------------------------------------------------------------------------
-  v.3.3.2-Beta3
+  v.3.3.2-Beta3 06/22/2006
   	- Fixed file-based parsing so that it can now be given priority
 		over the tags in the files using tag_order in the config
 		file
@@ -117,7 +117,7 @@
 		(Thx Nikk)
 
 --------------------------------------------------------------------------
-  v.3.3.2-Beta2 
+  v.3.3.2-Beta2 03/29/2006
   	- Fixed some Charset problems with htmlentities (Thx Nikk)
 	- Fixed some issues with IE and session caching (Thx wishbone)
   	- Improved Upload Error Messages and blanked up upload and 
