@@ -34,10 +34,48 @@
         </select>
     </td>
   </tr>
+  <tr>
+    <td colspan="2">	
+ 	 <table>
+ 		 <tr>
+		    <td><?php echo _('Catalog Statistics'); ?>:</td>
+		    <td>
+			<input type="checkbox" name="cat_stats" value="yes">
+		    </td>
+		    <td><?php echo _('Most Popular Albums'); ?>:</td>
+		    <td>
+		        <input type="checkbox" name="pop_albums" value="yes">
+		    </td>
+		  </tr>
+
+		  <tr>
+		    <td><?php echo _('Newest Artist Additions'); ?>:</td>
+		    <td>
+		        <input type="checkbox" name="new_artists" value="yes">
+		    </td>
+		    <td><?php echo _('Most Popular Artists'); ?>:</td>
+		    <td>
+		        <input type="checkbox" name="pop_artists" value="yes">
+		    </td>
+		  </tr>
+		
+		  <tr>
+		    <td><?php echo _('Newest Album Additions'); ?>:</td>
+		    <td>
+		        <input type="checkbox" name="new_albums" value="yes">
+		    </td>
+		      <td><?php echo _('Most Popular Songs'); ?>:</td>
+		    <td>
+		        <input type="checkbox" name="pop_songs" value="yes">
+		    </td>
+		</tr>
+	</table>
+    </td>
+  <tr>
 
   <tr>
     <td><?php echo _('Subject'); ?>:</td>
-    <td>
+    <td colspan="3">
         <input name="subject" value="<?php echo scrub_out($_POST['subject']); ?>" size="50"></input>
     </td>
   </tr>
