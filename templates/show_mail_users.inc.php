@@ -40,38 +40,38 @@
  		 <tr>
 		    <td><?php echo _('Catalog Statistics'); ?>:</td>
 		    <td>
-			<input type="checkbox" name="cat_stats" value="yes">
+			<input type="checkbox" name="cat_stats" value="yes" />
 		    </td>
 		    <td><?php echo _('Most Popular Albums'); ?>:</td>
 		    <td>
-		        <input type="checkbox" name="pop_albums" value="yes">
+		        <input type="checkbox" name="pop_albums" value="yes" />
 		    </td>
 		  </tr>
 
 		  <tr>
 		    <td><?php echo _('Newest Artist Additions'); ?>:</td>
 		    <td>
-		        <input type="checkbox" name="new_artists" value="yes">
+		        <input type="checkbox" name="new_artists" value="yes" />
 		    </td>
 		    <td><?php echo _('Most Popular Artists'); ?>:</td>
 		    <td>
-		        <input type="checkbox" name="pop_artists" value="yes">
+		        <input type="checkbox" name="pop_artists" value="yes" />
 		    </td>
 		  </tr>
 		
 		  <tr>
 		    <td><?php echo _('Newest Album Additions'); ?>:</td>
 		    <td>
-		        <input type="checkbox" name="new_albums" value="yes">
+		        <input type="checkbox" name="new_albums" value="yes" />
 		    </td>
 		      <td><?php echo _('Most Popular Songs'); ?>:</td>
 		    <td>
-		        <input type="checkbox" name="pop_songs" value="yes">
+		        <input type="checkbox" name="pop_songs" value="yes" />
 		    </td>
 		</tr>
 	</table>
     </td>
-  <tr>
+  </tr>
 
   <tr>
     <td><?php echo _('Subject'); ?>:</td>
