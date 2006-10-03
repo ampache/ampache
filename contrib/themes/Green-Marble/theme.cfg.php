@@ -25,44 +25,4 @@ author = "XGizzmo"
 # DEFAULT: N/A
 maintainer = "XGizzmo  irc.freenode.net #ampache"
 
-# Theme Colors
-###################
-[color]
-###################
-# Below is a list of the default colors for this theme, upon
-# applying this theme the users color preferences will be reset
-# to what is listed below... 
-
-# Background Color 1
-bg_color1 = "#000000"
-
-# Background Color 2
-bg_color2 = "#000000"
-
-# Base Color 1 
-base_color1 = "#000000"
-
-# Base Color 2 
-base_color2 = "#716F6B"
-
-# Font Color 1 
-font_color1 = "#00ff00"
-
-# Font Color 2
-font_color2 = "#00ff00"
-
-# Font Color 3
-font_color3 = "#00ff00"
-
-# Row Color 1 
-row_color1 = "#000000"
-
-# Row Color 2
-row_color2 = "#000000"
-
-# Row Color 3
-row_color3 = "#000000"
-
-# Error Color
-error_color = "#990033"
 

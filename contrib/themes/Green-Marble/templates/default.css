@@ -1,301 +1,435 @@
-<?php
+<!--
 /*
 
-Copyright (c) 2001 - 2005 Ampache.org
-All rights reserved.
+ Copyright (c) 2001 - 2006 Ampache.org
+ All rights reserved.
 
-This program is free software; you can redistribute it and/or
-modify it under the terms of the GNU General Public License
-as published by the Free Software Foundation; either version 2
-of the License, or (at your option) any later version.
+ This program is free software; you can redistribute it and/or
+ modify it under the terms of the GNU General Public License
+ as published by the Free Software Foundation; either version 2
+ of the License, or (at your option) any later version.
 
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
 
-You should have received a copy of the GNU General Public License
-along with this program; if not, write to the Free Software
-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ You should have received a copy of the GNU General Public License
+ along with this program; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
-
-/*!
-@header Style File
-@discussion this is the css that is included on every page of
-	ampache, mod this to change the look and feel of the site
-*/
-?>
-<style type="text/css">
-<!--
-body {
+-->
+/* General style rules  */
+body{ 
 	padding-top: 0px;
 	margin-top: 0px;
 	margin-left: 0px;
-	margin-right: 0px;
-	font-family: Verdana, Helvetica, sans-serif; 
-	font-size: 10px; 
+	margin-right: 0px; 
+	font-family:Arial, Helvetica, Sans-Serif;
+	background:#000000 url(../images/background.jpg) repeat;
+
+}
+
+p { 
 	color: #00ff00;
-	background: url(..//themes/Green-Marble/images/background.jpg) #000000 repeat;
-}
-#maincontainer {
-	margin: 0px;
-	background: url(..//themes/Green-Marble/images/background.jpg) #000000 repeat;
-}
-#topbar {
-	margin: 0px;
-	height: 100px;
-	padding-top:10px;
-	padding-left:10px;
-	padding-bottom: 10px;
-	background: url(..//themes/Green-Marble/images/background.jpg) #000000 repeat;
-	border: 2px black;
-}
-#topbarright {
-	float: right;
-}
-#topbarleft {
-	float: left;
-}
-p {
-	color: #00ff00; 
 	font-family: Verdana, Helvetica, sans-serif; 
 	font-size: 10px;
 }
 
-a {
+a { 
 	color: #00ff00; 
 	font-family: Verdana, Helvetica, sans-serif; 
 }
-a:visited {
-	color: #00ff00; 
+a:visited 
+	{ 
+	color: #00ff00; 	
 	font-family: Verdana, Helvetica, sans-serif; 
-}
-a:hover {
-	text-decoration: underline;
-}
-a:active {
+	}
+a:active  { 
 	color: #00ff00; 
 	font-family: Verdana, Helvetica, sans-serif; 
 }
 .text-box {
+	display: table-cell;
 	padding-left:5px;
 	padding-top:5px;
+	padding-right:5px;
 	margin-bottom:10px;
 	background-color: #000000;
-	border-right:2px solid #000000;
-	border-bottom:2px solid #000000;
-	border-left:2px solid #000000;
-	border-top:2px solid #000000;
-	display: table-cell;
+	border:2px solid #000000;
 }
+.selected_button {
+	color:#00ff00;
+	background: url("../images/tablebg.gif") #00ff00 repeat-x;
+}
+.unselected_button {
+	/* there really isn't anything for this */
+}
+.display {}
 
-td {
-/* padding top right bottom left */
-	padding: 0px 10px 0px 10px;
+#mpdpl td {
+	padding: 0px 2px 0px 2px;
+	text-align: left;
+}
+table.tabledata {}
+
+td { 
+	padding: 0px 8px 0px 8px;
 	color: #00ff00; 
 	font-family: Verdana, Helvetica, sans-serif; 
-	font-size: 10px;
+	font-size: 12px;
 }
 th {
 	padding-right: 10px;
-	padding-left: 10px;
 }
-input {
-	color: #00ff00; 
-	font-family: Verdana, Helvetica, sans-serif; 
-	font-size: 10px; 
-	font-weight: bold; 
-	background-color: #716F6B; 
-	margin: 2px 2px 2px 2px;
-	border-color: #555756;
-	cursor: pointer;
-}
-select {
-	color: #00ff00; 
-	font-family: Verdana, Helvetica, sans-serif; 
-	font-size: 10px;
-	background-color: #716F6B; 
-	
-}
-textarea {
-	background-color: #716F6B;
-	color: #00ff00; 
-	font-family: Verdana, Helvetica, sans-serif; 
-	font-size: 10px; 
-}
-.button {
-	background: url(..//themes/Green-Marble/images/tablebg.gif) #716F6B repeat-x;
-	padding: 2px;
-	border: 0;
-	margin: 2px;
-}
-
 tr td a {
 	text-align: center;
 	text-decoration:none;
 	
 }
-.login {
-	border-top: 1px solid black;
-	border-bottom: 1px solid black;
-	border-right: 1px solid black;
-	border-left: 1px solid black;
-}
-.table-header {
-	background: url(..//themes/Green-Marble/images/tablebg.gif) #716F6B repeat-x;
-	vertical-align: top;
-	text-align: center;
-}
-/*************** Page Header *********************/
-/*************** END Page Header *****************/
-.header1 {
+input {
 	color: #00ff00; 
 	font-family: Verdana, Helvetica, sans-serif; 
 	font-size: 12px; 
-	font-weight: 800;
+	font-weight: bold; 
+	background-color: #000000;
+	border-color:#bbbbbb; 
+	margin: 2px 2px 2px 2px;
 }
-.header2 {
-	color: #00ff00;
+select	{ 
+	color: #00ff00; 
+	font-family: Verdana, Helvetica, sans-serif; 
+	font-size: 12px; 
+	background-color: #000000; 
+	border-color:#bbbbbb; 
+}
+textarea { 
+	background-color: #000000;
+	color: #000000; 
+	font-family: Verdana, Helvetica, sans-serif; 
+	font-size: 12px; 
+}
+.table-header {
+	background: url("../images/tablebg.gif") #dddddd repeat left;
+	vertical-align: top;
+	text-align: center;
+
+}
+.header1 
+{ 
+	color: #000000; 
+	font-family: Verdana, Helvetica, sans-serif; 
+	font-size: 18px; 
+	font-weight: 900;
+}
+.header2
+{
+	color: #000000;
 	font-family: Verdana, Helvetica, sans-serif;
+	font-size: 14px;
+	font-weight: 900;
+}
+.headrow 
+{
+	background:#cccccc;
+	font-size: 12px;
+	background: url("../images/active.tablebg.gif") #000000 repeat-x;
+}
+.odd 
+{
+	background:#000000;
 	font-size: 11px;
-}
-.headrow {
-	background:#000000;
-}
-.odd {
-	background:#000000;
-	font-size: 10px;
 	padding: 0px 10px 0px 10px;
 }
-.even {
+.even
+{
 	background:#000000;
-	font-size: 10px;
+	font-size: 11px;
 	padding: 0px 10px 0px 10px;
 }
 .blank {
 	background: #fff;
 }
-.border {
-	background:#000000; 
+.border { 
+	background: url("../images/active.tablebg.gif") #000000 repeat-x;
 }
-.header {
-	font-size: 10px; 
+.header { 
+	font-size: 12px; 
 }
-.error {
+.error { 
 	color: #990033; 
 }
 .fatalerror {
 	padding-top: 3px;
+	padding-left: 3px;
+	padding-right: 3px;
+	display: table-cell;
 	padding-bottom: 3px;
 	color: #990033;
 	border-right:4px solid #990033;
 	border-bottom:4px solid #990033;
 	border-left:4px solid #990033;
 	border-top:4px solid #990033;		
-	font-size: 12px;
-	font-weight: 900;
-	text-align: center;
 }
 .disabled {
 	text-decoration: line-through;
 }
-.alphabet {
+.smallbutton {
+	border:0px;
+	padding-left:1px;
+	padding-right:1px;
+	font-size: 11px;
+	cursor: pointer;
+	background: url("../images/active.tablebg.gif") #00ff00 repeat-x;
+}
+/* ////////////////////////////////////////////////////////////////*/	
+/* De aqui pa'bajo, ros esta creando una hoja de estilos unica para todo Ampache  */
+
+#maincontainer{
+	margin: 0px;
+}
+
+.alphabet { 
+	margin: 10px;
 	font-size: 10px; 
 	font-weight: normal; 
 }
-.smallbutton {
-	border:0px;
-	margin-left: 10px;
-	margin-right: 10px;
-	font-size: 9px;
-	cursor: pointer;
-	background: url(..//themes/Green-Marble/images/tablebg.gif) #716F6B repeat-x;
-}
-/* These three lines make a menu vertical */
+
+/* Content block */
 #content {
-	float: none;
+	margin-left:175px;
+	/*float:left;  use for horizontal menu; comment out otherwise */
+	/* background:#fff url("../images/bg_content.gif") repeat-y right top; */
 }
-#sidebar li {
-	float: none;
+
+h3#content_title{
+	font-family:Arial,Helvetica,Sans-Serif;
+	font-size:12px;
+	line-height:32px;
+	color:#fff;
 }
-#sidebar li ul {
-	margin: -1.5em 0 0 9em;
+
+h3#content_title span {
+	text-align:left;
 }
-.nodisplay {
-	 display: none;
+			
+/* Styles for Header */
+div#Header{
+	height:80px;
+	margin-bottom:3px;
+	padding:0px;
 }
-.display {
-}
-#mpdpl td {
-	padding: 0px 2px 0px 2px;
-	text-align: left;
-}
-#sidebar {
-	clear: both;
-	height: 100%;
-	margin: 0px;
+
+#Header h1 { 
+	background: transparent url("../images/bg_login_0.jpg") no-repeat top left; 
+	border:0px; 
+	width: 439px; 
+	height: 84px; 
 	float: left;
-	padding: 0;
-	list-style: none;
-	line-height: 1.0;
+	margin:0px;
+	padding:0px;
 }
+	
+#Header h1 span {
+	display:none
+}
+
+#Header h2 { 
+	background: transparent url(001/h2.gif) no-repeat top left; 
+	margin-top: 75px;  
+	width: 200px; 
+	height: 18px; 
+	float: right;
+}
+
+#Header h2 span {
+	font-size:10px;
+	margin-left:10px;
+}
+
+
+div#sidebar{
+	clear:both;
+	position:absolute;
+	left:5px;
+	top:87px;
+}
+
+#sidebar h3 {
+display:none;
+}
+	
+#sidebar h3 span {
+	display:none
+}
+
 #sidebar ul {
 	margin: 0px;
 	list-style: none;
+	font-family:Arial, Helvetica, Sans-Serif;
+	font-size:10px;
 	padding: 0px;
-	font-family: verdana, arial, Helvetica, sans-serif;
 	line-height: 1.0;
 }
+
 #sidebar li {
-	display: block;
-	padding: 5px 0px 5px 10px;
-	width: 10.5em;
-	background: url(..//themes/Green-Marble/images/menu.jpg) #000000 repeat-y;
-	border: 1px solid black;
+    margin: 0;
+    display: block;
+    border: 1px solid #000000;
+    padding: 5px 0px 5px 10px;
+    width: 10.5em;
+    background: url(../images/menu.jpg) #000000 repeat-y;
 }
+
+#sidebar ul.subnavside li { 
+    border: 1px solid #000000;
+}
+
 #sidebar a, .navbutton {
-	display: block;  /*Not sure why this is neccesary, but it is for IE*/
-	padding: 0px 0px 0px 20px;
-	text-decoration: none;
-	}
+    display: block;  /*Not sure why this is neccesary, but it is for IE*/
+    text-decoration: none;
+}
+
 #sidebar li:hover, #sidebar li.sfhover {
-	background: url(..//themes/Green-Marble/images/menu-active.jpg) #000000 repeat-y;
+	color:#000000;
+	background-color:#DDDDDD;
 }
-#sidebar #activetopmenu, #sidebar #activesubmenu {
-	background: url(..//themes/Green-Marble/images/menu-active.jpg) #000000 repeat-y;
-}
+
 #sidebar li:active {
-	background: url(..//themes/Green-Marble/images/menu-active.jpg) #000000 repeat-y;
+
+	background: url(../images/menu-active.jpg) #000000 repeat-y;
+	z-index:30;
 }
+   
 #sidebar li ul {
-	float: left;
-	position: absolute;
-	width: 9em;
-	margin: -1.5em 0 0 10.5em;  /* for vertical menu; comment out otherwise */
-	left: -999em;  /* this -999em puts the submenu item way off to the left until it's called back by a hover (below) */
+    float: left;
+    position: absolute;
+    width: 9em;
+    margin: -1.5em 0 0 10.5em; /* for vertical menu; comment out otherwise */
+    left: -999em;  /* this -999em puts the submenu item way off to the left until it's called back by a hover (below) */
+    z-index:30;
 }
-#sidebar li:hover ul, #sidebar li.sfhover ul {
+
+#sidebar #activetopmenu, #sidebar #activesubmenu {
+	background: url(../images/menu-active.jpg) #000000 repeat-y;
+}
+#sidebar li:hover, #sidebar li.sfhover {
 	left: auto;  /* this calls the submenu back when the parent li is hovered. */
+	background: url(../images/menu-active.jpg) #000000 repeat-y;
 }
-/*star rating styles */
-.star-rating {
+
+/* Styles for Now Playing */
+#nowplaying{
+	clear: both;
+	width: 625px;
+}
+
+#np_container1{
+	width: 260px;
+	height: 18px;
+	padding: 0px;
+	margin: 0px;
+	background: #fff url("../images/tb_tab.jpg") no-repeat top left;
+}
+
+#np_container1 h1{
+	font-size: 10px;
+	font-weight: bold;
+	padding: 2px;
+}
+
+#np_container2{
+	border-width: 1px 1px 1px 1px;
+	border-style: solid;
+	border-color:#ddd #999 #999 #ccc;
+	padding: 6px;
+	font-family: Verdana, sans-serif;
+	font-size: 10px;
+	line-height: 12px;
+	color: #000;
+	background: #D6D6D4 url("../images/bg_row.jpg") repeat top left;
+}
+
+	
+/* Styles for Login template  */
+#container{
+	margin:100px auto 0px auto;
+	width:437px;
+	font-size: 12px;
+	text-align:center;
+}
+#container h1{
+	background:url("../images/bg_login_0.jpg") no-repeat;
+	height:81px;
+	margin-bottom:8px;
+}
+#container h1 span{
+	display:none;
+}
+#container div{
+	background:url("../images/bg_login_1.jpg") no-repeat;
+	height:285px;
+}
+#loginp_0{
+	color:#333;
+	margin-top:0px;
+	padding-top:60px;
+}
+.loginp_1{
+	text-align:right;
+	padding-right:100px;
+}
+.loginp_1 span{
+	font-weight:bold;
+}
+.loginp_1 input{
+	border:1px solid #999;
+}
+input.text_input {
+width:12em;
+}
+.loginp_1 input.check_input {
+margin-right:5em;
+} 
+/* Footer */
+#footer {
+	margin-left: 150px;
+	margin-bottom: 10px;
+}
+
+#footer p {
+	color:#999999;
+	font-size:10px;
+}
+#topbar { 
+	height: 120px;
+	padding-top:13px;
+	margin-left:230px;
+	border: 2px black;
+}
+#topbarright { 
+	font-size: 10px;
+}
+#topbarleft, #topbarleft a{ 
+	float: left;
+}
+/* styles for the star ratings */
+.star-rating{
 	list-style:none;
 	margin: 0px;
 	padding:0px;
 	width: 80px;
 	height: 15px;
 	position: relative;
-	background: url(images/ratings/star_rating.gif) top left repeat-x;
+	background: url("../images/ratings/star_rating.gif") top left repeat-x;        
 }
-.star-rating li {
+.star-rating li{
 	padding:0px;
 	margin:0px;
-	/*\*/
 	float: right;
-	/* */
 }
-.star-rating li a {
+.star-rating li a{
 	display:block;
 	width:16px;
 	height: 15px;
@@ -305,19 +439,19 @@ tr td a {
 	position: absolute;
 	padding: 0px;
 }
-.star-rating li a:hover {
-	background: url(images/ratings/star_rating.gif) left center;
+.star-rating li a:hover{
+	background: url("../images/ratings/star_rating.gif") left center;
 	z-index: 2;
 	left: 0px;
 }
-li.zero-stars a:hover { 
-	background: url(images/ratings/x.gif);
+li.zero-stars a:hover {
+	background: url("../images/ratings/x.gif");
 	height: 15px;
 	left: 80px;
 	display: block;
 }
 a.zero-stars {
-	background: url(images/ratings/x_off.gif);
+	background: url("../images/ratings/x_off.gif");
 	height: 15px;
 	left: 80px;
 	display: block;
@@ -325,63 +459,160 @@ a.zero-stars {
 a.one-stars{
 	left: 0px;
 }
-a.one-stars:hover {
+a.one-stars:hover{
 	width:16px;
 }
-a.two-stars {
+a.two-stars{
 	left:16px;
 }
-a.two-stars:hover {
+a.two-stars:hover{
 	width: 32px;
 }
-a.three-stars {
+a.three-stars{
 	left: 32px;
 }
-a.three-stars:hover {
+a.three-stars:hover{
 	width: 48px;
 }
-a.four-stars {
+a.four-stars{
 	left: 48px;
-}       
-a.four-stars:hover {
+}
+a.four-stars:hover{
 	width: 64px;
 }
-a.five-stars {
+a.five-stars{
 	left: 64px;
 }
-a.five-stars:hover {
+a.five-stars:hover{
 	width: 80px;
 }
-li.current-rating {
-	background: url(images/ratings/star_rating.gif) left bottom;
+li.current-rating{
+	background: url("../images/ratings/star_rating.gif") left bottom;
 	position: absolute;
 	height: 15px;
 	display: block;
 	text-indent: -9000px;
 	z-index: 1;
 }
-#sidebar li input {
-	padding: 0px 10px 0px 10px;
-	display: inline-table;
-}
-#sidebar li select {
-	display: inline-table;
-}
-#tablist li a {
-	padding: 3px 0.5em;
-	margin-left: 3px;
-	border: 1px solid #000000;
-	border-bottom: none;
+/* Box Related Styles */
+
+.box { 
+	padding:0px;
+	margin-bottom:5px;
 	background: #000000;
+}
+.box-title { 
+	font-size: 1.05em;
+	font-weight: bold;
+}
+.box-left-top { 
+	background: url("../images/topleft.gif") no-repeat top left;
+}
+.box-left-bottom {
+        background: url("../images/bottomleft.gif") no-repeat bottom left;
+}
+
+.box-right-bottom { 
+	background: url("../images/bottomright.gif") no-repeat bottom right;
+}
+.box-right-top {
+	background: url("../images/topright.gif") no-repeat top right;
+}
+.box-right { 
+	display:none;
+}
+.box-top { 
+	display:none;
+}
+.box-left { 
+	display:none;
+}
+.box-bottom { 
+	display:none;
+}
+/* List Header Styles */
+.list-header { 
 	text-decoration: none;
+} 
+.list-header:hover { 
+	color:#071fd4;
 }
-#tablist li a:link { color: #B2B2B2; }
-#tablist li a:visited { color: #B2B2B2; }
-#tablist li a:hover {
-	color: #00ff00;
+
+
+.confirmation-box {
+	padding-left:5px;
+	padding-top:5px;
+ 	padding-right:5px;
+	margin-bottom:10px;
+	display: table-cell;
+	background-color: #bbbbbb;
+	border:2px solid #000000;
+}
+.text-action, .text-action li {
+	margin-top:5px;
+	list-style: none;
+	margin-bottom:5px;
+}
+.text-action a, .text-action span {
+	border:1px solid #444444;
+ 	padding-left:2px;
+	padding-right:2px;
+	text-decoration: none;
+	background: url("../images/tablebg.gif") #000000 repeat-x;
+
+}
+.text-action #pt_active {
 	background: #000000;
-	border-color: #000000;
+	color: #00ff00;
+	border:1px solid #444444;
+	background: url("../images/tablebg.gif") #000000 repeat-x;
 }
--->
-</style>
+#nowplaying {
+	width:600px;
+}
+.np_row {
+	padding-top: 3px;
+	padding-bottom: 3px;
+	display: block;
+}
+.np_cell {
+	display: inline;
+	margin: 10px;
+}
+#tablist {
+        padding: 3px 0;
+        margin: 12px 0 0 0;
+        font: bold 12px Verdana, sans-serif;
+}
+
+#tablist li {
+        list-style: none;
+        margin: 0;
+        display: inline;
+}
+
+#tablist li a {
+        padding: 3px 0.5em;
+        margin-left: 3px;
+        background: #000000;
+        border-color: #bbbbbb;
+        border-bottom: 1px solid #bbbbbb;
+        text-decoration: none;
+}
+
+#tablist li a:link { color: #bbbbbb; }
+#tablist li a:visited { color: #bbbbbb; }
+
+#tablist li a:hover {
+        color: #000000;
+        background: #bbbbbb;
+        border-color: #000000;
+}
+
+#tablist li a#current {
+        color: #00ff00;
+        background: #000000;
+        border-color: #bbbbbb;
+        border-bottom: 1px solid #bbbbbb;
+}
 
