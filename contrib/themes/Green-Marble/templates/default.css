@@ -52,7 +52,7 @@ a:active  {
 }
 .text-box {
 	display: table-cell;
-	padding-left:5px;
+	padding-left:0px;
 	padding-top:5px;
 	padding-right:5px;
 	margin-bottom:10px;
@@ -61,7 +61,7 @@ a:active  {
 }
 .selected_button {
 	color:#00ff00;
-	background: url("../images/tablebg.gif") #00ff00 repeat-x;
+	background: url("../images/tablebg.gif") #000000 repeat-x;
 }
 .unselected_button {
 	/* there really isn't anything for this */
@@ -94,7 +94,7 @@ input {
 	font-size: 12px; 
 	font-weight: bold; 
 	background-color: #000000;
-	border-color:#bbbbbb; 
+	border-color:#555555; 
 	margin: 2px 2px 2px 2px;
 }
 select	{ 
@@ -102,13 +102,14 @@ select	{
 	font-family: Verdana, Helvetica, sans-serif; 
 	font-size: 12px; 
 	background-color: #000000; 
-	border-color:#bbbbbb; 
+	border-color:#555555; 
 }
 textarea { 
 	background-color: #000000;
 	color: #000000; 
 	font-family: Verdana, Helvetica, sans-serif; 
 	font-size: 12px; 
+	border-color:#555555; 
 }
 .table-header {
 	background: url("../images/tablebg.gif") #dddddd repeat left;
@@ -176,12 +177,12 @@ textarea {
 	text-decoration: line-through;
 }
 .smallbutton {
-	border:0px;
+	border:0px solid #555555;
 	padding-left:1px;
 	padding-right:1px;
 	font-size: 11px;
 	cursor: pointer;
-	background: url("../images/active.tablebg.gif") #00ff00 repeat-x;
+	background: url("../images/active.tablebg.gif") #000000 repeat-x;
 }
 /* ////////////////////////////////////////////////////////////////*/	
 /* De aqui pa'bajo, ros esta creando una hoja de estilos unica para todo Ampache  */
@@ -277,7 +278,7 @@ display:none;
     margin: 0;
     display: block;
     border: 1px solid #000000;
-    padding: 5px 0px 5px 10px;
+    padding: 5px 0px 5px 5px;
     width: 10.5em;
     background: url(../images/menu.jpg) #000000 repeat-y;
 }
@@ -289,6 +290,9 @@ display:none;
 #sidebar a, .navbutton {
     display: block;  /*Not sure why this is neccesary, but it is for IE*/
     text-decoration: none;
+    text-align: center;
+    padding:0px 12px 0px 0px;
+    margin:0px;
 }
 
 #sidebar li:hover, #sidebar li.sfhover {
