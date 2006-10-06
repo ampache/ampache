@@ -3,6 +3,16 @@
 --------------------------------------------------------------------------
 
 --------------------------------------------------------------------------
+  v.3.3.3-Alpha1
+	- Fixed MPD Controller to attempt to find files based on filename
+		if they were added outside of ampache
+	- Tweaked Now Playing to prevent wrapping of Album Art.
+	- Tweaked stylesheet to fix problem with Firefox and the :active
+		style on the sidebar with the select drop downs
+	- Added Options to Mail statistics to users when sending them
+		a message (Thx pb1dft)
+
+--------------------------------------------------------------------------
   v.3.3.2 10/01/2006
 	- Updated SQL file, changed default site title
 	- Fixed Duplicate Songs functions that have been broken for a 

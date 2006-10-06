@@ -319,12 +319,26 @@ class AmpacheMpd {
 			/* Parse out the song ID and then create the song object */
 			preg_match("/song=(\d+)\&/",$entry['file'],$matches);
 			
-			$song = new Song($matches['1']);
+			/* If we don't know it, look up by filename */
+			if (!$song->title) { 
+				$filename = sql_escape($entry['file']);
+				$sql = "SELECT id FROM song WHERE file = '$filename'";
+				$db_results = mysql_query($sql, dbh());
+				if ($results = mysql_fetch_assoc($db_results)) { 
+					$song = new Song($results['id']);
+				}	
+				else { 
+					$song = new Song(); 
+					$song->title = _('Unknown');
+				}
+			}
+			else { 
+				$song = new Song($matches['1']);
+			}
+
+			/* Make the name pretty */
 			$song->format_song();
 			$data['name']	= $song->f_title . ' - ' . $song->f_album . ' - ' . $song->f_artist;
-
-			/* Just incase prevent emtpy names */
-			if (!$song->title) { $data['name'] = _('Unknown'); }
 
 			/* Optional Elements */
 			$data['link']   = '';

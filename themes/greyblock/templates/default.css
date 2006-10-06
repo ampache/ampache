@@ -242,10 +242,6 @@
 	position: absolute;
 }
 
-#sidebar li:active { 
-	z-index:0;
-}
-
 #sidebar li:hover ul, #sidebar li.sfhover ul { 
 	left: auto;
 }

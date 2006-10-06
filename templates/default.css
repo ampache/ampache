@@ -316,7 +316,7 @@ div#sidebar{
 	background-color:#DDDDDD;
 }
 
-#sidebar li:active {
+#sidebar li.hover:active {
 	background-color:#CCCCCC;
 	z-index:30;
 }

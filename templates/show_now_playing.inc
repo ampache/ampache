@@ -48,7 +48,7 @@ foreach ($results as $item) {
 
 	/* If we've gotten a non-song object just skip this row */
 	if (!is_object($song)) { continue; }
-	if (!$np_user->fullname) { $np_user->fullname = "Unknown User"; }
+	if (!$np_user->fullname) { $np_user->fullname = "Ampache User"; }
 
 	require(conf('prefix') . '/templates/show_now_playing_row.inc.php');
 

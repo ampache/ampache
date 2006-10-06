@@ -144,7 +144,7 @@ $web_path = conf('web_path');
 		<a href="<?php echo $web_path; ?>/randomplay.php"><?php echo _('Random'); ?></a>
 	</li>
 <?php if ($GLOBALS['theme']['orientation'] != 'horizontal') { ?> 
-	<li>
+	<li id="sidebar_form">
 		<form name="sub_random" method="post" enctype="multipart/form-data" action="<?php echo $web_path; ?>/song.php?action=random&amp;method=stream" style="Display:inline">
 		<select name="random" style="width:8.7em;">
 			<option value="1">1</option>
