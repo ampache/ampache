@@ -18,6 +18,7 @@ name = "Simple Matrix"
 # DEFAULT: N/A
 author = "Marno van der Molen"
 #FULL CREDIT goes to Nedko Arnaudov for supplying the base for this theme.
+#Updated by Terence Theijn (pb1dft) to let it work in the new style version of ampache
 
 # Theme Maintainer
 # This is just a way of listing who is responsible for
@@ -29,7 +30,19 @@ maintainer = "Marno van der Molen <marno.vandermolen@gmail.com>"
 # Version
 # This is the revision for this theme, It's up to the maintainer
 # or author to decide how they want to format this
-version = "1.1"
+version = "1.2"
+
+# Orientation
+# This was added as of 3.3.2-Alpha4, this tells Ampache if this theme
+# uses vertical or horizontal orientation of the menu, if this is a horizontal
+# theme then it will not show the quick search and quick random play forms
+orientation = "vertical"
+
+# Submenu
+# If this is set to simple the sub menu's will only be shown when you're on one of the
+# respective pages. If you want to make the menu's something like the classic theme
+# comment this out
+#submenu = "simple"
 
 # Theme Colors
 ###################

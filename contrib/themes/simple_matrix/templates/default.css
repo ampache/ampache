@@ -1,7 +1,7 @@
-<?php
+<!--
 /*
 
- Copyright (c) 2001 - 2005 Ampache.org
+ Copyright (c) 2001 - 2006 Ampache.org
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
@@ -19,269 +19,604 @@
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
+-->
+/* General style rules  */
+body{ 
+	padding-top: 0px;
+	margin-top: 0px;
+	margin-left: 0px;
+	margin-right: 0px; 
+	font-family:Arial, Helvetica, Sans-Serif;
+	background:#000000 url(../images/background.jpg) repeat;
 
-/*!
- @header Style File
- @discussion this is the css that is included on every page of
- 	ampache, mod this to change the look and feel of the site
-*/
-?>
-<style type="text/css">
-<!--
-body	
-{ 
-  background: #000000; 
-  font-family: Verdana; 
-  font-size: 12px; 
-  color: #ffffff;
-  background-color: black;
-  background-image:url(/image/WebDesign3.jpg);
-  background-position: right top;
-  background-repeat: repeat-y;
-  background-attachment: scroll;
-  margin-right: 100px;
-  margin-left: 3%;
-  margin-top: 3%;
 }
 
-img
-{
-margin-bottom: 5px;
+p { 
+	color: #ffffff;
+	font-family: Verdana, Helvetica, sans-serif; 
+	font-size: 10px;
 }
-p	
-{ 
-  color: #ffffff; 
-  font-family: Verdana; 
-  font-size: 12px; 
-}
-a	
-{ 
-  color: #ffffff; 
-  font-family: Verdana; 
+
+a { 
+	color: #ffffff; 
+	font-family: Verdana, Helvetica, sans-serif; 
 }
 a:visited 
-{ 
-  color: #ffffff; 
-  font-family: Verdana; 
+	{ 
+	color: #ffffff; 	
+	font-family: Verdana, Helvetica, sans-serif; 
+	}
+a:active  { 
+	color: #ffffff; 
+	font-family: Verdana, Helvetica, sans-serif; 
 }
-a:active  
-{ 
-  color: #ffffff; 
-  font-family: Verdana; 
+.text-box {
+	display: table-cell;
+	padding-left:0px;
+	padding-top:5px;
+	padding-right:5px;
+	margin-bottom:10px;
+	background-color: #000000;
+	border:2px solid #000000;
 }
-.text-box 
-{
-  padding-left:5px;
-  padding-top:5px;
-  display: table-cell;
-  margin-bottom:10px;
-  background-color: #000000;
-  border-right:2px solid ;
-  border-bottom:2px solid ;
-  border-left:2px solid ;
-  border-top:2px solid ;
+.selected_button {
+	color:#00ff00;
+	background: url("../images/tablebg.gif") #000000 repeat-x;
 }
-table.tabledata
-{
+.unselected_button {
+	/* there really isn't anything for this */
 }
+.display {}
 
-table.login
-{
-  padding: 5px 5px 5px 5px;
+#mpdpl td {
+	padding: 0px 2px 0px 2px;
+	text-align: left;
 }
+table.tabledata {}
 
-td	
-{ 
-  padding: 0px 8px 0px 8px;
-  color: #ffffff; 
-  font-family: Verdana; 
-  font-size: 12px;
+td { 
+	padding: 0px 8px 0px 8px;
+	color: #00ff00; 
+	font-family: Verdana, Helvetica, sans-serif; 
+	font-size: 12px;
 }
-th
-{
-  padding-right: 10px;
+th {
+	padding-right: 10px;
 }
-input	
-{
-  color: #ffffff; 
-  font-family: Verdana; 
-  font-size: 12px; 
-  font-weight: bold; 
-  background-color: #000000; 
-  border-style: solid;
-  border-width: 1px;
-  border-color: ;
-  margin: 3px 3px 3px 3px;
+tr td a {
+	text-align: center;
+	text-decoration:none;
+	
+}
+input {
+	color: #00ff00; 
+	font-family: Verdana, Helvetica, sans-serif; 
+	font-size: 12px; 
+	font-weight: bold; 
+	background-color: #000000;
+	border-color:#555555; 
+	margin: 2px 2px 2px 2px;
 }
 select	{ 
-  color: #ffffff; 
-  font-family: Verdana; 
-  font-size: 12px; 
-  background-color: #000000; 
+	color: #00ff00; 
+	font-family: Verdana, Helvetica, sans-serif; 
+	font-size: 12px; 
+	background-color: #000000; 
+	border-color:#555555; 
 }
-textarea 
-{ 
-  background-color: #000000;
-  color: #ffffff; 
-  font-family: Verdana; 
-  font-size: 12px; 
+textarea { 
+	background-color: #000000;
+	color: #000000; 
+	font-family: Verdana, Helvetica, sans-serif; 
+	font-size: 12px; 
+	border-color:#555555; 
 }
-.table-header
-{
-  background: #404040;
-  vertical-align: top;
+.table-header {
+	background: url("../images/tablebg.gif") #dddddd repeat left;
+	vertical-align: top;
+	text-align: center;
+
 }
 .header1 
 { 
-  color: #ffffff; 
-  font-family: Verdana; 
-  font-size: <?php echo conf('font_size') + 6; ?>px; 
-  font-weight: 900;
+	color: #000000; 
+	font-family: Verdana, Helvetica, sans-serif; 
+	font-size: 18px; 
+	font-weight: 900;
 }
 .header2
 {
-  color: #ffffff;
-  font-family: Verdana;
-  font-size: <?php echo conf('font_size') + 2; ?>px;
-  font-weight: 900;
+	color: #000000;
+	font-family: Verdana, Helvetica, sans-serif;
+	font-size: 14px;
+	font-weight: 900;
 }
 .headrow 
 {
-  background:#000000;
-  font-size: 12px;
+	background:#cccccc;
+	font-size: 12px;
+	background: url("../images/active.tablebg.gif") #000000 repeat-x;
 }
 .odd 
 {
-  background:#202020;
-  font-size: 12px;
+	background:#000000;
+	font-size: 11px;
+	padding: 0px 10px 0px 10px;
 }
 .even
 {
-  background:#000000;
-  font-size: 12px;
+	background:#000000;
+	font-size: 11px;
+	padding: 0px 10px 0px 10px;
 }
-.blank
-{
-  background: #fff;
+.blank {
+	background: #fff;
 }
-.border 
-{ 
-  background:; 
+.border { 
+	background: url("../images/active.tablebg.gif") #000000 repeat-x;
 }
-.header 
-{ 
-  font-size: 12px; 
+.header { 
+	font-size: 12px; 
 }
-.error	
-{ 
-  color: ; 
-  font-weight: bold; 
+.error { 
+	color: #990033; 
 }
-.fatalerror
-{
-  padding-top: 3px;
-  padding-bottom: 3px;
-  color: ;
-  border-right:4px solid ;
-  border-bottom:4px solid ;
-  border-left:4px solid ;
-  border-top:4px solid ;		
-  font-size: <?php echo conf('font_size')+2; ?>px;
-  font-weight: 900;
-  text-align: center;
+.fatalerror {
+	padding-top: 3px;
+	padding-left: 3px;
+	padding-right: 3px;
+	display: table-cell;
+	padding-bottom: 3px;
+	color: #990033;
+	border-right:4px solid #990033;
+	border-bottom:4px solid #990033;
+	border-left:4px solid #990033;
+	border-top:4px solid #990033;		
 }
-.disabled
-{
-  text-decoration: line-through;
+.disabled {
+	text-decoration: line-through;
 }
-.alphabet 
-{ 
-  font-size: 12px; 
-  font-weight: normal; 
+.smallbutton {
+	border:0px solid #555555;
+	padding-left:1px;
+	padding-right:1px;
+	font-size: 11px;
+	cursor: pointer;
+	background: url("../images/active.tablebg.gif") #000000 repeat-x;
+}
+/* ////////////////////////////////////////////////////////////////*/	
+/* De aqui pa'bajo, ros esta creando una hoja de estilos unica para todo Ampache  */
+
+#maincontainer{
+	margin: 0px;
 }
 
-/*************** Main Menu *****************/
-
-#mainmenu {
-  float: left;
-  width: 100%;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-  border: 1px solid ;
-  background: #282828;
+.alphabet { 
+	margin: 10px;
+	font-size: 10px; 
+	font-weight: normal; 
 }
 
-#mainmenu li {
-  float: left;
-  margin: 0;
-  padding: 0 10px 0 10px;
-  border-right: 1px solid ;
-  display: inline;
-  background: #282828;
+/* Content block */
+#content {
+	margin-left:175px;
+	/*float:left;  use for horizontal menu; comment out otherwise */
+	/* background:#fff url("../images/bg_content.gif") repeat-y right top; */
 }
 
-#mainmenu li.active {
-  background: #404040;
+h3#content_title{
+	font-family:Arial,Helvetica,Sans-Serif;
+	font-size:12px;
+	line-height:32px;
+	color:#fff;
 }
 
-#mainmenu a {
-  text-decoration: none;
+h3#content_title span {
+	text-align:left;
+}
+			
+/* Styles for Header */
+div#Header{
+	height:80px;
+	margin-bottom:3px;
+	padding:0px;
 }
 
-#mainmenu a:hover {
-  text-decoration: underline;
+#Header h1 { 
+	background: transparent url("../images/bg_login_0.jpg") no-repeat top left; 
+	border:0px; 
+	width: 439px; 
+	height: 84px; 
+	float: left;
+	margin:0px;
+	padding:0px;
+}
+	
+#Header h1 span {
+	display:none
 }
 
-#mainmenu a:active {
+#Header h2 { 
+	background: transparent url(001/h2.gif) no-repeat top left; 
+	margin-top: 75px;  
+	width: 200px; 
+	height: 18px; 
+	float: right;
 }
 
-/*************** END Main Menu *************/
-
-/*************** Admin Menu *************/
-
-#adminmenu {
-  float: left;
-  width: 100%;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-  border: 1px solid ;
-  background: #282828;
+#Header h2 span {
+	font-size:10px;
+	margin-left:10px;
 }
 
-#adminmenu li {
-  float: left;
-  margin: 0;
-  padding: 0 10px 0 10px;
-  border-right: 1px solid ;
-  display: inline;
-  background: #282828;
+
+div#sidebar{
+	clear:both;
+	position:absolute;
+	left:5px;
+	top:87px;
 }
 
-#adminmenu li.active {
-  background: #404040;
+#sidebar h3 {
+display:none;
+}
+	
+#sidebar h3 span {
+	display:none
 }
 
-#adminmenu a {
-  text-decoration: none;
+#sidebar ul {
+	margin: 0px;
+	list-style: none;
+	font-family:Arial, Helvetica, Sans-Serif;
+	font-size:10px;
+	padding: 0px;
+	line-height: 1.0;
 }
 
-#adminmenu a:hover {
-  text-decoration: underline;
+#sidebar li {
+    margin: 0;
+    display: block;
+    border: 1px solid #000000;
+    padding: 5px 0px 5px 5px;
+    width: 10.5em;
+    background: url(../images/menu.jpg) #000000 repeat-y;
 }
 
-#adminmenu a:active {
+#sidebar ul.subnavside li { 
+    border: 1px solid #000000;
 }
 
-/*************** END Main Menu *************/
-
-/*************** Page Header *********************/
-#topbar { height: 150px; }
-#pageheader {
+#sidebar a, .navbutton {
+    display: block;  /*Not sure why this is neccesary, but it is for IE*/
+    text-decoration: none;
+    text-align: center;
+    padding:0px 12px 0px 0px;
+    margin:0px;
 }
 
-/*************** END Page Header *****************/
+#sidebar li:hover, #sidebar li.sfhover {
+	color:#000000;
+	background-color:#DDDDDD;
+}
 
--->
-</style>
+#sidebar li:active {
+
+	background: url(../images/menu-active.jpg) #000000 repeat-y;
+	z-index:30;
+}
+   
+#sidebar li ul {
+    float: left;
+    position: absolute;
+    width: 9em;
+    margin: -1.5em 0 0 10.5em; /* for vertical menu; comment out otherwise */
+    left: -999em;  /* this -999em puts the submenu item way off to the left until it's called back by a hover (below) */
+    z-index:30;
+}
+
+#sidebar #activetopmenu, #sidebar #activesubmenu {
+	background: url(../images/menu-active.jpg) #000000 repeat-y;
+}
+#sidebar li:hover, #sidebar li.sfhover {
+	left: auto;  /* this calls the submenu back when the parent li is hovered. */
+	background: url(../images/menu-active.jpg) #000000 repeat-y;
+}
+
+/* Styles for Now Playing */
+#nowplaying{
+	clear: both;
+	width: 625px;
+}
+
+#np_container1{
+	width: 260px;
+	height: 18px;
+	padding: 0px;
+	margin: 0px;
+	background: #fff url("../images/tb_tab.jpg") no-repeat top left;
+}
+
+#np_container1 h1{
+	font-size: 10px;
+	font-weight: bold;
+	padding: 2px;
+}
+
+#np_container2{
+	border-width: 1px 1px 1px 1px;
+	border-style: solid;
+	border-color:#ddd #999 #999 #ccc;
+	padding: 6px;
+	font-family: Verdana, sans-serif;
+	font-size: 10px;
+	line-height: 12px;
+	color: #000;
+	background: #D6D6D4 url("../images/bg_row.jpg") repeat top left;
+}
+
+	
+/* Styles for Login template  */
+#container{
+	margin:100px auto 0px auto;
+	width:437px;
+	font-size: 12px;
+	text-align:center;
+}
+#container h1{
+	background:url("../images/bg_login_0.jpg") no-repeat;
+	height:81px;
+	margin-bottom:8px;
+}
+#container h1 span{
+	display:none;
+}
+#container div{
+	background:url("../images/bg_login_1.jpg") no-repeat;
+	height:285px;
+}
+#loginp_0{
+	color:#333;
+	margin-top:0px;
+	padding-top:60px;
+}
+.loginp_1{
+	text-align:right;
+	padding-right:100px;
+}
+.loginp_1 span{
+	font-weight:bold;
+}
+.loginp_1 input{
+	border:1px solid #999;
+}
+input.text_input {
+width:12em;
+}
+.loginp_1 input.check_input {
+margin-right:5em;
+} 
+/* Footer */
+#footer {
+	margin-left: 150px;
+	margin-bottom: 10px;
+}
+
+#footer p {
+	color:#999999;
+	font-size:10px;
+}
+#topbar { 
+	height: 150px;
+	padding-top:13px;
+	margin-left:230px;
+	border: 2px black;
+}
+#topbarright { 
+	font-size: 10px;
+}
+#topbarleft, #topbarleft a{ 
+	float: left;
+}
+/* styles for the star ratings */
+.star-rating{
+	list-style:none;
+	margin: 0px;
+	padding:0px;
+	width: 80px;
+	height: 15px;
+	position: relative;
+	background: url("../images/ratings/star_rating.gif") top left repeat-x;        
+}
+.star-rating li{
+	padding:0px;
+	margin:0px;
+	float: right;
+}
+.star-rating li a{
+	display:block;
+	width:16px;
+	height: 15px;
+	text-decoration: none;
+	text-indent: -9000px;
+	z-index: 20;
+	position: absolute;
+	padding: 0px;
+}
+.star-rating li a:hover{
+	background: url("../images/ratings/star_rating.gif") left center;
+	z-index: 2;
+	left: 0px;
+}
+li.zero-stars a:hover {
+	background: url("../images/ratings/x.gif");
+	height: 15px;
+	left: 80px;
+	display: block;
+}
+a.zero-stars {
+	background: url("../images/ratings/x_off.gif");
+	height: 15px;
+	left: 80px;
+	display: block;
+}
+a.one-stars{
+	left: 0px;
+}
+a.one-stars:hover{
+	width:16px;
+}
+a.two-stars{
+	left:16px;
+}
+a.two-stars:hover{
+	width: 32px;
+}
+a.three-stars{
+	left: 32px;
+}
+a.three-stars:hover{
+	width: 48px;
+}
+a.four-stars{
+	left: 48px;
+}
+a.four-stars:hover{
+	width: 64px;
+}
+a.five-stars{
+	left: 64px;
+}
+a.five-stars:hover{
+	width: 80px;
+}
+li.current-rating{
+	background: url("../images/ratings/star_rating.gif") left bottom;
+	position: absolute;
+	height: 15px;
+	display: block;
+	text-indent: -9000px;
+	z-index: 1;
+}
+/* Box Related Styles */
+
+.box { 
+	padding:0px;
+	margin-bottom:5px;
+	background: #000000;
+}
+.box-title { 
+	font-size: 1.05em;
+	font-weight: bold;
+}
+.box-left-top { 
+	background: url("../images/topleft.gif") no-repeat top left;
+}
+.box-left-bottom {
+        background: url("../images/bottomleft.gif") no-repeat bottom left;
+}
+
+.box-right-bottom { 
+	background: url("../images/bottomright.gif") no-repeat bottom right;
+}
+.box-right-top {
+	background: url("../images/topright.gif") no-repeat top right;
+}
+.box-right { 
+        background: url("../images/right.gif");
+}
+.box-top { 
+        background: url("../images/top.gif");
+}
+.box-left { 
+        background: url("../images/left.gif");
+}
+.box-bottom { 
+        background: url("../images/bottom.gif");
+}
+/* List Header Styles */
+.list-header { 
+	text-decoration: none;
+} 
+.list-header:hover { 
+	color:#071fd4;
+}
+
+
+.confirmation-box {
+	padding-left:5px;
+	padding-top:5px;
+ 	padding-right:5px;
+	margin-bottom:10px;
+	display: table-cell;
+	background-color: #bbbbbb;
+	border:2px solid #000000;
+}
+.text-action, .text-action li {
+	margin-top:5px;
+	list-style: none;
+	margin-bottom:5px;
+}
+.text-action a, .text-action span {
+	border:1px solid #444444;
+ 	padding-left:2px;
+	padding-right:2px;
+	text-decoration: none;
+	background: url("../images/tablebg.gif") #000000 repeat-x;
+
+}
+.text-action #pt_active {
+	background: #000000;
+	color: #00ff00;
+	border:1px solid #444444;
+	background: url("../images/tablebg.gif") #000000 repeat-x;
+}
+#nowplaying {
+	width:600px;
+}
+.np_row {
+	padding-top: 3px;
+	padding-bottom: 3px;
+	display: block;
+}
+.np_cell {
+	display: inline;
+	margin: 10px;
+}
+#tablist {
+        padding: 3px 0;
+        margin: 12px 0 0 0;
+        font: bold 12px Verdana, sans-serif;
+}
+
+#tablist li {
+        list-style: none;
+        margin: 0;
+        display: inline;
+}
+
+#tablist li a {
+        padding: 3px 0.5em;
+        margin-left: 3px;
+        background: #000000;
+        border-color: #bbbbbb;
+        border-bottom: 1px solid #bbbbbb;
+        text-decoration: none;
+}
+
+#tablist li a:link { color: #bbbbbb; }
+#tablist li a:visited { color: #bbbbbb; }
+
+#tablist li a:hover {
+        color: #000000;
+        background: #bbbbbb;
+        border-color: #000000;
+}
+
+#tablist li a#current {
+        color: #00ff00;
+        background: #000000;
+        border-color: #bbbbbb;
+        border-bottom: 1px solid #bbbbbb;
+}
+
