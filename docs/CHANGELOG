@@ -4,6 +4,8 @@
 
 --------------------------------------------------------------------------
   v.3.3.3-Alpha1
+	- Fixed display of disabled localplay methods, Preferences wil
+		now only display active ones. 
 	- Fixed MPD Controller to attempt to find files based on filename
 		if they were added outside of ampache
 	- Tweaked Now Playing to prevent wrapping of Album Art.

@@ -160,7 +160,10 @@ function get_localplay_controllers() {
 		if (!is_dir($file)) { 
 			/* Get the base name, then get everything before .controller.php */
 			$filename = basename($file,'.controller.php');
-			$results[] = $filename;
+			/* Make sure that it's currently enabled */
+			if (verify_localplay_preferences($filename)) { 
+				$results[] = $filename;
+			} 
 		}
 	} // end while
 

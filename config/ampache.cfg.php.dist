@@ -140,8 +140,8 @@ tag_order	= "file"
 
 # Use auth?
 # If this is set to "Yes" ampache will require a valid
-# Username and password. If this is set to no then ampache
-# will not ask you for a username and password. No is only
+# Username and password. If this is set to false then ampache
+# will not ask you for a username and password. false is only
 # recommended for internal only instances
 # DEFAULT true
 use_auth	= "yes"

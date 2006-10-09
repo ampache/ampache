@@ -73,6 +73,8 @@ class Localplay {
 	 */
 	function _load_player() { 
 
+		if (!$this->type) { return false; } 
+
 		$filename = conf('prefix') . '/modules/localplay/' . $this->type . '.controller.php';
 		$include = require_once ($filename);
 		
@@ -173,9 +175,13 @@ class Localplay {
 	 */
 	function connect() { 
 
-		
 		$function = $this->_function_map['connect'];
-		
+	
+		/* This is very bad, that means they don't even 
+		 * have a connection function defined
+		 */
+		if (!$function) { return false; } 
+	
 		if (!$this->_player->$function()) { 
 			debug_event('localplay','Error Unable to connect, check ' . $this->type . ' controller','1');
 			return false;

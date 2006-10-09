@@ -305,6 +305,7 @@ function create_preference_input($name,$value) {
 				if ($value == $controller) { $is_selected = 'selected="selected"'; } 
 				echo "\t<option value=\"" . $controller . "\" $is_selected>" . ucfirst($controller) . "</option>\n";
 			} // end foreach
+			echo "\t<option value=\"\">" . _('None') . "</option>\n";
 			echo "</select>\n";
 		break;
 		case 'localplay_level':
