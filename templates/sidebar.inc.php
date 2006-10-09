@@ -184,9 +184,15 @@ $web_path = conf('web_path');
 		<br />
 		<?php $type = conf('play_type'); ${$type} = 'id="pt_active"'; ?>
 		<?php 
-			$required_info  = "&amp;user_id=" . $GLOBALS['user']->id . "&amp;sessid=" . session_id();
+			$required_info  = "&user_id=" . $GLOBALS['user']->id . "&sessid=" . session_id();
 			$ajax_url       = $web_path . '/server/ajax.server.php'; 
 		?>
+		<script type="text/javascript" language="javascript">
+		<!-- 
+		var lp_switch = new Array(2);
+		lp_switch[0]	= "play_type";
+		-->
+		</script>
 		<span class="text-action" style="cursor:pointer;" id="play_type">
 		<?php require_once(conf('prefix') . '/templates/show_localplay_switch.inc.php'); ?>
 		</span>

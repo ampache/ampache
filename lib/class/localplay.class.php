@@ -534,7 +534,7 @@ class Localplay {
 	 * of the current player state
 	 */
 	function get_user_state($state) { 
-	
+		
 		switch ($state) { 
 			case 'play':
 				return _('Now Playing');
@@ -551,6 +551,29 @@ class Localplay {
 		} // switch on state	
 
 	} // get_user_state
+
+	/**
+	 * get_user_playing
+	 * This attempts to return a nice user friendly
+	 * currently playing string
+	 */
+	function get_user_playing() { 
+
+		$status = $this->status();
+		
+		/* Format the track name */
+		$track_name = $status['track_artist'] . ' - ' . $status['track_album'] . ' - ' . $status['track_title'];
+
+		/* This is a cheezball fix for when we were unable to find a
+		 * artist/album (or one wasn't provided)
+		 */
+		$track_name = ltrim(ltrim($track_name,' - '),' - ');
+
+		$track_name = "[" . $status['track'] . "] - " . $track_name;
+
+		return $track_name;
+	
+	} // get_user_playing
 
 
 } //end localplay class

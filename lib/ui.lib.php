@@ -1334,5 +1334,29 @@ function get_user_icon($name) {
 
 } // show_icon
 
+/**
+ * xml_from_array
+ * This takes a one dimensional array and 
+ * creates a XML document form it for use 
+ * primarly by the ajax mojo
+ */
+function xml_from_array($array) { 
+
+	$escape_array = array ('<','&');
+	$replace_array = array('&lt;','&amp;');
+
+	$string = "<root>\n";
+	foreach ($array as $key=>$value) { 
+		/* We need to escape the value */
+		$value = str_replace($escape_array,$replace_array,$value);
+		$string .= "\t<$key>$value</$key>\n";
+	}
+	$string .= "</root>\n";
+
+	return $string;
+
+} // xml_from_array
+
+
 
 ?>

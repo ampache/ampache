@@ -23,40 +23,39 @@
 $web_path = conf('web_path'); 
 $localplay = init_localplay();
 
-$required_info 	= "&amp;user_id=" . $GLOBALS['user']->id . "&amp;sessid=" . session_id(); 
+$required_info 	= "&user_id=" . $GLOBALS['user']->id . "&sessid=" . session_id(); 
 $ajax_url	= $web_path . '/server/ajax.server.php';
 $status		= $localplay->status();
 
-/* Format the track name */
-$track_name = $status['track_artist'] . ' - ' . $status['track_album'] . ' - ' . $status['track_title'];
-
-/* This is a cheezball fix for when we were unable to find a
- * artist/album (or one wasn't provided)
- */
-$track_name = ltrim(ltrim($track_name,' - '));
 
 ?>
-<strong><?php echo $localplay->get_user_state($status['state']) ?></strong><br />
-&nbsp;&nbsp;<?php echo '[' . $status['track'] . '] - ' . $track_name . '<br />'; ?>
+<span style="font-weight:bold;" id="lp_state"><?php echo $localplay->get_user_state($status['state']) ?></span><br />
+&nbsp;&nbsp;<span id="lp_playing"><?php echo $localplay->get_user_playing(); ?></span><br />
 <div align="center"><?php require (conf('prefix') . '/templates/show_localplay_control.inc.php'); ?></div>
 <div align="center">
+	<script type="text/javascript" language="javascript">
+	<!--
+	var lp_v = new Array(1);
+	lp_v[0] = "lp_volume";
+	-->
+	</script>
 	<?php if ($localplay->has_function('volume_up')) { ?>
-	<span class="up_button" onclick="ajaxPut('<?php echo $ajax_url; ?>?action=localplay&amp;cmd=volume_up<?php echo $required_info; ?>','localplay_state');return true;">
+	<span class="up_button" onclick="ajaxPut('<?php echo $ajax_url; ?>?action=localplay&cmd=volume_up<?php echo $required_info; ?>','lp_v');return true;">
 	        <img src="<?php echo $web_path; ?>/images/localplay/volup.gif" alt="volume up" />
 	</span>
 	<?php } ?>
 	<?php if ($localplay->has_function('volume_down')) { ?>
-	<span class="down_button" onclick="ajaxPut('<?php echo $ajax_url; ?>?action=localplay&amp;cmd=volume_down<?php echo $required_info; ?>','localplay_state');return true;">
+	<span class="down_button" onclick="ajaxPut('<?php echo $ajax_url; ?>?action=localplay&cmd=volume_down<?php echo $required_info; ?>','lp_v');return true;">
 	        <img src="<?php echo $web_path; ?>/images/localplay/voldn.gif" alt="volume down" />
 	</span>
 	<?php } ?>
 	<?php if ($localplay->has_function('volume_mute')) { ?>
-	<span class="mute_button" onclick="ajaxPut('<?php echo $ajax_url; ?>?action=localplay&amp;cmd=volume_mute<?php echo $required_info; ?>','localplay_state');return true;">
+	<span class="mute_button" onclick="ajaxPut('<?php echo $ajax_url; ?>?action=localplay&cmd=volume_mute<?php echo $required_info; ?>','lp_v');return true;">
 	        <img src="<?php echo $web_path; ?>/images/localplay/volmute.gif" alt="volume mute" />
 	</span>
 	<?php } ?>
 	<br />
-	<?php echo _('Volume') . ":" . $status['volume']; ?>
+	<?php echo _('Volume'); ?>:<span id="lp_volume"><?php echo $status['volume']; ?></span>
 </div>
 <br />
 <?php if ($localplay->has_function('repeat')) { ?>

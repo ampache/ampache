@@ -33,6 +33,9 @@ if (!session_exists($_REQUEST['sessid'])) { exit(); }
 $GLOBALS['user'] = new User($_REQUEST['user_id']);
 $action = scrub_in($_REQUEST['action']);
 
+/* Set the correct headers */
+header("Content-type: application/xhtml+xml");
+
 switch ($action) { 
 	case 'localplay':
 		init_preferences();
@@ -40,7 +43,32 @@ switch ($action) {
 		$localplay->connect();
 		$function 	= scrub_in($_GET['cmd']);
 		$value		= scrub_in($_GET['value']);
+		/* Return information based on function */
+		switch($function) { 
+			case 'play':
+			case 'stop':
+			case 'pause':
+				$results['lp_state'] 	= $localplay->get_user_state($function);	
+				$results['lp_playing']	= $localplay->get_user_playing();
+			break;
+			case 'next':
+			case 'prev':
+				$results['lp_state']	= $localplay->get_user_state('play');
+				$results['lp_playing'] 	= $localplay->get_user_playing();
+			break;
+			case 'volume_up':
+			case 'volume_down':
+			case 'volume_mute':
+				$status = $localplay->status();
+				$results['lp_volume']	= $status['volume'];
+			break;
+			default:
+				$results = array();	
+			break;
+		} // end switch on cmd
 		$localplay->$function($value); 
+		$xml_doc = xml_from_array($results);
+		echo $xml_doc;
 	break;
 	case 'change_play_type':
 		init_preferences();
@@ -54,11 +82,20 @@ switch ($action) {
 		$ajax_url       = conf('web_path') . '/server/ajax.server.php';
 		$required_info  = "&user_id=" . $GLOBALS['user']->id . "&sessid=" . session_id();
 		${$_GET['type']} = 'id="pt_active"';
-		
+		ob_start();	
 		require_once(conf('prefix') . '/templates/show_localplay_switch.inc.php'); 
+		$results['play_type'] = ob_get_contents();
+		ob_end_clean();
+		$xml_doc = xml_from_array($results);
+		echo $xml_doc;
 	break;
 	case 'reloadnp':
+		ob_start();
 		show_now_playing();	
+		$results['np_data'] = ob_get_contents();
+		ob_end_clean();
+		$xml_doc = xml_from_array($results);
+		echo $xml_doc;
 	break;
 	default:
 		echo "Default Action";

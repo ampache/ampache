@@ -25,7 +25,8 @@
         http_request.open('GET', url, true);
         http_request.send(null);
 	}
-		
+	
+	// uid is an array of uids that need to be replaced		
 	function ajaxPut(url,uid) {
 		if (window.ActiveXObject) { // IE
             try {
@@ -52,7 +53,10 @@
 
     function getContents(http_request,uid) {
         if (http_request.readyState == 4) {
-	    	data = http_request.responseText;
-		document.getElementById(uid).innerHTML = data;
+	    	data = http_request.responseXML;
+		for(i=0;i<uid.length;i++) {
+			var new_txt = data.getElementsByTagName(uid[i])[0].firstChild.nodeValue;	
+			document.getElementById(uid[i]).innerHTML = new_txt;
+		}	
         }
     }

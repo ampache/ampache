@@ -40,12 +40,17 @@ $action = scrub_in($_REQUEST['action']);
 if (conf('refresh_limit') > 5) { 
 	$ajax_url = conf('web_path') . '/server/ajax.server.php?action=reloadnp&user_id=' . $GLOBALS['user']->id . 
 			'&sessid=' . session_id();
-	$ajax_object = 'nowplaying';
+	$ajax_object = 'np_refresh';
 	require_once(conf('prefix') . '/templates/javascript_refresh.inc.php');
 }
 ?>
-
-<div id="nowplaying">
+<script language="javascript" type="text/javascript">
+<!--
+var np_refresh = new Array(1);
+np_refresh[0] = "np_data";
+-->
+</script>
+<div id="np_data">
 	<?php show_now_playing(); ?>
 </div> <!-- Close Now Playing Div -->
 

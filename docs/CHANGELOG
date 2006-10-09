@@ -4,7 +4,10 @@
 
 --------------------------------------------------------------------------
   v.3.3.3-Alpha1
-	- Fixed display of disabled localplay methods, Preferences wil
+	- Tweaked Kajax, now accepts an array of elements to replace
+		from a passed xml document. allows for multiple targets
+		on a single ajax request 
+	- Fixed display of disabled localplay methods, Preferences will
 		now only display active ones. 
 	- Fixed MPD Controller to attempt to find files based on filename
 		if they were added outside of ampache
