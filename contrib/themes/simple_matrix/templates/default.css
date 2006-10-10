@@ -60,7 +60,7 @@ a:active  {
 	border:2px solid #000000;
 }
 .selected_button {
-	color:#00ff00;
+	color:#00FF99;
 	background: url("../images/tablebg.gif") #000000 repeat-x;
 }
 .unselected_button {
@@ -76,7 +76,7 @@ table.tabledata {}
 
 td { 
 	padding: 0px 8px 0px 8px;
-	color: #00ff00; 
+	color: #00FF99; 
 	font-family: Verdana, Helvetica, sans-serif; 
 	font-size: 12px;
 }
@@ -89,7 +89,7 @@ tr td a {
 	
 }
 input {
-	color: #00ff00; 
+	color: #00FF99; 
 	font-family: Verdana, Helvetica, sans-serif; 
 	font-size: 12px; 
 	font-weight: bold; 
@@ -98,7 +98,7 @@ input {
 	margin: 2px 2px 2px 2px;
 }
 select	{ 
-	color: #00ff00; 
+	color: #00FF99; 
 	font-family: Verdana, Helvetica, sans-serif; 
 	font-size: 12px; 
 	background-color: #000000; 
@@ -407,7 +407,7 @@ margin-right:5em;
 	font-size:10px;
 }
 #topbar { 
-	height: 150px;
+	height: 90px;
 	padding-top:13px;
 	margin-left:230px;
 	border: 2px black;
@@ -567,7 +567,7 @@ li.current-rating{
 }
 .text-action #pt_active {
 	background: #000000;
-	color: #00ff00;
+	color: #00FF99;
 	border:1px solid #444444;
 	background: url("../images/tablebg.gif") #000000 repeat-x;
 }
@@ -614,7 +614,7 @@ li.current-rating{
 }
 
 #tablist li a#current {
-        color: #00ff00;
+        color: #00FF99;
         background: #000000;
         border-color: #bbbbbb;
         border-bottom: 1px solid #bbbbbb;
