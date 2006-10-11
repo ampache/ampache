@@ -182,36 +182,37 @@ class Stream {
 	*/
 	function create_xspf() { 
 
-	        header("Cache-control: public");
-        	header("Content-Disposition: filename=playlist.xspf");
-		header("Content-Type: application/xspf+xml;");
-		echo "<?xml version=\"1.0\" encoding=\"iso-8859-1\" ?>\n";
-		echo "<playlist version = \"1\" \n		xmlns=\"http://xspf.org/ns/0/\">\n";
-                echo "		<title>Ampache XSPF Playlist</title>\n";
-                echo "		<creator>" . conf('site_title') . "</creator>\n";
-		echo "		<annotation>" . conf('site_title') . "</annotation>\n";
-		echo "		<info>". conf('web_path') ."</info>\n";
-		echo "		<trackList>\n\n\n\n";
-		
+		$playlist =	"<?xml version=\"1.0\" encoding=\"iso-8859-1\" ?>
+		<playlist version = \"1\" xmlns=\"http://xspf.org/ns/0/\">
+		<title>Ampache XSPF Playlist</title>
+		<creator>" . conf('site_title') . "</creator>
+		<annotation>" . conf('site_title') . "</annotation>
+		<info>". conf('web_path') ."</info>
+		<trackList>\n\n\n\n";
+
 		foreach ($this->songs as $song_id) {
                 	$song = new Song($song_id);
                         $song->format_song();
 			$url = $song->get_url();
                         $song_name = $song->f_artist_full . " - " . $song->title . "." . $song->type;
-			echo "		<track>\n";
-			echo "			<location>$url</location>\n";
-			echo "			<identifier>$url</identifier>\n";
-			echo "			<title>" . $song->title . "</title>\n";
-			echo "			<creator>" . $song->f_artist_full . "</creator>\n";
-			echo "			<annotation></annotation>\n";
-			echo "			<info>" . conf('web_path') . "/albums.php?action=show&album=" . $song->album  . "</info>\n";
-			echo "			<image>" . conf('web_path') . "/albumart.php?id=" . $song->album . "&thumb=2" . "</image>\n";
-			echo "			<album>" . $song->f_album_full . "</album>\n";
-			echo "			<duration>" . $song->time  . "</duration>\n"; 
-			echo "		</track>\n\n\n";
+			$playlist .= "		<track>\n";
+			$playlist .= "			<location>$url</location>\n";
+			$playlist .= "			<identifier>$url</identifier>\n";
+			$playlist .= "			<title>" . $song->title . "</title>\n";
+			$playlist .= "			<creator>" . $song->f_artist_full . "</creator>\n";
+			$playlist .= "			<annotation></annotation>\n";
+			$playlist .= "			<info>" . conf('web_path') . "/albums.php?action=show&album=" . $song->album  . "</info>\n";
+			$playlist .= "			<image>" . conf('web_path') . "/albumart.php?id=" . $song->album . "&thumb=2" . "</image>\n";
+			$playlist .= "			<album>" . $song->f_album_full . "</album>\n";
+			$playlist .= "			<duration>" . $song->time  . "</duration>\n"; 
+			$playlist .= "		</track>\n\n\n";
                 } // end foreach
-		echo "		</trackList>\n";
-                echo "</playlist>\n";
+		$playlist .= "		</trackList>\n";
+                $playlist .= "</playlist>\n";
+	        header("Cache-control: public");
+        	header("Content-Disposition: filename=playlist.xspf");
+		header("Content-Type: application/xspf+xml;");
+		echo $playlist;
 
 	} // create_xspf
 

@@ -54,6 +54,10 @@ $admin_menu = "admin/";
 		<b><?php echo _("Registration Date"); ?></b>
 		</a>
 	</td>
+        <td align="center">
+		<b><?php echo _("Activity"); ?></b>
+	</td>
+
 	<td colspan="5">&nbsp;</td>
 	<!--
         <td align="center">
@@ -82,6 +86,7 @@ while ($results = mysql_fetch_object($db_result)) {
         $last_seen = date("m\/d\/Y - H:i",$user->last_seen);
         if (!$user->last_seen) { $last_seen = "Never"; }
         $create_date = date("m\/d\/Y - H:i",$user->create_date);
+	$user->format_user();
         if (!$user->create_date) { $create_date = "Unknown"; }
 ?>
 
@@ -97,6 +102,11 @@ while ($results = mysql_fetch_object($db_result)) {
         <td>
 		<?php echo $create_date; ?>
 	</td>
+
+        <td>
+		<?php echo $user->f_useage; ?>
+	</td>
+
 
         <td>
 		<a href="<?php echo $web_path; ?>/admin/users.php?action=edit&amp;user=<?php echo $user->username; ?>">
