@@ -1342,14 +1342,10 @@ function get_user_icon($name) {
  */
 function xml_from_array($array) { 
 
-	$escape_array = array ('<','&');
-	$replace_array = array('&lt;','&amp;');
-
 	$string = "<root>\n";
 	foreach ($array as $key=>$value) { 
 		/* We need to escape the value */
-		$value = str_replace($escape_array,$replace_array,$value);
-		$string .= "\t<$key>$value</$key>\n";
+		$string .= "\t<$key><![CDATA[$value]]></$key>\n";
 	}
 	$string .= "</root>\n";
 
