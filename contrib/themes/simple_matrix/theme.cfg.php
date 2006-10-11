@@ -16,7 +16,7 @@ name = "Simple Matrix"
 # This is just a way of giving credit to the 
 # person who actually created this theme
 # DEFAULT: N/A
-author = "Marno van der Molen"
+author = "Marno van der Molen modified by Terence Theijn"
 #FULL CREDIT goes to Nedko Arnaudov for supplying the base for this theme.
 #Updated by Terence Theijn (pb1dft) to let it work in the new style version of ampache
 
@@ -25,12 +25,12 @@ author = "Marno van der Molen"
 # maintaining this theme incase it's not working right
 # please include an e-mail address so you can be contacted
 # DEFAULT: N/A
-maintainer = "Marno van der Molen <marno.vandermolen@gmail.com>"
+maintainer = "Marno van der Molen <marno.vandermolen@gmail.com> modifications by Terence Theijn <terence.theijn@gmail.com>"
 
 # Version
 # This is the revision for this theme, It's up to the maintainer
 # or author to decide how they want to format this
-version = "1.3"
+version = "1.4"
 
 # Orientation
 # This was added as of 3.3.2-Alpha4, this tells Ampache if this theme

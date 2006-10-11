@@ -572,7 +572,7 @@ li.current-rating{
 	background: url("../images/tablebg.gif") #000000 repeat-x;
 }
 #nowplaying {
-	width:600px;
+	width:650px;
 }
 .np_row {
 	padding-top: 3px;
@@ -580,7 +580,6 @@ li.current-rating{
 	display: block;
 }
 .np_cell {
-	display: inline;
 	margin: 10px;
 }
 #tablist {
