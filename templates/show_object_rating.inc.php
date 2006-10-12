@@ -32,7 +32,7 @@ if ($rating->rating == '-1') {
 	echo "<li class=\"zero-stars\"><span onclick=\"ajaxPut('" . $base_url . "&rating=-1',r_" . $rating->id . "_" . $rating->type . ");return true;\" title=\"don't play\" class=\"zero-stars\"></span></li>\n";
 }
 else { 
-	echo "<li class=\"zero-stars\"><span  onclick=\"ajaxPut('" . $base_url . "&rating=-1',r_" . $rating->id . "_" . $rating->type . ");return true;\" title=\"remove rating\" class=\"zero-stars\"></span></li>\n";
+	echo "<li class=\"zero-stars\"><span onclick=\"ajaxPut('" . $base_url . "&rating=-1',r_" . $rating->id . "_" . $rating->type . ");return true;\" title=\"remove rating\" class=\"zero-stars\"></span></li>\n";
 }
 // decide width of rating. image is 16 px wide
 $width = $rating->rating*16;

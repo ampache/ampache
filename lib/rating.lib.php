@@ -28,19 +28,7 @@ function show_rating($object_id,$type) {
 
 	$rating = new Rating($object_id,$type);
 	
-	switch (conf('ratings')) { 
-		case 'normal':
-			include(conf('prefix') . '/templates/show_object_rating.inc.php');
-		break;
-		case 'flash':
-			include(conf('prefix') . '/templates/show_object_rating_flash.inc.php');
-		break;
-		default:
-			return false;
-		break;
-	} // end flash switch
-
-	return true;
+	include(conf('prefix') . '/templates/show_object_rating.inc.php');
 
 } // show_rating
 
