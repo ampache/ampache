@@ -1,3 +1,9 @@
+// Copyright Ampache.org 2001 - 2006
+// All Rights Reserved
+// Origional Author Kevin Riker
+// Updated to handle post and XML Get by Karl Vollmer
+// Published under the GNU GPL
+	
 	//var xmlDoc = null;
 	var http_request = false;
 	var IE = true;

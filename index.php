@@ -38,8 +38,7 @@ $action = scrub_in($_REQUEST['action']);
  * going to let them break their servers
  */
 if (conf('refresh_limit') > 5) { 
-	$ajax_url = conf('web_path') . '/server/ajax.server.php?action=reloadnp&user_id=' . $GLOBALS['user']->id . 
-			'&sessid=' . session_id();
+	$ajax_url = conf('ajax_url') . '?action=reloadnp' . conf('ajax_info');
 	$ajax_object = 'np_refresh';
 	require_once(conf('prefix') . '/templates/javascript_refresh.inc.php');
 }
