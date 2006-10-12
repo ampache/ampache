@@ -27,7 +27,6 @@ $web_path = conf('web_path');
 // Build array of the table classes we are using
 $row_classes = array('even','odd');
 
-// Generate variables for the flash ratings
 //FIXME:
 $album_id	= $album->id;
 $artist_id	= $album->artist_id;
@@ -47,7 +46,11 @@ $title		= scrub_out($album->name) . ' -- ' . $album->f_artist;
 	</div>
 	<div style="display:table-cell;vertical-align:top;">
 		<?php
-		if (conf('ratings')) {	show_rating($album->id, 'album');} // end if ratings
+		if (conf('ratings')) {	
+			show_ajax_js("r_" . $album->id . "_album",array("rating_" . $album->id . "_album"));
+			echo "<span style=\"display:inline;\" id=\"rating_" . $album->id . "_album\">";
+			show_rating($album->id, 'album');} // end if ratings
+			echo "</span>";
 		echo "<br />\n";
 		?>
 		<strong><?php echo _('Actions'); ?>:</strong><br />

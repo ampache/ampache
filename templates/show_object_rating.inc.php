@@ -21,17 +21,18 @@
 
 /* Create some variables we are going to need */
 $web_path = conf('web_path');
-$base_url = $web_path . '/ratings.php?action=set_rating&amp;mode=' . conf('flash') . '&amp;rating_type=' . $rating->type . '&amp;object_id=' . $rating->id . '&amp;username=' . $GLOBALS['user']->username;
+$base_url = conf('ajax_url') . '?action=set_rating&rating_type=' . $rating->type . '&object_id=' . $rating->id . conf('ajax_info');
+
 
 //set the background to no stars
 echo "<ul class=\"star-rating\">\n";
 
 /* Handle the "Not rated" possibility */
 if ($rating->rating == '-1') { 
-	echo "<li class=\"zero-stars\"><a href=\"" . $base_url . "&amp;rating=-1\" title=\"don't play\" class=\"zero-stars\">-1</a></li>\n";
+	echo "<li class=\"zero-stars\"><span onclick=\"ajaxPut('" . $base_url . "&rating=-1',r_" . $rating->id . "_" . $rating->type . ");return true;\" title=\"don't play\" class=\"zero-stars\"></span></li>\n";
 }
 else { 
-	echo "<li class=\"zero-stars\"><a href=\"" . $base_url . "&amp;rating=-1\" title=\"remove rating\" class=\"zero-stars\">-1</a></li>\n";
+	echo "<li class=\"zero-stars\"><span  onclick=\"ajaxPut('" . $base_url . "&rating=-1',r_" . $rating->id . "_" . $rating->type . ");return true;\" title=\"remove rating\" class=\"zero-stars\"></span></li>\n";
 }
 // decide width of rating. image is 16 px wide
 $width = $rating->rating*16;
@@ -45,11 +46,21 @@ if ($rating->rating <= 0) {
 else echo "$rating->rating of 5</li>\n";
 
 //it did not like my "1-star", "2-star" ... css styles, and I changed it to this after I realized star1... would have worked :\
-echo "<li> <a href=\"" . $base_url . "&amp;rating=1\" class=\"one-stars\" title=\"1 out of 5\">$score</a></li>\n";
-echo "<li> <a href=\"" . $base_url . "&amp;rating=2\" class=\"two-stars\" title=\"2 out of 5\">$score</a></li>\n";
-echo "<li> <a href=\"" . $base_url . "&amp;rating=3\" class=\"three-stars\" title=\"3 out of 5\">$score</a></li>\n";
-echo "<li> <a href=\"" . $base_url . "&amp;rating=4\" class=\"four-stars\" title=\"4 out of 5\">$score</a></li>\n";
-echo "<li> <a href=\"" . $base_url . "&amp;rating=5\" class=\"five-stars\" title=\"5 out of 5\">$score</a></li>\n";
-echo "</ul>";
 ?>
+<li>
+	<span onclick="ajaxPut('<?php echo $base_url; ?>&rating=1',r_<?php echo $rating->id; ?>_<?php echo $rating->type; ?>);return true;" class="one-stars" title="1 <?php echo _('out of'); ?> 5"></span>
+</li>
+<li>
+	<span onclick="ajaxPut('<?php echo $base_url; ?>&rating=2',r_<?php echo $rating->id; ?>_<?php echo $rating->type; ?>);return true;" class="two-stars" title="2 <?php echo _('out of'); ?> 5"></span>
+</li>
+<li>
+	<span onclick="ajaxPut('<?php echo $base_url; ?>&rating=3',r_<?php echo $rating->id; ?>_<?php echo $rating->type; ?>);return true;" class="three-stars" title="3 <?php echo _('out of'); ?> 5"></span>
+</li>
+<li>
+	<span onclick="ajaxPut('<?php echo $base_url; ?>&rating=4',r_<?php echo $rating->id; ?>_<?php echo $rating->type; ?>);return true;" class="four-stars" title="4 <?php echo _('out of'); ?> 5"></span>
+</li>
+<li>
+	<span onclick="ajaxPut('<?php echo $base_url; ?>&rating=5',r_<?php echo $rating->id; ?>_<?php echo $rating->type; ?>);return true;" class="five-stars" title="5 <?php echo _('out of'); ?> 5"></span>
+</li>
+</ul>
 

@@ -4,6 +4,8 @@
 
 --------------------------------------------------------------------------
   v.3.3.3-Alpha1
+	- Added ajax support to ratings, no longer requires a refresh, 
+		hello instant gratification. 
 	- Tweaked Kajax, now accepts an array of elements to replace
 		from a passed xml document. allows for multiple targets
 		on a single ajax request 

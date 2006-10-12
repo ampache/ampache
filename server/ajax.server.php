@@ -97,6 +97,17 @@ switch ($action) {
 		$xml_doc = xml_from_array($results);
 		echo $xml_doc;
 	break;
+	case 'set_rating':
+		ob_start(); 
+		$rating = new Rating($_REQUEST['object_id'],$_REQUEST['rating_type']);
+		$rating->set_rating($_REQUEST['rating']);
+		show_rating($_REQUEST['object_id'],$_REQUEST['rating_type']);
+		$key = "rating_" . $_REQUEST['object_id'] . "_" . $_REQUEST['rating_type'];
+		$results[$key] = ob_get_contents();
+		ob_end_clean();
+		$xml_doc = xml_from_array($results);
+		echo $xml_doc;
+	break;
 	default:
 		echo "Default Action";
 	break;

@@ -445,7 +445,7 @@ margin-right:5em;
 	margin:0px;
 	float: right;
 }
-.star-rating li a{
+.star-rating li span{
 	display:block;
 	width:16px;
 	height: 15px;
@@ -455,51 +455,51 @@ margin-right:5em;
 	position: absolute;
 	padding: 0px;
 }
-.star-rating li a:hover{
+.star-rating li span:hover{
 	background: url(../images/ratings/star_rating.gif) left center;
 	z-index: 2;
 	left: 0px;
 }
-li.zero-stars a:hover {
+li.zero-stars span:hover {
 	background: url(../images/ratings/x.gif);
 	height: 15px;
 	left: 80px;
 	display: block;
 }
-a.zero-stars {
+span.zero-stars {
 	background: url(../images/ratings/x_off.gif);
 	height: 15px;
 	left: 80px;
 	display: block;
 }
-a.one-stars{
+span.one-stars{
 	left: 0px;
 }
-a.one-stars:hover{
+span.one-stars:hover{
 	width:16px;
 }
-a.two-stars{
+span.two-stars{
 	left:16px;
 }
-a.two-stars:hover{
+span.two-stars:hover{
 	width: 32px;
 }
-a.three-stars{
+span.three-stars{
 	left: 32px;
 }
-a.three-stars:hover{
+span.three-stars:hover{
 	width: 48px;
 }
-a.four-stars{
+span.four-stars{
 	left: 48px;
 }
-a.four-stars:hover{
+span.four-stars:hover{
 	width: 64px;
 }
-a.five-stars{
+span.five-stars{
 	left: 64px;
 }
-a.five-stars:hover{
+span.five-stars:hover{
 	width: 80px;
 }
 li.current-rating{

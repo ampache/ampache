@@ -1353,6 +1353,23 @@ function xml_from_array($array) {
 
 } // xml_from_array
 
+/**
+ * show_ajax_js
+ * This displays the javascript array definition needed
+ * For ajax to know what it should be replacing
+ */
+function show_ajax_js($name,$array) { 
 
+	$elements = count($array);
+
+	echo "<script type=\"text/javascript\" language=\"javascript\">\n";
+	echo "<!--\n";
+	echo "var $name = new Array($elements);\n";
+	foreach ($array as $key=>$value) { 
+		echo $name . "[$key] = \"$value\";\n";
+	}
+	echo "-->\n</script>\n";
+
+} // show_ajax_js
 
 ?>

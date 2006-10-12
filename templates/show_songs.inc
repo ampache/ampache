@@ -145,7 +145,8 @@ foreach ($song_ids as $song_id) {
 		<?php } ?>
 	</td>
 	<?php if(conf('ratings')) { ?>
-		<td>
+		<td id="rating_<?php echo $song->id; ?>_song">
+			<?php show_ajax_js("r_" . $song->id . "_song",array("rating_" . $song->id . "_song")); ?>
 			<?php show_rating($song->id,'song'); ?>
 		</td>
 	<?php } ?>

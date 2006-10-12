@@ -44,12 +44,7 @@ if (conf('refresh_limit') > 5) {
 	require_once(conf('prefix') . '/templates/javascript_refresh.inc.php');
 }
 ?>
-<script language="javascript" type="text/javascript">
-<!--
-var np_refresh = new Array(1);
-np_refresh[0] = "np_data";
--->
-</script>
+<?php show_ajax_js('np_refresh',array('np_data')); ?>
 <div id="np_data">
 	<?php show_now_playing(); ?>
 </div> <!-- Close Now Playing Div -->
