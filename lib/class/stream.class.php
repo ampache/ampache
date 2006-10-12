@@ -109,7 +109,7 @@ class Stream {
 	                $song->format_song();
 			if ($song->type == ".flac") { $song->type = ".ogg"; }
 	                $song_name = $song->f_artist_full . " - " . $song->title . "." . $song->type;
-	                echo "#EXTINF:$song->time,$song_name\n";
+	                echo "#EXTINF:$song->time," . $song->f_artist_full . " - " . $song->title . "\n";
 	                $sess = $_COOKIE[libglue_param('sess_name')];
 	                if($GLOBALS['user']->prefs['play_type'] == 'downsample') {
 	                	$ds = $GLOBALS['user']->prefs['sample_rate'];
