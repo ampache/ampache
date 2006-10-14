@@ -185,6 +185,7 @@ body{
 	postion:absolute;
 	float: left;
 	clear: both;
+	padding-top: 20px;
 	margin-left:15px;
 	/*float:left;  use for horizontal menu; comment out otherwise */
 	/* background:#fff url("../themes/classic/images/bg_content.gif") repeat-y right top; */
@@ -240,26 +241,21 @@ div#Header{
 }
 
 
+
+
 /* Sidebar */
-/**
- * Experimental for menus (Thx Sigger)
- * TO DO: Fill in 1px border around menus & submenu items
- * Make padding apply to the li, not just an a.  Moving padding: to li throws off the dropdown menu alignment.
- */
- 
 div#sidebar{
         clear:both;
         position:absolute;
-        left:5px;
-        top:100px;
+        left:0px;
+        top:120px;
+	padding-top:0px;
+	background: #F5F5F5;
+	width: 100%;
 }
 
 #sidebar h3 {
-    width: 120px;
-    height: 28px;
-    margin 0px;
-    padding: 0px;
-    background: transparent;
+	display:none;
 }
 
 #sidebar h3 span {
@@ -326,17 +322,6 @@ div#sidebar{
         left: auto;  /* this calls the submenu back when the parent li is hovered. */
         background: url(../images/bg_menubar.jpg) #F5F5F5 repeat-x;
 }
-
-
-
-
-
-
-
-
-
-
-
 
 
 /* Styles for Now Playing */
@@ -421,10 +406,14 @@ margin-right:5em;
 #topbar { 
 	float: left;
 	top:20px;
-	height: 140px;
-	padding-top:3px;
-	padding-left:10px;
-
+	height: 120px;
+	padding-top:0px;
+	padding-left:0px;
+	background: #000000 url("../images/top_fill.jpg") repeat-x;
+	color: #ffffff;
+}
+#topbar a { 
+	color: #ffffff;
 }
 #topbarright { 
 	float: right;
@@ -437,14 +426,13 @@ margin-right:5em;
 /* Box Related Styles */
 .box { 
 	padding:0px;
-	background: #4C669F;
+	background: #F5F5F5;
 	margin:10px;
-background:transparent; 
-border: 1px solid #000000;
-
+	border: 1px solid #000000;
 }
 .box-title { 
-	border-bottom: solid 1px #EEFF65;
+	background: #EEFF65;
+	width: 100%;
 	font-weight: bold;
 }
 .box-left-top { display:none; }
