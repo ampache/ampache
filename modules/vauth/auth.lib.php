@@ -129,7 +129,7 @@ function vauth_ldap_auth($username, $password) {
 		ldap_set_option($ldap_link, LDAP_OPT_PROTOCOL_VERSION, 3);
 
         	// bind using our auth, if we need to, for initial search for username
-          	if (!ldap_bind($ldap_link, $ldap_dn, $ldap_password)) {
+          	if (!ldap_bind($ldap_link, $ldap_username, $ldap_password)) {
                 	$results['success'] = false;
                 	$results['error'] = "Could not bind to LDAP server.";
                 	return $results;

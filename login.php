@@ -78,7 +78,7 @@ if ($_POST['username'] && $_POST['password']) {
                                 $auth['error'] = _('User Disabled please contact Admin');
                 } // if user disabled
                 
-		elseif (!$user->username) { 
+		elseif (!$user->username AND $auth['success']) { 
 			/* This is run if we want to auto_create users who don't exist (usefull for non mysql auth) */                
 			if (conf('auto_create')) {
 				if (!$access = conf('auto_user')) { $access = '5'; } 
