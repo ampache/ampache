@@ -16,7 +16,7 @@ name = "Dark"
 # This is just a way of giving credit to the 
 # person who actually created this theme
 # DEFAULT: N/A
-author = "Nedko Arnaudov"
+author = "Nedko Arnaudov modified by Terence Theijn"
 
 # Theme Maintainer
 # This is just a way of listing who is responsible for
@@ -28,7 +28,19 @@ maintainer = "Nedko Arnaudov <nedko@users.sourceforge.net>"
 # Version
 # This is the revision for this theme, It's up to the maintainer
 # or author to decide how they want to format this
-version = "1.2"
+version = "1.3"
+
+# Orientation
+# This was added as of 3.3.2-Alpha4, this tells Ampache if this theme
+# uses vertical or horizontal orientation of the menu, if this is a horizontal
+# theme then it will not show the quick search and quick random play forms
+orientation = "horizontal"
+
+# Submenu
+# If this is set to simple the sub menu's will only be shown when you're on one of the
+# respective pages. If you want to make the menu's something like the classic theme
+# comment this out
+# submenu = "simple"
 
 # Theme Colors
 ###################
