@@ -63,6 +63,15 @@ sess_cookielife         = 0
 # DEFAULT: 0
 sess_cookiesecure       = 0
 
+# Auth Methods 
+# This defines which auth methods vauth will attempt
+# to use and in which order, if auto_create isn't enabled
+# The user must exist locally as well
+# DEFAULT: mysql
+# VALUES: mysql,ldap
+#auth_methods = "ldap"
+auth_methods = "mysql"
+
 ######################
 #  Program Settings  #
 ######################
@@ -283,6 +292,45 @@ site_charset = iso-8859-1
 # DEFAULT: 60
 # Possible Values: Int > 5
 refresh_limit = "60"
+
+##########################################################
+# LDAP login info (optional)                             #
+##########################################################
+
+# This setting will silently create an ampache account
+# for anyone who can login using ldap (or any other login
+# extension) 
+# DEFAULT: false
+#auto_create = "false"
+
+# Some LDAP servers won't let you search for the username
+# without logging in with an application user account.
+# if this is the case, fill these in here:
+# DEFAULT: null
+#ldap_username = ""
+#ldap_password = ""
+
+# NOT YET IMPLIMENTED!!
+# This option checks to see if the specified user is in
+# a specific ldap group, allowing you to give access based
+# on group membership
+# DEFAULT: null
+#ldap_require_group = "cn=yourgroup,ou=yourorg,dc=yoursubdomain,dc=yourdomain,dc=yourtld"
+
+# This is the search dn used to find your user, uid=username is added on to 
+# This string 
+# DEFAULT: null
+#ldap_search_dn = "ou=People,dc=yoursubdomain,dc=yourdomain,dc=yourtld?uid?sub?(objectclass=*)"
+
+# This is the address of your ldap server
+# DEFAULT: null
+#ldap_url = ""
+
+# Specify where in your ldap db the following fields are stored:
+# (comment out if you don't have them)
+# DEFAULT: [none]
+#ldap_email_field = "mail"
+#ldap_name_field  = "cn"
 
 ##########################################################
 # Public Registration settings, defaults to disabled     #

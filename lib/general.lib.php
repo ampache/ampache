@@ -399,6 +399,11 @@ function clean_tag_info($results,$key,$filename) {
 	$info['track']		= intval($results[$key]['track']);
 	$info['comment']      	= sql_escape(str_replace($clean_array,$wipe_array,$results[$key]['comment']));
 
+	if (strlen($info['comment']) > 254) { 
+		debug_event('catalog','Error: Comment over 254 Char, truncating',4);
+		$info['comment'] = substr($info['comment'],0,254);
+	}
+
 	/* This are pulled from the info array */
 	$info['bitrate']      	= intval($results['info']['bitrate']);
 	$info['rate']         	= intval($results['info']['sample_rate']);

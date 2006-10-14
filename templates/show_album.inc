@@ -47,7 +47,6 @@ $title		= scrub_out($album->name) . ' -- ' . $album->f_artist;
 	<div style="display:table-cell;vertical-align:top;">
 		<?php
 		if (conf('ratings')) {	
-			show_ajax_js("r_" . $album->id . "_album",array("rating_" . $album->id . "_album"));
 			echo "<span style=\"display:inline;\" id=\"rating_" . $album->id . "_album\">";
 			show_rating($album->id, 'album');} // end if ratings
 			echo "</span>";

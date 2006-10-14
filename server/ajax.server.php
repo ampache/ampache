@@ -79,8 +79,8 @@ switch ($action) {
 		$GLOBALS['user']->update_preference($pref_id,$_GET['type']);
 
 		/* Now Replace the text as you should */
-		$ajax_url       = conf('web_path') . '/server/ajax.server.php';
-		$required_info  = "&user_id=" . $GLOBALS['user']->id . "&sessid=" . session_id();
+		$ajax_url       = conf('ajax_url');
+		$required_info  = conf('ajax_info');
 		${$_GET['type']} = 'id="pt_active"';
 		ob_start();	
 		require_once(conf('prefix') . '/templates/show_localplay_switch.inc.php'); 

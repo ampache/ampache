@@ -184,15 +184,9 @@ $web_path = conf('web_path');
 		<br />
 		<?php $type = conf('play_type'); ${$type} = 'id="pt_active"'; ?>
 		<?php 
-			$required_info  = "&user_id=" . $GLOBALS['user']->id . "&sessid=" . session_id();
-			$ajax_url       = $web_path . '/server/ajax.server.php'; 
+			$required_info  = conf('ajax_info');
+			$ajax_url       = conf('ajax_url');
 		?>
-		<script type="text/javascript" language="javascript">
-		<!-- 
-		var lp_switch = new Array(2);
-		lp_switch[0]	= "play_type";
-		-->
-		</script>
 		<span class="text-action" style="cursor:pointer;" id="play_type">
 		<?php require_once(conf('prefix') . '/templates/show_localplay_switch.inc.php'); ?>
 		</span>
@@ -200,6 +194,6 @@ $web_path = conf('web_path');
 <?php } // if horizontal orientation ?>
 <?php } // if localplay access ?>
 <?php if (conf('use_auth')) { ?>
-	<li><a href="<?php echo $web_path; ?>/logout.php"><?php echo _("Logout"); ?></a></li>
+	<li><a href="<?php echo $web_path; ?>/logout.php"><?php echo _('Logout'); ?></a></li>
 <?php } // end (conf('use_auth'))?>
 </ul>

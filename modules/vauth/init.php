@@ -57,7 +57,22 @@ function vauth_init($data) {
 
 	if (isset($data['auth_methods']['ldap'])) { 
 		
-
+		if (!isset($data['ldap_url'])) { 
+			vauth_error('No LDAP server defined [ldap_url]');
+			$error_status = true;
+		}
+		if (!isset($data['ldap_name_field'])) { 
+			vauth_error('No Name Field defined [ldap_name_field]');
+		}
+		if (!isset($data['ldap_email_field'])) { 
+			vauth_error('No E-mail Field defined [ldap_email_field]');
+		}
+		if (!isset($data['ldap_username'])) { 
+			vauth_error('No Bind Username defined [ldap_username]');
+		}
+		if (!isset($data['ldap_password'])) { 
+			vauth_error('No Bind Password defined [ldap_password]');
+		}
 
 	} // if we're doing ldap auth
 

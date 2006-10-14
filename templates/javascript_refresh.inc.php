@@ -15,7 +15,7 @@ function refresh()
     //  entry in the visitor's history.  It is provided for
     //  those browsers that only support JavaScript 1.0.
     //
-    ajaxPut('<?php echo $ajax_url; ?>',<?php echo $ajax_object; ?>);
+    ajaxPut('<?php echo $ajax_url; ?>');
     doLoad();
 }
 

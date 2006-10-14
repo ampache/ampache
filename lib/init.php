@@ -80,7 +80,7 @@ if (!$results['allow_stream_playback']) {
 
 
 /** This is the version.... fluf nothing more... **/
-$results['version']		= '3.3.3-Alpha1';
+$results['version']		= '3.3.3-Alpha1 (Build 002)';
 
 $results['raw_web_path']	= $results['web_path'];
 $results['web_path']		= $http_type . $_SERVER['HTTP_HOST'] . $results['web_path'];
@@ -112,6 +112,12 @@ if (!$results['raw_web_path']) {
 }
 if (!$_SERVER['SERVER_NAME']) { 
 	$_SERVER['SERVER_NAME'] = '';
+}
+if (!isset($results['auth_methods'])) { 
+	$results['auth_methods'] = 'mysql';
+}
+if (!is_array($results['auth_methods'])) { 
+	$results['auth_methods'] = array($results['auth_methods']);
 }
 
 /* Variables needed for vauth Module */

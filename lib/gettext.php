@@ -27,13 +27,25 @@
 function load_gettext() { 
 	/* If we have gettext */
 	if (function_exists('bindtextdomain')) { 
-		bindtextdomain('messages', conf('prefix') . "/locale/");
-		textdomain('messages');
 		$lang = conf('lang');
 		putenv("LANG=" . $lang);
+		putenv("LANGUAGE=" . $lang);
 		/* Try lang, lang + charset and lang + utf-8 */
-		setlocale(LC_ALL, $lang,$lang . '.'. conf('site_charset'),$lang . '.UTF-8',$lang . '.' . conf('lc_charset'));
-	}
+		setlocale(LC_ALL, 
+				$lang,
+				$lang . '.'. conf('site_charset'),
+				$lang . '.UTF-8',
+				$lang . '.utf-8',
+				$lang . '.' . conf('lc_charset'));
+
+		/* Bind the Text Domain */
+		bindtextdomain('messages', conf('prefix') . "/locale/");
+		textdomain('messages');
+		if (function_exists('bind_textdomain_codeset')) { 
+			bind_textdomain_codeset('messages',conf('site_charset'));
+		} // if we can codeset the textdomain
+
+	} // If bindtext domain exists
 
 } // load_gettext
 

@@ -71,17 +71,43 @@ if ($_POST['username'] && $_POST['password']) {
 		$username = scrub_in($_POST['username']);
 		$password = scrub_in($_POST['password']);
 		$auth = authenticate($username, $password);
-		$user = new User($username); 
-		if ($user->disabled === '1') { 
-			$auth['success'] = false;
-			$auth['error'] = "Error: User Disabled please contact Admin";
-		} // if user disabled
+                $user = new User($username);
+	
+		if ($user->disabled == '1') { 	
+                                $auth['success'] = false;
+                                $auth['error'] = _('User Disabled please contact Admin');
+                } // if user disabled
+                
+		elseif (!$user->username) { 
+			/* This is run if we want to auto_create users who don't exist (usefull for non mysql auth) */                
+			if (conf('auto_create')) {
+				if (!$access = conf('auto_user')) { $access = '5'; } 
+				
+                        	$name = $auth['name'];
+                        	$email = $auth['email'];
+                        
+				/* Attempt to create the user */	
+				if (!$user->create($username, $name, $email,md5(time()), $access)) {
+                                	$auth['success'] = false;
+                                	$auth['error'] = _('Unable to create new account');
+                            	}
+				else { 
+                        		$user = new User($username);
+				}
+                        } // End if auto_create
+
+                        else {
+                            $auth['success'] = false;
+                            $auth['error'] = _('No local account found');
+                        }
+                } // else user isn't disabled
+
 	} // if we aren't in demo mode
-}
+
+} // if they passed a username/password
 
 /* If the authentication was a success */
 if ($auth['success']) {
-
     // $auth->info are the fields specified in the config file
     //   to retrieve for each user
     vauth_session_create($auth);

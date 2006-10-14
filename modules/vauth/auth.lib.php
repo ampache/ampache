@@ -37,8 +37,16 @@ function authenticate($username,$password) {
 		return false;
 	}
 
-	/* Call the functions! */
-	$results = vauth_mysql_auth($username,$password);
+	/* Foreach Through the methods we are allowed to use */
+	foreach (vauth_conf('auth_methods') as $method) { 
+
+		/* Build Function name and call custom function */
+		$function = 'vauth_' . $method . '_auth';	
+		$results = $function($username,$password);
+
+		/* If we find something break */
+		if ($results['success']) { break; } 
+	} // end foreach
 
 	return $results;
 
@@ -87,5 +95,75 @@ function vauth_mysql_auth($username,$password) {
 	return $results;
 
 } // vauth_mysql_auth
+
+/**
+ * vauth_ldap_auth
+ * Step one, connect to the LDAP server and perform a search for teh username provided. 
+ * If its found, attempt to bind using that username and the password provided.
+ * Step two, figure out if they are authorized to use ampache:
+ * TODO: need implimented still:
+ * 	* require-group "The DN fetched from the LDAP directory (or the username passed by the client) occurs in the LDAP group"
+ *      * require-dn "Grant access if the DN in the directive matches the DN fetched from the LDAP directory"
+ *      * require-attribute "an attribute fetched from the LDAP directory matches the given value"
+ */
+function vauth_ldap_auth($username, $password) {
+
+	$ldap_username	= vauth_conf('ldap_username');
+	$ldap_password	= vauth_conf('ldap_password');
+
+	/* Currently not implemented */
+	$require_group	= vauth_conf('ldap_require_group'); 
+
+	// This is the DN for the users (required)
+    	$ldap_dn	= vauth_conf('ldap_search_dn');
+    
+	// This is the server url (required)
+    	$ldap_url	= vauth_conf('ldap_url');
+
+    	$ldap_name_field	= vauth_conf('ldap_name_field');
+	$ldap_email_field	= vauth_conf('ldap_email_field');
+
+	if ($ldap_link = ldap_connect($ldap_url) ) {
+
+		/* Set to Protocol 3 */
+		ldap_set_option($ldap_link, LDAP_OPT_PROTOCOL_VERSION, 3);
+
+        	// bind using our auth, if we need to, for initial search for username
+          	if (!ldap_bind($ldap_link, $ldap_dn, $ldap_password)) {
+                	$results['success'] = false;
+                	$results['error'] = "Could not bind to LDAP server.";
+                	return $results;
+            	} // If bind fails
+
+	        $sr = ldap_search($ldap_link, $ldap_search_dn, "(uid=$username)");
+        	$info = ldap_get_entries($ldap_link, $sr);
+
+        	if ($info["count"] == 1) {
+            		$user_entry = ldap_first_entry($ldap_link, $sr);
+            		$user_dn    = ldap_get_dn($ldap_link, $user_entry);
+            		// bind using the user..
+            		$retval = ldap_bind($ldap_link, $user_dn, $password);
+
+            		if ($retval) {
+                		ldap_close($ldap_link);
+                		$results['success'] = true;
+                		$results['type'] = "ldap";
+                		$results['username'] = $username;
+                		$results['name'] = $info[0][$ldap_name_field][0];
+                		$results['email'] = $info[0][$ldap_email_field][0]; 
+
+                		return $results;
+
+            		} // if we get something good back
+        	} // if something was sent back 
+	} // if failed connect 
+
+	/* Default to bad news */
+        $results['success'] = false;
+        $results['error'] = "LDAP login attempt failed";
+        return $results;
+
+
+} // vauth_ldap_auth
 
 ?>

@@ -9,30 +9,6 @@
 	var http_request = false;
 	var IE = true;
 	
-        function ajaxRequest(url) {
-                if (window.ActiveXObject) { // IE
-            try {
-                http_request = new ActiveXObject("Msxml2.XMLHTTP");
-            }
-                        catch (e) {
-                try {
-                    http_request = new ActiveXObject("Microsoft.XMLHTTP");
-                }
-                                catch (e) {}
-            }
-        }
-                else { // Mozilla
-                        IE = false;
-                        http_request = new XMLHttpRequest();
-                }
-        if (!http_request) {
-            return false;
-        }
-        http_request.onreadystatechange = function() { };
-        http_request.open('GET', url, true);
-        http_request.send(null);
-	}
-	
 	// uid is an array of uids that need to be replaced		
 	function ajaxPut(url) {
 		if (window.ActiveXObject) { // IE

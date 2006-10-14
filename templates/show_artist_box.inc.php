@@ -23,7 +23,12 @@ $web_path = conf('web_path');
 $title = _('Albums by') . " " . $artist->full_name; 
 ?>
 <?php require (conf('prefix') . '/templates/show_box_top.inc.php'); ?>
-<?php if (conf('ratings')) { show_rating($artist->id, 'artist'); } // end if ratings ?>
+<?php 
+if (conf('ratings')) { 
+	echo "<span id=\"rating_" . $artist->id . "_artist\" style=\"display:inline;\">";
+	show_rating($artist->id, 'artist'); 
+	echo "</span>";
+} // end if ratings ?>
 <strong><?php echo _('Actions'); ?>:</strong><br />
 &nbsp;&nbsp;<a href="<?php echo $web_path; ?>/artists.php?action=show_all_songs&amp;artist=<?php echo $artist_id; ?>"><?php echo _("Show All Songs By") . " " . $artist->full_name; ?></a><br />
 &nbsp;&nbsp;<a href="<?php echo $web_path; ?>/song.php?action=artist&amp;artist_id=<?php echo $artist_id; ?>"><?php echo _("Play All Songs By") . " " . $artist->full_name; ?></a><br />

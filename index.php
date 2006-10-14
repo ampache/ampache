@@ -39,11 +39,9 @@ $action = scrub_in($_REQUEST['action']);
  */
 if (conf('refresh_limit') > 5) { 
 	$ajax_url = conf('ajax_url') . '?action=reloadnp' . conf('ajax_info');
-	$ajax_object = 'np_refresh';
 	require_once(conf('prefix') . '/templates/javascript_refresh.inc.php');
 }
 ?>
-<?php show_ajax_js('np_refresh',array('np_data')); ?>
 <div id="np_data">
 	<?php show_now_playing(); ?>
 </div> <!-- Close Now Playing Div -->
