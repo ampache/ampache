@@ -16,7 +16,7 @@ name = "Simple_h"
 # This is just a way of giving credit to the 
 # person who actually created this theme
 # DEFAULT: N/A
-author = "Lars Olafsen"
+author = "Lars Olafsen modified by Terence Theijn"
 
 # Theme Maintainer
 # This is just a way of listing who is responsible for
@@ -25,7 +25,21 @@ author = "Lars Olafsen"
 # DEFAULT: N/A
 #maintainer = "Lars Olafsen" larsolafsen@gmail.com
 
-version = "1.0"
+# Version
+# This is the version of the Theme (usefull if you've updated it)
+version = "1.1"
+
+# Orientation
+# This was added as of 3.3.2-Alpha4, this tells Ampache if this theme
+# uses vertical or horizontal orientation of the menu, if this is a horizontal
+# theme then it will not show the quick search and quick random play forms
+orientation = "horizontal"
+
+# Submenu
+# If this is set to simple the sub menu's will only be shown when you're on one of the
+# respective pages. If you want to make the menu's something like the classic theme
+# comment this out
+# submenu = "simple"
 
 #Image Credits
 #Please give credit where credit is due
