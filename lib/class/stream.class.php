@@ -280,6 +280,20 @@ class Stream {
 
 	} // create_localplay
 
+	/**
+ 	 * create_democratic
+	 * This 'votes' on the songs it inserts them into
+	 * a tmp_playlist with user of -1 (System)
+	 */
+	function create_democratic() { 
+
+		$tmp_playlist	= new tmpPlaylist('-1');
+		$tmp_playlist->vote($this->songs);
+		
+		header("Location: " . return_referer());
+
+	} // create_democratic
+
 	/*!
 		@function create_mpd
 		@discussion function that passes information to 

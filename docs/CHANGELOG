@@ -4,6 +4,8 @@
 
 --------------------------------------------------------------------------
   v.3.3.3-Alpha1
+	- Fixed false positive error and PHP5 related error on archive
+		creation
 	- Added <image> tag for album art and ability to filter rss feed
 		by user by adding ?username=<username> to rss link.  
 	- Added LDAP/Active Directory  auth support (Thx Rubin & pb1dft)

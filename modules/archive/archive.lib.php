@@ -134,7 +134,10 @@ class archive
 			if ($this->options['type'] == "gzip" || $this->options['type'] == "bzip")
 				unlink($this->options['basedir'] . "/" . $this->options['name'] . ".tmp");
 		}
-	}
+
+		return true;
+
+	} // create_archive
 
 	function add_data($data)
 	{
@@ -228,9 +231,7 @@ class archive
 		chdir($pwd);
 
 		unset ($current, $pwd);
-
-		usort($files, array ("archive", "sort_files"));
-
+		
 		return $files;
 	}
 
@@ -268,24 +269,6 @@ class archive
 		@closedir($dir);
 
 		return $files;
-	}
-
-	function sort_files($a, $b)
-	{
-		if ($a['type'] != $b['type'])
-			if ($a['type'] == 5 || $b['type'] == 2)
-				return -1;
-			else if ($a['type'] == 2 || $b['type'] == 5)
-				return 1;
-		else if ($a['type'] == 5)
-			return strcmp(strtolower($a['name']), strtolower($b['name']));
-		else if ($a['ext'] != $b['ext'])
-			return strcmp($a['ext'], $b['ext']);
-		else if ($a['stat'][7] != $b['stat'][7])
-			return $a['stat'][7] > $b['stat'][7] ? -1 : 1;
-		else
-			return strcmp(strtolower($a['name']), strtolower($b['name']));
-		return 0;
 	}
 
 	function download_file()

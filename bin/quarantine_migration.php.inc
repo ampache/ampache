@@ -26,6 +26,8 @@
 $no_session='1';
 require_once('../lib/init.php');
 
+init_preferences();
+
 usage();
 
 // grab list of files from table

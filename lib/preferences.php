@@ -268,6 +268,9 @@ function create_preference_input($name,$value) {
 			if (conf('allow_downsample_playback')) { 
 				echo "\t<option value=\"downsample\" $is_down>" . _('Downsample') . "</option>\n";
 			}
+			if (conf('allow_democratic_playback')) { 
+				echo "\t<option value=\"democratic\" $is_demo>" . _('Voting') . "</option>\n";
+			}
 			echo "\t<option value=\"localplay\" $is_local>" . _('Localplay') . "</option>\n";	
 			echo "</select>\n";
 		break;
