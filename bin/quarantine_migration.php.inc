@@ -47,6 +47,11 @@ while ($results = mysql_fetch_assoc($db_results)) {
 /* Make sure we have write access to the upload dir */
 $upload_dir = conf('upload_dir');
 
+if (!$upload_dir) { 
+	echo "\nError: No Upload Directory Defined\n";
+	exit;
+}
+
 if (!@is_writeable($upload_dir)) { 
 	echo "\n" . _('Error: Unable to write to') .  " $upload_dir ". "\n";
 	exit;

@@ -969,4 +969,24 @@ function invert_boolean($value) {
 
 } // invert_boolean
 
+/**
+ * get_user_from_username
+ * As we are moving away from user from username to user from 
+ * unique ID (smaller/faster/more powerful!) this can be used
+ * to return a user object if all you've got is the username
+ */
+function get_user_from_username($username) { 
+
+	$sql = "SELECT id FROM user WHERE username='" . sql_escape($username) . "'";
+	$db_results = mysql_query($sql, dbh());
+
+	$results = mysql_fetch_assoc($db_results); 
+
+	$user = new User($results['id']);
+
+	return $user;
+
+} // get_user_from_username
+
+
 ?>

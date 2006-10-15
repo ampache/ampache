@@ -39,7 +39,13 @@ class User {
 	var $last_seen;
 	var $create_date;
 	var $validation;
-	
+
+	/**
+	 * Constructor
+	 * This function is the constructor object for the user
+	 * class, it currently takes a username
+	 * //FIXME take UID
+	 */	
 	function User($username=0) {
 
 		if (!$username) { 
@@ -47,8 +53,8 @@ class User {
 		}
 
 		$this->username 	= sql_escape($username);
+		$info 			= $this->_get_info();
 		$this->id		= $this->username;
-		$info 			= $this->get_info();
 		$this->username 	= $info->username;
 		$this->fullname 	= $info->fullname;
 		$this->access 		= $info->access;
@@ -65,20 +71,25 @@ class User {
 
 	} // User
 
+	/**
+	 * _get_info
+	 * This function returns the information for this object
+	 */
+	function _get_info() {
 
-	/*! 
-		@function get_info
-		@dicussion gets the info!
-	*/
-	function get_info() {
-
-		$sql = "SELECT * FROM user WHERE username='$this->username'";
+		/* Hack during transition back to UID for user creation */
+		if (is_numeric($this->username)) { 
+			$sql = "SELECT * FROM user WHERE id='" . $this->username . "'";
+		}
+		else { 
+			$sql = "SELECT * FROM user WHERE username='$this->username'";
+		}
 		
 		$db_results = mysql_query($sql, dbh());
 
 		return mysql_fetch_object($db_results);
 
-	} // get_info
+	} // _get_info
 
 	/**
 	 * get_preferences
@@ -195,25 +206,6 @@ class User {
 		return $items;
 
 	} // get_favorites
-
-	/*!
-		@function is_xmlrpc
-		@discussion checks to see if this is a valid
-			xmlrpc user
-	*/
-	function is_xmlrpc() { 
-
-		/* If we aren't using XML-RPC return true */
-		if (!conf('xml_rpc')) { 
-			return false;
-		}
-
-		//FIXME: Ok really what we will do is check the MD5 of the HTTP_REFERER 
-		//FIXME: combined with the song title to make sure that the REFERER
-		//FIXME: is in the access list with full rights
-		return true;
-
-	} // is_xmlrpc
 
 	/*!
 		@function is_logged_in
@@ -524,6 +516,7 @@ class User {
 		$username	= sql_escape($username);
 		$fullname	= sql_escape($fullname);
 		$email		= sql_escape($email);
+		$access		= sql_escape($access);
 		
 		/* Now Insert this new user */
 		$sql = "INSERT INTO user (username, fullname, email, password, access, create_date) VALUES" .
@@ -885,7 +878,8 @@ class User {
 		$db_results = mysql_query($sql, dbh());
 		
 	} // activate_user
+
 	
-} //end class
+} //end user class
 
 ?>

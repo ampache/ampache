@@ -24,7 +24,7 @@
         @discussion creates a RSS fead for the now
                 playing information
 */
-function show_now_playingRSS () {
+function show_now_playingRSS ($username=0) {
 
 header ("Content-Type: application/xml");
 
@@ -36,9 +36,14 @@ header ("Content-Type: application/xml");
         $rss_main_language = conf('rss_main_language');
         $rss_description = conf('rss_song_description');
 
-        $sql = "SELECT * FROM now_playing ORDER BY start_time DESC";
+	if ($username) { 
+		$user = get_user_from_username($username);
+		$constraint = " WHERE user='" . sql_escape($user->username) . "' ";
+	}
 
-        $db_result = mysql_query($sql, $dbh);
+        $sql = "SELECT * FROM now_playing $constraint ORDER BY start_time DESC";
+	
+	$db_result = mysql_query($sql, $dbh);
         $today = date("d-m-Y");
         $rss_song_description = $rss_description;
         echo "<rss version=\"2.0\">";
@@ -57,6 +62,7 @@ header ("Content-Type: application/xml");
                         $text = "$artist - $song->f_title played by $r->user";
                         echo "<item> \n";
                         echo " <title><![CDATA[$text]]></title> \n";
+			echo " <image>$web_path/albumart.php?id=$song->album</image>\n";
                         echo " <link>$web_path/albums.php?action=show&amp;album=$song->album</link>\n";
                         echo " <description><![CDATA[$song->f_title @ $album is played by $r->user]]></description>\n";
                         echo " <pubDate>$today</pubDate>\n";

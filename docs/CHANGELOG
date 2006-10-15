@@ -4,7 +4,9 @@
 
 --------------------------------------------------------------------------
   v.3.3.3-Alpha1
-	- Added LDAP auth support (Thx Rubin & pb1dft for the modification to support Microsoft AD)
+	- Added <image> tag for album art and ability to filter rss feed
+		by user by adding ?username=<username> to rss link.  
+	- Added LDAP/Active Directory  auth support (Thx Rubin & pb1dft)
 	- Added ajax support to ratings, no longer requires a refresh, 
 		hello instant gratification. 
 	- Tweaked Kajax, now accepts an array of elements to replace
