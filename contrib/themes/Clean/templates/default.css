@@ -1,7 +1,7 @@
-<?php
+<!--
 /*
 
- Copyright (c) 2001 - 2005 Ampache.org
+ Copyright (c) 2001 - 2006 Ampache.org
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
@@ -19,380 +19,512 @@
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
+-->
+p { 
+	color: #666666;
+}
 
-/*!
- @header Style File
- @discussion this is the css that is included on every page of
- 	ampache, mod this to change the look and feel of the site
-	
-	There is an unfortunate amount of repeating directives in here in an effort to 
-	normalize the varying styles/classes used throughout the site and to make as cross
-	browswer compatible as possible.  If someone actually knew what they were doing 
-	with css, I'm sure this could be done much more effeciently...
-*/
-$border2="1px solid Silver";
-?>
-<script type="text/javascript" language="javascript">
-<!-- Begin Suckerfish hover menu JS
-// function needed for IE.  attaches mouseover/out events to give/remove css class .sfhover (fake hover)
-sfHover = function(navlist) {
-var sfEls = document.getElementById("navlist").getElementsByTagName("LI");
-for (var i=0; i <sfEls.length; i++) {
-    sfEls[i].onmouseover=function() {
-        this.className+=" sfhover";
-    }
-    sfEls[i].onmouseout=function() {
-        this.className=this.className.replace(new RegExp("sfhover\\b"), "");
-    }
-} // end for
-} // end function for sfHover
-if (window.attachEvent) window.attachEvent("onload", sfHover);
-// End Suckerfish hover menu JS-->
-</script>
-<style type="text/css">
-<!--
-body{
-	font-family: Arial,Helvetica,sans-serif;
-   	color: #666666;
-	font-size: 12px;
+a { 
+	color: #3F5F5E; 
+	font-family: Verdana, Helvetica, sans-serif; 
+	text-decoration: none;
 }
-p{
-    font-family: Arial,Helvetica,sans-serif;
-   	color: #666666;
-	font-size: 12px;
+a:visited 
+	{ 
+	color: #3F5F5E; 	
+	font-family: Verdana, Helvetica, sans-serif; 
+	text-decoration: none;
+	}
+a:active  { 
+	color: #3F5F5E; 
+	font-family: Verdana, Helvetica, sans-serif; 
+	text-decoration: underline;
 }
-ol{list-style:decimal;}
-ul{list-style:disc;}
-a{
-	color: #3F5F5E;
-	font-weight:bolder;
+a:hover  { 
+	color: #3F5F5E; 
+	font-family: Verdana, Helvetica, sans-serif; 
+	text-decoration: underline;
 }
-a:link {text-decoration: none;}
-a:visited {text-decoration: none;}
-a:hover {text-decoration: underline;}
-a:active {text-decoration: underline;}
 
-img{border: thin outset Silver;}
-p img{border:none;}/*no border on login page logo.*/
-.text-box{
-	border: thin outset;
+.text-box {
 	display: table-cell;
+	padding-left:5px;
+	padding-top:5px;
+	padding-right:5px;
+	margin-bottom:10px;
+	background-color: #E1E9EE;
+	border:2px solid #C6C6C6;
 }
-H3{font-size: <?php echo conf('font_size')+2; ?>px;}
-TABLE{
-	border-collapse: separate;
-	empty-cells:show;
+.selected_button {
+	background-color: E1E9EE;
+	color:#666666;
 }
-td{color: #666666;padding: 0px 8px 0px 8px;}
-th{
-	border: <?php echo $border2;?>;
+.unselected_button {
+	/* there really isn't anything for this */
+}
+.display {}
+
+table.tabledata {}
+td { 
 	padding: 0px 8px 0px 8px;
-	vertical-align: top;
-	text-align: center;
-	font-weight: normal;/*override default bolding on th's*/
-}
-input{
-	color: #666666;
+	color: #3F5F5E; 
+	font-family: Verdana, Helvetica, sans-serif; 
 	font-size: 12px;
 }
-select{ 
-	color: #666666;
-	font-size: 12px;
+th {
+	padding-right: 10px;
 }
-textarea{ 
-	color: #666666;
-	font-size: 12px;
+input {
+	color: #3F5F5E; 
+	font-family: Verdana, Helvetica, sans-serif; 
+	font-size: 12px; 
+	font-weight: bold; 
+	background-color: #FFFFFF; 
+	margin: 2px 2px 2px 2px;
 }
-.login{border: 2px ridge Silver;}
-.npsong td{border-bottom: <?php echo $border2;?>;border-top: <?php echo $border2;?>;}
-.tabledata{border-collapse: collapse;border: <?php echo $border2;?>;}
-.table-header{
-	background: url(<?php echo conf('web_path'); ?><?php echo conf('theme_path'); ?>/images/ampache-light-bg.gif)  #E1E9EE repeat-x;
+select	{ 
+	color: #3F5F5E; 
+	font-family: Verdana, Helvetica, sans-serif; 
+	font-size: 12px; 
+	background-color: #FFFFFF; 
+}
+textarea { 
+	background-color: #FFFFFF;
+	color: #3F5F5E; 
+	font-family: Verdana, Helvetica, sans-serif; 
+	font-size: 12px; 
+}
+.table-header {
+        background: url(../images/ampache-light-bg.gif) #E1E9EE repeat-x;
 	vertical-align: top;
-	text-align: center;
-	border: <?php echo $border2;?>;
 }
-.table-header td{border: <?php echo $border2;?>;}/*override td and add border on all fields.*/
-
-.navitem{/*compatiblity with older version*/
-	background: url(<?php echo conf('web_path'); ?><?php echo conf('theme_path'); ?>/images/ampache-light-bg.gif)  #E1E9EE repeat-x;
-	vertical-align: top;
-	text-align: center;
-	border: <?php echo $border2;?>;
-}
-.active_navitem{/*compatiblity with older version*/
-	background: url(<?php echo conf('web_path'); ?><?php echo conf('theme_path'); ?>/images/ampache-dark-bg.gif) #FFFFFF repeat-x;
-	vertical-align: top;
-	text-align: center;
-	border: <?php echo $border2;?>;
-}
-.header1{ 
-	color:  #3F5F5E;
-	font-family: Verdana; 
-	font-size: <?php echo conf('font_size') + 3; ?>px; 
+    .header1 
+    { 
+	color: #3F5F5E; 
+	font-family: Verdana, Helvetica, sans-serif; 
+	font-size: 18px; 
 	font-weight: 900;
-}
-.header2{
+    }
+    .header2
+    {
     	color: #3F5F5E;
-	font-family: Verdana;
-	font-size: <?php echo conf('font_size') + 2; ?>px;
+	font-family: Verdana, Helvetica, sans-serif;
+	font-size: 14px;
 	font-weight: 900;
+    }
+	.headrow 
+		{
+		background:#8E9A9A;
+		font-size: 12px;
+		}
+	.odd 
+		{
+		background:#FFFFFF;
+		font-size: 12px;
+		}
+	.even
+		{
+		background:#FAFAF8;
+		font-size: 12px;
+		}
+.blank {
+	background: #fff;
 }
-
-.headrow {
-	background:#D1D8D5;
-	font-size: 12px;
-	border: <?php echo $border2;?>;	
+.border { 
+	background:#fff; 
 }
-
-.odd {/*odd rows in multi lined tables.*/
-	background: #ffffff;
-	border:none;
-	text-align: left;
+.header { 
+	font-size: 12px; 
 }
-
-/*do the borders for them.  we'll just do edges on odds except for first/last rows where we add the top or bottom.*/
-.odd td {border:none;}
-.odd td:first-child{border-left: <?php echo $border2;?>}
-.odd td:last-child{border-right: <?php echo $border2;?>;}
-.odd:first-child td{border-top: <?php echo $border2;?>}
-.odd:last-child td{border-bottom:<?php echo $border2;?>}
-/*special cases*/
-.odd td table tr td{border: none;}/*skip embedded tables*/
-.odd td table tr td:first-child{border:none;}
-.odd td table tr td:last-child{border:none;}
-.odd td table td table{border:<?php echo $border2;?>;}/*color swatches on preferences page*/
-
-
-.even{
-        background:#FAFAF8;
-        text-align: left;/*for lists on homepage*/
-        border:none;
+.error { 
+	color: #990033; 
 }
-/*specify sides/top & bottom on evens*/
-.even td{border-bottom:<?php echo $border2;?>;border-top:<?php echo $border2;?>;}
-.even td:first-child{border-bottom:<?php echo $border2;?>;border-left: <?php echo $border2;?>;border-top: <?php echo $border2;?>;}
-.even td:last-child{border-bottom:<?php echo $border2;?>;border-top:<?php echo $border2;?>;border-right:<?php echo $border2;?>;}
-/*special cases*/
-.even td table tr td{border:none;}/*skip embedded tables*/
-.even td table tr td:first-child{border:none;}
-.even td table tr td:last-child{border:none;}
-.even td table td table{border:<?php echo $border2;?>;}/*color swatches on preferences page*/
-
-
-
-.border{
-	border-collapse: collapse;
-	border: <?php echo $border2;?>;
-	padding: 0px 0px 0px 0px;
-}
-
-/*do some clean up of unwanted borders in border class with embedded even/odd classes */
-.border .even table .even td{border:none;}/*random selection on home page*/
-.border .even td table tr td{border:none;}/*prev next on artists/albums*/
-.border .even td table tr td:first-child{border:none;}/*prev next on artists/albums*/
-.border .even td table tr td:last-child{border:none;}/*prev next on artists/albums*/
-.border .odd td table td{border:none;}/*skip embedded tables.*/
-.border .odd td table td:first-child{border:none;}
-.border .odd td table td:last-child{border:none;}
-.border .table-header:first-child td font{/*override with defaults because  album header is hardcoded to big*/
-	font-size: 12px;
-	font-weight: bolder;
-}
-
-.blank{	background: #fff;}
-.header{font-size: 12px;}
-.error{	color: #990033;}
-.fatalerror{
+.fatalerror {
 	padding-top: 3px;
+	padding-left: 3px;
+	padding-right: 3px;
+	display: table-cell;
 	padding-bottom: 3px;
 	color: #990033;
-    border-right:4px solid #990033;
-    border-bottom:4px solid #990033;
-    border-left:4px solid #990033;
-    border-top:4px solid #990033;		
-	font-size: <?php echo conf('font_size')+2; ?>px;
-	font-weight: 900;
-	text-align: center;
+ border-right:4px solid #990033;
+ border-bottom:4px solid #990033;
+ border-left:4px solid #990033;
+ border-top:4px solid #990033;		
 }
-.disabled{text-decoration: line-through;}
-.alphabet{
-	font-size: 12px; 
+.disabled {
+	text-decoration: line-through;
+}
+.smallbutton {
+	border:0px;
+	padding-left:1px;
+	padding-right:1px;
+	font-size: 11px;
+	cursor: pointer;
+}
+/* ////////////////////////////////////////////////////////////////*/	
+/* De aqui pa'bajo, ros esta creando una hoja de estilos unica para todo Ampache  */
+
+/* General style rules  */
+body{
+        background: #FFFFFF repeat-x;
+	padding-top: 0px;
+	margin-top: 0px;
+	margin-left: 0px;
+	margin-right: 0px; 
+	font-size: 12px;
+	font-family: Verdana;
+	color: #666666;
+}
+
+#maincontainer{
+	margin: 0px;
+}
+
+.alphabet { 
+	margin: 10px;
+	font-size: 10px; 
 	font-weight: normal; 
 }
-/*************** Main Menu *****************/
-#mainmenu {
-        float: left;
-        width: 100%;
-        margin: 0;
-        padding: 0;
-        list-style: none;
-	border-top: <?php echo $border2;?>;  
-        border-bottom: <?php echo $border2;?>;
-        border-right: <?php echo $border2;?>;
-        border-left: <?php echo $border2;?>;
-        background: url(<?php echo conf('web_path'); ?><?php echo conf('theme_path'); ?>/images/ampache-light-bg.gif) #E1E9EE repeat-x;
-    }
-    #mainmenu li {
-        float: left;
-        margin: 0;
-        padding: 0 10px 0 10px;
-        border-right: <?php echo $border2;?>;
-        display: inline;
-    }
-    #mainmenu li.active {
-        background: url(<?php echo conf('web_path'); ?><?php echo conf('theme_path'); ?>/images/ampache-dark-bg.gif) #E1E9EE repeat-x;
-    }
-    #mainmenu a {
-        text-decoration: none;
-    }
-    #mainmenu a:hover {
-        color: #000;
-        text-decoration: underline;
-    }
-    #mainmenu a:active {
-        color: #00a;
-        text-decoration: underline;
-    }
-/*************** END Main Menu *************/
-/*************** Admin Menu *************/
-    #adminmenu {
-    	float: left;
-    	width: 100%;
-        margin: 0;
-        padding: 0;
-        list-style: none;
-        border-bottom: <?php echo $border2;?>;
-        border-right: <?php echo $border2;?>;
-		border-left: <?php echo $border2;?>;
-        background: url(<?php echo conf('web_path'); ?><?php echo conf('theme_path'); ?>/images/ampache-light-bg.gif) #E1E9EE repeat;
-    }
-    #adminmenu li {
+
+/* Content block */
+#content {
+	postion:absolute;
 	float: left;
-        margin: 0;
-        padding: 0 10px 0 10px;
-	border-right: <?php echo $border2;?>;
-        display: inline;
-        background: url(<?php echo conf('web_path'); ?><?php echo conf('theme_path'); ?>/images/ampache-light-bg.gif) #E1E9EE repeat-x;
-    }
-    #adminmenu li.active {
-        background: url(<?php echo conf('web_path'); ?><?php echo conf('theme_path'); ?>/images/ampache-dark-bg.gif) #E1E9EE repeat-x;
-    }
-    #adminmenu a {
-        text-decoration: none;
-    }
-    #adminmenu a:hover {
-        color: #000;
-        text-decoration: underline;
-    }
-    #adminmenu a:active {
-        color: #000;
-        text-decoration: underline;
-    }
-/*************** END Main Menu *************/
-/*New Menu (3.3.2 alpha 4+)*/
-/**
- * Div Definitions
- * These define how the page is layed out, be careful with these as changes to them
- * can cause drastic layout changes
- */
-	#maincontainer{
-			margin: 0px;
-	} 	
-	#topbar{
-			height: 60px;
-			padding-top:10px;
-			padding-left:10px;
-			background-color: #FFFFFF;
-	}
-	#topbarright{
-			float: right;
-	}
-	#topbarleft{
-			float: left;
-	}
-	#topbarleft img{border:none;}/*ampache logo*/
-	#navcontainer ul li{
-			float:left; 
-			width:100%;
-	}
-	.subnavbutton{
-			background-color: #ffffff;
-			text-align:center;
-			text-decoration: none;
-			color: #3F5F5E;
-	}
-	#content{ 
-		margin-left:0px;
-	}
+	clear: both;
+	margin-left:15px;
+	/* float:left;  use for horizontal menu; comment out otherwise */
+	/* background:#fff url("../themes/classic/images/bg_content.gif") repeat-y right top; */
+}
+
+h3#content_title{
+	font-family:Arial,Helvetica,Sans-Serif;
+	font-size:12px;
+	line-height:32px;
+	color:#fff;
+	margin:0px;
+	padding:0px;
+	background:#8B8B8B url("../themes/classic/images/content_corner.gif") no-repeat right top;
+}
+
+h3#content_title span {
+	text-align:left;
+}
+			
+/* Styles for Header */
+div#Header{
+	height:40px;
+	margin-bottom:3px;
+	padding:0px;
+}
+
+#Header h1 { 
+	background: transparent url("../themes/classic/images/bg_login_0.jpg") no-repeat top left; 
+	border:0px; 
+	width: 439px; 
+	height: 84px; 
+	float: left;
+	margin:0px;
+	padding:0px;
+}
+	
+#Header h1 span {
+	display:none
+}
+
+#Header h2 { 
+	background: transparent url(001/h2.gif) no-repeat top left; 
+	margin-top: 75px;  
+	width: 200px; 
+	height: 18px; 
+	float: right;
+}
+
+#Header h2 span {
+	font-size:10px;
+	margin-left:10px;
+}
+
+
+/* Sidebar */
 /**
  * Experimental for menus (Thx Sigger)
- * TO DO: Fill in 1px border around menus & submenu items 
- * Make padding appply to the li, not just an a.  Moving paddng: to li throws off the dropdown menu alignment.
+ * TO DO: Fill in 1px border around menus & submenu items
+ * Make padding apply to the li, not just an a.  Moving padding: to li throws off the dropdown menu alignment.
  */
-    #sidebar {
-		clear: both;
-		height: 100%;
-        margin: 0;
-        float: left;
- /*       width: 110px;  /* this controls the width of the sidebar.  horizontal menu needs more width */
-        padding: 0;
-		border-top: <?php echo $border2;?>;
-		list-style: none;
-        line-height: 1.0;
-	}
-    #sidebar ul {
-		margin: 0px;
-		list-style: none;
-		padding: 0px;
-        font-family: verdana, arial, Helvetica, sans-serif;
-		line-height: 1.0;
-    }
-    #sidebar li {
-/*        margin: 0 0 1px 0; */
-		margin: 0px;
-        display: block;   
-		border-bottom:<?php echo $border2;?>;
-		border-left: <?php echo $border2;?>;
-		border-right: <?php echo $border2;?>;
-		padding: 5px 0px 5px 10px;   
-		width: 10em;
-		background-color: #FAFAF8;
-	}
-    #sidebar a, .navbutton {
-		display: block;  /*Not sure why this is neccesary, but it is for IE*/
-		text-decoration: none;
-	}
-    #sidebar li:hover, #sidebar li.sfhover {
-        color: #3F5F5E;
-		background-color: #D1D8D5;
-    }
-    #sidebar li:active {
-        background-color: #ffffff;
-    }
-    #sidebar li ul {
-		float: left;
-		position: absolute;	
-		width: 11em; 
-		border: <?php echo $border2;?>;
-		margin: -1.5em 0 0 10em;
-/* -2em 0 0 10em for vertical menu puts the submenu back up and to the right of the hovered menu item by "the right amount"*/
-		left: -999em;  /* this puts the submenu item way off to the left until it's called back by a hover (below) */
-    }
-    #sidebar li:hover ul, #sidebar li.sfhover ul {
-		left: auto;  /* this calls the submenu back when the parent li is hovered. */
-    }
-/**
- * End Div Definitions
- * This is the end of the main structure def's
- */
-/*****/
-/*************** Page Header *********************/
-    #pageheader {
-        background-color: #FFFFFF;   
-	}
-    #pageheader img{border: none;}
-/*************** END Page Header *****************/
--->
+ 
+div#sidebar{
+        clear:both;
+        position:absolute;
+        left:5px;
+        top:25px;
+}
 
-</style>
+#sidebar h3 {
+    width: 120px;
+    height: 28px;
+    margin 0px;
+    padding: 0px;
+    background: transparent;
+}
+
+#sidebar h3 span {
+        display:none
+}
+
+#sidebar ul {
+        margin: 0px;
+        list-style: none;
+        font-family:Arial, Helvetica, Sans-Serif;
+        font-size:10px;
+        padding: 0px;
+        line-height: 1.0;
+	Background-color: #C6C6C6;
+}
+
+#sidebar li {
+    margin: 0;
+    float: left;
+    display: block;
+    border: 1px solid #C6C6C6;
+    padding: 3px 0px 3px 3px;
+    width: 10.5em;
+    background: url(../images/ampache-light-bg.gif) #C6C6C6 repeat-x;
+}
+
+#sidebar li {
+    border: 1px solid #C6C6C6;
+}
+
+#sidebar ul.subnavside  {
+    border: 1px solid #C6C6C6;
+    background: url(../images/ampache-dark-bg.gif) #C6C6C6 repeat-x;
+}
+
+
+#sidebar a, .navbutton {
+    display: block;  /*Not sure why this is neccesary, but it is for IE*/
+    text-decoration: none;
+    text-align: center;
+    padding:0px 12px 0px 0px;
+    margin:0px;
+}
+
+#sidebar li:hover, #sidebar li.sfhover {
+        color: #3F5F5E;
+	background: url(../images/ampache-dark-bg.gif) #C6C6C6 repeat-x;
+}
+
+#sidebar li ul {
+    float: left;
+    position: absolute;
+    width: 11.0em;
+/*    margin: -1.5em 0 0 10.5em; /* for vertical menu; comment out otherwise */
+    margin: 0.5em 0 0 -0.5em;
+    left: -999em;  /* this -999em puts the submenu item way off to the left until it's called back by a hover (below) */
+    z-index:30;
+    background: url(../images/ampache-light-bg.gif) #C6C6C6 repeat-x;
+}
+
+#sidebar #activetopmenu {
+        background: url(../images/ampache-dark-bg.gif) #C6C6C6 repeat-x;
+	}
+#sidebar #activesubmenu {
+        background: url(../images/ampache-dark-bg.gif) #C6C6C6 repeat-x;
+}
+#sidebar li:hover, #sidebar li.sfhover {
+        left: auto;  /* this calls the submenu back when the parent li is hovered. */
+        background: url(../images/ampache-dark-bg.gif) #C6C6C6 repeat-x;
+}
+
+
+/* Styles for Now Playing */
+
+#np_container1{
+	width: 260px;
+	height: 18px;
+	padding: 0px;
+	margin: 0px;
+	background: #fff url("../themes/classic/images/tb_tab.jpg") no-repeat top left;
+}
+
+#np_container1 h1{
+	font-size: 10px;
+	font-weight: bold;
+	padding: 2px;
+}
+
+#np_container2{
+	border-width: 1px 1px 1px 1px;
+	border-style: solid;
+	border-color:#ddd #999 #999 #ccc;
+	padding: 6px;
+	font-family: Verdana, sans-serif;
+	font-size: 10px;
+	line-height: 12px;
+	color: #000;
+	background: #D6D6D4 url("../themes/classic/images/bg_row.jpg") repeat top left;
+}
+
+	
+/* Styles for Login template  */
+#container{
+	margin:100px auto 0px auto;
+	width:437px;
+	font-size: 12px;
+	text-align:center;
+}
+#container h1{
+	background:url("../themes/classic/images/bg_login_0.jpg") no-repeat;
+	height:81px;
+	margin-bottom:8px;
+}
+#container h1 span{
+	display:none;
+}
+#container div{
+	background:url("../themes/classic/images/bg_login_1.jpg") no-repeat;
+	height:285px;
+}
+#loginp_0{
+	color:#333;
+	margin-top:0px;
+	padding-top:60px;
+}
+.loginp_1{
+	text-align:right;
+	padding-right:100px;
+}
+.loginp_1 span{
+	font-weight:bold;
+}
+.loginp_1 input{
+	border:1px solid #999;
+}
+input.text_input {
+width:12em;
+}
+.loginp_1 input.check_input {
+margin-right:5em;
+} 
+/* Footer */
+#footer {
+	margin-left: 150px;
+	margin-bottom: 10px;
+}
+
+#footer p {
+	color:#999999;
+	font-size:10px;
+}
+#topbar { 
+	height: 80px;
+	padding-top:3px;
+	padding-left:10px;
+}
+#topbarright { 
+	float: right;
+	font-size: 10px;
+}
+#topbarleft, #topbarleft a{ 
+	float: left;
+}
+
+/* Box Related Styles */
+.box { 
+	padding:0px;
+	background: #E6E9EA;
+	margin:10px;
+	border: 1px solid #C6C6C6;
+}
+.box-title { 
+	border-bottom: solid 1px #C6C6C6;
+	font-weight: bold;
+	background: #C6C6C6;
+}
+.box-left-top { display:none; }
+.box-left-bottom { display:none; }
+.box-left { display:none; }
+.box-bottom { display:none; }
+.box-right-bottom { display:none; }
+.box-right-top { display:none; }
+.box-right { display:none; }
+.box-top { display:none; }
+
+.confirmation-box {
+	padding-left:5px;
+	padding-top:5px;
+ 	padding-right:5px;
+	margin-bottom:10px;
+	display: table-cell;
+	background-color: #E1E9EE;
+	border-right:2px solid #C6C6C6;
+	border-bottom:2px solid #C6C6C6;
+	border-left:2px solid #C6C6C6;
+	border-top:2px solid #C6C6C6;}
+
+.text-action, .text-action li {
+	margin-top:5px;
+	list-style: none;
+	margin-bottom:5px;
+	padding-left:0px;
+}
+.text-action a, .text-action span {
+	background: #E1E9EE;
+	border:1px solid #C6C6C6;
+ 	padding-left:2px;
+	padding-right:2px;
+	text-decoration: none;
+}
+.text-action #pt_active {
+	background: #E1E9EE;
+	color: #3F5F5E;
+	border:1px solid #C6C6C6;
+}
+#nowplaying {
+	width:650px;
+	background: #E1E9EE;
+}
+.np_row {
+	padding-top: 3px;
+	padding-bottom: 3px;
+}
+.np_cell {
+	margin: 10px;
+}
+#tablist {
+        padding: 3px 0;
+        margin: 12px 0 0 0;
+        font: bold 12px Verdana, sans-serif;
+}
+
+#tablist li {
+        list-style: none;
+        margin: 0;
+        display: inline;
+}
+
+#tablist li a {
+        padding: 3px 0.5em;
+        margin-left: 3px;
+        border: 1px solid #C6C6C6;
+        border-bottom: none;
+        background: #93A6B4;
+        text-decoration: none;
+}
+
+#tablist li a:link { color: #3F5F5E; }
+#tablist li a:visited { color: #3F5F5E; }
+
+#tablist li a:hover {
+        color: #3F5F5E;
+        background: #E1E9EE;
+        border-color: #3F5F5E;
+	text-decoration: underline;
+}
+
+#tablist li a#current {
+        color: #3F5F5E;
+        background: #E1E9EE;
+        border-color: #3F5F5E;
+}
+
