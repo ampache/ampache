@@ -4,7 +4,7 @@
 
 --------------------------------------------------------------------------
   v.3.3.3-Alpha1
-	- Added LDAP auth support (Thx Rubin)
+	- Added LDAP auth support (Thx Rubin & pb1dft for the modification to support Microsoft AD)
 	- Added ajax support to ratings, no longer requires a refresh, 
 		hello instant gratification. 
 	- Tweaked Kajax, now accepts an array of elements to replace

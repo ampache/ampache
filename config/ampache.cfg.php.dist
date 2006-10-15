@@ -303,8 +303,13 @@ refresh_limit = "60"
 # DEFAULT: false
 #auto_create = "false"
 
-# Some LDAP servers won't let you search for the username
-# without logging in with an application user account.
+# LDAP filter string to use
+# For OpenLDAP use "uid" 
+# For Microsoft Active Directory (MAD) use "sAMAccountName"
+# DEFAULT: null
+# ldap_filter = "uid"
+# ldap_filter = "sAMAccountName"
+
 # if this is the case, fill these in here:
 # DEFAULT: null
 #ldap_username = ""
@@ -320,7 +325,8 @@ refresh_limit = "60"
 # This is the search dn used to find your user, uid=username is added on to 
 # This string 
 # DEFAULT: null
-#ldap_search_dn = "ou=People,dc=yoursubdomain,dc=yourdomain,dc=yourtld?uid?sub?(objectclass=*)"
+#For OpenLDAP use ldap_search_dn = "ou=People,dc=yoursubdomain,dc=yourdomain,dc=yourtld?uid?sub?(objectclass=*)"
+#For MAD use ldap_search_dn = "ou=People,dc=yoursubdomain,dc=yourdomain,dc=yourtld"
 
 # This is the address of your ldap server
 # DEFAULT: null

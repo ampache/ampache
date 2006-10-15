@@ -120,7 +120,10 @@ function vauth_ldap_auth($username, $password) {
 	// This is the server url (required)
     	$ldap_url	= vauth_conf('ldap_url');
 
-    	$ldap_name_field	= vauth_conf('ldap_name_field');
+	// This is the ldap filter string (required)
+	$ldap_filter	= vauth_conf('ldap_filter');
+    	
+	$ldap_name_field	= vauth_conf('ldap_name_field');
 	$ldap_email_field	= vauth_conf('ldap_email_field');
 
 	if ($ldap_link = ldap_connect($ldap_url) ) {
@@ -135,7 +138,7 @@ function vauth_ldap_auth($username, $password) {
                 	return $results;
             	} // If bind fails
 
-	        $sr = ldap_search($ldap_link, $ldap_search_dn, "(uid=$username)");
+	        $sr = ldap_search($ldap_link, $ldap_dn, "($ldap_filter=$username)");
         	$info = ldap_get_entries($ldap_link, $sr);
 
         	if ($info["count"] == 1) {
