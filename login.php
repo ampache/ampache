@@ -48,6 +48,8 @@ if (conf('access_control')) {
         }
 } // access_control is enabled
 
+/* Clean Auth values */
+unset($auth);
 
 /* Check for posted username and password */
 if ($_POST['username'] && $_POST['password']) {

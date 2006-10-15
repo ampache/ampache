@@ -37,6 +37,7 @@ $action = scrub_in($_REQUEST['action']);
 header("Content-type: application/xhtml+xml");
 
 switch ($action) { 
+	/* Controls Localplay */
 	case 'localplay':
 		init_preferences();
 		$localplay = init_localplay();
@@ -70,6 +71,7 @@ switch ($action) {
 		$xml_doc = xml_from_array($results);
 		echo $xml_doc;
 	break;
+	/* For changing the current play type */
 	case 'change_play_type':
 		init_preferences();
 		session_id(scrub_in($_REQUEST['sessid']));
@@ -89,6 +91,7 @@ switch ($action) {
 		$xml_doc = xml_from_array($results);
 		echo $xml_doc;
 	break;
+	/* reloading the now playing information */
 	case 'reloadnp':
 		ob_start();
 		show_now_playing();	
@@ -97,6 +100,7 @@ switch ($action) {
 		$xml_doc = xml_from_array($results);
 		echo $xml_doc;
 	break;
+	/* Setting ratings */
 	case 'set_rating':
 		ob_start(); 
 		$rating = new Rating($_REQUEST['object_id'],$_REQUEST['rating_type']);

@@ -293,6 +293,11 @@ class Update {
 		
 		$version[] = array('version' => '332013','description' => $update_string);
 
+		$update_string = '- Added tmp_playlist tables to allow for &lt;&lt;democratic playback&gt;&gt;.<br />' . 
+				'- Added hash field to song table to allow for some new optional cataloging functionality.<br />' . 
+				'- Added vote tables to allow users to vote on localplay.<br />';
+		
+		$version[] = array('version' => '333000','description' => $update_string); 
 
 		return $version;
 
@@ -341,7 +346,6 @@ class Update {
 		$sql = "DELETE * FROM session";
 		$db_results = mysql_query($sql, dbh());
 
-	
 		$methods = array();
 		
 		$current_version = $this->get_version();
@@ -353,7 +357,6 @@ class Update {
 		}
 
 		foreach ($this->versions as $version) { 
-
 
 			// If it's newer than our current version
 			// let's see if a function exists and run the 
@@ -1824,6 +1827,57 @@ class Update {
 		$this->set_version('db_version','332013');
 
 	} // update_332013
+
+
+	/**
+ 	 * update_333000
+	 * This adds tmp_playlist hotness and adds md5 field 
+	 * back to song table for potential use by the file 
+	 * moving magic code
+	 */
+	function update_333000() { 
+
+		$sql = "ALTER TABLE `song` ADD `hash` VARCHAR( 255 ) NOT NULL";
+		$db_results = mysql_query($sql, dbh());
+
+		$sql = "CREATE TABLE `tmp_playlist` (".
+			"`id` INT( 11 ) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY ,".
+			"`session` VARCHAR( 32 ) NOT NULL ,".
+			"`type` VARCHAR( 32 ) NOT NULL ,".
+			"`object_type` VARCHAR( 32 ) NOT NULL ,".
+			"`base_playlist` INT( 11 ) UNSIGNED NOT NULL".
+			")";
+		$db_results = mysql_query($sql, dbh());
+
+		$sql = "ALTER TABLE `tmp_playlist` ADD INDEX ( `session` )";
+		$db_results = mysql_query($sql, dbh());
+
+		$sql = "ALTER TABLE `tmp_playlist` ADD INDEX ( `type` )";
+		$db_results = mysql_query($sql, dbh());
+
+		$sql = "CREATE TABLE `tmp_playlist_data` (".
+			"`id` INT( 11 ) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY ,".
+			"`tmp_playlist` INT( 11 ) UNSIGNED NOT NULL ,".
+			"`object_id` INT( 11 ) UNSIGNED NOT NULL)"; 
+		$db_results = mysql_query($sql, dbh());
+
+		$sql = "ALTER TABLE `tmp_playlist_data` ADD INDEX ( `tmp_playlist` )";
+		$db_results = mysql_query($sql, dbh());
+
+		$sql = "CREATE TABLE `user_vote` (" . 
+			"`user` VARCHAR( 64 ) NOT NULL ," . 
+			"`object_id` INT( 11 ) UNSIGNED NOT NULL)";
+		$db_results = mysql_query($sql, dbh());
+
+		$sql = "ALTER TABLE `user_vote` ADD INDEX ( `user` )";
+		$db_results = mysql_query($sql, dbh()); 
+		
+		$sql = "ALTER TABLE `user_vote` ADD INDEX ( `object_id` )";
+		$db_results = mysql_query($sql, dbh());	
+
+		$this->set_version('db_version','333000');
+
+	} // update_333000
 
 } // end update class
 ?>

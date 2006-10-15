@@ -178,6 +178,7 @@ require_once(conf('prefix') . '/lib/class/localplay.class.php');
 require_once(conf('prefix') . '/lib/class/catalog.class.php');
 require_once(conf('prefix') . '/lib/class/stream.class.php');
 require_once(conf('prefix') . '/lib/class/playlist.class.php');
+require_once(conf('prefix') . '/lib/class/tmp_playlist.class.php');
 require_once(conf('prefix') . '/lib/class/song.class.php');
 require_once(conf('prefix') . '/lib/class/view.class.php');
 require_once(conf('prefix') . '/lib/class/update.class.php');
@@ -200,10 +201,6 @@ if ($results['memory_limit'] < 16) {
 	$results['memory_limit'] = 16;
 }
 set_memory_limit($results['memory_limit']);
-
-if (ini_get('short_open_tag') != "On") { 
-	ini_set (short_open_tag, "On");
-}
 
 // Check Session GC mojo, increase if need be
 $gc_probability = @ini_get('session.gc_probability');
