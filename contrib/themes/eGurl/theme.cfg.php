@@ -16,7 +16,7 @@ name = "eGurl"
 # This is just a way of giving credit to the 
 # person who actually created this theme
 # DEFAULT: N/A
-author = "s1amson wuzzuppy"
+author = "s1amson wuzzuppy modfied by Terence Theijn"
 
 # Theme Maintainer
 # This is just a way of listing who is responsible for
@@ -31,6 +31,22 @@ author = "s1amson wuzzuppy"
 #Table.gif borrowed from Google(tm) search. Credit for image respectivly belongs to photogropher.
 #plant_02 (background image) by buczo a.k.a Przemek B http://www.sxc.hu/browse.phtml?f=profile&l=buczo
 #red rose (used in logo) by float a.k.a Dora M http://www.sxc.hu/browse.phtml?f=profile&l=float
+
+# Version
+# This is the version of the Theme (usefull if you've updated it)
+version = "1.1"
+
+# Orientation
+# This was added as of 3.3.2-Alpha4, this tells Ampache if this theme
+# uses vertical or horizontal orientation of the menu, if this is a horizontal
+# theme then it will not show the quick search and quick random play forms
+orientation = "horizontal"
+
+# Submenu
+# If this is set to simple the sub menu's will only be shown when you're on one of the
+# respective pages. If you want to make the menu's something like the classic theme
+# comment this out
+# submenu = "simple"
 
 # Theme Colors
 ###################
