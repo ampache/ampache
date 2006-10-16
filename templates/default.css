@@ -596,6 +596,9 @@ li.current-rating{
 .np_cell {
 	margin: 10px;
 }
+
+/* 'Tab' Preferences, used by preferences.php */
+
 #tablist {
         padding: 3px 0;
         margin: 12px 0 0 0;
@@ -633,3 +636,16 @@ li.current-rating{
         border-bottom: 1px solid #000000;
 }
 
+
+/* TV Page Related Styles */
+#tv_control { 
+	float:left;
+} 
+
+#tv_np {
+	float:right;
+}
+
+#tv_playlist {
+	clear: both;
+}

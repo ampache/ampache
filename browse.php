@@ -81,7 +81,7 @@ switch($action) {
 	case 'genre':
 		/* Create the Needed Object */
 		$genre = new Genre();
-	
+
 		/* Setup the View object */
 		$view = new View();
 		$view->import_session_view();

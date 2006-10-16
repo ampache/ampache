@@ -249,6 +249,7 @@ class Genre {
 		switch ($match) { 
 			case 'Show_All':
 			case 'show_all':
+			case 'Show_all':
 				$sql = "SELECT id FROM genre";
 			break;
 			case 'Browse':
@@ -273,6 +274,8 @@ class Genre {
 	 * @catagory Class
 	 */
 	function show_match_list($match) { 
+
+		
 
 		require (conf('prefix') . '/templates/show_box_top.inc.php');
 		show_alphabet_list('genre','browse.php',$match,'genre');
