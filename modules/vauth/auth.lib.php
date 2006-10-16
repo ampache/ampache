@@ -123,6 +123,9 @@ function vauth_ldap_auth($username, $password) {
 	// This is the ldap filter string (required)
 	$ldap_filter	= vauth_conf('ldap_filter');
     	
+	//This is the ldap objectclass (required)
+	$ldap_class	= vauth_conf('ldap_objectclass');
+
 	$ldap_name_field	= vauth_conf('ldap_name_field');
 	$ldap_email_field	= vauth_conf('ldap_email_field');
 
@@ -137,8 +140,8 @@ function vauth_ldap_auth($username, $password) {
                 	$results['error'] = "Could not bind to LDAP server.";
                 	return $results;
             	} // If bind fails
-
-	        $sr = ldap_search($ldap_link, $ldap_dn, "($ldap_filter=$username)");
+	
+	        $sr = ldap_search($ldap_link, $ldap_dn, "(&(objectclass=$ldap_class)($ldap_filter=$username))");
         	$info = ldap_get_entries($ldap_link, $sr);
 
         	if ($info["count"] == 1) {
