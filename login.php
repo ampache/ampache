@@ -89,7 +89,7 @@ if ($_POST['username'] && $_POST['password']) {
                         	$email = $auth['email'];
                         
 				/* Attempt to create the user */	
-				if (!$user->create($username, $name, $email,md5(time()), $access)) {
+				if (!$user->create($username, $name, $email,md5(mt_rand()), $access)) {
                                 	$auth['success'] = false;
                                 	$auth['error'] = _('Unable to create new account');
                             	}
