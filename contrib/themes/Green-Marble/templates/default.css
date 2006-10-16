@@ -418,86 +418,6 @@ margin-right:5em;
 #topbarleft, #topbarleft a{ 
 	float: left;
 }
-/* styles for the star ratings */
-.star-rating{
-	list-style:none;
-	margin: 0px;
-	padding:0px;
-	width: 80px;
-	height: 15px;
-	position: relative;
-	background: url("../images/ratings/star_rating.gif") top left repeat-x;        
-}
-.star-rating li{
-	padding:0px;
-	margin:0px;
-	float: right;
-}
-.star-rating li a{
-	display:block;
-	width:16px;
-	height: 15px;
-	text-decoration: none;
-	text-indent: -9000px;
-	z-index: 20;
-	position: absolute;
-	padding: 0px;
-}
-.star-rating li a:hover{
-	background: url("../images/ratings/star_rating.gif") left center;
-	z-index: 2;
-	left: 0px;
-}
-li.zero-stars a:hover {
-	background: url("../images/ratings/x.gif");
-	height: 15px;
-	left: 80px;
-	display: block;
-}
-a.zero-stars {
-	background: url("../images/ratings/x_off.gif");
-	height: 15px;
-	left: 80px;
-	display: block;
-}
-a.one-stars{
-	left: 0px;
-}
-a.one-stars:hover{
-	width:16px;
-}
-a.two-stars{
-	left:16px;
-}
-a.two-stars:hover{
-	width: 32px;
-}
-a.three-stars{
-	left: 32px;
-}
-a.three-stars:hover{
-	width: 48px;
-}
-a.four-stars{
-	left: 48px;
-}
-a.four-stars:hover{
-	width: 64px;
-}
-a.five-stars{
-	left: 64px;
-}
-a.five-stars:hover{
-	width: 80px;
-}
-li.current-rating{
-	background: url("../images/ratings/star_rating.gif") left bottom;
-	position: absolute;
-	height: 15px;
-	display: block;
-	text-indent: -9000px;
-	z-index: 1;
-}
 /* Box Related Styles */
 
 .box { 
@@ -580,7 +500,6 @@ li.current-rating{
 	display: block;
 }
 .np_cell {
-	display: inline;
 	margin: 10px;
 }
 #tablist {
