@@ -111,7 +111,7 @@ foreach ($files['add'] as $data) {
 foreach ($files['delete'] as $data) { 
 
 	$results = unlink($data['file']);
-	if (!$results) { echo "Error: Unable to Delete File\n"; } 
+	if (!$results) { echo "Error: Unable to Delete File: " . $data['file'] . "\n"; } 
 	else { 
 		echo _('Deleted') . " " . $data['file'] . "\n"; 
 		$sql = "DELETE FROM upload WHERE id='" . $data['id'] . "'";

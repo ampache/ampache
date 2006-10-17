@@ -1340,14 +1340,22 @@ function get_user_icon($name) {
  * creates a XML document form it for use 
  * primarly by the ajax mojo
  */
-function xml_from_array($array) { 
-
-	$string = "<root>\n";
+function xml_from_array($array,$callback=0) { 
+	
 	foreach ($array as $key=>$value) { 
-		/* We need to escape the value */
-		$string .= "\t<$key><![CDATA[$value]]></$key>\n";
+		if (is_array($value)) { 
+			$value = xml_from_array($value,1);
+			$string .= "\t<$key>$value</$key>\n";
+		}
+		else { 
+			/* We need to escape the value */
+			$string .= "\t<$key><![CDATA[$value]]></$key>\n";
+		}
+	} // end foreach elements
+
+	if (!$callback) { 
+		$string = "<root>\n" . $string . "</root>\n";
 	}
-	$string .= "</root>\n";
 
 	return $string;
 

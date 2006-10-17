@@ -4,6 +4,10 @@
 
 --------------------------------------------------------------------------
   v.3.3.3-Alpha1
+	- Fixed security issue that allowed users to gain gues access to
+		ampache if register globals is enabled. 
+	- Added xml based query for artists,genre,albums and search see
+		/server/xml.server.php
 	- Fixed false positive error and PHP5 related error on archive
 		creation
 	- Added <image> tag for album art and ability to filter rss feed

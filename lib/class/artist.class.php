@@ -40,37 +40,35 @@ class Artist {
 	 */
 	function Artist($artist_id = 0) {
 
-		
-		/* If we have passed an id then do something */
-		if ($artist_id) { 
+		/* If they failed to pass in an id, just run for it */
+		if (!$artist_id) { return false; } 	
 
-			/* Assign id for use in get_info() */
-			$this->id = intval($artist_id);
+		/* Assign id for use in get_info() */
+		$this->id = intval($artist_id);
 
-			/* Get the information from the db */
-			if ($info = $this->get_info()) {
+		/* Get the information from the db */
+		$info = $this->_get_info();
+		if (count($info)) { 
+			/* Assign Vars */
+			$this->name = $info['name'];
+			$this->prefix = $info['prefix'];
+		} // if info
 
-				/* Assign Vars */
-				$this->name = $info->name;
-				$this->prefix = $info->prefix;
-			} // if info
-
-		} // if artist_id
 
 	} //constructor
 
 	/*!
-		@function get_info
+		@function _get_info
 		@discussion get's the vars for $this out of the database 
 		@param $this->id	Taken from the object
 	*/
-	function get_info() {
+	function _get_info() {
 
 		/* Grab the basic information from the catalog and return it */
 		$sql = "SELECT * FROM artist WHERE id='" . sql_escape($this->id) . "'";
 		$db_results = mysql_query($sql, dbh());
 
-		$results = mysql_fetch_object($db_results);
+		$results = mysql_fetch_assoc($db_results);
 
 		return $results;
 

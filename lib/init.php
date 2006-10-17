@@ -80,7 +80,7 @@ if (!$results['allow_stream_playback']) {
 
 
 /** This is the version.... fluf nothing more... **/
-$results['version']		= '3.3.3-Alpha1 (Build 002)';
+$results['version']		= '3.3.3-Alpha1 (Build 003)';
 
 $results['raw_web_path']	= $results['web_path'];
 $results['web_path']		= $http_type . $_SERVER['HTTP_HOST'] . $results['web_path'];
@@ -119,6 +119,8 @@ if (!isset($results['auth_methods'])) {
 if (!is_array($results['auth_methods'])) { 
 	$results['auth_methods'] = array($results['auth_methods']);
 }
+
+
 
 /* Variables needed for vauth Module */
 $results['cookie_path'] 	= $results['raw_web_path'];
@@ -226,6 +228,13 @@ putenv("TZ=GMT");
 srand((double) microtime() * 1000003);
 
 /**** END Set PHP Vars ****/
+
+/* Check to see if they've tried to set no_session via get/post */
+if (isset($_POST['no_session']) || isset($_GET['no_session'])) { 
+	/* just incase of register globals */
+	unset($no_session);
+	debug_event('no_session','No Session passed as get/post','1');
+}
 
 // If we don't want a session
 if (!isset($no_session) AND conf('use_auth')) { 
