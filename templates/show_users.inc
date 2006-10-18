@@ -139,11 +139,11 @@ while ($results = mysql_fetch_object($db_result)) {
 	</td>
        <?php
 	if (($user->is_logged_in()) and ($user->is_online())) {
-		echo "<td bgcolor=\"green\"> &nbsp; </td>";
+		echo "<td class=\"user_online\"> &nbsp; </td>";
 	} elseif ($user->disabled == 1) {
-		echo "<td bgcolor=\"gray\"> &nbsp; </td>";
+		echo "<td class=\"user_disabled\"> &nbsp; </td>";
 	} else {
-		echo "<td bgcolor=\"#7f0000\"> &nbsp; </td>";
+		echo "<td class=\"user_offline\"> &nbsp; </td>";
 	}
 ?>	
 </tr>
