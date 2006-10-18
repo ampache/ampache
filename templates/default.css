@@ -68,17 +68,6 @@ td {
 	font-family: Verdana, Helvetica, sans-serif; 
 	font-size: 12px;
 }
-.user_online {
-background-color: green;
-}
-.user_offline {
-background-color: #7f0000;
-}
-.user_disabled {
-background-color: gray;
-}
-
-/* End Online/Offline Style */
 th {
 	padding-right: 10px;
 }
@@ -661,3 +650,14 @@ li.current-rating{
 #tv_playlist {
 	clear: both;
 }
+/* User Online/Offline style, used in users.php */
+td.user_online {
+background-color: green;
+}
+td.user_offline {
+background-color: #7f0000;
+}
+td.user_disabled {
+background-color: gray;
+}
+
