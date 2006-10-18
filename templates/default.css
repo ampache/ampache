@@ -652,12 +652,12 @@ li.current-rating{
 }
 /* User Online/Offline style, used in users.php */
 td.user_online {
-background-color: green;
+	background-color: green;
 }
 td.user_offline {
-background-color: #7f0000;
+	background-color: #7f0000;
 }
 td.user_disabled {
-background-color: gray;
+	background-color: gray;
 }
 
