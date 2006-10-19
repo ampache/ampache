@@ -68,6 +68,7 @@ class vainfo {
                 $this->_getID3->option_md5_data_source   = false;
 		$this->_getID3->option_tags_html	 = false;
 		$this->_getID3->option_extra_info	 = false;
+		$this->_getID3->option_tag_lyrics3	 = false;
                 $this->_getID3->encoding                 = $this->encoding;
 
 		/* Check for ICONV */
@@ -191,8 +192,8 @@ class vainfo {
 				case 'id3v2':
 					$results[$key] = $this->_parse_id3v2($tag_array);
 				break;
-//				case 'ape':
-//					$results[$key] = $this->_parse_ape($tag_array);
+				case 'ape':
+					$results[$key] = $this->_parse_ape($tag_array);
 				break;
 				case 'quicktime':
 					$results[$key] = $this->_parse_quicktime($tag_array);
@@ -383,6 +384,13 @@ class vainfo {
 	 */
 	function _parse_ape($tags) { 
 
+		foreach ($tags as $tag=>$data) { 
+			
+			$array[$tag] = $this->_clean_tag($data['0'],$this->_file_encoding);
+
+		} // end foreach tags 
+
+		return $array;
 
 	} // _parse_ape
 

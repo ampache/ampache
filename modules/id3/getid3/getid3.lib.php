@@ -953,6 +953,7 @@ class getid3_lib
 		if ($in_charset == $out_charset) {
 			return $string;
 		}
+		if (!in_charset) { return $string; } 	
 
 		static $iconv_broken_or_unavailable = array();
 		if (is_null(@$iconv_broken_or_unavailable[$in_charset.'_'.$out_charset])) {
