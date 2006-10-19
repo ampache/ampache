@@ -18,35 +18,25 @@ class getid3_tar {
 
 	function getid3_tar(&$fd, &$ThisFileInfo) {
 		$ThisFileInfo['fileformat'] = 'tar';
-
-		@fseek($fd, 0);
-		$filebuffer = @fread($fd, $ThisFileInfo['filesize']);
-		return $this->read_tar($filebuffer, $ThisFileInfo);
-	}
-
-	// Reads the tar-file
-	function read_tar(&$filebuffer, &$ThisFileInfo) {
-
-		$header_length = 512;
-		$unpack_header = 'a100fname/a8mode/a8uid/a8gid/a12size/a12mtime/a8chksum/a1typflag/a100lnkname/a6magic/a2ver/a32uname/a32gname/a8devmaj/a8devmin/a155/prefix';
-
-		$null_512k = str_repeat("\0", 512); // end-of-file marker
-
 		$ThisFileInfo['tar']['files'] = array();
 
-		while(strlen($filebuffer) != 0) {
-			$buffer = substr($filebuffer, 0, $header_length);
-			$filebuffer = substr($filebuffer, strlen($buffer));
+		$unpack_header = 'a100fname/a8mode/a8uid/a8gid/a12size/a12mtime/a8chksum/a1typflag/a100lnkname/a6magic/a2ver/a32uname/a32gname/a8devmaj/a8devmin/a155/prefix';
+		$null_512k = str_repeat("\0", 512); // end-of-file marker
+
+		@fseek($fd, 0);
+        while (!feof($fd)) {
+            $buffer = fread($fd, 512);
+
 			// check the block
 			$checksum = 0;
 			for ($i = 0; $i < 148; $i++) {
-				$checksum += ord(substr($buffer, $i, 1));
+				$checksum += ord($buffer{$i});
 			}
 			for ($i = 148; $i < 156; $i++) {
 				$checksum += ord(' ');
 			}
 			for ($i = 156; $i < 512; $i++) {
-				$checksum += ord(substr($buffer, $i, 1));
+				$checksum += ord($buffer{$i});
 			}
 			$attr    = unpack($unpack_header, $buffer);
 			$name    =        trim(@$attr['fname']);
@@ -65,8 +55,8 @@ class getid3_tar {
 			$devmaj  = octdec(trim(@$attr['devmaj']));
 			$devmin  = octdec(trim(@$attr['devmin']));
 			$prefix  =        trim(@$attr['prefix']);
-			// EOF Found
 			if (($checksum == 256) && ($chksum == 0)) {
+				// EOF Found
 				break;
 			}
 			if ($prefix) {
@@ -75,22 +65,18 @@ class getid3_tar {
 			if ((preg_match('#/$#', $name)) && !$name) {
 				$typeflag = 5;
 			}
-			// If it's the end of the tar-file...
 			if ($buffer == $null_512k) {
+				// it's the end of the tar-file...
 				break;
 			}
-			// Read the next chunk
-			$data = substr($filebuffer, 0, $size);
-			$filebuffer = substr($filebuffer, strlen($data));
-			if (strlen($data) != $size) {
-				$ThisFileInfo['error'][] = 'Read error on tar file';
-				return false;
-			}
+
+			// Read to the next chunk
+			fseek($fd, $size, SEEK_CUR);
+
 			$diff = $size % 512;
 			if ($diff != 0) {
 				// Padding, throw away
-				$buff = substr($filebuffer, 0, (512 - $diff));
-				$filebuffer = substr($filebuffer, strlen($buff));
+				fseek($fd, (512 - $diff), SEEK_CUR);
 			}
 			// Protect against tar-files with garbage at the end
 			if ($name == '') {
@@ -122,7 +108,7 @@ class getid3_tar {
 	// Parses the file mode to file permissions
 	function display_perms($mode) {
 		// Determine Type
-		if ($mode & 0x1000)     $type='p'; // FIFO pipe
+		if     ($mode & 0x1000) $type='p'; // FIFO pipe
 		elseif ($mode & 0x2000) $type='c'; // Character special
 		elseif ($mode & 0x4000) $type='d'; // Directory
 		elseif ($mode & 0x6000) $type='b'; // Block special

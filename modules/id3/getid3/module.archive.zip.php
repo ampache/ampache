@@ -406,7 +406,7 @@ class getid3_zip
 		$UNIXminute = (($DOStime & 0x07E0) >> 5);
 		$UNIXhour   = (($DOStime & 0xF800) >> 11);
 
-		return mktime($UNIXhour, $UNIXminute, $UNIXsecond, $UNIXmonth, $UNIXday, $UNIXyear);
+		return gmmktime($UNIXhour, $UNIXminute, $UNIXsecond, $UNIXmonth, $UNIXday, $UNIXyear);
 	}
 
 }

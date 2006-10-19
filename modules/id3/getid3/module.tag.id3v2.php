@@ -234,7 +234,7 @@ class getid3_id3v2
 						} elseif (($frame_name == "\x00".'MP3') || ($frame_name == "\x00\x00".'MP') || ($frame_name == ' MP3') || ($frame_name == 'MP3e')) {
 							// MP3ext known broken frames - "ok" for the purposes of this test
 						} elseif (($id3v2_majorversion == 4) && ($this->IsValidID3v2FrameName(substr($framedata, getid3_lib::BigEndian2Int(substr($frame_header, 4, 4), 0), 4), 3))) {
-							$ThisFileInfo['warning'][] = 'ID3v2 tag written as ID3v2.4, but with non-synchsafe integers (ID3v2.3 style). Older versions of Helium2 (www.helium2.com) is a known culprit of this. Tag has been parsed as ID3v2.3';
+							$ThisFileInfo['warning'][] = 'ID3v2 tag written as ID3v2.4, but with non-synchsafe integers (ID3v2.3 style). Older versions of (Helium2; iTunes) are known culprits of this. Tag has been parsed as ID3v2.3';
 							$id3v2_majorversion = 3;
 							$frame_size = getid3_lib::BigEndian2Int(substr($frame_header, 4, 4), 0); // 32-bit integer
 						}
@@ -292,7 +292,8 @@ class getid3_id3v2
 						} else {
 
 							// next frame is invalid too, abort processing
-							unset($framedata);
+							//unset($framedata);
+							$framedata = null;
 							$ThisFileInfo['error'][] = 'Next ID3v2 frame is also invalid, aborting processing.';
 
 						}
@@ -305,7 +306,8 @@ class getid3_id3v2
 					} else {
 
 						// next frame is invalid too, abort processing
-						unset($framedata);
+						//unset($framedata);
+						$framedata = null;
 						$ThisFileInfo['warning'][] = 'Invalid ID3v2 frame size, aborting.';
 
 					}
@@ -384,6 +386,10 @@ class getid3_id3v2
 					list($thisfile_id3v2['comments']['tracknum'][$key], $thisfile_id3v2['comments']['totaltracks'][$key]) = explode('/', $thisfile_id3v2['comments']['track'][$key]);
 				}
 			}
+		}
+
+		if (!isset($thisfile_id3v2['comments']['year']) && ereg('^([0-9]{4})', trim(@$thisfile_id3v2['comments']['recording_time'][0]), $matches)) {
+			$thisfile_id3v2['comments']['year'] = array($matches[1]);
 		}
 
 
@@ -2873,31 +2879,94 @@ class getid3_id3v2
 
 		$begin = __LINE__;
 
-		/** This is not a comment!
-
-			COM	comment
-			COMM	comment
+		/** This is not a comment!		
+				
+			AENC	audio_encryption
+			APIC	attached_picture
+			ASPI	audio_seek_point_index
+			BUF	recommended_buffer_size
+			CNT	play_counter
+			COM	comments
+			COMM	comments
+			COMR	commercial_frame
+			CRA	audio_encryption
+			CRM	encrypted_meta_frame
+			ENCR	encryption_method_registration
+			EQU	equalisation
+			EQU2	equalisation
+			EQUA	equalisation
+			ETC	event_timing_codes
+			ETCO	event_timing_codes
+			GEO	general_encapsulated_object
+			GEOB	general_encapsulated_object
+			GRID	group_identification_registration
+			IPL	involved_people_list
+			IPLS	involved_people_list
+			LINK	linked_information
+			LNK	linked_information
+			MCDI	music_cd_identifier
+			MCI	music_cd_identifier
+			MLL	mpeg_location_lookup_table
+			MLLT	mpeg_location_lookup_table
+			OWNE	ownership_frame
+			PCNT	play_counter
+			PIC	attached_picture
+			POP	popularimeter
+			POPM	popularimeter
+			POSS	position_synchronisation_frame
+			PRIV	private_frame
+			RBUF	recommended_buffer_size
+			REV	reverb
+			RVA	relative_volume_adjustment
+			RVA2	relative_volume_adjustment
+			RVAD	relative_volume_adjustment
+			RVRB	reverb
+			SEEK	seek_frame
+			SIGN	signature_frame
+			SLT	synchronised_lyric
+			STC	synced_tempo_codes
+			SYLT	synchronised_lyric
+			SYTC	synchronised_tempo_codes
 			TAL	album
 			TALB	album
 			TBP	bpm
 			TBPM	bpm
 			TCM	composer
-			TCO	genre
+			TCO	content_type
 			TCOM	composer
-			TCON	genre
-			TCOP	copyright
-			TCR	copyright
+			TCON	content_type
+			TCOP	copyright_message
+			TCR	copyright_message
+			TDA	date
+			TDAT	date
+			TDEN	encoding_time
+			TDLY	playlist_delay
+			TDOR	original_release_time
+			TDRC	recording_time
+			TDRL	release_time
+			TDTG	tagging_time
+			TDY	playlist_delay
 			TEN	encoded_by
 			TENC	encoded_by
 			TEXT	lyricist
-			TIT1	description
+			TFLT	file_type
+			TFT	file_type
+			TIM	time
+			TIME	time
+			TIPL	involved_people_list
+			TIT1	content_group_description
 			TIT2	title
 			TIT3	subtitle
+			TKE	initial_key
+			TKEY	initial_key
 			TLA	language
 			TLAN	language
 			TLE	length
 			TLEN	length
+			TMCL	musician_credits_list
+			TMED	media_type
 			TMOO	mood
+			TMT	media_type
 			TOA	original_artist
 			TOAL	original_album
 			TOF	original_filename
@@ -2905,26 +2974,39 @@ class getid3_id3v2
 			TOL	original_lyricist
 			TOLY	original_lyricist
 			TOPE	original_artist
+			TOR	original_year
+			TORY	original_year
 			TOT	original_album
+			TOWN	file_owner
 			TP1	artist
 			TP2	band
 			TP3	conductor
 			TP4	remixer
+			TPA	part_of_a_set
 			TPB	publisher
 			TPE1	artist
 			TPE2	band
 			TPE3	conductor
 			TPE4	remixer
+			TPOS	part_of_a_set
+			TPRO	produced_notice
 			TPUB	publisher
 			TRC	isrc
-			TRCK	track
-			TRK	track
+			TRCK	track_number
+			TRD	recording_dates
+			TRDA	recording_dates
+			TRK	track_number
+			TRSN	internet_radio_station_name
+			TRSO	internet_radio_station_owner
 			TSI	size
 			TSIZ	size
+			TSOA	album_sort_order
+			TSOP	performer_sort_order
+			TSOT	title_sort_order
 			TSRC	isrc
 			TSS	encoder_settings
 			TSSE	encoder_settings
-			TSST	subtitle
+			TSST	set_subtitle
 			TT1	description
 			TT2	title
 			TT3	subtitle
@@ -2937,24 +3019,28 @@ class getid3_id3v2
 			UFID	unique_file_identifier
 			ULT	unsychronised_lyric
 			USER	terms_of_use
-			USLT	unsynchronised lyric
+			USLT	unsynchronised_lyric
 			WAF	url_file
 			WAR	url_artist
 			WAS	url_source
+			WCM	commercial_information
+			WCOM	commercial_information
 			WCOP	copyright
 			WCP	copyright
 			WOAF	url_file
 			WOAR	url_artist
 			WOAS	url_source
 			WORS	url_station
+			WPAY	url_payment
 			WPB	url_publisher
 			WPUB	url_publisher
 			WXX	url_user
 			WXXX	url_user
 			TFEA	featured_artist
-			TSTU	studio
-
-		*/
+			TSTU	recording_studio
+			rgad	replay_gain_adjustment
+				
+		*/		
 
 		return getid3_lib::EmbeddedLookup($framename, $begin, __LINE__, __FILE__, 'id3v2-framename_short');
 	}

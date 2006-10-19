@@ -1880,51 +1880,57 @@ class getid3_mp3
 	}
 
 	function LAMEpresetUsedLookup($LAMEtag) {
-		if ($LAMEtag['preset_used_id'] == 0) {
-			// no preset used (LAME >=3.93)
-			// no preset recorded (LAME <3.93)
-			return '';
-		}
-		static $LAMEpresetUsedLookup = array();
-		if (empty($LAMEpresetUsedLookup)) {
-			for ($i = 8; $i <= 320; $i++) {
-				switch ($LAMEtag['vbr_method']) {
-					case 'cbr':
-						$LAMEpresetUsedLookup[$i] = '--alt-preset '.$LAMEtag['vbr_method'].' '.$i;
-						break;
-					case 'abr':
-					default: // other VBR modes shouldn't be here(?)
-						$LAMEpresetUsedLookup[$i] = '--alt-preset '.$i;
-						break;
-				}
-			}
 
-			// named old-style presets (studio, phone, voice, etc) are handled in GuessEncoderOptions()
+        if ($LAMEtag['preset_used_id'] == 0) {
+            // no preset used (LAME >=3.93)
+            // no preset recorded (LAME <3.93)
+            return '';
+        }
+        $LAMEpresetUsedLookup = array();
 
-			// named alt-presets
-			$LAMEpresetUsedLookup[1000] = '--r3mix';
-			$LAMEpresetUsedLookup[1001] = '--alt-preset standard';
-			$LAMEpresetUsedLookup[1002] = '--alt-preset extreme';
-			$LAMEpresetUsedLookup[1003] = '--alt-preset insane';
-			$LAMEpresetUsedLookup[1004] = '--alt-preset fast standard';
-			$LAMEpresetUsedLookup[1005] = '--alt-preset fast extreme';
-			$LAMEpresetUsedLookup[1006] = '--alt-preset medium';
-			$LAMEpresetUsedLookup[1007] = '--alt-preset fast medium';
+        /////  THIS PART CANNOT BE STATIC .
+        for ($i = 8; $i <= 320; $i++) {
+            switch ($LAMEtag['vbr_method']) {
+                case 'cbr':
+                    $LAMEpresetUsedLookup[$i] = '--alt-preset '.$LAMEtag['vbr_method'].' '.$i;
+                    break;
+                case 'abr':
+                default: // other VBR modes shouldn't be here(?)
+                    $LAMEpresetUsedLookup[$i] = '--alt-preset '.$i;
+                    break;
+            }
+        }
 
-			// LAME 3.94 additions/changes
-			$LAMEpresetUsedLookup[1010] = '--preset portable';                                                           // 3.94a15 Oct 21 2003
-			$LAMEpresetUsedLookup[1015] = '--preset radio';                                                              // 3.94a15 Oct 21 2003
+        // named old-style presets (studio, phone, voice, etc) are handled in GuessEncoderOptions()
 
-			$LAMEpresetUsedLookup[320]  = '--preset insane';                                                             // 3.94a15 Nov 12 2003
-			$LAMEpresetUsedLookup[430]  = '--preset radio';                                                              // 3.94a15 Nov 12 2003
-			$LAMEpresetUsedLookup[450]  = '--preset '.(($LAMEtag['raw']['vbr_method'] == 4) ? 'fast ' : '').'portable';  // 3.94a15 Nov 12 2003
-			$LAMEpresetUsedLookup[460]  = '--preset '.(($LAMEtag['raw']['vbr_method'] == 4) ? 'fast ' : '').'medium';    // 3.94a15 Nov 12 2003
-			$LAMEpresetUsedLookup[470]  = '--r3mix';                                                                     // 3.94b1  Dec 18 2003
-			$LAMEpresetUsedLookup[480]  = '--preset '.(($LAMEtag['raw']['vbr_method'] == 4) ? 'fast ' : '').'standard';  // 3.94a15 Nov 12 2003
-			$LAMEpresetUsedLookup[500]  = '--preset '.(($LAMEtag['raw']['vbr_method'] == 4) ? 'fast ' : '').'extreme';   // 3.94a15 Nov 12 2003
-		}
-		return (isset($LAMEpresetUsedLookup[$LAMEtag['preset_used_id']]) ? $LAMEpresetUsedLookup[$LAMEtag['preset_used_id']] : 'new/unknown preset: '.$LAMEtag['preset_used_id'].' - report to info@getid3.org');
-	}
+        // named alt-presets
+        $LAMEpresetUsedLookup[1000] = '--r3mix';
+        $LAMEpresetUsedLookup[1001] = '--alt-preset standard';
+        $LAMEpresetUsedLookup[1002] = '--alt-preset extreme';
+        $LAMEpresetUsedLookup[1003] = '--alt-preset insane';
+        $LAMEpresetUsedLookup[1004] = '--alt-preset fast standard';
+        $LAMEpresetUsedLookup[1005] = '--alt-preset fast extreme';
+        $LAMEpresetUsedLookup[1006] = '--alt-preset medium';
+        $LAMEpresetUsedLookup[1007] = '--alt-preset fast medium';
+
+        // LAME 3.94 additions/changes
+        $LAMEpresetUsedLookup[1010] = '--preset portable';                                                           // 3.94a15 Oct 21 2003
+        $LAMEpresetUsedLookup[1015] = '--preset radio';                                                              // 3.94a15 Oct 21 2003
+
+        $LAMEpresetUsedLookup[320]  = '--preset insane';                                                             // 3.94a15 Nov 12 2003
+        $LAMEpresetUsedLookup[410]  = '-V9';
+        $LAMEpresetUsedLookup[420]  = '-V8';
+        $LAMEpresetUsedLookup[440]  = '-V6';
+        $LAMEpresetUsedLookup[430]  = '--preset radio';                                                              // 3.94a15 Nov 12 2003
+        $LAMEpresetUsedLookup[450]  = '--preset '.(($LAMEtag['raw']['vbr_method'] == 4) ? 'fast ' : '').'portable';  // 3.94a15 Nov 12 2003
+        $LAMEpresetUsedLookup[460]  = '--preset '.(($LAMEtag['raw']['vbr_method'] == 4) ? 'fast ' : '').'medium';    // 3.94a15 Nov 12 2003
+        $LAMEpresetUsedLookup[470]  = '--r3mix';                                                                     // 3.94b1  Dec 18 2003
+        $LAMEpresetUsedLookup[480]  = '--preset '.(($LAMEtag['raw']['vbr_method'] == 4) ? 'fast ' : '').'standard';  // 3.94a15 Nov 12 2003
+        $LAMEpresetUsedLookup[490]  = '-V1';
+        $LAMEpresetUsedLookup[500]  = '--preset '.(($LAMEtag['raw']['vbr_method'] == 4) ? 'fast ' : '').'extreme';   // 3.94a15 Nov 12 2003
+        
+        return (isset($LAMEpresetUsedLookup[$LAMEtag['preset_used_id']]) ? $LAMEpresetUsedLookup[$LAMEtag['preset_used_id']] : 'new/unknown preset: '.$LAMEtag['preset_used_id'].' - report to info@getid3.org');
+    }
 
 }
 

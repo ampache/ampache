@@ -520,7 +520,7 @@ class getid3_quicktime
 						$atomstructure['time_to_sample_table'][$i]['sample_duration'] = getid3_lib::BigEndian2Int(substr($atomdata, $sttsEntriesDataOffset, 4));
 						$sttsEntriesDataOffset += 4;
 
-						if (!empty($ThisFileInfo['quicktime']['time_scale'])) {
+						if (!empty($ThisFileInfo['quicktime']['time_scale']) && (@$atomstructure['time_to_sample_table'][$i]['sample_duration'] > 0)) {
 							$stts_new_framerate = $ThisFileInfo['quicktime']['time_scale'] / $atomstructure['time_to_sample_table'][$i]['sample_duration'];
 							if ($stts_new_framerate <= 60) {
 								// some atoms have durations of "1" giving a very large framerate, which probably is not right

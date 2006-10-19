@@ -30,6 +30,9 @@ init_preferences();
 
 usage();
 
+/* Check if they want to force delete */
+$force_delete = $GLOBALS['argv']['1']; 
+
 // grab list of files from table
 $sql = "SELECT id, file, user,action FROM upload WHERE action != 'quarantine'";
 $db_results = mysql_query($sql, dbh());
@@ -93,8 +96,13 @@ foreach ($files['add'] as $data) {
 	}
 
 	$results = unlink($data['file']);
-	if (!$results) { echo "Error: Unable to delete " . $data['file'] . "\n";}
-	
+	if (!$results AND !$force_delete) { echo "Error: Unable to delete " . $data['file'] . "\n";}
+	elseif (!$results) { 
+		echo "Error: Unable to delete " . $data['file'] . "\n"; 
+		echo "Force Delete enabled, removing from Database...\n";
+		$sql = "DELETE FROM upload WHERE id='" . $data['id'] . "'";
+		$db_results = mysql_query($sql, dbh());
+	} // if not able to unlike
 	else { 
 		echo _('Adding') . " " . $target_file . " " . _('to database') . "\n";
 		

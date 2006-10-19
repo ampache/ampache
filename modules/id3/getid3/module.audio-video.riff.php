@@ -201,7 +201,7 @@ class getid3_riff
 					$thisfile_riff_WAVE_bext_0['reserved']       = getid3_lib::LittleEndian2Int(substr($thisfile_riff_WAVE_bext_0['data'], 347, 254));
 					$thisfile_riff_WAVE_bext_0['coding_history'] =         explode("\r\n", trim(substr($thisfile_riff_WAVE_bext_0['data'], 601)));
 
-					$thisfile_riff_WAVE_bext_0['origin_date_unix'] = mktime(
+					$thisfile_riff_WAVE_bext_0['origin_date_unix'] = gmmktime(
 																				substr($thisfile_riff_WAVE_bext_0['origin_time'], 0, 2),
 																				substr($thisfile_riff_WAVE_bext_0['origin_time'], 3, 2),
 																				substr($thisfile_riff_WAVE_bext_0['origin_time'], 6, 2),

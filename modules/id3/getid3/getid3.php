@@ -10,7 +10,7 @@
 /////////////////////////////////////////////////////////////////
 
 // Defines
-define('GETID3_VERSION', '1.7.5-200512251515');
+define('GETID3_VERSION', '1.7.7');
 define('GETID3_FREAD_BUFFER_SIZE', 16384); // read buffer size in bytes
 
 
@@ -18,28 +18,29 @@ define('GETID3_FREAD_BUFFER_SIZE', 16384); // read buffer size in bytes
 class getID3
 {
 	// public: Settings
-	var $encoding                 = 'ISO-8859-1';     // CASE SENSITIVE! - i.e. (must be supported by iconv())
-	                                                  // Examples:  ISO-8859-1  UTF-8  UTF-16  UTF-16BE
+	var $encoding        = 'ISO-8859-1';   // CASE SENSITIVE! - i.e. (must be supported by iconv())
+	                                       // Examples:  ISO-8859-1  UTF-8  UTF-16  UTF-16BE
 
-	var $encoding_id3v1           = 'ISO-8859-1';     // Should always be 'ISO-8859-1', but some tags may be written
-	                                                  // in other encodings such as 'EUC-CN'
+	var $encoding_id3v1  = 'ISO-8859-1';   // Should always be 'ISO-8859-1', but some tags may be written in other encodings such as 'EUC-CN'
+
+	var $tempdir         = '*';            // default '*' should use system temp dir
 
 	// public: Optional tag checks - disable for speed.
-	var $option_tag_id3v1         = true;             // Read and process ID3v1 tags
-	var $option_tag_id3v2         = true;             // Read and process ID3v2 tags
-	var $option_tag_lyrics3       = true;             // Read and process Lyrics3 tags
-	var $option_tag_apetag        = true;             // Read and process APE tags
-	var $option_tags_process      = true;             // Copy tags to root key 'tags' and encode to $this->encoding
-	var $option_tags_html         = true;             // Copy tags to root key 'tags_html' properly translated from various encodings to HTML entities
+	var $option_tag_id3v1         = true;  // Read and process ID3v1 tags
+	var $option_tag_id3v2         = true;  // Read and process ID3v2 tags
+	var $option_tag_lyrics3       = true;  // Read and process Lyrics3 tags
+	var $option_tag_apetag        = true;  // Read and process APE tags
+	var $option_tags_process      = true;  // Copy tags to root key 'tags' and encode to $this->encoding
+	var $option_tags_html         = true;  // Copy tags to root key 'tags_html' properly translated from various encodings to HTML entities
 
 	// public: Optional tag/comment calucations
-	var $option_extra_info        = true;             // Calculate additional info such as bitrate, channelmode etc
+	var $option_extra_info        = true;  // Calculate additional info such as bitrate, channelmode etc
 
 	// public: Optional calculations
-	var $option_md5_data          = false;            // Get MD5 sum of data part - slow
-	var $option_md5_data_source   = false;            // Use MD5 of source file if availble - only FLAC and OptimFROG
-	var $option_sha1_data         = false;            // Get SHA1 sum of data part - slow
-	var $option_max_2gb_check     = true;             // Check whether file is larger than 2 Gb and thus not supported by PHP
+	var $option_md5_data          = false; // Get MD5 sum of data part - slow
+	var $option_md5_data_source   = false; // Use MD5 of source file if availble - only FLAC and OptimFROG
+	var $option_sha1_data         = false; // Get SHA1 sum of data part - slow
+	var $option_max_2gb_check     = true;  // Check whether file is larger than 2 Gb and thus not supported by PHP
 
 	// private
 	var $filename;
@@ -88,11 +89,9 @@ class getID3
 
 		// Get base path of getID3() - ONCE
 		if (!defined('GETID3_INCLUDEPATH')) {
-			define('GETID3_OS_DIRSLASH', (GETID3_OS_ISWINDOWS ? '\\' : '/'));
-
 			foreach (get_included_files() as $key => $val) {
 				if (basename($val) == 'getid3.php') {
-					define('GETID3_INCLUDEPATH', dirname($val).GETID3_OS_DIRSLASH);
+					define('GETID3_INCLUDEPATH', dirname($val).DIRECTORY_SEPARATOR);
 					break;
 				}
 			}
@@ -111,7 +110,7 @@ class getID3
 		//   ie for "C:/Program Files/Apache/" put "C:/PROGRA~1/APACHE/"
 		// IMPORTANT: This path must include the trailing slash
 		if (GETID3_OS_ISWINDOWS && !defined('GETID3_HELPERAPPSDIR')) {
-			$helperappsdir = GETID3_INCLUDEPATH.'..'.GETID3_OS_DIRSLASH.'helperapps'; // must not have any space in this path
+			$helperappsdir = GETID3_INCLUDEPATH.'..'.DIRECTORY_SEPARATOR.'helperapps'; // must not have any space in this path
 
 			if (!is_dir($helperappsdir)) {
 
@@ -119,9 +118,9 @@ class getID3
 
 			} elseif (strpos(realpath($helperappsdir), ' ') !== false) {
 
-				$DirPieces = explode(GETID3_OS_DIRSLASH, realpath($helperappsdir));
+				$DirPieces = explode(DIRECTORY_SEPARATOR, realpath($helperappsdir));
 				$DirPieces8 = $DirPieces;
-				
+
 				$CLIdir = $DirPieces[0].' && cd \\';
 				for ($i = 1; $i < count($DirPieces); $i++) {
 				  if (strpos($DirPieces[$i], ' ') === false) {
@@ -131,7 +130,7 @@ class getID3
 				    system($CLIdir.' && dir /ad /x');
 				    $subdirsraw = explode("\n", ob_get_contents());
 				    ob_end_clean();
-				    foreach ($subdirsraw as $line) {
+				    foreach ($subdirsraw as $dummy => $line) {
 				      if (eregi('^[0-9]{4}/[0-9]{2}/[0-9]{2}  [0-9]{2}:[0-9]{2} [AP]M    <DIR>          ([^ ]{8})     '.preg_quote($DirPieces[$i]).'$', trim($line), $matches)) {
 				        $CLIdir .= ' && cd '.$matches[1];
 				        break;
@@ -140,15 +139,29 @@ class getID3
 				    $DirPieces8[$i] = $matches[1];
 				  }
 				}
-				$helperappsdir = implode(GETID3_OS_DIRSLASH, $DirPieces8);
+				$helperappsdir = implode(DIRECTORY_SEPARATOR, $DirPieces8);
 
 			}
-			define('GETID3_HELPERAPPSDIR', realpath($helperappsdir).GETID3_OS_DIRSLASH);
+			define('GETID3_HELPERAPPSDIR', realpath($helperappsdir).DIRECTORY_SEPARATOR);
 
 		}
 
 	}
 
+
+	// public: setOption
+	function setOption($optArray) {
+		if (!is_array($optArray) || empty($optArray)) {
+			return false;
+		}
+		foreach ($optArray as $opt => $val) {
+			if (isset($this, $opt) === false) {
+				continue;
+			}
+			$this->$opt = $val;
+		}
+		return true;
+	}
 
 
 	// public: analyze file - replaces GetAllFileInfo() and GetTagOnly()
@@ -406,7 +419,7 @@ class getID3
 
 		// remove possible empty keys
 		$AVpossibleEmptyKeys = array('dataformat', 'bits_per_sample', 'encoder_options', 'streams');
-		foreach ($AVpossibleEmptyKeys as $key) {
+		foreach ($AVpossibleEmptyKeys as $dummy => $key) {
 			if (empty($this->info['audio'][$key]) && isset($this->info['audio'][$key])) {
 				unset($this->info['audio'][$key]);
 			}
@@ -832,7 +845,7 @@ class getID3
 							'fail_ape'  => 'ERROR',
 						),
 
-				// SZIP - audio       - SZIP compressed data
+				// SZIP - audio/data  - SZIP compressed data
 				'szip' => array(
 							'pattern'   => '^SZ\x0A\x04',
 							'group'     => 'archive',
@@ -862,7 +875,7 @@ class getID3
 							'fail_ape'  => 'ERROR',
 						),
 
-				// ZIP  - data        - ZIP compressed data
+				// ZIP  - data         - ZIP compressed data
 				'zip'  => array(
 							'pattern'   => '^PK\x03\x04',
 							'group'     => 'archive',
@@ -870,7 +883,30 @@ class getID3
 							'mime_type' => 'application/zip',
 							'fail_id3'  => 'ERROR',
 							'fail_ape'  => 'ERROR',
-						  )
+						),
+
+
+				// Misc other formats
+
+				// PDF  - data         - ZIP compressed data
+				'pdf'  => array(
+							'pattern'   => '^\x25PDF',
+							'group'     => 'misc',
+							'module'    => 'pdf',
+							'mime_type' => 'application/pdf',
+							'fail_id3'  => 'ERROR',
+							'fail_ape'  => 'ERROR',
+						),
+
+				// MSOFFICE  - data         - ZIP compressed data
+				'msoffice' => array(
+							'pattern'   => '^\xD0\xCF\x11\xE0', // D0CF11E == DOCFILE == Microsoft Office Document
+							'group'     => 'misc',
+							'module'    => 'msoffice',
+							'mime_type' => 'application/octet-stream',
+							'fail_id3'  => 'ERROR',
+							'fail_ape'  => 'ERROR',
+						),
 			);
 		}
 
@@ -898,29 +934,12 @@ class getID3
 
 
 		if (preg_match('/\.mp[123a]$/i', $filename)) {
-
 			// Too many mp3 encoders on the market put gabage in front of mpeg files
 			// use assume format on these if format detection failed
 			$GetFileFormatArray = $this->GetFileFormatArray();
 			$info = $GetFileFormatArray['mp3'];
 			$info['include'] = 'module.'.$info['group'].'.'.$info['module'].'.php';
 			return $info;
-
-		//} elseif (preg_match('/\.tar$/i', $filename)) {
-        //
-		//	// TAR files don't have any useful header to work from
-		//	// TAR  - data        - TAR compressed data
-		//	$info = array(
-		//		'pattern'   => '^.{512}',
-		//		'group'     => 'archive',
-		//		'module'    => 'tar',
-		//		'mime_type' => 'application/octet-stream',
-		//		'fail_id3'  => 'ERROR',
-		//		'fail_ape'  => 'ERROR',
-		//	);
-		//	$info['include'] = 'module.'.$info['group'].'.'.$info['module'].'.php';
-		//	return $info;
-
 		}
 
 		return false;
@@ -1087,6 +1106,7 @@ class getID3
 				} else {
 
 					$commandline = 'vorbiscomment -w -c "'.$empty.'" "'.$file.'" "'.$temp.'" 2>&1';
+					$commandline = 'vorbiscomment -w -c '.escapeshellarg($empty).' '.escapeshellarg($file).' '.escapeshellarg($temp).' 2>&1';
 					$VorbisCommentError = `$commandline`;
 
 				}
@@ -1274,6 +1294,10 @@ class getID3
 			}
 		}
 		return true;
+	}
+
+	function getid3_tempnam() {
+		return tempnam($this->tempdir, 'gI3');
 	}
 
 }

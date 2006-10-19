@@ -102,6 +102,7 @@ class getid3_writetags
 				case 'mp3':
 				case 'mp2':
 				case 'mp1':
+				case 'riff': // maybe not officially, but people do it anyway
 					$AllowedTagFormats = array('id3v1', 'id3v2.2', 'id3v2.3', 'id3v2.4', 'ape', 'lyrics3');
 					break;
 
@@ -300,7 +301,7 @@ class getid3_writetags
 							$this->errors[] = 'WriteVorbisComment() failed with message(s):<PRE><UL><LI>'.trim(implode('</LI><LI>', $vorbiscomment_writer->errors)).'</LI></UL></PRE>';
 						}
 					} else {
-						$this->errors[] = 'WriteVorbisComment() failed';
+						$this->errors[] = 'FormatDataForVorbisComment() failed';
 					}
 					break;
 

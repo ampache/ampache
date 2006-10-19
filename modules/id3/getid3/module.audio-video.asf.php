@@ -1071,6 +1071,7 @@ class getid3_asf
 							foreach ($thisfile_asf['stream_bitrate_properties_object']['bitrate_records'] as $dummy => $dataarray) {
 								if (@$dataarray['flags']['stream_number'] == $streamnumber) {
 									$thisfile_asf_videomedia_currentstream['bitrate'] = $dataarray['bitrate'];
+									$thisfile_video['streams'][$streamnumber]['bitrate'] = $dataarray['bitrate']; 
 									$thisfile_video['bitrate'] += $dataarray['bitrate'];
 									break;
 								}
@@ -1084,7 +1085,6 @@ class getid3_asf
 						$thisfile_video['streams'][$streamnumber]['resolution_x']    = $thisfile_asf_videomedia_currentstream['image_width'];
 						$thisfile_video['streams'][$streamnumber]['resolution_y']    = $thisfile_asf_videomedia_currentstream['image_height'];
 						$thisfile_video['streams'][$streamnumber]['bits_per_sample'] = $thisfile_asf_videomedia_currentstream['format_data']['bits_per_pixel'];
-						$thisfile_video['streams'][$streamnumber]['bitrate']         = $thisfile_asf_videomedia_currentstream['bitrate'];
 						break;
 
 					default:

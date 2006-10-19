@@ -348,11 +348,26 @@ class vainfo {
 
 		/* Go through the tags */
 		foreach ($tags as $tag=>$data) { 
-			
-			/* This is our baseline for naming so
-			 * no translation is needed
+	
+			/**
+			 * the new getid3 handles this differently 
+			 * so we now need to account for it :(
 			 */
-			$array[$tag]	= $this->_clean_tag($data['0'],$this->_file_encoding);
+			switch ($tag) { 
+				case 'track_number':
+					$array['track'] = $this->_clean_tag($data['0'],$this->_file_encoding);
+				break;	
+				case 'content_type':
+					$data['0'] = preg_replace("/^\(\d+\)/","",$data['0']);
+					$array['genre'] = $this->_clean_tag($data['0'],$this->_file_encoding);
+				break;
+				case 'comments':
+					$array['comment'] = $this->_clean_tag($data['0'],$this->_file_encoding);
+				break;
+				default: 
+					$array[$tag]	= $this->_clean_tag($data['0'],$this->_file_encoding);
+				break;
+			} // end switch on tag
 		
 		} // end foreach
 

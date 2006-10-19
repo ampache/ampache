@@ -299,7 +299,7 @@ class getid3_aac
 		}
 
 		// used to calculate bitrate below
-		static $BitrateCache = array();
+		$BitrateCache = array();
 
 
 		while (true) {

@@ -15,6 +15,10 @@
 //  Steve Webster <steve.webster@featurecreep.com>             //
 //  * version 0.2 (22 February 2006)                           //
 //                                                             //
+//  Modified to not read entire file into memory               //
+//  by James Heinrich <info@getid3.org>                        //
+//  * version 0.3 (15 June 2006)                               //
+//                                                             //
 /////////////////////////////////////////////////////////////////
 //                                                             //
 // module.audio-video.flv.php                                  //
@@ -37,81 +41,84 @@ class getid3_flv
 	function getid3_flv(&$fd, &$ThisFileInfo, $ReturnAllTagData=false) {
 		fseek($fd, $ThisFileInfo['avdataoffset'], SEEK_SET);
 
-		$FLVfileData = fread($fd, $ThisFileInfo['avdataend'] - $ThisFileInfo['avdataoffset']);
+		$FLVdataLength = $ThisFileInfo['avdataend'] - $ThisFileInfo['avdataoffset'];
+		$FLVheader = fread($fd, 5);
 
-		$FLVmagic = substr($FLVfileData, 0, 3);
-		if ($FLVmagic != 'FLV') {
+		$ThisFileInfo['fileformat'] = 'flv';
+		$ThisFileInfo['flv']['header']['signature'] =                           substr($FLVheader, 0, 3);
+		$ThisFileInfo['flv']['header']['version']   = getid3_lib::BigEndian2Int(substr($FLVheader, 3, 1));
+		$TypeFlags                                  = getid3_lib::BigEndian2Int(substr($FLVheader, 4, 1));
+
+		if ($ThisFileInfo['flv']['header']['signature'] != 'FLV') {
 			$ThisFileInfo['error'][] = 'Expecting "FLV" at offset '.$ThisFileInfo['avdataoffset'].', found "'.$ThisFileInfo['flv']['header']['signature'].'"';
 			unset($ThisFileInfo['flv']);
 			unset($ThisFileInfo['fileformat']);
 			return false;
 		}
-		$ThisFileInfo['flv']['header']['signature'] = $FLVmagic;
-		$ThisFileInfo['flv']['header']['version']   = ord($FLVfileData{3});
-		$ThisFileInfo['fileformat'] = 'flv';
 
-		$TypeFlags = ord($FLVfileData{4});
-		$ThisFileInfo['flv']['header']['hasAudio'] = (bool) ($TypeFlags & 4);
-		$ThisFileInfo['flv']['header']['hasVideo'] = (bool) ($TypeFlags & 1);
+		$ThisFileInfo['flv']['header']['hasAudio'] = (bool) ($TypeFlags & 0x04);
+		$ThisFileInfo['flv']['header']['hasVideo'] = (bool) ($TypeFlags & 0x01);
 
-		$FrameSizeDataLength = getid3_lib::BigEndian2Int(substr($FLVfileData, 5, 4));
-
-		// FLV tags
-		$CurrentOffset = $FrameSizeDataLength;
-		$FLVdataLength = strlen($FLVfileData);
+		$FrameSizeDataLength = getid3_lib::BigEndian2Int(fread($fd, 4));
+		$FLVheaderFrameLength = 9;
+		if ($FrameSizeDataLength > $FLVheaderFrameLength) {
+			fseek($fd, $FrameSizeDataLength - $FLVheaderFrameLength, SEEK_CUR);
+		}
 
 		$Duration = 0;
+		while ((ftell($fd) + 1) < $ThisFileInfo['avdataend']) {
+			//if (!$ThisFileInfo['flv']['header']['hasAudio'] || isset($ThisFileInfo['flv']['audio']['audioFormat'])) {
+			//	if (!$ThisFileInfo['flv']['header']['hasVideo'] || isset($ThisFileInfo['flv']['video']['videoCodec'])) {
+			//		break;
+			//	}
+			//}
 
-		$SoundFormat = null;
-		$VideoFormat = null;
-		while ($CurrentOffset < $FLVdataLength) {
-			// previous tag size
-			$PreviousTagLength = getid3_lib::BigEndian2Int(substr($FLVfileData, $CurrentOffset, 4));
-			$CurrentOffset += 4;
+			$ThisTagHeader = fread($fd, 16);
 
-			$TagType = ord(substr($FLVfileData, $CurrentOffset, 1));
-			$DataLength = getid3_lib::BigEndian2Int(substr($FLVfileData, $CurrentOffset + 1, 3));
-			$Timestamp  = getid3_lib::BigEndian2Int(substr($FLVfileData, $CurrentOffset + 4, 3));
+			$PreviousTagLength = getid3_lib::BigEndian2Int(substr($ThisTagHeader,  0, 4));
+			$TagType           = getid3_lib::BigEndian2Int(substr($ThisTagHeader,  4, 1));
+			$DataLength        = getid3_lib::BigEndian2Int(substr($ThisTagHeader,  5, 3));
+			$Timestamp         = getid3_lib::BigEndian2Int(substr($ThisTagHeader,  8, 3));
+			$LastHeaderByte    = getid3_lib::BigEndian2Int(substr($ThisTagHeader, 15, 1));
+			$NextOffset = ftell($fd) - 1 + $DataLength;
 
 			switch ($TagType) {
 				case GETID3_FLV_TAG_AUDIO:
-					if (is_null($SoundFormat)) {
-						$SoundInfo = ord(substr($FLVfileData, $CurrentOffset + 11, 1));
-						$SoundFormat = $SoundInfo & 0x07;
-						$ThisFileInfo['flv']['audio']['audioFormat']     = $SoundFormat;
-						$ThisFileInfo['flv']['audio']['audioRate']       = ($SoundInfo & 0x30) / 0x10;
-						$ThisFileInfo['flv']['audio']['audioSampleSize'] = ($SoundInfo & 0x40) / 0x40;
-						$ThisFileInfo['flv']['audio']['audioType']       = ($SoundInfo & 0x80) / 0x80;
+					if (!isset($ThisFileInfo['flv']['audio']['audioFormat'])) {
+						$ThisFileInfo['flv']['audio']['audioFormat']     =  $LastHeaderByte & 0x07;
+						$ThisFileInfo['flv']['audio']['audioRate']       = ($LastHeaderByte & 0x30) / 0x10;
+						$ThisFileInfo['flv']['audio']['audioSampleSize'] = ($LastHeaderByte & 0x40) / 0x40;
+						$ThisFileInfo['flv']['audio']['audioType']       = ($LastHeaderByte & 0x80) / 0x80;
 					}
 					break;
 
 				case GETID3_FLV_TAG_VIDEO:
-					if (is_null($VideoFormat)) {
-						$VideoInfo = ord(substr($FLVfileData, $CurrentOffset + 11, 1));
-						$VideoFormat = $VideoInfo & 0x07;
-						$ThisFileInfo['flv']['video']['videoCodec'] = $VideoFormat;
+					if (!isset($ThisFileInfo['flv']['video']['videoCodec'])) {
+						$ThisFileInfo['flv']['video']['videoCodec'] = $LastHeaderByte & 0x07;
 
-						if ($VideoFormat != GETID3_FLV_VIDEO_VP6) {
+						$FLVvideoHeader = fread($fd, 11);
 
-							$PictureSizeType = (getid3_lib::BigEndian2Int(substr($FLVfileData, $CurrentOffset + 15, 2))) >> 7;
+						if ($ThisFileInfo['flv']['video']['videoCodec'] != GETID3_FLV_VIDEO_VP6) {
+
+							$PictureSizeType = (getid3_lib::BigEndian2Int(substr($FLVvideoHeader, 3, 2))) >> 7;
 							$PictureSizeType = $PictureSizeType & 0x0007;
 							$ThisFileInfo['flv']['header']['videoSizeType'] = $PictureSizeType;
 							switch ($PictureSizeType) {
 								case 0:
-									$PictureSizeEnc = getid3_lib::BigEndian2Int(substr($FLVfileData, $CurrentOffset + 16, 2));
+									$PictureSizeEnc = getid3_lib::BigEndian2Int(substr($FLVvideoHeader, 5, 2));
 									$PictureSizeEnc <<= 1;
 									$ThisFileInfo['video']['resolution_x'] = ($PictureSizeEnc & 0xFF00) >> 8;
-									$PictureSizeEnc = getid3_lib::BigEndian2Int(substr($FLVfileData, $CurrentOffset + 17, 2));
+									$PictureSizeEnc = getid3_lib::BigEndian2Int(substr($FLVvideoHeader, 6, 2));
 									$PictureSizeEnc <<= 1;
 									$ThisFileInfo['video']['resolution_y'] = ($PictureSizeEnc & 0xFF00) >> 8;
 									break;
 
 								case 1:
-									$PictureSizeEnc = getid3_lib::BigEndian2Int(substr($FLVfileData, $CurrentOffset + 16, 4));
+									$PictureSizeEnc = getid3_lib::BigEndian2Int(substr($FLVvideoHeader, 5, 4));
 									$PictureSizeEnc <<= 1;
 									$ThisFileInfo['video']['resolution_x'] = ($PictureSizeEnc & 0xFFFF0000) >> 16;
 
-									$PictureSizeEnc = getid3_lib::BigEndian2Int(substr($FLVfileData, $CurrentOffset + 18, 4));
+									$PictureSizeEnc = getid3_lib::BigEndian2Int(substr($FLVvideoHeader, 7, 4));
 									$PictureSizeEnc <<= 1;
 									$ThisFileInfo['video']['resolution_y'] = ($PictureSizeEnc & 0xFFFF0000) >> 16;
 									break;
@@ -154,16 +161,15 @@ class getid3_flv
 				// Meta tag
 				case GETID3_FLV_TAG_META:
 
-					$reader = new AMFReader(new AMFStream(substr($FLVfileData, $CurrentOffset + 11, $DataLength)));
+					fseek($fd, -1, SEEK_CUR);
+					$reader = new AMFReader(new AMFStream(fread($fd, $DataLength)));
 					$eventName = $reader->readData();
 					$ThisFileInfo['meta'][$eventName] = $reader->readData();
-
 					unset($reader);
 
-					$ThisFileInfo['video']['frame_rate']         = $ThisFileInfo['meta']['onMetaData']['framerate'];
-					$ThisFileInfo['video']['resolution_x']       = $ThisFileInfo['meta']['onMetaData']['width'];
-					$ThisFileInfo['video']['resolution_y']       = $ThisFileInfo['meta']['onMetaData']['height'];
-
+					$ThisFileInfo['video']['frame_rate']   = $ThisFileInfo['meta']['onMetaData']['framerate'];
+					$ThisFileInfo['video']['resolution_x'] = $ThisFileInfo['meta']['onMetaData']['width'];
+					$ThisFileInfo['video']['resolution_y'] = $ThisFileInfo['meta']['onMetaData']['height'];
 					break;
 
 				default:
@@ -175,7 +181,7 @@ class getid3_flv
 				$Duration = $Timestamp;
 			}
 
-			$CurrentOffset += ($DataLength + 11);
+			fseek($fd, $NextOffset, SEEK_SET);
 		}
 
 		$ThisFileInfo['playtime_seconds'] = $Duration / 1000;
@@ -191,7 +197,7 @@ class getid3_flv
 			$ThisFileInfo['audio']['dataformat'] = 'flv';
 		}
 		if (@$ThisFileInfo['flv']['header']['hasVideo']) {
-			$ThisFileInfo['video']['codec']      =   $this->FLVvideoCodec($ThisFileInfo['flv']['video']['videoCodec']);
+			$ThisFileInfo['video']['codec']      = $this->FLVvideoCodec($ThisFileInfo['flv']['video']['videoCodec']);
 			$ThisFileInfo['video']['dataformat'] = 'flv';
 			$ThisFileInfo['video']['lossless']   = false;
 		}

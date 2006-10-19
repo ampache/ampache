@@ -17,15 +17,10 @@
 class getid3_gzip {
 
 	// public: Optional file list - disable for speed.
-	var $option_gzip_parse_contents = true; // decode gzipped files, if possible, and parse recursively (.tar.gz for example)
+	var $option_gzip_parse_contents = false; // decode gzipped files, if possible, and parse recursively (.tar.gz for example)
 
 	function getid3_gzip(&$fd, &$ThisFileInfo) {
 		$ThisFileInfo['fileformat'] = 'gzip';
-		return $this->read_gzip($fd, $ThisFileInfo);
-	}
-
-	// Reads the gzip-file
-	function read_gzip($fd, &$ThisFileInfo) {
 
 		$start_length = 10;
 		$unpack_header = 'a1id1/a1id2/a1cmethod/a1flags/a4mtime/a1xflags/a1os';

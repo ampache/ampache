@@ -524,7 +524,7 @@ class getid3_lib
 					die(implode(' and ', $RequiredFiles).' are required in '.GETID3_HELPERAPPSDIR.' for getid3_lib::md5_file() to function under Windows in PHP < v4.2.0');
 				}
 			}
-			$commandline = GETID3_HELPERAPPSDIR.'md5sum.exe "'.str_replace('/', GETID3_OS_DIRSLASH, $file).'"';
+			$commandline = GETID3_HELPERAPPSDIR.'md5sum.exe "'.str_replace('/', DIRECTORY_SEPARATOR, $file).'"';
 			if (ereg("^[\\]?([0-9a-f]{32})", strtolower(`$commandline`), $r)) {
 				return $r[1];
 			}
@@ -559,14 +559,14 @@ class getid3_lib
 					die(implode(' and ', $RequiredFiles).' are required in '.GETID3_HELPERAPPSDIR.' for getid3_lib::sha1_file() to function under Windows in PHP < v4.3.0');
 				}
 			}
-			$commandline = GETID3_HELPERAPPSDIR.'sha1sum.exe "'.str_replace('/', GETID3_OS_DIRSLASH, $file).'"';
+			$commandline = GETID3_HELPERAPPSDIR.'sha1sum.exe "'.str_replace('/', DIRECTORY_SEPARATOR, $file).'"';
 			if (ereg("^sha1=([0-9a-f]{40})", strtolower(`$commandline`), $r)) {
 				return $r[1];
 			}
 
 		} else {
 
-			$commandline = 'sha1sum "'.$file.'"';
+			$commandline = 'sha1sum '.escapeshellarg($file).'';
 			if (ereg("^([0-9a-f]{40})[ \t\n\r]", strtolower(`$commandline`), $r)) {
 				return $r[1];
 			}
@@ -617,14 +617,14 @@ class getid3_lib
 						break;
 					}
 				}
-				$commandline  = GETID3_HELPERAPPSDIR.'head.exe -c '.$end.' "'.str_replace('/', GETID3_OS_DIRSLASH, $file).'" | ';
+				$commandline  = GETID3_HELPERAPPSDIR.'head.exe -c '.$end.' "'.escapeshellarg(str_replace('/', DIRECTORY_SEPARATOR, $file)).'" | ';
 				$commandline .= GETID3_HELPERAPPSDIR.'tail.exe -c '.$size.' | ';
 				$commandline .= GETID3_HELPERAPPSDIR.$windows_call;
 
 			} else {
 
-				$commandline  = 'head -c '.$end.' "'.$file.'" | ';
-				$commandline .= 'tail -c '.$size.' | ';
+				$commandline  = 'head -c'.$end.' '.escapeshellarg($file).' | ';
+				$commandline .= 'tail -c'.$size.' | ';
 				$commandline .= $unix_call;
 
 			}
@@ -1170,7 +1170,7 @@ class getid3_lib
 	function GetDataImageSize($imgData) {
 		$GetDataImageSize = false;
 		if ($tempfilename = tempnam('*', 'getID3')) {
-			if ($tmp = @fopen($tempfilename, 'rb')) {
+			if ($tmp = @fopen($tempfilename, 'wb')) {
 				fwrite($tmp, $imgData);
 				fclose($tmp);
 				$GetDataImageSize = @GetImageSize($tempfilename);
@@ -1202,7 +1202,8 @@ class getid3_lib
 	}
 
 	function CopyTagsToComments(&$ThisFileInfo) {
-		// Copy all entries from ['tags'] into common ['comments'] and ['comments_html']
+
+		// Copy all entries from ['tags'] into common ['comments'] 
 		if (!empty($ThisFileInfo['tags'])) {
 			foreach ($ThisFileInfo['tags'] as $tagtype => $tagarray) {
 				foreach ($tagarray as $tagname => $tagdata) {
@@ -1237,14 +1238,18 @@ class getid3_lib
 							}
 							if (empty($ThisFileInfo['comments'][$tagname]) || !in_array(trim($value), $ThisFileInfo['comments'][$tagname])) {
 								$ThisFileInfo['comments'][$tagname][] = trim($value);
-								if (isset($ThisFileInfo['tags_html'][$tagtype][$tagname][$key])) {
-									$ThisFileInfo['comments_html'][$tagname][] = $ThisFileInfo['tags_html'][$tagtype][$tagname][$key];
-								}
 							}
 						}
 					}
 				}
 			}
+			
+			// Copy to ['comments_html'] 
+    		foreach ($ThisFileInfo['comments'] as $field => $values) {
+    		    foreach ($values as $index => $value) {
+    		        $ThisFileInfo['comments_html'][$field][$index] = str_replace('&#0;', '', getid3_lib::MultiByteCharString2HTML($value, $ThisFileInfo['encoding']));
+    		    }
+            }
 		}
 	}
 
