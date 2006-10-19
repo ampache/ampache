@@ -85,17 +85,17 @@ input {
 	font-family: Verdana, Helvetica, sans-serif; 
 	font-size: 12px; 
 	font-weight: bold; 
-	background-color: #dddddd; 
+	background-color: #FFFFFF; 
 	margin: 2px 2px 2px 2px;
 }
 select	{ 
 	color: #000000; 
 	font-family: Verdana, Helvetica, sans-serif; 
 	font-size: 12px; 
-	background-color: #dddddd; 
+	background-color: #FFFFFF; 
 }
 textarea { 
-	background-color: #dddddd;
+	background-color: #FFFFFF;
 	color: #000000; 
 	font-family: Verdana, Helvetica, sans-serif; 
 	font-size: 12px; 
@@ -296,6 +296,7 @@ div#sidebar{
 	width:100%;
 	font-weight:bold;
 	background: url(../images/gradient.jpg) #FF0000 repeat-y;
+	z-index:30;
 }
 
 #sidebar h3 {
