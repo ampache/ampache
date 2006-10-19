@@ -475,11 +475,14 @@ margin-right:5em;
 	color: #FFFFFF; 
 }
 #topbarright { 
-	float: right;
+	/*float: top-right;*/
+	position: absolute;
 	font-size: 10px;
+	top:3px;
+	right:3px;
+	z-index:40;
 }
 #topbarleft, #topbarleft a{
-	padding: 0px 0px 0px 10px;
 	float: left;
 }
 /* Box Related Styles */
