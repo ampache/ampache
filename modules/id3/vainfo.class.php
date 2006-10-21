@@ -170,6 +170,9 @@ class vainfo {
 
 		$results = array();
 
+		/* Gather Tag information from the filenames */
+		$results['file']	= $this->_parse_filename($this->filename);
+
 		/* Return false if we don't have 
 		 * any tags to look at 
 		 */
@@ -205,9 +208,6 @@ class vainfo {
 			} // end switch
 
 		} // end foreach
-
-		/* Gather Tag information from the filenames */
-		$results['file']	= $this->_parse_filename($this->filename);
 
 		return $results;
 
@@ -358,9 +358,8 @@ class vainfo {
 				case 'track_number':
 					$array['track'] = $this->_clean_tag($data['0'],$this->_file_encoding);
 				break;	
-				case 'content_type':
-					$data['0'] = preg_replace("/^\(\d+\)/","",$data['0']);
-					$array['genre'] = $this->_clean_tag($data['0'],$this->_file_encoding);
+				//case 'content_type':
+				//	$array['genre'] = $this->_clean_tag($data['0'],$this->_file_encoding);
 				break;
 				case 'comments':
 					$array['comment'] = $this->_clean_tag($data['0'],$this->_file_encoding);

@@ -4,6 +4,8 @@
 
 --------------------------------------------------------------------------
   v.3.3.3-Alpha1
+	- Fixed a problem with vainfo ignoring file pattern if no other
+		tags were found
 	- Added new version of getid3() library which will hopefully 
 		resolve some PHP5 related issues
 	- Fixed security issue that allowed users to gain gues access to

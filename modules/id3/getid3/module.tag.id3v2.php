@@ -2932,9 +2932,9 @@ class getid3_id3v2
 			TBP	bpm
 			TBPM	bpm
 			TCM	composer
-			TCO	content_type
+			TCO	genre
 			TCOM	composer
-			TCON	content_type
+			TCON	genre
 			TCOP	copyright_message
 			TCR	copyright_message
 			TDA	date

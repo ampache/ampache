@@ -1343,6 +1343,7 @@ function get_user_icon($name) {
 function xml_from_array($array,$callback=0) { 
 	
 	foreach ($array as $key=>$value) { 
+		if (is_numeric($key)) { $key = 'item'; } 
 		if (is_array($value)) { 
 			$value = xml_from_array($value,1);
 			$string .= "\t<$key>$value</$key>\n";

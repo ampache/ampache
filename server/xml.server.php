@@ -28,8 +28,11 @@
 $no_session = true;
 require_once('../lib/init.php');
 
-/* Verify the existance of the Session they passed in */
-if (!session_exists($_REQUEST['sessid'])) { exit(); }
+/** 
+ * Verify the existance of the Session they passed in we do allow them to
+ * login via this interface so we do have an exception for action=login
+ */
+if (!session_exists($_REQUEST['sessid']) AND $_REQUEST['action'] !== 'login') { exit(); }
 
 $GLOBALS['user'] = new User($_REQUEST['user_id']);
 $action = scrub_in($_REQUEST['action']);
@@ -46,8 +49,7 @@ switch ($action) {
 		while ($r = mysql_fetch_assoc($db_results)) { 
 			$artist = new Artist($r['id']);
 			$artist->format_artist();
-			$artist_id = "id_" . $artist->id;
-			$results[$artist_id] = $artist->full_name;
+			$results[] = array('id'=>$artist->id,'name'=>$artist->full_name);
 		} // end while results
 
 		$xml_doc = xml_from_array($results);
@@ -59,8 +61,7 @@ switch ($action) {
 
 		while ($r = mysql_fetch_assoc($db_results)) { 
 			$album = new Album($r['id']);
-			$album_id = "id_" . $album->id;
-			$results[$album_id] = array('year'=>$album->year,'name'=>$album->name);
+			$results[] = array('id'=>$r['id'],'year'=>$album->year,'name'=>$album->name);
 		} // end while results
 
 		$xml_doc = xml_from_array($results);
@@ -72,8 +73,7 @@ switch ($action) {
 	
 		while ($r = mysql_fetch_assoc($db_results)) { 
 			$genre = new Genre($r['id']); 
-			$genre_id = "id_" . $genre->id;
-			$results[$genre_id] = $genre->name;
+			$results[] = array('id'=>$r['id'],'name'=>$genre->name);
 		}
 		
 		$xml_doc = xml_from_array($results);
@@ -90,11 +90,11 @@ switch ($action) {
 		 * xml.. turn it into an array 
 		 */
 		foreach ($data as $song) { 
-			$song_id 	= 'id_' . $song->id; 
 			$genre 		= $song->get_genre_name();
 			$artist 	= $song->get_artist_name();
 			$album		= $song->get_album_name();
-			$results[$song_id] = array('title'=>$song->title,
+			$results[] 	= array('id'=>$song->id,
+						'title'=>$song->title,
 						'genre'=>$genre,
 						'artist'=>$artist,
 						'album'=>$album);	
@@ -104,6 +104,32 @@ switch ($action) {
 		echo $xml_doc;
 
 	break;	
+	/* This takes a object_id/object_type and returns the correct PLAY url for it */
+	case 'play_url':
+		/* We need the type and id */
+		$object_type 	= scrub_in($_REQUEST['object_type']); 
+		$object_id	= scrub_in($_REQUEST['object_id']);
+
+		switch ($object_type) { 
+			case 'song':
+				$song = new Song($object_id);
+				$url = $song->get_url($_REQUEST['sessid']); 
+				$results[] = $url;
+			break;
+			default: 
+				// Rien a faire
+			break;
+		} // end switch on object_type
+
+		$xml_doc = xml_from_array($results);
+		echo $xml_doc; 
+
+	break;
+	/* This allows you to login via the xml mojo */
+	case 'login':
+	
+
+	break;
 	default:
 		// Rien a faire
 	break;
