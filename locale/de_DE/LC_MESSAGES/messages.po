@@ -1825,9 +1825,8 @@ msgid "Next"
 msgstr ""
 
 #: ../../templates/show_localplay.inc:49
-#, fuzzy
 msgid "Volume"
-msgstr "Wert"
+msgstr ""
 
 #: ../../templates/show_localplay.inc:53 ../../templates/show_localplay.inc:54
 msgid "Increase Volume"
@@ -2500,10 +2499,10 @@ msgid "Sorry, you don't have access to that part of the server."
 msgstr "Entschuldigung, sie haben keinen Zugriff auf diesen Teil des Servers."
 
 msgid "No Songs Removed"
-msgstr "Keine Lieder gelscht"
+msgstr ""
 
 msgid "No Disabled songs found"
-msgstr "Keine 'abgeschalteten' Lieder gefunden"
+msgstr ""
 
 msgid "Popular Threshold"
 msgstr "Weiter"

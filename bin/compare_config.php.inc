@@ -22,7 +22,7 @@
 
 $no_session = '1';
 require ('../lib/init.php');
-require ('../lib/debug.php');
+require ('../lib/debug.lib.php');
 
 $results = debug_read_config(conf('prefix') . "/config/ampache.cfg.php");
 

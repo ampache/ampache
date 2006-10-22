@@ -35,7 +35,7 @@ msgstr ""
 
 #: ../../lib/class/catalog.class.php:365
 msgid "Added"
-msgstr "Eklendi"
+msgstr ""
 
 #: ../../lib/class/catalog.class.php:377
 msgid "is not readable by ampache"
@@ -1821,7 +1821,7 @@ msgstr ""
 
 #: ../../templates/show_localplay.inc:49
 msgid "Volume"
-msgstr "Ses"
+msgstr ""
 
 #: ../../templates/show_localplay.inc:53 ../../templates/show_localplay.inc:54
 msgid "Increase Volume"

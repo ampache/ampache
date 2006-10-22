@@ -9,3 +9,4 @@ msgmerge ./messages.po ../it_IT/LC_MESSAGES/messages.po --output-file=../it_IT/L
 msgmerge ./messages.po ../nl_NL/LC_MESSAGES/messages.po --output-file=../nl_NL/LC_MESSAGES/messages.po
 msgmerge ./messages.po ../tr_TR/LC_MESSAGES/messages.po --output-file=../tr_TR/LC_MESSAGES/messages.po
 msgmerge ./messages.po ../zh_CN/LC_MESSAGES/messages.po --output-file=../zh_CN/LC_MESSAGES/messages.po
+msgmerge ./messages.po ../ru_RU/LC_MESSAGES/messages.po --output-file=../ru_RU/LC_MESSAGES/messages.po

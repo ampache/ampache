@@ -1032,7 +1032,6 @@ msgid "Play Random Selection"
 msgstr ""
 
 #: ../../templates/show_random_play_bar.inc.php:51
-#, fuzzy
 msgid "Full Artists"
 msgstr ""
 
@@ -1046,7 +1045,6 @@ msgid "from"
 msgstr ""
 
 #: ../../templates/show_random_play_bar.inc.php:59
-#, fuzzy
 msgid "Advanced"
 msgstr ""
 
@@ -1229,7 +1227,6 @@ msgid "Create New Playlist"
 msgstr ""
 
 #: ../../templates/show_playlist_box.inc.php:35
-#, fuzzy
 msgid "View All Playlists"
 msgstr ""
 
@@ -1452,7 +1449,6 @@ msgid "Error: Upload directory not inside a catalog"
 msgstr ""
 
 #: ../../bin/quarantine_migration.php.inc:74
-#, fuzzy
 msgid "Moved"
 msgstr ""
 
@@ -1501,7 +1497,6 @@ msgid "!\n"
 msgstr ""
 
 #: ../../templates/show_admin_index.inc:27
-#, fuzzy
 msgid "User Management"
 msgstr ""
 
@@ -1510,7 +1505,6 @@ msgid "E-mail Management"
 msgstr ""
 
 #: ../../templates/show_admin_index.inc:29
-#, fuzzy
 msgid "Catalog Managment"
 msgstr ""
 
@@ -1531,7 +1525,6 @@ msgid "Clear Now Playing"
 msgstr ""
 
 #: ../../templates/show_admin_index.inc:36
-#, fuzzy
 msgid "Add Access List Entry"
 msgstr ""
 
@@ -1540,7 +1533,6 @@ msgid "Common Functions"
 msgstr ""
 
 #: ../../templates/show_admin_index.inc:43
-#, fuzzy
 msgid "Admin Sections"
 msgstr ""
 
@@ -2288,7 +2280,6 @@ msgid "Object Type"
 msgstr ""
 
 #: ../../templates/show_search.inc:138
-#, fuzzy
 msgid "Genres"
 msgstr ""
 

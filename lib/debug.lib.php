@@ -266,8 +266,6 @@ function debug_read_config($config_file,$debug) {
         
         $value = trim($value);
        
-       	if (substr($value,0,1) == '#') { continue; } 
-
         if (preg_match("/^#?([\w\d]+)\s+=\s+[\"]{1}(.*?)[\"]{1}$/",$value,$matches)
                         || preg_match("/^#?([\w\d]+)\s+=\s+[\']{1}(.*?)[\']{1}$/", $value, $matches)
                         || preg_match("/^#?([\w\d]+)\s+=\s+[\'\"]{0}(.*)[\'\"]{0}$/",$value,$matches)) {
@@ -339,5 +337,32 @@ function debug_compare_configs($config,$dist_config) {
 
 } // debug_compare_configs
 
+
+/**
+ * check_putenv
+ * This checks to see if we can manually set the
+ * memory limit, and other putenvs we need for 
+ * ampache to work correctly 
+ */
+function check_putenv() { 
+
+	/* Check memory */
+	$current = ini_get('memory_limit');
+	$current = substr($current_memory,0,strlen($current_memory)-1);
+	$new_limit = ($current+1) . "M";
+	
+	/* Bump it by one meg */
+	if (!ini_set(memory_limit,$new_limit)) { 
+		return false; 
+	}
+
+	/* Check if safe mode is on */
+	if (ini_get('safe_mode')) { 
+		return false; 
+	}
+
+	return true;
+
+} // check_putenv
 
 ?>

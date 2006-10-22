@@ -135,6 +135,23 @@ $row_classes = array('even','odd');
 	</td>
 </tr>
 <tr>
+	<td valign="top"><?php echo _('PHP PutENV Support'); ?></td>
+	<td valign="top">[
+	<?php
+		if (!check_putenv()) { 
+			$status['putevn_php'] = false;
+			echo " <font color=\"red\">ERROR</font> ";
+		}
+		else { 
+			echo "<font color=\"green\">&nbsp;&nbsp;&nbsp;OK&nbsp;&nbsp;&nbsp;&nbsp;</font> ";
+		} 
+	?>]
+	</td>
+	<td>
+	<?php echo _('This test makes sure that PHP isn\'t running in SafeMode and that we are able to modify the memory limits. While not required, without these abilities some features of ampache may not work correctly'); ?>
+	</td>
+</tr> 
+<tr>
 	<td valign="top"><?php echo _('Ampache.cfg.php Exists'); ?></td>
 	<td valign="top">[ 
 	<?php

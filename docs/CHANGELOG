@@ -4,6 +4,12 @@
 
 --------------------------------------------------------------------------
   v.3.3.3-Alpha1
+	- Added Generate Config tool for admins to update their configs
+		to the latest version. It reads current settings and merges
+		with the new config file and prompts for a download
+	- Added PutENV check on test page to make sure we can redefine
+		memory limit and safemode is off
+	- Added Russian translation (Thx Dimon) 
 	- Fixed a problem with vainfo ignoring file pattern if no other
 		tags were found
 	- Added new version of getid3() library which will hopefully 

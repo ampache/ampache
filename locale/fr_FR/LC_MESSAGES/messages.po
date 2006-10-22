@@ -186,7 +186,7 @@ msgstr ""
 
 #: ../../lib/class/catalog.class.php:1138
 msgid "Checking"
-msgstr ""
+msgstr "Véfication"
 
 #: ../../lib/class/catalog.class.php:1196
 msgid "Catalog Clean Done"
@@ -340,7 +340,7 @@ msgstr "Erreur, ne peut pas écrire"
 
 #: ../../lib/class/stream.class.php:214
 msgid "Error, cannot write song in file"
-msgstr ""
+msgstr "Erreur, ne peut pas écrire chanson dans le "fichier"
 
 #: ../../lib/class/stream.class.php:220
 msgid "Closed after write"
@@ -498,7 +498,7 @@ msgstr "Parcourir"
 
 #: ../../lib/ui.lib.php:301
 msgid "Show w/o art"
-msgstr ""
+msgstr "Montrer sans l'art"
 
 #: ../../lib/ui.lib.php:304
 msgid "Show all"
