@@ -4,6 +4,10 @@
 
 --------------------------------------------------------------------------
   v.3.3.3-Alpha1
+	- Reworked Stats so that they are time specific, allows for 
+		Top 10 of this week, threshold is per user configured
+	- Added Admin Allow XXXX preferences for downsampling, streaming
+		localplay and democratic play
 	- Added Generate Config tool for admins to update their configs
 		to the latest version. It reads current settings and merges
 		with the new config file and prompts for a download

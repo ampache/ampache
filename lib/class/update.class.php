@@ -298,6 +298,11 @@ class Update {
 				'- Added vote tables to allow users to vote on localplay.<br />';
 		
 		$version[] = array('version' => '333000','description' => $update_string); 
+		
+		$update_string = '- Added new preferences for playback Allow config options, moved out of config file.<br />' . 
+				'- Reworked object_count to store 1 ROW per stat, allowing for Top 10 this week type stats. This can take a very long time.<br />';
+		
+		$version[] = array('version' => '333001','description' => $update_string);
 
 		return $version;
 
@@ -1878,6 +1883,115 @@ class Update {
 		$this->set_version('db_version','333000');
 
 	} // update_333000
+
+	/**
+ 	 * update_333001
+	 * This adds a few extra preferences for play types. This is still a stopgap
+	 * for the roill based permissions that I hope to add in the next release
+	 * Re-work the stats so that they are time specific, this will drastically 
+	 * increase the number of rows so we need to make it more efficient as well
+	 */
+	function update_333001() { 
+
+		/* Add in the allow preferences for system */
+		$sql = "INSERT INTO preferences (`name`,`value`,`description`,`level`,`type`,`catagory`) " . 
+			" VALUES ('allow_downsample_playback','0','Allow Downsampling','100','boolean','system')";
+		$db_results = mysql_query($sql, dbh());
+
+		$sql = "INSERT INTO preferences (`name`,`value`,`description`,`level`,`type`,`catagory`) " . 
+			" VALUES ('allow_stream_playback','1','Allow Streaming','100','boolean','system')";
+		$db_results = mysql_query($sql, dbh());
+
+		$sql = "INSERT INTO preferences (`name`,`value`,`description`,`level`,`type`,`catagory`) " . 
+			" VALUES ('allow_democratic_playback','0','Allow Democratic Play','100','boolean','system')";
+		$db_results = mysql_query($sql, dbh());
+		
+		$sql = "INSERT INTO preferences (`name`,`value`,`description`,`level`,`type`,`catagory`) " . 
+			" VALUES ('allow_localplay_playback','0','Allow Localplay Play','100','boolean','system')";
+		$db_results = mysql_query($sql, dbh());
+
+		$sql = "INSERT INTO preferences (`name`,`value`,`description`,`level`,`type`,`catagory`) " . 
+			" VALUES ('stats_threshold','7','Statistics Day Threshold','25','integer','interface')";
+		$db_results = mysql_query($sql,dbh());
+
+                /* Fix every users preferences */
+                $sql = "SELECT * FROM user";
+                $db_results = mysql_query($sql, dbh());
+
+                $user = new User();
+                $user->fix_preferences('-1');
+
+                while ($r = mysql_fetch_assoc($db_results)) {
+                        $user->fix_preferences($r['username']);
+                } // while results
+
+		/* Store all current Stats */
+		$sql = "SELECT * FROM object_count";
+		$db_results = mysql_query($sql, dbh());
+
+		$results = array(); 
+
+		/* store in an array */
+		while ($result = mysql_fetch_assoc($db_results)) { 
+			$results[] = $result;
+		} // while results	
+
+		/* Alter the Table drop count and switch username to int  */
+		$sql = "TRUNCATE TABLE `object_count`";
+		$db_results = mysql_query($sql,dbh());
+
+		$sql = "ALTER TABLE `object_count` DROP `count`";
+		$db_results = mysql_query($sql, dbh());
+
+		$sql = "ALTER TABLE `object_count` CHANGE `userid` `user` INT ( 11 ) UNSIGNED NOT NULL";
+		$db_results = mysql_query($sql,dbh());
+
+		/* We do this here because it's more important that they
+		 * don't re-run the update then getting all their stats
+		 */
+		$this->set_version('db_version','333001');
+
+		// Prevent the script from timing out
+		set_time_limit(0);
+
+		/* Foreach through the old stuff and dump it back into the fresh table */
+		foreach ($results as $row) { 
+
+			/* Reset */
+			$i=0;
+			
+			/* One row per count */
+			while ($row['count'] > $i) { 
+
+				$object_type 	= sql_escape($row['object_type']);
+				$object_id	= sql_escape($row['object_id']);
+				$date		= sql_escape($row['date']);
+				$username	= sql_escape($row['userid']);
+				if (!isset($cache[$username])) { 
+					$tmp_user = get_user_from_username($row['userid']);
+					$username = $tmp_user->username;
+					$cache[$username] = $tmp_user;
+				}
+				else { 
+					$tmp_user = $cache[$username];
+				}
+				// FIXME:: User uid reference 
+				$user_id = $tmp_user->uid;
+				
+
+				$sql = "INSERT INTO `object_count` (`object_type`,`object_id`,`date`,`user`) " . 
+					" VALUES ('$object_type','$object_id','$date','$user_id')";
+				$db_results = mysql_query($sql, dbh());
+
+				$i++;
+
+			} // end while we've got stuff
+
+
+		} // end foreach
+
+
+	} // update_333001
 
 } // end update class
 ?>

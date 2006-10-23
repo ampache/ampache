@@ -535,13 +535,14 @@ function get_random_songs( $options, $matchlist) {
                 $artists_where = ltrim($artists_where," OR");
                 $query = "SELECT song.id,song.size FROM song WHERE $artists_where ORDER BY RAND()";
         }
-        elseif ($options['random_type'] == 'unplayed') {
-                $uid = $GLOBALS['user']->id;
-                $query = "SELECT song.id,song.size FROM song LEFT JOIN object_count ON song.id = object_count.object_id " .
-                         "WHERE ($where) AND ((object_count.object_type='song' AND userid = '$uid') OR object_count.count IS NULL ) " .
-                         "ORDER BY CASE WHEN object_count.count IS NULL THEN RAND() WHEN object_count.count > 4 THEN RAND()*RAND()*object_count.count " .
-                         "ELSE RAND()*object_count.count END " . $options['limit'];
-        } // If unplayed
+/* TEMP DISABLE */
+//        elseif ($options['random_type'] == 'unplayed') {
+//                $uid = $GLOBALS['user']->id;
+//                $query = "SELECT song.id,song.size FROM song LEFT JOIN object_count ON song.id = object_count.object_id " .
+//                         "WHERE ($where) AND ((object_count.object_type='song' AND user = '$uid') OR object_count.count IS NULL ) " .
+//                         "ORDER BY CASE WHEN object_count.count IS NULL THEN RAND() WHEN object_count.count > 4 THEN RAND()*RAND()*object_count.count " .
+//                         "ELSE RAND()*object_count.count END " . $options['limit'];
+//        } // If unplayed
         else {
                 $query = "SELECT id,size FROM song WHERE $where ORDER BY RAND() " . $options['limit'];
         }
@@ -606,47 +607,44 @@ function cleanup_and_exit($playing_id) {
  */
 function get_global_popular($type) {
 
-	/* Select out the most popular based on object_count */
-        $sql = "SELECT object_id, SUM(count) as count FROM object_count" .
-                " WHERE object_type = '$type'" .
-                " GROUP BY object_id" .
-                " ORDER BY count DESC LIMIT " . conf('popular_threshold');
-        $db_result = mysql_query($sql,dbh());
-        
-        $items = array();
+	$stats = new Stats();
+	$count = conf('popular_threshold');
         $web_path = conf('web_path');
-        
-        while ( $r = @mysql_fetch_object($db_result) ) {
+
+	/* Pull the top */
+	$results = $stats->get_top($count,$type);
+
+	foreach ($results as $r) { 
 		/* If Songs */
                 if ( $type == 'song' ) {
-                        $song = new Song($r->object_id);
+                        $song = new Song($r['object_id']);
                         $artist = $song->get_artist_name();
                         $text = "$artist - $song->title";
                         /* Add to array */
                         $items[] = "<li> <a href=\"$web_path/song.php?action=single_song&amp;song_id=$song->id\" title=\"". scrub_out($text) ."\">" .
-	                           	scrub_out(truncate_with_ellipse($text, conf('ellipse_threshold_title')+3)) . "&nbsp;($r->count)</a> </li>";
+	                           	scrub_out(truncate_with_ellipse($text, conf('ellipse_threshold_title')+3)) . "&nbsp;(" . $r['count'] . ")</a> </li>";
                 } // if it's a song
                 
 		/* If Artist */
                 elseif ( $type == 'artist' ) {
-                        $artist  = get_artist_name($r->object_id);
+                        $artist  = get_artist_name($r['object_id']);
                         $items[] = "<li> <a href=\"$web_path/artists.php?action=show&amp;artist=$r->object_id\" title=\"". scrub_out($artist) ."\">" .
-                        	           scrub_out(truncate_with_ellipse($artist, conf('ellipse_threshold_artist')+3)) . "&nbsp;($r->count)</a> </li>";
+                        	           scrub_out(truncate_with_ellipse($artist, conf('ellipse_threshold_artist')+3)) . "&nbsp;(" . $r['count'] . ")</a> </li>";
                 } // if type isn't artist
 
 		/* If Album */
                 elseif ( $type == 'album' ) {
-                        $album   = new Album($r->object_id);
+                        $album   = new Album($r['object_id']);
                         $items[] = "<li> <a href=\"$web_path/albums.php?action=show&amp;album=$r->object_id\" title=\"". scrub_out($album->name) ."\">" . 
-                        	           scrub_out(truncate_with_ellipse($album->name,conf('ellipse_threshold_album')+3)) . "&nbsp;($r->count)</a> </li>";
+                        	           scrub_out(truncate_with_ellipse($album->name,conf('ellipse_threshold_album')+3)) . "&nbsp;(" . $r['count'] . ")</a> </li>";
                 } // else not album
 
 		elseif ($type == 'genre') { 
-			$genre 	 = new Genre($r->object_id);
+			$genre 	 = new Genre($r['object_id']);
 			$items[] = "<li> <a href=\"$web_path/browse.php?action=genre&amp;genre=$r->object_id\" title=\"" . scrub_out($genre->name) . "\">" .
-					scrub_out(truncate_with_ellipse($genre->name,conf('ellipse_threshold_title')+3)) . "&nbsp;($r->count)</a> </li>";
+					scrub_out(truncate_with_ellipse($genre->name,conf('ellipse_threshold_title')+3)) . "&nbsp;(" . $r['count'] . ")</a> </li>";
 		} // end if genre
-        } // end while
+        } // end foreach
        
 	if (count($items) == 0) { 
 		$items[] = "<li style=\"list-style-type: none\"><span class=\"error\">" . _('Not Enough Data') . "</span></li>\n";

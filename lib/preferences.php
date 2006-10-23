@@ -247,6 +247,10 @@ function create_preference_input($name,$value) {
 		case 'no_symlinks':
 		case 'use_auth':
 		case 'access_control':
+		case 'allow_stream_playback':
+		case 'allow_downsample_playback':
+		case 'allow_democratic_playback':
+		case 'allow_localplay_playback':
 		case 'demo_mode':
 		case 'condPL':
 		case 'direct_link':
@@ -262,6 +266,7 @@ function create_preference_input($name,$value) {
 			elseif ($value == 'localplay') { $is_local = 'selected="selected"'; } 
 			else { $is_stream = "selected=\"selected\""; } 
 			echo "<select name=\"$name\">\n";
+			echo "\t<option value=\"\">" . _('None') . "</option>\n";
 			if (conf('allow_stream_playback')) { 
 				echo "\t<option value=\"stream\" $is_stream>" . _('Stream') . "</option>\n";
 			}
@@ -269,9 +274,11 @@ function create_preference_input($name,$value) {
 				echo "\t<option value=\"downsample\" $is_down>" . _('Downsample') . "</option>\n";
 			}
 			if (conf('allow_democratic_playback')) { 
-				echo "\t<option value=\"democratic\" $is_demo>" . _('Voting') . "</option>\n";
+				echo "\t<option value=\"democratic\" $is_demo>" . _('Democratic') . "</option>\n";
 			}
-			echo "\t<option value=\"localplay\" $is_local>" . _('Localplay') . "</option>\n";	
+			if (conf('allow_localplay_playback')) { 
+				echo "\t<option value=\"localplay\" $is_local>" . _('Localplay') . "</option>\n";	
+			} 
 			echo "</select>\n";
 		break;
 		case 'playlist_type':

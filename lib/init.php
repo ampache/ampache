@@ -72,15 +72,8 @@ if (!$results = read_config($configfile,0)) {
 	exit();
 } 
 
-
-//FIXME: Until we have a config updater force stream as allowed playback method
-if (!$results['allow_stream_playback']) { 
-	$results['allow_stream_playback'] = "true";
-}
-
-
 /** This is the version.... fluf nothing more... **/
-$results['version']		= '3.3.3-Alpha1 (Build 004)';
+$results['version']		= '3.3.3-Alpha1 (Build 005)';
 
 $results['raw_web_path']	= $results['web_path'];
 $results['web_path']		= $http_type . $_SERVER['HTTP_HOST'] . $results['web_path'];
@@ -177,6 +170,7 @@ if (conf('ratings')) {
 
 // Classes
 require_once(conf('prefix') . '/lib/class/localplay.class.php');
+require_once(conf('prefix') . '/lib/class/stats.class.php');
 require_once(conf('prefix') . '/lib/class/catalog.class.php');
 require_once(conf('prefix') . '/lib/class/stream.class.php');
 require_once(conf('prefix') . '/lib/class/playlist.class.php');

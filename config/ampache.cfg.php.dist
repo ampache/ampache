@@ -394,22 +394,6 @@ refresh_limit = "60"
 # DEFAULT: false
 #user_agreement = "false"
 
-###########################################################
-# These Option Control which playback methods are allowed #
-###########################################################
-
-# Stream Playback
-# Disable this if you don't want to allow people to stream
-# using HTTP without down-sampling
-# DEFAULT: true
-allow_stream_playback = true
-
-# Down-sampling Playback
-# Disable this if you don't want to allow people to down-sample
-# songs before they are streamed
-# DEFAULT: false
-#allow_downsample_playback = false
-
 #########################################################
 # These options control the dynamic down-sampling based #
 # on current usage                                      #

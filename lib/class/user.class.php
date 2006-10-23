@@ -30,6 +30,7 @@ class User {
 
 	//Basic Componets
 	var $id;
+	var $uid; // HACK ALERT
 	var $username;
 	var $fullname;
 	var $access;
@@ -55,6 +56,7 @@ class User {
 		$this->username 	= sql_escape($username);
 		$info 			= $this->_get_info();
 		$this->id		= $this->username;
+		$this->uid		= $info->id;
 		$this->username 	= $info->username;
 		$this->fullname 	= $info->fullname;
 		$this->access 		= $info->access;
@@ -158,50 +160,47 @@ class User {
 	*/
 	function get_favorites($type) { 
 
-	        $sql = "SELECT * FROM object_count" .
-	                " WHERE count > 0" .
-	                " AND object_type = '$type'" .
-	                " AND userid = '" . $this->username . "'" .
-	                " ORDER BY count DESC LIMIT " . conf('popular_threshold');
-	        $db_result = mysql_query($sql, dbh());
-
-		$items = array();
 	        $web_path = conf('web_path');
 
-        	while ($r = @mysql_fetch_object($db_result) ) {
+		$stats = new Stats();
+		$results = $stats->get_user(conf('popular_threshold'),$type,$this->uid,1);
+
+		$items = array();
+
+		foreach ($results as $r) { 
 			/* If its a song */
 			if ($type == 'song') { 
-				$data = new Song($r->object_id);
-				$data->count = $r->count;
+				$data = new Song($r['object_id']);
+				$data->count = $r['count'];
 				$data->format_song();
 				$data->f_name = $data->f_link;
 				$items[] = $data;
 			}
 			/* If its an album */
 			elseif ($type == 'album') { 
-				$data = new Album($r->object_id);
-				$data->count = $r->count;
+				$data = new Album($r['object_id']);
+				$data->count = $r['count'];
 				$data->format_album();
 				$items[] = $data;
 			} 
 			/* If its an artist */
 			elseif ($type == 'artist') { 
-				$data = new Artist($r->object_id);
-				$data->count = $r->count;
+				$data = new Artist($r['object_id']);
+				$data->count = $r['count'];
 				$data->format_artist();
 				$data->f_name = $data->link;
 				$items[] = $data;
 			} 		 
 			/* If it's a genre */
 			elseif ($type == 'genre') { 
-				$data = new Genre($r->object_id);
-				$data->count = $r->count;
+				$data = new Genre($r['object_id']);
+				$data->count = $r['count'];
 				$data->format_genre();
 				$data->f_name = $data->link;
 				$items[] = $data;
 			}
 
-		} // end while
+		} // end foreach
 		
 		return $items;
 
@@ -414,77 +413,23 @@ class User {
 	
 	} // update_last_seen
 
-	/*!
-		@function update_user_stats
-		@discussion updates the playcount mojo for this 
-			specific user
-	*/
+	/**
+	 * update_user_stats
+	 * updates the playcount mojo for this specific user
+	 */
 	function update_stats($song_id) {
 
 		$song_info = new Song($song_id);
-		$user = $this->username;
-		$dbh = dbh();
+		//FIXME:: User uid reference
+		$user = $this->uid;
 
 		if (!$song_info->file) { return false; }
 
-		$time = time();
-
-                // Play count for this song
-                $sql = "UPDATE object_count" .
-                        " SET date = '$time', count=count+1" .
-                        " WHERE object_type = 'song'" .
-                        " AND object_id = '$song_id' AND userid = '$user'";
-                $db_result = mysql_query($sql, $dbh);
-
-                $rows = mysql_affected_rows();
-                if (!$rows) {
-                        $sql = "INSERT INTO object_count (object_type,object_id,date,count,userid)" .
-                                " VALUES ('song','$song_id','$time','1','$user')";
-                        $db_result = mysql_query($sql, $dbh);
-                }
-
-                // Play count for this artist
-                $sql = "UPDATE object_count" .
-                        " SET date = '$time', count=count+1" .
-                        " WHERE object_type = 'artist'" .
-                        " AND object_id = '" . $song_info->artist . "' AND userid = '$user'";
-                $db_result = mysql_query($sql, $dbh);
-
-                $rows = mysql_affected_rows();
-                if (!$rows) {
-                        $sql = "INSERT INTO object_count (object_type,object_id,date,count,userid)" .
-                                " VALUES ('artist','".$song_info->artist."','$time','1','$user')";
-                        $db_result = mysql_query($sql, $dbh);
-                }
-
-                // Play count for this album
-                $sql = "UPDATE object_count" .
-                        " SET date = '$time', count=count+1" .
-                        " WHERE object_type = 'album'" .
-                        " AND object_id = '".$song_info->album."' AND userid = '$user'";
-                $db_result = mysql_query($sql, $dbh);
-
-                $rows = mysql_affected_rows();
-                if (!$rows) {
-                        $sql = "INSERT INTO object_count (object_type,object_id,date,count,userid)" .
-                                "VALUES ('album','".$song_info->album."','$time','1','$user')";
-                        $db_result = mysql_query($sql, $dbh);
-                }
-
-		// Play count for this genre
-		$sql = "UPDATE object_count" . 
-			" SET date = '$time', count=count+1" . 
-			" WHERE object_type = 'genre'" . 
-			" AND object_id = '" . $song_info->genre."' AND userid='$user'";
-		$db_results = mysql_query($sql, $dbh);
-
-		$rows = mysql_affected_rows();
-		if (!$rows) { 
-			$sql = "INSERT INTO object_count (`object_type`,`object_id`,`date`,`count`,`userid`)" . 
-				" VALUES ('genre','" . $song_info->genre."','$time','1','$user')";
-			$db_results = mysql_query($sql, $dbh);
-		}
-
+		$stats = new Stats();
+		$stats->insert('song',$song_id,$user);
+		$stats->insert('album',$song_info->album,$user);
+		$stats->insert('artist',$song_info->artist,$user);
+		$stats->insert('genre',$song_info->genre,$user);
 
 	} // update_stats
 
@@ -562,7 +507,7 @@ class User {
 
 		/* Calculate their total Bandwidth Useage */
 		$sql = "SELECT song.size FROM object_count LEFT JOIN song ON song.id=object_count.object_id " . 
-			"WHERE object_count.userid='$this->id' AND object_count.object_type='song'";
+			"WHERE object_count.userid='$this->uid' AND object_count.object_type='song'";
 		$db_results = mysql_query($sql, dbh());
 
 		while ($r = mysql_fetch_assoc($db_results)) { 
