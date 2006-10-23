@@ -34,7 +34,9 @@ $GLOBALS['user'] = new User($_REQUEST['user_id']);
 $action = scrub_in($_REQUEST['action']);
 
 /* Set the correct headers */
-header("Content-type: application/xhtml+xml");
+header("Content-type: text/xml; charset=utf-8");
+header("Content-Disposition: attachment; filename=ajax.xml");
+header("Cache-Control: no-cache");
 
 switch ($action) { 
 	/* Controls Localplay */
@@ -108,6 +110,23 @@ switch ($action) {
 		show_rating($_REQUEST['object_id'],$_REQUEST['rating_type']);
 		$key = "rating_" . $_REQUEST['object_id'] . "_" . $_REQUEST['rating_type'];
 		$results[$key] = ob_get_contents();
+		ob_end_clean();
+		$xml_doc = xml_from_array($results);
+		echo $xml_doc;
+	break;
+	case 'tv_activate':
+		if (!$GLOBALS['user']->has_access(100)) { break; } 
+		$tmp_playlist = new tmpPlaylist();
+		/* Pull in the info we need */
+		$base_id 	= scrub_in($_REQUEST['playlist_id']);
+
+		/* create the playlist */
+		$playlist_id = $tmp_playlist->create('0','vote','song',$base_id);
+
+		$playlist = new tmpPlaylist($playlist_id);
+		ob_start();
+		require_once(conf('prefix') . '/templates/show_tv_adminctl.inc.php');
+		$results['tv_control'] = ob_get_contents(); 
 		ob_end_clean();
 		$xml_doc = xml_from_array($results);
 		echo $xml_doc;

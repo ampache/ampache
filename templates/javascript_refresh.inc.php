@@ -20,7 +20,7 @@ function refresh()
 }
 
 // start with page-load
-window.onload=doLoad();
+window.onload=doLoad;
 // End -->
 </script>
 

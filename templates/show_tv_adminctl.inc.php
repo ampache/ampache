@@ -19,34 +19,16 @@
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
-
-require_once('lib/init.php');
-
-
-$dbh = dbh();
-$web_path = conf('web_path');
-
-/* Make sure they have access to this */
-if (!conf('allow_democratic_playback') || $GLOBALS['user']->prefs['play_type'] != 'democratic') { 
-	access_denied(); 
-	exit;
-}
-
-/* Attempt to build the temp playlist */
-$playlist	= new tmpPlaylist('-1'); 
-$action 	= scrub_in($_REQUEST['action']);
-
-
-switch ($action) { 
-	case 'create_playlist':
-
-	break;
-	default: 
-
-		require_once(conf('prefix') . '/templates/show_tv.inc.php');
-
-	break;
-} // end switch on action
-
-
 ?>
+<h3><?php echo _('Admin Controls'); ?></h3>
+<?php if (!$playlist->vote_active()) { ?>
+<form id="form_playlist">
+<?php echo _('Base Playlist'); ?>:
+<?php show_playlist_dropdown(); ?>
+<input type="button" onclick="ajaxPost('<?php conf('ajax_url'); ?>?action=tv_activate<?php echo conf('ajax_info'); ?>','form_playlist');return true;" value="<?php echo _('Activate'); ?>" />
+</form>
+
+<?php } else { ?>
+
+
+<?php } ?>

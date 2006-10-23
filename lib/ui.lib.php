@@ -76,37 +76,12 @@ function flip_class($array=0) {
  */
 function clear_now_playing() {
 
-	$sql = "DELETE FROM now_playing";
+	$sql = "TRUNCATE TABLE now_playing";
 	$db_results = mysql_query($sql, dbh());
 
 	return true;
 
 } // clear_now_playing
-
-/**
- *  show_menu_items
- * shows menu items
- */
-function show_menu_items ($high) {
-
-	include(conf('prefix') . "/templates/menu.inc");
-
-} // show_menu_items
-
-/**
- * Show Browse Menu
- * Shows the menu used by the browse page
- * @package Web Interface
- * @cataogry Menu
- * @author Karl Vollmer
- */
-function show_browse_menu($highlight) {
-
-	$highlight = ucfirst($highlight);
-
-	include(conf('prefix'). "/templates/show_browse_menu.inc");
-
-} // show_browse_menu
 
 /**
  *  _
@@ -1355,30 +1330,11 @@ function xml_from_array($array,$callback=0) {
 	} // end foreach elements
 
 	if (!$callback) { 
-		$string = "<root>\n" . $string . "</root>\n";
+		$string = "<?xml version=\"1.0\" encoding=\"utf-8\" ?>\n<root>\n" . $string . "</root>\n";
 	}
 
 	return $string;
 
 } // xml_from_array
-
-/**
- * show_ajax_js
- * This displays the javascript array definition needed
- * For ajax to know what it should be replacing
- */
-function show_ajax_js($name,$array) { 
-
-	$elements = count($array);
-
-	echo "<script type=\"text/javascript\" language=\"javascript\">\n";
-	echo "<!--\n";
-	echo "var $name = new Array($elements);\n";
-	foreach ($array as $key=>$value) { 
-		echo $name . "[$key] = \"$value\";\n";
-	}
-	echo "-->\n</script>\n";
-
-} // show_ajax_js
 
 ?>

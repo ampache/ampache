@@ -38,7 +38,7 @@ $GLOBALS['user'] = new User($_REQUEST['user_id']);
 $action = scrub_in($_REQUEST['action']);
 
 /* Set the correct headers */
-header("Content-type: application/xhtml+xml");
+header("Content-type: text/xml; charset=utf-8");
 
 switch ($action) { 
 	/* Returns an array of artist information */

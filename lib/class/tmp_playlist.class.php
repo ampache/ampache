@@ -191,6 +191,20 @@ class tmpPlaylist {
 	} // has_vote
 
 	/**
+	 * vote_active
+	 * This checks to see if this playlist is a voting playlist
+	 * and if it is active 
+	 */
+	function vote_active() { 
+
+		/* Going to do a little more here later */
+		if ($this->type == 'vote') { return true; } 
+
+		return false;
+
+	} // vote_active
+
+	/**
 	 * delete_track
 	 * This deletes a track and any assoicated votes, we only check for
 	 * votes if it's a -1 session

@@ -264,6 +264,7 @@ function create_preference_input($name,$value) {
 		case 'play_type':
 			if ($value == 'downsample') { $is_down = 'selected="selected"'; }
 			elseif ($value == 'localplay') { $is_local = 'selected="selected"'; } 
+			elseif ($value == 'democratic') { $is_vote = 'selected="selected"'; } 
 			else { $is_stream = "selected=\"selected\""; } 
 			echo "<select name=\"$name\">\n";
 			echo "\t<option value=\"\">" . _('None') . "</option>\n";
@@ -274,7 +275,7 @@ function create_preference_input($name,$value) {
 				echo "\t<option value=\"downsample\" $is_down>" . _('Downsample') . "</option>\n";
 			}
 			if (conf('allow_democratic_playback')) { 
-				echo "\t<option value=\"democratic\" $is_demo>" . _('Democratic') . "</option>\n";
+				echo "\t<option value=\"democratic\" $is_vote>" . _('Democratic') . "</option>\n";
 			}
 			if (conf('allow_localplay_playback')) { 
 				echo "\t<option value=\"localplay\" $is_local>" . _('Localplay') . "</option>\n";	
