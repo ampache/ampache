@@ -3,47 +3,49 @@
 // Origional Author: Kevin Riker
 // Added Multi-Value XML based GET/POST replacement * Karl Vollmer
 // Added Auto-Detects source/target information based on XML Doc Elements and
-// 	 Form Elements if it's a post call * Karl Vollmer
+//      Form Elements if it's a post call * Karl Vollmer
 // Licensed under the GNU/GPL
-	
+
 	var http_request = false;
 	var IE = true;
 	
 	// uid is an array of uids that need to be replaced		
 	function ajaxPut(url) {
+
 		if (window.ActiveXObject) { // IE
-            try {
-                http_request = new ActiveXObject("Msxml2.XMLHTTP");
-            } 
+			try {
+				http_request = new ActiveXObject("Msxml2.XMLHTTP");
+			} 
 			catch (e) {
-                try {
-                    http_request = new ActiveXObject("Microsoft.XMLHTTP");
-                } 
+	                	try {
+        			        http_request = new ActiveXObject("Microsoft.XMLHTTP");
+	                	} 
 				catch (e) {}
-            }
-        }
+			}
+	        }
 		else { // Mozilla
 			IE = false;
 			http_request = new XMLHttpRequest();
 		}
-        if (!http_request) {
-            return false;
-        }
-        http_request.onreadystatechange = function() { getContents(http_request); };
-        http_request.open('GET', url, true);
-        http_request.send(null);
-    }
+	        if (!http_request) {
+	            return false;
+	        }
+	        http_request.onreadystatechange = function() { getContents(http_request); };
+	        http_request.open('GET', url, true);
+        	http_request.send(null);
+	}
 
-    function getContents(http_request,uid) {
-        if (http_request.readyState == 4) {
-	    	data = http_request.responseXML;
-		for(i=0;i<data.childNodes[0].childNodes.length;i++) {
-			if (data.childNodes[0].childNodes[i].nodeType == '1') { 
-				var txt_node = data.childNodes[0].childNodes[i];
-				var new_txt = txt_node.firstChild.nodeValue;
-				document.getElementById(txt_node.localName).innerHTML = new_txt;
+    function getContents(http_request) {
+       if (http_request.readyState == 4) {
+	       if (http_request.status == 200) {
+			var data = http_request.responseXML;
+			var newContent = http_request.responseXML.getElementsByTagName('content'); 
+	                
+			for(var i=0; i < newContent.length; i++) {  
+				document.getElementById(newContent[i].getAttribute('div')).innerHTML=newContent[i].firstChild.nodeValue;
 			}
-		}	
+			
+		} 
         }
     }
 

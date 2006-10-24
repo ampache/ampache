@@ -1321,11 +1321,11 @@ function xml_from_array($array,$callback=0) {
 		if (is_numeric($key)) { $key = 'item'; } 
 		if (is_array($value)) { 
 			$value = xml_from_array($value,1);
-			$string .= "\t<$key>$value</$key>\n";
+			$string .= "\t<content div=\"$key\">$value</content>\n";
 		}
 		else { 
 			/* We need to escape the value */
-			$string .= "\t<$key><![CDATA[$value]]></$key>\n";
+			$string .= "\t<content div=\"$key\"><![CDATA[$value]]></content>\n";
 		}
 	} // end foreach elements
 
