@@ -117,7 +117,10 @@ $web_path = conf('web_path');
                     }?>>
 		<a href="<?php echo $web_path; ?>/playlist.php"><?php echo _("Playlists"); ?></a>
 	</li>
-	<li>
+	<li<?php
+                if ($location['page'] == "stats.php"){
+                    echo " id=\"activetopmenu\" ";
+                    }?>>
 		<a href="<?php echo $web_path; ?>/stats.php"><?php echo _('Statistics'); ?></a>
 	</li>
 	<li<?php
