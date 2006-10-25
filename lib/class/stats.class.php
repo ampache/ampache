@@ -77,7 +77,7 @@ class Stats {
 		/* Select Top objects counting by # of rows */
 		$sql = "SELECT object_id,COUNT(id) AS `count` FROM object_count" . 
 			" WHERE object_type='$type' AND date >= '$date'" .
-			" GROUP BY object_id ORDER BY COUNT(object_id) DESC LIMIT $count";
+			" GROUP BY object_id ORDER BY `count` DESC LIMIT $count";
 		$db_results = mysql_query($sql, dbh());
 
 		$results = array();
@@ -112,7 +112,7 @@ class Stats {
 		/* Select Objects based on user */
 		$sql = "SELECT object_id,COUNT(id) AS `count` FROM object_count" . 
 			" WHERE object_type='$type' AND date >= '$date' AND user = '$user'" . 
-			" GROUP BY object_id ORDER BY COUNT(object_id) DESC LIMIT $count";
+			" GROUP BY object_id ORDER BY `count` DESC LIMIT $count";
 		$db_results = mysql_query($sql, dbh());
 
 		$results = array();
