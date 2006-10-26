@@ -29,23 +29,23 @@ $ajax_url	= conf('ajax_url');
 ?>
 <div class="localplaycontrol" style="display:table-cell;cursor:pointer;padding:2px;">
 <?php if ($localplay->has_function('prev')) { ?>
-<span class="prev_button" onclick="ajaxPut('<?php echo $ajax_url; ?>?action=localplay&cmd=prev<?php echo $required_info; ?>');return true;">
+<span class="prev_button" onclick="ajaxPut('<?php echo $ajax_url; ?>?action=localplay&amp;cmd=prev<?php echo $required_info; ?>');return true;">
 	<img src="<?php echo $web_path; ?>/images/localplay/prev.gif" alt="prev" />
 </span>
 <?php } ?>
-<span class="stop_button" onclick="ajaxPut('<?php echo $ajax_url; ?>?action=localplay&cmd=stop<?php echo $required_info; ?>');return true;">
+<span class="stop_button" onclick="ajaxPut('<?php echo $ajax_url; ?>?action=localplay&amp;cmd=stop<?php echo $required_info; ?>');return true;">
 	<img src="<?php echo $web_path; ?>/images/localplay/stop.gif" alt="stop" />
 </span>
 <?php if ($localplay->has_function('pause')) { ?>
-<span class="pause_button" onclick="ajaxPut('<?php echo $ajax_url; ?>?action=localplay&cmd=pause<?php echo $required_info; ?>');return true;">
+<span class="pause_button" onclick="ajaxPut('<?php echo $ajax_url; ?>?action=localplay&amp;cmd=pause<?php echo $required_info; ?>');return true;">
 	<img src="<?php echo $web_path; ?>/images/localplay/pause.gif" alt="pause" />
 </span>
 <?php } ?>
-<span class="play_button" onclick="ajaxPut('<?php echo $ajax_url; ?>?action=localplay&cmd=play<?php echo $required_info; ?>');return true;">
+<span class="play_button" onclick="ajaxPut('<?php echo $ajax_url; ?>?action=localplay&amp;cmd=play<?php echo $required_info; ?>');return true;">
 	<img src="<?php echo $web_path; ?>/images/localplay/play.gif" alt="play" />
 </span>
 <?php if ($localplay->has_function('next')) { ?>
-<span class="next_button" onclick="ajaxPut('<?php echo $ajax_url; ?>?action=localplay&cmd=next<?php echo $required_info; ?>');return true;">
+<span class="next_button" onclick="ajaxPut('<?php echo $ajax_url; ?>?action=localplay&amp;cmd=next<?php echo $required_info; ?>');return true;">
 	<img src="<?php echo $web_path; ?>/images/localplay/next.gif" alt="next" />
 </span>
 <?php } ?>

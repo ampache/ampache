@@ -264,7 +264,7 @@ else {
 
 /* Add in some variables for ajax done here because we need the user */
 $ajax_info['ajax_url']		= $results['web_path'] . '/server/ajax.server.php';
-$ajax_info['ajax_info']		= '&user_id=' . $user->id . '&sessid=' . session_id();
+$ajax_info['ajax_info']		= '&amp;user_id=' . $user->id . '&amp;sessid=' . session_id();
 conf($ajax_info);
 unset($ajax_info);
 
