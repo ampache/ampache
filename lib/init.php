@@ -230,6 +230,23 @@ if (isset($_POST['no_session']) || isset($_GET['no_session'])) {
 	debug_event('no_session','No Session passed as get/post','1');
 }
 
+/* We have to check for HTTP Auth */
+if (in_array("http",$results['auth_methods'])) { 
+
+	$username = scrub_in($_SERVER['PHP_AUTH_USER']);
+	$results = vauth_http_auth($username);
+
+	if ($results['success']) { 
+		vauth_session_cookie();
+		vauth_session_create($results);
+		$session_name = vauth_conf('session_name');
+		$_SESSION['userdata'] = $results;
+		$_COOKIE[$session_name] = session_id();
+	} 
+
+} // end if http auth
+
+
 // If we don't want a session
 if (!isset($no_session) AND conf('use_auth')) { 
 	if (!vauth_check_session()) { logout(); exit(); }

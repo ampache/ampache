@@ -55,6 +55,9 @@ class User {
 
 		$this->username 	= sql_escape($username);
 		$info 			= $this->_get_info();
+
+		if (!count($info)) { return false; } 
+
 		$this->id		= $this->username;
 		$this->uid		= $info->id;
 		$this->username 	= $info->username;

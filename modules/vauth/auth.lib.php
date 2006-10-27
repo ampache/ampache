@@ -172,4 +172,40 @@ function vauth_ldap_auth($username, $password) {
 
 } // vauth_ldap_auth
 
+
+/**
+ * vauth_http_auth
+ * This auth method relies on HTTP auth from Apache
+ * This is not a very secure method of authentication
+ * defaulted to off. Because if they can load the page they
+ * are considered to be authenticated we need to look and
+ * see if their user exists and if not, by golly we just 
+ * go ahead and created it. NOT SECURE!!!!!
+ */
+function vauth_http_auth($username) { 
+
+	/* Check if the user exists */
+	if ($user = new User($username)) { 
+		$results['success'] 	= true;
+		$results['type'] 	= 'mysql';
+		$results['username'] 	= $username;
+		$results['name']	= $user->fullname;
+		$results['email']	= $user->email;
+		return $results;
+	}
+
+
+	/* If not then we auto-create the entry as a user.. :S */
+	$user->create($username,$username,'',md5(rand()),'25');
+	$user = new User($username);	
+
+	$results['success'] 	= true;
+	$results['type'] 	= 'mysql';
+	$results['username'] 	= $username;
+	$results['name']	= $user->fullname;
+	$results['email']	= $user->email;
+	return $results;	
+
+} // vauth_http_auth
+
 ?>

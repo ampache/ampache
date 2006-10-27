@@ -4,6 +4,8 @@
 
 --------------------------------------------------------------------------
   v.3.3.3-Alpha1
+	- Added HTTP auth method, auto-creates a 'user' if the auth user
+		doesn't exist in the database. 
 	- Fixed Mail statistics. It broke down after earlier updates.
 	- Reworked RSS features (Thx pb1dft)
 		Newest and latest songs albums and artist are available 

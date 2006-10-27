@@ -206,10 +206,10 @@ function vauth_session_create($data) {
 	$username 	= sql_escape($data['username']);
 	$type		= sql_escape($data['type']);
 	$value		= sql_escape($data['value']);
-	$expire		= sql_escape(vauth_conf('session_length'));
+	$expire		= sql_escape(time() + vauth_conf('session_length'));
 
 	/* We can't have null things here people */
-	if (strlen($value) == 2) { $value = ' '; } 
+	if (!strlen($value)) { $value = ' '; } 
 
 	/* Insert the row */
 	$sql = "INSERT INTO session (`id`,`username`,`type`,`value`,`expire`) " . 
@@ -234,7 +234,6 @@ function vauth_check_session() {
 	$session_name = vauth_conf('session_name');
 	
 	$key = scrub_in($_COOKIE[$session_name]);
-
 	$results = vauth_get_session($key);
 
 	if (!is_array($results)) { 
