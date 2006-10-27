@@ -4,6 +4,10 @@
 
 --------------------------------------------------------------------------
   v.3.3.3-Alpha1
+	- Fixed Mail statistics. It broke down after earlier updates.
+	- Reworked RSS features (Thx pb1dft)
+		Newest and latest songs albums and artist are available 
+		through RSS.
 	- Reworked Stats so that they are time specific, allows for 
 		Top 10 of this week, threshold is per user configured
 	- Added Admin Allow XXXX preferences for downsampling, streaming

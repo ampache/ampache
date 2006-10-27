@@ -28,6 +28,7 @@ if (!conf('use_rss') || conf('demo_mode')) {
         access_denied();
 }
 
-show_now_playingRSS($_REQUEST['username']);
+#show_now_playingRSS($_REQUEST['username']);
+show_RSS($_REQUEST['type']);
 
 ?>

@@ -114,7 +114,7 @@ class Stats {
 			" WHERE object_type='$type' AND date >= '$date' AND user = '$user'" . 
 			" GROUP BY object_id ORDER BY `count` DESC LIMIT $count";
 		$db_results = mysql_query($sql, dbh());
-
+		
 		$results = array();
 
 		while ($r = mysql_fetch_assoc($db_results)) { 

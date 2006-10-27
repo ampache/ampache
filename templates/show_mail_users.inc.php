@@ -49,7 +49,7 @@
 		  </tr>
 
 		  <tr>
-		    <td><?php echo _('Newest Artist Additions'); ?>:</td>
+		    <td><?php echo _('Latest Artist Additions'); ?>:</td>
 		    <td>
 		        <input type="checkbox" name="new_artists" value="yes" />
 		    </td>
@@ -60,7 +60,7 @@
 		  </tr>
 		
 		  <tr>
-		    <td><?php echo _('Newest Album Additions'); ?>:</td>
+		    <td><?php echo _('Latest Album Additions'); ?>:</td>
 		    <td>
 		        <input type="checkbox" name="new_albums" value="yes" />
 		    </td>

@@ -71,15 +71,16 @@ switch ($action) {
 		$from    = $user->fullname."<".$user->email.">";
         
         if (isset ($cat_stats)){
-
         /* Before we display anything make sure that they have a catalog */
         $query = "SELECT * FROM catalog";
+	$dbh = dbh();
         $db_results = mysql_query($query, dbh());
         if (!mysql_num_rows($db_results)) {
                 $items[] = "<span align=\"center\" class=\"error\">" . _("No Catalogs Found!") . "</span><br />";
                 $items[] = "<a href=\"" . conf('web_path') . "/admin/catalog.php?action=show_add_catalog\">" ._("Add a Catalog") . "</a>";
                 show_info_box(_('Catalog Statistics'),'catalog',$items);
                 return false;
+		break;
         }
 
         $query = "SELECT count(*) AS songs, SUM(size) AS size, SUM(time) as time FROM song";
@@ -126,7 +127,6 @@ switch ($action) {
                 $total_size = sprintf("%.2f", $size);
                 $size_unit = "MB";
         }
-
 		$stats 	= _('Total Users')."		".$users[0]."\n";
 		$stats .= _('Connected Users')."	".$connected_users[0]."\n";
 		$stats .= _('Albums')."		".$albums[0]."\n";
@@ -140,59 +140,42 @@ switch ($action) {
 		}
 	
 	if (isset ($pop_albums)){
-        /* Select out the most popular based on object_count */
-        $sql = "SELECT object_id, SUM(count) as count FROM object_count" .
-                " WHERE object_type = 'album'" .
-                " GROUP BY object_id" .
-                " ORDER BY count DESC LIMIT " . conf('popular_threshold');
-        $db_result = mysql_query($sql,dbh());
-        
-	while ( $r = @mysql_fetch_object($db_result) ) {
-			$album   = new Album($r->object_id);
-                        $palbums .= $album->name." (". $r->count.")\n";
-	}
-		
 		$message .= "\n\nMost Popular Albums\n\n";
+		$stats = new Stats();
+		$stats = $stats->get_top('10','album');
+
+		foreach( $stats as $r){
+		$album   = new Album($r[object_id]);
+                $palbums .= $album->name." (". $r[count].")\n";
+		}
                 $message .= "$palbums";
-			
 	}
 
        if (isset ($pop_artists)){
-        /* Select out the most popular based on object_count */
-        $sql = "SELECT object_id, SUM(count) as count FROM object_count" .
-                " WHERE object_type = 'artist'" .
-                " GROUP BY object_id" .
-                " ORDER BY count DESC LIMIT " . conf('popular_threshold');
-        $db_result = mysql_query($sql,dbh());
-
-        while ( $r = @mysql_fetch_object($db_result) ) {
-                        $artist   = new Artist($r->object_id);
-                        $partists .= $artist->name." (". $r->count.")\n";
-        }
-
                 $message .= "\n\nMost Popular Artists\n\n";
-                $message .= "$partists";
+		$stats = new Stats();
+		$stats = $stats->get_top('10','artist');
 
+		foreach( $stats as $r){
+                        $artist   = new Artist($r[object_id]);
+                        $partists .= $artist->name." (". $r[count].")\n";
+	        }
+                $message .= "$partists";
         }
 
        if (isset ($pop_songs)){
-        /* Select out the most popular based on object_count */
-        $sql = "SELECT object_id, SUM(count) as count FROM object_count" .
-                " WHERE object_type = 'song'" .
-                " GROUP BY object_id" .
-                " ORDER BY count DESC LIMIT " . conf('popular_threshold');
-        $db_result = mysql_query($sql,dbh());
-
-        while ( $r = @mysql_fetch_object($db_result) ) {
-                        $song = new Song($r->object_id);
-                        $artist = $song->get_artist_name();
-                        $text = "$artist - $song->title";
-                        $psongs .= $text." (". $r->count.")\n";
-        }
 
                 $message .= "\n\nMost Popular Songs\n\n";
-                $message .= "$psongs";
+		$stats = new Stats();
+		$stats = $stats->get_top('10','song');
 
+		foreach( $stats as $r){
+		$song = new Song($r[object_id]);
+		$artist = $song->get_artist_name();
+                $text = "$artist - $song->title";
+                $psongs .= $text." (". $r[count].")\n";
+		}    
+                $message .= "$psongs";
         }
 
         if (isset ($new_artists)){
@@ -200,12 +183,12 @@ switch ($action) {
         $sql = "SELECT DISTINCT artist FROM song ORDER BY addition_time " .
                 "DESC LIMIT " . conf('popular_threshold');
         $db_result = mysql_query($sql, dbh());
-        
-	while ( $item = mysql_fetch_row($db_result) ) {
-                        $artist = new Artist($item[0]);
-			$nartists .= $artist->name."\n";
+
+        while ( $item = mysql_fetch_row($db_result) ) {
+                $artist = new Artist($item[0]);
+		$nartists .= $artist->name."\n";
                 }
-                $message .= "\n\nNewest Artist Additions\n\n";
+                $message .= "\n\nLatest Artist Additions\n\n";
                 $message .= "$nartists";
         }
 
@@ -215,12 +198,14 @@ switch ($action) {
                 "DESC LIMIT " . conf('popular_threshold');
         $db_result = mysql_query($sql, dbh());
 
+	
         while ( $item = mysql_fetch_row($db_result) ) {
                         $album = new Album($item[0]);
 			$nalbums .= $album->name."\n";
 		}
-                $message .= "\n\nNewest Album Additions\n\n";
+                $message .= "\n\nLatest Album Additions\n\n";
                 $message .= "$nalbums";
+
 	}
 
 		// woohoo!!
