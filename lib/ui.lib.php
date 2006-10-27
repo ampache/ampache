@@ -150,6 +150,38 @@ function show_users () {
 
 } // show_users()
 
+/**
+ *  show_ip_history
+ * shows ip_history of specific user(admin function)
+ */
+
+function show_ip_history (){
+
+	$dbh = dbh();
+        $date   = time() - (86400*conf('user_ip_cardinality'));
+		$sql = "SELECT ip,date FROM ip_history where user = '$_REQUEST[user]' and date >= '$date' ORDER BY date DESC";
+		$db_results = mysql_query($sql, $dbh);
+	
+	 show_box_top();
+echo "		<table class=\"tabledata\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\">\n".
+     "		 <tr class=\"table-header\">\n".
+     "			  <td colspan=2>$_REQUEST[user]: IP History</td>\n".
+     "	         </tr>\n".
+     "		 <tr class=\"table-header\">\n".
+     "  		  <td align=\"center\">\n".
+     "			    	<b>Date</b>\n".
+     "			  </td>\n".
+     "  		  <td align=\"center\">\n".
+     "			   	<b>Ip Address</b>\n".
+     "			  </td>\n".
+     "		 </tr>\n";
+
+while ($r = mysql_fetch_array($db_results)){
+	echo "<tr class=". flip_class() .">\n <td>".date("m\/d\/Y-H:i",$r[date])."</td>\n <td>".int2ip($r[ip])."</td>\n</tr>\n";
+	}
+echo "</table>\n";
+show_box_bottom();
+} // show_ip_history
 
 /**
  *  return_referer

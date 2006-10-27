@@ -155,6 +155,9 @@ switch ($action) {
 		show_confirmation(_("Delete Error"), _("Unable to delete last Admin User"),"admin/users.php");
 	}
 	break;
+    case 'show_ip_history':
+	show_ip_history();
+	break;
     case 'show_add_user':
         if (conf('demo_mode')) { break; }
 	$type = 'new_user';

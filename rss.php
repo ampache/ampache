@@ -29,6 +29,6 @@ if (!conf('use_rss') || conf('demo_mode')) {
 }
 
 #show_now_playingRSS($_REQUEST['username']);
-show_RSS($_REQUEST['type']);
+show_RSS($_REQUEST['type'],$_REQUEST['username']);
 
 ?>

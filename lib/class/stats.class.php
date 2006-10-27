@@ -91,6 +91,34 @@ class Stats {
 	} // get_top
 
 	/**
+ 	 * get_ip_history
+	 * This returns the ip_history from the
+	 * last conf('user_ip_cardinality') days
+	 */
+	function get_ip_history($count,$type,$user) { 
+
+		$count	= intval($count);
+		$type	= $this->validate_type($type);
+		$date 	= time() - (86400*conf('user_ip_cardinality'));
+
+		/* Select ip history */
+		$sql = "SELECT ip,date FROM ip_history" . 
+			" WHERE user='$user->username' AND date >= '$date'" .
+			" ORDER BY `date` DESC LIMIT $count";
+		$db_results = mysql_query($sql, dbh());
+
+		$results = array();
+
+		while ($r = mysql_fetch_assoc($db_results)) { 
+			$results[] = $r;
+		}
+
+		return $results;
+
+	} // get_ip_history
+
+
+	/**
  	 * get_user
 	 * This gets all stats for atype based on user with thresholds and all
 	 * If full is passed, doesn't limit based on date 

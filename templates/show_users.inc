@@ -57,6 +57,9 @@ $admin_menu = "admin/";
         <td align="center">
 		<b><?php echo _("Activity"); ?></b>
 	</td>
+        <td align="center">
+		<b><?php echo _("Last Ip"); ?></b>
+	</td>
 
 	<td colspan="5">&nbsp;</td>
 	<!--
@@ -105,6 +108,11 @@ while ($results = mysql_fetch_object($db_result)) {
 
         <td>
 		<?php echo $user->f_useage; ?>
+	</td>
+        <td>
+		<a href="<?php echo $web_path; ?>/admin/users.php?action=show_ip_history&amp;user=<?php echo $user->username; ?>">
+			<?php echo $user->ip_history; ?>
+		</a>
 	</td>
 
 

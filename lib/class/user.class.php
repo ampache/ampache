@@ -509,8 +509,8 @@ class User {
 		else { $this->f_create_date = date("m\/d\/Y - H:i",$user->create_date); }
 
 		/* Calculate their total Bandwidth Useage */
-		$sql = "SELECT song.size FROM object_count LEFT JOIN song ON song.id=object_count.object_id " . 
-			"WHERE object_count.userid='$this->uid' AND object_count.object_type='song'";
+		$sql = "SELECT song.size FROM song LEFT JOIN object_count ON song.id=object_count.object_id " . 
+			"WHERE object_count.user='$this->uid' AND object_count.object_type='song'";
 		$db_results = mysql_query($sql, dbh());
 
 		while ($r = mysql_fetch_assoc($db_results)) { 
@@ -533,6 +533,16 @@ class User {
 		} // end switch
 
 		$this->f_useage = round($total,2) . $name;
+		
+		/* Get Users Last ip */
+		$sql = "SELECT ip FROM ip_history WHERE user = '$this->username' ORDER BY ip DESC LIMIT 1";
+		$db_results = mysql_query($sql, dbh());
+	
+		while ($r = mysql_fetch_assoc($db_results)) { 
+		$this->ip_history = int2ip($r[ip]);
+		}
+
+		
 
 	} // format_user
 
