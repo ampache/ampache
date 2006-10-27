@@ -4,6 +4,7 @@
 
 --------------------------------------------------------------------------
   v.3.3.3-Alpha1
+        - Added IP History to admin->users (Thx pb1dft and vollmer for creating the tables)
 	- Added HTTP auth method, auto-creates a 'user' if the auth user
 		doesn't exist in the database. 
 	- Fixed Mail statistics. It broke down after earlier updates.
