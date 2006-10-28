@@ -158,8 +158,9 @@ function show_users () {
 function show_ip_history (){
 
 	$dbh = dbh();
-        $date   = time() - (86400*conf('user_ip_cardinality'));
-		$sql = "SELECT ip,date FROM ip_history where user = '$_REQUEST[user]' and date >= '$date' ORDER BY date DESC";
+	if (conf('user_ip_cardinality')) { $cardinality = conf('user_ip_cardinality'); } else { $cardinality = '42'; } 
+		$date   = time() - (86400*$cardinality);
+		$sql = "SELECT ip,date FROM ip_history where user = '$_REQUEST[user]' and date >= '$cardinality' ORDER BY date DESC";
 		$db_results = mysql_query($sql, $dbh);
 	
 	 show_box_top();
