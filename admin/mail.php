@@ -45,7 +45,7 @@ show_template('header');
 switch ($action) { 
 	case 'send_mail':
 		if (conf('demo_mode')) { break; } 
-		$to = "admins";
+		//$to = "admins"; <<<<<<<<<<<<<<<<<<<< PB1DT Don't know how this came in here!. 
 		// do the mail mojo here
 		if ( $to == 'all' ) {
 			$sql = "SELECT * FROM user WHERE email IS NOT NULL";
