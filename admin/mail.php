@@ -51,7 +51,7 @@ switch ($action) {
 			$sql = "SELECT * FROM user WHERE email IS NOT NULL";
 		}
 		elseif ( $to == 'users' ) {
-			$sql = "SELECT * FROM user WHERE access='users' OR access='25' AND email IS NOT NULL";
+			$sql = "SELECT * FROM user WHERE access='user' OR access='25' AND email IS NOT NULL";
 		}
 		elseif ( $to == 'admins' ) {
 			$sql = "SELECT * FROM user WHERE access='admin' OR access='100' AND email IS NOT NULL";
