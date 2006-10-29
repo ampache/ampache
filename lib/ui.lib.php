@@ -151,40 +151,6 @@ function show_users () {
 } // show_users()
 
 /**
- *  show_ip_history
- * shows ip_history of specific user(admin function)
- */
-
-function show_ip_history (){
-
-	$dbh = dbh();
-	if (conf('user_ip_cardinality')) { $cardinality = conf('user_ip_cardinality'); } else { $cardinality = '42'; } 
-		$date   = time() - (86400*$cardinality);
-		$sql = "SELECT ip,date FROM ip_history where user = '$_REQUEST[user]' and date >= '$cardinality' ORDER BY date DESC";
-		$db_results = mysql_query($sql, $dbh);
-	
-	 show_box_top();
-echo "		<table class=\"tabledata\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\">\n".
-     "		 <tr class=\"table-header\">\n".
-     "			  <td colspan=2>$_REQUEST[user]: IP History</td>\n".
-     "	         </tr>\n".
-     "		 <tr class=\"table-header\">\n".
-     "  		  <td align=\"center\">\n".
-     "			    	<b>Date</b>\n".
-     "			  </td>\n".
-     "  		  <td align=\"center\">\n".
-     "			   	<b>Ip Address</b>\n".
-     "			  </td>\n".
-     "		 </tr>\n";
-
-while ($r = mysql_fetch_array($db_results)){
-	echo "<tr class=". flip_class() .">\n <td>".date("m\/d\/Y-H:i",$r[date])."</td>\n <td>".int2ip($r[ip])."</td>\n</tr>\n";
-	}
-echo "</table>\n";
-show_box_bottom();
-} // show_ip_history
-
-/**
  *  return_referer
  * returns the script part of the referer address passed by the web browser
  * this is not %100 accurate. Also because this is not passed by us we need

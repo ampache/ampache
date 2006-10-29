@@ -38,7 +38,9 @@ show_template('header');
 switch($action) {
     case 'show':
     case 'Show':
+	show_box_top();
 	show_alphabet_list('artists','artists.php');
+	show_box_bottom();
 	$artist = new Artist($_REQUEST['artist']);
 	$artist->show_albums();
 	break;

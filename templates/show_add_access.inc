@@ -85,7 +85,7 @@
 	<td colspan="2">
 		<br />
 		<input type="hidden" name="action" value="add_host" />
-		<input type="submit" value="<?php echo _('Create ACL'); ?>" />
+		<input class="button" type="submit" value="<?php echo _('Create ACL'); ?>" />
 	</td>
 </tr>
 </table>

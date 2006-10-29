@@ -24,9 +24,6 @@
 $artist_id = $artist->id;
 $web_path = conf('web_path');
 ?>
-<?php show_alphabet_form('',_('Artists'),'artists.php?action=match'); ?>
-<?php show_alphabet_form('',_('Albums'),'albums.php?aciont=mathc'); ?>
-<br />
 <?php require (conf('prefix') . '/templates/show_artist_box.inc.php'); ?>
 <!-- *** Multi-Album Art Display Thx MrBlahh Updated by clader *** -->
 <?php show_box_top(); ?>

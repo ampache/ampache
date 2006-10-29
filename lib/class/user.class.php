@@ -450,6 +450,12 @@ class User {
 		$sql = "INSERT INTO ip_history (`ip`,`user`,`date`) VALUES ('$ip','$user','$date')";
 		$db_results = mysql_query($sql, dbh());
 
+		/* Clean up old records */
+		$date = time() - (86400*conf('user_ip_cardinality'));
+
+		$sql = "DELETE FROM ip_history WHERE `date` < $date";
+		$db_results = mysql_query($sql,dbh());
+
 		return true;
 
 	} // insert_ip_history
@@ -535,14 +541,8 @@ class User {
 		$this->f_useage = round($total,2) . $name;
 		
 		/* Get Users Last ip */
-		$sql = "SELECT ip FROM ip_history WHERE user = '$this->username' ORDER BY ip DESC LIMIT 1";
-		$db_results = mysql_query($sql, dbh());
-	
-		while ($r = mysql_fetch_assoc($db_results)) { 
-		$this->ip_history = int2ip($r[ip]);
-		}
-
-		
+		$data = $this->get_ip_history(1);
+		$this->ip_history = int2ip($data['0']['ip']);	
 
 	} // format_user
 
@@ -823,6 +823,38 @@ class User {
 		return $results;
 
 	} // get_recent
+
+        /**
+         * get_ip_history 
+         * This returns the ip_history from the
+         * last conf('user_ip_cardinality') days
+         */             
+        function get_ip_history($count='',$distinct='') { 
+
+		$username 	= sql_escape($this->username);
+
+		if ($count) { 
+			$limit_sql = "LIMIT " . intval($count);
+		}
+		if ($distinct) { 
+			$group_sql = "GROUP BY ip";
+		}
+                        
+                /* Select ip history */
+                $sql = "SELECT ip,date FROM ip_history" .
+                        " WHERE user='$username'" .
+                        " $group_sql ORDER BY `date` DESC $limit_sql";
+                $db_results = mysql_query($sql, dbh());
+
+                $results = array();
+         
+                while ($r = mysql_fetch_assoc($db_results)) {
+                        $results[] = $r;
+                }
+        
+                return $results;
+                
+        } // get_ip_history
 
 	/*!
 		@function activate_user

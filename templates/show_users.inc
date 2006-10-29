@@ -46,41 +46,24 @@ $admin_menu = "admin/";
 	</td>
         <td align="center">
 		<a href="<?php echo $web_path; ?>/<?php echo $_SESSION['view_script']; ?>?action=<?php echo $_REQUEST['action']; ?>&amp;keep_view=true&amp;sort_type=last_seen&amp;sort_order=0">
-		<b><?php echo _("Last Seen"); ?></b>
+		<b><?php echo _('Last Seen'); ?></b>
 		</a>
 	</td>
         <td align="center">
 		<a href="<?php echo $web_path; ?>/<?php echo $_SESSION['view_script']; ?>?action=<?php echo $_REQUEST['action']; ?>&amp;keep_view=true&amp;sort_type=create_date&amp;sort_order=0">
-		<b><?php echo _("Registration Date"); ?></b>
+		<b><?php echo _('Registration Date'); ?></b>
 		</a>
 	</td>
         <td align="center">
-		<b><?php echo _("Activity"); ?></b>
+		<b><?php echo _('Activity'); ?></b>
 	</td>
         <td align="center">
-		<b><?php echo _("Last Ip"); ?></b>
+		<b><?php echo _('Last Ip'); ?></b>
 	</td>
 
 	<td colspan="5">&nbsp;</td>
-	<!--
         <td align="center">
-		<b><?php echo _("Edit"); ?></b>
-	</td>
-        <td align="center">
-		<b><?php echo _("Prefs"); ?></b>
-	</td>
-	<td align="center">
-		<b><?php echo _("Stats"); ?></b>
-	</td>
-        <td align="center">
-		<b><?php echo _("Access"); ?></b>
-	</td>
-	<td align="center">
-		<b><?php echo _("Delete"); ?></b>
-	</td>
-	-->
-        <td align="center">
-		<b><?php echo _("On-line"); ?></b>
+		<b><?php echo _('On-line'); ?></b>
 	</td>
 </tr>
 <?php
@@ -110,7 +93,7 @@ while ($results = mysql_fetch_object($db_result)) {
 		<?php echo $user->f_useage; ?>
 	</td>
         <td>
-		<a href="<?php echo $web_path; ?>/admin/users.php?action=show_ip_history&amp;user=<?php echo $user->username; ?>">
+		<a href="<?php echo $web_path; ?>/admin/users.php?action=show_ip_history&amp;user_id=<?php echo $user->id; ?>">
 			<?php echo $user->ip_history; ?>
 		</a>
 	</td>

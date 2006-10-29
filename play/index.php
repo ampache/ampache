@@ -195,6 +195,9 @@ header("Accept-Ranges: bytes" );
 // Prevent the script from timing out
 set_time_limit(0);			
 
+/* We're about to start record this persons IP */
+$user->insert_ip_history();
+
 /* If access control is on and they aren't local, downsample! */
 if (conf('access_control') AND conf('downsample_remote')) { 
 	if (!$access->check('network',$_SERVER['REMOTE_ADDR'],$GLOBALS['user']->username,'25')) { 

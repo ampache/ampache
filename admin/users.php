@@ -20,16 +20,11 @@
 
 */
 
-/*!
-	@header Users Admin Page
-	Handles User management functions
-
-*/
-
 require_once ('../lib/init.php');
 
 if (!$GLOBALS['user']->has_access(100)) { 
 	access_denied();
+	exit();
 }
 
 
@@ -101,7 +96,7 @@ switch ($action) {
 		} 
 		show_confirmation("User Updated", $thisuser->username . "'s information has been updated","admin/users.php");
 	break;
-    case 'add_user':
+	case 'add_user':
         	if (conf('demo_mode')) { break; }
 		$username = scrub_in($_REQUEST['new_username']);
 		$fullname = scrub_in($_REQUEST['new_fullname']);
@@ -139,31 +134,35 @@ switch ($action) {
 		}	
 		show_confirmation("New User Added",$username . " has been created with an access level of " . $access,"admin/users.php");	
 	break;
-    case 'delete':
-        if (conf('demo_mode')) { break; }
-	show_confirmation(_('Deletion Request'),
-		_("Are you sure you want to permanently delete") . " $temp_user->fullname ($temp_user->username) ?",
-		"admin/users.php?action=confirm_delete&amp;user=$temp_user->id");
+	case 'delete':
+        	if (conf('demo_mode')) { break; }
+		show_confirmation(_('Deletion Request'),
+			_("Are you sure you want to permanently delete") . " $temp_user->fullname ($temp_user->username) ?",
+			"admin/users.php?action=confirm_delete&amp;user=$temp_user->id");
 	break;
-    case 'confirm_delete':
-        if (conf('demo_mode')) { break; }
-    	if ($_REQUEST['confirm'] == _("No")) { show_manage_users(); break; }
-	if ($temp_user->delete()) { 
-		show_confirmation(_("User Deleted"), "$temp_user->username has been Deleted","admin/users.php");
-	}
-	else { 
-		show_confirmation(_("Delete Error"), _("Unable to delete last Admin User"),"admin/users.php");
-	}
+	case 'confirm_delete':
+	        if (conf('demo_mode')) { break; }
+	    	if ($_REQUEST['confirm'] == _("No")) { show_manage_users(); break; }
+		if ($temp_user->delete()) { 
+			show_confirmation(_("User Deleted"), "$temp_user->username has been Deleted","admin/users.php");
+		}
+		else { 
+			show_confirmation(_("Delete Error"), _("Unable to delete last Admin User"),"admin/users.php");
+		}
 	break;
-    case 'show_ip_history':
-	show_ip_history();
+	/* Show IP History for the Specified User */
+	case 'show_ip_history':
+		/* get the user and their history */
+		$temp_user	= new User($_REQUEST['user_id']); 
+		$history	= $temp_user->get_ip_history('',1);
+		
+		require (conf('prefix') . '/templates/show_ip_history.inc.php');
 	break;
-    case 'show_add_user':
-        if (conf('demo_mode')) { break; }
-	$type = 'new_user';
-	require_once(conf('prefix') . '/templates/show_edit_user.inc.php');
+	case 'show_add_user':
+	        if (conf('demo_mode')) { break; }
+		$type = 'new_user';
+		require_once(conf('prefix') . '/templates/show_edit_user.inc.php');
 	break;
-
 	case 'update':
 	case 'disabled':
 	        if (conf('demo_mode')) { break; }

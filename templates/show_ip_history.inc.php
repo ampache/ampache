@@ -19,30 +19,26 @@
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
-
 ?>
-<?php show_box_top(_('Create a new playlist')); ?>
-<form name="songs" method="post" action="<?php echo conf('web_path'); ?>/playlist.php">
-<table>
-<tr>
-	<td><?php echo _('Name'); ?>:</td>
-	<td><input type="text" name="playlist_name" size="20" /></td>
+<?php show_box_top($temp_user->fullname . ' ' . _('IP History')); ?>
+<table border="0">
+<tr class="table-header">
+        <td align="center">
+     		<?php echo _('Date'); ?>
+     	</td>
+     	<td align=\"center\">
+     		<?php echo _('IP Address'); ?>
+     	</td>
 </tr>
-<tr>
-	<td><?php echo _('Type'); ?>:</td>
+<?php foreach ($history as $data) { ?>
+<tr class="<?php echo flip_class(); ?>">
 	<td>
-	<select name="type">
-	<option value="private"> Private </option>
-	<option value="public"> Public </option>
-	</select>
+		<?php echo date("d/m/Y H\hi",$data['date']); ?>
+	</td>
+	<td>
+		<?php echo int2ip($data['ip']); ?>
 	</td>
 </tr>
-<tr>
-	<td colspan="2">
-	<input class="button" type="submit" value="<?php echo _('Create'); ?>" />
-	<input type="hidden" name="action" value="Create" />
-	</td>
-</tr>
+<?php } ?>
 </table>
-</form>
 <?php show_box_bottom(); ?>
