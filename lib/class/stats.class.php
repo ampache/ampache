@@ -61,6 +61,10 @@ class Stats {
 			" VALUES ('$type','$oid','$date','$user')";
 		$db_results = mysql_query($sql,dbh());
 
+		if (!$db_results) { 
+			debug_event('statistics','Unabled to insert statistics:' . $sql,'3');
+		}	
+
 	} // insert
 
 	/**
