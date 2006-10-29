@@ -200,25 +200,6 @@ ECHO;
 }
 
 
-function get_artist_name ($artist, $dbh=0) {
-
-	global $settings;
-	if (!is_resource($dbh)) {
-		$dbh = dbh();
-	}
-
-	$query = "SELECT name FROM artist WHERE id = '$artist'";
-	$db_result = mysql_query($query, $dbh);
-
-	if ($r = mysql_fetch_object($db_result)) {
-		return $r->name;
-	}
-	else {
-		return FALSE;
-	}
-}
-
-
 function get_artist_info ($artist_id) {
 
 	$dbh = dbh();
@@ -261,24 +242,6 @@ function get_artist_from_album ($album_id) {
 	$db_result = mysql_query($query, $dbh);
 	$r = mysql_fetch_object($db_result);
 	return $r;
-}
-
-
-function get_artist_name_from_song ($song_id) {
-
-	$dbh = dbh();
-
-	$sql = "SELECT artist.name AS name FROM artist, song" .
-		" WHERE artist.id = song.artist" .
-		" AND song.id = '$song_id'";
-	$db_result = mysql_query($sql, $dbh);
-
-	if ($r = mysql_fetch_object($db_result)) {
-		return $r->name;
-	}
-	else {
-		return FALSE;
-	}
 }
 
 

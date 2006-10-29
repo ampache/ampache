@@ -627,21 +627,23 @@ function get_global_popular($type) {
                 
 		/* If Artist */
                 elseif ( $type == 'artist' ) {
-                        $artist  = get_artist_name($r['object_id']);
-                        $items[] = "<li> <a href=\"$web_path/artists.php?action=show&amp;artist=$r->object_id\" title=\"". scrub_out($artist) ."\">" .
+                        $artist_obj	= new Artist($r['object_id']);
+			$artist_obj->format_artist();
+			$artist = $artist_obj->full_name;
+                        $items[] = "<li> <a href=\"$web_path/artists.php?action=show&amp;artist=" . $r['object_id'] . "\" title=\"". scrub_out($artist) ."\">" .
                         	           scrub_out(truncate_with_ellipse($artist, conf('ellipse_threshold_artist')+3)) . "&nbsp;(" . $r['count'] . ")</a> </li>";
                 } // if type isn't artist
 
 		/* If Album */
                 elseif ( $type == 'album' ) {
                         $album   = new Album($r['object_id']);
-                        $items[] = "<li> <a href=\"$web_path/albums.php?action=show&amp;album=$r->object_id\" title=\"". scrub_out($album->name) ."\">" . 
+                        $items[] = "<li> <a href=\"$web_path/albums.php?action=show&amp;album=" . $r['object_id'] . "\" title=\"". scrub_out($album->name) ."\">" . 
                         	           scrub_out(truncate_with_ellipse($album->name,conf('ellipse_threshold_album')+3)) . "&nbsp;(" . $r['count'] . ")</a> </li>";
                 } // else not album
 
 		elseif ($type == 'genre') { 
 			$genre 	 = new Genre($r['object_id']);
-			$items[] = "<li> <a href=\"$web_path/browse.php?action=genre&amp;genre=$r->object_id\" title=\"" . scrub_out($genre->name) . "\">" .
+			$items[] = "<li> <a href=\"$web_path/browse.php?action=genre&amp;genre=" . $r['object_id'] . "\" title=\"" . scrub_out($genre->name) . "\">" .
 					scrub_out(truncate_with_ellipse($genre->name,conf('ellipse_threshold_title')+3)) . "&nbsp;(" . $r['count'] . ")</a> </li>";
 		} // end if genre
         } // end foreach

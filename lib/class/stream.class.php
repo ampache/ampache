@@ -176,10 +176,10 @@ class Stream {
 
 	} // create_asx
 
-	/*!
-		@function create_xspf
-		@discussion creates an XSPF playlist (Thx PB1DFT)
-	*/
+	/**
+	 * create_xspf
+	 * creates an XSPF playlist (Thx PB1DFT)
+	 */
 	function create_xspf() { 
 
 		$playlist =	"<?xml version=\"1.0\" encoding=\"iso-8859-1\" ?>
@@ -216,53 +216,23 @@ class Stream {
 
 	} // create_xspf
 
-	/*! 
-		@function create_icecast2
-		@discussion pushes an icecast stream
-	*/
-	function create_icecast2() { 
+	/**
+	 * create_xspf_player
+	 * due to the fact that this is an integrated player (flash) we actually
+	 * have to do a little 'cheating' to make this work, we are going to take
+	 * advantage of tmp_playlists to do all of this hotness
+	 */
+	function create_xspf_player() { 
 
-	        echo "ICECAST2<br>\n";
+		/* First insert the songs we've got into
+		 * a tmp_playlist
+		 */
 
-		// Play the song locally using local play configuration
-	        if (count($this->songs) > 0) {
-	        echo "ICECAST2<br>\n";
-	        exec("killall ices");
-	        $filename = conf('icecast_tracklist');
-	        echo "$filename " . _("Opened for writing") . "<br>\n";
+		/* Echo some ugly javascript to make it pop-open the player */
 
-		/* Open the file for writing */
-		if (!$handle = @fopen($filename, "w")) {
-			debug_event("icecast","Fopen: $filename Failed",'3');
-		        echo _("Error, cannot write") . " $filename<br>\n";
-	        	exit;
-		}
-
-		/* Foreach through songs */
-		foreach($this->songs as $song_id) {
-        		$song = new Song($song_id);
-	        	echo "$song->file<br>\n";
-	        	$line = "$song->file\n";
-	                if (!fwrite($handle, $line)) {
-				debug_event("icecast","Fwrite: Unabled to write $line into $filename",'3');
-	                	echo _("Error, cannot write song in file") . " $song->file --&gt; $filename";
-				exit;
-			} // if write fails
-
-		} // foreach songs
-
-		echo $filename . " " . _("Closed after write") . "<br>\n";
-		fclose($handle);
-		$cmd = conf('icecast_command');
-                $cmd = str_replace("%FILE%", $filename, $cmd);
-		debug_event("icecast","Exec: $cmd",'3');
-		exec($cmd);
-		exit;
-	
-		} // if songs
-
-
-	} // create_icecast2
+		
+	} // create_xspf_player
+		
 
 	/**
 	 * create_localplay
@@ -294,44 +264,10 @@ class Stream {
 
 	} // create_democratic
 
-	/*!
-		@function create_mpd
-		@discussion function that passes information to 
-			MPD
-	*/
-	function create_mpd() { 
-
-		/* Create the MPD object */
-		$myMpd = @new mpd(conf('mpd_host'),conf('mpd_port'),conf('mpd_pass'));
-
-		/* Add the files to the MPD playlist */
-		addToPlaylist($myMpd,$this->songs);
-
-		/* If we've added songs we should start playing */
-		$myMpd->Play();
-
-		header ("Location: " . conf('web_path') . "/index.php");
-
-	} // create_mpd
-
-
-	/*!
-		@function create_slim
-		@discussion this function passes the correct mojo to the slim
-			class which is in turn passed to the slimserver
-	*/
-	function create_slim() { 
-
-
-
-
-
-	} // create_slim
-
-	/*!
-		@function create_ram
-		@discussion this functions creates a RAM file for use by Real Player
-	*/
+	/**
+	 * create_ram
+	 *this functions creates a RAM file for use by Real Player
+	 */
 	function create_ram() { 
 
                 header("Cache-control: public");

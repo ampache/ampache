@@ -5,9 +5,8 @@
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
- modify it under the terms of the GNU General Public License
- as published by the Free Software Foundation; either version 2
- of the License, or (at your option) any later version.
+ modify it under the terms of the GNU General Public License v2
+ as published by the Free Software Foundation
 
  This program is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -19,16 +18,6 @@
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
-
-/*!
-	@header Song Document
-	@discussion Actually play files from albums, artists or just given
-	a bunch of id's.
-	Special thanx goes to Mike Payson and Jon Disnard for the means
-	to do this.
-	FIXME: don't get me started... :(
-*/
-
 require('lib/init.php');
 
 /* If we are running a demo, quick while you still can! */
@@ -58,6 +47,10 @@ switch ($action) {
 		else { 
 			$song_ids = $_POST['song'];
 		}
+	break;
+	/* This is run if we need to gather info based on a tmp playlist */
+	case 'tmp_playlist':
+
 	break;
 	case 'single_song':
 		$song_ids[] = scrub_in($_REQUEST['song_id']);
