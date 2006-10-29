@@ -39,7 +39,7 @@ $total_items = $view->total_items;
 		<a href="<?php echo $web_path; ?>/<?php echo $_SESSION['view_script']; ?>?action=<?php echo $_REQUEST['action']; ?>&amp;keep_view=true&amp;sort_type=album.name&amp;sort_order=0"><?php echo _("Album"); ?></a>
 	</td>
 	<td>
-		<a href="<?php echo $web_path; ?>/<?php echo $_SESSION['view_script']; ?>?action=<?php echo $_REQUEST['action']; ?>&amp;keep_view=true&amp;sort_type=artist.name&amp;type=album_sort"><?php echo _('Artist'); ?></a>
+		<a href="<?php echo $web_path; ?>/<?php echo $_SESSION['view_script']; ?>?action=<?php echo $_REQUEST['action']; ?>&amp;keep_view=true&amp;sort_type=artist.name&amp;type=album_sort&amp;sort_order=0"><?php echo _('Artist'); ?></a>
 	</td>
 	<td> <?php echo _('Songs'); ?>  </td>
 	<td>

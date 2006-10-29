@@ -4,6 +4,8 @@
 
 --------------------------------------------------------------------------
   v.3.3.3-Alpha2
+	- Fixed bug with Album --> Artist sorting, wasn't allowing you to
+		sort Z-A
 	- Fixed bug with most popular where links weren't being generated
 		correctly
 

@@ -63,7 +63,7 @@
 		<input type="hidden" name="user_id" value="<?php echo scrub_out($this_user->id); ?>" />
 		<input type="hidden" name="action" value="update_user" />
 		<input type="hidden" name="tab" value="<?php echo scrub_out($current_tab); ?>" />
-		<input type="submit" value="<?php echo _('Update Account'); ?>" />
+		<input class="button" type="submit" value="<?php echo _('Update Account'); ?>" />
 	</td>
 </tr>
 </table>

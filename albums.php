@@ -201,7 +201,7 @@ else {
 			if ($match != 'Browse' && $match != 'Show_missing_art' && $match != 'Show_all') { 
 				$match_string = " AND album.name LIKE '$match%'";
 			}
-			unset($_REQUEST['keep_view']);
+//			unset($_REQUEST['keep_view']);
 			$sql = "SELECT album.id, IF(COUNT(DISTINCT(song.artist)) > 1,'Various', artist.name) AS artist_name " . 
 				"FROM song,artist,album WHERE song.album=album.id AND song.artist=artist.id $match_string" . 
 				"GROUP BY album.name,album.year ".

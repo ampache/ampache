@@ -5,9 +5,8 @@
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
- modify it under the terms of the GNU General Public License
- as published by the Free Software Foundation; either version 2
- of the License, or (at your option) any later version.
+ modify it under the terms of the GNU General Public License v2
+ as published by the Free Software Foundation
 
  This program is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -21,20 +20,17 @@
 ?>
 <br />
 <form name="songs" method="post" action="<?php echo conf('web_path'); ?>/admin/catalog.php" enctype="multipart/form-data" style="Display:inline">
-<table class="tabledata" cellspacing="0" cellpadding="3" border="0" width="100%">
+<table class="tabledata" cellspacing="0">
 <tr class="table-header">
-	<td class="table-header"><a href="#" onclick="check_songs(); return false;">Select</a></td>
-	<td>Title</td>
-	<td>Album</td>
-	<td>Artist</td>
-	<td>Filename</td>
-	<td>Addition Time</td>
+	<td><a href="#" onclick="check_songs(); return false;"><?php echo _('Select'); ?></a></td>
+	<td><?php echo _('Title'); ?></td>
+	<td><?php echo _('Album'); ?></td>
+	<td><?php echo _('Artist'); ?></td>
+	<td><?php echo _('Filename'); ?></td>
+	<td><?php echo _('Addition Time'); ?></td>
 </tr>
-<?php
-foreach ($songs as $song) { 
-	$class = (++$i%2)?'odd':'even';
-?>
-	<tr class="<?php echo $class; ?>">
+<?php foreach ($songs as $song) { ?>
+	<tr class="<?php echo flip_class(); ?>">
 		<td><input type="checkbox" name="song[]" value="<?php echo $song->id; ?>" /></td>
 		<td><?php echo $song->title; ?></td>
 		<td><?php echo $song->get_album_name($song->album); ?></td>
@@ -43,20 +39,13 @@ foreach ($songs as $song) {
 		<td><?php echo date("h:i:s, m/d/y",$song->addition_time); ?></td>
 	
 	</tr>
-<?php } // end foreach ($songs as $song)
-$class = (++$i%2)?'odd':'even';
-?>
-<tr class="<?php echo $class; ?>">
-	<td>&nbsp;</td>
-	<td colspan="10">
-		<input type="submit" value="Remove" />&nbsp;&nbsp;
-		<input type="reset" value="Reset Form" />
-		<input type="hidden" name="action" value="remove_disabled" />
-	</td>
-</tr>
-<tr>
-	<td colspan="10" class="table-header">&nbsp;</td>
-</tr>
+<?php } if (!count($songs)) { ?>
+	<tr class="<?php echo flip_class(); ?>">
+		<td colspan="7"><span class="error"><?php echo _('No Records Found'); ?></span></td>
+	</tr>
+<?php } ?>
 </table>
+		<input class="button" type="submit" value="<?php echo _('Remove'); ?>" />&nbsp;&nbsp;
+		<input type="hidden" name="action" value="remove_disabled" />
 </form>
 
