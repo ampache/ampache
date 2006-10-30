@@ -18,13 +18,14 @@
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
+//FIXME: This should be renamed to stream.php as it makes a little more sense
+//FIXME: considering what this file does
 require('lib/init.php');
 
 /* If we are running a demo, quick while you still can! */
 if (conf('demo_mode') || !$user->has_access('25')) {
 	access_denied();
 }
-
 
 $song_ids = array();
 $web_path = conf('web_path');
@@ -50,7 +51,8 @@ switch ($action) {
 	break;
 	/* This is run if we need to gather info based on a tmp playlist */
 	case 'tmp_playlist':
-
+		$tmp_playlist = new tmpPlaylist($_REQUEST['tmpplaylist_id']);
+		$song_ids = $tmp_playlist->get_items();
 	break;
 	case 'single_song':
 		$song_ids[] = scrub_in($_REQUEST['song_id']);

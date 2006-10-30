@@ -19,7 +19,6 @@
 
 */
 ?>
-
 <html>
 <head><title>Ampache XSPF Player</title></head>
 <body style="margin:0px; padding:0px; border:0px;">
@@ -28,7 +27,7 @@
 <param name="movie" value="<?php echo conf('web_path'); ?>/modules/flash/xspf_player.swf?playlist_url=<?php echo conf('web_path'); ?>/song.php<?php echo $play_info; ?>&autoplay=true&autoload=true"/>
 <param name="quality" value="high"/>
 <param name="bgcolor" value="#E6E6E6"/>
-<embed src="<?php echo conf('web_path'); ?>/modules/flash/xspf_player.swf?playlist_url=<?php echo conf('web_path'); ?>/song.php<?php echo $play_info; ?>&autoplay=true&autoload=true" quality="high" bgcolor="#E6E6E6" name="xspf_player" allowscriptaccess="sameDomain" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer" align="center" height="168" width="400"></embed>
+<embed src="<?php echo conf('web_path'); ?>/modules/flash/xspf_player.swf?playlist_url=<?php echo conf('web_path'); ?>/modules/flash/xspf_player.php<?php echo $play_info; ?>&autoplay=true&autoload=true" quality="high" bgcolor="#E6E6E6" name="xspf_player" allowscriptaccess="sameDomain" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer" align="center" height="168" width="400"></embed>
 </object>
 </body>
 </html>

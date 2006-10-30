@@ -29,7 +29,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 if (count($results)) {
 ?>
-<table class="box" cellspacing="0" cellpadding="0" style="width:625px;">
+<table class="box" cellspacing="0">
 <tr>
         <td class="box-left-top"></td>
         <td class="box-top"></td>

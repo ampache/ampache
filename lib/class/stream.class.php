@@ -227,9 +227,36 @@ class Stream {
 		/* First insert the songs we've got into
 		 * a tmp_playlist
 		 */
+		$tmp_playlist = new tmpPlaylist(); 
+		$playlist_id = $tmp_playlist->create($this->sess,'xspf','song',''); 
+		$tmp_playlist = new tmpPlaylist($playlist_id);
 
-		/* Echo some ugly javascript to make it pop-open the player */
+		/* Add the songs to this new playlist */
+		foreach ($this->songs as $song_id) { 
+			$tmp_playlist->add_object($song_id);
+		} // end foreach		
+		
+		/* Build the extra info we need to have it pass */
+		$play_info = "?action=show&tmpplaylist_id=" . $tmp_playlist->id;
 
+	        // start ugly evil javascript code
+		//FIXME: This needs to go in a template, here for now though
+	        echo "<html><head>\n";
+	        echo "<title>" . conf('site_title') . "</title>\n";
+	        echo "<script language=\"javascript\" type=\"text/javascript\">\n";
+	        echo "<!-- begin\n";
+	        echo "function PlayerPopUp(URL) {\n";
+	        echo "window.open(URL, 'XSPF_player', 'width=400,height=168,scrollbars=0,toolbar=0,location=0,directories=0,status=1,resizable=0');\n";
+	        echo "window.location = '" .  return_referer() . "';\n";
+	        echo "return false;\n";
+	        echo "}\n";
+	        echo "// end -->\n";
+	        echo "</script>\n";
+	        echo "</head>\n";
+
+	        echo "<body onLoad=\"javascript:PlayerPopUp('" . conf('web_path') . "/modules/flash/xspf_player.php" . $play_info . "')\">\n";
+	        echo "</body>\n";
+	        echo "</html>\n";
 		
 	} // create_xspf_player
 		

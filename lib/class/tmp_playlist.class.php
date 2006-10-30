@@ -89,7 +89,7 @@ class tmpPlaylist {
 		$db_results = mysql_query($sql, dbh());
 
 		while ($results = mysql_fetch_assoc($db_results)) { 
-			$items[] = $results['id'];
+			$items[] = $results['object_id'];
 		}
 
 		return $items;
@@ -97,7 +97,7 @@ class tmpPlaylist {
 	} // get_items
 
 	/** 
-	 * ceate
+	 * create
 	 * This function initializes a new tmpPlaylist it is assoicated with the current
 	 * session rather then a user, as you could have same user multiple locations
 	 */
@@ -114,9 +114,62 @@ class tmpPlaylist {
 
 		$id = mysql_insert_id(dbh());
 
+		/* Clean any other playlists assoicated with this sessoin */
+		$this->delete($sessid,$id);
+
 		return $id;
 
 	} // create 
+
+	/**
+	 * delete
+	 * This deletes any other tmp_playlists assoicated with this
+	 * session 
+	 */
+	function delete($sessid,$id) { 
+
+		$sessid = sql_escape($sessid);
+		$id	= sql_escape($id);
+
+		$sql = "DELETE FROM tmp_playlist WHERE session='$sessid' AND id != '$id'";
+		$db_results = mysql_query($sql,dbh());
+
+		/* Remove assoicated tracks */
+		$this->prune_tracks();
+
+		return true;
+
+	} // delete
+
+	/**
+	 * prune_tracks
+	 * This prunes tracks that don't have playlists
+	 */
+	function prune_tracks() { 
+
+		$sql = "DELETE FROM tmp_playlist_data USING tmp_playlist_data " . 
+			"LEFT JOIN tmp_playlist ON tmp_playlist_data.tmp_playlist=tmp_playlist.id " . 
+			"WHERE tmp_playlist.id IS NULL";
+		$db_results = mysql_query($sql,dbh());
+
+	} // prune_tracks
+
+	/**
+	 * add_object
+	 * This adds the object of $this->object_type to this tmp playlist
+	 */
+	function add_object($object_id) { 
+
+		$object_id 	= sql_escape($object_id);
+		$playlist_id 	= sql_escape($this->id);
+
+		$sql = "INSERT INTO tmp_playlist_data (`object_id`,`tmp_playlist`) " . 
+			" VALUES ('$object_id','$playlist_id')";
+		$db_results = mysql_query($sql, dbh());
+
+		return true;
+
+	} // add_object
 
 	/**
 	 * vote

@@ -286,12 +286,13 @@ function create_preference_input($name,$value) {
 			$var_name = $value . "_type";
 			${$var_name} = "selected=\"selected\""; 
 			echo "<select name=\"$name\">\n";
-			echo "\t<option value=\"m3u\" $m3u_type>" . _("M3U") . "</option>\n";
-			echo "\t<option value=\"simple_m3u\" $simple_m3u_type>" . _("Simple M3U") . "</option>\n";
-			echo "\t<option value=\"pls\" $pls_type>" . _("PLS") . "</option>\n";
-			echo "\t<option value=\"asx\" $asx_type>" . _("Asx") . "</option>\n";
-			echo "\t<option value=\"ram\" $ram_type>" . _("RAM") . "</option>\n";
-			echo "\t<option value=\"xspf\" $xspf_type>" . _("XSPF") . "</option>\n";
+			echo "\t<option value=\"m3u\" $m3u_type>" . _('M3U') . "</option>\n";
+			echo "\t<option value=\"simple_m3u\" $simple_m3u_type>" . _('Simple M3U') . "</option>\n";
+			echo "\t<option value=\"pls\" $pls_type>" . _('PLS') . "</option>\n";
+			echo "\t<option value=\"asx\" $asx_type>" . _('Asx') . "</option>\n";
+			echo "\t<option value=\"ram\" $ram_type>" . _('RAM') . "</option>\n";
+			echo "\t<option value=\"xspf\" $xspf_type>" . _('XSPF') . "</option>\n";
+			echo "\t<option value=\"xspf_player\">" . _('Flash') . "</option>\n";
 			echo "</select>\n";
 		break;
 		case 'lang':
