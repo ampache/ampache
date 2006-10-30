@@ -4,6 +4,9 @@
 
 --------------------------------------------------------------------------
   v.3.3.3-Alpha2
+	- Fixed a problem were invalid bitrates below the set downsample
+		bitrate could cause lame to crash as they weren't 
+		validated. 
 	- Added XSPF Flash player, rough around the edges but it works
 		(Thx pb1dft/GrinningArmor)
 	- Fixed bug with Album --> Artist sorting, wasn't allowing you to

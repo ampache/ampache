@@ -160,21 +160,6 @@ function start_downsample($song,$now_playing_id=0,$song_name=0) {
 	if ($max_bitrate > 1 AND $min_bitrate < $max_bitrate) {   
 		$last_seen_time = $time - 1200; //20 min.
 
-		/**********************************
-		 * Commenting out the following, I'd rather have it slightly less accurate and avoid a 4 table join 
-      		// Count the users connected in the last 20 min using downsampling 
-		$sql = "SELECT COUNT(DISTINCT session.username) FROM session,user,user_preference,preferences " . 
-			"WHERE user.username = session.username AND session.expire > '$time' AND user.last_seen > $last_seen_time " . 
-			"AND preferences.name = 'play_type' AND user_preference.preference = preferences.id AND " . 
-			"user_preference.user = user.username AND user_preference.value='downsample'";
-		$db_result = mysql_query($sql, $dbh);
-		$results = mysql_fetch_row($db_result);
-
-		// The current number of connected users 
-		$current_users_count = $results[0];
-		************************************/
-		
-
 		$sql = "SELECT COUNT(*) FROM now_playing, user_preference, preferences " . 
 			"WHERE preferences.name = 'play_type' AND user_preference.preference = preferences.id " . 
 			"AND now_playing.user = user_preference.user AND user_preference.value='downsample'";
@@ -220,7 +205,7 @@ function start_downsample($song,$now_playing_id=0,$song_name=0) {
  
 	/* Never Upsample a song */
 	if (($sample_rate*1000) > $song->bitrate) {
-		$sample_rate = $song->bitrate/1000;
+		$sample_rate = validate_bitrate($song->bitrate)/1000;
 		$sample_ratio = '1';
 	}
 	else { 

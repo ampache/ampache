@@ -265,6 +265,7 @@ function create_preference_input($name,$value) {
 			if ($value == 'downsample') { $is_down = 'selected="selected"'; }
 			elseif ($value == 'localplay') { $is_local = 'selected="selected"'; } 
 			elseif ($value == 'democratic') { $is_vote = 'selected="selected"'; } 
+			elseif ($value == 'xspf_player') { $is_xspf_player = 'selected="selected"'; } 
 			else { $is_stream = "selected=\"selected\""; } 
 			echo "<select name=\"$name\">\n";
 			echo "\t<option value=\"\">" . _('None') . "</option>\n";
@@ -280,6 +281,7 @@ function create_preference_input($name,$value) {
 			if (conf('allow_localplay_playback')) { 
 				echo "\t<option value=\"localplay\" $is_local>" . _('Localplay') . "</option>\n";	
 			} 
+			echo "\t<option value=\"xspf_player\" $is_xspf_player>" . _('XSPF Player') . "</option>\n";
 			echo "</select>\n";
 		break;
 		case 'playlist_type':
@@ -292,7 +294,6 @@ function create_preference_input($name,$value) {
 			echo "\t<option value=\"asx\" $asx_type>" . _('Asx') . "</option>\n";
 			echo "\t<option value=\"ram\" $ram_type>" . _('RAM') . "</option>\n";
 			echo "\t<option value=\"xspf\" $xspf_type>" . _('XSPF') . "</option>\n";
-			echo "\t<option value=\"xspf_player\">" . _('Flash') . "</option>\n";
 			echo "</select>\n";
 		break;
 		case 'lang':

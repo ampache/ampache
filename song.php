@@ -129,8 +129,15 @@ switch ($method) {
 	default:
 		$stream_type = conf('playlist_type');
 
-		if ($GLOBALS['user']->prefs['play_type'] != "stream" AND $GLOBALS['user']->prefs['play_type'] != "downsample") { 
-			$stream_type = $GLOBALS['user']->prefs['play_type'];
+		/* For non-stream/downsample methos we need to so something else */
+		switch ($GLOBALS['user']->prefs['play_type']) { 
+			case 'stream':
+			case 'downsample':
+				// Rien a faire
+			break;
+			default:
+				$stream_type = $GLOBALS['user']->prefs['play_type'];
+			break;
 		}
 
 		/* Start the Stream */
