@@ -141,7 +141,7 @@ function remove_localplay_preferences($type=0) {
  * This returns an array of the localplay controllers filenames
  * as well as a 'semi-cleaned' name
  */
-function get_localplay_controllers() { 
+function get_localplay_controllers($disabled='') { 
 
 	/* First get a list of the files */
 	$handle = opendir(conf('prefix') . '/modules/localplay');
@@ -161,7 +161,7 @@ function get_localplay_controllers() {
 			/* Get the base name, then get everything before .controller.php */
 			$filename = basename($file,'.controller.php');
 			/* Make sure that it's currently enabled */
-			if (verify_localplay_preferences($filename)) { 
+			if (verify_localplay_preferences($filename) || $disabled) { 
 				$results[] = $filename;
 			} 
 		}

@@ -21,14 +21,13 @@
 */
 ?>
 <h3><?php echo _('Admin Controls'); ?></h3>
-<?php if (!$playlist->vote_active()) { ?>
-<form id="form_playlist">
+<?php if (!$tmp_playlist->vote_active()) { ?>
+<form id="form_playlist" method="post" action="<?php echo conf('web_path'); ?>/tv.php" enctype="multipart/form-data" >
 <?php echo _('Base Playlist'); ?>:
 <?php show_playlist_dropdown(); ?>
-<input type="button" onclick="ajaxPost('<?php conf('ajax_url'); ?>?action=tv_activate<?php echo conf('ajax_info'); ?>','form_playlist');return true;" value="<?php echo _('Activate'); ?>" />
+<input type="hidden" name="action" value="create_playlist" />
+<input type="submit" value="<?php echo _('Activate'); ?>" />
 </form>
-
 <?php } else { ?>
-
-
+<?php echo _('Democratic Play Active'); ?>
 <?php } ?>

@@ -27,7 +27,7 @@
  */
 
 /* Get Localplay Modules */
-$localplay_modules = get_localplay_controllers(); 
+$localplay_modules = get_localplay_controllers('disabled'); 
 $web_path = conf('web_path'); 
 ?>
 <?php show_box_top(_('Modules')); ?>

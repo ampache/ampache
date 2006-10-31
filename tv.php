@@ -5,9 +5,8 @@
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
- modify it under the terms of the GNU General Public License
- as published by the Free Software Foundation; either version 2
- of the License, or (at your option) any later version.
+ modify it under the terms of the GNU General Public License v2
+ as published by the Free Software Foundation
 
  This program is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -22,6 +21,8 @@
 
 require_once('lib/init.php');
 
+/* Additional Library for tv stuff */
+require_once (conf('prefix') . '/lib/democratic.lib.php');
 
 $dbh = dbh();
 $web_path = conf('web_path');
@@ -32,19 +33,22 @@ if (!conf('allow_democratic_playback') || $GLOBALS['user']->prefs['play_type'] !
 	exit;
 }
 
-/* Attempt to build the temp playlist */
-$playlist	= new tmpPlaylist('-1'); 
+/* Clean up the stuff we need */
 $action 	= scrub_in($_REQUEST['action']);
-
 
 switch ($action) { 
 	case 'create_playlist':
-
+		/* We need to make ourselfs a new tmp playlist */
+		$tmp_playlist	= new tmpPlaylist();
+		$id = $tmp_playlist->create('-1','vote','song',$_REQUEST['playlist_id']);	
+		
+		/* Re-generate the playlist */
+		$tmp_playlist = new tmpPlaylist($id);
+		require_once(conf('prefix') . '/templates/show_tv.inc.php');
 	break;
 	default: 
-
+		$tmp_playlist = get_democratic_playlist('-1'); 
 		require_once(conf('prefix') . '/templates/show_tv.inc.php');
-
 	break;
 } // end switch on action
 

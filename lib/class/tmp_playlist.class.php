@@ -114,7 +114,7 @@ class tmpPlaylist {
 
 		$id = mysql_insert_id(dbh());
 
-		/* Clean any other playlists assoicated with this sessoin */
+		/* Clean any other playlists assoicated with this session */
 		$this->delete($sessid,$id);
 
 		return $id;
