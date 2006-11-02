@@ -318,6 +318,9 @@ class AmpacheMpd {
 
 			/* Parse out the song ID and then create the song object */
 			preg_match("/song=(\d+)\&/",$entry['file'],$matches);
+
+			/* Attempt to build the new song */
+			$song = new Song($matches['1']);
 			
 			/* If we don't know it, look up by filename */
 			if (!$song->title) { 
@@ -328,12 +331,8 @@ class AmpacheMpd {
 					$song = new Song($results['id']);
 				}	
 				else { 
-					$song = new Song(); 
 					$song->title = _('Unknown');
 				}
-			}
-			else { 
-				$song = new Song($matches['1']);
 			}
 
 			/* Make the name pretty */

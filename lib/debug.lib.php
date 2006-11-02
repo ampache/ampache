@@ -356,6 +356,11 @@ function check_putenv() {
 		return false; 
 	}
 
+	/* Check and see if we can up the post limit */
+	if (!ini_set(post_max_size,'8M')) { 
+		return false; 
+	}
+
 	/* Check if safe mode is on */
 	if (ini_get('safe_mode')) { 
 		return false; 

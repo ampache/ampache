@@ -4,6 +4,9 @@
 
 --------------------------------------------------------------------------
   v.3.3.3-Alpha2
+	- Foced a sane Post Size had some people with 32 byte post sizes
+		which will not work with Ampache. 
+	- Fixed a logic error with the MPD controller.
 	- Fixed a problem were invalid bitrates below the set downsample
 		bitrate could cause lame to crash as they weren't 
 		validated. 
