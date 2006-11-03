@@ -35,8 +35,8 @@ $users		= $GLOBALS['user']->get_recent(10);
 <tr class="<?php echo flip_class(); ?>">
 	<td>
 		<a href="<?php echo $web_path; ?>/admin/catalog.php?action=show_customize_catalog&amp;catalog_id=<?php echo $catalog->id; ?>">
-		<?php echo $catalog->name; ?></a>
-		&nbsp;&nbsp;(<?php echo $catalog->path; ?>)
+		<?php echo scrub_out($catalog->name); ?></a>
+		&nbsp;&nbsp;(<?php echo scrub_out($catalog->path); ?>)
 	</td>
 	<td>
 		<a href="<?php echo $web_path; ?>/admin/catalog.php?action=add_to_catalog&amp;catalogs[]=<?php echo $catalog->id; ?>">
