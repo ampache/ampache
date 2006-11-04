@@ -77,7 +77,7 @@ $results['version']		= '3.3.3-Alpha2 Build (002)';
 
 $results['raw_web_path']	= $results['web_path'];
 $results['web_path']		= $http_type . $_SERVER['HTTP_HOST'] . $results['web_path'];
-$results['catalog_file_pattern']= 'mp3|mpc|m4p|m4a|mp4|aac|ogg|rm|wma|asf|flac|spx|ra|ape|shn';
+$results['catalog_file_pattern']= 'mp3|mpc|m4p|m4a|mp4|aac|ogg|rm|wma|asf|flac|spx|ra|ape|shn|wv';
 $results['http_port']		= $_SERVER['SERVER_PORT'];
 if (!$results['prefix']) { 
 	$results['prefix'] = $prefix;

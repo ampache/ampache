@@ -5,9 +5,8 @@
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
- modify it under the terms of the GNU General Public License
- as published by the Free Software Foundation; either version 2
- of the License, or (at your option) any later version.
+ modify it under the terms of the GNU General Public License v2
+ as published by the Free Software Foundation
 
  This program is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -31,19 +30,20 @@
 
 require('../lib/init.php');
 
-
-if (!$user->has_access(100)) {
+if (!$GLOBALS['user']->has_access(100)) {
 	access_denied();
 }
 
 $user_id = scrub_in($_REQUEST['user_id']);
+$action  = scrub_in($_REQUEST['action']);
 if (!$user_id) { $user_id ='-1'; } 
 
 $temp_user = new User($user_id);
 $temp_user->username = $user_id;
 
-switch(scrub_in($_REQUEST['action'])) { 
+show_template('header');
 
+switch($action) { 
 	case 'user':
 		$fullname = "ADMIN - " . $temp_user->fullname;
 		$preferences = $temp_user->get_preferences();
@@ -66,6 +66,16 @@ switch(scrub_in($_REQUEST['action'])) {
 		$temp_user->fix_preferences($user_id);
 		$preferences = $temp_user->get_preferences($user_id);
 	break;
+	case 'set_preferences':
+		/* Update the preferences */
+		foreach ($_REQUEST['prefs'] as $name=>$leve) { 
+			update_preference_level($name,$level);
+		} // end foreach preferences
+	case 'show_set_preferences':
+		/* Get all preferences */
+		$preferences = get_preferences();
+		require_once(conf('prefix') . '/templates/show_preference_admin.inc.php');
+	break;
 	default:
 		$preferences = $temp_user->get_preferences();
 		$fullname = "Site";
@@ -74,16 +84,14 @@ switch(scrub_in($_REQUEST['action'])) {
 } // End Switch Action
 
 
-// HEADER
-show_template('header');
-// HEADER
+// OMG HORRIBLE HACK Beatings for the programmer 
+if ($action != 'show_set_preferences' AND $action != 'set_preferences') { 
+	// Set Target
+	$target = "/admin/preferences.php";
 
-// Set Target
-$target = "/admin/preferences.php";
-
-// Show the default preferences page
-require (conf('prefix') . "/templates/show_preferences.inc");
-
+	// Show the default preferences page
+	require (conf('prefix') . "/templates/show_preferences.inc");
+}
 
 // FOOTER
 show_footer();

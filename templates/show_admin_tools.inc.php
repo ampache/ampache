@@ -77,6 +77,7 @@ $users		= $GLOBALS['user']->get_recent(10);
 	<a href="<?php echo $web_path; ?>/admin/catalog.php?action=clear_now_playing"><?php echo _('Clear Now Playing'); ?></a>
 	<hr noshade="noshade" size="3" />
 	<a href="<?php echo $web_path; ?>/admin/system.php?action=generate_config"><?php echo _('Generate New Config'); ?></a>
+	<a href="<?php echo $web_path; ?>/admin/preferences.php?action=show_set_preferences"><?php echo _('Preferences Permissions'); ?></a>
 <!--	<a href="<?php echo $web_path; ?>/admin/system.php?action=check_version"><?php echo _('Check for New Version'); ?></a>
 -->
 </div>

@@ -179,25 +179,21 @@ function update_preference($username,$name,$pref_id,$value) {
 */
 function has_preference_access($name) { 
 
+	/* If it's a demo they don't get jack */
         if (conf('demo_mode')) {
 	        return false;
         }
 
-	switch($name) {
+	$name = sql_escape($name);
 
-		case 'download':
-		case 'upload':
-		case 'quarantine':
-		case 'upload_dir':
-		case 'sample_rate':
-		case 'direct_link':
-			$level = 100;
-		break;
-		default:
-			$level = 25;
-		break;
-	} // end switch key
+	/* Check Against the Database Row */
+	$sql = "SELECT level FROM preferences " . 
+		"WHERE name='$name'";
+	$db_results = mysql_query($sql, dbh());
 
+	$data = mysql_fetch_assoc($db_results);
+
+	$level = $data['level'];
 
 	if ($GLOBALS['user']->has_access($level)) { 
 		return true;
@@ -453,5 +449,42 @@ function show_import_playlist() {
 	require_once(conf('prefix') . '/templates/show_import_playlist.inc.php');
 
 } // show_import_playlist
+
+/**
+ * get_preferences
+ * This returns an array of all current preferences in the
+ * preferences table, this isn't a users preferences
+ */
+function get_preferences() {
+
+        $sql = "SELECT * FROM preferences";
+        $db_results = mysql_query($sql, dbh());
+
+        $results = array();
+
+        while ($r = mysql_fetch_assoc($db_results)) {
+                $results[] = $r;
+        }
+
+        return $results;
+
+} // get_preferences
+
+/**
+ * update_preference_level
+ * This function updates the level field in the preferences table
+ * this has nothing to do with a users actuall preferences
+ */
+function update_preference_level($name,$level) { 
+
+	$name 	= sql_escape($name);
+	$level 	= sql_escape($level);
+
+	$sql = "UPDATE preferences SET `level`='$level' WHERE `name`='$name'";
+	$db_results = mysql_query($sql,dbh());
+
+	return true;
+
+} // update_preference_level
 
 ?>

@@ -988,5 +988,4 @@ function get_user_from_username($username) {
 
 } // get_user_from_username
 
-
 ?>
