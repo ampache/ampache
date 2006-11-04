@@ -66,11 +66,11 @@ if (($GLOBALS['user']->has_access(100)) AND ($user_id == '-1' AND conf('use_auth
 <li <?php echo $tab_options; ?>>
 	<a href="<?php echo $link; ?>?tab=options&amp;user_id=<?php echo $user_id; ?>" <?php echo $a_options; ?>>Options</a>
 </li>
-<?php if ($user_id != '-1') { ?>
+<?php if ($user_id != '-1' && $_SESSION['userdata']['type'] == 'mysql') { ?>
 <li <?php echo $tab_account; ?>>
 	<a href="<?php echo $link; ?>?tab=account&amp;user_id=<?php echo $user_id; ?>" <?php echo $a_account; ?>>Account</a>
 </li>
-<?php } else { ?>
+<?php } elseif ($_SESSION['userdata']['type'] == 'mysql' || $user_id == '-1') { ?>
 <li <?php echo $tab_system; ?>>
 	<a href="<?php echo $link; ?>?tab=system&amp;user_id=<?php echo $user_id; ?>" <?php echo $a_system; ?>>System</a>
 </li>

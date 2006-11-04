@@ -21,6 +21,9 @@
 */
 ?>
 <?php show_box_top($temp_user->fullname . ' ' . _('IP History')); ?>
+<div class="text-action">
+	<a href="<?php echo conf('web_path')?>/admin/users.php?action=show_ip_history&user_id=<?php echo $temp_user->username?>&all"><?php echo _('Show All'); ?>...</a>
+</div>
 <table border="0">
 <tr class="table-header">
         <td align="center">
