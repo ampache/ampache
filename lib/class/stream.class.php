@@ -60,6 +60,11 @@ class Stream {
 	*/
 	function start() {
 
+		if (!is_array($this->songs)) { 
+			debug_event('stream','Error: No Songs Passed on ' . $this->type . ' stream','2');
+			return false; 
+		}
+
 		$methods = get_class_methods('Stream');
 		$create_function = "create_" . $this->type;	
                 if (in_array($create_function,$methods)) {

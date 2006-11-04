@@ -159,6 +159,7 @@ function vauth_get_session($key) {
 
 	if (!count($results)) { 
 		vauth_error("Query: $sql failed to return results " . mysql_error());
+		return false; 
 	}
 
 	return $results;

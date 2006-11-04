@@ -83,15 +83,17 @@ function install_check_status($configfile) {
 	*/
 	$results = read_config($GLOBALS['configfile'], 0, 0);
 	$dbh = check_database($results['local_host'],$results['local_username'],$results['local_pass']);	
-		
+
 	if (is_resource($dbh)) { 
-		mysql_select_db($results['local_db'],$dbh);
+		$db_select = mysql_select_db($results['local_db'],$dbh);
+		
 		$sql = "SELECT * FROM user";
 		$db_results = @mysql_query($sql, $dbh);
 		if (!@mysql_num_rows($db_results)) { 
 			return true;
 		}
 	}
+
 
 	
 	/* Defaut to no */
@@ -110,6 +112,11 @@ function install_insert_db($username,$password,$hostname,$database) {
 	/* Attempt to make DB connection */
 	$dbh = @mysql_pconnect($hostname,$username,$password);
 	
+	if (!is_resource($dbh)) { 
+		$GLOBALS['error']->add_error('general',"Error: Unable to make Database Connection " . mysql_error());
+		return false; 
+	}
+
 	/* Check/Create Database as needed */
 	$db_selected = @mysql_select_db($database, $dbh);
 	if (!$db_selected) { 

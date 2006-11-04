@@ -4,6 +4,13 @@
 
 --------------------------------------------------------------------------
   v.3.3.3-Alpha2
+	- Added more error checking to install, won't let you continue 
+		without a valid MySQL connection, rather then relying
+		on the db_select() to fail
+	- Fixed a session race condition if you turn use_auth off and on
+		and a user log in while use_auth if off
+	- Fixed a potential foreach error if no songs passed to stream
+		now logs error and gently returns the user
 	- Added ability for Admins to define the required permission level
 		for individual preferences
 	- Added WavPack support
