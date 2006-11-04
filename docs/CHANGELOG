@@ -4,6 +4,8 @@
 
 --------------------------------------------------------------------------
   v.3.3.3-Alpha2
+	- Fixed issue with delete confirmation on playlist always being 
+		yes, even if you click no.
 	- Added more error checking to install, won't let you continue 
 		without a valid MySQL connection, rather then relying
 		on the db_select() to fail
