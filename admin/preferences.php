@@ -68,7 +68,7 @@ switch($action) {
 	break;
 	case 'set_preferences':
 		/* Update the preferences */
-		foreach ($_REQUEST['prefs'] as $name=>$leve) { 
+		foreach ($_REQUEST['prefs'] as $name=>$level) { 
 			update_preference_level($name,$level);
 		} // end foreach preferences
 	case 'show_set_preferences':

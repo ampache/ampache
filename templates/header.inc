@@ -43,7 +43,7 @@ if (conf('use_rss')) { ?>
 <link rel="stylesheet" href="<?php echo $web_path; ?><?php echo conf('theme_path'); ?>/templates/default.css" type="text/css" />
 </head>
 <body>
-<script src="<?php echo $web_path; ?>/lib/general.js" language="javascript" type="text/javascript"></script>
+<script src="<?php echo $web_path; ?>/lib/javascript-base.js" language="javascript" type="text/javascript"></script>
 <script src="<?php echo $web_path; ?>/modules/kajax/ajax.js" language="javascript" type="text/javascript"></script>
 <div id="maincontainer">
 	<div id="topbar"><!-- This is the topbar row -->

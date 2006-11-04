@@ -32,7 +32,7 @@ $htmllang = str_replace("_","-",conf('lang'));
 <title><?php echo conf('site_title'); ?> - <?php echo $location['title']; ?></title>
 </head>
 <body>
-<script src="<?php echo conf('web_path'); ?>/lib/general.js" language="javascript" type="text/javascript"></script>
+<script src="<?php echo conf('web_path'); ?>/lib/javascript-base.js" language="javascript" type="text/javascript"></script>
 
 <div id="maincontainer">
 <!-- This is the topbar row -->

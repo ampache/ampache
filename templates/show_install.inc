@@ -3,7 +3,7 @@
 <title>Ampache :: For The Love Of Music - Install</title>
 </head>
 <body>
-<script src="lib/general.js" language="javascript" type="text/javascript"></script>
+<script src="lib/javascript-base.js" language="javascript" type="text/javascript"></script>
 <?php require_once(conf('prefix') . "/templates/install.css"); ?>
 <div id="header"> 
 <h1><?php echo _("Ampache Installation"); ?></h1>
