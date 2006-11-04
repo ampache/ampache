@@ -85,7 +85,7 @@ class tmpPlaylist {
 	function get_items() { 
 
 		$sql = "SELECT object_id FROM tmp_playlist_data " . 
-			"WHERE tmp_playlist_data.tmp_playlist='" . sql_escape($this->id) . "'";
+			"WHERE tmp_playlist_data.tmp_playlist='" . sql_escape($this->id) . "' ORDER by id ASC";
 		$db_results = mysql_query($sql, dbh());
 
 		while ($results = mysql_fetch_assoc($db_results)) { 

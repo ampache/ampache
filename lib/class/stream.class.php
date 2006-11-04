@@ -246,7 +246,7 @@ class Stream {
 	        echo "<script language=\"javascript\" type=\"text/javascript\">\n";
 	        echo "<!-- begin\n";
 	        echo "function PlayerPopUp(URL) {\n";
-	        echo "window.open(URL, 'XSPF_player', 'width=355,height=300,scrollbars=0,toolbar=0,location=0,directories=0,status=1,resizable=0');\n";
+	        echo "window.open(URL, 'XSPF_player', 'width=400,height=168,scrollbars=0,toolbar=0,location=0,directories=0,status=1,resizable=0');\n";
 	        echo "window.location = '" .  return_referer() . "';\n";
 	        echo "return false;\n";
 	        echo "}\n";
