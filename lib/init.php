@@ -258,7 +258,7 @@ if (!isset($no_session) AND conf('use_auth')) {
 	$user = new User($_SESSION['userdata']['username']);
 
 	/* If they user ID doesn't exist deny them */
-	if (!$user->uid) { logout(); exit; } 
+	if (!$user->uid AND !conf('demo_mode')) { logout(); exit; } 
 
 	/* Load preferences and theme */
 	init_preferences();
