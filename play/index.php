@@ -256,7 +256,7 @@ while (!feof($fp) && (connection_status() == 0)) {
 if ($bytesStreamed > $minBytesStreamed) {
         $user->update_stats($song_id);
 	/* If this is a voting tmp playlist remove the entry */
-	if (is_object($tmp_playlist) { 
+	if (is_object($tmp_playlist)) { 
 		if ($tmp_playlist->type == 'vote') { 
 			$tmp_playlist->delete_track($song_id);
 		}
