@@ -159,12 +159,16 @@ class Playlist {
 	/**
 	 * get_random_songs
 	 * This returns all of the songs in a random order, except those
-	 * pulled from dyn_songs
+	 * pulled from dyn_songs, takes an optional limit
 	 */
-	function get_random_songs() { 
+	function get_random_songs($limit='') { 
+
+		if ($limit) { 
+			$limit_sql = "LIMIT " . intval($limit);
+		}
 
 		$sql = "SELECT * FROM playlist_data WHERE playlist='" . sql_escape($this->id) . "'" . 
-			" ORDER BY RAND()";
+			" ORDER BY RAND() $limit_sql";
 		$db_results = mysql_query($sql, dbh());
 
 		$results = array();

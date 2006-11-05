@@ -5,9 +5,8 @@
  All rights reserved.  
 
  This program is free software; you can redistribute it and/or
- modify it under the terms of the GNU General Public License
- as published by the Free Software Foundation; either version 2
- of the License, or (at your option) any later version.
+ modify it under the terms of the GNU General Public License v2
+ as published by the Free Software Foundation
 
  This program is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -36,6 +35,9 @@ require_once(conf('prefix') . '/modules/horde/Browser.php');
 $uid 		= scrub_in($_REQUEST['uid']);
 $song_id 	= scrub_in($_REQUEST['song']);
 $sid 		= scrub_in($_REQUEST['sid']);
+
+/* This is specifically for tmp playlist requests */
+$tmp_id		= scrub_in($_REQUEST['tmp_id']);
 
 /* First things first, if we don't have a uid stop here */
 if (!isset($uid)) { 
@@ -81,7 +83,18 @@ if (conf('access_control')) {
 	}
 } // access_control is enabled
 
+/** 
+ * If we've got a tmp playlist then get the
+ * current song, and do any other crazyness
+ * we need to 
+ */
+if ($tmp_playlist = new tmpPlaylist($tmp_id)) { 
+	/* This takes into account votes etc and removes the */
+	$song_id = $tmp_playlist->get_next_object();
+}
 
+
+/* Base Checks passed create the song object */
 $song = new Song($song_id);
 $song->format_song();
 $catalog = new Catalog($song->catalog);
@@ -242,6 +255,10 @@ while (!feof($fp) && (connection_status() == 0)) {
 
 if ($bytesStreamed > $minBytesStreamed) {
         $user->update_stats($song_id);
+	/* If this is a voting tmp playlist remove the entry */
+	if ($tmp_playlist->type == 'vote') { 
+		$tmp_playlist->delete_track($song_id);
+	}
 } 
 
 /* Set the Song as Played if it isn't already */

@@ -5,9 +5,8 @@
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
- modify it under the terms of the GNU General Public License
- as published by the Free Software Foundation; either version 2
- of the License, or (at your option) any later version.
+ modify it under the terms of the GNU General Public License v2
+ as published by the Free Software Foundation
 
  This program is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -95,6 +94,43 @@ class tmpPlaylist {
 		return $items;
 
 	} // get_items
+
+	/**
+	 * get_next_object
+	 * This returns the next object in the tmp_playlist most of the time this 
+	 * will just be the top entry, but if there is a base_playlist and no
+	 * items in the playlist then it returns a random entry from the base_playlist
+	 */
+	function get_next_object() { 
+
+		$tmp_id = sql_escape($this->id);
+		$order = " ORDER BY tmp_playlist_data.id DESC";
+
+		/* Check for an item on the playlist, account for voting */
+		if ($this->type == 'vote') { 
+			/* Add conditions for voting */	
+			$vote_select = ", user_vote.user AS `count`";
+			$order = " ORDER BY `counte` DESC";
+			$vote_join = "LEFT JOIN user_vote ON user_vote.object_id=tmp_playlist_data.id";
+		}
+
+		$sql = "SELECT tmp_playlist_data.object_id $vote_select FROM tmp_playlist_data $vote_join " . 
+			"WHERE tmp_playlist_data.tmp_playlist = '$tmp_id' $order LIMIT 1";
+		$db_resutls = mysql_query($sql, dbh());
+
+		$results = mysql_fetch_assoc($db_results);
+
+		/* If nothing was found and this is a voting playlist then get from base_playlist */
+		if ($this->type == 'vote' AND !$results) { 
+			/* We need to pull a random one from the base_playlist */
+			$base_playlist = new playlist($this->base_playlist);
+			$data = $base_playlist->get_random_songs(1);
+			$results['object_id'] = $data['song'];	
+		}
+
+		return $results['object_id'];
+
+	} // get_next_object
 
 	/** 
 	 * create
@@ -260,22 +296,29 @@ class tmpPlaylist {
 	/**
 	 * delete_track
 	 * This deletes a track and any assoicated votes, we only check for
-	 * votes if it's a -1 session
+	 * votes if it's vote playlist, id is a object_id
 	 */
 	function delete_track($id) { 
 
-		$id = sql_escape($id);
-
-		/* If this is a -1 session then kill votes as well */
-		if ($this->session = '-1') { 
-			$sql = "DELETE FROM user_vote WHERE object_id='$id'";
-			$db_results = mysql_query($sql, dbh());
-		}
+		$id 	= sql_escape($id);
+		$tmp_id = sql_escape($this->id);
 
 		/* delete the track its self */
-		$sql = "DELETE FROM tmp_playlist_data WHERE id='$id'";
+		$sql = "DELETE FROM tmp_playlist_data " . 
+			" WHERE tmp_playlist='$tmp_id' AND object_id='$id'";
 		$db_results = mysql_query($sql,dbh());
 
+		/* If this is a voting playlit prune votes */
+		if ($this->type == 'vote') { 
+			$sql = "DELETE FROM user_vote USING user_vote " . 
+				"LEFT JOIN tmp_playlist_data ON user_vote.object_id = tmp_playlist_data.id " .
+				"WHERE tmp_playlist_data.id IS NULL";
+			$db_results = mysql_query($sql,dbh());
+		} 
+
+		return true;
+
 	} // delete_track
+
 
 } // class tmpPlaylist
