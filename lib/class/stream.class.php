@@ -187,7 +187,7 @@ class Stream {
 	 */
 	function create_xspf() { 
 
-		$playlist =	"<?xml version=\"1.0\" encoding=\"iso-8859-1\" ?>
+		$playlist =	"<?xml version=\"1.0\" encoding=\"utf-8\" ?>
 		<playlist version = \"1\" xmlns=\"http://xspf.org/ns/0/\">
 		<title>Ampache XSPF Playlist</title>
 		<creator>" . conf('site_title') . "</creator>
@@ -201,14 +201,14 @@ class Stream {
 			$url = $song->get_url();
                         $song_name = $song->f_artist_full . " - " . $song->title . "." . $song->type;
 			$playlist .= "		<track>\n";
-			$playlist .= "			<location>$url</location>\n";
-			$playlist .= "			<identifier>$url</identifier>\n";
-			$playlist .= "			<title>" . $song->title . "</title>\n";
-			$playlist .= "			<creator>" . $song->f_artist_full . "</creator>\n";
+			$playlist .= "			<location><![CDATA[$url]]></location>\n";
+			$playlist .= "			<identifier><![CDATA[$url]]></identifier>\n";
+			$playlist .= "			<title><![CDATA[" . $song->title . "]]></title>\n";
+			$playlist .= "			<creator><![CDATA[" . $song->f_artist_full . "]]></creator>\n";
 			$playlist .= "			<annotation></annotation>\n";
-			$playlist .= "			<info>" . conf('web_path') . "/albums.php?action=show&album=" . $song->album  . "</info>\n";
-			$playlist .= "			<image>" . conf('web_path') . "/albumart.php?id=" . $song->album . "&thumb=2" . "</image>\n";
-			$playlist .= "			<album>" . $song->f_album_full . "</album>\n";
+			$playlist .= "			<info><![CDATA[" . conf('web_path') . "/albums.php?action=show&album=" . $song->album  . "]]></info>\n";
+			$playlist .= "			<image><![CDATA[" . conf('web_path') . "/albumart.php?id=" . $song->album . "&thumb=2" . "]]></image>\n";
+			$playlist .= "			<album><![CDATA[" . $song->f_album_full . "]]></album>\n";
 			$playlist .= "			<duration>" . $song->time  . "</duration>\n"; 
 			$playlist .= "		</track>\n\n\n";
                 } // end foreach
@@ -216,7 +216,7 @@ class Stream {
                 $playlist .= "</playlist>\n";
 	        header("Cache-control: public");
         	header("Content-Disposition: filename=playlist.xspf");
-		header("Content-Type: application/xspf+xml;");
+		header("Content-Type: application/xspf+xml; charset=utf-8");
 		echo $playlist;
 
 	} // create_xspf

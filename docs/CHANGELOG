@@ -4,6 +4,7 @@
 
 --------------------------------------------------------------------------
   v.3.3.3-Alpha2
+	- Fixed style issue on Single Album view when ratings are off
 	- Added Democratic Play ability, UI incomplete and 'clunky'
 	- Added some extra error checking to the install process
 	- Fixed issue with delete confirmation on playlist always being 

@@ -34,7 +34,7 @@ $username	= $GLOBALS['user']->username;
 $title		= scrub_out($album->name) . ' -- ' . $album->f_artist; 
 ?>
 <?php require (conf('prefix') . '/templates/show_box_top.inc.php'); ?>
-	<div style="display:table-cell;width:140px;">
+	<div style="float:left;display:table-cell;width:140px;">
 	<?php 
         if ($album_name != "Unknown (Orphaned)") {
 		$aa_url = $web_path . "/albumart.php?id=" . $album->id . "&amp;type=popup";

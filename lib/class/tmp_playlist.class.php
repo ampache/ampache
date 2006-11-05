@@ -138,7 +138,7 @@ class tmpPlaylist {
 			/* We need to pull a random one from the base_playlist */
 			$base_playlist = new playlist($this->base_playlist);
 			$data = $base_playlist->get_random_songs(1);
-			$results['object_id'] = $data['song'];	
+			$results['object_id'] = $data['0'];	
 		}
 
 		return $results['object_id'];
