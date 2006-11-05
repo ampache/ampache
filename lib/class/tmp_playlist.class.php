@@ -42,7 +42,7 @@ class tmpPlaylist {
 	 * This takes a playlist_id as an optional argument and gathers the information
 	 * if not playlist_id is passed returns false (or if it isn't found 
 	 */
-	function tmpPlaylist($playlist_id = 0) { 
+	function tmpPlaylist($playlist_id='') { 
 
 		if (!$playlist_id) { return false; }
 		

@@ -88,7 +88,8 @@ if (conf('access_control')) {
  * current song, and do any other crazyness
  * we need to 
  */
-if ($tmp_playlist = new tmpPlaylist($tmp_id)) { 
+if ($tmp_id) { 
+	$tmp_playlist = new tmpPlaylist($tmp_id);
 	/* This takes into account votes etc and removes the */
 	$song_id = $tmp_playlist->get_next_object();
 }
