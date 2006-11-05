@@ -196,6 +196,11 @@ $web_path = conf('web_path');
 	</li>
 <?php } // if horizontal orientation ?>
 <?php } // if localplay access ?>
+<?php if ($GLOBALS['user']->prefs['play_type'] == 'democratic') { ?>
+	<li>
+		<a href="<?php echo $web_path; ?>/tv.php"><?php echo _('Democratic View'); ?></a>
+	</li>
+<?php } // if democratic play ?>
 <?php if (conf('use_auth')) { ?>
 	<li><a href="<?php echo $web_path; ?>/logout.php"><?php echo _('Logout'); ?></a></li>
 <?php } // end (conf('use_auth'))?>

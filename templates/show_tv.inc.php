@@ -51,6 +51,8 @@ else {
 </div>
 <!-- End Control Div -->
 <div id="tv_np">
+<?php require_once(conf('prefix') . '/templates/show_tv_nowplaying.inc.php'); ?>
 </div>
 <div id="tv_playlist">
+<?php require_once(conf('prefix') . '/templates/show_tv_playlist.inc.php'); ?>
 </div>

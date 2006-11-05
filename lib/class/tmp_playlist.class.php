@@ -83,12 +83,25 @@ class tmpPlaylist {
 	 */
 	function get_items() { 
 
-		$sql = "SELECT object_id FROM tmp_playlist_data " . 
-			"WHERE tmp_playlist_data.tmp_playlist='" . sql_escape($this->id) . "' ORDER by id ASC";
+		$order = 'ORDER BY id ASC';
+		
+		if ($this->type == 'vote') { 
+			$order 		= "ORDER BY `count` DESC";
+			$vote_select = ", user_vote.user AS `count`";
+			$vote_join = "LEFT JOIN user_vote ON user_vote.object_id=tmp_playlist_data.id";
+		}
+
+		/* Select all objects from this playlist */
+		$sql = "SELECT tmp_playlist_data.id, tmp_playlist_data.object_id $vote_select FROM tmp_playlist_data $vote_join " . 
+			"WHERE tmp_playlist_data.tmp_playlist='" . sql_escape($this->id) . "' $order";
 		$db_results = mysql_query($sql, dbh());
+		
+		/* Define the array */
+		$items = array();
 
 		while ($results = mysql_fetch_assoc($db_results)) { 
-			$items[] = $results['object_id'];
+			$key		= $results['id'];
+			$items[$key] 	= $results['object_id'];
 		}
 
 		return $items;
@@ -110,13 +123,13 @@ class tmpPlaylist {
 		if ($this->type == 'vote') { 
 			/* Add conditions for voting */	
 			$vote_select = ", user_vote.user AS `count`";
-			$order = " ORDER BY `counte` DESC";
+			$order = " ORDER BY `count` DESC";
 			$vote_join = "LEFT JOIN user_vote ON user_vote.object_id=tmp_playlist_data.id";
 		}
 
 		$sql = "SELECT tmp_playlist_data.object_id $vote_select FROM tmp_playlist_data $vote_join " . 
 			"WHERE tmp_playlist_data.tmp_playlist = '$tmp_id' $order LIMIT 1";
-		$db_resutls = mysql_query($sql, dbh());
+		$db_results = mysql_query($sql, dbh());
 
 		$results = mysql_fetch_assoc($db_results);
 
@@ -131,6 +144,19 @@ class tmpPlaylist {
 		return $results['object_id'];
 
 	} // get_next_object
+
+	/**
+	 * get_vote_url
+	 * This returns the special play URL for democratic play, only open to ADMINs
+	 */
+	function get_vote_url() { 
+
+		$link = conf('web_path') . '/play/index.php?tmp_id=' . scrub_out($this->id) . 
+			'&amp;sid=' . scrub_out(session_id()) . '&amp;uid=' . scrub_out($GLOBALS['user']->id);
+		
+		return $link;
+
+	} // get_vote_url
 
 	/** 
 	 * create
@@ -149,6 +175,9 @@ class tmpPlaylist {
 		$db_results = mysql_query($sql, dbh());
 
 		$id = mysql_insert_id(dbh());
+
+		/* Prune dead tmp_playlists */
+		$this->prune_playlists();
 
 		/* Clean any other playlists assoicated with this session */
 		$this->delete($sessid,$id);
@@ -176,6 +205,22 @@ class tmpPlaylist {
 		return true;
 
 	} // delete
+
+	/**
+	 * prune_playlists
+	 * This deletes and playlists that don't have an assoicated session
+	 */
+	function prune_playlists() { 
+
+		/* Just delete if no matching session row */
+		$sql = "DELETE FROM tmp_playlist USING tmp_playlist " . 
+			"LEFT JOIN session ON session.id=tmp_playlist.session " . 
+			"WHERE session.id IS NULL AND tmp_playlist.session != '-1'";
+		$db_results = mysql_query($sql,dbh());
+
+		return true;
+
+	} // prune_playlists
 
 	/**
 	 * prune_tracks
@@ -219,7 +264,7 @@ class tmpPlaylist {
 		/* Itterate through the objects if no vote, add to playlist and vote */
 		foreach ($items as $object_id) { 
 			if (!$this->has_vote($object_id)) { 
-				$this->add_vote($object_id);
+				$this->add_vote($object_id,$this->id);
 			}
 		} // end foreach
 
@@ -230,9 +275,10 @@ class tmpPlaylist {
 	 * add_vote
 	 * This takes a object id and user and actually inserts the row
 	 */
-	function add_vote($object_id) { 
+	function add_vote($object_id,$tmp_playlist) { 
 
-		$object_id = sql_escape($object_id);
+		$object_id 	= sql_escape($object_id);
+		$tmp_playlist	= sql_escape($tmp_playlist);
 
 		/* If it's on the playlist just vote */
 		$sql = "SELECT id FROM tmp_playlist_data " . 
@@ -242,7 +288,7 @@ class tmpPlaylist {
 		/* If it's not there, add it and pull ID */
 		if (!$results = mysql_fetch_assoc($db_results)) { 
 			$sql = "INSERT INTO tmp_playlist_data (`tmp_playlist`,`object_id`) " . 
-				"VALUES ('-1','$object_id')";
+				"VALUES ('$tmp_playlist','$object_id')";
 			$db_results = mysql_query($sql, dbh());
 			$results['id'] = mysql_insert_id(dbh());
 		} 
@@ -262,22 +308,42 @@ class tmpPlaylist {
 	 */
 	function has_vote($object_id) { 
 
+		$tmp_id = sql_escape($this->id);
+
 		/* Query vote table */
 		$sql = "SELECT tmp_playlist_data.id FROM user_vote " . 
 			"INNER JOIN tmp_playlist_data ON tmp_playlist_data.id=user_vote.object_id " . 
 			"WHERE user_vote.user='" . sql_escape($GLOBALS['user']->id) . "' " . 
-			"      AND tmp_playlist_data.object_id='" . sql_escape($object_id) . "' " . 
-			"      AND tmp_playlist_data.tmp_playlist='-1'";
+			"AND tmp_playlist_data.object_id='" . sql_escape($object_id) . "' " . 
+			"AND tmp_playlist_data.tmp_playlist='$tmp_id'";
 		$db_results = mysql_query($sql, dbh());
 		
 		/* If we find  row, they've voted!! */
 		if (mysql_num_rows($db_results)) { 
-			return false; 
+			return true; 
 		}
 
-		return true;		
+		return false;		
 
 	} // has_vote
+
+	/**
+	 * get_vote
+	 * This returns the current count for a specific song on this tmp_playlist
+	 */
+	function get_vote($object_id) { 
+
+		$object_id = sql_escape($object_id);
+
+		$sql = "SELECT COUNT(`user`) AS `count` FROM user_vote " . 
+			" WHERE object_id='$object_id'";
+		$db_results = mysql_query($sql,dbh());
+
+		$results = mysql_fetch_assoc($db_results);
+
+		return $results['count'];
+
+	} // get_vote
 
 	/**
 	 * vote_active

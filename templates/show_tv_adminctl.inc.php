@@ -29,5 +29,6 @@
 <input type="submit" value="<?php echo _('Activate'); ?>" />
 </form>
 <?php } else { ?>
-<?php echo _('Democratic Play Active'); ?>
+<?php echo _('Democratic Play Active'); ?>&nbsp;
+<a href="<?php echo $tmp_playlist->get_vote_url(); ?>"><?php echo _('Play'); ?></a>
 <?php } ?>

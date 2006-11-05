@@ -289,7 +289,7 @@ class Stream {
 	 */
 	function create_democratic() { 
 
-		$tmp_playlist	= new tmpPlaylist('-1');
+		$tmp_playlist	= get_democratic_playlist('-1');
 		$tmp_playlist->vote($this->songs);
 		
 		header("Location: " . return_referer());

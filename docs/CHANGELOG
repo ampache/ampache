@@ -4,6 +4,8 @@
 
 --------------------------------------------------------------------------
   v.3.3.3-Alpha2
+	- Added Democratic Play ability, UI incomplete and 'clunky'
+	- Added some extra error checking to the install process
 	- Fixed issue with delete confirmation on playlist always being 
 		yes, even if you click no.
 	- Added more error checking to install, won't let you continue 

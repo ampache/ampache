@@ -18,11 +18,7 @@
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
-
 require_once('lib/init.php');
-
-/* Additional Library for tv stuff */
-require_once (conf('prefix') . '/lib/democratic.lib.php');
 
 $dbh = dbh();
 $web_path = conf('web_path');
@@ -44,10 +40,12 @@ switch ($action) {
 		
 		/* Re-generate the playlist */
 		$tmp_playlist = new tmpPlaylist($id);
+		$songs = $tmp_playlist->get_items();
 		require_once(conf('prefix') . '/templates/show_tv.inc.php');
 	break;
 	default: 
 		$tmp_playlist = get_democratic_playlist('-1'); 
+		$songs = $tmp_playlist->get_items();
 		require_once(conf('prefix') . '/templates/show_tv.inc.php');
 	break;
 } // end switch on action

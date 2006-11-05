@@ -236,15 +236,30 @@ function install_create_config($web_path,$username,$password,$hostname,$database
 */
 function install_create_account($username,$password) { 
 
+	if (!strlen($username) OR !strlen($password)) { 
+		$GLOBALS['error']->add_error('general',"No Username/Password specified");
+		return false; 
+	}
+
         $results = read_config($GLOBALS['configfile'], 0, 0);
 	$dbh = check_database($results['local_host'],$results['local_username'],$results['local_pass']);
+
+	if (!is_resource($dbh)) { 
+		$GLOBALS['error']->add_error('general','Database Connection Failed:' . mysql_error());
+		return false; 
+	}
 		
-	@mysql_select_db($results['local_db'],$dbh);
+	$db_select = @mysql_select_db($results['local_db'],$dbh);
+	
+	if (!$db_select) { 
+		$GLOBALS['error']->add_error('general','Database Select Failed:' . mysql_error());
+		return false; 
+	}
 
 	$username = sql_escape($username,$dbh);
 	$password = sql_escape($password,$dbh);
 
-	$sql = "INSERT INTO user (`username`,`password`,`offset_limit`,`access`) VALUES ('$username',PASSWORD('$password'),'50','admin')";
+	$sql = "INSERT INTO user (`username`,`password`,`offset_limit`,`access`) VALUES ('$username',PASSWORD('$password'),'50','100')";
 	$db_results = mysql_query($sql, $dbh);
 	
 	if (!$db_results) { 

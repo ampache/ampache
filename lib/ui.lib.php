@@ -326,7 +326,7 @@ function show_play_selected() {
  * @package Web Interface
  * @catagory Get
  */
-function get_now_playing() {
+function get_now_playing($filter='') {
 
 	$sql = "SELECT song_id,user FROM now_playing ORDER BY start_time DESC";
 	$db_results = mysql_query($sql, dbh());
@@ -336,28 +336,6 @@ function get_now_playing() {
 		$np_user = new User($r['user']);
 		$results[] = array('song'=>$song,'user'=>$np_user);
 	} // end while
-/*
-	$myMpd = init_mpd();
-
-	if (is_object($myMpd) AND conf('mpd_method') == 'file') {
-		$sql = "SELECT song.id FROM song WHERE file = \"". conf('mpd_dir') . "/" .
-			$myMpd->playlist[$myMpd->current_track_id]['file']. "\"";
-
-		$db_results = @mysql_query($sql,dbh());
-
-		while ($r = mysql_fetch_assoc($db_results)) {
-
-			$song = new Song($r['id']);
-			$song->format_song();
-			$np_user = new User(0);
-			$np_user->fullname = 'MPD User';
-			$np_user->username = 'mpd_user';
-			$results[] = array('song'=>$song,'user'=>$np_user);
-
-		} // end while
-
-	} // end if we have a MPD object
-*/
 
 	return $results;
 
