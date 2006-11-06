@@ -4,6 +4,10 @@
 
 --------------------------------------------------------------------------
   v.3.3.3-Alpha2
+	- Fixed override of local_length to 9000 regardless of config file
+	- Tweaked Remeber Me Checkbox to be disabled if remember_length
+		is <= local_length
+	- Fixed issues with date not being set on insert of stats
 	- Fixed style issue on Single Album view when ratings are off
 	- Added Democratic Play ability, UI incomplete and 'clunky'
 	- Added some extra error checking to the install process

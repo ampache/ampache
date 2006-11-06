@@ -67,7 +67,7 @@ if (!$results = read_config($configfile,0)) {
 } 
 
 /** This is the version.... fluf nothing more... **/
-$results['version']		= '3.3.3-Alpha2 Build (003)';
+$results['version']		= '3.3.3-Alpha2 Build (004)';
 
 $results['raw_web_path']	= $results['web_path'];
 $results['web_path']		= $http_type . $_SERVER['HTTP_HOST'] . $results['web_path'];
@@ -109,6 +109,9 @@ if (!is_array($results['auth_methods'])) {
 if (!$results['user_ip_cardinality']) { 
 	$results['user_ip_cardinality'] = 42;
 }
+if (!$results['local_length']) { 
+	$results['local_length'] = '9000';
+}
 
 
 /* Variables needed for vauth Module */
@@ -116,8 +119,8 @@ $results['cookie_path'] 	= $results['raw_web_path'];
 $results['cookie_domain']	= $_SERVER['SERVER_NAME'];
 $results['cookie_life']		= $results['sess_cookielife'];
 $results['session_name']	= $results['sess_name'];
-$results['cookie_secure']	= '0';
-$results['session_length']	= '9000';
+$results['cookie_secure']	= $results['sess_cookiesecure'];
+$results['session_length']	= $results['local_length'];
 $results['mysql_password']	= $results['local_pass'];
 $results['mysql_username']	= $results['local_username'];
 $results['mysql_hostname']	= $results['local_host'];
