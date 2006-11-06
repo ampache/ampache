@@ -4,6 +4,7 @@
 
 --------------------------------------------------------------------------
   v.3.3.3-Alpha2
+	- Fixed Show All of Song Titles not having any data
 	- Fixed override of local_length to 9000 regardless of config file
 	- Tweaked Remeber Me Checkbox to be disabled if remember_length
 		is <= local_length

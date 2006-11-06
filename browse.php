@@ -138,7 +138,7 @@ switch($action) {
 
 		if ($view->base_sql) { 
 			$songs = $song->get_songs($view->sql);
-			show_songs($songs);
+			show_songs($songs,0,0);
 		}
 	break;
 	case 'catalog':

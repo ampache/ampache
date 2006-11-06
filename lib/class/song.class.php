@@ -823,6 +823,7 @@ class Song {
         function get_sql_from_match($match) {
 
                 switch ($match) {
+			case 'Show_all':
                         case 'Show_All':
                         case 'show_all':
                                 $sql = "SELECT id FROM song";
