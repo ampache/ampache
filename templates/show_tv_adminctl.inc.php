@@ -28,7 +28,17 @@
 <input type="hidden" name="action" value="create_playlist" />
 <input type="submit" value="<?php echo _('Activate'); ?>" />
 </form>
-<?php } else { ?>
+<?php 
+} 
+
+else { 
+?>
 <?php echo _('Democratic Play Active'); ?>&nbsp;
-<a href="<?php echo $tmp_playlist->get_vote_url(); ?>"><?php echo _('Play'); ?></a>
+<a href="<?php echo $tmp_playlist->get_vote_url(); ?>"><?php echo _('Play'); ?></a><br />
+<?php echo _('Base Playlist'); ?>: 
+<form method="post" style="Display:inline;" action="<?php echo conf('web_path'); ?>/tv.php?action=update_playlist&amp;playlist_id=<?php echo $tmp_playlist->base_playlist; ?>" enctype="multipart/form-data">
+	<?php show_playlist_dropdown($tmp_playlist->base_playlist); ?>		
+	<input type="hidden" name="tmp_playlist_id" value="<?php echo $tmp_playlist->id; ?>" />
+	<input type="submit" value="<?php echo _('Update'); ?>" />
+</form>
 <?php } ?>

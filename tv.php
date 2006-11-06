@@ -34,6 +34,11 @@ $action 	= scrub_in($_REQUEST['action']);
 
 switch ($action) { 
 	case 'create_playlist':
+		/* Only Admins Here */
+		if (!$GLOBALS['user']->has_access(100)) { 
+			access_denied(); 
+			break;
+		}
 		/* We need to make ourselfs a new tmp playlist */
 		$tmp_playlist	= new tmpPlaylist();
 		$id = $tmp_playlist->create('-1','vote','song',$_REQUEST['playlist_id']);	
@@ -43,6 +48,15 @@ switch ($action) {
 		$songs = $tmp_playlist->get_items();
 		require_once(conf('prefix') . '/templates/show_tv.inc.php');
 	break;
+	case 'update_playlist':
+		/* Only Admins Here */
+		if (!$GLOBALS['user']->has_access(100)) { 
+			access_denied();
+			break;
+		}
+		$tmp_playlist = new tmpPlaylist($_REQUEST['tmp_playlist_id']);
+		$tmp_playlist->update_playlist($_REQUEST['playlist_id']);
+	/* Display the default tv page */
 	default: 
 		$tmp_playlist = get_democratic_playlist('-1'); 
 		$songs = $tmp_playlist->get_items();

@@ -187,6 +187,22 @@ class tmpPlaylist {
 	} // create 
 
 	/**
+	 * update_playlist
+	 * This updates the base_playlist on this tmp_playlist
+	 */
+	function update_playlist($playlist_id) { 
+
+		$playlist_id 	= sql_escape($playlist_id);
+		$tmp_id		= sql_escape($this->id);
+
+		$sql = "UPDATE tmp_playlist SET tmp_playlist.base_playlist='$playlist_id' WHERE id='$tmp_id'";
+		$db_results = mysql_query($sql,dbh());
+
+		return true;
+
+	} // update_playlist
+
+	/**
 	 * delete
 	 * This deletes any other tmp_playlists assoicated with this
 	 * session 

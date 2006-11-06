@@ -56,6 +56,7 @@ class Stats {
 		$type 	= $this->validate_type($type);
 		$oid	= sql_escape($oid);
 		$user	= sql_escape($user);	
+		$date	= time();
 
 		$sql = "INSERT INTO object_count (`object_type`,`object_id`,`date`,`user`) " . 
 			" VALUES ('$type','$oid','$date','$user')";
