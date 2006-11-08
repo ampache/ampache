@@ -162,7 +162,7 @@ use_auth	= "yes"
 # This allows rattings for almost any object in ampache
 # POSSIBLE VALUES: false true
 # DEFAULT: false
-#ratings = "false"
+ratings = "true"
 
 # This options will turn on/off Demo Mode
 # If Demo mode is on you can not play songs or update your catalog

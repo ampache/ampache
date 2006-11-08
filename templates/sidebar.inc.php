@@ -81,7 +81,7 @@ $web_path = conf('web_path');
                 if ($location['page'] == "preferences.php" ){
                     echo " id=\"activetopmenu\" ";
                     }?>>
-		<a href="<?php echo $web_path; ?>/preferences.php"><?php echo _("Preferences"); ?></a>
+		<a href="<?php echo $web_path; ?>/preferences.php"><?php echo _('Preferences'); ?></a>
 	</li>
 	<li<?php
                 if ($location['page'] == "browse.php" ||
@@ -89,7 +89,7 @@ $web_path = conf('web_path');
                     $location['page'] == "albums.php" ){
                     echo " id=\"activetopmenu\" ";
                     }?>>
-		<a href="<?php echo $web_path; ?>/browse.php"><?php echo _("Browse"); ?></a> 
+		<a href="<?php echo $web_path; ?>/browse.php"><?php echo _('Browse'); ?></a> 
 		<?php 
 		if ($GLOBALS['theme']['submenu'] != 'simple' AND $GLOBALS['theme']['submenu'] != 'full') { 
 			show_submenu($browse_items);
@@ -108,14 +108,14 @@ $web_path = conf('web_path');
                 if ($location['page'] == "upload.php"){
                     echo " id=\"activetopmenu\" ";
                     }?>>
-		<a href="<?php echo $web_path; ?>/upload.php"><?php echo _("Upload"); ?></a>
+		<a href="<?php echo $web_path; ?>/upload.php"><?php echo _('Upload'); ?></a>
 	</li>
 <?php } // end if ($GLOBALS['user']->prefs['upload']) ?>
 	<li<?php
                 if ($location['page'] == "playlist.php"){
                     echo " id=\"activetopmenu\" ";
                     }?>>
-		<a href="<?php echo $web_path; ?>/playlist.php"><?php echo _("Playlists"); ?></a>
+		<a href="<?php echo $web_path; ?>/playlist.php"><?php echo _('Playlists'); ?></a>
 	</li>
 	<li<?php
                 if ($location['page'] == "stats.php"){
@@ -127,7 +127,7 @@ $web_path = conf('web_path');
                 if ($location['page'] == "search.php"){
                     echo " id=\"activetopmenu\" ";
                     }?>>
-		<a href="<?php echo $web_path; ?>/search.php"><?php echo _("Search"); ?></a>
+		<a href="<?php echo $web_path; ?>/search.php"><?php echo _('Search'); ?></a>
 	</li>
 <?php if ($GLOBALS['theme']['orientation'] != 'horizontal') { ?>
 	<li>
@@ -159,16 +159,16 @@ $web_path = conf('web_path');
 			<option value="100">100</option>
 			<option value="500">500</option>
 			<option value="1000">1000</option>
-			<option value="-1"><?php echo _("All"); ?></option>
+			<option value="-1"><?php echo _('All'); ?></option>
 		</select>
 		<?php show_genre_pulldown('genre','','','13','width:8.7em;'); ?>
 					<br />  
 		<select name="random_type" style="width:8.7em;">
-			<option value="Songs"><?php echo _("Songs"); ?></option>
-			<option value="Minutes"><?php echo _("Minutes"); ?></option>
-			<option value="Artists"><?php echo _("Artists"); ?></option>
-			<option value="Albums"><?php echo _("Albums"); ?></option>
-			<option value="Less Played"><?php echo _("Less Played"); ?></option>
+			<option value="Songs"><?php echo _('Songs'); ?></option>
+			<option value="Minutes"><?php echo _('Minutes'); ?></option>
+			<option value="Artists"><?php echo _('Artists'); ?></option>
+			<option value="Albums"><?php echo _('Albums'); ?></option>
+			<option value="Less Played"><?php echo _('Less Played'); ?></option>
 		</select>
 		<br /> 
 		<?php show_catalog_pulldown('catalog','width:8.7em;'); ?>

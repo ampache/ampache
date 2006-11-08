@@ -125,7 +125,9 @@ foreach ($song_ids as $song_id) {
 		<?php echo $song->f_bitrate; ?>
 	</td>
 	<td>
+		<a href="<?php echo $web_path; ?>/genre.php?action=show_genre&amp;genre_id=<?php echo $song->genre; ?>">
 		<?php echo $song->f_genre; ?>
+		</a>
 	</td>
 	<td>
 		<a href="<?php echo $web_path; ?>/flag.php?action=show_flag&amp;type=song&amp;id=<?php echo $song->id; ?>"><?php echo _('Flag'); ?></a>

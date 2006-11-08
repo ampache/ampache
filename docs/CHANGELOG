@@ -4,6 +4,11 @@
 
 --------------------------------------------------------------------------
   v.3.3.3-Alpha2
+	- Added From File: option to album art (Thx pb1dft)
+	- Updated French Translation (Thx charrea)
+	- Tweaked default config, Ratings are enabled by default
+	- Added Genre link on show_songs along with some other minor UI
+		improvements
 	- Fixed Show All of Song Titles not having any data
 	- Fixed override of local_length to 9000 regardless of config file
 	- Tweaked Remeber Me Checkbox to be disabled if remember_length
