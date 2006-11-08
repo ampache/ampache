@@ -21,7 +21,7 @@
 */
 ?>
 <?php show_box_top(_('Customize Search')); ?>
-<form name="coverart" method="get" action="<?php echo conf('web_path'); ?>/albums.php" style="Displain:inline;">
+<form enctype="multipart/form-data" name="coverart" method="post" action="<?php echo conf('web_path'); ?>/albums.php?action=find_art&album_id=<?php echo $album->id; ?>&artist_name=<?php echo $_POST['artist_name'];?>&album_name=<?php echo $_POST['album_name']; ?>&cover=<?php echo scrub_out($_POST['cover']); ?>" style="Display:inline;">
 <table>
 <tr>
 </tr>
@@ -51,8 +51,18 @@
 </tr>
 <tr>
 	<td>
+		<?php echo _('Local Image'); ?>
+	</td>
+	<td>
+		<input type="file" size="40" id="file" name="file" value="" />
+	</td>
+</tr>
+
+<tr>
+	<td>
 		<input type="hidden" name="action" value="find_art" />
 		<input type="hidden" name="album_id" value="<?php echo $album->id; ?>" />
+                <input type="hidden" name="MAX_FILE_SIZE" value="<?php echo conf('max_upload_size'); ?>" />
 		<input type="submit" value="<?php echo _('Get Art'); ?>" />
 	</td>
 </tr>

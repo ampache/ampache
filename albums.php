@@ -90,25 +90,56 @@ elseif ($_REQUEST['action'] === 'find_art') {
 	
 	$search = $artist . " " . $album_name;
 
-	// Attempt to find the art with what we've got
-	$images = $album->find_art($_REQUEST['cover'], $search);
-	$_SESSION['form']['images'] = $images;
+	//Find out if the cover url is a local filename or an url
+	if (empty($_FILES['file'])){
+		$coverurl = $_REQUEST['cover'];
 
-	if (count($images)) {
-		include(conf('prefix') . '/templates/show_album_art.inc.php');
-	}
-	else {
-		show_confirmation(_('Album Art Not Located'),_('Album Art could not be located at this time. This may be due to Amazon being busy, or the album not being present in their collection.'),"/albums.php?action=show&amp;album=" . $album->id);
-  	}
+		// Attempt to find the art with what we've got
+		$images = $album->find_art($_REQUEST['cover'], $search);
+		$_SESSION['form']['images'] = $images;
+
+		if (count($images)) {
+			include(conf('prefix') . '/templates/show_album_art.inc.php');
+		}
+		else {
+			show_confirmation(_('Album Art Not Located'),_('Album Art could not be located at this time. This may be due to Amazon being busy, or the album not being present in their collection.'),"/albums.php?action=show&amp;album=" . $album->id);
+	  	}
   
-	$albumname = $album->name;
-	$artistname = $artist;
+		$albumname = $album->name;
+		$artistname = $artist;
 	
-	// Remember the last typed entry, if there was one
-	if (isset($_REQUEST['album_name'])) {   $albumname = scrub_in($_REQUEST['album_name']); }
-	if (isset($_REQUEST['artist_name'])) {  $artistname = scrub_in($_REQUEST['artist_name']); }
-	
+		// Remember the last typed entry, if there was one
+		if (isset($_REQUEST['album_name'])) {   $albumname = scrub_in($_REQUEST['album_name']); }
+		if (isset($_REQUEST['artist_name'])) {  $artistname = scrub_in($_REQUEST['artist_name']); }
+
 	include(conf('prefix') . '/templates/show_get_albumart.inc.php');
+
+	}
+	elseif (isset($_FILES['file']['tmp_name'])){
+		$album_id = $_REQUEST['album_id'];
+		
+		$album = new Album($album_id);
+
+		$dir = dirname($_FILES['file']['tmp_name']) . "/";
+		$filename = $dir . basename($_FILES['file']['tmp_name']);
+		$handle = fopen($filename, "rb");
+                $mime = $_FILES['file']['type'];
+	
+	        $art = '';
+                while(!feof($handle)) {
+                $art .= fread($handle, 1024);
+                }
+                fclose($handle);
+		if (!empty($art)){
+		$album->insert_art($art,$mime);
+			show_confirmation(_("Album Art Inserted"),"","/albums.php?action=show&album=$album_id");
+		}
+		else {
+			show_confirmation(_('Album Art Not Located'),_('Album Art could not be located at this time. This may be due to write acces error, or the file is not received corectly.'),"/albums.php?action=show&amp;album=" . $album->id);
+	  	}
+	
+	}
+
 
 } // find_art 
 
