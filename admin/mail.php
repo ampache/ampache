@@ -34,6 +34,7 @@ if (isset ($_POST['cat_stats'])){$cat_stats = scrub_in($_POST['cat_stats']);}
 if (isset ($_POST['pop_albums'])){$pop_albums = scrub_in($_POST['pop_albums']);}
 if (isset ($_POST['pop_artists'])){$pop_artists = scrub_in($_POST['pop_artists']);}
 if (isset ($_POST['pop_songs'])){$pop_songs = scrub_in($_POST['pop_songs']);}
+if (isset ($_POST['threshold'])){$threshold = scrub_in($_POST['threshold']);} else { $threshold = conf($stats_threshold); };
 if (isset ($_POST['new_artists'])){$new_artists = scrub_in($_POST['new_artists']);}
 if (isset ($_POST['new_albums'])){$new_albums = scrub_in($_POST['new_albums']);}
 $subject = stripslashes(scrub_in($_POST['subject']));
@@ -142,7 +143,7 @@ switch ($action) {
 	if (isset ($pop_albums)){
 		$message .= "\n\nMost Popular Albums\n\n";
 		$stats = new Stats();
-		$stats = $stats->get_top('10','album');
+		$stats = $stats->get_top('10','album',$threshold);
 
 		foreach( $stats as $r){
 		$album   = new Album($r[object_id]);
@@ -154,7 +155,7 @@ switch ($action) {
        if (isset ($pop_artists)){
                 $message .= "\n\nMost Popular Artists\n\n";
 		$stats = new Stats();
-		$stats = $stats->get_top('10','artist');
+		$stats = $stats->get_top('10','artist',$threshold);
 
 		foreach( $stats as $r){
                         $artist   = new Artist($r[object_id]);
@@ -167,7 +168,7 @@ switch ($action) {
 
                 $message .= "\n\nMost Popular Songs\n\n";
 		$stats = new Stats();
-		$stats = $stats->get_top('10','song');
+		$stats = $stats->get_top('10','song',$threshold);
 
 		foreach( $stats as $r){
 		$song = new Song($r[object_id]);

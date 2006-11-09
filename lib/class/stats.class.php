@@ -73,12 +73,16 @@ class Stats {
 	 * This returns the top X for type Y from the
 	 * last conf('stats_threshold') days
 	 */
-	function get_top($count,$type) { 
+	function get_top($count,$type,$threshold = '') { 
 
 		$count	= intval($count);
 		$type	= $this->validate_type($type);
-		$date 	= time() - (86400*conf('stats_threshold'));
-
+		if (empty($threshold)){
+		    $date = time() - (86400*conf('stats_threshold'));
+		}
+		else {
+		    $date = time() - (86400*$threshold);
+		}
 		/* Select Top objects counting by # of rows */
 		$sql = "SELECT object_id,COUNT(id) AS `count` FROM object_count" . 
 			" WHERE object_type='$type' AND date >= '$date'" .

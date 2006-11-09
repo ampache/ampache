@@ -69,6 +69,13 @@
 		        <input type="checkbox" name="pop_songs" value="yes" />
 		    </td>
 		</tr>
+		  <tr>
+		    <td colspan = "2"><?php echo _('Most Popular Threshold in days'); ?>:</td>
+		    <td>
+		        <input type="text" name="threshold" value="<?php echo conf('popular_threshold'); ?>" />
+		    </td>
+		</tr>
+
 	</table>
     </td>
   </tr>
