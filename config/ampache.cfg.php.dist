@@ -161,7 +161,7 @@ use_auth	= "yes"
 # 5 Star Ratings
 # This allows rattings for almost any object in ampache
 # POSSIBLE VALUES: false true
-# DEFAULT: false
+# DEFAULT: true
 ratings = "true"
 
 # This options will turn on/off Demo Mode

@@ -4,6 +4,7 @@
 
 --------------------------------------------------------------------------
   v.3.3.3-Alpha2
+	- Added exception to MPD controller, forces HTTP play regardless
 	- Added From File: option to album art (Thx pb1dft)
 	- Updated French Translation (Thx charrea)
 	- Tweaked default config, Ratings are enabled by default

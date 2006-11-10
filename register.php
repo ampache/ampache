@@ -5,9 +5,8 @@
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
- modify it under the terms of the GNU General Public License
- as published by the Free Software Foundation; either version 2
- of the License, or (at your option) any later version.
+ modify it under the terms of the GNU General Public License v2
+ as published by the Free Software Foundation.
 
  This program is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -30,6 +29,9 @@
 $no_session = true;
 require_once ('lib/init.php');
 
+/* Load the preferences */
+init_preferences();
+
 $web_path = conf('web_path');
 
 /* Check Perms */
@@ -41,16 +43,15 @@ if (!conf('allow_public_registration') || conf('demo_mode')) {
  * These are only needed for this page so they aren't included in init.php 
  * this is for email validation and the cool little graphic
 */
-require ("modules/validatemail/validateEmailFormat.php");
-require ("modules/validatemail/validateEmail.php");
+require_once (conf('prefix') . '/modules/validatemail/validateEmailFormat.php');
+require_once (conf('prefix') . '/modules/validatemail/validateEmail.php');
 
 /* Don't even include it if we aren't going to use it */
 if (conf('captcha_public_reg')) { 
 	define ("CAPTCHA_INVERSE, 1");
-	include ("modules/captcha/captcha.php");
+	require_once (conf('prefix') . '/modules/captcha/captcha.php');
 }
 
-/* Show a light header */
 
 $action = scrub_in($_REQUEST['action']);
 
@@ -77,14 +78,14 @@ switch ($action) {
 		if (conf('captcha_public_reg')) { 
 		    	$captcha 		= captcha::check(); 
 			if(!isset ($captcha)) {
-				$GLOBALS['error']->add_error('captcha',_("Error Captcha Required"));
+				$GLOBALS['error']->add_error('captcha',_('Error Captcha Required'));
 			}	
 			if (isset ($captcha)) {
 				if ($captcha) {
 					$msg="SUCCESS";
 				}
 		    		else {
-			    		$GLOBALS['error']->add_error('captcha',_("Error Captcha Failed"));
+			    		$GLOBALS['error']->add_error('captcha',_('Error Captcha Failed'));
 		    		}
 			} // end if we've got captcha
 		} // end if it's enabled

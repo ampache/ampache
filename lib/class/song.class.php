@@ -711,7 +711,7 @@ class Song {
 	 * a stream URL taking into account the downsampling mojo and everything
 	 * else, this is used or will be used by _EVERYTHING_ 
 	 */
-	function get_url($session_id='') { 
+	function get_url($session_id='',$force_http='') { 
 
 		/* Define Variables we are going to need */
 		$username 	= $GLOBALS['user']->username;
@@ -737,7 +737,7 @@ class Song {
 	
 		$web_path = conf('web_path');
 
-                if (conf('force_http_play')) {
+                if (conf('force_http_play') AND !$force_http) {
                         $port = conf('http_port');
                         $web_path = preg_replace("/https/", "http",$web_path);
                         $web_path = preg_replace("/:\d+/",":$port",$web_path);

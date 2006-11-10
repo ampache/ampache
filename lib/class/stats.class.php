@@ -75,14 +75,15 @@ class Stats {
 	 */
 	function get_top($count,$type,$threshold = '') { 
 
+		/* If they don't pass one, then use the preference */
+		if (!$threshold) { 
+			$threshold = conf('stats_threshold');
+		}
+
 		$count	= intval($count);
 		$type	= $this->validate_type($type);
-		if (empty($threshold)){
-		    $date = time() - (86400*conf('stats_threshold'));
-		}
-		else {
-		    $date = time() - (86400*$threshold);
-		}
+		$date	= time() - (86400*$threshold);
+		
 		/* Select Top objects counting by # of rows */
 		$sql = "SELECT object_id,COUNT(id) AS `count` FROM object_count" . 
 			" WHERE object_type='$type' AND date >= '$date'" .

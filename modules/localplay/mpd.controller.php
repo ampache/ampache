@@ -5,9 +5,8 @@
  All Rights Reserved
 
  This program is free software; you can redistribute it and/or
- modify it under the terms of the GNU General Public License
- as published by the Free Software Foundation; either version 2
- of the License, or (at your option) any later version.
+ modify it under the terms of the GNU General Public License v2
+ as published by the Free Software Foundation.
 
  This program is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -113,7 +112,7 @@ class AmpacheMpd {
 
 		foreach ($songs as $song_id) { 
 			$song = new Song($song_id);
-			$url = $song->get_url();
+			$url = $song->get_url(0,1);
 			if (is_null($this->_mpd->PlAdd($url))) { 
 				debug_event('mpd_add','Error: Unable to add $url to MPD ' . $this->_mpd->errStr,'1');
 			}
