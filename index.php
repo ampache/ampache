@@ -38,6 +38,8 @@ $action = scrub_in($_REQUEST['action']);
  */
 if (conf('refresh_limit') > 5) { 
 	$ajax_url = conf('ajax_url') . '?action=reloadnp' . conf('ajax_info');
+	/* Can't have the &amp; stuff in the Javascript */
+	$ajax_url = str_replace("&amp;","&",$ajax_url);
 	require_once(conf('prefix') . '/templates/javascript_refresh.inc.php');
 }
 ?>
