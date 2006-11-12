@@ -240,7 +240,7 @@ class tmpPlaylist {
 
 	/**
 	 * prune_tracks
-	 * This prunes tracks that don't have playlists
+	 * This prunes tracks that don't have playlists or don't have votes 
 	 */
 	function prune_tracks() { 
 
@@ -248,6 +248,13 @@ class tmpPlaylist {
 			"LEFT JOIN tmp_playlist ON tmp_playlist_data.tmp_playlist=tmp_playlist.id " . 
 			"WHERE tmp_playlist.id IS NULL";
 		$db_results = mysql_query($sql,dbh());
+
+		$sql = "DELETE FROM tmp_playlist_data USING tmp_playlist_data " . 
+			"LEFT JOIN user_vote ON tmp_playlist_data.id=user_vote.object_id " . 
+			"WHERE user_vote.object_id IS NULL";
+		$db_results = mysql_query($sql,dbh());
+
+		return true; 
 
 	} // prune_tracks
 
@@ -390,6 +397,9 @@ class tmpPlaylist {
 			"WHERE user='$user_id' AND tmp_playlist_data.object_id='$object_id' " . 
 			"AND tmp_playlist_data.tmp_playlist='" . sql_escape($this->id) . "'";
 		$db_results = mysql_query($sql,dbh());
+		
+		/* Clean up anything that has no votes */
+		$this->prune_tracks();
 
 		return true;
 
