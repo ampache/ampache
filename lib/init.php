@@ -289,7 +289,13 @@ elseif (!conf('use_auth')) {
 	set_theme();
 }
 else { 
-	$user = new user();
+	if (isset($_REQUEST['sessid'])) { 
+		$results = vauth_get_session($_REQUEST['sessid']);	
+		session_id(scrub_in($_REQUEST['sessid']));
+		session_start();
+	}
+	$user = new user($results['username']);
+	init_preferences();
 }
 
 

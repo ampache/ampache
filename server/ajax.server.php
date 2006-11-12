@@ -41,7 +41,6 @@ header("Cache-Control: no-cache");
 switch ($action) { 
 	/* Controls Localplay */
 	case 'localplay':
-		init_preferences();
 		$localplay = init_localplay();
 		$localplay->connect();
 		$function 	= scrub_in($_GET['cmd']);
@@ -75,9 +74,6 @@ switch ($action) {
 	break;
 	/* For changing the current play type */
 	case 'change_play_type':
-		init_preferences();
-		session_id(scrub_in($_REQUEST['sessid']));
-		session_start(); 
 		$_SESSION['data']['old_play_type'] = conf('play_type'); 
 		$pref_id = get_preference_id('play_type');
 		$GLOBALS['user']->update_preference($pref_id,$_GET['type']);
@@ -130,6 +126,27 @@ switch ($action) {
 		ob_end_clean();
 		$xml_doc = xml_from_array($results);
 		echo $xml_doc;
+	break;
+	/* This can be a positve (1) or negative (-1) vote */
+	case 'vote':
+		if (!$GLOBALS['user']->has_access(25) || $GLOBALS['user']->prefs['play_type'] != 'democratic') { break; }
+		/* Get the playlist */
+		$tmp_playlist = get_democratic_playlist(-1);
+		
+		if ($_REQUEST['vote'] == '1') { 
+			$tmp_playlist->vote(array($_REQUEST['object_id']));
+		}
+		else { 
+			$tmp_playlist->remove_vote($_REQUEST['object_id']);
+		}
+
+		ob_start();
+		$songs = $tmp_playlist->get_items();
+		require_once(conf('prefix') . '/templates/show_tv_playlist.inc.php');
+		$results['tv_playlist'] = ob_get_contents(); 
+		ob_end_clean();
+		$xml_doc = xml_from_array($results);
+		echo $xml_doc; 
 	break;
 	default:
 		echo "Default Action";

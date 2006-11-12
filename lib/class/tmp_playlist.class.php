@@ -376,6 +376,26 @@ class tmpPlaylist {
 	} // vote_active
 
 	/**
+	 * remove_vote
+	 * This is called to remove a vote by a user for an object, it uses the object_id
+	 * As that's what we'll have most the time, no need to check if they've got an existing
+	 * vote for this, just remove anything that is there
+	 */
+	function remove_vote($object_id) { 
+
+		$object_id 	= sql_escape($object_id);
+		$user_id	= sql_escape($GLOBALS['user']->id); 	
+
+		$sql = "DELETE FROM user_vote USING user_vote INNER JOIN tmp_playlist_data ON tmp_playlist_data.id=user_vote.object_id " . 
+			"WHERE user='$user_id' AND tmp_playlist_data.object_id='$object_id' " . 
+			"AND tmp_playlist_data.tmp_playlist='" . sql_escape($this->id) . "'";
+		$db_results = mysql_query($sql,dbh());
+
+		return true;
+
+	} // remove_vote
+
+	/**
 	 * delete_track
 	 * This deletes a track and any assoicated votes, we only check for
 	 * votes if it's vote playlist, id is a object_id

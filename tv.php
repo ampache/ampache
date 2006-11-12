@@ -48,6 +48,12 @@ switch ($action) {
 		$songs = $tmp_playlist->get_items();
 		require_once(conf('prefix') . '/templates/show_tv.inc.php');
 	break;
+	/* This sends the playlist to the 'method' of their chosing */
+	case 'send_playlist':
+
+
+
+	break;
 	case 'update_playlist':
 		/* Only Admins Here */
 		if (!$GLOBALS['user']->has_access(100)) { 
