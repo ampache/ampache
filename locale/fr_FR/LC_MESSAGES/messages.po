@@ -523,10 +523,6 @@ msgstr "Erreur, acc&egrave;s interdit"
 msgid "Browse"
 msgstr "Parcourir"
 
-#: ../../lib/ui.lib.php:196
-msgid "Show w/o art"
-msgstr ""
-
 #: ../../lib/ui.lib.php:199
 msgid "Show all"
 msgstr "Montrer tout"
@@ -3191,6 +3187,10 @@ msgstr "Sauver la recherche comme un morceau sur"
 #: ../../templates/show_search.inc:145
 msgid "Save"
 msgstr "Sauver"
+
+#: ../../lib/ui.lib.php:196
+msgid "Show w/o art"
+msgstr "Afficher sans jaquette"
 
 #~ msgid "Opened for writing"
 #~ msgstr "Ouvert en &eacute;criture"

@@ -72,7 +72,7 @@ switch ($action) {
 		$xml_doc = xml_from_array($results);
 		echo $xml_doc;
 	break;
-	/* For changing the current play type */
+	/* For changing the current play type FIXME:: need to allow select of any type  */
 	case 'change_play_type':
 		$_SESSION['data']['old_play_type'] = conf('play_type'); 
 		$pref_id = get_preference_id('play_type');
@@ -98,6 +98,27 @@ switch ($action) {
 		$xml_doc = xml_from_array($results);
 		echo $xml_doc;
 	break;
+	/* Reloading of the TV Now Playing, formated differently */
+	case 'reload_np_tv':
+
+		/* Update the Now Playing */
+		ob_start();
+		require_once(conf('prefix') . '/templates/show_tv_nowplaying.inc.php');
+		$results = array();
+		$results['tv_np'] = ob_get_contents(); 
+		ob_end_clean(); 
+
+		/* Update the Playlist */
+		ob_start();
+		$tmp_playlist = get_democratic_playlist(-1);
+                $songs = $tmp_playlist->get_items();
+                require_once(conf('prefix') . '/templates/show_tv_playlist.inc.php');
+                $results['tv_playlist'] = ob_get_contents();
+                ob_end_clean();
+		
+		$xml_doc = xml_from_array($results);
+		echo $xml_doc;
+	break;
 	/* Setting ratings */
 	case 'set_rating':
 		ob_start(); 
@@ -110,6 +131,7 @@ switch ($action) {
 		$xml_doc = xml_from_array($results);
 		echo $xml_doc;
 	break;
+	/* Activate the Democratic Instance */
 	case 'tv_activate':
 		if (!$GLOBALS['user']->has_access(100)) { break; } 
 		$tmp_playlist = new tmpPlaylist();

@@ -639,16 +639,14 @@ li.current-rating{
 
 
 /* TV Page Related Styles */
-#tv_control { 
-	float:left;
-} 
-
 #tv_np {
 	float:right;
 }
-
-#tv_playlist {
-	clear: both;
+#tv_np .box {
+	aligh:right;
+}
+#tv_left { 
+	float:left;
 }
 /* User Online/Offline style, used in users.php */
 td.user_online {

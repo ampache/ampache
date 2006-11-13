@@ -57,13 +57,16 @@ Contents:
 		- standard pls
 		- ASX
 		- RAM
+		- XSPF
 	- Realtime Downsampled
+	- XSPF Based Flash Player
 	- Automatic Downsampling based on load
 	- On the Fly Transcoding
 	- Localplay
 		- Music Player Daemon (MPD)
 		- Xbox Media Center (XMBC)
 		- Icecast2
+	- Democratic Vote based play
 	
   C) Current Translations
 
@@ -110,7 +113,8 @@ Contents:
   	PHP4-Mysql
 	PHP4-Session
 	PHP4-gd (recommended)
-	PHP4 ICONV & ZLIB support (recommended)
+	PHP4 ICONV 
+	PHP4  ZLIB support (recommended)
   MySQL >= 4.x http://www.mysql.com
   16MB of Ram
 
@@ -132,7 +136,7 @@ Contents:
 
 4. License
 
-  This Application falls under the Standard GPL. See Licence 
+  This Application falls under the Standard GPL v2. See Licence 
   included with this tar file
 
 4a. Donations
@@ -151,7 +155,7 @@ Contents:
   Public SVN: https://svn.ampache.org/
   IRC: irc.ampache.org #ampache (Freenode)
   Forums: http://ampache.org/forums
-  Bugs: https://ampache.bountysource.com
+  Bugs: https://ampache.bountysource.com/development/
   Wiki: https://ampache.bountysource.com/wiki/
   Demo: http://ampache.org/demo
 

@@ -6,7 +6,7 @@
 
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License v2
- as published by the Free Software Foundation
+ as published by the Free Software Foundation.
 
  This program is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -18,4 +18,25 @@
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
+/* Pull the Now Playing Information */
+$results = get_now_playing(); 
 ?>
+<table cellpadding="0">
+<?php 
+foreach ($results as $row) { 
+	$title = scrub_out(truncate_with_ellipse($row['song']->title,'25'));
+	$album = scrub_out(truncate_with_ellipse($row['song']->f_album_full,'25'));
+	$artist = scrub_out(truncate_with_ellipse($row['song']->f_artist_full,'25'));
+?>
+<tr>
+	<td>
+		<a target="_blank" href="<?php echo $web_path; ?>/albumart.php?id=<?php echo $row['song']->album; ?>&amp;type=popup" onclick="popup_art('<?php echo $web_path; ?>/albumart.php?id=<?php echo $row['song']->album; ?>&amp;type=popup'); return false;">
+		<img align="middle" border="0" src="<?php echo $web_path; ?>/albumart.php?id=<?php echo $row['song']->album; ?>&amp;fast=1" />
+		</a>
+	</td>
+</tr>
+<tr>
+	<td><?php echo $title; ?> - (<?php echo $album; ?> / <?php echo $artist; ?> )</td>
+</tr>
+<?php } // end foreach ?>
+</table>
