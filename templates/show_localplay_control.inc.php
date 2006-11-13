@@ -26,6 +26,8 @@ $localplay = init_localplay();
 $required_info 	= conf('ajax_info');
 $ajax_url	= conf('ajax_url');
 
+/* If we actually got something back */
+if (is_object($localplay)) { 
 ?>
 <div class="localplaycontrol" style="display:table-cell;cursor:pointer;padding:2px;">
 <?php if ($localplay->has_function('prev')) { ?>
@@ -50,3 +52,4 @@ $ajax_url	= conf('ajax_url');
 </span>
 <?php } ?>
 </div>
+<?php } // End if localplay object ?>
