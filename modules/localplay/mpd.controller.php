@@ -109,6 +109,8 @@ class AmpacheMpd {
 	 * and then add them to MPD
 	 */
 	function add_songs($songs) { 
+		/* Clear the playlist first */
+		$this->clean_playlist();
 
 		foreach ($songs as $song_id) { 
 			$song = new Song($song_id);

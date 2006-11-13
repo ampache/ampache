@@ -5,9 +5,8 @@
  All Rights Reserved
 
  This program is free software; you can redistribute it and/or
- modify it under the terms of the GNU General Public License
- as published by the Free Software Foundation; either version 2
- of the License, or (at your option) any later version.
+ modify it under the terms of the GNU General Public License v2
+ as published by the Free Software Foundation.
 
  This program is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -182,6 +181,8 @@ function init_localplay($reload=0) {
 
 	static $localplay;
 	if ($GLOBALS['user']->prefs['localplay_level'] == '0') { return false; }
+
+	if (!strlen($GLOBALS['user']->prefs['localplay_controller'])) { return false; } 
 
 	if ($GLOBALS['user']->prefs['localplay_level'] == '1' AND !is_object($localplay)) { 
 		$localplay = new Localplay(conf('localplay_controller'));
