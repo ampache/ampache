@@ -21,13 +21,46 @@
 ?>
 <html>
 <head><title>Ampache XSPF Player</title></head>
-<body style="margin:0px; padding:0px; border:0px;">
-<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="http://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=7,0,0,0" width="400" height="168">
-<param name="allowScriptAccess" value="sameDomain"/>
-<param name="movie" value="<?php echo conf('web_path'); ?>/modules/flash/xspf_player.swf?playlist_url=<?php echo conf('web_path'); ?>/song.php<?php echo $play_info; ?>&autoplay=true&autoload=true"/>
-<param name="quality" value="high"/>
-<param name="bgcolor" value="#E6E6E6"/>
-<embed src="<?php echo conf('web_path'); ?>/modules/flash/xspf_player.swf?playlist_url=<?php echo conf('web_path'); ?>/modules/flash/xspf_player.php<?php echo $play_info; ?>&autoplay=true&autoload=true" quality="high" bgcolor="#E6E6E6" name="xspf_player" allowscriptaccess="sameDomain" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer" align="center" height="168" width="400"></embed>
-</object>
+<body style="margin:0px; padding:0px; border:0px; background-color: #000000">
+<div id="mp3player">
+<script type="text/javascript" src="<?php echo conf('web_path'); ?>/modules/flash/swfobject.js"></script>
+<script language=JavaScript>
+<!--
+//Disable right mouse click Script to hide the source url for the flash player it prevents ripping music a bit.
+//When used together with locked songs this will help just a bit more.
+function clickIE4(){
+if (event.button==2){
+return false;
+}
+}
+
+function clickNS4(e){
+if (document.layers||document.getElementById&&!document.all){
+if (e.which==2||e.which==3){
+return false;
+}
+}
+}
+
+if (document.layers){
+document.captureEvents(Event.MOUSEDOWN);
+document.onmousedown=clickNS4;
+}
+else if (document.all&&!document.getElementById){
+document.onmousedown=clickIE4;
+}
+
+document.oncontextmenu=new Function("return false")
+
+// --> 
+</script>
+<script type="text/javascript">
+<!--
+var flashObj = new SWFObject ("<?php echo conf('web_path'); ?>/modules/flash/xspf_player.swf?action=play&playlist=<?php echo conf('web_path'); ?>/modules/flash/xspf_player.php<?php echo $play_info; ?>&folder=<?php echo conf('web_path'); ?>/modules/flash/&textcolor=033066&color=E6E6E6&loop=playlist&lma=yes&viewinfo=true&vol=30&display=1@. - @2@ - @", "FMP3", "350", "300", 7, "#000000", true);
+flashObj.write ("mp3player");
+// -->
+</script>
+</div>
+
 </body>
 </html>

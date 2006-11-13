@@ -31,6 +31,7 @@ require('lib/init.php');
 /* Decide what size this image is */
 switch ($_REQUEST['thumb']) { 
 	case '1':
+		/* This is used by the now_playing stuff */
 		$size['height'] = '75';
 		$size['width']	= '75';
 	break;
@@ -38,6 +39,12 @@ switch ($_REQUEST['thumb']) {
 		$size['height']	= '128';
 		$size['width']	= '128';
 	break;
+	case '3':
+		/* This is used by the flash player */
+		$size['height']	= '80';
+		$size['width']	= '80';
+	break;
+
 	default:
 		$size['height'] = '275';
 		$size['width']	= '275';

@@ -2281,6 +2281,46 @@ class Catalog {
 
 	} // remove_songs
 
+	/*!
+		@function exports the catalog
+		@discussion it exports all songs in the database to the given export type.
+	*/
+	function export($type){
+	
+	    if ($type=="itunes"){
+		
+		$sql = "SELECT id FROM song ORDER BY album";
+		$db_results = mysql_query($sql, dbh());
+
+		while ($results = mysql_fetch_array($db_results)) { 
+		$song = new Song($results['id']);
+		$song->format_song();
+		
+		$xml = array();
+		$xml['key']= $results['id'];
+		$xml['dict']['Track ID']= $results['id'];
+		$xml['dict']['Name'] = utf8_encode($song->title);
+		$xml['dict']['Artist'] = utf8_encode($song->f_artist_full);
+		$xml['dict']['Album'] = utf8_encode($song->f_album_full);
+		$xml['dict']['Genre'] = $song->f_genre;
+		$xml['dict']['Total Time'] = $song->time;
+		$xml['dict']['Track Number'] = $song->track;
+		$xml['dict']['Year'] = $song->year;
+		$xml['dict']['Date Added'] = date("Y-m-d\TH:i:s\Z",$song->addition_time);
+		$xml['dict']['Bit Rate'] = intval($song->bitrate/1000);
+		$xml['dict']['Sample Rate'] = $song->rate;
+		$xml['dict']['Play Count'] = $song->played;
+		$xml['dict']['Track Type'] = "URL";
+		$xml['dict']['Location'] = $song->get_url();
+
+		$result .= xml_from_array($xml,1,'itunes');
+		}
+	return $result;
+
+	    }
+	
+	} // export
+
 } //end of catalog class
 
 ?>

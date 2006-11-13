@@ -1292,26 +1292,135 @@ function get_user_icon($name) {
  * creates a XML document form it for use 
  * primarly by the ajax mojo
  */
-function xml_from_array($array,$callback=0) { 
+function xml_from_array($array,$callback=0,$type='') { 
+	switch ($type) {
 	
-	foreach ($array as $key=>$value) { 
-		if (is_numeric($key)) { $key = 'item'; } 
-		if (is_array($value)) { 
-			$value = xml_from_array($value,1);
-			$string .= "\t<content div=\"$key\">$value</content>\n";
-		}
-		else { 
-			/* We need to escape the value */
-			$string .= "\t<content div=\"$key\"><![CDATA[$value]]></content>\n";
-		}
-	} // end foreach elements
+	case 'itunes':
+	        foreach ($array as $key=>$value) {
+	                if (is_array($value)) {
+        	                $value = xml_from_array($value,1,$type);
+                	        $string .= "\t\t<$key>\n$value\t\t</$key>\n";
+	                }
+        	        else {
+                	        if ($key == "key"){
+                        	$string .= "\t\t<$key>$value</$key>\n";
+	                        } elseif (is_numeric($value)) {
+        	                $string .= "\t\t\t<key>$key</key><integer>$value</integer>\n";
+                	        } elseif ($key == "Date Added") {
+                        	$string .= "\t\t\t<key>$key</key><date>$value</date>\n";
+	                        } elseif (is_string($value)) {
+        	                /* We need to escape the value */
+                	        $string .= "\t\t\t<key>$key</key><string><![CDATA[$value]]></string>\n";
+	                        }
+        	        }
 
-	if (!$callback) { 
-		$string = "<?xml version=\"1.0\" encoding=\"utf-8\" ?>\n<root>\n" . $string . "</root>\n";
+	        }
+
+		return $string;
+	break;
+	case 'xspf':
+	        foreach ($array as $key=>$value) {
+	                if (is_array($value)) {
+        	                $value = xml_from_array($value,1,$type);
+                	        $string .= "\t\t<$key>\n$value\t\t</$key>\n";
+	                }
+        	        else {
+                	        if ($key == "key"){
+                        	$string .= "\t\t<$key>$value</$key>\n";
+	                        } elseif (is_numeric($value)) {
+        	                $string .= "\t\t\t<$key>$value</$key>\n";
+	                        } elseif (is_string($value)) {
+        	                /* We need to escape the value */
+                	        $string .= "\t\t\t<$key><![CDATA[$value]]></$key>\n";
+	                        }
+        	        }
+
+	        }
+
+		return $string;
+	break;
+	default:
+		foreach ($array as $key=>$value) { 
+			if (is_numeric($key)) { $key = 'item'; } 
+			if (is_array($value)) { 
+				$value = xml_from_array($value,1);
+				$string .= "\t<content div=\"$key\">$value</content>\n";
+			}
+			else { 
+				/* We need to escape the value */
+				$string .= "\t<content div=\"$key\"><![CDATA[$value]]></content>\n";
+			}
+		// end foreach elements
+	        } 
+		if (!$callback) { 
+			$string = "<?xml version=\"1.0\" encoding=\"utf-8\" ?>\n<root>\n" . $string . "</root>\n";
+		}
+
+		return $string;
+	break;
 	}
-
-	return $string;
-
 } // xml_from_array
+
+/**
+ * xml_get_header
+ * This takes the type and returns the correct xml header 
+ */
+function xml_get_header($type){
+	switch ($type){
+	case 'itunes':
+		$header = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" .
+                "<!DOCTYPE plist PUBLIC \"-//Apple Computer//DTD PLIST 1.0//EN\"\n" .
+                "\"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">\n" .
+                "<plist version=\"1.0\">\n" .
+                "<dict>\n" .
+                "       <key>Major Version</key><integer>1</integer>\n" .
+                "       <key>Minor Version</key><integer>1</integer>\n" .
+                "       <key>Application Version</key><string>7.0.2</string>\n" .
+                "       <key>Features</key><integer>1</integer>\n" .
+                "       <key>Show Content Ratings</key><true/>\n" .
+                "       <key>Tracks</key>\n" .
+                "       <dict>\n";
+		return $header;
+	break;
+	case 'xspf':
+                $header = "<?xml version=\"1.0\" encoding=\"utf-8\" ?>\n" .
+                	  "<playlist version = \"1\" xmlns=\"http://xspf.org/ns/0/\">\n ".
+                	  "<title>Ampache XSPF Playlist</title>\n" .
+                	  "<creator>" . conf('site_title') . "</creator>\n" .
+                	  "<annotation>" . conf('site_title') . "</annotation>\n" .
+                	  "<info>". conf('web_path') ."</info>\n" .
+                	  "<trackList>\n\n\n\n";
+		return $header;	
+	break;
+	default:
+		$header = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"; 
+		return $header;	
+	break;
+	}
+} //xml_get_header
+
+/**
+ * xml_get_footer
+ * This takes the type and returns the correct xml footer
+ */
+function xml_get_footer($type){
+	switch ($type){
+	case 'itunes':
+        	$footer = "      </dict>\n" .
+                "</dict>\n" .
+                "</plist>\n";
+		return $footer;
+	break;
+	case 'xspf':
+                $footer = "          </trackList>\n" .
+                	  "</playlist>\n";
+		return $footer;
+	break;
+	default:
+
+	break;
+	}
+} //xml_get_footer
+
 
 ?>

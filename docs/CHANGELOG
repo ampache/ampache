@@ -4,6 +4,8 @@
 
 --------------------------------------------------------------------------
   v.3.3.3-Alpha2 11/12/2006
+        - Added Export to Itunes DB function (Thx PB1DFT)
+        - Added New XSPF Player that's solves all the UTF8 encoding problems (Thx Enrico Lai)
 	- Fixed some Ajax Issues, added Now Playing to TV page
 	- Fixed album art search on every Catalog Add
 	- Added exception to MPD controller, forces HTTP play regardless
@@ -12,6 +14,8 @@
 	- Tweaked default config, Ratings are enabled by default
 	- Added Genre link on show_songs along with some other minor UI
 		improvements
+	- Added Export to Itunes DB function (Thx PB1DFT) 	
+	- Added New XSPF Player that's solves all the UTF8 encoding problems (Thx Enrico Lai)
 	- Fixed Show All of Song Titles not having any data
 	- Fixed override of local_length to 9000 regardless of config file
 	- Tweaked Remeber Me Checkbox to be disabled if remember_length

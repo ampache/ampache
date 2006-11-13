@@ -103,6 +103,30 @@ switch ($action) {
 
 
 	break;
+	/* Export Catalog to ItunesDB */
+	case 'export':
+	    $catalog = new Catalog();
+	    switch ($_REQUEST['export']) {
+	    case 'itunes':
+        	        header("Cache-control: public");
+                	header("Content-Disposition: filename=itunes.xml");
+	                header("Content-Type: application/itunes+xml; charset=utf-8");
+        	        echo xml_get_header('itunes');
+                	echo $catalog->export($_REQUEST['export']);
+	                echo xml_get_footer('itunes');
+	    break;
+	    default:
+        	$url    = conf('web_path') . '/admin/index.php';
+	        $title  = _('Export Failed');
+	        $body   = '';
+	        show_template('header');
+	        show_confirmation($title,$body,$url);
+	        show_template('footer');
+	    break;
+	    }
+	
+	break;
+
 	default: 
 		// Rien a faire
 	break;

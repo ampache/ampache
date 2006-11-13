@@ -187,37 +187,30 @@ class Stream {
 	 */
 	function create_xspf() { 
 
-		$playlist =	"<?xml version=\"1.0\" encoding=\"utf-8\" ?>
-		<playlist version = \"1\" xmlns=\"http://xspf.org/ns/0/\">
-		<title>Ampache XSPF Playlist</title>
-		<creator>" . conf('site_title') . "</creator>
-		<annotation>" . conf('site_title') . "</annotation>
-		<info>". conf('web_path') ."</info>
-		<trackList>\n\n\n\n";
-
 		foreach ($this->songs as $song_id) {
-                	$song = new Song($song_id);
-                        $song->format_song();
-			$url = $song->get_url();
-                        $song_name = $song->f_artist_full . " - " . $song->title . "." . $song->type;
-			$playlist .= "		<track>\n";
-			$playlist .= "			<location><![CDATA[$url]]></location>\n";
-			$playlist .= "			<identifier><![CDATA[$url]]></identifier>\n";
-			$playlist .= "			<title><![CDATA[" . $song->title . "]]></title>\n";
-			$playlist .= "			<creator><![CDATA[" . $song->f_artist_full . "]]></creator>\n";
-			$playlist .= "			<annotation></annotation>\n";
-			$playlist .= "			<info><![CDATA[" . conf('web_path') . "/albums.php?action=show&album=" . $song->album  . "]]></info>\n";
-			$playlist .= "			<image><![CDATA[" . conf('web_path') . "/albumart.php?id=" . $song->album . "&thumb=2" . "]]></image>\n";
-			$playlist .= "			<album><![CDATA[" . $song->f_album_full . "]]></album>\n";
-			$playlist .= "			<duration>" . $song->time  . "</duration>\n"; 
-			$playlist .= "		</track>\n\n\n";
+				
+        	$song = new Song($song_id);
+                $song->format_song();
+
+                $xml = array();
+		$xml['track']['location'] = $song->get_url();
+		$xml['track']['identifier'] = $xml['track']['location'];
+		$xml['track']['title'] = $song->title;
+		$xml['track']['creator'] = $song->f_artist_full;
+		$xml['track']['info'] = conf('web_path') . "/albums.php?action=show&album=" . $song->album;
+		$xml['track']['image'] = conf('web_path') . "/albumart.php?id=" . $song->album . "&fast=1&thumb=3";
+		$xml['track']['album'] = $song->f_album_full;
+		$xml['track']['duration'] = $song->time;
+		$result .= xml_from_array($xml,1,'xspf');
+
                 } // end foreach
-		$playlist .= "		</trackList>\n";
-                $playlist .= "</playlist>\n";
+
 	        header("Cache-control: public");
         	header("Content-Disposition: filename=playlist.xspf");
 		header("Content-Type: application/xspf+xml; charset=utf-8");
-		echo $playlist;
+		echo xml_get_header('xspf');
+		echo $result;
+		echo xml_get_footer('xspf');
 
 	} // create_xspf
 
@@ -251,7 +244,7 @@ class Stream {
 	        echo "<script language=\"javascript\" type=\"text/javascript\">\n";
 	        echo "<!-- begin\n";
 	        echo "function PlayerPopUp(URL) {\n";
-	        echo "window.open(URL, 'XSPF_player', 'width=400,height=168,scrollbars=0,toolbar=0,location=0,directories=0,status=1,resizable=0');\n";
+	        echo "window.open(URL, 'XSPF_player', 'width=350,height=300,scrollbars=0,toolbar=0,location=0,directories=0,status=0,resizable=0');\n";
 	        echo "window.location = '" .  return_referer() . "';\n";
 	        echo "return false;\n";
 	        echo "}\n";
