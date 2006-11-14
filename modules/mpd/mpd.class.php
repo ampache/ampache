@@ -4,6 +4,8 @@
  *  Version 1.2, Released 05/05/2004
  *  Copyright (C) 2003-2004  Benjamin Carlisle (bcarlisle@24oz.com)
  *  http://mpd.24oz.com/ | http://www.musicpd.org/
+ *  Addition of Connection Timeout - Karl Vollmer (www.ampache.org)
+ *  Addition of ClearPLIfStopped Function - Henrik (henrikDOTprobellATgmailDOTcom)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -973,6 +975,22 @@ class mpd {
 		if ( $this->debugging ) echo "mpd->GetPlaylist() / return ".print_r($playlist)."\n";
 		return $playlist;
 	}
+
+	/* ClearPLIfStopped()
+	*
+	* This function clears the mpd playlist ONLY IF the mpd state is MPD_STATE_STOPPED
+	*/
+	function ClearPLIfStopped() {
+
+                if ( $this->debugging ) echo "mpd->ClearPLIfStopped()\n";
+                $this->RefreshInfo();
+                if ($resp = ($this->state == MPD_STATE_STOPPED)) {
+                        $this->PLClear();
+                }
+                if ( $this->debugging ) echo "mpd->ClearPLIfStopped() / return\n";
+        	return $resp;
+
+	} // ClearPLIfStopped
 
     /* ----------------- Command compatibility tables --------------------- */
 	var $COMPATIBILITY_MIN_TBL = array(

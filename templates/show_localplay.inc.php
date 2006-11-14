@@ -22,7 +22,6 @@
 
 $web_path = conf('web_path'); 
 $localplay = init_localplay();
-$songs = $localplay->get();
 ?>
 <?php show_box_top(ucfirst($localplay->type) . ' ' . _('Localplay')); ?>
 <table>

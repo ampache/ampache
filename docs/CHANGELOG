@@ -3,6 +3,14 @@
 --------------------------------------------------------------------------
 
 --------------------------------------------------------------------------
+  v.3.3.3-Beta1 
+	- Added new Flash Player with full support for Non-US Char and 
+		colors. (Thx PB1DFT/Enrico Lai http://www.enricolai.com)
+	- Tweaked how MPD is handled, if MPD is stopped a new play action
+		will clear old playlist, otherwise Play appends. 
+		(Thx henrik)
+
+--------------------------------------------------------------------------
   v.3.3.3-Alpha2 11/12/2006
         - Added Export to Itunes DB function (Thx PB1DFT)
         - Added New XSPF Player that's solves all the UTF8 encoding problems (Thx Enrico Lai)

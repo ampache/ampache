@@ -71,7 +71,13 @@ switch ($action) {
 		require_once (conf('prefix') . '/templates/show_localplay.inc.php');
 	break;
 	default: 
-		require_once (conf('prefix') . '/templates/show_localplay.inc.php');
+		if ($localplay = init_localplay()) { 
+			require_once (conf('prefix') . '/templates/show_localplay.inc.php');
+		} 
+		else { 
+			$GLOBALS['error']->add_error('general',_('Localplay Init Failed'));
+			$GLOBALS['error']->print_error('general');
+		}
 	break;
 } // end switch action
 
