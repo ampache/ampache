@@ -4,6 +4,8 @@
 
 --------------------------------------------------------------------------
   v.3.3.3-Beta1 
+	- Fixed a problem with Localplay Skip to song and added 
+		highlighting of currently playing song
 	- Added new Flash Player with full support for Non-US Char and 
 		colors. (Thx PB1DFT/Enrico Lai http://www.enricolai.com)
 	- Tweaked how MPD is handled, if MPD is stopped a new play action

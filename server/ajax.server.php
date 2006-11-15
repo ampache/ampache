@@ -58,6 +58,11 @@ switch ($action) {
 				$results['lp_state']	= $localplay->get_user_state('play');
 				$results['lp_playing'] 	= $localplay->get_user_playing();
 			break;
+			case 'skip':
+				ob_start();
+				require_once(conf('prefix') . '/templates/show_localplay_playlist.inc.php');
+				$results['lp_playlist'] = ob_get_contents();
+				ob_end_clean();
 			case 'volume_up':
 			case 'volume_down':
 			case 'volume_mute':

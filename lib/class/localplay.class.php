@@ -118,9 +118,9 @@ class Localplay {
 		$name = scrub_out($name);
 
 		if ($this->has_function('skip')) { 
-			$url = conf('web_path') . '/server/ajax.server.php?action=localplay&amp;cmd=skip&amp;value=' . $id . '&amp;user_id=' . $GLOBALS['user']->id . '&amp;sessid=' . session_id();
+			$url = conf('ajax_url') . "?action=localplay&amp;cmd=skip&amp;value=$id" . conf('ajax_info'); 
 			
-			$name = "<span style=\"cursor:pointer;text-decoration:underline;\" onclick=\"ajaxRequest('$url');\">$name</span>";
+			$name = "<span style=\"cursor:pointer;text-decoration:underline;\" onclick=\"ajaxPut('$url');return true;\">$name</span>";
 		}
 
 		return $name;

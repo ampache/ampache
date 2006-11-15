@@ -22,7 +22,6 @@
 
 $web_path = conf('web_path'); 
 $localplay = init_localplay();
-$songs = $localplay->get();
 ?>
 <?php show_box_top(ucfirst($localplay->type) . ' ' . _('Localplay')); ?>
 <table>
@@ -41,28 +40,7 @@ $songs = $localplay->get();
 
 
 <?php show_box_top(_('Current Playlist')); ?>
-<table class="border" cellspacing="0" border="0">
-<tr class="table-header">
-	<th><?php echo _('Track'); ?></th>
-	<th><?php echo _('Name'); ?></th>
-	<th><?php echo _('Action'); ?></th>
-</tr>
-<?php foreach ($songs as $song) { ?>
-<tr class="<?php echo flip_class(); ?>">
-	<td>
-		<?php echo scrub_out($song['track']); ?>
-	</td>
-	<td>
-		<?php echo $localplay->format_name($song['name'],$song['id']); ?>
-	</td>
-	<td>
-	<a href="<?php echo $web_path; ?>/localplay.php?action=delete_song&amp;song_id=<?php echo $song['id']; ?>"><?php echo _('Delete'); ?></a>
-	</td>
-</tr>
-<?php } if (!count($songs)) { ?>
-<tr class="<?php echo flip_class(); ?>">
-	<td colspan="3"><span class="error"><?php echo _('No Records Found'); ?></span></td>
-</tr>
-<?php } ?>
-</table>
+<div id="lp_playlist">
+<?php require_once(conf('prefix') . '/templates/show_localplay_playlist.inc.php'); ?>
+</div>
 <?php show_box_bottom(); ?>

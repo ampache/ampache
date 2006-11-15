@@ -51,7 +51,7 @@ switch($action) {
 	$song_ids = $artist->get_song_ids();
 	$artist_id = $artist->id;
 	require(conf('prefix') . '/templates/show_artist_box.inc.php');
-        show_songs($song_ids);
+        show_songs($song_ids,'');
         break;
 
     case 'update_from_tags':
