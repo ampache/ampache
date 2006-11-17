@@ -21,16 +21,16 @@
 */
 ?>
 <form method="post" name="import_playlist" action="<?php echo conf('web_path'); ?>/playlist.php" enctype="multipart/form-data">
-<span class="header2"><?php echo _('Importing a Playlist from a File'); ?></span>
-<table border="0" cellpadding="0" cellspacing="0" class="border" style="border: 1px solid black;">
-<tr class="<?php echo flip_class(); ?>">
+<?php show_box_top(_('Importing a Playlist from a File')); ?>
+<table border="0" cellpadding="0" cellspacing="0">
+<tr>
         <td>
 		<?php echo _('Filename'); ?>:
 		<?php $GLOBALS['error']->print_error('filename'); ?>
 	</td>
-	<td><input type="text" name="filename" value="<?php echo scrub_out($_REQUEST['filename']); ?>" size="45" /></td>	
+	<td><input type="file" name="filename" value="<?php echo scrub_out($_REQUEST['filename']); ?>" size="45" /></td>	
 </tr>
-<tr class="<?php echo flip_class(); ?>">
+<tr>
 	<td>
 		<?php echo _('Playlist Type'); ?>
 	</td>
@@ -41,7 +41,7 @@
 		</select>
 	</td>
 </tr>
-<tr class="<?php echo flip_class(); ?>">
+<tr>
 	<td>&nbsp;</td>
 	<td>
 		<input type="hidden" name="action" value="import_playlist" />
@@ -49,4 +49,5 @@
 	</td>
 </tr>
 </table>
+<?php show_box_bottom(); ?>
 </form>

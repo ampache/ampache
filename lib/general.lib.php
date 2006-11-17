@@ -631,7 +631,7 @@ function get_global_popular($type) {
 			$artist_obj->format_artist();
 			$artist = $artist_obj->full_name;
                         $items[] = "<li> <a href=\"$web_path/artists.php?action=show&amp;artist=" . $r['object_id'] . "\" title=\"". scrub_out($artist) ."\">" .
-                        	           scrub_out(truncate_with_ellipse($artist, conf('ellipse_threshold_artist')+3)) . "&nbsp;(" . $r['count'] . ")</a> </li>";
+                        	           truncate_with_ellipse($artist, conf('ellipse_threshold_artist')+3) . "&nbsp;(" . $r['count'] . ")</a> </li>";
                 } // if type isn't artist
 
 		/* If Album */
