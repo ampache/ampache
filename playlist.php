@@ -54,7 +54,7 @@ switch ($action) {
 	
 		/* Show Confirmation Question */
 		$message = _('Are you sure you want to delete this playlist') . " " . $playlist->name . "?";
-		show_confirmation(_('Confirm Action'),$message,'/playlist.php',1);
+		show_confirmation(_('Confirm Action'),$message,'/playlist.php?action=delete_playlist&amp;playlist_id=' . $playlist->id,1);
 	break;
 	case 'add_to':
 	case 'add to':
