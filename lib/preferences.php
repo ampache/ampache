@@ -323,7 +323,7 @@ function create_preference_input($name,$value) {
 			echo "<select name=\"$name\">\n";
 			echo "<option value=\"0\">" . _('Disabled') . "</option>\n";
 			echo "<option value=\"1\" $is_global>" . _('Global') . "</option>\n";
-			echo "<option value=\"2\" $is_full>" . _('Full') . "</option>\n";
+			echo "<option value=\"2\" $is_full>" . _('Local') . "</option>\n";
 			echo "</select>\n";
 		break;
 		case 'theme_name':

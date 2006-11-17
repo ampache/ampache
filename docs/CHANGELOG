@@ -4,6 +4,11 @@
 
 --------------------------------------------------------------------------
   v.3.3.3-Beta1 
+	- Added the ability to Upload a M3u and have it attempt to build
+		a playlist based on the filenames
+	- Added the ability for admins to 'Push' the democratic link
+		to a play method/localplay instance
+	- Fixed a bug with the File tag_order method
 	- Fixed a problem with Localplay Skip to song and added 
 		highlighting of currently playing song
 	- Added new Flash Player with full support for Non-US Char and 
@@ -15,7 +20,6 @@
 --------------------------------------------------------------------------
   v.3.3.3-Alpha2 11/12/2006
         - Added Export to Itunes DB function (Thx PB1DFT)
-        - Added New XSPF Player that's solves all the UTF8 encoding problems (Thx Enrico Lai)
 	- Fixed some Ajax Issues, added Now Playing to TV page
 	- Fixed album art search on every Catalog Add
 	- Added exception to MPD controller, forces HTTP play regardless
@@ -25,7 +29,6 @@
 	- Added Genre link on show_songs along with some other minor UI
 		improvements
 	- Added Export to Itunes DB function (Thx PB1DFT) 	
-	- Added New XSPF Player that's solves all the UTF8 encoding problems (Thx Enrico Lai)
 	- Fixed Show All of Song Titles not having any data
 	- Fixed override of local_length to 9000 regardless of config file
 	- Tweaked Remeber Me Checkbox to be disabled if remember_length

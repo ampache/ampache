@@ -437,7 +437,7 @@ class vainfo {
 
 		$results = array();
 
-		$pattern = $this->_dir_pattern . $this->_file_pattern;
+		$pattern = $this->_dir_pattern . '/' . $this->_file_pattern;
 		preg_match_all("/\%\w/",$pattern,$elements);
 		
 		$preg_pattern = preg_quote($pattern);

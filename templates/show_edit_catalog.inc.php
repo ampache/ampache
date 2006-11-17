@@ -5,9 +5,8 @@
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
- modify it under the terms of the GNU General Public License
- as published by the Free Software Foundation; either version 2
- of the License, or (at your option) any later version.
+ modify it under the terms of the GNU General Public License v2
+ as published by the Free Software Foundation.
 
  This program is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -27,18 +26,20 @@
 	<td><?php echo _('Name'); ?>:</td>
 	<td><input size="60" type="text" name="name" value="<?php echo scrub_out($catalog->name); ?>"></input></td>
 	<td style="vertical-align:top; font-family: monospace;" rowspan="5">
-		<strong><?php echo _("Auto-inserted Fields"); ?>:</strong><br />
-		%A = <?php echo _("album name"); ?><br />
-		%a = <?php echo _("artist name"); ?><br />
-		%C = <?php echo _("catalog path"); ?><br />
-		%c = <?php echo _("id3 comment"); ?><br />
-		%g = <?php echo _("genre"); ?><br />
-		%T = <?php echo _("track number (padded with leading 0)"); ?><br />
-		%t = <?php echo _("song title"); ?><br />
-		%y = <?php echo _("year"); ?><br />
-		%o = <?php echo _("other"); ?><br /> 
+		<strong><?php echo _('Auto-inserted Fields'); ?>:</strong><br />
+		%A = <?php echo _('album name'); ?><br />
+		%a = <?php echo _('artist name'); ?><br />
+		%c = <?php echo _('id3 comment'); ?><br />
+		%g = <?php echo _('genre'); ?><br />
+		%T = <?php echo _('track number (padded with leading 0)'); ?><br />
+		%t = <?php echo _('song title'); ?><br />
+		%y = <?php echo _('year'); ?><br />
+		%o = <?php echo _('other'); ?><br /> 
 	</td>
 </tr>
+<tr>
+	<td><?php echo _('Catalog Type'); ?></td>
+	<td><?php echo scrub_out(ucfirst($catalog->catalog_type)); ?></td>
 <tr>
 	<td><?php echo _('XML-RPC Key'); ?>:</td>
 	<td>
@@ -62,7 +63,7 @@
 <tr>
 	<td>&nbsp;</td>
 	<td>
-	<input type="hidden" name="catalog_id" value="<?php echo $catalog->id; ?>" />
+	<input type="hidden" name="catalog_id" value="<?php echo scrub_out($catalog->id); ?>" />
 	<input type="hidden" name="action" value="update_catalog_settings" />
 	<input type="submit" value="<?php echo _('Save Catalog Settings'); ?>" />
 	</td>

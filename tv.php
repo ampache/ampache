@@ -50,9 +50,16 @@ switch ($action) {
 	break;
 	/* This sends the playlist to the 'method' of their chosing */
 	case 'send_playlist':
-
-
-
+		/* Only Admins Here */
+		if (!$GLOBALS['user']->has_access(100)) { 
+			access_denied(); 
+			break;
+		}
+		$stream_type = scrub_in($_REQUEST['play_type']);
+		$tmp_playlist = new tmpPlaylist($_REQUEST['tmp_playlist_id']);
+		$stream = new Stream($stream_type,array()); 
+		$stream->manual_url_add($tmp_playlist->get_vote_url());
+		$stream->start();
 	break;
 	case 'update_playlist':
 		/* Only Admins Here */

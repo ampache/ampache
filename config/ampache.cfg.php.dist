@@ -139,12 +139,12 @@ require_session = "true"
 # POSSIBLE VALUES: id3v1 id3v2 file vorbiscomment 
 #                  quicktime ape
 # DEFAULT: id3v2,id3v1
-tag_order	= "id3v2"
-tag_order	= "id3v1"
+tag_order	= id3v2
+tag_order	= id3v1
 tag_order	= vorbiscomment
 tag_order	= quicktime
 tag_order	= ape
-#tag_order	= "file"
+#tag_order	= file
 
 # Un comment if don't want ampache to follow symlinks
 # DEFAULT: false
@@ -465,7 +465,7 @@ search_type  = fuzzy
 # %OFFSET%	= offset
 # %SAMPLE%	= sample rate
 # %EOF%		= end of file in min.sec
-# DEFAULT: mp3splt -qnf "%FILE%" %OFFSET% %EOF% -o - | lame --mp3input -q 3 -b %SAMPLE% -S - -
+# DEFAULT: mp3splt -qnf %FILE% %OFFSET% %EOF% -o - | lame --mp3input -q 3 -b %SAMPLE% -S - -
 downsample_cmd	= mp3splt -qnf %FILE% %OFFSET% %EOF% -o - | lame --mp3input -q 3 -b %SAMPLE% -S - -
 
 #######################################################
@@ -476,12 +476,12 @@ downsample_cmd	= mp3splt -qnf %FILE% %OFFSET% %EOF% -o - | lame --mp3input -q 3 
 
 # List of filetypes to transcode
 transcode_m4a 	= true
-#transcode_flac = false
+transcode_flac = true
 #transcode_mpc  = false
 
 # These are the commands that will be run to transcode the file
-#stream_cmd_flac 	= flac -dc %FILE% | lame -r -b 128 -S - - 
-stream_cmd_m4a 	= faad -f 2 -w "%FILE%" | lame -r -b 128 -S - -
+stream_cmd_flac 	= flac -dc %FILE% | lame -r -b 128 -S - - 
+stream_cmd_m4a 	= faad -f 2 -w %FILE% | lame -r -b 128 -S - -
 #stream_cmd_mpc		= 
 
 #######################################################

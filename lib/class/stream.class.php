@@ -5,9 +5,8 @@
  All rights reserved.  
 
  This program is free software; you can redistribute it and/or
- modify it under the terms of the GNU General Public License
- as published by the Free Software Foundation; either version 2
- of the License, or (at your option) any later version.
+ modify it under the terms of the GNU General Public License v2
+ as published by the Free Software Foundation.
 
  This program is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -76,6 +75,18 @@ class Stream {
 		}
 
 	} // start
+
+	/**
+	 * manual_url_add
+	 * This manually adds a URL to the stream object for passing
+	 * to whatever, this is an exception for when we don't actually
+	 * have a object_id but instead a weird or special URL
+	 */
+	function manual_url_add($url) { 
+
+
+
+	} // manual_url_add
 
 	/*!
 		@function create_simplem3u

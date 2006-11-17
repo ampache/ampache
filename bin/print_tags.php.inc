@@ -22,18 +22,22 @@
 $no_session = '1';
 require ("../lib/init.php");
 
-/**
- * Set this to true if you want it to e-mail a report
- * to tags@ampache.org (usefull for troubleshooting
- */
-//$send_mail = true;
-
 if (count($GLOBALS['argv']) == '1') { $filename = usage(); }
-else { $filename = $GLOBALS['argv']['1']; }
+else { 
+	$filename = $GLOBALS['argv']['1']; 
+	$send_mail = $GLOBALS['argv']['2'];
+}
 
 echo "Reading: $filename\n";
 
-$info = new vainfo($filename);
+/* Attempt to figure out what catalog it comes from */
+$sql = "SELECT catalog.id FROM song LEFT JOIN catalog ON song.catalog=catalog.id WHERE song.file='" . sql_escape($filename) . "'";
+$db_results = mysql_query($sql,dbh());
+$results = mysql_fetch_assoc($db_results);
+
+$catalog = new Catalog($results['id']);
+
+$info = new vainfo($filename,'',$catalog->sort_pattern,$catalog->rename_pattern);
 $info->get_info();
 $results = $info->tags;
 $results['file'] = $filename;

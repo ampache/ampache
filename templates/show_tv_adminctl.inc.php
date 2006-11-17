@@ -5,9 +5,8 @@
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
- modify it under the terms of the GNU General Public License
- as published by the Free Software Foundation; either version 2
- of the License, or (at your option) any later version.
+ modify it under the terms of the GNU General Public License v2
+ as published by the Free Software Foundation.
 
  This program is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -34,6 +33,19 @@
 else { 
 ?>
 <?php echo _('Democratic Play Active'); ?>&nbsp;
+<form method="post" style="Display:inline;" action="<?php echo conf('web_path'); ?>/tv.php?action=send_playlist&amp;tmp_playlist_id=<?php echo scrub_out($tmp_playlist->id); ?>" enctype="multipart/form-data">
+<select name="play_type">
+	<?php 
+		$controllers = get_localplay_controllers(); 
+		foreach ($controllers as $controller) { 
+	?>
+	<option value="__<?php echo $controller; ?>"><?php echo ucfirst($controller); ?></option>
+	<?php } // end foreach ?>
+	<option value="stream"><?php echo _('Stream'); ?></option>
+	<option value="downsample"><?php echo _('Downsample'); ?></option>
+</select>
+<input type="submit" value="<?php echo _('Play'); ?>" />
+</form>
 <a href="<?php echo $tmp_playlist->get_vote_url(); ?>"><?php echo _('Play'); ?></a><br />
 <?php echo _('Base Playlist'); ?>: 
 <form method="post" style="Display:inline;" action="<?php echo conf('web_path'); ?>/tv.php?action=update_playlist&amp;playlist_id=<?php echo $tmp_playlist->base_playlist; ?>" enctype="multipart/form-data">

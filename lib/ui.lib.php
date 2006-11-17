@@ -330,6 +330,10 @@ function get_now_playing($filter='') {
 
 	$sql = "SELECT song_id,user FROM now_playing ORDER BY start_time DESC";
 	$db_results = mysql_query($sql, dbh());
+
+	$results = array();
+	
+	/* While we've got stuff playing */
 	while ($r = mysql_fetch_assoc($db_results)) {
 		$song = new Song($r['song_id']);
 		$song->format_song();
