@@ -6,7 +6,7 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: Ampache SVN 632\n"
+"Project-Id-Version: Ampache SVN 693\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2006-11-18 00:37+0100\n"
 "PO-Revision-Date: 2006-11-14 08:00+0100\n"
