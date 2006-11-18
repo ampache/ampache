@@ -116,7 +116,7 @@ switch ($_REQUEST['action']) {
 		$catalog = new Catalog($_REQUEST['catalog_id']);
 		$catalog->delete_catalog();
 		$next_url = conf('web_path') . '/admin/index.php';
-		show_confirmation(_('Catalog Deleted'),_('The Catalog and all assoicated records has been deleted'),$nexturl);
+		show_confirmation(_('Catalog Deleted'),_('The Catalog and all associated records has been deleted'),$nexturl);
 	break;
 	case 'remove_disabled':
 	        if (conf('demo_mode')) { break; }

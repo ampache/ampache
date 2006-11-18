@@ -114,7 +114,7 @@
 			<option value="exact" <?php if($_REQUEST['method']=="exact") echo "selected=\"selected\""?>><?php echo _('Exact'); ?></option>
 		</select>
 	</td>
-	<td><?php echo _('Maxium Results'); ?>:</td>
+	<td><?php echo _('Maximum Results'); ?>:</td>
 	<td>
 		<select name="limit">
 			<option value="0"><?php echo _('Unlimited'); ?></option>

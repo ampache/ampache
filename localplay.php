@@ -55,7 +55,7 @@ switch ($action) {
 		$localplay = init_localplay(); 
 		$localplay->delete_all();
 		$url	= $web_path . '/localplay.php';
-		$title	= _('Song(s) Remove from Playlist');
+		$title	= _('Song(s) Removed from Playlist');
 		$body	= '';
 		show_confirmation($title,$body,$url);
 	break;
