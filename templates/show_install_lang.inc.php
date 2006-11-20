@@ -1,11 +1,11 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us" lang="en-us">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="$htmllang" lang="$htmllang">
 <head>
 <title>Ampache :: Pour l'Amour de la Musique - Install</title>
+<?php require_once(conf('prefix') . "/templates/install.css"); ?>
 </head>
 <body>
 <script src="lib/javascript-base.js" language="javascript" type="text/javascript"></script>
-<?php require_once(conf('prefix') . "/templates/install.css"); ?>
 <div id="header"> 
 <h1><?php echo _('Ampache Installation'); ?></h1>
 <p>For the love of Music</p>
@@ -15,11 +15,12 @@
 		<b><?php echo _("Requirements"); ?></b>
 		<p>
 		<?php echo _('This Page handles the installation of the Ampache database and the creation of the ampache.cfg.php file. Before you continue please make sure that you have the following pre-requisites'); ?>
-		<br />
+		</p>
 		<ul>
 			<li><?php echo _('A MySQL Server with a username and password that can create/modify databases'); ?></li>
 			<li><?php echo _('Your webserver has read access to the /sql/ampache.sql file and the /config/ampache.cfg.php.dist file'); ?></li>
 		</ul>
+		<p>
 <?php echo _("Once you have ensured that you have the above requirements please fill out the information below. You will only be asked for the required config values. If you would like to make changes to your ampache install at a later date simply edit /config/ampache.cfg.php"); ?>
 		</p>
 	</div>
@@ -28,7 +29,7 @@
 		<b>Choose installation language.</b>
 		<p>
 		<?php echo $GLOBALS['error']->print_error('general'); ?>
-
+		</p>
 <form method="post" action="<?php echo $http_type . $_SERVER['HTTP_HOST'] .  $_SERVER['PHP_SELF'] . "?action=init"; ?>" enctype="multipart/form-data" >
 
 <?
@@ -46,11 +47,10 @@ foreach ($languages as $lang=>$name) {
 echo "</select>\n";
 ?>
 
-<input type="submit" value="<?php echo _('Start configuration'); ?>">
+<input type="submit" value="<?php echo _('Start configuration'); ?>" />
 
 	</form>
- </p>
-	</div>
+ 	</div>
 	<div id="bottom">
     	<p><b>Ampache Installation.</b><br />
     	For the love of Music.</p>

@@ -192,7 +192,7 @@ switch ($action) {
         case 'init':
 		/* First step of installation */
 		// Get the language
-		$htmllang = $_REQUEST['htmllang'];
+		$htmllang = $_POST['htmllang'];
 
 		// Set the lang in the conf array
 		conf(array('lang'=>$htmllang));
@@ -207,16 +207,16 @@ switch ($action) {
 				  'nl_NL' => 'ISO-8859-15',
 				  'tr_TR' => 'iso-8859-9',
 				  'zh_CN' => 'GBK');
-		$charset = $charsets[$_REQUEST['htmllang']];
-		
+		$charset = $charsets[$_POST['htmllang']];
+
 		// Set the site_charset in the conf array
- 	        conf(array('site_charset'=>$charsets[$_REQUEST['htmllang']]));
+ 	        conf(array('site_charset'=>$charsets[$_POST['htmllang']]));
 			
 		// Now we make voodoo with the Load gettext mojo
 		load_gettext();
 
 		// Page ready  :)
-		header ("Content-Type: text/html; charset=" . conf('site_charset'));
+		header ("Content-Type: text/html; charset=$charset");
 		require_once('templates/show_install.inc');
 		break;
 		
@@ -225,8 +225,8 @@ switch ($action) {
 		if (!function_exists('mysql_query')) { 
 			header ("Location: test.php");
 		}
-
-
+		$htmllang = "en_US";
+		header ("Content-Type: text/html; charset=UTF-8");
 		/* Show the language options first */
 		require_once('templates/show_install_lang.inc.php');
 	break;

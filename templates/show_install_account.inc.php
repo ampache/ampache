@@ -25,12 +25,13 @@
 */
 
 ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php echo $htmllang; ?>" lang="<?php echo $htmllang; ?>">
 <head>
 <title>Ampache :: For The Love Of Music - Install</title>
+<?php require_once(conf('prefix') . "/templates/install.css"); ?>
 </head>
 <body>
-<?php require_once(conf('prefix') . "/templates/install.css"); ?>
 <div id="header"> 
 <h1><?php echo _("Ampache Installation"); ?></h1>
 <p>For the love of Music</p>
@@ -62,7 +63,7 @@
 <table>
 <tr>
 	<td class="align"><?php echo _("Username"); ?></td>
-	<td><input type="textbox" name="local_username" value="admin" /></td>
+	<td><input type="text" name="local_username" value="admin" /></td>
 </tr>
 <tr>
 	<td class="align"><?php echo _("Password"); ?></td>

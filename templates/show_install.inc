@@ -1,10 +1,11 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php echo $htmllang; ?>" lang="<?php echo $htmllang; ?>">
 <head>
 <title>Ampache :: For The Love Of Music - Install</title>
+<?php //require_once(conf('prefix') . "/templates/install.css"); ?>
 </head>
 <body>
 <script src="lib/javascript-base.js" language="javascript" type="text/javascript"></script>
-<?php require_once(conf('prefix') . "/templates/install.css"); ?>
 <div id="header"> 
 <h1><?php echo _("Ampache Installation"); ?></h1>
 <p>For the love of Music</p>
@@ -15,11 +16,12 @@
 		<b><?php echo _("Requirements"); ?></b>
 		<p>
 		<?php echo _("This Page handles the installation of the Ampache database and the creation of the ampache.cfg.php file. Before you continue please make sure that you have the following pre-requisites"); ?>
-		<br />
+		</p>
 		<ul>
 			<li><?php echo _("A MySQL Server with a username and password that can create/modify databases"); ?></li>
 			<li><?php echo _("Your webserver has read access to the /sql/ampache.sql file and the /config/ampache.cfg.php.dist file"); ?></li>
 		</ul>
+		<p>
 <?php echo _("Once you have ensured that you have the above requirements please fill out the information below. You will only be asked for the required config values. If you would like to make changes to your ampache install at a later date simply edit /config/ampache.cfg.php"); ?>
 		</p>
 	</div>
@@ -34,19 +36,19 @@
 		<br /><br />
 		<span class="header2">Insert Ampache Database</span>
 		<?php echo $GLOBALS['error']->print_error('general'); ?>
-		<form method="post" action="<?php echo $http_type . $_SERVER['HTTP_HOST'] .  $_SERVER['PHP_SELF'] . "?action=create_db&htmllang=$htmllang&charset=$charset"; ?>" enctype="multipart/form-data" >
+		<form method="post" action="<?php echo $http_type . $_SERVER['HTTP_HOST'] .  $_SERVER['PHP_SELF'] . "?action=create_db&amp;htmllang=$htmllang&amp;charset=$charset"; ?>" enctype="multipart/form-data" >
 <table>
 <tr>
 	<td class="align"><?php echo _("Desired Database Name"); ?></td>
-	<td><input type="textbox" name="local_db" value="ampache" /></td>
+	<td><input type="text" name="local_db" value="ampache" /></td>
 </tr>
 <tr>
 	<td class="align"><?php echo _("MySQL Hostname"); ?></td>
-	<td><input type="textbox" name="local_host" value="localhost" /></td>
+	<td><input type="text" name="local_host" value="localhost" /></td>
 </tr>
 <tr>
 	<td class="align"><?php echo _("MySQL Administrative Username"); ?></td>
-	<td><input type="textbox" name="local_username" value="root" /></td>
+	<td><input type="text" name="local_username" value="root" /></td>
 </tr>
 <tr>
 	<td class="align"><?php echo _("MySQL Administrative Password"); ?></td>
@@ -54,12 +56,11 @@
 </tr>
 <tr>
 	<td class="align"><?php echo _("Create Database User for New Database"); ?>? </td>
-	<td>
-		<input type="checkbox" value="create_db_user" name="db_user" onClick="flipField('db_username');flipField('db_password');">
-	</td>
+	<td><input type="checkbox" value="create_db_user" name="db_user" onClick="flipField('db_username');flipField('db_password');" /></td>
+</tr>
 <tr>
 	<td class="align"><?php echo _("Ampache Database Username"); ?></td>
-	<td><input type="textbox" id="db_username" name="db_username" value="ampache" disabled="disabled" /></td>
+	<td><input type="text" id="db_username" name="db_username" value="ampache" disabled="disabled" /></td>
 </tr>
 <tr>
 	<td class="align"><?php echo _("Ampache Database User Password"); ?></td>

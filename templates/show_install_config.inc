@@ -25,12 +25,13 @@
 */
 
 ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php echo $htmllang; ?>" lang="<?php echo $htmllang; ?>">
 <head>
 <title>Ampache :: For The Love Of Music - Install</title>
+<?php require_once(conf('prefix') . "/templates/install.css"); ?>
 </head>
 <body>
-<?php require_once(conf('prefix') . "/templates/install.css"); ?>
 <div id="header"> 
 <h1><?php echo _("Ampache Installation"); ?></h1>
 <p>For the love of Music</p>
@@ -53,7 +54,7 @@
 		<dl>
 		<dd><?php echo _("This steps takes the basic config values, and first attempts to write them out directly to your webserver. If access is denied it will prompt you to download the config file. Please put the downloaded config file in /config"); ?></dd>
 		</dl>
-		<?php echo _("Step 3 - Setup Initial Account"); ?></a><br />
+		<?php echo _("Step 3 - Setup Initial Account"); ?><br />
 		<br /><br />
 		<span class="header2">Generate Config File</span>
 		<?php echo $GLOBALS['error']->print_error('general'); ?>
@@ -61,19 +62,19 @@
 		<table>
 <tr>
 	<td class="align"><?php echo _("Web Path"); ?></td>
-	<td class="align"><input type="textbox" name="web_path" value="<?php echo $web_path; ?>" /></td>
+	<td class="align"><input type="text" name="web_path" value="<?php echo $web_path; ?>" /></td>
 </tr>
 <tr>
 	<td class="align"><?php echo _("Desired Database Name"); ?></td>
-	<td class="align"><input type="textbox" name="local_db" value="<?php echo scrub_out($_REQUEST['local_db']); ?>" /></td>
+	<td class="align"><input type="text" name="local_db" value="<?php echo scrub_out($_REQUEST['local_db']); ?>" /></td>
 </tr>
 <tr>
 	<td class="align"><?php echo _("MySQL Hostname"); ?></td>
-	<td class="align"><input type="textbox" name="local_host" value="<?php echo scrub_out($_REQUEST['local_host']); ?>" /></td>
+	<td class="align"><input type="text" name="local_host" value="<?php echo scrub_out($_REQUEST['local_host']); ?>" /></td>
 </tr>
 <tr>
 	<td class="align"><?php echo _("MySQL Username"); ?></td>
-	<td class="align"><input type="textbox" name="local_username" value="<?php echo scrub_out($_REQUEST['local_username']); ?>" /></td>
+	<td class="align"><input type="text" name="local_username" value="<?php echo scrub_out($_REQUEST['local_username']); ?>" /></td>
 </tr>
 <tr>
 	<td class="align"><?php echo _("MySQL Password"); ?></td>
@@ -131,8 +132,8 @@
 		</tr>
 		</table>
 		<br />
-		<form method="post" action="<?php echo $GLOBALS['php_self'] . "?action=show_create_account&htmllang=$htmllang&charset=$charset"; ?>" enctype="multipart/form-data">
-		<input type="Submit" value="Continue to Step 3" />
+		<form method="post" action="<?php echo $GLOBALS['php_self'] . "?action=show_create_account&amp;htmllang=$htmllang&amp;charset=$charset"; ?>" enctype="multipart/form-data">
+		<input type="submit" value="Continue to Step 3" />
 		</form>
 	</div>
 	<div id="bottom">
