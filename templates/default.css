@@ -642,7 +642,7 @@ li.current-rating{
 	float:right;
 }
 #tv_np .box {
-	aligh:right;
+	text-align:right;
 }
 #tv_left { 
 	float:left;

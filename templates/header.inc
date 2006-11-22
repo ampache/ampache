@@ -39,8 +39,10 @@ if (conf('use_rss')) { ?>
 <?php } ?>
 <meta http-equiv="Content-Type" content="text/html; charset=<?php echo conf('site_charset'); ?>" />
 <title><?php echo conf('site_title'); ?> - <?php echo $location['title']; ?></title>
-<link rel="stylesheet" href="<?php echo $web_path; ?>/templates/default.css" type="text/css" />
-<link rel="stylesheet" href="<?php echo $web_path; ?><?php echo conf('theme_path'); ?>/templates/default.css" type="text/css" />
+<link rel="stylesheet" href="<?php echo $web_path; ?>/templates/default.css" type="text/css" media="screen" />
+<link rel="stylesheet" href="<?php echo $web_path; ?>/templates/print.css" type="text/css" media="print" />
+<link rel="stylesheet" href="<?php echo $web_path; ?>/templates/handheld.css" type="text/css" media="handheld" />
+<link rel="stylesheet" href="<?php echo $web_path; ?><?php echo conf('theme_path'); ?>/templates/default.css" type="text/css" media="screen" />
 </head>
 <body>
 <script src="<?php echo $web_path; ?>/lib/javascript-base.js" language="javascript" type="text/javascript"></script>

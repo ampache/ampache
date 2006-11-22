@@ -157,7 +157,9 @@ $htmllang = str_replace("_","-",conf('lang'));
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=<?php echo conf('site_charset'); ?>" />
 <link rel="shortcut icon" href="<?php echo conf('web_path'); ?>/favicon.ico" />
-<link rel="stylesheet" href="templates/default.css" type="text/css" />
+<link rel="stylesheet" href="templates/default.css" type="text/css" media="screen" />
+<link rel="stylesheet" href="templates/print.css" type="text/css" media="print" />
+<link rel="stylesheet" href="templates/handheld.css" type="text/css" media="handheld" />
 <title> <?php echo conf('site_title'); ?> </title>
 <script type="text/javascript" language="javascript">
 function focus(){ document.login.username.focus(); }
