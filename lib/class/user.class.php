@@ -320,7 +320,7 @@ class User {
 	function update_validation($new_validation) { 
 
 		$new_validation = sql_escape($new_validation);
-		$sql = "UPDATE user SET validation='$new_validation' WHERE username='$this->username'";
+		$sql = "UPDATE user SET validation='$new_validation',disabled='1' WHERE username='$this->username'";
 		$this->validation = $new_validation;
 		$db_results = mysql_query($sql, dbh());
 
