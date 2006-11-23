@@ -106,9 +106,11 @@ BDO[DIR="rtl"]  { direction: rtl; unicode-bidi: bidi-override }
 #sidebar {
 display: none;
 }
+/*
 #topbar {
 display: none;
 }
+*/
 .alphabet {
 display: none;
 }
