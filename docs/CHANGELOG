@@ -4,6 +4,7 @@
 
 --------------------------------------------------------------------------
   v.3.3.3-Beta1 
+	- Added initial Tag writting script (Thx Jirwin)
   	- Updated flag class to make it easier to create a tag writer
   	- Fixed some potential issues with sort_files.php.inc
 	- Added the ability to Upload a M3u and have it attempt to build
