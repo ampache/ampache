@@ -5,9 +5,8 @@
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
- modify it under the terms of the GNU General Public License
- as published by the Free Software Foundation; either version 2
- of the License, or (at your option) any later version.
+ modify it under the terms of the GNU General Public License v2
+ as published by the Free Software Foundation.
 
  This program is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -21,9 +20,9 @@
 */
 ?>
 
-<span class="header1"><?php echo _('Edit Song'); ?></span>
+<?php show_box_top(_('Edit Song')); ?>
 <form name="edit_song" method="post" enctype="multipart/form-data" action="<?php echo conf('web_path'); ?>/admin/flag.php">
-<table class="text-box">
+<table>
 <tr class="<?php echo flip_class(); ?>">
 	<td><?php echo _('File'); ?>:</td>
 	<td><?php echo scrub_out($song->file); ?></td>
@@ -92,3 +91,4 @@
 </tr>
 </table>
 </form>
+<?php show_box_bottom(); ?>
