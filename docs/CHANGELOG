@@ -4,6 +4,8 @@
 
 --------------------------------------------------------------------------
   v.3.3.3-Beta1 
+  	- Updated flag class to make it easier to create a tag writer
+  	- Fixed some potential issues with sort_files.php.inc
 	- Added the ability to Upload a M3u and have it attempt to build
 		a playlist based on the filenames
 	- Added the ability for admins to 'Push' the democratic link

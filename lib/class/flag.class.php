@@ -143,6 +143,28 @@ class Flag {
 	} // get_flagged
 
 	/**
+	 * get_approved
+	 * This returns an array of approved flagged songs
+	 */
+	function get_approved() { 
+
+		$sql = "SELECT id FROM flagged WHERE approved='1'";
+		$db_results = mysql_query($sql,dbh()); 
+
+
+		/* Default the results array */
+		$results = array(); 
+
+		/* While it */
+		while ($r = mysql_fetch_assoc($db_results)) { 
+			$results[] = $r['id'];
+		}
+
+		return $results;
+
+	} // get_approved
+
+	/**
 	 * add
 	 * This adds a flag entry for an item, it takes an id, a type, the flag type
 	 * and a comment and then inserts the mofo
@@ -179,7 +201,7 @@ class Flag {
 
 		return true;
 
-	} // reject
+	} // delete_flag
 
 	/**
 	 * approve

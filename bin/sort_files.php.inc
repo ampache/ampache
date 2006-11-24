@@ -5,9 +5,8 @@
  All rights reserved
 
  This program is free software; you can redistribute it and/or
- modify it under the terms of the GNU General Public License
- as published by the Free Software Foundation; either version 2
- of the License, or (at your option) any later version.
+ modify it under the terms of the GNU General Public License v2
+ as published by the Free Software Foundation.
 
  This program is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -20,7 +19,7 @@
 
 */
 /**
- * DON'T USE ME! THIS SCRIPT _WILL_ MESS UP YOUR AUDIO FILES!!! 
+ * Still not fully tested but "Appears to work" use at your own risk
  * sort_files
  * This script has a lot of stuff to worry about. It's primary duty is to re-organize
  * your files based on some sane, and predefined (in the interface) order using the
@@ -33,7 +32,7 @@
  */
 
 /* Don't do anything just tell me what you would do */
-/* $test_mode = true; */
+//$test_mode = true; 
 
 /* m(__)m */
 $alphabet_prefix = true;
@@ -66,7 +65,7 @@ while ($r = mysql_fetch_row($db_results)) {
 		/* Check for Demo Mode */
 		if ($test_mode) { 
 			/* We're just talking here... no work */
-			echo "Moving File:\n\tSource: $song->file\n\tDest: $fullpath\n";
+			echo "Moving File...\n\tSource: $song->file\n\tDest: $fullpath\n";
 			flush();
 		}
 		/* We need to actually do the moving (fake it if we are testing) 
@@ -92,7 +91,7 @@ while ($r = mysql_fetch_row($db_results)) {
 function sort_find_filename($song,$rename_pattern) { 
 	
 	$extension = ltrim(substr($song->file,strlen($song->file)-4,4),".");
-
+	
 	/* Create the filename that this file should have */
 	$album 	= sort_clean_name($song->f_album_full);
 	$artist = sort_clean_name($song->f_artist_full);
@@ -105,10 +104,9 @@ function sort_find_filename($song,$rename_pattern) {
 	$replace_array = array('%a','%A','%t','%T','%y','%g');
 	$content_array = array($artist,$album,$title,$track,$year,$genre);
 	
-
 	$rename_pattern = str_replace($replace_array,$content_array,$rename_pattern);
 
-	$rename_pattern = preg_replace("[^A-Za-z0-9\-\_\ \'\,\(\)]","_",$rename_pattern);
+	$rename_pattern = preg_replace("[\-\:\!]","_",$rename_pattern);
 
 	return $rename_pattern . "." . $extension;
 
@@ -207,9 +205,11 @@ function sort_element_name($key) {
 function sort_clean_name($string) { 
 
 	/* First remove any / or \ chars */
-	$string = preg_replace("/[\/\\\]/","-",$string);
+	$string = preg_replace('/[\/\\\]/','-',$string);
 
-	$string = str_replace(":"," ",$string);
+	$string = str_replace(':',' ',$string);
+
+	$string = preg_replace('/[\!\:\*]/','_',$string);
 
 	return $string;
 
@@ -240,7 +240,8 @@ function sort_move_file($song,$fullname) {
 	unset($data[0]);
 
 	foreach ($data as $dir) { 
-
+	
+		$dir = sort_clean_name($dir);
 		$path .= "/" . $dir;
 
 		/* We need to check for the existance of this directory */
