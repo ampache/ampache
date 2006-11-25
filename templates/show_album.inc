@@ -63,7 +63,7 @@ $title		= scrub_out($album->name) . ' -- ' . $album->f_artist;
 		&nbsp;&nbsp;<a href="<?php echo $web_path; ?>/albums.php?action=update_from_tags&amp;album_id=<?php echo  $album->id; ; ?>"><?php echo  _("Update from tags"); ?></a><br />
 		<?php  } ?>
 		<?php if (batch_ok()) { ?>
-		&nbsp;&nbsp;<a href="<?php echo $web_path; ?>/batch.php?action=alb&amp;id=<?php echo  $album->id; ; ?>"><?php echo _('Download'); ?></a><br />
+		&nbsp;&nbsp;<a href="<?php echo $web_path; ?>/batch.php?action=alb&amp;id=<?php echo  $album->id; ; ?>"><img src="<?php echo $web_path; ?>/images/icon_download.gif" border="0" />&nbsp;<?php echo _('Download'); ?></a><br />
 		<?php } ?>
 	</div>
 <?php require (conf('prefix') . '/templates/show_box_bottom.inc.php'); ?>

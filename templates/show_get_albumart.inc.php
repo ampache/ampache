@@ -21,7 +21,7 @@
 */
 ?>
 <?php show_box_top(_('Customize Search')); ?>
-<form enctype="multipart/form-data" name="coverart" method="post" action="<?php echo conf('web_path'); ?>/albums.php?action=find_art&album_id=<?php echo $album->id; ?>&artist_name=<?php echo $_POST['artist_name'];?>&album_name=<?php echo $_POST['album_name']; ?>&cover=<?php echo scrub_out($_POST['cover']); ?>" style="Display:inline;">
+<form enctype="multipart/form-data" name="coverart" method="post" action="<?php echo conf('web_path'); ?>/albums.php?action=find_art&album_id=<?php echo $album->id; ?>&artist_name=<?php echo $_REQUEST['artist_name'];?>&album_name=<?php echo $_REQUEST['album_name']; ?>&cover=<?php echo scrub_out($_REQUEST['cover']); ?>" style="Display:inline;">
 <table>
 <tr>
 </tr>

@@ -41,8 +41,38 @@ switch($action) {
 	show_box_top();
 	show_alphabet_list('artists','artists.php');
 	show_box_bottom();
+
+        // Setup the View Ojbect
+        $view = new View();
+        $view->import_session_view();
+
+
 	$artist = new Artist($_REQUEST['artist']);
-	$artist->show_albums();
+
+        $sql = "SELECT DISTINCT(album.id) FROM song,album WHERE song.album=album.id AND song.artist='$artist->id'";
+
+	if ($_REQUEST['keep_view']) {
+                $view->initialize();
+        }
+
+        // If we aren't keeping the view then initlize it
+        elseif ($sql) {
+                if (!$sort_order) { $sort_order = 'album.name'; }
+                $db_results = mysql_query($sql, dbh());
+                $total_items = mysql_num_rows($db_results);
+                if ($match != "Show_all") { $offset_limit = $_SESSION['userdata']['offset_limit']; }
+                $view = new View($sql, 'artists.php',$sort_order,$total_items,$offset_limit);
+        }
+
+        else { $view = false; }
+
+        if ($view->base_sql) {
+                $artist->show_albums($view->sql);
+        }
+
+
+
+ //$artist->show_albums();
 	break;
 
     case 'show_all_songs':

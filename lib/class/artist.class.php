@@ -78,11 +78,11 @@ class Artist {
 		@function get_albums
 		@discussion gets the albums for this artist
 	*/
-	function get_albums() { 
+	function get_albums($sql) { 
 
 		$results = array();
 
-		$sql = "SELECT DISTINCT(album.id) FROM song,album WHERE song.album=album.id AND song.artist='$this->id' ORDER BY album.name";
+//		$sql = "SELECT DISTINCT(album.id) FROM song,album WHERE song.album=album.id AND song.artist='$this->id' ORDER BY album.name";
 		$db_results = mysql_query($sql, dbh());
 
 		while ($r = mysql_fetch_object($db_results)) { 
@@ -279,12 +279,12 @@ class Artist {
 		@function show_albums
 		@discussion displays the show albums by artist page
 	*/
-	function show_albums() { 
+	function show_albums($sql = 0) { 
 
 	        /* Set Vars */
 	        $web_path = conf('web_path');
 
-	        $albums = $this->get_albums();
+	        $albums = $this->get_albums($sql);
 	        $this->format_artist();
 		$artist = $this;
 

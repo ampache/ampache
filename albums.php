@@ -91,7 +91,7 @@ elseif ($_REQUEST['action'] === 'find_art') {
 	$search = $artist . " " . $album_name;
 
 	//Find out if the cover url is a local filename or an url
-	if (empty($_FILES['file'])){
+	if (empty($_FILES['file']['tmp_name'])){
 		$coverurl = $_REQUEST['cover'];
 
 		// Attempt to find the art with what we've got
