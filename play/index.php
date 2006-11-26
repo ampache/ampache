@@ -192,7 +192,7 @@ else {
 	
 
 // Send file, possible at a byte offset
-$fp = @fopen($song->file, 'r');
+$fp = @fopen($song->file, 'rb');
 
 if (!is_resource($fp)) { 
 	debug_event('file_read_error',"Error: Unable to open $song->file for reading",'2');
