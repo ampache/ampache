@@ -61,7 +61,7 @@ foreach ($albums as $album) {
 			<a href="<?php echo $web_path; ?>/song.php?action=album&amp;album_id=<?php echo $album->id; ?>"><?php echo _("All"); ?></a> | 
 			<a href="<?php echo $web_path; ?>/song.php?action=album_random&amp;album_id=<?php echo $album->id; ?>"><?php echo _("Random"); ?></a> 
 			<?php if (batch_ok()) { ?>
-				| <a href="<?php echo $web_path; ?>/batch.php?action=alb&amp;id=<?php echo $album->id; ?>"><img src="<?php echo $web_path; ?>/images/icon_download.gif" border="0" alt="<?php echo _('Download'); ?>" /></a>
+				| <a href="<?php echo $web_path; ?>/batch.php?action=alb&amp;id=<?php echo $album->id; ?>"><?php echo _('Download'); ?></a>
 			<?php } ?>
 			</td>
 	</tr>

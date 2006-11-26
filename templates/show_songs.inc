@@ -130,20 +130,32 @@ foreach ($song_ids as $song_id) {
 		</a>
 	</td>
 	<td>
-		<a href="<?php echo $web_path; ?>/flag.php?action=show_flag&amp;type=song&amp;id=<?php echo $song->id; ?>"><img src="<?php echo $web_path; ?>/images/icon_flag.gif" "border="0" alt="<?php echo _('Flag'); ?>" title="<?php echo _('Flag'); ?>"/></a>
+		<a href="<?php echo $web_path; ?>/flag.php?action=show_flag&amp;type=song&amp;id=<?php echo $song->id; ?>">
+			<?php echo get_user_icon('flag'); ?>
+		</a>
 		<?php if ($GLOBALS['user']->has_access('100')) { ?>
-				| <a href="<?php echo $web_path; ?>/admin/flag.php?action=show_edit_song&amp;song=<?php echo $song->id; ?>"><img src="<?php echo $web_path; ?>/images/icon_edit.gif" "border="0" alt="<?php echo _('Edit'); ?>" title="<?php echo _('Edit'); ?> "/></a> | 
+				| <a href="<?php echo $web_path; ?>/admin/flag.php?action=show_edit_song&amp;song=<?php echo $song->id; ?>">
+					<?php echo get_user_icon('edit'); ?>
+				</a> | 
 				<?php if ($song->enabled) { ?>
-				<a href="<?php echo $web_path; ?>/admin/flag.php?action=disable&amp;song_ids=<?php echo $song->id; ?>"><img src="<?php echo $web_path; ?>/images/icon_disable.gif" "border="0" alt="<?php echo _('Disable'); ?>" title="<?php echo _('Disable'); ?>" /></a>
+				<a href="<?php echo $web_path; ?>/admin/flag.php?action=disable&amp;song_ids=<?php echo $song->id; ?>">
+					<?php echo get_user_icon('disable'); ?>
+				</a>
 				<?php } else { ?>
-				<a href="<?php echo $web_path; ?>/admin/flag.php?action=enabled&amp;song_ids=<?php echo $song->id; ?>"><img src="<?php echo $web_path; ?>/images/icon_enable.gif" "border="0" alt="<?php echo _('Enable'); ?>" title="<?php echo _('Enable'); ?>" /></a>
+				<a href="<?php echo $web_path; ?>/admin/flag.php?action=enabled&amp;song_ids=<?php echo $song->id; ?>">
+					<?php echo get_user_icon('enable'); ?>
+				</a>
 				<?php } //status ?>
 		<?php } //access ?>
 		<?php if ($GLOBALS['user']->prefs['download']) { ?>
-				| <a href="<?php echo $web_path; ?>/download/index.php?action=download&amp;song_id=<?php echo $song->id; ?>&amp;sid=<?php echo scrub_out(session_id()); ?>&amp;fn=<?php echo rawurlencode($song->f_artist_full . " - " . $song->title . "." . $song->type); ?>"><img src="<?php echo $web_path; ?>/images/icon_download.gif" "border="0" alt="<?php echo _('Download'); ?>" title="<?php echo _('Download'); ?>" /></a>
+			| <a href="<?php echo $web_path; ?>/download/index.php?action=download&amp;song_id=<?php echo $song->id; ?>&amp;sid=<?php echo scrub_out(session_id()); ?>&amp;fn=<?php echo rawurlencode($song->f_artist_full . " - " . $song->title . "." . $song->type); ?>">
+				<?php echo get_user_icon('download'); ?>	
+			</a>
 		<?php } ?>
 		<?php if ($GLOBALS['user']->prefs['direct_link']) { ?>
-			| <a href="<?php echo scrub_out($song->get_url()); ?>"><img src="<?php echo $web_path; ?>/images/icon_link.gif" "border="0" alt="<?php echo _('Direct Link'); ?>" title="<?php echo _('Direct Link'); ?>" /></a>
+			| <a href="<?php echo scrub_out($song->get_url()); ?>">
+				<?php echo get_user_icon('link'); ?>
+			</a>
 		<?php } ?>
 	</td>
 	<?php if(conf('ratings')) { ?>

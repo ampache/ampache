@@ -42,7 +42,31 @@ function get_songs($sql, $action=0) {
 	return $results;
 
 
-} // get_albums
+} // get_songs
+
+/**
+ * get_recently_played
+ * This function returns the last X songs that have been played
+ * It uses the 'popular' threshold to determine how many to pull
+ */
+function get_recently_played() { 
+
+	$sql = "SELECT object_count.object_id, object_count.user, object_count.object_type, object_count.date " . 
+        	"FROM object_count " .
+		"WHERE object_type='song' " . 
+        	"ORDER by object_count.date DESC " . 
+		"LIMIT " . conf('popular_threshold'); 
+	$db_results = mysql_query($sql, dbh()); 
+
+	$results = array(); 
+
+	while ($r = mysql_fetch_assoc($db_results)) { 
+		$results[] = $r; 	
+	}
+
+	return $results;
+
+} // get_recently_played
 
 /*!
 	@function format_song

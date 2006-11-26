@@ -132,7 +132,7 @@ elseif ($_REQUEST['action'] === 'find_art') {
                 fclose($handle);
 		if (!empty($art)){
 		$album->insert_art($art,$mime);
-			show_confirmation(_("Album Art Inserted"),"","/albums.php?action=show&album=$album_id");
+			show_confirmation(_('Album Art Inserted'),'',"/albums.php?action=show&album=$album_id");
 		}
 		else {
 			show_confirmation(_('Album Art Not Located'),_('Album Art could not be located at this time. This may be due to write acces error, or the file is not received corectly.'),"/albums.php?action=show&amp;album=" . $album->id);
@@ -160,7 +160,7 @@ elseif ($_REQUEST['action'] === 'select_art') {
 	$album = new Album($album_id);
 	$album->insert_art($image_data,$mime);
 
-	show_confirmation(_("Album Art Inserted"),"","/albums.php?action=show&album=$album_id");
+	show_confirmation(_('Album Art Inserted'),'',"/albums.php?action=show&album=$album_id");
 
 
 } // end select art
@@ -232,8 +232,7 @@ else {
 			if ($match != 'Browse' && $match != 'Show_missing_art' && $match != 'Show_all') { 
 				$match_string = " AND album.name LIKE '$match%'";
 			}
-//			unset($_REQUEST['keep_view']);
-			$sql = "SELECT album.id, IF(COUNT(DISTINCT(song.artist)) > 1,'Various', artist.name) AS artist_name " . 
+			$sort_sql = "SELECT album.id, IF(COUNT(DISTINCT(song.artist)) > 1,'Various', artist.name) AS artist_name " . 
 				"FROM song,artist,album WHERE song.album=album.id AND song.artist=artist.id $match_string" . 
 				"GROUP BY album.name,album.year ".
                                 "HAVING COUNT(song.id) > $min_album_size ";
@@ -246,7 +245,7 @@ else {
 
 	// if we are returning
 	if ($_REQUEST['keep_view']) { 
-                $view->initialize();
+                $view->initialize($sort_sql);
 	}
 
 	// If we aren't keeping the view then initlize it

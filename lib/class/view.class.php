@@ -167,8 +167,15 @@ class View {
 		@discussion initializes the view object, checks $_REQUEST
 			    for changes to the view object
 	*/
-	function initialize() {
-	
+	function initialize($sql='') {
+
+		/* From time to time we need to change the SQL statement while 
+		 * maintaining the paging 
+		 */
+		if ($sql) { 
+			$this->change_sql($sql);
+		}
+
 		if ($_REQUEST['sort_type']) {
 			$this->change_sort_type($_REQUEST['sort_type']);
 		}

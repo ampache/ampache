@@ -46,13 +46,16 @@ if (conf('refresh_limit') > 5) {
 <div id="np_data">
 	<?php show_now_playing(); ?>
 </div> <!-- Close Now Playing Div -->
-
+<!-- Recently Played -->
+<div id="recently_played">
+	<?php 
+		$data = get_recently_played(); 
+		if (count($data)) { require_once(conf('prefix') . '/templates/show_recently_played.inc.php'); }
+	?>
+</div>
 <!-- Big Daddy Table -->
 <?php show_box_top(); ?>
-<table id="bigdaddy">
-<tr>
-	<td valign="top">
-		<table border="0"><!-- Left table -->
+<table id="biddaddy"><!-- The Table --> 
 		<tr>
 			<td valign="top"> 
 				<?php show_local_catalog_info(); ?>
@@ -65,30 +68,11 @@ if (conf('refresh_limit') > 5) {
 			?>
 			</td>	
 		</tr>
-		<tr><td colspan="2">&nbsp;</td></tr>
-		<tr><td colspan="2">&nbsp;</td></tr>
 		<tr>
 			<td valign="top">
 			<?php
 				if ($items = get_global_popular('artist')) {
 					show_info_box(_('Most Popular Artists'), 'artist', $items);
-				}
-			?>
-			</td>
-			<td valign="top">
-			<?php
-				if ($items = get_global_popular('song')) {
-					show_info_box(_('Most Popular Songs'), 'song', $items);
-				}
-			?>
-			</td>
-		</tr>
-		<tr><td colspan="2">&nbsp;</td></tr>
-		<tr>
-			<td valign="top">
-			<?php
-				if ($items = get_newest('artist')) {
-					show_info_box(_('Newest Artist Additions'), '', $items);
 				}
 			?>
 			</td>
@@ -101,9 +85,6 @@ if (conf('refresh_limit') > 5) {
 			</td>
 		</tr>
 		</table><!-- End Left table -->
-	</td>
-</tr>
-</table>
 <?php show_box_bottom(); ?>
 <!-- End Big Daddy Table -->
 <?php show_footer(); ?>

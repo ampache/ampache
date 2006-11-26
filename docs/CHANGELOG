@@ -4,6 +4,10 @@
 
 --------------------------------------------------------------------------
   v.3.3.3-Beta1 
+	- Tweaked home page a little, remove pop songs and recent artists
+	- Added Recently Played to Main Page
+	- Fixed an issue on Browse by Albums and sorting by Artist after
+		sorting by something else 
 	- Added initial Tag writting script (Thx Jirwin)
   	- Updated flag class to make it easier to create a tag writer
   	- Fixed some potential issues with sort_files.php.inc
