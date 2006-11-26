@@ -67,7 +67,7 @@ if (!$results = read_config($configfile,0)) {
 } 
 
 /** This is the version.... fluf nothing more... **/
-$results['version']		= '3.3.3-Beta1 (Build 001)';
+$results['version']		= '3.3.3-Beta1 (Build 002)';
 
 $results['raw_web_path']	= $results['web_path'];
 $results['web_path']		= $http_type . $_SERVER['HTTP_HOST'] . $results['web_path'];
@@ -153,7 +153,6 @@ require_once(conf('prefix') . '/lib/playlist.lib.php');
 require_once(conf('prefix') . '/lib/upload.php');
 require_once(conf('prefix') . '/lib/democratic.lib.php');
 require_once(conf('prefix') . '/modules/lib.php');
-require_once(conf('prefix') . '/modules/admin.php');
 require_once(conf('prefix') . '/modules/catalog.php');
 require_once(conf('prefix') . "/modules/id3/getid3/getid3.php");
 require_once(conf('prefix') . '/modules/id3/vainfo.class.php');
@@ -170,6 +169,7 @@ if (conf('ratings')) {
 
 // Classes
 require_once(conf('prefix') . '/lib/class/localplay.class.php');
+require_once(conf('prefix') . '/lib/class/plugin.class.php');
 require_once(conf('prefix') . '/lib/class/stats.class.php');
 require_once(conf('prefix') . '/lib/class/catalog.class.php');
 require_once(conf('prefix') . '/lib/class/stream.class.php');

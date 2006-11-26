@@ -9,55 +9,6 @@
 
 */
 
-/*
- * show_album_pulldown()
- * OLD FUNCTION!! use show_album_select($name,$selected)
- */
-
-function show_album_pulldown ($album) {
-
-	global $settings;
-	$dbh = dbh();
-
-	$sql = "SELECT id,name FROM album ORDER BY name";
-	$db_result = mysql_query($sql, $dbh);
-
-	echo "\n<select name=\"album\">\n";
-
-	while ( $r = mysql_fetch_row($db_result) ) {
-		// $r[0] = id, $r[1] = name
-		if ( $album == $r[0] ) {
-			echo "\t  <option value=\"${r[0]}\" selected=\"selected\">".htmlspecialchars($r[1])."</option>\n";
-		}
-		else {
-			echo "\t  <option value=\"${r[0]}\">".htmlspecialchars($r[1])."</option>\n";
-		}
-	}//while
-
-	echo "\n</select>\n";
-} // show_album_pulldown()
-
-
-/*
- * delete_user_stats()
- *
- * just delete stats for specific users or all of them
- *
- */
-
-function delete_user_stats ($user) {
-
-	$dbh = dbh();
-
-	if ( $user == 'all' ) {
-		$sql = "DELETE FROM object_count";
-	}
-	else {
-		$sql = "DELETE FROM object_count WHERE userid = '$user'";
-	}
-	$db_result = mysql_query($sql, $dbh);
-} // delete_user_stats()
-
 
 /*********************************************************/
 /* Functions for getting songs given artist, album or id */
@@ -87,54 +38,6 @@ function get_songs_from_album ($album) {
 	}
 
 	return $songs;
-}
-
-
-function get_song_ids_from_album ($album) {
-
-	$dbh = dbh();
-
-	$song_ids = array();
-
-	$query = "SELECT id FROM song" .
-		" WHERE album = '$album'" .
-		" ORDER BY track, title";
-
-	$db_result = mysql_query($query, $dbh);
-
-	while ( $r = mysql_fetch_object($db_result) ) {
-		$song_ids[] = $r->id;
-	}
-
-	return $song_ids;
-
-}
-
-
-/*
- * get_song_ids_from_artist_and_album();
- *
- * Get all of the songs that are from this album and artist
- *
- */
-function get_song_ids_from_artist_and_album ($artist, $album) {
-
-	global $settings;
-	$dbh = dbh();
-
-	$sql = "SELECT id FROM song" .
-		" WHERE artist = '$artist'" .
-		" AND album = '$album'" .
-		" ORDER BY track, title";
-	$db_result = mysql_query($sql, $dbh);
-
-	$song_ids = array();
-
-	while ( $r = mysql_fetch_object($db_result) ) {
-		$song_ids[] = $r->id;
-	}
-
-	return $song_ids;
 }
 
 
@@ -229,19 +132,6 @@ function get_artist_info ($artist_id) {
 	else {
 		return FALSE;
 	}
-}
-
-
-function get_artist_from_album ($album_id) {
-
-	global $settings;
-	$dbh = dbh();
-
-	$query = "SELECT DISTINCT artist.id, artist.name FROM artist,song" .
-                 " WHERE song.album = '$album_id' AND song.artist = artist.id";
-	$db_result = mysql_query($query, $dbh);
-	$r = mysql_fetch_object($db_result);
-	return $r;
 }
 
 

@@ -41,7 +41,7 @@ $target = conf('web_path').'/admin/flags.php';
 </tr>
 <tr>
 	<td>Album:</td>
-	<td><?php show_album_pulldown($song->album); ?></td>
+	<td><?php show_album_select('album',$song->album); ?></td>
 	<td>or <input type="text" name="new_album" size="30" value=""></input></td>
 </tr>
 <tr>

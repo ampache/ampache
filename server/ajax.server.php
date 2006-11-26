@@ -83,14 +83,8 @@ switch ($action) {
 		$pref_id = get_preference_id('play_type');
 		$GLOBALS['user']->update_preference($pref_id,$_GET['type']);
 
-		/* Now Replace the text as you should */
-		$ajax_url       = conf('ajax_url');
-		$required_info  = conf('ajax_info');
-		${$_GET['type']} = 'id="pt_active"';
-		ob_start();	
-		require_once(conf('prefix') . '/templates/show_localplay_switch.inc.php'); 
-		$results['play_type'] = ob_get_contents();
-		ob_end_clean();
+		/* Uses a drop down, no need to replace text */
+		$results['play_type'] = '';
 		$xml_doc = xml_from_array($results);
 		echo $xml_doc;
 	break;

@@ -988,4 +988,42 @@ function get_user_from_username($username) {
 
 } // get_user_from_username
 
+/**
+ * get_plugins
+ * This returns a list of the plugins and their information
+ */
+function get_plugins() { 
+
+	/* Init our vars */
+	$plugins = array(); 
+
+	/* Open the dir */
+	$handle = opendir(conf('prefix') . '/modules/plugins'); 
+
+	if (!is_resource($handle)) { 
+		debug_event('plugins','Error: Unable to read plugins directory','1');
+	}
+
+	while ($file = readdir($handle)) {	
+		if (substr($file,-10,10) != 'plugin.php') { continue; } 
+		
+		/* Make sure it isn't a subdir */
+		if (!is_dir($file)) { 
+
+			/* Get the Basename */
+			$plugin_name = basename($file,'.plugin.php');
+
+			/* Load it */
+			$plugin = new Plugin($plugin_name); 
+			$plugins[$plugin_name] = $plugin;
+		} // if its not a subdir
+
+	} // end while 
+
+
+	return $plugins;
+
+} // get_plugins
+
+
 ?>

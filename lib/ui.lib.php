@@ -1426,5 +1426,20 @@ function xml_get_footer($type){
 	}
 } //xml_get_footer
 
+/**
+ * show_manage_users
+ * This is the admin page for showing all of the users
+ */
+function show_manage_users() {
+
+        show_box_top(_('Manage Users'));
+        echo "<ul>\n\t<li><a href=\"".conf('web_path') . "/admin/users.php?action=show_add_user\">" . _('Add a new user') . "</a></li>\n</ul>\n";
+        show_box_bottom();
+
+	/* Show the Users */
+        show_users();
+
+} // show_manage_users
+
 
 ?>

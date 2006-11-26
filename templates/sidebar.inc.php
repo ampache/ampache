@@ -184,18 +184,16 @@ $web_path = conf('web_path');
 <?php if ($GLOBALS['theme']['orientation'] != 'horizontal') { ?>
 	<li>
 		<?php require_once(conf('prefix') . '/templates/show_localplay_control.inc.php'); ?>
-		<br />
-		<?php $type = conf('play_type'); ${$type} = 'id="pt_active"'; ?>
+	</li>
+<?php } // if horizontal orientation ?>
+<?php } // if localplay access ?>
+	<li>
 		<?php 
 			$required_info  = conf('ajax_info');
 			$ajax_url       = conf('ajax_url');
 		?>
-		<span class="text-action" style="cursor:pointer;" id="play_type">
-		<?php require_once(conf('prefix') . '/templates/show_localplay_switch.inc.php'); ?>
-		</span>
+		<?php require_once(conf('prefix') . '/templates/show_playtype_switch.inc.php'); ?>
 	</li>
-<?php } // if horizontal orientation ?>
-<?php } // if localplay access ?>
 <?php if ($GLOBALS['user']->prefs['play_type'] == 'democratic') { ?>
 	<li>
 		<a href="<?php echo $web_path; ?>/tv.php"><?php echo _('Democratic View'); ?></a>

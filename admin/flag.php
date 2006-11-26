@@ -97,6 +97,49 @@ switch ($action) {
 		
 		show_confirmation(_('Song Updated'),_('The requested song has been updated'),$_SESSION['source']);
 	break;
+	/* Done by 'Select' code passes array of song ids */
+	case 'mass_update': 
+		$songs = $_REQUEST['songs'];	
+	        $catalog = new Catalog();
+		$object = $_REQUEST['update_field']; 
+
+		/* Foreach the songs we need to update */
+		foreach ($songs as $song_id) { 
+
+			$new_song = new Song($song_id);
+	                $old_song               = new Song();
+	                $old_song->artist       = $new_song->artist;
+	                $old_song->album        = $new_song->album;
+	                $old_song->genre        = $new_song->genre;
+
+			/* Restrict which fields can be updated */
+			switch ($object) { 
+				case 'genre': 
+					$new_song->genre = $catalog->check_genre(revert_string($_REQUEST['update_value'])); 
+				break;
+				case 'album':
+					$new_song->album = $catalog->check_album(revert_string($_REQUEST['update_value'])); 
+				break;
+				case 'aritst':
+					$new_song->artist = $catalog->check_artist(revert_string($_REQUEST['update_value'])); 
+				break; 
+				default: 
+					// Rien a faire 
+				break;
+			} // end switch
+
+	                /* Update this mofo, store an old copy for cleaning */
+	                $song->update_song($song_id,$new_song);
+
+	                /* Now that it's been updated clean old junk entries */
+	                $cleaned = $catalog->clean_single_song($old_song);
+
+			$flag = new Flag(); 
+			$flag->add($song_id,'song','retag','Edited Song, auto-tag');
+
+		} // end foreach songs
+
+	break; 
 	case 'reject_flag':
 		$flag_id = scrub_in($_REQUEST['flag_id']);
 		$flag = new Flag($flag_id);
@@ -144,104 +187,6 @@ switch ($action) {
 	default:
 	break;
 } // end switch
-
-
-/*
-	@function edit_song_info
-	@discussion yea this is just wrong 
-*/
-function edit_song_info($song) {
-    $info = new Song($song);
-    preg_match("/^.*\/(.*?)$/",$info->file, $short);
-    $filename = htmlspecialchars($short[1]);
-    if(preg_match('/\.ogg$/',$short[1]))
-    {
-        $ogg = TRUE;
-        $oggwarn = "<br/><br><em>This file is an OGG file, which Ampache only has limited support for.<br/>";
-        $oggwarn .= "You can make changes to the database here, but Ampache will not change the actual file's information.</em><br/><br/>";
-    }
-
-echo <<<EDIT_SONG_1
-<p><b>Editing $info->title</b></p>
-<form name="update_song" method="post" action="song.php">
-<table class="border" cellspacing="0">
-  <tr class="table-header">
-  	<td colspan="3"><b>Editing $info->title</b></td>
-  </tr>
-
-  <tr class="odd">
-    <td>File:</td>
-    <td colspan="2">$filename $oggwarn</td>
-  </tr>
-
-  <tr class="odd">
-    <td>Title:</td>
-    <td colspan="2"><input type="text" name="title" size="60" value="$info->title" /></td>
-  </tr>
-
-  <tr class="even">
-    <td>Artist:</td>
-    <td>
-EDIT_SONG_1;
-    show_artist_pulldown($info->artist);
-echo <<<EDIT_SONG_2
-    </td>
-    <td>or <input type="text" name="new_artist" size="30" value="" /></td>
-  </tr>
-
-  <tr class="odd">
-    <td>Album:</td>
-    <td>
-EDIT_SONG_2;
-    show_album_pulldown($info->album);
-echo <<<EDIT_SONG_3
-    </td>
-    <td>or <input type="text" name="new_album" size="30" value="" /></td>
-  </tr>
-
-  <tr class="even">
-    <td>Track:</td>
-    <td colspan="2"><input type="text" size="4" maxlength="4" name="track" value="$info->track"></input></td>
-  </tr>
-
-  <tr class="odd">
-    <td>Genre:</td>
-    <td colspan="2">
-EDIT_SONG_3;
-    show_genre_pulldown('genre',$info->genre);
-echo <<<EDIT_SONG_4
-  </td>
-</tr>	
-  <tr class="even">
-    <td>Year</td>
-    <td colspan="2"><input type="text" size="4" maxlength="4" name="year" value="$info->year"></input></td>
-  </tr>
-
-EDIT_SONG_4;
-if(!$ogg)
-{
-echo <<<EDIT_SONG_5
-  <tr class="even">
-    <td>&nbsp;</td>
-    <td><input type="checkbox" name="update_id3" value="yes"></input>&nbsp; Update id3 tags </td>
-    <td>&nbsp;</td>
-  </tr>
-EDIT_SONG_5;
-}
-echo <<<EDIT_SONG_6
-  <tr class="odd">
-    <td> &nbsp; </td>
-    <td colspan="2"> 
-    	 <input type="hidden" name="song" value="$song" /> 
-         <input type="hidden" name="current_artist_id" value="$info->artist" /> 
-         <input type="submit" name="action" value="Update" /> 
-    </td>
-  </tr>
-</table>
-
-</form>
-EDIT_SONG_6;
-}
 
 show_footer();
 ?>

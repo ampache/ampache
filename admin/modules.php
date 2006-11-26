@@ -57,6 +57,48 @@ switch ($action) {
 		$body	= '';
 		show_confirmation($title,$body,$url);
 	break;
+	case 'install_plugin':
+		/* Verify that this plugin exists */
+		$plugins = get_plugins(); 
+		if (!array_key_exists($_REQUEST['plugin'],$plugins)) { 
+			debug_event('plugins','Error: Invalid Plugin: ' . $_REQUEST['plugin'] . ' selected','1'); 
+			break;
+		}
+		$plugin = new Plugin($_REQUEST['plugin']); 
+		$plugin->install(); 
+		
+		/* Show Confirmation */
+		$url	= conf('web_path') . '/admin/modules.php';
+		$title	= _('Plugin Activated'); 
+		$body	= '';
+		show_confirmation($title,$body,$url); 
+	break;
+	case 'confirm_uninstall_plugin':
+		$plugin = scrub_in($_REQUEST['plugin']); 
+		$url	= conf('web_path') . '/admin/modules.php?action=uninstall_plugin&amp;plugin=' . $plugin;
+		$title	= _('Are you sure you want to remove this plugin?'); 
+		$body	= '';
+		show_confirmation($title,$body,$url,1); 
+	break; 
+	case 'uninstall_plugin':
+		/* Verify that this plugin exists */
+                $plugins = get_plugins();
+                if (!array_key_exists($_REQUEST['plugin'],$plugins)) {
+                        debug_event('plugins','Error: Invalid Plugin: ' . $_REQUEST['plugin'] . ' selected','1');
+                        break;
+                }
+                $plugin = new Plugin($_REQUEST['plugin']);
+		$plugin->uninstall(); 
+
+                /* Show Confirmation */
+                $url    = conf('web_path') . '/admin/modules.php';
+                $title  = _('Plugin Deactivated');
+                $body   = '';
+                show_confirmation($title,$body,$url);
+	break;
+	case 'upgrade_plugin':
+
+	break;
 	default: 
 		require_once (conf('prefix') . '/templates/show_modules.inc.php');
 	break;

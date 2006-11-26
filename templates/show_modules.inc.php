@@ -27,10 +27,14 @@
  */
 
 /* Get Localplay Modules */
-$localplay_modules = get_localplay_controllers('disabled'); 
+$localplay_modules 	= get_localplay_controllers('disabled'); 
+/* Get Plugins */
+$plugins		= get_plugins(); 
 $web_path = conf('web_path'); 
 ?>
-<?php show_box_top(_('Modules')); ?>
+
+<!-- Localplay Modules --> 
+<?php show_box_top(_('Localplay Modules')); ?>
 <table class="border" border="0" cellspacing="0">
 <tr class="table-header">
 	<th><?php echo _('Module Name'); ?></th>
@@ -54,6 +58,41 @@ foreach ($localplay_modules as $module) {
 <?php } if (!count($localplay_modules)) { ?>
 <tr class="<?php echo flip_class(); ?>">
 	<td colspan="2"><span class="error"><?php echo _('No Records Found'); ?></span></td>
+</tr>
+<?php } ?>
+</table>
+<?php show_box_bottom(); ?>
+
+
+<!-- Plugins --> 
+<?php show_box_top(_('Available Plugins')); ?>
+<table>
+<tr class="table-header">
+	<td><?php echo _('Name'); ?></td>
+	<td><?php echo _('Description'); ?></td>
+	<td><?php echo _('Version'); ?></td>
+	<td><?php echo _('Action'); ?></td>
+</tr>
+<?php 
+foreach ($plugins as $key=>$plugin) { 
+        if (!$plugin->is_installed()) {
+                $action = "<a href=\"" . $web_path . "/admin/modules.php?action=install_plugin&amp;plugin=" . scrub_out($key) . "\">" .
+                        _('Activate') . "</a>";
+        }
+        else {
+                $action = "<a href=\"" . $web_path . "/admin/modules.php?action=confirm_uninstall_plugin&amp;plugin=" . scrub_out($key) . "\">" .
+                        _('Deactivate') . "</a>";
+        }
+?>
+<tr class="<?php echo flip_class(); ?>">
+	<td><?php echo scrub_out($plugin->_plugin->name); ?></td>
+	<td><?php echo scrub_out($plugin->_plugin->description); ?></td>
+	<td><?php echo scrub_out($plugin->_plugin->version); ?></td>
+	<td><?php echo $action; ?></td>
+</tr>
+<?php } if (!count($plugins)) { ?>
+<tr class="<?php echo flip_class(); ?>">
+	<td colspan="4"><span class="error"><?php echo _('No Records Found'); ?></span></td>
 </tr>
 <?php } ?>
 </table>

@@ -26,6 +26,4 @@ function get_albums($sql, $action=0) {
 
 
 
-
-
 ?>

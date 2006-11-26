@@ -487,4 +487,25 @@ function update_preference_level($name,$level) {
 
 } // update_preference_level
 
+/**
+ * fix_all_users_prefs
+ * This function is used by install/uninstall and fixes all of the users preferences
+ */
+function fix_all_users_prefs() {
+
+        $sql = "SELECT * FROM user";
+        $db_results = mysql_query($sql,dbh());
+
+        $user = new User();
+        $user->fix_preferences('-1');
+
+        while ($r = mysql_fetch_assoc($db_results)) {
+  	      $user->fix_preferences($r['username']);
+        }
+
+	return true;
+
+} // fix_all_users_prefs
+
+
 ?>
