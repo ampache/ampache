@@ -1,0 +1,232 @@
+diff -Nnr --exclude=.svn ampache.ref/lib/class/audioscrobbler.class.php ampache.dev/lib/class/audioscrobbler.class.php
+a0 211
+<?php
+/*
+
+ Copyright (c) 2001 - 2006 Ampache.org
+ All rights reserved.
+
+ This program is free software; you can redistribute it and/or
+ modify it under the terms of the GNU General Public License v2
+ as published by the Free Software Foundation.
+
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with this program; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+
+*/
+
+class scrobbler {
+
+	var $error_msg;
+	var $username;
+	var $password;
+	var $challenge;
+	var $submit_host;
+	var $submit_port;
+	var $submit_url;
+	var $queued_tracks;
+
+	/**
+	 * Constructor
+	 * This is the constructer it takes a username and password
+	 */
+	function scrobbler($username, $password) {
+
+		$this->error_msg = '';
+		$this->username = $username;
+		$this->password = $password;
+		$this->challenge = '';
+		$this->queued_tracks = array();
+
+	} // scrobbler
+
+	/**
+	 * get_error_msg
+	 */
+	function get_error_msg() {
+
+		return $this->error_msg;
+
+	} // get_error_msg
+
+	/**
+	 * get_queue_count
+	function get_queue_count() {
+
+		return count($this->queued_tracks);
+
+ 	} // get_queue_count
+
+	/**
+	 * handshake
+	 * This does a handshake with the audioscrobber server
+	 */
+	function handshake() {
+
+		$as_socket = @fsockopen('post.audioscrobbler.com', 80, $errno, $errstr, 10);
+		if(!$as_socket) {
+			$this->error_msg = $errstr;
+			return FALSE;
+		}
+
+		$username = rawurlencode($this->username);
+		fwrite($as_socket, "GET /?hs=true&p=1.1&c=m3a&v=0.1&u=".$username." HTTP/1.1\r\n");
+		fwrite($as_socket, "Host: post.audioscrobbler.com\r\n");
+		fwrite($as_socket, "Accept: */*\r\n\r\n");
+
+		$buffer = '';
+		while(!feof($as_socket)) {
+			$buffer .= fread($as_socket, 8192);
+		}
+		fclose($as_socket);
+
+		$split_response = preg_split("/\r\n\r\n/", $buffer);
+		if(!isset($split_response[1])) {
+			$this->error_msg = 'Did not receive a valid response';
+			return FALSE;
+		}
+		$response = explode("\n", $split_response[1]);
+
+		if(substr($response[0], 0, 6) == 'FAILED') {
+			$this->error_msg = substr($response[0], 7);
+			return FALSE;
+		}
+		if(substr($response[0], 0, 7) == 'BADUSER') {
+			$this->error_msg = 'Invalid Username';
+			return FALSE;
+		}
+		if(substr($response[0], 0, 6) == 'UPDATE') {
+			$this->error_msg = 'You need to update your client: '.substr($response[0], 7);
+			return FALSE;
+		}
+
+		if(preg_match('/http:\/\/(.*):(\d+)(.*)/', $response[2], $matches)) {
+			$this->submit_host = $matches[1];
+			$this->submit_port = $matches[2];
+			$this->submit_url = $matches[3];
+		} else {
+			$this->error_msg = 'Invalid POST URL returned, unable to continue';
+			return FALSE;
+		}
+
+		$this->challenge = $response[1];
+		return true;
+
+	} // handshake
+
+	function queue_track($artist, $album, $track, $timestamp, $length) {
+		$date = gmdate('Y-m-d H:i:s', $timestamp);
+		$mydate = date('Y-m-d H:i:s T', $timestamp);
+
+		if($length < 30) {
+			//printf("Skipping: %-25.25s  %-25.25s  %-25.25s  (%-4.4d secs), too short\n", $artist, $album, $track, $length);
+			return FALSE;
+		} else {
+			//printf("Queueing: %-25.25s  %-25.25s  %-25.25s  (%-4.4d secs)\n", $artist, $album, $track, $length);
+			//printf("          %23.23s (%23.23s)\n", $date." UTC", $mydate);
+		}
+
+		$newtrack = array();
+		$newtrack['artist'] = $artist;
+		$newtrack['album'] = $album;
+		$newtrack['track'] = $track;
+		$newtrack['length'] = $length;
+		$newtrack['time'] = $date;
+
+		$this->queued_tracks[$timestamp] = $newtrack;
+		return TRUE;
+	}
+
+	function submit_tracks() {
+		if(count($this->queued_tracks) == 0) {
+			$this->error_msg = "No tracks to submit\n";
+			return FALSE;
+		}
+
+		ksort($this->queued_tracks); //sort array by timestamp
+
+		$query_str = 'u='.rawurlencode($this->username).'&s='.rawurlencode(md5( md5($this->password).$this->challenge)).'&';
+		$i = 0;
+		foreach($this->queued_tracks as $track) {
+			$query_str .= "a[$i]=".rawurlencode($track['artist'])."&t[$i]=".rawurlencode($track['track'])."&b[$i]=".rawurlencode($track['album'])."&";
+			$query_str .= "m[$i]=&l[$i]=".rawurlencode($track['length'])."&i[$i]=".rawurlencode($track['time'])."&";
+			$i++;
+		}
+		$as_socket = @fsockopen($this->submit_host, $this->submit_port, $errno, $errstr, 10);
+		if(!$as_socket) {
+			$this->error_msg = $errstr;
+			return FALSE;
+		}
+
+		$action = "POST ".$this->submit_url." HTTP/1.0\r\n";
+		fwrite($as_socket, $action);
+		fwrite($as_socket, "Host: ".$this->submit_host."\r\n");
+		fwrite($as_socket, "Accept: */*\r\n");
+		fwrite($as_socket, "Content-type: application/x-www-form-urlencoded\r\n");
+		fwrite($as_socket, "Content-length: ".strlen($query_str)."\r\n\r\n");
+
+		fwrite($as_socket, $query_str."\r\n\r\n");
+
+		$buffer = '';
+		while(!feof($as_socket)) {
+			$buffer .= fread($as_socket, 8192);
+		}
+		fclose($as_socket);
+
+		$split_response = preg_split("/\r\n\r\n/", $buffer);
+		if(!isset($split_response[1])) {
+			$this->error_msg = 'Did not receive a valid response';
+			return FALSE;
+		}
+		$response = explode("\n", $split_response[1]);
+
+		if(!isset($response[0])) {
+			$this->error_msg = 'Unknown error submitting tracks'.
+					  "\nDebug output:\n".$buffer;
+			return FALSE;
+		}
+		if(substr($response[0], 0, 6) == 'FAILED') {
+			$this->error_msg = substr($response[6], 7);
+			return FALSE;
+		}
+		if(substr($response[0], 0, 7) == 'BADAUTH') {
+			$this->error_msg = 'Invalid username/password';
+			return FALSE;
+		}
+		if(substr($response[0], 0, 2) != 'OK') {
+			$this->error_msg = 'Unknown error submitting tracks'.
+					  "\nDebug output:\n".$buffer;
+			return FALSE;
+		}
+
+		return TRUE;
+	}
+
+}
+
+?>
+diff -Nnr --exclude=.svn ampache.ref/lib/class/user.class.php ampache.dev/lib/class/user.class.php
+a436 14
+		/* Record this play to LastFM */
+		if ($this->prefs['lastfm_user'] AND $this->prefs['lastfm_pass']) { 
+			$song->format_song();
+			$lastfm = new scrobbler($this->prefs['lastfm_user'],$this->prefs['lastfm_pass']);			
+			/* Attempt handshake */
+			if ($lastfm->handshake()) { 
+				$lastfm->queue_track($song->f_artist_full,$song->f_album_full,$song->title,time(),$song->time);			
+				$lastfm->submit_tracks();
+			} // if handshake
+			else { 
+				debug_event('plugins','Error: Handshake failed with LastFM','3');
+			}
+		} // record to LastFM
+
+diff -Nnr --exclude=.svn ampache.ref/lib/init.php ampache.dev/lib/init.php
+a187 1
+require_once(conf('prefix') . '/lib/class/audioscrobbler.class.php');
