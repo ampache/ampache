@@ -276,9 +276,9 @@ debug_level = 5
 max_upload_size = "10485760"
 
 # Charset of generated HTML pages
-# Default of iso-8859-1 should work for most poeple
-# DEFAULT: iso-8859-1
-site_charset = iso-8859-1
+# Default of UTF-8 should work for most poeple
+# DEFAULT: UTF-8
+site_charset = UTF-8
 
 # Locale Charset 
 # In some cases this has to be different

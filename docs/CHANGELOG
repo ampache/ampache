@@ -4,6 +4,7 @@
 
 --------------------------------------------------------------------------
   v.3.3.3-Beta1 
+	- Changed default site_charset to UTF-8 in ampache.cfg.php.dist
 	- Fixed some <? in show_test.inc (Thx apex)
 	- Added Plugin Interface under Admin --> Modules
 	- Fixed playtype switcher so it shows all possible play methods
