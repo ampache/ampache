@@ -45,7 +45,7 @@ $row_classes = array('even','odd');
 <tr>
 	<td valign="top"><?php echo _('PHP Version'); ?></td>
 	<td valign="top">[
-	<?
+	<?php
 		if (!check_php_ver()) { 
 			$status['php_ver'] = 'false';
 			echo " <font color=\"red\">ERROR</font> ";
@@ -64,7 +64,7 @@ $row_classes = array('even','odd');
 <tr>
         <td valign="top"><?php echo _('Mysql for PHP'); ?></td>
         <td valign="top">[
-        <?
+        <?php
                 if (!check_php_mysql()) {
                         $status['mysql_php'] = 'false';
                         echo " <font color=\"red\">ERROR</font> ";
@@ -83,7 +83,7 @@ $row_classes = array('even','odd');
 <tr>
 	<td valign="top"><?php echo _('PHP Session Support'); ?></td>
 	<td valign="top">[
-	<?
+	<?php
 		if (!check_php_session()) { 
 			$status['session_php'] = 'false';
 			echo " <font color=\"red\">ERROR</font> ";
@@ -176,7 +176,7 @@ $row_classes = array('even','odd');
 		<?php echo _('Ampache.cfg.php Configured?'); ?>
 	</td>
 	<td valign="top">[ 
-	<?
+	<?php
 		$results = read_config($configfile, 0, 0);
 		if (!check_config_values($results)) { 
 			$status['parse_config'] = 'false';
@@ -232,7 +232,7 @@ $row_classes = array('even','odd');
 <tr>
 	<td valign="top"><?php echo _("DB Connection"); ?></td>
 	<td valign="top">[
-	<?
+	<?php
 		$db = check_database($results['local_host'], $results['local_username'], $results['local_pass'],$results['local_db']);
 		if (!$db) { 
 			$status['check_db'] = 'false';
@@ -252,7 +252,7 @@ $row_classes = array('even','odd');
 <tr>
 	<td valign="top">DB Inserted</td>
 	<td valign="top">[
-	<?
+	<?php
 		$db_inserted = check_database_inserted($db,$results['local_db']);
 		if (!$db_inserted) { 
 			$status['check_db_insert'] = 'false';
@@ -274,7 +274,7 @@ $row_classes = array('even','odd');
 
 	<td valign="top">Web Path</td>
 	<td valign="top">[
-	<?
+	<?php
 		/*
 		 Check to see if this is Http or https
 		 */
