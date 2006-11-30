@@ -67,4 +67,4 @@ if (conf('use_rss')) { ?>
 	</div><!-- End sidebar -->
 	<div id="content">
 <!-- I hate IE... --> 
-<table><tr><td>
+<table class="smeg-ie"><tr><td>
