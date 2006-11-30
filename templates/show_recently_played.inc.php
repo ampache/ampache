@@ -24,22 +24,19 @@
 <tr class="table-header">
 	<td><?php echo _('Username'); ?></td>
 	<td><?php echo _('Song'); ?></td>
-	<td><?php echo _('Date'); ?></td>
+	<td><?php echo _('Album'); ?></td>
+	<td><?php echo _('Artist'); ?></td>
 </tr>
 <?php foreach ($data as $row) { 
 	$row_user = new User($row['user']);
 	$song = new Song($row['object_id']); 
 	$song->format_song(); 
-	/* Prepare the variables */
-	$title = scrub_out(truncate_with_ellipse($song->title,'25'));
-	$album = scrub_out(truncate_with_ellipse($song->f_album_full,'25'));
-	$artist = scrub_out(truncate_with_ellipse($song->f_artist_full,'25'));
-	$song_name = $title . ' - ' . $album . '/' . $artist;	
 ?>
 <tr>
 	<td><?php echo scrub_out($row_user->fullname); ?></td>
-	<td><?php echo $song_name; ?></td>
-	<td><?php echo date("d/m/Y H:i:s",$row['date']); ?></td>
+	<td><?php echo $song->f_link; ?></td>
+	<td><?php echo $song->f_album_link; ?></td>
+	<td><?php echo $song->f_artist_link; ?></td>
 </tr>
 <?php } ?>
 </table>

@@ -156,8 +156,9 @@ require_once(conf('prefix') . '/modules/lib.php');
 require_once(conf('prefix') . '/modules/catalog.php');
 require_once(conf('prefix') . "/modules/id3/getid3/getid3.php");
 require_once(conf('prefix') . '/modules/id3/vainfo.class.php');
-require_once(conf('prefix') . '/modules/amazon/Snoopy.class.php');
-require_once(conf('prefix') . '/modules/amazon/AmazonSearchEngine.class.php');
+require_once(conf('prefix') . '/modules/infotools/Snoopy.class.php');
+require_once(conf('prefix') . '/modules/infotools/AmazonSearchEngine.class.php');
+require_once(conf('prefix') . '/modules/infotools/jamendoSearch.class.php');
 require_once(conf('prefix') . '/lib/xmlrpc.php');
 require_once(conf('prefix') . '/modules/xmlrpc/xmlrpc.inc');
 

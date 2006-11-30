@@ -607,8 +607,10 @@ class Song {
 		// Format the title
 		$this->f_title = truncate_with_ellipse($this->title,conf('ellipse_threshold_title'));
 
-		// Create A link inclduing the title
+		// Create Links for the different objects 
 		$this->f_link = "<a href=\"" . conf('web_path') . "/song.php?action=single_song&amp;song_id=" . $this->id . "\">$this->f_title</a>";
+		$this->f_album_link = "<a href=\"" . conf('web_path') . "/album.php?action=show&amp;album_id=" . $this->album . "\">$this->f_album</a>";
+		$this->f_artist_link = "<a href=\"" . conf('web_path') . "/artist.php?action=show&amp;artist_id=" . $this->artist . "\">$this->f_artist</a>";	
 
 		// Format the Bitrate
 		$this->f_bitrate = intval($this->bitrate/1000) . "-" . strtoupper($this->mode);

@@ -143,6 +143,31 @@ class Update {
 
 	} // need_update
 
+	/**
+	 * plugins_installed
+	 * This function checks to make sure that there are no plugins
+	 * installed before allowing you to run the update. this is
+	 * to protect the integrity of the database
+	 */
+	function plugins_installed() { 
+
+		/* Pull all version info */
+		$sql = "SELECT * FROM `update_info`";
+		$db_results = mysql_query($sql,dbh());
+
+		while ($results = mysql_fetch_assoc($db_results)) { 
+
+			/* We have only one allowed string */
+			if ($results['key'] != 'db_version') { 
+				return false; 
+			}
+
+		} // while update_info results
+	
+		return true; 
+
+	} // plugins_installed
+
 	/*!
 		@function populate_version
 		@discussion just sets an array the current differences
@@ -304,6 +329,12 @@ class Update {
 		
 		$version[] = array('version' => '333001','description' => $update_string);
 
+		$update_string = '- Added object_tag table for Web2.0 Tag information.<br />' . 
+				'- Added song_ext_data for holding comments,lyrics and other large fields, not commonly used.<br />' . 
+				'- Added Timezone as a per user preference.';
+
+		//$version[] = array('version' => '333002','description' => $update_string);
+
 		return $version;
 
 	} // populate_version
@@ -350,6 +381,12 @@ class Update {
 		/* Nuke All Active session before we start the mojo */
 		$sql = "DELETE * FROM session";
 		$db_results = mysql_query($sql, dbh());
+
+		/* Verify that there are no plugins installed */
+		if (!$this->plugins_installed()) { 
+			$GLOBALS['error']->add_error('general',_('Plugins detected, please remove all Plugins and try again'));
+			return false; 
+		}
 
 		$methods = array();
 		
@@ -1992,6 +2029,74 @@ class Update {
 
 
 	} // update_333001
+
+	/**
+	 * update_333002
+	 * This updated adds two tables and a preference
+	 */
+	function update_333002 () { 
+
+		/* First add the two tables */
+		$sql = "CREATE TABLE `song_ext_data` (`song_id` INT( 11 ) UNSIGNED NOT NULL ,`comment` TEXT NULL ,`lyrics` TEXT NULL , UNIQUE (`song_id`)";
+		$db_results = mysql_query($sql,dbh()); 
+
+		$sql = "CREATE TABLE `tags` (`map_id` INT( 11 ) UNSIGNED NOT NULL ,`name` VARCHAR( 32 ) NOT NULL ,`order` TINYINT( 2 ) NOT NULL)";
+		$db_results = mysql_query($sql,dbh());
+
+		$sql = "ALTER TABLE `tags` ADD INDEX ( `order` )";
+		$db_results = mysql_query($sql,dbh()); 
+		
+		$sql = "ALTER TABLE `tags` ADD INDEX ( `map_id` )";
+		$db_results = mysql_query($sql,dbh()); 
+
+		$sql = "CREATE TABLE `tag_map` (`id` INT( 11 ) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY ,`object_id` INT( 11 ) UNSIGNED NOT NULL ,`object_type` VARCHAR( 16 ) NOT NULL ,`user_id` INT( 11 ) UNSIGNED NOT NULL)"; 
+		$db_results = mysql_query($sql,dbh()); 
+
+		$sql = "ALTER TABLE `tag_map` ADD INDEX ( `object_id` )";
+		$db_results = mysql_query($sql,dbh()); 
+
+		$sql = "ALTER TABLE `tag_map` ADD INDEX ( `object_type` )"; 
+		$db_results = mysql_query($sql,dbh()); 
+
+		$sql = "ALTER TABLE `tag_map` ADD INDEX ( `user_id` )";
+		$db_results = mysql_query($sql,dbh()); 
+
+		/* Move all of the comment data out of the song table */
+		$sql = "SELECT id,comment FROM song";
+		$db_results = mysql_query($sql,dbh()); 
+
+		while ($results = mysql_fetch_assoc($db_results)) { 
+			$song_id = sql_escape($results['id']);
+			$comment = sql_escape($results['comment']); 
+
+			$sql = "INSERT INTO song_ext_data (`song_id`,`comment`) VALUES ('$song_id','$comment')";
+			$insert_results = mysql_query($sql,dbh()); 
+
+		} // end while comments fetching
+
+
+		$sql = "ALTER TABLE `song` DROP `comment`";
+		$db_results = mysql_query($sql,dbh()); 
+
+		/* Add the Preference for Timezone */
+                $sql = "INSERT INTO preferences (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
+                        " VALUES ('time_zone','GMT','Local Timezone','5','string','interface')";
+                $db_results = mysql_query($sql,dbh());
+
+                /* Fix every users preferences */
+                $sql = "SELECT * FROM user";
+                $db_results = mysql_query($sql, dbh());
+
+                $user = new User();
+                $user->fix_preferences('-1');
+
+                while ($r = mysql_fetch_assoc($db_results)) {
+                        $user->fix_preferences($r['username']);
+                } // while results
+
+		$this->set_version('db_version','333002');
+	
+	} // update_333002
 
 } // end update class
 ?>
