@@ -84,7 +84,7 @@ if(conf('user_agreement')){ ?>
 			</table>
 		</td>
 	</tr>
-<? } // end if(conf('user_agreement')) ?>
+<?php } // end if(conf('user_agreement')) ?>
 <tr>
 	<td height='15'>
 	</td>
