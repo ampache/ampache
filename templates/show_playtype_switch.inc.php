@@ -1,6 +1,7 @@
 <?php 
 $name = "is_" . $GLOBALS['user']->prefs['play_type'];
 ${$name} = 'selected="selected" ';
+if (has_preference_access('play_type')){
 ?>
 <select style="font-size:0.9em;" name="type"> 
 	<?php if (conf('allow_stream_playback')) { ?>
@@ -14,3 +15,5 @@ ${$name} = 'selected="selected" ';
 	<?php } ?>
 	<option onclick="ajaxPut('<?php echo $ajax_url; ?>?action=change_play_type&amp;type=xspf_player<?php echo $required_info; ?>');return true;" <?php echo $is_xspf_player; ?>><?php echo _('XSPF Player'); ?></option>
 </select>
+<?php
+} else { echo ucwords($GLOBALS['user']->prefs['play_type']);}

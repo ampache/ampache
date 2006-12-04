@@ -29,7 +29,7 @@
 $admin_items[] = array('title'=>_('Users'),'url'=>'admin/users.php','active'=>$location['page']);
 $admin_items[] = array('title'=>_('Mail Users'),'url'=>'admin/mail.php','active'=>$location['page']);
 $admin_items[] = array('title'=>_('Catalog'),'url'=>'admin/index.php','active'=>$location['page']);
-$admin_items[] = array('title'=>_('Site Preferences'),'url'=>'admin/preferences.php','active'=>$location['page']);
+$admin_items[] = array('title'=>_('Config'),'url'=>'admin/preferences.php','active'=>$location['page']);
 $admin_items[] = array('title'=>_('Access List'),'url'=>'admin/access.php','active'=>$location['page']);
 $admin_items[] = array('title'=>_('Modules'),'url'=>'admin/modules.php','active'=>$location['page']);
 
