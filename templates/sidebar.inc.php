@@ -29,7 +29,7 @@
 $admin_items[] = array('title'=>_('Users'),'url'=>'admin/users.php','active'=>$location['page']);
 $admin_items[] = array('title'=>_('Mail Users'),'url'=>'admin/mail.php','active'=>$location['page']);
 $admin_items[] = array('title'=>_('Catalog'),'url'=>'admin/index.php','active'=>$location['page']);
-$admin_items[] = array('title'=>_('Config'),'url'=>'admin/preferences.php','active'=>$location['page']);
+$admin_items[] = array('title'=>_('Site Preferences'),'url'=>'admin/preferences.php','active'=>$location['page']);
 $admin_items[] = array('title'=>_('Access List'),'url'=>'admin/access.php','active'=>$location['page']);
 $admin_items[] = array('title'=>_('Modules'),'url'=>'admin/modules.php','active'=>$location['page']);
 
@@ -187,10 +187,6 @@ $web_path = conf('web_path');
 	</li>
 <?php } // if horizontal orientation ?>
 <?php } // if localplay access ?>
-<?php //If admin hasn't disabled the playtype switch
-
-	if (has_preference_access('play_type')){
-?>
 	<li>
 		<?php 
 			$required_info  = conf('ajax_info');
@@ -198,9 +194,6 @@ $web_path = conf('web_path');
 		?>
 		<?php require_once(conf('prefix') . '/templates/show_playtype_switch.inc.php'); ?>
 	</li>
-<?php
-} //End if admin hasn't disabled the playtype switch
-?>
 <?php if ($GLOBALS['user']->prefs['play_type'] == 'democratic') { ?>
 	<li>
 		<a href="<?php echo $web_path; ?>/tv.php"><?php echo _('Democratic View'); ?></a>

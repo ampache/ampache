@@ -82,13 +82,7 @@ switch ($action) {
 		$_SESSION['data']['old_play_type'] = conf('play_type'); 
 		$pref_id = get_preference_id('play_type');
 		$GLOBALS['user']->update_preference($pref_id,$_GET['type']);
-		
-		/* We need to set the correct playlist type when we want to change it */
-		if (!empty($_GET['playlist_type'])){
-			$_SESSION['data']['old_playlist_type'] = conf('playlist_type');
-			$pref_id = get_preference_id('playlist_type');
-			$GLOBALS['user']->update_preference($pref_id,$_GET['playlist_type']);
-		}
+
 		/* Uses a drop down, no need to replace text */
 		$results['play_type'] = '';
 		$xml_doc = xml_from_array($results);
