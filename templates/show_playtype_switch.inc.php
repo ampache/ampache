@@ -3,7 +3,7 @@ $name = "is_" . $GLOBALS['user']->prefs['play_type'];
 ${$name} = 'selected="selected" ';
 if (has_preference_access('play_type')){
 ?>
-<select style="font-size:0.9em;" name="type"> 
+<select id="play_type_switch" style="font-size:0.9em;" name="type"> 
 	<?php if (conf('allow_stream_playback')) { ?>
 		<option onclick="ajaxPut('<?php echo $ajax_url; ?>?action=change_play_type&amp;type=stream<?php echo $required_info; ?>');return true;" <?php echo $is_stream; ?>><?php echo _('Stream'); ?></option>
 	<?php } if (conf('allow_localplay_playback')) { ?>

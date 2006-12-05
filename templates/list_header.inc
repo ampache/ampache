@@ -5,9 +5,8 @@
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
- modify it under the terms of the GNU General Public License
- as published by the Free Software Foundation; either version 2
- of the License, or (at your option) any later version.
+ modify it under the terms of the GNU General Public License v2
+ as published by the Free Software Foundation.
 
  This program is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -96,7 +95,7 @@ $script = conf('web_path') . "/" . $admin_menu . $matches[1];
 // are there enough items to even need this view?
 if (($pages > 1) && ($_SESSION['view_script'])) {
 ?>
-<table cellpadding="1" cellspacing="0" width="100%">
+<table class="list-header" cellpadding="1" cellspacing="0" width="100%">
 <tr>
 	<td valign="top">
 	<a class="list-header" href="<?php echo $script; ?>?<?php echo $action; ?>&amp;offset=<?php echo $prev_offset; ?>&amp;keep_view=true">[<?php echo _('Prev'); ?>]</a>&nbsp;
