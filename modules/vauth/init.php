@@ -122,7 +122,7 @@ function vauth_init($data) {
 	}
 	
 	/* If an error has occured then return false */
-	if ($error_status) { return false; }
+	if (isset($error_status)) { return false; }
 
 	/* Load the additional libraries that we may or may not need... */
 	require_once 'dbh.lib.php';
@@ -171,7 +171,7 @@ function vauth_conf($param,$clobber=0) {
         }
 	// We are attempting to retrive a variable
         else {
-                if($params[$param]) return $params[$param];
+                if(isset($params[$param])) return $params[$param];
                 else return;
         }
 

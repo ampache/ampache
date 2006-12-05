@@ -89,7 +89,7 @@ function vauth_sess_write($key,$value) {
 
         /* Check for Rememeber Me */
         $cookie_name = vauth_conf('session_name') . "_remember";
-        if ($_COOKIE[$cookie_name]) {
+        if (isset($_COOKIE[$cookie_name])) {
 		$expire = time() + vauth_conf('remember_length');		
 	}
 
@@ -234,6 +234,8 @@ function vauth_check_session() {
 	/* Make sure we're still valid */
 	$session_name = vauth_conf('session_name');
 	
+	if (!isset($_COOKIE[$session_name])) { return false; } 
+	
 	$key = scrub_in($_COOKIE[$session_name]);
 	$results = vauth_get_session($key);
 
@@ -243,7 +245,7 @@ function vauth_check_session() {
 
 	/* Check for Rememeber Me */
 	$cookie_name = vauth_conf('session_name') . "_remember";
-	if ($_COOKIE[$cookie_name]) { 
+	if (isset($_COOKIE[$cookie_name])) { 
 		$extended = vauth_conf('remember_length');
 		vauth_conf(array('cookie_life'=>$extended),1);
 		setcookie($cookie_name, '1', time() + $extended,'/',vauth_conf('cookie_domain'));
