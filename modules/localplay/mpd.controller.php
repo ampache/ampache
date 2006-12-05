@@ -77,6 +77,7 @@ class AmpacheMpd {
 		/* Optional Functions */
 		$map['move']		= 'move';
 		$map['delete_all']	= 'clear_playlist';
+		$map['add_url']		= 'add_url';
 
                 return $map;
 
@@ -127,6 +128,22 @@ class AmpacheMpd {
 
 	} // add_songs
 
+	/**
+ 	 * add_url
+	 * This adds urls directly to the playlist, recieves an array of urls 
+	 */
+	function add_url($urls) { 
+
+		foreach ($urls as $url) { 
+			if (is_null($this->_mpd->PlAdd($url))) { 
+				debug_event('mpd_add','Error: Unable to add $url to MPD ' . $this->_mpd->errStr,'1');
+			}
+
+		} // end foreach
+
+		return true; 
+
+	} // add_url 
 
 	/**
 	 * delete_songs

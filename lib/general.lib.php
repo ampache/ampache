@@ -864,6 +864,7 @@ function get_languages() {
 				case 'es_ES'; $name = 'Espa&ntilde;ol'; break;
 				case 'fr_FR'; $name = 'Fran&ccedil;ais'; break;
 				case 'it_IT'; $name = 'Italiano'; break;
+				case 'is_IS'; $name = '&Iacute;slenska'; break;
 				case 'nl_NL'; $name = 'Nederlands'; break;
 				case 'tr_TR'; $name = _('Turkish'); break;
 				case 'zh_CN'; $name = _('Simplified Chinese') . " (&#x7b80;&#x4f53;&#x4e2d;&#x6587;)"; break;

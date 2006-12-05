@@ -225,22 +225,6 @@ function check_config_values($conf) {
 } // check_config_values
 
 /*!
-	@function show_compare_config
-	@discussion shows the difference between ampache.cfg
-		and ampache.cfg.dst
-*/
-function show_compare_config($prefix) { 
-
-	// Live Config File
-	$live_config = $prefix . "/config/ampache.cfg.php";
-
-	// Generic Config File
-	$generic_config = $prefix . "/config/ampache.cfg.dist";
-
-} // show_compare_config
-
-
-/*!
 	@function debug_read_config
 	@discussion this is the same as the read config function
 		except it will pull config values with a # before them
@@ -328,8 +312,16 @@ function debug_compare_configs($config,$dist_config) {
 	foreach ($dist_results as $key=>$value) { 
 
 		if (!isset($results[$key])) { 
-			$missing[$key] = $value;
-		}
+			/* If it's an array we need to split it out */
+			if (is_array($value)) { 
+				foreach ($value as $element) { 
+					$missing[$key][] = $element; 
+				}
+			}
+			else { 
+				$missing[$key] = $value;
+			} // end else not array
+		} // if it's not set 
 		
 	} // end foreach conf
 

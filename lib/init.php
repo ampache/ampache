@@ -112,6 +112,10 @@ if (!$results['user_ip_cardinality']) {
 if (!$results['local_length']) { 
 	$results['local_length'] = '9000';
 }
+/* Default it for now until I can get the auto-config updater working */
+if (!$results['tag_order']) { 
+	$results['tag_order'] = array('id3v2','id3v1','vorbiscomment','quicktime','file'); 
+}
 
 
 /* Variables needed for vauth Module */

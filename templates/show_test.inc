@@ -219,9 +219,16 @@ $row_classes = array('even','odd');
 	<td>
 	<?php if (count($difference)) {
 		echo _('Ampache.cfg.php is missing the following:');
-		echo "<br /><dl>\n";
+		echo "<br /><dl style=\"text-align:left;\">\n";
 		foreach ($difference as $key=>$value) { 
-			echo "\t<dd>$key = \"$value\"</dd>\n";
+			if (is_array($value)) { 
+				foreach ($value as $element) { 
+					echo "\t<dd>$key = \"$element\"</dd>\n";
+				}
+			}
+			else { 
+				echo "\t<dd>$key = \"$value\"</dd>\n";
+			}
 		}
 		echo "</dl><br />\n";
 	 } else { ?>

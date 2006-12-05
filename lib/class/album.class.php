@@ -385,6 +385,11 @@ class Album {
 	*/
 	function insert_art($image, $mime) { 
 
+		/* Have to disable this for Demo because people suck and try to
+ 		 * insert PORN :( 
+		 */
+		if (conf('demo_mode')) { return false; } 
+
                 // Check for PHP:GD and if we have it make sure this image is of some size
         	if (function_exists('ImageCreateFromString')) {
 			$im = @ImageCreateFromString($image);

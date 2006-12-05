@@ -165,6 +165,7 @@ class Localplay {
 		$this->_function_map['delete_all']	= $data['delete_all'];
 		$this->_function_map['randomize']	= $data['randomize'];
 		$this->_function_map['move']		= $data['move'];
+		$this->_function_map['add_url']		= $data['add_url'];
 
 	} // _map_functions
 
@@ -247,6 +248,25 @@ class Localplay {
 		return true;
 
 	} // add
+
+	/**
+	 * add_url	
+	 * This directly adds an array of URLs to the localplay module. This is really how I should
+	 * have done add, will migrate to this eventually
+	 */
+	function add_url($urls) { 
+
+		$function = $this->_function_map['add_url'];
+		
+		if (!$this->_player->$function($urls)) { 
+			debug_event('localplay','Error Unable to add urls, check ' . $this->type . ' controller','1');
+			return false; 
+		} 
+
+
+		return true; 
+
+	} // add_url
 
 	/**
 	 * repeat

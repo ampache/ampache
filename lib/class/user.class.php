@@ -248,6 +248,7 @@ class User {
 
 	/**
 	 * update_preference
+	 * //FIXME: Unused at this point, should be removed or used
 	 * updates a single preference if the query fails
 	 * it attempts to insert the preference instead
 	 * @package User
@@ -255,14 +256,21 @@ class User {
 	 * @todo Do a has_preference_access check
 	 */
 	function update_preference($preference_id, $value, $username=0) {
-		
+	
+		if (!has_preference_access(get_preference_name($preference_id))) { 
+			return false; 
+		} 
+
 		if (!$username) { 
 			$username = $this->username;
 		}
 
 		if (!conf('use_auth')) { $username = '-1'; }
 
-		$value = sql_escape($value);
+		$value 		= sql_escape($value);
+		$preference_id 	= sql_escape($preference_id); 
+		$username	= sql_escape($username);
+
 		$sql = "UPDATE user_preference SET value='$value' WHERE user='$username' AND preference='$preference_id'";
 
 		$db_results = @mysql_query($sql, dbh());

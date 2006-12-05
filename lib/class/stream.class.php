@@ -19,16 +19,20 @@
 
 */
 
-/*!
-	@header Stream Class
-*/
-
+/**
+ * Stream
+ * This class is used to generate the Playlists and pass them on
+ * With Localplay this actually just sends the commands to the localplay
+ * module in question. It has two sources for data
+ * songs (array of ids) and urls (array of full urls)
+ */
 class Stream {
 
 	/* Variables from DB */
 	var $type;
 	var $web_path;
 	var $songs = array();
+	var $urls  = array(); 
 	var $sess;
 
 	/*!
@@ -84,7 +88,7 @@ class Stream {
 	 */
 	function manual_url_add($url) { 
 
-
+		$this->urls[] = $url; 
 
 	} // manual_url_add
 
@@ -98,6 +102,8 @@ class Stream {
 		header("Cache-control: public");
 		header("Content-Disposition: filename=playlist.m3u");
 		header("Content-Type: audio/x-mpegurl;");
+
+		/* Foreach songs */
 		foreach ($this->songs as $song_id) { 
 			$song = new Song($song_id);
 			if ($song->type == ".flac") { $song->type = ".ogg"; }
@@ -106,6 +112,11 @@ class Stream {
                         }
 			echo "$this->web_path/play/index.php?song=$song_id&uid=$this->user_id&sid=$this->sess&ds=$ds&stupidwinamp=." . $song->type . "\n"; 
 		} // end foreach
+
+		/* Foreach the additional URLs */
+		foreach ($this->urls as $url) { 
+			echo "$url\n";
+		}
 
 	} // simple_m3u
 
@@ -133,6 +144,12 @@ class Stream {
 			echo $song->get_url() . "\n";
                 } // end foreach
 
+		/* Foreach URLS */
+		foreach ($this->urls as $url) { 
+			echo "#EXTINF: URL-Add\n";
+			echo $url . "\n";
+		}
+
 	} // create_m3u
 
 	/*!
@@ -141,12 +158,15 @@ class Stream {
 	*/
 	function create_pls() { 
 
+		/* Count entries */
+		$total_entries = count($this->songs) + count($this->urls); 
+
 		// Send the client a pls playlist
 		header("Cache-control: public");
 		header("Content-Disposition: filename=playlist.pls");
 		header("Content-Type: audio/x-scpls;");
 		echo "[Playlist]\n";
-		echo "NumberOfEntries=" . count($this->songs) . "\n";
+		echo "NumberOfEntries=$total_entries\n";
 		foreach ($this->songs as $song_id) { 
 			$i++;
 			$song = new Song($song_id);
@@ -157,6 +177,15 @@ class Stream {
 			echo "Title" . $i . "=$song_name\n";
 			echo "Length" . $i . "=-1\n";
 		} // end foreach songs	
+
+		/* Foreach Additional URLs */
+		foreach ($this->urls as $url) { 
+			$i++;
+			echo "File" . $i ."=$url\n";
+			echo "Title". $i . "=AddedURL\n";
+			echo "Length" . $i . "=-1\n";
+		} // end foreach urls
+
 		echo "Version=2\n";
 
 	} // create_pls
@@ -187,6 +216,15 @@ class Stream {
                         echo "</ENTRY>\n";
 			
                 } // end foreach
+
+		/* Foreach urls */
+		foreach ($this->urls as $url) { 
+			echo "<ENTRY>\n";
+			echo "<TITLE>AddURL</TITLE>\n";
+			echo "<AUTHOR>AddURL</AUTHOR>\n";
+			echo "<REF HREF=\"$url\" />\n";
+			echo "</ENTRY>\n";
+		} // end foreach 
 
                 echo "</ASX>\n";
 
@@ -280,6 +318,12 @@ class Stream {
 		$localplay = init_localplay();
 		$localplay->connect(); 
 		$localplay->add($this->songs);
+
+		/* Check for Support */ 
+		if ($localplay->has_function('add_url')) { 
+			$localplay->add_url($this->urls); 
+		} 
+
 		$localplay->play();
 
                 header("Location: " . return_referer());
@@ -315,7 +359,6 @@ class Stream {
 		} // foreach songs
 
 	} // create_ram
-	
 
 } //end of stream class
 

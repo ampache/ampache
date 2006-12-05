@@ -2093,6 +2093,10 @@ class Update {
                 while ($r = mysql_fetch_assoc($db_results)) {
                         $user->fix_preferences($r['username']);
                 } // while results
+		
+		/* Drop the unused user_catalog table */
+		$sql = "DROP TABLE `user_catalog`"; 
+		$db_results = mysql_query($sql,dbh()); 
 
 		$this->set_version('db_version','333002');
 	

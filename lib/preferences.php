@@ -368,6 +368,24 @@ function get_preference_id($name) {
 } // get_preference_id
 
 /**
+ * get_preference_name
+ * This does the inverse of the above function and returns the preference name from the ID
+ * This is usefull for doing... the opposite of above. Amazing isn't it. 
+ */
+function get_preference_name($id) { 
+
+	$id = sql_escape($id); 
+
+	$sql = "SELECT name FROM preferences WHERE id='$id'"; 
+	$db_results = mysql_query($sql,dbh()); 
+
+	$results = mysql_fetch_assoc($db_results); 
+
+	return $results['name']; 
+
+} // get_preference_name
+
+/**
  * insert_preference
  * This creates a new preference record in the
  * preferences table this is used by the modules

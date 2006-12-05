@@ -55,10 +55,11 @@ switch ($action) {
 			access_denied(); 
 			break;
 		}
+
 		$stream_type = scrub_in($_REQUEST['play_type']);
 		$tmp_playlist = new tmpPlaylist($_REQUEST['tmp_playlist_id']);
 		$stream = new Stream($stream_type,array()); 
-		$stream->manual_url_add($tmp_playlist->get_vote_url());
+		$stream->manual_url_add(unhtmlentities($tmp_playlist->get_vote_url()));
 		$stream->start();
 	break;
 	case 'update_playlist':
