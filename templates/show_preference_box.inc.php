@@ -51,22 +51,7 @@ foreach ($preferences['prefs'] as $pref) { ?>
 	<tr class="<?php echo flip_class(); ?>">
 		<td><?php echo _($pref['description']); ?></td>
 		<td>
-			<table>
-			<tr>
-				<td><?php create_preference_input($pref['name'], $pref['value']); ?></td>
-				<?php if (preg_match('/Color/', $pref['description'])) { ?>
-					<td>
-						<table width="40" border="3" style="border-collapse: collapse;" bgcolor="<?php echo $pref['value'];?>">
-						<tr style="height:20px;">
-							<td></td>
-						</tr>
-						</table>
-					</td>
-				<?php } else { ?>
-					<td></td>
-					<?php } ?>
-			</tr>
-			</table>
+			<?php create_preference_input($pref['name'], $pref['value']); ?>
 		</td>
 		<?php if ($show_apply_to_all) { ?>
 			<td align="center"><input type="checkbox" name="check_<?php echo $pref['name']; ?>" value="1" /></td>

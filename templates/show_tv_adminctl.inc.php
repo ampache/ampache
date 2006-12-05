@@ -41,6 +41,7 @@ else {
 </select>
 <input type="submit" value="<?php echo _('Play'); ?>" />
 </form>
+<br />
 <?php echo _('Base Playlist'); ?>: 
 <form method="post" style="Display:inline;" action="<?php echo conf('web_path'); ?>/tv.php?action=update_playlist&amp;playlist_id=<?php echo $tmp_playlist->base_playlist; ?>" enctype="multipart/form-data">
 	<?php show_playlist_dropdown($tmp_playlist->base_playlist); ?>		
