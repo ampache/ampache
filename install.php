@@ -57,7 +57,7 @@ if (!install_check_status($configfile)) {
 $action = scrub_in($_REQUEST['action']);
 $web_path = scrub_in($_REQUEST['web_path']);
 $username = scrub_in($_REQUEST['local_username']);
-$password = scrub_in($_REQUEST['local_pass']);
+$password = $_REQUEST['local_pass'];
 $hostname = scrub_in($_REQUEST['local_host']);
 $database = scrub_in($_REQUEST['local_db']);
 if ($_SERVER['HTTPS'] == 'on') { $http_type = "https://"; }
