@@ -254,6 +254,9 @@ while (!feof($fp) && (connection_status() == 0)) {
         $bytesStreamed += strlen($buf);
 }
 
+/* Delete the Now Playing Entry */
+delete_now_playing($lastid);
+
 if ($bytesStreamed > $minBytesStreamed) {
         $user->update_stats($song_id);
 	/* If this is a voting tmp playlist remove the entry */
@@ -266,9 +269,6 @@ if ($bytesStreamed > $minBytesStreamed) {
 
 /* Set the Song as Played if it isn't already */
 $song->set_played();
-
-/* Delete the Now Playing Entry */
-delete_now_playing($lastid);
 
 /* Clean up any open ends */
 if ($GLOBALS['user']->prefs['play_type'] == 'downsample' || !$song->native_stream()) { 
