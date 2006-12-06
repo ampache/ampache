@@ -41,8 +41,8 @@ diff -Nuar --exclude=.svn trunk/lib/class/audioscrobbler.class.php ampache/lib/c
 +        function scrobbler($username, $password) {
 +
 +                $this->error_msg = '';
-+                $this->username = $username;
-+                $this->password = $password;
++                $this->username = trim($username);
++                $this->password = trim($password);
 +                $this->challenge = '';
 +                $this->queued_tracks = array();
 +
@@ -196,7 +196,7 @@ diff -Nuar --exclude=.svn trunk/lib/class/audioscrobbler.class.php ampache/lib/c
 +                        return FALSE;
 +                }
 +                if(substr($response[0], 0, 6) == 'FAILED') {
-+                        $this->error_msg = substr($response[6], 7);
++                        $this->error_msg = $response[0];
 +                        return FALSE;
 +                }
 +                if(substr($response[0], 0, 7) == 'BADAUTH') {
