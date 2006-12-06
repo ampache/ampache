@@ -41,6 +41,7 @@ $prev_offset = $GLOBALS['view']->offset - $GLOBALS['view']->offset_limit;
 if ($prev_offset < 0) { $prev_offset = '0'; } 
 
 /* Calculate how many pages total exist */
+if (!$GLOBALS['view']->offset_limit) { $GLOBALS['view']->offset_limit = '50'; } 
 $pages  = ceil($total_items/$GLOBALS['view']->offset_limit);
 
 /* Calculate current page and how many we have on each side */
