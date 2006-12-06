@@ -5,9 +5,8 @@
  All rights reserved
 
  This program is free software; you can redistribute it and/or
- modify it under the terms of the GNU General Public License
- as published by the Free Software Foundation; either version 2
- of the License, or (at your option) any later version.
+ modify it under the terms of the GNU General Public License v2
+ as published by the Free Software Foundation.
 
  This program is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -35,7 +34,7 @@ if ($GLOBALS['user']->has_access(100) AND conf('use_auth')) {
 ?>
 
 
-<table class="border" border="0" cellpadding="0" cellspacing="0" width="100%">
+<table class="tabledata" border="0" cellpadding="0" cellspacing="0" width="100%">
 <tr class="odd">
 	<th colspan="3" class="header2" align="left"><?php echo $preferences['title']; ?></th>
 </tr>

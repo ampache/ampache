@@ -5,9 +5,8 @@
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
- modify it under the terms of the GNU General Public License
- as published by the Free Software Foundation; either version 2
- of the License, or (at your option) any later version.
+ modify it under the terms of the GNU General Public License v2
+ as published by the Free Software Foundation.
 
  This program is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -45,7 +44,7 @@ $tools = array( _("Add a catalog") => $web_path . "/admin/catalog.php?action=sho
 	<td valign="top"><?php show_local_catalog_info(); ?></td>
 	<td valign="top">
 		<form name="catalog" method="post" action="<?php echo  $web_path; ?>/admin/catalog.php" enctype="multipart/form-data">
-		<table class="border" cellspacing="1" cellpadding="3">
+		<table class="tabledata" cellspacing="1" cellpadding="3">
 		<tr class="table-header" align="center">
 			<td colspan="4"><?php echo  _("Update Catalogs"); ?></td>
 		</tr>

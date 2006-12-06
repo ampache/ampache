@@ -1,16 +1,12 @@
 <?php
 /*
 
- Copyright (c) 2004 Ampache.org
+ Copyright (c) 2001 - 2006 Ampache.org
  All rights reserved.
 
- $CVSHeader: ampache/modules/class/song.php,v 1.7 2004/01/12 08:27:26 vollmerk Exp $
- $Source: /data/cvsroot/ampache/modules/class/song.php,v $
-
  This program is free software; you can redistribute it and/or
- modify it under the terms of the GNU General Public License
- as published by the Free Software Foundation; either version 2
- of the License, or (at your option) any later version.
+ modify it under the terms of the GNU General Public License v2
+ as published by the Free Software Foundation.
 
  This program is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -28,7 +24,6 @@
 	@discussion default display for access admin page
 
 */
-$row_classes = array('even','odd');
 $web_path = conf('web_path');
 ?>
 <?php show_box_top(_('Host Access to Your Catalog')); ?>
@@ -45,7 +40,7 @@ stream from this server.</p>
 </span>
 </p>
 <?php if (count($list)) { ?>
-<table cellspacing="1" cellpadding="3" class="border">
+<table cellspacing="1" cellpadding="3" class="tabledata">
 <tr class="table-header" align="center">
 	<td><?php echo _('Name'); ?></td>
 	<td><?php echo _('Start Address'); ?></td>
@@ -60,7 +55,7 @@ stream from this server.</p>
 	/* Start foreach List Item */
 	foreach ($list as $access) { 
 ?>
-		<tr class="<?php echo $row_classes[0]; ?>">
+		<tr class="<?php echo flip_class(); ?>">
 			<td><?php echo scrub_out($access->name); ?></td>
 			<td><?php echo int2ip($access->start); ?></td>
 			<td><?php echo int2ip($access->end); ?></td>
@@ -74,7 +69,6 @@ stream from this server.</p>
 				<a href="<?php echo $web_path; ?>/admin/access.php?action=show_confirm_delete&amp;access_id=<?php echo scrub_out($access->id); ?>"><?php print _("Revoke"); ?></a>
 			</td>
 		</tr>
-		<?php  $row_classes = array_reverse($row_classes); ?>
 	<?php  } // end foreach ?>
 </table>
 <?php  } // end if count ?>

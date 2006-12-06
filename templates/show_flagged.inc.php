@@ -23,7 +23,7 @@
 $web_path = conf('web_path');
 
 ?>
-<table class="border" cellspacing="0" cellpadding="0">
+<table class="tabledata" cellspacing="0" cellpadding="0">
 <tr class="table-header">
 	<th><?php echo _('Object'); ?></th>
 	<th><?php echo _('Flag'); ?></th>

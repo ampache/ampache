@@ -4,6 +4,7 @@
 
 --------------------------------------------------------------------------
   v.3.3.3-Beta1 
+	- A ton of CSS cleanup (Thx apex)
 	- Fixed an issue with multi-value config options on test.php
 	- Changed default site_charset to UTF-8 in ampache.cfg.php.dist
 	- Fixed some <? in show_test.inc (Thx apex)

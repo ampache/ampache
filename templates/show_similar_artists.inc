@@ -5,9 +5,8 @@
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
- modify it under the terms of the GNU General Public License
- as published by the Free Software Foundation; either version 2
- of the License, or (at your option) any later version.
+ modify it under the terms of the GNU General Public License v2
+ as published by the Free Software Foundation. 
 
  This program is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -24,7 +23,7 @@ $web_path = conf('web_path');
 <?php show_box_top(_('Similar Artists')); ?>
 <form name="artists" method="post" enctype="multipart/form-data" action="<?php echo $web_path; ?>/artists.php?action=rename_similar&artist=<?php echo $artist_id;?>" style="Display:inline;">
 	<h3><?php _('Please check the artists you want to merge with the current one'); ?> (<span style='text-decoration: underline;'><?php echo $artist_name;?></span>)</h3>
-	<table class="border" cellspacing="0" cellpadding="0" border="0">
+	<table class="tabledata" cellspacing="0" cellpadding="0" border="0">
 	<tr class="table-header">
 		<th>&nbsp;&nbsp;Select</th>
 		<th><?php echo _("Artist"); ?></th>

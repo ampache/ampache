@@ -160,6 +160,7 @@ $htmllang = str_replace("_","-",conf('lang'));
 <link rel="stylesheet" href="templates/default.css" type="text/css" media="screen" />
 <link rel="stylesheet" href="templates/print.css" type="text/css" media="print" />
 <link rel="stylesheet" href="templates/handheld.css" type="text/css" media="handheld" />
+<link rel="stylesheet" href="<?php echo conf('web_path'); ?><?php echo conf('theme_path'); ?>/templates/default.css" type="text/css" media="screen" />
 <title> <?php echo conf('site_title'); ?> </title>
 <script type="text/javascript" language="javascript">
 function focus(){ document.login.username.focus(); }

@@ -5,9 +5,8 @@
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
- modify it under the terms of the GNU General Public License
- as published by the Free Software Foundation; either version 2
- of the License, or (at your option) any later version.
+ modify it under the terms of the GNU General Public License v2
+ as published by the Free Software Foundation. 
 
  This program is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -30,8 +29,8 @@ $web_path = conf('web_path');
 $total_items = $view->total_items;
 ?>
 <?php require(conf('prefix') . '/templates/show_box_top.inc.php'); ?>
-<table class="border" cellspacing="0" cellpadding="0" border="0">
-<tr class="even" align="center">
+<table class="tabledata" cellspacing="0" cellpadding="0" border="0">
+<tr class="table-header" align="center">
 	<td colspan="5">
 	<?php if ($GLOBALS['view']->offset_limit) { require (conf('prefix') . "/templates/list_header.inc"); } ?>
 	</td>
