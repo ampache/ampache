@@ -433,6 +433,7 @@ class User {
 		$song_info = new Song($song_id);
 		//FIXME:: User uid reference
 		$user = $this->uid;
+
 		if (!$song_info->file) { return false; }
 
 		$stats = new Stats();
@@ -440,27 +441,6 @@ class User {
 		$stats->insert('album',$song_info->album,$user);
 		$stats->insert('artist',$song_info->artist,$user);
 		$stats->insert('genre',$song_info->genre,$user);
-
-                /* Record this play to LastFM */
-                if ($this->prefs['lastfm_user'] AND $this->prefs['lastfm_pass']) { 
-                        $song_info->format_song();
-                        $lastfm = new scrobbler($this->prefs['lastfm_user'],$this->prefs['lastfm_pass']);                       
-                        /* Attempt handshake */
-                        if ($lastfm->handshake()) { 
-                                if (!$lastfm->queue_track($song_info->f_artist_full,$song_info->f_album_full,$song_info->title,time(),$song_info->time)) { 
-					debug_event('LastFM','Error: Queue Failed' . $lastfm->error_msg,'3');
-				}
-				if (!$lastfm->submit_tracks()) { 
-					debug_event('LastFM','Error Submit Failed' . $lastfm->error_msg,'3'); 
-				}
-                        } // if handshake
-                        else { 
-                                debug_event('LastFM','Error: Handshake failed with LastFM:' . $lastfm->error_msg,'3');
-                        }
-                } // record to LastFM
-		else { 
-			debug_event('plugins','Error: No Prefs','3');
-		}
 
 	} // update_stats
 
