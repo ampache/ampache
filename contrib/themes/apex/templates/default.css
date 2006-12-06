@@ -1,0 +1,556 @@
+<!--
+/*
+
+This skin was made by Apex.
+
+See README.txt for details.
+
+COLORS:
+
+3E413E  ## Dark Grey
+393D3A  ## Yet Another
+252525  ## Another Dark Grey
+424B45  ## Green
+B2C8B9  ## Light Green
+7A897F  ## Medium Light Green
+
+*/
+-->
+
+/**************/
+/*            */
+/*   PIECES   */
+/*            */
+/**************/
+
+
+p { 
+	color: #000000;
+}
+a { 
+	color: #000000; 
+	font-family: Verdana, Helvetica, sans-serif; 
+}
+a:visited { 
+	color: #000000; 	
+	font-family: Verdana, Helvetica, sans-serif; 
+}
+a:active { 
+	color: #000000; 
+	font-family: Verdana, Helvetica, sans-serif; 
+}
+.text-box {
+	display: table-cell;
+	padding: 0 0 25px 25px;
+	margin-bottom: 0px;
+	background-color: transparent;
+	border:2px solid #3E413E;
+}
+td { 
+	padding: 0px 8px 0px 8px;
+	color: #000000; 
+	font-family: Verdana, Helvetica, sans-serif; 
+	font-size: 12px;
+}
+
+/*******************/
+/*                 */
+/*  FORM ELEMENTS  */
+/*                 */
+/*******************/
+
+input {
+	color: #DADADA; 
+	font-family: Verdana, Helvetica, sans-serif; 
+	font-size: 12px; 
+	font-weight: bold; 
+	background-color: #393D3A; 
+	margin: 2px 2px 2px 2px;
+	border: 1px solid #252525;
+	position: relative;
+	top: 1px;
+}
+select { 
+	color: #DADADA; 
+	font-family: Verdana, Helvetica, sans-serif; 
+	font-size: 12px; 
+	background-color: #393D3A;
+	border: 1px solid #252525;
+	position: relative;
+	top: -1px;
+}
+textarea { 
+	background-color: #393D3A;
+	color: #000000; 
+	font-family: Verdana, Helvetica, sans-serif; 
+	font-size: 12px;
+	border: 1px solid #252525;
+}
+checkbox {
+	background-color: #393D3A;
+	border: 1px solid #252525;
+}
+.text-action, .text-action li {
+	margin-top:10px;
+	list-style: none;
+	border: 0;
+}
+.text-action a, .text-action a.visited, .text-action span {
+	background: #3E413E;
+	border:1px solid #252525;
+ 	padding: 2px;
+	text-decoration: none;
+	font-weight: bold;
+	color: #FFFFFF;
+}
+.text-action #pt_active {
+	background: #FFFFFF;
+	color: #000000;
+	border:1px solid #FF0000;
+}
+.confirmation-box {
+	padding: 5px;
+ 	margin-left: 0 auto;
+ 	margin-right: 0 auto;
+	margin-bottom:10px;
+	display: table-cell;
+	background-color: #B2C8B9;
+	border:2px solid #000000;
+}
+
+/* Playing around with making columns distinct */
+/* Unfortunately adding borders breaks alot of */
+/* other pages... trying to fix it but will    */
+/* require changes to core files... 8(         */
+
+.border {
+	border: 1px solid #000000;
+}
+.tabledata {
+	border-top: 5px solid #FF0000;
+}
+.odd {
+	background:#3E413E;
+	font-size: 12px;
+	text-align: left;
+}
+.even {
+	background:#424B45;
+	font-size: 12px;
+	text-align: left;
+}
+th {
+	padding: 4px 0 4px 0;
+	text-align: center;
+	border-bottom: 3px double #000000;
+}
+.even td {
+	text-align: center;
+	padding: 3px;
+	border-right: 1px solid #000000;
+	border-left: 1px solid #000000;
+}
+.odd td {
+	text-align: center;
+	padding: 3px;
+	border-right: 1px solid #000000;
+	border-left: 1px solid #000000;
+}
+.table-header {
+	background: #393D3A;
+	vertical-align: top;
+	padding: 0;
+	text-align: center;
+}
+.table-footer td {
+	background: #393D3A;
+	border-bottom: 3px double #000000;
+	border-left: 1px solid #000000;
+	border-right: 1px solid #000000;
+}
+.table-header td,th {
+	border-right: 1px solid #000000;
+	border-left: 1px solid #000000;
+	border-top: 3px double #000000;
+	border-bottom: 1px solid #000000;
+	padding: 4px 4px 4px 4px;
+	text-align: center;
+	background: #393D3A;
+	font-size: 10px;
+}
+.tabledata td {
+	border-bottom: 1px solid #000000;
+}
+.error { 
+	color: #FFFFFF;
+	border-bottom: 1px solid #000000;
+}
+.alphabet { 
+	margin: 10px;
+	font-size: 9px; 
+	font-weight: normal; 
+}
+.list-header td {
+	border: 0;
+}
+
+/*****************/
+/*               */
+/*   BIG STUFF   */
+/*               */
+/*****************/
+
+body {	
+	padding-top: 25px;
+	font-family:Arial, Helvetica, Sans-Serif;
+	color: #000000;
+	background: url(../images/background.gif) no-repeat fixed top center #393D3A;
+	text-align: center;
+}
+.smeg-ie {
+	margin: 0 auto;
+	padding: 10px;;
+}
+#maincontainer {
+	text-align: center;
+	border: 0;
+}
+#content {
+	position: relative;
+	top: -45px;
+	width: 873px;
+	border: 1px solid #E3E3E3;
+	padding: 0;
+	margin: 0 auto;
+	background: #252525;
+	z-index: 1;
+	filter:progid:DXImageTransform.Microsoft.Alpha(opacity=80);
+	-moz-opacity:0.80; 
+}
+#footer-content {
+	margin: 0 auto;
+	padding: 0;
+	border: 0;
+	width: 898px;
+	height: 65px;
+	background: url(../images/footer.gif) no-repeat top left;
+	position: relative;
+	top: -46px;
+	z-index: 2;
+}
+
+/***********************/
+/*                     */
+/*   SIDEBAR == MENU   */
+/*                     */
+/***********************/
+
+div#sidebar {
+	margin: 0px auto;
+	padding: 31px 150px 0 148px;
+	height: 65px;
+	width: 600px;
+	position: relative;
+	top: -29px;
+	left: 0px;
+	border: 0;
+	background: url(../images/button_bar.gif) no-repeat top left;
+	z-index: 50;
+}
+#sidebar h3 { 
+	display: none;
+	width: 0px; 
+	height: 0px; 
+	margin:0px;
+	padding:0px;
+	border: 0;
+	background: transparent;
+	line-height: 1px;
+}
+#sidebar ul {
+	margin: 0px;
+	list-style: none;
+	font-family:Arial, Helvetica, Sans-Serif;
+	font-size:10px;
+	padding: 0px;
+	width: 600px;
+	line-height: 10px;
+	border: 0;
+}
+#sidebar li {
+	margin: 0;
+	float: left;
+	padding: 5px 0px 5px 0px;
+	width: 100px;
+	height: 12px;
+	background: url(../images/menu_main.gif) no-repeat top left;
+	border: 0;
+}
+#sidebar a, .navbutton, #sidebar a:visited {
+	color: #7A897F;
+	font-weight: bold;
+	text-decoration: none;
+	border: 0;
+}
+#sidebar ul.subnavside li { 
+	background: url(../images/menu_sub.gif) no-repeat top left;
+	border: 0;
+}
+#sidebar li:hover, #sidebar li.sfhover {
+	color: #000000;
+}
+#sidebar li:active {
+	background: url(../images/menu_click.gif) no-repeat top left;
+	z-index: 30;
+}
+#sidebar li ul {
+	margin: 0 0 0 0;
+	z-index: 3;
+}
+#sidebar li:hover ul {
+	position: relative;
+	top: 7px;
+}
+#play_type_switch {
+	position: relative;
+	top: -3px;
+	width: 92px;
+	border: 1px solid #252525;
+	background: #424B45;;
+}
+
+#sidebar li.sfhover ul {}
+#navlist ul li:hover {}
+
+/***************************/
+/*                         */
+/* NOW PLAYING & HOME PAGE */
+/* STATISTICS + POPULAR    */
+/*         BOXES           */
+/*                         */
+/***************************/
+
+.np_row {
+	border: 0;
+	width: 780px;
+}
+.np_cell {
+	padding: 10px 0 10px 0;
+	text-align: center;
+	border: 0;
+	width: 500px;
+}
+#biddaddy {
+
+	/* I didn't pick the name. Its the box around most of the stuff on the main page. */
+
+	text-align: left;
+	border: 0;
+}
+
+/*************/
+/*           */
+/*  Top Bar  */
+/*           */
+/*************/
+
+#topbar {
+	margin: 0 auto;
+	height: 200px;
+	width: 900px;
+	border: 0;
+	padding: 0 0 0 0;
+}
+#topbarright { 
+	
+	/* This holds the "Your currently logged in as and version #... blah blah */
+
+	float: right;
+	position: relative;
+	font-size: 10px;
+	bottom: 35px;
+	right: 28px;
+	border: 0;
+	background: transparent;
+}
+#topbarleft {
+
+	/* ampache.gif inside this, hard coded into the page */
+
+	float: left;
+	border: 0;
+}
+
+/********************/
+/*                  */
+/* TABLE STUFF:     */
+/* Albums listings  */
+/* Preferences      */
+/* etc.             */
+/*                  */
+/********************/
+
+.box { 
+	text-align: center;
+	padding: 0px;
+	background: #7A897F;
+	margin: 10px auto;
+	border: 0;
+	
+}
+.box-title {
+	width: 800px;
+	border-bottom: solid 1px #393D3A;
+	font-weight: bold;
+}
+.box-content table {
+	text-align: left;
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: 5px;
+	margin-bottom: 5px;
+	border: 0;
+}
+.box-content {
+	text-align: left;
+}
+
+/*******************************/
+/*                             */
+/*  IMAGE BORDERS AROUND BOXES */
+/*                             */
+/*******************************/
+
+.box-left-top		{ height: 14px;	background: url(../images/top_left.gif) no-repeat bottom right; }
+.box-right-top		{ height: 14px;	background: url(../images/top_right.gif) no-repeat bottom left; }
+.box-left-bottom	{ height: 14px;	background: url(../images/bottom_left.gif) no-repeat top right; }
+.box-right-bottom	{ height: 14px; background: url(../images/bottom_right.gif) no-repeat top left; }
+.box-left		{  		background: url(../images/left.gif) repeat-y top right; }
+.box-right		{  		background: url(../images/right.gif) repeat-y top left; }
+.box-top		{ 		background: url(../images/top.gif) repeat-x bottom; }
+.box-bottom		{ height: 14px; background: url(../images/bottom.gif) repeat-x top; }
+
+/************************/
+/*                      */
+/*  TABS ON PREF. PAGE  */
+/*                      */
+/************************/
+
+#tablist {
+        padding: 3px 0;
+        margin: 12px 0 0 0;
+        font: bold 12px Verdana, sans-serif;
+}
+#tablist li {
+        list-style: none;
+        margin: 0;
+        display: inline;
+}
+#tablist li a {
+        padding: 3px 0.5em;
+        margin-left: 3px;
+        border: 1px solid #3E413E;
+        border-bottom: none;
+        background: #FFFFFF;
+}
+#tablist li a:link {
+	color: #7A897F;
+}
+#tablist li a:visited {
+	color: #7A897F;
+}
+#tablist li a:hover {
+        color: #000000;
+        background: #FFFFFF;
+        border-color: #000000;
+}
+#tablist li a#current {
+        color: #000000;
+        background: #FFFFFF;
+        border-color: #000000;
+}
+
+/*****************/
+/*               */
+/*  LOGIN PAGE   */
+/*               */
+/*****************/
+
+#container {
+	margin:100px auto 0px auto;
+	width:437px;
+	font-size: 12px;
+	text-align:center;
+}
+#container h1 {
+	background:url("../images/bg_login_0.gif") no-repeat;
+	height:200px;
+	width: 452px;
+	margin-bottom:8px;
+}
+#container h1 span {
+	display:none;
+}
+#container div {
+	background:url("../images/bg_login_1.gif") no-repeat;
+	height:200px;
+	width:452px;
+	position: relative;
+	top: -8px;
+}
+#loginp_0 {
+	margin-top:0px;
+	padding-top:5px;
+}
+.loginp_1 {
+	text-align:right;
+	padding-right:135px;
+}
+.loginp_1 span {
+	font-weight:bold;
+}
+.loginp_1 input {
+	border:1px solid #999;
+}
+input.text_input {
+width:12em;
+}
+.loginp_1 input.check_input {
+margin-right:5em;
+} 
+
+/**************************/
+/*                        */
+/*   USELESS STUFF THAT   */
+/*    DOESN'T DO MUCH     */
+/*      OF ANYTHING       */
+/*                        */
+/**************************/
+
+.disabled		{text-decoration: line-through;}
+
+/* ########################## */
+/*                            */
+/*   I'm too lazy to break    */
+/*   something sufficiently   */
+/*   to skin this for now.    */
+/*                            */
+/* If you have a fatal error, */
+/* your skin is not your most */
+/* important problem now,     */
+/* is it? 8)                  */
+/*                            */
+/* ########################## */
+
+.fatalerror {
+	padding-top: 3px;
+	padding-left: 3px;
+	padding-right: 3px;
+	display: table-cell;
+	padding-bottom: 3px;
+	color: #990033;
+	border-right:4px solid #B21542;
+	border-bottom:4px solid #B21542;
+	border-left:4px solid #B21542;
+	border-top:4px solid #B21542;		
+}
