@@ -1619,12 +1619,12 @@ class Catalog {
 					$file_date = filemtime($song->file);
 					if ($file_date < $this->last_update) { $skip = true; }
 				} // if gather_type
-				
-				if ($song->update_time >= $this->last_update) { 
-					$skip = true;
-					$song->update_utime($song->id,time()+86400);
-				}
-
+			
+				/* Make sure the song isn't flagged, we don't update flagged stuff */
+				if ($song->has_flag()) { 
+					$skip = true; 
+				} 
+		
 				// if the file hasn't been modified since the last_update
 				if (!$skip) {
 

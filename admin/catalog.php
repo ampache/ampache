@@ -54,7 +54,7 @@ switch ($_REQUEST['action']) {
 			foreach ($_REQUEST['catalogs'] as $catalog_id) {
 				echo "<div class=\"confirmation-box\">";
 				$catalog = new Catalog($catalog_id);
-				$catalog->add_to_catalog('fast_add');
+				$catalog->add_to_catalog();
 				echo "</div>";
 			}
 	       	}
@@ -74,7 +74,7 @@ switch ($_REQUEST['action']) {
 			foreach ($_REQUEST['catalogs'] as $catalog_id) {
 				echo "<div class=\"confirmation-box\">";
 				$catalog = new Catalog($catalog_id);
-				$catalog->verify_catalog($catalog_id->id,$_REQUEST['update_type']);
+				$catalog->verify_catalog($catalog_id->id);
 				echo "</div>\n";
 			}
 		}
