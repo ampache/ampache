@@ -1,7 +1,7 @@
-diff -Nuar --exclude=.svn trunk/lib/class/audioscrobbler.class.php ampache/lib/class/audioscrobbler.class.php
---- trunk/lib/class/audioscrobbler.class.php	1969-12-31 16:00:00.000000000 -0800
-+++ ampache/lib/class/audioscrobbler.class.php	2006-12-06 00:24:18.000000000 -0800
-@@ -0,0 +1,212 @@
+diff -Naur --exclude=.svn ampache.ref/lib/class/audioscrobbler.class.php ampache/lib/class/audioscrobbler.class.php
+--- ampache.ref/lib/class/audioscrobbler.class.php	1969-12-31 16:00:00.000000000 -0800
++++ ampache/lib/class/audioscrobbler.class.php	2006-12-06 01:42:27.000000000 -0800
+@@ -0,0 +1,210 @@
 +<?php
 +/*
 +
@@ -80,8 +80,8 @@ diff -Nuar --exclude=.svn trunk/lib/class/audioscrobbler.class.php ampache/lib/c
 +                $username = rawurlencode($this->username);
 +		
 +		$get_string = "GET /?hs=true&p=1.1&c=m3a&v=0.1&u=$username HTTP/1.1\r\n";
-+
-+                fwrite($as_socket, $get_string);
++                
++		fwrite($as_socket, $get_string);
 +                fwrite($as_socket, "Host: post.audioscrobbler.com\r\n");
 +                fwrite($as_socket, "Accept: */*\r\n\r\n");
 +
@@ -96,7 +96,6 @@ diff -Nuar --exclude=.svn trunk/lib/class/audioscrobbler.class.php ampache/lib/c
 +                        return FALSE;
 +                }
 +                $response = explode("\n", $split_response[1]);
-+                
 +		if(substr($response[0], 0, 6) == 'FAILED') {
 +                        $this->error_msg = substr($response[0], 7);
 +                        return FALSE;
@@ -189,7 +188,6 @@ diff -Nuar --exclude=.svn trunk/lib/class/audioscrobbler.class.php ampache/lib/c
 +                        return FALSE;
 +                }
 +                $response = explode("\n", $split_response[1]);
-+
 +                if(!isset($response[0])) {
 +                        $this->error_msg = 'Unknown error submitting tracks'.
 +                                          "\nDebug output:\n".$buffer;
@@ -214,9 +212,9 @@ diff -Nuar --exclude=.svn trunk/lib/class/audioscrobbler.class.php ampache/lib/c
 +
 +}
 +?>
-diff -Nuar --exclude=.svn trunk/lib/class/user.class.php ampache/lib/class/user.class.php
---- trunk/lib/class/user.class.php	2006-12-06 00:31:03.000000000 -0800
-+++ ampache/lib/class/user.class.php	2006-12-05 23:32:24.000000000 -0800
+diff -Naur --exclude=.svn ampache.ref/lib/class/user.class.php ampache/lib/class/user.class.php
+--- ampache.ref/lib/class/user.class.php	2006-12-08 12:41:00.000000000 -0800
++++ ampache/lib/class/user.class.php	2006-12-06 14:28:55.000000000 -0800
 @@ -433,7 +433,7 @@
  		$song_info = new Song($song_id);
  		//FIXME:: User uid reference
@@ -226,20 +224,35 @@ diff -Nuar --exclude=.svn trunk/lib/class/user.class.php ampache/lib/class/user.
  		if (!$song_info->file) { return false; }
  
  		$stats = new Stats();
-@@ -442,6 +442,27 @@
+@@ -442,6 +442,42 @@
  		$stats->insert('artist',$song_info->artist,$user);
  		$stats->insert('genre',$song_info->genre,$user);
  
-+                /* Record this play to LastFM */
++                /**
++		 * Record this play to LastFM 
++		 * because it lags like the dickens try twice on everything
++		 */
 +                if ($this->prefs['lastfm_user'] AND $this->prefs['lastfm_pass']) { 
 +                        $song_info->format_song();
 +                        $lastfm = new scrobbler($this->prefs['lastfm_user'],$this->prefs['lastfm_pass']);                       
 +                        /* Attempt handshake */
-+                        if ($lastfm->handshake()) { 
++			$handshake = $lastfm->handshake(); 
++
++			/* We failed, try again */			
++			if (!$handshake) { sleep(1); $handshake = $lastfm->handshake(); } 
++
++
++                        if ($handshake) { 
 +                                if (!$lastfm->queue_track($song_info->f_artist_full,$song_info->f_album_full,$song_info->title,time(),$song_info->time)) { 
 +					debug_event('LastFM','Error: Queue Failed: ' . $lastfm->error_msg,'3');
 +				}
-+				if (!$lastfm->submit_tracks()) { 
++
++				$submit = $lastfm->submit_tracks(); 
++	
++				/* Try again if it fails */
++				if (!$submit) { sleep(1); $submit = $lastfm->submit_tracks(); } 
++
++				if (!$submit) { 
 +					debug_event('LastFM','Error Submit Failed: ' . $lastfm->error_msg,'3'); 
 +				}
 +                        } // if handshake
@@ -254,9 +267,9 @@ diff -Nuar --exclude=.svn trunk/lib/class/user.class.php ampache/lib/class/user.
  	} // update_stats
  
  	/**
-diff -Nuar --exclude=.svn trunk/lib/init.php ampache/lib/init.php
---- trunk/lib/init.php	2006-12-06 00:31:03.000000000 -0800
-+++ ampache/lib/init.php	2006-12-05 23:32:24.000000000 -0800
+diff -Naur --exclude=.svn ampache.ref/lib/init.php ampache/lib/init.php
+--- ampache.ref/lib/init.php	2006-12-08 12:41:00.000000000 -0800
++++ ampache/lib/init.php	2006-12-06 12:27:23.000000000 -0800
 @@ -190,6 +190,8 @@
  require_once(conf('prefix') . '/lib/class/error.class.php');
  require_once(conf('prefix') . '/lib/class/genre.class.php');
