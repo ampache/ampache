@@ -1,0 +1,400 @@
+<!--
+/*
+
+COLORS:
+
+363E40  ## Dark Green
+6B7D80  ## Medium Blue
+8EA6AA  ## Light Blue
+30343D  ## Dark Blue
+EEEEEE  ## White-grey
+
+*/
+-->
+
+/* TEXT ELEMENTS */
+
+p { 
+	color: #000000;
+        font: 8px nonstep, sans-serif;
+}
+a { 
+	color: #000000;
+        font: 8px nonstep, sans-serif;
+}
+a:visited { 
+	color: #000000;
+        font: 8px nonstep, sans-serif;
+}
+a:active { 
+	color: #000000;
+        font: 8px nonstep, sans-serif;
+}
+td { 
+	color: #000000;
+        font: 8px nonstep, sans-serif;
+}
+
+/* FORM ELEMENTS */
+
+input {
+	color: #EEEEEE; 
+        font: bold 8px nonstep, sans-serif;
+	background-color: #363E40; 
+	margin: 2px;
+	position: relative;
+	top: 1px;
+	padding: 1px 2px;
+	border: 1px solid #000000;
+}
+select { 
+	color: #EEEEEE; 
+        font: 8px nonstep, sans-serif;
+	background-color: #363E40;
+	border: 1px solid #000000;
+	position: relative;
+	top: -1px;
+}
+textarea { 
+	background-color: #363E40;
+	color: #EEEEEE;
+        font: 8px nonstep, sans-serif;
+	border: 1px solid #000000;
+	padding: 2px;
+}
+.text-action, .text-action li {
+	margin-top:10px;
+	text-align: center;
+}
+.button {
+	font: 8px nonstep, sans-serif;
+}
+.text-action a, .text-action a.visited, .text-action a.active, .text-action span {
+	background: #363E40;
+	border: 1px solid #30343D;
+	color: #EEEEEE;
+ 	padding: 2px;
+	text-decoration: none;
+}
+.confirmation-box {
+	padding: 5px;
+ 	margin: 10px auto;
+	background-color: #363E40;
+	border:1px solid #000000;
+}
+
+/* TABLE PIECES */
+
+.odd {
+	background:#363E40;
+	text-align: left;
+}
+.even {
+	background:#6B7D80;
+	text-align: left;
+}
+.even td {
+	text-align: center;
+	padding: 3px;
+	border-right: 1px solid #000000;
+	border-left: 1px solid #000000;
+}
+.odd td {
+	text-align: center;
+	padding: 3px;
+	border-right: 1px solid #000000;
+	border-left: 1px solid #000000;
+}
+th {
+	padding: 4px 0;
+	text-align: center;
+	font-weight: normal;
+}
+.table-header td,th {
+	border-right: 1px solid #000000;
+	border-left: 1px solid #000000;
+	border-top: 3px double #000000;
+	border-bottom: 1px solid #000000;
+	padding: 4px;
+	text-align: center;
+	background: #363E40;
+}
+.table-footer td {
+	/* This is my tag, its not officially supported */
+	background: #363E40;
+	border-bottom: 3px double #000000;
+	border-left: 1px solid #000000;
+	border-right: 1px solid #000000;
+}
+.tabledata td {
+	border-bottom: 1px solid #000000;
+}
+.error { 
+	color: #EEEEEE;
+	border-bottom: 1px solid #000000;
+}
+.alphabet { 
+	margin: 10px;
+        font: 8px nonstep, sans-serif;
+}
+.list-header td {
+	border: 0;
+}
+hr {
+	border: 1px solid #EEEEEE;
+}
+
+/* BIG BOXES */
+
+body {	
+	padding-top: 25px;
+        font: 8px nonstep, sans-serif;
+	color: #000000;
+	background: #363E40;
+	text-align: center;
+}
+.smeg-ie {
+	margin: 0 auto;
+}
+#maincontainer {
+	text-align: center;
+}
+#content {
+	margin: 0 auto;
+	position: relative;
+	top: -23px;
+	width: 1096px;
+	border-right: 1px solid #D8D7D7;
+	border-left: 1px solid #FFFFFF;
+	background: #EEEEEE;
+	z-index: 1;
+}
+#footer-content {
+	margin: 0 auto;
+	width: 1098px;
+	height: 65px;
+	background: url(../images/footer.gif) no-repeat top left;
+	position: relative;
+	top: -23px;
+	z-index: 2;
+}
+
+/* SIDEBAR == MENU */
+
+div#sidebar {
+	margin: 0px auto;
+	padding: 4px 0px 0px 66px;
+	height: 52px;
+	width: 1032px;
+	position: relative;
+	top: -22px;
+	left: 0px;
+	background: url(../images/button_bar.gif) no-repeat top left;
+	z-index: 50;
+	text-align: left;
+	/* text-align required for IE */
+}
+#sidebar h3 {
+	/* Annoying in IE, breaks stuff if you aren't careful */
+	display: none;
+	width: 0; 
+	height: 0; 
+	margin:0;
+	padding:0;
+	border: 0;
+	background: transparent;
+	line-height: 1px;
+}
+#sidebar ul {
+	margin: 0px;
+	list-style: none;
+        font: 9px nonstep, sans-serif;
+	padding: 0px;
+	width: 720px;
+	line-height: 10px;
+	border: 0;
+}
+#sidebar li {
+	margin: 0;
+	float: left;
+	padding: 5px 0px;
+	height: 12px;
+	width: 120px;
+	background: transparent;
+	border: 0;
+	text-align: center;
+}
+#sidebar a, .navbutton, #sidebar a:visited {}
+#sidebar ul.subnavside li { 
+	background: url(../images/menu_sub.gif) no-repeat top left;
+	border: 0;
+	position: relative;
+	top: -2px;
+	left: 2px;
+	z-index: 3;
+	width: 115;
+}
+#sidebar li:hover, #sidebar li.sfhover {
+	background: transparent;
+}
+#sidebar li:active {
+	background: transparent;
+}
+#sidebar li ul {
+	margin: 0 0 0 0;
+	z-index: 3;
+}
+#sidebar li:hover ul {
+	position: relative;
+	top: 7px;
+}
+#play_type_switch {
+	position: relative;
+	top: -2px;
+	width: 92px;
+	border: 1px solid #30343D;
+	background: #363E40;
+}
+
+/* NOW PLAYING STATS & POPULAR ON HOME PAGE */
+
+.np_row {
+	border: 0;
+	width: 780px;
+}
+.np_cell {
+	padding: 10px 0 10px 0;
+	text-align: center;
+	border: 0;
+	width: 500px;
+}
+#biddaddy {
+	/* The box around some stuff on the main page. */
+	text-align: left;
+}
+
+/* TOP BAR */
+
+#topbar {
+	margin: 0 auto;
+	height: 148px;
+	width: 1098px;
+	padding: 0;
+}
+#topbarright { 
+	/* This holds the "Your currently logged in as and version */
+	float: right;
+	position: relative;
+	z-index: 100;
+	top: 15px;
+	right: 28px;
+	border: 0;
+        font: 8px nonstep, sans-serif;
+	font-weight: normal;
+	background: transparent;
+}
+#topbarleft {
+	/* ampache.gif inside this, hard coded into the page */
+	float: left;
+	border: 0;
+}
+
+/* TABLES */
+
+.box { 
+	text-align: center;
+	background: #EEEEEE;
+	margin: 10px auto;
+	border: 1px solid #30343D;
+	
+}
+.box-title {
+	width: 800px;
+	border-bottom: solid 1px #363E40;
+	font-weight: bold;
+}
+.box-content table {
+	margin: 5px auto;
+	text-align: left;
+}
+.box-content {
+	padding: 5px;
+	text-align: left;
+}
+
+/* BORDERS AROUND BOXES */
+
+.box-left-top		{ display: none }
+.box-right-top		{ display: none }
+.box-left-bottom	{ display: none }
+.box-right-bottom	{ display: none }
+.box-left		{ display: none }
+.box-right		{ display: none }
+.box-top		{ display: none }
+.box-bottom		{ display: none }
+
+/* CONFIG PAGE STUFF */
+
+.text-box {
+	display: table-cell;
+	padding: 4px;
+	background-color: transparent;
+	border:1px solid #363E40;
+}
+#tablist {
+        padding: 3px 0;
+        margin: 12px 0 0 0;
+        font: bold 8px nonstep, sans-serif;
+}
+#tablist li a {
+        padding: 3px 0.5em;
+        margin-left: 3px;
+        border: 1px solid #363E40;
+        border-bottom: none;
+        background: #EEEEEE;
+}
+#tablist li a:link {
+	color: #6B7D80;
+}
+#tablist li a:visited {
+	color: #6B7D80;
+}
+#tablist li a:hover {
+        color: #000000;
+        background: #EEEEEE;
+        border-color: #000000;
+}
+#tablist li a#current {
+        color: #000000;
+        background: #EEEEEE;
+        border-color: #000000;
+        border-bottom: none;
+}
+.header1 {
+        font: bold 12px nonstep, sans-serif;
+}
+.header2 {
+        font: bold 8px nonstep, sans-serif;
+}
+
+/* LOGIN PAGE */
+
+#container {
+	margin:300px auto 0 auto;
+	width:437px;
+	font-size: 8px;
+	text-align:center;
+}
+#container h1 span {
+	display:none;
+}
+.loginp_1 {
+	text-align:right;
+	padding-right:140px;
+}
+.loginp_1 span {
+	font-weight:bold;
+}
+.loginp_1 input {
+	border:1px solid #999;
+}
