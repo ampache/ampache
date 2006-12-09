@@ -5,9 +5,8 @@
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
- modify it under the terms of the GNU General Public License
- as published by the Free Software Foundation; either version 2
- of the License, or (at your option) any later version.
+ modify it under the terms of the GNU General Public License v2
+ as published by the Free Software Foundation.
 
  This program is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -26,7 +25,7 @@
 <?php show_box_top(_('Play Random Selection')); ?>
 <table>
 <tr>
-	<td><?php echo _("Item count"); ?></td>
+	<td><?php echo _('Item count'); ?></td>
 	<td>
 		<select name="random">
 		<option value="1">1</option>
@@ -50,10 +49,11 @@
 	<td colspan="2">
 		<?php echo _('Type'); ?>:
 		<select name="random_type">
-			<option value="normal"><?php echo _("Standard"); ?></option>
-			<option value="unplayed"><?php echo _("Favor Unplayed"); ?></option>
-			<option value="full_album"><?php echo _("Full Albums"); ?></option>
-			<option value="full_artist"><?php echo _("Full Artist"); ?></option>
+			<option value="normal"><?php echo _('Standard'); ?></option>
+			<option value="unplayed"><?php echo _('Less Played'); ?></option>
+			<option value="full_album"><?php echo _('Full Albums'); ?></option>
+			<option value="full_artist"><?php echo _('Full Artist'); ?></option>
+			<option value="length"><?php echo _('Minutes'); ?></option>
 		</select>
 	</td>
 </tr>

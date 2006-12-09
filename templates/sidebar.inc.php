@@ -5,9 +5,8 @@
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
- modify it under the terms of the GNU General Public License
- as published by the Free Software Foundation; either version 2
- of the License, or (at your option) any later version.
+ modify it under the terms of the GNU General Public License v2
+ as published by the Free Software Foundation.
 
  This program is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -168,7 +167,7 @@ $web_path = conf('web_path');
 			<option value="length"><?php echo _('Minutes'); ?></option>
 			<option value="full_artist"><?php echo _('Artists'); ?></option>
 			<option value="full_album"><?php echo _('Albums'); ?></option>
-			<option value="Less Played"><?php echo _('Less Played'); ?></option>
+			<option value="unplayed"><?php echo _('Less Played'); ?></option>
 		</select>
 		<br /> 
 		<?php show_catalog_pulldown('catalog','width:8.7em;'); ?>
