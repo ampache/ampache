@@ -5,9 +5,8 @@
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
- modify it under the terms of the GNU General Public License
- as published by the Free Software Foundation; either version 2
- of the License, or (at your option) any later version.
+ modify it under the terms of the GNU General Public License v2
+ as published by the Free Software Foundation.
 
  This program is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -71,7 +70,7 @@ $htmllang = str_replace("_","-",conf('lang'));
 </head>
 <body>
 <div id="header"> 
-<h1><?php echo _("Ampache Update"); ?></h1>
+<h1><?php echo _('Ampache Update'); ?></h1>
 <p>For the love of Music</p>
 </div>
 <div id="text-box">
