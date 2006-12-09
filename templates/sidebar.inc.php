@@ -165,9 +165,9 @@ $web_path = conf('web_path');
 					<br />  
 		<select name="random_type" style="width:8.7em;">
 			<option value="Songs"><?php echo _('Songs'); ?></option>
-			<option value="Minutes"><?php echo _('Minutes'); ?></option>
-			<option value="Artists"><?php echo _('Artists'); ?></option>
-			<option value="Albums"><?php echo _('Albums'); ?></option>
+			<option value="length"><?php echo _('Minutes'); ?></option>
+			<option value="full_artist"><?php echo _('Artists'); ?></option>
+			<option value="full_album"><?php echo _('Albums'); ?></option>
 			<option value="Less Played"><?php echo _('Less Played'); ?></option>
 		</select>
 		<br /> 
