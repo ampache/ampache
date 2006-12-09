@@ -495,7 +495,8 @@ function get_random_songs( $options, $matchlist) {
 
         /* If they've passed -1 as limit then don't get everything */
         if ($options['limit'] == "-1") { unset($options['limit']); }
-        else { $options['limit'] = "LIMIT " . $limit; }
+	elseif ($options['random_type'] == 'length') { /* Rien a faire */ } 
+        else { $limit_sql = "LIMIT " . $limit; }
 
 
         $where = "1=1 ";
@@ -518,22 +519,22 @@ function get_random_songs( $options, $matchlist) {
 
 
         if ($options['random_type'] == 'full_album') {
-                $query = "SELECT album.id FROM song,album WHERE song.album=album.id AND $where GROUP BY song.album ORDER BY RAND() " . $options['limit'];
+                $query = "SELECT album.id FROM song,album WHERE song.album=album.id AND $where GROUP BY song.album ORDER BY RAND() " . $limit_sql;
                 $db_results = mysql_query($query, $dbh);
                 while ($data = mysql_fetch_row($db_results)) {
                         $albums_where .= " OR song.album=" . $data[0];
                 }
                 $albums_where = ltrim($albums_where," OR");
-                $query = "SELECT song.id,song.size FROM song WHERE $albums_where ORDER BY song.track ASC";
+                $query = "SELECT song.id,song.size,song.time FROM song WHERE $albums_where ORDER BY song.track ASC";
         }
         elseif ($options['random_type'] == 'full_artist') {
-                $query = "SELECT artist.id FROM song,artist WHERE song.artist=artist.id AND $where GROUP BY song.artist ORDER BY RAND() " . $options['limit'];
+                $query = "SELECT artist.id FROM song,artist WHERE song.artist=artist.id AND $where GROUP BY song.artist ORDER BY RAND() " . $limit_sql;
                 $db_results = mysql_query($query, $dbh);
                 while ($data = mysql_fetch_row($db_results)) {
                         $artists_where .= " OR song.artist=" . $data[0];
                 }
                 $artists_where = ltrim($artists_where," OR");
-                $query = "SELECT song.id,song.size FROM song WHERE $artists_where ORDER BY RAND()";
+                $query = "SELECT song.id,song.size,song.time FROM song WHERE $artists_where ORDER BY RAND()";
         }
 /* TEMP DISABLE */
 //        elseif ($options['random_type'] == 'unplayed') {
@@ -541,36 +542,53 @@ function get_random_songs( $options, $matchlist) {
 //                $query = "SELECT song.id,song.size FROM song LEFT JOIN object_count ON song.id = object_count.object_id " .
 //                         "WHERE ($where) AND ((object_count.object_type='song' AND user = '$uid') OR object_count.count IS NULL ) " .
 //                         "ORDER BY CASE WHEN object_count.count IS NULL THEN RAND() WHEN object_count.count > 4 THEN RAND()*RAND()*object_count.count " .
-//                         "ELSE RAND()*object_count.count END " . $options['limit'];
+//                         "ELSE RAND()*object_count.count END " . $limit_sql;
 //        } // If unplayed
         else {
-                $query = "SELECT id,size FROM song WHERE $where ORDER BY RAND() " . $options['limit'];
+                $query = "SELECT id,size,time FROM song WHERE $where ORDER BY RAND() " . $limit_sql;
         }
         
 	$db_result = mysql_query($query, $dbh);
 
         $songs = array();
 
-        while ( $r = mysql_fetch_array($db_result) ) {
+        while ( $r = mysql_fetch_assoc($db_result) ) {
 		/* If they've specified a filesize limit */
 		if ($options['size_limit']) { 
 			/* Turn it into MB */
-			$new_size = ($r['1'] / 1024) / 1024;
+			$new_size = ($r['size'] / 1024) / 1024;
 
 			/* If we would go over the allowed size skip to the next song */
 			if (($total + $new_size) > $options['size_limit']) { continue; }
 			
 			$total = $total + $new_size;
-			$songs[] = $r[0]; 
+			$songs[] = $r['id']; 
 
 			/* If we are within 4mb then that's good enough for Vollmer work */
 			if (($options['size_limit'] - floor($total)) < 4) { return $songs; }
 
 		} // end if we are defining a size limit
 
+		/* If they've specified a length */
+		if ($options['random_type'] == 'length') { 
+			/* Turn the length into min's */
+			$new_time = floor($r['time'] / 60); 
+
+			if ($fuzzy_count > 10) { return $songs; } 
+
+			/* If the new one would go over skip to the next song with a limit */
+			if (($total + $new_time) > $options['limit']) { $fuzzy_count++; continue; } 
+
+			$total = $total + $new_time; 
+			$songs[] = $r['id'];	
+
+			if (($options['limit'] - $total) < 2) { return $songs; } 
+
+		} // if length
+
 		/* If we aren't using a limit */
 		else { 
-	                $songs[] = $r[0];
+	                $songs[] = $r['id'];
 		}
         } // while we fetch results
 

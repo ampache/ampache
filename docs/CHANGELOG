@@ -4,6 +4,8 @@
 
 --------------------------------------------------------------------------
   v.3.3.3-Beta1 
+	- Added Refreshing to the Recently Played menu at the same time
+		it refresh the now playing on the index page
 	- Fixed a cataloging issue that was using a round about way of
 		checking to make sure the song wasn't flaged. 
 	- A ton of CSS cleanup (Thx apex)

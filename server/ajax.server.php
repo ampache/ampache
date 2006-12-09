@@ -93,6 +93,10 @@ switch ($action) {
 		ob_start();
 		show_now_playing();	
 		$results['np_data'] = ob_get_contents();
+		ob_clean();
+		$data = get_recently_played(); 
+		if (count($data)) { require_once(conf('prefix') . '/templates/show_recently_played.inc.php'); }
+		$results['recently_played'] = ob_get_contents(); 
 		ob_end_clean();
 		$xml_doc = xml_from_array($results);
 		echo $xml_doc;
