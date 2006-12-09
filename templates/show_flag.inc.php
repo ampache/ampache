@@ -5,9 +5,8 @@
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
- modify it under the terms of the GNU General Public License
- as published by the Free Software Foundation; either version 2
- of the License, or (at your option) any later version.
+ modify it under the terms of the GNU General Public License v2
+ as published by the Free Software Foundation.
 
  This program is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -39,11 +38,9 @@ switch ($type) {
 } // end type switch
 ?>	
 
-<p class="header1"><?php echo _('Flag song'); ?></p>
-<p><?php echo _('Flag the following song as having one of the problems listed below.  Site admins will then take the appropriate action for the flagged files.'); ?></p>
-	
+<?php show_box_top(_('Flag Song')); ?>	
 <form name="flag" method="post" action="<?php echo $web_path; ?>/flag.php" enctype="multipart/form-data">
-<table class="text-box">
+<table class="tabledata">
 <tr class="<?php echo flip_class(); ?>">
 	<td><?php echo _('File'); ?>:</td>
 	<td><?php echo $file; ?></td>
@@ -78,3 +75,4 @@ switch ($type) {
 </tr>
 </table>
 </form>
+<?php show_box_bottom(); ?>
