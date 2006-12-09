@@ -334,6 +334,12 @@ div#sidebar{
 	left: auto;  /* this calls the submenu back when the parent li is hovered. */
 }
 
+#play_type_switch {
+    font-size: 0.9em;
+    position: relative;
+    left: -2px;
+}
+
 /* Styles for Now Playing */
 #nowplaying{
 	clear: both;
