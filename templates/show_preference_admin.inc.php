@@ -45,7 +45,8 @@
 	<td colspan="2">
 		<input type="hidden" name="action" value="set_preferences" />
 		<input type="submit" value="<?php echo _('Update'); ?>" />
-	</td>	
+	</td>
+</tr>	
 </table>
 </form>
 <?php show_box_bottom(); ?>

@@ -1,8 +1,8 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php echo $htmllang; ?>" lang="<?php echo $htmllang; ?>">
 <head>
 <title>Ampache :: For The Love Of Music - Install</title>
-<?php //require_once(conf('prefix') . "/templates/install.css"); ?>
+<?php require_once(conf('prefix') . "/templates/install.css"); ?>
 </head>
 <body>
 <script src="lib/javascript-base.js" language="javascript" type="text/javascript"></script>
@@ -56,7 +56,7 @@
 </tr>
 <tr>
 	<td class="align"><?php echo _("Create Database User for New Database"); ?>? </td>
-	<td><input type="checkbox" value="create_db_user" name="db_user" onClick="flipField('db_username');flipField('db_password');" /></td>
+	<td><input type="checkbox" value="create_db_user" name="db_user" onclick="flipField('db_username');flipField('db_password');" /></td>
 </tr>
 <tr>
 	<td class="align"><?php echo _("Ampache Database Username"); ?></td>

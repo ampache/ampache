@@ -22,7 +22,7 @@ $web_path = conf('web_path');
 $htmllang = str_replace("_","-",conf('lang'));
 $location = get_location();
 ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php echo $htmllang; ?>" lang="<?php echo $htmllang; ?>">
 
 <head>
@@ -36,7 +36,7 @@ if (conf('use_rss')) { ?>
 <link rel="alternate" type="application/rss+xml" title="Ampache Most Popular Artists" href="<?php echo $web_path; ?>/rss.php?type=popularalbum" />
 <link rel="alternate" type="application/rss+xml" title="Ampache Most Popular Songs" href="<?php echo $web_path; ?>/rss.php?type=popularsong" />
 <?php } ?>
-<meta http-equiv="Content-Type" content="text/html; charset=<?php echo conf('site_charset'); ?>" />
+<meta http-equiv="Content-Type" content="application/xhtml+xml; charset=<?php echo conf('site_charset'); ?>" />
 <title><?php echo conf('site_title'); ?> - <?php echo $location['title']; ?></title>
 <link rel="stylesheet" href="<?php echo $web_path; ?>/templates/default.css" type="text/css" media="screen" />
 <link rel="stylesheet" href="<?php echo $web_path; ?>/templates/print.css" type="text/css" media="print" />
