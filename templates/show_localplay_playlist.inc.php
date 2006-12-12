@@ -41,7 +41,9 @@ foreach ($songs as $song) {
 		<?php echo $localplay->format_name($song['name'],$song['id']); ?>
 	</td>
 	<td>
-	<a href="<?php echo $web_path; ?>/localplay.php?action=delete_song&amp;song_id=<?php echo scrub_out($song['id']); ?>"><?php echo _('Delete'); ?></a>
+	<a href="<?php echo $web_path; ?>/localplay.php?action=delete_song&amp;song_id=<?php echo scrub_out($song['id']); ?>">
+		<?php echo get_user_icon('delete'); ?>
+	</a>
 	</td>
 </tr>
 <?php } if (!count($songs)) { ?>

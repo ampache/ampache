@@ -144,7 +144,7 @@ class tmpPlaylist {
 				$results['object_id'] = $data['0'];	
 			}
 			else { 
-				$sql = "SELECT id as `object_id` FROM song WHERE disabled='0' ORDER BY RAND()"; 
+				$sql = "SELECT id as `object_id` FROM song WHERE enabled='1' ORDER BY RAND() LIMIT 1"; 
 				$db_results = mysql_query($sql, dbh()); 
 				$results = mysql_fetch_assoc($db_results); 
 			}
