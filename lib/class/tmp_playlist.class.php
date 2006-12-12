@@ -135,10 +135,19 @@ class tmpPlaylist {
 
 		/* If nothing was found and this is a voting playlist then get from base_playlist */
 		if ($this->type == 'vote' AND !$results) { 
-			/* We need to pull a random one from the base_playlist */
-			$base_playlist = new playlist($this->base_playlist);
-			$data = $base_playlist->get_random_songs(1);
-			$results['object_id'] = $data['0'];	
+
+			/* Check for a playlist */
+			if ($this->base_playlist != '0') { 
+				/* We need to pull a random one from the base_playlist */
+				$base_playlist = new playlist($this->base_playlist);
+				$data = $base_playlist->get_random_songs(1);
+				$results['object_id'] = $data['0'];	
+			}
+			else { 
+				$sql = "SELECT id as `object_id` FROM song WHERE disabled='0' ORDER BY RAND()"; 
+				$db_results = mysql_query($sql, dbh()); 
+				$results = mysql_fetch_assoc($db_results); 
+			}
 		}
 
 		return $results['object_id'];
