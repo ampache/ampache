@@ -23,7 +23,7 @@
 <?php if (!$tmp_playlist->vote_active()) { ?>
 <form id="form_playlist" method="post" action="<?php echo conf('web_path'); ?>/tv.php" enctype="multipart/form-data" >
 <?php echo _('Base Playlist'); ?>:
-<?php show_playlist_dropdown(); ?>
+<?php show_playlist_select('','democratic'); ?>
 <input type="hidden" name="action" value="create_playlist" />
 <input type="submit" value="<?php echo _('Activate'); ?>" />
 </form>
@@ -44,7 +44,7 @@ else {
 <br />
 <?php echo _('Base Playlist'); ?>: 
 <form method="post" style="Display:inline;" action="<?php echo conf('web_path'); ?>/tv.php?action=update_playlist&amp;playlist_id=<?php echo $tmp_playlist->base_playlist; ?>" enctype="multipart/form-data">
-	<?php show_playlist_dropdown($tmp_playlist->base_playlist); ?>		
+	<?php show_playlist_select($tmp_playlist->base_playlist,'democratic'); ?>		
 	<input type="hidden" name="tmp_playlist_id" value="<?php echo $tmp_playlist->id; ?>" />
 	<input type="submit" value="<?php echo _('Update'); ?>" />
 </form>

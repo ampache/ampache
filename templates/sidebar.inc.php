@@ -193,7 +193,7 @@ $web_path = conf('web_path');
 		?>
 		<?php require_once(conf('prefix') . '/templates/show_playtype_switch.inc.php'); ?>
 	</li>
-<?php if ($GLOBALS['user']->prefs['play_type'] == 'democratic') { ?>
+<?php if (conf('allow_democratic_playback')) { ?>
 	<li>
 		<a href="<?php echo $web_path; ?>/tv.php"><?php echo _('Democratic View'); ?></a>
 	</li>

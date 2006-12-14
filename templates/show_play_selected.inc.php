@@ -45,7 +45,7 @@ if (is_object($GLOBALS['playlist'])) { ?>
 <tr align="center">
 <td colspan="2">
 	<?php echo _('Playlist'); ?>: <input type="button" value="<?php echo _('Add to'); ?>" onclick="return SubmitToPage('songs','<?php echo $web_path; ?>/playlist.php?action=add_to');" />
-	<?php  show_playlist_dropdown($_SESSION['data']['playlist_id']); ?>
+	<?php  show_playlist_select($_SESSION['data']['playlist_id']); ?>
 	<input class="button" type="button" value="<?php echo _('View'); ?>" onclick="return SubmitToPage('songs','<?php echo $web_path; ?>/playlist.php?action=view');" />
 	<input class="button" type="button" value="<?php echo _('Edit'); ?>" onclick="return SubmitToPage('songs','<?php echo $web_path; ?>/playlist.php?action=edit');" />
 </td>

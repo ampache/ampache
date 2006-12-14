@@ -24,7 +24,7 @@ $dbh = dbh();
 $web_path = conf('web_path');
 
 /* Make sure they have access to this */
-if (!conf('allow_democratic_playback') || $GLOBALS['user']->prefs['play_type'] != 'democratic') { 
+if (!conf('allow_democratic_playback')) { 
 	access_denied(); 
 	exit;
 }

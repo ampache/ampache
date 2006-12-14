@@ -164,5 +164,46 @@ function prune_empty_playlists() {
 
 } // prune_empty_playlists
 
+/**
+ * show_playlist_select
+ * This shows the playlist select box, it takes a playlist ID and a type as an optional
+ * param, the type is 'normal','democratic','dynamic' these are hacks and make baby vollmer cry
+ * but I'm too lazy to fix them right now
+ */
+function show_playlist_select($playlist_id=0,$type='') { 
+
+	/* If democratic show everything, else normal */
+	if ($type == 'democratic') { 
+		$where_sql = '1=1';
+	}
+	else { 
+		$where_sql = " `user` = '" . sql_escape($GLOBALS['user']->id) . "'";
+	}
+
+	$sql = "SELECT id,name FROM playlist " . 
+		"WHERE " . $where_sql . " ORDER BY name";
+	$db_results = mysql_query($sql,dbh());
+
+	echo "<select name=\"playlist_id\">\n";
+	
+	/* The first value changes depending on our type */
+	if ($type == 'democratic') { 
+		echo "\t<option value=\"0\">" . _('All') . "</option>\n";
+	}
+	elseif ($type != 'dynamic') { 
+		echo "\t<option value=\"0\"> -" . _('New Playlist') . "- </option>\n"; 
+	}  
+
+	while ($r = mysql_fetch_assoc($db_results)) { 
+		$select_txt = '';
+		if ($playlist_id == $r['id']) { $select_txt = ' selected="selected" '; } 
+
+		echo "\t<option value=\"" . scrub_out($r['id']) . "\"$select_txt>" . scrub_out($r['name']) . "</option>\n";
+
+	} // end while
+
+	echo '</select>';
+
+} // show_playlist_select
 
 ?>

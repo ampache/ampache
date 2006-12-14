@@ -43,6 +43,10 @@ else {
 	<td><?php echo _('Action'); ?></td>
 	<td><?php echo _('Votes'); ?></td>
 	<td><?php echo _('Song'); ?></td>
+	<td><?php echo _('Time'); ?></td>
+	<?php if ($GLOBALS['user']->has_access(100)) { ?>
+	<td><?php echo _('Admin'); ?></td>
+	<?php } ?>
 </tr>
 <?php 
 
@@ -60,7 +64,15 @@ foreach($songs as $row_id=>$song_id) {
 	<?php } ?>
 	</td>
 	<td><?php echo scrub_out($tmp_playlist->get_vote($row_id)); ?></td>
-	<td><?php echo scrub_out($song->title . ' / ' . $song->get_album_name()); ?></td>
+	<td><?php echo $song->f_link . " / " . $song->f_album_link . " / " . $song->f_artist_link; ?></td>
+	<td><?php echo $song->f_time; ?></td>
+	<?php if ($GLOBALS['user']->has_access(100)) { ?>
+	<td>
+		<span onclick="ajaxPut('<?php echo conf('ajax_url'); ?>?action=tv_admin&amp;cmd=delete&amp;track_id=<?php echo $song_id; ?><?php echo conf('ajax_info'); ?>')" />
+		<?php echo get_user_icon('delete'); ?>
+		</span>
+	</td>
+	<?php } ?>
 </tr>
 <?php 
 	} // end foreach 

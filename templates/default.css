@@ -566,11 +566,13 @@ li.current-rating{
 	border-bottom:2px solid #000000;
 	border-left:2px solid #000000;
 	border-top:2px solid #000000;}
+
 .text-action, .text-action li {
 	margin-top:5px;
 	list-style: none;
 	margin-bottom:5px;
 	padding-left:0px;
+	text-wrap: none;
 }
 .text-action a, .text-action span {
 	background: #dddddd;
@@ -578,11 +580,13 @@ li.current-rating{
  	padding-left:2px;
 	padding-right:2px;
 	text-decoration: none;
+	text-wrap: none;
 }
 .text-action #pt_active {
 	background: #000000;
 	color: #ffffff;
 	border:1px solid #dddddd;
+	text-wrap: none; 
 }
 #nowplaying {
 	width:600px;

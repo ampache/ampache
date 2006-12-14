@@ -1284,7 +1284,7 @@ function get_user_icon($name) {
 		$img_url = conf('web_path') . '/images/' . $icon_name; 
 	}
 
-	$string = "<img src=\"$img_url\" border=\"0\" alt=\"$name\" title=\"$name\" />";
+	$string = "<img style=\"cursor: pointer;\" src=\"$img_url\" border=\"0\" alt=\"$name\" title=\"$name\" />";
 
 	return $string;
 

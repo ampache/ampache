@@ -152,9 +152,35 @@ switch ($action) {
 		$xml_doc = xml_from_array($results);
 		echo $xml_doc;
 	break;
+	/* Admin Actions on the tv page */
+	case 'tv_admin':
+		if (!$GLOBALS['user']->has_access(100) || !conf('allow_democratic_playback')) { break; } 
+
+		/* Get the playlist */
+		$tmp_playlist = get_democratic_playlist(-1); 
+		
+		ob_start();
+	
+		/* Switch on the command we need to run */
+		switch ($_REQUEST['cmd']) { 
+			case 'delete':
+				$tmp_playlist->delete_track($_REQUEST['track_id']); 
+				$songs = $tmp_playlist->get_items(); 
+				require_once(conf('prefix') . '/templates/show_tv_playlist.inc.php');
+				$results['tv_playlist'] = ob_get_contents(); 
+			break;	
+			default: 
+				// Rien a faire
+			break;
+		} // end switch
+
+		ob_end_clean(); 
+		$xml_doc = xml_from_array($results);
+		echo $xml_doc; 
+	break;
 	/* This can be a positve (1) or negative (-1) vote */
 	case 'vote':
-		if (!$GLOBALS['user']->has_access(25) || $GLOBALS['user']->prefs['play_type'] != 'democratic') { break; }
+		if (!$GLOBALS['user']->has_access(25) || !conf('allow_democratic_playback')) { break; }
 		/* Get the playlist */
 		$tmp_playlist = get_democratic_playlist(-1);
 		

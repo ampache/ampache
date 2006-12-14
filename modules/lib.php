@@ -10,36 +10,6 @@
 */
 
 
-/*********************************************************/
-/* Functions for getting songs given artist, album or id */
-/*********************************************************/
-// TODO : albums should be always gruoped by
-// id, like 'greatest hits' album is below, never by name. 
-// Other catalog functions should take care of assigning all
-// songs with same name album to the same album id. It should
-// not be done here. 
-// I'm commenting all this out to always sort by ID, to 
-// see how bad it is. -Rubin
-function get_songs_from_album ($album) {
-
-	global $settings;
-	$dbh = dbh();
-
-	$songs = array();
-
-	$query = "SELECT track, id as song FROM song" .
-		" WHERE album = '$album'" .
-		" ORDER BY track, title";
-
-	$db_result = mysql_query($query, $dbh);
-
-	while ( $r = mysql_fetch_array($db_result) ) {
-		$songs[] = $r;
-	}
-
-	return $songs;
-}
-
 
 // Used by playlist functions when you have an array of something of type
 //  and you want to extract the songs from it whether type is artists or albums
@@ -70,39 +40,8 @@ function get_songs_from_type ($type, $results, $artist_id = 0) {
 	return $song;
 }
 
-
-function show_playlist_form () {
-
-	print <<<ECHO
-<table cellpadding="5" class="tabledata">
-  <tr align="center" class="odd">
-    <td>
-      <input type="button" name="select_all" value="Select All" onclick="this.value=check_results()" />
-    </td>
-    <td> Playlist:</td>
-    <td>
-      <input name="action" class="button" type="submit" value="Add to" />
-ECHO;
- 
-	show_playlist_dropdown();
-    
-	print <<<ECHO
-      <input name="action" class="button" type="submit" value="View" />
-      <input name="action" class="button" type="submit" value="Edit" />
-    
-    </td>
-  </tr>
-  <tr align="center" class="even">
-    <td colspan="6">
-      <input name="action" class="button" type="submit" value="Play Selected" />
-    </td>
-  </tr> 
-</table>
-ECHO;
-
-}
-
-
+// This function makes baby vollmer cry, need to fix
+//FIXME
 function get_artist_info ($artist_id) {
 
 	$dbh = dbh();
@@ -219,70 +158,6 @@ function show_albums ($albums,$view=0) {
 	}
 
 } // show_albums
-
-function get_playlist_track_from_song ( $playlist_id, $song_id ) {
-
-	$dbh = dbh();
-
-	$sql = "SELECT track FROM playlist_data" .
-		" WHERE playlist = '$playlist_id'" .
-		" AND song = '$song_id'";
-	$db_result = mysql_query($sql, $dbh);
-	if ($r = mysql_fetch_array($db_result)) {
-		return $r[0];
-	}
-	else {
-		return FALSE;
-	}
-}
-
-/**
- * show_playlist_dropdown
- * Hacking this for now... will fix tomorrow evening 
- * Hmm Vollmer Lies... it's been a lot longer then said tomorrow evening...
- */
-function show_playlist_dropdown ($playlist_id=0,$no_new=false) {
-
-	global $settings;
-	$dbh = dbh();
-
-	$userid = scrub_in($_SESSION['userdata']['username']);
-	$sql = "SELECT * FROM playlist" .
-		" WHERE user = '$userid'" .
-		" AND name <> 'Temporary'" .
-		" ORDER BY name";
-	$db_result = @mysql_query($sql, $dbh);
-
-	echo "<select name=\"playlist_id\">\n";
-	if (!$no_new) { echo "<option value=\"0\"> -New Playlist- </option>\n"; }
-
-	while ( $r = @mysql_fetch_object($db_result) ) {
-		if ( $playlist_id == $r->id ) {
-			echo "<option value=\"" . $r->id . "\" selected=\"selected\">" . $r->name . "</option>\n";
-		}
-		else {
-			echo "<option value=\"" . $r->id . "\">" . $r->name . "</option>\n";
-		}
-	}
-	echo "</select>\n";
-}
-
-
-// Used to show when we have an access error for a playlist
-function show_playlist_access_error ($playlist, $username) {
-
-	$plname = $playlist->name;
-	$pluser = new User($playlist->user);
-	$plowner = $pluser->username;
-
-	print <<<ECHO
-<p style="font: 12px bold;"> Playlist Access Error </p>
-<p>$username doesn't have access to update the '$plname' playlist, it is owned by $plowner.</p>
-
-ECHO;
-
-}
-
 
 // Used to show a form with confirm action button on it (for deleting playlists, users, etc)
 /*!

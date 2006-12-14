@@ -4,6 +4,8 @@
 
 --------------------------------------------------------------------------
   v.3.3.3-Beta1 
+	- Added /bin/delete_disabled.php.inc to delete any disabled
+		songs in your DB, defaults to Debug only mode
 	- Fixed display issue with players that ignore EXTINF in m3us
 		(Thx AlxRogan)
 	- Added Refreshing to the Recently Played menu at the same time
