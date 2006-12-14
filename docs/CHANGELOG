@@ -4,6 +4,8 @@
 
 --------------------------------------------------------------------------
   v.3.3.3-Beta1 
+	- Fixed display issue with players that ignore EXTINF in m3us
+		(Thx AlxRogan)
 	- Added Refreshing to the Recently Played menu at the same time
 		it refresh the now playing on the index page
 	- Fixed a cataloging issue that was using a round about way of

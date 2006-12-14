@@ -745,7 +745,7 @@ class Song {
                         $web_path = preg_replace("/:\d+/",":$port",$web_path);
                 }
 	
-		$url = $web_path . "/play/index.php?song=$song_id&uid=$username$session_string$ds_string&name=$song_name";
+		$url = $web_path . "/play/index.php?song=$song_id&uid=$username$session_string$ds_string&name=/$song_name";
 
 		return $url;
 
