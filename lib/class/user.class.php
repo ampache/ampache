@@ -156,11 +156,10 @@ class User {
 		} 
 	} // get_preferences
 
-	/*!
-		@function get_favorites
-		@discussion returns an array of your $type
-			favorites
-	*/
+	/**
+	 * get_favorites
+	 * returns an array of your $type favorites
+	 */
 	function get_favorites($type) { 
 
 	        $web_path = conf('web_path');
@@ -208,6 +207,68 @@ class User {
 		return $items;
 
 	} // get_favorites
+
+	/**
+	 * get_recommendations
+	 * This returns recommended objects of $type. The recommendations
+	 * are based on voodoo economics,the phase of the moon and my current BAL. 
+	 */
+	function get_recommendations($type) { 
+
+		/* First pull all of your ratings of this type */ 
+		$sql = "SELECT object_id,user_rating FROM ratings " . 
+			"WHERE object_type='" . sql_escape($type) . "' AND user='" . sql_escape($this->id) . "'";
+		$db_results = mysql_query($sql,dbh()); 
+
+		while ($r = mysql_fetch_assoc($db_results)) { 
+			/* Store the fact that you rated this */
+			$key = $r['object_id'];
+			$ratings[$key] = true;
+
+			/* Build a key'd array of users with this same rating */
+			$sql = "SELECT user FROM ratings WHERE object_type='" . sql_escape($type) . "' " . 
+				"AND user !='" . sql_escape($this->id) . "' AND object_id='" . sql_escape($r['object_id']) . "' " . 
+				"AND user_rating ='" . sql_escape($r['user_rating']) . "'";
+			$user_results = mysql_query($sql,dbh()); 
+
+			while ($user_info = mysql_fetch_assoc($user_results)) { 
+				$key = $user_info['user'];
+				$users[$key]++; 
+			}
+
+		} // end while 
+
+		/* now we've got your ratings, and all users and the # of ratings that match your ratings 
+		 * sort the users[$key] array by value and then find things they've rated high (4+) that you
+		 * haven't rated
+		 */
+		asort($users);
+		$recommendations = array(); 
+
+		foreach ($users as $user_id=>$score) { 
+
+			/* Find everything they've rated at 4+ */
+			$sql = "SELECT object_id,user_rating FROM ratings " . 
+				"WHERE user='" . sql_escape($user_id) . "' AND user_rating >='4' AND object_type = '" . sql_escape($type) . "' ORDER BY user_rating DESC"; 
+			$db_results = mysql_query($sql,dbh()); 
+
+			while ($r = mysql_fetch_assoc($db_results)) { 
+				$key = $r['object_id'];
+				if (isset($ratings[$key])) { continue; } 
+
+				/* Let's only get 5 total for now */
+				if (count($recommendations) > 5) { return $recommendations; } 
+
+				$recommendations[$key] = $r['user_rating'];
+
+			} // end while
+
+
+		} // end foreach users
+
+		return $recommendations;
+
+	} // get_recommendations
 
 	/*!
 		@function is_logged_in
@@ -433,7 +494,7 @@ class User {
 		$song_info = new Song($song_id);
 		//FIXME:: User uid reference
 		$user = $this->uid;
-
+		
 		if (!$song_info->file) { return false; }
 
 		$stats = new Stats();
@@ -441,6 +502,38 @@ class User {
 		$stats->insert('album',$song_info->album,$user);
 		$stats->insert('artist',$song_info->artist,$user);
 		$stats->insert('genre',$song_info->genre,$user);
+
+                /**
+		 * Record this play to LastFM 
+		 * because it lags like the dickens try twice on everything
+		 */
+                if (!empty($this->prefs['lastfm_user']) AND !empty($this->prefs['lastfm_pass'])) { 
+                        $song_info->format_song();
+                        $lastfm = new scrobbler($this->prefs['lastfm_user'],$this->prefs['lastfm_pass']);                       
+                        /* Attempt handshake */
+			$handshake = $lastfm->handshake(); 
+
+			/* We failed, try again */			
+			if (!$handshake) { sleep(1); $handshake = $lastfm->handshake(); } 
+
+                        if ($handshake) { 
+                                if (!$lastfm->queue_track($song_info->f_artist_full,$song_info->f_album_full,$song_info->title,time(),$song_info->time)) { 
+					debug_event('LastFM','Error: Queue Failed: ' . $lastfm->error_msg,'3');
+				}
+
+				$submit = $lastfm->submit_tracks(); 
+	
+				/* Try again if it fails */
+				if (!$submit) { sleep(1); $submit = $lastfm->submit_tracks(); } 
+
+				if (!$submit) { 
+					debug_event('LastFM','Error Submit Failed: ' . $lastfm->error_msg,'3'); 
+				}
+                        } // if handshake
+                        else { 
+                                debug_event('LastFM','Error: Handshake failed with LastFM: ' . $lastfm->error_msg,'3');
+                        }
+                } // record to LastFM
 
 	} // update_stats
 
@@ -581,6 +674,41 @@ class User {
 		return $results;	
 
 	} // format_favorites
+
+	/**
+	 * format_recommendations
+	 * This takes an array of [object_id] = ratings
+	 * and displays them in a semi-pretty format
+	 */
+	 function format_recommendations($items,$type) { 
+
+		foreach ($items as $object_id=>$rating) { 
+
+			switch ($type) { 
+				case 'artist':
+					$object = new Artist($object_id);
+					$object->format_artist(); 
+					$name = $object->f_name;
+				break;
+				case 'album':
+					$object = new Album($object_id);
+					$object->format_album(); 
+					$name = $object->f_name;
+				break;
+				case 'song':
+					$object = new Song($object_id);
+					$object->format_song(); 
+					$name = $object->f_title; 
+				break;
+			} // end switch on type
+			$results[] = "<li>$name -- $rating<br />\n</li>";
+
+		} // end foreach items
+
+
+		return $results; 
+
+	 } // format_recommendations
 
 	/**
 	 * fix_preferences

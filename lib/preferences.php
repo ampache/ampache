@@ -123,10 +123,16 @@ function update_preferences($pref_id=0) {
 			case 'sample_rate':
 				$value = validate_bitrate($value);
 			break;
+			/* MD5 the LastFM so it's not plainTXT */
+			case 'lastfm_pass':
+				/* If it's our default blanking thing then don't use it */
+				if ($value == '******') { unset($_REQUEST[$name]); break; } 
+				$value = md5($value); 
+			break;
 			default: 
 			break;
 		}
-
+		
 		/* Run the update for this preference only if it's set */
 		if (isset($_REQUEST[$name])) { 
 			update_preference($pref_id,$name,$id,$value);
@@ -221,10 +227,6 @@ function create_preference_input($name,$value) {
 		elseif ($value == '0') { 
 			echo "Disabled";
 		}
-		elseif ($name == 'upload_dir' || $name == 'quarantine_dir') { 
-			/* Show Nothing */
-			echo "&nbsp;";
-		}
 		else {
 			echo $value; 
 		}
@@ -318,8 +320,8 @@ function create_preference_input($name,$value) {
 			echo "</select>\n";
 		break;
 		case 'localplay_level':
-			if ($GLOBALS['user']->prefs['localplay_level'] == '2') { $is_full = 'selected="selected"'; } 
-			elseif ($GLOBALS['user']->prefs['localplay_level'] == '1') { $is_global = 'selected="selected"'; } 
+			if ($value == '2') { $is_full = 'selected="selected"'; } 
+			elseif ($value == '1') { $is_global = 'selected="selected"'; } 
 			echo "<select name=\"$name\">\n";
 			echo "<option value=\"0\">" . _('Disabled') . "</option>\n";
 			echo "<option value=\"1\" $is_global>" . _('Global') . "</option>\n";
@@ -336,11 +338,9 @@ function create_preference_input($name,$value) {
 			} // foreach themes
 			echo "</select>\n";
 		break;
-		case 'quarantine_dir':
-		case 'upload_dir':
-			if (!$GLOBALS['user']->has_access(100)) { 
-				break;
-			}
+		case 'lastfm_pass':
+			echo "<input type=\"password\" size=\"16\" name=\"$name\" value=\"******\" />";
+		break;
 		default:
 			echo "<input type=\"text\" size=\"$len\" name=\"$name\" value=\"$value\" />";
 		break;

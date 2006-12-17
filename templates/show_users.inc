@@ -99,17 +99,17 @@ while ($results = mysql_fetch_object($db_result)) {
 
 
         <td>
-		<a href="<?php echo $web_path; ?>/admin/users.php?action=edit&amp;user=<?php echo $user->username; ?>">
+		<a href="<?php echo $web_path; ?>/admin/users.php?action=edit&amp;user=<?php echo $user->id; ?>">
 			<?php echo get_user_icon('edit'); ?>
 		</a>
 	</td>
         <td>
-		<a href="<?php echo $web_path; ?>/admin/preferences.php?action=user&amp;user_id=<?php echo $user->username; ?>">
+		<a href="<?php echo $web_path; ?>/admin/preferences.php?action=user&amp;user_id=<?php echo $user->id; ?>">
 			<?php echo get_user_icon('preferences'); ?>
 		</a>
 	</td>
 	<td>
-		<a href="<?php echo $web_path; ?>/stats.php?user_id=<?php echo $user->username; ?>">
+		<a href="<?php echo $web_path; ?>/stats.php?action=user_stats&amp;user_id=<?php echo $user->id; ?>">
 			<?php echo get_user_icon('statistics'); ?>
 		</a>
 	</td>

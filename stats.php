@@ -26,56 +26,46 @@
 */
 require_once('lib/init.php');
 
-/* If we are a full admin then we can see other peoples stats! */
-if ($GLOBALS['user']->has_access(100) AND isset($_REQUEST['user_id'])) { 
-	$working_user = new User($_REQUEST['user_id']);
-}
-else { 
-	$working_user = $GLOBALS['user'];
-}
-
 show_template('header');
-$title = $working_user->fullname . ' ' .  _('Favorites') . ':';
+
+$action = scrub_in($_REQUEST['action']); 
+
+/* Switch on the action to be performed */
+switch ($action) { 
+	case 'user_stats':
+		/* Get em! */
+		$working_user = new User($_REQUEST['user_id']); 
+
+                /* Pull favs */
+                $favorite_artists       = $working_user->get_favorites('artist');
+                $favorite_albums        = $working_user->get_favorites('album');
+                $favorite_songs         = $working_user->get_favorites('song');
+
+                require_once(conf('prefix') . '/templates/show_user_stats.inc.php');
+	
+	break;
+	/* Show their stats */
+	default: 
+		/* Here's looking at you kid! */
+		$working_user = $GLOBALS['user'];
+
+		/* Pull favs */
+		$favorite_artists	= $working_user->get_favorites('artist');
+		$favorite_albums	= $working_user->get_favorites('album');
+		$favorite_songs		= $working_user->get_favorites('song');
+
+		require_once(conf('prefix') . '/templates/show_user_stats.inc.php');
+
+		/* Build Recommendations from Ratings */
+		$recommended_artists	= $working_user->get_recommendations('artist');
+		$recommended_albums	= $working_user->get_recommendations('albums');
+		$recommended_songs	= $working_user->get_recommendations('song');
+
+		require_once(conf('prefix') . '/templates/show_user_recommendations.inc.php');
+		
+	break;
+} // end switch on action
+
+show_footer(); 
+
 ?>
-<?php require (conf('prefix') . '/templates/show_box_top.inc.php'); ?>
-<table cellpadding="5" cellspacing="5" border="0" width="100%">
-	<tr>
-		<td valign="top">
-		<?php
-			if ( $items = $working_user->get_favorites('artist') ) {
-				$items = $working_user->format_favorites($items);
-				show_info_box('Favorite Artists', 'artist', $items);
-			}
-			else {
-				echo "<span class=\"error\">" . _('Not Enough Data') . "</span>";
-			}
-		?>
-		</td>
-
-                <td valign="top">
-                <?php
-                        if ( $items = $working_user->get_favorites('song') ) { 
-				$items = $working_user->format_favorites($items);
-                                show_info_box('Favorite Songs', 'your_song', $items);
-                        }             
-                        else {
-				echo "<span class=\"error\">" . _('Not Enough Data') . "</span>";
-                        }
-                ?>
-                </td>
-
-                <td valign="top">
-                <?php
-                        if ( $items = $working_user->get_favorites('album') ) { 
-				$items = $working_user->format_favorites($items);
-                                show_info_box('Favorite Albums', 'album', $items);
-                        }             
-                        else {
-				echo "<span class=\"error\">" . _('Not Enough Data') . "</span>";
-                        }
-                ?>
-                </td>
-	</tr>
-</table>
-<?php require (conf('prefix') . '/templates/show_box_bottom.inc.php'); ?>
-<?php show_footer(); ?>

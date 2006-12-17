@@ -172,6 +172,7 @@ if (conf('ratings')) {
 	require_once(conf('prefix') . '/lib/rating.lib.php');
 }
 
+
 // Classes
 require_once(conf('prefix') . '/lib/class/localplay.class.php');
 require_once(conf('prefix') . '/lib/class/plugin.class.php');
@@ -190,6 +191,8 @@ require_once(conf('prefix') . '/lib/class/access.class.php');
 require_once(conf('prefix') . '/lib/class/error.class.php');
 require_once(conf('prefix') . '/lib/class/genre.class.php');
 require_once(conf('prefix') . '/lib/class/flag.class.php');
+require_once(conf('prefix') . '/lib/class/audioscrobbler.class.php');
+
 
 /* Set a new Error Handler */
 $old_error_handler = set_error_handler("ampache_error_handler");

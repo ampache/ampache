@@ -56,6 +56,7 @@ switch($action) {
 			$preferences = $temp_user->get_preferences();
 		}
 		else {
+			$fullname = _('Site');
 			init_preferences();
 			$GLOBALS['user']->set_preferences();
 			set_theme();
@@ -78,7 +79,7 @@ switch($action) {
 	break;
 	default:
 		$preferences = $temp_user->get_preferences();
-		$fullname = "Site";
+		$fullname = _('Site');
 	break;
 
 } // End Switch Action

@@ -4,6 +4,12 @@
 
 --------------------------------------------------------------------------
   v.3.3.3-Beta1 
+  	- Added Recommendations based on Ratings to Stats page
+  	- Encoded the LastFM password so that it isn't displayed or
+		stored in plain text. 
+  	- Fixed an issue with Admin -> Streaming -> Localplay Level
+		not correctly displaying the current setting
+  	- Integrated LastFM plugin per user requests. 
 	- Added /bin/delete_disabled.php.inc to delete any disabled
 		songs in your DB, defaults to Debug only mode
 	- Fixed display issue with players that ignore EXTINF in m3us
