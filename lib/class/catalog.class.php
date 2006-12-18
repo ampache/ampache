@@ -914,6 +914,9 @@ class Catalog {
                 $new_song->f_album      = $album . " - " . $new_song->year;
                 $new_song->title        = $this->check_title($new_song->title,$new_song->file);
 
+		/* Since we're doing a full compare make sure we fill the extended information */
+		$song->fill_ext_info();
+
                 $info = $song->compare_song_information($song,$new_song);
 
                 if ($info['change']) {

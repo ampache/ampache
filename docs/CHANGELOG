@@ -3,7 +3,7 @@
 --------------------------------------------------------------------------
 
 --------------------------------------------------------------------------
-  v.3.3.3-Beta1 
+  v.3.3.3-Beta1 12/18/2006 
   	- Moved Comment information to seperate table and added lyrics
 		row, no support for lyrics yet though.
   	- Removed Upload functionality (broken, and time better spent on

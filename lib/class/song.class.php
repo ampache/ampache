@@ -33,7 +33,6 @@ class Song {
 	var $artist; // artist.id (Int)
 	var $title;
 	var $year;
-	var $comment;
 	var $bitrate;
 	var $rate;
 	var $mode;
@@ -123,9 +122,29 @@ class Song {
 	 */
 	function _get_ext_info() { 
 
+		$sql = "SELECT comment,lyrics FROM song_ext_data WHERE song_id='" . sql_escape($this->id) . "'";
+		$db_results = mysql_query($sql,dbh()); 
 
+		$results = mysql_fetch_assoc($db_results); 
+
+		return $results; 
 
 	} // _get_ext_info
+
+	/**
+ 	 * fill_ext_info
+	 * This calls the _get_ext_info and then sets the correct vars
+	 */
+	function fill_ext_info() { 
+
+		$info = $this->_get_ext_info(); 
+
+		$this->comment	= $info['comment'];
+		$this->lyrics 	= $info['lyrics'];
+
+		return true; 
+
+	} // fill_ext_info
 
 	/*!
 		@function format_type
@@ -372,10 +391,10 @@ class Song {
 			$array['change']	= true;
 			$array['text']		.= "<br />" . _("Year") . " [$song->year] " . _("updated to") . " [$new_song->year]\n";
 		} // if year
-		//if (trim(stripslashes($song->comment)) != trim(stripslashes($new_song->comment))) { 
-		//	$array['change']	= true;
-		//	$array['text']		.= "<br />" . _("Comment") . " [$song->comment] " . _("updated to") . " [$new_song->comment]\n";
-		//} // if comment
+		if (trim(stripslashes($song->comment)) != trim(stripslashes($new_song->comment))) { 
+			$array['change']	= true;
+			$array['text']		.= "<br />" . _("Comment") . " [$song->comment] " . _("updated to") . " [$new_song->comment]\n";
+		} // if comment
 		if ($song->genre != $new_song->genre) { 
 			$array['change']	= true;
 			$name = $song->get_genre_name();
@@ -610,6 +629,18 @@ class Song {
 	 * These are items that aren't used normally, and often large/informational only
 	 */
 	function _update_ext_item($field,$value,$song_id,$level) { 
+
+		/* Check them rights boy! */
+		if (!$GLOBALS['user']->has_access($level)) { return false; } 
+	
+		if (!$song_id) { $song_id = $this->id; } 
+
+		$value = sql_escape($value); 
+
+		$sql = "UPDATE song SET `$field`='$value' WHERE song_id='$song_id'";
+		$db_results = mysql_query($sql,dbh()); 
+
+		$this->{$field} = $value; 
 
 		return true; 
 

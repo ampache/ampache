@@ -153,6 +153,7 @@ switch ($action) {
 	case 'show_edit_song':
 		$_SESSION['source'] = return_referer();
 		$song = new Song($_REQUEST['song']);
+		$song->fill_ext_info(); 
 		$song->format_song();
 		require_once (conf('prefix') . '/templates/show_edit_song.inc.php');
         break;
