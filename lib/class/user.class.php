@@ -688,20 +688,20 @@ class User {
 				case 'artist':
 					$object = new Artist($object_id);
 					$object->format_artist(); 
-					$name = $object->f_name;
+					$name = $object->link;
 				break;
 				case 'album':
 					$object = new Album($object_id);
 					$object->format_album(); 
-					$name = $object->f_name;
+					$name = $object->f_link;
 				break;
 				case 'song':
 					$object = new Song($object_id);
 					$object->format_song(); 
-					$name = $object->f_title; 
+					$name = $object->f_link; 
 				break;
 			} // end switch on type
-			$results[] = "<li>$name -- $rating<br />\n</li>";
+			$results[] = "<li>$name -- " . get_rating_name($rating) . "<br />\n</li>";
 
 		} // end foreach items
 

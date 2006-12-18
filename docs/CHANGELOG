@@ -4,6 +4,10 @@
 
 --------------------------------------------------------------------------
   v.3.3.3-Beta1 
+  	- Moved Comment information to seperate table and added lyrics
+		row, no support for lyrics yet though.
+  	- Removed Upload functionality (broken, and time better spent on
+		other features)
   	- Added Recommendations based on Ratings to Stats page
   	- Encoded the LastFM password so that it isn't displayed or
 		stored in plain text. 

@@ -77,17 +77,18 @@ $htmllang = str_replace("_","-",conf('lang'));
 	<div class="notify">
 This page handles all database updates to Ampache starting with 3.2. According to your database your current version is: <?php echo  $update->format_version($version); ; ?>. 
 the following updates need to be performed<br /><br />
+<div style="font-size:1.2em;font-weight:bold;text-align:center;"><?php $GLOBALS['error']->print_error('general'); ?></div>
 	</div>
 	<div class="content">
-<?php  $update->display_update(); ?>
+<?php $update->display_update(); ?>
 
 <form method="post" enctype="multipart/form-data" action="<?php echo  conf('web_path'); ; ?>/update.php?action=update">
-<?php  if ($update->need_update()) { ?><input type="submit" value="Update Now!" /> <?php  } ?>
+<?php if ($update->need_update()) { ?><input type="submit" value="Update Now!" /> <?php } ?>
 </form>
 	</div>
 	<div id="bottom">
     	<p><b>Ampache Installation.</b><br />
-    	For the love of Music.</p>
+    	Pour l'Amour de la Musique.</p>
    </div>
 </div>
 </body>

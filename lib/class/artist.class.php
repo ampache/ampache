@@ -5,9 +5,8 @@
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
- modify it under the terms of the GNU General Public License
- as published by the Free Software Foundation; either version 2
- of the License, or (at your option) any later version.
+ modify it under the terms of the GNU General Public License v2
+ as published by the Free Software Foundation.
 
  This program is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -20,10 +19,9 @@
 
 */
 
-/*!
-	@header Artist Class
-*/
-
+/**
+ * Artist Class
+ */
 class Artist {
 
 	/* Variables from DB */
@@ -54,6 +52,7 @@ class Artist {
 			$this->prefix = $info['prefix'];
 		} // if info
 
+		return true; 
 
 	} //constructor
 
@@ -77,6 +76,7 @@ class Artist {
 	/*!
 		@function get_albums
 		@discussion gets the albums for this artist
+		//FIXME: Appears to not be used? 
 	*/
 	function get_albums($sql) { 
 
@@ -99,11 +99,11 @@ class Artist {
 	*/
 	function get_songs() { 
 	
-		$sql = "SELECT song.id FROM song WHERE song.artist='$this->id'";
+		$sql = "SELECT song.id FROM song WHERE song.artist='" . sql_escape($this->id) . "'";
 		$db_results = mysql_query($sql, dbh());
 
-		while ($r = mysql_fetch_object($db_results)) { 
-			$results[] = new Song($r->id);
+		while ($r = mysql_fetch_assoc($db_results)) { 
+			$results[] = new Song($r['id']);
 		}
 
 		return $results;
@@ -186,14 +186,17 @@ class Artist {
 	function format_artist() {
 
 		/* Combine prefix and name, trim then add ... if needed */
-                $name = htmlspecialchars(truncate_with_ellipse(trim($this->prefix . " " . $this->name)));
+                $name = scrub_out(truncate_with_ellipse(trim($this->prefix . " " . $this->name)));
 		$this->f_name = $this->name;
+
 		//FIXME: This shouldn't be scrubing right here!!!!
 		$this->full_name = scrub_out(trim($this->prefix . " " . $this->name));
-		//FIXME: This shouldn't be set like this, f_name should be like this
+
+		//FIXME: This should be f_link
 	        $this->link = "<a href=\"" . conf('web_path') . "/artists.php?action=show&amp;artist=" . $this->id . "\" title=\"" . $this->full_name . "\">" . $name . "</a>";
 		$this->name = $this->link;
-	        return $artist;
+
+		return true; 
 
 	} // format_artist
 	
@@ -410,8 +413,7 @@ class Artist {
 				return levenshtein($name1,$name2) <= $distance;
 			break;
 		}
-	} //compare_loose
+	} // compare_loose
 	
-} //end of artist class
-
+} // end of artist class
 ?>

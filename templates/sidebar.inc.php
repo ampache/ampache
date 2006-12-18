@@ -101,15 +101,6 @@ $web_path = conf('web_path');
 			}
 		}
 		?>
-
-<?php if ($GLOBALS['user']->prefs['upload']) { ?>
-	<li<?php
-                if ($location['page'] == "upload.php"){
-                    echo " id=\"activetopmenu\" ";
-                    }?>>
-		<a href="<?php echo $web_path; ?>/upload.php"><?php echo _('Upload'); ?></a>
-	</li>
-<?php } // end if ($GLOBALS['user']->prefs['upload']) ?>
 	<li<?php
                 if ($location['page'] == "playlist.php"){
                     echo " id=\"activetopmenu\" ";

@@ -329,11 +329,12 @@ class Update {
 		
 		$version[] = array('version' => '333001','description' => $update_string);
 
-		$update_string = '- Added object_tag table for Web2.0 Tag information.<br />' . 
+		$update_string = '- Added object_tag table for Web2.0 style tag information.<br />' . 
 				'- Added song_ext_data for holding comments,lyrics and other large fields, not commonly used.<br />' . 
-				'- Added Timezone as a per user preference.';
+				'- Added Timezone as a per user preference.<br />' . 
+				'- Delete Upload Table and Upload Preferences.<br />';
 
-		//$version[] = array('version' => '333002','description' => $update_string);
+		$version[] = array('version' => '333002','description' => $update_string);
 
 		return $version;
 
@@ -382,11 +383,12 @@ class Update {
 		$sql = "DELETE * FROM session";
 		$db_results = mysql_query($sql, dbh());
 
-		/* Verify that there are no plugins installed */
+		/* Verify that there are no plugins installed 
+		//FIXME: provide a link to remove all plugins, otherwise this could turn into a catch 22
 		if (!$this->plugins_installed()) { 
 			$GLOBALS['error']->add_error('general',_('Plugins detected, please remove all Plugins and try again'));
 			return false; 
-		}
+		} */
 
 		$methods = array();
 		
@@ -2037,7 +2039,7 @@ class Update {
 	function update_333002 () { 
 
 		/* First add the two tables */
-		$sql = "CREATE TABLE `song_ext_data` (`song_id` INT( 11 ) UNSIGNED NOT NULL ,`comment` TEXT NULL ,`lyrics` TEXT NULL , UNIQUE (`song_id`)";
+		$sql = "CREATE TABLE `song_ext_data` (`song_id` INT( 11 ) UNSIGNED NOT NULL ,`comment` TEXT NULL ,`lyrics` TEXT NULL , UNIQUE (`song_id`))";
 		$db_results = mysql_query($sql,dbh()); 
 
 		$sql = "CREATE TABLE `tags` (`map_id` INT( 11 ) UNSIGNED NOT NULL ,`name` VARCHAR( 32 ) NOT NULL ,`order` TINYINT( 2 ) NOT NULL)";
@@ -2074,14 +2076,17 @@ class Update {
 
 		} // end while comments fetching
 
-
 		$sql = "ALTER TABLE `song` DROP `comment`";
 		$db_results = mysql_query($sql,dbh()); 
 
 		/* Add the Preference for Timezone */
                 $sql = "INSERT INTO preferences (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
-                        " VALUES ('time_zone','GMT','Local Timezone','5','string','interface')";
+                        " VALUES ('time_zone','GMT','Local Timezone','100','string','system')";
                 $db_results = mysql_query($sql,dbh());
+
+		/* Delete the upload related preferences */
+		$sql = "DELETE FROM preferences WHERE `name`='upload' OR `name`='upload_dir' OR `name`='quarantine_dir'";
+		$db_results = mysql_query($sql,dbh());
 
                 /* Fix every users preferences */
                 $sql = "SELECT * FROM user";
@@ -2096,6 +2101,10 @@ class Update {
 		
 		/* Drop the unused user_catalog table */
 		$sql = "DROP TABLE `user_catalog`"; 
+		$db_results = mysql_query($sql,dbh()); 
+
+		/* Drop the defunct Upload table */
+		$sql = "DROP TABLE `upload`";
 		$db_results = mysql_query($sql,dbh()); 
 
 		$this->set_version('db_version','333002');
