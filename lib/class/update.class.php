@@ -334,7 +334,7 @@ class Update {
 				'- Added Timezone as a per user preference.<br />' . 
 				'- Delete Upload Table and Upload Preferences.<br />';
 
-//		$version[] = array('version' => '333002','description' => $update_string);
+		$version[] = array('version' => '333002','description' => $update_string);
 
 		return $version;
 

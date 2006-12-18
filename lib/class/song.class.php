@@ -65,7 +65,7 @@ class Song {
 			$this->id = intval($song_id);
 
 			/* Get the information from the db */
-			if ($info = $this->get_info()) {
+			if ($info = $this->_get_info()) {
 
 				/* Assign Vars */
 				$this->file		= $info->file;
@@ -97,14 +97,14 @@ class Song {
 
 
 	/*!
-		@function get_info
+		@function _get_info
 		@discussion get's the vars for $this out of the database 
 		@param $this->id	Taken from the object
 	*/
-	function get_info() {
+	function _get_info() {
 
 		/* Grab the basic information from the catalog and return it */
-		$sql = "SELECT song.id,file,catalog,album,song.comment,year,artist,".
+		$sql = "SELECT song.id,file,catalog,album,year,artist,".
 			"title,bitrate,rate,mode,size,time,track,genre,played,song.enabled,update_time,".
 			"addition_time FROM song WHERE song.id = '$this->id'";
 			
@@ -114,7 +114,18 @@ class Song {
 
 		return $results;
 
-	} // get_info
+	} // _get_info
+
+	/**
+ 	 * _get_ext_info
+	 * This function gathers information from the song_ext_info table and adds it to the
+	 * current object
+	 */
+	function _get_ext_info() { 
+
+
+
+	} // _get_ext_info
 
 	/*!
 		@function format_type
@@ -361,10 +372,10 @@ class Song {
 			$array['change']	= true;
 			$array['text']		.= "<br />" . _("Year") . " [$song->year] " . _("updated to") . " [$new_song->year]\n";
 		} // if year
-		if (trim(stripslashes($song->comment)) != trim(stripslashes($new_song->comment))) { 
-			$array['change']	= true;
-			$array['text']		.= "<br />" . _("Comment") . " [$song->comment] " . _("updated to") . " [$new_song->comment]\n";
-		} // if comment
+		//if (trim(stripslashes($song->comment)) != trim(stripslashes($new_song->comment))) { 
+		//	$array['change']	= true;
+		//	$array['text']		.= "<br />" . _("Comment") . " [$song->comment] " . _("updated to") . " [$new_song->comment]\n";
+		//} // if comment
 		if ($song->genre != $new_song->genre) { 
 			$array['change']	= true;
 			$name = $song->get_genre_name();
@@ -413,15 +424,25 @@ class Song {
 		
 	} // update_year
 
-	/*!
-		@function update_comment
-		@discussion updates the comment field
-	*/
+	/**
+	 * update_comment
+	 * updates the comment field
+	 */
 	function update_comment($new_comment,$song_id=0) { 
 		
-		$this->_update_item('comment',$new_comment,$song_id,'100');
+		$this->_update_ext_item('comment',$new_comment,$song_id,'100');
 		
 	} // update_comment
+
+	/**
+ 	 * update_lyrics
+	 * updates the lyrics field
+	 */
+	function update_lyrics($new_lyrics,$song_id=0) { 
+	
+		$this->_update_ext_item('lyrics',$new_lyrics,$song_id,'100'); 
+
+	} // update_lyrics
 
 	/*!
 		@function update_title
@@ -581,8 +602,18 @@ class Song {
 
 		return true;
 
-	} // update_item
+	} // _update_item
 
+	/**
+	 * _update_ext_item
+	 * This updates a song record that is housed in the song_ext_info table
+	 * These are items that aren't used normally, and often large/informational only
+	 */
+	function _update_ext_item($field,$value,$song_id,$level) { 
+
+		return true; 
+
+	} // _update_ext_item
 
 	/*!
 		@function format_song
