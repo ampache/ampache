@@ -3,6 +3,11 @@
 --------------------------------------------------------------------------
 
 --------------------------------------------------------------------------
+  v.3.3.3-Beta2 12/18/2006: 
+	- Fixed a bug that prevented adding new songs to the catalog
+
+
+--------------------------------------------------------------------------
   v.3.3.3-Beta1 12/18/2006 
   	- Moved Comment information to seperate table and added lyrics
 		row, no support for lyrics yet though.

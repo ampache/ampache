@@ -2015,6 +2015,7 @@ class Catalog {
 		$year		= $results['year'];
 		$comment	= $results['comment'];
 		$current_time 	= time();
+		$lyrics 	= ' ';
 
 		/*
 		 * We have the artist/genre/album name need to check it in the tables
@@ -2026,14 +2027,26 @@ class Catalog {
 		$title		= $this->check_title($title,$file);
 		$add_file	= sql_escape($results['file']);
 
-		$sql = "INSERT INTO song (file,catalog,album,artist,title,bitrate,rate,mode,size,time,track,genre,addition_time,year,comment)" .
-			" VALUES ('$add_file','$this->id','$album_id','$artist_id','$title','$bitrate','$rate','$mode','$size','$song_time','$track','$genre_id','$current_time','$year','$comment')";
+		$sql = "INSERT INTO song (file,catalog,album,artist,title,bitrate,rate,mode,size,time,track,genre,addition_time,year)" .
+			" VALUES ('$add_file','$this->id','$album_id','$artist_id','$title','$bitrate','$rate','$mode','$size','$song_time','$track','$genre_id','$current_time','$year')";
 
 		$db_results = mysql_query($sql, dbh());
 
-		if (!$db_results) {
+		if (!$db_results) { 
 			debug_event('insert',"Unable to insert $file -- $sql",'5','ampache-catalog'); 
 			echo "<span style=\"color: #F00;\">Error Adding $file </span><hr />$sql<hr />";
+		} 
+			
+
+		$song_id = mysql_insert_id(dbh()); 
+
+		/* Add the EXT information */
+		$sql = "INSERT INTO song_ext_data (song_id,comment,lyrics) " . 
+			" VALUES ('$song_id','$comment','$lyrics')"; 
+		$db_results = mysql_query($sql,dbh()); 
+
+		if (!$db_results) {
+			debug_event('insert',"Unable to insert EXT Info for $file -- $sql",'5','ampache-catalog'); 
 			flush();
 		}
 
