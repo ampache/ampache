@@ -4,7 +4,9 @@
 
 --------------------------------------------------------------------------
   v.3.3.3-Beta2 12/18/2006: 
-	- Fixed a bug that prevented adding new songs to the catalog
+	- Fixed a bug that prevented adding new songs to the catalog.
+	- Removed a upload preference that I missed.
+	- Timezone setting actually works
 
 
 --------------------------------------------------------------------------

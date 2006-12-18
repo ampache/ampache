@@ -229,9 +229,6 @@ if (($gc_divisor / $gc_probability) > 5) {
 	ini_set('session.gc_probability',$new_gc_probability);
 }
 
-/* PHP5 Date problem solved.. ya'll GMT now! */
-putenv("TZ=GMT");
-
 /* Seed the random number */
 srand((double) microtime() * 1000003);
 
@@ -306,6 +303,9 @@ else {
 	init_preferences();
 }
 
+/* PHP5 Date problem solved.. ya'll GMT now! */
+$timezone = "TZ=" . conf('time_zone');
+putenv($timezone);
 
 /* Add in some variables for ajax done here because we need the user */
 $ajax_info['ajax_url']		= $results['web_path'] . '/server/ajax.server.php';

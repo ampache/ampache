@@ -331,10 +331,14 @@ class Update {
 
 		$update_string = '- Added object_tag table for Web2.0 style tag information.<br />' . 
 				'- Added song_ext_data for holding comments,lyrics and other large fields, not commonly used.<br />' . 
-				'- Added Timezone as a per user preference.<br />' . 
+				'- Added Timezone as a site preference.<br />' . 
 				'- Delete Upload Table and Upload Preferences.<br />';
 
 		$version[] = array('version' => '333002','description' => $update_string);
+
+		$update_string = '- Removed Last Upload Preference';
+		
+		$version[] = array('version' => '333003','description' => $update_string);
 
 		return $version;
 
@@ -2110,6 +2114,30 @@ class Update {
 		$this->set_version('db_version','333002');
 	
 	} // update_333002
+
+	/**
+	 * update_333003
+	 * This update removes the last upload preference
+	 */
+	function update_333003() { 
+
+		$sql = "DELETE FROM preferences WHERE `name`='quarantine'";
+		$db_results = mysql_query($sql,dbh()); 
+
+		/* Fix every users preferences */
+		$sql = "SELECT * FROM user"; 
+		$db_results = mysql_query($sql,dbh()); 
+
+		$user = new User(); 
+		$user->fix_preferences('-1'); 
+
+		while ($r = mysql_fetch_assoc($db_results)) { 
+			$user->fix_preferences($r['username']); 
+		} // while results
+
+		$this->set_version('db_version','333003');
+
+	} // update_333003
 
 } // end update class
 ?>
