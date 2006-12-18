@@ -637,7 +637,7 @@ class Song {
 
 		$value = sql_escape($value); 
 
-		$sql = "UPDATE song SET `$field`='$value' WHERE song_id='$song_id'";
+		$sql = "UPDATE song_ext_data SET `$field`='$value' WHERE song_id='$song_id'";
 		$db_results = mysql_query($sql,dbh()); 
 
 		$this->{$field} = $value; 
