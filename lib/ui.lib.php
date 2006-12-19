@@ -1273,10 +1273,11 @@ function show_box_bottom() {
  * this function takes a name and a returns either a text representation
  * or an <img /> tag 
  */
-function get_user_icon($name) { 
+function get_user_icon($name,$hover_name='') { 
 
 	$icon_name = 'icon_' . $name . '.png';
 
+	/* Build the image url */
 	if (file_exists(conf('prefix') . '/themes/' . $GLOBALS['theme']['path'] . '/images/' . $icon_name)) { 
 		$img_url = conf('web_path') . conf('theme_path') . '/images/' . $icon_name;
 	}
@@ -1284,7 +1285,20 @@ function get_user_icon($name) {
 		$img_url = conf('web_path') . '/images/' . $icon_name; 
 	}
 
-	$string = "<img style=\"cursor: pointer;\" src=\"$img_url\" border=\"0\" alt=\"$name\" title=\"$name\" />";
+	/* If Hover, then build its url */
+	if (!empty($hover_name)) { 
+		$hover_icon = 'icon_' . $hover_name . '.png';
+		if (file_exists(conf('prefix') . '/themes/' . $GLOBALS['theme']['path'] . '/images/' . $icon_name)) { 
+			$hov_url = conf('web_path') . conf('theme_path') . '/images/' . $hover_icon;
+		}
+		else { 
+			$hov_url = conf('web_path') . '/images/' . $hover_icon;
+		}
+		
+		$hov_txt = "onMouseOver=\"this.src='$hov_url'; return true;\" onMouseOut=\"this.src='$img_url'; return true;\"";
+	}
+
+	$string = "<img style=\"cursor: pointer;\" src=\"$img_url\" border=\"0\" alt=\"$name\" title=\"$name\" $hov_txt/>";
 
 	return $string;
 

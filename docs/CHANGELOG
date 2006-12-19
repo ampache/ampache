@@ -3,6 +3,11 @@
 --------------------------------------------------------------------------
 
 --------------------------------------------------------------------------
+  v.3.3.3-Beta3 
+	- Added new Icons from http://www.famfamfam.com from the Silk
+		subset. (Thx kalrnux && Mark James)
+
+--------------------------------------------------------------------------
   v.3.3.3-Beta2 12/18/2006: 
 	- Fixed a bug that prevented adding new songs to the catalog.
 	- Removed a upload preference that I missed.

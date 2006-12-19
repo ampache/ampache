@@ -33,25 +33,19 @@ $status		= $localplay->status();
 &nbsp;&nbsp;<span id="lp_playing"><?php echo $localplay->get_user_playing(); ?></span><br />
 <div align="center"><?php require (conf('prefix') . '/templates/show_localplay_control.inc.php'); ?></div>
 <div align="center">
-	<script type="text/javascript" language="javascript">
-	<!--
-	var lp_v = new Array(1);
-	lp_v[0] = "lp_volume";
-	-->
-	</script>
 	<?php if ($localplay->has_function('volume_up')) { ?>
 	<span class="up_button" onclick="ajaxPut('<?php echo $ajax_url; ?>?action=localplay&amp;cmd=volume_up<?php echo $required_info; ?>','lp_v');return true;">
-	        <img src="<?php echo $web_path; ?>/images/localplay/volup.gif" alt="volume up" />
+		<?php echo get_user_icon('volumeup'); ?>
 	</span>
 	<?php } ?>
 	<?php if ($localplay->has_function('volume_down')) { ?>
 	<span class="down_button" onclick="ajaxPut('<?php echo $ajax_url; ?>?action=localplay&amp;cmd=volume_down<?php echo $required_info; ?>','lp_v');return true;">
-	        <img src="<?php echo $web_path; ?>/images/localplay/voldn.gif" alt="volume down" />
+		<?php echo get_user_icon('volumedn'); ?>
 	</span>
 	<?php } ?>
 	<?php if ($localplay->has_function('volume_mute')) { ?>
 	<span class="mute_button" onclick="ajaxPut('<?php echo $ajax_url; ?>?action=localplay&amp;cmd=volume_mute<?php echo $required_info; ?>','lp_v');return true;">
-	        <img src="<?php echo $web_path; ?>/images/localplay/volmute.gif" alt="volume mute" />
+		<?php echo get_user_icon('volumemute'); ?>
 	</span>
 	<?php } ?>
 	<br />

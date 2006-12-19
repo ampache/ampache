@@ -116,10 +116,10 @@ while ($results = mysql_fetch_object($db_result)) {
 	<?php
 	//FIXME: Fix this for the extra permission levels
 	if ($user->disabled == '1') { 
-		echo "<td><a href=\"".$web_path."/admin/users.php?action=update&amp;user=$user->username&amp;level=enabled\">" . get_user_icon('enable') . "</a></td>";
+		echo "<td><a href=\"".$web_path."/admin/users.php?action=update&amp;user=$user->username&amp;level=enabled\">" . get_user_icon('disable','enable_hover') . "</a></td>";
 	}
 	else {
-		echo "<td><a href=\"".$web_path."/admin/users.php?action=update&amp;user=$user->username&amp;level=disabled\">" . get_user_icon('disable') ."</a></td>";
+		echo "<td><a href=\"".$web_path."/admin/users.php?action=update&amp;user=$user->username&amp;level=disabled\">" . get_user_icon('enable','disable_hover') ."</a></td>";
 	}
 	?>
 	<td>

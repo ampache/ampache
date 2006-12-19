@@ -138,11 +138,11 @@ foreach ($song_ids as $song_id) {
 				</a> | 
 				<?php if ($song->enabled) { ?>
 				<a href="<?php echo $web_path; ?>/admin/flag.php?action=disable&amp;song_ids=<?php echo $song->id; ?>">
-					<?php echo get_user_icon('disable'); ?>
+					<?php echo get_user_icon('enable','disable_hover'); ?>
 				</a>
 				<?php } else { ?>
 				<a href="<?php echo $web_path; ?>/admin/flag.php?action=enabled&amp;song_ids=<?php echo $song->id; ?>">
-					<?php echo get_user_icon('enable'); ?>
+					<?php echo get_user_icon('disable','enable_hover'); ?>
 				</a>
 				<?php } //status ?>
 		<?php } //access ?>
