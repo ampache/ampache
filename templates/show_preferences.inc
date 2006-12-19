@@ -74,14 +74,19 @@ if (($GLOBALS['user']->has_access(100)) AND ($user_id == '-1' AND conf('use_auth
 <li <?php echo $tab_system; ?>>
 	<a href="<?php echo $link; ?>?tab=system&amp;user_id=<?php echo $user_id; ?>" <?php echo $a_system; ?>>System</a>
 </li>
+<li <?php echo $tab_modules; ?>>
+	<a href="<?php echo $link; ?>?tab=modules&amp;user_id=<?php echo $user_id; ?>" <?php echo $a_modules; ?>>Modules</a>
+</li>
+
 <?php } ?>
 </ul>
 </div>
 <div class="text-box" style="width:45em;">
 <form method="post" name="preferences" action="<?php echo conf('web_path'); ?><?php echo $target; ?>" enctype="multipart/form-data">
 <?php 
-if ($current_tab != 'account') { 
+if ($current_tab != 'account' && $current_tab != 'modules') { 
 	show_preference_box($preferences[$current_tab]); 
+
 ?>
 	<input class="button" type="submit" value="<?php echo _("Update Preferences"); ?>" />
 	<input type="hidden" name="action" value="update_preferences" />
@@ -90,8 +95,10 @@ if ($current_tab != 'account') {
 	<input class="button" type="submit" name="action" value="<?php echo _("Cancel"); ?>" />
 <?php
 	} 
-
-	else { 
+if ($current_tab == 'modules') {
+	        require (conf('prefix') .  '/templates/show_modules.inc.php');
+}
+if ($current_tab == 'account') { 
 		$this_user = new User($user_id);
 		require (conf('prefix') . '/templates/show_user.inc.php');
 	}

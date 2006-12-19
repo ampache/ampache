@@ -33,11 +33,13 @@ $web_path = conf('web_path');
 ?>
 
 <!-- Localplay Modules --> 
-<?php show_box_top(_('Localplay Modules')); ?>
 <table class="tabledata" border="0" cellspacing="0">
+<tr class="odd">
+<th colspan="2" class="header2" align="left"><?php echo _('Localplay Modules');?></th>
+</tr>
 <tr class="table-header">
-	<th><?php echo _('Module Name'); ?></th>
-	<th><?php echo _('Action'); ?></th>
+	<td><?php echo _('Module Name'); ?></td>
+	<td><?php echo _('Action'); ?></td>
 </tr>
 <?php 
 foreach ($localplay_modules as $module) { 
@@ -60,12 +62,12 @@ foreach ($localplay_modules as $module) {
 </tr>
 <?php } ?>
 </table>
-<?php show_box_bottom(); ?>
-
+<br />
 
 <!-- Plugins --> 
-<?php show_box_top(_('Available Plugins')); ?>
 <table class="tabledata">
+<tr class="odd">
+<th colspan="4" class="header2" align="left"><?php echo _('Available Plugins'); ?></th>
 <tr class="table-header">
 	<td><?php echo _('Name'); ?></td>
 	<td><?php echo _('Description'); ?></td>
@@ -95,4 +97,4 @@ foreach ($plugins as $key=>$plugin) {
 </tr>
 <?php } ?>
 </table>
-<?php show_box_bottom(); ?>
+

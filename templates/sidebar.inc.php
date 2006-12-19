@@ -30,7 +30,6 @@ $admin_items[] = array('title'=>_('Mail Users'),'url'=>'admin/mail.php','active'
 $admin_items[] = array('title'=>_('Catalog'),'url'=>'admin/index.php','active'=>$location['page']);
 $admin_items[] = array('title'=>_('Config'),'url'=>'admin/preferences.php','active'=>$location['page']);
 $admin_items[] = array('title'=>_('Access List'),'url'=>'admin/access.php','active'=>$location['page']);
-$admin_items[] = array('title'=>_('Modules'),'url'=>'admin/modules.php','active'=>$location['page']);
 
 $browse_items[] = array('title'=>_("Albums"),'url'=>'albums.php','active'=>$location['page']);
 $browse_items[] = array('title'=>_("Artists"),'url'=>'artists.php','active'=>$location['page']);
@@ -57,7 +56,6 @@ $web_path = conf('web_path');
                     $location['page'] == 'admin/mail.php' ||
                     $location['page'] == 'admin/catalog.php' ||
                     $location['page'] == 'admin/preferences.php' ||
-		    $location['page'] == 'admin/modules.php' ||
                     $location['page'] == 'admin/access.php' ){
                     echo " id=\"activetopmenu\" ";
                     }?>>
