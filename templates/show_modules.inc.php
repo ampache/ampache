@@ -65,7 +65,7 @@ foreach ($localplay_modules as $module) {
 <br />
 
 <!-- Plugins --> 
-<table class="tabledata">
+<table class="tabledata" border="0" cellspacing="0">
 <tr class="odd">
 <th colspan="4" class="header2" align="left"><?php echo _('Available Plugins'); ?></th>
 <tr class="table-header">
@@ -97,4 +97,5 @@ foreach ($plugins as $key=>$plugin) {
 </tr>
 <?php } ?>
 </table>
+<br />
 
