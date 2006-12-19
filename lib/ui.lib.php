@@ -1275,7 +1275,7 @@ function show_box_bottom() {
  */
 function get_user_icon($name) { 
 
-	$icon_name = 'icon_' . $name . '.gif';
+	$icon_name = 'icon_' . $name . '.png';
 
 	if (file_exists(conf('prefix') . '/themes/' . $GLOBALS['theme']['path'] . '/images/' . $icon_name)) { 
 		$img_url = conf('web_path') . conf('theme_path') . '/images/' . $icon_name;
