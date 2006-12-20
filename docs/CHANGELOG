@@ -4,6 +4,12 @@
 
 --------------------------------------------------------------------------
   v.3.3.3-Beta3 
+	- Fixed ORDER BY `track` that was missing on play selected and 
+		reduced it to a single query, rather then one per object
+	- Fixed ip history being tracked even if disabled in config
+	- Improved performance of icon rendering due to increased use
+	- Added error handling for if /config/ampache.cfg.php.dist is 
+		not readable
 	- Added new Icons from http://www.famfamfam.com from the Silk
 		subset. (Thx kalrnux && Mark James)
 

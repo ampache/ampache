@@ -233,63 +233,68 @@ function check_config_values($conf) {
 */
 function debug_read_config($config_file,$debug) { 
 
-    $fp = @fopen($config_file,'r');
-    if(!is_resource($fp)) return false;
-    $file_data = fread($fp,filesize($config_file));
-    fclose($fp);
+	$fp = @fopen($config_file,'r');
+	if(!is_resource($fp)) return false;
+	$file_data = fread($fp,filesize($config_file));
+	fclose($fp);
     
-    // explode the var by \n's
-    $data = explode("\n",$file_data);
-    if($debug) echo "<pre>";
-    $count = 0;
+	// explode the var by \n's
+	$data = explode("\n",$file_data);
+	if($debug) echo "<pre>";
+	$count = 0;
 
-    $results = array();
+	if (!count($data)) { 
+		debug_event('debug_read_config','Error Unable to Read config file','1'); 	
+		return false; 
+	} 
+
+	$results = array();
     
-    foreach($data as $value) {
-        $count++;
+	foreach($data as $value) {
+	        $count++;
         
-        $value = trim($value);
+	        $value = trim($value);
        
-        if (preg_match("/^#?([\w\d]+)\s+=\s+[\"]{1}(.*?)[\"]{1}$/",$value,$matches)
-                        || preg_match("/^#?([\w\d]+)\s+=\s+[\']{1}(.*?)[\']{1}$/", $value, $matches)
-                        || preg_match("/^#?([\w\d]+)\s+=\s+[\'\"]{0}(.*)[\'\"]{0}$/",$value,$matches)) {
+	        if (preg_match("/^#?([\w\d]+)\s+=\s+[\"]{1}(.*?)[\"]{1}$/",$value,$matches)
+	                        || preg_match("/^#?([\w\d]+)\s+=\s+[\']{1}(.*?)[\']{1}$/", $value, $matches)
+	                        || preg_match("/^#?([\w\d]+)\s+=\s+[\'\"]{0}(.*)[\'\"]{0}$/",$value,$matches)) {
 
 
-                if (is_array($results[$matches[1]]) && isset($matches[2]) ) {
-                        if($debug) echo "Adding value <strong>$matches[2]</strong> to existing key <strong>$matches[1]</strong>\n";
-                        array_push($results[$matches[1]], $matches[2]);
-                }
+                	if (is_array($results[$matches[1]]) && isset($matches[2]) ) {
+	                        if($debug) echo "Adding value <strong>$matches[2]</strong> to existing key <strong>$matches[1]</strong>\n";
+	                        array_push($results[$matches[1]], $matches[2]);
+	                }
 
-                elseif (isset($results[$matches[1]]) && isset($matches[2]) ) {
-                        if($debug) echo "Adding value <strong>$matches[2]</strong> to existing key $matches[1]</strong>\n";
-                        $results[$matches[1]] = array($results[$matches[1]],$matches[2]);
-                }
+	                elseif (isset($results[$matches[1]]) && isset($matches[2]) ) {
+	                        if($debug) echo "Adding value <strong>$matches[2]</strong> to existing key $matches[1]</strong>\n";
+        	                $results[$matches[1]] = array($results[$matches[1]],$matches[2]);
+	                }
 
-                elseif ($matches[2] !== "") {
-                        if($debug) echo "Adding value <strong>$matches[2]</strong> for key <strong>$matches[1]</strong>\n";
-                        $results[$matches[1]] = $matches[2];
-                }
+	                elseif ($matches[2] !== "") {
+	                        if($debug) echo "Adding value <strong>$matches[2]</strong> for key <strong>$matches[1]</strong>\n";
+	                        $results[$matches[1]] = $matches[2];
+        	        }
 
-                // if there is something there and it's not a comment
-                elseif ($value{0} !== "#" AND strlen(trim($value)) > 0 AND !$test AND strlen($matches[2]) > 0) {
-                        echo "Error Invalid Config Entry --> Line:$count"; return false;
-                } // elseif it's not a comment and there is something there
+	                // if there is something there and it's not a comment
+	                elseif ($value{0} !== "#" AND strlen(trim($value)) > 0 AND !$test AND strlen($matches[2]) > 0) {
+        	                echo "Error Invalid Config Entry --> Line:$count"; return false;
+	                } // elseif it's not a comment and there is something there
+	
+	                else {
+	                        if($debug) echo "Key <strong>$matches[1]</strong> defined, but no value set\n";
+	                }
 
-                else {
-                        if($debug) echo "Key <strong>$matches[1]</strong> defined, but no value set\n";
-                }
+        	} // end else
 
-        } // end else
+	} // foreach
 
-    } // foreach
+	if (isset($config_name) && isset(${$config_name}) && count(${$config_name})) {
+		$results[$config_name] = ${$config_name};
+	}
 
-    if (isset($config_name) && isset(${$config_name}) && count(${$config_name})) {
-        $results[$config_name] = ${$config_name};
-    }
+	if($debug) echo "</pre>";
 
-    if($debug) echo "</pre>";
-
-    return $results;
+	return $results;
 
 } // debug_read_config
 

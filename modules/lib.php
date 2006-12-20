@@ -9,37 +9,6 @@
 
 */
 
-
-
-// Used by playlist functions when you have an array of something of type
-//  and you want to extract the songs from it whether type is artists or albums
-function get_songs_from_type ($type, $results, $artist_id = 0) {
-
-	$dbh = dbh();
-
-	$count = 0;
-	$song = array();
-
-	foreach ($results as $value) {
-
-		// special case from the album view where we don't want every orphan
-		if ($type == 'album' && ($value == 'orphans' || $artist_id != 0)) {
-			$sql = "SELECT id FROM song WHERE $type = '$value' AND artist = '$artist_id'";
-			$db_result = mysql_query($sql, $dbh);
-		}
-		else {
-			$sql = "SELECT id FROM song WHERE $type = '$value'";
-			$db_result = mysql_query($sql, $dbh);
-		}
-
-		while ( $r = mysql_fetch_row($db_result) ) {
-			$song[$count] = $r[0];
-			$count++;
-		}
-	}
-	return $song;
-}
-
 // This function makes baby vollmer cry, need to fix
 //FIXME
 function get_artist_info ($artist_id) {

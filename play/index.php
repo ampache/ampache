@@ -210,7 +210,9 @@ header("Accept-Ranges: bytes" );
 set_time_limit(0);			
 
 /* We're about to start record this persons IP */
-$user->insert_ip_history();
+if (conf('track_user_ip')) { 
+	$user->insert_ip_history();
+}
 
 /* If access control is on and they aren't local, downsample! */
 if (conf('access_control') AND conf('downsample_remote')) { 

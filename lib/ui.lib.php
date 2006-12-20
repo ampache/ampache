@@ -1274,29 +1274,47 @@ function show_box_bottom() {
  * or an <img /> tag 
  */
 function get_user_icon($name,$hover_name='') { 
+	
+	/* Because we do a lot of calls cache the URLs */
+	static $url_cache = array(); 
 
-	$icon_name = 'icon_' . $name . '.png';
-
-	/* Build the image url */
-	if (file_exists(conf('prefix') . '/themes/' . $GLOBALS['theme']['path'] . '/images/' . $icon_name)) { 
-		$img_url = conf('web_path') . conf('theme_path') . '/images/' . $icon_name;
+	if (isset($url_cache[$name])) { 
+		$img_url = $url_cache[$name]; 
+		$cache_url = true; 
 	}
-	else { 
-		$img_url = conf('web_path') . '/images/' . $icon_name; 
+	if (isset($url_cache[$hover_name])) { 
+		$hover_url = $url_cache[$hover_name];
+		$cache_hover = true; 
 	}
+	
+	if (empty($hover_name)) { $cache_hover = true; } 
 
-	/* If Hover, then build its url */
-	if (!empty($hover_name)) { 
-		$hover_icon = 'icon_' . $hover_name . '.png';
+	if (!isset($cache_url) OR !isset($cache_hover)) { 
+
+		$icon_name = 'icon_' . $name . '.png';
+
+		/* Build the image url */
 		if (file_exists(conf('prefix') . '/themes/' . $GLOBALS['theme']['path'] . '/images/' . $icon_name)) { 
-			$hov_url = conf('web_path') . conf('theme_path') . '/images/' . $hover_icon;
+			$img_url = conf('web_path') . conf('theme_path') . '/images/' . $icon_name;
 		}
 		else { 
-			$hov_url = conf('web_path') . '/images/' . $hover_icon;
+			$img_url = conf('web_path') . '/images/' . $icon_name; 
 		}
-		
-		$hov_txt = "onMouseOver=\"this.src='$hov_url'; return true;\" onMouseOut=\"this.src='$img_url'; return true;\"";
-	}
+
+		/* If Hover, then build its url */
+		if (!empty($hover_name)) { 
+			$hover_icon = 'icon_' . $hover_name . '.png';
+			if (file_exists(conf('prefix') . '/themes/' . $GLOBALS['theme']['path'] . '/images/' . $icon_name)) { 
+				$hov_url = conf('web_path') . conf('theme_path') . '/images/' . $hover_icon;
+			}
+			else { 
+				$hov_url = conf('web_path') . '/images/' . $hover_icon;
+			}
+			
+			$hov_txt = "onMouseOver=\"this.src='$hov_url'; return true;\" onMouseOut=\"this.src='$img_url'; return true;\"";
+		} // end hover
+
+	} // end if not cached
 
 	$string = "<img style=\"cursor: pointer;\" src=\"$img_url\" border=\"0\" alt=\"$name\" title=\"$name\" $hov_txt/>";
 

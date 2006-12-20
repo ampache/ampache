@@ -35,7 +35,7 @@ $web_path = conf('web_path');
 	<th><?php echo _('Cover'); ?></th>
 	<th><a href="<?php echo $web_path; ?>/<?php echo $_SESSION['view_script']; ?>?action=<?php echo $_REQUEST['action']; ?>&amp;artist=<?php echo $artist->id  ?>&amp;keep_view=true&amp;sort_type=album.name&amp;sort_order=0"><?php echo _('Album Name'); ?></th>
 	<th><a href="<?php echo $web_path; ?>/<?php echo $_SESSION['view_script']; ?>?action=<?php echo $_REQUEST['action']; ?>&amp;artist=<?php echo $artist->id  ?>&amp;keep_view=true&amp;sort_type=album.year&amp;sort_order=0"><?php echo _('Album Year'); ?></th>
-	<th><?php echo _('Total Tracks'); ?></th>
+	<th><?php echo _('Tracks'); ?></th>
 	<th><?php echo _('Action'); ?></th>
 </tr>
 <?php
@@ -59,10 +59,22 @@ foreach ($albums as $album) {
 		<td><?php echo $album->year; ?></td>
 		<td><?php echo $count; ?></td>
 		<td>
-		<a href="<?php echo $web_path; ?>/song.php?action=album&amp;album_id=<?php echo $id; ?>"><?php echo _('Play'); ?></a>
+		<a href="<?php echo $web_path; ?>/song.php?action=album&amp;album_id=<?php echo $id; ?>">
+			<?php echo get_user_icon('all'); ?>	
+		</a>
+		<a href="<?php echo $web_path; ?>/song.php?action=album_random&amp;album_id=<?php echo $album->id; ?>">
+			<?php echo get_user_icon('random'); ?>
+		</a>
 		<?php if (batch_ok()) { ?>
-			| <a href="<?php echo $web_path; ?>/batch.php?action=alb&amp;id=<?php echo $album->id; ?>"><?php echo _('Download'); ?></a>
+			<a href="<?php echo $web_path; ?>/batch.php?action=alb&amp;id=<?php echo $album->id; ?>">
+				<?php echo get_user_icon('download'); ?>
+			</a>
 		<?php } ?> 
+		<?php if ($GLOBALS['user']->has_access('100')) { ?>
+			<a href="<?php echo $web_path; ?>/admin/flag.php?action=album&amp;album_id=<?php echo $album->id; ?>">
+				<?php echo get_user_icon('edit'); ?>
+			</a>
+		<?php } ?>
 		</td>
 	</tr>
 <?php  } //end foreach ($albums as $album)?>

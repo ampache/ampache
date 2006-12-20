@@ -53,16 +53,16 @@ $title		= scrub_out($album->name) . ' -- ' . $album->f_artist;
 		?>
 		<strong><?php echo _('Actions'); ?>:</strong><br />
 		&nbsp;&nbsp;<a href="<?php echo $web_path; ?>/song.php?action=album&amp;album_id=<?php echo $album->id; ?>"><?php echo  _("Play Album"); ; ?></a><br />
-		&nbsp;&nbsp;<a href="<?php echo $web_path; ?>/song.php?action=album_random&amp;album_id=<?php echo  $album->id; ; ?>"><?php echo  _("Play Random from Album"); ; ?></a><br />
+		&nbsp;&nbsp;<a href="<?php echo $web_path; ?>/song.php?action=album_random&amp;album_id=<?php echo $album->id; ?>"><?php echo  _("Play Random from Album"); ; ?></a><br />
 		<?php if ( ($GLOBALS['user']->has_access('75')) || (!conf('use_auth'))) { ?>
-		&nbsp;&nbsp;<a href="<?php echo $web_path; ?>/albums.php?action=clear_art&amp;album_id=<?php echo  $album->id; ; ?>"><?php echo  _("Reset Album Art"); ; ?></a><br />
+		&nbsp;&nbsp;<a href="<?php echo $web_path; ?>/albums.php?action=clear_art&amp;album_id=<?php echo $album->id; ?>"><?php echo  _("Reset Album Art"); ; ?></a><br />
 		<?php } ?>
-		&nbsp;&nbsp;<a href="<?php echo $web_path; ?>/albums.php?action=find_art&amp;album_id=<?php echo  $album->id; ; ?>"><?php echo  _("Find Album Art"); ; ?></a><br />
+		&nbsp;&nbsp;<a href="<?php echo $web_path; ?>/albums.php?action=find_art&amp;album_id=<?php echo $album->id; ?>"><?php echo  _("Find Album Art"); ; ?></a><br />
 		<?php  if (($GLOBALS['user']->has_access('100')) || (!conf('use_auth'))) { ?>
-		&nbsp;&nbsp;<a href="<?php echo $web_path; ?>/albums.php?action=update_from_tags&amp;album_id=<?php echo  $album->id; ; ?>"><?php echo  _("Update from tags"); ?></a><br />
+		&nbsp;&nbsp;<a href="<?php echo $web_path; ?>/albums.php?action=update_from_tags&amp;album_id=<?php echo $album->id; ?>"><?php echo  _("Update from tags"); ?></a><br />
 		<?php  } ?>
 		<?php if (batch_ok()) { ?>
-		&nbsp;&nbsp;<a href="<?php echo $web_path; ?>/batch.php?action=alb&amp;id=<?php echo  $album->id; ; ?>"><?php echo _('Download'); ?></a><br />
+		&nbsp;&nbsp;<a href="<?php echo $web_path; ?>/batch.php?action=alb&amp;id=<?php echo $album->id; ?>"><?php echo _('Download'); ?></a><br />
 		<?php } ?>
 	</div>
 <?php require (conf('prefix') . '/templates/show_box_bottom.inc.php'); ?>

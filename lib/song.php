@@ -45,6 +45,39 @@ function get_songs($sql, $action=0) {
 } // get_songs
 
 /**
+ * get_songs_from_type 
+ * This gets an array of songs based on the type and from the results array
+ * can pull songs from an array of albums, artists whatever
+ */
+function get_songs_from_type($type,$results,$artist_id='') { 
+
+	// Init the array
+	$songs = array(); 
+
+	$type = sql_escape($type); 
+
+	$sql = "SELECT id FROM song WHERE ";
+
+	foreach ($results as $value) { 
+		$value = sql_escape($value); 
+		$sql .= "`$type`='$value' OR ";
+	}
+
+	// Run the long query
+	$sql = rtrim($sql,'OR '); 
+	$sql .= " ORDER BY `track`";
+
+	$db_results = mysql_query($sql,dbh()); 
+
+	while ($r = mysql_fetch_assoc($db_results)) { 
+		$songs[] = $r['id'];
+	}
+
+	return $songs; 
+
+} // get_song_from_type
+
+/**
  * get_recently_played
  * This function returns the last X songs that have been played
  * It uses the 'popular' threshold to determine how many to pull
