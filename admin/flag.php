@@ -99,6 +99,9 @@ switch ($action) {
 	// Show the page for editing a full album
 	case 'show_edit_album':
 
+		$album = new Album($_REQUEST['album_id']); 
+	
+		require_once(conf('prefix') . '/templates/show_edit_album.inc.php'); 
 
 	beak;
 	// Show the page for editing a full artist

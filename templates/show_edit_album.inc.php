@@ -24,8 +24,25 @@
 <form name="edit_album" method="post" enctype="multipart/form-data" action="<?php echo conf('web_path'); ?>/admin/flag.php?action=edit_album">
 <table class="tabledata">
 <tr class="<?php echo flip_class(); ?>">
+	<td><?php echo _('Name'); ?></td>
+	<td>
+		<input type="textbox" name="name" value="<?php echo scrub_out($album->artist); ?>">
+	</td>
+</tr>
+<tr class="<?php echo flip_class(); ?>">
+	<td><?php echo _('Year'); ?></td>
+	<td>
+		<input type="textbox" name="year" value="<?php echo scrub_out($album->year); ?>">
+	</td>
+</tr>
+<tr class="<?php echo flip_class(); ?>">
 	<td>&nbsp;</td>
 	<td>
+		<input type="checkbox" name="flag" value="1" checked="checked" /> <?php echo _('Flag for Retagging'); ?>
+	</td>
+</tr>
+<tr class="<?php echo flip_class(); ?>">
+	<td colspan="2">
 		<input type="hidden" name="album_id" value="<?php echo $album->id; ?>" />
 		<input type="submit" value="<?php echo _('Update Album'); ?>" />
 	</td>
