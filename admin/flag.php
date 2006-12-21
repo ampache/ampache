@@ -103,17 +103,90 @@ switch ($action) {
 	
 		require_once(conf('prefix') . '/templates/show_edit_album.inc.php'); 
 
-	beak;
-	// Show the page for editing a full artist
-	case 'show_edit_artist':
+	break;
+	// Update all songs from this album
+	case 'edit_album':
 	
+		// Build the needed album 
+		$album = new Album($_REQUEST['album_id']); 
+
+		// Create the needed catalog object cause we can't do 
+		// static class methods :( 
+		$catalog = new Catalog(); 
+		$flag = new Flag(); 
+
+		/* Check the new Name */
+		$album_id = $catalog->check_album($_REQUEST['name'],$_REQUEST['year']); 
+
+		$songs = $album->get_songs(); 
+
+		foreach ($songs as $song) { 
+			// Make that copy and change the album 
+			$new_song  = $song;
+			$new_song->album = $album_id;
+
+			$song->update_song($song->id,$new_song);
+
+			if ($_REQUEST['flag'] == '1') { 
+				$flag->add($song->id,'song','retag','Edited Song, auto-tag');
+			} 
+
+		} // end foreach songs
+
+		// Clean out the old album 
+		$catalog->clean_albums();
+
+		show_confirmation(_('Album Updated'),'',conf('web_path') . '/admin/index.php'); 
 
 	break;
+	// Show the page for editing a full artist
+	case 'show_edit_artist':
+
+		$artist = new Artist($_REQUEST['artist_id']); 
+
+		require_once(conf('prefix') . '/templates/show_edit_artist.inc.php'); 		
+
+	break;
+	// Update all songs by this artist
+	case 'edit_artist':
+
+		// Build the needed artist
+		$artist = new Artist($_REQUEST['artist_id']); 
+
+		// Create the needed objects, a pox on PHP4
+		$catalog = new Catalog(); 
+		$flag = new Flag(); 
+
+		/* Check the new Name */
+		$artist_id = $catalog->check_artist($_REQUEST['name']); 
+
+		$songs = $artist->get_songs(); 
+
+		foreach ($songs as $song) { 
+			// Make that copy and change the artist
+			$new_song = $song; 
+			$new_song->artist = $artist_id; 
+			
+			$song->update_song($song->id,$new_song); 
+
+			if ($_REQUEST['flag'] == '1') { 
+				$flag->add($song->id,'song','retag','Edited Song, auto-tag'); 
+			} 
+
+		} // end foreach songs
+
+		// Clean out the old artist(s)
+		$catalog->clean_artists(); 
+
+		show_confirmation(_('Artist Updated'),'',conf('web_path') . '/admin/index.php'); 
+
+	break; 
 	/* Done by 'Select' code passes array of song ids */
 	case 'mass_update': 
 		$songs = $_REQUEST['songs'];	
 	        $catalog = new Catalog();
 		$object = $_REQUEST['update_field']; 
+		$flag = new Flag(); 
 
 		/* Foreach the songs we need to update */
 		foreach ($songs as $song_id) { 
@@ -146,7 +219,6 @@ switch ($action) {
 	                /* Now that it's been updated clean old junk entries */
 	                $cleaned = $catalog->clean_single_song($old_song);
 
-			$flag = new Flag(); 
 			$flag->add($song_id,'song','retag','Edited Song, auto-tag');
 
 		} // end foreach songs

@@ -4,6 +4,8 @@
 
 --------------------------------------------------------------------------
   v.3.3.3-Beta3 
+	- Added ability to edit artist/albums and flag all songs under them
+		for re-tagging. 
 	- Fixed charset of XML documents returned (Thx blueorder)
 	- Fixed ORDER BY `track` that was missing on play selected and 
 		reduced it to a single query, rather then one per object

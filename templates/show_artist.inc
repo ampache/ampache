@@ -71,7 +71,7 @@ foreach ($albums as $album) {
 			</a>
 		<?php } ?> 
 		<?php if ($GLOBALS['user']->has_access('100')) { ?>
-			<a href="<?php echo $web_path; ?>/admin/flag.php?action=album&amp;album_id=<?php echo $album->id; ?>">
+			<a href="<?php echo $web_path; ?>/admin/flag.php?action=show_edit_album&amp;album_id=<?php echo $album->id; ?>">
 				<?php echo get_user_icon('edit'); ?>
 			</a>
 		<?php } ?>

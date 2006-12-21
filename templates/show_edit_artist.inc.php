@@ -20,19 +20,13 @@
 */
 ?>
 
-<?php show_box_top(_('Edit Album')); ?>
-<form name="edit_album" method="post" enctype="multipart/form-data" action="<?php echo conf('web_path'); ?>/admin/flag.php?action=edit_album">
+<?php show_box_top(_('Edit Artist')); ?>
+<form name="edit_artist" method="post" enctype="multipart/form-data" action="<?php echo conf('web_path'); ?>/admin/flag.php?action=edit_artist">
 <table class="tabledata">
 <tr class="<?php echo flip_class(); ?>">
 	<td><?php echo _('Name'); ?></td>
 	<td>
-		<input type="textbox" name="name" value="<?php echo scrub_out($album->name); ?>">
-	</td>
-</tr>
-<tr class="<?php echo flip_class(); ?>">
-	<td><?php echo _('Year'); ?></td>
-	<td>
-		<input type="textbox" name="year" value="<?php echo scrub_out($album->year); ?>">
+		<input type="textbox" name="name" value="<?php echo scrub_out($artist->name); ?>">
 	</td>
 </tr>
 <tr class="<?php echo flip_class(); ?>">
@@ -43,7 +37,7 @@
 </tr>
 <tr class="<?php echo flip_class(); ?>">
 	<td colspan="2">
-		<input type="hidden" name="album_id" value="<?php echo $album->id; ?>" />
+		<input type="hidden" name="artist_id" value="<?php echo $artist->id; ?>" />
 		<input type="submit" value="<?php echo _('Update Album'); ?>" />
 	</td>
 </tr>
