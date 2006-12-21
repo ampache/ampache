@@ -5,9 +5,8 @@
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
- modify it under the terms of the GNU General Public License
- as published by the Free Software Foundation; either version 2
- of the License, or (at your option) any later version.
+ modify it under the terms of the GNU General Public License v2
+ as published by the Free Software Foundation.
 
  This program is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -34,7 +33,7 @@ $GLOBALS['user'] = new User($_REQUEST['user_id']);
 $action = scrub_in($_REQUEST['action']);
 
 /* Set the correct headers */
-header("Content-type: text/xml; charset=utf-8");
+header("Content-type: text/xml; charset=" . conf('site_charset'));
 header("Content-Disposition: attachment; filename=ajax.xml");
 header("Cache-Control: no-cache");
 

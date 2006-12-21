@@ -4,6 +4,7 @@
 
 --------------------------------------------------------------------------
   v.3.3.3-Beta3 
+	- Fixed charset of XML documents returned (Thx blueorder)
 	- Fixed ORDER BY `track` that was missing on play selected and 
 		reduced it to a single query, rather then one per object
 	- Fixed ip history being tracked even if disabled in config
