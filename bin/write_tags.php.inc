@@ -68,9 +68,6 @@ foreach($flaggedIds as $flagged){
 	$tagData['date'][] = $song->year;
 	$tagData['year'][] = $song->year;
 	$tagData['comment'][] = $song->comment;
-	$tagData['bitrate'][] = $song->bitrate;
-	$tagData['rate'][] = $song->rate;
-	$tagData['mode'][] = $song->mode;
 	$tagData['size'][] = $song->size;
 	$tagData['time'][] = $song->time;
 	$tagData['album'][] = $song->get_album_name();

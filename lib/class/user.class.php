@@ -123,7 +123,7 @@ class User {
 
 	
 		$sql = "SELECT preferences.name, preferences.description, preferences.catagory, user_preference.value FROM preferences,user_preference " .
-			"WHERE user_preference.user='$user_id' AND user_preference.preference=preferences.id $user_limit";
+			"WHERE user_preference.user='$user_id' AND user_preference.preference=preferences.id $user_limit ORDER BY id";
 		$db_results = mysql_query($sql, dbh());
 
 		/* Ok this is crapy, need to clean this up or improve the code FIXME */

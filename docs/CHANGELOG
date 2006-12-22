@@ -4,6 +4,9 @@
 
 --------------------------------------------------------------------------
   v.3.3.3-Beta3 
+	- Fixed Preferences page, preferences now ordered semi-logically
+	- Fixed MPD controller so it displays track numbers correctly
+	- Added HttpQ Localplay Module. 
   	- Added 'Best Guess' option to Duplicate Song Disabled that checks
 		the shortest, lowest bitrate, smallest of a duplicate set
   	- Removed unused templates and documents

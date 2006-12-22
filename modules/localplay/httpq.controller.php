@@ -20,29 +20,29 @@
 */
 
 /**
- * AmpacheMpd Class
- * the Ampache Mpd Controller, this is the glue between
- * the MPD class and the Ampahce Localplay class
+ * AmpacheHttpQ Class
+ * This is the class for the HttpQ localplay method to remote control
+ * a WinAmp Instance
  */
-class AmpacheMpd {
+class AmpacheHttpq {
 
 	/* Variables */
 	
 
 	/* Constructed variables */
-	var $_mpd;
+	var $_httpq;
 
 	/**
 	 * Constructor
 	 * This returns the array map for the localplay object
 	 * REQUIRED for Localplay
 	 */
-	function AmpacheMpd() { 
+	function AmpacheHttpq() { 
 	
 		/* Do a Require Once On the needed Libraries */
-		require_once(conf('prefix') . '/modules/mpd/mpd.class.php');
+		require_once(conf('prefix') . '/modules/httpq/httpqplayer.class.php');
 
-	} // AmpacheMpd
+	} // AmpacheHttpq
 
 
 	/**
@@ -65,18 +65,18 @@ class AmpacheMpd {
                 $map['connect']         = 'connect';
 		
 		/* Recommended Functions */
-		$map['skip']		= 'skip';
-		$map['next']		= 'next';
-		$map['prev']		= 'prev';
+		//$map['skip']		= 'skip';
+		//$map['next']		= 'next';
+		//$map['prev']		= 'prev';
 		$map['pause']		= 'pause';
-		$map['volume_up']       = 'volume_up';
-		$map['volume_down']	= 'volume_down';
+		//$map['volume_up']       = 'volume_up';
+		//$map['volume_down']	= 'volume_down';
 		$map['random']          = 'random';
 		$map['repeat']		= 'loop';
 
 		/* Optional Functions */
-		$map['move']		= 'move';
-		$map['delete_all']	= 'clear_playlist';
+		//$map['move']		= 'move';
+		//$map['delete_all']	= 'clear_playlist';
 		$map['add_url']		= 'add_url';
 
                 return $map;
@@ -95,9 +95,9 @@ class AmpacheMpd {
 
 		$preferences = array(); 
 
-		$preferences[] = array('name'=>'hostname','default'=>'localhost','type'=>'string','description'=>'MPD Hostname');
-		$preferences[] = array('name'=>'port','default'=>'6600','type'=>'integer','description'=>'MPD Port');
-		$preferences[] = array('name'=>'password','default'=>'','type'=>'string','description'=>'MPD Password');
+		$preferences[] = array('name'=>'hostname','default'=>'localhost','type'=>'string','description'=>'HttpQ Hostname');
+		$preferences[] = array('name'=>'port','default'=>'4800','type'=>'integer','description'=>'HttpQ Port');
+		$preferences[] = array('name'=>'password','default'=>'','type'=>'string','description'=>'HttpQ Password');
 
 		return $preferences;
 
@@ -107,19 +107,15 @@ class AmpacheMpd {
 	/**
 	 * add_songs
 	 * This must take an array of URL's from Ampache
-	 * and then add them to MPD
+	 * and then add them to HttpQ
 	 */
 	function add_songs($songs) { 
-
-		if (is_null($this->_mpd->ClearPLIfStopped())) {
-	                debug_event('mpd_add', 'Error: Unable to clear the MPD playlist ' . $this->_mpd->errStr,'1');
-         	}
 
 		foreach ($songs as $song_id) { 
 			$song = new Song($song_id);
 			$url = $song->get_url(0,1);
-			if (is_null($this->_mpd->PlAdd($url))) { 
-				debug_event('mpd_add','Error: Unable to add $url to MPD ' . $this->_mpd->errStr,'1');
+			if (is_null($this->_httpq->add($song->title,$url))) { 
+				debug_event('httpq_add','Error: Unable to add $url to Httpq','1');
 			}
 
 		} // end foreach
@@ -135,8 +131,8 @@ class AmpacheMpd {
 	function add_url($urls) { 
 
 		foreach ($urls as $url) { 
-			if (is_null($this->_mpd->PlAdd($url))) { 
-				debug_event('mpd_add','Error: Unable to add $url to MPD ' . $this->_mpd->errStr,'1');
+			if (is_null($this->_httpq->add('URL',$url))) { 
+				debug_event('httpq_add','Error: Unable to add $url to Httpq ','1');
 			}
 
 		} // end foreach
@@ -148,7 +144,7 @@ class AmpacheMpd {
 	/**
 	 * delete_songs
 	 * This must take an array of ID's (as passed by get function) from Ampache
-	 * and delete them from MPD
+	 * and delete them from Httpq
 	 */
 	function delete_songs($songs) { 
 
@@ -163,7 +159,7 @@ class AmpacheMpd {
 		 */
 		foreach ($songs as $uid) { 
 
-			if (is_null($this->_mpd->PLRemove($uid))) { $return = false; } 
+			if (is_null($this->_httpq->delete_pos($uid))) { $return = false; } 
 
 		} // foreach of songs
 
@@ -171,14 +167,13 @@ class AmpacheMpd {
 
 	} // delete_songs
 	
-
 	/**
 	 * clear_playlist
-	 * This deletes the entire MPD playlist... nuff said
+	 * This deletes the entire Httpq playlist... nuff said
 	 */
 	function clear_playlist() { 
 
-		if (is_null($this->_mpd->PLClear())) { return false; }
+		if (is_null($this->_httpq->clear())) { return false; }
 
 		return true;
 
@@ -186,24 +181,24 @@ class AmpacheMpd {
 
 	/**
 	 * play
-	 * This just tells MPD to start playing, it does not
+	 * This just tells HttpQ to start playing, it does not
 	 * take any arguments
 	 */
 	function play() { 
 
-		if (is_null($this->_mpd->Play())) { return false; } 
+		if (is_null($this->_httpq->play())) { return false; } 
 		return true;
 
 	} // play
 
 	/**
 	 * stop
-	 * This just tells MPD to stop playing, it does not take
+	 * This just tells HttpQ to stop playing, it does not take
 	 * any arguments
 	 */
 	function stop() { 
 
-		if (is_null($this->_mpd->Stop())) { return false; } 
+		if (is_null($this->_httpq->stop())) { return false; } 
 		return true;
 
 	} // stop
@@ -267,11 +262,10 @@ class AmpacheMpd {
 	 */
 	function pause() { 
 		
-		if (is_null($this->_mpd->Pause())) { return false; } 
+		if (is_null($this->_httpq->pause())) { return false; } 
 		return true;
 
 	} // pause 
-
 
         /**
         * volume
@@ -290,7 +284,7 @@ class AmpacheMpd {
         */
        function loop($state) {
 	
-		if (is_null($this->_mpd->SetRepeat($state))) { return false; }
+		if (is_null($this->_httpq->repeat($state))) { return false; }
        		return true;
 
        } // loop
@@ -302,7 +296,7 @@ class AmpacheMpd {
         */
        function random($onoff) {
 
-               if (is_null($this->_mpd->SetRandom($onoff))) { return false; }
+               if (is_null($this->_httpq->random($onoff))) { return false; }
                return true;
 
        } // random
@@ -327,13 +321,15 @@ class AmpacheMpd {
 	function get_songs() { 
 
 		/* Get the Current Playlist */
-		$playlist = $this->_mpd->playlist;
+		$list = $this->_httpq->get_tracks();
+
+		$songs = explode(":",$list); 
 		
-		foreach ($playlist as $entry) { 
+		foreach ($songs as $key=>$song) { 
 			$data = array();
 
 			/* Required Elements */
-			$data['id'] 	= $entry['Pos'];
+			$data['id'] 	= $key;
 			$data['raw']	= $entry['file'];		
 
 			/* Parse out the song ID and then create the song object */
@@ -361,7 +357,7 @@ class AmpacheMpd {
 
 			/* Optional Elements */
 			$data['link']   = '';
-			$data['track']	= $entry['Pos']+1;
+			$data['track']	= $key+1;
 
 			$results[] = $data;
 
@@ -374,20 +370,18 @@ class AmpacheMpd {
 	/**
 	 * get_status
 	 * This returns bool/int values for features, loop, repeat and any other features
-	 * That this localplay method support
+	 * That this localplay method supports. required function
 	 */
 	function get_status() { 
 
-		$track = $this->_mpd->current_track_id;
-
 		/* Construct the Array */
-		$array['state'] 	= $this->_mpd->state;
-		$array['volume']	= $this->_mpd->volume;
-		$array['repeat']	= $this->_mpd->repeat;
-		$array['random']	= $this->_mpd->random;
-		$array['track']		= $track;
+		$array['state'] 	= $this->_httpq->state();
+		$array['volume']	= $this->_httpq->get_volume();
+		$array['repeat']	= $this->_httpq->get_repeat();
+		$array['random']	= $this->_httpq->get_random();
+		$array['track']		= $this->_httpq->get_now_playing();
 
-		preg_match("/song=(\d+)\&/",$this->_mpd->playlist[$track]['file'],$matches);
+		preg_match("/song=(\d+)\&/",$array['track'],$matches);
 		$song_id = $matches['1'];
 		$song = new Song($song_id);
 		$array['track_title'] 	= $song->title;
@@ -400,20 +394,21 @@ class AmpacheMpd {
 
 	/**
 	 * connect
-	 * This functions creates the connection to MPD and returns
+	 * This functions creates the connection to HttpQ and returns
 	 * a boolean value for the status, to save time this handle
 	 * is stored in this class
 	 */
 	function connect() { 
 		
-		$this->_mpd = new mpd(conf('localplay_mpd_hostname'),conf('localplay_mpd_port'),conf('localplay_mpd_password'));
+		$this->_httpq = new HttpQPlayer(conf('localplay_httpq_hostname'),conf('localplay_httpq_password'),conf('localplay_httpq_port'));
 
-		if ($this->_mpd->connected) { return true; } 
+		// Test our connection by retriving the version
+		if (!is_null($this->_httpq->version())) { return true; } 
 
 		return false;
 
 	} // connect
 	
-} //end of AmpacheMpd
+} //end of AmpacheHttpq
 
 ?>
