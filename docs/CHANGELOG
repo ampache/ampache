@@ -4,6 +4,8 @@
 
 --------------------------------------------------------------------------
   v.3.3.3-Beta3 
+  	- Added 'Best Guess' option to Duplicate Song Disabled that checks
+		the shortest, lowest bitrate, smallest of a duplicate set
   	- Removed unused templates and documents
 	- Added ability to edit artist/albums and flag all songs under them
 		for re-tagging. 

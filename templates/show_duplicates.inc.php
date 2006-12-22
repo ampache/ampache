@@ -23,32 +23,27 @@
 $web_path = conf('web_path');
 ?>
 <?php show_box_top(_('Find Duplicates')); ?>
-<form name="songs" action="<?php echo conf('web_path'); ?>/admin/duplicates.php" method="post" enctype="multipart/form-data" >
+<form name="duplicates" action="<?php echo conf('web_path'); ?>/admin/duplicates.php" method="post" enctype="multipart/form-data" >
 <table cellspacing="0" cellpadding="3" border="0" width="450">
         <tr>
                 <td valign="top"><?php echo _('Search Type'); ?>:</td>
                 <td>
-                        <?php
-
-                        if ($search_type=="title")
-                                $checked = "checked=\"checked\"";
-                        else
-                                $checked = "";
-                        echo "<input type=\"radio\" name=\"search_type\" value=\"title\" ".$checked." />" . _("Title") . "<br />";
-
-                        if ($search_type=="artist_title")
-                                                $checked = "checked=\"checked\"";
-                        else
-                                $checked = "";
-                        echo "<input type=\"radio\" name=\"search_type\" value=\"artist_title\" ".$checked." />" . _("Artist and Title") . "<br />";
-                        if ($search_type=="artist_album_title"OR $search_type=="")
-                                                $checked = "checked=\"checked\"";
-                        else
-                                $checked = "";
-                        echo "<input type=\"radio\" name=\"search_type\" value=\"artist_album_title\"".$checked." />" . _("Artist, Album and Title") . "<br />";
-                        ?>
+		<?php 
+			$name = 'check_' . $_REQUEST['search_type']; 
+			${$name} = ' checked="checked" ';
+		?>
+                <input type="radio" name="search_type" value="title"<?php echo $check_title; ?>/><?php echo _('Title'); ?><br />
+                <input type="radio" name="search_type" value="artist_title"<?php echo $check_artist_title; ?>/><?php echo _('Artist and Title'); ?><br />
+               	<input type="radio" name="search_type" value="artist_album_title"<?php echo $check_artist_album_title; ?>/><?php echo _('Artist, Album and Title'); ?><br />
                 </td>
         </tr>
+	<tr>
+		<td>&nbsp;</td>
+		<td>
+			<?php if ($_REQUEST['auto']) { $auto_check = ' checked="checked"'; } ?>
+			<input type="checkbox" name="auto" value="1" <?php echo $auto_check; ?>/><?php echo _('Select Best Guess'); ?>
+		</td>
+	</tr>
         <tr>
                 <td></td>
                 <td>
