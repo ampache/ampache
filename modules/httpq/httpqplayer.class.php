@@ -54,10 +54,11 @@ class HttpQPlayer {
 	 */  	
   	function add($name, $url) {
 
-  	  	$args["name"] = $name;
-  	  	$args["url"] = str_replace("&","%26",$url);
-		$results = $this->sendCommand("playurl", $args);
-
+  	  	$args['name'] = $name;
+  	  	$args['url'] = str_replace("&","%26",$url);
+		
+		$results = $this->sendCommand('playurl', $args);
+		
 		if ($results == '0') { $results = null; } 
 
 		return $results;
@@ -233,7 +234,7 @@ class HttpQPlayer {
 		if ($results == '0') { $results = null; } 
 		else { 
 			/* Need to make this out of 100 */ 
-			$results = ($results / 255) * 100;
+			$results = round((($results / 255) * 100),2);
 		}
 
 		return $results; 
@@ -277,8 +278,8 @@ class HttpQPlayer {
 		$pos = $this->sendCommand('getlistpos',array()); 
 		
 		// Now get the filename
-		$file = $this->sendCommand('getplaylistfile',array('index'=>$post)); 
-		
+		$file = $this->sendCommand('getplaylistfile',array('index'=>$pos)); 
+
 		return $file; 
 
 	} // get_now_playing
@@ -291,8 +292,8 @@ class HttpQPlayer {
 	function get_tracks() { 
 
 		// Pull a delimited list of all tracks
-		$results = $this->sendCommand('getplaylistfile',array('delim'=>':'));
-
+		$results = $this->sendCommand('getplaylistfile',array('delim'=>'::'));
+		
 		if ($results == '0') { $results = null; } 
 	
 		return $results; 
@@ -331,11 +332,14 @@ class HttpQPlayer {
 		}
   		fclose($fp);
 
-		return $data; 
+		// Explode the results by line break and take 4th line (results)
+		$data = explode("\n",$data); 
+		
+		$result = $data['4'];
+		
+		return $result; 
 
 	} // sendCommand
 
 } // End HttpQPlayer Class
-
-
-?> 
+?>

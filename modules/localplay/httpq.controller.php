@@ -115,7 +115,7 @@ class AmpacheHttpq {
 			$song = new Song($song_id);
 			$url = $song->get_url(0,1);
 			if (is_null($this->_httpq->add($song->title,$url))) { 
-				debug_event('httpq_add','Error: Unable to add $url to Httpq','1');
+				debug_event('httpq_add',"Error: Unable to add $url to Httpq",'1');
 			}
 
 		} // end foreach
@@ -132,7 +132,7 @@ class AmpacheHttpq {
 
 		foreach ($urls as $url) { 
 			if (is_null($this->_httpq->add('URL',$url))) { 
-				debug_event('httpq_add','Error: Unable to add $url to Httpq ','1');
+				debug_event('httpq_add',"Error: Unable to add $url to Httpq ",'1');
 			}
 
 		} // end foreach
@@ -323,28 +323,28 @@ class AmpacheHttpq {
 		/* Get the Current Playlist */
 		$list = $this->_httpq->get_tracks();
 
-		$songs = explode(":",$list); 
+		$songs = explode("::",$list); 
 		
-		foreach ($songs as $key=>$song) { 
+		foreach ($songs as $key=>$entry) { 
 			$data = array();
-
+			
 			/* Required Elements */
 			$data['id'] 	= $key;
-			$data['raw']	= $entry['file'];		
+			$data['raw']	= $entry;		
 
 			/* Parse out the song ID and then create the song object */
-			preg_match("/song=(\d+)\&/",$entry['file'],$matches);
+			preg_match("/song=(\d+)\&/",$entry,$matches);
 
 			/* Attempt to build the new song */
 			$song = new Song($matches['1']);
 			
 			/* If we don't know it, look up by filename */
 			if (!$song->title) { 
-				$filename = sql_escape($entry['file']);
+				$filename = sql_escape($entry);
 				$sql = "SELECT id FROM song WHERE file = '$filename'";
 				$db_results = mysql_query($sql, dbh());
-				if ($results = mysql_fetch_assoc($db_results)) { 
-					$song = new Song($results['id']);
+				if ($r = mysql_fetch_assoc($db_results)) { 
+					$song = new Song($r['id']);
 				}	
 				else { 
 					$song->title = _('Unknown');

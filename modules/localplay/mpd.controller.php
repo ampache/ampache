@@ -347,8 +347,8 @@ class AmpacheMpd {
 				$filename = sql_escape($entry['file']);
 				$sql = "SELECT id FROM song WHERE file = '$filename'";
 				$db_results = mysql_query($sql, dbh());
-				if ($results = mysql_fetch_assoc($db_results)) { 
-					$song = new Song($results['id']);
+				if ($r = mysql_fetch_assoc($db_results)) { 
+					$song = new Song($r['id']);
 				}	
 				else { 
 					$song->title = _('Unknown');
