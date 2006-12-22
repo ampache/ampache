@@ -22,7 +22,6 @@
 $web_path 	= conf('web_path');
 $catalog	= new Catalog(); 
 $catalogs 	= $catalog->get_catalogs();
-$users		= $GLOBALS['user']->get_recent(10);
 
 ?>
 <?php show_box_top(_('Catalogs')); ?>
@@ -82,10 +81,4 @@ $users		= $GLOBALS['user']->get_recent(10);
 	<a href="<?php echo $web_path; ?>/admin/system.php?action=export&amp;export=itunes"><?php echo _('Export To Itunes DB'); ?></a>
 <!--	<a href="<?php echo $web_path; ?>/admin/system.php?action=check_version"><?php echo _('Check for New Version'); ?></a>-->
 </div>
-<?php show_box_bottom(); ?>
-<?php show_box_top(_('User Activity')); ?>
-        <?php require (conf('prefix') . '/templates/show_users_info.inc.php'); ?>
-        <div class="text-action">
-        <a href="<?php echo $web_path; ?>/admin/users.php"><?php echo _('Show All'); ?>...</a>
-        </div>
 <?php show_box_bottom(); ?>

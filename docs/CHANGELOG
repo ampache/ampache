@@ -4,6 +4,7 @@
 
 --------------------------------------------------------------------------
   v.3.3.3-Beta3 
+  	- Removed unused templates and documents
 	- Added ability to edit artist/albums and flag all songs under them
 		for re-tagging. 
 	- Fixed charset of XML documents returned (Thx blueorder)

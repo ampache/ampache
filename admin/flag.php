@@ -266,8 +266,9 @@ switch ($action) {
 	case 'show_flagged':
 		$flag 		= new Flag();
 		$flagged 	= $flag->get_flagged();
-		echo "<span class=\"header1\">" . _('Flagged Records') . "</span>\n";
+		show_box_top(_('Flagged Records')); 
 		require (conf('prefix') . '/templates/show_flagged.inc.php'); 
+		show_box_bottom(); 
 	break;
 	default:
 	break;

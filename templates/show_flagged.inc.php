@@ -5,9 +5,8 @@
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
- modify it under the terms of the GNU General Public License
- as published by the Free Software Foundation; either version 2
- of the License, or (at your option) any later version.
+ modify it under the terms of the GNU General Public License v2
+ as published by the Free Software Foundation.
 
  This program is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -21,7 +20,6 @@
 */
 
 $web_path = conf('web_path');
-
 ?>
 <table class="tabledata" cellspacing="0" cellpadding="0">
 <tr class="table-header">
@@ -50,6 +48,15 @@ $web_path = conf('web_path');
 <?php } if (!count($flagged)) { ?>
 <tr class="<?php echo flip_class(); ?>">
 	<td colspan="4" class="error"><?php echo _('No Records Found'); ?></td>
+</tr>
+<?php } ?>
+<?php if ($total_flagged > count($flagged)) { ?>
+<tr class="<?php echo flip_class(); ?>">
+	<td colspan="4">
+		<a href="<?php echo $web_path; ?>/admin/flag.php?action=show_flagged">
+			<?php echo _('Show All'); ?>...
+		</a>
+	</td>
 </tr>
 <?php } ?>
 </table>

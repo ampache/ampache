@@ -133,9 +133,9 @@ foreach ($song_ids as $song_id) {
 			<?php echo get_user_icon('flag'); ?>
 		</a>
 		<?php if ($GLOBALS['user']->has_access('100')) { ?>
-				| <a href="<?php echo $web_path; ?>/admin/flag.php?action=show_edit_song&amp;song=<?php echo $song->id; ?>">
+				<a href="<?php echo $web_path; ?>/admin/flag.php?action=show_edit_song&amp;song=<?php echo $song->id; ?>">
 					<?php echo get_user_icon('edit'); ?>
-				</a> | 
+				</a>
 				<?php if ($song->enabled) { ?>
 				<a href="<?php echo $web_path; ?>/admin/flag.php?action=disable&amp;song_ids=<?php echo $song->id; ?>">
 					<?php echo get_user_icon('disable'); ?>
@@ -147,12 +147,12 @@ foreach ($song_ids as $song_id) {
 				<?php } //status ?>
 		<?php } //access ?>
 		<?php if ($GLOBALS['user']->prefs['download']) { ?>
-			| <a href="<?php echo $web_path; ?>/download/index.php?action=download&amp;song_id=<?php echo $song->id; ?>&amp;sid=<?php echo scrub_out(session_id()); ?>&amp;fn=<?php echo rawurlencode($song->f_artist_full . " - " . $song->title . "." . $song->type); ?>">
+			<a href="<?php echo $web_path; ?>/download/index.php?action=download&amp;song_id=<?php echo $song->id; ?>&amp;sid=<?php echo scrub_out(session_id()); ?>&amp;fn=<?php echo rawurlencode($song->f_artist_full . " - " . $song->title . "." . $song->type); ?>">
 				<?php echo get_user_icon('download'); ?>	
 			</a>
 		<?php } ?>
 		<?php if ($GLOBALS['user']->prefs['direct_link']) { ?>
-			| <a href="<?php echo scrub_out($song->get_url()); ?>">
+			<a href="<?php echo scrub_out($song->get_url()); ?>">
 				<?php echo get_user_icon('link'); ?>
 			</a>
 		<?php } ?>

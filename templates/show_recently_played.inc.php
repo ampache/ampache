@@ -33,7 +33,11 @@
 	$song->format_song(); 
 ?>
 <tr>
-	<td><?php echo scrub_out($row_user->fullname); ?></td>
+	<td>
+		<a href="<?php echo conf('web_path'); ?>/stats.php?action=user_stats&amp;user_id=<?php echo scrub_out($row_user->id); ?>">
+		<?php echo scrub_out($row_user->fullname); ?>
+		</a>
+	</td>
 	<td><?php echo $song->f_link; ?></td>
 	<td><?php echo $song->f_album_link; ?></td>
 	<td><?php echo $song->f_artist_link; ?></td>

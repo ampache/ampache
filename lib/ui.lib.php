@@ -1316,7 +1316,7 @@ function get_user_icon($name,$hover_name='') {
 
 	} // end if not cached
 
-	$string = "<img style=\"cursor: pointer;\" src=\"$img_url\" border=\"0\" alt=\"$name\" title=\"$name\" $hov_txt/>";
+	$string = "<img style=\"cursor: pointer;\" src=\"$img_url\" border=\"0\" alt=\"" . ucfirst($name) . "\" title=\"" . ucfirst($name) . "\" $hov_txt/>";
 
 	return $string;
 
