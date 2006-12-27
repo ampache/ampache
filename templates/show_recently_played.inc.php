@@ -18,6 +18,10 @@
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
+
+/* Define the time places starting at 0 */
+$time_unit = array('',_('seconds ago'),_('minutes ago'),_('hours ago'),_('days ago'),_('weeks ago'),_('months ago'),_('years ago')); 
+
 ?>
 <?php show_box_top(_('Recently Played')); ?>
 <table>
@@ -26,10 +30,22 @@
 	<td><?php echo _('Song'); ?></td>
 	<td><?php echo _('Album'); ?></td>
 	<td><?php echo _('Artist'); ?></td>
+	<td>&nbsp;</td>
 </tr>
 <?php foreach ($data as $row) { 
 	$row_user = new User($row['user']);
 	$song = new Song($row['object_id']); 
+	$amount = intval(time() - $row['date']); 
+	$time_place = '0';
+
+	while ($amount >= 1) { 
+		$final = $amount; 
+		$time_place++; 
+		$amount = floor($amount/60); 
+	}
+
+	$time_string = $final . ' ' . $time_unit[$time_place];
+
 	$song->format_song(); 
 ?>
 <tr>
@@ -41,6 +57,7 @@
 	<td><?php echo $song->f_link; ?></td>
 	<td><?php echo $song->f_album_link; ?></td>
 	<td><?php echo $song->f_artist_link; ?></td>
+	<td><?php echo $time_string; ?></td>
 </tr>
 <?php } ?>
 </table>
