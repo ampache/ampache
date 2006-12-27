@@ -4,6 +4,7 @@
 
 --------------------------------------------------------------------------
   v.3.3.3-Beta3 
+	- Added ability to mass tag using play selected functionality
 	- Fixed Preferences page, preferences now ordered semi-logically
 	- Fixed MPD controller so it displays track numbers correctly
 	- Added HttpQ Localplay Module. 

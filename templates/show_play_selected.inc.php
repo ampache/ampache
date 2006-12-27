@@ -22,8 +22,9 @@
 $web_path = conf('web_path'); 
 
 ?>
+<form method="post" action="" enctype="multipart/form-data">
 <table border="0" cellpadding="14" cellspacing="0" class="text-box">
-<tr align="left">
+<tr>
 <td>
 	<input class="button" type="button" value="<?php echo _('Play Selected'); ?>" onclick="return SubmitToPage('songs','<?php echo $web_path; ?>/song.php?action=play_selected');" />
 	<?php if (batch_ok()) { ?>
@@ -42,8 +43,8 @@ if (is_object($GLOBALS['playlist'])) { ?>
 </td>
 </tr>
 <?php } else { ?>
-<tr align="center">
-<td colspan="2">
+<tr>
+<td>
 	<?php echo _('Playlist'); ?>: <input type="button" value="<?php echo _('Add to'); ?>" onclick="return SubmitToPage('songs','<?php echo $web_path; ?>/playlist.php?action=add_to');" />
 	<?php  show_playlist_select($_SESSION['data']['playlist_id']); ?>
 	<input class="button" type="button" value="<?php echo _('View'); ?>" onclick="return SubmitToPage('songs','<?php echo $web_path; ?>/playlist.php?action=view');" />
@@ -51,4 +52,19 @@ if (is_object($GLOBALS['playlist'])) { ?>
 </td>
 </tr>
 <?php } ?>
+<?php if ($GLOBALS['user']->has_access('100')) { ?>
+<tr>
+<td>
+	<select name="update_field">
+		<option value="genre"><?php echo _('Genre'); ?></option> 
+		<option value="album"><?php echo _('Album'); ?></option>
+		<option value="artist"><?php echo _('Artist'); ?></option> 
+		<option value="year"><?php echo _('Year'); ?></option> 
+	</select>
+	<input type="textbox" name="update_value" />
+	<input class="button" type="button" value="<?php echo _('Update'); ?>" onclick="return SubmitToPage('songs','<?php echo $web_path; ?>/admin/flag.php?action=mass_update');" />
+</td>
+</tr>
+<?php } ?>
 </table>
+</form>

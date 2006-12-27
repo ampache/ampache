@@ -183,7 +183,7 @@ switch ($action) {
 	break; 
 	/* Done by 'Select' code passes array of song ids */
 	case 'mass_update': 
-		$songs = $_REQUEST['songs'];	
+		$songs = $_REQUEST['song'];	
 	        $catalog = new Catalog();
 		$object = $_REQUEST['update_field']; 
 		$flag = new Flag(); 
@@ -208,13 +208,16 @@ switch ($action) {
 				case 'aritst':
 					$new_song->artist = $catalog->check_artist(revert_string($_REQUEST['update_value'])); 
 				break; 
+				case 'year':
+					$new_song->year	= intval($_REQUEST['update_value']); 
+				break;
 				default: 
 					// Rien a faire 
 				break;
 			} // end switch
 
 	                /* Update this mofo, store an old copy for cleaning */
-	                $song->update_song($song_id,$new_song);
+	                $new_song->update_song($song_id,$new_song);
 
 	                /* Now that it's been updated clean old junk entries */
 	                $cleaned = $catalog->clean_single_song($old_song);
@@ -223,6 +226,8 @@ switch ($action) {
 
 		} // end foreach songs
 
+		// Show a confirmation that this worked
+		show_confirmation(_('Songs Updated'),'',return_referer()); 
 	break; 
 	case 'reject_flag':
 		$flag_id = scrub_in($_REQUEST['flag_id']);
