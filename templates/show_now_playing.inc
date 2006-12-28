@@ -29,18 +29,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 if (count($results)) {
 ?>
-<table class="box" cellspacing="0">
-<tr>
-        <td class="box-left-top"></td>
-        <td class="box-top"></td>
-        <td class="box-right-top"></td>
-</tr>
-<tr>
-        <td class="box-left" rowspan="2"></td>
-        <td class="box-title"><?php echo _('Now Playing'); ?></td>
-        <td class="box-right" rowspan="2"></td>
-</tr>
-<tr><td style="padding-top:3px;">
+<?php show_box_top(_('Now Playing')); ?>
+<table>
 <?php 
 foreach ($results as $item) {
 	$song = $item['song'];
@@ -50,15 +40,12 @@ foreach ($results as $item) {
 	if (!is_object($song)) { continue; }
 	if (!$np_user->fullname) { $np_user->fullname = "Ampache User"; }
 
+	echo '<tr class="np_row">';
 	require(conf('prefix') . '/templates/show_now_playing_row.inc.php');
+	echo '</tr>';
 
 } // end foreach
 ?>
-</td></tr>
-<tr>
-        <td class="box-left-bottom"></td>
-        <td class="box-bottom" style="width:100%;"></td>
-        <td class="box-right-bottom"></td>
-</tr>
 </table>
+<?php show_box_bottom(); ?>
 <?php } // end if count results ?>

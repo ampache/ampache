@@ -46,10 +46,14 @@ function get_themes() {
 			/* Open the theme.cfg.php file */
 			$r = read_config($config_file);
 			$r['path'] = $file;
-			$results[] = $r;
+			$name = $r['name']; 
+			$results[$name] = $r;
 		}
 
 	} // end while directory
+
+	// Sort by the theme name
+	ksort($results); 
 
 	return $results;
 

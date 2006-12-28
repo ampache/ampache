@@ -26,26 +26,22 @@ $album = scrub_out(truncate_with_ellipse($song->f_album_full,'25'));
 $artist = scrub_out(truncate_with_ellipse($song->f_artist_full,'25'));
 
 ?>
-<table class="np_row">
-<tr>
-	<td class="np_cell"><?php echo scrub_out($np_user->fullname); ?></td>
-	<td class="np_cell">
+<td class="np_cell"><?php echo scrub_out($np_user->fullname); ?></td>
+<td class="np_cell">
 	<a title="<?php echo scrub_out($song->title); ?>" href="<?php echo $web_path; ?>/song.php?action=single_song&amp;song_id=<?php echo $song->id; ?>">
 		<?php echo $title; ?>
 	</a>
-	</td>
-	<td class="np_cell">
+</td>
+<td class="np_cell">
 	<a title="<?php echo scrub_out($song->album_full); ?>" href="<?php echo $web_path; ?>/albums.php?action=show&amp;album=<?php echo $song->album; ?>">
 		<?php echo $album; ?></a> /
 	<a title="<?php echo scrub_out($song->artist_full); ?>" href="<?php echo $web_path; ?>/artists.php?action=show&amp;artist=<?php echo $song->artist; ?>">
 		<?php echo $artist; ?>
 	</a>
-	</td>
+</td>
 	<?php if (conf('play_album_art')) { ?>
-	<td class="np_cell">
+<td class="np_cell">
 	<a target="_blank" href="<?php echo $web_path; ?>/albumart.php?id=<?php echo $song->album; ?>&amp;type=popup" onclick="popup_art('<?php echo $web_path; ?>/albumart.php?id=<?php echo $song->album; ?>&amp;type=popup'); return false;">
 	<img align="middle" border="0" src="<?php echo $web_path; ?>/albumart.php?id=<?php echo $song->album; ?>&amp;fast=1&amp;thumb=1" alt="Album Art" height="75" /></a>
-	</td>
-	<?php } // end play album art ?>
-</tr>
-</table>
+</td>
+<?php } // end play album art ?>

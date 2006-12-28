@@ -4,6 +4,8 @@
 
 --------------------------------------------------------------------------
   v.3.3.3-Beta3 
+	- Fixed sorting of Themes, now sorted by Alpha of theme name
+	- Fixed long standing Now Playing display in Classic Theme
 	- Fixed Now Playing to account for Windows Media Player 11s 
 		3 HTTP Requests per song stupidity
 	- Added ability to mass tag using play selected functionality
