@@ -5,9 +5,8 @@
  All Rights Reserved
 
  This program is free software; you can redistribute it and/or
- modify it under the terms of the GNU General Public License
- as published by the Free Software Foundation; either version 2
- of the License, or (at your option) any later version.
+ modify it under the terms of the GNU General Public License v2
+ as published by the Free Software Foundation.
 
  This program is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -20,10 +19,11 @@
 
 */
 
-/*!
-	@header Album Class
-*/
-
+/**
+ * Album Class
+ * This is the class responsible for handling the Album object
+ * it is related to the album table in the database.
+ */
 class Album {
 
 	/* Variables from DB */
@@ -32,6 +32,10 @@ class Album {
 	var $year;
 	var $prefix;
 
+	/* Art Related Fields */
+	var $art;
+	var $art_mime; 
+
 	/*!
 		@function Album
 		@discussion Album class, for modifing a song.
@@ -39,51 +43,53 @@ class Album {
 	 */
 	function Album($album_id = 0) {
 
-		/* If we have passed an id then do something */
-		if ($album_id) { 
+		if (!$album_id) { return false; } 
 
-			/* Assign id for use in get_info() */
-			$this->id = intval($album_id);
+		/* Assign id for use in get_info() */
+		$this->id = $album_id;
 
-			/* Get the information from the db */
-			if ($info = $this->get_info()) {
+		/* Get the information from the db */
+		if ($info = $this->_get_info()) {
+			$this->name 		= trim($info['prefix'] . " " . $info['album_name']);
+			$this->songs		= $info['song_count'];
+			$this->artist_count	= $info['artist_count'];
+			$this->year		= $info['year'];
+			$this->artist		= trim($info['artist_prefix'] . " " . $info['artist_name']);
+			$this->artist_id	= $info['art_id'];
+			$this->album		= $info['album_name'];
+			$this->has_art		= $info['has_art'];
+			$this->prefix 		= $info['prefix'];
+		} // if info
 
-				/* Assign Vars */
-				$this->name 		= trim($info->prefix . " " . $info->album_name);
-				$this->songs		= $info->song_count;
-				$this->artist_count	= $info->artist_count;
-				$this->year		= $info->year;
-				$this->artist		= trim($info->artist_prefix . " " . $info->artist_name);
-				$this->artist_id	= $info->art_id;
-				$this->album		= $info->album_name;
-				
-				$this->prefix 	= $info->prefix;
-			} // if info
-
-		} // if album_id
+		return true; 
 
 	} //constructor
-
 
 	/*!
 		@function get_info
 		@discussion get's the vars for $this out of the database 
 		@param $this->id	Taken from the object
 	*/
-	function get_info() {
+	function _get_info() {
 
+		$this->id = intval($this->id); 
+	
 		/* Grab the basic information from the catalog and return it */
 		$sql = "SELECT COUNT(DISTINCT(song.artist)) as artist_count,album.prefix,album.year,album.name AS album_name,COUNT(song.id) AS song_count," .
-			"artist.name AS artist_name,artist.id AS art_id,artist.prefix AS artist_prefix ".
+			"artist.name AS artist_name,artist.id AS art_id,artist.prefix AS artist_prefix,album.art AS has_art ".
 			"FROM song,artist,album WHERE album.id='$this->id' AND song.album=album.id AND song.artist=artist.id GROUP BY song.album";
-		
+
 		$db_results = mysql_query($sql, dbh());
 
-		$results = mysql_fetch_object($db_results);
+		$results = mysql_fetch_assoc($db_results);
+
+		// If there is art then set it to 1, if not set it to 0, we don't want to cary
+		// around the full blob with every object because it can be pretty big
+		$results['has_art'] = strlen($results['has_art']) ? '1' : '0'; 
 
 		return $results;
 
-	} //get_info
+	} // _get_info
 
 	/*!
 		@function get_songs
@@ -131,12 +137,12 @@ class Album {
 	} // get_song_ids
 
 	/**
-	 * format_album
-	 * reformats this object with f_name, f_songs and f_artist 
-	 * that contain links etc...
-	 * //FIXME: Rename to format() so that it can be called more dynamicly between object types
+	 * format
+	 * This is the format function for this object. It sets cleaned up
+	 * album information with the base required
+	 * f_link, f_name
 	 */
-	function format_album() { 
+	function format() { 
 
 	        $web_path = conf('web_path');
 
@@ -157,21 +163,36 @@ class Album {
 			$this->year = "N/A";
 		}
 
+	} // format
+
+	/**
+	 * format_album
+	 * DEPRECIATED DO NOT USE!
+	 */
+	function format_album() { 
+	
+		// Call the real function 
+		$this->format(); 
+
 	} // format_album
 
 	/**
 	 * get_art
-	 * get art wrapper function
+	 * This function should be called for gathering and returning Album Art
+	 * By default it ignores the DB and looks at the current gathering preferences
+	 * as defined by the config file and attempts to find the album art. If the 
+	 * param FAST is passed then it will only check the database, if no art is
+	 * found it return false. This only return the first art found and should
+	 * not be used for the advanced album art finding functions, but for the 
+	 * catalog
 	 */
 	function get_art($fast = 0) { 
 
-		/* Check DB first */
-		if ($image = $this->get_db_art()) { 
-			return $image;
-		}
-	
-		/* Stop here if we are doing the fast art */
-		if ($fast) { return false; }
+		// If we are doing fast then only return
+		// what's in the database 
+		if ($fast) { 
+			return $this->get_db_art(); 
+		} 
 
 		/* Create Base Vars */
 		$album_art_order = array();

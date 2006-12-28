@@ -22,7 +22,6 @@
 $web_path = conf('web_path'); 
 
 ?>
-<form method="post" action="" enctype="multipart/form-data">
 <table border="0" cellpadding="14" cellspacing="0" class="text-box">
 <tr>
 <td>
@@ -67,4 +66,3 @@ if (is_object($GLOBALS['playlist'])) { ?>
 </tr>
 <?php } ?>
 </table>
-</form>

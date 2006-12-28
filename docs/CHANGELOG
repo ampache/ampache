@@ -4,6 +4,8 @@
 
 --------------------------------------------------------------------------
   v.3.3.3-Beta3 
+	- Fixed Now Playing to account for Windows Media Player 11s 
+		3 HTTP Requests per song stupidity
 	- Added ability to mass tag using play selected functionality
 	- Fixed Preferences page, preferences now ordered semi-logically
 	- Fixed MPD controller so it displays track numbers correctly

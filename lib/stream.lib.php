@@ -52,6 +52,9 @@ function delete_now_playing($insert_id) {
  */
 function gc_now_playing() { 
 
+	/* Account for WMP11's Initial Streaming */
+	if (strstr($_SERVER['HTTP_USER_AGENT'],"WMFSDK/11")) { return false; } 
+
         $time 		= time();
         $expire 	= $time - 3200;  // 86400 seconds = 1 day
 	$session_id	= sql_escape($_REQUEST['sid']);
@@ -79,6 +82,9 @@ function insert_now_playing($song_id,$uid,$song_length) {
 
         /* Windows Media Player is evil and it makes multiple requests per song */
         if (stristr($user_agent,"Windows-Media-Player")) { return false; }
+
+	/* Check for Windows Media Player 11 */
+	if (strstr($user_agent,"WMFSDK/11")) { return false; } 
 
         /* Set the Expire Time */
 

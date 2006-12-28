@@ -56,7 +56,7 @@ function get_songs_from_type($type,$results,$artist_id='') {
 
 	$type = sql_escape($type); 
 
-	$sql = "SELECT id FROM song WHERE ";
+	$sql = "SELECT id FROM song WHERE (";
 
 	foreach ($results as $value) { 
 		$value = sql_escape($value); 
@@ -64,9 +64,9 @@ function get_songs_from_type($type,$results,$artist_id='') {
 	}
 
 	// Run the long query
-	$sql = rtrim($sql,'OR '); 
+	$sql = rtrim($sql,'OR ') . ')'; 
 	$sql .= " ORDER BY `track`";
-
+	
 	$db_results = mysql_query($sql,dbh()); 
 
 	while ($r = mysql_fetch_assoc($db_results)) { 

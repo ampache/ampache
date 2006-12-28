@@ -702,8 +702,8 @@ function get_newest ($type = 'artist') {
                 }
                 elseif ( $type == 'album' ) {
                         $album = new Album($item[0]);
-                        $album->format_album();
-                        $items[] = "<li>" . $album->f_name . "</li>";
+                        $album->format();
+                        $items[] = "<li>$album->f_link</li>";
                 }
         }
         return $items;
