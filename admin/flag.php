@@ -188,6 +188,22 @@ switch ($action) {
 		$object = $_REQUEST['update_field']; 
 		$flag = new Flag(); 
 
+		/* If this is an album we need to pull the songs */
+		if ($_REQUEST['type'] == 'album') { 
+
+			// Define the results array 
+			$results = array(); 
+
+			foreach ($songs as $album_id) { 
+				$album = new Album($album_id); 
+				$results = array_merge($results,$album->get_song_ids()); 
+			} // end foreach albums
+
+			// Re-assign the variable... HACK ALERT :( 
+			$songs = $results; 
+
+		} // is album  
+
 		/* Foreach the songs we need to update */
 		foreach ($songs as $song_id) { 
 
