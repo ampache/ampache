@@ -58,8 +58,8 @@ switch ($_REQUEST['type']) {
 	default: 
 		$album = new Album($_REQUEST['id']);
 
-		// Check db first
-		$r = $album->get_art($_REQUEST['fast']);
+		// Attempt to pull art from the database
+		$r = $album->get_art();
 
 		if (isset($r->art)) {
 		    $art = $r->art;

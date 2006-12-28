@@ -88,8 +88,16 @@ while ($page <= $pages) {
 ksort($page_data['up']);
 ksort($page_data['down']);
 
-/* Take the script name and passed action and setup the next action */
+/* Detect the current script, this take a little work because we have to 
+ * account for FastCGI 
+ */
 preg_match("/.*\/(.+\.php)$/", $_SERVER['SCRIPT_NAME'], $matches);
+// Must be running Fast CGI or something similar
+if (!isset($matches['1'])) { 
+	// Try PHP_SELF
+	preg_match("/.*\/(.+\.php)$/",$_SERVER['PHP_SELF'],$matches); 
+}
+
 $action = "action=" . scrub_in($_REQUEST['action']);
 $script = conf('web_path') . "/" . $admin_menu . $matches[1];
 

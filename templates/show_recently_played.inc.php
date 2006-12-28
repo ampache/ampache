@@ -35,7 +35,7 @@ $time_unit = array('',_('seconds ago'),_('minutes ago'),_('hours ago'),_('days a
 <?php foreach ($data as $row) { 
 	$row_user = new User($row['user']);
 	$song = new Song($row['object_id']); 
-	$amount = intval(time() - $row['date']); 
+	$amount = intval(time() - $row['date']+2); 
 	$time_place = '0';
 
 	while ($amount >= 1) { 

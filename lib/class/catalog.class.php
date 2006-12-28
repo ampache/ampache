@@ -461,29 +461,25 @@ class Catalog {
 		// Run through them an get the art!
 		foreach ($albums as $album) { 
 			flush();
-			if ($debug) { echo "&nbsp;&nbsp;&nbsp;&nbsp;" . $album->name . " -- "; }
+			if (conf('debug')) { 
+				debug_event('gather_art','Gathering art for ' . $album->name,'5'); 
+			}
+			
+			// Define the options we want to use for the find art function
+			$options = array(
+				'album_name' 	=> $album->name,
+				'artist' 	=> $album->artist,
+				'keyword' 	=> $album->artist . ' ' . $album->name 
+				); 
 
-			if ($methods['id3']) { 
-				$found = $album->get_id3_art(); 
-				if ($found && $debug) { echo _("Found in ID3") . "<br />\n"; }
-			}
-			if ($methods['amazon'] && !$found) { 
-				$found = $album->get_amazon_art(); 	
-				if ($found && $debug) { echo _("Found on Amazon") . "<br />\n"; }
-			}
-			if ($methods['folder'] && !$found) { 
-				$found = $album->get_folder_art(); 
-				if ($found && $debug) { echo _("Found in Folder") . "<br />\n"; }
-			}
-			if (count($methods) == '0' && !$found) { 
-				$found = $album->get_art();
-				if ($found && $debug) { echo _("Found") . "<br />\n"; }
-			} 
-	
-			if (!$found && $debug) { echo "<font class=\"error\">" . _("Not Found") . "</font><br />\n"; }
-			
+			// Return results
+			$results = $album->find_art($options,1); 
+
+			// Pull the string representation from the source
+			$image = get_image_from_source($results['0']);  
+			$album->insert_art($image,$results['0']['mime']); 
+
 			if ($found) { $art_found++; }	
-			
 
 			/* Stupid little cutesie thing */
                         $search_count++;
@@ -1635,21 +1631,23 @@ class Catalog {
 					$album_id = $song->album;
 					if ($info['change']) {
 						echo "<dl style=\"list-style-type:none;\">\n\t<li>";
-						echo "<b>$song->file " . _("Updated") . "</b>\n";
+						echo "<b>$song->file " . _('Updated') . "</b>\n";
 						echo $info['text'];
-					/* If we aren't doing a fast update re-gather album art */
-						if ($gather_type != 'fast_update' AND !isset($searched_albums[$album_id])) { 
-							$album = new Album($song->album);
-							$searched_albums[$album_id] = 1;
-							$found = $album->get_art();
-							unset($album);
-							if ($found) { $is_found = _(" FOUND"); }
+						$album = new Album($song->album);
+
+						if (!$album->has_art) { 
+							$found = $album->find_art($options,1);
+							if (count($found)) {
+								$image = get_image_from_source($found['0']); 
+								$album->insert_art($image,$found['mime']); 
+								$is_found = _(' FOUND');
+							} 
 							echo "<br /><b>" . _('Searching for new Album Art') . ". . .$is_found</b><br />\n";
 							unset($found,$is_found);
-						}
-						elseif (isset($searched_albums[$album_id])) { 
+						} 
+						else { 
 							echo "<br /><b>" . _('Album Art Already Found') . ". . .</b><br />\n";
-						}
+						} 
 						echo "\t</li>\n</dl>\n<hr align=\"left\" width=\"50%\" />\n";
 						flush();
 						$total_updated++;

@@ -36,6 +36,9 @@ class Album {
 	var $art;
 	var $art_mime; 
 
+	// cached information
+	var $_songs=array(); 
+
 	/*!
 		@function Album
 		@discussion Album class, for modifing a song.
@@ -178,24 +181,29 @@ class Album {
 
 	/**
 	 * get_art
-	 * This function should be called for gathering and returning Album Art
-	 * By default it ignores the DB and looks at the current gathering preferences
-	 * as defined by the config file and attempts to find the album art. If the 
-	 * param FAST is passed then it will only check the database, if no art is
-	 * found it return false. This only return the first art found and should
-	 * not be used for the advanced album art finding functions, but for the 
-	 * catalog
+	 * This function only pulls art from the database, nothing else
+	 * It should not be called when trying to find new art
 	 */
-	function get_art($fast = 0) { 
+	function get_art() { 
 
-		// If we are doing fast then only return
-		// what's in the database 
-		if ($fast) { 
-			return $this->get_db_art(); 
-		} 
+		return $this->get_db_art(); 
+
+	} // get_art
+
+	/**
+	 * find_art
+	 * This function searches for album art using all configured methods
+	 * for the current album. There is an optional 'limit' passed that will
+	 * gather up to the specified number of possible album covers.
+	 * There is also an optional array of options the possible options are 
+	 * ['keyword'] 		= STRING
+	 * ['artist']  		= STRING
+	 * ['album_name']	= STRING
+	 */
+	function find_art($options=array(),$limit=null) { 
 
 		/* Create Base Vars */
-		$album_art_order = array();
+		$results = array(); 
 
 		/* Attempt to retrive the album art order */
 		$config_value = conf('album_art_order');
@@ -203,80 +211,106 @@ class Album {
 		
 		/* If it's not set */
 		if (empty($config_value)) { 
-			$album_art_order = array('id3','folder','amazon');
+			// They don't want art!
+			return false; 
 		}
 		elseif (!is_array($config_value)) { 
-			array_push($album_art_order,$config_value);
-		}
-		else { 
-			$album_art_order = array_merge($album_art_order, conf('album_art_order'));
+			$config_value = array($config_value); 
 		}
 		
-		foreach ($album_art_order AS $method) { 
+		foreach ($config_value AS $method) { 
 		
 			$method_name = "get_" . $method . "_art";
 			
 			if (in_array($method_name,$class_methods)) { 
-				if ($this->{$method_name}()) {
-					return $this->get_db_art();
-				} // if method finds the art
+				// Some of these take options!
+				switch ($method_name) { 
+					case 'get_amazon_art':
+						$data = $this->{$method_name}($options['keyword']); 
+					break;
+					case 'get_id3_art':
+						$data = $this->{$method_name}($limit); 
+					break; 
+					default:
+						$data = $this->{$method_name}(); 
+					break; 
+				} 
+
+				// Add the results we got to the current set
+				$total_results += count($data); 
+				$results = array_merge($results,$data); 
+
+				if ($total_results > $limit) { 
+					return $results;
+				}
+
 			} // if the method exists
 
 		} // end foreach
 
-		return false;
+		return $results; 
 		
-	} // get_art
+	} // find_art
 
 	/*!
 		@function get_id3_art
 		@discussion looks for art from the id3 tags
 	*/
-	function get_id3_art() { 
+	function get_id3_art($limit='') { 
 
-		$songs = $this->get_songs();
+		// grab the songs and define our results
+		if (!count($this->_songs)) { 
+			$this->_songs = $this->get_songs();	
+		} 
+		$data = array(); 
 
 		// Foreach songs in this album
-		foreach ($songs as $song) {
+		foreach ($this->_songs as $song) {
+
 			// If we find a good one, stop looking
 		        $getID3 = new getID3();
 		        $id3 = $getID3->analyze($song->file);
 
 			if ($id3['format_name'] == "WMA") { 
 				$image = $id3['asf']['extended_content_description_object']['content_descriptors']['13'];
+				$data[] = array('raw'=>$image['data'],'mime'=>$image['mime']);
 			}
-			else {
-				$image = $id3['id3v2']['APIC']['0'];
+			elseif (isset($id3['id3v2']['APIC'])) { 
+				// Foreach incase they have more then one 
+				foreach ($id3['id3v2']['APIC'] as $image) { 
+					$data[] = array('raw'=>$image['data'],'mime'=>$image['mime']);
+				} 
 			}
-		        if ($image) {
-		                $art = $image['data'];
-		                $mime = $image['mime'];
 
-		                // Stick it in the db for next time
-				$this->insert_art($art,$mime);
-	
-				return true;
-			} // end if image
+			if (!empty($limit) && $limit < count($data)) { 
+				return $data; 
+			}
+			
 		} // end foreach
 
-		return false;
+		return $data;
 
 	} // get_id3_art
 
-	/*!
-		@function get_folder_art()
-		@discussion returns the album art from the folder of the mp3s
-	*/
-	function get_folder_art() { 
+	/**
+	 * get_folder_art()
+	 * returns the album art from the folder of the audio files
+	 * If a limit is passed or the preferred filename is found the current results set
+	 * is returned
+	 */
+	function get_folder_art($limit='') { 
 
-		$songs = $this->get_songs();
+		if (!count($this->_songs)) { 
+			$this->_songs = $this->get_songs();
+		} 
+		$data = array(); 
 
 		/* See if we are looking for a specific filename */
 		$preferred_filename = conf('album_art_preferred_filename');
 		
 		/* Thanks to dromio for origional code */
 		/* Added search for any .jpg, png or .gif - Vollmer */
-		foreach($songs as $song) { 
+		foreach($this->_songs as $song) { 
 			$dir = dirname($song->file);
 
 			/* Open up the directory */
@@ -295,46 +329,33 @@ class Album {
 				if ($extension == "jpg" || $extension == "gif" || $extension == "png" || $extension == "jp2") { 
 				
 					if ($file == $preferred_filename) { 
-						$found = 1;
-						$album_art_filename = array('file' => $file, 'ext' => $extension);
-						break;
-					}
-					elseif (!$preferred_filename) { 
-						$found = 1;
-						$album_art_filename = array('file' => $file, 'ext' => $extension);
-						break;
+						// If we found the preferred filename we're done, wipe out previous results
+						$data = array(array('file' => $file, 'mime' => 'image/' . $extension));
+						return $data;
 					}
 					else {
-						$found = 1;
-						$album_art_filename = array('file' => $file, 'ext' => $extension);
+						$data[] = array('file' => $file, 'mime' => 'image/' . $extension);
 					}
 				
 				} // end if it's an image
 				
 			} // end while reading dir
 			@closedir($handle);
+			
+			if (!empty($limit) && $limit < count($data)) { 
+				return $data; 
+			} 
 
-			if ($found) { 
-				$handle = fopen($dir."/".$album_art_filename['file'], "rb");
-				$mime = "image/" . $album_art_filename['ext'];
-				$art = '';
-	               		while(!feof($handle)) {
-					$art .= fread($handle, 1024);
-				}
-				fclose($handle);
-				$this->insert_art($art,$mime);
-	                	return true; 
-			} // if found
 		} // end foreach songs
 
-		return false;
+		return $data;
 
 	} // get_folder_art()
 
-	/*!
-		@function get_db_art()
-		@discussion returns the album art from the db
-	*/
+	/**
+	 * get_db_art()
+	 * returns the album art from the db along with the mime type
+	 */
 	function get_db_art() {
 
 		$sql = "SELECT art,art_mime FROM album WHERE id='$this->id' AND art_mime IS NOT NULL";
@@ -345,28 +366,103 @@ class Album {
 		return $results;
 
 	} // get_db_art
+
+	/**
+	 * get_amazon_art
+	 * This takes keywords and performs a search of the Amazon website
+	 * for album art. It returns an array of found objects with mime/url keys
+	 */
+	function get_amazon_art($keywords = '') {
+
+		$images 	= array();
+		$final_results 	= array();
+		$possible_keys = array("LargeImage","MediumImage","SmallImage");
 	
+		// Prevent the script from timing out
+		set_time_limit(0);
 
-	/*!
-		@function get_amazon_art
-		@discussion searches amazon for the 
-			album art
-	*/
-	function get_amazon_art() { 
+		if (empty($keywords)) { 		
+			$keywords = $this->name;
+			/* If this isn't a various album combine with artist name */
+			if ($this->artist_count == '1') { $keywords .= ' ' . $this->artist; }
+		}
+			
+		/* Create Base Vars */
+		$amazon_base_urls = array();
 
-		$results = $this->find_art();
+		/* Attempt to retrive the album art order */
+		$config_value = conf('amazon_base_urls');
+               
+		/* If it's not set */
+		if (empty($config_value)) { 
+			$amazon_base_urls = array('http://webservices.amazon.com');
+		}
+		elseif (!is_array($config_value)) { 
+	        	array_push($amazon_base_urls,$config_value);
+		}
+		else { 
+			$amazon_base_urls = array_merge($amazon_base_urls, conf('amazon_base_urls'));
+		}
 
-		if (count($results) < 1) { return false; }
+	       /* Foreach through the base urls that we should check */
+               foreach ($amazon_base_urls AS $amazon_base) { 
 
-		$snoopy = new Snoopy();
-		$snoopy->fetch($results['0']['url']);
-		$data = $snoopy->results;
+		    	// Create the Search Object
+	        	$amazon = new AmazonSearch(conf('amazon_developer_key'), $amazon_base);
+			$search_results = array();
 
-		$this->insert_art($data,$results['0']['mime']);
+			/* Setup the needed variables */
+			$max_pages_to_search = max(conf('max_amazon_results_pages'),$amazon->_default_results_pages);
+			$pages_to_search = $max_pages_to_search; //init to max until we know better.
+			do {
+				$search_results = array_merge($search_results, $amazon->search(array('artist' => $artist, 'album' => $albumname, 'keywords' => $keywords)));
+				$pages_to_search = min($max_pages_to_search, $amazon->_maxPage);
+				debug_event('amazon-xml', "Searched results page " . ($amazon->_currentPage+1) . "/" . $pages_to_search,'5');
+				$amazon->_currentPage++;
+			} while($amazon->_currentPage < $pages_to_search);
+			
+			// Only do the second search if the first actually returns something
+			if (count($search_results)) { 
+				$final_results = $amazon->lookup($search_results);
+			}
+		
+			/* Log this if we're doin debug */
+			debug_event('amazon-xml',"Searched using $keywords with " . conf('amazon_developer_key') . " as key " . count($final_results) . " results found",'5');
+		} // end foreach
 
-		return true;
+		/* Foreach through what we've found */
+		foreach ($final_results as $result) { 
 
-	} // get_amazon_art
+			/* Recurse through the images found */
+			foreach ($possible_keys as $key) { 
+				if (strlen($result[$key])) { 
+					break;
+				} 
+			} // foreach
+
+			// Rudimentary image type detection, only JPG and GIF allowed.
+			if (substr($result[$key], -4 == ".jpg")) {
+				$mime = "image/jpg";
+			}
+			elseif (substr($result[$key], -4 == ".gif")) { 
+				$mime = "image/gif";
+			}
+			else {
+				/* Just go to the next result */
+				continue;
+			}
+
+	                $data['url'] 	= $result[$key];
+			$data['mime']	= $mime;
+			
+			$images[] = $data;
+
+                } // if we've got something
+	
+		return $images;
+
+	} // get_amazon_art() 
+
 
 	/*!
 		@function get_random_songs
@@ -431,113 +527,6 @@ class Album {
 
 	} // insert_art
 
-	/*!
-		@function find_art
-		@discussion searches amazon or a url
-			for the album art
-		@patch Added Keyword Support (csammis)
-		@patch Added Variable Root Amazon Search (nhorloc)
-	*/
-	function find_art($coverurl = '', $keywords = '') {
-
-		$images 	= array();
-		$final_results 	= array();
-		$possible_keys = array("LargeImage","MediumImage","SmallImage");
-	
-		// Prevent the script from timing out
-		set_time_limit(0);
-
-		// No coverurl specified search amazon
-	        if (empty($coverurl)) { 
-
-		if (empty($keywords)) { 		
-			$keywords = $this->name;
-			/* If this isn't a various album combine with artist name */
-			if ($this->artist_count == '1') { $keywords .= ' ' . $this->artist; }
-		}
-			
-		/* Create Base Vars */
-		$amazon_base_urls = array();
-
-		/* Attempt to retrive the album art order */
-		$config_value = conf('amazon_base_urls');
-               
-		/* If it's not set */
-		if (empty($config_value)) { 
-			$amazon_base_urls = array('http://webservices.amazon.com');
-		}
-		elseif (!is_array($config_value)) { 
-	        	array_push($amazon_base_urls,$config_value);
-		}
-		else { 
-			$amazon_base_urls = array_merge($amazon_base_urls, conf('amazon_base_urls'));
-		}
-
-	       /* Foreach through the base urls that we should check */
-               foreach ($amazon_base_urls AS $amazon_base) { 
-
-		    	// Create the Search Object
-	        	$amazon = new AmazonSearch(conf('amazon_developer_key'), $amazon_base);
-			$search_results = array();
-
-			/* Setup the needed variables */
-			$max_pages_to_search = max(conf('max_amazon_results_pages'),$amazon->_default_results_pages);
-			$pages_to_search = $max_pages_to_search; //init to max until we know better.
-			do {
-				$search_results = array_merge($search_results, $amazon->search(array('artist' => $artist, 'album' => $albumname, 'keywords' => $keywords)));
-				$pages_to_search = min($max_pages_to_search, $amazon->_maxPage);
-				debug_event('amazon-xml', "Searched results page " . ($amazon->_currentPage+1) . "/" . $pages_to_search,'5');
-				$amazon->_currentPage++;
-			} while($amazon->_currentPage < $pages_to_search);
-			
-			// Only do the second search if the first actually returns something
-			if (count($search_results)) { 
-				$final_results = $amazon->lookup($search_results);
-			}
-		
-			/* Log this if we're doin debug */
-			debug_event('amazon-xml',"Searched using $keywords with " . conf('amazon_developer_key') . " as key " . count($final_results) . " results found",'5');
-		} // end foreach
-		} // if no cover
-		
-		// If we've specified a coverurl, create a fake Amazon array with it
-		else {
-			$final_results = array_merge($final_results, array(array('LargeImage' => $coverurl)));
-		}
-		
-		/* Foreach through what we've found */
-		foreach ($final_results as $result) { 
-
-			/* Recurse through the images found */
-			foreach ($possible_keys as $key) { 
-				if (strlen($result[$key])) { 
-					break;
-				} 
-			} // foreach
-
-			// Rudimentary image type detection, only JPG and GIF allowed.
-			if (substr($result[$key], -4 == ".jpg")) {
-				$mime = "image/jpg";
-			}
-			elseif (substr($result[$key], -4 == ".gif")) { 
-				$mime = "image/gif";
-			}
-			else {
-				/* Just go to the next result */
-				continue;
-			}
-
-	                $data['url'] 	= $result[$key];
-			$data['mime']	= $mime;
-			
-			$images[] = $data;
-
-                } // if we've got something
-		
-		/* Default to false */
-		return $images;
-
-	} // find_art 
 
 } //end of album class
 

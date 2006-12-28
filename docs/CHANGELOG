@@ -4,6 +4,9 @@
 
 --------------------------------------------------------------------------
   v.3.3.3-Beta3 
+	- Rewrote Album Art collection to correct some seriou logic flaws
+	- Added potential fix for FastCGI installations
+	- Updated Snoopy to 1.2.3 (from manually patched 1.2.1) 
 	- Fixed sorting of Themes, now sorted by Alpha of theme name
 	- Fixed long standing Now Playing display in Classic Theme
 	- Fixed Now Playing to account for Windows Media Player 11s 
