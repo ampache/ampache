@@ -175,7 +175,7 @@ class Stream {
 			$song_url = $song->get_url();
 			echo "File" . $i . "=$song_url\n";
 			echo "Title" . $i . "=$song_name\n";
-			echo "Length" . $i . "=-1\n";
+			echo "Length" . $i . "=$song->time\n";
 		} // end foreach songs	
 
 		/* Foreach Additional URLs */
