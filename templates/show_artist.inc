@@ -49,12 +49,12 @@ foreach ($albums as $album) {
 		<input name="song[]" value="<?php echo $id; ?>" type="checkbox" />
 		</td>
 		<td height="87">
-		<a href="<?php echo $web_path; ?>/albums.php?album=<?php echo $id; ?>&amp;artist=<?php echo $artist->id; ?>">
+		<a href="<?php echo $web_path; ?>/albums.php?action=show&amp;album=<?php echo $id; ?>&amp;artist=<?php echo $artist->id; ?>">
 		<img border="0" src="<?php echo $web_path; ?>/image.php?id=<?php echo $id; ?>&amp;thumb=1&amp;sid=<?php echo session_id(); ?>" alt="<?php echo scrub_out($album_name); ?>" title="<?php echo scrub_out($album_name); ?>" height="75" width="75" />
 		</a>
 		</td>
 		<td>
-		<a href="<?php echo $web_path; ?>/albums.php?album=<?php echo $id; ?>&amp;artist=<?php echo $artist->id; ?>"><?php echo $album_name; ?></a>
+		<a href="<?php echo $web_path; ?>/albums.php?action=show&amp;album=<?php echo $id; ?>&amp;artist=<?php echo $artist->id; ?>"><?php echo $album_name; ?></a>
 		</td>
 		<td><?php echo $album->year; ?></td>
 		<td><?php echo $count; ?></td>
