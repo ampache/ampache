@@ -216,7 +216,7 @@ switch ($type) {
                         $text = "$artist - $song->f_title played by $r->user";
                         echo "<item> \n";
                         echo " <title><![CDATA[$text]]></title> \n";
-			echo " <image>$web_path/albumart.php?id=$song->album</image>\n";
+			echo " <image>$web_path/image.php?id=$song->album</image>\n";
                         echo " <link>$web_path/albums.php?action=show&amp;album=$song->album</link>\n";
                         echo " <description><![CDATA[$song->f_title @ $album is played by $r->user]]></description>\n";
                         echo " <pubDate>$today</pubDate>\n";

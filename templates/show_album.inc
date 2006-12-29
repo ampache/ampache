@@ -36,9 +36,9 @@ $title		= scrub_out($album->name) . ' -- ' . $album->f_artist;
 	<div style="float:left;display:table-cell;width:140px;">
 	<?php 
         if ($album_name != "Unknown (Orphaned)") {
-		$aa_url = $web_path . "/albumart.php?id=" . $album->id . "&amp;type=popup";
+		$aa_url = $web_path . "/image.php?id=" . $album->id . "&amp;type=popup&amp;sid=" . session_id();
 		echo "<a target=\"_blank\" href=\"$aa_url\" onclick=\"popup_art('$aa_url'); return false;\">";
-		echo "<img border=\"0\" src=\"" . $web_path . "/albumart.php?id=" . $album->id . "&amp;thumb=2\" alt=\"Album Art\" height=\"128\" />";
+		echo "<img border=\"0\" src=\"" . $web_path . "/image.php?id=" . $album->id . "&amp;thumb=2&amp;sid=" . session_id() . "\" alt=\"Album Art\" height=\"128\" />";
 		echo "</a>\n";
         }
 	?>

@@ -345,52 +345,6 @@ function get_now_playing($filter='') {
 
 } // get_now_playing
 
-/**
- *  get_all_ratings() - Implemented by SoundOfEmotion
- *
- *  Concept design to show a user ALL of his ratings, and sort by
- *  highest to lowest (will be sortable by multiple fields later)
- *
- */
-
-function get_all_ratings($rate_user,$sort_by) {;
-
-	$sql       = "SELECT * FROM ratings WHERE user='$rate_user' AND object_type='$sort_by' ORDER BY user_rating DESC";
-	$db_result = mysql_query( $sql, dbh() );
-
-	while($row = mysql_fetch_assoc($db_result))
-	{
-		$type=$row['object_type'];
-		$id=$row['object_id'];
-		$rating=$row['user_rating'];
-		$art_image="<img border=\"0\" src=\"" . conf('web_path') . "/albumart.php?id=" . $id . "\" alt=\"Album Art\" height=\"100\" />";
-		$art_link="<a href='http://" . conf('web_path') . "/ampache/albums.php?action=show&album=$id'>$art_image</a>";
-		$artist_name=$album->f_artist;
-		$album_name=$album->name;
-		if($type=="album"){
-			echo ("<table width=400>" .
-					"<tr>" .
-					"<td width=100 align=center>$artLink</td>" .
-					"<td width=* align=left>".ucfirst($type)." #$id<br>" .
-					"Rating: $rating</td>" .
-					"</tr>" .
-					"</table>");
-		}
-		else{
-			$artistLink="<a href='" . conf('web_path') . "/ampache/artists.php?action=show&artist=$id'>Artist $id</a>";
-			echo ("<table width=150>" .
-					"<tr>" .
-					"<td align=left>$artist_link<br>" .
-					"Rating: $rating" .
-					"</td>" .
-					"</tr>" .
-					"</table>");
-		}
-
-	}
-
-} // get_artist_rating()
-
 /*
  * Artist Ratings - Implemented by SoundOfEmotion
  *

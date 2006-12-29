@@ -5,9 +5,8 @@
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
- modify it under the terms of the GNU General Public License
- as published by the Free Software Foundation; either version 2
- of the License, or (at your option) any later version.
+ modify it under the terms of the GNU General Public License v2
+ as published by the Free Software Foundation.
 
  This program is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -19,13 +18,12 @@
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
-/*
-    @header Album Art
-This pulls album art out of the file using the getid3 library
-and dumps it to the browser as an image mime type.
-
-*/
-
+/**
+ * Album Art
+ * This pulls album art out of the file using the getid3 library
+ * and dumps it to the browser as an image mime type.
+ * 
+ */
 require('lib/init.php');
 
 /* Decide what size this image is */
@@ -54,6 +52,10 @@ switch ($_REQUEST['thumb']) {
 switch ($_REQUEST['type']) { 
 	case 'popup':
 		show_template('show_big_art');
+	break;
+	// If we need to pull the data out of the session 
+	case 'session':
+
 	break;
 	default: 
 		$album = new Album($_REQUEST['id']);

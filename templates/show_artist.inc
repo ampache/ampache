@@ -50,7 +50,7 @@ foreach ($albums as $album) {
 		</td>
 		<td height="87">
 		<a href="<?php echo $web_path; ?>/albums.php?album=<?php echo $id; ?>&amp;artist=<?php echo $artist->id; ?>">
-		<img border="0" src="<?php echo $web_path; ?>/albumart.php?id=<?php echo $id; ?>&amp;fast=1&amp;thumb=1" alt="<?php echo scrub_out($album_name); ?>" title="<?php echo scrub_out($album_name); ?>" height="75" width="75" />
+		<img border="0" src="<?php echo $web_path; ?>/image.php?id=<?php echo $id; ?>&amp;thumb=1&amp;sid=<?php echo session_id(); ?>" alt="<?php echo scrub_out($album_name); ?>" title="<?php echo scrub_out($album_name); ?>" height="75" width="75" />
 		</a>
 		</td>
 		<td>

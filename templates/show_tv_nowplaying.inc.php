@@ -30,8 +30,8 @@ foreach ($results as $row) {
 ?>
 <tr>
 	<td>
-		<a target="_blank" href="<?php echo $web_path; ?>/albumart.php?id=<?php echo $row['song']->album; ?>&amp;type=popup" onclick="popup_art('<?php echo $web_path; ?>/albumart.php?id=<?php echo $row['song']->album; ?>&amp;type=popup'); return false;">
-		<img align="middle" border="0" src="<?php echo $web_path; ?>/albumart.php?id=<?php echo $row['song']->album; ?>&amp;fast=1" />
+		<a target="_blank" href="<?php echo $web_path; ?>/image.php?id=<?php echo $row['song']->album; ?>&amp;type=popup&amp;sid=<?php echo session_id(); ?>" onclick="popup_art('<?php echo $web_path; ?>/image.php?id=<?php echo $row['song']->album; ?>&amp;type=popup&amp;sid=<?php echo session_id(); ?>'); return false;">
+		<img align="middle" border="0" src="<?php echo $web_path; ?>/image.php?id=<?php echo $row['song']->album; ?>&amp;fast=1" />
 		</a>
 	</td>
 </tr>

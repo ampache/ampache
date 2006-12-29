@@ -5,9 +5,8 @@
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
- modify it under the terms of the GNU General Public License
- as published by the Free Software Foundation; either version 2
- of the License, or (at your option) any later version.
+ modify it under the terms of the GNU General Public License v2
+ as published by the Free Software Foundation.
 
  This program is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -22,7 +21,6 @@
 
 $htmllang = str_replace("_","-",conf('lang'));
 ?>
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php echo $htmllang; ?>" lang="<?php echo $htmllang; ?>">
 <head>
@@ -32,8 +30,8 @@ $htmllang = str_replace("_","-",conf('lang'));
 </head>
 <body onLoad="self.resizeTo(document.images[0].width+30, document.images[0].height+70)">
 <?php
-echo "<a href=\"javascript:window.close()\" title=\"" . _("Click to close window") . "\">";
-echo "<img src=\"" . conf('web_path') . "/albumart.php?id=" . $_GET['id'] . "\" border=\"0\" />";
+echo "<a href=\"javascript:window.close()\" title=\"" . _('Click to close window') . "\">";
+echo "<img src=\"" . conf('web_path') . "/image.php?id=" . scrub_out($_GET['id']) . "&amp;sid=" . session_id() . "\" border=\"0\" />";
 echo "</a>";
 ?>
 </body>

@@ -327,7 +327,6 @@ class Album {
 				
 				/* If it's an image file */
 				if ($extension == "jpg" || $extension == "gif" || $extension == "png" || $extension == "jp2") { 
-				
 					if ($file == $preferred_filename) { 
 						// If we found the preferred filename we're done, wipe out previous results
 						$data = array(array('file' => $file, 'mime' => 'image/' . $extension));

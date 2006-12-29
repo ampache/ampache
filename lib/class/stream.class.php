@@ -247,7 +247,7 @@ class Stream {
 		$xml['track']['title'] = $song->title;
 		$xml['track']['creator'] = $song->f_artist_full;
 		$xml['track']['info'] = conf('web_path') . "/albums.php?action=show&album=" . $song->album;
-		$xml['track']['image'] = conf('web_path') . "/albumart.php?id=" . $song->album . "&fast=1&thumb=3";
+		$xml['track']['image'] = conf('web_path') . "/image.php?id=" . $song->album . "&&thumb=3&sid=" . session_id();
 		$xml['track']['album'] = $song->f_album_full;
 		$xml['track']['duration'] = $song->time;
 		$result .= xml_from_array($xml,1,'xspf');
