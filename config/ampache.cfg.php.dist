@@ -470,18 +470,27 @@ downsample_cmd	= mp3splt -qnf %FILE% %OFFSET% %EOF% -o - | lame --mp3input -q 3 
 
 #######################################################
 # These are commands used to transcode non-streaming
-# formats to mp3 for streaming.  Very similar to 
-# downsampling, but requires something that can play
-# the various file formats.  
+# formats to the target file type for streaming. Any
+# file types defined here will automatically be transcoded
+# using the stream_cmd_??? regardless of personal preferences
+# This can be usefull in re-encoding file types that don't stream
+# very well, or if the player doesn't support some file types. 
+# REQUIRED variables
+# transcode_TYPE	= true
+# transcode_TYPE_target	= TARGET_FILE_TYPE
+# stream_cmd_TYPE	= TRANSCODE_COMMAND
 
 # List of filetypes to transcode
-transcode_m4a 	= true
-transcode_flac = true
-#transcode_mpc  = false
+transcode_m4a 		= true
+transcode_m4a_target 	= mp3 
+transcode_flac 		= true
+transcode_flac_target	= mp3
+#transcode_mpc  	= false
+#transcode_mpc_target	= mp3
 
 # These are the commands that will be run to transcode the file
 stream_cmd_flac 	= flac -dc %FILE% | lame -r -b 128 -S - - 
-stream_cmd_m4a 	= faad -f 2 -w %FILE% | lame -r -b 128 -S - -
+stream_cmd_m4a 		= faad -f 2 -w %FILE% | lame -r -b 128 -S - -
 #stream_cmd_mpc		= 
 
 #######################################################

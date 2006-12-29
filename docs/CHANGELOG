@@ -4,6 +4,7 @@
 
 --------------------------------------------------------------------------
   v.3.3.3-Beta3 
+	- Fixed some logic errors in the Transcoding logic and play logic
 	- Rewrote Album Art collection to correct some seriou logic flaws
 	- Added potential fix for FastCGI installations
 	- Updated Snoopy to 1.2.3 (from manually patched 1.2.1) 

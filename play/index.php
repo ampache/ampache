@@ -23,10 +23,10 @@
  This is the wrapper for opening music streams from this server.  This script
    will play the local version or redirect to the remote server if that be
    the case.  Also this will update local statistics for songs as well.
-
+   This is also where it decides if you need to be downsampled. 
 */
 
-$no_session = true;
+define('NO_SESSION','1');
 require_once('../lib/init.php');
 require_once(conf('prefix') . '/modules/horde/Browser.php');
 
@@ -39,10 +39,15 @@ $sid 		= scrub_in($_REQUEST['sid']);
 /* This is specifically for tmp playlist requests */
 $tmp_id		= scrub_in($_REQUEST['tmp_id']);
 
-/* First things first, if we don't have a uid stop here */
-if (!isset($uid)) { 
+/* First things first, if we don't have a uid/song_id stop here */
+if (empty($song_id) && empty($tmp_id)) { 
 	debug_event('no_song',"Error: No Song UID Specified, nothing to play",'2');
 	exit; 
+}
+
+if (!isset($uid)) { 
+	debug_event('no_usre','Error: No User specified','2'); 
+	exit;
 }
 
 /* Misc Housework */
@@ -55,8 +60,8 @@ if (conf('xml_rpc')) {
 
 if (conf('require_session') OR $xml_rpc) { 
 	if(!session_exists($sid,$xml_rpc)) {	
-    		die(_("Session Expired: please log in again at") . " " . conf('web_path') . "/login.php");
 		debug_event('session_expired',"Streaming Access Denied: " . $GLOBALS['user']->username . "'s session has expired",'3');
+    		die(_("Session Expired: please log in again at") . " " . conf('web_path') . "/login.php");
 	}
 
 	// Now that we've confirmed the session is valid
@@ -80,6 +85,7 @@ if (conf('access_control')) {
 		!$access->check('network',$_SERVER['REMOTE_ADDR'],$GLOBALS['user']->username,'25')) { 
 		debug_event('access_denied', "Streaming Access Denied: " . $_SERVER['REMOTE_ADDR'] . " does not have stream level access",'3');
 		access_denied();
+		exit; 
 	}
 } // access_control is enabled
 
@@ -93,7 +99,6 @@ if ($tmp_id) {
 	/* This takes into account votes etc and removes the */
 	$song_id = $tmp_playlist->get_next_object();
 }
-
 
 /* Base Checks passed create the song object */
 $song = new Song($song_id);
@@ -188,17 +193,7 @@ if (conf('stream_name_format')) {
 else {
 	$song_name = $song->f_artist_full . " - " . $song->title . "." . $song->type;
 }
-
 	
-
-// Send file, possible at a byte offset
-$fp = @fopen($song->file, 'rb');
-
-if (!is_resource($fp)) { 
-	debug_event('file_read_error',"Error: Unable to open $song->file for reading",'2');
-	cleanup_and_exit($lastid);
-}
-
 $startArray = sscanf( $_SERVER[ "HTTP_RANGE" ], "bytes=%d-" );
 $start = $startArray[0];
 
@@ -220,15 +215,28 @@ if (conf('access_control') AND conf('downsample_remote')) {
 		$not_local = true;
 	}
 } // if access_control
+
+
 	
 if ($GLOBALS['user']->prefs['play_type'] == 'downsample' || !$song->native_stream() || $not_local) { 
+	debug_event('downsample','Starting Downsample...','5');
 	$results = start_downsample($song,$lastid,$song_name);
 	$fp = $results['handle'];
 	$song->size = $results['size'];
 	
 } // end if downsampling
+else { 
+	// Send file, possible at a byte offset
+	$fp = fopen($song->file, 'rb');
+	
+if (!is_resource($fp)) { 
+		debug_event('file_read_error',"Error: Unable to open $song->file for reading",'2');
+		cleanup_and_exit($lastid);
+	}
+} // else not downsampling
 
-elseif ($start) {
+if ($start) {
+	debug_event('seek','Start point recieved, skipping ahead in the song...','5');
 	$browser->downloadHeaders($song_name, $song->mime, false, $song->size);
 	fseek( $fp, $start );
 	$range = $start ."-". ($song->size-1) . "/" . $song->size;
@@ -239,6 +247,7 @@ elseif ($start) {
 
 /* Last but not least pump em out */
 else {
+	debug_event('stream','Starting stream of ' . $song->file . ' with size ' . $song->size,'5'); 
 	header("Content-Length: $song->size");
 	$browser->downloadHeaders($song_name, $song->mime, false, $song->size);
 }

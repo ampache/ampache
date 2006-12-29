@@ -122,6 +122,7 @@ function check_lock_songs($song_id) {
 	$db_results = mysql_query($sql, dbh());
 
 	if (mysql_num_rows($db_results)) { 
+		debug_event('lock_songs','Song Already Playing, skipping...','5'); 
 		return false;
 	}
 
@@ -138,18 +139,6 @@ function check_lock_songs($song_id) {
  * @param $song	The Song Object
  */
 function start_downsample($song,$now_playing_id=0,$song_name=0) { 
-
-	/** 
-	 * Extra check, for now hardcode it to mp3 but if
-	 * we are transcoding we need to fix the mime type
-	 * and let the user define what file type it's switching
-	 * to. 
-	 */
-	if (!$song->native_stream()) { 
-		$song->mime = 'audio/mpeg';
-		$song_name = $song->f_artist_full . " - " . $song->title . ".mp3";
-	}
-
 
 	/* Check to see if bitrates are set if so let's go ahead and optomize! */
 	$max_bitrate = conf('max_bit_rate');
@@ -252,7 +241,7 @@ function start_downsample($song,$now_playing_id=0,$song_name=0) {
 
 	/* We need more than just the handle here */
 	$return_array['handle'] = $fp;
-	$return_array['size']	= $sample_ration*$song->size;
+	$return_array['size']	= $sample_ratio*$song->size;
 
 	return ($return_array);
 

@@ -256,9 +256,13 @@ if (in_array("http",$results['auth_methods'])) {
 
 } // end if http auth
 
+if ($no_session) { 
+	define('NO_SESSION','1'); 
+} 
+
 
 // If we don't want a session
-if (!isset($no_session) AND conf('use_auth')) { 
+if (NO_SESSION != '1' AND conf('use_auth')) { 
 	/* Verify Their session */
 	if (!vauth_check_session()) { logout(); exit; }
 
@@ -301,10 +305,6 @@ else {
 	$user = new user($results['username']);
 	init_preferences();
 }
-
-/* PHP5 Date problem solved.. ya'll GMT now! */
-$timezone = "TZ=" . conf('time_zone');
-putenv($timezone);
 
 /* Add in some variables for ajax done here because we need the user */
 $ajax_info['ajax_url']		= $results['web_path'] . '/server/ajax.server.php';

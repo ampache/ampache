@@ -152,11 +152,17 @@ class Song {
 			play, used to set mime headers and to trick 
 			players into playing them correctly
 	*/
-	function format_type() { 
+	function format_type($override='') { 
 
-		preg_match('/\.([A-Za-z0-9]+)$/', $this->file,$results);
+		// If we pass an override for downsampling or whatever then use it
+		if (!empty($override)) { 
+			$this->type = $override; 
+		}
+		else {
+			preg_match('/\.([A-Za-z0-9]+)$/', $this->file,$results);
+			$this->type = strtolower($results['1']);
+		} 
 
-		$this->type = strtolower($results['1']);
 
 		switch ($this->type) { 
 			case 'spx':
@@ -654,6 +660,20 @@ class Song {
 	*/
 	function format_song() {
 
+		$this->format(); 
+
+		return true; 
+
+	} 
+
+	/**
+	 * format
+	 * This takes the current song object
+	 * and does a ton of formating on it creating f_??? variables on the current
+	 * object
+	 */
+	function format() { 
+
 		// Format the filename
 		preg_match("/^.*\/(.*?)$/",$this->file, $short);
 		$this->f_file = htmlspecialchars($short[1]);
@@ -820,31 +840,18 @@ class Song {
 	function native_stream() {
 		
 		if ($this->_transcode) { return false; }
+
+		$conf_var 	= 'transcode_' . $this->type;
+		$conf_type	= 'transcode_' . $this->type . '_target'; 
+
+		if (conf($conf_var)) { 
+			$this->_transcode = true; 
+			$this->format_type(conf($conf_type)); 
+			debug_event('auto_transcode','Transcoding to ' . conf($conf_type),'5'); 
+			return false; 
+		} 
 		
-		switch ($this->type) {
-			//TODO: fill out these cases once we have it working for m4a
-			case 'm4a':
-				if (conf('transcode_m4a')) { break; }
-				return true;
-			break;
-			case 'flac':
-				if (conf('transcode_flac')) { break; }
-				return true;
-			break;
-			case 'mpc':
-				if (conf('transcode_mpc')) { break; }
-				return true;
-			break;
-			default:
-				return true;
-			break;
-		}	// end switch
-		
-		/* If we've made it this far then we must be trying to transcode */
-		$this->_transcode = true;
-		$this->format_type();
-		
-		return false;
+		return true;
 
 	} // end native_stream
 	
