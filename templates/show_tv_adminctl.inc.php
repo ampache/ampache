@@ -32,7 +32,9 @@
 
 else { 
 ?>
-<?php echo _('Democratic Play Active'); ?>&nbsp;
+<div class="text-action">
+	<a href="<?php echo conf('web_path'); ?>/tv.php?action=clear_playlist&amp;tmp_playlist_id=<?php echo scrub_out($tmp_playlist->id); ?>"><?php echo _('Clear Playlist'); ?></a>
+</div>
 <form method="post" style="Display:inline;" action="<?php echo conf('web_path'); ?>/tv.php?action=send_playlist&amp;tmp_playlist_id=<?php echo scrub_out($tmp_playlist->id); ?>" enctype="multipart/form-data">
 <select name="play_type">
 	<option value="localplay"><?php echo _('Localplay'); ?></option>

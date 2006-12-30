@@ -54,7 +54,9 @@ if (conf('refresh_limit') > 5) {
 <!-- Left Col -->
 <div id="tv_left">
 <?php show_box_top(_('Controls')); ?>
-<a href="<?php echo conf('web_path'); ?>/index.php"><?php echo _('Home'); ?></a>
+<div class="text-action">
+	<a href="<?php echo conf('web_path'); ?>/index.php"><?php echo _('Home'); ?></a>
+</div>
 <!-- Control DIV -->
 <div id="tv_control">
 <?php 
