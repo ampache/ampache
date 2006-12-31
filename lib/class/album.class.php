@@ -324,16 +324,21 @@ class Album {
 	                /* Recurse through this dir and create the files array */
 	                while ( FALSE !== ($file = @readdir($handle)) ) {
 				$extension = substr($file,strlen($file)-3,4);
+
 				
 				/* If it's an image file */
 				if ($extension == "jpg" || $extension == "gif" || $extension == "png" || $extension == "jp2") { 
+
+					/* Make sure it's got something in it */
+					if (!filesize($dir . '/' . $file)) { continue; } 
+
 					if ($file == $preferred_filename) { 
 						// If we found the preferred filename we're done, wipe out previous results
-						$data = array(array('file' => $file, 'mime' => 'image/' . $extension));
+						$data = array(array('file' => $dir . '/' . $file, 'mime' => 'image/' . $extension));
 						return $data;
 					}
 					else {
-						$data[] = array('file' => $file, 'mime' => 'image/' . $extension);
+						$data[] = array('file' => $dir . '/' . $file, 'mime' => 'image/' . $extension);
 					}
 				
 				} // end if it's an image

@@ -475,11 +475,12 @@ class Catalog {
 			// Return results
 			$results = $album->find_art($options,1); 
 
-			// Pull the string representation from the source
-			$image = get_image_from_source($results['0']);  
-			$album->insert_art($image,$results['0']['mime']); 
-
-			if ($found) { $art_found++; }	
+			if (count($results)) { 
+				// Pull the string representation from the source
+				$image = get_image_from_source($results['0']);  
+				$album->insert_art($image,$results['0']['mime']); 
+				$art_found++; 
+			} 
 
 			/* Stupid little cutesie thing */
                         $search_count++;
@@ -644,28 +645,31 @@ class Catalog {
 	        // Get all of the albums in this catalog
 	        $albums = $this->get_catalog_albums($catalog_id);
 
-		echo "<br /><b>" . _('Starting Dump Album Art') . ". . .</b><br /><br />\n";
+		echo "Starting Dump Album Art...\n";
 
 		// Run through them an get the art!
 		foreach ($albums as $album) {
-	                flush();
-                	if ($image = $album->get_db_art()) {
-				/* Get the first song in the album */
-                                $songs = $album->get_songs(1);
-                                $song = $songs[0];
-                                $dir = dirname($song->file);
-				$extension = substr($image->art_mime,strlen($image->art_mime)-3,3);
+			// If no art, skip 
+			if (!$album->has_art) { continue; } 
 
-	                        $preferred_filename = conf('album_art_preferred_filename');
-	                        if (!$preferred_filename) { $preferred_filename = "folder.$extension"; }
+                	$image = $album->get_db_art();
 
-	                        $file = "$dir/$preferred_filename";
-	                        if ($file_handle = @fopen($file,"w")) {
-		                        if (fwrite($file_handle, $image->art)) {
-			                        $i++;
-        	                                if ( !($i%conf('catalog_echo_count')) ) {
-	                	                        echo _("Written") . " $i. . . <br />\n";
-				                        flush();
+			/* Get the first song in the album */
+                        $songs = $album->get_songs(1);
+                        $song = $songs[0];
+                        $dir = dirname($song->file);
+			$extension = substr($image->art_mime,strlen($image->art_mime)-3,3);
+
+			// Try the preferred filename, if that fails use folder.???
+	                $preferred_filename = conf('album_art_preferred_filename');
+	                if (!$preferred_filename) { $preferred_filename = "folder.$extension"; }
+
+	                $file = "$dir/$preferred_filename";
+	                if ($file_handle = @fopen($file,"w")) {
+		        	if (fwrite($file_handle, $image->art)) {
+			        	$i++;
+        	                        if ( !($i%conf('catalog_echo_count')) ) {
+	                	        	echo "Written: $i. . .\n";
 	                                        } //echos song count
 						debug_event('art_write',"$album->name Art written to $file",'5'); 
 	                                }
@@ -673,17 +677,13 @@ class Catalog {
 	                       	} // end if fopen
 				else {
 					debug_event('art_write',"Unable to open $file for writting",'5'); 
-					echo "<font class=\"error\">" . _("Error unable to open file for writting") . " [$file] </font><br />\n";
+					echo "Error unable to open file for writting [$file]\n";
 				}
 
-                	} // end if image
 
 	        } // end foreach
 
-	        echo "<br /><b>" . _("Album Art Dump Complete") . "</b> &nbsp;&nbsp;";
-	 	echo "<a href=\"" . conf('web_path') . "/admin/catalog.php" . "\">[" . _("Return") . "]</a>";
-
-		flush();
+	        echo "Album Art Dump Complete\n";
 
 	} // dump_album_art 
 
