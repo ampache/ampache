@@ -226,7 +226,7 @@ class Album {
 				// Some of these take options!
 				switch ($method_name) { 
 					case 'get_amazon_art':
-						$data = $this->{$method_name}($options['keyword']); 
+						$data = $this->{$method_name}($options['keyword'],$limit); 
 					break;
 					case 'get_id3_art':
 						$data = $this->{$method_name}($limit); 
@@ -371,7 +371,7 @@ class Album {
 	 * This takes keywords and performs a search of the Amazon website
 	 * for album art. It returns an array of found objects with mime/url keys
 	 */
-	function get_amazon_art($keywords = '') {
+	function get_amazon_art($keywords = '',$limit='') {
 
 		$images 	= array();
 		$final_results 	= array();
@@ -440,11 +440,14 @@ class Album {
 			} // foreach
 
 			// Rudimentary image type detection, only JPG and GIF allowed.
-			if (substr($result[$key], -4 == ".jpg")) {
+			if (substr($result[$key], -4 == '.jpg')) {
 				$mime = "image/jpg";
 			}
-			elseif (substr($result[$key], -4 == ".gif")) { 
+			elseif (substr($result[$key], -4 == '.gif')) { 
 				$mime = "image/gif";
+			}
+			elseif (substr($result[$key], -4 == '.png')) { 
+				$mime = "image/png";
 			}
 			else {
 				/* Just go to the next result */
@@ -455,6 +458,12 @@ class Album {
 			$data['mime']	= $mime;
 			
 			$images[] = $data;
+
+			if (!empty($limit)) { 
+				if (count($images) >= $limit) { 
+					return $images; 
+				} 
+			} 
 
                 } // if we've got something
 	

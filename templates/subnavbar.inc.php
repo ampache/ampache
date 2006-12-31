@@ -22,7 +22,7 @@
 
 /**
  * This file expect an array of 'items' which have ['0']['url'] ['0']['title']
- * and a ['0']['active'] == true/false this is called from show_submenu($items);
+ * ['0']['active'] == true/false and ['0']['cssclass'] this is called from show_submenu($items);
  */
 
 ?>
@@ -30,8 +30,10 @@
 <?php 
 	foreach ($items as $item) { 
 		if ($item['url'] == $item['active']) { 
-			$li_id 	= "id=\"activesubmenu\"";
-		} ?>
-		<li <?php echo $li_id; ?>><a href="<?php echo conf('web_path') . "/" .  $item['url']; ?>"><?php echo $item['title']; ?></a></li>
+			$li_class = "class=\"activesubmenu\"";
+		} 
+		$li_id = "id=\"" . $item['cssclass'] . "\"";
+		?>
+		<li <?php echo $li_class; echo $li_id; ?>><a href="<?php echo conf('web_path') . "/" .  $item['url']; ?>"><?php echo $item['title']; ?></a></li>
 	<?php unset($li_id); } // END foreach ($items as $item) ?>
 </ul>

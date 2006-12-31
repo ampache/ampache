@@ -185,20 +185,106 @@
 		font-size: 11px;
 		cursor: pointer;
 		}
-	.sidebar 
-		{
-		margin-left:0px;
-		margin-top:0px;
-		margin-right:0px;
-		padding-right:0px;
-		padding-top: 0px;
-		padding-left: 0px;
-		}
-/* These three lines make a menu vertical */
+
 #content { 
 	float: none; 
 	background-color: #8B8B8B;
 }
+
+
+/* Sidebar */
+/**
+ * Experimental for menus (Thx Sigger)
+ * TO DO: Fill in 1px border around menus & submenu items
+ * Make padding apply to the li, not just an a.  Moving padding: to li throws off the dropdown menu alignment.
+ */
+
+#sidebar{
+	clear:both;
+	position:absolute;
+	left:5px;
+	top:87px;
+}
+
+#sidebar select	{
+	width: 95%; 
+}
+
+#sidebar h3 {
+	display:none;
+}
+	
+#sidebar h3 span {
+	display:none
+}
+
+#sidebar ul {
+	list-style: none;
+	font-family:Arial, Helvetica, Sans-Serif;
+	font-size: 10px;
+	margin: 0;
+	padding: 0;
+	line-height: 1em;
+}
+   
+#sidebar ul.subnavside {
+    display: block; /*none;*/
+    position: static; /*absolute;*/
+    width: 100%; /*9em;*/
+    top: 0; /*-1px;*/
+    left: 0; /*11.5em;*/
+    font-size: 1em;
+    z-index: 1;		
+}
+
+#sidebar li {
+    float: left;
+    clear: both;
+    display: inline;	/* IE6 Patch */
+    position: relative;
+    width: 12em;
+    width: /**/10.5em; /* Only IE5.5 can't see this */
+    margin: 0;
+    padding: .5em 0 .5em 1em;
+    border-bottom: 1px solid #607080;
+    border-left: none;
+    border-right: 1px solid #607080;
+    border-top: none;
+    background:#D4D4D4;
+}
+
+#sidebar ul.subnavside li { 
+    border-right: 1px solid #B4B4B4;
+}
+
+#sidebar a, #sidebar .navbutton {
+    display: block;
+    position: relative;
+    text-decoration: none;
+}
+
+#sidebar li:hover ul.subnavside, #sidebar li.sfhover ul.subnavside {
+    display:block;
+}
+#sidebar ul.subnavside{
+    margin-left:0.5em;
+}
+#sidebar ul.subnavside li{
+    width: 11.5em;
+    width: /**/10em; /* Only IE5.5 can't see this */
+}
+
+#sidebar li:hover, #sidebar li.sfhover,  #sidebar li.activetopmenu {
+    color:#000;
+    background-color:#7f7f7f;
+}
+
+#sidebar li.hover:active {
+    background-color:#ccc;
+    z-index:30;
+}
+
+
 /**
  * Div Definitions
  * These define how the page is layed out, be careful with these as changes to them
@@ -206,11 +292,6 @@
  */
 .text-action a,.text-action li { background: #D4D4D4; } 
 
-#sidebar h3 { display: none; } 
-
-#sidebar li:hover { 
-	background-color: #7f7f7f;
-}
 
 .box-left-top { display: none; }
 .box-left-bottom { display: none; }
@@ -222,40 +303,8 @@
 .box-top { display: none; }
 .box { background: #D4D4D4; margin: 10px; }
 
-#sidebar li {
-  /* float: left; Uncomment for horizontal */
-  margin: 0;
-  border-right: 1px solid #607080;
-  border-bottom: 1px solid #607080;
-  display: block;
-  background: #D4D4D4;
-  padding: 5px 0px 5px 10px;
-  width: 10.5em;
-}
 
-#sidebar li ul { 
-	left: auto; 
-	margin: 0;
-	display: block;
-	float: left;
-	width: 10em;
-	position: absolute;
-}
-
-#sidebar li:hover ul, #sidebar li.sfhover ul { 
-	left: auto;
-}
-
-#navlist ul li { 
-       background-color: #d6d6d6;
-       margin-left:.5em;
-       width: 10em;
-       display: block;
 	
-}
-
-#sidebar li:active { background-color: #FFFFFF; } 
-	#sidebar { background-color: #8b8b8b; } 
 	#maincontainer
 		{
 			margin: 0px;

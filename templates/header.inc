@@ -46,7 +46,13 @@ if (conf('use_rss')) { ?>
 <body>
 <script src="<?php echo $web_path; ?>/lib/javascript-base.js" language="javascript" type="text/javascript"></script>
 <script src="<?php echo $web_path; ?>/modules/kajax/ajax.js" language="javascript" type="text/javascript"></script>
-<div id="maincontainer">
+<div id="maincontainer" <?php 
+	if ($GLOBALS['theme']['orientation'] == 'horizontal') { 
+		echo " class=\"horizontal_menu\" ";
+	}else{
+		echo " class=\"vertical_menu\" ";
+	}?>>
+		
 	<div id="topbar"><!-- This is the topbar row -->
 		<div id="topbarleft">
 		<a href="http://www.ampache.org">

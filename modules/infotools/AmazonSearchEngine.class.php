@@ -100,8 +100,6 @@ class AmazonSearch {
 		$snoopy->fetch($url);
 		$contents = $snoopy->results;
 	
-                debug_event('amazon-search-results','Retrieved ' . strlen($contents) . ' chars','5');
-					        		
 		if (!xml_parse($this->_parser, $contents)) {
 			debug_event('amazon-search-results','Error:' . sprintf('XML error: %s at line %d',xml_error_string(xml_get_error_code($this->_parser)),xml_get_current_line_number($this->_parser)),'1');
 		}

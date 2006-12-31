@@ -253,13 +253,12 @@ switch ($_REQUEST['action']) {
 	break;
 	case 'gather_album_art':
 	        flush();
-
 		$catalogs = $catalog->get_catalogs();
 		foreach ($catalogs as $data) { 
-	        	echo "<div class=\"confirmation-box\"><b>" . _("Starting Album Art Search") . ". . .</b><br /><br />\n";
+	        	echo "<div class=\"confirmation-box\"><b>" . _('Starting Album Art Search') . ". . .</b><br /><br />\n";
 			echo _('Searched') . ": <span id=\"count_art_" . $data->id . "\">" . _('None') . "</span><br />";
 			$data->get_album_art();
-			echo "<b>" . _("Album Art Search Finished") . ". . .</b></div>\n";
+			echo "<b>" . _('Album Art Search Finished') . ". . .</b></div>\n";
 		}
 		$url 	= conf('web_path') . '/admin/index.php';
 		$title 	= _('Album Art Search Finished');

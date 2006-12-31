@@ -43,7 +43,7 @@ function get_image_from_source($data) {
 	// Check to see if it's a URL
 	if (isset($data['url'])) { 
 		$snoopy = new Snoopy(); 
-		$snoopy->fetch($results['url']); 
+		$snoopy->fetch($data['url']); 
 		return $snoopy->results; 
 	} 
 

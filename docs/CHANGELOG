@@ -4,6 +4,8 @@
 
 --------------------------------------------------------------------------
   v.3.3.3-Beta3 
+	- Improved Sidebar CSS making it more compliant with different
+		browsers (Thx Spocky)
 	- Fixed some logic errors in the Transcoding logic and play logic
 	- Rewrote Album Art collection to correct some seriou logic flaws
 	- Added potential fix for FastCGI installations

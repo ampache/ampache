@@ -183,7 +183,7 @@ body{
 	postion:absolute;
 	float: left;
 	clear: both;
-	margin-left:15px;
+	margin-left:135px;
 	/*float:left;  use for horizontal menu; comment out otherwise */
 	/* background:#fff url("../themes/classic/images/bg_content.gif") repeat-y right top; */
 }
@@ -236,30 +236,31 @@ div#Header{
 	margin-left:10px;
 }
 
-
 /* Sidebar */
 /**
  * Experimental for menus (Thx Sigger)
  * TO DO: Fill in 1px border around menus & submenu items
  * Make padding apply to the li, not just an a.  Moving padding: to li throws off the dropdown menu alignment.
  */
- 
-div#sidebar{
+
+#sidebar{
 	clear:both;
 	position:absolute;
 	left:5px;
-	top:20px;
-	background:url("../themes/classic/images/bg_navigation.gif") repeat-y left;	
+	top:87px;
+}
+
+#sidebar select	{
+	width: 95%; 
 }
 
 #sidebar h3 {
-	border:0px; 
+	border:0; 
 	width: 120px; 
 	height: 28px; 
-	margin:0px;
-	padding:0px; 
-	background: transparent url("../themes/classic/images/sidebar_top.jpg") no-repeat left; 
-
+	margin:0;
+	padding:0; 
+	background: transparent url(../images/sidebar_top.jpg) no-repeat left; 
 }
 	
 #sidebar h3 span {
@@ -267,62 +268,71 @@ div#sidebar{
 }
 
 #sidebar ul {
-	margin: 0px;
 	list-style: none;
 	font-family:Arial, Helvetica, Sans-Serif;
-	font-size:10px;
-	padding: 0px;
-	line-height: 1.0;
-	background-color:#320000;
+	font-size: 10px;
+	margin: 0;
+	padding: 0;
+	line-height: 1em;
+}
+   
+#sidebar ul.subnavside {
+    display: none;
+    position: absolute;
+    width: 9em;
+    top: -1px;
+    left: 11.5em;
+    font-size: 1em;
+    z-index: 1;		
 }
 
 #sidebar li {
-    margin: 0;
     float: left;
-    display: block;
+    clear: both;
+    display: inline;	/* IE6 Patch */
+    position: relative;
+    width: 12em;
+    width: /**/10.5em; /* Only IE5.5 can't see this */
+    margin: 0;
+    padding: .5em 0 .5em 1em;
     border-bottom: 1px solid #8B8B8B;
     border-left: 1px solid #8B8B8B;
-    border-right: 1px solid #8B8B8B;
+    border-right: 4px solid #B4B4B4;
     border-top: 1px solid #8B8B8B;
-    padding: 5px 0px 5px 10px;
-    width: 10.5em;
-    background-color:#320000;
+    background:#320000;
 }
 
-#sidebar a, .navbutton {
-    display: block;  /*Not sure why this is neccesary, but it is for IE*/
+#sidebar ul.subnavside li { 
+    border-right: 1px solid #B4B4B4;
+}
+
+#sidebar a, #sidebar .navbutton {
+    display: block;
+    position: relative;
     text-decoration: none;
 }
 
-#sidebar li:hover, #sidebar li.sfhover {
-	color: #000000;
-       background-color: #8f0000;
+#sidebar li:hover ul.subnavside, #sidebar li.sfhover ul.subnavside {
+    display:block;
 }
 
-#sidebar li:active {
-	background-color:#320000;
-	z-index:30;
-}
-   
-#sidebar li ul {
-    float: left;
-    position: absolute;
-    width: 9em;
-/*	margin: -1.5em 0 0 10.5em; /* for vertical menu; comment out otherwise */
-	margin: 0.5em 0 0 -1.1em;  /* for horizontal menu;  comment out otherwise */ 
-    left: -999em;  /* this -999em puts the submenu item way off to the left until it's called back by a hover (below) */
-	z-index:30;
+#sidebar li:hover, #sidebar li.sfhover,  #sidebar li.activetopmenu {
+    color:#000;
+    background-color:#8f0000;
 }
 
-#sidebar li:hover ul, #sidebar li.sfhover ul {
-	left: auto;  /* this calls the submenu back when the parent li is hovered. */
-       background-color: #8f0000;
+#sidebar li.hover:active {
+    background-color:#8f0000;
+    z-index:30;
 }
 
-#navlist ul li:hover {
-       background-color: #8f0000;
+/* For horizontal menu */
+.horizontal_menu #content {margin:0em 0 0 2em;}
+.horizontal_menu #sidebar { width: auto; top: 50px;}
+.horizontal_menu #sidebar h3 { display: none; }
+.horizontal_menu #sidebar li { clear: none; border:1px solid #8b8b8b}
+.horizontal_menu #sidebar ul.subnavside  { left: 0; top: 2em; }
 
-}
 
 /* Styles for Now Playing */
 
