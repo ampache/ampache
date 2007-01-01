@@ -21,23 +21,24 @@
 
 // Gotta do some math here!
 $total_images = count($images);
-$rows = floor($total_images/3);
+$rows = floor($total_images/4);
 $i = 0;
 ?>
 <?php show_box_top(); ?>
-<table>
+<table class="table-data">
 <tr>
 <?php 
 while ($i <= $rows) { 
 	$j=0;
-	while ($j < 3) { 
-		$key = $i*3+$j;
+	while ($j < 4) { 
+		$key = $i*4+$j;
+		$image_url = conf('web_path') . '/image.php?type=session&amp;image_index=' . $key; 
 		if (!isset($images[$key])) { echo "<td>&nbsp;</td>\n"; } 
 		else { 
 ?>
 			<td align="center">
-				<a href="<?php echo $images[$key]['url']; ?>" target="_blank">
-				<img src="<?php echo scrub_out($images[$key]['url']); ?>" border="0" height="175" width="175" /><br />
+				<a href="<?php echo $image_url; ?>" target="_blank">
+				<img src="<?php echo $image_url; ?>" border="0" height="175" width="175" /><br />
 				</a>
 				<p align="center">
 				[<a href="<?php echo conf('web_path'); ?>/albums.php?action=select_art&amp;image=<?php echo $key; ?>&amp;album_id=<?php echo urlencode($_REQUEST['album_id']); ?>">Select</a>]

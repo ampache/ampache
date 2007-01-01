@@ -55,7 +55,17 @@ switch ($_REQUEST['type']) {
 	break;
 	// If we need to pull the data out of the session 
 	case 'session':
+		$key = scrub_in($_REQUEST['image_index']); 
+		$image = get_image_from_source($_SESSION['form']['images'][$key]);
+		
+		$mime = $_SESSION['form']['images'][$key]['mime'];
 
+		$data = explode("/",$mime); 
+		$extension = $data['1']; 
+
+		header("Content-type: $mime"); 
+		header("Content-Disposition: filename=" . $key . "." . $extension); 
+		echo $image; 
 	break;
 	default: 
 		$album = new Album($_REQUEST['id']);

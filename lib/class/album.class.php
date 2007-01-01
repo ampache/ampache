@@ -200,7 +200,7 @@ class Album {
 	 * ['artist']  		= STRING
 	 * ['album_name']	= STRING
 	 */
-	function find_art($options=array(),$limit=null) { 
+	function find_art($options=array(),$limit='') { 
 
 		/* Create Base Vars */
 		$results = array(); 
@@ -219,9 +219,10 @@ class Album {
 		}
 		
 		foreach ($config_value AS $method) { 
+	
+			$data = array(); 
 		
 			$method_name = "get_" . $method . "_art";
-			
 			if (in_array($method_name,$class_methods)) { 
 				// Some of these take options!
 				switch ($method_name) { 
@@ -229,6 +230,7 @@ class Album {
 						$data = $this->{$method_name}($options['keyword'],$limit); 
 					break;
 					case 'get_id3_art':
+						if ($options['skip_id3']) { break; } 
 						$data = $this->{$method_name}($limit); 
 					break; 
 					default:
@@ -239,8 +241,8 @@ class Album {
 				// Add the results we got to the current set
 				$total_results += count($data); 
 				$results = array_merge($results,$data); 
-
-				if ($total_results > $limit) { 
+				
+				if ($total_results > $limit AND $limit > 0) { 
 					return $results;
 				}
 
@@ -307,6 +309,9 @@ class Album {
 
 		/* See if we are looking for a specific filename */
 		$preferred_filename = conf('album_art_preferred_filename');
+
+		// Init a horrible hack array of lameness
+		$cache =array(); 
 		
 		/* Thanks to dromio for origional code */
 		/* Added search for any .jpg, png or .gif - Vollmer */
@@ -321,25 +326,33 @@ class Album {
 				debug_event('read',"Error: Unable to open $dir for album art read",'2');
 	                }
 
+
 	                /* Recurse through this dir and create the files array */
 	                while ( FALSE !== ($file = @readdir($handle)) ) {
 				$extension = substr($file,strlen($file)-3,4);
 
-				
+			
+	
 				/* If it's an image file */
 				if ($extension == "jpg" || $extension == "gif" || $extension == "png" || $extension == "jp2") { 
+
+					// HACK ALERT this is to prevent duplicate filenames
+					$full_filename	= $dir . '/' . $file; 
+					$index		= md5($full_filename); 
 
 					/* Make sure it's got something in it */
 					if (!filesize($dir . '/' . $file)) { continue; } 
 
 					if ($file == $preferred_filename) { 
 						// If we found the preferred filename we're done, wipe out previous results
-						$data = array(array('file' => $dir . '/' . $file, 'mime' => 'image/' . $extension));
+						$data = array(array('file' => $full_filename, 'mime' => 'image/' . $extension));
 						return $data;
 					}
-					else {
-						$data[] = array('file' => $dir . '/' . $file, 'mime' => 'image/' . $extension);
+					elseif (!isset($cache[$index])) {
+						$data[] = array('file' => $full_filename, 'mime' => 'image/' . $extension);
 					}
+				
+					$cache[$index] = '1'; 
 				
 				} // end if it's an image
 				

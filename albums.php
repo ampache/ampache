@@ -109,13 +109,23 @@ switch ($action) {
 		$options['album_name']	= $album_name; 
 		$options['keyword']	= $artist . " " . $album_name; 
 		$options['url']		= $_REQUEST['cover'];
+		// HACK that makes baby jesus cry...
+		$options['skip_id3']	= true; 
 	
 		// Attempt to find the art. 
-		$images = $album->find_art($options);
+		$images = $album->find_art($options,'6');
 
+		// We don't want to store raw's in here so we need to strip them out into a seperate array
+		foreach ($images as $index=>$image) { 
+			if (isset($image['raw'])) { 
+				//unset($images[$index]); 
+				$images[$index]['raw'] = ''; 
+			} 
+		} 
+		
 		// Store the results for further use
 		$_SESSION['form']['images'] = $images;
-	
+		
 		if (count($images)) {
 			require_once(conf('prefix') . '/templates/show_album_art.inc.php');
 		}
