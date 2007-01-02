@@ -780,8 +780,7 @@ msgstr "Alle Nu Speelt data opgeschoond"
 
 #: ../../admin/catalog.php:229
 msgid "Do you really want to clear the statistics for this catalog?"
-msgstr ""
-"Weet je zeker dat je alle Statistieken van deze catalogus wilt verwijderen?"
+msgstr "Weet je zeker dat je alle Statistieken van deze catalogus wilt verwijderen?"
 
 #: ../../admin/catalog.php:230 ../../templates/show_admin_tools.inc.php:68
 msgid "Clear Catalog Stats"
@@ -1629,7 +1628,7 @@ msgstr "Geen Records Gevonden"
 
 #: ../../templates/show_modules.inc.php:70
 msgid "Available Plugins"
-msgstr ""
+msgstr "Aanwezige Plugins"
 
 #: ../../templates/show_modules.inc.php:73
 #, fuzzy
@@ -2030,7 +2029,7 @@ msgstr "Verplicht voor Remote Catalogus"
 
 #: ../../templates/show_add_catalog.inc.php:68
 msgid "Filename Pattern"
-msgstr "Bastands Patroon"
+msgstr "Bestands Patroon"
 
 #: ../../templates/show_add_catalog.inc.php:82
 msgid "ID3V2 Tags"
@@ -2109,7 +2108,7 @@ msgstr "Eind IP Adres"
 
 #: ../../templates/show_user_recommendations.inc.php:22
 msgid "Recommendations"
-msgstr ""
+msgstr "Aanbevelingen"
 
 #: ../../templates/show_user_recommendations.inc.php:29
 #, fuzzy
@@ -2118,11 +2117,11 @@ msgstr "Hernoem Artiest"
 
 #: ../../templates/show_user_recommendations.inc.php:40
 msgid "Recommended Albums"
-msgstr ""
+msgstr "Album Aanbeveling"
 
 #: ../../templates/show_user_recommendations.inc.php:51
 msgid "Recommended Songs"
-msgstr ""
+msgstr "Nummer Aanbeveling"
 
 #: ../../templates/show_preference_admin.inc.php:22
 #, fuzzy
@@ -2150,7 +2149,7 @@ msgstr "Gebruiker"
 #: ../../templates/show_edit_album.inc.php:23
 #, fuzzy
 msgid "Edit Album"
-msgstr "Album"
+msgstr "Bewerk Album"
 
 #: ../../templates/show_edit_album.inc.php:47
 #: ../../templates/show_edit_artist.inc.php:41
@@ -2160,35 +2159,35 @@ msgstr "Werk Alle bij"
 
 #: ../../templates/show_recently_played.inc.php:23
 msgid "seconds ago"
-msgstr ""
+msgstr "seconden geleden"
 
 #: ../../templates/show_recently_played.inc.php:23
 #, fuzzy
 msgid "minutes ago"
-msgstr "Minuten"
+msgstr "minuten geleden"
 
 #: ../../templates/show_recently_played.inc.php:23
 #, fuzzy
 msgid "hours ago"
-msgstr "uren"
+msgstr "uren geleden"
 
 #: ../../templates/show_recently_played.inc.php:23
 #, fuzzy
 msgid "days ago"
-msgstr "dagen"
+msgstr "dagen geleden"
 
 #: ../../templates/show_recently_played.inc.php:23
 msgid "weeks ago"
-msgstr ""
+msgstr "weken gelden"
 
 #: ../../templates/show_recently_played.inc.php:23
 msgid "months ago"
-msgstr ""
+msgstr "maanden geleden"
 
 #: ../../templates/show_recently_played.inc.php:23
 #, fuzzy
 msgid "years ago"
-msgstr "jaar"
+msgstr "jaren geleden"
 
 #: ../../templates/show_recently_played.inc.php:26
 #, fuzzy
