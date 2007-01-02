@@ -201,6 +201,9 @@ class vainfo {
 				case 'quicktime':
 					$results[$key] = $this->_parse_quicktime($tag_array);
 				break;
+				case 'riff':
+					$results[$key] = $this->_parse_riff($tag_array); 
+				break;
 				default: 
 					debug_event('vainfo','Error: Unable to determine tag type of ' . $key . ' for file ' . $this->filename . ' Assuming id3v2','5');
 					$results[$key] = $this->_parse_id3v2($tag_array);
@@ -263,6 +266,7 @@ class vainfo {
 
 		switch ($type) { 
 			case 'mp3':
+			case 'mp2':
 			case 'mpeg3':
 				return 'mp3';
 			break;
@@ -392,6 +396,30 @@ class vainfo {
 		return $array;
 
 	} // _parse_ape
+
+	/**
+	 * _parse_riff
+	 * this function takes the riff take information passed by getid3() and 
+	 * then reformats it so that it matches the other formats. May require iconv
+	 */
+	function _parse_riff($tags) { 
+		
+		foreach ($tags as $tag=>$data) { 
+
+			switch ($tag) { 
+				case 'product':
+					$array['album'] = $this->_clean_tag($data['0'],$this->_file_encoding); 
+				break;
+				default: 
+					$array[$tag] = $this->_clean_tag($data['0'],$this->_file_encoding); 
+				break;
+			} // end switch on tag
+
+		} // foreach tags
+
+		return $array; 
+
+	} // _parse_riff
 
 	/**
 	 * _parse_quicktime

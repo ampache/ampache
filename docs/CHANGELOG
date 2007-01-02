@@ -4,6 +4,8 @@
 
 --------------------------------------------------------------------------
   v.3.3.3-Beta3 
+	- Added Die,Das,Ein,Eine as prefix's for album names (Thx Vogi)
+	- Added reading of riff tags 
 	- Improved Sidebar CSS making it more compliant with different
 		browsers (Thx Spocky)
 	- Fixed some logic errors in the Transcoding logic and play logic

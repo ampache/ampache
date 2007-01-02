@@ -1783,7 +1783,7 @@ class Catalog {
 		}
 
 		// Remove the prefix so we can sort it correctly
-		preg_match("/^(The\s|An\s|A\s)(.*)/i",$artist,$matches);
+		preg_match("/^(The\s|An\s|A\s|Die\s|Das\s|Ein\s|Eine\s)(.*)/i",$artist,$matches);
 
 		if (count($matches)) {
 			$artist = $matches[2];
@@ -1864,7 +1864,7 @@ class Catalog {
 		}
 
 		// Remove the prefix so we can sort it correctly
-		preg_match("/^(The\s|An\s|A\s)(.*)/i",$album,$matches);
+		preg_match("/^(The\s|An\s|A\s|Die\s|Das\s|Ein\s|Eine\s)(.*)/i",$album,$matches);
 
 		if (count($matches)) {
 			$album = $matches[2];
