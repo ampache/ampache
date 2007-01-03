@@ -109,7 +109,7 @@ foreach ($song_ids as $song_id) {
 		<a href="<?php echo $web_path; ?>/artists.php?action=show&amp;artist=<?php echo scrub_out($song->artist); ?>" title="<?php echo scrub_out($song->f_artist_full); ?>" <?php echo $text_class; ?>><?php echo scrub_out($song->f_artist); ?></a>
 	</td>
 	<td>
-		<a href="<?php echo $web_path; ?>/albums.php?album=<?php echo scrub_out($song->album); ?>" title="<?php echo scrub_out($song->f_album_full); ?>" <?php echo $text_class; ?>><?php echo scrub_out($song->f_album); ?></a>
+		<a href="<?php echo $web_path; ?>/albums.php?action=show&amp;album=<?php echo scrub_out($song->album); ?>" title="<?php echo scrub_out($song->f_album_full); ?>" <?php echo $text_class; ?>><?php echo scrub_out($song->f_album); ?></a>
 	</td>
 	<td align="right">
 		<?php echo $song->track; ?>
