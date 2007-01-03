@@ -4,6 +4,8 @@
 
 --------------------------------------------------------------------------
   v.3.3.3-Beta3 
+	- Fixed some get_info() references in song.class.php that caused
+		XBMC to not work. 
 	- Added Die,Das,Ein,Eine as prefix's for album names (Thx Vogi)
 	- Added reading of riff tags 
 	- Improved Sidebar CSS making it more compliant with different

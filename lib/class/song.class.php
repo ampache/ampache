@@ -725,14 +725,14 @@ class Song {
        function get_rel_path($file_path=0,$catalog_id=0) {
        
 		if (!$file_path) { 
-			$info = $this->get_info( );
+			$info = $this->_get_info();
 			$file_path = $info->file;
 		}
 		if (!$catalog_id) { 
 			$catalog_id = $info->catalog;
 		}
 	        $catalog = new Catalog( $catalog_id );
-                $info = $catalog->get_info( );
+                $info = $catalog->_get_info();
                 $catalog_path = $info->path;
 		$catalog_path = rtrim($catalog_path, "/");
                 return( str_replace( $catalog_path . "/", "", $file_path ) );
