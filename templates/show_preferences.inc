@@ -5,9 +5,8 @@
  All rights reserved
 
  This program is free software; you can redistribute it and/or
- modify it under the terms of the GNU General Public License
- as published by the Free Software Foundation; either version 2
- of the License, or (at your option) any later version.
+ modify it under the terms of the GNU General Public License v2
+ as published by the Free Software Foundation.
 
  This program is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -49,7 +48,7 @@ if (($GLOBALS['user']->has_access(100)) AND ($user_id == '-1' AND conf('use_auth
 ?>
 <?php show_box_top(); ?>
 <span class="header1">
-<?php echo _("Editing"); ?> <?php echo $fullname; ?> <?php echo _('preferences'); ?> 
+<?php echo _('Editing'); ?> <?php echo $fullname; ?> <?php echo _('preferences'); ?> 
 <?php if ($GLOBALS['user']->has_access(100)) { ?>
 [<a href="<?php echo conf('web_path'); ?>/admin/preferences.php?action=fix_preferences&amp;user_id=<?php echo $user_id; ?>"><?php echo _("Rebuild Preferences"); ?></a>]
 <?php } ?>
@@ -88,7 +87,7 @@ if ($current_tab != 'account' && $current_tab != 'modules') {
 	show_preference_box($preferences[$current_tab]); 
 
 ?>
-	<input class="button" type="submit" value="<?php echo _("Update Preferences"); ?>" />
+	<input class="button" type="submit" value="<?php echo _('Update Preferences'); ?>" />
 	<input type="hidden" name="action" value="update_preferences" />
 	<input type="hidden" name="user_id" value="<?php echo $user_id; ?>" />&nbsp;&nbsp;
 	<input type="hidden" name="tab" value="<?php echo scrub_out($current_tab); ?>" />

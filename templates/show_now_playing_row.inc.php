@@ -5,9 +5,8 @@ Copyright (c) 2001 - 2006 Ampache.org
 All rights reserved.
 
 This program is free software; you can redistribute it and/or
-modify it under the terms of the GNU General Public License
-as published by the Free Software Foundation; either version 2
-of the License, or (at your option) any later version.
+modify it under the terms of the GNU General Public License v2
+as published by the Free Software Foundation.
 
 This program is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -33,9 +32,9 @@ $artist = scrub_out(truncate_with_ellipse($song->f_artist_full,'25'));
 	</a>
 </td>
 <td class="np_cell">
-	<a title="<?php echo scrub_out($song->album_full); ?>" href="<?php echo $web_path; ?>/albums.php?action=show&amp;album=<?php echo $song->album; ?>">
+	<a title="<?php echo scrub_out($song->f_album_full); ?>" href="<?php echo $web_path; ?>/albums.php?action=show&amp;album=<?php echo $song->album; ?>">
 		<?php echo $album; ?></a> /
-	<a title="<?php echo scrub_out($song->artist_full); ?>" href="<?php echo $web_path; ?>/artists.php?action=show&amp;artist=<?php echo $song->artist; ?>">
+	<a title="<?php echo scrub_out($song->f_artist_full); ?>" href="<?php echo $web_path; ?>/artists.php?action=show&amp;artist=<?php echo $song->artist; ?>">
 		<?php echo $artist; ?>
 	</a>
 </td>
