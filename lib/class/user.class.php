@@ -220,6 +220,9 @@ class User {
 			"WHERE object_type='" . sql_escape($type) . "' AND user='" . sql_escape($this->id) . "'";
 		$db_results = mysql_query($sql,dbh()); 
 
+		// Incase they only have one user
+		$users = array(); 
+
 		while ($r = mysql_fetch_assoc($db_results)) { 
 			/* Store the fact that you rated this */
 			$key = $r['object_id'];
@@ -242,8 +245,8 @@ class User {
 		 * sort the users[$key] array by value and then find things they've rated high (4+) that you
 		 * haven't rated
 		 */
-		asort($users);
 		$recommendations = array(); 
+		asort($users);
 
 		foreach ($users as $user_id=>$score) { 
 

@@ -266,15 +266,6 @@ debug_level = 5
 # DEFAULT: NULL
 #log_path = "/var/log/ampache"
 
-# Max Upload Size
-# This sets what the max file-size for an uploaded
-# file, this is good at preventing someone from
-# filling up your HDD. It is measured in bytes
-# Example 1024 = 1K, 1048576 = 1MB
-# Default size limit is 10Mb
-# DEFAULT: 10485760
-max_upload_size = "10485760"
-
 # Charset of generated HTML pages
 # Default of UTF-8 should work for most poeple
 # DEFAULT: UTF-8

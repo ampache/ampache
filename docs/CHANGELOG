@@ -4,6 +4,12 @@
 
 --------------------------------------------------------------------------
   v.3.3.3-Beta3 
+  	- Fixed a view issue introduced when sorting of the albums under
+		single artist view was added 
+  	- Removed unused options from config file
+  	- Fixed some remaining album art issues and a undefined array()
+		issue if you only have one user and try to view 
+		recommendations
 	- Fixed some get_info() references in song.class.php that caused
 		XBMC to not work. 
 	- Added Die,Das,Ein,Eine as prefix's for album names (Thx Vogi)

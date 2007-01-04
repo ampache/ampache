@@ -60,7 +60,7 @@ switch($action) {
                 if (!$sort_order) { $sort_order = 'album.name'; }
                 $db_results = mysql_query($sql, dbh());
                 $total_items = mysql_num_rows($db_results);
-                if ($match != "Show_all") { $offset_limit = $_SESSION['userdata']['offset_limit']; }
+		$offset_limit = $total_items;
                 $view = new View($sql, 'artists.php',$sort_order,$total_items,$offset_limit);
         }
 

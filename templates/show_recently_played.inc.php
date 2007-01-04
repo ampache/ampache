@@ -30,7 +30,7 @@ $time_unit = array('',_('seconds ago'),_('minutes ago'),_('hours ago'),_('days a
 	<td><?php echo _('Song'); ?></td>
 	<td><?php echo _('Album'); ?></td>
 	<td><?php echo _('Artist'); ?></td>
-	<td>&nbsp;</td>
+	<td><?php echo _('Last Played'); ?></td>
 </tr>
 <?php foreach ($data as $row) { 
 	$row_user = new User($row['user']);

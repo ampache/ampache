@@ -148,16 +148,12 @@ switch ($action) {
 		/* Check to see if we have the image url still */
 		$image_id = $_REQUEST['image'];
 		$album_id = $_REQUEST['album_id'];
-	
-		$url 	= $_SESSION['form']['images'][$image_id]['url'];
-		$mime	= $_SESSION['form']['images'][$image_id]['mime'];
-		$snoopy = new Snoopy();
-		$snoopy->fetch($url);
 		
-		$image_data = $snoopy->results;
+		$image 	= get_image_from_source($_SESSION['form']['images'][$image_id]);
+		$mime	= $_SESSION['form']['images'][$image_id]['mime'];
 	
 		$album = new Album($album_id);
-		$album->insert_art($image_data,$mime);
+		$album->insert_art($image,$mime);
 
 		show_confirmation(_('Album Art Inserted'),'',"/albums.php?action=show&album=$album_id");
 
