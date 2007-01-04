@@ -4,6 +4,7 @@
 
 --------------------------------------------------------------------------
   v.3.3.3-Beta3 
+  	- Last Database update before Stable
   	- Fixed a view issue introduced when sorting of the albums under
 		single artist view was added 
   	- Removed unused options from config file

@@ -340,6 +340,11 @@ class Update {
 		
 		$version[] = array('version' => '333003','description' => $update_string);
 
+		$update_string = '- Removed Time Zone Preference that never should have been added.<br />' . 
+				'- Added German Prefixes to Album.Prefix and Artist.Prefix.<br />';
+
+		$version[] = array('version' => '333004','description' => $update_string); 
+
 		return $version;
 
 	} // populate_version
@@ -2138,6 +2143,37 @@ class Update {
 		$this->set_version('db_version','333003');
 
 	} // update_333003
+
+	/**
+	 * update_333004
+	 * This removes the TIME preference which I never should have added
+	 * and adds the German prefixes to the album table
+	 */
+	function update_333004() { 
+
+		$sql = "DELETE FROM preferences WHERE `name`='time_zone'";
+		$db_results = mysql_query($sql,dbh()); 
+
+		$sql = "ALTER TABLE `album` CHANGE `prefix` `prefix` ENUM('The','An','A','Der','Die','Das','Ein','Eine') NULL";
+		$db_results = mysql_query($sql, dbh()); 
+
+		$sql = "ALTER TABLE `artist` CHANGE `prefix` `prefix` ENUM('The','An','A','Der','Die','Das','Ein','Eine') NULL";
+		$db_results = mysql_query($sql,dbh()); 
+
+		/* Fix all preferences */
+		$sql = "SELECT * FROM user"; 
+		$db_results = mysql_query($sql,dbh()); 
+
+		$user = new User(); 
+		$user->fix_preferences('-1'); 
+
+		while ($r = mysql_fetch_assoc($db_results)) { 
+			$user->fix_preferences($r['username']); 
+		} // while results
+
+		$this->set_version('db_version','333004'); 
+
+	} // update_333004
 
 } // end update class
 ?>
