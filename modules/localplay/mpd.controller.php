@@ -385,7 +385,7 @@ class AmpacheMpd {
 		$array['volume']	= $this->_mpd->volume;
 		$array['repeat']	= $this->_mpd->repeat;
 		$array['random']	= $this->_mpd->random;
-		$array['track']		= $track;
+		$array['track']		= $track+1;
 
 		preg_match("/song=(\d+)\&/",$this->_mpd->playlist[$track]['file'],$matches);
 		$song_id = $matches['1'];
