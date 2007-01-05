@@ -167,7 +167,7 @@ class Song {
 		switch ($this->type) { 
 			case 'spx':
 			case 'ogg':
-				$this->mime = "application/x-ogg";
+				$this->mime = "application/ogg";
 			break;
 			case 'wma':
 			case 'asf':
@@ -182,7 +182,7 @@ class Song {
 				$this->mime = "audio/x-realaudio";
 			break;
 			case 'flac';
-				$this->mime = "audio/x-flac";
+				$this->mime = "application/x-flac";
 			break;
 			case 'wv':
 				$this->mime = 'audio/x-wavpack';
