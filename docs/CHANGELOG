@@ -3,7 +3,12 @@
 --------------------------------------------------------------------------
 
 --------------------------------------------------------------------------
-  v.3.3.3-Beta3 
+  v.3.3.3-Beta3 01/04/2007 
+	- Fixed a few more unhandled mis-configurations of Localplay which
+		could cause PHP errors
+	- Fixed an issue with the Quick Jump box on Browse by Songs
+		(Thx Jru)
+	- Tweaked Headers passed for AJAX in an attempt to 'help' IE. 
   	- Last Database update before Stable
   	- Fixed a view issue introduced when sorting of the albums under
 		single artist view was added 
@@ -22,7 +27,7 @@
 	- Added potential fix for FastCGI installations
 	- Updated Snoopy to 1.2.3 (from manually patched 1.2.1) 
 	- Fixed sorting of Themes, now sorted by Alpha of theme name
-	- Fixed long standing Now Playing display in Classic Theme
+	- Fixed long standing Now Playing display issue in Classic Theme
 	- Fixed Now Playing to account for Windows Media Player 11s 
 		3 HTTP Requests per song stupidity
 	- Added ability to mass tag using play selected functionality

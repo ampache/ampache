@@ -120,7 +120,7 @@ switch($action) {
 	        show_alphabet_list('song_title','browse.php',$match,'song_title');
                 /* Detect if it's Browse, and if so don't fill it in */
                 if ($match == 'Browse') { $match = ''; }
-                show_alphabet_form($match,_('Show Titles Starting With'),"browse.php?action=song_title&amp;match=$match");
+                show_alphabet_form($match,_('Show Titles Starting With'),"browse.php");
 		require (conf('prefix') . '/templates/show_box_bottom.inc.php');
 	
 		$sql = $song->get_sql_from_match($_REQUEST['match']);

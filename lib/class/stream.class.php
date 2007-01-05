@@ -315,8 +315,18 @@ class Stream {
 	 */
 	function create_localplay() { 
 
-		$localplay = init_localplay();
-		$localplay->connect(); 
+		if (!$localplay = init_localplay()) { 
+			debug_event('localplay','Player failed to init on song add','3');
+			echo "Error: Localplay Init Failed check config";
+			return false; 
+		} 
+
+		if (!$localplay->connect()) { 
+			debug_event('localplay','Localplay Player Connect failed','3'); 
+			echo "Error: Localplay connect failed check config";
+			return false; 
+		} 
+
 		$localplay->add($this->songs);
 
 		/* Check for Support */ 

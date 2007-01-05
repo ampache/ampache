@@ -80,7 +80,8 @@ class Localplay {
 		
 		if (!$include) { 
 			/* Throw Error Here */
-
+			debug_event('localplay','Unable to load ' . $this->type . ' controller','2');
+			return false; 
 		} // include
 		else { 
 			$class_name = "Ampache" . $this->type;
