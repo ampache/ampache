@@ -67,7 +67,7 @@ if (!$results = read_config($configfile,0)) {
 } 
 
 /** This is the version.... fluf nothing more... **/
-$results['version']		= '3.3.3-Beta3';
+$results['version']		= '3.3.3 Build (001)';
 
 $results['raw_web_path']	= $results['web_path'];
 $results['web_path']		= $http_type . $_SERVER['HTTP_HOST'] . $results['web_path'];
@@ -298,11 +298,11 @@ elseif (!conf('use_auth')) {
 }
 else { 
 	if (isset($_REQUEST['sessid'])) { 
-		$results = vauth_get_session($_REQUEST['sessid']);	
+		$sess_results = vauth_get_session($_REQUEST['sessid']);	
 		session_id(scrub_in($_REQUEST['sessid']));
 		session_start();
 	}
-	$user = new user($results['username']);
+	$user = new user($sess_results['username']);
 	init_preferences();
 }
 

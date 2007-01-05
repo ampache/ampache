@@ -26,7 +26,6 @@
 */
 
 require_once('lib/init.php');
-
 show_template('header');
 
 $action = scrub_in($_REQUEST['action']);

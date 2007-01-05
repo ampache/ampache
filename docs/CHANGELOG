@@ -3,6 +3,11 @@
 --------------------------------------------------------------------------
 
 --------------------------------------------------------------------------
+  v.3.3.3 
+	- Fixed an issue that caused AJAX not to work if you were working
+		in a sub-directory. 
+
+--------------------------------------------------------------------------
   v.3.3.3-Beta3 01/04/2007 
 	- Fixed a few more unhandled mis-configurations of Localplay which
 		could cause PHP errors
