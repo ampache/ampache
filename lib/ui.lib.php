@@ -893,11 +893,11 @@ function show_genre_pulldown ($name,$selected='',$size=1,$width=0,$style='') {
 
         while ($r = mysql_fetch_assoc($db_result)) {
 		
-		$r['name'] = scrub_out($r['name']);
-
 		if ($width > 0) { 
 			$r['name'] = truncate_with_ellipsis($r['name'],$width);
 		}
+		
+		$r['name'] = scrub_out($r['name']);
 		
                 if ( $selected == $r['id'] ) {
                         echo "\t<option value=\"" . $r['id'] . "\" selected=\"selected\">" . $r['name'] . "</option>\n";

@@ -187,7 +187,10 @@
 		}
 
 #content { 
-	float: none; 
+	top:90px;
+	float: none;
+	margin-top:7px;
+	margin-left:135px;	
 	background-color: #8B8B8B;
 }
 
