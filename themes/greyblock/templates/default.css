@@ -328,6 +328,15 @@
 		{
 			float: left;
 		}
+
+#tv_left { 
+	float: left;
+	clear: left;
+} 
+#tv_np { 
+	float: right;
+}
+
 /* styles for the star ratings */
 .star-rating{
         list-style:none;

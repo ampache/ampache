@@ -182,7 +182,7 @@ class Song {
 				$this->mime = "audio/x-realaudio";
 			break;
 			case 'flac';
-				$this->mime = "application/x-flac";
+				$this->mime = "audio/x-flac";
 			break;
 			case 'wv':
 				$this->mime = 'audio/x-wavpack';

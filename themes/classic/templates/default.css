@@ -601,14 +601,13 @@ margin-right:5em;
 
 
 /* TV Page Related Styles */
-#tv_control { 
-	float:left;
-} 
-
 #tv_np {
 	float:right;
 }
-
+#tv_left { 
+	float: left;
+	clear right;
+}
 #tv_playlist {
 	clear: both;
 }

@@ -120,6 +120,13 @@ if (make_bool($GLOBALS['user']->disabled)) {
 
 /* If we don't have a file, or the file is not readable */
 if (!$song->file OR ( !is_readable($song->file) AND $catalog->catalog_type != 'remote' ) ) { 
+
+	// We need to make sure this isn't democratic play, if it is then remove the song
+	// from the vote list
+	if (is_object($tmp_playlist)) { 
+		$tmp_playlist->delete_track($song_id); 
+	}
+
 	debug_event('file_not_found',"Error song ($song->title) does not have a valid filename specified",'2');
 	echo "Error: Invalid Song Specified, file not found or file unreadable"; 
 	exit; 

@@ -56,10 +56,11 @@ $admin_menu = "admin/";
         <td align="center">
 		<b><?php echo _('Activity'); ?></b>
 	</td>
+	<?php if (conf('track_user_ip')) { ?>
         <td align="center">
 		<b><?php echo _('Last Ip'); ?></b>
 	</td>
-
+	<?php } ?>
 	<td colspan="5">&nbsp;</td>
         <td align="center">
 		<b><?php echo _('On-line'); ?></b>
@@ -91,13 +92,13 @@ while ($results = mysql_fetch_object($db_result)) {
         <td>
 		<?php echo $user->f_useage; ?>
 	</td>
+	<?php if (conf('track_user_ip')) { ?>
         <td>
 		<a href="<?php echo $web_path; ?>/admin/users.php?action=show_ip_history&amp;user_id=<?php echo $user->id; ?>">
 			<?php echo $user->ip_history; ?>
 		</a>
 	</td>
-
-
+	<?php } ?>
         <td>
 		<a href="<?php echo $web_path; ?>/admin/users.php?action=edit&amp;user=<?php echo $user->id; ?>">
 			<?php echo get_user_icon('edit'); ?>

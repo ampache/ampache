@@ -83,6 +83,8 @@ class Update {
 		/* Make sure that update_info exits */
 		$sql = "SHOW TABLES LIKE 'update_info'";
 		$db_results = mysql_query($sql, dbh());
+		if (!is_resource(dbh())) { header("Location: test.php"); } 
+
 		// If no table
 		if (!mysql_num_rows($db_results)) {
 			
