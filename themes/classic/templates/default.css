@@ -606,7 +606,7 @@ margin-right:5em;
 }
 #tv_left { 
 	float: left;
-	clear right;
+	clear: right;
 }
 #tv_playlist {
 	clear: both;
