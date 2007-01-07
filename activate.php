@@ -31,7 +31,6 @@ if(!conf('allow_public_registration') || conf('demo_mode'))  {
 }
 ?>
 <html><head>
-<link rel="stylesheet" href="<?php echo $web_path; ?>/templates/default.css" type="text/css" />
 <link rel="stylesheet" href="<?php echo $web_path; ?><?php echo conf('theme_path'); ?>/templates/default.css" type="text/css" />
 <head><body>
 <?php 

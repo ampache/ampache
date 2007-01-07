@@ -307,7 +307,7 @@ class HttpQPlayer {
 	 */	
 	function sendCommand($cmd, $args) {
 
-  		$fp = fsockopen($this->host, $this->port, &$errno, &$errstr); 
+  		$fp = fsockopen($this->host, $this->port, $errno, $errstr); 
 
   		if(!$fp) {
     			debug_event('httpq',"HttpQPlayer: $errstr ($errno)",'1');
