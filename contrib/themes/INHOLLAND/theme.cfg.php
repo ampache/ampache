@@ -28,7 +28,7 @@ maintainer = "Terence Theijn <terence.theijn@gmail.com>"
 # Version
 # This is the revision for this theme, It's up to the maintainer
 # or author to decide how they want to format this
-version = "1.0a"
+version = "1.1"
 
 # Orientation
 # This was added as of 3.3.2-Alpha4, this tells Ampache if this theme
