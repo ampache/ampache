@@ -35,8 +35,6 @@ $browse_items[] = array('title'=>_("Albums"),'url'=>'albums.php','active'=>$loca
 $browse_items[] = array('title'=>_("Artists"),'url'=>'artists.php','active'=>$location['page'], 'cssclass'=>'sidebar_browse_artists');
 $browse_items[] = array('title'=>_("Genre"),'url'=>'browse.php?action=genre','active'=>$location['page'], 'cssclass'=>'sidebar_browse_genre');
 $browse_items[] = array('title'=>_('Song Title'),'url'=>'browse.php?action=song_title','active'=>$location['page'], 'cssclass'=>'sidebar_browse_song_title');
-$browse_items[] = array('title'=>_("Lists"),'url'=>'browse.php','active'=>$location['page'], 'cssclass'=>'sidebar_browse_lists');
-//$browse_items[] = array('title'=>'File','url'=>'files.php','active'=>''); <!--pb1dft: this can be cleaned up -->
 
 $web_path = conf('web_path');
 
@@ -165,7 +163,7 @@ $web_path = conf('web_path');
 		</form>
 	</li>
 <?php } // end if ($GLOBALS['theme']['orientation'] != 'horizontal') ?> 
-<?php if ($GLOBALS['user']->prefs['localplay_level'] > 0) { ?>
+<?php if ($GLOBALS['user']->prefs['localplay_level'] > 0 AND conf('allow_localplay_playback')) { ?>
 	<li id="sidebar_localplay">
 		<a href="<?php echo $web_path; ?>/localplay.php"><?php echo _('Localplay'); ?></a>
 	</li>

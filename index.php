@@ -41,49 +41,9 @@ if (conf('refresh_limit') > 5) {
 	$ajax_url = str_replace("&amp;","&",$ajax_url);
 	require_once(conf('prefix') . '/templates/javascript_refresh.inc.php');
 }
+
+require_once(conf('prefix') . '/templates/show_index.inc.php');
+
+show_footer(); 
+
 ?>
-<div id="np_data">
-	<?php show_now_playing(); ?>
-</div> <!-- Close Now Playing Div -->
-<!-- Recently Played -->
-<div id="recently_played">
-	<?php 
-		$data = get_recently_played(); 
-		if (count($data)) { require_once(conf('prefix') . '/templates/show_recently_played.inc.php'); }
-	?>
-</div>
-<!-- Big Daddy Table -->
-<?php show_box_top(); ?>
-<table id="biddaddy"><!-- The Table --> 
-		<tr>
-			<td valign="top"> 
-				<?php show_local_catalog_info(); ?>
-			</td>
-			<td valign="top">
-			<?php 
-				if ($items = get_global_popular('album')) { 
-					show_info_box(_('Most Popular Albums'), 'album',$items);
-				}
-			?>
-			</td>	
-		</tr>
-		<tr>
-			<td valign="top">
-			<?php
-				if ($items = get_global_popular('artist')) {
-					show_info_box(_('Most Popular Artists'), 'artist', $items);
-				}
-			?>
-			</td>
-			<td valign="top">
-			<?php
-				if ($items = get_newest('album')) {
-					show_info_box(_('Newest Album Additions'), '', $items);
-				}
-			?>
-			</td>
-		</tr>
-		</table><!-- End Left table -->
-<?php show_box_bottom(); ?>
-<!-- End Big Daddy Table -->
-<?php show_footer(); ?>

@@ -155,11 +155,12 @@ class Album {
 	        $this->f_name	= "<a href=\"$web_path/albums.php?action=show&amp;album=" . $this->id . "\" title=\"" . scrub_out($this->name) . "\">" . $name . "</a>";
 		$this->f_link	= "<a href=\"$web_path/albums.php?action=show&amp;album=" . scrub_out($this->id) . "\" title=\"" . scrub_out($this->name) . "\">" . $name . "</a>";
 	        $this->f_songs	= "<div align=\"center\">" . $this->songs . "</div>";
+
 		if ($this->artist_count == '1') { 
 		        $this->f_artist	= "<a href=\"$web_path/artists.php?action=show&amp;artist=" . $this->artist_id . "\">" . $artist . "</a>";
 		}
 		else {
-			$this->f_artist = _("Various");
+			$this->f_artist = _('Various');
 		}
 
 		if ($this->year == '0') { 

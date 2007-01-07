@@ -5,9 +5,8 @@
  All rights reserved. 
 
  This program is free software; you can redistribute it and/or
- modify it under the terms of the GNU General Public License
- as published by the Free Software Foundation; either version 2
- of the License, or (at your option) any later version.
+ modify it under the terms of the GNU General Public License v2
+ as published by the Free Software Foundation.
  
  This program is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -24,20 +23,24 @@
 <table class="tabledata">
 <tr>
 	<td valign="top" >
-		<?php show_info_box(_("Most Popular Artists"), 'artist', $artists); ?>
+		<?php show_info_box(_('Most Popular Artists'), 'artist', $artists); ?>
 	</td>
 	<td valign="top" align="left">
-		<?php show_info_box(_("Most Popular Albums"), '', $albums); ?>
+		<?php show_info_box(_('Most Popular Albums'), '', $albums); ?>
 	</td>
-
+	<td valign="top" align="left">
+		<?php show_info_box(_('Most Popular Genres'), '', $genres); ?>
+	</td>
 </tr>
 <tr><td colspan="2">&nbsp;</td></tr>
 <tr>
-	<td valign="top" align="left">
-		<?php show_info_box(_("Most Popular Genres"), '', $genres); ?>
+	<td valign="top">
+		<?php show_info_box(_('Most Popular Songs'), 'song', $songs); ?>
 	</td>
-	<td valign="top" >
-		<?php show_info_box(_("Most Popular Songs"), 'song', $songs); ?>
+	<td valign="top">
+		<?php show_info_box(_('Most Popular Live Streams'),'live_stream',$live_streams); ?>
+	</td>
+	<td valign="top">
+		<?php show_info_box(_('Most Popular Tags'),'tags',$tags); ?>
 	</td>
 </tr>
-</table>

@@ -4,6 +4,18 @@
 
 --------------------------------------------------------------------------
   v.3.3.3 
+  	- Fixed a img resize logic error that could cause no art to
+		display if resize was on and resize failed
+  	- Added Albums of the Moment to the Front page and removed the
+		stats information
+  	- Moved Popular/Recent to /stats.php and made Browse by Song the
+		default browse action
+  	- Fixed missing clean of Genre stats information and a logic
+		flaw with order of clean functions in the catalog clean 
+  	- Fixed Localplay page appearing even if disabled by Admin Config
+		if user still had distinct permissions
+  	- Added Menu to TV page per request
+  	- Fixed Album Art Upload and Cover URL methods
   	- Fixed play lock with Democratic Play if song no longer exists
   	- Fixed a display issue of the Now Playing on the Democratic
 		play page

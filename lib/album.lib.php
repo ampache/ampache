@@ -59,4 +59,28 @@ function get_image_from_source($data) {
 
 } // get_image_from_source
 
+/**
+ * get_random_albums
+ * This returns a random number of albums from the catalogs
+ * this is used by the index to return some 'potential' albums to play
+ */
+function get_random_albums($count='') { 
+
+	if (!$count) { $count = 5; } 
+
+	$count = sql_escape($count); 
+
+	$sql = "SELECT id FROM album ORDER BY RAND() LIMIT $count"; 
+	$db_results = mysql_query($sql,dbh()); 
+
+	$results = array(); 
+
+	while ($r = mysql_fetch_assoc($db_results)) { 
+		$results[] = $r['id']; 
+	} 
+
+	return $results; 
+
+} // get_random_albums
+
 ?>

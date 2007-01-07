@@ -62,6 +62,14 @@ switch ($action) {
 		$recommended_songs	= $working_user->get_recommendations('song');
 
 		require_once(conf('prefix') . '/templates/show_user_recommendations.inc.php');
+
+                show_box_top();
+                /* Show Most Popular artist/album/songs */
+                show_all_popular();
+
+                /* Show Recent Additions */
+                show_all_recent();
+                show_box_bottom();
 		
 	break;
 } // end switch on action

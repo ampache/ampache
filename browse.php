@@ -105,6 +105,7 @@ switch($action) {
         	}
 		
 	break;
+	default:
 	case 'song_title':
 		/* Create the Needed Object */
 		$song = new Song();
@@ -144,18 +145,6 @@ switch($action) {
 	case 'catalog':
 	
 	break;
-	/* Throw recently added, updated here */
-	default:
-		show_box_top(); 
-		/* Show Most Popular artist/album/songs */
-		show_all_popular();
-
-		/* Show Recent Additions */
-		show_all_recent();
-		show_box_bottom();
-
-	break;
-
 } // end Switch $action
 
 /* Show the Footer */

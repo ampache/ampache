@@ -59,7 +59,6 @@ switch ($_REQUEST['type']) {
 		$image = get_image_from_source($_SESSION['form']['images'][$key]);
 		
 		$mime = $_SESSION['form']['images'][$key]['mime'];
-
 		$data = explode("/",$mime); 
 		$extension = $data['1']; 
 
@@ -88,11 +87,11 @@ switch ($_REQUEST['type']) {
 		$extension = $data['1'];
 		header("Content-type: $mime");
 		header("Content-Disposition: filename=" . $album->name . "." . $extension);	
-		if (!$_REQUEST['thumb']) { 
+		if (empty($_REQUEST['thumb'])) { 
 			echo $art;
 		}
 		elseif (!img_resize($art,$size,$extension)) { 
-		    	echo $art;
+			echo $art; 
 		}
 	break;
 } // end switch type

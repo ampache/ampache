@@ -85,12 +85,29 @@ switch ($action) {
 
 	break; 
 	case 'find_art':
-	
+
+		// If not a user then kick em out
 		if (!$GLOBALS['user']->has_access('25')) { access_denied(); exit; }
-	
+
 		// get the Album information
 	        $album = new Album($_REQUEST['album_id']);
 
+		// If we've got an upload ignore the rest and just insert it
+		if (!empty($_FILES['file']['tmp_name'])) { 
+			$path_info = pathinfo($_FILES['file']['name']); 
+			$upload['file'] = $_FILES['file']['tmp_name'];
+			$upload['mime'] = 'image/' . $path_info['extension']; 
+			$image_data = get_image_from_source($upload); 
+
+			if ($image_data) { 
+				$album->insert_art($image_data,$upload['0']['mime']); 
+				show_confirmation(_('Album Art Inserted'),'',"/albums.php?action=show&album=" . $_REQUEST['album_id']);
+				break;
+
+			} // if image data
+
+		} // if it's an upload
+		
 		// Build the options for our search
 		if (isset($_REQUEST['artist_name'])) { 
 			$artist = scrub_in($_REQUEST['artist_name']);
@@ -108,12 +125,18 @@ switch ($action) {
 		$options['artist'] 	= $artist; 
 		$options['album_name']	= $album_name; 
 		$options['keyword']	= $artist . " " . $album_name; 
-		$options['url']		= $_REQUEST['cover'];
 		// HACK that makes baby jesus cry...
 		$options['skip_id3']	= true; 
 	
 		// Attempt to find the art. 
 		$images = $album->find_art($options,'6');
+
+		if (isset($_REQUEST['cover'])) { 
+			$path_info = pathinfo($_REQUEST['cover']); 
+			$cover_url[0]['url'] 	= scrub_in($_REQUEST['cover']); 
+			$cover_url[0]['mime'] 	= 'image/' . $path_info['extension'];
+		}
+		$images = array_merge($cover_url,$images); 
 
 		// We don't want to store raw's in here so we need to strip them out into a seperate array
 		foreach ($images as $index=>$image) { 
@@ -155,8 +178,8 @@ switch ($action) {
 		$album = new Album($album_id);
 		$album->insert_art($image,$mime);
 
-		show_confirmation(_('Album Art Inserted'),'',"/albums.php?action=show&album=$album_id");
 
+		show_confirmation(_('Album Art Inserted'),'',"/albums.php?action=show&album=$album_id");
 	break;
 	case 'update_from_tags':
 	

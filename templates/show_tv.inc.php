@@ -22,20 +22,6 @@
 $htmllang = str_replace("_","-",conf('lang'));
 $location = get_location();
 
-?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php echo $htmllang; ?>" lang="<?php echo $htmllang; ?>">
-<head>
-<link rel="shortcut icon" href="<?php echo $web_path; ?>/favicon.ico" />
-<meta http-equiv="Content-Type" content="text/html; charset=<?php echo conf('site_charset'); ?>" />
-<title><?php echo conf('site_title'); ?> - <?php echo $location['title']; ?></title>
-<link rel="stylesheet" href="<?php echo $web_path; ?><?php echo conf('theme_path'); ?>/templates/default.css" type="text/css" />
-</head>
-<body>
-<script src="<?php echo $web_path; ?>/lib/javascript-base.js" language="javascript" type="text/javascript"></script>
-<script src="<?php echo $web_path; ?>/modules/kajax/ajax.js" language="javascript" type="text/javascript"></script>
-<?php 
-
 /**
  * Check for the refresh mojo, if it's there then require the
  * refresh_javascript include. Must be greater then 5, I'm not
@@ -52,9 +38,6 @@ if (conf('refresh_limit') > 5) {
 <!-- Left Col -->
 <div id="tv_left">
 <?php show_box_top(_('Controls')); ?>
-<div class="text-action">
-	<a href="<?php echo conf('web_path'); ?>/index.php"><?php echo _('Home'); ?></a>
-</div>
 <!-- Control DIV -->
 <div id="tv_control">
 <?php 

@@ -619,6 +619,9 @@ function img_resize($image,$size,$type){
 	}
 
 	$src = imagecreatefromstring($image);
+	
+	if (!$src) { return false; } 
+
 	$width = imagesx($src);
 	$height = imagesy($src);
 
@@ -626,7 +629,10 @@ function img_resize($image,$size,$type){
 	$new_h = $size['height'];
 
 	$img = imagecreatetruecolor($new_w,$new_h);
-	imagecopyresampled($img,$src,0,0,0,0,$new_w,$new_h,$width,$height);
+	
+	if (!imagecopyresampled($img,$src,0,0,0,0,$new_w,$new_h,$width,$height)) { 
+		return false;
+	}
 
 	// determine image type and send it to the client
 	switch ($type) {

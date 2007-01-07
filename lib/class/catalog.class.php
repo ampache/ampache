@@ -1252,10 +1252,11 @@ class Catalog {
 		 */
 		$this->clean_albums();
 		$this->clean_artists();
-		$this->clean_stats();
 		$this->clean_playlists();
 		$this->clean_flagged();
 		$this->clean_genres();
+		$this->clean_stats();
+		$this->clean_ext_info(); 
 		
 		/* Return dead files, so they can be listed */
 		if ($verbose) { 
@@ -1326,25 +1327,6 @@ class Catalog {
 	 */
 	function clean_genres() { 
 
-                /* Mysql 3.23 doesn't support our cool query so we have to do it a different way */
-                if (preg_match("/^3\./",mysql_get_server_info())) {
-                        $sql = "SELECT genre.id FROM genre LEFT JOIN song ON song.genre = genre.id WHERE song.id IS NULL";
-                        $db_results = mysql_query($sql, dbh());
-
-                        $results = array();
-
-                        while ($r = mysql_fetch_row($db_results)) {
-                                $results[] = $r;
-                        }
-
-                        foreach ($results as $dead) {
-
-                                $sql = "DELETE FROM genre WHERE id='$dead[0]'";
-                                $db_results = mysql_query($sql,dbh());
-                        }
-                        return true;
-                }
-
                 /* Do a complex delete to get albums where there are no songs */
                 $sql = "DELETE FROM genre USING genre LEFT JOIN song ON song.genre = genre.id WHERE song.id IS NULL";
                 $db_results = mysql_query($sql, dbh());
@@ -1359,25 +1341,6 @@ class Catalog {
 	*/
 	function clean_albums() {
 
-		/* Mysql 3.23 doesn't support our cool query so we have to do it a different way */
-		if (preg_match("/^3\./",mysql_get_server_info())) { 
-			$sql = "SELECT album.id FROM album LEFT JOIN song ON song.album = album.id WHERE song.id IS NULL";
-			$db_results = mysql_query($sql, dbh());
-
-			$results = array();
-
-			while ($r = mysql_fetch_row($db_results)) { 
-				$results[] = $r;
-			}
-
-			foreach ($results as $dead) { 
-
-				$sql = "DELETE FROM album WHERE id='$dead[0]'";
-				$db_results = mysql_query($sql,dbh());
-			} 
-			return true;
-		}
-
 		/* Do a complex delete to get albums where there are no songs */
 		$sql = "DELETE FROM album USING album LEFT JOIN song ON song.album = album.id WHERE song.id IS NULL";
 		$db_results = mysql_query($sql, dbh());
@@ -1390,24 +1353,6 @@ class Catalog {
 	*/
 	function clean_flagged() { 
 
-		/* Mysql 3.23 doesn't support our cool query so we have to do it a different way */
-		if (preg_match("/^3\./",mysql_get_server_info())) { 
-			$sql = "SELECT flagged.id FROM flagged LEFT JOIN song ON song.id=flagged.song WHERE song.id IS NULL";
-			$db_results = mysql_query($sql, dbh());
-
-			$results = array();
-
-			while ($r = mysql_fetch_row($db_results)) { 
-				$results[] = $r;
-			} 
-
-			foreach ($results as $dead) { 
-				$sql = "DELETE FROM flagged WHERE id='$dead[0]'";
-				$db_results = mysql_query($sql, dbh());
-			}
-			return true;
-		}
-		
 		/* Do a complex delete to get flagged items where the songs are now gone */
 		$sql = "DELETE FROM flagged USING flagged LEFT JOIN song ON song.id = flagged.song WHERE song.id IS NULL";
 		$db_results = mysql_query($sql, dbh());
@@ -1422,26 +1367,6 @@ class Catalog {
 	*/
 	function clean_artists() {
 
-                /* Mysql 3.23 doesn't support our cool query so we have to do it a different way */
-                if (preg_match("/^3\./",mysql_get_server_info())) {
-                        $sql = "SELECT artist.id FROM artist LEFT JOIN song ON song.artist = artist.id WHERE song.id IS NULL";
-                        $db_results = mysql_query($sql, dbh());
-
-			$results = array();
-
-                        while ($r = mysql_fetch_row($db_results)) {
-                                $results[] = $r;
-                        }
-
-                        foreach ($results as $dead) {
-
-                                $sql = "DELETE FROM artist WHERE id='$dead[0]'";
-                                $db_results = mysql_query($sql,dbh());
-                        }                                           
-                        return true;                                                
-                }                                                                   
-
-
 		/* Do a complex delete to get artists where there are no songs */
 		$sql = "DELETE FROM artist USING artist LEFT JOIN song ON song.artist = artist.id WHERE song.id IS NULL";
 		$db_results = mysql_query($sql, dbh());
@@ -1455,29 +1380,27 @@ class Catalog {
 	*/
 	function clean_playlists() { 
 
-		/* Mysql 3.23 doesn't support our cool query so we have to do it a different way */
-		if (preg_match("/^3\./",mysql_get_server_infO())) { 
-			$sql = "SELECT playlist_data.song FROM playlist_data LEFT JOIN song ON song.id = playlist_data.song WHERE song.file IS NULL";
-			$db_results = mysql_query($sql, dbh());
-
-			$results = array();
-
-			while ($r = mysql_fetch_row($db_results)) { 
-				$results[] = $r;
-			}
-
-			foreach ($results as $dead) { 
-				$sql = "DELETE FROM playlist_data WHERE song='$dead[0]'";
-				$db_results = mysql_query($sql, dbh());
-			}
-			return true;
-		}
-
 		/* Do a complex delete to get playlist songs where there are no songs */
 		$sql = "DELETE FROM playlist_data USING playlist_data LEFT JOIN song ON song.id = playlist_data.song WHERE song.file IS NULL";
 		$db_results = mysql_query($sql, dbh());
 
+		// Clear TMP Playlist information as well
+		$sql = "DELETE FROM tmp_playlist_data USING tmp_playlist_data LEFT JOIN song ON tmp_playlist_data.object_id = song.id WHERE song.id IS NULL"; 
+		$db_results = mysql_query($sql,dbh()); 
+
 	} // clean_playlists
+
+	/**
+	 * clean_ext_info
+	 * This function clears any ext_info that no longer has a parent
+	 */
+	function clean_ext_info() { 
+
+		// No longer accounting for MySQL 3.23 here, so just run the query
+		$sql = "DELETE FROM song_ext_data USING song_ext_data LEFT JOIN song ON song.id = song_ext_data.song_id WHERE song.id IS NULL"; 
+		$db_results = mysql_query($sql, dbh()); 
+
+	} // clean_ext_info
 
 	/*!
 		@function clean_stats
@@ -1488,83 +1411,28 @@ class Catalog {
 
 		$version = mysql_get_server_info();
 
-                /* Mysql 3.23 doesn't support our cool query so we have to do it a different way */
-                if (preg_match("/^3\./",$version)) {
-                        $sql = "SELECT object_count.id FROM object_count LEFT JOIN song ON song.id = object_count.object_id WHERE object_type='song' AND song.id IS NULL";
-                        $db_results = mysql_query($sql, dbh());
-
-			$results = array();
-
-                        while ($r = mysql_fetch_row($db_results)) {
-                                $results[] = $r;
-                        }
-
-                        foreach ($results as $dead) {
-
-                                $sql = "DELETE FROM object_count WHERE id='$dead[0]'";
-                                $db_results = mysql_query($sql,dbh());
-                        }                                           
-                        
-                }                                                                   
-		// We assume this will be 4.0+
-		else {
-			/* Crazy SQL Mojo to remove stats where there are no songs */
-			$sql = "DELETE FROM object_count USING object_count LEFT JOIN song ON song.id=object_count.object_id WHERE object_type='song' AND song.id IS NULL";
-			$db_results = mysql_query($sql, dbh());
-		}
-
-                /* Mysql 3.23 doesn't support our cool query so we have to do it a different way */
-                if (preg_match("/^3\./",$version)) {
-                        $sql = "SELECT object_count.id FROM object_count LEFT JOIN album ON album.id = object_count.object_id WHERE object_type='album' AND album.id IS NULL";
-                        $db_results = mysql_query($sql, dbh());
-
-			$results = array();
-
-                        while ($r = mysql_fetch_row($db_results)) {
-                                $results[] = $r;
-                        }
-
-                        foreach ($results as $dead) {
-
-                                $sql = "DELETE FROM object_count WHERE id='$dead[0]'";
-                                $db_results = mysql_query($sql,dbh());
-                        }                                           
-                }                                                                   
-		// We assume 4.0+ Here
-		else {
-			/* Crazy SQL Mojo to remove stats where there are no albums */
-			$sql = "DELETE FROM object_count USING object_count LEFT JOIN album ON album.id=object_count.object_id WHERE object_type='album' AND album.id IS NULL";
-			$db_results = mysql_query($sql, dbh());
-		}
+		// Crazy SQL Mojo to remove stats where there are no songs 
+		$sql = "DELETE FROM object_count USING object_count LEFT JOIN song ON song.id=object_count.object_id WHERE object_type='song' AND song.id IS NULL";
+		$db_results = mysql_query($sql, dbh());
 		
-                /* Mysql 3.23 doesn't support our cool query so we have to do it a different way */
-                if (preg_match("/^3\./",$version)) {
-                        $sql = "SELECT object_count.id FROM object_count LEFT JOIN artist ON artist.id = object_count.object_id WHERE object_type='artist' AND artist.id IS NULL";
-                        $db_results = mysql_query($sql, dbh());
-	
-			$results = array();
+		// Crazy SQL Mojo to remove stats where there are no albums 
+		$sql = "DELETE FROM object_count USING object_count LEFT JOIN album ON album.id=object_count.object_id WHERE object_type='album' AND album.id IS NULL";
+		$db_results = mysql_query($sql, dbh());
+		
+		// Crazy SQL Mojo to remove stats where ther are no artists 
+		$sql = "DELETE FROM object_count USING object_count LEFT JOIN artist ON artist.id=object_count.object_id WHERE object_type='artist' AND artist.id IS NULL";
+		$db_results = mysql_query($sql, dbh());
 
-                        while ($r = mysql_fetch_row($db_results)) {
-                                $results[] = $r;
-                        }
+		// Delete genre stat information 
+		$sql = "DELETE FROM object_count USING object_count LEFT JOIN genre ON genre.id=object_count.object_id WHERE object_type='genre' AND genre.id IS NULL";
+		$db_results = mysql_query($sql,dbh()); 
 
-                        foreach ($results as $dead) {
-
-                                $sql = "DELETE FROM object_count WHERE id='$dead[0]'";
-                                $db_results = mysql_query($sql,dbh());
-                        }                                           
-                }                                                                   
-		// We assume 4.0+ here
-		else { 
-			/* Crazy SQL Mojo to remove stats where ther are no artists */
-			$sql = "DELETE FROM object_count USING object_count LEFT JOIN artist ON artist.id=object_count.object_id WHERE object_type='artist' AND artist.id IS NULL";
-			$db_results = mysql_query($sql, dbh());
-		}
-
+		// Delete the live_stream stat information
+		$sql = "DELETE FROM object_count USING object_count LEFT JOIN live_stream ON live_stream.id=object_count.object_id WHERE object_type='live_stream' AND live_stream.id IS NULL";
+		$db_results = mysql_query($sql,dbh()); 
 
 	} // clean_stats
 	
-
 	/*!
 		@function verify_catalog
 		@discussion This function compares the DB's information with the ID3 tags
