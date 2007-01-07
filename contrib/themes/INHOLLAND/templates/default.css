@@ -381,12 +381,12 @@ div#sidebar{
 #sidebar li:hover ul, #sidebar li.sfhover ul {
 	left: auto;  /* this calls the submenu back when the parent li is hovered. */
 }
-#play_type_switch {
-    width: 11em;
+#sidebar select {
+    width: 95%;
     position: relative;
-    top: -2px;
+    font-size: 10px;
+    top: -4px;
     left: -4px;
-    font-size: 8px;    
 }
 
 /* Styles for Now Playing */
