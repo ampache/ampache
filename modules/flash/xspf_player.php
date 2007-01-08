@@ -31,6 +31,8 @@ $action 	= scrub_in($_REQUEST['action']);
 switch ($action) { 
 	default:
 	case 'tmp_playlist':
+		// Set for hackage!
+		$_REQUEST['flash_hack'] = 1;
 		$tmp_playlist = new tmpPlaylist($_REQUEST['tmp_id']);
 		$items = $tmp_playlist->get_items();
 		$stream = new Stream('xspf',$items);

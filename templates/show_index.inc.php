@@ -31,7 +31,7 @@
 </div>
 <div id="random_selection">
 	<?php
-		$albums = get_random_albums('5'); 
+		$albums = get_random_albums('6'); 
 		if (count($albums)) { require_once(conf('prefix') . '/templates/show_random_albums.inc.php'); } 
 	?>
 </div> 

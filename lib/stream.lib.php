@@ -31,7 +31,8 @@ function delete_now_playing($insert_id) {
 
         $user_agent = $_SERVER['HTTP_USER_AGENT'];
 
-	if (stristr($user_agent,"NSPlayer")) { 
+	// Account for WMP and the Flash Player
+	if (stristr($user_agent,"NSPlayer") || $_REQUEST['flash_hack'] == 1) { 
                 // Commented out until I can figure out the
                 // trick to making this work
                 return true;
@@ -89,7 +90,7 @@ function insert_now_playing($song_id,$uid,$song_length) {
         /* Set the Expire Time */
 
         // If they are using Windows media player
-	if (stristr($user_agent,"NSPlayer")) { 
+	if (stristr($user_agent,"NSPlayer") || $_REQUEST['flash_hack'] == 1) { 
                 // WMP does keep the session open so we need to cheat a little here
 		$session_id 	= sql_escape($_REQUEST['sid']); 
         }

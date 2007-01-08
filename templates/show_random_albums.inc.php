@@ -29,12 +29,9 @@ $web_path = conf('web_path');
 		$album->format(); 
 	?>
 	<td>
-		<a target="_blank" href="<?php echo $web_path; ?>/image.php?type=popup&amp;id=<?php echo $album_id; ?>">
-		<img src="<?php echo $web_path; ?>/image.php?thumb=1&amp;id=<?php echo $album_id; ?>" width="75" height="75" border="0">
+		<a href="<?php echo $web_path; ?>/albums.php?action=show&amp;album=<?php echo $album_id; ?>">
+		<img src="<?php echo $web_path; ?>/image.php?thumb=1&amp;id=<?php echo $album_id; ?>" width="75" height="75" border="0" title="<?php echo $album->f_title; ?>">
 		</a>
-
-		<br />
-		<?php echo $album->f_link; ?>
 	</td>
 	<?php } ?>
 </tr>

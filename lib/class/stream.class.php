@@ -236,21 +236,29 @@ class Stream {
 	 */
 	function create_xspf() { 
 
+		$flash_hack = ''; 
+
+		if (isset($_REQUEST['flash_hack'])) { 
+			$flash_hack = '&flash_hack=' . $_REQUEST['flash_hack']; 
+			if (!conf('require_session')) { $flash_hack .= '&sid=' . session_id(); } 
+		} 
+
+		// Itterate through the songs
 		foreach ($this->songs as $song_id) {
 				
-        	$song = new Song($song_id);
-                $song->format_song();
+	        	$song = new Song($song_id);
+	                $song->format_song();
 
-                $xml = array();
-		$xml['track']['location'] = $song->get_url();
-		$xml['track']['identifier'] = $xml['track']['location'];
-		$xml['track']['title'] = $song->title;
-		$xml['track']['creator'] = $song->f_artist_full;
-		$xml['track']['info'] = conf('web_path') . "/albums.php?action=show&album=" . $song->album;
-		$xml['track']['image'] = conf('web_path') . "/image.php?id=" . $song->album . "&&thumb=3&sid=" . session_id();
-		$xml['track']['album'] = $song->f_album_full;
-		$xml['track']['duration'] = $song->time;
-		$result .= xml_from_array($xml,1,'xspf');
+	                $xml = array();
+			$xml['track']['location'] = $song->get_url() . $flash_hack;
+			$xml['track']['identifier'] = $xml['track']['location'];
+			$xml['track']['title'] = $song->title;
+			$xml['track']['creator'] = $song->f_artist_full;
+			$xml['track']['info'] = conf('web_path') . "/albums.php?action=show&album=" . $song->album;
+			$xml['track']['image'] = conf('web_path') . "/image.php?id=" . $song->album . "&thumb=3&sid=" . session_id();
+			$xml['track']['album'] = $song->f_album_full;
+			$xml['track']['duration'] = $song->time;
+			$result .= xml_from_array($xml,1,'xspf');
 
                 } // end foreach
 

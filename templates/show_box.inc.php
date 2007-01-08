@@ -22,9 +22,11 @@
 ?>
 	<span class="box-title"><?php echo $title; ?></span>
 	<ol>
+	<?php if (count($items)) { ?>
 	<?php
 		foreach ($items as $item) {
 			echo $item;
 		}
 	?>
+	<?php } else { echo '<span class="error">' . _('Not Enough Data') . '</span>'; } ?>
 	</ol>

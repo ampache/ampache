@@ -4,6 +4,7 @@
 
 --------------------------------------------------------------------------
   v.3.3.3 
+  	- Fixed Flash Player now playing issue
   	- Fixed a img resize logic error that could cause no art to
 		display if resize was on and resize failed
   	- Added Albums of the Moment to the Front page and removed the
