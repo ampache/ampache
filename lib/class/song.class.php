@@ -798,7 +798,7 @@ class Song {
 	function get_url($session_id='',$force_http='') { 
 
 		/* Define Variables we are going to need */
-		$username 	= $GLOBALS['user']->username;
+		$username 	= scrub_out($GLOBALS['user']->username);
 		$song_id	= $this->id;
 		if (conf('require_session')) { 
 			if ($session_id) { 
