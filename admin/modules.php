@@ -37,7 +37,7 @@ switch ($action) {
 	case 'insert_localplay_preferences':
 		$type = scrub_in($_REQUEST['type']);
 		insert_localplay_preferences($type);
-		$url 	= conf('web_path') . '/admin/modules.php';
+		$url 	= conf('web_path') . '/admin/preferences.php?tab=modules';
 		$title 	= _('Module Activated');
 		$body	= '';
 		show_confirmation($title,$body,$url);
@@ -52,7 +52,7 @@ switch ($action) {
 	case 'remove_localplay_preferences':
 		$type = scrub_in($_REQUEST['type']);
 		remove_localplay_preferences($type);
-		$url	= conf('web_path') . '/admin/modules.php';
+		$url	= conf('web_path') . '/admin/preferences.php?tab=modules';
 		$title	= _('Module Deactivated');
 		$body	= '';
 		show_confirmation($title,$body,$url);
@@ -68,7 +68,7 @@ switch ($action) {
 		$plugin->install(); 
 		
 		/* Show Confirmation */
-		$url	= conf('web_path') . '/admin/modules.php';
+		$url	= conf('web_path') . '/admin/preferences.php?tab=modules';
 		$title	= _('Plugin Activated'); 
 		$body	= '';
 		show_confirmation($title,$body,$url); 
@@ -91,7 +91,7 @@ switch ($action) {
 		$plugin->uninstall(); 
 
                 /* Show Confirmation */
-                $url    = conf('web_path') . '/admin/modules.php';
+                $url    = conf('web_path') . '/admin/preferences.php?tab=modules';
                 $title  = _('Plugin Deactivated');
                 $body   = '';
                 show_confirmation($title,$body,$url);
