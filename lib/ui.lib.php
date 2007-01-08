@@ -1042,7 +1042,7 @@ function show_registration_agreement() {
 	$data = fread($fp,filesize($filename));
 
 	/* Scrub and show */
-	echo scrub_out($data);
+	echo $data;
 		
 } // show_registration_agreement
 
