@@ -23,6 +23,12 @@
         <?php show_now_playing(); ?>
 </div> <!-- Close Now Playing Div -->
 <!-- Recently Played -->
+<div id="catalog_info">
+        <?php
+                $data = show_local_catalog_info();
+                if (count($data)) { show_local_catalog_info(); }
+        ?>
+</div>
 <div id="recently_played">
         <?php
                 $data = get_recently_played();
