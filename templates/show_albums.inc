@@ -57,22 +57,21 @@ foreach ($albums as $album) {
 			<td><?php echo $album->songs; ?></td>
 			<td><?php echo $album->year; ?></td>
 			<td nowrap="nowrap"> 
-			<?php echo _('Play'); ?>:
 			<a href="<?php echo $web_path; ?>/song.php?action=album&amp;album_id=<?php echo $album->id; ?>">
-				<?php echo _('All'); ?>
-			</a> |  
+				<?php echo get_user_icon('all'); ?>
+			</a>
 			<a href="<?php echo $web_path; ?>/song.php?action=album_random&amp;album_id=<?php echo $album->id; ?>">
-				<?php echo _('Random'); ?>
-			</a> |
+				<?php echo get_user_icon('random'); ?>
+			</a>
 			<?php if (batch_ok()) { ?>
 				<a href="<?php echo $web_path; ?>/batch.php?action=alb&amp;id=<?php echo $album->id; ?>">
-				<?php echo _('Download'); ?>
-				</a> |
+				<?php echo get_user_icon('download'); ?>
+				</a>
 			<?php } ?>
 			<?php if ($GLOBALS['user']->has_access('50')) { ?>
 				<a href="<?php echo $web_path; ?>/admin/flag.php?action=show_edit_album&amp;album_id=<?php echo $album->id; ?>">
-				<?php echo _('Edit'); ?>
-				</a> | 
+				<?php echo get_user_icon('edit'); ?>
+				</a>
 			<?php } ?>
 			</td>
 	</tr>

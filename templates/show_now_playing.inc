@@ -30,7 +30,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 if (count($results)) {
 ?>
 <?php show_box_top(_('Now Playing')); ?>
-<table>
+<table class="tabledata">
 <?php 
 foreach ($results as $item) {
 	$song = $item['song'];

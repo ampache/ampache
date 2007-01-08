@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2005 Ampache.org
+ Copyright (c) 2001 - 2006 Ampache.org
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
@@ -33,9 +33,9 @@ $total_items = $view->total_items;
 	</td>
 </tr>
 <tr class="table-header">
-	<td><?php echo _("Genre"); ?></td>
-	<td><?php echo _("Songs"); ?></td>
-	<td><?php echo _("Action"); ?></td>
+	<td><?php echo _('Genre'); ?></td>
+	<td><?php echo _('Songs'); ?></td>
+	<td><?php echo _('Action'); ?></td>
 </tr>
 <?php 
 foreach ($genres as $genre) { 
@@ -44,12 +44,17 @@ foreach ($genres as $genre) {
 		<td><?php echo $genre->link; ?></td>
 		<td><?php echo $genre->get_song_count(); ?></td>
 		<td>
-			<?php echo _("Play"); ?>:
-			<a href="<?php echo $genre->play_link; ?>">All</a> 
-			|
-			<a href="<?php echo $genre->random_link; ?>">Random</a>
-			|
-			Download
+			<a href="<?php echo $genre->play_link; ?>">
+				<?php echo get_user_icon('all'); ?>
+			</a> 
+			<a href="<?php echo $genre->random_link; ?>">
+				<?php echo get_user_icon('random'); ?>
+			</a>
+			<?php if (batch_ok()) { ?>
+			<a href="<?php echo $genre->download_link; ?>">
+				<?php echo get_user_icon('download'); ?>
+			</a>
+			<?php } ?>
 		</td>
 	</tr>
 <?php } // end foreach genres ?>

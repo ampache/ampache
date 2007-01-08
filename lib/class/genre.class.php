@@ -71,10 +71,11 @@ class Genre {
 	 */
 	function format_genre() { 
 
-		$this->link 		= "<a href=\"" . conf('web_path') . "/genre.php?action=show_genre&amp;genre_id=" . $this->id . "\">" . $this->name . "</a>";
+		$this->link 		= "<a href=\"" . conf('web_path') . "/genre.php?action=show_genre&amp;genre_id=" . $this->id . "\">" . scrub_out($this->name) . "</a>";
 		
-		$this->play_link 	= conf('web_path') . "/song.php?action=genre&amp;genre=" . $this->id;
-		$this->random_link 	= conf('web_path') . "/song.php?action=random_genre&amp;genre=" . $this->id; 
+		$this->play_link 	= conf('web_path') . '/song.php?action=genre&amp;genre=' . $this->id;
+		$this->random_link 	= conf('web_path') . '/song.php?action=random_genre&amp;genre=' . $this->id; 
+		$this->download_link 	= conf('web_path') . '/batch.php?action=genre&amp;id=' . $this->id;
 		
 	} // format_genre
 

@@ -51,11 +51,17 @@ foreach ($artists as $artist) { ?>
 		<td><?php echo $artist['name']; ?></td>
 		<td><?php echo $artist['songs']; ?></td>
 		<td><?php echo $artist['albums']; ?></td>	
-		<td nowrap="nowrap"> <?php echo _("Play"); ?> : 
-			<a href="<?php echo $web_path; ?>/song.php?action=artist&amp;artist_id=<?php echo $artist['id']; ?>"><?php echo _('All'); ?></a> | 
-			<a href="<?php echo $web_path; ?>/song.php?action=artist_random&amp;artist_id=<?php echo $artist['id']; ?>"><?php echo _('Random'); ?></a> 
+		<td nowrap="nowrap"> 
+			<a href="<?php echo $web_path; ?>/song.php?action=artist&amp;artist_id=<?php echo $artist['id']; ?>">
+				<?php echo get_user_icon('all'); ?>	
+			</a> 
+			<a href="<?php echo $web_path; ?>/song.php?action=artist_random&amp;artist_id=<?php echo $artist['id']; ?>">
+				<?php echo get_user_icon('random'); ?>
+			</a> 
 		<?php if ($GLOBALS['user']->has_access(100)) { ?>
-			| <a href="<?php echo $web_path; ?>/admin/flag.php?action=show_edit_artist&amp;artist_id=<?php echo $artist['id']; ?>"><?php echo _('Edit'); ?></a>
+			<a href="<?php echo $web_path; ?>/admin/flag.php?action=show_edit_artist&amp;artist_id=<?php echo $artist['id']; ?>">
+				<?php echo get_user_icon('edit'); ?>
+			</a>
 		<?php } ?>
 		</td>
 	</tr>

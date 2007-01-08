@@ -4,6 +4,10 @@
 
 --------------------------------------------------------------------------
   v.3.3.3 
+  	- Fixed batch page to correctly show access denied rather then
+		redirecting on error
+	- Fixed Genre actions to actually work
+	- Added http://www.famfamfam.com icons to browse functions
   	- Fixed Flash Player now playing issue
   	- Fixed a img resize logic error that could cause no art to
 		display if resize was on and resize failed
