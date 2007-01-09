@@ -164,7 +164,6 @@ switch ($action) {
 
 		send_confirmation($username, $fullname, $email, $pass1, $validation);
 		?>
-		<link rel="stylesheet" href="<?php echo $web_path; ?>/templates/default.css" type="text/css" />
 		<link rel="stylesheet" href="<?php echo $web_path; ?><?php echo conf('theme_path'); ?>/templates/default.css" type="text/css" />
 		<?php
 		show_confirmation(_('Registration Complete'),$message,'/login.php');	

@@ -91,7 +91,7 @@ textarea {
 	font-size: 12px; 
 }
 .table-header {
-//	background: url(../images/ampache-light-bg.gif) #dddddd repeat-x;
+/*	background: url(../images/ampache-light-bg.gif) #dddddd repeat-x; */
 	background: #a0a0a0;
 	vertical-align: top;
 	text-align:center;

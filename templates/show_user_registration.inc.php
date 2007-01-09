@@ -27,7 +27,6 @@ $htmllang = str_replace("_","-",conf('lang'));
 <head>
 <link rel="shortcut icon" href="<?php echo conf('web_path'); ?>/favicon.ico" />
 <meta http-equiv="Content-Type" content="text/html; charset=<?php echo conf('site_charset'); ?>" />
-<link rel="stylesheet" href="<?php echo conf('web_path'); ?>/templates/default.css" type="text/css" />
 <link rel="stylesheet" href="<?php echo conf('web_path'); ?><?php echo conf('theme_path'); ?>/templates/default.css" type="text/css" />
 <title><?php echo conf('site_title'); ?> - <?php echo $location['title']; ?></title>
 </head>
