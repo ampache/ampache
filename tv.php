@@ -32,7 +32,6 @@ if (!conf('allow_democratic_playback')) {
 /* Clean up the stuff we need */
 $action 	= scrub_in($_REQUEST['action']);
 
-show_template('header');
 
 switch ($action) { 
 	case 'create_playlist':

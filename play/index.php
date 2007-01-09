@@ -127,7 +127,7 @@ if (!$song->file OR ( !is_readable($song->file) AND $catalog->catalog_type != 'r
 		$tmp_playlist->delete_track($song_id); 
 	}
 
-	debug_event('file_not_found',"Error song ($song->title) does not have a valid filename specified",'2');
+	debug_event('file_not_found',"Error song $song->file ($song->title) does not have a valid filename specified",'2');
 	echo "Error: Invalid Song Specified, file not found or file unreadable"; 
 	exit; 
 }

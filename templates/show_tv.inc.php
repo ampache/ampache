@@ -22,6 +22,8 @@
 $htmllang = str_replace("_","-",conf('lang'));
 $location = get_location();
 
+show_template('header'); 
+
 /**
  * Check for the refresh mojo, if it's there then require the
  * refresh_javascript include. Must be greater then 5, I'm not

@@ -4,6 +4,8 @@
 
 --------------------------------------------------------------------------
   v.3.3.3 
+	- Fixed a play issue on democratic play created when I added
+		the menu
   	- Fixed batch page to correctly show access denied rather then
 		redirecting on error
 	- Fixed Genre actions to actually work
