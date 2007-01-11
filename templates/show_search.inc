@@ -89,7 +89,7 @@
 	</td>
 </tr>		
 <tr class="<?php echo flip_class(); ?>">
-	<td><?php echo _('Rating'); ?>:</td>
+	<td><?php echo _('Rating'); ?></td>
 	<td>
 		<select id="s_rating" name="s_rating">
 			<option value="">&nbsp;</option>
@@ -100,7 +100,7 @@
 			<option value="5"><?php echo _('Five Stars'); ?></option>
 		</select>
 	</td>
-	<td><?php echo _('Operator'); ?>:</td>
+	<td><?php echo _('Operator'); ?></td>
 	<td>
 		<select name="operator">
 			<option value="and" <?php if($_REQUEST['operator']=="and") echo "selected=\"selected\""?>><?php echo _('AND'); ?></option>
@@ -109,14 +109,14 @@
 	</td>
 </tr>
 <tr class="<?php echo flip_class(); ?>">
-	<td><?php echo _('Method'); ?>:</td>
+	<td><?php echo _('Method'); ?></td>
 	<td>
 		<select name="method">
 			<option value="fuzzy" <?php if($_REQUEST['method']=="fuzzy") echo "selected=\"selected\""?>><?php echo _('Fuzzy'); ?></option>
 			<option value="exact" <?php if($_REQUEST['method']=="exact") echo "selected=\"selected\""?>><?php echo _('Exact'); ?></option>
 		</select>
 	</td>
-	<td><?php echo _('Maximum Results'); ?>:</td>
+	<td><?php echo _('Maximum Results'); ?></td>
 	<td>
 		<select name="limit">
 			<option value="0"><?php echo _('Unlimited'); ?></option>

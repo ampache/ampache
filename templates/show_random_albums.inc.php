@@ -27,7 +27,7 @@ $web_path = conf('web_path');
 	foreach ($albums as $album_id) { 
 		$album = new Album($album_id); 
 		$album->format(); 
-		$name = scrub_out($album->name); 
+		$name = scrub_out('[' . $album->artist . '] ' . $album->name); 
 	?>
 	<td>
 		<a href="<?php echo $web_path; ?>/albums.php?action=show&amp;album=<?php echo $album_id; ?>">

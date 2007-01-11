@@ -70,7 +70,7 @@ function get_random_albums($count='') {
 
 	$count = sql_escape($count); 
 
-	$sql = "SELECT id FROM album ORDER BY RAND() LIMIT $count"; 
+	$sql = "SELECT id FROM album WHERE art IS NOT NULL ORDER BY RAND() LIMIT $count"; 
 	$db_results = mysql_query($sql,dbh()); 
 
 	$results = array(); 

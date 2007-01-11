@@ -46,8 +46,8 @@
 	</td>
 </tr>
 <tr>
-	<td colspan="2">
-		<?php echo _('Type'); ?>:
+	<td><?php echo _('Type'); ?></td>
+	<td>
 		<select name="random_type">
 			<option value="normal"><?php echo _('Standard'); ?></option>
 			<option value="unplayed"><?php echo _('Less Played'); ?></option>
