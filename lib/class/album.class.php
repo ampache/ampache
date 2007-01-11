@@ -213,7 +213,7 @@ class Album {
 		/* If it's not set */
 		if (empty($config_value)) { 
 			// They don't want art!
-			return false; 
+			return array(); 
 		}
 		elseif (!is_array($config_value)) { 
 			$config_value = array($config_value); 

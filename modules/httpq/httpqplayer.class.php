@@ -54,8 +54,8 @@ class HttpQPlayer {
 	 */  	
   	function add($name, $url) {
 
-  	  	$args['name'] = $name;
-  	  	$args['url'] = str_replace("&","%26",$url);
+  	  	$args['name'] = urlencode($name);
+  	  	$args['url'] = urlencode($url);
 		
 		$results = $this->sendCommand('playurl', $args);
 		
