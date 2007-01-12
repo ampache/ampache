@@ -28,7 +28,6 @@ $web_path = conf('web_path');
 	<th><?php echo _('Object'); ?></th>
 	<th><?php echo _('User'); ?></th>
 	<th><?php echo _('Flag'); ?></th>
-	<th><?php echo _('Flagged by'); ?></th>
 	<th><?php echo _('Status'); ?></th>
 	<th><?php echo _('Action'); ?></th>
 </tr>
@@ -40,7 +39,6 @@ $web_path = conf('web_path');
 	<td><?php $flag->print_name(); ?></td>
 	<td><?php echo scrub_out($flag->user); ?></td>
 	<td><?php $flag->print_flag(); ?></td>
-	<td><?php echo $flag->user; ?></td>
 	<td><?php $flag->print_status(); ?></td>
 	<td align="center">
 	<?php if ($flag->approved) { ?>

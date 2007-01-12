@@ -4,6 +4,7 @@
 
 --------------------------------------------------------------------------
   v.3.3.3 
+	- Fixed flagging not correctly tracking user on flag creation
 	- Added select boxes to Admin Flag pages to allow rejection or
 		approval of all songs at once
 	- Fixed an XMLRPC catalog issues created when I moved comments
