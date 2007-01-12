@@ -260,7 +260,7 @@ switch ($action) {
 
 		foreach ($flags as $flag_id) { 
 			$flag = new Flag($flag_id); 
-			if ($flag->approved) { 
+			if ($_REQUEST['update_action'] == 'reject') { 
 				$flag->delete_flag(); 
 			} 
 			else { 

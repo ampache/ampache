@@ -174,6 +174,7 @@ class Flag {
 		$id 		= sql_escape($id);
 		$type		= sql_escape($type);
 		$flag		= sql_escape($flag);
+		$user		= sql_escape($GLOBALS['user']->id);
 		$comment	= sql_escape($comment);
 		$time		= time();
 		$approved	= '0';
@@ -181,8 +182,8 @@ class Flag {
 		/* If they are an admin, it's auto approved */
 		if ($GLOBALS['user']->has_access('100')) { $approved = '1'; } 
 
-		$sql = "INSERT INTO flagged (`object_id`,`object_type`,`flag`,`comment`,`date`,`approved`) VALUES " . 
-			" ('$id','$type','$flag','$comment','$time','$approved')";
+		$sql = "INSERT INTO flagged (`object_id`,`object_type`,`flag`,`comment`,`date`,`approved`,`user`) VALUES " . 
+			" ('$id','$type','$flag','$comment','$time','$approved','$user')";
 		$db_results = mysql_query($sql, dbh());
 
 		return true;

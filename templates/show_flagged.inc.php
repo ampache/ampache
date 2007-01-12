@@ -26,6 +26,7 @@ $web_path = conf('web_path');
 <tr class="table-header">
 	<th><a href="#" onclick="check_songs(); return false;"><?php echo _('Select'); ?></a></th>
 	<th><?php echo _('Object'); ?></th>
+	<th><?php echo _('User'); ?></th>
 	<th><?php echo _('Flag'); ?></th>
 	<th><?php echo _('Status'); ?></th>
 	<th><?php echo _('Action'); ?></th>
@@ -36,6 +37,7 @@ $web_path = conf('web_path');
 		<input type="checkbox" name="song[]" value="<?php echo $flag->id; ?>" id="song_<?php echo $flag->id; ?>" />
 	</td>
 	<td><?php $flag->print_name(); ?></td>
+	<td><?php echo scrub_out($flag->user); ?></td>
 	<td><?php $flag->print_flag(); ?></td>
 	<td><?php $flag->print_status(); ?></td>
 	<td align="center">
@@ -52,11 +54,15 @@ $web_path = conf('web_path');
 </tr>
 <?php } if (!count($flagged)) { ?>
 <tr class="<?php echo flip_class(); ?>">
-	<td colspan="5" class="error"><?php echo _('No Records Found'); ?></td>
+	<td colspan="6" class="error"><?php echo _('No Records Found'); ?></td>
 </tr>
 <?php } ?>
 <tr class="<?php echo flip_class(); ?>">
-	<td colspan="5">
+	<td colspan="6">
+		<select name="update_action">
+			<option value="reject"><?php echo _('Reject'); ?></option>
+			<option value="approve"><?php echo _('Approve'); ?></option>
+		</select>
 		<input class="button" type="submit" value="<?php echo _('Update'); ?>" />
 	</td>
 </tr>
