@@ -37,6 +37,7 @@ if (isset ($_POST['pop_songs'])){$pop_songs = scrub_in($_POST['pop_songs']);}
 if (isset ($_POST['threshold'])){$threshold = scrub_in($_POST['threshold']);} else { $threshold = conf($stats_threshold); };
 if (isset ($_POST['new_artists'])){$new_artists = scrub_in($_POST['new_artists']);}
 if (isset ($_POST['new_albums'])){$new_albums = scrub_in($_POST['new_albums']);}
+if (isset ($_POST['flagged'])){$flagged = scrub_in($_POST['flagged']);}
 $subject = stripslashes(scrub_in($_POST['subject']));
 $message = stripslashes(scrub_in($_POST['message']));
 
@@ -208,6 +209,38 @@ switch ($action) {
                 $message .= "$nalbums";
 
 	}
+
+       if (isset ($flagged)){
+
+	    $flag = new Flag();
+	    $flagged = $flag->get_flagged();
+            $message .= "\n\nFlagged Songs\n\n";
+	    $message .= "Name\t\t\t\tFlag\t\tFlagged by\tStatus\n";
+	    foreach ($flagged as $data){ 
+
+		$flag = new Flag($data);
+		$flag->format_name();
+		$name = $flag->name;
+		$user = $flag->user;
+		$flag = $flag->flag;
+		if($flag->approved){ $status = "Approved"; } else { $status = "Pending"; }
+		$message .= "*) $name\t$flag\t\t$user\t\t$status\n";
+	    }
+}
+
+       if (isset ($disabled)){
+
+	    $catalog = new Catalog();
+	    $songs = $catalog->get_disabled();
+            $message .= "\n\nDisabled Songs\n\n";
+
+	    foreach ($songs as $song){ 
+
+    		$name = "*) ". $song->title ." | ". $song->get_album_name($song->album) ." | ". $song->get_artist_name($song->album) ." | ". $song->file ;
+		$message .= "$name";
+	    }
+}
+
 
 		// woohoo!!
 		mail ($from, $subject, $message,

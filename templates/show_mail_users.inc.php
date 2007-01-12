@@ -64,11 +64,23 @@
 		    <td>
 		        <input type="checkbox" name="new_albums" value="yes" />
 		    </td>
-		      <td><?php echo _('Most Popular Songs'); ?>:</td>
+		    <td><?php echo _('Most Popular Songs'); ?>:</td>
 		    <td>
 		        <input type="checkbox" name="pop_songs" value="yes" />
 		    </td>
 		</tr>
+		  <tr>
+		    <td><?php echo _('Flagged Songs'); ?>:</td>
+		    <td>
+		        <input type="checkbox" name="flagged" value="yes" />
+		    </td>
+		    <td><?php echo _('Disabled Songs'); ?>:</td>
+		    <td>
+		        <input type="checkbox" name="disabled" value="yes" />
+		    </td>
+
+		</tr>
+
 		  <tr>
 		    <td colspan = "2"><?php echo _('Most Popular Threshold in days'); ?>:</td>
 		    <td>
