@@ -4,6 +4,13 @@
 
 --------------------------------------------------------------------------
   v.3.3.3 
+	- Added select boxes to Admin Flag pages to allow rejection or
+		approval of all songs at once
+	- Fixed an XMLRPC catalog issues created when I moved comments
+	- Fixed an issue with localplay controls showing up even if it
+		was disabled
+	- Fixed Album of Moment's title tag and prevented it from showing
+		albums without art (Thx Spocky)
 	- Fixed a play issue on democratic play created when I added
 		the menu
   	- Fixed batch page to correctly show access denied rather then

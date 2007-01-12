@@ -1148,7 +1148,6 @@ class Catalog {
 			$new_song->artist 	= $this->check_artist($data[0]);
 			$new_song->album	= $this->check_album($data[1],$data[4]);
 			$new_song->title	= $data[2];
-			$new_song->comment	= $data[3];
 			$new_song->year		= $data[4];
 			$new_song->bitrate	= $data[5];
 			$new_song->rate		= $data[6];
@@ -1932,11 +1931,10 @@ class Catalog {
 		$url 		= sql_escape($song->file);
 		$title		= $this->check_title($song->title);
 		$title		= sql_escape($title);
-		$comment	= sql_escape($song->comment);
 		$current_time	= time();	
 		
-		$sql = "INSERT INTO song (file,catalog,album,artist,title,bitrate,rate,mode,size,time,track,genre,addition_time,year,comment)" .
-			" VALUES ('$url','$song->catalog','$song->album','$song->artist','$title','$song->bitrate','$song->rate','$song->mode','$song->size','$song->time','$song->track','$song->genre','$current_time','$song->year','$comment')";
+		$sql = "INSERT INTO song (file,catalog,album,artist,title,bitrate,rate,mode,size,time,track,genre,addition_time,year)" .
+			" VALUES ('$url','$song->catalog','$song->album','$song->artist','$title','$song->bitrate','$song->rate','$song->mode','$song->size','$song->time','$song->track','$song->genre','$current_time','$song->year')";
 		$db_results = mysql_query($sql, dbh());
 
 		if (!$db_results) { 

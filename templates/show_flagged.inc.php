@@ -21,8 +21,10 @@
 
 $web_path = conf('web_path');
 ?>
+<form id="songs" method="post" enctype="multipart/form-data" action="<?php echo conf('web_path'); ?>/admin/flag.php?action=reject_flags">
 <table class="tabledata" cellspacing="0" cellpadding="0">
 <tr class="table-header">
+	<th><a href="#" onclick="check_songs(); return false;"><?php echo _('Select'); ?></a></th>
 	<th><?php echo _('Object'); ?></th>
 	<th><?php echo _('Flag'); ?></th>
 	<th><?php echo _('Status'); ?></th>
@@ -30,33 +32,38 @@ $web_path = conf('web_path');
 </tr>
 <?php foreach ($flagged as $data) { $flag = new Flag($data); ?>
 <tr class="<?php echo flip_class(); ?>">
+	<td align="center">
+		<input type="checkbox" name="song[]" value="<?php echo $flag->id; ?>" id="song_<?php echo $flag->id; ?>" />
+	</td>
 	<td><?php $flag->print_name(); ?></td>
 	<td><?php $flag->print_flag(); ?></td>
 	<td><?php $flag->print_status(); ?></td>
-	<td>
+	<td align="center">
 	<?php if ($flag->approved) { ?>
 		<a href="<?php echo $web_path; ?>/admin/flag.php?action=reject_flag&amp;flag_id=<?php echo $flag->id; ?>">
-			<?php echo _('Reject'); ?>
+			<?php echo get_user_icon('disable'); ?>
 		</a>
 	<?php } else { ?>
 		<a href="<?php echo $web_path; ?>/admin/flag.php?action=approve_flag&amp;flag_id=<?php echo $flag->id; ?>">
-			<?php echo _('Approve'); ?>
+			<?php echo get_user_icon('enable'); ?>
 		</a>
 	<?php } ?>
 	</td>
 </tr>
 <?php } if (!count($flagged)) { ?>
 <tr class="<?php echo flip_class(); ?>">
-	<td colspan="4" class="error"><?php echo _('No Records Found'); ?></td>
+	<td colspan="5" class="error"><?php echo _('No Records Found'); ?></td>
 </tr>
 <?php } ?>
-<?php if ($total_flagged > count($flagged)) { ?>
 <tr class="<?php echo flip_class(); ?>">
-	<td colspan="4">
-		<a href="<?php echo $web_path; ?>/admin/flag.php?action=show_flagged">
-			<?php echo _('Show All'); ?>...
-		</a>
+	<td colspan="5">
+		<input class="button" type="submit" value="<?php echo _('Update'); ?>" />
 	</td>
 </tr>
-<?php } ?>
 </table>
+</form>
+<div class="text-action">
+<a href="<?php echo $web_path; ?>/admin/flag.php?action=show_flagged">
+	<?php echo _('Show All'); ?>...
+</a>
+</div>

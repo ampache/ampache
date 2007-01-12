@@ -44,8 +44,11 @@
 		<td colspan="7"><span class="error"><?php echo _('No Records Found'); ?></span></td>
 	</tr>
 <?php } ?>
-</table>
+<tr class="<?php echo flip_class(); ?>">
+	<td colspan="7">
 		<input class="button" type="submit" value="<?php echo _('Remove'); ?>" />&nbsp;&nbsp;
 		<input type="hidden" name="action" value="remove_disabled" />
+	</td>
+</tr>
+</table>
 </form>
-

@@ -221,7 +221,7 @@ switch ($action) {
 				case 'album':
 					$new_song->album = $catalog->check_album(revert_string($_REQUEST['update_value'])); 
 				break;
-				case 'aritst':
+				case 'artist':
 					$new_song->artist = $catalog->check_artist(revert_string($_REQUEST['update_value'])); 
 				break; 
 				case 'year':
@@ -254,6 +254,21 @@ switch ($action) {
 		$title = _('Flag Removed');
 		$body = _('Flag Removed from') . " " . $flag->name;
 		show_confirmation($title,$body,$url);
+	break;
+	case 'reject_flags':
+		$flags = $_REQUEST['song'];
+
+		foreach ($flags as $flag_id) { 
+			$flag = new Flag($flag_id); 
+			if ($flag->approved) { 
+				$flag->delete_flag(); 
+			} 
+			else { 
+				$flag->approve(); 
+			} 
+		} // end foreach flags
+		$title = _('Flags Updated'); 
+		show_confirmation($title,'',return_referer()); 
 	break;
 	case 'show_edit_song':
 		$_SESSION['source'] = return_referer();

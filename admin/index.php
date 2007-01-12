@@ -30,19 +30,11 @@ if (!$GLOBALS['user']->has_access(100)) {
 }
 
 
-show_template('header'); 
-?>
-<!-- Big Daddy Table --> 
-<table>
-<tr>
-	<!-- Needs Attention Cell -->
-	<td valign="top">
-	<?php require (conf('prefix') . '/templates/show_admin_info.inc.php'); ?>
-	</td>
-	<!-- Catalog Cell -->
-	<td valign="top">
+show_template('header'); ?>
+<div id="admin-tools">
 	<?php require (conf('prefix') . '/templates/show_admin_tools.inc.php'); ?>
-	</td>
-</tr>
-</table>
+</div>
+<div id="admin-info">
+	<?php require (conf('prefix') . '/templates/show_admin_info.inc.php'); ?>
+</div>
 <?php show_footer(); ?>

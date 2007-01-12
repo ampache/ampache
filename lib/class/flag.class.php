@@ -226,7 +226,7 @@ class Flag {
 		switch ($this->object_type) { 
 			case 'song':
 				$song = new Song($this->object_id);
-				$song->format_song();
+				$song->format();
 				$name 	= $song->f_title . " - " . $song->f_artist;
 				$title	= $song->title . " - " . $song->get_artist_name();
 			break;

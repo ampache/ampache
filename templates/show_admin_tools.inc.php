@@ -25,7 +25,7 @@ $catalogs 	= $catalog->get_catalogs();
 
 ?>
 <?php show_box_top(_('Catalogs')); ?>
-<table border="0" cellpadding="0" cellspacing="0">
+<table class="tabledata" cellpadding="0" cellspacing="0">
 <tr class="table-header">
 	<th><?php echo _('Name'); ?></th>
 	<th align="center"><?php echo _('Action'); ?></th>
@@ -50,6 +50,14 @@ $catalogs 	= $catalog->get_catalogs();
 		<?php echo _('Delete'); ?></a>
 	</td>
 </tr>
+<!--
+<tr class="<?php echo flip_class(); ?>">
+	<td colspan="2">
+		<?php echo _('Fast'); ?><input type="checkbox" name="fast" value="1" />
+		<?php echo _('Gather Art'); ?><input type="checkbox" name="gather_art" value="1" />
+	</td>
+</tr>
+-->
 <?php } // end foreach ?>
 <?php if (!count($catalogs)) { ?>
 <tr>
@@ -74,10 +82,8 @@ $catalogs 	= $catalog->get_catalogs();
 <div class="text-action">
 	<a href="<?php echo $web_path; ?>/admin/duplicates.php"><?php echo _('Show Duplicate Songs'); ?></a>
 	<a href="<?php echo $web_path; ?>/admin/catalog.php?action=clear_now_playing"><?php echo _('Clear Now Playing'); ?></a>
-	<hr noshade="noshade" size="3" />
 	<a href="<?php echo $web_path; ?>/admin/system.php?action=generate_config"><?php echo _('Generate New Config'); ?></a>
 	<a href="<?php echo $web_path; ?>/admin/preferences.php?action=show_set_preferences"><?php echo _('Preferences Permissions'); ?></a>
-	<hr noshade="noshade" size="3" />
 	<a href="<?php echo $web_path; ?>/admin/system.php?action=export&amp;export=itunes"><?php echo _('Export To Itunes DB'); ?></a>
 <!--	<a href="<?php echo $web_path; ?>/admin/system.php?action=check_version"><?php echo _('Check for New Version'); ?></a>-->
 </div>

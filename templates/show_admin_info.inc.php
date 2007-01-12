@@ -23,7 +23,6 @@ $web_path = conf('web_path');
 /* Flagged Information Gathering */
 $flag = new Flag();
 $flagged	= $flag->get_recent(10);
-$total_flagged	= $flag->get_total();
 
 /* Disabled Information Gathering */
 $catalog = new Catalog(); 
