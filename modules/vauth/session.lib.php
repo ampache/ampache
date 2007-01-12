@@ -178,7 +178,7 @@ function vauth_session_cookie() {
         $cookie_life    = vauth_conf('cookie_life');
         $cookie_path    = vauth_conf('cookie_path');
 	$cookie_domain	= false;
-        $cookie_secure  = vauth_conf('cookkie_secure');
+        $cookie_secure  = vauth_conf('cookie_secure');
         
         session_set_cookie_params($cookie_life,$cookie_path,$cookie_domain,$cookie_secure);
 
