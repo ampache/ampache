@@ -1,4 +1,3 @@
-
 /*
 
  Copyright (c) 2001 - 2006 Ampache.org
@@ -19,14 +18,19 @@
 
 */
 
+
 /************************************************/
 /*    Unify default browsers style rules        */
 /************************************************/
 :link,:visited { text-decoration:none; }
 h1, h2, h3, h4, h5, h6, pre, code	{ font-size: 1em; line-height: 1em; } /* avoid browser default inconsistent font-sizes */
 a img, :link img, :visited img { border: none; } /* no blue linked image borders */
-ul,ol,li,h1,h2,h3,h4,h5,h6,pre,form,body,html,p,blockquote,fieldset,input { margin:0; padding:0; list-style: none; } /* White space reset */
+ul,ol,li,h1,h2,h3,h4,h5,h6,pre,form,body,html,p,blockquote,fieldset,input { margin:0; padding:0; list-style: none;} /* White space reset */
 
+
+/************************************************/
+/*           General style rules                */
+/************************************************/
 body{ 
 	font-family:Arial, Helvetica, Sans-Serif;
 	background: #000000 url(../images/background.jpg) repeat;
@@ -36,17 +40,8 @@ body{
 p { font-size: 10px; font-family: Verdana, Helvetica, sans-serif; }
 
 a, a:visited, a:active { color: #00ff00; }
-.text-box {
-	display: table-cell;
-	padding-left:5px;
-	padding-top:5px;
-	padding-right:5px;
-	margin-bottom:10px;
-	background-color: #000000;
-	border:2px solid #000000;
-}
-.selected_button { color:#00ff00; background: url(../images/tablebg.gif) #000000 repeat-x; }
-td { padding: 3px; font-size: 12px; }
+
+td { padding: 0 8px; font:12px Verdana, Helvetica, sans-serif; }
 th { padding-right: 10px; }
 tr td a { text-align: center; }
 
@@ -55,7 +50,7 @@ input {
 	background-color: #000000;
 	font-size: 12px; 
 	font-weight: bold; 
-	border-color: #333333; 
+	border-color: #111111; 
 	margin:2px;
 }
 select	{ 
@@ -71,34 +66,24 @@ textarea {
 	font-size: 12px; 
 	border-color:#555555; 
 }
-.table-header {
-	background: url(../images/tablebg.gif) #dddddd repeat left;
-	vertical-align: top;
-	text-align: center;
 
+/************************************************/
+/*                Footer                        */
+/************************************************/
+#footer {
+	margin: 0 0 10px 150px;
 }
-.header1{ font-size: 18px; font-weight: 900; }
-.header2{ font-size: 14px; font-weight: 900; }
-.headrow{ font-size: 12px; background: url(../images/active.tablebg.gif) #000000 repeat-x; }
-.border { background: url(../images/active.tablebg.gif) #000000 repeat-x; }
-.header { font-size: 12px; }
-.error  { color: #990033; }
+#footer p {
+	color:#999;
+	font-size:10px;
+}
 
-.fatalerror {
-	display: table-cell;
-	padding: 3px;
-	color: #990033;
-	font-weight:bold;
- 	border:2px solid #990033;		
-}
-#container div.fatalerror {
-	background:none;
-	height:auto;
-	padding:5px;
-	margin:10px;
-	display:block;
-}
-.disabled { text-decoration: line-through; }
+
+/************************************************/
+/*                  Buttons                     */
+/************************************************/
+.selected_button { color:#00ff00; background: url(../images/tablebg.gif) #000000 repeat-x; }
+.unselected_button { display: none; }
 .smallbutton {
 	border:0px solid #555555;
 	padding-left:1px;
@@ -108,44 +93,41 @@ textarea {
 	background: url(../images/active.tablebg.gif) #000000 repeat-x;
 }
 
-.alphabet { 
-	margin: 10px;
-	font-size: 10px; 
-	font-weight: normal; 
+/************************************************/
+/*         Tables (songs lists...)              */
+/************************************************/
+.table-header {
+	background: url(../images/tablebg.gif) #000000 repeat-x;
+	vertical-align: top;
+	text-align: center;
 }
+.headrow{ font-size: 12px; background: url(../images/active.tablebg.gif) #000000 repeat-x; }
+.border { background: url(../images/active.tablebg.gif) #000000 repeat-x; }
+.header { font-size: 12px; }
+.blank  { background: #ffffff; }
 
-#mpdpl td { padding: 0px 2px 0px 2px; text-align: left; }
-/* Content block */
-#content { margin-left:165px; }
-h3#content_title span { text-align:left; }
-			
-/* Styles for Header */
-div#Header{
-	height:80px;
-	margin-bottom:3px;
-	padding:0px;
+
+/************************************************/
+/*               Content block                  */
+/************************************************/
+#content {
+	top:90px;
+	float: none;
+	margin:7px 0 0 135px;
+	/* background:#fff url(../images/bg_content.gif) repeat-y right top; */
 }
-
-#Header h1 { 
-	background: transparent url(../images/bg_login_0.jpg) no-repeat top left; 
-	border:0px; 
-	width: 439px; 
-	height: 84px; 
-	float: left;
-	margin:0px;
-	padding:0px;
+h3#content_title{
+	font: 12px/32px Arial,Helvetica,Sans-Serif;
+	background:#8b8b8b url(../images/content_corner.gif) no-repeat right top;
+	color:#fff;
 }
-	
-#Header h1 span { display:none }
-
-#Header h2 { 
-	margin-top: 75px;  
-	width: 200px; 
-	height: 18px; 
-	float: right;
+h3#content_title span {
+	text-align:left;
 }
+/************************************************/
+/*               Side Menu block                */
+/************************************************/
 
-#Header h2 span { font-size:10px; margin-left:10px; }
 #sidebar{
 	position:absolute;
 	left:5px;
@@ -232,56 +214,10 @@ div#Header{
 #sidebar_browse_song_title a	{ }
 #sidebar_browse_lists a		{ }
 */
-/* Styles for Now Playing */
-#nowplaying{
-	clear: both;
-	width: 625px;
-}
 
-#np_container1{
-	width: 260px;
-	height: 18px;
-	padding: 0px;
-	margin: 0px;
-	background: #fff url(../images/tb_tab.jpg) no-repeat top left;
-}
-
-#np_container1 h1{
-	font-size: 10px;
-	font-weight: bold;
-	padding: 2px;
-}
-
-#np_container2{
-	border-width: 1px 1px 1px 1px;
-	border-style: solid;
-	border-color:#ddd #999 #999 #ccc;
-	padding: 6px;
-	font-family: Verdana, sans-serif;
-	font-size: 10px;
-	line-height: 12px;
-	color: #000;
-	background: #D6D6D4 url(../images/bg_row.jpg) repeat top left;
-}
-
-	
-/* Styles for Login template  */
-#container{
-	margin:100px auto 0px auto;
-	width:437px;
-	font-size: 12px;
-	text-align:center;
-}
-#container h1{ background:url(../images/bg_login_0.jpg) no-repeat; height:81px;	margin-bottom:8px; }
-#container h1 span{ display:none; }
-#container div{	background:url(../images/bg_login_1.jpg) no-repeat; height:285px; }
-#loginp_0{ color:#333; margin-top:0px;  padding-top:60px; }
-.loginp_1{ text-align:right; padding-right:100px; }
-.loginp_1 span{ font-weight:bold; }
-.loginp_1 input{ border:1px solid #999; }
-input.text_input { width:12em; }
-.loginp_1 input.check_input { margin-right:5em; } 
-
+/************************************************/
+/*             Header                           */
+/************************************************/
 #topbar { 
 	height: 120px;
 	padding-top:13px;
@@ -295,41 +231,330 @@ input.text_input { width:12em; }
 	float: left;
 }
 
-/* Box Related Styles */
+/************************************************/
+/*          Now Playing Styles                  */
+/************************************************/
+#nowplaying{
+	clear: both;
+	width: 600px;
+}
+
+#np_container1{
+	width: 260px;
+	height: 18px;
+	background: #fff url(../images/tb_tab.jpg) no-repeat top left;
+}
+
+#np_container1 h1{
+	font-size: 10px;
+	font-weight: bold;
+	padding: 2px;
+}
+
+#np_container2{
+	border: 1px solid #999;
+	border-color:#ddd #999 #999 #ccc;
+	padding: 6px;
+	font: 10px/12px Verdana, sans-serif;
+	background: #d6d6d4 url(../images/bg_row.jpg) repeat top left;
+	color: #000;
+}
+.np_row {
+	padding: 3px 0;
+}
+.np_cell {
+	margin: 10px;
+}
+
+
+/************************************************/
+/*        Styles for the star ratings           */
+/************************************************/
+.star-rating{
+        position: relative;
+        list-style:none;
+        width: 80px;
+        height: 15px;
+        background: url(../../../images/ratings/star_rating.gif) top left repeat-x;
+}
+.star-rating li{
+        float: right;
+}
+li.current-rating{
+        display: block;
+        position: absolute;
+        height: 15px;
+        background: url(../../../images/ratings/star_rating.gif) left bottom;
+        text-indent: -9000px;
+        z-index: 1;
+}
+.star-rating li span{
+        position: absolute;
+        display:block;
+        width:16px;
+        height: 15px;
+        text-decoration: none;
+        text-indent: -9000px;
+        z-index: 20;
+}
+.star-rating li span:hover{
+        background: url(../../../images/ratings/star_rating.gif) left center;
+        z-index: 2;
+        left: 0;
+}
+li.zero-stars span:hover {
+        display: block;
+        left: 80px;
+        height: 15px;
+        background: url(../../../images/ratings/x.gif);
+}
+span.zero-stars {
+        display: block;
+        left: 80px;
+        height: 15px;
+        background: url(../../../images/ratings/x_off.gif);
+}
+span.one-stars        { left: 0px; }
+span.one-stars:hover  { width:16px; }
+span.two-stars        { left:16px; }
+span.two-stars:hover  { width: 32px; }
+span.three-stars      { left: 32px; }
+span.three-stars:hover{ width: 48px; }
+span.four-stars       { left: 48px; }
+span.four-stars:hover { width: 64px; }
+span.five-stars       { left: 64px; }
+span.five-stars:hover { width: 80px; }
+
+
+/************************************************/
+/*              Box Related Styles              */
+/************************************************/
 .box { 
 	padding:0px;
 	margin-bottom:5px;
 	background: #000000;
 }
 .box-title { 
+	text-align:center;
 	border-bottom: solid 1px #000000;
 	font-size: 1.05em;
 	font-weight: bold;
 }
+/* Enclosing Boxes Styles */
 .box-left-top { 
-	background:url(../images/topleft.gif) no-repeat;
+	background: url(../images/topleft.gif) no-repeat;
 	height:16px;
 }
-.box-right-top {
-	background:url(../images/topright.gif) no-repeat right top;
+.box-left-bottom {
+  background: url(../images/bottomleft.gif) no-repeat;
+	height:18px;
+}
+.box-left { 
+	background: url(../images/left.gif);
+}
+.box-bottom { 
+	background: url(../images/bottom.gif);
 	height:18px;
 }
 .box-right-bottom { 
-	background:url(../images/bottomright.gif) no-repeat right bottom;
-	height:18px;
+	background: url(../images/bottomright.gif) no-repeat;
 }
-.box-left-bottom {
-        background:url(../images/bottomleft.gif) no-repeat;
-	height:16px;
+.box-right-top {
+	background: url(../images/topright.gif) no-repeat;
 }
-.box-right { display:none; }
-.box-top { display:none; }
-.box-left { display:none; }
-.box-bottom { display:none; }
-/* List Header Styles */
-.list-header { text-decoration: none; } 
-.list-header:hover { color:#071fd4; }
+.box-right { 
+	background: url(../images/right.gif);
+}
+.box-top { 
+	background: url(../images/top.gif);
+}
 
+
+/************************************************/
+/*             List Header Styles               */
+/************************************************/
+.list-header { 
+	text-decoration: none;
+} 
+.list-header:hover { 
+	color:#071fd4;
+}
+
+
+/************************************************/
+/*             Text Action Styles               */
+/************************************************/
+.text-action, .text-action li {
+	list-style: none;
+	margin:5px 0;
+	padding-left:0px;
+}
+.text-action a, .text-action span {
+ 	padding: 0 2px;
+	background: #ddd;
+	border:1px solid #000;
+	text-decoration: none;
+}
+.text-action #pt_active {
+	background: #000;
+	color: #fff;
+	border:1px solid #ddd;
+}
+
+
+/************************************************/
+/*            Tabs (for preferences)            */
+/************************************************/
+#tablist {
+        padding: 3px 0;
+        margin: 12px 0 0 0;
+        font: bold 12px Verdana, sans-serif;
+}
+#tablist li {
+        list-style: none;
+        display: inline;
+}
+#tablist li a {
+        padding: 3px 0.5em;
+        margin-left: 3px;
+        background: #444444;
+        text-decoration: none;
+}
+#tablist li a:link { color: #777777; }
+#tablist li a:visited { color: #777777; }
+#tablist li a:hover {
+        color: #000000;
+        background: #bbbbbb;
+        border-color: #000000;
+}
+#tablist li a#current {
+        color: #00ff00;
+        background: #444444;
+}
+
+/************************************************/
+/*            Styles for Header                 */
+/*(for ampache admin : installation, update...) */
+/************************************************/
+div#Header{
+	height:80px;
+	margin-bottom:3px;
+}
+#Header h1 { 
+	width: 439px; 
+	height: 84px; 
+	float: left;
+	border:0; 
+	background: transparent url(../images/bg_login_0.jpg) no-repeat top left; 
+}
+#Header h1 span {
+	display:none
+}
+#Header h2 { 
+	float: right;
+	margin-top: 75px;  
+	width: 200px; 
+	height: 18px; 
+	background: transparent url(001/h2.gif) no-repeat top left; 
+}
+#Header h2 span {
+	font-size: 10px;
+	margin-left: 10px;
+}
+
+
+/************************************************/
+/*         Styles for Login template            */
+/************************************************/
+#container{
+	margin:100px auto 0 auto;
+	width:437px;
+	font-size:12px;
+	text-align:center;
+}
+#container h1{
+	background:url(../images/bg_login_0.jpg) no-repeat;
+	height:81px;
+	margin-bottom:8px;
+}
+#container h1 span{
+	display:none;
+}
+#container div.fatalerror {
+	display:block;
+	height:auto;
+	padding:5px;
+	margin:10px;
+	background:none;
+}
+#container div{
+	background:url(../images/bg_login_1.jpg) no-repeat;
+	height:285px;
+}
+#loginp_0{
+	color:#333;
+	margin-top:0;
+	padding-top:60px;
+}
+.loginp_1{
+	text-align:right;
+	padding-right:100px;
+}
+.loginp_1 span{
+	font-weight:bold;
+}
+.loginp_1 input{
+	border:1px solid #999;
+}
+input.text_input{
+width:12em;
+}
+.loginp_1 input.check_input{
+margin-right:5em;
+} 
+
+
+/************************************************/
+/*         TV Page Related Styles               */
+/************************************************/
+#tv_np{
+	float:right;
+}
+#tv_left{ 
+	float:left;
+	clear:right;
+}
+#tv_playlist{
+	clear:both;
+}
+
+
+/************************************************/
+/* User Online/Offline style, used in users.php */
+/************************************************/
+td.user_online{
+	background:#0f0;
+}
+td.user_offline {
+	background:#7f0000;
+}
+td.user_disabled {
+	background:#ccc;
+}
+
+
+/************************************************/
+/*                Misc                          */
+/************************************************/
+.text-box {
+	display: table-cell;
+	padding-left:5px;
+	padding-top:5px;
+	padding-right:5px;
+	margin-bottom:10px;
+	background-color: #000000;
+	border:2px solid #000000;
+}
 .confirmation-box {
 	padding-left:5px;
 	padding-top:5px;
@@ -339,157 +564,34 @@ input.text_input { width:12em; }
 	background-color: #bbbbbb;
 	border:2px solid #000000;
 }
-
-.text-action, .text-action li {
-	margin-top:5px;
-	list-style: none;
-	margin-bottom:5px;
-	padding-left:0px;
+.alphabet { 
+	margin:10px;
+	font-size:10px; 
+	font-weight:normal; 
 }
-
-.text-action a, .text-action span {
-	border:1px solid #444444;
- 	padding-left:2px;
-	padding-right:2px;
-	text-decoration: none;
-	background: url(../images/tablebg.gif) #000000 repeat-x;
-
+#mpdpl td {
+	padding:0 2px 0 2px;
+	text-align:left;
 }
-.text-action #pt_active {
-	background: #000000;
-	color: #00ff00;
-	border:1px solid #444444;
-	background: url(../images/tablebg.gif) #000000 repeat-x;
+.header1{ font-size: 18px; font-weight: 900; }
+.header2{ font-size: 14px; font-weight: 900; }
+.error  { color: #903; }
+.fatalerror {
+	display:table-cell;
+	padding:3px;
+	color: #903;
+	font-weight:bold;
+ 	border:2px solid #903;
 }
-
-#nowplaying {
-	width:600px;
+.disabled {
+	text-decoration:line-through;
 }
-
-.np_row {
-	padding-top: 3px;
-	padding-bottom: 3px;
-	display: block;
-}
-
-.np_cell {
-	margin: 10px;
-}
-
-/* 'Tab' Preferences, used by preferences.php */
-
-#tablist {
-        padding: 3px 0;
-        margin: 12px 0 0 0;
-        font: bold 12px Verdana, sans-serif;
-}
-
-#tablist li {
-        list-style: none;
-        margin: 0;
-        display: inline;
-}
-
-#tablist li a {
-        padding: 3px 0.5em;
-        margin-left: 3px;
-        background: #444444;
-        text-decoration: none;
-}
-
-#tablist li a:link { color: #777777; }
-#tablist li a:visited { color: #777777; }
-
-#tablist li a:hover {
-        color: #000000;
-        background: #bbbbbb;
-        border-color: #000000;
-}
-
-#tablist li a#current {
-        color: #00ff00;
-        background: #444444;
-}
-/* styles for the star ratings */
-.star-rating{
-        list-style:none;
-        margin: 0px;
-        padding:0px;
-        width: 80px;
-        height: 15px;
-        position: relative;
-        background: url(../../../images/ratings/star_rating.gif) top left repeat-x;
-}
-.star-rating li{
-        padding:0px;
-        margin:0px;
-        float: right;
-}
-.star-rating li span{
-        display:block;
-        width:16px;
-        height: 15px;
-        text-decoration: none;
-        text-indent: -9000px;
-        z-index: 20;
-        position: absolute;
-        padding: 0px;
-}
-.star-rating li span:hover{
-        background: url(../../../images/ratings/star_rating.gif) left center;
-        z-index: 2;
-        left: 0px;
-}
-li.zero-stars span:hover {
-        background: url(../../../images/ratings/x.gif);
-        height: 15px;
-        left: 80px;
-        display: block;
-}
-span.zero-stars {
-        background: url(../../../images/ratings/x_off.gif);
-        height: 15px;
-        left: 80px;
-        display: block;
-}
-span.one-stars{
-        left: 0px;
-}
-span.one-stars:hover{
-        width:16px;
-}
-span.two-stars{
-        left:16px;
-}
-span.two-stars:hover{
-        width: 32px;
-}
-span.three-stars{
-        left: 32px;
-}
-span.three-stars:hover{
-        width: 48px;
-}
-span.four-stars{
-        left: 48px;
-}
-span.four-stars:hover{
-        width: 64px;
-}
-span.five-stars{
-        left: 64px;
-}
-span.five-stars:hover{
-        width: 80px;
-}
-li.current-rating{
-        background: url(../../../images/ratings/star_rating.gif) left bottom;
-        position: absolute;
-        height: 15px;
-        display: block;
-        text-indent: -9000px;
-        z-index: 1;
-}
+#maincontainer{}
+table.tabledata {}
+.display {}
 
 
+
+
+	
 
