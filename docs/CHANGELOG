@@ -4,6 +4,13 @@
 
 --------------------------------------------------------------------------
   v.3.3.3 
+	- Fixed some minor catalog cleaning issues that could arrise due
+		to the order of the clean functions
+	- Added missing functions to the HttpQ controller, should now have
+		all capabilities that MPD has. 
+	- Fixed minor ajax issue with localplay buttons
+	- Fixed issue with Add to Catalogs always searching for all
+		album art making it really slow
 	- Fixed typo in session management that prevented setting of
 		secure_cookie option (used default value)
 	- Added ability to e-mail flagged/disabled reports in mail 

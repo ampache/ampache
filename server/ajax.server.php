@@ -52,13 +52,8 @@ switch ($action) {
 			case 'play':
 			case 'stop':
 			case 'pause':
-				$results['lp_state'] 	= $localplay->get_user_state($function);	
-				$results['lp_playing']	= $localplay->get_user_playing();
-			break;
 			case 'next':
 			case 'prev':
-				$results['lp_state']	= $localplay->get_user_state('play');
-				$results['lp_playing'] 	= $localplay->get_user_playing();
 			break;
 			case 'skip':
 				ob_start();

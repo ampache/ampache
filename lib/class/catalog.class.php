@@ -970,7 +970,10 @@ class Catalog {
 
 		/* Do a little stats mojo here */
 		$current_time = time();
-		
+	
+		/* Disabling for now need to re-work the logic on this
+		 * but I don't want to do that right before a stable, does not
+		 * search at all, this is less then perfect, but hey :(	
 		if ($type != 'fast_add') { 	
 			if ($verbose) { 
 				echo "\n<b>" . _('Starting Album Art Search') . ". . .</b><br />\n"; 
@@ -979,6 +982,7 @@ class Catalog {
 			}
 			$this->get_album_art(); 
 		} 
+		*/
 
 		/* Update the Catalog last_update */
 		$this->update_last_add();
@@ -1167,10 +1171,11 @@ class Catalog {
 
 	        // now delete invalid entries
 		$this->clean_albums();
-		$this->clean_stats();
 		$this->clean_artists();
 		$this->clean_genres();
 		$this->clean_flagged();
+		$this->clean_stats();
+		$this->clean_ext_info();
 
 	} // update_remote_catalog
 
@@ -1552,8 +1557,10 @@ class Catalog {
 		/* After we have updated all the songs with the new information clear any empty albums/artists */
 		$this->clean_albums();
 		$this->clean_artists();
-		$this->clean_stats();
+		$this->clean_genres(); 
 		$this->clean_flagged();
+		$this->clean_stats();
+		$this->clean_ext_info(); 
 
 		// Update the last_update
 		$this->update_last_update();
@@ -2139,10 +2146,11 @@ class Catalog {
 		// Run the Aritst/Album Cleaners...
 		$this->clean_albums();
 		$this->clean_artists();
-		$this->clean_stats();
 		$this->clean_playlists();
 		$this->clean_flagged();
 		$this->clean_genres();
+		$this->clean_stats();
+		$this->clean_ext_info(); 
 
 	} // delete_catalog
 

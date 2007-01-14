@@ -97,23 +97,50 @@ class HttpQPlayer {
 	
 	} // clear
 	
-	/*!
-		@function next
-		@discussion go to next song
+	/**
+	 * next
+	 * go to next song
 	 */  	
 	function next() {
-		$args = array();
-		$this->sendCommand("next", $args);
-	}		
 
-	/*!
-		@function prev
-		@discussion go to previous song
+		$args = array();
+		$results = $this->sendCommand("next", $args);
+
+		if ($results == '0') { return null; } 
+
+		return true; 
+
+	} // next		
+
+	/**
+	 * prev
+	 * go to previous song
 	 */  	
 	function prev() {
+
 		$args = array();
-		$this->sendCommand("prev", $args);
-	}		
+		$results = $this->sendCommand("prev", $args);
+
+		if ($results == '0') { return null; } 
+	
+		return true;
+
+	} // prev	
+
+	/**
+	 * skip
+	 * This skips to POS in the playlist
+	 */
+	function skip($pos) { 
+
+		$args = array('index'=>$pos); 
+		$results = $this->sendCommand('sendplaylistpos',$args); 
+
+		if ($results == '0') { return null; } 
+
+		return true; 
+
+	} // skip
 	
 	/** 
 	 * play
@@ -240,6 +267,69 @@ class HttpQPlayer {
 		return $results; 
 
 	} // get_volume
+
+	/**
+	 * volume_up
+	 * This increases the volume by Wimamp's defined amount
+	 */
+	function volume_up() { 
+
+		$args = array(); 
+		$results = $this->sendCommand('volumeup',$args); 
+		
+		if ($results == '0') { return null; } 
+
+		return true; 
+
+	} // volume_up
+
+	/**
+	 * volume_down
+	 * This decreases the volume by Winamp's defined amount
+	 */
+	function volume_down() { 
+
+		$args = array(); 
+		$results = $this->sendCommand('volumedown',$args); 
+		
+		if ($results == '0') { return null; } 
+
+		return true; 
+
+	} // volume_down
+
+	/**
+	 * set_volume
+	 * This sets the volume as best it can, we go from a resolution
+	 * of 100 --> 255 so it's a little fuzzy
+	 */
+	function set_volume($value) { 
+
+		// Convert it to base 255
+		$value = $value*2.55; 
+		$args = array('level'=>$value); 
+		$results = $this->sendCommand('setvolume',$args); 
+
+		if ($results == '0') { return null; } 
+
+		return true; 
+
+	} // set_volume
+
+	/**
+	 * clear_playlist
+	 * this flushes the playlist cache (I hope this means clear)
+	 */
+	function clear_playlist() { 
+
+		$args = array(); 
+		$results = $this->sendcommand('flushplaylist',$args); 
+		
+		if ($results == '0') { return null; } 
+
+		return true; 
+
+	} // clear_playlist
 
 	/** 
 	 * get_repeat

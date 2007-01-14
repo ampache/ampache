@@ -65,18 +65,17 @@ class AmpacheHttpq {
                 $map['connect']         = 'connect';
 		
 		/* Recommended Functions */
-		//$map['skip']		= 'skip';
-		//$map['next']		= 'next';
-		//$map['prev']		= 'prev';
+		$map['skip']		= 'skip';
+		$map['next']		= 'next';
+		$map['prev']		= 'prev';
 		$map['pause']		= 'pause';
-		//$map['volume_up']       = 'volume_up';
-		//$map['volume_down']	= 'volume_down';
+		$map['volume_up']       = 'volume_up';
+		$map['volume_down']	= 'volume_down';
 		$map['random']          = 'random';
 		$map['repeat']		= 'loop';
 
 		/* Optional Functions */
-		//$map['move']		= 'move';
-		//$map['delete_all']	= 'clear_playlist';
+		$map['delete_all']	= 'clear_playlist';
 		$map['add_url']		= 'add_url';
 
                 return $map;
@@ -205,31 +204,31 @@ class AmpacheHttpq {
 
 	/**
 	 * skip
-	 * This tells MPD to skip to the specified song
+	 * This tells HttpQ to skip to the specified song
 	 */
 	function skip($song) { 
 
-		if (is_null($this->_mpd->SkipTo($song))) { return false; }
+		if (is_null($this->_httpq->skip($song))) { return false; }
 		return true; 
 
 	} // skip
 
 	/**
-	 * This tells MPD to increase the volume by 5
+	 * This tells Httpq to increase the volume by WinAmps default amount
 	 */
 	function volume_up() { 
 
-		if (is_null($this->_mpd->AdjustVolume('5'))) { return false; } 
+		if (is_null($this->_httpq->volume_up())) { return false; } 
 		return true;
 
 	} // volume_up
 
 	/**
-	 * This tells MPD to decrese the volume by 5
+	 * This tells HttpQ to decrease the volume by Winamps default amount
 	 */
 	function volume_down() { 
 
-		if (is_null($this->_mpd->AdjustVolume('-5'))) { return false; }
+		if (is_null($this->_httpq->volume_down())) { return false; }
 		return true;
 		
 	} // volume_down
@@ -240,7 +239,8 @@ class AmpacheHttpq {
 	 */
 	function next() { 
 
-		if (is_null($this->_mpd->Next())) { return false; } 
+		if (is_null($this->_httpq->next())) { return false; } 
+
 		return true;
 
 	} // next
@@ -251,7 +251,8 @@ class AmpacheHttpq {
 	 */
 	function prev() { 
 
-		if (is_null($this->_mpd->Previous())) { return false; } 
+		if (is_null($this->_httpq->prev())) { return false; } 
+
 		return true;
 	
 	} // prev
@@ -269,18 +270,19 @@ class AmpacheHttpq {
 
         /**
         * volume
-        * This tells MPD to set the volume to the parameter
+        * This tells HttpQ to set the volume to the specified amount this
+	* is 0-100
         */
        function volume($volume) {
 
-               if (is_null($this->_mpd->SetVolume($volume))) { return false; }
+               if (is_null($this->_httpq->set_volume($volume))) { return false; }
                return true;
 
        } // volume
 
        /**
         * loop
-        * This tells MPD to set the repeating the playlist (i.e. loop) to either on or off
+        * This tells HttpQ to set the repeating the playlist (i.e. loop) to either on or off
         */
        function loop($state) {
 	
@@ -289,10 +291,9 @@ class AmpacheHttpq {
 
        } // loop
 
-
        /**
         * random
-        * This tells MPD to turn on or off the playing of songs from the playlist in random order
+        * This tells HttpQ to turn on or off the playing of songs from the playlist in random order
         */
        function random($onoff) {
 
@@ -301,21 +302,10 @@ class AmpacheHttpq {
 
        } // random
 
-       /**
-        * move
-        * This tells MPD to move song from SrcPos to DestPos
-        */
-       function move($SrcPos, $DestPos) {
-
-		if (is_null($this->_mpd->PLMoveTrack($SrcPos, $DestPos))) { return false; }
-
-        	return true;
-	} // move
-
 	/**
 	 * get_songs
 	 * This functions returns an array containing information about
-	 * The songs that MPD currently has in it's playlist. This must be
+	 * The songs that HttpQ currently has in it's playlist. This must be
 	 * done in a standardized fashion
 	 */
 	function get_songs() { 
