@@ -4,6 +4,7 @@
 
 --------------------------------------------------------------------------
   v.3.3.3 
+	- Fixed an issue with all numeric usernames
 	- Fixed some minor catalog cleaning issues that could arrise due
 		to the order of the clean functions
 	- Added missing functions to the HttpQ controller, should now have

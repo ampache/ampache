@@ -256,6 +256,11 @@ function install_create_account($username,$password) {
 		return false; 
 	}
 
+	if (is_numeric($username)) { 
+		$GLOBALS['error']->add_error('general',"Error: Due to the incompotence of the programmer of this application usernames with all numbers will cause the world to come to an end, please add a letter"); 
+		return false; 
+	} 
+
 	$username = sql_escape($username,$dbh);
 	$password = sql_escape($password,$dbh);
 

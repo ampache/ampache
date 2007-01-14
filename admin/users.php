@@ -111,6 +111,9 @@ switch ($action) {
 		if (empty($username)) { 
 			$GLOBALS['error']->add_error('username',_("Error Username Required"));
 		}
+		if (is_numeric($username)) { 
+			$GLOBALS['error']->add_error('username',"Error: Due to the incompetance of the programmer numeric usernames would cause the whole of existance to cease. Please add a letter or something"); 
+		}
 
 		/* make sure the username doesn't already exist */
 		if (!check_username($username)) { 

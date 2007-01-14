@@ -410,7 +410,7 @@ class User {
 		$sql = "UPDATE user SET fullname='$new_fullname' WHERE username='$this->id'";
 		$db_results = mysql_query($sql, dbh());
 
-	} // update_username
+	} // update_fullname
 
 	/*!
 		@function update_email
@@ -575,7 +575,7 @@ class User {
 		$fullname	= sql_escape($fullname);
 		$email		= sql_escape($email);
 		$access		= sql_escape($access);
-		
+	
 		/* Now Insert this new user */
 		$sql = "INSERT INTO user (username, fullname, email, password, access, create_date) VALUES" .
 			" ('$username','$fullname','$email',PASSWORD('$password'),'$access','" . time() ."')";
