@@ -52,7 +52,7 @@ foreach ($genres as $genre) {
 			</a>
 			<?php if (batch_ok()) { ?>
 			<a href="<?php echo $genre->download_link; ?>">
-				<?php echo get_user_icon('download'); ?>
+				<?php echo get_user_icon('batch_download'); ?>
 			</a>
 			<?php } ?>
 		</td>

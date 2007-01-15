@@ -800,6 +800,7 @@ class Song {
 		/* Define Variables we are going to need */
 		$username 	= scrub_out($GLOBALS['user']->username);
 		$song_id	= $this->id;
+
 		if (conf('require_session')) { 
 			if ($session_id) { 
 				$session_string = "&sid=" . $session_id; 
@@ -808,6 +809,7 @@ class Song {
 				$session_string	= "&sid=" . session_id();
 			}
 		} // if they are requiring a session
+
 		$type		= $this->type;
 
 		if ($GLOBALS['user']->prefs['play_type'] == 'downsample') { 
@@ -816,12 +818,13 @@ class Song {
 
 		/* Account for retarded players */
 		if ($song->type == 'flac') { $type = 'ogg'; } 
-		$this->format_song();
+
+		$this->format();
 		$song_name = rawurlencode($this->f_artist_full . " - " . $this->title . "." . $this->type);
 	
 		$web_path = conf('web_path');
 
-                if (conf('force_http_play') AND !$force_http) {
+                if (conf('force_http_play') OR !empty($force_http)) {
                         $port = conf('http_port');
                         $web_path = preg_replace("/https/", "http",$web_path);
                         $web_path = preg_replace("/:\d+/",":$port",$web_path);

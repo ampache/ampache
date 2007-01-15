@@ -4,6 +4,9 @@
 
 --------------------------------------------------------------------------
   v.3.3.3 
+	- Fixed a logic issue with force_http_play
+	- Improved performance of Amazon album art search by reducing the
+		queries made on gather album art
 	- Fixed an issue with all numeric usernames
 	- Fixed some minor catalog cleaning issues that could arrise due
 		to the order of the clean functions

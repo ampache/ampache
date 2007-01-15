@@ -1709,6 +1709,9 @@ class Update {
 
 		/* Clean Up Indexes */
 
+		// Prevent the script from timing out
+		set_time_limit(0);
+
 		// Access List
 		$sql = "ALTER TABLE `access_list` DROP INDEX `ip`";
 		$db_results = mysql_query($sql, dbh());
@@ -2003,6 +2006,7 @@ class Update {
 
 		// Prevent the script from timing out
 		set_time_limit(0);
+
 
 		/* Foreach through the old stuff and dump it back into the fresh table */
 		foreach ($results as $row) { 

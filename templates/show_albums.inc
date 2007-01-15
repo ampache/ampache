@@ -65,7 +65,7 @@ foreach ($albums as $album) {
 			</a>
 			<?php if (batch_ok()) { ?>
 				<a href="<?php echo $web_path; ?>/batch.php?action=alb&amp;id=<?php echo $album->id; ?>">
-				<?php echo get_user_icon('download'); ?>
+				<?php echo get_user_icon('batch_download'); ?>
 				</a>
 			<?php } ?>
 			<?php if ($GLOBALS['user']->has_access('50')) { ?>

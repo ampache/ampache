@@ -332,8 +332,6 @@ class Album {
 	                while ( FALSE !== ($file = @readdir($handle)) ) {
 				$extension = substr($file,strlen($file)-3,4);
 
-			
-	
 				/* If it's an image file */
 				if ($extension == "jpg" || $extension == "gif" || $extension == "png" || $extension == "jp2") { 
 
@@ -432,20 +430,49 @@ class Album {
 			/* Setup the needed variables */
 			$max_pages_to_search = max(conf('max_amazon_results_pages'),$amazon->_default_results_pages);
 			$pages_to_search = $max_pages_to_search; //init to max until we know better.
+
+			// while we have pages to search 
 			do {
-				$search_results = array_merge($search_results, $amazon->search(array('artist' => $artist, 'album' => $albumname, 'keywords' => $keywords)));
+				$raw_results = $amazon->search(array('artist'=>$artist,'album'=>$albumname,'keywords'=>$keywords)); 
+
+				$total = count($raw_results) + count($search_results); 
+
+				// If we've gotten more then we wanted
+				if (!empty($limit) && $total > $limit) { 
+					// We don't want ot re-count every loop
+					$i = $total; 
+					while ($i > $limit) { 
+						array_pop($raw_results); 
+						$i--;
+					} 
+
+					debug_event('amazon-xml',"Found $total, Limit $limit reducing and breaking from loop",'5'); 
+					// Merge the results and BREAK!
+					$search_results = array_merge($search_results,$raw_results); 
+					break;
+				} // if limit defined
+
+				$search_results = array_merge($search_results,$raw_results);
 				$pages_to_search = min($max_pages_to_search, $amazon->_maxPage);
 				debug_event('amazon-xml', "Searched results page " . ($amazon->_currentPage+1) . "/" . $pages_to_search,'5');
 				$amazon->_currentPage++;
+
 			} while($amazon->_currentPage < $pages_to_search);
 			
+
 			// Only do the second search if the first actually returns something
 			if (count($search_results)) { 
 				$final_results = $amazon->lookup($search_results);
 			}
-		
+
 			/* Log this if we're doin debug */
 			debug_event('amazon-xml',"Searched using $keywords with " . conf('amazon_developer_key') . " as key " . count($final_results) . " results found",'5');
+
+			// If we've hit our limit
+			if (!empty($limit) && count($final_results) >= $limit) { 
+				break; 
+			} 
+		
 		} // end foreach
 
 		/* Foreach through what we've found */
