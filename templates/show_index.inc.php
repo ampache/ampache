@@ -36,9 +36,6 @@
         ?>
 </div>
 <div id="catalog_info">
-        <?php
-                $data = show_local_catalog_info();
-                if (count($data)) { show_local_catalog_info(); }
-        ?>
+        <?php show_local_catalog_info(); ?>
 </div>
 

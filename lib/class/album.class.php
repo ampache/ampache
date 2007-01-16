@@ -319,6 +319,8 @@ class Album {
 		foreach($this->_songs as $song) { 
 			$dir = dirname($song->file);
 
+			debug_event('folder_art',"Opening $dir and checking for Album Art",'3'); 
+
 			/* Open up the directory */
 	                $handle = @opendir($dir);
 

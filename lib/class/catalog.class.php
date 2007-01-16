@@ -37,6 +37,7 @@ class Catalog {
 
 	/* This is a private var that's used during catalog builds */
 	var $_playlists = array();
+	var $_art_albums = array(); 
 
 	// Used in functions
 	var $albums	= array();
@@ -283,16 +284,19 @@ class Catalog {
 		@param $parse_m3u	Tells Ampache to look at m3us
 	 */
 	function add_files($path,$gather_type='',$parse_m3u=0,$verbose=1) {
-		/* Strip existing escape slashes and then add them again 
-		   This is done because we keep adding to the dir (slashed) + (non slashed)
-		   and a double addslashes would pooch things
-		*/
+
+		if (strstr($path,"/")) { 
+			$slash_type = '/';
+		} 
+		else { 
+			$slash_type = '\\';
+		} 
 
 		// Prevent the script from timing out
 		set_time_limit(0);
 			
 		/* Open up the directory */
-		$handle = opendir(stripslashes($path));
+		$handle = opendir($path);
 
 		if (!is_resource($handle)) {
                         debug_event('read',"Unable to Open $path",'5','ampache-catalog'); 
@@ -302,24 +306,19 @@ class Catalog {
 		/* Recurse through this dir and create the files array */
 		while ( false !== ( $file = readdir($handle) ) ) {
 
-			// Fix Found by Naund
-			// Needed to protect from ' in filenames
-			$file = sql_escape($file);
-
 			/* Skip to next if we've got . or .. */
 			if ($file == '.' || $file == '..') { continue; } 
 
 			debug_event('read',"Starting work on $file inside $path",'5','ampache-catalog');
 			
 			/* Change the dir so is_dir works correctly */
-			if (!@chdir(stripslashes($path))) {
+			if (!chdir($path)) {
 				debug_event('read',"Unable to chdir $path",'2','ampache-catalog'); 
 				echo "<font class=\"error\">" . _('Error: Unable to change to directory') . " $path</font><br />\n";
 			}
 
 			/* Create the new path */
-			$full_file = stripslashes($path."/".$file);
-			$full_file = str_replace("//","/",$full_file);
+			$full_file = $path.$slash_type.$file;
 			
 			// Incase this is the second time through clear this variable 
 			// if it was set the day before
@@ -445,22 +444,25 @@ class Catalog {
 
 	} // get_albums
 
-	/*!
-		@function get_album_art
-		@discussion This runs through all of the albums and trys to find the 
-			art for them from the mp3s
-		//FIXME: Make the display a table so it all lines up
-	*/
+	/**
+	 *get_album_art
+	 *This runs through all of the needs art albums and trys 
+	 *to find the art for them from the mp3s
+	 */
 	function get_album_art($catalog_id=0,$methods=array()) { 
+		// Just so they get a page
+		flush();
 
 		if (!$catalog_id) { $catalog_id = $this->id; }
 
-		// Get all of the albums in this catalog
-		$albums = $this->get_catalog_albums($catalog_id);	
+		// Get all of the needs art albums in this catalog
+		$albums = $this->_art_albums;	
 		
 		// Run through them an get the art!
-		foreach ($albums as $album) { 
-			flush();
+		foreach ($albums as $album_id=>$true) { 
+			// Create the object
+			$album = new Album($album_id); 
+
 			if (conf('debug')) { 
 				debug_event('gather_art','Gathering art for ' . $album->name,'5'); 
 			}
@@ -971,18 +973,12 @@ class Catalog {
 		/* Do a little stats mojo here */
 		$current_time = time();
 	
-		/* Disabling for now need to re-work the logic on this
-		 * but I don't want to do that right before a stable, does not
-		 * search at all, this is less then perfect, but hey :(	
-		if ($type != 'fast_add') { 	
-			if ($verbose) { 
-				echo "\n<b>" . _('Starting Album Art Search') . ". . .</b><br />\n"; 
-				echo _('Searched') . ": <span id=\"count_art_" . $this->id . "\">" . _('None') . "</span>";
-				flush();
-			}
-			$this->get_album_art(); 
-		} 
-		*/
+		if ($verbose) { 
+			echo "\n<b>" . _('Starting Album Art Search') . ". . .</b><br />\n"; 
+			echo _('Searched') . ": <span id=\"count_art_" . $this->id . "\">" . _('None') . "</span>";
+			flush();
+		}
+		$this->get_album_art(); 
 
 		/* Update the Catalog last_update */
 		$this->update_last_add();
@@ -1751,14 +1747,20 @@ class Catalog {
 		}
 
 		/* Setup the Query */
-		$sql = "SELECT id FROM album WHERE name LIKE '$album'";
+		$sql = "SELECT id,art FROM album WHERE name LIKE '$album'";
 		if ($album_year) { $sql .= " AND year='$album_year'"; }
 		$db_results = mysql_query($sql, dbh());
 
 		/* If it's found */
-		if ($r = mysql_fetch_object($db_results)) {
-			$album_id = $r->id;
+		if ($r = mysql_fetch_assoc($db_results)) {
+			$album_id = $r['id'];
 
+			// If we don't have art put it in the needs me some art array
+			if (!strlen($r['art'])) { 
+				$key = $r['id']; 
+				$this->_art_albums[$key] = 1;
+			}
+		
 		} //if found
 
 		/* If not found create */
@@ -1774,9 +1776,11 @@ class Catalog {
 			$album_id = mysql_insert_id(dbh());
 
 			if (!$db_results) {
-				echo "Error Inserting Album:$album <br />";
-				flush();
+				debug_event('album',"Error Unable to insert Album:$album",'2'); 
 			}
+
+			// Add it to the I needs me some album art array
+			$this->_art_albums[$album_id] = 1; 
 
 		} //not found
 
@@ -1897,7 +1901,7 @@ class Catalog {
 		$genre_id	= $this->check_genre($genre);
 		$album_id	= $this->check_album($album,$year);
 		$title		= $this->check_title($title,$file);
-		$add_file	= sql_escape($results['file']);
+		$add_file	= sql_escape($file);
 
 		$sql = "INSERT INTO song (file,catalog,album,artist,title,bitrate,rate,mode,size,time,track,genre,addition_time,year)" .
 			" VALUES ('$add_file','$this->id','$album_id','$artist_id','$title','$bitrate','$rate','$mode','$size','$song_time','$track','$genre_id','$current_time','$year')";

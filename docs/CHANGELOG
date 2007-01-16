@@ -4,6 +4,11 @@
 
 --------------------------------------------------------------------------
   v.3.3.3 
+  	- Fixed Album Art search on Catalog add so that it only searches
+		albums that currently don't have art
+  	- Fixed a long outstanding issue with Windows Shared drives and
+		the incorrect slashes and speed up catalog builds a tiny
+		bit
 	- Improve speed, sanity of single album art search
 	- Fixed a logic issue with force_http_play
 	- Improved performance of Amazon album art search by reducing the

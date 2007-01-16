@@ -535,9 +535,11 @@ function show_local_catalog_info() {
 	$query = "SELECT * FROM catalog";
 	$db_results = mysql_query($query, $dbh);
 	if (!mysql_num_rows($db_results)) {
-		$items[] = "<span align=\"center\" class=\"error\">" . _("No Catalogs Found!") . "</span><br />";
-		$items[] = "<a href=\"" . conf('web_path') . "/admin/catalog.php?action=show_add_catalog\">" ._("Add a Catalog") . "</a>";
-		show_info_box(_('Catalog Statistics'),'catalog',$items);
+		show_box_top(); 	
+		$items[] = "<span align=\"center\" class=\"error\">" . _('No Catalogs Found!') . "</span><br />";
+		$items[] = "<a href=\"" . conf('web_path') . "/admin/catalog.php?action=show_add_catalog\">" ._('Add a Catalog') . "</a>";
+		show_info_box('','catalog',$items);
+		show_box_bottom(); 
 		return false;
 	}
 
