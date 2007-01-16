@@ -23,21 +23,22 @@
         <?php show_now_playing(); ?>
 </div> <!-- Close Now Playing Div -->
 <!-- Recently Played -->
-<div id="catalog_info">
-        <?php
-                $data = show_local_catalog_info();
-                if (count($data)) { show_local_catalog_info(); }
-        ?>
-</div>
-<div id="recently_played">
-        <?php
-                $data = get_recently_played();
-                if (count($data)) { require_once(conf('prefix') . '/templates/show_recently_played.inc.php'); }
-        ?>
-</div>
 <div id="random_selection">
 	<?php
 		$albums = get_random_albums('6'); 
 		if (count($albums)) { require_once(conf('prefix') . '/templates/show_random_albums.inc.php'); } 
 	?>
 </div> 
+<div id="recently_played">
+        <?php
+                $data = get_recently_played();
+                if (count($data)) { require_once(conf('prefix') . '/templates/show_recently_played.inc.php'); }
+        ?>
+</div>
+<div id="catalog_info">
+        <?php
+                $data = show_local_catalog_info();
+                if (count($data)) { show_local_catalog_info(); }
+        ?>
+</div>
+

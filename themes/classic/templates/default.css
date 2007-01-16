@@ -364,6 +364,9 @@ span.five-stars:hover { width: 80px; }
 	font-size: 1.05em;
 	font-weight: bold;
 }
+.box-list { 
+	padding-right: 10px;
+}
 
 /* Enclosing Boxes Styles */
 .box-left-top { 

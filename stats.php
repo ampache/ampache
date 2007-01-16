@@ -56,12 +56,15 @@ switch ($action) {
 
 		require_once(conf('prefix') . '/templates/show_user_stats.inc.php');
 
-		/* Build Recommendations from Ratings */
-		$recommended_artists	= $working_user->get_recommendations('artist');
-		$recommended_albums	= $working_user->get_recommendations('albums');
-		$recommended_songs	= $working_user->get_recommendations('song');
-
-		require_once(conf('prefix') . '/templates/show_user_recommendations.inc.php');
+		// Onlu do this is ratings are on 
+		if (conf('ratings')) { 
+			/* Build Recommendations from Ratings */
+			$recommended_artists	= $working_user->get_recommendations('artist');
+			$recommended_albums	= $working_user->get_recommendations('albums');
+			$recommended_songs	= $working_user->get_recommendations('song');
+	
+			require_once(conf('prefix') . '/templates/show_user_recommendations.inc.php');
+		} // if ratings on 
 
                 show_box_top();
                 /* Show Most Popular artist/album/songs */

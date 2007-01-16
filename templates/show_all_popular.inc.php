@@ -44,3 +44,4 @@
 		<?php show_info_box(_('Most Popular Tags'),'tags',$tags); ?>
 	</td>
 </tr>
+<tr><td colspan="2">&nbsp;</td></tr>

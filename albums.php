@@ -91,6 +91,8 @@ switch ($action) {
 
 		// get the Album information
 	        $album = new Album($_REQUEST['album_id']);
+		$images = array(); 
+		$cover_url = array(); 
 
 		// If we've got an upload ignore the rest and just insert it
 		if (!empty($_FILES['file']['tmp_name'])) { 
@@ -138,20 +140,21 @@ switch ($action) {
 		}
 		$images = array_merge($cover_url,$images); 
 
-		// We don't want to store raw's in here so we need to strip them out into a seperate array
-		foreach ($images as $index=>$image) { 
-			if (isset($image['raw'])) { 
-				//unset($images[$index]); 
-				$images[$index]['raw'] = ''; 
-			} 
-		} 
-		
-		// Store the results for further use
-		$_SESSION['form']['images'] = $images;
-		
+		// If we've found anything then go for it!		
 		if (count($images)) {
+			// We don't want to store raw's in here so we need to strip them out into a seperate array
+			foreach ($images as $index=>$image) { 
+				if (isset($image['raw'])) { 
+					//unset($images[$index]); 
+					$images[$index]['raw'] = ''; 
+				} 
+			} // end foreach  
+
+			// Store the results for further use
+			$_SESSION['form']['images'] = $images;
 			require_once(conf('prefix') . '/templates/show_album_art.inc.php');
 		}
+		// Else nothing
 		else {
 			show_confirmation(_('Album Art Not Located'),_('Album Art could not be located at this time. This may be due to write access error, or the file is not received corectly.'),"/albums.php?action=show&amp;album=" . $album->id);
 		}

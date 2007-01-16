@@ -4,6 +4,7 @@
 
 --------------------------------------------------------------------------
   v.3.3.3 
+	- Improve speed, sanity of single album art search
 	- Fixed a logic issue with force_http_play
 	- Improved performance of Amazon album art search by reducing the
 		queries made on gather album art
