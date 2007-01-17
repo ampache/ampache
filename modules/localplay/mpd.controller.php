@@ -345,7 +345,7 @@ class AmpacheMpd {
 			/* If we don't know it, look up by filename */
 			if (!$song->title) { 
 				$filename = sql_escape($entry['file']);
-				$sql = "SELECT id FROM song WHERE file = '$filename'";
+				$sql = "SELECT id FROM song WHERE file LIKE '%$filename'";
 				$db_results = mysql_query($sql, dbh());
 				if ($r = mysql_fetch_assoc($db_results)) { 
 					$song = new Song($r['id']);

@@ -133,7 +133,7 @@ switch ($action) {
 		// Attempt to find the art. 
 		$images = $album->find_art($options,'6');
 
-		if (isset($_REQUEST['cover'])) { 
+		if (!empty($_REQUEST['cover'])) { 
 			$path_info = pathinfo($_REQUEST['cover']); 
 			$cover_url[0]['url'] 	= scrub_in($_REQUEST['cover']); 
 			$cover_url[0]['mime'] 	= 'image/' . $path_info['extension'];

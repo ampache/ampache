@@ -26,7 +26,7 @@
 	<?php 
 	if (count($recommended_artists)) { 
 		$items = $working_user->format_recommendations($recommended_artists,'artist'); 
-		show_info_box(_('Recommended Aritsts'),'artist',$items); 
+		show_info_box(_('Recommended Artists'),'artist',$items); 
 	}
 	else { 
 		echo "<span class=\"error\">" . _('Not Enough Data') . "</span>";

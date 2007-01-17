@@ -174,6 +174,9 @@ class AmpacheHttpq {
 
 		if (is_null($this->_httpq->clear())) { return false; }
 
+		// If the clear worked we should stop it!
+		$this->stop(); 
+
 		return true;
 
 	} // clear_playlist
@@ -184,6 +187,13 @@ class AmpacheHttpq {
 	 * take any arguments
 	 */
 	function play() { 
+
+		/* A play when it's already playing causes a track restart
+		 * which we don't want to doublecheck its state
+		 */
+		if ($this->_httpq->state() == 'play') { 
+			return true; 
+		} 
 
 		if (is_null($this->_httpq->play())) { return false; } 
 		return true;
@@ -331,7 +341,7 @@ class AmpacheHttpq {
 			/* If we don't know it, look up by filename */
 			if (!$song->title) { 
 				$filename = sql_escape($entry);
-				$sql = "SELECT id FROM song WHERE file = '$filename'";
+				$sql = "SELECT id FROM song WHERE file LIKE '%$filename'";
 				$db_results = mysql_query($sql, dbh());
 				if ($r = mysql_fetch_assoc($db_results)) { 
 					$song = new Song($r['id']);

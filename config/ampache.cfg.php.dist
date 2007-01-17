@@ -92,7 +92,7 @@ require_session = "true"
 
 # Downsample Remote
 # If this is set to true and access control is on any users who are not
-# comming from a defined localnet will be automatically downsampled
+# coming from a defined localnet will be automatically downsampled
 # regardless of their preferences
 # DEFAULT: false
 #downsample_remote = "false"
@@ -159,7 +159,7 @@ tag_order	= ape
 use_auth	= "yes"
 
 # 5 Star Ratings
-# This allows rattings for almost any object in ampache
+# This allows ratings for almost any object in ampache
 # POSSIBLE VALUES: false true
 # DEFAULT: true
 ratings = "true"
@@ -267,7 +267,7 @@ debug_level = 5
 #log_path = "/var/log/ampache"
 
 # Charset of generated HTML pages
-# Default of UTF-8 should work for most poeple
+# Default of UTF-8 should work for most people
 # DEFAULT: UTF-8
 site_charset = UTF-8
 
@@ -316,7 +316,7 @@ refresh_limit = "60"
 #ldap_username = ""
 #ldap_password = ""
 
-# NOT YET IMPLIMENTED!!
+# NOT YET IMPLEMENTED!!
 # This option checks to see if the specified user is in
 # a specific ldap group, allowing you to give access based
 # on group membership
@@ -367,7 +367,7 @@ refresh_limit = "60"
 #mail_domain = "domain.tld"
 
 # This setting will be used as mail from address.
-# It will also be used to notify if a registration occured.
+# It will also be used to notify if a registration occurred.
 # You need to change this when you activate public_registration.
 #mail_from = "info@domain.tld"
 
@@ -464,7 +464,7 @@ downsample_cmd	= mp3splt -qnf %FILE% %OFFSET% %EOF% -o - | lame --mp3input -q 3 
 # formats to the target file type for streaming. Any
 # file types defined here will automatically be transcoded
 # using the stream_cmd_??? regardless of personal preferences
-# This can be usefull in re-encoding file types that don't stream
+# This can be useful in re-encoding file types that don't stream
 # very well, or if the player doesn't support some file types. 
 # REQUIRED variables
 # transcode_TYPE	= true
