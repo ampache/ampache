@@ -826,8 +826,14 @@ class Song {
 
                 if (conf('force_http_play') OR !empty($force_http)) {
                         $port = conf('http_port');
-                        $web_path = preg_replace("/https/", "http",$web_path);
-                        $web_path = preg_replace("/:\d+/",":$port",$web_path);
+			if (preg_match("/:\d+/",$web_path)) { 
+	                        $web_path = str_replace("https://", "http://",$web_path);
+	                        $web_path = preg_replace("/:\d+/",":$port",$web_path);
+			}
+			else { 
+	                        $web_path = str_replace("https://", "http://",$web_path);
+				$web_path = str_replace($_SERVER['HTTP_HOST'],$_SERVER['HTTP_HOST'] . ':' . $port,$web_path); 
+			} 
                 }
 	
 		$url = $web_path . "/play/index.php?song=$song_id&uid=$username$session_string$ds_string&name=/$song_name";
