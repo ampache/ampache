@@ -761,6 +761,10 @@ class Catalog {
 			$catalog_id = $this->create_catalog_entry($path,$name,$key, $ren, $sort, $type);
 		}
 
+		// Make sure they don't have a trailing / or \ on their path
+		$path = rtrim($path,"/"); 
+		$path = rtrim($path,"\\"); 
+
 		/* Setup the $this with the new information */
 		$this->id 		= $catalog_id;
 		$this->path 		= $path;

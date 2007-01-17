@@ -244,9 +244,9 @@ switch ($_REQUEST['action']) {
 	case 'show_delete_catalog':
 		/* Stop the demo hippies */
 	        if (conf('demo_mode')) { break; }
-		
+		$catalog = new Catalog($_REQUEST['catalog_id']); 	
 		$nexturl = conf('web_path') . '/admin/catalog.php?action=delete_catalog&amp;catalog_id=' . scrub_out($_REQUEST['catalog_id']);
-		show_confirmation(_('Delete Catalog'),_('Do you really want to delete this catalog?'),$nexturl,1);
+		show_confirmation(_('Delete Catalog'),_('Do you really want to delete this catalog?') . " -- $catalog->name ($catalog->path)",$nexturl,1);
 	break;
 	case 'show_customize_catalog':
 		include(conf('prefix') . '/templates/show_edit_catalog.inc.php');
