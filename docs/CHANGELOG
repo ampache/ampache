@@ -4,6 +4,7 @@
 
 --------------------------------------------------------------------------
   v.3.3.3 
+	- Fixed a flagged and rated item clean issue with catalogs
 	- Fixed some minor issues in HttpQ and MPD localplay controllers
   	- Fixed Album Art search on Catalog add so that it only searches
 		albums that currently don't have art

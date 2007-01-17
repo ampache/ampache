@@ -130,7 +130,14 @@ foreach ($song_ids as $song_id) {
 	</td>
 	<td>
 		<a href="<?php echo $web_path; ?>/flag.php?action=show_flag&amp;type=song&amp;id=<?php echo $song->id; ?>">
-			<?php echo get_user_icon('flag'); ?>
+			<?
+			if ($song->has_flag()) { 
+				echo get_user_icon('flag'); 
+			} 
+			else { 
+				echo get_user_icon('flag_off'); 
+			} 
+			?>
 		</a>
 		<?php if ($GLOBALS['user']->has_access('100')) { ?>
 				<a href="<?php echo $web_path; ?>/admin/flag.php?action=show_edit_song&amp;song=<?php echo $song->id; ?>">
@@ -191,7 +198,6 @@ $num = count($song_ids);
 </tr>
 <?php } ?>
 </table>
-<p class="header2"><?php echo _('** Indicates flagged songs'); ?></p>
 <br />
 <?php show_play_selected(); ?>
 </form>

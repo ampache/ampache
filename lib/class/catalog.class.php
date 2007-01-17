@@ -1358,7 +1358,7 @@ class Catalog {
 	function clean_flagged() { 
 
 		/* Do a complex delete to get flagged items where the songs are now gone */
-		$sql = "DELETE FROM flagged USING flagged LEFT JOIN song ON song.id = flagged.song WHERE song.id IS NULL";
+		$sql = "DELETE FROM flagged USING flagged LEFT JOIN song ON song.id = flagged.object_id WHERE song.id IS NULL AND object_type='song'";
 		$db_results = mysql_query($sql, dbh());
 
 	} // clean_flagged
@@ -1433,6 +1433,22 @@ class Catalog {
 
 		// Delete the live_stream stat information
 		$sql = "DELETE FROM object_count USING object_count LEFT JOIN live_stream ON live_stream.id=object_count.object_id WHERE object_type='live_stream' AND live_stream.id IS NULL";
+		$db_results = mysql_query($sql,dbh()); 
+
+		// Delete Song Ratings information
+		$sql = "DELETE FROM ratings USING ratings LEFT JOIN song ON song.id=ratings.object_id WHERE object_type='song' AND song.id IS NULL"; 
+		$db_results = mysql_query($sql,dbh()); 
+
+		// Delete Genre Ratings Information
+		$sql = "DELETE FROM ratings USING ratings LEFT JOIN genre ON genre.id=ratings.object_id WHERE object_type='genre' AND genre.id IS NULL"; 
+		$db_results = mysql_query($sql,dbh()); 
+
+		// Delete Album Rating Information
+		$sql = "DELETE FROM ratings USING ratings LEFT JOIN album ON album.id=ratings.object_id WHERE object_type='album' AND album.id IS NULL"; 
+		$db_results = mysql_query($sql,dbh()); 
+
+		// Delete Artist Rating Information
+		$sql = "DELETE FROM ratings USING ratings LEFT JOIN artist ON artist.id=ratings.object_id WHERE object_type='artist' AND artist.id IS NULL"; 
 		$db_results = mysql_query($sql,dbh()); 
 
 	} // clean_stats
@@ -2125,24 +2141,6 @@ class Catalog {
 	*/
 	function delete_catalog() {
 
-		// Do some crazyness to delete all the songs in this catalog
-		// from playlists...
-		$sql = "SELECT playlist_data.song FROM song,playlist_data,catalog WHERE catalog.id=song.catalog AND playlist_data.song=song.id AND catalog.id='$this->id'";
-		$db_results = mysql_query($sql, dbh());
-
-		$results = array();
-
-		while ($r = mysql_fetch_object($db_results)) { 
-			$results[] = $r;
-		}
-
-		foreach ($results as $r) { 
-			// Clear Playlist Data
-			$sql = "DELETE FROM playlist_data WHERE song='$r->song'";
-			$db_results = mysql_query($sql, dbh());
-			
-		} // End Foreach
-
 		// First remove the songs in this catalog
 		$sql = "DELETE FROM song WHERE catalog = '$this->id'";
 		$db_results = mysql_query($sql, dbh());
@@ -2155,8 +2153,8 @@ class Catalog {
 		$this->clean_albums();
 		$this->clean_artists();
 		$this->clean_playlists();
-		$this->clean_flagged();
 		$this->clean_genres();
+		$this->clean_flagged();
 		$this->clean_stats();
 		$this->clean_ext_info(); 
 
