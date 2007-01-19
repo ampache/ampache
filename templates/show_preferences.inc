@@ -31,6 +31,8 @@
  */
 $current_tab 	= scrub_in($_REQUEST['tab']);
 if (!$current_tab) { $current_tab = 'interface'; } 
+// HORRIBLE HACK!
+if ($_REQUEST['action'] == 'user') { $action_txt = '&amp;action=user'; } 
 $link		= conf('web_path') . $target;
 
 /* CSS construction bs */
@@ -57,17 +59,17 @@ if (($GLOBALS['user']->has_access(100)) AND ($user_id == '-1' AND conf('use_auth
 <div id="tabcontainer">
 <ul id="tablist">
 <li <?php echo $tab_interface; ?>>
-	<a href="<?php echo $link; ?>?tab=interface&amp;user_id=<?php echo $user_id; ?>" <?php echo $a_interface; ?>><?php echo _('Interface'); ?></a>
+	<a href="<?php echo $link; ?>?tab=interface&amp;user_id=<?php echo $user_id . $action_txt; ?>" <?php echo $a_interface; ?>><?php echo _('Interface'); ?></a>
 </li>
 <li <?php echo $tab_streaming; ?>>
-	<a href="<?php echo $link; ?>?tab=streaming&amp;user_id=<?php echo $user_id; ?>" <?php echo $a_streaming; ?>><?php echo _('Streaming'); ?></a>
+	<a href="<?php echo $link; ?>?tab=streaming&amp;user_id=<?php echo $user_id . $action_txt; ?>" <?php echo $a_streaming; ?>><?php echo _('Streaming'); ?></a>
 </li>
 <li <?php echo $tab_options; ?>>
-	<a href="<?php echo $link; ?>?tab=options&amp;user_id=<?php echo $user_id; ?>" <?php echo $a_options; ?>><?php echo _('Options'); ?></a>
+	<a href="<?php echo $link; ?>?tab=options&amp;user_id=<?php echo $user_id . $action_txt; ?>" <?php echo $a_options; ?>><?php echo _('Options'); ?></a>
 </li>
 <?php if ($user_id != '-1' && $_SESSION['userdata']['type'] == 'mysql') { ?>
 <li <?php echo $tab_account; ?>>
-	<a href="<?php echo $link; ?>?tab=account&amp;user_id=<?php echo $user_id; ?>" <?php echo $a_account; ?>><?php echo _('Account'); ?></a>
+	<a href="<?php echo $link; ?>?tab=account&amp;user_id=<?php echo $user_id  . $action_txt; ?>" <?php echo $a_account; ?>><?php echo _('Account'); ?></a>
 </li>
 <?php } elseif ($_SESSION['userdata']['type'] == 'mysql' || $user_id == '-1') { ?>
 <li <?php echo $tab_system; ?>>

@@ -53,6 +53,7 @@ switch($action) {
 		update_preferences($user_id);	
 		if ($user_id != '-1') { 
 			$fullname = "ADMIN - " . $temp_user->fullname;
+			$_REQUEST['action'] = 'user';
 			$preferences = $temp_user->get_preferences();
 		}
 		else {
