@@ -4,6 +4,7 @@
 
 --------------------------------------------------------------------------
   v.3.3.3 
+	- Fixed a issue with Catalog builds in Windows 
 	- Fixed a bug with admins ability to set the preferences of a 
 		specific user
 	- Fixed logic on force http that was causing it not to work under

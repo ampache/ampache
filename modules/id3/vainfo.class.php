@@ -50,7 +50,7 @@ class vainfo {
 	 */
 	function vainfo($file,$encoding='',$dir_pattern,$file_pattern) { 
 
-		$this->filename = stripslashes($file);
+		$this->filename = $file;
 		if ($encoding) { 
 			$this->encoding = $encoding;
 		}

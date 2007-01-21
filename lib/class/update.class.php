@@ -338,7 +338,7 @@ class Update {
 
 		$version[] = array('version' => '333002','description' => $update_string);
 
-		$update_string = '- Removed Last Upload Preference';
+		$update_string = '- Removed Last Upload Preference<br />';
 		
 		$version[] = array('version' => '333003','description' => $update_string);
 

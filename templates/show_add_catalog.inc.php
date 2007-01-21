@@ -76,23 +76,7 @@ $default_sort = "%a/%A";
 
 <tr>
 	<td valign="top"><?php echo _("Gather Album Art"); ?>:</td>
-	<td><input type="checkbox" onclick="flipField('artextra1');flipField('artextra2');flipField('artextra3');" name="gather_art" value="1" /><br />
-		<table border="0" width="100%" cellpadding="0" cellspacing="0">
-		<tr class="even">
-			<td><?php echo _('ID3V2 Tags'); ?>:</td>
-			<td><input id="artextra1" disabled="disabled" type="checkbox" name="art_id3v2" value="1" /></td>
-		</tr>
-		<tr class="even">
-			<td><?php echo _('Amazon'); ?>:</td>
-			<td><input id="artextra2" disabled="disabled" type="checkbox" name="art_amazon" value="1" /></td>
-		</tr>
-		<tr class="even">
-			<td><?php echo _('File Folder'); ?>:</td>
-			<td><input id="artextra3" disabled="disabled" type="checkbox" name="art_folder" value="1" /></td>
-		</tr>
-		</table>
-		<br />
-	</td>
+	<td><input type="checkbox" name="gather_art" value="1" /></td>
 </tr>
 <tr>
 	<td valign="top"><?php echo _('Build Playlists from m3u Files'); ?>:</td>

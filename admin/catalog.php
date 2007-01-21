@@ -257,7 +257,7 @@ switch ($_REQUEST['action']) {
 		foreach ($catalogs as $data) { 
 	        	echo "<div class=\"confirmation-box\"><b>" . _('Starting Album Art Search') . ". . .</b><br /><br />\n";
 			echo _('Searched') . ": <span id=\"count_art_" . $data->id . "\">" . _('None') . "</span><br />";
-			$data->get_album_art();
+			$data->get_album_art(0,1);
 			echo "<b>" . _('Album Art Search Finished') . ". . .</b></div>\n";
 		}
 		$url 	= conf('web_path') . '/admin/index.php';

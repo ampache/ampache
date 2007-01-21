@@ -445,21 +445,48 @@ class Catalog {
 	} // get_albums
 
 	/**
+	 * get_catalog_album_ids
+	 * This returns an array of ids of albums that have songs in this
+	 * catalog
+	 * //FIXME:: :(
+	 */ 
+	function get_catalog_album_ids() { 
+
+		$id = sql_escape($this->id); 
+		$results = array(); 
+
+		$sql = "SELECT DISTINCT(song.album) FROM song WHERE song.catalog='$id'";
+		$db_results = mysql_query($sql,dbh()); 
+
+		while ($r = mysql_fetch_assoc($db_results)) { 
+			$results[] = $r['album']; 
+		} 
+
+		return $results; 
+
+	} // get_catalog_album_ids
+
+	/**
 	 *get_album_art
 	 *This runs through all of the needs art albums and trys 
 	 *to find the art for them from the mp3s
 	 */
-	function get_album_art($catalog_id=0,$methods=array()) { 
+	function get_album_art($catalog_id=0,$all='') { 
 		// Just so they get a page
 		flush();
 
 		if (!$catalog_id) { $catalog_id = $this->id; }
 
-		// Get all of the needs art albums in this catalog
-		$albums = $this->_art_albums;	
+
+		if (!empty($all)) { 	
+			$albums = $this->get_catalog_album_ids(); 
+		}
+		else { 
+			$albums = array_keys($this->_art_albums); 
+		} 
 		
 		// Run through them an get the art!
-		foreach ($albums as $album_id=>$true) { 
+		foreach ($albums as $album_id) { 
 			// Create the object
 			$album = new Album($album_id); 
 
@@ -586,7 +613,7 @@ class Catalog {
 		/* Set it as an empty array */
 		$files = array();
 
-		$path = stripslashes($path);
+		$path = $path;
 
 		/* Open up the directory */
 		$handle = @opendir($path);
@@ -598,11 +625,18 @@ class Catalog {
 			echo "<font class=\"error\">Error: Unable to change to $path directory</font><br />\n";
 		}
 
+		// Determine the slash type and go from there
+		if (strstr($path,"/")) { 
+			$slash_type = '/';
+		} 
+		else { 
+			$slash_type = '\\';
+		} 
+
 		/* Recurse through this dir and create the files array */
 		while ( FALSE !== ($file = @readdir($handle)) ) {
 
-			$full_file = stripslashes($path . "/" . $file);
-			$full_file = str_replace("//","/",$full_file);
+			$full_file = $path . $slash_type . $file; 
 
 			/* Incase this is the second time through, unset it before checking */
 			unset($failed_check);
@@ -809,7 +843,7 @@ class Catalog {
                         echo "<br />\n<b>" . _('Starting Album Art Search') . ". . .</b><br />\n";
 			echo _('Searched') . ": <span id=\"count_art_" . $this->id . "\">" . _('None') . "</span>";
                         flush();
-                        $this->get_album_art(0,$art);
+                        $this->get_album_art();
 		} // if we want to gather album art
 
 		/* Do a little stats mojo here */
@@ -1207,7 +1241,7 @@ class Catalog {
 		while ($results = mysql_fetch_object($db_results)) {
 
 			/* Remove slashes while we are checking for its existance */
-			$results->file = stripslashes($results->file);
+			$results->file = $results->file;
 
                         /* Stupid little cutesie thing */
                         $this->count++;
@@ -1219,7 +1253,7 @@ class Catalog {
                         } //echos song count
 
 			/* Also check the file information */
-			$file_info = @filesize($results->file);
+			$file_info = filesize($results->file);
 
 			/* If it errors somethings splated, or the files empty */
 			if (!file_exists($results->file) OR $file_info < 1) {
