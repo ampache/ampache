@@ -258,7 +258,7 @@ class Catalog {
 	*/
 	function add_file($filename) { 
 
-		$file_size = @filesize($filename);
+		$file_size = filesize($filename);
 		$pattern = "/\.[" . conf('catalog_file_pattern') . "]$/i";	
 		
 		if ( preg_match($pattern ,$filename) && ($file_size > 0) && (!preg_match('/\.AppleDouble/', $filename))  ) {
@@ -820,7 +820,11 @@ class Catalog {
 		
 		echo _('Found') . ": <span id=\"count_add_" . $this->id . "\">" . _('None') . "</span><br />\n";
 		flush();
-		
+	
+                // Make sure the path doesn't end in a / or \
+                $this->path = rtrim($this->path,'/');
+                $this->path = rtrim($this->path,'\\');
+	
 		/* Get the songs and then insert them into the db */
 		$this->add_files($this->path,$type,$parse_m3u);
 
@@ -990,6 +994,10 @@ class Catalog {
 
 		/* Set the Start time */
 		$start_time = time();
+
+		// Make sure the path doesn't end in a / or \
+		$this->path = rtrim($this->path,'/'); 
+		$this->path = rtrim($this->path,'\\');
 
 		/* Get the songs and then insert them into the db */
 		$this->add_files($this->path,$type,0,$verbose);
