@@ -408,7 +408,7 @@ class Catalog {
 					else {
 						// not readable, warn user
 			                        debug_event('read',"$full_file is not readable by ampache",'2','ampache-catalog'); 
-						echo "$full_file " . _("is not readable by ampache") . ".<br />\n";
+						echo "$full_file " . _('is not readable by ampache') . ".<br />\n";
 
 					}
 
@@ -885,15 +885,16 @@ class Catalog {
 			$info = $this->update_song_from_tags($song);
 
                         if ($info['change']) {
+				$file = scrub_out($song->file);
                                 echo "<dl>\n\t<dd>";
-                                echo "<b>$song->file " . _("Updated") . "</b>\n";
+                                echo "<b>$file " . _('Updated') . "</b>\n";
                                 echo $info['text'];
                                 echo "\t</dd>\n</dl><hr align=\"left\" width=\"50%\" />";
                         	flush();
 	                } // if change
 			else {
 				echo"<dl>\n\t<dd>";
-				echo "<b>$song->file</b><br />" . _("No Update Needed") . "\n";
+				echo "<b>$song->file</b><br />" . _('No Update Needed') . "\n";
 				echo "\t</dd>\n</dl><hr align=\"left\" width=\"50%\" />";
 				flush();
 			}

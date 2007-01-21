@@ -166,7 +166,9 @@ function search_song($data,$operator,$method,$limit) {
 				$where_sql .= " song.file $value_string $operator";
 			break;
 			case 'comment':
-				$where_sql .= " song.comment $value_string $operator";
+				$join_sql  .= 'song.id=song_ext_data.song_id AND ';
+				$table_sql .= 'song_ext_data,';
+				$where_sql .= " song_ext_data.comment $value_string $operator";
 			break;
 			case 'played':
 				/* This is a 0/1 value so bool it */
@@ -203,7 +205,7 @@ function search_song($data,$operator,$method,$limit) {
 	
 	$base_sql 	= "SELECT DISTINCT(song.id) $select_sql FROM song";
 
-	$sql = $base_sql . $table_sql . " WHERE " . $join_sql . "(" . $where_sql . ")" . $group_sql . $limit_sql;
+	$sql = $base_sql . $table_sql . " WHERE " . $join_sql . " (" . $where_sql . ")" . $group_sql . $limit_sql;
 	
 	/**
 	 * Because we might need this for Dynamic Playlist Action 

@@ -4,6 +4,8 @@
 
 --------------------------------------------------------------------------
   v.3.3.3 
+	- Fixed comment searching, broken when split out into its own
+		table
 	- Fixed a issue with Catalog builds in Windows 
 	- Fixed a bug with admins ability to set the preferences of a 
 		specific user
