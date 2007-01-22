@@ -85,12 +85,12 @@ function insert_now_playing($song_id,$uid,$song_length) {
         if (stristr($user_agent,"Windows-Media-Player")) { return false; }
 
 	/* Check for Windows Media Player 11 */
-	if (strstr($user_agent,"WMFSDK/11")) { return false; } 
+	if (strstr($user_agent,'NSPlayer/11') AND !strstr($user_agent,'WMFSDK/11')) { return false; } 
 
         /* Set the Expire Time */
 
         // If they are using Windows media player
-	if (stristr($user_agent,"NSPlayer") || $_REQUEST['flash_hack'] == 1) { 
+	if (strstr($user_agent,"NSPlayer") || $_REQUEST['flash_hack'] == 1) { 
                 // WMP does keep the session open so we need to cheat a little here
 		$session_id 	= sql_escape($_REQUEST['sid']); 
         }

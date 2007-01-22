@@ -3,6 +3,12 @@
 # General Config   #
 ####################
 
+# This value is used to detect quickly
+# if this config file is up to date 
+# this is compared against a value hardcoded
+# into the init script
+config_version = 1
+
 ####################
 # Path Vars        #
 ####################
@@ -198,7 +204,8 @@ ratings = "true"
 # ampache to search if you want to disable one of the search
 # method simply comment it out valid values are
 # POSSIBLE VALUES: id3 folder amazon
-# DEFAULT: id3,folder,amazon
+# DEFAULT: db,id3,folder,amazon
+album_art_order = "db"
 album_art_order = "id3"
 album_art_order = "folder"
 album_art_order = "amazon"

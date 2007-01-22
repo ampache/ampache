@@ -37,6 +37,8 @@ $method = scrub_in($_REQUEST['method']);
 
 switch ($action) { 
 	case 'play_selected':
+		// Make sure they actually passed soemthing
+		if (!count($_POST['song'])) { header("Location:" . return_referer()); exit; } 
 		$type = scrub_in($_REQUEST['type']);
 		if ($type == 'album') { 
 			$song_ids = get_songs_from_type($type, $_POST['song'], $_REQUEST['artist_id']);

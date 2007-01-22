@@ -162,8 +162,7 @@ class Song {
 			preg_match('/\.([A-Za-z0-9]+)$/', $this->file,$results);
 			$this->type = strtolower($results['1']);
 		} 
-
-
+		
 		switch ($this->type) { 
 			case 'spx':
 			case 'ogg':
@@ -201,7 +200,9 @@ class Song {
 			break;
 		}
 
-	} // get_type
+		return true; 
+
+	} // format_type
 	
 	/*!
 		@function get_album_songs
@@ -817,10 +818,10 @@ class Song {
 		}
 
 		/* Account for retarded players */
-		if ($song->type == 'flac') { $type = 'ogg'; } 
+		if ($this->type == 'flac') { $type = 'ogg'; } 
 
 		$this->format();
-		$song_name = rawurlencode($this->f_artist_full . " - " . $this->title . "." . $this->type);
+		$song_name = rawurlencode($this->f_artist_full . " - " . $this->title . "." . $type);
 	
 		$web_path = conf('web_path');
 
@@ -856,7 +857,7 @@ class Song {
 		if (conf($conf_var)) { 
 			$this->_transcode = true; 
 			$this->format_type(conf($conf_type)); 
-			debug_event('auto_transcode','Transcoding to ' . conf($conf_type),'5'); 
+			debug_event('auto_transcode','Transcoding to ' . $this->type,'5'); 
 			return false; 
 		} 
 		

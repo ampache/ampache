@@ -4,6 +4,12 @@
 
 --------------------------------------------------------------------------
   v.3.3.3 
+	- Fixed a redirect to a blank page if you hit play selected when
+		nothing was selected (Thx Chenb)
+	- Added detection of old config files, message displayed to admins
+		upon login
+	- Fixed an issue with WMP11 and Lock Songs that prevented playback
+		due to the way Now Playing was being calculated
 	- Fixed comment searching, broken when split out into its own
 		table
 	- Fixed a issue with Catalog builds in Windows 
@@ -23,7 +29,7 @@
 	- Improved performance of Amazon album art search by reducing the
 		queries made on gather album art
 	- Fixed an issue with all numeric usernames
-	- Fixed some minor catalog cleaning issues that could arrise due
+	- Fixed some minor catalog cleaning issues that could arise due
 		to the order of the clean functions
 	- Added missing functions to the HttpQ controller, should now have
 		all capabilities that MPD has. 
@@ -91,7 +97,7 @@
 	- Improved Sidebar CSS making it more compliant with different
 		browsers (Thx Spocky)
 	- Fixed some logic errors in the Transcoding logic and play logic
-	- Rewrote Album Art collection to correct some seriou logic flaws
+	- Rewrote Album Art collection to correct some serious logic flaws
 	- Added potential fix for FastCGI installations
 	- Updated Snoopy to 1.2.3 (from manually patched 1.2.1) 
 	- Fixed sorting of Themes, now sorted by Alpha of theme name
@@ -126,7 +132,7 @@
 
 --------------------------------------------------------------------------
   v.3.3.3-Beta1 12/18/2006 
-  	- Moved Comment information to seperate table and added lyrics
+  	- Moved Comment information to separate table and added lyrics
 		row, no support for lyrics yet though.
   	- Removed Upload functionality (broken, and time better spent on
 		other features)
@@ -135,7 +141,7 @@
 		stored in plain text. 
   	- Fixed an issue with Admin -> Streaming -> Localplay Level
 		not correctly displaying the current setting
-  	- Integrated LastFM plugin per user requests. 
+  	- Integrated LastFM plug-in per user requests. 
 	- Added /bin/delete_disabled.php.inc to delete any disabled
 		songs in your DB, defaults to Debug only mode
 	- Fixed display issue with players that ignore EXTINF in m3us
@@ -143,18 +149,18 @@
 	- Added Refreshing to the Recently Played menu at the same time
 		it refresh the now playing on the index page
 	- Fixed a cataloging issue that was using a round about way of
-		checking to make sure the song wasn't flaged. 
+		checking to make sure the song wasn't flagged. 
 	- A ton of CSS cleanup (Thx apex)
 	- Fixed an issue with multi-value config options on test.php
 	- Changed default site_charset to UTF-8 in ampache.cfg.php.dist
 	- Fixed some <? in show_test.inc (Thx apex)
-	- Added Plugin Interface under Admin --> Modules
-	- Fixed playtype switcher so it shows all possible play methods
+	- Added Plug-in Interface under Admin --> Modules
+	- Fixed play type switcher so it shows all possible play methods
 	- Tweaked home page a little, remove pop songs and recent artists
 	- Added Recently Played to Main Page
 	- Fixed an issue on Browse by Albums and sorting by Artist after
 		sorting by something else 
-	- Added initial Tag writting script (Thx Jirwin)
+	- Added initial Tag writing script (Thx Jirwin)
   	- Updated flag class to make it easier to create a tag writer
   	- Fixed some potential issues with sort_files.php.inc
 	- Added the ability to Upload a M3u and have it attempt to build
@@ -184,7 +190,7 @@
 	- Added Export to Itunes DB function (Thx PB1DFT) 	
 	- Fixed Show All of Song Titles not having any data
 	- Fixed override of local_length to 9000 regardless of config file
-	- Tweaked Remeber Me Checkbox to be disabled if remember_length
+	- Tweaked Remember Me Checkbox to be disabled if remember_length
 		is <= local_length
 	- Fixed issues with date not being set on insert of stats
 	- Fixed style issue on Single Album view when ratings are off
@@ -270,7 +276,7 @@
 		while
 	- Fixed some Install issues with incorrectly named templates
 	- Added check for MySQL support to first install page, redirects
-		to /test.php if mysql support is non-existant
+		to /test.php if mysql support is non-existent
 	- Added ability to turn Random/Repeat on and off in localplay
 		and also improved localplay page a tiny bit.
 	- Fixed a problem with pagination on the admin/users.php page
@@ -345,7 +351,7 @@
   	- Improved MPD class to use PHP 4.3+ socket timeout settings so
 		that if your MPD server goes down while in MPD mode it
 		doesn't hard-lock ampache. 
-  	- Supressed deprecated var warnings in PHP5
+  	- Suppressed deprecated var warnings in PHP5
   	- Fixed link to playlist import
 	- Fixed playlist add on every catalog add (I'm not kidding this 
 		time... really..)
@@ -371,10 +377,10 @@
 	- Added Localplay API, check the wiki for more information
 		https://ampache.bountysource.com/wiki/Localplay
   	- Added Download to Random play along with Size limitation
-		usefull for downloading a set amount of music for your
+		useful for downloading a set amount of music for your
 		mp3 player.
   	- Fixed mime detection, wasn't strtolowering the value
-	- Fixed a few more Charset issues specificaly with Russian 
+	- Fixed a few more Charset issues specifically with Russian 
 		(Thx Nikk)
 
 --------------------------------------------------------------------------
@@ -405,7 +411,7 @@
   	- Fixed a problem with browsing genres that would incorrectly put
 		'Browse' in the Showing Genres Starting With: box
   	- Fixed some unescaped ID's in class constructors. 
-  	- Added debug_level config option to allow fine tunning of logging
+  	- Added debug_level config option to allow fine tuning of logging
   	- Fixed catalog functions hopefully increasing speed and removing a bug
 		with fast search
   	- Fixed cookie code to account for violation of RFC's by IIS 5 where
@@ -442,9 +448,9 @@
   	- Added new Session Handling code called vauth (Vollmer's Auth)
   	- Moved xml-rpc server file to /server/xmlrpc.server.php keeping 
 		with the location of the ajax server mojo.. This will 
-		break compatiblity with previous versions, sorry!
+		break compatibility with previous versions, sorry!
   	- Added ability to search from non-us amazon webservices website
-		and retrive more then one page (Thx nhorloc)
+		and retrieve more then one page (Thx nhorloc)
 
 --------------------------------------------------------------------------
   v.3.3.2-Beta1 01/08/2006
@@ -455,7 +461,7 @@
   	- Fixed some minor theme issues with the built in themes
   	- Fixed some RSS problems, and linked it on header (Thx pb1dft)
   	- Fixed bug where you couldn't delete admin users because of an
-		overzelous permission check
+		overzealous permission check
   	- Fixed Search Album art page so it correctly shows results
 		(Thx nhorlock)
   	- Fixed stylesheet so all old Themes work again (Thx Sigger)
@@ -817,7 +823,7 @@
 	- Fixed problem with user create and user edit where it wasn't doing
 		any really good error checking, or notifying you when it
 		failed to update/create
-	- Tweaked now playing in an attempt to allivate some now playing
+	- Tweaked now playing in an attempt to correct some now playing
 		floods that people were seeing
 
 --------------------------------------------------------------------------
