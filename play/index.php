@@ -243,7 +243,7 @@ if (!is_resource($fp)) {
 } // else not downsampling
 
 if ($start) {
-	debug_event('seek','Start point recieved, skipping ahead in the song...','5');
+	debug_event('seek','Content-Range header recieved, skipping ahead ' . $start . ' bytes out of ' . $song->size,'5');
 	$browser->downloadHeaders($song_name, $song->mime, false, $song->size);
 	fseek( $fp, $start );
 	$range = $start ."-". ($song->size-1) . "/" . $song->size;
