@@ -72,6 +72,6 @@ if (conf('use_rss')) { ?>
 <?php if (conf('int_config_version') != conf('config_version') AND $GLOBALS['user']->has_access(100)) { ?>
 <div class="fatalerror">
 	<?php echo _('Error Config File Out of Date'); ?>
-	<a href="<?php conf('web_path'); ?>/admin/system.php?action=generate_config"><?php echo _('Generate New Config'); ?></a>
+	<a href="<?php echo conf('web_path'); ?>/admin/system.php?action=generate_config"><?php echo _('Generate New Config'); ?></a>
 </div>
 <?php } ?>
