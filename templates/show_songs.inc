@@ -130,7 +130,7 @@ foreach ($song_ids as $song_id) {
 	</td>
 	<td>
 		<a href="<?php echo $web_path; ?>/flag.php?action=show_flag&amp;type=song&amp;id=<?php echo $song->id; ?>">
-			<?
+			<?php
 			if ($song->has_flag()) { 
 				echo get_user_icon('flag'); 
 			} 
