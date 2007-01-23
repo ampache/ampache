@@ -41,6 +41,6 @@ $artist = scrub_out(truncate_with_ellipse($song->f_artist_full,'25'));
 	<?php if (conf('play_album_art')) { ?>
 <td class="np_cell">
 	<a target="_blank" href="<?php echo $web_path; ?>/image.php?id=<?php echo $song->album; ?>&amp;type=popup&amp;sid=<?php echo session_id(); ?>" onclick="popup_art('<?php echo $web_path; ?>/image.php?id=<?php echo $song->album; ?>&amp;type=popup&amp;sid=<?php echo session_id(); ?>'); return false;">
-	<img align="middle" border="0" src="<?php echo $web_path; ?>/image.php?id=<?php echo $song->album; ?>&amp;thumb=1&amp;sid=<?php echo session_id(); ?>" alt="Album Art" height="75" /></a>
+	<img align="middle" border="0" src="<?php echo $web_path; ?>/image.php?id=<?php echo $song->album; ?>&amp;thumb=1&amp;sid=<?php echo session_id(); ?>" alt="Album Art" height="75" width="75" /></a>
 </td>
 <?php } // end play album art ?>
