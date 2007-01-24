@@ -1,5 +1,5 @@
 -------------------------------------------------------------------------------
----------                    README - Ampache v.3.3                 -----------
+---------                   README - Ampache v.3.3.3                -----------
 -------------------------------------------------------------------------------
 
 Contents:
@@ -39,12 +39,15 @@ Contents:
 
      	- MP3 (id3v1 && id3v2)
 	- OGG
-	- WMA
+	- WMA/ASF
 	- FLAC
 	- RM
-	- AAC/M4A
+	- AAC/M4A/MP4
 	- MPC
 	- WV
+	- SHN
+	- APE
+	- SPX
 
   B) Supported Stream Methods
 
@@ -62,11 +65,13 @@ Contents:
 	- Realtime Downsampled
 	- XSPF Based Flash Player
 	- Automatic Downsampling based on load
+	- Local/Remote network definition based downsampling
 	- On the Fly Transcoding
 	- Localplay
 		- Music Player Daemon (MPD)
 		- Xbox Media Center (XMBC)
 		- Icecast2
+		- Winamp using (HTTPQ)
 	- Democratic Vote based play
 	
   C) Current Translations
@@ -118,7 +123,7 @@ Contents:
 	PHP4 ICONV 
 	PHP4  ZLIB support (recommended)
   MySQL >= 4.x http://www.mysql.com
-  16MB of Ram
+  24MB of Ram
 
 3. Setting Up
 
@@ -126,7 +131,6 @@ Contents:
     If you're upgrading from 3.0 to 3.1 you will not be able to re-use
     your database or config.php files.  You will need to follow the entire 
     Ampache install guidelines oultined in the INSTALL file.  
-
 
 3a. Upgrading Your Ampache Install
 

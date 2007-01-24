@@ -49,12 +49,6 @@ switch ($action) {
 		$value		= scrub_in($_GET['value']);
 		/* Return information based on function */
 		switch($function) { 
-			case 'play':
-			case 'stop':
-			case 'pause':
-			case 'next':
-			case 'prev':
-			break;
 			case 'skip':
 				ob_start();
 				require_once(conf('prefix') . '/templates/show_localplay_playlist.inc.php');
@@ -67,7 +61,7 @@ switch ($action) {
 				$results['lp_volume']	= $status['volume'];
 			break;
 			default:
-				$results = array();	
+				$results['3514'] = '0x1';	
 			break;
 		} // end switch on cmd
 		$localplay->$function($value); 
@@ -197,7 +191,8 @@ switch ($action) {
 		echo $xml_doc; 
 	break;
 	default:
-		echo "Default Action";
+		$results['3514'] = '0x1';
+		echo xml_from_array($results); 
 	break;
 } // end switch action
 ?>

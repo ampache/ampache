@@ -207,8 +207,8 @@ if (substr($post_size,strlen($post_size)-1,strlen($post_size)) != 'M') {
 	ini_set('post_max_size','8M');
 }
 
-if ($results['memory_limit'] < 16) { 
-	$results['memory_limit'] = 16;
+if ($results['memory_limit'] < 24) { 
+	$results['memory_limit'] = 24;
 }
 set_memory_limit($results['memory_limit']);
 

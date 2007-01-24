@@ -61,7 +61,6 @@ msgstr "Trouv&eacute;"
 #: ../../lib/class/catalog.class.php:1025 ../../lib/preferences.php:269
 #: ../../lib/preferences.php:319 ../../lib/ui.lib.php:1194
 #: ../../admin/catalog.php:259
-#, fuzzy
 msgid "None"
 msgstr "Non"
 
@@ -190,7 +189,7 @@ msgstr "test des tags des morceaux trouv&eacute;s"
 
 #: ../../lib/class/catalog.class.php:1522
 msgid "Verifed"
-msgstr ""
+msgstr "V&eacute;rifi&eacute;"
 
 #: ../../lib/class/catalog.class.php:1574
 msgid " FOUND"
@@ -205,17 +204,14 @@ msgid "Album Art Already Found"
 msgstr "Jaquette(s) d'album(s) d&eacute;ja trouv&eacute;e(s)"
 
 #: ../../lib/class/catalog.class.php:1634
-#, fuzzy
 msgid "Update Finished."
 msgstr "Mise &aacute; jour du catalogue termin&eacute;e"
 
 #: ../../lib/class/catalog.class.php:1634
-#, fuzzy
 msgid "Checked"
 msgstr "Test"
 
 #: ../../lib/class/catalog.class.php:1634
-#, fuzzy
 msgid "songs updated."
 msgstr " a &eacute;t&eacute; mis &aacute; jour"
 
@@ -325,14 +321,12 @@ msgid "Error: Name Identical"
 msgstr "Erreur : noms identiques"
 
 #: ../../lib/class/flag.class.php:264
-#, fuzzy
 msgid "Approved"
 msgstr "D&eacute;plac&eacute;"
 
 #: ../../lib/class/flag.class.php:265
-#, fuzzy
 msgid "Pending"
-msgstr "Ajout"
+msgstr "Attente"
 
 #: ../../lib/class/flag.class.php:277 ../../templates/show_flag.inc.php:56
 #: ../../templates/show_playlists.inc.php:57
@@ -349,7 +343,6 @@ msgid "Re-encode"
 msgstr ""
 
 #: ../../lib/class/flag.class.php:286 ../../templates/show_flag.inc.php:59
-#, fuzzy
 msgid "Other"
 msgstr "autre"
 
@@ -367,12 +360,10 @@ msgid "Now Playing"
 msgstr "En cours de lecture"
 
 #: ../../lib/class/localplay.class.php:564
-#, fuzzy
 msgid "Stopped"
 msgstr "Stop"
 
 #: ../../lib/class/localplay.class.php:567
-#, fuzzy
 msgid "Paused"
 msgstr "Pause"
 
@@ -441,7 +432,6 @@ msgstr ""
 #: ../../templates/show_localplay.inc.php:26
 #: ../../templates/show_playtype_switch.inc.php:32
 #: ../../ampache/templates/sidebar.inc.php:170
-#, fuzzy
 msgid "Localplay"
 msgstr "Lecture en local"
 
@@ -475,7 +465,6 @@ msgid "XSPF"
 msgstr ""
 
 #: ../../lib/preferences.php:326
-#, fuzzy
 msgid "Disabled"
 msgstr "D&eacute;sactiver"
 
@@ -562,7 +551,6 @@ msgid "Local Play"
 msgstr "Lecture en local"
 
 #: ../../lib/ui.lib.php:799
-#, fuzzy
 msgid "Random Play"
 msgstr "Al&eacute;atoire"
 
@@ -584,27 +572,22 @@ msgid "Preferences"
 msgstr "Pr&eacute;f&eacute;rences"
 
 #: ../../lib/ui.lib.php:811 ../../lib/ui.lib.php:815
-#, fuzzy
 msgid "Admin-Catalog"
 msgstr "Ajouter un catalogue"
 
 #: ../../lib/ui.lib.php:819
-#, fuzzy
 msgid "Admin-User Management"
 msgstr "Gestion des utilisateurs"
 
 #: ../../lib/ui.lib.php:823
-#, fuzzy
 msgid "Admin-Mail Users"
 msgstr "E-mail aux utilisateurs"
 
 #: ../../lib/ui.lib.php:827
-#, fuzzy
 msgid "Admin-Manage Access Lists"
 msgstr "Liste d'acc&egrave;s"
 
 #: ../../lib/ui.lib.php:831
-#, fuzzy
 msgid "Admin-Site Preferences"
 msgstr "Pr&eacute;f&eacute;rences administrateur"
 
@@ -613,7 +596,6 @@ msgid "Admin-Manage Modules"
 msgstr ""
 
 #: ../../lib/ui.lib.php:839
-#, fuzzy
 msgid "Browse Music"
 msgstr "Parcourir"
 
@@ -638,7 +620,6 @@ msgstr "Artistes"
 
 #: ../../lib/ui.lib.php:855 ../../templates/sidebar.inc.php:110
 #: ../../ampache/templates/sidebar.inc.php:112
-#, fuzzy
 msgid "Statistics"
 msgstr "Statistiques des catalogues"
 
@@ -728,12 +709,10 @@ msgstr ""
 
 #: ../../admin/catalog.php:62 ../../admin/catalog.php:82
 #: ../../admin/catalog.php:107 ../../admin/catalog.php:168
-#, fuzzy
 msgid "Catalog Updated"
 msgstr "Mise &aacute; jour du catalogue termin&eacute;e"
 
 #: ../../admin/catalog.php:119
-#, fuzzy
 msgid "Catalog Deleted"
 msgstr "Nettoyage de catalogue termin&eacute;"
 
@@ -742,7 +721,6 @@ msgid "The Catalog and all associated records has been deleted"
 msgstr ""
 
 #: ../../admin/catalog.php:128
-#, fuzzy
 msgid "Songs Removed"
 msgstr "Fichiers enlev&eacute;s"
 
@@ -751,19 +729,16 @@ msgid "No Songs Removed"
 msgstr ""
 
 #: ../../admin/catalog.php:134
-#, fuzzy
 msgid "Disabled Songs Processed"
 msgstr "Voir les morceaux d&eacute;sactiv&eacute;s"
 
 #: ../../admin/catalog.php:155
-#, fuzzy
 msgid "Catalog Cleaned"
 msgstr "Nettoyage de catalogue termin&eacute;"
 
 #: ../../admin/catalog.php:198
-#, fuzzy
 msgid "Catalog Created"
-msgstr "Nom de catalogue"
+msgstr "catalogue a cr&eacute;&eacute;"
 
 #: ../../admin/catalog.php:199
 #, fuzzy
@@ -771,9 +746,8 @@ msgid "Catalog Created and Songs Indexed"
 msgstr "Nettoyage de catalogue termin&eacute;"
 
 #: ../../admin/catalog.php:212
-#, fuzzy
 msgid "Catalog statistics cleared"
-msgstr "Statistiques des catalogues"
+msgstr "Statistiques des catalogues effacer"
 
 #: ../../admin/catalog.php:222
 msgid "Now Playing Cleared"
@@ -824,9 +798,8 @@ msgstr ""
 "sactiv&eacute;(s)"
 
 #: ../../admin/flag.php:139
-#, fuzzy
 msgid "Album Updated"
-msgstr "Mis &aacute; jour"
+msgstr "l'Album mis &aacute; jour"
 
 #: ../../admin/flag.php:181
 #, fuzzy
@@ -839,17 +812,16 @@ msgid "Songs Updated"
 msgstr "Score mis &aacute; jour"
 
 #: ../../admin/flag.php:254
-#, fuzzy
 msgid "Flag Removed"
-msgstr "Fichiers enlev&eacute;s"
+msgstr "marqu&eacute;e enlev&eacute;s"
 
 #: ../../admin/flag.php:255
 msgid "Flag Removed from"
-msgstr ""
+msgstr "marqu&eacute;e effacer de"
 
 #: ../../admin/flag.php:270
 msgid "Flags Updated"
-msgstr "marqu&eacutee ajout&eacute;e"
+msgstr "marqu&eacute;e ajout&eacute;e"
 
 #: ../../admin/flag.php:289
 msgid "Songs Disabled"
@@ -870,17 +842,14 @@ msgid "The requested song(s) have been enabled"
 msgstr ""
 
 #: ../../admin/flag.php:305
-#, fuzzy
 msgid "Flagged Records"
 msgstr "Marqu&eacute; par"
 
 #: ../../admin/preferences.php:60 ../../admin/preferences.php:83
-#, fuzzy
 msgid "Site"
-msgstr "Taille"
+msgstr "Site"
 
 #: ../../admin/access.php:42
-#, fuzzy
 msgid "Confirm Delete"
 msgstr "Entr&eacute;e effac&eacute;e"
 
@@ -906,12 +875,10 @@ msgstr ""
 "Votre nouvelle liste d'acc&egrave;s a &eacute;t&eacute; cr&eacute;&eacute;e"
 
 #: ../../admin/access.php:58
-#, fuzzy
 msgid "Entry Updated"
 msgstr "Entr&eacute;e ajout&eacute;e"
 
 #: ../../admin/access.php:58
-#, fuzzy
 msgid "Access List Entry updated"
 msgstr "Ajouter une entr&eacute;e dans la liste d'acc&egrave;s"
 
@@ -933,7 +900,7 @@ msgstr ""
 
 #: ../../admin/users.php:143
 msgid "Are you sure you want to permanently delete"
-msgstr "Êtes-vous sûr de vouloir supprimer d&eacute;finitivement"
+msgstr "&eacute;tes-vous sûr de vouloir supprimer d&eacute;finitivement"
 
 #: ../../admin/users.php:148 ../../templates/show_confirm_action.inc.php:29
 #: ../../templates/show_search.inc:78
@@ -993,14 +960,12 @@ msgid "Your E-mail was successfully sent."
 msgstr ""
 
 #: ../../admin/modules.php:41
-#, fuzzy
 msgid "Module Activated"
-msgstr "Utilisateur activ&eacute;"
+msgstr "Mode activ&eacute;"
 
 #: ../../admin/modules.php:48
-#, fuzzy
 msgid "Are you sure you want to remove this module?"
-msgstr "Voulez-vous vraiment supprimer cette liste de lecture ?"
+msgstr "Voulez-vous vraiment supprimer cette mode ?"
 
 #: ../../admin/modules.php:56
 #, fuzzy
@@ -1013,12 +978,10 @@ msgid "Plugin Activated"
 msgstr "Utilisateur activ&eacute;"
 
 #: ../../admin/modules.php:79
-#, fuzzy
 msgid "Are you sure you want to remove this plugin?"
 msgstr "Voulez-vous vraiment supprimer cette liste de lecture ?"
 
 #: ../../admin/modules.php:95
-#, fuzzy
 msgid "Plugin Deactivated"
 msgstr "Utilisateur activ&eacute;"
 
@@ -1033,14 +996,12 @@ msgstr "Morceau marqu&eacute;"
 
 #: ../../templates/show_flag.inc.php:45
 #: ../../templates/show_edit_song.inc.php:27
-#, fuzzy
 msgid "File"
 msgstr "fichier"
 
 #: ../../templates/show_flag.inc.php:49
-#, fuzzy
 msgid "Item"
-msgstr "Flux"
+msgstr "article"
 
 #: ../../templates/show_flag.inc.php:53
 msgid "Reason to flag"
@@ -1048,12 +1009,12 @@ msgstr "Raison du marquage"
 
 #: ../../templates/show_flag.inc.php:57
 msgid "Incorrect Tags"
-msgstr ""
+msgstr "mal Tags"
 
 #: ../../templates/show_flag.inc.php:70
 #: ../../templates/show_flagged.inc.php:30
 msgid "Flag"
-msgstr "Marque"
+msgstr "Marqu&eacute;e"
 
 #: ../../templates/show_install_account.inc.php:36
 #: ../../templates/show_install_lang.inc.php:32
@@ -1215,7 +1176,6 @@ msgid "Download"
 msgstr "T&eacute;l&eacute;charger"
 
 #: ../../templates/show_playlists.inc.php:75
-#, fuzzy
 msgid "No Playlists Found"
 msgstr "Non trouv&eacute;"
 
@@ -1245,9 +1205,8 @@ msgid "Yes"
 msgstr "Oui"
 
 #: ../../templates/show_tv.inc.php:42
-#, fuzzy
 msgid "Controls"
-msgstr "Sections administrateur"
+msgstr "Commandes"
 
 #: ../../templates/show_tv.inc.php:57
 #: ../../templates/show_localplay.inc.php:42
@@ -1256,7 +1215,6 @@ msgid "Current Playlist"
 msgstr "Cr&eacute;er un nouvelle liste de lecture"
 
 #: ../../templates/show_playlist_edit.inc.php:27
-#, fuzzy
 msgid "Editing Playlist"
 msgstr "Editer la liste de lecture"
 
@@ -1296,7 +1254,6 @@ msgstr "Priv&eacute;"
 #: ../../templates/show_play_selected.inc.php:64
 #: ../../templates/show_preference_admin.inc.php:47
 #: ../../templates/show_edit_access.inc:78
-#, fuzzy
 msgid "Update"
 msgstr "Mis &aacute; jour"
 
@@ -1312,9 +1269,8 @@ msgstr "E-mail aux utilisateurs"
 
 #: ../../templates/sidebar.inc.php:31
 #: ../../ampache/templates/sidebar.inc.php:31
-#, fuzzy
 msgid "Config"
-msgstr "&eacute;crire la configuration"
+msgstr "configuration"
 
 #: ../../templates/sidebar.inc.php:32
 #: ../../ampache/templates/sidebar.inc.php:32
@@ -1323,7 +1279,6 @@ msgstr "Liste d'acc&egrave;s"
 
 #: ../../templates/sidebar.inc.php:37
 #: ../../ampache/templates/sidebar.inc.php:37
-#, fuzzy
 msgid "Song Title"
 msgstr "Titre du morceau"
 
@@ -1362,7 +1317,6 @@ msgid "Logout"
 msgstr "D&eacute;connexion"
 
 #: ../../templates/show_admin_tools.inc.php:27
-#, fuzzy
 msgid "Catalogs"
 msgstr "Catalogues"
 
@@ -1389,7 +1343,6 @@ msgid "Verify"
 msgstr "V&eacute;rifier"
 
 #: ../../templates/show_admin_tools.inc.php:46
-#, fuzzy
 msgid "Clean"
 msgstr "Supprimer les informations"
 
@@ -1402,29 +1355,24 @@ msgid "Gather Art"
 msgstr ""
 
 #: ../../templates/show_admin_tools.inc.php:65
-#, fuzzy
 msgid "No Catalogs Found"
 msgstr "Aucun catalogue trouv&eacute; !"
 
 #: ../../templates/show_admin_tools.inc.php:71
-#, fuzzy
 msgid "Clean All"
 msgstr "Nettoyer tous les Catalogues"
 
 #: ../../templates/show_admin_tools.inc.php:72
-#, fuzzy
 msgid "Verify All"
-msgstr "Tout voir"
+msgstr "Tout V&eacute;rifier"
 
 #: ../../templates/show_admin_tools.inc.php:73
-#, fuzzy
 msgid "Add to All"
-msgstr "Ajouter &aacute;"
+msgstr "Ajouter &aacute; tout"
 
 #: ../../templates/show_admin_tools.inc.php:74
-#, fuzzy
 msgid "Update All"
-msgstr "Mis &aacute; jour"
+msgstr "Tout Mis &aacute; jour"
 
 #: ../../templates/show_admin_tools.inc.php:77
 #: ../../templates/show_add_catalog.inc.php:78
@@ -1444,12 +1392,10 @@ msgid "Clear Now Playing"
 msgstr "Effacer lecture en cours"
 
 #: ../../templates/show_admin_tools.inc.php:85 ../../templates/header.inc:75
-#, fuzzy
 msgid "Generate New Config"
 msgstr "&eacute;crire la configuration"
 
 #: ../../templates/show_admin_tools.inc.php:86
-#, fuzzy
 msgid "Preferences Permissions"
 msgstr "Pr&eacute;f&eacute;rences"
 
@@ -1458,7 +1404,6 @@ msgid "Export To Itunes DB"
 msgstr ""
 
 #: ../../templates/show_admin_tools.inc.php:88
-#, fuzzy
 msgid "Check for New Version"
 msgstr "Test de la configuration"
 
@@ -1488,7 +1433,6 @@ msgid "Rename Artist"
 msgstr "Renommer l'artiste"
 
 #: ../../templates/show_artist_box.inc.php:39
-#, fuzzy
 msgid "Find duplicate artists"
 msgstr "Trouver des doublons"
 
@@ -1503,7 +1447,6 @@ msgid "Results Per Page"
 msgstr "R&eacute;sultats par page"
 
 #: ../../templates/show_user.inc.php:42
-#, fuzzy
 msgid "New Password"
 msgstr "Mot de passe"
 
@@ -1518,28 +1461,25 @@ msgid "Clear Stats"
 msgstr "Vider les statistiques"
 
 #: ../../templates/show_user.inc.php:65
-#, fuzzy
 msgid "Update Account"
 msgstr "Cr&eacute;er un compte"
 
 #: ../../templates/show_user_stats.inc.php:22
 msgid "Favorites"
-msgstr ""
+msgstr "Favoris"
 
 #: ../../templates/show_user_stats.inc.php:29
-#, fuzzy
 msgid "Favorite Artists"
-msgstr "Liste compl&egrave;te des artistes"
+msgstr "Liste favoris des artistes"
 
 #: ../../templates/show_user_stats.inc.php:40
-#, fuzzy
 msgid "Favorite Albums"
-msgstr "Tous les albums"
+msgstr "Liste favoris des albums"
 
 #: ../../templates/show_user_stats.inc.php:51
 #, fuzzy
 msgid "Favorite Songs"
-msgstr "Total des morceaux"
+msgstr "Liste favoris des morceaux"
 
 #: ../../templates/show_tv_playlist.inc.php:31
 #, fuzzy
@@ -1623,19 +1563,16 @@ msgid "Start configuration"
 msgstr "Commenc&eacute; configuration"
 
 #: ../../templates/show_modules.inc.php:38
-#, fuzzy
 msgid "Localplay Modules"
 msgstr "Lecture en local"
 
 #: ../../templates/show_modules.inc.php:41
-#, fuzzy
 msgid "Module Name"
 msgstr "Nom complet"
 
 #: ../../templates/show_modules.inc.php:48
 #: ../../templates/show_modules.inc.php:81
 #: ../../templates/show_tv_adminctl.inc.php:28
-#, fuzzy
 msgid "Activate"
 msgstr "Utilisateur activ&eacute;"
 
@@ -1651,7 +1588,6 @@ msgstr "Utilisateur activ&eacute;"
 #: ../../templates/show_list_duplicates.inc.php:81
 #: ../../templates/show_localplay_playlist.inc.php:51
 #: ../../templates/show_disabled_songs.inc:44
-#, fuzzy
 msgid "No Records Found"
 msgstr "Aucun catalogue trouv&eacute; !"
 
@@ -1660,17 +1596,14 @@ msgid "Available Plugins"
 msgstr "Plugins disponible"
 
 #: ../../templates/show_modules.inc.php:73
-#, fuzzy
 msgid "Description"
 msgstr "Description"
 
 #: ../../templates/show_modules.inc.php:74
-#, fuzzy
 msgid "Version"
 msgstr "Version de PHP"
 
 #: ../../templates/show_edit_song.inc.php:23
-#, fuzzy
 msgid "Edit Song"
 msgstr "&eacute;dition"
 
@@ -1686,10 +1619,9 @@ msgstr "OU"
 #: ../../templates/show_edit_album.inc.php:41
 #: ../../templates/show_edit_artist.inc.php:35
 msgid "Flag for Retagging"
-msgstr "marqu&aecute;es pour indexation"
+msgstr "marqu&aecute;es pour etiquettage"
 
 #: ../../templates/show_edit_song.inc.php:89
-#, fuzzy
 msgid "Update Song"
 msgstr "Mise &aacute; jour des catalogues"
 
@@ -1741,7 +1673,6 @@ msgid "Most Popular Artists"
 msgstr "Artistes les plus populaires"
 
 #: ../../templates/show_mail_users.inc.php:63
-#, fuzzy
 msgid "Latest Album Additions"
 msgstr "Albums r&eacute;cemment ajout&eacute;s"
 
@@ -1938,11 +1869,11 @@ msgstr "Genres les plus populaires"
 
 #: ../../templates/show_all_popular.inc.php:41
 msgid "Most Popular Live Streams"
-msgstr "Flux live plus populaire"
+msgstr "Flux live les plus populaires"
 
 #: ../../templates/show_all_popular.inc.php:44
 msgid "Most Popular Tags"
-msgstr "Tags plus populaire"
+msgstr "Tags les plus populaires"
 
 #: ../../templates/show_play_selected.inc.php:28
 msgid "Play Selected"
@@ -2140,7 +2071,7 @@ msgstr "Histoire d'IP"
 
 #: ../../templates/show_ip_history.inc.php:26
 msgid "Show Unique"
-msgstr ""
+msgstr "Voir unique"
 
 #: ../../templates/show_ip_history.inc.php:34
 msgid "Date"
@@ -2184,13 +2115,11 @@ msgid "Guest"
 msgstr "Invite"
 
 #: ../../templates/show_edit_album.inc.php:23
-#, fuzzy
 msgid "Edit Album"
 msgstr "Editer l'Album"
 
 #: ../../templates/show_edit_album.inc.php:47
 #: ../../templates/show_edit_artist.inc.php:41
-#, fuzzy
 msgid "Update Album"
 msgstr "Mis &aacute; jour"
 
@@ -2199,17 +2128,14 @@ msgid "seconds ago"
 msgstr "secondes"
 
 #: ../../templates/show_recently_played.inc.php:23
-#, fuzzy
 msgid "minutes ago"
 msgstr "Minutes"
 
 #: ../../templates/show_recently_played.inc.php:23
-#, fuzzy
 msgid "hours ago"
 msgstr "heures"
 
 #: ../../templates/show_recently_played.inc.php:23
-#, fuzzy
 msgid "days ago"
 msgstr "jours"
 
@@ -2222,12 +2148,10 @@ msgid "months ago"
 msgstr "mois"
 
 #: ../../templates/show_recently_played.inc.php:23
-#, fuzzy
 msgid "years ago"
 msgstr "ann&eacute;e"
 
 #: ../../templates/show_recently_played.inc.php:26
-#, fuzzy
 msgid "Recently Played"
 msgstr "Moins jou&eacute;"
 
@@ -2236,7 +2160,6 @@ msgid "Last Played"
 msgstr "Derniers jouers"
 
 #: ../../templates/show_edit_artist.inc.php:23
-#, fuzzy
 msgid "Edit Artist"
 msgstr "Artiste"
 
@@ -2249,7 +2172,6 @@ msgid "Song(s) Removed from Playlist"
 msgstr "Morceaux Supprim&eacute;"
 
 #: ../../localplay.php:77
-#, fuzzy
 msgid "Localplay Init Failed"
 msgstr "Controle de lecture locale"
 
@@ -2262,7 +2184,6 @@ msgid "Show Artists starting with"
 msgstr "Voir les artistes commen&ccedil;ant par"
 
 #: ../../browse.php:124
-#, fuzzy
 msgid "Show Titles Starting With"
 msgstr "Voir les artistes commen&ccedil;ant par"
 
@@ -2303,7 +2224,6 @@ msgid "Error: Password Does Not Match or Empty"
 msgstr "Erreur : Mot de passe ne correspondant pas ou vide"
 
 #: ../../preferences.php:61
-#, fuzzy
 msgid "Password Updated"
 msgstr "Mot de passe mise &aacute; jour"
 
@@ -2356,9 +2276,8 @@ msgid "Are you sure you want to delete this playlist"
 msgstr "Voulez-vous vraiment supprimer cette liste de lecture ?"
 
 #: ../../playlist.php:57
-#, fuzzy
 msgid "Confirm Action"
-msgstr "Confirmation du mot de passe"
+msgstr "Confirmation d'action"
 
 #: ../../playlist.php:117
 msgid "Playlist Created"
@@ -2377,7 +2296,6 @@ msgid "Playlist Updated"
 msgstr "Liste de lecture mise &aacute; jour"
 
 #: ../../playlist.php:146
-#, fuzzy
 msgid "has been updated and is now"
 msgstr " a &eacute;t&eacute; mis &aacute; jour"
 
@@ -2390,7 +2308,6 @@ msgid "Empty Playlists Deleted"
 msgstr "Liste de lecture supprim&eacute;e"
 
 #: ../../flag.php:46
-#, fuzzy
 msgid "Item Flagged"
 msgstr "Marqu&eacute; par"
 
@@ -2413,7 +2330,6 @@ msgid "Album Art Not Located"
 msgstr "Jaquette d'album non trouv&eacute;e"
 
 #: ../../albums.php:66 ../../albums.php:83 ../../albums.php:159
-#, fuzzy
 msgid ""
 "Album Art could not be located at this time. This may be due to write access "
 "error, or the file is not received corectly."
@@ -2672,10 +2588,9 @@ msgstr "Reconstruire les pr&eacute;f&eacute;rences"
 
 #: ../../templates/show_preferences.inc:62
 msgid "Interface"
-msgstr "L'Interface"
+msgstr "l'Interface"
 
 #: ../../templates/show_preferences.inc:65
-#, fuzzy
 msgid "Streaming"
 msgstr "Flux"
 
@@ -2692,7 +2607,6 @@ msgid "System"
 msgstr "Le Serveur"
 
 #: ../../templates/show_preferences.inc:79
-#, fuzzy
 msgid "Modules"
 msgstr "Mode"
 
@@ -2797,9 +2711,8 @@ msgstr "Adresse IP de fin"
 
 #: ../../templates/show_add_access.inc:57
 #: ../../templates/show_edit_access.inc:67
-#, fuzzy
 msgid "Read"
-msgstr "Raison"
+msgstr "Lire"
 
 #: ../../templates/show_add_access.inc:58
 #: ../../templates/show_edit_access.inc:68
@@ -2808,22 +2721,20 @@ msgstr "Lire/Ecrit"
 
 #: ../../templates/show_add_access.inc:64
 #: ../../templates/show_edit_access.inc:31
-#, fuzzy
 msgid "ACL Type"
-msgstr "Type"
+msgstr "Type d'ACL"
 
 #: ../../templates/show_add_access.inc:67
-#, fuzzy
 msgid "Stream Access"
-msgstr "Flux"
+msgstr "Acc&eacute;s Flux"
 
 #: ../../templates/show_add_access.inc:68
 msgid "Web Interface"
-msgstr ""
+msgstr "l'Interface Web"
 
 #: ../../templates/show_add_access.inc:69
 msgid "Local Network Definition"
-msgstr ""
+msgstr "D&eacute;finition de r&eacute;seau local"
 
 #: ../../templates/show_add_access.inc:70
 msgid "XML-RPC"
@@ -2885,9 +2796,8 @@ msgid "Activity"
 msgstr ""
 
 #: ../../templates/show_users.inc:61
-#, fuzzy
 msgid "Last Ip"
-msgstr "Dernier(s) vu(s)"
+msgstr "Dernier(s) IPs"
 
 #: ../../templates/show_users.inc:66
 msgid "On-line"
@@ -2906,12 +2816,10 @@ msgid "Album Year"
 msgstr "Ann&eacute;e de l'album"
 
 #: ../../templates/show_artist.inc:38
-#, fuzzy
 msgid "Tracks"
 msgstr "Pistes"
 
 #: ../../templates/show_edit_access.inc:23
-#, fuzzy
 msgid "Edit Access List"
 msgstr "Liste d'acc&egrave;s"
 
@@ -2944,7 +2852,6 @@ msgid "PHP Version"
 msgstr "Version de PHP"
 
 #: ../../templates/show_test.inc:61
-#, fuzzy
 msgid ""
 "This tests to make sure that you are running a version of PHP that is known "
 "to work with Ampache."
@@ -3057,7 +2964,6 @@ msgid "Search Ampache"
 msgstr "Recherche dans Ampache"
 
 #: ../../templates/show_similar_artists.inc:23
-#, fuzzy
 msgid "Similar Artists"
 msgstr "Liste compl&egrave;te des artistes"
 
@@ -3067,21 +2973,19 @@ msgstr ""
 
 #: ../../templates/show_similar_artists.inc:62
 msgid "Back"
-msgstr "Avant"
+msgstr "Pr&eacute;c&ecaute;dent"
 
 #: ../../templates/show_similar_artists.inc:73
-#, fuzzy
 msgid "Rename selected"
-msgstr "Enlever les pistes s&eacute;lectionn&eacute;es"
+msgstr "Renommer les s&eacute;lectionn&eacute;es"
 
 #: ../../templates/show_similar_artists.inc:83
 msgid "Advanced Options"
 msgstr "Avanc&eacute;"
 
 #: ../../templates/show_similar_artists.inc:144
-#, fuzzy
 msgid "Search Again"
-msgstr "Recherche dans Ampache"
+msgstr "Recherche encore"
 
 #: ../../templates/show_login_form.inc:35
 #: ../../templates/show_login_form.inc:42
@@ -3150,7 +3054,6 @@ msgid "Exact"
 msgstr "exacte"
 
 #: ../../templates/show_search.inc:119
-#, fuzzy
 msgid "Maximum Results"
 msgstr "Nombre de r&eacute;sultats"
 

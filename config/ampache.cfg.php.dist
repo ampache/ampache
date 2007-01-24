@@ -180,8 +180,8 @@ ratings = "true"
 # This defines the "Min" memory limit for PHP if your php.ini
 # has a lower value set Ampache will set it up to this. If you
 # set it below 16MB getid3() will not work!
-# DEFAULT: 16
-#memory_limit = 16
+# DEFAULT: 24
+#memory_limit = 24
 
 # Album Art Preferred Filename
 # Specify a filename to look for if you always give the same filename
@@ -203,7 +203,7 @@ ratings = "true"
 # Simply arrange the following in the order you would like
 # ampache to search if you want to disable one of the search
 # method simply comment it out valid values are
-# POSSIBLE VALUES: id3 folder amazon
+# POSSIBLE VALUES: db id3 folder amazon
 # DEFAULT: db,id3,folder,amazon
 album_art_order = "db"
 album_art_order = "id3"

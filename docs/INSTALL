@@ -1,5 +1,5 @@
 -------------------------------------------------------------------------------
------------------- INSTALL - Ampache v.3.3 - 03/27/2005 -----------------------
+----------------- INSTALL - Ampache v.3.3.3 - 01/27/2007 ----------------------
 -------------------------------------------------------------------------------
 
   I'm assuming that you have Apache, PHP and MySQL running when you
@@ -210,6 +210,15 @@
 	the fileupdate.pl program to run at timed intervals.  This program will query the 
 	database and attempt to sort and rename your files based on the patterns you have
 	specified and the tag information in the database. 
+
+      3.5  Updating Tags from flagged information
+
+	Ampache has a flagging system that allows users and admins to flag songs to be 
+	re-encoded or modify their meta-data inside the website. Jirwin created a 
+	command line script called write_tags.php.inc located in /bin that will attempt
+	to write out the tags as set, and approved in your Ampache database. This is a
+	*EXPERIMENTAL* feature and caution should be used as it may destroy your audio 
+	files
 	
 
 
