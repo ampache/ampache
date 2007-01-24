@@ -331,8 +331,7 @@ class Localplay {
 	 * get
 	 * This calls the get function of the player and then returns
 	 * the array of current songs for display or whatever
-	 * Null is returned on failure here because the PHP count() 
-	 * function will return 1 on a value of 'false'
+	 * an empty array is passed on failure
 	 */
 	function get() { 
 
@@ -342,7 +341,7 @@ class Localplay {
 
 		if (!count($data) OR !is_array($data)) { 
 			debug_event('localplay','Error Unable to get song info, check ' . $this->type . ' controller','1');
-			return NULL; 
+			return array(); 
 		}
 		
 		return $data;
