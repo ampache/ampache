@@ -23,7 +23,7 @@
 $web_path = conf('web_path'); 
 $localplay = init_localplay();
 
-$required_info 	= conf('ajax_info');
+$required_info 	= conf('ajax_info') . $add_info;
 $ajax_url	= conf('ajax_url');
 
 /* If we actually got something back */

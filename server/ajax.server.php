@@ -47,6 +47,8 @@ switch ($action) {
 		$localplay->connect();
 		$function 	= scrub_in($_GET['cmd']);
 		$value		= scrub_in($_GET['value']);
+		$return		= scrub_in($_GET['return']);
+		$localplay->$function($value); 
 		/* Return information based on function */
 		switch($function) { 
 			case 'skip':
@@ -60,11 +62,18 @@ switch ($action) {
 				$status = $localplay->status();
 				$results['lp_volume']	= $status['volume'];
 			break;
+			case 'next':
+			case 'stop':
+			case 'prev':
+			case 'pause':
+			case 'play':
+				if ($return) { 
+					$results['lp_playing'] = $localplay->get_user_playing(); 
+				} 	
 			default:
 				$results['3514'] = '0x1';	
 			break;
 		} // end switch on cmd
-		$localplay->$function($value); 
 		$xml_doc = xml_from_array($results);
 		echo $xml_doc;
 	break;

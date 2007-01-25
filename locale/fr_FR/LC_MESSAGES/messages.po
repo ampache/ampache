@@ -773,9 +773,8 @@ msgid "No Disabled songs found"
 msgstr "Voir les morceaux d&eacute;sactiv&eacute;s"
 
 #: ../../admin/catalog.php:249
-#, fuzzy
 msgid "Delete Catalog"
-msgstr "Mise &aacute; jour des catalogues"
+msgstr "Supprimer le catalogue"
 
 #: ../../admin/catalog.php:249
 msgid "Do you really want to delete this catalog?"
@@ -786,9 +785,8 @@ msgid "Album Art Search Finished"
 msgstr "Recherche de jaquettes d'albums termin&eacute;e"
 
 #: ../../admin/flag.php:97
-#, fuzzy
 msgid "Song Updated"
-msgstr "Score mis &aacute; jour"
+msgstr "Morceaux mis &aacute; jour"
 
 #: ../../admin/flag.php:97
 #, fuzzy
@@ -802,14 +800,12 @@ msgid "Album Updated"
 msgstr "l'Album mis &aacute; jour"
 
 #: ../../admin/flag.php:181
-#, fuzzy
 msgid "Artist Updated"
-msgstr "Liste de lecture mise &aacute; jour"
+msgstr "Artist mise &aacute; jour"
 
 #: ../../admin/flag.php:246
-#, fuzzy
 msgid "Songs Updated"
-msgstr "Score mis &aacute; jour"
+msgstr "Morceaux mis &aacute; jour"
 
 #: ../../admin/flag.php:254
 msgid "Flag Removed"
@@ -968,14 +964,12 @@ msgid "Are you sure you want to remove this module?"
 msgstr "Voulez-vous vraiment supprimer cette mode ?"
 
 #: ../../admin/modules.php:56
-#, fuzzy
 msgid "Module Deactivated"
-msgstr "Utilisateur activ&eacute;"
+msgstr "Mode activ&eacute;"
 
 #: ../../admin/modules.php:72
-#, fuzzy
 msgid "Plugin Activated"
-msgstr "Utilisateur activ&eacute;"
+msgstr "Plugin activ&eacute;"
 
 #: ../../admin/modules.php:79
 msgid "Are you sure you want to remove this plugin?"
@@ -1687,7 +1681,6 @@ msgstr "Morceaux marqu&eacute;es"
 
 #: ../../templates/show_mail_users.inc.php:77
 #: ../../templates/show_admin_info.inc.php:36
-#, fuzzy
 msgid "Disabled Songs"
 msgstr "Voir les morceaux d&eacute;sactiv&eacute;s"
 
@@ -1728,7 +1721,6 @@ msgid "out of"
 msgstr "hors de"
 
 #: ../../templates/show_tv_adminctl.inc.php:22
-#, fuzzy
 msgid "Admin Controls"
 msgstr "Sections administrateur"
 
@@ -1740,7 +1732,7 @@ msgstr "liste de lecture accueil"
 #: ../../templates/show_tv_adminctl.inc.php:36
 #: ../../templates/show_localplay.inc.php:32
 msgid "Clear Playlist"
-msgstr "cr&eacute;&eacute;e liste de lecture"
+msgstr "Effacer liste de lecture"
 
 #: ../../templates/show_confirmation.inc.php:26
 msgid "Continue"
@@ -1759,9 +1751,8 @@ msgid "Select"
 msgstr "Selectionner"
 
 #: ../../templates/show_flagged.inc.php:28
-#, fuzzy
 msgid "Object"
-msgstr "Sujet"
+msgstr "Objet"
 
 #: ../../templates/show_flagged.inc.php:29
 #: ../../templates/show_preference_admin.inc.php:38
@@ -2233,7 +2224,7 @@ msgstr "Mode debogage d'Ampache"
 
 #: ../../tv.php:62
 msgid "Playlist Cleared"
-msgstr "Liste de lecture cr&eacute;&eacute;e"
+msgstr "Liste de lecture effac&eacute;e"
 
 #: ../../artists.php:91 ../../albums.php:191
 msgid "Starting Update from Tags"

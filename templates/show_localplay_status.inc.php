@@ -23,7 +23,7 @@
 $web_path = conf('web_path'); 
 $localplay = init_localplay();
 
-$required_info 	= "&amp;user_id=" . $GLOBALS['user']->id . "&amp;sessid=" . session_id(); 
+$required_info 	= "&amp;user_id=" . $GLOBALS['user']->id . "&amp;sessid=" . session_id();
 $ajax_url	= $web_path . '/server/ajax.server.php';
 $status		= $localplay->status();
 

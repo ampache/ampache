@@ -29,9 +29,10 @@ $localplay = init_localplay();
 	<td valign="top">
 		<strong><?php echo _('Actions'); ?>:</strong><br />
 		<?php if ($localplay->has_function('delete_all')) { ?>
-			&nbsp;&nbsp;&nbsp;<a href="<?php echo $web_path; ?>/localplay.php?action=delete_all"><?php echo _('Clear Playlist'); ?></a>
+			<div class="text-action"><a href="<?php echo $web_path; ?>/localplay.php?action=delete_all"><?php echo _('Clear Playlist'); ?></a></div>
 		<?php } ?>
 	</td><td>
+		<?php $add_info = "&amp;return=1"; ?>
 		<?php require_once(conf('prefix') . '/templates/show_localplay_status.inc.php'); ?>
 	</td>
 </tr>
