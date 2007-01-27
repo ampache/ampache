@@ -379,7 +379,9 @@ class Album {
 		$sql = "SELECT art,art_mime FROM album WHERE id='$this->id' AND art_mime IS NOT NULL";
 		$db_results = mysql_query($sql, dbh());
 
-		$results = mysql_fetch_object($db_results);
+		$results = mysql_fetch_assoc($db_results);
+
+		if (!$results['art']) { return array(); } 
 		
 		return $results;
 

@@ -1895,7 +1895,7 @@ class Update {
 	 */
 	function update_333000() { 
 
-		$sql = "ALTER TABLE `song` ADD `hash` VARCHAR( 255 ) NOT NULL";
+		$sql = "ALTER TABLE `song` ADD `hash` VARCHAR( 255 ) NULL DEFAULT NULL";
 		$db_results = mysql_query($sql, dbh());
 
 		$sql = "CREATE TABLE `tmp_playlist` (".

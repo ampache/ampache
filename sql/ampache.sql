@@ -1,11 +1,13 @@
--- MySQL dump 10.9
+-- MySQL dump 10.10
 --
 -- Host: localhost    Database: ampache
 -- ------------------------------------------------------
--- Server version	4.1.21-log
+-- Server version	5.0.24a-Debian_9-log
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+/*!40103 SET TIME_ZONE='+00:00' */;
 /*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
-/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO,MYSQL323' */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO,MYSQL40' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
@@ -32,10 +34,11 @@ CREATE TABLE `access_list` (
 -- Dumping data for table `access_list`
 --
 
-LOCK TABLES `access_list` WRITE;
+
 /*!40000 ALTER TABLE `access_list` DISABLE KEYS */;
-/*!40000 ALTER TABLE `access_list` ENABLE KEYS */;
+LOCK TABLES `access_list` WRITE;
 UNLOCK TABLES;
+/*!40000 ALTER TABLE `access_list` ENABLE KEYS */;
 
 --
 -- Table structure for table `album`
@@ -45,7 +48,7 @@ DROP TABLE IF EXISTS `album`;
 CREATE TABLE `album` (
   `id` int(11) unsigned NOT NULL auto_increment,
   `name` varchar(255) NOT NULL default '',
-  `prefix` enum('The','An','A') default NULL,
+  `prefix` enum('The','An','A','Der','Die','Das','Ein','Eine') default NULL,
   `year` int(4) unsigned NOT NULL default '1984',
   `art` mediumblob,
   `art_mime` varchar(128) default NULL,
@@ -55,6 +58,16 @@ CREATE TABLE `album` (
 ) TYPE=MyISAM;
 
 --
+-- Dumping data for table `album`
+--
+
+
+/*!40000 ALTER TABLE `album` DISABLE KEYS */;
+LOCK TABLES `album` WRITE;
+UNLOCK TABLES;
+/*!40000 ALTER TABLE `album` ENABLE KEYS */;
+
+--
 -- Table structure for table `artist`
 --
 
@@ -62,10 +75,20 @@ DROP TABLE IF EXISTS `artist`;
 CREATE TABLE `artist` (
   `id` int(11) unsigned NOT NULL auto_increment,
   `name` varchar(255) NOT NULL default '',
-  `prefix` enum('The','An','A') default NULL,
+  `prefix` enum('The','An','A','Der','Die','Das','Ein','Eine') default NULL,
   PRIMARY KEY  (`id`),
   KEY `name` (`name`)
 ) TYPE=MyISAM;
+
+--
+-- Dumping data for table `artist`
+--
+
+
+/*!40000 ALTER TABLE `artist` DISABLE KEYS */;
+LOCK TABLES `artist` WRITE;
+UNLOCK TABLES;
+/*!40000 ALTER TABLE `artist` ENABLE KEYS */;
 
 --
 -- Table structure for table `catalog`
@@ -89,6 +112,16 @@ CREATE TABLE `catalog` (
 ) TYPE=MyISAM;
 
 --
+-- Dumping data for table `catalog`
+--
+
+
+/*!40000 ALTER TABLE `catalog` DISABLE KEYS */;
+LOCK TABLES `catalog` WRITE;
+UNLOCK TABLES;
+/*!40000 ALTER TABLE `catalog` ENABLE KEYS */;
+
+--
 -- Table structure for table `flagged`
 --
 
@@ -110,6 +143,16 @@ CREATE TABLE `flagged` (
 ) TYPE=MyISAM;
 
 --
+-- Dumping data for table `flagged`
+--
+
+
+/*!40000 ALTER TABLE `flagged` DISABLE KEYS */;
+LOCK TABLES `flagged` WRITE;
+UNLOCK TABLES;
+/*!40000 ALTER TABLE `flagged` ENABLE KEYS */;
+
+--
 -- Table structure for table `genre`
 --
 
@@ -120,6 +163,16 @@ CREATE TABLE `genre` (
   PRIMARY KEY  (`id`),
   KEY `name` (`name`)
 ) TYPE=MyISAM;
+
+--
+-- Dumping data for table `genre`
+--
+
+
+/*!40000 ALTER TABLE `genre` DISABLE KEYS */;
+LOCK TABLES `genre` WRITE;
+UNLOCK TABLES;
+/*!40000 ALTER TABLE `genre` ENABLE KEYS */;
 
 --
 -- Table structure for table `ip_history`
@@ -136,6 +189,16 @@ CREATE TABLE `ip_history` (
   KEY `date` (`date`),
   KEY `ip` (`ip`)
 ) TYPE=MyISAM;
+
+--
+-- Dumping data for table `ip_history`
+--
+
+
+/*!40000 ALTER TABLE `ip_history` DISABLE KEYS */;
+LOCK TABLES `ip_history` WRITE;
+UNLOCK TABLES;
+/*!40000 ALTER TABLE `ip_history` ENABLE KEYS */;
 
 --
 -- Table structure for table `live_stream`
@@ -161,10 +224,11 @@ CREATE TABLE `live_stream` (
 -- Dumping data for table `live_stream`
 --
 
-LOCK TABLES `live_stream` WRITE;
+
 /*!40000 ALTER TABLE `live_stream` DISABLE KEYS */;
-/*!40000 ALTER TABLE `live_stream` ENABLE KEYS */;
+LOCK TABLES `live_stream` WRITE;
 UNLOCK TABLES;
+/*!40000 ALTER TABLE `live_stream` ENABLE KEYS */;
 
 --
 -- Table structure for table `now_playing`
@@ -184,10 +248,11 @@ CREATE TABLE `now_playing` (
 -- Dumping data for table `now_playing`
 --
 
-LOCK TABLES `now_playing` WRITE;
+
 /*!40000 ALTER TABLE `now_playing` DISABLE KEYS */;
-/*!40000 ALTER TABLE `now_playing` ENABLE KEYS */;
+LOCK TABLES `now_playing` WRITE;
 UNLOCK TABLES;
+/*!40000 ALTER TABLE `now_playing` ENABLE KEYS */;
 
 --
 -- Table structure for table `object_count`
@@ -199,12 +264,11 @@ CREATE TABLE `object_count` (
   `object_type` enum('album','artist','song','playlist','genre','catalog','live_stream','video') NOT NULL default 'song',
   `object_id` int(11) unsigned NOT NULL default '0',
   `date` int(11) unsigned NOT NULL default '0',
-  `count` int(11) unsigned NOT NULL default '0',
-  `userid` varchar(128) default NULL,
+  `user` int(11) unsigned NOT NULL,
   PRIMARY KEY  (`id`),
   KEY `object_type` (`object_type`),
   KEY `object_id` (`object_id`),
-  KEY `userid` (`userid`),
+  KEY `userid` (`user`),
   KEY `date` (`date`)
 ) TYPE=MyISAM;
 
@@ -212,10 +276,11 @@ CREATE TABLE `object_count` (
 -- Dumping data for table `object_count`
 --
 
-LOCK TABLES `object_count` WRITE;
+
 /*!40000 ALTER TABLE `object_count` DISABLE KEYS */;
-/*!40000 ALTER TABLE `object_count` ENABLE KEYS */;
+LOCK TABLES `object_count` WRITE;
 UNLOCK TABLES;
+/*!40000 ALTER TABLE `object_count` ENABLE KEYS */;
 
 --
 -- Table structure for table `playlist`
@@ -237,10 +302,11 @@ CREATE TABLE `playlist` (
 -- Dumping data for table `playlist`
 --
 
-LOCK TABLES `playlist` WRITE;
+
 /*!40000 ALTER TABLE `playlist` DISABLE KEYS */;
-/*!40000 ALTER TABLE `playlist` ENABLE KEYS */;
+LOCK TABLES `playlist` WRITE;
 UNLOCK TABLES;
+/*!40000 ALTER TABLE `playlist` ENABLE KEYS */;
 
 --
 -- Table structure for table `playlist_data`
@@ -261,10 +327,11 @@ CREATE TABLE `playlist_data` (
 -- Dumping data for table `playlist_data`
 --
 
-LOCK TABLES `playlist_data` WRITE;
+
 /*!40000 ALTER TABLE `playlist_data` DISABLE KEYS */;
-/*!40000 ALTER TABLE `playlist_data` ENABLE KEYS */;
+LOCK TABLES `playlist_data` WRITE;
 UNLOCK TABLES;
+/*!40000 ALTER TABLE `playlist_data` ENABLE KEYS */;
 
 --
 -- Table structure for table `playlist_permission`
@@ -285,10 +352,11 @@ CREATE TABLE `playlist_permission` (
 -- Dumping data for table `playlist_permission`
 --
 
-LOCK TABLES `playlist_permission` WRITE;
+
 /*!40000 ALTER TABLE `playlist_permission` DISABLE KEYS */;
-/*!40000 ALTER TABLE `playlist_permission` ENABLE KEYS */;
+LOCK TABLES `playlist_permission` WRITE;
 UNLOCK TABLES;
+/*!40000 ALTER TABLE `playlist_permission` ENABLE KEYS */;
 
 --
 -- Table structure for table `preferences`
@@ -306,17 +374,18 @@ CREATE TABLE `preferences` (
   PRIMARY KEY  (`id`),
   KEY `catagory` (`catagory`),
   KEY `name` (`name`)
-) TYPE=MyISAM AUTO_INCREMENT=43;
+) TYPE=MyISAM AUTO_INCREMENT=49;
 
 --
 -- Dumping data for table `preferences`
 --
 
-LOCK TABLES `preferences` WRITE;
+
 /*!40000 ALTER TABLE `preferences` DISABLE KEYS */;
-INSERT INTO `preferences` VALUES (1,'download','0','Allow Downloads',100,'boolean','options'),(2,'upload','0','Allow Uploads',100,'boolean','options'),(3,'quarantine','1','Quarantine All Uploads',100,'boolean','options'),(4,'popular_threshold','10','Popular Threshold',25,'integer','interface'),(18,'upload_dir','','Upload Directory',25,'string','options'),(19,'sample_rate','32','Downsample Bitrate',25,'string','streaming'),(22,'site_title','Ampache :: Pour l\'Amour de la Musique','Website Title',100,'string','system'),(23,'lock_songs','0','Lock Songs',100,'boolean','system'),(24,'force_http_play','1','Forces Http play regardless of port',100,'boolean','system'),(25,'http_port','80','Non-Standard Http Port',100,'integer','system'),(26,'catalog_echo_count','100','Catalog Echo Interval',100,'integer','system'),(41,'localplay_controller','0','Localplay Type',100,'special','streaming'),(29,'play_type','stream','Type of Playback',25,'special','streaming'),(30,'direct_link','1','Allow Direct Links',100,'boolean','options'),(31,'lang','en_US','Language',100,'special','interface'),(32,'playlist_type','m3u','Playlist Type',100,'special','streaming'),(33,'theme_name','classic','Theme',0,'special','interface'),(34,'ellipse_threshold_album','27','Album Ellipse Threshold',0,'integer','interface'),(35,'ellipse_threshold_artist','27','Artist Ellipse Threshold',0,'integer','interface'),(36,'ellipse_threshold_title','27','Title Ellipse Threshold',0,'integer','interface'),(39,'quarantine_dir','','Quarantine Directory',100,'string','system'),(42,'min_album_size','0','Min Album Size',0,'integer','interface'),(40,'localplay_level','0','Localplay Access Level',100,'special','streaming');
-/*!40000 ALTER TABLE `preferences` ENABLE KEYS */;
+LOCK TABLES `preferences` WRITE;
+INSERT INTO `preferences` VALUES (1,'download','0','Allow Downloads',100,'boolean','options'),(4,'popular_threshold','10','Popular Threshold',25,'integer','interface'),(19,'sample_rate','32','Downsample Bitrate',25,'string','streaming'),(22,'site_title','Ampache :: Pour l\'Amour de la Musique','Website Title',100,'string','system'),(23,'lock_songs','0','Lock Songs',100,'boolean','system'),(24,'force_http_play','1','Forces Http play regardless of port',100,'boolean','system'),(25,'http_port','80','Non-Standard Http Port',100,'integer','system'),(26,'catalog_echo_count','100','Catalog Echo Interval',100,'integer','system'),(41,'localplay_controller','0','Localplay Type',100,'special','streaming'),(29,'play_type','stream','Type of Playback',25,'special','streaming'),(30,'direct_link','1','Allow Direct Links',100,'boolean','options'),(31,'lang','en_US','Language',100,'special','interface'),(32,'playlist_type','m3u','Playlist Type',100,'special','streaming'),(33,'theme_name','classic','Theme',0,'special','interface'),(34,'ellipse_threshold_album','27','Album Ellipse Threshold',0,'integer','interface'),(35,'ellipse_threshold_artist','27','Artist Ellipse Threshold',0,'integer','interface'),(36,'ellipse_threshold_title','27','Title Ellipse Threshold',0,'integer','interface'),(42,'min_album_size','0','Min Album Size',0,'integer','interface'),(40,'localplay_level','0','Localplay Access Level',100,'special','streaming'),(43,'allow_downsample_playback','0','Allow Downsampling',100,'boolean','system'),(44,'allow_stream_playback','1','Allow Streaming',100,'boolean','system'),(45,'allow_democratic_playback','0','Allow Democratic Play',100,'boolean','system'),(46,'allow_localplay_playback','0','Allow Localplay Play',100,'boolean','system'),(47,'stats_threshold','7','Statistics Day Threshold',25,'integer','interface');
 UNLOCK TABLES;
+/*!40000 ALTER TABLE `preferences` ENABLE KEYS */;
 
 --
 -- Table structure for table `ratings`
@@ -337,10 +406,11 @@ CREATE TABLE `ratings` (
 -- Dumping data for table `ratings`
 --
 
-LOCK TABLES `ratings` WRITE;
+
 /*!40000 ALTER TABLE `ratings` DISABLE KEYS */;
-/*!40000 ALTER TABLE `ratings` ENABLE KEYS */;
+LOCK TABLES `ratings` WRITE;
 UNLOCK TABLES;
+/*!40000 ALTER TABLE `ratings` ENABLE KEYS */;
 
 --
 -- Table structure for table `session`
@@ -359,6 +429,16 @@ CREATE TABLE `session` (
 ) TYPE=MyISAM;
 
 --
+-- Dumping data for table `session`
+--
+
+
+/*!40000 ALTER TABLE `session` DISABLE KEYS */;
+LOCK TABLES `session` WRITE;
+UNLOCK TABLES;
+/*!40000 ALTER TABLE `session` ENABLE KEYS */;
+
+--
 -- Table structure for table `song`
 --
 
@@ -368,7 +448,6 @@ CREATE TABLE `song` (
   `file` varchar(255) NOT NULL default '',
   `catalog` int(11) unsigned NOT NULL default '0',
   `album` int(11) unsigned NOT NULL default '0',
-  `comment` text NOT NULL,
   `year` mediumint(4) unsigned NOT NULL default '0',
   `artist` int(11) unsigned NOT NULL default '0',
   `title` varchar(255) NOT NULL default '',
@@ -383,6 +462,7 @@ CREATE TABLE `song` (
   `enabled` tinyint(1) unsigned NOT NULL default '1',
   `update_time` int(11) unsigned default '0',
   `addition_time` int(11) unsigned default '0',
+  `hash` varchar(255) default NULL,
   PRIMARY KEY  (`id`),
   KEY `genre` (`genre`),
   KEY `album` (`album`),
@@ -394,6 +474,136 @@ CREATE TABLE `song` (
   KEY `played` (`played`),
   KEY `enabled` (`enabled`)
 ) TYPE=MyISAM;
+
+--
+-- Dumping data for table `song`
+--
+
+
+/*!40000 ALTER TABLE `song` DISABLE KEYS */;
+LOCK TABLES `song` WRITE;
+UNLOCK TABLES;
+/*!40000 ALTER TABLE `song` ENABLE KEYS */;
+
+--
+-- Table structure for table `song_ext_data`
+--
+
+DROP TABLE IF EXISTS `song_ext_data`;
+CREATE TABLE `song_ext_data` (
+  `song_id` int(11) unsigned NOT NULL,
+  `comment` text,
+  `lyrics` text,
+  UNIQUE KEY `song_id` (`song_id`)
+) TYPE=MyISAM;
+
+--
+-- Dumping data for table `song_ext_data`
+--
+
+
+/*!40000 ALTER TABLE `song_ext_data` DISABLE KEYS */;
+LOCK TABLES `song_ext_data` WRITE;
+UNLOCK TABLES;
+/*!40000 ALTER TABLE `song_ext_data` ENABLE KEYS */;
+
+--
+-- Table structure for table `tag_map`
+--
+
+DROP TABLE IF EXISTS `tag_map`;
+CREATE TABLE `tag_map` (
+  `id` int(11) unsigned NOT NULL auto_increment,
+  `object_id` int(11) unsigned NOT NULL,
+  `object_type` varchar(16) NOT NULL,
+  `user_id` int(11) unsigned NOT NULL,
+  PRIMARY KEY  (`id`),
+  KEY `object_id` (`object_id`),
+  KEY `object_type` (`object_type`),
+  KEY `user_id` (`user_id`)
+) TYPE=MyISAM;
+
+--
+-- Dumping data for table `tag_map`
+--
+
+
+/*!40000 ALTER TABLE `tag_map` DISABLE KEYS */;
+LOCK TABLES `tag_map` WRITE;
+UNLOCK TABLES;
+/*!40000 ALTER TABLE `tag_map` ENABLE KEYS */;
+
+--
+-- Table structure for table `tags`
+--
+
+DROP TABLE IF EXISTS `tags`;
+CREATE TABLE `tags` (
+  `map_id` int(11) unsigned NOT NULL,
+  `name` varchar(32) NOT NULL,
+  `order` tinyint(2) NOT NULL,
+  KEY `order` (`order`),
+  KEY `map_id` (`map_id`)
+) TYPE=MyISAM;
+
+--
+-- Dumping data for table `tags`
+--
+
+
+/*!40000 ALTER TABLE `tags` DISABLE KEYS */;
+LOCK TABLES `tags` WRITE;
+UNLOCK TABLES;
+/*!40000 ALTER TABLE `tags` ENABLE KEYS */;
+
+--
+-- Table structure for table `tmp_playlist`
+--
+
+DROP TABLE IF EXISTS `tmp_playlist`;
+CREATE TABLE `tmp_playlist` (
+  `id` int(11) unsigned NOT NULL auto_increment,
+  `session` varchar(32) NOT NULL,
+  `type` varchar(32) NOT NULL,
+  `object_type` varchar(32) NOT NULL,
+  `base_playlist` int(11) unsigned NOT NULL,
+  PRIMARY KEY  (`id`),
+  KEY `session` (`session`),
+  KEY `type` (`type`)
+) TYPE=MyISAM;
+
+--
+-- Dumping data for table `tmp_playlist`
+--
+
+
+/*!40000 ALTER TABLE `tmp_playlist` DISABLE KEYS */;
+LOCK TABLES `tmp_playlist` WRITE;
+UNLOCK TABLES;
+/*!40000 ALTER TABLE `tmp_playlist` ENABLE KEYS */;
+
+--
+-- Table structure for table `tmp_playlist_data`
+--
+
+DROP TABLE IF EXISTS `tmp_playlist_data`;
+CREATE TABLE `tmp_playlist_data` (
+  `id` int(11) unsigned NOT NULL auto_increment,
+  `tmp_playlist` int(11) unsigned NOT NULL,
+  `object_id` int(11) unsigned NOT NULL,
+  PRIMARY KEY  (`id`),
+  KEY `tmp_playlist` (`tmp_playlist`)
+) TYPE=MyISAM;
+
+--
+-- Dumping data for table `tmp_playlist_data`
+--
+
+
+/*!40000 ALTER TABLE `tmp_playlist_data` DISABLE KEYS */;
+LOCK TABLES `tmp_playlist_data` WRITE;
+UNLOCK TABLES;
+/*!40000 ALTER TABLE `tmp_playlist_data` ENABLE KEYS */;
 
 --
 -- Table structure for table `update_info`
@@ -410,36 +620,12 @@ CREATE TABLE `update_info` (
 -- Dumping data for table `update_info`
 --
 
-LOCK TABLES `update_info` WRITE;
+
 /*!40000 ALTER TABLE `update_info` DISABLE KEYS */;
-INSERT INTO `update_info` VALUES ('db_version','332013');
+LOCK TABLES `update_info` WRITE;
+INSERT INTO `update_info` VALUES ('db_version','333004');
+UNLOCK TABLES;
 /*!40000 ALTER TABLE `update_info` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `upload`
---
-
-DROP TABLE IF EXISTS `upload`;
-CREATE TABLE `upload` (
-  `id` int(11) unsigned NOT NULL auto_increment,
-  `user` varchar(128) NOT NULL default '',
-  `file` varchar(255) NOT NULL default '',
-  `action` enum('add','delete','quarantine') NOT NULL default 'add',
-  `addition_time` int(11) unsigned default '0',
-  PRIMARY KEY  (`id`),
-  KEY `action` (`action`),
-  KEY `user` (`user`)
-) TYPE=MyISAM;
-
---
--- Dumping data for table `upload`
---
-
-LOCK TABLES `upload` WRITE;
-/*!40000 ALTER TABLE `upload` DISABLE KEYS */;
-/*!40000 ALTER TABLE `upload` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `user`
@@ -466,34 +652,11 @@ CREATE TABLE `user` (
 -- Dumping data for table `user`
 --
 
-LOCK TABLES `user` WRITE;
+
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
+LOCK TABLES `user` WRITE;
+UNLOCK TABLES;
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `user_catalog`
---
-
-DROP TABLE IF EXISTS `user_catalog`;
-CREATE TABLE `user_catalog` (
-  `id` int(11) unsigned NOT NULL auto_increment,
-  `user` int(11) unsigned NOT NULL default '0',
-  `catalog` int(11) unsigned NOT NULL default '0',
-  `level` smallint(3) NOT NULL default '25',
-  PRIMARY KEY  (`id`),
-  KEY `user` (`user`),
-  KEY `catalog` (`catalog`)
-) TYPE=MyISAM;
-
---
--- Dumping data for table `user_catalog`
---
-
-LOCK TABLES `user_catalog` WRITE;
-/*!40000 ALTER TABLE `user_catalog` DISABLE KEYS */;
-/*!40000 ALTER TABLE `user_catalog` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `user_preference`
@@ -512,11 +675,35 @@ CREATE TABLE `user_preference` (
 -- Dumping data for table `user_preference`
 --
 
-LOCK TABLES `user_preference` WRITE;
+
 /*!40000 ALTER TABLE `user_preference` DISABLE KEYS */;
-INSERT INTO `user_preference` VALUES ('-1',1,'0'),('-1',2,'0'),('-1',3,'1'),('-1',4,'10'),('-1',17,'10'),('-1',18,''),('-1',19,'32'),('-1',22,'Ampache :: Pour l\'Amour de la Musique'),('-1',23,'0'),('-1',24,'1'),('-1',25,'80'),('-1',26,'100'),('-1',41,'0'),('-1',29,'stream'),('-1',30,'1'),('-1',31,'en_US'),('-1',32,'m3u'),('-1',33,'classic'),('-1',34,'27'),('-1',35,'27'),('-1',36,'27'),('-1',39,''),('-1',40,'0'),('-1',42,'0');
-/*!40000 ALTER TABLE `user_preference` ENABLE KEYS */;
+LOCK TABLES `user_preference` WRITE;
+INSERT INTO `user_preference` VALUES ('-1',1,'0'),('-1',4,'10'),('-1',19,'32'),('-1',22,'Ampache :: Pour l\'Amour de la Musique'),('-1',23,'0'),('-1',24,'1'),('-1',25,'80'),('-1',26,'100'),('-1',41,'0'),('-1',29,'stream'),('-1',30,'1'),('-1',31,'en_US'),('-1',32,'m3u'),('-1',33,'classic'),('-1',34,'27'),('-1',35,'27'),('-1',36,'27'),('-1',40,'0'),('-1',42,'0'),('-1',43,'0'),('-1',44,'1'),('-1',45,'0'),('-1',46,'0'),('-1',47,'7');
 UNLOCK TABLES;
+/*!40000 ALTER TABLE `user_preference` ENABLE KEYS */;
+
+--
+-- Table structure for table `user_vote`
+--
+
+DROP TABLE IF EXISTS `user_vote`;
+CREATE TABLE `user_vote` (
+  `user` varchar(64) NOT NULL,
+  `object_id` int(11) unsigned NOT NULL,
+  KEY `user` (`user`),
+  KEY `object_id` (`object_id`)
+) TYPE=MyISAM;
+
+--
+-- Dumping data for table `user_vote`
+--
+
+
+/*!40000 ALTER TABLE `user_vote` DISABLE KEYS */;
+LOCK TABLES `user_vote` WRITE;
+UNLOCK TABLES;
+/*!40000 ALTER TABLE `user_vote` ENABLE KEYS */;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;

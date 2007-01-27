@@ -4,6 +4,9 @@
 
 --------------------------------------------------------------------------
   v.3.3.3 01/26/2007 
+	- Updated the SQL file for stable release
+	- Fixed an issue with having db album art method always returning
+		true and returning a non-array
 	- Fixed a race condition with downsampling and transcoding
 	- Fixed some refresh issues on the localplay page
 	- Fixed a redirect to a blank page if you hit play selected when

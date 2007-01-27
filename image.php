@@ -72,9 +72,9 @@ switch ($_REQUEST['type']) {
 		// Attempt to pull art from the database
 		$r = $album->get_art();
 
-		if (isset($r->art)) {
-		    $art = $r->art;
-		    $mime = $r->art_mime;
+		if (isset($r['art'])) {
+		    $art = $r['art'];
+		    $mime = $r['art_mime'];
 		}
 		else { 
 			header('Content-type: image/gif');
