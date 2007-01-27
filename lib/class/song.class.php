@@ -869,29 +869,26 @@ class Song {
 	 * stream_cmd
 	 * test if the song type streams natively and 
 	 * if not returns a transcoding command from the config
+	 * we can't use this->type because its been formated for the
+	 * downsampling
 	 */
 	function stream_cmd() {
-	
-		$return = 'downsample_cmd';
+
+		$parts = pathinfo($this->file); 
+
 		
+	
 		if (!$this->native_stream()) {
-			switch ($this->type) {
-				case 'm4a':
-					$return = 'stream_cmd_m4a';
-				break;
-				case 'flac':
-					$return = 'stream_cmd_flac';
-				break;
-				case 'mpc':
-					$return = 'stream_cmd_mpc';
-				break;
-				default:
-					$return = 'downsample_cmd';
-				break;
-			} // end switch
+			$stream_cmd = 'stream_cmd_' . $parts['extension']; 
+			if (conf($stream_cmd)) { 
+				return $stream_cmd;
+			} 
+			else { 
+				debug_event('Downsample','Error: Stream command for ' . $parts['extension'] . ' not found, using downsample','2'); 
+			}
 		} // end if not native_stream
 		
-		return $return;
+		return 'downsample_cmd';
 		
 	} // end stream_cmd
 

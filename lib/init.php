@@ -67,7 +67,7 @@ if (!$results = read_config($configfile,0)) {
 } 
 
 /** This is the version.... fluf nothing more... **/
-$results['version']		= '3.3.3 Build (004)';
+$results['version']		= '3.3.3';
 $results['int_config_version']	= '1'; 
 
 $results['raw_web_path']	= $results['web_path'];

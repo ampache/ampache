@@ -3,7 +3,8 @@
 --------------------------------------------------------------------------
 
 --------------------------------------------------------------------------
-  v.3.3.3 
+  v.3.3.3 01/26/2007 
+	- Fixed a race condition with downsampling and transcoding
 	- Fixed some refresh issues on the localplay page
 	- Fixed a redirect to a blank page if you hit play selected when
 		nothing was selected (Thx Chenb)
