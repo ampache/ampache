@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2006 Ampache.org
+ Copyright (c) 2001 - 2007 Ampache.org
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
@@ -28,37 +28,32 @@ if (!$GLOBALS['user']->has_access(100)) {
 }
 
 
-$action = scrub_in($_REQUEST['action']);
-
+$action 	= scrub_in($_REQUEST['action']);
+$user_id	= scrub_in($_REQUEST['user_id']);
 
 show_template('header');
 
-$user_id = scrub_in($_REQUEST['user']);
-$temp_user = new User($user_id);
- 
+// Switch on the actions  
 switch ($action) {
 	case 'edit':
         	if (conf('demo_mode')) { break; }
-		$username	= $temp_user->username;
-		$fullname	= $temp_user->fullname;
-		$email		= $temp_user->email;
-		$access		= $temp_user->access;
-		$id		= $temp_user->id;
+		$working_user	= new User($user_id); 
 		require_once(conf('prefix') . '/templates/show_edit_user.inc.php');
 	break;
 	case 'update_user':
 	        if (conf('demo_mode')) { break; }
 
 		/* Clean up the variables */
-		$username = scrub_in($_REQUEST['new_username']);
-		$fullname = scrub_in($_REQUEST['new_fullname']);
-		$email = scrub_in($_REQUEST['new_email']);
-		$access = scrub_in($_REQUEST['user_access']);
-		$pass1 = scrub_in($_REQUEST['new_password_1']);
-		$pass2 = scrub_in($_REQUEST['new_password_2']);
+		$user_id	= scrub_in($_REQUEST['user_id']);
+		$username 	= scrub_in($_REQUEST['username']);
+		$fullname 	= scrub_in($_REQUEST['fullname']);
+		$email 		= scrub_in($_REQUEST['email']);
+		$access 	= scrub_in($_REQUEST['access']);
+		$pass1 		= scrub_in($_REQUEST['password_1']);
+		$pass2 		= scrub_in($_REQUEST['password_2']);
 	
 		/* Setup the temp user */	
-	    	$thisuser = new User($username);
+	    	$working_user = new User($user_id);
 	
 		/* Verify Input */
 		if (empty($username)) { 
@@ -70,40 +65,36 @@ switch ($action) {
 
 		/* If we've got an error then break! */
 		if ($GLOBALS['error']->error_state) { 
-			$username = $thisuser->username;
-			$fullname = $thisuser->fullname;
-			$email	  = $thisuser->email;
-			$access   = $thisuser->access;
-			$type = 'edit_user';
 			require_once(conf('prefix') . '/templates/show_edit_user.inc.php');
 			break;
 		} // if we've had an oops!
 
-		if ($access != $thisuser->access) { 
-			$thisuser->update_access($access);
+		if ($access != $working_user->access) { 
+			$working_user->update_access($access);
 		}
-		if ($email != $thisuser->email) { 
-			$thisuser->update_email($email);
+		if ($email != $working_user->email) { 
+			$working_user->update_email($email);
 		}
-		if ($username != $thisuser->username) { 
-			$thisuser->update_username($username);
+		if ($username != $working_user->username) { 
+			$working_user->update_username($username);
 		} 
-		if ($fullname != $user->fullname) {
-			$thisuser->update_fullname($fullname);
+		if ($fullname != $working_user->fullname) {
+			$working_user->update_fullname($fullname);
 		}
 		if ($pass1 == $pass2 && strlen($pass1)) { 
-			$thisuser->update_password($pass1);
+			$working_user->update_password($pass1);
 		} 
-		show_confirmation("User Updated", $thisuser->username . "'s information has been updated","admin/users.php");
+		
+		show_confirmation(_('User Updated'), $working_user->fullname . "(" . $working_user->username . ")" . _('updated'),'admin/users.php');
 	break;
 	case 'add_user':
         	if (conf('demo_mode')) { break; }
-		$username = scrub_in($_REQUEST['new_username']);
-		$fullname = scrub_in($_REQUEST['new_fullname']);
-		$email = scrub_in($_REQUEST['new_email']);
-		$access = scrub_in($_REQUEST['user_access']);
-		$pass1 = scrub_in($_REQUEST['new_password_1']);
-		$pass2 = scrub_in($_REQUEST['new_password_2']);
+		$username	= scrub_in($_REQUEST['username']);
+		$fullname	= scrub_in($_REQUEST['fullname']);
+		$email		= scrub_in($_REQUEST['email']);
+		$access		= scrub_in($_REQUEST['access']);
+		$pass1		= scrub_in($_REQUEST['password_1']);
+		$pass2		= scrub_in($_REQUEST['password_2']);
 		if (($pass1 !== $pass2)) { 
 			$GLOBALS['error']->add_error('password',_("Error Passwords don't match"));
 		}
@@ -139,18 +130,19 @@ switch ($action) {
 	break;
 	case 'delete':
         	if (conf('demo_mode')) { break; }
+		$working_user = new User($user_id); 
 		show_confirmation(_('Deletion Request'),
-			_("Are you sure you want to permanently delete") . " $temp_user->fullname ($temp_user->username) ?",
-			"admin/users.php?action=confirm_delete&amp;user=$temp_user->id");
+			_('Are you sure you want to permanently delete') . " $working_user->fullname ($working_user->username)?",
+			"admin/users.php?action=confirm_delete&amp;user_id=$user_id",1);
 	break;
 	case 'confirm_delete':
 	        if (conf('demo_mode')) { break; }
-	    	if ($_REQUEST['confirm'] == _("No")) { show_manage_users(); break; }
-		if ($temp_user->delete()) { 
-			show_confirmation(_("User Deleted"), "$temp_user->username has been Deleted","admin/users.php");
+		$working_user = new User($_REQUEST['user_id']); 
+		if ($working_user->delete()) { 
+			show_confirmation(_('User Deleted'), "$working_user->username has been Deleted","admin/users.php");
 		}
 		else { 
-			show_confirmation(_("Delete Error"), _("Unable to delete last Admin User"),"admin/users.php");
+			show_confirmation(_('Delete Error'), _("Unable to delete last Admin User"),"admin/users.php");
 		}
 	break;
 	/* Show IP History for the Specified User */
@@ -166,23 +158,42 @@ switch ($action) {
 	break;
 	case 'show_add_user':
 	        if (conf('demo_mode')) { break; }
-		$type = 'new_user';
-		require_once(conf('prefix') . '/templates/show_edit_user.inc.php');
+		require_once(conf('prefix') . '/templates/show_add_user.inc.php');
 	break;
-	case 'update':
-	case 'disabled':
-	        if (conf('demo_mode')) { break; }
-		$level = scrub_in($_REQUEST['level']);
-		$thisuser = new User($_REQUEST['user']);
-		if ($GLOBALS['user']->has_access(100)) { 
-			$thisuser->update_access($level);
+	case 'enable':
+		$working_user = new User($user_id); 
+		$working_user->enable(); 
+		show_confirmation(_('User Enabled'),'','admin/users.php'); 
+	break;
+	case 'disable':
+		$working_user = new User($user_id); 
+		if ($working_user->disable()) { 
+			show_confirmation(_('User Disabled'),'','admin/users.php'); 
 		} 
-		show_manage_users();
+		else { 
+			show_confirmation(_('Error'),_('Unable to Disabled last Administrator'),'admin/users.php'); 
+		} 
 	break;
 	default:
-		show_manage_users();
+		// Setup the View Object
+		$view	= new View(); 
+		$view->import_session_view(); 
+
+		// If we are returning
+		if ($_REQUEST['keep_view']) { 
+			$view->initialize(); 
+		} 
+		else { 
+			$sql = "SELECT `id` FROM `user`"; 
+			$db_results = mysql_query($sql,dbh()); 
+			$total_items = mysql_num_rows($db_results); 
+			$view = new View($sql,'admin/users.php','fullname',$total_items,$_SESSION['userdata']['offset_limit']); 
+		}
+		
+		$users = get_users($view->sql); 
+		require_once(conf('prefix') . '/templates/show_users.inc.php'); 
 	break;
-}
+} // end switch on action
 
 /* Show the footer */
 show_footer();

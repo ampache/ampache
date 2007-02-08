@@ -29,7 +29,7 @@
 /* Start House Keeping */
 
 	// We need this stuff
-	$no_session = 1;
+	define('NO_SESSION','1');
 	require('lib/init.php');
 
 	// Make a blank update object

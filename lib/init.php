@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2006 Ampache.org
+ Copyright (c) 2001 - 2007 Ampache.org
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
@@ -67,33 +67,19 @@ if (!$results = read_config($configfile,0)) {
 } 
 
 /** This is the version.... fluf nothing more... **/
-$results['version']		= '3.3.3';
-$results['int_config_version']	= '1'; 
+$results['version']		= '3.4-Alpha1 (Build 001)';
+$results['int_config_version']	= '2'; 
 
 $results['raw_web_path']	= $results['web_path'];
 $results['web_path']		= $http_type . $_SERVER['HTTP_HOST'] . $results['web_path'];
-$results['catalog_file_pattern']= 'mp3|mpc|m4p|m4a|mp4|aac|ogg|rm|wma|asf|flac|spx|ra|ape|shn|wv';
 $results['http_port']		= $_SERVER['SERVER_PORT'];
-if (!$results['prefix']) { 
-	$results['prefix'] = $prefix;
-}
-if (!$results['stop_auth']) {
-        $results['stop_auth'] = $results['prefix'] . "/modules/vauth/gone.fishing";
-}
+$results['prefix'] = $prefix;
+$results['stop_auth'] = $results['prefix'] . "/modules/vauth/gone.fishing";
 if (!$results['http_port']) { 
 	$results['http_port']	= '80';
 } 
 if (!$results['site_charset']) { 
-	$results['site_charset'] = "iso-8859-1";
-}
-if (!$results['ellipse_threshold_album']) { 
-	$results['ellipse_threshold_album'] = 27;
-}
-if (!$results['ellipse_threshold_artist']) { 
-	$results['ellipse_threshold_artist'] = 27;
-}
-if (!$results['ellipse_threshold_title']) { 
-	$results['ellipse_threshold_title'] = 27;
+	$results['site_charset'] = "UTF-8";
 }
 if (!$results['raw_web_path']) { 
 	$results['raw_web_path'] = '/';
@@ -113,11 +99,6 @@ if (!$results['user_ip_cardinality']) {
 if (!$results['local_length']) { 
 	$results['local_length'] = '9000';
 }
-/* Default it for now until I can get the auto-config updater working */
-if (!$results['tag_order']) { 
-	$results['tag_order'] = array('id3v2','id3v1','vorbiscomment','quicktime','file'); 
-}
-
 
 /* Variables needed for vauth Module */
 $results['cookie_path'] 	= $results['raw_web_path'];
@@ -162,7 +143,7 @@ require_once(conf('prefix') . "/modules/id3/getid3/getid3.php");
 require_once(conf('prefix') . '/modules/id3/vainfo.class.php');
 require_once(conf('prefix') . '/modules/infotools/Snoopy.class.php');
 require_once(conf('prefix') . '/modules/infotools/AmazonSearchEngine.class.php');
-require_once(conf('prefix') . '/modules/infotools/jamendoSearch.class.php');
+//require_once(conf('prefix') . '/modules/infotools/jamendoSearch.class.php');
 require_once(conf('prefix') . '/lib/xmlrpc.php');
 require_once(conf('prefix') . '/modules/xmlrpc/xmlrpc.inc');
 
@@ -257,18 +238,13 @@ if (in_array("http",$results['auth_methods'])) {
 
 } // end if http auth
 
-if ($no_session) { 
-	define('NO_SESSION','1'); 
-} 
-
-
 // If we don't want a session
 if (NO_SESSION != '1' AND conf('use_auth')) { 
 	/* Verify Their session */
 	if (!vauth_check_session()) { logout(); exit; }
 
 	/* Create the new user */
-	$user = new User($_SESSION['userdata']['username']);
+	$user = get_user_from_username($_SESSION['userdata']['username']);
 
 	/* If they user ID doesn't exist deny them */
 	if (!$user->uid AND !conf('demo_mode')) { logout(); exit; } 
@@ -303,7 +279,7 @@ else {
 		session_id(scrub_in($_REQUEST['sessid']));
 		session_start();
 	}
-	$user = new user($sess_results['username']);
+	$user = get_user_from_username($sess_results['username']);
 	init_preferences();
 }
 

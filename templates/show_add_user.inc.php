@@ -20,36 +20,36 @@
 
 */
 ?>
-<?php show_box_top(_('Editing existing User')); ?>
+<?php show_box_top(_('Adding a New User')); ?>
 <?php $GLOBALS['error']->print_error('general'); ?>
-<form name="update_user" enctype="multipart/form-data" method="post" action="<?php echo conf('web_path') . "/admin/users.php"; ?>">
+<form name="add_user" enctype="multpart/form-data" method="post" action="<?php echo conf('web_path') . "/admin/users.php"; ?>">
 <table class="tabledata" cellspacing="0" cellpadding="0" border="0">
 <tr>
 	<td>
-		<?php echo _('Username'); ?>:
+		<?php echo  _('Username'); ?>:
 	</td>
 	<td>
-		<input type="text" name="username" size="30" maxlength="128" value="<?php echo scrub_out($working_user->username); ?>" />
+		<input type="text" name="username" size="30" maxlength="128" value="<?php echo scrub_out($_POST['username']); ?>" />
 		<?php $GLOBALS['error']->print_error('username'); ?>
 	</td>
 </tr>
 <tr>
-	<td><?php echo _('Full Name'); ?>:</td>
+	<td><?php echo  _('Full Name'); ?>:</td>
 	<td>
-		<input type="text" name="fullname" size="30" value="<?php echo scrub_out($working_user->fullname); ?>" />
+		<input type="text" name="fullname" size="30" value="<?php echo scrub_out($_POST['fullname']); ?>" />
 	</td>
 </tr>
 <tr>
 	<td>
-		<?php echo _('E-mail'); ?>:
+		<?php echo  _('E-mail'); ?>:
 	</td>
 	<td>
-		<input type="text" name="email" size="30" value="<?php echo scrub_out($working_user->email); ?>" />
+		<input type="text" name="email" size="30" value="<?php echo scrub_out($_POST['email']); ?>" />
 	</td>
 </tr>
 <tr>
 	<td>
-		<?php echo _('Password'); ?> :
+		<?php echo  _('Password'); ?> :
 	</td>
 	<td>
 		<input type="password" name="password_1" size="30" value="" />
@@ -58,7 +58,7 @@
 </tr>
 <tr>
 	<td>
-		<?php echo _('Confirm Password'); ?>:
+		<?php echo  _('Confirm Password'); ?>:
 	</td>
 	<td>
 		<input type="password" name="password_2" size="30" value="" />
@@ -68,20 +68,18 @@
 	<td>
 		<?php echo  _('User Access Level'); ?>:
 	</td>
-	<td>
-		<?php $var_name = "on_" . $working_user->access; ${$var_name} = 'selected="selected"'; ?>
-		<select name="access">
-		<option value="1" <?php echo $on_1; ?>><?php echo _('Guest'); ?></option>
-		<option value="25" <?php echo $on_25; ?>><?php echo _('User'); ?></option>
-		<option value="100" <?php echo $on_100; ?>><?php echo _('Admin'); ?></option>
-		</select>
-	</td>
+        <td>
+                <?php $var_name = "on_" . $working_user->access; ${$var_name} = 'selected="selected"'; ?>
+                <select name="access">
+                <option value="1" <?php echo $on_1; ?>><?php echo _('Guest'); ?></option>
+                <option value="25" <?php echo $on_25; ?>><?php echo _('User'); ?></option>
+                <option value="100" <?php echo $on_100; ?>><?php echo _('Admin'); ?></option>
+                </select>
+        </td>
 </tr>
-<tr>
 	<td colspan="2">
-		<input type="hidden" name="action" value="update_user" />
-		<input type="submit" value="<?php echo _('Update User'); ?>" />
-		<input type="hidden" name="user_id" value="<?php echo $working_user->id; ?>" />
+		<input type="submit" value="<?php echo _('Add User'); ?>" />
+		<input type="hidden" name="action" value="add_user" />
 	</td>
 </tr>
 </table>

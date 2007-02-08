@@ -3,6 +3,15 @@
 --------------------------------------------------------------------------
 
 --------------------------------------------------------------------------
+  v.3.4-Alpha1
+	- Fixed a problem where config re-gen wouldn't update the current
+		version
+	- Changed database to fix some user tracking issues
+	- Added date to user_vote to allow for sorting by vote date on 
+		democratic play
+	- Added Label, Catalog # and Language to song extended data table
+
+--------------------------------------------------------------------------
   v.3.3.3 01/26/2007 
 	- Updated the SQL file for stable release
 	- Fixed an issue with having db album art method always returning

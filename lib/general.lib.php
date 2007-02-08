@@ -996,7 +996,7 @@ function invert_boolean($value) {
  */
 function get_user_from_username($username) { 
 
-	$sql = "SELECT id FROM user WHERE username='" . sql_escape($username) . "'";
+	$sql = "SELECT `id` FROM `user` WHERE `username`='" . sql_escape($username) . "'";
 	$db_results = mysql_query($sql, dbh());
 
 	$results = mysql_fetch_assoc($db_results); 

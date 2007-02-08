@@ -7,7 +7,7 @@
 # if this config file is up to date 
 # this is compared against a value hardcoded
 # into the init script
-config_version = 1
+config_version = 2
 
 ####################
 # Path Vars        #
@@ -82,6 +82,13 @@ auth_methods = "mysql"
 #  Program Settings  #
 ######################
 
+# File Pattern
+# This defines which file types Ampache will attempt to catalog
+# You can specify any file extension you want in here seperating them
+# with a |
+# DEFAULT: mp3|mpc|m4p|m4a|mp4|aac|ogg|rm|wma|asf|flac|spx|ra|ape|shn|wv
+catalog_file_pattern = "mp3|mpc|m4p|m4a|mp4|aac|ogg|rm|wma|asf|flac|spx|ra|ape|shn|wv"
+
 # Use Access List 
 # Toggle this on if you want ampache to pay attention to the access list
 # and only allow streaming/downloading/xml-rpc from known hosts by default
@@ -143,13 +150,15 @@ require_session = "true"
 # ampache will default to the first tag format
 # that was found. 
 # POSSIBLE VALUES: id3v1 id3v2 file vorbiscomment 
-#                  quicktime ape
-# DEFAULT: id3v2,id3v1
+#                  quicktime ape asf
+# DEFAULT: id3v2,id3v1 vorbiscomment quicktime ape
+# 		asf
 tag_order	= id3v2
 tag_order	= id3v1
 tag_order	= vorbiscomment
 tag_order	= quicktime
 tag_order	= ape
+tag_order 	= asf
 #tag_order	= file
 
 # Un comment if don't want ampache to follow symlinks

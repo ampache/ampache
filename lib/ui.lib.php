@@ -1,7 +1,7 @@
 <?php
 /*
 
-   Copyright (c) 2001 - 2006 Ampache.org
+   Copyright (c) 2001 - 2007 Ampache.org
    All rights reserved.
 
    This program is free software; you can redistribute it and/or
@@ -117,38 +117,6 @@ function access_denied() {
 	exit();
 
 } // access_denied
-
-/**
- *  show_users
- * shows all users (admin function)
- */
-function show_users () {
-
-	$dbh = dbh();
-
-	// Setup the View Ojbect
-	$view = new View();
-	$view->import_session_view();
-
-	// if we are returning
-	if ($_REQUEST['keep_view']) {
-		$view->initialize();
-	}
-	// If we aren't keeping the view then initlize it
-	else {
-		$sql = "SELECT username FROM user";
-		$db_results = mysql_query($sql, $dbh);
-		$total_items = mysql_num_rows($db_results);
-		if ($match != "Show_all") { $offset_limit = $_SESSION['userdata']['offset_limit']; }
-		$view = new View($sql, 'admin/users.php','fullname',$total_items,$offset_limit);
-	}
-
-	$db_result = mysql_query($view->sql, $dbh);
-	// wow this is stupid 
-	$GLOBALS['view'] = $view;
-	require(conf('prefix') . "/templates/show_users.inc");
-
-} // show_users()
 
 /**
  *  return_referer
@@ -1421,19 +1389,21 @@ function xml_get_footer($type){
 } //xml_get_footer
 
 /**
- * show_manage_users
- * This is the admin page for showing all of the users
+ * get_users
+ * This returns an array of user objects and takes an sql statement
  */
-function show_manage_users() {
+function get_users($sql) { 
 
-        show_box_top(_('Manage Users'));
-        echo "<ul>\n\t<li><a href=\"".conf('web_path') . "/admin/users.php?action=show_add_user\">" . _('Add a new user') . "</a></li>\n</ul>\n";
-        show_box_bottom();
+	$db_results = mysql_query($sql,dbh()); 
+	
+	$results = array(); 
 
-	/* Show the Users */
-        show_users();
+	while ($u = mysql_fetch_assoc($db_results)) { 
+		$results[] = new User($u['id']); 
+	} 
 
-} // show_manage_users
+	return $results; 
 
+} // get_users
 
 ?>

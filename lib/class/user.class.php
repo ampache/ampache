@@ -47,18 +47,17 @@ class User {
 	 * class, it currently takes a username
 	 * //FIXME take UID
 	 */	
-	function User($username=0) {
+	function User($id=0) {
 
-		if (!$username) { 
+		if (!$id) { 
 			return true;
 		}
 
-		$this->username 	= sql_escape($username);
+		$this->id		= $id;
 		$info 			= $this->_get_info();
 
 		if (!count($info)) { return false; } 
 
-		$this->id		= $this->username;
 		$this->uid		= $info->id;
 		$this->username 	= $info->username;
 		$this->fullname 	= $info->fullname;
@@ -82,13 +81,9 @@ class User {
 	 */
 	function _get_info() {
 
-		/* Hack during transition back to UID for user creation */
-		if (is_numeric($this->username)) { 
-			$sql = "SELECT * FROM user WHERE id='" . $this->username . "'";
-		}
-		else { 
-			$sql = "SELECT * FROM user WHERE username='$this->username'";
-		}
+		$id = sql_escape($this->id);
+
+		$sql = "SELECT * FROM `user` WHERE `id`='" . $id . "'";
 		
 		$db_results = mysql_query($sql, dbh());
 
@@ -108,7 +103,7 @@ class User {
 	function get_preferences($user_id=0,$type=0) { 
 		
 		if (!$user_id) { 
-			$user_id = $this->username;
+			$user_id = $this->id;
 		}
 
 		if (!conf('use_auth')) { $user_id = '-1'; }
@@ -279,7 +274,7 @@ class User {
 	*/
 	function is_logged_in() { 
 
-		$sql = "SELECT id FROM session WHERE username='$this->username'" .
+		$sql = "SELECT id FROM session WHERE `id`='$this->id'" .
 			" AND expire > ". time();
 		$db_results = mysql_query($sql,dbh());
 
@@ -298,13 +293,9 @@ class User {
 	*/
 	function has_access($needed_level) { 
 
-		if ($this->access == "admin") { $level = 100; }
-		elseif ($this->access == "user") { $level = 25; }
-		else { $level = $this->access; }
-
 		if (!conf('use_auth') || conf('demo_mode')) { return true; }
 
-		if ($level >= $needed_level) { return true; }
+		if ($this->access >= $needed_level) { return true; }
 
 		return false;
 
@@ -377,7 +368,7 @@ class User {
 	function update_username($new_username) {
 
 		$new_username = sql_escape($new_username);
-		$sql = "UPDATE user SET username='$new_username' WHERE username='$this->username'";
+		$sql = "UPDATE `user` SET `username`='$new_username' WHERE `id`='$this->id'";
 		$this->username = $new_username;
 		$db_results = mysql_query($sql, dbh());
 
@@ -392,7 +383,7 @@ class User {
 	function update_validation($new_validation) { 
 
 		$new_validation = sql_escape($new_validation);
-		$sql = "UPDATE user SET validation='$new_validation',disabled='1' WHERE username='$this->username'";
+		$sql = "UPDATE user SET validation='$new_validation',disabled='1' WHERE `id`='$this->id'";
 		$this->validation = $new_validation;
 		$db_results = mysql_query($sql, dbh());
 
@@ -407,7 +398,7 @@ class User {
 	function update_fullname($new_fullname) {
 		
 		$new_fullname = sql_escape($new_fullname);
-		$sql = "UPDATE user SET fullname='$new_fullname' WHERE username='$this->id'";
+		$sql = "UPDATE user SET fullname='$new_fullname' WHERE `id`='$this->id'";
 		$db_results = mysql_query($sql, dbh());
 
 	} // update_fullname
@@ -419,7 +410,7 @@ class User {
 	function update_email($new_email) {
 
 		$new_email = sql_escape($new_email);
-		$sql = "UPDATE user SET email='$new_email' WHERE username='$this->id'";
+		$sql = "UPDATE user SET email='$new_email' WHERE `id`='$this->id'";
 		$db_results = mysql_query($sql, dbh());
 
 	} // update_email
@@ -431,10 +422,46 @@ class User {
 	function update_offset($new_offset) { 
 
 		$new_offset = sql_escape($new_offset);
-		$sql = "UPDATE user SET offset_limit='$new_offset' WHERE username='$this->id'";
+		$sql = "UPDATE user SET offset_limit='$new_offset' WHERE `id`='$this->id'";
 		$db_results = mysql_query($sql, dbh());
 
 	} // update_offset
+
+	/** 
+	 * disable
+	 * This disables the current user
+	 */
+	function disable() { 
+
+		// Make sure we aren't disabling the last admin
+		$sql = "SELECT `id` FROM `user` WHERE `disabled` = '0' AND `id` != '" . $this->id . "' AND `access`='100'"; 
+		$db_results = mysql_query($sql,dbh()); 
+		
+		if (!mysql_num_rows($db_results)) { return false; } 
+
+		$sql = "UPDATE `user` SET `disabled`='1' WHERE id='" . $this->id . "'";
+		$db_results = mysql_query($sql,dbh()); 
+
+		// Delete any sessions they may have
+		$sql = "DELETE FROM `session` WHERE `username`='" . sql_escape($this->username) . "'"; 
+		$db_results = mysql_query($sql,dbh()); 
+
+		return true; 
+
+	} // disable
+
+	/**
+ 	 * enable
+	 * this enables the current user
+	 */
+	function enable() { 
+
+		$sql = "UPDATE `user` SET `disabled`='0' WHERE id='" . $this->id . "'";
+		$db_results = mysql_query($sql,dbh()); 
+
+		return true; 
+
+	} // enable
 
 	/**
 	 * update_access
@@ -443,37 +470,16 @@ class User {
 	 */
 	function update_access($new_access) { 
 
-		/* Check for all disable */
-		if ($new_access == 'disabled') { 
-			$sql = "SELECT username FROM user WHERE disabled != '1' AND username != '$this->username'";
-			$db_results = mysql_query($sql,dbh());
-			if (!mysql_num_rows($db_results)) { return false; }
-		}
-		
 		/* Prevent Only User accounts */
-		if ($new_access == 'user') { 
+		if ($new_access == '25') { 
 			$sql = "SELECT username FROM user WHERE (access='admin' OR access='100') AND username != '$this->username'";
 			$db_results = mysql_query($sql, dbh());
 			if (!mysql_num_rows($db_results)) { return false; }
 		}
 
-		if ($new_access == 'enabled') {
-			$new_access = sql_escape($new_access);
-			$sql = "UPDATE user SET disabled='0' WHERE username='$this->username'";
-			$db_results = mysql_query($sql, dbh());
-			
-		} 
-		elseif ($new_access == 'disabled') {
-			$sql = "UPDATE user SET disabled='1' WHERE username='$this->username'";
-			$db_results = mysql_query($sql, dbh());
-			$sql = "DELETE FROM session WHERE username='" . sql_escape($this->username) . "'";
-			$db_results = mysql_query($sql, dbh());
-		} 
-		else {
-			$new_access = sql_escape($new_access);
-			$sql = "UPDATE user SET access='$new_access' WHERE username='$this->username'";
-			$db_results = mysql_query($sql, dbh());
-		}
+		$new_access = sql_escape($new_access);
+		$sql = "UPDATE `user` SET `access`='$new_access' WHERE `id`='$this->id'";
+		$db_results = mysql_query($sql, dbh());
 
 	} // update_access
 
@@ -483,7 +489,7 @@ class User {
 	*/
 	function update_last_seen() { 
 		
-		$sql = "UPDATE user SET last_seen='" . time() . "' WHERE username='$this->username'";
+		$sql = "UPDATE user SET last_seen='" . time() . "' WHERE `id`='$this->id'";
 		$db_results = mysql_query($sql, dbh());
 	
 	} // update_last_seen
@@ -583,10 +589,13 @@ class User {
 		
 		if (!$db_results) { return false; }
 
-		/* Populates any missing preferences, in this case all of them */
-		$this->fix_preferences($username);
+		// Get the insert_id
+		$insert_id = mysql_insert_id(dbh()); 
 
-		return $username;
+		/* Populates any missing preferences, in this case all of them */
+		$this->fix_preferences($insert_id);
+
+		return $insert_id;
 
 	} // create
 	
@@ -714,16 +723,100 @@ class User {
 	 } // format_recommendations
 
 	/**
-	 * fix_preferences
-	 * this makes sure that the specified user
-	 *		has all the correct preferences. This function 
-	 *		should be run whenever a system preference is run
-	 *		it's a cop out... FIXME!
-	 * @todo Fix it so this isn't a hack
-	 * @package User
-	 * @catagory Class
+ 	 * fix_preferences
+	 * This is the new fix_preferences function, it does the following
+	 * Remove Duplicates from user, add in missing
+	 * If -1 is passed it also removes duplicates from the `preferences`
+	 * table. 
 	 */
 	function fix_preferences($user_id=0) { 
+
+		if (!$user_id) { 
+			$user_id = $this->id; 
+		} 
+
+		$user_id = sql_escape($user_id); 
+
+		/* Get All Preferences for the current user */
+		$sql = "SELECT * FROM `user_preference` WHERE `user`='$user_id'"; 
+		$db_results = mysql_query($sql,dbh()); 
+
+		$results = array(); 
+
+		while ($r = mysql_fetch_assoc($db_results)) { 
+			$pref_id = $r['preference'];
+			/* Check for duplicates */
+			if (isset($results[$pref_id])) { 
+				$r['value'] = sql_escape($r['value']); 
+				$sql = "DELETE FROM `user_preference` WHERE `user`='$user_id' AND `preference`='" . $r['preference'] . "' AND" . 
+					" `value`='" . sql_escape($r['value']) . "'"; 
+				$delete_results = mysql_query($sql,dbh()); 
+			} // if its set
+			else { 
+				$results[$pref_id] = 1; 
+			} 
+		} // end while
+	
+		/* If we aren't the -1 user before we continue grab the -1 users values */
+		if ($user_id != '-1') { 
+                        $sql = "SELECT `user_preference.preference`,`user_preference.value` FROM `user_preference`,`preferences` " .
+                                "WHERE `user_preference.preference` = `preferences.id` AND `user_preference.user`='-1' AND `preferences.catagory` !='system'";
+                        $db_results = mysql_query($sql, dbh());
+			/* While through our base stuff */
+                        while ($r = mysql_fetch_object($db_results)) {
+                                $zero_results[$r->preference] = $r->value;
+                        }
+                } // if not user -1
+
+		// get me _EVERYTHING_ 
+                $sql = "SELECT * FROM `preferences`";
+
+		// If not system, exclude system... *gasp*
+                if ($user_id != '-1') {
+                        $sql .= " WHERE catagory !='system'";
+                }
+                $db_results = mysql_query($sql, dbh());
+
+                while ($r = mysql_fetch_object($db_results)) {
+
+                        /* Check if this preference is set */
+                        if (!isset($results[$r->id])) {
+                                if (isset($zero_results[$r->id])) {
+                                        $r->value = $zero_results[$r->id];
+                                }
+				$value = sql_escape($r->value); 
+                                $sql = "INSERT INTO user_preference (`user`,`preference`,`value`) VALUES ('$user_id','$r->id','$value')";
+                                $insert_db = mysql_query($sql, dbh());
+                        }
+                } // while preferences
+
+                /* Let's also clean out any preferences garbage left over */
+                $sql = "SELECT DISTINCT(user_preference.user) FROM user_preference " .
+                        "LEFT JOIN user ON user_preference.user = user.id " .
+                        "WHERE user_preference.user!='-1' AND user.id IS NULL";
+                $db_results = mysql_query($sql, dbh());
+
+                $results = array();
+
+                while ($r = mysql_fetch_assoc($db_results)) {
+                        $results[] = $r['user'];
+                }
+
+                foreach ($results as $data) {
+                        $sql = "DELETE FROM user_preference WHERE user='$data'";
+                        $db_results = mysql_query($sql, dbh());
+                }
+
+
+	} // fix_preferences
+
+	/**
+	 * username_fix_preferences
+	 * this is an old function that takes a username
+	 * and fixes the preferences based on that it is no longer
+	 * used by has to be maintained due to the update class
+	 */
+	function username_fix_preferences($user_id=0) { 
 	
 		if (!$user_id) { 
 			$user_id = $this->username;

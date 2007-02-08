@@ -799,7 +799,7 @@ class Song {
 	function get_url($session_id='',$force_http='') { 
 
 		/* Define Variables we are going to need */
-		$username 	= scrub_out($GLOBALS['user']->username);
+		$user_id 	= scrub_out($GLOBALS['user']->id);
 		$song_id	= $this->id;
 
 		if (conf('require_session')) { 
@@ -837,7 +837,7 @@ class Song {
 			} 
                 }
 	
-		$url = $web_path . "/play/index.php?song=$song_id&uid=$username$session_string$ds_string&name=/$song_name";
+		$url = $web_path . "/play/index.php?song=$song_id&uid=$user_id$session_string$ds_string&name=/$song_name";
 
 		return $url;
 

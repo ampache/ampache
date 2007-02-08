@@ -26,7 +26,7 @@
 
 */
 
-$no_session = true;
+define('NO_SESSION','1');
 require_once('lib/init.php');
 
 /* We have to create a cookie here because IIS
@@ -73,7 +73,7 @@ if ($_POST['username'] && $_POST['password']) {
 		$username = scrub_in($_POST['username']);
 		$password = scrub_in($_POST['password']);
 		$auth = authenticate($username, $password);
-                $user = new User($username);
+                $user = get_user_from_username($username);
 	
 		if ($user->disabled == '1') { 	
                                 $auth['success'] = false;
@@ -124,7 +124,7 @@ if ($auth['success']) {
 	// Record the IP of this person!
 	// 
 	if (conf('track_user_ip')) { 
-		$user = new User($_POST['username']);
+		$user = get_user_from_username($username);
 		$user->insert_ip_history();	
 		unset($user);
 	}

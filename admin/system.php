@@ -75,7 +75,7 @@ switch ($action) {
 				} // is array
 				
 				/* Put in the current value */
-				elseif (isset($current[$key])) { 
+				elseif (isset($current[$key]) AND $key != 'config_version') { 
 					$line = $key . " = \"" . $current[$key] . "\"";
 					unset($current[$key]);
 				} // if set 

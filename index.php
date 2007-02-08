@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2006 Ampache.org
+ Copyright (c) 2001 - 2007 Ampache.org
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
@@ -24,7 +24,6 @@
 	@discussion Do most of the dirty work of displaying the mp3 catalog
 
 */
-
 require_once('lib/init.php');
 show_template('header');
 

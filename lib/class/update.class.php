@@ -347,6 +347,14 @@ class Update {
 
 		$version[] = array('version' => '333004','description' => $update_string); 
 
+		$update_string = '- Moved back to ID for user tracking internally.<br />' . 
+				'- Added date to user_vote to allow sorting by vote time.<br />' . 
+				'- Added Random Method and Object Count Preferences.<br />' . 
+				'- Removed some unused tables/fields.<br />' . 
+				'- Added Label, Catalog # and Language to Extended Song Data Table<br />';
+
+		$version[] = array('version' => '340001','description' => $update_string);
+
 		return $version;
 
 	} // populate_version
@@ -393,6 +401,9 @@ class Update {
 		/* Nuke All Active session before we start the mojo */
 		$sql = "DELETE * FROM session";
 		$db_results = mysql_query($sql, dbh());
+                
+		// Prevent the script from timing out, which could be bad
+		set_time_limit(0);
 
 		/* Verify that there are no plugins installed 
 		//FIXME: provide a link to remove all plugins, otherwise this could turn into a catch 22
@@ -1284,7 +1295,7 @@ class Update {
                 $user = new User(0);
 
                 while ($results = mysql_fetch_array($db_results)) {
-                        $user->fix_preferences($results[0]);
+                        $user->username_fix_preferences($results[0]);
                 }
 		
 
@@ -1658,7 +1669,7 @@ class Update {
 		$user->fix_preferences('-1');
 
 		while ($r = mysql_fetch_assoc($db_results)) { 
-			$user->fix_preferences($r['username']);
+			$user->username_fix_preferences($r['username']);
 		} // while results
 
 		/* Last but not least revert play types to downsample or stream */
@@ -1694,7 +1705,7 @@ class Update {
 		$user->fix_preferences('-1');
 
 		while ($r = mysql_fetch_assoc($db_results)) { 
-			$user->fix_preferences($r['username']);
+			$user->username_fix_preferences($r['username']);
 		} // while results
 
                 $this->set_version('db_version','332011');
@@ -1835,7 +1846,7 @@ class Update {
                 $user->fix_preferences('-1');
 
                 while ($r = mysql_fetch_assoc($db_results)) {
-                        $user->fix_preferences($r['username']);
+                        $user->username_fix_preferences($r['username']);
                 } // while results
 
 		$this->set_version('db_version','332012');
@@ -1975,7 +1986,7 @@ class Update {
                 $user->fix_preferences('-1');
 
                 while ($r = mysql_fetch_assoc($db_results)) {
-                        $user->fix_preferences($r['username']);
+                        $user->username_fix_preferences($r['username']);
                 } // while results
 
 		/* Store all current Stats */
@@ -2111,7 +2122,7 @@ class Update {
                 $user->fix_preferences('-1');
 
                 while ($r = mysql_fetch_assoc($db_results)) {
-                        $user->fix_preferences($r['username']);
+                        $user->username_fix_preferences($r['username']);
                 } // while results
 		
 		/* Drop the unused user_catalog table */
@@ -2143,7 +2154,7 @@ class Update {
 		$user->fix_preferences('-1'); 
 
 		while ($r = mysql_fetch_assoc($db_results)) { 
-			$user->fix_preferences($r['username']); 
+			$user->username_fix_preferences($r['username']); 
 		} // while results
 
 		$this->set_version('db_version','333003');
@@ -2174,12 +2185,236 @@ class Update {
 		$user->fix_preferences('-1'); 
 
 		while ($r = mysql_fetch_assoc($db_results)) { 
-			$user->fix_preferences($r['username']); 
+			$user->username_fix_preferences($r['username']); 
 		} // while results
 
 		$this->set_version('db_version','333004'); 
 
 	} // update_333004
+
+	/**
+ 	 * update_340001
+	 * This update moves back to the ID for user UID and 
+	 * adds date to the user_vote so that it can be sorted
+	 * correctly
+	 */
+	function update_340001() { 
+
+
+		// Build the User -> ID map using the username as the key
+		$sql = "SELECT `id`,`username` FROM `user`"; 
+		$db_results = mysql_query($sql,dbh());
+
+		$user_array = array(); 
+
+		while ($r = mysql_fetch_assoc($db_results)) { 
+			$username = $r['username'];
+			$user_array[$username] = sql_escape($r['id']); 
+		} // end while
+
+		// Alter the user table so that you can't have an ID beyond the 
+		// range of the other tables which have to allow for -1
+		$sql = "ALTER TABLE `user` CHANGE `id` `id` INT ( 11 ) NOT NULL AUTO_INCREMENT";
+		$db_results = mysql_query($sql,dbh()); 
+
+		// Now pull the access list users, alter table and then re-insert
+		$sql = "SELETE DISTINCT(`user`) FROM `access_list`"; 
+		$db_results = mysql_query($sql,dbh()); 
+
+		while ($r = mysql_fetch_assoc($db_results)) { 
+			// Build the new SQL
+			$username	= $r['user'];
+			$user_id	= $user_array[$username]; 
+			$username	= sql_escape($username); 
+
+			$sql = "UPDATE `access_list` SET `user`='$user_id' WERE `user`='$username'"; 
+			$update_results = mysql_query($sql,dbh()); 
+
+		} // end while access_list
+
+		// Alter the table
+		$sql = "ALTER TABLE `access_list` CHANGE `user` `user` INT ( 11 ) NOT NULL";
+		$db_results = mysql_query($sql,dbh());
+
+		// Now pull flagged users, update and alter
+		$sql = "SELECT DISTINCT(`user`) FROM `flagged`";
+		$db_results = mysql_query($sql,dbh()); 
+
+		while ($r = mysql_fetch_assoc($db_results)) { 
+			$username	= $r['user']; 
+			$user_id	= $user_array[$username];
+			$username	= sql_escape($username); 
+
+			$sql = "UPDATE `flagged` SET `user`='$user_id' WHERE `user`='$username'";
+			$update_results = mysql_query($sql,dbh()); 
+
+		} // end while 
+
+		// Alter the table
+		$sql = "ALTER TABLE `flagged` CHANGE `user` `user` INT ( 11 ) NOT NULL";
+		$db_results = mysql_query($sql,dbh()); 
+
+
+		// Now fix up the ip history
+		$sql = "SELECT DISTINCT(`user`) FROM `ip_history`";
+		$db_results = mysql_query($sql,dbh()); 
+
+		while ($r = mysql_fetch_assoc($db_results)) { 
+			$username 	= $r['user'];
+			$user_id	= $user_array[$username];
+			$username	= sql_escape($username); 
+
+			$sql = "UPDATE `ip_history` SET `user`='$user_id' WHERE `user`='$username'";
+			$update_results = mysql_query($sql,dbh()); 
+
+		} // end while
+
+		// Alter the table
+		$sql = "ALTER TABLE `ip_history` CHANGE `user` `user` INT ( 11 ) NOT NULL";
+		$db_results = mysql_query($sql,dbh()); 
+
+		// Now fix now playing
+		$sql = "SELECT DISTINCT(`user`) FROM `now_playing`";
+		$db_results = mysql_query($sql,dbh()); 
+
+		while ($r = mysql_fetch_assoc($db_results)) { 
+			$username	= $r['user'];
+			$user_id	= $user_array[$username];
+			$username	= sql_escape($username); 
+
+			$sql = "UPDATE `now_playing` SET `user`='$user_id' WHERE `user`='$username'";
+			$update_results = mysql_query($sql,dbh()); 
+
+		} // end while
+
+		// Alter the table
+		$sql = "ALTER TABLE `now_playing` CHANGE `user` `user` INT ( 11 ) NOT NULL";
+		$db_results = mysql_query($sql,dbh()); 
+
+		// Now fix the playlist table
+		$sql = "SELECT DISTINCT(`user`) FROM `playlist`";
+		$db_results = mysql_query($sql,dbh()); 
+
+		while ($r = mysql_fetch_assoc($db_results)) { 
+			$username	= $r['user'];
+			$user_id	= $user_array[$username];
+			$username	= sql_escape($username); 
+
+			$sql = "UPDATE `playlist` SET `user`='$user_id' WHERE `user`='$username'";
+			$update_results = mysql_query($sql,dbh()); 
+
+		} // end while
+
+		// Alter the table
+		$sql = "ALTER TABLE `playlist` CHANGE `user` `user` INT ( 11 ) NOT NULL";
+		$db_results = mysql_query($sql,dbh()); 
+
+		// Drop unused table
+		$sql = "DROP TABLE `playlist_permission`";
+		$db_results = mysql_query($sql,dbh()); 
+
+		// Now fix the ratings table
+		$sql = "SELECT DISTINCT(`user`) FROM `ratings`";
+		$db_results = mysql_query($sql,dbh()); 
+
+		while ($r = mysql_fetch_assoc($db_results)) { 
+			$username	= $r['user'];
+			$user_id	= $user_array[$username];
+			$username	= sql_escape($username); 
+
+			$sql = "UPDATE `ratings` SET `user`='$user_id' WHERE `user`='$username'";
+			$update_results = mysql_query($sql,dbh()); 
+
+		} // end while
+
+		$sql = "ALTER TABLE `ratings` CHANGE `user` `user` INT ( 11 ) NOT NULL";
+		$db_results = mysql_query($sql,dbh()); 
+		
+		// Now work on the tag_map 
+		$sql = "ALTER TABLE `tag_map` CHANGE `user_id` `user` INT ( 11 ) NOT NULL"; 
+		$db_results = mysql_query($sql,dbh()); 
+
+		// Now fix user preferences
+		$sql = "SELECT DISTINCT(`user`) FROM `user_preference`";
+		$db_results = mysql_query($sql,dbh()); 
+
+		while ($r = mysql_fetch_assoc($db_results)) { 
+			$username	 = $r['user'];
+			$user_id	 = $user_array[$username];
+			$username	 = sql_escape($username); 
+
+			$sql = "UPDATE `user_preference` SET `user`='$user_id' WHERE `user`='$username'"; 
+			$update_results = mysql_query($sql,dbh()); 
+
+		} // end while
+
+		// Alter the table
+		$sql = "ALTER TABLE `user_preference` CHANGE `user` `user` INT ( 11 ) NOT NULL";
+		$db_results = mysql_query($sql,dbh()); 
+
+		// Add a date to the user_vote
+		$sql = "ALTER TABLE `user_vote` ADD `date` INT( 11 ) UNSIGNED NOT NULL";
+		$db_results = mysql_query($sql,dbh()); 
+
+		// Add the index for said field
+		$sql = "ALTER TABLE `user_vote` ADD INDEX(`date`)";
+		$db_results = mysql_query($sql,dbh()); 
+
+		// Add the thumb fields to album
+		$sql = "ALTER TABLE `album` ADD `thumb` TINYBLOB NULL ,ADD `thumb_mime` VARCHAR( 128 ) NULL";
+		$db_results = mysql_query($sql,dbh()); 
+
+		// Now add in the min_object_count preference and the random_method
+		$sql = "INSERT INTO `preferences` (`name`,`value`,`description`,`level`,`type`,`catagory`) " . 
+			"VALUES('min_object_count','0','Min Element Count','5','integer','interface')";
+		$db_results = mysql_query($sql,dbh()); 
+
+		$sql = "INSERT INTO `preferences` (`name`,`value`,`description`,`level`,`type`,`catagory`) " . 
+			"VALUES('random_method','default','Random Method','5','string','interface')"; 
+		$db_results = mysql_query($sql,dbh()); 
+
+		// Delete old preference
+		$sql = "DELETE FROM `preferences` WHERE `name`='min_album_size'"; 
+		$db_results = mysql_query($sql,dbh()); 
+
+		// Make Hash a non-required field and smaller
+		$sql = "ALTER TABLE `song` CHANGE `hash` `hash` VARCHAR ( 64 ) NULL";
+		$db_results = mysql_query($sql,dbh()); 
+
+		// Make user access an int, nothing else
+		$sql = "UPDATE `user` SET `access`='100' WHERE `access`='admin'";
+		$db_results = mysql_query($sql,dbh()); 
+
+		$sql = "UPDATE `user` SET `access`='25' WHERE `access`='user'";
+		$db_results = mysql_query($sql,dbh()); 
+		
+		$sql = "UPDATE `user` SET `access`='5' WHERE `access`='guest'";
+		$db_results = mysql_query($sql,dbh()); 	
+
+		// Alter the table
+		$sql = "ALTER TABLE `user` CHANGE `access` `access` TINYINT ( 4 ) UNSIGNED NOT NULL";
+		$db_results = mysql_query($sql,dbh()); 
+
+		// Add in Label and Catalog # and language
+		$sql = "ALTER TABLE `song_ext_data` ADD `label` VARCHAR ( 128 ) NULL, ADD `catalog_number` VARCHAR ( 128 ) NULL, ADD `language` VARCHAR ( 128 ) NULL";
+		$db_results = mysql_query($sql,dbh()); 
+
+                /* Fix every users preferences */
+                $sql = "SELECT `id` FROM `user`";
+                $db_results = mysql_query($sql,dbh()); 
+         
+                $user = new User();
+                $user->fix_preferences('-1');
+        
+                while ($r = mysql_fetch_assoc($db_results)) {
+                        $user->fix_preferences($r['id']);
+                } // while results
+
+		$this->set_version('db_version','340001');
+
+		return true; 
+
+	} //update_340001
 
 } // end update class
 ?>
