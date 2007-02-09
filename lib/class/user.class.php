@@ -1063,7 +1063,7 @@ class User {
          */             
         function get_ip_history($count='',$distinct='') { 
 
-		$username 	= sql_escape($this->username);
+		$username 	= sql_escape($this->id);
 
 		if ($count) { 
 			$limit_sql = "LIMIT " . intval($count);

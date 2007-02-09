@@ -150,9 +150,9 @@ switch ($action) {
 		/* get the user and their history */
 		$working_user	= new User($_REQUEST['user_id']); 
 		if (!isset ($_REQUEST['all'])){
-		$history	= $temp_user->get_ip_history('',1);
+		$history	= $working_user->get_ip_history('',1);
 		} else {
-		$history	= $temp_user->get_ip_history('','');
+		$history	= $working_user->get_ip_history('','');
 		}
 		require (conf('prefix') . '/templates/show_ip_history.inc.php');
 	break;
