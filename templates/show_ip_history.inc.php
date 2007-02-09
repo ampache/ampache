@@ -20,12 +20,12 @@
 
 */
 ?>
-<?php show_box_top($temp_user->fullname . ' ' . _('IP History')); ?>
+<?php show_box_top($working_user->fullname . ' ' . _('IP History')); ?>
 <div class="text-action">
 <?php if (isset($_REQUEST['all'])){ ?>
-	<a href="<?php echo conf('web_path')?>/admin/users.php?action=show_ip_history&user_id=<?php echo $temp_user->username?>"><?php echo _('Show Unique'); ?>...</a>
+	<a href="<?php echo conf('web_path')?>/admin/users.php?action=show_ip_history&user_id=<?php echo $working_user->id?>"><?php echo _('Show Unique'); ?>...</a>
 <?php }else{ ?>
-	<a href="<?php echo conf('web_path')?>/admin/users.php?action=show_ip_history&user_id=<?php echo $temp_user->username?>&all"><?php echo _('Show All'); ?>...</a>
+	<a href="<?php echo conf('web_path')?>/admin/users.php?action=show_ip_history&user_id=<?php echo $working_user->id?>&all"><?php echo _('Show All'); ?>...</a>
 <?php }?>
 </div>
 <table border="0">

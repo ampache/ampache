@@ -148,7 +148,7 @@ switch ($action) {
 	/* Show IP History for the Specified User */
 	case 'show_ip_history':
 		/* get the user and their history */
-		$temp_user	= new User($_REQUEST['user_id']); 
+		$working_user	= new User($_REQUEST['user_id']); 
 		if (!isset ($_REQUEST['all'])){
 		$history	= $temp_user->get_ip_history('',1);
 		} else {
