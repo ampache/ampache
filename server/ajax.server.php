@@ -79,7 +79,6 @@ switch ($action) {
 	break;
 	/* For changing the current play type FIXME:: need to allow select of any type  */
 	case 'change_play_type':
-		$_SESSION['data']['old_play_type'] = conf('play_type'); 
 		$pref_id = get_preference_id('play_type');
 		$GLOBALS['user']->update_preference($pref_id,$_GET['type']);
 

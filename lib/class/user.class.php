@@ -303,32 +303,31 @@ class User {
 
 	/**
 	 * update_preference
-	 * //FIXME: Unused at this point, should be removed or used
 	 * updates a single preference if the query fails
 	 * it attempts to insert the preference instead
 	 * @package User
 	 * @catagory Class
 	 * @todo Do a has_preference_access check
 	 */
-	function update_preference($preference_id, $value, $username=0) {
+	function update_preference($preference_id, $value, $user_id=0) {
 	
 		if (!has_preference_access(get_preference_name($preference_id))) { 
 			return false; 
 		} 
 
-		if (!$username) { 
-			$username = $this->username;
+		if (!$user_id) { 
+			$user_id = $this->id;
 		}
 
-		if (!conf('use_auth')) { $username = '-1'; }
+		if (!conf('use_auth')) { $user_id = '-1'; }
 
 		$value 		= sql_escape($value);
 		$preference_id 	= sql_escape($preference_id); 
-		$username	= sql_escape($username);
+		$user_id	= sql_escape($user_id);
 
-		$sql = "UPDATE user_preference SET value='$value' WHERE user='$username' AND preference='$preference_id'";
+		$sql = "UPDATE user_preference SET value='$value' WHERE user='$user_id' AND preference='$preference_id'";
 
-		$db_results = @mysql_query($sql, dbh());
+		$db_results = mysql_query($sql, dbh());
 
 	} // update_preference
 

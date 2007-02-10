@@ -4,6 +4,8 @@
 
 --------------------------------------------------------------------------
   v.3.4-Alpha1
+  	- Fixed Democratic Play newest votes of same total count first
+		(Order by vote time)
 	- Fixed a problem where config re-gen wouldn't update the current
 		version
 	- Changed database to fix some user tracking issues

@@ -86,7 +86,7 @@ class tmpPlaylist {
 		$order = 'ORDER BY id ASC';
 		
 		if ($this->type == 'vote') { 
-			$order 		= "GROUP BY tmp_playlist_data.id ORDER BY `count` DESC";
+			$order 		= "GROUP BY tmp_playlist_data.id ORDER BY `count` ,user_vote.date DESC";
 			$vote_select = ", COUNT(user_vote.user) AS `count`";
 			$vote_join = "LEFT JOIN user_vote ON user_vote.object_id=tmp_playlist_data.id";
 		}
@@ -94,6 +94,7 @@ class tmpPlaylist {
 		/* Select all objects from this playlist */
 		$sql = "SELECT tmp_playlist_data.id, tmp_playlist_data.object_id $vote_select FROM tmp_playlist_data $vote_join " . 
 			"WHERE tmp_playlist_data.tmp_playlist='" . sql_escape($this->id) . "' $order";
+		debug_event('foo',$sql,'1');
 		$db_results = mysql_query($sql, dbh());
 		
 		/* Define the array */
@@ -123,7 +124,7 @@ class tmpPlaylist {
 		if ($this->type == 'vote') { 
 			/* Add conditions for voting */	
 			$vote_select = ", COUNT(user_vote.user) AS `count`";
-			$order = " GROUP BY tmp_playlist_data.id ORDER BY `count` DESC";
+			$order = " GROUP BY tmp_playlist_data.id ORDER BY `count`, user_vote.date DESC";
 			$vote_join = "LEFT JOIN user_vote ON user_vote.object_id=tmp_playlist_data.id";
 		}
 
@@ -326,8 +327,9 @@ class tmpPlaylist {
 		} 
 
 		/* Vote! */
-		$sql = "INSERT INTO user_vote (`user`,`object_id`) " . 
-			"VALUES ('" . sql_escape($GLOBALS['user']->id) . "','" . $results['id'] . "')";
+		$time = time(); 
+		$sql = "INSERT INTO user_vote (`user`,`object_id`,`date`) " . 
+			"VALUES ('" . sql_escape($GLOBALS['user']->id) . "','" . $results['id'] . "','$time')";
 		$db_results = mysql_query($sql, dbh());
 
 		return true;

@@ -190,31 +190,6 @@ function conf($param,$clobber=0)
         }
 } //conf
 
-function libglue_param($param,$clobber=0)
-{
-        static $params = array();
-        if(is_array($param))
-        //meaning we are setting values
-        {
-                foreach ($param as $key=>$val)
-                {
-                        if(!$clobber && isset($params[$key]))
-                        {
-                                echo "Error: attempting to clobber $key = $val\n";
-                                exit();
-                        }
-                        $params[$key] = $val;
-                }
-                return true;
-        }
-        else
-        //meaning we are trying to retrieve a parameter
-        {
-                if(isset($params[$param])) return $params[$param];
-                else return false;
-        }
-}
-
 function error_results($param,$clobber=0)
 {               
         static $params = array();

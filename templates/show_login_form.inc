@@ -40,7 +40,7 @@ if (conf('local_length') >= conf('remember_length')) {
 			<?php echo  conf('login_message'); ; ?>
 			<?php $GLOBALS['error']->print_error('general'); ?>
 			<p><input class="button" type="submit" value="<?php echo _('Login'); ?>" /></p>
-			<input type="hidden" name="referrer" value="<?php echo $referrer; ?>" />
+			<input type="hidden" name="referrer" value="<?php echo scrub_out($_SERVER['HTTP_REFERRER']); ?>" />
 			<input type="hidden" name="action" value="login" />
 		</form>
 		<?php if (conf('allow_public_registration')) { ?>

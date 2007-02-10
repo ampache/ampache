@@ -132,7 +132,7 @@ if ($auth['success']) {
 	/* Make sure they are actually trying to get to this site and don't try to redirect them back into 
 	 * an admin section
 	**/
-	if (strstr($_POST['referrer'], conf('web_path')) AND 
+	if (substr($_POST['referrer'],0,strlen(conf('web_path'))) == conf('web_path') AND 
 		!strstr($_POST['referrer'],"install.php") AND 
 		!strstr($_POST['referrer'],"login.php") AND 
 		!strstr($_POST['referrer'],"update.php") AND

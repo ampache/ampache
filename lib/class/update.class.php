@@ -2218,7 +2218,7 @@ class Update {
 		$db_results = mysql_query($sql,dbh()); 
 
 		// Now pull the access list users, alter table and then re-insert
-		$sql = "SELETE DISTINCT(`user`) FROM `access_list`"; 
+		$sql = "SELECT DISTINCT(`user`) FROM `access_list`"; 
 		$db_results = mysql_query($sql,dbh()); 
 
 		while ($r = mysql_fetch_assoc($db_results)) { 
