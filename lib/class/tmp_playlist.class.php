@@ -94,7 +94,6 @@ class tmpPlaylist {
 		/* Select all objects from this playlist */
 		$sql = "SELECT tmp_playlist_data.id, tmp_playlist_data.object_id $vote_select FROM tmp_playlist_data $vote_join " . 
 			"WHERE tmp_playlist_data.tmp_playlist='" . sql_escape($this->id) . "' $order";
-		debug_event('foo',$sql,'1');
 		$db_results = mysql_query($sql, dbh());
 		
 		/* Define the array */
