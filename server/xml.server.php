@@ -25,7 +25,7 @@
  * as such it needs to verify the session id that is passed 
  */
 
-$no_session = true;
+define('NO_SESSION','1');
 require_once('../lib/init.php');
 
 /** 

@@ -23,7 +23,7 @@
  * as part of the get request
  */
 
-$no_session = true;
+define('NO_SESSION','1');
 require_once('../lib/init.php');
 
 /* Verify the existance of the Session they passed in */
