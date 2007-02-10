@@ -274,7 +274,7 @@ class User {
 	*/
 	function is_logged_in() { 
 
-		$sql = "SELECT id FROM session WHERE `id`='$this->id'" .
+		$sql = "SELECT id FROM session WHERE `username`='$this->username'" .
 			" AND expire > ". time();
 		$db_results = mysql_query($sql,dbh());
 
