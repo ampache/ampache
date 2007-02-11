@@ -1,13 +1,12 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2006 Ampache.org
+ Copyright (c) 2001 - 2007 Ampache.org
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
- modify it under the terms of the GNU General Public License
- as published by the Free Software Foundation; either version 2
- of the License, or (at your option) any later version.
+ modify it under the terms of the GNU General Public License v2
+ as published by the Free Software Foundation.
 
  This program is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -44,12 +43,15 @@ class Rating {
 		$this->id 	= intval($id);
 		$this->type 	= sql_escape($type);
 
-		if (intval($id) > 1) { 
+		// Check for the users rating
+		if ($rating = $this->get_user($GLOBALS['user']->id)) { 
+			$this->rating = $rating;
+		} 
+		else { 
 			$this->get_average();
 		}
-		else {
-			$this->rating='0';
-		}
+	
+		return true; 
 
 	} // Rating
 
@@ -58,11 +60,11 @@ class Rating {
 	 * Get the user's rating this is based off the currently logged
 	 * in user. It returns the value
 	 */
-	function get_user($username) { 
+	function get_user($user_id) { 
 
-		$username = sql_escape($username);
+		$user_id	= sql_escape($user_id); 
 
-		$sql = "SELECT rating FROM ratings WHERE user='$username' AND object_id='$this->id' AND object_type='$this->type'";
+		$sql = "SELECT rating FROM ratings WHERE user='$user_id' AND object_id='$this->id' AND object_type='$this->type'";
 		$db_results = mysql_query($sql, dbh());
 		
 		$results = mysql_fetch_assoc($db_results);

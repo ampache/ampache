@@ -137,7 +137,6 @@ require_once(conf('prefix') . '/lib/themes.php');
 require_once(conf('prefix') . '/lib/stream.lib.php');
 require_once(conf('prefix') . '/lib/playlist.lib.php');
 require_once(conf('prefix') . '/lib/democratic.lib.php');
-require_once(conf('prefix') . '/modules/lib.php');
 require_once(conf('prefix') . '/modules/catalog.php');
 require_once(conf('prefix') . "/modules/id3/getid3/getid3.php");
 require_once(conf('prefix') . '/modules/id3/vainfo.class.php');

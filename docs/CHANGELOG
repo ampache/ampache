@@ -4,6 +4,10 @@
 
 --------------------------------------------------------------------------
   v.3.4-Alpha1
+  	- Added min song count to Browse Artist, refercing min object count
+		preference
+  	- Fixed ratings so that it shows your rating if you've rated it
+		otherwise it shows an average rating
   	- Fixed Democratic Play newest votes of same total count first
 		(Order by vote time)
 	- Fixed a problem where config re-gen wouldn't update the current

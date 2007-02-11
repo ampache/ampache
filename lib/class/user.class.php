@@ -1,13 +1,12 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2006 Ampache.org
+ Copyright (c) 2001 - 2007 Ampache.org
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
- modify it under the terms of the GNU General Public License
- as published by the Free Software Foundation; either version 2
- of the License, or (at your option) any later version.
+ modify it under the terms of the GNU General Public License v2
+ as published by the Free Software Foundation.
 
  This program is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -24,7 +23,6 @@
 	View object that is thrown into their session
 
 */
-
 
 class User {
 
@@ -247,7 +245,8 @@ class User {
 
 			/* Find everything they've rated at 4+ */
 			$sql = "SELECT object_id,user_rating FROM ratings " . 
-				"WHERE user='" . sql_escape($user_id) . "' AND user_rating >='4' AND object_type = '" . sql_escape($type) . "' ORDER BY user_rating DESC"; 
+				"WHERE user='" . sql_escape($user_id) . "' AND user_rating >='4' AND " . 
+				"object_type = '" . sql_escape($type) . "' ORDER BY user_rating DESC"; 
 			$db_results = mysql_query($sql,dbh()); 
 
 			while ($r = mysql_fetch_assoc($db_results)) { 
@@ -470,8 +469,8 @@ class User {
 	function update_access($new_access) { 
 
 		/* Prevent Only User accounts */
-		if ($new_access == '25') { 
-			$sql = "SELECT username FROM user WHERE (access='admin' OR access='100') AND username != '$this->username'";
+		if ($new_access < '100') { 
+			$sql = "SELECT `id` FROM user WHERE `access`='100' AND `id` != '$this->id'";
 			$db_results = mysql_query($sql, dbh());
 			if (!mysql_num_rows($db_results)) { return false; }
 		}
@@ -500,8 +499,7 @@ class User {
 	function update_stats($song_id) {
 
 		$song_info = new Song($song_id);
-		//FIXME:: User uid reference
-		$user = $this->uid;
+		$user = $this->id;
 		
 		if (!$song_info->file) { return false; }
 
@@ -603,8 +601,9 @@ class User {
 		@discussion updates a users password
 	*/
 	function update_password($new_password) { 
-		
-		$sql = "UPDATE user SET password=PASSWORD('$new_password') WHERE username='$this->username'";
+
+		$new_password = sql_escape($new_password);
+		$sql = "UPDATE user SET password=PASSWORD('$new_password') WHERE `id`='$this->id'";
 		$db_results = mysql_query($sql, dbh());
 
 		return true;
@@ -628,7 +627,7 @@ class User {
 
 		/* Calculate their total Bandwidth Useage */
 		$sql = "SELECT song.size FROM song LEFT JOIN object_count ON song.id=object_count.object_id " . 
-			"WHERE object_count.user='$this->uid' AND object_count.object_type='song'";
+			"WHERE object_count.user='$this->id' AND object_count.object_type='song'";
 		$db_results = mysql_query($sql, dbh());
 
 		while ($r = mysql_fetch_assoc($db_results)) { 
@@ -959,7 +958,7 @@ class User {
 	*/
 	function delete_stats() { 
 
-		$sql = "DELETE FROM object_count WHERE userid='" . $this->username . "'";
+		$sql = "DELETE FROM object_count WHERE user='" . $this->id . "'";
 		$db_results = mysql_query($sql, dbh());
 
 	} // delete_stats
@@ -975,7 +974,7 @@ class User {
 		  admin
 		*/
 		if ($this->has_access(100)) { 
-			$sql = "SELECT username FROM user WHERE (access='admin' OR access='100') AND username !='" . sql_escape($this->username) . "'";
+			$sql = "SELECT `id` FROM user WHERE `access`='100' AND id !='" . sql_escape($this->id) . "'";
 			$db_results = mysql_query($sql, dbh());
 			if (!mysql_num_rows($db_results)) { 
 				return false;
@@ -983,22 +982,34 @@ class User {
 		} // if this is an admin check for others 
 
 		// Delete their playlists
-		$sql = "DELETE FROM playlist WHERE user='$this->username'";
+		$sql = "DELETE FROM playlist WHERE user='$this->id'";
 		$db_results = mysql_query($sql, dbh());
 
 		// Delete any stats they have
-		$sql = "DELETE FROM object_count WHERE userid='$this->username'";
+		$sql = "DELETE FROM object_count WHERE user='$this->id'";
 		$db_results = mysql_query($sql, dbh());
 
+		// Delete their ratings
+		$sql = "DELETE FROM `ratings` WHERE `user`='$this->id'";
+		$db_results = mysql_query($sql,dbh()); 
+
+		// Delete their tags
+		$sql = "DELETE FROM `tag_map` WHERE `user`='$this->id'";
+		$db_results = mysql_query($sql,dbh());
+
+		// Clean out the tags
+		$sql = "DELETE FROM `tags` USING `tag_map` LEFT JOIN `tag_map` ON tag_map.id=tags.map_id AND tag_map.id IS NULL";
+		$db_results = mysql_query($sql,dbh()); 
+
 		// Delete their preferences
-		$sql = "DELETE FROM preferences WHERE user='$this->username'";
+		$sql = "DELETE FROM preferences WHERE user='$this->id'";
 		$db_results = mysql_query($sql, dbh());
 
 		// Delete the user itself
-		$sql = "DELETE FROM user WHERE username='$this->username'";
+		$sql = "DELETE FROM user WHERE `id`='$this->id'";
 		$db_results = mysql_query($sql, dbh());
 
-		$sql = "DELETE FROM session WHERE username='$this->username'";
+		$sql = "DELETE FROM session WHERE username='" . sql_escape($this->username) . "'";
 		$db_results = mysql_query($sql, dbh());
 
 		return true;
@@ -1100,6 +1111,24 @@ class User {
 		
 	} // activate_user
 
+       /*!
+                @function is_xmlrpc
+                @discussion checks to see if this is a valid
+                        xmlrpc user
+        */
+        function is_xmlrpc() {
+
+                /* If we aren't using XML-RPC return true */
+                if (!conf('xml_rpc')) {
+                        return false;
+                }
+
+                //FIXME: Ok really what we will do is check the MD5 of the HTTP_REFERER
+                //FIXME: combined with the song title to make sure that the REFERER
+                //FIXME: is in the access list with full rights
+                return true;
+
+        } // is_xmlrpc
 	
 } //end user class
 

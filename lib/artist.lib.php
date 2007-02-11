@@ -78,12 +78,19 @@ function show_artists ($match = '') {
 
         // If there isn't a view object we need to create a new one..
         else {
+
+		// Pull in the min object count
+		$min_object_count	= conf('min_object_count');
+		$min_join	= " LEFT JOIN song ON song.artist=artist.id"; 
+		$min_group	= "GROUP BY song.artist HAVING COUNT(song.id) > $min_object_count"; 
+
+
                 if ( isset($match) && $match != '' ) {
-                        $query = "SELECT id,name FROM artist " .
-                                " WHERE name LIKE '$match%' ";
+                        $query = "SELECT artist.id,artist.name FROM artist $min_join" .
+                                " WHERE artist.name LIKE '$match%' $min_group";
                 }
                 else {
-                        $query = "SELECT id FROM artist ";
+                        $query = "SELECT artist.id FROM `artist` $min_join $min_group";
                 }
 
                 $db_results = mysql_query($query, $dbh);
@@ -102,22 +109,20 @@ function show_artists ($match = '') {
                 $artists = $match;
                 $_SESSION['view_script'] = false;
         }
-
+debug_event('foo',$view->sql,'3');
         $db_results = mysql_query($view->sql, $dbh);
-        while ($r = @mysql_fetch_array($db_results)) {
-		//FIXME: This seriously needs to be updated to use the artist object
-                $artist_info = get_artist_info($r[0]);
-                $artist = format_artist($artist_info);
-		// Only Add this artist if there is information to go along with it
-		if ($artist_info) { 
-	                $artists[] = $artist;
-		}
+
+	// Get the artist object
+        while ($r = mysql_fetch_assoc($db_results)) {
+		$artist = new Artist($r['id']); 	
+		$artist->format(); 
+		$artists[] = $artist;
         }
 
         if (count($artists)) {
 		/* Ack horrible hack :( */
 		$GLOBALS['view'] = $view;
-                require ( conf('prefix') . "/templates/show_artists.inc");
+                require conf('prefix') . '/templates/show_artists.inc.php';
         }
 
 } // show_artists

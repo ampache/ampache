@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2006 Ampache.org
+ Copyright (c) 2001 - 2007 Ampache.org
  All Rights Reserved.
 
  This program is free software; you can redistribute it and/or
@@ -19,11 +19,9 @@
 
 */
 
-
-require_once('lib/init.php');
+require_once 'lib/init.php';
 
 show_template('header');
-
 
 // We'll set any input parameters here
 if(!isset($_REQUEST['match'])) { $_REQUEST['match'] = "Browse"; }
@@ -37,7 +35,6 @@ if ($min_album_size == '') {
 }
 
 $action = scrub_in($_REQUEST['action']); 
-
 
 /* Switch on Action */
 switch ($action) { 
@@ -278,7 +275,7 @@ switch ($action) {
 	
 		if ($view->base_sql) { 
 			$albums = get_albums($view->sql);
-			show_albums($albums,$view);	
+			require conf('prefix') . '/templates/show_albums.inc.php';
 		}
 	
 	break;

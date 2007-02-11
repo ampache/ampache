@@ -176,14 +176,14 @@ class Artist {
 
 	} // get_count
 
-	/*!
-		@function format_artist
-        	@discussion this function takes an array of artist
-	                information and reformats the relevent values
-	                so they can be displayed in a table for example
-	                it changes the title into a full link.
-	*/
-	function format_artist() {
+	/**
+	 * format
+         * this function takes an array of artist
+	 * information and reformats the relevent values
+	 * so they can be displayed in a table for example
+	 * it changes the title into a full link.
+ 	 */
+	function format() {
 
 		/* Combine prefix and name, trim then add ... if needed */
                 $name = scrub_out(truncate_with_ellipse(trim($this->prefix . " " . $this->name)));
@@ -196,7 +196,20 @@ class Artist {
 	        $this->link = "<a href=\"" . conf('web_path') . "/artists.php?action=show&amp;artist=" . $this->id . "\" title=\"" . $this->full_name . "\">" . $name . "</a>";
 		$this->name = $this->link;
 
+		// Get the counts 
+		$this->get_count(); 
+
 		return true; 
+
+	} // format
+
+	/** 
+	 * format_artist
+	 * DEFUNCT, do not use anymore
+	 */
+	function format_artist() { 
+
+		$this->format(); 
 
 	} // format_artist
 	

@@ -23,7 +23,6 @@
 define('NO_SESSION','1');
 require_once('../lib/init.php');
 
-
 if (conf('xml_rpc')) { 
 	require_once(conf('prefix') . "/modules/xmlrpc/xmlrpcs.inc");
 	require_once(conf('prefix') . "/modules/xmlrpc/xmlrpc.inc");
