@@ -1019,5 +1019,18 @@ function get_plugins() {
 
 } // get_plugins
 
+/**
+ * unhtmlentities
+ * This is required to make thing work.. but holycrap is it ugly
+ */
+function unhtmlentities ($string)  {
+
+        $trans_tbl = get_html_translation_table (HTML_ENTITIES);
+        $trans_tbl = array_flip ($trans_tbl);
+        $ret = strtr ($string, $trans_tbl);
+        return preg_replace('/&#(\d+);/me', "chr('\\1')",$ret);
+
+} // unhtmlentities
+
 
 ?>

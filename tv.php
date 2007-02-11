@@ -75,6 +75,7 @@ switch ($action) {
 		$stream = new Stream($stream_type,array()); 
 		$stream->manual_url_add(unhtmlentities($tmp_playlist->get_vote_url()));
 		$stream->start();
+		if ($stream_type != 'localplay') { exit; } 
 	break;
 	case 'update_playlist':
 		/* Only Admins Here */
