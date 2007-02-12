@@ -86,7 +86,7 @@ class tmpPlaylist {
 		$order = 'ORDER BY id ASC';
 		
 		if ($this->type == 'vote') { 
-			$order 		= "GROUP BY tmp_playlist_data.id ORDER BY `count` ,user_vote.date DESC";
+			$order 		= "GROUP BY tmp_playlist_data.id ORDER BY `count` DESC, user_vote.date ASC";
 			$vote_select = ", COUNT(user_vote.user) AS `count`";
 			$vote_join = "LEFT JOIN user_vote ON user_vote.object_id=tmp_playlist_data.id";
 		}
@@ -123,7 +123,7 @@ class tmpPlaylist {
 		if ($this->type == 'vote') { 
 			/* Add conditions for voting */	
 			$vote_select = ", COUNT(user_vote.user) AS `count`";
-			$order = " GROUP BY tmp_playlist_data.id ORDER BY `count`, user_vote.date DESC";
+			$order = " GROUP BY tmp_playlist_data.id ORDER BY `count` DESC, user_vote.date ASC";
 			$vote_join = "LEFT JOIN user_vote ON user_vote.object_id=tmp_playlist_data.id";
 		}
 
