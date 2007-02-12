@@ -28,10 +28,12 @@
     <td><?php echo _('Mail to'); ?>:</td>
     <td>
         <select name="to">
-                <option value="all" <?php if ($to == 'all') { echo "selected=\"selected\""; } ?>>All</option>
-                <option value="users" <?php if ($to == 'user') { echo "selected=\"selected\""; } ?>>Users</option>
-                <option value="admins" <?php if ($to == 'admin') { echo "selected=\"selected\""; } ?>>Admins</option>
+                <option value="all" title="Mail Everyone" <?php if ($to == 'all') { echo "selected=\"selected\""; } ?>>All</option>
+                <option value="users" title="Mail Users" <?php if ($to == 'user') { echo "selected=\"selected\""; } ?>>Users</option>
+                <option value="admins" title="Mail Admins" <?php if ($to == 'admin') { echo "selected=\"selected\""; } ?>>Admins</option>
+		<option value="inactive" title="Mail Inactive Users" <?php if ($to == 'inactive') { echo "selected=\"selected\""; } ?>>Inactive</option>
         </select>
+	&nbsp;&nbsp;users that are inactive for more than&nbsp;&nbsp;<input type="text" title="This value is only used when mailing to inactive users" size="3" name="inactive" value="30" />&nbsp;&nbsp;days</title>
     </td>
   </tr>
   <tr>
@@ -84,7 +86,7 @@
 		  <tr>
 		    <td colspan = "2"><?php echo _('Most Popular Threshold in days'); ?>:</td>
 		    <td>
-		        <input type="text" name="threshold" value="<?php echo conf('popular_threshold'); ?>" />
+		        <input type="text" name="threshold" size="3" value="<?php echo conf('popular_threshold'); ?>" />
 		    </td>
 		</tr>
 

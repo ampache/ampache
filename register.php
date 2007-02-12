@@ -145,8 +145,12 @@ switch ($action) {
 		}
 
 		/* Attempt to create the new user */
-		$access = 'disabled';
-		if (conf('auto_user')) { $access = conf('auto_user'); }
+		$access = '5';
+		if (conf('auto_user')) { 
+		    if (conf('auto_user') == "guest"){$access = "5";}
+		    elseif (conf('auto_user') == "user"){$access = "25";}
+		    elseif (conf('auto_user') == "admin"){$access = "100";}
+		}	
 		$new_user = $GLOBALS['user']->create($username,$fullname,$email,$pass1,$access);
 
 		if (!$new_user) {

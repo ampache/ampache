@@ -47,7 +47,7 @@ show_template('header');
 switch ($action) { 
 	case 'send_mail':
 		if (conf('demo_mode')) { break; } 
-		//$to = "admins"; <<<<<<<<<<<<<<<<<<<< PB1DT Don't know how this came in here!. 
+
 		// do the mail mojo here
 		if ( $to == 'all' ) {
 			$sql = "SELECT * FROM user WHERE email IS NOT NULL";
@@ -58,6 +58,16 @@ switch ($action) {
 		elseif ( $to == 'admins' ) {
 			$sql = "SELECT * FROM user WHERE access='admin' OR access='100' AND email IS NOT NULL";
 		}
+		elseif ( $to == 'inactive' ) {
+			if (isset ($_POST['inactive'])){
+			 $days = $_POST['inactive'];
+			} else {
+			    $days = "30";
+			}
+			$inactive = time() - ($days * 24 * 60 *60);
+			$sql = "SELECT * FROM user WHERE last_seen <= '$inactive' AND email IS NOT NULL";
+		}
+
   
 		$db_result = mysql_query($sql, dbh());
   
@@ -66,7 +76,7 @@ switch ($action) {
 		while ( $u = mysql_fetch_object($db_result) ) {
 			$recipient .= "$u->fullname <$u->email>, ";
 		}
-
+		
 		// Remove the last , from the recipient
 		$recipient = rtrim($recipient,",");
 
@@ -240,7 +250,7 @@ switch ($action) {
 		$message .= "$name";
 	    }
 }
-
+$message .= "$recipient";
 
 		// woohoo!!
 		mail ($from, $subject, $message,

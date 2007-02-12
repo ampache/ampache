@@ -71,7 +71,7 @@
 	<td>
 		<?php $var_name = "on_" . $working_user->access; ${$var_name} = 'selected="selected"'; ?>
 		<select name="access">
-		<option value="1" <?php echo $on_1; ?>><?php echo _('Guest'); ?></option>
+		<option value="5" <?php echo $on_5; ?>><?php echo _('Guest'); ?></option>
 		<option value="25" <?php echo $on_25; ?>><?php echo _('User'); ?></option>
 		<option value="100" <?php echo $on_100; ?>><?php echo _('Admin'); ?></option>
 		</select>
