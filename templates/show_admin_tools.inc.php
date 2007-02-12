@@ -85,6 +85,7 @@ $catalogs 	= $catalog->get_catalogs();
 	<a href="<?php echo $web_path; ?>/admin/system.php?action=generate_config"><?php echo _('Generate New Config'); ?></a>
 	<a href="<?php echo $web_path; ?>/admin/preferences.php?action=show_set_preferences"><?php echo _('Preferences Permissions'); ?></a>
 	<a href="<?php echo $web_path; ?>/admin/system.php?action=export&amp;export=itunes"><?php echo _('Export To Itunes DB'); ?></a>
+	<a href="<?php echo $web_path; ?>/admin/users.php?action=show_inactive&amp;days=30"><?php echo _('Show Inactive Users'); ?></a>
 <!--	<a href="<?php echo $web_path; ?>/admin/system.php?action=check_version"><?php echo _('Check for New Version'); ?></a>-->
 </div>
 <?php show_box_bottom(); ?>

@@ -174,6 +174,28 @@ switch ($action) {
 			show_confirmation(_('Error'),_('Unable to Disabled last Administrator'),'admin/users.php'); 
 		} 
 	break;
+	case 'show_inactive':
+		$view	= new View(); 
+		$view->import_session_view(); 
+
+		// If we are returning
+		if ($_REQUEST['keep_view']) { 
+			$view->initialize(); 
+		} 
+		else {
+		
+			$inactive = time() - ($_REQUEST['days'] * 24 * 60 *60);
+
+			$sql = "SELECT `id`,`last_seen` FROM `user` where last_seen <= $inactive"; 
+			$db_results = mysql_query($sql,dbh()); 
+			$total_items = mysql_num_rows($db_results); 
+			$view = new View($sql,'admin/users.php','fullname',$total_items,$_SESSION['userdata']['offset_limit']); 
+		}
+		
+		$users = get_users($view->sql); 
+		require_once(conf('prefix') . '/templates/show_users.inc.php'); 
+	
+	break;
 	default:
 		// Setup the View Object
 		$view	= new View(); 

@@ -24,8 +24,34 @@ $total_items = $view->total_items;
 $admin_menu = "admin/";
 
 show_box_top(_('Manage Users')); 
+?>
+<table class="tabledata" cellpadding="0" cellspacing="10" border="0">
+<tr>
+<td>
+<?php
 	echo get_user_icon('add_user') . '&nbsp;'; 
 	echo '<a href="' . $web_path . '/admin/users.php?action=show_add_user">' . _('Add a new user') . '</a>';
+	if (isset ($_REQUEST['action']) || $_REQUEST['action'] == "show_inactive"){
+	?>
+</td>
+</tr>
+<form name="show_inactive" enctype="multipart/form-data" method="request" action="<?php echo conf('web_path') . "/admin/users.php"; ?>">
+<tr align="center">
+        <td>
+        Inactive users for&nbsp;&nbsp;<input type=text name="days" size="4" value="<?php if (isset ($_REQUEST['days'])){ echo $_REQUEST['days'];}?>" />&nbsp;&nbsp;days
+        </td>
+</tr>
+<tr>
+	<td>
+	<input type="hidden" name="action" value="show_inactive" />
+	<input type="Submit" />
+	</td>
+</tr>
+</form>
+	<?php
+	}?>
+</table>
+<?php
 show_box_bottom(); 
 ?>
 <?php show_box_top(); ?>
