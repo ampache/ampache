@@ -250,7 +250,6 @@ switch ($action) {
 		$message .= "$name";
 	    }
 }
-$message .= "$recipient";
 
 		// woohoo!!
 		mail ($from, $subject, $message,
