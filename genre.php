@@ -42,7 +42,7 @@ switch($action) {
 		$genre = new Genre($_REQUEST['genre_id']);
 		show_genre($_REQUEST['genre_id']);
 		$albums = $genre->get_albums();
-		show_albums($albums);
+		require (conf('prefix') . '/templates/show_albums.inc.php');
 	break;
 	case 'show_artists':
 		$genre = new Genre($_REQUEST['genre_id']);
