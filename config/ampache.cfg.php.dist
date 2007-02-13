@@ -219,11 +219,12 @@ album_art_order = "id3"
 album_art_order = "folder"
 album_art_order = "amazon"
 
-# Album Art in Now Playing
-# Set this to true if you want the now playing box to display
-# album art from said album
+# Album Art 
+# Set this to true if you want album art displayed on pages besides the
+# Single Album view, if you have a slow machine, or limited bandwidth
+# turning this off can vastly improve performance
 # DEFAULT: true
-play_album_art = "true"
+show_album_art = "true"
 
 # Amazon Developer Key
 # This is needed in order to actually use the amazon album art

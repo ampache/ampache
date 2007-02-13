@@ -20,7 +20,7 @@
 
 */
 
-$no_session = '1';
+define('NO_SESSION','1');
 require ('../lib/init.php');
 require ('../lib/debug.lib.php');
 

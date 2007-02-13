@@ -656,11 +656,11 @@ function get_global_popular($type) {
  * @catagory Get
  * @todo Add Genre
  */
-function get_newest ($type = 'artist') {
+function get_newest ($type = 'artist',$limit='') {
 
         $dbh = dbh();
 
-        if (conf('popular_threshold') < 1) { conf(array('popular_threshold'=>'10'),1); }
+	if (!$limit) { $limit = conf('popular_threshold'); } 
 
         $sql = "SELECT DISTINCT $type FROM song ORDER BY addition_time " .
                 "DESC LIMIT " . conf('popular_threshold');

@@ -24,7 +24,7 @@ $search['artist_name'] 	= "Bent";
 
 
 
-$no_session = '1';
+define('NO_SESSION','1');
 require ("../lib/init.php");
 echo "<pre>\n";
 $amazon = new AmazonSearch(conf('amazon_developer_key'));

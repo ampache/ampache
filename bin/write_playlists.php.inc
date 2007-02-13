@@ -26,7 +26,7 @@
  * be especially important when trying to keep a clean file structure.
  */
 
-$no_session = '1';
+define('NO_SESSION','1');
 require ("../lib/init.php");
 
 

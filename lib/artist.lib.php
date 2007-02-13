@@ -109,7 +109,6 @@ function show_artists ($match = '') {
                 $artists = $match;
                 $_SESSION['view_script'] = false;
         }
-debug_event('foo',$view->sql,'3');
         $db_results = mysql_query($view->sql, $dbh);
 
 	// Get the artist object

@@ -20,7 +20,7 @@
 
 */
 
-$no_session='1';
+define('NO_SESSION','1');
 require ('../lib/init.php');
 
 echo "[catalog_update.php.inc]\nStarting Catalog Clean/Update And Add\n\n";

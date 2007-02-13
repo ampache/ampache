@@ -757,8 +757,8 @@ class User {
 	
 		/* If we aren't the -1 user before we continue grab the -1 users values */
 		if ($user_id != '-1') { 
-                        $sql = "SELECT `user_preference.preference`,`user_preference.value` FROM `user_preference`,`preferences` " .
-                                "WHERE `user_preference.preference` = `preferences.id` AND `user_preference.user`='-1' AND `preferences.catagory` !='system'";
+                        $sql = "SELECT `user_preference`.`preference`,`user_preference`.`value` FROM `user_preference`,`preferences` " .
+                                "WHERE `user_preference`.`preference` = `preferences`.`id` AND `user_preference`.`user`='-1' AND `preferences`.`catagory` !='system'";
                         $db_results = mysql_query($sql, dbh());
 			/* While through our base stuff */
                         while ($r = mysql_fetch_object($db_results)) {

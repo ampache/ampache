@@ -19,8 +19,7 @@
 
 */
 
-
-$no_session = '1';
+define('NO_SESSION','1');
 require ("../lib/init.php");
 
 $catalogs = Catalog::get_catalogs();
