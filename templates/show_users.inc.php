@@ -31,7 +31,7 @@ show_box_top(_('Manage Users'));
 <?php
 	echo get_user_icon('add_user') . '&nbsp;'; 
 	echo '<a href="' . $web_path . '/admin/users.php?action=show_add_user">' . _('Add a new user') . '</a>';
-	if (isset ($_REQUEST['action']) || $_REQUEST['action'] == "show_inactive"){
+	if (isset ($_REQUEST['action']) && $_REQUEST['action'] == "show_inactive"){
 	?>
 </td>
 </tr>
