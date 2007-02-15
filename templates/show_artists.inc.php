@@ -43,7 +43,7 @@ $total_items = $view->total_items;
 //FIXME: These should come in as objects...
 foreach ($artists as $artist) { ?>
 	<tr class="<?php echo flip_class(); ?>">
-		<td><?php echo $artist->f_name; ?></td>
+		<td><?php echo $artist->link; ?></td>
 		<td><?php echo $artist->songs; ?></td>
 		<td><?php echo $artist->albums; ?></td>	
 		<td nowrap="nowrap"> 

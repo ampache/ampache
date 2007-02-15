@@ -186,15 +186,14 @@ class Artist {
 	function format() {
 
 		/* Combine prefix and name, trim then add ... if needed */
-                $name = scrub_out(truncate_with_ellipse(trim($this->prefix . " " . $this->name)));
-		$this->f_name = $this->name;
+                $name = truncate_with_ellipse(trim($this->prefix . " " . $this->name));
+		$this->f_name = $name;
 
 		//FIXME: This shouldn't be scrubing right here!!!!
 		$this->full_name = scrub_out(trim($this->prefix . " " . $this->name));
 
 		//FIXME: This should be f_link
 	        $this->link = "<a href=\"" . conf('web_path') . "/artists.php?action=show&amp;artist=" . $this->id . "\" title=\"" . $this->full_name . "\">" . $name . "</a>";
-		$this->name = $this->link;
 
 		// Get the counts 
 		$this->get_count(); 
