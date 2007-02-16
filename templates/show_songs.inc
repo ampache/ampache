@@ -40,7 +40,7 @@ if (is_object($playlist) && ($GLOBALS['user']->username == $playlist->user || $G
 </tr>
 <?php } ?>
 <tr class="table-header">
-	<th>&nbsp;&nbsp;<a href="#" onclick="check_songs(); return false;">Select</a></th>
+	<th>&nbsp;&nbsp;<a href="#" onclick="check_select('song'); return false;">Select</a></th>
 	<?php if ($playlist_owner) { ?> 
 		<th><?php echo _('Track'); ?></th> 
 	<?php } ?>

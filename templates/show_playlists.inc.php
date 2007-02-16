@@ -28,8 +28,12 @@ $web_path = conf('web_path');
 $title = $type . ' ' . _('Playlists'); 
 ?>
 <?php show_box_top($title); ?>
+<form id="playlists<?php echo $type;?>" method="post" enctype="multipart/form-data" action="playlist.php">
 <table class="tabledata" cellspacing="0" cellpadding="0" border="0"> <!-- Playlist Table -->
 <tr class="table-header">
+        <th align="center">
+        &nbsp;&nbsp;<a href="#" onclick="check_select('playlist','<?php echo $type;?>'); return false;"><?php echo _('Select'); ?></a>
+        </th>
 	<th><?php echo _('Playlist Name'); ?></th>
 	<th><?php echo _('# Songs'); ?></th>
 	<th><?php echo _('Owner'); ?></th>
@@ -40,6 +44,9 @@ foreach ($playlists as $playlist) {
 	$playlist_user = new User($playlist->user);
 	$count = $playlist->get_song_count(); ?>
 	<tr class="<?php echo flip_class(); ?>">
+                <td align="center">
+                <input name="playlist[]" value="<?php echo $playlist->id; ?>" type="checkbox" />
+                </td>
 		<td>
 			<a href="<?php echo $web_path; ?>/playlist.php?action=show_playlist&amp;playlist_id=<?php echo $playlist->id; ?>">
 			<?php echo scrub_out($playlist->name); ?>
@@ -76,5 +83,6 @@ foreach ($playlists as $playlist) {
 </tr>
 <?php } ?>
 </table>
+</form>
 <?php show_box_bottom(); ?>
 

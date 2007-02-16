@@ -24,7 +24,7 @@ $web_path = conf('web_path');
 <form id="songs" method="post" enctype="multipart/form-data" action="<?php echo conf('web_path'); ?>/admin/flag.php?action=reject_flags">
 <table class="tabledata" cellspacing="0" cellpadding="0">
 <tr class="table-header">
-	<th><a href="#" onclick="check_songs(); return false;"><?php echo _('Select'); ?></a></th>
+	<th><a href="#" onclick="check_select('song'); return false;"><?php echo _('Select'); ?></a></th>
 	<th><?php echo _('Object'); ?></th>
 	<th><?php echo _('User'); ?></th>
 	<th><?php echo _('Flag'); ?></th>

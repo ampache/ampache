@@ -22,7 +22,7 @@
 <form name="songs" method="post" action="<?php echo conf('web_path'); ?>/admin/catalog.php" enctype="multipart/form-data" style="Display:inline">
 <table class="tabledata" cellspacing="0">
 <tr class="table-header">
-	<td><a href="#" onclick="check_songs(); return false;"><?php echo _('Select'); ?></a></td>
+	<td><a href="#" onclick="check_select('song'); return false;"><?php echo _('Select'); ?></a></td>
 	<td><?php echo _('Title'); ?></td>
 	<td><?php echo _('Album'); ?></td>
 	<td><?php echo _('Artist'); ?></td>

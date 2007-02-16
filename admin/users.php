@@ -125,7 +125,11 @@ switch ($action) {
 			$type = 'new_user';
 			require_once(conf('prefix') . '/templates/show_edit_user.inc.php');
 			break;
-		}	
+		}
+		if ($access == 5){ $access = "Guest";}
+		elseif ($access == 25){ $access = "User";}
+		elseif ($access == 100){ $access = "Admin";}
+		
 		show_confirmation("New User Added",$username . " has been created with an access level of " . $access,"admin/users.php");	
 	break;
 	case 'delete':

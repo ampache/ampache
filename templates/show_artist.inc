@@ -30,7 +30,7 @@ $web_path = conf('web_path');
 <table class="tabledata" cellspacing="0" cellpadding="0" border="0">
 <tr class="table-header">
 	<th align="center">
-	&nbsp;&nbsp;<a href="#" onclick="check_songs(); return false;"><?php echo _('Select'); ?></a>
+	&nbsp;&nbsp;<a href="#" onclick="check_select('song'); return false;"><?php echo _('Select'); ?></a>
 	</th>
 	<th><?php echo _('Cover'); ?></th>
 	<th><a href="<?php echo $web_path; ?>/<?php echo $_SESSION['view_script']; ?>?action=<?php echo $_REQUEST['action']; ?>&amp;artist=<?php echo $artist->id  ?>&amp;keep_view=true&amp;sort_type=album.name&amp;sort_order=0"><?php echo _('Album Name'); ?></th>
