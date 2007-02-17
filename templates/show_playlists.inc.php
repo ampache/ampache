@@ -79,7 +79,7 @@ foreach ($playlists as $playlist) {
 <?php } // end foreach ($playlists as $playlist) ?>
 <?php if (!count($playlists)) { ?>
 <tr class="<?php echo flip_class(); ?>">
-	<td colspan="4"><?php echo _('No Playlists Found'); ?></td>
+	<td colspan="5"><?php echo _('No Playlists Found'); ?></td>
 </tr>
 <?php } ?>
 </table>

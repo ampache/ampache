@@ -109,12 +109,12 @@ function get_playlists($type) {
 
 	switch ($type) { 
 		case 'private':
-			$sql = "SELECT id FROM playlist WHERE user='" . sql_escape($GLOBALS['user']->username) . "'" . 
+			$sql = "SELECT id FROM playlist WHERE user='" . sql_escape($GLOBALS['user']->id) . "'" . 
 				" AND type='private' ORDER BY name";
 		break;
 		case 'adminprivate':
 			if (!$GLOBALS['user']->has_access(100)) { return false; }
-			$sql = "SELECT id FROM playlist WHERE user!='" . sql_escape($GLOBALS['user']->username) . "'" . 
+			$sql = "SELECT id FROM playlist WHERE user!='" . sql_escape($GLOBALS['user']->id) . "'" . 
 				" AND type='private' ORDER BY name";
 		break;
 		default:
