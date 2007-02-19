@@ -1,0 +1,695 @@
+<!--
+/*   
+Empires
+so this is my first attempt at theming.  i'm not a css pro.  in fact, this 
+is pretty much the first time i've gotten my hands really dirty in css. so
+if there's css errors or issues, that's probably why.  if it's anything 
+blatant, feel free to fix them, just let me know what you did.
+
+i used apex's method of breaking down the css because it was easier to read
+and find stuff, so that, and a lot of the comments, is all him.  if you
+like the ampache.gif but want your own text/logo in there, feel free to 
+use the blank-ampache.gif as a template or you can email me and if i'm free
+i may be able to throw something together for you.  i am intending on, at
+some point, revisiting it and adding some color to it, but for now, i just
+want to get this thing out and be done with it.
+
+kay, i'll stop yammering.  --jazzs3quence (c <dot> s <dot> reynolds <at> gmail <dot> com
+
+oh, and one more thing.  this was written and tested for Ampache v.3.3.3
+It *should* work with other 3.3.3 versions and future versions but who the hell knows.
+*/
+-->
+
+/**************/
+/*   PIECES   */
+/**************/
+
+p { 
+	color: #0099FF;
+}
+a { 
+	color: #F9F9F9; 
+	font-family: Verdana, Helvetica, sans-serif; 
+}
+a:visited 
+	{ 
+	color: #F9F9F9; 	
+	font-family: Verdana, Helvetica, sans-serif; 
+	}
+a:hover
+{ 
+	color: #0099FF;
+font-family: Verdana, Helvetica, sans-serif;
+}
+a:active  { 
+	color: #0099FF; 
+	font-family: Verdana, Helvetica, sans-serif; 
+}
+.text-box {
+	display: table-cell;
+	padding-left:5px;
+	padding-top:25px;
+	padding-right:5px;
+	margin-bottom:10px;
+	background-color: #1D1D1D;
+	border-right:2px solid #000000;
+	border-bottom:2px solid #000000;
+	border-left:2px solid #000000;
+	border-top:2px solid #000000;
+}
+td { 
+	padding: 0px 8px 0px 8px;
+	color: #0099FF; 
+	font-family: Verdana, Helvetica, sans-serif; 
+	font-size: 10px;
+}
+
+/*******************/
+/*  FORM ELEMENTS  */
+/*******************/
+
+input {
+	color: #0099FF; 
+	font-family: Verdana, Helvetica, sans-serif; 
+	font-size: 10px; 
+	background-color: #1D1D1D;
+	border: 2px solid #000000;
+	position: relative;
+	margin: 2px 2px 2px 2px;
+}
+select { 
+	color: #0099FF; 
+	font-family: Verdana, Helvetica, sans-serif; 
+	font-size: 10px; 
+	background-color: #1D1D1D;
+	border: 1px solid #000000;
+	position: relative;
+}
+textarea { 
+	background-color: #1D1D1D;
+	color: #0099FF; 
+	font-family: Verdana, Helvetica, sans-serif; 
+	font-size: 10px;
+	border: 2px solid #000000;
+}
+checkbox {
+	background-color: #000000;
+	border: 1px solid #1D1D1D;
+}
+.text-action, .text-action li {
+	margin-top:5px;
+	list-style: none;
+	margin-bottom:5px;
+	padding-left:0px;
+}
+.text-action a, .text-action span {
+	background: #000000;
+	border:1px solid #1D1D1D;
+ 	padding-left:2px;
+	padding-right:2px;
+	text-decoration: none;
+}
+.text-action #pt_active {
+	background: #1D1D1D;
+	color: #0099FF;
+	border:1px solid #1D1D1D;
+}
+.confirmation-box {
+	padding: 5px;
+ 	margin-left: 0 auto;
+ 	margin-right: 0 auto;
+	margin-bottom:10px;
+	background-color: #000000;
+	border:2px solid #1D1D1D;
+}
+
+/* Playing around with making columns distinct */
+/* Unfortunately adding borders breaks alot of */
+/* other pages... trying to fix it but will    */
+/* require changes to core files... 8(         */
+
+.border {
+	border: 1px solid #1D1D1D;
+}
+.tabledata {
+	border-top: 5px solid #1D1D1D;
+}
+.odd {
+	background:#000000;
+	font-size: 10px;
+	text-align: left;
+}
+.even {
+	background:#1D1D1D;
+	font-size: 10px;
+	text-align: left;
+}
+th {
+	padding: 4px 0 4px 0;
+	text-align: center;
+	border-bottom: 3px double #000000;
+}
+.even td {
+	text-align: center;
+	padding: 3px;
+	border-right: 1px solid #000000;
+	border-left: 1px solid #000000;
+}
+.odd td {
+	text-align: center;
+	padding: 3px;
+	border-right: 1px solid #000000;
+	border-left: 1px solid #000000;
+}
+.table-header {
+	background: url(../themes/empires/images/ampache.gif) #1D1D1D repeat-x;
+	vertical-align: top;
+	padding: 0;
+	text-align: center;
+}
+	.header1 
+    { 
+	color: #0099FF; 
+	font-family: Verdana, Helvetica, sans-serif; 
+	font-size: 18px; 
+	font-weight: 900;
+    }
+    .header2
+    {
+    	color: #0099FF;
+	font-family: Verdana, Helvetica, sans-serif;
+	font-size: 14px;
+	font-weight: 900;
+    }
+	.headrow 
+		{
+		background:#1D1D1D;
+		font-size: 10px;
+		}
+	.odd 
+		{
+		background:#000000;
+		font-size: 10px;
+		}
+	.even
+		{
+		background:#1D1D1D;
+		font-size: 10px;
+		}
+.table-footer td {
+	background: #1D1D1D;
+	border-bottom: 3px double #000000;
+	border-left: 1px solid #000000;
+	border-right: 1px solid #000000;
+}
+.table-header td,th {
+	border-right: 1px solid #000000;
+	border-left: 1px solid #000000;
+	border-top: 3px double #000000;
+	border-bottom: 1px solid #000000;
+	padding: 4px 4px 4px 4px;
+	text-align: center;
+	background: #1D1D1D;
+	font-size: 10px;
+}
+.tabledata td {
+	border-bottom: 1px solid #000000;
+}
+.error { 
+	color: #990033;
+	border-bottom: 1px solid #000000;
+}
+.alphabet { 
+	margin: 10px;
+	font-size: 9px; 
+	font-weight: normal; 
+}
+.list-header td {
+	border: 0;
+}
+
+/*****************/
+/*   BIG STUFF   */
+/*****************/
+
+body {	
+	padding-top: 0px;
+	font-family:Arial, Helvetica, Sans-Serif;
+	color: #0099FF;
+	background: #000000;
+	text-align: center;
+	margin-right: auto;
+	margin-left: auto;
+}
+.smeg-ie {
+	margin: 0 auto;
+	padding: 10px;;
+}
+#maincontainer {
+	text-align: center;
+	border: 0;
+	margin-right: auto;
+	margin-left: auto;	
+}
+#content {
+	border: 1px solid #000000;
+	padding: 0;
+	margin: 0 auto;
+	z-index: 1;
+	text-align: center;
+}
+#footer-content {
+	margin: 0 auto;
+	padding: 0;
+	border: 0;
+	height: 0;
+	background: #000000;
+	position: relative;
+	z-index: 2;
+}
+
+/***********************/
+/*   SIDEBAR == MENU   */
+/***********************/
+
+div#sidebar{
+	margin: 0px auto;
+	padding: 31px 150px 0 148px;
+	height: 65px;
+	width: 600px;
+	position: relative;
+	top: -20px;
+	left: 0px;
+	border: 0;
+	background: #000000;
+	z-index: 50;
+}
+
+#sidebar h3 {
+	display: none;
+	width: 0px; 
+	height: 0px; 
+	margin:0px;
+	padding:0px;
+	border: 0;
+	background: #000000;
+	line-height: 1px;
+}
+	
+#sidebar h3 span {
+	display:none
+}
+
+#sidebar ul {
+	margin: 0px;
+	list-style: none;
+	font-family:Arial, Helvetica, Sans-Serif;
+	font-size:10px;
+	padding: 0px;
+	line-height: 1.0;
+	background-color:#000000;
+}
+
+#sidebar li {
+    margin: 0;
+    float: left;
+    display: block;
+    border-bottom: 1px solid #1D1D1D;
+    border-left: 1px solid #1D1D1D;
+    border-right: 1px solid #1D1D1D;
+    border-top: 1px solid #1D1D1D;
+    padding: 5px 0px 5px 10px;
+    width: 10.5em;
+    background-color:#000000;
+}
+
+#sidebar a, .navbutton {
+    display: block;  /*Not sure why this is neccesary, but it is for IE*/
+    text-decoration: none;
+}
+
+#sidebar li:hover, #sidebar li.sfhover {
+	color: #1D1D1D;
+       background-color: #000000;
+}
+
+#sidebar li:active {
+	background-color:#000000;
+	z-index:30;
+}
+   
+#sidebar li ul {
+    float: left;
+    position: absolute;
+    width: 9em;
+/*	margin: -1.5em 0 0 10.5em; /* for vertical menu; comment out otherwise */
+	margin: 0.5em 0 0 -1.1em;  /* for horizontal menu;  comment out otherwise */ 
+    left: -999em;  /* this -999em puts the submenu item way off to the left until it's called back by a hover (below) */
+	z-index:30;
+}
+
+#sidebar li:hover ul, #sidebar li.sfhover ul {
+	left: auto;  /* this calls the submenu back when the parent li is hovered. */
+       background-color: #000000;
+}
+
+#navlist ul li:hover {
+       background-color: #1D1D1D;
+}
+#play_type_switch {
+	position: relative;
+	top: -3px;
+	width: 92px;
+	border: 1px solid #1D1D1D;
+	background: #000000;
+}
+
+/* #sidebar li.sfhover ul {}
+#navlist ul li:hover {} */
+
+/***************************/
+/* NOW PLAYING & HOME PAGE */
+/* STATISTICS + POPULAR    */
+/*         BOXES           */
+/***************************/
+
+#nowplaying {
+	width:650px;
+	background: #000000;
+}
+.np_row {
+	border: 0;
+	width: 780px;
+}
+.np_cell {
+	color: #F9F9F9;
+	padding: 10px 0 10px 0;
+	text-align: center;
+	border: 5px;
+	background: #1D1D1D;
+	width: 500px;
+}
+#np_container1{
+	width: 260px;
+	height: 18px;
+	padding: 0px;
+	margin: 0px;
+	background: #000;
+}
+#np_container1 h1{
+	font-size: 10px;
+	font-weight: bold;
+	padding: 2px;
+}
+#np_container2{
+	border-width: 1px 1px 1px 1px;
+	border-style: solid;
+	padding: 6px;
+	font-family: Verdana, sans-serif;
+	font-size: 10px;
+	line-height: 10px;
+	color: #000;
+	background: #000000;
+}
+#biddaddy {
+	/* I didn't pick the name. Its the box around most of the stuff on the main page. */
+	text-align: left;
+	margin-left: auto;
+	margin-right: auto;
+	border: 0;
+}
+
+/*************/
+/*  Top Bar  */
+/*************/
+#topbar { 
+	height: 75px;
+	padding-top:3px;
+	padding-left:10px;
+}
+#topbarright { 
+	float: left;
+	margin-top: 30px;
+	font-size: 10px;
+}
+	/* This holds the "Your currently logged in as and version #... blah blah */
+
+#topbarleft {
+	/* ampache.gif inside this, hard coded into the page */
+	float: left;
+	border: 0;
+}
+
+/********************/
+/* TABLE STUFF:     */
+/* Albums listings  */
+/* Preferences      */
+/* etc.             */
+/********************/
+
+.box { 
+    text-align: center;
+	padding:0px;
+	background: #000000;
+	border: #1D1D1D;
+	margin:10px auto;
+}
+.box-title { 
+	border-bottom: 2px solid #1D1D1D;
+	font-weight: bold;
+}
+.box-content table {
+	text-align: left;
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: 5px;
+	margin-bottom: 5px;
+	border: 0;
+}
+.box-content {
+	text-align: left;
+}
+/*******************************/
+/*  IMAGE BORDERS AROUND BOXES */
+/*******************************/
+/* I don't have any */
+.box-left-top		{ display: none }
+.box-right-top		{ display: none }
+.box-left-bottom	{ display: none }
+.box-right-bottom	{ display: none }
+.box-left			{ display: none }
+.box-right			{ display: none }
+.box-top			{ display: none }
+.box-bottom			{ display: none }
+
+/************************/
+/*  TABS ON PREF. PAGE  */
+/************************/
+
+#tablist {
+        padding: 3px 0;
+        margin: 12px 0 0 0;
+        font: bold 12px Verdana, sans-serif;
+}
+#tablist li {
+        list-style: none;
+        margin: 0;
+        display: inline;
+}
+#tablist li a {
+        padding: 3px 0.5em;
+        margin-left: 3px;
+        border: 1px solid #000000;
+        border-bottom: none;
+        background: #1D1D1D;
+}
+#tablist li a:link {
+	color: #F9F9F9;
+}
+#tablist li a:visited {
+	color: #F9F9F9;
+}
+#tablist li a:hover {
+        color: #0099FF;
+        background: #000000;
+        border-color: #1D1D1D;
+}
+#tablist li a#current {
+        color: #0099FF;
+        background: #000000;
+        border-color: #1D1D1D;
+}
+
+/*****************/
+/*  LOGIN PAGE   */
+/*****************/
+#container{
+	margin:100px auto 0px auto;
+	width:437px;
+	font-size: 12px;
+	text-align:center;
+}
+#container h1{
+	background:url("../images/ampache.gif") no-repeat;
+	height:81px;
+	margin-bottom:8px;
+}
+#container h1 span{
+	display:none;
+}
+#container div{
+	background:#1D1D1D;
+	height:285px;
+}
+#loginp_0{
+	color:#0099FF;
+	font-family: Verdana, sans-serif;
+	margin-top:0px;
+	padding-top:60px;
+}
+.loginp_1{
+	text-align:right;
+	font-family: Verdana, sans-serif;
+	padding-right:100px;
+}
+.loginp_1 span{
+	font-weight:bold;
+}
+.loginp_1 input{
+	border:1px solid #999;
+}
+input.text_input {
+width:12em;
+}
+.loginp_1 input.check_input {
+margin-right:5em;
+} 
+
+/**************************/
+/*   USELESS STUFF THAT   */
+/*    DOESN'T DO MUCH     */
+/*      OF ANYTHING       */
+/**************************/
+
+.disabled		{text-decoration: line-through;}
+
+/* ########################## */
+/*   I'm too lazy to break    */
+/*   something sufficiently   */
+/*   to skin this for now.    */
+/*                            */
+/* If you have a fatal error, */
+/* your skin is not your most */
+/* important problem now,     */
+/* is it? 8)                  */
+/* ########################## */
+
+.fatalerror {
+	padding-top: 3px;
+	padding-left: 3px;
+
+	padding-right: 3px;
+	display: table-cell;
+	padding-bottom: 3px;
+	color: #990033;
+	border-right:4px solid #1D1D1D;
+	border-bottom:4px solid #1D1D1D;
+	border-left:4px solid #1D1D1D;
+	border-top:4px solid #1D1D1D;		
+}
+/* ########################### */
+/* styles for the star ratings */
+/* ########################### */
+.star-rating{
+        list-style:none;
+        margin: 0px;
+        padding:0px;
+        width: 80px;
+        height: 15px;
+        position: relative;
+        background: url(../../../images/ratings/star_rating.gif) top left repeat-x;
+}
+.star-rating li{
+        padding:0px;
+        margin:0px;
+        float: right;
+}
+.star-rating li span{
+        display:block;
+        width:16px;
+        height: 15px;
+        text-decoration: none;
+        text-indent: -9000px;
+        z-index: 20;
+        position: absolute;
+        padding: 0px;
+}
+.star-rating li span:hover{
+        background: url(../../../images/ratings/star_rating.gif) left center;
+        z-index: 2;
+        left: 0px;
+}
+li.zero-stars span:hover {
+        background: url(../../../images/ratings/x.gif);
+        height: 15px;
+        left: 80px;
+        display: block;
+}
+span.zero-stars {
+        background: url(../../../images/ratings/x_off.gif);
+        height: 15px;
+        left: 80px;
+        display: block;
+}
+span.one-stars{
+        left: 0px;
+}
+span.one-stars:hover{
+        width:16px;
+}
+span.two-stars{
+        left:16px;
+}
+span.two-stars:hover{
+        width: 32px;
+}
+span.three-stars{
+        left: 32px;
+}
+span.three-stars:hover{
+        width: 48px;
+}
+span.four-stars{
+        left: 48px;
+}
+span.four-stars:hover{
+        width: 64px;
+}
+span.five-stars{
+        left: 64px;
+}
+span.five-stars:hover{
+        width: 80px;
+}
+li.current-rating{
+        background: url(../../../images/ratings/star_rating.gif) left bottom;
+        position: absolute;
+        height: 15px;
+        display: block;
+        text-indent: -9000px;
+        z-index: 1;
+}
+
+/************************************************/
+/* User Online/Offline style, used in users.php */
+/************************************************/
+td.user_online{
+	background:#007ACC;
+}
+td.user_offline {
+	background:#4D4D4D;
+}
+td.user_disabled {
+	background:#999999;
+}
