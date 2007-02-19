@@ -28,6 +28,7 @@ $web_path = conf('web_path');
 	<th><?php echo _('Object'); ?></th>
 	<th><?php echo _('User'); ?></th>
 	<th><?php echo _('Flag'); ?></th>
+	<th><?php echo _('Comment'); ?></th>
 	<th><?php echo _('Status'); ?></th>
 	<th><?php echo _('Action'); ?></th>
 </tr>
@@ -36,9 +37,10 @@ $web_path = conf('web_path');
 	<td align="center">
 		<input type="checkbox" name="song[]" value="<?php echo $flag->id; ?>" id="song_<?php echo $flag->id; ?>" />
 	</td>
-	<td><?php $flag->print_name(); ?></td>
-	<td><?php echo scrub_out($flag->user); ?></td>
+	<td><a href="<?php echo conf('web_path'); ?>/admin/flag.php?action=show_edit_song&song=<?php echo $flag->object_id; ?>"><?php $flag->print_name(); ?></a></td>
+	<td><?php echo scrub_out($flag->f_user_username); ?></td>
 	<td><?php $flag->print_flag(); ?></td>
+	<td><?php echo scrub_out($flag->comment); ?></td>
 	<td><?php $flag->print_status(); ?></td>
 	<td align="center">
 	<?php if ($flag->approved) { ?>
@@ -54,11 +56,11 @@ $web_path = conf('web_path');
 </tr>
 <?php } if (!count($flagged)) { ?>
 <tr class="<?php echo flip_class(); ?>">
-	<td colspan="6" class="error"><?php echo _('No Records Found'); ?></td>
+	<td colspan="7" class="error"><?php echo _('No Records Found'); ?></td>
 </tr>
 <?php } ?>
 <tr class="<?php echo flip_class(); ?>">
-	<td colspan="6">
+	<td colspan="7">
 		<select name="update_action">
 			<option value="reject"><?php echo _('Reject'); ?></option>
 			<option value="approve"><?php echo _('Approve'); ?></option>

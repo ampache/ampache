@@ -59,7 +59,9 @@ class Flag {
 		$this->flag		= $info['flag'];
 		$this->date		= $info['date'];
 		$this->approved		= $info['approved'];
-
+		$f_user 		= $this->format_user();
+		$this->f_user_fullname  = $f_user['fullname'];
+		$this->f_user_username  = $f_user['username'];
 		return true;
 
 	} // flag
@@ -76,7 +78,7 @@ class Flag {
 		$db_results = mysql_query($sql, dbh());
 
 		$results = mysql_fetch_assoc($db_results);
-
+		
 		return $results;
 
 	} // _get_info
@@ -217,6 +219,21 @@ class Flag {
 		return true;
 	
 	 } // approve
+	 
+	/**
+	 * format_user
+	 * This formats username etc
+	 */
+	function format_user() {
+		
+		$sql = "SELECT * FROM user WHERE id = '$this->user'";
+		$db_results = mysql_query($sql, dbh());
+
+		$f_user = mysql_fetch_assoc($db_results);
+		
+		return $f_user;
+	 
+	} // format_user
 
 	/**
 	 * format_name
@@ -235,10 +252,9 @@ class Flag {
 			
 			break;
 		} // end switch on object type
-
+		
 		$this->title = $title; 
 		$this->name = $name;
-
 	} // format_name()
 	
 	/**
