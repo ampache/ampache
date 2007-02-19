@@ -34,7 +34,7 @@ msgstr "Erreur: Impossible de changer de r&eacute;pertoire"
 
 #: ../../lib/class/catalog.class.php:374
 msgid "Error: Unable to get filesize for"
-msgstr "Erreur: Impossible d'obtenir la taille de fichier pour"
+msgstr "Erreur: Impossible d'obtenir la taille de fichier de"
 
 #: ../../lib/class/catalog.class.php:411
 msgid "is not readable by ampache"
@@ -42,7 +42,7 @@ msgstr "n'est pas lisible par ampache"
 
 #: ../../lib/class/catalog.class.php:530
 msgid "album's with art"
-msgstr ""
+msgstr " albums avec image"
 
 #: ../../lib/class/catalog.class.php:812
 msgid "Starting Catalog Build"
@@ -67,7 +67,7 @@ msgstr "Non"
 #: ../../lib/class/catalog.class.php:840
 #: ../../lib/class/catalog.class.php:1014
 msgid "Added Playlist From"
-msgstr "Playlist ajout&eacute;e de"
+msgstr "Playlist ajout&eacute;e a partir de"
 
 #: ../../lib/class/catalog.class.php:847
 #: ../../lib/class/catalog.class.php:1024 ../../admin/catalog.php:258
@@ -213,7 +213,7 @@ msgstr "Test"
 
 #: ../../lib/class/catalog.class.php:1634
 msgid "songs updated."
-msgstr " a &eacute;t&eacute; mis &aacute; jour"
+msgstr " morceaux mis &aacute; jour"
 
 #: ../../lib/class/song.class.php:361
 #: ../../templates/show_duplicates.inc.php:35
@@ -677,7 +677,7 @@ msgstr "fichier"
 
 #: ../../modules/horde/Browser.php:871
 msgid "File uploads not supported."
-msgstr "Envoie de fichier non support&eacute;"
+msgstr "Envoi de fichiers non support&eacute;"
 
 #: ../../modules/horde/Browser.php:889
 msgid "No file uploaded"
@@ -718,7 +718,7 @@ msgstr "Nettoyage de catalogue termin&eacute;"
 
 #: ../../admin/catalog.php:119
 msgid "The Catalog and all associated records has been deleted"
-msgstr ""
+msgstr "Le catalogue et tous ses titres ont &eacute;t&eacute; supprim&eacute;s"
 
 #: ../../admin/catalog.php:128
 msgid "Songs Removed"
@@ -726,7 +726,7 @@ msgstr "Fichiers enlev&eacute;s"
 
 #: ../../admin/catalog.php:131
 msgid "No Songs Removed"
-msgstr ""
+msgstr "Aucun titre n a &eacute;t&eacute; supprim&eacute;"
 
 #: ../../admin/catalog.php:134
 msgid "Disabled Songs Processed"
@@ -738,7 +738,7 @@ msgstr "Nettoyage de catalogue termin&eacute;"
 
 #: ../../admin/catalog.php:198
 msgid "Catalog Created"
-msgstr "catalogue a cr&eacute;&eacute;"
+msgstr "catalogue a &eacute;t&eacute; cr&eacute;&eacute;"
 
 #: ../../admin/catalog.php:199
 #, fuzzy
@@ -747,7 +747,7 @@ msgstr "Nettoyage de catalogue termin&eacute;"
 
 #: ../../admin/catalog.php:212
 msgid "Catalog statistics cleared"
-msgstr "Statistiques des catalogues effacer"
+msgstr "Statistiques des catalogues efface&eacute;es"
 
 #: ../../admin/catalog.php:222
 msgid "Now Playing Cleared"
@@ -755,9 +755,7 @@ msgstr "Lecture en cours effac&eacute;e"
 
 #: ../../admin/catalog.php:222
 msgid "All now playing data has been cleared"
-msgstr ""
-"Toutes les donn&eacute;es sur les lectures en cours ont &eacute;t&eacute; "
-"effac&eacute;es"
+msgstr "Toutes les donn&eacute;es sur les lectures en cours ont &eacute;t&eacute; effac&eacute;es"
 
 #: ../../admin/catalog.php:229
 msgid "Do you really want to clear the statistics for this catalog?"
@@ -770,7 +768,7 @@ msgstr "Vider les statistiques des catalogues"
 #: ../../admin/catalog.php:241
 #, fuzzy
 msgid "No Disabled songs found"
-msgstr "Voir les morceaux d&eacute;sactiv&eacute;s"
+msgstr "Aucun morceau d&eacute;sactiv&eacute;"
 
 #: ../../admin/catalog.php:249
 msgid "Delete Catalog"
@@ -791,13 +789,11 @@ msgstr "Morceaux mis &aacute; jour"
 #: ../../admin/flag.php:97
 #, fuzzy
 msgid "The requested song has been updated"
-msgstr ""
-"Le(s) morceau(x) demand&eacute;(s) ont(a) &eacute;t&eacute; d&eacute;"
-"sactiv&eacute;(s)"
+msgstr "Le(s) morceau(x) demand&eacute;(s) ont(a) &eacute;t&eacute; d&eacute; sactiv&eacute;(s)"
 
 #: ../../admin/flag.php:139
 msgid "Album Updated"
-msgstr "l'Album mis &aacute; jour"
+msgstr "l'Album a &eacute;t&eacute; mis &aacute; jour"
 
 #: ../../admin/flag.php:181
 msgid "Artist Updated"
@@ -813,7 +809,7 @@ msgstr "marqu&eacute;e enlev&eacute;s"
 
 #: ../../admin/flag.php:255
 msgid "Flag Removed from"
-msgstr "marqu&eacute;e effacer de"
+msgstr "marqu&eacute;e effac&eacute;e pour"
 
 #: ../../admin/flag.php:270
 msgid "Flags Updated"
@@ -825,9 +821,7 @@ msgstr "Morceaux d&eacute;sactiv&eacute;s"
 
 #: ../../admin/flag.php:289
 msgid "The requested song(s) have been disabled"
-msgstr ""
-"Le(s) morceau(x) demand&eacute;(s) ont(a) &eacute;t&eacute; d&eacute;"
-"sactiv&eacute;(s)"
+msgstr "Le(s) morceau(x) demand&eacute;(s) ont(a) &eacute;t&eacute; d&eacute;sactiv&eacute;(s)"
 
 #: ../../admin/flag.php:300
 msgid "Songs Enabled"
@@ -867,8 +861,7 @@ msgstr "Entr&eacute;e ajout&eacute;e"
 
 #: ../../admin/access.php:54
 msgid "Your new Access List Entry has been created"
-msgstr ""
-"Votre nouvelle liste d'acc&egrave;s a &eacute;t&eacute; cr&eacute;&eacute;e"
+msgstr "Votre nouvelle liste d'acc&egrave;s a &eacute;t&eacute; cr&eacute;&eacute;e"
 
 #: ../../admin/access.php:58
 msgid "Entry Updated"
@@ -892,7 +885,7 @@ msgstr "Erreur: Nom d'utilisateur d&eacute;j&aacute; existant"
 
 #: ../../admin/users.php:142
 msgid "Deletion Request"
-msgstr ""
+msgstr "demande de suppression"
 
 #: ../../admin/users.php:143
 msgid "Are you sure you want to permanently delete"
@@ -953,7 +946,7 @@ msgstr "Gestion d'e-mail"
 
 #: ../../admin/mail.php:253
 msgid "Your E-mail was successfully sent."
-msgstr ""
+msgstr "Email envoy&eacute;"
 
 #: ../../admin/modules.php:41
 msgid "Module Activated"
@@ -961,7 +954,7 @@ msgstr "Mode activ&eacute;"
 
 #: ../../admin/modules.php:48
 msgid "Are you sure you want to remove this module?"
-msgstr "Voulez-vous vraiment supprimer cette mode ?"
+msgstr "Voulez-vous vraiment supprimer ce module ?"
 
 #: ../../admin/modules.php:56
 msgid "Module Deactivated"
@@ -977,7 +970,7 @@ msgstr "Voulez-vous vraiment supprimer cette liste de lecture ?"
 
 #: ../../admin/modules.php:95
 msgid "Plugin Deactivated"
-msgstr "Utilisateur activ&eacute;"
+msgstr "Plugin d&eacute;sactiv&eacute;"
 
 #: ../../admin/system.php:120
 #, fuzzy
@@ -1003,7 +996,7 @@ msgstr "Raison du marquage"
 
 #: ../../templates/show_flag.inc.php:57
 msgid "Incorrect Tags"
-msgstr "mal Tags"
+msgstr "Mauvais Tags"
 
 #: ../../templates/show_flag.inc.php:70
 #: ../../templates/show_flagged.inc.php:30
@@ -1021,56 +1014,33 @@ msgstr "Installation d'Ampache"
 #: ../../templates/show_install_lang.inc.php:39
 #: ../../templates/show_install_config.inc:42
 #: ../../templates/show_install.inc:40
-msgid ""
-"This Page handles the installation of the Ampache database and the creation "
-"of the ampache.cfg.php file. Before you continue please make sure that you "
-"have the following pre-requisites"
-msgstr ""
-"Cette page g&egrave;re l'installation de la base de donn&eacute;es d'Ampache "
-"et la cr&eacute;ation du fichier ampache.cfg.php. Avant de continuer, "
-"assurez-vous d'avoir tous les pr&eacute;-requis"
+msgid "This Page handles the installation of the Ampache database and the creation of the ampache.cfg.php file. Before you continue please make sure that you have the following pre-requisites"
+msgstr "Cette page g&egrave;re l'installation de la base de donn&eacute;es d'Ampache et la cr&eacute;ation du fichier ampache.cfg.php. Avant de continuer, assurez-vous d'avoir tous les pr&eacute;-requis"
 
 #: ../../templates/show_install_account.inc.php:46
 #: ../../templates/show_install_lang.inc.php:42
 #: ../../templates/show_install_config.inc:45
 #: ../../templates/show_install.inc:43
-msgid ""
-"A MySQL Server with a username and password that can create/modify databases"
-msgstr ""
-"Un serveur MySQL avec un utilisateur et mot de passe pouvant cr&eacute;er et "
-"modifier les bases de donn&eacute;es"
+msgid "A MySQL Server with a username and password that can create/modify databases"
+msgstr "Un serveur MySQL avec un utilisateur et mot de passe pouvant cr&eacute;er et modifier les bases de donn&eacute;es"
 
 #: ../../templates/show_install_account.inc.php:47
-msgid ""
-"Your webserver has read access to the /sql/ampache.sql file and the /config/"
-"ampache.cfg.dist.php file"
-msgstr ""
-"Votre serveur web a acc&egrave;s en lecture sur les fichiers /sql/ampache."
-"sql et /config/ampache.cfg.dist.php"
+msgid "Your webserver has read access to the /sql/ampache.sql file and the /config/ampache.cfg.dist.php file"
+msgstr "Votre serveur web a acc&egrave;s en lecture sur les fichiers /sql/ampache.sql et /config/ampache.cfg.dist.php"
 
 #: ../../templates/show_install_account.inc.php:49
 #: ../../templates/show_install_lang.inc.php:46
 #: ../../templates/show_install_config.inc:48
 #: ../../templates/show_install.inc:47
-msgid ""
-"Once you have ensured that you have the above requirements please fill out "
-"the information below. You will only be asked for the required config "
-"values. If you would like to make changes to your ampache install at a later "
-"date simply edit /config/ampache.cfg.php"
-msgstr ""
-"Une fois vous etre assur&eacute; avoir les pr&eacute;-requis pr&eacute;"
-"c&eacute;dents, donnez s'il vous plait les informations ci-dessous. On ne "
-"vous demandera que les informations de configuration indispensables. Si vous "
-"d&eacute;sirez modifier par la suite votre configuration, &eacute;ditez le "
-"fichier /config/ampache.cfg.php"
+msgid "Once you have ensured that you have the above requirements please fill out the information below. You will only be asked for the required config values. If you would like to make changes to your ampache install at a later date simply edit /config/ampache.cfg.php"
+msgstr "Une fois vous etre assur&eacute; avoir les pr&eacute;-requis pr&eacute;c&eacute;dents, donnez s'il vous plait les informations ci-dessous. On ne vous demandera que les informations de configuration indispensables. Si vous d&eacute;sirez modifier par la suite votre configuration, &eacute;ditez le fichier /config/ampache.cfg.php"
+
 
 #: ../../templates/show_install_account.inc.php:53
 #: ../../templates/show_install_config.inc:52
 #: ../../templates/show_install.inc:52
 msgid "Step 1 - Creating and Inserting the Ampache Database"
-msgstr ""
-"Etape 1 - Cr&eacute;ation et alimentation de la base de donn&eacute;es "
-"d'Ampache"
+msgstr "Etape 1 - Cr&eacute;ation et alimentation de la base de donn&eacute;es d'Ampache"
 
 #: ../../templates/show_install_account.inc.php:54
 msgid "Step 2 - Creating the ampache.cfg.php file"
@@ -1083,13 +1053,8 @@ msgid "Step 3 - Setup Initial Account"
 msgstr "Etape 3 - Param&egrave;tres du compte initial"
 
 #: ../../templates/show_install_account.inc.php:57
-msgid ""
-"This step creates your initial Ampache admin account. Once your admin "
-"account has been created you will be directed to the login page"
-msgstr ""
-"Cette &eacute;tape cr&eacute;e votre compte administrateur initial. Une fois "
-"ce compte cr&eacute;&eacute;, vous serez redirig&eacute; vers la page de "
-"login"
+msgid "This step creates your initial Ampache admin account. Once your admin account has been created you will be directed to the login page"
+msgstr "Cette &eacute;tape cr&eacute;e votre compte administrateur initial. Une fois ce compte cr&eacute;&eacute;, vous serez redirig&eacute; vers la page de login"
 
 #: ../../templates/show_install_account.inc.php:60
 msgid "Create Admin Account"
@@ -1303,7 +1268,7 @@ msgstr "En Liste"
 #: ../../templates/sidebar.inc.php:185
 #: ../../ampache/templates/sidebar.inc.php:187
 msgid "Democratic View"
-msgstr ""
+msgstr "Vue d&eacute;mocratique"
 
 #: ../../templates/sidebar.inc.php:189
 #: ../../ampache/templates/sidebar.inc.php:191
@@ -1346,7 +1311,7 @@ msgstr "Rapide"
 
 #: ../../templates/show_admin_tools.inc.php:57
 msgid "Gather Art"
-msgstr ""
+msgstr "Rassembler les jaquettes"
 
 #: ../../templates/show_admin_tools.inc.php:65
 msgid "No Catalogs Found"
@@ -1366,7 +1331,7 @@ msgstr "Ajouter &aacute; tout"
 
 #: ../../templates/show_admin_tools.inc.php:74
 msgid "Update All"
-msgstr "Tout Mis &aacute; jour"
+msgstr "Tout Mettre &aacute; jour"
 
 #: ../../templates/show_admin_tools.inc.php:77
 #: ../../templates/show_add_catalog.inc.php:78
@@ -1375,7 +1340,7 @@ msgstr "Recup&eacute;rer la jaquette d'album"
 
 #: ../../templates/show_admin_tools.inc.php:81
 msgid "Other Tools"
-msgstr "l'Autre ouils"
+msgstr "Autres outils"
 
 #: ../../templates/show_admin_tools.inc.php:83
 msgid "Show Duplicate Songs"
@@ -1395,7 +1360,7 @@ msgstr "Pr&eacute;f&eacute;rences"
 
 #: ../../templates/show_admin_tools.inc.php:87
 msgid "Export To Itunes DB"
-msgstr ""
+msgstr "Exporter vers Itunes DB"
 
 #: ../../templates/show_admin_tools.inc.php:88
 msgid "Check for New Version"
@@ -1456,7 +1421,7 @@ msgstr "Vider les statistiques"
 
 #: ../../templates/show_user.inc.php:65
 msgid "Update Account"
-msgstr "Cr&eacute;er un compte"
+msgstr "Modifier un compte"
 
 #: ../../templates/show_user_stats.inc.php:22
 msgid "Favorites"
@@ -1464,16 +1429,15 @@ msgstr "Favoris"
 
 #: ../../templates/show_user_stats.inc.php:29
 msgid "Favorite Artists"
-msgstr "Liste favoris des artistes"
+msgstr "Liste des artistes favoris"
 
 #: ../../templates/show_user_stats.inc.php:40
 msgid "Favorite Albums"
-msgstr "Liste favoris des albums"
+msgstr "Liste des albums favoris"
 
 #: ../../templates/show_user_stats.inc.php:51
-#, fuzzy
 msgid "Favorite Songs"
-msgstr "Liste favoris des morceaux"
+msgstr "Liste des morceaux favoris"
 
 #: ../../templates/show_tv_playlist.inc.php:31
 #, fuzzy
@@ -1483,7 +1447,7 @@ msgstr "Jouer cette liste de lecture"
 #: ../../templates/show_tv_playlist.inc.php:44
 #, fuzzy
 msgid "Votes"
-msgstr "autre"
+msgstr "Votes"
 
 #: ../../templates/show_tv_playlist.inc.php:45
 #: ../../templates/show_list_duplicates.inc.php:31
@@ -1545,16 +1509,12 @@ msgstr "Conditions"
 #: ../../templates/show_install_lang.inc.php:43
 #: ../../templates/show_install_config.inc:46
 #: ../../templates/show_install.inc:44
-msgid ""
-"Your webserver has read access to the /sql/ampache.sql file and the /config/"
-"ampache.cfg.php.dist file"
-msgstr ""
-"Votre serveur web a des droits en lecture sur les fichiers /sql/ampache.sql "
-"et /config/ampache.cfg.php.dist"
+msgid "Your webserver has read access to the /sql/ampache.sql file and the /config/ampache.cfg.php.dist file"
+msgstr "Votre serveur web a des droits en lecture sur les fichiers /sql/ampache.sql et /config/ampache.cfg.php.dist"
 
 #: ../../templates/show_install_lang.inc.php:72
 msgid "Start configuration"
-msgstr "Commenc&eacute; configuration"
+msgstr "Lancer la configuration"
 
 #: ../../templates/show_modules.inc.php:38
 msgid "Localplay Modules"
@@ -1983,12 +1943,8 @@ msgid "Create"
 msgstr "D&eacute;bit"
 
 #: ../../templates/show_add_catalog.inc.php:30
-msgid ""
-"In the form below enter either a local path (i.e. /data/music) or the URL to "
-"a remote Ampache installation (i.e http://theotherampache.com)"
-msgstr ""
-"Dans le formulaire suivant, entrez soit un chemin local (ex: /data/music) ou "
-"un lien d'une installation Ampache distante (ex: http://lautreampache.com)"
+msgid "In the form below enter either a local path (i.e. /data/music) or the URL to a remote Ampache installation (i.e http://theotherampache.com)"
+msgstr "Dans le formulaire suivant, entrez soit un chemin local (ex: /data/music) ou un lien d'une installation Ampache distante (ex: http://lautreampache.com)"
 
 #: ../../templates/show_add_catalog.inc.php:35
 msgid "Catalog Name"
@@ -2004,7 +1960,7 @@ msgstr "Distant"
 
 #: ../../templates/show_add_catalog.inc.php:65
 msgid "Required for Remote Catalogs"
-msgstr ""
+msgstr "Obligatoire pour un catalogue distant"
 
 #: ../../templates/show_add_catalog.inc.php:68
 msgid "Filename Pattern"
@@ -2075,7 +2031,7 @@ msgstr "Adresse IP de fin"
 
 #: ../../templates/show_user_recommendations.inc.php:22
 msgid "Recommendations"
-msgstr ""
+msgstr "Recommandations"
 
 #: ../../templates/show_user_recommendations.inc.php:29
 msgid "Recommended Artists"
@@ -2144,11 +2100,11 @@ msgstr "ann&eacute;e"
 
 #: ../../templates/show_recently_played.inc.php:26
 msgid "Recently Played"
-msgstr "Moins jou&eacute;"
+msgstr "r&eacute;cemment jou&eacute;s"
 
 #: ../../templates/show_recently_played.inc.php:33
 msgid "Last Played"
-msgstr "Derniers jouers"
+msgstr "Derniers titres jou&eacute;s"
 
 #: ../../templates/show_edit_artist.inc.php:23
 msgid "Edit Artist"
@@ -2156,11 +2112,11 @@ msgstr "Artiste"
 
 #: ../../templates/show_random_albums.inc.php:23
 msgid "Albums of the Moment"
-msgstr "l'Album de cette moment"
+msgstr "l'Album du moment"
 
 #: ../../localplay.php:50 ../../localplay.php:58
 msgid "Song(s) Removed from Playlist"
-msgstr "Morceaux Supprim&eacute;"
+msgstr "Morceaux Supprim&eacute;s de la playlist"
 
 #: ../../localplay.php:77
 msgid "Localplay Init Failed"
@@ -2196,15 +2152,15 @@ msgstr "Votre score pour cet objet a &eacute;t&eacute; mis &aacute; jour"
 
 #: ../../login.php:80
 msgid "User Disabled please contact Admin"
-msgstr ""
+msgstr "Utilisateur suspendu, contactezz l admin"
 
 #: ../../login.php:94
 msgid "Unable to create new account"
-msgstr ""
+msgstr "Impossible de creer ce compte"
 
 #: ../../login.php:103
 msgid "No local account found"
-msgstr ""
+msgstr "Pas de compte local correspondant"
 
 #: ../../login.php:176
 msgid "Message of the Day"
@@ -2212,7 +2168,7 @@ msgstr "Message de Jour"
 
 #: ../../preferences.php:53
 msgid "Error: Password Does Not Match or Empty"
-msgstr "Erreur : Mot de passe ne correspondant pas ou vide"
+msgstr "Erreur : Le mot de passe ne correspond pas ou est vide"
 
 #: ../../preferences.php:61
 msgid "Password Updated"
@@ -2312,21 +2268,15 @@ msgstr "Jaquettes d'album vid&eacute;es"
 
 #: ../../albums.php:48
 msgid "Album Art information has been removed from the database"
-msgstr ""
-"Les informations de jaquettes d'albums ont &eacute;t&eacute; supprim&eacute;"
-"es de la base de donn&eacute;es"
+msgstr "Les informations de jaquettes d'albums ont &eacute;t&eacute; supprim&eacute;es de la base de donn&eacute;es"
 
 #: ../../albums.php:66 ../../albums.php:83 ../../albums.php:159
 msgid "Album Art Not Located"
 msgstr "Jaquette d'album non trouv&eacute;e"
 
 #: ../../albums.php:66 ../../albums.php:83 ../../albums.php:159
-msgid ""
-"Album Art could not be located at this time. This may be due to write access "
-"error, or the file is not received corectly."
-msgstr ""
-"Pas de jaquette d'album trouv&eacute;e. Cel&aacute; peut etre du &aacute; "
-"une surcharge temporaire d'Amazon ou un album inconnu de leur catalogue"
+msgid "Album Art could not be located at this time. This may be due to write access error, or the file is not received corectly."
+msgstr "Pas de jaquette d'album trouv&eacute;e. Cel&aacute; peut etre du &aacute; une surcharge temporaire d'Amazon ou un album inconnu de leur catalogue"
 
 #: ../../albums.php:79 ../../albums.php:106 ../../albums.php:185
 msgid "Album Art Inserted"
@@ -2334,7 +2284,7 @@ msgstr "Jaquette d'album incluse"
 
 #: ../../register.php:81
 msgid "Error Captcha Required"
-msgstr ""
+msgstr "Erreur saisissez le captcha"
 
 #: ../../register.php:88
 msgid "Error Captcha Failed"
@@ -2369,18 +2319,8 @@ msgid "Registration Complete"
 msgstr "Enregistrement termin&eacute;"
 
 #: ../../bin/print_tags.php.inc:64
-msgid ""
-"[print_tags.php.inc]\n"
-"This commandline script will display the tag information for the specified "
-"filename as it will \n"
-"appear to Ampache. \n"
-"        \n"
-msgstr ""
-"[print_tags.php.inc]\n"
-"Cette ligne de commande de script affichera les informations de balise pour "
-"le fichier sp&eacute;cifi&eacute; \n"
-"comme elles apparaitrons dans Ampache. \n"
-"        \n"
+msgid "[print_tags.php.inc]\nThis commandline script will display the tag information for the specified filename as it will \nappear to Ampache. \n\n"
+msgstr "[print_tags.php.inc]\nCette ligne de commande de script affichera les informations de balise pour le fichier sp&eacute;cifi&eacute; \ncomme elles apparaitrons dans Ampache. \n        \n"
 
 #: ../../bin/print_tags.php.inc:70
 msgid "Filename:"
@@ -2499,15 +2439,8 @@ msgid "Step 2 - Creating the Ampache.cfg.php file"
 msgstr "&eacute;tape 2 - Cr&eacute;ation du fichier Ampache.cfg.php"
 
 #: ../../templates/show_install_config.inc:55
-msgid ""
-"This steps takes the basic config values, and first attempts to write them "
-"out directly to your webserver. If access is denied it will prompt you to "
-"download the config file. Please put the downloaded config file in /config"
-msgstr ""
-"Cette &eacute;tape prend la configuration de base et essaie de l'appliquer "
-"&aacute; votre serveur web. Si l'acc&egrave;s est refus&eacute;, vous verrez "
-"une invite de chargement du fichier de configuration. SVP mettez le fichier "
-"de configuration t&eacute;l&eacute;charg&eacute; dans /config"
+msgid "This steps takes the basic config values, and first attempts to write them out directly to your webserver. If access is denied it will prompt you to download the config file. Please put the downloaded config file in /config"
+msgstr "Cette &eacute;tape prend la configuration de base et essaie de l'appliquer &aacute; votre serveur web. Si l'acc&egrave;s est refus&eacute;, vous verrez une invite de chargement du fichier de configuration. SVP mettez le fichier de configuration t&eacute;l&eacute;charg&eacute; dans /config"
 
 #: ../../templates/show_install_config.inc:64
 msgid "Web Path"
@@ -2643,15 +2576,8 @@ msgid "Unlimited"
 msgstr "illimit&eacute;"
 
 #: ../../templates/show_install.inc:54
-msgid ""
-"This step creates and inserts the Ampache database, as such please provide a "
-"mysql account with database creation rights. This step may take a while "
-"depending upon the speed of your computer"
-msgstr ""
-"Cette &eacute;tape cr&eacute;e et remplie la base de donn&eacute;es Ampache, "
-"pour cel&aacute; donner un compte d'acc&egrave;s mysql avec des droits de "
-"cr&eacute;ation. Cette &eacute;tape peut prendre un certain temps d&eacute;"
-"pendant de la vitesse de votre ordinateur"
+msgid "This step creates and inserts the Ampache database, as such please provide a mysql account with database creation rights. This step may take a while depending upon the speed of your computer"
+msgstr "Cette &eacute;tape cr&eacute;e et remplie la base de donn&eacute;es Ampache, pour cel&aacute; donner un compte d'acc&egrave;s mysql avec des droits de cr&eacute;ation. Cette &eacute;tape peut prendre un certain temps d&eacute;pendant de la vitesse de votre ordinateur"
 
 #: ../../templates/show_install.inc:72
 msgid "MySQL Administrative Username"
@@ -2663,8 +2589,7 @@ msgstr "Mot de passe administrateur MySQL"
 
 #: ../../templates/show_install.inc:80
 msgid "Create Database User for New Database"
-msgstr ""
-"Cr&eacute;e un utilisateur de base de donn&eacute;es pour la nouvelle base"
+msgstr "Cr&eacute;e un utilisateur de base de donn&eacute;es pour la nouvelle base"
 
 #: ../../templates/show_install.inc:84
 msgid "Ampache Database Username"
@@ -2683,12 +2608,8 @@ msgid "Add Access for a Host"
 msgstr "Ajouter un acc&egrave;s pour un h&ocirc;te"
 
 #: ../../templates/show_add_access.inc:23
-msgid ""
-"Use the form below to add a host that you want to have access to your "
-"Ampache catalog."
-msgstr ""
-"Utiliser le formulaire ci-dessous pour ajouter un h&ocirc;te acc&eacute;dant "
-"&aacute; votre catalogue Ampache"
+msgid "Use the form below to add a host that you want to have access to your Ampache catalog."
+msgstr "Utiliser le formulaire ci-dessous pour ajouter un h&ocirc;te acc&eacute;dant &aacute; votre catalogue Ampache"
 
 #: ../../templates/show_add_access.inc:35
 #: ../../templates/show_edit_access.inc:35
@@ -2729,11 +2650,11 @@ msgstr "D&eacute;finition de r&eacute;seau local"
 
 #: ../../templates/show_add_access.inc:70
 msgid "XML-RPC"
-msgstr ""
+msgstr "XML-RPC"
 
 #: ../../templates/show_add_access.inc:75
 msgid "XML-RPC Options"
-msgstr ""
+msgstr "Options XML-RPC"
 
 #: ../../templates/show_add_access.inc:78
 #: ../../templates/show_edit_access.inc:54
@@ -2784,7 +2705,7 @@ msgstr "Date d'enregistrement"
 
 #: ../../templates/show_users.inc:57
 msgid "Activity"
-msgstr ""
+msgstr "Activit&eacute;"
 
 #: ../../templates/show_users.inc:61
 msgid "Last Ip"
@@ -2819,12 +2740,8 @@ msgid "Ampache Debug"
 msgstr "Mode debogage d'Ampache"
 
 #: ../../templates/show_test.inc:35
-msgid ""
-"You've reached this page because a configuration error has occured. Debug "
-"Information below"
-msgstr ""
-"Vous avez atteint cette page car une erreur de configuration est survenue. "
-"Voir les informations de debogage ci-dessous"
+msgid "You've reached this page because a configuration error has occured. Debug Information below"
+msgstr "Vous avez atteint cette page car une erreur de configuration est survenue. Voir les informations de debogage ci-dessous"
 
 #: ../../templates/show_test.inc:39
 msgid "CHECK"
@@ -2843,92 +2760,56 @@ msgid "PHP Version"
 msgstr "Version de PHP"
 
 #: ../../templates/show_test.inc:61
-msgid ""
-"This tests to make sure that you are running a version of PHP that is known "
-"to work with Ampache."
-msgstr ""
-"Ce test pour v&eacute;rifier que vous utilisez une version de PHP connue "
-"pour etre compatible avec Ampache"
+msgid "This tests to make sure that you are running a version of PHP that is known to work with Ampache."
+msgstr "Ce test pour v&eacute;rifier que vous utilisez une version de PHP connue pour etre compatible avec Ampache"
 
 #: ../../templates/show_test.inc:65
 msgid "Mysql for PHP"
 msgstr "Mysql pour PHP"
 
 #: ../../templates/show_test.inc:80
-msgid ""
-"This test checks to see if you have the mysql extensions loaded for PHP. "
-"These are required for Ampache to work."
-msgstr ""
-"Ce test pour v&eacute;rifier si vous avez l'extension mysql charg&eacute;e "
-"pour PHP. Ceci est requis pour qu'Ampache puisse fonctionner"
+msgid "This test checks to see if you have the mysql extensions loaded for PHP. These are required for Ampache to work."
+msgstr "Ce test pour v&eacute;rifier si vous avez l'extension mysql charg&eacute;e pour PHP. Ceci est requis pour qu'Ampache puisse fonctionner"
 
 #: ../../templates/show_test.inc:84
 msgid "PHP Session Support"
 msgstr "Support des sessions PHP"
 
 #: ../../templates/show_test.inc:99
-msgid ""
-"This test checks to make sure that you have PHP session support enabled. "
-"Sessions are required for Ampache to work."
-msgstr ""
-"Ce test pour s'assurer qur que le support de session PHP est activ&eacute;. "
-"Les sessions sont indispensable au bon fonctionnement d'Ampache"
+msgid "This test checks to make sure that you have PHP session support enabled. Sessions are required for Ampache to work."
+msgstr "Ce test pour s assurer qur que le support de session PHP est activ&eacute;. Les sessions sont indispensable au bon fonctionnement d'Ampache"
 
 #: ../../templates/show_test.inc:103
 msgid "PHP ICONV Support"
 msgstr "Support de PHP ICONV"
 
 #: ../../templates/show_test.inc:117
-msgid ""
-"This test checks to make sure you have Iconv support installed. Iconv "
-"support is not required for Ampache, but it is highly recommended"
-msgstr ""
-"Ce test pour v&eacute;rifier que l'Iconv support est bien install&eacute;. "
-"Ce n'est pas indispensable pour le fonctionnement d'Ampache mais fortement "
-"recommand&eacute;"
+msgid "This test checks to make sure you have Iconv support installed. Iconv support is not required for Ampache, but it is highly recommended"
+msgstr "Ce test pour v&eacute;rifier que l'Iconv support est bien install&eacute;. Ce n'est pas indispensable pour le fonctionnement d'Ampache mais fortement recommand&eacute;"
 
 #: ../../templates/show_test.inc:121
 msgid "PHP PCRE Support"
 msgstr "Support de PHP ICONV"
 
 #: ../../templates/show_test.inc:134
-msgid ""
-"This test makes sure you have PCRE support compiled into your version of "
-"PHP, this is required for Ampache."
-msgstr ""
-"Ce test pour s'assurer qur que le support de session PHP est activ&eacute;. "
-"Les sessions sont indispensable au bon fonctionnement d'Ampache"
+msgid "This test makes sure you have PCRE support compiled into your version of PHP, this is required for Ampache."
+msgstr "Ce test pour s'assurer qur que le support de session PHP est activ&eacute;. Les sessions sont indispensable au bon fonctionnement d'Ampache"
 
 #: ../../templates/show_test.inc:138
 msgid "PHP PutENV Support"
 msgstr "Support de PHP ICONV"
 
 #: ../../templates/show_test.inc:151
-msgid ""
-"This test makes sure that PHP isn't running in SafeMode and that we are able "
-"to modify the memory limits. While not required, without these abilities "
-"some features of ampache may not work correctly"
-msgstr ""
+msgid "This test makes sure that PHP isn't running in SafeMode and that we are able to modify the memory limits. While not required, without these abilities some features of ampache may not work correctly"
+msgstr "Ce test verifie que la safe mode n'est pas active pour PHP, ceci n'est pas n&eacute;cessaire mais pourrai gener certaines fonctionnalit&eacute;s de ampache"
 
 #: ../../templates/show_test.inc:170
-msgid ""
-"This attempts to read /config/ampache.cfg.php If this fails either the "
-"ampache.cfg.php is not in the correct locations or\n"
-"\tit is not currently readable by your webserver."
-msgstr ""
-"Cet essai pour lire /config/ampache.cfg.php Si cel&aacute; &eacute;choue, le "
-"fichier ampache.cfg.php n'est pas au bon endroit ou \n"
-"\t n'est pas lisible par votre serveur web"
+msgid "This attempts to read /config/ampache.cfg.php If this fails either the ampache.cfg.php is not in the correct locations or\n\tit is not currently readable by your webserver."
+msgstr "Cet essai pour lire /config/ampache.cfg.php Si cel&aacute; &eacute;choue, le fichier ampache.cfg.php n'est pas au bon endroit ou \n\t n'est pas lisible par votre serveur web"
 
 #: ../../templates/show_test.inc:193
-msgid ""
-"This test makes sure that you have set all of the required configuration "
-"variables and that we are able to \n"
-"\tcompletely parse your config file"
-msgstr ""
-"Ce test pour s'assurer que vous avez bien d&eacute;fini tous les "
-"param&egrave;tres de configuration et que nous sommes capables \n"
-"\td'analyser compl&egrave;tement votre fichier de configuration"
+msgid "This test makes sure that you have set all of the required configuration variables and that we are able to \n\tcompletely parse your config file"
+msgstr "Ce test pour s'assurer que vous avez bien d&eacute;fini tous les param&egrave;tres de configuration et que nous sommes capables \n\td'analyser compl&egrave;tement votre fichier de configuration"
 
 #: ../../templates/show_test.inc:203
 msgid "Ampache.cfg.php Up to Date?"
@@ -2943,11 +2824,9 @@ msgid "DB Connection"
 msgstr "Connexion &aacute; la base de donn&eacute;es"
 
 #: ../../templates/show_test.inc:256
-msgid ""
-"This attempts to connect to your database using the values from your ampache."
+msgid "This attempts to connect to your database using the values from your ampache."
 "cfg.php"
-msgstr ""
-"Ceci test la connexion &aacute; votre base de donn&eacute;es en utilisant "
+msgstr "Ceci test la connexion &aacute; votre base de donn&eacute;es en utilisant "
 "les valeurs de ampache.cfg.php"
 
 #: ../../templates/show_search_bar.inc:26 ../../templates/show_search.inc:26
@@ -2960,7 +2839,7 @@ msgstr "Liste compl&egrave;te des artistes"
 
 #: ../../templates/show_similar_artists.inc:25
 msgid "Please check the artists you want to merge with the current one"
-msgstr ""
+msgstr "V&eacute;rifiez les artictes que vous souhaitez associer a cet artiste"
 
 #: ../../templates/show_similar_artists.inc:62
 msgid "Back"
@@ -3006,23 +2885,23 @@ msgstr "D&eacute;bit minimum"
 #: ../../templates/show_search.inc:96
 #, fuzzy
 msgid "One Star"
-msgstr "Propri&eacute;taire"
+msgstr "1 etoile"
 
 #: ../../templates/show_search.inc:97
 msgid "Two Stars"
-msgstr ""
+msgstr "2 etoiles"
 
 #: ../../templates/show_search.inc:98
 msgid "Three Stars"
-msgstr ""
+msgstr "3 etoiles"
 
 #: ../../templates/show_search.inc:99
 msgid "Four Stars"
-msgstr ""
+msgstr "4 etoiles"
 
 #: ../../templates/show_search.inc:100
 msgid "Five Stars"
-msgstr ""
+msgstr "5 etoiles"
 
 #: ../../templates/show_search.inc:103
 msgid "Operator"
