@@ -236,11 +236,11 @@ class Playlist {
 		/* If they are a full admin, then they always get rights */
 		if ($GLOBALS['user']->has_access(100)) { return true; } 
 
-		if ($this->user == $GLOBALS['user']->username) { return true; } 
+		if ($this->user == $GLOBALS['user']->id) { return true; } 
 
 		/* Check the Playlist_permission table */
 		$sql = "SELECT id FROM playlist_permission WHERE " . 
-			"playlist='" . sql_escape($this->id) . "' AND userid='" . sql_escape($GLOBALS['user']->username) . "'" . 
+			"playlist='" . sql_escape($this->id) . "' AND userid='" . sql_escape($GLOBALS['user']->id) . "'" . 
 			" AND level >= '25'";
 		$db_results = mysql_query($sql, dbh());
 
@@ -282,7 +282,7 @@ class Playlist {
 	 */
 	function _update_item($field,$value,$level) { 
 
-		if ($GLOBALS['user']->username != $this->user AND !$GLOBALS['user']->has_access($level)) { 
+		if ($GLOBALS['user']->id != $this->user AND !$GLOBALS['user']->has_access($level)) { 
 			return false; 
 		}
 
@@ -381,13 +381,13 @@ class Playlist {
 	/**
 	 * create
 	 * This function creates an empty playlist, gives it a name and type
-	 * Assumes $GLOBALS['user']->username as the user
+	 * Assumes $GLOBALS['user']->id as the user
 	 */
 	function create($name,$type) { 
 
 		$name = sql_escape($name);
 		$type = sql_escape($type);
-		$user = sql_escape($GLOBALS['user']->username);
+		$user = sql_escape($GLOBALS['user']->id);
 		$date = time();
 
 		$sql = "INSERT INTO playlist (`name`,`user`,`type`,`date`) " . 
