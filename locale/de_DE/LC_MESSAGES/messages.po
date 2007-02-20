@@ -584,7 +584,7 @@ msgstr "Admin-Bearbeiten Zugriffslisten"
 
 #: ../../lib/ui.lib.php:831
 msgid "Admin-Site Preferences"
-msgstr "Admin-Site Einstellungen"
+msgstr "Admin-Seiten Einstellungen"
 
 #: ../../lib/ui.lib.php:835
 msgid "Admin-Manage Modules"
@@ -787,15 +787,15 @@ msgstr "Das gewünschte Stück wurde aktualisiert"
 
 #: ../../admin/flag.php:139
 msgid "Album Updated"
-msgstr ""
+msgstr "Album aktualisiert"
 
 #: ../../admin/flag.php:181
 msgid "Artist Updated"
-msgstr ""
+msgstr "Interpreten aktualisiert"
 
 #: ../../admin/flag.php:246
 msgid "Songs Updated"
-msgstr ""
+msgstr "Songs aktualisiert"
 
 #: ../../admin/flag.php:254
 msgid "Flag Removed"
@@ -807,7 +807,7 @@ msgstr "Markierung entfernt von"
 
 #: ../../admin/flag.php:270
 msgid "Flags Updated"
-msgstr ""
+msgstr "Markierung aktualisiert"
 
 #: ../../admin/flag.php:289
 msgid "Songs Disabled"
@@ -831,7 +831,7 @@ msgstr "Markierte Datensätze"
 
 #: ../../admin/preferences.php:60 ../../admin/preferences.php:83
 msgid "Site"
-msgstr "Site"
+msgstr "Seite"
 
 #: ../../admin/access.php:42
 msgid "Confirm Delete"
@@ -1173,7 +1173,7 @@ msgstr "Interpret, Album und Titel"
 
 #: ../../templates/show_duplicates.inc.php:44
 msgid "Select Best Guess"
-msgstr ""
+msgstr "Wähle vermutlich besten"
 
 #: ../../templates/show_confirm_action.inc.php:28
 #: ../../templates/show_search.inc:77
@@ -1182,7 +1182,7 @@ msgstr "Ja"
 
 #: ../../templates/show_tv.inc.php:42
 msgid "Controls"
-msgstr ""
+msgstr "Bedienelement"
 
 #: ../../templates/show_tv.inc.php:57
 #: ../../templates/show_localplay.inc.php:42
@@ -1323,7 +1323,7 @@ msgstr "Bereinigen"
 
 #: ../../templates/show_admin_tools.inc.php:56
 msgid "Fast"
-msgstr ""
+msgstr "Schnell"
 
 #: ../../templates/show_admin_tools.inc.php:57
 msgid "Gather Art"
@@ -1652,7 +1652,7 @@ msgstr "Meistgespielte Stücke"
 
 #: ../../templates/show_mail_users.inc.php:73
 msgid "Flagged Songs"
-msgstr ""
+msgstr "Markierte Stücke"
 
 #: ../../templates/show_mail_users.inc.php:77
 #: ../../templates/show_admin_info.inc.php:36
@@ -1691,11 +1691,11 @@ msgstr "Zeige Alle"
 #: ../../templates/show_object_rating.inc.php:59
 #: ../../templates/show_object_rating.inc.php:62
 msgid "out of"
-msgstr ""
+msgstr "außerhalb"
 
 #: ../../templates/show_tv_adminctl.inc.php:22
 msgid "Admin Controls"
-msgstr ""
+msgstr "Admin Bedienelement"
 
 #: ../../templates/show_tv_adminctl.inc.php:25
 #: ../../templates/show_tv_adminctl.inc.php:47
@@ -1754,7 +1754,7 @@ msgstr "Umbenennen"
 
 #: ../../templates/show_rename_artist.inc.php:35
 msgid "Insert current"
-msgstr ""
+msgstr "Füge aktuellen ein"
 
 #: ../../templates/show_rename_artist.inc.php:37
 msgid "Update id3 tags"
@@ -1770,7 +1770,7 @@ msgstr "Neuste Albenzugänge"
 
 #: ../../templates/show_all_recent.inc.php:31
 msgid "Newest Live Stream Additions"
-msgstr ""
+msgstr "Neuester Live Stream"
 
 #: ../../templates/show_get_albumart.inc.php:23
 msgid "Customize Search"
@@ -1830,11 +1830,11 @@ msgstr "Meistgespielte Genres"
 
 #: ../../templates/show_all_popular.inc.php:41
 msgid "Most Popular Live Streams"
-msgstr ""
+msgstr "Die populärsten Live Streams"
 
 #: ../../templates/show_all_popular.inc.php:44
 msgid "Most Popular Tags"
-msgstr ""
+msgstr "Die populärsten Tags"
 
 #: ../../templates/show_play_selected.inc.php:28
 msgid "Play Selected"
@@ -2021,7 +2021,7 @@ msgstr "Größe"
 
 #: ../../templates/show_list_duplicates.inc.php:75
 msgid "Disable Songs"
-msgstr ""
+msgstr "Sperre Stücke"
 
 #: ../../templates/show_ip_history.inc.php:23
 msgid "IP History"
@@ -2045,7 +2045,7 @@ msgstr "Empfehlungen"
 
 #: ../../templates/show_user_recommendations.inc.php:29
 msgid "Recommended Artists"
-msgstr ""
+msgstr "Empfohlene Interpreten"
 
 #: ../../templates/show_user_recommendations.inc.php:40
 msgid "Recommended Albums"
@@ -2072,40 +2072,40 @@ msgstr "Gast"
 
 #: ../../templates/show_edit_album.inc.php:23
 msgid "Edit Album"
-msgstr ""
+msgstr "Bearbeite Ablbum"
 
 #: ../../templates/show_edit_album.inc.php:47
 #: ../../templates/show_edit_artist.inc.php:41
 msgid "Update Album"
-msgstr ""
+msgstr "Aktualisiere Album"
 
 #: ../../templates/show_recently_played.inc.php:23
 msgid "seconds ago"
-msgstr ""
+msgstr "vor Sekunden"
 
 #: ../../templates/show_recently_played.inc.php:23
 msgid "minutes ago"
-msgstr ""
+msgstr "vor Minuten"
 
 #: ../../templates/show_recently_played.inc.php:23
 msgid "hours ago"
-msgstr ""
+msgstr "vor Stunden"
 
 #: ../../templates/show_recently_played.inc.php:23
 msgid "days ago"
-msgstr ""
+msgstr "vor Tagen"
 
 #: ../../templates/show_recently_played.inc.php:23
 msgid "weeks ago"
-msgstr ""
+msgstr "vor Wochen"
 
 #: ../../templates/show_recently_played.inc.php:23
 msgid "months ago"
-msgstr ""
+msgstr "vor Monaten"
 
 #: ../../templates/show_recently_played.inc.php:23
 msgid "years ago"
-msgstr ""
+msgstr "vor Jahren"
 
 #: ../../templates/show_recently_played.inc.php:26
 msgid "Recently Played"
@@ -2113,15 +2113,15 @@ msgstr "Zuletzt gespielt"
 
 #: ../../templates/show_recently_played.inc.php:33
 msgid "Last Played"
-msgstr ""
+msgstr "Zuletzt gespielt"
 
 #: ../../templates/show_edit_artist.inc.php:23
 msgid "Edit Artist"
-msgstr ""
+msgstr "Bearbeite Interpret"
 
 #: ../../templates/show_random_albums.inc.php:23
 msgid "Albums of the Moment"
-msgstr ""
+msgstr "Album in diesem Moment"
 
 #: ../../localplay.php:50 ../../localplay.php:58
 msgid "Song(s) Removed from Playlist"
@@ -2189,7 +2189,7 @@ msgstr "Ampache Update"
 
 #: ../../tv.php:62
 msgid "Playlist Cleared"
-msgstr ""
+msgstr "Playlist gelöscht"
 
 #: ../../artists.php:91 ../../albums.php:191
 msgid "Starting Update from Tags"
@@ -2287,7 +2287,8 @@ msgstr "Cover nicht vorhanden"
 msgid ""
 "Album Art could not be located at this time. This may be due to write access "
 "error, or the file is not received corectly."
-msgstr ""
+msgstr "Album konnte zur Zeit nicht gefunden werden. "
+" Dies kann an einem Schreibzugriffsfehler liegen oder die Daten wurden nicht korrekt empfangen"
 
 #: ../../albums.php:79 ../../albums.php:106 ../../albums.php:185
 msgid "Album Art Inserted"
@@ -2361,7 +2362,7 @@ msgstr "Hinzufügen"
 
 #: ../../bin/quarantine_migration.php.inc:107
 msgid "to database"
-msgstr ""
+msgstr "in die Datenbank"
 
 #: ../../bin/quarantine_migration.php.inc:124
 msgid "Deleted"
@@ -2439,7 +2440,7 @@ msgstr "Sie sind momentan angemeldet als"
 
 #: ../../templates/header.inc:74
 msgid "Error Config File Out of Date"
-msgstr ""
+msgstr "Fehler Konfigurationsdatei abgelaufen"
 
 #: ../../templates/show_songs.inc:47
 msgid "Song title"
@@ -2508,7 +2509,7 @@ msgstr "Ampache.cfg.php konfiguriert?"
 
 #: ../../templates/show_install_config.inc:130
 msgid "Check for Config"
-msgstr ""
+msgstr "Prüfe die Konfiguration"
 
 #: ../../templates/show_album.inc:55
 msgid "Play Album"
@@ -2784,7 +2785,7 @@ msgstr ""
 
 #: ../../templates/show_test.inc:39
 msgid "CHECK"
-msgstr ""
+msgstr "Prüfe"
 
 #: ../../templates/show_test.inc:41
 msgid "STATUS"

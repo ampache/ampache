@@ -2366,7 +2366,7 @@ class Update {
 
 		// Now add in the min_object_count preference and the random_method
 		$sql = "INSERT INTO `preferences` (`name`,`value`,`description`,`level`,`type`,`catagory`) " . 
-			"VALUES('min_object_count','0','Min Element Count','5','integer','interface')";
+			"VALUES('min_object_count','1','Min Element Count','5','integer','interface')";
 		$db_results = mysql_query($sql,dbh()); 
 
 		$sql = "INSERT INTO `preferences` (`name`,`value`,`description`,`level`,`type`,`catagory`) " . 

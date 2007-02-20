@@ -4,6 +4,7 @@
 
 --------------------------------------------------------------------------
   v.3.4-Alpha1
+	- Updated French and German translations
   	- Added min song count to Browse Artist, refercing min object count
 		preference
   	- Fixed ratings so that it shows your rating if you've rated it
