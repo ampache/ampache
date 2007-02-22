@@ -16,7 +16,7 @@ name = "tangens"
 # This is just a way of giving credit to the 
 # person who actually created this theme
 # DEFAULT: N/A
-#author = "Florian Kleinert"
+author = "Florian Kleinert modified by Terence Theijn (pb1dft)"
 
 # Theme Maintainer
 # This is just a way of listing who is responsible for
@@ -36,6 +36,11 @@ orientation = "vertical"
 # respective pages. If you want to make the menu's something like the classic theme
 # comment this out
 #submenu = "simple"
+
+# Version
+# This is the revision for this theme, It's up to the maintainer
+# or author to decide how they want to format this
+version = "1.1"
 
 # Theme Colors
 ###################
