@@ -27,7 +27,7 @@ author = "Lars Olafsen modified by Terence Theijn"
 
 # Version
 # This is the version of the Theme (usefull if you've updated it)
-version = "1.1"
+version = "1.2"
 
 # Orientation
 # This was added as of 3.3.2-Alpha4, this tells Ampache if this theme
