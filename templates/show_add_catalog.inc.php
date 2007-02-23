@@ -88,7 +88,8 @@ $default_sort = "%a/%A";
 	<td>
 		<input type="hidden" name="action" value="add_catalog" />
 		<input class="button" type="submit" value="<?php echo _("Add Catalog"); ?>" />&nbsp;&nbsp;
-		<input class="button" type="submit" name="action" value="Cancel" />
+		<input class="button" type="reset" value="<?php echo _("Reset"); ?>" />&nbsp;&nbsp;
+		<input type="button" onclick="javascript:history.go(-1)" value="<?php echo _("Cancel"); ?>" />
 	</td>
 </tr>
 

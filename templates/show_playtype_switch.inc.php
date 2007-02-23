@@ -25,17 +25,17 @@ ${$name} = 'selected="selected" ';
 if (has_preference_access('play_type')){
 ?>
 <!--<select id="play_type_switch" style="font-size:0.9em;" name="type"> -->
-<select id="play_type_switch" name="type"> 
+<select id="play_type_switch" name="type" onchange="ajaxPut('<?php echo $ajax_url; ?>?action=change_play_type<?php echo $required_info; ?>');return true;"> 
 	<?php if (conf('allow_stream_playback')) { ?>
-		<option onclick="ajaxPut('<?php echo $ajax_url; ?>?action=change_play_type&amp;type=stream<?php echo $required_info; ?>');return true;" <?php echo $is_stream; ?>><?php echo _('Stream'); ?></option>
+		<option value="stream" <?php echo $is_stream; ?>><?php echo _('Stream'); ?></option>
 	<?php } if (conf('allow_localplay_playback')) { ?>
-		<option onclick="ajaxPut('<?php echo $ajax_url; ?>?action=change_play_type&amp;type=localplay<?php echo $required_info; ?>');return true;" <?php echo $is_localplay; ?>><?php echo _('Localplay'); ?></option>
+		<option value="localplay" <?php echo $is_localplay; ?>><?php echo _('Localplay'); ?></option>
 	<?php } if (conf('allow_downsample_playback')) { ?>
-		<option onclick="ajaxPut('<?php echo $ajax_url; ?>?action=change_play_type&amp;type=downsample<?php echo $required_info; ?>');return true;" <?php echo $is_downsample; ?>><?php echo _('Downsample'); ?></option>
+		<option value="downsample" <?php echo $is_downsample; ?>><?php echo _('Downsample'); ?></option>
 	<?php } if (conf('allow_democratic_playback')) { ?>
-	<option onclick="ajaxPut('<?php echo $ajax_url; ?>?action=change_play_type&amp;type=democratic<?php echo $required_info; ?>');return true;" <?php echo $is_democratic; ?>><?php echo _('Democratic'); ?></option>
+		<option value="democratic" <?php echo $is_democratic; ?>><?php echo _('Democratic'); ?></option>
 	<?php } ?>
-	<option onclick="ajaxPut('<?php echo $ajax_url; ?>?action=change_play_type&amp;type=xspf_player<?php echo $required_info; ?>');return true;" <?php echo $is_xspf_player; ?>><?php echo _('XSPF Player'); ?></option>
+	<option value="xspf_player" <?php echo $is_xspf_player; ?>><?php echo _('XSPF Player'); ?></option>
 </select>
 <?php
 } else { echo ucwords($GLOBALS['user']->prefs['play_type']);}

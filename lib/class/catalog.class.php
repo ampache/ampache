@@ -527,7 +527,7 @@ class Catalog {
 			unset($found);
 
 		} // foreach albums
-		echo "<br />$art_found " . _('album\'s with art') . ". . .<br />\n";
+		echo "<br />$art_found " . _('albums with art') . ". . .<br />\n";
 		flush();
 
 	} // get_album_art

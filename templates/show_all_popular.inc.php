@@ -25,10 +25,10 @@
 	<td valign="top" >
 		<?php show_info_box(_('Most Popular Artists'), 'artist', $artists); ?>
 	</td>
-	<td valign="top" align="left">
+	<td valign="top">
 		<?php show_info_box(_('Most Popular Albums'), '', $albums); ?>
 	</td>
-	<td valign="top" align="left">
+	<td valign="top">
 		<?php show_info_box(_('Most Popular Genres'), '', $genres); ?>
 	</td>
 </tr>

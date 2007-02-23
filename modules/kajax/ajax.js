@@ -8,10 +8,14 @@
 
 	var http_request = false;
 	var IE = true;
+
 	
 	// uid is an array of uids that need to be replaced		
 	function ajaxPut(url) {
-
+		var s = document.getElementById('play_type_switch');
+		var type = s.options[s.selectedIndex].value;
+		if (type) { url = url +"&type="+ type;}
+	
 		if (window.ActiveXObject) { // IE
 			try {
 				http_request = new ActiveXObject("Msxml2.XMLHTTP");
