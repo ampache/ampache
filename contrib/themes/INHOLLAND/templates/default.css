@@ -329,13 +329,13 @@ div#sidebar{
     background: url(../images/menu.gif) no-repeat;
 }
 
-#sidebar #activetopmenu {
+#sidebar li.activetopmenu {
     background: url(../images/menu-active.gif) #000000 no-repeat;
     position: relative;
     top:-2px;
 }
 
-#sidebar #activesubmenu {
+#sidebar li.activesubmenu {
     background: #FF0396 no-repeat;
 }
 
