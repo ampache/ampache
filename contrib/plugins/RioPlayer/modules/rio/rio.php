@@ -486,23 +486,31 @@ require_once("../../lib/init.php");
 					if ($debug) { print "\nCreating new ampache user '$ampacheUsername'... ";}
 					
 						$user = new User();
-					
-						if (!$user->create($ampacheUsername,"Rio Receiver - $rio_user_IP", "" , mt_rand(10000000,99999999) , "disabled")) {
+				
+						if (!$new_user = $user->create($ampacheUsername,"Rio Receiver - $rio_user_IP", "" , mt_rand(10000000,99999999) , "5")) {
 							if ($debug) { print "FAILED\n\n";}
+							debug_event('RioPlayer',"Creation of new User failed",1);
 						} else {
+						    // Below is needed to set the account to disabled to prevent GUI logins..
+						    $user = new User($new_user);
+						    $validation = str_rand(20);
+						    $user->update_validation($validation);
 							if ($debug) { print "SUCCEEDED\n\n";}
+							debug_event('RioPlayer',"Creation of new User SUCCEEDED",1);
 						}
 
 				}
 			}
 		}
 	}
+	// Setup Ampache User Class
+	$user = new User($ampacheUserID);	
 	
 	// Update last_seen except for content calls for tracks... (too expensive, we'll do that again later in content for just the first request)
 	if ($track_receiver_stats && !($queryType=="content" && rio_isTrack($queryOpts))) {
-	
-		mysql_query("UPDATE user SET last_seen='" . time() . "' WHERE username='$ampacheUsername'");
-
+		$user->update_last_seen();
+		$user->insert_ip_history();
+//		mysql_query("UPDATE user SET last_seen='" . time() . "' WHERE username='$ampacheUsername'");
 	}
 
 
@@ -1227,8 +1235,8 @@ require_once("../../lib/init.php");
 		$db_results = mysql_query($sql);
 				
 		if ($debug) {print "\n\nQUERY RESPONSE:\n===============\n";}
-
-
+		//debug_event('RioPlayer',"Final SQL Query:\n" . $sql,1);
+//		$user->update_stats($num);
 
 
 
