@@ -1,0 +1,35 @@
+This is a crappy readme for the Rio Player plugin
+
+Work in progress... Plugin isn't functional yet..
+
+INSTALLATION
+
+A full helpfile will be available at http://ampache.bountysource.com/wiki as soon as possible
+
+
+NFS Setup
+
+Edit you're /etc/exports and add the line below. 
+
+/your/nfs/path (rw,no_root_squash)
+
+Create a directory in your NFS root with the ip address of your box as the folder name like;
+/your/nfs/path/192.168.0.6
+untar the mercury.arf in this folder with the command tar xf mercury.arf this file can be found in the normal Audio Receiver 
+setup ("c:\Program Files\Audio Receiver") when unchanged.
+
+APACHE setup
+
+Add this to your apache configuration;
+
+Alias /layout/ "<ampache_root>/modules/rio/layout/"
+Alias /query "<ampache_root>/modules/rio/rio.php"
+Alias /results "<ampache_root>/modules/rio/rio.php"
+AliasMatch ^/content/ "<ampache_root>/modules/rio/rio.php"
+AliasMatch ^/favourites/ "<ampache_root>/modules/rio/rio.php"
+AliasMatch ^/list/ "<ampache_root>/modules/rio/rio.php"
+AliasMatch ^/tags "<ampache_root>/modules/rio/rio.php"
+
+Ampache Setup
+
+Copy the modules directory to the root of ampache.
