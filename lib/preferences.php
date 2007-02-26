@@ -251,6 +251,8 @@ function create_preference_input($name,$value) {
 		case 'allow_localplay_playback':
 		case 'demo_mode':
 		case 'condPL':
+		case 'rio_track_stats':
+		case 'rio_global_stats':
 		case 'direct_link':
 			if ($value == '1') { $is_true = "selected=\"selected\""; } 
 			else { $is_false = "selected=\"selected\""; }
