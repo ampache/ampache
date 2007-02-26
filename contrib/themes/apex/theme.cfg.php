@@ -16,14 +16,14 @@ name = "Apex"
 # This is just a way of giving credit to the
 # person who actually created this theme
 # DEFAULT: N/A
-#author = "Apex"
+author = "Apex"
 
 # Theme Maintainer
 # This is just a way of listing who is responsible for
 # maintaining this theme incase it's not working right
 # please include an e-mail address so you can be contacted
 # DEFAULT: N/A
-#maintainer = "Brandon Cole <apexeleven@gmail.com>"
+maintainer = "Brandon Cole <apexeleven@gmail.com>"
 
 # Orientation
 # This was added as of 3.3.2-Alpha4, this tells Ampache if this theme
