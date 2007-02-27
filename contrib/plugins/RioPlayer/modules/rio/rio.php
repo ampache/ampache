@@ -622,7 +622,10 @@ require_once("../../lib/init.php");
 				$index++;
 			}
 			
-			$sql="SELECT album.name,sum(object_count.count) AS total_count FROM object_count LEFT JOIN album ON object_count.object_id=album.id WHERE object_count.object_type='album' GROUP BY object_count.object_id ORDER BY total_count DESC LIMIT $favorites_global_most_popular_albums";
+			$sql="SELECT a.name,COUNT(object_count.id) AS `count` FROM object_count, album as a ".
+				"WHERE object_type='album' AND a.id=object_count.object_id ".
+				"GROUP BY object_id ORDER BY `count` DESC LIMIT $favorites_global_most_popular_albums";
+			debug_event('RioPlayer',"FAV Albums (G):\n".$sql,1); 
 			$db_results = mysql_query($sql);
 			
 			while (($row=mysql_fetch_row($db_results)) && $index < 100) {
@@ -658,7 +661,11 @@ require_once("../../lib/init.php");
 				$index++;
 			}
 			
-			$sql="SELECT artist.name,sum(object_count.count) AS total_count FROM object_count LEFT JOIN artist ON object_count.object_id=artist.id WHERE object_count.object_type='artist' GROUP BY object_count.object_id ORDER BY total_count DESC LIMIT $favorites_global_most_popular_artists";
+//			$sql="SELECT artist.name,sum(object_count.count) AS total_count FROM object_count LEFT JOIN artist ON object_count.object_id=artist.id WHERE object_count.object_type='artist' GROUP BY object_count.object_id ORDER BY total_count DESC LIMIT $favorites_global_most_popular_artists";
+			$sql="SELECT a.name,COUNT(object_count.id) AS `count` FROM object_count, artist as a ".
+				"WHERE object_type='artist' AND a.id=object_count.object_id ".
+				"GROUP BY object_id ORDER BY `count` DESC LIMIT $favorites_global_most_popular_artists";
+			debug_event('RioPlayer',"FAV Artist (G):\n".$sql,1); 
 			$db_results = mysql_query($sql);
 			
 			while (($row=mysql_fetch_row($db_results)) && $index < 100) {
