@@ -840,7 +840,7 @@ require_once("../../lib/init.php");
 	
 			// Oh my, this is gonna be fun...
 
-			$select="song.title,artist.name,album.name,song.year,song_ext_data.comment,song.size,song.file,song.genre,song.bitrate,song.mode,song.time,song.track";
+			$select="song.title,artist.name,album.name,song.year,song_ext_data.comment,song.size,song.file,song.genre,song.bitrate,song.mode,song.time,song.track,song.id";
 			$from="song,song_ext_data";
 			$leftjoin="artist ON song.artist=artist.id LEFT JOIN album on song.album=album.id";
 			$where="song.id";
@@ -1252,7 +1252,7 @@ require_once("../../lib/init.php");
 				
 		if ($debug) {print "\n\nQUERY RESPONSE:\n===============\n";}
 		//debug_event('RioPlayer',"Final SQL Query:\n" . $sql,1);
-//		$user->update_stats($num);
+
 
 
 
@@ -1270,7 +1270,7 @@ require_once("../../lib/init.php");
 	$firstRun=1;
 
 	while($row=mysql_fetch_row($db_results)) {
-	
+
 		// query
 		if ($queryType=="query") {
 			
@@ -1306,7 +1306,7 @@ require_once("../../lib/init.php");
 		} elseif ($queryType=="tags") {		
 			
 			if (rio_isTrack($queryOpts)) {
-		
+
 				// select="song.title,artist.name,album.name,song.year,song.comment,song.size,song.file,song.genre,song.bitrate,song.mode,song.time,song.track"
 				
 				// Oh my, this is gonna be fun...
@@ -1319,7 +1319,7 @@ require_once("../../lib/init.php");
 				$length=$row[5];
 				$path=$row[6];
 				$genre=$row[7];
-				
+								
 				// Mode
 				if ($row[9]=="vbr") {$mode="vs";}
 				elseif ($row[9]=="cbr") {$mode="fs";}
@@ -1328,7 +1328,9 @@ require_once("../../lib/init.php");
 				$bitrate=$mode.round($row[8]/1000);
 				$duration=$row[10]*1000;
 				$tracknr=$row[11];
-				
+				$songid=$row[12];
+
+								
 				// Codec
 				if (preg_match("/\.mp3$/i",$path)) {$codec="mp3";}
 				elseif (preg_match("/\.wma$/i",$path)) {$codec="wma";}
@@ -1354,6 +1356,12 @@ require_once("../../lib/init.php");
 				print rio_tagdata(14,$duration);
 				print rio_tagdata(15,$tracknr);
 				print pack("C",255); // EOF
+				
+				//Lets update Now Playing here... Maybe the wrong place but coulnd't find a better one for the moment
+				insert_now_playing($songid,$ampacheUserID,$duration);
+//				debug_event('RioPlayer',print_r($row,1),1);			
+
+
 				
 			} elseif (rio_isPlaylist($queryOpts)) {
 				
@@ -1513,7 +1521,7 @@ require_once("../../lib/init.php");
 				// select="file"
 				
 				$file=$row[0];
-					
+
 				// open the file in binary mode
 				$fp = fopen($file, 'rb');
 				
@@ -1559,7 +1567,6 @@ require_once("../../lib/init.php");
 							// Ampache went to user classes so i have to do this...
 							$user = new User($ampacheUserID);
 							$user->update_stats($queryFilter);
-						
 					// END 1.1 MODIFICATION
 					
 					}
