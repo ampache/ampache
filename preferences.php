@@ -46,7 +46,7 @@ switch(scrub_in($_REQUEST['action'])) {
 		$this_user = new User($user_id);
 		$this_user->update_fullname($_REQUEST['fullname']);
 		$this_user->update_email($_REQUEST['email']);
-		$this_user->update_offset($_REQUEST['offset_limit']);
+
 		
 		/* Check for password change */
 		if ($_REQUEST['password1'] !== $_REQUEST['password2'] && !empty($_REQUEST['password1'])) { 

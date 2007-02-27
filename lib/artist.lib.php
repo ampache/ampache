@@ -99,7 +99,7 @@ function show_artists ($match = '') {
                         $offset_limit = 999999;
                 }
                 else {
-                         $offset_limit = $_SESSION['userdata']['offset_limit'];
+                         $offset_limit = $user->prefs['offset_limit'];
                 }
                 $view = new View($query,'artists.php','name',$total_items,$offset_limit);
 		

@@ -33,12 +33,6 @@
 	</td>
 </tr>
 <tr>
-	<td><?php echo _('Results Per Page'); ?>:</td>
-	<td>
-		<input type="text" name="offset_limit" size="3" value="<?php echo scrub_out($this_user->offset_limit); ?>" />
-	</td>
-</tr>
-<tr>
 	<td><?php echo _('New Password'); ?>:</td>
 	<td>
 		<?php $GLOBALS['error']->print_error('password'); ?>

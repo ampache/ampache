@@ -62,7 +62,7 @@ switch($action) {
 	        elseif ($sql) {
 	                $db_results = mysql_query($sql, dbh());
 	                $total_items = mysql_num_rows($db_results);
-	                if ($match != "Show_all") { $offset_limit = $_SESSION['userdata']['offset_limit']; }
+	                if ($match != "Show_all") { $offset_limit = $user->prefs['offset_limit']; }
 	                $view = new View($sql, 'albums.php','name',$total_items,$offset_limit);
 	        }
 
@@ -95,7 +95,7 @@ switch($action) {
 			$db_results = mysql_query($sql, dbh());
 			$total_items = mysql_num_rows($db_results);
 			$offset_limit = 999999;
-			if ($match != 'Show_All') { $offset_limit = $_SESSION['userdata']['offset_limit']; }
+			if ($match != 'Show_All') { $offset_limit = $user->prefs['offset_limit']; }
 			$view = new View($sql, 'browse.php?action=genre','name',$total_items,$offset_limit);
 		}
 	
@@ -133,7 +133,7 @@ switch($action) {
 			$db_results = mysql_query($sql, dbh());
 			$total_items = mysql_num_rows($db_results);
 			$offset_limit = 999999;
-			if ($match != 'Show All') { $offset_limit = $_SESSION['userdata']['offset_limit']; } 
+			if ($match != 'Show All') { $offset_limit = $user->prefs['offset_limit']; } 
 			$view = new View($sql, 'browse.php?action=song_title','title',$total_items,$offset_limit);
 		}
 

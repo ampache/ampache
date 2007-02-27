@@ -193,7 +193,7 @@ switch ($action) {
 			$sql = "SELECT `id`,`last_seen` FROM `user` where last_seen <= $inactive"; 
 			$db_results = mysql_query($sql,dbh()); 
 			$total_items = mysql_num_rows($db_results); 
-			$view = new View($sql,'admin/users.php','fullname',$total_items,$_SESSION['userdata']['offset_limit']); 
+			$view = new View($sql,'admin/users.php','fullname',$total_items,$user->prefs['offset_limit']); 
 		}
 		
 		$users = get_users($view->sql); 
@@ -213,7 +213,7 @@ switch ($action) {
 			$sql = "SELECT `id` FROM `user`"; 
 			$db_results = mysql_query($sql,dbh()); 
 			$total_items = mysql_num_rows($db_results); 
-			$view = new View($sql,'admin/users.php','fullname',$total_items,$_SESSION['userdata']['offset_limit']); 
+			$view = new View($sql,'admin/users.php','fullname',$total_items,$user->prefs['offset_limit']); 
 		}
 		
 		$users = get_users($view->sql); 

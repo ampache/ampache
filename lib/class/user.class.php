@@ -33,7 +33,6 @@ class User {
 	var $fullname;
 	var $access;
 	var $disabled;
-	var $offset_limit=25;
 	var $email;
 	var $last_seen;
 	var $create_date;
@@ -61,7 +60,6 @@ class User {
 		$this->fullname 	= $info->fullname;
 		$this->access 		= $info->access;
 		$this->disabled		= $info->disabled;
-		$this->offset_limit 	= $info->offset_limit;
 		$this->email		= $info->email;
 		$this->last_seen	= $info->last_seen;
 		$this->create_date	= $info->create_date;
@@ -412,18 +410,6 @@ class User {
 		$db_results = mysql_query($sql, dbh());
 
 	} // update_email
-
-	/*!
-		@function update_offset
-		@discussion this updates the users offset_limit
-	*/
-	function update_offset($new_offset) { 
-
-		$new_offset = sql_escape($new_offset);
-		$sql = "UPDATE user SET offset_limit='$new_offset' WHERE `id`='$this->id'";
-		$db_results = mysql_query($sql, dbh());
-
-	} // update_offset
 
 	/** 
 	 * disable

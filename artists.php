@@ -234,7 +234,7 @@ switch($action) {
 			show_artists();
 		}
 		elseif ($match === "Show_all") {
-			$_SESSION['view_offset_limit'] = 999999;
+			$offset_limit = 999999;
 			show_artists();
 		}		
 	        else {

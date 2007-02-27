@@ -267,7 +267,7 @@ switch ($action) {
 			if (!$sort_order) { $sort_order = 'name'; } 
 			$db_results = mysql_query($sql, dbh());
 			$total_items = mysql_num_rows($db_results);
-			if ($match != "Show_all") { $offset_limit = $_SESSION['userdata']['offset_limit']; }
+			if ($match != "Show_all") { $offset_limit = $user->prefs['offset_limit']; }
 			$view = new View($sql, 'albums.php',$sort_order,$total_items,$offset_limit);	
 		} 
 	
