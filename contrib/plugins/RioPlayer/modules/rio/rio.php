@@ -643,7 +643,12 @@ require_once("../../lib/init.php");
 				$index++;
 			}
 			
-			$sql="SELECT album.name FROM object_count LEFT JOIN album ON object_count.object_id=album.id WHERE object_count.object_type='album' AND object_count.userid='$ampacheUserID' ORDER BY object_count.count DESC LIMIT $favorites_user_most_popular_albums";
+//			$sql="SELECT album.name FROM object_count LEFT JOIN album ON object_count.object_id=album.id WHERE object_count.object_type='album' AND object_count.userid='$ampacheUserID' ORDER BY object_count.count DESC LIMIT $favorites_user_most_popular_albums";
+			$sql="SELECT a.name,COUNT(object_count.id) AS `count` FROM object_count, album as a ".
+				"WHERE object_type='album' AND a.id=object_count.object_id AND object_count.user='$ampacheUserID'".
+				"GROUP BY object_id ORDER BY `count` DESC LIMIT $favorites_user_most_popular_albums";
+			debug_event('RioPlayer',"FAV Albums (U):\n".$sql,1); 
+
 			$db_results = mysql_query($sql);
 			
 			while (($row=mysql_fetch_row($db_results)) && $index < 100) {
@@ -683,7 +688,11 @@ require_once("../../lib/init.php");
 				$index++;
 			}
 			
-			$sql="SELECT artist.name FROM object_count LEFT JOIN artist ON object_count.object_id=artist.id WHERE object_count.object_type='artist' AND object_count.userid='$ampacheUserID' ORDER BY object_count.count DESC LIMIT $favorites_user_most_popular_artists";
+//			$sql="SELECT artist.name FROM object_count LEFT JOIN artist ON object_count.object_id=artist.id WHERE object_count.object_type='artist' AND object_count.userid='$ampacheUserID' ORDER BY object_count.count DESC LIMIT $favorites_user_most_popular_artists";
+			$sql="SELECT a.name,COUNT(object_count.id) AS `count` FROM object_count, artist as a ".
+				"WHERE object_type='artist' AND a.id=object_count.object_id AND object_count.user='$ampacheUserID' ".
+				"GROUP BY object_id ORDER BY `count` DESC LIMIT $favorites_user_most_popular_artists";
+			debug_event('RioPlayer',"FAV Artist (U):\n".$sql,1); 
 			$db_results = mysql_query($sql);
 			
 			while (($row=mysql_fetch_row($db_results)) && $index < 100) {
@@ -1548,7 +1557,7 @@ require_once("../../lib/init.php");
 							//update_user_stats($ampacheUserID, $queryFilter);
 						
 							// Ampache went to user classes so i have to do this...
-							$user = new User($ampacheUsername,$userID[0]);
+							$user = new User($ampacheUserID);
 							$user->update_stats($queryFilter);
 						
 					// END 1.1 MODIFICATION
