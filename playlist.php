@@ -70,10 +70,6 @@ switch ($action) {
 			break;
 		}
 
-		/* Must be admin or person who created this playlist */
-		if ($GLOBALS['user']->username != $playlist->user && !$GLOBALS['user']->has_access(100)) { 
-			access_denied();
-		}
 		if ($_REQUEST['type'] == 'album') { 
 			$song_ids = get_songs_from_type($_REQUEST['type'],$_REQUEST['song'],$_REQUEST['artist_id']);
 		}

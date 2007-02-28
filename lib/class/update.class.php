@@ -355,6 +355,8 @@ class Update {
 
 		$version[] = array('version' => '340001','description' => $update_string);
 
+		$update_string = '- Added Offset Limit to Preferences and removed from user table';
+
 		return $version;
 
 	} // populate_version
@@ -2415,6 +2417,36 @@ class Update {
 		return true; 
 
 	} //update_340001
+
+	/**
+ 	 * update_340002
+	 * This update tweaks the preferences a little more and make sure that the 
+	 * min_object_count has a rational value
+	 */
+	function update_340002() { 
+
+		/* Add the offset_limit preference and remove it from the user table */
+		$sql = "INSERT INTO `preferences` (`name`,`value`,`description`,`level`,`type`,`catagory`) " . 
+			"VALUES ('offset_limit','50','Offset Limit','5','integer','interface')";
+		$db_results = mysql_query($sql,dbh()); 
+		
+
+		// Fix the preferences for everyone 
+		$sql = "SELECT `id` FROM `user`";
+		$db_results = mysql_query($sql,dbh()); 
+
+		$user = new User(); 
+		$user->fix_preferences('-1'); 
+
+		while ($r = mysql_fetch_assoc($db_results)) { 
+			$user->fix_preferences($r['id']); 
+		} 
+
+		$this->set_version('db_version','340002'); 
+
+		return true; 
+
+	} // update_340002
 
 } // end update class
 ?>

@@ -61,7 +61,7 @@ class Playlist {
 	 */
 	function _get_info() { 
 
-		$sql = "SELECT * FROM playlist WHERE id='" . sql_escape($this->id) . "'";	
+		$sql = "SELECT * FROM `playlist` WHERE `id`='" . sql_escape($this->id) . "'";	
 		$db_results = mysql_query($sql, dbh());
 
 		$results = mysql_fetch_assoc($db_results);
@@ -231,22 +231,13 @@ class Playlist {
 	 */
 	function has_access() { 
 
-		if (!$GLOBALS['user']->has_access(25)) { return false; }  
-
-		/* If they are a full admin, then they always get rights */
+		// Admin always have rights
 		if ($GLOBALS['user']->has_access(100)) { return true; } 
 
+		// People under 25 don't get playlist access even if they created it 
+		if (!$GLOBALS['user']->has_access(25)) { return false; }  
+
 		if ($this->user == $GLOBALS['user']->id) { return true; } 
-
-		/* Check the Playlist_permission table */
-		$sql = "SELECT id FROM playlist_permission WHERE " . 
-			"playlist='" . sql_escape($this->id) . "' AND userid='" . sql_escape($GLOBALS['user']->id) . "'" . 
-			" AND level >= '25'";
-		$db_results = mysql_query($sql, dbh());
-
-		$results = mysql_fetch_row($db_results);
-
-		if ($results) { return true; }
 
 		return false;
 
