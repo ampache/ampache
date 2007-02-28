@@ -1356,8 +1356,10 @@ require_once("../../lib/init.php");
 				print rio_tagdata(14,$duration);
 				print rio_tagdata(15,$tracknr);
 				print pack("C",255); // EOF
-				
+				$_SERVER['HTTP_USER_AGENT'] = "RioPlayer";
 				//Lets update Now Playing here... Maybe the wrong place but coulnd't find a better one for the moment
+				gc_now_playing();
+//				debug_event('RioPlayer',print_r($_SERVER,1),1);
 				insert_now_playing($songid,$ampacheUserID,$duration);
 //				debug_event('RioPlayer',print_r($row,1),1);			
 
