@@ -652,7 +652,7 @@ class User {
 
 		// The length of the longest item
 		$maxlen = strlen($items[0]->count);
-
+		
 		// Go through the favs
 		foreach ($items as $data) { 
 			
@@ -663,11 +663,11 @@ class User {
 				$len++;
 			}
 
-			$results[] = "<li>[$data->count] - $data->f_name</li>\n";
-
+			$item = "[$data->count] - $data->f_name";
+			$results[]->link = $item;
 		} // end foreach items
 
-		return $results;	
+		return $results;
 
 	} // format_favorites
 

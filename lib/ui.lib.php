@@ -296,7 +296,7 @@ function show_play_selected() {
  */
 function get_now_playing($filter='') {
 
-	$sql = "SELECT song_id,user FROM now_playing ORDER BY start_time DESC";
+	$sql = "SELECT song_id,user FROM now_playing ORDER BY id DESC";
 	$db_results = mysql_query($sql, dbh());
 
 	$results = array();

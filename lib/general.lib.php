@@ -611,40 +611,43 @@ function get_global_popular($type) {
 		/* If Songs */
                 if ( $type == 'song' ) {
                         $song = new Song($r['object_id']);
-                        $artist = $song->get_artist_name();
-                        $text = "$artist - $song->title";
+			$song->format_song();
+                        $text = "$song->f_artist_full - $song->title";
                         /* Add to array */
-                        $items[] = "<li> <a href=\"$web_path/song.php?action=single_song&amp;song_id=$song->id\" title=\"". scrub_out($text) ."\">" .
-	                           	scrub_out(truncate_with_ellipse($text, conf('ellipse_threshold_title')+3)) . "&nbsp;(" . $r['count'] . ")</a> </li>";
+                        $song->link = "<a href=\"$web_path/song.php?action=single_song&amp;song_id=$song->id\" title=\"". scrub_out($text) ."\">" .
+	                           	scrub_out(truncate_with_ellipse($text, conf('ellipse_threshold_title')+3)) . "&nbsp;(" . $r['count'] . ")</a>";
+			$items[] = $song;
                 } // if it's a song
                 
 		/* If Artist */
                 elseif ( $type == 'artist' ) {
-                        $artist_obj	= new Artist($r['object_id']);
-			$artist_obj->format_artist();
-			$artist = $artist_obj->full_name;
-                        $items[] = "<li> <a href=\"$web_path/artists.php?action=show&amp;artist=" . $r['object_id'] . "\" title=\"". scrub_out($artist) ."\">" .
-                        	           truncate_with_ellipse($artist, conf('ellipse_threshold_artist')+3) . "&nbsp;(" . $r['count'] . ")</a> </li>";
+                        $artist = new Artist($r['object_id']);
+			$artist->format_artist();
+                        $artist->link = "<a href=\"$web_path/artists.php?action=show&amp;artist=" . $r['object_id'] . "\" title=\"". scrub_out($artist->full_name) ."\">" .
+                        	           truncate_with_ellipse($artist->full_name, conf('ellipse_threshold_artist')+3) . "&nbsp;(" . $r['count'] . ")</a>";
+			$items[] = $artist;
                 } // if type isn't artist
 
 		/* If Album */
                 elseif ( $type == 'album' ) {
                         $album   = new Album($r['object_id']);
-                        $items[] = "<li> <a href=\"$web_path/albums.php?action=show&amp;album=" . $r['object_id'] . "\" title=\"". scrub_out($album->name) ."\">" . 
-                        	           scrub_out(truncate_with_ellipse($album->name,conf('ellipse_threshold_album')+3)) . "&nbsp;(" . $r['count'] . ")</a> </li>";
+                        $album->link = "<a href=\"$web_path/albums.php?action=show&amp;album=" . $r['object_id'] . "\" title=\"". scrub_out($album->name) ."\">" . 
+                        	           scrub_out(truncate_with_ellipse($album->name,conf('ellipse_threshold_album')+3)) . "&nbsp;(" . $r['count'] . ")</a>";
+			$items[] = $album;
                 } // else not album
 
 		elseif ($type == 'genre') { 
 			$genre 	 = new Genre($r['object_id']);
-			$items[] = "<li> <a href=\"$web_path/browse.php?action=genre&amp;genre=" . $r['object_id'] . "\" title=\"" . scrub_out($genre->name) . "\">" .
-					scrub_out(truncate_with_ellipse($genre->name,conf('ellipse_threshold_title')+3)) . "&nbsp;(" . $r['count'] . ")</a> </li>";
+			$genre->link = "<a href=\"$web_path/browse.php?action=genre&amp;genre=" . $r['object_id'] . "\" title=\"" . scrub_out($genre->name) . "\">" .
+					scrub_out(truncate_with_ellipse($genre->name,conf('ellipse_threshold_title')+3)) . "&nbsp;(" . $r['count'] . ")</a>";
+			$items[] = $genre;
 		} // end if genre
         } // end foreach
        
-	if (count($items) == 0) { 
-		$items[] = "<li style=\"list-style-type: none\"><span class=\"error\">" . _('Not Enough Data') . "</span></li>\n";
+/*	if (count($items) == 0) { 
+		$itemis[''] = "<li style=\"list-style-type: none\"><span class=\"error\">" . _('Not Enough Data') . "</span></li>\n";
 	}
- 
+ */
         return $items;
 
 } // get_global_popular
@@ -667,20 +670,22 @@ function get_newest ($type = 'artist',$limit='') {
         $db_result = mysql_query($sql, $dbh);
 
         $items = array();
-        $web_path = conf('web_path');
 
-        while ( $item = mysql_fetch_row($db_result) ) {
+        while ($r = mysql_fetch_array($db_result)) {
                 if ( $type == 'artist' ) {
-                        $artist = new Artist($item[0]);
+                        $artist = new Artist($r[0]);
                         $artist->format_artist();
-                        $items[] = "<li>" . $artist->link . "</li>\n";
+			$items[] = $artist;
+			
                 }
                 elseif ( $type == 'album' ) {
-                        $album = new Album($item[0]);
+                        $album = new Album($r[0]);
                         $album->format();
-                        $items[] = "<li>$album->f_link</li>";
+			$album->link = $album->f_link;
+			$items[] = $album;
                 }
         }
+
         return $items;
 } // get_newest
 

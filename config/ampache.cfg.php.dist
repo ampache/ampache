@@ -523,9 +523,6 @@ rss_main_description = Rss feed for Ampache so you can monitor who is listening 
 # rss_main_copyright = here you can enter copyright information if you wish
 # DEFAULT: copyright (c) Speedy B for Ampache
 rss_main_copyright = copyright (c) Speedy B for Ampache
-# rss_main_language = the feed language. Some feed readers use this.
-# DEFAULT: nl
-rss_main_language = nl
 # rss_song_description = The description of the song.
 #                        It has to start with <![CDATA[
 #                        and end with ]]>. this is because xml wont parse if strange
