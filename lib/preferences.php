@@ -167,7 +167,7 @@ function update_preference($username,$name,$pref_id,$value) {
 	/* Else make sure that the current users has the right to do this */
 	if (has_preference_access($name)) { 
 		$sql = "UPDATE user_preference SET `value`='$value' WHERE preference='$pref_id' AND user='$username'";
-		$db_resutls = mysql_query($sql, dbh());
+		$db_results = mysql_query($sql, dbh());
 		return true;
 	}
 
