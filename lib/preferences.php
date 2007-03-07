@@ -253,6 +253,7 @@ function create_preference_input($name,$value) {
 		case 'condPL':
 		case 'rio_track_stats':
 		case 'rio_global_stats':
+		case 'embed_xspf':
 		case 'direct_link':
 			if ($value == '1') { $is_true = "selected=\"selected\""; } 
 			else { $is_false = "selected=\"selected\""; }

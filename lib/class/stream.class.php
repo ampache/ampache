@@ -296,6 +296,9 @@ class Stream {
 
 	        // start ugly evil javascript code
 		//FIXME: This needs to go in a template, here for now though
+	    if ($GLOBALS['user']->prefs['embed_xspf'] == 1 ){ 
+		header("Location: ".conf('web_path')."/index.php?xspf&play_info=".$tmp_playlist->id);
+	    }else{
 	        echo "<html><head>\n";
 	        echo "<title>" . conf('site_title') . "</title>\n";
 	        echo "<script language=\"javascript\" type=\"text/javascript\">\n";
@@ -312,7 +315,7 @@ class Stream {
 	        echo "<body onLoad=\"javascript:PlayerPopUp('" . conf('web_path') . "/modules/flash/xspf_player.php" . $play_info . "')\">\n";
 	        echo "</body>\n";
 	        echo "</html>\n";
-		
+	    }
 	} // create_xspf_player
 		
 

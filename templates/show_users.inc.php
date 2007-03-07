@@ -141,7 +141,7 @@ foreach ($users as $working_user) {
 	</td>
 	<?php
 	//FIXME: Fix this for the extra permission levels
-	if ($user->disabled == '1') { 
+	if ($working_user->disabled == '1') { 
 		echo "<td><a href=\"".$web_path."/admin/users.php?action=enable&amp;user_id=$working_user->id\">" . get_user_icon('enable') . "</a></td>";
 	}
 	else {

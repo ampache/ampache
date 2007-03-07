@@ -77,6 +77,14 @@ input {
 	float: left;
 }
 
+/************************************************/
+/*                XSPF Player                   */
+/************************************************/
+
+.xspf_player {
+    right: 20px;
+    position: absolute;
+}
 
 /************************************************/
 /*                Footer                        */
@@ -620,8 +628,4 @@ td.user_disabled {
 table.tabledata {}
 .display {}
 
-
-
-
-	
 

@@ -19,6 +19,14 @@
 
 */
 ?>
+<?php
+if (isset($_REQUEST['xspf']) && isset ($_REQUEST['play_info'])){
+
+require_once(conf('prefix') . '/templates/show_embed_xspf.inc.php');
+}
+
+?>
+
 <div id="np_data">
         <?php show_now_playing(); ?>
 </div> <!-- Close Now Playing Div -->
