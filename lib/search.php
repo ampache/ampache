@@ -160,7 +160,12 @@ function search_song($data,$operator,$method,$limit) {
 				$table_sql .= "genre,";
 			break;
 			case 'year':
-				$where_sql .= " song.year $value_string $operator";
+				if (empty($data["year2"]) && is_numeric($data["year"])) {
+					$where_sql .= " song.year $value_string $operator";
+				}
+				elseif (!empty($data["year"]) && is_numeric($data["year"]) && !empty($data["year2"]) && is_numeric($data["year2"])) {
+					$where_sql .= " (song.year BETWEEN ".$data["year"]." AND ".$data["year2"].") $operator";
+				}
 			break;
 			case 'filename':
 				$where_sql .= " song.file $value_string $operator";

@@ -613,8 +613,6 @@ class Catalog {
 		/* Set it as an empty array */
 		$files = array();
 
-		$path = $path;
-
 		/* Open up the directory */
 		$handle = @opendir($path);
 
@@ -656,6 +654,7 @@ class Catalog {
 
 			$pattern = "/\.[" . conf('catalog_file_pattern') . "]$/i";
 
+			// REMOVE SECOND PREG_MATCH
 			if ( preg_match($pattern ,$file) && ($file_info > 0) && (!preg_match("/\.AppleDouble/", $file)) ) {
 				$files[] = $full_file;
 			} //is mp3 of at least some size

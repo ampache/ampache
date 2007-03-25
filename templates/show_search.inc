@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2006 Ampache.org
+ Copyright (c) 2001 - 2007 Ampache.org
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
@@ -62,7 +62,9 @@
 <tr class="<?php echo flip_class(); ?>">
 	<td><?php echo _('Year'); ?></td>
 	<td>
-		<input type="text" id="s_year" name="s_year" value="<?php echo scrub_out($_REQUEST['s_year']); ?>" />
+		<input type="text" id="s_year" name="s_year" size="5" value="<?php echo scrub_out($_REQUEST['s_year']); ?>" />
+		-
+		<input type="text" id="s_year2" name="s_year2" size="5" value="<?php echo scrub_out($_REQUEST['s_year2']); ?>" />
 	</td>
 	<td><?php echo _('Filename'); ?></td>
 	<td>
