@@ -3,7 +3,7 @@
 ##################
 
 ###########################
-# Classic Ampache Theme
+# Ampache Theme: Apex
 ###########################
 
 # Theme Name
@@ -16,7 +16,7 @@ name = "Apex"
 # This is just a way of giving credit to the
 # person who actually created this theme
 # DEFAULT: N/A
-author = "Apex"
+author = "Apex (updated for 3.3.3 by jazzs3quence)"
 
 # Theme Maintainer
 # This is just a way of listing who is responsible for
@@ -24,6 +24,16 @@ author = "Apex"
 # please include an e-mail address so you can be contacted
 # DEFAULT: N/A
 maintainer = "Brandon Cole <apexeleven@gmail.com>"
+
+# Version
+# This is the version of the Theme (usefull if you've updated it)
+version = "1.1"
+
+# Ampache Version
+# This is the ampache version that this theme works with. This is
+# mostly a fluf thing to make it easier for people to pick themes
+# that are designed for the version they are running. 
+ampache_version = "3.3.3" 
 
 # Orientation
 # This was added as of 3.3.2-Alpha4, this tells Ampache if this theme
