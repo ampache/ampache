@@ -4,6 +4,7 @@
 
 --------------------------------------------------------------------------
   v.3.4-Alpha1
+	- Added some minor sorting to the browse by song 
 	- Added ability to search year range (Thx Tom Kiehne)
 	- Updated French and German translations
   	- Added min song count to Browse Artist, refercing min object count

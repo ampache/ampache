@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2006 Ampache.org
+ Copyright (c) 2001 - 2007 Ampache.org
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
@@ -26,8 +26,14 @@ if (is_object($playlist) && ($GLOBALS['user']->username == $playlist->user || $G
 	$playlist_owner = true;
 }
 
-// Title of this page
-
+//Horrible hack!
+if ($_SERVER['SCRIPT_NAME'] == '/browse.php') { 
+	// Setup the links
+	$link_end = '</a>';
+	$title_start = '<a href="' . $web_path . '/browse.php?keep_view=true&amp;sort_type=song.title&amp;sort_order=0">';
+	$track_start = '<a href="' . $web_path . '/browse.php?keep_view=true&amp;sort_type=song.track&amp;sort_order=0">';
+	$bit_start = '<a href="' . $web_path . '/browse.php?keep_view=true&amp;sort_type=song.bitrate&amp;sort_order=0">';
+}
 ?>
 <?php require(conf('prefix') . '/templates/show_box_top.inc.php'); ?>
 <form id="songs" method="post" enctype="multipart/form-data" action="#" style="Display:inline;">
@@ -44,13 +50,13 @@ if (is_object($playlist) && ($GLOBALS['user']->username == $playlist->user || $G
 	<?php if ($playlist_owner) { ?> 
 		<th><?php echo _('Track'); ?></th> 
 	<?php } ?>
-	<th><?php echo _('Song title'); ?></th>
+	<th><?php echo $title_start . _('Song title') . $link_end; ?></th>
 	<th><?php echo _('Artist'); ?></th>
 	<th><?php echo _('Album'); ?></th>
-	<th><?php echo _('Track'); ?></th>
+	<th><?php echo $track_start . _('Track') . $link_end; ?></th>
 	<th><?php echo _('Time'); ?></th>
 	<th><?php echo _('Size'); ?></th>
-	<th><?php echo _('Bitrate'); ?></th>
+	<th><?php echo $bit_start . _('Bitrate') . $link_end; ?></th>
 	<th><?php echo _('Genre'); ?></th>
 	<th><?php echo _('Action'); ?></th>
 	<?php if (conf('ratings')) { ?>
