@@ -21,23 +21,10 @@
 
 require_once 'lib/init.php';
 
-show_template('header');
-
-// We'll set any input parameters here
-if(!isset($_REQUEST['match'])) { $_REQUEST['match'] = "Browse"; }
-if(isset($_REQUEST['match'])) $match = scrub_in($_REQUEST['match']);
-if(isset($_REQUEST['album'])) $album = scrub_in($_REQUEST['album']);
-if(isset($_REQUEST['artist'])) $artist = scrub_in($_REQUEST['artist']);
-$_REQUEST['artist_id'] = scrub_in($_REQUEST['artist_id']);
-$min_album_size = conf('min_object_count');
-if ($min_album_size == '') { 
-	$min_album_size = '0';
-}
-
-$action = scrub_in($_REQUEST['action']); 
+require_once Config::get('prefix') . '/templates/header.inc.php';
 
 /* Switch on Action */
-switch ($action) { 
+switch ($_REQUEST['action']) { 
 	case 'clear_art':
 		if (!$GLOBALS['user']->has_access('75')) { access_denied(); } 
 		$album = new Album($_REQUEST['album_id']);
@@ -48,12 +35,10 @@ switch ($action) {
 		$album = new Album($_REQUEST['album']);
 		$album->format();
 
-		require (conf('prefix') . '/templates/show_album.inc');
+		require Config::get('prefix') . '/templates/show_album.inc';
 	
 		/* Get the song ids for this album */
-		$song_ids = $album->get_song_ids($_REQUEST['artist']);
-	
-		show_songs($song_ids,0,$album);
+		$song_ids = $album->get_songs(0,$_REQUEST['artist']);
 	break;
 	// Upload album art
 	case 'upload_art':

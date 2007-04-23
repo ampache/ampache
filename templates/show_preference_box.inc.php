@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2006 Ampache.org
+ Copyright (c) 2001 - 2007 Ampache.org
  All rights reserved
 
  This program is free software; you can redistribute it and/or
@@ -19,16 +19,10 @@
 
 */
 
-/*!
-	@header Show Preferences
-	@discussion shows a single preference box
-
-*/
-
 /* I'm cheating a little here, check to see if we want to show the
  * Apply to All button on this page 
  */
-if ($GLOBALS['user']->has_access(100) AND conf('use_auth')) { 
+if ($GLOBALS['user']->has_access(100) AND Config::get('use_auth')) { 
 	$show_apply_to_all = true;
 }
 ?>

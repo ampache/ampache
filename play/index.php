@@ -82,8 +82,8 @@ if (Config::get('demo_mode') || (!$GLOBALS['user']->has_access('25') && !$xml_rp
    that they have enough access to play this mojo
 */
 if (Config::get('access_control')) { 
-	if (!Access::check('stream',$_SERVER['REMOTE_ADDR'],$GLOBALS['user']->username,'25') AND
-		!Access::check('network',$_SERVER['REMOTE_ADDR'],$GLOBALS['user']->username,'25')) { 
+	if (!Access::check_network('stream',$_SERVER['REMOTE_ADDR'],$GLOBALS['user']->username,'25') AND
+		!Access::check_network('network',$_SERVER['REMOTE_ADDR'],$GLOBALS['user']->username,'25')) { 
 		debug_event('access_denied', "Streaming Access Denied: " . $_SERVER['REMOTE_ADDR'] . " does not have stream level access",'3');
 		access_denied();
 		exit; 
@@ -196,7 +196,7 @@ if (Config::get('track_user_ip')) {
 
 /* If access control is on and they aren't local, downsample! */
 if (Config::get('access_control') AND Config::get('downsample_remote')) { 
-	if (!$access->check('network',$_SERVER['REMOTE_ADDR'],$GLOBALS['user']->username,'25')) { 
+	if (Access::check_network('network',$_SERVER['REMOTE_ADDR'],$GLOBALS['user']->username,'25')) { 
 		$not_local = true;
 	}
 } // if access_control

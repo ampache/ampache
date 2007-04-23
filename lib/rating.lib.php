@@ -27,7 +27,7 @@ function show_rating($object_id,$type) {
 
 	$rating = new Rating($object_id,$type);
 	
-	include(conf('prefix') . '/templates/show_object_rating.inc.php');
+	require Config::get('prefix') . '/templates/show_object_rating.inc.php';
 
 } // show_rating
 

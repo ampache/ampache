@@ -144,26 +144,50 @@ class Access {
 		$db_results = mysql_query($sql, dbh());
 
 	} // delete
+	
+	/**
+	 * check_function
+	 * This checks if a specific functionality is enabled
+	 * it takes a type only
+	 */
+	public static function check_function($type) { 
+
+		switch ($type) { 
+			case 'batch_download':
+                                if (!function_exists('gzcompress')) {
+                                        debug_event('gzcompress','ZLIB Extensions not loaded, batch download disabled','3');
+                                        return false;
+                                }
+                                if (Config::get('allow_zip_download') AND $GLOBALS['user']->has_access(25)) {
+                                        return $GLOBALS['user']->prefs['download'];
+                                }
+                        break;
+			default:
+				return false; 
+			break;
+		} // end switch			
+
+	} // check_function
 
 	/**
-	 * check
+	 * check_network
 	 * This takes a type, ip, user, level and key 
 	 * and then returns true or false if they have access to this
 	 * the IP is passed as a dotted quad
 	 */
-	public static function check($type,$ip,$user,$level,$key='') { 
+	public static function check_network($type,$ip,$user,$level,$key='') { 
 
 		// They aren't using access control 
 		// lets just keep on trucking
-		if (!conf('access_control')) { 
+		if (!Config::get('access_control')) { 
 			return true;
 		} 
 
 		// Clean incomming variables
 		$ip 	= ip2int($ip);
-		$user 	= sql_escape($user);
-		$key 	= sql_escape($key);
-		$level	= sql_escape($level);
+		$user 	= Dba::escape($user);
+		$key 	= Dba::escape($key);
+		$level	= Dba::escape($level);
 
 		switch ($type) { 
 			/* This is here because we want to at least check IP before even creating the xml-rpc server
@@ -190,10 +214,10 @@ class Access {
 			break;
 		} // end switch on type
 		
-		$db_results = mysql_query($sql, dbh());
+		$db_results = Dba::query($sql);
 
 		// Yah they have access they can use the mojo
-		if (mysql_fetch_row($db_results)) { 
+		if (Dba::fetch_row($db_results)) { 
 			return true;
 		}
 
@@ -202,7 +226,7 @@ class Access {
 			return false;
 		}
 
-	} // check
+	} // check_network
 
 	/**
 	 * validate_type

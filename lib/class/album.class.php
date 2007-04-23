@@ -97,11 +97,15 @@ class Album {
 	 * get_songs
 	 * gets the songs for this album
 	 */
-	public function get_songs($limit = 0) { 
+	public function get_songs($limit = 0,$artist='') { 
 
 		$results = array();
+	
+		if ($artist) { 
+			$artist_sql = "AND `artist`='" . Dba::escape($artist) . "'";
+		} 
 
-		$sql = "SELECT `id` FROM `song` WHERE `album`='$this->id' ORDER BY `track`, `title`";
+		$sql = "SELECT `id` FROM `song` WHERE `album`='$this->id' $artist_sql ORDER BY `track`, `title`";
 		if ($limit) { $sql .= " LIMIT $limit"; }
 		$db_results = Dba::query($sql);
 
@@ -112,31 +116,6 @@ class Album {
 		return $results;
 
 	} // get_songs
-
-	/**
-	 * get_song_ids
-	 * This returns an array of the song id's that are on this album. This is used by the
-	 * show_songs function and can be pased and artist if you so desire to limit it to that
-	 */
-	function get_song_ids($artist='') { 
-
-		/* If they pass an artist then constrain it based on the artist as well */
-		if ($artist) { 
-			$artist_sql = " AND artist='" . sql_escape($artist) . "'";
-		}
-		
-		$sql = "SELECT id FROM song WHERE album='" . sql_escape($this->id) . "' $artist_sql ORDER BY track";
-		$db_results = mysql_query($sql, dbh());
-
-		$results = array();
-
-		while ($r = mysql_fetch_assoc($db_results)) { 
-			$results[] = $r['id'];
-		}
-
-		return $results;
-
-	} // get_song_ids
 
 	/**
 	 * format

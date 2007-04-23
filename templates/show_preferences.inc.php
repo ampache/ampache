@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2006 Ampache.org
+ Copyright (c) 2001 - 2007 Ampache.org
  All rights reserved
 
  This program is free software; you can redistribute it and/or
@@ -19,12 +19,6 @@
 
 */
 
-/*!
-	@header Show Preferences
-	@discussion shows edit page for preferences
-
-*/
-
 /**
  * This page has a few tabs, as such we need to figure out which tab we are on 
  * and display the information accordingly 
@@ -33,26 +27,19 @@ $current_tab 	= scrub_in($_REQUEST['tab']);
 if (!$current_tab) { $current_tab = 'interface'; } 
 // HORRIBLE HACK!
 if ($_REQUEST['action'] == 'user') { $action_txt = '&amp;action=user'; } 
-$link		= conf('web_path') . $target;
+$link		= Config::get('web_path') . $target;
 
 /* CSS construction bs */
 $link_active	= "a_" . $current_tab;
 ${$link_active} = "id=\"current\"";
 $tab_active	= "tab_" .$current_tab;
 ${$tab_active}  = "id=\"tabactive\"";
-
-/* I'm cheating a little here, check to see if we want to show the
- * Apply to All button on this page 
- */
-if (($GLOBALS['user']->has_access(100)) AND ($user_id == '-1' AND conf('use_auth'))) { 
-	$show_apply_to_all = true;
-}
 ?>
 <?php show_box_top(); ?>
 <span class="header1">
 <?php echo _('Editing'); ?> <?php echo $fullname; ?> <?php echo _('preferences'); ?> 
 <?php if ($GLOBALS['user']->has_access(100)) { ?>
-[<a href="<?php echo conf('web_path'); ?>/admin/preferences.php?action=fix_preferences&amp;user_id=<?php echo $user_id; ?>"><?php echo _("Rebuild Preferences"); ?></a>]
+[<a href="<?php echo Config::get('web_path'); ?>/admin/preferences.php?action=fix_preferences&amp;user_id=<?php echo $user_id; ?>"><?php echo _('Rebuild Preferences'); ?></a>]
 <?php } ?>
 </span>
 
@@ -83,7 +70,7 @@ if (($GLOBALS['user']->has_access(100)) AND ($user_id == '-1' AND conf('use_auth
 </ul>
 </div>
 <div class="text-box" style="width:45em;">
-<form method="post" name="preferences" action="<?php echo conf('web_path'); ?><?php echo $target; ?>" enctype="multipart/form-data">
+<form method="post" name="preferences" action="<?php echo Config::get('web_path'); ?><?php echo $target; ?>" enctype="multipart/form-data">
 <?php 
 if ($current_tab != 'account' && $current_tab != 'modules') { 
 	show_preference_box($preferences[$current_tab]); 

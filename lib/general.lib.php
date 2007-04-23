@@ -279,27 +279,6 @@ function scrub_in($str) {
 } // scrub_in
 
 /*!
-       @function batch_ok()
-       @discussion return boolean if user can batch download
-       //FIXME: This needs to be fixed, it shouldn't be an independent function
-       //FIXME: It should reference a central one maybe the access object? 
-*/
-function batch_ok( ) {
-
-	/* Also make sure that they have ZLIB */
-	if (!function_exists('gzcompress')) { return false; }
-
-	// i check this before showing any link
-	// should make it easy to tie to a new pref if you choose to add it
-	if (conf('allow_zip_download') AND $GLOBALS['user']->has_access(25)) { 
-		return( $GLOBALS['user']->prefs['download'] );
-	} // if allowed zip downloads
-
-	return false;
-
-} // batch_ok
-
-/*!
 	@function set_memory_limit
 	@discussion this function attempts to change the
 		php memory limit using init_set but it will 
@@ -664,7 +643,7 @@ function make_bool($string) {
 function get_languages() { 
 
 	/* Open the locale directory */
-	$handle	= @opendir(conf('prefix') . '/locale');
+	$handle	= @opendir(Config::get('prefix') . '/locale');
 
 	if (!is_resource($handle)) { 
 		debug_event('language','Error unable to open locale directory','1'); 
@@ -677,7 +656,7 @@ function get_languages() {
 
 	while ($file = readdir($handle)) { 
 
-		$full_file = conf('prefix') . '/locale/' . $file;
+		$full_file = Config::get('prefix') . '/locale/' . $file;
 
 		/* Check to see if it's a directory */
 		if (is_dir($full_file) AND substr($file,0,1) != '.' AND $file != 'base') { 

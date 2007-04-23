@@ -89,7 +89,7 @@ switch ($action) {
 	break;
 	case 'artist':
 		$artist = new Artist($_REQUEST['artist_id']);
-		$song_ids = $artist->get_song_ids();
+		$song_ids = $artist->get_songs();
 	break;
 	case 'artist_random':
 		$artist = new Artist($_REQUEST['artist_id']);
@@ -102,7 +102,7 @@ switch ($action) {
 	break;
 	case 'album':
 		$album = new Album($_REQUEST['album_id']);
-		$song_ids = $album->get_song_ids();
+		$song_ids = $album->get_songs();
 	break;
 	case 'random_genre':
 		$genre 		= new Genre($_REQUEST['genre']);

@@ -111,35 +111,35 @@ class User {
 	 * []['admin'] = t/f value if this is an admin only section
 	 */
 	function get_preferences($user_id=0,$type=0) { 
-		
-		if (!$user_id) { 
-			$user_id = $this->id;
-		}
+	
+		// Fill out the user id
+		$user_id = $user_id ? Dba::escape($user_id) : Dba::escape($this->id); 
 
-		if (!conf('use_auth')) { $user_id = '-1'; }
+		if (!Config::get('use_auth')) { $user_id = '-1'; }
 
 		if ($user_id != '-1') { 
 			$user_limit = "AND preferences.catagory != 'system'";
 		}
-		
+			
 		if ($type != '0') { 
-			$user_limit = "AND preferences.catagory = '" . sql_escape($type) . "'";
+			$user_limit = "AND preferences.catagory = '" . Dba::escape($type) . "'";
 		}
 
 	
-		$sql = "SELECT preferences.name, preferences.description, preferences.catagory, user_preference.value FROM preferences,user_preference " .
-			"WHERE user_preference.user='$user_id' AND user_preference.preference=preferences.id $user_limit ORDER BY id";
-		$db_results = mysql_query($sql, dbh());
+		$sql = "SELECT preferences.name, preferences.description, preferences.catagory, user_preference.value " . 
+			"FROM preferences RIGHT JOIN user_preference ON user_preference.preference=preferences.id " .
+			"WHERE user_preference.user='$user_id' $user_limit";
+		$db_results = Dba::query($sql);
 
 		/* Ok this is crapy, need to clean this up or improve the code FIXME */
-		while ($r = mysql_fetch_assoc($db_results)) { 
+		while ($r = Dba::fetch_assoc($db_results)) { 
 			$type = $r['catagory'];
 			$admin = false;
 			if ($type == 'system') { $admin = true; }
-			$type_array[$type][] = array('name'=>$r['name'],'description'=>$r['description'],'value'=>$r['value']);
+			$type_array[$type][$r['name']] = array('name'=>$r['name'],'description'=>$r['description'],'value'=>$r['value']);
+			ksort($type_array[$type]); 
 			$results[$type] = array ('title'=>ucwords($type),'admin'=>$admin,'prefs'=>$type_array[$type]);
 		} // end while
-
 
 		return $results;
 	

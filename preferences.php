@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2006 Ampache.org
+ Copyright (c) 2001 - 2007 Ampache.org
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
@@ -20,24 +20,18 @@
 
 */
 
-/*!
-	@header Preferences page
-	Preferences page for whole site, and where
-	the admins do editing of other users preferences
-
-*/
-
-require('lib/init.php');
+require 'lib/init.php';
 
 /* Scrub in the needed mojo */
 if (!$_REQUEST['tab']) { $_REQUEST['tab'] = 'interface'; } 
 $user_id = scrub_in($_REQUEST['user_id']);
 
-
-switch(scrub_in($_REQUEST['action'])) { 
+// Switch on the action 
+switch($_REQUEST['action']) { 
 	case 'update_user':
 		/* Verify permissions */
-		if (!$GLOBALS['user']->has_access(25) || conf('demo_mode') || ($GLOBALS['user']->id != $user_id && !$GLOBALS['user']->has_access(100))) { 
+		if (!$GLOBALS['user']->has_access(25) || Config::get('demo_mode') || 
+			($GLOBALS['user']->id != $user_id && !$GLOBALS['user']->has_access(100))) { 
 			show_access_denied(); 
 			exit();
 		}
@@ -95,14 +89,14 @@ else {
 
 
 // HEADER
-show_template('header');
+require_once Config::get('prefix') . '/templates/header.inc.php';
 // HEADER
 
 // Set Target
 $target = "/preferences.php";
 
 // Show the default preferences page
-require (conf('prefix') . "/templates/show_preferences.inc");
+require Config::get('prefix') . '/templates/show_preferences.inc.php';
 
 
 // FOOTER

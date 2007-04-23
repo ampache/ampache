@@ -1,6 +1,6 @@
 <?php
 /*
- Copyright 2001 - 2006 Ampache.org
+ Copyright 2001 - 2007 Ampache.org
  All Rights Reserved
 
  This program is free software; you can redistribute it and/or
@@ -19,8 +19,8 @@
 */
 
 /* Create some variables we are going to need */
-$web_path = conf('web_path');
-$base_url = conf('ajax_url') . '?action=set_rating&amp;rating_type=' . $rating->type . '&amp;object_id=' . $rating->id . conf('ajax_info');
+$web_path = Config::get('web_path');
+$base_url = Config::get('ajax_url') . '?action=set_rating&amp;rating_type=' . $rating->type . '&amp;object_id=' . $rating->id . Config::get('ajax_info');
 
 
 //set the background to no stars

@@ -268,16 +268,16 @@ function create_preference_input($name,$value) {
 			else { $is_stream = "selected=\"selected\""; } 
 			echo "<select name=\"$name\">\n";
 			echo "\t<option value=\"\">" . _('None') . "</option>\n";
-			if (conf('allow_stream_playback')) { 
+			if (Config::get('allow_stream_playback')) { 
 				echo "\t<option value=\"stream\" $is_stream>" . _('Stream') . "</option>\n";
 			}
-			if (conf('allow_downsample_playback')) { 
+			if (Config::get('allow_downsample_playback')) { 
 				echo "\t<option value=\"downsample\" $is_down>" . _('Downsample') . "</option>\n";
 			}
-			if (conf('allow_democratic_playback')) { 
+			if (Config::get('allow_democratic_playback')) { 
 				echo "\t<option value=\"democratic\" $is_vote>" . _('Democratic') . "</option>\n";
 			}
-			if (conf('allow_localplay_playback')) { 
+			if (Config::get('allow_localplay_playback')) { 
 				echo "\t<option value=\"localplay\" $is_local>" . _('Localplay') . "</option>\n";	
 			} 
 			echo "\t<option value=\"xspf_player\" $is_xspf_player>" . _('XSPF Player') . "</option>\n";

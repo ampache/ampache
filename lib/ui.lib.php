@@ -837,7 +837,7 @@ function get_location() {
  */
 function show_preference_box($preferences) { 
 	
-	include (conf('prefix') . '/templates/show_preference_box.inc.php');
+	require Config::get('prefix') . '/templates/show_preference_box.inc.php';
 
 } // show_preference_box
 

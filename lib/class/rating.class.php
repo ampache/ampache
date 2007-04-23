@@ -41,7 +41,7 @@ class Rating {
 	function Rating($id,$type) { 
 
 		$this->id 	= intval($id);
-		$this->type 	= sql_escape($type);
+		$this->type 	= Dba::escape($type);
 
 		// Check for the users rating
 		if ($rating = $this->get_user($GLOBALS['user']->id)) { 
@@ -62,12 +62,12 @@ class Rating {
 	 */
 	function get_user($user_id) { 
 
-		$user_id	= sql_escape($user_id); 
+		$user_id	= Dba::escape($user_id); 
 
 		$sql = "SELECT rating FROM ratings WHERE user='$user_id' AND object_id='$this->id' AND object_type='$this->type'";
-		$db_results = mysql_query($sql, dbh());
+		$db_results = Dba::query($sql);
 		
-		$results = mysql_fetch_assoc($db_results);
+		$results = Dba::fetch_assoc($db_results);
 
 		return $results['rating'];
 
@@ -83,11 +83,11 @@ class Rating {
 	function get_average() { 
 
 		$sql = "SELECT user_rating as rating FROM ratings WHERE object_id='$this->id' AND object_type='$this->type'";
-		$db_results = mysql_query($sql, dbh());
+		$db_results = Dba::query($sql);
 
 		$i = 0;
 
-		while ($r = mysql_fetch_assoc($db_results)) { 
+		while ($r = Dba::fetch_assoc($db_results)) { 
 			$i++;
 			$total += $r['rating'];
 		} // while we're pulling results
