@@ -19,7 +19,7 @@
 
 */
 
-require 'lib/init.php';
+require_once 'lib/init.php';
 
 /* If we are running a demo, quick while you still can! */
 if (Config::get('demo_mode') || !$GLOBALS['user']->has_access('25')) {
@@ -55,6 +55,24 @@ switch ($action) {
 	case 'tmp_playlist':
 		$tmp_playlist = new tmpPlaylist($_REQUEST['tmpplaylist_id']);
 		$song_ids = $tmp_playlist->get_items();
+	break;
+	case 'play_favorite':
+		$data = $GLOBALS['user']->get_favorites($_REQUEST['type']); 
+		$song_ids = array(); 
+		switch ($_REQUEST['type']) { 
+			case 'artist':
+			case 'album':
+				foreach ($data as $value) { 
+					$songs = $value->get_songs(); 
+					$song_ids = array_merge($song_ids,$songs); 
+				} 
+			break;
+			case 'song':
+				foreach ($data as $value) { 
+					$song_ids[] = $value->id; 
+				} 
+			break;
+		} // end switch on type
 	break;
 	case 'single_song':
 		$song_ids[] = scrub_in($_REQUEST['song_id']);

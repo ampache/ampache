@@ -4,6 +4,7 @@
 
 --------------------------------------------------------------------------
   v.3.4-Alpha1
+  	- Added Play links for Favorite Artists/Albums/Songs
   	- Fixed an issue with the random album selection that was causing
 		a full table scan, which could lead to poor performance
 		with large databases

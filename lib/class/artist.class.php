@@ -25,11 +25,11 @@
 class Artist {
 
 	/* Variables from DB */
-	var $id;
-	var $name;
-	var $songs;
-	var $albums;
-	var $prefix;
+	public $id;
+	public $name;
+	public $songs;
+	public $albums;
+	public $prefix;
 
 	/**
 	 * Artist
@@ -91,17 +91,17 @@ class Artist {
 		
 	} // get_albums
 
-	/*! 
-		@function get_songs
-		@discussion gets the songs for this artist
-	*/
+	/** 
+	 * get_songs
+	 * gets the songs for this artist
+	 */
 	function get_songs() { 
 	
-		$sql = "SELECT song.id FROM song WHERE song.artist='" . sql_escape($this->id) . "'";
-		$db_results = mysql_query($sql, dbh());
+		$sql = "SELECT `song`.`id` FROM `song` WHERE `song`.`artist`='" . Dba::escape($this->id) . "'";
+		$db_results = Dba::query($sql);
 
-		while ($r = mysql_fetch_assoc($db_results)) { 
-			$results[] = new Song($r['id']);
+		while ($r = Dba::fetch_assoc($db_results)) { 
+			$results[] = $r['id'];
 		}
 
 		return $results;

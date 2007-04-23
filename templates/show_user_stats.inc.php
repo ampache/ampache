@@ -26,7 +26,7 @@
 	<?php 
 	if (count($favorite_artists)) { 
 		$items = $working_user->format_favorites($favorite_artists); 
-		$title = '<a href="' . Config::get('web_path') . '/stats.php?action=play_favorite&amp;type=artists">' . 
+		$title = '<a href="' . Config::get('web_path') . '/stream.php?action=play_favorite&amp;type=artist">' . 
 			get_user_icon('all') . '</a>&nbsp;' .  _('Favorite Artists');
 		show_info_box($title,'artist',$items); 
 	}
@@ -39,7 +39,7 @@
 	<?php
 	if (count($favorite_albums)) { 
 		$items = $working_user->format_favorites($favorite_albums);
-                $title = '<a href="' . Config::get('web_path') . '/stats.php?action=play_favorite&amp;type=albums">' . 
+                $title = '<a href="' . Config::get('web_path') . '/stream.php?action=play_favorite&amp;type=album">' . 
                         get_user_icon('all') . '</a>&nbsp;' .  _('Favorite Albums');
 		show_info_box($title,'album',$items);
 	}
@@ -52,7 +52,7 @@
 	<?php
 	if (count($favorite_songs)) { 
 		$items = $working_user->format_favorites($favorite_songs); 
-                $title = '<a href="' . Config::get('web_path') . '/stats.php?action=play_favorite&amp;type=songs">' . 
+                $title = '<a href="' . Config::get('web_path') . '/stream.php?action=play_favorite&amp;type=song">' . 
                         get_user_icon('all') . '</a>&nbsp;' .  _('Favorite Songs');
 		show_info_box($title,'your_song',$items); 
 	}

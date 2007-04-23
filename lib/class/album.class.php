@@ -93,20 +93,20 @@ class Album {
 
 	} // _get_info
 
-	/*!
-		@function get_songs
-		@discussion gets the songs for this album
-	*/
-	function get_songs($limit = 0) { 
+	/**
+	 * get_songs
+	 * gets the songs for this album
+	 */
+	public function get_songs($limit = 0) { 
 
 		$results = array();
 
-		$sql = "SELECT id FROM song WHERE album='$this->id' ORDER BY track, title";
+		$sql = "SELECT `id` FROM `song` WHERE `album`='$this->id' ORDER BY `track`, `title`";
 		if ($limit) { $sql .= " LIMIT $limit"; }
-		$db_results = mysql_query($sql, dbh());
+		$db_results = Dba::query($sql);
 
-		while ($r = mysql_fetch_object($db_results)) { 
-			$results[] = new Song($r->id);
+		while ($r = Dba::fetch_assoc($db_results)) { 
+			$results[] = $r['id'];
 		}
 
 		return $results;
