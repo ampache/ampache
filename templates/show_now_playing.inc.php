@@ -1,7 +1,7 @@
 <?php
 /*
 
-Copyright (c) 2001 - 2006 Ampache.org
+Copyright (c) 2001 - 2007 Ampache.org
 All rights reserved.
 
 This program is free software; you can redistribute it and/or
@@ -41,7 +41,7 @@ foreach ($results as $item) {
 	if (!$np_user->fullname) { $np_user->fullname = "Ampache User"; }
 
 	echo '<tr class="np_row">';
-	require(conf('prefix') . '/templates/show_now_playing_row.inc.php');
+	require Config::get('prefix') . '/templates/show_now_playing_row.inc.php';
 	echo '</tr>';
 
 } // end foreach

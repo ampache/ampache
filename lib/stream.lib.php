@@ -39,8 +39,8 @@ function delete_now_playing($insert_id) {
         }
 
         // Remove the song from the now_playing table
-        $sql = "DELETE FROM now_playing WHERE id = '$insert_id'";
-        $db_result = mysql_query($sql, dbh());
+        $sql = "DELETE FROM `now_playing` WHERE `id` = '$insert_id'";
+        $db_result = Dba::query($sql);
 
 } // delete_now_playing
 
@@ -92,7 +92,7 @@ function insert_now_playing($song_id,$uid,$song_length) {
         // If they are using Windows media player
 	if (strstr($user_agent,"NSPlayer") || $_REQUEST['flash_hack'] == 1) { 
                 // WMP does keep the session open so we need to cheat a little here
-		$session_id 	= sql_escape($_REQUEST['sid']); 
+		$session_id 	= Dba::escape($_REQUEST['sid']); 
         }
 
 	/* Set expire time for worst case clean up */
@@ -118,11 +118,11 @@ function insert_now_playing($song_id,$uid,$song_length) {
  */
 function check_lock_songs($song_id) { 
 
-	$sql = "SELECT song_id FROM now_playing " . 
-		"WHERE song_id = '$song_id'";
-	$db_results = mysql_query($sql, dbh());
+	$sql = "SELECT `song_id` FROM `now_playing` " . 
+		"WHERE `song_id` = '$song_id'";
+	$db_results = Dba::query($sql);
 
-	if (mysql_num_rows($db_results)) { 
+	if (Dba::num_rows($db_results)) { 
 		debug_event('lock_songs','Song Already Playing, skipping...','5'); 
 		return false;
 	}

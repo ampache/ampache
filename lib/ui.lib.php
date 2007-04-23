@@ -257,7 +257,7 @@ function show_now_playing() {
 
 	$web_path = Config::get('web_path');
 	$results = get_now_playing();
-	require Config::get('prefix') . '/templates/show_now_playing.inc';
+	require Config::get('prefix') . '/templates/show_now_playing.inc.php';
 
 } // show_now_playing
 
