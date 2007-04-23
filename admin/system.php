@@ -66,27 +66,38 @@ switch ($action) {
 				/* Check to see if Key on source side is an array */
 				if (is_array($current[$key])) { 
 					/* We need to add all values of this key to the new config file */
-					$line = '';
+					$line = $key . ' = "';
 					$array_value[$key] = true;
 					foreach ($current[$key] as $sub_value) { 
-						$line .= $key . " = \"" . $sub_value . "\"\n";
+						$line .= "$sub_value,";
 					}
+					
+					$line = rtrim($line,','); 
+					$line .= '"';
+
 					unset($current[$key]); 
 				} // is array
 				
 				/* Put in the current value */
 				elseif (isset($current[$key]) AND $key != 'config_version') { 
-					$line = $key . " = \"" . $current[$key] . "\"";
+					$line = $key . ' = "' . $current[$key] . '"';
 					unset($current[$key]);
 				} // if set 
 
 				elseif (isset($array_value[$key])) { 
 					$line = '';
 				}
-			
+		
+				if (substr($line,0,1) == "#") { 
+					$line = ltrim($line,"#"); 
+					$line = ";" . $line; 
+				}	
 
 			} // if key
-
+			else { 
+				// Replace # with ;
+				$line = str_replace("#",";",$line); 
+			} 
 
 			$final .= $line . "\n";	
 
