@@ -19,9 +19,8 @@
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
-$web_path 	= conf('web_path');
-$catalog	= new Catalog(); 
-$catalogs 	= $catalog->get_catalogs();
+$web_path 	= Config::get('web_path');
+$catalogs 	= Catalog::get_catalogs();
 
 ?>
 <?php show_box_top(_('Catalogs')); ?>

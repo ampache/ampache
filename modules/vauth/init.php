@@ -34,7 +34,6 @@
  * to throw an exception and return false
  */
 function vauth_init($data) { 
-
 	/* Check for the variables we are going to need first */
 	if (isset($data['auth_methods']['mysql'])) { 	
 		if (!isset($data['mysql_hostname'])) { 
@@ -80,11 +79,6 @@ function vauth_init($data) {
 	
 
 	} // if we're doing http auth
-
-	if (!isset($data['stop_auth'])) { 
-		vauth_error('No Stop File Defined [stop_auth]');
-		$error_status = true;
-	}
 
 	if (!isset($data['session_length'])) { 
 		vauth_error('No Session Length Defined [session_length]');
@@ -142,7 +136,7 @@ function vauth_init($data) {
  * is what is going to happen to it... amazing huh!
  */
 function vauth_error($string) { 
-
+	
 	trigger_error($string,E_USER_WARNING);
 	return true;
 

@@ -22,7 +22,7 @@
 /**
  * This is kind of the wrong place to do this, but let's define the different submenu's that could possibly be 
  * displayed on this page, this calls the show_submenu($items); function which takes an array of items
- * that have ['title'] ['url'] ['active'] and ['cssclass'] url assumes no conf('web_path')
+ * that have ['title'] ['url'] ['active'] and ['cssclass'] url assumes no Config::get('web_path')
  */
 
 $admin_items[] = array('title'=>_('Users'),'url'=>'admin/users.php','active'=>$location['page'], 'cssclass'=>'sidebar_admin_users');
@@ -36,7 +36,7 @@ $browse_items[] = array('title'=>_("Artists"),'url'=>'artists.php','active'=>$lo
 $browse_items[] = array('title'=>_("Genre"),'url'=>'browse.php?action=genre','active'=>$location['page'], 'cssclass'=>'sidebar_browse_genre');
 $browse_items[] = array('title'=>_('Song Title'),'url'=>'browse.php?action=song_title','active'=>$location['page'], 'cssclass'=>'sidebar_browse_song_title');
 
-$web_path = conf('web_path');
+$web_path = Config::get('web_path');
 
 ?>
 <h3>&nbsp;</h3>
@@ -163,29 +163,29 @@ $web_path = conf('web_path');
 		</form>
 	</li>
 <?php } // end if ($GLOBALS['theme']['orientation'] != 'horizontal') ?> 
-<?php if ($GLOBALS['user']->prefs['localplay_level'] > 0 AND conf('allow_localplay_playback')) { ?>
+<?php if ($GLOBALS['user']->prefs['localplay_level'] > 0 AND Config::get('allow_localplay_playback')) { ?>
 	<li id="sidebar_localplay">
 		<a href="<?php echo $web_path; ?>/localplay.php"><?php echo _('Localplay'); ?></a>
 	</li>
 <?php if ($GLOBALS['theme']['orientation'] != 'horizontal') { ?>
 	<li id="sidebar_localplay_ctrl">
-		<?php require_once(conf('prefix') . '/templates/show_localplay_control.inc.php'); ?>
+		<?php require_once(Config::get('prefix') . '/templates/show_localplay_control.inc.php'); ?>
 	</li>
 <?php } // if horizontal orientation ?>
 <?php } // if localplay access ?>
 	<li>
 		<?php 
-			$required_info  = conf('ajax_info');
-			$ajax_url       = conf('ajax_url');
+			$required_info  = Config::get('ajax_info');
+			$ajax_url       = Config::get('ajax_url');
 		?>
-		<?php require_once(conf('prefix') . '/templates/show_playtype_switch.inc.php'); ?>
+		<?php require_once(Config::get('prefix') . '/templates/show_playtype_switch.inc.php'); ?>
 	</li>
-<?php if (conf('allow_democratic_playback')) { ?>
+<?php if (Config::get('allow_democratic_playback')) { ?>
 	<li>
 		<a href="<?php echo $web_path; ?>/tv.php"><?php echo _('Democratic View'); ?></a>
 	</li>
 <?php } // if democratic play ?>
-<?php if (conf('use_auth')) { ?>
+<?php if (Config::get('use_auth')) { ?>
 	<li id="sidebar_logout"><a href="<?php echo $web_path; ?>/logout.php"><?php echo _('Logout'); ?></a></li>
-<?php } // end (conf('use_auth'))?>
+<?php } // end (Config::get('use_auth'))?>
 </ul>

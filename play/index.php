@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2006 Ampache.org
+ Copyright (c) 2001 - 2007 Ampache.org
  All rights reserved.  
 
  This program is free software; you can redistribute it and/or
@@ -25,10 +25,9 @@
    the case.  Also this will update local statistics for songs as well.
    This is also where it decides if you need to be downsampled. 
 */
-
 define('NO_SESSION','1');
-require_once('../lib/init.php');
-require_once(conf('prefix') . '/modules/horde/Browser.php');
+require_once '../lib/init.php';
+require_once Config::get('prefix') . '/modules/horde/Browser.php';
 
 
 /* These parameters had better come in on the url. */
@@ -51,17 +50,20 @@ if (!isset($uid)) {
 }
 
 /* Misc Housework */
-$dbh = dbh();
 $user = new User($uid);
 
-if (conf('xml_rpc')) { 
+/* Update the users last seen information */
+$user->update_last_seen();
+
+// If we're doing XML-RPC check _GET
+if (Config::get('xml_rpc')) { 
 	$xml_rpc = $_GET['xml_rpc'];
 }
 
-if (conf('require_session') OR $xml_rpc) { 
+if (Config::get('require_session') OR $xml_rpc) { 
 	if(!session_exists($sid,$xml_rpc)) {	
 		debug_event('session_expired',"Streaming Access Denied: " . $GLOBALS['user']->username . "'s session has expired",'3');
-    		die(_("Session Expired: please log in again at") . " " . conf('web_path') . "/login.php");
+    		die(_("Session Expired: please log in again at") . " " . Config::get('web_path') . "/login.php");
 	}
 
 	// Now that we've confirmed the session is valid
@@ -70,8 +72,8 @@ if (conf('require_session') OR $xml_rpc) {
 }
 
 /* If we are in demo mode.. die here */
-if (conf('demo_mode') || (!$GLOBALS['user']->has_access('25') && !$xml_rpc) ) {
-	debug_event('access_denied',"Streaming Access Denied:" .conf('demo_mode') . "is the value of demo_mode. Current user level is " . $GLOBALS['user']->access,'3');
+if (Config::get('demo_mode') || (!$GLOBALS['user']->has_access('25') && !$xml_rpc) ) {
+	debug_event('access_denied',"Streaming Access Denied:" .Config::get('demo_mode') . "is the value of demo_mode. Current user level is " . $GLOBALS['user']->access,'3');
 	access_denied();
 }
 
@@ -79,10 +81,9 @@ if (conf('demo_mode') || (!$GLOBALS['user']->has_access('25') && !$xml_rpc) ) {
    If they are using access lists let's make sure 
    that they have enough access to play this mojo
 */
-if (conf('access_control')) { 
-	$access = new Access(0);
-	if (!$access->check('stream',$_SERVER['REMOTE_ADDR'],$GLOBALS['user']->username,'25') AND
-		!$access->check('network',$_SERVER['REMOTE_ADDR'],$GLOBALS['user']->username,'25')) { 
+if (Config::get('access_control')) { 
+	if (!Access::check('stream',$_SERVER['REMOTE_ADDR'],$GLOBALS['user']->username,'25') AND
+		!Access::check('network',$_SERVER['REMOTE_ADDR'],$GLOBALS['user']->username,'25')) { 
 		debug_event('access_denied', "Streaming Access Denied: " . $_SERVER['REMOTE_ADDR'] . " does not have stream level access",'3');
 		access_denied();
 		exit; 
@@ -102,7 +103,7 @@ if ($tmp_id) {
 
 /* Base Checks passed create the song object */
 $song = new Song($song_id);
-$song->format_song();
+$song->format();
 $catalog = new Catalog($song->catalog);
 
 /* If the song is disabled */
@@ -133,17 +134,11 @@ if (!$song->file OR ( !is_readable($song->file) AND $catalog->catalog_type != 'r
 }
 	
 /* If we're using auth and we can't find a username for this user */
-if ( conf('use_auth') AND !$GLOBALS['user']->username AND !$GLOBALS['user']->is_xmlrpc() ) {
+if (Config::get('use_auth') AND !$GLOBALS['user']->username AND !$GLOBALS['user']->is_xmlrpc() ) {
 	debug_event('user_not_found',"Error $user->username not found, stream access denied",'3');
 	echo "Error: No User Found"; 
 	exit; 
 }
-
-/* Create the catalog object so we know a little more about it */
-$catalog = new Catalog($song->catalog);
-
-/* Update the users last seen information */
-$GLOBALS['user']->update_last_seen();
 
 /* Run Garbage Collection on Now Playing */
 gc_now_playing();
@@ -168,7 +163,7 @@ if ($catalog->catalog_type == 'remote') {
 
 
 // If we are running in Legalize mode, don't play songs already playing
-if (conf('lock_songs')) {
+if (Config::get('lock_songs')) {
 	if (!check_lock_songs($song->id)) { exit(); }
 }
 
@@ -181,25 +176,8 @@ set_magic_quotes_runtime(0);
 // don't abort the script if user skips this song because we need to update now_playing
 ignore_user_abort(TRUE);
 
-/* Format the Song Name */
-if (conf('stream_name_format')) {
-	$song_name = conf('stream_name_format');
-	$song_name = str_replace("%basename",basename($song->file),$song_name);
-	$song_name = str_replace("%filename",$song->file,$song_name);
-	$song_name = str_replace("%type",$song->type,$song_name);
-	$song_name = str_replace("%catalog",$catalog->name,$song_name);
-	$song_name = str_replace("%A",$song->f_album_full,$song_name); // this and next could be truncated version
-	$song_name = str_replace("%a",$song->f_artist_full,$song_name);
-	$song_name = str_replace("%C",$catalog->path,$song_name);
-	$song_name = str_replace("%c",$song->comment,$song_name);
-	$song_name = str_replace("%g",$song->f_genre,$song_name);
-	$song_name = str_replace("%T",$song->track,$song_name);
-	$song_name = str_replace("%t",$song->title,$song_name);
-	$song_name = str_replace("%y",$song->year,$song_name);
-} 
-else {
-	$song_name = $song->f_artist_full . " - " . $song->title . "." . $song->type;
-}
+// Format the song name
+$song_name = $song->f_artist_full . " - " . $song->title . "." . $song->type;
 	
 $startArray = sscanf( $_SERVER[ "HTTP_RANGE" ], "bytes=%d-" );
 $start = $startArray[0];
@@ -212,12 +190,12 @@ header("Accept-Ranges: bytes" );
 set_time_limit(0);			
 
 /* We're about to start record this persons IP */
-if (conf('track_user_ip')) { 
+if (Config::get('track_user_ip')) { 
 	$user->insert_ip_history();
 }
 
 /* If access control is on and they aren't local, downsample! */
-if (conf('access_control') AND conf('downsample_remote')) { 
+if (Config::get('access_control') AND Config::get('downsample_remote')) { 
 	if (!$access->check('network',$_SERVER['REMOTE_ADDR'],$GLOBALS['user']->username,'25')) { 
 		$not_local = true;
 	}

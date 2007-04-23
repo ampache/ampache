@@ -1,0 +1,79 @@
+// +----------------------------------------------------------------------+
+// | PHP version 5                                                        |
+// +----------------------------------------------------------------------+
+// | Copyright (c) 2002-2006 James Heinrich, Allan Hansen                 |
+// +----------------------------------------------------------------------+
+// | This source file is subject to version 2 of the GPL license,         |
+// | that is bundled with this package in the file license.txt and is     |
+// | available through the world-wide-web at the following url:           |
+// | http://www.gnu.org/copyleft/gpl.html                                 |
+// +----------------------------------------------------------------------+
+// | getID3() - http://getid3.sourceforge.net or http://www.getid3.org    |
+// +----------------------------------------------------------------------+
+// | Authors: James Heinrich <infoØgetid3*org>                            |
+// |          Allan Hansen <ahØartemis*dk>                                |
+// +----------------------------------------------------------------------+
+// | Dependencies                                                         |
+// +----------------------------------------------------------------------+
+//
+// $Id: dependencies.txt,v 1.9 2006/11/16 22:39:59 ah Exp $
+
+
+
+READER MODULES:
+
+  asf         	riff module required
+  
+  bonk        	id3v2 module optional
+  
+  id3v2       	id3v1 module required
+  		zlib php support optional
+  
+  gzip	      	zlib php support optional
+  		
+  jpeg        	exif php support optional
+  
+  la          	riff module required
+  
+  lpac        	riff module required
+  
+  lyrics3     	apetag  module optional
+  
+  mpeg        	mp3 module required
+  
+  optimfrog   	riff module required
+  
+  png         	zlib php support optional
+  
+  quicktime   	mp3 module required
+  	   	zlib php support optional
+  
+  riff        	mp3   module optional
+  		ac3   module optional
+  		dts   module optional
+  		mpeg  module optional
+  
+  shn 	      	shorten binary (shorten.exe on windows) required
+  
+  swf         	zlib php support required
+  
+  wavpack     	riff module required
+  
+  xiph		vorbiscomment binary (vorbiscomment.exe on windows) for md5/sha1 data hashes on ogg vorbis files.
+
+
+
+WRITER MODULES:
+
+  apetag      	apetag  (reader) module required
+  		id3v1   (reader) module required
+  		lyrics3 (reader) module required
+  
+  id3v1		id3v1(reader)  module required
+  
+  lyrics3	lyrics3 (reader) module required
+  		id3v1   (reader) module required
+  
+  flac		metaflac binary
+ 
+  vorbis	vorbiscomment binary

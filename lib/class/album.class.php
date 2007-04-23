@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2006 Ampache.org
+ Copyright (c) 2001 - 2007 Ampache.org
  All Rights Reserved
 
  This program is free software; you can redistribute it and/or
@@ -73,7 +73,7 @@ class Album {
 		@discussion get's the vars for $this out of the database 
 		@param $this->id	Taken from the object
 	*/
-	function _get_info() {
+	private function _get_info() {
 
 		$this->id = intval($this->id); 
 	
@@ -81,10 +81,9 @@ class Album {
 		$sql = "SELECT COUNT(DISTINCT(song.artist)) as artist_count,album.prefix,album.year,album.name AS album_name,COUNT(song.id) AS song_count," .
 			"artist.name AS artist_name,artist.id AS art_id,artist.prefix AS artist_prefix,album.art AS has_art ".
 			"FROM song,artist,album WHERE album.id='$this->id' AND song.album=album.id AND song.artist=artist.id GROUP BY song.album";
+		$db_results = Dba::query($sql);
 
-		$db_results = mysql_query($sql, dbh());
-
-		$results = mysql_fetch_assoc($db_results);
+		$results = Dba::fetch_assoc($db_results);
 
 		// If there is art then set it to 1, if not set it to 0, we don't want to cary
 		// around the full blob with every object because it can be pretty big
@@ -147,10 +146,10 @@ class Album {
 	 */
 	function format() { 
 
-	        $web_path = conf('web_path');
+	        $web_path = Config::get('web_path');
 
 		/* Truncate the string if it's to long */
-		$name 		= scrub_out(truncate_with_ellipse($this->name,conf('ellipse_threshold_album')));
+		$name 		= scrub_out(truncate_with_ellipse($this->name,Config::get('ellipse_threshold_album')));
 		$artist		= scrub_out($this->artist);
 	        $this->f_name	= "<a href=\"$web_path/albums.php?action=show&amp;album=" . $this->id . "\" title=\"" . scrub_out($this->name) . "\">" . $name . "</a>";
 		$this->f_link	= "<a href=\"$web_path/albums.php?action=show&amp;album=" . scrub_out($this->id) . "\" title=\"" . scrub_out($this->name) . "\">" . $name . "</a>";
@@ -182,12 +181,20 @@ class Album {
 
 	/**
 	 * get_art
-	 * This function only pulls art from the database, nothing else
-	 * It should not be called when trying to find new art
+	 * This function only pulls art from the database, if thumb is passed
+	 * it trys to pull the resized art instead, if resized art is found then
+	 * it returns an additional resized=true in the array
 	 */
 	function get_art() { 
 
-		return $this->get_db_art(); 
+		// Attempt to get the resized art first
+		$art = $this->get_resized_db_art(); 
+		
+		if (!is_array($art)) { 
+			$art = $this->get_db_art(); 
+		}
+
+		return $art;
 
 	} // get_art
 
@@ -371,15 +378,37 @@ class Album {
 	} // get_folder_art()
 
 	/**
-	 * get_db_art()
+	 * get_resized_db_art
+	 * This looks to see if we have a resized thumbnail that we can load rather then taking
+	 * the fullsized and resizing that
+	 */
+	public function get_resized_db_art() { 
+
+		$id = Dba::escape($this->id); 
+
+		$sql = "SELECT `thumb` AS `art`,`thumb_mime` AS `art_mime` FROM `album` WHERE `id`='$id'";
+		$db_results = Dba::query($sql); 
+		
+		$results = Dba::fetch_assoc($db_results); 
+		if (strlen($results['art_mime'])) { 
+			$results['resized'] = true; 
+		} 
+		else { return false; } 
+
+		return $results;
+
+	} // get_resized_db_art
+
+	/**
+	 * get_db_art
 	 * returns the album art from the db along with the mime type
 	 */
-	function get_db_art() {
+	public function get_db_art() {
 
-		$sql = "SELECT art,art_mime FROM album WHERE id='$this->id' AND art_mime IS NOT NULL";
-		$db_results = mysql_query($sql, dbh());
+		$sql = "SELECT `art`,`art_mime` FROM `album` WHERE `id`='$this->id'";
+		$db_results = Dba::query($sql);
 
-		$results = mysql_fetch_assoc($db_results);
+		$results = Dba::fetch_assoc($db_results);
 
 		if (!$results['art']) { return array(); } 
 		
@@ -585,6 +614,22 @@ class Album {
 
 	} // insert_art
 
+	/**
+	 * save_resized_art
+	 * This takes data from a gd resize operation and saves
+	 * it back into the database as a thumbnail
+	 */
+	public static function save_resized_art($data,$mime,$album) { 
+
+		$data = Dba::escape($data); 
+		$mime = Dba::escape($mime); 
+		$album = Dba::escape($album); 
+
+		$sql = "UPDATE `album` SET `thumb`='$data',`thumb_mime`='$mime' " . 
+			"WHERE `album`.`id`='$album'";
+		$db_results = Dba::query($sql); 
+
+	} // save_resized_art
 
 } //end of album class
 

@@ -27,22 +27,22 @@
 function load_gettext() { 
 	/* If we have gettext */
 	if (function_exists('bindtextdomain')) { 
-		$lang = conf('lang');
+		$lang = Config::get('lang');
 		putenv("LANG=" . $lang);
 		putenv("LANGUAGE=" . $lang);
 		/* Try lang, lang + charset and lang + utf-8 */
 		setlocale(LC_ALL, 
 				$lang,
-				$lang . '.'. conf('site_charset'),
+				$lang . '.'. Config::get('site_charset'),
 				$lang . '.UTF-8',
 				$lang . '.utf-8',
-				$lang . '.' . conf('lc_charset'));
+				$lang . '.' . Config::get('lc_charset'));
 
 		/* Bind the Text Domain */
-		bindtextdomain('messages', conf('prefix') . "/locale/");
+		bindtextdomain('messages', Config::get('prefix') . "/locale/");
 		textdomain('messages');
 		if (function_exists('bind_textdomain_codeset')) { 
-			bind_textdomain_codeset('messages',conf('site_charset'));
+			bind_textdomain_codeset('messages',Config::get('site_charset'));
 		} // if we can codeset the textdomain
 
 	} // If bindtext domain exists

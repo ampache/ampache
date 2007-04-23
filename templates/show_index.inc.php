@@ -21,10 +21,8 @@
 ?>
 <?php
 if (isset($_REQUEST['xspf']) && isset ($_REQUEST['play_info'])){
-
-require_once(conf('prefix') . '/templates/show_embed_xspf.inc.php');
+	require_once Config::get('prefix') . '/templates/show_embed_xspf.inc.php';
 }
-
 ?>
 
 <div id="np_data">
@@ -34,16 +32,20 @@ require_once(conf('prefix') . '/templates/show_embed_xspf.inc.php');
 <div id="random_selection">
 	<?php
 		$albums = get_random_albums('6'); 
-		if (count($albums)) { require_once(conf('prefix') . '/templates/show_random_albums.inc.php'); } 
+		if (count($albums)) { require_once Config::get('prefix') . '/templates/show_random_albums.inc.php'; } 
 	?>
 </div> 
 <div id="recently_played">
         <?php
                 $data = get_recently_played();
-                if (count($data)) { require_once(conf('prefix') . '/templates/show_recently_played.inc.php'); }
+                if (count($data)) { require_once Config::get('prefix') . '/templates/show_recently_played.inc.php'; }
         ?>
 </div>
 <div id="catalog_info">
         <?php show_local_catalog_info(); ?>
 </div>
-
+<div id="recent_added">
+	<?php show_box_top(); ?>
+	<?php show_all_recent('5'); ?>
+	<?php show_box_bottom(); ?>
+</div>

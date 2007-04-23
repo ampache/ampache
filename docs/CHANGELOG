@@ -4,6 +4,11 @@
 
 --------------------------------------------------------------------------
   v.3.4-Alpha1
+  	- Fixed an issue with the random album selection that was causing
+		a full table scan, which could lead to poor performance
+		with large databases
+  	- Start of Complete rewrite, config file format changed, requires
+		manual re-creation of /config/ampache.cfg.php
 	- Added some minor sorting to the browse by song 
 	- Added ability to search year range (Thx Tom Kiehne)
 	- Updated French and German translations

@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2006 Ampache.org
+ Copyright (c) 2001 - 2007 Ampache.org
  All Rights Reserved
 
  This program is free software; you can redistribute it and/or
@@ -27,22 +27,22 @@
  */
 class Catalog {
 
-	var $name;
-	var $last_update;
-	var $last_add;
-	var $key;
-	var $rename_pattern;
-	var $sort_pattern;
-	var $catalog_type;
+	public $name;
+	public $last_update;
+	public $last_add;
+	public $key;
+	public $rename_pattern;
+	public $sort_pattern;
+	public $catalog_type;
 
 	/* This is a private var that's used during catalog builds */
-	var $_playlists = array();
-	var $_art_albums = array(); 
+	private $_playlists = array();
+	private $_art_albums = array(); 
 
 	// Used in functions
-	var $albums	= array();
-	var $artists	= array();
-	var $genres	= array();
+	public $albums	= array();
+	public $artists	= array();
+	public $genres	= array();
 
 	/**
 	 * Catalog
@@ -52,57 +52,47 @@ class Catalog {
 	 */
 	function Catalog($catalog_id = 0) {
 
-		/* If we have passed an id then do something */
-		if ($catalog_id) {
-			/* Assign id for use in get_info() */
-			$this->id = intval($catalog_id);
+		if (!$catalog_id) { return false; } 
 
-			/* Get the information from the db */
-			$info = $this->get_info();
+		/* Assign id for use in get_info() */
+		$this->id = intval($catalog_id);
 
-			/* Assign Vars */
-			$this->path        	= $info->path;
-			$this->name        	= $info->name;
-			$this->last_update 	= $info->last_update;
-			$this->last_add	   	= $info->last_add;
-			$this->key		= $info->key;
-			$this->rename_pattern 	= $info->rename_pattern;
-			$this->sort_pattern 	= $info->sort_pattern;
-			$this->catalog_type	= $info->catalog_type;
-		} //catalog_id
+		/* Get the information from the db */
+		$info = $this->_get_info();
+
+		foreach ($info as $key=>$value) { 
+			$this->$key = $value; 
+		} 
 
 	} //constructor
 
-
-	/*!
-		@function get_info
-		@discussion get's the vars for $this out of the database
-		@param $this->id	Taken from the object
-	*/
-	function get_info() {
+	/**
+	 * _get_info
+	 * get's the vars for $this out of the database requires an id
+	 */
+	private function _get_info() {
 
 		/* Grab the basic information from the catalog and return it */
-		$sql = "SELECT * FROM catalog WHERE id='$this->id'";
-		$db_results = mysql_query($sql, dbh());
+		$sql = "SELECT * FROM `catalog` WHERE `id`='$this->id'";
+		$db_results = Dba::query($sql);
 
-		$results = mysql_fetch_object($db_results);
+		$results = Dba::fetch_assoc($db_results);
 
 		return $results;
 
-	} //get_info
+	} // _get_info
 
+	/**
+	 * get_catalogs
+	 *Pull all the current catalogs
+	 */
+	public static function get_catalogs() {
 
-	/*!
-		@function get_catalogs
-		@discussion Pull all the current catalogs
-	*/
-	function get_catalogs() {
+		$sql = "SELECT `id` FROM `catalog`";
+		$db_results = Dba::query($sql);
 
-		$sql = "SELECT id FROM catalog";
-		$db_results = mysql_query($sql, dbh());
-
-		while ($r = mysql_fetch_object($db_results)) {
-			$results[] = new Catalog($r->id);
+		while ($r = Dba::fetch_assoc($db_results)) {
+			$results[] = new Catalog($r['id']);
 		}
 
 		return $results;
@@ -115,10 +105,10 @@ class Catalog {
 	 */
 	function get_catalog_ids() { 
 
-		$sql = "SELECT id FROM catalog";
-		$db_results = mysql_query($sql, dbh());
+		$sql = "SELECT `id` FROM `catalog`";
+		$db_results = Dba::qery($sql);
 
-		while ($r = mysql_fetch_assoc($db_results)) { 
+		while ($r = Dba::fetch_assoc($db_results)) { 
 			$results[] = $r['id'];
 		}
 
@@ -126,46 +116,89 @@ class Catalog {
 
 	} // get_catalog_ids
 
-	/*!
-		@function get_catalog_stats
-		@discussion Pulls information about number of songs etc for a specifc catalog, or all catalogs
-			    calls many other internal functions, returns an object containing results
-		@param $catalog_id If set tells us to pull from a single catalog, rather than all catalogs
-	*/
-	function get_catalog_stats($catalog_id=0) {
+	/**
+	 * get_stats
+	 * This returns an hash with the #'s for the different
+	 * objects that are assoicated with this catalog. This is used
+	 * to build the stats box, it also calculates time
+	 */
+	public static function get_stats($catalog_id=0) {
 
-		$results->songs 	= $this->count_songs($catalog_id);
-		$results->albums 	= $this->count_albums($catalog_id);
-		$results->artists	= $this->count_artists($catalog_id);
-		$results->size		= $this->get_song_size($catalog_id);
-		$results->time		= $this->get_song_time($catalog_id);
+		$results 		= self::count_songs($catalog_id); 
+		$results	 	= array_merge(self::count_users($catalog_id),$results); 
 
-	} // get_catalog_stats
+//		$results->songs 	= $this->count_songs($catalog_id);
+//		$results->albums 	= $this->count_albums($catalog_id);
+//		$results->artists	= $this->count_artists($catalog_id);
+//		$results->size		= $this->get_song_size($catalog_id);
+//		$results->time		= $this->get_song_time($catalog_id);
 
+		return $results; 
 
-	/*!
-		@function get_song_time
-		@discussion Get the total amount of time (song wise) in all or specific catalog
-		@param $catalog_id If set tells ut to pick a specific catalog
-	*/
-	function get_song_time($catalog_id=0) {
+	} // get_stats
 
-		$sql = "SELECT SUM(song.time) FROM song";
-		if ($catalog_id) {
-			$sql .= " WHERE catalog='$catalog_id'";
-		}
+	/**
+	 * count_songs
+	 * This returns the current # of songs, albums, artists, genres
+	 * in this catalog
+	 */
+	public static function count_songs($catalog_id='') { 
 
-		$db_results = mysql_query($sql, dbh());
+		if ($catalog_id) { $catalog_search = "WHERE `catalog`='" . Dba::escape($catalog_id) . "'"; } 
 
-		$results = mysql_fetch_field($db_results);
+		$sql = "SELECT `id`,`album`,`artist`,`genre`,`file`,`size`,`time` FROM `song` $catalog_search"; 
+		$db_results = Dba::query($sql); 
 
-		/* Do some conversion to get Hours Min Sec */
+		while ($data = Dba::fetch_assoc($db_results)) { 
+			$albums[$data['album']] = true; 
+			$artists[$data['artist']] = true; 
+			$genres[$data['genre']] = true; 
+			$dir = basename($data['file']); 
+			$folders[$dir] = true; 
+			$size += $data['size'];
+			$time += $data['time'];
+			$songs++; 
+		} 
 
+		$results['songs'] 	= $songs; 
+		$results['albums']	= count($albums); 
+		$results['artists']	= count($artists); 
+		$results['genres']	= count($genres); 
+		$results['folders']	= count($folders); 
+		$results['size']	= $size; 
+		$results['time']	= $time; 
 
-		return $results;
+		return $results; 
 
-	} // get_song_time
+	} // count_songs
 
+	/**
+	 * count_users
+	 * This returns the total number of users in the ampache instance
+	 */ 
+	public static function count_users($catalog_id='') { 
+
+		// Count total users
+		$sql = "SELECT COUNT(id) FROM `user`"; 
+		$db_results = Dba::query($sql); 
+		$data = Dba::fetch_row($db_results); 
+		$results['users'] = $data['0'];
+
+		// Get the connected users
+	        $time = time();
+	        $last_seen_time = $time - 1200;
+	        $sql =  "SELECT count(DISTINCT s.username) FROM session AS s " .
+	                "INNER JOIN user AS u ON s.username = u.username " .
+	                "WHERE s.expire > " . $time . " " .
+	                "AND u.last_seen > " . $last_seen_time;
+		$db_results = Dba::query($sql); 
+		$data = Dba::fetch_row($db_results); 
+
+		$results['connected'] = $data['0'];
+
+		return $results; 
+
+	} // count_users
 
 	/*!
 		@function get_song_size
@@ -232,25 +265,6 @@ class Catalog {
 
 	} // count_albums
 
-
-	/*!
-		@function count_songs
-		@discussion Count the number of songs in all catalogs, or a specific one
-		@param $catalog_id If set tells us to pick a specific catalog
-	*/
-	function count_songs($catalog_id=0) {
-
-		$sql = "SELECT count(*) FROM song";
-		if ($catalog_id) {
-			$sql .= " WHERE catalog='$catalog_id'";
-		}
-
-		$db_results = mysql_query($sql, dbh());
-		$results = mysql_fetch_field($db_results);
-
-		return $results;
-
-	} // count_songs
 
 	/*!
 		@function add_file
@@ -585,23 +599,22 @@ class Catalog {
 	 * Gets an array of the disabled songs for all catalogs
 	 * and returns full song objects with them
 	 */
-	function get_disabled($count=0) {
+	public static function get_disabled($count=0) {
 
 		$results = array();
 
 		if ($count) { $limit_clause = " LIMIT $count"; } 
 
 		$sql = "SELECT id FROM song WHERE enabled='0' $limit_clause";
-		$db_results = mysql_query($sql, dbh());
+		$db_results = Dba::query($sql);
 
-		while ($r = mysql_fetch_array($db_results)) {
+		while ($r = Dba::fetch_assoc($db_results)) {
 			$results[] = new Song($r['id']);
 		}
 
 		return $results;
 
 	} // get_disabled
-
 
 	/*!
 		@function get_files

@@ -54,16 +54,11 @@ class User {
 		$info 			= $this->_get_info();
 
 		if (!count($info)) { return false; } 
+		foreach ($info as $key=>$value) { 
+			$this->$key = $value; 
+		} 
 
 		$this->uid		= $info->id;
-		$this->username 	= $info->username;
-		$this->fullname 	= $info->fullname;
-		$this->access 		= $info->access;
-		$this->disabled		= $info->disabled;
-		$this->email		= $info->email;
-		$this->last_seen	= $info->last_seen;
-		$this->create_date	= $info->create_date;
-		$this->validation	= $info->validation;
 		$this->set_preferences();
 
 		// Make sure the Full name is always filled
@@ -77,15 +72,34 @@ class User {
 	 */
 	function _get_info() {
 
-		$id = sql_escape($this->id);
+		$id = Dba::escape($this->id);
 
 		$sql = "SELECT * FROM `user` WHERE `id`='" . $id . "'";
 		
-		$db_results = mysql_query($sql, dbh());
+		$db_results = Dba::query($sql);
 
-		return mysql_fetch_object($db_results);
+		return Dba::fetch_assoc($db_results);
 
 	} // _get_info
+
+	/**
+	 * get_from_username
+	 * This returns a built user from a username. This is a 
+	 * static function so it doesn't require an instance
+	 */
+	public static function get_from_username($username) { 
+
+		$username = Dba::escape($username); 
+		
+		$sql = "SELECT `id` FROM `user` WHERE `username`='$username'"; 
+		$db_results = Dba::query($sql);
+		$results = Dba::fetch_assoc($db_results); 
+		
+		$user = new User($results['id']); 
+
+		return $user; 
+
+	} // get_from_username
 
 	/**
 	 * get_preferences
@@ -140,10 +154,11 @@ class User {
 
 		$sql = "SELECT preferences.name,user_preference.value FROM preferences,user_preference WHERE user_preference.user='$this->id' " .
 			"AND user_preference.preference=preferences.id AND preferences.type != 'system'";
-		$db_results = mysql_query($sql, dbh());
+		$db_results = Dba::query($sql);
 
-		while ($r = mysql_fetch_object($db_results)) {
-			$this->prefs[$r->name] = $r->value;
+		while ($r = Dba::fetch_assoc($db_results)) {
+			$key = $r['name'];
+			$this->prefs[$key] = $r['value'];
 		} 
 	} // get_preferences
 
@@ -153,10 +168,9 @@ class User {
 	 */
 	function get_favorites($type) { 
 
-	        $web_path = conf('web_path');
+	        $web_path = Config::get('web_path');
 
-		$stats = new Stats();
-		$results = $stats->get_user(conf('popular_threshold'),$type,$this->uid,1);
+		$results = Stats::get_user(Config::get('popular_threshold'),$type,$this->id,1);
 
 		$items = array();
 
@@ -165,7 +179,7 @@ class User {
 			if ($type == 'song') { 
 				$data = new Song($r['object_id']);
 				$data->count = $r['count'];
-				$data->format_song();
+				$data->format();
 				$data->f_name = $data->f_link;
 				$items[] = $data;
 			}
@@ -173,23 +187,23 @@ class User {
 			elseif ($type == 'album') { 
 				$data = new Album($r['object_id']);
 				$data->count = $r['count'];
-				$data->format_album();
+				$data->format();
 				$items[] = $data;
 			} 
 			/* If its an artist */
 			elseif ($type == 'artist') { 
 				$data = new Artist($r['object_id']);
 				$data->count = $r['count'];
-				$data->format_artist();
-				$data->f_name = $data->link;
+				$data->format();
+				$data->f_name = $data->f_link;
 				$items[] = $data;
 			} 		 
 			/* If it's a genre */
 			elseif ($type == 'genre') { 
 				$data = new Genre($r['object_id']);
 				$data->count = $r['count'];
-				$data->format_genre();
-				$data->f_name = $data->link;
+				$data->format();
+				$data->f_name = $data->f_link;
 				$items[] = $data;
 			}
 
@@ -208,24 +222,24 @@ class User {
 
 		/* First pull all of your ratings of this type */ 
 		$sql = "SELECT object_id,user_rating FROM ratings " . 
-			"WHERE object_type='" . sql_escape($type) . "' AND user='" . sql_escape($this->id) . "'";
-		$db_results = mysql_query($sql,dbh()); 
+			"WHERE object_type='" . Dba::escape($type) . "' AND user='" . Dba::escape($this->id) . "'";
+		$db_results = Dba::query($sql); 
 
 		// Incase they only have one user
 		$users = array(); 
 
-		while ($r = mysql_fetch_assoc($db_results)) { 
+		while ($r = Dba::fetch_assoc($db_results)) { 
 			/* Store the fact that you rated this */
 			$key = $r['object_id'];
 			$ratings[$key] = true;
 
 			/* Build a key'd array of users with this same rating */
-			$sql = "SELECT user FROM ratings WHERE object_type='" . sql_escape($type) . "' " . 
-				"AND user !='" . sql_escape($this->id) . "' AND object_id='" . sql_escape($r['object_id']) . "' " . 
-				"AND user_rating ='" . sql_escape($r['user_rating']) . "'";
-			$user_results = mysql_query($sql,dbh()); 
+			$sql = "SELECT user FROM ratings WHERE object_type='" . Dba::escape($type) . "' " . 
+				"AND user !='" . Dba::escape($this->id) . "' AND object_id='" . Dba::escape($r['object_id']) . "' " . 
+				"AND user_rating ='" . Dba::escape($r['user_rating']) . "'";
+			$user_results = Dba::query($sql); 
 
-			while ($user_info = mysql_fetch_assoc($user_results)) { 
+			while ($user_info = Dba::fetch_assoc($user_results)) { 
 				$key = $user_info['user'];
 				$users[$key]++; 
 			}
@@ -243,11 +257,11 @@ class User {
 
 			/* Find everything they've rated at 4+ */
 			$sql = "SELECT object_id,user_rating FROM ratings " . 
-				"WHERE user='" . sql_escape($user_id) . "' AND user_rating >='4' AND " . 
-				"object_type = '" . sql_escape($type) . "' ORDER BY user_rating DESC"; 
-			$db_results = mysql_query($sql,dbh()); 
+				"WHERE user='" . Dba::escape($user_id) . "' AND user_rating >='4' AND " . 
+				"object_type = '" . Dba::escape($type) . "' ORDER BY user_rating DESC"; 
+			$db_results = Dba::query($sql); 
 
-			while ($r = mysql_fetch_assoc($db_results)) { 
+			while ($r = Dba::fetch_assoc($db_results)) { 
 				$key = $r['object_id'];
 				if (isset($ratings[$key])) { continue; } 
 
@@ -290,7 +304,7 @@ class User {
 	*/
 	function has_access($needed_level) { 
 
-		if (!conf('use_auth') || conf('demo_mode')) { return true; }
+		if (!Config::get('use_auth') || Config::get('demo_mode')) { return true; }
 
 		if ($this->access >= $needed_level) { return true; }
 
@@ -474,7 +488,7 @@ class User {
 	function update_last_seen() { 
 		
 		$sql = "UPDATE user SET last_seen='" . time() . "' WHERE `id`='$this->id'";
-		$db_results = mysql_query($sql, dbh());
+		$db_results = Dba::query($sql);
 	
 	} // update_last_seen
 
@@ -664,7 +678,7 @@ class User {
 			}
 
 			$item = "[$data->count] - $data->f_name";
-			$results[]->link = $item;
+			$results[]->f_link = $item;
 		} // end foreach items
 
 		return $results;

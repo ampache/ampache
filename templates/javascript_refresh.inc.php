@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2006 Ampache.org
+ Copyright (c) 2001 - 2007 Ampache.org
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
@@ -23,7 +23,7 @@
 <script type="text/javascript" language="javascript">
 <!-- Begin
 // Set refresh interval (in seconds)
-var refreshinterval=<?php echo conf('refresh_limit'); ?>;
+var refreshinterval=<?php echo Config::get('refresh_limit'); ?>;
 
 function doLoad()
 {

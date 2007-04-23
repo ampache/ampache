@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2006 Ampache.org
+ Copyright (c) 2001 - 2007 Ampache.org
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
@@ -70,29 +70,30 @@ switch ($_REQUEST['type']) {
 		$album = new Album($_REQUEST['id']);
 
 		// Attempt to pull art from the database
-		$r = $album->get_art();
-
-		if (isset($r['art'])) {
-		    $art = $r['art'];
-		    $mime = $r['art_mime'];
-		}
-		else { 
+		$art = $album->get_art();
+		
+		if (!$art['art_mime']) { 
 			header('Content-type: image/gif');
-			readfile(conf('prefix') . conf('theme_path') . "/images/blankalbum.gif");
+			readfile(Config::get('prefix') . Config::get('theme_path') . '/images/blankalbum.gif');
 			break;
 		} // else no image
 
 		// Print the album art
-		$data = explode("/",$mime);
+		$data = explode("/",$art['art_mime']);
 		$extension = $data['1'];
+		
+//		if (empty($_REQUEST['thumb'])) { 
+			$art_data = $art['art'];
+//		}
+		//else { 
+		//	$art_data = img_resize($art,$size,$extension,$_REQUEST['id']);
+		//}
+		
+		// Send the headers and output the image
 		header("Content-type: $mime");
 		header("Content-Disposition: filename=" . $album->name . "." . $extension);	
-		if (empty($_REQUEST['thumb'])) { 
-			echo $art;
-		}
-		elseif (!img_resize($art,$size,$extension)) { 
-			echo $art; 
-		}
+		echo $art_data;
+
 	break;
 } // end switch type
 

@@ -84,8 +84,8 @@ function vauth_sess_write($key,$value) {
 
 	$length 	= vauth_conf('session_length');
 	$expire 	= time() + intval($length);
-	$value 		= sql_escape($value);
-	$key		= sql_escape($key);
+	$value 		= Dba::escape($value);
+	$key		= Dba::escape($key);
 
         /* Check for Rememeber Me */
         $cookie_name = vauth_conf('session_name') . "_remember";
@@ -107,7 +107,7 @@ function vauth_sess_write($key,$value) {
  */
 function vauth_sess_destory($key) { 
 
-	$key = sql_escape($key);
+	$key = Dba::escape($key);
 
 	/* Remove any database entries */
 	$sql = "DELETE FROM session WHERE id='$key'";
@@ -150,7 +150,7 @@ function vauth_logout($key) {
  */
 function vauth_get_session($key) { 
 
-	$key	= sql_escape($key);
+	$key	= Dba::escape($key);
 
 	$sql = "SELECT * FROM session WHERE id='$key' AND expire > '" . time() . "'";
 	$db_results = mysql_query($sql, vauth_dbh());
@@ -204,10 +204,10 @@ function vauth_session_create($data) {
 	/* Before a refresh we don't have the cookie, so use session_id() */
 	$key = session_id();
 
-	$username 	= sql_escape($data['username']);
-	$type		= sql_escape($data['type']);
-	$value		= sql_escape($data['value']);
-	$expire		= sql_escape(time() + vauth_conf('session_length'));
+	$username 	= Dba::escape($data['username']);
+	$type		= Dba::escape($data['type']);
+	$value		= Dba::escape($data['value']);
+	$expire		= Dba::escape(time() + vauth_conf('session_length'));
 
 	/* We can't have null things here people */
 	if (!strlen($value)) { $value = ' '; } 
@@ -238,7 +238,7 @@ function vauth_check_session() {
 	
 	$key = scrub_in($_COOKIE[$session_name]);
 	$results = vauth_get_session($key);
-
+	
 	if (!is_array($results)) { 
 		return false;
 	}
@@ -263,7 +263,7 @@ function vauth_check_session() {
 
 	vauth_ungimp_ie();
 	session_start();
-
+	
 	return true;
 
 } // vauth_check_session

@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2006 Ampache.org
+ Copyright (c) 2001 - 2007 Ampache.org
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
@@ -46,11 +46,11 @@ $time_unit = array('',_('seconds ago'),_('minutes ago'),_('hours ago'),_('days a
 
 	$time_string = $final . ' ' . $time_unit[$time_place];
 
-	$song->format_song(); 
+	$song->format(); 
 ?>
 <tr>
 	<td>
-		<a href="<?php echo conf('web_path'); ?>/stats.php?action=user_stats&amp;user_id=<?php echo scrub_out($row_user->id); ?>">
+		<a href="<?php echo Config::get('web_path'); ?>/stats.php?action=user_stats&amp;user_id=<?php echo scrub_out($row_user->id); ?>">
 		<?php echo scrub_out($row_user->fullname); ?>
 		</a>
 	</td>

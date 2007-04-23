@@ -20,6 +20,7 @@
 */
 
 ?>
+<table>
 <tr>
 	<td valign="top">
 		<?php show_info_box(_('Newest Artist Additions'), '', $artists); ?>

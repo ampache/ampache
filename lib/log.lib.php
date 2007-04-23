@@ -33,7 +33,7 @@ function log_event($username='Unknown',$event_name,$event_description,$log_name=
 	/* must have some name */
 	if (!strlen($log_name)) { $log_name = 'ampache'; } 
 
-        $log_filename   = conf('log_path') . "/$log_name." . date("Ymd",$log_time) . ".log";
+        $log_filename   = Config::get('log_path') . "/$log_name." . date("Ymd",$log_time) . ".log";
         $log_line       = date("Y-m-d H:i:s",$log_time) . " { $username } ( $event_name ) - $event_description \n";  
 
 	$log_write = error_log($log_line, 3, $log_filename);
@@ -109,7 +109,7 @@ function ampache_error_handler($errno, $errstr, $errfile, $errline) {
  */
 function debug_event($type,$message,$level,$file='',$username='') { 
 
-	if (!conf('debug') || $level > conf('debug_level')) { 
+	if (!Config::get('debug') || $level > Config::get('debug_level')) { 
 		return false;
 	}
 

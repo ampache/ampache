@@ -88,28 +88,18 @@ function get_recently_played() {
         	"FROM object_count " .
 		"WHERE object_type='song' " . 
         	"ORDER by object_count.date DESC " . 
-		"LIMIT " . conf('popular_threshold'); 
-	$db_results = mysql_query($sql, dbh()); 
+		"LIMIT " . Config::get('popular_threshold'); 
+	$db_results = Dba::query($sql); 
 
 	$results = array(); 
 
-	while ($r = mysql_fetch_assoc($db_results)) { 
+	while ($r = Dba::fetch_assoc($db_results)) { 
 		$results[] = $r; 	
 	}
 
 	return $results;
 
 } // get_recently_played
-
-/*!
-	@function format_song
-	@discussion takes a song array and makes it html friendly
-*/
-function format_song($song) {
-
-	return $song;
-
-} // format_song
 
 /**
  * get_popular_songs

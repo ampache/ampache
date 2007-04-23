@@ -37,9 +37,9 @@
 
 class Update {
 
-	var $key;
-	var $value;
-	var $versions; // array containing version information
+	public $key;
+	public $value;
+	public static $versions; // array containing version information
 
 	/*!
 		@function Update
@@ -77,16 +77,16 @@ class Update {
 			because we may not have the update_info table we have to check 
 			for it's existance first. 
 	*/
-	function get_version() {
+	public static function get_version() {
 
 
 		/* Make sure that update_info exits */
 		$sql = "SHOW TABLES LIKE 'update_info'";
-		$db_results = mysql_query($sql, dbh());
-		if (!is_resource(dbh())) { header("Location: test.php"); } 
+		$db_results = Dba::query($sql);
+		if (!is_resource(Dba::dbh())) { header("Location: test.php"); } 
 
 		// If no table
-		if (!mysql_num_rows($db_results)) {
+		if (!Dba::num_rows($db_results)) {
 			
 			$version = '310000';		
 			
@@ -95,9 +95,9 @@ class Update {
 		else {
 			// If we've found the update_info table, let's get the version from it
 			$sql = "SELECT * FROM update_info WHERE `key`='db_version'";
-			$db_results = mysql_query($sql, dbh());
-			$results = mysql_fetch_object($db_results);
-			$version = $results->value;
+			$db_results = Dba::query($sql);
+			$results = Dba::fetch_assoc($db_results);
+			$version = $results['value'];
 		} 
 
 		return $version;
@@ -117,24 +117,24 @@ class Update {
 
 	} // format_version
 
-	/*!
-		@function need_update
-		@discussion checks to see if we need to update 
-			maintain at all
-	*/
-	function need_update() {
+	/**
+	 * need_update
+	 * checks to see if we need to update 
+	 * maintain at all
+	 */
+	public static function need_update() {
 
-		$current_version = $this->get_version();
+		$current_version = self::get_version();
 		
-		if (!is_array($this->versions)) {
-			$this->versions = $this->populate_version();
+		if (!is_array(self::$versions)) {
+			self::$versions = self::populate_version();
 		}
 		
 		/* 
 		   Go through the versions we have and see if
 		   we need to apply any updates
 		*/
-		foreach ($this->versions as $update) {
+		foreach (self::$versions as $update) {
 			if ($update['version'] > $current_version) {
 				return true;
 			}
@@ -175,7 +175,7 @@ class Update {
 		@discussion just sets an array the current differences
 			that require an update
 	*/
-	function populate_version() {
+	public static function populate_version() {
 
 		/* Define the array */
 		$version = array();

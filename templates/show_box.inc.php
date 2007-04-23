@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2006 Ampache.org
+ Copyright (c) 2001 - 2007 Ampache.org
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
@@ -24,7 +24,7 @@
 	<?php if (count($items)) { ?>
 	<?php
 		foreach ($items as $item) {
-		    echo "<li>".$item->link."</li>\n";
+		    echo "<li>".$item->f_link."</li>\n";
 		}
 	?>
 	<?php } else { echo '<span class="error">' . _('Not Enough Data') . '</span>'; } ?>

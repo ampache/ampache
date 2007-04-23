@@ -76,10 +76,8 @@ function flip_class($array=0) {
  */
 function clear_now_playing() {
 
-	$sql = "TRUNCATE TABLE now_playing";
-	$db_results = mysql_query($sql, dbh());
-
-	return true;
+	$sql = "TRUNCATE TABLE `now_playing`";
+	$db_results = Dba::query($sql);
 
 } // clear_now_playing
 
@@ -89,11 +87,11 @@ function clear_now_playing() {
  *	if it isn't it defines it as a simple return
  */
 if (!function_exists('_')) {
+
 	function _($string) {
-
 		return $string;
-
 	} // _
+
 } // if _ isn't defined
 
 /**
@@ -223,9 +221,9 @@ function truncate_with_ellipsis($text, $max=27) {
 
 		/* Make sure the functions exist before doing the iconv mojo */
 		if (function_exists('iconv') && function_exists('iconv_substr') && function_exists('iconv_strlen')) {
-			if (iconv_strlen($text, conf('site_charset')) > $max) {
-				$text = iconv_substr($text, 0, $max-3, conf('site_charset'));
-				$text .= iconv("ISO-8859-1", conf('site_charset'), "...");
+			if (iconv_strlen($text, Config::get('site_charset')) > $max) {
+				$text = iconv_substr($text, 0, $max-3, Config::get('site_charset'));
+				$text .= iconv("ISO-8859-1", Config::get('site_charset'), "...");
 			}
 		}
 
@@ -247,7 +245,7 @@ function truncate_with_ellipsis($text, $max=27) {
  */
 function show_footer() {
 
-	require_once(conf('prefix') . '/templates/footer.inc');
+	require_once Config::get('prefix') . '/templates/footer.inc';
 
 } // show_footer
 
@@ -257,10 +255,9 @@ function show_footer() {
  */
 function show_now_playing() {
 
-	$dbh = dbh();
-	$web_path = conf('web_path');
+	$web_path = Config::get('web_path');
 	$results = get_now_playing();
-	require (conf('prefix') . "/templates/show_now_playing.inc");
+	require Config::get('prefix') . '/templates/show_now_playing.inc';
 
 } // show_now_playing
 
@@ -296,15 +293,15 @@ function show_play_selected() {
  */
 function get_now_playing($filter='') {
 
-	$sql = "SELECT song_id,user FROM now_playing ORDER BY id DESC";
-	$db_results = mysql_query($sql, dbh());
+	$sql = "SELECT `song_id`,`user` FROM `now_playing` ORDER BY `id` DESC";
+	$db_results = Dba::query($sql);
 
 	$results = array();
 	
 	/* While we've got stuff playing */
-	while ($r = mysql_fetch_assoc($db_results)) {
+	while ($r = Dba::fetch_assoc($db_results)) {
 		$song = new Song($r['song_id']);
-		$song->format_song();
+		$song->format();
 		$np_user = new User($r['user']);
 		$results[] = array('song'=>$song,'user'=>$np_user);
 	} // end while
@@ -468,7 +465,7 @@ function show_all_popular() {
 	$songs		= get_global_popular('song');
 	$genres		= get_global_popular('genre');
 
-	require_once(conf('prefix') . '/templates/show_all_popular.inc.php');
+	require_once Config::get('prefix') . '/templates/show_all_popular.inc.php';
 
 } // show_all_popular
 
@@ -480,12 +477,12 @@ function show_all_popular() {
  *	@catagory Display
  *	@author Karl Vollmer
  */
-function show_all_recent() {
+function show_all_recent($limit='') {
 
-	$artists	= get_newest('artist');
-	$albums		= get_newest('album');
+	$artists	= Stats::get_newest('artist',$limit);
+	$albums		= Stats::get_newest('album',$limit);
 
-	require_once(conf('prefix') . '/templates/show_all_recent.inc.php');
+	require_once Config::get('prefix') . '/templates/show_all_recent.inc.php';
 
 } // show_all_recent
 
@@ -497,47 +494,24 @@ function show_all_recent() {
  */
 function show_local_catalog_info() {
 
-	$dbh = dbh();
-
 	/* Before we display anything make sure that they have a catalog */
 	$query = "SELECT * FROM catalog";
-	$db_results = mysql_query($query, $dbh);
-	if (!mysql_num_rows($db_results)) {
+	$db_results = Dba::query($query);
+
+	// Make sure we have something to display
+	if (!Dba::num_rows($db_results)) {
 		show_box_top(); 	
 		$items[] = "<span align=\"center\" class=\"error\">" . _('No Catalogs Found!') . "</span><br />";
-		$items[] = "<a href=\"" . conf('web_path') . "/admin/catalog.php?action=show_add_catalog\">" ._('Add a Catalog') . "</a>";
+		$items[] = "<a href=\"" . Config::get('web_path') . "/admin/catalog.php?action=show_add_catalog\">" ._('Add a Catalog') . "</a>";
 		show_info_box('','catalog',$items);
 		show_box_bottom(); 
 		return false;
 	}
 
-	$query = "SELECT count(*) AS songs, SUM(size) AS size, SUM(time) as time FROM song";
-	$db_result = mysql_query($query, $dbh);
-	$songs = mysql_fetch_assoc($db_result);
+	$results = Catalog::get_stats(); 
 
-	$query = "SELECT count(*) FROM album";
-	$db_result = mysql_query($query, $dbh);
-	$albums = mysql_fetch_row($db_result);
-
-	$query = "SELECT count(*) FROM artist";
-	$db_result = mysql_query($query, $dbh);
-	$artists = mysql_fetch_row($db_result);
-
-	$sql = "SELECT count(*) FROM user";
-	$db_result = mysql_query($sql, $dbh);
-	$users = mysql_fetch_row($db_result);
-
-	$time = time();
-	$last_seen_time = $time - 1200;
-	$sql =  "SELECT count(DISTINCT s.username) FROM session AS s " .
-		"INNER JOIN user AS u ON s.username = u.username " .
-		"WHERE s.expire > " . $time . " " .
-		"AND u.last_seen > " . $last_seen_time;
-	$db_result = mysql_query($sql, $dbh);
-	$connected_users = mysql_fetch_row($db_result);
-
-	$hours = floor($songs['time']/3600);
-	$size = $songs['size']/1048576;
+	$hours = floor($results['time']/3600);
+	$size = $results['size']/1048576;
 
 	$days = floor($hours/24);
 	$hours = $hours%24;
@@ -556,22 +530,29 @@ function show_local_catalog_info() {
 		$size_unit = "MB";
 	}
 
-	require(conf('prefix') . "/templates/show_local_catalog_info.inc.php");
+	require Config::get('prefix') . '/templates/show_local_catalog_info.inc.php';
 
 } // show_local_catalog_info
 
-/*!
-  @function img_resize
-  @discussion this automaticly resizes the image for thumbnail viewing
-  only works on gif/jpg/png this function also checks to make
-  sure php-gd is enabled
+/**
+ * img_resize
+ * this automaticly resizes the image for thumbnail viewing
+ * only works on gif/jpg/png this function also checks to make
+ * sure php-gd is enabled
  */
-function img_resize($image,$size,$type){
+function img_resize($image,$size,$type,$album_id) {
 
 	/* Make sure they even want us to resize it */
-	if (!conf('resize_images')) {
-		return false;
+	if (!Config::get('resize_images')) {
+		return $image['art'];
 	}
+	// Already resized
+	if ($image['resized']) { 
+		debug_event('using_resized','using resized image for Album:' . $album_id,'2'); 
+		return $image['art']; 
+	}
+
+	$image = $image['art'];
 
 	if (!function_exists('gd_info')) { return false; }
 
@@ -604,6 +585,8 @@ function img_resize($image,$size,$type){
 		return false;
 	}
 
+	ob_start(); 
+
 	// determine image type and send it to the client
 	switch ($type) {
 		case 'jpg':
@@ -617,6 +600,21 @@ function img_resize($image,$size,$type){
 			imagepng($img,null,100);
 			break;
 	}
+
+	// Grab this image data and save it into the thumbnail
+	$data = ob_get_contents(); 
+	ob_end_clean();
+
+	// If our image create failed don't save it, just return
+	if (!$data) { 
+		debug_event('IMG_RESIZE','Failed to resize Art from Album:' . $album_id,'3'); 
+		return $image;
+	}
+
+	// Save what we've got
+	Album::save_resized_art($data,'image/' . $type,$album_id); 
+
+	return $data; 
 
 } // img_resize
 
@@ -692,14 +690,14 @@ function show_artist_pulldown ($artist_id,$select_name='artist') {
  */
 function show_catalog_pulldown ($name='catalog',$style) {
 
-	$sql = "SELECT id,name FROM catalog ORDER BY name";
-	$db_result = mysql_query($sql, dbh());
+	$sql = "SELECT `id`,`name` FROM `catalog` ORDER BY `name`";
+	$db_result = Dba::query($sql);
 
 	echo "\n<select name=\"" . $name . "\" style=\"" . $style . "\">\n";
 
-	echo "<option value=\"-1\">All</option>\n";
+	echo "<option value=\"-1\">" . _('All') . "</option>\n";
 
-	while ($r = mysql_fetch_assoc($db_result)) {
+	while ($r = Dba::fetch_assoc($db_result)) {
 		$catalog_name = scrub_out($r['name']);
 
 		if ( $catalog == $r['id'] ) {
@@ -722,7 +720,7 @@ function show_catalog_pulldown ($name='catalog',$style) {
  */
 function show_submenu($items) {
 
-	require (conf('prefix') . '/templates/subnavbar.inc.php');
+	require Config::get('prefix') . '/templates/subnavbar.inc.php';
 
 } // show_submenu
 
@@ -750,7 +748,7 @@ function get_location() {
 	}
 
 	/* Sanatize the $_SERVER['PHP_SELF'] variable */
-	$source			= str_replace(conf('raw_web_path'),"",$source);
+	$source			= str_replace(Config::get('raw_web_path'),"",$source);
 	$location['page'] 	= preg_replace("/^\/(.+\.php)\/?.*/","$1",$source);
 
 	switch ($location['page']) {
@@ -850,12 +848,11 @@ function show_preference_box($preferences) {
  * the currently selected and then the size
  *
  */
-
 function show_genre_pulldown ($name,$selected='',$size=1,$width=0,$style='') {
 
 	/* Get them genre hippies */        
 	$sql = "SELECT genre.id,genre.name FROM genre ORDER BY genre.name";
-        $db_result = mysql_query($sql, dbh());
+        $db_result = Dba::query($sql);
 
 	if ($size > 0) { 
 		$multiple_txt = "multiple=\"multiple\" size=\"$size\"";
@@ -867,7 +864,7 @@ function show_genre_pulldown ($name,$selected='',$size=1,$width=0,$style='') {
         echo "<select name=\"" . $name . "[]\" $multiple_txt $style_txt>\n";
 	echo "\t<option value=\"-1\">" . _("All") . "</option>\n";
 
-        while ($r = mysql_fetch_assoc($db_result)) {
+        while ($r = Dba::fetch_assoc($db_result)) {
 		
 		if ($width > 0) { 
 			$r['name'] = truncate_with_ellipsis($r['name'],$width);
@@ -1183,7 +1180,7 @@ function show_user_select($name,$selected='',$style='') {
  */
 function show_box_top($title='') { 
 
-	require (conf('prefix') . '/templates/show_box_top.inc.php');	
+	require Config::get('prefix') . '/templates/show_box_top.inc.php';	
 
 } // show_box_top
 
@@ -1194,7 +1191,7 @@ function show_box_top($title='') {
  */
 function show_box_bottom() { 
 
-	require (conf('prefix') . '/templates/show_box_bottom.inc.php');
+	require Config::get('prefix') . '/templates/show_box_bottom.inc.php';
 
 } // show_box_bottom
 
@@ -1224,21 +1221,21 @@ function get_user_icon($name,$hover_name='') {
 		$icon_name = 'icon_' . $name . '.png';
 
 		/* Build the image url */
-		if (file_exists(conf('prefix') . '/themes/' . $GLOBALS['theme']['path'] . '/images/' . $icon_name)) { 
-			$img_url = conf('web_path') . conf('theme_path') . '/images/' . $icon_name;
+		if (file_exists(Config::get('prefix') . '/themes/' . Config::get('theme_path') . '/images/' . $icon_name)) { 
+			$img_url = Config::get('web_path') . Config::get('theme_path') . '/images/' . $icon_name;
 		}
 		else { 
-			$img_url = conf('web_path') . '/images/' . $icon_name; 
+			$img_url = Config::get('web_path') . '/images/' . $icon_name; 
 		}
 
 		/* If Hover, then build its url */
 		if (!empty($hover_name)) { 
 			$hover_icon = 'icon_' . $hover_name . '.png';
-			if (file_exists(conf('prefix') . '/themes/' . $GLOBALS['theme']['path'] . '/images/' . $icon_name)) { 
-				$hov_url = conf('web_path') . conf('theme_path') . '/images/' . $hover_icon;
+			if (file_exists(Config::get('prefix') . '/themes/' . Config::get('theme_path') . '/images/' . $icon_name)) { 
+				$hov_url = Config::get('web_path') . Config::get('theme_path') . '/images/' . $hover_icon;
 			}
 			else { 
-				$hov_url = conf('web_path') . '/images/' . $hover_icon;
+				$hov_url = Config::get('web_path') . '/images/' . $hover_icon;
 			}
 			
 			$hov_txt = "onMouseOver=\"this.src='$hov_url'; return true;\" onMouseOut=\"this.src='$img_url'; return true;\"";

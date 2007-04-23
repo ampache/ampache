@@ -24,8 +24,8 @@
 	@discussion Do most of the dirty work of displaying the mp3 catalog
 
 */
-require_once('lib/init.php');
-show_template('header');
+require_once 'lib/init.php';
+require_once Config::get('prefix') . '/templates/header.inc.php';
 
 $action = scrub_in($_REQUEST['action']);
 
@@ -34,14 +34,14 @@ $action = scrub_in($_REQUEST['action']);
  * refresh_javascript include. Must be greater then 5, I'm not
  * going to let them break their servers
  */
-if (conf('refresh_limit') > 5) { 
-	$ajax_url = conf('ajax_url') . '?action=reloadnp' . conf('ajax_info');
+if (Config::get('refresh_limit') > 5) { 
+	$ajax_url = Config::get('ajax_url') . '?action=reloadnp' . Config::get('ajax_info');
 	/* Can't have the &amp; stuff in the Javascript */
 	$ajax_url = str_replace("&amp;","&",$ajax_url);
-	require_once(conf('prefix') . '/templates/javascript_refresh.inc.php');
+	require_once Config::get('prefix') . '/templates/javascript_refresh.inc.php';
 }
 
-require_once(conf('prefix') . '/templates/show_index.inc.php');
+require_once Config::get('prefix') . '/templates/show_index.inc.php';
 
 show_footer(); 
 

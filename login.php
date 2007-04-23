@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2006 Ampache.org
+ Copyright (c) 2001 - 2007 Ampache.org
  All Rights Reserved
 
  This program is free software; you can redistribute it and/or
@@ -20,14 +20,8 @@
 
 */
 
-/*
-
- Login our friendly users
-
-*/
-
 define('NO_SESSION','1');
-require_once('lib/init.php');
+require_once 'lib/init.php';
 
 /* We have to create a cookie here because IIS
  * can't handle Cookie + Redirect 
@@ -40,9 +34,8 @@ init_preferences();
  * even want them to be able to get to the login 
  * page if they aren't in the ACL
  */
-if (conf('access_control')) { 
-        $access = new Access(0);
-        if (!$access->check('interface',$_SERVER['REMOTE_ADDR'],'','5')) {
+if (Config::get('access_control')) { 
+        if (!Access::check('interface',$_SERVER['REMOTE_ADDR'],'','5')) {
                 debug_event('access_denied','Access Denied:' . $_SERVER['REMOTE_ADDR'] . ' is not in the Interface Access list','3');
                 access_denied();
         }
@@ -63,7 +56,7 @@ if ($_POST['username'] && $_POST['password']) {
         } 
 
 	/* If we are in demo mode let's force auth success */
-	if (conf('demo_mode')) {
+	if (Config::get('demo_mode')) {
 		$auth['success'] = 1;
 		$auth['info']['username'] = "Admin- DEMO";
 		$auth['info']['fullname'] = "Administrative User";
@@ -73,8 +66,8 @@ if ($_POST['username'] && $_POST['password']) {
 		$username = scrub_in($_POST['username']);
 		$password = scrub_in($_POST['password']);
 		$auth = authenticate($username, $password);
-                $user = get_user_from_username($username);
-	
+                $user = User::get_from_username($username);
+		
 		if ($user->disabled == '1') { 	
                                 $auth['success'] = false;
                                 $auth['error'] = _('User Disabled please contact Admin');
@@ -82,8 +75,8 @@ if ($_POST['username'] && $_POST['password']) {
                 
 		elseif (!$user->username AND $auth['success']) { 
 			/* This is run if we want to auto_create users who don't exist (usefull for non mysql auth) */                
-			if (conf('auto_create')) {
-				if (!$access = conf('auto_user')) { $access = '5'; } 
+			if (Config::get('auto_create')) {
+				if (!$access = Config::get('auto_user')) { $access = '5'; } 
 				
                         	$name = $auth['name'];
                         	$email = $auth['email'];
@@ -123,8 +116,8 @@ if ($auth['success']) {
 	// 
 	// Record the IP of this person!
 	// 
-	if (conf('track_user_ip')) { 
-		$user = get_user_from_username($username);
+	if (Config::get('track_user_ip')) { 
+		$user = User::get_from_username($username);
 		$user->insert_ip_history();	
 		unset($user);
 	}
@@ -132,7 +125,7 @@ if ($auth['success']) {
 	/* Make sure they are actually trying to get to this site and don't try to redirect them back into 
 	 * an admin section
 	**/
-	if (substr($_POST['referrer'],0,strlen(conf('web_path'))) == conf('web_path') AND 
+	if (substr($_POST['referrer'],0,strlen(Config::get('web_path'))) == Config::get('web_path') AND 
 		!strstr($_POST['referrer'],"install.php") AND 
 		!strstr($_POST['referrer'],"login.php") AND 
 		!strstr($_POST['referrer'],"update.php") AND
@@ -142,39 +135,20 @@ if ($auth['success']) {
 			header("Location: " . $_POST['referrer']);
 			exit();
 	} // if we've got a referrer
-	header("Location: " . conf('web_path') . "/index.php");
+	header("Location: " . Config::get('web_path') . "/index.php");
 	exit();
 } // auth success
 /* If auth failed then setup the error */
 else { 
-	$GLOBALS['error']->add_error('general',$auth['error']);
+	Error::add('general',$auth['error']);
 }
 
-$htmllang = str_replace("_","-",conf('lang'));
-?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php echo $htmllang; ?>" lang="<?php echo $htmllang; ?>">
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=<?php echo conf('site_charset'); ?>" />
-<link rel="shortcut icon" href="<?php echo conf('web_path'); ?>/favicon.ico" />
-<link rel="stylesheet" href="templates/print.css" type="text/css" media="print" />
-<link rel="stylesheet" href="templates/handheld.css" type="text/css" media="handheld" />
-<link rel="stylesheet" href="<?php echo conf('web_path'); ?><?php echo conf('theme_path'); ?>/templates/default.css" type="text/css" media="screen" />
-<title> <?php echo conf('site_title'); ?> </title>
-<script type="text/javascript" language="javascript">
-function focus(){ document.login.username.focus(); }
-</script>
-</head>
+require Config::get('prefix') . '/templates/show_login_form.inc';
 
-<body bgcolor="#D3D3D3" onload="focus();">
-
-<?php
-require(conf('prefix') . "/templates/show_login_form.inc");
-
-if (@is_readable(conf('prefix') . '/config/motd.php')) {
+if (@is_readable(Config::get('prefix') . '/config/motd.php')) {
 	echo "<div align=\"center\">\n";
 	show_box_top(_('Message of the Day')); 
-        include conf('prefix') . '/config/motd.php';
+        include Config::get('prefix') . '/config/motd.php';
 	show_box_bottom();
 	echo "</div>\n";
 }

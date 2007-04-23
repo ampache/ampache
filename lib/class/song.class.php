@@ -57,39 +57,19 @@ class Song {
 	 */
 	function Song($song_id = 0) {
 
-		/* If we have passed an id then do something */
-		if ($song_id) { 
+		if (!$song_id) { return false; } 
 
-			/* Assign id for use in get_info() */
-			$this->id = intval($song_id);
+		/* Assign id for use in get_info() */
+		$this->id = intval($song_id);
 
-			/* Get the information from the db */
-			if ($info = $this->_get_info()) {
+		/* Get the information from the db */
+		if ($info = $this->_get_info()) {
 
-				/* Assign Vars */
-				$this->file		= $info->file;
-				$this->album 		= $info->album;
-				$this->artist		= $info->artist;
-				$this->title		= $info->title;
-				$this->comment		= $info->comment;
-				$this->year		= $info->year;
-				$this->bitrate		= $info->bitrate;
-				$this->rate		= $info->rate;
-				$this->mode		= $info->mode;
-				$this->size		= $info->size;
-				$this->time		= $info->time;
-				$this->track		= $info->track;
-				$this->genre		= $info->genre;
-				$this->addition_time	= $info->addition_time;
-				$this->catalog		= $info->catalog;
-				$this->played   	= $info->played;
-				$this->update_time 	= $info->update_time;
-				$this->enabled 		= $info->enabled;
-
+			foreach ($info as $key=>$value) { 
+				$this->$key = $value; 
+			} 
 				// Format the Type of the song
 				$this->format_type();
-			}
-
 		}
 
 	} //constructor
@@ -100,16 +80,16 @@ class Song {
 		@discussion get's the vars for $this out of the database 
 		@param $this->id	Taken from the object
 	*/
-	function _get_info() {
+	private function _get_info() {
 
 		/* Grab the basic information from the catalog and return it */
 		$sql = "SELECT song.id,file,catalog,album,year,artist,".
 			"title,bitrate,rate,mode,size,time,track,genre,played,song.enabled,update_time,".
-			"addition_time FROM song WHERE song.id = '$this->id'";
+			"addition_time FROM `song` WHERE `song`.`id` = '$this->id'";
 			
-		$db_results = mysql_query($sql, dbh());
+		$db_results = Dba::query($sql);
 
-		$results = mysql_fetch_object($db_results);
+		$results = Dba::fetch_assoc($db_results);
 
 		return $results;
 
@@ -229,10 +209,10 @@ class Song {
 
 		if (!$album_id) { $album_id = $this->album; } 
 
-		$sql = "SELECT name,prefix FROM album WHERE id='" . sql_escape($album_id) . "'";
-		$db_results = mysql_query($sql, dbh());
+		$sql = "SELECT `name`,`prefix` FROM `album` WHERE `id`='" . Dba::escape($album_id) . "'";
+		$db_results = Dba::query($sql);
 
-		$results = mysql_fetch_assoc($db_results);
+		$results = Dba::fetch_assoc($db_results);
 
 		if ($results['prefix']) { 
 			return $results['prefix'] . " " .$results['name'];
@@ -251,10 +231,10 @@ class Song {
 
 		if (!$artist_id) { $artist_id = $this->artist; } 
 
-		$sql = "SELECT name,prefix FROM artist WHERE id='" . sql_escape($artist_id) . "'";
-		$db_results = mysql_query($sql, dbh());
+		$sql = "SELECT name,prefix FROM artist WHERE id='" . Dba::escape($artist_id) . "'";
+		$db_results = Dba::query($sql);
 
-		$results = mysql_fetch_assoc($db_results);
+		$results = Dba::fetch_assoc($db_results);
 
 		if ($results['prefix']) {
 			return $results['prefix'] . " " . $results['name'];
@@ -274,10 +254,10 @@ class Song {
 
 		if (!$genre_id) { $genre_id = $this->genre; } 
 
-		$sql = "SELECT name FROM genre WHERE id='" . sql_escape($genre_id) . "'";
-		$db_results = mysql_query($sql, dbh());
+		$sql = "SELECT name FROM genre WHERE id='" . Dba::escape($genre_id) . "'";
+		$db_results = Dba::query($sql);
 
-		$results = mysql_fetch_assoc($db_results);
+		$results = Dba::fetch_assoc($db_results);
 
 		return $results['name'];
 	
@@ -681,19 +661,19 @@ class Song {
 		    
 		// Format the album name
 		$this->f_album_full = $this->get_album_name();
-		$this->f_album = truncate_with_ellipse($this->f_album_full,conf('ellipse_threshold_album'));
+		$this->f_album = truncate_with_ellipse($this->f_album_full,Config::get('ellipse_threshold_album'));
 
 		// Format the artist name
 		$this->f_artist_full = $this->get_artist_name();
-		$this->f_artist = truncate_with_ellipse($this->f_artist_full,conf('ellipse_threshold_artist'));
+		$this->f_artist = truncate_with_ellipse($this->f_artist_full,Config::get('ellipse_threshold_artist'));
 
 		// Format the title
-		$this->f_title = truncate_with_ellipse($this->title,conf('ellipse_threshold_title'));
+		$this->f_title = truncate_with_ellipse($this->title,Config::get('ellipse_threshold_title'));
 
 		// Create Links for the different objects 
-		$this->f_link = "<a href=\"" . conf('web_path') . "/song.php?action=single_song&amp;song_id=" . $this->id . "\">$this->f_title</a>";
-		$this->f_album_link = "<a href=\"" . conf('web_path') . "/albums.php?action=show&amp;album=" . $this->album . "\">$this->f_album</a>";
-		$this->f_artist_link = "<a href=\"" . conf('web_path') . "/artists.php?action=show&amp;artist=" . $this->artist . "\">$this->f_artist</a>";	
+		$this->f_link = "<a href=\"" . Config::get('web_path') . "/stream.php?action=single_song&amp;song_id=" . $this->id . "\">$this->f_title</a>";
+		$this->f_album_link = "<a href=\"" . Config::get('web_path') . "/albums.php?action=show&amp;album=" . $this->album . "\">$this->f_album</a>";
+		$this->f_artist_link = "<a href=\"" . Config::get('web_path') . "/artists.php?action=show&amp;artist=" . $this->artist . "\">$this->f_artist</a>";	
 
 		// Format the Bitrate
 		$this->f_bitrate = intval($this->bitrate/1000) . "-" . strtoupper($this->mode);
@@ -802,7 +782,7 @@ class Song {
 		$user_id 	= scrub_out($GLOBALS['user']->id);
 		$song_id	= $this->id;
 
-		if (conf('require_session')) { 
+		if (Config::get('require_session')) { 
 			if ($session_id) { 
 				$session_string = "&sid=" . $session_id; 
 			} 
@@ -823,10 +803,10 @@ class Song {
 		$this->format();
 		$song_name = rawurlencode($this->f_artist_full . " - " . $this->title . "." . $type);
 	
-		$web_path = conf('web_path');
+		$web_path = Config::get('web_path');
 
-                if (conf('force_http_play') OR !empty($force_http)) {
-                        $port = conf('http_port');
+                if (Config::get('force_http_play') OR !empty($force_http)) {
+                        $port = Config::get('http_port');
 			if (preg_match("/:\d+/",$web_path)) { 
 	                        $web_path = str_replace("https://", "http://",$web_path);
 	                        $web_path = preg_replace("/:\d+/",":$port",$web_path);
@@ -854,9 +834,9 @@ class Song {
 		$conf_var 	= 'transcode_' . $this->type;
 		$conf_type	= 'transcode_' . $this->type . '_target'; 
 
-		if (conf($conf_var)) { 
+		if (Config::get($conf_var)) { 
 			$this->_transcode = true; 
-			$this->format_type(conf($conf_type)); 
+			$this->format_type(Config::get($conf_type)); 
 			debug_event('auto_transcode','Transcoding to ' . $this->type,'5'); 
 			return false; 
 		} 

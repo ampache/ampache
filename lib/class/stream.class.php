@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2006 Ampache.org
+ Copyright (c) 2001 - 2007 Ampache.org
  All rights reserved.  
 
  This program is free software; you can redistribute it and/or
@@ -43,16 +43,16 @@ class Stream {
 
 		$this->type = $type;
 		$this->songs = $song_ids;
-		$this->web_path = conf('web_path');
+		$this->web_path = Config::get('web_path');
 		
-		if (conf('force_http_play')) { 
-			$port = conf('http_port');
+		if (Config::get('force_http_play')) { 
+			$port = Config::get('http_port');
 			$this->web_path = preg_replace("/https/", "http",$this->web_path);
 			$this->web_path = preg_replace("/:\d+/",":$port",$this->web_path);
 		}
 		
 		$this->sess = session_id();
-		$this->user_id = $_SESSION['userdata']['username'];
+		$this->user_id = $GLOBALS['user']->id;
 
 	} //constructor
 
@@ -120,24 +120,25 @@ class Stream {
 
 	} // simple_m3u
 
-	/*!
-		@function create_m3u
-		@discussion creates an m3u file
-	*/
-	function create_m3u() { 
+	/**
+	 * create_m3u
+	 * creates an m3u file, this includes the EXTINFO and as such can be
+	 * large with very long playlsits
+	 */
+	public function create_m3u() { 
 
 	        // Send the client an m3u playlist
 	        header("Cache-control: public");
 	        header("Content-Disposition: filename=playlist.m3u");
 	        header("Content-Type: audio/x-mpegurl;");
 	        echo "#EXTM3U\n";
+
 	        foreach($this->songs as $song_id) {
 	        	$song = new Song($song_id);
-	                $song->format_song();
-			if ($song->type == ".flac") { $song->type = ".ogg"; }
+	                $song->format();
 	                $song_name = $song->f_artist_full . " - " . $song->title . "." . $song->type;
 	                echo "#EXTINF:$song->time," . $song->f_artist_full . " - " . $song->title . "\n";
-	                $sess = $_COOKIE[conf('sess_name')];
+	                $sess = $_COOKIE[Config::get('sess_name')];
 	                if($GLOBALS['user']->prefs['play_type'] == 'downsample') {
 	                	$ds = $GLOBALS['user']->prefs['sample_rate'];
 			}

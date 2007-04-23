@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2006 Ampache.org
+ Copyright (c) 2001 - 2007 Ampache.org
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
@@ -77,7 +77,7 @@ class Stats {
 
 		/* If they don't pass one, then use the preference */
 		if (!$threshold) { 
-			$threshold = conf('stats_threshold');
+			$threshold = Config::get('stats_threshold');
 		}
 
 		$count	= intval($count);
@@ -88,11 +88,11 @@ class Stats {
 		$sql = "SELECT object_id,COUNT(id) AS `count` FROM object_count" . 
 			" WHERE object_type='$type' AND date >= '$date'" .
 			" GROUP BY object_id ORDER BY `count` DESC LIMIT $count";
-		$db_results = mysql_query($sql, dbh());
+		$db_results = Dba::query($sql);
 
 		$results = array();
 
-		while ($r = mysql_fetch_assoc($db_results)) { 
+		while ($r = Dba::fetch_assoc($db_results)) { 
 			$results[] = $r;
 		}
 
@@ -105,29 +105,30 @@ class Stats {
 	 * This gets all stats for atype based on user with thresholds and all
 	 * If full is passed, doesn't limit based on date 
 	 */
-	function get_user($count,$type,$user,$full='') { 
+	public static function get_user($count,$type,$user,$full='') { 
 
 		$count 	= intval($count);
-		$type	= $this->validate_type($type);
-		$user	= sql_escape($user);
+		$type	= self::validate_type($type);
+		$user	= Dba::escape($user);
 	
 		/* If full then don't limit on date */	
 		if ($full) { 
 			$date = '0';
 		}
 		else { 
-			$date = time() - (86400*conf('stats_threshold'));
+			$date = time() - (86400*Config::get('stats_threshold'));
 		}
 
 		/* Select Objects based on user */
+		//FIXME:: Requires table can, look at improving 
 		$sql = "SELECT object_id,COUNT(id) AS `count` FROM object_count" . 
 			" WHERE object_type='$type' AND date >= '$date' AND user = '$user'" . 
 			" GROUP BY object_id ORDER BY `count` DESC LIMIT $count";
-		$db_results = mysql_query($sql, dbh());
+		$db_results = Dba::query($sql);
 		
 		$results = array();
 
-		while ($r = mysql_fetch_assoc($db_results)) { 
+		while ($r = Dba::fetch_assoc($db_results)) { 
 			$results[] = $r;
 		} 
 
@@ -140,7 +141,7 @@ class Stats {
 	 * This function takes a type and returns only those
 	 * which are allowed, ensures good data gets put into the db
 	 */
-	function validate_type($type) { 
+	public static function validate_type($type) { 
 
 		switch ($type) { 
 			case 'artist':
@@ -159,6 +160,32 @@ class Stats {
 		} // end switch
 
 	} // validate_type
+
+	/**
+	 * get_newest
+	 * This returns an array of the newest artists/albums/whatever
+	 * in this ampache instance
+	 */
+	public static function get_newest($type,$limit='') { 
+
+		if (!$limit) { $limit = Config::get('popular_threshold'); }
+	
+		$type = self::validate_type($type); 
+		$object_name = ucfirst($type); 
+
+		$sql = "SELECT DISTINCT($type) FROM `song` ORDER BY `addition_time` DESC " . 
+			"LIMIT $limit"; 
+		$db_results = Dba::query($sql); 
+
+		while ($r = Dba::fetch_row($db_results)) { 
+			$object = new $object_name($r['0']); 
+			$object->format(); 
+			$items[] = $object; 
+		} // end while results
+
+		return $items; 
+
+	} // get_newest
 
 } //Stats class
 ?>

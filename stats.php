@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2006 Ampache.org
+ Copyright (c) 2001 - 2007 Ampache.org
  All Rights Reserved.
 
  This program is free software; you can redistribute it and/or
@@ -20,13 +20,11 @@
 */
 
 /*
-
  Show us the stats for the server and this user
-
 */
-require_once('lib/init.php');
+require_once 'lib/init.php';
 
-show_template('header');
+require_once Config::get('prefix') . '/templates/header.inc.php'; 
 
 $action = scrub_in($_REQUEST['action']); 
 
@@ -41,7 +39,7 @@ switch ($action) {
                 $favorite_albums        = $working_user->get_favorites('album');
                 $favorite_songs         = $working_user->get_favorites('song');
 
-                require_once(conf('prefix') . '/templates/show_user_stats.inc.php');
+                require_once Config::get('prefix') . '/templates/show_user_stats.inc.php';
 	
 	break;
 	/* Show their stats */
@@ -54,16 +52,16 @@ switch ($action) {
 		$favorite_albums	= $working_user->get_favorites('album');
 		$favorite_songs		= $working_user->get_favorites('song');
 
-		require_once(conf('prefix') . '/templates/show_user_stats.inc.php');
+		require_once Config::get('prefix') . '/templates/show_user_stats.inc.php';
 
 		// Onlu do this is ratings are on 
-		if (conf('ratings')) { 
+		if (Config::get('ratings')) { 
 			/* Build Recommendations from Ratings */
 			$recommended_artists	= $working_user->get_recommendations('artist');
 			$recommended_albums	= $working_user->get_recommendations('albums');
 			$recommended_songs	= $working_user->get_recommendations('song');
 	
-			require_once(conf('prefix') . '/templates/show_user_recommendations.inc.php');
+			require_once Config::get('prefix') . '/templates/show_user_recommendations.inc.php';
 		} // if ratings on 
 
                 show_box_top();

@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2006 Ampache.org
+ Copyright (c) 2001 - 2007 Ampache.org
  All Rights Reserved
 
  this program is free software; you can redistribute it and/or
@@ -19,17 +19,15 @@
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
-
-$row_classes = array('even','odd');
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "DTD/xhtml1-transitional.dtd">
 <html lang="en-US">
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>Ampache -- Debug Page</title>
 </head>
 <body bgcolor="#f0f0f0">
-<?php require_once('templates/install.css'); ?>
+<link rel="stylesheet" href="templates/install.css" type="text/css" media="screen" />
 <div id="header">
 <h1><?php echo _('Ampache Debug'); ?></h1>
 <p><?php echo _('You\'ve reached this page because a configuration error has occured. Debug Information below'); ?></p>
@@ -155,12 +153,10 @@ $row_classes = array('even','odd');
 	<td valign="top"><?php echo _('Ampache.cfg.php Exists'); ?></td>
 	<td valign="top">[ 
 	<?php
-		if (!read_config_file($configfile)) {
-			$status['read_config'] = 'false';
+		if (!is_readable($configfile)) { 
 			echo " <font color=\"red\">ERROR</font> "; 
 		}
 		else {
-			$status['read_config'] = 'true';
 			echo " <font color=\"green\">&nbsp;&nbsp;&nbsp;OK&nbsp;&nbsp&nbsp;&nbsp;</font> ";
 		}
 	?>
@@ -177,70 +173,25 @@ $row_classes = array('even','odd');
 	</td>
 	<td valign="top">[ 
 	<?php
-		$results = read_config($configfile, 0, 0);
+		$results = @parse_ini_file($configfile);
 		if (!check_config_values($results)) { 
-			$status['parse_config'] = 'false';
 			echo " <font color=\"red\">ERROR</font> ";
 		}
 		else {
-			$status['parse_config'] = 'true';
 			echo " <font color=\"green\">&nbsp;&nbsp;&nbsp;OK&nbsp;&nbsp;&nbsp;&nbsp;</font> ";
 		}
 	?>
 	]
 	</td>
 	<td>
-	<?php echo _("This test makes sure that you have set all of the required configuration variables and that we are able to 
-	completely parse your config file");
-	echo " <font color=\"red\">";
-	$error->print_error('log_path');
-	echo " </font> ";
-	?>
-	</td>
-</tr>
-<tr>
-	<td valign="top">
-		<?php echo _("Ampache.cfg.php Up to Date?"); ?>
-	</td>
-	<td valign="top">[
-	<?php
-		$difference 	= debug_compare_configs($configfile,$configfile . ".dist");
-		if (count($difference)) { 
-			$status['check_config_uptodate'] = 'false';
-			echo " <font color=\"red\">ERROR</font> ";
-		}
-		else { 
-			$status['check_config_uptodate'] = 'true';
-			echo " <font color=\"green\">&nbsp;&nbsp;&nbsp;OK&nbsp;&nbsp;&nbsp;&nbsp;</font> ";
-		}
-	?>
-	]
-	</td>
-	<td>
-	<?php if (count($difference)) {
-		echo _('Ampache.cfg.php is missing the following:');
-		echo "<br /><dl style=\"text-align:left;\">\n";
-		foreach ($difference as $key=>$value) { 
-			if (is_array($value)) { 
-				foreach ($value as $element) { 
-					echo "\t<dd>$key = \"$element\"</dd>\n";
-				}
-			}
-			else { 
-				echo "\t<dd>$key = \"$value\"</dd>\n";
-			}
-		}
-		echo "</dl><br />\n";
-	 } else { ?>
-		
-	<?php } ?>
+	<?php echo _("This test makes sure that you have set all of the required configuration variables and that we are able to completely parse your config file"); ?>
 	</td>
 </tr>
 <tr>
 	<td valign="top"><?php echo _("DB Connection"); ?></td>
 	<td valign="top">[
 	<?php
-		$db = check_database($results['local_host'], $results['local_username'], $results['local_pass'],$results['local_db']);
+		$db = check_database($results['database_hostname'], $results['database_username'], $results['database_password'],$results['database_name']);
 		if (!$db) { 
 			$status['check_db'] = 'false';
 			echo " <font color=\"red\">ERROR</font> ";

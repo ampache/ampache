@@ -19,9 +19,9 @@
 
 */
 
-$web_path = conf('web_path');
+$web_path = Config::get('web_path');
 ?>
-<form id="songs" method="post" enctype="multipart/form-data" action="<?php echo conf('web_path'); ?>/admin/flag.php?action=reject_flags">
+<form id="songs" method="post" enctype="multipart/form-data" action="<?php echo Config::get('web_path'); ?>/admin/flag.php?action=reject_flags">
 <table class="tabledata" cellspacing="0" cellpadding="0">
 <tr class="table-header">
 	<th><a href="#" onclick="check_select('song'); return false;"><?php echo _('Select'); ?></a></th>
@@ -37,7 +37,7 @@ $web_path = conf('web_path');
 	<td align="center">
 		<input type="checkbox" name="song[]" value="<?php echo $flag->id; ?>" id="song_<?php echo $flag->id; ?>" />
 	</td>
-	<td><a href="<?php echo conf('web_path'); ?>/admin/flag.php?action=show_edit_song&song=<?php echo $flag->object_id; ?>"><?php $flag->print_name(); ?></a></td>
+	<td><a href="<?php echo Config::get('web_path'); ?>/admin/flag.php?action=show_edit_song&song=<?php echo $flag->object_id; ?>"><?php $flag->print_name(); ?></a></td>
 	<td><?php echo scrub_out($flag->f_user_username); ?></td>
 	<td><?php $flag->print_flag(); ?></td>
 	<td><?php echo scrub_out($flag->comment); ?></td>

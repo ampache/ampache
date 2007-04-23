@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2006 Ampache.org
+ Copyright (c) 2001 - 2007 Ampache.org
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
@@ -26,7 +26,9 @@
 	<?php 
 	if (count($favorite_artists)) { 
 		$items = $working_user->format_favorites($favorite_artists); 
-		show_info_box(_('Favorite Artists'),'artist',$items); 
+		$title = '<a href="' . Config::get('web_path') . '/stats.php?action=play_favorite&amp;type=artists">' . 
+			get_user_icon('all') . '</a>&nbsp;' .  _('Favorite Artists');
+		show_info_box($title,'artist',$items); 
 	}
 	else { 
 		echo "<span class=\"error\">" . _('Not Enough Data') . "</span>";
@@ -37,7 +39,9 @@
 	<?php
 	if (count($favorite_albums)) { 
 		$items = $working_user->format_favorites($favorite_albums);
-		show_info_box(_('Favorite Albums'),'album',$items);
+                $title = '<a href="' . Config::get('web_path') . '/stats.php?action=play_favorite&amp;type=albums">' . 
+                        get_user_icon('all') . '</a>&nbsp;' .  _('Favorite Albums');
+		show_info_box($title,'album',$items);
 	}
 	else { 
 		echo "<span class=\"error\">" . _('Not Enough Data') . "</span>";
@@ -48,7 +52,9 @@
 	<?php
 	if (count($favorite_songs)) { 
 		$items = $working_user->format_favorites($favorite_songs); 
-		show_info_box(_('Favorite Songs'),'your_song',$items); 
+                $title = '<a href="' . Config::get('web_path') . '/stats.php?action=play_favorite&amp;type=songs">' . 
+                        get_user_icon('all') . '</a>&nbsp;' .  _('Favorite Songs');
+		show_info_box($title,'your_song',$items); 
 	}
 	else { 
 		echo "<span class=\"error\">" . _('Not Enough Data') . "</span>";

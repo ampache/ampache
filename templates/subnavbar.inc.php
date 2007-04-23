@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2006 Ampache.org
+ Copyright (c) 2001 - 2007 Ampache.org
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
@@ -34,6 +34,6 @@
 		} 
 		$li_id = "id=\"" . $item['cssclass'] . "\"";
 		?>
-		<li <?php echo $li_class; echo $li_id; ?>><a href="<?php echo conf('web_path') . "/" .  $item['url']; ?>"><?php echo $item['title']; ?></a></li>
+		<li <?php echo $li_class; echo $li_id; ?>><a href="<?php echo Config::get('web_path') . "/" .  $item['url']; ?>"><?php echo $item['title']; ?></a></li>
 	<?php unset($li_id); } // END foreach ($items as $item) ?>
 </ul>

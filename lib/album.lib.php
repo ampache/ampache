@@ -68,15 +68,21 @@ function get_random_albums($count='') {
 
 	if (!$count) { $count = 5; } 
 
-	$count = sql_escape($count); 
+	$count = Dba::escape($count); 
 
-	$sql = "SELECT id FROM album WHERE art IS NOT NULL ORDER BY RAND() LIMIT $count"; 
-	$db_results = mysql_query($sql,dbh()); 
+	// We avoid a table scan by using the id index and then using a rand to pick a row #
+	$sql = "SELECT `id` FROM `album` WHERE `art` IS NOT NULL";
+	$db_results = Dba::query($sql); 
 
-	$results = array(); 
+	while ($r = Dba::fetch_assoc($db_results)) { 
+		$albums[] = $r['id'];
+	} 
 
-	while ($r = mysql_fetch_assoc($db_results)) { 
-		$results[] = $r['id']; 
+	$total = count($albums); 
+
+	for ($i=0; $i <= $count; $i++) { 
+		$record = rand(0,$total); 
+		$results[] = $albums[$record]; 
 	} 
 
 	return $results; 

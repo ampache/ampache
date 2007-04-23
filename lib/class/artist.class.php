@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2006 Ampache.org
+ Copyright (c) 2001 - 2007 Ampache.org
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
@@ -31,10 +31,10 @@ class Artist {
 	var $albums;
 	var $prefix;
 
-	/*!
-		@function Artist
-		@discussion Artist class, for modifing a artist
-		@param $artist_id 	The ID of the artist
+	/**
+	 * Artist
+	 * Artist class, for modifing a artist
+	 * Takes the ID of the artist and pulls the info from the db
 	 */
 	function Artist($artist_id = 0) {
 
@@ -46,32 +46,30 @@ class Artist {
 
 		/* Get the information from the db */
 		$info = $this->_get_info();
-		if (count($info)) { 
-			/* Assign Vars */
-			$this->name = $info['name'];
-			$this->prefix = $info['prefix'];
-		} // if info
+			
+		foreach ($info as $key=>$value) { 
+			$this->$key = $value; 
+		} // foreach info
 
 		return true; 
 
 	} //constructor
 
-	/*!
-		@function _get_info
-		@discussion get's the vars for $this out of the database 
-		@param $this->id	Taken from the object
+	/**
+	 * _get_info
+	 * get's the vars for $this out of the database taken from the object
 	*/
-	function _get_info() {
+	private function _get_info() {
 
 		/* Grab the basic information from the catalog and return it */
-		$sql = "SELECT * FROM artist WHERE id='" . sql_escape($this->id) . "'";
-		$db_results = mysql_query($sql, dbh());
+		$sql = "SELECT * FROM artist WHERE id='" . Dba::escape($this->id) . "'";
+		$db_results = Dba::query($sql);
 
-		$results = mysql_fetch_assoc($db_results);
+		$results = Dba::fetch_assoc($db_results);
 
 		return $results;
 
-	} //get_info
+	} // _get_info
 
 	/*!
 		@function get_albums
@@ -161,9 +159,9 @@ class Artist {
 		$albums = 0;
 
 		$sql = "SELECT COUNT(song.id) FROM song WHERE song.artist='$this->id' GROUP BY song.album";
-		$db_results = mysql_query($sql, dbh());
+		$db_results = Dba::query($sql);
 
-		while ($r = mysql_fetch_array($db_results)) { 
+		while ($r = Dba::fetch_row($db_results)) { 
 			$songs += $r[0];
 			$albums++;
 		}
@@ -193,7 +191,7 @@ class Artist {
 		$this->full_name = scrub_out(trim($this->prefix . " " . $this->name));
 
 		//FIXME: This should be f_link
-	        $this->link = "<a href=\"" . conf('web_path') . "/artists.php?action=show&amp;artist=" . $this->id . "\" title=\"" . $this->full_name . "\">" . $name . "</a>";
+	        $this->f_link = "<a href=\"" . Config::get('web_path') . "/artists.php?action=show&amp;artist=" . $this->id . "\" title=\"" . $this->full_name . "\">" . $name . "</a>";
 
 		// Get the counts 
 		$this->get_count(); 

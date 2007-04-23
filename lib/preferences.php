@@ -175,29 +175,27 @@ function update_preference($username,$name,$pref_id,$value) {
 
 } // update_preference
 
-/*!
-	@function has_preference_access
-	@discussion makes sure that the user has sufficient
-		rights to actually set this preference, handle
-		as allow all, deny X
-	//FIXME:
-	// This is no longer needed, we just need to check against preferences.level
-*/
+/**
+ * has_preference_access
+ * makes sure that the user has sufficient
+ * rights to actually set this preference, handle
+ * as allow all, deny X
+ */
 function has_preference_access($name) { 
 
 	/* If it's a demo they don't get jack */
-        if (conf('demo_mode')) {
+        if (Config::get('demo_mode')) {
 	        return false;
         }
 
-	$name = sql_escape($name);
+	$name = Dba::escape($name);
 
 	/* Check Against the Database Row */
-	$sql = "SELECT level FROM preferences " . 
-		"WHERE name='$name'";
-	$db_results = mysql_query($sql, dbh());
+	$sql = "SELECT `level` FROM `preferences` " . 
+		"WHERE `name`='$name'";
+	$db_results = Dba::query($sql);
 
-	$data = mysql_fetch_assoc($db_results);
+	$data = Dba::fetch_assoc($db_results);
 
 	$level = $data['level'];
 
@@ -207,7 +205,7 @@ function has_preference_access($name) {
 
 	return false;
 
-} // has_preference_access
+} //has_preference_access
 
 
 /*!
@@ -423,28 +421,27 @@ function insert_preference($name,$description,$default,$level,$type,$catagory) {
  */
 function init_preferences() {
 
-
         /* Get Global Preferences */
         $sql = "SELECT preferences.name,user_preference.value FROM preferences,user_preference WHERE user_preference.user='-1' " .
                 " AND user_preference.preference = preferences.id AND preferences.catagory='system'";
-        $db_results = mysql_query($sql, dbh());
+        $db_results = Dba::query($sql);
 
-        while ($r = mysql_fetch_assoc($db_results)) {
+        while ($r = Dba::fetch_assoc($db_results)) {
                 $name = $r['name'];
                 $results[$name] = $r['value'];
         } // end while sys prefs
 
         /* Now we need to allow the user to override some stuff that's been set by the above */
         $user_id = '-1';
-        if ($GLOBALS['user']->username) {
-                $user_id = sql_escape($GLOBALS['user']->id);
+        if ($GLOBALS['user']->id) {
+                $user_id = Dba::escape($GLOBALS['user']->id);
         }
 
         $sql = "SELECT preferences.name,user_preference.value FROM preferences,user_preference WHERE user_preference.user='$user_id' " .
                 " AND user_preference.preference = preferences.id AND preferences.catagory != 'system'";
-        $db_results = mysql_query($sql, dbh());
+        $db_results = Dba::query($sql);
 
-        while ($r = mysql_fetch_assoc($db_results)) {
+        while ($r = Dba::fetch_assoc($db_results)) {
                 $name = $r['name'];
                 $results[$name] = $r['value'];
         } // end while
@@ -454,9 +451,7 @@ function init_preferences() {
                 $results['theme_path'] = '/themes/' . $results['theme_name'];
         }
 
-        conf($results,1);
-
-        return true;
+        Config::set_by_array($results,1);
 
 } // init_preferences
 
@@ -528,5 +523,26 @@ function fix_all_users_prefs() {
 
 } // fix_all_users_prefs
 
+
+/**
+ * fix_preferences
+ * This takes the preferences, explodes what needs to 
+ * become an array and boolean everythings
+ */
+function fix_preferences($results) {
+
+	$results['auth_methods'] 	= explode(",",$results['auth_methods']); 
+	$results['tag_order']		= explode(",",$results['tag_order']); 
+	$results['album_art_order']	= explode(",",$results['album_art_order']); 
+	$results['amazon_base_urls']	= explode(",",$results['amazon_base_urls']); 
+
+        foreach ($results as $key=>$data) {
+                if (strcasecmp($data,"true") == "0") { $results[$key] = 1; }
+                if (strcasecmp($data,"false") == "0") { $results[$key] = 0; }
+        }
+
+        return $results;
+
+} // fix_preferences
 
 ?>

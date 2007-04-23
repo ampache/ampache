@@ -70,14 +70,14 @@ class Flag {
 	 * _get_info
 	 * Private function for getting the information for this object from the database 
 	 */
-	function _get_info() { 
+	private function _get_info() { 
 
-		$id = sql_escape($this->id);
+		$id = Dba::escape($this->id);
 
-		$sql = "SELECT * FROM flagged WHERE id='$id'";
-		$db_results = mysql_query($sql, dbh());
+		$sql = "SELECT * FROM `flagged` WHERE `id`='$id'";
+		$db_results = Dba::query($sql);
 
-		$results = mysql_fetch_assoc($db_results);
+		$results = Dba::fetch_assoc($db_results);
 		
 		return $results;
 
@@ -88,16 +88,16 @@ class Flag {
 	 * This returns the id's of the most recently flagged songs, it takes an int
 	 * as an argument which is the count of the object you want to return
 	 */
-	function get_recent($count=0) { 
+	public static function get_recent($count=0) { 
 
 		if ($count) { $limit = " LIMIT " . intval($count);  } 
 
 		$results = array();
 
 		$sql = "SELECT id FROM flagged ORDER BY date " . $limit;
-		$db_results = mysql_query($sql, dbh());
+		$db_results = Dba::query($sql);
 
-		while ($r = mysql_fetch_assoc($db_results)) { 
+		while ($r = Dba::fetch_assoc($db_results)) { 
 			$results[] = $r['id'];
 		}
 		

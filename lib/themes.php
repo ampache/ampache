@@ -68,8 +68,8 @@ function get_theme($name) {
 
 	if (strlen($name) < 1) { return false; }
 
-	$config_file = conf('prefix') . "/themes/" . $name . "/theme.cfg.php";
-	$results = read_config($config_file);
+	$config_file = Config::get('prefix') . "/themes/" . $name . "/theme.cfg.php";
+	$results = parse_ini_file($config_file);
 	$results['path'] = $name;
 	return $results;
 
@@ -116,9 +116,9 @@ function set_theme_colors($theme_name,$user_id) {
 */
 function set_theme() { 
 
-	if (strlen(conf('theme_name')) > 0) { 
-		$theme_path = "/themes/" . conf('theme_name');
-		conf(array('theme_path'=>$theme_path),1);
+	if (strlen(Config::get('theme_name')) > 0) { 
+		$theme_path = "/themes/" . Config::get('theme_name');
+		Config::set(array('theme_path'=>$theme_path),1);
 	}
 
 } // set_theme

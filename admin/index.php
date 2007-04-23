@@ -20,7 +20,7 @@
 
 */
 
-require ('../lib/init.php');
+require '../lib/init.php';
 
 $action = scrub_in($_REQUEST['action']);
 
@@ -29,12 +29,12 @@ if (!$GLOBALS['user']->has_access(100)) {
 	exit();
 }
 
-
-show_template('header'); ?>
+require_once Config::get('prefix') . '/templates/header.inc.php';
+?>
 <div id="admin-tools">
-	<?php require (conf('prefix') . '/templates/show_admin_tools.inc.php'); ?>
+	<?php require Config::get('prefix') . '/templates/show_admin_tools.inc.php'; ?>
 </div>
 <div id="admin-info">
-	<?php require (conf('prefix') . '/templates/show_admin_info.inc.php'); ?>
+	<?php require Config::get('prefix') . '/templates/show_admin_info.inc.php'; ?>
 </div>
 <?php show_footer(); ?>

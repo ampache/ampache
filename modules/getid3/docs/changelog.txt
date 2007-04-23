@@ -1,0 +1,491 @@
+// +----------------------------------------------------------------------+
+// | PHP version 5                                                        |
+// +----------------------------------------------------------------------+
+// | Copyright (c) 2002-2006 James Heinrich, Allan Hansen                 |
+// +----------------------------------------------------------------------+
+// | This source file is subject to version 2 of the GPL license,         |
+// | that is bundled with this package in the file license.txt and is     |
+// | available through the world-wide-web at the following url:           |
+// | http://www.gnu.org/copyleft/gpl.html                                 |
+// +----------------------------------------------------------------------+
+// | getID3() - http://getid3.sourceforge.net or http://www.getid3.org    |
+// +----------------------------------------------------------------------+
+// | Authors: James Heinrich <infoÿgetid3*org>                            |
+// |          Allan Hansen <ahÿartemis*dk>                                |
+// +----------------------------------------------------------------------+
+// | Changelog                                                            |
+// +----------------------------------------------------------------------+
+//
+// $Id: changelog.txt,v 1.47 2007/02/12 10:00:15 ah Exp $
+
+
+
+        ª  denotes a major feature addition/change
+        §  denotes a change in the returned structure
+        !  denotes a cry for help from developers
+* Bugfix:  denotes a fixed bug
+
+
+getID3() 2.x Version History
+============================
+
+
+2.0.0b4: [2007-01-12] Allan Hansen
+
+    GENERAL
+    ª Major update to readme.txt
+    ª Added new section sample apps
+    ª    Added well-written sample application "morg". 
+         See sample_apps/morg/screen_shots for more
+    § option_tags_process now generates root key 'comments' with merged 
+      values from 'tags'.
+    § Removed option_tags_html. HTML entities is a thing of the past. 
+      Use UTF-8 encoded pages instead. Saves bandwidth and is much easier.
+    * Bugfix: PHP_NOTICE issue in BigEndian2Float().
+    ª Tag writing support: ID3v1
+    ª Tag writing support: APEtag
+    ª Tag writing support: FLAC
+    ª Tag writing support: Ogg Vorbis
+    ª Tag writing support: Lyrics3
+    ª SVG  file detection (no parsing)
+    ª PAR2 file detection (no parsing)
+    ª Got rid of windowed and option_helperapps_dir. Helper apps must be 
+      somewhere in the path, e.g. c:\windows\system32 or /usr/bin
+
+    ASF MODULE:
+    * Bugfix: Wrong mime type (video/x-ms-wma instead of video/x-ms-wmv)
+    for certain FourCCs.
+    * Bugfix: Padding offset bug.
+
+    DATA_HASH MODULE:
+    § copy md5_data_source to md5_data if option set to true
+    
+    DTS MODULE:
+    ª New module (module.audio.dts.php)
+    
+    FLV MODULE:
+    * Bugfix: DivByZero on zero length FLV files.
+    * Bugfix: PHP_NOTICE one some files.
+    
+    ID3v1 MODULE:
+    § Removed: Padding check.
+    
+    ID3v2 MODULE:
+    * Bugfix: PHP_NOTICE issues with broken ID3v2 tag/garbage.
+    * Bugfix: UTF-8/16 encoded frames terminated by \x00.
+    * Bugfix: ID3v2 LINK frames iconv error.
+    * Bugfix: Padding length calculated incorrectly.
+    * Bugfix: ID3v2.3 extended headers non-conformance.
+
+    LYRICS3 MODULE
+    * Bugfix: Minor issues with lyrics3 (avoid PHP_NOTICE).
+    
+    PNG MODULE:
+    * Bugfix: Module broken in regards to gIFg and gIFx chunks.
+    
+    MIDI MODULE
+    * Bugfix: Minor issues with midi module (avoid PHP_NOTICE).
+
+    MP3 MODULE:
+    * Bugfix: Removed whitespace after ?>
+    * Bugfix: Some CBR MP3 files detected as VBR with plenty of warnings.
+    * Bugfix: PHP_NOTICE issues.
+    
+    MPC MODULE:
+    § Mime type returned: audio/x-musepack 
+    
+    QUICKTIME MODULE:
+    * Bugfix: TYPO in variable, resulting in unknown errors.
+    * Bugfix: Incorrect frame rate returned.
+    
+    REAL MODULE:
+    * Bugfix: fread() zero bytes issue.
+    
+    RIFF MODULE:
+    * Bugfix: Wave files being detected as MP3.
+    § Zero sized chunk invokes warning instead of error.
+    
+    SHORTEN MODULE:
+    * Bugfix: Not working for wav files with fmt chunks <> 16 bytes.
+    
+    XIPH MODULE:
+    ª replaygain_reference_loudness from FLAC 1.1.3 moved from comments
+      to ['replay_gain']['reference_volume'].
+    ª Supporting FLAC 1.1.3 PICTURE block.
+    § FLAC: Removed some ['raw'] keys.
+    
+
+2.0.0b3: [2006-06-25] Allan Hansen
+     
+    AAC_ADTS MODULE
+    * Bugfix: Static bitrate cache wrong result when parsing several files 
+    
+    ASF MODULE
+    * Bugfix: Do not return NULL video bitrate for ASF v3.
+    * Bugfix: ['codec'] key warning in module.audio-video.asf.php from 1.7.6,
+    * Bugfix: audio & video bitrates sometimes wrong in ASF files from 1.7.6,
+    § ASF lyrics now returned under [comments][lyrics] from 1.7.5,
+    
+    BMP MODULE
+    * Bugfix: Undocumented bugfix between 1.7.3 and 1.7.6,
+     
+    DATA_HASH MODULE
+    * Bugfix: Filenames not escaped with escapeshellarg() under UNIX.
+    * Bugfix: UNIX: head and tail called with -cNNN instead of "-c NNN".
+    
+    FLV MODULE
+    ª No longer reads entire file into memory.
+    
+    ID3v1 MODULE
+    §  Put back id3v1 padding check, since it exists in 1.7.6. 
+    
+    ID3v2 MODULE
+    * Bugfix: PHP notices on bad ID3v2 frames from 1.7.6.
+    * Bugfix: 'url_source' typo in module.tag.id3v2.php from 1.7.3.
+    § ID3v2 "TDRC" frame now used as "year" in comments if TYER
+      unavailable (TYER is deprecated in ID3v2.4)
+    § Bugfix: gmmktime() instead of mktime(). 
+     
+    ISO MODULE
+    § Using gmmktime() instead of mktime(). 
+    
+    GZIP MODULE
+    ! Module is a memory hog. Reads entire file into memory. It also 
+      gzdeflates() it to memory. Will use lots of memory on huge files.
+      Please someone rewrite it to work with filepointers and seeking.
+    ª info['gzip']['files'] removed. Contains redundant information only. 
+    ª Replaced ['tar'] key with ['parsed_content']. Module can now parse 
+      anything that getID3() can parse - not just tar files.
+     
+    JPEG MODULE
+    * Bugfix: Error when php exif support enabled.
+
+    LYRICS MODULE
+    § Comments are no longer trimmed.
+
+    QUICKTIME MODULE
+    * Bugfix: incorrect dimensions from disabled Quicktime tracks from 1.7.6,
+    § Added ['quicktime']['hinting'] key (boolean) from 1.7.4,
+    * Bugfix: Quicktime 'mvhd' matrix values were wrong from 1.7.3,
+
+    MIDI MODULE
+    * Bugfix: Fixed bug that reported wrong playing time on some files.
+    
+    MP3 MODULE
+    ª Module fully working.
+    ª Memory caches are reset when scanning new file. Might make analyse 
+      slightly slower, but will save lots of memory.
+    ª Removed unrecommended bruteforce code.
+    * Bugfix: Encoder options should now return proper "--alt-preset n" /  
+      "--alt-preset cbr n" when scanning more files. 
+    * Bugfix: added LAME preset guessing for presets 410,420,440,490
+      (thanks adminÿlogbud*com)
+    
+    RIFF MODULE
+    § No longer returns zero bits_per_sample for multiple formats.
+    * Bugfix: Missing 'lossless' key in RIFF-WAV from 1.7.4.
+    § Using gmmktime() instead of mktime(). 
+    
+    SHORTEN MODULE
+    * Bugfix: Filenames not escaped with escapeshellarg() under UNIX.
+    
+    TAR MODULE
+    ª Module rewritten to work with filepointer only. Makes parsing a lot 
+      faster (will fseek() past data). Also saves a lot of memory, expecially 
+      with large files.
+    ª Added warning for non ASCII filenames, which breaks specification.  
+    ª info['tar']['files'] removed. Contains redundant information only. Also
+      causes problems for non ASCII tar files, as filenames are used as keys
+      in PHP arrays.
+    
+    XIPH MODULE
+    * Bugfix: Error message when padding in FLAC files were used up.
+    
+    ZIP MODULE
+    § Using gmmktime() instead of mktime(). 
+    
+    ICONV_REPLACEMENT MODULE
+    * Bugfix: Major UTF-8 to UTF-16/ISO-8859-1 conversion bug (empty string 
+    returned) when iconv() not available - from 1.7.4.
+    * Bugfix: Other major bugfixes that broke the module.
+
+    demo.joinmp3.php
+    Demo removed - out of getID3()'s scope.
+    
+    PDF files can now be detected, but not parsed/analyzed.
+    MSOffice files can now be detected, but not parsed/analyzed.
+    
+
+2.0.0b2: [2004-11-01] Allan Hansen 
+
+    GENERAL
+    * Bugfixes: Analyzed 3,000 files and compared result with 1.7.2 - several 
+      minor bugs were fixed. Output of 2.0.0 should match 1.7.2 reasonable well.
+    * Bugfix: fail_id3 and fail_ape code never executed.
+      Wavpack4 support
+      Quicktime/MP3-in-MP4, Apple Lossless support
+    ª New encoding_id3v2 option/hack for broken ID3v2 tags
+    § Tags are no longer trim()ed.
+    § Some ['bits_per_sample'] == 0 removed
+    ª New option_analyze - disable to detect format only.
+    ª New option_accurate_results - disable to greatly speed up parsing of
+      AAC/ADTS, headerless MP3/MP2 VBR, midi (later), possible more in future.
+      Warnings issued when disabled and accuracy affected!
+
+    AAC/ADTS
+    ª Memory caches destroyed after analyze() to free up memory. 
+    
+    LA MODULE
+    * Bugfix: RIFF tags now parsed properly
+    
+    OPTIMFROG MODULE
+    * Bugfix: RIFF tags now parsed properly
+    
+    WAVPACK MODULE
+    * Bugfix: RIFF trailer now parsed properly
+    
+    QUICKTIME MODULE
+    § option_extra_info determines whether atom_data is returned
+    § Removed $ParseAllPossibleAtoms option. We should only return useful data.
+      zlib support in PHP optional reqirement
+    * Bugfix: New iTunes crashes PHP - temp fix - no tags on those files.
+      
+    RIFF MODULE
+    * Bugfix: Wavpack3 extra fields now parsed properly.
+    § RIFF tags in Litewave files now parsed properly
+    
+    BONK MODULE
+    * Bugfix: ['bonk']['ID3']['valid'] now returns bool instead of object
+    
+    NSV MODULE
+    * Bugfix: PCM part ignored
+    
+    APETAG MODULE
+    * Bugfix: APEtag 1.0 broken
+    
+    ASF MODULE
+    § Embedded ID3v2 tags processes again - supported by Windows Media Player.
+    
+    DEMOS
+    ª demo.browse.php scans directories faster with inaccurate results.
+    ª demo.browse.php now uses javascript alert to show longer warnings etc
+      instead of tool tips.
+    ª demo.browse.php now shows embedded covers just like the 1.7.x demo.
+    ª demo.browse.dhtml.php - DHTML version of the browser. Has progressive 
+      display in MSIE - but quite slow when scanning LOTS of files.
+    ª New demo.mime_only.php for returning mime type only.
+    ª Search example in demo.mysql.php
+    
+
+2.0.0b1: [2004-08-23] Allan Hansen 
+
+    ª Major memory savings. 1.7.1 use 25% more memory under PHP 5.0.0 than 
+      PHP 4.3.7. 2.0.0b1 memory usage is comparable to 1.7.1 under PHP 4.3.7.
+      See Memory.xls for details (will not be included in 2.0.0 final).
+      Loading all modules requires 4,277 kb of memory (4,171 with iconv() 
+      support in PHP. Some of the modules  require more memory while scanning, 
+      as they cache the results - MP3 and AAC/ADTS in particular. 
+
+    ª New internal testing method. Output of 2.0.0 matches that of 1.7.1
+      exactly - except those places where we deliberately changed something.
+      If something is changed it is because we did not have a test file
+      to show it.
+
+    ª New extras directory.
+      This contains multiple usefull code snips that really does not 
+      belong to the main getID3() codebase - i.e. stuff that the user most
+      likely can/will do differently.
+      
+    ª Deleted getid3_lib.php 
+      - Some common functions moved to getid3.php - getid3_lib declared 
+        there.
+      - Replaygain function moved to getid3.php   - new class 
+        geti3_replaygain.
+      - iconv() replacement function moved to new lib module.
+      - md5/sha1 data hash function moved to new lib module.
+      - Some function moved to the files that use them.
+      - CopyTagsToComments() moved to extras dir.
+      - EmbeddedLookup() gone - PHP5 use way more memory that way.
+      
+    ª magic_quotes_runtime must be disabled before running getID3().
+      If you use them, use set_magic_quotes_runtime(0) and
+      set_magic_quotes_runtime(1) around your getID3() block.
+      Older versions turned them on and off automatically. This would
+      require a lot extra code, since they needed being restored before
+      every first level throw.
+      
+    * Bugfix: Fixed multiple bugs in the caching extentions .
+      
+      Optimized most modules using new getid3_ReadSequence()
+      
+      Checked all(most) code using error_reporting (E_STRICT | E_ALL)
+
+    § Removed all dead modules: EXE, RAR, Bink, Matroska, MOD*.
+    § Kept magic bytes - getid3 will detect them and do nothing and return
+      warning instead of error.
+      
+    § Disabled quicktime and mpeg modules as they depend on mp3-
+
+    Reformatted and updated dependencies.txt
+
+
+    GETID3 MAIN
+    § getid3 option_tags_html     now defaults to false.
+    § getid3 option_max_2gb_check now defaults to false.
+    § New getid3 option_tags_images defaults to false. Scan tags for binary 
+      image data - ID3v2 and vorbiscomments only. Possible apetag later.
+      
+
+    JPEG MODULE
+    § Renamed module from jpg to jpeg.
+    § Changed mime type to correct image/jpeg.
+    § Added optional exif depency to depencies.txt for jpeg files.
+      
+
+    PNG MODULE
+    § Made png zlib dependecy optional.
+      
+
+    BMP MODULE
+    ª Removed unused and unneeded PlotBMP() in bmp module.
+      Removed extract_palette and extract_data code 
+      - This does not belong in getid3. We should analyze files, not process 
+        them.  If the user wants to display bmp files to the browser she can 
+        convert them with ImageMagick or something similar. She will 
+        probably have it installed already to resize user uploaded images.
+      
+
+    PCD MODULE
+    ª Removed $ExtractData from pcd module - same reason as BMP.
+      
+
+    SWF MODULE
+    § Added zlib dependecy REQUIRED for swf.
+
+
+    ID3v1 MODULE
+    §  Removed id3v1 padding check - who cares? 
+       - also removed in lyrics3 - if needed - it needs to be done differently 
+       - no access to warnings and no sorting!
+         
+
+    ID3v2 MODULE
+    § Made id3v2 zlib dependecy optional.
+    § id3v2 - images  - changed 'image_mime' to actual mime type.
+
+
+    AAC MODULE(s)
+    ª Split aac module in two - aac_adif and aac_adts.
+      This saves memory if user only have files of one type (very likely).
+      Replaced getid3_lib::Bin2Dec() with bindec() in aac modules - speed.
+
+
+    AC3 MODULE
+      Added ac3 optional dependency to dependencies.txt.
+    § Changed riff module dependency on mp3 to optional.
+      Changed wawpack references in riff module to wavpack3.
+    * Bugfix: RIFFparseWavPackHeader() needs 28 bytes, not 22.
+      
+    
+    ASF MODULE
+    ª Removed id3v1 dependency
+    ª Removed id3v2 dependency
+    § ASF genres are no longer case adjustet to match standard ID3v1 ones. 
+    § Embedded ID3v2 tags no longer processes. Not part of the ASF spec.
+    § Changed warning at line 71 to error.
+    ª Removed a lot of unneeded conversions between Bytestring and GUID
+    ª Changed the constants from bytestring to GUID
+    * Bugfix: Fixed incorrect warning messages on  
+      	{4B1ACBE3-100B-11D0-A39B-00A0C90348F6}
+      	{4CFEDB20-75F6-11CF-9C0F-00A0C90349CB}
+    § Removed objectid, fileid, reserved_1_id and reserved where 'same'_guid
+      exists.
+
+
+    MP3 MODULE
+    § MARKED MP3 MODULE BROKEN
+      Removed echoerrors debugcode in mp3 module.
+      Removed bruteforce code in mp3 module - never executed in 1.7.
+      Removed $scan_as_cbr - not used.
+    
+
+    MPC MODULE(s)    
+    ª Split mpc module in two - SV7 in "mpc" and SV4-6 in mpc_old.
+      This saves memory if user only have files of one type (very likely).
+      
+      
+    OGG, FLAC MODULES
+    ª Merged interdependant modules ogg and flac into new module xiph.
+    § Updated FLACapplicationIDLookup() with 2 new entries.
+
+    
+    REAL MODULE
+    § Removed 'unknown' keys.
+
+      
+    SHORTEN MODULE
+    ª Improved UNIX shorten binary detection. Scanning `which shorten`, 
+      /usr/bin, /usr/local/bin and checking is_executable()
+
+    
+    ISO MODULE      
+    § Removed unused_ indexes in iso modules - they are afterall not used.
+      
+
+    DEMOS
+    ª Created new index.php in demos/ explaining what the different demos 
+      does.
+
+    ª Rewrote demo.browse.php completely. 
+      - Using public domain HTML abstraction library by Allan Hansen.
+      - Removed security breach - able to browse any parent directory .
+      - A $root_path must be set before browsing.
+      - Screen width option.
+      - Compressed filename column using title=.
+      - Removed filesize column - not really that interesting.
+      - Removed md5data column.
+      - Removed total at the bottom - the user can probably figure out 
+        how to implement this himself.
+      - Added Audio column: sample_rate/bits_per_sample/channels columns.
+      - Added scan_time columns - how long it took getid3 to process the 
+        file.
+      - Compressed artist, title and warning column using tool_tips.
+      - Removed delete feature - possible security risk.
+      - Repeating file header every 20 rows.
+      - Added audio format/video format to format column.
+      - Listing supported php modules in footer.
+      - New colour scheme.
+     
+    ª Rewrote demo.mysql.php completely.
+      - Using multiple tables instead of just one. No string is stored 
+        twice. Searching tags should be a lot faster for large databases.
+      - Multiple artists, titles, genres, etc per file supported.
+      - Using public domain HTML  abstraction library by Allan Hansen.
+      - Using public domain MySQL abstraction library by Allan Hansen.
+      - Scanning limited to $audio_path - security.
+      - Included sample data that can be imported and browsed.
+      
+    ª Rewrote demo.basic.php
+    ª Removed demo.simple.php - basic should be enough
+    
+    ª Removed demo.joinmp3.php - this advanced demo should go in the extras
+      module IF/WHEN the mp3 module is running again.
+        
+    § Updated demo.audioinfo.class - minor changes.
+      
+
+    MISC CODING SPECIFIC
+      Partial new coding style - some is easily changed with Replace In Files
+        - New file header - PEAR compatible
+        - Indentation with four spaces instead of tab - PEAR compatible
+        - array() changed to as array () - as suggested by PEAR standard
+        - All(most) function names in MixedCase
+        - Variables in $my_variable lowercase/underscores
+        - (bool) $var changed to (bool)$var
+        - A few "} else {" changed to "else {" to make room for easier 
+          readable comments
+        
+      Removed all DivByZero checks. The plan was to catch them, but php 
+      errors and warnings are not exceptions... Something needs to be 
+      done here.
+

@@ -21,6 +21,15 @@
 /* Make sure they aren't directly accessing it */
 if (INIT_LOADED != '1') { exit; }
 
+/**
+ * Dba
+ * This is the database abstraction class
+ * It duplicates the functionality of mysql_???
+ * with a few exceptions, the row and assoc will always
+ * return an array, simplifying checking on the far end
+ * it will also auto-connect as needed, and has a default
+ * database simplifying queries in most cases. 
+ */
 class Dba { 
 
 	private static $_default_db;
@@ -66,6 +75,7 @@ class Dba {
 	/**
 	 * fetch_assoc
 	 * This emulates the mysql_fetch_assoc and takes a resource result
+	 * we force it to always return an array, albit an empty one
 	 */
 	public static function fetch_assoc($resource) { 
 
@@ -80,6 +90,7 @@ class Dba {
 	/**
 	 * fetch_row
 	 * This emulates the mysql_fetch_row and takes a resource result
+	 * we force it to always return an array, albit an empty one
 	 */
 	public static function fetch_row($resource) { 
 
@@ -92,16 +103,31 @@ class Dba {
 	} // fetch_row
 
 	/**
+	 * num_rows
+	 * This emulates the mysql_num_rows function which is really
+	 * just a count of rows returned by our select statement, this
+	 * doesn't work for updates or inserts
+	 */
+	public static function num_rows($resource) { 
+		
+		$result = mysql_num_rows($resource); 
+		
+		if (!$result) { return '0'; } 
+
+		return $result;
+	} // num_rows 
+
+	/**
 	 * _connect
 	 * This connects to the database, used by the DBH function
 	 */
 	private static function _connect($db_name) { 
 
 		if (self::$_default_db == $db_name) { 
-			$username = Config::get('mysql_username'); 
-			$hostname = Config::get('mysql_hostname'); 
-			$password = Config::get('mysql_password'); 
-			$database = Config::get('mysql_database'); 
+			$username = Config::get('database_username'); 
+			$hostname = Config::get('database_hostname'); 
+			$password = Config::get('database_password'); 
+			$database = Config::get('database_name'); 
 		} 
 		else { 
 			// Do this later
@@ -111,7 +137,7 @@ class Dba {
 		if (!$dbh) { debug_event('Database','Error unable to connect to database' . mysql_error(),'1'); } 
 
 		$select_db = mysql_select_db($database,$dbh); 
-
+		
 		return $dbh;
 
 	} // _connect
@@ -125,13 +151,16 @@ class Dba {
 
 		if (!$database) { $database = self::$_default_db; } 
 
-		if (!is_resource(self::$config->get($database))) { 
+		// Assign the Handle name that we are going to store
+		$handle = 'dbh_' . $database;
+		
+		if (!is_resource(Config::get($handle))) { 
 			$dbh = self::_connect($database);
-			self::$config->set($database,$dbh,1); 
+			Config::set($handle,$dbh,1); 
 			return $dbh;
 		} 
 		else { 
-			return self::$config->get($database); 
+			return Config::get($handle); 
 		} 
 
 
@@ -154,10 +183,9 @@ class Dba {
 	 * This is the auto init function it sets up the config class
 	 * and also sets the default database 
 	 */
-	public static function auto_init() { 
+	public static function _auto_init() { 
 
-		self::$_default_db = Config::get('mysql_database'); 
-		self::$config = new Config(); 
+		self::$_default_db = Config::get('database_name'); 
 
 		return true; 
 

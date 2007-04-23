@@ -58,13 +58,13 @@ function gc_now_playing() {
 
         $time 		= time();
         $expire 	= $time - 3200;  // 86400 seconds = 1 day
-	$session_id	= sql_escape($_REQUEST['sid']);
+	$session_id	= Dba::escape($_REQUEST['sid']);
 	if (strlen($session_id)) { 
 		$session_sql = " OR session = '$session_id'";
 	}	
 
         $sql = "DELETE FROM now_playing WHERE start_time < $expire" . $session_sql;
-        $db_result = mysql_query($sql, dbh());
+        $db_result = Dba::query($sql);
         
 } // gc_now_playing
 
@@ -101,9 +101,9 @@ function insert_now_playing($song_id,$uid,$song_length) {
         $sql = "INSERT INTO now_playing (`song_id`, `user`, `start_time`,`session`)" .
                 " VALUES ('$song_id', '$uid', '$expire','$session_id')";
 
-        $db_result = mysql_query($sql, dbh());
+        $db_result = Dba::query($sql);
 
-        $insert_id = mysql_insert_id(dbh());
+        $insert_id = Dba::insert_id();
 
         return $insert_id;
 

@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2006 Ampache.org
+ Copyright (c) 2001 - 2007 Ampache.org
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
@@ -18,7 +18,7 @@
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
-$web_path = conf('web_path'); 
+$web_path = Config::get('web_path'); 
 ?>
 <?php show_box_top(_('Albums of the Moment')); ?>
 <table class="tabledata">
@@ -31,7 +31,7 @@ $web_path = conf('web_path');
 	?>
 	<td>
 		<a href="<?php echo $web_path; ?>/albums.php?action=show&amp;album=<?php echo $album_id; ?>">
-		<?php if (conf('show_album_art')) { ?>
+		<?php if (Config::get('show_album_art')) { ?>
 		<img src="<?php echo $web_path; ?>/image.php?thumb=3&amp;id=<?php echo $album_id; ?>" width="80" height="80" border="0" alt="<?php echo $name; ?>" title="<?php echo $name; ?>" />
 		<?php } else { ?>
 		<?php echo '[' . $album->f_artist . '] ' . $album->f_name; ?>

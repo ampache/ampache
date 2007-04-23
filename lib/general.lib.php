@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2006 Ampache.org
+ Copyright (c) 2001 - 2007 Ampache.org
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
@@ -28,29 +28,6 @@
 */
 
 /*!
-	@function sql_escape
-	@discussion this takes a sql statement
-	and properly escapes it before a query is run 
-	against it. 
-*/
-function sql_escape($sql,$dbh=0) {
-
-	if (!is_resource($dbh)) { 
-		$dbh = dbh();
-	}
-
-	if (function_exists('mysql_real_escape_string')) {
-		$sql = mysql_real_escape_string($sql,$dbh);
-	}
-	else {
-		$sql = mysql_escape_string($sql);
-	}
-
-	return $sql;
-
-} // sql_escape
-
-/*!
 	@function ip2int
 	@discussion turns a dotted quad ip into an
 		int
@@ -74,89 +51,6 @@ function int2ip($i) {
 	return "$d[0].$d[1].$d[2].$d[3]";
 } // int2ip
 
-/*!
-	@function show_template
-	@discussion show a template from the /templates directory, automaticly appends .inc
-		to the passed filename
-	@param 	$template	Name of Template
-*/
-function show_template($template) {
-	global $user;
-
-	/* Check for a 'Theme' template */
-	if (is_readable(conf('prefix') . conf('theme_path') . "/templates/$template".".inc")) { 
-		require (conf('prefix') . conf('theme_path') . "/templates/$template".".inc");
-	}
-	else {
-	        require (conf('prefix') . "/templates/$template".".inc");
-	}
-
-} // show_template
-
-
-/*!
-	@function read_config
-	@discussion reads the config file for ampache
-*/
-function read_config($config_file, $debug=0, $test=0) {
-
-    $fp = @fopen($config_file,'r');
-    if(!is_resource($fp)) return false;
-    $file_data = fread($fp,filesize($config_file));
-    fclose($fp);
-
-    // explode the var by \n's
-    $data = explode("\n",$file_data);
-    if($debug) echo "<pre>";
-
-    $count = 0;
-
-    foreach($data as $value) {
-        $count++;
-
-        $value = trim($value);
-
-	if (substr($value,0,1) == '#') { continue; } 
-
-        if (preg_match("/^([\w\d]+)\s+=\s+[\"]{1}(.*?)[\"]{1}$/",$value,$matches)
-                        || preg_match("/^([\w\d]+)\s+=\s+[\']{1}(.*?)[\']{1}$/", $value, $matches)
-                        || preg_match("/^([\w\d]+)\s+=\s+[\'\"]{0}(.*)[\'\"]{0}$/",$value,$matches)) {
-
-
-                if (is_array($results[$matches[1]]) && isset($matches[2]) ) {
-                        if($debug) echo "Adding value <strong>$matches[2]</strong> to existing key <strong>$matches[1]</strong>\n";
-                        array_push($results[$matches[1]], $matches[2]);
-                }
-
-                elseif (isset($results[$matches[1]]) && isset($matches[2]) ) {
-                        if($debug) echo "Adding value <strong>$matches[2]</strong> to existing key $matches[1]</strong>\n";
-                        $results[$matches[1]] = array($results[$matches[1]],$matches[2]);
-                }
-
-                elseif ($matches[2] !== "") {
-                        if($debug) echo "Adding value <strong>$matches[2]</strong> for key <strong>$matches[1]</strong>\n";
-                        $results[$matches[1]] = $matches[2];
-                }
-
-                // if there is something there and it's not a comment
-                elseif ($value{0} !== "#" AND strlen(trim($value)) > 0 AND !$test AND strlen($matches[2]) > 0) {
-                        echo "Error Invalid Config Entry --> Line:$count"; return false;
-                } // elseif it's not a comment and there is something there
-
-                else {
-                        if($debug) echo "Key <strong>$matches[1]</strong> defined, but no value set\n";
-                }
-
-        } // end else
-
-    } // foreach
-
-    if ($debug) { echo "</pre>\n"; }
-
-    return $results;
-
-} // read_config
-
 /*
  * Conf function by Robert Hopson
  * call it with a $parm name to retrieve
@@ -164,7 +58,7 @@ function read_config($config_file, $debug=0, $test=0) {
  * to reset a var pass the array plus
  * Clobber! replaces global $conf;
 */
-function conf($param,$clobber=0)
+/*function conf($param,$clobber=0)
 {
         static $params = array();
 
@@ -215,37 +109,7 @@ function error_results($param,$clobber=0)
                 else return;
         }
 } //error_results
-
-
-/**
- * dbh
- * Alias for the vauth_dbh function
- */
-function dbh() {  
-
-	return vauth_dbh();
-
-} // dbh
-
-/*!
-	@function fix_preferences
-	@discussion cleans up the preferences
 */
-function fix_preferences($results) { 
-
-	foreach ($results as $key=>$data) { 
-		if (strcasecmp($data, "yes") == "0") { $data = 1; }
-		if (strcasecmp($data,"true") == "0") { $data = 1; }
-		if (strcasecmp($data,"enabled") == "0") { $data = 1; }
-		if (strcasecmp($data,"disabled") == "0") { $data = 0; }
-		if (strcasecmp($data,"false") == "0") { $data = 0; }
-		if (strcasecmp($data,"no") == "0") { $data = 0; }
-		$results[$key] = $data;
-	}
-
-	return $results;
-
-} // fix_preferences
 
 /**
  * session_exists
@@ -259,10 +123,10 @@ function session_exists($sid,$xml_rpc=0) {
 
 	$found = true;
 
-	$sql = "SELECT * FROM session WHERE id = '$sid'";
-	$db_results = mysql_query($sql, dbh());
+	$sql = "SELECT * FROM `session` WHERE `id` = '$sid'";
+	$db_results = Dba::query($sql);
 
-	if (!mysql_num_rows($db_results)) { 
+	if (!Dba::num_rows($db_results)) { 
 		$found = false;
 	}
 
@@ -306,12 +170,12 @@ function session_exists($sid,$xml_rpc=0) {
 */
 function extend_session($sid) { 
 
-	$new_time = time() + conf('local_length');
+	$new_time = time() + Config::get('local_length');
 
 	if ($_COOKIE['amp_longsess'] == '1') { $new_time = time() + 86400*364; }
 
-	$sql = "UPDATE session SET expire='$new_time' WHERE id='$sid'";
-	$db_results = mysql_query($sql, dbh());
+	$sql = "UPDATE `session` SET `expire`='$new_time' WHERE `id`='$sid'";
+	$db_results = Dba::query($sql);
 
 } // extend_session
 
@@ -601,8 +465,8 @@ function cleanup_and_exit($playing_id) {
 function get_global_popular($type) {
 
 	$stats = new Stats();
-	$count = conf('popular_threshold');
-        $web_path = conf('web_path');
+	$count = Config::get('popular_threshold');
+        $web_path = Config::get('web_path');
 
 	/* Pull the top */
 	$results = $stats->get_top($count,$type);
@@ -653,43 +517,6 @@ function get_global_popular($type) {
 } // get_global_popular
 
 /** 
- * gen_newest
- * Get a list of newest $type (which can then be handed to show_info_box
- * @package Web Interface
- * @catagory Get
- * @todo Add Genre
- */
-function get_newest ($type = 'artist',$limit='') {
-
-        $dbh = dbh();
-
-	if (!$limit) { $limit = conf('popular_threshold'); } 
-
-        $sql = "SELECT DISTINCT $type FROM song ORDER BY addition_time " .
-                "DESC LIMIT " . conf('popular_threshold');
-        $db_result = mysql_query($sql, $dbh);
-
-        $items = array();
-
-        while ($r = mysql_fetch_array($db_result)) {
-                if ( $type == 'artist' ) {
-                        $artist = new Artist($r[0]);
-                        $artist->format_artist();
-			$items[] = $artist;
-			
-                }
-                elseif ( $type == 'album' ) {
-                        $album = new Album($r[0]);
-                        $album->format();
-			$album->link = $album->f_link;
-			$items[] = $album;
-                }
-        }
-
-        return $items;
-} // get_newest
-
-/** 
  * show_info_box
  * This shows the basic box that popular and newest stuff goes into
  * @package Web Interface
@@ -698,9 +525,9 @@ function get_newest ($type = 'artist',$limit='') {
  */
 function show_info_box ($title, $type, $items) {
 
-        $web_path = conf('web_path');
-        $popular_threshold = conf('popular_threshold');
-	require (conf('prefix') . '/templates/show_box.inc.php');
+        $web_path = Config::get('web_path');
+        $popular_threshold = Config::get('popular_threshold');
+	require Config::get('prefix') . '/templates/show_box.inc.php';
 
 } // show_info_box
 
@@ -784,7 +611,7 @@ function scrub_out($str) {
 		$str = stripslashes($str);
 	}
 
-        $str = htmlentities($str,ENT_QUOTES,conf('site_charset'));
+        $str = htmlentities($str,ENT_QUOTES,Config::get('site_charset'));
 
         return $str;
 
@@ -890,7 +717,7 @@ function logout() {
 	vauth_logout(session_id());
 
 	/* Redirect them to the login page */
-	header ('Location: ' . conf('web_path') . '/login.php');
+	header ('Location: ' . Config::get('web_path') . '/login.php');
 	
 	return true;
 
@@ -976,10 +803,12 @@ function invert_boolean($value) {
  */
 function get_user_from_username($username) { 
 
-	$sql = "SELECT `id` FROM `user` WHERE `username`='" . sql_escape($username) . "'";
-	$db_results = mysql_query($sql, dbh());
+	$username = Dba::escape($username); 
 
-	$results = mysql_fetch_assoc($db_results); 
+	$sql = "SELECT `id` FROM `user` WHERE `username`='$username'";
+	$db_results = Dba::query($sql);
+
+	$results = Dba::fetch_assoc($db_results); 
 
 	$user = new User($results['id']);
 
@@ -1037,5 +866,30 @@ function unhtmlentities ($string)  {
 
 } // unhtmlentities
 
+/**
+ * __autoload
+ * This function automatically loads any missing
+ * classes as they are called so that we don't have to have
+ * a million include statements, and load more then we need
+ */
+function __autoload($class) {
+	// Lowercase the class
+        $class = strtolower($class);
+
+	$file = Config::get('prefix') . "/lib/class/$class.class.php";
+
+	// See if it exists
+        if (is_readable($file)) {
+                require_once $file;
+                if (is_callable($class . '::_auto_init')) {
+                        call_user_func(array($class, '_auto_init'));
+                }               
+        }
+	// Else log this as a fatal error
+        else {
+                debug_event('__autoload', "'$class' not found!",'1');
+        }
+
+} // __autoload
 
 ?>

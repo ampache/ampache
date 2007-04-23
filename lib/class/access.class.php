@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2006 Ampache.org
+ Copyright (c) 2001 - 2007 Ampache.org
  All Rights Reserved
 
  This program is free software; you can redistribute it and/or
@@ -145,11 +145,13 @@ class Access {
 
 	} // delete
 
-	/*!
-		@function check
-		@discussion check to see if they have rights
-	*/
-	function check($type,$ip,$user,$level,$key='') { 
+	/**
+	 * check
+	 * This takes a type, ip, user, level and key 
+	 * and then returns true or false if they have access to this
+	 * the IP is passed as a dotted quad
+	 */
+	public static function check($type,$ip,$user,$level,$key='') { 
 
 		// They aren't using access control 
 		// lets just keep on trucking

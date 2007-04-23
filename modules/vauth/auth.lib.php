@@ -60,28 +60,28 @@ function authenticate($username,$password) {
  */
 function vauth_mysql_auth($username,$password) { 
 
-	$username = sql_escape($username);
-	$password = sql_escape($password);
+	$username = Dba::escape($username);
+	$password = Dba::escape($password);
 
         $password_check_sql = "PASSWORD('$password')";
 
-	$sql = "SELECT password FROM user WHERE username='$username'";
-	$db_results = mysql_query($sql, vauth_dbh());
-	$row = mysql_fetch_row($db_results);
+	$sql = "SELECT `password` FROM `user` WHERE `username`='$username'";
+	$db_results = Dba::query($sql);
+	$row = Dba::fetch_row($db_results);
 
         $sql = "SELECT version()";
-        $db_results = mysql_query($sql, vauth_dbh());
-        $version = mysql_fetch_row($db_results);
+        $db_results = Dba::query($sql);
+        $version = Dba::fetch_row($db_results);
         $mysql_version = substr(preg_replace("/(\d+)\.(\d+)\.(\d+).*/","$1$2$3",$version[0]),0,3);
-        
+	
 	if ($mysql_version > "409" AND substr($row[0],0,1) !== "*") {
 	        $password_check_sql = "OLD_PASSWORD('$password')";
         }
 
 	$sql = "SELECT username FROM user WHERE username='$username' AND password=$password_check_sql";
-	$db_results = mysql_query($sql, vauth_dbh());
+	$db_results = Dba::query($sql);
 
-	$results = mysql_fetch_assoc($db_results);
+	$results = Dba::fetch_assoc($db_results);
 
 	if (!$results) { 
 		$results['success'] = false;
