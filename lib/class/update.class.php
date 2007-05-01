@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2006 Ampache.org
+ Copyright (c) 2001 - 2007 Ampache.org
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
@@ -41,44 +41,41 @@ class Update {
 	public $value;
 	public static $versions; // array containing version information
 
-	/*!
-		@function Update
-		@discussion Constructor, pulls out information about
-			the desired key
-	*/
+	/**
+	 * Update
+	 * Constructor, pulls out information about the desired key
+	 */
 	function Update ( $key=0 ) {
 
-		if ($key) {
-			$info = $this->get_info();
-			$this->key = $key;
-			$this->value = $info->value;
-			$this->versions = $this->populate_version();
-		}
+		if (!$key) { return false; } 
+
+		$this->key = intval($key);
+		$info = $this->_get_info();
+		$this->value = $info['value'];
+		$this->versions = $this->populate_version();
 
 	} // constructor
 
-	/*!
-		@function get_info
-		@discussion gets the information for the zone
-	*/
-	function get_info() {
-		global $conf;
+	/**
+	 * get_info
+	 * gets the information for the zone
+	 */
+	private function _get_info() {
 
 		$sql = "SELECT * FROM update_info WHERE key='$this->key'";
-		$db_results = mysql_query($sql, dbh());
+		$db_results = Dba::query($sql);
 
-		return mysql_fetch_object($db_results);		
+		return Dba::fetch_assoc($db_results);		
 
-	} //get_info
+	} // _get_info
 
-	/*!
-		@function get_version
-		@discussion this checks to see what version you are currently running
-			because we may not have the update_info table we have to check 
-			for it's existance first. 
-	*/
+	/**
+	 * get_version
+	 * this checks to see what version you are currently running
+	 * because we may not have the update_info table we have to check 
+	 * for it's existance first. 
+	 */
 	public static function get_version() {
-
 
 		/* Make sure that update_info exits */
 		$sql = "SHOW TABLES LIKE 'update_info'";
@@ -94,7 +91,7 @@ class Update {
 
 		else {
 			// If we've found the update_info table, let's get the version from it
-			$sql = "SELECT * FROM update_info WHERE `key`='db_version'";
+			$sql = "SELECT * FROM `update_info` WHERE `key`='db_version'";
 			$db_results = Dba::query($sql);
 			$results = Dba::fetch_assoc($db_results);
 			$version = $results['value'];
@@ -104,11 +101,11 @@ class Update {
 
 	} // get_version
 
-	/*!
-		@function format_version
-		@discussion make the version number pretty
-	*/
-	function format_version($data) {
+	/**
+	 * format_version
+	 * make the version number pretty
+	 */
+	public static function format_version($data) {
 
 		$new_version = substr($data,0,strlen($data) - 5) . "." . substr($data,strlen($data)-5,1) . " Build:" . 
 				substr($data,strlen($data)-4,strlen($data));
@@ -170,11 +167,11 @@ class Update {
 
 	} // plugins_installed
 
-	/*!
-		@function populate_version
-		@discussion just sets an array the current differences
-			that require an update
-	*/
+	/**
+	 * populate_version
+	 * just sets an array the current differences
+	 * that require an update
+	 */
 	public static function populate_version() {
 
 		/* Define the array */
@@ -380,7 +377,7 @@ class Update {
 		
 			if ($version['version'] > $current_version) {
 				$updated = true;
-				echo "<li><b>Version: " . $this->format_version($version['version']) . "</b><br />";
+				echo "<li><b>Version: " . self::format_version($version['version']) . "</b><br />";
 				echo $version['description'] . "<br /></li>\n"; 
 			} // if newer
 		

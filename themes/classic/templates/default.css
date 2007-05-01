@@ -1,6 +1,6 @@
 /*
 
- Copyright (c) 2001 - 2006 Ampache.org
+ Copyright (c) 2001 - 2007 Ampache.org
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
@@ -236,6 +236,22 @@ h3#content_title span {
 .horizontal_menu #sidebar h3 { display: none; }
 .horizontal_menu #sidebar li { clear: none; border:1px solid #8b8b8b; }
 .horizontal_menu #sidebar ul.subnavside  { left: 0; top: 2em; }
+
+/* For sidebar tabs */
+#sidebar-tabs li {
+	clear: none;
+	width: auto;
+	padding:2px;
+	border: 1px solid #ffffff;
+} 
+#sidebar-tabs li.active { 
+	background-color:#c0c0c0; 
+	border:1px solid #c0c0c0;
+} 
+#sidebar-page { 
+	clear: left;
+	background-color:#c0c0c0;
+} 
 
 
 /* Menu Elements Display (icons, visibility...) */

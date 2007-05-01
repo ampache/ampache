@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2006 Ampache.org
+ Copyright (c) 2001 - 2007 Ampache.org
  All Rights Reserved
 
  This program is free software; you can redistribute it and/or
@@ -33,15 +33,12 @@
  */
 
 /* Base Require */
-require_once('lib/init.php');
-
-/* Clean up incomming variables */
-$action		= scrub_in($_REQUEST['action']);
+require_once 'lib/init.php';
 
 /* Display the headers and menus */
-show_template('header');
+require_once Config::get('prefix') . '/templates/header.inc.php';
 
-switch($action) {
+switch($_REQUEST['action']) {
 	case 'file':
 	case 'album':
 		show_alphabet_list('albums','albums.php',$match);
@@ -105,7 +102,6 @@ switch($action) {
         	}
 		
 	break;
-	default:
 	case 'song_title':
 		/* Create the Needed Object */
 		$song = new Song();
@@ -145,6 +141,11 @@ switch($action) {
 	case 'catalog':
 	
 	break;
+	default: 
+
+
+
+	break; 
 } // end Switch $action
 
 /* Show the Footer */

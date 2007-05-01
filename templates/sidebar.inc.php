@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2006 Ampache.org
+ Copyright (c) 2001 - 2007 Ampache.org
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
@@ -36,9 +36,29 @@ $browse_items[] = array('title'=>_("Artists"),'url'=>'artists.php','active'=>$lo
 $browse_items[] = array('title'=>_("Genre"),'url'=>'browse.php?action=genre','active'=>$location['page'], 'cssclass'=>'sidebar_browse_genre');
 $browse_items[] = array('title'=>_('Song Title'),'url'=>'browse.php?action=song_title','active'=>$location['page'], 'cssclass'=>'sidebar_browse_song_title');
 
+
+if (!$_SESSION['state']['sidebar_tab']) { $_SESSION['state']['sidebar_tab'] = 'home'; } 
+$_SESSION['state']['sidebar_tab'] = 'home';
+$class_name = 'sidebar_' . $_SESSION['state']['sidebar_tab'];
+${$class_name} = ' class="active" ';
+
 $web_path = Config::get('web_path');
 
 ?>
+<ul id="sidebar-tabs">
+<li <?php echo $sidebar_home; ?>><?php echo get_user_icon('home'); ?></li>
+<li <?php echo $sidebar_browse; ?>><?php echo get_user_icon('browse'); ?></li>
+<li <?php echo $sidebar_view; ?>><?php echo get_user_icon('view'); ?></li>
+<li <?php echo $sidebar_edit; ?>><?php echo get_user_icon('edit'); ?></li>
+<?php if ($GLOBALS['user']->has_access('100')) { ?>
+<li <?php echo $sidebar_admin; ?>><?php echo get_user_icon('admin'); ?></li>
+<?php } ?>
+<li <?php echo $sidebar_all; ?>><?php echo get_user_icon('all'); ?></li>
+</ul>
+<div id="sidebar-page">
+<?php require_once Config::get('prefix') . '/templates/sidebar_' . $_SESSION['state']['sidebar_tab'] . '.inc.php'; ?>
+</div>
+<!--
 <h3>&nbsp;</h3>
 <ul id="navlist">
 	<li id="sidebar_home"<?php
@@ -178,7 +198,7 @@ $web_path = Config::get('web_path');
 			$required_info  = Config::get('ajax_info');
 			$ajax_url       = Config::get('ajax_url');
 		?>
-		<?php require_once(Config::get('prefix') . '/templates/show_playtype_switch.inc.php'); ?>
+		<?php //require_once(Config::get('prefix') . '/templates/show_playtype_switch.inc.php'); ?>
 	</li>
 <?php if (Config::get('allow_democratic_playback')) { ?>
 	<li>
@@ -189,3 +209,4 @@ $web_path = Config::get('web_path');
 	<li id="sidebar_logout"><a href="<?php echo $web_path; ?>/logout.php"><?php echo _('Logout'); ?></a></li>
 <?php } // end (Config::get('use_auth'))?>
 </ul>
+-->
