@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2006 Ampache.org
+ Copyright (c) 2001 - 2007 Ampache.org
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
@@ -23,17 +23,12 @@
  * as part of the get request
  */
 
-define('NO_SESSION','1');
-require_once('../lib/init.php');
+require_once '../lib/init.php';
 
-/* Verify the existance of the Session they passed in */
-if (!session_exists($_REQUEST['sessid'])) { exit(); }
-
-$GLOBALS['user'] = new User($_REQUEST['user_id']);
 $action = scrub_in($_REQUEST['action']);
 
 /* Set the correct headers */
-header("Content-type: text/xml; charset=" . conf('site_charset'));
+header("Content-type: text/xml; charset=" . Config::get('site_charset'));
 header("Content-Disposition: attachment; filename=ajax.xml");
 header("Expires Sun, 19 Nov 1978 05:00:00 GMT"); 
 header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
@@ -197,6 +192,30 @@ switch ($action) {
 		ob_end_clean();
 		$xml_doc = xml_from_array($results);
 		echo $xml_doc; 
+	break;
+	case 'sidebar': 
+		switch ($_REQUEST['button']) {
+			case 'home':
+			case 'browse':
+			case 'browse':
+			case 'preferences':
+				$button = $_REQUEST['button']; 
+			break;
+			case 'admin':
+				if ($GLOBALS['user']->has_access(100)) { $button = $_REQUEST['button']; } 
+				else { exit; } 
+			break;
+			default: 
+				exit; 
+			break;
+		} // end switch on button  
+
+		ob_start(); 
+		$_SESSION['state']['sidebar_tab'] = $button; 
+		require_once Config::get('prefix') . '/templates/sidebar.inc.php';
+		$results['sidebar'] = ob_get_contents(); 
+		ob_end_clean(); 
+		echo xml_from_array($results); 
 	break;
 	default:
 		$results['3514'] = '0x1';

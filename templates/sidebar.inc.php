@@ -38,16 +38,19 @@ $browse_items[] = array('title'=>_('Song Title'),'url'=>'browse.php?action=song_
 
 
 if (!$_SESSION['state']['sidebar_tab']) { $_SESSION['state']['sidebar_tab'] = 'home'; } 
-$_SESSION['state']['sidebar_tab'] = 'home';
 $class_name = 'sidebar_' . $_SESSION['state']['sidebar_tab'];
 ${$class_name} = ' class="active" ';
 
 $web_path = Config::get('web_path');
-
+$ajax_url = Config::get('ajax_url'); 
 ?>
 <ul id="sidebar-tabs">
-<li <?php echo $sidebar_home; ?>><?php echo get_user_icon('home'); ?></li>
-<li <?php echo $sidebar_browse; ?>><?php echo get_user_icon('browse'); ?></li>
+<li <?php echo $sidebar_home; ?> onclick="ajaxPut('<?php echo $ajax_url; ?>?action=sidebar&amp;button=home');" >
+	<?php echo get_user_icon('home'); ?>
+</li>
+<li <?php echo $sidebar_browse; ?> onclick="ajaxPut('<?php echo $ajax_url; ?>?action=sidebar&amp;button=browse');" >
+	<?php echo get_user_icon('browse'); ?>
+</li>
 <li <?php echo $sidebar_view; ?>><?php echo get_user_icon('view'); ?></li>
 <li <?php echo $sidebar_edit; ?>><?php echo get_user_icon('edit'); ?></li>
 <?php if ($GLOBALS['user']->has_access('100')) { ?>

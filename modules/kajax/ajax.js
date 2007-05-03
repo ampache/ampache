@@ -1,21 +1,9 @@
-// Copyright Ampache.org 2001 - 2006
-// All Rights Reserved
-// Origional Author: Kevin Riker
-// Added Multi-Value XML based GET/POST replacement * Karl Vollmer
-// Added Auto-Detects source/target information based on XML Doc Elements and
-//      Form Elements if it's a post call * Karl Vollmer
-// Licensed under the GNU/GPL
-
 	var http_request = false;
 	var IE = true;
-
 	
 	// uid is an array of uids that need to be replaced		
 	function ajaxPut(url) {
-		var s = document.getElementById('play_type_switch');
-		var type = s.options[s.selectedIndex].value;
-		if (type) { url = url +"&type="+ type;}
-	
+
 		if (window.ActiveXObject) { // IE
 			try {
 				http_request = new ActiveXObject("Msxml2.XMLHTTP");

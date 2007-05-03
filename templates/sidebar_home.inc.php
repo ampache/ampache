@@ -9,6 +9,7 @@
         <input type="hidden" name="object_type" value="song" />
         </form>
 </div>
+<hr />
 <h4><?php echo _('Random'); ?></h4>
 	<form name="sub_random" method="post" enctype="multipart/form-data" action="<?php echo $web_path; ?>/song.php?action=random&amp;method=stream" style="Display:inline">
         <select name="random" style="width:80px;">
@@ -36,4 +37,7 @@
 <!-- CATALOG PULLDOWN -->
         <input class="smallbutton" type="submit" value="<?php echo _('Enqueue'); ?>" />
 	</form>
+<hr />
+<h4><?php echo _('Playlists'); ?></h4>
+<br />
 

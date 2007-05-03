@@ -171,7 +171,7 @@ h3#content_title span {
 #sidebar{
 	clear:both;
 	position:absolute;
-	left:5px;
+	left:0px;
 	top:87px;
 }
 #sidebar select	{
@@ -251,6 +251,7 @@ h3#content_title span {
 #sidebar-page { 
 	clear: left;
 	background-color:#c0c0c0;
+	padding-left:5px;
 } 
 
 
