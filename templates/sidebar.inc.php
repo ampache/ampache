@@ -51,12 +51,20 @@ $ajax_url = Config::get('ajax_url');
 <li <?php echo $sidebar_browse; ?> onclick="ajaxPut('<?php echo $ajax_url; ?>?action=sidebar&amp;button=browse');" >
 	<?php echo get_user_icon('browse'); ?>
 </li>
-<li <?php echo $sidebar_view; ?>><?php echo get_user_icon('view'); ?></li>
-<li <?php echo $sidebar_edit; ?>><?php echo get_user_icon('edit'); ?></li>
+<li <?php echo $sidebar_search; ?> onclick="ajaxPut('<?php echo $ajax_url; ?>?action=sidebar&amp;button=search');" >
+	<?php echo get_user_icon('view'); ?>
+</li>
+<li <?php echo $sidebar_preferences; ?> onclick="ajaxPut('<?php echo $ajax_url; ?>?action=sidebar&amp;button=preferences');" >
+	<?php echo get_user_icon('edit'); ?>
+</li>
 <?php if ($GLOBALS['user']->has_access('100')) { ?>
-<li <?php echo $sidebar_admin; ?>><?php echo get_user_icon('admin'); ?></li>
+<li <?php echo $sidebar_admin; ?> onclick="ajaxPut('<?php echo $ajax_url; ?>?action=sidebar&amp;button=admin');" >
+	<?php echo get_user_icon('admin'); ?>
+</li>
 <?php } ?>
-<li <?php echo $sidebar_all; ?>><?php echo get_user_icon('all'); ?></li>
+<li <?php echo $sidebar_player; ?> onclick="ajaxPut('<?php echo $ajax_url; ?>?action=sidebar&amp;button=player');" >
+	<?php echo get_user_icon('all'); ?>
+</li>
 </ul>
 <div id="sidebar-page">
 <?php require_once Config::get('prefix') . '/templates/sidebar_' . $_SESSION['state']['sidebar_tab'] . '.inc.php'; ?>

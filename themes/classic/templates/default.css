@@ -253,6 +253,9 @@ h3#content_title span {
 	background-color:#c0c0c0;
 	padding-left:5px;
 } 
+#sidebar-page select { 
+	width: 120px; 
+} 
 
 
 /* Menu Elements Display (icons, visibility...) */

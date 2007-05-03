@@ -193,11 +193,30 @@ switch ($action) {
 		$xml_doc = xml_from_array($results);
 		echo $xml_doc; 
 	break;
+	case 'browse_type':
+		// Clean up the types
+		switch ($_REQUEST['type']) { 
+			case 'song':
+			case 'album':
+			case 'artist':
+			case 'genre':
+				$type = $_REQUEST['type']; 
+			break;
+			default: 
+				$type = 'song'; 
+			break;
+		} // types
+
+
+
+
+	break;
 	case 'sidebar': 
 		switch ($_REQUEST['button']) {
 			case 'home':
 			case 'browse':
-			case 'browse':
+			case 'search':
+			case 'player':
 			case 'preferences':
 				$button = $_REQUEST['button']; 
 			break;
