@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2006 Ampache.org
+ Copyright (c) 2001 - 2007 Ampache.org
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
@@ -30,42 +30,32 @@
 
 	// We need this stuff
 	define('NO_SESSION','1');
-	require('lib/init.php');
-
-	// Make a blank update object
-	$update = new Update(0);
+	require 'lib/init.php';
 
 	// Get the version and format it
-	$version = $update->get_version(); 
+	$version = Update::get_version(); 
 	
-	$conf['script'] = 'update.php';	
-	$prefs['font_size'] = 12;
-	$prefs['bg_color1'] = "#c0c0c0";
-	$prefs['font'] = "Verdana";
-	conf($prefs,1);
-	
-
 /* End House Keeping */
 
 if ($_REQUEST['action'] == 'update') { 
 	
 	/* Run the Update Mojo Here */
-	$update->run_update();
+	Update::run_update();
 
 	/* Get the New Version */
-	$version = $update->get_version();
+	$version = Update::get_version();
 
 } 
-$htmllang = str_replace("_","-",conf('lang'));
+$htmllang = str_replace("_","-",Config::get('lang'));
 
 ?>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php echo $htmllang; ?>" lang="<?php echo $htmllang; ?>">
 <head>
-<link rel="shortcut icon" href="<?php echo conf('web_path'); ?>/favicon.ico" />
-<meta http-equiv="Content-Type" content="text/html; charset=<?php echo conf('site_charset'); ?>" />
-<?php require_once(conf('prefix') . "/templates/install.css"); ?>
+<link rel="shortcut icon" href="<?php echo Config::get('web_path'); ?>/favicon.ico" />
+<meta http-equiv="Content-Type" content="text/html; charset=<?php echo Config::get('site_charset'); ?>" />
+<link rel="stylesheet" type="text/css" media="screen" href="<?php echo Config::get('web_path') . '/templates/install.css'; ?>">
 <title>Ampache - Update</title>
 </head>
 <body>
@@ -75,15 +65,15 @@ $htmllang = str_replace("_","-",conf('lang'));
 </div>
 <div id="text-box">
 	<div class="notify">
-This page handles all database updates to Ampache starting with 3.2. According to your database your current version is: <?php echo  $update->format_version($version); ; ?>. 
+This page handles all database updates to Ampache starting with 3.2. According to your database your current version is: <?php echo Update::format_version($version); ; ?>. 
 the following updates need to be performed<br /><br />
-<div style="font-size:1.2em;font-weight:bold;text-align:center;"><?php $GLOBALS['error']->print_error('general'); ?></div>
+<div style="font-size:1.2em;font-weight:bold;text-align:center;"><?php Error::display('general'); ?></div>
 	</div>
 	<div class="content">
-<?php $update->display_update(); ?>
+<?php Update::display_update(); ?>
 
-<form method="post" enctype="multipart/form-data" action="<?php echo  conf('web_path'); ; ?>/update.php?action=update">
-<?php if ($update->need_update()) { ?><input type="submit" value="Update Now!" /> <?php } ?>
+<form method="post" enctype="multipart/form-data" action="<?php echo Config::get('web_path'); ?>/update.php?action=update">
+<?php if (Update::need_update()) { ?><input type="submit" value="Update Now!" /> <?php } ?>
 </form>
 	</div>
 	<div id="bottom">

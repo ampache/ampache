@@ -189,7 +189,7 @@ $web_path = Config::get('web_path');
 	</li>
 <?php if ($GLOBALS['theme']['orientation'] != 'horizontal') { ?>
 	<li id="sidebar_localplay_ctrl">
-		<?php require_once(Config::get('prefix') . '/templates/show_localplay_control.inc.php'); ?>
+		<?php //require_once(Config::get('prefix') . '/templates/show_localplay_control.inc.php'); ?>
 	</li>
 <?php } // if horizontal orientation ?>
 <?php } // if localplay access ?>

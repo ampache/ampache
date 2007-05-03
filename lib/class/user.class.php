@@ -727,28 +727,24 @@ class User {
 	 * If -1 is passed it also removes duplicates from the `preferences`
 	 * table. 
 	 */
-	function fix_preferences($user_id=0) { 
+	public static function fix_preferences($user_id) { 
 
-		if (!$user_id) { 
-			$user_id = $this->id; 
-		} 
-
-		$user_id = sql_escape($user_id); 
+		$user_id = Dba::escape($user_id); 
 
 		/* Get All Preferences for the current user */
 		$sql = "SELECT * FROM `user_preference` WHERE `user`='$user_id'"; 
-		$db_results = mysql_query($sql,dbh()); 
+		$db_results = Dba::query($sql); 
 
 		$results = array(); 
 
-		while ($r = mysql_fetch_assoc($db_results)) { 
+		while ($r = Dba::fetch_assoc($db_results)) { 
 			$pref_id = $r['preference'];
 			/* Check for duplicates */
 			if (isset($results[$pref_id])) { 
-				$r['value'] = sql_escape($r['value']); 
+				$r['value'] = Dba::escape($r['value']); 
 				$sql = "DELETE FROM `user_preference` WHERE `user`='$user_id' AND `preference`='" . $r['preference'] . "' AND" . 
-					" `value`='" . sql_escape($r['value']) . "'"; 
-				$delete_results = mysql_query($sql,dbh()); 
+					" `value`='" . Dba::escape($r['value']) . "'"; 
+				$delete_results = Dba::query($sql); 
 			} // if its set
 			else { 
 				$results[$pref_id] = 1; 
@@ -759,10 +755,11 @@ class User {
 		if ($user_id != '-1') { 
                         $sql = "SELECT `user_preference`.`preference`,`user_preference`.`value` FROM `user_preference`,`preferences` " .
                                 "WHERE `user_preference`.`preference` = `preferences`.`id` AND `user_preference`.`user`='-1' AND `preferences`.`catagory` !='system'";
-                        $db_results = mysql_query($sql, dbh());
+                        $db_results = Dba::query($sql);
 			/* While through our base stuff */
-                        while ($r = mysql_fetch_object($db_results)) {
-                                $zero_results[$r->preference] = $r->value;
+                        while ($r = Dba::fetch_assoc($db_results)) {
+				$key = $r['preference']; 
+                                $zero_results[$key] = $r['value'];
                         }
                 } // if not user -1
 
@@ -773,18 +770,20 @@ class User {
                 if ($user_id != '-1') {
                         $sql .= " WHERE catagory !='system'";
                 }
-                $db_results = mysql_query($sql, dbh());
+                $db_results = Dba::query($sql);
 
-                while ($r = mysql_fetch_object($db_results)) {
+                while ($r = Dba::fetch_assoc($db_results)) {
+
+			$key = $r['id'];
 
                         /* Check if this preference is set */
-                        if (!isset($results[$r->id])) {
-                                if (isset($zero_results[$r->id])) {
-                                        $r->value = $zero_results[$r->id];
+                        if (!isset($results[$key])) {
+                                if (isset($zero_results[$key])) {
+                                        $r['value'] = $zero_results[$key];
                                 }
-				$value = sql_escape($r->value); 
-                                $sql = "INSERT INTO user_preference (`user`,`preference`,`value`) VALUES ('$user_id','$r->id','$value')";
-                                $insert_db = mysql_query($sql, dbh());
+				$value = Dba::escape($r['value']); 
+                                $sql = "INSERT INTO user_preference (`user`,`preference`,`value`) VALUES ('$user_id','$key','$value')";
+                                $insert_db = Dba::query($sql);
                         }
                 } // while preferences
 
@@ -792,165 +791,20 @@ class User {
                 $sql = "SELECT DISTINCT(user_preference.user) FROM user_preference " .
                         "LEFT JOIN user ON user_preference.user = user.id " .
                         "WHERE user_preference.user!='-1' AND user.id IS NULL";
-                $db_results = mysql_query($sql, dbh());
+                $db_results = Dba::query($sql);
 
                 $results = array();
 
-                while ($r = mysql_fetch_assoc($db_results)) {
+                while ($r = Dba::fetch_assoc($db_results)) {
                         $results[] = $r['user'];
                 }
 
                 foreach ($results as $data) {
                         $sql = "DELETE FROM user_preference WHERE user='$data'";
-                        $db_results = mysql_query($sql, dbh());
+                        $db_results = Dba::query($sql);
                 }
-
 
 	} // fix_preferences
-
-	/**
-	 * username_fix_preferences
-	 * this is an old function that takes a username
-	 * and fixes the preferences based on that it is no longer
-	 * used by has to be maintained due to the update class
-	 */
-	function username_fix_preferences($user_id=0) { 
-	
-		if (!$user_id) { 
-			$user_id = $this->username;
-		}
-		/* Get All Preferences */
-		$sql = "SELECT * FROM user_preference WHERE user='$user_id'";
-		$db_results = mysql_query($sql, dbh());
-
-		while ($r = mysql_fetch_object($db_results)) {
-			/* Check for duplicates */
-			if (isset($results[$r->preference])) { 
-				$r->value = sql_escape($r->value);
-				$sql = "DELETE FROM user_preference WHERE user='$user_id' AND preference='$r->preference' AND value='$r->value'";
-				$delete_results = mysql_query($sql, dbh());
-			} // duplicate
-			else { 
-				$results[$r->preference] = $r;
-			}
-		} // while results
-
-		/* 
-		  If we aren't the -1 user before we continue then grab the 
-		  -1 user's values 
-		*/
-		if ($user_id != '-1') { 
-			$sql = "SELECT user_preference.preference,user_preference.value FROM user_preference,preferences " . 
-				"WHERE user_preference.preference = preferences.id AND user_preference.user='-1' AND preferences.catagory !='system'";
-			$db_results = mysql_query($sql, dbh());
-			while ($r = mysql_fetch_object($db_results)) { 
-				$zero_results[$r->preference] = $r->value;
-			}
-		} // if not user -1
-
-
-		$sql = "SELECT * FROM preferences";
-		if ($user_id != '-1') { 
-			$sql .= " WHERE catagory !='system'";
-		}
-		$db_results = mysql_query($sql, dbh());
-
-		while ($r = mysql_fetch_object($db_results)) { 
-			
-			/* Check if this preference is set */
-			if (!isset($results[$r->id])) { 
-				if (isset($zero_results[$r->id])) { 
-					$r->value = $zero_results[$r->id];
-				}
-				$sql = "INSERT INTO user_preference (`user`,`preference`,`value`) VALUES ('$user_id','$r->id','$r->value')";
-				$insert_db = mysql_query($sql, dbh());
-			}
-		} // while preferences
-
-		/* Let's also clean out any preferences garbage left over */
-		$sql = "SELECT DISTINCT(user_preference.user) FROM user_preference " . 
-			"LEFT JOIN user ON user_preference.user = user.username " . 
-			"WHERE user_preference.user!='-1' AND user.username IS NULL";
-		$db_results = mysql_query($sql, dbh());
-
-		$results = array();
-	
-		while ($r = mysql_fetch_assoc($db_results)) { 
-			$results[] = $r['user'];
-		}
-		
-		foreach ($results as $data) { 
-			$sql = "DELETE FROM user_preference WHERE user='$data'";
-			$db_results = mysql_query($sql, dbh());
-		}
-
-	} // fix_preferences
-
-	/** 
-	 * This function is specificly for the update script
-	 * it's maintained simply because we have to in order to previous updates to 
-	 * work correctly
-	 * @package Update
-	 * @catagory Legacy Function
-	 * @depreciated If working with a new db please use the fix_preferences
-	 */
-	function old_fix_preferences($user_id = 0) { 
-
-                if (!$user_id) { 
-                        $user_id = $this->id;
-                }
-
-                /* Get All Preferences */
-                $sql = "SELECT * FROM user_preference WHERE user='$user_id'";
-                $db_results = mysql_query($sql, dbh());
-
-                while ($r = mysql_fetch_object($db_results)) {
-                        /* Check for duplicates */
-                        if (isset($results[$r->preference])) { 
-                                $r->value = sql_escape($r->value);
-                                $sql = "DELETE FROM user_preference WHERE user='$user_id' AND preference='$r->preference' AND value='$r->value'";
-                                $delete_results = mysql_query($sql, dbh());
-                        } // duplicate
-                        else { 
-                                $results[$r->preference] = $r;
-                        }
-                } // while results
-
-                /* 
-                  If we aren't the 0 user before we continue then grab the 
-                  0 user's values 
-                */
-                if ($user_id != '0') { 
-                        $sql = "SELECT user_preference.preference,user_preference.value FROM user_preference,preferences " . 
-                                "WHERE user_preference.preference = preferences.id AND user_preference.user='0' AND preferences.type='user'";
-                        $db_results = mysql_query($sql, dbh());
-                        while ($r = mysql_fetch_object($db_results)) { 
-                                $zero_results[$r->preference] = $r->value;
-                        }
-                } // if not user 0
-
-
-                $sql = "SELECT * FROM preferences";
-                if ($user_id != '0') { 
-                        $sql .= " WHERE type='user'";
-                }
-                $db_results = mysql_query($sql, dbh());
-
-
-                while ($r = mysql_fetch_object($db_results)) { 
-                        
-                        /* Check if this preference is set */
-                        if (!isset($results[$r->id])) { 
-                                if (isset($zero_results[$r->id])) { 
-                                        $r->value = $zero_results[$r->id];
-                                }
-                                $sql = "INSERT INTO user_preference (`user`,`preference`,`value`) VALUES ('$user_id','$r->id','$r->value')";
-                                $insert_db = mysql_query($sql, dbh());
-                        }
-                } // while preferences
-
-	} // old_fix_preferences
-
 
 	/*!
 		@function delete_stats
