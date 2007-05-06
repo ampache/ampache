@@ -29,12 +29,14 @@
  */
 class Browse { 
 
-	
+	// Public static vars that are cached
+	public static $sql; 
+
 	/**
 	 * constructor
 	 * This should never be called
 	 */
-	private __construct() { 
+	private function __construct() { 
 
 		// Rien a faire
 
@@ -56,9 +58,14 @@ class Browse {
                         case 'unplayed':
                         case 'rated':
                                 $key = $_REQUEST['key'];
-                                $_SESSION['browse']['filter'][$key] = make_bool($_REQUEST['value']);
+				if ($_SESSION['browse']['filter'][$key]) { 
+					unset($_SESSION['browse']['filter'][$key]);
+				} 
+				else { 
+	                                $_SESSION['browse']['filter'][$key] = 1;
+				}
                         break;
-                        default
+                        default:
                                 // Rien a faire
                         break;
                 } // end switch
@@ -86,5 +93,146 @@ class Browse {
 		} // end type whitelist
 
 	} // set_type
+
+	/**
+	 * get_objects
+	 * This gets an array of the ids of the objects that we are
+	 * currently browsing by it applies the sql and logic based
+	 * filters
+	 */
+	public static function get_objects() { 
+
+		// First we need to get the SQL statement we are going to run
+		// This has to run against any possible filters (dependent on type)
+		$sql = self::get_sql(); 
+		$db_results = Dba::query($sql); 
+
+		$results = array(); 
+
+		while ($data = Dba::fetch_assoc($db_results)) { 
+			// If we've hit our offset limit
+			if (count($results) >= $GLOBALS['user']->prefs['offset_limit']) { return $results; } 
+
+			// Make sure that this object passes the logic filter
+			if (self::logic_filter($data['id'])) { 
+				$results[] = $data['id']; 
+			} 
+		} // end while
+		
+		return $results; 
+
+	} // get_objects
+
+	/**
+	 * get_sql
+	 * This returns the sql statement we are going to use this has to be run
+	 * every time we get the objects because it depends on the filters and the
+	 * type of object we are currently browsing
+	 */
+	public static function get_sql() { 
+
+		// Get our base SQL must always return ID 
+		switch ($_SESSION['browse']['type']) { 
+			case 'album':
+
+			break;
+			case 'artist':
+
+			break;
+			case 'genre':
+
+			break;
+			case 'song':
+			default:
+				$sql = "SELECT `song`.`id` FROM `song` ";  
+			break;
+		} // end base sql
+
+		// No sense to go further if we don't have filters
+		if (!is_array($_SESSION['browse']['filter'])) { return $sql; } 
+
+		// Foreach the filters and see if any of them can be applied
+		// as part of a where statement in this sql (type dependent)
+		$where_sql = "WHERE 1=1 AND ";
+			
+		foreach ($_SESSION['browse']['filter'] as $key=>$value) { 
+			$where_sql .= self::sql_filter($key,$value); 	
+		} // end foreach
+
+		$where_sql = rtrim($where_sql,'AND ');
+
+		$sql .= $where_sql;
+
+		self::$sql = $sql; 
+
+		return $sql;
+
+	} // get_sql 
+
+	/**
+	 * sql_filter
+	 * This takes a filter name and value and if it is possible
+	 * to filter by this name on this type returns the approiate sql
+	 * if not returns nothing
+	 */
+	private static function sql_filter($filter,$value) { 
+
+		$filter_sql = ''; 
+
+		if ($_SESSION['browse']['type'] == 'song') { 
+			switch($filter) { 
+				case 'alpha_match':
+					$filter_sql = " `song`.`title` LIKE '" . Dba::escape($value) . "%' AND ";
+				break;
+				case 'unplayed':
+					$filter_sql = " `song`.`played`='0' AND "; 
+				break;
+				default: 
+					// Rien a faire
+				break;
+			} // end list of sqlable filters
+		} // if it is a song
+
+		if ($_SESSION['browse']['type'] == 'album') { 
+
+
+
+
+		} // end album 
+	
+		return $filter_sql; 
+
+	} // sql_filter
+
+	/**
+	 * logic_filter
+	 * This runs the filters that we can't easily apply
+	 * to the sql so they have to be done after the fact
+	 * these should be limited as they are often intensive and
+	 * require additional queries per object... :(
+	 */
+	private static function logic_filter($object_id) { 
+
+		return true; 
+
+	} // logic_filter
+
+	/**
+	 * show_objects
+	 * This takes an array of objects
+	 * and requires the correct template based on the
+	 * type that we are currently browsing
+	 */
+	public static function show_objects($object_ids) { 
+
+		switch ($_SESSION['browse']['type']) { 
+			case 'song': 
+				show_box_top(); 
+				require_once Config::get('prefix') . '/templates/show_songs.inc.php'; 
+				show_box_bottom(); 
+			break;
+		} // end switch on type
+
+	} // show_object
 
 } // browse

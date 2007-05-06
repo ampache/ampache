@@ -126,12 +126,12 @@ class Song {
 
 	} // fill_ext_info
 
-	/*!
-		@function format_type
-		@discussion gets the type of song we are trying to 
-			play, used to set mime headers and to trick 
-			players into playing them correctly
-	*/
+	/**
+	 * format_type
+	 * gets the type of song we are trying to 
+	 * play, used to set mime headers and to trick 
+	 * players into playing them correctly
+	 */
 	function format_type($override='') { 
 
 		// If we pass an override for downsampling or whatever then use it
@@ -632,20 +632,6 @@ class Song {
 		return true; 
 
 	} // _update_ext_item
-
-	/*!
-		@function format_song
-		@discussion this takes a song object
-			and formats it for display
-			and returns the object cleaned up
-	*/
-	function format_song() {
-
-		$this->format(); 
-
-		return true; 
-
-	} 
 
 	/**
 	 * format

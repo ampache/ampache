@@ -37,6 +37,7 @@ require_once 'lib/init.php';
 
 /* Display the headers and menus */
 require_once Config::get('prefix') . '/templates/header.inc.php';
+echo '<div id="browse_content">'; 
 
 switch($_REQUEST['action']) {
 	case 'file':
@@ -104,37 +105,8 @@ switch($_REQUEST['action']) {
 	break;
 	case 'song':
 		Browse::set_type('song'); 
-
-		/* Setup the View Object */
-		$view = new View();
-		$view->import_session_view();
-
-		$match = scrub_in($_REQUEST['match']);
-
-		require (conf('prefix') . '/templates/show_box_top.inc.php');
-	        show_alphabet_list('song_title','browse.php',$match,'song_title');
-                /* Detect if it's Browse, and if so don't fill it in */
-                if ($match == 'Browse') { $match = ''; }
-                show_alphabet_form($match,_('Show Titles Starting With'),"browse.php");
-		require (conf('prefix') . '/templates/show_box_bottom.inc.php');
-	
-		$sql = $song->get_sql_from_match($_REQUEST['match']);
-
-		if ($_REQUEST['keep_view']) { 
-			$view->initialize();
-		}
-		else { 
-			$db_results = mysql_query($sql, dbh());
-			$total_items = mysql_num_rows($db_results);
-			$offset_limit = 999999;
-			if ($match != 'Show All') { $offset_limit = $user->prefs['offset_limit']; } 
-			$view = new View($sql, 'browse.php?action=song_title','title',$total_items,$offset_limit);
-		}
-
-		if ($view->base_sql) { 
-			$songs = $song->get_songs($view->sql);
-			show_songs($songs,0,0);
-		}
+		$song_ids = Browse::get_objects(); 
+		Browse::show_objects($song_ids); 
 	break;
 	case 'catalog':
 	
@@ -145,6 +117,8 @@ switch($_REQUEST['action']) {
 
 	break; 
 } // end Switch $action
+
+echo '</div>';
 
 /* Show the Footer */
 show_footer();
