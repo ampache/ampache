@@ -619,6 +619,11 @@ td.user_disabled {
 	font-size:10px; 
 	font-weight:normal; 
 }
+.alphabet span { 
+	cursor: pointer;
+	color: #003399;
+} 
+
 #mpdpl td {
 	padding:0 2px 0 2px;
 	text-align:left;

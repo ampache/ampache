@@ -141,29 +141,25 @@ function return_referer() {
 
 /**
  *  show_alphabet_list
- * shows the A-Z,0-9 lists for
- *		albums and artist pages
+ * shows the A-Z,0-9 lists for albums and artist page
+ * It takes a selected and an action 
  */
-function show_alphabet_list ($type,$script="artist.php",$selected="false",$action='match') {
+function show_alphabet_list () {
 
 	$list = array(A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z,1,2,3,4,5,6,7,8,9,"0");
 
 	$style_name = "style_" . strtolower($selected);
 	${$style_name} = "style=\"font-weight:bold;\"";
-	unset($title);
+	
 	echo "<div class=\"alphabet\">";
 	foreach ($list as $l) {
 		$style_name = "style_" . strtolower($l);
-		echo "<a href=\"". conf('web_path') ."/$script?action=$action&amp;match=$l\" " . ${$style_name} . ">$l</a> | \n";
+		echo "<span style=\"width:3px;\" onclick=\"ajaxPut('". Config::get('ajax_url') ."?action=browse&amp;key=alpha_match&amp;value=$l');return true;\">" . 
+			$l . "</span>\n";
+		$i++; 
+		if ($i/11 == intval($i/11)) { echo "<br />"; } 
 	}
-
-	echo " <a href=\"". conf('web_path') ."/$script?action=$action&amp;match=Browse\" $style_browse>" . _("Browse") . "</a> | \n";
-	if ($script == "albums.php") {
-		echo " <a href=\"". conf('web_path') ."/$script?action=$action&amp;match=Show_missing_art\" $style_show_missing_art>" . _("Show w/o art") . "</a> | \n";
-	} // if we are on the albums page
-
-	echo " <a href=\"". conf('web_path') ."/$script?action=$action&amp;match=Show_all\" $style_show_all>" . _("Show all") . "</a>";
-	echo "</div>\n";
+	echo "</div>";
 
 } // show_alphabet_list
 

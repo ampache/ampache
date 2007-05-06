@@ -604,6 +604,14 @@ class Update {
 		$sql = "ALTER TABLE `album`  DROP `art`,  DROP `art_mime`,  DROP `thumb`,  DROP `thumb_mime`"; 
 		$db_results = Dba::query($sql); 
 
+		// We need to fix the user_vote table
+		$sql = "ALTER TABLE `user_vote` CHANGE `user` `user` INT( 11 ) UNSIGNED NOT NULL"; 
+		$db_results = Dba::query($sql); 
+
+		// Remove offset limit from the user
+		$sql = "ALTER TABLE `user` DROP `offset_limit`"; 
+		$db_results = Dba::query($sql); 
+
 		self::set_version('db_version','340003'); 
 
 	} // update_340003

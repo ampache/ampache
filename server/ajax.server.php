@@ -193,23 +193,20 @@ switch ($action) {
 		$xml_doc = xml_from_array($results);
 		echo $xml_doc; 
 	break;
-	case 'browse_type':
-		// Clean up the types
-		switch ($_REQUEST['type']) { 
-			case 'song':
-			case 'album':
-			case 'artist':
-			case 'genre':
-				$type = $_REQUEST['type']; 
-			break;
-			default: 
-				$type = 'song'; 
-			break;
-		} // types
+	// Used to change filter/settings on browse
+	case 'browse':
+		// Set any new filters we've just added
+		Browse::set_filter($_REQUEST['key'],$_REQUEST['value']); 
 
+		// Refresh the browse div with our new filter options
+		$object_ids = Browse::get_objects(); 
 
-
-
+		ob_start(); 
+		Browse::show_objects($object_ids); 
+		$results['browse_content'] = ob_get_contents(); 
+		ob_end_clean(); 
+		$xml_doc = xml_from_array($results); 
+		echo $xml_doc; 
 	break;
 	case 'sidebar': 
 		switch ($_REQUEST['button']) {

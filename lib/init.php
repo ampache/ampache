@@ -226,10 +226,7 @@ else {
 init_preferences();
 
 /* Add in some variables for ajax done here because we need the user */
-$ajax_info['ajax_url']		= $results['web_path'] . '/server/ajax.server.php';
-$ajax_info['ajax_info']		= '&amp;user_id=' . $GLOBALS['user']->id;
-Config::set_by_array($ajax_info);
-unset($ajax_info);
+Config::set('ajax_url',Config::get('web_path') . '/server/ajax.server.php',1);
 
 // Load gettext mojo
 load_gettext();

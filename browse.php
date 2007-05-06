@@ -102,10 +102,8 @@ switch($_REQUEST['action']) {
         	}
 		
 	break;
-	case 'song_title':
-		/* Create the Needed Object */
-		$song = new Song();
-
+	case 'song':
+		Browse::set_type('song'); 
 
 		/* Setup the View Object */
 		$view = new View();

@@ -27,33 +27,48 @@
 class Album {
 
 	/* Variables from DB */
-	var $id;
-	var $name;
-	var $year;
-	var $prefix;
+	public $id;
+	public $name;
+	public $year;
+	public $prefix;
 
 	/* Art Related Fields */
-	var $art;
-	var $art_mime; 
+	public $art;
+	public $art_mime; 
+	public $thumb; 
+	public $thumb_mime;
 
 	// cached information
-	var $_songs=array(); 
+	public $_songs=array(); 
 
-	/*!
-		@function Album
-		@discussion Album class, for modifing a song.
-		@param $album_id 	The ID of the song
+	/**
+	 * __construct
+	 * Album constructor it loads everything relating
+	 * to this album from the database it does not
+	 * pull the album or thumb art by default or
+	 * get any of the counts.
 	 */
-	function Album($album_id = 0) {
+	function __construct($album_id = 0) {
 
 		if (!$album_id) { return false; } 
 
 		/* Assign id for use in get_info() */
-		$this->id = $album_id;
+		$this->id = intval($album_id);
 
 		/* Get the information from the db */
-		if ($info = $this->_get_info()) {
-			$this->name 		= trim($info['prefix'] . " " . $info['album_name']);
+		$info = $this->_get_info();
+	
+		// Foreach what we've got
+		foreach ($info as $key=>$value) { 
+			$this->$key = $value; 
+		} 
+
+		// Little bit of formating here
+		$this->f_name = trim($info['prefix'] . ' ' . $info['name']); 
+
+		// Additional data that we are going to need
+
+		/*
 			$this->songs		= $info['song_count'];
 			$this->artist_count	= $info['artist_count'];
 			$this->year		= $info['year'];
@@ -62,32 +77,30 @@ class Album {
 			$this->album		= $info['album_name'];
 			$this->has_art		= $info['has_art'];
 			$this->prefix 		= $info['prefix'];
-		} // if info
+		*/
 
 		return true; 
 
 	} //constructor
 
-	/*!
-		@function get_info
-		@discussion get's the vars for $this out of the database 
-		@param $this->id	Taken from the object
-	*/
+	/**
+	 * _get_info
+	 * This is a private function that pulls the album 
+	 * from the database 
+	 */
 	private function _get_info() {
 
-		$this->id = intval($this->id); 
-	
-		/* Grab the basic information from the catalog and return it */
+		// Just get the album information
+		$sql = "SELECT * FROM `album` WHERE `id`='" . $this->id . "'"; 
+
+		/* Grab the basic information from the catalog and return it 
 		$sql = "SELECT COUNT(DISTINCT(song.artist)) as artist_count,album.prefix,album.year,album.name AS album_name,COUNT(song.id) AS song_count," .
 			"artist.name AS artist_name,artist.id AS art_id,artist.prefix AS artist_prefix,album.art AS has_art ".
 			"FROM song,artist,album WHERE album.id='$this->id' AND song.album=album.id AND song.artist=artist.id GROUP BY song.album";
+		*/
 		$db_results = Dba::query($sql);
 
 		$results = Dba::fetch_assoc($db_results);
-
-		// If there is art then set it to 1, if not set it to 0, we don't want to cary
-		// around the full blob with every object because it can be pretty big
-		$results['has_art'] = strlen($results['has_art']) ? '1' : '0'; 
 
 		return $results;
 
@@ -95,7 +108,9 @@ class Album {
 
 	/**
 	 * get_songs
-	 * gets the songs for this album
+	 * gets the songs for this album takes an optional limit
+	 * and an optional artist, if artist is passed it only gets
+	 * songs with this album + specified artist
 	 */
 	public function get_songs($limit = 0,$artist='') { 
 
@@ -118,12 +133,31 @@ class Album {
 	} // get_songs
 
 	/**
+	 * has_art
+	 * This returns true or false depending on if we find any art for this 
+	 * album. 
+	 */
+	public function has_art() { 
+
+		$sql = "SELECT `album_id` FROM `album_data` WHERE `album_id`='" . $this->id . "' AND art IS NOT NULL"; 
+		$db_results = Dba::query($sql); 
+
+		if (Dba::fetch_assoc($db_results)) { 
+			$this->has_art = true; 
+			return true; 
+		} 
+
+		return false; 
+
+	} // has_art
+
+	/**
 	 * format
 	 * This is the format function for this object. It sets cleaned up
 	 * album information with the base required
 	 * f_link, f_name
 	 */
-	function format() { 
+	public function format() { 
 
 	        $web_path = Config::get('web_path');
 
@@ -148,23 +182,12 @@ class Album {
 	} // format
 
 	/**
-	 * format_album
-	 * DEPRECIATED DO NOT USE!
-	 */
-	function format_album() { 
-	
-		// Call the real function 
-		$this->format(); 
-
-	} // format_album
-
-	/**
 	 * get_art
 	 * This function only pulls art from the database, if thumb is passed
 	 * it trys to pull the resized art instead, if resized art is found then
 	 * it returns an additional resized=true in the array
 	 */
-	function get_art() { 
+	public function get_art() { 
 
 		// Attempt to get the resized art first
 		$art = $this->get_resized_db_art(); 
@@ -187,7 +210,7 @@ class Album {
 	 * ['artist']  		= STRING
 	 * ['album_name']	= STRING
 	 */
-	function find_art($options=array(),$limit='') { 
+	public function find_art($options=array(),$limit='') { 
 
 		/* Create Base Vars */
 		$results = array(); 
@@ -365,7 +388,7 @@ class Album {
 
 		$id = Dba::escape($this->id); 
 
-		$sql = "SELECT `thumb` AS `art`,`thumb_mime` AS `art_mime` FROM `album` WHERE `id`='$id'";
+		$sql = "SELECT `thumb` AS `art`,`thumb_mime` AS `art_mime` FROM `album_data` WHERE `album_id`='$id'";
 		$db_results = Dba::query($sql); 
 		
 		$results = Dba::fetch_assoc($db_results); 
@@ -384,7 +407,7 @@ class Album {
 	 */
 	public function get_db_art() {
 
-		$sql = "SELECT `art`,`art_mime` FROM `album` WHERE `id`='$this->id'";
+		$sql = "SELECT `art`,`art_mime` FROM `album_data` WHERE `album_id`='$this->id'";
 		$db_results = Dba::query($sql);
 
 		$results = Dba::fetch_assoc($db_results);
