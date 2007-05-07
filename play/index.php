@@ -242,7 +242,7 @@ else {
  * we count it in the statistics
  * @author SH
  */
-$bytesStreamed  = 0;
+$bytesStreamed  = $start;
 $minBytesStreamed = $song->size / 2;
 while (!feof($fp) && (connection_status() == 0)) {
 	$buf = fread($fp, 8192);
