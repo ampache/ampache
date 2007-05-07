@@ -195,8 +195,14 @@ switch ($action) {
 	break;
 	// Used to change filter/settings on browse
 	case 'browse':
-		// Set any new filters we've just added
-		Browse::set_filter($_REQUEST['key'],$_REQUEST['value']); 
+		if ($_REQUEST['key'] && $_REQUEST['value']) { 
+			// Set any new filters we've just added
+			Browse::set_filter($_REQUEST['key'],$_REQUEST['value']); 
+		} 
+		if ($_REQUEST['sort']) { 
+			// Set the new sort value
+			Browse::set_sort($_REQUEST['sort']); 
+		} 
 
 		// Refresh the browse div with our new filter options
 		$object_ids = Browse::get_objects(); 

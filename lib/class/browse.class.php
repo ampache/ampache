@@ -65,6 +65,9 @@ class Browse {
 	                                $_SESSION['browse']['filter'][$key] = 1;
 				}
                         break;
+			case 'alpha_match':
+				$_SESSION['browse']['filter'][$key] = $value; 
+			break;
                         default:
                                 // Rien a faire
                         break;
@@ -93,6 +96,22 @@ class Browse {
 		} // end type whitelist
 
 	} // set_type
+
+	/**
+	 * set_sort
+	 * This sets the current sort(s)
+	 */
+	public static function set_sort($sort) { 
+
+		if ($_SESSION['browse']['type'] == 'song') { 
+			switch ($sort) { 
+				case'title':
+					$_SESSION['browse']['sort']['title'] = 'ASC'; 
+				break;
+			} 
+		} 
+
+	} // set_sort
 
 	/**
 	 * get_objects
@@ -134,13 +153,13 @@ class Browse {
 		// Get our base SQL must always return ID 
 		switch ($_SESSION['browse']['type']) { 
 			case 'album':
-
+				$sql = "SELECT `album`.`id` FROM `album` "; 
 			break;
 			case 'artist':
-
+				$sql = "SELECT `artist`.`id` FROM `artist` "; 
 			break;
 			case 'genre':
-
+				$sql = "SELECT `genre`.`id` FROM `genre` ";
 			break;
 			case 'song':
 			default:
@@ -163,7 +182,18 @@ class Browse {
 
 		$sql .= $where_sql;
 
-		self::$sql = $sql; 
+		// Now Add the Order 
+		$order_sql = "ORDER BY "; 	
+
+		foreach ($_SESSION['browse']['sort'] as $key=>$value) { 			
+			$order_sql .= self::sql_sort($value); 
+		} 
+
+		// Clean her up
+		$order_sql = rtrim($order_sql,"ORDER BY "); 
+		$order_sql = rtrim($order_sql,","); 
+
+		self::$sql = $sql . $order_sql; 
 
 		return $sql;
 
@@ -194,10 +224,17 @@ class Browse {
 		} // if it is a song
 
 		if ($_SESSION['browse']['type'] == 'album') { 
+			switch($filter) { 
+				case 'alpha_match':
+					$filter_sql = " `album`.`name` LIKE '" . Dba::escape($value) . "%' AND "; 
+				break;
+				case 'min_count': 
 
-
-
-
+				break;
+				default: 
+					// Rien a faire
+				break;
+			} 
 		} // end album 
 	
 		return $filter_sql; 
@@ -218,6 +255,36 @@ class Browse {
 	} // logic_filter
 
 	/**
+	 * sql_sort
+	 * This builds any order bys we need to do
+	 * to sort the results as best we can, there is also
+	 * a logic based sort that will come later as that's
+	 * a lot more complicated
+	 */
+	private static function sql_sort($field,$order) { 
+
+		if ($order != 'DESC') { $order == 'ASC'; } 
+
+
+		if ($_SESSION['browse']['type'] == 'song') { 
+			switch($field) { 
+				case 'title';
+					$sql = "`song`.`title`"; 
+				break;
+				case 'year':
+					$sql = "`song`.`year`"; 
+				break;
+				default: 
+					// Rien a faire
+				break;
+			} // end switch
+		} // end if song 
+
+		return $sql . "$order,"; 
+
+	} // sql_sort
+
+	/**
 	 * show_objects
 	 * This takes an array of objects
 	 * and requires the correct template based on the
@@ -230,6 +297,14 @@ class Browse {
 				show_box_top(); 
 				require_once Config::get('prefix') . '/templates/show_songs.inc.php'; 
 				show_box_bottom(); 
+			break;
+			case 'album': 
+				show_box_top(); 
+				require_once Config::get('prefix') . '/templates/show_albums.inc.php';
+				show_box_bottom(); 
+			break;
+			default: 
+				// Rien a faire
 			break;
 		} // end switch on type
 

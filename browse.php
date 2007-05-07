@@ -42,34 +42,9 @@ echo '<div id="browse_content">';
 switch($_REQUEST['action']) {
 	case 'file':
 	case 'album':
-		show_alphabet_list('albums','albums.php',$match);
-		show_alphabet_form($match,_("Show Albums starting with"),"albums.php?action=match");
-
-		/* Get the results and show them */
-		$sql = "SELECT id FROM album WHERE name LIKE '$match%'";
-
-		$view = new View();
-		$view->import_session_view();
-
-	        // if we are returning
-	        if ($_REQUEST['keep_view']) {
-	                $view->initialize();
-	        }
-
-	        // If we aren't keeping the view then initlize it
-	        elseif ($sql) {
-	                $db_results = mysql_query($sql, dbh());
-	                $total_items = mysql_num_rows($db_results);
-	                if ($match != "Show_all") { $offset_limit = $user->prefs['offset_limit']; }
-	                $view = new View($sql, 'albums.php','name',$total_items,$offset_limit);
-	        }
-
-	        else { $view = false; }
-
-	        if ($view->base_sql) {
-	                $albums = get_albums($view->sql);
-                	show_albums($albums,$view);
-		}		
+		Browse::set_type('album'); 
+		$album_ids = Browse::get_objects(); 
+		Browse::show_objects($album_ids); 
 	break;
 	case 'artist':
                 show_alphabet_list('artists','artists.php');
@@ -107,6 +82,7 @@ switch($_REQUEST['action']) {
 		Browse::set_type('song'); 
 		$song_ids = Browse::get_objects(); 
 		Browse::show_objects($song_ids); 
+
 	break;
 	case 'catalog':
 	
