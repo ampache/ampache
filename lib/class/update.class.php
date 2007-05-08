@@ -622,7 +622,7 @@ class Update {
 		$db_results = Dba::query($sql); 
 
 		$sql = "ALTER TABLE `ratings` CHANGE `user_rating` `rating` ENUM( '-1', '0', '1', '2', '3', '4', '5' ) NOT NULL DEFAULT '0'"; 
-		$db_results = Dba::query($sql): 
+		$db_results = Dba::query($sql);
 
                 /* Add the rate_limit preference */
                 $sql = "INSERT INTO `preferences` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
