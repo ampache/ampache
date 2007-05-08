@@ -531,17 +531,6 @@ class Update {
 			"VALUES ('offset_limit','50','Offset Limit','5','integer','interface')";
 		$db_results = Dba::query($sql); 
 		
-
-		// Fix the preferences for everyone 
-		$sql = "SELECT `id` FROM `user`";
-		$db_results = Dba::query($sql); 
-
-		User::fix_preferences('-1'); 
-
-		while ($r = Dba::fetch_assoc($db_results)) { 
-			User::fix_preferences($r['id']); 
-		} 
-
 		self::set_version('db_version','340002'); 
 
 		return true; 

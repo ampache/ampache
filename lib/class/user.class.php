@@ -118,16 +118,16 @@ class User {
 		if (!Config::get('use_auth')) { $user_id = '-1'; }
 
 		if ($user_id != '-1') { 
-			$user_limit = "AND preferences.catagory != 'system'";
+			$user_limit = "AND preference.catagory != 'system'";
 		}
 			
 		if ($type != '0') { 
-			$user_limit = "AND preferences.catagory = '" . Dba::escape($type) . "'";
+			$user_limit = "AND preference.catagory = '" . Dba::escape($type) . "'";
 		}
 
 	
-		$sql = "SELECT preferences.name, preferences.description, preferences.catagory, user_preference.value " . 
-			"FROM preferences RIGHT JOIN user_preference ON user_preference.preference=preferences.id " .
+		$sql = "SELECT preference.name, preference.description, preference.catagory, user_preference.value " . 
+			"FROM preference INNER JOIN user_preference ON user_preference.preference=preference.id " .
 			"WHERE user_preference.user='$user_id' $user_limit";
 		$db_results = Dba::query($sql);
 
@@ -152,8 +152,8 @@ class User {
 	*/
 	function set_preferences() {
 
-		$sql = "SELECT preferences.name,user_preference.value FROM preferences,user_preference WHERE user_preference.user='$this->id' " .
-			"AND user_preference.preference=preferences.id AND preferences.type != 'system'";
+		$sql = "SELECT preference.name,user_preference.value FROM preference,user_preference WHERE user_preference.user='$this->id' " .
+			"AND user_preference.preference=preference.id AND preference.type != 'system'";
 		$db_results = Dba::query($sql);
 
 		while ($r = Dba::fetch_assoc($db_results)) {
@@ -360,7 +360,7 @@ class User {
 		$value = sql_escape($value);
 
 		if (!is_numeric($preference_id)) { 
-			$sql = "SELECT id FROM preferences WHERE `name`='$preference_id'";
+			$sql = "SELECT id FROM preference WHERE `name`='$preference_id'";
 			$db_results = mysql_query($sql, dbh());
 			$r = mysql_fetch_array($db_results);
 			$preference_id = $r[0];
@@ -753,8 +753,8 @@ class User {
 	
 		/* If we aren't the -1 user before we continue grab the -1 users values */
 		if ($user_id != '-1') { 
-                        $sql = "SELECT `user_preference`.`preference`,`user_preference`.`value` FROM `user_preference`,`preferences` " .
-                                "WHERE `user_preference`.`preference` = `preferences`.`id` AND `user_preference`.`user`='-1' AND `preferences`.`catagory` !='system'";
+                        $sql = "SELECT `user_preference`.`preference`,`user_preference`.`value` FROM `user_preference`,`preference` " .
+                                "WHERE `user_preference`.`preference` = `preference`.`id` AND `user_preference`.`user`='-1' AND `preference`.`catagory` !='system'";
                         $db_results = Dba::query($sql);
 			/* While through our base stuff */
                         while ($r = Dba::fetch_assoc($db_results)) {
@@ -764,7 +764,7 @@ class User {
                 } // if not user -1
 
 		// get me _EVERYTHING_ 
-                $sql = "SELECT * FROM `preferences`";
+                $sql = "SELECT * FROM `preference`";
 
 		// If not system, exclude system... *gasp*
                 if ($user_id != '-1') {
@@ -856,7 +856,7 @@ class User {
 		$db_results = mysql_query($sql,dbh()); 
 
 		// Delete their preferences
-		$sql = "DELETE FROM preferences WHERE user='$this->id'";
+		$sql = "DELETE FROM user_preference WHERE `user`='$this->id'";
 		$db_results = mysql_query($sql, dbh());
 
 		// Delete the user itself
