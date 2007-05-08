@@ -45,7 +45,7 @@ if (empty($song_id) && empty($tmp_id)) {
 }
 
 if (!isset($uid)) { 
-	debug_event('no_usre','Error: No User specified','2'); 
+	debug_event('no_user','Error: No User specified','2'); 
 	exit;
 }
 
@@ -82,8 +82,8 @@ if (Config::get('demo_mode') || (!$GLOBALS['user']->has_access('25') && !$xml_rp
    that they have enough access to play this mojo
 */
 if (Config::get('access_control')) { 
-	if (!Access::check_network('stream',$_SERVER['REMOTE_ADDR'],$GLOBALS['user']->username,'25') AND
-		!Access::check_network('network',$_SERVER['REMOTE_ADDR'],$GLOBALS['user']->username,'25')) { 
+	if (!Access::check_network('stream',$_SERVER['REMOTE_ADDR'],$GLOBALS['user']->id,'25') AND
+		!Access::check_network('network',$_SERVER['REMOTE_ADDR'],$GLOBALS['user']->id,'25')) { 
 		debug_event('access_denied', "Streaming Access Denied: " . $_SERVER['REMOTE_ADDR'] . " does not have stream level access",'3');
 		access_denied();
 		exit; 
@@ -196,7 +196,7 @@ if (Config::get('track_user_ip')) {
 
 /* If access control is on and they aren't local, downsample! */
 if (Config::get('access_control') AND Config::get('downsample_remote')) { 
-	if (Access::check_network('network',$_SERVER['REMOTE_ADDR'],$GLOBALS['user']->username,'25')) { 
+	if (Access::check_network('network',$_SERVER['REMOTE_ADDR'],$GLOBALS['user']->id,'25')) { 
 		$not_local = true;
 	}
 } // if access_control
@@ -244,9 +244,19 @@ else {
  */
 $bytesStreamed  = $start;
 $minBytesStreamed = $song->size / 2;
+
+// We need to check to see if they are rate limited
+$chunk_size = '8192';
+
+if ($GLOBALS['user']->prefs['rate_limit'] > 0) { 
+	$chunk_size = $GLOBALS['user']->prefs['rate_limit']; 
+} 
+
+// Actually do the streaming 
 while (!feof($fp) && (connection_status() == 0)) {
-	$buf = fread($fp, 8192);
+	$buf = fread($fp, $chunk_size);
         print($buf);
+	if ($GLOBALS['user']->prefs['rate_limit'] > 0) { slepp (1); } 
         $bytesStreamed += strlen($buf);
 }
 

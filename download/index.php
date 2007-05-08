@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2006 Ampache.org
+ Copyright (c) 2001 - 2007 Ampache.org
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
@@ -25,8 +25,8 @@
 	Special thanks to the Horde project for their Browser class that makes this so easy.
 */
 
-require('../lib/init.php');
-require(conf('prefix') . '/modules/horde/Browser.php');
+require '../lib/init.php';
+require Config::get('prefix') . '/modules/horde/Browser.php';
 
 $browser = new Browser();
 

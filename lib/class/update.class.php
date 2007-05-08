@@ -193,7 +193,8 @@ class Update {
 
 		$update_string = '- Moved Art from the Album table into album_data to improve performance.<br />' . 
 				'- Made some minor changes to song table to reduce size of each row.<br />' . 
-				'- Moved song_ext_data to song_data to match album_data pattern.<br />';
+				'- Moved song_ext_data to song_data to match album_data pattern.<br />' . 
+				'- Added Playlist Method and Rate Limit Preferences.<br />';
 
 		$version[] = array('version' => '340003','description' => $update_string); 
 
@@ -611,6 +612,25 @@ class Update {
 		// Remove offset limit from the user
 		$sql = "ALTER TABLE `user` DROP `offset_limit`"; 
 		$db_results = Dba::query($sql); 
+
+               /* Add the rate_limit preference */
+                $sql = "INSERT INTO `preferences` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
+                        "VALUES ('rate_limit','8192','Rate Limit','100','integer','streaming')";
+                $db_results = Dba::query($sql);
+
+               /* Add the playlist_method preference and remove it from the user table */
+                $sql = "INSERT INTO `preferences` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
+                        "VALUES ('playlist_method','50','Playlist Method','5','string','streaming')";
+                $db_results = Dba::query($sql);
+
+                $sql = "SELECT `id` FROM `user`";
+                $db_results = Dba::query($sql);
+
+                User::fix_preferences('-1'); 
+
+                while ($r = Dba::fetch_assoc($db_results)) { 
+                        User::fix_preferences($r['id']);
+                }
 
 		self::set_version('db_version','340003'); 
 
