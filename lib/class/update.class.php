@@ -194,7 +194,9 @@ class Update {
 		$update_string = '- Moved Art from the Album table into album_data to improve performance.<br />' . 
 				'- Made some minor changes to song table to reduce size of each row.<br />' . 
 				'- Moved song_ext_data to song_data to match album_data pattern.<br />' . 
-				'- Added Playlist Method and Rate Limit Preferences.<br />';
+				'- Added Playlist Method and Rate Limit Preferences.<br />' . 
+				'- Renamed preferences and ratings to preference and rating to fit table pattern.<br />' . 
+				'- Fixed rating table, renamed user_rating to rating and switched 00 for -1.<br />';
 
 		$version[] = array('version' => '340003','description' => $update_string); 
 
@@ -601,6 +603,12 @@ class Update {
 		$sql = "RENAME TABLE `ampache`.`song_ext_data`  TO `ampache`.`song_data`"; 
 		$db_results = Dba::query($sql); 
 
+		$sql = "RENAME TABLE `ampache`.`preferences` TO `ampache`.`preference`"; 
+		$db_results = Dba::query($sql); 
+
+		$sql = "RENAME TABLE `ampache`.`ratings` TO `ampache`.`rating`"; 
+		$db_results = Dba::query($sql); 
+
 		// Go ahead and drop the art/thumb stuff
 		$sql = "ALTER TABLE `album`  DROP `art`,  DROP `art_mime`,  DROP `thumb`,  DROP `thumb_mime`"; 
 		$db_results = Dba::query($sql); 
@@ -613,12 +621,15 @@ class Update {
 		$sql = "ALTER TABLE `user` DROP `offset_limit`"; 
 		$db_results = Dba::query($sql); 
 
-               /* Add the rate_limit preference */
+		$sql = "ALTER TABLE `ratings` CHANGE `user_rating` `rating` ENUM( '-1', '0', '1', '2', '3', '4', '5' ) NOT NULL DEFAULT '0'"; 
+		$db_results = Dba::query($sql): 
+
+                /* Add the rate_limit preference */
                 $sql = "INSERT INTO `preferences` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
                         "VALUES ('rate_limit','8192','Rate Limit','100','integer','streaming')";
                 $db_results = Dba::query($sql);
 
-               /* Add the playlist_method preference and remove it from the user table */
+                /* Add the playlist_method preference and remove it from the user table */
                 $sql = "INSERT INTO `preferences` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
                         "VALUES ('playlist_method','50','Playlist Method','5','string','streaming')";
                 $db_results = Dba::query($sql);
