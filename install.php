@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2006 ampache.org
+ Copyright (c) 2001 - 2007 ampache.org
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
@@ -22,38 +22,37 @@
 // Set the Error level manualy... I'm to lazy to fix notices
 error_reporting(E_ALL ^ E_NOTICE);
 
-require_once('lib/general.lib.php');
-require_once('lib/ui.lib.php');
-require_once('modules/horde/Browser.php');
-require_once('lib/install.php');
-require_once('lib/debug.lib.php');
-require_once('lib/class/user.class.php');
-require_once('lib/class/error.class.php');
-require_once('lib/gettext.php');
+require_once 'lib/general.lib.php';
+require_once 'lib/class/config.class.php';
+require_once 'lib/ui.lib.php';
+require_once 'lib/log.lib.php'; 
+require_once 'modules/horde/Browser.php';
+require_once 'lib/install.php';
+require_once 'lib/debug.lib.php';
+require_once 'lib/gettext.php';
 
-require_once('modules/vauth/dbh.lib.php');
-require_once('modules/vauth/init.php');
+require_once 'modules/vauth/dbh.lib.php';
+require_once 'modules/vauth/init.php';
 
 if ($_SERVER['HTTPS'] == 'on') { $http_type = "https://"; }
 else { $http_type = "http://"; }
 
 $prefix = dirname(__FILE__); 
+Config::set('prefix',$prefix,'1'); 
 $configfile = "$prefix/config/ampache.cfg.php";
-
-$conf_array = array('prefix' => $prefix,'font_size' => '12', 'bg_color1' => '#c0c0c0', 'font' => 'Verdana', 'error_color' => 'red');
-$conf_array['base_color1'] = "#a0a0a0";
-$conf_array['bg_color2']   = "#000000";
-conf($conf_array);
 
 /* First things first we must be sure that they actually still need to 
    install ampache 
 */
 if (!install_check_status($configfile)) { 
-	access_denied();
+	echo "Error: Config file detected, Ampache is already installed"; 
+	exit; 
 }
 
+// Define that we are doing an install so the includes will work
+define('INSTALL','1'); 
+
 /* Clean up incomming variables */
-$action = scrub_in($_REQUEST['action']);
 $web_path = scrub_in($_REQUEST['web_path']);
 $username = scrub_in($_REQUEST['local_username']);
 $password = $_REQUEST['local_pass'];
@@ -62,11 +61,9 @@ $database = scrub_in($_REQUEST['local_db']);
 if ($_SERVER['HTTPS'] == 'on') { $http_type = "https://"; }
 else { $http_type = "http://"; }
 $php_self = $http_type . $_SERVER['HTTP_HOST'] . "/" . preg_replace("/^\/(.+\.php)\/?.*/","$1",$_SERVER['PHP_SELF']);
-$error	  = new Error();
 
 /* Catch the Current Action */
-switch ($action) { 
-
+switch ($_REQUEST['action']) { 
 	case 'create_db':
 		if (!install_insert_db($username,$password,$hostname,$database)) { 
 			require_once('templates/show_install.inc');
@@ -186,15 +183,14 @@ switch ($action) {
 		header ("Content-Type: text/html; charset=" . conf('site_charset'));
 		
 		require_once('templates/show_install_account.inc.php');
-		break;
-
+	break;
         case 'init':
 		/* First step of installation */
 		// Get the language
 		$htmllang = $_POST['htmllang'];
 
 		// Set the lang in the conf array
-		conf(array('lang'=>$htmllang));
+		Config::set('lang',$htmllang,'1');
 
 		// We need the charset for the different languages
 		$charsets = array('de_DE' => 'ISO-8859-15',
@@ -209,16 +205,15 @@ switch ($action) {
 		$charset = $charsets[$_POST['htmllang']];
 
 		// Set the site_charset in the conf array
- 	        conf(array('site_charset'=>$charsets[$_POST['htmllang']]));
+ 	        Config::set('site_charset',$charsets[$_POST['htmllang']],'1');
 			
 		// Now we make voodoo with the Load gettext mojo
 		load_gettext();
 
 		// Page ready  :)
 		header ("Content-Type: text/html; charset=$charset");
-		require_once('templates/show_install.inc');
-		break;
-		
+		require_once 'templates/show_install.inc';
+	break;
         default:
 		/* Do some basic tests here... most common error, no mysql */
 		if (!function_exists('mysql_query')) { 
@@ -227,9 +222,8 @@ switch ($action) {
 		$htmllang = "en_US";
 		header ("Content-Type: text/html; charset=UTF-8");
 		/* Show the language options first */
-		require_once('templates/show_install_lang.inc.php');
+		require_once 'templates/show_install_lang.inc.php';
 	break;
-
 
 } // end action switch
 

@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2006 Ampache.org
+ Copyright (c) 2001 - 2007 Ampache.org
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
@@ -28,12 +28,11 @@
  * connections, web paths etc..
 */
 
-/*!
-	@function check_database
-	@discussion checks the local mysql db
-		and make sure life is good
-*/
-function check_database($host,$username,$pass,$database) {
+/**
+ * check_database
+ *  checks the local mysql db and make sure life is good
+ */
+function check_database($host,$username,$pass) {
 	
 	$dbh = @mysql_connect($host, $username, $pass);
 

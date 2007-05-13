@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2006 Ampache.org
+ Copyright (c) 2001 - 2007 Ampache.org
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
@@ -19,17 +19,12 @@
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
-/*!
-	@header Install docuement
-	@discussion this document contains the functions needed to see if 
-		ampache needs to be installed
-*/
 
-/*!
-	@function split_sql
-	@discussion splits up a standard SQL dump file into distinct
-		sql queryies 
-*/
+/**
+ * split_sql
+ * splits up a standard SQL dump file into distinct
+ * sql queryies 
+ */
 function split_sql($sql) {
         $sql = trim($sql);
         $sql = ereg_replace("\n#[^\n]*\n", "\n", $sql);
@@ -59,13 +54,12 @@ function split_sql($sql) {
         return($ret);
 } // split_sql
 
-/*!
-	@function install_check_status()
-	@discussion this function checks to see if we actually
-		still need to install ampache. This function is
-		very important, we don't want to reinstall over top
-		of an existing install
-*/
+/**
+ * install_check_status
+ * this function checks to see if we actually
+ * still need to install ampache. This function is
+ * very important, we don't want to reinstall over top of an existing install
+ */
 function install_check_status($configfile) { 
 
 	/* 
@@ -81,11 +75,10 @@ function install_check_status($configfile) {
 	  Check and see if they've got _any_ account
 	  if they don't then they're cool
 	*/
-	$results = read_config($GLOBALS['configfile'], 0, 0);
-	$dbh = check_database($results['local_host'],$results['local_username'],$results['local_pass']);	
+	$results = parse_ini_file($GLOBALS['configfile']);
+	$dbh = check_database($results['database_hostname'],$results['database_username'],$results['database_password']);	
 
 	if (is_resource($dbh)) { 
-		$db_select = mysql_select_db($results['local_db'],$dbh);
 		
 		$sql = "SELECT * FROM user";
 		$db_results = @mysql_query($sql, $dbh);
@@ -94,8 +87,6 @@ function install_check_status($configfile) {
 		}
 	}
 
-
-	
 	/* Defaut to no */
 	return false;
 

@@ -343,7 +343,7 @@ function get_random_songs( $options, $matchlist) {
                         $albums_where .= " OR song.album=" . $data[0];
                 }
                 $albums_where = ltrim($albums_where," OR");
-                $query = "SELECT song.id,song.size,song.time FROM song WHERE $albums_where ORDER BY song.track ASC";
+                $query = "SELECT song.id,song.size,song.time FROM song WHERE $albums_where ORDER BY song.album,song.track ASC";
         }
         elseif ($options['random_type'] == 'full_artist') {
                 $query = "SELECT artist.id FROM song,artist WHERE song.artist=artist.id AND $where GROUP BY song.artist ORDER BY RAND() " . $limit_sql;

@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2006 Ampache.org
+ Copyright (c) 2001 - 2007 Ampache.org
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
@@ -19,12 +19,12 @@
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 ?>
-
+<?php if (INSTALL != '1') { exit; } ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="$htmllang" lang="$htmllang">
 <head>
 <title>Ampache :: Pour l'Amour de la Musique - Install</title>
-<?php require_once(conf('prefix') . "/templates/install.css"); ?>
+<link rel="stylesheet" href="templates/install.css" type="text/css" media="screen" />
 </head>
 <body>
 <script src="lib/javascript-base.js" language="javascript" type="text/javascript"></script>
@@ -34,7 +34,7 @@
 </div>
 <div id="text-box">
 	<div class="notify">
-		<b><?php echo _("Requirements"); ?></b>
+		<b><?php echo _('Requirements'); ?></b>
 		<p>
 		<?php echo _('This Page handles the installation of the Ampache database and the creation of the ampache.cfg.php file. Before you continue please make sure that you have the following pre-requisites'); ?>
 		</p>
@@ -50,7 +50,7 @@
 	<div class="content">
 		<b>Choose installation language.</b>
 		<p>
-		<?php echo $GLOBALS['error']->print_error('general'); ?>
+		<?php Error::display('general'); ?>
 		</p>
 <form method="post" action="<?php echo $http_type . $_SERVER['HTTP_HOST'] .  $_SERVER['PHP_SELF'] . "?action=init"; ?>" enctype="multipart/form-data" >
 

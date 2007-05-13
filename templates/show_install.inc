@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2006 Ampache.org
+ Copyright (c) 2001 - 2007 Ampache.org
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
@@ -24,7 +24,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php echo $htmllang; ?>" lang="<?php echo $htmllang; ?>">
 <head>
 <title>Ampache :: For The Love Of Music - Install</title>
-<?php require_once(conf('prefix') . "/templates/install.css"); ?>
+<link rel="stylesheet" href="templates/install.css" type="text/css" media="screen" />
 </head>
 <body>
 <script src="lib/javascript-base.js" language="javascript" type="text/javascript"></script>
@@ -35,7 +35,7 @@
 <div id="text-box">
 
 	<div class="notify">
-		<b><?php echo _("Requirements"); ?></b>
+		<b><?php echo _('Requirements'); ?></b>
 		<p>
 		<?php echo _("This Page handles the installation of the Ampache database and the creation of the ampache.cfg.php file. Before you continue please make sure that you have the following pre-requisites"); ?>
 		</p>
@@ -57,7 +57,7 @@
 		<?php echo _("Step 3 - Setup Initial Account"); ?><br />
 		<br /><br />
 		<span class="header2">Insert Ampache Database</span>
-		<?php echo $GLOBALS['error']->print_error('general'); ?>
+		<?php Error::display('general'); ?>
 		<form method="post" action="<?php echo $http_type . $_SERVER['HTTP_HOST'] .  $_SERVER['PHP_SELF'] . "?action=create_db&amp;htmllang=$htmllang&amp;charset=$charset"; ?>" enctype="multipart/form-data" >
 <table>
 <tr>
