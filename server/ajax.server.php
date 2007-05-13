@@ -72,6 +72,28 @@ switch ($action) {
 		$xml_doc = xml_from_array($results);
 		echo $xml_doc;
 	break;
+	// Handle the users basketcases... 
+	case 'basket': 
+		switch ($_REQUEST['type']) { 
+			case 'album': 
+				$album = new Album($_REQUEST['id']); 
+				$songs = $album->get_songs(); 
+				foreach ($songs as $song_id) { 
+					$GLOBALS['user']->playlist->add_object($song_id); 
+				} // end foreach
+			break;
+			default: 
+			case 'song': 
+				$GLOBALS['user']->playlist->add_object($_REQUEST['id']); 
+			break;
+		} // end switch
+		
+		ob_start(); 
+		require_once Config::get('prefix') . '/templates/show_playlist_bar.inc.php'; 
+		$results['topbar-playlist'] = ob_get_contents(); 
+		ob_end_clean(); 
+		echo xml_from_array($results); 
+	break;
 	/* For changing the current play type FIXME:: need to allow select of any type  */
 	case 'change_play_type':
 		$pref_id = get_preference_id('play_type');

@@ -30,6 +30,7 @@ $ajax_url = Config::get('ajax_url');
 	<th><?php echo _('Add'); ?></th>
 	<th><?php echo _('Album'); ?></th>
 	<th><?php echo _('Artist'); ?></th>
+	<th><?php echo _('Songs'); ?></th>
 	<th><?php echo _('Year'); ?></th>
 </tr>
 <?php 
@@ -39,6 +40,9 @@ $ajax_url = Config::get('ajax_url');
 		$album->format(); 
 ?>
 <tr class="<?php echo flip_class(); ?>">
+		<td onclick="ajaxPut('<?php echo Config::get('ajax_url'); ?>?action=basket&amp;type=album&amp;id=<?php echo $album->id; ?>');return true;" >
+			<?php echo get_user_icon('add'); ?>
+		</td>
 		<td><?php echo $album->f_name; ?></td>
 		<td><?php echo $album->f_artist; ?></td>
 		<td><?php echo $album->songs; ?></td>
