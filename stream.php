@@ -51,6 +51,9 @@ switch ($action) {
 		// Make sure they actually passed soemthing
 		if (!count($song_ids)) { header("Location:" . return_referer()); exit; } 
 	break;
+	case 'basket': 
+		$song_ids = $GLOBALS['user']->playlist->get_items(); 
+	break;
 	/* This is run if we need to gather info based on a tmp playlist */
 	case 'tmp_playlist':
 		$tmp_playlist = new tmpPlaylist($_REQUEST['tmpplaylist_id']);

@@ -202,6 +202,19 @@ class tmpPlaylist {
 
 	} // count_items
 
+	/**
+ 	 * clear
+	 * This clears all the objects out of a single playlist
+	 */
+	public function clear() { 
+
+		$sql = "DELETE FROM `tmp_playlist_data` WHERE `tmp_playlist_data`.`tmp_playlist`='" . $this->id . "'"; 
+		$db_results = Dba::query($sql); 
+
+		return true; 
+
+	} // clear
+
 	/** 
 	 * create
 	 * This function initializes a new tmpPlaylist it is assoicated with the current

@@ -82,6 +82,9 @@ switch ($action) {
 					$GLOBALS['user']->playlist->add_object($song_id); 
 				} // end foreach
 			break;
+			case 'clear_all': 
+				$GLOBALS['user']->playlist->clear(); 
+			break;
 			default: 
 			case 'song': 
 				$GLOBALS['user']->playlist->add_object($_REQUEST['id']); 
