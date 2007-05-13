@@ -1,8 +1,6 @@
 <?php
 /*
-
  This library handles album related functions.... wooo!
- //FIXME: Remove this in favor of /modules/class/album
 */
 
 /*!
@@ -71,7 +69,7 @@ function get_random_albums($count='') {
 	$count = Dba::escape($count); 
 
 	// We avoid a table scan by using the id index and then using a rand to pick a row #
-	$sql = "SELECT `id` FROM `album` WHERE `art` IS NOT NULL";
+	$sql = "SELECT `id` FROM `album`";
 	$db_results = Dba::query($sql); 
 
 	while ($r = Dba::fetch_assoc($db_results)) { 
@@ -82,9 +80,12 @@ function get_random_albums($count='') {
 
 	for ($i=0; $i <= $count; $i++) { 
 		$record = rand(0,$total); 
-		$results[] = $albums[$record]; 
-	} 
-
+		if (isset($results[$record]) || !$albums[$record]) { $i--; } 
+		else { 
+			$results[$record] = $albums[$record]; 
+		} 
+	} // end for 
+	
 	return $results; 
 
 } // get_random_albums

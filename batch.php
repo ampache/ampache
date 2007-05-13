@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2004 batch.php by RosenSama
+ Copyright (c) 2001 - 2007 Ampache.org
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
@@ -18,23 +18,11 @@
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
-/**
- *	
- *	creates and sends a zip of an album or playlist
- *	zip is just a container w/ no compression
- *
- *	uses  archive.php from
- *	http://phpclasses.mirrors.nyphp.org/browse/file/3191.html
- *	can modify to allow user to select tar, gzip, or bzip2
- *
- *	I believe archive.php requires zlib support to be eanbled
- *	in your PHP build.
- */
 
-require_once('lib/init.php');
+require_once 'lib/init.php';
 
 //test that batch download is permitted
-if (!batch_ok()) { 
+if (!Access::check_function('batch_download')) { 
 	access_denied(); 
 	exit; 
 }
@@ -42,51 +30,36 @@ if (!batch_ok()) {
 /* Drop the normal Time limit constraints, this can take a while */
 set_time_limit(0);
 
-switch( scrub_in( $_REQUEST['action'] ) ) {
-	case 'download_selected':
-		$type = scrub_in($_REQUEST['type']);
-		if ($type == 'album') { 
-			$song_ids = get_songs_from_type($type,$_POST['song'],$_REQUEST['artist_id']);
-		}
-                elseif ($_REQUEST['playlist_id']) { 
-                        $playlist = new Playlist($_REQUEST['playlist_id']);
-                        $song_ids = $playlist->get_songs($_REQUEST['song']);
-                }
-		else { 
-			$song_ids = $_POST['song'];
-		}
-		$name = "selected-" . date("m-d-Y",time());
-		$song_files = get_song_files($song_ids);
-		set_memory_limit($song_files[1]+32);
-		send_zip($name,$song_files[0]);
+switch ($_REQUEST['action']) {
+	case 'tmp_playlist': 
+		$tmpPlaylist = new tmpPlaylist($_REQUEST['id']); 
+		$song_ids = $tmpPlaylist->get_objects(); 
+		$name = $GLOBALS['user']->username . ' - Playlist';
 	break;
-	case 'pl':
-		$id = scrub_in($_REQUEST['id']);
-		$pl = new Playlist($id);
-		$song_ids = $pl->get_songs();
-		$song_files = get_song_files( $song_ids );
-		set_memory_limit($song_files[1]+32);
-		send_zip($pl->name, $song_files[0]);
+	case 'playlist':
+		$playlist = new Playlist($_REQUEST['id']);
+		$song_ids = $playlist->get_songs();
+		$name = $playlist->name;
 	break;
-	case 'alb':
-		$id = scrub_in($_REQUEST['id']);
-		$alb = new Album($id);
-		$song_ids = $alb->get_song_ids();
-		$song_files = get_song_files($song_ids);
-		set_memory_limit($song_files[1]+32);
-		send_zip($alb->name, $song_files[0]);
+	case 'album':
+		$album = new Album($_REQUEST['id']);
+		$song_ids = $album->get_songs();
+		$name = $album->name;
 	break;
 	case 'genre':
 		$id = scrub_in($_REQUEST['id']); 
 		$genre = new Genre($id); 
 		$song_ids = $genre->get_songs();
-		$song_files = get_song_files($song_ids); 
-		set_memory_limit($song_files[1]+32); 
-		send_zip($genre->name,$song_files[0]); 
+		$name = $genre->name; 
 	break;
 	default:
 		// Rien a faire
 	break;
 } // action switch		
+
+// Take whatever we've got and send the zip
+$song_files = get_song_files($song_ids); 
+set_memory_limit($song_files['1']+32); 
+send_zip($name,$song_files['0']); 
 
 ?>

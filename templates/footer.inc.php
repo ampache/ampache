@@ -24,6 +24,8 @@
 </td></tr></table>
 </div> <!-- end id="content"-->
 </div> <!-- end id="maincontainer"-->
-<div id="footer-content">&nbsp;</div>
+<div id="footer-content">
+	<a href="http://www.ampache.org/index.php">Ampache v.<?php echo Config::get('version'); ?></a>
+</div>
 </body>
 </html>

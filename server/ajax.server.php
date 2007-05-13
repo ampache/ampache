@@ -82,6 +82,13 @@ switch ($action) {
 					$GLOBALS['user']->playlist->add_object($song_id); 
 				} // end foreach
 			break;
+			case 'album_random': 
+				$album = new Album($_REQUEST['id']); 
+				$songs = $album->get_random_songs(); 
+				foreach ($songs as $song_id) { 
+					$GLOBALS['user']->playlist->add_object($song_id); 
+				} 
+			break; 
 			case 'clear_all': 
 				$GLOBALS['user']->playlist->clear(); 
 			break;

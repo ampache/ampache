@@ -92,12 +92,6 @@ class Album {
 
 		// Just get the album information
 		$sql = "SELECT * FROM `album` WHERE `id`='" . $this->id . "'"; 
-
-		/* Grab the basic information from the catalog and return it 
-		$sql = "SELECT COUNT(DISTINCT(song.artist)) as artist_count,album.prefix,album.year,album.name AS album_name,COUNT(song.id) AS song_count," .
-			"artist.name AS artist_name,artist.id AS art_id,artist.prefix AS artist_prefix,album.art AS has_art ".
-			"FROM song,artist,album WHERE album.id='$this->id' AND song.album=album.id AND song.artist=artist.id GROUP BY song.album";
-		*/
 		$db_results = Dba::query($sql);
 
 		$results = Dba::fetch_assoc($db_results);
@@ -105,6 +99,30 @@ class Album {
 		return $results;
 
 	} // _get_info
+
+	/**
+	 * _get_extra_info
+	 * This pulls the extra information from our tables, this is a 3 table join, which is why we don't normally
+	 * do it
+	 */
+	private function _get_extra_info() { 
+
+		$sql = "SELECT COUNT(DISTINCT(song.artist)) as artist_count,COUNT(song.id) AS song_count,artist.name AS artist_name" . 
+			",artist.prefix AS artist_prefix,album_data.art AS has_art,album_data.thumb AS has_thumb ".
+			"FROM `song` " .
+			"INNER JOIN `artist` ON `artist`.`id`=`song`.`artist` " .
+			"LEFT JOIN `album_data` ON `album_data`.`album_id` = `song`.`album` " . 
+			"WHERE `song`.`album`='$this->id' GROUP BY `song`.`album`";
+		$db_results = Dba::query($sql); 
+
+		$results = Dba::fetch_assoc($db_results); 
+
+		if ($results['has_art']) { $results['has_art'] = 1; } 
+		if ($results['has_thumb']) { $results['has_thumb'] = 1; } 
+
+		return $results; 
+
+	} // _get_extra_info
 
 	/**
 	 * get_songs
@@ -161,18 +179,20 @@ class Album {
 
 	        $web_path = Config::get('web_path');
 
+		/* Pull the advanced information */
+		$data = $this->_get_extra_info(); 
+		foreach ($data as $key=>$value) { $this->$key = $value; } 
+		
 		/* Truncate the string if it's to long */
-		$name 		= scrub_out(truncate_with_ellipse($this->name,Config::get('ellipse_threshold_album')));
-		$artist		= scrub_out($this->artist);
-	        $this->f_name	= "<a href=\"$web_path/albums.php?action=show&amp;album=" . $this->id . "\" title=\"" . scrub_out($this->name) . "\">" . $name . "</a>";
-		$this->f_link	= "<a href=\"$web_path/albums.php?action=show&amp;album=" . scrub_out($this->id) . "\" title=\"" . scrub_out($this->name) . "\">" . $name . "</a>";
-	        $this->f_songs	= "<div align=\"center\">" . $this->songs . "</div>";
+	        $this->f_name	= scrub_out(truncate_with_ellipse($this->name,Config::get('ellipse_threshold_album')));
+		$this->f_name_link	= "<a href=\"$web_path/albums.php?action=show&amp;album=" . scrub_out($this->id) . "\" title=\"" . scrub_out($this->name) . "\">" . $this->f_name . "</a>";
 		$this->f_title	= $name; 
 		if ($this->artist_count == '1') { 
+			$artist = scrub_out(truncate_with_ellipse(trim($this->artist_prefix . ' ' . $this->artist_name),Config::get('ellipse_threshold_album')));
 		        $this->f_artist	= "<a href=\"$web_path/artists.php?action=show&amp;artist=" . $this->artist_id . "\">" . $artist . "</a>";
 		}
 		else {
-			$this->f_artist = _('Various');
+			$this->f_artist = "<div title=\"$this->artist_count " . _('Artists') . "\">" . _('Various') . "</div>"; 
 		}
 
 		if ($this->year == '0') { 
@@ -277,8 +297,8 @@ class Album {
 		$data = array(); 
 
 		// Foreach songs in this album
-		foreach ($this->_songs as $song) {
-
+		foreach ($this->_songs as $song_id) { 
+			$song = new Song($song_id); 
 			// If we find a good one, stop looking
 		        $getID3 = new getID3();
 		        $id3 = $getID3->analyze($song->file);
@@ -552,22 +572,17 @@ class Album {
 
 	} // get_amazon_art() 
 
-
-	/*!
-		@function get_random_songs
-		@discussion gets a random number, and 
-			a random assortment of songs from this 
-			album
-	*/
+	/**
+	 * get_random_songs
+	 * gets a random number, and a random assortment of songs from this album
+	 */
 	function get_random_songs() { 
 
-		$results = array();
+		$sql = "SELECT `id` FROM `song` WHERE `album`='$this->id' ORDER BY RAND()";
+		$db_results = Dba::query($sql);
 
-		$sql = "SELECT id FROM song WHERE album='$this->id' ORDER BY RAND()";
-		$db_results = mysql_query($sql, dbh());
-
-		while ($r = mysql_fetch_array($db_results)) { 
-			$results[] = $r[0];
+		while ($r = Dba::fetch_row($db_results)) { 
+			$results[] = $r['0'];
 		}
 
 		return $results;

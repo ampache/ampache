@@ -65,7 +65,6 @@ if (Config::get('use_rss')) { ?>
 		</div><!--End topbarleft -->
 		<div id="topbarright">
 			<?php show_box_top(); ?>
-			<a href="http://www.ampache.org/index.php">Ampache v.<?php echo Config::get('version'); ?></a><br />
 			<b><?php echo _('You are currently logged in as') . " " . $GLOBALS['user']->fullname; ?></b>
 			<div id="topbar-playlist"><?php require_once Config::get('prefix') . '/templates/show_playlist_bar.inc.php'; ?></div>
 			<?php show_box_bottom(); ?>

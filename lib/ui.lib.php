@@ -241,7 +241,7 @@ function truncate_with_ellipsis($text, $max=27) {
  */
 function show_footer() {
 
-	require_once Config::get('prefix') . '/templates/footer.inc';
+	require_once Config::get('prefix') . '/templates/footer.inc.php';
 
 } // show_footer
 

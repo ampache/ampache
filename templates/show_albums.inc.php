@@ -32,6 +32,7 @@ $ajax_url = Config::get('ajax_url');
 	<th><?php echo _('Artist'); ?></th>
 	<th><?php echo _('Songs'); ?></th>
 	<th><?php echo _('Year'); ?></th>
+	<th><?php echo _('Actions'); ?></th>
 </tr>
 <?php 
 	/* Foreach through the albums */
@@ -39,14 +40,27 @@ $ajax_url = Config::get('ajax_url');
 		$album = new Album($album_id); 
 		$album->format(); 
 ?>
-<tr class="<?php echo flip_class(); ?>">
-		<td onclick="ajaxPut('<?php echo Config::get('ajax_url'); ?>?action=basket&amp;type=album&amp;id=<?php echo $album->id; ?>');return true;" >
-			<?php echo get_user_icon('add'); ?>
+<tr id="album_<?php echo $album->id; ?>" class="<?php echo flip_class(); ?>">
+		<td>
+			<span onclick="ajaxPut('<?php echo Config::get('ajax_url'); ?>?action=basket&amp;type=album&amp;id=<?php echo $album->id; ?>');return true;" >
+				<?php echo get_user_icon('add'); ?>
+			</span>
+			<span onclick="ajaxPut('<?php echo Config::get('ajax_url'); ?>?action=basket&amp;type=album_random&amp;id=<?php echo $album->id; ?>');return true;" >
+				<?php echo get_user_icon('random'); ?>
+			</span>
 		</td>
-		<td><?php echo $album->f_name; ?></td>
+		<td><?php echo $album->f_name_link; ?></td>
 		<td><?php echo $album->f_artist; ?></td>
-		<td><?php echo $album->songs; ?></td>
+		<td><?php echo $album->song_count; ?></td>
 		<td><?php echo $album->year; ?></td>
+		<td>
+			<a href="<?php echo Config::get('web_path'); ?>/batch.php?action=album&amp;id=<?php echo $album->id; ?>">
+				<?php echo get_user_icon('batch_download'); ?>
+			</a>
+			<span onclick="ajaxPut('<?php echo Config::get('ajax_url'); ?>?action=album&amp;type=edit&amp;id=<?php echo $album->id; ?>');return true;" >
+				<?php echo get_user_icon('edit'); ?>
+			</span>
+		</td>
 </tr>
 <?php } //end foreach ($albums as $album) ?>
 </table>
