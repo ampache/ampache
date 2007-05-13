@@ -143,11 +143,10 @@ function check_php_pcre() {
 
 } // check_php_pcre
 
-/*!
-        @function check_config_values()
-        @discussion checks to make sure that they have at 
-                least set the needed variables
-*/
+/**
+ * check_config_values
+ * checks to make sure that they have at least set the needed variables
+ */
 function check_config_values($conf) { 
 	
 	if (!$conf['database_hostname']) { 
@@ -210,5 +209,51 @@ function check_putenv() {
 	return true;
 
 } // check_putenv
+
+/**
+ * generate_config
+ * This takes an array of results and re-generates the config file
+ * this is used by the installer and by the admin/system page
+ */
+function generate_config($current) { 
+
+	/* Start building the new config file */
+	$distfile = Config::get('prefix') . '/config/ampache.cfg.php.dist';
+        $handle = fopen($distfile,'r');
+        $dist = fread($handle,filesize($distfile));
+        fclose($handle);
+
+        $data = explode("\n",$dist);
+
+        /* Run throught the lines and set our settings */
+        foreach ($data as $line) {
+
+	        /* Attempt to pull out Key */
+	        if (preg_match("/^;?([\w\d]+)\s+=\s+[\"]{1}(.*?)[\"]{1}$/",$line,$matches)
+			|| preg_match("/^;?([\w\d]+)\s+=\s+[\']{1}(.*?)[\']{1}$/", $line, $matches)
+	                || preg_match("/^;?([\w\d]+)\s+=\s+[\'\"]{0}(.*)[\'\"]{0}$/",$line,$matches)) {
+
+			$key    = $matches[1];
+	        	$value  = $matches[2];
+
+	                /* Put in the current value */
+	                if (isset($current[$key]) AND $key != 'config_version') {
+	                	$line = $key . ' = "' . $current[$key] . '"';
+	                        unset($current[$key]);
+			} // if set
+
+	                elseif (isset($array_value[$key])) {
+	                	$line = '';
+	                }
+
+		} // if key
+
+	        $final .= $line . "\n";
+
+	} // end foreach line
+
+	return $final; 
+
+} // generate_config
 
 ?>

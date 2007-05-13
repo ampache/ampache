@@ -18,8 +18,8 @@
  along with this program; if not, write to the Free Software
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
+if (INSTALL != '1') { exit; } 
 ?>
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php echo $htmllang; ?>" lang="<?php echo $htmllang; ?>">
 <head>
@@ -55,9 +55,10 @@
 		</dl>
 		<?php echo _("Step 2 - Creating the Ampache.cfg.php file"); ?><br />
 		<?php echo _("Step 3 - Setup Initial Account"); ?><br />
-		<br /><br />
-		<span class="header2">Insert Ampache Database</span>
+		<br />
 		<?php Error::display('general'); ?>
+		<br />
+		<span class="header2">Insert Ampache Database</span>
 		<form method="post" action="<?php echo $http_type . $_SERVER['HTTP_HOST'] .  $_SERVER['PHP_SELF'] . "?action=create_db&amp;htmllang=$htmllang&amp;charset=$charset"; ?>" enctype="multipart/form-data" >
 <table>
 <tr>
@@ -87,6 +88,10 @@
 <tr>
 	<td class="align"><?php echo _("Ampache Database User Password"); ?></td>
 	<td><input type="password" id="db_password" name="db_password" value="" disabled="disabled" /></td>
+</tr>
+<tr>
+	<td class="align"><?php echo _('Overwrite Existing'); ?></td>
+	<td><input type="checkbox" name="overwrite_db" value="1" /></td>
 </tr>
 <tr>
 	<td>&nbsp;</td>

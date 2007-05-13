@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2006 Ampache.org
+ Copyright (c) 2001 - 2007 Ampache.org
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
@@ -19,17 +19,13 @@
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
-/*!
- @header Show Install Config File
-
-*/
-
+if (INSTALL != '1') { exit; }
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php echo $htmllang; ?>" lang="<?php echo $htmllang; ?>">
 <head>
 <title>Ampache :: For The Love Of Music - Install</title>
-<?php require_once(conf('prefix') . "/templates/install.css"); ?>
+<link rel="stylesheet" href="templates/install.css" type="text/css" media="screen" />
 </head>
 <body>
 <div id="header"> 
@@ -48,7 +44,6 @@
 	</ul>
 <?php echo _("Once you have ensured that you have the above requirements please fill out the information below. You will only be asked for the required config values. If you would like to make changes to your ampache install at a later date simply edit /config/ampache.cfg.php"); ?>
 	</div>
-
 	<div class="content">
 	<?php echo _("Step 1 - Creating and Inserting the Ampache Database"); ?><br />
 	<?php echo _("Step 2 - Creating the ampache.cfg.php file"); ?><br />
@@ -56,22 +51,22 @@
 	<dl>
 	<dd><?php echo _("This step creates your initial Ampache admin account. Once your admin account has been created you will be directed to the login page"); ?></dd>
 	</dl>
-	<br /><br />
+	<?php Error::display('general'); ?>
+	<br />
 	<span class="header2"><?php echo _('Create Admin Account'); ?></span>
-	<?php echo $GLOBALS['error']->print_error('general'); ?>
 	<form method="post" action="<?php echo $GLOBALS['php_self'] . "?action=create_account"; ?>" enctype="multipart/form-data" >
 <table>
 <tr>
-	<td class="align"><?php echo _("Username"); ?></td>
+	<td class="align"><?php echo _('Username'); ?></td>
 	<td><input type="text" name="local_username" value="admin" /></td>
 </tr>
 <tr>
-	<td class="align"><?php echo _("Password"); ?></td>
+	<td class="align"><?php echo _('Password'); ?></td>
 	<td><input type="password" name="local_pass" value="" /></td>
 </tr>
 <tr>
 	<td>&nbsp;</td>
-	<td><input type="submit" value="<?php echo _("Create Account"); ?>" /></td>
+	<td><input type="submit" value="<?php echo _('Create Account'); ?>" /></td>
 </tr>
 	</table>
 	</form>

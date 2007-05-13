@@ -177,17 +177,15 @@ class Update {
 		/* Define the array */
 		$version = array();
 	
-		$version[] = array('version' => '333004','description' => $update_string); 
-
 		$update_string = '- Moved back to ID for user tracking internally.<br />' . 
 				'- Added date to user_vote to allow sorting by vote time.<br />' . 
 				'- Added Random Method and Object Count Preferences.<br />' . 
 				'- Removed some unused tables/fields.<br />' . 
-				'- Added Label, Catalog # and Language to Extended Song Data Table<br />';
+				'- Added Label, Catalog # and Language to Extended Song Data Table.';
 
 		$version[] = array('version' => '340001','description' => $update_string);
 
-		$update_string = '- Added Offset Limit to Preferences and removed from user table';
+		$update_string = '- Added Offset Limit to Preferences and removed from user table.';
 
 		$version[] = array('version' => '340002','description' => $update_string); 
 

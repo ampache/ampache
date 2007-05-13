@@ -20,9 +20,9 @@
 
 */
 
-require('../lib/init.php');
-require_once(conf('prefix') . '/lib/debug.lib.php');
-require_once(conf('prefix') . '/modules/horde/Browser.php');
+require '../lib/init.php';
+require_once Config::get('prefix') . '/lib/debug.lib.php';
+require_once Config::get('prefix') . '/modules/horde/Browser.php';
 
 if (!$GLOBALS['user']->has_access(100)) {
 	access_denied();
@@ -30,83 +30,17 @@ if (!$GLOBALS['user']->has_access(100)) {
 }
 
 
-$action = scrub_in($_REQUEST['action']);
-
 /* Switch on action boys */
-switch ($action) { 
+switch ($_REQUEST['action']) { 
 	/* This re-generates the config file comparing
 	 * /config/ampache.cfg to .cfg.dist
 	 */
 	case 'generate_config':
-		
-		$configfile 	= conf('prefix') . '/config/ampache.cfg.php';
-		$distfile 	= conf('prefix') . '/config/ampache.cfg.php.dist';
-
-		/* Load the current config file */
-		$current 	= read_config($configfile, 0, 0);	
-		
-		/* Start building the new config file */
-		$handle = fopen($distfile,'r'); 
-		$dist = fread($handle,filesize($distfile));
-		fclose($handle);
-		
-		$data = explode("\n",$dist);
-		
-		/* Run throught the lines and set our settings */
-		foreach ($data as $line) { 
-
-			/* Attempt to pull out Key */
-			if (preg_match("/^#?([\w\d]+)\s+=\s+[\"]{1}(.*?)[\"]{1}$/",$line,$matches)
-        	                || preg_match("/^#?([\w\d]+)\s+=\s+[\']{1}(.*?)[\']{1}$/", $line, $matches)
-                	        || preg_match("/^#?([\w\d]+)\s+=\s+[\'\"]{0}(.*)[\'\"]{0}$/",$line,$matches)) {
-
-				$key 	= $matches[1];
-				$value	= $matches[2];
-				
-				/* Check to see if Key on source side is an array */
-				if (is_array($current[$key])) { 
-					/* We need to add all values of this key to the new config file */
-					$line = $key . ' = "';
-					$array_value[$key] = true;
-					foreach ($current[$key] as $sub_value) { 
-						$line .= "$sub_value,";
-					}
-					
-					$line = rtrim($line,','); 
-					$line .= '"';
-
-					unset($current[$key]); 
-				} // is array
-				
-				/* Put in the current value */
-				elseif (isset($current[$key]) AND $key != 'config_version') { 
-					$line = $key . ' = "' . $current[$key] . '"';
-					unset($current[$key]);
-				} // if set 
-
-				elseif (isset($array_value[$key])) { 
-					$line = '';
-				}
-		
-				if (substr($line,0,1) == "#") { 
-					$line = ltrim($line,"#"); 
-					$line = ";" . $line; 
-				}	
-
-			} // if key
-			else { 
-				// Replace # with ;
-				$line = str_replace("#",";",$line); 
-			} 
-
-			$final .= $line . "\n";	
-
-		} // end foreach dist file contents
-
-		/* Set Correct Headers */
-		$browser = new Browser();
-		$browser->downloadHeaders("ampache.cfg.php","text/plain",false,filesize("config/ampache.cfg.php.dist"));
-		echo $final;
+		$current = parse_ini_file(Config::get('prefix') . '/config/ampache.cfg.php');
+		$final = generate_config($current);
+	        $browser = new Browser(); 
+	        $browser->downloadHeaders('ampache.cfg.php','text/plain',false,filesize('config/ampache.cfg.php.dist')); 
+	        echo $final; 
 
 	break;
 	/* Check this version against ampache.org's record */

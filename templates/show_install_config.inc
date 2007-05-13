@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2005 Ampache.org
+ Copyright (c) 2001 - 2007 Ampache.org
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
@@ -19,21 +19,17 @@
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
-/*!
- @header Show Install Config File
-
-*/
-
+if (INSTALL != '1') { exit; } 
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php echo $htmllang; ?>" lang="<?php echo $htmllang; ?>">
 <head>
 <title>Ampache :: For The Love Of Music - Install</title>
-<?php require_once(conf('prefix') . "/templates/install.css"); ?>
+<link rel="stylesheet" href="templates/install.css" type="text/css" media="screen" />
 </head>
 <body>
 <div id="header"> 
-<h1><?php echo _("Ampache Installation"); ?></h1>
+<h1><?php echo _('Ampache Installation'); ?></h1>
 <p>For the love of Music</p>
 </div>
 <div id="text-box">
@@ -55,44 +51,44 @@
 		<dd><?php echo _("This steps takes the basic config values, and first attempts to write them out directly to your webserver. If access is denied it will prompt you to download the config file. Please put the downloaded config file in /config"); ?></dd>
 		</dl>
 		<?php echo _("Step 3 - Setup Initial Account"); ?><br />
-		<br /><br />
-		<span class="header2">Generate Config File</span>
-		<?php echo $GLOBALS['error']->print_error('general'); ?>
+		<?php Error::display('general'); ?>
+		<br />
+		<span class="header2"><?php echo _('Generate Config File'); ?></span>
 		<form method="post" action="<?php echo $_SERVER['PHP_SELF'] . "?action=create_config"; ?>" enctype="multipart/form-data" >
 		<table>
 <tr>
-	<td class="align"><?php echo _("Web Path"); ?></td>
+	<td class="align"><?php echo _('Web Path'); ?></td>
 	<td class="align"><input type="text" name="web_path" value="<?php echo $web_path; ?>" /></td>
 </tr>
 <tr>
-	<td class="align"><?php echo _("Desired Database Name"); ?></td>
+	<td class="align"><?php echo _('Desired Database Name'); ?></td>
 	<td class="align"><input type="text" name="local_db" value="<?php echo scrub_out($_REQUEST['local_db']); ?>" /></td>
 </tr>
 <tr>
-	<td class="align"><?php echo _("MySQL Hostname"); ?></td>
+	<td class="align"><?php echo _('MySQL Hostname'); ?></td>
 	<td class="align"><input type="text" name="local_host" value="<?php echo scrub_out($_REQUEST['local_host']); ?>" /></td>
 </tr>
 <tr>
-	<td class="align"><?php echo _("MySQL Username"); ?></td>
+	<td class="align"><?php echo _('MySQL Username'); ?></td>
 	<td class="align"><input type="text" name="local_username" value="<?php echo scrub_out($_REQUEST['local_username']); ?>" /></td>
 </tr>
 <tr>
-	<td class="align"><?php echo _("MySQL Password"); ?></td>
+	<td class="align"><?php echo _('MySQL Password'); ?></td>
 	<td class="align"><input type="password" name="local_pass" value="" /></td>
 </tr>
 <tr>
 	<td>&nbsp;</td>
-	<td><input type="submit" value="<?php echo _("Write Config"); ?>" /></td>
+	<td><input type="submit" value="<?php echo _('Write Config'); ?>" /></td>
 </tr>
 		</table>
 		</form>
 		<br />
 		<table>
 <tr>
-        <td class="align"><?php echo _("Ampache.cfg.php Exists"); ?></td>
+        <td class="align"><?php echo _('Ampache.cfg.php Exists'); ?></td>
         <td>[ 
         <?php
-                if (!read_config_file($configfile)) {
+                if (!is_readable($configfile)) {
                         $status['read_config'] = 'false';
                         echo " <span class=\"notok\">ERROR</span> "; 
                 }
@@ -106,11 +102,11 @@
 </tr>
 <tr>
         <td class="align">
-                <?php echo _("Ampache.cfg.php Configured?"); ?>
+                <?php echo _('Ampache.cfg.php Configured?'); ?>
         </td>
         <td>[ 
         <?php
-                $results = read_config($configfile, 0, 0);
+                $results = @parse_ini_file($configfile);
                 if (!check_config_values($results)) { 
                         $status['parse_config'] = 'false';
                         echo " <span class=\"notok\">ERROR</span> ";
@@ -133,7 +129,7 @@
 		</table>
 		<br />
 		<form method="post" action="<?php echo $GLOBALS['php_self'] . "?action=show_create_account&amp;htmllang=$htmllang&amp;charset=$charset"; ?>" enctype="multipart/form-data">
-		<input type="submit" value="Continue to Step 3" />
+		<input type="submit" value="<?php echo _('Continue to Step 3'); ?>" />
 		</form>
 	</div>
 	<div id="bottom">

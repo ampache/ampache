@@ -44,7 +44,10 @@ body {
     text-align: left;
     font-size: smaller;
 }
-
+.error { 
+	color: #ff0033; 
+	font-weight: bold; 
+} 
 .notify {
     border: 1px solid #cccccc;
 	background-color: #f4f4f4;

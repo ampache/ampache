@@ -585,26 +585,26 @@ class User {
 	 * create
 	 * inserts a new user into ampache
 	 */
-	function create($username, $fullname, $email, $password, $access) { 
+	public static function create($username, $fullname, $email, $password, $access) { 
 
 		/* Lets clean up the fields... */
-		$username	= sql_escape($username);
-		$fullname	= sql_escape($fullname);
-		$email		= sql_escape($email);
-		$access		= sql_escape($access);
+		$username	= Dba::escape($username);
+		$fullname	= Dba::escape($fullname);
+		$email		= Dba::escape($email);
+		$access		= Dba::escape($access);
 	
 		/* Now Insert this new user */
-		$sql = "INSERT INTO user (username, fullname, email, password, access, create_date) VALUES" .
+		$sql = "INSERT INTO `user` (`username`, `fullname`, `email`, `password`, `access`, `create_date`) VALUES" .
 			" ('$username','$fullname','$email',PASSWORD('$password'),'$access','" . time() ."')";
-		$db_results = mysql_query($sql, dbh());
+		$db_results = Dba::query($sql);
 		
 		if (!$db_results) { return false; }
 
 		// Get the insert_id
-		$insert_id = mysql_insert_id(dbh()); 
+		$insert_id = Dba::insert_id(); 
 
 		/* Populates any missing preferences, in this case all of them */
-		$this->fix_preferences($insert_id);
+		self::fix_preferences($insert_id);
 
 		return $insert_id;
 
