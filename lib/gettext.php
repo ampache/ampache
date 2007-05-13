@@ -49,5 +49,19 @@ function load_gettext() {
 
 } // load_gettext
 
+/**
+ * __
+ * This function does the same as _ on the supplied
+ * string, but also does a str_replace on the supplied
+ * vars
+ */
+function __($string,$subject,$replace) {
+
+        $translated = _($string);
+        $result = str_replace($subject,$replace,$translated);
+        return $result;
+
+} // __
+
 
 ?>

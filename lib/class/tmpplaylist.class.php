@@ -74,6 +74,30 @@ class tmpPlaylist {
 	} // _get_info
 
 	/**
+	 * get_from_session
+	 * This returns a playlist object based on the session that is passed to us
+	 * this is used by the load_playlist on user for the most part
+	 */
+	public static function get_from_session($session_id) { 
+
+		$session_id = Dba::escape($session_id); 
+
+		$sql = "SELECT `id` FROM `tmp_playlist` WHERE `session`='$session_id'"; 
+		$db_results = Dba::query($sql); 
+
+		$results = Dba::fetch_row($db_results); 
+		
+		if (!$results['0']) { 
+			$results['0'] = tmpPlaylist::create($session_id,'user','song','0'); 
+		} 
+
+		$playlist = new tmpPlaylist($results['0']); 
+
+		return $playlist; 
+
+	} // get_from_session
+
+	/**
 	 * get_items
 	 * This returns an array of all object_ids currently in this tmpPlaylist
 	 */
@@ -162,6 +186,21 @@ class tmpPlaylist {
 		return $link;
 
 	} // get_vote_url
+
+	/**
+	 * count_items
+	 * This returns a count of the total number of tracks that are in this tmp playlist
+	 */
+	public function count_items() { 
+
+		$sql = "SELECT COUNT(`id`) FROM `tmp_playlist_data` WHERE `tmp_playlist_data`.`tmp_playlist`='" . $this->id . "'"; 
+		$db_results = Dba::query($sql); 
+
+		$results = Dba::fetch_row($db_results); 
+
+		return $results['0']; 
+
+	} // count_items
 
 	/** 
 	 * create

@@ -225,6 +225,9 @@ else {
 // Load the Preferences from the database
 init_preferences();
 
+// We need to create the tmp playlist for our user
+$GLOBALS['user']->load_playlist(); 
+
 /* Add in some variables for ajax done here because we need the user */
 Config::set('ajax_url',Config::get('web_path') . '/server/ajax.server.php',1);
 

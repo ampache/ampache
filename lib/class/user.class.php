@@ -83,6 +83,20 @@ class User {
 	} // _get_info
 
 	/**
+	 * load_playlist
+	 * This is called once per page load it makes sure that this session
+	 * has a tmp_playlist, creating it if it doesn't, then sets $this->playlist
+	 * as a tmp_playlist object that can be fiddled with later on
+	 */
+	public function load_playlist() { 
+
+		$session_id = session_id(); 
+
+		$this->playlist = tmpPlaylist::get_from_session($session_id); 
+
+	} // load_playlist
+
+	/**
 	 * get_from_username
 	 * This returns a built user from a username. This is a 
 	 * static function so it doesn't require an instance

@@ -64,12 +64,15 @@ if (Config::get('use_rss')) { ?>
 		</a>
 		</div><!--End topbarleft -->
 		<div id="topbarright">
+			<?php show_box_top(); ?>
 			<a href="http://www.ampache.org/index.php">Ampache v.<?php echo Config::get('version'); ?></a><br />
 			<b><?php echo _('You are currently logged in as') . " " . $GLOBALS['user']->fullname; ?></b>
+			<div id="topbar-playlist"><?php require_once Config::get('prefix') . '/templates/show_playlist_bar.inc.php'; ?></div>
+			<?php show_box_bottom(); ?>
 		</div> <!-- End topbarright -->
 	</div><!-- End topbar -->
 	<div id="sidebar"><!-- This is the sidebar -->
-		<?php require_once(Config::get('prefix') . '/templates/sidebar.inc.php'); ?>
+		<?php require_once Config::get('prefix') . '/templates/sidebar.inc.php'; ?>
 	</div><!-- End sidebar -->
 	<div id="content">
 <!-- I hate IE... --> 
