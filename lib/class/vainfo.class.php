@@ -55,7 +55,7 @@ class vainfo {
 			$this->encoding = $encoding;
 		}
 		else { 
-			$this->encoding = conf('site_charset');
+			$this->encoding = Config::get('site_charset');
 		}
 
 		/* These are needed for the filename mojo */

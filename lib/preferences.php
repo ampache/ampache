@@ -422,8 +422,8 @@ function insert_preference($name,$description,$default,$level,$type,$catagory) {
 function init_preferences() {
 
         /* Get Global Preferences */
-        $sql = "SELECT preferences.name,user_preference.value FROM preferences,user_preference WHERE user_preference.user='-1' " .
-                " AND user_preference.preference = preferences.id AND preferences.catagory='system'";
+        $sql = "SELECT preference.name,user_preference.value FROM preference,user_preference WHERE user_preference.user='-1' " .
+                " AND user_preference.preference = preference.id AND preference.catagory='system'";
         $db_results = Dba::query($sql);
 
         while ($r = Dba::fetch_assoc($db_results)) {
@@ -433,12 +433,12 @@ function init_preferences() {
 
         /* Now we need to allow the user to override some stuff that's been set by the above */
         $user_id = '-1';
-        if ($GLOBALS['user']->id) {
+        if ($GLOBALS['user']->username) {
                 $user_id = Dba::escape($GLOBALS['user']->id);
         }
 
-        $sql = "SELECT preferences.name,user_preference.value FROM preferences,user_preference WHERE user_preference.user='$user_id' " .
-                " AND user_preference.preference = preferences.id AND preferences.catagory != 'system'";
+        $sql = "SELECT preference.name,user_preference.value FROM preference,user_preference WHERE user_preference.user='$user_id' " .
+                " AND user_preference.preference = preference.id AND preference.catagory != 'system'";
         $db_results = Dba::query($sql);
 
         while ($r = Dba::fetch_assoc($db_results)) {

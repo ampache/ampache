@@ -271,6 +271,30 @@ switch ($action) {
 		ob_end_clean(); 
 		echo xml_from_array($results); 
 	break;
+	case 'catalog': 
+		switch ($_REQUEST['type']) { 
+			case 'add_files': 
+				$sql = "SELECT * FROM `update_info` WHERE `key` LIKE 'catalog_add_%'"; 
+				$template = '/templates/show_run_add_catalog.inc.php'; 
+			break;
+			case 'update_files': 
+			case 'clean_files': 
+			default:
+			break;
+		} // end switch on type
+
+		$db_results = Dba::query($sql); 
+
+		while ($data = Dba::fetch_assoc($db_results)) { 
+			${$data['key']} = $data['value']; 
+		} 
+
+		ob_start(); 
+		require_once Config::get('prefix') . $template; 
+		$results['catalog_update'] = ob_get_contents(); 
+		ob_end_clean(); 
+		echo xml_from_array($results); 
+	break;
 	default:
 		$results['3514'] = '0x1';
 		echo xml_from_array($results); 

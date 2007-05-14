@@ -1,8 +1,10 @@
-<h4><?php echo _('Browse By'); ?></h4>
-<select name="type">
-	<option value="song"><?php echo _('Song Title'); ?></option>
-	<option value="album"><?php echo _('Albums'); ?></option>
-	<option value="artist"><?php echo _('Artist'); ?></option>
-	<option value="genre"><?php echo _('Genre'); ?></option>
-</select>
+<h4><?php echo _('Catalogs'); ?></h4>
+<a href="<?php echo $web_path; ?>/admin/catalog.php?action=show_add_catalog"><?php echo _('Add a Catalog'); ?></a>
 <hr />
+<h4><?php echo _('Other Tools'); ?></h4>
+<a href="<?php echo $web_path; ?>/admin/catalog.php?action=clear_now_playing"><?php echo _('Clear Now Playing'); ?></a>
+<a href="<?php echo $web_path; ?>/admin/catalog.php?action=clear_stats"><?php echo _('Clear Catalog Stats'); ?></a>
+<a href="<?php echo $web_path; ?>/admin/catalog.php?action=gather_album_art"><?php echo _('Gather Album Art'); ?></a>
+<hr />
+
+

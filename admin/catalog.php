@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2006 Ampache.org
+ Copyright (c) 2001 - 2007 Ampache.org
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
@@ -20,23 +20,17 @@
 
 */
 
-
-/*!
-	@header Admin Catalog
-	This document handles actions for catalog creation and passes them off to the catalog class
-*/
-
-require('../lib/init.php');
+require '../lib/init.php';
 
 if (!$GLOBALS['user']->has_access(100)) {
 	access_denied();
+	exit; 
 }
 
-
-/* Set any vars we are going to need */
+// We'll need this
 $catalog = new Catalog($_REQUEST['catalog_id']);
 
-show_template('header');
+require_once Config::get('prefix') . '/templates/header.inc.php'; 
 
 /* Big switch statement to handle various actions */
 switch ($_REQUEST['action']) {
@@ -169,39 +163,45 @@ switch ($_REQUEST['action']) {
 		$body	= '';
 		show_confirmation($title,$body,$url);
 	break;
-	// FIXME!
 	case 'add_catalog':
 		/* Wah Demo! */
-		if (conf('demo_mode')) { break; }
+		if (Config::get('demo_mode')) { break; }
+
+		if (!strlen($_REQUEST['path']) || !strlen($_REQUEST['name'])) { 
+			Error::add('general','Error Name and path not specified'); 
+		} 
+
+		if (substr($_REQUEST['path'],0,7) != 'http://' && $_REQUEST['type'] == 'remote') { 
+			Error::add('general','Error Remote selected, but path is not a URL'); 
+		} 
 		
-		if ($_REQUEST['path'] AND $_REQUEST['name']) { 
-			/* Throw all of the album art types into an array */
-			$art = array('id3'=>$_REQUEST['art_id3v2'],'amazon'=>$_REQUEST['art_amazon'],'folder'=>$_REQUEST['art_folder']);
+		if ($_REQUEST['type'] == 'remote' && !strlen($_REQUEST['key'])) { 
+			Error::add('general','Error Remote Catalog specified, but no key provided'); 
+		} 
 
-			/* Enclose it in a purrty box! */
-			echo "<div class=\"confirmation-box\">";
+		// If an error hasn't occured
+		if (!Error::$state) { 
+
+			$catalog_id = Catalog::create($_REQUEST); 
+
+			if (!$catalog_id) { 
+				require Config::get('prefix') . '/templates/show_add_catalog.inc.php'; 
+				break; 
+			} 
+
+			$catalog = new Catalog($catalog_id); 
 			
-			/* Create the Catalog */
-			$catalog->new_catalog($_REQUEST['path'],
-					$_REQUEST['name'],
-					$_REQUEST['key'],
-					$_REQUEST['rename_pattern'],
-					$_REQUEST['sort_pattern'],
-					$_REQUEST['type'],
-					$_REQUEST['gather_art'],
-					$_REQUEST['parse_m3u'],
-					$art);
+			// Run our initial add
+			$catalog->run_add($_REQUEST); 
 
-			echo "</div>\n";
-
-			$url = conf('web_path') . '/admin/index.php';
-			$title = _('Catalog Created');
-			$body  = _('Catalog Created and Songs Indexed');
-			show_confirmation($title,$body,$url);
+			show_box_top(); 
+			echo "<h2>" .  _('Catalog Created') . "</h2>";
+			Error::display('general'); 
+			Error::display('catalog_add'); 
+			show_box_bottom(); 
 		}
 		else {
-			$error = "Please complete the form.";
-			include(conf('prefix') . '/templates/show_add_catalog.inc.php');
+			require Config::get('prefix') . '/templates/show_add_catalog.inc.php';
 		}
 	break;
 	case 'clear_stats':
@@ -214,7 +214,7 @@ switch ($_REQUEST['action']) {
 		show_confirmation($title,$body,$url);
 	break;
 	case 'show_add_catalog':
-		include(conf('prefix') . '/templates/show_add_catalog.inc.php');
+		require Config::get('prefix') . '/templates/show_add_catalog.inc.php';
 	break;
 	case 'clear_now_playing':
 	        if (conf('demo_mode')) { break; }

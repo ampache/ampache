@@ -78,6 +78,8 @@ function get_random_albums($count='') {
 
 	$total = count($albums); 
 
+	if ($total == '0') { return array(); } 
+
 	for ($i=0; $i <= $count; $i++) { 
 		$record = rand(0,$total); 
 		if (isset($results[$record]) || !$albums[$record]) { $i--; } 

@@ -77,54 +77,6 @@ function get_theme($name) {
 } // get_theme
 
 /*!
-	@function set_theme
-	@discussion Resets all of the colors for this theme 
-*/
-function set_theme_colors($theme_name,$user_id) { 
-
-	if (make_bool($user_id)) { 
-		$user_sql = "`user`='$user_id' AND";
-	}
-
-
-	/* We assume if we've made it this far we've got the right to do it 
-	   This could be dangerous but eah!
-	*/
-	$theme = get_theme($theme_name);	
-	$GLOBALS['theme'] = $theme;
-	if (!count($theme)) { return false; }
-
-	foreach ($theme as $key=>$color) { 
-
-		$sql = "SELECT id FROM preferences WHERE name='" . sql_escape($key) . "'";
-		$db_results = mysql_query($sql, dbh());
-
-		$results = mysql_fetch_array($db_results);
-		// Quick hack this needs to be fixed
-		if ($results) { 
-			$sql = "UPDATE user_preference SET `value`='" . sql_escape($color) . "' WHERE $user_sql " . 
-				" preference='" . $results[0] . "'";
-			$db_results = mysql_query($sql, dbh());
-		}
-
-	} // theme colors
-
-} // set_theme_colors
-
-/*!
-	@function set_theme
-	@discussion this sets the needed vars for the theme
-*/
-function set_theme() { 
-
-	if (strlen(Config::get('theme_name')) > 0) { 
-		$theme_path = "/themes/" . Config::get('theme_name');
-		Config::set(array('theme_path'=>$theme_path),1);
-	}
-
-} // set_theme
-
-/*!
 	@function get_theme_author
 	@discussion returns the author of this theme
 */

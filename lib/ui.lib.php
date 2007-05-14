@@ -493,13 +493,12 @@ function show_local_catalog_info() {
 	/* Before we display anything make sure that they have a catalog */
 	$query = "SELECT * FROM catalog";
 	$db_results = Dba::query($query);
-
+	
 	// Make sure we have something to display
-	if (!Dba::num_rows($db_results)) {
+	if (Dba::num_rows($db_results) < 1) {
 		show_box_top(); 	
-		$items[] = "<span align=\"center\" class=\"error\">" . _('No Catalogs Found!') . "</span><br />";
-		$items[] = "<a href=\"" . Config::get('web_path') . "/admin/catalog.php?action=show_add_catalog\">" ._('Add a Catalog') . "</a>";
-		show_info_box('','catalog',$items);
+		echo "<span align=\"center\" class=\"error\">" . _('No Catalogs Found!') . "</span><br />";
+		echo "<a href=\"" . Config::get('web_path') . "/admin/catalog.php?action=show_add_catalog\">" ._('Add a Catalog') . "</a>";
 		show_box_bottom(); 
 		return false;
 	}
@@ -1196,10 +1195,12 @@ function show_box_bottom() {
  * this function takes a name and a returns either a text representation
  * or an <img /> tag 
  */
-function get_user_icon($name,$hover_name='') { 
+function get_user_icon($name,$hover_name='',$title='') { 
 	
 	/* Because we do a lot of calls cache the URLs */
 	static $url_cache = array(); 
+
+	if (!$title) { $title = $name; } 
 
 	if (isset($url_cache[$name])) { 
 		$img_url = $url_cache[$name]; 
@@ -1239,7 +1240,7 @@ function get_user_icon($name,$hover_name='') {
 
 	} // end if not cached
 
-	$string = "<img style=\"cursor: pointer;\" src=\"$img_url\" border=\"0\" alt=\"" . ucfirst($name) . "\" title=\"" . ucfirst($name) . "\" $hov_txt/>";
+	$string = "<img style=\"cursor: pointer;\" src=\"$img_url\" border=\"0\" alt=\"" . ucfirst($title) . "\" title=\"" . ucfirst($title) . "\" $hov_txt/>";
 
 	return $string;
 

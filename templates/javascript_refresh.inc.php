@@ -23,7 +23,7 @@
 <script type="text/javascript" language="javascript">
 <!-- Begin
 // Set refresh interval (in seconds)
-var refreshinterval=<?php echo Config::get('refresh_limit'); ?>;
+var refreshinterval=<?php echo $refresh_limit ?>;
 
 function doLoad()
 {
@@ -42,7 +42,7 @@ function refresh()
 }
 
 // start with page-load
-window.onload=doLoad;
+doLoad;
 // End -->
 </script>
 

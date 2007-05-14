@@ -621,6 +621,9 @@ class Update {
                         "VALUES ('playlist_method','50','Playlist Method','5','string','streaming')";
                 $db_results = Dba::query($sql);
 
+		$sql = "ALTER TABLE `update_info` ADD UNIQUE (`key`)"; 
+		$db_results = Dba::query($sql); 
+
                 $sql = "SELECT `id` FROM `user`";
                 $db_results = Dba::query($sql);
 

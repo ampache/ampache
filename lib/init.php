@@ -193,7 +193,6 @@ if (NO_SESSION != '1' AND Config::get('use_auth')) {
 	if (!$GLOBALS['user']->id AND !Config::get('demo_mode')) { logout(); exit; } 
 
 	/* Load preferences and theme */
-	set_theme();	
 	$GLOBALS['user']->update_last_seen();
 }
 elseif (!Config::get('use_auth')) { 
@@ -210,7 +209,6 @@ elseif (!Config::get('use_auth')) {
 	$GLOBALS['user']->username 	= '-1';
 	$GLOBALS['user']->access	= $auth['access'];
 	$_SESSION['userdata']['username'] 	= $auth['username'];
-	set_theme();
 }
 // If Auth, but no session is set
 else { 

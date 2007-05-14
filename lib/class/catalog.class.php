@@ -45,12 +45,11 @@ class Catalog {
 	public $genres	= array();
 
 	/**
-	 * Catalog
+	 * Constructor
 	 * Catalog class constructor, pulls catalog information
-	 * @catagory Catalog
-	 * @param $catalog_id 	The ID of the catalog you want to build information from
+	 * $catalog_id 	The ID of the catalog you want to build information from
 	 */
-	function Catalog($catalog_id = 0) {
+	public function __construct($catalog_id = '') {
 
 		if (!$catalog_id) { return false; } 
 
@@ -127,15 +126,87 @@ class Catalog {
 		$results 		= self::count_songs($catalog_id); 
 		$results	 	= array_merge(self::count_users($catalog_id),$results); 
 
-//		$results->songs 	= $this->count_songs($catalog_id);
-//		$results->albums 	= $this->count_albums($catalog_id);
-//		$results->artists	= $this->count_artists($catalog_id);
-//		$results->size		= $this->get_song_size($catalog_id);
-//		$results->time		= $this->get_song_time($catalog_id);
-
 		return $results; 
 
 	} // get_stats
+
+	/**
+	 * create
+	 * This creates a new catalog entry and then returns the insert id
+	 * it checks to make sure this path is not already used before creating
+	 * the catalog
+	 */
+	public static function create($data) { 
+
+		$path = Dba::escape($data['path']); 
+
+		// Make sure the path is readable/exists
+		if (!is_readable($data['path'])) { 
+			Error::add('general','Error: ' . scrub_out($data['path']) . ' is not readable or does not exist'); 
+			return false; 
+		} 
+
+		// Make sure this path isn't already in use by an existing catalog
+		$sql = "SELECT `id` FROM `catalog` WHERE `path`='$path'"; 
+		$db_results = Dba::query($sql); 
+
+		if (Dba::num_rows($db_results)) { 
+			Error::add('general','Error: Catalog with ' . $path . ' already exists'); 
+			return false; 
+		} 
+
+		$name		= Dba::escape($data['name']); 
+		$catalog_type	= Dba::escape($data['catalog_type']); 
+		$rename_pattern	= Dba::escape($data['rename_pattern']); 
+		$sort_pattern	= Dba::escape($data['sort_pattern']); 
+		$gather_types	= Dba::escape($data['gather_types']); 
+		$key		= Dba::escape($data['key']); 
+
+		// Ok we're good to go ahead and insert this record
+		$sql = "INSERT INTO `catalog` (`name`,`path`,`catalog_type`,`rename_pattern`,`sort_pattern`,`gather_types`,`key`) " . 
+			"VALUES ('$name','$path','$catalog_type','$rename_pattern','$sort_pattern','$gather_types','$key')";
+		$db_results = Dba::query($sql); 
+
+		$insert_id = Dba::insert_id(); 
+
+		return $insert_id; 
+
+	} // create
+
+	/**
+	 * run_add
+	 * This runs the add to catalog function 
+	 * it includes the javascript refresh stuff and then starts rolling 
+	 * throught the path for this catalog
+	 */
+	public function run_add($options) { 
+
+		// Catalog Add start
+		$start_time = time(); 
+
+		// Setup the 10 sec ajax request hotness
+                $refresh_limit = 10;
+                $ajax_url = Config::get('ajax_url') . '?action=catalog&type=add_files';  
+                /* Can't have the &amp; stuff in the Javascript */
+                $ajax_url = str_replace("&amp;","&",$ajax_url);
+                require_once Config::get('prefix') . '/templates/javascript_refresh.inc.php';
+
+		show_box_top(); 
+		echo _('Starting New Song Search on') . " <strong>[$this->name]</strong> " . _('catalog') . "<br />";
+		echo "<div id=\"catalog_update\">";
+		require_once Config::get('prefix') . '/templates/show_run_add_catalog.inc.php'; 
+		echo "</div>"; 
+		show_box_bottom(); 
+
+		// Prevent the script from timing out and flush what we've got
+		set_time_limit(0);
+		flush(); 	
+
+		$this->add_files($this->path,$options); 
+
+		return true;  
+
+	} // run_add
 
 	/**
 	 * count_songs
@@ -200,71 +271,6 @@ class Catalog {
 
 	} // count_users
 
-	/*!
-		@function get_song_size
-		@discussion Get the total size of songs in all or a specific catalog
-		@param $catalog_id If set tells us to pick a specific catalog
-	*/
-	function get_song_size($catalog_id=0) {
-
-		$sql = "SELECT SUM(song.size) FROM song";
-		if ($catalog_id) {
-			$sql .= " WHERE catalog='$catalog_id'";
-		}
-
-		$db_results = mysql_query($sql, dbh());
-
-		$results = mysql_fetch_field($db_results);
-
-		/* Convert it into MB */
-		$results = ($results / 1048576);
-
-		return $results;
-
-	} // get_song_size
-
-
-	/*!
-		@function count_artists
-		@discussion Count the number of artists in all catalogs or in a specific one
-		@param $catalog_id If set tells us to pick a specific catalog
-	*/
-	function count_artists($catalog_id=0) {
-
-		$sql = "SELECT DISTINCT(song.artist) FROM song";
-		if ($catalog_id) {
-			$sql .= " WHERE catalog='$catalog_id'";
-		}
-
-		$db_results = mysql_query($sql,dbh());
-
-		$results = mysql_num_rows($db_results);
-
-		return $results;
-
-	} // count_artists
-
-
-	/*!
-		@function count_albums
-		@discussion Count the number of albums in all catalogs or in a specific one
-		@param $catalog_id If set tells us to pick a specific catalog
-	*/
-	function count_albums($catalog_id=0) {
-
-		$sql = "SELECT DISTINCT(song.album) FROM song";
-		if ($catalog_id) {
-			$sql .=" WHERE catalog='$catalog_id'";
-		}
-
-		$db_results = mysql_query($sql, dbh());
-
-		$results = mysql_num_rows($db_results);
-
-		return $results;
-
-	} // count_albums
-
 
 	/*!
 		@function add_file
@@ -288,17 +294,15 @@ class Catalog {
 	} // add_file
 
 
-	/*!
-		@function add_files
-		@discussion  Recurses throught $this->path and pulls out all mp3s and returns the full
-			     path in an array. Passes gather_type to determin if we need to check id3
-			     information against the db.
-		@param $path 		The root path you want to start grabing files from
-		@param $gather_type=0   Determins if we need to check the id3 tags of the file or not
-		@param $parse_m3u	Tells Ampache to look at m3us
+	/**
+	 * add_files
+	 * Recurses throught $this->path and pulls out all mp3s and returns the full
+	 * path in an array. Passes gather_type to determin if we need to check id3
+	 * information against the db.
 	 */
-	function add_files($path,$gather_type='',$parse_m3u=0,$verbose=1) {
+	public function add_files($path,$options) {
 
+		// Correctly detect the slash we need to use here
 		if (strstr($path,"/")) { 
 			$slash_type = '/';
 		} 
@@ -306,15 +310,12 @@ class Catalog {
 			$slash_type = '\\';
 		} 
 
-		// Prevent the script from timing out
-		set_time_limit(0);
-			
 		/* Open up the directory */
 		$handle = opendir($path);
 
 		if (!is_resource($handle)) {
                         debug_event('read',"Unable to Open $path",'5','ampache-catalog'); 
-			echo "<font class=\"error\">" . _("Error: Unable to open") . " $path</font><br />\n";
+			Error::add('catalog_add',_('Error: Unable to open') . ' ' . $path); 
 		}
 
 		/* Recurse through this dir and create the files array */
@@ -328,7 +329,7 @@ class Catalog {
 			/* Change the dir so is_dir works correctly */
 			if (!chdir($path)) {
 				debug_event('read',"Unable to chdir $path",'2','ampache-catalog'); 
-				echo "<font class=\"error\">" . _('Error: Unable to change to directory') . " $path</font><br />\n";
+				Error::add('catalog_add',_('Error: Unable to change to directory') . ' ' . $path); 
 			}
 
 			/* Create the new path */
@@ -338,7 +339,7 @@ class Catalog {
 			// if it was set the day before
 			unset($failed_check);
 				
-			if (conf('no_symlinks')) {
+			if (Config::get('no_symlinks')) {
 				if (is_link($full_file)) { 
 					debug_event('read',"Skipping Symbolic Link $path",'5','ampache-catalog'); 
 					continue;
@@ -347,7 +348,7 @@ class Catalog {
 
 			/* If it's a dir run this function again! */
 			if (is_dir($full_file)) {
-				$this->add_files($full_file,$gather_type,$parse_m3u);
+				$this->add_files($full_file,$options);
 				/* Skip to the next file */
 				continue;
 			} //it's a directory
@@ -357,8 +358,8 @@ class Catalog {
 			 * to detect if it's a audio file for now the source for
 			 * this is in the /modules/init.php file
 			 */
-			$pattern = "/\.(" . conf('catalog_file_pattern');
-			if ($parse_m3u) { 
+			$pattern = "/\.(" . Config::get('catalog_file_pattern');
+			if ($options['parse_m3u']) { 
 				$pattern .= "|m3u)$/i";
 			}
 			else { 
@@ -368,69 +369,55 @@ class Catalog {
 			/* see if this is a valid audio file or playlist file */
 			if (preg_match($pattern ,$file)) {
 
-				/* Once we're sure that it is a valid file 
-				 * we need to check to see if it's new, only
-				 * if we're doing a fast add
-				 */
-				if ($gather_type == 'fast_add') { 
-					$file_time = filemtime($full_file);
-					if ($file_time < $this->last_add) {
-						debug_event('fast_add',"Skipping $full_file because last add is newer then file mod time",'5','ampache-catalog'); 
-						continue;
-					} 
-				} // if fast_add
-			
 				/* Now that we're sure its a file get filesize  */
 				$file_size = @filesize($full_file);
 
 				if (!$file_size) { 
 					debug_event('read',"Unable to get filesize for $full_file",'2','ampache-catalog'); 
-					echo "<span class=\"error\">" . _("Error: Unable to get filesize for") . " $full_file</span><br />";
+					Error::add('catalog_add',_('Error: Unable to get filesize for') . ' ' . $full_file); 
 				} // file_size check
+
+				if (!is_readable($full_file)) { 
+					// not readable, warn user
+		                        debug_event('read',"$full_file is not readable by ampache",'2','ampache-catalog'); 
+					Error::add('catalog_add',"$full_file " . _('is not readable by ampache'));
+					continue; 
+				} 
 		
-				if (is_readable($full_file)) {
-
-					if (substr($file,-3,3) == 'm3u' AND $parse_m3u > 0) { 
-						$this->_playlists[] = $full_file;
-					} // if it's an m3u
-
-					else {
-						
-						/* see if the current song is in the catalog */
-						$found = $this->check_local_mp3($full_file);
-
-						/* If not found then insert, gets id3 information
-						 * and then inserts it into the database
-						 */
-						if (!$found) {
-							$this->insert_local_song($full_file,$file_size);
-
-							/* Stupid little cutesie thing */
-							$this->count++;
-							if ( !($this->count%conf('catalog_echo_count')) AND $verbose) {
-							        echo "<script type=\"text/javascript\">";
-								echo "update_txt('" . $this->count . "','count_add_" . $this->id ."');";
-								echo "</script>\n";
-								flush();
-							} //echos song count
-
-						} // not found
-
-						} // if it's not an m3u
-						
-					} // is readable
-					else {
-						// not readable, warn user
-			                        debug_event('read',"$full_file is not readable by ampache",'2','ampache-catalog'); 
-						echo "$full_file " . _('is not readable by ampache') . ".<br />\n";
-
-					}
-
-				} //if it's a mp3 and is greater than 0 bytes
+				if (substr($file,-3,3) == 'm3u' AND $parse_m3u > 0) { 
+					$this->_playlists[] = $full_file;
+				} // if it's an m3u
 
 				else {
-					debug_event('read',"$full_file ignored, non audio file or 0 bytes",'5','ampache-catalog');
-				} // else not an audio file or 0 size
+					
+					/* see if the current song is in the catalog */
+					$found = $this->check_local_mp3($full_file);
+
+					/* If not found then insert, gets id3 information
+					 * and then inserts it into the database
+					 */
+					if (!$found) {
+						$this->insert_local_song($full_file,$file_size);
+
+						/* Stupid little cutesie thing */
+						$this->count++;
+						if ( !($this->count%Config::get('catalog_echo_count'))) {
+							$sql = "REPLACE INTO `update_info` (`key`,`value`) " . 
+								"VALUES('catalog_add_found','$this->count')"; 
+							$db_results = Dba::query($sql); 
+							$sql = "REPLACE INTO `update_info` (`key`,`value`) " . 
+								"VALUES('catalog_add_directory','" . Dba::escape($path) . "')"; 
+							$db_results = Dba::query($sql); 
+						} // update our current state
+
+					} // not found
+
+				} // if it's not an m3u
+						
+			} //if it matches the pattern
+			else {
+				debug_event('read',"$full_file ignored, non audio file or 0 bytes",'5','ampache-catalog');
+			} // else not an audio file
 
 		} // end while reading directory 
 
@@ -439,7 +426,7 @@ class Catalog {
 		/* Close the dir handle */
 		@closedir($handle);
 
-	} //add_files
+	} // add_files
 
 	/*!
 		@function get_albums
@@ -1651,75 +1638,18 @@ class Catalog {
 
 	} //verify_catalog
 
-
-	/*!
-		@function create_catalog_entry
-		@discussion Creates a new catalog from path and type
-		@param $path The root path for this catalog
-		@param $name The name of the new catalog
-	*/
-	function create_catalog_entry($path,$name,$key=0,$ren=0,$sort=0, $type='') {
-
-		if (!$type) { $type = 'local'; } 
-
-		// Current time
-		$date = time();
-
-		$path = sql_escape($path);
-		$name = sql_escape($name);
-		$key  = sql_escape($key);
-		$ren  = sql_escape($ren);
-		$sort = sql_escape($sort);
-		$type = sql_escape($type);
-
-		if($ren && $sort) {
-			$sql = "INSERT INTO catalog (path,name,last_update,`key`,rename_pattern,sort_pattern,catalog_type) " .
-				" VALUES ('$path','$name','$date', '$key', '$ren', '$sort','$type')";
-		}
-		else {
-			$sql = "INSERT INTO catalog (path,name,`key`,`catalog_type`,last_update) VALUES ('$path','$name','$key','$type','$date')";
-		}
-		
-		$db_results = mysql_query($sql, dbh());
-		$catalog_id = mysql_insert_id(dbh());
-
-	        return $catalog_id;
-
-	} //create_catalog_entry
-
-
-	/*!
-		@function check_catalog
-		@discussion  Checks for the $path already in the catalog table
-		@param $path The root path for the catalog we are checking
-	*/
-	function check_catalog($path) {
-		
-		$path = sql_escape($path);
-
-		$sql = "SELECT id FROM catalog WHERE path='$path'";
-		$db_results = mysql_query($sql, dbh());
-
-		$results = mysql_fetch_object($db_results);
-
-		return $results->id;
-
-	} //check_catalog
-
-
-	/*!
-		@function check_artist
-		@discussion Takes $artist checks if there then return id else insert and return id
-		@param $artist The name of the artist
-	*/
-	function check_artist($artist) {
+	/**
+	 * check_artist
+	 * $artist checks if there then return id else insert and return id
+	 */
+	public function check_artist($artist) {
 
 		// Only get the var ones.. less func calls
-		$cache_limit = conf('artist_cache_limit');
+		$cache_limit = Config::get('artist_cache_limit');
 
 		/* Clean up the artist */
 		$artist = trim($artist);
-		$artist = sql_escape($artist);
+		$artist = Dba::escape($artist);
 
 
 		/* Ohh no the artist has lost it's mojo! */
@@ -1741,12 +1671,12 @@ class Catalog {
 		} // if we've seen this artist before
 
 		/* Setup the checking sql statement */
-		$sql = "SELECT id FROM artist WHERE name LIKE '$artist' ";
-		$db_results = mysql_query($sql, dbh());
+		$sql = "SELECT `id` FROM `artist` WHERE `name` LIKE '$artist' ";
+		$db_results = Dba::query($sql);
 
 		/* If it's found */
-		if ($r = mysql_fetch_object($db_results)) {
-			$artist_id = $r->id;
+		if ($r = Dba::fetch_assoc($db_results)) {
+			$artist_id = $r['id'];
 		} //if found
 
 		/* If not found create */
@@ -1758,17 +1688,15 @@ class Catalog {
 				$prefix_txt = "'$prefix'";
 			}
 		
-			$sql = "INSERT INTO artist (name, prefix) VALUES ('$artist', $prefix_txt)";
-			$db_results = mysql_query($sql, dbh());
-			$artist_id = mysql_insert_id(dbh());
-
+			$sql = "INSERT INTO `artist` (`name`, `prefix`) VALUES ('$artist',$prefix_txt)";
+			$db_results = Dba::query($sql);
+			$artist_id = Dba::insert_id();
 
 			if (!$db_results) {
-				echo "Error Inserting Artist:$artist <br />";
-				flush();
+				Error::add('general',"Inserting Artist:$artist"); 
 			}
 
-		} //not found
+		} // not found
 
 		if ($cache_limit) {
 
@@ -1785,23 +1713,21 @@ class Catalog {
 
 		return $artist_id;
 
-	} //check_artist
+	} // check_artist
 
-
-	/*!
-		@function check_album
-		@disucssion Takes $album and checks if there then return id else insert and return id 
-		@param $album The name of the album
-	*/
-	function check_album($album,$album_year=0) {
+	/**
+	 * check_album
+	 * Takes $album and checks if there then return id else insert and return id 
+	 */
+	public function check_album($album,$album_year=0) {
 
 		/* Clean up the album name */
 		$album = trim($album);
-		$album = sql_escape($album);
+		$album = Dba::escape($album);
 		$album_year = intval($album_year);
 
 		// Set it once to reduce function calls
-		$cache_limit = conf('album_cache_limit');
+		$cache_limit = Config::get('album_cache_limit');
 
 		/* Ohh no the album has lost it's mojo */
 		if (!$album) {
@@ -1822,12 +1748,12 @@ class Catalog {
 		}
 
 		/* Setup the Query */
-		$sql = "SELECT id,art FROM album WHERE name LIKE '$album'";
-		if ($album_year) { $sql .= " AND year='$album_year'"; }
-		$db_results = mysql_query($sql, dbh());
+		$sql = "SELECT `id` FROM `album` WHERE `name` = '$album'";
+		if ($album_year) { $sql .= " AND `year`='$album_year'"; }
+		$db_results = Dba::query($sql);
 
 		/* If it's found */
-		if ($r = mysql_fetch_assoc($db_results)) {
+		if ($r = Dba::fetch_assoc($db_results)) {
 			$album_id = $r['id'];
 
 			// If we don't have art put it in the needs me some art array
@@ -1846,9 +1772,9 @@ class Catalog {
                                 $prefix_txt = "'$prefix'";
                         }
 
-			$sql = "INSERT INTO album (name, prefix,year) VALUES ('$album',$prefix_txt,'$album_year')";
-			$db_results = mysql_query($sql, dbh());
-			$album_id = mysql_insert_id(dbh());
+			$sql = "INSERT INTO `album` (`name`, `prefix`,`year`) VALUES ('$album',$prefix_txt,'$album_year')";
+			$db_results = Dba::query($sql);
+			$album_id = Dba::insert_id();
 
 			if (!$db_results) {
 				debug_event('album',"Error Unable to insert Album:$album",'2'); 
@@ -1874,15 +1800,14 @@ class Catalog {
 
 		return $album_id;
 
-	} //check_album
+	} // check_album
 
 
-	/*!
-		@function check_genre
-		@discussion Finds the Genre_id from the text name
-		@param $genre The name of the genre
-	*/
-	function check_genre($genre) {
+	/**
+	 * check_genre
+	 * Finds the Genre_id from the text name
+	 */
+	public function check_genre($genre) {
 	
 		/* If a genre isn't specified force one */
 		if (strlen(trim($genre)) < 1) {
@@ -1894,16 +1819,16 @@ class Catalog {
 		}
 
 		/* Look in the genre table */
-		$genre = sql_escape($genre);
-		$sql = "SELECT id FROM genre WHERE name LIKE '$genre'";	
-		$db_results = mysql_query($sql, dbh());
+		$genre = Dba::escape($genre);
+		$sql = "SELECT `id` FROM `genre` WHERE `name` = '$genre'";	
+		$db_results = Dba::query($sql);
 
-		$results = mysql_fetch_assoc($db_results);
+		$results = Dba::fetch_assoc($db_results);
 
 		if (!$results['id']) { 
-			$sql = "INSERT INTO genre (name) VALUES ('$genre')";
-			$db_results = mysql_query($sql, dbh());
-			$insert_id = mysql_insert_id(dbh());
+			$sql = "INSERT INTO `genre` (`name`) VALUES ('$genre')";
+			$db_results = Dba::query($sql);
+			$insert_id = Dba::insert_id();
 		}
 		else { $insert_id = $results['id']; }
 
@@ -1911,41 +1836,36 @@ class Catalog {
 
 		return $insert_id;
 
-	} //check_genre
-
-
-	/*!
-		@function check_title
-		@discussion this checks to make sure something is
-			set on the title, if it isn't it looks at the
-			filename and trys to set the title based on that
-	*/
-	function check_title($title,$file=0) {
+	} // check_genre
+	
+	/**
+	 * check_title
+	 * this checks to make sure something is
+	 * set on the title, if it isn't it looks at the
+	 * filename and trys to set the title based on that
+	 */
+	public function check_title($title,$file=0) {
 
 		if (strlen(trim($title)) < 1) {
 			preg_match("/.+\/(.*)\.....?$/",$file,$matches);
-			$title = sql_escape($matches[1]);
+			$title = Dba::escape($matches[1]);
 		}
 
 		return $title;
 
 
-	} //check_title
+	} // check_title
 
-
-	/*!
-		@function insert_local_song
-		@discussion Insert a song that isn't already in the database this
-			    function is in here so we don't have to create a song object
-		@param $file The file name we are adding (full path)
-		@param $file_info The information of the file, size etc taken from stat()
-	*/
-	function insert_local_song($file,$file_info) {
+	/**
+	 * insert_local_song
+	 * Insert a song that isn't already in the database this
+	 * function is in here so we don't have to create a song object
+	 */
+	public function insert_local_song($file,$file_info) {
 
 		/* Create the vainfo object and get info */
 		$vainfo		= new vainfo($file,'',$this->sort_pattern,$this->rename_pattern);
 		$vainfo->get_info();
-		$song_obj	 = new Song();
 
 		$key = get_tag_type($vainfo->tags);
 
@@ -1953,7 +1873,7 @@ class Catalog {
 		$results = clean_tag_info($vainfo->tags,$key,$file);
 	
 		/* Set the vars here... so we don't have to do the '" . $blah['asd'] . "' */
-		$title 		= sql_escape($results['title']);
+		$title 		= Dba::escape($results['title']);
 		$artist 	= $results['artist'];
 		$album 		= $results['album'];
 		$genre 		= $results['genre'];
@@ -1976,33 +1896,27 @@ class Catalog {
 		$genre_id	= $this->check_genre($genre);
 		$album_id	= $this->check_album($album,$year);
 		$title		= $this->check_title($title,$file);
-		$add_file	= sql_escape($file);
+		$add_file	= Dba::escape($file);
 
-		$sql = "INSERT INTO song (file,catalog,album,artist,title,bitrate,rate,mode,size,time,track,genre,addition_time,year)" .
+		$sql = "INSERT INTO `song` (file,catalog,album,artist,title,bitrate,rate,mode,size,time,track,genre,addition_time,year)" .
 			" VALUES ('$add_file','$this->id','$album_id','$artist_id','$title','$bitrate','$rate','$mode','$size','$song_time','$track','$genre_id','$current_time','$year')";
-
-		$db_results = mysql_query($sql, dbh());
+		$db_results = Dba::query($sql);
 
 		if (!$db_results) { 
 			debug_event('insert',"Unable to insert $file -- $sql",'5','ampache-catalog'); 
-			echo "<span style=\"color: #F00;\">Error Adding $file </span><hr />$sql<hr />";
+			Error::add('catalog_add','Error Adding ' . $file . ' SQL:' . $sql); 
 		} 
 			
-
-		$song_id = mysql_insert_id(dbh()); 
+		$song_id = Dba::insert_id(); 
 
 		/* Add the EXT information */
-		$sql = "INSERT INTO song_ext_data (song_id,comment,lyrics) " . 
+		$sql = "INSERT INTO `song_data` (`song_id`,`comment`,`lyrics`) " . 
 			" VALUES ('$song_id','$comment','$lyrics')"; 
-		$db_results = mysql_query($sql,dbh()); 
+		$db_results = Dba::query($sql); 
 
 		if (!$db_results) {
 			debug_event('insert',"Unable to insert EXT Info for $file -- $sql",'5','ampache-catalog'); 
-			flush();
 		}
-
-		/* Clear Variables */
-		unset($results,$audio_info,$song_obj);
 
 	} // insert_local_song
 
@@ -2053,12 +1967,10 @@ class Catalog {
 	} // check_remote_song
 
 
-	/*!
-		@function check_local_mp3
-		@discussion Checks the song to see if it's there already returns true if found, false if not 
-		@param $full_file The full file name that we are checking
-		@param $gather_type=0 If we need to check id3 tags or not
-	*/
+	/**
+	 * check_local_mp3
+	 * Checks the song to see if it's there already returns true if found, false if not 
+	 */
 	function check_local_mp3($full_file, $gather_type='') {
 
 		if ($gather_type == 'fast_add') {
@@ -2068,13 +1980,13 @@ class Catalog {
 			}
 		}
 
-		$full_file = sql_escape($full_file);
+		$full_file = Dba::escape($full_file);
 
-		$sql = "SELECT id FROM song WHERE file = '$full_file'";
-		$db_results = mysql_query($sql, dbh());
+		$sql = "SELECT `id` FROM `song` WHERE `file` = '$full_file'";
+		$db_results = Dba::query($sql);
 
 		//If it's found then return true
-		if (mysql_fetch_row($db_results)) {
+		if (Dba::fetch_row($db_results)) {
 			return true;
 		}
 

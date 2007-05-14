@@ -255,6 +255,7 @@ h3#content_title span {
 	clear: left;
 	background-color:#c0c0c0;
 	padding-left:5px;
+	font-size: 0.8em; 
 } 
 #sidebar-page select { 
 	width: 120px; 
