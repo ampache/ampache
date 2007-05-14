@@ -37,6 +37,10 @@ $ajax_url = Config::get('ajax_url');
 	</th>
 	<th><?php echo _('Artist'); ?></th>
 	<th><?php echo _('Album'); ?></th>
+	<th><?php echo _('Genre'); ?></th>
+	<th><?php echo _('Track'); ?></th>
+	<td><?php echo _('Time'); ?></th>
+	<td><?php echo _('Action'); ?></td>
 </tr>
 <?php 
 	foreach ($object_ids as $song_id) { 
@@ -50,6 +54,19 @@ $ajax_url = Config::get('ajax_url');
 	<td><?php echo $song->f_link; ?></td>
 	<td><?php echo $song->f_artist_link; ?></td>
 	<td><?php echo $song->f_album_link; ?></td>
+	<td><?php echo $song->f_genre_link; ?></td>
+	<td><?php echo $song->f_track; ?></td>
+	<td><?php echo $song->f_time; ?></td>
+	<td>
+		<span>
+			<?php echo get_user_icon('flag_off','flag',_('Flag')); ?>
+		</span>
+		<?php if ($GLOBALS['user']->has_access(100)) { ?>
+		<span>
+			<?php echo get_user_icon('edit','',_('Edit')); ?>
+		</span>
+		<?php } ?>
+	</td>
 </tr>
 <?php } ?>
 </table>

@@ -665,21 +665,19 @@ class Song {
 		$this->f_bitrate = intval($this->bitrate/1000) . "-" . strtoupper($this->mode);
 
 		// Format Genre
-		$this->f_genre = $this->get_genre_name(); 
+		$this->f_genre_link = $this->get_genre_name(); 
 
 		// Format the Time
 		$min = floor($this->time/60);
 		$sec = sprintf("%02d", ($this->time%60) );
 		$this->f_time = $min . ":" . $sec;
 
+		// Format the track (there isn't really anything to do here)
+		$this->f_track = $this->track; 
+
 		// Format the size
 		$this->f_size = sprintf("%.2f",($this->size/1048576));
 
-		// Set style
-		if (preg_match("/id3/", $this->flagtype)) { $this->f_style = "style=\"color: #33c;\""; }
-		elseif (preg_match("/(mp3|del|sort|ren)/", $this->flagtype)) { $this->f_style = "style=\"color: #C00;\""; }
-		if (!$this->enabled) { $this->f_style = "style=\"text-decoration: line-through;\""; }
-		
 		return true;
 
 	} // format_song
