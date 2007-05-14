@@ -27,7 +27,9 @@
  */
 
 define('NO_SESSION','1');
-require ("../lib/init.php");
+$path = dirname(__FILE__); 
+$prefix = realpath($path . '/../'); 
+require_once $prefix . '/lib/init.php';
 
 // Include getID3 libs, including the ability to write tags
 $getID3 = new getID3();

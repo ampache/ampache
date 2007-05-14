@@ -38,7 +38,9 @@
 $alphabet_prefix = true;
  
 define('NO_SESSION','1');
-require ("../lib/init.php");
+$path = dirname(__FILE__); 
+$prefix = realpath($path . '/../'); 
+require_once $prefix . '/lib/init.php';
 
 /* First Clean the catalog to we don't try to write anything we shouldn't */
 

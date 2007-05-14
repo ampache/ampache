@@ -43,10 +43,10 @@ $ajax_url = Config::get('ajax_url');
 <tr id="album_<?php echo $album->id; ?>" class="<?php echo flip_class(); ?>">
 		<td>
 			<span onclick="ajaxPut('<?php echo Config::get('ajax_url'); ?>?action=basket&amp;type=album&amp;id=<?php echo $album->id; ?>');return true;" >
-				<?php echo get_user_icon('add'); ?>
+				<?php echo get_user_icon('add','',_('Add')); ?>
 			</span>
 			<span onclick="ajaxPut('<?php echo Config::get('ajax_url'); ?>?action=basket&amp;type=album_random&amp;id=<?php echo $album->id; ?>');return true;" >
-				<?php echo get_user_icon('random'); ?>
+				<?php echo get_user_icon('random','',_('Random')); ?>
 			</span>
 		</td>
 		<td><?php echo $album->f_name_link; ?></td>
@@ -55,10 +55,10 @@ $ajax_url = Config::get('ajax_url');
 		<td><?php echo $album->year; ?></td>
 		<td>
 			<a href="<?php echo Config::get('web_path'); ?>/batch.php?action=album&amp;id=<?php echo $album->id; ?>">
-				<?php echo get_user_icon('batch_download'); ?>
+				<?php echo get_user_icon('batch_download','',_('Batch Download')); ?>
 			</a>
 			<span onclick="ajaxPut('<?php echo Config::get('ajax_url'); ?>?action=album&amp;type=edit&amp;id=<?php echo $album->id; ?>');return true;" >
-				<?php echo get_user_icon('edit'); ?>
+				<?php echo get_user_icon('edit','',_('Edit')); ?>
 			</span>
 		</td>
 </tr>

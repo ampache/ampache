@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright 2001 - 2006 Ampache.org
+ Copyright 2001 - 2007 Ampache.org
  All Rights Reserved
 
  This program is free software; you can redistribute it and/or
@@ -21,7 +21,9 @@
 */
 
 define('NO_SESSION','1');
-require ("../lib/init.php");
+$path = dirname(__FILE__); 
+$prefix = realpath($path . '/../'); 
+require_once $prefix . '/lib/init.php';
 
 if (count($GLOBALS['argv']) == '1') { $filename = usage(); }
 else { 
@@ -32,9 +34,9 @@ else {
 echo "Reading: $filename\n";
 
 /* Attempt to figure out what catalog it comes from */
-$sql = "SELECT catalog.id FROM song LEFT JOIN catalog ON song.catalog=catalog.id WHERE song.file='" . sql_escape($filename) . "'";
-$db_results = mysql_query($sql,dbh());
-$results = mysql_fetch_assoc($db_results);
+$sql = "SELECT `catalog`.`id` FROM `song` INNER JOIN `catalog` ON `song`.`catalog`=`catalog`.`id` WHERE `song`.`file`='" . Dba::escape($filename) . "'";
+$db_results = Dba::query($sql);
+$results = Dba::fetch_assoc($db_results);
 
 $catalog = new Catalog($results['id']);
 

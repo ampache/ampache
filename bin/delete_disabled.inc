@@ -30,7 +30,9 @@ $debug = true;
 
 
 define('NO_SESSION','1');
-require ("../lib/init.php");
+$path = dirname(__FILE__); 
+$prefix = realpath($path . '/../'); 
+require_once $prefix . '/lib/init.php';
 
 /* Get a list of filenames */
 $sql = "SELECT id,file FROM song WHERE enabled='0'"; 

@@ -21,7 +21,10 @@
 */
 
 define('NO_SESSION','1');
-require ('../lib/init.php');
+$path = dirname(__FILE__); 
+$prefix = realpath($path . '/../'); 
+require_once $prefix . '/lib/init.php';
+
 
 echo "[catalog_update.php.inc]\nStarting Catalog Clean/Update And Add\n\n";
 
