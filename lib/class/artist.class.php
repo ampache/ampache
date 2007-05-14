@@ -181,7 +181,7 @@ class Artist {
 	 * so they can be displayed in a table for example
 	 * it changes the title into a full link.
  	 */
-	function format() {
+	public function format() {
 
 		/* Combine prefix and name, trim then add ... if needed */
                 $name = truncate_with_ellipse(trim($this->prefix . " " . $this->name));
@@ -191,7 +191,8 @@ class Artist {
 		$this->full_name = scrub_out(trim($this->prefix . " " . $this->name));
 
 		//FIXME: This should be f_link
-	        $this->f_link = "<a href=\"" . Config::get('web_path') . "/artists.php?action=show&amp;artist=" . $this->id . "\" title=\"" . $this->full_name . "\">" . $name . "</a>";
+		
+	        $this->f_name_link = "<a href=\"" . Config::get('web_path') . "/artists.php?action=show&amp;artist=" . $this->id . "\" title=\"" . $this->full_name . "\">" . $name . "</a>";
 
 		// Get the counts 
 		$this->get_count(); 

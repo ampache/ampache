@@ -24,7 +24,7 @@
 	<?php if (count($items)) { ?>
 	<?php
 		foreach ($items as $item) {
-		    echo "<li>".$item->f_link."</li>\n";
+		    echo "<li>".$item->f_name_link."</li>\n";
 		}
 	?>
 	<?php } else { echo '<span class="error">' . _('Not Enough Data') . '</span>'; } ?>
