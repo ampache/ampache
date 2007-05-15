@@ -627,7 +627,7 @@ class getid3_id3v2 extends getid3_handler
                 
                 // remove possible terminating \x00 (put by encoding id or software bug)
                 $string = $getid3->iconv($parsed_frame['encoding'], 'UTF-8', $parsed_frame['data']);
-                if ($string[strlen($string)-1] = "\x00") {
+                if ($string[strlen($string)-1] == "\x00") {
                     $string = substr($string, 0, strlen($string)-1);
                 }
                 $getid3->info['id3v2']['comments'][$parsed_frame['framenameshort']][] = $string;
