@@ -185,7 +185,7 @@ class Catalog {
 		$start_time = time(); 
 
 		// Setup the 10 sec ajax request hotness
-                $refresh_limit = 10;
+                $refresh_limit = 5;
                 $ajax_url = Config::get('ajax_url') . '?action=catalog&type=add_files';  
                 /* Can't have the &amp; stuff in the Javascript */
                 $ajax_url = str_replace("&amp;","&",$ajax_url);
@@ -196,6 +196,7 @@ class Catalog {
 		echo "<div id=\"catalog_update\">";
 		require_once Config::get('prefix') . '/templates/show_run_add_catalog.inc.php'; 
 		echo "</div>"; 
+		echo "<script type=\"text/javascript\">doLoad();</script>"; 
 		show_box_bottom(); 
 
 		// Prevent the script from timing out and flush what we've got
