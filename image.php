@@ -24,7 +24,7 @@
  * and dumps it to the browser as an image mime type.
  * 
  */
-require('lib/init.php');
+require 'lib/init.php';
 
 /* Decide what size this image is */
 switch ($_REQUEST['thumb']) { 
@@ -51,7 +51,7 @@ switch ($_REQUEST['thumb']) {
 
 switch ($_REQUEST['type']) { 
 	case 'popup':
-		show_template('show_big_art');
+		require_once Config::get('prefix') . '/templates/show_big_art.inc.php';
 	break;
 	// If we need to pull the data out of the session 
 	case 'session':

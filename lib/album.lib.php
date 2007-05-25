@@ -52,6 +52,23 @@ function get_image_from_source($data) {
 		fclose($handle); 
 		return $image_data; 
 	} 
+	
+	// Check to see if it is embedded in id3 of a song
+	if (isset($data['song'])) { 
+        	// If we find a good one, stop looking
+		$getID3 = new getID3();
+		$id3 = $getID3->analyze($data['song']);
+
+		if ($id3['format_name'] == "WMA") { 
+			return $id3['asf']['extended_content_description_object']['content_descriptors']['13']['data'];
+		}
+		elseif (isset($id3['id3v2']['APIC'])) { 
+			// Foreach incase they have more then one 
+			foreach ($id3['id3v2']['APIC'] as $image) { 
+				return $image['data'];
+			} 
+		}
+	} // if data song
 
 	return false; 
 

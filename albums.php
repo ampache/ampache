@@ -109,8 +109,6 @@ switch ($_REQUEST['action']) {
 		$options['artist'] 	= $artist; 
 		$options['album_name']	= $album_name; 
 		$options['keyword']	= $artist . " " . $album_name; 
-		// HACK that makes baby jesus cry...
-		$options['skip_id3']	= true; 
 	
 		// Attempt to find the art. 
 		$images = $album->find_art($options,'6');
@@ -127,14 +125,13 @@ switch ($_REQUEST['action']) {
 			// We don't want to store raw's in here so we need to strip them out into a seperate array
 			foreach ($images as $index=>$image) { 
 				if (isset($image['raw'])) { 
-					//unset($images[$index]); 
-					$images[$index]['raw'] = ''; 
+					unset($images[$index]['raw']); 
 				} 
-			} // end foreach  
+			} // end foreach
 
 			// Store the results for further use
 			$_SESSION['form']['images'] = $images;
-			require_once(conf('prefix') . '/templates/show_album_art.inc.php');
+			require_once Config::get('prefix') . '/templates/show_album_art.inc.php';
 		}
 		// Else nothing
 		else {
@@ -148,7 +145,7 @@ switch ($_REQUEST['action']) {
 		if (isset($_REQUEST['album_name'])) {   $albumname = scrub_in($_REQUEST['album_name']); }
 		if (isset($_REQUEST['artist_name'])) {  $artistname = scrub_in($_REQUEST['artist_name']); }
 	
-		require_once(conf('prefix') . '/templates/show_get_albumart.inc.php');
+		require_once Config::get('prefix') . '/templates/show_get_albumart.inc.php';
 	
 	break;
 	case 'select_art':	

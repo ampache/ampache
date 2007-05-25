@@ -4,6 +4,8 @@
 
 --------------------------------------------------------------------------
   v.3.4-Alpha1
+	- Fixed Find album art so it can look in the id3/wma art tags 
+		correctly (Thx Karl Hungus)
   	- Updated SQL to latest version
   	- Moved Album art out of the album table into album_data 
   	- Changed Browsing Method and default playlist method

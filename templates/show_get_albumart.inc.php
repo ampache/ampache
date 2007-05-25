@@ -21,7 +21,7 @@
 */
 ?>
 <?php show_box_top(_('Customize Search')); ?>
-<form enctype="multipart/form-data" name="coverart" method="post" action="<?php echo conf('web_path'); ?>/albums.php?action=find_art&album_id=<?php echo $album->id; ?>&artist_name=<?php echo $_REQUEST['artist_name'];?>&album_name=<?php echo $_REQUEST['album_name']; ?>&cover=<?php echo scrub_out($_REQUEST['cover']); ?>" style="Display:inline;">
+<form enctype="multipart/form-data" name="coverart" method="post" action="<?php echo Config::get('web_path'); ?>/albums.php?action=find_art&album_id=<?php echo $album->id; ?>&artist_name=<?php echo $_REQUEST['artist_name'];?>&album_name=<?php echo $_REQUEST['album_name']; ?>&cover=<?php echo scrub_out($_REQUEST['cover']); ?>" style="Display:inline;">
 <table>
 <tr>
 </tr>
@@ -62,7 +62,7 @@
 	<td>
 		<input type="hidden" name="action" value="find_art" />
 		<input type="hidden" name="album_id" value="<?php echo $album->id; ?>" />
-                <input type="hidden" name="MAX_FILE_SIZE" value="<?php echo conf('max_upload_size'); ?>" />
+                <input type="hidden" name="MAX_FILE_SIZE" value="<?php echo Config::get('max_upload_size'); ?>" />
 		<input type="submit" value="<?php echo _('Get Art'); ?>" />
 	</td>
 </tr>

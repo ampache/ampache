@@ -32,7 +32,7 @@ while ($i <= $rows) {
 	$j=0;
 	while ($j < 4) { 
 		$key = $i*4+$j;
-		$image_url = conf('web_path') . '/image.php?type=session&amp;image_index=' . $key; 
+		$image_url = Config::get('web_path') . '/image.php?type=session&amp;image_index=' . $key; 
 		if (!isset($images[$key])) { echo "<td>&nbsp;</td>\n"; } 
 		else { 
 ?>
@@ -41,7 +41,7 @@ while ($i <= $rows) {
 				<img src="<?php echo $image_url; ?>" border="0" height="175" width="175" /><br />
 				</a>
 				<p align="center">
-				[<a href="<?php echo conf('web_path'); ?>/albums.php?action=select_art&amp;image=<?php echo $key; ?>&amp;album_id=<?php echo urlencode($_REQUEST['album_id']); ?>">Select</a>]
+				[<a href="<?php echo Config::get('web_path'); ?>/albums.php?action=select_art&amp;image=<?php echo $key; ?>&amp;album_id=<?php echo urlencode($_REQUEST['album_id']); ?>">Select</a>]
 				</p>
 			</td>
 <?php 

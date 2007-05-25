@@ -19,19 +19,19 @@
 
 */
 
-$htmllang = str_replace("_","-",conf('lang'));
+$htmllang = str_replace("_","-",Config::get('lang'));
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php echo $htmllang; ?>" lang="<?php echo $htmllang; ?>">
 <head>
-<link rel="shortcut icon" href="<?php echo conf('web_path'); ?>/favicon.ico" />
-<meta http-equiv="Content-Type" content="text/html; charset=<?php echo conf('site_charset'); ?>" />
-<title><?php echo conf('site_title'); ?> - <?php echo _("Album Art"); ?></title>
+<link rel="shortcut icon" href="<?php echo Config::get('web_path'); ?>/favicon.ico" />
+<meta http-equiv="Content-Type" content="text/html; charset=<?php echo Config::get('site_charset'); ?>" />
+<title><?php echo Config::get('site_title'); ?> - <?php echo _("Album Art"); ?></title>
 </head>
 <body onLoad="self.resizeTo(document.images[0].width+30, document.images[0].height+70)">
 <?php
 echo "<a href=\"javascript:window.close()\" title=\"" . _('Click to close window') . "\">";
-echo "<img src=\"" . conf('web_path') . "/image.php?id=" . scrub_out($_GET['id']) . "&amp;sid=" . session_id() . "\" border=\"0\" />";
+echo "<img src=\"" . Config::get('web_path') . "/image.php?id=" . scrub_out($_GET['id']) . "&amp;sid=" . session_id() . "\" border=\"0\" />";
 echo "</a>";
 ?>
 </body>

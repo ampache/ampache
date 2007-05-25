@@ -38,14 +38,14 @@
  */
 function show_confirmation($title,$text,$next_url,$cancel=0) {
 
-	if (substr_count($next_url,conf('web_path'))) {
+	if (substr_count($next_url,Config::get('web_path'))) {
 		$path = $next_url;
 	}
 	else {
-		$path = conf('web_path') . "/$next_url";
+		$path = Config::get('web_path') . "/$next_url";
 	}
 
-	require (conf('prefix') . "/templates/show_confirmation.inc.php");
+	require Config::get('prefix') . '/templates/show_confirmation.inc.php';
 
 } // show_confirmation
 

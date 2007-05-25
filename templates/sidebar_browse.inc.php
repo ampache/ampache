@@ -1,12 +1,17 @@
 <?php $ajax_info = Config::get('ajax_url'); ?>
 <h4><?php echo _('Browse By'); ?></h4>
-<form id="browse_type" name="browse_type" action="<?php echo Config::get('web_path'); ?>/browse.php" method="post">
+<?php 
+	// Build the selected dealie
+	$text = scrub_in($_REQUEST['action']) . '_ac';
+	${$text} = ' selected="selected"'; 
+?>
+<form id="browse_type" name="browse_type" action="<?php echo Config::get('web_path'); ?>/browse.php" method="get">
 <select name="action" onchange="document.getElementById('browse_type').submit();" >
 	<option value="">-- <?php echo _('Type'); ?> --</option>
-	<option value="song"><?php echo _('Song Title'); ?></option>
-	<option value="album"><?php echo _('Albums'); ?></option>
-	<option value="artist"><?php echo _('Artist'); ?></option>
-	<option value="genre"><?php echo _('Genre'); ?></option>
+	<option value="song"<?php echo $song_ac; ?>><?php echo _('Song Title'); ?></option>
+	<option value="album"<?php echo $album_ac; ?>><?php echo _('Albums'); ?></option>
+	<option value="artist"<?php echo $artist_ac; ?>><?php echo _('Artist'); ?></option>
+	<option value="genre"<?php echo $genre_ac; ?>><?php echo _('Genre'); ?></option>
 </select>
 </form>
 <hr />

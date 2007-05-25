@@ -210,7 +210,7 @@ class Album {
 	public function get_art() { 
 
 		// Attempt to get the resized art first
-		$art = $this->get_resized_db_art(); 
+		//$art = $this->get_resized_db_art(); 
 		
 		if (!is_array($art)) { 
 			$art = $this->get_db_art(); 
@@ -236,7 +236,7 @@ class Album {
 		$results = array(); 
 
 		/* Attempt to retrive the album art order */
-		$config_value = conf('album_art_order');
+		$config_value = Config::get('album_art_order');
                 $class_methods = get_class_methods('Album');		
 		
 		/* If it's not set */
@@ -305,12 +305,12 @@ class Album {
 
 			if ($id3['format_name'] == "WMA") { 
 				$image = $id3['asf']['extended_content_description_object']['content_descriptors']['13'];
-				$data[] = array('raw'=>$image['data'],'mime'=>$image['mime']);
+				$data[] = array('song'=>$song->file,'raw'=>$image['data'],'mime'=>$image['mime']);
 			}
 			elseif (isset($id3['id3v2']['APIC'])) { 
 				// Foreach incase they have more then one 
 				foreach ($id3['id3v2']['APIC'] as $image) { 
-					$data[] = array('raw'=>$image['data'],'mime'=>$image['mime']);
+					$data[] = array('song'=>$song->file,'raw'=>$image['data'],'mime'=>$image['mime']);
 				} 
 			}
 
@@ -611,7 +611,7 @@ class Album {
 		/* Have to disable this for Demo because people suck and try to
  		 * insert PORN :( 
 		 */
-		if (conf('demo_mode')) { return false; } 
+		if (Config::get('demo_mode')) { return false; } 
 
                 // Check for PHP:GD and if we have it make sure this image is of some size
         	if (function_exists('ImageCreateFromString')) {
@@ -622,10 +622,10 @@ class Album {
 		} // if we have PHP:GD
 
                 // Push the image into the database
-                $sql = "UPDATE album SET art = '" . sql_escape($image) . "'," .
-                        " art_mime = '" . sql_escape($mime) . "'" .
-        	        " WHERE id = '$this->id'";
-	        $db_results = mysql_query($sql, dbh());
+                $sql = "REPLACE INTO `album_data` SET `art` = '" . Dba::escape($image) . "'," .
+                        " `art_mime` = '" . Dba::escape($mime) . "'" .
+        	        ", `album_id` = '$this->id'";
+	        $db_results = Dba::query($sql);
 
 		return true;
 
