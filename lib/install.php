@@ -136,7 +136,7 @@ function install_insert_db($username,$password,$hostname,$database) {
 	if ($_REQUEST['db_user'] == 'create_db_user') { 
 		$db_user = scrub_in($_REQUEST['db_username']);
 		$db_pass = scrub_in($_REQUEST['db_password']);
-		$sql = "GRANT ALL PRIVILEGES ON " . sql_escape($database,$dbh) . ".* TO " .
+		$sql = "GRANT ALL PRIVILEGES ON " . Dba::escape($database) . ".* TO " .
 			"'" . Dba::escape($db_user) . "'@'" . Dba::escape($hostname) . "' IDENTIFIED BY '" . Dba::escape($db_pass) . "' WITH GRANT OPTION";	
 
 		if (!$db_results = @mysql_query($sql, $dbh)) { 
