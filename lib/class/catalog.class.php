@@ -156,11 +156,13 @@ class Catalog {
 		} 
 
 		$name		= Dba::escape($data['name']); 
-		$catalog_type	= Dba::escape($data['catalog_type']); 
+		$catalog_type	= Dba::escape($data['type']); 
 		$rename_pattern	= Dba::escape($data['rename_pattern']); 
 		$sort_pattern	= Dba::escape($data['sort_pattern']); 
-		$gather_types	= Dba::escape($data['gather_types']); 
+		$gather_types	= ' '; //FIXME 
 		$key		= Dba::escape($data['key']); 
+
+		if (!$key) { $key = ' '; } //FIXME 
 
 		// Ok we're good to go ahead and insert this record
 		$sql = "INSERT INTO `catalog` (`name`,`path`,`catalog_type`,`rename_pattern`,`sort_pattern`,`gather_types`,`key`) " . 
