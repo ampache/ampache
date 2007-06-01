@@ -5,15 +5,10 @@
 	$text = scrub_in($_REQUEST['action']) . '_ac';
 	${$text} = ' selected="selected"'; 
 ?>
-<form id="browse_type" name="browse_type" action="<?php echo Config::get('web_path'); ?>/browse.php" method="get">
-<select name="action" onchange="document.getElementById('browse_type').submit();" >
-	<option value="">-- <?php echo _('Type'); ?> --</option>
-	<option value="song"<?php echo $song_ac; ?>><?php echo _('Song Title'); ?></option>
-	<option value="album"<?php echo $album_ac; ?>><?php echo _('Albums'); ?></option>
-	<option value="artist"<?php echo $artist_ac; ?>><?php echo _('Artist'); ?></option>
-	<option value="genre"<?php echo $genre_ac; ?>><?php echo _('Genre'); ?></option>
-</select>
-</form>
+<span><a href="<?php $web_path; ?>/browse.php?action=song"><?php echo _('Song Title'); ?></a></span>
+<span><a href="<?php $web_path; ?>/browse.php?action=album"><?php echo _('Albums'); ?></a></span>
+<span><a href="<?php $web_path; ?>/browse.php?action=artist"><?php echo _('Artist'); ?></a></span>
+<span><a href="<?php $web_path; ?>/browse.php?action=genre"><?php echo _('Genre'); ?></a></span>
 <hr />
 <h4><?php echo _('Filters'); ?></h4>
 <?php show_alphabet_list($_REQUEST['alpha_match'],$_REQUEST['action']); ?>

@@ -154,10 +154,10 @@ function show_alphabet_list () {
 	echo "<div class=\"alphabet\">";
 	foreach ($list as $l) {
 		$style_name = "style_" . strtolower($l);
-		echo "<span style=\"width:3px;\" onclick=\"ajaxPut('". Config::get('ajax_url') ."?action=browse&amp;key=alpha_match&amp;value=$l');return true;\">" . 
+		echo "<span class=\"link\" onclick=\"ajaxPut('". Config::get('ajax_url') ."?action=browse&amp;key=alpha_match&amp;value=$l');return true;\">" . 
 			$l . "</span>\n";
 		$i++; 
-		if ($i/11 == intval($i/11)) { echo "<br />"; } 
+		if ($i/5 == intval($i/5)) { echo "<br />"; } 
 	}
 	echo "</div>";
 

@@ -62,7 +62,7 @@ switch ($_REQUEST['action']) {
 		$_REQUEST['catalogs'] = $catalog->get_catalog_ids();
 	case 'update_catalog':
 	    	/* If they are in demo mode stop here */
-	        if (conf('demo_mode')) { break; }
+	        if (Config::get('demo_mode')) { break; }
 
 		if (isset($_REQUEST['catalogs'])) {
 			foreach ($_REQUEST['catalogs'] as $catalog_id) {
@@ -72,7 +72,7 @@ switch ($_REQUEST['action']) {
 				echo "</div>\n";
 			}
 		}
-		$url	= conf('web_path') . '/admin/index.php';
+		$url	= Config::get('web_path') . '/admin/index.php';
 		$title	= _('Catalog Updated');
 		$body	= '';
 		show_confirmation($title,$body,$url);

@@ -1496,32 +1496,30 @@ class Catalog {
 
 	} // clean_stats
 	
-	/*!
-		@function verify_catalog
-		@discussion This function compares the DB's information with the ID3 tags
-		@param $catalog_id The ID of the catalog to compare
-	*/
-	function verify_catalog($catalog_id=0,$gather_type='',$verbose=1) {
-
-		/* Create and empty song for us to use */
-		$total_updated = 0;
-
-		/* Set it to this if they don't pass anything */
-		if (!$catalog_id) {
-			$catalog_id = $this->id;
-		}
+	/**
+	 * verify_catalog
+	 * This function compares the DB's information with the ID3 tags
+	 */
+	public static function verify_catalog($catalog_id) {
 
 		/* First get the filenames for the catalog */
-		$sql = "SELECT id FROM song WHERE catalog='$catalog_id' ORDER BY id";
-		$db_results = mysql_query($sql, dbh());
-		$number = mysql_num_rows($db_results);
-		
-		if ($verbose) { 
-			echo _("Updating the") . " <b>[ $this->name ]</b> " . _("Catalog") . "<br />\n";
-			echo $number . " " . _("songs found checking tag information.") . "<br />\n\n";
-			echo _('Verifed') . ": <span id=\"count_verify_" . $this->id . "\">None</span><br />\n";
-			flush();
-		}
+		$sql = "SELECT `id` FROM `song` WHERE `catalog`='$catalog_id'";
+		$db_results = Dba::query($sql);
+		$number = Dba::num_rows($db_results);
+	
+                $refresh_limit = 10;
+                $ajax_url = Config::get('ajax_url') . '?action=catalog&type=add_files';  
+                /* Can't have the &amp; stuff in the Javascript */
+                $ajax_url = str_replace("&amp;","&",$ajax_url);
+                require_once Config::get('prefix') . '/templates/javascript_refresh.inc.php';
+
+		show_box_top(); 
+		echo _("Updating the") . " <b>[ $this->name ]</b> " . _("Catalog") . "<br />\n";
+		echo $number . " " . _("songs found checking tag information.") . "<br />\n\n";
+		require_once Config::get('prefix') . '/templates/show_verify_catalog.inc.php';
+		echo "<script type=\"text/javascript\">doLoad();</script>"; 
+		show_box_bottom(); 
+		flush();
 
 		/* Magical Fix so we don't run out of time */
 		set_time_limit(0);
@@ -1531,25 +1529,16 @@ class Catalog {
 		 * if it's not blank, and different in
 		 * in the file then update!
 		 */
-		while ($results = mysql_fetch_object($db_results)) {
+		while ($results = Dba::fetch_assoc($db_results)) {
 
 			/* Create the object from the existing database information */
-			$song = new Song($results->id);
+			$song = new Song($results['id']);
 
 			debug_event('verify',"Starting work on $song->file",'5','ampache-catalog');
 			
 			if (is_readable($song->file)) {
 				unset($skip);
 
-				/* If they have specified fast_update check the file
-				   filemtime to make sure the file has actually 
-				   changed
-				*/
-				if ($gather_type == 'fast_update') {
-					$file_date = filemtime($song->file);
-					if ($file_date < $this->last_update) { $skip = true; }
-				} // if gather_type
-			
 				/* Make sure the song isn't flagged, we don't update flagged stuff */
 				if ($song->has_flag()) { 
 					$skip = true; 
