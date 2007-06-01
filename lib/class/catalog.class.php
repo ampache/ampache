@@ -169,6 +169,12 @@ class Catalog {
 
 		$insert_id = Dba::insert_id(); 
 
+		if (!$insert_id) { 
+			Error::add('general','Catalog Insert Failed check debug logs'); 
+			debug_event('catalog','SQL Failed:' . $sql,'3'); 
+			return false; 
+		} 
+
 		return $insert_id; 
 
 	} // create
