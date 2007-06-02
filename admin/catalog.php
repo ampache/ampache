@@ -58,18 +58,15 @@ switch ($_REQUEST['action']) {
 		show_confirmation($title,$body,$url);
 	break;
 	case 'update_all_catalogs':
-		$catalog = new Catalog();
-		$_REQUEST['catalogs'] = $catalog->get_catalog_ids();
+		$_REQUEST['catalogs'] = Catalog::get_catalog_ids();
 	case 'update_catalog':
 	    	/* If they are in demo mode stop here */
 	        if (Config::get('demo_mode')) { break; }
 
 		if (isset($_REQUEST['catalogs'])) {
 			foreach ($_REQUEST['catalogs'] as $catalog_id) {
-				echo "<div class=\"confirmation-box\">";
-				$catalog = new Catalog($catalog_id);
-				$catalog->verify_catalog($catalog_id->id);
-				echo "</div>\n";
+				$catalog = new Catalog($catalog_id); 
+				$catalog->verify_catalog($catalog_id);
 			}
 		}
 		$url	= Config::get('web_path') . '/admin/index.php';

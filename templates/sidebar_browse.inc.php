@@ -1,4 +1,4 @@
-<?php $ajax_info = Config::get('ajax_url'); ?>
+<?php $ajax_info = Config::get('ajax_url'); $web_path = Config::get('web_path'); ?>
 <h4><?php echo _('Browse By'); ?></h4>
 <?php 
 	// Build the selected dealie

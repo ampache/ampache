@@ -102,7 +102,7 @@ class Catalog {
 	 * get_catalog_ids
 	 * This returns an array of all catalog ids
 	 */
-	function get_catalog_ids() { 
+	public static function get_catalog_ids() { 
 
 		$sql = "SELECT `id` FROM `catalog`";
 		$db_results = Dba::qery($sql);
@@ -914,11 +914,12 @@ class Catalog {
 
 	} // update_single_item
 
-        /*!
-                @function update_song_from_tags
-                @discussion updates the song info based on tags
-        */
-        function update_song_from_tags($song) {
+        /**
+         * update_song_from_tags
+         * updates the song info based on tags, this is called from a bunch of different places
+	 * and passes in a full fledged song object, so it's a static function
+	 */
+        public function update_song_from_tags($song) {
 
 		/* Record the reading of these tags */
 		debug_event('tag-read',"Reading Tags from $song->file",'5','ampache-catalog');
@@ -955,18 +956,18 @@ class Catalog {
                 * We have the artist/genre/album name need to check it in the tables
                 * If found then add & return id, else return id
                 */
-                $new_song->artist       = $this->check_artist($artist);
+                $new_song->artist       = self::check_artist($artist);
                 $new_song->f_artist     = $artist;
-                $new_song->genre        = $this->check_genre($genre);
+                $new_song->genre        = self::check_genre($genre);
                 $new_song->f_genre      = $new_song->get_genre_name();
-                $new_song->album        = $this->check_album($album,$new_song->year);
+                $new_song->album        = self::check_album($album,$new_song->year);
                 $new_song->f_album      = $album . " - " . $new_song->year;
-                $new_song->title        = $this->check_title($new_song->title,$new_song->file);
+                $new_song->title        = self::check_title($new_song->title,$new_song->file);
 
 		/* Since we're doing a full compare make sure we fill the extended information */
 		$song->fill_ext_info();
 
-                $info = $song->compare_song_information($song,$new_song);
+                $info = Song::compare_song_information($song,$new_song);
 
                 if ($info['change']) {
 			debug_event('update',"$song->file difference found, updating database",'5','ampache-catalog'); 
@@ -1221,12 +1222,7 @@ class Catalog {
 		} // foreach new Songs
 
 	        // now delete invalid entries
-		$this->clean_albums();
-		$this->clean_artists();
-		$this->clean_genres();
-		$this->clean_flagged();
-		$this->clean_stats();
-		$this->clean_ext_info();
+		self::clean($this->id); 
 
 	} // update_remote_catalog
 
@@ -1305,13 +1301,7 @@ class Catalog {
 		 * This finds artists and albums that no
 		 * longer have any songs associated with them
 		 */
-		$this->clean_albums();
-		$this->clean_artists();
-		$this->clean_playlists();
-		$this->clean_flagged();
-		$this->clean_genres();
-		$this->clean_stats();
-		$this->clean_ext_info(); 
+		self::clean($catalog_id); 
 		
 		/* Return dead files, so they can be listed */
 		if ($verbose) { 
@@ -1377,71 +1367,64 @@ class Catalog {
 	/**
 	 * clean_genres
 	 * This functions cleans up unused genres
-	 * @package Catalog
-	 * @catagory Clean
 	 */
-	function clean_genres() { 
+	public static function clean_genres() { 
 
                 /* Do a complex delete to get albums where there are no songs */
                 $sql = "DELETE FROM genre USING genre LEFT JOIN song ON song.genre = genre.id WHERE song.id IS NULL";
-                $db_results = mysql_query($sql, dbh());
+                $db_results = Dba::query($sql);
 
 	} // clean_genres
 
-
-	/*!
-		@function clean_albums
-		@discussion  This function cleans out unused albums
-		@param $this->id Depends on the current object
-	*/
-	function clean_albums() {
+	/**
+	 * clean_albums
+	 *This function cleans out unused albums
+	 */
+	public static function clean_albums() {
 
 		/* Do a complex delete to get albums where there are no songs */
 		$sql = "DELETE FROM album USING album LEFT JOIN song ON song.album = album.id WHERE song.id IS NULL";
-		$db_results = mysql_query($sql, dbh());
+		$db_results = Dba::query($sql);
 
-	} //clean_albums
+	} // clean_albums
 
-	/*!
-		@function clean_flagged
-		@discussion This functions cleans ou unused flagged items
-	*/
-	function clean_flagged() { 
+	/**
+	 * clean_flagged
+	 * This functions cleans ou unused flagged items
+	 */
+	public static function clean_flagged() { 
 
 		/* Do a complex delete to get flagged items where the songs are now gone */
 		$sql = "DELETE FROM flagged USING flagged LEFT JOIN song ON song.id = flagged.object_id WHERE song.id IS NULL AND object_type='song'";
-		$db_results = mysql_query($sql, dbh());
+		$db_results = Dba::query($sql);
 
 	} // clean_flagged
 
-
-	/*!
-		@function clean_artists
-		@discussion This function cleans out unused artists
-		@param $this->id Depends on the current object
-	*/
-	function clean_artists() {
+	/**
+	 * clean_artists
+	 * This function cleans out unused artists
+	 */
+	public static function clean_artists() {
 
 		/* Do a complex delete to get artists where there are no songs */
 		$sql = "DELETE FROM artist USING artist LEFT JOIN song ON song.artist = artist.id WHERE song.id IS NULL";
-		$db_results = mysql_query($sql, dbh());
+		$db_results = Dba::query($sql);
 
 	} //clean_artists
 
-	/*
-		@function clean_playlists
-		@discussion cleans out dead files from playlists
-		@param $this->id depends on the current object
-	*/
-	function clean_playlists() { 
+	/**
+	 * clean_playlists
+	 * cleans out dead files from playlists
+	 */
+	public static function clean_playlists($catalog_id) { 
 
 		/* Do a complex delete to get playlist songs where there are no songs */
 		$sql = "DELETE FROM playlist_data USING playlist_data LEFT JOIN song ON song.id = playlist_data.song WHERE song.file IS NULL";
-		$db_results = mysql_query($sql, dbh());
+		$db_results = Dba::query($sql);
 
 		// Clear TMP Playlist information as well
 		$sql = "DELETE FROM tmp_playlist_data USING tmp_playlist_data LEFT JOIN song ON tmp_playlist_data.object_id = song.id WHERE song.id IS NULL"; 
-		$db_results = mysql_query($sql,dbh()); 
+		$db_results = Dba::query($sql); 
 
 	} // clean_playlists
 
@@ -1449,58 +1432,54 @@ class Catalog {
 	 * clean_ext_info
 	 * This function clears any ext_info that no longer has a parent
 	 */
-	function clean_ext_info() { 
+	public static function clean_ext_info($catalog_id) { 
 
-		// No longer accounting for MySQL 3.23 here, so just run the query
 		$sql = "DELETE FROM song_ext_data USING song_ext_data LEFT JOIN song ON song.id = song_ext_data.song_id WHERE song.id IS NULL"; 
-		$db_results = mysql_query($sql, dbh()); 
+		$db_results = Dba::query($sql); 
 
 	} // clean_ext_info
 
-	/*!
-		@function clean_stats
-		@discussion This functions removes stats for songs/albums that no longer exist
-		@param $catalog_id The ID of the catalog to clean
-	*/
-	function clean_stats() {
-
-		$version = mysql_get_server_info();
+	/**
+	 * clean_stats
+	 * This functions removes stats for songs/albums that no longer exist
+	 */
+	public static function clean_stats($catalog_id) {
 
 		// Crazy SQL Mojo to remove stats where there are no songs 
 		$sql = "DELETE FROM object_count USING object_count LEFT JOIN song ON song.id=object_count.object_id WHERE object_type='song' AND song.id IS NULL";
-		$db_results = mysql_query($sql, dbh());
+		$db_results = Dba::query($sql);
 		
 		// Crazy SQL Mojo to remove stats where there are no albums 
 		$sql = "DELETE FROM object_count USING object_count LEFT JOIN album ON album.id=object_count.object_id WHERE object_type='album' AND album.id IS NULL";
-		$db_results = mysql_query($sql, dbh());
+		$db_results = Dba::query($sql);
 		
 		// Crazy SQL Mojo to remove stats where ther are no artists 
 		$sql = "DELETE FROM object_count USING object_count LEFT JOIN artist ON artist.id=object_count.object_id WHERE object_type='artist' AND artist.id IS NULL";
-		$db_results = mysql_query($sql, dbh());
+		$db_results = Dba::query($sql);
 
 		// Delete genre stat information 
 		$sql = "DELETE FROM object_count USING object_count LEFT JOIN genre ON genre.id=object_count.object_id WHERE object_type='genre' AND genre.id IS NULL";
-		$db_results = mysql_query($sql,dbh()); 
+		$db_results = Dba::query($sql); 
 
 		// Delete the live_stream stat information
 		$sql = "DELETE FROM object_count USING object_count LEFT JOIN live_stream ON live_stream.id=object_count.object_id WHERE object_type='live_stream' AND live_stream.id IS NULL";
-		$db_results = mysql_query($sql,dbh()); 
+		$db_results = Dba::query($sql); 
 
 		// Delete Song Ratings information
 		$sql = "DELETE FROM ratings USING ratings LEFT JOIN song ON song.id=ratings.object_id WHERE object_type='song' AND song.id IS NULL"; 
-		$db_results = mysql_query($sql,dbh()); 
+		$db_results = Dba::query($sql); 
 
 		// Delete Genre Ratings Information
 		$sql = "DELETE FROM ratings USING ratings LEFT JOIN genre ON genre.id=ratings.object_id WHERE object_type='genre' AND genre.id IS NULL"; 
-		$db_results = mysql_query($sql,dbh()); 
+		$db_results = Dba::query($sql); 
 
 		// Delete Album Rating Information
 		$sql = "DELETE FROM ratings USING ratings LEFT JOIN album ON album.id=ratings.object_id WHERE object_type='album' AND album.id IS NULL"; 
-		$db_results = mysql_query($sql,dbh()); 
+		$db_results = Dba::query($sql); 
 
 		// Delete Artist Rating Information
 		$sql = "DELETE FROM ratings USING ratings LEFT JOIN artist ON artist.id=ratings.object_id WHERE object_type='artist' AND artist.id IS NULL"; 
-		$db_results = mysql_query($sql,dbh()); 
+		$db_results = Dba::query($sql); 
 
 	} // clean_stats
 	
@@ -1508,25 +1487,17 @@ class Catalog {
 	 * verify_catalog
 	 * This function compares the DB's information with the ID3 tags
 	 */
-	public static function verify_catalog($catalog_id) {
+	public function verify_catalog($catalog_id) {
+
+		// Create the object so we have some information on it
+		$catalog = new Catalog($catalog_id); 
 
 		/* First get the filenames for the catalog */
 		$sql = "SELECT `id` FROM `song` WHERE `catalog`='$catalog_id'";
 		$db_results = Dba::query($sql);
 		$number = Dba::num_rows($db_results);
 	
-                $refresh_limit = 10;
-                $ajax_url = Config::get('ajax_url') . '?action=catalog&type=add_files';  
-                /* Can't have the &amp; stuff in the Javascript */
-                $ajax_url = str_replace("&amp;","&",$ajax_url);
-                require_once Config::get('prefix') . '/templates/javascript_refresh.inc.php';
-
-		show_box_top(); 
-		echo _("Updating the") . " <b>[ $this->name ]</b> " . _("Catalog") . "<br />\n";
-		echo $number . " " . _("songs found checking tag information.") . "<br />\n\n";
 		require_once Config::get('prefix') . '/templates/show_verify_catalog.inc.php';
-		echo "<script type=\"text/javascript\">doLoad();</script>"; 
-		show_box_bottom(); 
 		flush();
 
 		/* Magical Fix so we don't run out of time */
@@ -1558,11 +1529,9 @@ class Catalog {
 					$info = $this->update_song_from_tags($song);
 					$album_id = $song->album;
 					if ($info['change']) {
-						echo "<dl style=\"list-style-type:none;\">\n\t<li>";
-						echo "<b>$song->file " . _('Updated') . "</b>\n";
-						echo $info['text'];
-						$album = new Album($song->album);
+						$update_string .= $info['text'] . "<br />\n"; 
 
+						$album = new Album($song->album);
 						if (!$album->has_art) { 
 							$found = $album->find_art($options,1);
 							if (count($found)) {
@@ -1570,13 +1539,9 @@ class Catalog {
 								$album->insert_art($image,$found['mime']); 
 								$is_found = _(' FOUND');
 							} 
-							echo "<br /><b>" . _('Searching for new Album Art') . ". . .$is_found</b><br />\n";
+							$update_string .= "<b>" . _('Searching for new Album Art') . ". . .$is_found</b><br />\n";
 							unset($found,$is_found);
 						} 
-						else { 
-							echo "<br /><b>" . _('Album Art Already Found') . ". . .</b><br />\n";
-						} 
-						echo "\t</li>\n</dl>\n<hr align=\"left\" width=\"50%\" />\n";
 						flush();
 						$total_updated++;
 					}
@@ -1590,10 +1555,11 @@ class Catalog {
 				}
 	
                                 /* Stupid little cutesie thing */
-                                $this->count++;
-                                if (!($this->count%conf('catalog_echo_count')) ) {
+                                $count++;
+                                if (!($count%10) ) {
                                         echo "<script type=\"text/javascript\">";
-                                        echo "update_txt('" . $this->count . "','count_verify_" . $this->id . "');";
+                                        echo "update_txt('" . $count . "','verify_count_" . $catalog_id . "');";
+					echo "update_txt('" . htmlentities($song->file) . "','verify_dir_" . $catalog_id . "');"; 
                                         echo "</script>\n";
                                         flush();
                                 } //echos song count
@@ -1601,40 +1567,46 @@ class Catalog {
 			} // end if file exists
 
 			else {
-				echo "<dl>\n  <li>";
-				echo "<b>$song->file does not exist or is not readable</b>\n";
-				echo "</li>\n</dl>\n<hr align=\"left\" width=\"50%\" />\n";
-				
+				Error::add('general',"$song->file does not exist or is not readable"); 
 				debug_event('read-error',"$song->file does not exist or is not readable",'5','ampache-catalog'); 
 			}
 
 		} //end foreach
 
 		/* After we have updated all the songs with the new information clear any empty albums/artists */
-		$this->clean_albums();
-		$this->clean_artists();
-		$this->clean_genres(); 
-		$this->clean_flagged();
-		$this->clean_stats();
-		$this->clean_ext_info(); 
+		self::clean($catalog_id); 
 
 		// Update the last_update
-		$this->update_last_update();
+		self::update_last_update($catalog_id);
 
-		if ($verbose) { 
-                        echo "<script type=\"text/javascript\">";
-                        echo "update_txt('" . $this->count . "','count_verify_" . $this->id . "');";
-                        echo "</script>\n";
-                        flush();
-		}
+                // One final time!
+		echo "<script type=\"text/javascript\">";
+                echo "update_txt('" . $this->count . "','count_verify_" . $this->id . "');";
+                echo "</script>\n";
+                flush();
 
-		echo _('Update Finished.') . _('Checked') . " $this->count. $total_updated " . _('songs updated.') . "<br /><br />";
-
-		$this->count = 0;
+		echo _('Update Finished.') . _('Checked') . " $count. $total_updated " . _('songs updated.') . "<br /><br />";
 
 		return true;
 
-	} //verify_catalog
+	} // verify_catalog
+
+	/**
+	 * clean
+	 * This is a wrapper function for all of the different cleaning
+	 * functions, it runs them in the correct order and takes a catalog_id
+	 */
+	public static function clean($catalog_id) { 
+
+		self::clean_albums($catalog_id); 
+		self::clean_artists($catalog_id); 
+		self::clean_genres($catalog_id); 
+		self::clean_flagged($catalog_id); 
+		self::clean_stats($catalog_id); 
+		self::clean_ext_info($catalog_id); 
+		self::clean_playlists($catalog_id); 
+
+	} // clean
 
 	/**
 	 * check_artist
@@ -2099,32 +2071,25 @@ class Catalog {
 
         } // merge_stats
 
-	/*!
-		@function delete_catalog
-		@discussion Deletes the catalog and everything assoicated with it
-			    assumes $this
-	*/
-	function delete_catalog() {
+	/**
+	 * delete
+	 * Deletes the catalog and everything assoicated with it
+	 * assumes $this
+	 */
+	public static function delete() {
 
 		// First remove the songs in this catalog
-		$sql = "DELETE FROM song WHERE catalog = '$this->id'";
-		$db_results = mysql_query($sql, dbh());
+		$sql = "DELETE FROM `song` WHERE `catalog` = '$this->id'";
+		$db_results = Dba::query($sql);
 
 		// Next Remove the Catalog Entry it's self
-		$sql = "DELETE FROM catalog WHERE id = '$this->id'";
-		$db_results = mysql_query($sql, dbh());
+		$sql = "DELETE FROM `catalog` WHERE `id` = '$this->id'";
+		$db_results = Dba::query($sql);
 
 		// Run the Aritst/Album Cleaners...
-		$this->clean_albums();
-		$this->clean_artists();
-		$this->clean_playlists();
-		$this->clean_genres();
-		$this->clean_flagged();
-		$this->clean_stats();
-		$this->clean_ext_info(); 
+		self::clean($this->id); 
 
-	} // delete_catalog
-
+	} // delete
 
 	/*!
 		@function remove_songs
@@ -2180,6 +2145,6 @@ class Catalog {
 	
 	} // export
 
-} //end of catalog class
+} // end of catalog class
 
 ?>

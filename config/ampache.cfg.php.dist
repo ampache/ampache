@@ -205,8 +205,8 @@ ratings = "true"
 ; Simply arrange the following in the order you would like
 ; ampache to search if you want to disable one of the search
 ; method simply comment it out valid values are
-; POSSIBLE VALUES: db id3 folder amazon
-; DEFAULT: db,id3,folder,amazon
+; POSSIBLE VALUES: db id3 folder amazon lastfm
+; DEFAULT: db,id3,folder,lastfm,amazon
 album_art_order = "db,id3,folder,amazon"
 
 ; Album Art 

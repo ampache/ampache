@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2006 Ampache.org
+ Copyright (c) 2001 - 2007 Ampache.org
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
@@ -18,10 +18,6 @@
  along with this program; if not, write to the Free Software
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
-*/
-
-/*!
-	@header Song Class
 */
 
 class Song {
@@ -100,12 +96,12 @@ class Song {
 	 * This function gathers information from the song_ext_info table and adds it to the
 	 * current object
 	 */
-	function _get_ext_info() { 
+	public function _get_ext_info() { 
 
-		$sql = "SELECT comment,lyrics FROM song_ext_data WHERE song_id='" . sql_escape($this->id) . "'";
-		$db_results = mysql_query($sql,dbh()); 
+		$sql = "SELECT * FROM song_data WHERE `song_id`='" . Dba::escape($this->id) . "'";
+		$db_results = Dba::query($sql); 
 
-		$results = mysql_fetch_assoc($db_results); 
+		$results = Dba::fetch_assoc($db_results); 
 
 		return $results; 
 
@@ -115,14 +111,15 @@ class Song {
  	 * fill_ext_info
 	 * This calls the _get_ext_info and then sets the correct vars
 	 */
-	function fill_ext_info() { 
+	public function fill_ext_info() { 
 
 		$info = $this->_get_ext_info(); 
 
-		$this->comment	= $info['comment'];
-		$this->lyrics 	= $info['lyrics'];
-
-		return true; 
+		foreach ($info as $key=>$value) { 
+			if ($key != 'song_id') { 
+				$this->$key = $value; 
+			}
+		} // end foreach
 
 	} // fill_ext_info
 
@@ -289,12 +286,12 @@ class Song {
 	 * This just returns true or false depending on if this song is flagged for something
 	 * We don't care what so we limit the SELECT to 1
 	 */
-	function has_flag() { 
+	public function has_flag() { 
 
-		$sql = "SELECT id FROM flagged WHERE object_type='song' AND object_id='$this->id' LIMIT 1";
-		$db_results = mysql_query($sql, dbh());
+		$sql = "SELECT `id` FROM `flagged` WHERE `object_type`='song' AND `object_id`='$this->id' LIMIT 1";
+		$db_results = Dba::query($sql);
 
-		if (mysql_fetch_assoc($db_results)) { 
+		if (Dba::fetch_assoc($db_results)) { 
 			return true;
 		}
 
@@ -322,19 +319,16 @@ class Song {
 
 	} // set_played
 	
-	/*!
-		@function compare_song_information
-		@discussion this compares the new ID3 tags of a file against
-			    the ones in the database to see if they have changed
-			    it returns false if nothing has changes, or the true 
-			    if they have.
-		@param $song	The origional song object
-		@param $new_song	The new version of the song
-	*/
-	function compare_song_information($song,$new_song) {
+	/**
+	 * compare_song_information
+	 * this compares the new ID3 tags of a file against
+	 * the ones in the database to see if they have changed
+	 * it returns false if nothing has changes, or the true 
+	 * if they have. Static because it doesn't need this
+	 */
+	public static function compare_song_information($song,$new_song) {
 
 		if ($song->title == "No Title Found") { $song->title = false; }
-	
 
 		if (trim($song->title) != trim(stripslashes($new_song->title)) && strlen($new_song->title) > 0) { 
 			$array['change']	= true;
@@ -392,41 +386,39 @@ class Song {
 
 	} // compare_song_information
 
-	/*!
-		@function update_song
-		@discussion this is the main updater for a song it actually
-			    calls a whole bunch of mini functions to update
-			    each little part of the song... lastly it updates
-			    the "update_time" of the song
-		@param $song_id		The id of the song we are updating
-		@param $new_song	A object with the new song params
-	*/
-	function update_song($song_id, $new_song) {
+	/**
+	 * update
+	 * this is the main updater for a song it actually
+	 * calls a whole bunch of mini functions to update
+	 * each little part of the song... lastly it updates
+	 * the "update_time" of the song
+	 */
+	public static function update_song($song_id, $new_song) {
 
-		$this->update_title($new_song->title,$song_id);
-		$this->update_bitrate($new_song->bitrate,$song_id);
-		$this->update_rate($new_song->rate,$song_id);
-		$this->update_mode($new_song->mode,$song_id);
-		$this->update_size($new_song->size,$song_id);
-		$this->update_time($new_song->time,$song_id);
-		$this->update_track($new_song->track,$song_id);
-		$this->update_artist($new_song->artist,$song_id);
-		$this->update_genre($new_song->genre,$song_id);
-		$this->update_album($new_song->album,$song_id);
-		$this->update_year($new_song->year,$song_id);
-		$this->update_comment($new_song->comment,$song_id);
-		$this->update_played(0,$song_id);
-		$this->update_utime($song_id);
+		self::update_title($new_song->title,$song_id);
+		self::update_bitrate($new_song->bitrate,$song_id);
+		self::update_rate($new_song->rate,$song_id);
+		self::update_mode($new_song->mode,$song_id);
+		self::update_size($new_song->size,$song_id);
+		self::update_time($new_song->time,$song_id);
+		self::update_track($new_song->track,$song_id);
+		self::update_artist($new_song->artist,$song_id);
+		self::update_genre($new_song->genre,$song_id);
+		self::update_album($new_song->album,$song_id);
+		self::update_year($new_song->year,$song_id);
+		self::update_comment($new_song->comment,$song_id);
+		self::update_played(0,$song_id);
+		self::update_utime($song_id);
 
 	} // update_song
 
-	/*!
-		@function update_year
-		@discussion update the year tag
-	*/
-	function update_year($new_year,$song_id=0) {
+	/**
+	 * update_year
+	 * update the year tag
+	 */
+	public function update_year($new_year,$song_id) {
 		
-		$this->_update_item('year',$new_year,$song_id,'100'); 
+		self::_update_item('year',$new_year,$song_id,'100'); 
 		
 	} // update_year
 
@@ -434,9 +426,9 @@ class Song {
 	 * update_comment
 	 * updates the comment field
 	 */
-	function update_comment($new_comment,$song_id=0) { 
+	public function update_comment($new_comment,$song_id) { 
 		
-		$this->_update_ext_item('comment',$new_comment,$song_id,'100');
+		self::_update_ext_item('comment',$new_comment,$song_id,'100');
 		
 	} // update_comment
 
@@ -444,142 +436,141 @@ class Song {
  	 * update_lyrics
 	 * updates the lyrics field
 	 */
-	function update_lyrics($new_lyrics,$song_id=0) { 
+	public function update_lyrics($new_lyrics,$song_id) { 
 	
-		$this->_update_ext_item('lyrics',$new_lyrics,$song_id,'100'); 
+		self::_update_ext_item('lyrics',$new_lyrics,$song_id,'100'); 
 
 	} // update_lyrics
 
-	/*!
-		@function update_title
-		@discussion updates the title field
-	*/
-	function update_title($new_title,$song_id=0) {
+	/**
+	 * update_title
+	 * updates the title field
+	 */
+	public function update_title($new_title,$song_id) {
 	
-		$this->_update_item('title',$new_title,$song_id,'100');
+		self::_update_item('title',$new_title,$song_id,'100');
 			
 	} // update_title
 
-	/*!
-		@function update_bitrate
-		@discussion updates the bitrate field
-	*/
-	function update_bitrate($new_bitrate,$song_id=0) {
+	/**
+	 * update_bitrate
+	 * updates the bitrate field
+	 */
+	public function update_bitrate($new_bitrate,$song_id) {
 		
-		$this->_update_item('bitrate',$new_bitrate,$song_id,'100');
+		self::_update_item('bitrate',$new_bitrate,$song_id,'100');
 
 	} // update_bitrate
 
-	/*!
-		@function update_rate
-		@discussion updates the rate field
-	*/
-	function update_rate($new_rate,$song_id=0) {
+	/**
+	 * update_rate
+	 * updates the rate field
+	 */
+	public function update_rate($new_rate,$song_id) {
 		
-		$this->_update_item('rate',$new_rate,$song_id,'100');
+		self::_update_item('rate',$new_rate,$song_id,'100');
 
 	} // update_rate
 
-	/*!
-		@function update_mode
-		@discussion updates the mode field
-	*/
-	function update_mode($new_mode,$song_id=0) {
+	/**
+	 * update_mode
+	 * updates the mode field
+	 */
+	public function update_mode($new_mode,$song_id) {
 
-		$this->_update_item('mode',$new_mode,$song_id,'100');
+		self::_update_item('mode',$new_mode,$song_id,'100');
 
 	} // update_mode
 
-	/*!
-		@function update_size
-		@discussion updates the size field
-	*/
-	function update_size($new_size,$song_id=0) { 
+	/**
+	 * update_size
+	 * updates the size field
+	 */
+	public function update_size($new_size,$song_id) { 
 		
-		$this->_update_item('size',$new_size,$song_id,'100');
+		self::_update_item('size',$new_size,$song_id,'100');
 
 	} // update_size
 
-	/*!
-		@function update_time
-		@discussion updates the time field
-	*/
-	function update_time($new_time,$song_id=0) { 
+	/**
+	 * update_time
+	 * updates the time field
+	 */
+	public function update_time($new_time,$song_id) { 
 		
-		$this->_update_item('time',$new_time,$song_id,'100');
+		self::_update_item('time',$new_time,$song_id,'100');
 
 	} // update_time
 
-	/*!
-		@function update_track
-		@discussion this updates the track field
-	*/
-	function update_track($new_track,$song_id=0) { 
+	/**
+	 * update_track
+	 * this updates the track field
+	 */
+	public function update_track($new_track,$song_id) { 
 
-			$this->_update_item('track',$new_track,$song_id,'100');
+			self::_update_item('track',$new_track,$song_id,'100');
 
 	} // update_track
 
-	/*!
-		@function update_artist
-		@discussion updates the artist field
-	*/
-	function update_artist($new_artist,$song_id=0) {
+	/**
+	 * update_artist
+	 * updates the artist field
+	 */
+	public function update_artist($new_artist,$song_id) {
 
-		$this->_update_item('artist',$new_artist,$song_id,'100');
+		self::_update_item('artist',$new_artist,$song_id,'100');
 
 	} // update_artist
 
-	/*!
-		@function update_genre
-		@discussion updates the genre field
-	*/
-	function update_genre($new_genre,$song_id=0) { 
+	/**
+	 * update_genre
+	 * updates the genre field
+	 */
+	public function update_genre($new_genre,$song_id) { 
 
-		$this->_update_item('genre',$new_genre,$song_id,'100');
+		self::_update_item('genre',$new_genre,$song_id,'100');
 
 	} // update_genre
 
-	/*!
-		@function update_album
-		@discussion updates the album field
-	*/
-	function update_album($new_album,$song_id=0) { 
+	/**
+	 * update_album
+	 * updates the album field
+	 */
+	public function update_album($new_album,$song_id) { 
 
-		$this->_update_item('album',$new_album,$song_id,'100');
+		self::_update_item('album',$new_album,$song_id,'100');
 
 	} // update_album
 
-	/*!
-		@function update_utime
-		@discussion sets a new update time
-	*/
-	function update_utime($song_id=0,$time=0) {
+	/**
+	 * update_utime
+	 * sets a new update time
+	 */
+	public function update_utime($song_id,$time=0) {
 
 		if (!$time) { $time = time(); }
 
-		$this->_update_item('update_time',$time,$song_id,'100');
+		self::_update_item('update_time',$time,$song_id,'100');
 
 	} // update_utime
 
-	/*!
-		@function update_played
-		@discussion sets the played flag
-	*/
-	function update_played($new_played,$song_id=0) { 
+	/**
+	 * update_played
+	 * sets the played flag
+	 */
+	public function update_played($new_played,$song_id) { 
 
-		$this->_update_item('played',$new_played,$song_id,'25');
+		self::_update_item('played',$new_played,$song_id,'25');
 
 	} // update_played
 
-
-	/*!
-		@function update_enabled
-		@discussion sets the enabled flag
-	*/
-	function update_enabled($new_enabled,$song_id=0) {
+	/**
+	 * update_enabled
+	 * sets the enabled flag
+	 */
+	public function update_enabled($new_enabled,$song_id) {
 		
-		$this->_update_item('enabled',$new_enabled,$song_id,'100');
+		self::_update_item('enabled',$new_enabled,$song_id,'100');
 
 	} // update_enabled
 
@@ -590,21 +581,18 @@ class Song {
 	 * against $GLOBALS['user'] to make sure they are allowed to update this record
 	 * it then updates it and sets $this->{$field} to the new value
 	 */
-	function _update_item($field,$value,$song_id=0,$level) {
+	private static function _update_item($field,$value,$song_id,$level) {
 
 		/* Check them Rights! */
 		if (!$GLOBALS['user']->has_access($level)) { return false; }
 
-		if (!$song_id) { $song_id = $this->id; }
-
 		/* Can't update to blank */
 		if (!strlen(trim($value)) && $field != 'comment') { return false; } 
 
-		$value = sql_escape($value);
+		$value = Dba::escape($value);
 
-		$sql = "UPDATE song SET $field='$value' WHERE id='$song_id'";
-		$db_results = mysql_query($sql, dbh());
-		$this->{$field} = $value;
+		$sql = "UPDATE `song` SET `$field`='$value' WHERE `id`='$song_id'";
+		$db_results = Dba::query($sql);
 
 		return true;
 
@@ -615,19 +603,15 @@ class Song {
 	 * This updates a song record that is housed in the song_ext_info table
 	 * These are items that aren't used normally, and often large/informational only
 	 */
-	function _update_ext_item($field,$value,$song_id,$level) { 
+	private static function _update_ext_item($field,$value,$song_id,$level) { 
 
 		/* Check them rights boy! */
 		if (!$GLOBALS['user']->has_access($level)) { return false; } 
 	
-		if (!$song_id) { $song_id = $this->id; } 
+		$value = Dba::escape($value); 
 
-		$value = sql_escape($value); 
-
-		$sql = "UPDATE song_ext_data SET `$field`='$value' WHERE song_id='$song_id'";
-		$db_results = mysql_query($sql,dbh()); 
-
-		$this->{$field} = $value; 
+		$sql = "UPDATE `song_data` SET `$field`='$value' WHERE `song_id`='$song_id'";
+		$db_results = Dba::query($sql); 
 
 		return true; 
 

@@ -338,7 +338,7 @@ class Album {
 		$data = array(); 
 
 		/* See if we are looking for a specific filename */
-		$preferred_filename = conf('album_art_preferred_filename');
+		$preferred_filename = Config::get('album_art_preferred_filename');
 
 		// Init a horrible hack array of lameness
 		$cache =array(); 
@@ -354,10 +354,9 @@ class Album {
 	                $handle = @opendir($dir);
 
                 	if (!is_resource($handle)) {
-	                        echo "<font class=\"error\">" . _("Error: Unable to open") . " $dir</font><br />\n";
+				Error::add('general',_('Error: Unable to open') . ' ' . $dir); 
 				debug_event('read',"Error: Unable to open $dir for album art read",'2');
 	                }
-
 
 	                /* Recurse through this dir and create the files array */
 	                while ( FALSE !== ($file = @readdir($handle)) ) {
@@ -397,7 +396,7 @@ class Album {
 
 		return $data;
 
-	} // get_folder_art()
+	} // get_folder_art
 
 	/**
 	 * get_resized_db_art
@@ -462,7 +461,7 @@ class Album {
 		$amazon_base_urls = array();
 
 		/* Attempt to retrive the album art order */
-		$config_value = conf('amazon_base_urls');
+		$config_value = Config::get('amazon_base_urls');
                
 		/* If it's not set */
 		if (empty($config_value)) { 
@@ -472,18 +471,18 @@ class Album {
 	        	array_push($amazon_base_urls,$config_value);
 		}
 		else { 
-			$amazon_base_urls = array_merge($amazon_base_urls, conf('amazon_base_urls'));
+			$amazon_base_urls = array_merge($amazon_base_urls, Config::get('amazon_base_urls'));
 		}
 
 	       /* Foreach through the base urls that we should check */
                foreach ($amazon_base_urls AS $amazon_base) { 
 
 		    	// Create the Search Object
-	        	$amazon = new AmazonSearch(conf('amazon_developer_key'), $amazon_base);
+	        	$amazon = new AmazonSearch(Config::get('amazon_developer_key'), $amazon_base);
 			$search_results = array();
 
 			/* Setup the needed variables */
-			$max_pages_to_search = max(conf('max_amazon_results_pages'),$amazon->_default_results_pages);
+			$max_pages_to_search = max(Config::get('max_amazon_results_pages'),$amazon->_default_results_pages);
 			$pages_to_search = $max_pages_to_search; //init to max until we know better.
 
 			// while we have pages to search 
@@ -521,7 +520,7 @@ class Album {
 			}
 
 			/* Log this if we're doin debug */
-			debug_event('amazon-xml',"Searched using $keywords with " . conf('amazon_developer_key') . " as key " . count($final_results) . " results found",'5');
+			debug_event('amazon-xml',"Searched using $keywords with " . Config::get('amazon_developer_key') . " as key " . count($final_results) . " results found",'5');
 
 			// If we've hit our limit
 			if (!empty($limit) && count($final_results) >= $limit) { 
