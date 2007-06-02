@@ -731,18 +731,17 @@ class Catalog {
 
 	} // dump_album_art 
 
-	/*!
-		@function update_last_update
-		@discussion updates the last_update of the catalog
-	*/
-	function update_last_update() {
+	/**
+	 * update_last_update
+	 * updates the last_update of the catalog
+	 */
+	private function update_last_update() {
 
 		$date = time();
-		$sql = "UPDATE catalog SET last_update='$date' WHERE id='$this->id'";
-		$db_results = mysql_query($sql, dbh());
+		$sql = "UPDATE `catalog` SET `last_update`='$date' WHERE `id`='$this->id'";
+		$db_results = Dba::query($sql);
 
 	} // update_last_update
-
 
 	/**
 	 * update_last_add
@@ -1557,9 +1556,10 @@ class Catalog {
                                 /* Stupid little cutesie thing */
                                 $count++;
                                 if (!($count%10) ) {
+					$file = str_replace(array('(',')','\''),'',$song->file); 
                                         echo "<script type=\"text/javascript\">";
                                         echo "update_txt('" . $count . "','verify_count_" . $catalog_id . "');";
-					echo "update_txt('" . htmlentities($song->file) . "','verify_dir_" . $catalog_id . "');"; 
+					echo "update_txt('" . scrub_out($file) . "','verify_dir_" . $catalog_id . "');"; 
                                         echo "</script>\n";
                                         flush();
                                 } //echos song count
@@ -1577,7 +1577,7 @@ class Catalog {
 		self::clean($catalog_id); 
 
 		// Update the last_update
-		self::update_last_update($catalog_id);
+		$this->update_last_update();
 
                 // One final time!
 		echo "<script type=\"text/javascript\">";
