@@ -5,10 +5,10 @@
 	$text = scrub_in($_REQUEST['action']) . '_ac';
 	${$text} = ' selected="selected"'; 
 ?>
-<span><a href="<?php $web_path; ?>/browse.php?action=song"><?php echo _('Song Title'); ?></a></span>
-<span><a href="<?php $web_path; ?>/browse.php?action=album"><?php echo _('Albums'); ?></a></span>
-<span><a href="<?php $web_path; ?>/browse.php?action=artist"><?php echo _('Artist'); ?></a></span>
-<span><a href="<?php $web_path; ?>/browse.php?action=genre"><?php echo _('Genre'); ?></a></span>
+<span><a href="<?php echo $web_path; ?>/browse.php?action=song"><?php echo _('Song Title'); ?></a></span>
+<span><a href="<?php echo $web_path; ?>/browse.php?action=album"><?php echo _('Albums'); ?></a></span>
+<span><a href="<?php echo $web_path; ?>/browse.php?action=artist"><?php echo _('Artist'); ?></a></span>
+<span><a href="<?php echo $web_path; ?>/browse.php?action=genre"><?php echo _('Genre'); ?></a></span>
 <hr />
 <h4><?php echo _('Filters'); ?></h4>
 <?php show_alphabet_list($_REQUEST['alpha_match'],$_REQUEST['action']); ?>

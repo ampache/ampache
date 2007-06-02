@@ -127,22 +127,20 @@ switch ($_REQUEST['action']) {
 	break;
 	case 'clean_all_catalogs':
 		$catalog = new Catalog(); 
-		$_REQUEST['catalogs'] = $catalog->get_catalog_ids();
+		$_REQUEST['catalogs'] = Catalog::get_catalog_ids();
 	case 'clean_catalog':
 	    	/* If they are in demo mode stop them here */
-	        if (conf('demo_mode')) { break; }
+	        if (Config::get('demo_mode')) { break; }
 	
 		// Make sure they checked something
 		if (isset($_REQUEST['catalogs'])) {	
 			foreach($_REQUEST['catalogs'] as $catalog_id) { 
-				echo "<div class=\"confirmation-box\">";
 				$catalog = new Catalog($catalog_id);
 				$catalog->clean_catalog(0,1);
-				echo "</div>";
 			} // end foreach catalogs
 		}
 		
-		$url 	= conf('web_path') . '/admin/index.php';
+		$url 	= Config::get('web_path') . '/admin/index.php';
 		$title	= _('Catalog Cleaned');
 		$body	= '';
 		show_confirmation($title,$body,$url);

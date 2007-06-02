@@ -1226,58 +1226,48 @@ class Catalog {
 	} // update_remote_catalog
 
 
-	/*!
-		@function clean_catalog
-		@discussion  Cleans the Catalog of files that no longer exist grabs from $this->id or $id passed 
-  	  		     Doesn't actually delete anything, disables errored files, and returns them in an array
-		@param $catalog_id=0	Take the ID of the catalog you want to clean
-	*/
-	function clean_catalog($catalog_id=0,$verbose=1) {
+	/**
+	 * clean_catalog
+	 * Cleans the Catalog of files that no longer exist grabs from $this->id or $id passed 
+  	 * Doesn't actually delete anything, disables errored files, and returns them in an array
+	 */
+	public function clean_catalog() {
 
 		/* Define the Arrays we will need */
 		$dead_files = array();
 
-		if (!$catalog_id) { $catalog_id = $this->id; }
-
-		if ($verbose) { 
-			echo "\n" . _('Cleaning the') . " <b>[" . $this->name . "]</b> " . _('Catalog') . "...<br />\n";
-			echo _('Checking') . ": <span id=\"count_clean_" . $this->id . "\"></span>\n<br />";
-			flush();
-		}
+		require_once Config::get('prefix') . '/templates/show_clean_catalog.inc.php';
+		flush(); 
 
 		/* Get all songs in this catalog */
-		$sql = "SELECT id,file FROM song WHERE catalog='$catalog_id' AND enabled='1'";
-		$db_results = mysql_query($sql, dbh());
+		$sql = "SELECT `id`,`file` FROM `song` WHERE `catalog`='$this->id' AND enabled='1'";
+		$db_results = Dba::query($sql);
 
 		/* Recurse through files, put @ to prevent errors poping up */
-		while ($results = mysql_fetch_object($db_results)) {
-
-			/* Remove slashes while we are checking for its existance */
-			$results->file = $results->file;
+		while ($results = Dba::fetch_assoc($db_results)) {
 
                         /* Stupid little cutesie thing */
-                        $this->count++;
-                        if ( !($this->count%conf('catalog_echo_count')) && $verbose) {
+                        $count++;
+                        if (!($count%10)) {
+				$file = str_replace(array('(',')','\''),'',$results['file']);
 			        echo "<script type=\"text/javascript\">";
-			        echo "update_txt('" . $this->count ."','count_clean_" . $this->id . "');";
+			        echo "update_txt('" . $count ."','clean_count_" . $this->id . "');";
+				echo "update_txt('" . htmlentities($file) . "','clean_dir_" . $this->id . "');"; 
 			        echo "</script>\n";	
 	                        flush();
                         } //echos song count
 
 			/* Also check the file information */
-			$file_info = filesize($results->file);
+			$file_info = filesize($results['file']);
 
 			/* If it errors somethings splated, or the files empty */
-			if (!file_exists($results->file) OR $file_info < 1) {
+			if (!file_exists($results['file']) OR $file_info < 1) {
 			
 				/* Add Error */
-				if ($verbose) { 
-					echo "<font class=\"error\">Error File Not Found or 0 Bytes: " . $results->file . "</font><br />";
-					flush();
-				}
+				Error::add('general',"Error File Not Found or 0 Bytes: " . $results['file']); 
 
 				/* Add this file to the list for removal from the db */
-				$dead_files[] = $results;
+				$dead_files[] = $results['id'];
 			} //if error
 
 		} //while gettings songs
@@ -1289,8 +1279,8 @@ class Catalog {
 		if (count($dead_files)) {
 			foreach ($dead_files as $data) {
 
-				$sql = "DELETE FROM song WHERE id='$data->id'";
-				$db_results = mysql_query($sql, dbh());
+				$sql = "DELETE FROM `song` WHERE `id`='$data'";
+				$db_results = Dba::query($sql);
 
 			} //end foreach
 
@@ -1303,16 +1293,13 @@ class Catalog {
 		self::clean($catalog_id); 
 		
 		/* Return dead files, so they can be listed */
-		if ($verbose) { 
-                        echo "<script type=\"text/javascript\">";
-                        echo "update_txt('" . $this->count ."','count_clean_" . $this->id . "');";
-                        echo "</script>\n";
-			echo "<b>" . _("Catalog Clean Done") . " [" . count($dead_files) . "] " . _("files removed") . "</b><br />\n";
-			flush();
-		}
-		return $dead_files;
-
-		$this->count = 0;
+                echo "<script type=\"text/javascript\">";
+                echo "update_txt('" . $count ."','clean_count_" . $this->id . "');";
+                echo "</script>\n";
+		show_box_top(); 
+		echo "<b>" . _('Catalog Clean Done') . " [" . count($dead_files) . "] " . _('files removed') . "</b><br />\n";
+		show_box_bottom(); 
+		flush();
 
 	} //clean_catalog
 
