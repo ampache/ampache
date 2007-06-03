@@ -83,7 +83,7 @@ class Catalog {
 
 	/**
 	 * get_catalogs
-	 *Pull all the current catalogs
+	 * Pull all the current catalogs and return an array of objects
 	 */
 	public static function get_catalogs() {
 
