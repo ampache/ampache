@@ -84,6 +84,7 @@ class Browse {
 	public static function set_type($type) { 
 
 		switch($type) { 
+			case 'user':
 			case 'song':
 			case 'album':
 			case 'artist':
@@ -160,6 +161,9 @@ class Browse {
 			break;
 			case 'genre':
 				$sql = "SELECT `genre`.`id` FROM `genre` ";
+			break;
+			case 'user': 
+				$sql = "SELECT `user`.`id` FROM `user` ";
 			break;
 			case 'song':
 			default:
@@ -306,6 +310,11 @@ class Browse {
 			case 'genre':
 				show_box_top(); 
 				require_once Config::get('prefix') . '/templates/show_genres.inc.php'; 
+				show_box_bottom(); 
+			break;
+			case 'user':
+				show_box_top(_('Manage Users')); 
+				require_once Config::get('prefix') . '/templates/show_users.inc.php'; 
 				show_box_bottom(); 
 			break;
 			case 'artist':

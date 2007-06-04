@@ -293,17 +293,19 @@ class User {
 
 	} // get_recommendations
 
-	/*!
-		@function is_logged_in
-		@discussion checks to see if $this user is logged in
-	*/
-	function is_logged_in() { 
+	/**
+	 * is_logged_in
+	 * checks to see if $this user is logged in
+	 */
+	public function is_logged_in() { 
 
-		$sql = "SELECT id FROM session WHERE `username`='$this->username'" .
-			" AND expire > ". time();
-		$db_results = mysql_query($sql,dbh());
+		$username = Dba::escape($this->username); 
 
-		if (mysql_num_rows($db_results)) { 
+		$sql = "SELECT `id` FROM `session` WHERE `username`='$username'" .
+			" AND `expire` > ". time();
+		$db_results = Dba::query($sql);
+
+		if (Dba::num_rows($db_results)) { 
 			return true;
 		}
 
@@ -385,16 +387,16 @@ class User {
 
 	} // add_preference
 
-	/*!
-		@function update_username
-		@discussion updates their username
-	*/
-	function update_username($new_username) {
+	/**
+	 * update_username
+	 * updates their username
+	 */
+	public function update_username($new_username) {
 
-		$new_username = sql_escape($new_username);
+		$new_username = Dba::escape($new_username);
 		$sql = "UPDATE `user` SET `username`='$new_username' WHERE `id`='$this->id'";
 		$this->username = $new_username;
-		$db_results = mysql_query($sql, dbh());
+		$db_results = Dba::query($sql);
 
 	} // update_username
 
@@ -415,27 +417,27 @@ class User {
 
 	} // update_validation
 
-	/*!
-		@function update_fullname
-		@discussion updates their fullname
-	*/
-	function update_fullname($new_fullname) {
+	/**
+	 * update_fullname
+	 * updates their fullname
+	 */
+	public function update_fullname($new_fullname) {
 		
-		$new_fullname = sql_escape($new_fullname);
-		$sql = "UPDATE user SET fullname='$new_fullname' WHERE `id`='$this->id'";
-		$db_results = mysql_query($sql, dbh());
+		$new_fullname = Dba::escape($new_fullname);
+		$sql = "UPDATE `user` SET `fullname`='$new_fullname' WHERE `id`='$this->id'";
+		$db_results = Dba::query($sql);
 
 	} // update_fullname
 
-	/*!
-		@function update_email
-		@discussion updates their email address
-	*/
-	function update_email($new_email) {
+	/**
+	 * update_email
+	 * updates their email address
+	 */
+	public function update_email($new_email) {
 
-		$new_email = sql_escape($new_email);
-		$sql = "UPDATE user SET email='$new_email' WHERE `id`='$this->id'";
-		$db_results = mysql_query($sql, dbh());
+		$new_email = Dba::escape($new_email);
+		$sql = "UPDATE `user` SET `email`='$new_email' WHERE `id`='$this->id'";
+		$db_results = Dba::query($sql);
 
 	} // update_email
 
@@ -478,20 +480,19 @@ class User {
 	/**
 	 * update_access
 	 * updates their access level
-	 * @todo Remove References to the named version of access
 	 */
-	function update_access($new_access) { 
+	public function update_access($new_access) { 
 
 		/* Prevent Only User accounts */
 		if ($new_access < '100') { 
 			$sql = "SELECT `id` FROM user WHERE `access`='100' AND `id` != '$this->id'";
-			$db_results = mysql_query($sql, dbh());
-			if (!mysql_num_rows($db_results)) { return false; }
+			$db_results = Dba::query($sql);
+			if (!Dba::num_rows($db_results)) { return false; }
 		}
 
-		$new_access = sql_escape($new_access);
+		$new_access = Dba::escape($new_access);
 		$sql = "UPDATE `user` SET `access`='$new_access' WHERE `id`='$this->id'";
-		$db_results = mysql_query($sql, dbh());
+		$db_results = Dba::query($sql);
 
 	} // update_access
 
@@ -610,41 +611,40 @@ class User {
 
 	} // create
 	
-	/*!
-		@function update_password
-		@discussion updates a users password
-	*/
-	function update_password($new_password) { 
+	/**
+	 * update_password
+	 * updates a users password
+	 */
+	public function update_password($new_password) { 
 
-		$new_password = sql_escape($new_password);
-		$sql = "UPDATE user SET password=PASSWORD('$new_password') WHERE `id`='$this->id'";
-		$db_results = mysql_query($sql, dbh());
+		$new_password = Dba::escape($new_password);
+		$sql = "UPDATE `user` SET `password`=PASSWORD('$new_password') WHERE `id`='$this->id'";
+		$db_results = Dba::query($sql);
 
-		return true;
 	} // update_password 
 
 	/**
-	 * format_user
+	 * format
 	 * This function sets up the extra variables we need when we are displaying a
 	 * user for an admin, these should not be normally called when creating a 
 	 * user object
 	 */
-	function format_user() { 
+	public function format() { 
 
 		/* If they have a last seen date */
-		if (!$this->last_seen) { $this->f_last_seen = "Never"; }
+		if (!$this->last_seen) { $this->f_last_seen = _('Never'); }
 		else { $this->f_last_seen = date("m\/d\/Y - H:i",$this->last_seen); }
 
 		/* If they have a create date */
-        	if (!$this->create_date) { $this->f_create_date = "Unknown"; }
-		else { $this->f_create_date = date("m\/d\/Y - H:i",$user->create_date); }
+        	if (!$this->create_date) { $this->f_create_date = _('Unknown'); }
+		else { $this->f_create_date = date("m\/d\/Y - H:i",$this->create_date); }
 
 		/* Calculate their total Bandwidth Useage */
-		$sql = "SELECT song.size FROM song LEFT JOIN object_count ON song.id=object_count.object_id " . 
-			"WHERE object_count.user='$this->id' AND object_count.object_type='song'";
-		$db_results = mysql_query($sql, dbh());
+		$sql = "SELECT `song`.`size` FROM `song` LEFT JOIN `object_count` ON `song`.`id`=`object_count`.`object_id` " . 
+			"WHERE `object_count`.`user`='$this->id' AND `object_count`.`object_type`='song'";
+		$db_results = Dba::query($sql);
 
-		while ($r = mysql_fetch_assoc($db_results)) { 
+		while ($r = Dba::fetch_assoc($db_results)) { 
 			$total = $total + $r['size'];
 		}		
 
@@ -656,6 +656,7 @@ class User {
 		}
 
 		switch ($divided) { 
+			default:
 			case '1': $name = "KB"; break;
 			case '2': $name = "MB"; break;
 			case '3': $name = "GB"; break;
@@ -937,28 +938,31 @@ class User {
         /**
          * get_ip_history 
          * This returns the ip_history from the
-         * last conf('user_ip_cardinality') days
+         * last Config::get('user_ip_cardinality') days
          */             
-        function get_ip_history($count='',$distinct='') { 
+        public function get_ip_history($count='',$distinct='') { 
 
-		$username 	= sql_escape($this->id);
+		$username 	= Dba::escape($this->id);
 
 		if ($count) { 
 			$limit_sql = "LIMIT " . intval($count);
 		}
+		else { 
+			$limit_sql = "LIMIT " . intval(Config::get('user_ip_cardinality'));
+		} 
 		if ($distinct) { 
-			$group_sql = "GROUP BY ip";
+			$group_sql = "GROUP BY `ip`";
 		}
                         
                 /* Select ip history */
-                $sql = "SELECT ip,date FROM ip_history" .
-                        " WHERE user='$username'" .
+                $sql = "SELECT `ip`,`date` FROM `ip_history`" .
+                        " WHERE `user`='$username'" .
                         " $group_sql ORDER BY `date` DESC $limit_sql";
-                $db_results = mysql_query($sql, dbh());
+                $db_results = Dba::query($sql);
 
                 $results = array();
          
-                while ($r = mysql_fetch_assoc($db_results)) {
+                while ($r = Dba::fetch_assoc($db_results)) {
                         $results[] = $r;
                 }
         
@@ -997,6 +1001,26 @@ class User {
                 return true;
 
         } // is_xmlrpc
+
+	/**
+	 * check_username
+	 * This checks to make sure the username passed doesn't already
+	 * exist in this instance of ampache
+	 */
+	public static function check_username($username) { 
+
+		$usrename = Dba::escape($username); 
+
+		$sql = "SELECT `id` FROM `user` WHERE `username`='$username'"; 
+		$db_results = Dba::query($sql); 
+
+		if (Dba::num_rows($db_results)) { 
+			return false; 
+		} 
+
+		return true; 
+
+	} // check_username
 	
 } //end user class
 

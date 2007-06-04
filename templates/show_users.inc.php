@@ -19,46 +19,13 @@
 
 */
 
-$web_path = conf('web_path');
-$total_items = $view->total_items;
-$admin_menu = "admin/";
+$web_path = Config::get('web_path');
 
-show_box_top(_('Manage Users')); 
 ?>
-<table class="tabledata" cellpadding="0" cellspacing="10" border="0">
-<tr>
-<td>
-<?php
-	echo get_user_icon('add_user') . '&nbsp;'; 
-	echo '<a href="' . $web_path . '/admin/users.php?action=show_add_user">' . _('Add a new user') . '</a>';
-	if (isset ($_REQUEST['action']) && $_REQUEST['action'] == "show_inactive"){
-	?>
-</td>
-</tr>
-<form name="show_inactive" enctype="multipart/form-data" method="request" action="<?php echo conf('web_path') . "/admin/users.php"; ?>">
-<tr align="center">
-        <td>
-        Inactive users for&nbsp;&nbsp;<input type=text name="days" size="4" value="<?php if (isset ($_REQUEST['days'])){ echo $_REQUEST['days'];}?>" />&nbsp;&nbsp;days
-        </td>
-</tr>
-<tr>
-	<td>
-	<input type="hidden" name="action" value="show_inactive" />
-	<input type="Submit" />
-	</td>
-</tr>
-</form>
-	<?php
-	}?>
-</table>
-<?php
-show_box_bottom(); 
-?>
-<?php show_box_top(); ?>
 <table class="tabledata" cellpadding="0" cellspacing="0" border="0">
 <tr class="table-header" align="center">
         <td colspan="11">
-        <?php  if ($view->offset_limit) { require (conf('prefix') . "/templates/list_header.inc"); } ?>
+        <?php  if ($view->offset_limit) { require Config::get('prefix') . '/templates/list_header.inc'; } ?>
         </td>
 </tr>
 <tr class="table-header">
@@ -83,28 +50,27 @@ show_box_bottom();
         <td align="center">
 		<b><?php echo _('Activity'); ?></b>
 	</td>
-	<?php if (conf('track_user_ip')) { ?>
+	<?php if (Config::get('track_user_ip')) { ?>
         <td align="center">
 		<b><?php echo _('Last Ip'); ?></b>
 	</td>
 	<?php } ?>
-	<td colspan="5">&nbsp;</td>
+	<td align="center"><strong><?php echo _('Action'); ?></strong></td>
         <td align="center">
 		<b><?php echo _('On-line'); ?></b>
 	</td>
 </tr>
 <?php
-foreach ($users as $working_user) { 
-	$working_user->format_user();
-        $last_seen = date("m\/d\/Y - H:i",$working_user->last_seen);
-        if (!$working_user->last_seen) { $last_seen = _('Never'); }
-        $create_date = date("m\/d\/Y - H:i",$working_user->create_date);
-        if (!$working_user->create_date) { $create_date = _('Unknown'); }
+foreach ($object_ids as $user_id) { 
+	$client = new User($user_id); 
+	$client->format(); 
+        $last_seen 	= $client->last_seen ? date("m\/d\/Y - H:i",$client->last_seen) : _('Never');
+        $create_date	= $client->create_date ? date("m\/d\/Y - H:i",$client->create_date) : _('Unknown');
 ?>
 <tr class="<?php echo flip_class(); ?>" align="center">
 	<td align="left">
-		<a href="<?php echo $web_path; ?>/admin/users.php?action=edit&amp;user_id=<?php echo $working_user->id; ?>">
-			<?php echo $working_user->fullname; ?> (<?php echo $working_user->username; ?>)
+		<a href="<?php echo $web_path; ?>/admin/users.php?action=edit&amp;user_id=<?php echo $client->id; ?>">
+			<?php echo $client->fullname; ?> (<?php echo $client->username; ?>)
 		</a>
 	</td>
         <td>
@@ -115,48 +81,37 @@ foreach ($users as $working_user) {
 	</td>
 
         <td>
-		<?php echo $working_user->f_useage; ?>
-	</td>
-	<?php if (conf('track_user_ip')) { ?>
-        <td>
-		<a href="<?php echo $web_path; ?>/admin/users.php?action=show_ip_history&amp;user_id=<?php echo $working_user->id; ?>">
-			<?php echo $working_user->ip_history; ?>
-		</a>
-	</td>
-	<?php } ?>
-        <td>
-		<a href="<?php echo $web_path; ?>/admin/users.php?action=edit&amp;user_id=<?php echo $working_user->id; ?>">
-			<?php echo get_user_icon('edit'); ?>
-		</a>
-	</td>
-        <td>
-		<a href="<?php echo $web_path; ?>/admin/preferences.php?action=user&amp;user_id=<?php echo $working_user->id; ?>">
-			<?php echo get_user_icon('preferences'); ?>
-		</a>
+		<?php echo $client->f_useage; ?>
 	</td>
 	<td>
-		<a href="<?php echo $web_path; ?>/stats.php?action=user_stats&amp;user_id=<?php echo $working_user->id; ?>">
-			<?php echo get_user_icon('statistics'); ?>
+	<?php if (Config::get('track_user_ip')) { ?>
+		<a href="<?php echo $web_path; ?>/admin/users.php?action=show_ip_history&amp;user_id=<?php echo $client->id; ?>">
+			<?php echo $client->ip_history; ?>
 		</a>
-	</td>
+	<?php } ?>
+		<a href="<?php echo $web_path; ?>/admin/users.php?action=show_edit&amp;user_id=<?php echo $client->id; ?>">
+			<?php echo get_user_icon('edit'); ?>
+		</a>
+		<a href="<?php echo $web_path; ?>/admin/preferences.php?action=user&amp;user_id=<?php echo $client->id; ?>">
+			<?php echo get_user_icon('preferences'); ?>
+		</a>
 	<?php
 	//FIXME: Fix this for the extra permission levels
 	if ($working_user->disabled == '1') { 
-		echo "<td><a href=\"".$web_path."/admin/users.php?action=enable&amp;user_id=$working_user->id\">" . get_user_icon('enable') . "</a></td>";
+		echo "<a href=\"".$web_path."/admin/users.php?action=enable&amp;user_id=$client->id\">" . get_user_icon('enable') . "</a>";
 	}
 	else {
-		echo "<td><a href=\"".$web_path."/admin/users.php?action=disable&amp;user_id=$working_user->id\">" . get_user_icon('disable') ."</a></td>";
+		echo "<a href=\"".$web_path."/admin/users.php?action=disable&amp;user_id=$client->id\">" . get_user_icon('disable') ."</a>";
 	}
 	?>
-	<td>
-		<a href="<?php echo $web_path; ?>/admin/users.php?action=delete&amp;user_id=<?php echo $working_user->id; ?>">
+		<a href="<?php echo $web_path; ?>/admin/users.php?action=delete&amp;user_id=<?php echo $client->id; ?>">
 		<?php echo get_user_icon('delete'); ?>
 		</a>
 	</td>
        <?php
-	if (($working_user->is_logged_in()) and ($working_user->is_online())) {
+	if (($client->is_logged_in()) AND ($client->is_online())) {
 		echo "<td class=\"user_online\"> &nbsp; </td>";
-	} elseif ($working_user->disabled == 1) {
+	} elseif ($client->disabled == 1) {
 		echo "<td class=\"user_disabled\"> &nbsp; </td>";
 	} else {
 		echo "<td class=\"user_offline\"> &nbsp; </td>";
@@ -165,4 +120,3 @@ foreach ($users as $working_user) {
 </tr>
 <?php } //end foreach users ?>
 </table>
-<?php show_box_bottom(); ?>

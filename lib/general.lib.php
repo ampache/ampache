@@ -556,25 +556,6 @@ function clear_catalog_stats() {
 } // clear_catalog_stats
 
 /**
- * check_username
- * this function checks to make sure the specified username doesn't already exist 
- * @package General
- * @catagory Users
- */
-function check_username($username) { 
-
-	$sql = "SELECT username FROM user WHERE username = '" . sql_escape($username) . "'";
-	$db_results = mysql_query($sql, dbh());
-
-	if (mysql_fetch_row($db_results)) { 
-		return false; 
-	}
-
-	return true;
-
-} // check_username
-
-/**
  * scrub_out
  * This function is used to escape user data that is getting redisplayed
  * onto the page, it htmlentities the mojo

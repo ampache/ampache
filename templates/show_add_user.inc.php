@@ -21,8 +21,8 @@
 */
 ?>
 <?php show_box_top(_('Adding a New User')); ?>
-<?php $GLOBALS['error']->print_error('general'); ?>
-<form name="add_user" enctype="multpart/form-data" method="post" action="<?php echo conf('web_path') . "/admin/users.php"; ?>">
+<?php Error::display('general'); ?>
+<form name="add_user" enctype="multpart/form-data" method="post" action="<?php echo Config::get('web_path') . "/admin/users.php?action=add_user"; ?>">
 <table class="tabledata" cellspacing="0" cellpadding="0" border="0">
 <tr>
 	<td>
@@ -30,7 +30,7 @@
 	</td>
 	<td>
 		<input type="text" name="username" size="30" maxlength="128" value="<?php echo scrub_out($_POST['username']); ?>" />
-		<?php $GLOBALS['error']->print_error('username'); ?>
+		<?php Error::display('username'); ?>
 	</td>
 </tr>
 <tr>
@@ -53,7 +53,7 @@
 	</td>
 	<td>
 		<input type="password" name="password_1" size="30" value="" />
-		<?php $GLOBALS['error']->print_error('password'); ?>
+		<?php Error::display('password'); ?>
 	</td>
 </tr>
 <tr>
@@ -79,7 +79,6 @@
 </tr>
 	<td colspan="2">
 		<input type="submit" value="<?php echo _('Add User'); ?>" />
-		<input type="hidden" name="action" value="add_user" />
 	</td>
 </tr>
 </table>

@@ -21,22 +21,22 @@
 */
 ?>
 <?php show_box_top(_('Editing existing User')); ?>
-<?php $GLOBALS['error']->print_error('general'); ?>
-<form name="update_user" enctype="multipart/form-data" method="post" action="<?php echo conf('web_path') . "/admin/users.php"; ?>">
+<?php Error::display('general'); ?>
+<form name="update_user" enctype="multipart/form-data" method="post" action="<?php echo Config::get('web_path') . "/admin/users.php"; ?>">
 <table class="tabledata" cellspacing="0" cellpadding="0" border="0">
 <tr>
 	<td>
 		<?php echo _('Username'); ?>:
 	</td>
 	<td>
-		<input type="text" name="username" size="30" maxlength="128" value="<?php echo scrub_out($working_user->username); ?>" />
-		<?php $GLOBALS['error']->print_error('username'); ?>
+		<input type="text" name="username" size="30" maxlength="128" value="<?php echo scrub_out($client->username); ?>" />
+		<?php Error::display('username'); ?>
 	</td>
 </tr>
 <tr>
 	<td><?php echo _('Full Name'); ?>:</td>
 	<td>
-		<input type="text" name="fullname" size="30" value="<?php echo scrub_out($working_user->fullname); ?>" />
+		<input type="text" name="fullname" size="30" value="<?php echo scrub_out($client->fullname); ?>" />
 	</td>
 </tr>
 <tr>
@@ -44,7 +44,7 @@
 		<?php echo _('E-mail'); ?>:
 	</td>
 	<td>
-		<input type="text" name="email" size="30" value="<?php echo scrub_out($working_user->email); ?>" />
+		<input type="text" name="email" size="30" value="<?php echo scrub_out($client->email); ?>" />
 	</td>
 </tr>
 <tr>
@@ -53,7 +53,7 @@
 	</td>
 	<td>
 		<input type="password" name="password_1" size="30" value="" />
-		<?php $GLOBALS['error']->print_error('password'); ?>
+		<?php Error::display('password'); ?>
 	</td>
 </tr>
 <tr>
@@ -69,7 +69,7 @@
 		<?php echo  _('User Access Level'); ?>:
 	</td>
 	<td>
-		<?php $var_name = "on_" . $working_user->access; ${$var_name} = 'selected="selected"'; ?>
+		<?php $var_name = "on_" . $client->access; ${$var_name} = 'selected="selected"'; ?>
 		<select name="access">
 		<option value="5" <?php echo $on_5; ?>><?php echo _('Guest'); ?></option>
 		<option value="25" <?php echo $on_25; ?>><?php echo _('User'); ?></option>
@@ -81,7 +81,7 @@
 	<td colspan="2">
 		<input type="hidden" name="action" value="update_user" />
 		<input type="submit" value="<?php echo _('Update User'); ?>" />
-		<input type="hidden" name="user_id" value="<?php echo $working_user->id; ?>" />
+		<input type="hidden" name="user_id" value="<?php echo $client->id; ?>" />
 	</td>
 </tr>
 </table>
