@@ -43,16 +43,14 @@ switch ($_REQUEST['action']) {
 		$catalog = new Catalog();
 		$_REQUEST['catalogs'] = $catalog->get_catalog_ids();
 	case 'add_to_catalog':
-	    	if (conf('demo_mode')) { break; }
+	    	if (Config::get('demo_mode')) { break; }
 		if ($_REQUEST['catalogs'] ) {
 			foreach ($_REQUEST['catalogs'] as $catalog_id) {
-				echo "<div class=\"confirmation-box\">";
 				$catalog = new Catalog($catalog_id);
 				$catalog->add_to_catalog();
-				echo "</div>";
 			}
 	       	}
-		$url 	= conf('web_path') . '/admin/index.php';
+		$url 	= Config::get('web_path') . '/admin/index.php';
 		$title 	= _('Catalog Updated');
 		$body	= '';
 		show_confirmation($title,$body,$url);
@@ -247,17 +245,14 @@ switch ($_REQUEST['action']) {
 		include(conf('prefix') . '/templates/show_edit_catalog.inc.php');
 	break;
 	case 'gather_album_art':
-	        flush();
 		$catalogs = Catalog::get_catalogs();
-		foreach ($catalogs as $data) { 
-			show_box_top(_('Starting Album Art Search')); 
-			echo _('Searched') . ": <span id=\"count_art_" . $data->id . "\">" . _('None') . "</span><br />";
-			show_box_bottom(); 
+		foreach ($catalogs as $catalog) { 
+			$catalog_id = $catalog->id;
+			require Config::get('prefix') . '/templates/show_gather_art.inc.php'; 
 			flush(); 
-			echo "<b>" . _('Album Art Search Finished') . ". . .</b></div>\n";
-			$data->get_album_art(0,1);
+			$catalog->get_album_art(0,1);
 		}
-		$url 	= conf('web_path') . '/admin/index.php';
+		$url 	= Config::get('web_path') . '/admin/index.php';
 		$title 	= _('Album Art Search Finished');
 		$body	= '';
 		show_confirmation($title,$body,$url);

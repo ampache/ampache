@@ -132,6 +132,7 @@ require_once $prefix . '/modules/catalog.php';
 require_once $prefix . '/modules/getid3/getid3.php';
 require_once $prefix . '/modules/infotools/Snoopy.class.php';
 require_once $prefix . '/modules/infotools/AmazonSearchEngine.class.php';
+require_once $prefix . '/modules/infotools/lastfm.class.php';
 //require_once $prefix . '/modules/infotools/jamendoSearch.class.php';
 
 /* Temp Fixes */

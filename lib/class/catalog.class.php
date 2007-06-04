@@ -455,41 +455,40 @@ class Catalog {
 	} // get_albums
 
 	/**
-	 * get_catalog_album_ids
+	 * get_album_ids
 	 * This returns an array of ids of albums that have songs in this
 	 * catalog
-	 * //FIXME:: :(
 	 */ 
-	function get_catalog_album_ids() { 
+	public function get_album_ids() { 
 
-		$id = sql_escape($this->id); 
+		$id = Dba::escape($this->id); 
 		$results = array(); 
 
-		$sql = "SELECT DISTINCT(song.album) FROM song WHERE song.catalog='$id'";
-		$db_results = mysql_query($sql,dbh()); 
+		$sql = "SELECT DISTINCT(song.album) FROM `song` WHERE `song`.`catalog`='$id'";
+		$db_results = Dba::query($sql); 
 
-		while ($r = mysql_fetch_assoc($db_results)) { 
+		while ($r = Dba::fetch_assoc($db_results)) { 
 			$results[] = $r['album']; 
 		} 
 
 		return $results; 
 
-	} // get_catalog_album_ids
+	} // get_album_ids
 
 	/**
-	 *get_album_art
-	 *This runs through all of the needs art albums and trys 
-	 *to find the art for them from the mp3s
+	 * get_album_art
+	 * This runs through all of the needs art albums and trys 
+	 * to find the art for them from the mp3s
 	 */
-	function get_album_art($catalog_id=0,$all='') { 
-		// Just so they get a page
-		flush();
+	public function get_album_art($catalog_id=0,$all='') { 
+
+		// Prevent the script from timing out
+		set_time_limit(0);
 
 		if (!$catalog_id) { $catalog_id = $this->id; }
 
-
 		if (!empty($all)) { 	
-			$albums = $this->get_catalog_album_ids(); 
+			$albums = $this->get_album_ids(); 
 		}
 		else { 
 			$albums = array_keys($this->_art_albums); 
@@ -499,16 +498,16 @@ class Catalog {
 		foreach ($albums as $album_id) { 
 			// Create the object
 			$album = new Album($album_id); 
-
-			if (conf('debug')) { 
-				debug_event('gather_art','Gathering art for ' . $album->name,'5'); 
-			}
+			// We're going to need the name here
+			$album->format(); 
+			
+			debug_event('gather_art','Gathering art for ' . $album->name,'5'); 
 			
 			// Define the options we want to use for the find art function
 			$options = array(
 				'album_name' 	=> $album->name,
-				'artist' 	=> $album->artist,
-				'keyword' 	=> $album->artist . ' ' . $album->name 
+				'artist' 	=> $album->artist_name,
+				'keyword' 	=> $album->artist_name . ' ' . $album->name 
 				); 
 
 			// Return results
@@ -523,22 +522,18 @@ class Catalog {
 
 			/* Stupid little cutesie thing */
                         $search_count++;
-                        if ( !($search_count%conf('catalog_echo_count'))) {
-                                echo "<script type=\"text/javascript\">";
+                        if ( !($search_count%5)) {
+				echo "<script type=\"text/javascript\">";
                                 echo "update_txt('" . $search_count ."','count_art_" . $this->id . "');";
+				echo "update_txt('" . $album->name . "','read_art_" . $this->id . "');"; 
                                 echo "</script>\n"; 
 	                        flush();
                         } //echos song count
 			
-			
-			// Prevent the script from timing out
-			set_time_limit(0);
 
 			unset($found);
 
 		} // foreach albums
-		echo "<br />$art_found " . _('albums with art') . ". . .<br />\n";
-		flush();
 
 	} // get_album_art
 
@@ -751,8 +746,8 @@ class Catalog {
 	function update_last_add() {
 
 		$date = time();
-		$sql = "UPDATE catalog SET last_add='$date' WHERE id='$this->id'";
-		$db_results = mysql_query($sql, dbh());
+		$sql = "UPDATE `catalog` SET `last_add`='$date' WHERE `id`='$this->id'";
+		$db_results = Dba::query($sql);
 
 	} // update_last_add
 
@@ -980,24 +975,20 @@ class Catalog {
 
         } // update_song_from_tags
 
-	/*!
-		@function add_to_catalog
-		@discussion this function adds new files to an
-			existing catalog
-	*/
-	function add_to_catalog($type='',$verbose=1) { 
-
-		if ($verbose) { 
-			echo "\n" . _('Starting New Song Search on') . " <b>[$this->name]</b> " . _('catalog') . "<br />\n";
-		}
+	/**
+	 * add_to_catalog
+	 * this function adds new files to an
+	 * existing catalog
+	 */
+	public function add_to_catalog() { 
 
 		if ($this->catalog_type == 'remote') { 
 			echo _('Running Remote Update') . ". . .<br />";
 			$this->get_remote_catalog($type=0);
 			return true;
 		} 
-		
-		echo _('Found') . ": <span id=\"count_add_" . $this->id ."\">" . _('None') . "</span><br />\n";
+	
+		require Config::get('prefix') . '/templates/show_adds_catalog.inc.php'; 
 		flush();
 
 		/* Set the Start time */
@@ -1010,11 +1001,7 @@ class Catalog {
 		/* Get the songs and then insert them into the db */
 		$this->add_files($this->path,$type,0,$verbose);
 
-                echo "<script type=\"text/javascript\">";
-                echo "update_txt('" . $this->count . "','count_add_" . $this->id ."');";
-                echo "</script>\n";
-                flush();
-
+		// Foreach Playlists we found
                 foreach ($this->_playlists as $full_file) {
                         if ($this->import_m3u($full_file)) {
 				$file = basename($full_file);
@@ -1030,7 +1017,7 @@ class Catalog {
 	
 		if ($verbose) { 
 			echo "\n<b>" . _('Starting Album Art Search') . ". . .</b><br />\n"; 
-			echo _('Searched') . ": <span id=\"count_art_" . $this->id . "\">" . _('None') . "</span>";
+			echo _('Searched') . ": <span id=\"art_count_" . $this->id . "\">" . _('None') . "</span>";
 			flush();
 		}
 		$this->get_album_art(); 

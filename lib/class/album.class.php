@@ -260,11 +260,10 @@ class Album {
 						$data = $this->{$method_name}($options['keyword'],$limit); 
 					break;
 					case 'get_id3_art':
-						if ($options['skip_id3']) { break; } 
 						$data = $this->{$method_name}($limit); 
 					break; 
 					default:
-						$data = $this->{$method_name}(); 
+						$data = $this->{$method_name}($limit); 
 					break; 
 				} 
 
@@ -283,6 +282,36 @@ class Album {
 		return $results; 
 		
 	} // find_art
+
+	/**
+	 * get_lastfm_art
+	 * This returns the art as pulled from lastFM. This doesn't require
+	 * a special account, we just parse and run with it. 
+	 */
+	public function get_lastfm_art($limit) { 
+
+		// Create the parser object
+		$lastfm = new LastFMSearch(); 
+
+		$raw_data = $lastfm->search($this->artist_name,$this->name); 
+
+		if (!count($raw_data)) { return array(); } 
+
+		$coverart = $raw_data['coverart']; 
+
+		ksort($coverart); 
+		foreach ($coverart as $key=>$value) { 
+			$i++; 
+			$url = $coverart[$key]; 
+			$results = pathinfo($url); 
+			$mime = 'image/' . $results['extension']; 
+			$data[] = array('url'=>$url,'mime'=>$mime); 
+			if ($i >= $limit) { return $data; } 
+		} // end foreach
+
+		return $data; 
+
+	} // get_lastfm_art
 
 	/*!
 		@function get_id3_art

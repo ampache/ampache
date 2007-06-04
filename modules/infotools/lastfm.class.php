@@ -22,22 +22,16 @@
 
 class LastFMSearch {
 
-	var $base_url = "http://ws.audioscrobbler.com/1.0/album";
-	var $token;
-	var $results=array();  // Array of results
-	var $_parser;   // The XML parser
-	var $_grabtags; // Tags to grab the contents of
-	var $_sourceTag; // source tag don't ask
-	var $_subTag; // Stupid hack to make things come our right
-	var $_currentTag; // Stupid hack to make things come out right
-	var $_currentTagContents;
-	var $_currentPage=0;
-	var $_maxPage=1;
-	var $_default_results_pages=1;
+	protected $base_url = "http://ws.audioscrobbler.com/1.0/album";
+	public $results=array();  // Array of results
+	private $_parser;   // The XML parser
+	protected $_grabtags = array('coverart','large','medium','small');
+	private $_subTag; // Stupid hack to make things come our right
+	private $_currentTag; // Stupid hack to make things come out right
     
 	function LastFMSearch() {
-	  
-		$this->_grabtags = array('coverart','large','medium','small');
+
+		// Rien a faire
 	
 	} // LastFMSearch
     

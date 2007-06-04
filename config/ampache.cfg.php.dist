@@ -207,7 +207,7 @@ ratings = "true"
 ; method simply comment it out valid values are
 ; POSSIBLE VALUES: db id3 folder amazon lastfm
 ; DEFAULT: db,id3,folder,lastfm,amazon
-album_art_order = "db,id3,folder,amazon"
+album_art_order = "db,id3,folder,lastfm,amazon"
 
 ; Album Art 
 ; Set this to true if you want album art displayed on pages besides the
