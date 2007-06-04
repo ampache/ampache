@@ -66,7 +66,7 @@ input {
 /*             Header                           */
 /************************************************/
 #topbar { 
-	height: 80px;
+	height: 85px;
 	padding: 3px 0 0 10px;
 }
 #topbarright { 
@@ -90,7 +90,9 @@ input {
 /*                Footer                        */
 /************************************************/
 #footer {
-	margin: 0 0 10px 150px;
+	float:right;
+	margin:5px;
+	font-size:10px;
 }
 #footer p {
 	color:#999;
@@ -153,10 +155,8 @@ input {
 /*               Content block                  */
 /************************************************/
 #content {
-	top:90px;
-	float: none;
+	float:left;
 	margin:7px 0 0 135px;
-	/* background:#fff url(../images/bg_content.gif) repeat-y right top; */
 }
 h3#content_title{
 	font: 12px/32px Arial,Helvetica,Sans-Serif;

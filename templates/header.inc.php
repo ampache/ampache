@@ -73,9 +73,9 @@ if (Config::get('use_rss')) { ?>
 	<div id="sidebar"><!-- This is the sidebar -->
 		<?php require_once Config::get('prefix') . '/templates/sidebar.inc.php'; ?>
 	</div><!-- End sidebar -->
-	<div id="content">
 <!-- I hate IE... --> 
-<table class="smeg-ie"><tr><td>
+<table class="smeg-ie" width="100%"><tr><td>
+<div id="content">
 <?php if (Config::get('int_config_version') != Config::get('config_version') AND $GLOBALS['user']->has_access(100)) { ?>
 <div class="fatalerror">
 	<?php echo _('Error Config File Out of Date'); ?>

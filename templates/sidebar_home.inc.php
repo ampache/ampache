@@ -1,3 +1,7 @@
+<h4><?php echo _('Information'); ?></h4>
+<span><a href="<?php echo $web_path; ?>/index.php"><?php echo _('Currently Playing'); ?></a></span>
+<span><a href="<?php echo $web_path; ?>/stats.php"><?php echo _('Statistics'); ?></a></span>
+<hr />
 <h4><?php echo _('Search'); ?></h4>
 <div id="sidebar_subsearch">
 	<form name="sub_search" method="post" action="<?php echo $web_path; ?>/search.php" enctype="multipart/form-data" style="Display:inline">

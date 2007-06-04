@@ -303,6 +303,16 @@ class Browse {
 				require_once Config::get('prefix') . '/templates/show_albums.inc.php';
 				show_box_bottom(); 
 			break;
+			case 'genre':
+				show_box_top(); 
+				require_once Config::get('prefix') . '/templates/show_genres.inc.php'; 
+				show_box_bottom(); 
+			break;
+			case 'artist':
+				show_box_top(); 
+				require_once Config::get('prefix') . '/templates/show_artists.inc.php'; 
+				show_box_bottom(); 
+			break;
 			default: 
 				// Rien a faire
 			break;

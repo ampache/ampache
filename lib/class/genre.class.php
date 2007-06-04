@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright 2001 - 2006 Ampache.org
+ Copyright 2001 - 2007 Ampache.org
  All Rights Reserved
 
  This program is free software; you can redistribute it and/or
@@ -27,21 +27,19 @@
 class Genre {
 
 	/* Variables */
-	var $id;
-	var $name;
+	public $id;
+	public $name;
 
 	/** 
 	 * Constructor
-	 * @package Genre
-	 * @catagory Constructor
 	 */
-	function Genre($genre_id=0) { 
-
-		if ($genre_id > 0) { 
-			$this->id 	= intval($genre_id);
-			$info 		= $this->_get_info();
-			$this->name 	= $info['name'];
-		}
+	public function __construct($genre_id=0) { 
+	
+		if (!$genre_id) { return false; }
+	
+		$this->id 	= intval($genre_id);
+		$info 		= $this->_get_info();
+		$this->name 	= $info['name'];
 
 
 	} // Genre
@@ -49,50 +47,44 @@ class Genre {
 	/** 
 	 * Private Get Info 
 	 * This simply returns the information for this genre
-	 * @package Genre
-	 * @catagory Class
 	 */
-	function _get_info() { 
+	private function _get_info() { 
 
-		$sql = "SELECT * FROM " . tbl_name('genre') . " WHERE id='$this->id'";
-		$db_results = mysql_query($sql, dbh());
+		$sql = "SELECT * FROM `genre`  WHERE `id`='$this->id'";
+		$db_results = Dba::query($sql);
 		
-		$results = mysql_fetch_assoc($db_results);
+		$results = Dba::fetch_assoc($db_results);
 
 		return $results;
 
-	} // _get_info()
+	} // _get_info
 
 	/** 
 	 * format_genre
 	 * this reformats the genre object so it's all purdy and creates a link var
-	 * @package Genre
-	 * @catagory Class
 	 */
-	function format_genre() { 
+	public function format_genre() { 
 
-		$this->link 		= "<a href=\"" . conf('web_path') . "/genre.php?action=show_genre&amp;genre_id=" . $this->id . "\">" . scrub_out($this->name) . "</a>";
+		$this->link 		= "<a href=\"" . Config::get('web_path') . "/genre.php?action=show_genre&amp;genre_id=" . $this->id . "\">" . scrub_out($this->name) . "</a>";
 		
-		$this->play_link 	= conf('web_path') . '/song.php?action=genre&amp;genre=' . $this->id;
-		$this->random_link 	= conf('web_path') . '/song.php?action=random_genre&amp;genre=' . $this->id; 
-		$this->download_link 	= conf('web_path') . '/batch.php?action=genre&amp;id=' . $this->id;
+		$this->play_link 	= Config::get('web_path') . '/song.php?action=genre&amp;genre=' . $this->id;
+		$this->random_link 	= Config::get('web_path') . '/song.php?action=random_genre&amp;genre=' . $this->id; 
+		$this->download_link 	= Config::get('web_path') . '/batch.php?action=genre&amp;id=' . $this->id;
 		
 	} // format_genre
 
 	/**
 	 * get_song_count
 	 * This returns the number of songs in said genre
-	 * @package Genre
-	 * @catagory Class
 	 */
-	function get_song_count() { 
+	public function get_song_count() { 
 
-		$sql = "SELECT count(song.id) FROM song WHERE genre='" . $this->id . "'";
-		$db_results = mysql_query($sql, dbh());
+		$sql = "SELECT count(`song`.`id`) AS `total` FROM `song` WHERE `genre`='" . $this->id . "'";
+		$db_results = Dba::query($sql);
 
-		$total_items = mysql_fetch_array($db_results);
-
-		return $total_items[0];
+		$total_items = Dba::fetch_assoc($db_results);
+		
+		return $total_items['total'];
 
 	} // get_song_count
 
@@ -251,14 +243,14 @@ class Genre {
 			case 'Show_All':
 			case 'show_all':
 			case 'Show_all':
-				$sql = "SELECT id FROM genre";
+				$sql = "SELECT `id` FROM `genre`";
 			break;
 			case 'Browse':
 			case 'show_genres':
-				$sql = "SELECT id FROM genre";
+				$sql = "SELECT `id` FROM `genre`";
 			break;
 			default:
-				$sql = "SELECT id FROM genre WHERE name LIKE '" . sql_escape($match) . "%'";
+				$sql = "SELECT `id` FROM `genre` WHERE `name` LIKE '" . Dba::escape($match) . "%'";
 			break;
 		} // end switch on match
 				
@@ -266,27 +258,6 @@ class Genre {
 
 	} // get_sql_from_match
 	 
-
-	/**
-	 * show_match_list
-	 * This shows the Alphabet list and any other 'things' that genre by need at the top of every browse
-	 * page
-	 * @package Genre
-	 * @catagory Class
-	 */
-	function show_match_list($match) { 
-
-		
-
-		require (conf('prefix') . '/templates/show_box_top.inc.php');
-		show_alphabet_list('genre','browse.php',$match,'genre');
-		/* Detect if it's Browse, and if so don't fill it in */
-		if ($match == 'Browse') { $match = ''; } 
-		show_alphabet_form($match,_('Show Genres starting with'),"browse.php?action=genre&amp;match=$match");
-		require (conf('prefix') . '/templates/show_box_bottom.inc.php');
-
-	} // show_match_list
-
 } //end of genre class
 
 ?>

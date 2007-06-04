@@ -20,12 +20,13 @@
 
 */
 ?>
+</div> <!-- end id="content"-->
 <!-- I really hate IE -->
 </td></tr></table>
-</div> <!-- end id="content"-->
 </div> <!-- end id="maincontainer"-->
-<div id="footer-content">
-	<a href="http://www.ampache.org/index.php">Ampache v.<?php echo Config::get('version'); ?></a>
+<div id="footer">
+	<a href="http://www.ampache.org/index.php">Ampache v.<?php echo Config::get('version'); ?></a><br />
+	Copyright (c) 2001 - 2007 Ampache.org 
 </div>
 </body>
 </html>

@@ -18,22 +18,18 @@
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
-$web_path = conf('web_path');
+$web_path = Config::get('web_path');
 
-// Build array of the table classes we are using
-$total_items = $view->total_items;
 ?>
-<?php require(conf('prefix') . '/templates/show_box_top.inc.php'); ?>
 <table class="tabledata" cellspacing="0" cellpadding="0" border="0">
 <tr class="table-header" align="center">
 	<td colspan="5">
-	<?php if ($GLOBALS['view']->offset_limit) { require (conf('prefix') . "/templates/list_header.inc"); } ?>
+	<?php if ($GLOBALS['view']->offset_limit) { require Config::get('prefix') . '/templates/list_header.inc'; } ?>
 	</td>
 </tr>
 <tr class="table-header">
-	<td>
-		<a href="<?php echo $web_path; ?>/<?php echo $_SESSION['view_script']; ?>?action=<?php echo $_REQUEST['action']; ?>&amp;keep_view=true&amp;sort_type=artist.name&amp;sort_order=0"> <?php echo _('Artist'); ?> </a>
-	</td>
+	<td><?php echo _('Add'); ?>
+	<td><?php echo _('Artist'); ?></td>
 	<td> <?php echo _('Songs');  ?> </td>
 	<td> <?php echo _('Albums'); ?> </td>
 	<td> <?php echo _('Action'); ?> </td>
@@ -41,18 +37,28 @@ $total_items = $view->total_items;
 <?php 
 /* Foreach through every artist that has been passed to us */
 //FIXME: These should come in as objects...
-foreach ($artists as $artist) { ?>
+foreach ($object_ids as $artist_id) { 
+	$artist = new Artist($artist_id); 
+	$artist->format(); 
+?>
 	<tr class="<?php echo flip_class(); ?>">
-		<td><?php echo $artist->link; ?></td>
+		<td>
+			<span onclick="ajaxPut('<?php echo Config::get('ajax_url'); ?>?action=basket&amp;type=artist&amp;id=<?php echo $artist->id; ?>');return true;" >
+				<?php echo get_user_icon('add'); ?>	
+			</span>
+			<span onclick="ajaxPut('<?php echo Config::get('ajax_url'); ?>?action=basket&amp;type=artist_random&amp;id=<?php echo $artist->id; ?>');return true;" >
+				<?php echo get_user_icon('random'); ?>
+			</span> 
+		</td>
+		<td><?php echo $artist->f_name_link; ?></td>
 		<td><?php echo $artist->songs; ?></td>
 		<td><?php echo $artist->albums; ?></td>	
 		<td nowrap="nowrap"> 
-			<a href="<?php echo $web_path; ?>/song.php?action=artist&amp;artist_id=<?php echo $artist->id; ?>">
-				<?php echo get_user_icon('all'); ?>	
-			</a> 
-			<a href="<?php echo $web_path; ?>/song.php?action=artist_random&amp;artist_id=<?php echo $artist->id; ?>">
-				<?php echo get_user_icon('random'); ?>
-			</a> 
+		<?php if (Access::check_function('batch_download')) { ?>
+                        <a href="<?php echo Config::get('web_path'); ?>/batch.php?action=artist&amp;id=<?php echo $artist->id; ?>">
+                                <?php echo get_user_icon('batch_download','',_('Batch Download')); ?>
+                        </a>
+                <?php } ?>
 		<?php if ($GLOBALS['user']->has_access(100)) { ?>
 			<a href="<?php echo $web_path; ?>/admin/flag.php?action=show_edit_artist&amp;artist_id=<?php echo $artist->id; ?>">
 				<?php echo get_user_icon('edit'); ?>
@@ -62,9 +68,8 @@ foreach ($artists as $artist) { ?>
 	</tr>
 <?php } //end foreach ($artists as $artist) ?>
 <tr class="table-header">
-        <td>
-                <a href="<?php echo $web_path; ?>/<?php echo $_SESSION['view_script']; ?>?action=<?php echo $_REQUEST['action']; ?>&amp;keep_view=true&amp;sort_type=artist.name&amp;sort_order=0"> <?php echo _("Artist"); ?> </a>
-        </td>
+	<td><?php echo _('Add'); ?>
+        <td><?php echo _("Artist"); ?></td>
         <td><?php echo _('Songs');  ?></td>
         <td><?php echo _('Albums'); ?></td>
 	<td><?php echo _('Action'); ?></td>
@@ -76,4 +81,3 @@ foreach ($artists as $artist) { ?>
 	</td>
 </tr>
 </table>
-<?php require(conf('prefix') . '/templates/show_box_bottom.inc.php'); ?>

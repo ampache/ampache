@@ -95,7 +95,7 @@ class Artist {
 	 * get_songs
 	 * gets the songs for this artist
 	 */
-	function get_songs() { 
+	public function get_songs() { 
 	
 		$sql = "SELECT `song`.`id` FROM `song` WHERE `song`.`artist`='" . Dba::escape($this->id) . "'";
 		$db_results = Dba::query($sql);
@@ -126,21 +126,19 @@ class Artist {
 
 	} // get_song_ids
 
-        /*!
-                @function get_random_songs
-                @discussion gets a random number, and
-                        a random assortment of songs from this
-                        album
-        */
-        function get_random_songs() {
+        /**
+         * get_random_songs
+	 * Gets the songs from this artist in a random order
+         */
+        public function get_random_songs() {
 
                 $results = array();
 
-                $sql = "SELECT id FROM song WHERE artist='$this->id' ORDER BY RAND() LIMIT " . rand(1,$this->songs);
-                $db_results = mysql_query($sql, dbh());
+                $sql = "SELECT `id` FROM `song` WHERE `artist`='$this->id' ORDER BY RAND()";
+                $db_results = Dba::query($sql);
 
-                while ($r = mysql_fetch_array($db_results)) {
-                        $results[] = $r[0];
+                while ($r = Dba::fetch_assoc($db_results)) {
+                        $results[] = $r['id'];
                 }
 
                 return $results;

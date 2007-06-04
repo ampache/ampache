@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2006 Ampache.org
+ Copyright (c) 2001 - 2007 Ampache.org
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
@@ -23,9 +23,7 @@
  * Show Genres
  * Takes an array of genre objects and displays them out
  */
-$total_items = $view->total_items;
 ?>
-<?php require(conf('prefix') . '/templates/show_box_top.inc.php'); ?>
 <table class="tabledata" cellspacing="0" cellpadding="0" border="0">
 <tr class="table-header" align="center">
 	<td colspan="5">
@@ -33,24 +31,29 @@ $total_items = $view->total_items;
 	</td>
 </tr>
 <tr class="table-header">
+	<td><?php echo _('Add'); ?></td>
 	<td><?php echo _('Genre'); ?></td>
 	<td><?php echo _('Songs'); ?></td>
 	<td><?php echo _('Action'); ?></td>
 </tr>
 <?php 
-foreach ($genres as $genre) { 
-	$genre->format_genre();?>
+foreach ($object_ids as $genre_id) { 
+	$genre = new Genre($genre_id); 
+	$genre->format_genre();
+?>
 	<tr class="<?php echo flip_class(); ?>">
+		<td>
+		<span onclick="ajaxPut('<?php echo Config::get('ajax_url'); ?>?action=basket&amp;type=genre&amp;id=<?php echo $genre->id; ?>');return true;" >
+				<?php echo get_user_icon('add'); ?>
+		</span>
+		<span onclick="ajaxPut('<?php echo Config::get('ajax_url'); ?>?action=basket&amp;type=genre_random&amp;id=<?php echo $genre->id; ?>');return true;" >
+				<?php echo get_user_icon('random'); ?>
+		</span>
+		</td>
 		<td><?php echo $genre->link; ?></td>
 		<td><?php echo $genre->get_song_count(); ?></td>
 		<td>
-			<a href="<?php echo $genre->play_link; ?>">
-				<?php echo get_user_icon('all'); ?>
-			</a> 
-			<a href="<?php echo $genre->random_link; ?>">
-				<?php echo get_user_icon('random'); ?>
-			</a>
-			<?php if (batch_ok()) { ?>
+			<?php if (Access::check_function('batch_download')) { ?>
 			<a href="<?php echo $genre->download_link; ?>">
 				<?php echo get_user_icon('batch_download'); ?>
 			</a>
@@ -64,4 +67,3 @@ foreach ($genres as $genre) {
 	</td>
 </tr>
 </table>
-<?php require(conf('prefix') . '/templates/show_box_bottom.inc.php'); ?>

@@ -374,7 +374,8 @@ class Album {
 		
 		/* Thanks to dromio for origional code */
 		/* Added search for any .jpg, png or .gif - Vollmer */
-		foreach($this->_songs as $song) { 
+		foreach($this->_songs as $song_id) { 
+			$song = new Song($song_id);
 			$dir = dirname($song->file);
 
 			debug_event('folder_art',"Opening $dir and checking for Album Art",'3'); 

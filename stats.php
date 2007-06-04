@@ -26,10 +26,8 @@ require_once 'lib/init.php';
 
 require_once Config::get('prefix') . '/templates/header.inc.php'; 
 
-$action = scrub_in($_REQUEST['action']); 
-
 /* Switch on the action to be performed */
-switch ($action) { 
+switch ($_REQUEST['action']) { 
 	case 'user_stats':
 		/* Get em! */
 		$working_user = new User($_REQUEST['user_id']); 

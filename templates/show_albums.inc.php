@@ -54,9 +54,11 @@ $ajax_url = Config::get('ajax_url');
 		<td><?php echo $album->song_count; ?></td>
 		<td><?php echo $album->year; ?></td>
 		<td>
+		<?php if (Access::check_function('batch_download')) { ?>
 			<a href="<?php echo Config::get('web_path'); ?>/batch.php?action=album&amp;id=<?php echo $album->id; ?>">
 				<?php echo get_user_icon('batch_download','',_('Batch Download')); ?>
 			</a>
+		<?php } ?>
 			<span onclick="ajaxPut('<?php echo Config::get('ajax_url'); ?>?action=album&amp;type=edit&amp;id=<?php echo $album->id; ?>');return true;" >
 				<?php echo get_user_icon('edit','',_('Edit')); ?>
 			</span>

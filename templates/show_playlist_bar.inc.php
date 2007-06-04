@@ -27,5 +27,10 @@ $ajax_url = Config::get('ajax_url');
 		<?php echo get_user_icon('disable'); ?>
 	</a>
 	<a href="<?php echo Config::get('web_path'); ?>/stream.php?action=basket"><?php echo get_user_icon('all'); ?></a>
+	<?php if (Access::check_function('batch_download')) { ?>
+	        <a href="<?php echo Config::get('web_path'); ?>/batch.php?action=tmp_playlist&amp;id=<?php echo $GLOBALS['user']->playlist->id; ?>">
+			<?php echo get_user_icon('batch_download','',_('Batch Download')); ?>
+	        </a>
+	<?php } ?>
 	<?php echo __('There are currently %count% items in your playlist','%count%',$GLOBALS['user']->playlist->count_items()); ?>
 </div>

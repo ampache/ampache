@@ -33,7 +33,7 @@ set_time_limit(0);
 switch ($_REQUEST['action']) {
 	case 'tmp_playlist': 
 		$tmpPlaylist = new tmpPlaylist($_REQUEST['id']); 
-		$song_ids = $tmpPlaylist->get_objects(); 
+		$song_ids = $tmpPlaylist->get_items(); 
 		$name = $GLOBALS['user']->username . ' - Playlist';
 	break;
 	case 'playlist':
@@ -45,6 +45,11 @@ switch ($_REQUEST['action']) {
 		$album = new Album($_REQUEST['id']);
 		$song_ids = $album->get_songs();
 		$name = $album->name;
+	break;
+	case 'artist': 
+		$artist = new Artist($_REQUEST['id']); 
+		$song_ids = $artist->get_songs(); 
+		$name = $artist->name; 
 	break;
 	case 'genre':
 		$id = scrub_in($_REQUEST['id']); 

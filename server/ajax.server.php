@@ -76,19 +76,31 @@ switch ($action) {
 	case 'basket': 
 		switch ($_REQUEST['type']) { 
 			case 'album': 
-				$album = new Album($_REQUEST['id']); 
-				$songs = $album->get_songs(); 
+			case 'artist': 
+			case 'genre': 
+				$object = new $_REQUEST['type']($_REQUEST['id']); 
+				$songs = $object->get_songs(); 
 				foreach ($songs as $song_id) { 
 					$GLOBALS['user']->playlist->add_object($song_id); 
 				} // end foreach
 			break;
 			case 'album_random': 
-				$album = new Album($_REQUEST['id']); 
-				$songs = $album->get_random_songs(); 
+			case 'artist_random': 
+			case 'genre_random':
+				$data = explode('_',$_REQUEST['type']); 
+				$type = $data['0'];
+				$object = new $type($_REQUEST['id']); 
+				$songs = $object->get_random_songs(); 
 				foreach ($songs as $song_id) { 
 					$GLOBALS['user']->playlist->add_object($song_id); 
 				} 
 			break; 
+				$artist = new Artist($_REQUEST['id']); 
+				$songs = $artist->get_random_songs(); 
+				foreach ($songs as $song_id) { 
+					$GLOBALS['user']->playlist->add_object($song_id); 
+				} 
+			break;
 			case 'clear_all': 
 				$GLOBALS['user']->playlist->clear(); 
 			break;

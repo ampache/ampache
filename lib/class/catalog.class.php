@@ -83,7 +83,7 @@ class Catalog {
 
 	/**
 	 * get_catalogs
-	 * Pull all the current catalogs and return an array of objects
+	 *Pull all the current catalogs
 	 */
 	public static function get_catalogs() {
 
@@ -192,24 +192,11 @@ class Catalog {
 		// Catalog Add start
 		$start_time = time(); 
 
-		// Setup the 10 sec ajax request hotness
-                $refresh_limit = 5;
-                $ajax_url = Config::get('ajax_url') . '?action=catalog&type=add_files';  
-                /* Can't have the &amp; stuff in the Javascript */
-                $ajax_url = str_replace("&amp;","&",$ajax_url);
-                require_once Config::get('prefix') . '/templates/javascript_refresh.inc.php';
-
-		show_box_top(); 
-		echo _('Starting New Song Search on') . " <strong>[$this->name]</strong> " . _('catalog') . "<br />";
-		echo "<div id=\"catalog_update\">";
-		require_once Config::get('prefix') . '/templates/show_run_add_catalog.inc.php'; 
-		echo "</div>"; 
-		echo "<script type=\"text/javascript\">doLoad();</script>"; 
-		show_box_bottom(); 
+		require Config::get('prefix') . '/templates/show_adds_catalog.inc.php'; 
+		flush(); 	
 
 		// Prevent the script from timing out and flush what we've got
 		set_time_limit(0);
-		flush(); 	
 
 		$this->add_files($this->path,$options); 
 
@@ -410,13 +397,12 @@ class Catalog {
 
 						/* Stupid little cutesie thing */
 						$this->count++;
-						if ( !($this->count%Config::get('catalog_echo_count'))) {
-							$sql = "REPLACE INTO `update_info` (`key`,`value`) " . 
-								"VALUES('catalog_add_found','$this->count')"; 
-							$db_results = Dba::query($sql); 
-							$sql = "REPLACE INTO `update_info` (`key`,`value`) " . 
-								"VALUES('catalog_add_directory','" . Dba::escape($path) . "')"; 
-							$db_results = Dba::query($sql); 
+						if ( !($this->count%10)) {
+			                                $file = str_replace(array('(',')','\''),'',$full_file);
+			                                echo "<script type=\"text/javascript\">";
+			                                echo "update_txt('" . $this->count ."','add_count_" . $this->id . "');";
+			                                echo "update_txt('" . htmlentities($file) . "','add_dir_" . $this->id . "');"; 
+			                                echo "</script>\n";    	
 						} // update our current state
 
 					} // not found
@@ -1014,13 +1000,11 @@ class Catalog {
 
 		/* Do a little stats mojo here */
 		$current_time = time();
-	
-		if ($verbose) { 
-			echo "\n<b>" . _('Starting Album Art Search') . ". . .</b><br />\n"; 
-			echo _('Searched') . ": <span id=\"art_count_" . $this->id . "\">" . _('None') . "</span>";
-			flush();
-		}
-		$this->get_album_art(); 
+
+		$catalog_id = $this->id; 
+		require Config::get('prefix') . '/templates/show_gather_art.inc.php'; 
+		flush(); 
+		$this->get_album_art(0,1); 
 
 		/* Update the Catalog last_update */
 		$this->update_last_add();
@@ -1036,8 +1020,10 @@ class Catalog {
 			$this->count = 0;
 		}
 
+		show_box_top(); 
 		echo "\n<br />" . _("Catalog Update Finished") . "... " . _("Total Time") . " [" . date("i:s",$time_diff) . "] " .
 			_("Total Songs") . " [" . $this->count . "] " . _("Songs Per Seconds") . " [" . $song_per_sec . "]<br /><br />";
+		show_box_bottom(); 
 
 	} // add_to_catalog
 

@@ -47,42 +47,19 @@ switch($_REQUEST['action']) {
 		Browse::show_objects($album_ids); 
 	break;
 	case 'artist':
-                show_alphabet_list('artists','artists.php');
-                show_alphabet_form('',_("Show Artists starting with"),"artists.php?action=match");
-                show_artists();
+		Browse::set_type('artist'); 
+		$artist_ids = Browse::get_objects(); 
+		Browse::show_objects($artist_ids); 
 	break;
 	case 'genre':
-		/* Create the Needed Object */
-		$genre = new Genre();
-
-		/* Setup the View object */
-		$view = new View();
-		$view->import_session_view();
-		$genre->show_match_list($_REQUEST['match']);
-		$sql = $genre->get_sql_from_match($_REQUEST['match']);
-
-		if ($_REQUEST['keep_view']) { 
-			$view->initialize();
-		}
-		else { 
-			$db_results = mysql_query($sql, dbh());
-			$total_items = mysql_num_rows($db_results);
-			$offset_limit = 999999;
-			if ($match != 'Show_All') { $offset_limit = $user->prefs['offset_limit']; }
-			$view = new View($sql, 'browse.php?action=genre','name',$total_items,$offset_limit);
-		}
-	
-	        if ($view->base_sql) {
-			$genres = $genre->get_genres($view->sql);
-	                show_genres($genres,$view);
-        	}
-		
+		Browse::set_type('genre'); 
+		$genre_ids = Browse::get_objects(); 
+		Browse::show_objects($genre_ids); 
 	break;
 	case 'song':
 		Browse::set_type('song'); 
 		$song_ids = Browse::get_objects(); 
 		Browse::show_objects($song_ids); 
-
 	break;
 	case 'catalog':
 	
