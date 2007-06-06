@@ -198,6 +198,8 @@ class Update {
 
 		$version[] = array('version' => '340003','description' => $update_string); 
 
+		$update_string = '- Alter the Session.id to be VARCHAR(64) to account for all potential configs.<br />'; 
+
 		return $version;
 
 	} // populate_version
@@ -636,6 +638,24 @@ class Update {
 		self::set_version('db_version','340003'); 
 
 	} // update_340003
+
+	/**
+ 	 * update_340004
+	 * Update the session.id to varchar(64) to handle 
+	 * newer configs
+	 */
+	public static function update_340004() { 
+
+
+                /* Alter the session.id so that it's 64 */
+                $sql = "ALTER TABLE `session` CHANGE `id` `id` VARCHAR( 64 ) NOT NULL";
+		$db_results = Dba::query($sql); 
+
+		self::set_version('db_version','340004'); 
+
+		return true; 
+
+	} // update_340004	
 
 } // end update class
 ?>
