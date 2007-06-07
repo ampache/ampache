@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2006 Ampache.org
+ Copyright (c) 2001 - 2007 Ampache.org
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
@@ -21,12 +21,25 @@
 */
 
 define('NO_SESSION','1');
-require('lib/init.php');
+require 'lib/init.php';
 
 /* Check Perms */
-if (!conf('use_rss') || conf('demo_mode')) {
+if (!Config::get('use_rss') || Config::get('demo_mode')) {
         access_denied();
+	exit;
 }
+
+
+switch ($_REQUEST['action']) { 
+	case 'user':
+
+	break;
+	case 'catalog_add': 
+
+	default: 
+
+	break; 
+} // end data collection 
 
 #show_now_playingRSS($_REQUEST['username']);
 show_RSS($_REQUEST['type'],$_REQUEST['username']);

@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2006 Ampache.org
+ Copyright (c) 2001 - 2007 Ampache.org
  All Rights Reserved
 
  This program is free software; you can redistribute it and/or
@@ -20,71 +20,40 @@
 
 */
 
-/*
+require_once 'lib/init.php';
 
- Do most of the dirty work of displaying the mp3 catalog
+show_header(); 
 
-*/
-
-require_once('lib/init.php');
-
-if (!isset($_REQUEST['match'])) { $_REQUEST['match'] = "Browse"; }
-if (!isset($_REQUEST['action'])) { $_REQUEST['action'] = "match"; }
-$action = scrub_in($_REQUEST['action']);
-
-show_template('header');
-
-
-switch($action) {
-    case 'show':
-    case 'Show':
-	show_box_top();
-	show_alphabet_list('artists','artists.php');
-	show_box_bottom();
-
-        // Setup the View Ojbect
-        $view = new View();
-        $view->import_session_view();
-
-
-	$artist = new Artist($_REQUEST['artist']);
-
-        $sql = "SELECT DISTINCT(album.id) FROM song,album WHERE song.album=album.id AND song.artist='$artist->id'";
-
-	if ($_REQUEST['keep_view']) {
-                $view->initialize();
-        }
-
-        // If we aren't keeping the view then initlize it
-        elseif ($sql) {
-                if (!$sort_order) { $sort_order = 'album.name'; }
-                $db_results = mysql_query($sql, dbh());
-                $total_items = mysql_num_rows($db_results);
-		$offset_limit = $total_items;
-                $view = new View($sql, 'artists.php',$sort_order,$total_items,$offset_limit);
-        }
-
-        else { $view = false; }
-
-        if ($view->base_sql) {
-                $artist->show_albums($view->sql);
-        }
+/**
+ * Doing Switch
+ */
+switch($_REQUEST['action']) { 
 
 
 
- //$artist->show_albums();
+} // end display switch
+
+
+/**
+ * Display Switch 
+ */
+switch($_REQUEST['action']) {
+	case 'show':
+		$artist = new Artist($_REQUEST['artist']);
+		$artist->format(); 
+		$albums = $artist->get_albums(); 
+		require_once Config::get('prefix') . '/templates/show_artist.inc.php';
 	break;
-
-    case 'show_all_songs':
-    	$artist = new Artist($_REQUEST['artist']);
-	$artist->format_artist();
-	$song_ids = $artist->get_song_ids();
-	$artist_id = $artist->id;
-	require(conf('prefix') . '/templates/show_artist_box.inc.php');
-        show_songs($song_ids,'');
+	case 'show_all_songs':
+	    	$artist = new Artist($_REQUEST['artist']);
+		$artist->format_artist();
+		$song_ids = $artist->get_song_ids();
+		$artist_id = $artist->id;
+		require(conf('prefix') . '/templates/show_artist_box.inc.php');
+	        show_songs($song_ids,'');
         break;
 
-    case 'update_from_tags':
+	case 'update_from_tags':
 
         $artist = new Artist($_REQUEST['artist']);
 
@@ -246,12 +215,6 @@ switch($action) {
 			}
 		}
 	break;	
-	default:
-		//FIXME: This is being moved to browse
-		show_alphabet_list('artists','artists.php');
-		show_alphabet_form('',_("Show Artists starting with"),"artists.php?action=match");
-		show_artists('A');
-	break;
 } // end switch
 
 show_footer();

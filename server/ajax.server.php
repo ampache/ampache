@@ -169,8 +169,7 @@ switch ($action) {
 		$key = "rating_" . $_REQUEST['object_id'] . "_" . $_REQUEST['rating_type'];
 		$results[$key] = ob_get_contents();
 		ob_end_clean();
-		$xml_doc = xml_from_array($results);
-		echo $xml_doc;
+		echo xml_from_array($results);
 	break;
 	/* Activate the Democratic Instance */
 	case 'tv_activate':

@@ -28,9 +28,8 @@
 
 function show_RSS ($type = 'artist',$username = 0) {
 	header ("Content-Type: application/xml");
-        $dbh = dbh();
-        $web_path = conf('web_path');
-        $rss_main_title = conf('rss_main_title');
+        $web_path = Config::get('web_path');
+        $rss_main_title = "Ampache :: Pour l'Amour de la Musique - RSS";
 
         $rss_latestartist_title = "Ampache Latest Artists";
         $rss_latestalbum_title = "Ampache Latest Albums";
@@ -39,9 +38,6 @@ function show_RSS ($type = 'artist',$username = 0) {
 	$rss_popularsong_title = "Ampache Most Popular Songs";
 	$rss_recentlyplayed_title = "Ampache Recently Played";
 
-        $rss_main_description = conf('rss_main_description');
-        $rss_main_copyright = conf('rss_main_copyright');
-        $rss_description = conf('rss_song_description');
         $today = date("d-m-Y");
 
         echo "<rss version=\"2.0\">\n";
@@ -57,7 +53,7 @@ switch ($type) {
 		" WHERE object_type='album' AND date >= '$date'" .
 		" GROUP BY object_id ORDER BY `count` DESC LIMIT 10";
 
-	$db_result = mysql_query($sql, $dbh);
+	$db_result = Dba::query($sql);
 
         echo " <channel>\n  <title>$rss_popularalbum_title</title>\n";
         echo "  <link>$web_path</link>\n  <description>$rss_main_description</description>\n";

@@ -38,13 +38,13 @@ class Rating {
 	 * This is run every time a new object is created, it requires
 	 * the id and type of object that we need to pull the raiting for
 	 */
-	function Rating($id,$type) { 
+	public function __construct($id,$type) { 
 
 		$this->id 	= intval($id);
 		$this->type 	= Dba::escape($type);
 
 		// Check for the users rating
-		if ($rating = $this->get_user($GLOBALS['user']->id)) { 
+		if ($rating == $this->get_user($GLOBALS['user']->id)) { 
 			$this->rating = $rating;
 		} 
 		else { 
@@ -53,23 +53,23 @@ class Rating {
 	
 		return true; 
 
-	} // Rating
+	} // Constructor
 
 	/**
 	 * get_user
 	 * Get the user's rating this is based off the currently logged
 	 * in user. It returns the value
 	 */
-	function get_user($user_id) { 
+	public function get_user($user_id) { 
 
 		$user_id	= Dba::escape($user_id); 
 
-		$sql = "SELECT rating FROM ratings WHERE user='$user_id' AND object_id='$this->id' AND object_type='$this->type'";
+		$sql = "SELECT `user_rating` FROM `rating` WHERE `user`='$user_id' AND `object_id`='$this->id' AND `object_type`='$this->type'";
 		$db_results = Dba::query($sql);
 		
 		$results = Dba::fetch_assoc($db_results);
-
-		return $results['rating'];
+		
+		return $results['user_rating'];
 
 	} // get_user
 
@@ -80,9 +80,9 @@ class Rating {
 	 * is no personal rating, and used for random play mojo. It sets 
 	 * $this->average_rating and returns the value
 	 */
-	function get_average() { 
+	public function get_average() { 
 
-		$sql = "SELECT user_rating as rating FROM ratings WHERE object_id='$this->id' AND object_type='$this->type'";
+		$sql = "SELECT `user_rating` AS `rating` FROM `rating` WHERE `object_id`='$this->id' AND `object_type`='$this->type'";
 		$db_results = Dba::query($sql);
 
 		$i = 0;
@@ -113,22 +113,23 @@ class Rating {
 	 * This uses the currently logged in user for the 'user' who is rating
 	 * the object. Returns true on success, false on failure
 	 */
-	function set_rating($score) { 
+	public function set_rating($score) { 
 		
-		$score = sql_escape($score);
+		$score = Dba::escape($score);
 
 		/* Check if it exists */
-		$sql = "SELECT id FROM ratings WHERE object_id='$this->id' AND object_type='$this->type' AND `user`='" . sql_escape($GLOBALS['user']->username) . "'";
-		$db_results = mysql_query($sql, dbh());
+		$sql = "SELECT `id` FROM `rating` WHERE `object_id`='$this->id' AND `object_type`='$this->type' " . 
+			"AND `user`='" . Dba::escape($GLOBALS['user']->id) . "'";
+		$db_results = Dba::query($sql);
 
-		if ($existing = mysql_fetch_assoc($db_results)) { 
-			$sql = "UPDATE ratings SET user_rating='$score' WHERE id='" . $existing['id'] . "'";
-			$db_results = mysql_query($sql, dbh());
+		if ($existing = Dba::fetch_assoc($db_results)) { 
+			$sql = "UPDATE `rating` SET `user_rating`='$score' WHERE `id`='" . $existing['id'] . "'";
+			$db_results = Dba::query($sql);
 		}
 		else { 
-			$sql = "INSERT INTO ratings (`object_id`,`object_type`,`user_rating`,`user`) VALUES " . 
-				" ('$this->id','$this->type','$score','" . sql_escape($GLOBALS['user']->username) . "')";
-			$db_results = mysql_query($sql, dbh());
+			$sql = "INSERT INTO `rating` (`object_id`,`object_type`,`user_rating`,`user`) VALUES " . 
+				" ('$this->id','$this->type','$score','" . $GLOBALS['user']->id . "')";
+			$db_results = Dba::query($sql);
 		} 
 
 		return true;

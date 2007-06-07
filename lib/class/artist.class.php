@@ -71,20 +71,21 @@ class Artist {
 
 	} // _get_info
 
-	/*!
-		@function get_albums
-		@discussion gets the albums for this artist
-		//FIXME: Appears to not be used? 
-	*/
-	function get_albums($sql) { 
+	/**
+	 * get_albums
+	 * gets the album ids that this artist is a part
+	 * of
+	 */
+	public function get_albums() { 
 
 		$results = array();
 
-//		$sql = "SELECT DISTINCT(album.id) FROM song,album WHERE song.album=album.id AND song.artist='$this->id' ORDER BY album.name";
-		$db_results = mysql_query($sql, dbh());
+		$sql = "SELECT `album`.`id` FROM album LEFT JOIN `song` ON `song`.`album`=`album`.`id` " . 
+			"WHERE `song`.`artist`='$this->id' GROUP BY `album`.`id` ORDER BY `album`.`name`,`album`.`year`";
+		$db_results = Dba::query($sql);
 
-		while ($r = mysql_fetch_object($db_results)) { 
-			$results[] = new Album($r->id);
+		while ($r = Dba::fetch_assoc($db_results)) { 
+			$results[] = $r['id'];
 		}
 
 		return $results;
@@ -286,24 +287,6 @@ class Artist {
                         return false;
                 }
         } // merge
-	
-
-	/*!
-		@function show_albums
-		@discussion displays the show albums by artist page
-	*/
-	function show_albums($sql = 0) { 
-
-	        /* Set Vars */
-	        $web_path = conf('web_path');
-
-	        $albums = $this->get_albums($sql);
-	        $this->format_artist();
-		$artist = $this;
-
-	        require (conf('prefix') . "/templates/show_artist.inc");
-
-	} // show_albums
 	
 	/*!
 		@function get_similar_artists
