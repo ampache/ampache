@@ -240,6 +240,16 @@ class Browse {
 				break;
 			} 
 		} // end album 
+		if ($_SESSION['browse']['type'] == 'artist') { 
+			switch($filter) { 
+				case 'alpha_match':
+					$filter_sql = " `artist`.`name` LIKE '" . Dba::escape($value) . "%' AND ";
+				break;
+				default:
+					// Rien a faire
+				break;
+			} // end filter
+		} // end artist
 	
 		return $filter_sql; 
 
