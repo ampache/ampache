@@ -511,18 +511,17 @@ class User {
 	 * update_user_stats
 	 * updates the playcount mojo for this specific user
 	 */
-	function update_stats($song_id) {
+	public function update_stats($song_id) {
 
 		$song_info = new Song($song_id);
 		$user = $this->id;
 		
 		if (!$song_info->file) { return false; }
 
-		$stats = new Stats();
-		$stats->insert('song',$song_id,$user);
-		$stats->insert('album',$song_info->album,$user);
-		$stats->insert('artist',$song_info->artist,$user);
-		$stats->insert('genre',$song_info->genre,$user);
+		Stats::insert('song',$song_id,$user);
+		Stats::insert('album',$song_info->album,$user);
+		Stats::insert('artist',$song_info->artist,$user);
+		Stats::insert('genre',$song_info->genre,$user);
 
                 /**
 		 * Record this play to LastFM 

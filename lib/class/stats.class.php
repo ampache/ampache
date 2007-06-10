@@ -40,7 +40,7 @@ class Stats {
  	 * Constructor
 	 * This doesn't do anything currently
 	 */
-	function Stats() { 
+	public function __construct() { 
 
 		return true;
 
@@ -51,16 +51,16 @@ class Stats {
 	 * This inserts a new record for the specified object
 	 * with the specified information, amazing! 
 	 */
-	function insert($type,$oid,$user) { 
+	public static function insert($type,$oid,$user) { 
 
-		$type 	= $this->validate_type($type);
-		$oid	= sql_escape($oid);
-		$user	= sql_escape($user);	
+		$type 	= self::validate_type($type);
+		$oid	= Dba::escape($oid);
+		$user	= Dba::escape($user);	
 		$date	= time();
 
-		$sql = "INSERT INTO object_count (`object_type`,`object_id`,`date`,`user`) " . 
+		$sql = "INSERT INTO `object_count` (`object_type`,`object_id`,`date`,`user`) " . 
 			" VALUES ('$type','$oid','$date','$user')";
-		$db_results = mysql_query($sql,dbh());
+		$db_results = Dba::query($sql);
 
 		if (!$db_results) { 
 			debug_event('statistics','Unabled to insert statistics:' . $sql,'3');
@@ -73,7 +73,7 @@ class Stats {
 	 * This returns the top X for type Y from the
 	 * last conf('stats_threshold') days
 	 */
-	function get_top($count,$type,$threshold = '') { 
+	public static function get_top($count,$type,$threshold = '') { 
 
 		/* If they don't pass one, then use the preference */
 		if (!$threshold) { 
@@ -81,7 +81,7 @@ class Stats {
 		}
 
 		$count	= intval($count);
-		$type	= $this->validate_type($type);
+		$type	= self::validate_type($type);
 		$date	= time() - (86400*$threshold);
 		
 		/* Select Top objects counting by # of rows */
@@ -120,7 +120,7 @@ class Stats {
 		}
 
 		/* Select Objects based on user */
-		//FIXME:: Requires table can, look at improving 
+		//FIXME:: Requires table scan, look at improving 
 		$sql = "SELECT object_id,COUNT(id) AS `count` FROM object_count" . 
 			" WHERE object_type='$type' AND date >= '$date' AND user = '$user'" . 
 			" GROUP BY object_id ORDER BY `count` DESC LIMIT $count";
