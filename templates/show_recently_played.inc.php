@@ -41,7 +41,21 @@ $time_unit = array('',_('seconds ago'),_('minutes ago'),_('hours ago'),_('days a
 	while ($amount >= 1) { 
 		$final = $amount; 
 		$time_place++; 
-		$amount = floor($amount/60); 
+                if ($time_place <= 2) {
+                        $amount = floor($amount/60);
+                }
+                if ($time_place == '3') {
+                        $amount = floor($amount/24);
+                }
+                if ($time_place == '4') {
+                        $amount = floor($amount/7);
+                }
+                if ($time_place == '5') {
+                        $amount = floor($amount/4);
+                }
+                if ($time_place == '6') {
+                        $amount = floor ($amount/12);
+                }
 	}
 
 	$time_string = $final . ' ' . $time_unit[$time_place];
