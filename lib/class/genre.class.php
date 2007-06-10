@@ -60,10 +60,10 @@ class Genre {
 	} // _get_info
 
 	/** 
-	 * format_genre
+	 * format
 	 * this reformats the genre object so it's all purdy and creates a link var
 	 */
-	public function format_genre() { 
+	public function format() { 
 
 		$this->link 		= "<a href=\"" . Config::get('web_path') . "/genre.php?action=show_genre&amp;genre_id=" . $this->id . "\">" . scrub_out($this->name) . "</a>";
 		
@@ -71,7 +71,7 @@ class Genre {
 		$this->random_link 	= Config::get('web_path') . '/song.php?action=random_genre&amp;genre=' . $this->id; 
 		$this->download_link 	= Config::get('web_path') . '/batch.php?action=genre&amp;id=' . $this->id;
 		
-	} // format_genre
+	} // format
 
 	/**
 	 * get_song_count

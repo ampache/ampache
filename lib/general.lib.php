@@ -449,35 +449,37 @@ function get_global_popular($type) {
 		/* If Songs */
                 if ( $type == 'song' ) {
                         $song = new Song($r['object_id']);
-			$song->format_song();
+			$song->format();
                         $text = "$song->f_artist_full - $song->title";
                         /* Add to array */
                         $song->link = "<a href=\"$web_path/song.php?action=single_song&amp;song_id=$song->id\" title=\"". scrub_out($text) ."\">" .
-	                           	scrub_out(truncate_with_ellipse($text, conf('ellipse_threshold_title')+3)) . "&nbsp;(" . $r['count'] . ")</a>";
+	                           	scrub_out(truncate_with_ellipse($text, Config::get('ellipse_threshold_title')+3)) . "&nbsp;(" . $r['count'] . ")</a>";
 			$items[] = $song;
                 } // if it's a song
                 
 		/* If Artist */
                 elseif ( $type == 'artist' ) {
                         $artist = new Artist($r['object_id']);
-			$artist->format_artist();
+			$artist->format();
                         $artist->link = "<a href=\"$web_path/artists.php?action=show&amp;artist=" . $r['object_id'] . "\" title=\"". scrub_out($artist->full_name) ."\">" .
-                        	           truncate_with_ellipse($artist->full_name, conf('ellipse_threshold_artist')+3) . "&nbsp;(" . $r['count'] . ")</a>";
+                        	           truncate_with_ellipse($artist->full_name, Config::get('ellipse_threshold_artist')+3) . "&nbsp;(" . $r['count'] . ")</a>";
 			$items[] = $artist;
                 } // if type isn't artist
 
 		/* If Album */
                 elseif ( $type == 'album' ) {
                         $album   = new Album($r['object_id']);
+			$album->format(); 
                         $album->link = "<a href=\"$web_path/albums.php?action=show&amp;album=" . $r['object_id'] . "\" title=\"". scrub_out($album->name) ."\">" . 
-                        	           scrub_out(truncate_with_ellipse($album->name,conf('ellipse_threshold_album')+3)) . "&nbsp;(" . $r['count'] . ")</a>";
+                        	           scrub_out(truncate_with_ellipse($album->name,Config::get('ellipse_threshold_album')+3)) . "&nbsp;(" . $r['count'] . ")</a>";
 			$items[] = $album;
                 } // else not album
 
 		elseif ($type == 'genre') { 
 			$genre 	 = new Genre($r['object_id']);
+			$genre->format(); 
 			$genre->link = "<a href=\"$web_path/browse.php?action=genre&amp;genre=" . $r['object_id'] . "\" title=\"" . scrub_out($genre->name) . "\">" .
-					scrub_out(truncate_with_ellipse($genre->name,conf('ellipse_threshold_title')+3)) . "&nbsp;(" . $r['count'] . ")</a>";
+					scrub_out(truncate_with_ellipse($genre->name,Config::get('ellipse_threshold_title')+3)) . "&nbsp;(" . $r['count'] . ")</a>";
 			$items[] = $genre;
 		} // end if genre
         } // end foreach
@@ -493,9 +495,6 @@ function get_global_popular($type) {
 /** 
  * show_info_box
  * This shows the basic box that popular and newest stuff goes into
- * @package Web Interface
- * @catagory Display
- * @todo make this use a template
  */
 function show_info_box ($title, $type, $items) {
 
