@@ -46,9 +46,7 @@ class Stream {
 		$this->web_path = Config::get('web_path');
 		
 		if (Config::get('force_http_play')) { 
-			$port = Config::get('http_port');
 			$this->web_path = preg_replace("/https/", "http",$this->web_path);
-			$this->web_path = preg_replace("/:\d+/",":$port",$this->web_path);
 		}
 		
 		$this->sess = session_id();
