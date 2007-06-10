@@ -125,17 +125,15 @@ class Genre {
 	/**
 	 * get_songs
 	 * This gets all of the songs in this genre and returns an array of song objects
-	 * @package Genre
-	 * @catagory Class
 	 */
-	function get_songs() { 
+	public function get_songs() { 
 
-		$sql = "SELECT song.id FROM song WHERE genre='" . $this->id . "'";
-		$db_results = mysql_query($sql, dbh());
+		$sql = "SELECT `song`.`id` FROM `song` WHERE `genre`='" . $this->id . "'";
+		$db_results = Dba::query($sql);
 
 		$results = array();
 
-		while ($r = mysql_fetch_assoc($db_results)) { 
+		while ($r = Dba::fetch_assoc($db_results)) { 
 			$results[] = $r['id'];
 		}
 
@@ -147,19 +145,15 @@ class Genre {
 	 * get_random_songs
 	 * This is the same as get_songs except it returns a random assortment of songs from this
 	 * genre
-	 * @package Genre
-	 * @catagory Class
 	 */
-	function get_random_songs() { 
+	public function get_random_songs() { 
 
-		$limit = rand(1,$this->get_song_count());
-
-		$sql = "SELECT song.id FROM song WHERE genre='" . $this->id . "' ORDER BY RAND() LIMIT $limit";
-		$db_results = mysql_query($sql, dbh());
+		$sql = "SELECT `song`.`id` FROM `song` WHERE `genre`='" . $this->id . "' ORDER BY RAND()";
+		$db_results = Dba::query($sql);
 
 		$results = array();
 
-		while ($r = mysql_fetch_assoc($db_results)) { 
+		while ($r = Dba::fetch_assoc($db_results)) { 
 			$results[] = $r['id'];
 		}
 

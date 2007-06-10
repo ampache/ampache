@@ -72,6 +72,17 @@ switch ($action) {
 		$xml_doc = xml_from_array($results);
 		echo $xml_doc;
 	break;
+	case 'current_playlist':
+		switch ($_REQUEST['type']) { 
+			case 'delete':
+				$GLOBALS['user']->playlist->delete_track($_REQUEST['id']);
+			break;
+		} // end switch
+
+		$results['topbar-playlist'] = ajax_include('show_playlist_bar.inc.php');
+		$results['rightbar'] = ajax_include('rightbar.inc.php');
+		echo xml_from_array($results); 
+	break;
 	// Handle the users basketcases... 
 	case 'basket': 
 		switch ($_REQUEST['type']) { 
@@ -110,10 +121,9 @@ switch ($action) {
 			break;
 		} // end switch
 		
-		ob_start(); 
-		require_once Config::get('prefix') . '/templates/show_playlist_bar.inc.php'; 
-		$results['topbar-playlist'] = ob_get_contents(); 
-		ob_end_clean(); 
+		$results['topbar-playlist'] = ajax_include('show_playlist_bar.inc.php'); 
+		$results['rightbar'] = ajax_include('rightbar.inc.php'); 
+
 		echo xml_from_array($results); 
 	break;
 	/* For changing the current play type FIXME:: need to allow select of any type  */
@@ -139,27 +149,6 @@ switch ($action) {
 		$xml_doc = xml_from_array($results);
 		echo $xml_doc;
 	break;
-	/* Reloading of the TV Now Playing, formated differently */
-	case 'reload_np_tv':
-
-		/* Update the Now Playing */
-		ob_start();
-		require_once(conf('prefix') . '/templates/show_tv_nowplaying.inc.php');
-		$results = array();
-		$results['tv_np'] = ob_get_contents(); 
-		ob_end_clean(); 
-
-		/* Update the Playlist */
-		ob_start();
-		$tmp_playlist = get_democratic_playlist(-1);
-                $songs = $tmp_playlist->get_items();
-                require_once(conf('prefix') . '/templates/show_tv_playlist.inc.php');
-                $results['tv_playlist'] = ob_get_contents();
-                ob_end_clean();
-		
-		$xml_doc = xml_from_array($results);
-		echo $xml_doc;
-	break;
 	/* Setting ratings */
 	case 'set_rating':
 		ob_start(); 
@@ -170,50 +159,6 @@ switch ($action) {
 		$results[$key] = ob_get_contents();
 		ob_end_clean();
 		echo xml_from_array($results);
-	break;
-	/* Activate the Democratic Instance */
-	case 'tv_activate':
-		if (!$GLOBALS['user']->has_access(100)) { break; } 
-		$tmp_playlist = new tmpPlaylist();
-		/* Pull in the info we need */
-		$base_id 	= scrub_in($_REQUEST['playlist_id']);
-
-		/* create the playlist */
-		$playlist_id = $tmp_playlist->create('0','vote','song',$base_id);
-
-		$playlist = new tmpPlaylist($playlist_id);
-		ob_start();
-		require_once(conf('prefix') . '/templates/show_tv_adminctl.inc.php');
-		$results['tv_control'] = ob_get_contents(); 
-		ob_end_clean();
-		$xml_doc = xml_from_array($results);
-		echo $xml_doc;
-	break;
-	/* Admin Actions on the tv page */
-	case 'tv_admin':
-		if (!$GLOBALS['user']->has_access(100) || !conf('allow_democratic_playback')) { break; } 
-
-		/* Get the playlist */
-		$tmp_playlist = get_democratic_playlist(-1); 
-		
-		ob_start();
-	
-		/* Switch on the command we need to run */
-		switch ($_REQUEST['cmd']) { 
-			case 'delete':
-				$tmp_playlist->delete_track($_REQUEST['track_id']); 
-				$songs = $tmp_playlist->get_items(); 
-				require_once(conf('prefix') . '/templates/show_tv_playlist.inc.php');
-				$results['tv_playlist'] = ob_get_contents(); 
-			break;	
-			default: 
-				// Rien a faire
-			break;
-		} // end switch
-
-		ob_end_clean(); 
-		$xml_doc = xml_from_array($results);
-		echo $xml_doc; 
 	break;
 	/* This can be a positve (1) or negative (-1) vote */
 	case 'vote':
@@ -279,30 +224,6 @@ switch ($action) {
 		$_SESSION['state']['sidebar_tab'] = $button; 
 		require_once Config::get('prefix') . '/templates/sidebar.inc.php';
 		$results['sidebar'] = ob_get_contents(); 
-		ob_end_clean(); 
-		echo xml_from_array($results); 
-	break;
-	case 'catalog': 
-		switch ($_REQUEST['type']) { 
-			case 'add_files': 
-				$sql = "SELECT * FROM `update_info` WHERE `key` LIKE 'catalog_add_%'"; 
-				$template = '/templates/show_run_add_catalog.inc.php'; 
-			break;
-			case 'update_files': 
-			case 'clean_files': 
-			default:
-			break;
-		} // end switch on type
-
-		$db_results = Dba::query($sql); 
-
-		while ($data = Dba::fetch_assoc($db_results)) { 
-			${$data['key']} = $data['value']; 
-		} 
-
-		ob_start(); 
-		require_once Config::get('prefix') . $template; 
-		$results['catalog_update'] = ob_get_contents(); 
 		ob_end_clean(); 
 		echo xml_from_array($results); 
 	break;

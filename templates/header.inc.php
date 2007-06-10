@@ -73,6 +73,9 @@ if (Config::get('use_rss')) { ?>
 	<div id="sidebar"><!-- This is the sidebar -->
 		<?php require_once Config::get('prefix') . '/templates/sidebar.inc.php'; ?>
 	</div><!-- End sidebar -->
+	<div id="rightbar"><!-- This is the rightbar -->
+		<?php require_once Config::get('prefix') . '/templates/rightbar.inc.php'; ?>
+	</div>
 <!-- I hate IE... --> 
 <table class="smeg-ie" width="100%"><tr><td>
 <div id="content">

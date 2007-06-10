@@ -155,8 +155,8 @@ input {
 /*               Content block                  */
 /************************************************/
 #content {
-	float:left;
-	margin:7px 0 0 135px;
+	position: relative;
+	margin: 0px 220px 20px 135px;
 }
 h3#content_title{
 	font: 12px/32px Arial,Helvetica,Sans-Serif;
@@ -167,6 +167,23 @@ h3#content_title span {
 	text-align:left;
 }
 
+/************************************************/
+/*                  Rightbar                    */
+/************************************************/
+#rightbar { 
+	position:absolute;
+	right:0px;
+	top:87px;
+	width:250px;
+} 
+#rightbar li { 
+	list-style:none;	
+	float:left;
+	margin-right:3px;
+}
+#current_playlist { 
+	clear:left; 
+} 
 
 /************************************************/
 /*                  Sidebar                     */

@@ -1411,4 +1411,21 @@ function get_users($sql) {
 
 } // get_users
 
+/**
+ * ajax_include
+ * This does an ob_start, getcontents, clean
+ * on the specified require, only works if you
+ * don't need to pass data in
+ */
+function ajax_include($include) { 
+
+	ob_start(); 
+	require_once Config::get('prefix') . '/templates/' . $include; 
+	$results = ob_get_contents(); 
+	ob_end_clean(); 
+
+	return $results; 
+
+} // ajax_include
+
 ?>
