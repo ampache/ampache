@@ -777,11 +777,9 @@ class Song {
                         $port = Config::get('http_port');
 			if (preg_match("/:\d+/",$web_path)) { 
 	                        $web_path = str_replace("https://", "http://",$web_path);
-	                        $web_path = preg_replace("/:\d+/",":$port",$web_path);
 			}
 			else { 
 	                        $web_path = str_replace("https://", "http://",$web_path);
-				$web_path = str_replace($_SERVER['HTTP_HOST'],$_SERVER['HTTP_HOST'] . ':' . $port,$web_path); 
 			} 
                 }
 	
