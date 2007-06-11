@@ -1345,6 +1345,14 @@ class Catalog {
 		$sql = "DELETE FROM album USING album LEFT JOIN song ON song.album = album.id WHERE song.id IS NULL";
 		$db_results = Dba::query($sql);
 
+		/* Now remove any album art that is now dead */
+		$sql = "DELETE FROM `album_data` USING `album_data` LEFT JOIN `album` ON `album`.`id`=`album_data`.`album_id` WHERE `album`.`id` IS NULL"; 
+		$db_results = Dba::query($sql); 
+
+		// This can save a lot of space so always optomize
+		$sql = "OPTIMIZE TABLE `album_data`"; 
+		$db_results = Dba::query($sql); 
+
 	} // clean_albums
 
 	/**
