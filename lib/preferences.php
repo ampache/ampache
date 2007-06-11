@@ -80,26 +80,26 @@ function clean_preference_name($name) {
 
 } // clean_preference_name
 
-/*!
-	@function update_preferences
-	@discussion grabs the current keys that should be added
-		and then runs throught $_REQUEST looking for those
-		values and updates them for this user
-*/
+/*
+ * update_preferences
+ * grabs the current keys that should be added
+ * and then runs throught $_REQUEST looking for those
+ * values and updates them for this user
+ */
 function update_preferences($pref_id=0) { 
 	
 	$pref_user = new User($pref_id);
 	
 	/* Get current keys */
-	$sql = "SELECT id,name,type FROM preferences";
+	$sql = "SELECT `id`,`name`,`type` FROM `preference`";
 
 	/* If it isn't the System Account's preferences */
-	if ($pref_id != '-1') { $sql .= " WHERE type!='system'"; }
+	if ($pref_id != '-1') { $sql .= " WHERE `type` != 'system'"; }
 	
-	$db_results = mysql_query($sql, dbh());
+	$db_results = Dba::query($sql);
 
 	// Collect the current possible keys
-	while ($r = mysql_fetch_assoc($db_results)) { 
+	while ($r = Dba::fetch_assoc($db_results)) { 
 		$results[] = array('id' => $r['id'], 'name' => $r['name'],'type' => $r['type']);
 	} // end collecting keys
 
@@ -110,16 +110,10 @@ function update_preferences($pref_id=0) {
 		$name 		= $data['name'];
 		$apply_to_all	= "check_" . $data['name'];
 		$id		= $data['id'];
-		$value 		= sql_escape(scrub_in($_REQUEST[$name]));
+		$value 		= Dba::escape(scrub_in($_REQUEST[$name]));
 
 		/* Some preferences require some extra checks to be performed */
 		switch ($name) { 
-			case 'theme_name':
-				// If the theme exists and it's different then our current one reset the colors
-				if (theme_exists($value) AND $pref_user->prefs['theme_name'] != $value) { 
-					set_theme_colors($value,$pref_id);
-				}
-			break;
 			case 'sample_rate':
 				$value = validate_bitrate($value);
 			break;
@@ -146,28 +140,22 @@ function update_preferences($pref_id=0) {
 /**
  * update_preference
  * This function updates a single preference and is called by the update_preferences function
- * @package Preferences
- * @catagory Update
  */
-function update_preference($username,$name,$pref_id,$value) { 
+function update_preference($user_id,$name,$pref_id,$value) { 
 
 	$apply_check = "check_" . $name;
 
 	/* First see if they are an administrator and we are applying this to everything */
 	if ($GLOBALS['user']->has_access(100) AND make_bool($_REQUEST[$apply_check])) { 
-		$sql = "UPDATE user_preference SET `value`='$value' WHERE preference='$pref_id'";
-		$db_results = mysql_query($sql, dbh());
-		/* Reset everyones colors! */
-		if ($name =='theme_name') { 
-			set_theme_colors($value,0);
-		}
+		$sql = "UPDATE `user_preference` SET `value`='$value' WHERE `preference`='$pref_id'";
+		$db_results = Dba::query($sql);
 		return true;
 	}
 	
 	/* Else make sure that the current users has the right to do this */
 	if (has_preference_access($name)) { 
-		$sql = "UPDATE user_preference SET `value`='$value' WHERE preference='$pref_id' AND user='$username'";
-		$db_results = mysql_query($sql, dbh());
+		$sql = "UPDATE `user_preference` SET `value`='$value' WHERE `preference`='$pref_id' AND `user`='$user_id'";
+		$db_results = Dba::query($sql);
 		return true;
 	}
 
@@ -191,7 +179,7 @@ function has_preference_access($name) {
 	$name = Dba::escape($name);
 
 	/* Check Against the Database Row */
-	$sql = "SELECT `level` FROM `preferences` " . 
+	$sql = "SELECT `level` FROM `preference` " . 
 		"WHERE `name`='$name'";
 	$db_results = Dba::query($sql);
 
@@ -208,11 +196,10 @@ function has_preference_access($name) {
 } //has_preference_access
 
 
-/*!
-	@function create_preference_input
-	@discussion takes the key and then creates
-		the correct type of input for updating it
-*/
+/**
+ * create_preference_input
+ * takes the key and then creates the correct type of input for updating it
+ */
 function create_preference_input($name,$value) { 
 
 	$len = strlen($value);
@@ -338,6 +325,11 @@ function create_preference_input($name,$value) {
 				echo "\t<option value=\"" . $theme['path'] . "\" $is_selected>" . $theme['name'] . "</option>\n";
 			} // foreach themes
 			echo "</select>\n";
+		break;
+		case 'random_method': 
+			echo "<select name=\"$name\">\n"; 
+			echo "\t<option value=\"genre\">" . _('Similar Genre') . "</option>"; 
+			echo "</select>\n"; 
 		break;
 		case 'lastfm_pass':
 			echo "<input type=\"password\" size=\"16\" name=\"$name\" value=\"******\" />";
@@ -522,7 +514,6 @@ function fix_all_users_prefs() {
 	return true;
 
 } // fix_all_users_prefs
-
 
 /**
  * fix_preferences

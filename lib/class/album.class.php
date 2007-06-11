@@ -108,7 +108,7 @@ class Album {
 	private function _get_extra_info() { 
 
 		$sql = "SELECT COUNT(DISTINCT(song.artist)) as artist_count,COUNT(song.id) AS song_count,artist.name AS artist_name" . 
-			",artist.prefix AS artist_prefix,album_data.art AS has_art,album_data.thumb AS has_thumb ".
+			",artist.prefix AS artist_prefix,album_data.art AS has_art,album_data.thumb AS has_thumb, artist.id AS artist_id ".
 			"FROM `song` " .
 			"INNER JOIN `artist` ON `artist`.`id`=`song`.`artist` " .
 			"LEFT JOIN `album_data` ON `album_data`.`album_id` = `song`.`album` " . 

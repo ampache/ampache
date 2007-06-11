@@ -91,34 +91,30 @@ class Genre {
 	/**
 	 * get_album_count
 	 * Returns the number of albums that contain a song of this genre
-	 * @package Genre
-	 * @catagory Class
 	 */
-	function get_album_count() { 
+	public function get_album_count() { 
 
-		$sql = "SELECT COUNT(DISTINCT(song.album)) FROM song WHERE genre='" . $this->id . "'";
-		$db_results = mysql_query($sql, dbh());
+		$sql = "SELECT COUNT(DISTINCT(song.album)) FROM `song` WHERE `genre`='" . $this->id . "'";
+		$db_results = Dba::query($sql);
 
-		$total_items = mysql_fetch_array($db_results); 
+		$total_items = Dba::fetch_row($db_results); 
 
-		return $total_items[0];
+		return $total_items['0'];
 
 	} // get_album_count
 
 	/**
 	 * get_artist_count
 	 * Returns the number of artists who have at least one song in this genre
-	 * @package Genre
-	 * @catagory Class
 	 */
-	function get_artist_count() { 
+	public function get_artist_count() { 
 
-		$sql = "SELECT COUNT(DISTINCT(song.artist)) FROM song WHERE genre='" . $this->id . "'";
-		$db_results = mysql_query($sql, dbh());
+		$sql = "SELECT COUNT(DISTINCT(`song`.`artist`)) FROM `song` WHERE `genre`='" . $this->id . "'";
+		$db_results = Dba::query($sql);
 
-		$total_items = mysql_fetch_array($db_results);
+		$total_items = Dba::fetch_row($db_results);
 
-		return $total_items[0];
+		return $total_items['0'];
 
 	} // get_artist_count
 
@@ -169,15 +165,13 @@ class Genre {
 	 */
 	function get_albums() { 
 
-		$sql = "SELECT DISTINCT(song.album) FROM song WHERE genre='" . $this->id . "'";
-		$db_results = mysql_query($sql,dbh());
+		$sql = "SELECT DISTINCT(`song`.`album`) FROM `song` WHERE `genre`='" . $this->id . "'";
+		$db_results = Dba::query($sql);
 
 		$results = array();
 
-		while ($r = mysql_fetch_assoc($db_results)) { 
-			$album = new Album($r['album']);
-			$album->format_album();
-			$results[] = $album;
+		while ($r = Dba::fetch_row($db_results)) { 
+			$results[] = $r['0'];
 		}
 
 		return $results;

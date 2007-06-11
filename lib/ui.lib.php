@@ -627,26 +627,22 @@ function img_resize($image,$size,$type,$album_id) {
 /**
  * show_genres
  * this shows the 'many' genre form, it takes an array of genre objects and the view object
- * @package Genre
- * @catagory Display
  */
 function show_genres($genres,$view) {
 
-	require (conf('prefix') . '/templates/show_genres.inc.php');
+	require Config::get('prefix') . '/templates/show_genres.inc.php';
 
 } // show_genres
 
 /**
  * show_genre
  * this shows a single genre item which is basicly just a link to the albums/artists/songs of said genre
- * @package Genre
- * @catagory Display
  */
 function show_genre($genre_id) {
 
 	$genre = new Genre($genre_id);
 
-	require (conf('prefix') . '/templates/show_genre.inc.php');
+	require Config::get('prefix') . '/templates/show_genre.inc.php';
 
 } // show_genre
 

@@ -39,7 +39,7 @@
 <?php 
 foreach ($object_ids as $genre_id) { 
 	$genre = new Genre($genre_id); 
-	$genre->format_genre();
+	$genre->format();
 ?>
 	<tr class="<?php echo flip_class(); ?>">
 		<td>

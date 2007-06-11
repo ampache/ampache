@@ -31,15 +31,6 @@ switch ($_REQUEST['action']) {
 		$album->clear_art();
 		show_confirmation(_('Album Art Cleared'),_('Album Art information has been removed from the database'),"/albums.php?action=show&amp;album=" . $album->id);
 	break;
-	case 'show':	
-		$album = new Album($_REQUEST['album']);
-		$album->format();
-
-		require Config::get('prefix') . '/templates/show_album.inc';
-	
-		/* Get the song ids for this album */
-		$song_ids = $album->get_songs(0,$_REQUEST['artist']);
-	break;
 	// Upload album art
 	case 'upload_art':
 
@@ -177,21 +168,7 @@ switch ($_REQUEST['action']) {
 		show_box_bottom(); 
 	break;
 	// Browse by Album
-	default: 
-		if (strlen($_REQUEST['match']) < '1') { $match = 'a'; }
-
-		// Setup the View Ojbect
-	        $view = new View();
-	        $view->import_session_view();
-
-		if ($match == 'Show_all' || $match == 'Show_missing_art' || $match == 'Browse') { $chr = ''; } 
-		else { $chr = $match; } 
-
-		require (conf('prefix') . '/templates/show_box_top.inc.php');
-		show_alphabet_list('albums','albums.php',$match);
-		show_alphabet_form($chr,_('Show Albums starting with'),"albums.php?action=match");
-		require (conf('prefix') . '/templates/show_box_bottom.inc.php');
-	
+	case 'broken':	
 		switch($match) {
 			case 'Show_all':
 				$offset_limit = 99999;
@@ -262,6 +239,22 @@ switch ($_REQUEST['action']) {
 	
 	break;
 } // end switch on action
+
+
+/**
+ * switch on view
+ */
+switch ($_REQUEST['action']) { 
+	case 'show':
+		$album = new Album($_REQUEST['album']);
+		$album->format();
+
+		require Config::get('prefix') . '/templates/show_album.inc.php';
+	
+		/* Get the song ids for this album */
+		$song_ids = $album->get_songs(0,$_REQUEST['artist']);
+	break;
+} // switch on view
 
 show_footer();
 ?>

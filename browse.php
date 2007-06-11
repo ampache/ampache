@@ -36,7 +36,7 @@
 require_once 'lib/init.php';
 
 /* Display the headers and menus */
-require_once Config::get('prefix') . '/templates/header.inc.php';
+show_header(); 
 echo '<div id="browse_content">'; 
 
 switch($_REQUEST['action']) {

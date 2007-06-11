@@ -23,63 +23,19 @@
  * This page has a few tabs, as such we need to figure out which tab we are on 
  * and display the information accordingly 
  */
-$current_tab 	= scrub_in($_REQUEST['tab']);
-if (!$current_tab) { $current_tab = 'interface'; } 
-// HORRIBLE HACK!
-if ($_REQUEST['action'] == 'user') { $action_txt = '&amp;action=user'; } 
-$link		= Config::get('web_path') . $target;
 
-/* CSS construction bs */
-$link_active	= "a_" . $current_tab;
-${$link_active} = "id=\"current\"";
-$tab_active	= "tab_" .$current_tab;
-${$tab_active}  = "id=\"tabactive\"";
 ?>
-<?php show_box_top(); ?>
-<span class="header1">
-<?php echo _('Editing'); ?> <?php echo $fullname; ?> <?php echo _('preferences'); ?> 
-<?php if ($GLOBALS['user']->has_access(100)) { ?>
-[<a href="<?php echo Config::get('web_path'); ?>/admin/preferences.php?action=fix_preferences&amp;user_id=<?php echo $user_id; ?>"><?php echo _('Rebuild Preferences'); ?></a>]
-<?php } ?>
-</span>
-
-<div id="tabcontainer">
-<ul id="tablist">
-<li <?php echo $tab_interface; ?>>
-	<a href="<?php echo $link; ?>?tab=interface&amp;user_id=<?php echo $user_id . $action_txt; ?>" <?php echo $a_interface; ?>><?php echo _('Interface'); ?></a>
-</li>
-<li <?php echo $tab_streaming; ?>>
-	<a href="<?php echo $link; ?>?tab=streaming&amp;user_id=<?php echo $user_id . $action_txt; ?>" <?php echo $a_streaming; ?>><?php echo _('Streaming'); ?></a>
-</li>
-<li <?php echo $tab_options; ?>>
-	<a href="<?php echo $link; ?>?tab=options&amp;user_id=<?php echo $user_id . $action_txt; ?>" <?php echo $a_options; ?>><?php echo _('Options'); ?></a>
-</li>
-<?php if ($user_id != '-1' && $_SESSION['userdata']['type'] == 'mysql') { ?>
-<li <?php echo $tab_account; ?>>
-	<a href="<?php echo $link; ?>?tab=account&amp;user_id=<?php echo $user_id  . $action_txt; ?>" <?php echo $a_account; ?>><?php echo _('Account'); ?></a>
-</li>
-<?php } elseif ($_SESSION['userdata']['type'] == 'mysql' || $user_id == '-1') { ?>
-<li <?php echo $tab_system; ?>>
-	<a href="<?php echo $link; ?>?tab=system&amp;user_id=<?php echo $user_id; ?>" <?php echo $a_system; ?>><?php echo _('System'); ?></a>
-</li>
-<li <?php echo $tab_modules; ?>>
-	<a href="<?php echo $link; ?>?tab=modules&amp;user_id=<?php echo $user_id; ?>" <?php echo $a_modules; ?>><?php echo _('Modules'); ?></a>
-</li>
-
-<?php } ?>
-</ul>
-</div>
-<div class="text-box" style="width:45em;">
-<form method="post" name="preferences" action="<?php echo Config::get('web_path'); ?><?php echo $target; ?>" enctype="multipart/form-data">
+<?php show_box_top(_('Editing') . ' ' . $fullname . ' ' . _('preferences')); ?>
+<form method="post" name="preferences" action="<?php echo Config::get('web_path'); ?>/preferences.php?action=update_preferences" enctype="multipart/form-data">
 <?php 
 if ($current_tab != 'account' && $current_tab != 'modules') { 
-	show_preference_box($preferences[$current_tab]); 
+	show_preference_box($preferences[$_REQUEST['tab']]); 
 
 ?>
 	<input class="button" type="submit" value="<?php echo _('Update Preferences'); ?>" />
 	<input type="hidden" name="action" value="update_preferences" />
-	<input type="hidden" name="user_id" value="<?php echo $user_id; ?>" />&nbsp;&nbsp;
 	<input type="hidden" name="tab" value="<?php echo scrub_out($current_tab); ?>" />
+	<input type="hidden" name="method" value="<?php echo scrub_out($_REQUEST['action']); ?>" />
 	<input class="button" type="submit" name="action" value="<?php echo _("Cancel"); ?>" />
 <?php
 	} 

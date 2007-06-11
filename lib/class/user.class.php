@@ -154,7 +154,7 @@ class User {
 			ksort($type_array[$type]); 
 			$results[$type] = array ('title'=>ucwords($type),'admin'=>$admin,'prefs'=>$type_array[$type]);
 		} // end while
-
+		
 		return $results;
 	
 	} // get_preferences

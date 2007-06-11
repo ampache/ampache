@@ -22,32 +22,33 @@
 /* I'm cheating a little here, check to see if we want to show the
  * Apply to All button on this page 
  */
-if ($GLOBALS['user']->has_access(100) AND Config::get('use_auth')) { 
-	$show_apply_to_all = true;
+if (($GLOBALS['user']->has_access(100) OR !Config::get('use_auth')) AND $_REQUEST['action'] == 'admin') { 
+	$is_admin = true; 
 }
 ?>
-
-
 <table class="tabledata" border="0" cellpadding="0" cellspacing="0" width="100%">
 <tr class="odd">
-	<th colspan="3" class="header2" align="left"><?php echo $preferences['title']; ?></th>
+	<th colspan="5" class="header2" align="left"><?php echo $preferences['title']; ?></th>
 </tr>
 <tr class="table-header">
 	<th><?php echo _('Preference'); ?></th>
 	<th><?php echo _('Value'); ?></th>
-	<?php if ($show_apply_to_all) { ?>
-		<th><?php echo _('Apply to All'); ?></th>
+	<?php if ($is_admin) { ?>
+	<th><?php echo _('Apply to All'); ?></th>
+	<th><?php echo _('Access Level'); ?></th>
 	<?php } ?>
 </tr>
-<?php 
-foreach ($preferences['prefs'] as $pref) { ?>
+<?php foreach ($preferences['prefs'] as $pref) { ?>
 	<tr class="<?php echo flip_class(); ?>">
 		<td><?php echo _($pref['description']); ?></td>
 		<td>
 			<?php create_preference_input($pref['name'], $pref['value']); ?>
 		</td>
-		<?php if ($show_apply_to_all) { ?>
+		<?php if ($is_admin) { ?>
 			<td align="center"><input type="checkbox" name="check_<?php echo $pref['name']; ?>" value="1" /></td>
+			<td align="center">
+
+			</td>
 		<?php } ?>
 	</tr>
 <?php } // End foreach ($preferences['prefs'] as $pref) ?>

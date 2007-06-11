@@ -210,9 +210,9 @@ switch ($_REQUEST['action']) {
 		require Config::get('prefix') . '/templates/show_add_catalog.inc.php';
 	break;
 	case 'clear_now_playing':
-	        if (conf('demo_mode')) { break; }
+	        if (Config::get('demo_mode')) { break; }
 	    	clear_now_playing();
-		show_confirmation(_('Now Playing Cleared'),_('All now playing data has been cleared'),conf('web_path') . '/admin/index.php');
+		show_confirmation(_('Now Playing Cleared'),_('All now playing data has been cleared'),Config::get('web_path') . '/admin/index.php');
 	break;
 	case 'show_clear_stats':
 		/* Demo Bad! */

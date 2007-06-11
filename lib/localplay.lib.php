@@ -36,10 +36,10 @@ function verify_localplay_preferences($type) {
 	foreach ($preferences as $preference) { 
 		$name = 'localplay_' . $type . '_' . $preference['name'];
 		/* check for an existing record */
-		$sql = "SELECT id FROM preferences WHERE name = '" . sql_escape($name) . "'";
-		$db_results = mysql_query($sql, dbh());
+		$sql = "SELECT id FROM preferences WHERE name = '" . Dba::escape($name) . "'";
+		$db_results = Dba::query($sql);
 
-		if (!mysql_num_rows($db_results)) { return false; } 
+		if (!Dba::num_rows($db_results)) { return false; } 
 
 	} // end foreach preferences
 
@@ -76,8 +76,8 @@ function insert_localplay_preferences($type) {
 	} // end foreach preferences
 
 	/* Fix everyones preferences */
-	$sql = "SELECT * FROM user";
-	$db_results = mysql_query($sql, dbh());
+	$sql = "SELECT * FROM `user`";
+	$db_results = Dba::query($sql);
 
 	$temp_user = new User();
 	$temp_user->fix_preferences('-1');
@@ -143,7 +143,7 @@ function remove_localplay_preferences($type=0) {
 function get_localplay_controllers($disabled='') { 
 
 	/* First get a list of the files */
-	$handle = opendir(conf('prefix') . '/modules/localplay');
+	$handle = opendir(Config::get('prefix') . '/modules/localplay');
 	
 	if (!is_resource($handle)) { 
 		debug_event('localplay','Error: Unable to read localplay controller directory','1');

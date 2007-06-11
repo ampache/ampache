@@ -24,81 +24,57 @@ require 'lib/init.php';
 
 /* Scrub in the needed mojo */
 if (!$_REQUEST['tab']) { $_REQUEST['tab'] = 'interface'; } 
-$user_id = scrub_in($_REQUEST['user_id']);
 
 // Switch on the action 
 switch($_REQUEST['action']) { 
-	case 'update_user':
-		/* Verify permissions */
-		if (!$GLOBALS['user']->has_access(25) || Config::get('demo_mode') || 
-			($GLOBALS['user']->id != $user_id && !$GLOBALS['user']->has_access(100))) { 
-			show_access_denied(); 
-			exit();
-		}
-		
-		/* Go ahead and update normal stuff */
-		$this_user = new User($user_id);
-		$this_user->update_fullname($_REQUEST['fullname']);
-		$this_user->update_email($_REQUEST['email']);
-
-		
-		/* Check for password change */
-		if ($_REQUEST['password1'] !== $_REQUEST['password2'] && !empty($_REQUEST['password1'])) { 
-			$GLOBALS['error']->add_error('password',_('Error: Password Does Not Match or Empty'));
-			break;
-		}
-		elseif (!empty($_REQUEST['password1'])) { 	
-			/* We're good change the mofo! */
-			$this_user->update_password($_REQUEST['password1']);
-		
-			/* Haha I'm fired... it's not an error but screw it */
-			$GLOBALS['error']->add_error('password',_('Password Updated'));
-		}
-
-		/* Check for stats */
-		if ($_REQUEST['clear_stats'] == '1') { 
-			$this_user->delete_stats();
-		}
-	break;
 	case 'update_preferences':
+		if ($_REQUEST['method'] == 'admin' && !$GLOBALS['user']->has_access('100')) { 
+			access_denied(); 
+			exit; 
+		} 
 		
-		/* Do the work */
-		update_preferences($user_id);	
-		
-		/* Reload the Preferences */
-		$GLOBALS['user']->set_preferences();
+		/* Reset the Theme */
+		if ($_REQUEST['method'] == 'admin') { 
+			$user_id = '-1'; 
+			$fullname = _('Server'); 
+		}
+		else { 
+			$user_id = $GLOBALS['user']->id; 
+			$fullname = $GLOBALS['user']->fullname; 
+		} 
 
-		/* Reset the conf values */
+		/* Update and reset preferences */
+		update_preferences($user_id);	
 		init_preferences();
 
-		/* Reset the Theme */
-		set_theme();
-	default:
-		if (!$user_id) { $user_id = $GLOBALS['user']->id; }
-		$preferences = $GLOBALS['user']->get_preferences(0,$_REQUEST['tab']);		
+		$preferences = $GLOBALS['user']->get_preferences($user_id,$_REQUEST['tab']);		
 	break;
-
+	case 'admin': 
+		// Make sure only admins here
+		if (!$GLOBALS['user']->has_access('100')) { 
+			access_denied(); 
+			exit;
+		} 
+		$fullname= _('Server');
+		$preferences = $GLOBALS['user']->get_preferences(-1,$_REQUEST['tab']); 
+	break;
+	default: 
+		$fullname = $GLOBALS['user']->fullname; 
+		$preferences = $GLOBALS['user']->get_preferences(0,$_REQUEST['tab']); 
+	break;
 } // End Switch Action
 
-if (!$GLOBALS['user']->fullname) { 
-	$fullname = "Site";
-}
-else {
-	$fullname = $GLOBALS['user']->fullname;
-}
+show_header(); 
 
+/**
+ * switch on the view
+ */
+switch ($_REQUEST['action']) { 
+	default: 
+		// Show the default preferences page
+		require Config::get('prefix') . '/templates/show_preferences.inc.php';
+	break;
+} // end switch on action
 
-// HEADER
-require_once Config::get('prefix') . '/templates/header.inc.php';
-// HEADER
-
-// Set Target
-$target = "/preferences.php";
-
-// Show the default preferences page
-require Config::get('prefix') . '/templates/show_preferences.inc.php';
-
-
-// FOOTER
 show_footer();
 ?>

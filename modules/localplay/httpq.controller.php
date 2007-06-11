@@ -30,20 +30,19 @@ class AmpacheHttpq {
 	
 
 	/* Constructed variables */
-	var $_httpq;
+	private $_httpq;
 
 	/**
 	 * Constructor
 	 * This returns the array map for the localplay object
 	 * REQUIRED for Localplay
 	 */
-	function AmpacheHttpq() { 
+	public function __construct() { 
 	
 		/* Do a Require Once On the needed Libraries */
-		require_once(conf('prefix') . '/modules/httpq/httpqplayer.class.php');
+		require_once Config::get('prefix') . '/modules/httpq/httpqplayer.class.php';
 
-	} // AmpacheHttpq
-
+	} // Constructor
 
 	/**
 	 * function_map

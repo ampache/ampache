@@ -30,17 +30,17 @@ class AmpacheMpd {
 	
 
 	/* Constructed variables */
-	var $_mpd;
+	private $_mpd;
 
 	/**
 	 * Constructor
 	 * This returns the array map for the localplay object
 	 * REQUIRED for Localplay
 	 */
-	function AmpacheMpd() { 
+	public function __construct() { 
 	
 		/* Do a Require Once On the needed Libraries */
-		require_once(conf('prefix') . '/modules/mpd/mpd.class.php');
+		require_once Config::get('prefix') . '/modules/mpd/mpd.class.php';
 
 	} // AmpacheMpd
 
@@ -51,7 +51,7 @@ class AmpacheMpd {
 	 * that this player supports and their names in this local
 	 * class. This is a REQUIRED function
 	 */
-	function function_map() { 
+	public function function_map() { 
 
                 $map = array();
 

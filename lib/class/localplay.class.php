@@ -23,15 +23,15 @@
 class Localplay {
 
 	/* Base Variables */
-	var $type;
+	public $type;
 
 
 
 	/* Built Variables */
-	var $_function_map = array(); 
-	var $_template;
-	var $_preferences = array();
-	var $_player; 
+	public $_function_map = array(); 
+	public $_template;
+	public $_preferences = array();
+	public $_player; 
 
 
 	/**
@@ -41,7 +41,6 @@ class Localplay {
 	 * map, the preferences and the template
 	 */
 	function Localplay($type) { 
-
 
 		$this->type = $type;
 
@@ -57,10 +56,9 @@ class Localplay {
 	 * any failures, fatal errors will actually return something to the
 	 * gui
 	 */
-	function _get_info() { 
+	private function _get_info() { 
 
 		$this->_load_player();
-
 
 	} // _get_info
 
@@ -71,11 +69,11 @@ class Localplay {
 	 * Will interface with in order to make all this magical stuf work
 	 * all LocalPlay modules should be located in /modules/<name>/<name>.class.php
 	 */
-	function _load_player() { 
+	private function _load_player() { 
 
 		if (!$this->type) { return false; } 
 
-		$filename = conf('prefix') . '/modules/localplay/' . $this->type . '.controller.php';
+		$filename = Config::get('prefix') . '/modules/localplay/' . $this->type . '.controller.php';
 		$include = require_once ($filename);
 		
 		if (!$include) { 

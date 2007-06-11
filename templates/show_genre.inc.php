@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2006 Ampache.org
+ Copyright (c) 2001 - 2007 Ampache.org
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
@@ -24,7 +24,7 @@
  * This shows a single genre and lets you pick between
  * albums/artists or songs
 */
-$web_path = conf('web_path');
+$web_path = Config::get('web_path');
 ?>
 <?php show_box_top(_('Viewing') . " " . $genre->name . " " . _('Genre')); ?>
 		[<?php echo $genre->get_album_count(); ?>] 

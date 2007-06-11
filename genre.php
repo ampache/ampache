@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2006 Ampache.org
+ Copyright (c) 2001 - 2007 Ampache.org
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
@@ -23,26 +23,28 @@
  * Genres Pages
  * Nuff Said for now
  */
-require_once('lib/init.php');
+require_once 'lib/init.php';
 
-show_template('header');
+show_header();
 
-$action = scrub_in($_REQUEST['action']);
-
-switch($action) { 
+/**
+ * switch on action 
+ */
+switch($_REQUEST['action']) { 
 	case 'show_songs':
 		$genre = new Genre($_REQUEST['genre_id']);
 		show_genre($_REQUEST['genre_id']);
 		$songs = $genre->get_songs();
-		show_songs($songs);
 	break;
 	case 'show_genre':
 	default:
 	case 'show_albums':
 		$genre = new Genre($_REQUEST['genre_id']);
 		show_genre($_REQUEST['genre_id']);
-		$albums = $genre->get_albums();
-		require (conf('prefix') . '/templates/show_albums.inc.php');
+		$object_ids = $genre->get_albums();
+		show_box_top(_('Albums')); 
+		require Config::get('prefix') . '/templates/show_albums.inc.php';
+		show_box_bottom(); 
 	break;
 	case 'show_artists':
 		$genre = new Genre($_REQUEST['genre_id']);
