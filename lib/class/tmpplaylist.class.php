@@ -98,6 +98,28 @@ class tmpPlaylist {
 	} // get_from_session
 
 	/**
+	 * get_from_userid
+	 * This returns a tmp playlist object based on a userid passed
+	 * this is used for the user profiles page
+	 */
+	public static function get_from_userid($user_id) { 
+
+		// This is a little stupid, because we don't have the user_id in the session or
+		// in the tmp_playlist table we have to do it this way.
+		$client = new User($user_id); 
+		$username = Dba::escape($client->username); 
+
+		$sql = "SELECT `tmp_playlist`.`id` FROM `tmp_playlist` LEFT JOIN `session` ON `session`.`id`=`tmp_playlist`.`session` " . 
+			" WHERE `session`.`username`='$username' ORDER BY `session`.`expire` DESC"; 
+		$db_results = Dba::query($sql); 
+
+		$data = Dba::fetch_assoc($db_results); 
+		
+		return $data['id']; 
+
+	} // get_from_userid
+
+	/**
 	 * get_items
 	 * This returns an array of all object_ids currently in this tmpPlaylist
 	 */

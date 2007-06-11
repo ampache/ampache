@@ -58,3 +58,9 @@ $title		= scrub_out($album->name) . ' -- ' . $album->f_artist;
 		<?php } ?>
 	</div>
 <?php show_box_bottom(); ?>
+<?php 
+	show_box_top(_('Songs')); 
+	$object_ids = $album->get_songs(); 
+	require Config::get('prefix') . '/templates/show_songs.inc.php'; 
+	show_box_bottom(); 
+?>

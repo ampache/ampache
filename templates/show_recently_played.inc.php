@@ -23,7 +23,6 @@
 $time_unit = array('',_('seconds ago'),_('minutes ago'),_('hours ago'),_('days ago'),_('weeks ago'),_('months ago'),_('years ago')); 
 
 ?>
-<?php show_box_top(_('Recently Played')); ?>
 <table>
 <tr class="table-header">
 	<td><?php echo _('Username'); ?></td>
@@ -75,4 +74,3 @@ $time_unit = array('',_('seconds ago'),_('minutes ago'),_('hours ago'),_('days a
 </tr>
 <?php } ?>
 </table>
-<?php show_box_bottom(); ?>

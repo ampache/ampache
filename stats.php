@@ -24,10 +24,15 @@
 */
 require_once 'lib/init.php';
 
-require_once Config::get('prefix') . '/templates/header.inc.php'; 
+show_header(); 
 
 /* Switch on the action to be performed */
 switch ($_REQUEST['action']) { 
+	// Show a Users "Profile" page
+	case 'show_user': 
+		$client = new User($_REQUEST['user_id']); 
+		require_once Config::get('prefix') . '/templates/show_user.inc.php'; 
+	break;
 	case 'user_stats':
 		/* Get em! */
 		$working_user = new User($_REQUEST['user_id']); 

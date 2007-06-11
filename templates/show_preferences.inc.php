@@ -28,23 +28,19 @@
 <?php show_box_top(_('Editing') . ' ' . $fullname . ' ' . _('preferences')); ?>
 <form method="post" name="preferences" action="<?php echo Config::get('web_path'); ?>/preferences.php?action=update_preferences" enctype="multipart/form-data">
 <?php 
-if ($current_tab != 'account' && $current_tab != 'modules') { 
+if ($_REQUEST['tab'] != 'account' && $_REQUEST['tab'] != 'modules') { 
 	show_preference_box($preferences[$_REQUEST['tab']]); 
 
 ?>
 	<input class="button" type="submit" value="<?php echo _('Update Preferences'); ?>" />
-	<input type="hidden" name="action" value="update_preferences" />
 	<input type="hidden" name="tab" value="<?php echo scrub_out($current_tab); ?>" />
 	<input type="hidden" name="method" value="<?php echo scrub_out($_REQUEST['action']); ?>" />
 	<input class="button" type="submit" name="action" value="<?php echo _("Cancel"); ?>" />
 <?php
-	} 
-if ($current_tab == 'modules') {
-	        require (conf('prefix') .  '/templates/show_modules.inc.php');
-}
-if ($current_tab == 'account') { 
-		$this_user = new User($user_id);
-		require (conf('prefix') . '/templates/show_user.inc.php');
+}  // end if not account
+if ($_REQUEST['tab'] == 'account') { 
+		$client = $GLOBALS['user']; 
+		require Config::get('prefix') . '/templates/show_account.inc.php';
 	}
 ?>
 </form>

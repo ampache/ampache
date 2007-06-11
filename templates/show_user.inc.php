@@ -1,12 +1,13 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2006 Ampache.org
+ Copyright (c) 2001 - 2007 Ampache.org
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
- modify it under the terms of the GNU General Public License v2
- as published by the Free Software Foundation.
+ modify it under the terms of the GNU General Public License
+ as published by the Free Software Foundation; either version 2
+ of the License, or (at your option) any later version.
 
  This program is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -18,45 +19,48 @@
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
+$last_seen      = $client->last_seen ? date("m\/d\/y - H:i",$client->last_seen) : _('Never');
+$create_date    = $client->create_date ? date("m\/d\/y - H:i",$client->create_date) : _('Unknown');
+$client->format(); 
 ?>
-<table class="tabledata">
+<?php show_box_top($client->fullname); ?>
+<table border="0" cellspacing="0">
 <tr>
-	<td><?php echo _('Name'); ?>:</td>
-	<td>
-		<input type="text" name="fullname" size="27" value="<?php echo scrub_out($this_user->fullname); ?>" />
+	<td valign="top">
+		<strong><?php echo _('Full Name'); ?>:</strong> <?php echo $client->fullname; ?><br />
+		<strong><?php echo _('Create Date'); ?>:</strong> <?php echo $create_date; ?><br />
+		<strong><?php echo _('Last Seen'); ?>:</strong> <?php echo $last_seen; ?><br />
+		<strong><?php echo _('Activity'); ?>:</strong> <?php echo $client->f_useage; ?><br />
+		<?php if ($client->is_logged_in() AND $client->is_online()) { ?>
+			<i style="color:green;"><?php echo _('User is Online Now'); ?></i>
+		<?php } else { ?>
+			<i style="color:red;"><?php echo _('User is Offline Now'); ?></i>
+		<?php } ?>
+	</td>
+	<td valign="top">
+		<h2><?php echo _('Active Playlist'); ?></h2>
+		<?php 
+			$tmp_playlist = new tmpPlaylist(tmpPlaylist::get_from_userid($client->id)); 
+			$object_ids = $tmp_playlist->get_items(); 
+			foreach ($object_ids as $song_id) { 
+				$song = new Song($song_id);
+				$song->format(); 
+		?>
+		<?php echo $song->f_link; ?><br />
+		<?php } ?>
 	</td>
 </tr>
 <tr>
-	<td><?php echo _('E-mail'); ?>:</td>
-	<td>
-		<input type="text" name="email" size="27" value="<?php echo scrub_out($this_user->email); ?>" />
+	<td valign="top">
+		<h2><?php echo _('Recently Rated'); ?></h2>
 	</td>
-</tr>
-<tr>
-	<td><?php echo _('New Password'); ?>:</td>
 	<td>
-		<?php $GLOBALS['error']->print_error('password'); ?>
-		<input type="password" name="password1" size="27" />
-	</td>
-</tr>
-<tr>
-	<td><?php echo _('Confirm Password'); ?>:</td>
-	<td>
-		<input type="password" name="password2" size="27" />
-	</td>
-</tr>
-<tr>
-	<td><?php echo _('Clear Stats'); ?>:</td>
-	<td>
-		<input type="checkbox" name="clear_stats" value="1" />
-	</td>
-</tr>
-<tr>
-	<td colspan="2">
-		<input type="hidden" name="user_id" value="<?php echo scrub_out($this_user->id); ?>" />
-		<input type="hidden" name="action" value="update_user" />
-		<input type="hidden" name="tab" value="<?php echo scrub_out($current_tab); ?>" />
-		<input class="button" type="submit" value="<?php echo _('Update Account'); ?>" />
+	<?php 
+		echo "<h2>" . _('Recently Played') . "</h2>\n"; 
+		$data = get_recently_played($client->id); 
+		require Config::get('prefix') . '/templates/show_recently_played.inc.php'; 
+	?>
 	</td>
 </tr>
 </table>
+<?php show_box_bottom(); ?>

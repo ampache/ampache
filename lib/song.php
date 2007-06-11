@@ -82,11 +82,15 @@ function get_songs_from_type($type,$results,$artist_id='') {
  * This function returns the last X songs that have been played
  * It uses the 'popular' threshold to determine how many to pull
  */
-function get_recently_played() { 
+function get_recently_played($user_id='') { 
+
+	if ($user_id) { 
+		$user_limit = " AND object_count.user='" . Dba::escape($user_id) . "'"; 
+	} 
 
 	$sql = "SELECT object_count.object_id, object_count.user, object_count.object_type, object_count.date " . 
         	"FROM object_count " .
-		"WHERE object_type='song' " . 
+		"WHERE object_type='song'$user_limit " . 
         	"ORDER by object_count.date DESC " . 
 		"LIMIT " . Config::get('popular_threshold'); 
 	$db_results = Dba::query($sql); 

@@ -126,8 +126,8 @@ function vauth_sess_destory($key) {
  */
 function vauth_sess_gc($maxlifetime) { 
 
-	$sql = "DELETE FROM session WHERE expire < '" . time() . "'";
-	$db_results = mysql_query($sql, vauth_dbh());
+	$sql = "DELETE FROM `session` WHERE `expire` < '" . time() . "'";
+	$db_results = Dba::query($sql);
 
 	return true;
 
@@ -152,8 +152,8 @@ function vauth_get_session($key) {
 
 	$key	= Dba::escape($key);
 
-	$sql = "SELECT * FROM session WHERE id='$key' AND expire > '" . time() . "'";
-	$db_results = mysql_query($sql, vauth_dbh());
+	$sql = "SELECT * FROM `session` WHERE `id`='$key' AND `expire` > '" . time() . "'";
+	$db_results = Dba::query($sql);
 
 	$results = mysql_fetch_assoc($db_results);
 

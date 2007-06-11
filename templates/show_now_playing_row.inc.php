@@ -23,9 +23,12 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 $title = scrub_out(truncate_with_ellipse($song->title,'25'));
 $album = scrub_out(truncate_with_ellipse($song->f_album_full,'25'));
 $artist = scrub_out(truncate_with_ellipse($song->f_artist_full,'25'));
-
 ?>
-<td class="np_cell"><?php echo scrub_out($np_user->fullname); ?></td>
+<td class="np_cell">
+	<a href="<?php echo $web_path; ?>/stats.php?action=show_user&amp;user_id=<?php echo $np_user->id; ?>">
+		<?php echo scrub_out($np_user->fullname); ?>
+	</a>
+</td>
 <td class="np_cell">
 	<a title="<?php echo scrub_out($song->title); ?>" href="<?php echo $web_path; ?>/song.php?action=single_song&amp;song_id=<?php echo $song->id; ?>">
 		<?php echo $title; ?>
