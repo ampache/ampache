@@ -163,7 +163,6 @@ switch ($_REQUEST['method']) {
 
 		/* Start the Stream */
 		$stream = new Stream($stream_type,$song_ids);
-		exit; 
 		$stream->start();
 	break;
 } // end method switch 

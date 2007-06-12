@@ -323,14 +323,17 @@ class tmpPlaylist {
 	 */
 	public static function prune_tracks() { 
 
+		// This prue is always run clears data for playlists that don't have tmp_playlist anymore
 		$sql = "DELETE FROM tmp_playlist_data USING tmp_playlist_data " . 
 			"LEFT JOIN tmp_playlist ON tmp_playlist_data.tmp_playlist=tmp_playlist.id " . 
 			"WHERE tmp_playlist.id IS NULL";
 		$db_results = Dba::query($sql);
-
+	
+		// This deletes data without votes, if it's a voting democratic playlist
 		$sql = "DELETE FROM tmp_playlist_data USING tmp_playlist_data " . 
 			"LEFT JOIN user_vote ON tmp_playlist_data.id=user_vote.object_id " . 
-			"WHERE user_vote.object_id IS NULL";
+			"LEFT JOIN tmp_playlist ON tmp_playlist.id=tmp_playlist.tmp_playlist " . 
+			"WHERE user_vote.object_id IS NULL AND tmp_playlist.type = 'vote'";
 		$db_results = Dba::query($sql);
 
 		return true; 
