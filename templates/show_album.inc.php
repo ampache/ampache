@@ -22,7 +22,7 @@
 $web_path = Config::get('web_path');
 
 // Title for this album
-$title		= scrub_out($album->name) . ' -- ' . $album->f_artist; 
+$title		= scrub_out($album->name) . ' (' . $album->year . ') -- ' . $album->f_artist; 
 ?>
 <?php show_box_top($title); ?>
 	<div style="float:left;display:table-cell;width:140px;">
