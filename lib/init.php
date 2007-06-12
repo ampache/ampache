@@ -215,6 +215,7 @@ elseif (!Config::get('use_auth')) {
 else { 
 	if (isset($_REQUEST['sessid'])) { 
 		$sess_results = vauth_get_session($_REQUEST['sessid']);	
+		session_name(Config::get('session_name')); 
 		session_id(scrub_in($_REQUEST['sessid']));
 		session_start();
 	}
