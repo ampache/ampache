@@ -55,9 +55,11 @@ class User {
 
 		if (!count($info)) { return false; } 
 		foreach ($info as $key=>$value) { 
+			// Let's not save the password in this object :S
+			if ($key == 'password') { continue; } 
+
 			$this->$key = $value; 
 		} 
-
 		$this->uid		= $info->id;
 		$this->set_preferences();
 

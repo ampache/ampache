@@ -63,7 +63,7 @@ $time_unit = array('',_('seconds ago'),_('minutes ago'),_('hours ago'),_('days a
 ?>
 <tr>
 	<td>
-		<a href="<?php echo Config::get('web_path'); ?>/stats.php?action=user_stats&amp;user_id=<?php echo scrub_out($row_user->id); ?>">
+		<a href="<?php echo Config::get('web_path'); ?>/stats.php?action=show_user&amp;user_id=<?php echo scrub_out($row_user->id); ?>">
 		<?php echo scrub_out($row_user->fullname); ?>
 		</a>
 	</td>
