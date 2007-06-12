@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2006 Karl Vollmer
+ Copyright (c) 2007 Karl Vollmer
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
@@ -119,7 +119,6 @@ function vauth_init($data) {
 	if (isset($error_status)) { return false; }
 
 	/* Load the additional libraries that we may or may not need... */
-	require_once 'dbh.lib.php';
 	require_once 'session.lib.php';
 	require_once 'auth.lib.php';
 

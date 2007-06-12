@@ -54,12 +54,12 @@ class Stream {
 
 	} //constructor
 
-	/*!
-		@function start
-		@discussion runs this and depending on the type passed it will
-			call the correct function
-	*/
-	function start() {
+	/**
+	 * start
+	 *runs this and depending on the type passed it will
+	 *call the correct function
+	 */
+	public function start() {
 
 		if (!is_array($this->songs)) { 
 			debug_event('stream','Error: No Songs Passed on ' . $this->type . ' stream','2');
@@ -68,6 +68,8 @@ class Stream {
 
 		$methods = get_class_methods('Stream');
 		$create_function = "create_" . $this->type;	
+
+		// If in the class, call it
                 if (in_array($create_function,$methods)) {
 	                $this->{$create_function}();
                 }
@@ -123,23 +125,20 @@ class Stream {
 	 * creates an m3u file, this includes the EXTINFO and as such can be
 	 * large with very long playlsits
 	 */
-	public function create_m3u() { 
+	public public function create_m3u() { 
 
 	        // Send the client an m3u playlist
 	        header("Cache-control: public");
-	        header("Content-Disposition: filename=playlist.m3u");
+	        header("Content-Disposition: filename=ampache-playlist.m3u");
 	        header("Content-Type: audio/x-mpegurl;");
 	        echo "#EXTM3U\n";
 
-	        foreach($this->songs as $song_id) {
+		// Foreach the songs in this stream object
+	        foreach ($this->songs as $song_id) {
 	        	$song = new Song($song_id);
 	                $song->format();
-	                $song_name = $song->f_artist_full . " - " . $song->title . "." . $song->type;
+
 	                echo "#EXTINF:$song->time," . $song->f_artist_full . " - " . $song->title . "\n";
-	                $sess = $_COOKIE[Config::get('sess_name')];
-	                if($GLOBALS['user']->prefs['play_type'] == 'downsample') {
-	                	$ds = $GLOBALS['user']->prefs['sample_rate'];
-			}
 			echo $song->get_url() . "\n";
                 } // end foreach
 
@@ -162,7 +161,7 @@ class Stream {
 
 		// Send the client a pls playlist
 		header("Cache-control: public");
-		header("Content-Disposition: filename=playlist.pls");
+		header("Content-Disposition: filename=ampache-playlist.pls");
 		header("Content-Type: audio/x-scpls;");
 		echo "[Playlist]\n";
 		echo "NumberOfEntries=$total_entries\n";

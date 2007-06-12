@@ -30,12 +30,10 @@ if (Config::get('demo_mode') || !$GLOBALS['user']->has_access('25')) {
 $song_ids = array();
 $web_path = Config::get('web_path');
 
-/* We need an action and a method */
-$action = scrub_in($_REQUEST['action']);
-$method = scrub_in($_REQUEST['method']);
-
-// Switch through the actions
-switch ($action) { 
+/**
+ * action switch 
+ */
+switch ($_REQUEST['action']) { 
 	case 'play_selected':
 		$type = scrub_in($_REQUEST['type']);
 		if ($type == 'album') { 
@@ -139,10 +137,12 @@ switch ($action) {
  * we should do with it, this is a sensitive time for the song id's
  * they don't know where they want to go.. let's help them out
  */
-switch ($method) { 
+switch ($_REQUEST['method']) { 
 	case 'download':
-		/* Make sure they are allowed to download */
-		if (!batch_ok()) { break; } 
+		// Run the access check and exit if they are not allowed to download
+		if (!Access::check_function('batch_download')) { access_denied(); exit; } 
+
+		// Format the zip file
 		$name = "AmpacheZip-" . date("m-d-Y",time());
 		$song_files = get_song_files($song_ids);
 		set_memory_limit($song_files[1]+32);
@@ -155,8 +155,6 @@ switch ($method) {
 		/* For non-stream/downsample methos we need to so something else */
 		switch ($GLOBALS['user']->prefs['play_type']) { 
 			case 'stream':
-			case 'downsample':
-				// Rien a faire
 			break;
 			default:
 				$stream_type = $GLOBALS['user']->prefs['play_type'];
@@ -165,6 +163,7 @@ switch ($method) {
 
 		/* Start the Stream */
 		$stream = new Stream($stream_type,$song_ids);
+		exit; 
 		$stream->start();
 	break;
 } // end method switch 

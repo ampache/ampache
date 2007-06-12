@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2006 Karl Vollmer
+ Copyright (c) 2006 - 2007 Karl Vollmer
  All rights reserved.
 
  This program is free software; you can redistribute it and/or

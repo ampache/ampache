@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2006 Karl Vollmer
+ Copyright (c) 2006 - 2007 Karl Vollmer
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
@@ -42,7 +42,7 @@ session_set_save_handler(
  */
 function vauth_sess_open($save_path,$session_name) { 
 
-	if (!is_resource(vauth_dbh())) { 
+	if (!is_resource(Dba::dbh())) { 
 		vauth_error('Session open failed, no database handle');
 		return false;
 	}
@@ -95,7 +95,7 @@ function vauth_sess_write($key,$value) {
 
 	$sql = "UPDATE session SET value='$value', expire='$expire'" . 
 		" WHERE id='$key'";
-	$db_results = mysql_query($sql, vauth_dbh());
+	$db_results = Dba::query($sql);
 
 	return $db_results;
 
@@ -110,8 +110,8 @@ function vauth_sess_destory($key) {
 	$key = Dba::escape($key);
 
 	/* Remove any database entries */
-	$sql = "DELETE FROM session WHERE id='$key'";
-	$db_results = mysql_query($sql, vauth_dbh());
+	$sql = "DELETE FROM `session` WHERE `id`='$key'";
+	$db_results = Dba::query($sql);
 
 	/* Destory the Cookie */
 	setcookie (vauth_conf('session_name'),'',time() - 86400);
@@ -155,7 +155,7 @@ function vauth_get_session($key) {
 	$sql = "SELECT * FROM `session` WHERE `id`='$key' AND `expire` > '" . time() . "'";
 	$db_results = Dba::query($sql);
 
-	$results = mysql_fetch_assoc($db_results);
+	$results = Dba::fetch_assoc($db_results);
 
 	if (!count($results)) { 
 		vauth_error("Query: $sql failed to return results " . mysql_error());
@@ -215,7 +215,7 @@ function vauth_session_create($data) {
 	/* Insert the row */
 	$sql = "INSERT INTO session (`id`,`username`,`type`,`value`,`expire`) " . 
 		" VALUES ('$key','$username','$type','$value','$expire')";
-	$db_results = mysql_query($sql, vauth_dbh());
+	$db_results = Dba::query($sql);
 
 	if (!$db_results) { 
 		vauth_error("Session Creation Failed with Query: $sql and " . mysql_error());
