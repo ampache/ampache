@@ -204,7 +204,7 @@ switch ($type) {
 		$user = new User($item['user']);
 		$user->format_user();
  		echo " <title><![CDATA[$song->title]]></title>\n";
- 		echo " <link>$web_path/songs.php?action=single_song&amp;song_id=".$item['object_id']."</link>\n";
+ 		echo " <link>$web_path/song.php?action=single_song&amp;song_id=".$item['object_id']."</link>\n";
  		echo " <description><![CDATA[$user->fullname played $song->title - $song->f_artist $time_string]]></description>\n";
  		echo "</item>\n";
 	}
