@@ -31,7 +31,6 @@ require_once 'lib/install.php';
 require_once 'lib/debug.lib.php';
 require_once 'lib/gettext.php';
 
-require_once 'modules/vauth/dbh.lib.php';
 require_once 'modules/vauth/init.php';
 
 if ($_SERVER['HTTPS'] == 'on') { $http_type = "https://"; }
