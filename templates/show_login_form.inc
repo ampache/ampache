@@ -32,8 +32,8 @@ $htmllang = str_replace("_","-",Config::get('lang'));
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=<?php echo Config::get('site_charset'); ?>" />
 <link rel="shortcut icon" href="<?php echo Config::get('web_path'); ?>/favicon.ico" />
-<link rel="stylesheet" href="templates/print.css" type="text/css" media="print" />
-<link rel="stylesheet" href="templates/handheld.css" type="text/css" media="handheld" />
+<link rel="stylesheet" href="<?php echo Config::get('web_path'); ?>/templates/print.css" type="text/css" media="print" />
+<link rel="stylesheet" href="<?php echo Config::get('web_path'); ?>/templates/handheld.css" type="text/css" media="handheld" />
 <link rel="stylesheet" href="<?php echo Config::get('web_path'); ?><?php echo Config::get('theme_path'); ?>/templates/default.css" type="text/css" media="screen" />
 <title> <?php echo Config::get('site_title'); ?> </title>
 <script type="text/javascript" language="javascript">

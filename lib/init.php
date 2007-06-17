@@ -244,9 +244,6 @@ unset($results);
 /* Setup the flip class */
 flip_class(array('odd','even')); 
 
-/* Set the Theme */
-$theme = get_theme(Config::get('theme_name'));
-
 /* Check to see if we need to perform an update */
 if (! preg_match('/update\.php/', $_SERVER['PHP_SELF'])) {
 	if (Update::need_update()) {

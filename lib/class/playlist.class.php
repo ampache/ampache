@@ -478,9 +478,6 @@ class Playlist {
 		$sql = "DELETE FROM playlist WHERE id='$id'";
 		$db_results = mysql_query($sql, dbh());
 
-		$sql = "DELETE FROM playlist_permission WHERE playlist='$id'";
-		$db_results = mysql_query($sql, dbh());
-
 		return true;
 	
 	} // delete

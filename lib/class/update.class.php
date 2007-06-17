@@ -19,22 +19,21 @@
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
-/*!
-	@header Update Class
-	@discussion this class handles updating from one version of 
-	maintain to the next. Versions are a 6 digit number
-	220000
-	^
-	Major Revision
-	
-	220000
-	 ^
-	 Minor Revision
-
-	The last 4 digits are a build number...
-	If Minor can't go over 9 Major can go as high as we want
-*/
-
+/**
+ * Update Class
+ * this class handles updating from one version of 
+ * maintain to the next. Versions are a 6 digit number
+ *  220000
+ *  ^
+ *  Major Revision
+ *	
+ *  220000
+ *   ^
+ *  Minor Revision
+ *
+ * The last 4 digits are a build number...
+ * If Minor can't go over 9 Major can go as high as we want
+ */
 class Update {
 
 	public $key;
@@ -62,7 +61,7 @@ class Update {
 	 */
 	private function _get_info() {
 
-		$sql = "SELECT * FROM update_info WHERE key='$this->key'";
+		$sql = "SELECT * FROM `update_info` WHERE `key`='$this->key'";
 		$db_results = Dba::query($sql);
 
 		return Dba::fetch_assoc($db_results);		
@@ -589,13 +588,13 @@ class Update {
 			$insert_results = Dba::query($sql); 
 		} // end while
 
-		$sql = "RENAME TABLE `ampache`.`song_ext_data`  TO `ampache`.`song_data`"; 
+		$sql = "RENAME TABLE `song_ext_data`  TO `song_data`"; 
 		$db_results = Dba::query($sql); 
 
-		$sql = "RENAME TABLE `ampache`.`preferences` TO `ampache`.`preference`"; 
+		$sql = "RENAME TABLE `preferences` TO `preference`"; 
 		$db_results = Dba::query($sql); 
 
-		$sql = "RENAME TABLE `ampache`.`ratings` TO `ampache`.`rating`"; 
+		$sql = "RENAME TABLE `ratings` TO `rating`"; 
 		$db_results = Dba::query($sql); 
 
 		// Go ahead and drop the art/thumb stuff
@@ -610,16 +609,16 @@ class Update {
 		$sql = "ALTER TABLE `user` DROP `offset_limit`"; 
 		$db_results = Dba::query($sql); 
 
-		$sql = "ALTER TABLE `ratings` CHANGE `user_rating` `rating` ENUM( '-1', '0', '1', '2', '3', '4', '5' ) NOT NULL DEFAULT '0'"; 
+		$sql = "ALTER TABLE `rating` CHANGE `user_rating` `rating` ENUM( '-1', '0', '1', '2', '3', '4', '5' ) NOT NULL DEFAULT '0'"; 
 		$db_results = Dba::query($sql);
 
                 /* Add the rate_limit preference */
-                $sql = "INSERT INTO `preferences` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
+                $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
                         "VALUES ('rate_limit','8192','Rate Limit','100','integer','streaming')";
                 $db_results = Dba::query($sql);
 
                 /* Add the playlist_method preference and remove it from the user table */
-                $sql = "INSERT INTO `preferences` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
+                $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
                         "VALUES ('playlist_method','50','Playlist Method','5','string','streaming')";
                 $db_results = Dba::query($sql);
 

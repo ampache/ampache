@@ -18,61 +18,57 @@
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
-/*!
-	@header User Object
-	View object that is thrown into their session
-
-*/
-
+/**
+ * User Class
+ * This class handles all of the user related functions includingn the creationg
+ * and deletion of the user objects from the database by defualt you constrcut it
+ * with a user_id from user.id
+ */
 class User {
 
 	//Basic Componets
-	var $id;
-	var $uid; // HACK ALERT
-	var $username;
-	var $fullname;
-	var $access;
-	var $disabled;
-	var $email;
-	var $last_seen;
-	var $create_date;
-	var $validation;
+	public $id;
+	public $username;
+	public $fullname;
+	public $access;
+	public $disabled;
+	public $email;
+	public $last_seen;
+	public $create_date;
+	public $validation;
+
+	// Constructed variables
+	public $prefs = array(); 
 
 	/**
 	 * Constructor
 	 * This function is the constructor object for the user
 	 * class, it currently takes a username
-	 * //FIXME take UID
 	 */	
-	function User($id=0) {
+	public function __construct($user_id=0) {
 
-		if (!$id) { 
-			return true;
-		}
-
-		$this->id		= $id;
+		$this->id		= intval($user_id);
 		$info 			= $this->_get_info();
 
-		if (!count($info)) { return false; } 
 		foreach ($info as $key=>$value) { 
 			// Let's not save the password in this object :S
 			if ($key == 'password') { continue; } 
-
 			$this->$key = $value; 
 		} 
-		$this->uid		= $info->id;
+		
+		// Set the preferences for thsi user
 		$this->set_preferences();
 
 		// Make sure the Full name is always filled
 		if (strlen($this->fullname) < 1) { $this->fullname = $this->username; }
 
-	} // User
+	} // Constructor
 
 	/**
 	 * _get_info
 	 * This function returns the information for this object
 	 */
-	function _get_info() {
+	private function _get_info() {
 
 		$id = Dba::escape($this->id);
 
@@ -447,20 +443,20 @@ class User {
 	 * disable
 	 * This disables the current user
 	 */
-	function disable() { 
+	public function disable() { 
 
 		// Make sure we aren't disabling the last admin
 		$sql = "SELECT `id` FROM `user` WHERE `disabled` = '0' AND `id` != '" . $this->id . "' AND `access`='100'"; 
-		$db_results = mysql_query($sql,dbh()); 
+		$db_results = Dba::query($sql); 
 		
-		if (!mysql_num_rows($db_results)) { return false; } 
+		if (!Dba::num_rows($db_results)) { return false; } 
 
 		$sql = "UPDATE `user` SET `disabled`='1' WHERE id='" . $this->id . "'";
-		$db_results = mysql_query($sql,dbh()); 
+		$db_results = Dba::query($sql); 
 
 		// Delete any sessions they may have
-		$sql = "DELETE FROM `session` WHERE `username`='" . sql_escape($this->username) . "'"; 
-		$db_results = mysql_query($sql,dbh()); 
+		$sql = "DELETE FROM `session` WHERE `username`='" . Dba::escape($this->username) . "'"; 
+		$db_results = Dba::query($sql); 
 
 		return true; 
 
@@ -833,54 +829,73 @@ class User {
 
 	} // delete_stats
 
-	/*!
-		@function delete
-		@discussion deletes this user and everything assoicated with it
-	*/
-	function delete() { 
+	/**
+	 * delete
+	 * deletes this user and everything assoicated with it. This will affect
+	 * ratings and tottal stats
+	 */
+	public function delete() { 
 
 		/* 
 		  Before we do anything make sure that they aren't the last 
 		  admin
 		*/
 		if ($this->has_access(100)) { 
-			$sql = "SELECT `id` FROM user WHERE `access`='100' AND id !='" . sql_escape($this->id) . "'";
-			$db_results = mysql_query($sql, dbh());
-			if (!mysql_num_rows($db_results)) { 
+			$sql = "SELECT `id` FROM `user` WHERE `access`='100' AND id !='" . Dba::escape($this->id) . "'";
+			$db_results = mysql_query($sql);
+			if (!Dba::num_rows($db_results)) { 
 				return false;
 			}
 		} // if this is an admin check for others 
 
 		// Delete their playlists
-		$sql = "DELETE FROM playlist WHERE user='$this->id'";
-		$db_results = mysql_query($sql, dbh());
+		$sql = "DELETE FROM `playlist` WHERE `user`='$this->id'";
+		$db_results = Dba::query($sql);
+
+		// Clean up the playlist data table
+		$sql = "DELETE FROM `playlist_data` USING `playlist_data` " . 
+			"LEFT JOIN `playlist` ON `playlist`.`id`=`playlist_data`.`playlist` " . 
+			"WHERE `playlist`.`id` IS NULL"; 
+		$db_results = Dba::query($sql); 
 
 		// Delete any stats they have
-		$sql = "DELETE FROM object_count WHERE user='$this->id'";
-		$db_results = mysql_query($sql, dbh());
+		$sql = "DELETE FROM `object_count` WHERE `user`='$this->id'";
+		$db_results = Dba::query($sql);
+
+		// Clear the IP history for this user
+		$sql = "DELETE FROM `ip_history` WHERE `user`='$this->id'"; 
+		$db_results = Dba::query($sql); 
+
+		// Nuke any access lists that are specific to this user
+		$sql = "DELETE FROM `access_list` WHERE `user`='$this->id'"; 
+		$db_results = Dba::query($sql); 
 
 		// Delete their ratings
-		$sql = "DELETE FROM `ratings` WHERE `user`='$this->id'";
-		$db_results = mysql_query($sql,dbh()); 
+		$sql = "DELETE FROM `rating` WHERE `user`='$this->id'";
+		$db_results = Dba::query($sql); 
 
 		// Delete their tags
 		$sql = "DELETE FROM `tag_map` WHERE `user`='$this->id'";
-		$db_results = mysql_query($sql,dbh());
+		$db_results = Dba::query($sql);
 
 		// Clean out the tags
 		$sql = "DELETE FROM `tags` USING `tag_map` LEFT JOIN `tag_map` ON tag_map.id=tags.map_id AND tag_map.id IS NULL";
-		$db_results = mysql_query($sql,dbh()); 
+		$db_results = Dba::query($sql); 
 
 		// Delete their preferences
-		$sql = "DELETE FROM user_preference WHERE `user`='$this->id'";
-		$db_results = mysql_query($sql, dbh());
+		$sql = "DELETE FROM `user_preference` WHERE `user`='$this->id'";
+		$db_results = Dba::query($sql);
+
+		// Delete their voted stuff in democratic play
+		$sql = "DELETE FROM `user_vote` WHERE `user`='$this->id'";
+		$db_results = Dba::query($sql); 
 
 		// Delete the user itself
-		$sql = "DELETE FROM user WHERE `id`='$this->id'";
-		$db_results = mysql_query($sql, dbh());
+		$sql = "DELETE FROM `user` WHERE `id`='$this->id'";
+		$db_results = Dba::query($sql);
 
-		$sql = "DELETE FROM session WHERE username='" . sql_escape($this->username) . "'";
-		$db_results = mysql_query($sql, dbh());
+		$sql = "DELETE FROM `session` WHERE `username`='" . Dba::escape($this->username) . "'";
+		$db_results = Dba::query($sql);
 
 		return true;
 
