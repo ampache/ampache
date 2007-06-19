@@ -52,14 +52,26 @@ if (!isset($uid)) {
 /* Misc Housework */
 $user = new User($uid);
 
-/* Update the users last seen information */
-$user->update_last_seen();
+/* If the user has been disabled (true value) */
+if (make_bool($GLOBALS['user']->disabled)) {
+	debug_event('user_disabled',"Error $user->username is currently disabled, stream access denied",'3');
+	echo "Error: User Disabled"; 
+	exit; 
+}
+
+/* If we're using auth and we can't find a username for this user */
+if (Config::get('use_auth') AND !$GLOBALS['user']->username AND !$GLOBALS['user']->is_xmlrpc() ) {
+	debug_event('user_not_found',"Error $user->username not found, stream access denied",'3');
+	echo "Error: No User Found"; 
+	exit; 
+}
 
 // If we're doing XML-RPC check _GET
 if (Config::get('xml_rpc')) { 
 	$xml_rpc = $_GET['xml_rpc'];
 }
 
+// If require session is set then we need to make sure we're legit
 if (Config::get('require_session') OR $xml_rpc) { 
 	if(!session_exists($sid,$xml_rpc)) {	
 		debug_event('session_expired',"Streaming Access Denied: " . $GLOBALS['user']->username . "'s session has expired",'3');
@@ -70,6 +82,10 @@ if (Config::get('require_session') OR $xml_rpc) {
 	// extend it
 	extend_session($sid);
 }
+
+
+/* Update the users last seen information */
+$user->update_last_seen();
 
 /* If we are in demo mode.. die here */
 if (Config::get('demo_mode') || (!$GLOBALS['user']->has_access('25') && !$xml_rpc) ) {
@@ -112,13 +128,6 @@ if (!make_bool($song->enabled)) {
 	exit;
 }
 
-/* If the user has been disabled (true value) */
-if (make_bool($GLOBALS['user']->disabled)) {
-	debug_event('user_disabled',"Error $user->username is currently disabled, stream access denied",'3');
-	echo "Error: User Disabled"; 
-	exit; 
-}
-
 /* If we don't have a file, or the file is not readable */
 if (!$song->file OR ( !is_readable($song->file) AND $catalog->catalog_type != 'remote' ) ) { 
 
@@ -133,15 +142,13 @@ if (!$song->file OR ( !is_readable($song->file) AND $catalog->catalog_type != 'r
 	exit; 
 }
 	
-/* If we're using auth and we can't find a username for this user */
-if (Config::get('use_auth') AND !$GLOBALS['user']->username AND !$GLOBALS['user']->is_xmlrpc() ) {
-	debug_event('user_not_found',"Error $user->username not found, stream access denied",'3');
-	echo "Error: No User Found"; 
-	exit; 
-}
-
 /* Run Garbage Collection on Now Playing */
 gc_now_playing();
+
+// If we are running in Legalize mode, don't play songs already playing
+if (Config::get('lock_songs')) {
+	if (!check_lock_songs($song->id)) { exit(); }
+}
 
 /* Check to see if this is a 'remote' catalog */
 if ($catalog->catalog_type == 'remote') {
@@ -160,12 +167,6 @@ if ($catalog->catalog_type == 'remote') {
 	debug_event('xmlrpc-stream',"Start XML-RPC Stream - " . $song->file . $extra_info,'5');
 	exit;
 } // end if remote catalog
-
-
-// If we are running in Legalize mode, don't play songs already playing
-if (Config::get('lock_songs')) {
-	if (!check_lock_songs($song->id)) { exit(); }
-}
 
 // Put this song in the now_playing table
 $lastid = insert_now_playing($song->id,$uid,$song->time);
@@ -201,8 +202,7 @@ if (Config::get('access_control') AND Config::get('downsample_remote')) {
 	}
 } // if access_control
 
-
-	
+// If they are downsampling, or if the song is not a native stream or it's non-local
 if ($GLOBALS['user']->prefs['play_type'] == 'downsample' || !$song->native_stream() || $not_local) { 
 	debug_event('downsample','Starting Downsample...','5');
 	$results = start_downsample($song,$lastid,$song_name);
@@ -256,7 +256,7 @@ if ($GLOBALS['user']->prefs['rate_limit'] > 0) {
 while (!feof($fp) && (connection_status() == 0)) {
 	$buf = fread($fp, $chunk_size);
         print($buf);
-	if ($GLOBALS['user']->prefs['rate_limit'] > 0) { slepp (1); } 
+	if ($GLOBALS['user']->prefs['rate_limit'] > 0) { sleep (1); } 
         $bytesStreamed += strlen($buf);
 }
 
