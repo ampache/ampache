@@ -220,6 +220,16 @@ if (!is_resource($fp)) {
 	}
 } // else not downsampling
 
+// We need to check to see if they are rate limited
+$chunk_size = '8192';
+
+if ($GLOBALS['user']->prefs['rate_limit'] > 0) { 
+	$chunk_size = $GLOBALS['user']->prefs['rate_limit']; 
+}
+
+// Attempted fix, pimp up the size a bit
+$song->size = $song->size + ($chunk_size*2);
+
 if ($start) {
 	debug_event('seek','Content-Range header recieved, skipping ahead ' . $start . ' bytes out of ' . $song->size,'5');
 	$browser->downloadHeaders($song_name, $song->mime, false, $song->size);
@@ -245,12 +255,7 @@ else {
 $bytesStreamed  = $start;
 $minBytesStreamed = $song->size / 2;
 
-// We need to check to see if they are rate limited
-$chunk_size = '8192';
-
-if ($GLOBALS['user']->prefs['rate_limit'] > 0) { 
-	$chunk_size = $GLOBALS['user']->prefs['rate_limit']; 
-} 
+ 
 
 // Actually do the streaming 
 while (!feof($fp) && (connection_status() == 0)) {
@@ -283,5 +288,8 @@ if ($GLOBALS['user']->prefs['play_type'] == 'downsample' || !$song->native_strea
 else { 
 	@fclose($fp);
 }
+
+// Note that the stream has ended
+debug_event('stream','Stream Ended at ' . $bytesStreamed . ' bytes out of ' . $song->size,'5'); 
 
 ?>

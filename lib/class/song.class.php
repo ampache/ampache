@@ -303,17 +303,15 @@ class Song {
 	 * set_played
 	 * this checks to see if the current object has been played
 	 * if not then it sets it to played
-	 * @package Song
-	 * @catagory Class
 	 */
-	function set_played() { 
+	public function set_played() { 
 
 		if ($this->played) { 
 			return true;
 		}
 
 		/* If it hasn't been played, set it! */
-		$this->update_played('1');
+		self::update_played('1',$this->id);
 
 		return true;
 
