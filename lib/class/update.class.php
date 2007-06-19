@@ -197,7 +197,9 @@ class Update {
 
 		$version[] = array('version' => '340003','description' => $update_string); 
 
-		$update_string = '- Alter the Session.id to be VARCHAR(64) to account for all potential configs.<br />'; 
+		$update_string = '- Alter the Session.id to be VARCHAR(64) to account for all potential configs.<br />' . 
+				'- Added new user_shout table for Sticky objects / shoutbox.<br />' . 
+				'- Added new playlist preferences, and new preference catagory of playlist.<br />';
 
 		return $version;
 
@@ -619,7 +621,7 @@ class Update {
 
                 /* Add the playlist_method preference and remove it from the user table */
                 $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
-                        "VALUES ('playlist_method','50','Playlist Method','5','string','streaming')";
+                        "VALUES ('playlist_method','normal','Playlist Method','5','string','streaming')";
                 $db_results = Dba::query($sql);
 
 		$sql = "ALTER TABLE `update_info` ADD UNIQUE (`key`)"; 
@@ -645,11 +647,45 @@ class Update {
 	 */
 	public static function update_340004() { 
 
-
                 /* Alter the session.id so that it's 64 */
                 $sql = "ALTER TABLE `session` CHANGE `id` `id` VARCHAR( 64 ) NOT NULL";
 		$db_results = Dba::query($sql); 
 
+		/* Add Playlist Related Preferences */
+		$sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " . 
+			"VALUES ('playlist_add','append','Add Behavior','5','string','playlist')"; 
+		$db_results = Dba::query($sql); 
+
+		// Switch the existing preferences over to this new catagory
+		$sql = "UPDATE `preference` SET `catagory`='playlist' WHERE `name`='playlist_method' " . 
+			" OR `name`='playlist_type'"; 
+		$db_results = Dba::query($sql); 
+	
+		// Change the default value for playlist_method
+		$sql = "UPDATE `preference` SET `value`='normal' WHERE `name`='playlist_method'"; 
+		$db_results = Dba::query($sql); 
+		
+		// Add in the shoutbox
+		$sql = "CREATE TABLE `user_shout` (`id` INT( 11 ) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY , " . 
+			"`user` INT( 11 ) NOT NULL , " . 
+			"`text` TEXT NOT NULL , " . 
+			"`date` INT( 11 ) UNSIGNED NOT NULL , " . 
+			"`sticky` TINYINT( 1 ) UNSIGNED NOT NULL DEFAULT '0', " . 
+			"`object_id` INT( 11 ) UNSIGNED NOT NULL , " . 
+			"`object_type` VARCHAR( 32 ) NOT NULL " . 
+			") ENGINE = MYISAM"; 
+		$db_results = Dba::query($sql); 
+
+		$sql = "ALTER TABLE `user_shout` ADD INDEX ( `sticky` )"; 
+		$db_results = Dba::query($sql); 	
+
+		$sql = "ALTER TABLE `user_shout` ADD INDEX ( `date` )"; 
+		$db_results = Dba::query($sql); 
+
+		$sql = "ALTER TABLE `user_shout` ADD INDEX ( `user` )"; 
+		$db_results = Dba::query($sql); 
+
+		// Update our database version now that we are all done
 		self::set_version('db_version','340004'); 
 
 		return true; 
