@@ -47,22 +47,21 @@ function check_database($host,$username,$pass) {
 
 } // check_database
 
-/*!
-	@function check_database_inserted
-	@discussion checks to make sure that you 
-		have inserted the database and that the user
-		you are using has access to it
-*/
+/**
+ * check_database_inserted
+ * checks to make sure that you have inserted the database 
+ * and that the user you are using has access to it
+ */
 function check_database_inserted($dbh,$db_name) { 
 
-
-	if (!@mysql_select_db($db_name,$dbh)) { 
-		return false;
-	}
-
 	$sql = "DESCRIBE session";
-	$db_results = @mysql_query($sql, $dbh);
-	if (!@mysql_num_rows($db_results)) { 
+	$db_results = Dba::query($sql);
+
+	if (!$db_results) { 
+		return false; 
+	} 
+
+	if (!Dba::num_rows($db_results)) { 
 		return false;
 	}
 
@@ -70,11 +69,11 @@ function check_database_inserted($dbh,$db_name) {
 
 } // check_database_inserted
 
-/*!
-	@function check_php_ver
-	@discussion checks the php version and makes
-		sure that it's good enough
-*/
+/**
+ * check_php_ver
+ * checks the php version and makes
+ * sure that it's good enough
+ */
 function check_php_ver($level=0) {
 
 	if (strcmp('5.0.0',phpversion()) > 0) {
@@ -85,10 +84,10 @@ function check_php_ver($level=0) {
 
 } // check_php_ver
 
-/*!
-	@function check_php_mysql
-	@discussion checks for mysql support
-*/
+/**
+ * check_php_mysql
+ * checks for mysql support by looking for the mysql_query function
+ */
 function check_php_mysql() { 
 
 	if (!function_exists('mysql_query')) { 
@@ -99,10 +98,10 @@ function check_php_mysql() {
 
 } // check_php_mysql
 
-/*!
-	@function check_php_session
-	@discussion checks to make sure the needed functions 
-		for sessions exist
+/**
+ * check_php_session
+ * checks to make sure the needed functions 
+ * for sessions exist
 */
 function check_php_session() {
 
@@ -114,10 +113,10 @@ function check_php_session() {
 
 } // check_php_session
 
-/*!
-	@function check_php_iconv
-	@discussion checks to see if you have iconv installed
-*/
+/**
+ * check_php_iconv
+ * checks to see if you have iconv installed
+ */
 function check_php_iconv() { 
 
 	if (!function_exists('iconv')) { 

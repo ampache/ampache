@@ -174,10 +174,12 @@
 	<td valign="top">[ 
 	<?php
 		$results = @parse_ini_file($configfile);
+		Config::set_by_array($results);
 		if (!check_config_values($results)) { 
 			echo " <font color=\"red\">ERROR</font> ";
 		}
 		else {
+			$status['parse_config'] = true; 
 			echo " <font color=\"green\">&nbsp;&nbsp;&nbsp;OK&nbsp;&nbsp;&nbsp;&nbsp;</font> ";
 		}
 	?>
@@ -242,9 +244,9 @@
 	 	else { 
 	        	$http_type = "http://";
 		}
-		$results['web_path'] = $http_type . $_SERVER['SERVER_NAME'] . ":" . $_SERVER['SERVER_PORT'] . $results['web_path'];
+		$results['web_path'] = $http_type . $_SERVER['SERVER_NAME'] . ":" . $_SERVER['SERVER_PORT'] . Config::get('web_path');
 		if ($status['parse_config']) { 
-			echo "<img src=\"" . $results['web_path'] ."/images/ampache.gif\" width=\"80\" height=\"15\"/>";
+			echo "<img src=\"" . $results['web_path'] ."/images/ampache.png\" width=\"80\" height=\"15\"/>";
 		}
 		else {
 			$status['check_webpath'] = false;
