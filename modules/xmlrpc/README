@@ -1,3 +1,9 @@
+NAME: XMLRPC FOR PHP
+
+DESCRIPTION: A php library for building xmlrpc clients and servers
+
+
+
 HTML documentation can be found in the doc/ directory.
 
 Recent changes in the ChangeLog
