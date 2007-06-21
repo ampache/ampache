@@ -560,20 +560,19 @@ class User {
 	 * This inserts a row into the IP History recording this user at this
 	 * address at this time in this place, doing this thing.. you get the point
 	 */
-	function insert_ip_history() { 
+	public function insert_ip_history() { 
 
 		$ip = ip2int($_SERVER['REMOTE_ADDR']);
 		$date = time(); 
 		$user = $this->id;
 
-		$sql = "INSERT INTO ip_history (`ip`,`user`,`date`) VALUES ('$ip','$user','$date')";
-		$db_results = mysql_query($sql, dbh());
+		$sql = "INSERT INTO `ip_history` (`ip`,`user`,`date`) VALUES ('$ip','$user','$date')";
+		$db_results = Dba::query($sql);
 
 		/* Clean up old records */
-		$date = time() - (86400*conf('user_ip_cardinality'));
-
-		$sql = "DELETE FROM ip_history WHERE `date` < $date";
-		$db_results = mysql_query($sql,dbh());
+		$date = time() - (86400*Config::get('user_ip_cardinality'));
+		$sql = "DELETE FROM `ip_history` WHERE `date` < $date";
+		$db_results = Dba::query($sql);
 
 		return true;
 
