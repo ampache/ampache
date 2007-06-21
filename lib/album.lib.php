@@ -95,14 +95,16 @@ function get_random_albums($count='') {
 
 	$total = count($albums); 
 
-	if ($total == '0') { return array(); } 
+	if ($total < ($count+2)) { return array(); } 
 
 	for ($i=0; $i <= $count; $i++) { 
+		$tries++; 
 		$record = rand(0,$total); 
-		if (isset($results[$record]) || !$albums[$record]) { $i--; } 
+		if (isset($results[$record]) || !$albums[$record]) { $i--; continue; } 
 		else { 
 			$results[$record] = $albums[$record]; 
 		} 
+		if ($tries > 50) { return array(); } 
 	} // end for 
 	
 	return $results; 
