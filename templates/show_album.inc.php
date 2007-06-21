@@ -20,6 +20,7 @@
 */
 
 $web_path = Config::get('web_path');
+$ajax_url = Config::get('ajax_url'); 
 
 // Title for this album
 $title		= scrub_out($album->name) . ' (' . $album->year . ') -- ' . $album->f_artist; 
@@ -44,22 +45,24 @@ $title		= scrub_out($album->name) . ' (' . $album->year . ') -- ' . $album->f_ar
 		echo "<br />\n";
 		?>
 		<strong><?php echo _('Actions'); ?>:</strong><br />
-		&nbsp;&nbsp;<a href="<?php echo $web_path; ?>/stream.php?action=album&amp;album_id=<?php echo $album->id; ?>"><?php echo  _("Play Album"); ; ?></a><br />
-		&nbsp;&nbsp;<a href="<?php echo $web_path; ?>/stream.php?action=album_random&amp;album_id=<?php echo $album->id; ?>"><?php echo  _("Play Random from Album"); ; ?></a><br />
+		<div style="padding-left:5px;">
+		<a href="#" onclick="ajaxPut('<?php echo $ajax_url; ?>?action=basket&amp;type=album&amp;id=<?php echo $album->id; ?>');"><?php echo _('Play Album'); ?></a><br />
+		<a href="#" onclick="ajaxPut('<?php echo $ajax_url; ?>?action=basket&amp;type=album_random&amp;id=<?php echo $album->id; ?>');"><?php echo _('Play Random from Album'); ?></a><br />
 		<?php if ( ($GLOBALS['user']->has_access('75')) || (!Config::get('use_auth'))) { ?>
-		&nbsp;&nbsp;<a href="<?php echo $web_path; ?>/albums.php?action=clear_art&amp;album_id=<?php echo $album->id; ?>"><?php echo  _("Reset Album Art"); ; ?></a><br />
+		<a href="<?php echo $web_path; ?>/albums.php?action=clear_art&amp;album_id=<?php echo $album->id; ?>"><?php echo _('Reset Album Art'); ?></a><br />
 		<?php } ?>
-		&nbsp;&nbsp;<a href="<?php echo $web_path; ?>/albums.php?action=find_art&amp;album_id=<?php echo $album->id; ?>"><?php echo  _("Find Album Art"); ; ?></a><br />
+		<a href="<?php echo $web_path; ?>/albums.php?action=find_art&amp;album_id=<?php echo $album->id; ?>"><?php echo _('Find Album Art'); ?></a><br />
 		<?php  if (($GLOBALS['user']->has_access('100')) || (!Config::get('use_auth'))) { ?>
-		&nbsp;&nbsp;<a href="<?php echo $web_path; ?>/albums.php?action=update_from_tags&amp;album_id=<?php echo $album->id; ?>"><?php echo  _("Update from tags"); ?></a><br />
+		<a href="<?php echo $web_path; ?>/albums.php?action=update_from_tags&amp;album_id=<?php echo $album->id; ?>"><?php echo _('Update from tags'); ?></a><br />
 		<?php  } ?>
 		<?php if (Access::check_function('batch_download')) { ?>
-		&nbsp;&nbsp;<a href="<?php echo $web_path; ?>/batch.php?action=alb&amp;id=<?php echo $album->id; ?>"><?php echo _('Download'); ?></a><br />
+		<a href="<?php echo $web_path; ?>/batch.php?action=alb&amp;id=<?php echo $album->id; ?>"><?php echo _('Download'); ?></a><br />
 		<?php } ?>
+		</div>
 	</div>
 <?php show_box_bottom(); ?>
 <?php 
-	show_box_top(_('Songs')); 
+	show_box_top($album->name . ' ' . _('Songs')); 
 	$object_ids = $album->get_songs(); 
 	require Config::get('prefix') . '/templates/show_songs.inc.php'; 
 	show_box_bottom(); 

@@ -106,12 +106,6 @@ switch ($action) {
 					$GLOBALS['user']->playlist->add_object($song_id); 
 				} 
 			break; 
-				$artist = new Artist($_REQUEST['id']); 
-				$songs = $artist->get_random_songs(); 
-				foreach ($songs as $song_id) { 
-					$GLOBALS['user']->playlist->add_object($song_id); 
-				} 
-			break;
 			case 'clear_all': 
 				$GLOBALS['user']->playlist->clear(); 
 			break;
@@ -121,9 +115,11 @@ switch ($action) {
 			break;
 		} // end switch
 		
+
+
+
 		$results['topbar-playlist'] = ajax_include('show_playlist_bar.inc.php'); 
 		$results['rightbar'] = ajax_include('rightbar.inc.php'); 
-
 		echo xml_from_array($results); 
 	break;
 	/* For changing the current play type FIXME:: need to allow select of any type  */

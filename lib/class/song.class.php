@@ -647,7 +647,9 @@ class Song {
 		$this->f_bitrate = intval($this->bitrate/1000) . "-" . strtoupper($this->mode);
 
 		// Format Genre
-		$this->f_genre_link = $this->get_genre_name(); 
+		$this->f_genre = $this->get_genre_name(); 
+		$this->f_genre_link = "<a href=\"" . Config::get('web_path') . "/genre.php?action=show_genre&amp;genre_id=" . $this->genre . "\">$this->f_genre</a>"; 
+
 
 		// Format the Time
 		$min = floor($this->time/60);
