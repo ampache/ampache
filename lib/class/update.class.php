@@ -199,7 +199,10 @@ class Update {
 
 		$update_string = '- Alter the Session.id to be VARCHAR(64) to account for all potential configs.<br />' . 
 				'- Added new user_shout table for Sticky objects / shoutbox.<br />' . 
-				'- Added new playlist preferences, and new preference catagory of playlist.<br />';
+				'- Added new playlist preferences, and new preference catagory of playlist.<br />' . 
+				'- Tweaked Now Playing Table.<br />'; 
+
+		$version[] = array('version' => '340004','description' => $update_string); 
 
 		return $version;
 
@@ -683,6 +686,12 @@ class Update {
 		$db_results = Dba::query($sql); 
 
 		$sql = "ALTER TABLE `user_shout` ADD INDEX ( `user` )"; 
+		$db_results = Dba::query($sql); 
+
+		$sql = "ALTER TABLE `now_playing` CHANGE `start_time` `expire` INT( 11 ) UNSIGNED NOT NULL DEFAULT '0'"; 
+		$db_results = Dba::query($sql); 
+
+		$sql = "OPTIMIZE TABLE `album`"; 
 		$db_results = Dba::query($sql); 
 
 		// Update our database version now that we are all done

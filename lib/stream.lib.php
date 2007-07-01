@@ -32,11 +32,11 @@ function delete_now_playing($insert_id) {
         $user_agent = $_SERVER['HTTP_USER_AGENT'];
 
 	// Account for WMP and the Flash Player
-	if (stristr($user_agent,"NSPlayer") || $_REQUEST['flash_hack'] == 1) { 
+//	if (stristr($user_agent,"NSPlayer") || $_REQUEST['flash_hack'] == 1) { 
                 // Commented out until I can figure out the
                 // trick to making this work
-                return true;
-        }
+//                return true;
+//        }
 
         // Remove the song from the now_playing table
         $sql = "DELETE FROM `now_playing` WHERE `id` = '$insert_id'";
@@ -54,16 +54,15 @@ function delete_now_playing($insert_id) {
 function gc_now_playing() { 
 
 	/* Account for WMP11's Initial Streaming */
-	if (strstr($_SERVER['HTTP_USER_AGENT'],"WMFSDK/11")) { return false; } 
+	//if (strstr($_SERVER['HTTP_USER_AGENT'],"WMFSDK/11")) { return false; } 
 
         $time 		= time();
-        $expire 	= $time - 3200;  // 86400 seconds = 1 day
 	$session_id	= Dba::escape($_REQUEST['sid']);
 	if (strlen($session_id)) { 
 		$session_sql = " OR session = '$session_id'";
 	}	
 
-        $sql = "DELETE FROM now_playing WHERE start_time < $expire" . $session_sql;
+        $sql = "DELETE FROM `now_playing` WHERE `expire` < '$time'" . $session_sql;
         $db_result = Dba::query($sql);
         
 } // gc_now_playing
@@ -73,33 +72,24 @@ function gc_now_playing() {
  * This function takes care of inserting the now playing data
  * we use this function because we need to do thing differently
  * depending upon which play is actually streaming
- * @package General
- * @catagory Now Playing
  */
 function insert_now_playing($song_id,$uid,$song_length) {
 
         $user_agent = $_SERVER['HTTP_USER_AGENT'];
-        $time = time();
+        $time = time()+$song_length;
+	$session_id = Dba::escape($_REQUEST['sid']); 
 
         /* Windows Media Player is evil and it makes multiple requests per song */
-        if (stristr($user_agent,"Windows-Media-Player")) { return false; }
+        if (stristr($user_agent,"Windows-Media-Player") || strstr($user_agent,"Audacious")) { $session_id = ' '; }
 
 	/* Check for Windows Media Player 11 */
-	if (strstr($user_agent,'NSPlayer/11') AND !strstr($user_agent,'WMFSDK/11')) { return false; } 
-
-        /* Set the Expire Time */
+	if (strstr($user_agent,'NSPlayer/11') AND !strstr($user_agent,'WMFSDK/11')) { $session_id = ' '; } 
 
         // If they are using Windows media player
-	if (strstr($user_agent,"NSPlayer") || $_REQUEST['flash_hack'] == 1) { 
-                // WMP does keep the session open so we need to cheat a little here
-		$session_id 	= Dba::escape($_REQUEST['sid']); 
-        }
+	if (strstr($user_agent,"NSPlayer") || $_REQUEST['flash_hack'] == 1) { $session_id = ' '; }
 
-	/* Set expire time for worst case clean up */
-	$expire = $time;
-
-        $sql = "INSERT INTO now_playing (`song_id`, `user`, `start_time`,`session`)" .
-                " VALUES ('$song_id', '$uid', '$expire','$session_id')";
+        $sql = "INSERT INTO now_playing (`song_id`, `user`, `expire`,`session`)" .
+                " VALUES ('$song_id', '$uid', '$time','$session_id')";
 
         $db_result = Dba::query($sql);
 
@@ -210,7 +200,7 @@ function start_downsample($song,$now_playing_id=0,$song_name=0) {
 	}
 
 
-	header("Content-Length: " . $sample_ratio*$song->size);
+	header("Content-Length: " . intval($sample_ratio*$song->size));
         $browser->downloadHeaders($song_name, $song->mime, false,$sample_ratio*$song->size);
 
         /* Get Offset */

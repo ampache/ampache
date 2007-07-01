@@ -242,7 +242,7 @@ switch ($_REQUEST['action']) {
 		show_confirmation(_('Delete Catalog'),_('Do you really want to delete this catalog?') . " -- $catalog->name ($catalog->path)",$nexturl,1);
 	break;
 	case 'show_customize_catalog':
-		include(conf('prefix') . '/templates/show_edit_catalog.inc.php');
+		require_once Config::get('prefix') . '/templates/show_edit_catalog.inc.php';
 	break;
 	case 'gather_album_art':
 		$catalogs = Catalog::get_catalogs();

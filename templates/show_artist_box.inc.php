@@ -29,12 +29,12 @@ if (Config::get('ratings')) {
 	echo "</span>";
 } // end if ratings ?>
 <strong><?php echo _('Actions'); ?>:</strong><br />
-<a href="<?php echo $web_path; ?>/artists.php?action=show_all_songs&amp;artist=<?php echo $artist_id; ?>"><?php echo _("Show All Songs By") . " " . $artist->full_name; ?></a><br />
-<a href="<?php echo $web_path; ?>/song.php?action=artist&amp;artist_id=<?php echo $artist_id; ?>"><?php echo _("Play All Songs By") . " " . $artist->full_name; ?></a><br />
-<a href="<?php echo $web_path; ?>/song.php?action=artist_random&amp;artist_id=<?php echo $artist_id; ?>"><?php echo _("Play Random Songs By") . " " . $artist->full_name; ?></a><br />
+<a href="<?php echo $web_path; ?>/artists.php?action=show_all_songs&amp;artist=<?php echo $artist->id; ?>"><?php echo _("Show All Songs By") . " " . $artist->full_name; ?></a><br />
+<a href="<?php echo $web_path; ?>/stream.php?action=artist&amp;artist_id=<?php echo $artist->id; ?>"><?php echo _("Play All Songs By") . " " . $artist->full_name; ?></a><br />
+<a href="<?php echo $web_path; ?>/stream.php?action=artist_random&amp;artist_id=<?php echo $artist->id; ?>"><?php echo _("Play Random Songs By") . " " . $artist->full_name; ?></a><br />
 <?php  if ($GLOBALS['user']->has_access('100')) { ?>
-	<a href="<?php echo $web_path; ?>/artists.php?action=update_from_tags&amp;artist=<?php echo $artist_id; ?>"><?php echo _("Update from tags"); ?></a><br />
-	<a href="<?php echo $web_path; ?>/artists.php?action=show_rename&amp;artist=<?php echo $artist_id; ?>"><?php echo _("Rename Artist"); ?></a><br />
-	<a href="<?php echo $web_path; ?>/artists.php?action=show_similar&amp;artist=<?php echo $artist_id; ?>"><?php echo _("Find duplicate artists"); ?></a><br />
+	<a href="<?php echo $web_path; ?>/artists.php?action=update_from_tags&amp;artist=<?php echo $artist->id; ?>"><?php echo _("Update from tags"); ?></a><br />
+	<a href="<?php echo $web_path; ?>/artists.php?action=show_rename&amp;artist=<?php echo $artist->id; ?>"><?php echo _("Rename Artist"); ?></a><br />
+	<a href="<?php echo $web_path; ?>/artists.php?action=show_similar&amp;artist=<?php echo $artist->id; ?>"><?php echo _("Find duplicate artists"); ?></a><br />
 <?php } ?>
 <?php show_box_bottom(); ?>

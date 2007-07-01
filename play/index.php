@@ -221,7 +221,7 @@ if (!is_resource($fp)) {
 } // else not downsampling
 
 // We need to check to see if they are rate limited
-$chunk_size = '8192';
+$chunk_size = '4096';
 
 if ($GLOBALS['user']->prefs['rate_limit'] > 0) { 
 	$chunk_size = $GLOBALS['user']->prefs['rate_limit']; 
@@ -250,12 +250,9 @@ else {
 
 /* Let's force them to actually play a portion of the song before 
  * we count it in the statistics
- * @author SH
  */
 $bytesStreamed  = $start;
 $minBytesStreamed = $song->size / 2;
-
- 
 
 // Actually do the streaming 
 while (!feof($fp) && (connection_status() == 0)) {

@@ -1021,8 +1021,8 @@ class Catalog {
 		}
 
 		show_box_top(); 
-		echo "\n<br />" . _("Catalog Update Finished") . "... " . _("Total Time") . " [" . date("i:s",$time_diff) . "] " .
-			_("Total Songs") . " [" . $this->count . "] " . _("Songs Per Seconds") . " [" . $song_per_sec . "]<br /><br />";
+		echo "\n<br />" . _('Catalog Update Finished') . "... " . _('Total Time') . " [" . date("i:s",$time_diff) . "] " .
+			_('Total Songs') . " [" . $this->count . "] " . _('Songs Per Seconds') . " [" . $song_per_sec . "]<br /><br />";
 		show_box_bottom(); 
 
 	} // add_to_catalog
@@ -1594,7 +1594,7 @@ class Catalog {
 
 		/* Ohh no the artist has lost it's mojo! */
 		if (!$artist) {
-			$artist = "Unknown (Orphaned)";
+			$artist = _('Unknown (Orphaned)');
 		}
 
 		// Remove the prefix so we can sort it correctly
@@ -1671,7 +1671,8 @@ class Catalog {
 
 		/* Ohh no the album has lost it's mojo */
 		if (!$album) {
-			$album = "Unknown (Orphaned)";
+			$album = _('Unknown (Orphaned)');
+			unset($album_year); 
 		}
 
 		// Remove the prefix so we can sort it correctly
@@ -1751,7 +1752,7 @@ class Catalog {
 	
 		/* If a genre isn't specified force one */
 		if (strlen(trim($genre)) < 1) {
-			$genre = "Unknown (Orphaned)";
+			$genre = _('Unknown (Orphaned)');
 		}
 
 		if ($this->genres[$genre]) {

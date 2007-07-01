@@ -4,6 +4,9 @@
 
 --------------------------------------------------------------------------
   v.3.4-Alpha1
+	- Round the downsampled content-length
+  	- Fixed cataloging so that Orphaned Albums are always the same year
+  	- Added new preferences, created new Playlist Preference section
 	- Fixed Find album art so it can look in the id3/wma art tags 
 		correctly (Thx Karl Hungus)
   	- Updated SQL to latest version

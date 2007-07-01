@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2006 Ampache.org
+ Copyright (c) 2001 - 2007 Ampache.org
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
@@ -20,7 +20,7 @@
 */
 ?>
 <?php show_box_top(_('Settings for') . ' ' . $catalog->name . ' (' . $catalog->path . ')'); ?>
-<form method="post" action="<?php echo conf('web_path'); ?>/admin/catalog.php" enctype="multipart/form-data">
+<form method="post" action="<?php echo Config::get('web_path'); ?>/admin/catalog.php" enctype="multipart/form-data">
 <table cellspacing="0" cellpadding="0" border="0">
 <tr>
 	<td><?php echo _('Name'); ?>:</td>

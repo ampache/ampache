@@ -22,6 +22,6 @@
 show_box_top();
 echo "\n" . _('Starting New Song Search on') . " <b>[$this->name]</b> " . _('catalog') . "<br />\n";
 echo _('Found') . ": <span id=\"add_count_" . $this->id ."\">" . _('None') . "</span><br />\n";
-echo _('Reading') . ":<span id=\"add_dir_$catalog_id\"></span><br />";
+echo _('Reading') . ":<span id=\"add_dir_" . $this->id . "\"></span><br />";
 show_box_bottom(); 
 ?>
