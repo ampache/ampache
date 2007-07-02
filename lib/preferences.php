@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2006 Ampache.org
+ Copyright (c) 2001 - 2007 Ampache.org
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
@@ -18,10 +18,6 @@
  along with this program; if not, write to the Free Software
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
-*/
-/*!
-	@header Preferences Library
-	@discussion This contains all of the functions needed for the preferences
 */
 
 /*!
@@ -67,10 +63,10 @@ function set_site_preferences() {
 
 } // set_site_preferences
 
-/*!
-	@function clean_preference_name
-	@discussion s/_/ /g & upper case first
-*/
+/**
+ * clean_preference_name
+ * s/_/ /g & upper case first
+ */
 function clean_preference_name($name) { 
 
 	$name = str_replace("_"," ",$name);
@@ -185,9 +181,7 @@ function has_preference_access($name) {
 
 	$data = Dba::fetch_assoc($db_results);
 
-	$level = $data['level'];
-
-	if ($GLOBALS['user']->has_access($level)) { 
+	if ($GLOBALS['user']->has_access($data['level'])) { 
 		return true;
 	}
 
@@ -258,16 +252,13 @@ function create_preference_input($name,$value) {
 			if (Config::get('allow_stream_playback')) { 
 				echo "\t<option value=\"stream\" $is_stream>" . _('Stream') . "</option>\n";
 			}
-			if (Config::get('allow_downsample_playback')) { 
-				echo "\t<option value=\"downsample\" $is_down>" . _('Downsample') . "</option>\n";
-			}
 			if (Config::get('allow_democratic_playback')) { 
 				echo "\t<option value=\"democratic\" $is_vote>" . _('Democratic') . "</option>\n";
 			}
 			if (Config::get('allow_localplay_playback')) { 
 				echo "\t<option value=\"localplay\" $is_local>" . _('Localplay') . "</option>\n";	
 			} 
-			echo "\t<option value=\"xspf_player\" $is_xspf_player>" . _('XSPF Player') . "</option>\n";
+			echo "\t<option value=\"xspf_player\" $is_xspf_player>" . _('Flash Player') . "</option>\n";
 			echo "</select>\n";
 		break;
 		case 'playlist_type':
@@ -334,6 +325,11 @@ function create_preference_input($name,$value) {
 		case 'lastfm_pass':
 			echo "<input type=\"password\" size=\"16\" name=\"$name\" value=\"******\" />";
 		break;
+		case 'playlist_add': 
+			echo "<select name=\"$name\">\n"; 
+			echo "\t<option value=\"append\">" . _('Append to Existing') . "</option>\n"; 
+			echo "\t<option value=\"default\">" . _('Default') . "</option>\n"; 
+			echo "</select>\n"; 
 		default:
 			echo "<input type=\"text\" size=\"$len\" name=\"$name\" value=\"$value\" />";
 		break;

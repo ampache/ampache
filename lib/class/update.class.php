@@ -694,12 +694,32 @@ class Update {
 		$sql = "OPTIMIZE TABLE `album`"; 
 		$db_results = Dba::query($sql); 
 
+                $sql = "SELECT `id` FROM `user`";
+                $db_results = Dba::query($sql);
+
+                User::fix_preferences('-1');
+
+                while ($r = Dba::fetch_assoc($db_results)) {
+                        User::fix_preferences($r['id']);
+                }
+
 		// Update our database version now that we are all done
 		self::set_version('db_version','340004'); 
 
 		return true; 
 
 	} // update_340004	
+
+
+	/**
+	 * update_340005
+	 * This update fixes the preferences types 
+ 	 */
+	public static function update_340005() { 
+
+
+
+	} // update_340005
 
 } // end update class
 ?>
