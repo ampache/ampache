@@ -181,18 +181,16 @@ class Genre {
 	/**
 	 * get_artists
 	 * This gets all of the artists who have at least one song in this genre
-	 * @package Genre
-	 * @catagory Class
 	 */
-	function get_artists() { 
+	public function get_artists() { 
 
-		$sql = "SELECT DISTINCT(song.artist) FROM song WHERE genre='" . $this->id . "'";
-		$db_results = mysql_query($sql, dbh());
+		$sql = "SELECT DISTINCT(`song`.`artist`) FROM `song` WHERE `genre`='" . $this->id . "'";
+		$db_results = Dba::query($sql);
 
 		$results = array();
 
-		while ($r = mysql_fetch_assoc($db_results)) { 
-			$results[] = get_artist_info($r['artist']);
+		while ($r = Dba::fetch_assoc($db_results)) { 
+			$results[] = $r['artist']; 
 		}
 		
 		return $results;

@@ -189,8 +189,6 @@ class Artist {
 		//FIXME: This shouldn't be scrubing right here!!!!
 		$this->full_name = scrub_out(trim($this->prefix . " " . $this->name));
 
-		//FIXME: This should be f_link
-		
 	        $this->f_name_link = "<a href=\"" . Config::get('web_path') . "/artists.php?action=show&amp;artist=" . $this->id . "\" title=\"" . $this->full_name . "\">" . $name . "</a>";
 
 		// Get the counts 
@@ -200,16 +198,6 @@ class Artist {
 
 	} // format
 
-	/** 
-	 * format_artist
-	 * DEFUNCT, do not use anymore
-	 */
-	function format_artist() { 
-
-		$this->format(); 
-
-	} // format_artist
-	
         /*!
                 @function rename
                 @discussion changes the name of the artist in the db,

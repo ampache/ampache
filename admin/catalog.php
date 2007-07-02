@@ -145,13 +145,12 @@ switch ($_REQUEST['action']) {
 	break;
 	case 'update_catalog_settings':
 		/* No Demo Here! */
-        	if (conf('demo_mode')) { break; }
+        	if (Config::get('demo_mode')) { break; }
 
 		/* Update the catalog */
-		$catalog = new Catalog();
-		$catalog->update_settings($_REQUEST);
+		Catalog::update_settings($_REQUEST);
 		
-		$url 	= conf('web_path') . '/admin/index.php';
+		$url 	= Config::get('web_path') . '/admin/index.php';
 		$title 	= _('Catalog Updated');
 		$body	= '';
 		show_confirmation($title,$body,$url);
@@ -198,10 +197,10 @@ switch ($_REQUEST['action']) {
 		}
 	break;
 	case 'clear_stats':
-    		if (conf('demo_mode')) { break; }
+    		if (Config::get('demo_mode')) { break; }
 		
-		clear_catalog_stats();
-		$url	= conf('web_path') . '/admin/index.php';
+		Catalog::clear_stats(); 
+		$url	= Config::get('web_path') . '/admin/index.php';
 		$title	= _('Catalog statistics cleared');
 		$body	= '';
 		show_confirmation($title,$body,$url);
@@ -213,15 +212,6 @@ switch ($_REQUEST['action']) {
 	        if (Config::get('demo_mode')) { break; }
 	    	clear_now_playing();
 		show_confirmation(_('Now Playing Cleared'),_('All now playing data has been cleared'),Config::get('web_path') . '/admin/index.php');
-	break;
-	case 'show_clear_stats':
-		/* Demo Bad! */
-	        if (conf('demo_mode')) { break; }
-
-		$url 	= conf('web_path') . '/admin/catalog.php?action=clear_stats';
-		$body	= _('Do you really want to clear the statistics for this catalog?');
-		$title	= _('Clear Catalog Stats'); 
-		show_confirmation($title,$body,$url,1);
 	break;
 	case 'show_disabled':
 	        if (conf('demo_mode')) { break; }

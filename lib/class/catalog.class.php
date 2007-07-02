@@ -131,6 +131,23 @@ class Catalog {
 	} // get_stats
 
 	/**
+	 * clear_stats
+	 * This clears all stats for _everything_
+	 */
+	public static function clear_stats() { 
+
+		/* Whip out everything */
+		$sql = "TRUNCATE `object_count`"; 
+		$db_results = Dba::query($sql); 
+
+		$sql = "UDPATE `song` SET `player`='0'"; 
+		$db_results = Dba::query($sql); 
+
+		return true; 
+
+	} // clear_stats
+
+	/**
 	 * create
 	 * This creates a new catalog entry and then returns the insert id
 	 * it checks to make sure this path is not already used before creating
@@ -741,17 +758,17 @@ class Catalog {
 	 * update_settings
 	 * This function updates the basic setting of the catalog
 	 */
-	function update_settings($data) { 
+	public static function update_settings($data) { 
 
-		$id	= sql_escape($data['catalog_id']);
-		$name	= sql_escape($data['name']);
-		$key	= sql_escape($data['key']);
-		$rename	= sql_escape($data['rename_pattern']);
-		$sort	= sql_escape($data['sort_pattern']);
+		$id	= Dba::escape($data['catalog_id']);
+		$name	= Dba::escape($data['name']);
+		$key	= Dba::escape($data['key']);
+		$rename	= Dba::escape($data['rename_pattern']);
+		$sort	= Dba::escape($data['sort_pattern']);
 		
-		$sql = "UPDATE catalog SET name='$name', `key`='$key', rename_pattern='$rename', " . 
-			"sort_pattern='$sort' WHERE id = '$id'";
-		$db_results = mysql_query($sql, dbh());
+		$sql = "UPDATE `catalog` SET `name`='$name', `key`='$key', `rename_pattern`='$rename', " . 
+			"`sort_pattern`='$sort' WHERE `id` = '$id'";
+		$db_results = Dba::query($sql);
 
 		return true;
 

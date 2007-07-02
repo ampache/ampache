@@ -107,7 +107,12 @@ class Browse {
 		if ($_SESSION['browse']['type'] == 'song') { 
 			switch ($sort) { 
 				case'title':
-					$_SESSION['browse']['sort']['title'] = 'ASC'; 
+					if ($_SESSION['browse']['sort'][$sort] == 'DESC') { 
+						$_SESSION['browse']['sort'][$sort] = 'ASC'; 
+					}
+					else { 
+						$_SESSION['browse']['sort'][$sort] = 'DESC'; 
+					} 
 				break;
 			} 
 		} 
@@ -189,16 +194,18 @@ class Browse {
 		// Now Add the Order 
 		$order_sql = "ORDER BY "; 	
 
-		foreach ($_SESSION['browse']['sort'] as $key=>$value) { 			
-			$order_sql .= self::sql_sort($value); 
-		} 
+		// If we don't have a sort, then go ahead and return it now
+		if (!is_array($_SESSION['browse']['sort'])) { return $sql; }
 
+		foreach ($_SESSION['browse']['sort'] as $key=>$value) { 			
+			$order_sql .= self::sql_sort($key,$value); 
+		} 
 		// Clean her up
 		$order_sql = rtrim($order_sql,"ORDER BY "); 
 		$order_sql = rtrim($order_sql,","); 
 
-		self::$sql = $sql . $order_sql; 
-
+		$sql = $sql . $order_sql; 
+		
 		return $sql;
 
 	} // get_sql 
@@ -279,7 +286,7 @@ class Browse {
 
 		if ($order != 'DESC') { $order == 'ASC'; } 
 
-
+		
 		if ($_SESSION['browse']['type'] == 'song') { 
 			switch($field) { 
 				case 'title';
@@ -294,7 +301,7 @@ class Browse {
 			} // end switch
 		} // end if song 
 
-		return $sql . "$order,"; 
+		return "$sql $order,"; 
 
 	} // sql_sort
 
@@ -308,17 +315,17 @@ class Browse {
 
 		switch ($_SESSION['browse']['type']) { 
 			case 'song': 
-				show_box_top(); 
+				show_box_top(_('Songs')); 
 				require_once Config::get('prefix') . '/templates/show_songs.inc.php'; 
 				show_box_bottom(); 
 			break;
 			case 'album': 
-				show_box_top(); 
+				show_box_top(_('Albums')); 
 				require_once Config::get('prefix') . '/templates/show_albums.inc.php';
 				show_box_bottom(); 
 			break;
 			case 'genre':
-				show_box_top(); 
+				show_box_top(_('Genres')); 
 				require_once Config::get('prefix') . '/templates/show_genres.inc.php'; 
 				show_box_bottom(); 
 			break;
@@ -328,7 +335,7 @@ class Browse {
 				show_box_bottom(); 
 			break;
 			case 'artist':
-				show_box_top(); 
+				show_box_top(_('Artists')); 
 				require_once Config::get('prefix') . '/templates/show_artists.inc.php'; 
 				show_box_bottom(); 
 			break;

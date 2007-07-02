@@ -534,27 +534,6 @@ function tbl_name($table) {
 } // tbl_name
 
 /**
- * clear_catalog_stats()
- *
- * Use this to clear the stats for the entire Ampache server.
- * @package Catalog
- * @catagory Clear
- */
-function clear_catalog_stats() {
-
-        $dbh = dbh();
-
-        /* Wipe out the object_count table */
-        $sql = "TRUNCATE object_count";
-        $results = mysql_query($sql, $dbh);
-
-        /* Set every song to unplayed */
-        $sql = "UPDATE song SET played='0'";
-        $results = mysql_query($sql, $dbh);
-     
-} // clear_catalog_stats
-
-/**
  * scrub_out
  * This function is used to escape user data that is getting redisplayed
  * onto the page, it htmlentities the mojo

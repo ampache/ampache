@@ -32,7 +32,7 @@ $ajax_url = Config::get('ajax_url');
 </tr>
 <tr class="table-header">
 	<th><?php echo _('Add'); ?></th>
-	<th onclick="ajaxPut('<?php echo $ajax_url; ?>?action=browse&amp;sort=title');return true;" >
+	<th onclick="ajaxPut('<?php echo $ajax_url; ?>?action=browse&amp;sort=title');return true;" style="cursor:pointer;">
 		<?php echo _('Song Title'); ?>
 	</th>
 	<th><?php echo _('Artist'); ?></th>

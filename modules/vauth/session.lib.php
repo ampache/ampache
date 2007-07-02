@@ -158,7 +158,6 @@ function vauth_get_session($key) {
 	$results = Dba::fetch_assoc($db_results);
 
 	if (!count($results)) { 
-		vauth_error("Query: $sql failed to return results " . mysql_error());
 		return false; 
 	}
 

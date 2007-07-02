@@ -689,7 +689,7 @@ class User {
 			}
 
 			$item = "[$data->count] - $data->f_name";
-			$results[]->f_link = $item;
+			$results[]->f_name_link = $item;
 		} // end foreach items
 
 		return $results;

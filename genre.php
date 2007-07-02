@@ -34,7 +34,10 @@ switch($_REQUEST['action']) {
 	case 'show_songs':
 		$genre = new Genre($_REQUEST['genre_id']);
 		show_genre($_REQUEST['genre_id']);
-		$songs = $genre->get_songs();
+		$object_ids = $genre->get_songs();
+		show_box_top(_('Songs')); 
+		require_once Config::get('prefix') . '/templates/show_songs.inc.php'; 
+		show_box_bottom(); 
 	break;
 	case 'show_genre':
 	default:
@@ -49,8 +52,10 @@ switch($_REQUEST['action']) {
 	case 'show_artists':
 		$genre = new Genre($_REQUEST['genre_id']);
 		show_genre($_REQUEST['genre_id']);
-		$artists = $genre->get_artists();
-		require (conf('prefix') . '/templates/show_artists.inc');
+		$object_ids = $genre->get_artists();
+		show_box_top(_('Artists'));
+		require_once Config::get('prefix') . '/templates/show_artists.inc.php';
+		show_box_bottom(); 
 	break;
 } // action
 
