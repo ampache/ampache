@@ -259,20 +259,23 @@ while (!feof($fp) && (connection_status() == 0)) {
 	$buf = fread($fp, $chunk_size);
         print($buf);
 	if ($GLOBALS['user']->prefs['rate_limit'] > 0) { sleep (1); } 
-        $bytesStreamed += strlen($buf);
+        $bytesStreamed += $chunk_size;
 }
 
 /* Delete the Now Playing Entry */
 delete_now_playing($lastid);
 
 if ($bytesStreamed > $minBytesStreamed) {
-        $user->update_stats($song_id);
+        $user->update_stats($song->id);
 	/* If this is a voting tmp playlist remove the entry */
 	if (is_object($tmp_playlist)) { 
 		if ($tmp_playlist->type == 'vote') { 
 			$tmp_playlist->delete_track($song_id);
 		}
 	}
+} 
+else { 
+	debug_event('stream',$bytesStreamed .' of ' . $song->size . ' streamed, less then ' . $minBytesStreamed . ' not collecting stats','5'); 
 } 
 
 /* Set the Song as Played if it isn't already */

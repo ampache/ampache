@@ -4,6 +4,8 @@
 
 --------------------------------------------------------------------------
   v.3.4-Alpha1
+	- Fixed lastFM and increased timeout slightly in an attempt to 
+		improve success rate
 	- Disabled Search, Random Play & Localplay for Alpha release
 	- Repalced CC Flash player with the previous GPL based flash player
 		used patched 0.2.3 version created by Sylvain of 

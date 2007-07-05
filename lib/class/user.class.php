@@ -514,7 +514,7 @@ class User {
 		$song_info = new Song($song_id);
 		$user = $this->id;
 		
-		if (!$song_info->file) { return false; }
+		if (!strlen($song_info->file)) { return false; }
 
 		Stats::insert('song',$song_id,$user);
 		Stats::insert('album',$song_info->album,$user);
@@ -526,7 +526,7 @@ class User {
 		 * because it lags like the dickens try twice on everything
 		 */
                 if (!empty($this->prefs['lastfm_user']) AND !empty($this->prefs['lastfm_pass'])) { 
-                        $song_info->format_song();
+                        $song_info->format();
                         $lastfm = new scrobbler($this->prefs['lastfm_user'],$this->prefs['lastfm_pass']);                       
                         /* Attempt handshake */
 			$handshake = $lastfm->handshake(); 
@@ -552,7 +552,6 @@ class User {
                                 debug_event('LastFM','Error: Handshake failed with LastFM: ' . $lastfm->error_msg,'3');
                         }
                 } // record to LastFM
-
 	} // update_stats
 
 	/**
