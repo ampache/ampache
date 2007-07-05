@@ -155,16 +155,18 @@ switch ($_REQUEST['action']) {
 		show_confirmation(_('Album Art Inserted'),'',"/albums.php?action=show&album=$album_id");
 	break;
 	case 'update_from_tags':
-	
-		$album = new Album($_REQUEST['album_id']);
+		// Make sure they are a 'power' user at least
+		if (!$GLOBALS['user']->has_access('75')) { 
+			access_denied(); 
+			exit; 
+		} 
 
 		show_box_top(_('Starting Update from Tags')); 
 
-		$catalog = new Catalog();
-		$catalog->update_single_item('album',$_REQUEST['album_id']);
+		Catalog::update_single_item('album',$_REQUEST['album_id']);
 
 		echo "<br /><b>" . _('Update From Tags Complete') . "</b> &nbsp;&nbsp;";
-		echo "<a href=\"" . conf('web_path') . "/albums.php?action=show&amp;album=" . scrub_out($_REQUEST['album_id']) . "\">[" . _('Return') . "]</a>";
+		echo "<a href=\"" . Config::get('web_path') . "/albums.php?action=show&amp;album=" . scrub_out($_REQUEST['album_id']) . "\">[" . _('Return') . "]</a>";
 		show_box_bottom(); 
 	break;
 	// Browse by Album

@@ -14,6 +14,7 @@
         </form>
 </div>
 <hr />
+<!-- RANDOM, Hidden for now cause its broken
 <h4><?php echo _('Random'); ?></h4>
 	<form name="sub_random" method="post" enctype="multipart/form-data" action="<?php echo $web_path; ?>/song.php?action=random&amp;method=stream" style="Display:inline">
         <select name="random" style="width:80px;">
@@ -42,6 +43,7 @@
         <input class="smallbutton" type="submit" value="<?php echo _('Enqueue'); ?>" />
 	</form>
 <hr />
+-->
 <h4><?php echo _('Playlists'); ?></h4>
 <br />
 

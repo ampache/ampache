@@ -37,12 +37,12 @@ class Catalog {
 
 	/* This is a private var that's used during catalog builds */
 	private $_playlists = array();
-	private $_art_albums = array(); 
 
 	// Used in functions
-	public $albums	= array();
-	public $artists	= array();
-	public $genres	= array();
+	private static $albums	= array();
+	private static $artists	= array();
+	private static $genres	= array();
+	private static $_art_albums = array(); 
 
 	/**
 	 * Constructor
@@ -867,11 +867,12 @@ class Catalog {
 
 	} //new_catalog
 
-	/*!
-		@function update_single_item
-		@discussion updates a single album,artist,song
-	*/
-	function update_single_item($type,$id) { 
+	/**
+	 * update_single_item
+	 * updates a single album,artist,song from the tag data
+	 * this can be done by 75+
+	 */
+	public static function update_single_item($type,$id) { 
 
 		$songs = array();
 
@@ -889,9 +890,9 @@ class Catalog {
 				break;
 		} // end switch type
 
-		foreach($songs as $song) { 
-
-			$info = $this->update_song_from_tags($song);
+		foreach($songs as $song_id) { 
+			$song = new Song($song_id); 
+			$info = self::update_song_from_tags($song);
 
                         if ($info['change']) {
 				$file = scrub_out($song->file);
@@ -916,12 +917,12 @@ class Catalog {
          * updates the song info based on tags, this is called from a bunch of different places
 	 * and passes in a full fledged song object, so it's a static function
 	 */
-        public function update_song_from_tags($song) {
+        public static function update_song_from_tags($song,$sort_pattern,$rename_pattern) {
 
 		/* Record the reading of these tags */
 		debug_event('tag-read',"Reading Tags from $song->file",'5','ampache-catalog');
 		
-		$vainfo = new vainfo($song->file,'',$this->sort_pattern,$this->rename_pattern);
+		$vainfo = new vainfo($song->file,'',$sort_pattern,$rename_pattern);
 		$vainfo->get_info();
 
                 /* Find the correct key */
@@ -1510,7 +1511,7 @@ class Catalog {
 				// if the file hasn't been modified since the last_update
 				if (!$skip) {
 
-					$info = $this->update_song_from_tags($song);
+					$info = self::update_song_from_tags($song,$this->sort_pattern,$this->rename_pattern);
 					$album_id = $song->album;
 					if ($info['change']) {
 						$update_string .= $info['text'] . "<br />\n"; 
@@ -1623,8 +1624,8 @@ class Catalog {
 		}
 
 		// Check to see if we've seen this artist before
-		if (isset($this->artists[$artist])) {
-			return $this->artists[$artist];
+		if (isset(self::$artists[$artist])) {
+			return self::$artists[$artist];
 		} // if we've seen this artist before
 
 		/* Setup the checking sql statement */
@@ -1659,11 +1660,11 @@ class Catalog {
 
 			$artist_count = count($this->artists);
 			if ($artist_count == $cache_limit) {
-				$this->artists = array_slice($this->artists,1);
+				self::$artists = array_slice(self::$artists,3);
 			}
 			debug_event('cache',"Adding $artist with $artist_id to Cache",'5','ampache-catalog'); 
 			$array = array($artist => $artist_id);
-			$this->artists = array_merge($this->artists, $array);
+			self::$artists = array_merge(self::$artists, $array);
 			unset($array);
 
 		} // if cache limit is on..
@@ -1701,8 +1702,8 @@ class Catalog {
 		}
 
 		// Check to see if we've seen this album before
-		if (isset($this->albums[$album])) {
-			return $this->albums[$album];
+		if (isset(self::$albums[$album])) {
+			return self::$albums[$album];
 		}
 
 		/* Setup the Query */
@@ -1714,10 +1715,10 @@ class Catalog {
 		if ($r = Dba::fetch_assoc($db_results)) {
 			$album_id = $r['id'];
 
-			// If we don't have art put it in the needs me some art array
+			// If we don't have art put it in the 'needs me some art' array
 			if (!strlen($r['art'])) { 
 				$key = $r['id']; 
-				$this->_art_albums[$key] = 1;
+				self::$_art_albums[$key] = 1;
 			}
 		
 		} //if found
@@ -1739,19 +1740,19 @@ class Catalog {
 			}
 
 			// Add it to the I needs me some album art array
-			$this->_art_albums[$album_id] = 1; 
+			self::$_art_albums[$album_id] = 1; 
 
 		} //not found
 
                 if ($cache_limit > 0) {
 
-                        $albums_count = count($this->albums);
+                        $albums_count = count(self::$albums);
 
                         if ($albums_count == $cache_limit) {
-        	                $this->albums = array_slice($this->albums,1);
+        	                self::$albums = array_slice(self::$albums,3);
                         }
 			$array = array($album => $album_id);
-			$this->albums = array_merge($this->albums,$array);	               
+			self::$albums = array_merge(self::$albums,$array);	               
 			unset($array);
 
                 } // if cache limit is on..
@@ -1759,7 +1760,6 @@ class Catalog {
 		return $album_id;
 
 	} // check_album
-
 
 	/**
 	 * check_genre
@@ -1772,8 +1772,8 @@ class Catalog {
 			$genre = _('Unknown (Orphaned)');
 		}
 
-		if ($this->genres[$genre]) {
-			return $this->genres[$genre];
+		if (self::$genres[$genre]) {
+			return self::$genres[$genre];
 		}
 
 		/* Look in the genre table */
@@ -1790,7 +1790,7 @@ class Catalog {
 		}
 		else { $insert_id = $results['id']; }
 
-		$this->genres[$genre] = $insert_id;
+		self::$genres[$genre] = $insert_id;
 
 		return $insert_id;
 
@@ -1810,7 +1810,6 @@ class Catalog {
 		}
 
 		return $title;
-
 
 	} // check_title
 

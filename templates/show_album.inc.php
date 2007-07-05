@@ -28,7 +28,7 @@ $title		= scrub_out($album->name) . ' (' . $album->year . ') -- ' . $album->f_ar
 <?php show_box_top($title); ?>
 	<div style="float:left;display:table-cell;width:140px;">
 	<?php 
-        if ($album_name != "Unknown (Orphaned)") {
+        if ($album_name != _('Unknown (Orphaned)')) {
 		$aa_url = $web_path . "/image.php?id=" . $album->id . "&amp;type=popup&amp;sid=" . session_id();
 		echo "<a target=\"_blank\" href=\"$aa_url\" onclick=\"popup_art('$aa_url'); return false;\">";
 		echo "<img border=\"0\" src=\"" . $web_path . "/image.php?id=" . $album->id . "&amp;thumb=2&amp;sid=" . session_id() . "\" alt=\"Album Art\" height=\"128\" />";
@@ -52,7 +52,7 @@ $title		= scrub_out($album->name) . ' (' . $album->year . ') -- ' . $album->f_ar
 		<a href="<?php echo $web_path; ?>/albums.php?action=clear_art&amp;album_id=<?php echo $album->id; ?>"><?php echo _('Reset Album Art'); ?></a><br />
 		<?php } ?>
 		<a href="<?php echo $web_path; ?>/albums.php?action=find_art&amp;album_id=<?php echo $album->id; ?>"><?php echo _('Find Album Art'); ?></a><br />
-		<?php  if (($GLOBALS['user']->has_access('100')) || (!Config::get('use_auth'))) { ?>
+		<?php  if (($GLOBALS['user']->has_access('75')) || (!Config::get('use_auth'))) { ?>
 		<a href="<?php echo $web_path; ?>/albums.php?action=update_from_tags&amp;album_id=<?php echo $album->id; ?>"><?php echo _('Update from tags'); ?></a><br />
 		<?php  } ?>
 		<?php if (Access::check_function('batch_download')) { ?>

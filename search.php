@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2006 Ampache.org
+ Copyright (c) 2001 - 2007 Ampache.org
  All Rights Reserved
 
  This program is free software; you can redistribute it and/or
@@ -20,22 +20,14 @@
 
 */
 
-/*!
-	@header Search page 
- Search stuff.  Can do by artist, album and song title.
+require_once 'lib/init.php';
 
- Also case-insensitive for now.
+show_header(); 
 
-*/
-
-require_once('lib/init.php');
-
-show_template('header');
-
-/* Import/Clean vars */
-$action = scrub_in($_REQUEST['action']);
-
-switch ($action) { 
+/**
+ * action switch 
+ */
+switch ($_REQUEST['action']) { 
 	case 'quick_search':
 		/* This needs to be done because we don't know what thing
 		 * they used the quick search to search on until after they've

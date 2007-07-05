@@ -55,16 +55,15 @@ switch($_REQUEST['action']) {
 
 	case 'update_from_tags':
 
-        $artist = new Artist($_REQUEST['artist']);
+	        $artist = new Artist($_REQUEST['artist']);
 
-        echo "<br /><b>" . _("Starting Update from Tags") . ". . .</b><br />\n";
+        	show_box_top(_('Starting Update from Tags')); 
 
-        $catalog = new Catalog();
-        $catalog->update_single_item('artist',$_REQUEST['artist']);
+		Catalog::update_single_item('artist',$_REQUEST['artist']);
 
-        echo "<br /><b>" . _("Update From Tags Complete") . "</b> &nbsp;&nbsp;";
-        echo "<a href=\"" . conf('web_path') . "/artists.php?action=show&amp;artist=" . $_REQUEST['artist'] . "\">[" . _("Return") . "]</a>";
-
+        	echo "<br /><b>" . _("Update From Tags Complete") . "</b> &nbsp;&nbsp;";
+	        echo "<a href=\"" . Config::get('web_path') . "/artists.php?action=show&amp;artist=" . $_REQUEST['artist'] . "\">[" . _('Return') . "]</a>";
+		show_box_bottom(); 
 	break;
 	case 'rename_similar':
 		if (!$user->has_access('100')) { access_denied(); }

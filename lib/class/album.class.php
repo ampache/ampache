@@ -618,14 +618,14 @@ class Album {
 
 	} // get_random_songs
 
-	/*!
-		@function clear_art
-		@discussion clears the album art from the DB
-	*/
-	function clear_art() { 
+	/**
+	 * clear_art
+	 * clears the album art from the DB
+	 */
+	public function clear_art() { 
 	
-		$sql = "UPDATE album SET art=NULL, art_mime=NULL WHERE id='$this->id'";
-		$db_results = mysql_query($sql, dbh());
+		$sql = "UPDATE `album_data` SET `art`=NULL, `art_mime`=NULL, `thumb`=NULL, `thumb_mime`=NULL WHERE `album_id`='$this->id'";
+		$db_results = Dba::query($sql);
 
 	} // clear_art
 
