@@ -1353,9 +1353,9 @@ function xml_get_header($type){
                 $header = "<?xml version=\"1.0\" encoding=\"utf-8\" ?>\n" .
                 	  "<playlist version = \"1\" xmlns=\"http://xspf.org/ns/0/\">\n ".
                 	  "<title>Ampache XSPF Playlist</title>\n" .
-                	  "<creator>" . conf('site_title') . "</creator>\n" .
-                	  "<annotation>" . conf('site_title') . "</annotation>\n" .
-                	  "<info>". conf('web_path') ."</info>\n" .
+                	  "<creator>" . Config::get('site_title') . "</creator>\n" .
+                	  "<annotation>" . Config::get('site_title') . "</annotation>\n" .
+                	  "<info>". Config::get('web_path') ."</info>\n" .
                 	  "<trackList>\n\n\n\n";
 		return $header;	
 	break;

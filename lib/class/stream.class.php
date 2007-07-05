@@ -29,17 +29,18 @@
 class Stream {
 
 	/* Variables from DB */
-	var $type;
-	var $web_path;
-	var $songs = array();
-	var $urls  = array(); 
-	var $sess;
+	public $type;
+	public $web_path;
+	public $songs = array();
+	public $urls  = array(); 
+	public $sess;
+	public $user_id; 
 
-	/*!
-		@function stream 
-		@discussion constructor for the stream class
-	*/
-	function Stream($type='m3u', $song_ids=0) {
+	/**
+	 * Constructor for the stream class takes a type and an array
+	 * of song ids
+	 */
+	public function __construct($type='m3u', $song_ids=0) {
 
 		$this->type = $type;
 		$this->songs = $song_ids;
@@ -52,7 +53,7 @@ class Stream {
 		$this->sess = session_id();
 		$this->user_id = $GLOBALS['user']->id;
 
-	} //constructor
+	} // Constructor
 
 	/**
 	 * start
@@ -86,18 +87,17 @@ class Stream {
 	 * to whatever, this is an exception for when we don't actually
 	 * have a object_id but instead a weird or special URL
 	 */
-	function manual_url_add($url) { 
+	public function manual_url_add($url) { 
 
 		$this->urls[] = $url; 
 
 	} // manual_url_add
 
-	/*!
-		@function create_simplem3u
-		@discussion this creates a simple m3u
-			without any of the extended information
-	*/
-	function create_simple_m3u() {
+	/**
+	 * create_simplem3u
+	 * this creates a simple m3u without any of the extended information
+	 */
+	public function create_simple_m3u() {
 
 		header("Cache-control: public");
 		header("Content-Disposition: filename=playlist.m3u");
@@ -168,7 +168,7 @@ class Stream {
 		foreach ($this->songs as $song_id) { 
 			$i++;
 			$song = new Song($song_id);
-			$song->format_song();
+			$song->format();
 			$song_name = $song->f_artist_full . " - " . $song->title . "." . $song->type;
 			$song_url = $song->get_url();
 			echo "File" . $i . "=$song_url\n";
@@ -203,7 +203,7 @@ class Stream {
                 
 		foreach ($this->songs as $song_id) {
                 	$song = new Song($song_id);
-                        $song->format_song();   
+                        $song->format();   
 			$url = $song->get_url();
                         $song_name = $song->f_artist_full . " - " . $song->title . "." . $song->type;
 			
@@ -238,22 +238,22 @@ class Stream {
 
 		if (isset($_REQUEST['flash_hack'])) { 
 			$flash_hack = '&flash_hack=' . $_REQUEST['flash_hack']; 
-			if (!conf('require_session')) { $flash_hack .= '&sid=' . session_id(); } 
+			if (!Config::get('require_session')) { $flash_hack .= '&sid=' . session_id(); } 
 		} 
 
 		// Itterate through the songs
 		foreach ($this->songs as $song_id) {
 				
 	        	$song = new Song($song_id);
-	                $song->format_song();
+	                $song->format();
 
 	                $xml = array();
 			$xml['track']['location'] = $song->get_url() . $flash_hack;
 			$xml['track']['identifier'] = $xml['track']['location'];
 			$xml['track']['title'] = $song->title;
 			$xml['track']['creator'] = $song->f_artist_full;
-			$xml['track']['info'] = conf('web_path') . "/albums.php?action=show&album=" . $song->album;
-			$xml['track']['image'] = conf('web_path') . "/image.php?id=" . $song->album . "&thumb=3&sid=" . session_id();
+			$xml['track']['info'] = Config::get('web_path') . "/albums.php?action=show&album=" . $song->album;
+			$xml['track']['image'] = Config::get('web_path') . "/image.php?id=" . $song->album . "&thumb=3&sid=" . session_id();
 			$xml['track']['album'] = $song->f_album_full;
 			$xml['track']['duration'] = $song->time;
 			$result .= xml_from_array($xml,1,'xspf');
@@ -261,7 +261,7 @@ class Stream {
                 } // end foreach
 
 	        header("Cache-control: public");
-        	header("Content-Disposition: filename=playlist.xspf");
+        	header("Content-Disposition: filename=ampache-playlist.xspf");
 		header("Content-Type: application/xspf+xml; charset=utf-8");
 		echo xml_get_header('xspf');
 		echo $result;
@@ -294,15 +294,18 @@ class Stream {
 
 	        // start ugly evil javascript code
 		//FIXME: This needs to go in a template, here for now though
-	    if ($GLOBALS['user']->prefs['embed_xspf'] == 1 ){ 
-		header("Location: ".conf('web_path')."/index.php?xspf&play_info=".$tmp_playlist->id);
-	    }else{
+		//FIXME: This preference doesn't even exists, we'll eventually
+		//FIXME: just make it the default
+		if ($GLOBALS['user']->prefs['embed_xspf'] == 1 ){ 
+			header("Location: ".Config::get('web_path')."/index.php?xspf&play_info=".$tmp_playlist->id);
+		}
+		else {
 	        echo "<html><head>\n";
-	        echo "<title>" . conf('site_title') . "</title>\n";
+	        echo "<title>" . Config::get('site_title') . "</title>\n";
 	        echo "<script language=\"javascript\" type=\"text/javascript\">\n";
 	        echo "<!-- begin\n";
 	        echo "function PlayerPopUp(URL) {\n";
-	        echo "window.open(URL, 'XSPF_player', 'width=350,height=300,scrollbars=0,toolbar=0,location=0,directories=0,status=0,resizable=0');\n";
+	        echo "window.open(URL, 'XSPF_player', 'width=400,height=200,scrollbars=0,toolbar=0,location=0,directories=0,status=0,resizable=0');\n";
 	        echo "window.location = '" .  return_referer() . "';\n";
 	        echo "return false;\n";
 	        echo "}\n";
@@ -310,13 +313,12 @@ class Stream {
 	        echo "</script>\n";
 	        echo "</head>\n";
 
-	        echo "<body onLoad=\"javascript:PlayerPopUp('" . conf('web_path') . "/modules/flash/xspf_player.php" . $play_info . "')\">\n";
+	        echo "<body onLoad=\"javascript:PlayerPopUp('" . Config::get('web_path') . "/modules/flash/xspf_player.php" . $play_info . "')\">\n";
 	        echo "</body>\n";
 	        echo "</html>\n";
 	    }
 	} // create_xspf_player
 		
-
 	/**
 	 * create_localplay
 	 * This calls the Localplay API and attempts to 

@@ -4,6 +4,10 @@
 
 --------------------------------------------------------------------------
   v.3.4-Alpha1
+	- Disabled Search, Random Play & Localplay for Alpha release
+	- Repalced CC Flash player with the previous GPL based flash player
+		used patched 0.2.3 version created by Sylvain of 
+		http://www.jamendo.com/fr/
 	- Round the downsampled content-length
   	- Fixed cataloging so that Orphaned Albums are always the same year
   	- Added new preferences, created new Playlist Preference section

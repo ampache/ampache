@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2006 Ampache.org
+ Copyright (c) 2001 - 2007 Ampache.org
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
@@ -19,11 +19,9 @@
 
 */
 
-require_once('../../lib/init.php');
+require_once '../../lib/init.php';
 
-
-$dbh = dbh();
-$web_path = conf('web_path');
+$web_path = Config::get('web_path');
 
 /* Attempt to build the temp playlist */
 $action 	= scrub_in($_REQUEST['action']);
@@ -40,7 +38,7 @@ switch ($action) {
 	break;
 	case 'show':
 		$play_info = "?tmp_id=" . scrub_out($_REQUEST['tmpplaylist_id']);
-		require_once (conf('prefix') . '/templates/show_xspf_player.inc.php');
+		require_once Config::get('prefix') . '/templates/show_xspf_player.inc.php';
 	break;
 } // end switch
 

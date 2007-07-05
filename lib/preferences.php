@@ -330,6 +330,14 @@ function create_preference_input($name,$value) {
 			echo "\t<option value=\"append\">" . _('Append to Existing') . "</option>\n"; 
 			echo "\t<option value=\"default\">" . _('Default') . "</option>\n"; 
 			echo "</select>\n"; 
+		break;
+		case 'playlist_method': 
+			echo "<select name=\"$name\">\n"; 
+			echo "\t<option value=\"send\">" . _('Send on Add') . "</option>\n"; 
+			echo "\t<option value=\"send\">" . _('Send and Clear') . "</option>\n"; 
+			echo "\t<option value=\"default\">" . _('Default') . "</option>\n"; 
+			echo "</select>\n"; 
+		break;
 		default:
 			echo "<input type=\"text\" size=\"$len\" name=\"$name\" value=\"$value\" />";
 		break;

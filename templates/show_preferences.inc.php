@@ -33,7 +33,7 @@ if ($_REQUEST['tab'] != 'account' && $_REQUEST['tab'] != 'modules') {
 
 ?>
 	<input class="button" type="submit" value="<?php echo _('Update Preferences'); ?>" />
-	<input type="hidden" name="tab" value="<?php echo scrub_out($current_tab); ?>" />
+	<input type="hidden" name="tab" value="<?php echo scrub_out($_REQUEST['tab']); ?>" />
 	<input type="hidden" name="method" value="<?php echo scrub_out($_REQUEST['action']); ?>" />
 	<input class="button" type="submit" name="action" value="<?php echo _("Cancel"); ?>" />
 <?php
