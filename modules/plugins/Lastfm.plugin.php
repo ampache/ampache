@@ -25,14 +25,14 @@ class AmpacheLastfm {
 	var $description	='Records your played songs to your Last.FM Account'; 
 	var $url		='';
 	var $version		='000001';
-	var $min_ampache	='333001';
-	var $max_ampache	='333005';
+	var $min_ampache	='334001';
+	var $max_ampache	='334005';
 
 	/**
 	 * Constructor
 	 * This function does nothing...
 	 */
-	function PluginLastfm() { 
+	public function __construct() { 
 
 		return true; 
 
@@ -43,16 +43,16 @@ class AmpacheLastfm {
 	 * This is a required plugin function it inserts the required preferences
 	 * into Ampache
 	 */
-	function install() { 
+	public function install() { 
 
 		/* We need to insert the new preferences */
-		$sql = "INSERT INTO preferences (`name`,`value`,`description`,`level`,`type`,`catagory`) " . 
+		$sql = "INSERT INTO preference (`name`,`value`,`description`,`level`,`type`,`catagory`) " . 
 			"VALUES ('lastfm_user',' ','Last.FM Username','25','string','options')";
-		$db_results = mysql_query($sql,dbh());
+		$db_results = Dba::query($sql);
 
-		$sql = "INSERT INTO preferences (`name`,`value`,`description`,`level`,`type`,`catagory`) " . 
+		$sql = "INSERT INTO preference (`name`,`value`,`description`,`level`,`type`,`catagory`) " . 
 			"VALUES ('lastfm_pass',' ','Last.FM Password','25','string','options')";
-		$db_results = mysql_query($sql,dbh());
+		$db_results = Dba::query($sql);
 
 		fix_all_users_prefs(); 
 
@@ -66,8 +66,8 @@ class AmpacheLastfm {
 	function uninstall() { 
 
 		/* We need to remove the preivously added preferences */
-		$sql = "DELETE FROM preferences WHERE name='lastfm_pass' OR name='lastfm_user'"; 
-		$db_results = mysql_query($sql,dbh());
+		$sql = "DELETE FROM preference WHERE name='lastfm_pass' OR name='lastfm_user'"; 
+		$db_results = Dba::query($sql);
 
 		fix_all_users_prefs();
 

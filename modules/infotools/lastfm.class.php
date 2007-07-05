@@ -29,17 +29,18 @@ class LastFMSearch {
 	private $_subTag; // Stupid hack to make things come our right
 	private $_currentTag; // Stupid hack to make things come out right
     
-	function LastFMSearch() {
+	public function __construct() {
 
 		// Rien a faire
 	
 	} // LastFMSearch
     
-	/*!	
-		@create_parser
-		@discussion this sets up an XML Parser
-	*/
-	function create_parser() { 
+	/**
+	 * create_parser
+	 * this sets up an XML Parser that we can use to parse the XML
+	 * document we recieve
+	 */
+	public function create_parser() { 
                 $this->_parser = xml_parser_create();
 
                 xml_parser_set_option($this->_parser, XML_OPTION_CASE_FOLDING, false);
@@ -52,11 +53,11 @@ class LastFMSearch {
 
 	} // create_parser
     
-	/*!
-		@function search
-		@discussion do a full search on the url they pass
-	*/
-	function run_search($url) {
+	/**
+	 * search
+	 * do a full search on the url they pass
+	 */
+	public function run_search($url) {
 
 		/* Create the Parser */
 		$this->create_parser();

@@ -34,6 +34,7 @@ class Dba {
 
 	private static $_default_db;
 
+	private static $_sql; 
 	private static $config; 
 
 	/**
@@ -53,7 +54,11 @@ class Dba {
 	 */
 	public static function query($sql) { 
 
+		// Run the query
 		$resource = mysql_query($sql,self::dbh()); 
+		
+		// Save the query, to make debug easier
+		self::$_sql = $sql; 
 
 		return $resource; 
 
@@ -81,7 +86,9 @@ class Dba {
 
 		$result = mysql_fetch_assoc($resource); 
 
-		if (!$result) { return array(); } 
+		if (!$result) { 
+			return array(); 
+		} 
 
 		return $result;
 
@@ -96,7 +103,9 @@ class Dba {
 
 		$result = mysql_fetch_row($resource); 
 
-		if (!$result) { return array(); } 
+		if (!$result) { 
+			return array(); 
+		} 
 
 		return $result; 
 
@@ -112,7 +121,9 @@ class Dba {
 		
 		$result = mysql_num_rows($resource); 
 		
-		if (!$result) { return '0'; } 
+		if (!$result) { 
+			return '0'; 
+		} 
 
 		return $result;
 	} // num_rows 
@@ -137,6 +148,7 @@ class Dba {
 		if (!$dbh) { debug_event('Database','Error unable to connect to database' . mysql_error(),'1'); } 
 
 		$select_db = mysql_select_db($database,$dbh); 
+		if (!$select_db) { debug_event('Database','Error unable to select ' . $database . ' error ' . mysql_error(),'1'); } 
 		
 		return $dbh;
 

@@ -729,27 +729,6 @@ function invert_boolean($value) {
 } // invert_boolean
 
 /**
- * get_user_from_username
- * As we are moving away from user from username to user from 
- * unique ID (smaller/faster/more powerful!) this can be used
- * to return a user object if all you've got is the username
- */
-function get_user_from_username($username) { 
-
-	$username = Dba::escape($username); 
-
-	$sql = "SELECT `id` FROM `user` WHERE `username`='$username'";
-	$db_results = Dba::query($sql);
-
-	$results = Dba::fetch_assoc($db_results); 
-
-	$user = new User($results['id']);
-
-	return $user;
-
-} // get_user_from_username
-
-/**
  * get_plugins
  * This returns a list of the plugins and their information
  */

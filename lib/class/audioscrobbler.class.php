@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2006 Ampache.org
+ Copyright (c) 2001 - 2007 Ampache.org
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
@@ -21,20 +21,20 @@
 
 class scrobbler {
 
-        var $error_msg;
-        var $username;
-        var $password;
-        var $challenge;
-        var $submit_host;
-        var $submit_port;
-        var $submit_url;
-        var $queued_tracks;
+        public $error_msg;
+        public $username;
+        public $password;
+        public $challenge;
+        public $submit_host;
+        public $submit_port;
+        public $submit_url;
+        public $queued_tracks;
 
         /**
          * Constructor
          * This is the constructer it takes a username and password
          */
-        function scrobbler($username, $password) {
+        public function __construct($username, $password) {
 
                 $this->error_msg = '';
                 $this->username = trim($username);
@@ -47,7 +47,7 @@ class scrobbler {
         /**
          * get_error_msg
          */
-        function get_error_msg() {
+        public function get_error_msg() {
 
                 return $this->error_msg;
 
@@ -55,7 +55,8 @@ class scrobbler {
 
         /**
          * get_queue_count
-        function get_queue_count() {
+	 */
+        public function get_queue_count() {
 
                 return count($this->queued_tracks);
 
@@ -66,9 +67,9 @@ class scrobbler {
          * This does a handshake with the audioscrobber server it doesn't pass the password, but 
 	 * it does pass the username and has a 10 second timeout 
          */
-        function handshake() {
+        public function handshake() {
 
-                $as_socket = @fsockopen('post.audioscrobbler.com', 80, $errno, $errstr, 10);
+                $as_socket = @fsockopen('post.audioscrobbler.com', 80, $errno, $errstr, 15);
                 if(!$as_socket) {
                         $this->error_msg = $errstr;
                         return false;
@@ -84,7 +85,7 @@ class scrobbler {
 
                 $buffer = '';
                 while(!feof($as_socket)) {
-                        $buffer .= fread($as_socket, 8192);
+                        $buffer .= fread($as_socket, 4096);
                 }
                 fclose($as_socket);
                 $split_response = preg_split("/\r\n\r\n/", $buffer);
@@ -126,7 +127,7 @@ class scrobbler {
 	 * submit the track or talk to LastFM in anyway, kind of useless for our uses but its
 	 * here, and that's how it is. 
 	 */
-        function queue_track($artist, $album, $track, $timestamp, $length) {
+        public function queue_track($artist, $album, $track, $timestamp, $length) {
                 $date = gmdate('Y-m-d H:i:s', $timestamp);
                 $mydate = date('Y-m-d H:i:s T', $timestamp);
 
@@ -146,12 +147,13 @@ class scrobbler {
                 return true; 
 		
         } // queue_track
+
 	/**
 	 * submit_tracks
 	 * This actually talks to LastFM submiting the tracks that are queued up. It
 	 * passed the md5'd password combinted with the challenge, which is then md5'd
 	 */ 
-        function submit_tracks() {
+        public function submit_tracks() {
 
 		// Check and make sure that we've got some queued tracks
                 if(!count($this->queued_tracks)) {
@@ -173,7 +175,7 @@ class scrobbler {
                         $i++;
                 }
 
-                $as_socket = @fsockopen($this->submit_host, $this->submit_port, $errno, $errstr, 10);
+                $as_socket = @fsockopen($this->submit_host, $this->submit_port, $errno, $errstr, 15);
 
                 if(!$as_socket) {
                         $this->error_msg = $errstr;
