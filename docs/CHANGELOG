@@ -4,7 +4,9 @@
 
 --------------------------------------------------------------------------
   v.3.4-Alpha1
-	- Fixed lastFM and increased timeout slightly in an attempt to 
+	- Updated LastFM submission formating to account for changes on 
+		last.fm (Thx entropathy)
+	- Fixed LastFM and increased timeout slightly in an attempt to 
 		improve success rate
 	- Disabled Search, Random Play & Localplay for Alpha release
 	- Repalced CC Flash player with the previous GPL based flash player

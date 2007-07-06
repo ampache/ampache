@@ -107,7 +107,7 @@ class scrobbler {
                         return false;
                 }
 
-                if(preg_match('/http:\/\/(.*):(\d+)(.*)/', $response[3], $matches)) {
+                if(preg_match('/http:\/\/(.*):(\d+)(.*)/', $response[2], $matches)) {
                         $this->submit_host = $matches[1];
                         $this->submit_port = $matches[2];
                         $this->submit_url = $matches[3];
@@ -116,7 +116,7 @@ class scrobbler {
                         return false;
                 }
 
-                $this->challenge = $response[2];
+                $this->challenge = $response[1];
                 return true;
 
         } // handshake
