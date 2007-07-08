@@ -47,11 +47,11 @@ function focus(){ document.login.username.focus(); }
 	<div>
 		<p id="loginp_0"><?php echo Config::get('site_title'); ?></p>
 		<form name="login" method="post" enctype="multipart/form-data" action="<?php echo Config::get('web_path'); ; ?>/login.php" style="Display:inline">
-			<p class="loginp_1"><span><?php echo  _('Login'); ; ?>:</span> 
-			<input class="text_input" type="text" name="username" value="<?php echo  $_REQUEST['username']; ; ?>" /></p>
-			<p class="loginp_1"><span><?php echo  _('Password'); ; ?>:</span> 
-			<input class="text_input" type="password" name="password" value="" /></p>
-			<p class="loginp_1"><?php echo _('Remember Me'); ?><input class="check_input" type="checkbox" name="rememberme" <?php echo $remember_disabled; ?> /></p>
+			<p class="loginp_1" id="usernamebox"><label for="username"><?php echo  _('Login'); ; ?>:</label> 
+			<input class="text_input" type="text" id="username" name="username" value="<?php echo  $_REQUEST['username']; ; ?>" /></p>
+			<p class="loginp_1" id="passwordbox"><label for="password"><?php echo  _('Password'); ; ?>:</label> 
+			<input class="text_input" type="password" id="password" name="password" value="" /></p>
+			<p class="loginp_1" id="remembermebox"><label for="rememberme"><?php echo _('Remember Me'); ?>&nbsp;</label><input class="check_input" type="checkbox" id="rememberme" name="rememberme" <?php echo $remember_disabled; ?> /></p>
 			<?php echo Config::get('login_message'); ?>
 			<?php Error::display('general'); ?>
 			<p><input class="button" type="submit" value="<?php echo _('Login'); ?>" /></p>

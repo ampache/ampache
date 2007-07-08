@@ -218,7 +218,7 @@ h3#content_title span {
 	display:inline; 
 	text-decoration:none; 
 	color: #000;
-	font: monospace, Courier, Georgia;
+	font-family: monospace, Courier, Georgia;
 } 
 
 #sidebar li {
@@ -555,7 +555,7 @@ div#Header{
 	text-align:right;
 	padding-right:100px;
 }
-.loginp_1 span{
+.loginp_1 label{
 	font-weight:bold;
 }
 .loginp_1 input{

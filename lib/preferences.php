@@ -443,7 +443,7 @@ function init_preferences() {
         } // end while
 
         /* Set the Theme mojo */
-        if (strlen($results['theme']) > 0) {
+        if (strlen($results['theme_name']) > 0) {
                 $results['theme_path'] = '/themes/' . $results['theme_name'];
         }
 	// Default to the classic theme if we don't get anything from their
