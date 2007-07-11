@@ -1,0 +1,786 @@
+/*
+
+ Copyright (c) 2001 - 2006 Ampache.org
+ All rights reserved.
+
+ This program is free software; you can redistribute it and/or
+ modify it under the terms of the GNU General Public License
+ as published by the Free Software Foundation; either version 
+ of the License, or (at your option) any later version.
+
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with this program; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+
+*/
+
+/***************************************************************/
+
+ Ampache Theme "Greysme"
+ by Spocky v0.95 (070501)
+ 
+ Feel free to modify/reuse, just mention my name _somewhere_
+  
+/***************************************************************/
+/* Theme colors : */
+/* ---------------*/
+/* Red : 		#8b3e38 (#5a211c was too dark) */
+/* Light blue : 	#74718a (#5b596d was too dark) */
+/* Dark blue  : 	#2b293d */
+/* Black : 		#050505 */
+/* Dark grey : 		#111    */
+/* Orange:		#e9ad51 */
+
+
+
+
+/************************************************/
+/*         General style rules                  */
+/************************************************/
+
+body, html, fieldset			{ border: 0; } 
+h1, h2, h3, h4, h5, h6, pre, code	{ font-size: 1em; line-height: 1em; } /* avoid browser default inconsistent font-sizes */
+a img, :link img, :visited img 		{ border: none; } /* no blue linked image borders */
+*					{ margin: 0; padding: 0; } /* White space reset */
+
+
+html{ font-size: 62.5%; }
+
+body{ 
+	font-size: 1.1em;
+	font-family: Lucida Sans Unicode, Verdana, Arial, Helvetica, sans-serif;
+	background: #2b293d url(../images/background.jpg) 0 0 repeat-x fixed;
+}
+
+ol	{ list-style-type: decimal-leading-zero; }
+li	{ list-style-position: inside; }
+p 	{ color: #e9ad51; }
+a	{ color: #74718a; text-decoration: none; }
+
+td 	{ padding: 0 8px; color: #e9ad51; }
+th 	{ padding-right: 10px; }
+
+input, select	{
+	font-size:1em;
+	color: #e9ad51;
+	background-color: #111; 
+	border: 1px solid #8b3e38;
+	margin:0 0 1px 0;
+}
+
+input{
+  padding:0 2px;
+}
+
+input:focus, select:focus { border-style: dotted; }
+
+textarea { 
+	background-color: #111;
+	color: #e9ad51; 
+}
+
+/************************************************/
+/*             Styles for Site Header           */
+/************************************************/
+
+#topbar 	{ padding: 0 0; }
+#topbarright  	{ font-size: 0.7em; text-align: right; color: #e9ad51; position: absolute; top: 40px; right: 0; padding: 3px; }
+#topbarright b 	{ font-weight: normal }
+#topbarright a 	{ color: #e9ad51;}
+#topbarleft 	{ text-align: center; background: url(../images/ampache_back.gif) 0 0 repeat-x;}
+#topbarleft a 	{ }
+
+
+/************************************************/
+/*                  Buttons                     */
+/************************************************/
+
+.selected_button {
+	background-color: #000; color: #fff;
+}
+.unselected_button {
+	/* there really isn't anything for this */
+}
+.smallbutton {
+	border: 0px;
+	padding: 0 1px;
+	cursor: pointer;
+}
+input.button, input[type=button], input[type=submit], .text-action a, .text-action span {
+	background:#8b3e38 url(../images/button_back2.png) 0 100% repeat-x !important;
+	background:#8b3e38;
+	color:#c98d31;
+	padding:0px 0.5em; 
+	margin:4px 0 0 0; 
+	border:none;
+}
+input.button:hover, input[type=button]:hover, input[type=submit]:hover, div.text-action a:hover, div.text-action span:hover {
+	background:#74718a url(../images/button_back2.png) 0 100% repeat-x !important;
+	background:#74718a;
+	color:#e9ad51;
+}
+
+input[type=checkbox]{border:none;background:none;}
+
+/************************************************/
+/*         Tables (songs lists...)              */
+/************************************************/
+
+.table-header {
+	background: #111;
+	vertical-align: top;
+}
+.table-header td, .table-header th {
+	color:#8b3e38; 
+	font-variant:small-caps;
+	font-weight:normal;
+}
+.table-header th { 
+	border-right:1px solid #000;
+}
+.table-header td a, .table-header th a {
+	color:#8b3e38;
+	/*padding-right:8px;
+	background: url(../images/sort_off.gif) 100% 50% no-repeat;*/
+}
+.table-header td a:hover, .table-header th a:hover {
+	/*color:#111;*/
+	/*padding-right:8px;
+	background:transparent url(../images/sort_on.gif) 100% 50% no-repeat;*/
+}
+
+.odd, .even				{ background: url(../images/list_back.png) 0 50% repeat-x !important; background-image: none;}
+.odd 					{ background-color: #111 !important;}
+.even					{ }
+.odd:hover, .even:hover 		{ background-color: #2b293d !important;}
+/*
+.odd td img, .even td img 		{ border: 2px solid transparent; }
+.odd:hover td img, .even:hover td img	{ border-color: #e9ad510; }
+*/
+/* todo : quand col, mettre sur les a:hover de la col action un background-color:none;*/
+.odd td a img:hover, .even td a img:hover {opacity:0.5;}
+
+.headrow 	{ font-size: 1.2em; } 	/* ? */
+.blank 		{ background: #fff; }	/* ? */
+.header 	{ font-size: 12px; }	/* ? */
+.border 	{ background: #000; }
+
+
+
+/************************************************/
+/*               Content block                  */
+/************************************************/
+
+#content {padding:10px 12em;}
+
+/* Center things on supporting browsers */
+#content>table,#content>table .box  { margin-left: auto; margin-right: auto; } 
+
+h3#content_title{}		/* Doesn't exist anymore (?) */
+h3#content_title span {}	/* Doesn't exist anymore (?) */
+
+
+/************************************************/
+/*                  Sidebar                     */
+/************************************************/
+
+#sidebar {
+	clear: both;
+	position: absolute;
+	left: 0;
+	top: 120px;
+	width: 12.5em;
+	text-align: left;
+	font-size: 0.8em;
+}
+
+/* For supporting browsers *cough*... I mean not IE6... *cough*, fix sidebar position on the left */
+*>div#sidebar{ position: fixed; } 
+
+#sidebar select		{ width: 95%; }
+#sidebar .smallbutton	{ margin: 0; }
+
+#sidebar h3 {
+	height: 29px;
+	background: #2b293d url(../images/ampache_menu.gif) 50% 50% no-repeat; 
+}
+#sidebar h3 span { display:none; }
+
+#sidebar ul {
+	list-style: none;
+}
+
+#sidebar ul.subnavside {
+  position: absolute;
+	top: 0;
+	left: 12.5em;		
+	font-size: 1em;
+	display: none;
+	z-index:1;
+}
+
+/* For simple submenus (no rollover) */
+#sidebar ul.subnavsidesimple {
+	text-align:right;
+}
+#sidebar ul.subnavsidesimple li{
+	border-bottom-style:dotted;
+	border-bottom-color:#8b3e38;
+}
+/* End of simple submenus (no rollover) */
+
+#sidebar li:hover ul.subnavside, #sidebar li.sfhover ul.subnavside {
+	display:block;
+}
+
+#sidebar li {
+	float: left;
+	clear: both;
+	width: 12.5em;
+	display: inline;	/* IE6 Patch */
+	position: relative;
+	background-color: #111;
+	border-bottom: 1px solid #050505;
+}
+
+#sidebar a, #sidebar .navbutton {
+	display: block;
+	position: relative;
+	color: #8b3e38;
+	padding: .5em;
+	line-height: 1em;
+	border-left: .5em solid #8b3e38;
+}
+
+#sidebar li:hover a, #sidebar li.sfhover a, #sidebar li.activetopmenu a,
+#sidebar li:hover ul li:hover a, #sidebar li.sfhover ul li.sfhover a {
+	border-left-color: #e9ad51;
+	background-color: #050505;
+	color: #e9ad51;
+}
+
+/* Menu Elements Display (icons, visibility...) */
+#sidebar_home a 	{ padding-left: 22px; background: url(../images/icons/icon_home.gif) 5px 50% no-repeat; }
+#sidebar_admin a 	{ padding-left: 22px; background: url(../images/icons/icon_admin.gif) 5px 50% no-repeat; }
+#sidebar_prefs a 	{ padding-left: 22px; background: url(../images/icons/icon_prefs.gif) 5px 50% no-repeat; }
+#sidebar_browse a 	{ padding-left: 22px; background: url(../images/icons/icon_browse.gif) 5px 50% no-repeat; }
+#sidebar_plists a 	{ padding-left: 22px; background: url(../images/icons/icon_plists.gif) 5px 50% no-repeat; }
+#sidebar_stats a 	{ padding-left: 22px; background: url(../images/icons/icon_stats.gif) 5px 50% no-repeat; }
+#sidebar_search a 	{ padding-left: 22px; background: url(../images/icons/icon_search.gif) 5px 50% no-repeat; }
+#sidebar #sidebar_subsearch  	{ }
+#sidebar_random a 	{ padding-left: 22px; background: url(../images/icons/icon_random.gif) 5px 50% no-repeat; }
+#sidebar_form  		{ }
+#sidebar_localplay a 	{ padding-left: 22px; background: url(../images/icons/icon_localplay.gif) 5px 50% no-repeat; }
+#sidebar_localplay_ctrl	{ }
+#sidebar_logout a 	{ padding-left: 22px; background: url(../images/icons/icon_logout.gif) 5px 50% no-repeat; }
+
+#sidebar_admin_users a		{ }
+#sidebar_admin_mail_users a	{ }
+#sidebar_admin_catalog a	{ }
+#sidebar_admin_config a 	{ }
+#sidebar_admin_access_list a	{ }
+
+#sidebar_browse_albums a	{ }
+#sidebar_browse_artists a	{ }
+#sidebar_browse_genre a		{ }
+#sidebar_browse_song_title a	{ }
+#sidebar_browse_lists a		{ }
+
+/* Submenus souldn't inherit image, padding and border */
+#sidebar li:hover ul li a, #sidebar li.sfhover ul li a,
+#sidebar li.activetopmenu ul li a { 
+  color: #8b3e38; 
+  background-image:none; 
+  padding-left:.5em; 
+  background-color:#111; 
+  border-color:#8b3e38; 
+}
+
+
+/* For horizontal menu */
+.horizontal_menu #sidebar { width: 100%; top: 0px; background: #111; }
+.horizontal_menu #sidebar h3 { display: none; }
+.horizontal_menu #sidebar li { clear: none; }
+.horizontal_menu #sidebar ul.subnavside  { left: 0; top: 2em; }
+
+
+/************************************************/
+/*          Styles for Now Playing              */
+/************************************************/
+
+#nowplaying{
+	clear: both;
+}
+#np_container1{
+	height: 18px;
+}
+#np_container1 h1{
+	font-weight: bold;
+	padding: 2px;
+}
+#np_container2{
+	border-width: 1px;
+	border-style: solid;
+	border-color:#ddd #999 #999 #ccc;
+	padding: 6px;
+	color: #000;
+}
+
+.np_row {
+	padding-top: 3px;
+	padding-bottom: 3px;
+	display: block;
+}
+.np_cell {
+	margin: 10px;
+}
+
+/************************************************/
+/*                Footer                        */
+/************************************************/
+#footer {
+	margin-left: 150px;
+	margin-bottom: 10px;
+}
+
+#footer p {
+	color:#999;
+	font-size:10px;
+}
+
+
+/************************************************/
+/*        Styles for the star ratings           */
+/************************************************/
+.star-rating{
+        position: relative;
+        list-style:none;
+        width: 80px;
+        height: 15px;
+        background: url(../images/ratings/star_rating.gif) top left repeat-x;
+}
+.star-rating li{
+        float: right;
+}
+li.current-rating{
+        display: block;
+        position: absolute;
+        height: 15px;
+        background: url(../images/ratings/star_rating.gif) left bottom;
+        text-indent: -9000px;
+        z-index: 1;
+}
+.star-rating li span{
+        position: absolute;
+        display:block;
+        width:16px;
+        height: 15px;
+        text-decoration: none;
+        text-indent: -9000px;
+        z-index: 20;
+}
+.star-rating li span:hover{
+        background: url(../images/ratings/star_rating.gif) left center;
+        z-index: 2;
+        left: 0;
+}
+li.zero-stars span:hover {
+        display: block;
+        left: 80px;
+        height: 15px;
+        background: url(../images/ratings/x.gif);
+}
+span.zero-stars {
+        display: block;
+        left: 80px;
+        height: 15px;
+        background: url(../images/ratings/x_off.gif);
+}
+span.one-stars        { left: 0px; }
+span.one-stars:hover  { width:16px; }
+span.two-stars        { left:16px; }
+span.two-stars:hover  { width: 32px; }
+span.three-stars      { left: 32px; }
+span.three-stars:hover{ width: 48px; }
+span.four-stars       { left: 48px; }
+span.four-stars:hover { width: 64px; }
+span.five-stars       { left: 64px; }
+span.five-stars:hover { width: 80px; } 
+
+/*
+.star-rating{
+        position: relative;
+        list-style:none;
+        width: 80px;
+        height: 15px;
+        background: url(../images/ratings/star_rating.gif) top left repeat-x;
+}
+.star-rating li{
+        float: right;
+}
+li.current-rating{
+        display: block;
+        position: absolute;
+        height: 15px;
+        background: url(../images/ratings/star_rating.gif) left bottom;
+        text-indent: -9000px;
+        z-index: 1;
+}
+.star-rating li span{
+        position: absolute;
+        display:block;
+        width:16px;
+        height: 15px;
+        text-decoration: none;
+        text-indent: -9000px;
+        z-index: 20;
+}
+.star-rating li span:hover{
+        background: url(../images/ratings/star_rating.gif) left center;
+        z-index: 2;
+        left: 0;
+}
+li.zero-stars span:hover {
+        display: block;
+        left: 80px;
+        height: 15px;
+        background: url(../images/ratings/x.gif);
+}
+span.zero-stars {
+        display: block;
+        left: 80px;
+        height: 15px;
+        background: url(../images/ratings/x_off.gif);
+}
+span.one-stars        { left: 0px; }
+span.one-stars:hover  { width:16px; }
+span.two-stars        { left:16px; }
+span.two-stars:hover  { width: 32px; }
+span.three-stars      { left: 32px; }
+span.three-stars:hover{ width: 48px; }
+span.four-stars       { left: 48px; }
+span.four-stars:hover { width: 64px; }
+span.five-stars       { left: 64px; }
+span.five-stars:hover { width: 80px; }
+*/
+
+
+/************************************************/
+/*              Box Related Styles              */
+/************************************************/
+
+/** General Boxes Styles ***/
+.box { 
+	padding: 0;
+	margin-top: 5px;
+	background: #050505 url(../images/back-box.gif) 0 0 no-repeat;
+	font-size : 0.9em;
+	border: 1px solid #8b3e38;
+}
+.box ol { margin-left:5px; }
+
+/* Hovering effects on links */
+.box a:hover { background: #8b3e38; color: #e9ad51;}
+
+/** Title Boxes Styles ***/
+.box-title { 
+	display:block;
+	color:#8b3e38;
+	padding:0 3px 0 18px;
+	background: url(../images/puce.gif) 0 50% no-repeat;
+	font-size: 1.1em;
+	font-variant:small-caps;
+	border-bottom:1px solid #8b3e38;
+	letter-spacing:0.1em;
+}
+.box-title:first-letter{font-style:italic;}
+
+/* Some hovering effects on titles */
+table.box:hover .box-title { 
+	border-bottom:1px solid #74718a;
+	color:#e9ad51 ;
+}
+
+
+/* Enclosing Boxes Styles */
+.box-left-top { 
+	background:  url(../images/punaise-tl.gif) no-repeat;
+	height:16px;
+}
+.box-left-bottom {
+  background: url(../images/punaise-bl.gif) no-repeat;
+	height:18px;
+}
+.box-right-bottom { 
+	background:  url(../images/punaise-br.gif) no-repeat;
+}
+.box-right-top {
+	background: url(../images/curl.gif) no-repeat;
+}
+.box-top {}
+.box-right {}
+.box-bottom {}
+.box-left {}
+
+
+/************************************************/
+/*             List Header Styles               */
+/************************************************/
+
+.list-header { 
+	text-decoration: none;
+} 
+
+.list-header:hover { 
+	color:#071fd4;
+}
+
+
+/************************************************/
+/*             Text Action Styles               */
+/************************************************/
+
+.text-action {
+	border-top:1px dotted #8b3e38; 
+}
+.text-action, .text-action li {
+	margin: 10px 0 5px 0;
+	list-style: none;
+	padding: 1px 0 0 0;
+	text-wrap: none;
+}
+
+/* See input.button class */
+/*
+.text-action a, .text-action span {
+	background: #111;
+	border: 1px solid #000;
+ 	padding-left: 2px;
+	padding-right: 2px;
+	text-decoration: none;
+	text-wrap: none;
+}
+*/
+
+.text-action #pt_active {
+	background: #000;
+	color: #fff;
+	border: 1px solid #ddd;
+	text-wrap: none;
+}
+
+
+/************************************************/
+/*            Tabs (for preferences)            */
+/************************************************/
+
+#tablist {
+        padding: 4px 0;
+        margin: 12px 0 0 0;
+}
+
+#tablist li {
+        list-style: none;
+        display: inline;
+}
+
+#tablist li a {
+        padding: 0 0.5em;
+        margin-left: 3px;
+        color: #000;
+       	background: #8b3e38 url(../images/button_back.png) 0 100% repeat-x !important;
+        background: #8b3e38;
+
+}
+
+#tablist li a:hover {
+        border-top: 2px solid #e9ad51;
+        color: #e9ad51;
+}
+
+#tablist li a#current {
+        padding: 5px 0.5em;
+        color: #8b3e38;
+        background: #111;
+        background: #111 !important;
+        border:none;
+}
+
+/************************************************/
+/*            Styles for Header                 */
+/*(for ampache admin : installation, update...) */
+/************************************************/
+
+div#Header {
+	height: 80px;
+	margin-bottom: 3px;
+	padding: 0px;
+}
+
+#Header h1 { 
+	background: transparent url(../themes/classic/images/bg_login_0.jpg) no-repeat top left; 
+	border: 0; 
+	width: 439px; 
+	height: 84px; 
+	float: left;
+}
+	
+#Header h1 span {
+	display:none
+}
+
+#Header h2 { 
+	background: transparent url(001/h2.gif) no-repeat top left; 
+	margin-top: 75px;  
+	width: 200px; 
+	height: 18px; 
+	float: right;
+}
+
+#Header h2 span {
+	font-size: 10px;
+	margin-left: 10px;
+}
+
+/************************************************/
+/* User Online/Offline style, used in users.php */
+/************************************************/
+td.user_online{
+	background:#0f0;
+}
+td.user_offline {
+	background:#7f0000;
+}
+td.user_disabled {
+	background:#ccc;
+}
+
+/************************************************/
+/*         Styles for Login template            */
+/************************************************/
+
+#container {
+	margin: 100px auto 0px auto;
+	text-align:center;	
+}
+#container h1 {
+  background:url(../images/ampache_back.gif) 0 0 repeat-x;
+}
+#container h1 span {
+	background: url(../images/ampache.gif) 50% 0 no-repeat;
+	height: 120px;
+	margin-bottom: 8px;
+	display:block;
+	text-indent:-9000px;
+}
+#container div {
+  width:340px;
+  margin:auto;
+}
+#loginp_0 {
+	color:#111;
+	font-size:0.8em;
+	font-style:italic;
+	margin: 0 0 2em 0;
+}
+.loginp_1 {
+	text-align:right;
+	padding-right:100px;
+}
+.loginp_1 span {
+	font-weight:bold;
+}
+.loginp_1 input {
+	border:1px solid #74718a;
+}
+input.text_input {
+	width:12em;
+}
+.loginp_1 input.check_input {
+	margin-left:5px;
+}
+
+
+
+/************************************************/
+/*                Misc                          */
+/************************************************/
+
+.text-box {
+	display: table-cell;
+	padding:5px;
+	margin:0 0 10px 0;
+	background-color: #111;
+}
+
+.confirmation-box {
+	padding: 5px 5px 0 5px;
+	margin-bottom: 10px;
+	display: table-cell;
+	background-color: #111;
+	border: 2px solid #000;
+}
+
+.alphabet { 
+	margin: 10px;
+	font-size: 0.9em; 
+	font-weight: normal; 
+}
+
+.display {}
+
+#mpdpl td {
+	padding: 0 2px 0 2px;
+	text-align: left;
+}
+
+table.tabledata {width:100%}
+
+.header1 { 
+	color: #8b3e38;
+       	background: #111 url(../images/button_back.png) 0 100% repeat-x !important;
+	background: #111;
+	font-size: 1.4em; 
+	font-variant:small-caps;
+	display:block;
+	padding:2px 5px;
+}
+.header2 {
+ 	color: #8b3e38;
+	font-size: 1.1em;
+	text-align:center;
+	font-weight: bold;
+	border-bottom:1px solid #8b3e38;
+	padding:1em;
+}
+
+.error {
+	color: #990033; 
+}
+
+.fatalerror {
+	padding: 3px;
+	display: table-cell;
+	color: #990033;
+	font-weight:bold;
+ 	border:2px solid #990033;		
+}
+
+#container div.fatalerror {
+	background:none;
+	height:auto;
+	padding:5px;
+	margin:10px;
+	display:block;
+}
+
+.disabled { text-decoration: line-through; }
+
+
+#maincontainer{}
+
