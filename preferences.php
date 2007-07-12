@@ -28,7 +28,7 @@ if (!$_REQUEST['tab']) { $_REQUEST['tab'] = 'interface'; }
 // Switch on the action 
 switch($_REQUEST['action']) { 
 	case 'update_preferences':
-		if ($_REQUEST['method'] == 'admin' && !$GLOBALS['user']->has_access('100')) { 
+		if (($_REQUEST['method'] == 'admin' OR $_REQUEST['method'] == 'user') && !$GLOBALS['user']->has_access('100')) { 
 			access_denied(); 
 			exit; 
 		} 
@@ -38,6 +38,11 @@ switch($_REQUEST['action']) {
 			$user_id = '-1'; 
 			$fullname = _('Server'); 
 		}
+		elseif ($_REQUEST['method'] == 'user') { 
+			$user_id = $_REQUEST['user_id']; 
+			$client = new User($user_id); 
+			$fullname = $client->fullname; 
+		} 
 		else { 
 			$user_id = $GLOBALS['user']->id; 
 			$fullname = $GLOBALS['user']->fullname; 
@@ -58,6 +63,15 @@ switch($_REQUEST['action']) {
 		$fullname= _('Server');
 		$preferences = $GLOBALS['user']->get_preferences(-1,$_REQUEST['tab']); 
 	break;
+	case 'user':
+		if (!$GLOBALS['user']->has_access('100')) { 
+			access_denied(); 
+			exit; 
+		} 
+		$client = new User($_REQUEST['user_id']); 
+		$fullname = $client->fullname; 
+		$preferences = $client->get_preferences(0,$_REQUEST['tab']); 
+	break; 
 	default: 
 		$fullname = $GLOBALS['user']->fullname; 
 		$preferences = $GLOBALS['user']->get_preferences(0,$_REQUEST['tab']); 

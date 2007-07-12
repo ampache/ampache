@@ -2,17 +2,20 @@
 <span><a href="<?php echo $web_path; ?>/admin/catalog.php?action=show_add_catalog"><?php echo _('Add a Catalog'); ?></a></span>
 <hr />
 <?php 
-	$catalogs = Catalog::get_catalogs(); 
+	$catalogs = Catalog::get_catalog_ids(); 
 	foreach ($catalogs as $catalog_id) { 
 		$catalog = new Catalog($catalog_id); 
 ?>
 <strong><a href="<?php echo $web_path; ?>/admin/catalog?action=show_customize_catalog">
 	<?php echo $catalog->name; ?>
+	<a href="<?php echo Config::get('web_path'); ?>/admin/catalog.php?action=show_delete_catalog&amp;catalog_id=<?php echo $catalog->id; ?>">
+		<?php echo get_user_icon('delete','',_('Delete Catalog')); ?>
+	</a>
 </a></strong><br />
 <a href="<?php echo $web_path; ?>/admin/catalog.php?action=add_to_catalog&amp;catalogs[]=<?php echo $catalog->id; ?>"><?php echo _('Add'); ?></a>
 | <a href="<?php echo $web_path; ?>/admin/catalog.php?action=update_catalog&amp;catalogs[]=<?php echo $catalog->id; ?>"><?php echo _('Verify'); ?></a>
 | <a href="<?php echo $web_path; ?>/admin/catalog.php?action=clean_catalog&amp;catalogs[]=<?php echo $catalog->id; ?>"><?php echo _('Clean'); ?></a>
-<?php } ?>
+<?php } // end foreach catalogs ?>
 <hr />
 <h4><?php echo _('User Tools'); ?></h4>
 <span><a href="<?php echo $web_path; ?>/admin/users.php?action=show_add_user"><?php echo _('Add User'); ?></a></span>

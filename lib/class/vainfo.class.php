@@ -88,7 +88,12 @@ class vainfo {
 	function get_info() {
 
 		/* Get the Raw file information */
-		$this->_raw = $this->_getID3->analyze($this->filename);
+		try { 
+			$this->_raw = $this->_getID3->analyze($this->filename);
+		} 
+		catch (Exception $error) { 
+			debug_event('getid3',$e->message,'1'); 
+		} 
 
 		/* Figure out what type of file we are dealing with */
 		$this->type = $this->_get_type();

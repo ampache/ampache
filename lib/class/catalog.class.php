@@ -105,7 +105,7 @@ class Catalog {
 	public static function get_catalog_ids() { 
 
 		$sql = "SELECT `id` FROM `catalog`";
-		$db_results = Dba::qery($sql);
+		$db_results = Dba::query($sql);
 
 		while ($r = Dba::fetch_assoc($db_results)) { 
 			$results[] = $r['id'];
@@ -2061,20 +2061,22 @@ class Catalog {
 	/**
 	 * delete
 	 * Deletes the catalog and everything assoicated with it
-	 * assumes $this
+	 * it takes the catalog id
 	 */
-	public static function delete() {
+	public static function delete($catalog_id) {
+
+		$catalog_id = Dba::escape($catalog_id); 
 
 		// First remove the songs in this catalog
-		$sql = "DELETE FROM `song` WHERE `catalog` = '$this->id'";
+		$sql = "DELETE FROM `song` WHERE `catalog` = '$catalog_id'";
 		$db_results = Dba::query($sql);
 
 		// Next Remove the Catalog Entry it's self
-		$sql = "DELETE FROM `catalog` WHERE `id` = '$this->id'";
+		$sql = "DELETE FROM `catalog` WHERE `id` = '$catalog_id'";
 		$db_results = Dba::query($sql);
 
 		// Run the Aritst/Album Cleaners...
-		self::clean($this->id); 
+		self::clean($catalog_id); 
 
 	} // delete
 

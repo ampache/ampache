@@ -30,22 +30,14 @@ $web_path = Config::get('web_path');
 </tr>
 <tr class="table-header">
 	<td align="center">
-		<a href="<?php echo $web_path; ?>/<?php echo $_SESSION['view_script']; ?>?action=<?php echo $_REQUEST['action']; ?>&amp;keep_view=true&amp;sort_type=fullname&amp;sort_order=0">
 		<b><?php echo _('Fullname'); ?></b>
-		</a>
-		<a href="<?php echo $web_path; ?>/<?php echo $_SESSION['view_script']; ?>?action=<?php echo $_REQUEST['action']; ?>&amp;keep_view=true&amp;sort_type=username&amp;sort_order=0">
 		<b>(<?php echo _('Username'); ?>)</b>
-		</a>
 	</td>
         <td align="center">
-		<a href="<?php echo $web_path; ?>/<?php echo $_SESSION['view_script']; ?>?action=<?php echo $_REQUEST['action']; ?>&amp;keep_view=true&amp;sort_type=last_seen&amp;sort_order=0">
 		<b><?php echo _('Last Seen'); ?></b>
-		</a>
 	</td>
         <td align="center">
-		<a href="<?php echo $web_path; ?>/<?php echo $_SESSION['view_script']; ?>?action=<?php echo $_REQUEST['action']; ?>&amp;keep_view=true&amp;sort_type=create_date&amp;sort_order=0">
 		<b><?php echo _('Registration Date'); ?></b>
-		</a>
 	</td>
         <td align="center">
 		<b><?php echo _('Activity'); ?></b>
@@ -69,7 +61,7 @@ foreach ($object_ids as $user_id) {
 ?>
 <tr class="<?php echo flip_class(); ?>" align="center">
 	<td align="left">
-		<a href="<?php echo $web_path; ?>/admin/users.php?action=edit&amp;user_id=<?php echo $client->id; ?>">
+		<a href="<?php echo $web_path; ?>/stats.php?action=show_user&amp;user_id=<?php echo $client->id; ?>">
 			<?php echo $client->fullname; ?> (<?php echo $client->username; ?>)
 		</a>
 	</td>
@@ -92,9 +84,10 @@ foreach ($object_ids as $user_id) {
 		<a href="<?php echo $web_path; ?>/admin/users.php?action=show_edit&amp;user_id=<?php echo $client->id; ?>">
 			<?php echo get_user_icon('edit'); ?>
 		</a>
-		<a href="<?php echo $web_path; ?>/admin/preferences.php?action=user&amp;user_id=<?php echo $client->id; ?>">
+<!--		<a href="<?php echo $web_path; ?>/preferences.php?action=user&amp;user_id=<?php echo $client->id; ?>">
 			<?php echo get_user_icon('preferences'); ?>
 		</a>
+-->
 	<?php
 	//FIXME: Fix this for the extra permission levels
 	if ($working_user->disabled == '1') { 

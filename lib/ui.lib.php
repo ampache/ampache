@@ -1424,4 +1424,27 @@ function ajax_include($include) {
 
 } // ajax_include
 
+/**
+ * ajax_button
+ * This is a generic function that generates the on(whateva) URL for ajaxie hotness
+ * it takes a action url, icon name, alt tag and form_id (option)
+ */
+function ajax_button($action,$icon,$alt,$post_id='') { 
+
+	$url = Config::get('ajax_url') . $action;
+        $icon_url = Config::get('web_path') . '/images/icons/' . $icon . '.png';
+                
+        if ($post) { 
+        	$ajax_string = "ajaxPost('$url','$post');";
+        } 
+        else { 
+        	$ajax_string = "ajaxPut('$url');"; 
+        }  
+
+	$string = "<span onclick=\"$ajax_string;return true\">\n\t<img src=\"$icon_url\" border=\"0\" style=\"cursor:pointer;\" alt=\"$alt\" />\n</span>\n"; 
+
+        return $string;
+
+} // ajax_button
+
 ?>

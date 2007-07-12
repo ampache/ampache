@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2006 Ampache.org
+ Copyright (c) 2001 - 2007 Ampache.org
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
@@ -22,19 +22,13 @@
 
 require '../lib/init.php';
 
-$action = scrub_in($_REQUEST['action']);
-
 if (!$GLOBALS['user']->has_access(100)) { 
 	access_denied();
 	exit();
 }
 
-require_once Config::get('prefix') . '/templates/header.inc.php';
-?>
-<div id="admin-tools">
-	<?php require Config::get('prefix') . '/templates/show_admin_tools.inc.php'; ?>
-</div>
-<div id="admin-info">
-	<?php require Config::get('prefix') . '/templates/show_admin_info.inc.php'; ?>
-</div>
-<?php show_footer(); ?>
+show_header(); 
+
+
+
+show_footer(); 

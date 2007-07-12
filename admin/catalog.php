@@ -99,13 +99,12 @@ switch ($_REQUEST['action']) {
 	break;
 	case 'delete_catalog':
 		/* Make sure they aren't in demo mode */
-	        if (conf('demo_mode')) { break; }
+	        if (Config::get('demo_mode')) { break; }
 	
 		/* Delete the sucker, we don't need to check perms as thats done above */
-		$catalog = new Catalog($_REQUEST['catalog_id']);
-		$catalog->delete_catalog();
-		$next_url = conf('web_path') . '/admin/index.php';
-		show_confirmation(_('Catalog Deleted'),_('The Catalog and all associated records has been deleted'),$nexturl);
+		Catalog::delete($_REQUEST['catalog_id']); 
+		$next_url = Config::get('web_path') . '/admin/index.php';
+		show_confirmation(_('Catalog Deleted'),_('The Catalog and all associated records have been deleted'),$nexturl);
 	break;
 	case 'remove_disabled':
 	        if (conf('demo_mode')) { break; }
@@ -226,9 +225,10 @@ switch ($_REQUEST['action']) {
 	break;
 	case 'show_delete_catalog':
 		/* Stop the demo hippies */
-	        if (conf('demo_mode')) { break; }
+	        if (Config::get('demo_mode')) { break; } 
+
 		$catalog = new Catalog($_REQUEST['catalog_id']); 	
-		$nexturl = conf('web_path') . '/admin/catalog.php?action=delete_catalog&amp;catalog_id=' . scrub_out($_REQUEST['catalog_id']);
+		$nexturl = Config::get('web_path') . '/admin/catalog.php?action=delete_catalog&amp;catalog_id=' . scrub_out($_REQUEST['catalog_id']);
 		show_confirmation(_('Delete Catalog'),_('Do you really want to delete this catalog?') . " -- $catalog->name ($catalog->path)",$nexturl,1);
 	break;
 	case 'show_customize_catalog':
