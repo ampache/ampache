@@ -92,7 +92,7 @@ class vainfo {
 			$this->_raw = $this->_getID3->analyze($this->filename);
 		} 
 		catch (Exception $error) { 
-			debug_event('getid3',$e->message,'1'); 
+			debug_event('getid3',$error->message,'1'); 
 		} 
 
 		/* Figure out what type of file we are dealing with */

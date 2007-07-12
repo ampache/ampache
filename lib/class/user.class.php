@@ -138,7 +138,7 @@ class User {
 		}
 
 	
-		$sql = "SELECT preference.name, preference.description, preference.catagory, user_preference.value " . 
+		$sql = "SELECT preference.name, preference.description, preference.catagory, preference.level, user_preference.value " . 
 			"FROM preference INNER JOIN user_preference ON user_preference.preference=preference.id " .
 			"WHERE user_preference.user='$user_id' $user_limit";
 		$db_results = Dba::query($sql);
@@ -148,7 +148,7 @@ class User {
 			$type = $r['catagory'];
 			$admin = false;
 			if ($type == 'system') { $admin = true; }
-			$type_array[$type][$r['name']] = array('name'=>$r['name'],'description'=>$r['description'],'value'=>$r['value']);
+			$type_array[$type][$r['name']] = array('name'=>$r['name'],'level'=>$r['level'],'description'=>$r['description'],'value'=>$r['value']);
 			ksort($type_array[$type]); 
 			$results[$type] = array ('title'=>ucwords($type),'admin'=>$admin,'prefs'=>$type_array[$type]);
 		} // end while

@@ -47,7 +47,15 @@ if (($GLOBALS['user']->has_access(100) OR !Config::get('use_auth')) AND $_REQUES
 		<?php if ($is_admin) { ?>
 			<td align="center"><input type="checkbox" name="check_<?php echo $pref['name']; ?>" value="1" /></td>
 			<td align="center">
-
+				<?php $name = 'on_' . $pref['level']; ${$name} = 'selected="selected"';  ?> 
+				<select name="level_<?php echo $pref['name']; ?>">
+					<option value="5" <?php echo $on_5; ?>><?php echo _('Guest'); ?></option> 
+					<option value="25" <?php echo $on_25; ?>><?php echo _('User'); ?></option>
+					<option value="50" <?php echo $on_50; ?>><?php echo _('Content Manager'); ?></option>
+					<option value="75" <?php echo $on_75; ?>><?php echo _('Catalog Manager'); ?></option>
+					<option value="100" <?php echo $on_100; ?>><?php echo _('Admin'); ?></option>
+				</select> 
+				<?php unset(${$name}); ?>
 			</td>
 		<?php } ?>
 	</tr>

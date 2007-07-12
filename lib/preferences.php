@@ -140,6 +140,7 @@ function update_preferences($pref_id=0) {
 function update_preference($user_id,$name,$pref_id,$value) { 
 
 	$apply_check = "check_" . $name;
+	$level_check = "level_" . $name; 
 
 	/* First see if they are an administrator and we are applying this to everything */
 	if ($GLOBALS['user']->has_access(100) AND make_bool($_REQUEST[$apply_check])) { 
@@ -147,6 +148,11 @@ function update_preference($user_id,$name,$pref_id,$value) {
 		$db_results = Dba::query($sql);
 		return true;
 	}
+
+	/* Check and see if they are an admin and the level def is set */
+	if ($GLOBALS['user']->has_access(100) AND make_bool($_REQUEST[$level_check])) { 
+		update_preference_level($pref_id,$_REQUEST[$level_check]); 
+	} 
 	
 	/* Else make sure that the current users has the right to do this */
 	if (has_preference_access($name)) { 
@@ -493,13 +499,13 @@ function get_preferences() {
  * This function updates the level field in the preferences table
  * this has nothing to do with a users actuall preferences
  */
-function update_preference_level($name,$level) { 
+function update_preference_level($pref_id,$level) { 
 
-	$name 	= sql_escape($name);
-	$level 	= sql_escape($level);
+	$name 	= Dba::escape($pref_id);
+	$level 	= Dba::escape($level);
 
-	$sql = "UPDATE preferences SET `level`='$level' WHERE `name`='$name'";
-	$db_results = mysql_query($sql,dbh());
+	$sql = "UPDATE `preference` SET `level`='$level' WHERE `id`='$pref_id'";
+	$db_results = Dba::query($sql);
 
 	return true;
 
