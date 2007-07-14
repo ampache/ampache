@@ -570,3 +570,13 @@ margin-right:5em;
 	border-left:4px solid #B21542;
 	border-top:4px solid #B21542;		
 }
+
+
+.lp_box_ctrl {
+	text-align: center; /*for compatibility, may be controlled by themers now*/
+/* 	padding-top: 5px; */
+}
+.lp_box_vol {
+	text-align: center; /*for compatibility, may be controlled by themers now*/
+/* 	padding-left: 7px; */
+}

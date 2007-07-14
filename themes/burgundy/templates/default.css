@@ -293,6 +293,7 @@ div#Header{
     position: relative;
     width: 12em;
     width: /**/10.5em; /* Only IE5.5 can't see this */
+    height: 12px; /*fixed by the_foster*/
     margin: 0;
     padding: .5em 0 .5em 1em;
     border-bottom: 1px solid #8B8B8B;
@@ -483,7 +484,7 @@ margin-right:5em;
 	padding-top: 3px;
 	padding-bottom: 3px;
 }
-.np_cell {
+.np_cell, .np_cell_left, .np_cell_m, .np_cell_right {
 	margin: 10px;
 }
 #tablist {
@@ -612,3 +613,11 @@ li.current-rating{
         z-index: 1;
 }
 
+.lp_box_ctrl {
+	text-align: center; /*for compatibility, may be controlled by themers now*/
+/* 	padding-top: 5px; */
+}
+.lp_box_vol {
+	text-align: center; /*for compatibility, may be controlled by themers now*/
+/* 	padding-left: 7px; */
+}

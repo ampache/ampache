@@ -616,3 +616,13 @@ td.user_offline {
 td.user_disabled {
 	background:#999999;
 }
+
+
+.lp_box_ctrl {
+	text-align: center; /*for compatibility, may be controlled by themers now*/
+/* 	padding-top: 5px; */
+}
+.lp_box_vol {
+	text-align: center; /*for compatibility, may be controlled by themers now*/
+/* 	padding-left: 7px; */
+}

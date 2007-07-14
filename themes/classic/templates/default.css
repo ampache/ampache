@@ -311,7 +311,7 @@ h3#content_title span {
 .np_row {
 	padding: 3px 0;
 }
-.np_cell {
+.np_cell, .np_cell_left, .np_cell_m, .np_cell_right {
 	margin: 10px;
 }
 
@@ -648,3 +648,11 @@ table.tabledata {}
 .display {}
 
 
+.lp_box_ctrl {
+	text-align: center; /*for compatibility, may be controlled by themers now*/
+/* 	padding-top: 5px; */
+}
+.lp_box_vol {
+	text-align: center; /*for compatibility, may be controlled by themers now*/
+/* 	padding-left: 7px; */
+}

@@ -30,9 +30,9 @@ $status		= $localplay->status();
 
 ?>
 <span style="font-weight:bold;" id="lp_state"><?php echo $localplay->get_user_state($status['state']) ?></span><br />
-&nbsp;&nbsp;<span id="lp_playing"><?php echo $localplay->get_user_playing(); ?></span><br />
-<div align="center"><?php require (conf('prefix') . '/templates/show_localplay_control.inc.php'); ?></div>
-<div align="center">
+&nbsp;&nbsp;<span id="lp_playing"><?php echo $localplay->get_user_playing(); ?></span>
+<div class="lp_box_ctrl"><?php require (conf('prefix') . '/templates/show_localplay_control.inc.php'); ?></div>
+<div class="lp_box_vol">
 	<?php if ($localplay->has_function('volume_up')) { ?>
 	<span class="up_button" onclick="ajaxPut('<?php echo $ajax_url; ?>?action=localplay&amp;cmd=volume_up<?php echo $required_info; ?>','lp_v');return true;">
 		<?php echo get_user_icon('volumeup'); ?>
@@ -47,8 +47,7 @@ $status		= $localplay->status();
 	<span class="mute_button" onclick="ajaxPut('<?php echo $ajax_url; ?>?action=localplay&amp;cmd=volume_mute<?php echo $required_info; ?>','lp_v');return true;">
 		<?php echo get_user_icon('volumemute'); ?>
 	</span>
-	<?php } ?>
-	<br />
+	<?php } ?>&nbsp;
 	<?php echo _('Volume'); ?>:<span id="lp_volume"><?php echo $status['volume']; ?></span>
 </div>
 <br />
