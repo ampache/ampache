@@ -1,19 +1,20 @@
-# SOME DESCRIPTIVE TITLE.
+# translation of messages.po to
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
+# Nikolai Försterling <devel@fosternet.de>, 2007.
 msgid ""
 msgstr ""
-"Project-Id-Version: Ampache de_DE v 1\n"
+"Project-Id-Version: messages\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2007-01-22 19:07-0800\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
+"PO-Revision-Date: 2007-07-14 15:09+0200\n"
+"Last-Translator: Nikolai Försterling <devel@fosternet.de>\n"
+"Language-Team:  <de@li.org>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=utf-8\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"X-Generator: KBabel 1.11.4\n"
 
 #: ../../play/index.php:64 ../../download/index.php:61
 msgid "Session Expired: please log in again at"
@@ -535,7 +536,7 @@ msgstr "Stunden"
 #: ../../lib/ui.lib.php:790 ../../templates/sidebar.inc.php:48
 #: ../../ampache/templates/sidebar.inc.php:50
 msgid "Home"
-msgstr "Home"
+msgstr "Startseite"
 
 #: ../../lib/ui.lib.php:793
 msgid "Upload"
@@ -547,7 +548,7 @@ msgstr "Lokal abspielen"
 
 #: ../../lib/ui.lib.php:799
 msgid "Random Play"
-msgstr "Zufällig Apspielen"
+msgstr "Zufällig Abspielen"
 
 #: ../../lib/ui.lib.php:802 ../../templates/show_play_selected.inc.php:47
 msgid "Playlist"
@@ -698,8 +699,7 @@ msgstr ""
 
 #: ../../modules/horde/Browser.php:903
 #, php-format
-msgid ""
-"There was a problem with the file upload: The %s was only partially uploaded."
+msgid "There was a problem with the file upload: The %s was only partially uploaded."
 msgstr ""
 "Ein Problem mit der hochgeladenen Datei wurde festgestellt: %s wurde nur "
 "teilweise hochgeladen."
@@ -984,7 +984,7 @@ msgstr "Stück"
 
 #: ../../templates/show_flag.inc.php:53
 msgid "Reason to flag"
-msgstr "Grund der Makierung"
+msgstr "Grund der Markierung"
 
 #: ../../templates/show_flag.inc.php:57
 msgid "Incorrect Tags"
@@ -1019,8 +1019,7 @@ msgstr ""
 #: ../../templates/show_install_lang.inc.php:42
 #: ../../templates/show_install_config.inc:45
 #: ../../templates/show_install.inc:43
-msgid ""
-"A MySQL Server with a username and password that can create/modify databases"
+msgid "A MySQL Server with a username and password that can create/modify databases"
 msgstr ""
 "Ein MySQL Server mit bekanntem Benutzername und Passwort auf dem Datenbanken "
 "erstellt/modifiziert werden können"
@@ -1401,7 +1400,7 @@ msgstr "Spiele Zufallsauswahl von"
 #: ../../templates/show_artist_box.inc.php:37
 #: ../../templates/show_album.inc:62
 msgid "Update from tags"
-msgstr "Aktuallisieren vom TAG"
+msgstr "Aktualisieren vom TAG"
 
 #: ../../templates/show_artist_box.inc.php:38
 msgid "Rename Artist"
@@ -1532,7 +1531,7 @@ msgstr ""
 
 #: ../../templates/show_install_lang.inc.php:72
 msgid "Start configuration"
-msgstr "Starte Configuration"
+msgstr "Starte Konfiguration"
 
 #: ../../templates/show_modules.inc.php:38
 msgid "Localplay Modules"
@@ -1590,7 +1589,7 @@ msgstr "ODER"
 #: ../../templates/show_edit_album.inc.php:41
 #: ../../templates/show_edit_artist.inc.php:35
 msgid "Flag for Retagging"
-msgstr "Markierung Retagging"
+msgstr "Markierung Tags neu"
 
 #: ../../templates/show_edit_song.inc.php:89
 msgid "Update Song"
@@ -1691,7 +1690,7 @@ msgstr "Zeige Alle"
 #: ../../templates/show_object_rating.inc.php:59
 #: ../../templates/show_object_rating.inc.php:62
 msgid "out of"
-msgstr "außerhalb"
+msgstr "von"
 
 #: ../../templates/show_tv_adminctl.inc.php:22
 msgid "Admin Controls"
@@ -1758,7 +1757,7 @@ msgstr "Füge aktuellen ein"
 
 #: ../../templates/show_rename_artist.inc.php:37
 msgid "Update id3 tags"
-msgstr "Aktuallisieren des id3 TAG"
+msgstr "Aktualisieren des id3 TAG"
 
 #: ../../templates/show_all_recent.inc.php:25
 msgid "Newest Artist Additions"
@@ -1888,7 +1887,7 @@ msgstr "Genre"
 #: ../../templates/show_edit_catalog.inc.php:34
 #: ../../templates/show_add_catalog.inc.php:43
 msgid "track number (padded with leading 0)"
-msgstr "Titelummer (Mit einer 0 am Anfang)"
+msgstr "Titelnummer (Mit einer 0 am Anfang)"
 
 #: ../../templates/show_edit_catalog.inc.php:35
 #: ../../templates/show_add_catalog.inc.php:44
@@ -2025,7 +2024,7 @@ msgstr "Sperre Stücke"
 
 #: ../../templates/show_ip_history.inc.php:23
 msgid "IP History"
-msgstr "IP Hostorie"
+msgstr "IP Historie"
 
 #: ../../templates/show_ip_history.inc.php:26
 msgid "Show Unique"
@@ -2072,7 +2071,7 @@ msgstr "Gast"
 
 #: ../../templates/show_edit_album.inc.php:23
 msgid "Edit Album"
-msgstr "Bearbeite Ablbum"
+msgstr "Bearbeite Album"
 
 #: ../../templates/show_edit_album.inc.php:47
 #: ../../templates/show_edit_artist.inc.php:41
@@ -2081,39 +2080,39 @@ msgstr "Aktualisiere Album"
 
 #: ../../templates/show_recently_played.inc.php:23
 msgid "seconds ago"
-msgstr "vor Sekunden"
+msgstr "Sekunden"
 
 #: ../../templates/show_recently_played.inc.php:23
 msgid "minutes ago"
-msgstr "vor Minuten"
+msgstr "Minuten"
 
 #: ../../templates/show_recently_played.inc.php:23
 msgid "hours ago"
-msgstr "vor Stunden"
+msgstr "Stunden"
 
 #: ../../templates/show_recently_played.inc.php:23
 msgid "days ago"
-msgstr "vor Tagen"
+msgstr "Tagen"
 
 #: ../../templates/show_recently_played.inc.php:23
 msgid "weeks ago"
-msgstr "vor Wochen"
+msgstr "Wochen"
 
 #: ../../templates/show_recently_played.inc.php:23
 msgid "months ago"
-msgstr "vor Monaten"
+msgstr "Monaten"
 
 #: ../../templates/show_recently_played.inc.php:23
 msgid "years ago"
-msgstr "vor Jahren"
+msgstr "Jahren"
 
 #: ../../templates/show_recently_played.inc.php:26
 msgid "Recently Played"
-msgstr "Zuletzt gespielt"
+msgstr "kürzlich gespielt"
 
 #: ../../templates/show_recently_played.inc.php:33
 msgid "Last Played"
-msgstr "Zuletzt gespielt"
+msgstr "zuletzt gespielt vor"
 
 #: ../../templates/show_edit_artist.inc.php:23
 msgid "Edit Artist"
@@ -2193,11 +2192,11 @@ msgstr "Playlist gelöscht"
 
 #: ../../artists.php:91 ../../albums.php:191
 msgid "Starting Update from Tags"
-msgstr "Starte Aktuallisierung von TAGs"
+msgstr "Starte Aktualisierung von TAGs"
 
 #: ../../artists.php:96 ../../albums.php:196
 msgid "Update From Tags Complete"
-msgstr "Aktuallisierung von den TAGs vollständig"
+msgstr "Aktualisierung von den TAGs vollständig"
 
 #: ../../artists.php:97 ../../albums.php:197
 msgid "Return"
@@ -2253,7 +2252,7 @@ msgstr "Wiedergabeliste aktualisiert"
 
 #: ../../playlist.php:146
 msgid "has been updated and is now"
-msgstr "wurde aktialisiert und ist nun"
+msgstr "wurde aktualisiert und ist nun"
 
 #: ../../playlist.php:166
 msgid "Playlist Imported"
@@ -2287,7 +2286,8 @@ msgstr "Cover nicht vorhanden"
 msgid ""
 "Album Art could not be located at this time. This may be due to write access "
 "error, or the file is not received corectly."
-msgstr "Album konnte zur Zeit nicht gefunden werden. "
+msgstr ""
+"Album konnte zur Zeit nicht gefunden werden. "
 " Dies kann an einem Schreibzugriffsfehler liegen oder die Daten wurden nicht korrekt empfangen"
 
 #: ../../albums.php:79 ../../albums.php:106 ../../albums.php:185
@@ -2920,8 +2920,7 @@ msgstr "Ähnliche Interpreten"
 
 #: ../../templates/show_similar_artists.inc:25
 msgid "Please check the artists you want to merge with the current one"
-msgstr ""
-"Bitte den Interpreten markieren, den Sie mit dem aktuellen verbinden möchten"
+msgstr "Bitte den Interpreten markieren, den Sie mit dem aktuellen verbinden möchten"
 
 #: ../../templates/show_similar_artists.inc:62
 msgid "Back"
@@ -2998,7 +2997,7 @@ msgstr "Methode"
 
 #: ../../templates/show_search.inc:115
 msgid "Fuzzy"
-msgstr "Fuzzy"
+msgstr "Unscharf"
 
 #: ../../templates/show_search.inc:116
 msgid "Exact"
@@ -3020,152 +3019,3 @@ msgstr "Sichere Suchergebnis in"
 msgid "Save"
 msgstr "Speichern"
 
-#~ msgid "Found in ID3"
-#~ msgstr "Gefunden im ID3"
-
-#~ msgid "Found on Amazon"
-#~ msgstr "Gefunden bei Amazon"
-
-#~ msgid "Found in Folder"
-#~ msgstr "Gefunden im Verzeichnis"
-
-#~ msgid "Not Found"
-#~ msgstr "Nicht gefunden"
-
-#~ msgid "Starting Dump Album Art"
-#~ msgstr "Starte Ablum-Cover Dump"
-
-#~ msgid "Written"
-#~ msgstr "Geschrieben"
-
-#~ msgid "Error unable to open file for writting"
-#~ msgstr "Fehler: Kann Datei zum Schreiben nicht öffnen"
-
-#~ msgid "Album Art Dump Complete"
-#~ msgstr "Album Cover-Dump komplett"
-
-#~ msgid "The file uploaded successfully"
-#~ msgstr "Die Datei wurde erfolgreich hochgeladen"
-
-#~ msgid ""
-#~ "The uploaded file exceeds the upload_max_filesize directive in php.ini"
-#~ msgstr ""
-#~ "Die Dateigröße der hochgeladenen Datei überschreitet die "
-#~ "upload_max_filesize directive in der php.ini"
-
-#~ msgid ""
-#~ "The uploaded file exceeds the MAX_FILE_SIZE directive that was specified "
-#~ "in the HTML form"
-#~ msgstr ""
-#~ "Die Dateigröße der hochgeladenen Datei überschreitet die MAX_FILE_SIZE "
-#~ "Direktive, die im HTML-Formular bestimmt wurde"
-
-#~ msgid "The uploaded file was only partially uploaded"
-#~ msgstr "Die hochgeladene Datei wurde nicht vollständig hochgeladen"
-
-#~ msgid "No file was uploaded"
-#~ msgstr "Keine Datei wurde hochgeladen"
-
-#~ msgid "Missing a temporary folder"
-#~ msgstr "Vermisse ein temporäres Verzeichnis"
-
-#~ msgid "ID3V2 Tags"
-#~ msgstr "ID3V2 TAGs"
-
-#~ msgid "Amazon"
-#~ msgstr "Amazon"
-
-#~ msgid "File Folder"
-#~ msgstr "Datei Verzeichnis"
-
-#~ msgid "User Activity"
-#~ msgstr "Benutzer Aktivität"
-
-#~ msgid "Recommended Aritsts"
-#~ msgstr "Empfohlene Interpreten"
-
-#~ msgid "You don't have any duplicate songs."
-#~ msgstr "Sie haben keine doppelten Stücke"
-
-#~ msgid ""
-#~ "No Amazon Developer Key set, amazon album art searching will not work"
-#~ msgstr ""
-#~ "Kein Amazon Entwickler Schlüssel gesetzt, Amazon Cover Suche wird nicht "
-#~ "arbeiten"
-
-#~ msgid ""
-#~ "Album Art could not be located at this time. This may be due to Amazon "
-#~ "being busy, or the album not being present in their collection."
-#~ msgstr ""
-#~ "Album Cover kann momentan nicht gefunden werden. Entweder der Amazon-"
-#~ "Server ist nicht erreichbar, oder das Album konnte nicht gefunden werden."
-
-#~ msgid ""
-#~ "Album Art could not be located at this time. This may be due to write "
-#~ "acces error, or the file is not received corectly."
-#~ msgstr ""
-#~ "Album Cover kann momentan nicht gefunden werden. Entweder ein "
-#~ "Schreibfehler, oder die Datei wurde nicht korrekt empfangen."
-
-#~ msgid "** Indicates flagged songs"
-#~ msgstr "** Markierte Stücke"
-
-#~ msgid "Add a catalog"
-#~ msgstr "Katalog hinzufügen"
-
-#~ msgid "Access Lists"
-#~ msgstr "Zugriffsliste"
-
-#~ msgid "Show Disabled Songs"
-#~ msgstr "Gesperrte Stücke anzeigen"
-
-#~ msgid "Dump Album Art"
-#~ msgstr "Cover Dump"
-
-#~ msgid "View flagged songs"
-#~ msgstr "Markierte Stücke anzeigen"
-
-#~ msgid ""
-#~ "Error: ICONV not found, ID3V2 Tags will not import correctly. See <a href="
-#~ "\"http://php.oregonstate.edu/iconv\">Iconv</a> for information on getting "
-#~ "ICONV"
-#~ msgstr ""
-#~ "Fehler: ICONV nicht gefunden, die ID3V Tags werden nicht korrekt "
-#~ "importiert werden. Besuchen sie die <a href=\"http://php.oregonstate.edu/"
-#~ "iconv\">Iconv</a> um an Informationen zu ICONV zu gelangen."
-
-#~ msgid "Update Catalogs"
-#~ msgstr "Kataloge aktualisieren"
-
-#~ msgid "Add to Catalog(s)"
-#~ msgstr "Zu Katalog(en) hinzufügen"
-
-#~ msgid "Add to all Catalogs"
-#~ msgstr "Zu allen Katalogen hinzufügen"
-
-#~ msgid "Fast Add"
-#~ msgstr "Schnelles Hinzufügen"
-
-#~ msgid "Update Catalog(s)"
-#~ msgstr "Katalog(e) aktualisieren"
-
-#~ msgid "Update All Catalogs"
-#~ msgstr "Alle Kataloge aktualisieren"
-
-#~ msgid "Fast Update"
-#~ msgstr "Schnelle Aktualisierung"
-
-#~ msgid "Clean Catalog(s)"
-#~ msgstr "Katalog(e) leeren"
-
-#~ msgid "Clean All Catalogs"
-#~ msgstr "Alle Kataloge leeren"
-
-#~ msgid "You don't have any catalogs."
-#~ msgstr "Sie haben keine Kataloge"
-
-#~ msgid "Catalog Tools"
-#~ msgstr "Katalogwerkzeuge"
-
-#~ msgid "Total Tracks"
-#~ msgstr "Anzahl Stücke"
