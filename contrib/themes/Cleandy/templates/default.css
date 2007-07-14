@@ -542,7 +542,7 @@ margin-right:5em;
 }
 
 /* for rating-patch by blueorder, needs a modified  */
-.np_cell_1 { /*username and rating*/
+.np_cell_left { /*username and rating, formerly 1*/
     width: 120px;
     padding: 0;
     text-align:left;
@@ -558,20 +558,20 @@ margin-right:5em;
     margin-left: auto;
     margin-right: auto;
 }*/
-.np_cell_3 { /*artist and album name*/
+.np_cell_m { /*artist and album name, formerly 3*/
     width: 150px;
     padding: 2;
     text-align:right;
     border-bottom:1px dotted silver;
     border-top:1px dotted silver;
 }
-.np_cell_3 ul {
+.np_cell_m ul {
     margin-left: auto;
     margin-right: auto;
     border-bottom:1px dotted silver;
     border-top:1px dotted silver;
 }
-.np_cell_4 { /*album image*/
+.np_cell_right { /*album image, formerly 4*/
     width: 75px;
     padding: 0;
     text-align:center;

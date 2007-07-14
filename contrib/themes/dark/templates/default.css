@@ -489,7 +489,7 @@ margin-right:5em;
 	padding-top: 3px;
 	padding-bottom: 3px;
 }
-.np_cell {
+.np_cell, .np_cell_left, .np_cell_m, .np_cell_right {
 	margin: 10px;
 }
 #tablist {

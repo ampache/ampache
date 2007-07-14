@@ -286,7 +286,7 @@ if (window.attachEvent) window.attachEvent("onload", sfHover);
     }
     #sidebar ul {
     	display: block;
-    	border; 1px;
+    	border: 1px; /*syntax fixed by the_foster*/
 	margin: 0px;
 	list-style: none;
 	padding: 0px;
@@ -337,6 +337,8 @@ if (window.attachEvent) window.attachEvent("onload", sfHover);
     	left: -11em;
     	top: 2em;
     }
+.np_cell, .np_cell_left, .np_cell_m, .np_cell_right {
+}
 /**
  * End Div Definitions
  * This is the end of the main structure def's

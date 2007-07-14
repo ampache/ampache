@@ -431,6 +431,8 @@
 		text-indent: -9000px;
 		z-index: 1;
 		}
+.np_cell, .np_cell_left, .np_cell_m, .np_cell_right {
+}
 -->
 </style>
 

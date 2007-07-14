@@ -262,7 +262,7 @@ h3#content_title span {
 .np_row {
 	padding: 3px 0;
 }
-.np_cell {
+.np_cell, .np_cell_left, .np_cell_m, .np_cell_right {
 	margin: 10px;
 }
 

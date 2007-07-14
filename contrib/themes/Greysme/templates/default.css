@@ -336,7 +336,7 @@ h3#content_title span {}	/* Doesn't exist anymore (?) */
 	padding-bottom: 3px;
 	display: block;
 }
-.np_cell {
+.np_cell, .np_cell_left, .np_cell_m, .np_cell_right {
 	margin: 10px;
 }
 
