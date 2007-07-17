@@ -28,7 +28,7 @@ $artist = scrub_out(truncate_with_ellipse($song->f_artist_full,'25'));
     <b><?php echo _('Song'); ?></b><br /><a title="<?php echo scrub_out($song->title); ?>" href="<?php echo $web_path; ?>/song.php?action=single_song&amp;song_id=<?php echo $song->id; ?>">
         <?php echo $title; ?>
     </a>
-    <?php if(conf('ratings')) { ?>
+    <?php if(Config::get('ratings')) { ?>
         <br /><?php show_rating($song->id,'song'); ?>
     <?php } ?>
 </td>

@@ -36,6 +36,45 @@ header("Cache-Control: no-store, no-cache, must-revalidate");
 header("Pragma: no-cache"); 
 
 switch ($action) { 
+	/* Controls the editing of objects */
+	case 'show_edit_object': 
+		switch ($_GET['type']) { 
+			case 'album': 
+				$key = 'album_' . $_GET['id']; 
+				$album = new Album($_GET['id']); 
+				$album->format(); 
+			break;
+			default: 
+				// Bad type
+				die; 
+			break;
+		} // end switch on type 
+
+		ob_start(); 
+		require Config::get('prefix') . '/templates/show_edit_' . $_GET['type'] . '_row.inc.php'; 
+		$results[$key] = ob_get_contents(); 
+		ob_end_clean(); 
+		echo xml_from_array($results); 
+	break; 
+	case 'edit_object': 
+		switch ($_POST['type']) { 
+			case 'album': 
+				$key = 'album_' . $_POST['id']; 
+				$album = new Album($_POST['id']); 
+				$album->format(); 
+			break;
+			default: 
+				// Bad type
+				die; 
+			break;
+		} // end switch on type
+
+		ob_start(); 
+		require Config::get('prefix') . '/templates/show_' . $_POST['type'] . '_row.inc.php'; 
+		$results[$key] = ob_get_contents(); 
+		ob_end_clean(); 
+		echo xml_from_array($results); 
+	break;
 	/* Controls Localplay */
 	case 'localplay':
 		$localplay = init_localplay();

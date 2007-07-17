@@ -32,9 +32,13 @@
 	       if (http_request.status == 200) {
 			var data = http_request.responseXML;
 			var newContent = http_request.responseXML.getElementsByTagName('content'); 
-	                
+	               
+
 			for(var i=0; i < newContent.length; i++) {  
-				document.getElementById(newContent[i].getAttribute('div')).innerHTML=newContent[i].firstChild.nodeValue;
+				var newID = newContent[i].getAttribute('div'); 				
+				if (document.getElementById(newID)) { 
+					$(newID).update(newContent[i].firstChild.nodeValue); 
+				} 
 			}
 			
 		} 
@@ -75,3 +79,4 @@
 
 
     } 
+

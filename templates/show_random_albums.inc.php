@@ -38,7 +38,7 @@ $web_path = Config::get('web_path');
                 <?php } ?>
                 </a><br>
                 <?php
-                if(conf('ratings')){
+                if(Config::get('ratings')){
                         echo "<div style=\"float:left; display:inline;\" id=\"rating_" . $album->id . "_album\">";
                         show_rating_static($album->id, 'album');}
                         echo "</div>";

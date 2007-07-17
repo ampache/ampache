@@ -41,28 +41,7 @@ $ajax_url = Config::get('ajax_url');
 		$album->format(); 
 ?>
 <tr id="album_<?php echo $album->id; ?>" class="<?php echo flip_class(); ?>">
-		<td>
-			<span onclick="ajaxPut('<?php echo Config::get('ajax_url'); ?>?action=basket&amp;type=album&amp;id=<?php echo $album->id; ?>');return true;" >
-				<?php echo get_user_icon('add','',_('Add')); ?>
-			</span>
-			<span onclick="ajaxPut('<?php echo Config::get('ajax_url'); ?>?action=basket&amp;type=album_random&amp;id=<?php echo $album->id; ?>');return true;" >
-				<?php echo get_user_icon('random','',_('Random')); ?>
-			</span>
-		</td>
-		<td><?php echo $album->f_name_link; ?></td>
-		<td><?php echo $album->f_artist; ?></td>
-		<td><?php echo $album->song_count; ?></td>
-		<td><?php echo $album->year; ?></td>
-		<td>
-		<?php if (Access::check_function('batch_download')) { ?>
-			<a href="<?php echo Config::get('web_path'); ?>/batch.php?action=album&amp;id=<?php echo $album->id; ?>">
-				<?php echo get_user_icon('batch_download','',_('Batch Download')); ?>
-			</a>
-		<?php } ?>
-			<span onclick="ajaxPut('<?php echo Config::get('ajax_url'); ?>?action=album&amp;type=edit&amp;id=<?php echo $album->id; ?>');return true;" >
-				<?php echo get_user_icon('edit','',_('Edit')); ?>
-			</span>
-		</td>
+	<?php require Config::get('prefix') . '/templates/show_album_row.inc.php'; ?> 
 </tr>
 <?php } //end foreach ($albums as $album) ?>
 </table>

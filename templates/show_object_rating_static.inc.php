@@ -19,8 +19,8 @@
 */
 
 /* Create some variables we are going to need */
-$web_path = conf('web_path');
-$base_url = conf('ajax_url') . '?action=set_rating&amp;rating_type=' . $rating->type . '&amp;object_id=' . $rating->id . conf('ajax_info');
+$web_path = Config::get('web_path');
+$base_url = Config::get('ajax_url') . '?action=set_rating&amp;rating_type=' . $rating->type . '&amp;object_id=' . $rating->id;
 
 
 //set the background to no stars

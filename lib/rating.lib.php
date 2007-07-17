@@ -36,7 +36,7 @@ function show_rating_static($object_id,$type) {
 
     $rating = new Rating($object_id,$type);
 
-    include(conf('prefix') . '/templates/show_object_rating_static.inc.php');
+    require Config::get('prefix') . '/templates/show_object_rating_static.inc.php';
 
 } // show_rating_static
 
