@@ -2,7 +2,11 @@
 	var IE = true;
 	
 	// uid is an array of uids that need to be replaced		
-	function ajaxPut(url) {
+	function ajaxPut(url,source) {
+
+		if (document.getElementById(source)) { 
+			Event.stopObserving(source.'click',function(){ajaxPut(url,source);});
+		} 
 
 		if (window.ActiveXObject) { // IE
 			try {
@@ -45,8 +49,12 @@
         }
     }
 
-    function ajaxPost(url,input) { 
+    function ajaxPost(url,input,source) { 
     
+	if (document.getElementById(source)) { 
+		Event.stopObserving(source,'click',function(){ajaxPost(url,input,source);}); 
+	} 
+
         var post_data = 'a=0';
 	var data = document.getElementById(input).elements;
 
