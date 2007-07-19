@@ -40,6 +40,7 @@
 <tr>
 	<td><?php echo _('Catalog Type'); ?></td>
 	<td><?php echo scrub_out(ucfirst($catalog->catalog_type)); ?></td>
+</tr>
 <tr>
 	<td><?php echo _('XML-RPC Key'); ?>:</td>
 	<td>

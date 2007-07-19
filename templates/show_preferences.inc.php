@@ -46,5 +46,5 @@ if ($_REQUEST['tab'] == 'account') {
 	}
 ?>
 </form>
-</div>
+
 <?php show_box_bottom(); ?>

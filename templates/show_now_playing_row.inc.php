@@ -24,7 +24,7 @@ $title = scrub_out(truncate_with_ellipse($song->title,'25'));
 $album = scrub_out(truncate_with_ellipse($song->f_album_full,'25'));
 $artist = scrub_out(truncate_with_ellipse($song->f_artist_full,'25'));
 ?>
-<td class="np_cell_left"><b><?php echo _('Username'); ?></b>:<br><?php echo scrub_out($np_user->fullname); ?><br><br><!-- ##  modified ##-->
+<td class="np_cell_left"><b><?php echo _('Username'); ?></b>:<br /><?php echo scrub_out($np_user->fullname); ?><br /><br /><!-- ##  modified ##-->
     <b><?php echo _('Song'); ?></b><br /><a title="<?php echo scrub_out($song->title); ?>" href="<?php echo $web_path; ?>/song.php?action=single_song&amp;song_id=<?php echo $song->id; ?>">
         <?php echo $title; ?>
     </a>

@@ -123,7 +123,7 @@ switch ($action) {
 			$mmsg = "MAILOK";
 		}
 	        else {
-	                $GLOBALS['error']->add_error('email',_("Error Email address not confirmed<br>$validate_results[1]"));
+	                $GLOBALS['error']->add_error('email',_("Error Email address not confirmed<br />$validate_results[1]"));
 	        }
 		/* End of mailcheck */
 	

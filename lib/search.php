@@ -219,7 +219,7 @@ function search_song($data,$operator,$method,$limit) {
 	 */
 	$_SESSION['userdata']['stored_search'] = $sql;
 
-        //echo "DEBUG: $sql<BR>"; flush();
+        //echo "DEBUG: $sql<br />"; flush();
 	$db_results = mysql_query($sql, dbh());
 	
 	while ($r = mysql_fetch_assoc($db_results)) { 

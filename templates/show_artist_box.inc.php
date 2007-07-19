@@ -24,9 +24,9 @@ $title = _('Albums by') . " " . $artist->full_name;
 
 show_box_top(_('Albums by') . ' ' . $artist->full_name);  
 if (Config::get('ratings')) { 
-	echo "<span id=\"rating_" . $artist->id . "_artist\" style=\"display:inline;\">";
+	echo "<div id=\"rating_" . $artist->id . "_artist\" style=\"display:inline;\">";
 	show_rating($artist->id, 'artist'); 
-	echo "</span>";
+	echo "</div>";
 } // end if ratings ?>
 <strong><?php echo _('Actions'); ?>:</strong><br />
 <a href="<?php echo $web_path; ?>/artists.php?action=show_all_songs&amp;artist=<?php echo $artist->id; ?>"><?php echo _("Show All Songs By") . " " . $artist->full_name; ?></a><br />

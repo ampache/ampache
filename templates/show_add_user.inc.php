@@ -79,6 +79,7 @@
                 </select>
         </td>
 </tr>
+<tr>
 	<td colspan="2">
 		<input type="submit" value="<?php echo _('Add User'); ?>" />
 	</td>

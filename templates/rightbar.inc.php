@@ -55,4 +55,5 @@
 	<tr><td class="error"><?php echo _('Not Enough Data'); ?></td></tr>
 <?php } ?>
 </table>
+</div>
 <?php show_box_bottom(); ?> 

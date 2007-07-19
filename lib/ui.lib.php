@@ -1242,7 +1242,7 @@ function get_user_icon($name,$hover_name='',$title='') {
 				$hov_url = Config::get('web_path') . '/images/' . $hover_icon;
 			}
 			
-			$hov_txt = "onMouseOver=\"this.src='$hov_url'; return true;\" onMouseOut=\"this.src='$img_url'; return true;\"";
+			$hov_txt = "onmouseover=\"this.src='$hov_url'; return true;\" onmouseout=\"this.src='$img_url'; return true;\"";
 		} // end hover
 
 	} // end if not cached

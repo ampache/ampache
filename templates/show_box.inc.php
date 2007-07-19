@@ -27,5 +27,5 @@
 		    echo "<li>".$item->f_name_link."</li>\n";
 		}
 	?>
-	<?php } else { echo '<span class="error">' . _('Not Enough Data') . '</span>'; } ?>
+	<?php } else { echo '<li><span class="error">' . _('Not Enough Data') . '</span></li>'; } ?>
 	</ol>

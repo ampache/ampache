@@ -36,7 +36,7 @@ $web_path = Config::get('web_path');
                 <?php } else { ?>
                 <?php echo '[' . $album->f_artist . '] ' . $album->f_name; ?>
                 <?php } ?>
-                </a><br>
+                </a><br />
                 <?php
                 if(Config::get('ratings')){
                         echo "<div style=\"float:left; display:inline;\" id=\"rating_" . $album->id . "_album\">";

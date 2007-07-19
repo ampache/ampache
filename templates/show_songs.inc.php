@@ -39,8 +39,8 @@ $ajax_url = Config::get('ajax_url');
 	<th><?php echo _('Album'); ?></th>
 	<th><?php echo _('Genre'); ?></th>
 	<th><?php echo _('Track'); ?></th>
-	<td><?php echo _('Time'); ?></th>
-	<td><?php echo _('Action'); ?></td>
+	<th><?php echo _('Time'); ?></th>
+	<th><?php echo _('Action'); ?></th>
 </tr>
 <?php 
 	foreach ($object_ids as $song_id) { 

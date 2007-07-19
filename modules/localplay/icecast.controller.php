@@ -109,7 +109,7 @@ class AmpacheIcecast {
 	function add_songs($songs) {
 
 		$filename = conf('localplay_icecast_tracklist');
-		//echo "$filename " . _("Opened for writing") . "<br>\n";
+		//echo "$filename " . _("Opened for writing") . "<br />\n";
 
 		/* Open the file for writing */
                 if (!$handle = @fopen($filename, "w")) {
@@ -121,7 +121,7 @@ class AmpacheIcecast {
 			$song = new Song($song_id);
 			$url = $song->get_url();
 			
-		        //echo "$song->file<br>\n";
+		        //echo "$song->file<br />\n";
                         $line = "$song->file\n";
                         if (!fwrite($handle, $line)) {
                                 debug_event('icecast',"Fwrite: Unabled to write $line into $filename",'3');
@@ -131,7 +131,7 @@ class AmpacheIcecast {
 
 		} // end foreach
 
-                //echo $filename . " " . _("Closed after write") . "<br>\n";
+                //echo $filename . " " . _("Closed after write") . "<br />\n";
                 fclose($handle);
 
 		return true;
