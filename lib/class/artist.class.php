@@ -183,7 +183,7 @@ class Artist {
 	public function format() {
 
 		/* Combine prefix and name, trim then add ... if needed */
-                $name = truncate_with_ellipse(trim($this->prefix . " " . $this->name));
+                $name = truncate_with_ellipsis(trim($this->prefix . " " . $this->name));
 		$this->f_name = $name;
 
 		//FIXME: This shouldn't be scrubing right here!!!!

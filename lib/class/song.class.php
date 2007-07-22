@@ -629,14 +629,14 @@ class Song {
 		    
 		// Format the album name
 		$this->f_album_full = $this->get_album_name();
-		$this->f_album = truncate_with_ellipse($this->f_album_full,Config::get('ellipse_threshold_album'));
+		$this->f_album = truncate_with_ellipsis($this->f_album_full,Config::get('ellipse_threshold_album'));
 
 		// Format the artist name
 		$this->f_artist_full = $this->get_artist_name();
-		$this->f_artist = truncate_with_ellipse($this->f_artist_full,Config::get('ellipse_threshold_artist'));
+		$this->f_artist = truncate_with_ellipsis($this->f_artist_full,Config::get('ellipse_threshold_artist'));
 
 		// Format the title
-		$this->f_title = truncate_with_ellipse($this->title,Config::get('ellipse_threshold_title'));
+		$this->f_title = truncate_with_ellipsis($this->title,Config::get('ellipse_threshold_title'));
 
 		// Create Links for the different objects 
 		$this->f_link = "<a href=\"" . Config::get('web_path') . "/stream.php?action=single_song&amp;song_id=" . $this->id . "\">$this->f_title</a>";

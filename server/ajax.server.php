@@ -44,9 +44,20 @@ switch ($action) {
 				$album = new Album($_GET['id']); 
 				$album->format(); 
 			break;
+			case 'artist': 
+				$key = 'artist_' . $_GET['id']; 
+				$artist = new Artist($_GET['id']); 
+				$artist->format(); 
+			break;
+			case 'song': 
+				$key = 'song_' . $_GET['id']; 
+				$song = new Song($_GET['id']); 
+				$song->format(); 
+			break;
 			default: 
-				// Bad type
-				die; 
+				$key = 'rfc3514'; 
+				echo xml_from_array(array($key=>'0x1')); 
+				exit; 
 			break;
 		} // end switch on type 
 

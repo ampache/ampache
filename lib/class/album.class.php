@@ -184,11 +184,11 @@ class Album {
 		foreach ($data as $key=>$value) { $this->$key = $value; } 
 		
 		/* Truncate the string if it's to long */
-	        $this->f_name	= scrub_out(truncate_with_ellipse($this->name,Config::get('ellipse_threshold_album')));
+	        $this->f_name	= scrub_out(truncate_with_ellipsis($this->name,Config::get('ellipsis_threshold_album')));
 		$this->f_name_link	= "<a href=\"$web_path/albums.php?action=show&amp;album=" . scrub_out($this->id) . "\" title=\"" . scrub_out($this->name) . "\">" . $this->f_name . "</a>";
 		$this->f_title	= $name; 
 		if ($this->artist_count == '1') { 
-			$artist = scrub_out(truncate_with_ellipse(trim($this->artist_prefix . ' ' . $this->artist_name),Config::get('ellipse_threshold_album')));
+			$artist = scrub_out(truncate_with_ellipsis(trim($this->artist_prefix . ' ' . $this->artist_name),Config::get('ellipsis_threshold_album')));
 		        $this->f_artist	= "<a href=\"$web_path/artists.php?action=show&amp;artist=" . $this->artist_id . "\">" . $artist . "</a>";
 		}
 		else {

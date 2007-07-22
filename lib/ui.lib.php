@@ -70,18 +70,6 @@ function flip_class($array=0) {
 } // flip_class
 
 /**
- *  clear_now_playing
- * Clears the now playing information incase something has
- *		gotten stuck in there
- */
-function clear_now_playing() {
-
-	$sql = "TRUNCATE TABLE `now_playing`";
-	$db_results = Dba::query($sql);
-
-} // clear_now_playing
-
-/**
  *  _
  * checks to see if the alias _ is defined
  *	if it isn't it defines it as a simple return
@@ -93,14 +81,6 @@ if (!function_exists('_')) {
 	} // _
 
 } // if _ isn't defined
-
-/**
- *  show_admin_menu
- * shows the admin menu
- */
-function show_admin_menu ($admin_highlight) {
-	include(conf('prefix') . "/templates/admin_menu.inc");
-} // show_admin_menu
 
 /**
  *  access_denied
@@ -186,21 +166,6 @@ function show_local_control () {
 	require_once(conf('prefix') . "/templates/show_localplay.inc");
 
 } // show_local_control
-
-/**
- *  truncate_with_ellipse
- * truncates a text file to specified length by adding
- *	thre dots (ellipse) to the end
- *	(Thx Nedko Arnaudov)
- * @todo Fix Spelling!
- * @depreciated
- */
-function truncate_with_ellipse($text, $max=27) {
-
-	/* Run the function with the correct spelling */
-	return truncate_with_ellipsis($text,$max);
-
-} // truncate_with_ellipse
 
 /**
  * truncate_with_ellipsis
@@ -327,8 +292,7 @@ function get_now_playing($filter='') {
  * if they don't: insert them
  *
  */
-
-function set_artist_rating($artist_id, $rate_user, $rating) {
+function set_artist_rating ($artist_id, $rate_user, $rating) {
 	$artist_id = sql_escape($artist_id);
 
 	$sql	     = "SELECT * FROM ratings WHERE user='$rate_user' AND object_type='artist' AND object_id='$artist_id'";
@@ -646,84 +610,6 @@ function show_genre($genre_id) {
 
 } // show_genre
 
-function show_random_play_bar() {
-
-	require (conf('prefix') . '/templates/show_random_play_bar.inc.php');
-
-} // show_random_play_bar()
-
-
-/*
- * show_artist_pulldown()
- *
- * Helper functions for album and artist functions
- *
- */
-function show_artist_pulldown ($artist_id,$select_name='artist') {
-
-	$sq = "SELECT `id`,`name` FROM `artist` ORDER BY `name`";
-	$db_results = Dba::query($sq); 
-
-	echo "\n<select name=\"$select_name\">\n";
-
-	while ($data = Dba::fetch_assoc($db_results)) { 
-
-		if ( $artist_id == $data['id'] ) {
-			echo "\t<option value=\"" . $data['id'] . "\" selected=\"selected\">". scrub_out($data['name']) . "</option>\n";
-		}
-		else {
-			echo "\t<option value=\"" . $data['id'] . "\">". scrub_out($data['name']) ."</option>\n";
-		}
-
-	} // end while fetching artists
-
-	echo "</select>\n";
-
-} // show_artist_pulldown
-
-/**
- * show_catalog_pulldown
- * This has been changed, first is the name of the
- * dropdown select, the second is the style to be applied
- *
- */
-function show_catalog_pulldown ($name='catalog',$style) {
-
-	$sql = "SELECT `id`,`name` FROM `catalog` ORDER BY `name`";
-	$db_result = Dba::query($sql);
-
-	echo "\n<select name=\"" . $name . "\" style=\"" . $style . "\">\n";
-
-	echo "<option value=\"-1\">" . _('All') . "</option>\n";
-
-	while ($r = Dba::fetch_assoc($db_result)) {
-		$catalog_name = scrub_out($r['name']);
-
-		if ( $catalog == $r['id'] ) {
-			echo "  <option value=\"" .$r['id'] . "\" selected=\"selected\">$catalog_name</option>\n";
-		}
-		else {
-			echo "  <option value=\"" . $r['id'] . "\">$catalog_name</option>\n";
-		}
-	}
-	echo "\n</select>\n";
-
-} // show_catalog_pulldown
-
-
-/**
- * show_submenu
- * This shows the submenu mojo for the sidebar, and I guess honestly anything
- * else you would want it to... takes an array of items which have ['url'] ['title']
- * and ['active']
- */
-function show_submenu($items) {
-
-	require Config::get('prefix') . '/templates/subnavbar.inc.php';
-
-} // show_submenu
-
-
 /**
  * get_location
  * This function gets the information about said persons currently location
@@ -839,49 +725,6 @@ function show_preference_box($preferences) {
 	require Config::get('prefix') . '/templates/show_preference_box.inc.php';
 
 } // show_preference_box
-
-
-/**
- * show_genre_pulldown
- * This shows a select of all of the genres, it takes the name of the select
- * the currently selected and then the size
- *
- */
-function show_genre_pulldown ($name,$selected='',$size=1,$width=0,$style='') {
-
-	/* Get them genre hippies */        
-	$sql = "SELECT genre.id,genre.name FROM genre ORDER BY genre.name";
-        $db_result = Dba::query($sql);
-
-	if ($size > 0) { 
-		$multiple_txt = "multiple=\"multiple\" size=\"$size\"";
-	}
-	if ($style) { 
-		$style_txt = "style=\"$style\"";
-	}
-
-        echo "<select name=\"" . $name . "[]\" $multiple_txt $style_txt>\n";
-	echo "\t<option value=\"-1\">" . _("All") . "</option>\n";
-
-        while ($r = Dba::fetch_assoc($db_result)) {
-		
-		if ($width > 0) { 
-			$r['name'] = truncate_with_ellipsis($r['name'],$width);
-		}
-		
-		$r['name'] = scrub_out($r['name']);
-		
-                if ( $selected == $r['id'] ) {
-                        echo "\t<option value=\"" . $r['id'] . "\" selected=\"selected\">" . $r['name'] . "</option>\n";
-                }
-                else {
-                        echo "  <option value=\"" . $r['id'] . "\">" . $r['name'] . "</option>\n";
-                }
-        } // end while
-
-        echo "</select>\n";
-
-} // show_genre_pulldown
 
 /**
  * good_email
@@ -1024,24 +867,6 @@ function show_playlist_import() {
 } // show_playlist_import
 
 /**
- * show_songs
- * Still not happy with this function, but at least it's in the right 
- * place now
- */
-function show_songs ($song_ids, $playlist, $album=0) {
-
-        $dbh = dbh();
-
-        $totaltime = 0;
-        $totalsize = 0;
-
-        require (conf('prefix') . "/templates/show_songs.inc");
-
-        return true;
-
-} // show_songs
-
-/**
  * show_album_select
  * This displays a select of every album that we've got in Ampache, (it can be hella long) it's used
  * by the Edit page, it takes a $name and a $album_id 
@@ -1050,10 +875,10 @@ function show_album_select($name='album',$album_id=0) {
 
 	echo "<select name=\"$name\">\n";
 
-	$sql = "SELECT id, name, prefix FROM album ORDER BY name";
-	$db_results = mysql_query($sql, dbh());
+	$sql = "SELECT `id`, `name`, `prefix` FROM `album` ORDER BY `name`";
+	$db_results = Dba::query($sql);
 
-	while ($r = mysql_fetch_assoc($db_results)) { 
+	while ($r = Dba::fetch_assoc($db_results)) { 
 		$selected = '';
 		$album_name = trim($r['prefix'] . " " . $r['name']);
 		if ($r['id'] == $album_id) { 
@@ -1076,10 +901,10 @@ function show_artist_select($name='artist', $artist_id=0) {
 
 	echo "<select name=\"$name\">\n";
 	
-	$sql = "SELECT id, name, prefix FROM artist ORDER BY name";
-	$db_results = mysql_query($sql, dbh());
+	$sql = "SELECT `id`, `name`, `prefix` FROM `artist` ORDER BY `name`";
+	$db_results = Dba::query($sql);
 	
-	while ($r = mysql_fetch_assoc($db_results)) { 
+	while ($r = Dba::fetch_assoc($db_results)) { 
 		$selected = '';
 		$artist_name = trim($r['prefix'] . " " . $r['name']);
 		if ($r['id'] == $artist_id) { 
@@ -1103,10 +928,10 @@ function show_genre_select($name='genre',$genre_id=0) {
 
 	echo "<select name=\"$name\">\n";
 
-	$sql = "SELECT id, name FROM genre ORDER BY name";
-	$db_results = mysql_query($sql, dbh());
+	$sql = "SELECT `id`, `name` FROM `genre` ORDER BY `name`";
+	$db_results = Dba::query($sql);
 
-	while ($r = mysql_fetch_assoc($db_results)) { 
+	while ($r = Dba::fetch_assoc($db_results)) { 
 		$selected = '';
 		$genre_name = $r['name'];
 		if ($r['id'] == $genre_id) { 
@@ -1145,7 +970,6 @@ function show_catalog_select($name='catalog',$catalog_id=0,$style='') {
 	echo "</select>\n";
 
 } // show_catalog_select
-
 
 /**
  * show_user_select
@@ -1397,24 +1221,6 @@ function xml_get_footer($type){
 } //xml_get_footer
 
 /**
- * get_users
- * This returns an array of user objects and takes an sql statement
- */
-function get_users($sql) { 
-
-	$db_results = mysql_query($sql,dbh()); 
-	
-	$results = array(); 
-
-	while ($u = mysql_fetch_assoc($db_results)) { 
-		$results[] = new User($u['id']); 
-	} 
-
-	return $results; 
-
-} // get_users
-
-/**
  * ajax_include
  * This does an ob_start, getcontents, clean
  * on the specified require, only works if you
@@ -1430,28 +1236,5 @@ function ajax_include($include) {
 	return $results; 
 
 } // ajax_include
-
-/**
- * ajax_button
- * This is a generic function that generates the on(whateva) URL for ajaxie hotness
- * it takes a action url, icon name, alt tag and form_id (option)
- */
-function ajax_button($action,$icon,$alt,$post_id='') { 
-
-	$url = Config::get('ajax_url') . $action;
-        $icon_url = Config::get('web_path') . '/images/icons/' . $icon . '.png';
-                
-        if ($post) { 
-        	$ajax_string = "ajaxPost('$url','$post');";
-        } 
-        else { 
-        	$ajax_string = "ajaxPut('$url');"; 
-        }  
-
-	$string = "<span onclick=\"$ajax_string;return true\">\n\t<img src=\"$icon_url\" border=\"0\" style=\"cursor:pointer;\" alt=\"$alt\" />\n</span>\n"; 
-
-        return $string;
-
-} // ajax_button
 
 ?>

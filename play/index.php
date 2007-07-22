@@ -141,6 +141,7 @@ if (!$song->file OR ( !is_readable($song->file) AND $catalog->catalog_type != 'r
 	echo "Error: Invalid Song Specified, file not found or file unreadable"; 
 	exit; 
 }
+
 	
 /* Run Garbage Collection on Now Playing */
 gc_now_playing();
@@ -168,8 +169,7 @@ if ($catalog->catalog_type == 'remote') {
 	exit;
 } // end if remote catalog
 
-// Put this song in the now_playing table
-$lastid = insert_now_playing($song->id,$uid,$song->time);
+
 
 // make fread binary safe
 set_magic_quotes_runtime(0);
@@ -179,6 +179,43 @@ ignore_user_abort(TRUE);
 
 // Format the song name
 $song_name = $song->f_artist_full . " - " . $song->title . "." . $song->type;
+
+/* If they are just trying to download make sure they have rights 
+ * and then present them with the download file
+ */
+if ($_GET['action'] == 'download' AND $GLOBALS['user']->prefs['download']) { 
+	
+	// STUPID IE
+	$song_name = str_replace(array('?','/','\\'),"_",$song_name);
+
+	// Use Horde's Browser class to send the headers
+	header("Content-Length: " . $song->size); 
+	$browser = new Browser(); 
+	$browser->downloadHeaders($song_name,$song->mime,false,$song->size); 
+	$fp = fopen($song->file,'rb'); 
+
+	if (!is_resource($fp)) { 
+                debug_event('file_read_error',"Error: Unable to open $song->file for downloading",'2');
+		exit(); 
+        }
+		
+	// Check to see if we should be throttling because we can get away with it
+	if ($GLOBALS['user']->prefs['rate_limit'] > 0) { 
+		while (!feof($fp)) { 
+			echo fread($fp,round($GLOBALS['user']->prefs['rate_limit']*1024)); 
+			flush(); 
+			sleep(1); 
+		} 
+	} 
+	else { 
+		fpassthru($fp); 
+	} 
+		
+	fclose($fp); 
+	exit(); 
+
+} // if they are trying to download and they can
+
 	
 $startArray = sscanf( $_SERVER[ "HTTP_RANGE" ], "bytes=%d-" );
 $start = $startArray[0];
@@ -214,7 +251,7 @@ else {
 	// Send file, possible at a byte offset
 	$fp = fopen($song->file, 'rb');
 	
-if (!is_resource($fp)) { 
+	if (!is_resource($fp)) { 
 		debug_event('file_read_error',"Error: Unable to open $song->file for reading",'2');
 		cleanup_and_exit($lastid);
 	}
@@ -223,12 +260,11 @@ if (!is_resource($fp)) {
 // We need to check to see if they are rate limited
 $chunk_size = '4096';
 
-if ($GLOBALS['user']->prefs['rate_limit'] > 0) { 
-	$chunk_size = $GLOBALS['user']->prefs['rate_limit']; 
-}
-
 // Attempted fix, pimp up the size a bit
 $song->size = $song->size + ($chunk_size*2);
+
+// Put this song in the now_playing table
+$lastid = insert_now_playing($song->id,$uid,$song->time);
 
 if ($start) {
 	debug_event('seek','Content-Range header recieved, skipping ahead ' . $start . ' bytes out of ' . $song->size,'5');

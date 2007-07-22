@@ -47,26 +47,8 @@ $ajax_url = Config::get('ajax_url');
 		$song = new Song($song_id); 
 		$song->format(); 
 ?>
-<tr class="<?php echo flip_class(); ?>">
-	<td>
-		<?php echo Ajax::button('?action=basket&atype=song&id=' . $song->id,'add',_('Add'),'add_' . $song->id); ?>
-	</td>
-	<td><?php echo $song->f_link; ?></td>
-	<td><?php echo $song->f_artist_link; ?></td>
-	<td><?php echo $song->f_album_link; ?></td>
-	<td><?php echo $song->f_genre_link; ?></td>
-	<td><?php echo $song->f_track; ?></td>
-	<td><?php echo $song->f_time; ?></td>
-	<td>
-		<span>
-			<?php echo get_user_icon('flag_off','flag',_('Flag')); ?>
-		</span>
-		<?php if ($GLOBALS['user']->has_access(100)) { ?>
-		<span>
-			<?php echo get_user_icon('edit','',_('Edit')); ?>
-		</span>
-		<?php } ?>
-	</td>
+<tr class="<?php echo flip_class(); ?>" id="song_<?php echo $song->id; ?>">
+	<?php require Config::get('prefix') . '/templates/show_song_row.inc.php'; ?> 
 </tr>
 <?php } ?>
 </table>
