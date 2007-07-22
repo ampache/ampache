@@ -5,7 +5,7 @@
 	function ajaxPut(url,source) {
 
 		if (document.getElementById(source)) { 
-			Event.stopObserving(source.'click',function(){ajaxPut(url,source);});
+			Event.stopObserving(source,'click',function(){ajaxPut(url,source);});
 		} 
 
 		if (window.ActiveXObject) { // IE

@@ -1,13 +1,13 @@
 <?php 
 /*
 
- Copyright (c) 2001 - 2006 Ampache.org
+ Copyright (c) 2001 - 2007 Ampache.org
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
- as published by the Free Software Foundation; either version 2
- of the License, or (at your option) any later version.
+ as published by the Free Software Foundation; version 2
+ of the License.
 
  This program is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -24,7 +24,8 @@
  * This is the logout page, it kills any cookies you have in your browser kills
  * your session in the database and then redirects you to the login page
  */
-require_once('lib/init.php');
+require_once 'lib/init.php';
+
 // To end a legitimate session, just call logout.
 setcookie("amp_longsess","",null); 
 logout();

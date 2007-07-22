@@ -48,8 +48,8 @@ $ajax_url = Config::get('ajax_url');
 		$song->format(); 
 ?>
 <tr class="<?php echo flip_class(); ?>">
-	<td onclick="ajaxPut('<?php echo $ajax_url; ?>?action=basket&amp;type=song&amp;id=<?php echo $song->id; ?>');return true;">
-		<?php echo get_user_icon('add'); ?>
+	<td>
+		<?php echo Ajax::button('?action=basket&atype=song&id=' . $song->id,'add',_('Add'),'add_' . $song->id); ?>
 	</td>
 	<td><?php echo $song->f_link; ?></td>
 	<td><?php echo $song->f_artist_link; ?></td>

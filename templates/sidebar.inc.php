@@ -27,25 +27,30 @@ $web_path = Config::get('web_path');
 $ajax_url = Config::get('ajax_url'); 
 ?>
 <ul id="sidebar-tabs">
-<li <?php echo $sidebar_home; ?> onclick="ajaxPut('<?php echo $ajax_url; ?>?action=sidebar&amp;button=home');" >
-	<?php echo get_user_icon('home','',_('Home')); ?>
+<li <?php echo $sidebar_home; ?>>
+	<?php echo Ajax::button("?action=sidebar&button=home",home,_('Home'),'sidebar_home'); ?>
 </li>
-<li <?php echo $sidebar_browse; ?> onclick="ajaxPut('<?php echo $ajax_url; ?>?action=sidebar&amp;button=browse');" >
-	<?php echo get_user_icon('browse','',_('Browse')); ?>
+<li <?php echo $sidebar_browse; ?>>
+	<?php echo Ajax::button("?action=sidebar&button=browse",browse,_('Browse'),'sidebar_browse'); ?>
 </li>
-<li <?php echo $sidebar_search; ?> onclick="ajaxPut('<?php echo $ajax_url; ?>?action=sidebar&amp;button=search');" >
-	<?php echo get_user_icon('view','',_('Search')); ?>
+<li <?php echo $sidebar_search; ?>>
+	<?php echo Ajax::button("?action=sidebar&button=search",'view',_('Search'),'sidebar_search'); ?>
 </li>
-<li <?php echo $sidebar_preferences; ?> onclick="ajaxPut('<?php echo $ajax_url; ?>?action=sidebar&amp;button=preferences');" >
-	<?php echo get_user_icon('edit','',_('Preferences')); ?>
+<li <?php echo $sidebar_preferences; ?>>
+	<?php echo Ajax::button("?action=sidebar&button=preferences",'edit',_('Preferences'),'sidebar_prefs'); ?>
 </li>
 <?php if ($GLOBALS['user']->has_access('100')) { ?>
-<li <?php echo $sidebar_admin; ?> onclick="ajaxPut('<?php echo $ajax_url; ?>?action=sidebar&amp;button=admin');" >
-	<?php echo get_user_icon('admin','',_('Admin')); ?>
+<li <?php echo $sidebar_admin; ?>>
+	<?php echo Ajax::button("?action=sidebar&button=admin",'admin',_('Admin'),'sidebar_admin'); ?>
 </li>
 <?php } ?>
-<li <?php echo $sidebar_player; ?> onclick="ajaxPut('<?php echo $ajax_url; ?>?action=sidebar&amp;button=player');" >
-	<?php echo get_user_icon('all','',_('Player')); ?>
+<!-- <li <?php echo $sidebar_player; ?> onclick="ajaxPut('<?php echo $ajax_url; ?>?action=sidebar&button=player');" >
+</li>
+-->
+<li>
+	<a href="<?php echo Config::get('web_path'); ?>/logout.php">
+	<?php echo get_user_icon('logout',_('Logout')); ?>
+	</a>
 </li>
 </ul>
 <div id="sidebar-page">

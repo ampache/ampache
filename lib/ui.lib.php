@@ -661,21 +661,18 @@ function show_random_play_bar() {
  */
 function show_artist_pulldown ($artist_id,$select_name='artist') {
 
-	$query = "SELECT id FROM artist ORDER BY name";
-	$db_result = mysql_query($query, dbh());
+	$sq = "SELECT `id`,`name` FROM `artist` ORDER BY `name`";
+	$db_results = Dba::query($sq); 
 
 	echo "\n<select name=\"$select_name\">\n";
 
-	while ($r = mysql_fetch_assoc($db_result)) {
+	while ($data = Dba::fetch_assoc($db_results)) { 
 
-		$artist = new Artist($r['id']);
-		$artist->get_count();
-
-		if ( $artist_id == $r['id'] ) {
-			echo "\t<option value=\"" . $artist->id . "\" selected=\"selected\">". scrub_out($artist->name) . "</option>\n";
+		if ( $artist_id == $data['id'] ) {
+			echo "\t<option value=\"" . $data['id'] . "\" selected=\"selected\">". scrub_out($data['name']) . "</option>\n";
 		}
 		else {
-			echo "\t<option value=\"" . $artist->id . "\">". scrub_out($artist->name) ."</option>\n";
+			echo "\t<option value=\"" . $data['id'] . "\">". scrub_out($data['name']) ."</option>\n";
 		}
 
 	} // end while fetching artists
@@ -1202,12 +1199,22 @@ function show_box_bottom() {
  * this function takes a name and a returns either a text representation
  * or an <img /> tag 
  */
-function get_user_icon($name,$hover_name='',$title='') { 
+function get_user_icon($name,$title='',$id='') { 
 	
 	/* Because we do a lot of calls cache the URLs */
 	static $url_cache = array(); 
 
+	// If our name is an array
+	if (is_array($name)) { 
+		$hover_name = $name['1']; 
+		$name = $name['0']; 
+	} 
+
 	if (!$title) { $title = $name; } 
+
+	if ($id) { 
+		$id_element = 'id="' . $id . '"'; 
+	} 
 
 	if (isset($url_cache[$name])) { 
 		$img_url = $url_cache[$name]; 
@@ -1247,11 +1254,11 @@ function get_user_icon($name,$hover_name='',$title='') {
 
 	} // end if not cached
 
-	$string = "<img style=\"cursor: pointer;\" src=\"$img_url\" border=\"0\" alt=\"" . ucfirst($title) . "\" title=\"" . ucfirst($title) . "\" $hov_txt/>";
+	$string = "<img style=\"cursor: pointer;\" src=\"$img_url\" $id_element border=\"0\" alt=\"" . ucfirst($title) . "\" title=\"" . ucfirst($title) . "\" $hov_txt/>";
 
 	return $string;
 
-} // show_icon
+} // get_user_icon
 
 /**
  * xml_from_array

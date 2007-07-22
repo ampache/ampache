@@ -21,12 +21,21 @@
 ?>
 <td colspan="6">
 <form method="post" id="edit_album_<?php echo $album->id; ?>">
-<input type="input" name="name" value="<?php echo scrub_out($album->name); ?>" />
-<input type="hidden" name="id" value="<?php echo $album->id; ?>" />
-<input type="hidden" name="type" value="album" />
-<span onclick="ajaxPost('<?php echo Config::get('ajax_url'); ?>?action=edit_object&amp;id=<?php echo $album->id; ?>&amp;type=album','edit_album_<?php echo $album->id; ?>');">
-	<img src="<?php echo Config::get('web_path'); ?>/images/icon_download.png">
-</span>
-</form>
+<table border="0" cellpadding="3" cellspacing="0">
+<td>
+	<input type="textbox" name="name" value="<?php echo scrub_out($album->name); ?>" />
 </td>
+<td>
+	<?php show_artist_pulldown($album->artist_id,'artist_id'); ?>
+</td>
+<td>
+	<input type="textbox" name="year" value="<?php echo scrub_out($album->year); ?>" />
+</td>
+<td>
+	<input type="hidden" name="id" value="<?php echo $album->id; ?>" />
+	<input type="hidden" name="type" value="album" />
+	<?php echo Ajax::button('?action=edit_object&id=' . $album->id . '&type=album','download',_('Save Changes'),'save_album_' . $album->id,'edit_album_' . $album->id); ?>
+</td>
+</table>
+</form>
 </td>

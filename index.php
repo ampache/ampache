@@ -31,11 +31,13 @@ $action = scrub_in($_REQUEST['action']);
  * going to let them break their servers
  */
 if (Config::get('refresh_limit') > 5) { 
+/*
 	$refresh_limit = Config::get('refresh_limit'); 
 	$ajax_url = Config::get('ajax_url') . '?action=reloadnp' . Config::get('ajax_info');
-	/* Can't have the &amp; stuff in the Javascript */
+	
 	$ajax_url = str_replace("&amp;","&",$ajax_url);
 	require_once Config::get('prefix') . '/templates/javascript_refresh.inc.php';
+*/
 }
 
 require_once Config::get('prefix') . '/templates/show_index.inc.php';
