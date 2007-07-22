@@ -38,8 +38,8 @@
 	<input type="textbox" size="3" value="<?php echo scrub_out($song->track); ?>" />
 </td>
 <td>
-	<input type="hidden" name="id" value="<?php echo $album->id; ?>" />
-	<input type="hidden" name="type" value="album" />
+	<input type="hidden" name="id" value="<?php echo $song->id; ?>" />
+	<input type="hidden" name="type" value="song" />
 	<?php echo Ajax::button('?action=edit_object&id=' . $song->id . '&type=song','download',_('Save Changes'),'save_song_' . $song->id,'edit_song_' . $song->id); ?>
 </td>
 </table>

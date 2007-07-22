@@ -50,7 +50,7 @@ if (Config::get('use_rss')) { ?>
 <script src="<?php echo $web_path; ?>/lib/javascript-base.js" language="javascript" type="text/javascript"></script>
 <script src="<?php echo $web_path; ?>/modules/kajax/ajax.js" language="javascript" type="text/javascript"></script>
 <script src="<?php echo $web_path; ?>/modules/prototype/prototype.js" language="javascript" type="text/javascript"></script>
-<div id="rfc3514" style="display:none;"></div>
+<div id="rfc3514" style="display:none;">0x0</div>
 <div id="maincontainer" <?php 
 	if ($GLOBALS['theme']['orientation'] == 'horizontal') { 
 		echo " class=\"horizontal_menu\" ";

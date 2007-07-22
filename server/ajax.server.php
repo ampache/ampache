@@ -38,6 +38,11 @@ header("Pragma: no-cache");
 switch ($action) { 
 	/* Controls the editing of objects */
 	case 'show_edit_object': 
+		
+		if (!$GLOBALS['user']->has_access('50')) { 
+			exit; 
+		} 
+
 		switch ($_GET['type']) { 
 			case 'album': 
 				$key = 'album_' . $_GET['id']; 
@@ -68,15 +73,27 @@ switch ($action) {
 		echo xml_from_array($results); 
 	break; 
 	case 'edit_object': 
+
+		// Make sure we've got them rights
+		if (!$GLOBALS['user']->has_access('50')) { 
+			exit; 
+		} 
+
 		switch ($_POST['type']) { 
 			case 'album': 
 				$key = 'album_' . $_POST['id']; 
 				$album = new Album($_POST['id']); 
 				$album->format(); 
 			break;
+			case 'song': 
+				$key = 'song_' . $_POST['id']; 
+				$song = new Song($_POST['id']); 
+				$song->format(); 
+			break;
 			default: 
-				// Bad type
-				die; 
+				$key = 'rfc3514';
+				echo xml_from_array(array($key=>'0x1')); 
+				exit; 
 			break;
 		} // end switch on type
 
@@ -274,7 +291,7 @@ switch ($action) {
 		echo xml_from_array($results); 
 	break;
 	default:
-		$results['3514'] = '0x1';
+		$results['rfc3514'] = '0x1';
 		echo xml_from_array($results); 
 	break;
 } // end switch action
