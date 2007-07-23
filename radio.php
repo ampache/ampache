@@ -47,7 +47,11 @@ switch ($_REQUEST['action']) {
 		if (!$results) { 
 			require_once Config::get('prefix') . '/templates/show_add_live_stream.inc.php'; 
 		} 
-
+		else { 
+			$body = _('Radio Station Added'); 
+			$title = ''; 
+			show_confirmation($title,$body,Config::get('web_path') . '/index.php'); 
+		} 
 	break;
 } // end data collection 
 

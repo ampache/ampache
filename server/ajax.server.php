@@ -59,6 +59,11 @@ switch ($action) {
 				$song = new Song($_GET['id']); 
 				$song->format(); 
 			break;
+			case 'live_stream': 
+				$key = 'live_stream_' . $_GET['id']; 
+				$radio = new Radio($_GET['id']); 
+				$radio->format(); 
+			break;
 			default: 
 				$key = 'rfc3514'; 
 				echo xml_from_array(array($key=>'0x1')); 
@@ -73,7 +78,6 @@ switch ($action) {
 		echo xml_from_array($results); 
 	break; 
 	case 'edit_object': 
-
 		// Make sure we've got them rights
 		if (!$GLOBALS['user']->has_access('50')) { 
 			exit; 
@@ -89,6 +93,12 @@ switch ($action) {
 				$key = 'song_' . $_POST['id']; 
 				$song = new Song($_POST['id']); 
 				$song->format(); 
+			break;
+			case 'live_stream': 
+				$key = 'live_stream_' . $_POST['id']; 
+				Radio::update($_POST); 
+				$radio = new Radio($_POST['id']); 
+				$radio->format(); 
 			break;
 			default: 
 				$key = 'rfc3514';

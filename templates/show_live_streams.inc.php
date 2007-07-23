@@ -40,7 +40,7 @@ foreach ($object_ids as $radio_id) {
 	$radio = new Radio($radio_id); 
 	$radio->format(); 
 ?>
-<tr id="radio_<?php echo $radio->id; ?>" class="<?php echo flip_class(); ?>">
+<tr id="live_stream_<?php echo $radio->id; ?>" class="<?php echo flip_class(); ?>">
 	<?php require Config::get('prefix') . '/templates/show_live_stream_row.inc.php'; ?>
 </tr>
 <?php } //end foreach ($artists as $artist) ?>

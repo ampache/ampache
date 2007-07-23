@@ -96,6 +96,53 @@ class Radio {
 	} // format
 
 	/**
+	 * update
+	 * This is a static function that takes a key'd array for input
+	 * it depends on a ID element to determine which radio element it 
+	 * should be updating
+	 */
+	public static function update($data) { 
+
+		// Verify the incoming data
+		if (!$data['id']) { 
+			Error::add('general','Missing ID'); 
+		} 
+
+		if (!$data['name']) { 
+			Error::add('general','Name Required'); 
+		} 
+
+		if (!preg_match("/^https?:\/\/.+/",$data['url'])) { 
+			Error::add('general','Invalid URL must be https:// or http://'); 
+		} 
+
+		$genre = new Genre($data['genre']); 
+		if (!$genre->name) { 
+			Error::add('general','Invalid Genre Selected'); 
+		} 
+
+		if (Error::$state) { 
+			return false; 
+		} 
+
+		// Setup the data
+		$name 		= Dba::escape($data['name']); 
+		$site_url	= Dba::escape($data['site_url']); 
+		$url		= Dba::escape($data['url']); 
+		$frequency	= Dba::escape($data['frequency']); 
+		$call_sign	= Dba::escape($data['call_sign']); 
+		$genre		= Dba::escape($data['genre']); 
+		$id		= Dba::escape($data['id']); 
+
+		$sql = "UPDATE `live_stream` SET `name`='$name',`site_url`='$site_url',`url`='$url',`genre`='$genre'" . 
+			",`frequency`='$frequency',`call_sign`='$call_sign' WHERE `id`='$id'"; 
+		$db_results = Dba::query($sql); 
+
+		return $db_results; 
+
+	} // update
+
+	/**
 	 * create
 	 * This is a static function that takes a key'd array for input
 	 * and if everything is good creates the object. 

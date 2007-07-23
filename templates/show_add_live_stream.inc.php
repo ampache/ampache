@@ -32,27 +32,27 @@
 	</td>
 </tr>
 <tr>
-	<td><?php echo _('Station Homepage'); ?></td>
+	<td><?php echo _('Homepage'); ?></td>
 	<td>
 		<input type="text" name="site_url" value="<?php echo scrub_out($_REQUEST['site_url']); ?>" />
 		<?php Error::display('site_url'); ?>
 	</td>
 </tr>
 <tr>
-	<td><?php echo _('Station URL'); ?></td>
+	<td><?php echo _('Stream URL'); ?></td>
 	<td>
 		<input type="text" name="url" value="<?php echo scrub_out($_REQUEST['url']); ?>" />
 		<?php Error::display('url'); ?>
 	</td>
 </tr>
 <tr>
-	<td><?php echo _('Station Frequency'); ?></td>
+	<td><?php echo _('Frequency'); ?></td>
 	<td>
 		<input type="text" name="frequency" value="<?php echo scrub_out($_REQUEST['frequency']); ?>" />
 	</td>
 </tr>
 <tr>
-	<td><?php echo _('Station call-sign'); ?></td>
+	<td><?php echo _('Callsign'); ?></td>
 	<td>
 		<input type="text" name="call_sign" value="<?Php echo scrub_out($_REQUEST['call_sign']); ?>" />
 	</td>
