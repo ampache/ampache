@@ -1,13 +1,13 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2006 Ampache.org
+ Copyright (c) 2001 - 2007 Ampache.org
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
- as published by the Free Software Foundation; either version 2
- of the License, or (at your option) any later version.
+ as published by the Free Software Foundation; version 2
+ of the License.
 
  This program is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -23,9 +23,9 @@
 <?php show_box_top($working_user->fullname . ' ' . _('IP History')); ?>
 <div class="text-action">
 <?php if (isset($_REQUEST['all'])){ ?>
-	<a href="<?php echo conf('web_path')?>/admin/users.php?action=show_ip_history&user_id=<?php echo $working_user->id?>"><?php echo _('Show Unique'); ?>...</a>
+	<a href="<?php echo Config::get('web_path')?>/admin/users.php?action=show_ip_history&user_id=<?php echo $working_user->id?>"><?php echo _('Show Unique'); ?>...</a>
 <?php }else{ ?>
-	<a href="<?php echo conf('web_path')?>/admin/users.php?action=show_ip_history&user_id=<?php echo $working_user->id?>&all"><?php echo _('Show All'); ?>...</a>
+	<a href="<?php echo Config::get('web_path')?>/admin/users.php?action=show_ip_history&user_id=<?php echo $working_user->id?>&all"><?php echo _('Show All'); ?>...</a>
 <?php }?>
 </div>
 <table border="0">

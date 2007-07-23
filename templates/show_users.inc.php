@@ -75,12 +75,14 @@ foreach ($object_ids as $user_id) {
         <td>
 		<?php echo $client->f_useage; ?>
 	</td>
-	<td>
 	<?php if (Config::get('track_user_ip')) { ?>
+		<td>
 		<a href="<?php echo $web_path; ?>/admin/users.php?action=show_ip_history&amp;user_id=<?php echo $client->id; ?>">
 			<?php echo $client->ip_history; ?>
 		</a>
+		</td>
 	<?php } ?>
+	<td>
 		<a href="<?php echo $web_path; ?>/admin/users.php?action=show_edit&amp;user_id=<?php echo $client->id; ?>">
 			<?php echo get_user_icon('edit'); ?>
 		</a>

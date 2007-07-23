@@ -4,6 +4,7 @@
 
 --------------------------------------------------------------------------
   v.3.4-Alpha1
+	- Added support for Internet Radio Stations
 	- Updated LastFM submission formating to account for changes on 
 		last.fm (Thx entropathy)
 	- Fixed LastFM and increased timeout slightly in an attempt to 

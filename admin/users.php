@@ -169,12 +169,14 @@ switch ($_REQUEST['action']) {
 	case 'show_ip_history':
 		/* get the user and their history */
 		$working_user	= new User($_REQUEST['user_id']); 
+		
 		if (!isset ($_REQUEST['all'])){
-		$history	= $working_user->get_ip_history('',1);
-		} else {
-		$history	= $working_user->get_ip_history('','');
+			$history	= $working_user->get_ip_history('',1);
+		} 
+		else {
+			$history	= $working_user->get_ip_history('','');
 		}
-		require (conf('prefix') . '/templates/show_ip_history.inc.php');
+		require Config::get('prefix') . '/templates/show_ip_history.inc.php';
 	break;
 	case 'show_add_user':
 	        if (Config::get('demo_mode')) { break; }
