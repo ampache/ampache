@@ -344,6 +344,13 @@ function create_preference_input($name,$value) {
 			echo "\t<option value=\"default\">" . _('Default') . "</option>\n"; 
 			echo "</select>\n"; 
 		break;
+		case 'transcode':
+			echo "<select name=\"$name\">\n"; 
+			echo "\t<option value=\"default\">" . _('Default') . "</option>\n"; 
+			echo "\t<option value=\"acl\">" . _('Follow ACL Rules') . "</option>\n"; 
+			echo "\t<option value=\"always\">" . _('Always') . "</option>\n"; 
+			echo "</select>\n";
+		break;
 		default:
 			echo "<input type=\"text\" size=\"$len\" name=\"$name\" value=\"$value\" />";
 		break;

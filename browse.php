@@ -61,6 +61,11 @@ switch($_REQUEST['action']) {
 		$song_ids = Browse::get_objects(); 
 		Browse::show_objects($song_ids); 
 	break;
+	case 'live_stream':
+		Browse::set_type('live_stream'); 
+		$live_stream_ids = Browse::get_objects(); 
+		Browse::show_objects($live_stream_ids); 
+	break;
 	case 'catalog':
 	
 	break;

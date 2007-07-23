@@ -50,7 +50,7 @@ foreach ($object_ids as $genre_id) {
 				<?php echo get_user_icon('random'); ?>
 		</span>
 		</td>
-		<td><?php echo $genre->link; ?></td>
+		<td><?php echo $genre->f_link; ?></td>
 		<td><?php echo $genre->get_song_count(); ?></td>
 		<td>
 			<?php if (Access::check_function('batch_download')) { ?>

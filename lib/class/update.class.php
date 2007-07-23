@@ -204,6 +204,12 @@ class Update {
 
 		$version[] = array('version' => '340004','description' => $update_string); 
 
+		$update_string = '- Altered Ratings table so the fields make more sense.<br />' . 
+				'- Moved Random Method to Playlist catagory.<br />' . 
+				'- Added Transcode Method to Streaming.<br />'; 
+
+		$version[] = array('version' => '340005','description' => $update_string); 
+
 		return $version;
 
 	} // populate_version
@@ -710,14 +716,49 @@ class Update {
 
 	} // update_340004	
 
-
 	/**
 	 * update_340005
 	 * This update fixes the preferences types 
  	 */
 	public static function update_340005() { 
 
+		// Turn user_rating into a tinyint and call it score
+		$sql = "ALTER TABLE `rating` CHANGE `user_rating` `score` TINYINT( 4 ) UNSIGNED NOT NULL DEFAULT '0'";
+		$db_results = Dba::query($sql); 
 
+		$sql = "UPDATE `preference` SET `catagory`='playlist' WHERE `name`='random_method'"; 
+		$db_results = Dba::query($sql); 
+
+		$sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " . 
+			"VALUES ('transcode','default','Transcoding','25','string','streaming')"; 
+		$db_results = Dba::query($sql);
+
+		/* We need to check for playlist_method here because I fubar'd an earlier update */
+		$sql = "SELECT * FROM `preference` WHERE `name`='playlist_method'"; 
+		$db_results = Dba::query($sql); 
+		if (!Dba::num_rows($db_results)) { 
+	                /* Add the playlist_method preference and remove it from the user table */
+	                $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
+	                        "VALUES ('playlist_method','default','Playlist Method','5','string','playlist')";
+	                $db_results = Dba::query($sql);
+		} 
+
+		// Add in the object_type to the tmpplaylist data table so that we can have non-songs in there
+		$sql = "ALTER TABLE `tmp_playlist_data` ADD `object_type` VARCHAR( 32 ) NULL AFTER `tmp_playlist`";
+		$db_results = Dba::query($sql); 
+
+                $sql = "SELECT `id` FROM `user`";
+                $db_results = Dba::query($sql);
+
+                User::fix_preferences('-1');
+
+                while ($r = Dba::fetch_assoc($db_results)) {
+                        User::fix_preferences($r['id']);
+                }
+
+		self::set_version('db_version','340005'); 	
+
+		return true; 
 
 	} // update_340005
 

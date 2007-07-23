@@ -1,6 +1,7 @@
 <h4><?php echo _('Information'); ?></h4>
 <span><a href="<?php echo $web_path; ?>/index.php"><?php echo _('Currently Playing'); ?></a></span>
 <span><a href="<?php echo $web_path; ?>/stats.php"><?php echo _('Statistics'); ?></a></span>
+<span><a href="<?php echo $web_path; ?>/radio.php?action=show_create"><?php echo _('Add Radio Station'); ?></a></span>
 <hr />
 <!-- RANDOM, Hidden for now cause its broken
 <h4><?php echo _('Search'); ?></h4>

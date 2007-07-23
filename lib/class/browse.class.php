@@ -89,6 +89,7 @@ class Browse {
 			case 'album':
 			case 'artist':
 			case 'genre':
+			case 'live_stream':
 				$_SESSION['browse']['type'] = $type;
 			break;
 			default:
@@ -170,6 +171,9 @@ class Browse {
 			case 'user': 
 				$sql = "SELECT `user`.`id` FROM `user` ";
 			break;
+			case 'live_stream':
+				$sql = "SELECT `live_stream`.`id` FROM `live_stream` "; 
+			break;
 			case 'song':
 			default:
 				$sql = "SELECT `song`.`id` FROM `song` ";  
@@ -233,8 +237,7 @@ class Browse {
 				break;
 			} // end list of sqlable filters
 		} // if it is a song
-
-		if ($_SESSION['browse']['type'] == 'album') { 
+		elseif ($_SESSION['browse']['type'] == 'album') { 
 			switch($filter) { 
 				case 'alpha_match':
 					$filter_sql = " `album`.`name` LIKE '" . Dba::escape($value) . "%' AND "; 
@@ -247,7 +250,7 @@ class Browse {
 				break;
 			} 
 		} // end album 
-		if ($_SESSION['browse']['type'] == 'artist') { 
+		elseif ($_SESSION['browse']['type'] == 'artist') { 
 			switch($filter) { 
 				case 'alpha_match':
 					$filter_sql = " `artist`.`name` LIKE '" . Dba::escape($value) . "%' AND ";
@@ -257,6 +260,16 @@ class Browse {
 				break;
 			} // end filter
 		} // end artist
+		elseif ($_SESSION['browse']['type'] == 'live_stream') { 
+			switch ($filter) { 
+				case 'alpha_match':
+					$filter_sql = " `live_stream`.`name` LIKE '" . Dba::escape($value) . "%' AND "; 
+				break;
+				default: 
+					// Rien a faire
+				break;
+			} // end filter
+		} // end live_stream
 	
 		return $filter_sql; 
 
@@ -337,6 +350,11 @@ class Browse {
 			case 'artist':
 				show_box_top(_('Artists')); 
 				require_once Config::get('prefix') . '/templates/show_artists.inc.php'; 
+				show_box_bottom(); 
+			break;
+			case 'live_stream': 
+				show_box_top(_('Radion Stations')); 
+				require_once Config::get('prefix') . '/templates/show_live_streams.inc.php';
 				show_box_bottom(); 
 			break;
 			default: 

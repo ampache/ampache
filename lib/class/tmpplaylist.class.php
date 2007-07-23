@@ -121,7 +121,9 @@ class tmpPlaylist {
 
 	/**
 	 * get_items
-	 * This returns an array of all object_ids currently in this tmpPlaylist
+	 * This returns an array of all object_ids currently in this tmpPlaylist. This
+	 * has gotten a little more complicated because of type, the values are an array
+	 * 0 being ID 1 being TYPE
 	 */
 	public function get_items() { 
 
@@ -134,7 +136,8 @@ class tmpPlaylist {
 		}
 
 		/* Select all objects from this playlist */
-		$sql = "SELECT tmp_playlist_data.id, tmp_playlist_data.object_id $vote_select FROM tmp_playlist_data $vote_join " . 
+		$sql = "SELECT tmp_playlist_data.object_type, tmp_playlist_data.id, tmp_playlist_data.object_id $vote_select " . 
+			"FROM tmp_playlist_data $vote_join " . 
 			"WHERE tmp_playlist_data.tmp_playlist='" . Dba::escape($this->id) . "' $order";
 		$db_results = Dba::query($sql);
 		
@@ -143,7 +146,7 @@ class tmpPlaylist {
 
 		while ($results = Dba::fetch_assoc($db_results)) { 
 			$key		= $results['id'];
-			$items[$key] 	= $results['object_id'];
+			$items[$key] 	= array($results['object_id'],$results['object_type']);
 		}
 
 		return $items;
@@ -343,14 +346,16 @@ class tmpPlaylist {
 	/**
 	 * add_object
 	 * This adds the object of $this->object_type to this tmp playlist
+	 * it takes an optional type, default is song
 	 */
-	public function add_object($object_id) { 
+	public function add_object($object_id,$object_type) { 
 
 		$object_id 	= Dba::escape($object_id);
 		$playlist_id 	= Dba::escape($this->id);
+		$object_type	= $object_type ? Dba::escape($object_type) : 'song'; 
 
-		$sql = "INSERT INTO `tmp_playlist_data` (`object_id`,`tmp_playlist`) " . 
-			" VALUES ('$object_id','$playlist_id')";
+		$sql = "INSERT INTO `tmp_playlist_data` (`object_id`,`tmp_playlist`,`object_type`) " . 
+			" VALUES ('$object_id','$playlist_id','$object_type')";
 		$db_results = Dba::query($sql);
 
 		return true;
@@ -495,11 +500,10 @@ class tmpPlaylist {
 	public function delete_track($id) { 
 
 		$id 	= Dba::escape($id);
-		$tmp_id = Dba::escape($this->id);
 
 		/* delete the track its self */
-		$sql = "DELETE FROM tmp_playlist_data " . 
-			" WHERE tmp_playlist='$tmp_id' AND object_id='$id'";
+		$sql = "DELETE FROM `tmp_playlist_data` " . 
+			" WHERE `id`='$id'";
 		$db_results = Dba::query($sql);
 
 		/* If this is a voting playlit prune votes */

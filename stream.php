@@ -50,7 +50,24 @@ switch ($_REQUEST['action']) {
 		if (!count($song_ids)) { header("Location:" . return_referer()); exit; } 
 	break;
 	case 'basket': 
-		$song_ids = $GLOBALS['user']->playlist->get_items(); 
+		// Pull in our items (multiple types) 
+		$objects = $GLOBALS['user']->playlist->get_items(); 
+
+		//Recurse through the objects 
+		foreach ($objects as $object_data) { 
+			// Switch on the type of object we've got in here
+			switch ($object_data['1']) { 
+				case 'radio': 
+					$radio = new Radio($object_data['0']); 
+					$urls[] = $radio->url;
+				break;
+				case 'song': 
+				default:
+					$song_ids[] = $object_data['0'];
+				break;
+			} // end switch on type
+		} // end foreach
+
 	break;
 	/* This is run if we need to gather info based on a tmp playlist */
 	case 'tmp_playlist':
@@ -163,6 +180,11 @@ switch ($_REQUEST['method']) {
 
 		/* Start the Stream */
 		$stream = new Stream($stream_type,$song_ids);
+		if (is_array($urls)) { 
+			foreach ($urls as $url) { 
+				$stream->manual_url_add($url); 
+			} 
+		} 
 		$stream->start();
 	break;
 } // end method switch 

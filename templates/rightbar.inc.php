@@ -37,18 +37,16 @@
 <table cellpadding="0" cellspacing="0">
 <?php 
 	$objects = $GLOBALS['user']->playlist->get_items(); 
-	foreach ($objects as $song_id) { 
-		$song = new Song($song_id); 
-		$song->format(); 
+	foreach ($objects as $uid=>$object_data) { 
+		$object = new $object_data['1']($object_data['0']); 
+		$object->format(); 
 ?>
 <tr class="<?php echo flip_class(); ?>">
 	<td>
-	<?php echo $song->f_link; ?>
+	<?php echo $object->f_link; ?>
 	</td>
 	<td>
-		<span onclick="ajaxPut('<?php echo Config::get('ajax_url'); ?>?action=current_playlist&amp;type=delete&amp;id=<?php echo $song_id; ?>');return true;">
-		<?php echo get_user_icon('delete','',_('Delete')); ?>
-		</span>
+		<?php echo Ajax::button('?action=current_playlist&type=delete&id=' . $uid,'delete',_('Delete'),'rightbar_delete_' . $uid); ?>
 	</td>
 </tr>
 <?php } if (!count($objects)) { ?>

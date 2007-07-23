@@ -176,15 +176,19 @@ switch ($action) {
 			case 'clear_all': 
 				$GLOBALS['user']->playlist->clear(); 
 			break;
+			case 'live_stream': 
+				$object = new Radio($_REQUEST['id']); 
+				// Confirm its a valid ID
+				if ($object->name) { 
+					$GLOBALS['user']->playlist->add_object($object->id,'radio'); 
+				} 
+			break;
 			default: 
 			case 'song': 
 				$GLOBALS['user']->playlist->add_object($_REQUEST['id']); 
 			break;
 		} // end switch
 		
-
-
-
 		$results['topbar-playlist'] = ajax_include('show_playlist_bar.inc.php'); 
 		$results['rightbar'] = ajax_include('rightbar.inc.php'); 
 		echo xml_from_array($results); 

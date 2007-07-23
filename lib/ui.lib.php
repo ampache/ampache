@@ -954,10 +954,10 @@ function show_catalog_select($name='catalog',$catalog_id=0,$style='') {
 
 	echo "<select name=\"$name\" style=\"$style\">\n";
 
-	$sql = "SELECT id, name FROM catalog ORDER BY name";
-	$db_results = mysql_query($sql, dbh());
+	$sql = "SELECT `id`, `name` FROM `catalog` ORDER BY `name`";
+	$db_results = Dba::query($sql);
 
-	while ($r = mysql_fetch_assoc($db_results)) { 
+	while ($r = Dba::fetch_assoc($db_results)) { 
 		$selected = '';
 		if ($r['id'] == $catalog_id) { 
 			$selected = "selected=\"selected\"";

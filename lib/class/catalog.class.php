@@ -1288,7 +1288,9 @@ class Catalog {
                 echo "update_txt('" . $count ."','clean_count_" . $this->id . "');";
                 echo "</script>\n";
 		show_box_top(); 
-		echo "<b>" . _('Catalog Clean Done') . " [" . count($dead_files) . "] " . _('files removed') . "</b><br />\n";
+		echo "<strong>" . _('Catalog Clean Done') . " [" . count($dead_files) . "] " . _('files removed') . "</strong><br />\n";
+		echo "<strong>" . _('Optimizing Tables') . "...</strong><br />\n"; 
+		self::optimize_tables(); 
 		show_box_bottom(); 
 		flush();
 
@@ -1419,7 +1421,8 @@ class Catalog {
 	 */
 	public static function clean_ext_info($catalog_id) { 
 
-		$sql = "DELETE FROM song_ext_data USING song_ext_data LEFT JOIN song ON song.id = song_ext_data.song_id WHERE song.id IS NULL"; 
+		$sql = "DELETE FROM `song_data` USING `song_data` LEFT JOIN `song` ON `song`.`id` = `song_data`.`song_id` " . 
+			"WHERE `song`.`id` IS NULL"; 
 		$db_results = Dba::query($sql); 
 
 	} // clean_ext_info
@@ -1451,19 +1454,19 @@ class Catalog {
 		$db_results = Dba::query($sql); 
 
 		// Delete Song Ratings information
-		$sql = "DELETE FROM ratings USING ratings LEFT JOIN song ON song.id=ratings.object_id WHERE object_type='song' AND song.id IS NULL"; 
+		$sql = "DELETE FROM rating USING rating LEFT JOIN song ON song.id=rating.object_id WHERE object_type='song' AND song.id IS NULL"; 
 		$db_results = Dba::query($sql); 
 
 		// Delete Genre Ratings Information
-		$sql = "DELETE FROM ratings USING ratings LEFT JOIN genre ON genre.id=ratings.object_id WHERE object_type='genre' AND genre.id IS NULL"; 
+		$sql = "DELETE FROM rating USING rating LEFT JOIN genre ON genre.id=rating.object_id WHERE object_type='genre' AND genre.id IS NULL"; 
 		$db_results = Dba::query($sql); 
 
 		// Delete Album Rating Information
-		$sql = "DELETE FROM ratings USING ratings LEFT JOIN album ON album.id=ratings.object_id WHERE object_type='album' AND album.id IS NULL"; 
+		$sql = "DELETE FROM rating USING rating LEFT JOIN album ON album.id=rating.object_id WHERE object_type='album' AND album.id IS NULL"; 
 		$db_results = Dba::query($sql); 
 
 		// Delete Artist Rating Information
-		$sql = "DELETE FROM ratings USING ratings LEFT JOIN artist ON artist.id=ratings.object_id WHERE object_type='artist' AND artist.id IS NULL"; 
+		$sql = "DELETE FROM rating USING rating LEFT JOIN artist ON artist.id=rating.object_id WHERE object_type='artist' AND artist.id IS NULL"; 
 		$db_results = Dba::query($sql); 
 
 	} // clean_stats
@@ -1595,6 +1598,26 @@ class Catalog {
 		self::clean_playlists($catalog_id); 
 
 	} // clean
+
+	/**
+	 * optimize_tables
+	 * This runs an optomize on the tables and updates the stats to improve join speed
+	 * this can be slow, but is a good idea to do from time to time. This is incase the dba
+	 * isn't doing it... which we're going to assume they aren't
+	 */
+	 public static function optimize_tables() { 
+
+		$sql = "OPTIMIZE TABLE `song_data`,`song`,`rating`,`catalog`,`session`,`object_count`,`album`,`album_data`" . 
+			",`artist`,`ip_history`,`genre`,`flagged`,`now_playing`,`user_preference`,`tags`,`tag_map`,`tmp_playlist`" . 
+			",`tmp_playlist_data`,`playlist`,`playlist_data`"; 
+		$db_results = Dba::query($sql); 
+
+                $sql = "ANALYZE TABLE `song_data`,`song`,`rating`,`catalog`,`session`,`object_count`,`album`,`album_data`" .
+		        ",`artist`,`ip_history`,`genre`,`flagged`,`now_playing`,`user_preference`,`tags`,`tag_map`,`tmp_playlist`" .
+			",`tmp_playlist_data`,`playlist`,`playlist_data`";
+		$db_results = Dba::query($sql); 		
+
+	 } // optimize_tables; 
 
 	/**
 	 * check_artist

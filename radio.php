@@ -1,0 +1,56 @@
+<?php
+/*
+
+ Copyright (c) 2001 - 2007 Ampache.org
+ All rights reserved.
+
+ This program is free software; you can redistribute it and/or
+ modify it under the terms of the GNU General Public License
+ as published by the Free Software Foundation; version 2
+ of the License.
+
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with this program; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+
+*/
+
+require 'lib/init.php';
+
+show_header(); 
+
+// Switch on Action
+switch ($_REQUEST['action']) { 
+	case 'show_create': 
+		if (!$GLOBALS['user']->has_access('25')) { 
+			access_denied(); 
+			exit; 
+		} 
+
+		require_once Config::get('prefix') . '/templates/show_add_live_stream.inc.php'; 
+
+	break;
+	case 'create': 
+		if (!$GLOBALS['user']->has_access('25')) { 
+			access_denied(); 
+			exit; 
+		} 
+
+		// Try to create the sucker
+		$results = Radio::create($_POST); 
+
+		if (!$results) { 
+			require_once Config::get('prefix') . '/templates/show_add_live_stream.inc.php'; 
+		} 
+
+	break;
+} // end data collection 
+
+show_footer(); 
+
+?>
