@@ -215,10 +215,10 @@ switch ($action) {
 	/* Setting ratings */
 	case 'set_rating':
 		ob_start(); 
-		$rating = new Rating($_REQUEST['object_id'],$_REQUEST['rating_type']);
-		$rating->set_rating($_REQUEST['rating']);
-		show_rating($_REQUEST['object_id'],$_REQUEST['rating_type']);
-		$key = "rating_" . $_REQUEST['object_id'] . "_" . $_REQUEST['rating_type'];
+		$rating = new Rating($_GET['object_id'],$_GET['rating_type']);
+		$rating->set_rating($_GET['rating']);
+		Rating::show($_GET['object_id'],$_GET['rating_type']); 
+		$key = "rating_" . $_GET['object_id'] . "_" . $_GET['rating_type'];
 		$results[$key] = ob_get_contents();
 		ob_end_clean();
 		echo xml_from_array($results);

@@ -439,11 +439,10 @@ span.five-stars:hover { width: 80px; }
 	margin:5px 0;
 	padding-left:0px;
 }
-.text-action a, .text-action span {
- 	padding: 0 2px;
-	background: #ddd;
-	border:1px solid #000;
-	text-decoration: none;
+.text-action span {
+	text-decoration: underline; 
+	cursor: pointer; 
+	display:block; 
 }
 .text-action #pt_active {
 	background: #000;

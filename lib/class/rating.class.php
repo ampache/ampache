@@ -64,12 +64,12 @@ class Rating {
 
 		$user_id	= Dba::escape($user_id); 
 
-		$sql = "SELECT `user_rating` FROM `rating` WHERE `user`='$user_id' AND `object_id`='$this->id' AND `object_type`='$this->type'";
+		$sql = "SELECT `rating` FROM `rating` WHERE `user`='$user_id' AND `object_id`='$this->id' AND `object_type`='$this->type'";
 		$db_results = Dba::query($sql);
 		
 		$results = Dba::fetch_assoc($db_results);
 		
-		return $results['user_rating'];
+		return $results['rating'];
 
 	} // get_user
 
@@ -82,7 +82,7 @@ class Rating {
 	 */
 	public function get_average() { 
 
-		$sql = "SELECT `user_rating` AS `rating` FROM `rating` WHERE `object_id`='$this->id' AND `object_type`='$this->type'";
+		$sql = "SELECT `rating` FROM `rating` WHERE `object_id`='$this->id' AND `object_type`='$this->type'";
 		$db_results = Dba::query($sql);
 
 		$i = 0;
@@ -123,11 +123,11 @@ class Rating {
 		$db_results = Dba::query($sql);
 
 		if ($existing = Dba::fetch_assoc($db_results)) { 
-			$sql = "UPDATE `rating` SET `user_rating`='$score' WHERE `id`='" . $existing['id'] . "'";
+			$sql = "UPDATE `rating` SET `rating`='$score' WHERE `id`='" . $existing['id'] . "'";
 			$db_results = Dba::query($sql);
 		}
 		else { 
-			$sql = "INSERT INTO `rating` (`object_id`,`object_type`,`user_rating`,`user`) VALUES " . 
+			$sql = "INSERT INTO `rating` (`object_id`,`object_type`,`rating`,`user`) VALUES " . 
 				" ('$this->id','$this->type','$score','" . $GLOBALS['user']->id . "')";
 			$db_results = Dba::query($sql);
 		} 
@@ -135,6 +135,31 @@ class Rating {
 		return true;
 
 	} // set_rating
+
+	/**
+	 * show
+	 * This takes an id and a type and displays the rating if ratings are enabled. 
+	 */
+	public static function show ($object_id,$type) { 
+
+		// If there aren't ratings don't return anything
+		if (!Config::get('ratings')) { return false; } 
+
+		$rating = new Rating($object_id,$type); 
+
+		require Config::get('prefix') . '/templates/show_object_rating.inc.php'; 
+
+	} // show 
+
+	/**
+	 * show_static
+	 * This is a static version of the ratings created by Andy90 
+	 */
+	public static function show_static ($object_id,$type) { 
+
+
+
+	} // show_static
 
 } //end rating class
 ?>

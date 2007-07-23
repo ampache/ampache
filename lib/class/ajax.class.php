@@ -80,19 +80,25 @@ class Ajax {
 	 * This prints out the specified text as a link and setups the required
 	 * ajax for the link so it works correctly
 	 */
-	public static function text($action,$text,$source,$post='') { 
+	public static function text($action,$text,$source,$post='',$span_class='') { 
 
 		$url = Config::get('ajax_url') . $action; 
 
+		// Use ajaxPost() if we are doing a post
 		if ($post) { 
 			$ajax_string = "ajaxPost('$url','$post','$source')"; 
 		}
 		else { 
-			$ajax_string = "ajaxPut('$url','$post','$source')"; 
+			$ajax_string = "ajaxPut('$url','$source')"; 
+		} 
+
+		// If they passed a span class
+		if ($span_class) { 
+			$class_txt = ' class="' . $span_class . '"'; 
 		} 
 
 		// If we pass a source put it in the ID
-		$string = "<span id=\"$source\">$text</span>\n"; 
+		$string = "<span id=\"$source\" $class_txt>$text</span>\n"; 
 
 		$string .= self::observe($source,'click',$ajax_string); 
 
