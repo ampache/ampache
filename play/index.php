@@ -37,9 +37,10 @@ $sid 		= scrub_in($_REQUEST['sid']);
 
 /* This is specifically for tmp playlist requests */
 $tmp_id		= scrub_in($_REQUEST['tmp_id']);
+$random		= scrub_in($_REQUEST['random']); 
 
 /* First things first, if we don't have a uid/song_id stop here */
-if (empty($song_id) && empty($tmp_id)) { 
+if (empty($song_id) && empty($tmp_id) && empty($random)) { 
 	debug_event('no_song',"Error: No Song UID Specified, nothing to play",'2');
 	exit; 
 }
@@ -116,6 +117,13 @@ if ($tmp_id) {
 	/* This takes into account votes etc and removes the */
 	$song_id = $tmp_playlist->get_next_object();
 }
+
+/**
+ * if we are doing random let's pull the random object
+ */
+if ($random) { 
+	$song_id = Random::get_single_song($_REQUEST['type']); 
+} 
 
 /* Base Checks passed create the song object */
 $song = new Song($song_id);

@@ -4,6 +4,8 @@
 
 --------------------------------------------------------------------------
   v.3.4-Alpha1
+  	- Added initial dyanmic playlist item support, only default
+		and genre work right now. 
 	- Added support for Internet Radio Stations
 	- Updated LastFM submission formating to account for changes on 
 		last.fm (Thx entropathy)

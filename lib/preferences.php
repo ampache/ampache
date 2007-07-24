@@ -325,7 +325,9 @@ function create_preference_input($name,$value) {
 		break;
 		case 'random_method': 
 			echo "<select name=\"$name\">\n"; 
-			echo "\t<option value=\"genre\">" . _('Similar Genre') . "</option>"; 
+			echo "\t<option value=\"default\">" . _('Default') . "</option>"; 
+			echo "\t<option value=\"album\">" . _('Related Album') . "</option>"; 
+			echo "\t<option value=\"genre\">" . _('Related Genre') . "</option>"; 
 			echo "</select>\n"; 
 		break;
 		case 'lastfm_pass':

@@ -929,6 +929,27 @@ class User {
 	} // get_user_validation
 
 	/**
+	 * get_recently_played
+	 * This gets the recently played items for this user respecting
+	 * the limit passed
+	 */
+	public function get_recently_played($limit,$type='') { 
+
+		if (!$type) { $type = 'song'; } 
+
+		$sql = "SELECT * FROM `object_count` WHERE `object_type`='$type' AND `user`='$this->id' " . 
+			"ORDER BY `date` DESC LIMIT $limit"; 
+		$db_results = Dba::query($sql); 
+
+		while ($row = Dba::fetch_assoc($db_results)) { 
+			$results[] = $row['object_id'];
+		} 
+
+		return $results; 
+
+	} // get_recently_played
+
+	/**
  	 * get_recent
 	 * This returns users by thier last login date
 	 */
@@ -1005,7 +1026,7 @@ class User {
         function is_xmlrpc() {
 
                 /* If we aren't using XML-RPC return true */
-                if (!conf('xml_rpc')) {
+                if (!Config::get('xml_rpc')) {
                         return false;
                 }
 

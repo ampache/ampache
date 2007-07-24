@@ -103,13 +103,21 @@ class Stream {
 		header("Content-Disposition: filename=playlist.m3u");
 		header("Content-Type: audio/x-mpegurl;");
 
+		// Flip for the poping!
+		asort($this->urls); 
+
 		/* Foreach songs */
 		foreach ($this->songs as $song_id) { 
+			// If it's a place-holder
+			if ($song_id == '-1') { 
+				echo array_pop($this->urls) . "\n"; 
+				continue; 
+			} 
 			$song = new Song($song_id);
 			if ($song->type == ".flac") { $song->type = ".ogg"; }
-                        if($GLOBALS['user']->prefs['play_type'] == 'downsample') {
-                                $ds = $GLOBALS['user']->prefs['sample_rate'];
-                        }
+	                if ($GLOBALS['user']->prefs['play_type'] == 'downsample') {
+	                	$ds = $GLOBALS['user']->prefs['sample_rate'];
+	                }
 			echo "$this->web_path/play/index.php?song=$song_id&uid=$this->user_id&sid=$this->sess&ds=$ds&stupidwinamp=." . $song->type . "\n"; 
 		} // end foreach
 
@@ -133,8 +141,16 @@ class Stream {
 	        header("Content-Type: audio/x-mpegurl;");
 	        echo "#EXTM3U\n";
 
+		// Flip for the popping
+		asort($this->urls); 
+
 		// Foreach the songs in this stream object
 	        foreach ($this->songs as $song_id) {
+			if ($song_id == '-1') { 
+				echo "#EXTINF: URL-Add\n"; 
+				echo array_pop($this->urls) . "\n"; 
+				continue; 
+			} 
 	        	$song = new Song($song_id);
 	                $song->format();
 

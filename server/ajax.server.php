@@ -193,6 +193,9 @@ switch ($action) {
 					$GLOBALS['user']->playlist->add_object($object->id,'radio'); 
 				} 
 			break;
+			case 'dynamic': 
+				$GLOBALS['user']->playlist->add_object('0','special'); 
+			break;
 			default: 
 			case 'song': 
 				$GLOBALS['user']->playlist->add_object($_REQUEST['id']); 
@@ -220,7 +223,11 @@ switch ($action) {
 		$results['np_data'] = ob_get_contents();
 		ob_clean();
 		$data = get_recently_played(); 
-		if (count($data)) { require_once Config::get('prefix') . '/templates/show_recently_played.inc.php'; }
+		if (count($data)) { 
+			show_box_top(_('Recently Played')); 
+			require_once Config::get('prefix') . '/templates/show_recently_played.inc.php'; 
+			show_box_bottom(); 
+		}
 		$results['recently_played'] = ob_get_contents(); 
 		ob_end_clean();
 		echo xml_from_array($results);

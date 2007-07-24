@@ -29,17 +29,26 @@
         </a>
 	</li>
 <?php } ?>
-	<li><span onclick="ajaxPut('<?php echo Config::get('ajax_url'); ?>?action=basket&amp;type=clear_all');return true;">
-		<?php echo get_user_icon('delete',_('Clear Playlist')); ?>
-	</span></li>
+	<li>
+	<?php echo Ajax::button('?action=basket&type=dynamic','cog',_('Add Dynamic Item'),'rightbar_dynamic_playlist'); ?>
+	</li>
+	<li>
+	<?php echo Ajax::button('?action=basket&type=clear_all','delete',_('Clear Playlist'),'rightbar_clear_playlist'); ?>
+	</li>
 </ul>
 <div id="current_playlist">
 <table cellpadding="0" cellspacing="0">
 <?php 
+	//FIXME :: this feels kludgy
 	$objects = $GLOBALS['user']->playlist->get_items(); 
 	foreach ($objects as $uid=>$object_data) { 
-		$object = new $object_data['1']($object_data['0']); 
-		$object->format(); 
+		if ($object_data['1'] == 'special') { 
+			$object->f_link = _('Dynamic Playlist Item'); 
+		} 
+		else { 
+			$object = new $object_data['1']($object_data['0']); 
+			$object->format(); 
+		} 
 ?>
 <tr class="<?php echo flip_class(); ?>">
 	<td>
