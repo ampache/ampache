@@ -175,7 +175,7 @@ class Random {
 
 		$results = array(); 
 
-		$data = $GLOBALS['user']->get_recently_player('1','artist'); 
+		$data = $GLOBALS['user']->get_recently_played('1','artist'); 
 		if ($data['0']) { 
 			$where_sql = " WHERE `artist`='" . $data['0'] . "' "; 
 		} 
@@ -183,10 +183,10 @@ class Random {
 		$sql = "SELECT `id` FROM `song` $where_sql ORDER BY RAND() LIMIT $limit"; 
 		$db_results = Dba::query($sql); 
 
-		while ($row = Dba::fetch_assoc($db_resutls)) { 
+		while ($row = Dba::fetch_assoc($db_results)) { 
 			$results[] = $row['id']; 
 		} 
-
+		
 		return $results; 
 
 	} // get_artist
