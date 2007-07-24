@@ -141,22 +141,95 @@ class Random {
 	} // get_genre
 
 	/**
-	 * validiate_type
-	 * this validates the random type, this is a private function
+	 * get_album
+	 * This looks at the last album played by the current user and
+	 * picks something else in the same album
 	 */
-	private static function validate_type($type) { 
+	public static function get_album($limit) { 
+
+		$results = array(); 
+
+		// Get the last album playbed by us
+		$data = $GLOBALS['user']->get_recently_played('1','album'); 
+		if ($data['0']) { 
+			$where_sql = " WHERE `album`='" . $data['0'] . "' ";
+		} 
+
+		$sql = "SELECT `id` FROM `song` $where_sql ORDER BY RAND() LIMIT $limit"; 
+		$db_results = Dba::query($sql); 
+
+		while ($row = Dba::fetch_assoc($db_results)) { 
+			$results[] = $row['id']; 
+		} 
+
+		return $results; 
+
+	} // get_album
+
+	/**
+	 * get_artist
+	 * This looks at the last artist played and then randomly picks a song from the
+	 * same artist
+	 */
+	public static function get_artist($limit) { 
+
+		$results = array(); 
+
+		$data = $GLOBALS['user']->get_recently_player('1','artist'); 
+		if ($data['0']) { 
+			$where_sql = " WHERE `artist`='" . $data['0'] . "' "; 
+		} 
+
+		$sql = "SELECT `id` FROM `song` $where_sql ORDER BY RAND() LIMIT $limit"; 
+		$db_results = Dba::query($sql); 
+
+		while ($row = Dba::fetch_assoc($db_resutls)) { 
+			$results[] = $row['id']; 
+		} 
+
+		return $results; 
+
+	} // get_artist
+
+	/**
+	 * get_type_name
+	 * This returns a 'purrty' name for the differnt random types
+	 */
+	public static function get_type_name($type) { 
+
+		switch ($type) { 
+			case 'album':
+				return _('Related Album'); 
+			break;
+			case 'genre': 
+				return _('Related Genre'); 
+			break;
+			case 'artist': 
+				return _('Related Artist'); 
+			break;
+			default: 
+				return _('Pure Random'); 
+			break;
+		} // end switch 
+
+	} // get_type_name
+
+	/**
+	 * validiate_type
+	 * this validates the random type
+	 */
+	public static function validate_type($type) { 
 
                 switch ($type) {
-                        case 'special':
-                                $type = $GLOBALS['user']->prefs['random_method'];
-			break;
+			case 'default':
                         case 'genre':
                         case 'album':
                         case 'artist':
                         case 'rated':
+				return $type; 
                         break;
                         default:
-                                return false;
+                                return 'default';
                         break;
                 } // end switch
 		

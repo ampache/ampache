@@ -194,7 +194,8 @@ switch ($action) {
 				} 
 			break;
 			case 'dynamic': 
-				$GLOBALS['user']->playlist->add_object('0','special'); 
+				$random_type = Random::validate_type($_REQUEST['random_type']); 
+				$GLOBALS['user']->playlist->add_object('0',$random_type); 
 			break;
 			default: 
 			case 'song': 

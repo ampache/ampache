@@ -30,9 +30,6 @@
 	</li>
 <?php } ?>
 	<li>
-	<?php echo Ajax::button('?action=basket&type=dynamic','cog',_('Add Dynamic Item'),'rightbar_dynamic_playlist'); ?>
-	</li>
-	<li>
 	<?php echo Ajax::button('?action=basket&type=clear_all','delete',_('Clear Playlist'),'rightbar_clear_playlist'); ?>
 	</li>
 </ul>
@@ -42,12 +39,12 @@
 	//FIXME :: this feels kludgy
 	$objects = $GLOBALS['user']->playlist->get_items(); 
 	foreach ($objects as $uid=>$object_data) { 
-		if ($object_data['1'] == 'special') { 
-			$object->f_link = _('Dynamic Playlist Item'); 
-		} 
-		else { 
+		if ($object_data['1'] == 'radio' || $object_data['1'] == 'song') { 
 			$object = new $object_data['1']($object_data['0']); 
 			$object->format(); 
+		} 
+		else { 
+			$object->f_link = Random::get_type_name($object_data['1']); 
 		} 
 ?>
 <tr class="<?php echo flip_class(); ?>">
@@ -62,5 +59,19 @@
 	<tr><td class="error"><?php echo _('Not Enough Data'); ?></td></tr>
 <?php } ?>
 </table>
+</div>
+<div id="rightbar-bottom">
+<h4><?php echo _('Add Dynamic Items'); ?></h4>
+<span><?php echo Ajax::button('?action=basket&type=dynamic&random_type=default','add',_('Add'),'rightbar_pure_random'); ?>
+<?php echo _('Pure Random'); ?></span>
+
+<span><?php echo Ajax::button('?action=basket&type=dynamic&random_type=artist','add',_('Add'),'rightbar_related_artist'); ?>
+<?php echo _('Related Artist'); ?></span>
+
+<span><?php echo Ajax::button('?action=basket&type=dynamic&random_type=album','add',_('Add'),'rightbar_related_album'); ?>
+<?php echo _('Related Album'); ?></span>
+
+<span><?php echo Ajax::button('?action=basket&type=dynamic&random_type=genre','add',_('Add'),'rightbar_related_genre'); ?>
+<?php echo _('Related Genre'); ?></span>
 </div>
 <?php show_box_bottom(); ?> 

@@ -181,6 +181,11 @@ h3#content_title span {
 	float:left;
 	margin-right:3px;
 }
+#rightbar-bottom span { 
+	padding-left:10px; 
+	display:block; 
+} 
+
 #current_playlist { 
 	clear:left; 
 } 
