@@ -28,10 +28,10 @@ $ajax_url = Config::get('ajax_url');
 ?>
 <ul id="sidebar-tabs">
 <li <?php echo $sidebar_home; ?>>
-	<?php echo Ajax::button("?action=sidebar&button=home",home,_('Home'),'sidebar_home'); ?>
+	<?php echo Ajax::button("?action=sidebar&button=home",'home',_('Home'),'sidebar_home'); ?>
 </li>
 <li <?php echo $sidebar_browse; ?>>
-	<?php echo Ajax::button("?action=sidebar&button=browse",browse,_('Browse'),'sidebar_browse'); ?>
+	<?php echo Ajax::button("?action=sidebar&button=browse",'browse',_('Browse'),'sidebar_browse'); ?>
 </li>
 <li <?php echo $sidebar_search; ?>>
 	<?php echo Ajax::button("?action=sidebar&button=search",'view',_('Search'),'sidebar_search'); ?>

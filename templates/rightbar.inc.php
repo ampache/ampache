@@ -25,12 +25,12 @@
 <?php if (Access::check_function('batch_download')) { ?>
 	<li>
 	<a href="<?php echo Config::get('web_path'); ?>/batch.php?action=tmp_playlist&amp;id=<?php echo $GLOBALS['user']->playlist->id; ?>">
-	        <?php echo get_user_icon('batch_download','',_('Batch Download')); ?>
+	        <?php echo get_user_icon('batch_download',_('Batch Download')); ?>
         </a>
 	</li>
 <?php } ?>
 	<li><span onclick="ajaxPut('<?php echo Config::get('ajax_url'); ?>?action=basket&amp;type=clear_all');return true;">
-		<?php echo get_user_icon('delete','',_('Clear Playlist')); ?>
+		<?php echo get_user_icon('delete',_('Clear Playlist')); ?>
 	</span></li>
 </ul>
 <div id="current_playlist">
