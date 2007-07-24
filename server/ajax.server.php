@@ -220,11 +220,10 @@ switch ($action) {
 		$results['np_data'] = ob_get_contents();
 		ob_clean();
 		$data = get_recently_played(); 
-		if (count($data)) { require_once(conf('prefix') . '/templates/show_recently_played.inc.php'); }
+		if (count($data)) { require_once Config::get('prefix') . '/templates/show_recently_played.inc.php'; }
 		$results['recently_played'] = ob_get_contents(); 
 		ob_end_clean();
-		$xml_doc = xml_from_array($results);
-		echo $xml_doc;
+		echo xml_from_array($results);
 	break;
 	/* Setting ratings */
 	case 'set_rating':

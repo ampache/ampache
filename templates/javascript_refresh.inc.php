@@ -42,7 +42,6 @@ function refresh()
 }
 
 // start with page-load
-doLoad;
+doLoad();
 // End -->
 </script>
-
