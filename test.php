@@ -41,6 +41,9 @@ require_once $prefix . '/lib/debug.lib.php';
 Dba::_auto_init(); 
 
 switch ($_REQUEST['action']) { 
+	case 'config': 
+		require_once $prefix . '/templates/show_test_config.inc.php'; 
+	break;
 	default:
 		require_once $prefix . '/templates/show_test.inc.php';
 	break;

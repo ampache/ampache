@@ -61,7 +61,7 @@ $results = @parse_ini_file($configfile);
 
 if (!count($results)) { 
 	$path = preg_replace("/(.*)\/(\w+\.php)$/","\${1}", $_SERVER['PHP_SELF']);
-	$link = $http_type . $_SERVER['HTTP_HOST'] . $path . "/test.php";
+	$link = $http_type . $_SERVER['HTTP_HOST'] . $path . "/test.php?action=config";
 	header ("Location: $link");
 	exit();
 } 
