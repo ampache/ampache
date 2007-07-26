@@ -302,7 +302,6 @@ $minBytesStreamed = $song->size / 2;
 while (!feof($fp) && (connection_status() == 0)) {
 	$buf = fread($fp, $chunk_size);
         print($buf);
-	if ($GLOBALS['user']->prefs['rate_limit'] > 0) { sleep (1); } 
         $bytesStreamed += $chunk_size;
 }
 
