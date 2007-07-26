@@ -293,18 +293,20 @@ class User {
 
 	/**
 	 * is_logged_in
-	 * checks to see if $this user is logged in
+	 * checks to see if $this user is logged in returns their current IP if they
+	 * are logged in 
 	 */
 	public function is_logged_in() { 
 
 		$username = Dba::escape($this->username); 
 
-		$sql = "SELECT `id` FROM `session` WHERE `username`='$username'" .
+		$sql = "SELECT `id`,`ip` FROM `session` WHERE `username`='$username'" .
 			" AND `expire` > ". time();
 		$db_results = Dba::query($sql);
 
-		if (Dba::num_rows($db_results)) { 
-			return true;
+		if ($row = Dba::fetch_assoc($db_results)) { 
+			$ip = $row['ip'] ? $row['ip'] : '1'; 
+			return $ip;
 		}
 
 		return false;

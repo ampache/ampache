@@ -65,16 +65,33 @@ function vauth_mysql_auth($username,$password) {
 
         $password_check_sql = "PASSWORD('$password')";
 
-	$sql = "SELECT `password` FROM `user` WHERE `username`='$username'";
+	$sql = "SELECT `user`.`password`,`session`,`ip`,`user`,`id` FROM `user` " . 
+		"LEFT JOIN `session` ON `session`.`username`=`user`.`username` " . 
+		"WHERE `user`.`username`='$username'";
 	$db_results = Dba::query($sql);
-	$row = Dba::fetch_row($db_results);
+	$row = Dba::fetch_assoc($db_results);
+
+	// If they don't have a password kick em ou
+	if (!$row['password']) { 
+		Error::add('general','Error Username or Password incorrect, please try again'); 
+		return false; 
+	} 
+
+	if (Config::get('prevent_multiple_logins')) { 
+		$client = new User($row['id']); 
+		$ip = $client->is_logged_in(); 
+		if ($current_ip != ip2int($_SERVER['REMOTE_ADDR'])) { 
+			Error::add('general','User Already Logged in'; 
+			return false; 
+		} 
+
 
         $sql = "SELECT version()";
         $db_results = Dba::query($sql);
         $version = Dba::fetch_row($db_results);
         $mysql_version = substr(preg_replace("/(\d+)\.(\d+)\.(\d+).*/","$1$2$3",$version[0]),0,3);
 	
-	if ($mysql_version > "409" AND substr($row[0],0,1) !== "*") {
+	if ($mysql_version > "409" AND substr($row['password'],0,1) !== "*") {
 	        $password_check_sql = "OLD_PASSWORD('$password')";
         }
 
@@ -84,9 +101,8 @@ function vauth_mysql_auth($username,$password) {
 	$results = Dba::fetch_assoc($db_results);
 
 	if (!$results) { 
-		$results['success'] = false;
-		$results['error'] = 'Error Username or Password incorrect, please try again';
-		return $results;
+		Error::add('general','Error Username or Password incorrect, please try again'); 
+		return false; 
 	}
 
 	$results['type'] 	= 'mysql';

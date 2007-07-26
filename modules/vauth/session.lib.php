@@ -204,6 +204,7 @@ function vauth_session_create($data) {
 	$key = session_id();
 
 	$username 	= Dba::escape($data['username']);
+	$ip		= Dba::escape(ip2int($_SERVER['REMOTE_ADDR'])); 
 	$type		= Dba::escape($data['type']);
 	$value		= Dba::escape($data['value']);
 	$expire		= Dba::escape(time() + vauth_conf('session_length'));
@@ -212,8 +213,8 @@ function vauth_session_create($data) {
 	if (!strlen($value)) { $value = ' '; } 
 
 	/* Insert the row */
-	$sql = "INSERT INTO session (`id`,`username`,`type`,`value`,`expire`) " . 
-		" VALUES ('$key','$username','$type','$value','$expire')";
+	$sql = "INSERT INTO session (`id`,`username`,`ip`,`type`,`value`,`expire`) " . 
+		" VALUES ('$key','$username','$ip','$type','$value','$expire')";
 	$db_results = Dba::query($sql);
 
 	if (!$db_results) { 

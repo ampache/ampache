@@ -71,7 +71,7 @@ if ($_POST['username'] && $_POST['password']) {
 		
 		if ($user->disabled == '1') { 	
                                 $auth['success'] = false;
-                                $auth['error'] = _('User Disabled please contact Admin');
+				Error::add('general',_('User Disabled please contact Admin')); 
                 } // if user disabled
                 
 		elseif (!$user->username AND $auth['success']) { 
@@ -85,7 +85,7 @@ if ($_POST['username'] && $_POST['password']) {
 				/* Attempt to create the user */	
 				if (!$user->create($username, $name, $email,md5(mt_rand()), $access)) {
                                 	$auth['success'] = false;
-                                	$auth['error'] = _('Unable to create new account');
+					Error::add('general',_('Unable to create new account')); 
                             	}
 				else { 
                         		$user = new User($username);
@@ -94,7 +94,7 @@ if ($_POST['username'] && $_POST['password']) {
 
                         else {
                             $auth['success'] = false;
-                            $auth['error'] = _('No local account found');
+			    Error::add('general',_('No local account found')); 
                         }
                 } // else user isn't disabled
 
