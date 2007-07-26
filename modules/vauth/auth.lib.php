@@ -81,7 +81,7 @@ function vauth_mysql_auth($username,$password) {
 		$client = new User($row['id']); 
 		$ip = $client->is_logged_in(); 
 		if ($current_ip != ip2int($_SERVER['REMOTE_ADDR'])) { 
-			Error::add('general','User Already Logged in'; 
+			Error::add('general','User Already Logged in'); 
 			return false; 
 		} 
 
