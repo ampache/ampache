@@ -7,7 +7,7 @@
 ; if this config file is up to date 
 ; this is compared against a value hardcoded
 ; into the init script
-config_version = 2
+config_version = 4
 
 ;###################
 ; Path Vars        #
@@ -101,6 +101,13 @@ catalog_file_pattern = "mp3|mpc|m4p|m4a|mp4|aac|ogg|rm|wma|asf|flac|spx|ra|ape|s
 ; others from guessing URL's
 ; DEFAULT: true
 require_session = "true"
+
+; Multiple Logins
+; Added by Vlet 07/25/07
+; When this setting is enabled a user may only be logged in from a single
+; IP address at any one time, this is to prevent sharing of accounts
+; DEFAULT: false
+;prevent_multiple_logins = "false"
 
 ; Downsample Remote
 ; If this is set to true and access control is on any users who are not
