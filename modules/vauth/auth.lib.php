@@ -65,7 +65,7 @@ function vauth_mysql_auth($username,$password) {
 
         $password_check_sql = "PASSWORD('$password')";
 
-	$sql = "SELECT `user`.`password`,`session`,`ip`,`user`,`id` FROM `user` " . 
+	$sql = "SELECT `user`.`password`,`session`.`ip`,`user`.`id` FROM `user` " . 
 		"LEFT JOIN `session` ON `session`.`username`=`user`.`username` " . 
 		"WHERE `user`.`username`='$username'";
 	$db_results = Dba::query($sql);
