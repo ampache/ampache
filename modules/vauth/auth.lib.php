@@ -84,7 +84,7 @@ function vauth_mysql_auth($username,$password) {
 			Error::add('general','User Already Logged in'); 
 			return false; 
 		} 
-
+	} // if prevent_multiple_logins
 
         $sql = "SELECT version()";
         $db_results = Dba::query($sql);
