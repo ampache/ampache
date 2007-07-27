@@ -1575,7 +1575,7 @@ class Catalog {
                 flush();
 
 		show_box_top(); 
-		echo _('Update Finished.') . _('Checked') . " $count. $total_updated " . _('songs updated.') . "<br /><br />";
+		echo _('Update Finished.') . ' ' . _('Checked') . " $count. $total_updated " . _('songs updated.') . "<br /><br />";
 		show_box_bottom(); 
 
 		return true;
