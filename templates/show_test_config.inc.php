@@ -67,7 +67,7 @@ method simply comment it out valid values are<br />
 <br />
 <strong>amazon_base_urls</strong> (<i>http://webservices.amazon.com</i>)<br />
 An array of Amazon sites to search. NOTE: This will search each of these sites in turn so don't expect it
-to be lighting fast! It is strongly recommended that only one of these is selected at any<br />
+to be lightning fast! It is strongly recommended that only one of these is selected at any<br />
 <br />
 </div>
 <div id="bottom">

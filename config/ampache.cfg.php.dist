@@ -231,7 +231,7 @@ show_album_art = "true"
 ; Amazon base urls
 ; An array of Amazon sites to search.
 ; NOTE: This will search each of these sites in turn so don't expect it
-; to be lighting fast!
+; to be lightning fast!
 ; It is strongly recommended that only one of these is selected at any
 ; one time
 ; POSSIBLE VALUES: 
