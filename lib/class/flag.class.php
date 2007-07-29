@@ -1,13 +1,13 @@
 <?php
 /*
 
- Copyright 2001 - 2006 Ampache.org
+ Copyright 2001 - 2007 Ampache.org
  All Rights Reserved
 
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
- as published by the Free Software Foundation; either version 2
- of the License, or (at your option) any later version.
+ as published by the Free Software Foundation; version 2
+ of the License.
 
  This program is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -171,22 +171,22 @@ class Flag {
 	 * This adds a flag entry for an item, it takes an id, a type, the flag type
 	 * and a comment and then inserts the mofo
 	 */
-	function add($id,$type,$flag,$comment) { 
+	public static function add($id,$type,$flag,$comment) { 
 	
-		$id 		= sql_escape($id);
-		$type		= sql_escape($type);
-		$flag		= sql_escape($flag);
-		$user		= sql_escape($GLOBALS['user']->id);
-		$comment	= sql_escape($comment);
+		$id 		= Dba::escape($id);
+		$type		= Dba::escape($type);
+		$flag		= self::validate_flag($flag);
+		$user		= Dba::escape($GLOBALS['user']->id);
+		$comment	= Dba::escape($comment);
 		$time		= time();
 		$approved	= '0';
 
-		/* If they are an admin, it's auto approved */
-		if ($GLOBALS['user']->has_access('100')) { $approved = '1'; } 
+		/* If they are an content manager or higher, it's auto approved */
+		if ($GLOBALS['user']->has_access('75')) { $approved = '1'; } 
 
-		$sql = "INSERT INTO flagged (`object_id`,`object_type`,`flag`,`comment`,`date`,`approved`,`user`) VALUES " . 
+		$sql = "INSERT INTO `flagged` (`object_id`,`object_type`,`flag`,`comment`,`date`,`approved`,`user`) VALUES " . 
 			" ('$id','$type','$flag','$comment','$time','$approved','$user')";
-		$db_results = mysql_query($sql, dbh());
+		$db_results = Dba::query($sql);
 
 		return true;
 
@@ -309,6 +309,27 @@ class Flag {
 		echo $name;
 		
 	} // print_flag
+
+	/**
+	 * validate_flag
+	 * This takes a flag input and makes sure it's one of the reigstered
+	 * and valid 'flag' values
+	 */
+	public static function validate_flag($flag) { 
+
+		switch ($flag) { 
+			case 'delete': 
+			case 'retag': 
+			case 'reencode': 
+			case 'other': 
+				return $flag; 
+			break;
+			default: 
+				return 'other'; 
+			break;
+		} // end switch
+
+	} // validate_flag
 
 } //end of flag class
 

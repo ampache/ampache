@@ -39,20 +39,28 @@ $client->format();
 	</td>
 	<td valign="top">
 		<h2><?php echo _('Active Playlist'); ?></h2>
+		<div style="padding-left:10px;">
 		<?php 
 			$tmp_playlist = new tmpPlaylist(tmpPlaylist::get_from_userid($client->id)); 
 			$object_ids = $tmp_playlist->get_items(); 
-			foreach ($object_ids as $song_id) { 
-				$song = new Song($song_id);
-				$song->format(); 
+			foreach ($object_ids as $object_data) { 
+				if ($object_data['1'] == 'radio' || $object_data['1'] == 'song') { 
+					$object = new $object_data['1']($object_data['0']);
+					$object->format(); 
+				} 
+				else { 
+					$object = new Random(); 
+					$object->f_link = Random::get_type_name($object_data['1']); 
+				} 
 		?>
-		<?php echo $song->f_link; ?><br />
+		<?php echo $object->f_link; ?><br />
 		<?php } ?>
+		</div>
 	</td>
 </tr>
 <tr>
 	<td valign="top">
-		<h2><?php echo _('Recently Rated'); ?></h2>
+		&nbsp;
 	</td>
 	<td>
 	<?php 

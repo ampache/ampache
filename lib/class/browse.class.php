@@ -300,21 +300,37 @@ class Browse {
 		if ($order != 'DESC') { $order == 'ASC'; } 
 
 		
-		if ($_SESSION['browse']['type'] == 'song') { 
-			switch($field) { 
-				case 'title';
-					$sql = "`song`.`title`"; 
-				break;
-				case 'year':
-					$sql = "`song`.`year`"; 
-				break;
-				default: 
-					// Rien a faire
-				break;
-			} // end switch
-		} // end if song 
+		switch ($_SESSION['browse']['type']) { 
+			case 'song': 
+				switch($field) { 
+					case 'title';
+						$sql = "`song`.`title`"; 
+					break;
+					case 'year':
+						$sql = "`song`.`year`"; 
+					break;
+						default: 
+						// Rien a faire
+					break;
+				} // end switch
+			break;
+			case 'album': 
+				switch($field) { 
+					case 'name': 
+						$sql = "`album`.`name`"; 
+					break;
+					case 'year': 
+						$sql = "`album`.`year`"; 
+					break;
+				} // end switch
+			default: 
+				// Rien a faire
+			break;
+		} // end switch
 
-		return "$sql $order,"; 
+		if ($sql) { $sql_sort = "$sql $order,"; } 
+		
+		return $sql_sort; 
 
 	} // sql_sort
 

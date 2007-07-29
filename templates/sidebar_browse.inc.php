@@ -14,12 +14,14 @@
 <h4><?php echo _('Filters'); ?></h4>
 <?php show_alphabet_list($_REQUEST['alpha_match'],$_REQUEST['action']); ?>
 <hr />
+<!--
 <input type="checkbox" onclick="ajaxPut('<?php echo $ajax_info; ?>?action=browse&amp;key=show_art&amp;value=1');return true;" value="1" />
 	<?php echo _('Show Art'); ?><br />
 <input type="checkbox" onclick="ajaxPut('<?php echo $ajax_info; ?>?action=browse&amp;key=min_count&amp;value=1');return true;" value="1" />
 	<?php echo _('Minimum Count'); ?><br />
-<input type="checkbox" onclick="ajaxPut('<?php echo $ajax_info; ?>?action=browse&amp;key=unplayed&amp;value=1');return true;" value="1" />
-	<?php echo _('Unplayed'); ?><br />
 <input type="checkbox" onclick="ajaxPut('<?php echo $ajax_info; ?>?action=browse&amp;key=rated&amp;value=1');return true;" value="1" />
 	<?php echo _('Rated'); ?><br />
+-->
+<input type="checkbox" onclick="ajaxPut('<?php echo $ajax_info; ?>?action=browse&amp;key=unplayed&amp;value=1');return true;" value="1" />
+	<?php echo _('Unplayed'); ?><br />
 <hr />

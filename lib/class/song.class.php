@@ -386,6 +386,42 @@ class Song {
 
 	/**
 	 * update
+	 * This takes a key'd array of data does any cleaning it needs to
+	 * do and then calls the helper functions as needed. This will also 
+	 * cause the song to be flagged
+	 */
+	public function update($data) { 
+
+		foreach ($data as $key=>$value) { 
+			switch ($key) { 
+				case 'title': 
+				case 'album': 
+				case 'artist': 
+				case 'genre': 
+				case 'track':
+					// Check to see if it needs to be updated
+					if ($value != $this->$key) { 
+						$function = 'update_' . $key; 
+						self::$function($value,$this->id); 
+						$this->$key = $value; 
+						$updated=1; 
+					} 
+				break;
+				default: 
+					// Rien a faire
+				break;
+			} // end whitelist
+		} // end foreach
+
+		// If a field was changed then we need to flag this mofo
+		Flag::add($this->id,'song','retag','Interface Update'); 
+
+		return true; 
+
+	} // update
+
+	/**
+	 * update_song
 	 * this is the main updater for a song it actually
 	 * calls a whole bunch of mini functions to update
 	 * each little part of the song... lastly it updates
@@ -416,7 +452,7 @@ class Song {
 	 */
 	public function update_year($new_year,$song_id) {
 		
-		self::_update_item('year',$new_year,$song_id,'100'); 
+		self::_update_item('year',$new_year,$song_id,'50'); 
 		
 	} // update_year
 
@@ -426,7 +462,7 @@ class Song {
 	 */
 	public function update_comment($new_comment,$song_id) { 
 		
-		self::_update_ext_item('comment',$new_comment,$song_id,'100');
+		self::_update_ext_item('comment',$new_comment,$song_id,'50');
 		
 	} // update_comment
 
@@ -436,7 +472,7 @@ class Song {
 	 */
 	public function update_lyrics($new_lyrics,$song_id) { 
 	
-		self::_update_ext_item('lyrics',$new_lyrics,$song_id,'100'); 
+		self::_update_ext_item('lyrics',$new_lyrics,$song_id,'50'); 
 
 	} // update_lyrics
 
@@ -446,7 +482,7 @@ class Song {
 	 */
 	public function update_title($new_title,$song_id) {
 	
-		self::_update_item('title',$new_title,$song_id,'100');
+		self::_update_item('title',$new_title,$song_id,'50');
 			
 	} // update_title
 
@@ -456,7 +492,7 @@ class Song {
 	 */
 	public function update_bitrate($new_bitrate,$song_id) {
 		
-		self::_update_item('bitrate',$new_bitrate,$song_id,'100');
+		self::_update_item('bitrate',$new_bitrate,$song_id,'50');
 
 	} // update_bitrate
 
@@ -466,7 +502,7 @@ class Song {
 	 */
 	public function update_rate($new_rate,$song_id) {
 		
-		self::_update_item('rate',$new_rate,$song_id,'100');
+		self::_update_item('rate',$new_rate,$song_id,'50');
 
 	} // update_rate
 
@@ -476,7 +512,7 @@ class Song {
 	 */
 	public function update_mode($new_mode,$song_id) {
 
-		self::_update_item('mode',$new_mode,$song_id,'100');
+		self::_update_item('mode',$new_mode,$song_id,'50');
 
 	} // update_mode
 
@@ -486,7 +522,7 @@ class Song {
 	 */
 	public function update_size($new_size,$song_id) { 
 		
-		self::_update_item('size',$new_size,$song_id,'100');
+		self::_update_item('size',$new_size,$song_id,'50');
 
 	} // update_size
 
@@ -496,7 +532,7 @@ class Song {
 	 */
 	public function update_time($new_time,$song_id) { 
 		
-		self::_update_item('time',$new_time,$song_id,'100');
+		self::_update_item('time',$new_time,$song_id,'50');
 
 	} // update_time
 
@@ -506,7 +542,7 @@ class Song {
 	 */
 	public function update_track($new_track,$song_id) { 
 
-			self::_update_item('track',$new_track,$song_id,'100');
+		self::_update_item('track',$new_track,$song_id,'50');
 
 	} // update_track
 
@@ -516,7 +552,7 @@ class Song {
 	 */
 	public function update_artist($new_artist,$song_id) {
 
-		self::_update_item('artist',$new_artist,$song_id,'100');
+		self::_update_item('artist',$new_artist,$song_id,'50');
 
 	} // update_artist
 
@@ -526,7 +562,7 @@ class Song {
 	 */
 	public function update_genre($new_genre,$song_id) { 
 
-		self::_update_item('genre',$new_genre,$song_id,'100');
+		self::_update_item('genre',$new_genre,$song_id,'50');
 
 	} // update_genre
 
@@ -536,7 +572,7 @@ class Song {
 	 */
 	public function update_album($new_album,$song_id) { 
 
-		self::_update_item('album',$new_album,$song_id,'100');
+		self::_update_item('album',$new_album,$song_id,'50');
 
 	} // update_album
 
@@ -548,7 +584,7 @@ class Song {
 
 		if (!$time) { $time = time(); }
 
-		self::_update_item('update_time',$time,$song_id,'100');
+		self::_update_item('update_time',$time,$song_id,'75');
 
 	} // update_utime
 
@@ -568,7 +604,7 @@ class Song {
 	 */
 	public function update_enabled($new_enabled,$song_id) {
 		
-		self::_update_item('enabled',$new_enabled,$song_id,'100');
+		self::_update_item('enabled',$new_enabled,$song_id,'75');
 
 	} // update_enabled
 

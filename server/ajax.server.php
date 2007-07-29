@@ -91,7 +91,8 @@ switch ($action) {
 			break;
 			case 'song': 
 				$key = 'song_' . $_POST['id']; 
-				$song = new Song($_POST['id']); 
+				$song = new Song($_POST['id']);
+				$song->update($_POST); 
 				$song->format(); 
 			break;
 			case 'live_stream': 

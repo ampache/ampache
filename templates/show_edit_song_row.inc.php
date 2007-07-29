@@ -35,7 +35,7 @@
 	<?php show_genre_select('genre',$song->genre); ?>
 </td>
 <td>
-	<input type="textbox" size="3" value="<?php echo scrub_out($song->track); ?>" />
+	<input type="textbox" name="track" size="3" value="<?php echo scrub_out($song->track); ?>" />
 </td>
 <td>
 	<input type="hidden" name="id" value="<?php echo $song->id; ?>" />
