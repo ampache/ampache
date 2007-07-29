@@ -519,19 +519,32 @@ function get_file_extension( $filename ) {
 	}
 } // get_file_extension
 
-/** 
- * tbl_name
- * This function takes a SQL table name and returns it with any prefix 
- * that might be needed to make it work, 
- * @package General
- * @catagory Database
+/**
+ * generate_password
+ * This generates a random password, of the specified
+ * length
  */
-function tbl_name($table) { 
+function generate_password($length) { 
 
-	/* For now we just return the table name */
-	return $table;
+    $vowels = 'aAeEuUyY12345';
+    $consonants = 'bBdDgGhHjJmMnNpPqQrRsStTvVwWxXzZ6789';
+    $password = '';
+    
+    $alt = time() % 2;
 
-} // tbl_name
+    for ($i = 0; $i < $length; $i++) {
+        if ($alt == 1) {
+            $password .= $consonants[(rand() % 39)];
+            $alt = 0;
+        } else {
+            $password .= $vowels[(rand() % 17)];
+            $alt = 1;
+        }
+    }
+
+    return $password;
+	
+} // generate_password
 
 /**
  * scrub_out

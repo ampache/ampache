@@ -72,6 +72,29 @@ switch($_REQUEST['action']) {
 		$fullname = $client->fullname; 
 		$preferences = $client->get_preferences(0,$_REQUEST['tab']); 
 	break; 
+	case 'update_user': 
+		// Make sure we're a user and they came from the form
+		if (!$GLOBALS['user']->has_access('25') || $_POST['form_string'] != $_SESSION['forms']['account']) { 
+			access_denied(); 
+			exit; 
+		} 
+		// Remove the value
+		unset($_SESSION['forms']['account']); 
+
+		// Don't let them change access, or username here
+		unset($_POST['access']); 
+		$_POST['username'] = $GLOBALS['user']->username; 
+
+		if (!$GLOBALS['user']->update($_POST)) { 
+			Error::add('general',_('Error Update Failed')); 
+		} 
+		else { 
+			$_REQUEST['action'] = 'confirm'; 
+			$title = _('Updated'); 
+			$text = _('Your Account has been updated'); 
+			$next_url = Config::get('web_path') . '/preferences.php?tab=account'; 
+		} 
+	break;
 	default: 
 		$fullname = $GLOBALS['user']->fullname; 
 		$preferences = $GLOBALS['user']->get_preferences(0,$_REQUEST['tab']); 
@@ -84,6 +107,9 @@ show_header();
  * switch on the view
  */
 switch ($_REQUEST['action']) { 
+	case 'confirm': 
+		show_confirmation($title,$text,$next_url,$cancel); 
+	break;
 	default: 
 		// Show the default preferences page
 		require Config::get('prefix') . '/templates/show_preferences.inc.php';

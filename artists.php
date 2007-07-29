@@ -25,16 +25,6 @@ require_once 'lib/init.php';
 show_header(); 
 
 /**
- * Doing Switch
- */
-switch($_REQUEST['action']) { 
-
-
-
-} // end display switch
-
-
-/**
  * Display Switch 
  */
 switch($_REQUEST['action']) {
@@ -46,13 +36,12 @@ switch($_REQUEST['action']) {
 	break;
 	case 'show_all_songs':
 	    	$artist = new Artist($_REQUEST['artist']);
-		$artist->format_artist();
-		$song_ids = $artist->get_song_ids();
-		$artist_id = $artist->id;
-		require(conf('prefix') . '/templates/show_artist_box.inc.php');
-	        show_songs($song_ids,'');
+		$artist->format();
+		require_once Config::get('prefix') . '/templates/show_artist_box.inc.php';
+		$song_ids = $artist->get_songs();
+		Browse::set_type('song'); 
+		Browse::show_objects($song_ids); 
         break;
-
 	case 'update_from_tags':
 
 	        $artist = new Artist($_REQUEST['artist']);
@@ -61,7 +50,7 @@ switch($_REQUEST['action']) {
 
 		Catalog::update_single_item('artist',$_REQUEST['artist']);
 
-        	echo "<br /><b>" . _("Update From Tags Complete") . "</b> &nbsp;&nbsp;";
+        	echo "<br /><strong>" . _('Update From Tags Complete') . "</strong> &nbsp;&nbsp;";
 	        echo "<a href=\"" . Config::get('web_path') . "/artists.php?action=show&amp;artist=" . $_REQUEST['artist'] . "\">[" . _('Return') . "]</a>";
 		show_box_bottom(); 
 	break;

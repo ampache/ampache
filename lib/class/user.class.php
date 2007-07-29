@@ -388,6 +388,52 @@ class User {
 	} // add_preference
 
 	/**
+	 * update
+	 * This function is an all encompasing update function that
+	 * calls the mini ones does all the error checking and all that
+	 * good stuff
+	 */
+	public function update($data) { 
+
+		if (empty($data['username'])) { 
+			Error::add('username',_('Error Username Required')); 
+echo "WOO";
+		} 
+
+		if ($data['password1'] != $data['password2'] AND !empty($data['password1'])) { 
+echo "WOO"; 
+			Error::add('password',_("Error Passwords don't match")); 
+		} 
+
+		if (Error::$state) { 
+			return false; 
+		} 
+		
+		foreach ($data as $name=>$value) { 
+			switch ($name) { 
+				case 'password1'; 
+					$name = 'password'; 
+				case 'access':
+				case 'email':
+				case 'username': 
+				case 'fullname'; 
+					if ($this->$name != $value) { 
+						$function = 'update_' . $name; 
+						$this->$function($value);
+					} 	
+				break;
+				default: 
+					// Rien a faire
+				break;
+			} // end switch on field
+
+		} // end foreach	
+
+		return true; 
+
+	} // update
+
+	/**
 	 * update_username
 	 * updates their username
 	 */
