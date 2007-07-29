@@ -64,6 +64,7 @@ switch ($_REQUEST['action']) {
 
 		// get the Album information
 	        $album = new Album($_REQUEST['album_id']);
+		$album->format(); 
 		$images = array(); 
 		$cover_url = array(); 
 
@@ -88,7 +89,7 @@ switch ($_REQUEST['action']) {
 			$artist = scrub_in($_REQUEST['artist_name']);
 		} 
 		elseif ($album->artist_count == '1') { 
-			$artist = $album->artist;
+			$artist = $album->artist_name;
 		}
 		if (isset($_REQUEST['album_name'])) { 
 			$album_name = scrub_in($_REQUEST['album_name']);
@@ -100,7 +101,7 @@ switch ($_REQUEST['action']) {
 		$options['artist'] 	= $artist; 
 		$options['album_name']	= $album_name; 
 		$options['keyword']	= $artist . " " . $album_name; 
-	
+		
 		// Attempt to find the art. 
 		$images = $album->find_art($options,'6');
 
@@ -115,7 +116,7 @@ switch ($_REQUEST['action']) {
 		if (count($images)) {
 			// We don't want to store raw's in here so we need to strip them out into a seperate array
 			foreach ($images as $index=>$image) { 
-				if (isset($image['raw'])) { 
+				if (isset($image[$index]['raw'])) { 
 					unset($images[$index]['raw']); 
 				} 
 			} // end foreach
@@ -133,8 +134,8 @@ switch ($_REQUEST['action']) {
 		$artistname = $artist;
 		
 		// Remember the last typed entry, if there was one
-		if (isset($_REQUEST['album_name'])) {   $albumname = scrub_in($_REQUEST['album_name']); }
-		if (isset($_REQUEST['artist_name'])) {  $artistname = scrub_in($_REQUEST['artist_name']); }
+		if (!empty($_REQUEST['album_name'])) {   $albumname = scrub_in($_REQUEST['album_name']); }
+		if (!empty($_REQUEST['artist_name'])) {  $artistname = scrub_in($_REQUEST['artist_name']); }
 	
 		require_once Config::get('prefix') . '/templates/show_get_albumart.inc.php';
 	

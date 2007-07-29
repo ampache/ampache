@@ -300,6 +300,7 @@ class Album {
 		$coverart = $raw_data['coverart']; 
 
 		ksort($coverart); 
+		
 		foreach ($coverart as $key=>$value) { 
 			$i++; 
 			$url = $coverart[$key]; 
@@ -310,7 +311,6 @@ class Album {
 		} // end foreach
 
 		return $data; 
-
 	} // get_lastfm_art
 
 	/*!

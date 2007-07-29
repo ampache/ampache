@@ -240,7 +240,7 @@ switch ($_REQUEST['action']) {
 			$catalog_id = $catalog->id;
 			require Config::get('prefix') . '/templates/show_gather_art.inc.php'; 
 			flush(); 
-			$catalog->get_album_art(0,1);
+			$catalog->get_album_art('',1);
 		}
 		$url 	= Config::get('web_path') . '/admin/index.php';
 		$title 	= _('Album Art Search Finished');

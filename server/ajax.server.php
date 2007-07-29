@@ -169,7 +169,7 @@ switch ($action) {
 				$object = new $_REQUEST['type']($_REQUEST['id']); 
 				$songs = $object->get_songs(); 
 				foreach ($songs as $song_id) { 
-					$GLOBALS['user']->playlist->add_object($song_id); 
+					$GLOBALS['user']->playlist->add_object($song_id,'song'); 
 				} // end foreach
 			break;
 			case 'album_random': 
@@ -180,7 +180,7 @@ switch ($action) {
 				$object = new $type($_REQUEST['id']); 
 				$songs = $object->get_random_songs(); 
 				foreach ($songs as $song_id) { 
-					$GLOBALS['user']->playlist->add_object($song_id); 
+					$GLOBALS['user']->playlist->add_object($song_id,'song'); 
 				} 
 			break; 
 			case 'clear_all': 
@@ -199,7 +199,7 @@ switch ($action) {
 			break;
 			default: 
 			case 'song': 
-				$GLOBALS['user']->playlist->add_object($_REQUEST['id']); 
+				$GLOBALS['user']->playlist->add_object($_REQUEST['id'],'song'); 
 			break;
 		} // end switch
 		

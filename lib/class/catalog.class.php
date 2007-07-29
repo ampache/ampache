@@ -515,11 +515,16 @@ class Catalog {
 
 			// Return results
 			$results = $album->find_art($options,1); 
-
+			
 			if (count($results)) { 
 				// Pull the string representation from the source
 				$image = get_image_from_source($results['0']);  
-				$album->insert_art($image,$results['0']['mime']); 
+				if (strlen($image) > '5') { 
+					$album->insert_art($image,$results['0']['mime']); 
+				} 
+				else { 
+					debug_event('album_art','Image less then 5 chars, not inserting','3');
+				} 
 				$art_found++; 
 			} 
 
