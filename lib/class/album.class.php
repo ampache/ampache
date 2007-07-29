@@ -625,8 +625,6 @@ class Album {
 	 */
 	public function update($data) { 
 
-		// Sadly we need a catalog object here
-		$catalog = new Catalog(); 
 
 		$year 		= $data['year']; 
 		$artist		= $data['artist']; 
@@ -641,9 +639,10 @@ class Album {
 				Song::update_artist($artist,$song_id); 
 			} 
 			$updated = 1; 
+			Catalog::clean_artists(); 
 		} 
 
-		$album_id = $catalog->check_album($name,$year); 
+		$album_id = Catalog::check_album($name,$year); 
 		if ($album_id != $this->id) { 
 			if (!is_array($songs)) { $songs = $this->get_songs(); } 
 			foreach ($songs as $song_id) { 
@@ -652,6 +651,7 @@ class Album {
 			} 
 			$current_id = $album_id; 
 			$updated = 1; 
+			Catalog::clean_albums(); 
 		} 
 
 		if ($updated) { 
@@ -660,6 +660,7 @@ class Album {
 				Flag::add($song_id,'song','retag','Interface Album Update'); 
 				Song::update_utime($song_id); 
 			} // foreach song of album
+			Catalog::clean_stats(); 
 		} // if updated
 
 

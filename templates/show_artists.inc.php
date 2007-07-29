@@ -41,31 +41,9 @@ foreach ($object_ids as $artist_id) {
 	$artist = new Artist($artist_id); 
 	$artist->format(); 
 ?>
-	<tr class="<?php echo flip_class(); ?>">
-		<td>
-			<span onclick="ajaxPut('<?php echo Config::get('ajax_url'); ?>?action=basket&amp;type=artist&amp;id=<?php echo $artist->id; ?>');return true;" >
-				<?php echo get_user_icon('add'); ?>	
-			</span>
-			<span onclick="ajaxPut('<?php echo Config::get('ajax_url'); ?>?action=basket&amp;type=artist_random&amp;id=<?php echo $artist->id; ?>');return true;" >
-				<?php echo get_user_icon('random'); ?>
-			</span> 
-		</td>
-		<td><?php echo $artist->f_name_link; ?></td>
-		<td><?php echo $artist->songs; ?></td>
-		<td><?php echo $artist->albums; ?></td>	
-		<td nowrap="nowrap"> 
-		<?php if (Access::check_function('batch_download')) { ?>
-                        <a href="<?php echo Config::get('web_path'); ?>/batch.php?action=artist&amp;id=<?php echo $artist->id; ?>">
-                                <?php echo get_user_icon('batch_download','',_('Batch Download')); ?>
-                        </a>
-                <?php } ?>
-		<?php if ($GLOBALS['user']->has_access(100)) { ?>
-			<a href="<?php echo $web_path; ?>/admin/flag.php?action=show_edit_artist&amp;artist_id=<?php echo $artist->id; ?>">
-				<?php echo get_user_icon('edit'); ?>
-			</a>
-		<?php } ?>
-		</td>
-	</tr>
+<tr id="artist_<?php echo $artist->id; ?>" class="<?php echo flip_class(); ?>">
+	<?php require Config::get('prefix') . '/templates/show_artist_row.inc.php'; ?>
+</tr>
 <?php } //end foreach ($artists as $artist) ?>
 <tr class="table-header">
 	<td><?php echo _('Add'); ?>

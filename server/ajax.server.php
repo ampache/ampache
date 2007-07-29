@@ -93,6 +93,15 @@ switch ($action) {
 				} 
 				$album->format(); 
 			break;
+			case 'artist': 
+				$key = 'artist_' . $_POST['id']; 
+				$artist = new Artist($_POST['id']); 
+				$new_id = $artist->update($_POST); 
+				if ($new_id != $_POST['id']) { 
+					$artist = new Artist($new_id); 
+				} 
+				$artist->format(); 
+			break;
 			case 'song': 
 				$key = 'song_' . $_POST['id']; 
 				$song = new Song($_POST['id']);

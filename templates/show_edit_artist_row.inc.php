@@ -19,31 +19,17 @@
 
 */
 ?>
-<td colspan="6">
-<form method="post" id="edit_album_<?php echo $album->id; ?>">
+<td colspan="5">
+<form method="post" id="edit_artist_<?php echo $artist->id; ?>">
 <table border="0" cellpadding="3" cellspacing="0">
 <tr>
 <td>
-	<input type="textbox" name="name" value="<?php echo scrub_out($album->name); ?>" />
+	<input type="textbox" name="name" value="<?php echo scrub_out($artist->f_name); ?>" />
 </td>
 <td>
-	<?php 
-	if ($album->artist_count == '1') { 
-		show_artist_select('artist',$album->artist_id); 
-	} 
-	else { 
-		echo _('Various'); 
-	} 
-	?>
-</td>
-<td>
-	<input type="textbox" name="year" value="<?php echo scrub_out($album->year); ?>" />
-</td>
-<td>
-	<input type="hidden" name="id" value="<?php echo $album->id; ?>" />
-	<input type="hidden" name="type" value="album" />
-	<?php echo Ajax::button('?action=edit_object&id=' . $album->id . '&type=album','download',_('Save Changes'),'save_album_' . $album->id,'edit_album_' . $album->id); ?>
-</td>
+	<input type="hidden" name="id" value="<?php echo $artist->id; ?>" />
+	<input type="hidden" name="type" value="artist" />
+	<?php echo Ajax::button('?action=edit_object&id=' . $album->id . '&type=artist','download',_('Save Changes'),'save_artist_' . $artist->id,'edit_artist_' . $artist->id); ?>
 </tr>
 </table>
 </form>

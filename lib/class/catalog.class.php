@@ -897,7 +897,7 @@ class Catalog {
 
 		foreach($songs as $song_id) { 
 			$song = new Song($song_id); 
-			$info = self::update_song_from_tags($song);
+			$info = self::update_song_from_tags($song,'','');
 
                         if ($info['change']) {
 				$file = scrub_out($song->file);
@@ -1196,8 +1196,8 @@ class Catalog {
 
 	                $data = explode("::", $song);
 
-			$new_song->artist 	= $this->check_artist($data[0]);
-			$new_song->album	= $this->check_album($data[1],$data[4]);
+			$new_song->artist 	= self::check_artist($data[0]);
+			$new_song->album	= self::check_album($data[1],$data[4]);
 			$new_song->title	= $data[2];
 			$new_song->year		= $data[4];
 			$new_song->bitrate	= $data[5];
@@ -1206,7 +1206,7 @@ class Catalog {
 			$new_song->size		= $data[8];
 			$new_song->time		= $data[9];
 			$new_song->track	= $data[10];
-			$new_song->genre	= $this->check_genre($data[11]);
+			$new_song->genre	= self::check_genre($data[11]);
 			$new_song->file		= $root_path . "/play/index.php?song=" . $data[12];
 			$new_song->catalog	= $this->id;
 	     
@@ -1628,7 +1628,7 @@ class Catalog {
 	 * check_artist
 	 * $artist checks if there then return id else insert and return id
 	 */
-	public function check_artist($artist) {
+	public static function check_artist($artist) {
 
 		// Only get the var ones.. less func calls
 		$cache_limit = Config::get('artist_cache_limit');
@@ -1705,7 +1705,7 @@ class Catalog {
 	 * check_album
 	 * Takes $album and checks if there then return id else insert and return id 
 	 */
-	public function check_album($album,$album_year=0) {
+	public static function check_album($album,$album_year=0) {
 
 		/* Clean up the album name */
 		$album = trim($album);
@@ -1793,7 +1793,7 @@ class Catalog {
 	 * check_genre
 	 * Finds the Genre_id from the text name
 	 */
-	public function check_genre($genre) {
+	public static function check_genre($genre) {
 	
 		/* If a genre isn't specified force one */
 		if (strlen(trim($genre)) < 1) {
@@ -1830,7 +1830,7 @@ class Catalog {
 	 * set on the title, if it isn't it looks at the
 	 * filename and trys to set the title based on that
 	 */
-	public function check_title($title,$file=0) {
+	public static function check_title($title,$file=0) {
 
 		if (strlen(trim($title)) < 1) {
 			preg_match("/.+\/(.*)\.....?$/",$file,$matches);
@@ -1877,10 +1877,10 @@ class Catalog {
 		 * We have the artist/genre/album name need to check it in the tables
 		 * If found then add & return id, else return id
 		 */
-		$artist_id	= $this->check_artist($artist);
-		$genre_id	= $this->check_genre($genre);
-		$album_id	= $this->check_album($album,$year);
-		$title		= $this->check_title($title,$file);
+		$artist_id	= self::check_artist($artist);
+		$genre_id	= self::check_genre($genre);
+		$album_id	= self::check_album($album,$year);
+		$title		= self::check_title($title,$file);
 		$add_file	= Dba::escape($file);
 
 		$sql = "INSERT INTO `song` (file,catalog,album,artist,title,bitrate,rate,mode,size,time,track,genre,addition_time,year)" .
@@ -1914,7 +1914,7 @@ class Catalog {
 	function insert_remote_song($song) {
 
 		$url 		= sql_escape($song->file);
-		$title		= $this->check_title($song->title);
+		$title		= self::check_title($song->title);
 		$title		= sql_escape($title);
 		$current_time	= time();	
 		
