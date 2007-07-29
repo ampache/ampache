@@ -28,7 +28,7 @@ $artist = scrub_out(truncate_with_ellipsis($song->f_artist_full,'25'));
 	<a href="<?php echo $web_path; ?>/stats.php?action=show_user&amp;user_id=<?php echo $np_user->id; ?>"><?php echo scrub_out($np_user->fullname); ?></a><br /><br />
 	<!-- ##  modified ##-->
 	<strong><?php echo _('Song'); ?></strong><br />
-	<a title="<?php echo scrub_out($song->title); ?>" href="<?php echo $web_path; ?>/song.php?action=single_song&amp;song_id=<?php echo $song->id; ?>">
+	<a title="<?php echo scrub_out($song->title); ?>" href="<?php echo $web_path; ?>/stream.php?action=single_song&amp;song_id=<?php echo $song->id; ?>">
         <?php echo $title; ?>
 	</a>
 	<div id="rating_<?php echo $song->id; ?>_song">

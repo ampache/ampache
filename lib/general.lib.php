@@ -452,7 +452,7 @@ function get_global_popular($type) {
 			$song->format();
                         $text = "$song->f_artist_full - $song->title";
                         /* Add to array */
-                        $song->link = "<a href=\"$web_path/song.php?action=single_song&amp;song_id=$song->id\" title=\"". scrub_out($text) ."\">" .
+                        $song->link = "<a href=\"$web_path/stream.php?action=single_song&amp;song_id=$song->id\" title=\"". scrub_out($text) ."\">" .
 	                           	scrub_out(truncate_with_ellipsis($text, Config::get('ellipsis_threshold_title')+3)) . "&nbsp;(" . $r['count'] . ")</a>";
 			$items[] = $song;
                 } // if it's a song

@@ -119,7 +119,7 @@ switch ($type) {
                 $song   = new Song($r->object_id);
 		$artist = $song->get_artist_name();
  		echo " <title><![CDATA[$artist - $song->title ($r->count)]]></title>\n";
- 		echo " <link>$web_path/song.php?action=single_song&amp;song_id=$r->object_id</link>\n";
+ 		echo " <link>$web_path/stream.php?action=single_song&amp;song_id=$r->object_id</link>\n";
  		echo " <description><![CDATA[$artist - $song->title ($r->count)]]></description>\n";
  		echo "</item>\n";
         }
@@ -204,7 +204,7 @@ switch ($type) {
 		$user = new User($item['user']);
 		$user->format_user();
  		echo " <title><![CDATA[$song->title]]></title>\n";
- 		echo " <link>$web_path/song.php?action=single_song&amp;song_id=".$item['object_id']."</link>\n";
+ 		echo " <link>$web_path/stream.php?action=single_song&amp;song_id=".$item['object_id']."</link>\n";
  		echo " <description><![CDATA[$user->fullname played $song->title - $song->f_artist $time_string]]></description>\n";
  		echo "</item>\n";
 	}

@@ -64,9 +64,9 @@ foreach ($playlists as $playlist) {
 				<?php echo _('Delete'); ?></a>
 			<?php } ?>
 			<?php if ($count > 0) { ?>
-				| <a href="<?php echo $web_path; ?>/song.php?action=playlist&amp;playlist_id=<?php echo $playlist->id; ?>">
+				| <a href="<?php echo $web_path; ?>/stream.php?action=playlist&amp;playlist_id=<?php echo $playlist->id; ?>">
 				<?php echo _('Play'); ?></a>
-				| <a href="<?php echo $web_path; ?>/song.php?action=playlist_random&amp;playlist_id=<?php echo $playlist->id; ?>">
+				| <a href="<?php echo $web_path; ?>/stream.php?action=playlist_random&amp;playlist_id=<?php echo $playlist->id; ?>">
 				<?php echo _('Random'); ?></a>
 			<?php if (batch_ok()) { ?>
 				| <a href="<?php echo $web_path; ?>/batch.php?action=pl&amp;id=<?php echo $playlist->id; ?>">

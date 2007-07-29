@@ -25,7 +25,7 @@ $web_path = conf('web_path');
 <table border="0" cellpadding="14" cellspacing="0" class="text-box">
 <tr>
 <td>
-	<input class="button" type="button" value="<?php echo _('Play Selected'); ?>" onclick="return SubmitToPage('songs','<?php echo $web_path; ?>/song.php?action=play_selected');" />
+	<input class="button" type="button" value="<?php echo _('Play Selected'); ?>" onclick="return SubmitToPage('songs','<?php echo $web_path; ?>/stream.php?action=play_selected');" />
 	<?php if (batch_ok()) { ?>
 		&nbsp;&nbsp;
 		<input class="button" type="button" value="<?php echo _('Download Selected'); ?>" onclick="return SubmitToPage('songs','<?php echo $web_path; ?>/batch.php?action=download_selected');" />

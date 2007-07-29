@@ -67,8 +67,8 @@ class Genre {
 
 		$this->f_link 		= "<a href=\"" . Config::get('web_path') . "/genre.php?action=show_genre&amp;genre_id=" . $this->id . "\">" . scrub_out($this->name) . "</a>";
 		
-		$this->play_link 	= Config::get('web_path') . '/song.php?action=genre&amp;genre=' . $this->id;
-		$this->random_link 	= Config::get('web_path') . '/song.php?action=random_genre&amp;genre=' . $this->id; 
+		$this->play_link 	= Config::get('web_path') . '/stream.php?action=genre&amp;genre=' . $this->id;
+		$this->random_link 	= Config::get('web_path') . '/stream.php?action=random_genre&amp;genre=' . $this->id; 
 		$this->download_link 	= Config::get('web_path') . '/batch.php?action=genre&amp;id=' . $this->id;
 		
 	} // format
