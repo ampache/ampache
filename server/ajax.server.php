@@ -87,6 +87,10 @@ switch ($action) {
 			case 'album': 
 				$key = 'album_' . $_POST['id']; 
 				$album = new Album($_POST['id']); 
+				$new_id = $album->update($_POST); 
+				if ($new_id != $_POST['id']) { 
+					$album = new Album($new_id); 
+				} 
 				$album->format(); 
 			break;
 			case 'song': 

@@ -404,7 +404,7 @@ class Song {
 						$function = 'update_' . $key; 
 						self::$function($value,$this->id); 
 						$this->$key = $value; 
-						$updated=1; 
+						$updated = 1; 
 					} 
 				break;
 				default: 
@@ -414,7 +414,9 @@ class Song {
 		} // end foreach
 
 		// If a field was changed then we need to flag this mofo
-		Flag::add($this->id,'song','retag','Interface Update'); 
+		if ($updated) { 
+			Flag::add($this->id,'song','retag','Interface Update'); 
+		} 
 
 		return true; 
 
@@ -450,7 +452,7 @@ class Song {
 	 * update_year
 	 * update the year tag
 	 */
-	public function update_year($new_year,$song_id) {
+	public static function update_year($new_year,$song_id) {
 		
 		self::_update_item('year',$new_year,$song_id,'50'); 
 		
@@ -460,7 +462,7 @@ class Song {
 	 * update_comment
 	 * updates the comment field
 	 */
-	public function update_comment($new_comment,$song_id) { 
+	public static function update_comment($new_comment,$song_id) { 
 		
 		self::_update_ext_item('comment',$new_comment,$song_id,'50');
 		
@@ -470,7 +472,7 @@ class Song {
  	 * update_lyrics
 	 * updates the lyrics field
 	 */
-	public function update_lyrics($new_lyrics,$song_id) { 
+	public static function update_lyrics($new_lyrics,$song_id) { 
 	
 		self::_update_ext_item('lyrics',$new_lyrics,$song_id,'50'); 
 
@@ -480,7 +482,7 @@ class Song {
 	 * update_title
 	 * updates the title field
 	 */
-	public function update_title($new_title,$song_id) {
+	public static function update_title($new_title,$song_id) {
 	
 		self::_update_item('title',$new_title,$song_id,'50');
 			
@@ -490,7 +492,7 @@ class Song {
 	 * update_bitrate
 	 * updates the bitrate field
 	 */
-	public function update_bitrate($new_bitrate,$song_id) {
+	public static function update_bitrate($new_bitrate,$song_id) {
 		
 		self::_update_item('bitrate',$new_bitrate,$song_id,'50');
 
@@ -500,7 +502,7 @@ class Song {
 	 * update_rate
 	 * updates the rate field
 	 */
-	public function update_rate($new_rate,$song_id) {
+	public static function update_rate($new_rate,$song_id) {
 		
 		self::_update_item('rate',$new_rate,$song_id,'50');
 
@@ -510,7 +512,7 @@ class Song {
 	 * update_mode
 	 * updates the mode field
 	 */
-	public function update_mode($new_mode,$song_id) {
+	public static function update_mode($new_mode,$song_id) {
 
 		self::_update_item('mode',$new_mode,$song_id,'50');
 
@@ -520,7 +522,7 @@ class Song {
 	 * update_size
 	 * updates the size field
 	 */
-	public function update_size($new_size,$song_id) { 
+	public static function update_size($new_size,$song_id) { 
 		
 		self::_update_item('size',$new_size,$song_id,'50');
 
@@ -530,7 +532,7 @@ class Song {
 	 * update_time
 	 * updates the time field
 	 */
-	public function update_time($new_time,$song_id) { 
+	public static function update_time($new_time,$song_id) { 
 		
 		self::_update_item('time',$new_time,$song_id,'50');
 
@@ -540,7 +542,7 @@ class Song {
 	 * update_track
 	 * this updates the track field
 	 */
-	public function update_track($new_track,$song_id) { 
+	public static function update_track($new_track,$song_id) { 
 
 		self::_update_item('track',$new_track,$song_id,'50');
 
@@ -550,7 +552,7 @@ class Song {
 	 * update_artist
 	 * updates the artist field
 	 */
-	public function update_artist($new_artist,$song_id) {
+	public static function update_artist($new_artist,$song_id) {
 
 		self::_update_item('artist',$new_artist,$song_id,'50');
 
@@ -560,7 +562,7 @@ class Song {
 	 * update_genre
 	 * updates the genre field
 	 */
-	public function update_genre($new_genre,$song_id) { 
+	public static function update_genre($new_genre,$song_id) { 
 
 		self::_update_item('genre',$new_genre,$song_id,'50');
 
@@ -570,7 +572,7 @@ class Song {
 	 * update_album
 	 * updates the album field
 	 */
-	public function update_album($new_album,$song_id) { 
+	public static function update_album($new_album,$song_id) { 
 
 		self::_update_item('album',$new_album,$song_id,'50');
 
@@ -580,7 +582,7 @@ class Song {
 	 * update_utime
 	 * sets a new update time
 	 */
-	public function update_utime($song_id,$time=0) {
+	public static function update_utime($song_id,$time=0) {
 
 		if (!$time) { $time = time(); }
 
@@ -592,7 +594,7 @@ class Song {
 	 * update_played
 	 * sets the played flag
 	 */
-	public function update_played($new_played,$song_id) { 
+	public static function update_played($new_played,$song_id) { 
 
 		self::_update_item('played',$new_played,$song_id,'25');
 
@@ -602,7 +604,7 @@ class Song {
 	 * update_enabled
 	 * sets the enabled flag
 	 */
-	public function update_enabled($new_enabled,$song_id) {
+	public static function update_enabled($new_enabled,$song_id) {
 		
 		self::_update_item('enabled',$new_enabled,$song_id,'75');
 

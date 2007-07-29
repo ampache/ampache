@@ -26,7 +26,14 @@
 	<input type="textbox" name="name" value="<?php echo scrub_out($album->name); ?>" />
 </td>
 <td>
-	<?php show_artist_pulldown($album->artist_id,'artist_id'); ?>
+	<?php 
+	if ($album->artist_count == '1') { 
+		show_artist_select('artist',$album->artist_id); 
+	} 
+	else { 
+		echo _('Various'); 
+	} 
+	?>
 </td>
 <td>
 	<input type="textbox" name="year" value="<?php echo scrub_out($album->year); ?>" />

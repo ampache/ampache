@@ -66,19 +66,6 @@ class Album {
 		// Little bit of formating here
 		$this->f_name = trim($info['prefix'] . ' ' . $info['name']); 
 
-		// Additional data that we are going to need
-
-		/*
-			$this->songs		= $info['song_count'];
-			$this->artist_count	= $info['artist_count'];
-			$this->year		= $info['year'];
-			$this->artist		= trim($info['artist_prefix'] . " " . $info['artist_name']);
-			$this->artist_id	= $info['art_id'];
-			$this->album		= $info['album_name'];
-			$this->has_art		= $info['has_art'];
-			$this->prefix 		= $info['prefix'];
-		*/
-
 		return true; 
 
 	} //constructor
@@ -485,7 +472,7 @@ class Album {
 	 * This takes keywords and performs a search of the Amazon website
 	 * for album art. It returns an array of found objects with mime/url keys
 	 */
-	function get_amazon_art($keywords = '',$limit='') {
+	public function get_amazon_art($keywords = '',$limit='') {
 
 		$images 	= array();
 		$final_results 	= array();
@@ -612,7 +599,7 @@ class Album {
 	
 		return $images;
 
-	} // get_amazon_art() 
+	} // get_amazon_art 
 
 	/**
 	 * get_random_songs
@@ -632,6 +619,55 @@ class Album {
 	} // get_random_songs
 
 	/**
+	 * update
+	 * This function takes a key'd array of data and updates this object
+	 * as needed, and then throws down with a flag
+	 */
+	public function update($data) { 
+
+		// Sadly we need a catalog object here
+		$catalog = new Catalog(); 
+
+		$year 		= $data['year']; 
+		$artist		= $data['artist']; 
+		$name		= $data['name']; 
+
+		$current_id = $this->id; 
+
+		if ($artist != $this->artist_id AND $artist > 0) { 
+			// Update every song
+			$songs = $this->get_songs(); 
+			foreach ($songs as $song_id) { 
+				Song::update_artist($artist,$song_id); 
+			} 
+			$updated = 1; 
+		} 
+
+		$album_id = $catalog->check_album($name,$year); 
+		if ($album_id != $this->id) { 
+			if (!is_array($songs)) { $songs = $this->get_songs(); } 
+			foreach ($songs as $song_id) { 
+				Song::update_album($album_id,$song_id); 
+				Song::update_year($year,$song_id);
+			} 
+			$current_id = $album_id; 
+			$updated = 1; 
+		} 
+
+		if ($updated) { 
+			// Flag all songs
+			foreach ($songs as $song_id) { 
+				Flag::add($song_id,'song','retag','Interface Album Update'); 
+				Song::update_utime($song_id); 
+			} // foreach song of album
+		} // if updated
+
+
+		return $current_id; 
+
+	} // update
+
+	/**
 	 * clear_art
 	 * clears the album art from the DB
 	 */
@@ -642,13 +678,12 @@ class Album {
 
 	} // clear_art
 
-	/*!
-		@function insert_art
-		@discussion this takes a string representation of an image
-			and inserts it into the database. You must pass the
-			mime type as well
-	*/
-	function insert_art($image, $mime) { 
+	/**
+	 * insert_art
+	 * this takes a string representation of an image
+	 * and inserts it into the database. You must pass the mime type as well
+	 */
+	public function insert_art($image, $mime) { 
 
 		/* Have to disable this for Demo because people suck and try to
  		 * insert PORN :( 
@@ -679,6 +714,9 @@ class Album {
 	 * it back into the database as a thumbnail
 	 */
 	public static function save_resized_art($data,$mime,$album) { 
+
+		// Make sure there's actually something to save
+		if (strlen($data) < '5') { return false; } 
 
 		$data = Dba::escape($data); 
 		$mime = Dba::escape($mime); 
