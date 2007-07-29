@@ -576,7 +576,7 @@ class Update {
 
 		$sql = "CREATE TABLE `album_data` (" . 
 			"`album_id` INT( 11 ) UNSIGNED NOT NULL , " . 
-			"`art` BLOB NULL , " . 
+			"`art` MEDIUMBLOB NULL , " . 
 			"`art_mime` VARCHAR( 64 ) NULL , " . 
 			"`thumb` BLOB NULL , " . 
 			"`thumb_mime` VARCHAR( 64 ) NULL , " . 
@@ -761,6 +761,18 @@ class Update {
 		return true; 
 
 	} // update_340005
+
+	/**
+	 * update_340006
+	 * This just updates the size of the album_data table 
+	 * and removes the random_method config option
+	 */
+	public static function update_340006() { 
+
+		$sql = "ALTER TABLE `album_data` CHANGE `art` `art` MEDIUMBLOB NULL DEFAULT NULL";
+		$db_results = Dba::query($sql); 
+
+	} // update_340006
 
 } // end update class
 ?>
