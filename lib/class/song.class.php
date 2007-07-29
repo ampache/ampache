@@ -789,20 +789,19 @@ class Song {
 
 	} // get_url
 
-	/*!
-		@function native_stream
-		@discussion returns true if the $song->type streams ok, false if it must be transcoded to stream
-	*/
-	function native_stream() {
+	/**
+	 * native_stream
+	 * This returns true/false if this can be nativly streamed
+	 */
+	public function native_stream() {
 		
 		if ($this->_transcode) { return false; }
 
 		$conf_var 	= 'transcode_' . $this->type;
 		$conf_type	= 'transcode_' . $this->type . '_target'; 
-
+		
 		if (Config::get($conf_var)) { 
 			$this->_transcode = true; 
-			$this->format_type(Config::get($conf_type)); 
 			debug_event('auto_transcode','Transcoding to ' . $this->type,'5'); 
 			return false; 
 		} 
@@ -820,21 +819,19 @@ class Song {
 	 */
 	function stream_cmd() {
 
-		$parts = pathinfo($this->file); 
+		// Find the target for this transcode
+		$conf_type      = 'transcode_' . $this->type . '_target';
+		$this->format_type(Config::get($conf_type));
 
+		$stream_cmd = 'transcode_cmd_' . $this->type; 
+		if (Config::get($stream_cmd)) { 
+			return $stream_cmd;
+		} 
+		else { 
+			debug_event('Downsample','Error: Transcode ' . $stream_cmd . ' for ' . $this->type . ' not found, using downsample','2'); 
+		}
 		
-	
-		if (!$this->native_stream()) {
-			$stream_cmd = 'stream_cmd_' . $parts['extension']; 
-			if (conf($stream_cmd)) { 
-				return $stream_cmd;
-			} 
-			else { 
-				debug_event('Downsample','Error: Stream command for ' . $parts['extension'] . ' not found, using downsample','2'); 
-			}
-		} // end if not native_stream
-		
-		return 'downsample_cmd';
+		return false;
 		
 	} // end stream_cmd
 

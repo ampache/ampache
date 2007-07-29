@@ -248,8 +248,7 @@ function create_preference_input($name,$value) {
 			echo "</select>\n";
 		break;
 		case 'play_type':
-			if ($value == 'downsample') { $is_down = 'selected="selected"'; }
-			elseif ($value == 'localplay') { $is_local = 'selected="selected"'; } 
+			if ($value == 'localplay') { $is_local = 'selected="selected"'; } 
 			elseif ($value == 'democratic') { $is_vote = 'selected="selected"'; } 
 			elseif ($value == 'xspf_player') { $is_xspf_player = 'selected="selected"'; } 
 			else { $is_stream = "selected=\"selected\""; } 
@@ -347,10 +346,10 @@ function create_preference_input($name,$value) {
 			echo "</select>\n"; 
 		break;
 		case 'transcode':
+			${$value} = ' selected="selected"'; 
 			echo "<select name=\"$name\">\n"; 
-			echo "\t<option value=\"default\">" . _('Default') . "</option>\n"; 
-			echo "\t<option value=\"acl\">" . _('Follow ACL Rules') . "</option>\n"; 
-			echo "\t<option value=\"always\">" . _('Always') . "</option>\n"; 
+			echo "\t<option value=\"default\"$default>" . _('Default') . "</option>\n"; 
+			echo "\t<option value=\"always\"$always>" . _('Always') . "</option>\n"; 
 			echo "</select>\n";
 		break;
 		default:

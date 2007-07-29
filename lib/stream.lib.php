@@ -125,20 +125,16 @@ function check_lock_songs($song_id) {
  * start_downsample
  * This is a rather complext function that starts the downsampling of a song and returns the 
  * opened file handled
- * @package General
- * @catagory Downsample
- * @param $song	The Song Object
  */
 function start_downsample($song,$now_playing_id=0,$song_name=0) { 
 
 	/* Check to see if bitrates are set if so let's go ahead and optomize! */
-	$max_bitrate = conf('max_bit_rate');
-	$min_bitrate = conf('min_bit_rate');
+	$max_bitrate = Config::get('max_bit_rate');
+	$min_bitrate = Config::get('min_bit_rate');
 	$time = time();
-	$dbh = dbh();
 	$user_sample_rate = $GLOBALS['user']->prefs['sample_rate'];
 	$browser = new Browser();
-
+	
 	if (!$song_name) { 
 		$song_name = $song->f_artist_full . " - " . $song->title . "." . $song->type;
 	}
@@ -149,12 +145,11 @@ function start_downsample($song,$now_playing_id=0,$song_name=0) {
 		$sql = "SELECT COUNT(*) FROM now_playing, user_preference, preferences " . 
 			"WHERE preferences.name = 'play_type' AND user_preference.preference = preferences.id " . 
 			"AND now_playing.user = user_preference.user AND user_preference.value='downsample'";
-		$db_results = mysql_query($sql,$dbh);
-		$results = mysql_fetch_row($db_results);
+		$db_results = Dba::query($sql);
+		$results = Dba::fetch_row($db_results);
 
 		// Current number of active streams (current is already in now playing)
 		$active_streams = $results[0];
-
 
 		/* If only one user, they'll get all available.  Otherwise split up equally. */
 		$sample_rate = floor($max_bitrate/$active_streams);
@@ -217,7 +212,7 @@ function start_downsample($song,$now_playing_id=0,$song_name=0) {
 	$song_file = escapeshellarg($song->file);
 
         /* Replace Variables */
-        $downsample_command = conf($song->stream_cmd());
+        $downsample_command = Config::get($song->stream_cmd());
         $downsample_command = str_replace("%FILE%",$song_file,$downsample_command);
         $downsample_command = str_replace("%OFFSET%",$offset,$downsample_command);
         $downsample_command = str_replace("%EOF%",$eof,$downsample_command);

@@ -397,11 +397,9 @@ class User {
 
 		if (empty($data['username'])) { 
 			Error::add('username',_('Error Username Required')); 
-echo "WOO";
 		} 
 
 		if ($data['password1'] != $data['password2'] AND !empty($data['password1'])) { 
-echo "WOO"; 
 			Error::add('password',_("Error Passwords don't match")); 
 		} 
 
