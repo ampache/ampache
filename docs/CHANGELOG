@@ -4,6 +4,8 @@
 
 --------------------------------------------------------------------------
   v.3.4-Alpha1
+	- Improved Albums of the Moment performance on large catalogs
+		(Thx Vlet)
   	- Added Migration script for config file. Also added in sane
 		redirection on config parse failure
   	- Added initial dyanmic playlist item support, only default

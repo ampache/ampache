@@ -79,36 +79,42 @@ function get_image_from_source($data) {
  * This returns a random number of albums from the catalogs
  * this is used by the index to return some 'potential' albums to play
  */
-function get_random_albums($count='') { 
+function get_random_albums($count=6) {
+        // There's a slight chance with this logic that the number of albums
+        // returned will be less than the number requested if the id's for the
+        // albums have signifigant gaps, but the speed increase is probably
+        // worth it
+        // - Vlet
 
-	if (!$count) { $count = 5; } 
+        $sql = 'SELECT ';
 
-	$count = Dba::escape($count); 
+        for ($i = 0; $i < ceil($count * 1.5); $i++) {
+                if ($i > 0) $sql .= ', ';
 
-	// We avoid a table scan by using the id index and then using a rand to pick a row #
-	$sql = "SELECT `id` FROM `album`";
-	$db_results = Dba::query($sql); 
+                $sql .= 'floor(rand() * count(id))';
+        }
+        $sql .= ' FROM `album`';
+        $db_results = Dba::query($sql);
 
-	while ($r = Dba::fetch_assoc($db_results)) { 
-		$albums[] = $r['id'];
-	} 
+        $sql = '';
 
-	$total = count($albums); 
+        $row = Dba::fetch_row($db_results);
+        
+	for ($i = 0; $i < ceil($count * 1.5); $i++) {
+                if ($i > 0) $sql .= ' UNION ';
+                $sql .= "SELECT `id` FROM (SELECT `id` FROM `album` LIMIT $row[$i],1) t".$i ;
+        }
+        
+	$db_results = Dba::query($sql);
 
-	if ($total < ($count+2)) { return array(); } 
+        $results = array();
 
-	for ($i=0; $i <= $count; $i++) { 
-		$tries++; 
-		$record = rand(0,$total); 
-		if (isset($results[$record]) || !$albums[$record]) { $i--; continue; } 
-		else { 
-			$results[$record] = $albums[$record]; 
-		} 
-		if ($tries > 50) { return array(); } 
-	} // end for 
-	
-	return $results; 
+        for ($i = 0; $i < $count; $i++) {
+                $row = Dba::fetch_assoc($db_results);
+                $results[] = $row['id'];
+        }
 
+        return $results;
 } // get_random_albums
 
 ?>
