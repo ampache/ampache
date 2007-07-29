@@ -1,5 +1,5 @@
 -------------------------------------------------------------------------------
----------                   README - Ampache v.3.3.3                -----------
+---------                    README - Ampache v.3.4                 -----------
 -------------------------------------------------------------------------------
 
 Contents:
@@ -116,12 +116,12 @@ Contents:
 2. Getting all the components
 
   Apache >= 1.3.19 http://www.apache.org OR other webserver
-  PHP >= 4.3.x http://www.php.net
-  	PHP4-Mysql
-	PHP4-Session
-	PHP4-gd (recommended)
-	PHP4 ICONV 
-	PHP4  ZLIB support (recommended)
+  PHP >= 5.0.x http://www.php.net
+  	PHP5-Mysql
+	PHP5-Session
+	PHP5-gd (recommended)
+	PHP5 ICONV 
+	PHP5  ZLIB support (recommended)
   MySQL >= 4.x http://www.mysql.com
   24MB of Ram
 

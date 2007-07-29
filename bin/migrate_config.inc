@@ -39,7 +39,9 @@ $translate = array('local_host'=>'database_hostname',
 	'sess_cookielife'=>'session_cookielife',
 	'sess_cookiesecure'=>'session_cookiesecure'); 
 
-$old_config = file_get_contents('../config/ampache.cfg.php'); 
+$path = dirname(__FILE__); 
+$prefix = realpath($path . '/../'); 
+$old_config = file_get_contents($prefix . '/config/ampache.cfg.php'); 
 
 $data = explode("\n",$old_config); 
 
@@ -75,7 +77,7 @@ foreach ($data as $line) {
 
 echo "Parse complete, writing\n"; 
 
-$handle = fopen('../config/ampache.cfg.php','w');
+$handle = fopen($prefix . '/config/ampache.cfg.php','w');
 
 $worked = fwrite($handle,$new_config); 
 

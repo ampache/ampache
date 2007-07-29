@@ -90,9 +90,6 @@ if (!$_SERVER['SERVER_NAME']) {
 if (!$results['user_ip_cardinality']) { 
 	$results['user_ip_cardinality'] = 42;
 }
-if (!$results['local_length']) { 
-	$results['local_length'] = '900';
-}
 
 /* Variables needed for vauth Module */
 $results['cookie_path'] 	= $results['raw_web_path'];

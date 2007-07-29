@@ -1,8 +1,13 @@
 -------------------------------------------------------------------------------
----------             MIGRATION - Ampache v.3.3.3                   -----------
+---------              MIGRATION - Ampache v.3.4                    -----------
 -------------------------------------------------------------------------------
 
-- Migrating from Ampache 3.3.X --> 3.3.3
+- Migrating from Ampache 3.3.x --> 3.4
+
+	The config file format has changed, please follow the instructions
+	in the web interface. 
+
+- Migrating from Ampache 3.3.x --> 3.3.3
 	
 	The newest release of Ampache will prompt Admins to download and 
 	install a config file if their current one is out of date. While
@@ -10,13 +15,13 @@
 	it is strongly recommended that if prompted you install the newly
 	created config file
 
-- Migrating from Ampache 3.3 --> 3.X+
+- Migrating from Ampache 3.3 --> 3.x+
 
 	After running /update.php check /test.php to make sure that you 
 	still meet all the requirements, and that your config file is up to
 	date. 
 
-- Migrating from Ampache 3.3 --> 3.3.X+
+- Migrating from Ampache 3.3 --> 3.3.x+
 
 	Rename your /config/ampache.cfg to /config/ampache.cfg.php
 

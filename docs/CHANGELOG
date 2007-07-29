@@ -1,9 +1,9 @@
 --------------------------------------------------------------------------
----------                  Ampache -- CHANGELOG                  ---------   
+---------                Ampache -- CHANGELOG                    ---------   
 --------------------------------------------------------------------------
 
 --------------------------------------------------------------------------
-  v.3.4-Alpha1
+  v.3.4-Alpha1 07/29/2007
 	- Improved Albums of the Moment performance on large catalogs
 		(Thx Vlet)
   	- Added Migration script for config file. Also added in sane
