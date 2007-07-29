@@ -69,6 +69,9 @@ method simply comment it out valid values are<br />
 An array of Amazon sites to search. NOTE: This will search each of these sites in turn so don't expect it
 to be lightning fast! It is strongly recommended that only one of these is selected at any<br />
 <br />
+<strong>downsample_cmd</strong><br />
+This variable no longer exists, all downsampling/transcoding is handled by the transcode_*  please see config file for details.
+<br />
 </div>
 <div id="bottom">
 <p><b>Ampache Debug.</b><br />

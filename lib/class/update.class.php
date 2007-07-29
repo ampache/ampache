@@ -210,6 +210,11 @@ class Update {
 
 		$version[] = array('version' => '340005','description' => $update_string); 
 
+		$update_string = '- Remove Random Method config option, ended up being useless.<br />' . 
+				'- Check and change album_data.art to a MEDIUMBLOB if needed.<br />';
+
+		$version[] = array('version' => '340006','description' => $update_string); 
+
 		return $version;
 
 	} // populate_version
@@ -769,8 +774,36 @@ class Update {
 	 */
 	public static function update_340006() { 
 
-		$sql = "ALTER TABLE `album_data` CHANGE `art` `art` MEDIUMBLOB NULL DEFAULT NULL";
+		$sql = "DESCRIBE `album_data`"; 
 		$db_results = Dba::query($sql); 
+
+		while ($row = Dba::fetch_assoc($db_results)) { 
+			if ($row['Field'] == 'art' AND $row['Type'] == 'blob') { 
+				$blob_needed = true; 
+			} 
+		} // end while 
+		if ($blob_needed) { 
+			$sql = "ALTER TABLE `album_data` CHANGE `art` `art` MEDIUMBLOB NULL DEFAULT NULL";
+			$db_results = Dba::query($sql); 
+		} 
+
+		// No matter what remove that random method preference
+		$sql = "DELETE FROM `preference` WHERE `name`='random_method'";
+		$db_results = Dba::query($sql); 
+
+                $sql = "SELECT `id` FROM `user`";
+                $db_results = Dba::query($sql);
+
+                User::fix_preferences('-1');
+
+                while ($r = Dba::fetch_assoc($db_results)) {
+                        User::fix_preferences($r['id']);
+                }
+
+                self::set_version('db_version','340006');
+
+                return true;
+
 
 	} // update_340006
 
