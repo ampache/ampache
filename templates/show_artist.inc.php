@@ -64,11 +64,6 @@ foreach ($albums as $album_id) {
 			<?php echo get_user_icon('batch_download'); ?>
 		</a>
 	<?php } ?> 
-	<?php if ($GLOBALS['user']->has_access('100')) { ?>
-		<a href="<?php echo $web_path; ?>/admin/flag.php?action=show_edit_album&amp;album_id=<?php echo $album->id; ?>">
-			<?php echo get_user_icon('edit'); ?>
-		</a>
-	<?php } ?>
 	</td>
 </tr>
 <?php  } //end foreach ($albums as $album)?>

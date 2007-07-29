@@ -302,7 +302,7 @@ class Stream {
 
 		/* Add the songs to this new playlist */
 		foreach ($this->songs as $song_id) { 
-			$tmp_playlist->add_object($song_id);
+			$tmp_playlist->add_object($song_id,'song');
 		} // end foreach		
 		
 		/* Build the extra info we need to have it pass */
@@ -321,7 +321,7 @@ class Stream {
 	        echo "<script language=\"javascript\" type=\"text/javascript\">\n";
 	        echo "<!-- begin\n";
 	        echo "function PlayerPopUp(URL) {\n";
-	        echo "window.open(URL, 'XSPF_player', 'width=400,height=200,scrollbars=0,toolbar=0,location=0,directories=0,status=0,resizable=0');\n";
+	        echo "window.open(URL, 'XSPF_player', 'width=400,height=170,scrollbars=0,toolbar=0,location=0,directories=0,status=0,resizable=0');\n";
 	        echo "window.location = '" .  return_referer() . "';\n";
 	        echo "return false;\n";
 	        echo "}\n";

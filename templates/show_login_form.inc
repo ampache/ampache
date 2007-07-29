@@ -43,7 +43,7 @@ function focus(){ document.login.username.focus(); }
 
 <body bgcolor="#D3D3D3" onload="focus();">
 <div id="container">
-	<h1><span><?php echo Config::get('site_title'); ?></span></h1>
+	<h1 onclick="document.location='http://www.ampache.org';" title="<?php echo Config::get('site_title'); ?>" style="cursor:pointer;" ><span><?php echo Config::get('site_title'); ?></span></h1>
 	<div>
 		<p id="loginp_0"><?php echo Config::get('site_title'); ?></p>
 		<form name="login" method="post" enctype="multipart/form-data" action="<?php echo Config::get('web_path'); ; ?>/login.php" style="Display:inline">

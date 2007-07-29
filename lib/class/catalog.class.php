@@ -1408,7 +1408,7 @@ class Catalog {
 	 * clean_playlists
 	 * cleans out dead files from playlists
 	 */
-	public static function clean_playlists($catalog_id) { 
+	public static function clean_playlists() { 
 
 		/* Do a complex delete to get playlist songs where there are no songs */
 		$sql = "DELETE FROM playlist_data USING playlist_data LEFT JOIN song ON song.id = playlist_data.song WHERE song.file IS NULL";
@@ -1424,7 +1424,7 @@ class Catalog {
 	 * clean_ext_info
 	 * This function clears any ext_info that no longer has a parent
 	 */
-	public static function clean_ext_info($catalog_id) { 
+	public static function clean_ext_info() { 
 
 		$sql = "DELETE FROM `song_data` USING `song_data` LEFT JOIN `song` ON `song`.`id` = `song_data`.`song_id` " . 
 			"WHERE `song`.`id` IS NULL"; 
@@ -1436,7 +1436,7 @@ class Catalog {
 	 * clean_stats
 	 * This functions removes stats for songs/albums that no longer exist
 	 */
-	public static function clean_stats($catalog_id) {
+	public static function clean_stats() {
 
 		// Crazy SQL Mojo to remove stats where there are no songs 
 		$sql = "DELETE FROM object_count USING object_count LEFT JOIN song ON song.id=object_count.object_id WHERE object_type='song' AND song.id IS NULL";

@@ -60,7 +60,7 @@ document.oncontextmenu=new Function("return false")
 	<param name="movie" value="xspf_player.swf" />
 	<param name="quality" value="high" />
 	<param name="bgcolor" value="#ffffff" />
-	<embed src="<?php echo Config::get('web_path'); ?>/modules/flash/xspf_player.swf?autoplay=true&playlist_url=<?php echo Config::get('web_path'); ?>/modules/flash/xspf_player.php<?php echo $play_info; ?>" quality="high" bgcolor="#ffffff" width="400" height="170" name="xspf_player" align="middle" allowScriptAccess="sameDomain" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer" />
+	<embed src="<?php echo Config::get('web_path'); ?>/modules/flash/xspf_player.swf?autoplay=true&playlist_url=<?php echo $play_url; ?>" quality="high" bgcolor="#ffffff" width="400" height="170" name="xspf_player" align="middle" allowScriptAccess="sameDomain" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer" />
 </object>
 </div>
 
