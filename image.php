@@ -72,24 +72,28 @@ switch ($_REQUEST['type']) {
 		// Attempt to pull art from the database
 		$art = $album->get_art();
 		
-		if (!$art['art_mime']) { 
+		if (!$art['mime']) { 
 			header('Content-type: image/gif');
 			readfile(Config::get('prefix') . Config::get('theme_path') . '/images/blankalbum.gif');
 			break;
 		} // else no image
 
 		// Print the album art
-		$data = explode("/",$art['art_mime']);
+		$data = explode("/",$art['mime']);
 		$extension = $data['1'];
 		
-//		if (empty($_REQUEST['thumb'])) { 
-			$art_data = $art['art'];
-//		}
-		//else { 
-		//	$art_data = img_resize($art,$size,$extension,$_REQUEST['id']);
-		//}
+		if (empty($_REQUEST['thumb'])) { 
+			$art_data = $art['raw'];
+		}
+		else { 
+			$art_data = img_resize($art,$size,$extension,$_REQUEST['id']);
+		}
 		
 		// Send the headers and output the image
+                header("Expires Sun, 19 Nov 1978 05:00:00 GMT"); 
+                header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
+                header("Cache-Control: no-store, no-cache, must-revalidate");
+                header("Pragma: no-cache");
 		header("Content-type: $mime");
 		header("Content-Disposition: filename=" . $album->name . "." . $extension);	
 		echo $art_data;

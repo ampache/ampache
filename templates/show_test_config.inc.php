@@ -47,7 +47,7 @@ If you are upgrading from 3.3.x please see the directions below.</p>
 
 <h3>Migrating from 3.3.x to 3.4.x</h3>
 <p>Ampache 3.4 uses a different config parser that is over 10x faster then the previous version. Unfortunately the new parser is
-unable to read the old config files. You must run <strong>/bin/migrate_config.inc</strong> from the command line to create your
+unable to read the old config files. You must run <strong>php /bin/migrate_config.inc</strong> from the command line to create your
 new config file.</p>
 
 <p>The following settings will not be migrated by the <strong>migrate_config.inc</strong> script due to major changes between versions. The default

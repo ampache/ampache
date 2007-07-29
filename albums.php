@@ -116,11 +116,10 @@ switch ($_REQUEST['action']) {
 		if (count($images)) {
 			// We don't want to store raw's in here so we need to strip them out into a seperate array
 			foreach ($images as $index=>$image) { 
-				if (isset($image[$index]['raw'])) { 
+				if ($image['raw']) { 
 					unset($images[$index]['raw']); 
 				} 
 			} // end foreach
-
 			// Store the results for further use
 			$_SESSION['form']['images'] = $images;
 			require_once Config::get('prefix') . '/templates/show_album_art.inc.php';

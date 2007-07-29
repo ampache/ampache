@@ -514,15 +514,15 @@ function img_resize($image,$size,$type,$album_id) {
 
 	/* Make sure they even want us to resize it */
 	if (!Config::get('resize_images')) {
-		return $image['art'];
+		return $image['raw'];
 	}
 	// Already resized
-	if ($image['resized']) { 
+	if ($image['db_resized']) { 
 		debug_event('using_resized','using resized image for Album:' . $album_id,'2'); 
-		return $image['art']; 
+		return $image['raw']; 
 	}
 
-	$image = $image['art'];
+	$image = $image['raw'];
 
 	if (!function_exists('gd_info')) { return false; }
 
@@ -541,7 +541,10 @@ function img_resize($image,$size,$type,$album_id) {
 
 	$src = imagecreatefromstring($image);
 	
-	if (!$src) { return false; } 
+	if (!$src) { 
+		debug_event('IMG_RESIZE','Failed to create from string','3');
+		return false; 
+	} 
 
 	$width = imagesx($src);
 	$height = imagesy($src);
@@ -552,6 +555,7 @@ function img_resize($image,$size,$type,$album_id) {
 	$img = imagecreatetruecolor($new_w,$new_h);
 	
 	if (!imagecopyresampled($img,$src,0,0,0,0,$new_w,$new_h,$width,$height)) { 
+		debug_event('IMG_RESIZE','Failed to copy resample image','3');
 		return false;
 	}
 

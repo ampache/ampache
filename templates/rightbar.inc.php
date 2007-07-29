@@ -44,6 +44,7 @@
 			$object->format(); 
 		} 
 		else { 
+			$object = new Random(); 
 			$object->f_link = Random::get_type_name($object_data['1']); 
 		} 
 ?>

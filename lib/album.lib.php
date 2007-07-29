@@ -38,6 +38,16 @@ function get_image_from_source($data) {
 		return $data['raw'];
 	}
 
+	// If it came from the database
+	if (isset($data['db'])) { 
+		// Repull it 
+		$album_id = Dba::escape($data['db']); 
+		$sql = "SELECT * FROM `album_data` WHERE `album_id`='$album_id'"; 
+		$db_results = Dba::query($sql); 
+		$row = Dba::fetch_assoc($db_results); 
+		return $row['art']; 
+	} // came from the db
+
 	// Check to see if it's a URL
 	if (isset($data['url'])) { 
 		$snoopy = new Snoopy(); 

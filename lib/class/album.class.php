@@ -216,7 +216,7 @@ class Album {
 			$art = $this->get_db_art(); 
 		}
 
-		return $art;
+		return $art['0'];
 
 	} // get_art
 
@@ -259,9 +259,9 @@ class Album {
 					case 'get_amazon_art':
 						$data = $this->{$method_name}($options['keyword'],$limit); 
 					break;
-					case 'get_id3_art':
-						$data = $this->{$method_name}($limit); 
-					break; 
+					case 'get_lastfm_art':
+						$data = $this->{$method_name}($limit,$options); 
+					break;
 					default:
 						$data = $this->{$method_name}($limit); 
 					break; 
@@ -288,12 +288,21 @@ class Album {
 	 * This returns the art as pulled from lastFM. This doesn't require
 	 * a special account, we just parse and run with it. 
 	 */
-	public function get_lastfm_art($limit) { 
+	public function get_lastfm_art($limit,$options='') { 
 
 		// Create the parser object
 		$lastfm = new LastFMSearch(); 
 
-		$raw_data = $lastfm->search($this->artist_name,$this->name); 
+		if (is_array($options)) { 
+			$artist	= $options['artist'];
+			$album	= $options['album_name']; 
+		} 
+		else { 
+			$artist = $this->artist_name; 
+			$album = $this->name; 
+		} 
+
+		$raw_data = $lastfm->search($artist,$album); 
 
 		if (!count($raw_data)) { return array(); } 
 
@@ -446,7 +455,9 @@ class Album {
 		} 
 		else { return false; } 
 
-		return $results;
+		$data = array(array('db_resized'=>$this->id,'raw'=>$results['art'],'mime'=>$results['art_mime']));
+
+		return $data;
 
 	} // get_resized_db_art
 
@@ -462,8 +473,10 @@ class Album {
 		$results = Dba::fetch_assoc($db_results);
 
 		if (!$results['art']) { return array(); } 
+
+		$data = array(array('db'=>$this->id,'raw'=>$results['art'],'mime'=>$results['art_mime'])); 
 		
-		return $results;
+		return $data;
 
 	} // get_db_art
 

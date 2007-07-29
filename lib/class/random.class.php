@@ -32,7 +32,7 @@ class Random {
 	 * Constructor
 	 * nothing to see here, move along
 	 */
-	private function __construct($id) { 
+	public function __construct() { 
 
 		// Rien a faire
 
