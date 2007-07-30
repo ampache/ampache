@@ -3,6 +3,11 @@
 --------------------------------------------------------------------------
 
 --------------------------------------------------------------------------
+  v.3.4-Alpha2 
+  	- Fixed clear now playing
+  	- Fixed now playing issues with Audacious 1.3.x office space style
+
+--------------------------------------------------------------------------
   v.3.4-Alpha1 07/29/2007
 	- Improved Albums of the Moment performance on large catalogs
 		(Thx Vlet)

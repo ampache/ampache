@@ -79,8 +79,20 @@ function insert_now_playing($song_id,$uid,$song_length) {
         $time = time()+$song_length;
 	$session_id = Dba::escape($_REQUEST['sid']); 
 
+	/* Check for against a list of clients that have abusive traffic patterns causing
+	 * faulty now playing data and return without inserting
+	 */
+	$banned_clients = array('Audacious/1.3'); 
+
+	foreach ($banned_clients as $banned_agent) { 
+		if (stristr($user_agent,$banned_agent)) { 
+			debug_event('Banned Agent',$banned_agent . ' clients now playing data not entered because Ampache is unable to handle its request pattern','5'); 
+			return false; 
+		} 
+	} 
+
         /* Windows Media Player is evil and it makes multiple requests per song */
-        if (stristr($user_agent,"Windows-Media-Player") || strstr($user_agent,"Audacious")) { $session_id = ' '; }
+        if (stristr($user_agent,"Windows-Media-Player")) { $session_id = ' '; }
 
 	/* Check for Windows Media Player 11 */
 	if (strstr($user_agent,'NSPlayer/11') AND !strstr($user_agent,'WMFSDK/11')) { $session_id = ' '; } 
@@ -100,11 +112,23 @@ function insert_now_playing($song_id,$uid,$song_length) {
 } // insert_now_playing
 
 /**
+ * clear_now_playing
+ * There really isn't anywhere else for this function, shouldn't have deleted it in the first
+ * place
+ */
+function clear_now_playing() { 
+
+	$sql = "TRUNCATE `now_playing`"; 
+	$db_results = Dba::query($sql); 
+
+	return true; 
+
+} // clear_now_playing
+
+/**
  * check_lock_songs
  * This checks to see if the song is already playing, if it is then it prevents the user
  * from streaming it
- * @package General
- * @catagory Security
  */
 function check_lock_songs($song_id) { 
 

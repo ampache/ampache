@@ -67,7 +67,7 @@ if (!count($results)) {
 } 
 
 /** This is the version.... fluf nothing more... **/
-$results['version']		= '3.4-Alpha1';
+$results['version']		= '3.4-Alpha2 Build (001)';
 $results['int_config_version']	= '4'; 
 
 $results['raw_web_path']	= $results['web_path'];
