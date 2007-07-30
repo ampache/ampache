@@ -56,7 +56,7 @@ $title		= scrub_out($album->name) . ' (' . $album->year . ') -- ' . $album->f_ar
 	<a href="<?php echo $web_path; ?>/batch.php?action=alb&amp;id=<?php echo $album->id; ?>"><?php echo _('Download'); ?></a><br />
 	<?php } ?>
 	</div>
-</div>
+
 <?php show_box_bottom(); ?>
 <?php 
 	show_box_top($album->name . ' ' . _('Songs')); 

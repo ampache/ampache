@@ -30,7 +30,7 @@
                 <option value="1000">1000</option>
                 <option value="-1"><?php echo _('All'); ?></option>
 	</select>
-<!-- GENRE PULLDOWN -->
+<!- GENRE PULLDOWN ->
 <br />
 	<select name="random_type" style="width:80px;">
         	<option value="Songs"><?php echo _('Songs'); ?></option>
@@ -40,7 +40,7 @@
                 <option value="unplayed"><?php echo _('Less Played'); ?></option>
 	</select>
         <br />
-<!-- CATALOG PULLDOWN -->
+<!- CATALOG PULLDOWN ->
         <input class="smallbutton" type="submit" value="<?php echo _('Enqueue'); ?>" />
 	</form>
 <hr />

@@ -28,10 +28,10 @@ echo "<ul class=\"star-rating\">\n";
 
 /* Handle the "Not rated" possibility */
 if ($rating->rating == '-1') {
-    echo "<li class=\"zero-stars\"></li>\n";
+    echo "<li class=\"zero-stars\" style=\"display:none;\">reset</li>\n";
 }
 else {
-    echo "<li class=\"zero-stars\"></li>\n";
+    echo "<li class=\"zero-stars\" style=\"display:none;\">reset</li>\n";
 }
 // decide width of rating. image is 16 px wide
 $width = $rating->rating*16;
@@ -47,18 +47,18 @@ else echo "$rating->rating of 5</li>\n";
 //it did not like my "1-star", "2-star" ... css styles, and I changed it to this after I realized star1... would have worked :\
 ?>
 <li>
-    <span class="one-stars" title="1 <?php echo _('out of'); ?> 5"></span>
+    <span class="one-stars" title="1 <?php echo _('out of'); ?> 5">1</span>
 </li>
 <li>
-    <span class="two-stars" title="2 <?php echo _('out of'); ?> 5"></span>
+    <span class="two-stars" title="2 <?php echo _('out of'); ?> 5">2</span>
 </li>
 <li>
-    <span class="three-stars" title="3 <?php echo _('out of'); ?> 5"></span>
+    <span class="three-stars" title="3 <?php echo _('out of'); ?> 5">3</span>
 </li>
 <li>
-    <span class="four-stars" title="4 <?php echo _('out of'); ?> 5"></span>
+    <span class="four-stars" title="4 <?php echo _('out of'); ?> 5">4</span>
 </li>
 <li>
-    <span class="five-stars" title="5 <?php echo _('out of'); ?> 5"></span>
+    <span class="five-stars" title="5 <?php echo _('out of'); ?> 5">5</span>
 </li>
 </ul>
