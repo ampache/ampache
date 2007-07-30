@@ -1,7 +1,6 @@
 <?php
 /*
-
- Copyright (c) 2001 - 2006 Ampache.org
+ Copyright (c) 2001 - 2007 Ampache.org
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
@@ -23,25 +22,13 @@
  * This box is used for actions on the main screen and on a specific playlist page
  * It changes depending on where it is 
  */
-
-$web_path = conf('web_path'); 
-$playlist_id = scrub_out($_REQUEST['playlist_id']);
-$title = _('Playlist Actions');
+$web_path = Config::get('web_path'); 
 ?>
-<?php require (conf('prefix') . '/templates/show_box_top.inc.php'); ?>
+<?php show_box_top($playlist->name . ' ' . _('Playlist')); ?>
 		<ul class="text-action">
-		<?php if ($_REQUEST['playlist_id']) { ?>
-		<li><a href="<?php echo $web_path; ?>/playlist.php?action=edit&amp;playlist_id=<?php echo $playlist_id; ?>"><?php echo _('Edit Playlist'); ?></a></li>
 		<li><a href="<?php echo $web_path; ?>/playlist.php?action=normalize_tracks&amp;playlist_id=<?php echo $playlist_id; ?>"><?php echo _('Normalize Tracks'); ?></a></li>
 		<li><a href="<?php echo $web_path; ?>/stream.php?action=play_selected&amp;playlist_id=<?php echo $playlist_id; ?>"><?php echo _('Play This Playlist'); ?></a></li>
 		<li><a href="<?php echo $web_path; ?>/stream.php?action=playlist_random&amp;playlist_id=<?php echo $playlist_id; ?>"><?php echo _('Play Random'); ?></a></li>
-		<li><a href="<?php echo $web_path; ?>/playlist.php?action=show_delete_playlist&amp;playlist_id=<?php echo $playlist_id; ?>"><?php echo _('Delete This Playlist'); ?></a></li>
-		<?php } else { ?>
-		<li><a href="<?php echo $web_path; ?>/playlist.php?action=show_import_playlist"><?php echo _('Import From File'); ?></a></li>
-		<li><a href="<?php echo $web_path; ?>/playlist.php?action=new"><?php echo _('Create New Playlist'); ?></a></li>
-		<?php if ($GLOBALS['user']->has_access(100)) { ?>
-		<li><a href="<?php echo $web_path; ?>/playlist.php?action=prune_empty"><?php echo _('Delete Empty Playlists'); ?></a></li>
-		<?php } ?>
-		<?php } ?>	
 		</ul>
-<?php require (conf('prefix') . '/templates/show_box_bottom.inc.php'); ?>
+<?php show_box_bottom(); ?>
+

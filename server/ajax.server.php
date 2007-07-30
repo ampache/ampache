@@ -197,6 +197,13 @@ switch ($action) {
 					$GLOBALS['user']->playlist->add_object($song_id,'song'); 
 				} 
 			break; 
+			case 'playlist': 
+				$playlist = new Playlist($_REQUEST['id']); 
+				$songs = $playlist->get_items(); 
+				foreach ($songs as $song_id) { 
+					$GLOBALS['user']->playlist->add_object($song_id,'song'); 
+				} 
+			break;
 			case 'clear_all': 
 				$GLOBALS['user']->playlist->clear(); 
 			break;

@@ -55,38 +55,6 @@ function show_playlists() {
 } // show_playlists
 
 /**
- * show_playlist
- * This function takes a playlist object and calls show_songs after
- * runing get_items()
- */
-function show_playlist($playlist) {
-        
-	/* Create the Playlist */
-        $song_ids = $playlist->get_items();
-
-
-	show_playlist_menu();
-
-        if (count($song_ids) > 0) {
-                show_songs($song_ids, $playlist);
-        }
-        else {
-                echo "<div class=\"text-box\">" . _("No songs in this playlist.") . "</div>\n";
-        }
-
-} // show_playlist
-
-/**
- * show_playlist_menu
- * This shows a little pretty box that contains the playlist 'functions'
- */
-function show_playlist_menu() {
-
-	require (conf('prefix') . '/templates/show_playlist_box.inc.php');
-
-} // show_playlist_menu
-
-/**
  * show_playlist_edit
  * This function shows the edit form for a playlist, nothing special here
  */

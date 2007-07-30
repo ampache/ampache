@@ -164,13 +164,14 @@ function session_exists($sid,$xml_rpc=0) {
 
 } // session_exists
 
-/*!
-	@function extend_session
-	@discussion just update the expire time
-*/
+/**
+ * extend_session
+ * just updates the expire time of the specified session this 
+ * is used by the the play script after a song finishes
+ */
 function extend_session($sid) { 
 
-	$new_time = time() + Config::get('local_length');
+	$new_time = time() + Config::get('session_length');
 
 	if ($_COOKIE['amp_longsess'] == '1') { $new_time = time() + 86400*364; }
 

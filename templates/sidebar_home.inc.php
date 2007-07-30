@@ -46,5 +46,18 @@
 <hr />
 -->
 <h4><?php echo _('Playlists'); ?></h4>
-<br />
-
+<span><a href="<?php echo $web_path; ?>/playlist.php?action=show_all"><?php echo _('View All'); ?></a></span>
+<hr />
+<div style="left-padding:5px;">
+<?php 
+	$playlists = Playlist::get_users($GLOBALS['user']->id); 
+	foreach ($playlists as $playlist_id) { 
+		$playlist = new Playlist($playlist_id); 
+		$playlist->format(); 
+?>
+<span>
+	<?php echo Ajax::button('?action=basket&type=playlist&id=' . $playlist_id,'all',_('Play This Playlist'),'leftbar_playlist_' . $playlist_id); ?>
+	<?php echo $playlist->f_link; ?>
+</span>
+<?php } // end foreach playlist ?>
+</div>

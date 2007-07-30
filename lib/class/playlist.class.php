@@ -1,13 +1,13 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2006 Ampache.org
+ Copyright (c) 2001 - 2007 Ampache.org
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
- as published by the Free Software Foundation; either version 2
- of the License, or (at your option) any later version.
+ as published by the Free Software Foundation; version 2
+ of the License.
 
  This program is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -26,31 +26,28 @@
 class Playlist { 
 
 	/* Variables from the Datbase */
-	var $id;
-	var $name;
-	var $user;
-	var $type;
-	var $date;
+	public $id;
+	public $name;
+	public $user;
+	public $type;
+	public $date;
 
 	/* Generated Elements */
-	var $items = array();
-
+	public $items = array();
 
 	/**
 	 * Constructor 
 	 * This takes a playlist_id as an optional argument and gathers the information
 	 * if not playlist_id is passed returns false (or if it isn't found 
 	 */
-	function Playlist($playlist_id = 0) { 
+	public function __construct($id) { 
 
-		if (!$playlist_id) { return false; }
-		
-		$this->id 	= intval($playlist_id);
+		$this->id 	= intval($id);
 		$info 		= $this->_get_info();
-		$this->name	= $info['name'];
-		$this->user	= $info['user'];
-		$this->type	= $info['type'];
-		$this->date	= $info['date'];
+
+		foreach ($info as $key=>$value) { 
+			$this->$key = $value; 
+		} 
 	
 	} // Playlist
 
@@ -59,16 +56,27 @@ class Playlist {
 	 * This is an internal (private) function that gathers the information for this object from the 
 	 * playlist_id that was passed in. 
 	 */
-	function _get_info() { 
+	private function _get_info() { 
 
-		$sql = "SELECT * FROM `playlist` WHERE `id`='" . sql_escape($this->id) . "'";	
-		$db_results = mysql_query($sql, dbh());
+		$sql = "SELECT * FROM `playlist` WHERE `id`='" . Dba::escape($this->id) . "'";	
+		$db_results = Dba::query($sql);
 
-		$results = mysql_fetch_assoc($db_results);
+		$results = Dba::fetch_assoc($db_results);
 
 		return $results;
 
 	} // _get_info
+
+	/**
+	 * format
+	 * This takes the current playlist object and gussies it up a little
+	 * bit so it is presentable to the users
+	 */
+	public function format() { 
+
+		$this->f_link = '<a href="' . Config::get('web_path') . '/playlist.php?action=show_playlist&amp;playlist_id=' . $this->id . '">' . $this->name . '</a>'; 
+
+	} // format
 
 	/**
 	 * get_track
@@ -90,16 +98,16 @@ class Playlist {
 	 * This returns an array of playlist songs that are in this playlist. Because the same
 	 * song can be on the same playlist twice they are key'd by the uid from playlist_data
 	 */
-	function get_items() { 
+	public function get_items() { 
 
-		$sql = "SELECT * FROM playlist_data WHERE playlist='" . sql_escape($this->id) . "' ORDER BY track";
-		$db_results = mysql_query($sql, dbh());
+		$results = array(); 
 
-		while ($r = mysql_fetch_assoc($db_results)) { 
+		$sql = "SELECT * FROM `playlist_data` WHERE `playlist`='" . Dba::escape($this->id) . "' ORDER BY `track`";
+		$db_results = Dba::query($sql);
 
-			$key = $r['id'];
-			$results[$key] = $r;
-
+		while ($row = Dba::fetch_assoc($db_results)) { 
+			$key = $row['id'];
+			$results[$key] = $row['song'];
 		} // end while
 
 		return $results;
@@ -225,23 +233,25 @@ class Playlist {
 	} // get_song_count
 
 	/**
-	 * has_access
-	 * This takes no arguments. It looks at the currently logged in user (_SESSION)
-	 * This accounts for admin powers and the access on a per list basis
+	 * get_users
+	 * This returns the specified users playlists as an array of
+	 * playlist ids
 	 */
-	function has_access() { 
+	public static function get_users($user_id) { 
 
-		// Admin always have rights
-		if ($GLOBALS['user']->has_access(100)) { return true; } 
+		$user_id = Dba::escape($user_id); 
+		$results = array(); 
 
-		// People under 25 don't get playlist access even if they created it 
-		if (!$GLOBALS['user']->has_access(25)) { return false; }  
+		$sql = "SELECT `id` FROM `playlist` WHERE `user`='$user_id'"; 
+		$db_results = Dba::query($sql); 
 
-		if ($this->user == $GLOBALS['user']->id) { return true; } 
+		while ($row = Dba::fetch_assoc($db_results)) { 
+			$results[] = $row['id']; 
+		} 
 
-		return false;
+		return $results; 
 
-	} // has_access
+	} // get_users
 
 	/**
 	 * update_type

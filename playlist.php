@@ -1,13 +1,13 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2006 Ampache.org
+ Copyright (c) 2001 - 2007 Ampache.org
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
- as published by the Free Software Foundation; either version 2
- of the License, or (at your option) any later version.
+ as published by the Free Software Foundation; version 2
+ of the License.
 
  This program is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -24,10 +24,9 @@
  * This is the playlist document, it handles all things playlist.
  */
 
-require_once('lib/init.php');
+require_once 'lib/init.php';
 
-
-show_template('header');
+show_header(); 
 
 /* Get the Vars we need for later cleaned up */
 $action 	= strtolower(scrub_in($_REQUEST['action']));
@@ -143,7 +142,9 @@ switch ($action) {
 		show_confirmation($title,$body,$url);
 	break;
 	case 'show_playlist':
-		show_playlist($playlist);
+		$playlist = new Playlist($_REQUEST['playlist_id']); 
+		$playlist->format(); 
+		require_once Config::get('prefix') . '/templates/show_playlist.inc.php'; 
 	break;
 	case 'show_import_playlist':
 		show_import_playlist();
