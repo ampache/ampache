@@ -4,6 +4,7 @@
 
 --------------------------------------------------------------------------
   v.3.4-Alpha2 
+  	- Added paging on all song displays including search
   	- Fixed searching via quicksearch bar
   	- Added 'Your' playlists to leftbar with play and view links
   	- Fixed clear now playing

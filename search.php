@@ -44,7 +44,10 @@ switch ($_REQUEST['action']) {
 		require_once Config::get('prefix') . '/templates/show_search.inc.php'; 
 		$results = run_search($_REQUEST);
 		Browse::set_type('song'); 
+
+		echo "<div id=\"browse_content\">";
 		Browse::show_objects($results); 
+		echo "</div>"; 
 	break;
 	case 'save_as_track':
 		$playlist_id = save_search($_REQUEST);

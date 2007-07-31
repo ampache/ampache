@@ -307,6 +307,15 @@ switch ($action) {
 		$xml_doc = xml_from_array($results); 
 		echo $xml_doc; 
 	break;
+	case 'page': 
+		Browse::set_start($_REQUEST['start']); 
+
+		ob_start(); 
+		Browse::show_objects(); 
+		$results['browse_content'] = ob_get_contents(); 
+		ob_end_clean(); 
+		echo xml_from_array($results); 
+	break;
 	case 'sidebar': 
 		switch ($_REQUEST['button']) {
 			case 'home':

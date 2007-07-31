@@ -430,6 +430,7 @@ span.five-stars:hover { width: 80px; }
 /************************************************/
 .list-header { 
 	text-decoration: none;
+	cursor:pointer; 
 } 
 .list-header:hover { 
 	color:#071fd4;

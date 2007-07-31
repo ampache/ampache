@@ -31,6 +31,8 @@ class Browse {
 
 	// Public static vars that are cached
 	public static $sql; 
+	public static $start = '0'; 
+	public static $total_objects; 
 
 	/**
 	 * constructor
@@ -121,6 +123,29 @@ class Browse {
 	} // set_sort
 
 	/**
+	 * set_start
+	 * This sets the start point for our show functions
+	 */
+	public static function set_start($start) { 
+
+		self::$start = intval($start); 
+
+	} // set_start
+
+	/**
+	 * get_saved
+	 * This looks in the session for the saved 
+	 * stuff and returns what it finds
+	 */
+	public static function get_saved() { 
+
+		$objects = $_SESSION['browse']['save']; 
+		
+		return $objects; 
+
+	} // get_saved
+
+	/**
 	 * get_objects
 	 * This gets an array of the ids of the objects that we are
 	 * currently browsing by it applies the sql and logic based
@@ -136,15 +161,15 @@ class Browse {
 		$results = array(); 
 
 		while ($data = Dba::fetch_assoc($db_results)) { 
-			// If we've hit our offset limit
-			if (count($results) >= $GLOBALS['user']->prefs['offset_limit']) { return $results; } 
-
 			// Make sure that this object passes the logic filter
 			if (self::logic_filter($data['id'])) { 
 				$results[] = $data['id']; 
 			} 
 		} // end while
-		
+	
+		// Save what we've found and then return it
+		self::save_objects($results); 
+
 		return $results; 
 
 	} // get_objects
@@ -340,7 +365,17 @@ class Browse {
 	 * and requires the correct template based on the
 	 * type that we are currently browsing
 	 */
-	public static function show_objects($object_ids) { 
+	public static function show_objects($object_ids='') { 
+
+		$object_ids = $object_ids ? $object_ids : self::get_saved();
+
+		// Reset the total items
+		self::$total_objects = count($object_ids); 
+
+		// Limit is based on the users preferences
+		$limit = $GLOBALS['user']->prefs['offset_limit'] ? $GLOBALS['user']->prefs['offset_limit'] : '25'; 
+
+		$object_ids = array_slice($object_ids,self::$start,$limit); 
 
 		switch ($_SESSION['browse']['type']) { 
 			case 'song': 
@@ -379,5 +414,19 @@ class Browse {
 		} // end switch on type
 
 	} // show_object
+
+	/**
+	 * save_objects
+	 * This takes the full array of object ides, often passed into show and then
+	 * if nessecary it saves them into the session
+	 */
+	public static function save_objects($object_ids) { 
+
+		// save these objects
+		$_SESSION['browse']['save'] = $object_ids; 
+		self::$total_objects = count($object_ids); 
+		return true; 
+
+	} // save_objects
 
 } // browse

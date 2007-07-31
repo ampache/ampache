@@ -26,30 +26,28 @@
  * to layout this page.
  */
 
-/* We must have Some Items, if none passed use sesison information */
-if (!$total_items) { $total_items = $_SESSION['view_total_items']; }
-
-
-/* Calculate the Next/Prev Pages */
+// Pull these variables out to allow shorthand (easier for lazy programmers)
+$limit = $GLOBALS['user']->prefs['offset_limit'] ? $GLOBALS['user']->prefs['offset_limit'] : '25'; 
+$start = Browse::$start; 
+$total = Browse::$total_objects; 
 
 // Next
-$next_offset = $GLOBALS['view']->offset + $GLOBALS['view']->offset_limit;
-if ($next_offset > $total_items) { $next_offset = $GLOBALS['view']->offset; }
+$next_offset = $start + $limit;
+if ($next_offset > $total) { $next_offset = $start; }
 
 // Prev
-$prev_offset = $GLOBALS['view']->offset - $GLOBALS['view']->offset_limit; 
+$prev_offset = $start - $limit; 
 if ($prev_offset < 0) { $prev_offset = '0'; } 
 
 /* Calculate how many pages total exist */
-if (!$GLOBALS['view']->offset_limit) { $GLOBALS['view']->offset_limit = '50'; } 
-$pages  = ceil($total_items/$GLOBALS['view']->offset_limit);
+$pages  = ceil($total/$limit);
 
 /* Calculate current page and how many we have on each side */
 $page_data = array('up'=>array(),'down'=>array());
 
 // Can't Divide by 0
-if ($GLOBALS['view']->offset > 0) { 
-	$current_page = floor($GLOBALS['view']->offset/$GLOBALS['view']->offset_limit);
+if ($start> 0) { 
+	$current_page = floor($start/$limit);
 }
 else { 
 	$current_page = 0;
@@ -72,16 +70,16 @@ $page = $current_page+1;
 $i = 0;
 /* While we have pages left */
 while ($page <= $pages) { 
-	if ($page * $GLOBALS['view']->offset_limit > $total_items) { break; }
+	if ($page * $limit > $total) { break; }
 	if ($i == '15') { 
 		$key = $pages - 1;
 		if (!$page_data['up'][$key]) { $page_data['up'][$key] = '...'; }
-		$page_data['up'][$pages] = ($pages-1) * $GLOBALS['view']->offset_limit;
+		$page_data['up'][$pages] = ($pages-1) * $limit;
 		break;
 	}
 	$i++;
 	$page = $page + 1;
-	$page_data['up'][$page] = ($page-1) * $GLOBALS['view']->offset_limit;
+	$page_data['up'][$page] = ($page-1) * $limit;
 } // end while
 
 // Sort These Arrays of Hotness
@@ -99,15 +97,15 @@ if (!isset($matches['1'])) {
 }
 
 $action = "action=" . scrub_in($_REQUEST['action']);
-$script = conf('web_path') . "/" . $admin_menu . $matches[1];
+$script = Config::get('web_path') . "/" . $admin_menu . $matches[1];
 
 // are there enough items to even need this view?
-if (($pages > 1) && ($_SESSION['view_script'])) {
+if ($pages > 1) {
 ?>
 <table class="list-header" cellpadding="1" cellspacing="0" width="100%">
 <tr>
 	<td valign="top">
-	<a class="list-header" href="<?php echo $script; ?>?<?php echo $action; ?>&amp;offset=<?php echo $prev_offset; ?>&amp;keep_view=true">[<?php echo _('Prev'); ?>]</a>&nbsp;
+	<?php echo Ajax::text('?action=page&start=' . $prev_offset,'[' . _('Prev') . ']','browse_prev','','list-header'); ?>
 	</td>
 	<td align="center">
 	<?php 
@@ -133,30 +131,28 @@ if (($pages > 1) && ($_SESSION['view_script'])) {
 		foreach ($page_data['up'] as $page=>$offset) { 
 			if ($offset === '...') { echo '...&nbsp;'; } 
 			else { 
-	?>
-	<a class="list-header" href="<?php echo $script; ?>?<?php echo $action; ?>&amp;sort_type=<?php echo $GLOBALS['view']->sort_type;  ?>&amp;offset=<?php echo $offset; ?>&amp;keep_view=true"><?php echo $page; ?></a>&nbsp;
-	<?php
+				echo Ajax::text('?action=page&start=' . $offset,$page,'browse_page_' . $page,'','list-header'); 
 			} // end else
 		} // end foreach up
 		/*
 		$counter = 1;
 		$offset_pages = 0;
 		while ($counter <= $pages) {
-		if ($GLOBALS['view']->offset == $offset_pages) { ?>
+		if ($start == $offset_pages) { ?>
 		<?php } else { ?>
 		<?php 	
-		} // end if ($GLOBALS['view']->offset == $offset_pages) and else
-			$offset_pages += $GLOBALS['view']->offset_limit;
+		} // end if ($start == $offset_pages) and else
+			$offset_pages += $limit;
 			$counter++;
 		} // end while ($counter <= $pages) 
 		*/
 	?>
 	</td>
 	<td valign="top">
-		<a class="list-header" href="<?php echo $script; ?>?<?php echo $action; ?>&amp;offset=<?php echo $next_offset; ?>&amp;keep_view=true">[<?php echo _('Next'); ?>]</a>&nbsp;
+		<?php echo Ajax::text('?action=page&start=' . $next_offset,'[' . _('Next') . ']','browse_next','','list-header'); ?>
 	</td>
 </tr>
 </table>
 <?php
-} // if (($pages > 1) && ($_SESSION['view_script']))
+} // if stuff
 ?>
