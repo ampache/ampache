@@ -36,8 +36,8 @@ switch ($_REQUEST['action']) {
 		$_REQUEST['s_all'] = $_REQUEST['search_string'];
 		
 		if (strlen($_REQUEST['search_string']) < 1) { 
-			$GLOBALS['error']->add_error('keyword',_("Error: No Keyword Entered"));
-			show_template('show_search');
+			Error::add('keyword',_('Error: No Keyword Entered'));
+			require_once Config::get('prefix') . '/templates/show_search.inc.php'; 
 			break;
 		}
 	case 'search':
