@@ -24,7 +24,7 @@ $web_path = Config::get('web_path');
 <table class="tabledata" cellspacing="0" cellpadding="0" border="0">
 <tr class="table-header" align="center">
 	<td colspan="5">
-	<?php if ($GLOBALS['view']->offset_limit) { require Config::get('prefix') . '/templates/list_header.inc'; } ?>
+	<?php require Config::get('prefix') . '/templates/list_header.inc.php'; ?>
 	</td>
 </tr>
 <tr class="table-header">

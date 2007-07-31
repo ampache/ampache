@@ -115,9 +115,7 @@ if ($pages > 1) {
 			else { 
 			// Hack Alert
 			$page++;
-	?>
-	<a class="list-header" href="<?php echo $script; ?>?<?php echo $action; ?>&amp;sort_type=<?php echo $GLOBALS['view']->sort_type;  ?>&amp;offset=<?php echo $offset; ?>&amp;keep_view=true"><?php echo $page; ?></a>&nbsp;
-	<?php	
+				echo Ajax::text('?action=page&start=' . $offset,$page,'browse_page_' . $page,'','list-header'); 
 			}
 		} // end foreach down
 
@@ -134,18 +132,6 @@ if ($pages > 1) {
 				echo Ajax::text('?action=page&start=' . $offset,$page,'browse_page_' . $page,'','list-header'); 
 			} // end else
 		} // end foreach up
-		/*
-		$counter = 1;
-		$offset_pages = 0;
-		while ($counter <= $pages) {
-		if ($start == $offset_pages) { ?>
-		<?php } else { ?>
-		<?php 	
-		} // end if ($start == $offset_pages) and else
-			$offset_pages += $limit;
-			$counter++;
-		} // end while ($counter <= $pages) 
-		*/
 	?>
 	</td>
 	<td valign="top">
