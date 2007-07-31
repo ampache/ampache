@@ -145,12 +145,12 @@ function show_playlist_select($playlist_id=0,$type='') {
 		$where_sql = '1=1';
 	}
 	else { 
-		$where_sql = " `user` = '" . sql_escape($GLOBALS['user']->id) . "'";
+		$where_sql = " `user` = '" . Dba::escape($GLOBALS['user']->id) . "'";
 	}
 
 	$sql = "SELECT id,name FROM playlist " . 
-		"WHERE " . $where_sql . " ORDER BY name";
-	$db_results = mysql_query($sql,dbh());
+		"WHERE " . $where_sql . " ORDER BY `name`";
+	$db_results = Dba::query($sql);
 
 	echo "<select name=\"playlist_id\">\n";
 	

@@ -24,7 +24,7 @@
  */
 ?>
 <?php show_box_top(_('Search Ampache') . "..."); ?>
-<form name="search" method="post" action="<?php echo  conf('web_path'); ?>/search.php" enctype="multipart/form-data" style="Display:inline">
+<form name="search" method="post" action="<?php echo Config::get('web_path'); ?>/search.php" enctype="multipart/form-data" style="Display:inline">
 <table class="tabledata" cellspacing="0" cellpadding="3" border="0">
 <tr class="table-header">
 	<td colspan="4">&nbsp;</td>
@@ -133,7 +133,6 @@
 	<td>&nbsp;</td>
 	<td>
 	        <input class="button" type="submit" value="<?php echo _('Search'); ?>" />&nbsp;&nbsp;
-	        <input class="button" type="reset" value="<?php echo _('Reset Form');?>" />
 	        <input type="hidden" name="action" value="search" />
 	</td>
 	<td colspan="2">&nbsp;</td>
@@ -143,9 +142,9 @@
 
 <?php if ($_REQUEST['action'] == 'search' || $_REQUEST['action'] == 'quick_search') { ?>
 <br />
-<form method="post" action="<?php echo conf('web_path'); ?>/playlist.php?action=add_dyn_song">
+<form method="post" action="<?php echo Config::get('web_path'); ?>/playlist.php?action=add_dyn_song">
 <?php echo _('Save Search As Track on'); ?>:
 <?php show_playlist_select($_SESSION['data']['playlist_id'],'dynamic'); ?>
 <input class="button" type="submit" value="<?php echo _('Save'); ?>" /></form>
 <?php } ?>
-<?php require (conf('prefix') . '/templates/show_box_bottom.inc.php'); ?>
+<?php show_box_bottom(); ?>

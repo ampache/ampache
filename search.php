@@ -41,9 +41,10 @@ switch ($_REQUEST['action']) {
 			break;
 		}
 	case 'search':
-		show_template('show_search');
+		require_once Config::get('prefix') . '/templates/show_search.inc.php'; 
 		$results = run_search($_REQUEST);
-		show_search($_REQUEST['object_type'],$results);
+		Browse::set_type('song'); 
+		Browse::show_objects($results); 
 	break;
 	case 'save_as_track':
 		$playlist_id = save_search($_REQUEST);
@@ -51,7 +52,7 @@ switch ($_REQUEST['action']) {
 		show_confirmation("Search Saved","Your Search has been saved as a track in $playlist->name",conf('web_path') . "/search.php");
 	break;
 	default:
-		show_template('show_search');
+		require_once Config::get('prefix') . '/templates/show_search.inc.php'; 
 	break;
 }
 

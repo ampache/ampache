@@ -42,7 +42,7 @@ function run_search($data) {
 		
 		if ($prefix == 's_' AND strlen($value)) { 
 			$true_name = substr($key,2,strlen($key));
-			$search[$true_name] = sql_escape($value);
+			$search[$true_name] = Dba::escape($value);
 		}
 		
 	} // end foreach
@@ -219,11 +219,10 @@ function search_song($data,$operator,$method,$limit) {
 	 */
 	$_SESSION['userdata']['stored_search'] = $sql;
 
-        //echo "DEBUG: $sql<br />"; flush();
-	$db_results = mysql_query($sql, dbh());
+	$db_results = Dba::query($sql);
 	
-	while ($r = mysql_fetch_assoc($db_results)) { 
-		$results[] = new Song($r['id']);
+	while ($row = Dba::fetch_assoc($db_results)) { 
+		$results[] = $row['id'];
 	}
 
 	return $results;

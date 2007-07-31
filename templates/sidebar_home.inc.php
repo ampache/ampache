@@ -3,12 +3,9 @@
 <span><a href="<?php echo $web_path; ?>/stats.php"><?php echo _('Statistics'); ?></a></span>
 <span><a href="<?php echo $web_path; ?>/radio.php?action=show_create"><?php echo _('Add Radio Station'); ?></a></span>
 <hr />
-<!-- RANDOM, Hidden for now cause its broken
-<h4><?php echo _('Search'); ?></h4>
 <div id="sidebar_subsearch">
-	<form name="sub_search" method="post" action="<?php echo $web_path; ?>/search.php" enctype="multipart/form-data" style="Display:inline">
+	<form name="search" method="post" action="<?php echo $web_path; ?>/search.php" enctype="multipart/form-data" style="Display:inline">
         <input type="text" name="search_string" value="" size="5" />
-<br />
         <input class="smallbutton" type="submit" value="<?php echo _('Search'); ?>" />
         <input type="hidden" name="action" value="quick_search" />
         <input type="hidden" name="method" value="fuzzy" />
@@ -16,6 +13,7 @@
         </form>
 </div>
 <hr />
+<!-- RANDOM, Hidden for now cause its broken
 <h4><?php echo _('Random'); ?></h4>
 	<form name="sub_random" method="post" enctype="multipart/form-data" action="<?php echo $web_path; ?>/song.php?action=random&amp;method=stream" style="Display:inline">
         <select name="random" style="width:80px;">
