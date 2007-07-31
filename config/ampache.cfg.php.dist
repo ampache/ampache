@@ -7,7 +7,7 @@
 ; if this config file is up to date 
 ; this is compared against a value hardcoded
 ; into the init script
-config_version = 4
+config_version = 5
 
 ;###################
 ; Path Vars        #
