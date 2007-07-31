@@ -34,6 +34,7 @@ class Catalog {
 	public $rename_pattern;
 	public $sort_pattern;
 	public $catalog_type;
+	public $path; 
 
 	/* This is a private var that's used during catalog builds */
 	private $_playlists = array();
@@ -1234,6 +1235,17 @@ class Catalog {
 
 		require_once Config::get('prefix') . '/templates/show_clean_catalog.inc.php';
 		flush(); 
+
+		/* Do a quick check to make sure that the root of the catalog is readable, error if not 
+		 * this will minimize the loss of catalog data if mount points fail
+		 */
+		if (!is_readable($this->path)) { 
+			debug_event('catalog','Catalog path:' . $this->path . ' unreadable, clean failed','1'); 
+			Error::add('general',_('Catalog Root unreadable, stopping clean')); 
+			Error::display('general'); 
+			return false; 
+		} 
+
 
 		/* Get all songs in this catalog */
 		$sql = "SELECT `id`,`file` FROM `song` WHERE `catalog`='$this->id' AND enabled='1'";

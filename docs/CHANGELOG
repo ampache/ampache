@@ -4,6 +4,8 @@
 
 --------------------------------------------------------------------------
   v.3.4-Alpha2 
+  	- Added check on clean to see if Root path is readable, if not
+		stop clean (mount point failures) 
   	- Fixed now playing, hopefully once and for all
   	- Added distinct sessions for each stream action, also allows
 		for independent session lengths between interface
