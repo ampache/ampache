@@ -139,6 +139,24 @@ class Stream {
 	} // session_exists
 
 	/**
+	 * gc_session
+	 * This function performes the garbage collection stuff, run on extend and on now playing refresh
+	 */
+	public static function gc_session($ip='',$agent='',$uid='',$sid='') { 
+
+		$time = time(); 
+		$sql = "DELETE FROM `session_stream` WHERE `expire` < '$time'"; 
+		$db_results = Dba::query($sql); 
+
+		// We need all of this to run this query
+		if ($ip AND $agent AND $uid AND $sid) { 
+			$sql = "DELETE FROM `session_stream` WHERE `ip`='$ip' AND `agent`='$agent' AND `user`='$uid' AND `id` != '$sid'"; 
+			$db_results = Dba::query($sql); 
+		} 
+
+	} // gc_session 
+
+	/**
 	 * extend_session
 	 * This takes the passed sid and does a replace into also setting the user
 	 * agent and IP also do a little GC in this function
@@ -155,8 +173,7 @@ class Stream {
 			"WHERE `id`='$sid'"; 
 		$db_results = Dba::query($sql); 
 
-		$sql = "DELETE FROM `session_stream` WHERE `ip`='$ip' AND `agent`='$agent' AND `user`='$uid' AND `id` != '$sid'"; 
-		$db_results = Dba::query($sql); 
+		self::gc_session($ip,$agent,$uid,$sid); 
 
 		return true; 
 
