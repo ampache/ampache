@@ -4,6 +4,10 @@
 
 --------------------------------------------------------------------------
   v.3.4-Alpha2 
+  	- Fixed now playing, hopefully once and for all
+  	- Added distinct sessions for each stream action, also allows
+		for independent session lengths between interface
+		and streaming
   	- Added paging on all song displays including search
   	- Fixed searching via quicksearch bar
   	- Added 'Your' playlists to leftbar with play and view links

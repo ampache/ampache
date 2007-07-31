@@ -114,10 +114,6 @@ function error_results($param,$clobber=0)
 /**
  * session_exists
  * checks to make sure they've specified a valid session, can handle xmlrpc
- * @package General
- * @cataogry Verify
- * @todo Have XMLRPC check extend remote session 
- * @todo actually check
  */
 function session_exists($sid,$xml_rpc=0) { 
 

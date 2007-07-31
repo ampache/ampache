@@ -45,13 +45,14 @@ class Stream {
 		$this->type = $type;
 		$this->songs = $song_ids;
 		$this->web_path = Config::get('web_path');
+		$this->user_id = $GLOBALS['user']->id;
 		
 		if (Config::get('force_http_play')) { 
 			$this->web_path = preg_replace("/https/", "http",$this->web_path);
 		}
 		
-		$this->sess = session_id();
-		$this->user_id = $GLOBALS['user']->id;
+		// Generate the session ID
+		$this->session = md5(uniqid(rand(), true));;
 
 	} // Constructor
 
@@ -64,6 +65,12 @@ class Stream {
 
 		if (!is_array($this->songs)) { 
 			debug_event('stream','Error: No Songs Passed on ' . $this->type . ' stream','2');
+			return false; 
+		}
+
+		// We're starting insert the session into session_stream
+		if (!$this->insert_session()) { 
+			debug_event('stream','Session Insertion failure, aboring','3'); 
 			return false; 
 		}
 
@@ -94,6 +101,68 @@ class Stream {
 	} // manual_url_add
 
 	/**
+	 * insert_session
+	 * This inserts a row into the session_stream table
+	 */
+	private function insert_session() { 
+
+		$expire = time() + Config::get('stream_length'); 
+
+		$sql = "INSERT INTO `session_stream` (`id`,`expire`,`user`) " . 
+			"VALUES('$this->session','$expire','$this->user_id')"; 
+		$db_results = Dba::query($sql); 
+
+		if (!$db_results) { return false; } 
+
+		return true; 
+
+	} // insert_session
+
+	/**
+	 * session_exists
+	 * This checks to see if the passed stream session exists and is valid 
+	 */
+	public static function session_exists($sid) { 
+
+		$sid 	= Dba::escape($sid); 
+		$time	= time(); 
+
+		$sql = "SELECT * FROM `session_stream` WHERE `id`='$sid' AND `expire` > '$time'"; 
+		$db_results = Dba::query($sql); 
+
+		if ($row = Dba::fetch_assoc($db_results)) { 
+			return true; 
+		} 
+		 
+		return false; 
+
+	} // session_exists
+
+	/**
+	 * extend_session
+	 * This takes the passed sid and does a replace into also setting the user
+	 * agent and IP also do a little GC in this function
+	 */
+	public static function extend_session($sid,$uid) { 
+
+		$expire = time() + Config::get('stream_length'); 
+		$sid 	= Dba::escape($sid); 
+		$agent	= Dba::escape($_SERVER['HTTP_USER_AGENT']); 
+		$ip	= ip2int($_SERVER['REMOTE_ADDR']); 
+		$uid	= Dba::escape($uid); 
+
+		$sql = "UPDATE `session_stream` SET `expire`='$expire', `agent`='$agent', `ip`='$ip' " . 
+			"WHERE `id`='$sid'"; 
+		$db_results = Dba::query($sql); 
+
+		$sql = "DELETE FROM `session_stream` WHERE `ip`='$ip' AND `agent`='$agent' AND `user`='$uid' AND `id` != '$sid'"; 
+		$db_results = Dba::query($sql); 
+
+		return true; 
+
+	} // extend_session
+
+	/**
 	 * create_simplem3u
 	 * this creates a simple m3u without any of the extended information
 	 */
@@ -118,7 +187,7 @@ class Stream {
 	                if ($GLOBALS['user']->prefs['play_type'] == 'downsample') {
 	                	$ds = $GLOBALS['user']->prefs['sample_rate'];
 	                }
-			echo "$this->web_path/play/index.php?song=$song_id&uid=$this->user_id&sid=$this->sess&ds=$ds&stupidwinamp=." . $song->type . "\n"; 
+			echo $song->get_url($this->session); 
 		} // end foreach
 
 		/* Foreach the additional URLs */
@@ -155,7 +224,7 @@ class Stream {
 	                $song->format();
 
 	                echo "#EXTINF:$song->time," . $song->f_artist_full . " - " . $song->title . "\n";
-			echo $song->get_url() . "\n";
+			echo $song->get_url($this->session) . "\n";
                 } // end foreach
 
 		/* Foreach URLS */
@@ -186,7 +255,7 @@ class Stream {
 			$song = new Song($song_id);
 			$song->format();
 			$song_name = $song->f_artist_full . " - " . $song->title . "." . $song->type;
-			$song_url = $song->get_url();
+			$song_url = $song->get_url($this->session);
 			echo "File" . $i . "=$song_url\n";
 			echo "Title" . $i . "=$song_name\n";
 			echo "Length" . $i . "=$song->time\n";
@@ -220,7 +289,7 @@ class Stream {
 		foreach ($this->songs as $song_id) {
                 	$song = new Song($song_id);
                         $song->format();   
-			$url = $song->get_url();
+			$url = $song->get_url($this->session);
                         $song_name = $song->f_artist_full . " - " . $song->title . "." . $song->type;
 			
                         echo "<ENTRY>\n";
@@ -264,7 +333,7 @@ class Stream {
 	                $song->format();
 
 	                $xml = array();
-			$xml['track']['location'] = $song->get_url() . $flash_hack;
+			$xml['track']['location'] = $song->get_url($this->session) . $flash_hack;
 			$xml['track']['identifier'] = $xml['track']['location'];
 			$xml['track']['title'] = $song->title;
 			$xml['track']['creator'] = $song->f_artist_full;
@@ -392,7 +461,7 @@ class Stream {
                 header("Content-Type: audio/x-pn-realaudio ram;");
                 foreach ($this->songs as $song_id) {
                         $song = new Song($song_id);
- 			echo "$this->web_path/play/index.php?song=$song_id&uid=$this->user_id&sid=$this->sess&stupidwinamp=." . $song->type . "\n";	
+			echo $song->get_url($this->session); 
 		} // foreach songs
 
 	} // create_ram

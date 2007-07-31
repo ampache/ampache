@@ -73,15 +73,15 @@ if (Config::get('xml_rpc')) {
 }
 
 // If require session is set then we need to make sure we're legit
-if (Config::get('require_session') OR $xml_rpc) { 
-	if(!session_exists($sid,$xml_rpc)) {	
+if (Config::get('require_session')) { 
+	if(!Stream::session_exists($sid)) {	
 		debug_event('session_expired',"Streaming Access Denied: " . $GLOBALS['user']->username . "'s session has expired",'3');
     		die(_("Session Expired: please log in again at") . " " . Config::get('web_path') . "/login.php");
 	}
 
 	// Now that we've confirmed the session is valid
 	// extend it
-	extend_session($sid);
+	Stream::extend_session($sid,$uid);
 }
 
 
@@ -272,7 +272,7 @@ $chunk_size = '4096';
 $song->size = $song->size + ($chunk_size*2);
 
 // Put this song in the now_playing table
-$lastid = insert_now_playing($song->id,$uid,$song->time);
+insert_now_playing($song->id,$uid,$song->time,$sid);
 
 if ($start) {
 	debug_event('seek','Content-Range header recieved, skipping ahead ' . $start . ' bytes out of ' . $song->size,'5');
@@ -304,9 +304,6 @@ while (!feof($fp) && (connection_status() == 0)) {
         print($buf);
         $bytesStreamed += $chunk_size;
 }
-
-/* Delete the Now Playing Entry */
-delete_now_playing($lastid);
 
 if ($bytesStreamed > $minBytesStreamed) {
         $user->update_stats($song->id);

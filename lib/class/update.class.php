@@ -215,6 +215,11 @@ class Update {
 
 		$version[] = array('version' => '340006','description' => $update_string); 
 
+		$update_string = '- Added new session_stream table for sessions tied directly to stream instances.<br />' . 
+				'- Altered the session table, making value a LONGTEXT.<br />'; 
+
+		$version[] = array('version' => '340007','description' => $update_string); 
+
 		return $version;
 
 	} // populate_version
@@ -806,6 +811,42 @@ class Update {
 
 
 	} // update_340006
+
+	/**
+	 * update_340007
+	 * This update converts the session.value to a longtext
+	 * and adds a session_stream table
+	 */
+	public static function update_340007() { 
+
+		// Tweak the session table to handle larger session vars for my page-a-nation hotness
+		$sql = "ALTER TABLE `session` CHANGE `value` `value` LONGTEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL"; 
+		$db_results = Dba::query($sql); 
+
+		// Create the new stream table where we will store stream SIDs
+		$sql = "CREATE TABLE `session_stream` ( " . 
+			"`id` VARCHAR( 64 ) NOT NULL , " . 
+			"`user` INT( 11 ) UNSIGNED NOT NULL , " . 
+			"`agent` VARCHAR( 255 ) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL , " . 
+			"`expire` INT( 11 ) UNSIGNED NOT NULL , " . 
+			"`ip` INT( 11 ) UNSIGNED NULL , " . 
+			"PRIMARY KEY ( `id` ) " . 
+			") ENGINE = MYISAM"; 
+		$db_results = Dba::query($sql); 
+
+		// Change the now playing to use stream session ids for its ID
+		$sql = "ALTER TABLE `now_playing` CHANGE `id` `id` VARCHAR( 64 ) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL"; 
+		$db_results = Dba::query($sql); 
+
+		// Now longer needed because of the new hotness
+		$sql = "ALTER TABLE `now_playing` DROP `session`"; 
+		$db_results = Dba::query($sql); 
+
+		self::set_version('db_version','340007'); 
+
+		return true; 
+
+	} // update_340007
 
 } // end update class
 ?>

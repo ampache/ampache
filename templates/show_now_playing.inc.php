@@ -35,6 +35,7 @@ if (count($results)) {
 foreach ($results as $item) {
 	$song = $item['song'];
 	$np_user = $item['user'];
+	$agent = $item['agent'];
 
 	/* If we've gotten a non-song object just skip this row */
 	if (!is_object($song)) { continue; }

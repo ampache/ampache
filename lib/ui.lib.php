@@ -222,18 +222,6 @@ function show_footer() {
 } // show_footer
 
 /**
- *  show_now_playing
- * shows the now playing template
- */
-function show_now_playing() {
-
-	$web_path = Config::get('web_path');
-	$results = get_now_playing();
-	require Config::get('prefix') . '/templates/show_now_playing.inc.php';
-
-} // show_now_playing
-
-/**
  *  show_user_registration
  * this function is called for a new user
  * registration
@@ -256,31 +244,6 @@ function show_play_selected() {
 	require (conf('prefix') . "/templates/show_play_selected.inc.php");
 
 } // show_play_selected
-
-/**
- *  get_now_playing
- * gets the now playing information
- * @package Web Interface
- * @catagory Get
- */
-function get_now_playing($filter='') {
-
-	$sql = "SELECT `song_id`,`user` FROM `now_playing` ORDER BY `id` DESC";
-	$db_results = Dba::query($sql);
-
-	$results = array();
-	
-	/* While we've got stuff playing */
-	while ($r = Dba::fetch_assoc($db_results)) {
-		$song = new Song($r['song_id']);
-		$song->format();
-		$np_user = new User($r['user']);
-		$results[] = array('song'=>$song,'user'=>$np_user);
-	} // end while
-
-	return $results;
-
-} // get_now_playing
 
 /*
  * Artist Ratings - Implemented by SoundOfEmotion

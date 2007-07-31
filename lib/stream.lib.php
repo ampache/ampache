@@ -20,30 +20,6 @@
 
 */
 
-/**
- * delete_now_playing
- * This function checks to see if we should delete the last now playing entry now that it's
- * finished streaming the song. Basicly this is an exception for WMP10
- * @package General
- * @catagory Now Playing
- */
-function delete_now_playing($insert_id) { 
-
-        $user_agent = $_SERVER['HTTP_USER_AGENT'];
-
-	// Account for WMP and the Flash Player
-//	if (stristr($user_agent,"NSPlayer") || $_REQUEST['flash_hack'] == 1) { 
-                // Commented out until I can figure out the
-                // trick to making this work
-//                return true;
-//        }
-
-        // Remove the song from the now_playing table
-        $sql = "DELETE FROM `now_playing` WHERE `id` = '$insert_id'";
-        $db_result = Dba::query($sql);
-
-} // delete_now_playing
-
 /** 
  * gc_now_playing
  * this is a garbage collection function for now playing this is called every time something
@@ -53,18 +29,16 @@ function delete_now_playing($insert_id) {
  */
 function gc_now_playing() { 
 
-	/* Account for WMP11's Initial Streaming */
-	//if (strstr($_SERVER['HTTP_USER_AGENT'],"WMFSDK/11")) { return false; } 
-
-        $time 		= time();
-	$session_id	= Dba::escape($_REQUEST['sid']);
-	if (strlen($session_id)) { 
-		$session_sql = " OR session = '$session_id'";
-	}	
-
-        $sql = "DELETE FROM `now_playing` WHERE `expire` < '$time'" . $session_sql;
+	// Delete expired songs
+        $sql = "DELETE FROM `now_playing` WHERE `expire` < '$time'";
         $db_result = Dba::query($sql);
-        
+
+	// Remove any now playing entries for session_streams that have been GC'd
+	$sql = "DELETE FROM `now_playing` USING `now_playing` " . 
+		"LEFT JOIN `session_stream` ON `session_stream`.`id`=`now_playing`.`id` " . 
+		"WHERE `session_stream`.`id` IS NULL"; 
+	$db_results = Dba::query($sql); 
+
 } // gc_now_playing
 
 /**
@@ -73,41 +47,16 @@ function gc_now_playing() {
  * we use this function because we need to do thing differently
  * depending upon which play is actually streaming
  */
-function insert_now_playing($song_id,$uid,$song_length) {
+function insert_now_playing($song_id,$uid,$song_length,$sid) {
 
-        $user_agent = $_SERVER['HTTP_USER_AGENT'];
         $time = time()+$song_length;
-	$session_id = Dba::escape($_REQUEST['sid']); 
+	$session_id = Dba::escape($sid); 
 
-	/* Check for against a list of clients that have abusive traffic patterns causing
-	 * faulty now playing data and return without inserting
-	 */
-	$banned_clients = array('Audacious/1.3'); 
-
-	foreach ($banned_clients as $banned_agent) { 
-		if (stristr($user_agent,$banned_agent)) { 
-			debug_event('Banned Agent',$banned_agent . ' clients now playing data not entered because Ampache is unable to handle its request pattern','5'); 
-			return false; 
-		} 
-	} 
-
-        /* Windows Media Player is evil and it makes multiple requests per song */
-        if (stristr($user_agent,"Windows-Media-Player")) { $session_id = ' '; }
-
-	/* Check for Windows Media Player 11 */
-	if (strstr($user_agent,'NSPlayer/11') AND !strstr($user_agent,'WMFSDK/11')) { $session_id = ' '; } 
-
-        // If they are using Windows media player
-	if (strstr($user_agent,"NSPlayer") || $_REQUEST['flash_hack'] == 1) { $session_id = ' '; }
-
-        $sql = "INSERT INTO now_playing (`song_id`, `user`, `expire`,`session`)" .
-                " VALUES ('$song_id', '$uid', '$time','$session_id')";
-
-        $db_result = Dba::query($sql);
-
-        $insert_id = Dba::insert_id();
-
-        return $insert_id;
+	// Do a replace into ensuring that this client always only has a single row
+        $sql = "REPLACE INTO `now_playing` (`id`,`song_id`, `user`, `expire`)" .
+                " VALUES ('$session_id','$song_id', '$uid', '$time')";
+        
+	$db_result = Dba::query($sql);
 
 } // insert_now_playing
 
@@ -124,6 +73,44 @@ function clear_now_playing() {
 	return true; 
 
 } // clear_now_playing
+
+/**
+ * show_now_playing
+ * shows the now playing template
+ */
+function show_now_playing() {
+
+        $web_path = Config::get('web_path');
+        $results = get_now_playing();
+        require Config::get('prefix') . '/templates/show_now_playing.inc.php';
+
+} // show_now_playing
+
+/**
+ * get_now_playing
+ * gets the now playing information
+ */
+function get_now_playing($filter='') {
+
+        $sql = "SELECT `session_stream`.`agent`,`now_playing`.`song_id`,`now_playing`.`user` FROM `now_playing` " . 
+		"LEFT JOIN `session_stream` ON `session_stream`.`id`=`now_playing`.`id` " . 
+		"ORDER BY `now_playing`.`expire` DESC";
+        $db_results = Dba::query($sql);
+
+        $results = array();
+
+        /* While we've got stuff playing */
+        while ($r = Dba::fetch_assoc($db_results)) {
+                $song = new Song($r['song_id']);
+                $song->format();
+                $np_user = new User($r['user']);
+                $results[] = array('song'=>$song,'user'=>$np_user,'agent'=>$r['agent']);
+        } // end while
+
+        return $results;
+
+} // get_now_playing
+
 
 /**
  * check_lock_songs
