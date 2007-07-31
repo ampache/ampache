@@ -68,6 +68,7 @@ class Browse {
 				}
                         break;
 			case 'alpha_match':
+				if ($value == _('All')) { $value = ''; } 
 				$_SESSION['browse']['filter'][$key] = $value; 
 			break;
                         default:

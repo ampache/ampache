@@ -26,7 +26,7 @@ $ajax_url = Config::get('ajax_url');
 ?>
 <table class="tabledata" cellspacing="0" cellpadding="0">
 <tr class="table-header" align="center">
-	<td colspan="7">
+	<td colspan="8">
 	<?php require Config::get('prefix') . '/templates/list_header.inc.php'; ?>
 	</td>
 </tr>

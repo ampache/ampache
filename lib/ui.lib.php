@@ -126,7 +126,7 @@ function return_referer() {
  */
 function show_alphabet_list () {
 
-	$list = array(A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z,1,2,3,4,5,6,7,8,9,"0");
+	$list = array(A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z,1,2,3,4,5,6,7,8,9,"0",_('All'));
 
 	$style_name = "style_" . strtolower($selected);
 	${$style_name} = "style=\"font-weight:bold;\"";
