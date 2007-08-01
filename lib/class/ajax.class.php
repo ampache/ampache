@@ -42,9 +42,9 @@ class Ajax {
 	 */
 	public static function observe($source,$method,$action) { 
 
-                $observe	= "<script type=\"text/javascript\">\n";
+                $observe	= "<script type=\"text/javascript\"><!--\n";
                 $observe	.= "\tEvent.observe('$source','$method',function(){" . $action . ";});\n";
-                $observe	.= "</script>\n";
+                $observe	.= "--></script>\n";
 
 		return $observe; 
 

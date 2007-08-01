@@ -20,7 +20,7 @@
 */
 ?>
 <td>
-	<?php echo Ajax::button('?action=basket&atype=song&id=' . $song->id,'add',_('Add'),'add_' . $song->id); ?>
+	<?php echo Ajax::button('?action=basket&type=song&id=' . $song->id,'add',_('Add'),'add_' . $song->id); ?>
 </td>
 <td><?php echo $song->f_link; ?></td>
 <td><?php echo $song->f_artist_link; ?></td>

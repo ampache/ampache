@@ -42,10 +42,10 @@ foreach ($albums as $album_id) {
 <tr class="<?php echo flip_class(); ?>">
 	<td align="center">
                 <span onclick="ajaxPut('<?php echo Config::get('ajax_url'); ?>?action=basket&amp;type=album&amp;id=<?php echo $album->id; ?>');return true;" >
-        	        <?php echo get_user_icon('add','',_('Add')); ?>
+        	        <?php echo get_user_icon('add',_('Add')); ?>
                 </span>
                 <span onclick="ajaxPut('<?php echo Config::get('ajax_url'); ?>?action=basket&amp;type=album_random&amp;id=<?php echo $album->id; ?>');return true;" >
-	                <?php echo get_user_icon('random','',_('Random')); ?>
+	                <?php echo get_user_icon('random',_('Random')); ?>
 	        </span>
 	</td>
 	<td height="87">

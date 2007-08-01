@@ -49,7 +49,7 @@ switch ($_REQUEST['action']) {
 		// If we got something back insert it
 		if ($image_data) { 
 			$album->insert_art($image_data,$_FILES['file']['type']);
-			show_confirmation(_('Album Art Inserted'),'',"/albums.php?action=show&album=" . $album->id);
+			show_confirmation(_('Album Art Inserted'),'',"/albums.php?action=show&amp;album=" . $album->id);
 		} 
 		// Else it failed
 		else { 
@@ -77,7 +77,7 @@ switch ($_REQUEST['action']) {
 
 			if ($image_data) { 
 				$album->insert_art($image_data,$upload['0']['mime']); 
-				show_confirmation(_('Album Art Inserted'),'',"/albums.php?action=show&album=" . $_REQUEST['album_id']);
+				show_confirmation(_('Album Art Inserted'),'',"/albums.php?action=show&amp;album=" . $_REQUEST['album_id']);
 				break;
 
 			} // if image data
@@ -152,7 +152,7 @@ switch ($_REQUEST['action']) {
 		$album->insert_art($image,$mime);
 
 
-		show_confirmation(_('Album Art Inserted'),'',"/albums.php?action=show&album=$album_id");
+		show_confirmation(_('Album Art Inserted'),'',"/albums.php?action=show&amp;album=$album_id");
 	break;
 	case 'update_from_tags':
 		// Make sure they are a 'power' user at least

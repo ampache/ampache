@@ -13,6 +13,7 @@
         </form>
 </div>
 <hr />
+<?php /*
 <!-- RANDOM, Hidden for now cause its broken
 <h4><?php echo _('Random'); ?></h4>
 	<form name="sub_random" method="post" enctype="multipart/form-data" action="<?php echo $web_path; ?>/song.php?action=random&amp;method=stream" style="Display:inline">
@@ -42,7 +43,7 @@
         <input class="smallbutton" type="submit" value="<?php echo _('Enqueue'); ?>" />
 	</form>
 <hr />
--->
+--> */ ?>
 <h4><?php echo _('Playlists'); ?></h4>
 <span><a href="<?php echo $web_path; ?>/playlist.php?action=show_all"><?php echo _('View All'); ?></a></span>
 <hr />
