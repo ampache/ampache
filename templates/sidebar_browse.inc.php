@@ -5,11 +5,13 @@
 	$text = scrub_in($_REQUEST['action']) . '_ac';
 	${$text} = ' selected="selected"'; 
 ?>
-<span><a href="<?php echo $web_path; ?>/browse.php?action=song"><?php echo _('Song Title'); ?></a></span>
-<span><a href="<?php echo $web_path; ?>/browse.php?action=album"><?php echo _('Albums'); ?></a></span>
-<span><a href="<?php echo $web_path; ?>/browse.php?action=artist"><?php echo _('Artist'); ?></a></span>
-<span><a href="<?php echo $web_path; ?>/browse.php?action=genre"><?php echo _('Genre'); ?></a></span>
-<span><a href="<?php echo $web_path; ?>/browse.php?action=live_stream"><?php echo _('Radio Stations'); ?></a></span>
+<ul id="sb_BrowseBy">
+<li id="sb_BB_SongTitle"><a href="<?php echo $web_path; ?>/browse.php?action=song"><?php echo _('Song Title'); ?></a></li>
+<li id="sb_BB_Album"><a href="<?php echo $web_path; ?>/browse.php?action=album"><?php echo _('Albums'); ?></a></li>
+<li id="sb_BB_Artist"><a href="<?php echo $web_path; ?>/browse.php?action=artist"><?php echo _('Artist'); ?></a></li>
+<li id="sb_BB_Genre"><a href="<?php echo $web_path; ?>/browse.php?action=genre"><?php echo _('Genre'); ?></a></li>
+<li id="sb_BB_RadioStation"><a href="<?php echo $web_path; ?>/browse.php?action=live_stream"><?php echo _('Radio Stations'); ?></a></li>
+</ul>
 <hr />
 <h4><?php echo _('Filters'); ?></h4>
 <?php show_alphabet_list($_REQUEST['alpha_match'],$_REQUEST['action']); ?>
@@ -22,6 +24,6 @@
 <input type="checkbox" onclick="ajaxPut('<?php echo $ajax_info; ?>?action=browse&amp;key=rated&amp;value=1');return true;" value="1" />
 	<?php echo _('Rated'); ?><br />
 -->
-<input type="checkbox" onclick="ajaxPut('<?php echo $ajax_info; ?>?action=browse&amp;key=unplayed&amp;value=1');return true;" value="1" />
-	<?php echo _('Unplayed'); ?><br />
+<input id="unplayedCB" type="checkbox" onclick="ajaxPut('<?php echo $ajax_info; ?>?action=browse&amp;key=unplayed&amp;value=1');return true;" value="1" />
+	<label id="unplayedLabel" for="unplayedCB"><?php echo _('Unplayed'); ?></label><br />
 <hr />

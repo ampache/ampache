@@ -198,53 +198,50 @@ h3#content_title span {
 	position:absolute;
 	left:0px;
 	top:87px;
-	width:133px; 
+	width:133px;
 }
 
 #sidebar select	{
 	width: 95%; 
 }
 
+#sidebar ul {
+  list-style:none;
+}
+#sidebar a { 
+	text-decoration:none;
+} 
+/*
 #sidebar span { 
 	display:block;
 	text-decoration:none;
 	margin-left:5px;  
 	margin-right:5px;
-} 
-#sidebar a { 
-	text-decoration:none;
-} 
+} */
+
+
 
 #sidebar span:hover { 
 	background: #fff;
 } 
 
+
 #sidebar span.link { 
 	display:inline; 
 	text-decoration:none; 
 	color: #000;
+	margin: 0 5px;
 	font-family: monospace, Courier, Georgia;
 } 
 
-#sidebar li {
-    float: left;
-    clear: both;
-    display: inline;	/* IE6 Patch */
-    position: relative;
-    width: 13em;
-    width: /**/11.5em; /* Only IE5.5 can't see this */
-    border: 1px solid #8b8b8b;
-    border-right: 4px solid #b4b4b4;
-    background:#fff;
-}
-
 /* For sidebar tabs */
 #sidebar-tabs li {
-	clear: none;
-	width: auto;
+  float: left;
 	padding:2px;
-	border: 1px solid #ffffff;
-} 
+	border: 1px solid #fff;
+  background:#fff;
+  
+}
 #sidebar-tabs li.active { 
 	background-color:#c0c0c0; 
 	border:1px solid #c0c0c0;
@@ -252,37 +249,30 @@ h3#content_title span {
 #sidebar-page { 
 	clear: left;
 	background-color:#c0c0c0;
-	padding-left:5px;
+	padding: 0 5px 0 8px;
 	font-size: 0.8em; 
 } 
+#sidebar-page h4{
+  margin-left:-4px;
+} 
+#sidebar-page ul {
+}
+#sidebar-page a{
+  display:block;
+}
+#sidebar-page a:hover{
+  background:#fff;
+}
+/* SIDEBAR : Home */
+/* SIDEBAR : Browse */
+/* SIDEBAR : Search */
+/* SIDEBAR : Preferences */
 
+/* SIDEBAR : Admin */
+#sb_Catalogs a{
+  display:inline;
+}
 
-/* Menu Elements Display (icons, visibility...) */
-#sidebar_home a 	{ }
-#sidebar_admin a 	{ }
-#sidebar_prefs a 	{ }
-#sidebar_browse a 	{ }
-#sidebar_plists a 	{ }
-#sidebar_stats a 	{ }
-#sidebar_search a 	{ }
-#sidebar #sidebar_subsearch  	{ }
-#sidebar_random a 	{ }
-#sidebar_form  		{ }
-#sidebar_localplay a 	{ }
-#sidebar_localplay_ctrl	{ }
-#sidebar_logout a 	{ }
-
-#sidebar_admin_users a		{ }
-#sidebar_admin_mail_users a	{ }
-#sidebar_admin_catalog a	{ }
-#sidebar_admin_config a 	{ }
-#sidebar_admin_access_list a	{ }
-
-#sidebar_browse_albums a	{ }
-#sidebar_browse_artists a	{ }
-#sidebar_browse_genre a		{ }
-#sidebar_browse_song_title a	{ }
-#sidebar_browse_lists a		{ }
 
 
 /************************************************/

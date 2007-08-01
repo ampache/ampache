@@ -1,9 +1,11 @@
 <h4><?php echo _('Information'); ?></h4>
-<span><a href="<?php echo $web_path; ?>/index.php"><?php echo _('Currently Playing'); ?></a></span>
-<span><a href="<?php echo $web_path; ?>/stats.php"><?php echo _('Statistics'); ?></a></span>
-<span><a href="<?php echo $web_path; ?>/radio.php?action=show_create"><?php echo _('Add Radio Station'); ?></a></span>
+<ul id="sb_Information">
+<li id="sb_Info_CurrentlyPlaying"><a href="<?php echo $web_path; ?>/index.php"><?php echo _('Currently Playing'); ?></a></li>
+<li id="sb_Info_Statistics"><a href="<?php echo $web_path; ?>/stats.php"><?php echo _('Statistics'); ?></a></li>
+<li id="sb_Info_AddStationRadio"><a href="<?php echo $web_path; ?>/radio.php?action=show_create"><?php echo _('Add Radio Station'); ?></a></li>
+</ul>
 <hr />
-<div id="sidebar_subsearch">
+<div id="sb_Subsearch">
 	<form name="search" method="post" action="<?php echo $web_path; ?>/search.php" enctype="multipart/form-data" style="Display:inline">
         <input type="text" name="search_string" value="" size="5" />
         <input class="smallbutton" type="submit" value="<?php echo _('Search'); ?>" />
@@ -45,7 +47,7 @@
 <hr />
 --> */ ?>
 <h4><?php echo _('Playlists'); ?></h4>
-<span><a href="<?php echo $web_path; ?>/playlist.php?action=show_all"><?php echo _('View All'); ?></a></span>
+<a id="sb_ViewAll" href="<?php echo $web_path; ?>/playlist.php?action=show_all"><?php echo _('View All'); ?></a>
 <hr />
 <div style="left-padding:5px;">
 <?php 
