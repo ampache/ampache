@@ -22,7 +22,6 @@
 // First let's setup some vars we're going to use a lot
 $web_path = Config::get('web_path'); 
 $ajax_url = Config::get('ajax_url'); 
-
 ?>
 <table class="tabledata" cellspacing="0" cellpadding="0">
 <tr class="table-header" align="center">
