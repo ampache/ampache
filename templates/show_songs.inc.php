@@ -50,4 +50,9 @@ $ajax_url = Config::get('ajax_url');
 	<?php require Config::get('prefix') . '/templates/show_song_row.inc.php'; ?> 
 </tr>
 <?php } ?>
+<tr class="table-header" align="center">
+	<td colspan="8">
+	<?php require Config::get('prefix') . '/templates/list_header.inc.php'; ?>
+	</td>
+</tr>
 </table>

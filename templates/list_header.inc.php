@@ -62,7 +62,7 @@ while ($page > 0) {
 	if ($i == '15') { $page_data['down'][1] = '...'; $page_data['down'][0] = '0'; break; } 
 	$i++;
 	$page = $page - 1;
-	$page_data['down'][$page] = $page * $GLOBALS['view']->offset_limit;
+	$page_data['down'][$page] = $page * $limit;
 } // while page > 0
 
 // Up Next

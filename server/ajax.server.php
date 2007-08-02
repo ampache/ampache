@@ -170,7 +170,6 @@ switch ($action) {
 			break;
 		} // end switch
 
-		$results['topbar-playlist'] = ajax_include('show_playlist_bar.inc.php');
 		$results['rightbar'] = ajax_include('rightbar.inc.php');
 		echo xml_from_array($results); 
 	break;
@@ -224,7 +223,6 @@ switch ($action) {
 			break;
 		} // end switch
 		
-		$results['topbar-playlist'] = ajax_include('show_playlist_bar.inc.php'); 
 		$results['rightbar'] = ajax_include('rightbar.inc.php'); 
 		echo xml_from_array($results); 
 	break;

@@ -45,4 +45,9 @@ $ajax_url = Config::get('ajax_url');
 	<?php require Config::get('prefix') . '/templates/show_album_row.inc.php'; ?> 
 </tr>
 <?php } //end foreach ($albums as $album) ?>
+<tr class="table-header">
+	<td colspan="6">
+	<?php require Config::get('prefix') . '/templates/list_header.inc.php'; ?>
+	</td>
+</tr>
 </table>

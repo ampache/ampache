@@ -53,9 +53,9 @@ foreach ($object_ids as $artist_id) {
 	<td><?php echo _('Action'); ?></td>
 
 </tr>
-<tr class="even" align="center">
-	<td colspan="4">
-	<?php if ($view->offset_limit) { require (conf('prefix') . "/templates/list_header.inc"); } ?>
+<tr class="table-header" align="center">
+	<td colspan="5">
+	<?php require Config::get('prefix') . '/templates/list_header.inc.php'; ?>
 	</td>
 </tr>
 </table>

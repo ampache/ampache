@@ -4,6 +4,7 @@
 
 --------------------------------------------------------------------------
   v.3.4-Alpha2 
+	- Added Paging to bottom of all views
 	- Fixed get_location() (Thx ichneumon)
 	- Moved Quick search to the top, right appears on every page
 	- Fixed an issue with reading id3tags causing a uncaught exception
