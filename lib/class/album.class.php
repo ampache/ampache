@@ -326,7 +326,10 @@ class Album {
 			$song = new Song($song_id); 
 			// If we find a good one, stop looking
 		        $getID3 = new getID3();
-		        $id3 = $getID3->analyze($song->file);
+			try { $id3 = $getID3->analyze($song->file); } 
+			catch (Exception $error) { 
+				debug_event('getid3',$error->message,'1'); 
+			} 
 
 			if ($id3['format_name'] == "WMA") { 
 				$image = $id3['asf']['extended_content_description_object']['content_descriptors']['13'];

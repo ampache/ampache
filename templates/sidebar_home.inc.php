@@ -5,16 +5,6 @@
 <li id="sb_Info_AddStationRadio"><a href="<?php echo $web_path; ?>/radio.php?action=show_create"><?php echo _('Add Radio Station'); ?></a></li>
 </ul>
 <hr />
-<div id="sb_Subsearch">
-	<form name="search" method="post" action="<?php echo $web_path; ?>/search.php" enctype="multipart/form-data" style="Display:inline">
-        <input type="text" name="search_string" value="" size="5" />
-        <input class="smallbutton" type="submit" value="<?php echo _('Search'); ?>" />
-        <input type="hidden" name="action" value="quick_search" />
-        <input type="hidden" name="method" value="fuzzy" />
-        <input type="hidden" name="object_type" value="song" />
-        </form>
-</div>
-<hr />
 <?php /*
 <!-- RANDOM, Hidden for now cause its broken
 <h4><?php echo _('Random'); ?></h4>
@@ -49,16 +39,3 @@
 <h4><?php echo _('Playlists'); ?></h4>
 <a id="sb_ViewAll" href="<?php echo $web_path; ?>/playlist.php?action=show_all"><?php echo _('View All'); ?></a>
 <hr />
-<div style="left-padding:5px;">
-<?php 
-	$playlists = Playlist::get_users($GLOBALS['user']->id); 
-	foreach ($playlists as $playlist_id) { 
-		$playlist = new Playlist($playlist_id); 
-		$playlist->format(); 
-?>
-<span>
-	<?php echo Ajax::button('?action=basket&type=playlist&id=' . $playlist_id,'all',_('Play This Playlist'),'leftbar_playlist_' . $playlist_id); ?>
-	<?php echo $playlist->f_link; ?>
-</span>
-<?php } // end foreach playlist ?>
-</div>

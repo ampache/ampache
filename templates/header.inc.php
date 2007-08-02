@@ -67,7 +67,7 @@ if (Config::get('use_rss')) { ?>
 		<div id="topbarright">
 			<?php show_box_top(); ?>
 			<b><?php echo _('You are currently logged in as') . " " . $GLOBALS['user']->fullname; ?></b>
-			<div id="topbar-playlist"><?php require_once Config::get('prefix') . '/templates/show_playlist_bar.inc.php'; ?></div>
+			<?php require_once Config::get('prefix') . '/templates/show_search_bar.inc.php'; ?>
 			<?php show_box_bottom(); ?>
 		</div> <!-- End topbarright -->
 	</div><!-- End topbar -->

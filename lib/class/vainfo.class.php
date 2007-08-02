@@ -98,7 +98,7 @@ class vainfo {
 		/* Figure out what type of file we are dealing with */
 		$this->type = $this->_get_type();
 
-		/* This is very important, figure out th encoding of the
+		/* This is very important, figure out the encoding of the
 		 * file 
 		 */
 		$this->_set_encoding();
