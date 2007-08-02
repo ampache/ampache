@@ -23,7 +23,7 @@
 class openStrands {
 
 	public static $base_url = 'https://www.mystrands.com/services';
-	public static $auth_token = ''; 
+	private static $auth_token = ''; 
 	private static $authenticated=false; 
 
 	// Some settings to prevent stupid users, or abusive queries
@@ -68,7 +68,7 @@ class openStrands {
 		$username = urlencode($username); 
 		$password = urlencode($password); 
 
-		$xml_doc = self::run_query("/user/validate?username=$username&password=$password"); 
+		$xml_doc = self::run_query("/user/validate?username=$username&hexPass=$password"); 
 
 		// Set the right parent
 		$this->_containerTag = 'User'; 
@@ -233,6 +233,6 @@ class openStrands {
 	
     	} // end_element
 
-} // end AmazonSearch
+} // end openstrands
 
 ?>
