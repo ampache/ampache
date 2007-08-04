@@ -122,7 +122,7 @@ function search_song($data,$operator,$method,$limit) {
                         case 'all': /* artist, title, and album, anyway.. */
                                 $value_words = explode(' ', $value);
                                 $where_sql .= " ( ";
-                                $ii == 0;
+                                $ii = 0;
                                 foreach($value_words as $word)
                                 {
                                     if($ii++ > 0)

@@ -417,10 +417,10 @@ class Catalog {
 						$this->count++;
 						if ( !($this->count%10)) {
 			                                $file = str_replace(array('(',')','\''),'',$full_file);
-			                                echo "<script type=\"text/javascript\">";
+			                                echo "<script type=\"text/javascript\"><!--";
 			                                echo "update_txt('" . $this->count ."','add_count_" . $this->id . "');";
 			                                echo "update_txt('" . htmlentities($file) . "','add_dir_" . $this->id . "');"; 
-			                                echo "</script>\n";    	
+			                                echo "--></script>\n";    	
 						} // update our current state
 
 					} // not found
@@ -532,10 +532,10 @@ class Catalog {
 			/* Stupid little cutesie thing */
                         $search_count++;
                         if ( !($search_count%5)) {
-				echo "<script type=\"text/javascript\">";
+				echo "<script type=\"text/javascript\"><!--";
                                 echo "update_txt('" . $search_count ."','count_art_" . $this->id . "');";
 				echo "update_txt('" . $album->name . "','read_art_" . $this->id . "');"; 
-                                echo "</script>\n"; 
+                                echo "--></script>\n"; 
 	                        flush();
                         } //echos song count
 			
@@ -839,9 +839,9 @@ class Catalog {
 		/* Get the songs and then insert them into the db */
 		$this->add_files($this->path,$type,$parse_m3u);
 
-                echo "<script type=\"text/javascript\">";
+                echo "<script type=\"text/javascript\"><!--";
                 echo "update_txt('" . $this->count . "','count_add_" . $this->id ."');";
-                echo "</script>\n";
+                echo "--></script>\n";
                 flush();
 
 
@@ -1258,10 +1258,10 @@ class Catalog {
                         $count++;
                         if (!($count%10)) {
 				$file = str_replace(array('(',')','\''),'',$results['file']);
-			        echo "<script type=\"text/javascript\">";
+			        echo "<script type=\"text/javascript\"><!--";
 			        echo "update_txt('" . $count ."','clean_count_" . $this->id . "');";
 				echo "update_txt('" . htmlentities($file) . "','clean_dir_" . $this->id . "');"; 
-			        echo "</script>\n";	
+			        echo "--></script>\n";	
 	                        flush();
                         } //echos song count
 
@@ -1301,9 +1301,9 @@ class Catalog {
 		self::clean($catalog_id); 
 		
 		/* Return dead files, so they can be listed */
-                echo "<script type=\"text/javascript\">";
+                echo "<script type=\"text/javascript\"><!--";
                 echo "update_txt('" . $count ."','clean_count_" . $this->id . "');";
-                echo "</script>\n";
+                echo "--></script>\n";
 		show_box_top(); 
 		echo "<strong>" . _('Catalog Clean Done') . " [" . count($dead_files) . "] " . _('files removed') . "</strong><br />\n";
 		echo "<strong>" . _('Optimizing Tables') . "...</strong><br />\n"; 
@@ -1563,10 +1563,10 @@ class Catalog {
                                 $count++;
                                 if (!($count%10) ) {
 					$file = str_replace(array('(',')','\''),'',$song->file); 
-                                        echo "<script type=\"text/javascript\">";
+                                        echo "<script type=\"text/javascript\"><!--";
                                         echo "update_txt('" . $count . "','verify_count_" . $catalog_id . "');";
 					echo "update_txt('" . scrub_out($file) . "','verify_dir_" . $catalog_id . "');"; 
-                                        echo "</script>\n";
+                                        echo "--></script>\n";
                                         flush();
                                 } //echos song count
 				
@@ -1586,9 +1586,9 @@ class Catalog {
 		$this->update_last_update();
 
                 // One final time!
-		echo "<script type=\"text/javascript\">";
+		echo "<script type=\"text/javascript\"><!--";
                 echo "update_txt('" . $this->count . "','count_verify_" . $this->id . "');";
-                echo "</script>\n";
+                echo "--></script>\n";
                 flush();
 
 		show_box_top(); 

@@ -37,7 +37,7 @@ require_once $prefix . '/lib/class/config.class.php';
 /*
  Check to see if this is Http or https
 */
-if ($_SERVER['HTTPS'] == 'on') { 
+if (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') { 
 	$http_type = "https://";
 }
 else { 
