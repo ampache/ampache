@@ -51,21 +51,34 @@ class Ajax {
 	} // observe
 
 	/**
+	 * action
+	 * This takes the action, the source and the post (if passed) and generated the full
+	 * ajax link
+	 */
+	public static function action($action,$source,$post='') { 
+
+		$url = Config::get('ajax_url') . $action; 
+
+		if ($post) { 
+			$ajax_string = "ajaxPost('$url','$post','$source')"; 
+		}
+		else { 
+			$ajax_string = "ajaxPut('$url','$source')"; 
+		} 
+	
+		return $ajax_string; 
+
+	} // action
+
+	/**
 	 * button
 	 * This prints out an img of the specified icon with the specified alt text
 	 * and then sets up the required ajax for it
 	 */
 	public static function button($action,$icon,$alt,$source='',$post='') { 
 
-                $url = Config::get('ajax_url') . $action;
-
-                // Define the Action that is going to be performed
-                if ($post) {
-                        $ajax_string = "ajaxPost('$url','$post','$source')";
-                }
-                else {
-                        $ajax_string = "ajaxPut('$url','$source')";
-                }
+		// Get the correct action
+		$ajax_string = self::action($action,$source,$post); 
 
 		$string = get_user_icon($icon,$alt,$source); 
 
@@ -82,15 +95,8 @@ class Ajax {
 	 */
 	public static function text($action,$text,$source,$post='',$span_class='') { 
 
-		$url = Config::get('ajax_url') . $action; 
-
-		// Use ajaxPost() if we are doing a post
-		if ($post) { 
-			$ajax_string = "ajaxPost('$url','$post','$source')"; 
-		}
-		else { 
-			$ajax_string = "ajaxPut('$url','$source')"; 
-		} 
+		// Format the string we wanna use
+		$ajax_string = self::action($action,$source,$post); 
 
 		// If they passed a span class
 		if ($span_class) { 

@@ -4,6 +4,8 @@
 
 --------------------------------------------------------------------------
   v.3.4-Alpha2 
+	- Fixed a potential issue with the kajax.js and checkboxes
+	- Added 'Advanced Search' link to top rightbar
 	- Added Paging to bottom of all views
 	- Fixed get_location() (Thx ichneumon)
 	- Moved Quick search to the top, right appears on every page

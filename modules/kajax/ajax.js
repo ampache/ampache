@@ -58,8 +58,14 @@
         var post_data = 'a=0';
 	var data = document.getElementById(input).elements;
 
+	// For the post data we recieved
 	for(i=0;i<data.length;i++) { 
 		var frm_field = data[i];
+
+		// This makes the value of the checkbox the checked status, more usefull
+		if (frm_field.type == 'checkbox') { 
+			frm_field.value = frm_field.checked; 
+		} 
 		post_data = post_data +'&' + frm_field.name + '=' + encodeURI(frm_field.value);
 	}
 	

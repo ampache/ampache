@@ -27,6 +27,7 @@
         <input type="hidden" name="action" value="quick_search" />
         <input type="hidden" name="method" value="fuzzy" />
         <input type="hidden" name="object_type" value="song" />
+	<a href="<?php echo $web_path; ?>/search.php" class="smallbutton"><?php echo _('Advanced Search'); ?></a>
         </form>
 </div>
 

@@ -118,6 +118,15 @@ input {
 	font-size: 11px;
 	cursor: pointer;
 }
+a.smallbutton { 
+	border:0; 
+	font-size: 11px; 
+	cursor: pointer; 
+	padding: 2px; 
+	font-weight:bold;
+	background: #d0d0d0; 
+	text-decoration:none; 
+} 
 
 
 /************************************************/
