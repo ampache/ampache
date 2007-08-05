@@ -4,6 +4,10 @@
 
 --------------------------------------------------------------------------
   v.3.4-Alpha2 
+  	- Added Playlists as a browse type and fixed playback
+  	- Fixed an issue where albums of the moment would show when you 
+		had 0 albums
+  	- Fixed warnings on Update & typo in Install
   	- Removed redundent GPL licence file
   	- Fixed filesize() issue on config re-gen
   	- Fixed an issue with seeking causing incorrect stats counts 

@@ -220,6 +220,13 @@ class Update {
 
 		$version[] = array('version' => '340007','description' => $update_string); 
 
+		$update_string = '- Modified Playlist_Data table to account for multiple object types.<br />' . 
+				'- Verified previous updates, adjusting as needed.<br />' . 
+				'- Dropped Allow Downsampling pref, configured in cfg file.<br />' . 
+				'- Renamed Downsample Rate --> Transcode Rate to reflect new terminiology.<br />';
+
+		$version[] = array('version' => '340008','description' => $update_string); 
+
 		return $version;
 
 	} // populate_version
@@ -309,7 +316,7 @@ class Update {
 	 * This updates the 'update_info' which is used by the updater
 	 * and plugins
 	 */
-	private function set_version($key,$value) {
+	private static function set_version($key,$value) {
 
 		$sql = "UPDATE update_info SET value='$value' WHERE `key`='$key'";
 		$db_results = Dba::query($sql);		
@@ -847,6 +854,55 @@ class Update {
 		return true; 
 
 	} // update_340007
+
+	/**
+	 * update_340008
+	 * This modifies the playlist table to handle the different types of objects that it needs to be able to
+	 * store, and tweaks how dynamic playlist stuff works
+	 */
+	public static function update_340008() { 
+
+		$sql = "ALTER TABLE `playlist_data` CHANGE `song` `object_id` INT( 11 ) UNSIGNED NULL DEFAULT NULL"; 
+		$db_results = Dba::query($sql); 
+
+		$sql = "ALTER TABLE `playlist_data` CHANGE `dyn_song` `dynamic_song` TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL"; 
+		$db_results = Dba::query($sql); 
+
+		$sql = "ALTER TABLE `playlist_data` ADD `object_type` VARCHAR( 32 ) NOT NULL DEFAULT 'song' AFTER `object_id`"; 
+		$db_results = Dba::query($sql); 
+
+		$sql = "ALTER TABLE `playlist` ADD `genre` INT( 11 ) UNSIGNED NOT NULL AFTER `type`"; 
+		$db_results = Dba::query($sql); 
+
+		$sql = "DELETE FROM `preference` WHERE `name`='allow_downsample_playback'"; 
+		$db_results = Dba::query($sql); 
+
+		$sql = "UPDATE `preference` SET `description`='Transcode Bitrate' WHERE `name`='sample_rate'"; 
+		$db_results = Dba::query($sql); 
+
+		// Check for old tables and drop if found, seems like there was a glitch that caused them
+		// not to get droped.. *shrug*
+		$sql = "DROP TABLE IF EXISTS `preferences`"; 
+		$db_results = Dba::query($sql); 
+
+		$sql = "DROP TABLE IF EXISTS `song_ext_data`"; 
+		$db_results = Dba::query($sql); 
+
+		$sql = "DROP TABLE IF EXISTS `ratings`"; 
+		$db_results = Dba::query($sql); 
+
+                $sql = "SELECT `id` FROM `user`";
+                $db_results = Dba::query($sql); 
+
+                User::fix_preferences('-1');
+
+                while ($r = Dba::fetch_assoc($db_results)) {
+                        User::fix_preferences($r['id']); 
+                }
+
+		self::set_version('db_version','340008'); 
+
+	} // update_340008
 
 } // end update class
 ?>

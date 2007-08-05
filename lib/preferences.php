@@ -231,7 +231,6 @@ function create_preference_input($name,$value) {
 		case 'use_auth':
 		case 'access_control':
 		case 'allow_stream_playback':
-		case 'allow_downsample_playback':
 		case 'allow_democratic_playback':
 		case 'allow_localplay_playback':
 		case 'demo_mode':
@@ -348,6 +347,7 @@ function create_preference_input($name,$value) {
 		case 'transcode':
 			${$value} = ' selected="selected"'; 
 			echo "<select name=\"$name\">\n"; 
+			echo "\t<option value=\"never\"$never>" . _('Never') . "</option>\n"; 
 			echo "\t<option value=\"default\"$default>" . _('Default') . "</option>\n"; 
 			echo "\t<option value=\"always\"$always>" . _('Always') . "</option>\n"; 
 			echo "</select>\n";

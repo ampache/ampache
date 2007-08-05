@@ -120,7 +120,7 @@ function install_insert_db($username,$password,$hostname,$database) {
 	$db_selected = @mysql_select_db($database, $dbh);
 
 	if ($db_selected && !$_POST['overwrite_db']) { 
-		Error::add('general','Error: Database Already exists and Overwrite no checked'); 
+		Error::add('general','Error: Database Already exists and Overwrite not checked'); 
 		return false; 
 	} 
 	if (!$db_selected) { 

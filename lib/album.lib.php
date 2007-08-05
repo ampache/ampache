@@ -90,6 +90,14 @@ function get_image_from_source($data) {
  * this is used by the index to return some 'potential' albums to play
  */
 function get_random_albums($count=6) {
+
+	// Make sure that we have anything to pick from
+	$sql = "SELECT `id` FROM `album` LIMIT 7"; 
+	$db_results = Dba::query($sql); 
+
+	$rows = Dba::num_rows($db_results); 
+	if ($rows < 7) { return false; } 
+
         // There's a slight chance with this logic that the number of albums
         // returned will be less than the number requested if the id's for the
         // albums have signifigant gaps, but the speed increase is probably

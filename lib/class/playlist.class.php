@@ -30,6 +30,7 @@ class Playlist {
 	public $name;
 	public $user;
 	public $type;
+	public $genre; 
 	public $date;
 
 	/* Generated Elements */
@@ -74,7 +75,12 @@ class Playlist {
 	 */
 	public function format() { 
 
-		$this->f_link = '<a href="' . Config::get('web_path') . '/playlist.php?action=show_playlist&amp;playlist_id=' . $this->id . '">' . $this->name . '</a>'; 
+		$this->f_name =  truncate_with_ellipsis($this->name,Config::get('ellipse_threshold_title'));
+		$this->f_link = '<a href="' . Config::get('web_path') . '/playlist.php?action=show_playlist&amp;playlist_id=' . $this->id . '">' . $this->f_name . '</a>'; 
+
+		$client = new User($this->user); 
+
+		$this->f_user = $client->fullname; 
 
 	} // format
 
@@ -102,12 +108,16 @@ class Playlist {
 
 		$results = array(); 
 
-		$sql = "SELECT * FROM `playlist_data` WHERE `playlist`='" . Dba::escape($this->id) . "' ORDER BY `track`";
+		$sql = "SELECT `object_id`,`object_type`,`dynamic_song` FROM `playlist_data` WHERE `playlist`='" . Dba::escape($this->id) . "' ORDER BY `track`";
 		$db_results = Dba::query($sql);
 
 		while ($row = Dba::fetch_assoc($db_results)) { 
-			$key = $row['id'];
-			$results[$key] = $row['song'];
+
+			if (strlen($row['dynamic_song'])) { 
+				// Do something here FIXME!
+			} 
+
+			$results[] = array('type'=>$row['object_type'],'object_id'=>$row['object_id']); 
 		} // end while
 
 		return $results;
@@ -115,47 +125,49 @@ class Playlist {
 	} // get_items
 
 	/**
-	 * get_songs
-	 * This returns an array of song_ids accounting for any dyn_song entries this playlist
-	 * may have. This is what should be called when trying to generate a m3u or other playlist
+	 * get_random_items
+	 * This is the same as before but we randomize the buggers!
 	 */
-	function get_songs($array=array()) { 
+	public function get_random_items() { 
+
+		$results = array(); 
+
+		$sql = "SELECT `object_id`,`object_type`,`dynamic_song` FROM `playlist_data` " . 
+			"WHERE `playlist`='" . Dba::escape($this->id) . "' ORDER BY RAND()"; 
+		$db_results = Dba::query($sql); 
+
+		while ($row = Dba::fetch_assoc($db_results)) { 
+
+			if (strlen($row['dynamic_song'])) { 
+				// Do something here FIXME!!!
+			} 
+
+                        $results[] = array('type'=>$row['object_type'],'object_id'=>$row['object_id']);
+                } // end while
+
+                return $results;
+
+	} // get_random_items
+
+	/**
+	 * get_songs
+	 * This is called by the batch script, because we can't pass in Dynamic objects they pulled once and then their
+	 * target song.id is pushed into the array
+	 */
+	function get_songs() { 
 
 		$results = array();
 
-		/* If we've passed in some songs */
-		if (count($array)) { 
-		
-			foreach ($array as $data) { 
-				
-				$sql = "SELECT song,dyn_song FROM playlist_data WHERE id='" . sql_escape($data) . "' ORDER BY track";
-				$db_results = mysql_query($sql, dbh());
+		$sql = "SELECT * FROM `playlist_data` WHERE `playlist`='" . Dba::escape($this->id) . "' ORDER BY `track`";
+		$db_results = Dba::query($sql);
 
-				$r = mysql_fetch_assoc($db_results);
-				if ($r['dyn_song']) { 
-					$array = $this->get_dyn_songs($r['dyn_song']);
-					$results = array_merge($array,$results);
-				}
-				else { 
-					$results[] = $r['song'];
-				}
-				
-			} // end foreach songs
-			
-			return $results;
-
-		} // end if we were passed some data
-
-		$sql = "SELECT * FROM playlist_data WHERE playlist='" . sql_escape($this->id) . "' ORDER BY track";
-		$db_results = mysql_query($sql, dbh());
-
-		while ($r = mysql_fetch_assoc($db_results)) { 
+		while ($r = Dba::fetch_assoc($db_results)) { 
 			if ($r['dyn_song']) { 
 				$array = $this->get_dyn_songs($r['dyn_song']);
 				$results = array_merge($array,$results);
 			}
 			else { 
-				$results[] = $r['song'];
+				$results[] = $r['object_id'];
 			} 
 
 		} // end while
@@ -163,37 +175,6 @@ class Playlist {
 		return $results;
 
 	} // get_songs
-
-	/**
-	 * get_random_songs
-	 * This returns all of the songs in a random order, except those
-	 * pulled from dyn_songs, takes an optional limit
-	 */
-	function get_random_songs($limit='') { 
-
-		if ($limit) { 
-			$limit_sql = "LIMIT " . intval($limit);
-		}
-
-		$sql = "SELECT * FROM playlist_data WHERE playlist='" . sql_escape($this->id) . "'" . 
-			" ORDER BY RAND() $limit_sql";
-		$db_results = mysql_query($sql, dbh());
-
-		$results = array();
-
-		while ($r = mysql_fetch_assoc($db_results)) { 
-			if ($r['dyn_song']) { 
-				$array = $this->get_dyn_songs($r['dyn_song']);
-				$results = array_merge($array,$results);
-			}
-			else { 
-				$results[] = $r['song'];
-			}
-		} // end while
-
-		return $results;
-
-	} // get_random_songs
 
 	/**
  	 * get_dyn_songs
@@ -298,7 +279,6 @@ class Playlist {
 
 	/**
 	 * update_track_numbers
-	 
 	 * This function takes an array of $array['song_id'] $array['track'] where song_id is really the
 	 * playlist_data.id and updates them
 	 */
