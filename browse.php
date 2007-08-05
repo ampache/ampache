@@ -69,6 +69,11 @@ switch($_REQUEST['action']) {
 	case 'catalog':
 	
 	break;
+	case 'playlist': 
+		Browse::set_type('playlist'); 
+		$playlist_ids = Browse::get_objects(); 
+		Browse::show_objects($playlist_ids); 
+	break;
 	default: 
 
 

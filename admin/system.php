@@ -39,7 +39,7 @@ switch ($_REQUEST['action']) {
 		$current = parse_ini_file(Config::get('prefix') . '/config/ampache.cfg.php');
 		$final = generate_config($current);
 	        $browser = new Browser(); 
-	        $browser->downloadHeaders('ampache.cfg.php','text/plain',false,filesize('config/ampache.cfg.php.dist')); 
+	        $browser->downloadHeaders('ampache.cfg.php','text/plain',false,filesize(Config::get('prefix') . '/config/ampache.cfg.php.dist')); 
 	        echo $final; 
 
 	break;

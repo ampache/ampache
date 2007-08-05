@@ -4,6 +4,9 @@
 
 --------------------------------------------------------------------------
   v.3.4-Alpha2 
+  	- Removed redundent GPL licence file
+  	- Fixed filesize() issue on config re-gen
+  	- Fixed an issue with seeking causing incorrect stats counts 
 	- Fixed a potential issue with the kajax.js and checkboxes
 	- Added 'Advanced Search' link to top rightbar
 	- Added Paging to bottom of all views

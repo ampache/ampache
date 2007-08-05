@@ -88,6 +88,7 @@ class Browse {
 
 		switch($type) { 
 			case 'user':
+			case 'playlist':
 			case 'song':
 			case 'album':
 			case 'artist':
@@ -200,6 +201,9 @@ class Browse {
 			case 'live_stream':
 				$sql = "SELECT `live_stream`.`id` FROM `live_stream` "; 
 			break;
+			case 'playlist': 
+				$sql = "SELECT `playlist`.`id` FROM `playlist` "; 
+			break;
 			case 'song':
 			default:
 				$sql = "SELECT `song`.`id` FROM `song` ";  
@@ -296,6 +300,16 @@ class Browse {
 				break;
 			} // end filter
 		} // end live_stream
+		elseif ($_SESSION['browse']['type'] == 'playlist') { 
+			switch ($filter) { 
+				case 'alpha_match': 
+					$filter_sql = " `playlist`.`name` LIKE '" . Dba::escape($value) . "%' AND "; 
+				break;
+				default; 
+					// Rien a faire
+				break;
+			} // end filter
+		} // end playlist
 	
 		return $filter_sql; 
 
@@ -407,6 +421,11 @@ class Browse {
 			case 'live_stream': 
 				show_box_top(_('Radion Stations')); 
 				require_once Config::get('prefix') . '/templates/show_live_streams.inc.php';
+				show_box_bottom(); 
+			break;
+			case 'playlist': 
+				show_box_top(_('Playlists'));
+				require_once Config::get('prefix') . '/templates/show_playlists.inc.php'; 
 				show_box_bottom(); 
 			break;
 			default: 

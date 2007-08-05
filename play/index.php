@@ -295,7 +295,7 @@ else {
 /* Let's force them to actually play a portion of the song before 
  * we count it in the statistics
  */
-$bytesStreamed  = $start;
+$bytesStreamed = 0;
 $minBytesStreamed = $song->size / 2;
 
 // Actually do the streaming 
@@ -305,7 +305,9 @@ while (!feof($fp) && (connection_status() == 0)) {
         $bytesStreamed += $chunk_size;
 }
 
+// Make sure that a good chunk of the song has been played
 if ($bytesStreamed > $minBytesStreamed) {
+	debug_event('Stats','Registering stats for ' . $song->title,'5'); 
         $user->update_stats($song->id);
 	/* If this is a voting tmp playlist remove the entry */
 	if (is_object($tmp_playlist)) { 

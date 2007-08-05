@@ -223,10 +223,10 @@ class Playlist {
 	 */
 	function get_song_count() { 
 
-		$sql = "SELECT COUNT(id) FROM playlist_data WHERE playlist='" . sql_escape($this->id) . "'";
-		$db_results = mysql_query($sql, dbh());
+		$sql = "SELECT COUNT(`id`) FROM `playlist_data` WHERE `playlist`='" . Dba::escape($this->id) . "'";
+		$db_results = Dba::query($sql);
 
-		$results = mysql_fetch_row($db_results);
+		$results = Dba::fetch_row($db_results);
 
 		return $results['0'];
 

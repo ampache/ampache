@@ -20,6 +20,27 @@
 
 */
 
+/**
+ * Ampache openStrands Class, Version 0.1
+ * This class interacts with the OpenStrands API (http://mystrands.com)
+ * It requires a valid authtoken, and on creation of an instance requires
+ * a valid username and password, Password is expected as an MD5 hash for
+ * security reasons
+ *
+ * This class returns the XML data as a array of key'd arrays, attributes
+ * are stored in [][__attributes] = array(); Any questions, recommendations
+ * bugfixes or the like please contact mystrands@ampache.org or visit us on
+ * irc.ampache.org #ampache 
+ *
+ * There are some bugs in this library, and some things that are a little
+ * redundent, I will be fixing it in future releases. 
+ * 
+ * - Karl Vollmer
+ * 
+ * REQUIREMENTS: 
+ * - fopen wrappers enabled to allow file_get_contents(URL); 
+ * - PHP5
+ */
 class openStrands {
 
 	public static $base_url = 'https://www.mystrands.com/services';
@@ -47,7 +68,8 @@ class openStrands {
 
 		// Trust them enough to let them try once
 		self::$authenticated = true; 
-		self::$auth_token = Config::get('mystrands_subscriber_id'); 
+
+		if (!self::$auth_token) { echo 'No Auth Token, quiting'; return false; } 
 
 		// Test login with the provided credientials 
 		$auth_data = $this->user_validate($username,$password);

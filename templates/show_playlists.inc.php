@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2006 Ampache.org
+ Copyright (c) 2001 - 2007 Ampache.org
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
@@ -19,20 +19,12 @@
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
-/**
- * Show Playlists
- * This takes an array of playlists and displays them for the default view of
- * /playlists.php $type is always passed
- */
-$web_path = conf('web_path');
-$title = $type . ' ' . _('Playlists'); 
+
 ?>
-<?php show_box_top($title); ?>
-<form id="playlists<?php echo $type;?>" method="post" enctype="multipart/form-data" action="playlist.php">
 <table class="tabledata" cellspacing="0" cellpadding="0" border="0"> <!-- Playlist Table -->
 <tr class="table-header">
         <th align="center">
-        &nbsp;&nbsp;<a href="#" onclick="check_select('playlist','<?php echo $type;?>'); return false;"><?php echo _('Select'); ?></a>
+
         </th>
 	<th><?php echo _('Playlist Name'); ?></th>
 	<th><?php echo _('# Songs'); ?></th>
@@ -40,12 +32,12 @@ $title = $type . ' ' . _('Playlists');
 	<th><?php echo _('Actions'); ?></th>
 </tr>
 <?php 
-foreach ($playlists as $playlist) { 
-	$playlist_user = new User($playlist->user);
-	$count = $playlist->get_song_count(); ?>
+foreach ($object_ids as $playlist_id) { 
+	$playlist = new Playlist($playlist_id); 
+	$count = $playlist->get_song_count(); 
+?>
 	<tr class="<?php echo flip_class(); ?>">
                 <td align="center">
-                <input name="playlist[]" value="<?php echo $playlist->id; ?>" type="checkbox" />
                 </td>
 		<td>
 			<a href="<?php echo $web_path; ?>/playlist.php?action=show_playlist&amp;playlist_id=<?php echo $playlist->id; ?>">
@@ -77,12 +69,4 @@ foreach ($playlists as $playlist) {
 		</td>
 	</tr>
 <?php } // end foreach ($playlists as $playlist) ?>
-<?php if (!count($playlists)) { ?>
-<tr class="<?php echo flip_class(); ?>">
-	<td colspan="5"><?php echo _('No Playlists Found'); ?></td>
-</tr>
-<?php } ?>
 </table>
-</form>
-<?php show_box_bottom(); ?>
-
