@@ -28,7 +28,9 @@ class openStrands {
 
 	// Some settings to prevent stupid users, or abusive queries
 	public $limit = '10'; // Limit results set total, when possible 
-
+	public static $alias; // Store the users alias here after authing
+	private $filter = '';  // The filter for this instance of the class
+ 
 	// Stuff dealing with our internal XML parser
 	public $_parser;   // The XML parser
 	public $_grabtags; // Tags to grab the contents of
@@ -45,14 +47,17 @@ class openStrands {
 
 		// Trust them enough to let them try once
 		self::$authenticated = true; 
+		self::$auth_token = Config::get('mystrands_subscriber_id'); 
 
 		// Test login with the provided credientials 
-		if (!$this->user_validate($username,$password)) { 
+		$auth_data = $this->user_validate($username,$password);
+			
+		if (!$auth_data) { 
 			self::$authenticated = false; 
 		} 
 		else { 
 			self::$authenticated = true; 
-			self::$auth_token = Config::get('mystrands_subscriber_id'); 
+			self::$alias = $auth_data['0']['Alias']; 
 		} 
 
 
@@ -80,32 +85,46 @@ class openStrands {
 	} // user_validate
 
 	/**
-	 * search_albums
-	 * This searches for albums of the given name in MyStrands
+	 * user_lookup_profile
+	 * This takes a username and the md5 password and returns the users profile information
 	 */
-	public function search_albums($name) { 
+	public function user_lookup_profile($username,$password) { 
 
-		$name = urlencode($name); 
+		$username = urlencode($username); 
+		$password = urlencode($password); 
 
-		$xml_doc = self::run_query("/search/albums?searchText=$name&num=$this->limit"); 
-		// Set the right parent 
-		$this->_containerTag = 'SimpleAlbum'; 
+		$xml_doc = self::run_query("/user/lookup/profile?username=$username&hexPass=$password"); 
+
+		// Set the right parent
+		$this->_containerTag = 'User'; 
 
 		$data = $this->run_parse($xml_doc); 
 
 		return $data; 
 
-	} // search_albums
+	} // user_lookup_profile
 
 	/**
-	 * search_artists
-	 * This searches for artists of the given name in MyStrands
+	 * lookup_artists
+	 * This returns the data for a given mystrands artist (based on ID) 
+	 * If it's an array of ids pass as [] = ID, [] = ID
 	 */
-	public function search_artists($name) { 
+	public function lookup_artists($ids) { 
 
-		$name = urlencode($name); 
+		// This allows multiple artists in a single query
+		// so build the string if needed
+		if (is_array($ids)) { 
+			foreach ($ids as $id) { 
+				$string .= '&id=' . intval($id); 
+			} 
+			$string = ltrim($string,'&');
+			$string = '?' . $string; 
+		} 
+		else { 
+			$string = '?id=' . intval($ids); 
+		} 
 
-		$xml_doc = self::run_query("/search/artists?searchText=$name&num=$this->limit"); 
+		$xml_doc = self::run_query("/lookup/artists$string"); 
 
 		// Set the right parent
 		$this->_containerTag = 'SimpleArtist'; 
@@ -114,7 +133,68 @@ class openStrands {
 
 		return $data; 
 
-	} // search_artists
+	} // lookup_artists
+
+	/**
+	 * lookup_albums
+	 * This returns the data for a given mystrands album (based on ID)
+	 * If it's an array of ids pass as [] = ID, [] = ID
+	 */
+	public function lookup_albums($ids) { 
+
+		// This allows multiple albums in a single query, 
+		// so build it accordingly
+		if (is_array($ids)) { 
+			foreach ($ids as $id) { 
+				$string .= '&id=' . intval($id); 
+			} 
+			$string = ltrim($string,'&'); 
+			$string = '?' . $string; 
+		} 
+		else { 
+			$string = '?id=' . intval($ids); 
+		} 
+
+		$xml_doc = self::run_query("/lookup/albums$string"); 
+
+		// Set the right parent
+		$this->_containerTag = 'SimpleAlbum'; 
+
+		$data = $this->run_parse($xml_doc); 
+
+		return $data; 
+
+	} // lookup_albums
+
+	/**
+	 * lookup_tracks
+	 * This returns the data for a given mystrands track (based on ID)
+	 * If it's an array of ids pass as [] = ID, [] = ID
+	 */
+	public function lookup_tracks($ids) { 
+
+		// This allows for multiple entires, so build accordingly
+		if (is_array($ids)) { 
+			foreach ($ids as $id) { 
+				$string .= '&id=' . intval($id); 
+			} 
+			$string = ltrim($string,'&'); 
+			$string = '?' . $string; 
+		} // end if array
+		else { 
+			$string = '?id=' . intval($ids); 
+		} 
+
+		$xml_doc = self::run_query("/lookup/tracks$string"); 
+
+		// Set the parent
+		$this->_containerTag = 'SimpleTrack'; 
+
+		$data = $this->run_parse($xml_doc); 
+
+		return $data; 
+
+	} // lookup_tracks
 
 	/**
 	 * lookup_album_tracks
@@ -134,6 +214,262 @@ class openStrands {
 		return $data; 
 
 	} // lookup_album_tracks
+
+	/**
+	 * lookup_artist_albums
+	 * This returns a list of the albums for a given artist ID you can 
+	 * pass an optional limit and offset
+	 */
+	public function lookup_artist_albums($artist_id,$limit='',$offset='') { 
+
+		$artist_id = intval($artist_id); 
+
+		$limit 	= $limit ? intval($limit) : $this->limit; 
+		$offset	= $offset ? intval($offset) : '0'; 
+
+		$xml_doc = self::run_query("/lookup/artist/albums?id=$artist_id&num=$limit&skip=$offset"); 
+
+		// Set the container
+		$this->_containerTag = 'SimpleAlbum'; 
+
+		$data = $this->run_parse($xml_doc); 
+
+		return $data; 
+
+	} // lookup_artist_albums
+
+	/**
+	 * search_albums
+	 * This searches for albums of the given name in MyStrands
+	 */
+	public function search_albums($name,$limit='',$offset='') { 
+
+		$name = urlencode($name); 
+
+                $limit  = $limit ? intval($limit) : $this->limit;
+		$offset = $offset ? intval($offset) : '0';
+
+		$xml_doc = self::run_query("/search/albums?searchText=$name&num=$limit&skip=$offset"); 
+
+		// Set the right parent 
+		$this->_containerTag = 'SimpleAlbum'; 
+
+		$data = $this->run_parse($xml_doc); 
+
+		return $data; 
+
+	} // search_albums
+
+	/**
+	 * search_artists
+	 * This searches for artists of the given name in MyStrands
+	 */
+	public function search_artists($name,$limit='',$offset='') { 
+
+		$name = urlencode($name); 
+
+                $limit  = $limit ? intval($limit) : $this->limit;
+		$offset = $offset ? intval($offset) : '0';
+
+		$xml_doc = self::run_query("/search/artists?searchText=$name&num=$limit&skip=$offset"); 
+
+		// Set the right parent
+		$this->_containerTag = 'SimpleArtist'; 
+
+		$data = $this->run_parse($xml_doc); 
+
+		return $data; 
+
+	} // search_artists
+
+	/**
+	 * search_tracks
+	 * This searches for tracks on Mystrands based on the search text
+	 */
+	public function search_tracks($name,$limit='',$offset='') { 
+
+		$name = urlencode($name); 
+
+		$limit  = $limit ? intval($limit) : $this->limit;
+		$offset = $offset ? intval($offset) : '0';
+
+		$xml_doc = self::run_query("/search/tracks?searchText=$name&num=$limit&skip=$offset"); 
+
+		// Set the right parent
+		$this->_containerTag = 'SimpleTrack'; 
+
+		$data = $this->run_parse($xml_doc); 
+
+		return $data; 
+
+	} // search_tracks
+
+	/**
+	 * recommend_artists
+	 * This generates recomendations for other artists, takes at least one artist (ID/Name) as
+	 * as seed, filters allowed, this user is used unless another alias is passed
+	 * $values should be ['id'][] = ID, ['id'][] = ID, ['name'][] = NAME, ['name'][] = NAME
+	 */
+	public function recommend_artists($values,$limit='',$offset='',$alias='') { 
+
+                if (!is_array($values['id'])) { $values['id'] = array(); } 
+                if (!is_array($values['name'])) { $values['name'] = array(); } 
+
+		// Build out the ids first
+		foreach ($values['id'] as $id) { 
+			$id_string .= '&id=' . intval($id); 
+		} 
+		// Now for z-names
+		foreach ($values['name'] as $name) { 
+			$name_string .= '&name=' . urlencode($name); 
+		} 
+
+		// Clean up remaining stuff
+		$filters	= $this->filter; 
+		$offset		= $offset ? intval($offset) : '0'; 
+		$limit		= $limit ? intval($limit) : $this->limit; 
+		$alias		= $alias ? urlencode($alias) : urlencode(self::$alias); 
+
+		$xml_doc = self::run_query("/recommend/artists?alias=$alias$id_string$name_string&num=$limit&skip=$offset$filters"); 
+
+		$this->_containerTag = 'SimpleArtist'; 
+
+		$data = $this->run_parse($xml_doc); 
+
+		return $data; 
+
+	} // recommend_artists
+
+	/**
+	 * recommend_albums
+	 * This produces recommended albums based on sets of artist|album filters allowed, this user is used unless different
+	 * alias is passed. Values are integrity checked to the best of my lazyness
+	 * $values should be ['id'][] = ARTISTID|ALBUMID, ['name'][] = ARTIST|ALBUM
+	 */
+	public function recommend_albums($values,$limit='',$offset='',$alias='') { 
+
+		if (!is_array($values['id'])) { $values['id'] = array(); } 
+		if (!is_array($values['name'])) { $values['name'] = array(); }  
+
+                // Build out the ids first
+                foreach ($values['id'] as $id) {
+			if (!preg_match("/\d+\|\d+/",$id)) { next; } 
+                        $id_string .= '&id=' . intval($id);
+                }
+                // Now for z-names
+                foreach ($values['name'] as $name) {
+			// Only add stuff that's valid
+			if (!preg_match("/.+\|.+/",$name)) { next; } 
+                        $name_string .= '&name=' . urlencode($name);
+                }
+
+                // Clean up remaining stuff
+                $filters        = $this->filter;
+                $offset         = $offset ? intval($offset) : '0';
+                $limit          = $limit ? intval($limit) : $this->limit;
+                $alias          = $alias ? urlencode($alias) : urlencode(self::$alias);
+
+                $xml_doc = self::run_query("/recommend/albums?alias=$alias$id_string$name_string&num=$limit&skip=$offset$filters");
+                
+		$this->_containerTag = 'SimpleAlbum';
+
+                $data = $this->run_parse($xml_doc);
+
+                return $data;
+	
+	} // recommend_albums
+
+        /**
+         * recommend_tracks
+         * This produces recommended tracks based on sets of artist|album|track filters allowed, this user is used unless different
+         * alias is passed. Values are integrity checked to the best of my lazyness
+         * $values should be ['id'][] = ARTISTID|ALBUMID|TRACKID, ['name'][] = ARTIST|ALBUM|TRACK
+         */
+        public function recommend_tracks($values,$limit='',$offset='',$alias='') {
+
+                if (!is_array($values['id'])) { $values['id'] = array(); }
+                if (!is_array($values['name'])) { $values['name'] = array(); }
+
+                // Build out the ids first
+                foreach ($values['id'] as $id) {
+                        if (!preg_match("/\d+\|\d+\|\d+/",$id)) { next; }
+                        $id_string .= '&id=' . intval($id);
+                }
+                // Now for z-names
+                foreach ($values['name'] as $name) {
+                        // Only add stuff that's valid
+                        if (!preg_match("/.+\|.+\|.+/",$name)) { next; }
+                        $name_string .= '&name=' . urlencode($name);
+                }
+
+                // Clean up remaining stuff
+                $filters        = $this->filter;
+                $offset         = $offset ? intval($offset) : '0';
+                $limit          = $limit ? intval($limit) : $this->limit;
+                $alias          = $alias ? urlencode($alias) : urlencode(self::$alias);
+
+                $xml_doc = self::run_query("/recommend/tracks?alias=$alias$id_string$name_string&num=$limit&skip=$offset$filters");
+
+                $this->_containerTag = 'SimpleTrack';
+
+                $data = $this->run_parse($xml_doc);
+
+                return $data;
+
+        } // recommend_tracks
+
+
+	/**
+	 * set_filter
+	 * This builds out the filter for this object, it's a per instance filter 
+	 */
+	public function set_filter($field,$fuzzy,$level,$values) { 
+
+		// Make sure they pick a sane field
+		switch ($field) { 
+			case 'Artist': 
+			case 'Album':
+			case 'Year': 
+			case 'Track': 
+			case 'Genre':
+			case 'PersonalTag':
+			case 'CommunityTag':
+			case 'PersonalTrackTag': 
+			case 'CommunityTrackTag': 
+			case 'PersonalArtistTag': 
+			case 'CommunityArtistTag': 
+			case 'UserHistory': 
+				// We're good
+			break;
+			default: 
+				return false; 
+			break;
+		} // end switch on passed filed 
+
+		$level = intval($level); 
+	
+		// Default to very hard
+		if ($level > 9 || $level < 0) { $level = 0; } 
+
+		// Clean up the fuzzyness
+		$fuzzy = make_bool($fuzzy); 
+		if ($fuzzy) { $fuzzy = 'True'; } 
+		else { $fuzzy = 'False'; }
+
+		if (is_array($values)) { 
+			foreach ($values as $value) { 
+				$value_string .= $value; 
+			} 
+		} 
+		else { 
+			$value_string = $values; 
+		} 
+
+		$filter_string = "&filter=$field,$fuzzy,$level|$value_string"; 
+
+		$this->filter .= $filter_string; 
+
+	} // set_filter
 
 	/**
 	 * run_query
@@ -206,8 +542,12 @@ class openStrands {
 			$this->_key++; 
 			// If we find attributes
 			if (count($attributes)) { 
-				$this->results[$this->_key][__attributes] = $attributes;
-			} 
+				// If it's not already an array, make it one so merge always works
+				if (!isset($this->results[$this->_key][__attributes])) { 
+					$this->results[$this->_key][__attributes] = array(); 
+				} 
+				$this->results[$this->_key][__attributes] = array_merge($this->results[$this->_key][__attributes],$attributes); 
+			} // end if there are attributes 
 		} 
 		elseif ($this->_key >= '0') { 
 			$this->_currentTag = $tag; 
