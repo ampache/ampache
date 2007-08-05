@@ -33,8 +33,8 @@ $ajax_url = Config::get('ajax_url');
 <li <?php echo $sidebar_browse; ?>>
 	<?php echo Ajax::button("?action=sidebar&button=browse",'browse',_('Browse'),'sidebar_browse'); ?>
 </li>
-<li <?php echo $sidebar_search; ?>>
-	<?php echo Ajax::button("?action=sidebar&button=search",'view',_('Search'),'sidebar_search'); ?>
+<li <?php echo $sidebar_localplay; ?>>
+	<?php echo Ajax::button("?action=sidebar&button=localplay",'volumeup',_('Localplay'),'sidebar_localplay'); ?>
 </li>
 <li <?php echo $sidebar_preferences; ?>>
 	<?php echo Ajax::button("?action=sidebar&button=preferences",'edit',_('Preferences'),'sidebar_prefs'); ?>
