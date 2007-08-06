@@ -328,6 +328,7 @@ function create_preference_input($name,$value) {
 			echo "\t<option value=\"genre\">" . _('Related Genre') . "</option>"; 
 			echo "</select>\n"; 
 		break;
+		case 'mystrands_pass':
 		case 'lastfm_pass':
 			echo "<input type=\"password\" size=\"16\" name=\"$name\" value=\"******\" />";
 		break;
@@ -518,26 +519,6 @@ function update_preference_level($pref_id,$level) {
 	return true;
 
 } // update_preference_level
-
-/**
- * fix_all_users_prefs
- * This function is used by install/uninstall and fixes all of the users preferences
- */
-function fix_all_users_prefs() {
-
-        $sql = "SELECT * FROM user";
-        $db_results = mysql_query($sql,dbh());
-
-        $user = new User();
-        $user->fix_preferences('-1');
-
-        while ($r = mysql_fetch_assoc($db_results)) {
-  	      $user->fix_preferences($r['username']);
-        }
-
-	return true;
-
-} // fix_all_users_prefs
 
 /**
  * fix_preferences

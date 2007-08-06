@@ -18,7 +18,6 @@
   <li><?php echo _('Filters'); ?>
     <div class="sb3">
       <?php show_alphabet_list($_REQUEST['alpha_match'],$_REQUEST['action']); ?>
-      <hr />
   <!--
   <input type="checkbox" onclick="ajaxPut('<?php echo $ajax_info; ?>?action=browse&amp;key=show_art&amp;value=1');return true;" value="1" />
   	<?php echo _('Show Art'); ?><br />

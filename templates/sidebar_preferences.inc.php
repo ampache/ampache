@@ -18,5 +18,11 @@
       <li id="sb_preferences_sc_System"><a href="<?php echo $web_path; ?>/preferences.php?action=admin&amp;tab=system"><?php echo _('System'); ?></a></li>
     </ul>
   </li>
+<li><?php echo _('Modules'); ?>
+	<ul class="sb3" id="sb_Modules">
+	<li id="sb_preferences_mo_localplay"><a href="<?php echo $web_path; ?>/admin/modules.php?action=show_localplay"><?php echo _('Localplay Modules'); ?></a></li>
+	<li id="sb_preferences_mo_plugins"><a href="<?php echo $web_path; ?>/admin/modules.php?action=show_plugins"><?php echo _('Available Plugins'); ?></a></li>
+	</ul>
+</li>
 </ul>
 <?php } ?>

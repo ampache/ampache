@@ -1102,6 +1102,25 @@ class User {
 		return true; 
 
 	} // check_username
+
+	/**
+	 * rebuild_all_preferences
+	 * This rebuilds the user preferences for all installed users, called by the plugin functions
+	 */
+	public static function rebuild_all_preferences() { 
+
+		$sql = "SELECT * FROM `user`"; 
+		$db_results = Dba::query($sql); 
+
+		User::fix_preferences('-1'); 
+
+		while ($row = Dba::fetch_assoc($db_results)) { 
+			User::fix_preferences($row['id']); 
+		} 
+
+		return true; 
+
+	} // rebuild_all_preferences
 	
 } //end user class
 

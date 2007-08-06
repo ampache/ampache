@@ -4,6 +4,9 @@
 
 --------------------------------------------------------------------------
   v.3.4-Alpha2 
+  	- Added MyStrands Plugin
+  	- Re-enabled / updated Plugin functionality
+  	- Fixed CSS (Thx Spocky) 
   	- Added Playlists as a browse type and fixed playback
   	- Fixed an issue where albums of the moment would show when you 
 		had 0 albums

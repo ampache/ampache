@@ -1,13 +1,13 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2006 Ampache.org
+ Copyright (c) 2001 - 2007 Ampache.org
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
- as published by the Free Software Foundation; either version 2
- of the License, or (at your option) any later version.
+ as published by the Free Software Foundation; version 2
+ of the License.
 
  This program is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -20,7 +20,7 @@
 
 */
 
-require('../lib/init.php');
+require_once '../lib/init.php';
 
 if (!$GLOBALS['user']->has_access(100)) {
 	access_denied();
@@ -28,12 +28,10 @@ if (!$GLOBALS['user']->has_access(100)) {
 }
 
 
-$action = scrub_in($_REQUEST['action']);
-
 /* Always show the header */
-show_template('header');
+show_header(); 
 
-switch ($action) { 
+switch ($_REQUEST['action']) { 
 	case 'insert_localplay_preferences':
 		$type = scrub_in($_REQUEST['type']);
 		insert_localplay_preferences($type);
@@ -59,30 +57,33 @@ switch ($action) {
 	break;
 	case 'install_plugin':
 		/* Verify that this plugin exists */
-		$plugins = get_plugins(); 
+		$plugins = Plugin::get_plugins();  
 		if (!array_key_exists($_REQUEST['plugin'],$plugins)) { 
 			debug_event('plugins','Error: Invalid Plugin: ' . $_REQUEST['plugin'] . ' selected','1'); 
 			break;
 		}
 		$plugin = new Plugin($_REQUEST['plugin']); 
 		$plugin->install(); 
+
+		// Don't trust the plugin to this stuff
+		User::rebuild_all_preferences(); 
 		
 		/* Show Confirmation */
-		$url	= conf('web_path') . '/admin/preferences.php?tab=modules';
+		$url	= Config::get('web_path') . '/admin/modules.php?action=show_plugins';
 		$title	= _('Plugin Activated'); 
 		$body	= '';
 		show_confirmation($title,$body,$url); 
 	break;
 	case 'confirm_uninstall_plugin':
 		$plugin = scrub_in($_REQUEST['plugin']); 
-		$url	= conf('web_path') . '/admin/modules.php?action=uninstall_plugin&amp;plugin=' . $plugin;
+		$url	= Config::get('web_path') . '/admin/modules.php?action=uninstall_plugin&amp;plugin=' . $plugin;
 		$title	= _('Are you sure you want to remove this plugin?'); 
 		$body	= '';
 		show_confirmation($title,$body,$url,1); 
 	break; 
 	case 'uninstall_plugin':
 		/* Verify that this plugin exists */
-                $plugins = get_plugins();
+                $plugins = Plugin::get_plugins(); 
                 if (!array_key_exists($_REQUEST['plugin'],$plugins)) {
                         debug_event('plugins','Error: Invalid Plugin: ' . $_REQUEST['plugin'] . ' selected','1');
                         break;
@@ -90,8 +91,11 @@ switch ($action) {
                 $plugin = new Plugin($_REQUEST['plugin']);
 		$plugin->uninstall(); 
 
+		// Don't trust the plugin to do it
+		User::rebuild_all_preferences(); 
+
                 /* Show Confirmation */
-                $url    = conf('web_path') . '/admin/preferences.php?tab=modules';
+                $url    = Config::get('web_path') . '/admin/modules.php?action=show_plugins';
                 $title  = _('Plugin Deactivated');
                 $body   = '';
                 show_confirmation($title,$body,$url);
@@ -99,8 +103,17 @@ switch ($action) {
 	case 'upgrade_plugin':
 
 	break;
+	case 'show_plugins': 
+		$plugins = Plugin::get_plugins(); 	
+		show_box_top(_('Plugins')); 
+		require_once Config::get('prefix') . '/templates/show_plugins.inc.php'; 
+		show_box_bottom(); 
+	break;
+	case 'show_localplay': 
+
+	break;
 	default: 
-		require_once (conf('prefix') . '/templates/show_modules.inc.php');
+		// Rien a faire
 	break;
 } // end switch
 
