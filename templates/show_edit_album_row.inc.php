@@ -19,7 +19,7 @@
 
 */
 ?>
-<td colspan="6">
+<td colspan="7">
 <form method="post" id="edit_album_<?php echo $album->id; ?>">
 <table border="0" cellpadding="3" cellspacing="0">
 <tr>

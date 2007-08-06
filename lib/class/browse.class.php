@@ -79,6 +79,18 @@ class Browse {
 	} // set_filter
 
 	/**
+	 * get_filter
+	 * returns the specified filter value
+	 */
+	public static function get_filter($key) { 
+	
+		// Simple enough, but if we ever move this crap 
+		return $_SESSION['browse']['filter'][$key]; 
+
+	} // get_filter
+
+
+	/**
  	 * set_type
 	 * This sets the type of object that we want to browse by
 	 * we do this here so we only have to maintain a single whitelist

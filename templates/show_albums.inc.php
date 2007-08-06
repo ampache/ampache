@@ -23,12 +23,15 @@ $ajax_url = Config::get('ajax_url');
 ?>
 <table class="tabledata" cellspacing="0" cellpadding="0" border="0">
 <tr class="table-header">
-	<td colspan="6">
+	<td colspan="7">
 	<?php require Config::get('prefix') . '/templates/list_header.inc.php'; ?>
 	</td>
 </tr>
 <tr class="table-header">
 	<th><?php echo _('Add'); ?></th>
+	<?php if (Browse::get_filter('show_art')) { ?>
+	<th><?php echo _('Cover'); ?></th>
+	<?php } ?>
 	<th><?php echo _('Album'); ?></th>
 	<th><?php echo _('Artist'); ?></th>
 	<th><?php echo _('Songs'); ?></th>
@@ -46,7 +49,7 @@ $ajax_url = Config::get('ajax_url');
 </tr>
 <?php } //end foreach ($albums as $album) ?>
 <tr class="table-header">
-	<td colspan="6">
+	<td colspan="7">
 	<?php require Config::get('prefix') . '/templates/list_header.inc.php'; ?>
 	</td>
 </tr>
