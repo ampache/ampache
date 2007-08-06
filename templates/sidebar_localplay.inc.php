@@ -1,1 +1,3 @@
-<h4><?php echo _('Localplay'); ?></h4>
+<ul class="sb2" id="sb_localplay">
+  <li><?php echo _('Localplay'); ?></li>
+</ul>

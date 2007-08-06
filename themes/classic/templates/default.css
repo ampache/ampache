@@ -244,28 +244,48 @@ h3#content_title span {
 } 
 
 /* For sidebar tabs */
-#sidebar-tabs li {
+#sidebar-tabs li.sb1 {
   float: left;
 	padding:2px;
 	border: 1px solid #fff;
   background:#fff;
-  
 }
 #sidebar-tabs li.active { 
 	background-color:#c0c0c0; 
 	border:1px solid #c0c0c0;
 } 
-#sidebar-page { 
-	clear: left;
+
+/* Tabs content */
+#sidebar-page {
+  position:absolute;
+  left:0;
+  top:26px;
 	background-color:#c0c0c0;
-	padding: 0 5px 0 8px;
-	font-size: 0.8em; 
+	font-size: 0.8em;
+  width:133px;
 } 
-#sidebar-page h4{
-  margin-left:-4px;
-} 
-#sidebar-page ul {
+#sidebar-page ul.sb2 {
+  padding:5px 8px;
 }
+#sidebar-page ul.sb2 li{
+  font-weight:bold;
+  margin-top:0.3em;
+  padding-bottom: 0.3em;
+  border-bottom: 1px solid #666;
+}
+
+#sidebar-page .sb3 {
+  margin-left:4px;
+  font-weight:normal;
+}
+#sidebar-page ul.sb3 li{
+  margin:0;
+  padding:0;
+  border:none;
+  font-weight:normal;
+}
+* html #sidebar-page ul.sb3 li{display:inline;} /* fix ie6 */
+
 #sidebar-page a{
   display:block;
 }
@@ -278,7 +298,7 @@ h3#content_title span {
 /* SIDEBAR : Preferences */
 
 /* SIDEBAR : Admin */
-#sb_Catalogs a{
+#sb_admin_catalogs a{
   display:inline;
 }
 

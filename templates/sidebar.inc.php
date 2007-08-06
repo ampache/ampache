@@ -21,38 +21,50 @@
 
 if (!$_SESSION['state']['sidebar_tab']) { $_SESSION['state']['sidebar_tab'] = 'home'; } 
 $class_name = 'sidebar_' . $_SESSION['state']['sidebar_tab'];
-${$class_name} = ' class="active" ';
+${$class_name} = ' active';
+
+// List of buttons ( id, title, icon, access level)
+$sidebar_items[] = array('id'=>'home', 'title'=>_('Home'), 'icon'=>'home', 'access'=>5);
+$sidebar_items[] = array('id'=>'browse', 'title'=>_('Browse'), 'icon'=>'browse', 'access'=>5);
+$sidebar_items[] = array('id'=>'localplay', 'title'=>_('Localplay'), 'icon'=>'volumeup', 'access'=>5);
+$sidebar_items[] = array('id'=>'preferences', 'title'=>_('Preferences'), 'icon'=>'edit', 'access'=>5);
+$sidebar_items[] = array('id'=>'admin', 'title'=>_('Admin'), 'icon'=>'admin', 'access'=>100);
+
 
 $web_path = Config::get('web_path');
 $ajax_url = Config::get('ajax_url'); 
+
 ?>
 <ul id="sidebar-tabs">
-<li <?php echo $sidebar_home; ?>>
-	<?php echo Ajax::button("?action=sidebar&button=home",'home',_('Home'),'sidebar_home'); ?>
-</li>
-<li <?php echo $sidebar_browse; ?>>
-	<?php echo Ajax::button("?action=sidebar&button=browse",'browse',_('Browse'),'sidebar_browse'); ?>
-</li>
-<li <?php echo $sidebar_localplay; ?>>
-	<?php echo Ajax::button("?action=sidebar&button=localplay",'volumeup',_('Localplay'),'sidebar_localplay'); ?>
-</li>
-<li <?php echo $sidebar_preferences; ?>>
-	<?php echo Ajax::button("?action=sidebar&button=preferences",'edit',_('Preferences'),'sidebar_prefs'); ?>
-</li>
-<?php if ($GLOBALS['user']->has_access('100')) { ?>
-<li <?php echo $sidebar_admin; ?>>
-	<?php echo Ajax::button("?action=sidebar&button=admin",'admin',_('Admin'),'sidebar_admin'); ?>
-</li>
-<?php } ?>
+<?php 
+	foreach ($sidebar_items as $item) { 
+	   if ($GLOBALS['user']->has_access($item['access']))
+	   {
+	     $li_params = "id='sb_tab_" . $item['id'] . "' class='sb1" . ${'sidebar_'.$item['id'] } . "'";
+	     ?><li <?php echo $li_params; ?>>
+      	<?php 
+        // Button
+        echo Ajax::button("?action=sidebar&button=".$item['id'],$item['icon'],$item['title'],'sidebar_'.$item['id']);
+      	
+      	// Include subnav if it's the selected one
+      	// so that it's generated inside its parent li
+      	if($item['id']==$_SESSION['state']['sidebar_tab'])
+      	{
+      	  ?><div id="sidebar-page"><?php
+      	  require_once Config::get('prefix') . '/templates/sidebar_' . $_SESSION['state']['sidebar_tab'] . '.inc.php';
+      	  ?></div><?php
+        }
+       ?></li><?php
+     }
+	}
+?>
 <!-- <li <?php echo $sidebar_player; ?> onclick="ajaxPut('<?php echo $ajax_url; ?>?action=sidebar&button=player');" >
 </li>
 -->
-<li>
+<li id="sb_Logout" class="sb1">
 	<a href="<?php echo Config::get('web_path'); ?>/logout.php">
 	<?php echo get_user_icon('logout',_('Logout')); ?>
 	</a>
 </li>
 </ul>
-<div id="sidebar-page">
-<?php require_once Config::get('prefix') . '/templates/sidebar_' . $_SESSION['state']['sidebar_tab'] . '.inc.php'; ?>
-</div>
+
