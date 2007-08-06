@@ -24,10 +24,10 @@
   <input type="checkbox" onclick="ajaxPut('<?php echo $ajax_info; ?>?action=browse&amp;key=rated&amp;value=1');return true;" value="1" />
   	<?php echo _('Rated'); ?><br />
   -->
-      <input id="unplayedCB" type="checkbox" <? echo $string = Browse::get_filter('unplayed') ? 'checked="checked"' : ''; ?>/>
+      <input id="unplayedCB" type="checkbox" <?php echo $string = Browse::get_filter('unplayed') ? 'checked="checked"' : ''; ?> />
   	  <label id="unplayedLabel" for="unplayedCB"><?php echo _('Unplayed'); ?></label><br />
 	 <?php echo Ajax::observe('unplayedCB','click',Ajax::action('?page=browse&action=browse&key=unplayed&value=1','')); ?>
-      <input id="show_artCB" type="checkbox" <? echo $string = Browse::get_filter('show_art') ? 'checked="checked"' : ''; ?>/>
+      <input id="show_artCB" type="checkbox" <?php echo $string = Browse::get_filter('show_art') ? 'checked="checked"' : ''; ?> />
       	  <label id="show_artLabel" for="show_artCB"><?php echo _('Show Art'); ?></label><br />
 	<?php echo Ajax::observe('show_artCB','click',Ajax::action('?page=browse&action=browse&key=show_art&value=1','')); ?>
     </div>

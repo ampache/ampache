@@ -31,7 +31,7 @@ $artist = scrub_out(truncate_with_ellipsis($song->f_artist_full,'25'));
 	<a title="<?php echo scrub_out($song->title); ?>" href="<?php echo $web_path; ?>/stream.php?action=single_song&amp;song_id=<?php echo $song->id; ?>">
         <?php echo $title; ?>
 	</a>
-	<div id="rating_<?php echo $song->id; ?>_song">
+	<div class="rating_<?php echo $song->id; ?>_song">
         <?php Rating::show($song->id,'song'); ?>
 	</div>
 </td>

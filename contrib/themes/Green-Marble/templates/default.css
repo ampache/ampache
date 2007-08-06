@@ -391,7 +391,7 @@ span.five-stars:hover { width: 80px; }
 }
 .text-action a, .text-action span {
  	padding: 0 2px;
-	background: #ddd;
+   background: url(../images/active.tablebg.gif) #000000 repeat-x;
 	border:1px solid #000;
 	text-decoration: none;
 }

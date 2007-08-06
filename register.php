@@ -49,7 +49,7 @@ require_once (conf('prefix') . '/modules/validatemail/validateEmail.php');
 
 /* Don't even include it if we aren't going to use it */
 if (conf('captcha_public_reg')) { 
-	define ("CAPTCHA_INVERSE, 1");
+	define ("CAPTCHA_INVERSE", 1);
 	require_once (conf('prefix') . '/modules/captcha/captcha.php');
 }
 
