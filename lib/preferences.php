@@ -113,7 +113,8 @@ function update_preferences($pref_id=0) {
 			case 'sample_rate':
 				$value = validate_bitrate($value);
 			break;
-			/* MD5 the LastFM so it's not plainTXT */
+			/* MD5 the LastFM & MyStrands so it's not plainTXT */
+			case 'mystrands_pass':
 			case 'lastfm_pass':
 				/* If it's our default blanking thing then don't use it */
 				if ($value == '******') { unset($_REQUEST[$name]); break; } 

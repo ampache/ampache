@@ -31,18 +31,21 @@ class Artist {
 	public $albums;
 	public $prefix;
 
+	// Constructed vars
+	public $_fake = false; // Set if construct_from_array() used
+
 	/**
 	 * Artist
 	 * Artist class, for modifing a artist
 	 * Takes the ID of the artist and pulls the info from the db
 	 */
-	function Artist($artist_id = 0) {
+	public function __construct($id='') {
 
 		/* If they failed to pass in an id, just run for it */
-		if (!$artist_id) { return false; } 	
+		if (!$id) { return false; } 	
 
 		/* Assign id for use in get_info() */
-		$this->id = intval($artist_id);
+		$this->id = intval($id);
 
 		/* Get the information from the db */
 		$info = $this->_get_info();
@@ -54,6 +57,25 @@ class Artist {
 		return true; 
 
 	} //constructor
+
+	/**
+	 * construct_from_array
+	 * This is used by the metadata class specifically but fills out a Artist object
+	 * based on a key'd array, it sets $_fake to true
+	 */
+	public static function construct_from_array($data) { 
+
+		$artist = new Artist(0); 
+		foreach ($data as $key=>$value) { 
+			$artist->$key = $value; 
+		} 
+
+		//Ack that this is not a real object from the DB
+		$artist->_fake = true; 
+
+		return $artist;
+
+	} // construct_from_array
 
 	/**
 	 * _get_info
@@ -185,6 +207,9 @@ class Artist {
 		/* Combine prefix and name, trim then add ... if needed */
                 $name = truncate_with_ellipsis(trim($this->prefix . " " . $this->name));
 		$this->f_name = $name;
+
+		// If this is a fake object, we're done here
+		if ($this->_fake) { return true; } 
 
 	        $this->f_name_link = "<a href=\"" . Config::get('web_path') . "/artists.php?action=show&amp;artist=" . $this->id . "\" title=\"" . $this->full_name . "\">" . $name . "</a>";
 

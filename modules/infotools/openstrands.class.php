@@ -440,7 +440,6 @@ class openStrands {
 
         } // recommend_tracks
 
-
 	/**
 	 * set_filter
 	 * This builds out the filter for this object, it's a per instance filter 
@@ -492,6 +491,21 @@ class openStrands {
 		$this->filter .= $filter_string; 
 
 	} // set_filter
+
+	/**
+	 * set_auth_token
+	 * This function should be called on load to set the auth_token, if you don't
+	 * just hardcode it, also allows realtime switching between auth tokens 
+	 * so that users can use their own limits when querying
+	 */
+	public static function set_auth_token($token) { 
+
+		// Set it
+		self::$auth_token = $token; 
+
+		//FIXME: We should log this event? 
+
+	} // set_auth_token
 
 	/**
 	 * run_query

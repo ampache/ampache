@@ -23,40 +23,40 @@
 class Song {
 
 	/* Variables from DB */
-	var $id;
-	var $file;
-	var $album; // album.id (Int)
-	var $artist; // artist.id (Int)
-	var $title;
-	var $year;
-	var $bitrate;
-	var $rate;
-	var $mode;
-	var $size;
-	var $time;
-	var $track;
-	var $genre; // genre.id (Int)
-	var $type;
-	var $mime;
-	var $played;
-	var $enabled;
-	var $addition_time;
-	var $update_time;
+	public $id;
+	public $file;
+	public $album; // album.id (Int)
+	public $artist; // artist.id (Int)
+	public $title;
+	public $year;
+	public $bitrate;
+	public $rate;
+	public $mode;
+	public $size;
+	public $time;
+	public $track;
+	public $genre; // genre.id (Int)
+	public $type;
+	public $mime;
+	public $played;
+	public $enabled;
+	public $addition_time;
+	public $update_time;
 
 	/* Setting Variables */
-	var $_transcoded = false;
+	public $_transcoded = false;
+	public $_fake = false; // If this is a 'construct_from_array' object
 
-	/*!
-		@function Song
-		@discussion Song class, for modifing a song.
-		@param $song_id 	The ID of the song
+	/**
+	 * Constructor
+	 * Song class, for modifing a song.
 	 */
-	function Song($song_id = 0) {
-
-		if (!$song_id) { return false; } 
+	public function __construct($id='') {
 
 		/* Assign id for use in get_info() */
-		$this->id = intval($song_id);
+		$this->id = intval($id);
+
+		if (!$this->id) { return false; } 
 
 		/* Get the information from the db */
 		if ($info = $this->_get_info()) {
@@ -64,12 +64,13 @@ class Song {
 			foreach ($info as $key=>$value) { 
 				$this->$key = $value; 
 			} 
-				// Format the Type of the song
-				$this->format_type();
+			// Format the Type of the song
+			$this->format_type();
 		}
 
-	} //constructor
+		return true; 
 
+	} // constructor
 
 	/*!
 		@function _get_info

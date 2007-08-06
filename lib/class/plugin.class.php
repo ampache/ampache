@@ -147,13 +147,13 @@ class Plugin {
 
 	/**
 	 * is_installed
-	 * This checks to see if the current plugin is currently installed in the
+	 * This checks to see if the specified plugin is currently installed in the
 	 * database, it doesn't check the files for integrity
 	 */
-	function is_installed() { 
+	public static function is_installed($plugin_name) { 
 
 		/* All we do is check the version */ 
-		return $this->get_plugin_version(); 
+		return self::get_plugin_version($plugin_name); 
 
 	} // is_installed
 
@@ -187,11 +187,11 @@ class Plugin {
 
 	/**
 	 * get_plugin_version
-	 * This returns the version of the currently installed plugin
+	 * This returns the version of the specified plugin
 	 */
-	function get_plugin_version() { 
+	public static function get_plugin_version($plugin_name) { 
 
-		$name = Dba::escape('Plugin_' . $this->_plugin->name); 
+		$name = Dba::escape('Plugin_' . $plugin_name); 
 
 		$sql = "SELECT * FROM `update_info` WHERE `key`='$name'"; 
 		$db_results = Dba::query($sql); 
