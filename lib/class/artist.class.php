@@ -212,6 +212,7 @@ class Artist {
 		if ($this->_fake) { return true; } 
 
 	        $this->f_name_link = "<a href=\"" . Config::get('web_path') . "/artists.php?action=show&amp;artist=" . $this->id . "\" title=\"" . $this->full_name . "\">" . $name . "</a>";
+		$this->f_link = Config::get('web_path') . '/artists.php?action=show&amp;artist=' . $this->id; 
 
 		// Get the counts 
 		$this->get_count(); 

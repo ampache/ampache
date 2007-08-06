@@ -66,7 +66,16 @@ class metadata {
 					$data['name']		= $item['ArtistName']; 
 					$data['uid']		= $item['__attributes']['ArtistID']; 
 					$data['mystrands_url']	= $item['URI']; 
-					$data['links']		= "<a target=\"_blank\" href=\"" . $item['URI'] . "\">" . get_user_icon('mystrands','','MyStrands Link') . "</a>"; 
+					$data['links']		= "<a target=\"_blank\" href=\"" . $item['URI'] . "\">" . get_user_icon('mystrands','MyStrands Link') . "</a>"; 
+
+					// Do a search for this artist in our instance
+					$artist_id = Catalog::check_artist($data['name'],1); 
+					if ($artist_id) { 
+						$artist = new Artist($artist_id); 
+						$artist->format(); 
+						$data['links'] 	.= "<a href=\"$artist->f_link\">" . get_user_icon('link','Ampache') . "</a>"; 
+					} 
+
 					$objects[] = Artist::construct_from_array($data); 
 				break;
 			} // end switch on type

@@ -49,7 +49,7 @@ switch ($_REQUEST['action']) {
 	case 'recommend': 
 		switch ($_REQUEST['type']) { 
 			case 'artist':
-				$headers = array('name'=>_('Name'),'links'=>' '); 
+				$headers = array('name'=>_('Name'),'links'=>_('Links')); 
 			break;
 			case 'album': 
 			case 'track': 

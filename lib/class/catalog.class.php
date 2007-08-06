@@ -1640,8 +1640,9 @@ class Catalog {
 	/**
 	 * check_artist
 	 * $artist checks if there then return id else insert and return id
+	 * If readonly is passed then don't create, return false on not found
 	 */
-	public static function check_artist($artist) {
+	public static function check_artist($artist,$readonly='') {
 
 		// Only get the var ones.. less func calls
 		$cache_limit = Config::get('artist_cache_limit');
@@ -1679,7 +1680,7 @@ class Catalog {
 		} //if found
 
 		/* If not found create */
-		else {
+		elseif (!$readonly) {
 
 			$prefix_txt = 'NULL';
 
@@ -1696,6 +1697,10 @@ class Catalog {
 			}
 
 		} // not found
+		// If readonly, and not found return false
+		else { 
+			return false; 
+		} 
 
 		if ($cache_limit) {
 
@@ -1718,7 +1723,7 @@ class Catalog {
 	 * check_album
 	 * Takes $album and checks if there then return id else insert and return id 
 	 */
-	public static function check_album($album,$album_year=0) {
+	public static function check_album($album,$album_year=0,$readonly='') {
 
 		/* Clean up the album name */
 		$album = trim($album);
@@ -1765,7 +1770,7 @@ class Catalog {
 		} //if found
 
 		/* If not found create */
-		else {
+		elseif (!$readonly) {
                         $prefix_txt = 'NULL';
 
                         if ($prefix) {
@@ -1784,6 +1789,10 @@ class Catalog {
 			self::$_art_albums[$album_id] = 1; 
 
 		} //not found
+		// If not readonly and not found
+		else { 
+			return false; 
+		} 
 
                 if ($cache_limit > 0) {
 
