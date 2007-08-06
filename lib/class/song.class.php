@@ -678,9 +678,9 @@ class Song {
 		$this->f_title = truncate_with_ellipsis($this->title,Config::get('ellipse_threshold_title'));
 
 		// Create Links for the different objects 
-		$this->f_link = "<a href=\"" . Config::get('web_path') . "/stream.php?action=single_song&amp;song_id=" . $this->id . "\">$this->f_title</a>";
-		$this->f_album_link = "<a href=\"" . Config::get('web_path') . "/albums.php?action=show&amp;album=" . $this->album . "\">$this->f_album</a>";
-		$this->f_artist_link = "<a href=\"" . Config::get('web_path') . "/artists.php?action=show&amp;artist=" . $this->artist . "\">$this->f_artist</a>";	
+		$this->f_link = "<a href=\"" . Config::get('web_path') . "/stream.php?action=single_song&amp;song_id=" . $this->id . "\"> " . scrub_out($this->f_title) . "</a>";
+		$this->f_album_link = "<a href=\"" . Config::get('web_path') . "/albums.php?action=show&amp;album=" . $this->album . "\"> " . scrub_out($this->f_album) . "</a>";
+		$this->f_artist_link = "<a href=\"" . Config::get('web_path') . "/artists.php?action=show&amp;artist=" . $this->artist . "\"> " . scrub_out($this->f_artist) . "</a>";	
 
 		// Format the Bitrate
 		$this->f_bitrate = intval($this->bitrate/1000) . "-" . strtoupper($this->mode);
