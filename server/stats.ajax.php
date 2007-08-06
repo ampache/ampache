@@ -69,6 +69,30 @@ switch ($_REQUEST['action']) {
 		$results['additional_information'] = ob_get_contents(); 
 		ob_end_clean(); 
 	break;
+	case 'show_check_album_tracks': 
+                ob_start();
+                show_box_top(_('Find Missing Tracks'));
+                echo "Loading...";
+                $ajax_action = Ajax::action('?page=stats&action=check_album_tracks&id=' . $_REQUEST['id'],'show_album_tracks_refresh');                Ajax::run($ajax_action);
+                show_box_bottom();
+                $results['additional_information'] = ob_get_contents();
+                ob_end_clean();
+	break;
+	case 'check_album_tracks': 
+
+		// Set the headers	
+		$headers = array('title'=>_('Title'),'track'=>_('Track'),'artist'=>_('Artist'),'links'=>_('Links')); 
+
+		// Ask the great and wise metadata
+		$objects = metadata::find_missing_tracks($_REQUEST['id']);
+
+		ob_start(); 
+		show_box_top(_('Find Missing Tracks')); 
+		require_once Config::get('prefix') . '/templates/show_objects.inc.php'; 
+		show_box_bottom(); 
+		$results['additional_information'] = ob_get_contents(); 
+		ob_end_clean(); 
+	break;
 	default: 
 		$results['rfc3514'] = '0x1'; 
 	break;

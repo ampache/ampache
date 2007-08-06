@@ -4,6 +4,7 @@
 
 --------------------------------------------------------------------------
   v.3.4-Alpha2 
+  	- Added Find Missing tracks, requires MyStrands
   	- Added ability to show Album art on Browse -> Albums
   	- Added Similar Artists Link, requires MyStrands
   	- Fixed hovering on the static Ratings displays

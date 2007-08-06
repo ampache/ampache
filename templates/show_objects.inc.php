@@ -37,4 +37,11 @@
 	<?php require Config::get('prefix') . '/templates/show_object_row.inc.php'; ?>
 </tr>
 <?php } ?>
+<?php if (!count($objects)) { ?>
+<tr>
+	<td colspan="<?php echo count($headers); ?>">
+	<span class="error"><?php echo _('Not Enough Data'); ?></span>
+	</td>
+</tr>
+<?php } ?>
 </table>

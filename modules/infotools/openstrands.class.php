@@ -66,10 +66,12 @@ class openStrands {
 	 */
 	public function __construct($username,$password) { 
 
+		// Check to see if we've already authenticated
+		if (self::$authenticated) { return true; }  
+		if (!self::$auth_token) { echo 'No Auth Token, quiting'; return false; } 
+
 		// Trust them enough to let them try once
 		self::$authenticated = true; 
-
-		if (!self::$auth_token) { echo 'No Auth Token, quiting'; return false; } 
 
 		// Test login with the provided credientials 
 		$auth_data = $this->user_validate($username,$password);
@@ -596,7 +598,7 @@ class openStrands {
 		$tag 	= $this->_currentTag;
 
 		if (strlen($tag) AND $this->_key >= 0) { 
-			  $this->results[$this->_key][$tag] = trim($cdata);
+			  $this->results[$this->_key][$tag] .= trim($cdata);
 		}
 	
 	

@@ -85,6 +85,48 @@ class metadata {
 
 	} // recommend_similar
 
+	/**
+	 * find_missing_tracks
+	 * This returns an array of song objects using the construct_from_array() that are
+	 * not in the specified album. 
+	 */
+	public static function find_missing_tracks($album_id) { 
+
+		// Build our object
+		$album = new Album($album_id); 
+		$objects = array(); 
+
+                // For now it's only mystrands
+                OpenStrands::set_auth_token(Config::get('mystrands_developer_key'));
+                $openstrands = new OpenStrands($GLOBALS['user']->prefs['mystrands_user'],$GLOBALS['user']->prefs['mystrands_pass']);
+
+		if (!$openstrands) { return false; } 
+
+		// First find the album on mystrands
+		$result = $openstrands->search_albums($album->full_name,'1'); 
+
+		$mystrands_id = $result['0']['__attributes']['AlbumId']; 
+
+		if (!$mystrands_id) { return false; } 
+
+		$tracks = $openstrands->lookup_album_tracks($mystrands_id); 		
+
+		// Recurse the data we've found and check the local album
+		foreach ($tracks as $track) { 
+			if (!$album->has_track($track['TrackName'])) { 
+				$data['title'] 	= $track['TrackName']; 
+				$data['track']	= $track['TrackNumber']; 
+				$data['disc']	= $track['DiscNumber']; 
+				$data['artist']	= $track['ArtistName']; 
+				$data['links']	= "<a target=\"_blank\" href=\"" . $track['URI'] . "\">" . get_user_icon('world_link','MyStrands') . "</a>"; 
+				$objects[] = Album::construct_from_array($data); 
+			}
+		} // end foreach
+
+		return $objects; 
+
+	} // find_missing_tracks
+
 } // metadata
 
 ?>

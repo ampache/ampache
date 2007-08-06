@@ -29,6 +29,7 @@ class Album {
 	/* Variables from DB */
 	public $id;
 	public $name;
+	public $full_name; // Prefix + Name, genereated by format(); 
 	public $year;
 	public $prefix;
 
@@ -48,7 +49,7 @@ class Album {
 	 * pull the album or thumb art by default or
 	 * get any of the counts.
 	 */
-	function __construct($album_id = 0) {
+	public function __construct($album_id='') {
 
 		if (!$album_id) { return false; } 
 
@@ -64,11 +65,30 @@ class Album {
 		} 
 
 		// Little bit of formating here
-		$this->f_name = trim($info['prefix'] . ' ' . $info['name']); 
+		$this->full_name = trim($info['prefix'] . ' ' . $info['name']);
 
 		return true; 
 
 	} //constructor
+
+	/**
+	 * construct_from_array
+	 * This is often used by the metadata class, it fills out an album object from a
+	 * named array, _fake is set to true
+	 */
+	public static function construct_from_array($data) { 
+
+		$album = new Album(0); 
+		foreach ($data as $key=>$value) { 
+			$album->$key = $value; 
+		} 
+
+		// Make sure that we tell em it's fake
+		$album->_fake = true; 
+
+		return $album; 
+
+	} // construct_from_array
 
 	/**
 	 * _get_info
@@ -155,6 +175,23 @@ class Album {
 		return false; 
 
 	} // has_art
+
+	/**
+	 * has_track
+	 * This checks to see if this album has a track of the specified title
+	 */
+	public function has_track($title) { 
+
+		$title = Dba::escape($title); 
+
+		$sql = "SELECT `id` FROM `song` WHERE `album`='$this->id' AND `title`='$title'"; 
+		$db_results = Dba::query($sql); 
+
+		$data = Dba::fetch_assoc($db_results); 
+
+		return $data; 
+
+	} // has_track
 
 	/**
 	 * format
