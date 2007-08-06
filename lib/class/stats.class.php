@@ -179,7 +179,6 @@ class Stats {
 
 		while ($r = Dba::fetch_row($db_results)) { 
 			$object = new $object_name($r['0']); 
-			$object->format(); 
 			$items[] = $object; 
 		} // end while results
 
@@ -187,5 +186,5 @@ class Stats {
 
 	} // get_newest
 
-} //Stats class
+} // Stats class
 ?>

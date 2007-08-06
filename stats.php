@@ -45,47 +45,6 @@ switch ($_REQUEST['action']) {
                 require_once Config::get('prefix') . '/templates/show_user_stats.inc.php';
 	
 	break;
-	//FIXME:: The logic in here should be moved to our metadata class
-	case 'recommend_similar':
-		// For now this is just MyStrands so verify they've filled out stuff
-		if (!$GLOBALS['user']->has_access('25') || !$GLOBALS['user']->prefs['mystrands_pass'] || !$GLOBALS['user']->prefs['mystrands_user']) { 
-			access_denied(); 
-			exit; 
-		} 
-
-		// We're good attempt to dial up MyStrands 
-		OpenStrands::set_auth_token(Config::get('mystrands_developer_key'));  
-		$openstrands = new OpenStrands($GLOBALS['user']->prefs['mystrands_user'],$GLOBALS['user']->prefs['mystrands_pass']); 	
-
-		if (!$openstrands) { 
-			debug_event('openstrands','Unable to authenticate MyStrands user, or authtoken invalid','3'); 
-			Error::add('general','Unable to authenticate MyStrands user, or authtoken invalid'); 
-		} 
-
-		// Do our recommendation
-		switch ($_REQUEST['type']) { 
-			case 'artist': 
-				$artist = new Artist($_REQUEST['id']); 
-				$seed = array('name'=>array($artist->name)); 
-				$results = $openstrands->recommend_artists($seed); 
-			break;
-		} // end switch 
-
-		// Run through what we've found and build out the data
-		foreach ($results as $result) { 
-
-			switch ($_REQUEST['type']) { 
-				case 'artist': 
-					$data['name'] 	= $result['ArtistName']; 
-					$data['f_name_link'] = "<a href=\"" . $result['URI'] . "\">" . $data['name'] . "</a>"; 
-					$object_ids[] = Artist::construct_from_array($data); 	
-				break;
-			} 
-		} // end foreach
-
-		require_once Config::get('prefix') . '/templates/show_artists.inc.php'; 	
-
-	break;
 	/* Show their stats */
 	default: 
 		/* Here's looking at you kid! */

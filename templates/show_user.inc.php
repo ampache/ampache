@@ -36,6 +36,7 @@ $client->format();
 		<?php } else { ?>
 			<i style="color:red;"><?php echo _('User is Offline Now'); ?></i>
 		<?php } ?>
+		
 	</td>
 	<td valign="top">
 		<h2><?php echo _('Active Playlist'); ?></h2>

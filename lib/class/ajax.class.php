@@ -42,8 +42,17 @@ class Ajax {
 	 */
 	public static function observe($source,$method,$action) { 
 
+                $non_quoted = array('document','window');
+
+                if (in_array($source,$non_quoted)) {
+                        $source_txt = $source;
+                }
+                else {
+                        $source_txt = "'$source'";
+                }
+
                 $observe	= "<script type=\"text/javascript\"><!--\n";
-                $observe	.= "\tEvent.observe('$source','$method',function(){" . $action . ";});\n";
+                $observe	.= "\tEvent.observe($source_txt,'$method',function(){" . $action . ";});\n";
                 $observe	.= "--></script>\n";
 
 		return $observe; 
@@ -59,11 +68,20 @@ class Ajax {
 
 		$url = Config::get('ajax_url') . $action; 
 
+                $non_quoted = array('document','window');
+
+                if (in_array($source,$non_quoted)) {
+                        $source_txt = $source;
+                }
+                else {
+                        $source_txt = "'$source'";
+                }
+
 		if ($post) { 
-			$ajax_string = "ajaxPost('$url','$post','$source')"; 
+			$ajax_string = "ajaxPost('$url','$post',$source_txt)"; 
 		}
 		else { 
-			$ajax_string = "ajaxPut('$url','$source')"; 
+			$ajax_string = "ajaxPut('$url',$source_txt)"; 
 		} 
 	
 		return $ajax_string; 
@@ -111,6 +129,18 @@ class Ajax {
 		return $string; 
 
 	} // text
+
+	/**
+	 * run
+	 * This runs the specified action no questions asked
+	 */
+	public static function run($action) { 
+
+		echo "<script type=\"text/javascript\"><!--\n"; 
+		echo "$action"; 
+		echo "\n--></script>"; 
+
+	} // run
 
 } // end Ajax class
 ?>

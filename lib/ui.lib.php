@@ -404,23 +404,6 @@ function show_all_popular() {
 } // show_all_popular
 
 /**
- * 	Show All Recent
- * 	This function shows all of the possible "Newest" tables. The number of newest is pulled from the users
- * 	popular threshold
- *	@package Web Interface
- *	@catagory Display
- *	@author Karl Vollmer
- */
-function show_all_recent($limit='') {
-
-	$artists	= Stats::get_newest('artist',$limit);
-	$albums		= Stats::get_newest('album',$limit);
-
-	require_once Config::get('prefix') . '/templates/show_all_recent.inc.php';
-
-} // show_all_recent
-
-/**
  * show_local_catalog_info
  * Shows the catalog stats
  * @package Web INterface
@@ -968,7 +951,7 @@ function show_user_select($name,$selected='',$style='') {
  * This function requires the top part of the box
  * it takes title as an optional argument
  */
-function show_box_top($title='') { 
+function show_box_top($title='',$class='') { 
 
 	require Config::get('prefix') . '/templates/show_box_top.inc.php';	
 

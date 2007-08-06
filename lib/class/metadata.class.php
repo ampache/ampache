@@ -33,11 +33,48 @@ class metadata {
 	 * constructor
 	 * We don't use this, as its really a static class
 	 */
-	private __construct() { 
+	private function __construct() { 
 
 		// Rien a faire
 
 	} // constructor
+
+	/**
+	 * recommend_similar
+	 * This takes the input and returns an array of objects construct_from_array()'d
+	 */
+	public static function recommend_similar($type,$id,$limit='') { 
+
+		// For now it's only mystrands
+		OpenStrands::set_auth_token(Config::get('mystrands_developer_key')); 
+		$openstrands = new OpenStrands($GLOBALS['user']->prefs['mystrands_user'],$GLOBALS['user']->prefs['mystrands_pass']); 
+
+		// Make sure auth worked
+		if (!$openstrands) { return false; } 
+
+		switch ($type) { 
+			case 'artist': 
+				$artist = new Artist($id); 
+				$seed = array('name'=>array($artist->name)); 
+				$results = $openstrands->recommend_artists($seed,$limit); 
+			break;
+		} 
+
+		foreach ($results as $item) { 
+			switch ($type) { 
+				case 'artist': 
+					$data['name']		= $item['ArtistName']; 
+					$data['uid']		= $item['__attributes']['ArtistID']; 
+					$data['mystrands_url']	= $item['URI']; 
+					$data['links']		= "<a target=\"_blank\" href=\"" . $item['URI'] . "\">" . get_user_icon('mystrands','','MyStrands Link') . "</a>"; 
+					$objects[] = Artist::construct_from_array($data); 
+				break;
+			} // end switch on type
+		} // end foreach 
+
+		return $objects; 
+
+	} // recommend_similar
 
 } // metadata
 

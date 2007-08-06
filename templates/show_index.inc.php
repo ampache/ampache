@@ -47,7 +47,8 @@ if (isset($_REQUEST['xspf']) && isset ($_REQUEST['play_info'])){
         <?php show_local_catalog_info(); ?>
 </div>
 <div id="recent_added">
-	<?php show_box_top(); ?>
-	<?php show_all_recent('5'); ?>
-	<?php show_box_bottom(); ?>
+	<?php 
+		show_box_top(); 
+		show_box_bottom(); 
+	?>
 </div>

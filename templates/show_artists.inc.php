@@ -37,14 +37,8 @@ $web_path = Config::get('web_path');
 <?php 
 /* Foreach through every artist that has been passed to us */
 foreach ($object_ids as $artist_id) { 
-	if (get_class($artist_id) == 'Artist') { 
-		$artist = $artist_id; 
-		$artist->format(); 
-	} 
-	else { 
 		$artist = new Artist($artist_id); 
 		$artist->format(); 
-	} 
 ?>
 <tr id="artist_<?php echo $artist->id; ?>" class="<?php echo flip_class(); ?>">
 	<?php require Config::get('prefix') . '/templates/show_artist_row.inc.php'; ?>

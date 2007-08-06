@@ -25,8 +25,6 @@
 
 require_once '../lib/init.php';
 
-$action = scrub_in($_REQUEST['action']);
-
 /* Set the correct headers */
 header("Content-type: text/xml; charset=" . Config::get('site_charset'));
 header("Content-Disposition: attachment; filename=ajax.xml");
@@ -35,7 +33,20 @@ header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
 header("Cache-Control: no-store, no-cache, must-revalidate");
 header("Pragma: no-cache"); 
 
-switch ($action) { 
+// Set that this is an ajax include
+define('AJAX_INCLUDE','1'); 
+
+switch ($_REQUEST['page']) { 
+	case 'stats': 
+		require_once Config::get('prefix') . '/server/stats.ajax.php'; 
+		exit; 
+	break;
+	default: 
+		// A taste of compatibility
+	break;
+} // end switch on page 
+
+switch ($_REQUEST['action']) { 
 	/* Controls the editing of objects */
 	case 'show_edit_object': 
 		

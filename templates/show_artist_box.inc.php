@@ -21,15 +21,16 @@
 */ 
 $web_path = Config::get('web_path');
 $title = _('Albums by') . " " . $artist->full_name; 
-
-show_box_top(_('Albums by') . ' ' . $artist->f_name);  
+?>
+<?php
+show_box_top(_('Albums by') . ' ' . $artist->f_name,'info-box');  
 if (Config::get('ratings')) { 
 	echo "<div id=\"rating_" . $artist->id . "_artist\" style=\"display:inline;\">";
 	show_rating($artist->id, 'artist'); 
 	echo "</div>";
 } // end if ratings ?>
 <strong><?php echo _('Actions'); ?>:</strong>
-<div style="padding-left:5px;">
+<div id="information_actions">
 <a href="<?php echo $web_path; ?>/artists.php?action=show_all_songs&amp;artist=<?php echo $artist->id; ?>"><?php echo _("Show All Songs By") . " " . $artist->f_name; ?></a><br />
 <span class="text-action"><?php echo Ajax::text('?action=basket&type=artist&id=' . $artist->id,_('Play All Songs By') . ' ' . $artist->f_name,'play_full_artist'); ?></span>
 <span class="text-action"><?php echo Ajax::text('?action=basket&type=artist_random&id=' . $artist->id,_('Play Random Songs By') . ' ' . $artist->f_name,'play_random_artist'); ?></span>
@@ -39,7 +40,12 @@ if (Config::get('ratings')) {
 	<a href="<?php echo $web_path; ?>/artists.php?action=show_similar&amp;artist=<?php echo $artist->id; ?>"><?php echo _("Find duplicate artists"); ?></a><br />
 <?php } ?>
 <?php if (Plugin::is_installed('OpenStrands')) { ?>
-<a href="<?php echo $web_path; ?>/stats.php?action=recommend_similar&amp;type=artist&id=<?php echo $artist->id; ?>"><?php echo _('Recommend Similar'); ?></a><br />
+<span class="text-action"><?php echo Ajax::text('?page=stats&action=show_recommend&type=artist&id=' . $artist->id,_('Recommend Similar'),'artist_recommend_similar'); ?></span>
 <?php } ?>
 </div>
 <?php show_box_bottom(); ?>
+<div id="additional_information">
+&nbsp;
+</div>
+
+

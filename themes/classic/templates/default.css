@@ -353,6 +353,7 @@ h3#content_title span {
 .star-rating li{
         float: right;
 }
+ 
 li.current-rating{
         display: block;
         position: absolute;
@@ -398,13 +399,43 @@ span.four-stars:hover { width: 64px; }
 span.five-stars       { left: 64px; }
 span.five-stars:hover { width: 80px; }
 
+/************************************************/
+/*     Styles for the static star ratings       */
+/************************************************/
+.static-star-rating li span:hover {
+	/* Kill the mouseovers */
+} 
+.static-star-rating li span{
+        position: absolute;
+        display:block;
+        width:16px;
+        height: 15px;
+        text-decoration: none;
+        text-indent: -9000px;
+        z-index: 20;
+}
+.static-star-rating li { 
+	float: right; 
+}
+.static-star-rating { 
+        position: relative;
+        list-style:none;
+        width: 80px;
+        height: 15px;
+        background: url(../../../images/ratings/star_rating.gif) top left repeat-x;
+}
 
 /************************************************/
 /*              Box Related Styles              */
 /************************************************/
 .box { 
 	background: #f7f7f7;
+	clear:both;
 }
+.info-box { 
+	background: #f7f7f7;
+	float:left; 
+} 
 .box-title { 
 	border-bottom: solid 1px #000;
 	font-size: 1.05em;
@@ -420,7 +451,7 @@ span.five-stars:hover { width: 80px; }
 	height:16px;
 }
 .box-left-bottom {
-  background: url(../images/bottomleft.gif) no-repeat;
+	background: url(../images/bottomleft.gif) no-repeat;
 	height:18px;
 }
 .box-left { 
@@ -473,41 +504,6 @@ span.five-stars:hover { width: 80px; }
 	background: #000;
 	color: #fff;
 	border:1px solid #ddd;
-}
-
-
-/************************************************/
-/*            Tabs (for preferences)            */
-/************************************************/
-#tablist {
-        padding: 3px 0;
-        margin: 12px 0 0 0;
-        font: bold 12px Verdana, sans-serif;
-}
-#tablist li {
-        list-style: none;
-        display: inline;
-}
-#tablist li a {
-        padding: 3px 0.5em;
-        margin-left: 3px;
-        border: 1px solid #ccc;
-        border-bottom: none;
-        background: #ddd;
-        text-decoration: none;
-}
-#tablist li a:link { color: #222; }
-#tablist li a:visited { color: #000; }
-#tablist li a:hover {
-        color: #000;
-        background: #bbb;
-        border-color: #000;
-}
-#tablist li a#current {
-        color: #000;
-        background: #bbb;
-        border-color: #000;
-        border-bottom: 1px solid #000;
 }
 
 
@@ -620,6 +616,17 @@ td.user_offline {
 td.user_disabled {
 	background:#ccc;
 }
+
+
+/************************************************/
+/*         Additional Information Boxes         */
+/************************************************/
+#information_actions { 
+	margin-left:5px; 
+} 
+#additional_information { 
+	float:left; 
+} 
 
 
 /************************************************/

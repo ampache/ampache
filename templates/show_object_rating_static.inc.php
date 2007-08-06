@@ -24,7 +24,7 @@ $base_url = Config::get('ajax_url') . '?action=set_rating&amp;rating_type=' . $r
 
 
 //set the background to no stars
-echo "<ul class=\"star-rating\">\n";
+echo "<ul class=\"static-star-rating\">\n";
 
 /* Handle the "Not rated" possibility */
 if ($rating->rating == '-1') {

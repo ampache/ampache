@@ -489,18 +489,6 @@ function get_global_popular($type) {
 
 } // get_global_popular
 
-/** 
- * show_info_box
- * This shows the basic box that popular and newest stuff goes into
- */
-function show_info_box ($title, $type, $items) {
-
-        $web_path = Config::get('web_path');
-        $popular_threshold = Config::get('popular_threshold');
-	require Config::get('prefix') . '/templates/show_box.inc.php';
-
-} // show_info_box
-
 /*!
 	@function get_file_extension
 	@discussion returns all characters after the last "." in $filename

@@ -18,14 +18,23 @@
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
+
+/* 
+ * Variable/Non-DB object display takes headers & objects
+ */
 ?>
-	<span class="box-title"><?php echo $title; ?></span>
-	<ol class="box-list">
-	<?php if (count($items)) { ?>
-	<?php
-		foreach ($items as $item) {
-		    echo "<li>".$item->f_name_link."</li>\n";
-		}
-	?>
-	<?php } else { echo '<li><span class="error">' . _('Not Enough Data') . '</span></li>'; } ?>
-	</ol>
+<table class="table-data" cellspacing="0">
+<tr class="<?php echo flip_class(); ?>">
+<?php foreach ($headers as $header) { ?>
+	<th><?php echo scrub_out($header); ?></th>
+<?php } ?>
+</tr>
+<?php 
+	foreach ($objects as $object) { 
+		$object->format(); 
+?>
+<tr id="object_row_<?php echo $object->uid; ?>" class="<?php echo flip_class(); ?>">
+	<?php require Config::get('prefix') . '/templates/show_object_row.inc.php'; ?>
+</tr>
+<?php } ?>
+</table>

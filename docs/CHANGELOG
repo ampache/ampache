@@ -4,7 +4,9 @@
 
 --------------------------------------------------------------------------
   v.3.4-Alpha2 
-  	- Added MyStrands Plugin
+  	- Added Similar Artists Link, requires MyStrands
+  	- Fixed hovering on the static Ratings displays
+  	- Added MyStrands Plugin, must be enabled under Plugins
   	- Re-enabled / updated Plugin functionality
   	- Fixed CSS (Thx Spocky) 
   	- Added Playlists as a browse type and fixed playback
