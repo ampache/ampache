@@ -634,8 +634,9 @@ td.user_disabled {
 }
 .alphabet { 
 	margin:10px;
+  background:transparent; /* fix ie bug */
 	font-size:10px; 
-	font-weight:normal; 
+	font-weight:normal;
 }
 .alphabet span { 
 	cursor: pointer;
