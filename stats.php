@@ -54,7 +54,7 @@ switch ($_REQUEST['action']) {
 		$favorite_artists	= $working_user->get_favorites('artist');
 		$favorite_albums	= $working_user->get_favorites('album');
 		$favorite_songs		= $working_user->get_favorites('song');
-
+break;
 		require_once Config::get('prefix') . '/templates/show_user_stats.inc.php';
 
 		// Onlu do this is ratings are on 
