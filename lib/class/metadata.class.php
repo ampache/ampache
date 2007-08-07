@@ -94,6 +94,7 @@ class metadata {
 
 		// Build our object
 		$album = new Album($album_id); 
+		$album->format(); 
 		$objects = array(); 
 
                 // For now it's only mystrands
@@ -102,8 +103,16 @@ class metadata {
 
 		if (!$openstrands) { return false; } 
 
+		// Setup the string we're going to pass
+		if ($album->artist_count == '1') { $artist_name = $album->artist_name; } 
+		else { $artist_name = "Various"; } 
+
+		$data[] = array('artist'=>$artist_name,'album'=>$album->full_name); 
+
 		// First find the album on mystrands
-		$result = $openstrands->search_albums($album->full_name,'1'); 
+		$result = $openstrands->match_albums($data); 
+		
+		if (!$result) { return false; } 
 
 		$mystrands_id = $result['0']['__attributes']['AlbumId']; 
 

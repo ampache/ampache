@@ -329,6 +329,94 @@ class openStrands {
 	} // search_tracks
 
 	/**
+	 * match_artists
+	 * This does a best choice match on the artist name(s) passed
+	 */
+	public function match_artists($values) { 
+
+		// If it's not, turn it into one!
+		if (!is_array($values)) { $values = array($values); } 
+
+		foreach ($values as $value) { 
+			$artist_text .= '&name=' . urlencode($value); 
+		} 
+
+		$artist_text = ltrim($artist_text,'&'); 
+		$artist_text = '?' . $artist_text; 
+
+		$xml_doc = self::run_query("/match/artists$artist_text"); 
+
+		// Set the right parent
+		$this->_containerTag = 'SimpleArtist'; 
+
+		$data = $this->run_parse($xml_doc); 
+
+		return $data; 
+
+	} // match_artists
+
+	/**
+	 * match_albums
+	 * This does its best to match on the album name with an attached artist name
+	 * This function expects matches paris album,artist as such
+	 * [0]['artist'] = artist name, [0]['album'] = album name
+	 */
+	public function match_albums($values) { 
+
+		// We're less forgiving here
+		if (!is_array($values)) { return false; } 
+
+		foreach ($values as $value) { 
+			if (!$value['artist'] || !$value['album']) { next; } 
+			$query_text .= '&name=' . urlencode($value['artist']) . '|' . urlencode($value['album']); 
+		} 
+
+		$query_text = ltrim($query_text,'&'); 
+		$query_text = '?' . $query_text; 
+
+		$xml_doc = self::run_query("/match/albums$query_text"); 
+
+		// Set the right parent
+		$this->_containerTag = 'SimpleAlbum';
+
+		$data = $this->run_parse($xml_doc); 
+
+		return $data; 
+
+	} // match_albums
+
+	/**
+	 * match_tracks
+	 * This expects a trifectum of information as such
+	 * [0]['artist'] = artist name
+	 * [0]['album'] = album name
+	 * [0]['track] = track
+	 */
+	public function match_tracks($values) { 
+
+		// We're not very forgiving here
+		if (!is_array($values)) { return false; } 
+
+		foreach ($values as $value) { 
+			if (!$value['artist'] || !$value['album'] || !$value['track']) { next; } 
+			$query_text .= '&name' . urlencode($value['artist']) . '|' . urlencode($value['album']) . '|' . urlencode($value['track']); 
+		} // end foreach
+
+		$query_text = ltrim($query_text,'&'); 
+		$query_text = '?' . $query_text; 
+
+		$xml_doc = self::run_query("/match/tracks$query_text"); 
+
+		// Set up the parent
+		$this->_containerTag = 'SimpleTrack'; 
+
+		$data = $this->run_parse($xml_doc); 
+
+		return $data; 
+
+	} // match_tracks
+
+	/**
 	 * recommend_artists
 	 * This generates recomendations for other artists, takes at least one artist (ID/Name) as
 	 * as seed, filters allowed, this user is used unless another alias is passed
