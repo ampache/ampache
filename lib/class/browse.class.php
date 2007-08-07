@@ -121,17 +121,28 @@ class Browse {
 	 */
 	public static function set_sort($sort) { 
 
-		if ($_SESSION['browse']['type'] == 'song') { 
-			switch ($sort) { 
-				case'title':
-					if ($_SESSION['browse']['sort'][$sort] == 'DESC') { 
-						$_SESSION['browse']['sort'][$sort] = 'ASC'; 
-					}
-					else { 
-						$_SESSION['browse']['sort'][$sort] = 'DESC'; 
-					} 
-				break;
-			} 
+		switch ($_SESSION['browse']['type']) { 
+			case 'song': 
+				$valid_array = array('title','year'); 
+			break;
+			case 'artist': 
+				$valid_array = array('name'); 
+			break;
+			case 'album': 
+				$valid_array = array('name','year'); 
+			break;
+		} // end switch  
+
+		// If it's not in our list, smeg off!
+		if (!in_array($sort,$valid_array)) { 
+			return false; 
+		} 
+			
+		if ($_SESSION['browse']['sort'][$sort] == 'DESC') { 
+				$_SESSION['browse']['sort'][$sort] = 'ASC'; 
+		}
+		else { 
+			$_SESSION['browse']['sort'][$sort] = 'DESC'; 
 		} 
 
 	} // set_sort
@@ -170,6 +181,7 @@ class Browse {
 		// First we need to get the SQL statement we are going to run
 		// This has to run against any possible filters (dependent on type)
 		$sql = self::get_sql(); 
+debug_event('sql',$sql,'1'); 
 		$db_results = Dba::query($sql); 
 
 		$results = array(); 
@@ -223,19 +235,20 @@ class Browse {
 		} // end base sql
 
 		// No sense to go further if we don't have filters
-		if (!is_array($_SESSION['browse']['filter'])) { return $sql; } 
+		if (is_array($_SESSION['browse']['filter'])) { 
 
-		// Foreach the filters and see if any of them can be applied
-		// as part of a where statement in this sql (type dependent)
-		$where_sql = "WHERE 1=1 AND ";
+			// Foreach the filters and see if any of them can be applied
+			// as part of a where statement in this sql (type dependent)
+			$where_sql = "WHERE 1=1 AND ";
 			
-		foreach ($_SESSION['browse']['filter'] as $key=>$value) { 
-			$where_sql .= self::sql_filter($key,$value); 	
-		} // end foreach
+			foreach ($_SESSION['browse']['filter'] as $key=>$value) { 
+				$where_sql .= self::sql_filter($key,$value); 	
+			} // end foreach
 
-		$where_sql = rtrim($where_sql,'AND ');
+			$where_sql = rtrim($where_sql,'AND ');
 
-		$sql .= $where_sql;
+			$sql .= $where_sql;
+		} // if filters
 
 		// Now Add the Order 
 		$order_sql = "ORDER BY "; 	
@@ -351,7 +364,6 @@ class Browse {
 
 		if ($order != 'DESC') { $order == 'ASC'; } 
 
-		
 		switch ($_SESSION['browse']['type']) { 
 			case 'song': 
 				switch($field) { 
@@ -375,6 +387,14 @@ class Browse {
 						$sql = "`album`.`year`"; 
 					break;
 				} // end switch
+			break;
+			case 'artist': 
+				switch ($field) { 
+					case 'name': 
+						$sql = "`artist`.`name`"; 
+					break;
+				} // end switch 
+			break;
 			default: 
 				// Rien a faire
 			break;

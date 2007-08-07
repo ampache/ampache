@@ -4,6 +4,9 @@
 
 --------------------------------------------------------------------------
   v.3.4-Alpha2 
+	- Added default sort order for Song Titles, Albums & Artists
+		has a dbl sort bug, leaving it in until true sorting
+		is in so you can click twice to invert sort
   	- Added Find Missing tracks, requires MyStrands
   	- Added ability to show Album art on Browse -> Albums
   	- Added Similar Artists Link, requires MyStrands
