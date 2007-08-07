@@ -317,7 +317,7 @@ if ($bytesStreamed > $minBytesStreamed) {
 	}
 } 
 else { 
-	debug_event('stream',$bytesStreamed .' of ' . $song->size . ' streamed, less then ' . $minBytesStreamed . ' not collecting stats','5'); 
+	debug_event('stream',$bytesStreamed .' of ' . $song->size . ' streamed, less than ' . $minBytesStreamed . ' not collecting stats','5'); 
 } 
 
 /* Set the Song as Played if it isn't already */
