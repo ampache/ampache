@@ -127,17 +127,23 @@ function return_referer() {
 function show_alphabet_list () {
 
 	$list = array(A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z,1,2,3,4,5,6,7,8,9,"0",_('All'));
-
-	$style_name = "style_" . strtolower($selected);
-	${$style_name} = "style=\"font-weight:bold;\"";
+  
+  $selected = $_SESSION['browse']['filter']['alpha_match'];
 	
+  //$style_name = "style_" . strtolower($selected);
+	//${$style_name} = "style=\"font-weight:bold;\"";
+
 	echo "<div class=\"alphabet\">";
 	foreach ($list as $l) {
 		$style_name = "style_" . strtolower($l);
-		echo "<span class=\"link\" onclick=\"ajaxPut('". Config::get('ajax_url') ."?action=browse&amp;key=alpha_match&amp;value=$l');return true;\">" . 
+		$class = "link";
+		if ($l==$selected) $class .=" active";
+		echo "<span class=\"" . $class . "\" onclick=\"ajaxPut('". Config::get('ajax_url') ."?action=browse&amp;key=alpha_match&amp;value=$l');return true;\">" . 
 			$l . "</span>\n";
+    /* without this, it also works and breaks line when needed only
 		$i++; 
-		if ($i/5 == intval($i/5)) { echo "<br />"; } 
+		if ($i/5 == intval($i/5)) { echo "<br />"; }
+    */ 
 	}
 	echo "</div>";
 

@@ -1,5 +1,5 @@
 <ul class="sb2" id="sb_preferences">
-  <li><?php echo _('Sections'); ?>
+  <li><h4><?php echo _('Sections'); ?></h4>
     <ul class="sb3" id="sb_preferences_sections">
       <li id="sb_preferences_sections_Interface"><a href="<?php echo $web_path; ?>/preferences.php?tab=interface"><?php echo _('Interface'); ?></a></li>
       <li id="sb_preferences_sections_Playlist"><a href="<?php echo $web_path; ?>/preferences.php?tab=playlist"><?php echo _('Playlist'); ?></a></li>
@@ -9,7 +9,7 @@
     </ul>
   </li>
 <?php if ($GLOBALS['user']->has_access('100')) { ?>
-  <li><?php echo _('Server Config'); ?>
+  <li><h4><?php echo _('Server Config'); ?></h4>
     <ul class="sb3" id="sb_preferences_sc">
       <li id="sb_preferences_sc_Interface"><a href="<?php echo $web_path; ?>/preferences.php?action=admin&amp;tab=interface"><?php echo _('Interface'); ?></a></li>
       <li id="sb_preferences_sc_Playlist"><a href="<?php echo $web_path; ?>/preferences.php?action=admin&amp;tab=playlist"><?php echo _('Playlist'); ?></a></li>
@@ -18,7 +18,7 @@
       <li id="sb_preferences_sc_System"><a href="<?php echo $web_path; ?>/preferences.php?action=admin&amp;tab=system"><?php echo _('System'); ?></a></li>
     </ul>
   </li>
-<li><?php echo _('Modules'); ?>
+<li><h4><?php echo _('Modules'); ?></h4>
 	<ul class="sb3" id="sb_Modules">
 	<li id="sb_preferences_mo_localplay"><a href="<?php echo $web_path; ?>/admin/modules.php?action=show_localplay"><?php echo _('Localplay Modules'); ?></a></li>
 	<li id="sb_preferences_mo_plugins"><a href="<?php echo $web_path; ?>/admin/modules.php?action=show_plugins"><?php echo _('Available Plugins'); ?></a></li>

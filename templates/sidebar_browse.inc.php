@@ -1,6 +1,6 @@
 <?php $ajax_info = Config::get('ajax_url'); $web_path = Config::get('web_path'); ?>
 <ul class="sb2" id="sb_browse">
-  <li><?php echo _('Browse By'); ?>
+  <li><h4><?php echo _('Browse By'); ?></h4>
   <?php 
 	  // Build the selected dealie
 	  $text = scrub_in($_REQUEST['action']) . '_ac';
@@ -15,7 +15,7 @@
       <li id="sb_browse_bb_RadioStation"><a href="<?php echo $web_path; ?>/browse.php?action=live_stream"><?php echo _('Radio Stations'); ?></a></li>
     </ul>
   </li>
-  <li><?php echo _('Filters'); ?>
+  <li><h4><?php echo _('Filters'); ?></h4>
     <div class="sb3">
       <?php show_alphabet_list($_REQUEST['alpha_match'],$_REQUEST['action']); ?>
   <!--
@@ -24,10 +24,10 @@
   <input type="checkbox" onclick="ajaxPut('<?php echo $ajax_info; ?>?action=browse&amp;key=rated&amp;value=1');return true;" value="1" />
   	<?php echo _('Rated'); ?><br />
   -->
-      <input id="unplayedCB" type="checkbox" <?php echo $string = Browse::get_filter('unplayed') ? 'checked="checked"' : ''; ?> />
+      <input id="unplayedCB" type="checkbox" <?php echo $string = Browse::get_filter('unplayed') ? 'checked="checked"' : ''; ?>/>
   	  <label id="unplayedLabel" for="unplayedCB"><?php echo _('Unplayed'); ?></label><br />
 	 <?php echo Ajax::observe('unplayedCB','click',Ajax::action('?page=browse&action=browse&key=unplayed&value=1','')); ?>
-      <input id="show_artCB" type="checkbox" <?php echo $string = Browse::get_filter('show_art') ? 'checked="checked"' : ''; ?> />
+      <input id="show_artCB" type="checkbox" <?php echo $string = Browse::get_filter('show_art') ? 'checked="checked"' : ''; ?>/>
       	  <label id="show_artLabel" for="show_artCB"><?php echo _('Show Art'); ?></label><br />
 	<?php echo Ajax::observe('show_artCB','click',Ajax::action('?page=browse&action=browse&key=show_art&value=1','')); ?>
     </div>
