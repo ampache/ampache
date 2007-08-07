@@ -51,9 +51,9 @@ class Ajax {
                         $source_txt = "'$source'";
                 }
 
-                $observe	= "\n <script type=\"text/javascript\"><!--\n";
-                $observe	.= "\tEvent.observe($source_txt,'$method',function(){" . $action . ";});\n";
-                $observe	.= "--></script>\n";
+                $observe	= "<script type=\"text/javascript\">";
+                $observe	.= "Event.observe($source_txt,'$method',function(){" . $action . ";});";
+                $observe	.= "</script>";
 
 		return $observe; 
 
