@@ -112,20 +112,22 @@ input {
 }
 .unselected_button {
 }
+#sb_Subsearch input{ margin:0; padding:0;}
 .smallbutton {
-	border:0;
+  border-top:1px solid #f0f0f0;
+  border-left:1px solid #f0f0f0;
+  border-bottom:1px solid #a0a0a0;
+  border-right:1px solid #a0a0a0;
 	padding: 0 1px;
+	margin:0;
 	font-size: 11px;
 	cursor: pointer;
+  font-weight:bold;
+  background: #d0d0d0;
 }
 a.smallbutton { 
-	border:0; 
-	font-size: 11px; 
-	cursor: pointer; 
-	padding: 2px; 
-	font-weight:bold;
-	background: #d0d0d0; 
-	text-decoration:none; 
+	text-decoration:none;
+	padding:1px 2px;
 } 
 
 
@@ -228,13 +230,14 @@ h3#content_title span {
 #sidebar-tabs li.sb1 {
   float: left;
 	padding:2px;
-  background: #c0c0c0; 
+  background: #c0c0c0 ; 
 }
 #sidebar-tabs li.active { 
-	background: #fff; 
+	background: #fff url(../images/top.gif) repeat-x 0 0; 
+	margin-top:8px;
 } 
 #sidebar-tabs li.active img{ 
-	margin-top:12px;position:relative;z-index:2;
+	margin-top:4px;position:relative;z-index:2;
   /*position:absolute;left:10px;top:5px;*/
 } 
 
