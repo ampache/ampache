@@ -105,11 +105,14 @@ function access_denied() {
 function return_referer() {
 
 	$referer = $_SERVER['HTTP_REFERER'];
-
-	$file = basename($referer);
-	
-	/* Strip off the filename */
-	$referer = substr($referer,0,strlen($referer)-strlen($file));
+    if (substr($referer, -1)=='/'){
+    	$file = 'index.php';
+    }
+    else {
+    	$file = basename($referer);
+		/* Strip off the filename */	
+    	$referer = substr($referer,0,strlen($referer)-strlen($file));  
+    }
 	
 	if (substr($referer,strlen($referer)-6,6) == 'admin/') { 
 		$file = 'admin/' . $file;
