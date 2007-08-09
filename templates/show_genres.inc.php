@@ -25,9 +25,9 @@
  */
 ?>
 <table class="tabledata" cellspacing="0" cellpadding="0" border="0">
-<tr class="table-header" align="center">
+<tr>
 	<td colspan="5">
-		<?php if ($view->offset_limit) { require (conf('prefix') . "/templates/list_header.inc"); } ?>
+		<?php require Config::get('prefix') . '/templates/list_header.inc.php' ?>
 	</td>
 </tr>
 <tr class="table-header">
@@ -61,9 +61,9 @@ foreach ($object_ids as $genre_id) {
 		</td>
 	</tr>
 <?php } // end foreach genres ?>
-<tr class="even" align="center">
+<tr>
 	<td colspan="5">
-		<?php if ($view->offset_limit) { require (conf('prefix') . "/templates/list_header.inc"); } ?>
+		<?php require Config::get('prefix') . '/templates/list_header.inc.php' ?>
 	</td>
 </tr>
 </table>

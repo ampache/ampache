@@ -118,7 +118,7 @@ class metadata {
 
 		if (!$mystrands_id) { return false; } 
 
-		$tracks = $openstrands->lookup_album_tracks($mystrands_id); 		
+		$tracks = $openstrands->lookup_album_tracks($mystrands_id,Openstrands::$alias); 		
 
 		// Recurse the data we've found and check the local album
 		foreach ($tracks as $track) { 
@@ -128,6 +128,10 @@ class metadata {
 				$data['disc']	= $track['DiscNumber']; 
 				$data['artist']	= $track['ArtistName']; 
 				$data['links']	= "<a target=\"_blank\" href=\"" . $track['URI'] . "\">" . get_user_icon('world_link','MyStrands') . "</a>"; 
+				// If we've got a purchase URL
+				if ($track['UserPurchaseURI']) { 
+					$data['links'] .= "<a target=\"_blank\" href=\"" . $track['UserPurchaseURI'] . "\">" . get_user_icon('money',_('Buy Track from MyStrands')) . "</a>"; 
+				} 
 				$objects[] = Album::construct_from_array($data); 
 			}
 		} // end foreach

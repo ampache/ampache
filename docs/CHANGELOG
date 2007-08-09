@@ -4,6 +4,11 @@
 
 --------------------------------------------------------------------------
   v.3.4-Alpha2 
+  	- Added 'Buy This Track' link on Find Missing Tracks if a purchase
+		url is given in the returned data
+  	- Reduced # of pages at any one point on browse pages and tweaked
+		their display, and fixed the bottom paging stuff
+  	- Massive improvement to sidebar (Thx Spocky) 
 	- Added default sort order for Song Titles, Albums & Artists
 		has a dbl sort bug, leaving it in until true sorting
 		is in so you can click twice to invert sort

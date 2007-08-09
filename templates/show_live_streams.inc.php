@@ -22,9 +22,9 @@ $web_path = Config::get('web_path');
 
 ?>
 <table class="tabledata" cellspacing="0" cellpadding="0" border="0">
-<tr class="table-header" align="center">
-	<td colspan="5">
-	<?php if ($GLOBALS['view']->offset_limit) { require Config::get('prefix') . '/templates/list_header.inc'; } ?>
+<tr>
+	<td colspan="6">
+	<?php require Config::get('prefix') . '/templates/list_header.inc.php'; ?>
 	</td>
 </tr>
 <tr class="table-header">
@@ -44,9 +44,9 @@ foreach ($object_ids as $radio_id) {
 	<?php require Config::get('prefix') . '/templates/show_live_stream_row.inc.php'; ?>
 </tr>
 <?php } //end foreach ($artists as $artist) ?>
-<tr class="even" align="center">
-	<td colspan="4">
-	<?php if ($view->offset_limit) { require (conf('prefix') . "/templates/list_header.inc"); } ?>
+<tr>
+	<td colspan="6">
+	<?php require Config::Get('prefix') . '/templates/list_header.inc.php'; ?>
 	</td>
 </tr>
 </table>

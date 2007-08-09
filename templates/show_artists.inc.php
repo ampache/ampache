@@ -22,7 +22,7 @@ $web_path = Config::get('web_path');
 
 ?>
 <table class="tabledata" cellspacing="0" cellpadding="0" border="0">
-<tr class="table-header" align="center">
+<tr>
 	<td colspan="5">
 	<?php require Config::get('prefix') . '/templates/list_header.inc.php'; ?>
 	</td>
@@ -52,7 +52,7 @@ foreach ($object_ids as $artist_id) {
 	<td><?php echo _('Action'); ?></td>
 
 </tr>
-<tr class="table-header" align="center">
+<tr>
 	<td colspan="5">
 	<?php require Config::get('prefix') . '/templates/list_header.inc.php'; ?>
 	</td>

@@ -21,6 +21,11 @@
 */
 ?>
 <table class="tabledata" cellspacing="0" cellpadding="0" border="0"> <!-- Playlist Table -->
+<tr>
+        <td colspan="5">
+                <?php require Config::get('prefix') . '/templates/list_header.inc.php' ?>
+        </td>
+</tr>
 <tr class="table-header">
         <th>&nbsp;</th>
 	<th><?php echo _('Playlist Name'); ?></th>
@@ -38,4 +43,9 @@ foreach ($object_ids as $playlist_id) {
 	<?php require Config::get('prefix') . '/templates/show_playlist_row.inc.php'; ?> 
 </tr>
 <?php } // end foreach ($playlists as $playlist) ?>
+<tr>
+        <td colspan="5">
+                <?php require Config::get('prefix') . '/templates/list_header.inc.php' ?>
+        </td>
+</tr>
 </table>

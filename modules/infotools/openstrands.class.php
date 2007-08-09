@@ -163,8 +163,10 @@ class openStrands {
 	 * lookup_albums
 	 * This returns the data for a given mystrands album (based on ID)
 	 * If it's an array of ids pass as [] = ID, [] = ID
+	 * You can optionally pass an alias to this, if you do you can get
+	 * the 'buy' links as UserPurchaseURI
 	 */
-	public function lookup_albums($ids) { 
+	public function lookup_albums($ids,$alias='') { 
 
 		// This allows multiple albums in a single query, 
 		// so build it accordingly
@@ -177,6 +179,11 @@ class openStrands {
 		} 
 		else { 
 			$string = '?id=' . intval($ids); 
+		} 
+
+		// If they have passed an alias
+		if ($alias) { 
+			$string .= '&alias=' . urlencode($alias); 
 		} 
 
 		$xml_doc = self::run_query("/lookup/albums$string"); 
@@ -194,8 +201,10 @@ class openStrands {
 	 * lookup_tracks
 	 * This returns the data for a given mystrands track (based on ID)
 	 * If it's an array of ids pass as [] = ID, [] = ID
+	 * This can take an optional alias, if passed UserPurchaseURI will
+	 * be returned
 	 */
-	public function lookup_tracks($ids) { 
+	public function lookup_tracks($ids,$alias='') { 
 
 		// This allows for multiple entires, so build accordingly
 		if (is_array($ids)) { 
@@ -207,6 +216,11 @@ class openStrands {
 		} // end if array
 		else { 
 			$string = '?id=' . intval($ids); 
+		} 
+
+		// If they have passed an alias
+		if ($alias) { 
+			$string .= '&alias=' . urlencode($alias); 
 		} 
 
 		$xml_doc = self::run_query("/lookup/tracks$string"); 
@@ -224,11 +238,15 @@ class openStrands {
 	 * lookup_album_tracks
 	 * This takes a album ID and then returns the track list for it
 	 */
-	public function lookup_album_tracks($mystrands_album_id) { 
+	public function lookup_album_tracks($mystrands_album_id,$alias='') { 
 
 		$mystrands_album_id = intval($mystrands_album_id); 
 
-		$xml_doc = self::run_query("/lookup/album/tracks?id=$mystrands_album_id"); 
+		if ($alias) { 
+			$alias_txt = '&alias=' . urlencode($alias); 
+		} 
+
+		$xml_doc = self::run_query("/lookup/album/tracks?id=$mystrands_album_id$alias_txt"); 
 		
 		// Set the right parent
 		$this->_containerTag = 'AlbumTrack'; 
@@ -608,6 +626,7 @@ class openStrands {
 
 		// Build the URL
 		$url = self::$base_url . $action . '&subscriberId=' . self::$auth_token; 
+		
 		$contents = file_get_contents($url); 
 
 		return $contents; 

@@ -24,7 +24,7 @@ $web_path = Config::get('web_path');
 $ajax_url = Config::get('ajax_url'); 
 ?>
 <table class="tabledata" cellspacing="0" cellpadding="0">
-<tr class="table-header" align="center">
+<tr>
 	<td colspan="8">
 	<?php require Config::get('prefix') . '/templates/list_header.inc.php'; ?>
 	</td>
@@ -50,7 +50,7 @@ $ajax_url = Config::get('ajax_url');
 	<?php require Config::get('prefix') . '/templates/show_song_row.inc.php'; ?> 
 </tr>
 <?php } ?>
-<tr class="table-header" align="center">
+<tr>
 	<td colspan="8">
 	<?php require Config::get('prefix') . '/templates/list_header.inc.php'; ?>
 	</td>

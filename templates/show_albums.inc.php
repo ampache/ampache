@@ -22,7 +22,7 @@ $web_path = Config::get('web_path');
 $ajax_url = Config::get('ajax_url'); 
 ?>
 <table class="tabledata" cellspacing="0" cellpadding="0" border="0">
-<tr class="table-header">
+<tr>
 	<td colspan="7">
 	<?php require Config::get('prefix') . '/templates/list_header.inc.php'; ?>
 	</td>
@@ -48,7 +48,7 @@ $ajax_url = Config::get('ajax_url');
 	<?php require Config::get('prefix') . '/templates/show_album_row.inc.php'; ?> 
 </tr>
 <?php } //end foreach ($albums as $album) ?>
-<tr class="table-header">
+<tr>
 	<td colspan="7">
 	<?php require Config::get('prefix') . '/templates/list_header.inc.php'; ?>
 	</td>
