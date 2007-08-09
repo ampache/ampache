@@ -308,6 +308,7 @@ while (!feof($fp) && (connection_status() == 0)) {
 // Make sure that a good chunk of the song has been played
 if ($bytesStreamed > $minBytesStreamed) {
 	debug_event('Stats','Registering stats for ' . $song->title,'5'); 
+	
         $user->update_stats($song->id);
 	/* If this is a voting tmp playlist remove the entry */
 	if (is_object($tmp_playlist)) { 
@@ -315,7 +316,7 @@ if ($bytesStreamed > $minBytesStreamed) {
 			$tmp_playlist->delete_track($song_id);
 		}
 	}
-} 
+} // if enough bytes are streamed
 else { 
 	debug_event('stream',$bytesStreamed .' of ' . $song->size . ' streamed, less than ' . $minBytesStreamed . ' not collecting stats','5'); 
 } 

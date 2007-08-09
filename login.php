@@ -104,10 +104,13 @@ if ($_POST['username'] && $_POST['password']) {
 
 /* If the authentication was a success */
 if ($auth['success']) {
-    // $auth->info are the fields specified in the config file
-    //   to retrieve for each user
-    vauth_session_create($auth);
+	// $auth->info are the fields specified in the config file
+	//   to retrieve for each user
+	vauth_session_create($auth);
 	
+	// Generate the user we need for a few things
+	$user = User::get_from_username($username);
+
 	//
 	// Not sure if it was me or php tripping out,
 	//   but naming this 'user' didn't work at all
@@ -118,10 +121,23 @@ if ($auth['success']) {
 	// Record the IP of this person!
 	// 
 	if (Config::get('track_user_ip')) { 
-		$user = User::get_from_username($username);
 		$user->insert_ip_history();	
-		unset($user);
 	}
+
+	// Reload the Preferences from the database
+	init_preferences();
+	
+	// Do the handshake with LastFM if they are configured as such to let it know we might submit some stuff soon
+	if ($user->prefs['lastfm_user'] AND $user->prefs['lastfm_pass']) { 
+		$lastfm = new scrobbler($user->prefs['lastfm_user'],$user->prefs['lastfm_pass']);
+		
+		/* Attempt handshake */
+		$handshake = $lastfm->handshake();
+		if (!$handshake) { 
+			debug_event('LastFM','Handshake Failed: ' . $lastfm->error_msg,'3'); 
+		} 
+	}  // if LastFM
+
 
 	/* Make sure they are actually trying to get to this site and don't try to redirect them back into 
 	 * an admin section

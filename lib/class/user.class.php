@@ -573,30 +573,27 @@ class User {
 		 */
                 if (!empty($this->prefs['lastfm_user']) AND !empty($this->prefs['lastfm_pass'])) { 
                         $song_info->format();
-                        $lastfm = new scrobbler($this->prefs['lastfm_user'],$this->prefs['lastfm_pass']);                       
-                        /* Attempt handshake */
-			$handshake = $lastfm->handshake(); 
 
-			/* We failed, try again */			
-			if (!$handshake) { sleep(1); $handshake = $lastfm->handshake(); } 
+			// We're also going to need the session here
+			$data = $this->get_newest_session(); 
+                        
+			$lastfm = new scrobbler($this->prefs['lastfm_user'],$this->prefs['lastfm_pass']);                       
+                        $lastfm->submit_host = $data['state']['lastfm']['submit_host']; 
+			$lastfm->submit_port = $data['state']['lastfm']['submit_port']; 
+			$lastfm->submit_url  = $data['state']['lastfm']['submit_url']; 
 
-                        if ($handshake) { 
-                                if (!$lastfm->queue_track($song_info->f_artist_full,$song_info->f_album_full,$song_info->title,time(),$song_info->time)) { 
-					debug_event('LastFM','Error: Queue Failed: ' . $lastfm->error_msg,'3');
-				}
+                        if (!$lastfm->queue_track($song_info->f_artist_full,$song_info->f_album_full,$song_info->title,time(),$song_info->time)) { 
+				debug_event('LastFM','Error: Queue Failed: ' . $lastfm->error_msg,'3');
+			}
 
-				$submit = $lastfm->submit_tracks(); 
+			$submit = $lastfm->submit_tracks(); 
 	
-				/* Try again if it fails */
-				if (!$submit) { sleep(1); $submit = $lastfm->submit_tracks(); } 
+			/* Try again if it fails */
+			if (!$submit) { sleep(1); $submit = $lastfm->submit_tracks(); } 
 
-				if (!$submit) { 
-					debug_event('LastFM','Error Submit Failed: ' . $lastfm->error_msg,'3'); 
-				}
-                        } // if handshake
-                        else { 
-                                debug_event('LastFM','Error: Handshake failed with LastFM: ' . $lastfm->error_msg,'3');
-                        }
+			if (!$submit) { 
+				debug_event('LastFM','Error Submit Failed: ' . $lastfm->error_msg,'3'); 
+			}
                 } // record to LastFM
 	} // update_stats
 
@@ -1121,6 +1118,27 @@ class User {
 		return true; 
 
 	} // rebuild_all_preferences
+
+	/**
+	 * get_newest_session
+	 * This will find the latest active session for this user and return an array from the serialized value
+	 */
+	public function get_newest_session() { 
+
+		$username = Dba::escape($this->username); 
+		$time = time(); 
+
+		$sql = "SELECT `value` FROM `session` WHERE `username`='$username' AND `expire` > '$time' ORDER BY `expire` DESC"; 
+		$db_results = Dba::query($sql);
+
+		$row = Dba::fetch_assoc($db_results); 
+		$string = trim($row['value']);
+
+		$value = unseralize($string); 
+
+		return $value; 
+
+	} // get_newest_session
 	
 } //end user class
 

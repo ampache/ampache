@@ -48,7 +48,10 @@ if (isset($_REQUEST['xspf']) && isset ($_REQUEST['play_info'])){
 </div>
 <div id="recent_added">
 	<?php 
+		$objects = Stats::get_newest('album'); 
+		$headers = array('f_link'=>_('Newest Albums')); 
 		show_box_top(); 
+		require_once Config::get('prefix') . '/templates/show_objects.inc.php';
 		show_box_bottom(); 
 	?>
 </div>

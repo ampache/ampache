@@ -42,6 +42,10 @@ class scrobbler {
                 $this->challenge = '';
                 $this->queued_tracks = array();
 
+		$this->submit_host = $_SESSION['state']['lastfm']['submit_host'];
+		$this->submit_port = $_SESSION['state']['lastfm']['submit_port'];
+		$this->submit_url = $_SESSION['state']['lastfm']['submit_url'];
+
         } // scrobbler
 
         /**
@@ -77,7 +81,7 @@ class scrobbler {
 
                 $username = rawurlencode($this->username);
 		
-		$get_string = "GET /?hs=true&p=1.1&c=m3a&v=0.1&u=$username HTTP/1.1\r\n";
+		$get_string = "GET /?hs=true&p=1.1&c=apa&v=0.1&u=$username HTTP/1.1\r\n";
                 
 		fwrite($as_socket, $get_string);
                 fwrite($as_socket, "Host: post.audioscrobbler.com\r\n");
@@ -108,9 +112,9 @@ class scrobbler {
                 }
 
                 if(preg_match('/http:\/\/(.*):(\d+)(.*)/', $response[2], $matches)) {
-                        $this->submit_host = $matches[1];
-                        $this->submit_port = $matches[2];
-                        $this->submit_url = $matches[3];
+                        $_SESSION['state']['lastfm']['submit_host'] = $matches[1];
+                        $_SESSION['state']['lastfm']['submit_port'] = $matches[2];
+                        $_SESSION['state']['lastfm']['submit_url'] = $matches[3];
                 } else {
                         $this->error_msg = 'Invalid POST URL returned, unable to continue';
                         return false;
