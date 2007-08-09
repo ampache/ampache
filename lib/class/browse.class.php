@@ -181,7 +181,7 @@ class Browse {
 		// First we need to get the SQL statement we are going to run
 		// This has to run against any possible filters (dependent on type)
 		$sql = self::get_sql(); 
-debug_event('sql',$sql,'1'); 
+		
 		$db_results = Dba::query($sql); 
 
 		$results = array(); 
@@ -422,7 +422,9 @@ debug_event('sql',$sql,'1');
 		// Limit is based on the users preferences
 		$limit = $GLOBALS['user']->prefs['offset_limit'] ? $GLOBALS['user']->prefs['offset_limit'] : '25'; 
 
-		$object_ids = array_slice($object_ids,self::$start,$limit); 
+		if (count($object_ids) > $start) { 
+			$object_ids = array_slice($object_ids,self::$start,$limit); 
+		} 
 
 		switch ($_SESSION['browse']['type']) { 
 			case 'song': 

@@ -171,9 +171,9 @@ function search_song($data,$operator,$method,$limit) {
 				$where_sql .= " song.file $value_string $operator";
 			break;
 			case 'comment':
-				$join_sql  .= 'song.id=song_ext_data.song_id AND ';
-				$table_sql .= 'song_ext_data,';
-				$where_sql .= " song_ext_data.comment $value_string $operator";
+				$join_sql  .= 'song.id=song_data.song_id AND ';
+				$table_sql .= 'song_data,';
+				$where_sql .= " song_data.comment $value_string $operator";
 			break;
 			case 'played':
 				/* This is a 0/1 value so bool it */
@@ -186,11 +186,11 @@ function search_song($data,$operator,$method,$limit) {
 			break;
 			case 'rating':
 				$value = intval($value);
-				$select_sql .= "SUM(ratings.user_rating)/(SELECT COUNT(song.id) FROM song,ratings WHERE ratings.object_id=song.id AND ratings.object_type='song' AND ratings.user_rating >= '$value') AS avgrating,";
-				$group_sql .= " ratings.user_rating,";
-				$where_sql .= " (ratings.user_rating >= '$value' AND ratings.object_type='song')";
-				$table_sql .= "ratings,";
-				$join_sql  .= "ratings.object_id=song.id AND";
+				$select_sql .= "SUM(rating.rating)/(SELECT COUNT(song.id) FROM song,rating WHERE rating.object_id=song.id AND rating.object_type='song' AND rating.rating >= '$value') AS avgrating,";
+				$group_sql .= " rating.rating,";
+				$where_sql .= " (rating.rating >= '$value' AND rating.object_type='song')";
+				$table_sql .= "rating,";
+				$join_sql  .= "rating.object_id=song.id AND";
 				$limit_sql .= " ORDER BY avgrating DESC";
 			default:
 				// Notzing!

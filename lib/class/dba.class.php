@@ -87,6 +87,7 @@ class Dba {
 		$result = mysql_fetch_assoc($resource); 
 
 		if (!$result) { 
+//			debug_event('fetch_assoc',self::$_sql,'1'); 
 			return array(); 
 		} 
 
