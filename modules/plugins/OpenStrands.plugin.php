@@ -45,14 +45,8 @@ class AmpacheOpenStrands {
 	 */
 	public function install() { 
 
-		/* We need to insert the new preferences */
-		$sql = "INSERT INTO preference (`name`,`value`,`description`,`level`,`type`,`catagory`) " . 
-			"VALUES ('mystrands_user',' ','MyStrands Username','25','string','options')";
-		$db_results = Dba::query($sql);
-
-		$sql = "INSERT INTO preference (`name`,`value`,`description`,`level`,`type`,`catagory`) " . 
-			"VALUES ('mystrands_pass',' ','MyStrands Password','25','string','options')";
-		$db_results = Dba::query($sql);
+		Preference::insert('mystrands_user','MyStrands Login',' ','25','string','options'); 
+		Preference::insert('mystrands_pass','MyStrands Password',' ','25','string','options'); 
 
 	} // install
 

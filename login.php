@@ -137,16 +137,11 @@ if ($auth['success']) {
 			debug_event('LastFM','Handshake Failed: ' . $lastfm->error_msg,'3'); 
 		} 
 
-		// Get the preference IDs
-		$port_id	= get_preference_id('lastfm_port'); 
-		$url_id		= get_preference_id('lastfm_url'); 
-		$host_id	= get_preference_id('lastfm_host'); 
-		$challenge_id	= get_preference_id('lastfm_challenge'); 
-		update_preference($user->id,'lastfm_port',$port_id,$handshake['submit_port']); 
-		update_preference($user->id,'lastfm_host',$host_id,$handshake['submit_host']); 
-		update_preference($user->id,'lastfm_url',$url_id,$handshake['submit_url']); 
-		update_preference($user->id,'lastfm_challenge',$challenge_id,$handshake['challenge']); 
-
+		// Update the preferences
+		Preference::update('lastfm_port',$user->id,$handshake['submit_port']); 
+		Preference::update('lastfm_host',$user->id,$handshake['submit_host']); 
+		Preference::update('lastfm_url',$user->id,$handshake['submit_url']); 
+		Preference::update('lastfm_challenge',$challenge_id,$handshake['challenge']); 
 
 	}  // if LastFM
 

@@ -45,30 +45,12 @@ class AmpacheLastfm {
 	 */
 	public function install() { 
 
-		/* We need to insert the new preferences */
-		$sql = "INSERT INTO preference (`name`,`value`,`description`,`level`,`type`,`catagory`) " . 
-			"VALUES ('lastfm_user',' ','Last.FM Username','25','string','options')";
-		$db_results = Dba::query($sql);
-
-		$sql = "INSERT INTO preference (`name`,`value`,`description`,`level`,`type`,`catagory`) " . 
-			"VALUES ('lastfm_pass',' ','Last.FM Password','25','string','options')";
-		$db_results = Dba::query($sql);
-
-		$sql = "INSERT INTO preference (`name`,`value`,`description`,`level`,`type`,`catagory`) " . 
-			"VALUES ('lastfm_port',' ','Last.FM Submission port','5','string','internal')"; 
-		$db_results = Dba::query($sql); 
-
-		$sql = "INSERT INTO preference (`name`,`value`,`description`,`level`,`type`,`catagory`) " . 
-			"VALUES ('lastfm_host',' ','Last.FM Submission host','5','string','internal')"; 
-		$db_results = Dba::query($sql); 
-
-		$sql = "INSERT INTO preference (`name`,`value`,`description`,`level`,`type`,`catagory`) " . 
-			"VALUES ('lastfm_url',' ','Last.FM Submission url','5','string','internal')"; 
-		$db_results = Dba::query($sql); 
-
-		$sql = "INSERT INTO preference (`name`,`value`,`description`,`level`,`type`,`catagory`) " . 
-			"VALUES ('lastfm_challenge',' ','Last.FM Submission Challenge','5','string','internal')"; 
-		$db_results = Dba::query($sql); 
+		Preference::insert('lastfm_user','Last.FM Username',' ','25','string','options'); 
+		Preference::insert('lastfm_pass','Last.FM Password',' ','25','string','options'); 
+		Preference::insert('lastfm_port','Last.FM Submit Port',' ','25','string','internal'); 
+		Preference::insert('lastfm_host','Last.FM Submit Host',' ','25','string','internal'); 
+		Preference::insert('lastfm_url','Last.FM Submit URL',' ','25','string','internal'); 
+		Preference::insert('lastfm_challenge','Last.FM Submit Challenge',' ','25','string','internal'); 
 
 	} // install
 
