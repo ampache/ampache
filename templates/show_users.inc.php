@@ -25,7 +25,7 @@ $web_path = Config::get('web_path');
 <table class="tabledata" cellpadding="0" cellspacing="0" border="0">
 <tr class="table-header" align="center">
         <td colspan="11">
-        <?php  if ($view->offset_limit) { require Config::get('prefix') . '/templates/list_header.inc'; } ?>
+        <?php require Config::get('prefix') . '/templates/list_header.inc.php'; ?>
         </td>
 </tr>
 <tr class="table-header">
@@ -86,13 +86,9 @@ foreach ($object_ids as $user_id) {
 		<a href="<?php echo $web_path; ?>/admin/users.php?action=show_edit&amp;user_id=<?php echo $client->id; ?>">
 			<?php echo get_user_icon('edit'); ?>
 		</a>
-<!--		<a href="<?php echo $web_path; ?>/preferences.php?action=user&amp;user_id=<?php echo $client->id; ?>">
-			<?php echo get_user_icon('preferences'); ?>
-		</a>
--->
 	<?php
 	//FIXME: Fix this for the extra permission levels
-	if ($working_user->disabled == '1') { 
+	if ($client->disabled == '1') { 
 		echo "<a href=\"".$web_path."/admin/users.php?action=enable&amp;user_id=$client->id\">" . get_user_icon('enable') . "</a>";
 	}
 	else {

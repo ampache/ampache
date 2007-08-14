@@ -66,6 +66,10 @@ class AmpacheLastfm {
 			"VALUES ('lastfm_url',' ','Last.FM Submission url','5','string','internal')"; 
 		$db_results = Dba::query($sql); 
 
+		$sql = "INSERT INTO preference (`name`,`value`,`description`,`level`,`type`,`catagory`) " . 
+			"VALUES ('lastfm_challenge',' ','Last.FM Submission Challenge','5','string','internal')"; 
+		$db_results = Dba::query($sql); 
+
 	} // install
 
 	/**
@@ -77,7 +81,7 @@ class AmpacheLastfm {
 
 		/* We need to remove the preivously added preferences */
 		$sql = "DELETE FROM `preference` WHERE `name`='lastfm_pass' OR `name`='lastfm_user' " . 
-			"OR `name`='lastfm_url' OR `name`='lastfm_host' OR `name`='lastfm_port'"; 
+			"OR `name`='lastfm_url' OR `name`='lastfm_host' OR `name`='lastfm_port' OR `name`='lastfm_challenge'"; 
 		$db_results = Dba::query($sql);
 
 	} // uninstall

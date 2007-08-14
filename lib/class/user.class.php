@@ -512,10 +512,10 @@ class User {
  	 * enable
 	 * this enables the current user
 	 */
-	function enable() { 
+	public function enable() { 
 
 		$sql = "UPDATE `user` SET `disabled`='0' WHERE id='" . $this->id . "'";
-		$db_results = mysql_query($sql,dbh()); 
+		$db_results = Dba::query($sql); 
 
 		return true; 
 
@@ -574,11 +574,11 @@ class User {
                 if (!empty($this->prefs['lastfm_user']) AND !empty($this->prefs['lastfm_pass'])) { 
                         $song_info->format();
 
-
 			$lastfm = new scrobbler($this->prefs['lastfm_user'],$this->prefs['lastfm_pass']);                       
-                        $lastfm->submit_host = $this->prefs['lastfm_host']; 
-			$lastfm->submit_port = $this->prefs['lastfm_port'];
-			$lastfm->submit_url  = $this->prefs['lastfm_url'];
+                        $lastfm->submit_host	= $this->prefs['lastfm_host']; 
+			$lastfm->submit_port	= $this->prefs['lastfm_port'];
+			$lastfm->submit_url	= $this->prefs['lastfm_url'];
+			$lastfm->challenge	= $this->prefs['lastfm_challenge'];
 
                         if (!$lastfm->queue_track($song_info->f_artist_full,$song_info->f_album_full,$song_info->title,time(),$song_info->time)) { 
 				debug_event('LastFM','Error: Queue Failed: ' . $lastfm->error_msg,'3');

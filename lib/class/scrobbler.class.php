@@ -42,10 +42,6 @@ class scrobbler {
                 $this->challenge = '';
                 $this->queued_tracks = array();
 
-		$this->submit_host = $_SESSION['state']['lastfm']['submit_host'];
-		$this->submit_port = $_SESSION['state']['lastfm']['submit_port'];
-		$this->submit_url = $_SESSION['state']['lastfm']['submit_url'];
-
         } // scrobbler
 
         /**
@@ -120,7 +116,7 @@ class scrobbler {
                         return false;
                 }
 
-                $this->challenge = $response[1];
+                $data['challenge'] = $response[1];
                 return $data;
 
         } // handshake
