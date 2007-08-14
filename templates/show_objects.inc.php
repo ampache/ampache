@@ -24,7 +24,7 @@
  */
 ?>
 <table class="table-data" cellspacing="0">
-<tr class="<?php echo flip_class(); ?>">
+<tr>
 <?php foreach ($headers as $header) { ?>
 	<th><?php echo scrub_out($header); ?></th>
 <?php } ?>

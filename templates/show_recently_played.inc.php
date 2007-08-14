@@ -23,7 +23,7 @@
 $time_unit = array('',_('seconds ago'),_('minutes ago'),_('hours ago'),_('days ago'),_('weeks ago'),_('months ago'),_('years ago')); 
 
 ?>
-<table>
+<table class="table-data" cellspacing="0">
 <tr class="table-header">
 	<td><?php echo _('Username'); ?></td>
 	<td><?php echo _('Song'); ?></td>
@@ -61,7 +61,7 @@ $time_unit = array('',_('seconds ago'),_('minutes ago'),_('hours ago'),_('days a
 
 	$song->format(); 
 ?>
-<tr>
+<tr class="<?php echo flip_class(); ?>">
 	<td>
 		<a href="<?php echo Config::get('web_path'); ?>/stats.php?action=show_user&amp;user_id=<?php echo scrub_out($row_user->id); ?>">
 		<?php echo scrub_out($row_user->fullname); ?>
