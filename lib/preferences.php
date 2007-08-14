@@ -371,10 +371,10 @@ function create_preference_input($name,$value) {
  */
 function get_preference_id($name) { 
 
-	$sql = "SELECT id FROM preferences WHERE name='" . sql_escape($name) . "'";
-	$db_results = mysql_query($sql, dbh());
+	$sql = "SELECT `id` FROM `preference` WHERE `name`='" . Dba::escape($name) . "'";
+	$db_results =Dba::query($sql);
 
-	$results = mysql_fetch_assoc($db_results);
+	$results = Dba::fetch_assoc($db_results);
 
 	return $results['id'];
 

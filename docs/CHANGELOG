@@ -4,6 +4,8 @@
 
 --------------------------------------------------------------------------
   v.3.4-Alpha2 
+  	- Updated LastFM pluging, must uninstall/reinstall to make it work
+		will add in auto-update later
   	- Adjusted LastFM reporting to reduce lag betwen songs. You must
 		now currently be logged in for LastFM to report correctly
   	- Fixed a potential PHP error when browsing the last page or a 

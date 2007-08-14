@@ -24,7 +24,7 @@ class AmpacheLastfm {
 	public $name		='Last.FM'; 
 	public $description	='Records your played songs to your Last.FM Account'; 
 	public $url		='';
-	public $version		='000002';
+	public $version		='000003';
 	public $min_ampache	='340007';
 	public $max_ampache	='340008';
 
@@ -54,6 +54,18 @@ class AmpacheLastfm {
 			"VALUES ('lastfm_pass',' ','Last.FM Password','25','string','options')";
 		$db_results = Dba::query($sql);
 
+		$sql = "INSERT INTO preference (`name`,`value`,`description`,`level`,`type`,`catagory`) " . 
+			"VALUES ('lastfm_port',' ','Last.FM Submission port','5','string','internal')"; 
+		$db_results = Dba::query($sql); 
+
+		$sql = "INSERT INTO preference (`name`,`value`,`description`,`level`,`type`,`catagory`) " . 
+			"VALUES ('lastfm_host',' ','Last.FM Submission host','5','string','internal')"; 
+		$db_results = Dba::query($sql); 
+
+		$sql = "INSERT INTO preference (`name`,`value`,`description`,`level`,`type`,`catagory`) " . 
+			"VALUES ('lastfm_url',' ','Last.FM Submission url','5','string','internal')"; 
+		$db_results = Dba::query($sql); 
+
 	} // install
 
 	/**
@@ -64,7 +76,8 @@ class AmpacheLastfm {
 	function uninstall() { 
 
 		/* We need to remove the preivously added preferences */
-		$sql = "DELETE FROM `preference` WHERE `name`='lastfm_pass' OR `name`='lastfm_user'"; 
+		$sql = "DELETE FROM `preference` WHERE `name`='lastfm_pass' OR `name`='lastfm_user' " . 
+			"OR `name`='lastfm_url' OR `name`='lastfm_host' OR `name`='lastfm_port'"; 
 		$db_results = Dba::query($sql);
 
 	} // uninstall

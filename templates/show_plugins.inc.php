@@ -31,7 +31,7 @@ $web_path = Config::get('web_path');
 <?php 
 foreach ($plugins as $plugin_name) { 
 	$plugin = new Plugin($plugin_name); 
-        if (!Plugin::is_installed($plugin_name)) {
+        if (!Plugin::is_installed($plugin->_plugin->name)) {
                 $action = "<a href=\"" . $web_path . "/admin/modules.php?action=install_plugin&amp;plugin=" . scrub_out($plugin_name) . "\">" .
                         _('Activate') . "</a>";
         }

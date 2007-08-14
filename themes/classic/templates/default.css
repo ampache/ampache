@@ -136,21 +136,24 @@ a.smallbutton {
 /************************************************/
 .table-header {
 /*	background: url(../images/ampache-light-bg.gif) #dddddd repeat-x; */
-	background: #a0a0a0;
+	font-size:1.1em;
 	vertical-align: top;
 	text-align:center;
 }
-.odd {
-		font-size: 12px;
-		background:#bbb;
+.odd, .odd td {
+	font-size: 12px;
+	border-bottom:1px dotted #c0c0c0;
 }
-.even {
-		font-size: 12px;
-		background:#ddd;
+.even, .even td {
+	font-size: 12px;
+	border-bottom:1px dotted #c0c0c0;
 }
+.even:hover, .odd:hover { 
+	background:#99ccff;
+} 
 .headrow {
-		font-size: 12px;
-    background:#ccc;
+	font-size: 12px;
+	background:#ccc;
 }
 .blank {
 	background: #fff;
@@ -503,9 +506,6 @@ span.five-stars:hover { width: 80px; }
 /************************************************/
 /*             List Header Styles               */
 /************************************************/
-.list-header { 
-	background:#ffffff;
-} 
 table.list-header { 
 	margin:3px;
 } 

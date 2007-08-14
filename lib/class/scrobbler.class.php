@@ -112,16 +112,16 @@ class scrobbler {
                 }
 
                 if(preg_match('/http:\/\/(.*):(\d+)(.*)/', $response[2], $matches)) {
-                        $_SESSION['state']['lastfm']['submit_host'] = $matches[1];
-                        $_SESSION['state']['lastfm']['submit_port'] = $matches[2];
-                        $_SESSION['state']['lastfm']['submit_url'] = $matches[3];
+                        $data['submit_host'] = $matches[1];
+                        $data['submit_port'] = $matches[2];
+                        $data['submit_url'] = $matches[3];
                 } else {
                         $this->error_msg = 'Invalid POST URL returned, unable to continue';
                         return false;
                 }
 
                 $this->challenge = $response[1];
-                return true;
+                return $data;
 
         } // handshake
 
