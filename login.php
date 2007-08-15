@@ -141,7 +141,7 @@ if ($auth['success']) {
 		Preference::update('lastfm_port',$user->id,$handshake['submit_port']); 
 		Preference::update('lastfm_host',$user->id,$handshake['submit_host']); 
 		Preference::update('lastfm_url',$user->id,$handshake['submit_url']); 
-		Preference::update('lastfm_challenge',$challenge_id,$handshake['challenge']); 
+		Preference::update('lastfm_challenge',$user->id,$handshake['challenge']); 
 
 	}  // if LastFM
 
