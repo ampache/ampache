@@ -37,9 +37,9 @@ $title		= scrub_out($album->name) . ' (' . $album->year . ') -- ' . $album->f_ar
 	?>
 	</div>
 	<div style="display:table-cell;vertical-align:top;">
-		<div style="float:left; display:inline;" id="rating_<?php echo $album->id; ?>_album">
+		<!--<div style="float:left; display:inline;" id="rating_<?php echo $album->id; ?>_album">-->
 			<?php Rating::show($album->id,'album'); ?>
-		</div>
+		<!--</div>-->
 	</div>
 	<strong><?php echo _('Actions'); ?>:</strong><br />
 	<div id="information_actions">

@@ -77,8 +77,8 @@ if (Config::get('use_rss')) { ?>
 	<div id="rightbar"><!-- This is the rightbar -->
 		<?php require_once Config::get('prefix') . '/templates/rightbar.inc.php'; ?>
 	</div>
-<!-- I hate IE... --> 
-<table class="smeg-ie" width="100%"><tr><td>
+<!-- I hate IE... 
+<table class="smeg-ie" width="100%"><tr><td> -->
 <div id="content">
 <?php if (Config::get('int_config_version') != Config::get('config_version') AND $GLOBALS['user']->has_access(100)) { ?>
 <div class="fatalerror">

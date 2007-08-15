@@ -21,8 +21,8 @@
 */
 ?>
 </div> <!-- end id="content"-->
-<!-- I really hate IE -->
-</td></tr></table>
+<!-- I really hate IE
+</td></tr></table> -->
 </div> <!-- end id="maincontainer"-->
 <div id="footer">
 	<a href="http://www.ampache.org/index.php">Ampache v.<?php echo Config::get('version'); ?></a><br />

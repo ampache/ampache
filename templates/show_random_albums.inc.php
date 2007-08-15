@@ -21,30 +21,31 @@
 $web_path = Config::get('web_path'); 
 ?>
 <?php show_box_top(_('Albums of the Moment')); ?>
-<table class="tabledata">
-<tr>
+
 	<?php 
 	foreach ($albums as $album_id) { 
 		$album = new Album($album_id); 
 		$album->format(); 
 		$name = scrub_out('[' . $album->artist . '] ' . $album->name); 
         ?>
-        <td>
+        <div class="random_album">
                 <a href="<?php echo $web_path; ?>/albums.php?action=show&amp;album=<?php echo $album_id; ?>">
                 <?php if (Config::get('show_album_art')) { ?>
                 <img src="<?php echo $web_path; ?>/image.php?thumb=3&amp;id=<?php echo $album_id; ?>" width="80" height="80" border="0" alt="<?php echo $name; ?>" title="<?php echo $name; ?>" />
                 <?php } else { ?>
                 <?php echo '[' . $album->f_artist . '] ' . $album->f_name; ?>
                 <?php } ?>
-                </a><br />
+                </a>
                 <?php
                 if(Config::get('ratings')){
-                        echo "<div style=\"float:left; display:inline;\" id=\"rating_" . $album->id . "_album\">";
-                        show_rating_static($album->id, 'album');}
-                        echo "</div>";
+                        //echo "<div style=\"float:left; display:inline;\" id=\"rating_" . $album->id . "_album\">";
+                        show_rating_static($album->id, 'album');
+                        //echo "</div>";
+                }
                 ?>
-        </td>
+              	<span class="play_album"><?php echo Ajax::button('?action=basket&type=album&id=' . $album->id,'add',_('Play Album'),'play_full_' . $album->id); ?></span>
+        </div>
+       
         <?php } ?>
-</tr>
-</table> 
+
 <?php show_box_bottom(); ?>
