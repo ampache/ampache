@@ -364,6 +364,10 @@ class vainfo {
 			 * so we now need to account for it :(
 			 */
 			switch ($tag) { 
+				case 'pos':
+					$el = split('/', $data['0']);
+					$array['pos'] = $el[0];
+				break;
 				case 'track_number':
 					$array['track'] = $this->_clean_tag($data['0'],$this->_file_encoding);
 				break;	

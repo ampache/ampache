@@ -227,6 +227,12 @@ class Update {
 
 		$version[] = array('version' => '340008','description' => $update_string); 
 
+		$update_string = '- Added disk to Album table.<br />' . 
+				'- Added artist_data for artist images and bios.<br />' . 
+				'- Added DNS to access list to allow for dns based ACLs.<br />';
+
+		$version[] = array('version' => '340009','description' => $update_string); 
+
 		return $version;
 
 	} // populate_version
@@ -903,6 +909,35 @@ class Update {
 		self::set_version('db_version','340008'); 
 
 	} // update_340008
+
+	/**
+	 * update_340009
+	 * This modifies the song table to handle pos fields
+	 */
+	public static function update_340009() { 
+
+		$sql = "ALTER TABLE `album` ADD `disk` smallint(5) UNSIGNED DEFAULT NULL";
+		$db_results = Dba::query($sql); 
+
+		$sql = "ALTER TABLE `album` ADD INDEX (`disk`)";
+		$db_results = Dba::query($sql); 
+
+		$sql = "ALTER TABLE `access_list` ADD `dns` VARCHAR( 255 ) NOT NULL AFTER `end`"; 
+		$db_results = Dba::query($sql); 
+
+		$sql = "CREATE TABLE `artist_data` (" . 
+			"`artist_id` INT( 11 ) UNSIGNED NOT NULL ," . 
+			"`art` MEDIUMBLOB NOT NULL ," . 
+			"`art_mime` VARCHAR( 32 ) NOT NULL ," . 
+			"`thumb` BLOB NOT NULL ," . 
+			"`thumb_mime` VARCHAR( 32 ) NOT NULL ," . 
+			"`bio` TEXT NOT NULL , " . 
+			"UNIQUE (`artist_id`) ) ENGINE = MYISAM";
+		$db_results = Dba::query($sql); 
+
+		self::set_version('db_version','340009'); 
+
+	} // update_340009
 
 } // end update class
 ?>

@@ -953,6 +953,7 @@ class Catalog {
                 $artist                 = $results['artist'];
                 $album                  = $results['album'];
                 $genre                  = $results['genre'];
+		$disk			= $results['pos'];
 
 		/* Clean up Old Vars */
 		unset($vainfo,$key);
@@ -965,7 +966,7 @@ class Catalog {
                 $new_song->f_artist     = $artist;
                 $new_song->genre        = self::check_genre($genre);
                 $new_song->f_genre      = $new_song->get_genre_name();
-                $new_song->album        = self::check_album($album,$new_song->year);
+                $new_song->album        = self::check_album($album,$new_song->year,$disk);
                 $new_song->f_album      = $album . " - " . $new_song->year;
                 $new_song->title        = self::check_title($new_song->title,$new_song->file);
 
@@ -1723,12 +1724,13 @@ class Catalog {
 	 * check_album
 	 * Takes $album and checks if there then return id else insert and return id 
 	 */
-	public static function check_album($album,$album_year=0,$readonly='') {
+	public static function check_album($album,$album_year=0,$disk='',$readonly='') {
 
 		/* Clean up the album name */
 		$album = trim($album);
 		$album = Dba::escape($album);
 		$album_year = intval($album_year);
+		$album_disk = intval($disk);
 
 		// Set it once to reduce function calls
 		$cache_limit = Config::get('album_cache_limit');
@@ -1755,6 +1757,7 @@ class Catalog {
 		/* Setup the Query */
 		$sql = "SELECT `id` FROM `album` WHERE `name` = '$album'";
 		if ($album_year) { $sql .= " AND `year`='$album_year'"; }
+		if ($album_disk) { $sql .= " AND `disk`='$album_disk'"; } 
 		$db_results = Dba::query($sql);
 
 		/* If it's found */
@@ -1777,7 +1780,7 @@ class Catalog {
                                 $prefix_txt = "'$prefix'";
                         }
 
-			$sql = "INSERT INTO `album` (`name`, `prefix`,`year`) VALUES ('$album',$prefix_txt,'$album_year')";
+			$sql = "INSERT INTO `album` (`name`, `prefix`,`year`,`disk`) VALUES ('$album',$prefix_txt,'$album_year','$album_disk')";
 			$db_results = Dba::query($sql);
 			$album_id = Dba::insert_id();
 
@@ -1890,6 +1893,7 @@ class Catalog {
 		$size	 	= $results['size'];
 		$song_time 	= $results['time'];
 		$track	 	= $results['track'];
+		$disk	 	= $results['pos'];
 		$year		= $results['year'];
 		$comment	= $results['comment'];
 		$current_time 	= time();
@@ -1901,7 +1905,7 @@ class Catalog {
 		 */
 		$artist_id	= self::check_artist($artist);
 		$genre_id	= self::check_genre($genre);
-		$album_id	= self::check_album($album,$year);
+		$album_id	= self::check_album($album,$year,$disk);
 		$title		= self::check_title($title,$file);
 		$add_file	= Dba::escape($file);
 

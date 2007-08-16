@@ -30,6 +30,7 @@ class Album {
 	public $id;
 	public $name;
 	public $full_name; // Prefix + Name, genereated by format(); 
+	public $disk; 
 	public $year;
 	public $prefix;
 
@@ -145,7 +146,7 @@ class Album {
 			$artist_sql = "AND `artist`='" . Dba::escape($artist) . "'";
 		} 
 
-		$sql = "SELECT `id` FROM `song` WHERE `album`='$this->id' $artist_sql ORDER BY `track`, `title`";
+		$sql = "SELECT `id` FROM `song` WHERE `album`='$this->id' $artist_sql ORDER BY `pos`, `track`, `title`";
 		if ($limit) { $sql .= " LIMIT $limit"; }
 		$db_results = Dba::query($sql);
 
@@ -670,6 +671,7 @@ class Album {
 		$year 		= $data['year']; 
 		$artist		= $data['artist']; 
 		$name		= $data['name']; 
+		$disk		= $data['disk'];
 
 		$current_id = $this->id; 
 
@@ -683,7 +685,7 @@ class Album {
 			Catalog::clean_artists(); 
 		} 
 
-		$album_id = Catalog::check_album($name,$year); 
+		$album_id = Catalog::check_album($name,$year,$disk); 
 		if ($album_id != $this->id) { 
 			if (!is_array($songs)) { $songs = $this->get_songs(); } 
 			foreach ($songs as $song_id) { 
