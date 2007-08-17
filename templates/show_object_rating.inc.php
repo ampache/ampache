@@ -22,18 +22,15 @@
 $web_path = Config::get('web_path');
 $base_url = '?action=set_rating&rating_type=' . $rating->type . '&object_id=' . $rating->id;
 
+echo "<div class=\"star-rating dynamic-star-rating\">\n";
+echo "<ul>\n";
 
-//set the background to no stars
-echo "<ul class=\"star-rating\">\n";
-
-// Add in the 0 / Remove rating level
-echo "<li class=\"zero-stars\">" . Ajax::text($base_url . '&rating=-1','','rating0_' . $rating->id,'','zero-stars') . "</li>"; 
-
-// decide width of rating. image is 16 px wide
-$width = $rating->rating*16;
+// decide width of rating (5 stars -> 20% per star)
+$width = $rating->rating*20;
+if ($width < 0) $width = 0;
 
 //set the current rating background 
-echo "<li class=\"current-rating\" style=\"width:${width}px\" >Current rating: ";
+echo "<li class=\"current-rating\" style=\"width:${width}%\" >Current rating: ";
 if ($rating->rating <= 0) {
 	echo "not rated yet </li>\n";
 }
@@ -58,3 +55,8 @@ else echo "$rating->rating of 5</li>\n";
 </li>
 </ul>
 
+<?php
+  // Add in the 0 / Remove rating level
+  echo "<span class=\"zero-stars\">" . Ajax::text($base_url . '&rating=-1','','rating0_' . $rating->id,'','zero-stars') . "</span>\n";
+  echo "</div>\n"; 
+?>

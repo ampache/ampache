@@ -22,23 +22,15 @@
 $web_path = Config::get('web_path');
 $base_url = Config::get('ajax_url') . '?action=set_rating&amp;rating_type=' . $rating->type . '&amp;object_id=' . $rating->id;
 
+echo "<div class=\"star-rating\">\n";
+echo "<ul>\n";
 
-//set the background to no stars
-echo "<ul class=\"static-star-rating\">\n";
-
-/* Handle the "Not rated" possibility */
-if ($rating->rating == '-1') {
-    echo "<li class=\"zero-stars\" style=\"display:none;\">reset</li>\n";
-}
-else {
-    echo "<li class=\"zero-stars\" style=\"display:none;\">reset</li>\n";
-}
-// decide width of rating. image is 16 px wide
-$width = $rating->rating*16;
+// decide width of rating (5 stars -> 20% per star)
+$width = $rating->rating*20;
 if ($width < 0) $width = 0;
 
 //set the current rating background
-echo "<li class=\"current-rating\" style=\"width:${width}px\" >Current rating: ";
+echo "<li class=\"current-rating\" style=\"width:${width}%\" >Current rating: ";
 if ($rating->rating <= 0) {
     echo "not rated yet </li>\n";
 }
@@ -62,3 +54,4 @@ else echo "$rating->rating of 5</li>\n";
     <span class="five-stars" title="5 <?php echo _('out of'); ?> 5">5</span>
 </li>
 </ul>
+</div>
