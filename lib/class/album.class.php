@@ -146,7 +146,7 @@ class Album {
 			$artist_sql = "AND `artist`='" . Dba::escape($artist) . "'";
 		} 
 
-		$sql = "SELECT `id` FROM `song` WHERE `album`='$this->id' $artist_sql ORDER BY `pos`, `track`, `title`";
+		$sql = "SELECT `id` FROM `song` WHERE `album`='$this->id' $artist_sql ORDER BY `track`, `title`";
 		if ($limit) { $sql .= " LIMIT $limit"; }
 		$db_results = Dba::query($sql);
 
