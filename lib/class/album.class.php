@@ -225,6 +225,11 @@ class Album {
 			$this->year = "N/A";
 		}
 
+		// If we've got a disk append it
+		if ($this->disk) { 
+			$this->f_name_link .= ' [' . _('Disk') . ' ' . $this->disk . ']';
+		} 
+
 	} // format
 
 	/**

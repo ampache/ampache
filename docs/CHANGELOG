@@ -4,6 +4,9 @@
 
 --------------------------------------------------------------------------
   v.3.4-Alpha2 
+  	- Fixed Album Disk support for OGG's and added display to browse
+		albums
+  	- Added Album Disk support for id3v2 (Thx Hugo Haas)
   	- Updated LastFM pluging, must uninstall/reinstall to make it work
 		will add in auto-update later
   	- Adjusted LastFM reporting to reduce lag betwen songs. You must

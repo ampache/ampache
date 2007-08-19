@@ -165,12 +165,13 @@ switch ($_REQUEST['action']) {
 
 		Catalog::update_single_item('album',$_REQUEST['album_id']);
 
-		echo "<br /><b>" . _('Update From Tags Complete') . "</b> &nbsp;&nbsp;";
+		echo "<br /><strong>" . _('Update From Tags Complete') . "</strong> &nbsp;&nbsp;";
 		echo "<a href=\"" . Config::get('web_path') . "/albums.php?action=show&amp;album=" . scrub_out($_REQUEST['album_id']) . "\">[" . _('Return') . "]</a>";
 		show_box_bottom(); 
 	break;
 	// Browse by Album
 	case 'broken':	
+		exit; 
 		switch($match) {
 			case 'Show_all':
 				$offset_limit = 99999;

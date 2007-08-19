@@ -953,7 +953,7 @@ class Catalog {
                 $artist                 = $results['artist'];
                 $album                  = $results['album'];
                 $genre                  = $results['genre'];
-		$disk			= $results['pos'];
+		$disk			= $results['disk'];
 
 		/* Clean up Old Vars */
 		unset($vainfo,$key);
@@ -1893,7 +1893,7 @@ class Catalog {
 		$size	 	= $results['size'];
 		$song_time 	= $results['time'];
 		$track	 	= $results['track'];
-		$disk	 	= $results['pos'];
+		$disk	 	= $results['disk'];
 		$year		= $results['year'];
 		$comment	= $results['comment'];
 		$current_time 	= time();

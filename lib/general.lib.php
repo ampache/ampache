@@ -233,7 +233,7 @@ function clean_tag_info($results,$key,$filename) {
 	$info['title']        	= stripslashes(trim($results[$key]['title']));
 	$info['year']         	= intval($results[$key]['year']);
 	$info['track']		= intval($results[$key]['track']);
-	$info['pos']		= intval($results[$key]['pos']);
+	$info['disk']		= intval($results[$key]['disk']);
 	$info['comment']      	= Dba::escape(str_replace($clean_array,$wipe_array,$results[$key]['comment']));
 
 	/* This are pulled from the info array */

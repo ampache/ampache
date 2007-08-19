@@ -303,11 +303,14 @@ class vainfo {
 
 		/* go through them all! */
 		foreach ($tags as $tag=>$data) { 
-
+			
 			/* We need to translate a few of these tags */
 			switch ($tag) { 
 				case 'tracknumber':
 					$array['track']	= $this->_clean_tag($data['0']);
+				break;
+				case 'discnumber': 
+					$array['disk'] 	= $this->_clean_tag($data['0']); 
 				break;
 				case 'date':
 					$array['year']	= $this->_clean_tag($data['0']);
@@ -366,7 +369,7 @@ class vainfo {
 			switch ($tag) { 
 				case 'pos':
 					$el = split('/', $data['0']);
-					$array['pos'] = $el[0];
+					$array['disk'] = $el[0];
 				break;
 				case 'track_number':
 					$array['track'] = $this->_clean_tag($data['0'],$this->_file_encoding);

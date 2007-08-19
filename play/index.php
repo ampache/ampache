@@ -315,14 +315,16 @@ if ($bytesStreamed > $minBytesStreamed) {
 		if ($tmp_playlist->type == 'vote') { 
 			$tmp_playlist->delete_track($song_id);
 		}
-	}
+	} // if tmp_playlist
+	
+	/* Set the Song as Played if it isn't already */
+	$song->set_played();
+
 } // if enough bytes are streamed
 else { 
 	debug_event('stream',$bytesStreamed .' of ' . $song->size . ' streamed, less than ' . $minBytesStreamed . ' not collecting stats','5'); 
 } 
 
-/* Set the Song as Played if it isn't already */
-$song->set_played();
 
 /* Clean up any open ends */
 if ($GLOBALS['user']->prefs['play_type'] == 'downsample' || !$song->native_stream()) { 
