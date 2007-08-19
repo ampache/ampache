@@ -57,6 +57,6 @@ else echo "$rating->rating of 5</li>\n";
 
 <?php
   // Add in the 0 / Remove rating level
-  echo "<span class=\"zero-stars\">" . Ajax::text($base_url . '&rating=-1','','rating0_' . $rating->id,'','zero-stars') . "</span>\n";
+  echo "<div class=\"zero-stars\">" . Ajax::text($base_url . '&rating=-1','','rating0_' . $rating->id,'','zero-stars') . "</div>\n";
   echo "</div>\n"; 
 ?>
