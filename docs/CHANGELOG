@@ -4,6 +4,7 @@
 
 --------------------------------------------------------------------------
   v.3.4-Alpha2 
+  	- Fixed a session fixation issue
   	- Fixed Album Disk support for OGG's and added display to browse
 		albums
   	- Added Album Disk support for id3v2 (Thx Hugo Haas)

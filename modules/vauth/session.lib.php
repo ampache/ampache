@@ -196,6 +196,9 @@ function vauth_session_cookie() {
  * of data
  */
 function vauth_session_create($data) { 
+	
+	// Regenerate the session ID to prevent fixation
+	session_regenerate_id();
 
 	/* function that creates the cookie for us */
 	vauth_session_cookie();
