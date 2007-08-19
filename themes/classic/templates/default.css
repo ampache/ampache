@@ -502,21 +502,23 @@ h3#content_title span {
 table.list-header { 
 	margin:3px;
 } 
-span.list-header { 
+div.list-header { 
 	cursor:pointer; 
 	text-decoration: none;
 	font-size: 0.8em; 
-	padding:0px 4px 0px 4px;
+	padding:2px 4px 0px 4px;
 	border: 1px solid #000; 
+	display:inline;
 } 
-span.list-header-selected {
+div.list-header-selected {
         text-decoration: none;
         font-size: 0.8em;
-        padding:0px 4px 0px 4px;
+        padding:2px 4px 0px 4px;
         border: 1px solid #000;
 	background: #e0e0e0; 
+	display:inline;
 }
-span.list-header:hover { 
+div.list-header:hover { 
 	background: #d0d0d0; 
 } 
 

@@ -113,7 +113,7 @@ if ($pages > 1) {
 		/* Echo Out current Page */
 		$current_page = $current_page +1;
 	?>
-	<span class="list-header-selected"><?php echo $current_page; ?></span>
+	<div class="list-header-selected"><?php echo $current_page; ?></div>
 	<?php
 		
 		/* Echo Out Everything Above Us */
