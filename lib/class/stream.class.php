@@ -223,7 +223,7 @@ class Stream {
 
 	        // Send the client an m3u playlist
 	        header("Cache-control: public");
-	        header("Content-Disposition: filename=ampache-playlist.m3u");
+	        header("Content-Disposition: filename=ampache_playlist.m3u");
 	        header("Content-Type: audio/x-mpegurl;");
 	        echo "#EXTM3U\n";
 
