@@ -39,6 +39,54 @@ class Random {
 	} // constructor
 
 	/**
+	 * album
+	 * This returns the ID of a random album, nothing special
+	 */
+	public static function album() { 
+
+		$sql = "SELECT `id` FROM `album` ORDER BY RAND() LIMIT 1"; 
+		$db_results = Dba::query($sql); 
+
+		$results = Dba::fetch_assoc($db_results); 
+
+		return $results['id']; 
+
+	} // album
+
+	/**
+	 * artist
+	 * This returns the ID of a random artist, nothing special here for now
+	 */
+	public static function artist() { 
+
+		$sql = "SELECT `id` FROM `artist` ORDER BY RAND() LIMIT 1"; 
+		$db_results = Dba::query($sql); 
+
+		$results = Dba::fetch_assoc($db_results); 
+
+		return $results['id']; 
+
+	} // artist
+
+	/**
+	 * playlist
+	 * This returns a random Playlist with songs little bit of extra
+	 * logic require
+	 */
+	public static function playlist() { 
+
+		$sql = "SELECT `playlist`.`id` FROM `playlist` LEFT JOIN `playlist_data` " . 
+			" ON `playlist`.`id`=`playlist_data`.`playlist` WHERE `playlist_data`.`object_id` IS NOT NULL " . 
+			" ORDER BY RAND()"; 
+		$db_results = Dba::query($sql); 
+
+		$results = Dba::fetch_assoc($db_results); 
+
+		return $results['id']; 
+
+	} // playlist
+
+	/**
 	 * play_url
 	 * This generates a random play url based on the passed type
 	 * and returns it

@@ -282,11 +282,13 @@ h3#content_title span {
 }
 * html #sidebar-page ul.sb3 li{display:inline;} /* fix ie6 */
 #sidebar-page .sb3 a{ padding:0.1em;border-bottom:1px dotted #c0c0c0;}
+#sidebar-page .sb3 div{ padding:0.1em;border-bottom:1px dotted #c0c0c0; cursor:pointer; }
+
 
 #sidebar-page a{
   display:block;
 }
-#sidebar-page a:hover{
+#sidebar-page a:hover, #sidebar-page div:hover{
   background:#99ccff;
   color:#fff;
 }
@@ -527,7 +529,7 @@ span.list-header:hover {
 	margin:5px 0;
 	padding-left:0px;
 }
-.text-action span {
+.text-action div {
 	text-decoration: underline; 
 	cursor: pointer; 
 	display:block; 

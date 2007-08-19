@@ -122,7 +122,7 @@ class Ajax {
 		} 
 
 		// If we pass a source put it in the ID
-		$string = "<span id=\"$source\" $class_txt>$text</span>\n"; 
+		$string = "<div id=\"$source\" $class_txt>$text</div>\n"; 
 
 		$string .= self::observe($source,'click',$ajax_string); 
 

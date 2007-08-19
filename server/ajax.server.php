@@ -45,6 +45,10 @@ switch ($_REQUEST['page']) {
 		require_once Config::get('prefix') . '/server/browse.ajax.php'; 
 		exit; 
 	break;
+	case 'random': 
+		require_once Config::get('prefix') . '/server/random.ajax.php'; 
+		exit; 
+	break;
 	default: 
 		// A taste of compatibility
 	break;
