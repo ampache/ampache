@@ -153,6 +153,8 @@ switch ($_REQUEST['action']) {
 		$options = array('limit' => $_REQUEST['random'], 'random_type' => $_REQUEST['random_type'],'size_limit'=>$_REQUEST['size_limit']);
 		$song_ids = get_random_songs($options, $matchlist);
 	break;
+	case 'download': 
+		$song_ids[] = $_REQUEST['song_id']; 
 	default:
 	break;
 } // end action switch
@@ -175,16 +177,15 @@ switch ($_REQUEST['method']) {
 	break;
 	case 'stream':
 	default:
-		$stream_type = Config::get('playlist_type');
-
-		/* For non-stream/downsample methos we need to so something else */
-		switch ($GLOBALS['user']->prefs['play_type']) { 
-			case 'stream':
+		// See if we need a special streamtype
+		switch ($_REQUEST['action']) { 
+			case 'download': 
+				$stream_type = 'download'; 
 			break;
 			default:
 				$stream_type = $GLOBALS['user']->prefs['play_type'];
 			break;
-		}
+		} 
 
 		/* Start the Stream */
 		$stream = new Stream($stream_type,$song_ids);

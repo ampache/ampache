@@ -4,6 +4,8 @@
 
 --------------------------------------------------------------------------
   v.3.4-Alpha2 
+  	- Fixed single downloads
+  	- Fixed weird CSS issue with a crafty little hack
   	- Fixed a session fixation issue
   	- Fixed Album Disk support for OGG's and added display to browse
 		albums

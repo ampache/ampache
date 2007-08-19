@@ -468,6 +468,27 @@ class Stream {
 	} // create_democratic
 
 	/**
+	 * create_download
+	 * This prompts for a download of the song, only a single
+	 * element can by in song_ids
+	 */
+	private function create_download() { 
+
+		// Build up our object
+		$song_id = $this->songs['0']; 
+		$song = new Song($song_id); 
+		$url = $song->get_url($this->session); 
+
+		// Append the fact we are downloading
+		$url .= '&action=download'; 
+
+		// Header redirect baby!
+		header("Location: $url"); 
+		exit; 
+
+	} //create_download
+
+	/**
 	 * create_ram
 	 *this functions creates a RAM file for use by Real Player
 	 */

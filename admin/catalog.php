@@ -43,6 +43,7 @@ switch ($_REQUEST['action']) {
 		$catalog = new Catalog();
 		$_REQUEST['catalogs'] = $catalog->get_catalog_ids();
 	case 'add_to_catalog':
+		ob_end_flush(); 
 	    	if (Config::get('demo_mode')) { break; }
 		if ($_REQUEST['catalogs'] ) {
 			foreach ($_REQUEST['catalogs'] as $catalog_id) {
@@ -58,6 +59,7 @@ switch ($_REQUEST['action']) {
 	case 'update_all_catalogs':
 		$_REQUEST['catalogs'] = Catalog::get_catalog_ids();
 	case 'update_catalog':
+		ob_end_flush(); 
 	    	/* If they are in demo mode stop here */
 	        if (Config::get('demo_mode')) { break; }
 
@@ -73,6 +75,7 @@ switch ($_REQUEST['action']) {
 		show_confirmation($title,$body,$url);
 	break;
 	case 'full_service':
+		ob_end_flush(); 
 		$catalog = new Catalog();
 		/* Make sure they aren't in demo mode */
 		if (conf('demo_mode')) { break; } 
@@ -126,6 +129,7 @@ switch ($_REQUEST['action']) {
 		$catalog = new Catalog(); 
 		$_REQUEST['catalogs'] = Catalog::get_catalog_ids();
 	case 'clean_catalog':
+		ob_end_flush(); 
 	    	/* If they are in demo mode stop them here */
 	        if (Config::get('demo_mode')) { break; }
 	

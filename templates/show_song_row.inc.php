@@ -30,7 +30,7 @@
 <td><?php echo $song->f_time; ?></td>
 <td>
 	<?php if ($GLOBALS['user']->prefs['download']) { ?>
-	<a href="<?php echo Config::get('web_path'); ?>/play/index.php?action=download&amp;uid=<?php echo $GLOBALS['user']->id; ?>&amp;song=<?php echo $song->id; ?>&amp;sid=<?php echo session_id(); ?>">
+	<a href="<?php echo Config::get('web_path'); ?>/stream.php?action=download&amp;song_id=<?php echo $song->id; ?>">
 		<?php echo get_user_icon('download',_('Download')); ?>
 	</a>
 	<?php } ?>
