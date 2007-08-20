@@ -39,19 +39,19 @@ else echo "$rating->rating of 5</li>\n";
 //it did not like my "1-star", "2-star" ... css styles, and I changed it to this after I realized star1... would have worked :\
 ?>
 <li>
-    <div class="one-stars" title="1 <?php echo _('out of'); ?> 5">1</div>
+    <span class="one-stars" title="1 <?php echo _('out of'); ?> 5">1</span>
 </li>
 <li>
-    <div class="two-stars" title="2 <?php echo _('out of'); ?> 5">2</div>
+    <span class="two-stars" title="2 <?php echo _('out of'); ?> 5">2</span>
 </li>
 <li>
-    <div class="three-stars" title="3 <?php echo _('out of'); ?> 5">3</div>
+    <span class="three-stars" title="3 <?php echo _('out of'); ?> 5">3</span>
 </li>
 <li>
-    <div class="four-stars" title="4 <?php echo _('out of'); ?> 5">4</div>
+    <span class="four-stars" title="4 <?php echo _('out of'); ?> 5">4</span>
 </li>
 <li>
-    <div class="five-stars" title="5 <?php echo _('out of'); ?> 5">5</div>
+    <span class="five-stars" title="5 <?php echo _('out of'); ?> 5">5</span>
 </li>
 </ul>
 </div>

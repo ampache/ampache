@@ -400,7 +400,7 @@ h3#content_title span {
 }
 
 .star-rating ul,
-.star-rating div:hover,
+.star-rating a:hover,
 .star-rating .current-rating{
   background: url(../../../images/ratings/star_rating.gif) left -1000px repeat-x;
 }
@@ -417,7 +417,7 @@ h3#content_title span {
 .star-rating li{
   display: inline;
 }
-.star-rating div,
+.star-rating a, .star-rating span,  
 .star-rating .current-rating{
   position:absolute;
   top:0;
@@ -429,24 +429,24 @@ h3#content_title span {
   overflow:hidden;
   border: none;
 }
-.star-rating div.one-stars  { width:20%; z-index:6; }
-.star-rating div.two-stars  { width:40%; z-index:5; }
-.star-rating div.three-stars{ width:60%; z-index:4; }
-.star-rating div.four-stars { width:80%; z-index:3; }
-.star-rating div.five-stars { width:100%; z-index:2; }
+.star-rating .one-stars  { width:20%; z-index:6; }
+.star-rating .two-stars  { width:40%; z-index:5; }
+.star-rating .three-stars { width:60%; z-index:4; }
+.star-rating .four-stars { width:80%; z-index:3; }
+.star-rating .five-stars { width:100%; z-index:2; }
 .star-rating .current-rating { z-index:1; background-position: left bottom; }
 
-.star-rating div.zero-stars {
+.star-rating a.zero-stars {
   left:80px;
   width:16px;
   background-image: url(../../../images/ratings/x_off.gif);
 }
 
 /* hovering effect only for dynamic star rating */
-.dynamic-star-rating div:hover{
+.dynamic-star-rating a:hover{
   background-position: left center;
 }
-.dynamic-star-rating div:hover.zero-stars {
+.dynamic-star-rating a:hover.zero-stars {
   background-image: url(../../../images/ratings/x.gif);
 }
 
