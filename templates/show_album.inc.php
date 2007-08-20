@@ -23,7 +23,7 @@ $web_path = Config::get('web_path');
 $ajax_url = Config::get('ajax_url'); 
 
 // Title for this album
-$title		= scrub_out($album->name) . ' (' . $album->year . ') -- ' . $album->f_artist; 
+$title		= scrub_out($album->name) . '&nbsp;(' . $album->year . ')&nbsp;--&nbsp;' . $album->f_artist; 
 ?>
 <?php show_box_top($title,'info-box'); ?>
 	<div style="float:left;margin-right:10px;">
@@ -43,8 +43,8 @@ $title		= scrub_out($album->name) . ' (' . $album->year . ') -- ' . $album->f_ar
 	</div>
 	<strong><?php echo _('Actions'); ?>:</strong><br />
 	<div id="information_actions">
-	<span class="text-action"><?php echo Ajax::text('?action=basket&type=album&id=' . $album->id,_('Play Album'),'play_full_' . $album->id); ?></span>
-	<span class="text-action"><?php echo Ajax::text('?action=basket&type=album_random&id=' . $album->id,_('Play Random from Album'),'play_random_' . $album->id); ?></span> 
+	<?php echo Ajax::text('?action=basket&type=album&id=' . $album->id,_('Play Album'),'play_full_' . $album->id); ?><br />
+	<?php echo Ajax::text('?action=basket&type=album_random&id=' . $album->id,_('Play Random from Album'),'play_random_' . $album->id); ?><br />
 	<?php if ($GLOBALS['user']->has_access('75')) { ?>
 	<a href="<?php echo $web_path; ?>/albums.php?action=clear_art&amp;album_id=<?php echo $album->id; ?>"><?php echo _('Reset Album Art'); ?></a><br />
 	<?php } ?>
@@ -56,7 +56,7 @@ $title		= scrub_out($album->name) . ' (' . $album->year . ') -- ' . $album->f_ar
 	<a href="<?php echo $web_path; ?>/batch.php?action=alb&amp;id=<?php echo $album->id; ?>"><?php echo _('Download'); ?></a><br />
 	<?php } ?>
 	<?php if (Plugin::is_installed('OpenStrands')) { ?>
-	<span class="text-action"><?php echo Ajax::text('?page=stats&action=show_check_album_tracks&id=' . $album->id,_('Find Missing Tracks'),'album_missing_tracks'); ?></span>
+	<?php echo Ajax::text('?page=stats&action=show_check_album_tracks&id=' . $album->id,_('Find Missing Tracks'),'album_missing_tracks'); ?><br />
 	<?php } ?>
 	</div>
 <?php show_box_bottom(); ?>

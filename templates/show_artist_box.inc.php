@@ -32,8 +32,8 @@ if (Config::get('ratings')) {
 <strong><?php echo _('Actions'); ?>:</strong>
 <div id="information_actions">
 <a href="<?php echo $web_path; ?>/artists.php?action=show_all_songs&amp;artist=<?php echo $artist->id; ?>"><?php echo _("Show All Songs By") . " " . $artist->f_name; ?></a><br />
-<span class="text-action"><?php echo Ajax::text('?action=basket&type=artist&id=' . $artist->id,_('Play All Songs By') . ' ' . $artist->f_name,'play_full_artist'); ?></span>
-<span class="text-action"><?php echo Ajax::text('?action=basket&type=artist_random&id=' . $artist->id,_('Play Random Songs By') . ' ' . $artist->f_name,'play_random_artist'); ?></span>
+<?php echo Ajax::text('?action=basket&type=artist&id=' . $artist->id,_('Play All Songs By') . ' ' . $artist->f_name,'play_full_artist'); ?><br />
+<?php echo Ajax::text('?action=basket&type=artist_random&id=' . $artist->id,_('Play Random Songs By') . ' ' . $artist->f_name,'play_random_artist'); ?><br />
 <?php if ($GLOBALS['user']->has_access('50')) { ?>
 	<a href="<?php echo $web_path; ?>/artists.php?action=update_from_tags&amp;artist=<?php echo $artist->id; ?>"><?php echo _("Update from tags"); ?></a><br />
 	<a href="<?php echo $web_path; ?>/artists.php?action=show_rename&amp;artist=<?php echo $artist->id; ?>"><?php echo _("Rename Artist"); ?></a><br />

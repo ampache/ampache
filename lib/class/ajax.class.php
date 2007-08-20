@@ -116,13 +116,7 @@ class Ajax {
 		// Format the string we wanna use
 		$ajax_string = self::action($action,$source,$post); 
 
-    // Temporary (?) fix to have a pointer cursor on every ajax button
-    // Would it be possible to generate a <a> instead of <div>, as it would
-    // greatly simplify css and bring back ie6 ":hover" pseudo-class compatibility ?
-    // Of course generated html would be correct if $text contains only <img>,
-    // <span> and text but that should be enough.
-
-    $span_class.= ($span_class?' ':'') . 'link';
+    		$span_class.= ($span_class?' ':'') . 'link';
 
 		// If they passed a span class
 		if ($span_class) { 
@@ -130,10 +124,9 @@ class Ajax {
 		} 
 
 		// If we pass a source put it in the ID
-		$string = "<div id=\"$source\" $class_txt>$text</div>\n"; 
+		//$string = "<div id=\"$source\" $class_txt>$text</div>\n"; 
 		
-    /* Commented out as I didn't test much but it seems to work fine */
-    //$string = "<a href=\"javascript:void(0);\" id=\"$source\" $class_txt>$text</a>\n"; 
+    		$string = "<a href=\"javascript:void(0);\" id=\"$source\" $class_txt>$text</a>\n"; 
 
 		$string .= self::observe($source,'click',$ajax_string); 
 
