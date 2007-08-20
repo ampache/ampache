@@ -4,6 +4,7 @@
 
 --------------------------------------------------------------------------
   v.3.4-Alpha2 
+	- Fixed copyright notices (Thx porthose)
   	- Fixed single downloads
   	- Fixed weird CSS issue with a crafty little hack
   	- Fixed a session fixation issue

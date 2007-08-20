@@ -26,9 +26,10 @@ $web_path = Config::get('web_path');
 ?>
 <?php show_box_top($playlist->name . ' ' . _('Playlist')); ?>
 		<ul class="text-action">
-		<li><a href="<?php echo $web_path; ?>/playlist.php?action=normalize_tracks&amp;playlist_id=<?php echo $playlist_id; ?>"><?php echo _('Normalize Tracks'); ?></a></li>
-		<li><a href="<?php echo $web_path; ?>/stream.php?action=play_selected&amp;playlist_id=<?php echo $playlist_id; ?>"><?php echo _('Play This Playlist'); ?></a></li>
-		<li><a href="<?php echo $web_path; ?>/stream.php?action=playlist_random&amp;playlist_id=<?php echo $playlist_id; ?>"><?php echo _('Play Random'); ?></a></li>
+		<li><a href="<?php echo $web_path; ?>/playlist.php?action=normalize_tracks&amp;playlist_id=<?php echo $playlist->id; ?>"><?php echo _('Normalize Tracks'); ?></a></li>
+		<li><a href="<?php echo $web_path; ?>/stream.php?action=play_selected&amp;playlist_id=<?php echo $playlist->id; ?>"><?php echo _('Play This Playlist'); ?></a></li>
+		<li><a href="<?php echo $web_path; ?>/stream.php?action=playlist_random&amp;playlist_id=<?php echo $playlist->id; ?>"><?php echo _('Play Random'); ?></a></li>
 		</ul>
 <?php show_box_bottom(); ?>
-
+<div id="browse_content">
+</div>

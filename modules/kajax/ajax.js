@@ -1,39 +1,53 @@
-	var http_request = false;
-	var IE = true;
-	
-	// uid is an array of uids that need to be replaced		
-	function ajaxPut(url,source) {
+// Copyright (c) 2001 - 2007 Ampache.org
+// All rights reserved.
+//
+// This program is free software; you can redistribute it and/or
+// modify it under the terms of the GNU General Public License v2
+// as published by the Free Software Foundation.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program; if not, write to the Free Software
+// Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+//
+// uid is an array of uids that need to be replaced		
+function ajaxPut(url,source) {
 
-		if (document.getElementById(source)) { 
-			Event.stopObserving(source,'click',function(){ajaxPut(url,source);});
+	if (document.getElementById(source)) { 
+		Event.stopObserving(source,'click',function(){ajaxPut(url,source);});
+	} 
+
+	if (window.ActiveXObject) { // IE
+		try {
+			http_request = new ActiveXObject("Msxml2.XMLHTTP");
 		} 
-
-		if (window.ActiveXObject) { // IE
-			try {
-				http_request = new ActiveXObject("Msxml2.XMLHTTP");
-			} 
-			catch (e) {
-	                	try {
-        			        http_request = new ActiveXObject("Microsoft.XMLHTTP");
-	                	} 
-				catch (e) {}
-			}
-	        }
-		else { // Mozilla
-			IE = false;
-			http_request = new XMLHttpRequest();
+		catch (e) {
+                	try {
+       			        http_request = new ActiveXObject("Microsoft.XMLHTTP");
+                	} 
+			catch (e) {}
 		}
-	        if (!http_request) {
-	            return false;
-	        }
-	        http_request.onreadystatechange = function() { getContents(http_request); };
-	        http_request.open('GET', url, true);
-        	http_request.send(null);
+        }
+	else { // Mozilla
+		IE = false;
+		http_request = new XMLHttpRequest();	
 	}
+        if (!http_request) {
+            return false;
+        }
+        http_request.onreadystatechange = function() { getContents(http_request); };
+        http_request.open('GET', url, true);
+       	http_request.send(null);	
+}
 
-    function getContents(http_request) {
-       if (http_request.readyState == 4) {
-	       if (http_request.status == 200) {
+
+function getContents(http_request) {
+	if (http_request.readyState == 4) {
+		if (http_request.status == 200) {
 			var data = http_request.responseXML;
 			var newContent = http_request.responseXML.getElementsByTagName('content'); 
 	               
@@ -47,9 +61,9 @@
 			
 		} 
         }
-    }
+}
 
-    function ajaxPost(url,input,source) { 
+function ajaxPost(url,input,source) { 
     
 	if (document.getElementById(source)) { 
 		Event.stopObserving(source,'click',function(){ajaxPost(url,input,source);}); 
@@ -91,6 +105,5 @@
 	http_request.setRequestHeader("Connection", "close");
 	http_request.send(post_data);
 
-
-    } 
+} 
 

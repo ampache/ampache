@@ -28,63 +28,9 @@ require_once 'lib/init.php';
 
 show_header(); 
 
-/* Get the Vars we need for later cleaned up */
-$action 	= strtolower(scrub_in($_REQUEST['action']));
-$playlist	= new Playlist(scrub_in($_REQUEST['playlist_id']));
 
 /* Switch on the action passed in */
-switch ($action) { 
-	case 'delete_playlist': 
-		/* Make sure they have the rights */
-		if (!$playlist->has_access()) { 
-			access_denied();
-			break;
-		}
-		/* Go for it! */
-		$playlist->delete();
-		show_confirmation(_('Playlist Deleted'),_('The Requested Playlist has been deleted'),'/playlist.php');
-	break;
-	case 'show_delete_playlist':
-		/* Make sure they have the rights */
-                if (!$playlist->has_access()) {
-                        access_denied();
-                        break;
-                }
-	
-		/* Show Confirmation Question */
-		$message = _('Are you sure you want to delete this playlist') . " " . $playlist->name . "?";
-		show_confirmation(_('Confirm Action'),$message,'/playlist.php?action=delete_playlist&amp;playlist_id=' . $playlist->id,1);
-	break;
-	case 'add_to':
-	case 'add to':
-		/* If we don't already have a playlist */
-		if (!$playlist->id && $GLOBALS['user']->has_access(25)) { 
-			$playlist_name = _('New Playlist') . " - " . date('m/j/y, g:i a');
-			$id = $playlist->create($playlist_name, 'private');
-			$playlist = new Playlist($id);
-		}
-
-		if (!$playlist->has_access()) { 
-			access_denied();
-			break;
-		}
-
-		if ($_REQUEST['type'] == 'album') { 
-			$song_ids = get_songs_from_type($_REQUEST['type'],$_REQUEST['song'],$_REQUEST['artist_id']);
-		}
-		else { 	
-			$song_ids = $_REQUEST['song'];
-		}	
-
-		/* Add the songs */
-		$playlist->add_songs($song_ids);
-
-		/* Show the Playlist */
-		$_REQUEST['playlist_id'] = $playlist->id;
-		/* Store this new id in the session for later use */
-		$_SESSION['data']['playlist_id']        = $playlist->id;
-		show_playlist($playlist);
-	break;	
+switch ($_REQUEST['action']) { 
 	case 'add_dyn_song':
 		/* Check Rights */
 		if (!$playlist->has_access()) { 
@@ -97,7 +43,6 @@ switch ($action) {
 		show_playlist($playlist);
 	break;
 	case 'create_playlist':
-	case 'create':
 		/* Check rights */
 		if (!$GLOBALS['user']->has_access(25)) { 
 			access_denied();
@@ -111,14 +56,7 @@ switch ($action) {
 		$_SESSION['data']['playlist_id']        = $playlist->id;
 		show_confirmation(_('Playlist Created'),$playlist_name . ' (' . $playlist_type . ') ' . _(' has been created'),'playlist.php');
 	break;
-	case 'edit':
-		show_playlist_edit($_REQUEST['playlist_id']);	
-	break;
-	case 'new':
-		require (conf('prefix') . '/templates/show_add_playlist.inc.php');
-	break;
 	case 'remove_song':
-	case _('Remote Selected Tracks'):
 		/* Check em for rights */
 		if (!$playlist->has_access()) { 
 			access_denied();
@@ -194,6 +132,8 @@ switch ($action) {
 		show_confirmation($title,$body,$url);
 	break;
 	case 'normalize_tracks':
+		$playlist = new Playlist($_REQUEST['playlist_id']); 
+
 		/* Make sure they have permission */
 		if (!$playlist->has_access()) { 
 			access_denied();
@@ -203,11 +143,9 @@ switch ($action) {
 		/* Normalize the tracks */
 		$playlist->normalize_tracks();
 
-		/* Show our wonderful work */
-		show_playlist($playlist);
 	break;
 	default:
-		show_playlists();
+		require_once Config::get('prefix') . '/templates/show_playlist.inc.php'; 
 	break;
 } // switch on the action
 
