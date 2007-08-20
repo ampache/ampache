@@ -62,6 +62,7 @@ input {
   margin: 2px 2px 2px 0;
 }
 
+.link { cursor:pointer; }
 
 /************************************************/
 /*             Header                           */
@@ -273,7 +274,7 @@ h3#content_title span {
   font-weight:normal;
   color:#5b5b5b;
 }
-#sidebar-page .sb3 a{ color:#5b5b5b; }
+
 #sidebar-page ul.sb3 li{
   margin:0;
   padding:0;
@@ -281,14 +282,18 @@ h3#content_title span {
   font-weight:normal;
 }
 * html #sidebar-page ul.sb3 li{display:inline;} /* fix ie6 */
-#sidebar-page .sb3 a{ padding:0.1em;border-bottom:1px dotted #c0c0c0;}
-#sidebar-page .sb3 div{ padding:0.1em;border-bottom:1px dotted #c0c0c0; cursor:pointer; }
+
+#sidebar-page .sb3 a, #sidebar-page .sb3 .link{
+ padding:0.1em;
+ border-bottom:1px dotted #c0c0c0;
+ color:#5b5b5b;
+}
 
 
 #sidebar-page a{
   display:block;
 }
-#sidebar-page a:hover, #sidebar-page div:hover{
+#sidebar-page a:hover, #sidebar-page .link:hover{
   background:#99ccff;
   color:#fff;
 }
