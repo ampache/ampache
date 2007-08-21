@@ -126,25 +126,6 @@ if ($auth['success']) {
 	// Reload the Preferences from the database
 	init_preferences();
 	
-	// Do the handshake with LastFM if they are configured as such to let it know we might submit some stuff soon
-	if ($user->prefs['lastfm_user'] AND $user->prefs['lastfm_pass']) { 
-		$lastfm = new scrobbler($user->prefs['lastfm_user'],$user->prefs['lastfm_pass']);
-		
-		/* Attempt handshake */
-		$handshake = $lastfm->handshake();
-		if (!$handshake) { 
-			debug_event('LastFM','Handshake Failed: ' . $lastfm->error_msg,'3'); 
-		} 
-
-		// Update the preferences
-		Preference::update('lastfm_port',$user->id,$handshake['submit_port']); 
-		Preference::update('lastfm_host',$user->id,$handshake['submit_host']); 
-		Preference::update('lastfm_url',$user->id,$handshake['submit_url']); 
-		Preference::update('lastfm_challenge',$user->id,$handshake['challenge']); 
-
-	}  // if LastFM
-
-
 	/* Make sure they are actually trying to get to this site and don't try to redirect them back into 
 	 * an admin section
 	**/

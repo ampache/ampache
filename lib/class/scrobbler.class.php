@@ -34,12 +34,15 @@ class scrobbler {
          * Constructor
          * This is the constructer it takes a username and password
          */
-        public function __construct($username, $password) {
+        public function __construct($username, $password,$host='',$port='',$url='',$challenge='') {
 
                 $this->error_msg = '';
                 $this->username = trim($username);
                 $this->password = trim($password);
-                $this->challenge = '';
+                $this->challenge = $challenge;
+		$this->submit_host = $host; 
+		$this->submit_port = $port; 
+		$this->submit_url = $url; 
                 $this->queued_tracks = array();
 
         } // scrobbler
@@ -69,15 +72,17 @@ class scrobbler {
          */
         public function handshake() {
 
-                $as_socket = @fsockopen('post.audioscrobbler.com', 80, $errno, $errstr, 15);
+                $as_socket = @fsockopen('post.audioscrobbler.com', 80, $errno, $errstr, 5);
                 if(!$as_socket) {
                         $this->error_msg = $errstr;
                         return false;
                 }
 
-                $username = rawurlencode($this->username);
+                $username	= rawurlencode($this->username);
+		$timestamp	= time(); 
+		$auth_token	= rawurlencode(md5($this->password . $timestamp)); 
 		
-		$get_string = "GET /?hs=true&p=1.1&c=apa&v=0.1&u=$username HTTP/1.1\r\n";
+		$get_string = "GET /?hs=true&p=1.2&c=apa&v=0.1&u=$username&t=$timestamp&a=$auth_token HTTP/1.1\r\n";
                 
 		fwrite($as_socket, $get_string);
                 fwrite($as_socket, "Host: post.audioscrobbler.com\r\n");
@@ -107,7 +112,7 @@ class scrobbler {
                         return false;
                 }
 
-                if(preg_match('/http:\/\/(.*):(\d+)(.*)/', $response[2], $matches)) {
+                if(preg_match('/http:\/\/(.*):(\d+)(.*)/', $response[3], $matches)) {
                         $data['submit_host'] = $matches[1];
                         $data['submit_port'] = $matches[2];
                         $data['submit_url'] = $matches[3];
@@ -127,21 +132,20 @@ class scrobbler {
 	 * submit the track or talk to LastFM in anyway, kind of useless for our uses but its
 	 * here, and that's how it is. 
 	 */
-        public function queue_track($artist, $album, $track, $timestamp, $length) {
-                $date = gmdate('Y-m-d H:i:s', $timestamp);
-                $mydate = date('Y-m-d H:i:s T', $timestamp);
+        public function queue_track($artist, $album, $title, $timestamp, $length,$track) {
 
-                if($length < 30) {
-                        debug_event('lastfm',"Not queuing track, too short",'5');
+                if ($length < 30) {
+                        debug_event('LastFM',"Not queuing track, too short",'5');
                         return false;
                 } 
 
                 $newtrack = array();
                 $newtrack['artist'] = $artist;
                 $newtrack['album'] = $album;
+		$newtrack['title'] = $title; 
                 $newtrack['track'] = $track;
                 $newtrack['length'] = $length;
-                $newtrack['time'] = $date;
+                $newtrack['time'] = $timestamp;
 
                 $this->queued_tracks[$timestamp] = $newtrack;
                 return true; 
@@ -165,17 +169,18 @@ class scrobbler {
                 ksort($this->queued_tracks); 
 
 		// build the query string
-                $query_str = 'u='.rawurlencode($this->username).'&s='.rawurlencode(md5($this->password.$this->challenge)).'&';
+                $query_str = 's='.rawurlencode($this->challenge).'&';
 
                 $i = 0;
 
                 foreach($this->queued_tracks as $track) {
-                        $query_str .= "a[$i]=".rawurlencode($track['artist'])."&t[$i]=".rawurlencode($track['track'])."&b[$i]=".rawurlencode($track['album'])."&";
+                        $query_str .= "a[$i]=".rawurlencode($track['artist'])."&t[$i]=".rawurlencode($track['title'])."&b[$i]=".rawurlencode($track['album'])."&";
                         $query_str .= "m[$i]=&l[$i]=".rawurlencode($track['length'])."&i[$i]=".rawurlencode($track['time'])."&";
+			$query_str .= "n[$i]=" . rawurlencode($track['track']) . "&o[$i]=P&r[$i]=&"; 
                         $i++;
                 }
 
-                $as_socket = @fsockopen($this->submit_host, $this->submit_port, $errno, $errstr, 15);
+                $as_socket = @fsockopen($this->submit_host, $this->submit_port, $errno, $errstr, 5);
 
                 if(!$as_socket) {
                         $this->error_msg = $errstr;
@@ -186,11 +191,12 @@ class scrobbler {
                 fwrite($as_socket, $action);
                 fwrite($as_socket, "Host: ".$this->submit_host."\r\n");
                 fwrite($as_socket, "Accept: */*\r\n");
+		fwrite($as_socket, "User-Agent: Ampache/3.4\r\n");
                 fwrite($as_socket, "Content-type: application/x-www-form-urlencoded\r\n");
                 fwrite($as_socket, "Content-length: ".strlen($query_str)."\r\n\r\n");
 
                 fwrite($as_socket, $query_str."\r\n\r\n");
-
+debug_event('LastFM',$query_str,'1');
                 $buffer = '';
                 while(!feof($as_socket)) {
                         $buffer .= fread($as_socket, 8192);
@@ -213,15 +219,20 @@ class scrobbler {
                         return false;
                 }
                 if(substr($response[0], 0, 7) == 'BADAUTH') {
-                        $this->error_msg = 'Invalid username/password';
+                        $this->error_msg = 'Invalid username/password (' . $response[0] . ')';
                         return false;
                 }
+		if (substr($response[0],0,10) == 'BADSESSION') { 
+			$this->error_msg = 'Invalid Session passed (' . trim($response[0]) . ')'; 
+			return false; 
+		} 
                 if(substr($response[0], 0, 2) != 'OK') {
-                        $this->error_msg = 'Unknown error submitting tracks'.
+                        $this->error_msg = 'Response Not ok, unknown error'.
                                           "\nDebug output:\n".$buffer;
                         return false;
                 }
 
+		debug_event('fooo',$buffer,'1'); 
                 return true;
 
         } // submit_tracks

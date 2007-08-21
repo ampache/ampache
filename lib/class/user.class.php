@@ -558,41 +558,34 @@ class User {
 	public function update_stats($song_id) {
 
 		$song_info = new Song($song_id);
+		$song_info->format(); 
 		$user = $this->id;
 		
 		if (!strlen($song_info->file)) { return false; }
 
+		// Make sure we didn't just play this song
+		$data = Stats::get_last_song($this->id);
+		$last_song = new Song($data['object_id']); 
+		if ($data['date']+($song_info->time/2) >= time()) { 
+			debug_event('Stats','Not collecting stats less then 50% of song has elapsed','3'); 
+			return false; 
+		} 
+
+		// Check if lastfm is loaded, if so run the update
+		if (Plugin::is_installed('Last.FM')) { 
+			$lastfm = new Plugin('Lastfm');
+			if ($lastfm->_plugin->load($this->prefs,$this->id)) { 
+				$lastfm->_plugin->submit($song_info,$this->id); 
+			} 
+		} // end if is_installed 
+
+		// Do this last so the 'last played checks are correct' 
 		Stats::insert('song',$song_id,$user);
 		Stats::insert('album',$song_info->album,$user);
 		Stats::insert('artist',$song_info->artist,$user);
 		Stats::insert('genre',$song_info->genre,$user);
 
-                /**
-		 * Record this play to LastFM 
-		 * because it lags like the dickens try twice on everything
-		 */
-                if (!empty($this->prefs['lastfm_user']) AND !empty($this->prefs['lastfm_pass'])) { 
-                        $song_info->format();
 
-			$lastfm = new scrobbler($this->prefs['lastfm_user'],$this->prefs['lastfm_pass']);                       
-                        $lastfm->submit_host	= $this->prefs['lastfm_host']; 
-			$lastfm->submit_port	= $this->prefs['lastfm_port'];
-			$lastfm->submit_url	= $this->prefs['lastfm_url'];
-			$lastfm->challenge	= $this->prefs['lastfm_challenge'];
-
-                        if (!$lastfm->queue_track($song_info->f_artist_full,$song_info->f_album_full,$song_info->title,time(),$song_info->time)) { 
-				debug_event('LastFM','Error: Queue Failed: ' . $lastfm->error_msg,'3');
-			}
-
-			$submit = $lastfm->submit_tracks(); 
-	
-			/* Try again if it fails */
-			if (!$submit) { sleep(1); $submit = $lastfm->submit_tracks(); } 
-
-			if (!$submit) { 
-				debug_event('LastFM','Error Submit Failed: ' . $lastfm->error_msg,'3'); 
-			}
-                } // record to LastFM
 	} // update_stats
 
 	/**

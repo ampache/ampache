@@ -66,6 +66,28 @@ class Stats {
 		}	
 
 	} // insert
+	
+	/**
+	 * get_last_song
+	 * This returns the full data for the last song that was played, including when it
+	 * was played, this is used by, among other things, the LastFM plugin to figure out
+	 * if we should re-submit or if this is a duplicate / if it's too soon. This takes an
+	 * optional user_id because when streaming we don't have $GLOBALS()
+	 */
+	public static function get_last_song($user_id='') { 
+
+		$user_id = $user_id ? $user_id : $GLOBALS['user']->id; 
+
+		$user_id = Dba::escape($user_id);
+
+		$sql = "SELECT * FROM `object_count` WHERE `user`='$user_id' AND `object_type`='song' ORDER BY `date` DESC LIMIT 1"; 
+		$db_results = Dba::query($sql); 
+
+		$results = Dba::fetch_assoc($db_results); 
+
+		return $results; 
+
+	} // get_last_song
 
 	/**
  	 * get_top

@@ -4,6 +4,9 @@
 
 --------------------------------------------------------------------------
   v.3.4-Alpha2 
+  	- Fixed double posting of songs on a single stream with some
+		clients
+  	- Updated LastFM protocol to v1.2 
 	- Fixed copyright notices (Thx porthose)
   	- Fixed single downloads
   	- Fixed weird CSS issue with a crafty little hack
