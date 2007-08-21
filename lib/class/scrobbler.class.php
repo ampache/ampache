@@ -196,8 +196,8 @@ class scrobbler {
                 fwrite($as_socket, "Content-length: ".strlen($query_str)."\r\n\r\n");
 
                 fwrite($as_socket, $query_str."\r\n\r\n");
-debug_event('LastFM',$query_str,'1');
-                $buffer = '';
+                
+		$buffer = '';
                 while(!feof($as_socket)) {
                         $buffer .= fread($as_socket, 8192);
                 }
@@ -232,7 +232,6 @@ debug_event('LastFM',$query_str,'1');
                         return false;
                 }
 
-		debug_event('fooo',$buffer,'1'); 
                 return true;
 
         } // submit_tracks
