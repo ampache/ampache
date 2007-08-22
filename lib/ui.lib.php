@@ -882,9 +882,13 @@ function show_artist_select($name='artist', $artist_id=0) {
  * It's amazing we have three of these funtions now, this one shows a select of genres and take s name
  * and a selected genre... Woot!
  */
-function show_genre_select($name='genre',$genre_id=0) { 
+function show_genre_select($name='genre',$genre_id=0,$size='') { 
 
-	echo "<select name=\"$name\">\n";
+        if ($size > 0) {
+                $multiple_txt = " multiple=\"multiple\" size=\"$size\"";
+        }
+
+	echo "<select name=\"$name\"$multiple_txt>\n";
 
 	$sql = "SELECT `id`, `name` FROM `genre` ORDER BY `name`";
 	$db_results = Dba::query($sql);

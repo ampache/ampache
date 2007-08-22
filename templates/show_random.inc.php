@@ -21,7 +21,7 @@
 
 
 ?>
-<form id="random" method="post" enctype="multipart/form-data" action="<?php echo conf('web_path'); ?>/song.php">
+<form id="random" method="post" enctype="multipart/form-data" action="<?php echo Config::get('web_path'); ?>/random.php">
 <?php show_box_top(_('Play Random Selection')); ?>
 <table>
 <tr>
@@ -42,7 +42,7 @@
 	</td>
 	<td rowspan="4" valign="top"><?php echo  _('From genre'); ?></td>
 	<td rowspan="4">
-	<?php show_genre_pulldown('genre','','5'); ?>
+	<?php show_genre_select('genre','','5'); ?>
 	</td>
 </tr>
 <tr>
@@ -60,7 +60,7 @@
 <tr>
 	<td nowrap="nowrap"><?php echo _('From catalog'); ?></td>
 	<td>
-	<?php show_catalog_pulldown('catalog',''); ?>
+	<?php show_catalog_select('catalog',''); ?>
 	</td>
 </tr>
 <tr>
@@ -78,11 +78,6 @@
 </tr>
 <tr>
 	<td colspan="4">
-		<input type="hidden" name="action" value="random" />
-		<input class="button" type="button" value="<?php echo _('Play'); ?>" onclick="return SubmitToPage('random','<?php echo conf('web_path'); ?>/song.php?action=random&amp;method=stream');" />
-		<?php if (batch_ok()) { ?>
-			<input class="button" type="button" value="<?php echo _('Download'); ?>" onclick="return SubmitToPage('random','<?php echo conf('web_path'); ?>/song.php?action=random&amp;method=download');" />
-		<?php } ?>
 	</td>
 </tr>
 </table>

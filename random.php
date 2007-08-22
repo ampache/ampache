@@ -27,7 +27,7 @@ show_header();
 switch ($_REQUEST['action']) { 
 	default: 
 	case 'advanced':
-	
+		require_once Config::get('prefix') . '/templates/show_random.inc.php';	
 	break;
 } // end switch 
 
