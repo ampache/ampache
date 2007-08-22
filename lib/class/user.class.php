@@ -568,7 +568,7 @@ class User {
 		$last_song = new Song($data['object_id']); 
 		if ($data['date']+($song_info->time/2) >= time()) { 
 			debug_event('Stats','Not collecting stats less then 50% of song has elapsed','3'); 
-			return false; 
+			return false;
 		} 
 
 		// Check if lastfm is loaded, if so run the update

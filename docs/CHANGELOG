@@ -4,6 +4,8 @@
 
 --------------------------------------------------------------------------
   v.3.4-Alpha2 
+  	- Fixed missing artist name on Albums of the Moment
+	- Added simple Playlist element view, non-editable
   	- Fixed double posting of songs on a single stream with some
 		clients
   	- Updated LastFM protocol to v1.2 

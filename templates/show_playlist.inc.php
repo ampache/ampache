@@ -31,5 +31,11 @@ $web_path = Config::get('web_path');
 		<li><a href="<?php echo $web_path; ?>/stream.php?action=playlist_random&amp;playlist_id=<?php echo $playlist->id; ?>"><?php echo _('Play Random'); ?></a></li>
 		</ul>
 <?php show_box_bottom(); ?>
+<?php show_box_top(); ?>
 <div id="browse_content">
+<?php 
+	$object_ids = $playlist->get_items(); 
+	require_once Config::get('prefix') . '/templates/show_playlist_songs.inc.php'; 
+?>
 </div>
+<?php show_box_bottom(); ?>

@@ -215,10 +215,12 @@ class Album {
 		$this->f_title		= $name; 
 		if ($this->artist_count == '1') { 
 			$artist = scrub_out(truncate_with_ellipsis(trim($this->artist_prefix . ' ' . $this->artist_name),Config::get('ellipsis_threshold_album')));
-		        $this->f_artist	= "<a href=\"$web_path/artists.php?action=show&amp;artist=" . $this->artist_id . "\">" . $artist . "</a>";
+		        $this->f_artist_link = "<a href=\"$web_path/artists.php?action=show&amp;artist=" . $this->artist_id . "\">" . $artist . "</a>";
+			$this->f_artist = $artist; 
 		}
 		else {
-			$this->f_artist = "<div title=\"$this->artist_count " . _('Artists') . "\">" . _('Various') . "</div>"; 
+			$this->f_artist_link = "<div title=\"$this->artist_count " . _('Artists') . "\">" . _('Various') . "</div>"; 
+			$this->f_artist = _('Various');
 		}
 
 		if ($this->year == '0') { 

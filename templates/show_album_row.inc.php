@@ -30,7 +30,7 @@
         </a>
 <?php } ?>
 <td><?php echo $album->f_name_link; ?></td>
-<td><?php echo $album->f_artist; ?></td>
+<td><?php echo $album->f_artist_link; ?></td>
 <td><?php echo $album->song_count; ?></td>
 <td><?php echo $album->year; ?></td>
 <td>

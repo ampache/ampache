@@ -108,7 +108,7 @@ class Playlist {
 
 		$results = array(); 
 
-		$sql = "SELECT `object_id`,`object_type`,`dynamic_song` FROM `playlist_data` WHERE `playlist`='" . Dba::escape($this->id) . "' ORDER BY `track`";
+		$sql = "SELECT `object_id`,`object_type`,`dynamic_song`,`track` FROM `playlist_data` WHERE `playlist`='" . Dba::escape($this->id) . "' ORDER BY `track`";
 		$db_results = Dba::query($sql);
 
 		while ($row = Dba::fetch_assoc($db_results)) { 
@@ -117,7 +117,7 @@ class Playlist {
 				// Do something here FIXME!
 			} 
 
-			$results[] = array('type'=>$row['object_type'],'object_id'=>$row['object_id']); 
+			$results[] = array('type'=>$row['object_type'],'object_id'=>$row['object_id'],'track'=>$row['track']); 
 		} // end while
 
 		return $results;
