@@ -256,8 +256,8 @@ class Random {
 		if ($data['genre'][0] != '-1') { 
 			$matchlist['genre'] = $data['genre']; 
 		} 	
-print_r($_POST);
-	        /* If they've passed -1 as limit then don't get everything */
+	        
+		/* If they've passed -1 as limit then don't get everything */
 	        if ($data['limit'] == "-1") { unset($data['limit']); }
 	        elseif ($data['random_type'] == 'length') { /* Rien a faire */ }
 	        else { $limit_sql = "LIMIT " . $limit; }
