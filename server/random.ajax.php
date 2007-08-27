@@ -52,7 +52,26 @@ switch ($_REQUEST['action']) {
                 }
 		$results['rightbar'] = ajax_include('rightbar.inc.php');
         break;
+	case 'advanced_random': 
+		$object_ids = Random::advanced($_POST); 
+
+		// First add them to the active playlist
+		foreach ($object_ids as $object_id) { 
+			$GLOBALS['user']->playlist->add_object($object_id,'song'); 
+		} 
+		$results['rightbar'] = ajax_include('rightbar.inc.php'); 
+
+		// Now setup the browse and show them below!
+		Browse::set_type('song'); 
+		Browse::save_objects($object_ids);
+		ob_start(); 
+		Browse::show_objects(); 
+		$results['browse'] = ob_get_contents(); 
+		ob_end_clean(); 
+		
+	break;
 	default: 
+		$results['rfc3514'] = '0x1'; 
 	break;
 } // switch on action; 
 

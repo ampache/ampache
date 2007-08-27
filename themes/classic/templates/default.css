@@ -128,6 +128,12 @@ input {
   font-weight:bold;
   background: #d0d0d0;
 }
+.smallbutton:active { 
+  border-bottom:1px solid #f0f0f0;
+  border-right:1px solid #f0f0f0;
+  border-top:1px solid #a0a0a0;
+  border-left:1px solid #a0a0a0;
+}	
 a.smallbutton { 
 	text-decoration:none;
 	padding:1px 2px;
@@ -459,8 +465,7 @@ h3#content_title span {
 }
 .info-box { 
 	background: #f7f7f7;
-	/*float:left; 
-	clear:left;*/
+	/*float:left;*/
 } 
 .box-title { 
 	border-bottom: solid 1px #000;

@@ -18,12 +18,10 @@
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
-
-
 ?>
 <form id="random" method="post" enctype="multipart/form-data" action="<?php echo Config::get('web_path'); ?>/random.php">
 <?php show_box_top(_('Play Random Selection')); ?>
-<table>
+<table class="table-data" border="0" cellspacing="0" cellpadding="3">
 <tr>
 	<td><?php echo _('Item count'); ?></td>
 	<td>
@@ -42,7 +40,7 @@
 	</td>
 	<td rowspan="4" valign="top"><?php echo  _('From genre'); ?></td>
 	<td rowspan="4">
-	<?php show_genre_select('genre','','5'); ?>
+	<?php show_genre_select('genre[]','','5'); ?>
 	</td>
 </tr>
 <tr>
@@ -78,8 +76,12 @@
 </tr>
 <tr>
 	<td colspan="4">
+	<?php echo Ajax::text("?page=random&action=advanced_random",_('Enqueue'),'advanced_random_enqueue','random','smallbutton'); ?>
 	</td>
 </tr>
 </table>
 <?php show_box_bottom(); ?>
 </form>
+<div id="browse">
+
+</div>

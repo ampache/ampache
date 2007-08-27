@@ -23,7 +23,7 @@ $web_path = Config::get('web_path');
 $ajax_url = Config::get('ajax_url'); 
 
 // Title for this album
-$title		= scrub_out($album->name) . '&nbsp;(' . $album->year . ')&nbsp;--&nbsp;' . $album->f_artist; 
+$title		= scrub_out($album->name) . '&nbsp;(' . $album->year . ')&nbsp;--&nbsp;' . $album->f_artist_link; 
 ?>
 <?php show_box_top($title,'info-box'); ?>
 	<div style="float:left;margin-right:10px;">

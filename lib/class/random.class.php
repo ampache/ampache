@@ -240,6 +240,132 @@ class Random {
 	} // get_artist
 
 	/**
+	 * advanced
+	 * This processes the results of a post from a form and returns an 
+	 * array of song items that were returned from said randomness 
+	 */
+	public static function advanced($data) { 
+
+		/* Figure out our object limit */
+		$limit = intval($data['random']); 
+
+		// Generate our matchlist
+		if ($data['catalog'] != '-1') {
+			$matchlist['catalog'] = $data['catalog']; 
+		}
+		if ($data['genre'][0] != '-1') { 
+			$matchlist['genre'] = $data['genre']; 
+		} 	
+print_r($_POST);
+	        /* If they've passed -1 as limit then don't get everything */
+	        if ($data['limit'] == "-1") { unset($data['limit']); }
+	        elseif ($data['random_type'] == 'length') { /* Rien a faire */ }
+	        else { $limit_sql = "LIMIT " . $limit; }
+
+	        $where = "1=1 ";
+	        if (is_array($matchlist)) { 
+	            foreach ($matchlist as $type => $value) {
+	                        if (is_array($value)) {
+	                                foreach ($value as $v) {
+	                                        $v = Dba::escape($v);
+	                                        if ($v != $value[0]) { $where .= " OR $type='$v' "; }
+	                                        else { $where .= " AND ( $type='$v'"; }
+	                                }
+        	                        $where .= " ) ";
+	                        }
+	                        elseif (strlen($value)) {
+	                                $value = Dba::escape($value);
+	                                $where .= " AND $type='$value' ";
+	                        }
+	            } // end foreach
+		} // end if matchlist
+
+		
+	        if ($data['random_type'] == 'full_album') {
+	                $query = "SELECT` album`.`id` FROM `song` INNER JOIN `album` ON `song`.`album`=`album`.`id` " . 
+				"WHERE $where GROUP BY `song`.`album` ORDER BY RAND() $limit_sql";
+	                $db_results = Dba::query($query);
+	                while ($row = Dba::fetch_row($db_results)) {
+	                        $albums_where .= " OR `song`.`album`=" . $row[0];
+	                }
+	                $albums_where = ltrim($albums_where," OR");
+	                $sql = "SELECT `song`.`id`,`song`.`size`,`song`.`time` FROM `song` WHERE $albums_where ORDER BY `song`.`album`,`song`.`track` ASC";
+	        }
+	        elseif ($data['random_type'] == 'full_artist') {
+	                $query = "SELECT `artist`.`id` FROM `song` INNER JOIN `artist` ON `song`.`artist`=`artist`.`id` " . 
+				"WHERE $where GROUP BY `song`.`artist` ORDER BY RAND()  $limit_sql";
+	                $db_results = Dba::query($query);
+	                while ($row = Dba::fetch_row($db_results)) {
+	                        $artists_where .= " OR song.artist=" . $row[0];
+	                }
+	                $artists_where = ltrim($artists_where," OR");
+	                $sql = "SELECT song.id,song.size,song.time FROM song WHERE $artists_where ORDER BY RAND()";
+	        }
+/* TEMP DISABLE */
+//        elseif ($options['random_type'] == 'unplayed') {
+//                $uid = $GLOBALS['user']->id;
+//                $query = "SELECT song.id,song.size FROM song LEFT JOIN object_count ON song.id = object_count.object_id " .
+//                         "WHERE ($where) AND ((object_count.object_type='song' AND user = '$uid') OR object_count.count IS NULL ) " .
+//                         "ORDER BY CASE WHEN object_count.count IS NULL THEN RAND() WHEN object_count.count > 4 THEN RAND()*RAND()*object_count.count " .
+//                         "ELSE RAND()*object_count.count END " . $limit_sql;
+//        } // If unplayed
+		else { 
+			$sql = "SELECT `id`,`size`,`time` FROM `song` WHERE $where ORDER BY RAND() $limit_sql"; 
+		} 
+
+		// Run the query generated above so we can while it
+		$db_results = Dba::query($sql); 
+		$results = array(); 	
+
+		while ($row = Dba::fetch_assoc($db_results)) { 
+
+			// If size limit is specified
+			if ($data['size_limit']) { 
+				// Convert
+				$new_size = ($row['size'] / 1024) / 1024; 
+	
+				// Only fuzzy 10 times
+				if ($fuzzy_size > 10) { return $results; } 
+
+				// Add and check, skip if over don't return incase theres a smaller one commin round
+				if (($size_total + $new_size) > $data['size_limit']) { $fuzzy_size++; continue; } 
+				
+				$size_total = $size_total + $new_size; 
+				$results[] = $row['id']; 
+
+				// If we are within 4mb of target then jump ship
+				if (($data['size_limit'] - floor($size_total)) < 4) { return $results; } 
+			} // if size_limit
+
+			// If length really does matter
+			if ($data['random_type'] == 'length') { 
+				// base on min, seconds are for chumps and chumpettes
+				$new_time = floor($row['time'] / 60); 
+
+				if ($fuzzy_time > 10) { return $results; } 
+
+				// If the new one would go voer skip!
+				if (($time_total + $new_time) > $data['limit']) { $fuzzy_time++; continue; } 
+
+				$time_total = $time_total + $new_time; 
+				$results[] = $row['id']; 
+
+				if (($data['limit'] - $time_total) < 2) { return $results; } 
+
+			} // if length does matter 
+
+			if (!$data['size_limit'] AND $data['random_type'] != 'length') { 
+				$results[] = $row['id']; 
+			} 
+
+		} // end while results
+
+
+		return $results; 
+
+	} // advanced
+
+	/**
 	 * get_type_name
 	 * This returns a 'purrty' name for the differnt random types
 	 */

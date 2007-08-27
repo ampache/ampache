@@ -219,7 +219,7 @@ class Album {
 			$this->f_artist = $artist; 
 		}
 		else {
-			$this->f_artist_link = "<div title=\"$this->artist_count " . _('Artists') . "\">" . _('Various') . "</div>"; 
+			$this->f_artist_link = "<span title=\"$this->artist_count " . _('Artists') . "\">" . _('Various') . "</span>"; 
 			$this->f_artist = _('Various');
 		}
 

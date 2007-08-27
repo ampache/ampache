@@ -20,17 +20,10 @@
 */
 
 
-/*
-	@header General Library
-	This is the general library that contains misc functions
-	that doesn't have a home elsewhere
-*/
-
-/*!
-	@function ip2int
-	@discussion turns a dotted quad ip into an
-		int
-*/
+/**
+ * ip2int
+ * turns a dotted quad ip into an int
+ */
 function ip2int($ip) { 
 
         $a=explode(".",$ip);
@@ -289,122 +282,6 @@ function set_memory_limit($new_limit) {
 	}
 
 } // set_memory_limit
-
-/*!
-	@function get_random_songs
-	@discussion Returns a random set of songs/albums or artists
-		matchlist is an array of the WHERE mojo and options
-		defines special unplayed,album,artist,limit info
-*/
-function get_random_songs( $options, $matchlist) {
-
-        $dbh = dbh();
-	
-        /* Define the options */
-        $limit          = intval($options['limit']);
-
-        /* If they've passed -1 as limit then don't get everything */
-        if ($options['limit'] == "-1") { unset($options['limit']); }
-	elseif ($options['random_type'] == 'length') { /* Rien a faire */ } 
-        else { $limit_sql = "LIMIT " . $limit; }
-
-
-        $where = "1=1 ";
-        if(is_array($matchlist))
-            foreach ($matchlist as $type => $value) {
-                        if (is_array($value)) {
-                                foreach ($value as $v) {
-                                        $v = sql_escape($v);
-                                        if ($v != $value[0]) { $where .= " OR $type='$v' "; }
-                                        else { $where .= " AND ( $type='$v'"; }
-                                }
-                                $where .= " ) ";
-                        }
-                        elseif (strlen($value)) {
-                                $value = sql_escape($value);
-                                $where .= " AND $type='$value' ";
-                        }
-            }
-
-
-
-        if ($options['random_type'] == 'full_album') {
-                $query = "SELECT album.id FROM song,album WHERE song.album=album.id AND $where GROUP BY song.album ORDER BY RAND() " . $limit_sql;
-                $db_results = mysql_query($query, $dbh);
-                while ($data = mysql_fetch_row($db_results)) {
-                        $albums_where .= " OR song.album=" . $data[0];
-                }
-                $albums_where = ltrim($albums_where," OR");
-                $query = "SELECT song.id,song.size,song.time FROM song WHERE $albums_where ORDER BY song.album,song.track ASC";
-        }
-        elseif ($options['random_type'] == 'full_artist') {
-                $query = "SELECT artist.id FROM song,artist WHERE song.artist=artist.id AND $where GROUP BY song.artist ORDER BY RAND() " . $limit_sql;
-                $db_results = mysql_query($query, $dbh);
-                while ($data = mysql_fetch_row($db_results)) {
-                        $artists_where .= " OR song.artist=" . $data[0];
-                }
-                $artists_where = ltrim($artists_where," OR");
-                $query = "SELECT song.id,song.size,song.time FROM song WHERE $artists_where ORDER BY RAND()";
-        }
-/* TEMP DISABLE */
-//        elseif ($options['random_type'] == 'unplayed') {
-//                $uid = $GLOBALS['user']->id;
-//                $query = "SELECT song.id,song.size FROM song LEFT JOIN object_count ON song.id = object_count.object_id " .
-//                         "WHERE ($where) AND ((object_count.object_type='song' AND user = '$uid') OR object_count.count IS NULL ) " .
-//                         "ORDER BY CASE WHEN object_count.count IS NULL THEN RAND() WHEN object_count.count > 4 THEN RAND()*RAND()*object_count.count " .
-//                         "ELSE RAND()*object_count.count END " . $limit_sql;
-//        } // If unplayed
-        else {
-                $query = "SELECT id,size,time FROM song WHERE $where ORDER BY RAND() " . $limit_sql;
-        }
-        
-	$db_result = mysql_query($query, $dbh);
-
-        $songs = array();
-
-        while ( $r = mysql_fetch_assoc($db_result) ) {
-		/* If they've specified a filesize limit */
-		if ($options['size_limit']) { 
-			/* Turn it into MB */
-			$new_size = ($r['size'] / 1024) / 1024;
-
-			/* If we would go over the allowed size skip to the next song */
-			if (($total + $new_size) > $options['size_limit']) { continue; }
-			
-			$total = $total + $new_size;
-			$songs[] = $r['id']; 
-
-			/* If we are within 4mb then that's good enough for Vollmer work */
-			if (($options['size_limit'] - floor($total)) < 4) { return $songs; }
-
-		} // end if we are defining a size limit
-
-		/* If they've specified a length */
-		if ($options['random_type'] == 'length') { 
-			/* Turn the length into min's */
-			$new_time = floor($r['time'] / 60); 
-
-			if ($fuzzy_count > 10) { return $songs; } 
-
-			/* If the new one would go over skip to the next song with a limit */
-			if (($total + $new_time) > $options['limit']) { $fuzzy_count++; continue; } 
-
-			$total = $total + $new_time; 
-			$songs[] = $r['id'];	
-
-			if (($options['limit'] - $total) < 2) { return $songs; } 
-
-		} // if length
-
-		/* If we aren't using a limit */
-		else { 
-	                $songs[] = $r['id'];
-		}
-        } // while we fetch results
-
-        return $songs;
-
-} // get_random_songs
 
 /**
  *	cleanup_and_exit
@@ -689,7 +566,6 @@ function translate_pattern_code($code) {
 	return false;
 	
 } // translate_pattern_code
-
 
 /**
  * print_boolean
