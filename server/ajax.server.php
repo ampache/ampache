@@ -28,7 +28,7 @@ require_once '../lib/init.php';
 /* Set the correct headers */
 header("Content-type: text/xml; charset=" . Config::get('site_charset'));
 header("Content-Disposition: attachment; filename=ajax.xml");
-header("Expires Sun, 19 Nov 1978 05:00:00 GMT"); 
+header("Expires: Sun, 19 Nov 1978 05:00:00 GMT"); 
 header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
 header("Cache-Control: no-store, no-cache, must-revalidate");
 header("Pragma: no-cache"); 
