@@ -18,24 +18,12 @@
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 
-/*!
-	@header Update Document	
-	This document handles updating from one version of Maintain to the next
-	if this doc is readable you can't login. stop.update and gone.fishing 
-	must also be in place for this doc to work.
+// We need this stuff
+define('NO_SESSION','1');
+require 'lib/init.php';
 
-*/
-
-/* Start House Keeping */
-
-	// We need this stuff
-	define('NO_SESSION','1');
-	require 'lib/init.php';
-
-	// Get the version and format it
-	$version = Update::get_version(); 
-	
-/* End House Keeping */
+// Get the version and format it
+$version = Update::get_version(); 
 
 if ($_REQUEST['action'] == 'update') { 
 	

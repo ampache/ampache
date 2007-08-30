@@ -60,7 +60,7 @@ function focus(){ document.login.username.focus(); }
 		</form>
 		<?php if (Config::get('allow_public_registration')) { ?>
 		<span class="text-action">
-			<a href="<?php echo conf('web_path'); ?>/register.php"><?php echo _('Register'); ?></a>
+			<a href="<?php echo Config::get('web_path'); ?>/register.php"><?php echo _('Register'); ?></a>
 		</span>
 		<?php } // end if (conf('allow_public_registration')) ?>
 	</div>
