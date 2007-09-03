@@ -32,4 +32,7 @@
 		<?php echo get_user_icon('download',_('Download')); ?>
 	</a>
 	<?php } ?>
+	<?php if ($playlist->has_access()) { ?>
+		<?php echo Ajax::button('?page=playlist&action=delete_track&playlist_id=' . $playlist->id . '&track=' . $object['track_id'],'delete',_('Delete'),'track_del_' . $object['track_id']); ?>
+	<?php } ?>
 </td>

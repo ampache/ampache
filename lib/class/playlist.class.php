@@ -85,6 +85,24 @@ class Playlist {
 	} // format
 
 	/**
+ 	 * has_access
+	 * This function returns true or false if the current user
+	 * has access to this playlist
+	 */
+	public function has_access() { 
+
+		if ($this->user == $GLOBALS['user']->id) { 
+			return true; 
+		} 
+		else { 
+			return $GLOBALS['user']->has_access('100'); 
+		} 	
+
+		return false; 
+
+	} // has_access
+
+	/**
 	 * get_track
 	 * Takes a playlist_data.id and returns the current track value for said entry
 	 */
@@ -108,7 +126,7 @@ class Playlist {
 
 		$results = array(); 
 
-		$sql = "SELECT `object_id`,`object_type`,`dynamic_song`,`track` FROM `playlist_data` WHERE `playlist`='" . Dba::escape($this->id) . "' ORDER BY `track`";
+		$sql = "SELECT `id`,`object_id`,`object_type`,`dynamic_song`,`track` FROM `playlist_data` WHERE `playlist`='" . Dba::escape($this->id) . "' ORDER BY `track`";
 		$db_results = Dba::query($sql);
 
 		while ($row = Dba::fetch_assoc($db_results)) { 
@@ -117,7 +135,7 @@ class Playlist {
 				// Do something here FIXME!
 			} 
 
-			$results[] = array('type'=>$row['object_type'],'object_id'=>$row['object_id'],'track'=>$row['track']); 
+			$results[] = array('type'=>$row['object_type'],'object_id'=>$row['object_id'],'track'=>$row['track'],'track_id'=>$row['id']); 
 		} // end while
 
 		return $results;
@@ -437,22 +455,20 @@ class Playlist {
 	} // check_type
 
 	/**
-	 * remove_songs
-	 * This is the polar opposite of the add_songs function... with one little 
-	 * change. it works off of the playlist_data.id rather then song_id
+	 * delete_track
+	 * this deletes a single track, you specify the playlist_data.id here
 	 */
-	function remove_songs($data) { 
+	public function delete_track($id) { 
 
-		foreach ($data as $value) { 
-		
-			$id = sql_escape($value);
-			
-			$sql = "DELETE FROM playlist_data WHERE id='$id'";
-			$db_results = mysql_query($sql, dbh());
+		$this_id = Dba::escape($this->id); 
+		$id = Dba::escape($id); 
+	
+		$sql = "DELETE FROM `playlist_data` WHERE `playlist_data`.`playlist`='$this_id' AND `playlist_data`.`id`='$id' LIMIT 1"; 
+		$db_results = Dba::query($sql); 
 
-		} // end foreach dead songs
+		return true; 
 
-	} // remove_songs
+	} // delete_track 
 
 	/**
 	 * delete
