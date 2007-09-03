@@ -125,7 +125,6 @@ require_once $prefix . '/lib/gettext.php';
 require_once $prefix . '/lib/batch.lib.php';
 require_once $prefix . '/lib/themes.php';
 require_once $prefix . '/lib/stream.lib.php';
-require_once $prefix . '/lib/playlist.lib.php';
 require_once $prefix . '/lib/democratic.lib.php';
 require_once $prefix . '/lib/xmlrpc.php';
 require_once $prefix . '/modules/xmlrpc/xmlrpc.inc';

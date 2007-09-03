@@ -230,25 +230,32 @@ class Catalog {
 
 		if ($catalog_id) { $catalog_search = "WHERE `catalog`='" . Dba::escape($catalog_id) . "'"; } 
 
-		$sql = "SELECT `id`,`album`,`artist`,`genre`,`file`,`size`,`time` FROM `song` $catalog_search"; 
+		$sql = "SELECT COUNT(`id`),SUM(`time`),SUM(`size`) FROM `song` $catalog_search"; 
 		$db_results = Dba::query($sql); 
+		$data = Dba::fetch_row($db_results); 
+		$songs	= $data['0']; 
+		$time	= $data['1']; 
+		$size	= $data['2']; 
 
-		while ($data = Dba::fetch_assoc($db_results)) { 
-			$albums[$data['album']] = true; 
-			$artists[$data['artist']] = true; 
-			$genres[$data['genre']] = true; 
-			$dir = basename($data['file']); 
-			$folders[$dir] = true; 
-			$size += $data['size'];
-			$time += $data['time'];
-			$songs++; 
-		} 
+		$sql = "SELECT COUNT(`album`) FROM `song` $catalog_search GROUP BY `album`"; 
+		$db_results = Dba::query($sql); 
+		$data = Dba::fetch_row($db_results); 
+		$albums = $data['0']; 
+
+		$sql = "SELECT COUNT(`artist`) FROM `song` $catalog_search GROUP BY `artist`"; 
+		$db_results = Dba::query($sql); 
+		$data = Dba::fetch_row($db_results); 
+		$artists = $data['0']; 
+
+		$sql = "SELECT COUNT(`genre`) FROM `song` $catalog_search GROUP BY `genre`"; 
+		$db_results = Dba::query($sql); 
+		$data = Dba::fetch_row($db_results); 
+		$genres = $data['0']; 
 
 		$results['songs'] 	= $songs; 
-		$results['albums']	= count($albums); 
-		$results['artists']	= count($artists); 
-		$results['genres']	= count($genres); 
-		$results['folders']	= count($folders); 
+		$results['albums']	= $albums; 
+		$results['artists']	= $artists; 
+		$results['genres']	= $genres; 
 		$results['size']	= $size; 
 		$results['time']	= $time; 
 

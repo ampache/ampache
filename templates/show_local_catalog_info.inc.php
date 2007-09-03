@@ -29,7 +29,6 @@
 	<td><?php echo _('Artists'); ?></td>
 	<td><?php echo _('Songs'); ?></td>
 	<td><?php echo _('Genres'); ?></td>
-	<td><?php echo _('Folders'); ?></td>
 	<td><?php echo _('Catalog Size'); ?></td>
 	<td><?php echo _('Catalog Time'); ?></td>
 </tr>
@@ -40,7 +39,6 @@
 	<td><?php echo $results['artists']; ?></td>
 	<td><?php echo $results['songs']; ?></td>
 	<td><?php echo $results['genres']; ?></td>
-	<td><?php echo $results['folders']; ?></td>
 	<td><?php echo $total_size; ?> <?php echo $size_unit; ?></td>
 	<td><?php echo $time_text; ?></td>
 </tr>
