@@ -314,6 +314,16 @@ class Browse {
 				break;
 			} // end filter
 		} // end artist
+		elseif ($_SESSION['browse']['type'] == 'genre') { 
+			switch ($filter) { 
+				case 'alpha_match': 
+					$filter_sql = " `genre`.`name` LIKE '" . Dba::escape($value) . "%' AND "; 
+				break;
+				default: 
+					// Rien a faire
+				break;
+			} // end filter 
+		} // end if genre
 		elseif ($_SESSION['browse']['type'] == 'live_stream') { 
 			switch ($filter) { 
 				case 'alpha_match':
@@ -425,39 +435,42 @@ class Browse {
 			$object_ids = array_slice($object_ids,self::$start,$limit); 
 		} 
 
+		// Format any matches we have so we can show them to the masses
+		$match = $_SESSION['browse']['filter']['alpha_match'] ? ' (' . $_SESSION['browse']['filter']['alpha_match'] . ')' : '';  
+
 		switch ($_SESSION['browse']['type']) { 
 			case 'song': 
-				show_box_top(_('Songs')); 
+				show_box_top(_('Songs') . $match); 
 				require_once Config::get('prefix') . '/templates/show_songs.inc.php'; 
 				show_box_bottom(); 
 			break;
 			case 'album': 
-				show_box_top(_('Albums')); 
+				show_box_top(_('Albums') . $match); 
 				require_once Config::get('prefix') . '/templates/show_albums.inc.php';
 				show_box_bottom(); 
 			break;
 			case 'genre':
-				show_box_top(_('Genres')); 
+				show_box_top(_('Genres') . $match); 
 				require_once Config::get('prefix') . '/templates/show_genres.inc.php'; 
 				show_box_bottom(); 
 			break;
 			case 'user':
-				show_box_top(_('Manage Users')); 
+				show_box_top(_('Manage Users') . $match); 
 				require_once Config::get('prefix') . '/templates/show_users.inc.php'; 
 				show_box_bottom(); 
 			break;
 			case 'artist':
-				show_box_top(_('Artists')); 
+				show_box_top(_('Artists') . $match); 
 				require_once Config::get('prefix') . '/templates/show_artists.inc.php'; 
 				show_box_bottom(); 
 			break;
 			case 'live_stream': 
-				show_box_top(_('Radion Stations')); 
+				show_box_top(_('Radion Stations') . $match); 
 				require_once Config::get('prefix') . '/templates/show_live_streams.inc.php';
 				show_box_bottom(); 
 			break;
 			case 'playlist': 
-				show_box_top(_('Playlists'));
+				show_box_top(_('Playlists') . $match);
 				require_once Config::get('prefix') . '/templates/show_playlists.inc.php'; 
 				show_box_bottom(); 
 			break;
