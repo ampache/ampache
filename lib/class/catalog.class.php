@@ -1252,6 +1252,8 @@ class Catalog {
 		$sql = "SELECT `id`,`file` FROM `song` WHERE `catalog`='$this->id' AND enabled='1'";
 		$db_results = Dba::query($sql);
 
+		$dead_files = 0;
+
 		/* Recurse through files, put @ to prevent errors poping up */
 		while ($results = Dba::fetch_assoc($db_results)) {
 
@@ -1275,26 +1277,17 @@ class Catalog {
 				/* Add Error */
 				Error::add('general',"Error File Not Found or 0 Bytes: " . $results['file']); 
 
-				/* Add this file to the list for removal from the db */
-				$dead_files[] = $results['id'];
+				/* Remove the file! */
+				$sql = "DELETE FROM `song` WHERE `id`='" . $results['id'] . "'"; 
+				$delete_results = Dba::query($sql); 
+
+				// Count em!
+				$dead_files++; 
+
 			} //if error
 
 		} //while gettings songs
 	
-		/* Unfortuantly it has to be done this way 
-		 * you can't delete a row at the same time you're 
-		 * doing a select on said table 
-		 */
-		if (count($dead_files)) {
-			foreach ($dead_files as $data) {
-
-				$sql = "DELETE FROM `song` WHERE `id`='$data'";
-				$db_results = Dba::query($sql);
-
-			} //end foreach
-
-		} // end if dead files
-
 		/* Step two find orphaned Arists/Albums
 		 * This finds artists and albums that no
 		 * longer have any songs associated with them
@@ -1306,7 +1299,7 @@ class Catalog {
                 echo "update_txt('" . $count ."','clean_count_" . $this->id . "');";
                 echo "\n</script>\n";
 		show_box_top(); 
-		echo "<strong>" . _('Catalog Clean Done') . " [" . count($dead_files) . "] " . _('files removed') . "</strong><br />\n";
+		echo "<strong>" . _('Catalog Clean Done') . " [" . $dead_files . "] " . _('files removed') . "</strong><br />\n";
 		echo "<strong>" . _('Optimizing Tables') . "...</strong><br />\n"; 
 		self::optimize_tables(); 
 		show_box_bottom(); 
