@@ -418,13 +418,13 @@ class Playlist {
         function normalize_tracks() { 
 
                 /* First get all of the songs in order of their tracks */
-                $sql = "SELECT id FROM playlist_data WHERE playlist='" . sql_escape($this->id) . "' ORDER BY track ASC";
-                $db_results = mysql_query($sql, dbh());
+                $sql = "SELECT `id` FROM `playlist_data` WHERE `playlist`='" . Dba::escape($this->id) . "' ORDER BY `track` ASC";
+                $db_results = Dba::query($sql);
 
                 $i = 1;
 		$results = array();
 
-                while ($r = mysql_fetch_assoc($db_results)) { 
+                while ($r = Dba::fetch_assoc($db_results)) { 
                         $new_data = array();
                         $new_data['id']         = $r['id'];
                         $new_data['track']      = $i;
@@ -433,9 +433,9 @@ class Playlist {
                 } // end while results
 
                 foreach($results as $data) { 
-                        $sql = "UPDATE playlist_data SET track='" . $data['track'] . "' WHERE" . 
-                                        " id='" . $data['id'] . "'";
-                        $db_results = mysql_query($sql, dbh());
+                        $sql = "UPDATE `playlist_data` SET `track`='" . $data['track'] . "' WHERE" . 
+                                        " `id`='" . $data['id'] . "'";
+                        $db_results = Dba::query($sql);
                 } // foreach re-ordered results
 
                 return true;

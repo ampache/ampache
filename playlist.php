@@ -142,8 +142,6 @@ switch ($_REQUEST['action']) {
 		
 		/* Normalize the tracks */
 		$playlist->normalize_tracks();
-
-	break;
 	default:
 		require_once Config::get('prefix') . '/templates/show_playlist.inc.php'; 
 	break;
