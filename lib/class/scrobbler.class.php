@@ -29,6 +29,7 @@ class scrobbler {
         public $submit_port;
         public $submit_url;
         public $queued_tracks;
+	public $reset_handshake = false; 
 
         /**
          * Constructor
@@ -206,16 +207,19 @@ class scrobbler {
                 $split_response = preg_split("/\r\n\r\n/", $buffer);
                 if(!isset($split_response[1])) {
                         $this->error_msg = 'Did not receive a valid response';
+			$this->reset_handshake = true; 
                         return false;
                 }
                 $response = explode("\n", $split_response[1]);
                 if(!isset($response[0])) {
                         $this->error_msg = 'Unknown error submitting tracks'.
                                           "\nDebug output:\n".$buffer;
+			$this->reset_handshake = true; 
                         return false;
                 }
                 if(substr($response[0], 0, 6) == 'FAILED') {
                         $this->error_msg = $response[0];
+			$this->reset_handshake = true; 
                         return false;
                 }
                 if(substr($response[0], 0, 7) == 'BADAUTH') {
@@ -224,11 +228,13 @@ class scrobbler {
                 }
 		if (substr($response[0],0,10) == 'BADSESSION') { 
 			$this->error_msg = 'Invalid Session passed (' . trim($response[0]) . ')'; 
+			$this->reset_handshake = true; 
 			return false; 
 		} 
                 if(substr($response[0], 0, 2) != 'OK') {
                         $this->error_msg = 'Response Not ok, unknown error'.
                                           "\nDebug output:\n".$buffer;
+			$this->reset_handshake = true; 
                         return false;
                 }
 

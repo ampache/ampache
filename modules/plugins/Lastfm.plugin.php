@@ -102,13 +102,24 @@ class AmpacheLastfm {
 		
 		// Create our scrobbler with everything this time and then queue it
 		$scrobbler = new scrobbler($this->username,$this->password,$this->hostname,$this->port,$this->path,$this->challenge); 
+
+		// Check to see if the scrobbling works
 		if (!$scrobbler->queue_track($song->f_artist_full,$song->f_album_full,$song->title,time(),$song->time,$song->track)) { 
+			// Depending on the error we might need to do soemthing here
 			return false; 
 		} 
 		
 		// Go ahead and submit it now	
 		if (!$scrobbler->submit_tracks()) { 
 			debug_event('LastFM','Error Submit Failed: ' . $scrobbler->error_msg,'3'); 
+			if ($scrobbler->reset_handshake) { 
+				debug_event('LastFM','Re-running Handshake due to error','3');
+				$this->set_handshake($user_id); 
+				// Try try again
+				if ($scrobbler->submit_tracks()) { 
+					return true; 
+				} 
+			} 
 			return false; 
 		}
 		

@@ -32,4 +32,7 @@
                         <?php echo get_user_icon('batch_download',_('Batch Download')); ?>
                 </a>
         <?php } ?>
+	<?php if ($playlist->has_access()) { ?>
+		<?php echo Ajax::button('?action=show_edit_object&type=playlist&id=' . $playlist->id,'edit',_('Edit'),'edit_playlist_' . $playlist->id); ?>
+	<?php } ?>
 </td>

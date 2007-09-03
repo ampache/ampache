@@ -253,12 +253,24 @@ class Playlist {
 	} // get_users
 
 	/**
+ 	 * update
+	 * This function takes a key'd array of data and runs updates
+	 */
+	public function update($data) { 
+
+		if ($data['name'] != $this->name) { 
+			$this->update_name($data['name']); 
+		} 
+
+	} // update
+
+	/**
 	 * update_type
 	 * This updates the playlist type, it calls the generic update_item function 
 	 */
-	function update_type($new_type) { 
+	private function update_type($new_type) { 
 
-		if ($this->_update_item('type',$new_type,'100')) { 
+		if ($this->_update_item('type',$new_type,'50')) { 
 			$this->type = $new_type;
 		}
 
@@ -268,9 +280,9 @@ class Playlist {
 	 * update_name
 	 * This updates the playlist name, it calls the generic update_item function
 	 */
-	function update_name($new_name) { 
+	private function update_name($new_name) { 
 
-		if ($this->_update_item('name',$new_name,'100')) { 
+		if ($this->_update_item('name',$new_name,'50')) { 
 			$this->name = $new_name;
 		}
 
@@ -280,16 +292,16 @@ class Playlist {
 	 * _update_item
 	 * This is the generic update function, it does the escaping and error checking
 	 */
-	function _update_item($field,$value,$level) { 
+	private function _update_item($field,$value,$level) { 
 
 		if ($GLOBALS['user']->id != $this->user AND !$GLOBALS['user']->has_access($level)) { 
 			return false; 
 		}
 
-		$value = sql_escape($value);
+		$value = Dba::escape($value);
 
-		$sql = "UPDATE playlist SET $field='$value' WHERE id='" . sql_escape($this->id) . "'";
-		$db_results = mysql_query($sql, dbh());
+		$sql = "UPDATE `playlist` SET $field='$value' WHERE `id`='" . Dba::escape($this->id) . "'";
+		$db_results = Dba::query($sql);
 
 		return $db_results;
 

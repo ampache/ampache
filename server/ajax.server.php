@@ -62,9 +62,8 @@ switch ($_REQUEST['action']) {
 	/* Controls the editing of objects */
 	case 'show_edit_object': 
 		
-		if (!$GLOBALS['user']->has_access('50')) { 
-			exit; 
-		} 
+		// Set the default required level
+		$level = '50'; 
 
 		switch ($_GET['type']) { 
 			case 'album': 
@@ -87,12 +86,26 @@ switch ($_REQUEST['action']) {
 				$radio = new Radio($_GET['id']); 
 				$radio->format(); 
 			break;
+			case 'playlist': 
+				$key = 'playlist_row_' . $_GET['id']; 
+				$playlist = new Playlist($_GET['id']); 
+				$playlist->format(); 
+				// If the current user is the owner, only user is required
+				if ($playlist->user == $GLOBALS['user']->id) { 
+					$level = '25'; 
+				} 
+			break;
 			default: 
 				$key = 'rfc3514'; 
 				echo xml_from_array(array($key=>'0x1')); 
 				exit; 
 			break;
 		} // end switch on type 
+
+		// Make sure they got them rights
+		if (!$GLOBALS['user']->has_access($level)) { 
+			exit; 
+		} 
 
 		ob_start(); 
 		require Config::get('prefix') . '/templates/show_edit_' . $_GET['type'] . '_row.inc.php'; 
@@ -101,8 +114,18 @@ switch ($_REQUEST['action']) {
 		echo xml_from_array($results); 
 	break; 
 	case 'edit_object': 
+
+		$level = '50'; 
+		
+		if ($_POST['type'] = 'playlist') { 
+			$playlist = new Playlist($_POST['id']); 
+			if ($GLOBALS['user']->id == $playlist->user) { 
+				$level = '25'; 
+			} 
+		} 
+
 		// Make sure we've got them rights
-		if (!$GLOBALS['user']->has_access('50')) { 
+		if (!$GLOBALS['user']->has_access($level)) { 
 			exit; 
 		} 
 
@@ -130,6 +153,11 @@ switch ($_REQUEST['action']) {
 				$song = new Song($_POST['id']);
 				$song->update($_POST); 
 				$song->format(); 
+			break;
+			case 'playlist': 
+				$key = 'playlist_row_' . $_POST['id']; 
+				$playlist->update($_POST); 
+				$playlist->format(); 
 			break;
 			case 'live_stream': 
 				$key = 'live_stream_' . $_POST['id']; 
