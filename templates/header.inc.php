@@ -79,6 +79,8 @@ if (Config::get('use_rss')) { ?>
 	</div>
 <!-- I hate IE... 
 <table class="smeg-ie" width="100%"><tr><td> -->
+<!-- Tiny little iframe, used to cheat the system --> 
+<iframe id="util_iframe" style="display:none;" src="<?php echo Config::get('web_path'); ?>/util.php"></iframe>
 <div id="content">
 <?php if (Config::get('int_config_version') != Config::get('config_version') AND $GLOBALS['user']->has_access(100)) { ?>
 <div class="fatalerror">

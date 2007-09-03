@@ -18,10 +18,14 @@
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
+
 ?>
 <?php show_box_top(_('Active Playlist')); ?>
 <ul>
 	<li><a href="<?php echo Config::get('web_path'); ?>/stream.php?action=basket"><?php echo get_user_icon('all'); ?></a></li>
+	<li>
+	<?php echo Ajax::button('?page=playlist&action=create','playlist_add',_('Save as Playlist'),'rightbar_create_playlist'); ?>
+	</li>
 <?php if (Access::check_function('batch_download')) { ?>
 	<li>
 	<a href="<?php echo Config::get('web_path'); ?>/batch.php?action=tmp_playlist&amp;id=<?php echo $GLOBALS['user']->playlist->id; ?>">
@@ -76,3 +80,16 @@
 <?php echo _('Related Genre'); ?></span>
 </div>
 <?php show_box_bottom(); ?> 
+<?php 
+
+// We do a little magic here to force a iframe reload depending on preference
+// We do this last because we want it to load, and we want to know if there is anything
+// to even pass
+if ($GLOBALS['user']->prefs['playlist_method'] != 'default' AND AJAX_INCLUDE == '1' AND count($objects)) { 
+	// Set the target
+	$_SESSION['iframe']['target'] = Config::get('web_path') . '/stream.php?action=basket'; 
+	echo "<script type=\"text/javascript\">"; 
+	echo "document.getElementById('util_iframe').contentWindow.location.reload(true);"; 
+	echo "</script>"; 
+} 
+?>

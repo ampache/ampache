@@ -339,10 +339,11 @@ function create_preference_input($name,$value) {
 			echo "</select>\n"; 
 		break;
 		case 'playlist_method': 
+			${$value} = ' selected="selected"'; 
 			echo "<select name=\"$name\">\n"; 
-			echo "\t<option value=\"send\">" . _('Send on Add') . "</option>\n"; 
-			echo "\t<option value=\"send\">" . _('Send and Clear') . "</option>\n"; 
-			echo "\t<option value=\"default\">" . _('Default') . "</option>\n"; 
+			echo "\t<option value=\"send\"$send>" . _('Send on Add') . "</option>\n"; 
+			echo "\t<option value=\"send_clear\"$send_clear>" . _('Send and Clear') . "</option>\n"; 
+			echo "\t<option value=\"default\"$default>" . _('Default') . "</option>\n"; 
 			echo "</select>\n"; 
 		break;
 		case 'transcode':

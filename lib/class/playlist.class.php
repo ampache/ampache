@@ -320,30 +320,30 @@ class Playlist {
 	 * if you want to add a dyn_song you need to use the one shot function
 	 * add_dyn_song
 	 */
-	function add_songs($song_ids=array()) { 
+	public function add_songs($song_ids=array()) { 
 
 		/* We need to pull the current 'end' track and then use that to
 		 * append, rather then integrate take end track # and add it to 
 		 * $song->track add one to make sure it really is 'next'
 		 */
-		$sql = "SELECT `track` FROM playlist_data WHERE `playlist`='" . $this->id . "' ORDER BY `track` DESC LIMIT 1";
-		$db_results = mysql_query($sql, dbh());
-		$data = mysql_fetch_assoc($db_results);
+		$sql = "SELECT `track` FROM `playlist_data` WHERE `playlist`='" . $this->id . "' ORDER BY `track` DESC LIMIT 1";
+		$db_results = Dba::query($sql);
+		$data = Dba::fetch_assoc($db_results);
 		$base_track = $data['track'];
 
 		foreach ($song_ids as $song_id) { 
 			/* We need the songs track */
 			$song = new Song($song_id);
 			
-			$track	= sql_escape($song->track+$base_track);
-			$id	= sql_escape($song->id);
-			$pl_id	= sql_escape($this->id);
+			$track	= Dba::escape($song->track+$base_track);
+			$id	= Dba::escape($song->id);
+			$pl_id	= Dba::escape($this->id);
 
 			/* Don't insert dead songs */
 			if ($id) { 
-				$sql = "INSERT INTO playlist_data (`playlist`,`song`,`track`) " . 
-					" VALUES ('$pl_id','$id','$track')";
-				$db_results = mysql_query($sql, dbh());
+				$sql = "INSERT INTO `playlist_data` (`playlist`,`object_id`,`object_type`,`track`) " . 
+					" VALUES ('$pl_id','$id','song','$track')";
+				$db_results = Dba::query($sql);
 			} // if valid id
 
 		} // end foreach songs
@@ -382,22 +382,22 @@ class Playlist {
 	 * This function creates an empty playlist, gives it a name and type
 	 * Assumes $GLOBALS['user']->id as the user
 	 */
-	function create($name,$type) { 
+	public static function create($name,$type) { 
 
-		$name = sql_escape($name);
-		$type = sql_escape($type);
-		$user = sql_escape($GLOBALS['user']->id);
+		$name = Dba::escape($name);
+		$type = Dba::escape($type);
+		$user = Dba::escape($GLOBALS['user']->id);
 		$date = time();
 
-		$sql = "INSERT INTO playlist (`name`,`user`,`type`,`date`) " . 
-			" VALUES ('$name','$user','$type','$date')";
-		$db_results = mysql_query($sql, dbh());
+		$sql = "INSERT INTO `playlist` (`name`,`user`,`type`,`genre`,`date`) " . 
+			" VALUES ('$name','$user','$type','0','$date')";
+		$db_results = Dba::query($sql);
 
-		$insert_id = mysql_insert_id(dbh());
+		$insert_id = Dba::insert_id();
 
 		return $insert_id;
 
-	} //create_paylist
+	} // create
 
 	/**
 	 * set_items
