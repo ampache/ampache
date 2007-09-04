@@ -192,6 +192,16 @@ class Dba {
 	} // insert_id
 
 	/**
+	 * error
+	 * this returns the error of the db
+	 */
+	public static function error() { 
+
+		return mysql_error(); 
+
+	} // error
+
+	/**
 	 * auto_init
 	 * This is the auto init function it sets up the config class
 	 * and also sets the default database 

@@ -1913,7 +1913,7 @@ class Catalog {
 		$db_results = Dba::query($sql);
 
 		if (!$db_results) { 
-			debug_event('insert',"Unable to insert $file -- $sql",'5','ampache-catalog'); 
+			debug_event('insert',"Unable to insert $file -- $sql" . Dba::error(),'5','ampache-catalog'); 
 			Error::add('catalog_add','Error Adding ' . $file . ' SQL:' . $sql); 
 		} 
 			
