@@ -3,7 +3,10 @@
 --------------------------------------------------------------------------
 
 --------------------------------------------------------------------------
-  v.3.4-Alpha2 
+  v.3.4-Alpha2 09/03/2007
+	- Fixed a problem where it'd let you go through the install after
+		ampache had already been installed due to a change in the
+		config variable names
 	- Added ability to delete songs from a saved playlist
 	- Added ability to create a new playlist based on active playlist
 	- Fixed the Playlist Method 'Send on Add' so that it works, the

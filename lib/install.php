@@ -74,12 +74,12 @@ function install_check_status($configfile) {
 	  Check and see if they've got _any_ account
 	  if they don't then they're cool
 	*/
-	$results = parse_ini_file($GLOBALS['configfile']);
+	$results = parse_ini_file($configfile);
 	$dbh = check_database($results['database_hostname'],$results['database_username'],$results['database_password']);	
 
 	if (is_resource($dbh)) { 
-		
-		$sql = "SELECT * FROM user";
+		@mysql_select_db($results['database_name'],$dbh);
+		$sql = "SELECT * FROM `user`";
 		$db_results = @mysql_query($sql, $dbh);
 		if (!@mysql_num_rows($db_results)) { 
 			return true;
