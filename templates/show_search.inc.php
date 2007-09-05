@@ -139,12 +139,4 @@
 </tr>
 </table>
 </form>
-
-<?php if ($_REQUEST['action'] == 'search' || $_REQUEST['action'] == 'quick_search') { ?>
-<br />
-<form method="post" action="<?php echo Config::get('web_path'); ?>/playlist.php?action=add_dyn_song">
-<?php echo _('Save Search As Track on'); ?>:
-<?php show_playlist_select($_SESSION['data']['playlist_id'],'dynamic'); ?>
-<input class="button" type="submit" value="<?php echo _('Save'); ?>" /></form>
-<?php } ?>
 <?php show_box_bottom(); ?>

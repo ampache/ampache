@@ -237,17 +237,17 @@ class Catalog {
 		$time	= $data['1']; 
 		$size	= $data['2']; 
 
-		$sql = "SELECT COUNT(`album`) FROM `song` $catalog_search GROUP BY `album`"; 
+		$sql = "SELECT COUNT(DISTINCT(`album`)) FROM `song` $catalog_search"; 
 		$db_results = Dba::query($sql); 
 		$data = Dba::fetch_row($db_results); 
 		$albums = $data['0']; 
 
-		$sql = "SELECT COUNT(`artist`) FROM `song` $catalog_search GROUP BY `artist`"; 
+		$sql = "SELECT COUNT(DISTINCT(`artist`)) FROM `song` $catalog_search"; 
 		$db_results = Dba::query($sql); 
 		$data = Dba::fetch_row($db_results); 
 		$artists = $data['0']; 
 
-		$sql = "SELECT COUNT(`genre`) FROM `song` $catalog_search GROUP BY `genre`"; 
+		$sql = "SELECT COUNT(DISTINCT(`genre`)) FROM `song` $catalog_search"; 
 		$db_results = Dba::query($sql); 
 		$data = Dba::fetch_row($db_results); 
 		$genres = $data['0']; 

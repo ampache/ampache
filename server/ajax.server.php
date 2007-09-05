@@ -117,7 +117,7 @@ switch ($_REQUEST['action']) {
 
 		$level = '50'; 
 		
-		if ($_POST['type'] = 'playlist') { 
+		if ($_POST['type'] == 'playlist') { 
 			$playlist = new Playlist($_POST['id']); 
 			if ($GLOBALS['user']->id == $playlist->user) { 
 				$level = '25'; 
