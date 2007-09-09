@@ -2,6 +2,15 @@
 ---------              MIGRATION - Ampache v.3.4                    -----------
 -------------------------------------------------------------------------------
 
+-- Upgrading ALL VERSIONS --
+
+	When upgrading Ampache extract the new .tar.gz into your existing
+	webpath, and then make sure that the /config/ampache.cfg.php from 
+	your old install is copied into the new directory, then follow any 
+	instructions provided via the web interface. 
+
+	Specifics for upgrading between versions are provided below
+
 - Migrating from Ampache 3.3.x --> 3.4
 
 	The config file format has changed, please follow the instructions

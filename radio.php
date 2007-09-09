@@ -35,7 +35,7 @@ switch ($_REQUEST['action']) {
 
 	break;
 	case 'create': 
-		if (!$GLOBALS['user']->has_access('25')) { 
+		if (!$GLOBALS['user']->has_access('25') || Config::get('demo_mode')) { 
 			access_denied(); 
 			exit; 
 		} 

@@ -227,19 +227,7 @@ class Localplay {
 		// If we can't even load it no sense in going on 
 		if (!isset($localplay->_player)) { return false; } 
 
-		$preferences = $localplay->get_preferences(); 
-
-		foreach ($preferences as $preference) { 
-			$name = 'localplay_' . $type . '_' . $preference['name']; 
-			/* Check for existing record */
-			$sql = "SELECT `id` FROM `preference` WHERE `name` = '" . Dba::escape($name) . "'"; 
-			$db_results = Dba::query($sql); 
-
-			if (!Dba::num_rows($db_results)) { return false; } 
-
-		} // end foreach
-
-		return true; 
+		return $localplay->_player->is_installed();  
 
 	} // is_enabled
 

@@ -34,7 +34,10 @@ abstract class localplay_controller {
 	abstract public function status(); 
 	abstract public function get_version(); // Returns the version of this plugin
 	abstract public function get_description(); // Returns the description 
-	abstract public function get_preferences(); // Returns an array of the prefs needed 
+	abstract public function actions(); // Return an array of name=>link actions for the sidebar
+	abstract public function is_installed(); // Returns an boolean t/f 
+	abstract public function install(); 
+	abstract public function uninstall(); 
 
 	/**
 	 * get_url

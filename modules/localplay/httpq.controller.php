@@ -101,29 +101,46 @@ class AmpacheHttpq extends localplay_controller {
 
 	} // function_map
 
+        /**
+         * is_installed
+         * This returns true or false if MPD controller is installed
+         */
+        public function is_installed() {
+
+
+        } // is_installed
+
+        /**
+         * install
+         * This function installs the MPD localplay controller
+         */
+        public function install() {
+
+
+
+        } // install
+
+        /**
+         * uninstall
+         * This removes the localplay controller 
+         */
+        public function uninstall() {
+
+
+        } // uninstall
+
+        /**
+         * actions
+         * List all the special kick ass things you can do with MPD
+         */
+        public function actions() {
+
+
+
+        } // actions
+
 	/**
-	 * preference
-	 * This function returns an array of the preferences and their 
-	 * information for Ampache to use All preferences will get a 
-	 * localplay_mpd_ appended to their name to avoid conflicts
-	 * however this controller does not need to take that into acount
-	 * REQUIRE for Locaplay
-	 */
-	public function get_preferences() { 
-
-		$preferences = array(); 
-
-		$preferences[] = array('name'=>'hostname','default'=>'localhost','type'=>'string','description'=>'HttpQ Hostname');
-		$preferences[] = array('name'=>'port','default'=>'4800','type'=>'integer','description'=>'HttpQ Port');
-		$preferences[] = array('name'=>'password','default'=>'','type'=>'string','description'=>'HttpQ Password');
-
-		return $preferences;
-
-	} // get_preferences
-
-
-	/**
-	 * songs
+	 * add
 	 * This must take an array of URL's from Ampache
 	 * and then add them to HttpQ
 	 */

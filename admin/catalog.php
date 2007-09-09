@@ -241,9 +241,14 @@ switch ($_REQUEST['action']) {
 		require_once Config::get('prefix') . '/templates/show_edit_catalog.inc.php';
 	break;
 	case 'gather_album_art':
-		$catalogs = Catalog::get_catalogs();
-		foreach ($catalogs as $catalog) { 
-			$catalog_id = $catalog->id;
+		ob_end_flush(); 
+		if (!$_REQUEST['catalog_id']) { 
+			$catalogs = Catalog::get_catalogs();
+		} 
+
+		// Itterate throught the catalogs and gather as needed
+		foreach ($catalogs as $catalog_id) { 
+			$catalog = new Catalog($catalog_id);
 			require Config::get('prefix') . '/templates/show_gather_art.inc.php'; 
 			flush(); 
 			$catalog->get_album_art('',1);

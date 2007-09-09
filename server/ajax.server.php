@@ -125,7 +125,7 @@ switch ($_REQUEST['action']) {
 		} 
 
 		// Make sure we've got them rights
-		if (!$GLOBALS['user']->has_access($level)) { 
+		if (!$GLOBALS['user']->has_access($level) || Config::get('demo_mode')) { 
 			exit; 
 		} 
 
