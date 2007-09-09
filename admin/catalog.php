@@ -26,10 +26,7 @@ if (!$GLOBALS['user']->has_access(100)) {
 	exit; 
 }
 
-// We'll need this
-$catalog = new Catalog($_REQUEST['catalog_id']);
-
-require_once Config::get('prefix') . '/templates/header.inc.php'; 
+show_header(); 
 
 /* Big switch statement to handle various actions */
 switch ($_REQUEST['action']) {
@@ -207,6 +204,11 @@ switch ($_REQUEST['action']) {
 		$body	= '';
 		show_confirmation($title,$body,$url);
 	break;
+	case 'show_catalogs': 
+		$catalog_ids = Catalog::get_catalogs(); 
+		Browse::set_type('catalog'); 
+		Browse::show_objects($catalog_ids); 
+	break;
 	case 'show_add_catalog':
 		require Config::get('prefix') . '/templates/show_add_catalog.inc.php';
 	break;
@@ -235,6 +237,7 @@ switch ($_REQUEST['action']) {
 		show_confirmation(_('Delete Catalog'),_('Do you really want to delete this catalog?') . " -- $catalog->name ($catalog->path)",$nexturl,1);
 	break;
 	case 'show_customize_catalog':
+		$catalog = new Catalog($_REQUEST['catalog_id']); 
 		require_once Config::get('prefix') . '/templates/show_edit_catalog.inc.php';
 	break;
 	case 'gather_album_art':

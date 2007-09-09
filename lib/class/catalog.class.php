@@ -82,16 +82,34 @@ class Catalog {
 	} // _get_info
 
 	/**
+	 * format
+	 * This makes the object human readable
+	 */
+	public function format() { 
+
+		$this->f_name		= truncate_with_ellipsis($this->name,Config::get('ellipse_threshold_title')); 
+		$this->f_name_link	= '<a href="' . Config::get('web_path') . '/admin/catalog.php?action=show_customize_catalog&catalog_id=' . $this->id . '" title="' . scrub_out($this->name) . '">' . scrub_out($this->f_name) . '</a>'; 
+		$this->f_path		= truncate_with_ellipsis($this->path,Config::get('ellipse_threshold_title')); 
+		$this->f_update		= date('d/m/Y h:i',$this->last_update); 
+		$this->f_add		= date('d/m/Y h:i',$this->last_add); 
+
+
+	} // format
+
+	/**
 	 * get_catalogs
-	 *Pull all the current catalogs
+	 * Pull all the current catalogs and return an array of ids
+	 * of what you find
 	 */
 	public static function get_catalogs() {
 
 		$sql = "SELECT `id` FROM `catalog`";
 		$db_results = Dba::query($sql);
 
-		while ($r = Dba::fetch_assoc($db_results)) {
-			$results[] = new Catalog($r['id']);
+		$results = array(); 
+
+		while ($row = Dba::fetch_assoc($db_results)) {
+			$results[] = $row['id'];
 		}
 
 		return $results;

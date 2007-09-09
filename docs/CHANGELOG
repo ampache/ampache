@@ -4,6 +4,8 @@
 
 --------------------------------------------------------------------------
   v.3.4-Alpha3 
+	- Moved Catalog functions out of sidebar, back into the content
+		area
 	- Fixed a problem with batch downloads and tmpplaylists
 	- Fixed missing set_timeout_limit(0); on add to catalog
 		functions

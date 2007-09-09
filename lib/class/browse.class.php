@@ -101,6 +101,7 @@ class Browse {
 			case 'user':
 			case 'playlist':
 			case 'song':
+			case 'catalog':
 			case 'album':
 			case 'artist':
 			case 'genre':
@@ -472,6 +473,11 @@ class Browse {
 			case 'playlist': 
 				show_box_top(_('Playlists') . $match);
 				require_once Config::get('prefix') . '/templates/show_playlists.inc.php'; 
+				show_box_bottom(); 
+			break;
+			case 'catalog': 
+				show_box_top(_('Catalogs')); 
+				require_once Config::get('prefix') . '/templates/show_catalogs.inc.php';
 				show_box_bottom(); 
 			break;
 			default: 

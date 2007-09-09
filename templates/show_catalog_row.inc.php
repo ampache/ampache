@@ -18,23 +18,13 @@
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
-
-require '../lib/init.php';
-
-if (!$GLOBALS['user']->has_access(100)) { 
-	access_denied();
-	exit();
-}
-
-show_header(); 
-
-switch ($_REQUEST['action']) { 
-	default: 
-		// Show Catalogs
-		$catalog_ids = Catalog::get_catalogs(); 	
-		Browse::set_type('catalog'); 
-		Browse::show_objects($catalog_ids); 
-	break;
-} 
-
-show_footer(); 
+?>
+<td><?php echo $catalog->f_name_link; ?></td>
+<td><?php echo scrub_out($catalog->f_path); ?></td>
+<td><?php echo scrub_out($catalog->f_update); ?></td>
+<td><?php echo scrub_out($catalog->f_add); ?></td>
+<td>
+	<a href="<?php echo $web_path; ?>/admin/catalog.php?action=add_to_catalog&amp;catalogs[]=<?php echo $catalog->id; ?>"><?php echo _('Add'); ?></a>
+	| <a href="<?php echo $web_path; ?>/admin/catalog.php?action=update_catalog&amp;catalogs[]=<?php echo $catalog->id; ?>"><?php echo _('Verify'); ?></a>
+        | <a href="<?php echo $web_path; ?>/admin/catalog.php?action=clean_catalog&amp;catalogs[]=<?php echo $catalog->id; ?>"><?php echo _('Clean'); ?></a>
+</td>
