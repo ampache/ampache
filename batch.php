@@ -20,6 +20,7 @@
 */
 
 require_once 'lib/init.php';
+ob_end_clean(); 
 
 //test that batch download is permitted
 if (!Access::check_function('batch_download')) { 
@@ -33,7 +34,13 @@ set_time_limit(0);
 switch ($_REQUEST['action']) {
 	case 'tmp_playlist': 
 		$tmpPlaylist = new tmpPlaylist($_REQUEST['id']); 
-		$song_ids = $tmpPlaylist->get_items(); 
+		$data = $tmpPlaylist->get_items(); 
+	
+		// We have to translate these :(
+		foreach ($data as $row) { 
+			$song_ids[] = $row['0'];
+		} 
+
 		$name = $GLOBALS['user']->username . ' - Playlist';
 	break;
 	case 'playlist':

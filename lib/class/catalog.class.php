@@ -800,6 +800,9 @@ class Catalog {
 		/* Record the time.. time the catalog gen */
 		$start_time = time();
 
+                // Prevent the script from timing out and flush what we've got
+                set_time_limit(0);
+
 		/* Flush anything that has happened so they don't think it's locked */
 		flush();
 
@@ -1015,6 +1018,9 @@ class Catalog {
 		// Make sure the path doesn't end in a / or \
 		$this->path = rtrim($this->path,'/'); 
 		$this->path = rtrim($this->path,'\\');
+
+                // Prevent the script from timing out and flush what we've got
+                set_time_limit(0);
 
 		/* Get the songs and then insert them into the db */
 		$this->add_files($this->path,$type,0,$verbose);

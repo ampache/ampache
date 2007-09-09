@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2006 Ampache.org
+ Copyright (c) 2001 - 2007 Ampache.org
  All Rights Reserved
 
  This program is free software; you can redistribute it and/or
@@ -24,19 +24,19 @@
  * get_song_files
  * tmakes array of song ids and returns
  *	array of path to actual files
- * @param $song_ids        an array of song ids whose filenames you need
  */
-function get_song_files( $song_ids ) {
-        global $user;
+function get_song_files($song_ids) {
+
         $song_files = array();
-        foreach( $song_ids as $song_id ) {
-                $song = new Song( $song_id );
+        foreach ($song_ids as $song_id) {
+                $song = new Song($song_id);
 		/* Don't archive disabled songs */
-		if ($song->status != 'disabled') { 
+		if ($song->enabled) { 
 	                $total_size += sprintf("%.2f",($song->size/1048576));
-	                array_push( $song_files, $song->file );
+	                array_push($song_files, $song->file);
 		} // if song isn't disabled
         }
+
         return array($song_files,$total_size);
 } //get_song_files
 
@@ -61,12 +61,15 @@ function send_zip( $name, $song_files ) {
 	
         $arc->set_options( $options );
         $arc->add_files( $song_files );
+
 	if (count($arc->error)) { 
 		debug_event('archive',"Error: unable to add songs",'3');
+		return false; 
 	} // if failed to add songs
 	
         if (!$arc->create_archive()) { 
 		debug_event('archive',"Error: unable to create archive",'3');
+		return false; 
 	} // if failed to create archive
 	
         $arc->download_file();

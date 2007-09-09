@@ -3,6 +3,12 @@
 --------------------------------------------------------------------------
 
 --------------------------------------------------------------------------
+  v.3.4-Alpha3 
+	- Fixed a problem with batch downloads and tmpplaylists
+	- Fixed missing set_timeout_limit(0); on add to catalog
+		functions
+
+--------------------------------------------------------------------------
   v.3.4-Alpha2 09/03/2007
 	- Fixed a problem where it'd let you go through the install after
 		ampache had already been installed due to a change in the
