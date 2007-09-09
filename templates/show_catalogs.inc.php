@@ -28,7 +28,7 @@
 <tr class="table-header">
 	<th><?php echo _('Name'); ?></th>
 	<th><?php echo _('Path'); ?></th>
-	<th><?php echo _('Last Update'); ?></th>
+	<th><?php echo _('Last Verify'); ?></th>
 	<th><?php echo _('Last Add'); ?></th>
 	<th><?php echo _('Actions'); ?></th>
 </tr>

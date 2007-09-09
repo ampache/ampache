@@ -4,6 +4,9 @@
 
 --------------------------------------------------------------------------
   v.3.4-Alpha3 
+	- Cleaned up Preferences, moved Plugin Preferences into their own
+		section
+	- Fixed potential LastFM issue if invalid data is passed
 	- Added Abstract class for localplay and started work on 
 		next generation of localplay support
 	- Moved Catalog functions out of sidebar, back into the content

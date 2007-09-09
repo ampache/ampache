@@ -181,10 +181,16 @@ class scrobbler {
                         $i++;
                 }
 
-                $as_socket = @fsockopen($this->submit_host, $this->submit_port, $errno, $errstr, 5);
+		if (!trim($this->submit_host) || !$this->submit_port) { 
+			$this->reset_handshake = true; 
+			return false; 
+		} 
+
+                $as_socket = @fsockopen($this->submit_host, intval($this->submit_port), $errno, $errstr, 5);
 
                 if(!$as_socket) {
                         $this->error_msg = $errstr;
+			$this->reset_handshake = true; 
                         return false;
                 }
 

@@ -60,7 +60,7 @@ class AmpacheHttpq extends localplay_controller {
 	 */
 	public function get_version() { 
 
-		return '00001'; 
+		return '000001'; 
 
 	} // get_version
 

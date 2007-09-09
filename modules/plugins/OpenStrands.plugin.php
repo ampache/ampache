@@ -45,8 +45,8 @@ class AmpacheOpenStrands {
 	 */
 	public function install() { 
 
-		Preference::insert('mystrands_user','MyStrands Login',' ','25','string','options'); 
-		Preference::insert('mystrands_pass','MyStrands Password',' ','25','string','options'); 
+		Preference::insert('mystrands_user','MyStrands Login',' ','25','string','plugins'); 
+		Preference::insert('mystrands_pass','MyStrands Password',' ','25','string','plugins'); 
 
 	} // install
 

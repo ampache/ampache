@@ -224,6 +224,9 @@ class Localplay {
 
 		// Load the controller and then check for its preferences
 		$localplay = new Localplay($controller); 
+		// If we can't even load it no sense in going on 
+		if (!isset($localplay->_player)) { return false; } 
+
 		$preferences = $localplay->get_preferences(); 
 
 		foreach ($preferences as $preference) { 
@@ -575,7 +578,7 @@ class Localplay {
 	 */
 	public function get_preferences() { 
 
-		$preferences = $this->_player->preferences();
+		$preferences = $this->_player->get_preferences();
 		
 		return $preferences;
 

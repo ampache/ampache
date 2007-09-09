@@ -27,7 +27,7 @@
 class AmpacheMpd extends localplay_controller {
 
 	/* Variables */
-	private $version 	= '00001'; 
+	private $version 	= '000001'; 
 	private $description	= 'Controls an instance of MPD'; 
 
 	/* Constructed variables */

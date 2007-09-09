@@ -322,22 +322,9 @@ function create_preference_input($name,$value) {
 			} // foreach themes
 			echo "</select>\n";
 		break;
-		case 'random_method': 
-			echo "<select name=\"$name\">\n"; 
-			echo "\t<option value=\"default\">" . _('Pure Random') . "</option>"; 
-			echo "\t<option value=\"album\">" . _('Related Album') . "</option>"; 
-			echo "\t<option value=\"genre\">" . _('Related Genre') . "</option>"; 
-			echo "</select>\n"; 
-		break;
 		case 'mystrands_pass':
 		case 'lastfm_pass':
 			echo "<input type=\"password\" size=\"16\" name=\"$name\" value=\"******\" />";
-		break;
-		case 'playlist_add': 
-			echo "<select name=\"$name\">\n"; 
-			echo "\t<option value=\"append\">" . _('Append to Existing') . "</option>\n"; 
-			echo "\t<option value=\"default\">" . _('Default') . "</option>\n"; 
-			echo "</select>\n"; 
 		break;
 		case 'playlist_method': 
 			${$value} = ' selected="selected"'; 

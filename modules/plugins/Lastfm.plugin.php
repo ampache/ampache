@@ -54,8 +54,8 @@ class AmpacheLastfm {
 	 */
 	public function install() { 
 
-		Preference::insert('lastfm_user','Last.FM Username',' ','25','string','options'); 
-		Preference::insert('lastfm_pass','Last.FM Password',' ','25','string','options'); 
+		Preference::insert('lastfm_user','Last.FM Username',' ','25','string','plugins'); 
+		Preference::insert('lastfm_pass','Last.FM Password',' ','25','string','plugins'); 
 		Preference::insert('lastfm_port','Last.FM Submit Port',' ','25','string','internal'); 
 		Preference::insert('lastfm_host','Last.FM Submit Host',' ','25','string','internal'); 
 		Preference::insert('lastfm_url','Last.FM Submit URL',' ','25','string','internal'); 
@@ -122,6 +122,8 @@ class AmpacheLastfm {
 			} 
 			return false; 
 		}
+
+		debug_event('LastFM','Submission Successful','5'); 
 		
 		return true; 
 

@@ -21,7 +21,7 @@
 /**
  * Update Class
  * this class handles updating from one version of 
- * maintain to the next. Versions are a 6 digit number
+ * ampache to the next. Versions are a 6 digit number
  *  220000
  *  ^
  *  Major Revision
@@ -82,8 +82,8 @@ class Update {
 
 		// If no table
 		if (!Dba::num_rows($db_results)) {
-			
-			$version = '310000';		
+			// They can't upgrade, they are too old
+			header("Location: test.php");
 			
 		} // if table isn't found
 
@@ -115,7 +115,7 @@ class Update {
 	/**
 	 * need_update
 	 * checks to see if we need to update 
-	 * maintain at all
+	 * ampache at all
 	 */
 	public static function need_update() {
 
@@ -231,6 +231,12 @@ class Update {
 				'- Added DNS to access list to allow for dns based ACLs.<br />';
 
 		$version[] = array('version' => '340009','description' => $update_string); 
+
+		$update_string = '- Removed Playlist Add preference.<br />' . 
+				'- Moved Localplay* preferences to options.<br />' . 
+				'- Tweaked Default Playlist Method.<br />' . 
+				'- Change wording on Localplay preferences.<br />'; 
+		$version[] = array('version' => '340010','description'=>$update_string); 
 
 		return $version;
 
@@ -937,6 +943,41 @@ class Update {
 		self::set_version('db_version','340009'); 
 
 	} // update_340009
+
+	/**
+	 * update_340010
+	 * Bunch of minor tweaks to the preference table
+	 */
+	public static function update_340010() { 
+
+		$sql = "UPDATE `preference` SET `catagory`='options' WHERE `name` LIKE 'localplay_%'"; 
+		$db_results = Dba::query($sql); 
+
+		$sql = "DELETE FROM `preference` WHERE `name`='playlist_add'"; 
+		$db_results = Dba::query($sql); 
+
+		$sql = "UPDATE `preference` SET `catagory`='plugins' WHERE (`name` LIKE 'mystrands_%' OR `name` LIKE 'lastfm_%') AND `catagory`='options'"; 
+		$db_results = Dba::query($sql); 
+
+		$sql = "UPDATE `preference` SET `value`='default' WHERE `name`='playlist_method'"; 
+		$db_results = Dba::query($sql); 
+
+		$sql = "UPDATE `preference` SET `description`='Localplay Config' WHERE `name`='localplay_level'"; 
+		$db_results = Dba::query($sql); 
+
+                /* Fix every users preferences */
+                $sql = "SELECT `id` FROM `user`";
+                $db_results = Dba::query($sql); 
+
+                User::fix_preferences('-1');
+
+                while ($r = Dba::fetch_assoc($db_results)) {
+                        User::fix_preferences($r['id']);
+                } // while results
+
+		self::set_version('db_version','340010'); 
+
+	} // update_340010
 
 } // end update class
 ?>
