@@ -107,7 +107,6 @@ class AmpacheHttpq extends localplay_controller {
          */
         public function is_installed() {
 
-
         } // is_installed
 
         /**
@@ -115,7 +114,6 @@ class AmpacheHttpq extends localplay_controller {
          * This function installs the MPD localplay controller
          */
         public function install() {
-
 
 
         } // install

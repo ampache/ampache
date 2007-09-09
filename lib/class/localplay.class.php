@@ -58,6 +58,22 @@ class Localplay {
 	} // _get_info
 
 	/**
+	 * player_loaded
+	 * This returns true / false if the player load
+	 * failed / worked
+	 */
+	public function player_loaded() { 
+
+		if (is_object($this->_player)) { 
+			return true; 
+		} 
+		else { 
+			return false; 
+		} 
+
+	} // player_loaded
+
+	/**
  	 * format
 	 * This makes the localplay/plugin information 
 	 * human readable 

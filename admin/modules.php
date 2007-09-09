@@ -55,6 +55,16 @@ switch ($_REQUEST['action']) {
 		$body	= '';
 		show_confirmation($title,$body,$url);
 	break;
+	case 'install_localplay': 
+		
+
+	break;
+	case 'confirm_uninstall_localplay': 
+
+	break;
+	case 'uninstall_localplay': 
+
+	break;
 	case 'install_plugin':
 		/* Verify that this plugin exists */
 		$plugins = Plugin::get_plugins();  

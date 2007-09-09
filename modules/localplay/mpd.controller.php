@@ -109,6 +109,10 @@ class AmpacheMpd extends localplay_controller {
 	 */
 	public function is_installed() { 
 
+                $sql = "DESCRIBE `localplay_mpd`";
+                $db_results = Dba::query($sql);
+
+                return Dba::num_rows($db_results);
 
 	} // is_installed
 
@@ -118,7 +122,18 @@ class AmpacheMpd extends localplay_controller {
 	 */
 	public function install() { 
 
+                /* We need to create the MPD table */
+                $sql = "CREATE TABLE `localplay_mpd` ( `id` INT( 11 ) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY , " .
+                        "`name` VARCHAR( 128 ) NOT NULL , " .
+                        "`owner` INT( 11 ) NOT NULL , " .
+                        "`host` VARCHAR( 255 ) NOT NULL , " .
+                        "`port` INT( 11 ) UNSIGNED NOT NULL DEFAULT '6600', " .
+                        "`password` VARCHAR( 255 ) NOT NULL , " .
+                        "`access` SMALLINT( 4 ) UNSIGNED NOT NULL DEFAULT '0' " .
+                        ") ENGINE = MYISAM";
+                $db_results = Dba::query($sql);
 
+                return true;
 
 	} // install
 
@@ -128,6 +143,10 @@ class AmpacheMpd extends localplay_controller {
 	 */
 	public function uninstall() { 
 
+                $sql = "DROP TABLE `localplay_mpd`";
+                $db_results = Dba::query($sql);
+
+                return true;
 
 	} // uninstall
 
