@@ -4,6 +4,8 @@
 
 --------------------------------------------------------------------------
   v.3.4-Alpha3 
+	- Added Abstract class for localplay and started work on 
+		next generation of localplay support
 	- Moved Catalog functions out of sidebar, back into the content
 		area
 	- Fixed a problem with batch downloads and tmpplaylists

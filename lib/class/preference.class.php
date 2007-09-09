@@ -128,6 +128,29 @@ class Preference {
 	} // name_from_id
 
 	/**
+ 	 * get_catagories
+	 * This returns an array of the names of the different possible sections
+	 * it ignores the 'internal' catagory
+	 */
+	public static function get_catagories() { 
+
+		$sql = "SELECT `preference`.`catagory` FROM `preference` GROUP BY `catagory` ORDER BY `catagory`"; 
+		$db_results = Dba::query($sql); 
+
+		$results = array(); 
+
+		while ($row = Dba::fetch_assoc($db_results)) { 
+			if ($row['catagory'] != 'internal') { 
+				$results[] = $row['catagory']; 
+			}
+		} // end while
+
+		return $results; 
+
+	} // get_catagories
+	
+
+	/**
 	 * insert
 	 * This inserts a new preference into the preference table
 	 * it does NOT sync up the users, that should be done independtly

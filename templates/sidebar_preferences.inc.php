@@ -1,21 +1,31 @@
+<?php 
+/* This one is a little dynamic as we add plugins or localplay modules
+ * they can have their own preference sections so we need to build the
+ * links based on that, always ignore 'internal' though
+ */
+$catagories = Preference::get_catagories();  
+?>
 <ul class="sb2" id="sb_preferences">
   <li><h4><?php echo _('Sections'); ?></h4>
     <ul class="sb3" id="sb_preferences_sections">
-      <li id="sb_preferences_sections_Interface"><a href="<?php echo $web_path; ?>/preferences.php?tab=interface"><?php echo _('Interface'); ?></a></li>
-      <li id="sb_preferences_sections_Playlist"><a href="<?php echo $web_path; ?>/preferences.php?tab=playlist"><?php echo _('Playlist'); ?></a></li>
-      <li id="sb_preferences_sections_Streaming"><a href="<?php echo $web_path; ?>/preferences.php?tab=streaming"><?php echo _('Streaming'); ?></a></li>
-      <li id="sb_preferences_sections_Options"><a href="<?php echo $web_path; ?>/preferences.php?tab=options"><?php echo _('Options'); ?></a></li>
-      <li id="sb_preferences_sections_Account"><a href="<?php echo $web_path; ?>/preferences.php?tab=account"><?php echo _('Account'); ?></a></li>
+<?php 
+	foreach ($catagories as $name) { 
+		if ($name == 'system') { continue; } 
+		$f_name = ucfirst($name); 
+?>
+      <li id="sb_preferences_sections_<?php echo $f_name; ?>"><a href="<?php echo $web_path; ?>/preferences.php?tab=<?php echo $name; ?>"><?php echo _($f_name); ?></a></li>
+<?php } ?>
     </ul>
   </li>
 <?php if ($GLOBALS['user']->has_access('100')) { ?>
   <li><h4><?php echo _('Server Config'); ?></h4>
     <ul class="sb3" id="sb_preferences_sc">
-      <li id="sb_preferences_sc_Interface"><a href="<?php echo $web_path; ?>/preferences.php?action=admin&amp;tab=interface"><?php echo _('Interface'); ?></a></li>
-      <li id="sb_preferences_sc_Playlist"><a href="<?php echo $web_path; ?>/preferences.php?action=admin&amp;tab=playlist"><?php echo _('Playlist'); ?></a></li>
-      <li id="sb_preferences_sc_Streaming"><a href="<?php echo $web_path; ?>/preferences.php?action=admin&amp;tab=streaming"><?php echo _('Streaming'); ?></a></li>
-      <li id="sb_preferences_sc_Options"><a href="<?php echo $web_path; ?>/preferences.php?action=admin&amp;tab=options"><?php echo _('Options'); ?></a></li>
-      <li id="sb_preferences_sc_System"><a href="<?php echo $web_path; ?>/preferences.php?action=admin&amp;tab=system"><?php echo _('System'); ?></a></li>
+<?php 
+        foreach ($catagories as $name) { 
+                $f_name = ucfirst($name);
+?>
+      <li id="sb_preferences_sc_<?php echo $f_name; ?>"><a href="<?php echo $web_path; ?>/preferences.php?action=admin&amp;tab=<?php echo $name; ?>"><?php echo _($f_name); ?></a></li>
+<?php } ?>
     </ul>
   </li>
 <li><h4><?php echo _('Modules'); ?></h4>

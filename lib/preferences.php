@@ -292,9 +292,10 @@ function create_preference_input($name,$value) {
 			echo "</select>\n";
 		break;
 		case 'localplay_controller':
-			$controllers = get_localplay_controllers();
+			$controllers = Localplay::get_controllers();
 			echo "<select name=\"$name\">\n";
 			foreach ($controllers as $controller) { 
+				if (!Localplay::is_enabled($controller)) { continue; } 
 				$is_selected = '';
 				if ($value == $controller) { $is_selected = 'selected="selected"'; } 
 				echo "\t<option value=\"" . $controller . "\" $is_selected>" . ucfirst($controller) . "</option>\n";
@@ -307,8 +308,8 @@ function create_preference_input($name,$value) {
 			elseif ($value == '1') { $is_global = 'selected="selected"'; } 
 			echo "<select name=\"$name\">\n";
 			echo "<option value=\"0\">" . _('Disabled') . "</option>\n";
-			echo "<option value=\"1\" $is_global>" . _('Global') . "</option>\n";
-			echo "<option value=\"2\" $is_full>" . _('Local') . "</option>\n";
+			echo "<option value=\"1\" $is_global>" . _('Server') . "</option>\n";
+			echo "<option value=\"2\" $is_full>" . _('User') . "</option>\n";
 			echo "</select>\n";
 		break;
 		case 'theme_name':
@@ -342,7 +343,8 @@ function create_preference_input($name,$value) {
 			${$value} = ' selected="selected"'; 
 			echo "<select name=\"$name\">\n"; 
 			echo "\t<option value=\"send\"$send>" . _('Send on Add') . "</option>\n"; 
-			echo "\t<option value=\"send_clear\"$send_clear>" . _('Send and Clear') . "</option>\n"; 
+			echo "\t<option value=\"send_clear\"$send_clear>" . _('Send and Clear on Add') . "</option>\n"; 
+			echo "\t<option value=\"clear\"$clear>" . _('Clear on Send') . "</option>\n"; 
 			echo "\t<option value=\"default\"$default>" . _('Default') . "</option>\n"; 
 			echo "</select>\n"; 
 		break;

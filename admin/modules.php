@@ -110,7 +110,10 @@ switch ($_REQUEST['action']) {
 		show_box_bottom(); 
 	break;
 	case 'show_localplay': 
-
+		$controllers = Localplay::get_controllers(); 
+		show_box_top(_('Localplay Controllers')); 
+		require_once Config::get('prefix') . '/templates/show_localplay_controllers.inc.php'; 
+		show_box_bottom(); 
 	break;
 	default: 
 		// Rien a faire

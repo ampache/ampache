@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright 2001 - 2006 Ampache.org
+ Copyright 2001 - 2007 Ampache.org
  All Rights Reserved
 
  This program is free software; you can redistribute it and/or
@@ -24,10 +24,11 @@
  * the Ampache Mpd Controller, this is the glue between
  * the MPD class and the Ampahce Localplay class
  */
-class AmpacheMpd {
+class AmpacheMpd extends localplay_controller {
 
 	/* Variables */
-	
+	private $version 	= '00001'; 
+	private $description	= 'Controls an instance of MPD'; 
 
 	/* Constructed variables */
 	private $_mpd;
@@ -44,6 +45,25 @@ class AmpacheMpd {
 
 	} // AmpacheMpd
 
+	/**
+	 * get_description
+	 * Returns the description
+	 */
+	public function get_description() { 
+
+		return $this->description; 
+	
+	} // get_description
+
+	/**
+	 * get_version
+	 * This returns the version information
+	 */
+	public function get_version() { 
+
+		return $this->version; 
+
+	} // get_version
 
 	/**
 	 * function_map
@@ -91,7 +111,7 @@ class AmpacheMpd {
 	 * however this controller does not need to take that into acount
 	 * REQUIRE for Locaplay
 	 */
-	function preferences() { 
+	public function get_preferences() { 
 
 		$preferences = array(); 
 
@@ -109,7 +129,7 @@ class AmpacheMpd {
 	 * This must take an array of URL's from Ampache
 	 * and then add them to MPD
 	 */
-	function add_songs($songs) { 
+	public function add($objects) { 
 
 		if (is_null($this->_mpd->ClearPLIfStopped())) {
 	                debug_event('mpd_add', 'Error: Unable to clear the MPD playlist ' . $this->_mpd->errStr,'1');
@@ -129,28 +149,11 @@ class AmpacheMpd {
 	} // add_songs
 
 	/**
- 	 * add_url
-	 * This adds urls directly to the playlist, recieves an array of urls 
-	 */
-	function add_url($urls) { 
-
-		foreach ($urls as $url) { 
-			if (is_null($this->_mpd->PlAdd($url))) { 
-				debug_event('mpd_add','Error: Unable to add $url to MPD ' . $this->_mpd->errStr,'1');
-			}
-
-		} // end foreach
-
-		return true; 
-
-	} // add_url 
-
-	/**
 	 * delete_songs
 	 * This must take an array of ID's (as passed by get function) from Ampache
 	 * and delete them from MPD
 	 */
-	function delete_songs($songs) { 
+	public function delete($objects) { 
 
 		/* Default to true */
 		$return = true;
@@ -171,7 +174,6 @@ class AmpacheMpd {
 
 	} // delete_songs
 	
-
 	/**
 	 * clear_playlist
 	 * This deletes the entire MPD playlist... nuff said
@@ -324,7 +326,7 @@ class AmpacheMpd {
 	 * The songs that MPD currently has in it's playlist. This must be
 	 * done in a standardized fashion
 	 */
-	function get_songs() { 
+	public function get() { 
 
 		/* Get the Current Playlist */
 		$playlist = $this->_mpd->playlist;
@@ -376,7 +378,7 @@ class AmpacheMpd {
 	 * This returns bool/int values for features, loop, repeat and any other features
 	 * That this localplay method support
 	 */
-	function get_status() { 
+	public function status() { 
 
 		$track = $this->_mpd->current_track_id;
 
@@ -404,7 +406,7 @@ class AmpacheMpd {
 	 * a boolean value for the status, to save time this handle
 	 * is stored in this class
 	 */
-	function connect() { 
+	public function connect() { 
 		
 		$this->_mpd = new mpd(conf('localplay_mpd_hostname'),conf('localplay_mpd_port'),conf('localplay_mpd_password'));
 

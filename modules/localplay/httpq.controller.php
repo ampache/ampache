@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright 2001 - 2006 Ampache.org
+ Copyright 2001 - 2007 Ampache.org
  All Rights Reserved
 
  This program is free software; you can redistribute it and/or
@@ -24,7 +24,7 @@
  * This is the class for the HttpQ localplay method to remote control
  * a WinAmp Instance
  */
-class AmpacheHttpq {
+class AmpacheHttpq extends localplay_controller {
 
 	/* Variables */
 	
@@ -43,6 +43,26 @@ class AmpacheHttpq {
 		require_once Config::get('prefix') . '/modules/httpq/httpqplayer.class.php';
 
 	} // Constructor
+
+	/**
+	 * get_description
+	 * This returns the description of this localplay method
+	 */
+	public function get_description() { 
+
+		return 'Connects to a remote Winamp instance'; 
+	
+	} // get_description
+
+	/**
+	 * get_version
+	 * This returns the current version
+	 */
+	public function get_version() { 
+
+		return '00001'; 
+
+	} // get_version
 
 	/**
 	 * function_map
@@ -89,7 +109,7 @@ class AmpacheHttpq {
 	 * however this controller does not need to take that into acount
 	 * REQUIRE for Locaplay
 	 */
-	function preferences() { 
+	public function get_preferences() { 
 
 		$preferences = array(); 
 
@@ -99,15 +119,15 @@ class AmpacheHttpq {
 
 		return $preferences;
 
-	} // preferences
+	} // get_preferences
 
 
 	/**
-	 * add_songs
+	 * songs
 	 * This must take an array of URL's from Ampache
 	 * and then add them to HttpQ
 	 */
-	function add_songs($songs) { 
+	public function add($objects) { 
 
 		foreach ($songs as $song_id) { 
 			$song = new Song($song_id);
@@ -120,31 +140,14 @@ class AmpacheHttpq {
 
 		return true;
 
-	} // add_songs
+	} // add
 
 	/**
- 	 * add_url
-	 * This adds urls directly to the playlist, recieves an array of urls 
-	 */
-	function add_url($urls) { 
-
-		foreach ($urls as $url) { 
-			if (is_null($this->_httpq->add('URL',$url))) { 
-				debug_event('httpq_add',"Error: Unable to add $url to Httpq ",'1');
-			}
-
-		} // end foreach
-
-		return true; 
-
-	} // add_url 
-
-	/**
-	 * delete_songs
+	 * delete
 	 * This must take an array of ID's (as passed by get function) from Ampache
 	 * and delete them from Httpq
 	 */
-	function delete_songs($songs) { 
+	public function delete($objects) { 
 
 		/* Default to true */
 		$return = true;
@@ -185,7 +188,7 @@ class AmpacheHttpq {
 	 * This just tells HttpQ to start playing, it does not
 	 * take any arguments
 	 */
-	function play() { 
+	public function play() { 
 
 		/* A play when it's already playing causes a track restart
 		 * which we don't want to doublecheck its state
@@ -204,7 +207,7 @@ class AmpacheHttpq {
 	 * This just tells HttpQ to stop playing, it does not take
 	 * any arguments
 	 */
-	function stop() { 
+	public function stop() { 
 
 		if (is_null($this->_httpq->stop())) { return false; } 
 		return true;
@@ -312,12 +315,12 @@ class AmpacheHttpq {
        } // random
 
 	/**
-	 * get_songs
+	 * get
 	 * This functions returns an array containing information about
 	 * The songs that HttpQ currently has in it's playlist. This must be
 	 * done in a standardized fashion
 	 */
-	function get_songs() { 
+	public function get() { 
 
 		/* Get the Current Playlist */
 		$list = $this->_httpq->get_tracks();
@@ -364,14 +367,14 @@ class AmpacheHttpq {
 		
 		return $results;
 
-	} // get_songs
+	} // get
 
 	/**
-	 * get_status
+	 * status
 	 * This returns bool/int values for features, loop, repeat and any other features
 	 * That this localplay method supports. required function
 	 */
-	function get_status() { 
+	public function status() { 
 
 		/* Construct the Array */
 		$array['state'] 	= $this->_httpq->state();
@@ -389,7 +392,7 @@ class AmpacheHttpq {
 
 		return $array;
 
-	} // get_status
+	} // status
 
 	/**
 	 * connect
@@ -397,7 +400,7 @@ class AmpacheHttpq {
 	 * a boolean value for the status, to save time this handle
 	 * is stored in this class
 	 */
-	function connect() { 
+	public function connect() { 
 		
 		$this->_httpq = new HttpQPlayer(conf('localplay_httpq_hostname'),conf('localplay_httpq_password'),conf('localplay_httpq_port'));
 

@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2006 Ampache.org
+ Copyright (c) 2001 - 2007 Ampache.org
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
@@ -24,14 +24,11 @@ class Localplay {
 	/* Base Variables */
 	public $type;
 
-
-
 	/* Built Variables */
-	public $_function_map = array(); 
-	public $_template;
-	public $_preferences = array();
-	public $_player; 
-
+	private $_function_map = array(); 
+	private $_template;
+	private $_preferences = array();
+	private $_player; 
 
 	/**
 	 * Constructor
@@ -39,14 +36,13 @@ class Localplay {
 	 * file for the specified type and attempts to load in the function
 	 * map, the preferences and the template
 	 */
-	function Localplay($type) { 
+	public function __construct($type) { 
 
 		$this->type = $type;
 
 		$this->_get_info();
 
 	} // Localplay
-
 
 	/**
 	 * _get_info
@@ -61,6 +57,21 @@ class Localplay {
 
 	} // _get_info
 
+	/**
+ 	 * format
+	 * This makes the localplay/plugin information 
+	 * human readable 
+	 */
+	public function format() { 
+
+		if (!is_object($this->_player)) { return false; } 
+
+		$this->f_name 		= ucfirst($this->type); 
+		$this->f_description 	= $this->_player->get_description(); 
+		$this->f_version	= $this->_player->get_version(); 
+
+
+	} // format
 
 	/**
 	 * _load_player
@@ -83,6 +94,11 @@ class Localplay {
 		else { 
 			$class_name = "Ampache" . $this->type;
 			$this->_player = new $class_name();
+			if (!($this->_player instanceof localplay_controller)) { 
+				debug_event('Localplay',$this->type . ' not an instance of controller abstract, unable to load','1'); 
+				unset($this->_player); 
+				return false; 
+			} 
 			$function_map = $this->_player->function_map();
 			$this->_map_functions($function_map);
 		}
@@ -94,7 +110,7 @@ class Localplay {
 	 * This is used to check the function map and see if the current
 	 * player type supports the indicated function. 
 	 */
-	function has_function($function_name) { 
+	public function has_function($function_name) { 
 
 		/* Check the function map, if it's got a value it must 
 		 * be possible 
@@ -111,7 +127,7 @@ class Localplay {
 	 * is supported in the current player, if so it returns a 'skip to'
 	 * link, otherwise it returns just the text
 	 */
-	function format_name($name,$id) { 
+	public function format_name($name,$id) { 
 
 		$name = scrub_out($name);
 
@@ -134,7 +150,7 @@ class Localplay {
 	 * warning. The value of the elements in the $data array should
 	 * be function names that are called on the action in question
 	 */
-	function _map_functions($data) { 
+	private function _map_functions($data) { 
 		
 		/* Required Functions */
 		$this->_function_map['add']	= $data['add'];
@@ -168,11 +184,68 @@ class Localplay {
 	} // _map_functions
 
 	/**
+	 * get_controllers
+	 * This returns the controllers that are currently loaded into this instance
+	 */
+	public static function get_controllers() { 
+
+		/* First open the dir */
+		$handle = opendir(Config::get('prefix') . '/modules/localplay'); 
+		
+		if (!is_resource($handle)) { 
+			debug_event('Localplay','Error: Unable to read localplay controller directory','1'); 
+			return array(); 
+		}
+
+		$results = array(); 
+
+		while ($file = readdir($handle)) { 
+
+			if (substr($file,-14,14) != 'controller.php') { continue; } 
+
+			/* Make sure it isn't a dir */
+			if (!is_dir($file)) { 
+				/* Get the basename and then everything before controller */
+				$filename = basename($file,'.controller.php'); 
+				$results[] = $filename; 
+			} 
+		} // end while
+
+		return $results; 
+
+	} // get_controllers
+
+	/**
+	 * is_enabled
+	 * This returns true or false depending on if the specified controller
+	 * is currently enabled
+	 */
+	public static function is_enabled($controller) { 
+
+		// Load the controller and then check for its preferences
+		$localplay = new Localplay($controller); 
+		$preferences = $localplay->get_preferences(); 
+
+		foreach ($preferences as $preference) { 
+			$name = 'localplay_' . $type . '_' . $preference['name']; 
+			/* Check for existing record */
+			$sql = "SELECT `id` FROM `preference` WHERE `name` = '" . Dba::escape($name) . "'"; 
+			$db_results = Dba::query($sql); 
+
+			if (!Dba::num_rows($db_results)) { return false; } 
+
+		} // end foreach
+
+		return true; 
+
+	} // is_enabled
+
+	/**
 	 * connect
 	 * This function attempts to connect to the localplay 
 	 * player that we are using
 	 */
-	function connect() { 
+	public function connect() { 
 
 		$function = $this->_function_map['connect'];
 	
@@ -195,7 +268,7 @@ class Localplay {
 	 * This function passes NULL and calls the play function of the player
 	 * object
 	 */
-	function play() { 
+	public function play() { 
 	
 		$function = $this->_function_map['play'];
 
@@ -213,7 +286,7 @@ class Localplay {
 	 * This functions passes NULl and calls the stop function of the player
 	 * object, it should recieve a true/false boolean value
 	 */
-	function stop() { 
+	public function stop() { 
 
 		$function = $this->_function_map['stop'];
 
@@ -231,7 +304,7 @@ class Localplay {
 	 * This function takes an array of song_ids and then passes the full URL
 	 * to the player, this is a required function. 
 	 */
-	function add($songs) { 
+	public function add($songs) { 
 
 
 		/* Call the Function Specified in the Function Map */
@@ -252,7 +325,7 @@ class Localplay {
 	 * This directly adds an array of URLs to the localplay module. This is really how I should
 	 * have done add, will migrate to this eventually
 	 */
-	function add_url($urls) { 
+	public function add_url($urls) { 
 
 		$function = $this->_function_map['add_url'];
 		
@@ -271,7 +344,7 @@ class Localplay {
 	 * This turns the repeat feature of a localplay method on or 
 	 * off, takes a 0/1 value
 	 */
-	function repeat($state) { 
+	public function repeat($state) { 
 
 		$function = $this->_function_map['repeat'];
 
@@ -290,7 +363,7 @@ class Localplay {
 	 * This turns on the random feature of a localplay method
 	 * It takes a 0/1 value 
 	 */
-	function random($state) { 
+	public function random($state) { 
 		
 		$function = $this->_function_map['random'];
 
@@ -309,7 +382,7 @@ class Localplay {
 	 * This returns current information about the state of the player
 	 * There is an expected array format
 	 */
-	function status() { 
+	public function status() { 
 
 		$function = $this->_function_map['status'];
 
@@ -330,7 +403,7 @@ class Localplay {
 	 * the array of current songs for display or whatever
 	 * an empty array is passed on failure
 	 */
-	function get() { 
+	public function get() { 
 
 		$function = $this->_function_map['get'];
 
@@ -351,7 +424,7 @@ class Localplay {
 	 * as passed in the variable it is a 0 - 100 scale the controller is 
 	 * responsible for adjusting the scale if nessecary
 	 */
-	function volume_set($value) { 
+	public function volume_set($value) { 
 		
 		/* Make sure it's int and 0 - 100 */
 		$value = int($value);
@@ -375,7 +448,7 @@ class Localplay {
 	 * This function isn't required. It tells the daemon to increase the volume
 	 * by a pre-defined amount controlled by the controller
 	 */
-	function volume_up() { 
+	public function volume_up() { 
 
 		$function = $this->_function_map['volume_up'];
 
@@ -393,7 +466,7 @@ class Localplay {
 	 * This function isn't required. It tells the daemon to decrese the volume
 	 * by a pre-defined amount controlled by the controller.
 	 */
-	function volume_down() { 
+	public function volume_down() { 
 
 		$function = $this->_function_map['volume_down'];
 
@@ -411,7 +484,7 @@ class Localplay {
 	 * This function isn't required, It tells the daemon to mute all output
 	 * It's up to the controller to decide what that actually entails
 	 */
-	function volume_mute() { 
+	public function volume_mute() { 
 
 		$function = $this->_function_map['volume_mute'];
 
@@ -428,7 +501,7 @@ class Localplay {
 	 * skip
 	 * This isn't a required function, it tells the daemon to skip to the specified song
 	 */
-	function skip($song_id) { 
+	public function skip($song_id) { 
 
 		$function = $this->_function_map['skip'];
 
@@ -446,7 +519,7 @@ class Localplay {
 	 * This isn't a required function, it tells the daemon to go to the next 
 	 * song
 	 */
-	function next() { 
+	public function next() { 
 
 		$function = $this->_function_map['next'];
 		
@@ -464,7 +537,7 @@ class Localplay {
 	 * This isn't a required function, it tells the daemon to go the the previous
 	 * song
 	 */
-	function prev() { 
+	public function prev() { 
 		
 		$function = $this->_function_map['prev'];
 
@@ -482,7 +555,7 @@ class Localplay {
         * This isn't a required function, it tells the daemon to pause the
         * song
         */
-        function pause() {
+        public function pause() {
 
                 $function = $this->_function_map['pause'];
 
@@ -500,7 +573,7 @@ class Localplay {
 	 * This functions returns an array of the preferences that the localplay 
 	 * controller needs in order to actually work
 	 */
-	function get_preferences() { 
+	public function get_preferences() { 
 
 		$preferences = $this->_player->preferences();
 		
@@ -512,7 +585,7 @@ class Localplay {
 	 * delete
 	 * This removes songs from the players playlist as defined get function
 	 */
-	function delete($songs) { 
+	public function delete($songs) { 
 
 		$function = $this->_function_map['delete'];
 
@@ -531,7 +604,7 @@ class Localplay {
 	 * This removes every song from the players playlist as defined by the delete_all function
 	 * map
 	 */
-	function delete_all() { 
+	public function delete_all() { 
 
 
 		$function = $this->_function_map['delete_all'];
@@ -550,7 +623,7 @@ class Localplay {
 	 * This function returns a user friendly version
 	 * of the current player state
 	 */
-	function get_user_state($state) { 
+	public function get_user_state($state) { 
 		
 		switch ($state) { 
 			case 'play':
@@ -574,7 +647,7 @@ class Localplay {
 	 * This attempts to return a nice user friendly
 	 * currently playing string
 	 */
-	function get_user_playing() { 
+	public function get_user_playing() { 
 
 		$status = $this->status();
 		

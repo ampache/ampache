@@ -20,35 +20,6 @@
 */
 
 /**
- * verify_localplay_prefrences
- * This takes a type of localplay and then
- * Verifys that the preferences have all been 
- * inserted into the database if they haven't been
- * Then it returns false 
- */
-function verify_localplay_preferences($type) { 
-
-	/* Load the locaplay module of said type */
-	$localplay = new Localplay($type); 
-
-	$preferences = $localplay->get_preferences();
-
-	foreach ($preferences as $preference) { 
-		$name = 'localplay_' . $type . '_' . $preference['name'];
-		/* check for an existing record */
-		$sql = "SELECT id FROM preferences WHERE name = '" . Dba::escape($name) . "'";
-		$db_results = Dba::query($sql);
-
-		if (!Dba::num_rows($db_results)) { return false; } 
-
-	} // end foreach preferences
-
-	return true;
-
-} // verify_localplay_preferences
-
-
-/**
  * insert_locaplay_preferences
  * This takes a controller type and inserts the preferences
  * Into the database, it is able to handle existing preferences
@@ -134,42 +105,6 @@ function remove_localplay_preferences($type=0) {
 
 
 } // remove_localplay_preferences
-
-/**
- * get_localplay_controllers
- * This returns an array of the localplay controllers filenames
- * as well as a 'semi-cleaned' name
- */
-function get_localplay_controllers($disabled='') { 
-
-	/* First get a list of the files */
-	$handle = opendir(Config::get('prefix') . '/modules/localplay');
-	
-	if (!is_resource($handle)) { 
-		debug_event('localplay','Error: Unable to read localplay controller directory','1');
-	}
-
-	$results = array(); 
-
-	while ($file = readdir($handle)) { 
-		
-		if (substr($file,-14,14) != 'controller.php') { continue; } 
-
-		/* Make sure it isn't a subdir */
-		if (!is_dir($file)) { 
-			/* Get the base name, then get everything before .controller.php */
-			$filename = basename($file,'.controller.php');
-			/* Make sure that it's currently enabled */
-			if (verify_localplay_preferences($filename) || $disabled) { 
-				$results[] = $filename;
-			} 
-		}
-	} // end while
-
-	return $results;
-
-} // get_localplay_controllers
-
 
 /** 
  * This function stores the Localplay object
