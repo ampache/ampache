@@ -69,7 +69,7 @@ class Rating {
 		
 		$results = Dba::fetch_assoc($db_results);
 		
-		return $results['rating'];
+		return $results['score'];
 
 	} // get_user
 
@@ -89,7 +89,7 @@ class Rating {
 
 		while ($r = Dba::fetch_assoc($db_results)) { 
 			$i++;
-			$total += $r['rating'];
+			$total += $r['score'];
 		} // while we're pulling results
 
 		if ($total > 0) { 
