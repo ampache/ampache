@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2006 Ampache.org
+ Copyright (c) 2001 - 2007 Ampache.org
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
@@ -19,28 +19,17 @@
 
 */
 
+require 'lib/init.php';
 
-require('lib/init.php');
+show_header(); 
 
-/* If we are running a demo, quick while you still can! */
-if (conf('demo_mode')) {
-        exit();
-}
+switch ($_REQUEST['action']) { 
+	case 'show_add_instance': 
+		require_once Config::get('prefix') . '/templates/show_localplay_add_instance.inc.php'; 
+	break;
+	case 'add_instance': 
 
-$web_path = conf('web_path');
-
-if($GLOBALS['user']->prefs['localplay_level'] < 1) {
-	access_denied();
-	exit();
-}
-
-/* Scrub in the action */
-$action = scrub_in($_REQUEST['action']);
-
-show_template('header');
-
-
-switch ($action) { 
+	break;
 	case 'delete_song':
 		$song_id = scrub_in($_REQUEST['song_id']);
 		$songs = array($song_id);
@@ -70,13 +59,7 @@ switch ($action) {
 		require_once (conf('prefix') . '/templates/show_localplay.inc.php');
 	break;
 	default: 
-		if ($localplay = init_localplay()) { 
-			require_once (conf('prefix') . '/templates/show_localplay.inc.php');
-		} 
-		else { 
-			$GLOBALS['error']->add_error('general',_('Localplay Init Failed'));
-			$GLOBALS['error']->print_error('general');
-		}
+		// Rien a faire? 
 	break;
 } // end switch action
 

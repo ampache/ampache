@@ -175,4 +175,46 @@ class Preference {
 
 	} // insert
 
+	/**
+	 * delete
+	 * This deletes the specified preference, a name or a ID can be passed
+	 */
+	public static function delete($preference) { 
+
+               // First prepare
+                if (!is_numeric($preference)) {
+                        $id = self::id_from_name($preference);
+                        $name = $preference;
+                }
+                else {
+                        $name = self::name_from_id($preference);
+                        $id = $preference;
+                }
+
+		$id = Dba::escape($id); 
+
+		// Remove the preference, then the user records of it
+		$sql = "DELETE FROM `preference` WHERE `id`='$id'"; 
+		$db_results = Dba::query($sql); 
+
+		self::rebuild_preferences(); 
+
+	} // delete
+
+	/**
+	 * rebuild_preferences
+	 * This removes any garbage and then adds back in anything missing preferences wise
+	 */
+	public static function rebuild_preferences() { 
+
+		// First remove garbage
+		$sql = "DELETE FROM `user_preference` USING `user_preference` LEFT JOIN `preference` ON `preference`.`id`=`user_preference`.`preference` " . 
+			"WHERE `preference`.`id` IS NULL"; 
+		$db_results = Dba::query($sql); 
+
+		// Now add anything that we are missing back in, except System
+		$sql = "SELECT * FROM `preference` WHERE `type`!='system'"; 	
+
+	} // rebuild_preferences
+
 } // end Preference class

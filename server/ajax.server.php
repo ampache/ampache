@@ -53,6 +53,10 @@ switch ($_REQUEST['page']) {
 		require_once Config::get('prefix') . '/server/playlist.ajax.php'; 
 		exit; 
 	break;
+	case 'localplay': 
+		require_once Config::get('prefix') . '/server/localplay.ajax.php'; 
+		exit; 
+	break;
 	default: 
 		// A taste of compatibility
 	break;

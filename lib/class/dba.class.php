@@ -85,9 +85,9 @@ class Dba {
 	public static function fetch_assoc($resource) { 
 
 		$result = mysql_fetch_assoc($resource); 
+		debug_event('Assoc',self::$_sql,'6'); 
 
 		if (!$result) { 
-//			debug_event('fetch_assoc',self::$_sql,'1'); 
 			return array(); 
 		} 
 

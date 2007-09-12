@@ -128,14 +128,63 @@ class AmpacheHttpq extends localplay_controller {
         } // uninstall
 
         /**
-         * actions
-         * List all the special kick ass things you can do with MPD
+         * add_instance
+         * This takes key'd data and inserts a new MPD instance
          */
-        public function actions() {
+        public function add_instance($data) {
 
 
 
-        } // actions
+        } // add_instance
+
+        /**
+         * delete_instance
+         * This takes a UID and deletes the instance in question
+         */
+        public function delete_instance($uid) {
+
+
+        } // delete_instance
+
+        /**
+         * get_instances
+         * This returns a key'd array of the instance information with 
+         * [UID]=>[NAME]
+         */
+        public function get_instances() {
+
+
+        } // get_instances
+
+        /**
+         * instance_fields
+         * This returns a key'd array of [NAME]=>array([DESCRIPTION]=>VALUE,[TYPE]=>VALUE) for the
+         * fields so that we can on-the-fly generate a form
+         */
+        public function instance_fields() {
+
+
+
+        } // instance_fields
+
+        /**
+         * set_active_instance
+         * This sets the specified instance as the 'active' one
+         */
+        public function set_active_instance($uid) {
+
+
+        } // set_active_instance        
+
+        /**
+         * get_active_instance
+         * This returns the UID of the current active instance
+         * false if none are active
+         */
+        public function get_active_instance() {
+
+
+        } // get_active_instance
 
 	/**
 	 * add

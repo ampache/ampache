@@ -34,10 +34,17 @@ abstract class localplay_controller {
 	abstract public function status(); 
 	abstract public function get_version(); // Returns the version of this plugin
 	abstract public function get_description(); // Returns the description 
-	abstract public function actions(); // Return an array of name=>link actions for the sidebar
 	abstract public function is_installed(); // Returns an boolean t/f 
 	abstract public function install(); 
 	abstract public function uninstall(); 
+
+	// For display we need the following 'instance' functions
+	abstract public function add_instance($data); 
+	abstract public function delete_instance($id); 
+	abstract public function get_instances(); 
+	abstract public function instance_fields();
+	abstract public function set_active_instance($uid); 
+	abstract public function get_active_instance(); 
 
 	/**
 	 * get_url

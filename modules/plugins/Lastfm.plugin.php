@@ -70,10 +70,12 @@ class AmpacheLastfm {
 	 */
 	public function uninstall() { 
 
-		/* We need to remove the preivously added preferences */
-		$sql = "DELETE FROM `preference` WHERE `name`='lastfm_pass' OR `name`='lastfm_user' " . 
-			"OR `name`='lastfm_url' OR `name`='lastfm_host' OR `name`='lastfm_port' OR `name`='lastfm_challenge'"; 
-		$db_results = Dba::query($sql);
+		Preference::delete('lastfm_pass'); 
+		Preference::delete('lastfm_user'); 
+		Preference::delete('lastfm_url'); 
+		Preference::delete('lastfm_host'); 
+		Preference::delete('lastfm_port'); 
+		Preference::delete('lastfm_challenge'); 
 
 	} // uninstall
 

@@ -57,9 +57,8 @@ class AmpacheOpenStrands {
 	 */
 	function uninstall() { 
 
-		/* We need to remove the preivously added preferences */
-		$sql = "DELETE FROM `preference` WHERE `name`='mystrands_pass' OR `name`='mystrands_user'"; 
-		$db_results = Dba::query($sql);
+		Preference::delete('mystrands_pass'); 
+		Preference::delete('mystrands_user'); 
 
 	} // uninstall
 
