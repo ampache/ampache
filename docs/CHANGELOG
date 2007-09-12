@@ -4,6 +4,7 @@
 
 --------------------------------------------------------------------------
   v.3.4-Alpha3 
+	- Fixed Playlist Play links
 	- Added ability to gather album art for a single catalog at a time
 	- Improved Upgrade Documentation
 	- Disabled more functionality when in Demo Mode because people
