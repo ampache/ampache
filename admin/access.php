@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2006 Ampache.org
+ Copyright (c) 2001 - 2007 Ampache.org
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
@@ -19,24 +19,18 @@
 
 */
 
-require('../lib/init.php');
+require '../lib/init.php';
 
 
-/* Scrub in the Needed vars */
-$action = scrub_in($_REQUEST['action']);
-$access_id = scrub_in($_REQUEST['access_id']);
-$access = new Access($access_id);
-
-if (!$GLOBALS['user']->has_access(100) || conf('demo_mode')) { 
+if (!$GLOBALS['user']->has_access(100) || Config::get('demo_mode')) { 
 	access_denied();
 	exit();
 }
 
 
-show_template('header');
+show_header(); 
 
-
-switch ($action ) { 
+switch ($_REQUEST['action']) { 
 	case 'show_confirm_delete':
 		$title 	= _('Confirm Delete');
 		$body	= _('Do you really want to delete this Access Record?');
@@ -57,15 +51,15 @@ switch ($action ) {
 		show_confirmation(_('Entry Updated'),_('Access List Entry updated'),'admin/access.php');
 	break;
 	case 'show_add_host':
-		include(conf('prefix') . '/templates/show_add_access.inc');
+		require_once Config::get('prefix') . '/templates/show_add_access.inc.php';
 	break;
 	case 'show_edit_host':
 		include(conf('prefix') . '/templates/show_edit_access.inc');
 	break;
 	default:
 		$list = array();
-		$list = $access->get_access_list();
-		include(conf('prefix') .'/templates/show_access_list.inc');
+//		$list = $access->get_access_list();
+		require_once Config::get('prefix') .'/templates/show_access_list.inc.php';
 	break;
 } // end switch on action
 show_footer();

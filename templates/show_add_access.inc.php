@@ -23,7 +23,7 @@
 <p><?php echo _('Use the form below to add a host that you want to have access to your Ampache catalog.'); ?></p>
 
 
-<form name="update_catalog" method="post" enctype="multipart/form-data" action="<?php echo conf('web_path'); ?>/admin/access.php">
+<form name="update_catalog" method="post" enctype="multipart/form-data" action="<?php echo Config::get('web_path'); ?>/admin/access.php">
 <table cellpadding="5" cellspacing="0" border="0">
 <tr>
 	<td><?php echo _('Name'); ?>:</td>
@@ -45,8 +45,8 @@
 </tr>
 <tr>
 	<td><?php echo _('User'); ?>:</td>
+		<!-- Stuff Goes Here --> 
 	<td>
-		<?php show_user_select('user'); ?>
 	</td>
 </tr>
 <tr>

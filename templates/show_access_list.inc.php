@@ -24,7 +24,7 @@
 	@discussion default display for access admin page
 
 */
-$web_path = conf('web_path');
+$web_path = Config::get('web_path');
 ?>
 <?php show_box_top(_('Host Access to Your Catalog')); ?>
 <p>Since your catalog can be accessed remotely you may want to limit the access from

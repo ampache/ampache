@@ -19,6 +19,7 @@
 
 */
 ?>
+<td><?php echo Ajax::button('?action=basket&type=song&id=' . $song->id,'add',_('Add'),'playlist_add_' . $song->id); ?></td>
 <td><?php echo $playlist_track; ?></td>
 <td><?php echo $song->f_link; ?></td>
 <td><?php echo $song->f_artist_link; ?></td>

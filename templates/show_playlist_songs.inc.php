@@ -30,6 +30,7 @@ $ajax_url = Config::get('ajax_url');
 	</td>
 </tr>
 <tr class="table-header">
+	<th>&nbsp;</th>
 	<th><?php echo _('Track'); ?></th>
 	<th><?php echo _('Song Title'); ?></th>
 	<th><?php echo _('Artist'); ?></th>
