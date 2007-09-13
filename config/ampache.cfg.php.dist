@@ -52,7 +52,7 @@ session_length = 900
 ; Length that the session for a single streaming instance will last
 ; the default is 15min. With some clients, and long songs this can 
 ; cause playback to stop, increase this value if you experience that
-stream_length = 900
+stream_length = 3600
 
 ; This length defines how long a 'remember me' session and cookie will 
 ; last, the default is 900, same as length. It is up to the administrator
