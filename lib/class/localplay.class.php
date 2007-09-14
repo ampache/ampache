@@ -115,8 +115,6 @@ class Localplay {
 				unset($this->_player); 
 				return false; 
 			} 
-			$function_map = $this->_player->function_map();
-			$this->_map_functions($function_map);
 		}
 		
 	} // _load_player
@@ -156,48 +154,6 @@ class Localplay {
 		return $name;
 
 	} // format_name
-
-	/**
-	 * _map_functions
-	 * This takes the results from the loaded from the target player
-	 * and maps them to the defined functions that Ampache currently 
-	 * supports, this is broken into require and optional componets
-	 * Failure of required componets will cause log entry and gui
-	 * warning. The value of the elements in the $data array should
-	 * be function names that are called on the action in question
-	 */
-	private function _map_functions($data) { 
-		
-		/* Required Functions */
-		$this->_function_map['add']	= $data['add'];
-		$this->_function_map['delete']	= $data['delete'];
-		$this->_function_map['play']	= $data['play'];
-		$this->_function_map['stop']	= $data['stop'];
-		$this->_function_map['get']	= $data['get'];
-		$this->_function_map['connect'] = $data['connect'];
-		$this->_function_map['status']		= $data['status'];
-
-		/* Recommended Functions */
-		$this->_function_map['pause']		= $data['pause'];
-		$this->_function_map['next']		= $data['next'];
-		$this->_function_map['prev']		= $data['prev'];
-		$this->_function_map['skip']		= $data['skip'];
-		$this->_function_map['get_playlist']	= $data['get_playlist'];
-		$this->_function_map['get_playing']	= $data['get_playing'];
-		$this->_function_map['repeat']		= $data['repeat'];
-		$this->_function_map['random']		= $data['random'];
-		$this->_function_map['loop']		= $data['loop'];
-
-		/* Optional Functions */
-		$this->_function_map['volume_set']	= $data['volume_set'];
-		$this->_function_map['volume_up']	= $data['volume_up'];
-		$this->_function_map['volume_down']	= $data['volume_down'];
-		$this->_function_map['delete_all']	= $data['delete_all'];
-		$this->_function_map['randomize']	= $data['randomize'];
-		$this->_function_map['move']		= $data['move'];
-		$this->_function_map['add_url']		= $data['add_url'];
-
-	} // _map_functions
 
 	/**
 	 * get_controllers
@@ -246,6 +202,20 @@ class Localplay {
 		return $localplay->_player->is_installed();  
 
 	} // is_enabled
+
+	/**
+	 * install
+	 * This runs the install for the localplay controller we've
+	 * currently got pimped out
+	 */
+	public function install() { 
+
+		// Run the player's installer
+		$installed = $this->_player->install(); 
+		
+		return $installed; 
+
+	} // install
 
 	/**
 	 * connect
@@ -576,17 +546,26 @@ class Localplay {
         } // pause
 
 	/**
-	 * get_preferences
-	 * This functions returns an array of the preferences that the localplay 
-	 * controller needs in order to actually work
+	 * get_instances
+	 * This returns the instances of the current type
 	 */
-	public function get_preferences() { 
+	public function get_instances() { 
 
-		$preferences = $this->_player->get_preferences();
-		
-		return $preferences;
+		$instances = $this->_player->get_instances(); 
 
-	} // get_preferences
+		return $instances; 
+
+	} // get_instances
+
+	/**
+	 * add_instance
+	 * This adds a new instance for the current controller type
+	 */
+	public function add_instance($data) { 
+
+		$this->_player->add_instance($data); 
+
+	} // add_instance
 
 	/**
 	 * delete
@@ -624,6 +603,19 @@ class Localplay {
 		return true;
 
 	} // delete_all
+
+	/**
+	 * get_instance_fields
+	 * This loads the fields from the localplay 
+	 * player and returns them 
+	 */
+	public function get_instance_fields() { 
+
+		$fields = $this->_player->instance_fields(); 
+
+		return $fields;
+
+	} // get_instance_fields
 
 	/**
 	 * get_user_state

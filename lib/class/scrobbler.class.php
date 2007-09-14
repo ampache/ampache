@@ -73,7 +73,7 @@ class scrobbler {
          */
         public function handshake() {
 
-                $as_socket = @fsockopen('post.audioscrobbler.com', 80, $errno, $errstr, 5);
+                $as_socket = fsockopen('post.audioscrobbler.com', 80, $errno, $errstr, 2);
                 if(!$as_socket) {
                         $this->error_msg = $errstr;
                         return false;
@@ -186,7 +186,7 @@ class scrobbler {
 			return false; 
 		} 
 
-                $as_socket = @fsockopen($this->submit_host, intval($this->submit_port), $errno, $errstr, 5);
+                $as_socket = fsockopen($this->submit_host, intval($this->submit_port), $errno, $errstr, 2);
 
                 if(!$as_socket) {
                         $this->error_msg = $errstr;

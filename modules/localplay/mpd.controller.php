@@ -66,44 +66,6 @@ class AmpacheMpd extends localplay_controller {
 	} // get_version
 
 	/**
-	 * function_map
-	 * This function returns a named array of the functions
-	 * that this player supports and their names in this local
-	 * class. This is a REQUIRED function
-	 */
-	public function function_map() { 
-
-                $map = array();
-
-		/* Required Functions */
-                $map['add']             = 'add_songs';
-                $map['delete']          = 'delete_songs';
-                $map['play']            = 'play';
-                $map['stop']            = 'stop';
-                $map['get']             = 'get_songs';
-		$map['status']		= 'get_status';
-                $map['connect']         = 'connect';
-		
-		/* Recommended Functions */
-		$map['skip']		= 'skip';
-		$map['next']		= 'next';
-		$map['prev']		= 'prev';
-		$map['pause']		= 'pause';
-		$map['volume_up']       = 'volume_up';
-		$map['volume_down']	= 'volume_down';
-		$map['random']          = 'random';
-		$map['repeat']		= 'loop';
-
-		/* Optional Functions */
-		$map['move']		= 'move';
-		$map['delete_all']	= 'clear_playlist';
-		$map['add_url']		= 'add_url';
-
-                return $map;
-
-	} // function_map
-
-	/**
 	 * is_installed
 	 * This returns true or false if MPD controller is installed
 	 */
@@ -129,12 +91,13 @@ class AmpacheMpd extends localplay_controller {
                         "`host` VARCHAR( 255 ) NOT NULL , " .
                         "`port` INT( 11 ) UNSIGNED NOT NULL DEFAULT '6600', " .
                         "`password` VARCHAR( 255 ) NOT NULL , " .
-                        "`access` SMALLINT( 4 ) UNSIGNED NOT NULL DEFAULT '0', " .
+                        "`access` SMALLINT( 4 ) UNSIGNED NOT NULL DEFAULT '0'" .
                         ") ENGINE = MYISAM";
                 $db_results = Dba::query($sql);
-
+		
 		// Add an internal preference for the users current active instance
 		Preference::insert('mpd_active','MPD Active Instance','0','25','integer','internal'); 
+		User::rebuild_all_preferences(); 
 
                 return true;
 
@@ -149,6 +112,8 @@ class AmpacheMpd extends localplay_controller {
                 $sql = "DROP TABLE `localplay_mpd`";
                 $db_results = Dba::query($sql);
 
+		Preference::delete('mpd_active'); 
+
                 return true;
 
 	} // uninstall
@@ -159,7 +124,27 @@ class AmpacheMpd extends localplay_controller {
 	 */
 	public function add_instance($data) { 
 
+		foreach ($data as $key=>$value) { 
+			switch ($key) { 
+				case 'name': 
+				case 'hostname': 
+				case 'port': 
+				case 'password': 
+					${$key} = Dba::escape($value); 
+				break;
+				default: 
 
+				break;
+			} // end switch 
+		} // end foreach
+
+		$user_id = Dba::escape($GLOBALS['user']->id); 
+
+		$sql = "INSERT INTO `localplay_mpd` (`name`,`host`,`port`,`password`,`owner`) " . 
+			"VALUES ('$name','$hostname','$port','$password','$user_id')";
+		$db_results = Dba::query($sql); 
+		
+		return $db_results; 
 
 	} // add_instance
 
@@ -179,6 +164,16 @@ class AmpacheMpd extends localplay_controller {
 	 */
 	public function get_instances() { 
 
+		$sql = "SELECT * FROM `localplay_mpd`"; 
+		$db_results = Dba::query($sql); 
+
+		$results = array(); 
+
+		while ($row = Dba::fetch_assoc($db_results)) { 
+			$results[$row['id']] = $row['name']; 
+		} 
+
+		return $results; 
 
 	} // get_instances
 
@@ -189,7 +184,12 @@ class AmpacheMpd extends localplay_controller {
 	 */
 	public function instance_fields() { 
 
+		$fields['name'] 	= array('description'=>_('Instance Name'),'type'=>'textbox'); 
+		$fields['hostname'] 	= array('description'=>_('Hostname'),'type'=>'textbox'); 
+		$fields['port']		= array('description'=>_('Port'),'type'=>'textbox'); 
+		$fields['password']	= array('description'=>_('Password'),'type'=>'textbox'); 
 
+		return $fields; 
 
 	} // instance_fields
 

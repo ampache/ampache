@@ -26,6 +26,10 @@ if (AJAX_INCLUDE != '1') { exit; }
 
 switch ($_REQUEST['action']) { 
 	case 'set_instance': 
+		// Make sure they they are allowed to do this
+		//... ok I don't really know what that means yet
+
+		Preference::update('mpd_active',$GLOBALS['user']->id,$_REQUEST['instance']); 
 
 	break;
 	default: 

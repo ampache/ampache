@@ -32,32 +32,16 @@ if (!$GLOBALS['user']->has_access(100)) {
 show_header(); 
 
 switch ($_REQUEST['action']) { 
-	case 'insert_localplay_preferences':
-		$type = scrub_in($_REQUEST['type']);
-		insert_localplay_preferences($type);
-		$url 	= conf('web_path') . '/admin/preferences.php?tab=modules';
-		$title 	= _('Module Activated');
-		$body	= '';
-		show_confirmation($title,$body,$url);
-	break;
-	case 'confirm_remove_localplay_preferences':
-		$type = scrub_in($_REQUEST['type']);
-		$url	= conf('web_path') . '/admin/modules.php?action=remove_localplay_preferences&amp;type=' . $type;
-		$title	= _('Are you sure you want to remove this module?');
-		$body	= '';
-		show_confirmation($title,$body,$url,1);
-	break;
-	case 'remove_localplay_preferences':
-		$type = scrub_in($_REQUEST['type']);
-		remove_localplay_preferences($type);
-		$url	= conf('web_path') . '/admin/preferences.php?tab=modules';
-		$title	= _('Module Deactivated');
-		$body	= '';
-		show_confirmation($title,$body,$url);
-	break;
 	case 'install_localplay': 
-		
-
+		$localplay = new Localplay($_REQUEST['type']); 
+		if (!$localplay->player_loaded()) { 
+			Error::add('general',_('Install Failed, Controller Error')); 
+			Error::display('general'); 
+			break;
+		} 	
+		// Install it!
+		$localplay->install(); 
+		header("Location:" . Config::get('web_path') . '/admin/modules.php?action=show_localplay'); 
 	break;
 	case 'confirm_uninstall_localplay': 
 

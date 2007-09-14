@@ -4,6 +4,9 @@
 
 --------------------------------------------------------------------------
   v.3.4-Alpha3 
+	- Tweaked the Playback to try to fix some issues with WMP
+	- Reduced the timeout on the LastFM Plugin to reduce delay
+		when scrobbling is down
 	- Added Add buttons to single playlist view, and put the delete 
 		link back for catalogs
 	- Fixed Playlist Play links

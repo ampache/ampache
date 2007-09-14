@@ -23,12 +23,29 @@ require 'lib/init.php';
 
 show_header(); 
 
+// Check to see if we've got the rights to be here
+if (!Config::get('allow_localplay_playback') || !$GLOBALS['user']->has_access('25')) { 
+	access_denied(); 
+} 
+
+
 switch ($_REQUEST['action']) { 
 	case 'show_add_instance': 
+		// This requires 50 or better
+		if (!$GLOBALS['user']->has_access('50')) { access_denied(); break; } 
+		
+		// Get the current localplay fields
+		$localplay = new Localplay($GLOBALS['user']->prefs['localplay_controller']); 
+		$fields = $localplay->get_instance_fields(); 
 		require_once Config::get('prefix') . '/templates/show_localplay_add_instance.inc.php'; 
 	break;
 	case 'add_instance': 
-
+		// This requires 50 or better!
+		if (!$GLOBALS['user']->has_access('50')) { access_denied(); break; } 
+		
+		// Setup the object
+		$localplay = new Localplay($GLOBALS['user']->prefs['localplay_controller']); 
+		$localplay->add_instance($_POST); 
 	break;
 	case 'delete_song':
 		$song_id = scrub_in($_REQUEST['song_id']);

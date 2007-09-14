@@ -22,5 +22,19 @@
 
 ?>
 <?php show_box_top(_('Add Localplay Instance')); ?>
-
+<form method="post" action="<?php echo Config::get('web_path'); ?>/localplay.php?action=add_instance">
+<table border="0" cellpadding="3" cellspacing="0" class="table-data">
+<?php foreach ($fields as $key=>$field) { ?>
+<tr>
+	<td><?php echo $field['description']; ?></td>
+	<td><input type="textbox" name="<?php echo $key; ?>" /></td>
+</tr>
+<?php } ?>
+<tr>
+	<td colspan="2">
+		<input type="submit" value="<?php echo _('Add Instance'); ?>" />
+	</td>
+</tr>
+</table>
+</form>
 <?php show_box_bottom(); ?>

@@ -428,7 +428,7 @@ class Stream {
 	 */
 	function create_localplay() { 
 
-		if (!$localplay = init_localplay()) { 
+		if (!$localplay = new Localplay($GLOBALS['user']->prefs['localplay_controller'])) { 
 			debug_event('localplay','Player failed to init on song add','3');
 			echo "Error: Localplay Init Failed check config";
 			return false; 
@@ -448,8 +448,6 @@ class Stream {
 		} 
 
 		$localplay->play();
-
-                header("Location: " . return_referer());
 
 	} // create_localplay
 

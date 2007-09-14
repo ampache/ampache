@@ -33,7 +33,7 @@ foreach ($controllers as $controller) {
 	$localplay = new Localplay($controller); 
 	if (!$localplay->player_loaded()) { continue; } 
 	$localplay->format(); 
-	if ($localplay->is_enabled()) { 
+	if (Localplay::is_enabled($controller)) { 
 		$action 	= 'confirm_uninstall_localplay'; 
 		$action_txt	= _('Disable'); 
 	} 
@@ -46,7 +46,7 @@ foreach ($controllers as $controller) {
 	<td><?php echo scrub_out($localplay->f_name); ?></td>
 	<td><?php echo scrub_out($localplay->f_description); ?></td>
 	<td><?php echo scrub_out($localplay->f_version); ?></td>
-	<td><a href="<?php echo $web_path; ?>/admin/modules.php?action=<?php echo $action; ?>&amp;type="<?php urlencode($localplay->type); ?>"><?php echo $action_txt; ?></a></td>
+	<td><a href="<?php echo $web_path; ?>/admin/modules.php?action=<?php echo $action; ?>&amp;type=<?php echo urlencode($controller); ?>"><?php echo $action_txt; ?></a></td>
 </tr>
 <?php } if (!count($controllers)) { ?>
 <tr class="<?php echo flip_class(); ?>">

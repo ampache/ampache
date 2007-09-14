@@ -266,10 +266,10 @@ else {
 } // else not downsampling
 
 // We need to check to see if they are rate limited
-$chunk_size = '4096';
+$chunk_size = '2084';
 
 // Attempted fix, pimp up the size a bit
-$song->size = $song->size + ($chunk_size*2);
+$song->size = $song->size;
 
 // Put this song in the now_playing table
 insert_now_playing($song->id,$uid,$song->time,$sid);
@@ -299,11 +299,11 @@ $bytesStreamed = 0;
 $minBytesStreamed = $song->size / 2;
 
 // Actually do the streaming 
-while (!feof($fp) && (connection_status() == 0)) {
+do { 
 	$buf = fread($fp, $chunk_size);
         print($buf);
         $bytesStreamed += $chunk_size;
-}
+} while (!feof($fp) && (connection_status() == 0));
 
 // Make sure that a good chunk of the song has been played
 if ($bytesStreamed > $minBytesStreamed) {
