@@ -31,14 +31,14 @@ $ajax_url = Config::get('ajax_url');
 </tr>
 <tr class="table-header">
 	<th><?php echo _('Add'); ?></th>
-	<th onclick="ajaxPut('<?php echo $ajax_url; ?>?action=browse&amp;sort=title');return true;" style="cursor:pointer;">
-		<?php echo _('Song Title'); ?>
+	<th>
+	<?php echo Ajax::text('?page=browse&action=set_sort&sort=title',_('Song Title'),'sort_song_title'); ?>
 	</th>
 	<th><?php echo _('Artist'); ?></th>
 	<th><?php echo _('Album'); ?></th>
 	<th><?php echo _('Genre'); ?></th>
-	<th><?php echo _('Track'); ?></th>
-	<th><?php echo _('Time'); ?></th>
+	<th><?php echo Ajax::text('?page=browse&action=set_sort&sort=track',_('Track'),'sort_song_track'); ?></th>
+	<th><?php echo Ajax::text('?page=browse&action=set_sort&sort=time',_('Time'),'sort_song_time'); ?></th>
 	<th><?php echo _('Action'); ?></th>
 </tr>
 <?php 

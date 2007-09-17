@@ -43,6 +43,19 @@ switch ($_REQUEST['action']) {
                 $results['browse_content'] = ob_get_contents();
                 ob_end_clean();
 	break;
+	case 'set_sort':
+		if ($_REQUEST['sort']) { 
+			Browse::set_sort($_REQUEST['sort']); 
+		} 
+
+		// Refresh the browse div with our new hotness
+		$object_ids = Browse::get_saved(); 
+
+		ob_start(); 
+		Browse::show_objects($object_ids); 
+		$results['browse_content'] = ob_get_contents(); 
+		ob_end_clean(); 
+	break; 
 	default: 
 		$results['rfc3514'] = '0x1'; 
 	break;

@@ -28,11 +28,11 @@ $web_path = Config::get('web_path');
 	</td>
 </tr>
 <tr class="table-header">
-	<td><?php echo _('Add'); ?>
-	<td><?php echo _('Artist'); ?></td>
-	<td> <?php echo _('Songs');  ?> </td>
-	<td> <?php echo _('Albums'); ?> </td>
-	<td> <?php echo _('Action'); ?> </td>
+	<th><?php echo _('Add'); ?></th>
+	<th><?php echo Ajax::text('?page=browse&action=set_sort&sort=name',_('Artist'),'artist_sort_name'); ?></th>
+	<th> <?php echo _('Songs');  ?> </th>
+	<th> <?php echo _('Albums'); ?> </th>
+	<th> <?php echo _('Action'); ?> </th>
 </tr>
 <?php 
 /* Foreach through every artist that has been passed to us */

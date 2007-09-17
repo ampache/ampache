@@ -123,13 +123,19 @@ class Browse {
 
 		switch ($_SESSION['browse']['type']) { 
 			case 'song': 
-				$valid_array = array('title','year'); 
+				$valid_array = array('title','year','track','time'); 
 			break;
 			case 'artist': 
 				$valid_array = array('name'); 
 			break;
 			case 'album': 
 				$valid_array = array('name','year'); 
+			break;
+			case 'playlist': 
+				$valid_array = array('name');
+			break; 
+			case 'live_stream': 
+				$valid_array = array('name','call_sign','frequency'); 
 			break;
 		} // end switch  
 
@@ -139,11 +145,17 @@ class Browse {
 		} 
 			
 		if ($_SESSION['browse']['sort'][$sort] == 'DESC') { 
-				$_SESSION['browse']['sort'][$sort] = 'ASC'; 
+			// Reset it till I can figure out how to interface the hotness
+			$_SESSION['browse']['sort'] = array(); 
+			$_SESSION['browse']['sort'][$sort] = 'ASC'; 
 		}
 		else { 
+			// Reset it till I can figure out how to interface the hotness
+			$_SESSION['browse']['sort'] = array(); 
 			$_SESSION['browse']['sort'][$sort] = 'DESC'; 
 		} 
+
+		self::resort_objects(); 
 
 	} // set_sort
 
@@ -201,6 +213,42 @@ class Browse {
 	} // get_objects
 
 	/**
+	 * get_base_sql
+	 * This returns the base SQL (select + from) for the different types
+	 */
+	private static function get_base_sql() { 
+
+                // Get our base SQL must always return ID
+                switch ($_SESSION['browse']['type']) {
+                        case 'album':
+                                $sql = "SELECT `album`.`id` FROM `album` ";
+                        break;
+                        case 'artist':
+                                $sql = "SELECT `artist`.`id` FROM `artist` ";
+                        break;
+                        case 'genre':
+                                $sql = "SELECT `genre`.`id` FROM `genre` ";
+                        break;
+                        case 'user':
+                                $sql = "SELECT `user`.`id` FROM `user` ";
+                        break;
+                        case 'live_stream':
+                                $sql = "SELECT `live_stream`.`id` FROM `live_stream` ";
+                        break;
+                        case 'playlist':
+                                $sql = "SELECT `playlist`.`id` FROM `playlist` ";
+                        break;
+                        case 'song':
+                        default:
+                                $sql = "SELECT `song`.`id` FROM `song` ";
+                        break;
+                } // end base sql
+
+		return $sql; 
+
+	} // get_base_sql
+
+	/**
 	 * get_sql
 	 * This returns the sql statement we are going to use this has to be run
 	 * every time we get the objects because it depends on the filters and the
@@ -208,31 +256,7 @@ class Browse {
 	 */
 	public static function get_sql() { 
 
-		// Get our base SQL must always return ID 
-		switch ($_SESSION['browse']['type']) { 
-			case 'album':
-				$sql = "SELECT `album`.`id` FROM `album` "; 
-			break;
-			case 'artist':
-				$sql = "SELECT `artist`.`id` FROM `artist` "; 
-			break;
-			case 'genre':
-				$sql = "SELECT `genre`.`id` FROM `genre` ";
-			break;
-			case 'user': 
-				$sql = "SELECT `user`.`id` FROM `user` ";
-			break;
-			case 'live_stream':
-				$sql = "SELECT `live_stream`.`id` FROM `live_stream` "; 
-			break;
-			case 'playlist': 
-				$sql = "SELECT `playlist`.`id` FROM `playlist` "; 
-			break;
-			case 'song':
-			default:
-				$sql = "SELECT `song`.`id` FROM `song` ";  
-			break;
-		} // end base sql
+		$sql = self::get_base_sql(); 
 
 		// No sense to go further if we don't have filters
 		if (is_array($_SESSION['browse']['filter'])) { 
@@ -383,7 +407,13 @@ class Browse {
 					case 'year':
 						$sql = "`song`.`year`"; 
 					break;
-						default: 
+					case 'time': 
+						$sql = "`song`.`time`"; 
+					break;
+					case 'track': 
+						$sql = "`song`.`track`"; 
+					break;
+					default: 
 						// Rien a faire
 					break;
 				} // end switch
@@ -404,6 +434,26 @@ class Browse {
 						$sql = "`artist`.`name`"; 
 					break;
 				} // end switch 
+			break;
+			case 'playlist': 
+				switch ($field) { 
+					case 'name':
+						$sql = "`playlist`.`name`"; 
+					break;
+				} // end switch
+			break; 
+			case 'live_stream': 
+				switch ($field) { 
+					case 'name':
+						$sql = "`live_stream`.`name`"; 
+					break;
+					case 'call_sign':
+						$sql = "`live_stream`.`call_sign`";
+					break;
+					case 'frequency': 
+						$sql = "`live_stream`.`frequency`"; 
+					break; 
+				} // end switch
 			break;
 			default: 
 				// Rien a faire
@@ -500,5 +550,46 @@ class Browse {
 		return true; 
 
 	} // save_objects
+
+	/**
+	 * resort_objects
+	 * This takes the existing objects, looks at the current
+	 * sort method and then re-sorts them This is internally
+	 * called by the set_sort() function 
+	 */
+	private static function resort_objects() { 
+
+		// First pull the objects
+		$objects = self::get_saved(); 
+
+		foreach ($objects as $object_id) { 
+			$object_id = Dba::escape($object_id); 
+			$where_sql .= "`id`='$object_id' OR"; 
+		} 
+		$where_sql = rtrim($where_sql,'OR'); 
+
+		$sql = self::get_base_sql() . ' WHERE ' . $where_sql; 	
+
+		$order_sql = "ORDER BY ";
+
+                foreach ($_SESSION['browse']['sort'] as $key=>$value) {
+                        $order_sql .= self::sql_sort($key,$value);
+                } 
+                // Clean her up
+                $order_sql = rtrim($order_sql,"ORDER BY ");
+                $order_sql = rtrim($order_sql,",");
+                                        
+                $sql = $sql . $order_sql;
+		$db_results = Dba::query($sql); 
+
+		while ($row = Dba::fetch_assoc($db_results)) { 
+			$results[] = $row['id']; 
+		} 
+		
+		self::save_objects($results); 
+
+		return true; 
+
+	} // resort_objects
 
 } // browse

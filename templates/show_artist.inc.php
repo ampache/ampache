@@ -25,5 +25,9 @@ require Config::get('prefix') . '/templates/show_artist_box.inc.php';
 
 ?>
 <div id="browse_content">
-<?php Browse::set_type('album'); Browse::show_objects($albums); ?>
+<?php 
+	Browse::set_type('album'); 
+	Browse::save_objects($albums);
+	Browse::show_objects($albums); 
+?>
 </div>

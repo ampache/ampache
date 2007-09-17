@@ -61,9 +61,11 @@ $title		= scrub_out($album->name) . '&nbsp;(' . $album->year . ')&nbsp;--&nbsp;'
 <div id="additional_information">
 &nbsp;
 </div>
+<div id="browse_content">
 <?php 
-	show_box_top($album->name . ' ' . _('Songs')); 
 	$object_ids = $album->get_songs(); 
-	require Config::get('prefix') . '/templates/show_songs.inc.php'; 
-	show_box_bottom(); 
+	Browse::set_type('song');
+	Browse::save_objects($object_ids); 
+	Browse::show_objects($object_ids); 
 ?>
+</div>

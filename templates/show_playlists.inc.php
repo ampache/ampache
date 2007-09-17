@@ -28,7 +28,7 @@
 </tr>
 <tr class="table-header">
         <th>&nbsp;</th>
-	<th><?php echo _('Playlist Name'); ?></th>
+	<th><?php echo Ajax::text('?page=browse&action=set_sort&sort=name',_('Playlist Name'),'playlist_sort_name'); ?></th>
 	<th><?php echo _('# Songs'); ?></th>
 	<th><?php echo _('Owner'); ?></th>
 	<th><?php echo _('Actions'); ?></th>

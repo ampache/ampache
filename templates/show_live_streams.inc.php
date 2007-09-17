@@ -29,9 +29,9 @@ $web_path = Config::get('web_path');
 </tr>
 <tr class="table-header">
 	<th><?php echo _('Add'); ?></th>
-	<th><?php echo _('Name'); ?></th>
-	<th><?php echo _('Callsign');  ?></th>
-	<th><?php echo _('Frequency'); ?></th>
+	<th><?php echo Ajax::text('?page=browse&action=set_sort&sort=name',_('Name'),'live_stream_sort_name'); ?></th>
+	<th><?php echo Ajax::text('?page=browse&action=set_sort&sort=call_sign',_('Callsign'),'live_stream_call_sign');  ?></th>
+	<th><?php echo Ajax::text('?page=browse&action=set_sort&sort=frequency',_('Frequency'),'live_stream_frequency'); ?></th>
 	<th><?php echo _('Genre'); ?></th> 
 	<th><?php echo _('Action'); ?> </th>
 </tr>

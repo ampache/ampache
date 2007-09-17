@@ -32,10 +32,10 @@ $ajax_url = Config::get('ajax_url');
 	<?php if (Browse::get_filter('show_art')) { ?>
 	<th><?php echo _('Cover'); ?></th>
 	<?php } ?>
-	<th><?php echo _('Album'); ?></th>
+	<th><?php echo Ajax::text('?page=browse&action=set_sort&sort=name',_('Album'),'album_sort_name'); ?></th>
 	<th><?php echo _('Artist'); ?></th>
 	<th><?php echo _('Songs'); ?></th>
-	<th><?php echo _('Year'); ?></th>
+	<th><?php echo Ajax::text('?page=browse&action=set_sort&sort=year',_('Year'),'album_sort_year'); ?></th>
 	<th><?php echo _('Actions'); ?></th>
 </tr>
 <?php 

@@ -42,13 +42,11 @@ switch($_REQUEST['action']) {
 	case 'file':
 	case 'album':
 		Browse::set_type('album'); 
-		Browse::set_sort('name'); 
 		$album_ids = Browse::get_objects(); 
 		Browse::show_objects($album_ids); 
 	break;
 	case 'artist':
 		Browse::set_type('artist'); 
-		Browse::set_sort('name'); 
 		$artist_ids = Browse::get_objects(); 
 		Browse::show_objects($artist_ids); 
 	break;
@@ -59,7 +57,6 @@ switch($_REQUEST['action']) {
 	break;
 	case 'song':
 		Browse::set_type('song'); 
-		Browse::set_sort('title'); 
 		$song_ids = Browse::get_objects(); 
 		Browse::show_objects($song_ids); 
 	break;
