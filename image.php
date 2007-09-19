@@ -71,15 +71,16 @@ switch ($_REQUEST['type']) {
 
 		// Attempt to pull art from the database
 		$art = $album->get_art();
+		$mime = $art['mime'];
 		
-		if (!$art['mime']) { 
+		if (!$mime) { 
 			header('Content-type: image/gif');
 			readfile(Config::get('prefix') . Config::get('theme_path') . '/images/blankalbum.gif');
 			break;
 		} // else no image
 
 		// Print the album art
-		$data = explode("/",$art['mime']);
+		$data = explode("/",$mime);
 		$extension = $data['1'];
 		
 		if (empty($_REQUEST['thumb'])) { 
