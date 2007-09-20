@@ -96,6 +96,16 @@ class Radio {
 	} // format
 
 	/**
+	 * get_url	
+	 * This returns the URL for this live stream
+	 */
+	public function get_url() { 
+
+		
+
+	} // get_url 
+
+	/**
 	 * update
 	 * This is a static function that takes a key'd array for input
 	 * it depends on a ID element to determine which radio element it 

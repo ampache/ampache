@@ -178,6 +178,23 @@ class AmpacheMpd extends localplay_controller {
 	} // get_instances
 
 	/**
+	 * get_instance
+	 * This returns the specified instance and all it's pretty variables
+	 */
+	private function get_instance($instance) { 
+	
+		$instance = Dba::escape($instance); 
+
+		$sql = "SELECT * FROM `localplay_mpd` WHERE `id`='$instance'";  
+		$db_results = Dba::query($sql); 
+
+		$row = Dba::fetch_assoc($db_results); 
+		
+		return $row; 
+
+	} // get_instance
+
+	/**
 	 * instance_fields
 	 * This returns a key'd array of [NAME]=>array([DESCRIPTION]=>VALUE,[TYPE]=>VALUE) for the
 	 * fields so that we can on-the-fly generate a form
@@ -224,24 +241,22 @@ class AmpacheMpd extends localplay_controller {
 
 	/**
 	 * add
-	 * This must take an array of URL's from Ampache
-	 * and then add them to MPD
+	 * This takes a single object and adds it in, it uses the built in 
+	 * functions to generate the URL it needs
 	 */
-	public function add($objects) { 
-
+	public function add($object) { 
+		
 		if (is_null($this->_mpd->ClearPLIfStopped())) {
 	                debug_event('mpd_add', 'Error: Unable to clear the MPD playlist ' . $this->_mpd->errStr,'1');
          	}
 
-		foreach ($songs as $song_id) { 
-			$song = new Song($song_id);
-			$url = $song->get_url(0,1);
-			if (is_null($this->_mpd->PlAdd($url))) { 
-				debug_event('mpd_add','Error: Unable to add $url to MPD ' . $this->_mpd->errStr,'1');
-			}
+		$url = $this->get_url($object); 
 
-		} // end foreach
-
+		if (is_null($this->_mpd->PlAdd($url))) { 
+			debug_event('mpd_add',"Error: Unable to add $url to MPD " . $this->_mpd->errStr,'1'); 
+			return false; 
+		} 
+		
 		return true;
 
 	} // add_songs
@@ -505,8 +520,10 @@ class AmpacheMpd extends localplay_controller {
 	 * is stored in this class
 	 */
 	public function connect() { 
-		
-		$this->_mpd = new mpd(conf('localplay_mpd_hostname'),conf('localplay_mpd_port'),conf('localplay_mpd_password'));
+	
+		// Look at the current instance and pull the options for said instance
+		$options = self::get_instance($GLOBALS['user']->prefs['mpd_active']); 
+		$this->_mpd = new mpd($options['host'],$options['port'],$options['password']);
 
 		if ($this->_mpd->connected) { return true; } 
 

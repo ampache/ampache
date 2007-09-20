@@ -36,6 +36,9 @@ class Stream {
 	public $sess;
 	public $user_id; 
 
+	// Generate once an object is constructed
+	public static $session; 
+
 	/**
 	 * Constructor for the stream class takes a type and an array
 	 * of song ids
@@ -52,7 +55,7 @@ class Stream {
 		}
 		
 		// Generate the session ID
-		$this->session = md5(uniqid(rand(), true));;
+		self::$session = md5(uniqid(rand(), true));;
 
 	} // Constructor
 
@@ -109,7 +112,7 @@ class Stream {
 		$expire = time() + Config::get('stream_length'); 
 
 		$sql = "INSERT INTO `session_stream` (`id`,`expire`,`user`) " . 
-			"VALUES('$this->session','$expire','$this->user_id')"; 
+			"VALUES('" . self::$session . "','$expire','$this->user_id')"; 
 		$db_results = Dba::query($sql); 
 
 		if (!$db_results) { return false; } 
@@ -204,7 +207,7 @@ class Stream {
 	                if ($GLOBALS['user']->prefs['play_type'] == 'downsample') {
 	                	$ds = $GLOBALS['user']->prefs['sample_rate'];
 	                }
-			echo $song->get_url($this->session); 
+			echo $song->get_url(self::$session); 
 		} // end foreach
 
 		/* Foreach the additional URLs */
@@ -241,7 +244,7 @@ class Stream {
 	                $song->format();
 
 	                echo "#EXTINF:$song->time," . $song->f_artist_full . " - " . $song->title . "\n";
-			echo $song->get_url($this->session) . "\n";
+			echo $song->get_url(self::$session) . "\n";
                 } // end foreach
 
 		/* Foreach URLS */
@@ -272,7 +275,7 @@ class Stream {
 			$song = new Song($song_id);
 			$song->format();
 			$song_name = $song->f_artist_full . " - " . $song->title . "." . $song->type;
-			$song_url = $song->get_url($this->session);
+			$song_url = $song->get_url(self::$session);
 			echo "File" . $i . "=$song_url\n";
 			echo "Title" . $i . "=$song_name\n";
 			echo "Length" . $i . "=$song->time\n";
@@ -306,7 +309,7 @@ class Stream {
 		foreach ($this->songs as $song_id) {
                 	$song = new Song($song_id);
                         $song->format();   
-			$url = $song->get_url($this->session);
+			$url = $song->get_url(self::$session);
                         $song_name = $song->f_artist_full . " - " . $song->title . "." . $song->type;
 			
                         echo "<ENTRY>\n";
@@ -350,7 +353,7 @@ class Stream {
 	                $song->format();
 
 	                $xml = array();
-			$xml['track']['location'] = $song->get_url($this->session) . $flash_hack;
+			$xml['track']['location'] = $song->get_url(self::$session) . $flash_hack;
 			$xml['track']['identifier'] = $xml['track']['location'];
 			$xml['track']['title'] = $song->title;
 			$xml['track']['creator'] = $song->f_artist_full;
@@ -428,23 +431,19 @@ class Stream {
 	 */
 	function create_localplay() { 
 
-		if (!$localplay = new Localplay($GLOBALS['user']->prefs['localplay_controller'])) { 
-			debug_event('localplay','Player failed to init on song add','3');
-			echo "Error: Localplay Init Failed check config";
-			return false; 
+		// First figure out what their current one is and create the object
+		$localplay = new Localplay($GLOBALS['user']->prefs['localplay_controller']); 
+		$localplay->connect(); 
+
+		//HACK!!!
+		// Yea.. you know the baby jesus... he's crying right meow
+		foreach ($this->songs as $song_id) { 
+			$this->objects[] = new Song($song_id); 
 		} 
 
-		if (!$localplay->connect()) { 
-			debug_event('localplay','Localplay Player Connect failed','3'); 
-			echo "Error: Localplay connect failed check config";
-			return false; 
-		} 
-
-		$localplay->add($this->songs);
-
-		/* Check for Support */ 
-		if ($localplay->has_function('add_url')) { 
-			$localplay->add_url($this->urls); 
+		// Foreach the stuff we've got and add it
+		foreach ($this->objects as $object) { 
+			$localplay->add($object,self::$session); 
 		} 
 
 		$localplay->play();
@@ -475,7 +474,7 @@ class Stream {
 		// Build up our object
 		$song_id = $this->songs['0']; 
 		$song = new Song($song_id); 
-		$url = $song->get_url($this->session); 
+		$url = $song->get_url(self::$session); 
 
 		// Append the fact we are downloading
 		$url .= '&action=download'; 
@@ -497,7 +496,7 @@ class Stream {
                 header("Content-Type: audio/x-pn-realaudio ram;");
                 foreach ($this->songs as $song_id) {
                         $song = new Song($song_id);
-			echo $song->get_url($this->session); 
+			echo $song->get_url(self::$session); 
 		} // foreach songs
 
 	} // create_ram

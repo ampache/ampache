@@ -50,8 +50,21 @@ abstract class localplay_controller {
 	 * get_url
 	 * This returns the URL for the passed object
 	 */
-	private function get_url($object) { 
+	public function get_url($object) { 
 
+		// This can get a little complicated
+		switch ($object_type) { 
+			case 'random': 
+		
+			break; 
+			case 'radio': 
+			case 'song': 
+			default: 
+				$url = $object->get_url(Stream::$session); 	
+			break;
+		} // end switch on objecttype
+
+		return $url;
 
 	} // get_url 
 
@@ -60,7 +73,7 @@ abstract class localplay_controller {
 	 * This returns the Filename for the passed object, not
 	 * always possible
 	 */
-	private function get_file($object) { 
+	public function get_file($object) { 
 
 
 	} // get_file 

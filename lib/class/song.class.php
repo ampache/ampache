@@ -799,10 +799,6 @@ class Song {
 
 		$type		= $this->type;
 
-		if ($GLOBALS['user']->prefs['play_type'] == 'downsample') { 
-			$ds_string = "&ds=" . $GLOBALS['user']->prefs['sample_rate'];
-		}
-
 		/* Account for retarded players */
 		if ($this->type == 'flac') { $type = 'ogg'; } 
 

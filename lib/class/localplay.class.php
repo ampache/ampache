@@ -224,14 +224,7 @@ class Localplay {
 	 */
 	public function connect() { 
 
-		$function = $this->_function_map['connect'];
-	
-		/* This is very bad, that means they don't even 
-		 * have a connection function defined
-		 */
-		if (!$function) { return false; } 
-	
-		if (!$this->_player->$function()) { 
+		if (!$this->_player->connect()) { 
 			debug_event('localplay','Error Unable to connect, check ' . $this->type . ' controller','1');
 			return false;
 		}
@@ -247,9 +240,7 @@ class Localplay {
 	 */
 	public function play() { 
 	
-		$function = $this->_function_map['play'];
-
-		if (!$this->_player->$function()) { 
+		if (!$this->_player->play()) { 
 			debug_event('localplay','Error Unable to start playback, check ' . $this->type . ' controller','1');
 			return false;
 		}
@@ -278,20 +269,15 @@ class Localplay {
 
 	/**
 	 * add
-	 * This function takes an array of song_ids and then passes the full URL
+	 * This function takes a single object and then passes it to
 	 * to the player, this is a required function. 
 	 */
-	public function add($songs) { 
+	public function add($object) { 
 
-
-		/* Call the Function Specified in the Function Map */
-		$function = $this->_function_map['add'];
-
-		if (!$this->_player->$function($songs)) { 
+		if (!$this->_player->add($object)) { 
 			debug_event('localplay','Error Unable to add songs, check ' . $this->type . ' controller','1');
 			return false;
 		}
-
 		
 		return true;
 

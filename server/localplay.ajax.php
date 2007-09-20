@@ -29,7 +29,10 @@ switch ($_REQUEST['action']) {
 		// Make sure they they are allowed to do this
 		//... ok I don't really know what that means yet
 
+		$type = $_REQUEST['instance'] ? 'localplay' : 'stream';
+
 		Preference::update('mpd_active',$GLOBALS['user']->id,$_REQUEST['instance']); 
+		Preference::update('play_type',$GLOBALS['user']->id,$type); 
 
 	break;
 	default: 

@@ -4,6 +4,7 @@
 
 --------------------------------------------------------------------------
   v.3.4-Alpha3 
+	- Based MPD Support Restored
 	- Moved catalog stats off to statistics page
 	- Added basic sorting to all browse pages
 	- Tweaked the Playback to try to fix some issues with WMP

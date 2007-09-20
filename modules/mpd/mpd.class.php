@@ -128,29 +128,32 @@ class mpd {
        			$this->errStr = "Could not connect";
 			return;
 		} 
-		else {	list ( $this->mpd_version ) = sscanf($resp, MPD_RESPONSE_OK . " MPD %s\n");
-                
-		if ( ! is_null($pwd) ) {
-                if ( is_null($this->SendCommand(MPD_CMD_PASSWORD,$pwd)) ) {
-                    $this->connected = FALSE;
-		    $this->errStr = "Password supplied is incorrect or Invalid Command";
-                    return;  // bad password or command
-                }
+
+		list ( $this->mpd_version ) = sscanf($resp, OK . " MPD %s\n");
+
+		if ( ! empty($pwd) ) {
+	        	if ( is_null($this->SendCommand(MPD_CMD_PASSWORD,$pwd)) ) {
+				$this->connected = FALSE;
+				$this->errStr = "Password supplied is incorrect or Invalid Command";
+                    		return;  // bad password or command
+                	}
     			
-		if ( is_null($this->RefreshInfo()) ) { // no read access -- might as well be disconnected!
-                    $this->connected = FALSE;
-                    $this->errStr = "Password supplied does not have read access";
-                    return;
-                }
-            } else {
+			if ( is_null($this->RefreshInfo()) ) { // no read access -- might as well be disconnected!
+                    		$this->connected = FALSE;
+                    		$this->errStr = "Password supplied does not have read access";
+                    		return;
+                	}
+		} // if password
+		else {
     			if ( is_null($this->RefreshInfo()) ) { // no read access -- might as well be disconnected!
-                    $this->connected = FALSE;
-                    $this->errStr = "Password required to access server";
-                    return; 
-                }
-            }
+	                    $this->connected = FALSE;
+        	            $this->errStr = "Password required to access server";
+                	    return; 
+                	}
 		}
-	}
+		return true; 
+
+	} // constructor
 
 	/* Connect()
 	 * 
@@ -185,7 +188,7 @@ class mpd {
 				if (function_exists('socket_get_status')) { 
 					$status = socket_get_status($this->mpd_sock);
 				}
-				if (strncmp(MPD_RESPONSE_OK,$response,strlen(MPD_RESPONSE_OK)) == 0) {
+				if (strstr($response,"OK")) { 
 					$this->connected = TRUE;
 					return $response;
 					break;
