@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: messages\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2007-01-22 19:07-0800\n"
-"PO-Revision-Date: 2007-07-14 15:09+0200\n"
+"PO-Revision-Date: 2007-09-13 13:17+0200\n"
 "Last-Translator: Nikolai Försterling <devel@fosternet.de>\n"
 "Language-Team:  <de@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -147,7 +147,7 @@ msgstr "Grund"
 
 #: ../../lib/class/catalog.class.php:1123
 msgid "Completed updating remote catalog(s)"
-msgstr "Aktualisierung der fernen Kataloge abgeschlossen"
+msgstr "Aktualisierung der entfernten Kataloge abgeschlossen"
 
 #: ../../lib/class/catalog.class.php:1158
 msgid "Added"
@@ -155,7 +155,7 @@ msgstr "Hinzugefügt"
 
 #: ../../lib/class/catalog.class.php:1240
 msgid "Cleaning the"
-msgstr "Leere den"
+msgstr "Säubere den"
 
 #: ../../lib/class/catalog.class.php:1240
 #: ../../lib/class/catalog.class.php:1520 ../../templates/sidebar.inc.php:30
@@ -369,7 +369,7 @@ msgstr "Verschiedene"
 
 #: ../../lib/class/genre.class.php:285
 msgid "Show Genres starting with"
-msgstr "Zeige Genres mit folgendem Beginn"
+msgstr "Zeige Genres beginnend mit"
 
 #: ../../lib/rating.lib.php:43
 msgid "Don't Play"
@@ -421,7 +421,7 @@ msgstr ""
 #: ../../lib/preferences.php:277
 #: ../../templates/show_playtype_switch.inc.php:36
 msgid "Democratic"
-msgstr ""
+msgstr "demokratisch"
 
 #: ../../lib/preferences.php:280 ../../templates/sidebar.inc.php:168
 #: ../../templates/show_tv_adminctl.inc.php:40
@@ -442,7 +442,7 @@ msgstr ""
 
 #: ../../lib/preferences.php:290
 msgid "Simple M3U"
-msgstr ""
+msgstr "einfache M3U"
 
 #: ../../lib/preferences.php:291
 msgid "PLS"
@@ -988,7 +988,7 @@ msgstr "Grund der Markierung"
 
 #: ../../templates/show_flag.inc.php:57
 msgid "Incorrect Tags"
-msgstr "Inkorrekte TAGs"
+msgstr "fehlerhafte TAGs"
 
 #: ../../templates/show_flag.inc.php:70
 #: ../../templates/show_flagged.inc.php:30
@@ -1103,7 +1103,7 @@ msgstr "Wiedergabelisten"
 
 #: ../../templates/show_playlists.inc.php:33
 msgid "Playlist Name"
-msgstr "Wiedergabelisten Name"
+msgstr "Name der Wiedergabeliste"
 
 #: ../../templates/show_playlists.inc.php:34
 msgid "# Songs"
@@ -1181,7 +1181,7 @@ msgstr "Ja"
 
 #: ../../templates/show_tv.inc.php:42
 msgid "Controls"
-msgstr "Bedienelement"
+msgstr "Bedienelemente"
 
 #: ../../templates/show_tv.inc.php:57
 #: ../../templates/show_localplay.inc.php:42
@@ -1278,7 +1278,7 @@ msgstr "Wenig gespielt"
 #: ../../templates/sidebar.inc.php:162
 #: ../../ampache/templates/sidebar.inc.php:164
 msgid "Enqueue"
-msgstr "Abspielen"
+msgstr "Abspielen (Queue)"
 
 #: ../../templates/sidebar.inc.php:185
 #: ../../ampache/templates/sidebar.inc.php:187
@@ -1326,7 +1326,7 @@ msgstr "Schnell"
 
 #: ../../templates/show_admin_tools.inc.php:57
 msgid "Gather Art"
-msgstr ""
+msgstr "Cover holen"
 
 #: ../../templates/show_admin_tools.inc.php:65
 msgid "No Catalogs Found"
@@ -1334,7 +1334,7 @@ msgstr "Keine Kataloge gefunden"
 
 #: ../../templates/show_admin_tools.inc.php:71
 msgid "Clean All"
-msgstr "Alle Bereinigen"
+msgstr "Alle bereinigen"
 
 #: ../../templates/show_admin_tools.inc.php:72
 msgid "Verify All"
@@ -1479,7 +1479,7 @@ msgstr "Wert"
 
 #: ../../templates/show_preference_box.inc.php:45
 msgid "Apply to All"
-msgstr "zu allen hinzufügen"
+msgstr "bei allen anwenden"
 
 #: ../../templates/show_preference_box.inc.php:51
 msgid "description"
@@ -1495,7 +1495,7 @@ msgstr "Benutzer-Vereinbarung"
 
 #: ../../templates/show_user_registration.inc.php:79
 msgid "I Accept"
-msgstr "Ich Akzeptiere"
+msgstr "Ich akzeptiere"
 
 #: ../../templates/show_user_registration.inc.php:93
 msgid "User Information"
@@ -1624,7 +1624,7 @@ msgstr "Sende E-mail zu Benutzern"
 
 #: ../../templates/show_mail_users.inc.php:28
 msgid "Mail to"
-msgstr "Mail zu"
+msgstr "Mail an"
 
 #: ../../templates/show_mail_users.inc.php:45
 #: ../../templates/show_all_popular.inc.php:29
@@ -1682,7 +1682,7 @@ msgstr "Die letzten 10 markierten Stücke"
 #: ../../templates/show_flagged.inc.php:73
 #: ../../templates/show_ip_history.inc.php:28
 msgid "Show All"
-msgstr "Zeige Alle"
+msgstr "Zeige alle"
 
 #: ../../templates/show_object_rating.inc.php:50
 #: ../../templates/show_object_rating.inc.php:53
@@ -1699,7 +1699,7 @@ msgstr "Admin Bedienelement"
 #: ../../templates/show_tv_adminctl.inc.php:25
 #: ../../templates/show_tv_adminctl.inc.php:47
 msgid "Base Playlist"
-msgstr "Basis Wiedergabeliste"
+msgstr "Basis-Wiedergabeliste"
 
 #: ../../templates/show_tv_adminctl.inc.php:36
 #: ../../templates/show_localplay.inc.php:32
@@ -1789,7 +1789,7 @@ msgstr "Empfange Cover"
 
 #: ../../templates/show_playlist_box.inc.php:29
 msgid "Playlist Actions"
-msgstr "Wiedergabelisten Aktionen"
+msgstr "Wiedergabelisten-Aktionen"
 
 #: ../../templates/show_playlist_box.inc.php:34
 msgid "Edit Playlist"
@@ -2120,7 +2120,7 @@ msgstr "Bearbeite Interpret"
 
 #: ../../templates/show_random_albums.inc.php:23
 msgid "Albums of the Moment"
-msgstr "Album in diesem Moment"
+msgstr "zufällige Alben"
 
 #: ../../localplay.php:50 ../../localplay.php:58
 msgid "Song(s) Removed from Playlist"
@@ -2152,7 +2152,7 @@ msgstr "Listen"
 
 #: ../../ratings.php:33
 msgid "Rating Updated"
-msgstr "Bewertung Aktualisiert"
+msgstr "Bewertung aktualisiert"
 
 #: ../../ratings.php:33
 msgid "Your rating for this object has been updated"
@@ -2160,7 +2160,7 @@ msgstr "Ihre Bewertung für dieses Objekt wurde aktualisiert"
 
 #: ../../login.php:80
 msgid "User Disabled please contact Admin"
-msgstr "Benutzer Deaktiviert, bitte Admin kontaktieren"
+msgstr "Benutzer deaktiviert, bitte Admin kontaktieren"
 
 #: ../../login.php:94
 msgid "Unable to create new account"
@@ -2328,7 +2328,7 @@ msgstr "Fehler: einfügen fehlgeschlagen"
 
 #: ../../register.php:169
 msgid "Registration Complete"
-msgstr "Registration komplett"
+msgstr "Registrierung komplett"
 
 #: ../../bin/print_tags.php.inc:64
 msgid ""
@@ -2436,7 +2436,7 @@ msgstr "Nächste"
 
 #: ../../templates/header.inc:63 ../../ampache/templates/header.inc:64
 msgid "You are currently logged in as"
-msgstr "Sie sind momentan angemeldet als"
+msgstr "Momentan angemeldet als"
 
 #: ../../templates/header.inc:74
 msgid "Error Config File Out of Date"
@@ -2500,7 +2500,7 @@ msgstr "Schreibe Konfiguration"
 #: ../../templates/show_install_config.inc:92
 #: ../../templates/show_test.inc:155
 msgid "Ampache.cfg.php Exists"
-msgstr "Ampache.cfg existiert"
+msgstr "Ampache.cfg vorhanden"
 
 #: ../../templates/show_install_config.inc:109
 #: ../../templates/show_test.inc:176
@@ -2697,7 +2697,7 @@ msgstr "XML-RPC Optionen"
 #: ../../templates/show_add_access.inc:78
 #: ../../templates/show_edit_access.inc:54
 msgid "Remote Key"
-msgstr "Remote Key"
+msgstr "Entfernter Schlüssel"
 
 #: ../../templates/show_add_access.inc:87
 msgid "Create ACL"
@@ -2737,7 +2737,7 @@ msgstr "Zuletzt anwesend"
 
 #: ../../templates/show_users.inc:53
 msgid "Registration Date"
-msgstr "Registrations-Datum"
+msgstr "Registrierungsdatum "
 
 #: ../../templates/show_users.inc:57
 msgid "Activity"
@@ -2765,7 +2765,7 @@ msgstr "Album Jahr"
 
 #: ../../templates/show_artist.inc:38
 msgid "Tracks"
-msgstr ""
+msgstr "Titel"
 
 #: ../../templates/show_edit_access.inc:23
 msgid "Edit Access List"
@@ -2949,7 +2949,7 @@ msgstr "Speichere Login"
 
 #: ../../templates/show_login_form.inc:48
 msgid "Register"
-msgstr ""
+msgstr "Registrieren"
 
 #: ../../templates/show_search.inc:33
 msgid "Keywords"
@@ -3019,3 +3019,175 @@ msgstr "Sichere Suchergebnis in"
 msgid "Save"
 msgstr "Speichern"
 
+# Added the following strings (only in german localization)
+# left here at the end for better overview what has to be done to other localizations and even the base mo/po
+# 070913 by nf
+
+#: ../../templates/sidebar_admin.inc.php:4
+msgid "Show Catalogs"
+msgstr "Zeige Kataloge"
+
+#: ../../templates/sidebar_admin.inc.php:7
+msgid "User Tools"
+msgstr "Benutzerwerkzeuge"
+
+#: ../../templates/sidebar_admin.inc.php:10
+msgid "Browse Users"
+msgstr "Zeige Benutzer"
+
+#: ../../templates/sidebar_localplay.inc.php:4
+msgid "Add Instance"
+msgstr "Sitzung hinzufügen"
+
+#: ../../ttemplates/sidebar_localplay.inc.php:7
+msgid "Active Instance"
+msgstr "Aktive Sitzung"
+
+#: ../../templates/sidebar_home.inc.php:4
+msgid "Currently Playing"
+msgstr "gerade gespielt"
+
+#: ../../templates/sidebar_home.inc.php:6
+#: ../../templates/show_add_live_stream.inc.php:24
+msgid "Add Radio Station"
+msgstr "Radiosender hinzufügen"
+
+#: ../../templates/sidebar_home.inc.php:14
+msgid "Advanced"
+msgstr "Erweitert"
+
+#: ../../templates/show_search_bar.inc.php:30
+msgid "Advanced Search"
+msgstr "Erweiterte Suche"
+
+#: ../../templates/show_user.inc.php:42
+#: ../../templates/rightbar.inc.php:23
+msgid "Active Playlist"
+msgstr "Aktive Wiedergabeliste"
+
+#: ../../templates/rightbar.inc.php:69
+msgid "Add Dynamic Items"
+msgstr "dynamisch hinzufügen"
+
+#: ../../templates/rightbar.inc.php:71
+msgid "Pure Random"
+msgstr "Absolut zufällig"
+
+#: ../../templates/rightbar.inc.php:74
+msgid "Related Artist"
+msgstr "Ähnliche Interpreten"
+
+#: ../../templates/rightbar.inc.php:77
+msgid "Related Album"
+msgstr "Ähnliche Alben"
+
+#: ../../templates/rightbar.inc.php:80
+msgid "Related Genre"
+msgstr "Ähnliche Genres"
+
+#. ../../templates/show_index.inc.php:52
+msgid "Newest Albums"
+msgstr "Neueste Alben"
+
+#: ../../templates/show_index.inc.php:57
+msgid "Newest Artists"
+msgstr "Neueste Interpreten"
+
+#: ../../templates/show_index.inc.php:62
+msgid "Newest Genres"
+msgstr "Neueste Genres"
+
+#: ../../templates/show_edit_live_stream_row.inc.php:30
+#: ../../templates/show_edit_live_stream_row.inc.php:48
+#: ../../templates/show_add_live_stream.inc.php:49
+#: ../../templates/show_add_live_stream.inc.php:51
+#: ../../templates/show_live_stream_row.inc.php:27
+#: ../../templates/show_live_streams.inc.php:34
+msgid "Frequency"
+msgstr "Frequenz"
+
+#: ../../templates/show_edit_live_stream_row.inc.php:29
+#: ../../templates/show_add_live_stream.inc.php:55
+#: ../../templates/show_live_stream_row.inc.php:26
+#: ../../templates/show_live_streams.inc.php:33
+msgid "Callsign"
+msgstr "Kennung"
+
+#: ../../templates/sidebar_browse.inc.php:15
+msgid "Radio Stations"
+msgstr "Radiosender"
+
+#: ../../templates/sidebar_browse.inc.php:18
+msgid "Filters"
+msgstr "Filter"
+
+#: ../../templates/sidebar_browse.inc.php:28
+msgid "Unplayed"
+msgstr "nicht gespielte"
+
+#: ../../templates/sidebar_browse.inc.php:31
+msgid "Show Art"
+msgstr "zeige Cover"
+
+#: ../../templates/sidebar_browse.inc.php:3
+msgid "Browse By"
+msgstr "Anzeige nach"
+
+#: ../../templates/show_localplay_add_instance.inc.php:24
+msgid "Add Localplay Instance"
+msgstr "lokale Sitzung hinzufügen"
+
+#: ../../templates/sidebar_preferences.inc.php:9
+msgid "Sections"
+msgstr "Bereiche"
+
+#: ../../templates/sidebar_preferences.inc.php:21
+msgid "Server Config"
+msgstr "Serverkonfiguration"
+
+
+#: ../../lib/preferences.php:332
+msgid "Send on Add"
+msgstr ""
+
+#: ../../lib/preferences.php:333
+msgid "Send and Clear on Add"
+msgstr ""
+
+#: ../../lib/preferences.php:334
+msgid "Clear on Send"
+msgstr ""
+
+#: ../../lib/preferences.php:335
+#: ../../lib/preferences.php:342
+msgid "Default"
+msgstr "Voreinstellung"
+
+#: ../../lib/class/user.class.php:664
+#: ../../lib/preferences.php:341
+#: ../../templates/show_user.inc.php:22
+#: ../../templates/show_users.inc.php:59
+msgid "Never"
+msgstr "Nie"
+
+#: ../../lib/preferences.php:343
+msgid "Always"
+msgstr "Immer"
+
+#: ../../templates/show_add_user.inc.php:76
+#: ../../templates/show_preference_box.inc.php:54
+msgid "Content Manager"
+msgstr "Inhaltsmanager"
+
+#: ../../templates/show_add_user.inc.php:77
+#: ../../templates/show_preference_box.inc.php:55
+msgid "Catalog Manager"
+msgstr "Katalogmanager"
+
+#: ../../templates/show_preference_box.inc.php:38
+msgid "Access Level"
+msgstr "Berechtigung"
+
+#: ../../admin/modules.php:124
+msgid "Localplay Controllers"
+msgstr ""
