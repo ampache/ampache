@@ -412,53 +412,6 @@ function show_all_popular() {
 } // show_all_popular
 
 /**
- * show_local_catalog_info
- * Shows the catalog stats
- * @package Web INterface
- * @catagory Display
- */
-function show_local_catalog_info() {
-
-	/* Before we display anything make sure that they have a catalog */
-	$query = "SELECT * FROM catalog";
-	$db_results = Dba::query($query);
-	
-	// Make sure we have something to display
-	if (Dba::num_rows($db_results) < 1) {
-		show_box_top(); 	
-		echo "<span align=\"center\" class=\"error\">" . _('No Catalogs Found!') . "</span><br />";
-		echo "<a href=\"" . Config::get('web_path') . "/admin/catalog.php?action=show_add_catalog\">" ._('Add a Catalog') . "</a>";
-		show_box_bottom(); 
-		return false;
-	}
-
-	$results = Catalog::get_stats(); 
-
-	$hours = floor($results['time']/3600);
-	$size = $results['size']/1048576;
-
-	$days = floor($hours/24);
-	$hours = $hours%24;
-
-	$time_text = "$days ";
-	$time_text .= ($days == 1) ? _("day") : _("days");
-	$time_text .= ", $hours ";
-	$time_text .= ($hours == 1) ? _("hour") : _("hours");
-
-	if ( $size > 1024 ) {
-		$total_size = sprintf("%.2f", ($size/1024));
-		$size_unit = "GB";
-	}
-	else {
-		$total_size = sprintf("%.2f", $size);
-		$size_unit = "MB";
-	}
-
-	require Config::get('prefix') . '/templates/show_local_catalog_info.inc.php';
-
-} // show_local_catalog_info
-
-/**
  * img_resize
  * this automaticly resizes the image for thumbnail viewing
  * only works on gif/jpg/png this function also checks to make

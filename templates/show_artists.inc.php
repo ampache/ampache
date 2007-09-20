@@ -45,11 +45,11 @@ foreach ($object_ids as $artist_id) {
 </tr>
 <?php } //end foreach ($artists as $artist) ?>
 <tr class="table-header">
-	<td><?php echo _('Add'); ?>
-        <td><?php echo _("Artist"); ?></td>
-        <td><?php echo _('Songs');  ?></td>
-        <td><?php echo _('Albums'); ?></td>
-	<td><?php echo _('Action'); ?></td>
+	<th><?php echo _('Add'); ?></th>
+        <th><?php echo _("Artist"); ?></th>
+        <th><?php echo _('Songs');  ?></th>
+        <th><?php echo _('Albums'); ?></th>
+	<th><?php echo _('Action'); ?></th>
 
 </tr>
 <tr>

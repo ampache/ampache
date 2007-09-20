@@ -128,6 +128,9 @@ class Browse {
 			case 'artist': 
 				$valid_array = array('name'); 
 			break;
+			case 'genre': 
+				$valid_array = array('name'); 
+			break; 
 			case 'album': 
 				$valid_array = array('name','year'); 
 			break;
@@ -455,6 +458,13 @@ class Browse {
 					break; 
 				} // end switch
 			break;
+			case 'genre': 
+				switch ($field) { 
+					case 'name': 
+						$sql = "`genre`.`name`"; 
+					break;
+				} // end switch
+			break; 
 			default: 
 				// Rien a faire
 			break;

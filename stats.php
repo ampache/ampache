@@ -45,35 +45,11 @@ switch ($_REQUEST['action']) {
                 require_once Config::get('prefix') . '/templates/show_user_stats.inc.php';
 	
 	break;
-	/* Show their stats */
+	// Show stats
 	default: 
-		/* Here's looking at you kid! */
-		$working_user = $GLOBALS['user'];
-
-		/* Pull favs */
-		$favorite_artists	= $working_user->get_favorites('artist');
-		$favorite_albums	= $working_user->get_favorites('album');
-		$favorite_songs		= $working_user->get_favorites('song');
-break;
-		require_once Config::get('prefix') . '/templates/show_user_stats.inc.php';
-
-		// Onlu do this is ratings are on 
-		if (Config::get('ratings')) { 
-			/* Build Recommendations from Ratings */
-			$recommended_artists	= $working_user->get_recommendations('artist');
-			$recommended_albums	= $working_user->get_recommendations('albums');
-			$recommended_songs	= $working_user->get_recommendations('song');
-	
-			require_once Config::get('prefix') . '/templates/show_user_recommendations.inc.php';
-		} // if ratings on 
-
-                show_box_top();
-                /* Show Most Popular artist/album/songs */
-                show_all_popular();
-
-                /* Show Recent Additions */
-                show_all_recent();
-                show_box_bottom();
+		// Global stuff first
+		$stats = Catalog::get_stats(); 
+		require_once Config::get('prefix') . '/templates/show_local_catalog_info.inc.php';
 		
 	break;
 } // end switch on action

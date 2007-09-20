@@ -43,9 +43,6 @@ if (isset($_REQUEST['xspf']) && isset ($_REQUEST['play_info'])){
 		show_box_bottom(); 
         ?>
 </div>
-<div id="catalog_info">
-        <?php show_local_catalog_info(); ?>
-</div>
 <div id="recent_added">
 	<?php 
 		$objects = Stats::get_newest('album'); 

@@ -144,6 +144,30 @@ class Catalog {
 		$results 		= self::count_songs($catalog_id); 
 		$results	 	= array_merge(self::count_users($catalog_id),$results); 
 
+		$hours = floor($results['time']/3600); 
+		$size = $results['size']/1048576; 
+		$days = floor($hours/24); 
+		$hours = $hours%24; 
+		
+		$time_text = "$days ";
+		$time_text .= ($days == 1) ? _('day') : _('days'); 
+		$time_text .= ", $hours "; 
+		$time_text .= ($hours == 1) ? _('hour') : _('hours'); 
+
+		$results['time_text'] = $time_text; 
+
+		if ($size > 1024) { 
+			$total_size = sprintf("%.2f",($size/1024)); 
+			$size_unit = "GB"; 
+		} 
+		else { 
+			$total_size = sprintf("%.2f",$size); 
+			$size_unit = "MB"; 
+		} 
+
+		$results['total_size'] = $total_size; 
+		$results['size_unit'] = $size_unit; 
+
 		return $results; 
 
 	} // get_stats

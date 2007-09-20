@@ -31,10 +31,10 @@
 	</td>
 </tr>
 <tr class="table-header">
-	<td><?php echo _('Add'); ?></td>
-	<td><?php echo _('Genre'); ?></td>
-	<td><?php echo _('Songs'); ?></td>
-	<td><?php echo _('Action'); ?></td>
+	<th><?php echo _('Add'); ?></th>
+	<th><?php echo Ajax::text('?page=browse&action=set_sort&sort=name',_('Genre'),'sort_genre_name'); ?></th>
+	<th><?php echo _('Songs'); ?></th>
+	<th><?php echo _('Action'); ?></th>
 </tr>
 <?php 
 foreach ($object_ids as $genre_id) { 
