@@ -20,20 +20,15 @@
 */
 $class = $class ? $class : 'box'; 
 ?>
-<table class="<?php echo $class; ?>" cellspacing="0" cellpadding="0">
-<tr>
-	<td class="box-left-top"></td>
-	<td class="box-top"></td>
-	<td class="box-right-top"></td>
-</tr>
-<tr>
-	<td class="box-left" rowspan="2"></td>
-<?php if ($title) { ?>
-	<td class="box-title"><?php echo $title; ?></td>
-<?php } else { ?>
-	<td></td>
-<?php } ?>
-	<td class="box-right" rowspan="2"></td>
-</tr>
-<tr>
-	<td class="box-content" style="padding-top:3px;">
+
+<div class="<?php echo $class; ?>">
+  <div class="box-inside">
+    <div class="box-top">
+      <div class="box-left-top"></div>
+      <div class="box-right-top"></div>
+    </div>
+    <?php if ($title) { ?>
+	   <h3 class="box-title"><?php echo $title; ?></h3>
+	  <?php } ?>
+    <div class="box-content">
+

@@ -47,10 +47,12 @@ a, a:visited, a:active{
 td { 
 	padding: 0 8px;
 	color: #000; 
-	font:12px Verdana, Helvetica, sans-serif; 
+	font:12px Verdana, Helvetica, sans-serif;
 }
 th {
 	padding-right: 10px;
+	font-family: Verdana, Helvetica, sans-serif;
+  font-size:13px; 
 }
 input, select, textarea{
 	font: 12px Verdana, Helvetica, sans-serif; 
@@ -62,7 +64,11 @@ input {
   margin: 2px 2px 2px 0;
 }
 
-.link { cursor:pointer; }
+/************************************************/
+/*             IE6 behaviors                    */
+/* - csshover2: :hover support on any element   */
+/************************************************/
+body { behavior:url("csshover2.htc"); }
 
 /************************************************/
 /*             Header                           */
@@ -78,7 +84,6 @@ input {
 #topbarleft, #topbarleft a{ 
 	float: left;
 }
-
 /************************************************/
 /*                XSPF Player                   */
 /************************************************/
@@ -93,9 +98,9 @@ input {
 /************************************************/
 #footer {
   clear:both;
-	float:right;
-	margin:5px;
+	text-align:center;
 	font-size:10px;
+	padding:3px;
 }
 #footer p {
 	color:#999;
@@ -117,10 +122,8 @@ input {
 }
 #sb_Subsearch input{ margin:0; padding:0;}
 .smallbutton {
-  border-top:1px solid #f0f0f0;
-  border-left:1px solid #f0f0f0;
-  border-bottom:1px solid #a0a0a0;
-  border-right:1px solid #a0a0a0;
+  border: 1px solid #f0f0f0;
+  border-color: #f0f0f0 #a0a0a0 #a0a0a0 #f0f0f0;
 	padding: 0 1px;
 	margin:0;
 	font-size: 11px;
@@ -129,10 +132,8 @@ input {
   background: #d0d0d0;
 }
 .smallbutton:active { 
-  border-bottom:1px solid #f0f0f0;
-  border-right:1px solid #f0f0f0;
-  border-top:1px solid #a0a0a0;
-  border-left:1px solid #a0a0a0;
+  border: 1px solid #f0f0f0;
+  border-color: #f0f0f0 #a0a0a0 #a0a0a0 #f0f0f0;
 }	
 a.smallbutton { 
 	text-decoration:none;
@@ -144,7 +145,6 @@ a.smallbutton {
 /*         Tables (songs lists...)              */
 /************************************************/
 .table-header {
-/*	background: url(../images/ampache-light-bg.gif) #dddddd repeat-x; */
 	font-size:1.1em;
 	vertical-align: top;
 	text-align:center;
@@ -178,7 +178,7 @@ a.smallbutton {
 /*               Content block                  */
 /************************************************/
 #content {
-	margin: 0px 220px 20px 135px;
+	margin: 20px 135px 20px 135px;
 }
 h3#content_title{
 	font: 12px/32px Arial,Helvetica,Sans-Serif;
@@ -193,34 +193,71 @@ h3#content_title span {
 /*                  Rightbar                    */
 /************************************************/
 #rightbar { 
-	width:200px;
+	width:120px;
+	background:#fff;
+	padding-top:28px;
+	background:#c0c0c0 url(../images/rightbar_top.jpg) no-repeat;
 	float:right;
+	font-family: Verdana,Helvetica,sans-serif;
 } 
-#rightbar table.box
-{
-  float:right;
-}
-#rightbar li { 
-	list-style:none;	
-	float:left;
-	margin-right:3px;
-}
-#rightbar-bottom span { 
-	padding-left:10px; 
-	display:block; 
-} 
+#rightbar ul                      {	list-style:none; }
+#rightbar a                       { text-decoration:none; }
 
-#current_playlist { 
-	clear:left; 
-} 
+
+/* Rightbar Menu */
+#rightbar #rb_action {	
+  border-top:1px solid #8b8b8b; 
+  padding:4px;
+}
+#rightbar #rb_action li         {	display:inline; }
+#rightbar li#rb_add             { position:relative; z-index:10;}
+#rightbar li#rb_add:hover       { background:#99ccff; } 
+/* Rightbar AddItems SubMenu */
+#rightbar li:hover #rb_action_additems  {	display:block; } 
+#rightbar #rb_action_additems   { 
+  display:none; 	
+  position:absolute;
+	right:0px;
+	top:18px;
+	background:#fff;
+	border:2px solid #c0c0c0;
+	width:120px;
+	font-size:0.7em;
+	padding:0.3em;
+}
+* html #rightbar #rb_action_additems {right:100px;} /* IE6 fix */
+
+#rightbar #rb_action_additems a {
+ display:block;
+ padding:0.1em;
+ border-bottom:1px dotted #c0c0c0;
+ color:#5b5b5b;
+ text-decoration:none;
+ text-align:right;
+}
+#rightbar #rb_action_additems a:hover,
+#rightbar #rb_current_playlist a:hover { background:#99ccff; color:#fff; }
+
+/* Rightbar playlist */
+#rightbar #rb_current_playlist    {
+  background: #fff url(../images/bottom.gif) 0 100% repeat-x;
+  padding-bottom:0.5em; 
+ 	border-left:2px solid #c0c0c0;
+ 	border-right:2px solid #c0c0c0;
+}
+#rightbar #rb_current_playlist li   { position:relative; font-size:0.6em;line-height:14px; color:#5b5b5b; padding-right:20px;}
+#rightbar #rb_current_playlist li a { display:block; padding:0.2em;}
+#rightbar .delitem                  { position:absolute;right:0;top:0; }
 
 /************************************************/
 /*                  Sidebar                     */
 /************************************************/
 #sidebar{
-	float:left;
-  position:relative;
-	width:120px;
+	/*float:left;*/
+  position:absolute;
+  top:100px;
+  left:0;
+  width:120px;
 	padding-top:28px;
 	background:#c0c0c0 url(../images/sidebar_top.jpg) no-repeat;
 	font-size:0.9em;
@@ -289,7 +326,7 @@ h3#content_title span {
 }
 * html #sidebar-page ul.sb3 li{display:inline;} /* fix ie6 */
 
-#sidebar-page .sb3 a, #sidebar-page .sb3 .link{
+#sidebar-page .sb3 a{
  padding:0.1em;
  border-bottom:1px dotted #c0c0c0;
  color:#5b5b5b;
@@ -299,7 +336,7 @@ h3#content_title span {
 #sidebar-page a{
   display:block;
 }
-#sidebar-page a:hover, #sidebar-page .link:hover{
+#sidebar-page a:hover{
   background:#99ccff;
   color:#fff;
 }
@@ -342,6 +379,7 @@ h3#content_title span {
   padding:0; 
   border:none; 
 }
+
 
 
 /************************************************/
@@ -459,52 +497,72 @@ h3#content_title span {
 /************************************************/
 /*              Box Related Styles              */
 /************************************************/
-.box { 
-	background: #f7f7f7;
-	/*clear:left;/*both;*/
-}
-.info-box { 
-	background: #f7f7f7;
-	/*float:left;*/
-} 
+ 
 .box-title { 
 	border-bottom: solid 1px #000;
 	font-size: 1.05em;
 	font-weight: bold;
+	margin: 0 10px;
 }
 .box-list { 
 	padding-right: 10px;
 }
 
 /* Enclosing Boxes Styles */
+
+.box, .info-box { 
+	background: #f7f7f7 url(../images/left.gif) top left repeat-y;
+	float:left;
+  clear:left;
+	height:1%; /* IE6 : Holly Hack comes to rescue once again */
+}
+.box-inside { 
+	background: url(../images/right.gif) top right repeat-y;
+}
+.box-content {
+	padding:8px 15px;
+}
+
+.box-top { 
+	background: url(../images/top.gif) 0 0 repeat-x;
+	position:relative;
+}
 .box-left-top { 
 	background: url(../images/topleft.gif) no-repeat;
 	height:16px;
+	width:16px;
+	position:relative;left:0;top:0;
+}
+.box-right-top {
+	background: url(../images/topright.gif) no-repeat;
+	height:16px;
+	width:20px;
+	position:absolute;right:0;top:0;
+}
+* html .box-right-top {right: expression(-this.parentNode.offsetWidth%2+"px");} /* Fixes an IE6 rounding error */
+.box-bottom { 
+	background: url(../images/bottom.gif) 0 0 repeat-x;
+	position:relative;clear:both;
 }
 .box-left-bottom {
 	background: url(../images/bottomleft.gif) no-repeat;
 	height:18px;
-}
-.box-left { 
-	background: url(../images/left.gif);
-}
-.box-bottom { 
-	background: url(../images/bottom.gif);
-	height:18px;
+	width:16px;
+	position:relative;left:0;top:0;
 }
 .box-right-bottom { 
 	background: url(../images/bottomright.gif) no-repeat;
+	height:18px;
+	width:20px;
+	position:absolute;right:0;top:0;
 }
-.box-right-top {
-	background: url(../images/topright.gif) no-repeat;
-}
-.box-right { 
-	background: url(../images/right.gif);
-}
-.box-top { 
-	background: url(../images/top.gif);
-}
+* html .box-right-bottom {right: expression(-this.parentNode.offsetWidth%2+"px");} /* Fixes an IE6 rounding error */
 
+/* Specific boxes */
+.box_newest_albums  {}
+.box_newest_artists {clear:none;}
+.box_newest_genres  {clear:none;}
+.box_topbarright    {display:table;}
 
 /************************************************/
 /*             List Header Styles               */
@@ -669,6 +727,7 @@ td.user_disabled {
 /************************************************/
 #information_actions { 
 	margin-left:5px; 
+	font-size:0.7em;
 } 
 #additional_information { 
 	float:left; 

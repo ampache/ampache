@@ -65,7 +65,7 @@ if (Config::get('use_rss')) { ?>
 		</a>
 		</div><!--End topbarleft -->
 		<div id="topbarright">
-			<?php show_box_top(); ?>
+			<?php show_box_top('','box box_topbarright'); ?>
 			<b><?php echo _('You are currently logged in as') . " " . $GLOBALS['user']->fullname; ?></b>
 			<?php require_once Config::get('prefix') . '/templates/show_search_bar.inc.php'; ?>
 			<?php show_box_bottom(); ?>
@@ -76,7 +76,7 @@ if (Config::get('use_rss')) { ?>
 	</div><!-- End sidebar -->
 	<div id="rightbar"><!-- This is the rightbar -->
 		<?php require_once Config::get('prefix') . '/templates/rightbar.inc.php'; ?>
-	</div>
+	</div><!-- End rightbar -->
 <!-- I hate IE... 
 <table class="smeg-ie" width="100%"><tr><td> -->
 <!-- Tiny little iframe, used to cheat the system --> 

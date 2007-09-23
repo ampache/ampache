@@ -20,6 +20,7 @@
 
 */
 ?>
+<div style="clear:both;"></div>
 </div> <!-- end id="content"-->
 <!-- I really hate IE
 </td></tr></table> -->

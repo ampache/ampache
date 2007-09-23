@@ -1,7 +1,9 @@
 <ul class="sb2" id="sb_admin">
   <li><h4><?php echo _('Catalogs'); ?></h4>
-    <div class="sb3"><a href="<?php echo $web_path; ?>/admin/catalog.php?action=show_add_catalog"><?php echo _('Add a Catalog'); ?></a></div>
-    <div class="sb3"><a href="<?php echo $web_path; ?>/admin/catalog.php?action=show_catalogs"><?php echo _('Show Catalogs'); ?></a></div>
+   <ul class="sb3" id="sb_admin_catalogs">
+    <li id="sb_admin_catalogs_Add"><a href="<?php echo $web_path; ?>/admin/catalog.php?action=show_add_catalog"><?php echo _('Add a Catalog'); ?></a></li>
+    <li id="sb_admin_catalogs_Show"><a href="<?php echo $web_path; ?>/admin/catalog.php?action=show_catalogs"><?php echo _('Show Catalogs'); ?></a></li>
+   </ul>
   </li>
 
   <li><h4><?php echo _('User Tools'); ?></h4>

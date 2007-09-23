@@ -93,16 +93,26 @@ class Ajax {
 	 * This prints out an img of the specified icon with the specified alt text
 	 * and then sets up the required ajax for it
 	 */
-	public static function button($action,$icon,$alt,$source='',$post='') { 
+	public static function button($action,$icon,$alt,$source='',$post='',$class='') { 
 
 		// Get the correct action
 		$ajax_string = self::action($action,$source,$post); 
 
-		$string = get_user_icon($icon,$alt,$source); 
+    // If they passed a span class
+		if ($class) { 
+			$class_txt = ' class="' . $class . '"'; 
+		} 
+
+
+		$string = get_user_icon($icon,$alt); 
+
+    // Generate a <a> so that it's more compliant with older browsers
+    // (ie :hover actions) and also to unify linkbuttons (w/o ajax) display
+    $string = "<a href=\"javascript:void(0);\" id=\"$source\" $class_txt>".$string."</a>\n"; 
 
 		$string .= self::observe($source,'click',$ajax_string); 
 
-                return $string;
+    return $string;
 
 	} // button
 
@@ -111,22 +121,22 @@ class Ajax {
 	 * This prints out the specified text as a link and setups the required
 	 * ajax for the link so it works correctly
 	 */
-	public static function text($action,$text,$source,$post='',$span_class='') { 
+	public static function text($action,$text,$source,$post='',$class='') { 
 
 		// Format the string we wanna use
 		$ajax_string = self::action($action,$source,$post); 
 
-    		$span_class.= ($span_class?' ':'') . 'link';
+    //$class.= ($class?' ':'') . 'link';
 
 		// If they passed a span class
-		if ($span_class) { 
-			$class_txt = ' class="' . $span_class . '"'; 
+		if ($class) { 
+			$class_txt = ' class="' . $class . '"'; 
 		} 
 
 		// If we pass a source put it in the ID
 		//$string = "<div id=\"$source\" $class_txt>$text</div>\n"; 
 		
-    		$string = "<a href=\"javascript:void(0);\" id=\"$source\" $class_txt>$text</a>\n"; 
+    $string = "<a href=\"javascript:void(0);\" id=\"$source\" $class_txt>$text</a>\n"; 
 
 		$string .= self::observe($source,'click',$ajax_string); 
 

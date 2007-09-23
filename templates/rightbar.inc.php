@@ -20,11 +20,10 @@
 */
 
 ?>
-<?php show_box_top(_('Active Playlist')); ?>
-<ul>
+<ul id="rb_action">
 	<li><a href="<?php echo Config::get('web_path'); ?>/stream.php?action=basket"><?php echo get_user_icon('all'); ?></a></li>
 	<li>
-	<?php echo Ajax::button('?page=playlist&action=create','playlist_add',_('Save as Playlist'),'rightbar_create_playlist'); ?>
+	<?php echo Ajax::button('?page=playlist&action=create','playlist_add',_('Save as Playlist'),'rb_create_playlist'); ?>
 	</li>
 <?php if (Access::check_function('batch_download')) { ?>
 	<li>
@@ -34,11 +33,27 @@
 	</li>
 <?php } ?>
 	<li>
-	<?php echo Ajax::button('?action=basket&type=clear_all','delete',_('Clear Playlist'),'rightbar_clear_playlist'); ?>
+	<?php echo Ajax::button('?action=basket&type=clear_all','delete',_('Clear Playlist'),'rb_clear_playlist'); ?>
+	</li>
+	<li id="rb_add">
+	  <?php echo get_user_icon('add',_('Add Dynamic Items')); ?>
+	  <ul id="rb_action_additems">
+	   <li>
+	    <?php echo Ajax::text('?action=basket&type=dynamic&random_type=default',_('Pure Random'),'rb_add_pure_random'); ?>
+	   </li>
+	   <li>
+	    <?php echo Ajax::text('?action=basket&type=dynamic&random_type=artist',_('Related Artist'),'rb_add_related_artist'); ?>
+	   </li>
+	   <li>
+	    <?php echo Ajax::text('?action=basket&type=dynamic&random_type=album',_('Related Album'),'rb_add_related_album'); ?>
+	   </li>
+	   <li>
+	    <?php echo Ajax::text('?action=basket&type=dynamic&random_type=genre',_('Related Genre'),'rb_add_related_genre'); ?>
+	   </li>
+	  </ul>
 	</li>
 </ul>
-<div id="current_playlist">
-<table cellpadding="0" cellspacing="0">
+<ul id="rb_current_playlist">
 <?php 
 	//FIXME :: this feels kludgy
 	$objects = $GLOBALS['user']->playlist->get_items(); 
@@ -52,34 +67,16 @@
 			$object->f_link = Random::get_type_name($object_data['1']); 
 		} 
 ?>
-<tr class="<?php echo flip_class(); ?>">
-	<td>
-	<?php echo $object->f_link; ?>
-	</td>
-	<td>
-		<?php echo Ajax::button('?action=current_playlist&type=delete&id=' . $uid,'delete',_('Delete'),'rightbar_delete_' . $uid); ?>
-	</td>
-</tr>
+<li class="<?php echo flip_class(); ?>" >
+  <?php echo $object->f_link; ?>
+	<?php echo Ajax::button('?action=current_playlist&type=delete&id=' . $uid,'delete',_('Delete'),'rightbar_delete_' . $uid,'','delitem'); ?>
+</li>
 <?php } if (!count($objects)) { ?>
-	<tr><td class="error"><?php echo _('Not Enough Data'); ?></td></tr>
+	<li class="error"><?php echo _('Not Enough Data'); ?></li>
 <?php } ?>
-</table>
-</div>
-<div id="rightbar-bottom">
-<h4><?php echo _('Add Dynamic Items'); ?></h4>
-<span><?php echo Ajax::button('?action=basket&type=dynamic&random_type=default','add',_('Add'),'rightbar_pure_random'); ?>
-<?php echo _('Pure Random'); ?></span>
+</ul>
 
-<span><?php echo Ajax::button('?action=basket&type=dynamic&random_type=artist','add',_('Add'),'rightbar_related_artist'); ?>
-<?php echo _('Related Artist'); ?></span>
 
-<span><?php echo Ajax::button('?action=basket&type=dynamic&random_type=album','add',_('Add'),'rightbar_related_album'); ?>
-<?php echo _('Related Album'); ?></span>
-
-<span><?php echo Ajax::button('?action=basket&type=dynamic&random_type=genre','add',_('Add'),'rightbar_related_genre'); ?>
-<?php echo _('Related Genre'); ?></span>
-</div>
-<?php show_box_bottom(); ?> 
 <?php 
 
 // We do a little magic here to force a iframe reload depending on preference

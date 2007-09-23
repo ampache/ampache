@@ -20,11 +20,11 @@
 
 */
 ?>
-	</td>
-</tr>
-<tr>
-        <td class="box-left-bottom"></td>
-        <td class="box-bottom"></td>
-        <td class="box-right-bottom"></td>
-</tr>
-</table>
+    </div>
+    <div class="box-bottom">
+      <div class="box-left-bottom"></div>
+      <div class="box-right-bottom"></div>
+    </div>
+  </div>
+</div>
+

@@ -62,7 +62,7 @@ $ajax_url = Config::get('ajax_url');
 </li>
 -->
 <li id="sb_tab_logout" class="sb1">
-	<a href="<?php echo Config::get('web_path'); ?>/logout.php">
+	<a href="<?php echo Config::get('web_path'); ?>/logout.php" id="sidebar_logout" >
 	<?php echo get_user_icon('logout',_('Logout')); ?>
 	</a>
 </li>
