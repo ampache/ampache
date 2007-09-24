@@ -38,7 +38,7 @@ $htmllang = str_replace("_","-",conf('lang'));
 <div id="topbar">
 	<div align="center">
 	<a href="http://www.ampache.org/">
-        <img src="<?php echo conf('web_path'); ?><?php echo conf('theme_path'); ?>/images/ampache.gif" border="0" title="Ampache: For the love of music" alt="Ampache: For the love of music" />
+        <img src="<?php echo conf('web_path'); ?><?php echo conf('theme_path'); ?>/images/ampache.gif" title="Ampache: For the love of music" alt="Ampache: For the love of music" />
 	</a>
 	</div>
 </div>
@@ -53,7 +53,7 @@ $email = scrub_in($_REQUEST['email']);
 <div align="center">
 <?php show_box_top(_('Ampache New User Registration')); ?>
 <form name="update_user" method="post" action="<?php echo conf('web_path'); ?>/register.php" enctype="multipart/form-data">
-<table width='700px' cellpadding='0' cellspacing='0' border='0'>
+<table width='700px' cellpadding='0' cellspacing='0'>
 <?php
 /*  If we should show the user agreement */
 if(conf('user_agreement')){ ?>
@@ -63,7 +63,7 @@ if(conf('user_agreement')){ ?>
 	</tr>
 	<tr>
 		<td>
-			<table border="0" cellpadding="2" cellspacing="0">
+			<table cellpadding="2" cellspacing="0">
 			<tr>
 				<td>
 					<span class="box-title"><?php echo _('User Agreement'); ?></span>
@@ -92,7 +92,7 @@ if(conf('user_agreement')){ ?>
 	<td valign="top">
 		<p class="box-title"><?php echo _('User Information'); ?></p>
 
-		<table width='99%' cellpadding='0' cellspacing='0' border='0'>
+		<table width='99%' cellpadding='0' cellspacing='0'>
 		<tr>
 			<td align='right'>
 				<?php echo _('Username'); ?>:

@@ -23,7 +23,7 @@ $web_path = conf('web_path');
 <?php show_box_top(_('Similar Artists')); ?>
 <form name="artists" method="post" enctype="multipart/form-data" action="<?php echo $web_path; ?>/artists.php?action=rename_similar&artist=<?php echo $artist_id;?>" style="Display:inline;">
 	<h3><?php _('Please check the artists you want to merge with the current one'); ?> (<span style='text-decoration: underline;'><?php echo $artist_name;?></span>)</h3>
-	<table class="tabledata" cellspacing="0" cellpadding="0" border="0">
+	<table class="tabledata" cellspacing="0" cellpadding="0">
 	<tr class="table-header">
 		<th>&nbsp;&nbsp;Select</th>
 		<th><?php echo _("Artist"); ?></th>
@@ -82,7 +82,7 @@ if ($show) {
 <?php show_box_bottom(); ?>
 <?php show_box_top(_('Advanced Options')); ?>
 <form name='advanced' action='<?php echo $web_path; ?>/artists.php?action=show_similar&artist=<?php echo $artist_id; ?>' method='POST'>
-<table class="border" cellspacing="0" cellpadding="0" border="0" style='margin-left: 10px; margin-top: 20px;'>
+<table class="border" cellspacing="0" cellpadding="0" style='margin-left: 10px; margin-top: 20px;'>
 <!--Advanced-->
 	<tr class="<?php echo flip_class(); ?>">
 		<th colspan='2' style='text-align: left;'>Normalize options</th>

@@ -21,7 +21,7 @@
 ?>
 <td colspan="6">
 <form method="post" id="edit_live_stream_<?php echo $radio->id; ?>">
-<table border="0" cellpadding="3" cellspacing="0">
+<table cellpadding="3" cellspacing="0">
 <tr>
 	<th><?php echo _('Name'); ?></th>
 	<th><?php echo _('Stream URL'); ?></th>

@@ -24,7 +24,7 @@
  * Takes an array of genre objects and displays them out
  */
 ?>
-<table class="tabledata" cellspacing="0" cellpadding="0" border="0">
+<table class="tabledata" cellspacing="0" cellpadding="0">
 <tr>
 	<td colspan="5">
 		<?php require Config::get('prefix') . '/templates/list_header.inc.php' ?>

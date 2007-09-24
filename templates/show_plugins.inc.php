@@ -21,7 +21,7 @@
 $web_path = Config::get('web_path'); 
 ?>
 <!-- Plugin we've found --> 
-<table class="tabledata" border="0" cellspacing="0">
+<table class="tabledata" cellspacing="0">
 <tr class="table-header">
 	<th><?php echo _('Name'); ?></th>
 	<th><?php echo _('Description'); ?></th>

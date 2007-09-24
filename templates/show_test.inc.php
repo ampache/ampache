@@ -32,7 +32,7 @@
 <h1><?php echo _('Ampache Debug'); ?></h1>
 <p><?php echo _('You\'ve reached this page because a configuration error has occured. Debug Information below'); ?></p>
 </div>
-<table align="center" border="0" cellpadding="3" cellspacing="0">
+<table align="center" cellpadding="3" cellspacing="0">
 <tr>
 	<td><font size="+1"><?php echo _('CHECK'); ?></font></td>
 	<td>

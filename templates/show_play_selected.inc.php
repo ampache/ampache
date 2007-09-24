@@ -22,7 +22,7 @@
 $web_path = conf('web_path'); 
 
 ?>
-<table border="0" cellpadding="14" cellspacing="0" class="text-box">
+<table cellpadding="14" cellspacing="0" class="text-box">
 <tr>
 <td>
 	<input class="button" type="button" value="<?php echo _('Play Selected'); ?>" onclick="return SubmitToPage('songs','<?php echo $web_path; ?>/stream.php?action=play_selected');" />

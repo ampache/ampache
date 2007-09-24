@@ -22,7 +22,7 @@
 
 ?>
 <?php show_box_top(_('Catalog Statistics')); ?>
-<table cellspacing="1" cellpadding="3" border="0"> 
+<table cellspacing="1" cellpadding="3"> 
 <tr class="table-header">
 	<td><?php echo _('Connected Users'); ?></td>
 	<td><?php echo _('Total Users'); ?></td>

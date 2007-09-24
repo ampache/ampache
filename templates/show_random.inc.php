@@ -21,7 +21,7 @@
 ?>
 <form id="random" method="post" enctype="multipart/form-data" action="<?php echo Config::get('web_path'); ?>/random.php">
 <?php show_box_top(_('Play Random Selection')); ?>
-<table class="table-data" border="0" cellspacing="0" cellpadding="3">
+<table class="table-data" cellspacing="0" cellpadding="3">
 <tr>
 	<td><?php echo _('Item count'); ?></td>
 	<td>

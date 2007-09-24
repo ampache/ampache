@@ -23,7 +23,7 @@
 <?php show_box_top(_('Adding a New User')); ?>
 <?php Error::display('general'); ?>
 <form name="add_user" enctype="multpart/form-data" method="post" action="<?php echo Config::get('web_path') . "/admin/users.php?action=add_user"; ?>">
-<table class="tabledata" cellspacing="0" cellpadding="0" border="0">
+<table class="tabledata" cellspacing="0" cellpadding="0">
 <tr>
 	<td>
 		<?php echo  _('Username'); ?>:

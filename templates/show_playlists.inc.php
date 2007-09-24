@@ -20,7 +20,7 @@
 
 */
 ?>
-<table class="tabledata" cellspacing="0" cellpadding="0" border="0"> <!-- Playlist Table -->
+<table class="tabledata" cellspacing="0" cellpadding="0"> <!-- Playlist Table -->
 <tr>
         <td colspan="5">
                 <?php require Config::get('prefix') . '/templates/list_header.inc.php' ?>

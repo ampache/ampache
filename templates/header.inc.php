@@ -61,12 +61,12 @@ if (Config::get('use_rss')) { ?>
 	<div id="topbar"><!-- This is the topbar row -->
 		<div id="topbarleft">
 		<a href="http://www.ampache.org">
-		<img src="<?php echo $web_path; ?><?php echo Config::get('theme_path'); ?>/images/ampache.png" border="0" title="Ampache: For the love of music" alt="Ampache: For the love of music" />
+		<img src="<?php echo $web_path; ?><?php echo Config::get('theme_path'); ?>/images/ampache.png" title="Ampache: For the love of music" alt="Ampache: For the love of music" />
 		</a>
 		</div><!--End topbarleft -->
 		<div id="topbarright">
 			<?php show_box_top('','box box_topbarright'); ?>
-			<b><?php echo _('You are currently logged in as') . " " . $GLOBALS['user']->fullname; ?></b>
+			<span id="loginInfo"><?php echo _('You are currently logged in as') . " " . $GLOBALS['user']->fullname; ?></span>
 			<?php require_once Config::get('prefix') . '/templates/show_search_bar.inc.php'; ?>
 			<?php show_box_bottom(); ?>
 		</div> <!-- End topbarright -->

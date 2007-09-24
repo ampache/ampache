@@ -25,7 +25,7 @@
 ?>
 <?php show_box_top(_('Search Ampache') . "..."); ?>
 <form name="search" method="post" action="<?php echo Config::get('web_path'); ?>/search.php" enctype="multipart/form-data" style="Display:inline">
-<table class="tabledata" cellspacing="0" cellpadding="3" border="0">
+<table class="tabledata" cellspacing="0" cellpadding="3">
 <tr class="table-header">
 	<td colspan="4">&nbsp;</td>
 </tr>

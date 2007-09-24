@@ -102,25 +102,11 @@ body { behavior:url("csshover2.htc"); }
 	font-size:10px;
 	padding:3px;
 }
-#footer p {
-	color:#999;
-	font-size:10px;
-}
-#footer-content { 
-	font-size:10px; 
-} 
-
 
 /************************************************/
 /*                  Buttons                     */
 /************************************************/
-.selected_button {
-	background: #000;
-  color: #fff;
-}
-.unselected_button {
-}
-#sb_Subsearch input{ margin:0; padding:0;}
+#sb_Subsearch input{ margin:0; padding:0; }
 .smallbutton {
   border: 1px solid #f0f0f0;
   border-color: #f0f0f0 #a0a0a0 #a0a0a0 #f0f0f0;
@@ -160,20 +146,7 @@ a.smallbutton {
 .even:hover, .odd:hover { 
 	background:#99ccff;
 } 
-.headrow {
-	font-size: 12px;
-	background:#ccc;
-}
-.blank {
-	background: #fff;
-}
-.border { 
-	background: #000; 
-}
-.header { 
-	font-size: 12px; 
-}
-
+.border 	{ background: #000; }
 /************************************************/
 /*               Content block                  */
 /************************************************/
@@ -563,7 +536,7 @@ h3#content_title span {
 .box_newest_artists {clear:none;}
 .box_newest_genres  {clear:none;}
 .box_topbarright    {display:table;}
-
+.box_topbarright #loginInfo {font-weight:bold;display:block;text-align:right;margin-bottom:.3em;}
 /************************************************/
 /*             List Header Styles               */
 /************************************************/

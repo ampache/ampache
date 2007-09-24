@@ -26,7 +26,7 @@ if (($GLOBALS['user']->has_access(100) OR !Config::get('use_auth')) AND $_REQUES
 	$is_admin = true; 
 }
 ?>
-<table class="tabledata" border="0" cellpadding="0" cellspacing="0" width="100%">
+<table class="tabledata" cellpadding="0" cellspacing="0">
 <tr class="odd">
 	<th colspan="5" class="header2" align="left"><?php echo $preferences['title']; ?></th>
 </tr>

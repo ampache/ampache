@@ -993,7 +993,7 @@ function get_user_icon($name,$title='',$id='') {
 
 	} // end if not cached
 
-	$string = "<img src=\"$img_url\" $id_element border=\"0\" alt=\"" . ucfirst($title) . "\" title=\"" . ucfirst($title) . "\" $hov_txt/>";
+	$string = "<img src=\"$img_url\" $id_element alt=\"" . ucfirst($title) . "\" title=\"" . ucfirst($title) . "\" $hov_txt/>";
 
 	return $string;
 

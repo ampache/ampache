@@ -21,7 +21,7 @@
 $web_path = Config::get('web_path');
 $ajax_url = Config::get('ajax_url'); 
 ?>
-<table class="tabledata" cellspacing="0" cellpadding="0" border="0">
+<table class="tabledata" cellspacing="0" cellpadding="0">
 <tr>
 	<td colspan="7">
 	<?php require Config::get('prefix') . '/templates/list_header.inc.php'; ?>

@@ -28,7 +28,7 @@
 	<a href="<?php echo Config::get('web_path')?>/admin/users.php?action=show_ip_history&user_id=<?php echo $working_user->id?>&all"><?php echo _('Show All'); ?>...</a>
 <?php }?>
 </div>
-<table border="0">
+<table>
 <tr class="table-header">
         <td align="center">
      		<?php echo _('Date'); ?>

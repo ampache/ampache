@@ -21,7 +21,7 @@
 ?>
 <td colspan="5">
 <form method="post" id="edit_playlist_<?php echo $playlist->id; ?>" action="#">
-<table border="0" cellpadding="0" cellspacing="0">
+<table cellpadding="0" cellspacing="0">
 <tr>
 	<td>
 	<input type="textbox" name="name" size="9" value="<?php echo scrub_out($playlist->name); ?>" />

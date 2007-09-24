@@ -26,7 +26,7 @@
 <?php if (Browse::get_filter('show_art')) { ?>
 <td height="87">
         <a href="<?php echo Config::get('web_path'); ?>/albums.php?action=show&amp;album=<?php echo $album->id; ?>">
-                <img height="75" width="75" border="0" src="<?php echo Config::get('web_path'); ?>/image.php?id=<?php echo $album->id; ?>&amp;thumb=1&amp;sid=<?php echo session_id(); ?>"
+                <img height="75" width="75" src="<?php echo Config::get('web_path'); ?>/image.php?id=<?php echo $album->id; ?>&amp;thumb=1&amp;sid=<?php echo session_id(); ?>"
         </a>
 <?php } ?>
 <td><?php echo $album->f_name_link; ?></td>

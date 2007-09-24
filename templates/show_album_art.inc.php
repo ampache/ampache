@@ -38,7 +38,7 @@ while ($i <= $rows) {
 ?>
 			<td align="center">
 				<a href="<?php echo $image_url; ?>" target="_blank">
-				<img src="<?php echo $image_url; ?>" alt="Album Art" border="0" height="175" width="175" /><br />
+				<img src="<?php echo $image_url; ?>" alt="Album Art" height="175" width="175" /><br />
 				</a>
 				<p align="center">
 				[<a href="<?php echo Config::get('web_path'); ?>/albums.php?action=select_art&amp;image=<?php echo $key; ?>&amp;album_id=<?php echo urlencode($_REQUEST['album_id']); ?>">Select</a>]

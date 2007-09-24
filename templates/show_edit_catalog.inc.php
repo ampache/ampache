@@ -21,7 +21,7 @@
 ?>
 <?php show_box_top(_('Settings for') . ' ' . $catalog->name . ' (' . $catalog->path . ')'); ?>
 <form method="post" action="<?php echo Config::get('web_path'); ?>/admin/catalog.php" enctype="multipart/form-data">
-<table cellspacing="0" cellpadding="0" border="0">
+<table cellspacing="0" cellpadding="0">
 <tr>
 	<td><?php echo _('Name'); ?>:</td>
 	<td><input size="60" type="text" name="name" value="<?php echo scrub_out($catalog->name); ?>"></input></td>

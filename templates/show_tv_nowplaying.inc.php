@@ -32,7 +32,7 @@ foreach ($results as $row) {
 <tr>
 	<td>
 		<a target="_blank" href="<?php echo $web_path; ?>/image.php?id=<?php echo $row['song']->album; ?>&amp;type=popup&amp;sid=<?php echo session_id(); ?>" onclick="popup_art('<?php echo $web_path; ?>/image.php?id=<?php echo $row['song']->album; ?>&amp;type=popup&amp;sid=<?php echo session_id(); ?>'); return false;">
-		<img align="middle" border="0" src="<?php echo $web_path; ?>/image.php?id=<?php echo $row['song']->album; ?>&amp;fast=1" width="275" height="275" />
+		<img align="middle" src="<?php echo $web_path; ?>/image.php?id=<?php echo $row['song']->album; ?>&amp;fast=1" width="275" height="275" />
 		</a>
 	</td>
 </tr>

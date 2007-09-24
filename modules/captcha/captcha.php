@@ -53,7 +53,7 @@ class captcha {
       $alt = htmlentities(captcha::textual_riddle($pw));
       $test = substr($img,22);
       $html = 
-        '<table border="0" summary="captcha input"><tr>'
+        '<table summary="captcha input"><tr>'
       . '<td><img name="captcha_image" id="captcha_image" src="'.$img. '" height="60" width="200" alt="'.$alt. '" /></td>'
       . '<td>'.$title. '<br/><input name="captcha_hash" type="hidden" value="'.$hash. '" />'
       . '<font color="red">*</font><input name="captcha_input" type="text" size="7" maxlength="16" style="height:23px; font-size:16px; font-weight:450;" />'

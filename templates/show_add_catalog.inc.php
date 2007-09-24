@@ -27,7 +27,7 @@ $default_sort = "%a/%A";
 <p><?php echo _("In the form below enter either a local path (i.e. /data/music) or the URL to a remote Ampache installation (i.e http://theotherampache.com)"); ?></p>
 <?php Error::display('general'); ?>
 <form name="update_catalog" method="post" action="<?php echo Config::get('web_path'); ?>/admin/catalog.php" enctype="multipart/form-data">
-<table class="tabledata" cellpadding="0" border="0" cellspacing="0">
+<table class="tabledata" cellpadding="0" cellspacing="0">
 <tr>
 	<td><?php echo _('Catalog Name'); ?>: </td>
 	<td><input size="60" type="text" name="name" value="<?php echo $_REQUEST['name']; ?>" /></td>

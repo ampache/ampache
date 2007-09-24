@@ -25,11 +25,11 @@ $time_unit = array('',_('seconds ago'),_('minutes ago'),_('hours ago'),_('days a
 ?>
 <table class="table-data" cellspacing="0">
 <tr class="table-header">
-	<td><?php echo _('Username'); ?></td>
-	<td><?php echo _('Song'); ?></td>
-	<td><?php echo _('Album'); ?></td>
-	<td><?php echo _('Artist'); ?></td>
-	<td><?php echo _('Last Played'); ?></td>
+	<th><?php echo _('Username'); ?></th>
+	<th><?php echo _('Song'); ?></th>
+	<th><?php echo _('Album'); ?></th>
+	<th><?php echo _('Artist'); ?></th>
+	<th><?php echo _('Last Played'); ?></th>
 </tr>
 <?php foreach ($data as $row) { 
 	$row_user = new User($row['user']);

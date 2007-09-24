@@ -24,7 +24,7 @@
 
 
 <form name="update_catalog" method="post" enctype="multipart/form-data" action="<?php echo Config::get('web_path'); ?>/admin/access.php">
-<table cellpadding="5" cellspacing="0" border="0">
+<table cellpadding="5" cellspacing="0">
 <tr>
 	<td><?php echo _('Name'); ?>:</td>
 	<td>

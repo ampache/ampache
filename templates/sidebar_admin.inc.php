@@ -14,8 +14,8 @@
   </li>
   <li><h4><?php echo _('Access Control'); ?></h4>
     <ul class="sb3" id="sb_admin_acl">
-      <li id="sb_admin_acl_AddAccess"><a href="<?php echo $web_path; ?>/admin/access.php?action=show_add_host"><?php echo _('Add ACL'); ?></li>
-      <li id="sb_admin_acl_ShowAccess"><a href="<?php echo $web_path; ?>/admin/access.php"><?php echo _('Show ACL(s)'); ?></a>
+      <li id="sb_admin_acl_AddAccess"><a href="<?php echo $web_path; ?>/admin/access.php?action=show_add_host"><?php echo _('Add ACL'); ?></a></li>
+      <li id="sb_admin_acl_ShowAccess"><a href="<?php echo $web_path; ?>/admin/access.php"><?php echo _('Show ACL(s)'); ?></a></li>
     </ul>
   </li>
   <li><h4><?php echo _('Other Tools'); ?></h4>

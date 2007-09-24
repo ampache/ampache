@@ -88,6 +88,12 @@ textarea {
 .link { cursor:pointer; }
 
 /************************************************/
+/*             IE6 behaviors                    */
+/* - csshover2: :hover support on any element   */
+/************************************************/
+body { behavior:url("csshover2.htc"); }
+
+/************************************************/
 /*             Styles for Site Header           */
 /************************************************/
 
@@ -113,25 +119,12 @@ textarea {
 #footer {
   clear:both;
 	text-align:center;
-	font-size:10px;
 	padding:3px;
 }
-#footer p {
-	color:#999;
-}
-#footer-content { 
-} 
 
 /************************************************/
 /*                  Buttons                     */
 /************************************************/
-
-.selected_button {
-	background-color: #000; color: #fff;
-}
-.unselected_button {
-	/* there really isn't anything for this */
-}
 .smallbutton {
 	border: 0px;
 	padding: 0 1px;
@@ -195,9 +188,6 @@ input[type=checkbox]{border:none;background:none;}
 /* todo : quand col, mettre sur les a:hover de la col action un background-color:none;*/
 .odd td a img:hover, .even td a img:hover {opacity:0.5;}
 
-.headrow 	{ font-size: 1.2em; } 	/* ? */
-.blank 		{ background: #fff; }	/* ? */
-.header 	{ font-size: 12px; }	/* ? */
 .border 	{ background: #000; }
 
 
@@ -353,10 +343,10 @@ h3#content_title span {}	/* Doesn't exist anymore (?) */
   padding:0;
   border:none;
   font-weight:normal;
-  background: url(../images/button_back.png) 0 100% repeat-x;
+  background: #111 url(../images/button_back.png) 0 100% repeat-x;
   border-bottom: 1px solid #000;
 }
-* html #sidebar-page ul.sb3 li{display:inline;} /* fix ie6 */
+* html #sidebar-page ul.sb3 li{display:inline;background:#111;} /* fix ie6 */
 #sidebar-page .sb3 a, #sidebar-page .sb3 div{ 
   padding:0.2em 0.6em;
   border-left: .5em solid #8b3e38;

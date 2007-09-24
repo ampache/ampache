@@ -23,7 +23,7 @@
 <?php show_box_top(_('Editing existing User')); ?>
 <?php Error::display('general'); ?>
 <form name="update_user" enctype="multipart/form-data" method="post" action="<?php echo Config::get('web_path') . "/admin/users.php"; ?>">
-<table class="tabledata" cellspacing="0" cellpadding="0" border="0">
+<table class="tabledata" cellspacing="0" cellpadding="0">
 <tr>
 	<td>
 		<?php echo _('Username'); ?>:

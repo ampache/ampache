@@ -22,35 +22,37 @@
 $web_path = Config::get('web_path');
 
 ?>
-<table class="tabledata" cellpadding="0" cellspacing="0" border="0">
+<table class="tabledata" cellpadding="0" cellspacing="0">
 <tr class="table-header" align="center">
-        <td colspan="11">
+        <th colspan="11">
         <?php require Config::get('prefix') . '/templates/list_header.inc.php'; ?>
-        </td>
+        </th>
 </tr>
 <tr class="table-header">
-	<td align="center">
-		<b><?php echo _('Fullname'); ?></b>
-		<b>(<?php echo _('Username'); ?>)</b>
-	</td>
-        <td align="center">
-		<b><?php echo _('Last Seen'); ?></b>
-	</td>
-        <td align="center">
-		<b><?php echo _('Registration Date'); ?></b>
-	</td>
-        <td align="center">
-		<b><?php echo _('Activity'); ?></b>
-	</td>
+	<th>
+		<?php echo _('Fullname'); ?>
+		(<?php echo _('Username'); ?>)
+	</th>
+  <th>
+		<?php echo _('Last Seen'); ?>
+	</th>
+  <th>
+		<?php echo _('Registration Date'); ?>
+	</th>
+  <th>
+		<?php echo _('Activity'); ?>
+	</th>
 	<?php if (Config::get('track_user_ip')) { ?>
-        <td align="center">
-		<b><?php echo _('Last Ip'); ?></b>
-	</td>
+  <th>
+		<?php echo _('Last Ip'); ?>
+	</th>
 	<?php } ?>
-	<td align="center"><strong><?php echo _('Action'); ?></strong></td>
-        <td align="center">
-		<b><?php echo _('On-line'); ?></b>
-	</td>
+	<th>
+    <?php echo _('Action'); ?>
+  </th>
+  <th>
+		<?php echo _('On-line'); ?>
+	</th>
 </tr>
 <?php
 foreach ($object_ids as $user_id) { 

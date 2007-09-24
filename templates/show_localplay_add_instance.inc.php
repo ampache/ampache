@@ -23,7 +23,7 @@
 ?>
 <?php show_box_top(_('Add Localplay Instance')); ?>
 <form method="post" action="<?php echo Config::get('web_path'); ?>/localplay.php?action=add_instance">
-<table border="0" cellpadding="3" cellspacing="0" class="table-data">
+<table cellpadding="3" cellspacing="0" class="tabledata">
 <?php foreach ($fields as $key=>$field) { ?>
 <tr>
 	<td><?php echo $field['description']; ?></td>

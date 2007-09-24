@@ -22,12 +22,12 @@
 ?>
 <div id="sb_Subsearch">
         <form name="search" method="post" action="<?php echo $web_path; ?>/search.php" enctype="multipart/form-data" style="Display:inline">
-        <input type="text" name="search_string" value="" size="5" />
-        <input class="smallbutton" type="submit" value="<?php echo _('Search'); ?>" />
+        <input type="text" name="search_string" id="searchString"/>
         <input type="hidden" name="action" value="quick_search" />
         <input type="hidden" name="method" value="fuzzy" />
         <input type="hidden" name="object_type" value="song" />
-	<a href="<?php echo $web_path; ?>/search.php" class="smallbutton"><?php echo _('Advanced Search'); ?></a>
+        <input class="smallbutton" type="submit" value="<?php echo _('Search'); ?>" id="searchBtn" />
+      	<a href="<?php echo $web_path; ?>/search.php" class="smallbutton" id="advSearchBtn"><?php echo _('Advanced Search'); ?></a>
         </form>
 </div>
 

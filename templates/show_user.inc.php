@@ -24,7 +24,7 @@ $create_date    = $client->create_date ? date("m\/d\/y - H:i",$client->create_da
 $client->format(); 
 ?>
 <?php show_box_top($client->fullname); ?>
-<table border="0" cellspacing="0">
+<table cellspacing="0">
 <tr>
 	<td valign="top">
 		<strong><?php echo _('Full Name'); ?>:</strong> <?php echo $client->fullname; ?><br />

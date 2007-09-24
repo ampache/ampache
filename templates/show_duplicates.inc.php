@@ -24,7 +24,7 @@ $web_path = conf('web_path');
 ?>
 <?php show_box_top(_('Find Duplicates')); ?>
 <form name="duplicates" action="<?php echo conf('web_path'); ?>/admin/duplicates.php" method="post" enctype="multipart/form-data" >
-<table cellspacing="0" cellpadding="3" border="0" width="450">
+<table cellspacing="0" cellpadding="3" width="450">
         <tr>
                 <td valign="top"><?php echo _('Search Type'); ?>:</td>
                 <td>

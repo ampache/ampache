@@ -21,7 +21,7 @@
 ?>
 <td colspan="7">
 <form method="post" id="edit_album_<?php echo $album->id; ?>">
-<table border="0" cellpadding="3" cellspacing="0">
+<table cellpadding="3" cellspacing="0">
 <tr>
 <td>
 	<input type="textbox" name="name" value="<?php echo scrub_out($album->name); ?>" />
