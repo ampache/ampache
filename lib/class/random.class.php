@@ -258,7 +258,7 @@ class Random {
 		} 	
 	        
 		/* If they've passed -1 as limit then don't get everything */
-	        if ($data['limit'] == "-1") { unset($data['limit']); }
+	        if ($data['random'] == "-1") { unset($data['random']); }
 	        elseif ($data['random_type'] == 'length') { /* Rien a faire */ }
 	        else { $limit_sql = "LIMIT " . $limit; }
 
@@ -266,12 +266,15 @@ class Random {
 	        if (is_array($matchlist)) { 
 	            foreach ($matchlist as $type => $value) {
 	                        if (is_array($value)) {
+					$where .= "("; 
 	                                foreach ($value as $v) {
+						if (!strlen($v)) { continue; } 
 	                                        $v = Dba::escape($v);
 	                                        if ($v != $value[0]) { $where .= " OR $type='$v' "; }
 	                                        else { $where .= " AND ( $type='$v'"; }
 	                                }
-        	                        $where .= " ) ";
+        	                        $where .= ")";
+					$where = rtrim($where,"()"); 
 	                        }
 	                        elseif (strlen($value)) {
 	                                $value = Dba::escape($value);
@@ -282,14 +285,15 @@ class Random {
 
 		
 	        if ($data['random_type'] == 'full_album') {
-	                $query = "SELECT` album`.`id` FROM `song` INNER JOIN `album` ON `song`.`album`=`album`.`id` " . 
+	                $query = "SELECT `album`.`id` FROM `song` INNER JOIN `album` ON `song`.`album`=`album`.`id` " . 
 				"WHERE $where GROUP BY `song`.`album` ORDER BY RAND() $limit_sql";
 	                $db_results = Dba::query($query);
-	                while ($row = Dba::fetch_row($db_results)) {
-	                        $albums_where .= " OR `song`.`album`=" . $row[0];
+	                while ($row = Dba::fetch_assoc($db_results)) {
+	                        $albums_where .= " OR `song`.`album`=" . $row['id'];
 	                }
 	                $albums_where = ltrim($albums_where," OR");
 	                $sql = "SELECT `song`.`id`,`song`.`size`,`song`.`time` FROM `song` WHERE $albums_where ORDER BY `song`.`album`,`song`.`track` ASC";
+
 	        }
 	        elseif ($data['random_type'] == 'full_artist') {
 	                $query = "SELECT `artist`.`id` FROM `song` INNER JOIN `artist` ON `song`.`artist`=`artist`.`id` " . 
@@ -318,7 +322,7 @@ class Random {
 		$results = array(); 	
 
 		while ($row = Dba::fetch_assoc($db_results)) { 
-
+			
 			// If size limit is specified
 			if ($data['size_limit']) { 
 				// Convert
@@ -343,14 +347,14 @@ class Random {
 				$new_time = floor($row['time'] / 60); 
 
 				if ($fuzzy_time > 10) { return $results; } 
-
+				
 				// If the new one would go voer skip!
-				if (($time_total + $new_time) > $data['limit']) { $fuzzy_time++; continue; } 
+				if (($time_total + $new_time) > $data['random']) { $fuzzy_time++; continue; } 
 
 				$time_total = $time_total + $new_time; 
 				$results[] = $row['id']; 
 
-				if (($data['limit'] - $time_total) < 2) { return $results; } 
+				if (($data['random'] - $time_total) < 2) { return $results; } 
 
 			} // if length does matter 
 
