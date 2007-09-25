@@ -467,7 +467,7 @@ class Catalog {
 			                                $file = str_replace(array('(',')','\''),'',$full_file);
 			                                echo "<script type=\"text/javascript\">\n";
 			                                echo "update_txt('" . $this->count ."','add_count_" . $this->id . "');";
-			                                echo "update_txt('" . htmlentities($file) . "','add_dir_" . $this->id . "');"; 
+			                                echo "update_txt('" . addslashes(htmlentities($file)) . "','add_dir_" . $this->id . "');"; 
 			                                echo "\n</script>\n";    	
 							flush(); 
 						} // update our current state
@@ -583,7 +583,7 @@ class Catalog {
                         if ( !($search_count%5)) {
 				echo "<script type=\"text/javascript\">\n";
                                 echo "update_txt('" . $search_count ."','count_art_" . $this->id . "');";
-				echo "update_txt('" . $album->name . "','read_art_" . $this->id . "');"; 
+				echo "update_txt('" . addslashes($album->name) . "','read_art_" . $this->id . "');"; 
                                 echo "\n</script>\n"; 
 	                        flush();
                         } //echos song count

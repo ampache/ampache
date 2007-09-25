@@ -486,16 +486,19 @@ class Playlist {
 	 * delete
 	 * This deletes the current playlist and all assoicated data
 	 */
-	function delete() { 
+	public function delete() { 
 
-		$id = sql_escape($this->id);
+		$id = Dba::escape($this->id); 
+	
+		$sql = "DELETE FROM `playlist_data` WHERE `playlist` = '$id'";
+		$db_results = Dba::query($sq);
 
-		$sql = "DELETE FROM playlist_data WHERE playlist = '$id'";
-		$db_results = mysql_query($sql, dbh());
+		$sql = "DELETE FROM `playlist` WHERE `id`='$id'";
+		$db_results = Dba::query($sql);
 
-		$sql = "DELETE FROM playlist WHERE id='$id'";
-		$db_results = mysql_query($sql, dbh());
-
+		$sql = "DELETE FROM `object_count` WHERE `object_type`='playlist' AND `object_id`='$id'"; 
+		$db_results = Dba::query($sql); 
+ 
 		return true;
 	
 	} // delete

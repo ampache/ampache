@@ -65,3 +65,10 @@ function focus(){ document.login.username.focus(); }
 		<?php } // end if (conf('allow_public_registration')) ?>
 	</div>
 </div>
+<?php
+if (@is_readable(Config::get('prefix') . '/config/motd.php')) {
+        show_box_top(_('Message of the Day'));
+        include Config::get('prefix') . '/config/motd.php';
+        show_box_bottom();
+}
+?>

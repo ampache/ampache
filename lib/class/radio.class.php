@@ -200,6 +200,21 @@ class Radio {
 
 	} // create
 
+	/**
+	 * delete
+	 * This deletes the current object from the database
+	 */
+	public function delete() { 
+
+		$id = Dba::escape($this->id); 
+
+		$sql = "DELETE FROM `live_stream` WHERE `id`='$id'"; 
+		$db_results = Dba::query($sql); 
+
+		return true; 
+
+	} // delete
+
 } //end of radio class
 
 ?>

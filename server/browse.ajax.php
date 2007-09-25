@@ -56,6 +56,31 @@ switch ($_REQUEST['action']) {
 		$results['browse_content'] = ob_get_contents(); 
 		ob_end_clean(); 
 	break; 
+	case 'delete_object': 
+		switch ($_REQUEST['type']) { 
+			case 'playlist': 
+				// Check the perms we need to on this
+				$playlist = new Playlist($_REQUEST['id']); 
+				if (!$playlist->has_access()) { exit; } 
+
+				// Delete it!
+				$playlist->delete(); 
+				$key = 'playlist_row_' . $playlist->id;
+			break;
+			case 'live_stream': 
+				if (!$GLOBALS['user']->has_access('75')) { exit; } 
+				$radio = new Radio($_REQUEST['id']);
+				$radio->delete(); 
+				$key = 'live_stream_' . $radio->id; 
+			break; 
+			default: 
+
+			break;
+		} // end switch on type
+
+		$results[$key] = ''; 
+
+	break; 
 	default: 
 		$results['rfc3514'] = '0x1'; 
 	break;

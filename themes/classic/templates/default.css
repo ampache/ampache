@@ -172,6 +172,7 @@ h3#content_title span {
 	background:#c0c0c0 url(../images/rightbar_top.jpg) no-repeat;
 	float:right;
 	font-family: Verdana,Helvetica,sans-serif;
+	clear:both;
 } 
 #rightbar ul                      {	list-style:none; }
 #rightbar a                       { text-decoration:none; }

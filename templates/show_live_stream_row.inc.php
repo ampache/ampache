@@ -30,4 +30,7 @@
 	<?php if ($GLOBALS['user']->has_access('50')) { ?>
 		<?php echo Ajax::button('?action=show_edit_object&type=live_stream&id=' . $radio->id,'edit',_('Edit'),'edit_radio_' . $radio->id); ?>
 	<?php } ?>
+	<?php if ($GLOBALS['user']->has_access('75')) { ?>
+		<?php echo Ajax::button('?page=browse&action=delete_object&type=live_stream&id=' . $radio->id,'delete',_('Delete'),'delete_radio_' . $radio->id); ?>
+	<?php } ?>
 </td>

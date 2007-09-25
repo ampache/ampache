@@ -149,14 +149,6 @@ else {
 
 require Config::get('prefix') . '/templates/show_login_form.inc';
 
-if (@is_readable(Config::get('prefix') . '/config/motd.php')) {
-	echo "<div align=\"center\">\n";
-	show_box_top(_('Message of the Day')); 
-        include Config::get('prefix') . '/config/motd.php';
-	show_box_bottom();
-	echo "</div>\n";
-}
-
 ?>
 </body>
 </html>
