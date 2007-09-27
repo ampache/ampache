@@ -64,7 +64,7 @@ p 	{ color: #e9ad51; }
 a	{ color: #74718a; text-decoration: none; }
 
 td 	{ padding: 0 8px; color: #e9ad51; }
-th 	{ padding-right: 10px; }
+th 	{ }
 
 input, select	{
 	font-size:1em;
@@ -120,6 +120,7 @@ body { behavior:url("csshover2.htc"); }
   clear:both;
 	text-align:center;
 	padding:3px;
+	font-size:0.8em;
 }
 
 /************************************************/
@@ -130,7 +131,7 @@ body { behavior:url("csshover2.htc"); }
 	padding: 0 1px;
 	cursor: pointer;
 }
-input.button, input[type=button], input[type=submit], .text-action a, .text-action span {
+input.button, input[type=button], input[type=submit], .text-action a, .text-action span, .smallbutton {
 	background:#8b3e38 url(../images/button_back2.png) 0 100% repeat-x !important;
 	background:#8b3e38;
 	color:#c98d31;
@@ -142,7 +143,7 @@ input.button, input[type=button], input[type=submit], .text-action a, .text-acti
 {
   display:block; cursor: pointer;
 }
-input.button:hover, input[type=button]:hover, input[type=submit]:hover, div.text-action a:hover, div.text-action span:hover {
+input.button:hover, input[type=button]:hover, input[type=submit]:hover, div.text-action a:hover, div.text-action span:hover,.smallbutton:hover {
 	background:#74718a url(../images/button_back2.png) 0 100% repeat-x !important;
 	background:#74718a;
 	color:#e9ad51;
@@ -168,13 +169,14 @@ input[type=checkbox]{border:none;background:none;}
 }
 .table-header td a, .table-header th a {
 	color:#8b3e38;
-	/*padding-right:8px;
-	background: url(../images/sort_off.gif) 100% 50% no-repeat;*/
+	padding-right:10px;
+	background: url(../images/sort_off.gif) 100% 50% no-repeat;
+	display:block;
 }
 .table-header td a:hover, .table-header th a:hover {
-	/*color:#111;*/
-	/*padding-right:8px;
-	background:transparent url(../images/sort_on.gif) 100% 50% no-repeat;*/
+	color:#8b3e38;
+	background-color:transparent;
+	background-image:url(../images/sort_on.gif);
 }
 
 .odd, .even				{ background: url(../images/list_back.png) 0 50% repeat-x !important; background-image: none;}
@@ -290,7 +292,7 @@ h3#content_title span {}	/* Doesn't exist anymore (?) */
 	padding:1px;
   background: #111 ; 
   border-top:0.5em solid #8b3e38;
-  border-right:1px solid #000;
+  border-right:1px solid #000;width:16px;
 }
 #sidebar-tabs li.active { 
 	/*background: #faf url(../images/top.gif) repeat-x 0 0;*/ 
@@ -417,7 +419,7 @@ h3#content_title span {}	/* Doesn't exist anymore (?) */
 .random_album .play_album
 {
   position:absolute;
-  top:12px;
+  top:10px;
   right:0;
 }
 /************************************************/
@@ -513,16 +515,16 @@ h3#content_title span {}	/* Doesn't exist anymore (?) */
 .star-rating a.zero-stars {
   left:80px;
   width:16px;
-  background-image: url(../images/ratings/x_off.gif);
+  background: url(../images/ratings/x_off.gif) left top;
 }
 
 /* hovering effect only for dynamic star rating */
-.info-box .dynamic-star-rating a:hover{
+#content .dynamic-star-rating a:hover{
   background-position: left center;
   background-color:transparent;
 }
 .dynamic-star-rating a:hover.zero-stars {
-  background-image: url(../images/ratings/x.gif);
+  background: url(../images/ratings/x.gif) left top;
 }
 
 
@@ -820,11 +822,11 @@ input.text_input {
 	text-align: left;
 }
 
-table.tabledata {width:100%}
+/*table.tabledata {width:100%}*/
 
 .header1 { 
 	color: #8b3e38;
-       	background: #111 url(../images/button_back.png) 0 100% repeat-x !important;
+  background: #111 url(../images/button_back.png) 0 100% repeat-x !important;
 	background: #111;
 	font-size: 1.4em; 
 	font-variant:small-caps;
@@ -865,3 +867,6 @@ table.tabledata {width:100%}
 
 #maincontainer{}
 
+.info-box .album_art {float:left;margin-right:10px;}
+#information_actions ul { list-style:none; }
+#information_actions h3 { color:#8b3e38; font-size:1.2em; margin:0.2em; }

@@ -23,10 +23,10 @@ $web_path = Config::get('web_path');
 $ajax_url = Config::get('ajax_url'); 
 
 // Title for this album
-$title		= scrub_out($album->name) . '&nbsp;(' . $album->year . ')&nbsp;--&nbsp;' . $album->f_artist_link; 
+$title		= scrub_out($album->name) . '&nbsp;(' . $album->year . ')&nbsp;--&nbsp;' . $album->f_artist_link;
 ?>
 <?php show_box_top($title,'info-box'); ?>
-	<div style="float:left;margin-right:10px;">
+	<div class="album_art">
 	<?php 
         if ($album_name != _('Unknown (Orphaned)')) {
 		$aa_url = $web_path . "/image.php?id=" . $album->id . "&amp;type=popup&amp;sid=" . session_id();
@@ -39,24 +39,26 @@ $title		= scrub_out($album->name) . '&nbsp;(' . $album->year . ')&nbsp;--&nbsp;'
 	<div style="display:table-cell;vertical-align:top;" id="rating_<?php echo $album->id; ?>_album">
 			<?php Rating::show($album->id,'album'); ?>
 	</div>
-	<strong><?php echo _('Actions'); ?>:</strong><br />
 	<div id="information_actions">
-	<?php echo Ajax::text('?action=basket&type=album&id=' . $album->id,_('Play Album'),'play_full_' . $album->id); ?><br />
-	<?php echo Ajax::text('?action=basket&type=album_random&id=' . $album->id,_('Play Random from Album'),'play_random_' . $album->id); ?><br />
+	<h3><?php echo _('Actions'); ?>:</h3>
+	<ul>
+	<li><?php echo Ajax::text('?action=basket&type=album&id=' . $album->id,_('Play Album'),'play_full_' . $album->id); ?></li>
+	<li><?php echo Ajax::text('?action=basket&type=album_random&id=' . $album->id,_('Play Random from Album'),'play_random_' . $album->id); ?></li>
 	<?php if ($GLOBALS['user']->has_access('75')) { ?>
-	<a href="<?php echo $web_path; ?>/albums.php?action=clear_art&amp;album_id=<?php echo $album->id; ?>"><?php echo _('Reset Album Art'); ?></a><br />
+	<li><a href="<?php echo $web_path; ?>/albums.php?action=clear_art&amp;album_id=<?php echo $album->id; ?>"><?php echo _('Reset Album Art'); ?></a></li>
 	<?php } ?>
-	<a href="<?php echo $web_path; ?>/albums.php?action=find_art&amp;album_id=<?php echo $album->id; ?>"><?php echo _('Find Album Art'); ?></a><br />
+	<li><a href="<?php echo $web_path; ?>/albums.php?action=find_art&amp;album_id=<?php echo $album->id; ?>"><?php echo _('Find Album Art'); ?></a></li>
 	<?php  if (($GLOBALS['user']->has_access('75')) || (!Config::get('use_auth'))) { ?>
-	<a href="<?php echo $web_path; ?>/albums.php?action=update_from_tags&amp;album_id=<?php echo $album->id; ?>"><?php echo _('Update from tags'); ?></a><br />
+	<li><a href="<?php echo $web_path; ?>/albums.php?action=update_from_tags&amp;album_id=<?php echo $album->id; ?>"><?php echo _('Update from tags'); ?></a></li>
 	<?php  } ?>
 	<?php if (Access::check_function('batch_download')) { ?>
-	<a href="<?php echo $web_path; ?>/batch.php?action=alb&amp;id=<?php echo $album->id; ?>"><?php echo _('Download'); ?></a><br />
+	<li><a href="<?php echo $web_path; ?>/batch.php?action=alb&amp;id=<?php echo $album->id; ?>"><?php echo _('Download'); ?></a></li>
 	<?php } ?>
 	<?php if (Plugin::is_installed('OpenStrands')) { ?>
-	<?php echo Ajax::text('?page=stats&action=show_check_album_tracks&id=' . $album->id,_('Find Missing Tracks'),'album_missing_tracks'); ?><br />
+	<li><?php echo Ajax::text('?page=stats&action=show_check_album_tracks&id=' . $album->id,_('Find Missing Tracks'),'album_missing_tracks'); ?></li>
 	<?php } ?>
-	</div>
+	</ul>
+  </div>
 <?php show_box_bottom(); ?>
 <div id="additional_information">
 &nbsp;

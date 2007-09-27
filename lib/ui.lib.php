@@ -971,8 +971,8 @@ function get_user_icon($name,$title='',$id='') {
 		$icon_name = 'icon_' . $name . '.png';
 
 		/* Build the image url */
-		if (file_exists(Config::get('prefix') . '/themes/' . Config::get('theme_path') . '/images/' . $icon_name)) { 
-			$img_url = Config::get('web_path') . Config::get('theme_path') . '/images/' . $icon_name;
+		if (file_exists(Config::get('prefix') . Config::get('theme_path') . '/images/icons/' . $icon_name)) { 
+			$img_url = Config::get('web_path') . Config::get('theme_path') . '/images/icons/' . $icon_name;
 		}
 		else { 
 			$img_url = Config::get('web_path') . '/images/' . $icon_name; 
@@ -981,8 +981,8 @@ function get_user_icon($name,$title='',$id='') {
 		/* If Hover, then build its url */
 		if (!empty($hover_name)) { 
 			$hover_icon = 'icon_' . $hover_name . '.png';
-			if (file_exists(Config::get('prefix') . '/themes/' . Config::get('theme_path') . '/images/' . $icon_name)) { 
-				$hov_url = Config::get('web_path') . Config::get('theme_path') . '/images/' . $hover_icon;
+			if (file_exists(Config::get('prefix') . Config::get('theme_path') . '/images/icons/' . $icon_name)) { 
+				$hov_url = Config::get('web_path') . Config::get('theme_path') . '/images/icons/' . $hover_icon;
 			}
 			else { 
 				$hov_url = Config::get('web_path') . '/images/' . $hover_icon;

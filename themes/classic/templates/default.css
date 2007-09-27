@@ -147,6 +147,7 @@ a.smallbutton {
 	background:#99ccff;
 } 
 .border 	{ background: #000; }
+
 /************************************************/
 /*               Content block                  */
 /************************************************/
@@ -475,7 +476,7 @@ h3#content_title span {
   line-height:15px;
   outline:none;
   overflow:hidden;
-  border: none;
+  border:none;
 }
 .star-rating .one-stars  { width:20%; z-index:6; }
 .star-rating .two-stars  { width:40%; z-index:5; }
@@ -487,7 +488,7 @@ h3#content_title span {
 .star-rating a.zero-stars {
   left:80px;
   width:16px;
-  background-image: url(../../../images/ratings/x_off.gif);
+  background: url(../../../images/ratings/x_off.gif) left top;
 }
 
 /* hovering effect only for dynamic star rating */
@@ -495,7 +496,7 @@ h3#content_title span {
   background-position: left center;
 }
 .dynamic-star-rating a:hover.zero-stars {
-  background-image: url(../../../images/ratings/x.gif);
+  background: url(../../../images/ratings/x.gif) left top;
 }
 
 /************************************************/
@@ -733,6 +734,8 @@ td.user_disabled {
 	margin-left:5px; 
 	font-size:0.7em;
 } 
+#information_actions ul { list-style:none; }
+#information_actions h3 { font-size:1.2em;margin:0.2em; }
 #additional_information { 
 	float:left; 
 } 
@@ -787,3 +790,5 @@ table.tabledata {}
 	text-align: center; /*for compatibility, may be controlled by themers now*/
 /* 	padding-left: 7px; */
 }
+
+.info-box .album_art {float:left;margin-right:10px;}
