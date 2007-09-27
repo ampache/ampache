@@ -4,6 +4,7 @@
 
 --------------------------------------------------------------------------
   v.3.4-Alpha3 
+	- Modified Play Method to use hidden iframe
 	- Fixed album random and by min random 
 	- Added Delete to Playlist and Live Streams (Radio)
 	- Massive improvements to CSS (Thx Spocky) 

@@ -21,9 +21,16 @@
 
 ?>
 <ul id="rb_action">
-	<li><a href="<?php echo Config::get('web_path'); ?>/stream.php?action=basket"><?php echo get_user_icon('all'); ?></a></li>
 	<li>
-	<?php echo Ajax::button('?page=playlist&action=create','playlist_add',_('Save as Playlist'),'rb_create_playlist'); ?>
+	<?php echo Ajax::button('?page=stream&action=basket','all',_('Play'),'rightbar_play'); ?>
+	</li>
+	<li id="pl_add">
+		<?php echo get_user_icon('playlist_add',_('Add to Playlist')); ?>
+		<ul id="pl_action_additems">
+		  <li>
+		    <?php echo Ajax::text('?page=playlist&action=create',_('Add to New Playlist'),'rb_create_playlist'); ?>
+		  </li>
+		</ul>
 	</li>
 <?php if (Access::check_function('batch_download')) { ?>
 	<li>
@@ -86,7 +93,7 @@ if ($GLOBALS['user']->prefs['playlist_method'] != 'default' AND AJAX_INCLUDE == 
 	// Set the target
 	$_SESSION['iframe']['target'] = Config::get('web_path') . '/stream.php?action=basket'; 
 	echo "<script type=\"text/javascript\">"; 
-	echo "document.getElementById('util_iframe').contentWindow.location.reload(true);"; 
+	echo "reload_util();"; 
 	echo "</script>"; 
 } 
 ?>

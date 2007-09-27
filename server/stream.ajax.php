@@ -25,6 +25,11 @@
 if (AJAX_INCLUDE != '1') { exit; } 
 
 switch ($_REQUEST['action']) { 
+	case 'basket': 
+		// We need to set the basket up!
+		$_SESSION['iframe']['target'] = Config::get('web_path') . '/stream.php?action=basket'; 
+		$results['rfc3514'] = '<script type="text/javascript">reload_util()</script>'; 
+	break;
 	default: 
 		$results['rfc3514'] = '0x1'; 
 	break;
