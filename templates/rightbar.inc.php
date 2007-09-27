@@ -26,7 +26,7 @@
 	</li>
 	<li id="pl_add">
 		<?php echo get_user_icon('playlist_add',_('Add to Playlist')); ?>
-		<ul id="pl_action_additems">
+		<ul id="pl_action_additems" class="submenu">
 		  <li>
 		    <?php echo Ajax::text('?page=playlist&action=create',_('Add to New Playlist'),'rb_create_playlist'); ?>
 		  </li>
@@ -54,7 +54,7 @@
 	</li>
 	<li id="rb_add">
 	  <?php echo get_user_icon('add',_('Add Dynamic Items')); ?>
-	  <ul id="rb_action_additems">
+	  <ul id="rb_action_additems" class="submenu">
 	   <li>
 	    <?php echo Ajax::text('?action=basket&type=dynamic&random_type=default',_('Pure Random'),'rb_add_pure_random'); ?>
 	   </li>

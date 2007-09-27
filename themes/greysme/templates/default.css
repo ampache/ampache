@@ -224,31 +224,32 @@ h3#content_title span {}	/* Doesn't exist anymore (?) */
   padding:4px;
 }
 #rightbar #rb_action li         {	display:inline; }
-#rightbar li#rb_add             { position:relative; z-index:10;}
-#rightbar li#rb_add:hover       { background:#e9ad51; } 
+#rightbar li#rb_add,#rightbar li#pl_add              { position:relative; z-index:10;}
+#rightbar li#rb_add:hover, #rightbar li#pl_add:hover { background:#e9ad51; } 
 /* Rightbar AddItems SubMenu */
-#rightbar li:hover #rb_action_additems  {	display:block; } 
-#rightbar #rb_action_additems   { 
+#rightbar li:hover .submenu  {	display:block; } 
+#rightbar .submenu { 
   display:none; 	
   position:absolute;
 	right:0px;
 	top:15px;
   background: #050505 url(../images/button_back.png) 0 100% repeat-x;
 	border:2px solid #e9ad51;
-	width:10em;
+	width:15em;
 	padding:0.3em;
+	font-size:0.8em;
 	
 }
-* html #rightbar #rb_action_additems {right:100px;} /* IE6 fix */
+* html #rightbar .submenu {right:100px;} /* IE6 fix */
 
-#rightbar #rb_action_additems a {
+#rightbar .submenu a {
  display:block;
  padding:0.1em;
  color:#8b3e38;
  text-decoration:none;
  text-align:right;
 }
-#rightbar #rb_action_additems a:hover,
+#rightbar .submenu a:hover,
 #rightbar #rb_current_playlist a:hover { color:#e9ad51; }
 
 /* Rightbar playlist */
