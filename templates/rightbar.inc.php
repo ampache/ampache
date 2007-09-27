@@ -30,6 +30,16 @@
 		  <li>
 		    <?php echo Ajax::text('?page=playlist&action=create',_('Add to New Playlist'),'rb_create_playlist'); ?>
 		  </li>
+		<?php 
+			$playlists = Playlist::get_users($GLOBALS['user']->id); 
+			foreach ($playlists as $playlist_id) { 
+				$playlist = new Playlist($playlist_id);
+				$playlist->format(); 
+		?>
+		  <li>
+		    <?php echo Ajax::text('?page=playlist&action=append',$playlist->f_name,'rb_append_playlist_' . $playlist->id); ?>
+		  </li>
+		<?php } ?>
 		</ul>
 	</li>
 <?php if (Access::check_function('batch_download')) { ?>

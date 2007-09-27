@@ -65,6 +65,34 @@ switch ($_REQUEST['action']) {
 		$results['content'] = ob_get_contents(); 
 		ob_end_clean(); 
 	break;
+	case 'append': 
+		// Pull the current active playlist items
+		$objects = $GLOBALS['user']->playlist->get_items(); 
+
+		// Create the playlist object
+		$playlist = new Playlist($_REQUEST['playlist_id']); 
+
+		// We need to make sure that they have access	
+		if (!$playlist->has_access()) { 
+			break; 
+		} 
+
+		// Itterate through and add them to our new playlist
+		foreach ($objects as $uid=>$object_data) { 
+			// For now only allow songs on here, we'll change this later
+			if ($object_data['1'] == 'song') { 
+				$songs[] = $object_data['0']; 
+			} 
+		} // foreach
+
+		// Add our new songs
+		$playlist->add_songs($songs); 
+		$playlist->format(); 
+		ob_start(); 
+		require_once Config::get('prefix') . '/templates/show_playlist.inc.php'; 
+		$results['content'] = ob_get_contents(); 
+		ob_end_clean(); 
+	break;
 	default: 
 		$results['rfc3514'] = '0x1'; 
 	break;

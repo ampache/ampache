@@ -4,6 +4,7 @@
 
 --------------------------------------------------------------------------
   v.3.4-Alpha3 
+	- Added ability to append to existing playlists
 	- Modified Play Method to use hidden iframe
 	- Fixed album random and by min random 
 	- Added Delete to Playlist and Live Streams (Radio)
