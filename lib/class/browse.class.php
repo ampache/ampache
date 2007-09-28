@@ -119,7 +119,7 @@ class Browse {
 	 * set_sort
 	 * This sets the current sort(s)
 	 */
-	public static function set_sort($sort) { 
+	public static function set_sort($sort,$order='') { 
 
 		switch ($_SESSION['browse']['type']) { 
 			case 'song': 
@@ -145,9 +145,13 @@ class Browse {
 		// If it's not in our list, smeg off!
 		if (!in_array($sort,$valid_array)) { 
 			return false; 
-		} 
-			
-		if ($_SESSION['browse']['sort'][$sort] == 'DESC') { 
+		}
+
+		if ($order) { 
+			$_SESSION['browse']['sort'] = array(); 
+			$_SESSION['browse']['sort'][$sort] = $order; 
+		} 	 
+		elseif ($_SESSION['browse']['sort'][$sort] == 'DESC') { 
 			// Reset it till I can figure out how to interface the hotness
 			$_SESSION['browse']['sort'] = array(); 
 			$_SESSION['browse']['sort'][$sort] = 'ASC'; 
@@ -571,6 +575,9 @@ class Browse {
 
 		// First pull the objects
 		$objects = self::get_saved(); 
+
+		// If there's nothing there don't do anything
+		if (!count($objects)) { return false; } 
 
 		foreach ($objects as $object_id) { 
 			$object_id = Dba::escape($object_id); 

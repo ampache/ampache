@@ -4,6 +4,8 @@
 
 --------------------------------------------------------------------------
   v.3.4-Alpha3 
+	- Fixed Random methods (rightbar) 
+	- Added Loading box for ajax actions
 	- Added ability to append to existing playlists
 	- Modified Play Method to use hidden iframe
 	- Fixed album random and by min random 

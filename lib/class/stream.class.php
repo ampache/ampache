@@ -53,9 +53,6 @@ class Stream {
 		if (Config::get('force_http_play')) { 
 			$this->web_path = preg_replace("/https/", "http",$this->web_path);
 		}
-		
-		// Generate the session ID
-		self::$session = md5(uniqid(rand(), true));;
 
 	} // Constructor
 
@@ -102,6 +99,16 @@ class Stream {
 		$this->urls[] = $url; 
 
 	} // manual_url_add
+
+	/**
+	 * get_session
+	 * This returns the current stream session
+	 */
+	public static function get_session() { 
+
+		return self::$session; 
+
+	} // get_session
 
 	/**
 	 * insert_session
@@ -207,7 +214,7 @@ class Stream {
 	                if ($GLOBALS['user']->prefs['play_type'] == 'downsample') {
 	                	$ds = $GLOBALS['user']->prefs['sample_rate'];
 	                }
-			echo $song->get_url(self::$session); 
+			echo $song->get_url(); 
 		} // end foreach
 
 		/* Foreach the additional URLs */
@@ -443,7 +450,7 @@ class Stream {
 
 		// Foreach the stuff we've got and add it
 		foreach ($this->objects as $object) { 
-			$localplay->add($object,self::$session); 
+			$localplay->add($object); 
 		} 
 
 		$localplay->play();
@@ -474,7 +481,7 @@ class Stream {
 		// Build up our object
 		$song_id = $this->songs['0']; 
 		$song = new Song($song_id); 
-		$url = $song->get_url(self::$session); 
+		$url = $song->get_url(); 
 
 		// Append the fact we are downloading
 		$url .= '&action=download'; 
@@ -496,10 +503,21 @@ class Stream {
                 header("Content-Type: audio/x-pn-realaudio ram;");
                 foreach ($this->songs as $song_id) {
                         $song = new Song($song_id);
-			echo $song->get_url(self::$session); 
+			echo $song->get_url(); 
 		} // foreach songs
 
 	} // create_ram
+
+	/**
+	 * auto_init
+	 * This is called on class load it sets the session
+	 */
+	public static function auto_init() { 
+
+		// Generate the session ID
+		self::$session = md5(uniqid(rand(), true));;
+
+	} // auto_init
 
 } //end of stream class
 

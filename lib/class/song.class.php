@@ -793,7 +793,7 @@ class Song {
 				$session_string = "&sid=" . $session_id; 
 			} 
 			else { 
-				$session_string	= "&sid=" . session_id();
+				$session_string	= "&sid=" . Stream::get_session(); 
 			}
 		} // if they are requiring a session
 

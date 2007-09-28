@@ -46,6 +46,10 @@ function ajaxPut(url,source) {
 
 
 function getContents(http_request) {
+	
+	// Display the loading doodly
+	document.getElementById('ajax-loading').style.display = 'block';
+
 	if (http_request.readyState == 4) {
 		if (http_request.status == 200) {
 			var data = http_request.responseXML;
@@ -58,7 +62,7 @@ function getContents(http_request) {
 					$(newID).update(newContent[i].firstChild.nodeValue); 
 				} 
 			}
-			
+			document.getElementById('ajax-loading').style.display = 'none';
 		} 
         }
 }

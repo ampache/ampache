@@ -724,6 +724,18 @@ td.user_disabled {
 	border:2px solid #000;
 }
 
+#ajax-loading { 
+	position: absolute;  
+	right: 0px; 
+	top: 0px;
+	float: right; 
+	z-index: 100;
+	background: #99ccff;
+	display: none;
+	padding: 3px 25px 5px 25px;
+	border: 1px solid #000;
+} 
+
 #mpdpl td {
 	padding:0 2px 0 2px;
 	text-align:left;

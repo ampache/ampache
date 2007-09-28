@@ -98,7 +98,7 @@ class Random {
 		} 
 	
 		if (Config::get('require_session')) { 
-			$session_string = '&sid=' . session_id(); 
+			$session_string = '&sid=' . Stream::get_session();
 		} 
 
                 $web_path = Config::get('web_path');
