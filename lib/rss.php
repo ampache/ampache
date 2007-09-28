@@ -199,7 +199,7 @@ switch ($type) {
 
 		echo "<item>\n";
 		$song = new Song($item['object_id']);
-                $song->format_song();
+                $song->format();
 		$user = new User($item['user']);
 		$user->format_user();
  		echo " <title><![CDATA[$song->title]]></title>\n";
@@ -225,7 +225,7 @@ switch ($type) {
 
 		$song = $r['song'];
 		$user = $r['user'];
-                $song->format_song();
+                $song->format();
                         $artist = $song->f_artist;
                         $album = $song->get_album_name();
                         $text = "$artist - $song->f_title played by $user->fullname";

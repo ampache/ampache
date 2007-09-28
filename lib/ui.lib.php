@@ -176,8 +176,10 @@ function show_local_control () {
  * @catagory General
  * @author Nedko Arnaudov
  */
-function truncate_with_ellipsis($text, $max=27) {
+function truncate_with_ellipsis($text, $max='') {
 
+	$max = $max ? $max : '27'; 
+	
 	/* If we want it to be shorter than three, just throw it back */
 	if ($max > 3) {
 
