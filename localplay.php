@@ -47,6 +47,9 @@ switch ($_REQUEST['action']) {
 		$localplay = new Localplay($GLOBALS['user']->prefs['localplay_controller']); 
 		$localplay->add_instance($_POST); 
 	break;
+	case 'show_songs': 
+
+	break;
 	case 'delete_song':
 		$song_id = scrub_in($_REQUEST['song_id']);
 		$songs = array($song_id);

@@ -512,7 +512,7 @@ class Stream {
 	 * auto_init
 	 * This is called on class load it sets the session
 	 */
-	public static function auto_init() { 
+	public static function _auto_init() { 
 
 		// Generate the session ID
 		self::$session = md5(uniqid(rand(), true));;

@@ -390,8 +390,12 @@ h3#content_title span {}	/* Doesn't exist anymore (?) */
 	color:#111;
 } 
 
-/* SIDEBAR : Search */
-/********************/
+/* SIDEBAR : Localplay */
+/***********************/
+
+.active_instance { 
+
+} 
 
 /* SIDEBAR : Preferences */
 /*************************/
