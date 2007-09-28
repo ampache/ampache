@@ -56,7 +56,7 @@ class User {
 			$this->$key = $value; 
 		} 
 		
-		// Set the preferences for thsi user
+		// Set the preferences for this user
 		$this->set_preferences();
 
 		// Make sure the Full name is always filled
@@ -157,12 +157,11 @@ class User {
 	
 	} // get_preferences
 
-	/*!
-		@function set_preferences
-		@discussion sets the prefs for this specific 
-			user
-	*/
-	function set_preferences() {
+	/**
+	 * set_preferences
+	 * sets the prefs for this specific user
+	 */
+	public function set_preferences() {
 
 		$sql = "SELECT preference.name,user_preference.value FROM preference,user_preference WHERE user_preference.user='$this->id' " .
 			"AND user_preference.preference=preference.id AND preference.type != 'system'";
@@ -172,7 +171,7 @@ class User {
 			$key = $r['name'];
 			$this->prefs[$key] = $r['value'];
 		} 
-	} // get_preferences
+	} // set_preferences
 
 	/**
 	 * get_favorites

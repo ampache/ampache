@@ -342,8 +342,12 @@ h3#content_title span {
 	color:#fff;
 } 
 
-/* SIDEBAR : Search */
-/********************/
+/* SIDEBAR : Localplay */
+/***********************/
+
+.active_instance {
+	background:#99ccff; 
+}
 
 /* SIDEBAR : Preferences */
 /*************************/

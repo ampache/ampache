@@ -60,7 +60,7 @@ abstract class localplay_controller {
 			case 'radio': 
 			case 'song': 
 			default: 
-				$url = $object->get_url(Stream::$session); 	
+				$url = $object->get_url(Stream::get_session()); 	
 			break;
 		} // end switch on objecttype
 

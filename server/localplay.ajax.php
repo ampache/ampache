@@ -31,9 +31,18 @@ switch ($_REQUEST['action']) {
 
 		$type = $_REQUEST['instance'] ? 'localplay' : 'stream';
 
-		Preference::update('mpd_active',$GLOBALS['user']->id,$_REQUEST['instance']); 
+		$localplay = new Localplay($GLOBALS['user']->prefs['localplay_controller']); 
+		$localplay->set_active_instance($_REQUEST['instance']); 
 		Preference::update('play_type',$GLOBALS['user']->id,$type); 
 
+		// Now reload the preferences into the user object
+		$GLOBALS['user']->set_preferences(); 
+
+		// We should also refesh the sidebar
+		ob_start(); 
+		require_once Config::get('prefix') . '/templates/sidebar.inc.php'; 
+		$results['sidebar'] = ob_get_contents(); 
+		ob_end_clean(); 
 	break;
 	default: 
 		$results['rfc3514'] = '0x1'; 

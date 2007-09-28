@@ -180,9 +180,11 @@ class AmpacheMpd extends localplay_controller {
 	/**
 	 * get_instance
 	 * This returns the specified instance and all it's pretty variables
+	 * If no instance is passed current is used
 	 */
-	private function get_instance($instance) { 
+	public function get_instance($instance='') { 
 	
+		$instance = $instance ? $instance : $GLOBALS['user']->prefs['mpd_active'];
 		$instance = Dba::escape($instance); 
 
 		$sql = "SELECT * FROM `localplay_mpd` WHERE `id`='$instance'";  
@@ -223,7 +225,7 @@ class AmpacheMpd extends localplay_controller {
 
 		$user_id = $user_id ? $user_id : $GLOBALS['user']->id; 
 
-		Preference::update('mpd_instance',$user_id,intval($uid)); 
+		Preference::update('mpd_active',$user_id,intval($uid)); 
 
 		return true; 
 
@@ -522,7 +524,7 @@ class AmpacheMpd extends localplay_controller {
 	public function connect() { 
 	
 		// Look at the current instance and pull the options for said instance
-		$options = self::get_instance($GLOBALS['user']->prefs['mpd_active']); 
+		$options = self::get_instance(); 
 		$this->_mpd = new mpd($options['host'],$options['port'],$options['password']);
 
 		if ($this->_mpd->connected) { return true; } 

@@ -544,6 +544,18 @@ class Localplay {
 	} // get_instances
 
 	/**
+	 * current_instance
+	 * This returns the UID of the current Instance
+	 */
+	public function current_instance() { 
+
+		$data = $this->_player->get_instance(); 
+
+		return $data['id']; 
+
+	} // current_instance
+
+	/**
 	 * add_instance
 	 * This adds a new instance for the current controller type
 	 */
@@ -552,6 +564,16 @@ class Localplay {
 		$this->_player->add_instance($data); 
 
 	} // add_instance
+
+	/**
+	 * set_active_instance
+	 * This sets the active instance of the localplay controller
+	 */
+	public function set_active_instance($instance) { 
+
+		$this->_player->set_active_instance($instance); 
+
+	} // set_active_instance
 
 	/**
 	 * delete
