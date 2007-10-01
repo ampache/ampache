@@ -4,6 +4,7 @@
 
 --------------------------------------------------------------------------
   v.3.4-Alpha3 
+	- Gather album art now only gathers for the specified catalog
 	- Fixed Random methods (rightbar) 
 	- Added Loading box for ajax actions
 	- Added ability to append to existing playlists

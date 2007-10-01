@@ -40,7 +40,6 @@ switch ($_REQUEST['action']) {
 	break; 
 } // end data collection 
 
-#show_now_playingRSS($_REQUEST['username']);
 show_RSS($_REQUEST['type'],$_REQUEST['username']);
 
 ?>

@@ -242,9 +242,8 @@ switch ($_REQUEST['action']) {
 	break;
 	case 'gather_album_art':
 		ob_end_flush(); 
-		if (!$_REQUEST['catalog_id']) { 
-			$catalogs = Catalog::get_catalogs();
-		} 
+
+		$catalogs = $_REQUEST['catalogs'] ? $_REQUEST['catalogs'] : Catalog::get_catalogs();
 
 		// Itterate throught the catalogs and gather as needed
 		foreach ($catalogs as $catalog_id) { 

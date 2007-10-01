@@ -161,9 +161,9 @@ class mpd {
 	 * 
 	 * NOTE: This is called automatically upon object instantiation; you should not need to call this directly.
 	 */
-	function Connect() {
+	public function Connect() {
 		if ( $this->debugging ) echo "mpd->Connect() / host: ".$this->host.", port: ".$this->port."\n";
-		$this->mpd_sock = fsockopen($this->host,$this->port,$errNo,$errStr,3);
+		$this->mpd_sock = fsockopen($this->host,$this->port,$errNo,$errStr,6);
 		
 		/* Vollmerize this bizatch, if we've got php4.3+ we should 
 		 * have these functions and we need them
@@ -171,7 +171,7 @@ class mpd {
 		if (function_exists('stream_set_timeout')) { 
 		
 			/* Set the timeout on the connection */
-			stream_set_timeout($this->mpd_sock,2);
+			stream_set_timeout($this->mpd_sock,6);
 			
 			/* We want blocking, cause otherwise it doesn't
 			 * timeout, and feof just keeps on spinning 
@@ -204,7 +204,8 @@ class mpd {
 			$this->errStr = "Connection not available";
 			return NULL;
 		}
-	}
+
+	} // connect
 
 	/* SendCommand()
 	 * 
