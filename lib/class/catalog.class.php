@@ -485,6 +485,16 @@ class Catalog {
 
 		debug_event('closedir',"Finished reading $path closing handle",'5','ampache-catalog');
 
+		// This should only happen on the last run
+		if ($path == $this->path) { 
+                	echo "<script type=\"text/javascript\">\n";
+                        echo "update_txt('" . $this->count ."','add_count_" . $this->id . "');";
+                        echo "update_txt('" . addslashes(htmlentities($file)) . "','add_dir_" . $this->id . "');";
+                        echo "\n</script>\n";
+                        flush();
+		} 
+
+
 		/* Close the dir handle */
 		@closedir($handle);
 
@@ -538,17 +548,19 @@ class Catalog {
 		// Prevent the script from timing out
 		set_time_limit(0);
 
-		if (!$catalog_id) { $catalog_id = $this->id; }
+		// If not passed use this 
+		$catalog_id = $catalog_id ? $catalog_id : $this->id; 
 
-		if (!empty($all)) { 	
+		if ($all) { 	
 			$albums = $this->get_album_ids(); 
 		}
 		else { 
-			$albums = array_keys($this->_art_albums); 
+			$albums = array_keys(self::$_art_albums); 
 		} 
 		
 		// Run through them an get the art!
 		foreach ($albums as $album_id) { 
+
 			// Create the object
 			$album = new Album($album_id); 
 			// We're going to need the name here
@@ -588,10 +600,15 @@ class Catalog {
 	                        flush();
                         } //echos song count
 			
-
 			unset($found);
-
 		} // foreach albums
+
+		// One last time for good measure
+		echo "<script type=\"text/javascript\">\n";
+                echo "update_txt('" . $search_count ."','count_art_" . $this->id . "');";
+		echo "update_txt('" . addslashes($album->name) . "','read_art_" . $this->id . "');"; 
+                echo "\n</script>\n"; 
+	        flush();
 
 	} // get_album_art
 
@@ -1084,7 +1101,7 @@ class Catalog {
 		$catalog_id = $this->id; 
 		require Config::get('prefix') . '/templates/show_gather_art.inc.php'; 
 		flush(); 
-		$this->get_album_art(0,1); 
+		$this->get_album_art(); 
 
 		/* Update the Catalog last_update */
 		$this->update_last_add();
@@ -1814,7 +1831,7 @@ class Catalog {
 			// If we don't have art put it in the 'needs me some art' array
 			if (!strlen($r['art'])) { 
 				$key = $r['id']; 
-				self::$_art_albums[$key] = 1;
+				self::$_art_albums[$key] = $key;
 			}
 		
 		} //if found
@@ -1836,7 +1853,7 @@ class Catalog {
 			}
 
 			// Add it to the I needs me some album art array
-			self::$_art_albums[$album_id] = 1; 
+			self::$_art_albums[$album_id] = $album_id; 
 
 		} //not found
 		// If not readonly and not found

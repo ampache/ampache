@@ -4,6 +4,8 @@
 
 --------------------------------------------------------------------------
   v.3.4-Alpha3 
+	- Fixed Gathering album art to only gather for changed albums
+	- Fixed display of catalog to correctly show catalog stats
 	- Gather album art now only gathers for the specified catalog
 	- Fixed Random methods (rightbar) 
 	- Added Loading box for ajax actions
