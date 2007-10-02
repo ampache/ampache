@@ -4,6 +4,7 @@
 
 --------------------------------------------------------------------------
   v.3.4-Alpha3 
+	- Fixed the Localplay Controls
 	- Fixed Gathering album art to only gather for changed albums
 	- Fixed display of catalog to correctly show catalog stats
 	- Gather album art now only gathers for the specified catalog

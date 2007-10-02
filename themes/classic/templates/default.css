@@ -226,6 +226,14 @@ h3#content_title span {
 #rightbar #rb_current_playlist li a { display:block; padding:0.2em;}
 #rightbar .delitem                  { position:absolute;right:0;top:0; }
 
+/* Rightbar Localplay Controls */
+#rightbar #localplay-control { 
+	padding-left: 5px;
+} 
+#localplay-control span { 
+	cursor: pointer; 
+} 
+
 /************************************************/
 /*                  Sidebar                     */
 /************************************************/

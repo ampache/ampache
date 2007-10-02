@@ -256,9 +256,7 @@ class Localplay {
 	 */
 	public function stop() { 
 
-		$function = $this->_function_map['stop'];
-
-		if (!$this->_player->$function()) { 
+		if (!$this->_player->stop()) { 
 			debug_event('localplay','Error Unable to stop playback, check ' . $this->type . ' controller','1');
 			return false;
 		}
@@ -466,8 +464,6 @@ class Localplay {
 	 */
 	public function skip($song_id) { 
 
-		$function = $this->_function_map['skip'];
-
 		if (!$this->_player->$function($song_id)) { 
 			debug_event('localplay','Error: Unable to skip to next song, check ' . $this->type . ' controller','1');
 			return false; 
@@ -484,9 +480,7 @@ class Localplay {
 	 */
 	public function next() { 
 
-		$function = $this->_function_map['next'];
-		
-		if (!$this->_player->$function()) { 
+		if (!$this->_player->next()) { 
 			debug_event('localplay','Error: Unable to skip to next song, check ' . $this->type . ' controller','1');
 			return false; 
 		}
@@ -502,9 +496,8 @@ class Localplay {
 	 */
 	public function prev() { 
 		
-		$function = $this->_function_map['prev'];
 
-		if (!$this->_player->$function()) { 
+		if (!$this->_player->prev()) { 
 			debug_event('localplay','Error: Unable to skip to previous song, check ' . $this->type . ' controller','1');
 			return false;
 		}
@@ -520,9 +513,7 @@ class Localplay {
         */
         public function pause() {
 
-                $function = $this->_function_map['pause'];
-
-                if (!$this->_player->$function()) {
+                if (!$this->_player->pause()) {
                         debug_event('localplay','Error: Unable to pause song, check ' . $this->type . ' controller','1');
                         return false;
                 }

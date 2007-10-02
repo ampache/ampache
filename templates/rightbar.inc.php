@@ -70,6 +70,7 @@
 	  </ul>
 	</li>
 </ul>
+<?php if ($GLOBALS['user']->prefs['play_type'] == 'localplay') { require_once Config::get('prefix') . '/templates/show_localplay_control.inc.php'; } ?> 
 <ul id="rb_current_playlist">
 <?php 
 	//FIXME :: this feels kludgy

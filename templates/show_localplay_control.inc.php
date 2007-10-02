@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2006 Ampache.org
+ Copyright (c) 2001 - 2007 Ampache.org
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
@@ -20,36 +20,11 @@
 
 */
 
-$web_path = conf('web_path'); 
-$localplay = init_localplay();
-
-$required_info 	= conf('ajax_info') . $add_info;
-$ajax_url	= conf('ajax_url');
-
-/* If we actually got something back */
-if (is_object($localplay)) { 
 ?>
-<div class="localplaycontrol" style="display:table-cell;cursor:pointer;padding:2px;">
-<?php if ($localplay->has_function('prev')) { ?>
-<span class="prev_button" onclick="ajaxPut('<?php echo $ajax_url; ?>?action=localplay&amp;cmd=prev<?php echo $required_info; ?>');return true;">
-	<?php echo get_user_icon('prev','prev_hover'); ?>
-</span>
-<?php } ?>
-<span class="stop_button" onclick="ajaxPut('<?php echo $ajax_url; ?>?action=localplay&amp;cmd=stop<?php echo $required_info; ?>');return true;">
-	<?php echo get_user_icon('stop','stop_hover'); ?>
-</span>
-<?php if ($localplay->has_function('pause')) { ?>
-<span class="pause_button" onclick="ajaxPut('<?php echo $ajax_url; ?>?action=localplay&amp;cmd=pause<?php echo $required_info; ?>');return true;">
-	<?php echo get_user_icon('pause','pause_hover'); ?>
-</span>
-<?php } ?>
-<span class="play_button" onclick="ajaxPut('<?php echo $ajax_url; ?>?action=localplay&amp;cmd=play<?php echo $required_info; ?>');return true;">
-	<?php echo get_user_icon('play','play_hover'); ?>
-</span>
-<?php if ($localplay->has_function('next')) { ?>
-<span class="next_button" onclick="ajaxPut('<?php echo $ajax_url; ?>?action=localplay&amp;cmd=next<?php echo $required_info; ?>');return true;">
-	<?php echo get_user_icon('next','next_hover'); ?>
-</span>
-<?php } ?>
+<div id="localplay-control">
+<?php echo Ajax::button('?page=localplay&action=command&command=prev','prev',_('Previous'),'localplay_control_previous'); ?>
+<?php echo Ajax::button('?page=localplay&action=command&command=stop','stop',_('Stop'),'localplay_control_stop'); ?>
+<?php echo Ajax::button('?page=localplay&action=command&command=pause','pause',_('Pause'),'localplay_control_pause'); ?>
+<?php echo Ajax::button('?page=localplay&action=command&command=play','play',_('Play'),'localplay_control_play'); ?>
+<?php echo Ajax::button('?page=localplay&action=command&command=next','next',_('Next'),'localplay_control_next'); ?>
 </div>
-<?php } // End if localplay object ?>

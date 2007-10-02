@@ -44,6 +44,29 @@ switch ($_REQUEST['action']) {
 		$results['sidebar'] = ob_get_contents(); 
 		ob_end_clean(); 
 	break;
+	case 'command': 
+		// Make sure they are allowed to do this
+		// ok I still don't know what that means... but I'm thinking about it
+
+		$localplay = new Localplay($GLOBALS['user']->prefs['localplay_controller']); 
+		$localplay->connect(); 
+		
+		// Switch on valid commands
+		switch ($_REQUEST['command']) { 
+			case 'prev': 
+			case 'next': 
+			case 'stop': 
+			case 'play': 
+			case 'pause': 
+				$command = scrub_in($_REQUEST['command']); 
+				$localplay->$command(); 
+			break;
+			default: 
+				// Nothing
+			break; 
+		} // end whitelist
+
+	break; 
 	default: 
 		$results['rfc3514'] = '0x1'; 
 	break;
