@@ -441,18 +441,18 @@ class Stream {
 		// First figure out what their current one is and create the object
 		$localplay = new Localplay($GLOBALS['user']->prefs['localplay_controller']); 
 		$localplay->connect(); 
-
 		//HACK!!!
 		// Yea.. you know the baby jesus... he's crying right meow
 		foreach ($this->songs as $song_id) { 
 			$this->objects[] = new Song($song_id); 
 		} 
+		
 
 		// Foreach the stuff we've got and add it
 		foreach ($this->objects as $object) { 
 			$localplay->add($object); 
 		} 
-
+		
 		$localplay->play();
 
 	} // create_localplay

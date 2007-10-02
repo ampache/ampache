@@ -16,7 +16,7 @@
 	- Added Delete to Playlist and Live Streams (Radio)
 	- Massive improvements to CSS (Thx Spocky) 
 	- Addition of Greysme theme (Thx Spocky)
-	- Based MPD Support Restored
+	- Basic MPD Support Restored
 	- Moved catalog stats off to statistics page
 	- Added basic sorting to all browse pages
 	- Tweaked the Playback to try to fix some issues with WMP

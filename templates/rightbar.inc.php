@@ -37,7 +37,7 @@
 				$playlist->format(); 
 		?>
 		  <li>
-		    <?php echo Ajax::text('?page=playlist&action=append',$playlist->f_name,'rb_append_playlist_' . $playlist->id); ?>
+		    <?php echo Ajax::text('?page=playlist&action=append&playlist_id=' .  $playlist->id,$playlist->f_name,'rb_append_playlist_' . $playlist->id); ?>
 		  </li>
 		<?php } ?>
 		</ul>
