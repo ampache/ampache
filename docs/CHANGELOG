@@ -4,6 +4,10 @@
 
 --------------------------------------------------------------------------
   v.3.4-Alpha3 
+	- Fixed an issue where MPD was clearing all but last song in submit
+		if its initial state was not play 
+	- Added check for PHP5 to prevent ugly errors if missing
+	- Fixed issue with NULL localplay controller causing fatal error
 	- Fixed the Localplay Controls
 	- Fixed Gathering album art to only gather for changed albums
 	- Fixed display of catalog to correctly show catalog stats

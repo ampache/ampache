@@ -27,6 +27,12 @@
 // fixes some CSS issues
 ob_start();
 
+// Do a check for PHP5 because nothing will work without it
+if (strcmp('5.0.0',phpversion()) > 0) {
+	echo "ERROR: Ampache requires PHP5";
+	exit; 
+}
+
 // Set the Error level manualy... I'm to lazy to fix notices
 error_reporting(E_ALL ^ E_NOTICE);
 

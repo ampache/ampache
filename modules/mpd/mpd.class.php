@@ -107,7 +107,6 @@ class mpd {
 	// Misc Other Vars	
 	var $mpd_class_version = "1.2";
 
-	var $debugging   = FALSE;    // Set to TRUE to turn extended debugging on.
 	var $errStr      = "";       // Used for maintaining information about the last error message
 
 	var $command_queue;          // The list of commands for bulk command sending
@@ -118,7 +117,7 @@ class mpd {
 	 * 
 	 * Builds the MPD object, connects to the server, and refreshes all local object properties.
 	 */
-	function mpd($srv,$port,$pwd = NULL) {
+	public function __construct($srv,$port,$pwd = NULL) {
 		$this->host = $srv;
 		$this->port = $port;
         	$this->password = $pwd;
@@ -162,9 +161,8 @@ class mpd {
 	 * NOTE: This is called automatically upon object instantiation; you should not need to call this directly.
 	 */
 	public function Connect() {
-		if ( $this->debugging ) echo "mpd->Connect() / host: ".$this->host.", port: ".$this->port."\n";
+		debug_event('MPD',"mpd->Connect() / host: ".$this->host.", port: ".$this->port,'5');
 		$this->mpd_sock = fsockopen($this->host,$this->port,$errNo,$errStr,6);
-		
 		/* Vollmerize this bizatch, if we've got php4.3+ we should 
 		 * have these functions and we need them
 		 */
@@ -182,7 +180,8 @@ class mpd {
 		if (!$this->mpd_sock) {
 			$this->errStr = "Socket Error: $errStr ($errNo)";
 			return NULL;
-		} else {
+		} 
+		else {
 			while(!feof($this->mpd_sock) && !$status['timed_out']) {
 				$response =  fgets($this->mpd_sock,1024);
 				if (function_exists('socket_get_status')) { 
@@ -213,7 +212,7 @@ class mpd {
 	 * use (see MPD_CMD_* constant definitions above). 
 	 */
 	function SendCommand($cmdStr,$arg1 = "",$arg2 = "") {
-		if ( $this->debugging ) echo "mpd->SendCommand() / cmd: ".$cmdStr.", args: ".$arg1." ".$arg2."\n";
+		debug_event('MPD',"mpd->SendCommand() / cmd: ".$cmdStr.", args: ".$arg1." ".$arg2,'5');
 		if ( ! $this->connected ) {
 			echo "mpd->SendCommand() / Error: Not connected\n";
 		} else {
@@ -250,7 +249,7 @@ class mpd {
 				// Build the response string
 				$respStr .= $response;
 			}
-			if ( $this->debugging ) echo "mpd->SendCommand() / response: '".$respStr."'\n";
+			debug_event('MPD',"mpd->SendCommand() / response: '".$respStr,'5');
 		}
 		return $respStr;
 	}
@@ -875,7 +874,6 @@ class mpd {
 		if ( ($this->state == MPD_STATE_PLAYING) || ($this->state == MPD_STATE_PAUSED) ) {
 			list ($this->current_track_position, $this->current_track_length ) = split(":",$status['time']);
 		} else {
-//			$this->current_track_id = -1;
 			$this->current_track_position = -1;
 			$this->current_track_length = -1;
 		}
@@ -968,7 +966,7 @@ class mpd {
 	/* GetPlaylist() 
 	 * 
 	 * Retrieves the playlist from the server and tosses it into a multidimensional array.
-     *
+	 *
 	 * NOTE: This function really should not be used. Instead, use $this->playlist. The function
 	 *   will most likely be deprecated in future releases.
 	 */
@@ -986,13 +984,13 @@ class mpd {
 	*/
 	function ClearPLIfStopped() {
 
-                if ( $this->debugging ) echo "mpd->ClearPLIfStopped()\n";
+                debug_event('MPD',"Running: mpd->ClearPLIfStopped()",'5');
                 $this->RefreshInfo();
                 if ($resp = ($this->state == MPD_STATE_STOPPED)) {
                         $this->PLClear();
+			return true; 
                 }
-                if ( $this->debugging ) echo "mpd->ClearPLIfStopped() / return\n";
-        	return $resp;
+        	return false;
 
 	} // ClearPLIfStopped
 

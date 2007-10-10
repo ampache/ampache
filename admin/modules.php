@@ -44,10 +44,23 @@ switch ($_REQUEST['action']) {
 		header("Location:" . Config::get('web_path') . '/admin/modules.php?action=show_localplay'); 
 	break;
 	case 'confirm_uninstall_localplay': 
-
+		$type = scrub_in($_REQUEST['type']); 
+		$url = Config::get('web_path') . '/admin/modules.php?action=uninstall_localplay&amp;type=' . $type; 
+		$title = _('Are you sure you want to remove this plugin?'); 
+		$body = ''; 
+		show_confirmation($title,$body,$url); 
 	break;
 	case 'uninstall_localplay': 
+		$type = scrub_in($_REQUEST['type']); 
 
+		$localplay = new Localplay($type); 
+		$localplay->uninstall(); 
+			
+                /* Show Confirmation */
+                $url    = Config::get('web_path') . '/admin/modules.php?action=show_localplay';
+                $title  = _('Plugin Deactivated');
+                $body   = '';
+                show_confirmation($title,$body,$url);
 	break;
 	case 'install_plugin':
 		/* Verify that this plugin exists */

@@ -218,6 +218,25 @@ class Localplay {
 	} // install
 
 	/**
+	 * uninstall
+	 * This runs the uninstall for the localplay controller we've 
+	 * currently pimped out
+	 */
+	public function uninstall() { 
+
+		// Run the players uninstaller
+		$this->_player->uninstall(); 
+
+		// If its our current player, reset player to nothing
+		if ($GLOBALS['user']->prefs['localplay_controller'] == $this->type) { 
+			Preference::update('localplay_controller',$GLOBALS['user']->id,''); 
+		} 
+
+		return true; 
+
+	} // uninstall
+
+	/**
 	 * connect
 	 * This function attempts to connect to the localplay 
 	 * player that we are using

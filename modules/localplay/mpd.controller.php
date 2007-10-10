@@ -247,16 +247,22 @@ class AmpacheMpd extends localplay_controller {
 	 * functions to generate the URL it needs
 	 */
 	public function add($object) { 
-		
-		if (is_null($this->_mpd->ClearPLIfStopped())) {
-	                debug_event('mpd_add', 'Error: Unable to clear the MPD playlist ' . $this->_mpd->errStr,'1');
-         	}
+
+		// If we haven't added anything then check to see if we should clear
+		if ($this->_add_count < '1') { 
+			if (is_null($this->_mpd->ClearPLIfStopped())) {
+		                debug_event('mpd_add', 'Error: Unable to clear the MPD playlist ' . $this->_mpd->errStr,'1');
+	         	}
+		} // edn if no add count
 
 		$url = $this->get_url($object); 
 
 		if (is_null($this->_mpd->PlAdd($url))) { 
 			debug_event('mpd_add',"Error: Unable to add $url to MPD " . $this->_mpd->errStr,'1'); 
 			return false; 
+		} 
+		else { 
+			$this->_add_count++; 
 		} 
 		
 		return true;

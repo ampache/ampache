@@ -1,11 +1,11 @@
+<ul class="sb2" id="sb_localplay">
+<?php if (Config::get('allow_localplay_playback') AND $GLOBALS['user']->prefs['localplay_controller']) { ?>
 <?php
 	// Little bit of work to be done here
 	$localplay = new Localplay($GLOBALS['user']->prefs['localplay_controller']); 
 	$current_instance = $localplay->current_instance(); 
 	$class = $current_instance ? '' : ' class="active_instance"';
 ?>
-<ul class="sb2" id="sb_localplay">
-<?php if (Config::get('allow_localplay_playback')) { ?>
 <?php if ($GLOBALS['user']->has_access('50')) { ?>
   <li><h4><?php echo _('Localplay'); ?></h4>
     <ul class="sb3" id="sb_localplay_info">
