@@ -609,12 +609,10 @@ class Stream {
 	        $message = "Start Downsample: $downsample_command";
 	        debug_event('downsample',$message,'3');
 
-	        $fp = @popen($downsample_command, 'rb');
+	        $fp = popen($downsample_command, 'rb');
 
-	        /* We need more than just the handle here */
-	        $return_array['handle'] = $fp;
-
-	        return ($return_array);
+		// Return our new handle
+	        return ($fp);
 
 	} // start_downsample
 

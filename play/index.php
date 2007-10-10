@@ -250,10 +250,7 @@ if (Config::get('access_control') AND Config::get('downsample_remote')) {
 // If they are downsampling, or if the song is not a native stream or it's non-local
 if (($GLOBALS['user']->prefs['transcode'] == 'always' || !$song->native_stream() || $not_local) && $GLOBALS['user']->prefs['transcode'] != 'never') { 
 	debug_event('downsample','Starting Downsample...','5');
-	$results = Stream::start_downsample($song,$lastid,$song_name);
-	$fp = $results['handle'];
-	$song->size = $results['size'];
-	
+	$fp = Stream::start_downsample($song,$lastid,$song_name);
 } // end if downsampling
 else { 
 	// Send file, possible at a byte offset
@@ -264,12 +261,6 @@ else {
 		cleanup_and_exit($lastid);
 	}
 } // else not downsampling
-
-// We need to check to see if they are rate limited
-$chunk_size = '2084';
-
-// Attempted fix, pimp up the size a bit
-$song->size = $song->size;
 
 // Put this song in the now_playing table
 insert_now_playing($song->id,$uid,$song->time,$sid);
@@ -300,9 +291,9 @@ $minBytesStreamed = $song->size / 2;
 
 // Actually do the streaming 
 do { 
-	$buf = fread($fp, $chunk_size);
+	$buf = fread($fp, 2048);
         print($buf);
-        $bytesStreamed += $chunk_size;
+        $bytesStreamed += 2048;
 } while (!feof($fp) && (connection_status() == 0));
 
 // Make sure that a good chunk of the song has been played
