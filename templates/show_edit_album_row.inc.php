@@ -20,7 +20,7 @@
 */
 ?>
 <td colspan="7">
-<form method="post" id="edit_album_<?php echo $album->id; ?>">
+<form method="post" id="edit_album_<?php echo $album->id; ?>" action="#">
 <table cellpadding="3" cellspacing="0">
 <tr>
 <td>
@@ -37,7 +37,7 @@
 	?>
 </td>
 <td>
-	<input type="textbox" name="year" value="<?php echo scrub_out($album->year); ?>" />
+	<input type="textbox" name="year" value="<?php echo scrub_out($album->year); ?>" /> 
 </td>
 <td>
 	<input type="hidden" name="id" value="<?php echo $album->id; ?>" />
