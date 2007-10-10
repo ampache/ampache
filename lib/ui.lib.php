@@ -891,18 +891,21 @@ function show_user_select($name,$selected='',$style='') {
 	echo "<select name=\"$name\" style=\"$style\">\n";
 	echo "\t<option value=\"\">" . _('None') . "</option>\n";
 
-	$sql = "SELECT username as id,fullname FROM user ORDER BY fullname";
-	$db_results = mysql_query($sql, dbh());
+	$sql = "SELECT `id`,`username`,`fullname` FROM `user` ORDER BY `fullname`";
+	$db_results = Dba::query($sql);
 
-	while ($r = mysql_fetch_assoc($db_results)) { 
+	while ($row = Dba::fetch_assoc($db_results)) { 
 		$select_txt = '';
-		if ($r['id'] == $selected) { 
+		if ($row['id'] == $selected) { 
 			$select_txt = 'selected="selected"';
 		}
+		// If they don't have a full name, revert to the username
+		$row['fullname'] = $row['fullname'] ? $row['fullname'] : $row['username']; 
 
-		echo "\t<option value=\"" . $r['id'] . "\" $select_txt>" . scrub_out($r['fullname']) . "</option>\n";
-		
+		echo "\t<option value=\"" . $row['id'] . "\" $select_txt>" . scrub_out($row['fullname']) . "</option>\n";
 	} // end while users
+
+	echo "</select>\n";
 
 } // show_user_select
 

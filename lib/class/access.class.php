@@ -23,124 +23,111 @@
  * This class handles the access list mojo for Ampache, it is ment to restrict
  * access based on IP and maybe something else in the future
 */
-
 class Access {
 
 	/* Variables from DB */
-	var $id;
-	var $name;
-	var $start;
-	var $end;
-	var $level;
-	var $user;
-	var $type;
-	var $key;
+	public $id;
+	public $name;
+	public $start;
+	public $end;
+	public $level;
+	public $user;
+	public $type;
+	public $key;
 
-	/*!
-		@function Access
-		@discussion Access class, for modifing access rights
-		@param $access_id 	The ID of access entry
+	/**
+	 * constructor
+	 * Takes an ID of the access_id dealie :) 
 	 */
-	function Access($access_id = 0) {
+	public function __construct($access_id='') {
 
 		if (!$access_id) { return false; }
-
 
 		/* Assign id for use in get_info() */
 		$this->id = intval($access_id);
 
-		$info = $this->get_info();
-		$this->name 	= $info->name;
-		$this->start 	= $info->start;
-		$this->end	= $info->end;
-		$this->level	= $info->level;
-		$this->key	= $info->key;
-		$this->user	= $info->user;
-		$this->type	= $info->type;
+		$info = $this->_get_info();
+		foreach ($info as $key=>$value) { 
+			$this->$key = $value; 
+		} 
 
 		return true;
 
-	} //Access
+	} // Constructor
 
-	/*!
-		@function get_info
-		@discussion get's the vars for $this out of the database 
-		@param $this->id	Taken from the object
-	*/
-	function get_info() {
+	/**
+	 * _get_info
+	 * get's the vars for $this out of the database 
+	 * Taken from the object
+	 */
+	private function _get_info() {
 
 		/* Grab the basic information from the catalog and return it */
-		$sql = "SELECT * FROM access_list WHERE id='" . sql_escape($this->id) . "'";
-		$db_results = mysql_query($sql, dbh());
+		$sql = "SELECT * FROM `access_list` WHERE `id`='" . Dba::escape($this->id) . "'";
+		$db_results = Dba::query($sql);
 
-		$results = mysql_fetch_object($db_results);
+		$results = Dba::fetch_assoc($db_results);
 
 		return $results;
 
-	} //get_info
+	} // _get_info
 
 	/**
 	 * update
 	 * This function takes a named array as a datasource and updates the current access list entry
 	 */
-	function update($data) { 
+	public function update($data) { 
 
+		$name	= Dba::escape($data['name']); 
+		$type	= self::validate_type($data['type']); 
 		$start 	= ip2int($data['start']);
 		$end	= ip2int($data['end']);
-		$level	= sql_escape($data['level']);
-		$user	= sql_escape($data['user']);
-		$key	= sql_escape($data['key']);
+		$level	= Dba::escape($data['level']);
+		$user	= $data['user'] ? Dba::escape($data['user']) : '-1'; 
+		$key	= Dba::escape($data['key']);
 		
-		if (!$user) { $user = '-1'; } 
-		
-		$sql = "UPDATE access_list " . 
-			"SET start='$start', end='$end', level='$level', user='$user', `key`='$key' " . 
-			"WHERE id='" . sql_escape($this->id) . "'";
-
-		$db_results = mysql_query($sql, dbh());
+		$sql = "UPDATE `access_list` " . 
+			"SET `start`='$start', `end`='$end', `level`='$level', `user`='$user', `key`='$key', " . 
+			"`name`='$name', `type`='$type' WHERE `id`='" . Dba::escape($this->id) . "'";
+		$db_results = Dba::query($sql);
 
 		return true;
 
 	} // update
 
-	/*!
-		@function create
-		@discussion creates a new entry
-	*/
-	function create($name,$start,$end,$level,$user,$key,$type) { 
+	/**
+	 * create
+	 * This takes a key'd array of data and trys to insert it as a 
+	 * new ACL entry
+	 */
+	public static function create($data) { 
 
 		/* We need to verify the incomming data a littlebit */
 
-		$start 	= ip2int($start);
-		$end 	= ip2int($end);
-		$name	= sql_escape($name);
-		$key	= sql_escape($key);
-		$user	= sql_escape($user);
-		$level	= intval($level);
-		$type	= $this->validate_type($type);
+		$start 	= ip2int($data['start']);
+		$end 	= ip2int($data['end']);
+		$name	= Dba::escape($data['name']);
+		$key	= Dba::escape($data['key']);
+		$user	= $data['user'] ? Dba::escaep($data['user']) : '-1'; 
+		$level	= intval($data['level']);
+		$type	= self::validate_type($data['type']);
 
-		if (!$user) { $user = '-1'; } 
-
-		$sql = "INSERT INTO access_list (`name`,`level`,`start`,`end`,`key`,`user`,`type`) " . 
+		$sql = "INSERT INTO `access_list` (`name`,`level`,`start`,`end`,`key`,`user`,`type`) " . 
 			"VALUES ('$name','$level','$start','$end','$key','$user','$type')";
-		$db_results = mysql_query($sql, dbh());
+		$db_results = Dba::query($sql);
 
 		return true;
 
 	} // create
 
-	/*!
-		@function delete
-		@discussion deletes $this access_list entry
-	*/
-	function delete($access_id=0) { 
+	/**
+	 * delete
+	 * deletes the specified access_list entry
+	 */
+	public static function delete($access_id) { 
 
-		if (!$access_id) { 
-			$access_id = $this->id;
-		}
-
-		$sql = "DELETE FROM access_list WHERE id='" . sql_escape($access_id) . "'";
-		$db_results = mysql_query($sql, dbh());
+		$sql = "DELETE FROM `access_list` WHERE `id`='" . Dba::escape($access_id) . "'";
+		$db_results = Dba::query($sql);
 
 	} // delete
 	
@@ -193,11 +180,11 @@ class Access {
 			 * however we don't have the key that was passed yet so we've got to do just ip
 			 */
 			case 'init-xml-rpc':
-				$sql = "SELECT id FROM access_list" .
+				$sql = "SELECT `id` FROM `access_list`" .
 					" WHERE `start` <= '$ip' AND `end` >= '$ip' AND `type`='xml-rpc' AND `level` >= '$level'";
 			break;
 			case 'xml-rpc':
-				$sql = "SELECT id FROM access_list" . 
+				$sql = "SELECT `id` FROM `access_list`" . 
 					" WHERE `start` <= '$ip' AND `end` >= '$ip'" . 
 					" AND  `key` = '$key' AND `level` >= '$level' AND `type`='xml-rpc'";
 			break;
@@ -205,7 +192,7 @@ class Access {
 			case 'interface':
 			case 'stream':
 			default:
-				$sql = "SELECT id FROM access_list" . 
+				$sql = "SELECT `id` FROM `access_list`" . 
 					" WHERE `start` <= '$ip' AND `end` >= '$ip'" .
 					" AND `level` >= '$level' AND `type` = '$type'";
 				if (strlen($user)) { $sql .= " AND (`user` = '$user' OR `user` = '-1')"; }
@@ -231,7 +218,7 @@ class Access {
 	 * validate_type
 	 * This cleans up and validates the specified type
 	 */
-	function validate_type($type) { 
+	public static function validate_type($type) { 
 
 		switch($type) { 
 			case 'xml-rpc':
@@ -243,57 +230,48 @@ class Access {
 				return 'stream';
 			break;
 		} // end switch
+
 	} // validate_type
 
-	/*!
-		@function get_access_list
-		@discussion returns a full listing of all access
-			rules on this server
-	*/
-	function get_access_list() { 
+	/**
+	 * get_access_lists
+	 * returns a full listing of all access rules on this server
+	 */
+	public static function get_access_lists() { 
 
-		$sql = "SELECT * FROM access_list";
-		$db_results = mysql_query($sql, dbh());
-		
+		$sql = "SELECT `id` FROM `access_list`";
+		$db_results = Dba::query($sql);
+	
+		$results = array(); 
+	
 		// Man this is the wrong way to do it...
-		while ($r = mysql_fetch_object($db_results)) {
-			$obj = new Access();
-			$obj->id 	= $r->id;
-			$obj->start 	= $r->start;
-			$obj->end	= $r->end;
-			$obj->name	= $r->name;
-			$obj->level	= $r->level;
-			$obj->user	= $r->user;
-			$obj->key	= $r->key;
-			$obj->type	= $r->type;
-			$results[] = $obj;
+		while ($row = Dba::fetch_assoc($db_results)) {
+			$results[] = $row['id'];
 		} // end while access list mojo
 
 		return $results;
 
-	} // get_access_list
+	} // get_access_lists
 
 
-	/*! 
-		@function get_level_name
-		@discussion take the int level and return a 
-			named level
-	*/
-	function get_level_name() { 
+	/** 
+	 * get_level_name
+	 * take the int level and return a named level
+	 */
+	public function get_level_name() { 
 
 		if ($this->level == '75') { 
-			return "Read/Write/Modify";
+			return _('All');
 		}
 		if ($this->level == '5') { 
-			return "View";
+			return _('View'); 
 		}
 		if ($this->level == '25') { 
-			return "Read";
+			return _('Read');
 		}
 		if ($this->level == '50') { 
-			return "Read/Write";
+			return _('Read/Write');
 		}
-
 
 	} // get_level_name
 
@@ -301,14 +279,14 @@ class Access {
  	 * get_user_name
 	 * Take a user and return their full name
 	 */
-	function get_user_name() { 
+	public function get_user_name() { 
 		
 		$user = new User($this->user);
 		if ($user->username) { 
 			return $user->fullname . " (" . $user->username . ")";
 		}
 		
-		return false;
+		return _('All');
 
 	} // get_user_name
 
@@ -316,7 +294,7 @@ class Access {
 	 * get_type_name
 	 * This function returns the pretty name for our current type
 	 */
-	function get_type_name() { 
+	public function get_type_name() { 
 
 		switch ($this->type) { 
 			case 'xml-rpc':
@@ -333,6 +311,7 @@ class Access {
 				return 'Stream Access';
 			break;
 		} // end switch
+
 	} // get_type_name
 
 } //end of access class

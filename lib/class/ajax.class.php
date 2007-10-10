@@ -40,7 +40,7 @@ class Ajax {
 	 * observe
 	 * This returns a string with the correct and full ajax 'observe' stuff from prototype
 	 */
-	public static function observe($source,$method,$action) { 
+	public static function observe($source,$method,$action,$post='') { 
 
                 $non_quoted = array('document','window');
 
@@ -51,8 +51,13 @@ class Ajax {
                         $source_txt = "'$source'";
                 }
 
+		// If it's a post then we need to stop events
+		if ($post) { 
+			$action  = 'Event.stop(e); ' . $action; 
+		} 
+
                 $observe	= "<script type=\"text/javascript\">";
-                $observe	.= "Event.observe($source_txt,'$method',function(){" . $action . ";});";
+                $observe	.= "Event.observe($source_txt,'$method',function(e){" . $action . ";});";
                 $observe	.= "</script>";
 
 		return $observe; 
@@ -98,7 +103,7 @@ class Ajax {
 		// Get the correct action
 		$ajax_string = self::action($action,$source,$post); 
 
-    // If they passed a span class
+    		// If they passed a span class
 		if ($class) { 
 			$class_txt = ' class="' . $class . '"'; 
 		} 
@@ -106,13 +111,13 @@ class Ajax {
 
 		$string = get_user_icon($icon,$alt); 
 
-    // Generate a <a> so that it's more compliant with older browsers
-    // (ie :hover actions) and also to unify linkbuttons (w/o ajax) display
-    $string = "<a href=\"javascript:void(0);\" id=\"$source\" $class_txt>".$string."</a>\n"; 
+    		// Generate a <a> so that it's more compliant with older browsers
+		// (ie :hover actions) and also to unify linkbuttons (w/o ajax) display
+		$string = "<a href=\"javascript:void(0);\" id=\"$source\" $class_txt>".$string."</a>\n"; 
 
 		$string .= self::observe($source,'click',$ajax_string); 
 
-    return $string;
+		return $string;
 
 	} // button
 
@@ -126,17 +131,13 @@ class Ajax {
 		// Format the string we wanna use
 		$ajax_string = self::action($action,$source,$post); 
 
-    //$class.= ($class?' ':'') . 'link';
-
 		// If they passed a span class
 		if ($class) { 
 			$class_txt = ' class="' . $class . '"'; 
 		} 
 
 		// If we pass a source put it in the ID
-		//$string = "<div id=\"$source\" $class_txt>$text</div>\n"; 
-		
-    $string = "<a href=\"javascript:void(0);\" id=\"$source\" $class_txt>$text</a>\n"; 
+    		$string = "<a href=\"javascript:void(0);\" id=\"$source\" $class_txt>$text</a>\n"; 
 
 		$string .= self::observe($source,'click',$ajax_string); 
 

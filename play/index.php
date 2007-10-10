@@ -250,7 +250,7 @@ if (Config::get('access_control') AND Config::get('downsample_remote')) {
 // If they are downsampling, or if the song is not a native stream or it's non-local
 if (($GLOBALS['user']->prefs['transcode'] == 'always' || !$song->native_stream() || $not_local) && $GLOBALS['user']->prefs['transcode'] != 'never') { 
 	debug_event('downsample','Starting Downsample...','5');
-	$results = start_downsample($song,$lastid,$song_name);
+	$results = Stream::start_downsample($song,$lastid,$song_name);
 	$fp = $results['handle'];
 	$song->size = $results['size'];
 	

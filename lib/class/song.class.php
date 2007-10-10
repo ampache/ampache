@@ -129,7 +129,7 @@ class Song {
 	 * play, used to set mime headers and to trick 
 	 * players into playing them correctly
 	 */
-	function format_type($override='') { 
+	public function format_type($override='') { 
 
 		// If we pass an override for downsampling or whatever then use it
 		if (!empty($override)) { 

@@ -4,6 +4,9 @@
 
 --------------------------------------------------------------------------
   v.3.4-Alpha3 
+	- Fixed ACL's
+	- Fixed incorrect Mime type being passed with transcoded songs due 
+		to duplicate headers being passed
 	- Fixed an issue where MPD was clearing all but last song in submit
 		if its initial state was not play 
 	- Added check for PHP5 to prevent ugly errors if missing

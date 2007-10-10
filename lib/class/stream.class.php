@@ -509,6 +509,116 @@ class Stream {
 	} // create_ram
 
 	/**
+	 * start_downsample
+	 * This is a rather complext function that starts the downsampling of a song and returns the 
+	 * opened file handled a reference to the song object is passed so that the changes we make
+	 * in here affect the external object, References++ 
+	 */
+	public static function start_downsample(&$song,$now_playing_id=0,$song_name=0) {
+	
+	        /* Check to see if bitrates are set if so let's go ahead and optomize! */
+	        $max_bitrate = Config::get('max_bit_rate');
+	        $min_bitrate = Config::get('min_bit_rate');
+	        $time = time();
+	        $user_sample_rate = $GLOBALS['user']->prefs['sample_rate'];
+	        $browser = new Browser();
+
+	        if (!$song_name) {
+	                $song_name = $song->f_artist_full . " - " . $song->title . "." . $song->type;
+	        }
+
+	        if ($max_bitrate > 1 AND $min_bitrate < $max_bitrate) {
+	                $last_seen_time = $time - 1200; //20 min.
+
+	                $sql = "SELECT COUNT(*) FROM now_playing, user_preference, preference " .
+	                        "WHERE preference.name = 'play_type' AND user_preference.preference = preference.id " .
+	                        "AND now_playing.user = user_preference.user AND user_preference.value='downsample'";
+	                $db_results = Dba::query($sql);
+	                $results = Dba::fetch_row($db_results);
+
+	                // Current number of active streams (current is already in now playing)
+	                $active_streams = $results[0];
+
+	                /* If only one user, they'll get all available.  Otherwise split up equally. */
+	                $sample_rate = floor($max_bitrate/$active_streams);
+
+	                /* If min_bitrate is set, then we'll exit if the bandwidth would need to be split up smaller than the min. */
+	                if ($min_bitrate > 1 AND ($max_bitrate/$active_streams) < $min_bitrate) {
+
+	                        /* Log the failure */
+	                        debug_event('downsample',"Error: Max bandwidith already allocated. $active_streams Active Streams",'2');
+
+	                        /* Toast the now playing entry, then tell em to try again later */
+	                        delete_now_playing($now_playing_id);
+	                        echo "Maximum bandwidth already allocated.  Try again later.";
+	                        exit();
+
+	                }
+        	        else {
+	                        $sample_rate = floor($max_bitrate/$active_streams);
+	                } // end else
+
+	                // Never go over the users sample rate 
+	                if ($sample_rate > $user_sample_rate) { $sample_rate = $user_sample_rate; }
+
+	                debug_event('downsample',"Downsampled: $active_streams current active streams, downsampling to $sample_rate",'2');
+
+	        } // end if we've got bitrates
+
+	        else {
+	                $sample_rate = $user_sample_rate;
+	        }
+
+	        /* Validate the bitrate */
+	        $sample_rate = validate_bitrate($sample_rate);
+
+	        /* Never Upsample a song */
+	        if (($sample_rate*1000) > $song->bitrate) {
+	                $sample_rate = validate_bitrate($song->bitrate)/1000;
+	                $sample_ratio = '1';
+	        }
+	        else {
+	                /* Set the Sample Ratio */
+	                $sample_ratio = $sample_rate/($song->bitrate/1000);
+	        }
+	        
+		// Set the new size for the song
+		$song->size  = floor($sample_ratio*$song->size);
+
+	        /* Get Offset */
+	        $offset = ( $start*$song->time )/( $sample_ratio*$song->size );
+	        $offsetmm = floor($offset/60);
+	        $offsetss = floor($offset-$offsetmm*60);
+	        $offset   = sprintf("%02d.%02d",$offsetmm,$offsetss);
+
+	        /* Get EOF */
+	        $eofmm  = floor($song->time/60);
+	        $eofss  = floor($song->time-$eofmm*60);
+	        $eof    = sprintf("%02d.%02d",$eofmm,$eofss);
+
+	        $song_file = escapeshellarg($song->file);
+
+	        /* Replace Variables */
+	        $downsample_command = Config::get($song->stream_cmd());
+	        $downsample_command = str_replace("%FILE%",$song_file,$downsample_command);
+	        $downsample_command = str_replace("%OFFSET%",$offset,$downsample_command);
+	        $downsample_command = str_replace("%EOF%",$eof,$downsample_command);
+	        $downsample_command = str_replace("%SAMPLE%",$sample_rate,$downsample_command);
+
+	        // If we are debugging log this event
+	        $message = "Start Downsample: $downsample_command";
+	        debug_event('downsample',$message,'3');
+
+	        $fp = @popen($downsample_command, 'rb');
+
+	        /* We need more than just the handle here */
+	        $return_array['handle'] = $fp;
+
+	        return ($return_array);
+
+	} // start_downsample
+
+	/**
 	 * auto_init
 	 * This is called on class load it sets the session
 	 */

@@ -294,13 +294,13 @@ function create_preference_input($name,$value) {
 		case 'localplay_controller':
 			$controllers = Localplay::get_controllers();
 			echo "<select name=\"$name\">\n";
+			echo "\t<option value=\"\">" . _('None') . "</option>\n";
 			foreach ($controllers as $controller) { 
 				if (!Localplay::is_enabled($controller)) { continue; } 
 				$is_selected = '';
 				if ($value == $controller) { $is_selected = 'selected="selected"'; } 
 				echo "\t<option value=\"" . $controller . "\" $is_selected>" . ucfirst($controller) . "</option>\n";
 			} // end foreach
-			echo "\t<option value=\"\">" . _('None') . "</option>\n";
 			echo "</select>\n";
 		break;
 		case 'localplay_level':

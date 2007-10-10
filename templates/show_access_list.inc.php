@@ -26,7 +26,7 @@
 */
 $web_path = Config::get('web_path');
 ?>
-<?php show_box_top(_('Host Access to Your Catalog')); ?>
+<?php show_box_top(_('Ampache Access Control')); ?>
 <p>Since your catalog can be accessed remotely you may want to limit the access from
 remote sources so you are not in violation of copyright laws.  By default your
 server will allow anyone with an account to stream music. It will not allow any
@@ -35,40 +35,38 @@ to add any server's IP address that you want to access your Ampache catalog or b
 stream from this server.</p>
 
 <p>
-<span class="text-action">
-<a href="<?php echo $web_path; ?>/admin/access.php?action=show_add_host"><?php echo _('Add Entry'); ?></a>
-</span>
+<a class="smallbutton" href="<?php echo $web_path; ?>/admin/access.php?action=show_add_host"><?php echo _('Add Entry'); ?></a>
 </p>
 <?php if (count($list)) { ?>
 <table cellspacing="1" cellpadding="3" class="tabledata">
-<tr class="table-header" align="center">
-	<td><?php echo _('Name'); ?></td>
-	<td><?php echo _('Start Address'); ?></td>
-	<td><?php echo _('End Address'); ?></td>
-	<td><?php echo _('Level'); ?></td>
-	<td><?php echo _('User'); ?></td>
-	<td><?php echo _('Key'); ?></td>
-	<td><?php echo _('Type'); ?></td>
-	<td><?php echo _('Action'); ?></td>
+<tr class="table-data">
+	<th><?php echo _('Name'); ?></th>
+	<th><?php echo _('Start Address'); ?></th>
+	<th><?php echo _('End Address'); ?></th>
+	<th><?php echo _('Level'); ?></th>
+	<th><?php echo _('User'); ?></th>
+	<th><?php echo _('Key'); ?></th>
+	<th><?php echo _('Type'); ?></th>
+	<th><?php echo _('Action'); ?></th>
 </tr>
 <?php 
 	/* Start foreach List Item */
-	foreach ($list as $access) { 
+	foreach ($list as $access_id) { 
+		$access = new Access($access_id); 
 ?>
-		<tr class="<?php echo flip_class(); ?>">
-			<td><?php echo scrub_out($access->name); ?></td>
-			<td><?php echo int2ip($access->start); ?></td>
-			<td><?php echo int2ip($access->end); ?></td>
-			<td><?php echo $access->get_level_name(); ?></td>
-			<td><?php echo $access->get_user_name(); ?></td>
-			<td><?php echo $access->key; ?></td>
-			<td><?php echo $access->get_type_name(); ?></td>
-			<td>
-				<a href="<?php echo $web_path; ?>/admin/access.php?action=show_edit_host&amp;access_id=<?php echo scrub_out($access->id); ?>"><?php echo _('Edit'); ?></a>
-				| 
-				<a href="<?php echo $web_path; ?>/admin/access.php?action=show_confirm_delete&amp;access_id=<?php echo scrub_out($access->id); ?>"><?php print _("Revoke"); ?></a>
-			</td>
-		</tr>
+<tr class="<?php echo flip_class(); ?>">
+	<td><?php echo scrub_out($access->name); ?></td>
+	<td><?php echo int2ip($access->start); ?></td>
+	<td><?php echo int2ip($access->end); ?></td>
+	<td><?php echo $access->get_level_name(); ?></td>
+	<td><?php echo $access->get_user_name(); ?></td>
+	<td><?php echo $access->key; ?></td>
+	<td><?php echo $access->get_type_name(); ?></td>
+	<td>
+		<a href="<?php echo $web_path; ?>/admin/access.php?action=show_edit_record&amp;access_id=<?php echo scrub_out($access->id); ?>"><?php echo get_user_icon('edit'); ?></a>
+		<a href="<?php echo $web_path; ?>/admin/access.php?action=delete_record&amp;access_id=<?php echo scrub_out($access->id); ?>"><?php echo get_user_icon('delete'); ?></a>
+	</td>
+</tr>
 	<?php  } // end foreach ?>
 </table>
 <?php  } // end if count ?>

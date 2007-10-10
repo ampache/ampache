@@ -50,7 +50,7 @@ database_password = password
 session_length = 900
 
 ; Length that the session for a single streaming instance will last
-; the default is 15min. With some clients, and long songs this can 
+; the default is one hour. With some clients, and long songs this can 
 ; cause playback to stop, increase this value if you experience that
 stream_length = 3600
 

@@ -1,13 +1,12 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2006 Ampache.org
+ Copyright (c) 2001 - 2007 Ampache.org
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
- modify it under the terms of the GNU General Public License
- as published by the Free Software Foundation; either version 2
- of the License, or (at your option) any later version.
+ modify it under the terms of the GNU General Public License v2
+ as published by the Free Software Foundation.
 
  This program is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -20,16 +19,25 @@
 
 */
 ?>
-<?php show_box_top(_('Edit Access List')); ?>
-<form name="edit_access" method="post" enctype="multipart/form-data" action="<?php echo conf('web_path'); ?>/admin/access.php">
-<table>
+<?php show_box_top(_('Edit ACL')); ?>
+<form name="edit_access" method="post" enctype="multipart/form-data" action="<?php echo Config::get('web_path'); ?>/admin/access.php?action=update_record&amp;access_id=<?php echo intval($access->id); ?>">
+<table class="table-data">
 <tr>
 	<td><?php echo _('Name'); ?>: </td>
-	<td><?php echo scrub_out($access->name); ?></td>
+	<td><input type="textbox" name="name" value="<?php echo scrub_out($access->name); ?>" /></td>
 </tr>
 <tr>
 	<td><?php echo _('ACL Type'); ?>: </td>
-	<td><?php echo scrub_out($access->get_type_name()); ?></td>
+        <td>
+                <select name="type">
+			<?php $name = 'sl_' . $access->type; ${$name} = ' selected="selected"'; ?>
+                        <option value="stream"<?php echo $sl_stream; ?>><?php echo _('Stream Access'); ?></option>
+                        <option value="interface"<?php echo $sl_interface; ?>><?php echo _('Web Interface'); ?></option>
+                        <option value="network"<?php echo $sl_network; ?>><?php echo _('Local Network Definition'); ?></option>
+                        <option value="xml-rpc"<?php echo $sl_xml-rpc; ?>><?php echo _('XML-RPC'); ?></option>
+                </select>
+        </td>
+
 </tr>
 <tr>
 	<td><?php echo _('Start IP Address'); ?>:</td>
@@ -71,12 +79,7 @@
 	</td>
 </tr>
 <tr>
-	<td>&nbsp;</td>
-	<td>
-		<input type="hidden" name="access_id" value="<?php echo scrub_out($access->id); ?>" />
-		<input type="hidden" name="action" value="update_host" />
-		<input type="submit" value="<?php echo _('Update'); ?>" />
-	</td>
+	<td colspan="2"><input type="submit" value="<?php echo _('Update'); ?>" /></td>
 </tr>
 </table>
 </form>

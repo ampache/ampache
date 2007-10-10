@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2006 Ampache.org
+ Copyright (c) 2001 - 2007 Ampache.org
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
@@ -20,10 +20,7 @@
 */
 ?>
 <?php show_box_top(_('Add Access for a Host')); ?>
-<p><?php echo _('Use the form below to add a host that you want to have access to your Ampache catalog.'); ?></p>
-
-
-<form name="update_catalog" method="post" enctype="multipart/form-data" action="<?php echo Config::get('web_path'); ?>/admin/access.php">
+<form name="update_catalog" method="post" enctype="multipart/form-data" action="<?php echo Config::get('web_path'); ?>/admin/access.php?action=add_host">
 <table cellpadding="5" cellspacing="0">
 <tr>
 	<td><?php echo _('Name'); ?>:</td>
@@ -45,8 +42,8 @@
 </tr>
 <tr>
 	<td><?php echo _('User'); ?>:</td>
-		<!-- Stuff Goes Here --> 
 	<td>
+		<?php show_user_select('user'); ?>
 	</td>
 </tr>
 <tr>
@@ -72,7 +69,7 @@
 	</td>
 </tr>
 <tr>
-	<td colspan="2"><br /><?php echo _('XML-RPC Options'); ?>:</td>
+	<td colspan="2"><h4><?php echo _('XML-RPC Options'); ?></h4></td>
 </tr>
 <tr>
 	<td><?php echo _('Remote Key'); ?>:</td>
@@ -82,8 +79,6 @@
 </tr>
 <tr>
 	<td colspan="2">
-		<br />
-		<input type="hidden" name="action" value="add_host" />
 		<input class="button" type="submit" value="<?php echo _('Create ACL'); ?>" />
 	</td>
 </tr>
