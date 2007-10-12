@@ -566,6 +566,18 @@ class Localplay {
 	} // current_instance
 
 	/**
+	 * get_instance
+	 * This returns the specified instance
+	 */
+	public function get_instance($uid) { 
+
+		$data = $this->_player->get_instance($uid); 
+		
+		return $data; 
+
+	} // get_instance
+
+	/**
 	 * add_instance
 	 * This adds a new instance for the current controller type
 	 */
@@ -574,6 +586,16 @@ class Localplay {
 		$this->_player->add_instance($data); 
 
 	} // add_instance
+
+	/**
+	 * delete_instance
+	 * This removes an instance (it actually calls the players function)
+	 */
+	public function delete_instance($instance_uid) { 
+
+		$this->_player->delete_instance($instance_uid); 
+
+	} // delete_instance
 
 	/**
 	 * set_active_instance

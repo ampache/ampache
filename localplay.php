@@ -47,7 +47,15 @@ switch ($_REQUEST['action']) {
 		$localplay = new Localplay($GLOBALS['user']->prefs['localplay_controller']); 
 		$localplay->add_instance($_POST); 
 	break;
+	case 'show_instances': 
+		// First build the localplay object and then get the instances
+		$localplay = new Localplay($GLOBALS['user']->prefs['localplay_controller']); 
+		$instances = $localplay->get_instances(); 
+		$fields = $localplay->get_instance_fields(); 
+		require_once Config::get('prefix') . '/templates/show_localplay_instances.inc.php'; 
+	break; 
 	case 'show_songs': 
+		$localplay = new Localplay($GLOBALS['user']->prefs['localplay_controller']); 
 
 	break;
 	case 'delete_song':

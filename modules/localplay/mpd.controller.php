@@ -127,7 +127,7 @@ class AmpacheMpd extends localplay_controller {
 		foreach ($data as $key=>$value) { 
 			switch ($key) { 
 				case 'name': 
-				case 'hostname': 
+				case 'host': 
 				case 'port': 
 				case 'password': 
 					${$key} = Dba::escape($value); 
@@ -141,7 +141,7 @@ class AmpacheMpd extends localplay_controller {
 		$user_id = Dba::escape($GLOBALS['user']->id); 
 
 		$sql = "INSERT INTO `localplay_mpd` (`name`,`host`,`port`,`password`,`owner`) " . 
-			"VALUES ('$name','$hostname','$port','$password','$user_id')";
+			"VALUES ('$name','$host','$port','$password','$user_id')";
 		$db_results = Dba::query($sql); 
 		
 		return $db_results; 
@@ -153,7 +153,14 @@ class AmpacheMpd extends localplay_controller {
 	 * This takes a UID and deletes the instance in question
 	 */
 	public function delete_instance($uid) { 
+		
+		$uid = Dba::escape($uid); 
 
+		// Go ahead and delete this mofo!
+		$sql = "DELETE FROM `localplay_mpd` WHERE `id`='$uid'"; 
+		$db_results = Dba::query($sql); 
+
+		return true; 
 
 	} // delete_instance
 
@@ -204,7 +211,7 @@ class AmpacheMpd extends localplay_controller {
 	public function instance_fields() { 
 
 		$fields['name'] 	= array('description'=>_('Instance Name'),'type'=>'textbox'); 
-		$fields['hostname'] 	= array('description'=>_('Hostname'),'type'=>'textbox'); 
+		$fields['host'] 	= array('description'=>_('Hostname'),'type'=>'textbox'); 
 		$fields['port']		= array('description'=>_('Port'),'type'=>'textbox'); 
 		$fields['password']	= array('description'=>_('Password'),'type'=>'textbox'); 
 

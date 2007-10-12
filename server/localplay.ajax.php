@@ -67,6 +67,18 @@ switch ($_REQUEST['action']) {
 		} // end whitelist
 
 	break; 
+	case 'delete_instance': 
+		// Make sure that you have access to do this... again I really 
+		// don't know what that means so I'm just going to do nothing fo now
+		
+
+		// Scrub it in
+		$localplay = new Localplay($GLOBALS['user']->prefs['localplay_controller']); 
+		$localplay->delete_instance($_REQUEST['instance']); 
+		
+		$key = 'localplay_instance_' . $_REQUEST['instance']; 
+		$results[$key] = ''; 
+	break; 
 	default: 
 		$results['rfc3514'] = '0x1'; 
 	break;

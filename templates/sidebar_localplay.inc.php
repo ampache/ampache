@@ -10,6 +10,7 @@
   <li><h4><?php echo _('Localplay'); ?></h4>
     <ul class="sb3" id="sb_localplay_info">
 	<li id="sb_localplay_info_add_instance"><a href="<?php echo $web_path; ?>/localplay.php?action=show_add_instance"><?php echo _('Add Instance'); ?></a></li>
+	<li id="sb_localplay_info_show_instances"><a href="<?php echo $web_path; ?>/localplay.php?action=show_instances"><?php echo _('Show instances'); ?></a></li>
 	<li id="sb_localplay_info_show"><a href="<?php echo $web_path; ?>/localplay.php?action=show_songs"><?php echo _('Show Playlist'); ?></a></li>
     </ul>
   </li>

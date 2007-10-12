@@ -130,6 +130,22 @@ class Dba {
 	} // num_rows 
 
 	/**
+	 * affected_rows
+	 * This emulates the mysql_affected_rows function
+	 */
+	public static function affected_rows($resource) { 
+
+		$result = mysql_affected_rows($resource); 
+
+		if (!$result) { 
+			return '0'; 
+		} 
+
+		return $result; 
+
+	} // affected_rows
+
+	/**
 	 * _connect
 	 * This connects to the database, used by the DBH function
 	 */
