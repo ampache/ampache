@@ -93,12 +93,10 @@ ksort($page_data['down']);
 // are there enough items to even need this view?
 if ($pages > 1) {
 ?>
-<table class="list-header" cellpadding="1" cellspacing="0" width="100%">
-<tr>
-	<td valign="top">
-	<?php echo Ajax::text('?action=page&start=' . $prev_offset,_('Prev'),'browse_' . $uid . 'prev','','list-header'); ?>
-	</td>
-	<td align="center">
+<div class="list-header">
+
+  <?php echo Ajax::text('?action=page&start=' . $prev_offset,_('Prev'),'browse_' . $uid . 'prev','','prev'); ?>
+	<?php echo Ajax::text('?action=page&start=' . $next_offset,_('Next'),'browse_' . $uid . 'next','','next'); ?>
 	<?php 
 		/* Echo Everything below us */
 		foreach ($page_data['down'] as $page => $offset) { 
@@ -106,30 +104,25 @@ if ($pages > 1) {
 			else { 
 			// Hack Alert
 			$page++;
-				echo Ajax::text('?action=page&start=' . $offset,$page,'browse_' . $uid . 'page_' . $page,'','list-header'); 
+				echo Ajax::text('?action=page&start=' . $offset,$page,'browse_' . $uid . 'page_' . $page,'','page-nb'); 
 			}
 		} // end foreach down
 
 		/* Echo Out current Page */
 		$current_page = $current_page +1;
 	?>
-	<div class="list-header-selected"><?php echo $current_page; ?></div>
+	<span class="page-nb selected"><?php echo $current_page; ?></span>
 	<?php
-		
+
 		/* Echo Out Everything Above Us */
 		foreach ($page_data['up'] as $page=>$offset) { 
 			if ($offset === '...') { echo '...&nbsp;'; } 
 			else { 
-				echo Ajax::text('?action=page&start=' . $offset,$page,'browse_' . $uid . 'page_' . $page,'','list-header'); 
+				echo Ajax::text('?action=page&start=' . $offset,$page,'browse_' . $uid . 'page_' . $page,'','page-nb'); 
 			} // end else
 		} // end foreach up
 	?>
-	</td>
-	<td valign="top">
-		<?php echo Ajax::text('?action=page&start=' . $next_offset,_('Next'),'browse_' . $uid . 'next','','list-header'); ?>
-	</td>
-</tr>
-</table>
+</div>
 <?php
 } // if stuff
 ?>

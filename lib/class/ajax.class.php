@@ -81,7 +81,13 @@ class Ajax {
                 else {
                         $source_txt = "'$source'";
                 }
-
+    
+    /* 
+      Replaces ampersand with &amp; for w3c conformance.
+      Fixme: ajax doesn't seem to work anymore with this...
+    */
+    //$url = htmlspecialchars($url);
+    
 		if ($post) { 
 			$ajax_string = "ajaxPost('$url','$post',$source_txt)"; 
 		}

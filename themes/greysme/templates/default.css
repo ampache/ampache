@@ -233,7 +233,8 @@ h3#content_title span {}	/* Doesn't exist anymore (?) */
   position:absolute;
 	right:0px;
 	top:15px;
-  background: #050505 url(../images/button_back.png) 0 100% repeat-x;
+  background: #050505 url(../images/button_back.png) 0 100% repeat-x  !important;
+  background: #050505;
 	border:2px solid #e9ad51;
 	width:15em;
 	padding:0.3em;
@@ -619,14 +620,12 @@ h3#content_title span {}	/* Doesn't exist anymore (?) */
 /************************************************/
 /*             List Header Styles               */
 /************************************************/
-
-.list-header { 
-	text-decoration: none;
-} 
-
-.list-header:hover { 
-	color:#071fd4;
-}
+.list-header{margin:7px 0; text-align:center; font-size: 0.9em;} 
+.list-header .prev{float:left;}
+.list-header .next{float:right;}
+.list-header .selected{}
+.list-header .page-nb{padding:1px;border: 1px solid #111;}
+.list-header a:hover{background: transparent; border-color:#e9ad51;}
 
 
 /************************************************/
@@ -823,15 +822,15 @@ input.text_input {
 .display {}
 
 #ajax-loading {
-        position: absolute;
-        right: 0px;
-        top: 0px;
-        float: right;
-        z-index: 100;
-        background: #99ccff;
-        display: none;
-        padding: 3px 25px 5px 25px;
-        border: 1px solid #000;
+ 	position: absolute;  
+  top:106px;
+  left:42%; 
+  width:265px;
+  height:50px;
+	z-index: 100;
+  background: url(../images/ajax-loader.gif) no-repeat;
+	text-indent:-9999em;
+	display: none;
 }
 
 #mpdpl td {

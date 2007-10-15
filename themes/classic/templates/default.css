@@ -556,29 +556,12 @@ h3#content_title span {
 /************************************************/
 /*             List Header Styles               */
 /************************************************/
-table.list-header { 
-	margin:3px;
-} 
-div.list-header { 
-	cursor:pointer; 
-	text-decoration: none;
-	font-size: 0.8em; 
-	padding:2px 4px 0px 4px;
-	border: 1px solid #000; 
-	display:inline;
-} 
-div.list-header-selected {
-        text-decoration: none;
-        font-size: 0.8em;
-        padding:2px 4px 0px 4px;
-        border: 1px solid #000;
-	background: #e0e0e0; 
-	display:inline;
-}
-div.list-header:hover { 
-	background: #d0d0d0; 
-} 
-
+.list-header{margin:7px 0; text-align:center; font-size: 0.8em;} 
+.list-header .prev{float:left;}
+.list-header .next{float:right;}
+.list-header .selected{background: #e0e0e0;}
+.list-header .page-nb{padding:1px;border: 1px solid #ccc;text-decoration: none;}
+.list-header .page-nb:hover{background: #d0d0d0;}
 
 /************************************************/
 /*             Text Action Styles               */
@@ -738,14 +721,14 @@ td.user_disabled {
 
 #ajax-loading { 
 	position: absolute;  
-	right: 0px; 
-	top: 0px;
-	float: right; 
-	z-index: 100;
-	background: #99ccff;
+  top:42px;
+  left:345px; 
+  width:43px;
+  height:11px;
+	z-index:100;
+  background: url(../images/ajax-loader.gif) no-repeat;
 	display: none;
-	padding: 3px 25px 5px 25px;
-	border: 1px solid #000;
+	text-indent:-9999em;
 } 
 
 #mpdpl td {
