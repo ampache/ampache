@@ -4,6 +4,8 @@
 
 --------------------------------------------------------------------------
   v.3.4-Alpha3 
+	- Replaced Flash Player with Lacy Morrow's (http://blog.lacymorrow.com/)
+		(Thx Hugoh)		(Thx Hugoh)		(Thx Hugoh)		(Thx Hugoh)		(Thx Hugoh)		(Thx Hugoh)		(Thx Hugoh)		(Thx Hugoh)		(Thx Hugoh)
 	- Fixed ACL's
 	- Fixed incorrect Mime type being passed with transcoded songs due 
 		to duplicate headers being passed

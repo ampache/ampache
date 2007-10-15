@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?> <skin version="0" xmlns="http://xsml.org/ns/0/"> 
+<width>400</width>
+<height>170</height>
+<name>
+Original</name> <author>
+Lacy Morrow</author> 
+<email>
+gojukebox@gmail.com</email> <website>
+http://www.lacymorrow.com</website> <objects>
+<shape shape="rectangle" width="400" height="15" color="EAEAEA" />
+<shape shape="rectangle" width="248" height="138" x="138" y="17" color="EAEAEA" />
+<shape shape="rectangle" width="10" height="144" x="388" y="17" color="EAEAEA" />
+<shape shape="rectangle" width="134" height="134" x="2.4" y="17.4" color="EAEAEA" />
+<shape shape="rectangle" width="44" height="14" x="5" y="154" color="EAEAEA" />
+<shape shape="rectangle" width="50.2" height="13" x="56" y="155" border="2" borderColor="999999" color="EAEAEA" />
+<shape shape="rectangle" width="25.8" height="13" x="110" y="155" border="2" borderColor="999999" color="EAEAEA" />
+<object label="playButton" x="19" y="3" width="9" height="9" color="999999" />
+<object label="stopButton" x="32" y="3" width="8" height="9" color="999999" />
+<object label="prevButton" x="3" y="3" width="11" height="9" color="999999" />
+<object label="fwdButton" x="46" y="3" width="11" height="9" color="999999" />
+<object label="loadBar" x="62" y="2" width="335" height="11" alpha="80" color="BBBBBB" />
+<object label="timeBar" x="62" y="2" width="335" height="11" alpha="70" color="999999" />
+<object label="trackDisplay" x="64" y="" width="280" size="10" font="Arial" color="333333" align="left" />
+<object label="timeDisplay" x="350" y="" size="10" font="Arial" color="333333" />
+<object label="volumeDisplay" x="380" y="4" width="15" height="7" color="444444" />
+<object label="shuffleButton" x="7" y="155" width="20.7" height="11.7" color="333333" hoverMessage="Shuffle" /> 
+<object label="repeatButton" x="34" y="156" width="15.7" height="11.7" color="333333" hoverMessage="Repeat" /> 
+<object label="infoButton" x="112" y="154" size="-2" color="333333" text="info" font="Arial" hoverMessage="Info" />
+<object label="purchaseButton" x="58" y="153" size="-2" color="333333" text="purchase" font="Arial" hoverMessage="Purchase" />
+<object label="downloadButton" x="56" y="153.5" size="-2" color="333333" text="Download" font="Arial" />
+<object label="scrollupButton" x="391" y="22" width="6" height="6" color="888888" /> <object label="scrolldownButton" x="391" y="31" width="6" height="6" color="888888" /> <object label="scrollButton" x="391.2" y="40" width="6" height="120" color="888888" bgAlpha="0" />
+<object label="imageDisplay" x="4" y="20" width="130" height="130" />
+<object label="videoDisplay" x="4" y="20" width="130" height="130" />
+<playlist x="140" y="17" width="243" height="136" size="10" font="Arial" color="333333" />
+<text x="374" y="142" size="10" text="@" bold="1" color="333333" hoverMessage="About the Jukebox..." url="http://blog.lacymorrow.com" />
+<object label="startButton" width="400" height="170" alpha="0" />
+</objects></skin> 
