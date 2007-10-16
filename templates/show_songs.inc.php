@@ -23,13 +23,19 @@
 $web_path = Config::get('web_path'); 
 $ajax_url = Config::get('ajax_url'); 
 ?>
+<?php require Config::get('prefix') . '/templates/list_header.inc.php'; ?>
 <table class="tabledata" cellspacing="0" cellpadding="0">
-<tr>
-	<td colspan="8">
-	<?php require Config::get('prefix') . '/templates/list_header.inc.php'; ?>
-	</td>
-</tr>
-<tr class="table-header">
+<colgroup>
+  <col id="br_add" />
+  <col id="br_song" />
+  <col id="br_artist" />
+  <col id="br_album" />
+  <col id="br_genre" />
+  <col id="br_track" />
+  <col id="br_time" />
+  <col id="br_action" />
+</colgroup>
+<tr class="table-header th-top">
 	<th><?php echo _('Add'); ?></th>
 	<th>
 	<?php echo Ajax::text('?page=browse&action=set_sort&sort=title',_('Song Title'),'sort_song_title'); ?>
@@ -50,9 +56,17 @@ $ajax_url = Config::get('ajax_url');
 	<?php require Config::get('prefix') . '/templates/show_song_row.inc.php'; ?> 
 </tr>
 <?php } ?>
-<tr>
-	<td colspan="8">
-	<?php require Config::get('prefix') . '/templates/list_header.inc.php'; ?>
-	</td>
+<tr class="table-header th-bottom">
+	<th><?php echo _('Add'); ?></th>
+	<th>
+	<?php echo Ajax::text('?page=browse&action=set_sort&sort=title',_('Song Title'),'sort_song_title'); ?>
+	</th>
+	<th><?php echo _('Artist'); ?></th>
+	<th><?php echo _('Album'); ?></th>
+	<th><?php echo _('Genre'); ?></th>
+	<th><?php echo Ajax::text('?page=browse&action=set_sort&sort=track',_('Track'),'sort_song_track'); ?></th>
+	<th><?php echo Ajax::text('?page=browse&action=set_sort&sort=time',_('Time'),'sort_song_time'); ?></th>
+	<th><?php echo _('Action'); ?></th>
 </tr>
 </table>
+<?php require Config::get('prefix') . '/templates/list_header.inc.php'; ?>

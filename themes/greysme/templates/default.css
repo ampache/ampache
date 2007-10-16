@@ -56,6 +56,7 @@ body{
 	font-family: Lucida Sans Unicode, Verdana, Arial, Helvetica, sans-serif;
 	background: #2b293d url(../images/background.jpg) 0 0 repeat-x fixed;
 	min-width:90em;
+	color:#e9ad51;
 }
 
 ol	{ list-style-type: decimal-leading-zero; }
@@ -159,15 +160,13 @@ input[type=checkbox]{border:none;background:none;}
 	background: #111;
 	vertical-align: top;
 }
-.table-header td, .table-header th {
+.table-header th {
 	color:#8b3e38; 
 	font-variant:small-caps;
 	font-weight:normal;
-}
-.table-header th { 
 	border-right:1px solid #000;
 }
-.table-header td a, .table-header th a {
+.table-header th a {
 	color:#8b3e38;
 	padding-right:10px;
 	background: url(../images/sort_off.gif) 100% 50% no-repeat;
@@ -333,6 +332,7 @@ h3#content_title span {}	/* Doesn't exist anymore (?) */
   border-bottom:1px dotted #e9ad51;
   text-decoration: overline;
   background: url(../images/puce.gif) -8px -8px no-repeat;
+  color:#e9ad51;
   }
 #sidebar-page ul.sb2 li:hover h4{
   background-color:#000;
@@ -620,9 +620,9 @@ h3#content_title span {}	/* Doesn't exist anymore (?) */
 /************************************************/
 /*             List Header Styles               */
 /************************************************/
-.list-header{margin:7px 0; text-align:center; font-size: 0.9em;} 
-.list-header .prev{float:left;}
-.list-header .next{float:right;}
+.list-header{margin:7px 0; text-align:center; font-size: 0.9em;position:relative;} 
+.list-header .prev{/*float:left;*/ position:absolute; top:0; left:0;}
+.list-header .next{/*float:right;*/ position:absolute; top:0; right:0;}
 .list-header .selected{}
 .list-header .page-nb{padding:1px;border: 1px solid #111;}
 .list-header a:hover{background: transparent; border-color:#e9ad51;}
@@ -792,7 +792,10 @@ input.text_input {
 	margin-left:5px;
 }
 
-
+/************************************************/
+/*           "Browse by"                        */
+/************************************************/
+.br_td_cover{padding:6px;}
 
 /************************************************/
 /*                Misc                          */

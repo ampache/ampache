@@ -26,7 +26,7 @@
 <td><?php echo $artist->f_name_link; ?></td>
 <td><?php echo $artist->songs; ?></td>
 <td><?php echo $artist->albums; ?></td>
-<td nowrap="nowrap">
+<td>
 <?php if (Access::check_function('batch_download')) { ?>
 	<a href="<?php echo Config::get('web_path'); ?>/batch.php?action=artist&amp;id=<?php echo $artist->id; ?>">
         	<?php echo get_user_icon('batch_download','',_('Batch Download')); ?>

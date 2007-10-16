@@ -21,13 +21,16 @@
 $web_path = Config::get('web_path');
 
 ?>
+<?php require Config::get('prefix') . '/templates/list_header.inc.php'; ?>
 <table class="tabledata" cellspacing="0" cellpadding="0">
-<tr>
-	<td colspan="5">
-	<?php require Config::get('prefix') . '/templates/list_header.inc.php'; ?>
-	</td>
-</tr>
-<tr class="table-header">
+<colgroup>
+  <col id="br_add" />
+  <col id="br_artist" />
+  <col id="br_songs" />
+  <col id="br_albums" />
+  <col id="br_action" />
+</colgroup>
+<tr class="table-header th-top">
 	<th><?php echo _('Add'); ?></th>
 	<th><?php echo Ajax::text('?page=browse&action=set_sort&sort=name',_('Artist'),'artist_sort_name'); ?></th>
 	<th> <?php echo _('Songs');  ?> </th>
@@ -44,17 +47,12 @@ foreach ($object_ids as $artist_id) {
 	<?php require Config::get('prefix') . '/templates/show_artist_row.inc.php'; ?>
 </tr>
 <?php } //end foreach ($artists as $artist) ?>
-<tr class="table-header">
+<tr class="table-header th-bottom">
 	<th><?php echo _('Add'); ?></th>
-        <th><?php echo _("Artist"); ?></th>
-        <th><?php echo _('Songs');  ?></th>
-        <th><?php echo _('Albums'); ?></th>
-	<th><?php echo _('Action'); ?></th>
-
-</tr>
-<tr>
-	<td colspan="5">
-	<?php require Config::get('prefix') . '/templates/list_header.inc.php'; ?>
-	</td>
+	<th><?php echo Ajax::text('?page=browse&action=set_sort&sort=name',_('Artist'),'artist_sort_name'); ?></th>
+	<th> <?php echo _('Songs');  ?> </th>
+	<th> <?php echo _('Albums'); ?> </th>
+	<th> <?php echo _('Action'); ?> </th>
 </tr>
 </table>
+<?php require Config::get('prefix') . '/templates/list_header.inc.php'; ?>

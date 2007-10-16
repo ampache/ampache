@@ -24,10 +24,11 @@
 	<?php echo Ajax::button('?action=basket&type=album_random&id=' . $album->id,'random',_('Random'),'random_album_' . $album->id); ?>
 </td>
 <?php if (Browse::get_filter('show_art')) { ?>
-<td height="87">
+<td class="br_td_cover">
         <a href="<?php echo Config::get('web_path'); ?>/albums.php?action=show&amp;album=<?php echo $album->id; ?>">
-                <img height="75" width="75" src="<?php echo Config::get('web_path'); ?>/image.php?id=<?php echo $album->id; ?>&amp;thumb=1&amp;sid=<?php echo session_id(); ?>"
+                <img height="75" width="75" src="<?php echo Config::get('web_path'); ?>/image.php?id=<?php echo $album->id; ?>&amp;thumb=1&amp;sid=<?php echo session_id(); ?>" />
         </a>
+</td>
 <?php } ?>
 <td><?php echo $album->f_name_link; ?></td>
 <td><?php echo $album->f_artist_link; ?></td>

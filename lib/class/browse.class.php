@@ -428,7 +428,7 @@ class Browse {
 			case 'album': 
 				switch($field) { 
 					case 'name': 
-						$sql = "`album`.`name`"; 
+						$sql = "`album`.`name`, `album`.`disk`"; 
 					break;
 					case 'year': 
 						$sql = "`album`.`year`"; 
@@ -503,44 +503,45 @@ class Browse {
 		// Format any matches we have so we can show them to the masses
 		$match = $_SESSION['browse']['filter']['alpha_match'] ? ' (' . $_SESSION['browse']['filter']['alpha_match'] . ')' : '';  
 
+    $class = "box browse_".$_SESSION['browse']['type'];
 		switch ($_SESSION['browse']['type']) { 
 			case 'song': 
-				show_box_top(_('Songs') . $match); 
+				show_box_top(_('Songs') . $match, $class); 
 				require_once Config::get('prefix') . '/templates/show_songs.inc.php'; 
 				show_box_bottom(); 
 			break;
 			case 'album': 
-				show_box_top(_('Albums') . $match); 
+				show_box_top(_('Albums') . $match, $class); 
 				require_once Config::get('prefix') . '/templates/show_albums.inc.php';
 				show_box_bottom(); 
 			break;
 			case 'genre':
-				show_box_top(_('Genres') . $match); 
+				show_box_top(_('Genres') . $match, $class); 
 				require_once Config::get('prefix') . '/templates/show_genres.inc.php'; 
 				show_box_bottom(); 
 			break;
 			case 'user':
-				show_box_top(_('Manage Users') . $match); 
+				show_box_top(_('Manage Users') . $match, $class); 
 				require_once Config::get('prefix') . '/templates/show_users.inc.php'; 
 				show_box_bottom(); 
 			break;
 			case 'artist':
-				show_box_top(_('Artists') . $match); 
+				show_box_top(_('Artists') . $match, $class); 
 				require_once Config::get('prefix') . '/templates/show_artists.inc.php'; 
 				show_box_bottom(); 
 			break;
 			case 'live_stream': 
-				show_box_top(_('Radion Stations') . $match); 
+				show_box_top(_('Radion Stations') . $match, $class); 
 				require_once Config::get('prefix') . '/templates/show_live_streams.inc.php';
 				show_box_bottom(); 
 			break;
 			case 'playlist': 
-				show_box_top(_('Playlists') . $match);
+				show_box_top(_('Playlists') . $match, $class);
 				require_once Config::get('prefix') . '/templates/show_playlists.inc.php'; 
 				show_box_bottom(); 
 			break;
 			case 'catalog': 
-				show_box_top(_('Catalogs')); 
+				show_box_top(_('Catalogs'), $class); 
 				require_once Config::get('prefix') . '/templates/show_catalogs.inc.php';
 				show_box_bottom(); 
 			break;

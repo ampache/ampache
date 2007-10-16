@@ -556,9 +556,9 @@ h3#content_title span {
 /************************************************/
 /*             List Header Styles               */
 /************************************************/
-.list-header{margin:7px 0; text-align:center; font-size: 0.8em;} 
-.list-header .prev{float:left;}
-.list-header .next{float:right;}
+.list-header{margin:7px 0; text-align:center; font-size: 0.8em;position:relative;} 
+.list-header .prev{/*float:left;*/ position:absolute; top:0; left:0;}
+.list-header .next{/*float:right;*/ position:absolute; top:0; right:0;}
 .list-header .selected{background: #e0e0e0;}
 .list-header .page-nb{padding:1px;border: 1px solid #ccc;text-decoration: none;}
 .list-header .page-nb:hover{background: #d0d0d0;}
@@ -612,6 +612,11 @@ div#Header{
 	font-size: 10px;
 	margin-left: 10px;
 }
+
+/************************************************/
+/*           "Browse by"                        */
+/************************************************/
+.br_td_cover{padding:6px;}
 
 
 /************************************************/

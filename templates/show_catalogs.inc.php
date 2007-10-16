@@ -19,13 +19,16 @@
 
 */
 ?>
+<?php require Config::get('prefix') . '/templates/list_header.inc.php'; ?>
 <table class="tabledata" cellspacing="0" cellpadding="0">
-<tr>
-	<td colspan="5">
-	<?php require Config::get('prefix') . '/templates/list_header.inc.php'; ?>
-	</td>
-</tr>
-<tr class="table-header">
+<colgroup>
+  <col id="br_catalog" />
+  <col id="br_path" />
+  <col id="br_lastverify" />
+  <col id="br_lastadd" />
+  <col id="br_action" />
+</colgroup>
+<tr class="table-header th-top">
 	<th><?php echo _('Name'); ?></th>
 	<th><?php echo _('Path'); ?></th>
 	<th><?php echo _('Last Verify'); ?></th>
@@ -41,9 +44,12 @@
 	<?php require Config::get('prefix') . '/templates/show_catalog_row.inc.php'; ?>
 </tr>
 <?php } ?>
-<tr>
-	<td colspan="5">
-	<?php require Config::get('prefix') . '/templates/list_header.inc.php'; ?>
-	</td>
+<tr class="table-header th-bottom">
+	<th><?php echo _('Name'); ?></th>
+	<th><?php echo _('Path'); ?></th>
+	<th><?php echo _('Last Verify'); ?></th>
+	<th><?php echo _('Last Add'); ?></th>
+	<th><?php echo _('Actions'); ?></th>
 </tr>
 </table>
+<?php require Config::get('prefix') . '/templates/list_header.inc.php'; ?>
