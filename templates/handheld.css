@@ -96,10 +96,6 @@ BDO[DIR="rtl"]  { direction: rtl; unicode-bidi: bidi-override }
 
 *[DIR="ltr"]    { direction: ltr; unicode-bidi: embed }
 *[DIR="rtl"]    { direction: rtl; unicode-bidi: embed }
-@page {
-	margin: 5%;
-	size: landscape;
-}
 
 @media print {
   h1            { page-break-before: always }
