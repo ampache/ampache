@@ -108,7 +108,7 @@ class Access {
 		$end 	= ip2int($data['end']);
 		$name	= Dba::escape($data['name']);
 		$key	= Dba::escape($data['key']);
-		$user	= $data['user'] ? Dba::escaep($data['user']) : '-1'; 
+		$user	= $data['user'] ? Dba::escape($data['user']) : '-1'; 
 		$level	= intval($data['level']);
 		$type	= self::validate_type($data['type']);
 
