@@ -41,30 +41,35 @@ echo '<div id="browse_content">';
 switch($_REQUEST['action']) {
 	case 'file':
 	case 'album':
+		Browse::reset_filters(); 
 		Browse::set_type('album'); 
 		Browse::set_sort('name','ASC');
 		$album_ids = Browse::get_objects(); 
 		Browse::show_objects($album_ids); 
 	break;
 	case 'artist':
+		Browse::reset_filters(); 
 		Browse::set_type('artist'); 
 		Browse::set_sort('name','ASC');
 		$artist_ids = Browse::get_objects(); 
 		Browse::show_objects($artist_ids); 
 	break;
 	case 'genre':
+		Browse::reset_filters(); 
 		Browse::set_type('genre'); 
 		Browse::set_sort('name','ASC');
 		$genre_ids = Browse::get_objects(); 
 		Browse::show_objects($genre_ids); 
 	break;
 	case 'song':
+		Browse::reset_filters(); 
 		Browse::set_type('song'); 
 		Browse::set_sort('title','ASC');
 		$song_ids = Browse::get_objects(); 
 		Browse::show_objects($song_ids); 
 	break;
 	case 'live_stream':
+		Browse::reset_filters(); 
 		Browse::set_type('live_stream'); 
 		Browse::set_sort('name','ASC');
 		$live_stream_ids = Browse::get_objects(); 
@@ -74,6 +79,7 @@ switch($_REQUEST['action']) {
 	
 	break;
 	case 'playlist': 
+		Browse::reset_filters(); 
 		Browse::set_type('playlist'); 
 		Browse::set_sort('name','ASC');
 		$playlist_ids = Browse::get_objects(); 

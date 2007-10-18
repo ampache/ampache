@@ -54,9 +54,14 @@ switch ($_REQUEST['action']) {
 		$fields = $localplay->get_instance_fields(); 
 		require_once Config::get('prefix') . '/templates/show_localplay_instances.inc.php'; 
 	break; 
-	case 'show_songs': 
+	case 'show_playlist': 
+		// Init and then connect to our localplay instance
 		$localplay = new Localplay($GLOBALS['user']->prefs['localplay_controller']); 
+		$localplay->connect(); 
 
+		// Pull the current playlist and require the template
+		$objects = $localplay->get(); 
+		require_once Config::get('prefix') . '/templates/show_localplay_playlist.inc.php';
 	break;
 	case 'delete_song':
 		$song_id = scrub_in($_REQUEST['song_id']);

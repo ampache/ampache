@@ -120,22 +120,6 @@ class Localplay {
 	} // _load_player
 
 	/**
-	 * has_function
-	 * This is used to check the function map and see if the current
-	 * player type supports the indicated function. 
-	 */
-	public function has_function($function_name) { 
-
-		/* Check the function map, if it's got a value it must 
-		 * be possible 
-		 */
-		if (strlen($this->_function_map[$function_name]) > 0) { return true; } 
-
-		return false;
-
-	} // has_function
-
-	/**
 	 * format_name
 	 * This function takes the track name and checks to see if 'skip' 
 	 * is supported in the current player, if so it returns a 'skip to'
@@ -144,13 +128,7 @@ class Localplay {
 	public function format_name($name,$id) { 
 
 		$name = scrub_out($name);
-
-		if ($this->has_function('skip')) { 
-			$url = conf('ajax_url') . "?action=localplay&amp;cmd=skip&amp;value=$id" . conf('ajax_info'); 
-			
-			$name = "<span style=\"cursor:pointer;text-decoration:underline;\" onclick=\"ajaxPut('$url');return true;\">$name</span>";
-		}
-
+		$name = Ajax::text('?page=localplay&action=command&command=skip&id=' . $id,$name,'localplay_skip_' . $id); 
 		return $name;
 
 	} // format_name
@@ -385,10 +363,8 @@ class Localplay {
 	 */
 	public function get() { 
 
-		$function = $this->_function_map['get'];
-
-		$data = $this->_player->$function();
-
+		$data = $this->_player->get();
+		
 		if (!count($data) OR !is_array($data)) { 
 			debug_event('localplay','Error Unable to get song info, check ' . $this->type . ' controller','1');
 			return array(); 
@@ -481,9 +457,9 @@ class Localplay {
 	 * skip
 	 * This isn't a required function, it tells the daemon to skip to the specified song
 	 */
-	public function skip($song_id) { 
+	public function skip($track_id) { 
 
-		if (!$this->_player->$function($song_id)) { 
+		if (!$this->_player->skip($track_id)) { 
 			debug_event('localplay','Error: Unable to skip to next song, check ' . $this->type . ' controller','1');
 			return false; 
 		}
@@ -608,14 +584,13 @@ class Localplay {
 	} // set_active_instance
 
 	/**
-	 * delete
-	 * This removes songs from the players playlist as defined get function
+	 * delete_track
+	 * This removes songs from the players playlist it takes a single ID as provided
+	 * by the get command
 	 */
-	public function delete($songs) { 
+	public function delete_track($object_id) { 
 
-		$function = $this->_function_map['delete'];
-
-		if (!$this->_player->$function($songs)) { 
+		if (!$this->_player->delete_track($object_id)) { 
 			debug_event('localplay','Error: Unable to remove songs, check ' . $this->type . ' controller','1');
 			return false;
 		}

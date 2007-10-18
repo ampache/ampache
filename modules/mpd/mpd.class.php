@@ -467,16 +467,15 @@ class mpd {
 	 * 
 	 * Removes track <id> from the playlist.
 	 */
-	function PLRemove($id) {
-		if ( $this->debugging ) echo "mpd->PLRemove()\n";
+	public function PLRemove($id) {
 		if ( ! is_numeric($id) ) {
 			$this->errStr = "PLRemove() : argument 1 must be a numeric value";
 			return NULL;
 		}
 		if ( ! is_null($resp = $this->SendCommand(MPD_CMD_PLREMOVE,$id))) $this->RefreshInfo();
-		if ( $this->debugging ) echo "mpd->PLRemove() / return\n";
+		debug_event('MPD',"mpd->PLRemove() / return",'5'); 
 		return $resp;
-	}
+	} // PLRemove
 
 	/* SetRepeat() 
 	 * 
@@ -970,13 +969,14 @@ class mpd {
 	 * NOTE: This function really should not be used. Instead, use $this->playlist. The function
 	 *   will most likely be deprecated in future releases.
 	 */
-	function GetPlaylist() {
-		if ( $this->debugging ) echo "mpd->GetPlaylist()\n";
+	public function GetPlaylist() {
+
 		$resp = $this->SendCommand(MPD_CMD_PLLIST);
 		$playlist = $this->_parseFileListResponse($resp);
-		if ( $this->debugging ) echo "mpd->GetPlaylist() / return ".print_r($playlist)."\n";
+		debug_event('MPD',"mpd->GetPlaylist() / return ".print_r($playlist,1),'5');
 		return $playlist;
-	}
+
+	} // GetPlaylist
 
 	/* ClearPLIfStopped()
 	*

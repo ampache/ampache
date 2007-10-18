@@ -61,11 +61,26 @@ switch ($_REQUEST['action']) {
 				$command = scrub_in($_REQUEST['command']); 
 				$localplay->$command(); 
 			break;
+			case 'skip': 
+				$localplay->skip(intval($_REQUEST['id']));
+			break;
 			default: 
 				// Nothing
 			break; 
 		} // end whitelist
 
+	break; 
+	case 'delete_track': 
+		// Load Connect... yada yada
+		$localplay = new Localplay($GLOBALS['user']->prefs['localplay_controller']); 
+		$localplay->connect(); 
+
+		// Scrub in the delete request
+		$id = intval($_REQUEST['id']); 
+
+		$localplay->delete_track($id); 
+
+		$results['localplay_playlist_' . $id] = ''; 
 	break; 
 	case 'delete_instance': 
 		// Make sure that you have access to do this... again I really 

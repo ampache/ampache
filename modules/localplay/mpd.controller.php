@@ -277,30 +277,17 @@ class AmpacheMpd extends localplay_controller {
 	} // add_songs
 
 	/**
-	 * delete_songs
-	 * This must take an array of ID's (as passed by get function) from Ampache
-	 * and delete them from MPD
+	 * delete_track
+	 * This must take a single ID (as passed by get function) from Ampache
+	 * and delete it from the current playlist
 	 */
-	public function delete($objects) { 
+	public function delete_track($object_id) { 
 
-		/* Default to true */
-		$return = true;
+		if (is_null($this->_mpd->PLRemove($object_id))) { return false; } 
 
-		/* This should be an array of UID's as returned by
-		 * the get function so that we can just call the class based 
-		 * functions to remove them or if there isn't a uid for 
-		 * the songs, then however ya'll have stored them
-		 * in this controller 
-		 */
-		foreach ($songs as $uid) { 
+		return true;
 
-			if (is_null($this->_mpd->PLRemove($uid))) { $return = false; } 
-
-		} // foreach of songs
-
-		return $return;
-
-	} // delete_songs
+	} // delete_track
 	
 	/**
 	 * clear_playlist
@@ -456,6 +443,11 @@ class AmpacheMpd extends localplay_controller {
 	 */
 	public function get() { 
 
+		// If we don't have the playlist yet, pull it
+		if (!isset($this->_mpd->playlist)) {
+			$this->_mpd->GetPlaylist(); 
+		} 
+
 		/* Get the Current Playlist */
 		$playlist = $this->_mpd->playlist;
 		
@@ -474,10 +466,10 @@ class AmpacheMpd extends localplay_controller {
 			
 			/* If we don't know it, look up by filename */
 			if (!$song->title) { 
-				$filename = sql_escape($entry['file']);
-				$sql = "SELECT id FROM song WHERE file LIKE '%$filename'";
-				$db_results = mysql_query($sql, dbh());
-				if ($r = mysql_fetch_assoc($db_results)) { 
+				$filename = Dba::escape($entry['file']);
+				$sql = "SELECT `id` FROM `song` WHERE `file` LIKE '%$filename'";
+				$db_results = Dba::query($sql);
+				if ($r = Dba::fetch_assoc($db_results)) { 
 					$song = new Song($r['id']);
 				}	
 				else { 
@@ -486,7 +478,7 @@ class AmpacheMpd extends localplay_controller {
 			}
 
 			/* Make the name pretty */
-			$song->format_song();
+			$song->format();
 			$data['name']	= $song->f_title . ' - ' . $song->f_album . ' - ' . $song->f_artist;
 
 			/* Optional Elements */
@@ -499,7 +491,7 @@ class AmpacheMpd extends localplay_controller {
 		
 		return $results;
 
-	} // get_songs
+	} // get
 
 	/**
 	 * get_status

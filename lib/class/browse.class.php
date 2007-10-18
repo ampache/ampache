@@ -78,6 +78,20 @@ class Browse {
 	} // set_filter
 
 	/**
+	 * reset_filter
+	 * This is a wrapper function that resets the filters 
+	 */
+	public static function reset_filters() { 
+
+		if (!is_array($_SESSION['browse']['filter'])) { return true; } 
+
+		foreach ($_SESSION['browse']['filter'] AS $key=>$value) { 
+			self::set_filter($key,''); 
+		} 
+
+	} // reset_filters
+
+	/**
 	 * get_filter
 	 * returns the specified filter value
 	 */

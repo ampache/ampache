@@ -4,6 +4,12 @@
 
 --------------------------------------------------------------------------
   v.3.4-Alpha3 
+	- Added reset of filters when switching between browse types this
+		may be removed in the future...
+	- Fixed LastFM submitting even when there was no username/password
+	- Put Catalog 'All' Functions back onto catalog view
+	- Fixed Admin Preferences reverting to user after first update
+	- Fixed Localplay playlist
 	- Updated Ajax Load icon (Thx Spocky) 
 	- Replaced Flash Player with Lacy Morrow's (http://blog.lacymorrow.com/)
 		(Thx Hugoh)

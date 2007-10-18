@@ -51,5 +51,17 @@
 	<th><?php echo _('Last Add'); ?></th>
 	<th><?php echo _('Actions'); ?></th>
 </tr>
+<tr class="<?php echo flip_class(); ?>">
+	<td colspan="3">
+	&nbsp;
+	</td>
+	<td align="right" colspan="2">
+		<a href="<?php echo Config::get('web_path'); ?>/admin/catalog.php?action=gather_album_art"><?php echo _('Gather All Art'); ?></a>
+		| <a href="<?php echo Config::get('web_path'); ?>/admin/catalog.php?action=add_to_all_catalogs"><?php echo _('Add to All'); ?></a> 
+		| <a href="<?php echo Config::get('web_path'); ?>/admin/catalog.php?action=update_all_catalogs"><?php echo _('Verify All'); ?></a>
+		| <a href="<?php echo Config::get('web_path'); ?>/admin/catalog.php?action=clean_all_catalogs"><?php echo _('Clean All'); ?></a>
+		| <a href="<?php echo Config::get('web_path'); ?>/admin/catalog.php?action=full_service"><?php echo _('Update All'); ?></a>
+	</td>
+</tr>
 </table>
 <?php require Config::get('prefix') . '/templates/list_header.inc.php'; ?>

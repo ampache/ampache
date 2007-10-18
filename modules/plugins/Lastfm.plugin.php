@@ -101,6 +101,9 @@ class AmpacheLastfm {
 			debug_event('LastFM','Song less then 30 seconds not queueing','3'); 
 			return false; 
 		} 
+
+		// Make sure there's actually a username and password before we keep going
+		if (!$this->username || !$this->password) { return false; } 
 		
 		// Create our scrobbler with everything this time and then queue it
 		$scrobbler = new scrobbler($this->username,$this->password,$this->hostname,$this->port,$this->path,$this->challenge); 

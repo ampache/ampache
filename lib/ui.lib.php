@@ -1004,8 +1004,12 @@ function get_user_icon($name,$title='',$id='') {
  * primarly by the ajax mojo
  */
 function xml_from_array($array,$callback=0,$type='') { 
+
+	// If we weren't passed an array then return a blank string
+	if (!is_array($array)) { return ''; } 
+
+	// The type is used for the different XML docs we pass
 	switch ($type) {
-	
 	case 'itunes':
 	        foreach ($array as $key=>$value) {
 	                if (is_array($value)) {
@@ -1025,7 +1029,7 @@ function xml_from_array($array,$callback=0,$type='') {
 	                        }
         	        }
 
-	        }
+	        } // end foreach
 
 		return $string;
 	break;
@@ -1046,7 +1050,7 @@ function xml_from_array($array,$callback=0,$type='') {
 	                        }
         	        }
 
-	        }
+	        } // end foreach
 
 		return $string;
 	break;

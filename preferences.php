@@ -21,9 +21,6 @@
 
 require 'lib/init.php';
 
-/* Scrub in the needed mojo */
-if (!$_REQUEST['tab']) { $_REQUEST['tab'] = 'interface'; } 
-
 // Switch on the action 
 switch($_REQUEST['action']) { 
 	case 'update_preferences':
@@ -36,6 +33,7 @@ switch($_REQUEST['action']) {
 		if ($_REQUEST['method'] == 'admin') { 
 			$user_id = '-1'; 
 			$fullname = _('Server'); 
+			$_REQUEST['action'] = 'admin'; 
 		}
 		elseif ($_REQUEST['method'] == 'user') { 
 			$user_id = $_REQUEST['user_id']; 
