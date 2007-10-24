@@ -22,10 +22,12 @@
 /************************************************/
 /*    Unify default browsers style rules        */
 /************************************************/
-:link,:visited { text-decoration:underline; }
 h1, h2, h3, h4, h5, h6, pre, code	{ font-size: 1em; line-height: 1em; } /* avoid browser default inconsistent font-sizes */
-a img, :link img, :visited img { border: none; } /* no blue linked image borders */
-ul,ol,li,h1,h2,h3,h4,h5,h6,pre,form,body,html,p,blockquote,fieldset,input { margin:0; padding:0 } /* White space reset */
+ol, ul { list-style: none; }
+table {	border-collapse: separate; border-spacing: 0; }
+caption, th, td {	text-align: left;	font-weight: normal; }
+*	{ margin: 0; padding: 0; } /* White space reset */
+a img, :link img, :visited img { border: 0; } /* no blue linked image borders */
 
 
 /************************************************/
@@ -53,6 +55,7 @@ th {
 	padding-right: 10px;
 	font-family: Verdana, Helvetica, sans-serif;
   font-size:13px; 
+  font-weight:bold;
 }
 input, select, textarea{
 	font: 12px Verdana, Helvetica, sans-serif; 
@@ -61,7 +64,6 @@ input, select, textarea{
 }
 input {
 	font-weight: bold;
-  margin: 2px 2px 2px 0;
 }
 
 /************************************************/
@@ -71,27 +73,29 @@ input {
 body { behavior:url("csshover2.htc"); }
 
 /************************************************/
-/*             Header                           */
-/************************************************/
-#topbar { 
-	height: 85px;
-	padding: 3px 0 0 10px;
-}
-#topbarright { 
-	float: right;
-	font-size: 10px;
-}
-#topbarleft, #topbarleft a{ 
-	float: left;
-}
-/************************************************/
 /*                XSPF Player                   */
 /************************************************/
-
 .xspf_player {
     right: 20px;
     position: absolute;
 }
+
+/************************************************/
+/*             Header                           */
+/************************************************/
+#header { 
+	height: 85px;
+	padding: 3px 0 0 10px;
+}
+#headerbox { 
+	float: right;
+	font-size: 10px;
+}
+#headerlogo, #headerlogo a{ 
+	float: left;
+}
+.box_headerbox    {display:table;}
+.box_headerbox #loginInfo {font-weight:bold;display:block;text-align:right;margin-bottom:.3em;}
 
 /************************************************/
 /*                Footer                        */
@@ -106,139 +110,22 @@ body { behavior:url("csshover2.htc"); }
 /************************************************/
 /*                  Buttons                     */
 /************************************************/
-#sb_Subsearch input{ margin:0; padding:0; }
-.smallbutton {
+.button, input[type=button], input[type=submit], .text-action a {
   border: 1px solid #f0f0f0;
   border-color: #f0f0f0 #a0a0a0 #a0a0a0 #f0f0f0;
-	padding: 0 1px;
-	margin:0;
-	font-size: 11px;
-	cursor: pointer;
-  font-weight:bold;
   background: #d0d0d0;
+	padding: 0 1px;
+	font-size: 11px;
+  font-weight:bold;
+  text-decoration:none;
+	cursor: pointer;
 }
-.smallbutton:active { 
-  border: 1px solid #f0f0f0;
-  border-color: #f0f0f0 #a0a0a0 #a0a0a0 #f0f0f0;
-}	
-a.smallbutton { 
-	text-decoration:none;
-	padding:1px 2px;
-} 
-
-
-/************************************************/
-/*         Tables (songs lists...)              */
-/************************************************/
-.table-header {
-	font-size:1.1em;
-	vertical-align: top;
-	text-align:center;
-}
-.odd, .odd td {
-	font-size: 12px;
-	border-bottom:1px dotted #c0c0c0;
-}
-.even, .even td {
-	font-size: 12px;
-	border-bottom:1px dotted #c0c0c0;
-}
-.even:hover, .odd:hover { 
-	background:#99ccff;
-} 
-.border 	{ background: #000; }
-
-/************************************************/
-/*               Content block                  */
-/************************************************/
-#content {
-	margin: 20px 135px 20px 135px;
-}
-h3#content_title{
-	font: 12px/32px Arial,Helvetica,Sans-Serif;
-	background:#8b8b8b url(../images/content_corner.gif) no-repeat right top;
-	color:#fff;
-}
-h3#content_title span {
-	text-align:left;
-}
-
-/************************************************/
-/*                  Rightbar                    */
-/************************************************/
-#rightbar { 
-	width:120px;
-	background:#fff;
-	padding-top:28px;
-	background:#c0c0c0 url(../images/rightbar_top.jpg) no-repeat;
-	float:right;
-	font-family: Verdana,Helvetica,sans-serif;
-	clear:both;
-} 
-#rightbar ul                      {	list-style:none; }
-#rightbar a                       { text-decoration:none; }
-
-
-/* Rightbar Menu */
-#rightbar #rb_action {	
-  border-top:1px solid #8b8b8b; 
-  padding:4px;
-}
-#rightbar #rb_action li         {	display:inline; }
-
-#rightbar li#rb_add, #rightbar li#pl_add             { position:relative; z-index:10;}
-#rightbar li#rb_add:hover, #rightbar li#pl_add:hover { background:#99ccff; } 
-/* Rightbar AddItems SubMenu */
-#rightbar li:hover .submenu {	display:block; } 
-#rightbar .submenu  { 
-  display:none; 	
-  position:absolute;
-	right:0px;
-	top:18px;
-	background:#fff;
-	border:2px solid #c0c0c0;
-	width:120px;
-	font-size:0.7em;
-	padding:0.3em;
-}
-* html #rightbar .submenu {right:100px;} /* IE6 fix */
-
-#rightbar .submenu a {
- display:block;
- padding:0.1em;
- border-bottom:1px dotted #c0c0c0;
- color:#5b5b5b;
- text-decoration:none;
- text-align:right;
-}
-
-#rightbar .submenu a:hover,
-#rightbar #rb_current_playlist a:hover { background:#99ccff; color:#fff; }
-
-/* Rightbar playlist */
-#rightbar #rb_current_playlist    {
-  background: #fff url(../images/bottom.gif) 0 100% repeat-x;
-  padding-bottom:0.5em; 
- 	border-left:2px solid #c0c0c0;
- 	border-right:2px solid #c0c0c0;
-}
-#rightbar #rb_current_playlist li   { position:relative; font-size:0.6em;line-height:14px; color:#5b5b5b; padding-right:20px;}
-#rightbar #rb_current_playlist li a { display:block; padding:0.2em;}
-#rightbar .delitem                  { position:absolute;right:0;top:0; }
-
-/* Rightbar Localplay Controls */
-#rightbar #localplay-control { 
-	padding-left: 5px;
-} 
-#localplay-control span { 
-	cursor: pointer; 
-} 
+a.button{padding:1px}
 
 /************************************************/
 /*                  Sidebar                     */
 /************************************************/
 #sidebar{
-	/*float:left;*/
   position:absolute;
   top:100px;
   left:0;
@@ -352,7 +239,6 @@ h3#content_title span {
 
 /* SIDEBAR : Localplay */
 /***********************/
-
 .active_instance {
 	background:#99ccff; 
 }
@@ -370,58 +256,76 @@ h3#content_title span {
 }
 
 
-
 /************************************************/
-/*          Albums of the moment                */
+/*                  Rightbar                    */
 /************************************************/
+#rightbar { 
+	width:120px;
+	background:#fff;
+	padding-top:28px;
+	background:#c0c0c0 url(../images/rightbar_top.jpg) no-repeat;
+	float:right;
+	font-family: Verdana,Helvetica,sans-serif;
+	clear:both;
+} 
+#rightbar ul                      {	list-style:none; }
+#rightbar a                       { text-decoration:none; }
 
-.random_album
-{
-  position:relative;
-  float:left;
-  padding:8px;
-  width:80px;
+
+/* Rightbar Menu */
+#rightbar #rb_action {	
+  border-top:1px solid #8b8b8b; 
+  padding:4px;
+}
+#rightbar #rb_action li         {	display:inline; }
+
+#rightbar li#rb_add, #rightbar li#pl_add             { position:relative; z-index:10;}
+#rightbar li#rb_add:hover, #rightbar li#pl_add:hover { background:#99ccff; } 
+/* Rightbar AddItems SubMenu */
+#rightbar li:hover .submenu {	display:block; } 
+#rightbar .submenu  { 
+  display:none; 	
+  position:absolute;
+	right:0px;
+	top:18px;
+	background:#fff;
+	border:2px solid #c0c0c0;
+	width:120px;
+	font-size:0.7em;
+	padding:0.3em;
+}
+* html #rightbar .submenu {right:100px;} /* IE6 fix */
+
+#rightbar .submenu a {
+ display:block;
+ padding:0.1em;
+ border-bottom:1px dotted #c0c0c0;
+ color:#5b5b5b;
+ text-decoration:none;
+ text-align:right;
 }
 
-.random_album .play_album
-{
-  display:none;
-}
+#rightbar .submenu a:hover,
+#rightbar #rb_current_playlist a:hover { background:#99ccff; color:#fff; }
 
-/************************************************/
-/*          Now Playing Styles                  */
-/************************************************/
-#nowplaying{
-	clear: both;
-	width: 600px;
+/* Rightbar playlist */
+#rightbar #rb_current_playlist    {
+  background: #fff url(../images/bottom.gif) 0 100% repeat-x;
+  padding-bottom:0.5em; 
+ 	border-left:2px solid #c0c0c0;
+ 	border-right:2px solid #c0c0c0;
 }
+#rightbar #rb_current_playlist li   { position:relative; font-size:0.6em;line-height:14px; color:#5b5b5b; padding-right:20px;}
+#rightbar #rb_current_playlist li a { display:block; padding:0.2em;}
+#rightbar .delitem                  { position:absolute;right:0;top:0; }
 
-#np_container1{
-	width: 260px;
-	height: 18px;
-	background: #fff url(../images/tb_tab.jpg) no-repeat top left;
-}
-
-#np_container1 h1{
-	font-size: 10px;
-	font-weight: bold;
-	padding: 2px;
-}
-
-#np_container2{
-	border: 1px solid #999;
-	border-color:#ddd #999 #999 #ccc;
-	padding: 6px;
-	font: 10px/12px Verdana, sans-serif;
-	background: #d6d6d4 url(../images/bg_row.jpg) repeat top left;
-	color: #000;
-}
-.np_row {
-	padding: 3px 0;
-}
-.np_cell, .np_cell_left, .np_cell_m, .np_cell_right {
-	margin: 10px;
-}
+/* Rightbar Localplay Controls */
+#rightbar #localplay-control { 
+	padding-left: 5px;
+} 
+#localplay-control span { 
+	cursor: pointer; 
+} 
 
 
 /************************************************/
@@ -482,6 +386,7 @@ h3#content_title span {
 .dynamic-star-rating a:hover.zero-stars {
   background: url(../../../images/ratings/x.gif) left top;
 }
+
 
 /************************************************/
 /*              Box Related Styles              */
@@ -551,8 +456,108 @@ h3#content_title span {
 .box_newest_albums  {}
 .box_newest_artists {clear:none;}
 .box_newest_genres  {clear:none;}
-.box_topbarright    {display:table;}
-.box_topbarright #loginInfo {font-weight:bold;display:block;text-align:right;margin-bottom:.3em;}
+
+/************************************************/
+/*         Tables (songs lists...)              */
+/************************************************/
+.tabledata .th-top, .tabledata .th-bottom {
+	font-size:1.1em;
+	vertical-align: top;
+	text-align:center;
+}
+.odd, .odd td {
+	font-size: 12px;
+	border-bottom:1px dotted #c0c0c0;
+}
+.even, .even td {
+	font-size: 12px;
+	border-bottom:1px dotted #c0c0c0;
+}
+.even:hover, .odd:hover { 
+	background:#99ccff;
+} 
+.border 	{ background: #000; }
+
+/* specific cells */
+.cel_cover{padding:6px;}
+.cel_select, .cel_action, .cel_date, .cel_applytoall, .cel_level {text-align:center;}
+
+/* specific boxes */
+#recently_played .th-bottom {display:none;}
+
+/************************************************/
+/*               Content block                  */
+/************************************************/
+#content {
+	margin: 20px 135px 20px 135px;
+}
+h3#content_title{
+	font: 12px/32px Arial,Helvetica,Sans-Serif;
+	background:#8b8b8b url(../images/content_corner.gif) no-repeat right top;
+	color:#fff;
+}
+h3#content_title span {
+	text-align:left;
+}
+
+
+
+
+
+
+/************************************************/
+/*          Albums of the moment                */
+/************************************************/
+
+.random_album
+{
+  position:relative;
+  float:left;
+  padding:8px;
+  width:80px;
+}
+
+.random_album .play_album
+{
+  display:none;
+}
+
+/************************************************/
+/*          Now Playing Styles                  */
+/************************************************/
+#nowplaying{
+	clear: both;
+	width: 600px;
+}
+
+#np_container1{
+	width: 260px;
+	height: 18px;
+	background: #fff url(../images/tb_tab.jpg) no-repeat top left;
+}
+
+#np_container1 h1{
+	font-size: 10px;
+	font-weight: bold;
+	padding: 2px;
+}
+
+#np_container2{
+	border: 1px solid #999;
+	border-color:#ddd #999 #999 #ccc;
+	padding: 6px;
+	font: 10px/12px Verdana, sans-serif;
+	background: #d6d6d4 url(../images/bg_row.jpg) repeat top left;
+	color: #000;
+}
+.np_row {
+	padding: 3px 0;
+}
+.np_cell, .np_cell_left, .np_cell_m, .np_cell_right {
+	margin: 10px;
+}
+
+
 /************************************************/
 /*             List Header Styles               */
 /************************************************/
@@ -612,12 +617,6 @@ div#Header{
 	font-size: 10px;
 	margin-left: 10px;
 }
-
-/************************************************/
-/*           "Browse by"                        */
-/************************************************/
-.br_td_cover{padding:6px;}
-
 
 /************************************************/
 /*         Styles for Login template            */
@@ -762,7 +761,7 @@ td.user_disabled {
 	text-decoration:line-through;
 }
 #maincontainer{}
-table.tabledata {}
+.tabledata input, .tabledata select{ margin:2px 0;}
 .display {}
 
 

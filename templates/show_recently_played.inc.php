@@ -23,13 +23,20 @@
 $time_unit = array('',_('seconds ago'),_('minutes ago'),_('hours ago'),_('days ago'),_('weeks ago'),_('months ago'),_('years ago')); 
 
 ?>
-<table class="table-data" cellspacing="0">
-<tr class="table-header">
-	<th><?php echo _('Username'); ?></th>
-	<th><?php echo _('Song'); ?></th>
-	<th><?php echo _('Album'); ?></th>
-	<th><?php echo _('Artist'); ?></th>
-	<th><?php echo _('Last Played'); ?></th>
+<table class="tabledata" cellpadding="0" cellspacing="0">
+<colgroup>
+  <col id="col_username" />
+  <col id="col_song" />
+  <col id="col_album" />
+  <col id="col_artist" />
+  <col id="col_lastplayed" />
+</colgroup>
+<tr class="th-top">
+	<th class="cel_username"><?php echo _('Username'); ?></th>
+	<th class="cel_song"><?php echo _('Song'); ?></th>
+	<th class="cel_album"><?php echo _('Album'); ?></th>
+	<th class="cel_artist"><?php echo _('Artist'); ?></th>
+	<th class="cel_lastplayed"><?php echo _('Last Played'); ?></th>
 </tr>
 <?php foreach ($data as $row) { 
 	$row_user = new User($row['user']);
@@ -62,15 +69,22 @@ $time_unit = array('',_('seconds ago'),_('minutes ago'),_('hours ago'),_('days a
 	$song->format(); 
 ?>
 <tr class="<?php echo flip_class(); ?>">
-	<td>
+	<td class="cel_username">
 		<a href="<?php echo Config::get('web_path'); ?>/stats.php?action=show_user&amp;user_id=<?php echo scrub_out($row_user->id); ?>">
 		<?php echo scrub_out($row_user->fullname); ?>
 		</a>
 	</td>
-	<td><?php echo $song->f_link; ?></td>
-	<td><?php echo $song->f_album_link; ?></td>
-	<td><?php echo $song->f_artist_link; ?></td>
-	<td><?php echo $time_string; ?></td>
+	<td class="cel_song"><?php echo $song->f_link; ?></td>
+	<td class="cel_album"><?php echo $song->f_album_link; ?></td>
+	<td class="cel_artist"><?php echo $song->f_artist_link; ?></td>
+	<td class="cel_lastplayed"><?php echo $time_string; ?></td>
 </tr>
 <?php } ?>
+<tr class="th-bottom">
+	<th class="cel_username"><?php echo _('Username'); ?></th>
+	<th class="cel_song"><?php echo _('Song'); ?></th>
+	<th class="cel_album"><?php echo _('Album'); ?></th>
+	<th class="cel_artist"><?php echo _('Artist'); ?></th>
+	<th class="cel_lastplayed"><?php echo _('Last Played'); ?></th>
+</tr>
 </table>

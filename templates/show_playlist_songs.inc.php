@@ -23,22 +23,29 @@
 $web_path = Config::get('web_path'); 
 $ajax_url = Config::get('ajax_url'); 
 ?>
-<table class="tabledata" cellspacing="0" cellpadding="0">
-<tr>
-	<td colspan="8">
-	<?php require Config::get('prefix') . '/templates/list_header.inc.php'; ?>
-	</td>
-</tr>
-<tr class="table-header">
-	<th>&nbsp;</th>
-	<th><?php echo _('Track'); ?></th>
-	<th><?php echo _('Song Title'); ?></th>
-	<th><?php echo _('Artist'); ?></th>
-	<th><?php echo _('Album'); ?></th>
-	<th><?php echo _('Genre'); ?></th>
-	<th><?php echo _('Track'); ?></th>
-	<th><?php echo _('Time'); ?></th>
-	<th><?php echo _('Action'); ?></th>
+<?php require Config::get('prefix') . '/templates/list_header.inc.php'; ?>
+<table class="tabledata" cellpadding="0" cellspacing="0">
+<colgroup>
+  <col id="col_add" />
+  <col id="col_track" />
+  <col id="col_song" />
+  <col id="col_artist" />
+  <col id="col_album" />
+  <col id="col_genre" />
+  <col id="col_track" />
+  <col id="col_time" />
+  <col id="col_action" />
+</colgroup>
+<tr class="th-top">
+	<th class="cel_add">&nbsp;</th>
+	<th class="cel_track"><?php echo _('Track'); ?></th>
+	<th class="cel_song"><?php echo _('Song Title'); ?></th>
+	<th class="cel_artist"><?php echo _('Artist'); ?></th>
+	<th class="cel_album"><?php echo _('Album'); ?></th>
+	<th class="cel_genre"><?php echo _('Genre'); ?></th>
+	<th class="cel_track"><?php echo _('Track'); ?></th>
+	<th class="cel_time"><?php echo _('Time'); ?></th>
+	<th class="cel_action"><?php echo _('Action'); ?></th>
 </tr>
 <?php 
 	foreach ($object_ids as $object) { 
@@ -50,9 +57,16 @@ $ajax_url = Config::get('ajax_url');
 	<?php require Config::get('prefix') . '/templates/show_playlist_song_row.inc.php'; ?> 
 </tr>
 <?php } ?>
-<tr>
-	<td colspan="8">
-	<?php require Config::get('prefix') . '/templates/list_header.inc.php'; ?>
-	</td>
+<tr class="th-bottom">
+	<th class="cel_add">&nbsp;</th>
+	<th class="cel_track"><?php echo _('Track'); ?></th>
+	<th class="cel_song"><?php echo _('Song Title'); ?></th>
+	<th class="cel_artist"><?php echo _('Artist'); ?></th>
+	<th class="cel_album"><?php echo _('Album'); ?></th>
+	<th class="cel_genre"><?php echo _('Genre'); ?></th>
+	<th class="cel_track"><?php echo _('Track'); ?></th>
+	<th class="cel_time"><?php echo _('Time'); ?></th>
+	<th class="cel_action"><?php echo _('Action'); ?></th>
 </tr>
 </table>
+<?php require Config::get('prefix') . '/templates/list_header.inc.php'; ?>

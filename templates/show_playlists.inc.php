@@ -21,20 +21,20 @@
 */
 ?>
 <?php require Config::get('prefix') . '/templates/list_header.inc.php' ?>
-<table class="tabledata" cellspacing="0" cellpadding="0">
+<table class="tabledata" cellpadding="0" cellspacing="0">
 <colgroup>
-  <col id="br_add" />
-  <col id="br_playlist" />
-  <col id="br_songs" />
-  <col id="br_owner" />
-  <col id="br_action" />
+  <col id="col_add" />
+  <col id="col_playlist" />
+  <col id="col_songs" />
+  <col id="col_owner" />
+  <col id="col_action" />
 </colgroup>
-<tr class="table-header th-top">
-  <th><?php echo _('Add'); ?></th>
-	<th><?php echo Ajax::text('?page=browse&action=set_sort&sort=name',_('Playlist Name'),'playlist_sort_name'); ?></th>
-	<th><?php echo _('# Songs'); ?></th>
-	<th><?php echo _('Owner'); ?></th>
-	<th><?php echo _('Actions'); ?></th>
+<tr class="th-top">
+  <th class="cel_add"><?php echo _('Add'); ?></th>
+	<th class="cel_playlist"><?php echo Ajax::text('?page=browse&action=set_sort&sort=name',_('Playlist Name'),'playlist_sort_name'); ?></th>
+	<th class="cel_songs"><?php echo _('# Songs'); ?></th>
+	<th class="cel_owner"><?php echo _('Owner'); ?></th>
+	<th class="cel_action"><?php echo _('Actions'); ?></th>
 </tr>
 <?php 
 foreach ($object_ids as $playlist_id) { 
@@ -46,12 +46,12 @@ foreach ($object_ids as $playlist_id) {
 	<?php require Config::get('prefix') . '/templates/show_playlist_row.inc.php'; ?> 
 </tr>
 <?php } // end foreach ($playlists as $playlist) ?>
-<tr class="table-header th-bottom">
-  <th><?php echo _('Add'); ?></th>
-	<th><?php echo Ajax::text('?page=browse&action=set_sort&sort=name',_('Playlist Name'),'playlist_sort_name'); ?></th>
-	<th><?php echo _('# Songs'); ?></th>
-	<th><?php echo _('Owner'); ?></th>
-	<th><?php echo _('Actions'); ?></th>
+<tr class="th-bottom">
+  <th class="cel_add"><?php echo _('Add'); ?></th>
+	<th class="cel_playlist"><?php echo Ajax::text('?page=browse&action=set_sort&sort=name',_('Playlist Name'),'playlist_sort_name'); ?></th>
+	<th class="cel_songs"><?php echo _('# Songs'); ?></th>
+	<th class="cel_owner"><?php echo _('Owner'); ?></th>
+	<th class="cel_action"><?php echo _('Actions'); ?></th>
 </tr>
 </table>
 <?php require Config::get('prefix') . '/templates/list_header.inc.php' ?>

@@ -19,22 +19,22 @@
 
 */
 ?>
-<td>
+<td class="cel_add">
 	<?php echo Ajax::button('?action=basket&type=album&id=' . $album->id,'add',_('Add'),'add_album_' . $album->id); ?>
 	<?php echo Ajax::button('?action=basket&type=album_random&id=' . $album->id,'random',_('Random'),'random_album_' . $album->id); ?>
 </td>
 <?php if (Browse::get_filter('show_art')) { ?>
-<td class="br_td_cover">
+<td class="cel_cover">
         <a href="<?php echo Config::get('web_path'); ?>/albums.php?action=show&amp;album=<?php echo $album->id; ?>">
                 <img height="75" width="75" src="<?php echo Config::get('web_path'); ?>/image.php?id=<?php echo $album->id; ?>&amp;thumb=1&amp;sid=<?php echo session_id(); ?>" />
         </a>
 </td>
 <?php } ?>
-<td><?php echo $album->f_name_link; ?></td>
-<td><?php echo $album->f_artist_link; ?></td>
-<td><?php echo $album->song_count; ?></td>
-<td><?php echo $album->year; ?></td>
-<td>
+<td class="cel_album"><?php echo $album->f_name_link; ?></td>
+<td class="cel_artist"><?php echo $album->f_artist_link; ?></td>
+<td class="cel_songs"><?php echo $album->song_count; ?></td>
+<td class="cel_year"><?php echo $album->year; ?></td>
+<td class="cel_action">
 	<?php if (Access::check_function('batch_download')) { ?>
 		<a href="<?php echo Config::get('web_path'); ?>/batch.php?action=album&amp;id=<?php echo $album->id; ?>">
 			<?php echo get_user_icon('batch_download',_('Batch Download')); ?>

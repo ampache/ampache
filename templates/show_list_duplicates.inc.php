@@ -25,16 +25,26 @@ show_duplicate_searchbox($search_type);
 if (count($flags)) { ?>
 	<?php show_box_top(_('Duplicate Songs')); ?>
 	<form method="post" enctype="multipart/form-data" action="<?php echo $web_path; ?>/admin/flag.php?action=disable">
-	<table class="tabledata">
-	<tr class="table-header">
-		<td><?php echo _('Disable'); ?></td>
-		<td><?php echo _('Song'); ?></td>
-		<td><?php echo _('Artist'); ?></td>
-		<td><?php echo _('Album'); ?></td>
-		<td><?php echo _('Length'); ?></td>
-		<td><?php echo _('Bitrate'); ?></td>
-		<td><?php echo _('Size'); ?></td>
-		<td><?php echo _('Filename'); ?></td>
+  <table class="tabledata" cellpadding="0" cellspacing="0">
+  <colgroup>
+    <col id="col_disable" />
+    <col id="col_song" />
+    <col id="col_artist" />
+    <col id="col_album" />
+    <col id="col_length" />
+    <col id="col_bitrate" />
+    <col id="col_size" />
+    <col id="col_filename" />
+  </colgroup>	
+	<tr class="th-top">
+		<th class="cel_disable"><?php echo _('Disable'); ?></th>
+		<th class="cel_song"><?php echo _('Song'); ?></th>
+		<th class="cel_artist"><?php echo _('Artist'); ?></th>
+		<th class="cel_album"><?php echo _('Album'); ?></th>
+		<th class="cel_length"><?php echo _('Length'); ?></th>
+		<th class="cel_bitrate"><?php echo _('Bitrate'); ?></th>
+		<th class="cel_size"><?php echo _('Size'); ?></th>
+		<th class="cel_filename"><?php echo _('Filename'); ?></th>
 	</tr>
 	<?php 
 	foreach ($flags as $flag) {
@@ -58,14 +68,14 @@ if (count($flags)) { ?>
 			$check_txt = '';
 			if ($key == '0' AND $_REQUEST['auto']) { $check_txt = ' checked="checked"'; } 
 			echo "<tr class=\"".$current_class."\">".
-			"<td><input type=\"checkbox\" name=\"song_ids[]\" value=\"" . $dinfo['songid'] . "\" $check_txt/></td>".
-			"<td><a href=\"$web_path/stream.php?action=single_song&amp;song_id=$song->id\">".scrub_out($formated_title)."</a> </td>".
-			"<td><a href=\"$web_path/artists.php?action=show&amp;artist=".$dinfo['artistid']."\" title=\"".scrub_out($dinfo['artist'])."\">".scrub_out($dinfo['artist'])."</a> </td>".
-			"<td><a href=\"$web_path/albums.php?action=show&amp;album=".$dinfo['albumid']."\" title=\"".scrub_out($dinfo['album'])."\">".scrub_out($dinfo['album'])."</a> </td>".
-			"<td>".floor($dinfo['time']/60).":".sprintf("%02d", ($dinfo['time']%60) )."</td>".
-			"<td>".intval($dinfo['bitrate']/1000)."</td>".
-			"<td>".sprintf("%.2f", ($dinfo['size']/1048576))."MB</td>".
-			"<td>".$dinfo['file']."</td>";
+			"<td class=\"cel_disable\"><input type=\"checkbox\" name=\"song_ids[]\" value=\"" . $dinfo['songid'] . "\" $check_txt/></td>".
+			"<td class=\"cel_song\"><a href=\"$web_path/stream.php?action=single_song&amp;song_id=$song->id\">".scrub_out($formated_title)."</a> </td>".
+			"<td class=\"cel_artist\"><a href=\"$web_path/artists.php?action=show&amp;artist=".$dinfo['artistid']."\" title=\"".scrub_out($dinfo['artist'])."\">".scrub_out($dinfo['artist'])."</a> </td>".
+			"<td class=\"cel_album\"><a href=\"$web_path/albums.php?action=show&amp;album=".$dinfo['albumid']."\" title=\"".scrub_out($dinfo['album'])."\">".scrub_out($dinfo['album'])."</a> </td>".
+			"<td class=\"cel_length\">".floor($dinfo['time']/60).":".sprintf("%02d", ($dinfo['time']%60) )."</td>".
+			"<td class=\"cel_bitrate\">".intval($dinfo['bitrate']/1000)."</td>".
+			"<td class=\"cel_size\">".sprintf("%.2f", ($dinfo['size']/1048576))."MB</td>".
+			"<td class=\"cel_filename\">".$dinfo['file']."</td>";
 			echo "</tr>\n";
 		} // end foreach ($dinfolist as $dinfo)
 		
@@ -73,6 +83,16 @@ if (count($flags)) { ?>
 	?>
 	<tr>
 		<td colspan="8" class="<?php echo flip_class(); ?>"><input type="submit" value="<?php echo _('Disable Songs'); ?>" /></td>
+	</tr>
+	<tr class="th-bottom">
+		<th class="cel_disable"><?php echo _('Disable'); ?></th>
+		<th class="cel_song"><?php echo _('Song'); ?></th>
+		<th class="cel_artist"><?php echo _('Artist'); ?></th>
+		<th class="cel_album"><?php echo _('Album'); ?></th>
+		<th class="cel_length"><?php echo _('Length'); ?></th>
+		<th class="cel_bitrate"><?php echo _('Bitrate'); ?></th>
+		<th class="cel_size"><?php echo _('Size'); ?></th>
+		<th class="cel_filename"><?php echo _('Filename'); ?></th>
 	</tr>
 	</table>
 	</form>

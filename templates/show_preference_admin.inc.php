@@ -21,17 +21,21 @@
 ?>
 <?php show_box_top(_('Preference Administration')); ?>
 <form method="post" action="<?php echo conf('web_path'); ?>/admin/preferences.php" enctype="multipart/form-data">
-<table cellspacing="0">
-<tr class="table-header">
-	<td><?php echo _('Preference'); ?></td>
-	<td><?php echo _('Level'); ?></td>
+<table class="tabledata" cellpadding="0" cellspacing="0">
+<colgroup>
+  <col id="col_preference" />
+  <col id="col_level" />
+</colgroup>
+<tr class="th-top">
+	<th class="cel_preference"><?php echo _('Preference'); ?></th>
+	<th class="cel_level"><?php echo _('Level'); ?></th>
 </tr>
 <?php foreach ($preferences as $preference) { 
 	unset($is_25,$is_5,$is_100);
 ?>
 <tr class="<?php echo flip_class(); ?>">
-	<td><?php echo scrub_out($preference['description']); ?></td>
-	<td>
+	<td class="cel_preference"><?php echo scrub_out($preference['description']); ?></td>
+	<td class="cel_level">
 		<?php $level_name = "is_" . $preference['level']; ${$level_name} = 'selected="selected"'; ?> 
 		<select name="prefs[<?php echo scrub_out($preference['name']); ?>]">
 			<option value="5" <?php echo $is_5; ?>><?php echo _('Guest'); ?></option>
@@ -47,6 +51,10 @@
 		<input type="submit" value="<?php echo _('Update'); ?>" />
 	</td>
 </tr>	
+<tr class="th-bottom">
+	<th class="cel_preference"><?php echo _('Preference'); ?></th>
+	<th class="cel_level"><?php echo _('Level'); ?></th>
+</tr>
 </table>
 </form>
 <?php show_box_bottom(); ?>

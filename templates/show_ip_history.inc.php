@@ -28,24 +28,29 @@
 	<a href="<?php echo Config::get('web_path')?>/admin/users.php?action=show_ip_history&user_id=<?php echo $working_user->id?>&all"><?php echo _('Show All'); ?>...</a>
 <?php }?>
 </div>
-<table>
-<tr class="table-header">
-        <td align="center">
-     		<?php echo _('Date'); ?>
-     	</td>
-     	<td align=\"center\">
-     		<?php echo _('IP Address'); ?>
-     	</td>
+<table class="tabledata" cellpadding="0" cellspacing="0">
+<colgroup>
+  <col id="col_date" />
+  <col id="col_ipaddress" />
+</colgroup>
+<tr class="th-top">
+  <th class="cel_date"><?php echo _('Date'); ?></th>
+ 	<th class="cel_ipaddress"><?php echo _('IP Address'); ?></th>
 </tr>
 <?php foreach ($history as $data) { ?>
 <tr class="<?php echo flip_class(); ?>">
-	<td>
+	<td class="cel_date">
 		<?php echo date("d/m/Y H\hi",$data['date']); ?>
 	</td>
-	<td>
+	<td class="cel_ipaddress">
 		<?php echo int2ip($data['ip']); ?>
 	</td>
 </tr>
 <?php } ?>
+<tr class="th-bottom">
+  <th class="cel_date"><?php echo _('Date'); ?></th>
+ 	<th class="cel_ipaddress"><?php echo _('IP Address'); ?></th>
+</tr>
+
 </table>
 <?php show_box_bottom(); ?>

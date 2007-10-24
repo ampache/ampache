@@ -25,18 +25,18 @@
  */
 ?>
 <?php require Config::get('prefix') . '/templates/list_header.inc.php' ?>
-<table class="tabledata" cellspacing="0" cellpadding="0">
+<table class="tabledata" cellpadding="0" cellspacing="0">
 <colgroup>
-  <col id="br_add" />
-  <col id="br_genre" />
-  <col id="br_songs" />
-  <col id="br_action" />
+  <col id="col_add" />
+  <col id="col_genre" />
+  <col id="col_songs" />
+  <col id="col_action" />
 </colgroup>
-<tr class="table-header th-top">
-	<th><?php echo _('Add'); ?></th>
-	<th><?php echo Ajax::text('?page=browse&action=set_sort&sort=name',_('Genre'),'sort_genre_name'); ?></th>
-	<th><?php echo _('Songs'); ?></th>
-	<th><?php echo _('Action'); ?></th>
+<tr class="th-top">
+	<th class="cel_add"><?php echo _('Add'); ?></th>
+	<th class="cel_genre"><?php echo Ajax::text('?page=browse&action=set_sort&sort=name',_('Genre'),'sort_genre_name'); ?></th>
+	<th class="cel_songs"><?php echo _('Songs'); ?></th>
+	<th class="cel_action"><?php echo _('Action'); ?></th>
 </tr>
 <?php 
 foreach ($object_ids as $genre_id) { 
@@ -44,7 +44,7 @@ foreach ($object_ids as $genre_id) {
 	$genre->format();
 ?>
 	<tr class="<?php echo flip_class(); ?>">
-		<td>
+		<td class="cel_add">
 		<span onclick="ajaxPut('<?php echo Config::get('ajax_url'); ?>?action=basket&amp;type=genre&amp;id=<?php echo $genre->id; ?>');return true;" >
 				<?php echo get_user_icon('add'); ?>
 		</span>
@@ -52,9 +52,9 @@ foreach ($object_ids as $genre_id) {
 				<?php echo get_user_icon('random'); ?>
 		</span>
 		</td>
-		<td><?php echo $genre->f_link; ?></td>
-		<td><?php echo $genre->get_song_count(); ?></td>
-		<td>
+		<td class="cel_genre"><?php echo $genre->f_link; ?></td>
+		<td class="cel_songs"><?php echo $genre->get_song_count(); ?></td>
+		<td class="cel_action">
 			<?php if (Access::check_function('batch_download')) { ?>
 			<a href="<?php echo $genre->download_link; ?>">
 				<?php echo get_user_icon('batch_download'); ?>
@@ -63,11 +63,11 @@ foreach ($object_ids as $genre_id) {
 		</td>
 	</tr>
 <?php } // end foreach genres ?>
-<tr class="table-header th-bottom">
-	<th><?php echo _('Add'); ?></th>
-	<th><?php echo Ajax::text('?page=browse&action=set_sort&sort=name',_('Genre'),'sort_genre_name'); ?></th>
-	<th><?php echo _('Songs'); ?></th>
-	<th><?php echo _('Action'); ?></th>
+<tr class="th-bottom">
+	<th class="cel_add"><?php echo _('Add'); ?></th>
+	<th class="cel_genre"><?php echo Ajax::text('?page=browse&action=set_sort&sort=name',_('Genre'),'sort_genre_name'); ?></th>
+	<th class="cel_songs"><?php echo _('Songs'); ?></th>
+	<th class="cel_action"><?php echo _('Action'); ?></th>
 </tr>
 </table>
 <?php require Config::get('prefix') . '/templates/list_header.inc.php' ?>

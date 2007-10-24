@@ -22,26 +22,28 @@ $web_path = Config::get('web_path');
 $ajax_url = Config::get('ajax_url'); 
 ?>
 <?php require Config::get('prefix') . '/templates/list_header.inc.php'; ?>
-<table class="tabledata" cellspacing="0" cellpadding="0">
+<table class="tabledata" cellpadding="0" cellspacing="0">
 <colgroup>
-  <col id="br_add" />
-  <col id="br_cover" />
-  <col id="br_album" />
-  <col id="br_artist" />
-  <col id="br_songs" />
-  <col id="br_year" />
-  <col id="br_action" />
-</colgroup>
-<tr class="table-header th-top">
-	<th><?php echo _('Add'); ?></th>
+  <col id="col_add" />
 	<?php if (Browse::get_filter('show_art')) { ?>
-	<th><?php echo _('Cover'); ?></th>
+  <col id="col_cover" />
 	<?php } ?>
-	<th><?php echo Ajax::text('?page=browse&action=set_sort&sort=name',_('Album'),'album_sort_name'); ?></th>
-	<th><?php echo _('Artist'); ?></th>
-	<th><?php echo _('Songs'); ?></th>
-	<th><?php echo Ajax::text('?page=browse&action=set_sort&sort=year',_('Year'),'album_sort_year'); ?></th>
-	<th><?php echo _('Actions'); ?></th>
+  <col id="col_album" />
+  <col id="col_artist" />
+  <col id="col_songs" />
+  <col id="col_year" />
+  <col id="col_action" />
+</colgroup>
+<tr class="th-top">
+	<th class="cel_add"><?php echo _('Add'); ?></th>
+	<?php if (Browse::get_filter('show_art')) { ?>
+	<th class="cel_cover"><?php echo _('Cover'); ?></th>
+	<?php } ?>
+	<th class="cel_album"><?php echo Ajax::text('?page=browse&action=set_sort&sort=name',_('Album'),'album_sort_name'); ?></th>
+	<th class="cel_artist"><?php echo _('Artist'); ?></th>
+	<th class="cel_songs"><?php echo _('Songs'); ?></th>
+	<th class="cel_year"><?php echo Ajax::text('?page=browse&action=set_sort&sort=year',_('Year'),'album_sort_year'); ?></th>
+	<th class="cel_action"><?php echo _('Actions'); ?></th>
 </tr>
 <?php 
 	/* Foreach through the albums */
@@ -53,16 +55,16 @@ $ajax_url = Config::get('ajax_url');
 	<?php require Config::get('prefix') . '/templates/show_album_row.inc.php'; ?> 
 </tr>
 <?php } //end foreach ($albums as $album) ?>
-<tr class="table-header th-bottom">
-	<th><?php echo _('Add'); ?></th>
+<tr class="th-bottom">
+	<th class="cel_add"><?php echo _('Add'); ?></th>
 	<?php if (Browse::get_filter('show_art')) { ?>
-	<th><?php echo _('Cover'); ?></th>
+	<th class="cel_cover"><?php echo _('Cover'); ?></th>
 	<?php } ?>
-	<th><?php echo Ajax::text('?page=browse&action=set_sort&sort=name',_('Album'),'album_sort_name'); ?></th>
-	<th><?php echo _('Artist'); ?></th>
-	<th><?php echo _('Songs'); ?></th>
-	<th><?php echo Ajax::text('?page=browse&action=set_sort&sort=year',_('Year'),'album_sort_year'); ?></th>
-	<th><?php echo _('Actions'); ?></th>
+	<th class="cel_album"><?php echo Ajax::text('?page=browse&action=set_sort&sort=name',_('Album'),'album_sort_name'); ?></th>
+	<th class="cel_artist"><?php echo _('Artist'); ?></th>
+	<th class="cel_songs"><?php echo _('Songs'); ?></th>
+	<th class="cel_year"><?php echo Ajax::text('?page=browse&action=set_sort&sort=year',_('Year'),'album_sort_year'); ?></th>
+	<th class="cel_action"><?php echo _('Actions'); ?></th>
 </tr>
 </table>
 <?php require Config::get('prefix') . '/templates/list_header.inc.php'; ?>

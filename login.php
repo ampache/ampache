@@ -147,7 +147,7 @@ else {
 	Error::add('general',$auth['error']);
 }
 
-require Config::get('prefix') . '/templates/show_login_form.inc';
+require Config::get('prefix') . '/templates/show_login_form.inc.php';
 
 ?>
 </body>

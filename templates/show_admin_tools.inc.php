@@ -25,18 +25,22 @@ $catalogs 	= Catalog::get_catalogs();
 ?>
 <?php show_box_top(_('Catalogs')); ?>
 <table class="tabledata" cellpadding="0" cellspacing="0">
-<tr class="table-header">
-	<th><?php echo _('Name'); ?></th>
-	<th align="center"><?php echo _('Action'); ?></th>
+<colgroup>
+  <col id="col_name" />
+  <col id="col_action" />
+</colgroup>
+<tr class="th-top">
+	<th class="cel_name"><?php echo _('Name'); ?></th>
+	<th class="cel_action"><?php echo _('Action'); ?></th>
 </tr>
 <?php foreach ($catalogs as $catalog) { ?>
 <tr class="<?php echo flip_class(); ?>">
-	<td>
+	<td class="cel_name">
 		<a href="<?php echo $web_path; ?>/admin/catalog.php?action=show_customize_catalog&amp;catalog_id=<?php echo $catalog->id; ?>">
 		<?php echo scrub_out($catalog->name); ?></a>
 		&nbsp;&nbsp;(<?php echo scrub_out($catalog->path); ?>)
 	</td>
-	<td>
+	<td class="cel_action">
 		<a href="<?php echo $web_path; ?>/admin/catalog.php?action=add_to_catalog&amp;catalogs[]=<?php echo $catalog->id; ?>">
 		<?php echo _('Add'); ?></a>&nbsp;|&nbsp;
 		<a href="<?php echo $web_path; ?>/admin/catalog.php?action=update_catalog&amp;catalogs[]=<?php echo $catalog->id; ?>">
@@ -65,6 +69,10 @@ $catalogs 	= Catalog::get_catalogs();
 	</td>
 </tr>
 <?php } // end if no catalogs ?>
+<tr class="th-bottom">
+	<th class="cel_name"><?php echo _('Name'); ?></th>
+	<th class="cel_action"><?php echo _('Action'); ?></th>
+</tr>
 </table>
 <div class="text-action">
 <a href="<?php echo $web_path; ?>/admin/catalog.php?action=clean_all_catalogs"><?php echo _('Clean All'); ?></a>&nbsp;

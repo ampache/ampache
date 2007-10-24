@@ -40,19 +40,22 @@
 
 
 /************************************************/
-/*         General style rules                  */
+/*    Unify default browsers style rules        */
 /************************************************/
-
-body, html, fieldset			{ border: 0; } 
 h1, h2, h3, h4, h5, h6, pre, code	{ font-size: 1em; line-height: 1em; } /* avoid browser default inconsistent font-sizes */
-a img, :link img, :visited img 		{ border: none; } /* no blue linked image borders */
-*					{ margin: 0; padding: 0; } /* White space reset */
+ol, ul { list-style: none; }
+table {	border-collapse: separate; border-spacing: 0; }
+caption, th, td {	text-align: left;	font-weight: normal; }
+*	{ margin: 0; padding: 0; border:0; } /* White space reset */
+a img, :link img, :visited img { border: 0; } /* no blue linked image borders */
 
-
+/************************************************/
+/*           General style rules                */
+/************************************************/
 html{ font-size: 62.5%; }
 
 body{ 
-	font-size: 1.1em;
+  font-size:1.1em;
 	font-family: Lucida Sans Unicode, Verdana, Arial, Helvetica, sans-serif;
 	background: #2b293d url(../images/background.jpg) 0 0 repeat-x fixed;
 	min-width:90em;
@@ -62,31 +65,23 @@ body{
 ol	{ list-style-type: decimal-leading-zero; }
 li	{ list-style-position: inside; }
 p 	{ color: #e9ad51; }
-a	{ color: #74718a; text-decoration: none; }
+a	  { color: #74718a; text-decoration: none; }
 
 td 	{ padding: 0 8px; color: #e9ad51; }
-th 	{ }
+th 	{ font-weight:bold; padding: 0 .3em;}
 
 input, select	{
 	font-size:1em;
+	font-family: Lucida Sans Unicode, Verdana, Arial, Helvetica, sans-serif;
 	color: #e9ad51;
 	background-color: #111; 
 	border: 1px solid #8b3e38;
-	margin:0 0 1px 0;
+	margin:0 0 0px 0;
 }
 
-input{
-  padding:0 2px;
-}
-
+input{ padding:0 2px; }
 input:focus, select:focus { border-style: dotted; }
-
-textarea { 
-	background-color: #111;
-	color: #e9ad51; 
-}
-
-.link { cursor:pointer; }
+textarea { background-color: #111; color: #e9ad51; }
 
 /************************************************/
 /*             IE6 behaviors                    */
@@ -95,24 +90,23 @@ textarea {
 body { behavior:url("csshover2.htc"); }
 
 /************************************************/
-/*             Styles for Site Header           */
-/************************************************/
-
-#topbar 	{ padding: 0 0; }
-#topbarright  	{ font-size: 0.9em; text-align: right; color: #e9ad51; position: absolute; top: 0px; right: 0; padding: 3px; }
-#topbarright b 	{ font-weight: normal }
-#topbarright a 	{ color: #e9ad51;}
-#topbarleft 	{ text-align: center; background: url(../images/ampache_back.gif) 0 0 repeat-x;}
-#topbarleft a 	{ }
-
-/************************************************/
 /*                XSPF Player                   */
 /************************************************/
-
 .xspf_player {
     right: 20px;
     position: absolute;
 }
+
+/************************************************/
+/*             Header                           */
+/************************************************/
+#header 	{ padding: 0 0; }
+#headerbox  	{ font-size: 0.9em; text-align: right; color: #e9ad51; position: absolute; top: 0; right: 0; padding: 3px; }
+#headerbox b 	{ font-weight: normal }
+#headerbox a 	{ color: #e9ad51;}
+#headerlogo 	  { text-align: center; background: url(../images/ampache_back.gif) 0 0 repeat-x;}
+#headerlogo a 	{ }
+.box_topbarright    {display:table;}
 
 /************************************************/
 /*                Footer                        */
@@ -120,91 +114,173 @@ body { behavior:url("csshover2.htc"); }
 #footer {
   clear:both;
 	text-align:center;
+	font-size:.8em;
 	padding:3px;
-	font-size:0.8em;
 }
 
 /************************************************/
 /*                  Buttons                     */
 /************************************************/
-.smallbutton {
-	border: 0px;
-	padding: 0 1px;
-	cursor: pointer;
-}
-input.button, input[type=button], input[type=submit], .text-action a, .text-action span, .smallbutton {
+
+.button, input[type=button], input[type=submit], .text-action a {
 	background:#8b3e38 url(../images/button_back2.png) 0 100% repeat-x !important;
 	background:#8b3e38;
-	color:#c98d31;
+	color:#e9ad51;
 	padding:0px 0.5em; 
 	margin:4px 0 0 0; 
-	border:none;
+	border:0;
+  cursor:pointer;
 }
-.text-action span
-{
-  display:block; cursor: pointer;
-}
-input.button:hover, input[type=button]:hover, input[type=submit]:hover, div.text-action a:hover, div.text-action span:hover,.smallbutton:hover {
+.button:hover, input[type=button]:hover, input[type=submit]:hover, div.text-action a:hover {
 	background:#74718a url(../images/button_back2.png) 0 100% repeat-x !important;
 	background:#74718a;
-	color:#e9ad51;
 }
 
-input[type=checkbox]{border:none;background:none;}
+a.button              { padding:1px .5em; }
+input[type=checkbox]  {border:0;background:none;}
+.text-action span     { display:block; }
 
 /************************************************/
-/*         Tables (songs lists...)              */
+/*                  Sidebar                     */
 /************************************************/
+#sidebar {
+	float:left:
+  position:relative;
+	width: 13em;
+	text-align: left;
+	font-size: 0.8em;
+	padding-top:29px;
+	background:#2b293d url(../images/ampache_menu.gif) 50% 0 no-repeat;
+}
 
-.table-header {
+/* For supporting browsers *cough*... I mean not IE6... *cough*, fix sidebar position on the left */
+*>div#sidebar{ position: fixed; } 
+
+#sidebar select		    { width: 95%; }
+#sidebar ul           { list-style:none; }
+
+/* For sidebar tabs */
+/********************/
+#sidebar-tabs{
+	border-top:1px solid #000;
+	background:#111;
+}
+
+#sidebar-tabs li.sb1 {
+  float: left;
+	padding:1px;
+  background: #111 ; 
+  border-top:0.5em solid #8b3e38;
+  border-right:1px solid #000;width:16px;
+}
+#sidebar-tabs li.active { 
+	border-top-color: #e9ad51;
+} 
+#sidebar-tabs li:hover.sb1
+{
+  background:#000;
+	border-top-color: #e9ad51;
+}
+/* Tabs content */
+/****************/
+#sidebar-page {
+  position:absolute;
+  left:0;
+  top:52px;
 	background: #111;
-	vertical-align: top;
+	padding-bottom:0.5em;
+  width:13em;
+  color:#8b3e38;
+} 
+#sidebar-page ul.sb2 {
 }
-.table-header th {
-	color:#8b3e38; 
-	font-variant:small-caps;
-	font-weight:normal;
-	border-right:1px solid #000;
+#sidebar-page ul.sb2 li{
+  margin:1em auto;
+  padding-bottom: 0.5em;
 }
-.table-header th a {
-	color:#8b3e38;
-	padding-right:10px;
-	background: url(../images/sort_off.gif) 100% 50% no-repeat;
-	display:block;
+#sidebar-page ul.sb2 h4{
+  padding:.2em .5em .5em 0;
+  font-style:italic; 
+  font-weight:normal;
+  font-size:1em;
+  letter-spacing:.2em;
+  text-align:right;
+  border-bottom:1px dotted #e9ad51;
+  text-decoration: overline;
+  background: url(../images/puce.gif) -8px -8px no-repeat;
+  color:#e9ad51;
 }
-.table-header td a:hover, .table-header th a:hover {
-	color:#8b3e38;
-	background-color:transparent;
-	background-image:url(../images/sort_on.gif);
+#sidebar-page ul.sb2 li:hover h4{
+  background-color:#000;
 }
 
-.odd, .even				{ background: url(../images/list_back.png) 0 50% repeat-x !important; background-image: none;}
-.odd 					{ background-color: #111 !important;}
-.even					{ }
-.odd:hover, .even:hover 		{ background-color: #2b293d !important;}
-/*
-.odd td img, .even td img 		{ border: 2px solid transparent; }
-.odd:hover td img, .even:hover td img	{ border-color: #e9ad510; }
-*/
-/* todo : quand col, mettre sur les a:hover de la col action un background-color:none;*/
-.odd td a img:hover, .even td a img:hover {opacity:0.5;}
+#sidebar-page ul.sb3, #sidebar-page div.sb3 {
+  color:#8b3e38;
+}
+#sidebar-page .sb3 a{ color:#8b3e38; }
+#sidebar-page ul.sb3 li{
+  margin:0;
+  padding:0;
+  border:none;
+  font-weight:normal;
+  background: #111 url(../images/button_back.png) 0 100% repeat-x;
+  border-bottom: 1px solid #000;
+}
+* html #sidebar-page ul.sb3 li{display:inline;background:#111;} /* fix ie6 */
+#sidebar-page .sb3 a, #sidebar-page .sb3 div{
+  padding:.2em .6em;
+  border-left: .5em solid #8b3e38;
+}
+#sidebar-page .sb3 a:hover{ 
+  border-left-color: #e9ad51;
+}
 
-.border 	{ background: #000; }
+#sidebar-page a{
+  display:block;
+}
+#sidebar-page a:hover{
+  background:#000;
+  color:#e9ad51;
+}
 
+/* SIDEBAR : Home */
+/******************/
 
+/* SIDEBAR : Browse */
+/********************/
+.alphabet { 
+  background:transparent; /* fix ie bug */
+	margin: 0.3em auto;
+}
+.alphabet span.link { 
+	cursor: pointer;
+	margin: 0;
+	padding:3px 5px;
+	font-family: monospace, Courier, Georgia;
+} 
+.alphabet span.active{ color:#e9ad51; }
+.alphabet span.link:hover { 
+	background: #8b3e38;
+	color:#111;
+} 
 
-/************************************************/
-/*               Content block                  */
-/************************************************/
+/* SIDEBAR : Localplay */
+/***********************/
 
-#content {margin:10px 14em 10px 13.5em;}
+.active_instance { 
+} 
 
-/* Center things on supporting browsers */
-#content>table,#content>table .box  { margin-left: auto; margin-right: auto; } 
+/* SIDEBAR : Preferences */
+/*************************/
 
-h3#content_title{}		/* Doesn't exist anymore (?) */
-h3#content_title span {}	/* Doesn't exist anymore (?) */
-
+/* SIDEBAR : Admin */
+/*******************/
+#sb_admin_catalogs li.sb_admin_catalogs_ctrls img {margin:0;}
+#sb_admin_catalogs li.sb_admin_catalogs_ctrls a{
+  display:inline; 
+  padding:0; 
+  border:none; 
+}
 
 /************************************************/
 /*                  Rightbar                    */
@@ -260,217 +336,6 @@ h3#content_title span {}	/* Doesn't exist anymore (?) */
 #rightbar #rb_current_playlist li   { position:relative;font-size:0.9em;;line-height:14px; color:#5b5b5b; padding-right:20px;}
 #rightbar #rb_current_playlist li a { display:block; padding:0.2em;}
 #rightbar .delitem                  { position:absolute;right:0;top:0; }
-/************************************************/
-/*                  Sidebar                     */
-/************************************************/
-
-#sidebar {
-	float:left:
-  position:relative;
-	width: 13em;
-	text-align: left;
-	font-size: 0.8em;
-	padding-top:29px;
-	background:#2b293d url(../images/ampache_menu.gif) 50% 0 no-repeat;
-}
-
-/* For supporting browsers *cough*... I mean not IE6... *cough*, fix sidebar position on the left */
-*>div#sidebar{ position: fixed; } 
-
-#sidebar select		    { width: 95%; }
-#sidebar .smallbutton	{ margin: 0; }
-#sidebar ul           { list-style:none; }
-
-/* For sidebar tabs */
-/********************/
-#sidebar-tabs{
-	border-top:1px solid #000;
-	background:#111;
-}
-
-#sidebar-tabs li.sb1 {
-  float: left;
-	padding:1px;
-  background: #111 ; 
-  border-top:0.5em solid #8b3e38;
-  border-right:1px solid #000;width:16px;
-}
-#sidebar-tabs li.active { 
-	/*background: #faf url(../images/top.gif) repeat-x 0 0;*/ 
-	border-top-color: #e9ad51;
-} 
-#sidebar-tabs li:hover.sb1
-{
-  background:#000;
-	border-top-color: #e9ad51;
-}
-/* Tabs content */
-/****************/
-#sidebar-page {
-  position:absolute;
-  left:0;
-  top:52px;
-	background: #111;
-	padding-bottom:0.5em;
-  width:13em;
-  color:#8b3e38;
-} 
-#sidebar-page ul.sb2 {
-  /*padding:2px 4px;*/
-}
-#sidebar-page ul.sb2 li{
-  margin:1em auto;
-  padding-bottom: 0.5em;
-  /*border-bottom: 1px solid #fff;*/
-}
-#sidebar-page ul.sb2 h4{
-  padding:0.2em 0.5em 0.5em 0;
-  font-style:italic; 
-  font-weight:normal;
-  letter-spacing:0.2em;
-  text-align:right;
-  border-bottom:1px dotted #e9ad51;
-  text-decoration: overline;
-  background: url(../images/puce.gif) -8px -8px no-repeat;
-  color:#e9ad51;
-  }
-#sidebar-page ul.sb2 li:hover h4{
-  background-color:#000;
-}
-
-#sidebar-page ul.sb3, #sidebar-page div.sb3 {
-  color:#8b3e38;
-}
-#sidebar-page .sb3 a{ color:#8b3e38; }
-#sidebar-page ul.sb3 li{
-  margin:0;
-  padding:0;
-  border:none;
-  font-weight:normal;
-  background: #111 url(../images/button_back.png) 0 100% repeat-x;
-  border-bottom: 1px solid #000;
-}
-* html #sidebar-page ul.sb3 li{display:inline;background:#111;} /* fix ie6 */
-#sidebar-page .sb3 a, #sidebar-page .sb3 div{ 
-  padding:0.2em 0.6em;
-  border-left: .5em solid #8b3e38;
-}
-#sidebar-page .sb3 a:hover{ 
-  border-left-color: #e9ad51;
-}
-
-#sidebar-page a{
-  display:block;
-}
-#sidebar-page a:hover{
-  background:#000;
-  color:#e9ad51;
-}
-
-/* SIDEBAR : Home */
-/******************/
-
-/* SIDEBAR : Browse */
-/********************/
-.alphabet { 
-  background:transparent; /* fix ie bug */
-  /*font-size:0.95em;*/
-	/*font-weight:normal;*/
-	margin: 0.3em auto;
-	/*color:#5b5b5b;*/
-}
-.alphabet span.link { 
-	cursor: pointer;
-	margin: 0;
-	padding:3px 5px;
-	font-family: monospace, Courier, Georgia;
-} 
-.alphabet span.active{ color:#e9ad51; }
-.alphabet span.link:hover { 
-	background: #8b3e38;
-	color:#111;
-} 
-
-/* SIDEBAR : Localplay */
-/***********************/
-
-.active_instance { 
-
-} 
-
-/* SIDEBAR : Preferences */
-/*************************/
-
-/* SIDEBAR : Admin */
-/*******************/
-#sb_admin_catalogs li.sb_admin_catalogs_ctrls img {margin:0;}
-#sb_admin_catalogs li.sb_admin_catalogs_ctrls a{
-  display:inline; 
-  padding:0; 
-  border:none; 
-}
-
-
-/************************************************/
-/*          Albums of the moment                */
-/************************************************/
-
-.random_album
-{
-  position:relative;
-  float:left;
-  padding:8px;
-}
-
-.random_album .play_album
-{
-  position:absolute;
-  top:10px;
-  right:0;
-}
-/************************************************/
-/*          Styles for Now Playing              */
-/************************************************/
-
-#nowplaying{
-	clear: both;
-}
-#np_container1{
-	height: 18px;
-}
-#np_container1 h1{
-	font-weight: bold;
-	padding: 2px;
-}
-#np_container2{
-	border-width: 1px;
-	border-style: solid;
-	border-color:#ddd #999 #999 #ccc;
-	padding: 6px;
-	color: #000;
-}
-
-.np_row {
-	padding-top: 3px;
-	padding-bottom: 3px;
-	display: block;
-}
-.np_cell {
-	margin: 10px;
-}
-
-/************************************************/
-/*                Footer                        */
-/************************************************/
-#footer {
-	margin-left: 150px;
-	margin-bottom: 10px;
-}
-
-#footer p {
-	color:#999;
-	font-size:10px;
-}
 
 
 /************************************************/
@@ -534,7 +399,6 @@ h3#content_title span {}	/* Doesn't exist anymore (?) */
 }
 
 
-
 /************************************************/
 /*              Box Related Styles              */
 /************************************************/
@@ -556,7 +420,6 @@ h3#content_title span {}	/* Doesn't exist anymore (?) */
 }
 
 /* Enclosing Boxes Styles */
-
 .box, .info-box { 
 	margin-top: 5px;
 	margin-right: 3px;
@@ -614,8 +477,121 @@ h3#content_title span {}	/* Doesn't exist anymore (?) */
 .box_newest_albums  {}
 .box_newest_artists {clear:none;}
 .box_newest_genres  {clear:none;}
-.box_topbarright    {display:table;}
+
 .info-box th {color:#8b3e38;}
+
+
+/************************************************/
+/*         Tables (songs lists...)              */
+/************************************************/
+.tabledata .th-top, .tabledata .th-bottom {
+	background: #111;
+	vertical-align: top;
+}
+.tabledata th {
+	color:#8b3e38; 
+	font-variant:small-caps;
+	font-weight:normal;
+	border-right:1px solid #000;
+	text-align:center;
+}
+.tabledata th a {
+	color:#8b3e38;
+	padding-right:10px;
+	background: url(../images/sort_off.gif) 100% 50% no-repeat;
+	display:block;
+}
+.tabledata th a:hover {
+	color:#8b3e38;
+	background-color:transparent;
+	background-image:url(../images/sort_on.gif);
+}
+
+.odd, .even		{ background: url(../images/list_back.png) 0 50% repeat-x !important; background-image: none;}
+.odd 					{ background-color: #111 !important;}
+.even					{ }
+.odd:hover, .even:hover 		{ background-color: #2b293d !important;}
+
+.odd td a img:hover, .even td a img:hover {opacity:0.5;}
+
+.border 	{ background: #000; }
+
+/* specific cells */
+.cel_cover{padding:6px;}
+.cel_select, .cel_action, .cel_date, .cel_applytoall, .cel_level {text-align:center;}
+
+td.cel_track {text-align:right;}
+
+/* specific boxes */
+#recently_played .th-bottom {display:none;}
+
+/************************************************/
+/*               Content block                  */
+/************************************************/
+
+#content {margin:10px 14em 10px 13.5em;}
+
+/* Center things on supporting browsers */
+#content>table,#content>table .box  { margin-left: auto; margin-right: auto; } 
+
+h3#content_title{}		/* Doesn't exist anymore (?) */
+h3#content_title span {}	/* Doesn't exist anymore (?) */
+
+
+
+
+/************************************************/
+/*          Albums of the moment                */
+/************************************************/
+
+.random_album
+{
+  position:relative;
+  float:left;
+  padding:8px;
+}
+
+.random_album .play_album
+{
+  position:absolute;
+  top:10px;
+  right:0;
+}
+/************************************************/
+/*          Styles for Now Playing              */
+/************************************************/
+
+#nowplaying{
+	clear: both;
+}
+#np_container1{
+	height: 18px;
+}
+#np_container1 h1{
+	font-weight: bold;
+	padding: 2px;
+}
+#np_container2{
+	border-width: 1px;
+	border-style: solid;
+	border-color:#ddd #999 #999 #ccc;
+	padding: 6px;
+	color: #000;
+}
+
+.np_row {
+	padding-top: 3px;
+	padding-bottom: 3px;
+	display: block;
+}
+.np_cell {
+	margin: 10px;
+}
+
+
+
+
+
 
 /************************************************/
 /*             List Header Styles               */
@@ -793,11 +769,6 @@ input.text_input {
 }
 
 /************************************************/
-/*           "Browse by"                        */
-/************************************************/
-.br_td_cover{padding:6px;}
-
-/************************************************/
 /*                Misc                          */
 /************************************************/
 
@@ -841,7 +812,7 @@ input.text_input {
 	text-align: left;
 }
 
-/*table.tabledata {width:100%}*/
+.tabledata input, .tabledata select{ margin:0 0 2px 0;}
 
 .header1 { 
 	color: #8b3e38;

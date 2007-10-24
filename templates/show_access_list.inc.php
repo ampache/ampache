@@ -35,7 +35,7 @@ to add any server's IP address that you want to access your Ampache catalog or b
 stream from this server.</p>
 
 <p>
-<a class="smallbutton" href="<?php echo $web_path; ?>/admin/access.php?action=show_add_host"><?php echo _('Add Entry'); ?></a>
+<a class="button" href="<?php echo $web_path; ?>/admin/access.php?action=show_add_host"><?php echo _('Add Entry'); ?></a>
 </p>
 <?php if (count($list)) { ?>
 <table cellspacing="1" cellpadding="3" class="tabledata">

@@ -23,10 +23,14 @@ $web_path = conf('web_path');
 <?php show_box_top(_('Similar Artists')); ?>
 <form name="artists" method="post" enctype="multipart/form-data" action="<?php echo $web_path; ?>/artists.php?action=rename_similar&artist=<?php echo $artist_id;?>" style="Display:inline;">
 	<h3><?php _('Please check the artists you want to merge with the current one'); ?> (<span style='text-decoration: underline;'><?php echo $artist_name;?></span>)</h3>
-	<table class="tabledata" cellspacing="0" cellpadding="0">
-	<tr class="table-header">
-		<th>&nbsp;&nbsp;Select</th>
-		<th><?php echo _("Artist"); ?></th>
+  <table class="tabledata" cellpadding="0" cellspacing="0">
+	<colgroup>
+    <col id="col_select" />
+    <col id="col_artist" />
+  </colgroup>
+	<tr class="th-top">
+		<th class="cel_select">&nbsp;&nbsp;Select</th>
+		<th class="cel_artist"><?php echo _("Artist"); ?></th>
 	</tr>
 <?php
 if (count($similar_artists) > 0) {
@@ -34,10 +38,10 @@ if (count($similar_artists) > 0) {
 	foreach ($similar_artists as $artist_array) {
 ?>
 	<tr class="<?php echo flip_class(); ?>">
-		<td align="center">
+		<td class="cel_select">
 			<input type="checkbox" name="artists[]" value="<?php echo $artist_array[0]; ?>" />
 		</td>
-		<td>
+		<td class="cel_artist">
 			<a href="<?php echo $web_path; ?>/artists.php?action=show&amp;artist=<?php echo $artist_array[0]; ?>" title="<?php echo htmlspecialchars($artist_array[1]); ?>" <?php echo $text_class; ?>><?php echo htmlspecialchars($artist_array[1]); ?></a>
 		</td>
 	</tr>
@@ -47,7 +51,7 @@ if (count($similar_artists) > 0) {
 	$show = false;
 ?>
 	<tr class="<?php echo flip_class(); ?>">
-		<td align="center">
+		<td>
 			&nbsp;
 		</td>
 		<td>
@@ -55,7 +59,7 @@ if (count($similar_artists) > 0) {
 		</td>
 	</tr>
 	<tr class="<?php echo flip_class(); ?>">
-		<td align="center">
+		<td>
 			&nbsp;
 		</td>
 		<td>
@@ -77,7 +81,11 @@ if ($show) {
 <?php
 }
 ?>
-</table>
+	<tr class="th-bottom">
+		<th class="cel_select">&nbsp;&nbsp;Select</th>
+		<th class="cel_artist"><?php echo _("Artist"); ?></th>
+	</tr>
+  </table>
 </form>
 <?php show_box_bottom(); ?>
 <?php show_box_top(_('Advanced Options')); ?>

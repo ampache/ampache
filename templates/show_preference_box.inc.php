@@ -26,27 +26,33 @@ if (($GLOBALS['user']->has_access(100) OR !Config::get('use_auth')) AND $_REQUES
 	$is_admin = true; 
 }
 ?>
+<div class="header2"><?php echo $preferences['title']; ?></div>
 <table class="tabledata" cellpadding="0" cellspacing="0">
-<tr class="odd">
-	<th colspan="5" class="header2" align="left"><?php echo $preferences['title']; ?></th>
-</tr>
-<tr class="table-header">
-	<th><?php echo _('Preference'); ?></th>
-	<th><?php echo _('Value'); ?></th>
+<colgroup>
+  <col id="col_preference" />
+  <col id="col_value" />
 	<?php if ($is_admin) { ?>
-	<th><?php echo _('Apply to All'); ?></th>
-	<th><?php echo _('Access Level'); ?></th>
+  <col id="col_applytoall" />
+  <col id="col_level" />
+	<?php } ?>
+</colgroup>
+<tr class="th-top">
+	<th class="cel_preference"><?php echo _('Preference'); ?></th>
+	<th class="cel_value"><?php echo _('Value'); ?></th>
+	<?php if ($is_admin) { ?>
+	<th class="cel_applytoall"><?php echo _('Apply to All'); ?></th>
+	<th class="cel_level"><?php echo _('Access Level'); ?></th>
 	<?php } ?>
 </tr>
 <?php foreach ($preferences['prefs'] as $pref) { ?>
 	<tr class="<?php echo flip_class(); ?>">
-		<td><?php echo _($pref['description']); ?></td>
-		<td>
+		<td class="cel_preference"><?php echo _($pref['description']); ?></td>
+		<td class="cel_value">
 			<?php create_preference_input($pref['name'], $pref['value']); ?>
 		</td>
 		<?php if ($is_admin) { ?>
-			<td align="center"><input type="checkbox" name="check_<?php echo $pref['name']; ?>" value="1" /></td>
-			<td align="center">
+			<td class="cel_applytoall"><input type="checkbox" name="check_<?php echo $pref['name']; ?>" value="1" /></td>
+			<td class="cel_level">
 				<?php $name = 'on_' . $pref['level']; ${$name} = 'selected="selected"';  ?> 
 				<select name="level_<?php echo $pref['name']; ?>">
 					<option value="5" <?php echo $on_5; ?>><?php echo _('Guest'); ?></option> 
@@ -60,4 +66,12 @@ if (($GLOBALS['user']->has_access(100) OR !Config::get('use_auth')) AND $_REQUES
 		<?php } ?>
 	</tr>
 <?php } // End foreach ($preferences['prefs'] as $pref) ?>
+<tr class="th-bottom">
+	<th class="cel_preference"><?php echo _('Preference'); ?></th>
+	<th class="cel_value"><?php echo _('Value'); ?></th>
+	<?php if ($is_admin) { ?>
+	<th class="cel_applytoall"><?php echo _('Apply to All'); ?></th>
+	<th class="cel_level"><?php echo _('Access Level'); ?></th>
+	<?php } ?>
+</tr>
 </table>

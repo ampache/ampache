@@ -68,7 +68,7 @@ $php_self = $http_type . $_SERVER['HTTP_HOST'] . "/" . preg_replace("/^\/(.+\.ph
 switch ($_REQUEST['action']) { 
 	case 'create_db':
 		if (!install_insert_db($username,$password,$hostname,$database)) { 
-			require_once 'templates/show_install.inc';
+			require_once 'templates/show_install.inc.php';
 			break;
 		}
 
@@ -82,7 +82,7 @@ switch ($_REQUEST['action']) {
 	case 'create_config':
 		$created_config = install_create_config($web_path,$username,$password,$hostname,$database);
 
-		require_once 'templates/show_install_config.inc';
+		require_once 'templates/show_install_config.inc.php';
 	break;
 	case 'show_create_config':
 	
@@ -116,7 +116,7 @@ switch ($_REQUEST['action']) {
 		load_gettext();
 		header ("Content-Type: text/html; charset=" . Config::get('site_charset'));
 		
-		require_once 'templates/show_install_config.inc';
+		require_once 'templates/show_install_config.inc.php';
 	break;
 	case 'create_account':
 
@@ -141,7 +141,7 @@ switch ($_REQUEST['action']) {
 
 		/* Make sure we've got a valid config file */
 		if (!check_config_values($results)) { 
-			require_once Config::get('prefix') . '/templates/show_install_config.inc'; 
+			require_once Config::get('prefix') . '/templates/show_install_config.inc.php'; 
 			break;
 		}
 
@@ -201,7 +201,7 @@ switch ($_REQUEST['action']) {
 
 		// Page ready  :)
 		header ("Content-Type: text/html; charset=$charset");
-		require_once 'templates/show_install.inc';
+		require_once 'templates/show_install.inc.php';
 	break;
         default:
 		/* Do some basic tests here... most common error, no mysql */

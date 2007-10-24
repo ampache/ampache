@@ -58,19 +58,19 @@ if (Config::get('use_rss')) { ?>
 		echo " class=\"vertical_menu\" ";
 	}?>>
 		
-	<div id="topbar"><!-- This is the topbar row -->
-		<div id="topbarleft">
-		<a href="http://www.ampache.org">
-		<img src="<?php echo $web_path; ?><?php echo Config::get('theme_path'); ?>/images/ampache.png" title="Ampache: For the love of music" alt="Ampache: For the love of music" />
-		</a>
-		</div><!--End topbarleft -->
-		<div id="topbarright">
-			<?php show_box_top('','box box_topbarright'); ?>
+	<div id="header"><!-- This is the header -->
+		<h1 id="headerlogo">
+		  <a href="http://www.ampache.org">
+		    <img src="<?php echo $web_path; ?><?php echo Config::get('theme_path'); ?>/images/ampache.png" title="Ampache: For the love of music" alt="Ampache: For the love of music" />
+		  </a>
+		</h1>
+		<div id="headerbox">
+			<?php show_box_top('','box box_headerbox'); ?>
 			<span id="loginInfo"><?php echo _('You are currently logged in as') . " " . $GLOBALS['user']->fullname; ?></span>
 			<?php require_once Config::get('prefix') . '/templates/show_search_bar.inc.php'; ?>
 			<?php show_box_bottom(); ?>
-		</div> <!-- End topbarright -->
-	</div><!-- End topbar -->
+		</div> <!-- End headerbox -->
+	</div><!-- End header -->
 	<div id="sidebar"><!-- This is the sidebar -->
 		<?php require_once Config::get('prefix') . '/templates/sidebar.inc.php'; ?>
 	</div><!-- End sidebar -->

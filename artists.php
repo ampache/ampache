@@ -104,7 +104,7 @@ switch($_REQUEST['action']) {
 							make_bool($_POST['c_ignins_l']));
 			$artist_id = $artist->id;
 			$artist_name = $artist->name;
-			require (conf('prefix') . '/templates/show_similar_artists.inc');
+			require (conf('prefix') . '/templates/show_similar_artists.inc.php');
 		} else {
 			$GLOBALS['error']->add_error('general',"Error: No artist given");
 		} 

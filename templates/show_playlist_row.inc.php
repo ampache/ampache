@@ -19,14 +19,14 @@
 
 */
 ?>
-<td>
+<td class="cel_add">
 	<?php echo Ajax::button('?action=basket&type=playlist&id=' . $playlist->id,'add',_('Add'),'add_playlist_' . $playlist->id); ?>
 	<?php echo Ajax::button('?action=basket&type=playlist_random&id=' . $playlist->id,'random',_('Random'),'random_playlist_' . $playlist->id); ?>
 </td>
-<td><?php echo $playlist->f_link; ?></td>
-<td><?php echo $count; ?></td>
-<td><?php echo scrub_out($playlist->f_user); ?></td>
-<td>
+<td class="cel_playlist"><?php echo $playlist->f_link; ?></td>
+<td class="cel_songs"><?php echo $count; ?></td>
+<td class="cel_owner"><?php echo scrub_out($playlist->f_user); ?></td>
+<td class="cel_action">
         <?php if (Access::check_function('batch_download')) { ?>
                 <a href="<?php echo Config::get('web_path'); ?>/batch.php?action=playlist&amp;id=<?php echo $playlist->id; ?>">
                         <?php echo get_user_icon('batch_download',_('Batch Download')); ?>

@@ -19,14 +19,14 @@
 
 */
 ?>
-<td>
+<td class="cel_add">
 	<?php echo Ajax::button('?action=basket&type=artist&id=' . $artist->id,'add',_('Add'),'add_artist_' . $artist->id); ?>
 	<?php echo Ajax::button('?action=basket&type=artist_random&id=' . $artist->id,'random',_('Random'),'random_artist_' . $artist->id); ?>
 </td>
-<td><?php echo $artist->f_name_link; ?></td>
-<td><?php echo $artist->songs; ?></td>
-<td><?php echo $artist->albums; ?></td>
-<td>
+<td class="cel_artist"><?php echo $artist->f_name_link; ?></td>
+<td class="cel_songs"><?php echo $artist->songs; ?></td>
+<td class="cel_albums"><?php echo $artist->albums; ?></td>
+<td class="cel_action">
 <?php if (Access::check_function('batch_download')) { ?>
 	<a href="<?php echo Config::get('web_path'); ?>/batch.php?action=artist&amp;id=<?php echo $artist->id; ?>">
         	<?php echo get_user_icon('batch_download','',_('Batch Download')); ?>

@@ -22,8 +22,8 @@
 <?php show_box_top(scrub_out($title)); ?>
 <?php echo $text; ?>
 <br />
-	<a class="smallbutton" href="<?php echo $path; ?>"><?php echo _('Continue'); ?></a>
+	<a class="button" href="<?php echo $path; ?>"><?php echo _('Continue'); ?></a>
 <?php if ($cancel) { ?>
-	<a class="smallbutton" href="<?php echo Config::get('web_path') . "/" . return_referer(); ?>"><?php echo _('Cancel'); ?></a>
+	<a class="button" href="<?php echo Config::get('web_path') . "/" . return_referer(); ?>"><?php echo _('Cancel'); ?></a>
 <?php } ?>
 <?php show_box_bottom(); ?>

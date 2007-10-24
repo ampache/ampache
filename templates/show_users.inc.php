@@ -25,24 +25,26 @@ $web_path = Config::get('web_path');
 <?php require Config::get('prefix') . '/templates/list_header.inc.php'; ?>
 <table class="tabledata" cellpadding="0" cellspacing="0">
 <colgroup>
-  <col id="br_username" />
-  <col id="br_lastseen" />
-  <col id="br_registrationdate" />
-  <col id="br_activity" />
-  <col id="br_lastip" />
-  <col id="br_action" />
-  <col id="br_online" />
-</colgroup>
-<tr class="table-header th-top">
-	<th><?php echo _('Fullname'); ?>(<?php echo _('Username'); ?>)</th>
-  <th><?php echo _('Last Seen'); ?></th>
-  <th><?php echo _('Registration Date'); ?></th>
-  <th><?php echo _('Activity'); ?></th>
+  <col id="col_username" />
+  <col id="col_lastseen" />
+  <col id="col_registrationdate" />
+  <col id="col_activity" />
 	<?php if (Config::get('track_user_ip')) { ?>
-  <th><?php echo _('Last Ip'); ?></th>
+  <col id="col_lastip" />
 	<?php } ?>
-	<th><?php echo _('Action'); ?></th>
-  <th><?php echo _('On-line'); ?></th>
+  <col id="col_action" />
+  <col id="col_online" />
+</colgroup>
+<tr class="th-top">
+	<th class="cel_username"><?php echo _('Fullname'); ?>(<?php echo _('Username'); ?>)</th>
+  <th class="cel_lastseen"><?php echo _('Last Seen'); ?></th>
+  <th class="cel_registrationdate"><?php echo _('Registration Date'); ?></th>
+  <th class="cel_activity"><?php echo _('Activity'); ?></th>
+	<?php if (Config::get('track_user_ip')) { ?>
+  <th class="cel_lastip"><?php echo _('Last Ip'); ?></th>
+	<?php } ?>
+	<th class="cel_action"><?php echo _('Action'); ?></th>
+  <th class="cel_online"><?php echo _('On-line'); ?></th>
 </tr>
 <?php
 foreach ($object_ids as $user_id) { 
@@ -52,29 +54,22 @@ foreach ($object_ids as $user_id) {
         $create_date	= $client->create_date ? date("m\/d\/Y - H:i",$client->create_date) : _('Unknown');
 ?>
 <tr class="<?php echo flip_class(); ?>" align="center">
-	<td align="left">
+	<td class="cel_username">
 		<a href="<?php echo $web_path; ?>/stats.php?action=show_user&amp;user_id=<?php echo $client->id; ?>">
 			<?php echo $client->fullname; ?> (<?php echo $client->username; ?>)
 		</a>
 	</td>
-        <td>
-		<?php echo $last_seen; ?>
-	</td>
-        <td>
-		<?php echo $create_date; ?>
-	</td>
-
-        <td>
-		<?php echo $client->f_useage; ?>
-	</td>
+  <td class="cel_lastseen"><?php echo $last_seen; ?></td>
+  <td class="cel_registrationdate"><?php echo $create_date; ?></td>
+  <td class="cel_activity"><?php echo $client->f_useage; ?></td>
 	<?php if (Config::get('track_user_ip')) { ?>
-		<td>
+		<td class="cel_lastip">
 		<a href="<?php echo $web_path; ?>/admin/users.php?action=show_ip_history&amp;user_id=<?php echo $client->id; ?>">
 			<?php echo $client->ip_history; ?>
 		</a>
 		</td>
 	<?php } ?>
-	<td>
+	<td class="cel_action">
 		<a href="<?php echo $web_path; ?>/admin/users.php?action=show_edit&amp;user_id=<?php echo $client->id; ?>">
 			<?php echo get_user_icon('edit'); ?>
 		</a>
@@ -93,24 +88,24 @@ foreach ($object_ids as $user_id) {
 	</td>
        <?php
 	if (($client->is_logged_in()) AND ($client->is_online())) {
-		echo "<td class=\"user_online\"> &nbsp; </td>";
+		echo "<td class=\"cel_online user_online\"> &nbsp; </td>";
 	} elseif ($client->disabled == 1) {
-		echo "<td class=\"user_disabled\"> &nbsp; </td>";
+		echo "<td class=\"cel_online user_disabled\"> &nbsp; </td>";
 	} else {
-		echo "<td class=\"user_offline\"> &nbsp; </td>";
+		echo "<td class=\"cel_online user_offline\"> &nbsp; </td>";
 	}
 ?>	
 </tr>
 <?php } //end foreach users ?>
-<tr class="table-header th-bottom">
-	<th><?php echo _('Fullname'); ?>(<?php echo _('Username'); ?>)</th>
-  <th><?php echo _('Last Seen'); ?></th>
-  <th><?php echo _('Registration Date'); ?></th>
-  <th><?php echo _('Activity'); ?></th>
+<tr class="th-bottom">
+	<th class="cel_username"><?php echo _('Fullname'); ?>(<?php echo _('Username'); ?>)</th>
+  <th class="cel_lastseen"><?php echo _('Last Seen'); ?></th>
+  <th class="cel_registrationdate"><?php echo _('Registration Date'); ?></th>
+  <th class="cel_activity"><?php echo _('Activity'); ?></th>
 	<?php if (Config::get('track_user_ip')) { ?>
-  <th><?php echo _('Last Ip'); ?></th>
+  <th class="cel_lastip"><?php echo _('Last Ip'); ?></th>
 	<?php } ?>
-	<th><?php echo _('Action'); ?></th>
-  <th><?php echo _('On-line'); ?></th>
+	<th class="cel_action"><?php echo _('Action'); ?></th>
+  <th class="cel_online"><?php echo _('On-line'); ?></th>
 </tr>
 </table>

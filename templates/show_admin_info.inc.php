@@ -33,7 +33,7 @@ $songs = Catalog::get_disabled(10);
 
 <?php show_box_top(_('Disabled Songs')); ?>
 	<!-- Show Last 10 Disabled Songs -->&nbsp;
-	<?php require Config::get('prefix') . '/templates/show_disabled_songs.inc'; ?>
+	<?php require Config::get('prefix') . '/templates/show_disabled_songs.inc.php'; ?>
 	<div class="text-action">
 	<a href="<?php echo $web_path; ?>/admin/catalog.php?action=show_disabled"><?php echo _('Show All'); ?>...</a>
 	</div>

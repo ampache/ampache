@@ -76,7 +76,7 @@
 </tr>
 <tr>
 	<td colspan="4">
-	<?php echo Ajax::text("?page=random&action=advanced_random",_('Enqueue'),'advanced_random_enqueue','random','smallbutton'); ?>
+	<?php echo Ajax::text("?page=random&action=advanced_random",_('Enqueue'),'advanced_random_enqueue','random','button'); ?>
 	</td>
 </tr>
 </table>

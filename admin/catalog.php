@@ -222,7 +222,7 @@ switch ($_REQUEST['action']) {
 		
 		$songs = $catalog->get_disabled();
 		if (count($songs)) { 
-			require (conf('prefix') . '/templates/show_disabled_songs.inc');
+			require (conf('prefix') . '/templates/show_disabled_songs.inc.php');
 		}
 		else {
 			echo "<div class=\"error\" align=\"center\">" . _('No Disabled songs found') . "</div>";

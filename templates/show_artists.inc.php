@@ -22,20 +22,20 @@ $web_path = Config::get('web_path');
 
 ?>
 <?php require Config::get('prefix') . '/templates/list_header.inc.php'; ?>
-<table class="tabledata" cellspacing="0" cellpadding="0">
+<table class="tabledata" cellpadding="0" cellspacing="0">
 <colgroup>
-  <col id="br_add" />
-  <col id="br_artist" />
-  <col id="br_songs" />
-  <col id="br_albums" />
-  <col id="br_action" />
+  <col id="col_add" />
+  <col id="col_artist" />
+  <col id="col_songs" />
+  <col id="col_albums" />
+  <col id="col_action" />
 </colgroup>
-<tr class="table-header th-top">
-	<th><?php echo _('Add'); ?></th>
-	<th><?php echo Ajax::text('?page=browse&action=set_sort&sort=name',_('Artist'),'artist_sort_name'); ?></th>
-	<th> <?php echo _('Songs');  ?> </th>
-	<th> <?php echo _('Albums'); ?> </th>
-	<th> <?php echo _('Action'); ?> </th>
+<tr class="th-top">
+	<th class="cel_add"><?php echo _('Add'); ?></th>
+	<th class="cel_artist"><?php echo Ajax::text('?page=browse&action=set_sort&sort=name',_('Artist'),'artist_sort_name'); ?></th>
+	<th class="cel_songs"> <?php echo _('Songs');  ?> </th>
+	<th class="cel_albums"> <?php echo _('Albums'); ?> </th>
+	<th class="cel_action"> <?php echo _('Action'); ?> </th>
 </tr>
 <?php 
 /* Foreach through every artist that has been passed to us */
@@ -47,12 +47,12 @@ foreach ($object_ids as $artist_id) {
 	<?php require Config::get('prefix') . '/templates/show_artist_row.inc.php'; ?>
 </tr>
 <?php } //end foreach ($artists as $artist) ?>
-<tr class="table-header th-bottom">
-	<th><?php echo _('Add'); ?></th>
-	<th><?php echo Ajax::text('?page=browse&action=set_sort&sort=name',_('Artist'),'artist_sort_name'); ?></th>
-	<th> <?php echo _('Songs');  ?> </th>
-	<th> <?php echo _('Albums'); ?> </th>
-	<th> <?php echo _('Action'); ?> </th>
+<tr class="th-bottom">
+	<th class="cel_add"><?php echo _('Add'); ?></th>
+	<th class="cel_artist"><?php echo Ajax::text('?page=browse&action=set_sort&sort=name',_('Artist'),'artist_sort_name'); ?></th>
+	<th class="cel_songs"> <?php echo _('Songs');  ?> </th>
+	<th class="cel_albums"> <?php echo _('Albums'); ?> </th>
+	<th class="cel_action"> <?php echo _('Action'); ?> </th>
 </tr>
 </table>
 <?php require Config::get('prefix') . '/templates/list_header.inc.php'; ?>

@@ -19,16 +19,16 @@
 
 */
 ?>
-<td>
+<td class="cel_add">
 	<?php echo Ajax::button('?action=basket&type=song&id=' . $song->id,'add',_('Add'),'add_' . $song->id); ?>
 </td>
-<td><?php echo $song->f_link; ?></td>
-<td><?php echo $song->f_artist_link; ?></td>
-<td><?php echo $song->f_album_link; ?></td>
-<td><?php echo $song->f_genre_link; ?></td>
-<td><?php echo $song->f_track; ?></td>
-<td><?php echo $song->f_time; ?></td>
-<td>
+<td class="cel_song"><?php echo $song->f_link; ?></td>
+<td class="cel_artist"><?php echo $song->f_artist_link; ?></td>
+<td class="cel_album"><?php echo $song->f_album_link; ?></td>
+<td class="cel_genre"><?php echo $song->f_genre_link; ?></td>
+<td class="cel_track"><?php echo $song->f_track; ?></td>
+<td class="cel_time"><?php echo $song->f_time; ?></td>
+<td class="cel_action">
 	<?php if ($GLOBALS['user']->prefs['download']) { ?>
 	<a href="<?php echo Config::get('web_path'); ?>/stream.php?action=download&amp;song_id=<?php echo $song->id; ?>">
 		<?php echo get_user_icon('download',_('Download')); ?>

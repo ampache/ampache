@@ -22,16 +22,16 @@
 
 ?>
 <?php show_box_top(_('Catalog Statistics')); ?>
-<table cellspacing="1" cellpadding="3"> 
-<tr class="table-header">
-	<td><?php echo _('Connected Users'); ?></td>
-	<td><?php echo _('Total Users'); ?></td>
-	<td><?php echo _('Albums'); ?></td>
-	<td><?php echo _('Artists'); ?></td>
-	<td><?php echo _('Songs'); ?></td>
-	<td><?php echo _('Genres'); ?></td>
-	<td><?php echo _('Catalog Size'); ?></td>
-	<td><?php echo _('Catalog Time'); ?></td>
+<table class="tabledata" cellpadding="3" cellspacing="1">
+<tr class="th-top">
+	<th><?php echo _('Connected Users'); ?></th>
+	<th><?php echo _('Total Users'); ?></th>
+	<th><?php echo _('Albums'); ?></th>
+	<th><?php echo _('Artists'); ?></th>
+	<th><?php echo _('Songs'); ?></th>
+	<th><?php echo _('Genres'); ?></th>
+	<th><?php echo _('Catalog Size'); ?></th>
+	<th><?php echo _('Catalog Time'); ?></th>
 </tr>
 <tr>
 	<td><?php echo $stats['connected']; ?></td>
