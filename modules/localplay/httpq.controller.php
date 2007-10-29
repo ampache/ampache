@@ -64,43 +64,6 @@ class AmpacheHttpq extends localplay_controller {
 
 	} // get_version
 
-	/**
-	 * function_map
-	 * This function returns a named array of the functions
-	 * that this player supports and their names in this local
-	 * class. This is a REQUIRED function
-	 */
-	function function_map() { 
-
-                $map = array();
-
-		/* Required Functions */
-                $map['add']             = 'add_songs';
-                $map['delete']          = 'delete_songs';
-                $map['play']            = 'play';
-                $map['stop']            = 'stop';
-                $map['get']             = 'get_songs';
-		$map['status']		= 'get_status';
-                $map['connect']         = 'connect';
-		
-		/* Recommended Functions */
-		$map['skip']		= 'skip';
-		$map['next']		= 'next';
-		$map['prev']		= 'prev';
-		$map['pause']		= 'pause';
-		$map['volume_up']       = 'volume_up';
-		$map['volume_down']	= 'volume_down';
-		$map['random']          = 'random';
-		$map['repeat']		= 'loop';
-
-		/* Optional Functions */
-		$map['delete_all']	= 'clear_playlist';
-		$map['add_url']		= 'add_url';
-
-                return $map;
-
-	} // function_map
-
         /**
          * is_installed
          * This returns true or false if MPD controller is installed
@@ -207,11 +170,11 @@ class AmpacheHttpq extends localplay_controller {
 	} // add
 
 	/**
-	 * delete
+	 * delete_track
 	 * This must take an array of ID's (as passed by get function) from Ampache
 	 * and delete them from Httpq
 	 */
-	public function delete($objects) { 
+	public function delete_track($object_id) { 
 
 		/* Default to true */
 		$return = true;
@@ -230,7 +193,7 @@ class AmpacheHttpq extends localplay_controller {
 
 		return $return;
 
-	} // delete_songs
+	} // delete_track
 	
 	/**
 	 * clear_playlist
