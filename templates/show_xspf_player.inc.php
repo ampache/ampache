@@ -54,7 +54,7 @@ document.oncontextmenu=new Function("return false")
 </script>
 <div id="mp3player">
 <?php 
-$player_url = sprintf("%s/modules/flash/xspf_jukebox.swf?autoplay=true&shuffle=false&skin_url=%s/modules/flash/Original/&playlist_url=%s",Config::get('web_path'),Config::get('web_path'),$play_url); 
+$player_url = sprintf("%s/modules/flash/xspf_jukebox.swf?autoplay=true&repeat_playlist=false&crossfase=false&shuffle=false&skin_url=%s/modules/flash/Original/&playlist_url=%s",Config::get('web_path'),Config::get('web_path'),$play_url); 
 ?>
 <object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="http://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=7,0,0,0" width="400" height="170" id="xspf_player" align="middle">
 	<param name="pluginspage" value="http://www.macromedia.com/go/getflashplayer" />
