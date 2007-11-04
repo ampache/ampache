@@ -74,7 +74,7 @@ switch ($_REQUEST['action']) {
 		ob_end_flush(); 
 		$catalog = new Catalog();
 		/* Make sure they aren't in demo mode */
-		if (conf('demo_mode')) { break; } 
+		if (Config::get('demo_mode')) { break; } 
 
 		if (!$_REQUEST['catalogs']) { 
 			$_REQUEST['catalogs'] = $catalog->get_catalog_ids();
