@@ -52,7 +52,7 @@ $title		= scrub_out($album->name) . '&nbsp;(' . $album->year . ')&nbsp;--&nbsp;'
 	<li><a href="<?php echo $web_path; ?>/albums.php?action=update_from_tags&amp;album_id=<?php echo $album->id; ?>"><?php echo _('Update from tags'); ?></a></li>
 	<?php  } ?>
 	<?php if (Access::check_function('batch_download')) { ?>
-	<li><a href="<?php echo $web_path; ?>/batch.php?action=alb&amp;id=<?php echo $album->id; ?>"><?php echo _('Download'); ?></a></li>
+	<li><a href="<?php echo $web_path; ?>/batch.php?action=album&amp;id=<?php echo $album->id; ?>"><?php echo _('Download'); ?></a></li>
 	<?php } ?>
 	<?php if (Plugin::is_installed('OpenStrands')) { ?>
 	<li><?php echo Ajax::text('?page=stats&action=show_check_album_tracks&id=' . $album->id,_('Find Missing Tracks'),'album_missing_tracks'); ?></li>

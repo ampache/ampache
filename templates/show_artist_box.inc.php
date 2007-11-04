@@ -36,7 +36,6 @@ if (Config::get('ratings')) {
 <?php echo Ajax::text('?action=basket&type=artist_random&id=' . $artist->id,_('Play Random Songs By') . ' ' . $artist->f_name,'play_random_artist'); ?><br />
 <?php if ($GLOBALS['user']->has_access('50')) { ?>
 	<a href="<?php echo $web_path; ?>/artists.php?action=update_from_tags&amp;artist=<?php echo $artist->id; ?>"><?php echo _("Update from tags"); ?></a><br />
-	<a href="<?php echo $web_path; ?>/artists.php?action=show_rename&amp;artist=<?php echo $artist->id; ?>"><?php echo _("Rename Artist"); ?></a><br />
 	<a href="<?php echo $web_path; ?>/artists.php?action=show_similar&amp;artist=<?php echo $artist->id; ?>"><?php echo _("Find duplicate artists"); ?></a><br />
 <?php } ?>
 <?php if (Plugin::is_installed('OpenStrands')) { ?>

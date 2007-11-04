@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright 2001 - 2006 Ampache.org
+ Copyright 2001 - 2007 Ampache.org
  All Rights Reserved
 
  This program is free software; you can redistribute it and/or
@@ -26,8 +26,8 @@ require_once $prefix . '/lib/init.php';
 
 $catalogs = Catalog::get_catalogs();
 
-foreach ($catalogs as $catalog) { 
-	$catalog->dump_album_art();
+foreach ($catalogs as $catalog_id) { 
+	Catalog::dump_album_art($catalog_id);
 }
 
 ?>

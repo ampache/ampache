@@ -612,22 +612,19 @@ class Catalog {
 
 	} // get_album_art
 
-	/*!
-		@function get_catalog_albums()
-		@discussion Returns an array of the albums from a catalog
-	*/
-	function get_catalog_albums($catalog_id=0) { 
+	/**
+	 * get_catalog_albums()
+	 * Returns an array of the albums from a catalog
+	 */
+	public static function get_catalog_albums($catalog_id) { 
 
 		$results = array();
 
-		/* Use $this->id if nothing is passed */
-		if (!$catalog_id) { $catalog_id = $this->id; }
-		
-		$sql = "SELECT DISTINCT(album.id) FROM album,song WHERE song.catalog='$catalog_id' AND song.album=album.id";
-		$db_results = mysql_query($sql, dbh());
+		$sql = "SELECT DISTINCT(`song`.`album`) FROM `song`  WHERE `song`.`catalog`='$catalog_id'";
+		$db_results = Dba::query($sql);
 
-		while ($r = mysql_fetch_object($db_results)) { 
-			$results[] = new Album($r->id);
+		while ($row = Dba::fetch_assoc($db_results)) { 
+			$results[] = $row['album']; 
 		}
 
 		return $results;
@@ -748,51 +745,54 @@ class Catalog {
 
 	} //get_files
 
-	/*!
-		@function dump_album_art (Added by Cucumber 20050216)
-		@discussion This runs through all of the albums and trys to dump the
-			art for them into the 'folder.jpg' file in the appropriate dir
-	*/
-	function dump_album_art($catalog_id=0,$methods=array()) {
-	        if (!$catalog_id) { $catalog_id = $this->id; }
+	/**
+	 * dump_album_art (Added by Cucumber 20050216)
+	 * This runs through all of the albums and trys to dump the
+	 * art for them into the 'folder.jpg' file in the appropriate dir
+	 */
+	public static function dump_album_art($catalog_id,$methods=array()) {
 
 	        // Get all of the albums in this catalog
-	        $albums = $this->get_catalog_albums($catalog_id);
-
+	        $albums = self::get_catalog_albums($catalog_id);
+		
 		echo "Starting Dump Album Art...\n";
 
 		// Run through them an get the art!
-		foreach ($albums as $album) {
+		foreach ($albums as $album_id) {
+
+			$album = new Album($album_id); 
+
 			// If no art, skip 
-			if (!$album->has_art) { continue; } 
+			if (!$album->has_art()) { continue; } 
 
                 	$image = $album->get_db_art();
 
 			/* Get the first song in the album */
                         $songs = $album->get_songs(1);
-                        $song = $songs[0];
+                        $song = new Song($songs[0]);
                         $dir = dirname($song->file);
-			$extension = substr($image->art_mime,strlen($image->art_mime)-3,3);
-
+			$extension = substr($image['0']['mime'],strlen($image['0']['mime'])-3,3);
+			
 			// Try the preferred filename, if that fails use folder.???
-	                $preferred_filename = conf('album_art_preferred_filename');
-	                if (!$preferred_filename) { $preferred_filename = "folder.$extension"; }
+	                $preferred_filename = Config::get('album_art_preferred_filename');
+	                if (!$preferred_filename || strstr($preferred_filename,"%")) { $preferred_filename = "folder.$extension"; }
 
 	                $file = "$dir/$preferred_filename";
 	                if ($file_handle = @fopen($file,"w")) {
 		        	if (fwrite($file_handle, $image->art)) {
 			        	$i++;
-        	                        if ( !($i%conf('catalog_echo_count')) ) {
-	                	        	echo "Written: $i. . .\n";
-	                                        } //echos song count
+					if (!($i%100)) { 
+		                	        echo "Written: $i. . .\n";
 						debug_event('art_write',"$album->name Art written to $file",'5'); 
-	                                }
-	                                        fclose($file_handle);
+					} 
 	                       	} // end if fopen
 				else {
 					debug_event('art_write',"Unable to open $file for writting",'5'); 
 					echo "Error unable to open file for writting [$file]\n";
 				}
+			} // end if fopen worked 
+	
+			fclose($file_handle);
 
 
 	        } // end foreach
