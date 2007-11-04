@@ -48,7 +48,7 @@ class metadata {
 		// For now it's only mystrands
 		OpenStrands::set_auth_token(Config::get('mystrands_developer_key')); 
 		$openstrands = new OpenStrands($GLOBALS['user']->prefs['mystrands_user'],$GLOBALS['user']->prefs['mystrands_pass']); 
-
+		
 		// Make sure auth worked
 		if (!$openstrands) { return false; } 
 
@@ -59,6 +59,8 @@ class metadata {
 				$results = $openstrands->recommend_artists($seed,$limit); 
 			break;
 		} 
+
+		$objects = array(); 
 
 		foreach ($results as $item) { 
 			switch ($type) { 
@@ -119,6 +121,8 @@ class metadata {
 		if (!$mystrands_id) { return false; } 
 
 		$tracks = $openstrands->lookup_album_tracks($mystrands_id,Openstrands::$alias); 		
+
+		$object = array(); 
 
 		// Recurse the data we've found and check the local album
 		foreach ($tracks as $track) { 

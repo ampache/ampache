@@ -461,11 +461,11 @@ class openStrands {
 		$alias		= $alias ? urlencode($alias) : urlencode(self::$alias); 
 
 		$xml_doc = self::run_query("/recommend/artists?alias=$alias$id_string$name_string&num=$limit&skip=$offset$filters"); 
-
+		
 		$this->_containerTag = 'SimpleArtist'; 
 
 		$data = $this->run_parse($xml_doc); 
-
+		
 		return $data; 
 
 	} // recommend_artists
@@ -654,6 +654,8 @@ class openStrands {
 
 		$data = $this->results; 
 		$this->results = ''; 
+
+		if (!$data) { return array(); } 
 
 		return $data; 
 

@@ -39,7 +39,7 @@ if (Config::get('ratings')) {
 	<a href="<?php echo $web_path; ?>/artists.php?action=show_similar&amp;artist=<?php echo $artist->id; ?>"><?php echo _("Find duplicate artists"); ?></a><br />
 <?php } ?>
 <?php if (Plugin::is_installed('OpenStrands')) { ?>
-<span class="text-action"><?php echo Ajax::text('?page=stats&action=show_recommend&type=artist&id=' . $artist->id,_('Recommend Similar'),'artist_recommend_similar'); ?></span>
+<?php echo Ajax::text('?page=stats&action=show_recommend&type=artist&id=' . $artist->id,_('Recommend Similar'),'artist_recommend_similar'); ?>
 <?php } ?>
 </div>
 <?php show_box_bottom(); ?>
