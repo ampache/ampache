@@ -25,8 +25,17 @@ require_once 'lib/init.php';
 show_header(); 
 
 switch ($_REQUEST['action']) { 
-	default: 
+	case 'get_advanced': 
+		$object_ids = Random::advanced($_POST); 
+
+		// We need to add them to the active playlist
+		foreach ($object_ids as $object_id) { 
+			$GLOBALS['user']->playlist->add_object($object_id,'song'); 
+		} 
+		// We need to refresh the playlist
+
 	case 'advanced':
+	default: 
 		require_once Config::get('prefix') . '/templates/show_random.inc.php';	
 	break;
 } // end switch 

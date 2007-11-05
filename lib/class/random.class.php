@@ -266,15 +266,13 @@ class Random {
 	        if (is_array($matchlist)) { 
 	            foreach ($matchlist as $type => $value) {
 	                        if (is_array($value)) {
-					$where .= "("; 
 	                                foreach ($value as $v) {
 						if (!strlen($v)) { continue; } 
 	                                        $v = Dba::escape($v);
 	                                        if ($v != $value[0]) { $where .= " OR $type='$v' "; }
 	                                        else { $where .= " AND ( $type='$v'"; }
 	                                }
-        	                        $where .= ")";
-					$where = rtrim($where,"()"); 
+					$where .= ")"; 
 	                        }
 	                        elseif (strlen($value)) {
 	                                $value = Dba::escape($value);
@@ -282,7 +280,6 @@ class Random {
 	                        }
 	            } // end foreach
 		} // end if matchlist
-
 		
 	        if ($data['random_type'] == 'full_album') {
 	                $query = "SELECT `album`.`id` FROM `song` INNER JOIN `album` ON `song`.`album`=`album`.`id` " . 

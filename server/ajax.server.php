@@ -67,6 +67,9 @@ switch ($_REQUEST['page']) {
 } // end switch on page 
 
 switch ($_REQUEST['action']) { 
+	case 'refresh_rightbar': 
+		$results['rightbar'] = ajax_include('rightbar.inc.php'); 
+	break;
 	/* Controls the editing of objects */
 	case 'show_edit_object': 
 		
@@ -119,7 +122,6 @@ switch ($_REQUEST['action']) {
 		require Config::get('prefix') . '/templates/show_edit_' . $_GET['type'] . '_row.inc.php'; 
 		$results[$key] = ob_get_contents(); 
 		ob_end_clean(); 
-		echo xml_from_array($results); 
 	break; 
 	case 'edit_object': 
 
@@ -184,7 +186,6 @@ switch ($_REQUEST['action']) {
 		require Config::get('prefix') . '/templates/show_' . $_POST['type'] . '_row.inc.php'; 
 		$results[$key] = ob_get_contents(); 
 		ob_end_clean(); 
-		echo xml_from_array($results); 
 	break;
 	/* Controls Localplay */
 	case 'localplay':
@@ -219,8 +220,6 @@ switch ($_REQUEST['action']) {
 				$results['3514'] = '0x1';	
 			break;
 		} // end switch on cmd
-		$xml_doc = xml_from_array($results);
-		echo $xml_doc;
 	break;
 	case 'current_playlist':
 		switch ($_REQUEST['type']) { 
@@ -230,7 +229,6 @@ switch ($_REQUEST['action']) {
 		} // end switch
 
 		$results['rightbar'] = ajax_include('rightbar.inc.php');
-		echo xml_from_array($results); 
 	break;
 	// Handle the users basketcases... 
 	case 'basket': 
@@ -290,7 +288,6 @@ switch ($_REQUEST['action']) {
 		} // end switch
 		
 		$results['rightbar'] = ajax_include('rightbar.inc.php'); 
-		echo xml_from_array($results); 
 	break;
 	/* For changing the current play type FIXME:: need to allow select of any type  */
 	case 'change_play_type':
@@ -299,8 +296,6 @@ switch ($_REQUEST['action']) {
 
 		/* Uses a drop down, no need to replace text */
 		$results['play_type'] = '';
-		$xml_doc = xml_from_array($results);
-		echo $xml_doc;
 	break;
 	/* reloading the now playing information */
 	case 'reloadnp':
@@ -316,7 +311,6 @@ switch ($_REQUEST['action']) {
 		}
 		$results['recently_played'] = ob_get_contents(); 
 		ob_end_clean();
-		echo xml_from_array($results);
 	break;
 	/* Setting ratings */
 	case 'set_rating':
@@ -327,7 +321,6 @@ switch ($_REQUEST['action']) {
 		$key = "rating_" . $_GET['object_id'] . "_" . $_GET['rating_type'];
 		$results[$key] = ob_get_contents();
 		ob_end_clean();
-		echo xml_from_array($results);
 	break;
 	/* This can be a positve (1) or negative (-1) vote */
 	case 'vote':
@@ -347,8 +340,6 @@ switch ($_REQUEST['action']) {
 		require_once(conf('prefix') . '/templates/show_tv_playlist.inc.php');
 		$results['tv_playlist'] = ob_get_contents(); 
 		ob_end_clean();
-		$xml_doc = xml_from_array($results);
-		echo $xml_doc; 
 	break;
 	// Used to change filter/settings on browse
 	case 'browse':
@@ -368,8 +359,6 @@ switch ($_REQUEST['action']) {
 		Browse::show_objects($object_ids); 
 		$results['browse_content'] = ob_get_contents(); 
 		ob_end_clean(); 
-		$xml_doc = xml_from_array($results); 
-		echo $xml_doc; 
 	break;
 	case 'page': 
 		Browse::set_start($_REQUEST['start']); 
@@ -378,7 +367,6 @@ switch ($_REQUEST['action']) {
 		Browse::show_objects(); 
 		$results['browse_content'] = ob_get_contents(); 
 		ob_end_clean(); 
-		echo xml_from_array($results); 
 	break;
 	case 'sidebar': 
 		switch ($_REQUEST['button']) {
@@ -403,11 +391,13 @@ switch ($_REQUEST['action']) {
 		require_once Config::get('prefix') . '/templates/sidebar.inc.php';
 		$results['sidebar'] = ob_get_contents(); 
 		ob_end_clean(); 
-		echo xml_from_array($results); 
 	break;
 	default:
 		$results['rfc3514'] = '0x1';
-		echo xml_from_array($results); 
 	break;
 } // end switch action
+
+// Go ahead and do the echo
+echo xml_from_array($results); 
+
 ?>

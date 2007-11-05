@@ -19,7 +19,7 @@
 
 */
 ?>
-<form id="random" method="post" enctype="multipart/form-data" action="<?php echo Config::get('web_path'); ?>/random.php">
+<form id="random" method="post" enctype="multipart/form-data" action="<?php echo Config::get('web_path'); ?>/random.php?action=get_advanced">
 <?php show_box_top(_('Play Random Selection')); ?>
 <table class="table-data" cellspacing="0" cellpadding="3">
 <tr>
@@ -76,12 +76,20 @@
 </tr>
 <tr>
 	<td colspan="4">
-	<?php echo Ajax::text("?page=random&action=advanced_random",_('Enqueue'),'advanced_random_enqueue','random','button'); ?>
+	<input type="submit" value="<?php echo _('Enqueue'); ?>" />
 	</td>
 </tr>
 </table>
 <?php show_box_bottom(); ?>
 </form>
 <div id="browse">
-
+<?php
+	if (is_array($object_ids)) { 
+		Browse::reset_filters(); 
+		Browse::set_type('song');
+		Browse::save_objects($object_ids); 
+		Browse::show_objects(); 
+		echo Ajax::observe('window','load',Ajax::action('?action=refresh_rightbar','playlist_refresh_load'));
+	}  
+?>	
 </div>
