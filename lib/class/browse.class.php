@@ -510,7 +510,7 @@ class Browse {
 		// Limit is based on the users preferences
 		$limit = $GLOBALS['user']->prefs['offset_limit'] ? $GLOBALS['user']->prefs['offset_limit'] : '25'; 
 
-		if (count($object_ids) > $start) { 
+		if (count($object_ids) > self::$start) { 
 			$object_ids = array_slice($object_ids,self::$start,$limit); 
 		} 
 
