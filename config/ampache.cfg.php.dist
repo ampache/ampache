@@ -478,6 +478,9 @@ transcode_mp3_target	= mp3
 transcode_cmd_flac 	= "flac -dc %FILE% | lame -r -b 128 -S - - "
 transcode_cmd_m4a 	= "faad -f 2 -w %FILE% | lame -r -b 128 -S - -"
 transcode_cmd_mp3	= "mp3splt -qnf %FILE% %OFFSET% %EOF% -o - | lame --mp3input -q 3 -b %SAMPLE% -S - -"
+# This line seems to work better for windows, switch if needed
+#transcode_cmd_mp3	= "mp3splt -qnf -o - %FILE% %OFFSET% %EOF% | lame --mp3input -q 3 -b %SAMPLE% -S - -" 
+
 
 ;######################################################
 ; these options allow you to configure your rss-feed

@@ -4,6 +4,7 @@
 
 --------------------------------------------------------------------------
   v.3.4-Alpha3 
+	- Fixed ordering of catalogs
 	- Fixed multi-genre Random Play
 	- New Version of Flash player fixes playlist repeat bug (Thx hugoh)
 	- Fixed catalog update and album art dump command line tools

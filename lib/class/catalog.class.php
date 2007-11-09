@@ -103,7 +103,7 @@ class Catalog {
 	 */
 	public static function get_catalogs() {
 
-		$sql = "SELECT `id` FROM `catalog`";
+		$sql = "SELECT `id` FROM `catalog` ORDER BY `name`";
 		$db_results = Dba::query($sql);
 
 		$results = array(); 
