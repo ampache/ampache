@@ -25,6 +25,16 @@
 if (AJAX_INCLUDE != '1') { exit; } 
 
 switch ($_REQUEST['action']) { 
+	case 'set_play_type': 
+		// Make sure they have the rights to do this
+		if (!Preference::has_access('play_type')) { 
+			$results['rfc3514'] = '0x1'; 
+			break;
+		} 
+	
+		// Go ahead and update their preference
+		Preference::update('play_type',$GLOBALS['user']->id,$_POST['type']); 
+	break;
 	case 'basket': 
 		// We need to set the basket up!
 		$_SESSION['iframe']['target'] = Config::get('web_path') . '/stream.php?action=basket'; 

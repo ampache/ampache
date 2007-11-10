@@ -6,8 +6,8 @@
 
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
- as published by the Free Software Foundation; either version 2
- of the License, or (at your option) any later version.
+ as published by the Free Software Foundation; Version 2 of the
+ licence.
 
  This program is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -22,20 +22,26 @@
 <?php 
 $name = "is_" . $GLOBALS['user']->prefs['play_type'];
 ${$name} = 'selected="selected" ';
-if (has_preference_access('play_type')){
+
+if (Preference::has_access('play_type')) {
 ?>
-<!--<select id="play_type_switch" style="font-size:0.9em;" name="type"> -->
-<select id="play_type_switch" name="type" onchange="ajaxPut('<?php echo $ajax_url; ?>?action=change_play_type<?php echo $required_info; ?>');return true;"> 
+<div id="play_type_switch">
+<form method="post" id="play_type_form" action="javascript.void(0);">
+<select id="play_type_select" name="type"> 
 	<?php if (Config::get('allow_stream_playback')) { ?>
 		<option value="stream" <?php echo $is_stream; ?>><?php echo _('Stream'); ?></option>
 	<?php } if (Config::get('allow_localplay_playback')) { ?>
 		<option value="localplay" <?php echo $is_localplay; ?>><?php echo _('Localplay'); ?></option>
-	<?php } if (Config::get('allow_downsample_playback')) { ?>
-		<option value="downsample" <?php echo $is_downsample; ?>><?php echo _('Downsample'); ?></option>
 	<?php } if (Config::get('allow_democratic_playback')) { ?>
 		<option value="democratic" <?php echo $is_democratic; ?>><?php echo _('Democratic'); ?></option>
 	<?php } ?>
-	<option value="xspf_player" <?php echo $is_xspf_player; ?>><?php echo _('XSPF Player'); ?></option>
+	<option value="xspf_player" <?php echo $is_xspf_player; ?>><?php echo _('Flash Player'); ?></option>
 </select>
+<?php echo Ajax::observe('play_type_select','change',Ajax::action('?page=stream&action=set_play_type','play_type_select','play_type_form'),'1'); ?>
+</form>
 <?php
-} else { echo ucwords($GLOBALS['user']->prefs['play_type']);}
+} // if they have access
+// Else just show what it currently is
+else { echo ucwords($GLOBALS['user']->prefs['play_type']);}
+?>
+</div>

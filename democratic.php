@@ -1,12 +1,12 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2006 Ampache.org
+ Copyright (c) 2001 - 2007 Ampache.org
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License v2
- as published by the Free Software Foundation
+ as published by the Free Software Foundation.
 
  This program is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -18,22 +18,19 @@
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
-require_once('lib/init.php');
 
-$dbh = dbh();
-$web_path = conf('web_path');
+require_once 'lib/init.php';
 
 /* Make sure they have access to this */
-if (!conf('allow_democratic_playback')) { 
+if (!Config::get('allow_democratic_playback')) { 
 	access_denied(); 
 	exit;
 }
 
-/* Clean up the stuff we need */
-$action 	= scrub_in($_REQUEST['action']);
+show_header(); 
 
-
-switch ($action) { 
+// Switch on their action
+switch ($_REQUEST['action']) { 
 	case 'create_playlist':
 		/* Only Admins Here */
 		if (!$GLOBALS['user']->has_access(100)) { 
@@ -77,6 +74,9 @@ switch ($action) {
 		$stream->start();
 		if ($stream_type != 'localplay') { exit; } 
 	break;
+	case 'manage_playlists': 
+
+	break;
 	case 'update_playlist':
 		/* Only Admins Here */
 		if (!$GLOBALS['user']->has_access(100)) { 
@@ -85,11 +85,11 @@ switch ($action) {
 		}
 		$tmp_playlist = new tmpPlaylist($_REQUEST['tmp_playlist_id']);
 		$tmp_playlist->update_playlist($_REQUEST['playlist_id']);
-	/* Display the default tv page */
+	case 'show_playlist': 
 	default: 
-		$tmp_playlist = get_democratic_playlist('-1'); 
+		$tmp_playlist = Democratic::get_current_playlist(); 
 		$songs = $tmp_playlist->get_items();
-		require_once(conf('prefix') . '/templates/show_tv.inc.php');
+		require_once Config::get('prefix') . '/templates/show_democratic.inc.php';
 	break;
 } // end switch on action
 

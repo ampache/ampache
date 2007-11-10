@@ -70,7 +70,7 @@ input {
 /*             IE6 behaviors                    */
 /* - csshover2: :hover support on any element   */
 /************************************************/
-body { behavior:url("csshover2.htc"); }
+body { behavior:url("templates/csshover2.htc"); }
 
 /************************************************/
 /*                XSPF Player                   */
@@ -96,6 +96,11 @@ body { behavior:url("csshover2.htc"); }
 }
 .box_headerbox    {display:table;}
 .box_headerbox #loginInfo {font-weight:bold;display:block;text-align:right;margin-bottom:.3em;}
+
+#play_type_switch { 
+	float:left;
+	margin-top:2px;
+} 
 
 /************************************************/
 /*                Footer                        */

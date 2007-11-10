@@ -6,6 +6,14 @@
       <li id="sb_home_info_AddStationRadio"><a href="<?php echo $web_path; ?>/radio.php?action=show_create"><?php echo _('Add Radio Station'); ?></a></li>
     </ul>
   </li>
+<?php if (Config::get('allow_democratic_playback')) { ?>
+  <li><h4><?php echo _('Democratic'); ?></h4>
+    <ul class="sb3" id="sb_home_democratic">
+      <li id="sb_home_democratic_playlist"><a href="<?php echo $web_path; ?>/democratic.php?action=show_playlist"><?php echo _('Show Playlist'); ?></a></li>
+      <li id="sb_home_democratic_playlist"><a href="<?php echo $web_path; ?>/democratic.php?action=manage_playlists"><?php echo _('Manage Playlist'); ?></a></li>
+    </ul>
+  </li>
+<?php } ?>
   <li><h4><?php echo _('Random'); ?></h4>
     <ul class="sb3" id="sb_home_random">
       <li id="sb_home_random_album"><?php echo Ajax::text('?page=random&action=album',_('Album'),'home_random_album'); ?></li>
