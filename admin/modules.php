@@ -48,7 +48,7 @@ switch ($_REQUEST['action']) {
 		$url = Config::get('web_path') . '/admin/modules.php?action=uninstall_localplay&amp;type=' . $type; 
 		$title = _('Are you sure you want to remove this plugin?'); 
 		$body = ''; 
-		show_confirmation($title,$body,$url); 
+		show_confirmation($title,$body,$url,1); 
 	break;
 	case 'uninstall_localplay': 
 		$type = scrub_in($_REQUEST['type']); 
