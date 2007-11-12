@@ -25,11 +25,13 @@
 $web_path = Config::get('web_path'); 
 ?>
 <?php show_box_top($playlist->name . ' ' . _('Playlist')); ?>
-		<ul class="text-action">
+		<div id="information_actions">
+		<ul>
 		<li><a href="<?php echo $web_path; ?>/playlist.php?action=normalize_tracks&amp;playlist_id=<?php echo $playlist->id; ?>"><?php echo _('Normalize Tracks'); ?></a></li>
 		<li><?php echo Ajax::text('?action=basket&type=playlist&id=' . $playlist->id,_('Play All'),'play_playlist'); ?></li>
 		<li><?php echo Ajax::text('?action=basket&type=playlist_random&id=' . $playlist->id,_('Play Random'),'play_playlist'); ?></li>
 		</ul>
+		</div>
 <?php show_box_bottom(); ?>
 <?php show_box_top(); ?>
 <div id="browse_content">
