@@ -77,7 +77,7 @@ if (!count($results)) {
 } 
 
 /** This is the version.... fluf nothing more... **/
-$results['version']		= '3.4-Alpha3 Build (002)';
+$results['version']		= '3.4-Alpha3 Build (003)';
 $results['int_config_version']	= '5'; 
 
 $results['raw_web_path']	= $results['web_path'];
@@ -130,7 +130,6 @@ require_once $prefix . '/lib/gettext.php';
 require_once $prefix . '/lib/batch.lib.php';
 require_once $prefix . '/lib/themes.php';
 require_once $prefix . '/lib/stream.lib.php';
-require_once $prefix . '/lib/democratic.lib.php';
 require_once $prefix . '/lib/xmlrpc.php';
 require_once $prefix . '/lib/class/localplay.abstract.php';
 require_once $prefix . '/modules/xmlrpc/xmlrpc.inc';

@@ -910,6 +910,32 @@ function show_user_select($name,$selected='',$style='') {
 } // show_user_select
 
 /**
+ * show_playlist_select
+ * This one is for users! shows a select/option statement so you can pick a user
+ * to blame
+ */
+function show_playlist_select($name,$selected='',$style='') { 
+
+	echo "<select name=\"$name\" style=\"$style\">\n";
+	echo "\t<option value=\"\">" . _('None') . "</option>\n";
+
+	$sql = "SELECT `id`,`name` FROM `playlist` ORDER BY `name`";
+	$db_results = Dba::query($sql);
+
+	while ($row = Dba::fetch_assoc($db_results)) { 
+		$select_txt = '';
+		if ($row['id'] == $selected) { 
+			$select_txt = 'selected="selected"';
+		}
+		// If they don't have a full name, revert to the username
+		echo "\t<option value=\"" . $row['id'] . "\" $select_txt>" . scrub_out($row['name']) . "</option>\n";
+	} // end while users
+
+	echo "</select>\n";
+
+} // show_playlist_select
+
+/**
  * show_box_top
  * This function requires the top part of the box
  * it takes title as an optional argument

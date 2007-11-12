@@ -220,7 +220,7 @@ class Playlist {
 	 * This simply returns a int of how many song elements exist in this playlist
 	 * For now let's consider a dyn_song a single entry
 	 */
-	function get_song_count() { 
+	public function get_song_count() { 
 
 		$sql = "SELECT COUNT(`id`) FROM `playlist_data` WHERE `playlist`='" . Dba::escape($this->id) . "'";
 		$db_results = Dba::query($sql);
@@ -427,7 +427,7 @@ class Playlist {
          * and numbers them in a liner fashion, not allowing for
 	 * the same track # twice, this is an optional funcition
 	 */
-        function normalize_tracks() { 
+        public function normalize_tracks() { 
 
                 /* First get all of the songs in order of their tracks */
                 $sql = "SELECT `id` FROM `playlist_data` WHERE `playlist`='" . Dba::escape($this->id) . "' ORDER BY `track` ASC";

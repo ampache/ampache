@@ -755,9 +755,9 @@ td.user_disabled {
 .fatalerror {
 	display:table-cell;
 	padding:3px;
-	color: #903;
+	color:#903; 
 	font-weight:bold;
- 	border:2px solid #903;
+	font-size:1.2em;
 }
 .disabled {
 	text-decoration:line-through;

@@ -116,8 +116,8 @@ require_session = "true"
 
 ; Downsample Remote
 ; If this is set to true and access control is on any users who are not
-; coming from a defined localnet will be automatically downsampled
-; regardless of their preferences
+; coming from a defined 'network' ACL will be automatically downsampled
+; regardless of their preferences. Requires access_control to be enabled
 ; DEFAULT: false
 ;downsample_remote = "false"
 
@@ -449,22 +449,18 @@ search_type  = fuzzy
 
 ;######################################################
 ; These are commands used to transcode non-streaming
-; formats to the target file type for streaming. Any
-; file types defined here will automatically be transcoded
-; using the stream_cmd_??? regardless of personal preferences
+; formats to the target file type for streaming. 
 ; This can be useful in re-encoding file types that don't stream
-; very well, or if the player doesn't support some file types. 
-; This is also the string used when 'downsampling' is selected 
-;
+; very well, or if your player doesn't support some file types. 
+; This is also the string used when 'downsampling' is selected
 ; REQUIRED variables
-; transcode_TYPE	= true/false ## True if you want to force transcode
+; transcode_TYPE	= true/false ## True to force transcode regardless of prefs
 ; transcode_TYPE_target	= TARGET_FILE_TYPE
 ; transcode_cmd_TYPE	= TRANSCODE_COMMAND
 ; %FILE%	= filename
 ; %OFFSET%	= offset
 ; %SAMPLE%	= sample rate
 ; %EOF%		= end of file in min.sec
-
 
 ; List of filetypes to transcode
 transcode_m4a 		= true
@@ -478,6 +474,7 @@ transcode_mp3_target	= mp3
 transcode_cmd_flac 	= "flac -dc %FILE% | lame -r -b 128 -S - - "
 transcode_cmd_m4a 	= "faad -f 2 -w %FILE% | lame -r -b 128 -S - -"
 transcode_cmd_mp3	= "mp3splt -qnf %FILE% %OFFSET% %EOF% -o - | lame --mp3input -q 3 -b %SAMPLE% -S - -"
+
 # This line seems to work better for windows, switch if needed
 #transcode_cmd_mp3	= "mp3splt -qnf -o - %FILE% %OFFSET% %EOF% | lame --mp3input -q 3 -b %SAMPLE% -S - -" 
 

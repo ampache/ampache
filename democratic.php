@@ -31,6 +31,27 @@ show_header();
 
 // Switch on their action
 switch ($_REQUEST['action']) { 
+	case 'show_create': 
+		if (!$GLOBALS['user']->has_access('75')) { 
+			access_denied(); 
+			break;
+		} 
+
+		// Show the create page
+		require_once Config::get('prefix') . '/templates/show_create_democratic.inc.php'; 
+
+	break; 
+	case 'create': 
+		// Only power users here 
+		if (!$GLOBALS['user']->has_access('75')) { 
+			access_denied(); 
+			break;
+		} 
+		// Create the playlist
+		//FIXME: don't use hardcoded id value here, needs db rework to fix this
+		Democratic::create('-1','vote','song',$_REQUEST['democratic']); 
+		header("Location: " . Config::get('web_path') . "/democratic.php?action=manage_playlists"); 	
+	break; 
 	case 'create_playlist':
 		/* Only Admins Here */
 		if (!$GLOBALS['user']->has_access(100)) { 
@@ -75,6 +96,14 @@ switch ($_REQUEST['action']) {
 		if ($stream_type != 'localplay') { exit; } 
 	break;
 	case 'manage_playlists': 
+		if (!$GLOBALS['user']->has_access('75')) { 
+			access_denied(); 
+			break;
+		} 
+		// Get all of the non-user playlists
+		$playlists = Democratic::get_playlists(); 
+
+		require_once Config::get('prefix') . '/templates/show_manage_democratic.inc.php'; 
 
 	break;
 	case 'update_playlist':

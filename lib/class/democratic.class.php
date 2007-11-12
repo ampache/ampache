@@ -22,20 +22,9 @@
 /**
  * Democratic
  * This class handles democratic play, which is a fancy
- * name for voting based playback. This uses the tmp playlist
- * heavily
+ * name for voting based playback. This extends the tmpplaylist
  */
-class Democratic {
-
-	/**
- 	 * Constructor
-	 * This doesn't do anything currently
-	 */
-	public function __construct() { 
-
-		return true;
-
-	} // Constructor
+class Democratic extends tmpPlaylist {
 
 	/**
 	 * get_playlists
@@ -44,7 +33,19 @@ class Democratic {
 	 */
 	public static function get_playlists() { 
 
+		// Pull all tmp playlsits with a session of < 0 (as those are fake) 
+		// This is kind of hackish, should really think about tweaking the db
+		// and doing this right. 
+		$sql = "SELECT `id` FROM `tmp_playlist` WHERE `session`< '0'"; 
+		$db_results = Dba::query($sql);  
 
+		$results = array(); 
+
+		while ($row = Dba::fetch_assoc($db_results)) { 
+			$results[] = $row['id']; 
+		} 
+
+		return $results; 
 
 	} // get_playlists
 
