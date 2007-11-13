@@ -677,7 +677,7 @@ class Song {
 		$this->f_title = truncate_with_ellipsis($this->title,Config::get('ellipse_threshold_title'));
 
 		// Create Links for the different objects 
-		$this->f_link = "<a href=\"" . Config::get('web_path') . "/stream.php?action=single_song&amp;song_id=" . $this->id . "\"> " . scrub_out($this->f_title) . "</a>";
+		$this->f_link = "<a href=\"" . Config::get('web_path') . "/song.php?action=show_song&amp;song_id=" . $this->id . "\"> " . scrub_out($this->f_title) . "</a>";
 		$this->f_album_link = "<a href=\"" . Config::get('web_path') . "/albums.php?action=show&amp;album=" . $this->album . "\"> " . scrub_out($this->f_album) . "</a>";
 		$this->f_artist_link = "<a href=\"" . Config::get('web_path') . "/artists.php?action=show&amp;artist=" . $this->artist . "\"> " . scrub_out($this->f_artist) . "</a>";	
 
@@ -687,7 +687,6 @@ class Song {
 		// Format Genre
 		$this->f_genre = $this->get_genre_name(); 
 		$this->f_genre_link = "<a href=\"" . Config::get('web_path') . "/genre.php?action=show_genre&amp;genre_id=" . $this->genre . "\">$this->f_genre</a>"; 
-
 
 		// Format the Time
 		$min = floor($this->time/60);
@@ -702,14 +701,14 @@ class Song {
 
 		return true;
 
-	} // format_song
+	} // format
 
-       /*!
-       *       @function       get_rel_path
-       *       @discussion    returns the path of the song file stripped of the catalog path
-       *			used for mpd playback 
-       */
-       function get_rel_path($file_path=0,$catalog_id=0) {
+	/**
+	 *       @function       get_rel_path
+	 *       @discussion    returns the path of the song file stripped of the catalog path
+	 *			used for mpd playback 
+	 */
+	function get_rel_path($file_path=0,$catalog_id=0) {
        
 		if (!$file_path) { 
 			$info = $this->_get_info();
@@ -724,7 +723,7 @@ class Song {
 		$catalog_path = rtrim($catalog_path, "/");
                 return( str_replace( $catalog_path . "/", "", $file_path ) );
 	       
-       } // get_rel_path
+	} // get_rel_path
 
 
 	/*! 
