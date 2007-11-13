@@ -30,7 +30,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 if (count($results)) {
 ?>
 <?php show_box_top(_('Now Playing')); ?>
-<table class="tabledata">
+<div class="np_row">
 <?php 
 foreach ($results as $item) {
 	$song = $item['song'];
@@ -41,12 +41,10 @@ foreach ($results as $item) {
 	if (!is_object($song)) { continue; }
 	if (!$np_user->fullname) { $np_user->fullname = "Ampache User"; }
 
-	echo '<tr class="np_row">';
 	require Config::get('prefix') . '/templates/show_now_playing_row.inc.php';
-	echo '</tr>';
 
 } // end foreach
 ?>
-</table>
+</div>
 <?php show_box_bottom(); ?>
 <?php } // end if count results ?>

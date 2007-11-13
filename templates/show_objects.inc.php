@@ -23,10 +23,10 @@
  * Variable/Non-DB object display takes headers & objects
  */
 ?>
-<table class="table-data" cellspacing="0">
+<table class="tabledata" cellspacing="0">
 <tr>
 <?php foreach ($headers as $header) { ?>
-	<th><?php echo scrub_out($header); ?></th>
+	<th class="th-top"><?php echo scrub_out($header); ?></th>
 <?php } ?>
 </tr>
 <?php 

@@ -30,7 +30,8 @@
 $limit	= $GLOBALS['user']->prefs['offset_limit'] ? $GLOBALS['user']->prefs['offset_limit'] : '25'; 
 $start	= Browse::$start; 
 $total	= Browse::$total_objects; 
-$uid	= Config::get('list_header_uid'); 
+$uid	  = Config::get('list_header_uid'); 
+$sides  = 5;
 
 // ++ the uid
 Config::set('list_header_uid',$uid+1); 
@@ -63,7 +64,7 @@ $page = $current_page;
 $i = 0;
 /* While we have pages left */
 while ($page > 0) { 
-	if ($i == '10') { $page_data['down'][1] = '...'; $page_data['down'][0] = '0'; break; } 
+	if ($i == $sides) { $page_data['down'][1] = '...'; $page_data['down'][0] = '0'; break; } 
 	$i++;
 	$page = $page - 1;
 	$page_data['down'][$page] = $page * $limit;
@@ -75,7 +76,7 @@ $i = 0;
 /* While we have pages left */
 while ($page <= $pages) { 
 	if ($page * $limit > $total) { break; }
-	if ($i == '10') { 
+	if ($i == $sides) { 
 		$key = $pages - 1;
 		if (!$page_data['up'][$key]) { $page_data['up'][$key] = '...'; }
 		$page_data['up'][$pages] = ($pages-1) * $limit;

@@ -25,7 +25,7 @@ if (isset($_REQUEST['xspf']) && isset ($_REQUEST['play_info'])){
 }
 ?>
 
-<div id="np_data">
+<div id="now_playing">
         <?php show_now_playing(); ?>
 </div> <!-- Close Now Playing Div -->
 <!-- Recently Played -->

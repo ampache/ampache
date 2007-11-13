@@ -21,42 +21,31 @@
 /* Create some variables we are going to need */
 $web_path = Config::get('web_path');
 $base_url = '?action=set_rating&rating_type=' . $rating->type . '&object_id=' . $rating->id;
-
-echo "<div class=\"star-rating dynamic-star-rating\">\n";
-echo "<ul>\n";
-
-// decide width of rating (5 stars -> 20% per star)
-$width = $rating->rating*20;
-if ($width < 0) $width = 0;
-
-//set the current rating background 
-echo "<li class=\"current-rating\" style=\"width:${width}%\" >Current rating: ";
-if ($rating->rating <= 0) {
-	echo "not rated yet </li>\n";
-}
-else echo "$rating->rating of 5</li>\n";
-
-//it did not like my "1-star", "2-star" ... css styles, and I changed it to this after I realized star1... would have worked :\
 ?>
-<li>
-	<?php echo Ajax::text($base_url . '&rating=1','','rating1_' . $rating->id,'','one-stars'); ?>
-</li>
-<li>
-	<?php echo Ajax::text($base_url . '&rating=2','','rating2_' . $rating->id,'','two-stars'); ?>
-</li>
-<li>
-	<?php echo Ajax::text($base_url . '&rating=3','','rating3_' . $rating->id,'','three-stars'); ?>
-</li>
-<li>
-	<?php echo Ajax::text($base_url . '&rating=4','','rating4_' . $rating->id,'','four-stars'); ?>
-</li>
-<li>
-	<?php echo Ajax::text($base_url . '&rating=5','','rating5_' . $rating->id,'','five-stars'); ?>
-</li>
-</ul>
 
-<?php
-  // Add in the 0 / Remove rating level
-  echo "<div class=\"zero-stars\">" . Ajax::text($base_url . '&rating=-1','','rating0_' . $rating->id,'','zero-stars') . "</div>\n";
-  echo "</div>\n"; 
-?>
+<div class="star-rating dynamic-star-rating">
+  <ul>
+    <?php
+    // decide width of rating (5 stars -> 20% per star)
+    $width = $rating->rating*20;
+    if ($width < 0) $width = 0;
+    
+    //set the current rating background 
+    echo "<li class=\"current-rating\" style=\"width:${width}%\" >Current rating: ";
+    if ($rating->rating <= 0) {
+    	echo "not rated yet </li>\n";
+    }
+    else echo "$rating->rating of 5</li>\n";
+    
+    for ($i=1; $i<6; $i++)
+    {
+    ?>
+      <li>
+      	<?php echo Ajax::text($base_url . '&rating='.$i,'','rating'.$i.'_' . $rating->id,'','star'.$i); ?>
+      </li>
+    <?php
+    }
+    ?>
+  </ul>
+   	<?php echo Ajax::text($base_url . '&rating=-1','','rating0_' . $rating->id,'','star0'); ?>
+</div>

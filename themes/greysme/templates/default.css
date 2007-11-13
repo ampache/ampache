@@ -101,12 +101,14 @@ body { behavior:url("templates/csshover2.htc"); }
 /*             Header                           */
 /************************************************/
 #header 	{ padding: 0 0; }
-#headerbox  	{ font-size: 0.9em; text-align: right; color: #e9ad51; position: absolute; top: 0; right: 0; padding: 3px; }
+#headerbox  	{ font-size: 0.9em; text-align: right; color: #e9ad51; position: absolute; top: 20px; right: 0; padding: 3px; }
 #headerbox b 	{ font-weight: normal }
 #headerbox a 	{ color: #e9ad51;}
 #headerlogo 	  { text-align: center; background: url(../images/ampache_back.gif) 0 0 repeat-x;}
 #headerlogo a 	{ }
-.box_topbarright    {display:table;}
+#headerbox .box_headerbox    {background:transparent;border:none;}
+#headerbox .box-top{display:none;}
+#headerbox .box-bottom{display:none;}
 
 #play_type_switch {
         float:left;
@@ -120,7 +122,10 @@ body { behavior:url("templates/csshover2.htc"); }
   clear:both;
 	text-align:center;
 	font-size:.8em;
-	padding:3px;
+	padding:3px 0;
+	background:#2c2b39;
+	border-top:5px solid #21212a;
+	margin-top:20px;
 }
 
 /************************************************/
@@ -348,7 +353,9 @@ input[type=checkbox]  {border:0;background:none;}
 /************************************************/
 .star-rating {
   position:relative;
-  display:inline;
+}
+.dynamic-star-rating{
+  width:96px;
 }
 
 .star-rating ul,
@@ -365,6 +372,7 @@ input[type=checkbox]  {border:0;background:none;}
   margin:0;
   padding:0;
   background-position: left top;
+  /*float:left;*/
 }
 .star-rating li{
   display: inline;
@@ -381,25 +389,26 @@ input[type=checkbox]  {border:0;background:none;}
   overflow:hidden;
   border: none;
 }
-.star-rating .one-stars  { width:20%; z-index:6; }
-.star-rating .two-stars  { width:40%; z-index:5; }
-.star-rating .three-stars { width:60%; z-index:4; }
-.star-rating .four-stars { width:80%; z-index:3; }
-.star-rating .five-stars { width:100%; z-index:2; }
+.star-rating .star1 { width:20%; z-index:6; }
+.star-rating .star2 { width:40%; z-index:5; }
+.star-rating .star3 { width:60%; z-index:4; }
+.star-rating .star4 { width:80%; z-index:3; }
+.star-rating .star5 { width:100%; z-index:2;}
 .star-rating .current-rating { z-index:1; background-position: left bottom; }
 
-.star-rating a.zero-stars {
+.star-rating-reset {height:16px;}
+.star-rating a.star0 {
   left:80px;
+  height:16px;
   width:16px;
   background: url(../images/ratings/x_off.gif) left top;
 }
-
 /* hovering effect only for dynamic star rating */
 #content .dynamic-star-rating a:hover{
   background-position: left center;
   background-color:transparent;
 }
-.dynamic-star-rating a:hover.zero-stars {
+.dynamic-star-rating a:hover.star0 {
   background: url(../images/ratings/x.gif) left top;
 }
 
@@ -426,23 +435,24 @@ input[type=checkbox]  {border:0;background:none;}
 
 /* Enclosing Boxes Styles */
 .box, .info-box { 
-	margin-top: 5px;
-	margin-right: 3px;
+	margin-top: 7px;
+	margin-right: 5px;
 	background: #050505 url(../images/back-box.gif) 0 0 no-repeat;
 	font-size : 0.9em;
 	border: 1px solid #8b3e38;
+	border-width: 1px 1px 0 0;
 	float:left;
   clear:left;
 	height:1%; /* IE6 : Holly Hack comes to rescue once again */
 }
 /* Hovering effects on links */
-.box a:hover, .info-box a:hover { background-color: #8b3e38; color: #e9ad51;}
+.box a:hover, .info-box a:hover { /*background-color: #8b3e38;*/ color: #e9ad51;}
 
 .box-inside { 
 	background: url(../images/right.gif) top right repeat-y;
 }
 .box-content {
-	padding:8px 15px;
+	padding:8px 12px;
 }
 
 .box-top { 
@@ -452,7 +462,7 @@ input[type=checkbox]  {border:0;background:none;}
 	background: url(../images/punaise-tl.gif) no-repeat;
 	height:16px;
 	width:16px;
-	position:relative;left:0;top:0;
+	position:relative;left:-4px;top:-4px;
 }
 .box-right-top {
 	background: url(../images/curl.gif) no-repeat;
@@ -468,13 +478,13 @@ input[type=checkbox]  {border:0;background:none;}
 	background: url(../images/punaise-bl.gif) no-repeat;
 	height:18px;
 	width:16px;
-	position:relative;left:0;top:0;
+	position:relative;left:-6px;top:5px;
 }
 .box-right-bottom { 
 	background: url(../images/punaise-br.gif) no-repeat;
 	height:18px;
 	width:20px;
-	position:absolute;right:0;top:0;
+	position:absolute;right:-6px;top:5px;
 }
 * html .box-right-bottom {right: expression(-this.parentNode.offsetWidth%2+"px");} /* Fixes an IE6 rounding error */
 
@@ -512,12 +522,18 @@ input[type=checkbox]  {border:0;background:none;}
 	background-image:url(../images/sort_on.gif);
 }
 
+.tabledata td a{display:block;}
+.tabledata td.cel_add a, .tabledata td.cel_action a{display:inline;}
+
 .odd, .even		{ background: url(../images/list_back.png) 0 50% repeat-x !important; background-image: none;}
 .odd 					{ background-color: #111 !important;}
 .even					{ }
 .odd:hover, .even:hover 		{ background-color: #2b293d !important;}
 
-.odd td a img:hover, .even td a img:hover {opacity:0.5;}
+.odd td a img, .even td a img {opacity:0.7;}
+.odd td a img:hover, .even td a img:hover {opacity:1;}
+
+.discnb       { font-style: italic; font-size:0.8em; }
 
 .border 	{ background: #000; }
 
@@ -533,22 +549,14 @@ td.cel_track {text-align:right;}
 /************************************************/
 /*               Content block                  */
 /************************************************/
-
-#content {margin:10px 14em 10px 13.5em;}
-
-/* Center things on supporting browsers */
-#content>table,#content>table .box  { margin-left: auto; margin-right: auto; } 
-
-h3#content_title{}		/* Doesn't exist anymore (?) */
-h3#content_title span {}	/* Doesn't exist anymore (?) */
-
-
+#content { 
+  margin:10px 14em 10px 13.5em;
+}
 
 
 /************************************************/
 /*          Albums of the moment                */
 /************************************************/
-
 .random_album
 {
   position:relative;
@@ -562,55 +570,48 @@ h3#content_title span {}	/* Doesn't exist anymore (?) */
   top:10px;
   right:0;
 }
-/************************************************/
-/*          Styles for Now Playing              */
-/************************************************/
 
-#nowplaying{
-	clear: both;
-}
-#np_container1{
-	height: 18px;
-}
-#np_container1 h1{
-	font-weight: bold;
-	padding: 2px;
-}
-#np_container2{
-	border-width: 1px;
-	border-style: solid;
-	border-color:#ddd #999 #999 #ccc;
-	padding: 6px;
-	color: #000;
+/************************************************/
+/*          Now Playing                         */
+/************************************************/
+#now_playing{
 }
 
 .np_row {
-	padding-top: 3px;
-	padding-bottom: 3px;
-	display: block;
+	padding: 3px;
+	float:left;
+	clear:both;
 }
 .np_cell {
-	margin: 10px;
+  padding-left:5px;
+  margin-left:5px;
+}
+
+.np_row label {
+  display:block;
+  font-weight:bold;
+  margin-left:-5px;
+}
+
+.np_group {
+  float:left;
+  padding-left:10px;
 }
 
 
-
-
-
-
 /************************************************/
-/*             List Header Styles               */
+/*             List Header                      */
 /************************************************/
-.list-header{margin:7px 0; text-align:center; font-size: 0.9em;position:relative;} 
+.list-header{margin:7px 0; padding:0 4em; text-align:center; font-size: 0.9em;position:relative;} 
 .list-header .prev{/*float:left;*/ position:absolute; top:0; left:0;}
 .list-header .next{/*float:right;*/ position:absolute; top:0; right:0;}
-.list-header .selected{}
+.list-header .selected{background:#e9ad51;color:#111;}
 .list-header .page-nb{padding:1px;border: 1px solid #111;}
 .list-header a:hover{background: transparent; border-color:#e9ad51;}
 
 
 /************************************************/
-/*             Text Action Styles               */
+/*             Text Action                      */
 /************************************************/
 
 .text-action {
