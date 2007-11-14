@@ -100,11 +100,7 @@
 // We do a little magic here to force a iframe reload depending on preference
 // We do this last because we want it to load, and we want to know if there is anything
 // to even pass
-if ($GLOBALS['user']->prefs['playlist_method'] != 'default' AND AJAX_INCLUDE == '1' AND count($objects)) { 
-	// Set the target
-	$_SESSION['iframe']['target'] = Config::get('web_path') . '/stream.php?action=basket'; 
-	echo "<script type=\"text/javascript\">"; 
-	echo "reload_util();"; 
-	echo "</script>"; 
+if (count($objects)) { 
+	Stream::run_playlist_method(); 
 } 
 ?>

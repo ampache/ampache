@@ -76,6 +76,12 @@ switch ($_REQUEST['action']) {
 			} // end switch on type
 		} // end foreach
 
+		// Check to see if 'clear' was passed if it was then we need to reset the basket
+		// FIXME: We need to reload the rightbar when we do this... sigh... 
+		if ($_REQUEST['playlist_method'] == 'clear' || $GLOBALS['user']->prefs['playlist_method'] == 'clear') { 
+			$GLOBALS['user']->playlist->clear(); 
+		} 
+
 	break;
 	/* This is run if we need to gather info based on a tmp playlist */
 	case 'tmp_playlist':

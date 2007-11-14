@@ -627,6 +627,38 @@ class Stream {
 
 	} // auto_init
 
+	/**
+	 * run_playlist_method
+	 * This takes care of the different types of 'playlist methods' the reason this is here
+	 * is because it deals with streaming rather then playlist mojo. If something needs to happen
+	 * this will echo the javascript required to cause a reload of the iframe. 
+	 */
+	public static function run_playlist_method() { 
+
+		// If this wasn't ajax included run away 
+		if (AJAX_INCLUDE != '1') { return false; } 
+
+		switch ($GLOBALS['user']->prefs['playlist_method']) { 
+			default: 
+			case 'clear': 
+			case 'default': 
+				return true; 
+			break;
+			case 'send': 
+				$_SESSION['iframe']['target'] = Config::get('web_path') . '/stream.php?action=basket';
+			break;
+			case 'send_clear': 
+				$_SESSION['iframe']['target'] = Config::get('web_path') . '/stream.php?action=basket&playlist_method=clear'; 
+			break;		
+		} // end switch on method 
+
+		// Load our javascript	
+	        echo "<script type=\"text/javascript\">";
+	        echo "reload_util();";
+	        echo "</script>";
+
+	} // run_playlist_method
+
 } //end of stream class
 
 ?>

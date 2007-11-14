@@ -4,6 +4,8 @@
 
 --------------------------------------------------------------------------
   v.3.4-Alpha3 
+	- Fixed all playlist methods, send, send and clear and clear on 
+		send now work correctly
 	- Added single song view
 	- Added Play Select drop down back in
 	- Fixed ordering of catalogs
