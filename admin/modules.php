@@ -41,6 +41,11 @@ switch ($_REQUEST['action']) {
 		} 	
 		// Install it!
 		$localplay->install(); 
+
+		// Go ahead and enable Localplay (Admin->System) as we assume they want to do that
+		// if they are enabling this
+		Prefernece::update('allow_localplay_playback','-1','1'); 
+
 		header("Location:" . Config::get('web_path') . '/admin/modules.php?action=show_localplay'); 
 	break;
 	case 'confirm_uninstall_localplay': 
