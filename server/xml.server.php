@@ -37,13 +37,17 @@ if (!Access::session_exists(array(),$_REQUEST['auth'],'api') AND $_REQUEST['acti
 }
 
 /* Set the correct headers */
-header("Content-type: text/xml; charset=utf-8");
-
+header("Content-type: text/xml; charset=" . Config::get('site_charset'));
+header("Content-Disposition: attachment; filename=information.xml");
 
 switch ($_REQUEST['action']) { 
 	case 'handshake': 
-
 		// Send the data we were sent to the API class so it can be chewed on 
+		$token = Api::handshake($_REQUEST['timestamp'],$_REQUEST['auth'],$_SERVER['REMOTE_ADDR'],$_REQUEST['user']); 
+		
+		if (!$token) { 
+			echo xmlData::error('Error Invalid Handshake, attempt logged'); 
+		} 
 
 	break; 
 	default:

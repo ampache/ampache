@@ -1004,6 +1004,8 @@ class Update {
                         "PRIMARY KEY ( `id` ) " .
                         ") ENGINE = MYISAM";
                 $db_results = Dba::query($sql);
+
+		
 				
 
 	} // 340011

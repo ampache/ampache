@@ -623,7 +623,7 @@ class Stream {
 	public static function _auto_init() { 
 
 		// Generate the session ID
-		self::$session = md5(uniqid(rand(), true));;
+		self::$session = md5(uniqid(rand(), true));
 
 	} // auto_init
 

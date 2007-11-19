@@ -545,6 +545,13 @@ class Catalog {
 	 */
 	public function get_album_art($catalog_id=0,$all='') { 
 
+
+		// Make sure they've actually got methods
+		$album_art_order = Config::get('album_art_order'); 
+		if (empty($album_art_order)) { 
+			return true; 
+		} 
+
 		// Prevent the script from timing out
 		set_time_limit(0);
 

@@ -24,7 +24,7 @@
  * This handles functions relating to the API written for ampache, initially this is very focused
  * on providing functionality for Amarok so it can integrate with Ampache
  */
-class AmpacheApi { 
+class Api { 
 
 	/**
  	 * constructor
@@ -47,12 +47,22 @@ class AmpacheApi {
 	public static function handshake($timesamp,$passphrase,$ip,$username='') { 
 
 		// First we'll filter by username and IP 
-		$username = $username ? Dba::escape($username) : '-1'; 
-		$ip = ip2int($ip); 
+		if (!$username) { 
+			$user_id = '-1'; 
+		} 
+		else { 
+			$client = User::get_from_username($username); 
+			$user_id =$client->id; 
+		} 
+
+		// Clean incomming variables
+		$user_id 	= Dba::escape($user_id); 
+		$timestampe 	= intval($timestamp); 
+		$ip 		= ip2int($ip); 
 		
 		// Run the query and return the passphrases as we'll have to mangle them
 		// to figure out if they match what we've got
-		$sql = "SELECT * FROM `access_list` WHERE `user`='$username' AND `start` >= '$ip' AND `end` <= '$ip'"; 
+		$sql = "SELECT * FROM `access_list` WHERE `user`='$user_id' AND `start` >= '$ip' AND `end` <= '$ip'"; 
 		$db_results = Dba::query($sql); 
 
 		while ($row = Dba::fetch_assoc($db_results)) { 
@@ -60,9 +70,40 @@ class AmpacheApi {
 			// Combine and MD5 this mofo
 			$md5pass = md5($timestamp . $row); 
 
+			if ($md5pass === $passphrase) { 
+				// Create the Session, in this class for now needs to be moved
+				$token = self::create_session($row['level'],$ip,$user_id); 
+				return $token; 
+			} // match 
+
 		} // end while
 
 	} // handhsake
+
+	/**
+	 * create_session
+	 * This actually creates the new session it takes the level, ip and user
+	 * and figures out the agent and expire then returns the token
+	 */
+	public static function create_session($level,$ip,$user_id) { 
+
+		// Generate the token 
+		$token = md5(uniqid(rand(), true));
+		$level = Dba::escape($level); 
+		$agent = Dba::escape($_SERVER['HTTP_USER_AGENT']); 
+		$expire = time() + 3600; 
+
+		$sql = "REPLACE INTO `session_api` (`id`,`user`,`agent`,`level`,`expire`,`ip`) " . 
+			"VALUES ('$token','$user_id','$agent','$level','$expire','$ip')"; 
+		$db_results = Dba::query($sql); 
+
+		if (Dba::affected_rows($db_results)) { 
+			return $token; 
+		} 
+
+		return false; 
+
+	} // create_session
 
 } // API class
 ?>

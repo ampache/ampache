@@ -44,6 +44,10 @@ $configfile = "$prefix/config/ampache.cfg.php";
 require_once $prefix . '/lib/general.lib.php';
 require_once $prefix . '/lib/class/config.class.php';
 
+// Define some base level config options
+Config::set('prefix',$prefix); 
+
+
 /*
  Check to see if this is Http or https
 */
@@ -77,13 +81,12 @@ if (!count($results)) {
 } 
 
 /** This is the version.... fluf nothing more... **/
-$results['version']		= '3.4-Alpha3 Build (003)';
+$results['version']		= '3.4-Alpha3 Build (004)';
 $results['int_config_version']	= '5'; 
 
 $results['raw_web_path']	= $results['web_path'];
 $results['web_path']		= $http_type . $_SERVER['HTTP_HOST'] . $results['web_path'];
 $results['http_port']		= $_SERVER['SERVER_PORT'];
-$results['prefix'] = $prefix;
 $results['stop_auth'] = $results['prefix'] . "/modules/vauth/gone.fishing";
 if (!$results['http_port']) { 
 	$results['http_port']	= '80';
@@ -142,9 +145,8 @@ require_once $prefix . '/modules/infotools/openstrands.class.php';
 //require_once $prefix . '/modules/infotools/jamendoSearch.class.php';
 
 /* Temp Fixes */
-$results = fix_preferences($results);
+$results = Preference::fix_preferences($results);
 
-// Setup Static Arrays
 Config::set_by_array($results,1);
 
 // Modules (These are conditionaly included depending upon config values)

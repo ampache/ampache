@@ -510,25 +510,4 @@ function update_preference_level($pref_id,$level) {
 
 } // update_preference_level
 
-/**
- * fix_preferences
- * This takes the preferences, explodes what needs to 
- * become an array and boolean everythings
- */
-function fix_preferences($results) {
-
-	$results['auth_methods'] 	= explode(",",$results['auth_methods']); 
-	$results['tag_order']		= explode(",",$results['tag_order']); 
-	$results['album_art_order']	= explode(",",$results['album_art_order']); 
-	$results['amazon_base_urls']	= explode(",",$results['amazon_base_urls']); 
-
-        foreach ($results as $key=>$data) {
-                if (strcasecmp($data,"true") == "0") { $results[$key] = 1; }
-                if (strcasecmp($data,"false") == "0") { $results[$key] = 0; }
-        }
-
-        return $results;
-
-} // fix_preferences
-
 ?>

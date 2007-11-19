@@ -39,6 +39,18 @@ class xmlData {
 
 	} // constructor
 
+	/**
+	 * error
+	 * This generates a standard XML Error message
+	 * nothing fancy here...
+	 */
+	public static function error($string) { 
+
+		$string = "<root>\n\t<error><![CDATA[$string]]></error>\n</root>"; 
+		return $string; 
+
+	} // error
+
 } // xmlData
 
 ?>
