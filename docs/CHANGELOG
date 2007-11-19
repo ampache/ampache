@@ -4,7 +4,7 @@
 
 --------------------------------------------------------------------------
   v.3.4-Alpha3 
-	- Fixed by where Ampache would incorrectly search for album art
+	- Fixed bug where Ampache would incorrectly search for album art
 		when config option was empty (Thx Karl Hungus)
 	- Enabling a Localplay Method will now set Allow Localplay to true
 	- Fixed all playlist methods, send, send and clear and clear on 

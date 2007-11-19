@@ -3146,6 +3146,7 @@ class getid3_id3v2 extends getid3_handler
             'TP2'  => 'band',
             'TP3'  => 'conductor',
             'TP4'  => 'remixer',
+	    'TPA'  => 'pos',
             'TPB'  => 'publisher',
             'TPE1' => 'artist',
             'TPE2' => 'band',
