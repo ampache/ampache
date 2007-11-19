@@ -314,6 +314,33 @@ class Access {
 
 	} // get_type_name
 
+	/**
+	 * session_exists
+	 * This checks to see if the specified session of the specified type
+	 * exists, it also provides an array of key'd data that may be required
+	 * based on the type
+	 */
+	public static function session_exists($data,$key,$type) { 
+
+		// Switch on the type they pass
+		switch ($type) { 
+			case 'api': 
+
+			break; 
+			case 'stream': 
+		
+			break; 
+			case 'interface': 
+
+			break; 
+			default: 
+				return false; 
+			break; 
+		} // type
+
+
+	} // session_exists
+
 } //end of access class
 
 ?>

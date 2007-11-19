@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2006 Ampache.org
+ Copyright (c) 2001 - 2007 Ampache.org
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
@@ -25,110 +25,27 @@
  */
 
 define('NO_SESSION','1');
-require_once('../lib/init.php');
+require_once '../lib/init.php';
 
 /** 
  * Verify the existance of the Session they passed in we do allow them to
  * login via this interface so we do have an exception for action=login
  */
-if (!session_exists($_REQUEST['sessid']) AND $_REQUEST['action'] !== 'login') { exit(); }
-
-$GLOBALS['user'] = new User($_REQUEST['user_id']);
-$action = scrub_in($_REQUEST['action']);
+if (!Access::session_exists(array(),$_REQUEST['auth'],'api') AND $_REQUEST['action'] != 'handshake') { 
+	debug_event('Access Denied','Invalid Session or unthorized access attempt to API','5'); 
+	exit(); 
+}
 
 /* Set the correct headers */
 header("Content-type: text/xml; charset=utf-8");
 
-switch ($action) { 
-	/* Returns an array of artist information */
-	case 'get_artists': 
-		$sql = "SELECT id FROM artist ORDER BY name";
-		$db_results = mysql_query($sql,dbh());
-		
-		while ($r = mysql_fetch_assoc($db_results)) { 
-			$artist = new Artist($r['id']);
-			$artist->format_artist();
-			$results[] = array('id'=>$artist->id,'name'=>$artist->full_name);
-		} // end while results
 
-		$xml_doc = xml_from_array($results);
-		echo $xml_doc;
-	break;
-	case 'get_albums':
-		$sql = "SELECT id FROM album ORDER BY name";
-		$db_results = mysql_query($sql,dbh()); 
+switch ($_REQUEST['action']) { 
+	case 'handshake': 
 
-		while ($r = mysql_fetch_assoc($db_results)) { 
-			$album = new Album($r['id']);
-			$results[] = array('id'=>$r['id'],'year'=>$album->year,'name'=>$album->name);
-		} // end while results
+		// Send the data we were sent to the API class so it can be chewed on 
 
-		$xml_doc = xml_from_array($results);
-		echo $xml_doc;
-	break;
-	case 'get_genres':
-		$sql = "SELECT id FROM genre ORDER BY name";
-		$db_results = mysql_query($sql,dbh());
-	
-		while ($r = mysql_fetch_assoc($db_results)) { 
-			$genre = new Genre($r['id']); 
-			$results[] = array('id'=>$r['id'],'name'=>$genre->name);
-		}
-		
-		$xml_doc = xml_from_array($results);
-		echo $xml_doc;
-	break;
-	/* Return results of a quick search */
-	case 'search': 
-		/* We need search string */
-		$_REQUEST['s_all'] = $_REQUEST['search_string'];	
-		if (strlen($_REQUEST['s_all']) < 1) { break; } 
-		$data = run_search($_REQUEST);
-
-		/* Unfortuantly these are song objects, which are not good for
-		 * xml.. turn it into an array 
-		 */
-		foreach ($data as $song) { 
-			$genre 		= $song->get_genre_name();
-			$artist 	= $song->get_artist_name();
-			$album		= $song->get_album_name();
-			$results[] 	= array('id'=>$song->id,
-						'title'=>$song->title,
-						'genre'=>$genre,
-						'artist'=>$artist,
-						'album'=>$album);	
-		} // end foreach song	
-
-		$xml_doc = xml_from_array($results);
-		echo $xml_doc;
-
-	break;	
-	/* This takes a object_id/object_type and returns the correct PLAY url for it */
-	case 'play_url':
-		/* We need the type and id */
-		$object_type 	= scrub_in($_REQUEST['object_type']); 
-		$object_id	= scrub_in($_REQUEST['object_id']);
-
-		switch ($object_type) { 
-			case 'song':
-				$song = new Song($object_id);
-				$url = $song->get_url($_REQUEST['sessid']); 
-				$results[] = $url;
-			break;
-			default: 
-				// Rien a faire
-			break;
-		} // end switch on object_type
-
-		$xml_doc = xml_from_array($results);
-		echo $xml_doc; 
-
-	break;
-	/* This allows you to login via the xml mojo */
-	case 'login':
-	
-
-	break;
+	break; 
 	default:
 		// Rien a faire
 	break;

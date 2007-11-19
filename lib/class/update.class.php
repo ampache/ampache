@@ -238,6 +238,12 @@ class Update {
 				'- Change wording on Localplay preferences.<br />'; 
 		$version[] = array('version' => '340010','description'=>$update_string); 
 
+		$update_string = '- Adjusted Tables to new democratic play methods.<br />' . 
+				'- Added api session table, will eventually recombine.<br />'; 
+
+		//$version[] = array('version' => '340011','description'=>$update_string); 
+
+
 		return $version;
 
 	} // populate_version
@@ -978,6 +984,29 @@ class Update {
 		self::set_version('db_version','340010'); 
 
 	} // update_340010
+
+	/**
+	 * update_340011
+	 * This updates the democratic play stuff so that can handle a little more complext mojo
+	 * It also adds yet another table to the db to handle the sessions for API access. Eventually
+	 * should combine all of the session tables, but I'll do that later
+	 */
+	public static function update_340011() { 
+
+		// First add the new table for the new session stuff
+                $sql = "CREATE TABLE `session_api` ( " .
+                        "`id` VARCHAR( 64 ) NOT NULL , " .
+                        "`user` INT( 11 ) UNSIGNED NOT NULL , " .
+                        "`agent` VARCHAR( 255 ) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL , " .
+			"`level` INT( 11 ) UNSIGNED NOT NULL DEFAULT '0', " . 
+                        "`expire` INT( 11 ) UNSIGNED NOT NULL , " .
+                        "`ip` INT( 11 ) UNSIGNED NULL , " .
+                        "PRIMARY KEY ( `id` ) " .
+                        ") ENGINE = MYISAM";
+                $db_results = Dba::query($sql);
+				
+
+	} // 340011
 
 } // end update class
 ?>
