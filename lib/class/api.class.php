@@ -36,7 +36,6 @@ class Api {
 
 	} // constructor
 
-
 	/**
 	 * handshake
 	 * This is the function that handles the verifying a new handshake

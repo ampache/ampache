@@ -46,10 +46,71 @@ class xmlData {
 	 */
 	public static function error($string) { 
 
-		$string = "<root>\n\t<error><![CDATA[$string]]></error>\n</root>"; 
+		$string = self::_header() . "\t<error><![CDATA[$string]]></error>" . self::_footer(); 
 		return $string; 
 
 	} // error
+
+	/**
+	 * artists
+	 * This takes an array of artists and then returns a pretty xml document with the information 
+	 * we want 
+	 */
+	public static function artists($artists) { 
+
+		foreach ($artists as $artist_id) { 
+			$artist = new Artist($artist_id); 
+			$artist->format(); 
+
+			$string .= "<artist id="$artist->id">\n" . 
+					"\t<name>$artist->f_full_name</name>\n"; 
+					"</artist>\n"; 
+		} // end foreach artists
+
+		$final = self::_header() . $string . self::_footer(); 
+		return $final; 
+
+	} // artists
+
+	/**
+	 * _header
+	 * this returns a standard header, there are a few types
+	 * so we allow them to pass a type if they want to
+	 */
+	private static function _header($type='') { 
+
+		switch ($type) { 
+			case 'xspf': 
+
+			break; 
+			case 'itunes':
+			
+			break; 
+			default: 
+				$header = "<?xml version=\"1.0\" encoding=\"utf-8\" ?>\n<root>\n";
+			break; 
+		} // end switch 
+
+		return $header; 
+
+	} // _header
+
+	/**
+ 	 * _footer
+ 	 * this returns the footer for this document, these are pretty boring
+	 */
+	private static function _footer($type='') { 
+
+		switch ($type) { 
+			default: 
+				$footer = "\n</root>\n"; 
+			break; 
+		} // end switch on type 
+
+
+		return $footer; 
+
+	} // _footer
 
 } // xmlData
 

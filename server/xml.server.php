@@ -50,6 +50,19 @@ switch ($_REQUEST['action']) {
 		} 
 
 	break; 
+	case 'artists': 
+
+		Browse::reset_filters(); 
+		Browse::set_type('artist'); 
+		Browse::set_sort('name','ASC'); 
+	
+		if ($_REQUEST['filter']) { 
+			Browse::set_filter('alpha_match',$_REQUEST['filter']); 
+		} 
+		$artists = Browse::get_objects(); 
+		// echo out the resulting xml document
+		echo xmlData::artists($artists); 
+	break; 
 	default:
 		// Rien a faire
 	break;

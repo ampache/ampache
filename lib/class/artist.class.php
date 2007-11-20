@@ -207,6 +207,7 @@ class Artist {
 		/* Combine prefix and name, trim then add ... if needed */
                 $name = truncate_with_ellipsis(trim($this->prefix . " " . $this->name));
 		$this->f_name = $name;
+		$this->f_full_name = trim($this->prefix . " " . $this->name); 
 
 		// If this is a fake object, we're done here
 		if ($this->_fake) { return true; } 

@@ -325,6 +325,19 @@ class Access {
 		// Switch on the type they pass
 		switch ($type) { 
 			case 'api': 
+				$key = Dba::escape($key); 
+				$time = time(); 
+				$sql = "SELECT * FROM `session_api` WHERE `id`='$key' AND `expire` > '$time'"; 
+				$db_results = Dba::query($sql); 
+		
+				if (Dba::num_rows($db_results)) { 
+					$time = $time + 3600; 
+					$sql = "UPDATE `session_api` WHERE `id`='$key' SET `expire`='$time'"; 
+					$db_results($db_results); 
+					return true; 
+				} 
+
+				return false; 
 
 			break; 
 			case 'stream': 

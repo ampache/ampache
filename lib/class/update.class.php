@@ -238,10 +238,9 @@ class Update {
 				'- Change wording on Localplay preferences.<br />'; 
 		$version[] = array('version' => '340010','description'=>$update_string); 
 
-		$update_string = '- Adjusted Tables to new democratic play methods.<br />' . 
-				'- Added api session table, will eventually recombine.<br />'; 
+		$update_string =  '- Added api session table, will eventually recombine with others.<br />'; 
 
-		//$version[] = array('version' => '340011','description'=>$update_string); 
+		$version[] = array('version' => '340011','description'=>$update_string); 
 
 
 		return $version;
@@ -1005,7 +1004,8 @@ class Update {
                         ") ENGINE = MYISAM";
                 $db_results = Dba::query($sql);
 
-		
+
+		self::set_version('db_version','340011'); 		
 				
 
 	} // 340011
