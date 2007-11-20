@@ -43,7 +43,7 @@ class Api {
 	 * can take a username, if non is passed the ACL must be non-use 
 	 * specific
 	 */
-	public static function handshake($timesamp,$passphrase,$ip,$username='') { 
+	public static function handshake($timestamp,$passphrase,$ip,$username='') { 
 
 		// First we'll filter by username and IP 
 		if (!$username) { 
@@ -56,18 +56,18 @@ class Api {
 
 		// Clean incomming variables
 		$user_id 	= Dba::escape($user_id); 
-		$timestampe 	= intval($timestamp); 
+		$timestamp 	= intval($timestamp); 
 		$ip 		= ip2int($ip); 
 		
 		// Run the query and return the passphrases as we'll have to mangle them
 		// to figure out if they match what we've got
-		$sql = "SELECT * FROM `access_list` WHERE `user`='$user_id' AND `start` >= '$ip' AND `end` <= '$ip'"; 
+		$sql = "SELECT * FROM `access_list` WHERE `user`='$user_id' AND `start` <= '$ip' AND `end` >= '$ip'"; 
 		$db_results = Dba::query($sql); 
 
 		while ($row = Dba::fetch_assoc($db_results)) { 
 
 			// Combine and MD5 this mofo
-			$md5pass = md5($timestamp . $row); 
+			$md5pass = md5($timestamp . $row['key']); 
 
 			if ($md5pass === $passphrase) { 
 				// Create the Session, in this class for now needs to be moved
@@ -96,7 +96,7 @@ class Api {
 			"VALUES ('$token','$user_id','$agent','$level','$expire','$ip')"; 
 		$db_results = Dba::query($sql); 
 
-		if (Dba::affected_rows($db_results)) { 
+		if ($db_results) { 
 			return $token; 
 		} 
 

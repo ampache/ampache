@@ -29,6 +29,9 @@ class xmlData {
 
 	public static $version = '340001'; 
 
+	// This is added so that we don't pop any webservers
+	public static $limit = '5000';
+
 	/**
 	 * constructor
 	 * We don't use this, as its really a static class
@@ -52,18 +55,34 @@ class xmlData {
 	} // error
 
 	/**
+	 * single_string
+	 * This takes two values, first the key second the string
+	 */
+	public static function single_string($key,$string) { 
+
+		$final = self::_header() . "\t<$key><![CDATA[$string]]></$key>" . self::_footer(); 
+
+		return $final; 
+
+	} // single_string
+
+	/**
 	 * artists
 	 * This takes an array of artists and then returns a pretty xml document with the information 
 	 * we want 
 	 */
 	public static function artists($artists) { 
 
+		if (count($artists) > self::$limit) { 
+			$artists = array_splice($artists,0,self::$limit); 
+		} 
+
 		foreach ($artists as $artist_id) { 
 			$artist = new Artist($artist_id); 
 			$artist->format(); 
 
-			$string .= "<artist id="$artist->id">\n" . 
-					"\t<name>$artist->f_full_name</name>\n"; 
+			$string .= "<artist id=\"$artist->id\">\n" . 
+					"\t<name><![CDATA[$artist->f_full_name]]></name>\n" .  
 					"</artist>\n"; 
 		} // end foreach artists
 
@@ -71,6 +90,47 @@ class xmlData {
 		return $final; 
 
 	} // artists
+
+	/**
+	 * albums
+	 * This echos out a standard albums XML document, it pays attention to the limit
+	 */
+	public static function albums($albums) { 
+
+		if (count($albums) > self::$limit) { 
+			$albums = array_splice($albums,0,self::$limit); 
+		} 
+
+		foreach ($albums as $album_id) { 
+			$album = new Album($album_id); 
+			$album->format(); 
+
+			// Build the Art URL
+			$art_url = Config::get('web_path') . '/image.php?id=' . $album->id; 
+
+			$string .= "<album id=\"$album->id\">\n" . 
+					"\t<name><![CDATA[$album->name]]></name>\n"; 
+
+			// Do a little check for artist stuff
+			if ($album->artist_count != 1) { 
+				$string .= "\t<artist id=\"0\"><![CDATA[Various]]></artist>\n"; 
+			} 
+			else { 
+				$string .= "\t<artist id=\"$album->artist_id\"><![CDATA[$album->artist_name]]></artist>\n"; 
+			} 
+
+			$string .= "\t<year>$album->year</year>\n" . 
+					"\t<tracks>$album->song_count</tracks>\n" . 
+					"\t<disk>$album->disk</disk>\n" . 
+					"\t<art>$art_url</art>\n" . 
+					"</album>\n"; 
+		} // end foreach
+
+		$final = self::_header() . $string . self::_footer(); 
+
+		return $final; 
+
+	} // albums
 
 	/**
 	 * _header

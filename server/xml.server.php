@@ -48,10 +48,12 @@ switch ($_REQUEST['action']) {
 		if (!$token) { 
 			echo xmlData::error('Error Invalid Handshake, attempt logged'); 
 		} 
+		else { 
+			echo xmlData::single_string('auth',$token); 
+		} 
 
 	break; 
 	case 'artists': 
-
 		Browse::reset_filters(); 
 		Browse::set_type('artist'); 
 		Browse::set_sort('name','ASC'); 
@@ -62,6 +64,17 @@ switch ($_REQUEST['action']) {
 		$artists = Browse::get_objects(); 
 		// echo out the resulting xml document
 		echo xmlData::artists($artists); 
+	break; 
+	case 'albums': 
+		Browse::reset_filters(); 
+		Browse::set_type('album'); 
+		Browse::set_sort('name','ASC'); 
+		
+		if ($_REQUEST['filter']) { 
+			Browse::set_filter('alpha_match',$_REQUEST['filter']); 
+		} 
+		$albums = Browse::get_objects(); 
+		echo xmlData::albums($albums); 
 	break; 
 	default:
 		// Rien a faire

@@ -333,7 +333,7 @@ class Access {
 				if (Dba::num_rows($db_results)) { 
 					$time = $time + 3600; 
 					$sql = "UPDATE `session_api` WHERE `id`='$key' SET `expire`='$time'"; 
-					$db_results($db_results); 
+					$db_results = Dba::query($sql); 
 					return true; 
 				} 
 
