@@ -58,6 +58,9 @@ class Api {
 		$user_id 	= Dba::escape($user_id); 
 		$timestamp 	= intval($timestamp); 
 		$ip 		= ip2int($ip); 
+
+		// Log this attempt
+		debug_event('API','Login Attempt, IP:' . int2ip($ip) . ' Time:' . $timestamp . ' User:' . $user_id . ' Auth:' . $passphrase,'1'); 
 		
 		// Run the query and return the passphrases as we'll have to mangle them
 		// to figure out if they match what we've got
@@ -72,10 +75,13 @@ class Api {
 			if ($md5pass === $passphrase) { 
 				// Create the Session, in this class for now needs to be moved
 				$token = self::create_session($row['level'],$ip,$user_id); 
+				debug_event('API','Login Success, passphrase matched','1'); 
 				return $token; 
 			} // match 
 
 		} // end while
+
+		debug_event('API','Login Failed, unable to match passphrase','1'); 
 
 	} // handhsake
 

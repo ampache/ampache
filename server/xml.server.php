@@ -76,6 +76,18 @@ switch ($_REQUEST['action']) {
 		$albums = Browse::get_objects(); 
 		echo xmlData::albums($albums); 
 	break; 
+	case 'genres': 
+		Browse::reset_filters(); 
+		Browse::set_type('genre'); 
+		Browse::set_sort('name','ASC'); 
+		
+		if ($_REQUEST['filter']) { 
+			Browse::set_filter('alpha_match',$_REQUEST['filter']); 
+		} 
+		$genres = Browse::get_objects(); 
+
+		echo xmlData::genres($genres); 
+	break; 
 	default:
 		// Rien a faire
 	break;
