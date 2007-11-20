@@ -94,6 +94,24 @@ class Artist {
 	} // _get_info
 
 	/**
+	 * get_from_name
+	 * This gets an artist object based on the artist name
+	 */
+	public static function get_from_name($name) { 
+
+		$name = Dba::escape($name); 
+		$sql = "SELECT `id` FROM `artist` WHERE `name`='$name'"; 
+		$db_results = Dba::query($sql); 
+
+		$row = Dba::fetch_assoc($db_results); 
+
+		$object = new Artist($row['id']); 
+
+		return $object; 
+
+	} // get_from_name 
+
+	/**
 	 * get_albums
 	 * gets the album ids that this artist is a part
 	 * of

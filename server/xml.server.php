@@ -65,6 +65,13 @@ switch ($_REQUEST['action']) {
 		// echo out the resulting xml document
 		echo xmlData::artists($artists); 
 	break; 
+	case 'artist_albums': 
+		$artist = new Artist($_REQUEST['filter']); 
+
+		$albums = $artist->get_albums(); 
+		echo xmlData::albums($albums); 
+
+	break; 
 	case 'albums': 
 		Browse::reset_filters(); 
 		Browse::set_type('album'); 
