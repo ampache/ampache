@@ -23,8 +23,8 @@
 $web_path = conf('web_path');
 
 ?>
-<form method="post" action="<?php echo $web_path; ?>/playlist.php" enctype="multipart/form-data">
 <?php show_box_top(_('Editing Playlist')); ?>
+<form method="post" action="<?php echo $web_path; ?>/playlist.php" enctype="multipart/form-data">
 <table>
 <tr>
 	<td><?php echo _('Name'); ?>:</td>
@@ -40,14 +40,11 @@ $web_path = conf('web_path');
 	<input type="radio" name="type" value="private" <?php echo $selected_private; ?>/><?php echo _('Private'); ?><br />
 	</td>
 </tr>
-<tr>
-	<td>&nbsp;</td>
-	<td>
+</table>
+<div class="formValidation">
 	<input type="hidden" name="playlist_id" value="<?php echo $playlist->id; ?>" />
 	<input type="hidden" name="action" value="update_playlist" />
 	<input type="submit" value="<?php echo _('Update'); ?>" />
-	</td>
-</tr>
-</table>
-<?php show_box_bottom(); ?>
+</div>
 </form>
+<?php show_box_bottom(); ?>

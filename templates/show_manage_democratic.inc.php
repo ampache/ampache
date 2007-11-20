@@ -51,6 +51,6 @@ show_box_top(_('Manage Democratic Playlists'));  ?>
 <?php } ?>
 </table>
 <div>
-<span class="text-action"><a href="<?php echo Config::get('web_path'); ?>/democratic.php?action=show_create"><?php echo _('Create New Playlist'); ?></a></span>
+<a class="button" href="<?php echo Config::get('web_path'); ?>/democratic.php?action=show_create"><?php echo _('Create New Playlist'); ?></a>
 </div>
 <?php show_box_bottom(); ?>

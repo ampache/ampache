@@ -25,19 +25,21 @@
  */
 
 ?>
-<?php show_box_top(_('Editing') . ' ' . $fullname . ' ' . _('preferences')); ?>
+<?php show_box_top(_('Editing') . ' ' . $fullname . ' ' . _('preferences'),'box box_preferences'); ?>
 <form method="post" name="preferences" action="<?php echo Config::get('web_path'); ?>/preferences.php?action=update_preferences" enctype="multipart/form-data">
 <?php 
 if ($_REQUEST['tab'] != 'account' && $_REQUEST['tab'] != 'modules') { 
 	show_preference_box($preferences[$_REQUEST['tab']]); 
 
 ?>
+<div class="formValidation">
 	<input class="button" type="submit" value="<?php echo _('Update Preferences'); ?>" />
 	<input type="hidden" name="tab" value="<?php echo scrub_out($_REQUEST['tab']); ?>" />
 	<input type="hidden" name="method" value="<?php echo scrub_out($_REQUEST['action']); ?>" />
 	<?php if ($GLOBALS['user']->has_access('100')) { ?>
 		<input type="hidden" name="user_id" value="<?php echo scrub_out($_REQUEST['user_id']); ?>" />
 	<?php } ?>
+</div>
 <?php
 }  // end if not account
 if ($_REQUEST['tab'] == 'account') { 

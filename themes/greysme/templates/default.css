@@ -63,7 +63,6 @@ body{
 }
 
 ol	{ list-style-type: decimal-leading-zero; }
-li	{ list-style-position: inside; }
 p 	{ color: #e9ad51; }
 a	  { color: #74718a; text-decoration: none; }
 
@@ -90,6 +89,16 @@ textarea { background-color: #111; color: #e9ad51; }
 body { behavior:url("templates/csshover2.htc"); }
 
 /************************************************/
+/*         Float Clearer                        */
+/************************************************/
+/* float clearing for IE6 */
+* html .clearfix{ height: 1%; overflow: visible; }
+/* float clearing for IE7 */
+/* *+html .clearfix{ min-height: 1%; }*/
+/* float clearing for everyone else */
+.clearfix:after{ clear: both; content: "."; display: block; height: 0; visibility: hidden; }
+
+/************************************************/
 /*                XSPF Player                   */
 /************************************************/
 .xspf_player {
@@ -98,21 +107,33 @@ body { behavior:url("templates/csshover2.htc"); }
 }
 
 /************************************************/
+/*             Main Container                   */
+/************************************************/
+#maincontainer{}
+
+/************************************************/
 /*             Header                           */
 /************************************************/
 #header 	{ padding: 0 0; }
-#headerbox  	{ font-size: 0.9em; text-align: right; color: #e9ad51; position: absolute; top: 20px; right: 0; padding: 3px; }
+#headerbox  	{ font-size: 0.9em; text-align: right; color: #e9ad51; position: absolute; top: 15px; right: 0; padding: 3px; }
 #headerbox b 	{ font-weight: normal }
 #headerbox a 	{ color: #e9ad51;}
 #headerlogo 	  { text-align: center; background: url(../images/ampache_back.gif) 0 0 repeat-x;}
 #headerlogo a 	{ }
-#headerbox .box_headerbox    {background:transparent;border:none;}
+#headerbox .box-content    {background:transparent;border:none;}
 #headerbox .box-top{display:none;}
 #headerbox .box-bottom{display:none;}
 
 #play_type_switch {
         float:left;
         margin-top:2px;
+}
+
+/************************************************/
+/*               Content block                  */
+/************************************************/
+#content { 
+  margin:10px 14em 10px 13.5em;
 }
 
 /************************************************/
@@ -132,7 +153,7 @@ body { behavior:url("templates/csshover2.htc"); }
 /*                  Buttons                     */
 /************************************************/
 
-.button, input[type=button], input[type=submit], .text-action a {
+.button, input[type=button], input[type=submit] {
 	background:#8b3e38 url(../images/button_back2.png) 0 100% repeat-x !important;
 	background:#8b3e38;
 	color:#e9ad51;
@@ -141,14 +162,13 @@ body { behavior:url("templates/csshover2.htc"); }
 	border:0;
   cursor:pointer;
 }
-.button:hover, input[type=button]:hover, input[type=submit]:hover, div.text-action a:hover {
+.button:hover, input[type=button]:hover, input[type=submit]:hover {
 	background:#74718a url(../images/button_back2.png) 0 100% repeat-x !important;
 	background:#74718a;
 }
 
 a.button              { padding:1px .5em; }
-input[type=checkbox]  {border:0;background:none;}
-.text-action span     { display:block; }
+input[type=checkbox]  { border:0;background:none; }
 
 /************************************************/
 /*                  Sidebar                     */
@@ -261,7 +281,9 @@ input[type=checkbox]  {border:0;background:none;}
 .alphabet { 
   background:transparent; /* fix ie bug */
 	margin: 0.3em auto;
+	font-size: 0.9em;
 }
+
 .alphabet span.link { 
 	cursor: pointer;
 	margin: 0;
@@ -419,13 +441,12 @@ input[type=checkbox]  {border:0;background:none;}
 .box-title { 
 	display:block;
 	color:#8b3e38;
-	padding:3px 3px 0 18px;
-	background: url(../images/puce.gif) 0 50% no-repeat;
+	padding:3px 13px 0 28px;
+	background: #000 url(../images/puce.gif) 10px 50% no-repeat;
 	font-size: 1.1em;
 	font-variant:small-caps;
 	border-bottom:1px solid #8b3e38;
 	letter-spacing:0.1em;
-	margin: 0 10px;
 }
 .box-title:first-letter{font-style:italic;}
 
@@ -436,11 +457,9 @@ input[type=checkbox]  {border:0;background:none;}
 /* Enclosing Boxes Styles */
 .box, .info-box { 
 	margin-top: 7px;
-	margin-right: 5px;
-	background: #050505 url(../images/back-box.gif) 0 0 no-repeat;
+	margin-right: 11px;
+	/*background: url(../images/back-box.gif) 0 0 no-repeat;*/
 	font-size : 0.9em;
-	border: 1px solid #8b3e38;
-	border-width: 1px 1px 0 0;
 	float:left;
   clear:left;
 	height:1%; /* IE6 : Holly Hack comes to rescue once again */
@@ -452,49 +471,60 @@ input[type=checkbox]  {border:0;background:none;}
 	background: url(../images/right.gif) top right repeat-y;
 }
 .box-content {
-	padding:8px 12px;
+	padding:12px 12px;
+	background:#000;
 }
 
 .box-top { 
 	position:relative;
+	background:transparent url(../images/box_top.png) 0 100% repeat-x !important;
+	background:#000;
 }
 .box-left-top { 
-	background: url(../images/punaise-tl.gif) no-repeat;
-	height:16px;
-	width:16px;
-	position:relative;left:-4px;top:-4px;
+	/*background: url(../images/punaise-tl.gif) no-repeat;*/
+	height:15px;
+	width:17px;
+	position:relative;left:/*-8px*/ 30%;top:-3px;
 }
 .box-right-top {
-	background: url(../images/curl.gif) no-repeat;
-	height:16px;
-	width:20px;
-	position:absolute;right:0;top:0;
+	/*background: url(../images/curl.gif) no-repeat;*/
+	background: url(../images/punaise-tl.gif) no-repeat;
+	height:15px;
+	width:17px;
+	position:absolute;left:30%;top:-3px;
 }
 * html .box-right-top {right: expression(-this.parentNode.offsetWidth%2+"px");} /* Fixes an IE6 rounding error */
 .box-bottom { 
 	position:relative;clear:both;
+	background:transparent url(../images/box_bottom.png) 0 0 repeat-x !important;
+	background:#000;
 }
 .box-left-bottom {
 	background: url(../images/punaise-bl.gif) no-repeat;
-	height:18px;
-	width:16px;
-	position:relative;left:-6px;top:5px;
+	height:15px;
+	width:17px;
+	position:relative;left:-7px;top:-3px;
 }
 .box-right-bottom { 
 	background: url(../images/punaise-br.gif) no-repeat;
-	height:18px;
-	width:20px;
-	position:absolute;right:-6px;top:5px;
+	height:15px;
+	width:17px;
+	position:absolute;right:-7px;top:-3px;
 }
 * html .box-right-bottom {right: expression(-this.parentNode.offsetWidth%2+"px");} /* Fixes an IE6 rounding error */
+
+
+/* Specific to Info Boxes */
+.info-box .album_art {float:left;margin-right:10px;}
+.info-box th {color:#8b3e38;}
+#information_actions { } 
+#information_actions h3 { color:#8b3e38; font-size:1.2em; margin:0.2em; }
 
 /* Specific boxes */
 .box_newest_albums  {}
 .box_newest_artists {clear:none;}
 .box_newest_genres  {clear:none;}
-
-.info-box th {color:#8b3e38;}
-
+.box_preferences h4 {color: #8b3e38;font-size: 1.1em;text-align:center;font-weight: bold;border-bottom:1px solid #8b3e38;padding:1em;}
 
 /************************************************/
 /*         Tables (songs lists...)              */
@@ -507,8 +537,9 @@ input[type=checkbox]  {border:0;background:none;}
 	color:#8b3e38; 
 	font-variant:small-caps;
 	font-weight:normal;
-	border-right:1px solid #000;
+	border-right:3px solid #000;
 	text-align:center;
+	line-height:2em;
 }
 .tabledata th a {
 	color:#8b3e38;
@@ -522,53 +553,53 @@ input[type=checkbox]  {border:0;background:none;}
 	background-image:url(../images/sort_on.gif);
 }
 
-.tabledata td a{display:block;}
-.tabledata td.cel_add a, .tabledata td.cel_action a{display:inline;}
-
+/* table rows */
 .odd, .even		{ background: url(../images/list_back.png) 0 50% repeat-x !important; background-image: none;}
 .odd 					{ background-color: #111 !important;}
 .even					{ }
 .odd:hover, .even:hover 		{ background-color: #2b293d !important;}
 
-.odd td a img, .even td a img {opacity:0.7;}
-.odd td a img:hover, .even td a img:hover {opacity:1;}
-
-.discnb       { font-style: italic; font-size:0.8em; }
-
+/* Misc */
 .border 	{ background: #000; }
+.tabledata input[type=text], .tabledata select{ margin:1px 0; }
+.discnb       { font-style: italic; font-size:0.8em; }
 
 /* specific cells */
 .cel_cover{padding:6px;}
 .cel_select, .cel_action, .cel_date, .cel_applytoall, .cel_level {text-align:center;}
-
 td.cel_track {text-align:right;}
+/* specific cells : users login state */
+.user_online{background:#0f0;}
+.user_offline{background:#7f0000;}
+.user_disabled{background:#ccc;}
+/* specific cells : enlarge links */
+.tabledata td a{display:block;}
+.tabledata td.cel_add a, .tabledata td.cel_action a{display:inline;}
+/* specific cells : image links */
+.odd td a img, .even td a img {opacity:0.7;}
+.odd td a img:hover, .even td a img:hover {opacity:1;}
 
-/* specific boxes */
+/* specific tables */
 #recently_played .th-bottom {display:none;}
-
-/************************************************/
-/*               Content block                  */
-/************************************************/
-#content { 
-  margin:10px 14em 10px 13.5em;
-}
-
+.box_preferences .th-bottom {display:none;}
 
 /************************************************/
 /*          Albums of the moment                */
 /************************************************/
-.random_album
-{
+.random_album{
   position:relative;
   float:left;
   padding:8px;
 }
 
-.random_album .play_album
-{
+.random_album .play_album{
   position:absolute;
   top:10px;
   right:0;
+}
+
+#random_selection .box-content{
+  float:left;
 }
 
 /************************************************/
@@ -598,208 +629,95 @@ td.cel_track {text-align:right;}
   padding-left:10px;
 }
 
+#now_playing .box-content{
+background:#000;
+  float:left;
+}
+
 
 /************************************************/
 /*             List Header                      */
 /************************************************/
 .list-header{margin:7px 0; padding:0 4em; text-align:center; font-size: 0.9em;position:relative;} 
-.list-header .prev{/*float:left;*/ position:absolute; top:0; left:0;}
-.list-header .next{/*float:right;*/ position:absolute; top:0; right:0;}
+.list-header .prev{position:absolute; top:0; left:0;}
+.list-header .next{position:absolute; top:0; right:0;}
 .list-header .selected{background:#e9ad51;color:#111;}
 .list-header .page-nb{padding:1px;border: 1px solid #111;}
 .list-header a:hover{background: transparent; border-color:#e9ad51;}
 
-
 /************************************************/
-/*             Text Action                      */
+/*             Errors                           */
 /************************************************/
-
-.text-action {
-	border-top:1px dotted #8b3e38; 
-}
-.text-action, .text-action li {
-	margin: 10px 0 5px 0;
-	list-style: none;
-	padding: 1px 0 0 0;
-	text-wrap: none;
+.error {
+	color: #990033; 
 }
 
-/* See input.button class */
-/*
-.text-action a, .text-action span {
-	background: #111;
-	border: 1px solid #000;
- 	padding-left: 2px;
-	padding-right: 2px;
-	text-decoration: none;
-	text-wrap: none;
-}
-*/
-
-.text-action #pt_active {
-	background: #000;
-	color: #fff;
-	border: 1px solid #ddd;
-	text-wrap: none;
+.fatalerror {
+	padding: 3px;
+	display: table-cell;
+	color: #990033;
+	font-weight:bold;
+ 	border:2px solid #990033;		
 }
 
 
 /************************************************/
-/*            Tabs (for preferences)            */
+/*             LocalPlay                        */
 /************************************************/
-
-#tablist {
-        padding: 4px 0;
-        margin: 12px 0 0 0;
+.lp_box_ctrl, .lp_box_vol {
+	text-align: center; /*for compatibility, may be controlled by themers now*/
 }
 
-#tablist li {
-        list-style: none;
-        display: inline;
-}
-
-#tablist li a {
-        padding: 0 0.5em;
-        margin-left: 3px;
-        color: #000;
-       	background: #8b3e38 url(../images/button_back.png) 0 100% repeat-x !important;
-        background: #8b3e38;
-
-}
-
-#tablist li a:hover {
-        border-top: 2px solid #e9ad51;
-        color: #e9ad51;
-}
-
-#tablist li a#current {
-        padding: 5px 0.5em;
-        color: #8b3e38;
-        background: #111;
-        background: #111 !important;
-        border:none;
-}
-
-/************************************************/
-/*            Styles for Header                 */
-/*(for ampache admin : installation, update...) */
-/************************************************/
-
-div#Header {
-	height: 80px;
-	margin-bottom: 3px;
-	padding: 0px;
-}
-
-#Header h1 { 
-	background: transparent url(../themes/classic/images/bg_login_0.jpg) no-repeat top left; 
-	border: 0; 
-	width: 439px; 
-	height: 84px; 
-	float: left;
-}
-	
-#Header h1 span {
-	display:none
-}
-
-#Header h2 { 
-	background: transparent url(001/h2.gif) no-repeat top left; 
-	margin-top: 75px;  
-	width: 200px; 
-	height: 18px; 
-	float: right;
-}
-
-#Header h2 span {
-	font-size: 10px;
-	margin-left: 10px;
-}
-
-/************************************************/
-/* User Online/Offline style, used in users.php */
-/************************************************/
-td.user_online{
-	background:#0f0;
-}
-td.user_offline {
-	background:#7f0000;
-}
-td.user_disabled {
-	background:#ccc;
-}
 
 /************************************************/
 /*         Styles for Login template            */
 /************************************************/
-
-#container {
+#loginPage #maincontainer {
 	margin: 100px auto 0px auto;
 	text-align:center;	
 }
-#container h1 {
-  background:url(../images/ampache_back.gif) 0 0 repeat-x;
-}
-#container h1 span {
-	background: url(../images/ampache.gif) 50% 0 no-repeat;
-	height: 120px;
-	margin-bottom: 8px;
-	display:block;
-	text-indent:-9000px;
-}
-#container div {
-  width:340px;
-  margin:auto;
-}
-#loginp_0 {
+#loginPage h2{
 	color:#111;
 	font-size:0.8em;
 	font-style:italic;
+	font-weight:normal;
 	margin: 0 0 2em 0;
 }
-.loginp_1 {
+#loginPage #loginbox{
+  width:340px;
+  margin:auto;
+}
+.loginfield{
 	text-align:right;
 	padding-right:100px;
+	margin: 1px 0;
 }
-.loginp_1 span {
-	font-weight:bold;
+.loginfield input.text_input{
+  width:12em;
+  border:1px solid #74718a;
 }
-.loginp_1 input {
-	border:1px solid #74718a;
+
+#loginPage div.fatalerror {
+	padding:5px;
+	margin:10px;
 }
-input.text_input {
-	width:12em;
-}
-.loginp_1 input.check_input {
-	margin-left:5px;
-}
+
 
 /************************************************/
 /*                Misc                          */
 /************************************************/
 
-.text-box {
+.formValidation{
+  margin-top:1em;
+  text-align:center;
+}
+
+.text-box, .confirmation-box {
 	display: table-cell;
 	padding:5px;
 	margin:0 0 10px 0;
 	background-color: #111;
 }
-
-.confirmation-box {
-	padding: 5px 5px 0 5px;
-	margin-bottom: 10px;
-	display: table-cell;
-	background-color: #111;
-	border: 2px solid #000;
-}
-
-.alphabet { 
-	margin: 10px;
-	font-size: 0.9em; 
-	font-weight: normal; 
-}
-
-.display {}
 
 #ajax-loading {
  	position: absolute;  
@@ -813,56 +731,3 @@ input.text_input {
 	display: none;
 }
 
-#mpdpl td {
-	padding: 0 2px 0 2px;
-	text-align: left;
-}
-
-.tabledata input, .tabledata select{ margin:0 0 2px 0;}
-
-.header1 { 
-	color: #8b3e38;
-  background: #111 url(../images/button_back.png) 0 100% repeat-x !important;
-	background: #111;
-	font-size: 1.4em; 
-	font-variant:small-caps;
-	display:block;
-	padding:2px 5px;
-}
-.header2 {
- 	color: #8b3e38;
-	font-size: 1.1em;
-	text-align:center;
-	font-weight: bold;
-	border-bottom:1px solid #8b3e38;
-	padding:1em;
-}
-
-.error {
-	color: #990033; 
-}
-
-.fatalerror {
-	padding: 3px;
-	display: table-cell;
-	color: #990033;
-	font-weight:bold;
- 	border:2px solid #990033;		
-}
-
-#container div.fatalerror {
-	background:none;
-	height:auto;
-	padding:5px;
-	margin:10px;
-	display:block;
-}
-
-.disabled { text-decoration: line-through; }
-
-
-#maincontainer{}
-
-.info-box .album_art {float:left;margin-right:10px;}
-#information_actions ul { list-style:none; }
-#information_actions h3 { color:#8b3e38; font-size:1.2em; margin:0.2em; }

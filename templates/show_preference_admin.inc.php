@@ -45,16 +45,14 @@
 	</td>
 </tr>
 <?php } ?>
-<tr>
-	<td colspan="2">
-		<input type="hidden" name="action" value="set_preferences" />
-		<input type="submit" value="<?php echo _('Update'); ?>" />
-	</td>
-</tr>	
 <tr class="th-bottom">
 	<th class="cel_preference"><?php echo _('Preference'); ?></th>
 	<th class="cel_level"><?php echo _('Level'); ?></th>
 </tr>
 </table>
+<div class="formValidation">
+		<input type="hidden" name="action" value="set_preferences" />
+		<input type="submit" value="<?php echo _('Update'); ?>" />
+</div>
 </form>
 <?php show_box_bottom(); ?>

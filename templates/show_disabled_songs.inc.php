@@ -52,12 +52,6 @@
 		<td colspan="7"><span class="error"><?php echo _('No Records Found'); ?></span></td>
 	</tr>
 <?php } ?>
-<tr class="<?php echo flip_class(); ?>">
-	<td colspan="7">
-		<input class="button" type="submit" value="<?php echo _('Remove'); ?>" />&nbsp;&nbsp;
-		<input type="hidden" name="action" value="remove_disabled" />
-	</td>
-</tr>
 <tr class="th-bottom">
 	<th class="cel_select"><a href="#" onclick="check_select('song'); return false;"><?php echo _('Select'); ?></a></td>
 	<th class="cel_song"><?php echo _('Title'); ?></th>
@@ -67,4 +61,8 @@
 	<th class="cel_additiontime"><?php echo _('Addition Time'); ?></th>
 </tr>
 </table>
+<div class="formValidation">
+		<input class="button" type="submit" value="<?php echo _('Remove'); ?>" />&nbsp;&nbsp;
+		<input type="hidden" name="action" value="remove_disabled" />
+</div>
 </form>

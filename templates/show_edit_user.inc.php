@@ -77,13 +77,11 @@
 		</select>
 	</td>
 </tr>
-<tr>
-	<td colspan="2">
+</table>
+<div class="formValidation">
 		<input type="hidden" name="action" value="update_user" />
 		<input type="submit" value="<?php echo _('Update User'); ?>" />
 		<input type="hidden" name="user_id" value="<?php echo $client->id; ?>" />
-	</td>
-</tr>
-</table>
+</div>
 </form>
 <?php show_box_bottom(); ?>

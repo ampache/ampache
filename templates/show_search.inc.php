@@ -126,14 +126,10 @@
 		</select>
 	</td>
 </tr>
-<tr class="<?php echo flip_class(); ?>">
-	<td>&nbsp;</td>
-	<td>
+</table>
+<div class="formValidation">
 	        <input class="button" type="submit" value="<?php echo _('Search'); ?>" />&nbsp;&nbsp;
 	        <input type="hidden" name="action" value="search" />
-	</td>
-	<td colspan="2">&nbsp;</td>
-</tr>
-</table>
+</div>
 </form>
 <?php show_box_bottom(); ?>

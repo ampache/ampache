@@ -44,13 +44,10 @@ $web_path = conf('web_path');
 			<input type="checkbox" name="auto" value="1" <?php echo $auto_check; ?>/><?php echo _('Select Best Guess'); ?>
 		</td>
 	</tr>
-        <tr>
-                <td></td>
-                <td>
-                        <input type="hidden" name="action" value="search" />
-                        <input type="submit" value="<?php echo _('Search'); ?>" />
-                </td>
-        </tr>
 </table>
+<div class="formValidation">
+      <input type="hidden" name="action" value="search" />
+      <input type="submit" value="<?php echo _('Search'); ?>" />
+</div>
 </form>
 <?php show_box_bottom(); ?>

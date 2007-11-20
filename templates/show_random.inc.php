@@ -19,8 +19,8 @@
 
 */
 ?>
-<form id="random" method="post" enctype="multipart/form-data" action="<?php echo Config::get('web_path'); ?>/random.php?action=get_advanced">
 <?php show_box_top(_('Play Random Selection')); ?>
+<form id="random" method="post" enctype="multipart/form-data" action="<?php echo Config::get('web_path'); ?>/random.php?action=get_advanced">
 <table class="table-data" cellspacing="0" cellpadding="3">
 <tr>
 	<td><?php echo _('Item count'); ?></td>
@@ -74,14 +74,12 @@
 		</select>
 	</td>
 </tr>
-<tr>
-	<td colspan="4">
-	<input type="submit" value="<?php echo _('Enqueue'); ?>" />
-	</td>
-</tr>
 </table>
-<?php show_box_bottom(); ?>
+<div class="formValidation">
+	<input type="submit" value="<?php echo _('Enqueue'); ?>" />
+</div>
 </form>
+<?php show_box_bottom(); ?>
 <div id="browse">
 <?php
 	if (is_array($object_ids)) { 

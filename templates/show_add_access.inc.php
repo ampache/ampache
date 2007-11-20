@@ -21,7 +21,7 @@
 ?>
 <?php show_box_top(_('Add Access for a Host')); ?>
 <form name="update_catalog" method="post" enctype="multipart/form-data" action="<?php echo Config::get('web_path'); ?>/admin/access.php?action=add_host">
-<table cellpadding="5" cellspacing="0">
+<table class="tabledata" cellpadding="5" cellspacing="0">
 <tr>
 	<td><?php echo _('Name'); ?>:</td>
 	<td>
@@ -77,11 +77,9 @@
 		<input type="text" name="key" value="<?php echo scrub_out($_REQUEST['end']); ?>" size="32" maxlength="32" />
 	</td>
 </tr>
-<tr>
-	<td colspan="2">
-		<input class="button" type="submit" value="<?php echo _('Create ACL'); ?>" />
-	</td>
-</tr>
 </table>
+<div class="formValidation">
+		<input class="button" type="submit" value="<?php echo _('Create ACL'); ?>" />
+</div>
 </form>
 <?php show_box_bottom(); ?>

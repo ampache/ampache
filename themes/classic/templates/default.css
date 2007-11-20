@@ -73,12 +73,27 @@ input {
 body { behavior:url("templates/csshover2.htc"); }
 
 /************************************************/
+/*         Float Clearer                        */
+/************************************************/
+/* float clearing for IE6 */
+* html .clearfix{ height: 1%; overflow: visible; }
+/* float clearing for IE7 */
+/**+html .clearfix{ min-height: 1%; }*/
+/* float clearing for everyone else */
+.clearfix:after{ clear: both; content: "."; display: block; height: 0; visibility: hidden; }
+
+/************************************************/
 /*                XSPF Player                   */
 /************************************************/
 .xspf_player {
     right: 20px;
     position: absolute;
 }
+
+/************************************************/
+/*             Main Container                   */
+/************************************************/
+#maincontainer{}
 
 /************************************************/
 /*             Header                           */
@@ -103,6 +118,13 @@ body { behavior:url("templates/csshover2.htc"); }
 } 
 
 /************************************************/
+/*               Content block                  */
+/************************************************/
+#content {
+	margin: 20px 135px 20px 135px;
+}
+
+/************************************************/
 /*                Footer                        */
 /************************************************/
 #footer {
@@ -115,7 +137,7 @@ body { behavior:url("templates/csshover2.htc"); }
 /************************************************/
 /*                  Buttons                     */
 /************************************************/
-.button, input[type=button], input[type=submit], .text-action a {
+.button, input[type=button], input[type=submit] {
   border: 1px solid #f0f0f0;
   border-color: #f0f0f0 #a0a0a0 #a0a0a0 #f0f0f0;
   background: #d0d0d0;
@@ -125,7 +147,7 @@ body { behavior:url("templates/csshover2.htc"); }
   text-decoration:none;
 	cursor: pointer;
 }
-a.button{padding:1px}
+a.button{padding:1px 3px;}
 
 /************************************************/
 /*                  Sidebar                     */
@@ -458,10 +480,18 @@ a.button{padding:1px}
 }
 * html .box-right-bottom {right: expression(-this.parentNode.offsetWidth%2+"px");} /* Fixes an IE6 rounding error */
 
+
+/* Specific to Info Boxes */
+.info-box .album_art {float:left;margin-right:10px;}
+#information_actions { margin-left:5px; font-size:0.7em; } 
+#information_actions h3 { font-size:1.2em; margin:0.2em; }
+
 /* Specific boxes */
 .box_newest_albums  {}
 .box_newest_artists {clear:none;}
 .box_newest_genres  {clear:none;}
+.box_preferences h4 {color:#000;font:bold 14px Verdana, Helvetica, sans-serif;padding:0.8em 0;}
+
 
 /************************************************/
 /*         Tables (songs lists...)              */
@@ -471,10 +501,9 @@ a.button{padding:1px}
 	vertical-align: top;
 	text-align:center;
 }
-.odd, .odd td {
-	font-size: 12px;
-	border-bottom:1px dotted #c0c0c0;
-}
+
+/* table rows */
+.odd, .odd td,
 .even, .even td {
 	font-size: 12px;
 	border-bottom:1px dotted #c0c0c0;
@@ -482,35 +511,35 @@ a.button{padding:1px}
 .even:hover, .odd:hover { 
 	background:#99ccff;
 } 
+
+/* Misc */
 .border 	{ background: #000; }
+.tabledata input, .tabledata select{ margin:2px 0;}
 
 /* specific cells */
 .cel_cover{padding:6px;}
 .cel_select, .cel_action, .cel_date, .cel_applytoall, .cel_level {text-align:center;}
+/* specific cells : users login state */
+.user_online{background:#0f0;}
+.user_offline{background:#7f0000;}
+.user_disabled{background:#ccc;}
 
-/* specific boxes */
+/* specific tables */
 #recently_played .th-bottom {display:none;}
+.box_preferences .th-bottom {display:none;}
 
-/************************************************/
-/*               Content block                  */
-/************************************************/
-#content {
-	margin: 20px 135px 20px 135px;
-}
 
 /************************************************/
 /*          Albums of the moment                */
 /************************************************/
-.random_album
-{
+.random_album{
   position:relative;
   float:left;
   padding:8px;
   width:80px;
 }
 
-.random_album .play_album
-{
+.random_album .play_album{
   display:none;
 }
 
@@ -550,156 +579,87 @@ a.button{padding:1px}
 /*             List Header                      */
 /************************************************/
 .list-header{margin:7px 0; padding:0 4em; text-align:center; font-size: 0.8em;position:relative;} 
-.list-header .prev{/*float:left;*/ position:absolute; top:0; left:0;}
-.list-header .next{/*float:right;*/ position:absolute; top:0; right:0;}
+.list-header .prev{position:absolute; top:0; left:0;}
+.list-header .next{position:absolute; top:0; right:0;}
 .list-header .selected{background: #e0e0e0;}
 .list-header .page-nb{padding:1px;border: 1px solid #ccc;text-decoration: none;}
 .list-header .page-nb:hover{background: #d0d0d0;}
 
 /************************************************/
-/*             Text Action                      */
+/*             Errors                           */
 /************************************************/
-.text-action, .text-action li {
-	list-style: none;
-	margin:5px 0;
-	padding-left:0px;
+.error { 
+	color:#903; 
 }
-.text-action div {
-	text-decoration: underline; 
-	cursor: pointer; 
-	display:block; 
-}
-.text-action #pt_active {
-	background: #000;
-	color: #fff;
-	border:1px solid #ddd;
+
+.fatalerror {
+	display:table-cell;
+	padding:3px;
+	color:#903; 
+	font-weight:bold;
+	font-size:1.2em;
 }
 
 
 /************************************************/
-/*            Styles for Header                 */
-/*(for ampache admin : installation, update...) */
+/*             LocalPlay                        */
 /************************************************/
-div#Header{
-	height:80px;
-	margin-bottom:3px;
-}
-#Header h1 { 
-	width: 439px; 
-	height: 84px; 
-	float: left;
-	border:0; 
-	background: transparent url(../images/bg_login_0.jpg) no-repeat top left; 
-}
-#Header h1 span {
-	display:none
-}
-#Header h2 { 
-	float: right;
-	margin-top: 75px;  
-	width: 200px; 
-	height: 18px; 
-	background: transparent url(001/h2.gif) no-repeat top left; 
-}
-#Header h2 span {
-	font-size: 10px;
-	margin-left: 10px;
+.lp_box_ctrl, .lp_box_vol {
+	text-align: center; /*for compatibility, may be controlled by themers now*/
 }
 
 /************************************************/
 /*         Styles for Login template            */
 /************************************************/
-#container{
+#loginPage #maincontainer{
 	margin:100px auto 0 auto;
 	width:437px;
 	font-size:12px;
 	text-align:center;
 }
-#container h1{
-	background:url(../images/bg_login_0.jpg) no-repeat;
-	height:81px;
-	margin-bottom:8px;
+#loginPage #header{
+  padding:0;
 }
-#container h1 span{
-	display:none;
+
+#loginPage #loginbox{
+	background:url(../images/bg_login.jpg) no-repeat;
+	height:292px;
 }
-#container div.fatalerror {
-	display:block;
-	height:auto;
-	padding:5px;
-	margin:10px;
-	background:none;
+#loginPage h2{
+  color:#333;
+  padding-top:60px;
+  font-weight: normal;
 }
-#container div{
-	background:url(../images/bg_login_1.jpg) no-repeat;
-	height:285px;
-}
-#loginp_0{
-	color:#333;
-	margin-top:0;
-	padding-top:60px;
-}
-.loginp_1{
+.loginfield{
 	text-align:right;
 	padding-right:100px;
+	margin: 1em 0;
 }
-.loginp_1 label{
+.loginfield input.text_input{
+  width:12em;
+  border:1px solid #999;
+}
+.loginfield label{
 	font-weight:bold;
 }
-.loginp_1 input{
-	border:1px solid #999;
-}
-input.text_input{
-width:12em;
-}
-.loginp_1 input.check_input{
-margin-right:5em;
+.loginfield #rememberme{
+  margin-right:5em;
+  background:none;
 } 
 
-
-/************************************************/
-/*         TV Page Related Styles               */
-/************************************************/
-#tv_np{
-	float:right;
+#loginPage div.fatalerror {
+	padding:5px;
+	margin:10px;
 }
-#tv_left{ 
-	float:left;
-	clear:right;
-}
-#tv_playlist{
-	clear:both;
-}
-
-
-/************************************************/
-/* User Online/Offline style, used in users.php */
-/************************************************/
-td.user_online{
-	background:#0f0;
-}
-td.user_offline {
-	background:#7f0000;
-}
-td.user_disabled {
-	background:#ccc;
-}
-
-
-/************************************************/
-/*         Additional Information Boxes         */
-/************************************************/
-#information_actions { 
-	margin-left:5px; 
-	font-size:0.7em;
-} 
-#information_actions ul { list-style:none; }
-#information_actions h3 { font-size:1.2em;margin:0.2em; }
-
 
 /************************************************/
 /*                Misc                          */
 /************************************************/
+.formValidation{
+  margin-top:1em;
+  text-align:center;
+}
+
 .text-box, .confirmation-box {
 	display:table-cell;
 	padding:5px 5px 0 5px;
@@ -719,44 +679,3 @@ td.user_disabled {
 	display: none;
 	text-indent:-9999em;
 } 
-
-#mpdpl td {
-	padding:0 2px 0 2px;
-	text-align:left;
-}
-.header1 { 
-	color:#000; 
-	font:bold 18px Verdana, Helvetica, sans-serif; 
-}
-.header2 {
-  color:#000;
-	font:bold 14px Verdana, Helvetica, sans-serif;
-}
-.error { 
-	color:#903; 
-}
-.fatalerror {
-	display:table-cell;
-	padding:3px;
-	color:#903; 
-	font-weight:bold;
-	font-size:1.2em;
-}
-.disabled {
-	text-decoration:line-through;
-}
-#maincontainer{}
-.tabledata input, .tabledata select{ margin:2px 0;}
-.display {}
-
-
-.lp_box_ctrl {
-	text-align: center; /*for compatibility, may be controlled by themers now*/
-/* 	padding-top: 5px; */
-}
-.lp_box_vol {
-	text-align: center; /*for compatibility, may be controlled by themers now*/
-/* 	padding-left: 7px; */
-}
-
-.info-box .album_art {float:left;margin-right:10px;}

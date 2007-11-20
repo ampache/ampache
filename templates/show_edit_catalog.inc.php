@@ -61,14 +61,11 @@
 		<input size="60" type="text" name="sort_pattern" value="<?php echo scrub_out($catalog->sort_pattern);?>" />
 	</td>
 </tr>
-<tr>
-	<td>&nbsp;</td>
-	<td>
+</table>
+<div class="formValidation">
 	<input type="hidden" name="catalog_id" value="<?php echo scrub_out($catalog->id); ?>" />
 	<input type="hidden" name="action" value="update_catalog_settings" />
 	<input type="submit" value="<?php echo _('Save Catalog Settings'); ?>" />
-	</td>
-</tr>
-</table>
+</div>
 </form>
 <?php show_box_bottom(); ?>

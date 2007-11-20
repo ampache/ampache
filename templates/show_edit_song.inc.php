@@ -81,14 +81,11 @@
 		<input type="checkbox" name="flag" value="1" checked="checked" /> <?php echo _('Flag for Retagging'); ?>
 	</td>
 </tr>
-<tr class="<?php echo flip_class(); ?>">
-	<td>&nbsp;</td>
-	<td>
+</table>
+<div class="formValidation">
 		<input type="hidden" name="song_id" value="<?php echo $song->id; ?>" />
 		<input type="hidden" name="action" value="edit_song" />
 		<input type="submit" value="<?php echo _('Update Song'); ?>" />
-	</td>
-</tr>
-</table>
+</div>
 </form>
 <?php show_box_bottom(); ?>

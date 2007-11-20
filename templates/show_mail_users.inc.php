@@ -21,8 +21,8 @@
 */
 ?>
 
-<form name="mail" method="post" action="<?php echo conf('web_path'); ?>/admin/mail.php" enctype="multipart/form-data">
 <?php show_box_top(_('Send E-mail to Users')); ?>
+<form name="mail" method="post" action="<?php echo conf('web_path'); ?>/admin/mail.php" enctype="multipart/form-data">
 <table>
   <tr>
     <td><?php echo _('Mail to'); ?>:</td>
@@ -108,13 +108,11 @@
     </td>
   </tr>
 
-  <tr>
-    <td>&nbsp;</td>
-    <td>
+</table>
+<div class="formValidation">
         <input type="hidden" name="action" value="send_mail" />
         <input class="button" type="submit" value="<?php echo _('Send Mail'); ?>" />
-    </td>
-  </tr>
-</table>
-<?php show_box_bottom(); ?>
+</div>
 </form>
+<?php show_box_bottom(); ?>
+

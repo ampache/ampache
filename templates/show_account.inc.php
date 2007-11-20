@@ -55,13 +55,11 @@ $_SESSION['forms']['account'] = $form_string;
 		<input type="checkbox" name="clear_stats" value="1" />
 	</td>
 </tr>
-<tr>
-	<td colspan="2">
+</table>
+<div class="formValidation">
 		<input type="hidden" name="user_id" value="<?php echo scrub_out($client->id); ?>" />
 		<input type="hidden" name="action" value="update_user" />
 		<input type="hidden" name="tab" value="<?php echo scrub_out($_REQUEST['tab']); ?>" />
 		<input type="hidden" name="form_string" value="<?php echo $form_string; ?>" />
 		<input class="button" type="submit" value="<?php echo _('Update Account'); ?>" />
-	</td>
-</tr>
-</table>
+</div>

@@ -79,14 +79,10 @@ $default_sort = "%a/%A";
 	<td valign="top"><?php echo _('Build Playlists from m3u Files'); ?>:</td>
 	<td><input type="checkbox" name="parse_m3u" value="1" /></td>
 </tr>
-
-<tr>	
-	<td>&nbsp;</td>
-	<td>
-		<input type="hidden" name="action" value="add_catalog" />
-		<input class="button" type="submit" value="<?php echo _('Add Catalog'); ?>" />
-	</td>
-</tr>
 </table>
+<div class="formValidation">
+  <input type="hidden" name="action" value="add_catalog" />
+  <input class="button" type="submit" value="<?php echo _('Add Catalog'); ?>" />
+</div>
 </form>
 <?php show_box_bottom(); ?>

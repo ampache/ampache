@@ -41,28 +41,45 @@ function focus(){ document.login.username.focus(); }
 </script>
 </head>
 
-<body bgcolor="#D3D3D3" onload="focus();">
-<div id="container">
-	<h1 onclick="document.location='http://www.ampache.org';" title="<?php echo Config::get('site_title'); ?>" style="cursor:pointer;" ><span><?php echo Config::get('site_title'); ?></span></h1>
-	<div>
-		<p id="loginp_0"><?php echo Config::get('site_title'); ?></p>
-		<form name="login" method="post" enctype="multipart/form-data" action="<?php echo Config::get('web_path'); ; ?>/login.php" style="Display:inline">
-			<p class="loginp_1" id="usernamebox"><label for="username"><?php echo  _('Login'); ; ?>:</label> 
-			<input class="text_input" type="text" id="username" name="username" value="<?php echo  $_REQUEST['username']; ; ?>" /></p>
-			<p class="loginp_1" id="passwordbox"><label for="password"><?php echo  _('Password'); ; ?>:</label> 
-			<input class="text_input" type="password" id="password" name="password" value="" /></p>
-			<p class="loginp_1" id="remembermebox"><label for="rememberme"><?php echo _('Remember Me'); ?>&nbsp;</label><input class="check_input" type="checkbox" id="rememberme" name="rememberme" <?php echo $remember_disabled; ?> /></p>
+<body id="loginPage" onload="focus();">
+<div id="maincontainer">
+	<div id="header"><!-- This is the header -->
+		<h1 id="headerlogo">
+		  <a href="http://www.ampache.org">
+		    <img src="<?php echo Config::get('web_path'); ?><?php echo Config::get('theme_path'); ?>/images/ampache.png" title="<?php echo Config::get('site_title'); ?>" alt="<?php echo Config::get('site_title'); ?>" />
+		  </a>
+    </h1>
+  </div>
+	<div id="loginbox">
+		<h2><?php echo Config::get('site_title'); ?></h2>
+		<form name="login" method="post" enctype="multipart/form-data" action="<?php echo Config::get('web_path'); ?>/login.php">
+
+			<div class="loginfield" id="usernamefield">
+        <label for="username"><?php echo  _('Login'); ; ?>:</label> 
+			  <input class="text_input" type="text" id="username" name="username" value="<?php echo  $_REQUEST['username']; ; ?>" />
+      </div>
+			<div class="loginfield" id="passwordfield">
+        <label for="password"><?php echo  _('Password'); ; ?>:</label> 
+  			<input class="text_input" type="password" id="password" name="password" value="" />
+      </div>
+			<div class="loginfield" id="remembermefield"><label for="rememberme">
+        <?php echo _('Remember Me'); ?>&nbsp;</label><input type="checkbox" id="rememberme" name="rememberme" <?php echo $remember_disabled; ?> />
+      </div>
+
 			<?php echo Config::get('login_message'); ?>
 			<?php Error::display('general'); ?>
-			<p><input class="button" type="submit" value="<?php echo _('Login'); ?>" /></p>
-			<input type="hidden" name="referrer" value="<?php echo scrub_out($_SERVER['HTTP_REFERRER']); ?>" />
-			<input type="hidden" name="action" value="login" />
+
+	    <div class="formValidation">
+    		<input class="button" id="loginbutton" type="submit" value="<?php echo _('Login'); ?>" />
+  			<input type="hidden" name="referrer" value="<?php echo scrub_out($_SERVER['HTTP_REFERRER']); ?>" />
+  			<input type="hidden" name="action" value="login" />
+  
+    		<?php if (Config::get('allow_public_registration')) { ?>
+    			<a class="button" id="registerbutton" href="<?php echo Config::get('web_path'); ?>/register.php"><?php echo _('Register'); ?></a>
+    		<?php } // end if (conf('allow_public_registration')) ?>
+      </div>
+  
 		</form>
-		<?php if (Config::get('allow_public_registration')) { ?>
-		<span class="text-action">
-			<a href="<?php echo Config::get('web_path'); ?>/register.php"><?php echo _('Register'); ?></a>
-		</span>
-		<?php } // end if (conf('allow_public_registration')) ?>
 	</div>
 </div>
 <?php

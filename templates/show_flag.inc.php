@@ -64,15 +64,12 @@ switch ($type) {
 	<td><?php echo _('Comment'); ?>:</td>
 	<td><input name="comment" type="text" size="50" maxlength="128" value="" /></td>
 </tr>
-<tr class="<?php echo flip_class(); ?>">
-	<td> &nbsp; </td>
-	<td>
+</table>
+<div class="formValidation">
 		<input type="submit" value="<?php echo _('Flag'); ?>" />
 		<input type="hidden" name="id" value="<?php echo scrub_out($_REQUEST['id']); ?>" />
 		<input type="hidden" name="action" value="flag" />
 		<input type="hidden" name="type" value="<?php echo scrub_out($type); ?>" />
-	</td>
-</tr>
-</table>
+</div>
 </form>
 <?php show_box_bottom(); ?>

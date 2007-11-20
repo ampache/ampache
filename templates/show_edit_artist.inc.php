@@ -35,12 +35,10 @@
 		<input type="checkbox" name="flag" value="1" checked="checked" /> <?php echo _('Flag for Retagging'); ?>
 	</td>
 </tr>
-<tr class="<?php echo flip_class(); ?>">
-	<td colspan="2">
-		<input type="hidden" name="artist_id" value="<?php echo $artist->id; ?>" />
-		<input type="submit" value="<?php echo _('Update Album'); ?>" />
-	</td>
-</tr>
 </table>
+<div class="formValidation">
+		<input type="hidden" name="artist_id" value="<?php echo $artist->id; ?>" />
+		<input type="submit" value="<?php echo _('Update Artist'); ?>" />
+</div>
 </form>
 <?php show_box_bottom(); ?>

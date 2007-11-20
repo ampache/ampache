@@ -37,12 +37,10 @@
 	</select>
 	</td>
 </tr>
-<tr>
-	<td colspan="2">
+</table>
+<div class="formValidation">
 	<input class="button" type="submit" value="<?php echo _('Create'); ?>" />
 	<input type="hidden" name="action" value="Create" />
-	</td>
-</tr>
-</table>
+</div>
 </form>
 <?php show_box_bottom(); ?>

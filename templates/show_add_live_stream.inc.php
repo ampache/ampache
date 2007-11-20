@@ -69,11 +69,9 @@
 		<?php echo show_catalog_select('catalog',intval($_REQUEST['catalog'])); ?>
 	</td>
 </tr>
-<tr>
-	<td colspan="2">
-	<input class="button" type="submit" value="<?php echo _('Add'); ?>" />
-	</td>
-</tr>
 </table>
+<div class="formValidation">
+	<input class="button" type="submit" value="<?php echo _('Add'); ?>" />
+</div>
 </form>
 <?php show_box_bottom(); ?>

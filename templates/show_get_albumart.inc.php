@@ -55,15 +55,12 @@
 		<input type="file" size="40" id="file" name="file" value="" />
 	</td>
 </tr>
-
-<tr>
-	<td>
+</table>
+<div class="formValidation">
 		<input type="hidden" name="action" value="find_art" />
 		<input type="hidden" name="album_id" value="<?php echo $album->id; ?>" />
-                <input type="hidden" name="MAX_FILE_SIZE" value="<?php echo Config::get('max_upload_size'); ?>" />
+    <input type="hidden" name="MAX_FILE_SIZE" value="<?php echo Config::get('max_upload_size'); ?>" />
 		<input type="submit" value="<?php echo _('Get Art'); ?>" />
-	</td>
-</tr>
-</table>
+</div>
 </form>
 <?php show_box_bottom(); ?>

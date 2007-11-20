@@ -79,11 +79,9 @@
                 </select>
         </td>
 </tr>
-<tr>
-	<td colspan="2">
-		<input type="submit" value="<?php echo _('Add User'); ?>" />
-	</td>
-</tr>
 </table>
+<div class="formValidation">
+  <input type="submit" value="<?php echo _('Add User'); ?>" />
+</div>
 </form>
 <?php show_box_bottom(); ?>

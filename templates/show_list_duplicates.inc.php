@@ -81,9 +81,6 @@ if (count($flags)) { ?>
 		
 	} // end foreach ($flags as $flag)
 	?>
-	<tr>
-		<td colspan="8" class="<?php echo flip_class(); ?>"><input type="submit" value="<?php echo _('Disable Songs'); ?>" /></td>
-	</tr>
 	<tr class="th-bottom">
 		<th class="cel_disable"><?php echo _('Disable'); ?></th>
 		<th class="cel_song"><?php echo _('Song'); ?></th>
@@ -95,6 +92,9 @@ if (count($flags)) { ?>
 		<th class="cel_filename"><?php echo _('Filename'); ?></th>
 	</tr>
 	</table>
+	<div class="formValidation">
+    <input type="submit" value="<?php echo _('Disable Songs'); ?>" />
+  </div>
 	</form>
 	<?php show_box_bottom(); ?>
 <?php  } else { ?>

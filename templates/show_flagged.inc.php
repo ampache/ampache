@@ -68,15 +68,6 @@ $web_path = Config::get('web_path');
 	<td colspan="7" class="error"><?php echo _('No Records Found'); ?></td>
 </tr>
 <?php } ?>
-<tr class="<?php echo flip_class(); ?>">
-	<td colspan="7">
-		<select name="update_action">
-			<option value="reject"><?php echo _('Reject'); ?></option>
-			<option value="approve"><?php echo _('Approve'); ?></option>
-		</select>
-		<input class="button" type="submit" value="<?php echo _('Update'); ?>" />
-	</td>
-</tr>
 <tr class="th-bottom">
 	<th class="cel_select"><a href="#" onclick="check_select('song'); return false;"><?php echo _('Select'); ?></a></th>
 	<th class="cel_object"><?php echo _('Object'); ?></th>
@@ -87,9 +78,16 @@ $web_path = Config::get('web_path');
 	<th class="cel_action"><?php echo _('Action'); ?></th>
 </tr>
 </table>
+<div class="formValidation">
+		<select name="update_action">
+			<option value="reject"><?php echo _('Reject'); ?></option>
+			<option value="approve"><?php echo _('Approve'); ?></option>
+		</select>
+		<input class="button" type="submit" value="<?php echo _('Update'); ?>" />
+</div>
 </form>
-<div class="text-action">
-<a href="<?php echo $web_path; ?>/admin/flag.php?action=show_flagged">
-	<?php echo _('Show All'); ?>...
-</a>
+<div>
+  <a class="button" href="<?php echo $web_path; ?>/admin/flag.php?action=show_flagged">
+  	<?php echo _('Show All'); ?>...
+  </a>
 </div>

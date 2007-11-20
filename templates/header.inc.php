@@ -61,7 +61,7 @@ if (Config::get('use_rss')) { ?>
 	<div id="header"><!-- This is the header -->
 		<h1 id="headerlogo">
 		  <a href="http://www.ampache.org">
-		    <img src="<?php echo $web_path; ?><?php echo Config::get('theme_path'); ?>/images/ampache.png" title="Ampache: For the love of music" alt="Ampache: For the love of music" />
+		    <img src="<?php echo $web_path; ?><?php echo Config::get('theme_path'); ?>/images/ampache.png" title="<?php echo Config::get('site_title'); ?>" alt="<?php echo Config::get('site_title'); ?>" />
 		  </a>
 		</h1>
 		<div id="headerbox">

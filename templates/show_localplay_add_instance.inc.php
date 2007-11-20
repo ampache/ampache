@@ -30,11 +30,9 @@
 	<td><input type="textbox" name="<?php echo $key; ?>" /></td>
 </tr>
 <?php } ?>
-<tr>
-	<td colspan="2">
-		<input type="submit" value="<?php echo _('Add Instance'); ?>" />
-	</td>
-</tr>
 </table>
+	<div class="formValidation">
+		<input type="submit" value="<?php echo _('Add Instance'); ?>" />
+  </div>
 </form>
 <?php show_box_bottom(); ?>

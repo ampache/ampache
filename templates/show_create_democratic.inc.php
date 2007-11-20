@@ -34,11 +34,9 @@ show_box_top(_('Create Democratic Playlist')); ?>
 	<td><?php echo _('Make Default'); ?></td>
 	<td><input type="checkbox" name="make_default" value="1" /></td>
 </tr>
-<tr>
-	<td>
-		<input type="submit" value="<?php echo _('Create'); ?>" />
-	</td>
-</tr>
 </table>
+<div class="formValidation">
+		<input type="submit" value="<?php echo _('Create'); ?>" />
+</div>
 </form>
 <?php show_box_bottom(); ?>
