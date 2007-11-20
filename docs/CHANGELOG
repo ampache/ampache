@@ -4,6 +4,8 @@
 
 --------------------------------------------------------------------------
   v.3.4-Alpha3 
+	- Added tweak for Wii so that Flash player opens in current window
+		(Thx Dgn)
 	- Fixed bug where Ampache would incorrectly search for album art
 		when config option was empty (Thx Karl Hungus)
 	- Enabling a Localplay Method will now set Allow Localplay to true

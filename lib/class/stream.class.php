@@ -417,9 +417,16 @@ class Stream {
 	        echo "<script language=\"javascript\" type=\"text/javascript\">\n";
 	        echo "<!-- begin\n";
 	        echo "function PlayerPopUp(URL) {\n";
-	        echo "window.open(URL, 'XSPF_player', 'width=400,height=170,scrollbars=0,toolbar=0,location=0,directories=0,status=0,resizable=0');\n";
-	        echo "window.location = '" .  return_referer() . "';\n";
-	        echo "return false;\n";
+		// We do a little check here to see if it's a Wii!
+		if (false !== stristr($_SERVER['HTTP_USER_AGENT'], 'Nintendo Wii')) {
+			echo "window.location=URL;\n";
+		} 
+		// Else go ahead and do the normal stuff
+		else {
+		        echo "window.open(URL, 'XSPF_player', 'width=400,height=170,scrollbars=0,toolbar=0,location=0,directories=0,status=0,resizable=0');\n";
+		        echo "window.location = '" .  return_referer() . "';\n";
+		        echo "return false;\n";
+		} 
 	        echo "}\n";
 	        echo "// end -->\n";
 	        echo "</script>\n";
