@@ -74,7 +74,7 @@ if (Config::get('xml_rpc')) {
 
 // If require session is set then we need to make sure we're legit
 if (Config::get('require_session')) { 
-	if(!Stream::session_exists($sid)) {	
+	if(!Stream::session_exists($sid) && !Access::session_exists(array(),$sid,'api')) {	
 		debug_event('session_expired',"Streaming Access Denied: " . $GLOBALS['user']->username . "'s session has expired",'3');
     		die(_("Session Expired: please log in again at") . " " . Config::get('web_path') . "/login.php");
 	}

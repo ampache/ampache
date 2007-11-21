@@ -31,7 +31,7 @@ define('NO_SESSION','1');
 require 'lib/init.php';
 
 // Check their session manually
-if (!session_exists(session_id()) && !Access::session_exists(array(),$_REQUEST['auth'],'api')) { 
+if (!vauth_check_session() && !Access::session_exists(array(),$_REQUEST['auth'],'api')) { 
 	exit; 
 } 
 

@@ -187,7 +187,7 @@ class xmlData {
 					"\t<genre id=\"$song->genre\"><![CDATA[$song->genre]]></genre>\n" . 
 					"\t<track>$song->track</track>\n" . 
 					"\t<time>$song->time</time>\n" . 
-					"\t<url></url>\n" . 
+					"\t<url><![CDATA[" . $song->get_url($_REQUEST['auth']) . "]]></url>\n" . 
 					"</song>\n"; 
 
 		} // end foreach
