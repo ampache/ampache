@@ -116,7 +116,7 @@ class xmlData {
 				$string .= "\t<artist id=\"0\"><![CDATA[Various]]></artist>\n"; 
 			} 
 			else { 
-				$string .= "\t<artist id=\"$album->artist\"><![CDATA[$album->artist_name]]></artist>\n"; 
+				$string .= "\t<artist id=\"$album->artist_id\"><![CDATA[$album->artist_name]]></artist>\n"; 
 			} 
 
 			$string .= "\t<year>$album->year</year>\n" . 

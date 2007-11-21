@@ -92,6 +92,7 @@ $user->update_last_seen();
 if (Config::get('demo_mode') || (!$GLOBALS['user']->has_access('25') && !$xml_rpc) ) {
 	debug_event('access_denied',"Streaming Access Denied:" .Config::get('demo_mode') . "is the value of demo_mode. Current user level is " . $GLOBALS['user']->access,'3');
 	access_denied();
+	exit; 
 }
 
 /* 

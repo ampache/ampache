@@ -70,13 +70,23 @@ class User {
 	 */
 	private function _get_info() {
 
+		// If the ID is -1 then
+		if ($this->id == '-1') { 
+			$data['username'] = 'System'; 
+			$data['fullname'] = 'Ampache User'; 
+			$data['access'] = '25'; 
+			return $data; 
+		} 
+
+		// Else...
 		$id = Dba::escape($this->id);
 
 		$sql = "SELECT * FROM `user` WHERE `id`='" . $id . "'";
-		
 		$db_results = Dba::query($sql);
 
-		return Dba::fetch_assoc($db_results);
+		$data = Dba::fetch_assoc($db_results);  
+
+		return $data; 
 
 	} // _get_info
 
@@ -312,15 +322,15 @@ class User {
 
 	} // is_logged_in
 
-	/*!
-		@function has_access
-		@discussion this function checkes to see if this user has access
-			to the passed action (pass a level requirement)
-	*/
+	/**
+	 * has_access
+	 * this function checkes to see if this user has access
+	 * to the passed action (pass a level requirement)
+	 */
 	function has_access($needed_level) { 
 
 		if (!Config::get('use_auth') || Config::get('demo_mode')) { return true; }
-
+		
 		if ($this->access >= $needed_level) { return true; }
 
 		return false;
