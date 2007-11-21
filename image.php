@@ -24,6 +24,15 @@
  * and dumps it to the browser as an image mime type.
  * 
  */
+
+// This file is a little weird it needs to allow API session
+// this needs to be done a little better, but for now... eah
+if ($_REQUEST['auth']) { 
+	if (Access::session_exists(array(),$_REQUEST['auth'],'api')) { 
+		define('NO_SESSION','1'); 
+	}
+} // extra layer of auth 
+
 require 'lib/init.php';
 
 /* Decide what size this image is */

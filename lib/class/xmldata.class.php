@@ -105,8 +105,8 @@ class xmlData {
 			$album = new Album($album_id); 
 			$album->format(); 
 
-			// Build the Art URL
-			$art_url = Config::get('web_path') . '/image.php?id=' . $album->id; 
+			// Build the Art URL, include session 
+			$art_url = Config::get('web_path') . '/image.php?id=' . $album->id . '&auth=' . scrub_out($_REQUEST['auth']);  
 
 			$string .= "<album id=\"$album->id\">\n" . 
 					"\t<name><![CDATA[$album->name]]></name>\n"; 
