@@ -27,13 +27,13 @@
 
 // This file is a little weird it needs to allow API session
 // this needs to be done a little better, but for now... eah
-if ($_REQUEST['auth']) { 
-	if (Access::session_exists(array(),$_REQUEST['auth'],'api')) { 
-		define('NO_SESSION','1'); 
-	}
-} // extra layer of auth 
-
+define('NO_SESSION','1'); 
 require 'lib/init.php';
+
+// Check their session manually
+if (!session_exists(session_id()) && !Access::session_exists(array(),$_REQUEST['auth'],'api')) { 
+	exit; 
+} 
 
 /* Decide what size this image is */
 switch ($_REQUEST['thumb']) { 

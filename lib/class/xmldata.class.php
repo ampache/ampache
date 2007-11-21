@@ -116,13 +116,13 @@ class xmlData {
 				$string .= "\t<artist id=\"0\"><![CDATA[Various]]></artist>\n"; 
 			} 
 			else { 
-				$string .= "\t<artist id=\"$album->artist_id\"><![CDATA[$album->artist_name]]></artist>\n"; 
+				$string .= "\t<artist id=\"$album->artist\"><![CDATA[$album->artist_name]]></artist>\n"; 
 			} 
 
 			$string .= "\t<year>$album->year</year>\n" . 
 					"\t<tracks>$album->song_count</tracks>\n" . 
 					"\t<disk>$album->disk</disk>\n" . 
-					"\t<art>$art_url</art>\n" . 
+					"\t<art><![CDATA[$art_url]]></art>\n" . 
 					"</album>\n"; 
 		} // end foreach
 
