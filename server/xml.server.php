@@ -100,6 +100,24 @@ switch ($_REQUEST['action']) {
 
 		echo xmlData::genres($genres); 
 	break; 
+	case 'genre_artists': 
+		$genre = new Genre($_REQUEST['filter']); 
+		$artists = $genre->get_artists(); 
+		
+		echo xmlData::artists($artists); 	
+	break; 
+	case 'genre_albums': 
+		$genre = new Genre($_REQUEST['filter']); 
+		$albums = $genre->get_albums(); 
+
+		echo xmlData::albums($albums); 
+	break;
+	case 'genre_songs': 
+		$genre = new Genre($_REQUEST['filter']); 
+		$songs = $genre->get_songs(); 
+	
+		echo xmlData::songs($songs); 
+	break; 
 	case 'songs': 
 		Browse::reset_filters(); 
 		Browse::set_type('song'); 
