@@ -128,6 +128,10 @@ function vauth_sess_gc($maxlifetime) {
 	$sql = "DELETE FROM `session` WHERE `expire` < '" . time() . "'";
 	$db_results = Dba::query($sql);
 
+	// Randomly collect the api session table
+	$sql = "DELETE FROM `session_api` WHERE `expire` < '" . time() . "'"; 
+	$db_results = Dba::query($sql); 
+
 	return true;
 
 } // vauth_sess_gc

@@ -380,6 +380,12 @@ class Catalog {
 			Error::add('catalog_add',_('Error: Unable to open') . ' ' . $path); 
 		}
 
+		/* Change the dir so is_dir works correctly */
+		if (!chdir($path)) {
+			debug_event('read',"Unable to chdir $path",'2','ampache-catalog'); 
+			Error::add('catalog_add',_('Error: Unable to change to directory') . ' ' . $path); 
+		}
+
 		/* Recurse through this dir and create the files array */
 		while ( false !== ( $file = readdir($handle) ) ) {
 
@@ -388,11 +394,6 @@ class Catalog {
 
 			debug_event('read',"Starting work on $file inside $path",'5','ampache-catalog');
 			
-			/* Change the dir so is_dir works correctly */
-			if (!chdir($path)) {
-				debug_event('read',"Unable to chdir $path",'2','ampache-catalog'); 
-				Error::add('catalog_add',_('Error: Unable to change to directory') . ' ' . $path); 
-			}
 
 			/* Create the new path */
 			$full_file = $path.$slash_type.$file;
@@ -411,6 +412,13 @@ class Catalog {
 			/* If it's a dir run this function again! */
 			if (is_dir($full_file)) {
 				$this->add_files($full_file,$options);
+
+		                /* Change the dir so is_dir works correctly */
+        		        if (!chdir($path)) {
+	        	                debug_event('read',"Unable to chdir $path",'2','ampache-catalog');
+		                        Error::add('catalog_add',_('Error: Unable to change to directory') . ' ' . $path);
+		                } 
+
 				/* Skip to the next file */
 				continue;
 			} //it's a directory

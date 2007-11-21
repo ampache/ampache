@@ -70,7 +70,6 @@ switch ($_REQUEST['action']) {
 
 		$albums = $artist->get_albums(); 
 		echo xmlData::albums($albums); 
-
 	break; 
 	case 'albums': 
 		Browse::reset_filters(); 
@@ -83,6 +82,12 @@ switch ($_REQUEST['action']) {
 		$albums = Browse::get_objects(); 
 		echo xmlData::albums($albums); 
 	break; 
+	case 'album_songs': 
+		$album = new Album($_REQUEST['filter']); 
+		$songs = $album->get_songs(); 
+
+		echo xmlData::songs($songs); 
+	break; 
 	case 'genres': 
 		Browse::reset_filters(); 
 		Browse::set_type('genre'); 
@@ -94,6 +99,18 @@ switch ($_REQUEST['action']) {
 		$genres = Browse::get_objects(); 
 
 		echo xmlData::genres($genres); 
+	break; 
+	case 'songs': 
+		Browse::reset_filters(); 
+		Browse::set_type('song'); 
+		Browse::set_sort('title','ASC'); 
+		
+		if ($_REQUEST['filter']) { 
+			Browse::set_filter('alpha_match',$_REQUEST['filter']); 
+		} 
+		$songs = Browse::get_objects(); 
+
+		echo xmlData::songs($songs); 
 	break; 
 	default:
 		// Rien a faire

@@ -166,6 +166,39 @@ class xmlData {
 	} // genres
 
 	/**
+	 * songs
+	 * This returns an xml document from an array of song ids spiffy isn't it!
+	 */
+	public static function songs($songs) { 
+
+		if (count($songs) > self::$limit) { 
+			$songs = array_slice($songs,0,self::$limit); 
+		} 
+
+		// Foreach the ids!
+		foreach ($songs as $song_id) { 
+			$song = new Song($song_id); 
+			$song->format(); 
+
+			$string .= "<song id=\"$song->id\">\n" . 
+					"\t<title><![CDATA[$song->title]]></title>\n" . 
+					"\t<artist id=\"$song->artist\"><![CDATA[$song->f_artist_full]]></artist>\n" . 
+					"\t<album id=\"$song->album\"><![CDATA[$song->f_album_full]]></album>\n" . 
+					"\t<genre id=\"$song->genre\"><![CDATA[$song->genre]]></genre>\n" . 
+					"\t<track>$song->track</track>\n" . 
+					"\t<time>$song->time</time>\n" . 
+					"\t<url></url>\n" . 
+					"</song>\n"; 
+
+		} // end foreach
+
+		$final = self::_header() . $string . self::_footer(); 
+
+		return $final;
+
+	} // songs
+
+	/**
 	 * _header
 	 * this returns a standard header, there are a few types
 	 * so we allow them to pass a type if they want to

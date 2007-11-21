@@ -4,6 +4,7 @@
 
 --------------------------------------------------------------------------
   v.3.4-Alpha3 
+	- Tweaked catalog add function to improve speed (Thx Karl Hungus)
 	- Added XML API borrows authentication style from Last.FM's 
 		scrobbling, allows query of Ampache DB, returns XML
 		see https://ampache.bountysource.com/wiki/xmlapi
