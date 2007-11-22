@@ -271,15 +271,14 @@ class archive
 		return $files;
 	}
 
-	function download_file()
-	{
-		if ($this->options['inmemory'] == 0)
-		{
-			$this->error[] = "Can only use download_file() if archive is in memory. Redirect to file otherwise, it is faster.";
-			return;
-		}
-		switch ($this->options['type'])
-		{
+	/**
+	 * download_file
+	 * Modified by COF
+	 */
+	public function download_file() {
+
+		// Always send this header
+		switch ($this->options['type']) {
 		case "zip":
 			header("Content-Type: application/zip");
 			break;
@@ -291,18 +290,50 @@ class archive
 			break;
 		case "tar":
 			header("Content-Type: application/x-tar");
+		} // end switch 
+
+		if ($this->options['inmemory'] == 0) {
+
+                        $full_arc_name = $this->options['basedir']."/".$this->options['name'];
+			if (file_exists($full_arc_name)) {
+	                        $fsize = filesize($full_arc_name);
+
+	                        //Send some headers which can be useful...
+	                        $header = "Content-Disposition: attachment; filename=\"";
+	                        $header .= strstr($this->options['name'], "/") ? substr($this->options['name'], strrpos($this->options['name'], "/") + 1) : $this->options['name'];
+	                        $header .= "\"";
+	                        header($header);
+	                        header("Content-Length: " . $fsize);
+	                        header("Content-Transfer-Encoding: binary");
+	                        header("Cache-Control: no-cache, must-revalidate, max-age=60");
+	                        header("Expires: Sat, 01 Jan 2000 12:00:00 GMT");
+
+	                        readfile($full_arc_name);
+
+	                        //Now delete tempory file
+	                        unlink($full_arc_name);
+			} 
+			else { 
+				debug_event('ERROR','Archive does not exist, unable to download','1');
+				return false; 
+			} 
+			return true;
 		}
-		$header = "Content-Disposition: attachment; filename=\"";
-		$header .= strstr($this->options['name'], "/") ? substr($this->options['name'], strrpos($this->options['name'], "/") + 1) : $this->options['name'];
-		$header .= "\"";
-		header($header);
-		header("Content-Length: " . strlen($this->archive));
-		header("Content-Transfer-Encoding: binary");
-		header("Cache-Control: no-cache, must-revalidate, max-age=60");
-		header("Expires: Sat, 01 Jan 2000 12:00:00 GMT");
-		print($this->archive);
-	}
-}
+		// else if we're doing this baby in memory	
+		else { 
+			$header = "Content-Disposition: attachment; filename=\"";
+			$header .= strstr($this->options['name'], "/") ? substr($this->options['name'], strrpos($this->options['name'], "/") + 1) : $this->options['name'];
+			$header .= "\"";
+			header($header);
+			header("Content-Length: " . strlen($this->archive));
+			header("Content-Transfer-Encoding: binary");
+			header("Cache-Control: no-cache, must-revalidate, max-age=60");
+			header("Expires: Sat, 01 Jan 2000 12:00:00 GMT");
+			print($this->archive);
+		} 
+	} // download file
+
+} // end zip_file class
 
 class tar_file extends archive
 {

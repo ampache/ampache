@@ -26,6 +26,8 @@
  */
 class Api { 
 
+	public static $version = '340001'; 
+	
 	/**
  	 * constructor
 	 * This really isn't anything to do here, so it's private
@@ -44,6 +46,11 @@ class Api {
 	 * specific
 	 */
 	public static function handshake($timestamp,$passphrase,$ip,$username='') { 
+
+		// If the timestamp is over 2hr old sucks to be them
+//		if ($timestamp < (time() - 7200)) { 
+//			return 'Timestamp too old, try again'; 
+//		} 
 
 		// First we'll filter by username and IP 
 		if (!$username) { 
@@ -76,7 +83,8 @@ class Api {
 				// Create the Session, in this class for now needs to be moved
 				$token = self::create_session($row['level'],$ip,$user_id); 
 				debug_event('API','Login Success, passphrase matched','1'); 
-				return $token; 
+
+				return array('auth'=>$token,'api'=>self::$version); 
 			} // match 
 
 		} // end while

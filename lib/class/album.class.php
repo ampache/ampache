@@ -751,6 +751,9 @@ class Album {
 	               	}
 		} // if we have PHP:GD
 
+		// Default to image/jpg as a guess if there is no passed mime type
+		$mime = $mime ? $mime : 'image/jpg'; 
+
                 // Push the image into the database
                 $sql = "REPLACE INTO `album_data` SET `art` = '" . Dba::escape($image) . "'," .
                         " `art_mime` = '" . Dba::escape($mime) . "'" .

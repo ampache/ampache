@@ -64,12 +64,12 @@
 			<option selected="selected" value="stream"><?php echo _('Stream Access'); ?></option>
 			<option value="interface"><?php echo _('Web Interface'); ?></option>
 			<option value="network"><?php echo _('Local Network Definition'); ?></option>
-			<option value="xml-rpc"><?php echo _('XML-RPC'); ?></option>
+			<option value="rpc"><?php echo _('RPC'); ?></option>
 		</select>
 	</td>
 </tr>
 <tr>
-	<td colspan="2"><h4><?php echo _('XML-RPC Options'); ?></h4></td>
+	<td colspan="2"><h4><?php echo _('RPC Options'); ?></h4></td>
 </tr>
 <tr>
 	<td><?php echo _('Remote Key'); ?>:</td>

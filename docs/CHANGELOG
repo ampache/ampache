@@ -4,6 +4,10 @@
 
 --------------------------------------------------------------------------
   v.3.4-Alpha3 
+	- Added ability to do batch downloads on the FS failed downloads
+		currently will not be garbage collected (Thx COF)
+	- Added default mime type if none found (image/jpg) 
+	- Changed XML-RPC ACL type to RPC to reflect multiple uses
 	- Tweaked catalog add function to improve speed (Thx Karl Hungus)
 	- Added XML API borrows authentication style from Last.FM's 
 		scrobbling, allows query of Ampache DB, returns XML

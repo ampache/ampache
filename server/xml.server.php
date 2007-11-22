@@ -61,6 +61,10 @@ switch ($_REQUEST['action']) {
 		if ($_REQUEST['filter']) { 
 			Browse::set_filter('alpha_match',$_REQUEST['filter']); 
 		} 
+
+		// Set the offset
+		xmlData::set_offset($_REQUEST['offset']); 
+
 		$artists = Browse::get_objects(); 
 		// echo out the resulting xml document
 		echo xmlData::artists($artists); 
@@ -69,6 +73,10 @@ switch ($_REQUEST['action']) {
 		$artist = new Artist($_REQUEST['filter']); 
 
 		$albums = $artist->get_albums(); 
+
+                // Set the offset
+                xmlData::set_offset($_REQUEST['offset']);
+
 		echo xmlData::albums($albums); 
 	break; 
 	case 'albums': 
@@ -80,11 +88,18 @@ switch ($_REQUEST['action']) {
 			Browse::set_filter('alpha_match',$_REQUEST['filter']); 
 		} 
 		$albums = Browse::get_objects(); 
+
+                // Set the offset
+                xmlData::set_offset($_REQUEST['offset']);
+
 		echo xmlData::albums($albums); 
 	break; 
 	case 'album_songs': 
 		$album = new Album($_REQUEST['filter']); 
 		$songs = $album->get_songs(); 
+
+                // Set the offset
+                xmlData::set_offset($_REQUEST['offset']);
 
 		echo xmlData::songs($songs); 
 	break; 
@@ -97,6 +112,9 @@ switch ($_REQUEST['action']) {
 			Browse::set_filter('alpha_match',$_REQUEST['filter']); 
 		} 
 		$genres = Browse::get_objects(); 
+
+                // Set the offset
+                xmlData::set_offset($_REQUEST['offset']);
 
 		echo xmlData::genres($genres); 
 	break; 
@@ -127,6 +145,9 @@ switch ($_REQUEST['action']) {
 			Browse::set_filter('alpha_match',$_REQUEST['filter']); 
 		} 
 		$songs = Browse::get_objects(); 
+
+                // Set the offset
+                xmlData::set_offset($_REQUEST['offset']);
 
 		echo xmlData::songs($songs); 
 	break; 

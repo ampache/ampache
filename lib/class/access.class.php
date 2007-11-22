@@ -183,10 +183,11 @@ class Access {
 				$sql = "SELECT `id` FROM `access_list`" .
 					" WHERE `start` <= '$ip' AND `end` >= '$ip' AND `type`='xml-rpc' AND `level` >= '$level'";
 			break;
+			case 'rpc': 
 			case 'xml-rpc':
 				$sql = "SELECT `id` FROM `access_list`" . 
 					" WHERE `start` <= '$ip' AND `end` >= '$ip'" . 
-					" AND  `key` = '$key' AND `level` >= '$level' AND `type`='xml-rpc'";
+					" AND  `key` = '$key' AND `level` >= '$level' AND (`type`='xml-rpc' OR `type`='rpc')";
 			break;
 			case 'network':
 			case 'interface':
@@ -221,11 +222,14 @@ class Access {
 	public static function validate_type($type) { 
 
 		switch($type) { 
-			case 'xml-rpc':
+			case 'rpc':
 			case 'interface':
 			case 'network':
 				return $type;
 			break;
+			case 'xml-rpc':
+				return 'rpc';
+			break; 
 			default: 
 				return 'stream';
 			break;
@@ -297,8 +301,9 @@ class Access {
 	public function get_type_name() { 
 
 		switch ($this->type) { 
-			case 'xml-rpc':
-				return 'XML-RPC';
+			case 'xml-rpc': 
+			case 'rpc':
+				return 'RPC';
 			break;
 			case 'network':
 				return 'Local Network Definition';

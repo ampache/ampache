@@ -141,12 +141,26 @@ require_session = "true"
 ; DEFAULT: false
 ;xml_rpc 	= "false"
 
+; Allow Zip Download
 ; This setting allows/disallows using zlib to zip up an entire
 ; playlist/album for download. Even if this is turned on you will
 ; still need to enabled downloading for the specific user you 
 ; want to be able to use this function
 ; DEFAULT: false
 ;allow_zip_download = "false"
+
+; File Zip Download
+; This settings tells Ampache to attempt to save the zip file
+; to the filesystem instead of creating it in memory, you must
+; also set file_zip_path in order for this to work
+; DEFAULT: false
+;file_zip_download = "false" 
+
+; File Zip Path
+; If File Zip Download is enabled this must be set to tell 
+; Ampache which directory to save the file to
+; DEFAULT: false
+;file_zip_path= "false" 
 
 ; This setting throttles a persons downloading to the specified
 ; bytes per second. This is not a 100% guaranteed function, and 

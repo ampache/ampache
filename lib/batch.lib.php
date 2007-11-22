@@ -50,11 +50,27 @@ function get_song_files($song_ids) {
  */
 function send_zip( $name, $song_files ) {
 
+	// Check if they want to save it to a file, if so then make sure they've got
+	// a defined path as well and that it's writeable
+	if (Config::get('file_zip_download') && Config::get('file_zip_path')) { 
+		// Check writeable
+		if (!is_writable(Config::get('file_zip_path'))) { 
+			$in_memory = '1'; 
+			debug_event('Error','File Zip Path:' . Config::get('file_zip_path') . ' is not writeable','1'); 
+		} 
+		else { 
+			$in_memory = '0'; 
+			$basedir = Config::get('file_zip_path'); 
+		} 
+
+	} // if file downloads
+
 	/* Require needed library */
         require_once Config::get('prefix') . '/modules/archive/archive.lib.php';
         $arc = new zip_file( $name . ".zip" );
         $options = array(
-                'inmemory'      => 1,   // create archive in memory
+                'inmemory'      => $in_memory,   // create archive in memory
+		'basedir'	=> $basedir,
                 'storepaths'    => 0,   // only store file name, not full path
                 'level'         => 0    // no compression
         );

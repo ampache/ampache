@@ -27,10 +27,9 @@
  */
 class xmlData { 
 
-	public static $version = '340001'; 
-
 	// This is added so that we don't pop any webservers
 	public static $limit = '5000';
+	private static $offset = '0'; 
 
 	/**
 	 * constructor
@@ -41,6 +40,17 @@ class xmlData {
 		// Rien a faire
 
 	} // constructor
+
+	/**
+	 * set_offset
+	 * This takes an int and changes the offset
+	 */
+	public static function set_offset($offset) { 
+
+		$offset = intval($offset); 
+		self::$offset = $offset; 
+
+	} // set_offset
 
 	/**
 	 * error
@@ -67,6 +77,35 @@ class xmlData {
 	} // single_string
 
 	/**
+	 * keyed_array
+	 * This will build an xml document from a key'd array, 
+	 */
+	public static function keyed_array($array,$callback='') { 
+
+		$string = ''; 
+
+		// Foreach it
+		foreach ($array as $key=>$value) { 
+			// If it's an array, run again
+			if (is_array($value)) { 
+				$value = self::keyed_array($value,1); 
+				$string .= "\t<$key>$value</$key>\n"; 
+			} 
+			else { 
+				$string .= "\t<$key><![CDATA[$value]]></$key>\n"; 
+			} 
+
+		} // end foreach 
+
+		if (!$callback) { 
+			$string = self::_header() . $string . self::_footer(); 
+		} 
+
+		return $string; 
+
+	} // keyed_array
+
+	/**
 	 * artists
 	 * This takes an array of artists and then returns a pretty xml document with the information 
 	 * we want 
@@ -74,8 +113,10 @@ class xmlData {
 	public static function artists($artists) { 
 
 		if (count($artists) > self::$limit) { 
-			$artists = array_splice($artists,0,self::$limit); 
+			$artists = array_splice($artists,self::$offset,self::$limit); 
 		} 
+
+		$string = ''; 
 
 		foreach ($artists as $artist_id) { 
 			$artist = new Artist($artist_id); 
@@ -98,7 +139,7 @@ class xmlData {
 	public static function albums($albums) { 
 
 		if (count($albums) > self::$limit) { 
-			$albums = array_splice($albums,0,self::$limit); 
+			$albums = array_splice($albums,self::$offset,self::$limit); 
 		} 
 
 		foreach ($albums as $album_id) { 
@@ -139,7 +180,7 @@ class xmlData {
 	public static function genres($genres) { 
 
 		if (count($genres) > self::$limit) { 
-			$genres = array_slice($genres,0,self::$limit); 
+			$genres = array_slice($genres,self::$offset,self::$limit); 
 		} 
 
 		// Foreach the ids
@@ -172,7 +213,7 @@ class xmlData {
 	public static function songs($songs) { 
 
 		if (count($songs) > self::$limit) { 
-			$songs = array_slice($songs,0,self::$limit); 
+			$songs = array_slice($songs,self::$offset,self::$limit); 
 		} 
 
 		// Foreach the ids!
