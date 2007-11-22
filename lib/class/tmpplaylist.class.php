@@ -331,6 +331,9 @@ class tmpPlaylist {
 			"LEFT JOIN tmp_playlist ON tmp_playlist_data.tmp_playlist=tmp_playlist.id " . 
 			"WHERE tmp_playlist.id IS NULL";
 		$db_results = Dba::query($sql);
+
+		// If we don't allow it, don't waste the time
+		if (!Config::get('allow_democratic_playback')) { return true; } 
 	
 		// This deletes data without votes, if it's a voting democratic playlist
 		$sql = "DELETE FROM tmp_playlist_data USING tmp_playlist_data " . 
