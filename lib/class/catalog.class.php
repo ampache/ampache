@@ -38,6 +38,9 @@ class Catalog {
 	/* This is a private var that's used during catalog builds */
 	private $_playlists = array();
 
+	// Cache all files in catalog for quick lookup during add
+	private $_filecache = array(); 
+
 	// Used in functions
 	private static $albums	= array();
 	private static $artists	= array();
@@ -80,6 +83,26 @@ class Catalog {
 		return $results;
 
 	} // _get_info
+
+	/**
+	 * _create_filecache
+	 * This poplates an array (filecache) on this object from the database
+	 * it is used to speed up the add process
+	 */
+	private function _create_filecache() { 
+
+		if (count($this->_filecache) == 0) { 
+			// Get _EVERYTHING_ 
+			$sql = "SELECT `id`,`file` FROM `song` WHERE `catalog`='$this->id'"; 
+			$db_results = Dba::query($sql); 
+
+			// Populate the filecache
+			while ($results = Dba::fetch_assoc($db_results)) { 
+				$this->_filecache[strtolower($results['file'])] = $results['id']; 
+			} 
+		} // end if empty filecache
+	
+	} // _create_filecache 
 
 	/**
 	 * format
@@ -386,6 +409,9 @@ class Catalog {
 			Error::add('catalog_add',_('Error: Unable to change to directory') . ' ' . $path); 
 		}
 
+		// Ensure that we've got our cache
+		$this->_create_filecache(); 
+
 		/* Recurse through this dir and create the files array */
 		while ( false !== ( $file = readdir($handle) ) ) {
 
@@ -397,6 +423,13 @@ class Catalog {
 
 			/* Create the new path */
 			$full_file = $path.$slash_type.$file;
+
+			/* First thing first, check if file is already in catalog. 
+			 * This check is very quick, so it should be performed before any other checks to save time
+			 */
+			if (isset($this->_filecache[strtolower($full_file)])) { 
+				continue; 
+			} 
 			
 			// Incase this is the second time through clear this variable 
 			// if it was set the day before
@@ -460,9 +493,6 @@ class Catalog {
 
 				else {
 					
-					/* see if the current song is in the catalog */
-					$found = $this->check_local_mp3($full_file);
-
 					/* If not found then insert, gets id3 information
 					 * and then inserts it into the database
 					 */
@@ -2083,6 +2113,8 @@ class Catalog {
 	return false;
 
 	} //check_local_mp3
+
+	
 
 	/*!
 		@function import_m3u
