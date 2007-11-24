@@ -129,12 +129,6 @@ class tmpPlaylist {
 
 		$order = 'ORDER BY id ASC';
 		
-		if ($this->type == 'vote') { 
-			$order 		= "GROUP BY tmp_playlist_data.id ORDER BY `count` DESC, user_vote.date ASC";
-			$vote_select = ", COUNT(user_vote.user) AS `count`";
-			$vote_join = "INNER JOIN user_vote ON user_vote.object_id=tmp_playlist_data.id";
-		}
-
 		/* Select all objects from this playlist */
 		$sql = "SELECT tmp_playlist_data.object_type, tmp_playlist_data.id, tmp_playlist_data.object_id $vote_select " . 
 			"FROM tmp_playlist_data $vote_join " . 
@@ -364,81 +358,6 @@ class tmpPlaylist {
 		return true;
 
 	} // add_object
-
-	/**
-	 * vote
-	 * This function is called by users to vote on a system wide playlist
-	 * This adds the specified objects to the tmp_playlist and adds a 'vote' 
-	 * by this user, naturally it checks to make sure that the user hasn't
-	 * already voted on any of these objects
-	 */
-	public function vote($items) { 
-
-		/* Itterate through the objects if no vote, add to playlist and vote */
-		foreach ($items as $object_id) { 
-			if (!$this->has_vote($object_id)) { 
-				$this->add_vote($object_id,$this->id);
-			}
-		} // end foreach
-
-	} // vote
-
-	/**
-	 * add_vote
-	 * This takes a object id and user and actually inserts the row
-	 */
-	public function add_vote($object_id,$tmp_playlist) { 
-
-		$object_id 	= Dba::escape($object_id);
-		$tmp_playlist	= Dba::escape($tmp_playlist);
-
-		/* If it's on the playlist just vote */
-		$sql = "SELECT id FROM tmp_playlist_data " . 
-			"WHERE tmp_playlist_data.object_id='$object_id'";
-		$db_results = Dba::query($sql);
-
-		/* If it's not there, add it and pull ID */
-		if (!$results = Dba::fetch_assoc($db_results)) { 
-			$sql = "INSERT INTO tmp_playlist_data (`tmp_playlist`,`object_id`) " . 
-				"VALUES ('$tmp_playlist','$object_id')";
-			$db_results = Dba::query($sql);
-			$results['id'] = Dba::insert_id();
-		} 
-
-		/* Vote! */
-		$time = time(); 
-		$sql = "INSERT INTO user_vote (`user`,`object_id`,`date`) " . 
-			"VALUES ('" . Dba::escape($GLOBALS['user']->id) . "','" . $results['id'] . "','$time')";
-		$db_results = Dba::query($sql);
-
-		return true;
-
-	} // add_vote
-	
-	/**
-	 * has_vote
-	 * This checks to see if the current user has already voted on this object
-	 */
-	public function has_vote($object_id) { 
-
-		$tmp_id = Dba::escape($this->id);
-
-		/* Query vote table */
-		$sql = "SELECT tmp_playlist_data.id FROM `user_vote` " . 
-			"INNER JOIN tmp_playlist_data ON tmp_playlist_data.id=user_vote.object_id " . 
-			"WHERE user_vote.user='" . Dba::escape($GLOBALS['user']->id) . "' " . 
-			"AND tmp_playlist_data.object_id='" . Dba::escape($object_id) . "' " . 
-			"AND tmp_playlist_data.tmp_playlist='$tmp_id'";
-		$db_results = Dba::query($sql);
-		
-		/* If we find  row, they've voted!! */
-		if (Dba::num_rows($db_results)) { 
-			return true; 
-		}
-
-		return false;		
-
-	} // has_vote
 
 	/**
 	 * get_vote

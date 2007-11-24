@@ -117,7 +117,7 @@ switch ($_REQUEST['action']) {
 	case 'show_playlist': 
 	default: 
 		$tmp_playlist = Democratic::get_current_playlist(); 
-		$songs = $tmp_playlist->get_items();
+		$objects = $tmp_playlist->get_items();
 		require_once Config::get('prefix') . '/templates/show_democratic.inc.php';
 	break;
 } // end switch on action

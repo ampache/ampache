@@ -30,7 +30,7 @@
   <?php } ?>
 </colgroup>
 <?php
-if (!count($songs)) { 
+if (!count($objects)) { 
 	$playlist = new Playlist($tmp_playlist->base_playlist);
 ?>
 <tr>
@@ -57,17 +57,14 @@ else {
 </tr>
 <?php 
 
-
-foreach($songs as $row_id=>$song_id) { 
-	$song = new Song($song_id);
-	$song->format_song();
+foreach($objects as $row_id=>$object_data) { 
+	$song = new Song($object_data['0']);
+	$song->format();
 ?>
 <tr class="<?php echo flip_class(); ?>">
 	<td class="cel_action">
 	<?php if ($tmp_playlist->has_vote($song_id)) { ?>
-		<input class="button" type="button" value="-" onclick="ajaxPut('<?php echo conf('ajax_url'); ?>?action=vote&amp;object_id=<?php echo $song_id; ?>&amp;vote=-1<?php echo conf('ajax_info'); ?>')" />
 	<?php } else { ?>
-		<input class="button" type="button" value="+" onclick="ajaxPut('<?php echo conf('ajax_url'); ?>?action=vote&amp;object_id=<?php echo $song_id; ?>&amp;vote=1<?php echo conf('ajax_info'); ?>')" />
 	<?php } ?>
 	</td>
 	<td class="cel_votes"><?php echo scrub_out($tmp_playlist->get_vote($row_id)); ?></td>
@@ -75,9 +72,6 @@ foreach($songs as $row_id=>$song_id) {
 	<td class="cel_time"><?php echo $song->f_time; ?></td>
 	<?php if ($GLOBALS['user']->has_access(100)) { ?>
 	<td class="cel_admin">
-		<span onclick="ajaxPut('<?php echo conf('ajax_url'); ?>?action=tv_admin&amp;cmd=delete&amp;track_id=<?php echo $song_id; ?><?php echo conf('ajax_info'); ?>')" />
-		<?php echo get_user_icon('delete'); ?>
-		</span>
 	</td>
 	<?php } ?>
 </tr>

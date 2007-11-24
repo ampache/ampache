@@ -469,13 +469,11 @@ class Stream {
 	 * This 'votes' on the songs it inserts them into
 	 * a tmp_playlist with user of -1 (System)
 	 */
-	function create_democratic() { 
+	public function create_democratic() { 
 
-		$tmp_playlist	= get_democratic_playlist('-1');
+		$tmp_playlist	= Democratic::get_current_playlist();
 		$tmp_playlist->vote($this->songs);
 		
-		header("Location: " . return_referer());
-
 	} // create_democratic
 
 	/**
