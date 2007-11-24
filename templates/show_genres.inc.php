@@ -65,7 +65,7 @@ foreach ($object_ids as $genre_id) {
 <?php } // end foreach genres ?>
 <tr class="th-bottom">
 	<th class="cel_add"><?php echo _('Add'); ?></th>
-	<th class="cel_genre"><?php echo Ajax::text('?page=browse&action=set_sort&sort=name',_('Genre'),'sort_genre_name'); ?></th>
+	<th class="cel_genre"><?php echo Ajax::text('?page=browse&action=set_sort&sort=name',_('Genre'),'sort_genre_name_bottom'); ?></th>
 	<th class="cel_songs"><?php echo _('Songs'); ?></th>
 	<th class="cel_action"><?php echo _('Action'); ?></th>
 </tr>

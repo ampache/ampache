@@ -56,12 +56,12 @@ $ajax_url = Config::get('ajax_url');
 <?php } ?>
 <tr class="th-bottom">
 	<th class="cel_add"><?php echo _('Add'); ?></th>
-	<th class="cel_song"><?php echo Ajax::text('?page=browse&action=set_sort&sort=title',_('Song Title'),'sort_song_title'); ?></th>
+	<th class="cel_song"><?php echo Ajax::text('?page=browse&action=set_sort&sort=title',_('Song Title'),'sort_song_title_bottom'); ?></th>
 	<th class="cel_artist"><?php echo _('Artist'); ?></th>
 	<th class="cel_album"><?php echo _('Album'); ?></th>
 	<th class="cel_genre"><?php echo _('Genre'); ?></th>
-	<th class="cel_track"><?php echo Ajax::text('?page=browse&action=set_sort&sort=track',_('Track'),'sort_song_track'); ?></th>
-	<th class="cel_time"><?php echo Ajax::text('?page=browse&action=set_sort&sort=time',_('Time'),'sort_song_time'); ?></th>
+	<th class="cel_track"><?php echo Ajax::text('?page=browse&action=set_sort&sort=track',_('Track'),'sort_song_track_bottom'); ?></th>
+	<th class="cel_time"><?php echo Ajax::text('?page=browse&action=set_sort&sort=time',_('Time'),'sort_song_time_bottom'); ?></th>
 	<th class="cel_action"><?php echo _('Action'); ?></th>
 </tr>
 </table>

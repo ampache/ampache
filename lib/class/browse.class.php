@@ -135,6 +135,7 @@ class Browse {
 	 */
 	public static function set_sort($sort,$order='') { 
 
+
 		switch ($_SESSION['browse']['type']) { 
 			case 'song': 
 				$valid_array = array('title','year','track','time'); 
@@ -162,6 +163,7 @@ class Browse {
 		}
 
 		if ($order) { 
+			$order = ($order == 'DESC') ? 'DESC' : 'ASC'; 
 			$_SESSION['browse']['sort'] = array(); 
 			$_SESSION['browse']['sort'][$sort] = $order; 
 		} 	 
@@ -175,7 +177,7 @@ class Browse {
 			$_SESSION['browse']['sort'] = array(); 
 			$_SESSION['browse']['sort'][$sort] = 'DESC'; 
 		} 
-
+		
 		self::resort_objects(); 
 
 	} // set_sort
@@ -442,7 +444,7 @@ class Browse {
 			case 'album': 
 				switch($field) { 
 					case 'name': 
-						$sql = "`album`.`name`, `album`.`disk`"; 
+						$sql = "`album`.`name`"; 
 					break;
 					case 'year': 
 						$sql = "`album`.`year`"; 
@@ -517,7 +519,9 @@ class Browse {
 		// Format any matches we have so we can show them to the masses
 		$match = $_SESSION['browse']['filter']['alpha_match'] ? ' (' . $_SESSION['browse']['filter']['alpha_match'] . ')' : '';  
 
-    $class = "box browse_".$_SESSION['browse']['type'];
+		// Set the correct classes based on type
+    		$class = "box browse_".$_SESSION['browse']['type'];
+
 		switch ($_SESSION['browse']['type']) { 
 			case 'song': 
 				show_box_top(_('Songs') . $match, $class); 
@@ -610,8 +614,8 @@ class Browse {
                 // Clean her up
                 $order_sql = rtrim($order_sql,"ORDER BY ");
                 $order_sql = rtrim($order_sql,",");
-                                        
                 $sql = $sql . $order_sql;
+
 		$db_results = Dba::query($sql); 
 
 		while ($row = Dba::fetch_assoc($db_results)) { 

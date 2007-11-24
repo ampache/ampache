@@ -48,7 +48,7 @@ foreach ($object_ids as $playlist_id) {
 <?php } // end foreach ($playlists as $playlist) ?>
 <tr class="th-bottom">
   <th class="cel_add"><?php echo _('Add'); ?></th>
-	<th class="cel_playlist"><?php echo Ajax::text('?page=browse&action=set_sort&sort=name',_('Playlist Name'),'playlist_sort_name'); ?></th>
+	<th class="cel_playlist"><?php echo Ajax::text('?page=browse&action=set_sort&sort=name',_('Playlist Name'),'playlist_sort_name_bottom'); ?></th>
 	<th class="cel_songs"><?php echo _('# Songs'); ?></th>
 	<th class="cel_owner"><?php echo _('Owner'); ?></th>
 	<th class="cel_action"><?php echo _('Actions'); ?></th>

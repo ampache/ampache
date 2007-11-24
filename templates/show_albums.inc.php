@@ -60,10 +60,10 @@ $ajax_url = Config::get('ajax_url');
 	<?php if (Browse::get_filter('show_art')) { ?>
 	<th class="cel_cover"><?php echo _('Cover'); ?></th>
 	<?php } ?>
-	<th class="cel_album"><?php echo Ajax::text('?page=browse&action=set_sort&sort=name',_('Album'),'album_sort_name'); ?></th>
+	<th class="cel_album"><?php echo Ajax::text('?page=browse&action=set_sort&sort=name',_('Album'),'album_sort_name_bottom'); ?></th>
 	<th class="cel_artist"><?php echo _('Artist'); ?></th>
 	<th class="cel_songs"><?php echo _('Songs'); ?></th>
-	<th class="cel_year"><?php echo Ajax::text('?page=browse&action=set_sort&sort=year',_('Year'),'album_sort_year'); ?></th>
+	<th class="cel_year"><?php echo Ajax::text('?page=browse&action=set_sort&sort=year',_('Year'),'album_sort_year_bottom'); ?></th>
 	<th class="cel_action"><?php echo _('Actions'); ?></th>
 </tr>
 </table>
