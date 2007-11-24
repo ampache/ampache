@@ -158,9 +158,16 @@ require_session = "true"
 
 ; File Zip Path
 ; If File Zip Download is enabled this must be set to tell 
-; Ampache which directory to save the file to
+; Ampache which directory to save the file to. Do not put a
+; trailing slash or this will not work. 
 ; DEFAULT: false
-;file_zip_path= "false" 
+;file_zip_path = "false" 
+
+; File Zip Comment
+; This is an optional configuration option that adds a comment
+; to your zip files, this only applies if you've got allow_zip_downloads
+; DEFAULT: Ampache - Zip Batch Download
+;file_zip_comment = "Ampache - Zip Batch Download" 
 
 ; This setting throttles a persons downloading to the specified
 ; bytes per second. This is not a 100% guaranteed function, and 

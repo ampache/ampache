@@ -72,7 +72,8 @@ function send_zip( $name, $song_files ) {
                 'inmemory'      => $in_memory,   // create archive in memory
 		'basedir'	=> $basedir,
                 'storepaths'    => 0,   // only store file name, not full path
-                'level'         => 0    // no compression
+                'level'         => 0,    // no compression
+		'comment'	=> Config::get('file_zip_comment')
         );
 	
         $arc->set_options( $options );

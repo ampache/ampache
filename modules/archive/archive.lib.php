@@ -4,6 +4,7 @@
  | By Devin Doucette
  | Copyright (c) 2005 Devin Doucette
  | Email: darksnoopy@shaw.ca
+ | Modification by CoF & Vollmer
  +--------------------------------------------------
  | Email bugs/suggestions to darksnoopy@shaw.ca
  +--------------------------------------------------
@@ -12,10 +13,13 @@
  | only if this copyright statement is not removed
  +--------------------------------------------------*/
 
-class archive
-{
-	function archive($name)
-	{
+class archive {
+
+	/**
+ 	 * constructor
+	 * This function is the constructor for the arcive class
+	 */
+	public function archive($name) {
 		$this->options = array (
 			'basedir' => ".",
 			'name' => $name,
@@ -35,10 +39,10 @@ class archive
 		$this->exclude = array ();
 		$this->storeonly = array ();
 		$this->error = array ();
-	}
+	} // archive 
 
-	function set_options($options)
-	{
+	public function set_options($options) {
+
 		foreach ($options as $key => $value)
 			$this->options[$key] = $value;
 		if (!empty ($this->options['basedir']))
@@ -59,27 +63,30 @@ class archive
 			$this->options['prepend'] = preg_replace("/\/+/", "/", $this->options['prepend']);
 			$this->options['prepend'] = preg_replace("/\/$/", "", $this->options['prepend']) . "/";
 		}
-	}
 
-	function create_archive()
-	{
+		// Generate a tmpname
+		$this->options['tmpname'] = time() . '_' . session_id(); 
+
+	} // set_options 
+
+	public function create_archive() {
 		$this->make_list();
 
 		if ($this->options['inmemory'] == 0)
 		{
 			$pwd = getcwd();
 			chdir($this->options['basedir']);
-			if ($this->options['overwrite'] == 0 && file_exists($this->options['name'] . ($this->options['type'] == "gzip" || $this->options['type'] == "bzip" ? ".tmp" : "")))
+			if ($this->options['overwrite'] == 0 && file_exists($this->options['tmpname'] . ($this->options['type'] == "gzip" || $this->options['type'] == "bzip" ? ".tmp" : "")))
 			{
-				$this->error[] = "File {$this->options['name']} already exists.";
+				$this->error[] = "File {$this->options['tmpname']} already exists.";
 				chdir($pwd);
 				return 0;
 			}
-			else if ($this->archive = @fopen($this->options['name'] . ($this->options['type'] == "gzip" || $this->options['type'] == "bzip" ? ".tmp" : ""), "wb+"))
+			else if ($this->archive = @fopen($this->options['tmpname'] . ($this->options['type'] == "gzip" || $this->options['type'] == "bzip" ? ".tmp" : ""), "wb+"))
 				chdir($pwd);
 			else
 			{
-				$this->error[] = "Could not open {$this->options['name']} for writing.";
+				$this->error[] = "Could not open {$this->options['tmpname']} for writing.";
 				chdir($pwd);
 				return 0;
 			}
@@ -132,7 +139,7 @@ class archive
 		{
 			fclose($this->archive);
 			if ($this->options['type'] == "gzip" || $this->options['type'] == "bzip")
-				unlink($this->options['basedir'] . "/" . $this->options['name'] . ".tmp");
+				unlink($this->options['basedir'] . "/" . $this->options['tmpname'] . ".tmp");
 		}
 
 		return true;
@@ -294,7 +301,7 @@ class archive
 
 		if ($this->options['inmemory'] == 0) {
 
-                        $full_arc_name = $this->options['basedir']."/".$this->options['name'];
+                        $full_arc_name = $this->options['basedir']."/".$this->options['tmpname'];
 			if (file_exists($full_arc_name)) {
 	                        $fsize = filesize($full_arc_name);
 
