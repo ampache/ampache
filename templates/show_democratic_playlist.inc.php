@@ -31,7 +31,7 @@
 </colgroup>
 <?php
 if (!count($objects)) { 
-	$playlist = new Playlist($tmp_playlist->base_playlist);
+	$playlist = new Playlist($democratic->base_playlist);
 ?>
 <tr>
 	<td>
@@ -63,15 +63,16 @@ foreach($objects as $row_id=>$object_data) {
 ?>
 <tr class="<?php echo flip_class(); ?>">
 	<td class="cel_action">
-	<?php if ($tmp_playlist->has_vote($song_id)) { ?>
+	<?php if ($democratic->has_vote($song_id)) { ?>
 	<?php } else { ?>
 	<?php } ?>
 	</td>
-	<td class="cel_votes"><?php echo scrub_out($tmp_playlist->get_vote($row_id)); ?></td>
+	<td class="cel_votes"><?php echo scrub_out($democratic->get_vote($row_id)); ?></td>
 	<td class="cel_song"><?php echo $song->f_link . " / " . $song->f_album_link . " / " . $song->f_artist_link; ?></td>
 	<td class="cel_time"><?php echo $song->f_time; ?></td>
 	<?php if ($GLOBALS['user']->has_access(100)) { ?>
 	<td class="cel_admin">
+	<?php echo Ajax::button('?page=democratic&action=delete&row_id=' . $row_id,'delete',_('Delete'),'delete_row_' . $row_id); ?>
 	</td>
 	<?php } ?>
 </tr>

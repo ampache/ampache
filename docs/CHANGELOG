@@ -4,6 +4,9 @@
 
 --------------------------------------------------------------------------
   v.3.4-Alpha3 
+	- Inital Version of Democratic play working, minor speed improvements
+		to normal tmpplaylist class due to simplification and removal
+		of democratic related code
 	- Added ability to do batch downloads on the FS failed downloads
 		currently will not be garbage collected (Thx COF)
 	- Added default mime type if none found (image/jpg) 

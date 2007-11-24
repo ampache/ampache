@@ -159,6 +159,11 @@ switch ($_REQUEST['action']) {
 		$options = array('limit' => $_REQUEST['random'], 'random_type' => $_REQUEST['random_type'],'size_limit'=>$_REQUEST['size_limit']);
 		$song_ids = get_random_songs($options, $matchlist);
 	break;
+	case 'democratic': 
+		$democratic = Democratic::get_current_playlist(); 
+		$urls[] = $democratic->get_url(); 
+		$song_ids = array(); 
+	break;
 	case 'download': 
 		$song_ids[] = $_REQUEST['song_id']; 
 	default:

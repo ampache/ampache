@@ -30,19 +30,22 @@ show_box_top(_('Manage Democratic Playlists'));  ?>
 <tr class="th-top">
 	<th class="cel_number"><?php echo _('Playlist'); ?></th>
 	<th class="cel_base_playlist"><?php echo _('Base Playlist'); ?></th>
-	<th class="cel_vote_count"><?php echo _('Current Number of Votes'); ?></th>
+	<th class="cel_vote_count"><?php echo _('Songs'); ?></th>
 	<th class="cel_action"><?php echo _('Action'); ?></th>
 </tr>
 <?php
 	foreach ($playlists as $democratic_id) { 
 		$democratic = new Democratic($democratic_id); 
 		$playlist = new Playlist($democratic->base_playlist); 
+		$playlist->format(); 
 ?>
-<tr>
+<tr class="<?php echo flip_class(); ?>">
 	<td><?php echo abs($democratic->id); ?></td>
-	<td><?php echo scrub_out($playlist->name); ?></td>
+	<td><?php echo $playlist->f_link; ?></td>
 	<td><?php echo $democratic->count_items(); ?></td>
-	<td>&nbsp;</td>
+	<td>
+	<a href="<?php echo Config::get('web_path'); ?>/stream.php?action=democratic"><?php echo get_user_icon('all'); ?></a>
+	</td>
 </tr>
 <?php } if (!count($playlists)) { ?>
 <tr>
@@ -50,6 +53,7 @@ show_box_top(_('Manage Democratic Playlists'));  ?>
 </tr>
 <?php } ?>
 </table>
+<br />
 <div>
 <a class="button" href="<?php echo Config::get('web_path'); ?>/democratic.php?action=show_create"><?php echo _('Create New Playlist'); ?></a>
 </div>

@@ -36,11 +36,11 @@ $song_id 	= scrub_in($_REQUEST['song']);
 $sid 		= scrub_in($_REQUEST['sid']);
 
 /* This is specifically for tmp playlist requests */
-$tmp_id		= scrub_in($_REQUEST['tmp_id']);
+$demo_id	= scrub_in($_REQUEST['demo_id']);
 $random		= scrub_in($_REQUEST['random']); 
 
 /* First things first, if we don't have a uid/song_id stop here */
-if (empty($song_id) && empty($tmp_id) && empty($random)) { 
+if (empty($song_id) && empty($demo_id) && empty($random)) { 
 	debug_event('no_song',"Error: No Song UID Specified, nothing to play",'2');
 	exit; 
 }
@@ -57,13 +57,6 @@ $user = new User($uid);
 if (make_bool($GLOBALS['user']->disabled)) {
 	debug_event('user_disabled',"Error $user->username is currently disabled, stream access denied",'3');
 	echo "Error: User Disabled"; 
-	exit; 
-}
-
-/* If we're using auth and we can't find a username for this user */
-if (Config::get('use_auth') AND !$GLOBALS['user']->username AND !$GLOBALS['user']->is_xmlrpc() ) {
-	debug_event('user_not_found',"Error $user->username not found, stream access denied",'3');
-	echo "Error: No User Found"; 
 	exit; 
 }
 
@@ -113,10 +106,10 @@ if (Config::get('access_control')) {
  * current song, and do any other crazyness
  * we need to 
  */
-if ($tmp_id) { 
-	$tmp_playlist = new tmpPlaylist($tmp_id);
+if ($demo_id) { 
+	$democratic = new Democratic($demo_id);
 	/* This takes into account votes etc and removes the */
-	$song_id = $tmp_playlist->get_next_object();
+	$song_id = $democratic->get_next_object();
 }
 
 /**

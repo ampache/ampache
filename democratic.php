@@ -87,13 +87,9 @@ switch ($_REQUEST['action']) {
 			access_denied(); 
 			break;
 		}
-
-		$stream_type = scrub_in($_REQUEST['play_type']);
-		$tmp_playlist = new tmpPlaylist($_REQUEST['tmp_playlist_id']);
-		$stream = new Stream($stream_type,array()); 
-		$stream->manual_url_add(unhtmlentities($tmp_playlist->get_vote_url()));
-		$stream->start();
-		if ($stream_type != 'localplay') { exit; } 
+		// Tmp just to make this work
+		header("Location: " . Config::get('web_path') . "/stream.php?action=democratic"); 
+		exit; 
 	break;
 	case 'manage_playlists': 
 		if (!$GLOBALS['user']->has_access('75')) { 
@@ -116,8 +112,8 @@ switch ($_REQUEST['action']) {
 		$tmp_playlist->update_playlist($_REQUEST['playlist_id']);
 	case 'show_playlist': 
 	default: 
-		$tmp_playlist = Democratic::get_current_playlist(); 
-		$objects = $tmp_playlist->get_items();
+		$democratic = Democratic::get_current_playlist(); 
+		$objects = $democratic->get_items();
 		require_once Config::get('prefix') . '/templates/show_democratic.inc.php';
 	break;
 } // end switch on action

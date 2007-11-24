@@ -194,19 +194,6 @@ class tmpPlaylist {
 	} // get_next_object
 
 	/**
-	 * get_vote_url
-	 * This returns the special play URL for democratic play, only open to ADMINs
-	 */
-	public function get_vote_url() { 
-
-		$link = Config::get('web_path') . '/play/index.php?tmp_id=' . scrub_out($this->id) . 
-			'&amp;sid=' . scrub_out(session_id()) . '&amp;uid=' . scrub_out($GLOBALS['user']->id);
-		
-		return $link;
-
-	} // get_vote_url
-
-	/**
 	 * count_items
 	 * This returns a count of the total number of tracks that are in this tmp playlist
 	 */
@@ -392,32 +379,8 @@ class tmpPlaylist {
 	} // vote_active
 
 	/**
-	 * remove_vote
-	 * This is called to remove a vote by a user for an object, it uses the object_id
-	 * As that's what we'll have most the time, no need to check if they've got an existing
-	 * vote for this, just remove anything that is there
-	 */
-	public function remove_vote($object_id) { 
-
-		$object_id 	= Dba::escape($object_id);
-		$user_id	= Dba::escape($GLOBALS['user']->id); 	
-
-		$sql = "DELETE FROM user_vote USING user_vote INNER JOIN tmp_playlist_data ON tmp_playlist_data.id=user_vote.object_id " . 
-			"WHERE user='$user_id' AND tmp_playlist_data.object_id='$object_id' " . 
-			"AND tmp_playlist_data.tmp_playlist='" . Dba::escape($this->id) . "'";
-		$db_results = Dba::query($sql);
-		
-		/* Clean up anything that has no votes */
-		self::prune_tracks();
-
-		return true;
-
-	} // remove_vote
-
-	/**
 	 * delete_track
-	 * This deletes a track and any assoicated votes, we only check for
-	 * votes if it's vote playlist, id is a object_id
+	 * This deletes a track from the tmpplaylist
 	 */
 	public function delete_track($id) { 
 
@@ -428,18 +391,10 @@ class tmpPlaylist {
 			" WHERE `id`='$id'";
 		$db_results = Dba::query($sql);
 
-		/* If this is a voting playlit prune votes */
-		if ($this->type == 'vote') { 
-			$sql = "DELETE FROM user_vote USING user_vote " . 
-				"LEFT JOIN tmp_playlist_data ON user_vote.object_id = tmp_playlist_data.id " .
-				"WHERE tmp_playlist_data.id IS NULL";
-			$db_results = Dba::query($sql);
-		} 
-
 		return true;
 
 	} // delete_track
-
+	
 	/**
 	 * clear_playlist
 	 * This is really just a wrapper function, it clears the entire playlist
