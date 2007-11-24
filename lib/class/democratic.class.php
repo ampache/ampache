@@ -168,6 +168,7 @@ class Democratic extends tmpPlaylist {
 
 		$sql = "SELECT `tmp_playlist_data`.`id` FROM `tmp_playlist_data` WHERE `object_type`='$object_type' AND " . 
 			"`tmp_playlist`='$tmp_id' AND `object_id`='$object_id'"; 
+debug_event('foo',$sql,'1');
 		$db_results = Dba::query($sql); 
 
 		$row = Dba::fetch_assoc($db_results); 
@@ -188,7 +189,7 @@ class Democratic extends tmpPlaylist {
                 /* Itterate through the objects if no vote, add to playlist and vote */
                 foreach ($items as $type=>$object_id) {
 			//FIXME: This is a hack until we fix everything else
-			if (intval($type)) { $type = 'song'; } 
+			if (intval($type) == $type) { $type = 'song'; } 
                         if (!$this->has_vote($object_id,$type)) {
                                 $this->add_vote($object_id,$type);
                         }

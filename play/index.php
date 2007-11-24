@@ -296,8 +296,9 @@ if ($bytesStreamed > $minBytesStreamed) {
 	
         $user->update_stats($song->id);
 	/* If this is a voting tmp playlist remove the entry */
-	if (is_object($democratic)) { 
+	if ($demo_id) { 
 		$row_id = $democratic->get_uid_from_object_id($song_id,'song'); 
+		debug_event('Democratic','Removing Song Entry from Democratic Playlist','1'); 
 		$democratic->delete_votes($row_id);
 	} // if tmp_playlist
 	
