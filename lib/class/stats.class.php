@@ -94,12 +94,16 @@ class Stats {
 	 * This returns the top X for type Y from the
 	 * last conf('stats_threshold') days
 	 */
-	public static function get_top($count,$type,$threshold = '') { 
+	public static function get_top($type,$count='',$threshold = '') { 
 
 		/* If they don't pass one, then use the preference */
 		if (!$threshold) { 
 			$threshold = Config::get('stats_threshold');
 		}
+
+		if (!$count) { 
+			$count = Config::get('popular_threshold'); 
+		} 
 
 		$count	= intval($count);
 		$type	= self::validate_type($type);
@@ -114,7 +118,7 @@ class Stats {
 		$results = array();
 
 		while ($r = Dba::fetch_assoc($db_results)) { 
-			$results[] = $r;
+			$results[] = new $type($r['object_id']);
 		}
 
 		return $results;
