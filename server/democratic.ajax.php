@@ -25,6 +25,29 @@
 if (AJAX_INCLUDE != '1') { exit; } 
 
 switch ($_REQUEST['action']) { 
+	case 'delete_vote': 
+		$democratic = Democratic::get_current_playlist(); 
+		$democratic->remove_vote($_REQUEST['row_id']); 
+		
+		ob_start(); 
+		$objects = $democratic->get_items(); 
+		require_once Config::get('prefix') . '/templates/show_democratic_playlist.inc.php'; 
+		$results['democratic_playlist'] = ob_get_contents();
+		ob_end_clean(); 
+
+	break;
+	case 'add_vote': 
+
+		$democratic = Democratic::get_current_playlist(); 
+		$democratic->add_vote($_REQUEST['object_id'],$_REQUEST['type']); 
+
+		ob_start(); 
+		$objects = $democratic->get_items(); 
+		require_once Config::get('prefix') . '/templates/show_democratic_playlist.inc.php'; 
+		$results['democratic_playlist'] = ob_get_contents(); 
+		ob_end_clean(); 
+
+	break; 
 	case 'delete': 
 		if (!$GLOBALS['user']->has_access('75')) { 
 			exit; 

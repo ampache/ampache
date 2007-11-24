@@ -471,8 +471,8 @@ class Stream {
 	 */
 	public function create_democratic() { 
 
-		$tmp_playlist	= Democratic::get_current_playlist();
-		$tmp_playlist->vote($this->songs);
+		$democratic	= Democratic::get_current_playlist();
+		$democratic->vote($this->songs);
 		
 	} // create_democratic
 

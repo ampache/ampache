@@ -296,10 +296,9 @@ if ($bytesStreamed > $minBytesStreamed) {
 	
         $user->update_stats($song->id);
 	/* If this is a voting tmp playlist remove the entry */
-	if (is_object($tmp_playlist)) { 
-		if ($tmp_playlist->type == 'vote') { 
-			$tmp_playlist->delete_track($song_id);
-		}
+	if (is_object($democratic)) { 
+		$row_id = $democratic->get_uid_from_object_id($song_id,'song'); 
+		$democratic->delete_votes($row_id);
 	} // if tmp_playlist
 	
 	/* Set the Song as Played if it isn't already */

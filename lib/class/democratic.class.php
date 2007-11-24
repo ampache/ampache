@@ -157,6 +157,26 @@ class Democratic extends tmpPlaylist {
         } // get_next_object
 
 	/**
+	 * get_uid_from_object_id
+	 * This takes an object_id and an object type and returns the ID for the row
+	 */
+	public function get_uid_from_object_id($object_id,$object_type='') { 
+
+		$object_id	= Dba::escape($object_id); 
+		$object_type	= $object_type ? Dba::escape($object_type) : 'song'; 
+		$tmp_id		= Dba::escape($this->id);
+
+		$sql = "SELECT `tmp_playlist_data`.`id` FROM `tmp_playlist_data` WHERE `object_type`='$object_type' AND " . 
+			"`tmp_playlist`='$tmp_id' AND `object_id`='$object_id'"; 
+		$db_results = Dba::query($sql); 
+
+		$row = Dba::fetch_assoc($db_results); 
+
+		return $row['id']; 
+
+	} // get_uid_from_object_id
+
+	/**
          * vote
          * This function is called by users to vote on a system wide playlist
          * This adds the specified objects to the tmp_playlist and adds a 'vote' 
@@ -167,8 +187,10 @@ class Democratic extends tmpPlaylist {
 
                 /* Itterate through the objects if no vote, add to playlist and vote */
                 foreach ($items as $type=>$object_id) {
+			//FIXME: This is a hack until we fix everything else
+			if (intval($type)) { $type = 'song'; } 
                         if (!$this->has_vote($object_id,$type)) {
-                                $this->add_vote($object_id,$this->id,$type);
+                                $this->add_vote($object_id,$type);
                         }
                 } // end foreach
 
@@ -186,7 +208,7 @@ class Democratic extends tmpPlaylist {
 		$user_id	= Dba::escape($GLOBALS['user']->id); 
 
                 /* Query vote table */
-                $sql = "SELECT tmp_playlist_data.id FROM `user_vote` " .
+                $sql = "SELECT tmp_playlist_data.object_id FROM `user_vote` " .
                         "INNER JOIN tmp_playlist_data ON tmp_playlist_data.id=user_vote.object_id " .
                         "WHERE user_vote.user='$user_id' AND tmp_playlist_data.object_type='$type' " .
                         "AND tmp_playlist_data.object_id='$object_id' " .
@@ -206,10 +228,10 @@ class Democratic extends tmpPlaylist {
          * add_vote
          * This takes a object id and user and actually inserts the row
          */
-        public function add_vote($object_id,$tmp_playlist,$object_type='') {
+        public function add_vote($object_id,$object_type='') {
         
                 $object_id      = Dba::escape($object_id);
-                $tmp_playlist   = Dba::escape($tmp_playlist);
+                $tmp_playlist   = Dba::escape($this->id);
 		$object_type	= $object_type ? Dba::escape($object_type) : 'song'; 
                 
                 /* If it's on the playlist just vote */
@@ -241,14 +263,12 @@ class Democratic extends tmpPlaylist {
          * As that's what we'll have most the time, no need to check if they've got an existing
          * vote for this, just remove anything that is there
          */
-        public function remove_vote($object_id) {
+        public function remove_vote($row_id) {
 
-                $object_id      = Dba::escape($object_id);
+                $object_id      = Dba::escape($row_id);
                 $user_id        = Dba::escape($GLOBALS['user']->id);
 
-                $sql = "DELETE FROM user_vote USING user_vote INNER JOIN tmp_playlist_data ON tmp_playlist_data.id=user_vote.object_id " .
-                        "WHERE user='$user_id' AND tmp_playlist_data.object_id='$object_id' " .
-                        "AND tmp_playlist_data.tmp_playlist='" . Dba::escape($this->id) . "'";
+		$sql = "DELETE FROM `user_vote` WHERE `object_id`='$object_id'";
                 $db_results = Dba::query($sql);
 
                 /* Clean up anything that has no votes */

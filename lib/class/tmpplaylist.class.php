@@ -130,8 +130,8 @@ class tmpPlaylist {
 		$order = 'ORDER BY id ASC';
 		
 		/* Select all objects from this playlist */
-		$sql = "SELECT tmp_playlist_data.object_type, tmp_playlist_data.id, tmp_playlist_data.object_id $vote_select " . 
-			"FROM tmp_playlist_data $vote_join " . 
+		$sql = "SELECT tmp_playlist_data.object_type, tmp_playlist_data.id, tmp_playlist_data.object_id " . 
+			"FROM tmp_playlist_data " . 
 			"WHERE tmp_playlist_data.tmp_playlist='" . Dba::escape($this->id) . "' $order";
 		$db_results = Dba::query($sql);
 		
@@ -158,36 +158,11 @@ class tmpPlaylist {
 		$tmp_id = Dba::escape($this->id);
 		$order = " ORDER BY tmp_playlist_data.id DESC";
 
-		/* Check for an item on the playlist, account for voting */
-		if ($this->type == 'vote') { 
-			/* Add conditions for voting */	
-			$vote_select = ", COUNT(user_vote.user) AS `count`";
-			$order = " GROUP BY tmp_playlist_data.id ORDER BY `count` DESC, user_vote.date ASC";
-			$vote_join = "INNER JOIN user_vote ON user_vote.object_id=tmp_playlist_data.id";
-		}
-
-		$sql = "SELECT tmp_playlist_data.object_id $vote_select FROM tmp_playlist_data $vote_join " . 
+		$sql = "SELECT tmp_playlist_data.object_id FROM tmp_playlist_data " . 
 			"WHERE tmp_playlist_data.tmp_playlist = '$tmp_id' $order LIMIT 1";
 		$db_results = Dba::query($sql);
 
 		$results = Dba::fetch_assoc($db_results);
-
-		/* If nothing was found and this is a voting playlist then get from base_playlist */
-		if ($this->type == 'vote' AND !$results) { 
-
-			/* Check for a playlist */
-			if ($this->base_playlist != '0') { 
-				/* We need to pull a random one from the base_playlist */
-				$base_playlist = new playlist($this->base_playlist);
-				$data = $base_playlist->get_random_songs(1);
-				$results['object_id'] = $data['0'];	
-			}
-			else { 
-				$sql = "SELECT id as `object_id` FROM song WHERE enabled='1' ORDER BY RAND() LIMIT 1"; 
-				$db_results = Dba::query($sql); 
-				$results = Dba::fetch_assoc($db_results); 
-			}
-		}
 
 		return $results['object_id'];
 
