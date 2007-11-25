@@ -30,7 +30,7 @@ if (INSTALL != '1') { exit; }
 <body>
 <div id="header"> 
 <h1><?php echo _('Ampache Installation'); ?></h1>
-<p>For the love of Music</p>
+<p>Pour l'Amour de la Musique</p>
 </div>
 <div id="text-box">
 

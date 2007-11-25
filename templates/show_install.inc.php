@@ -30,7 +30,7 @@ if (INSTALL != '1') { exit; }
 <script src="lib/javascript-base.js" language="javascript" type="text/javascript"></script>
 <div id="header"> 
 <h1><?php echo _("Ampache Installation"); ?></h1>
-<p>For the love of Music</p>
+<p>Pour l'Amour de la Musique</p>
 </div>
 <div id="text-box">
 
@@ -58,7 +58,7 @@ if (INSTALL != '1') { exit; }
 		<br />
 		<?php Error::display('general'); ?>
 		<br />
-		<span class="header2">Insert Ampache Database</span>
+		<span class="header2"><?php echo _('Insert Ampache Database'); ?></span>
 		<form method="post" action="<?php echo $http_type . $_SERVER['HTTP_HOST'] .  $_SERVER['PHP_SELF'] . "?action=create_db&amp;htmllang=$htmllang&amp;charset=$charset"; ?>" enctype="multipart/form-data" >
 <table>
 <tr>
@@ -104,7 +104,7 @@ if (INSTALL != '1') { exit; }
 	</div>
 	<div id="bottom">
     	<p><b>Ampache Installation.</b><br />
-    	For the love of Music.</p>
+    	Pour l'Amour de la Musique</p>
    </div>
 </div>
 

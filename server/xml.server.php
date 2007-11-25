@@ -27,6 +27,9 @@
 define('NO_SESSION','1');
 require_once '../lib/init.php';
 
+// If we don't even have access control on then we can't use this!
+if (!Config::get('access_control')) { access_denied(); exit; }  
+
 /** 
  * Verify the existance of the Session they passed in we do allow them to
  * login via this interface so we do have an exception for action=login
@@ -35,6 +38,11 @@ if (!Access::session_exists(array(),$_REQUEST['auth'],'api') AND $_REQUEST['acti
 	debug_event('Access Denied','Invalid Session or unthorized access attempt to API','5'); 
 	exit(); 
 }
+
+// If it's not a handshake then we can allow it to take up lots of time
+if (!$_REQUEST['action'] != 'handshake') { 
+	set_time_limit(0); 
+} 
 
 /* Set the correct headers */
 header("Content-type: text/xml; charset=" . Config::get('site_charset'));

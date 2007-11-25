@@ -20,7 +20,7 @@
 */
 
 // Set the Error level manualy... I'm to lazy to fix notices
-error_reporting(E_ALL ^ E_NOTICE);
+error_reporting(0);
 
 $prefix = dirname(__FILE__);
 $configfile = "$prefix/config/ampache.cfg.php";
