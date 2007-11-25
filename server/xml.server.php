@@ -49,7 +49,7 @@ switch ($_REQUEST['action']) {
 			echo xmlData::error('Error Invalid Handshake, attempt logged'); 
 		} 
 		else { 
-			echo xmlData::single_string('auth',$token); 
+			echo xmlData::keyed_array('auth',$token); 
 		} 
 
 	break; 
