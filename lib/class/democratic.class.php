@@ -142,8 +142,8 @@ class Democratic extends tmpPlaylist {
                         if ($this->base_playlist != '0') {
                                 /* We need to pull a random one from the base_playlist */
                                 $base_playlist = new Playlist($this->base_playlist);
-                                $data = $base_playlist->get_random_songs(1);
-                                $results['object_id'] = $data['0'];
+				$data = $base_playlist->get_random_items(1);
+                                $results['object_id'] = $data['0']['object_id']; 
                         }
                         else {
                                 $sql = "SELECT `id` as `object_id` FROM `song` WHERE `enabled`='1' ORDER BY RAND() LIMIT 1";
@@ -168,7 +168,6 @@ class Democratic extends tmpPlaylist {
 
 		$sql = "SELECT `tmp_playlist_data`.`id` FROM `tmp_playlist_data` WHERE `object_type`='$object_type' AND " . 
 			"`tmp_playlist`='$tmp_id' AND `object_id`='$object_id'"; 
-debug_event('foo',$sql,'1');
 		$db_results = Dba::query($sql); 
 
 		$row = Dba::fetch_assoc($db_results); 
@@ -237,7 +236,7 @@ debug_event('foo',$sql,'1');
                 
                 /* If it's on the playlist just vote */
                 $sql = "SELECT `id` FROM `tmp_playlist_data` " .
-                        "WHERE `tmp_playlist_data`.`object_id`='$object_id'";
+                        "WHERE `tmp_playlist_data`.`object_id`='$object_id' AND `tmp_playlist_data`.`tmp_playlist`='$tmp_playlist'";
                 $db_results = Dba::query($sql);
 
                 /* If it's not there, add it and pull ID */

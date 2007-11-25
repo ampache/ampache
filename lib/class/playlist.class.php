@@ -146,12 +146,14 @@ class Playlist {
 	 * get_random_items
 	 * This is the same as before but we randomize the buggers!
 	 */
-	public function get_random_items() { 
+	public function get_random_items($limit='') { 
 
 		$results = array(); 
 
+		$limit_sql = $limit ? 'LIMIT ' . intval($limit) : ''; 
+
 		$sql = "SELECT `object_id`,`object_type`,`dynamic_song` FROM `playlist_data` " . 
-			"WHERE `playlist`='" . Dba::escape($this->id) . "' ORDER BY RAND()"; 
+			"WHERE `playlist`='" . Dba::escape($this->id) . "' ORDER BY RAND() $limit_sql"; 
 		$db_results = Dba::query($sql); 
 
 		while ($row = Dba::fetch_assoc($db_results)) { 

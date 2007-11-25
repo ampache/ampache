@@ -38,8 +38,7 @@ switch ($_REQUEST['action']) {
 	case 'basket': 
 		// We need to set the basket up!
 		$_SESSION['iframe']['target'] = Config::get('web_path') . '/stream.php?action=basket&playlist_method=' . scrub_out($_REQUEST['playlist_method']); 
-		//$results['rfc3514'] = '<script type="text/javascript">reload_util()</script>'; 
-		$results['rfc3514'] = '<script type="text/javascript">reload_util2("'.$_SESSION['iframe']['target'].'")</script>'; 
+		$results['rfc3514'] = '<script type="text/javascript">reload_util("'.$_SESSION['iframe']['target'].'")</script>'; 
 	break;
 	default: 
 		$results['rfc3514'] = '0x1'; 
