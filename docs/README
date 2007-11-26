@@ -13,7 +13,6 @@ Contents:
  3. Setting Up
      a) Upgrading
  4. License
-     a) Donations (Beer!)
  5. Contact info
 
 1. Intro:
@@ -73,6 +72,7 @@ Contents:
 		- Icecast2
 		- Winamp using (HTTPQ)
 	- Democratic Vote based play
+	- 3rd Party clients using API (Amarok)
 	
   C) Current Translations
 
@@ -97,7 +97,7 @@ Contents:
 	 Robert Hopson - Libglue, Playlists, Ogg support.. and much more
 	 Andy Morgan - Protagonist
 	 RosenSama - Previous Developer
-	 Ben Shields - Graphics Boy
+	 Ben Shields - Ampache Logo
 	 Randall Ehren (Initial XML-RPC)
 	 s1amson (lots of beta testing)
 	 Caleb Crome (bug fixes and enhancements)
@@ -110,7 +110,7 @@ Contents:
          Maan Bsat (random fixes)
          latka (from media.tangent.org site) for orphaned song ideas
 	 Lamar Hansford (README/INSTALL improvements) & Upload
-	 Enrico Lai http://www.enricolai.com for the XSPF Flash Player
+	 Lacy Morrow (Flash Player)
 	 And many many more...
 
 2. Getting all the components
@@ -144,14 +144,6 @@ Contents:
 
   This Application falls under the Standard GPL v2. See Licence 
   included with this tar file
-
-4a. Donations
-
-  We don't want your money but we will take your beer. If you 
-  love ampache and want to encourage us to write more please
-  visit ampache.org for information on how to donate some beer
-  to our cause. If you can't send beer a postcard would also 
-  be great. E-mail beer@ampache.org for shipping address 
 
 5. Contact Info
 

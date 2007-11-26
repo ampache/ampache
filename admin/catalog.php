@@ -192,6 +192,9 @@ switch ($_REQUEST['action']) {
 			Error::display('general'); 
 			Error::display('catalog_add'); 
 			show_box_bottom(); 
+
+			show_confirmation('','','/admin/index.php'); 
+
 		}
 		else {
 			require Config::get('prefix') . '/templates/show_add_catalog.inc.php';

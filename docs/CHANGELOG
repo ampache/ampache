@@ -3,7 +3,8 @@
 --------------------------------------------------------------------------
 
 --------------------------------------------------------------------------
-  v.3.4-Alpha3 
+  v.3.4-Alpha3 11/25/2007 
+	- Fixed display problem and lack of link when creating a catalog
 	- Inital Version of Democratic play working, minor speed improvements
 		to normal tmpplaylist class due to simplification and removal
 		of democratic related code
