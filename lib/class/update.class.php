@@ -242,6 +242,10 @@ class Update {
 
 		$version[] = array('version' => '340011','description'=>$update_string); 
 
+		$update_string = '- Added Democratic Table for new democratic play features.<br />' . 
+				'- Added Add Path to Catalog to improve add speeds on large catalogs.<br />'; 
+		
+		$version[] = array('version' => '340012','description'=>$update_string); 
 
 		return $version;
 
@@ -1001,14 +1005,42 @@ class Update {
                         "`expire` INT( 11 ) UNSIGNED NOT NULL , " .
                         "`ip` INT( 11 ) UNSIGNED NULL , " .
                         "PRIMARY KEY ( `id` ) " .
-                        ") ENGINE = MYISAM";
+                        ") ENGINE = MYISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci";
                 $db_results = Dba::query($sql);
 
 
 		self::set_version('db_version','340011'); 		
-				
 
 	} // 340011
+
+	/**
+	 * update_340012
+	 * This update adds in the democratic stuff, checks for some potentially screwed up indexes
+	 * and removes the timestamp from the playlist, and adds the field to the catalog for the upload dir
+	 */
+	public static function update_340012() { 
+
+		$sql = "ALTER TABLE `catalog` ADD `add_path` VARCHAR( 255 ) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL AFTER `path`"; 
+		$db_results = Dba::query($sql); 
+
+		$sql = "CREATE TABLE `democratic` (`id` INT( 11 ) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY ," . 
+			"`name` VARCHAR( 64 ) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ," . 
+			"`cooldown` TINYINT( 4 ) UNSIGNED NULL ," . 
+			"`level` TINYINT( 4 ) UNSIGNED NOT NULL DEFAULT '25'," . 
+			"`user` INT( 11 ) NOT NULL ," . 
+			"`primary` TINYINT( 1 ) UNSIGNED NOT NULL DEFAULT '0'" . 
+			") ENGINE = MYISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci"; 
+		$db_results = Dba::query($sql); 
+
+		$sql = "ALTER TABLE `democratic` ADD INDEX (`primary`)"; 
+		$db_results = Dba::query($sql); 
+
+		$sql = "ALTER TABLE `democratic` ADD INDEX (`level`)"; 
+		$db_results = Dba::query($sql);
+
+		self::set_version('db_version','340012'); 
+
+	} // update_340012
 
 } // end update class
 ?>
