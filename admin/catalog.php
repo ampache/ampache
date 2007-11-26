@@ -19,7 +19,7 @@
 
 */
 
-require '../lib/init.php';
+require_once '../lib/init.php';
 
 if (!$GLOBALS['user']->has_access(100)) {
 	access_denied();
@@ -158,6 +158,8 @@ switch ($_REQUEST['action']) {
 		/* Wah Demo! */
 		if (Config::get('demo_mode')) { break; }
 
+		ob_end_flush(); 
+
 		if (!strlen($_REQUEST['path']) || !strlen($_REQUEST['name'])) { 
 			Error::add('general','Error Name and path not specified'); 
 		} 
@@ -173,7 +175,7 @@ switch ($_REQUEST['action']) {
 		// If an error hasn't occured
 		if (!Error::$state) { 
 
-			$catalog_id = Catalog::create($_REQUEST); 
+			$catalog_id = Catalog::Create($_REQUEST); 
 
 			if (!$catalog_id) { 
 				require Config::get('prefix') . '/templates/show_add_catalog.inc.php'; 
