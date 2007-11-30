@@ -553,8 +553,6 @@ class Stream {
 	                        /* Log the failure */
 	                        debug_event('downsample',"Error: Max bandwidith already allocated. $active_streams Active Streams",'2');
 
-	                        /* Toast the now playing entry, then tell em to try again later */
-	                        delete_now_playing($now_playing_id);
 	                        echo "Maximum bandwidth already allocated.  Try again later.";
 	                        exit();
 

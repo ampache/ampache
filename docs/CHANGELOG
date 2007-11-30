@@ -4,6 +4,8 @@
 
 --------------------------------------------------------------------------
   v.3.4-Alpha4 
+	- Fixed a problem with automatic downsampling which was referencing
+		a now non-existant function 
 	- Massive speed improvement on display and sorting of standard
 		browse functions
 	- Put Ratings back into single song view 
