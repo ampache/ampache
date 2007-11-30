@@ -14,7 +14,9 @@
 - Migrating from Ampache 3.3.x --> 3.4
 
 	The config file format has changed, please follow the instructions
-	in the web interface. 
+	in the web interface. Depending on the age of your Ampache install
+	this may not work as a large number of pre 3.3.3.x updates were
+	removed from the update file. 
 
 - Migrating from Ampache 3.3.x --> 3.3.3
 	
