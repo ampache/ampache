@@ -24,7 +24,7 @@
 	install a config file if their current one is out of date. While
 	ampache may work without the new config file, results may vary 
 	it is strongly recommended that if prompted you install the newly
-	created config file
+	created config file.
 
 - Migrating from Ampache 3.3 --> 3.x+
 
