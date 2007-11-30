@@ -4,6 +4,9 @@
 
 --------------------------------------------------------------------------
   v.3.4-Alpha4 
+	- Corrected potential consistancy issue with Play Type dropdown
+	- Made Access Denied page more friendly, added verbage for
+		demo access
 
 
 --------------------------------------------------------------------------

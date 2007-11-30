@@ -31,9 +31,28 @@ switch ($_REQUEST['action']) {
 			$results['rfc3514'] = '0x1'; 
 			break;
 		} 
-	
+
+		switch ($_POST['type']) { 
+			case 'stream': 
+			case 'localplay':
+			case 'democratic': 
+				$key = 'allow_' . $_POST['type'] . '_playback'; 
+				if (!Config::get($key)) { 
+					$results['rfc3514'] = '0x1'; 
+					break 2; 
+				} 
+			break; 
+			case 'xspf_player': 
+				// Rien a faire
+			break; 
+			default: 
+				$results['rfc3514'] = '0x1'; 
+			break 2; 
+		} // end switch 
+
 		// Go ahead and update their preference
 		Preference::update('play_type',$GLOBALS['user']->id,$_POST['type']); 
+		$results['rfc3514'] = '0x0'; 
 	break;
 	case 'basket': 
 		// We need to set the basket up!
