@@ -123,7 +123,7 @@ Contents:
 	PHP5 ICONV 
 	PHP5 ZLIB support (recommended)
   MySQL >= 4.x http://www.mysql.com
-  24MB of Ram
+  32MB of Ram
 
 3. Setting Up
 
