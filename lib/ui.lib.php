@@ -88,10 +88,8 @@ if (!function_exists('_')) {
  */
 function access_denied() {
 
-	echo "<br /><br /><br />";
-	echo "<div class=\"fatalerror\">" . _("Error Access Denied") . "</div>\n";
-	show_footer();
-	exit();
+	require_once Config::get('prefix') . '/templates/show_denied.inc.php'; 
+	exit; 
 
 } // access_denied
 
