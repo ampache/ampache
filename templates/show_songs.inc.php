@@ -33,6 +33,7 @@ $ajax_url = Config::get('ajax_url');
   <col id="col_genre" />
   <col id="col_track" />
   <col id="col_time" />
+  <col id="col_rating" />
   <col id="col_action" />
 </colgroup>
 <tr class="th-top">
@@ -43,6 +44,9 @@ $ajax_url = Config::get('ajax_url');
 	<th class="cel_genre"><?php echo _('Genre'); ?></th>
 	<th class="cel_track"><?php echo Ajax::text('?page=browse&action=set_sort&sort=track',_('Track'),'sort_song_track'); ?></th>
 	<th class="cel_time"><?php echo Ajax::text('?page=browse&action=set_sort&sort=time',_('Time'),'sort_song_time'); ?></th>
+<?php if (Config::get('ratings')) { ?>
+	<th class="cel_rating"><?php echo _('Rating'); ?></th>
+<?php } ?>
 	<th class="cel_action"><?php echo _('Action'); ?></th>
 </tr>
 <?php 

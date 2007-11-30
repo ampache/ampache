@@ -33,6 +33,9 @@ class Browse {
 	public static $start = '0'; 
 	public static $total_objects; 
 
+	// Boolean if this is a simple browse method (use different paging code)
+	public static $simple_browse; 
+
 	/**
 	 * constructor
 	 * This should never be called
@@ -121,6 +124,8 @@ class Browse {
 			case 'genre':
 			case 'live_stream':
 				$_SESSION['browse']['type'] = $type;
+				// Resets the simple browse
+				self::set_simple_browse(0); 
 			break;
 			default:
 				// Rien a faire
@@ -191,6 +196,20 @@ class Browse {
 		self::$start = intval($start); 
 
 	} // set_start
+
+	/**
+	 * set_simple_browse
+	 * This sets the current browse object to a 'simple' browse method
+	 * which means use the base query provided and expand from there
+	 */
+	public static function set_simple_browse($value) { 
+
+		$value = make_bool($value); 
+		self::$simple_browse = $value; 
+		
+		$_SESSION['browse']['simple'] = $value;  
+
+	} // set_simple_browse
 
 	/**
 	 * get_saved
@@ -592,19 +611,28 @@ class Browse {
 	 */
 	private static function resort_objects() { 
 
-		// First pull the objects
-		$objects = self::get_saved(); 
-
-		// If there's nothing there don't do anything
-		if (!count($objects)) { return false; } 
-
-		foreach ($objects as $object_id) { 
-			$object_id = Dba::escape($object_id); 
-			$where_sql .= "`id`='$object_id' OR"; 
+		// There are two ways to do this.. the easy way... 
+		// and the vollmer way, hopefully we don't have to
+		// do it the vollmer way
+		if (self::$simple_browse) { 
+			$sql = self::get_base_sql(); 
 		} 
-		$where_sql = rtrim($where_sql,'OR'); 
+		else { 
+			// First pull the objects
+			$objects = self::get_saved(); 
 
-		$sql = self::get_base_sql() . ' WHERE ' . $where_sql; 	
+			// If there's nothing there don't do anything
+			if (!count($objects)) { return false; } 
+
+			foreach ($objects as $object_id) { 
+				$object_id = Dba::escape($object_id); 
+				$where_sql .= "`id`='$object_id' OR"; 
+			} 
+			$where_sql = rtrim($where_sql,'OR'); 
+
+			$sql = self::get_base_sql() . ' WHERE ' . $where_sql; 	
+		} 
+
 
 		$order_sql = "ORDER BY ";
 
@@ -627,5 +655,16 @@ class Browse {
 		return true; 
 
 	} // resort_objects
+
+	/**
+	 * _auto_init
+	 * this function reloads information back from the session 
+	 * it is called on creation of the class
+	 */
+	public static function _auto_init() { 
+
+		self::$simple_browse = make_bool($_SESSION['browse']['simple']); 
+
+	} // _auto_init
 
 } // browse

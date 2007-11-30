@@ -43,6 +43,7 @@ switch($_REQUEST['action']) {
 	case 'album':
 		Browse::reset_filters(); 
 		Browse::set_type('album'); 
+		Browse::set_simple_browse(1); 
 		Browse::set_sort('name','ASC');
 		$album_ids = Browse::get_objects(); 
 		Browse::show_objects($album_ids); 
@@ -50,6 +51,7 @@ switch($_REQUEST['action']) {
 	case 'artist':
 		Browse::reset_filters(); 
 		Browse::set_type('artist'); 
+		Browse::set_simple_browse(1); 
 		Browse::set_sort('name','ASC');
 		$artist_ids = Browse::get_objects(); 
 		Browse::show_objects($artist_ids); 
@@ -57,6 +59,7 @@ switch($_REQUEST['action']) {
 	case 'genre':
 		Browse::reset_filters(); 
 		Browse::set_type('genre'); 
+		Browse::set_simple_browse(1); 
 		Browse::set_sort('name','ASC');
 		$genre_ids = Browse::get_objects(); 
 		Browse::show_objects($genre_ids); 
@@ -64,6 +67,7 @@ switch($_REQUEST['action']) {
 	case 'song':
 		Browse::reset_filters(); 
 		Browse::set_type('song'); 
+		Browse::set_simple_browse(1); 
 		Browse::set_sort('title','ASC');
 		$song_ids = Browse::get_objects(); 
 		Browse::show_objects($song_ids); 
@@ -71,6 +75,7 @@ switch($_REQUEST['action']) {
 	case 'live_stream':
 		Browse::reset_filters(); 
 		Browse::set_type('live_stream'); 
+		Browse::set_simple_browse(1); 
 		Browse::set_sort('name','ASC');
 		$live_stream_ids = Browse::get_objects(); 
 		Browse::show_objects($live_stream_ids); 
@@ -81,6 +86,7 @@ switch($_REQUEST['action']) {
 	case 'playlist': 
 		Browse::reset_filters(); 
 		Browse::set_type('playlist'); 
+		Browse::set_simple_browse(1); 
 		Browse::set_sort('name','ASC');
 		$playlist_ids = Browse::get_objects(); 
 		Browse::show_objects($playlist_ids); 

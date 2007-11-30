@@ -28,6 +28,9 @@
 <td class="cel_genre"><?php echo $song->f_genre_link; ?></td>
 <td class="cel_track"><?php echo $song->f_track; ?></td>
 <td class="cel_time"><?php echo $song->f_time; ?></td>
+<?php if (Config::get('ratings')) { ?>
+<td class="cel_rating" id="rating_<?php echo $song->id; ?>_song"><?php Rating::show($song->id,'song'); ?></td>
+<?php } ?>
 <td class="cel_action">
 	<?php if ($GLOBALS['user']->prefs['download']) { ?>
 	<a href="<?php echo Config::get('web_path'); ?>/stream.php?action=download&amp;song_id=<?php echo $song->id; ?>">
