@@ -87,6 +87,14 @@ switch ($_REQUEST['action']) {
 
 		echo xmlData::albums($albums); 
 	break; 
+	case 'artist_songs': 
+		$artist = new Artist($_REQUEST['filter']); 
+		$songs = $artist->get_songs(); 
+
+		// Set the offset
+		xmlData::set_offset($_REQUEST['offset']); 
+		xmlData::songs($songs); 
+	break; 
 	case 'albums': 
 		Browse::reset_filters(); 
 		Browse::set_type('album'); 

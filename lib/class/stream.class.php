@@ -70,7 +70,7 @@ class Stream {
 
 		// We're starting insert the session into session_stream
 		if (!$this->insert_session()) { 
-			debug_event('stream','Session Insertion failure, aboring','3'); 
+			debug_event('stream','Session Insertion failure, aborting','3'); 
 			return false; 
 		}
 

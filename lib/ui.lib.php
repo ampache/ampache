@@ -87,7 +87,9 @@ if (!function_exists('_')) {
  * 	that they aren't allowed to
  */
 function access_denied() {
-
+	
+	// Clear any crap we've got up top
+	ob_end_clean(); 
 	require_once Config::get('prefix') . '/templates/show_denied.inc.php'; 
 	exit; 
 
