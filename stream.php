@@ -198,7 +198,6 @@ switch ($_REQUEST['method']) {
 				if ($GLOBALS['user']->prefs['play_type'] == 'democratic') { 
 					$GLOBALS['user']->prefs['play_type'] = 'stream'; 
 				}
-			break; 
 			default:
 				$stream_type = $GLOBALS['user']->prefs['play_type'];
 			break;

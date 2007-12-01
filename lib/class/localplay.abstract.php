@@ -52,6 +52,12 @@ abstract class localplay_controller {
 	 */
 	public function get_url($object) { 
 
+		// This might not be an object!
+		if (!is_object($object)) { 
+			// Stupiidly we'll just blindly add it for now
+			return $object; 		
+		} 
+
 		// This can get a little complicated
 		switch ($object_type) { 
 			case 'random': 

@@ -42,8 +42,8 @@ $title		= scrub_out($album->name) . '&nbsp;(' . $album->year . ')&nbsp;--&nbsp;'
 	<div id="information_actions">
 	<h3><?php echo _('Actions'); ?>:</h3>
 	<ul>
-	<li><?php echo Ajax::text('?action=basket&type=album&id=' . $album->id,_('Play Album'),'play_full_' . $album->id); ?></li>
-	<li><?php echo Ajax::text('?action=basket&type=album_random&id=' . $album->id,_('Play Random from Album'),'play_random_' . $album->id); ?></li>
+	<li><?php echo Ajax::text('?action=basket&type=album&id=' . $album->id,_('Add Album'),'play_full_' . $album->id); ?></li>
+	<li><?php echo Ajax::text('?action=basket&type=album_random&id=' . $album->id,_('Add Random from Album'),'play_random_' . $album->id); ?></li>
 	<?php if ($GLOBALS['user']->has_access('75')) { ?>
 	<li><a href="<?php echo $web_path; ?>/albums.php?action=clear_art&amp;album_id=<?php echo $album->id; ?>"><?php echo _('Reset Album Art'); ?></a></li>
 	<?php } ?>

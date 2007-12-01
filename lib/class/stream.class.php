@@ -459,6 +459,10 @@ class Stream {
 		foreach ($this->objects as $object) { 
 			$localplay->add($object); 
 		} 
+
+		foreach ($this->urls as $url) { 
+			$localplay->add($url); 
+		} 
 		
 		$localplay->play();
 
