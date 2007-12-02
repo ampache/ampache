@@ -225,19 +225,6 @@ function show_footer() {
 } // show_footer
 
 /**
- *  show_user_registration
- * this function is called for a new user
- * registration
- * @author Terry
- * @todo Fix so that it recieves an array of values for the user reg rather than seperate
- */
-function show_user_registration ($values=array()) {
-
-	require (conf('prefix') . "/templates/show_user_registration.inc.php");
-
-} // show_user_registration
-
-/**
  *  show_play_selected
  * this shows the playselected/add to playlist
  *	box, which includes a little javascript

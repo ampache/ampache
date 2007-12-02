@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2006 Ampache.org
+ Copyright (c) 2001 - 2007 Ampache.org
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
@@ -19,38 +19,27 @@
 
 */
 
-/*!
-	@header User Registration page
-	@discussion this page handles new user
-		registration, this is by default disabled
-		(it allows public reg)
-
-*/
-
 define('NO_SESSION','1');
-require_once ('lib/init.php');
-
-/* Load the preferences */
-init_preferences();
-
-$web_path = conf('web_path');
+require_once 'lib/init.php';
 
 /* Check Perms */
-if (!conf('allow_public_registration') || conf('demo_mode')) {
+if (!Config::get('allow_public_registration') || Config::get('demo_mode')) {
+	debug_event('DENIED','Error Attempted registration','1');
 	access_denied();
+	exit(); 
 }
 
 /**
  * These are only needed for this page so they aren't included in init.php 
  * this is for email validation and the cool little graphic
 */
-require_once (conf('prefix') . '/modules/validatemail/validateEmailFormat.php');
-require_once (conf('prefix') . '/modules/validatemail/validateEmail.php');
+require_once Config::get('prefix') . '/modules/validatemail/validateEmailFormat.php';
+require_once Config::get('prefix') . '/modules/validatemail/validateEmail.php';
 
 /* Don't even include it if we aren't going to use it */
-if (conf('captcha_public_reg')) { 
+if (Config::get('captcha_public_reg')) { 
 	define ("CAPTCHA_INVERSE", 1);
-	require_once (conf('prefix') . '/modules/captcha/captcha.php');
+	require_once Config::get('prefix') . '/modules/captcha/captcha.php';
 }
 
 
@@ -175,8 +164,7 @@ switch ($action) {
 	break;
 	case 'show_add_user':
 	default:
-		$values = array('type'=>"new_user");
-		show_user_registration($values);
+		require_once Config::get('prefix') . '/templates/show_user_registration.inc.php'; 
 	break;
 } // end switch on action
 ?>

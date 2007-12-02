@@ -4,6 +4,12 @@
 
 --------------------------------------------------------------------------
   v.3.4-Alpha4 
+	- Limited Rightbar to only 100 items, adds last row indicating any
+		additional items on playlist. Prevents Firefox crash if you
+		add many thousands of items to a single active playlist
+	- Corrected Sorting of Democratic Play votes, sort order is now 
+		# of votes then oldest vote first so new votes sort to
+		the bottom
 	- Fixed sending URLs directly to MPD
 	- Fixed a problem with automatic downsampling which was referencing
 		a now non-existant function 

@@ -7,6 +7,13 @@ body {
 	background: #FFFFFF url(../images/top_bg.jpg) repeat-x top left;
 }
 
+h3 { 
+	text-align:left; 
+	border-bottom: 1px dotted #cccccc;
+	padding-left: 10px;
+} 
+
+
 /* Header */
 #header {
     width: 90%;
@@ -103,8 +110,8 @@ margin:10px 10 10px 10px;
 
 /* Bottom */
 #bottom {
-    border-top: 1px dotted #cccccc;
-    margin-top: 10px;
+	 border-top: 1px dotted #cccccc;
+	margin-top: 10px;
 	margin-bottom: 10px;
 	padding:5px;
 }

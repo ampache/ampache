@@ -75,6 +75,13 @@
 <?php 
 	//FIXME :: this feels kludgy
 	$objects = $GLOBALS['user']->playlist->get_items(); 
+
+	// Limit the number of objects we show here
+	if (count($objects) > 100) { 
+		$truncated = (count($objects) - 100); 
+		$objects = array_slice($objects,0,100); 
+	} 
+
 	foreach ($objects as $uid=>$object_data) { 
 		if ($object_data['1'] == 'radio' || $object_data['1'] == 'song') { 
 			$object = new $object_data['1']($object_data['0']); 
@@ -91,6 +98,11 @@
 </li>
 <?php } if (!count($objects)) { ?>
 	<li class="error"><?php echo _('Not Enough Data'); ?></li>
+<?php } ?>
+<?php if ($truncated) { ?>
+	<li class="<?php echo flip_class(); ?>">
+		<?php echo $truncated . ' ' . _('More'); ?>...
+	</li>
 <?php } ?>
 </ul>
 
