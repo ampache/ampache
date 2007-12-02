@@ -43,7 +43,7 @@ class captcha {
    /* yields <input> fields html string (no complete form), with captcha
       image already embedded as data:-URI
    */
-   function form($title="&rarr; retype that here", $more="<small><br>Enter the correct letters and numbers from the image into the text box. <br>This small test serves as access restriction against malicious bots. <br>Simply reload the page if this graphic is too hard to read.</small>") {
+   public static function form($title="&rarr; retype that here", $more="<small><br>Enter the correct letters and numbers from the image into the text box. <br>This small test serves as access restriction against malicious bots. <br>Simply reload the page if this graphic is too hard to read.</small>") {
       $pw = captcha::mkpass();
       $hash = captcha::hash($pw);
      $maxsize = (strpos("MSIE", $_SERVER["HTTP_USER_AGENT"]) ? 1000 : 6000);
@@ -84,7 +84,7 @@ END;
    /* generates alternative (non-graphic), human-understandable
       representation of the passphrase
    */
-   function textual_riddle($phrase) {
+   public static function textual_riddle($phrase) {
       $symbols0 = '"\'-/_:';
       $symbols1 = array("\n,", "\n;", ";", "\n&", "\n-", ",", ",", "\nand then", "\nfollowed by", "\nand", "\nand not a\n\"".chr(65+rand(0,26))."\",\nbut");
       $s = "Guess the letters and numbers\n(passphrase riddle)\n--\n";
@@ -146,7 +146,7 @@ END;
    /* returns jpeg file stream with unscannable letters encoded
       in front of colorful disturbing background
    */
-   function image($phrase, $width=200, $height=60, $inverse=0, $maxsize=0xFFFFF) {
+   public static function image($phrase, $width=200, $height=60, $inverse=0, $maxsize=0xFFFFF) {
    
       #-- initialize in-memory image with gd library
       srand(microtime()*21017);
@@ -252,13 +252,13 @@ if (preg_match('|MSIE ([0-9].[0-9]{1,2})|',$_SERVER["HTTP_USER_AGENT"],$matched)
 
 
    /* helper code */
-   function random_color($img, $a,$b) {
+   public static function random_color($img, $a,$b) {
       return imagecolorallocate($img, rand($a,$b), rand($a,$b), rand($a,$b));
    }
 
 
    /* unreversable hash from passphrase, with time() slice encoded */
-   function hash($text, $dtime=0) {
+   public static function hash($text, $dtime=0) {
       $text = strtolower($text);
       $pfix = (int) (time() / CAPTCHA_TIMEOUT) + $dtime;
       return md5("captcha::$pfix:$text::".__FILE__.":$_SERVER[SERVER_NAME]:80");
@@ -268,7 +268,7 @@ if (preg_match('|MSIE ([0-9].[0-9]{1,2})|',$_SERVER["HTTP_USER_AGENT"],$matched)
    /* makes string of random letters for embedding into image and for
       encoding as hash, later verification
    */
-   function mkpass() {
+   public static function mkpass() {
       $s = "";
       for ($n=0; $n<10; $n++) {
          $s .= chr(rand(0, 255));

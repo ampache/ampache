@@ -63,7 +63,7 @@ if (Config::get('user_agreement')) { ?>
 <tr>
 	<td>
 		<input type='checkbox' name='accept_agreement'> <?php echo _('I Accept'); ?>
-		<?php $GLOBALS['error']->print_error('user_agreement'); ?>
+		<?php Error::display('user_agreement'); ?>
 	</td>
 </tr>
 </table>
@@ -115,19 +115,20 @@ if (Config::get('user_agreement')) { ?>
 		<font color='red'>*</font> <input type='password' name='password_2' id='password_2' />
 	</td>
 </tr>
-<?php if (Config::get('captcha_public_reg')) { ?>
-	<tr>
-			<?php echo captcha::form(); ?>
-			<?php Error::display('captcha'); ?>
-	</tr>
-<?php } ?>
 <tr>
-	<td colspan='2' align='center' height='20'>
+	<td align='center' height='20'>
 		<span style="color:red;">* Required fields</span>
 	</td>
+	<td>&nbsp;</td>
 </tr>
+</table>
+<?php if (Config::get('captcha_public_reg')) { ?>
+			<?php echo captcha::form(); ?>
+			<?php Error::display('captcha'); ?>
+<?php } ?>
+<table>
 <tr>
-	<td colspan='2' align='center' height='50'>
+	<td align='center' height='50'>
 		<input type="hidden" name="action" value="add_user" />
 		<input type='submit' name='submit_registration' id='submit_registration' value='<?php echo _('Register User'); ?>' />
 	</td>

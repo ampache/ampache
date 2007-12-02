@@ -734,7 +734,9 @@ mail (conf('mail_from'), "New user registration at $title", $admin_body, $from);
  */
 function show_registration_agreement() { 
 
-	$filename = conf('prefix') . '/config/registration_agreement.php';
+	$filename = Config::get('prefix') . '/config/registration_agreement.php';
+
+	if (!file_exists($filename)) { return false; } 
 
 	/* Check for existance */
 	$fp = fopen($filename,'r');
