@@ -148,10 +148,11 @@ function validateEmail ( $email, $verbose=0 ) {
     // Leave blank to use $SERVER_NAME.
     // Note that most modern MTAs will ignore (but require) whatever you say here ...
     // the server will determine your domain via other means.
-    if (conf('mail_domain')){
-    $serverName = conf('mail_domain');
-    } else {
-    $serverName = "domain.tld";
+    if (Config::get('mail_domain')) {
+	    $serverName = Config::get('mail_domain');
+    } 
+    else {
+    	$serverName = "domain.tld";
     }
     // MAIL FROM -- who's asking?
     // Good values: nobody, postmaster, info, buckwheat, gumby

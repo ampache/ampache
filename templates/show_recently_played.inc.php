@@ -25,6 +25,7 @@ $time_unit = array('',_('seconds ago'),_('minutes ago'),_('hours ago'),_('days a
 ?>
 <table class="tabledata" cellpadding="0" cellspacing="0">
 <colgroup>
+  <col id="col_add" />
   <col id="col_username" />
   <col id="col_song" />
   <col id="col_album" />
@@ -32,6 +33,7 @@ $time_unit = array('',_('seconds ago'),_('minutes ago'),_('hours ago'),_('days a
   <col id="col_lastplayed" />
 </colgroup>
 <tr class="th-top">
+	<th class="cel_add"><?php echo _('Add'); ?></th>
 	<th class="cel_song"><?php echo _('Song'); ?></th>
 	<th class="cel_album"><?php echo _('Album'); ?></th>
 	<th class="cel_artist"><?php echo _('Artist'); ?></th>
@@ -69,6 +71,9 @@ $time_unit = array('',_('seconds ago'),_('minutes ago'),_('hours ago'),_('days a
 	$song->format(); 
 ?>
 <tr class="<?php echo flip_class(); ?>">
+	<td class="cel_add">
+        <?php echo Ajax::button('?action=basket&type=song&id=' . $song->id,'add',_('Add'),'add_' . $song->id); ?>
+	</td>
 	<td class="cel_song"><?php echo $song->f_link; ?></td>
 	<td class="cel_album"><?php echo $song->f_album_link; ?></td>
 	<td class="cel_artist"><?php echo $song->f_artist_link; ?></td>

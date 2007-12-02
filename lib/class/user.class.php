@@ -459,12 +459,12 @@ class User {
 	 * Use this function to update the validation key
 	 * NOTE: crap this doesn't have update_item the humanity of it all 
 	 */
-	function update_validation($new_validation) { 
+	public function update_validation($new_validation) { 
 
-		$new_validation = sql_escape($new_validation);
-		$sql = "UPDATE user SET validation='$new_validation',disabled='1' WHERE `id`='$this->id'";
+		$new_validation = Dba::escape($new_validation);
+		$sql = "UPDATE `user` SET `validation`='$new_validation', `disabled`='1' WHERE `id`='" . Dba::escape($this->id) . "'";
+		$db_results = Dba::query($sql); 
 		$this->validation = $new_validation;
-		$db_results = mysql_query($sql, dbh());
 
 		return $db_results;
 
