@@ -942,34 +942,34 @@ class User {
 
 	} // delete
 
-	/*!
-		@function is_online
-		@parameter delay how long since last_seen in seconds default of 20 min
-		@description  calcs difference between now and last_seen
-			if less than delay, we consider them still online
-	*/
-	
-	function is_online( $delay = 1200 ) {
+	/**
+	 * is_online
+	 * delay how long since last_seen in seconds default of 20 min
+	 * calcs difference between now and last_seen
+	 * if less than delay, we consider them still online
+	 */
+	public function is_online( $delay = 1200 ) {
+
 		return time() - $this->last_seen <= $delay;
-	}
 
-	/*!
-		@function get_user_validation
-		@check if user exists before activation can be done.
-	*/
-	function get_user_validation($username,$validation) {
+	} // is_online
+
+	/**
+	 * get_user_validation
+	 *if user exists before activation can be done.
+	 */
+	public static function get_validation($username) {
 	
-		$usename = sql_escape($username);
+		$usename = Dba::escape($username);
 	
-		$sql = "SELECT validation FROM user where username='$username'";
-		$db_results = mysql_query($sql, dbh());
+		$sql = "SELECT `validation` FROM `user` WHERE `username`='$username'";
+		$db_results = Dba::query($sql); 
 		
-		$row = mysql_fetch_assoc($db_results);
-		$val = $row['validation'];
+		$row = Dba::fetch_assoc($db_results);
 
-		return $val;
+		return $row['validation'];
 
-	} // get_user_validation
+	} // get_validation
 
 	/**
 	 * get_recently_played

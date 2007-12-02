@@ -57,7 +57,7 @@ if (Config::get('user_agreement')) { ?>
 <table cellpadding="2" cellspacing="0">
 <tr>
 	<td>
-		<?php show_registration_agreement(); ?>
+		<?php Registration::show_agreement(); ?>
 	</td>
 </tr>
 <tr>

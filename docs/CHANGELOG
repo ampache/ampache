@@ -4,6 +4,7 @@
 
 --------------------------------------------------------------------------
   v.3.4-Alpha4 
+	- Fixed Public registration page, and simplified logic
 	- Added 'Add' button to recently played
 	- Limited Rightbar to only 100 items, adds last row indicating any
 		additional items on playlist. Prevents Firefox crash if you

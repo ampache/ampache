@@ -145,30 +145,6 @@ function show_alphabet_list () {
 } // show_alphabet_list
 
 /**
- * show_alphabet_form
- * this shows the spiffy little form that acts as a "quick search" when browsing
- * @package General
- * @catagory Display
- */
-function show_alphabet_form($match, $text, $action) {
-
-	require (conf('prefix') . '/templates/show_alphabet_form.inc.php');
-
-} // show_alphabet_form
-
-
-/**
- *  show_local_control
- * shows the controls
- *	for localplay
- */
-function show_local_control () {
-
-	require_once(conf('prefix') . "/templates/show_localplay.inc");
-
-} // show_local_control
-
-/**
  * truncate_with_ellipsis
  * Correct Spelling function that truncates text to a specific lenght
  * and appends three dots, or an ellipsis to the end
@@ -338,19 +314,6 @@ function set_song_rating($song_id, $rate_user, $rating) {
 } // set_song_rating()
 
 /**
- *  show_clear
- * this is a hack because of the float mojo it clears the floats
- * @package Web Interface
- * @catagory Hack-o-Rama
- * @author Karl Vollmer
- */
-function show_clear() {
-
-	echo "\n<br style=\"clear:both;\" />\n";
-
-} // show_clear
-
-/**
  *	show_page_footer
  *	adds page footer including html and body end tags
  *	@param $menu			menu item to highlight
@@ -373,25 +336,6 @@ function show_page_footer($menu="Home", $admin_menu='', $display_menu=0) {
 	show_template('footer');
 
 } // show_page_footer
-
-/**
- * 	Show All Popular
- * 	This functions shows all of the possible global popular tables, this is basicly a top X where X is
- * 	set on a per user basis
- *	@package Web Interface
- *	@catagory Display
- *	@author Karl Vollmer
- */
-function show_all_popular() {
-
-	$artists 	= get_global_popular('artist');
-	$albums		= get_global_popular('album');
-	$songs		= get_global_popular('song');
-	$genres		= get_global_popular('genre');
-
-	require_once Config::get('prefix') . '/templates/show_all_popular.inc.php';
-
-} // show_all_popular
 
 /**
  * img_resize
@@ -653,103 +597,6 @@ function good_email($email) {
 	}
 	return true;
 } //good_email
-
-/**
- * str_rand
- *
- *
- */
-function str_rand($length = 8, $seeds = 'abcdefghijklmnopqrstuvwxyz0123456789'){
-    $str = '';
-    $seeds_count = strlen($seeds);
-
-    // Seed
-    list($usec, $sec) = explode(' ', microtime());
-    $seed = (float) $sec + ((float) $usec * 100000);
-    mt_srand($seed);
-
-    // Generate
-    for ($i = 0; $length > $i; $i++) {
-        $str .= $seeds{mt_rand(0, $seeds_count - 1)};
-    }
-
-    return $str;
-} //str_rand
-
-/**
- * send_confirmation
- *
- *
- */
-function send_confirmation($username, $fullname, $email, $password, $validation) {
-
-$title = conf('site_title');
-$from = "From: Ampache <".conf('mail_from').">";
-$body = "Welcome to $title
-
-Please keep this email for your records. Your account information is as follows: 
-
-----------------------------
-Username: $username
-Password: $password
-----------------------------
-
-Your account is currently inactive. You cannot use it until you visit the following link:
-"
-. conf('web_path'). "/activate.php?mode=activate&u=$username&act_key=$validation
-
-Please do not forget your password as it has been encrypted in our database and we cannot retrieve it for you. However, should you forget your password you can request a new one which will be activated in the same way as this account.
-
-Thank you for registering.";
-
-
-mail($email, "Welcome to $title" , $body, $from);
-
-if (conf('admin_notify_reg')){
-
-$admin_body = "A new user has registered at $title
-
-The following values where entered;
-
-Username: $username
-Fullname: $fullname
-E-Mail: $email
-
-Click here to view user:
-"
- . conf('web_path') . "/admin/users.php?action=edit&user=$username";
-
-
-
-mail (conf('mail_from'), "New user registration at $title", $admin_body, $from);
-}
-
-
-} //send_confirmation
-
-/**
- * show_registration_agreement
- * This function reads in /config/registration_agreement.php
- * Plaintext Only
- */
-function show_registration_agreement() { 
-
-	$filename = Config::get('prefix') . '/config/registration_agreement.php';
-
-	if (!file_exists($filename)) { return false; } 
-
-	/* Check for existance */
-	$fp = fopen($filename,'r');
-
-	if (!$fp) { return false; }
-
-	$data = fread($fp,filesize($filename));
-
-	/* Scrub and show */
-	echo $data;
-		
-} // show_registration_agreement
-
 
 /**
  * show_playlist_import

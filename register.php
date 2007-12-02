@@ -45,6 +45,11 @@ if (Config::get('captcha_public_reg')) {
 
 /* Start switch based on action passed */
 switch ($_REQUEST['action']) {
+	case 'validate': 
+		$username 	= scrub_in($_GET['username']); 
+		$validation	= scrub_in($_GET['auth']); 
+		require_once Config::get('prefix') . '/templates/show_user_activate.inc.php'; 
+	break; 
 	case 'add_user':
 		/** 
 		 * User information has been entered
@@ -156,14 +161,14 @@ switch ($_REQUEST['action']) {
 		}
 
 		$client = new User($new_user);
-		$validation = str_rand(20);
+		$validation = md5(uniqid(rand(), true));
 		$client->update_validation($validation);
 
 		$message = 'Your account has been created. However, this application requires account activation.' .
 				' An activation key has been sent to the e-mail address you provided. ' .
 				'Please check your e-mail for further information';
 
-		send_confirmation($username, $fullname, $email, $pass1, $validation);
+		Registration::send_confirmation($username, $fullname, $email, $pass1, $validation);
 		?>
 		<link rel="stylesheet" href="<?php echo $web_path; ?><?php echo conf('theme_path'); ?>/templates/default.css" type="text/css" />
 		<?php
