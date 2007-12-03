@@ -577,11 +577,11 @@ class Stream {
 	        }
 
 	        /* Validate the bitrate */
-	        $sample_rate = validate_bitrate($sample_rate);
+	        $sample_rate = self::validate_bitrate($sample_rate);
 
 	        /* Never Upsample a song */
 	        if (($sample_rate*1000) > $song->bitrate) {
-	                $sample_rate = validate_bitrate($song->bitrate)/1000;
+	                $sample_rate = self::validate_bitrate($song->bitrate)/1000;
 	                $sample_ratio = '1';
 	        }
 	        else {
@@ -622,6 +622,91 @@ class Stream {
 	        return ($fp);
 
 	} // start_downsample
+
+	/** 
+	 * validate_bitrate
+	 * this function takes a bitrate and returns a valid one
+	 */
+	public static function validate_bitrate($bitrate) {
+
+	        // Setup an array of valid bitrates for Lame (yea yea, others might be different :P)
+	        $valid_rate = array('32','40','56','64','80','96','112','128','160','192','224','256','320');
+
+	        /* Round to standard bitrates */
+	        $sample_rate = 8*(floor($bitrate/8));
+
+	        if (in_array($sample_rate,$valid_rate)) {
+	                return $sample_rate;
+	        }
+
+	        /* See if it's less than the lowest one */
+	        if ($sample_rate < $valid_rate['0']) {
+	                return $valid_rate['0'];
+	        }
+
+	        /* Check to see if it's over 320 */
+	        if ($sample_rate > 320) {
+	                return '320';
+	        }
+
+	        foreach ($valid_rate as $key=>$rate) {
+	                $next_key = $key+1;
+
+	                if ($sample_rate > $rate AND $sample_rate < $valid_rate[$next_key]) {
+	                        return $rate;
+	                }
+	        } // end foreach
+
+	} // validate_bitrate
+
+
+	/**
+ 	 * gc_now_playing
+	 * This will garbage collect the now playing data, 
+	 * this is done on every play start
+	 */
+	public static function gc_now_playing() { 
+
+        	// Remove any now playing entries for session_streams that have been GC'd
+	        $sql = "DELETE FROM `now_playing` USING `now_playing` " .
+	                "LEFT JOIN `session_stream` ON `session_stream`.`id`=`now_playing`.`id` " .
+	                "WHERE `session_stream`.`id` IS NULL OR `now_playing`.`expire` < '" . time() . "'";
+	        $db_results = Dba::query($sql);
+
+	} // gc_now_playing
+
+	/**
+ 	 * insert_now_playing
+	 * This will insert the now playing data
+	 * This fucntion is used by the /play/index.php song
+	 * primarily, but could be used by other people
+	 */
+	public static function insert_now_playing($song_id,$uid,$song_length,$sid) {
+
+	        $time = time()+$song_length;
+	        $session_id = Dba::escape($sid);
+
+	        // Do a replace into ensuring that this client always only has a single row
+	        $sql = "REPLACE INTO `now_playing` (`id`,`song_id`, `user`, `expire`)" .
+	                " VALUES ('$session_id','$song_id', '$uid', '$time')";
+	        $db_result = Dba::query($sql);
+
+	} // insert_now_playing
+
+	 /**
+	  * clear_now_playing
+	  * There really isn't anywhere else for this function, shouldn't have deleted it in the first
+	  * place
+	  */
+	public static function clear_now_playing() {
+
+	        $sql = "TRUNCATE `now_playing`";
+	        $db_results = Dba::query($sql);
+
+	        return true;
+
+	} // clear_now_playing
+
 
 	/**
 	 * auto_init

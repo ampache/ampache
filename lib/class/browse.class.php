@@ -117,6 +117,7 @@ class Browse {
 		switch($type) { 
 			case 'user':
 			case 'playlist':
+			case 'playlist_song': 
 			case 'song':
 			case 'catalog':
 			case 'album':
@@ -142,6 +143,7 @@ class Browse {
 
 
 		switch ($_SESSION['browse']['type']) { 
+			case 'playlist_song': 
 			case 'song': 
 				$valid_array = array('title','year','track','time'); 
 			break;
@@ -280,6 +282,7 @@ class Browse {
                         case 'playlist':
                                 $sql = "SELECT `playlist`.`id` FROM `playlist` ";
                         break;
+			case 'playlist_song': 
                         case 'song':
                         default:
                                 $sql = "SELECT `song`.`id` FROM `song` ";
@@ -534,7 +537,7 @@ class Browse {
 		if (count($object_ids) > self::$start) { 
 			$object_ids = array_slice($object_ids,self::$start,$limit); 
 		} 
-
+print_r($object_ids);
 		// Format any matches we have so we can show them to the masses
 		$match = $_SESSION['browse']['filter']['alpha_match'] ? ' (' . $_SESSION['browse']['filter']['alpha_match'] . ')' : '';  
 
@@ -568,7 +571,7 @@ class Browse {
 				show_box_bottom(); 
 			break;
 			case 'live_stream': 
-				show_box_top(_('Radion Stations') . $match, $class); 
+				show_box_top(_('Radio Stations') . $match, $class); 
 				require_once Config::get('prefix') . '/templates/show_live_streams.inc.php';
 				show_box_bottom(); 
 			break;
@@ -577,6 +580,13 @@ class Browse {
 				require_once Config::get('prefix') . '/templates/show_playlists.inc.php'; 
 				show_box_bottom(); 
 			break;
+			case 'playlist_song': 
+				// We need a playlist for this one man this is a hack, should figure out a better way
+				$playlist = $GLOBALS['playlist']; 
+				show_box_top(_('Playlist Songs') . $match,$class); 
+				require_once Config::get('prefix') . '/templates/show_playlist_songs.inc.php'; 
+				show_box_bottom(); 
+			break; 
 			case 'catalog': 
 				show_box_top(_('Catalogs'), $class); 
 				require_once Config::get('prefix') . '/templates/show_catalogs.inc.php';

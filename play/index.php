@@ -146,7 +146,7 @@ if (!$song->file OR ( !is_readable($song->file) AND $catalog->catalog_type != 'r
 
 	
 /* Run Garbage Collection on Now Playing */
-gc_now_playing();
+Stream::gc_now_playing();
 
 // If we are running in Legalize mode, don't play songs already playing
 if (Config::get('lock_songs')) {
@@ -257,7 +257,7 @@ else {
 } // else not downsampling
 
 // Put this song in the now_playing table
-insert_now_playing($song->id,$uid,$song->time,$sid);
+Stream::insert_now_playing($song->id,$uid,$song->time,$sid);
 
 if ($start) {
 	debug_event('seek','Content-Range header recieved, skipping ahead ' . $start . ' bytes out of ' . $song->size,'5');

@@ -33,11 +33,11 @@ $web_path = Config::get('web_path');
 		</ul>
 		</div>
 <?php show_box_bottom(); ?>
-<?php show_box_top(); ?>
 <div id="browse_content">
 <?php 
 	$object_ids = $playlist->get_items(); 
-	require_once Config::get('prefix') . '/templates/show_playlist_songs.inc.php'; 
+	Browse::set_type('playlist_song'); 
+	Browse::save_objects($object_ids); 
+	Browse::show_objects($object_ids); 
 ?>
 </div>
-<?php show_box_bottom(); ?>

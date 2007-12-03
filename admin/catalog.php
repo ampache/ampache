@@ -72,26 +72,23 @@ switch ($_REQUEST['action']) {
 	break;
 	case 'full_service':
 		ob_end_flush(); 
-		$catalog = new Catalog();
 		/* Make sure they aren't in demo mode */
-		if (Config::get('demo_mode')) { break; } 
+		if (Config::get('demo_mode')) { access_denied(); break; } 
 
 		if (!$_REQUEST['catalogs']) { 
-			$_REQUEST['catalogs'] = $catalog->get_catalog_ids();
+			$_REQUEST['catalogs'] = Catalog::get_catalog_ids();
 		}
 
 		/* This runs the clean/verify/add in that order */
 		foreach ($_REQUEST['catalogs'] as $catalog_id) { 
-			echo "<div class=\"confirmation-box\">";
 			$catalog = new Catalog($catalog_id);
 			$catalog->clean_catalog();
 			$catalog->count = 0;
 			$catalog->verify_catalog();
 			$catalog->count = 0;
 			$catalog->add_to_catalog();
-			echo "</div>";
 		} 		
-		$url	= conf('web_path') . '/admin/index.php';
+		$url	= Config::get('web_path') . '/admin/index.php';
 		$title	= _('Catalog Updated');
 		$body	= '';
 		show_confirmation($title,$body,$url);
@@ -201,7 +198,7 @@ switch ($_REQUEST['action']) {
 		}
 	break;
 	case 'clear_stats':
-    		if (Config::get('demo_mode')) { break; }
+    		if (Config::get('demo_mode')) { access_denied(); break; }
 		
 		Catalog::clear_stats(); 
 		$url	= Config::get('web_path') . '/admin/index.php';
@@ -218,8 +215,8 @@ switch ($_REQUEST['action']) {
 		require Config::get('prefix') . '/templates/show_add_catalog.inc.php';
 	break;
 	case 'clear_now_playing':
-	        if (Config::get('demo_mode')) { break; }
-	    	clear_now_playing();
+	        if (Config::get('demo_mode')) { access_denied(); break; }
+	    	Stream::clear_now_playing();
 		show_confirmation(_('Now Playing Cleared'),_('All now playing data has been cleared'),Config::get('web_path') . '/admin/index.php');
 	break;
 	case 'show_disabled':
@@ -235,7 +232,7 @@ switch ($_REQUEST['action']) {
 	break;
 	case 'show_delete_catalog':
 		/* Stop the demo hippies */
-	        if (Config::get('demo_mode')) { break; } 
+	        if (Config::get('demo_mode')) { access_denied(); break; } 
 
 		$catalog = new Catalog($_REQUEST['catalog_id']); 	
 		$nexturl = Config::get('web_path') . '/admin/catalog.php?action=delete_catalog&amp;catalog_id=' . scrub_out($_REQUEST['catalog_id']);

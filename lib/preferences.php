@@ -110,7 +110,7 @@ function update_preferences($pref_id=0) {
 		/* Some preferences require some extra checks to be performed */
 		switch ($name) { 
 			case 'sample_rate':
-				$value = validate_bitrate($value);
+				$value = Stream::validate_bitrate($value);
 			break;
 			/* MD5 the LastFM & MyStrands so it's not plainTXT */
 			case 'lastfm_pass':
