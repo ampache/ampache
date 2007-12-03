@@ -82,11 +82,11 @@ switch ($_REQUEST['action']) {
 		/* This runs the clean/verify/add in that order */
 		foreach ($_REQUEST['catalogs'] as $catalog_id) { 
 			$catalog = new Catalog($catalog_id);
-			$catalog->clean_catalog();
+			$catalog->clean_catalog($catalog_id);
 			$catalog->count = 0;
-			$catalog->verify_catalog();
+			$catalog->verify_catalog($catalog_id);
 			$catalog->count = 0;
-			$catalog->add_to_catalog();
+			$catalog->add_to_catalog($catalog_id);
 		} 		
 		$url	= Config::get('web_path') . '/admin/index.php';
 		$title	= _('Catalog Updated');

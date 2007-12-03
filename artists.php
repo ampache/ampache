@@ -88,26 +88,26 @@ switch($_REQUEST['action']) {
 		
 	break;
 	case 'show_similar':
-		if (!$user->has_access('100')) { access_denied(); }
-	
-		if (isset($_REQUEST['artist'])) {
-			$artist = new Artist($_REQUEST['artist']);
-			//options
-			$similar_artists = $artist->get_similar_artists(
-							make_bool($_POST['n_rep_uml']),
-							$_POST['n_filter'],
-							$_POST['n_ignore'],
-							$_POST['c_mode'],
-							$_POST['c_count_w'],
-							$_POST['c_percent_w'],
-							$_POST['c_distance_l'],
-							make_bool($_POST['c_ignins_l']));
-			$artist_id = $artist->id;
-			$artist_name = $artist->name;
-			require (conf('prefix') . '/templates/show_similar_artists.inc.php');
-		} else {
-			$GLOBALS['error']->add_error('general',"Error: No artist given");
-		} 
+		if (!$GLOBALS['user']->has_access('75')) { 
+			access_denied(); 
+			exit; 
+		}
+		
+		$artist = new Artist($_REQUEST['artist']);
+		//options
+		$similar_artists = $artist->get_similar_artists(
+						make_bool($_POST['n_rep_uml']),
+						$_POST['n_filter'],
+						$_POST['n_ignore'],
+						$_POST['c_mode'],
+						$_POST['c_count_w'],
+						$_POST['c_percent_w'],
+						$_POST['c_distance_l'],
+						make_bool($_POST['c_ignins_l']));
+		$artist_id = $artist->id;
+		$artist_name = $artist->name;
+		require Config::get('prefix') . '/templates/show_similar_artists.inc.php';
+		 
 	break;
 	case 'rename':
 		//die if not enough permissions

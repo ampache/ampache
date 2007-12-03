@@ -37,6 +37,7 @@ $web_path = Config::get('web_path');
 <?php 
 	$object_ids = $playlist->get_items(); 
 	Browse::set_type('playlist_song'); 
+	Browse::add_supplemental_object('playlist',$playlist->id); 
 	Browse::save_objects($object_ids); 
 	Browse::show_objects($object_ids); 
 ?>

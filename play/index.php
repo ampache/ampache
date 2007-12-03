@@ -145,12 +145,12 @@ if (!$song->file OR ( !is_readable($song->file) AND $catalog->catalog_type != 'r
 }
 
 	
-/* Run Garbage Collection on Now Playing */
-Stream::gc_now_playing();
-
 // If we are running in Legalize mode, don't play songs already playing
 if (Config::get('lock_songs')) {
-	if (!check_lock_songs($song->id)) { exit(); }
+	if (!check_lock_songs($song->id)) { 
+		debug_event('Denied','Song ' . $song->id . ' is currently being played and lock songs is enabled','1'); 
+		exit(); 
+	}
 }
 
 /* Check to see if this is a 'remote' catalog */

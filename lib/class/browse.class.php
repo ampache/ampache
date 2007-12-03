@@ -95,6 +95,17 @@ class Browse {
 	} // reset_filters
 
 	/**
+	 * reset_supplemental_objects
+	 * This clears any sup objects we've added, normally called on every set_type
+	 */
+	public static function reset_supplemental_objects() { 
+
+
+		$_SESSION['browse']['supplemental'] = array(); 
+
+	} // reset_supplemental_objects
+
+	/**
 	 * get_filter
 	 * returns the specified filter value
 	 */
@@ -127,6 +138,7 @@ class Browse {
 				$_SESSION['browse']['type'] = $type;
 				// Resets the simple browse
 				self::set_simple_browse(0); 
+				self::reset_supplemental_objects(); 
 			break;
 			default:
 				// Rien a faire
@@ -255,6 +267,33 @@ class Browse {
 		return $results; 
 
 	} // get_objects
+
+	/**
+	 * get_supplemental_objects
+	 * This returns an array of 'class','id' for additional objects that need to be
+	 * created before we start this whole browsing thing
+	 */
+	public static function get_supplemental_objects() { 
+
+		$objects = $_SESSION['browse']['supplemental']; 
+		
+		if (!is_array($objects)) { $objects = array(); } 
+
+		return $objects; 
+
+	} // get_supplemental_objects
+
+	/**
+	 * add_supplemental_object
+	 * This will add a suplemental object that has to be created
+	 */
+	public static function add_supplemental_object($class,$uid) { 
+
+		$_SESSION['browse']['supplemental'][$class] = intval($uid); 
+
+		return true; 
+
+	} // add_supplemental_object
 
 	/**
 	 * get_base_sql
@@ -537,13 +576,21 @@ class Browse {
 		if (count($object_ids) > self::$start) { 
 			$object_ids = array_slice($object_ids,self::$start,$limit); 
 		} 
-print_r($object_ids);
+
 		// Format any matches we have so we can show them to the masses
 		$match = $_SESSION['browse']['filter']['alpha_match'] ? ' (' . $_SESSION['browse']['filter']['alpha_match'] . ')' : '';  
 
 		// Set the correct classes based on type
     		$class = "box browse_".$_SESSION['browse']['type'];
 
+		// Load any additional object we need for this
+		$extra_objects = self::get_supplemental_objects(); 
+
+		foreach ($extra_objects as $class_name => $id) { 
+			${$class_name} = new $class_name($id); 
+		} 
+
+		// Switch on the type of browsing we're doing
 		switch ($_SESSION['browse']['type']) { 
 			case 'song': 
 				show_box_top(_('Songs') . $match, $class); 
@@ -581,8 +628,6 @@ print_r($object_ids);
 				show_box_bottom(); 
 			break;
 			case 'playlist_song': 
-				// We need a playlist for this one man this is a hack, should figure out a better way
-				$playlist = $GLOBALS['playlist']; 
 				show_box_top(_('Playlist Songs') . $match,$class); 
 				require_once Config::get('prefix') . '/templates/show_playlist_songs.inc.php'; 
 				show_box_bottom(); 
