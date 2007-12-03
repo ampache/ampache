@@ -823,8 +823,8 @@ class Catalog {
 	                if (!$preferred_filename || strstr($preferred_filename,"%")) { $preferred_filename = "folder.$extension"; }
 
 	                $file = "$dir/$preferred_filename";
-	                if ($file_handle = @fopen($file,"w")) {
-		        	if (fwrite($file_handle, $image->art)) {
+	                if ($file_handle = fopen($file,"w")) {
+		        	if (fwrite($file_handle, $image['0']['raw'])) {
 			        	$i++;
 					if (!($i%100)) { 
 		                	        echo "Written: $i. . .\n";
