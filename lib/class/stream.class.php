@@ -451,17 +451,14 @@ class Stream {
 		//HACK!!!
 		// Yea.. you know the baby jesus... he's crying right meow
 		foreach ($this->songs as $song_id) { 
-			$this->objects[] = new Song($song_id); 
-		} 
-		
-
-		// Foreach the stuff we've got and add it
-		foreach ($this->objects as $object) { 
-			$localplay->add($object); 
-		} 
-
-		foreach ($this->urls as $url) { 
-			$localplay->add($url); 
+			if ($song_id > 0) { 
+				$song = new Song($song_id); 
+				$localplay->add($song); 
+			} 
+			else { 
+				$url = array_shift($this->urls); 
+				$localplay->add($url); 
+			} 
 		} 
 		
 		$localplay->play();

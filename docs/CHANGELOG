@@ -4,6 +4,8 @@
 
 --------------------------------------------------------------------------
   v.3.4-Alpha4 
+	- Fixed problem with invalid urls populated to localplay methods
+		under certin conditions
 	- Fixed Album Art dump bin script 
 	- Added paging to the Playlist Song view
 	- Fixed error on catalog Update All 
