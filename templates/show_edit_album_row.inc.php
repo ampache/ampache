@@ -24,7 +24,7 @@
 <table cellpadding="3" cellspacing="0">
 <tr>
 <td>
-	<input type="textbox" name="name" value="<?php echo scrub_out($album->name); ?>" />
+	<input type="textbox" name="name" value="<?php echo scrub_out($album->full_name); ?>" />
 </td>
 <td>
 	<?php 

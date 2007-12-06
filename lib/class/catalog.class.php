@@ -615,9 +615,9 @@ class Catalog {
 			
 			// Define the options we want to use for the find art function
 			$options = array(
-				'album_name' 	=> $album->name,
+				'album_name' 	=> $album->full_name,
 				'artist' 	=> $album->artist_name,
-				'keyword' 	=> $album->artist_name . ' ' . $album->name 
+				'keyword' 	=> $album->artist_name . ' ' . $album->full_name 
 				); 
 
 			// Return results
@@ -2235,6 +2235,9 @@ class Catalog {
 		// First remove the songs in this catalog
 		$sql = "DELETE FROM `song` WHERE `catalog` = '$catalog_id'";
 		$db_results = Dba::query($sql);
+
+		// Only if the previous one works do we go on
+		if (!$db_results) { return false; } 
 
 		// Next Remove the Catalog Entry it's self
 		$sql = "DELETE FROM `catalog` WHERE `id` = '$catalog_id'";

@@ -209,9 +209,9 @@ class Album {
 		foreach ($data as $key=>$value) { $this->$key = $value; } 
 		
 		/* Truncate the string if it's to long */
-	  	$this->f_name		= truncate_with_ellipsis($this->name,Config::get('ellipsis_threshold_album'));
+	  	$this->f_name		= truncate_with_ellipsis($this->full_name,Config::get('ellipsis_threshold_album'));
 
-		 $this->f_name_link	= "<a href=\"$web_path/albums.php?action=show&amp;album=" . scrub_out($this->id) . "\" title=\"" . scrub_out($this->name) . "\">" . $this->f_name;
+		 $this->f_name_link	= "<a href=\"$web_path/albums.php?action=show&amp;album=" . scrub_out($this->id) . "\" title=\"" . scrub_out($this->full_name) . "\">" . $this->f_name;
 		// If we've got a disk append it
 		if ($this->disk) { 
 			$this->f_name_link .= " <span class=\"discnb disc" .$this->disk. "\">[" . _('Disk') . " " . $this->disk . "]</span>";
@@ -219,7 +219,7 @@ class Album {
 		$this->f_name_link .="</a>";
 		
     $this->f_link 		= $this->f_name_link; 
-		$this->f_title		= $name; 
+		$this->f_title		= $full_name; 
 		if ($this->artist_count == '1') { 
 			$artist = scrub_out(truncate_with_ellipsis(trim($this->artist_prefix . ' ' . $this->artist_name),Config::get('ellipsis_threshold_album')));
 		        $this->f_artist_link = "<a href=\"$web_path/artists.php?action=show&amp;artist=" . $this->artist_id . "\">" . $artist . "</a>";
@@ -334,7 +334,7 @@ class Album {
 		} 
 		else { 
 			$artist = $this->artist_name; 
-			$album = $this->name; 
+			$album = $this->full_name; 
 		} 
 
 		$raw_data = $lastfm->search($artist,$album); 
@@ -533,7 +533,7 @@ class Album {
 		set_time_limit(0);
 
 		if (empty($keywords)) { 		
-			$keywords = $this->name;
+			$keywords = $this->full_name;
 			/* If this isn't a various album combine with artist name */
 			if ($this->artist_count == '1') { $keywords .= ' ' . $this->artist; }
 		}

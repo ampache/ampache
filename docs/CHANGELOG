@@ -4,6 +4,10 @@
 
 --------------------------------------------------------------------------
   v.3.4-Alpha4 
+	- Added another layer of checking on catalog deletes to help 
+		prevent orphaned elements
+	- Fixed lack of prefix on Albums, improves album art search 
+		results (Thx darkside)
 	- Fixed problem with invalid urls populated to localplay methods
 		under certin conditions
 	- Fixed Album Art dump bin script 
