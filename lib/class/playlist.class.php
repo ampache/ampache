@@ -243,7 +243,7 @@ class Playlist {
 		$user_id = Dba::escape($user_id); 
 		$results = array(); 
 
-		$sql = "SELECT `id` FROM `playlist` WHERE `user`='$user_id'"; 
+		$sql = "SELECT `id` FROM `playlist` WHERE `user`='$user_id' ORDER BY `name`"; 
 		$db_results = Dba::query($sql); 
 
 		while ($row = Dba::fetch_assoc($db_results)) { 

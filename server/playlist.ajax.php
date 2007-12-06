@@ -35,7 +35,10 @@ switch ($_REQUEST['action']) {
 
 		$object_ids = $playlist->get_items(); 
 		ob_start(); 
-		require_once Config::get('prefix') . '/templates/show_playlist_songs.inc.php'; 	
+	        Browse::set_type('playlist_song');
+	        Browse::add_supplemental_object('playlist',$playlist->id);
+	        Browse::save_objects($object_ids);
+	        Browse::show_objects($object_ids);
 		$results['browse_content'] = ob_get_contents(); 
 		ob_end_clean(); 
 	break;
