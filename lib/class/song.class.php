@@ -661,6 +661,8 @@ class Song {
 	 */
 	function format() { 
 
+		$this->fill_ext_info(); 
+
 		// Format the filename
 		preg_match("/^.*\/(.*?)$/",$this->file, $short);
 		$this->f_file = htmlspecialchars($short[1]);

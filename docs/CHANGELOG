@@ -4,6 +4,8 @@
 
 --------------------------------------------------------------------------
   v.3.4-Alpha4 
+	- Added paging to genre sub-pages
+	- Added missing song data fields to single song view
 	- Fixed display issue with playlists when deleting a song
 	- Fixed sorting of 'add to Playlist' menu on rightbar
 	- Added another layer of checking on catalog deletes to help 

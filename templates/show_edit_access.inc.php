@@ -34,7 +34,7 @@
                         <option value="stream"<?php echo $sl_stream; ?>><?php echo _('Stream Access'); ?></option>
                         <option value="interface"<?php echo $sl_interface; ?>><?php echo _('Web Interface'); ?></option>
                         <option value="network"<?php echo $sl_network; ?>><?php echo _('Local Network Definition'); ?></option>
-                        <option value="xml-rpc"<?php echo $sl_xml-rpc; ?>><?php echo _('XML-RPC'); ?></option>
+                        <option value="rpc"<?php echo $sl_rpc; ?>><?php echo _('RPC'); ?></option>
                 </select>
         </td>
 
@@ -57,7 +57,7 @@
 		<?php show_user_select('user',$access->user); ?>
 	</td>
 </tr>
-<?php if ($access->type == 'xml-rpc') { ?>
+<?php if ($access->type == 'rpc') { ?>
 <tr>
 	<td><?php echo _('Remote Key'); ?></td>
 	<td>

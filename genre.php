@@ -34,9 +34,13 @@ switch($_REQUEST['action']) {
 		$genre = new Genre($_REQUEST['genre_id']);
 		show_genre($_REQUEST['genre_id']);
 		$object_ids = $genre->get_songs();
-		show_box_top(_('Songs')); 
-		require_once Config::get('prefix') . '/templates/show_songs.inc.php'; 
-		show_box_bottom(); 
+		echo "<div id=\"browse_content\">"; 
+		Browse::reset_filters(); 
+		Browse::set_type('song'); 
+		Browse::set_sort('name','ASC'); 
+		Browse::save_objects($object_ids);
+		Browse::show_objects($object_ids); 
+		echo "</div>"; 
 	break;
 	case 'show_genre':
 	default:
@@ -44,17 +48,25 @@ switch($_REQUEST['action']) {
 		$genre = new Genre($_REQUEST['genre_id']);
 		show_genre($_REQUEST['genre_id']);
 		$object_ids = $genre->get_albums();
-		show_box_top(_('Albums')); 
-		require Config::get('prefix') . '/templates/show_albums.inc.php';
-		show_box_bottom(); 
+		echo "<div id=\"browse_content\">"; 
+		Browse::reset_filters(); 
+		Browse::set_type('album'); 
+		Browse::set_sort('name','ASC'); 
+		Browse::save_objects($object_ids); 
+		Browse::show_objects($object_ids); 
+		echo "</div>"; 
 	break;
 	case 'show_artists':
 		$genre = new Genre($_REQUEST['genre_id']);
 		show_genre($_REQUEST['genre_id']);
 		$object_ids = $genre->get_artists();
-		show_box_top(_('Artists'));
-		require_once Config::get('prefix') . '/templates/show_artists.inc.php';
-		show_box_bottom(); 
+		echo "<div id=\"browse_content\">"; 
+		Browse::reset_filters(); 
+		Browse::set_type('artist'); 
+		Browse::set_sort('name','ASC'); 
+		Browse::save_objects($object_ids); 
+		Browse::show_objects($object_ids); 
+		echo "</div>"; 
 	break;
 } // action
 

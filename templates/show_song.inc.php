@@ -38,13 +38,35 @@
 	<td><?php echo $song->f_genre_link; ?></td>
 </tr>
 <tr>
+	<td><?php echo _('Length'); ?></td>
+	<td><?php echo scrub_out($song->f_time); ?></td>
+</tr>
+<tr>
+	<td><?php echo _('Comment'); ?></td>
+	<td><?php echo scrub_out($song->comment); ?></td>
+</tr>
+<tr>
+	<td><?php echo _('Label'); ?></td>
+	<td><?php echo scrub_out($song->label); ?></td>
+</tr>
+<tr>
+	<td><?php echo _('Language'); ?></td>
+	<td><?php echo scrub_out($song->language); ?></td>
+</tr>
+<tr>
+	<td><?php echo _('Catalog Number'); ?></td>
+	<td><?php echo scrub_out($song->catalog_number); ?></td>
+</tr>
+<tr>
 	<td><?php echo _('Bitrate'); ?></td>
 	<td><?php echo scrub_out($song->f_bitrate); ?></td>
 </tr>
+<?php if ($GLOBALS['user']->has_access('75')) { ?>
 <tr>
 	<td><?php echo _('Filename'); ?></td>
 	<td><?php echo scrub_out($song->file); ?> (<?php echo $song->f_size; ?>MB)</td>
 </tr>
+<?php } ?>
 <?php if ($song->update_time) { ?>
 <tr>
 	<td><?php echo _('Last Updated'); ?></td>

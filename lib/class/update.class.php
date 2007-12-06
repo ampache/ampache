@@ -247,6 +247,11 @@ class Update {
 		
 		$version[] = array('version' => '340012','description'=>$update_string); 
 
+		$update_string = '- Removed Unused Preferneces<br />' . 
+				'- Changed all XML-RPC acls to RPC to reflect inclusion of new API<br />';
+		
+//		$version[] = array('version' => '340013','description'=>$update_string)
+
 		return $version;
 
 	} // populate_version
@@ -1041,6 +1046,33 @@ class Update {
 		self::set_version('db_version','340012'); 
 
 	} // update_340012
+
+	/**
+ 	 * update_340013
+	 * This update removes a whole bunch of preferences that are no longer
+	 * being used in any way, and changes the ACL XML-RPC to just RPC
+	 */
+	public static function update_340013() { 
+
+		$sql = "DELETE FROM `preference` WHERE `name`='localplay_mpd_hostname' OR `name`='localplay_mpd_port' " . 
+			"OR `name`='direct_link' OR `name`='localplay_level' OR `name`='localplay_mpd_password'"; 
+		$db_results = Dba::query($sql); 
+
+		$sql = "UPDATE `access_list` SET `type`='rpc' WHERE `type`='xml-rpc'"; 
+		$db_results = Dba::query($sql); 
+
+                $sql = "SELECT `id` FROM `user`";
+                $db_results = Dba::query($sql);
+
+                User::fix_preferences('-1');
+
+                while ($r = Dba::fetch_assoc($db_results)) {
+                        User::fix_preferences($r['id']);
+                } // while we're fixing the useres stuff
+		
+		self::set_version('db_version','340013');	
+
+	} // update_340013
 
 } // end update class
 ?>

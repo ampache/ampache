@@ -89,13 +89,13 @@ switch ($_REQUEST['action']) {
 			$artist = scrub_in($_REQUEST['artist_name']);
 		} 
 		elseif ($album->artist_count == '1') { 
-			$artist = $album->artist_name;
+			$artist = $album->f_artist_name;
 		}
 		if (isset($_REQUEST['album_name'])) { 
 			$album_name = scrub_in($_REQUEST['album_name']);
 		}
 		else { 
-			$album_name = $album->name;
+			$album_name = $album->full_name;
 		}
 	
 		$options['artist'] 	= $artist; 
@@ -170,77 +170,6 @@ switch ($_REQUEST['action']) {
 		show_box_bottom(); 
 	break;
 	// Browse by Album
-	case 'broken':	
-		exit; 
-		switch($match) {
-			case 'Show_all':
-				$offset_limit = 99999;
-	                        $sql = "SELECT album.id FROM song,album ".
-	                               " WHERE song.album=album.id ".
-	                               "GROUP BY song.album ".
-	                               "  HAVING COUNT(song.id) > $min_album_size ";
-			break;
-	                case 'Show_missing_art':
-	                        $offset_limit = 99999;
-	                        $sql = "SELECT album.id FROM song,album ".
-	                               " WHERE song.album=album.id ".
-	                               "   AND album.art is null ".
-	                               "GROUP BY song.album ".
-	                               "  HAVING COUNT(song.id) > $min_album_size ";
-                        break; 
-			case 'Browse':
-			case 'show_albums':
-                	        $sql = "SELECT album.id FROM song,album ".
-	                               " WHERE song.album=album.id ".
-	                               "GROUP BY song.album ".
-	                               "  HAVING COUNT(song.id) > $min_album_size ";
-			break;
-			default:
-        	                $sql = "SELECT album.id FROM song,album ".
-	                               " WHERE song.album=album.id ".
-                	               "   AND album.name LIKE '$match%'".
-	                               "GROUP BY song.album ".
-	                               "  HAVING COUNT(song.id) > $min_album_size ";
-		} // end switch
-
-		switch ($_REQUEST['type']) { 
-			case 'album_sort':
-				if ($match != 'Browse' && $match != 'Show_missing_art' && $match != 'Show_all') { 
-					$match_string = " AND album.name LIKE '$match%'";
-				}
-				$sort_sql = "SELECT album.id, IF(COUNT(DISTINCT(song.artist)) > 1,'Various', artist.name) AS artist_name " . 
-					"FROM song,artist,album WHERE song.album=album.id AND song.artist=artist.id $match_string" . 
-					"GROUP BY album.name,album.year ".
-	                                "HAVING COUNT(song.id) > $min_album_size ";
-				$sort_order = 'artist.name';
-			break;
-			default:
-	
-			break;
-		} // switch on special sort types
-
-		// if we are returning
-		if ($_REQUEST['keep_view']) { 
-	                $view->initialize($sort_sql);
-		}
-
-		// If we aren't keeping the view then initlize it
-		elseif ($sql) {
-			if (!$sort_order) { $sort_order = 'name'; } 
-			$db_results = mysql_query($sql, dbh());
-			$total_items = mysql_num_rows($db_results);
-			if ($match != "Show_all") { $offset_limit = $user->prefs['offset_limit']; }
-			$view = new View($sql, 'albums.php',$sort_order,$total_items,$offset_limit);	
-		} 
-	
-		else { $view = false; }
-	
-		if ($view->base_sql) { 
-			$albums = get_albums($view->sql);
-			require conf('prefix') . '/templates/show_albums.inc.php';
-		}
-	
-	break;
 } // end switch on action
 
 
@@ -248,6 +177,7 @@ switch ($_REQUEST['action']) {
  * switch on view
  */
 switch ($_REQUEST['action']) { 
+	default:
 	case 'show':
 		$album = new Album($_REQUEST['album']);
 		$album->format();
