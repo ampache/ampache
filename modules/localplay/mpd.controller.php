@@ -86,13 +86,13 @@ class AmpacheMpd extends localplay_controller {
 
                 /* We need to create the MPD table */
                 $sql = "CREATE TABLE `localplay_mpd` ( `id` INT( 11 ) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY , " .
-                        "`name` VARCHAR( 128 ) NOT NULL , " .
+                        "`name` VARCHAR( 128 ) COLLATE utf8_unicode_ci NOT NULL , " .
                         "`owner` INT( 11 ) NOT NULL , " .
-                        "`host` VARCHAR( 255 ) NOT NULL , " .
+                        "`host` VARCHAR( 255 ) COLLATE utf8_unicode_ci NOT NULL , " .
                         "`port` INT( 11 ) UNSIGNED NOT NULL DEFAULT '6600', " .
-                        "`password` VARCHAR( 255 ) NOT NULL , " .
+                        "`password` VARCHAR( 255 ) COLLATE utf8_unicode_ci NOT NULL , " .
                         "`access` SMALLINT( 4 ) UNSIGNED NOT NULL DEFAULT '0'" .
-                        ") ENGINE = MYISAM";
+                        ") ENGINE = MYISAM DEFAULT CHARSET=ut8 COLLATE=utf8_unicode_ci";
                 $db_results = Dba::query($sql);
 		
 		// Add an internal preference for the users current active instance
@@ -171,7 +171,7 @@ class AmpacheMpd extends localplay_controller {
 	 */
 	public function get_instances() { 
 
-		$sql = "SELECT * FROM `localplay_mpd`"; 
+		$sql = "SELECT * FROM `localplay_mpd` ORDER BY `name`"; 
 		$db_results = Dba::query($sql); 
 
 		$results = array(); 
@@ -458,31 +458,41 @@ class AmpacheMpd extends localplay_controller {
 			$data['id'] 	= $entry['Pos'];
 			$data['raw']	= $entry['file'];		
 
-			/* Parse out the song ID and then create the song object */
-			preg_match("/song=(\d+)\&/",$entry['file'],$matches);
+			$url_data = $this->parse_url($entry['file']); 
+		
+			switch ($url_data['primary_key']) { 
+				case 'song': 	
+					$song = new Song($url_data['song']); 
+					$song->format(); 
+					$data['name'] = $song->f_title . ' - ' . $song->f_album . ' - ' . $song->f_artist;					
+					$data['link']   = $song->f_link; 
+				break; 
+				case 'demo_id': 
+					$democratic = new Democratic($url_data['demo_id']); 
+					$data['name'] = _('Democratic') . ' - ' . $democratic->name; 	
+					$data['link']   = '';
+				break; 
+				default: 
 
-			/* Attempt to build the new song */
-			$song = new Song($matches['1']);
-			
-			/* If we don't know it, look up by filename */
-			if (!$song->title) { 
-				$filename = Dba::escape($entry['file']);
-				$sql = "SELECT `id` FROM `song` WHERE `file` LIKE '%$filename'";
-				$db_results = Dba::query($sql);
-				if ($r = Dba::fetch_assoc($db_results)) { 
-					$song = new Song($r['id']);
-				}	
-				else { 
-					$song->title = _('Unknown');
-				}
-			}
+					/* If we don't know it, look up by filename */
+					$filename = Dba::escape($entry['file']);
+					$sql = "SELECT `id` FROM `song` WHERE `file` LIKE '%$filename'";
+					$db_results = Dba::query($sql);
+					if ($r = Dba::fetch_assoc($db_results)) { 
+						$song = new Song($r['id']);
+						$song->format(); 
+						$data['name'] = $song->f_title . ' - ' . $song->f_album . ' - ' . $song->f_artist;
+						$data['link'] = $song->f_link; 
+					}	
+					else { 
+						$data['name'] = _('Unknown');
+						$data['link']   = '';
+					}
 
-			/* Make the name pretty */
-			$song->format();
-			$data['name']	= $song->f_title . ' - ' . $song->f_album . ' - ' . $song->f_artist;
-
+				break; 
+			} // end switch on primary key type
+	
 			/* Optional Elements */
-			$data['link']   = '';
 			$data['track']	= $entry['Pos']+1;
 
 			$results[] = $data;

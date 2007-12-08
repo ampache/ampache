@@ -84,4 +84,38 @@ abstract class localplay_controller {
 
 	} // get_file 
 
+	/**
+	 * parse_url 
+	 * This takes an Ampache URL and then returns the 'primary' part of it
+	 * So that it's easier for localplay module sto return valid song information
+	 */
+	public function parse_url($url) { 
+
+		// Define possible 'primary' keys
+		$primary_array = array('song','demo_id');  
+
+                // Delete everything before the first ? 
+                $file = preg_replace("/.*\?(.+)/",'$1',$url);
+
+                // Split on & symbol
+                $data = explode("&",$file);
+
+                foreach ($data as $pair) {  
+                        $elements = explode("=",$pair); 
+	                $key = $elements['0'];
+                        $value = $elements['1'];
+	                $results[$key] = $value;
+
+			if (in_array($key,$primary_array)) { 
+				$primary = $key; 
+			} 
+
+        	} // end foreach
+
+		$results['primary_key'] = $primary;
+
+		return $results; 
+
+	} // parse_url 
+
 } // end localplay_controller interface
