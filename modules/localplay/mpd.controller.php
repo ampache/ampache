@@ -402,15 +402,15 @@ class AmpacheMpd extends localplay_controller {
        } // volume
 
        /**
-        * loop
+        * repeat
         * This tells MPD to set the repeating the playlist (i.e. loop) to either on or off
         */
-       function loop($state) {
+       function repeat($state) {
 	
 		if (is_null($this->_mpd->SetRepeat($state))) { return false; }
        		return true;
 
-       } // loop
+       } // repeat
 
 
        /**

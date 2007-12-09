@@ -304,9 +304,7 @@ class Localplay {
 	 */
 	public function repeat($state) { 
 
-		$function = $this->_function_map['repeat'];
-
-		$data = $this->_player->$function($state);
+		$data = $this->_player->repeat($state);
 
 		if (!$data) { 
 			debug_event('localplay',"Error Unable to set Repeat to $state",'1');
@@ -323,9 +321,7 @@ class Localplay {
 	 */
 	public function random($state) { 
 		
-		$function = $this->_function_map['random'];
-
-		$data = $this->_player->$function($state); 
+		$data = $this->_player->random($state); 
 
 		if (!$data) { 
 			debug_event('localplay',"Error Unable to set Random to $state",'1');
@@ -342,9 +338,7 @@ class Localplay {
 	 */
 	public function status() { 
 
-		$function = $this->_function_map['status'];
-
-		$data = $this->_player->$function();
+		$data = $this->_player->status();
 
 		if (!count($data)) { 
 			debug_event('localplay','Error Unable to get status, check ' . $this->type . ' controller','1');
@@ -388,9 +382,7 @@ class Localplay {
 		/* Make sure that it's between 0 and 100 */
 		if ($value > 100 OR $value < 0) { return false; }
 
-		$function = $this->_function_map['volume_set'];
-		
-		if (!$this->_player->$function($value)) { 
+		if (!$this->_player->volume($value)) { 
 			debug_event('localplay','Error: Unable to set volume, check ' . $this->type . ' controller','1');
 			return false;
 		}
@@ -406,9 +398,7 @@ class Localplay {
 	 */
 	public function volume_up() { 
 
-		$function = $this->_function_map['volume_up'];
-
-		if (!$this->_player->$function()) { 
+		if (!$this->_player->volume_up()) { 
 			debug_event('localplay','Error: Unable to increase volume, check ' . $this->type . ' controller','1');
 			return false; 
 		}
@@ -424,9 +414,7 @@ class Localplay {
 	 */
 	public function volume_down() { 
 
-		$function = $this->_function_map['volume_down'];
-
-		if (!$this->_player->$function()) { 
+		if (!$this->_player->volume_down()) { 
 			debug_event('localplay','Error: Unable to decrese volume, check ' . $this->type . ' controller','1');
 			return false; 
 		} 
@@ -442,9 +430,7 @@ class Localplay {
 	 */
 	public function volume_mute() { 
 
-		$function = $this->_function_map['volume_mute'];
-
-		if (!$this->_player->$function()){ 
+		if (!$this->_player->volume(0)){ 
 			debug_event('localplay','Error: Unable to mute volume, check ' . $this->type . ' controller','1');
 			return false; 
 		}

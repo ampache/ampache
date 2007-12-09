@@ -1351,6 +1351,9 @@ class Catalog {
 		/* Define the Arrays we will need */
 		$dead_files = array();
 
+		// Added set time limit because this runs out of time for some people
+		set_time_limit(0); 
+
 		require_once Config::get('prefix') . '/templates/show_clean_catalog.inc.php';
 		flush(); 
 

@@ -61,6 +61,7 @@ switch ($_REQUEST['action']) {
 
 		// Pull the current playlist and require the template
 		$objects = $localplay->get(); 
+		require_once Config::get('prefix') . '/templates/show_localplay_status.inc.php';
 		require_once Config::get('prefix') . '/templates/show_localplay_playlist.inc.php';
 	break;
 	case 'delete_song':

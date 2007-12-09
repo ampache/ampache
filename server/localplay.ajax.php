@@ -58,6 +58,9 @@ switch ($_REQUEST['action']) {
 			case 'stop': 
 			case 'play': 
 			case 'pause': 
+			case 'volume_up': 
+			case 'volume_down': 
+			case 'volume_mute': 
 				$command = scrub_in($_REQUEST['command']); 
 				$localplay->$command(); 
 			break;
@@ -93,6 +96,23 @@ switch ($_REQUEST['action']) {
 		
 		$key = 'localplay_instance_' . $_REQUEST['instance']; 
 		$results[$key] = ''; 
+	break; 
+	case 'repeat': 
+		// Make sure that they have access to do this again no clue
+		
+		// Scrub her in 
+		$localplay = new Localplay($GLOBALS['user']->prefs['localplay_controller']); 
+		$localplay->connect(); 
+		$localplay->repeat(make_bool($_REQUEST['value']));
+	break;
+	case 'random': 
+		// Make sure that they have access to do this again no clue... seems
+		// to be a pattern here
+		
+		// Scrub her in
+		$localplay = new Localplay($GLOBALS['user']->prefs['localplay_controller']); 
+		$localplay->connect(); 
+		$localplay->random(make_bool($_REQUEST['value'])); 
 	break; 
 	default: 
 		$results['rfc3514'] = '0x1'; 
