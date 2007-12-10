@@ -68,8 +68,6 @@ Contents:
 	- On the Fly Transcoding
 	- Localplay
 		- Music Player Daemon (MPD)
-		- Xbox Media Center (XMBC)
-		- Icecast2
 		- Winamp using (HTTPQ)
 	- Democratic Vote based play
 	- 3rd Party clients using API (Amarok)
@@ -153,9 +151,9 @@ Contents:
   Public SVN: https://svn.ampache.org/
   IRC: irc.ampache.org #ampache (Freenode)
   Forums: http://ampache.org/forums
-  Bugs: https://ampache.bountysource.com/development/
-  Wiki: https://ampache.bountysource.com/wiki/
+  Bugs: http://bugs.ampache.org/open
+  Wiki: http://wiki.ampache.org
   Demo: http://ampache.org/demo
 
   Ampache Development Team
-  dev@ampache.org
+  vollmer@ampache.org

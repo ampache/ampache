@@ -31,7 +31,7 @@ require_once '../lib/init.php';
 /* Set the correct headers */
 header("Content-type: text/xml; charset=" . Config::get('site_charset'));
 header("Content-Disposition: attachment; filename=ajax.xml");
-header("Expires: Sun, 19 Nov 1978 05:00:00 GMT"); 
+header("Expires: Tuesday, 27 Mar 1984 05:00:00 GMT"); 
 header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
 header("Cache-Control: no-store, no-cache, must-revalidate");
 header("Pragma: no-cache"); 
@@ -191,40 +191,6 @@ switch ($_REQUEST['action']) {
 		$results[$key] = ob_get_contents(); 
 		ob_end_clean(); 
 	break;
-	/* Controls Localplay */
-	case 'localplay':
-		$localplay = init_localplay();
-		$localplay->connect();
-		$function 	= scrub_in($_GET['cmd']);
-		$value		= scrub_in($_GET['value']);
-		$return		= scrub_in($_GET['return']);
-		$localplay->$function($value); 
-		/* Return information based on function */
-		switch($function) { 
-			case 'skip':
-				ob_start();
-				require_once(conf('prefix') . '/templates/show_localplay_playlist.inc.php');
-				$results['lp_playlist'] = ob_get_contents();
-				ob_end_clean();
-			case 'volume_up':
-			case 'volume_down':
-			case 'volume_mute':
-				$status = $localplay->status();
-				$results['lp_volume']	= $status['volume'];
-			break;
-			case 'next':
-			case 'stop':
-			case 'prev':
-			case 'pause':
-			case 'play':
-				if ($return) { 
-					$results['lp_playing'] = $localplay->get_user_playing(); 
-				} 	
-			default:
-				$results['3514'] = '0x1';	
-			break;
-		} // end switch on cmd
-	break;
 	case 'current_playlist':
 		switch ($_REQUEST['type']) { 
 			case 'delete':
@@ -293,14 +259,6 @@ switch ($_REQUEST['action']) {
 		
 		$results['rightbar'] = ajax_include('rightbar.inc.php'); 
 	break;
-	/* For changing the current play type FIXME:: need to allow select of any type  */
-	case 'change_play_type':
-		$pref_id = get_preference_id('play_type');
-		$GLOBALS['user']->update_preference($pref_id,$_GET['type']);
-
-		/* Uses a drop down, no need to replace text */
-		$results['play_type'] = '';
-	break;
 	/* reloading the now playing information */
 	case 'reloadnp':
 		ob_start();
@@ -324,25 +282,6 @@ switch ($_REQUEST['action']) {
 		Rating::show($_GET['object_id'],$_GET['rating_type']); 
 		$key = "rating_" . $_GET['object_id'] . "_" . $_GET['rating_type'];
 		$results[$key] = ob_get_contents();
-		ob_end_clean();
-	break;
-	/* This can be a positve (1) or negative (-1) vote */
-	case 'vote':
-		if (!$GLOBALS['user']->has_access(25) || !conf('allow_democratic_playback')) { break; }
-		/* Get the playlist */
-		$tmp_playlist = get_democratic_playlist(-1);
-		
-		if ($_REQUEST['vote'] == '1') { 
-			$tmp_playlist->vote(array($_REQUEST['object_id']));
-		}
-		else { 
-			$tmp_playlist->remove_vote($_REQUEST['object_id']);
-		}
-
-		ob_start();
-		$songs = $tmp_playlist->get_items();
-		require_once(conf('prefix') . '/templates/show_tv_playlist.inc.php');
-		$results['tv_playlist'] = ob_get_contents(); 
 		ob_end_clean();
 	break;
 	// Used to change filter/settings on browse
