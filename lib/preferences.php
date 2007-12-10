@@ -82,7 +82,7 @@ function update_preferences($pref_id=0) {
 		
 		/* Run the update for this preference only if it's set */
 		if (isset($_REQUEST[$name])) { 
-			update_preference($pref_id,$name,$id,$value);
+			Preference::update($id,$pref_id,$value); 
 		}
 
 	} // end foreach preferences

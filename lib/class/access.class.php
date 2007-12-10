@@ -222,6 +222,8 @@ class Access {
 	 */
 	public static function check($type,$level) { 
 
+		if (!Config::get('use_auth') || Config::get('demo_mode')) { return true; } 
+
 		$level = intval($level); 
 
 		// Switch on the type
@@ -229,6 +231,15 @@ class Access {
 			case 'localplay': 
 				// Check their localplay_level 
 				if ($GLOBALS['user']->prefs['localplay_level'] >= $level) { 
+					return true; 
+				} 
+				else { 
+					return false; 
+				} 
+			break;
+			case 'interface': 
+				// Check their standard user level
+				if ($GLOBALS['user']->access >= $level) { 
 					return true; 
 				} 
 				else { 

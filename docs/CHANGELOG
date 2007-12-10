@@ -4,6 +4,8 @@
 
 --------------------------------------------------------------------------
   v.3.4-Alpha4 
+	- Fixed a bug with Random Play if you had no artists/albums/playlists
+	- Fixed Admin's ability to modify other users preferences
 	- Added User and Manager levels to Localplay, determines what the
 		user in question can do
 	- Moved Newest * to statistics page

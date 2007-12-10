@@ -27,6 +27,10 @@ if (AJAX_INCLUDE != '1') { exit; }
 switch ($_REQUEST['action']) { 
         case 'album':
                 $album_id = Random::album();
+
+		// If we don't get anything stop
+		if (!$album_id) { break; } 
+
                 $album = new Album($album_id);
                 $songs = $album->get_songs();
                 foreach ($songs as $song_id) {
@@ -36,6 +40,10 @@ switch ($_REQUEST['action']) {
         break;
         case 'artist':
                 $artist_id = Random::artist();
+
+		// If we don't get anything stop
+		if (!$artist_id) { break; } 
+
                 $artist = new Artist($artist_id);
                 $songs = $artist->get_songs();
                 foreach ($songs as $song_id) {
@@ -45,6 +53,10 @@ switch ($_REQUEST['action']) {
         break;
         case 'playlist':
                 $playlist_id = Random::playlist();
+		
+		// If we don't get any results stop right here!
+		if (!$playlist_id) { break; } 
+
                 $playlist = new Playlist($playlist_id);
                 $items = $playlist->get_items();
                 foreach ($items as $item) {

@@ -148,7 +148,33 @@ class Preference {
 		return $results; 
 
 	} // get_catagories
-	
+
+	/**
+	 * get_all
+	 * This returns a nice flat array of all of the possible preferences for the specified user
+	 */
+	public static function get_all($user_id) { 
+
+		$user_id = Dba::escape($user_id); 
+
+                if ($user_id != '-1') {
+                        $user_limit = "AND `preference`.`catagory` != 'system'";
+                }
+		
+		$sql = "SELECT `preference`.`name`,`preference`.`description`,`user_preference`.`value` FROM `preference` " . 
+			" INNER JOIN `user_preference` ON `user_preference`.`preference`=`preference`.`id` " . 
+			" WHERE `user_preference`.`user`='$user_id' AND `preference`.`catagory` != 'internal' $user_limit"; 
+		$db_results = Dba::query($sql); 
+
+		$results = array(); 
+
+		while ($row = Dba::fetch_assoc($db_results)) { 
+			$results[] = array('name'=>$row['name'],'level'=>$row['level'],'description'=>$row['description'],'value'=>$row['value']);
+		} 
+
+		return $results; 
+
+	} // get_all	
 
 	/**
 	 * insert

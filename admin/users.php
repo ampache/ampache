@@ -20,12 +20,11 @@
 */
 
 require_once '../lib/init.php';
-if (!$GLOBALS['user']->has_access(100)) { 
+
+if (!Access::check('interface','100')) { 
 	access_denied();
 	exit();
 }
-
-$user_id	= scrub_in($_REQUEST['user_id']);
 
 show_header(); 
 
@@ -181,30 +180,15 @@ switch ($_REQUEST['action']) {
 	        if (Config::get('demo_mode')) { break; }
 		require_once Config::get('prefix') . '/templates/show_add_user.inc.php';
 	break;
-	case 'show_inactive':
-		$view	= new View(); 
-		$view->import_session_view(); 
-
-		// If we are returning
-		if ($_REQUEST['keep_view']) { 
-			$view->initialize(); 
-		} 
-		else {
-		
-			$inactive = time() - ($_REQUEST['days'] * 24 * 60 *60);
-
-			$sql = "SELECT `id`,`last_seen` FROM `user` where last_seen <= $inactive"; 
-			$db_results = mysql_query($sql,dbh()); 
-			$total_items = mysql_num_rows($db_results); 
-			$view = new View($sql,'admin/users.php','fullname',$total_items,$user->prefs['offset_limit']); 
-		}
-		
-		$users = get_users($view->sql); 
-		require_once(conf('prefix') . '/templates/show_users.inc.php'); 
-	
+	case 'show_preferences': 
+		$client = new User($_REQUEST['user_id']); 
+		$preferences = Preference::get_all($client->id); 	
+		require_once Config::get('prefix') . '/templates/show_user_preferences.inc.php';
 	break;
 	default:
 		Browse::set_type('user'); 
+		Browse::set_simple_browse(1);
+		Browse::set_sort('name','ASC');
 		$user_ids = Browse::get_objects(); 
 		Browse::show_objects($user_ids); 
 	break;

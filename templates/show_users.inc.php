@@ -73,6 +73,9 @@ foreach ($object_ids as $user_id) {
 		<a href="<?php echo $web_path; ?>/admin/users.php?action=show_edit&amp;user_id=<?php echo $client->id; ?>">
 			<?php echo get_user_icon('edit'); ?>
 		</a>
+		<a href="<?php echo $web_path; ?>/admin/users.php?action=show_preferences&amp;user_id=<?php echo $client->id; ?>">
+			<?php echo get_user_icon('preferences'); ?>
+		</a>
 	<?php
 	//FIXME: Fix this for the extra permission levels
 	if ($client->disabled == '1') { 

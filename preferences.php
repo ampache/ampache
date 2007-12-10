@@ -24,7 +24,7 @@ require 'lib/init.php';
 // Switch on the action 
 switch($_REQUEST['action']) { 
 	case 'update_preferences':
-		if (($_REQUEST['method'] == 'admin' OR $_REQUEST['method'] == 'user') && !$GLOBALS['user']->has_access('100')) { 
+		if ($_REQUEST['method'] == 'admin' && !Access::check('interface','100')) { 
 			access_denied(); 
 			exit; 
 		} 
@@ -35,11 +35,6 @@ switch($_REQUEST['action']) {
 			$fullname = _('Server'); 
 			$_REQUEST['action'] = 'admin'; 
 		}
-		elseif ($_REQUEST['method'] == 'user') { 
-			$user_id = $_REQUEST['user_id']; 
-			$client = new User($user_id); 
-			$fullname = $client->fullname; 
-		} 
 		else { 
 			$user_id = $GLOBALS['user']->id; 
 			$fullname = $GLOBALS['user']->fullname; 
@@ -51,9 +46,19 @@ switch($_REQUEST['action']) {
 
 		$preferences = $GLOBALS['user']->get_preferences($user_id,$_REQUEST['tab']);		
 	break;
+	case 'admin_update_preferences': 
+		// Make sure only admins here
+		if (!Access::check('interface','100')) { 
+			access_denied(); 
+			exit; 
+		} 
+
+		update_preferences($_REQUEST['user_id']); 
+		header("Location: " . Config::get('web_path') . "/admin/users.php?action=show_preferences&user_id=" . scrub_out($_REQUEST['user_id'])); 
+	break;
 	case 'admin': 
 		// Make sure only admins here
-		if (!$GLOBALS['user']->has_access('100')) { 
+		if (!Access::check('interface','100')) { 
 			access_denied(); 
 			exit;
 		} 

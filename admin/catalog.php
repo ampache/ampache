@@ -21,7 +21,7 @@
 
 require_once '../lib/init.php';
 
-if (!$GLOBALS['user']->has_access(100)) {
+if (!Access::check('interface','100')) {
 	access_denied();
 	exit; 
 }
