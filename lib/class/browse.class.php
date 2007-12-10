@@ -679,11 +679,15 @@ class Browse {
 			// If there's nothing there don't do anything
 			if (!count($objects)) { return false; } 
 
+			$where_sql .= "`id` IN (";
+
 			foreach ($objects as $object_id) { 
 				$object_id = Dba::escape($object_id); 
-				$where_sql .= "`id`='$object_id' OR"; 
+				$where_sql .= "'$object_id',"; 
 			} 
-			$where_sql = rtrim($where_sql,'OR'); 
+			$where_sql = rtrim($where_sql,','); 
+			
+			$where_sql .= ")"; 
 
 			$sql = self::get_base_sql() . ' WHERE ' . $where_sql; 	
 		} 
