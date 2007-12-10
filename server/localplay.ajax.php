@@ -27,7 +27,10 @@ if (AJAX_INCLUDE != '1') { exit; }
 switch ($_REQUEST['action']) { 
 	case 'set_instance': 
 		// Make sure they they are allowed to do this
-		//... ok I don't really know what that means yet
+		if (!Access::check('localplay','5')) { 
+			debug_event('DENIED','Error attempted to set instance without required level','1'); 
+			exit; 
+		} 	
 
 		$type = $_REQUEST['instance'] ? 'localplay' : 'stream';
 
@@ -46,7 +49,10 @@ switch ($_REQUEST['action']) {
 	break;
 	case 'command': 
 		// Make sure they are allowed to do this
-		// ok I still don't know what that means... but I'm thinking about it
+		if (!Access::check('localplay','50')) { 
+			debug_event('DENIED','Attempted to control Localplay without sufficient access','1'); 
+			exit;
+		} 
 
 		$localplay = new Localplay($GLOBALS['user']->prefs['localplay_controller']); 
 		$localplay->connect(); 
@@ -92,6 +98,10 @@ switch ($_REQUEST['action']) {
 	break; 
 	case 'delete_track': 
 		// Load Connect... yada yada
+		if (!Access::check('localplay','50')) { 
+			debug_event('DENIED','Attempted to delete track without access','1'); 
+			exit; 
+		} 
 		$localplay = new Localplay($GLOBALS['user']->prefs['localplay_controller']); 
 		$localplay->connect(); 
 
@@ -103,9 +113,11 @@ switch ($_REQUEST['action']) {
 		$results['localplay_playlist_' . $id] = ''; 
 	break; 
 	case 'delete_instance': 
-		// Make sure that you have access to do this... again I really 
-		// don't know what that means so I'm just going to do nothing fo now
-		
+		// Make sure that you have access to do this...
+		if (!Access::check('localplay','75')) { 
+			debug_event('DENIED','Attempted to delete instance without access','1'); 
+			exit; 
+		} 
 
 		// Scrub it in
 		$localplay = new Localplay($GLOBALS['user']->prefs['localplay_controller']); 
@@ -116,6 +128,10 @@ switch ($_REQUEST['action']) {
 	break; 
 	case 'repeat': 
 		// Make sure that they have access to do this again no clue
+		if (!Access::check('localplay','50')) { 
+			debug_event('DENIED','Attempted to set repeat without access','1'); 
+			exit; 
+		} 
 		
 		// Scrub her in 
 		$localplay = new Localplay($GLOBALS['user']->prefs['localplay_controller']); 
@@ -129,8 +145,11 @@ switch ($_REQUEST['action']) {
 
 	break;
 	case 'random': 
-		// Make sure that they have access to do this again no clue... seems
-		// to be a pattern here
+		// Make sure that they have access to do this
+		if (!Access::check('localplay','50')) { 
+			debug_event('DENIED','Attempted to set random without access','1'); 
+			exit; 
+		} 
 		
 		// Scrub her in
 		$localplay = new Localplay($GLOBALS['user']->prefs['localplay_controller']); 

@@ -263,9 +263,11 @@ function create_preference_input($name,$value) {
 		case 'localplay_level':
 			if ($value == '25') { $is_user = 'selected="selected"'; } 
 			elseif ($value == '100') { $is_admin = 'selected="selected"'; } 
+			elseif ($value == '50') { $is_manager = 'selected="selected"'; } 
 			echo "<select name=\"$name\">\n";
 			echo "<option value=\"0\">" . _('Disabled') . "</option>\n";
 			echo "<option value=\"25\" $is_user>" . _('User') . "</option>\n";
+			echo "<option value=\"50\" $is_manager>" . _('Manager') . "</option>\n";
 			echo "<option value=\"100\" $is_admin>" . _('Admin') . "</option>\n";
 			echo "</select>\n";
 		break;

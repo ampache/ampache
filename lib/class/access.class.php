@@ -181,13 +181,13 @@ class Access {
 			 */
 			case 'init-xml-rpc':
 				$sql = "SELECT `id` FROM `access_list`" .
-					" WHERE `start` <= '$ip' AND `end` >= '$ip' AND `type`='xml-rpc' AND `level` >= '$level'";
+					" WHERE `start` <= '$ip' AND `end` >= '$ip' AND `type`='rpc' AND `level` >= '$level'";
 			break;
 			case 'rpc': 
 			case 'xml-rpc':
 				$sql = "SELECT `id` FROM `access_list`" . 
 					" WHERE `start` <= '$ip' AND `end` >= '$ip'" . 
-					" AND  `key` = '$key' AND `level` >= '$level' AND (`type`='xml-rpc' OR `type`='rpc')";
+					" AND  `key` = '$key' AND `level` >= '$level' AND `type`='rpc'";
 			break;
 			case 'network':
 			case 'interface':
@@ -214,6 +214,36 @@ class Access {
 		}
 
 	} // check_network
+
+	/**
+	 * check_access
+	 * This is the global 'has_access' function it can check for any 'type' of object
+	 * everything uses the global 0,5,25,50,75,100 stuff. GLOBALS['user'] is always used
+	 */
+	public static function check($type,$level) { 
+
+		$level = intval($level); 
+
+		// Switch on the type
+		switch ($type) { 
+			case 'localplay': 
+				// Check their localplay_level 
+				if ($GLOBALS['user']->prefs['localplay_level'] >= $level) { 
+					return true; 
+				} 
+				else { 
+					return false; 
+				} 
+			break;
+			default:
+				return false; 
+			break; 
+		} // end switch on type
+
+		// Default false
+		return false; 
+
+	} // check
 
 	/**
 	 * validate_type
