@@ -490,6 +490,9 @@ a.button{padding:1px 3px;}
 .box_newest_albums  {}
 .box_newest_artists {clear:none;}
 .box_newest_genres  {clear:none;}
+.box_popular_album  {}
+.box_popular_artists {clear:none;}
+.box_popular_genres {clear:none;}
 .box_preferences h4 {color:#000;font:bold 14px Verdana, Helvetica, sans-serif;padding:0.8em 0;}
 
 

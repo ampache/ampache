@@ -50,26 +50,8 @@ switch ($_REQUEST['action']) {
 		// Global stuff first
 		$stats = Catalog::get_stats(); 
 		require_once Config::get('prefix') . '/templates/show_local_catalog_info.inc.php';
-
-		$objects = Stats::get_top('album'); 
-		$headers = array('f_link'=>_('Most Popular Albums')); 
-		show_box_top('','info-box box_popular_albums'); 
-		require Config::get('prefix') . '/templates/show_objects.inc.php'; 
-		show_box_bottom(); 
-
-		$objects = Stats::get_top('artist'); 
-		$headers = array('f_name_link'=>_('Most Popular Artists')); 
-		show_box_top('','info-box box_popular_artists'); 
-		require Config::get('prefix') . '/templates/show_objects.inc.php'; 
-		show_box_bottom(); 
-
-		$objects = Stats::get_top('genre'); 
-		$headers = array('f_link'=>_('Most Popular Genres')); 
-		show_box_top('','info-box box_popular_genres'); 
-		require Config::get('prefix') . '/templates/show_objects.inc.php'; 
-		show_box_bottom(); 
-
-
+		require_once Config::get('prefix') . '/templates/show_stats_popular.inc.php'; 
+		require_once Config::get('prefix') . '/templates/show_stats_newest.inc.php'; 
 	break;
 } // end switch on action
 

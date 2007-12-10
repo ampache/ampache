@@ -521,11 +521,22 @@ function get_languages() {
  */
 function logout() { 
 
+	// Do a quick check to see if this is an AJAX'd logout request
+	// if so use the iframe to redirect
+	if (AJAX_INCLUDE == '1') { 
+		$_SESSION['iframe']['target'] = Config::get('web_path') . '/login.php'; 
+		$results['rfc3514'] = '<script type="text/javascript">reload_util("'.$_SESSION['iframe']['target'].'")</script>';
+		echo xml_from_array($results);
+	} 
+
 	/* First destory their session */
 	vauth_logout(session_id());
 
+
 	/* Redirect them to the login page */
-	header ('Location: ' . Config::get('web_path') . '/login.php');
+	if (AJAX_INCLUDE != '1') { 
+		header ('Location: ' . Config::get('web_path') . '/login.php');
+	} 
 	
 	return true;
 

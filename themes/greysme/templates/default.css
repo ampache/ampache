@@ -524,6 +524,9 @@ input[type=checkbox]  { border:0;background:none; }
 .box_newest_albums  {}
 .box_newest_artists {clear:none;}
 .box_newest_genres  {clear:none;}
+.box_popular_album  {}
+.box_popular_artists {clear:none;}
+.box_popular_genres {clear:none;}
 .box_preferences h4 {color: #8b3e38;font-size: 1.1em;text-align:center;font-weight: bold;border-bottom:1px solid #8b3e38;padding:1em;}
 
 /************************************************/

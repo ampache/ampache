@@ -247,10 +247,12 @@ class Update {
 		
 		$version[] = array('version' => '340012','description'=>$update_string); 
 
-		$update_string = '- Removed Unused Preferneces<br />' . 
-				'- Changed all XML-RPC acls to RPC to reflect inclusion of new API<br />';
+		$update_string = '- Removed Unused Preferneces.<br />' . 
+				'- Changed Localplay Config to Localplay Access.<br />' . 
+				'- Changed all XML-RPC acls to RPC to reflect inclusion of new API.<br />';
 		
-//		$version[] = array('version' => '340013','description'=>$update_string)
+		$version[] = array('version' => '340013','description'=>$update_string);
+
 
 		return $version;
 
@@ -1055,7 +1057,10 @@ class Update {
 	public static function update_340013() { 
 
 		$sql = "DELETE FROM `preference` WHERE `name`='localplay_mpd_hostname' OR `name`='localplay_mpd_port' " . 
-			"OR `name`='direct_link' OR `name`='localplay_level' OR `name`='localplay_mpd_password'"; 
+			"OR `name`='direct_link' OR `name`='localplay_mpd_password' OR `name`='catalog_echo_count'"; 
+		$db_results = Dba::query($sql); 
+
+		$sql = "UPDATE `preference` SET `description`='Localplay Access' WHERE `name`='localplay_level'"; 
 		$db_results = Dba::query($sql); 
 
 		$sql = "UPDATE `access_list` SET `type`='rpc' WHERE `type`='xml-rpc'"; 

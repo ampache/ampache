@@ -43,22 +43,3 @@ if (isset($_REQUEST['xspf']) && isset ($_REQUEST['play_info'])){
 		show_box_bottom(); 
         ?>
 </div>
-<div id="recent_added">
-	<?php 
-		$objects = Stats::get_newest('album'); 
-		$headers = array('f_link'=>_('Newest Albums')); 
-		show_box_top('','info-box box_newest_albums'); 
-		require Config::get('prefix') . '/templates/show_objects.inc.php';
-		show_box_bottom(); 
-		$objects = Stats::get_newest('artist'); 
-		$headers = array('f_name_link'=>_('Newest Artists')); 
-		show_box_top('','info-box box_newest_artists'); 
-		require Config::get('prefix') . '/templates/show_objects.inc.php'; 
-		show_box_bottom(); 
-		$objects = Stats::get_newest('genre'); 
-		$headers = array('f_link'=>_('Newest Genres')); 
-		show_box_top('','info-box box_newest_genres'); 
-		require Config::get('prefix') . '/templates/show_objects.inc.php';
-		show_box_bottom(); 
-	?>
-</div>

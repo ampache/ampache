@@ -4,6 +4,7 @@
 
 --------------------------------------------------------------------------
   v.3.4-Alpha4 
+	- Database Update, removed useless config options and tweaked a few others
 	- Fixed last of the missing MPD functionality (Volume & Playlist Clear)
 	- Fixed HTTPQ and improved parsing for urls from MPD & HTTPQ
 		they now reconize Democratic Playlists

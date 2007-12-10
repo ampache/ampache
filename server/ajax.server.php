@@ -23,6 +23,9 @@
  * as part of the get request
  */
 
+// Set that this is an ajax include
+define('AJAX_INCLUDE','1'); 
+
 require_once '../lib/init.php';
 
 /* Set the correct headers */
@@ -32,9 +35,6 @@ header("Expires: Sun, 19 Nov 1978 05:00:00 GMT");
 header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
 header("Cache-Control: no-store, no-cache, must-revalidate");
 header("Pragma: no-cache"); 
-
-// Set that this is an ajax include
-define('AJAX_INCLUDE','1'); 
 
 switch ($_REQUEST['page']) { 
 	case 'stats': 

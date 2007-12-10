@@ -19,49 +19,6 @@
 
 */
 
-/*!
-	@function get_site_preferences
-	@discussion gets all of the preferences for this Ampache site
-*/
-function get_site_preferences() { 
-
-	$results = array();
-
-	$sql = "SELECT preferences.name, preferences.type, user_preference.value, preferences.description FROM preferences,user_preference " .
-		" WHERE preferences.id=user_preference.preference AND user_preference.user = '-1' ORDER BY `type`,`name`";
-	$db_results = mysql_query($sql, dbh());
-
-	while ($r = mysql_fetch_object($db_results)) { 
-		$results[] = $r;
-	}
-
-	return $results;
-
-} // get_site_preferences
-
-/*!
-	@function set_site_preferences
-	@discussion sets the conf() function with the current site preferences from the db
-*/
-function set_site_preferences() { 
-
-	$results = array();
-
-	$sql = "SELECT preferences.name,user_preference.value FROM preferences,user_preference WHERE user='-1' AND user_preference.preference=preferences.id";
-	$db_results = mysql_query($sql, dbh());
-
-	while ($r = mysql_fetch_object($db_results)) { 
-		$results[$r->name] = $r->value;
-	} // db results
-
-	if (strlen($results['theme_name']) > 0) { 
-		$results['theme_path'] = "/themes/" . $results['theme_name'];
-	}
-
-	conf($results,1);
-
-} // set_site_preferences
-
 /**
  * clean_preference_name
  * s/_/ /g & upper case first
@@ -304,12 +261,12 @@ function create_preference_input($name,$value) {
 			echo "</select>\n";
 		break;
 		case 'localplay_level':
-			if ($value == '2') { $is_full = 'selected="selected"'; } 
-			elseif ($value == '1') { $is_global = 'selected="selected"'; } 
+			if ($value == '25') { $is_user = 'selected="selected"'; } 
+			elseif ($value == '100') { $is_admin = 'selected="selected"'; } 
 			echo "<select name=\"$name\">\n";
 			echo "<option value=\"0\">" . _('Disabled') . "</option>\n";
-			echo "<option value=\"1\" $is_global>" . _('Server') . "</option>\n";
-			echo "<option value=\"2\" $is_full>" . _('User') . "</option>\n";
+			echo "<option value=\"25\" $is_user>" . _('User') . "</option>\n";
+			echo "<option value=\"100\" $is_admin>" . _('Admin') . "</option>\n";
 			echo "</select>\n";
 		break;
 		case 'theme_name':
@@ -370,51 +327,6 @@ function get_preference_id($name) {
 } // get_preference_id
 
 /**
- * get_preference_name
- * This does the inverse of the above function and returns the preference name from the ID
- * This is usefull for doing... the opposite of above. Amazing isn't it. 
- */
-function get_preference_name($id) { 
-
-	$id = sql_escape($id); 
-
-	$sql = "SELECT name FROM preferences WHERE id='$id'"; 
-	$db_results = mysql_query($sql,dbh()); 
-
-	$results = mysql_fetch_assoc($db_results); 
-
-	return $results['name']; 
-
-} // get_preference_name
-
-/**
- * insert_preference
- * This creates a new preference record in the
- * preferences table this is used by the modules
- */
-function insert_preference($name,$description,$default,$level,$type,$catagory) { 
-
-	/* Clean the incomming variables */
-	$name		= sql_escape($name);
-	$description 	= sql_escape($description);
-	$default	= sql_escape($default);
-	$level		= sql_escape($level);
-	$type		= sql_escape($type);
-	$catagory	= sql_escape($catagory);
-
-
-	/* Form the sql statement */
-	$sql = "INSERT INTO preferences (`name`,`description`,`value`,`type`,`level`,`catagory`) VALUES " . 
-		" ('$name','$description','$default','$type','$level','$catagory')";
-	$db_results = mysql_query($sql, dbh());
-
-	if ($db_results) { return true; }
-
-	return false;
-
-} // insert_preference
-
-/**
  * init_preferences
  * Third times the charm, why rename a function once when you can do it three times :(
  * This grabs the preferences and then loads them into conf it should be run on page load
@@ -461,37 +373,6 @@ function init_preferences() {
         Config::set_by_array($results,1);
 
 } // init_preferences
-
-/**
- * show_import_playlist
- * This just shows the template for importing playlists
- * from something outside Ampache such as a m3u
- */
-function show_import_playlist() { 
-
-	require_once(conf('prefix') . '/templates/show_import_playlist.inc.php');
-
-} // show_import_playlist
-
-/**
- * get_preferences
- * This returns an array of all current preferences in the
- * preferences table, this isn't a users preferences
- */
-function get_preferences() {
-
-        $sql = "SELECT * FROM preferences";
-        $db_results = mysql_query($sql, dbh());
-
-        $results = array();
-
-        while ($r = mysql_fetch_assoc($db_results)) {
-                $results[] = $r;
-        }
-
-        return $results;
-
-} // get_preferences
 
 /**
  * update_preference_level
