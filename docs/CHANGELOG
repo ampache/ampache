@@ -4,6 +4,8 @@
 
 --------------------------------------------------------------------------
   v.3.4-Alpha4 
+	- Fixed a bug where ajax actions wouldn't trigger a redirect to login
+		when session expired, instead they would just break
 	- Fixed a bug with Random Play if you had no artists/albums/playlists
 	- Fixed Admin's ability to modify other users preferences
 	- Added User and Manager levels to Localplay, determines what the

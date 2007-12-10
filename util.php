@@ -18,7 +18,6 @@
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
-
 require_once 'lib/init.php';
 
 // This is a little bit of a special file, it takes the

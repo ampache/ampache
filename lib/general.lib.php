@@ -43,66 +43,6 @@ function int2ip($i) {
 	return "$d[0].$d[1].$d[2].$d[3]";
 } // int2ip
 
-/*
- * Conf function by Robert Hopson
- * call it with a $parm name to retrieve
- * a var, pass it a array to set them
- * to reset a var pass the array plus
- * Clobber! replaces global $conf;
-*/
-/*function conf($param,$clobber=0)
-{
-        static $params = array();
-
-        if(is_array($param))
-        //meaning we are setting values
-        {
-                foreach ($param as $key=>$val)
-                {
-                        if(!$clobber && isset($params[$key]))
-                        {
-                                echo "Error: attempting to clobber $key = $val\n";
-                                exit();
-                        }
-                        $params[$key] = $val;
-                }
-                return true;
-        }
-        else
-        //meaning we are trying to retrieve a parameter
-        {
-                if($params[$param]) return $params[$param];
-                else return;
-        }
-} //conf
-
-function error_results($param,$clobber=0)
-{               
-        static $params = array();
-        
-        if(is_array($param))
-        //meaning we are setting values
-        {
-                foreach ($param as $key=>$val)
-                {       
-                        if(!$clobber && isset($params[$key]))
-                        {
-                                echo "Error: attempting to clobber $key = $val\n";
-                                exit(); 
-                        }
-                        $params[$key] = $val;
-                }
-                return true;
-        }               
-        else            
-        //meaning we are trying to retrieve a parameter
-        {
-                if($params[$param]) return $params[$param];
-                else return;
-        }
-} //error_results
-*/
-
 /**
  * session_exists
  * checks to make sure they've specified a valid session, can handle xmlrpc
@@ -524,8 +464,19 @@ function logout() {
 	// Do a quick check to see if this is an AJAX'd logout request
 	// if so use the iframe to redirect
 	if (AJAX_INCLUDE == '1') { 
-		$_SESSION['iframe']['target'] = Config::get('web_path') . '/login.php'; 
-		$results['rfc3514'] = '<script type="text/javascript">reload_util("'.$_SESSION['iframe']['target'].'")</script>';
+		ob_end_clean(); 
+		ob_start(); 
+
+		/* Set the correct headers */
+		header("Content-type: text/xml; charset=" . Config::get('site_charset'));
+		header("Content-Disposition: attachment; filename=ajax.xml");
+		header("Expires: Tuesday, 27 Mar 1984 05:00:00 GMT");
+		header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
+		header("Cache-Control: no-store, no-cache, must-revalidate");
+		header("Pragma: no-cache");
+
+		$target = Config::get('web_path') . '/login.php'; 
+		$results['rfc3514'] = '<script type="text/javascript">reload_logout("'.$target.'")</script>';
 		echo xml_from_array($results);
 	} 
 

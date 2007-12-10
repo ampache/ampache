@@ -247,7 +247,7 @@ class Update {
 		
 		$version[] = array('version' => '340012','description'=>$update_string); 
 
-		$update_string = '- Removed Unused Preferneces.<br />' . 
+		$update_string = '- Removed Unused Preferences.<br />' . 
 				'- Changed Localplay Config to Localplay Access.<br />' . 
 				'- Changed all XML-RPC acls to RPC to reflect inclusion of new API.<br />';
 		
