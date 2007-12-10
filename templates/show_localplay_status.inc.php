@@ -22,19 +22,21 @@
 $status = $localplay->status();  
 
 ?>
+<?php Ajax::start_container('localplay_status'); ?>
 <?php show_box_top(_('Localplay Control')); ?>
-<span id="lp_state"><?php echo $localplay->get_user_state($status['state']) ?></span><br />
-<div id="lp_box_vol">
-	<?php echo Ajax::button('?page=localplay&action=command&command=volume_up','volumeup',_('Increase Volume'),'localplay_volume_up'); ?>
-	<?php echo Ajax::button('?page=localplay&action=command&command=volume_down','volumedn',_('Decrease Volume'),'localplay_volume_dn'); ?>
-	<?php echo Ajax::button('?page=localplay&action=command&command=volume_mute','volumemute',_('Mute'),'localplay_mute'); ?>
-	<?php echo _('Volume'); ?>:<span id="lp_volume"><?php echo $status['volume']; ?></span>
-</div>
+<strong><?php echo $localplay->get_user_state($status['state']) ?></strong><br />
+
+<?php echo Ajax::button('?page=localplay&action=command&command=volume_up','volumeup',_('Increase Volume'),'localplay_volume_up'); ?>
+<?php echo Ajax::button('?page=localplay&action=command&command=volume_down','volumedn',_('Decrease Volume'),'localplay_volume_dn'); ?>
+<?php echo Ajax::button('?page=localplay&action=command&command=volume_mute','volumemute',_('Mute'),'localplay_mute'); ?>
+<strong><?php echo _('Volume'); ?>:</strong><?php echo $status['volume']; ?>%
 <br />
-	<?php echo _('Repeat') . ":" . print_boolean($status['repeat']); ?> | 
+	<strong><?php echo _('Repeat') . ":"; ?></strong> <?php echo print_boolean($status['repeat']); ?> | 
 	<?php echo Ajax::text('?page=localplay&action=repeat&value=' . invert_boolean($status['repeat']),print_boolean(invert_boolean($status['repeat'])),'localplay_repeat'); ?>
-	<br />
-	<?php echo _('Random') . ":" . print_boolean($status['random']); ?> | 
+	
+	<strong><?php echo _('Random') . ":"; ?></strong> <?php echo print_boolean($status['random']); ?> | 
 	<?php echo Ajax::text('?page=localplay&action=random&value=' . invert_boolean($status['random']),print_boolean(invert_boolean($status['random'])),'localplay_random'); ?>
 	<br />
+<?php echo Ajax::text('?page=localplay&action=command&command=delete_all',_('Clear Playlist'),'localplay_clear_all'); ?>
 <?php show_box_bottom(); ?>
+<?php Ajax::end_container(); ?>

@@ -58,11 +58,28 @@ switch ($_REQUEST['action']) {
 			case 'stop': 
 			case 'play': 
 			case 'pause': 
+				$command = scrub_in($_REQUEST['command']); 
+				$localplay->$command(); 
+			break;
 			case 'volume_up': 
 			case 'volume_down': 
 			case 'volume_mute': 
 				$command = scrub_in($_REQUEST['command']); 
 				$localplay->$command(); 
+
+				// We actually want to refresh something here
+				ob_start(); 
+				require_once Config::get('prefix') . '/templates/show_localplay_status.inc.php';
+				$results['localplay_status'] = ob_get_contents(); 
+				ob_end_clean(); 
+			break;
+			case 'delete_all': 
+				$localplay->delete_all(); 
+				
+				ob_start(); 
+				require_once Config::get('prefix') . '/templates/show_localplay_playlist.inc.php'; 
+				$results['localplay_playlist'] = ob_get_contents(); 
+				ob_end_clean(); 
 			break;
 			case 'skip': 
 				$localplay->skip(intval($_REQUEST['id']));
@@ -104,6 +121,12 @@ switch ($_REQUEST['action']) {
 		$localplay = new Localplay($GLOBALS['user']->prefs['localplay_controller']); 
 		$localplay->connect(); 
 		$localplay->repeat(make_bool($_REQUEST['value']));
+
+		ob_start(); 
+		require_once Config::get('prefix') . '/templates/show_localplay_status.inc.php'; 
+		$results['localplay_status'] = ob_get_contents(); 
+		ob_end_clean(); 
+
 	break;
 	case 'random': 
 		// Make sure that they have access to do this again no clue... seems
@@ -113,6 +136,12 @@ switch ($_REQUEST['action']) {
 		$localplay = new Localplay($GLOBALS['user']->prefs['localplay_controller']); 
 		$localplay->connect(); 
 		$localplay->random(make_bool($_REQUEST['value'])); 
+
+		ob_start(); 
+		require_once Config::get('prefix') . '/templates/show_localplay_status.inc.php'; 
+		$results['localplay_status'] = ob_get_contents(); 
+		ob_end_clean(); 
+
 	break; 
 	default: 
 		$results['rfc3514'] = '0x1'; 

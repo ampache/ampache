@@ -19,6 +19,7 @@
 
 */
 ?>
+<?php Ajax::start_container('localplay_playlist'); ?>
 <?php show_box_top(_('Current Playlist')); ?>
 <table class="tabledata" cellpadding="0" cellspacing="0">
 <colgroup>
@@ -59,3 +60,4 @@ foreach ($objects as $object) {
 </tr>
 </table>
 <?php show_box_bottom(); ?>
+<?php Ajax::end_container(); ?>

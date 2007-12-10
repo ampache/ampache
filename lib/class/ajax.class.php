@@ -157,5 +157,30 @@ class Ajax {
 
 	} // run
 
+	/**
+ 	 * start_container
+	 * This checks to see if we're AJAX'in if we aren't then it echos out the 
+	 * html needed to start a container that can be replaced by Ajax
+	 */
+	public static function start_container($name) { 
+
+		if (AJAX_INCLUDE == '1') { return true; } 
+
+		echo '<div id="' . scrub_out($name) . '">'; 
+
+	} // start_container
+
+	/**
+	 * end_container
+	 * This ends the container if we're not doing the AJAX thing
+	 */
+	public static function end_container() { 
+
+		if (AJAX_INCLUDE == '1') { return true; } 
+
+		echo "</div>"; 
+
+	} // end_container
+
 } // end Ajax class
 ?>

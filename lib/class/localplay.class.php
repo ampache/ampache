@@ -593,10 +593,7 @@ class Localplay {
 	 */
 	public function delete_all() { 
 
-
-		$function = $this->_function_map['delete_all'];
-
-		if (!$this->_player->$function($songs)) { 
+		if (!$this->_player->clear_playlist()) { 
 			debug_event('localplay','Error: Unable to delete entire playlist, check ' . $this->type . ' controller','1');
 			return false; 
 		}
