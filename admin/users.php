@@ -118,13 +118,13 @@ switch ($_REQUEST['action']) {
 		show_confirmation(_('New User Added'),__('%user% has been created with an access level of ' . $access,'%user%',$username),'admin/users.php');	
 	break;
 	case 'enable':
-		$working_user = new User($user_id); 
-		$working_user->enable(); 
+		$client = new User($_REQUEST['user_id']); 
+		$client->enable(); 
 		show_confirmation(_('User Enabled'),'','admin/users.php'); 
 	break;
 	case 'disable':
-		$working_user = new User($user_id); 
-		if ($working_user->disable()) { 
+		$client = new User($_REQUEST['user_id']); 
+		if ($client->disable()) { 
 			show_confirmation(_('User Disabled'),'','admin/users.php'); 
 		} 
 		else { 
@@ -143,14 +143,14 @@ switch ($_REQUEST['action']) {
 switch ($_REQUEST['action']) { 
 	case 'show_edit':
         	if (Config::get('demo_mode')) { break; }
-		$client	= new User($user_id); 
+		$client	= new User($_REQUEST['user_id']); 
 		require_once Config::get('prefix') . '/templates/show_edit_user.inc.php';
 	break;
 	case 'confirm_delete':
 	        if (Config::get('demo_mode')) { break; }
-		$working_user = new User($_REQUEST['user_id']); 
-		if ($working_user->delete()) { 
-			show_confirmation(_('User Deleted'), "$working_user->username has been Deleted","admin/users.php");
+		$clint = new User($_REQUEST['user_id']); 
+		if ($client->delete()) { 
+			show_confirmation(_('User Deleted'), "$client->username has been Deleted","admin/users.php");
 		}
 		else { 
 			show_confirmation(_('Delete Error'), _("Unable to delete last Admin User"),"admin/users.php");
@@ -158,7 +158,7 @@ switch ($_REQUEST['action']) {
 	break;
 	case 'delete':
         	if (Config::get('demo_mode')) { break; }
-		$client = new User($user_id); 
+		$client = new User($_REQUEST['user_id']); 
 		show_confirmation(_('Deletion Request'),
 			_('Are you sure you want to permanently delete') . " $client->fullname ($client->username)?",
 			"admin/users.php?action=confirm_delete&amp;user_id=$user_id",1);
