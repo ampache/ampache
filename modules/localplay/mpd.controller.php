@@ -92,7 +92,7 @@ class AmpacheMpd extends localplay_controller {
                         "`port` INT( 11 ) UNSIGNED NOT NULL DEFAULT '6600', " .
                         "`password` VARCHAR( 255 ) COLLATE utf8_unicode_ci NOT NULL , " .
                         "`access` SMALLINT( 4 ) UNSIGNED NOT NULL DEFAULT '0'" .
-                        ") ENGINE = MYISAM DEFAULT CHARSET=ut8 COLLATE=utf8_unicode_ci";
+                        ") ENGINE = MYISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci";
                 $db_results = Dba::query($sql);
 		
 		// Add an internal preference for the users current active instance
