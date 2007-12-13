@@ -157,9 +157,7 @@ END;
       $c2 = rand(195^$R, 230^$R);
       
       #-- configuration
-      $fonts = array(
-        // "COLLEGE.ttf",
-      );
+      $fonts = array();
       $fonts += glob(EWIKI_FONT_DIR."/*.ttf");
       
       #-- encolour bg
