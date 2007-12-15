@@ -38,9 +38,24 @@
 		<option value="-1"><?php echo _('All'); ?></option>
 		</select>
 	</td>
-	<td rowspan="4" valign="top"><?php echo  _('From genre'); ?></td>
-	<td rowspan="4">
-	<?php show_genre_select('genre[]','','5'); ?>
+	<td rowspan="5" valign="top"><?php echo  _('From genre'); ?></td>
+	<td rowspan="5">
+	<?php show_genre_select('genre[]','','6'); ?>
+	</td>
+</tr>
+<tr>
+	<td><?php echo _('Length'); ?></td>
+	<td>
+		<select name="length">
+			<option value="0"><?php echo _('Unlimited'); ?></option>
+			<option value="15">15 <?php echo _('minutes'); ?></option>
+			<option value="30">30 <?php echo _('minutes'); ?></option>
+			<option value="60">1 <?php echo _('hours'); ?></option>
+			<option value="120">2 <?php echo _('hours'); ?></option>
+			<option value="240">4 <?php echo _('hours'); ?></option>
+			<option value="480">8 <?php echo _('hours'); ?></option>
+			<option value="960">16 <?php echo _('hours'); ?></option>
+		</select>
 	</td>
 </tr>
 <tr>
@@ -51,7 +66,9 @@
 			<option value="unplayed"><?php echo _('Less Played'); ?></option>
 			<option value="full_album"><?php echo _('Full Albums'); ?></option>
 			<option value="full_artist"><?php echo _('Full Artist'); ?></option>
-			<option value="length"><?php echo _('Minutes'); ?></option>
+			<?php if (Config::get('ratings')) { ?>
+			<option value="high_rating"><?php echo _('Highest Rated'); ?></option>
+			<?php } ?>
 		</select>
 	</td>
 </tr>

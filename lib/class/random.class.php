@@ -259,7 +259,6 @@ class Random {
 	        
 		/* If they've passed -1 as limit then don't get everything */
 	        if ($data['random'] == "-1") { unset($data['random']); }
-	        elseif ($data['random_type'] == 'length') { /* Rien a faire */ }
 	        else { $limit_sql = "LIMIT " . $limit; }
 
 	        $where = "1=1 ";
@@ -301,15 +300,28 @@ class Random {
 	                }
 	                $artists_where = ltrim($artists_where," OR");
 	                $sql = "SELECT song.id,song.size,song.time FROM song WHERE $artists_where ORDER BY RAND()";
-	        }
-/* TEMP DISABLE */
-//        elseif ($options['random_type'] == 'unplayed') {
-//                $uid = $GLOBALS['user']->id;
-//                $query = "SELECT song.id,song.size FROM song LEFT JOIN object_count ON song.id = object_count.object_id " .
-//                         "WHERE ($where) AND ((object_count.object_type='song' AND user = '$uid') OR object_count.count IS NULL ) " .
-//                         "ORDER BY CASE WHEN object_count.count IS NULL THEN RAND() WHEN object_count.count > 4 THEN RAND()*RAND()*object_count.count " .
-//                         "ELSE RAND()*object_count.count END " . $limit_sql;
-//        } // If unplayed
+	        }	
+		elseif ($data['random_type'] == 'unplayed') {
+			$uid = Dba::escape($GLOBALS['user']->id); 
+			$sql = "SELECT object_id,COUNT(`id`) AS `total` FROM `object_count` WHERE `user`='$uid' GROUP BY `object_id`";
+			$db_results = Dba::query($sql); 
+
+			$in_sql = "`id` IN (";
+
+			while ($row = Dba::fetch_assoc($db_results)) { 
+				$in_sql .= "'" . $row['object_id'] . "',";  
+			} 
+
+			$in_sql = rtrim($in_sql,',') . ')';
+
+			$sql = "SELECT song.id,song.size,song.time FROM song " .
+				"WHERE ($where) AND $in_sql ORDER BY RAND() $limit_sql";
+
+		} // If unplayed
+		elseif ($data['random_type'] == 'high_rating') { 
+
+
+		} 
 		else { 
 			$sql = "SELECT `id`,`size`,`time` FROM `song` WHERE $where ORDER BY RAND() $limit_sql"; 
 		} 
@@ -339,23 +351,24 @@ class Random {
 			} // if size_limit
 
 			// If length really does matter
-			if ($data['random_type'] == 'length') { 
+			if ($data['length']) { 
 				// base on min, seconds are for chumps and chumpettes
 				$new_time = floor($row['time'] / 60); 
 
 				if ($fuzzy_time > 10) { return $results; } 
 				
 				// If the new one would go voer skip!
-				if (($time_total + $new_time) > $data['random']) { $fuzzy_time++; continue; } 
+				if (($time_total + $new_time) > $data['length']) { $fuzzy_time++; continue; } 
 
 				$time_total = $time_total + $new_time; 
 				$results[] = $row['id']; 
 
-				if (($data['random'] - $time_total) < 2) { return $results; } 
+				// If there are less then 2 min of free space return 
+				if (($data['length'] - $time_total) < 2) { return $results; } 
 
 			} // if length does matter 
 
-			if (!$data['size_limit'] AND $data['random_type'] != 'length') { 
+			if (!$data['size_limit'] AND !$data['length']) { 
 				$results[] = $row['id']; 
 			} 
 
