@@ -4,6 +4,8 @@
 
 --------------------------------------------------------------------------
   v.3.4-Alpha4 
+	- Fixed download filename to match the catalog filename pattern
+	- Added downloads back to stats tracking 
 	- Fixed disable/re-enable of users
 	- Fixed a bug where ajax actions wouldn't trigger a redirect to login
 		when session expired, instead they would just break

@@ -188,7 +188,8 @@ $song_name = $song->f_artist_full . " - " . $song->title . "." . $song->type;
 if ($_GET['action'] == 'download' AND $GLOBALS['user']->prefs['download']) { 
 	
 	// STUPID IE
-	$song_name = str_replace(array('?','/','\\'),"_",$song_name);
+	$song->format_pattern(); 
+	$song_name = str_replace(array('?','/','\\'),"_",$song->f_file);
 
 	// Use Horde's Browser class to send the headers
 	header("Content-Length: " . $song->size); 
@@ -212,6 +213,14 @@ if ($_GET['action'] == 'download' AND $GLOBALS['user']->prefs['download']) {
 	else { 
 		fpassthru($fp); 
 	} 
+
+	// Make sure that a good chunk of the song has been played
+	if ($bytesStreamed > $minBytesStreamed) {
+        	debug_event('Stats','Downloaded, Registering stats for ' . $song->title,'5');
+        
+	        $user->update_stats($song->id);
+        
+	} // if enough bytes are streamed
 		
 	fclose($fp); 
 	exit(); 

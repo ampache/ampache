@@ -60,8 +60,9 @@ while ($r = mysql_fetch_row($db_results)) {
 	foreach ($songs as $song) { 
 		/* Find this poor song a home */
 		$song->format_song();
+		$song->format_pattern();
 		$directory 	= sort_find_home($song,$catalog->sort_pattern,$catalog->path);
-		$filename 	= sort_find_filename($song,$catalog->rename_pattern);
+		$filename 	= $song->f_file; 
 		$fullpath = $directory . "/" . $filename;
 
 		/* Check for Demo Mode */

@@ -2299,7 +2299,7 @@ class Catalog {
 
 		$result .= xml_from_array($xml,1,'itunes');
 		}
-	return $result;
+		return $result;
 
 	    }
 	

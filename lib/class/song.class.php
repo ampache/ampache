@@ -706,6 +706,38 @@ class Song {
 	} // format
 
 	/**
+	 * format_pattern
+	 * This reformates the song information based on the catalog 
+	 * rename patterns 
+	 */
+	public function format_pattern() { 
+
+		$catalog = new Catalog($this->catalog); 
+
+	        $extension = ltrim(substr($this->file,strlen($this->file)-4,4),".");
+
+	        /* Create the filename that this file should have */
+	        $album  = $this->f_album_full;
+	        $artist = $this->f_artist_full;
+	        $genre  = $this->f_genre;
+	        $track  = $this->track;
+	        $title  = $this->title;
+	        $year   = $this->year;
+
+	        /* Start replacing stuff */
+	        $replace_array = array('%a','%A','%t','%T','%y','%g');
+	        $content_array = array($artist,$album,$title,$track,$year,$genre);
+
+	        $rename_pattern = str_replace($replace_array,$content_array,$catalog->rename_pattern);
+	
+	        $rename_pattern = preg_replace("[\-\:\!]","_",$rename_pattern);
+
+		$this->f_pattern	= $rename_pattern; 
+	        $this->f_file 		= $rename_pattern . "." . $extension;
+
+	} // format_pattern
+
+	/**
 	 *       @function       get_rel_path
 	 *       @discussion    returns the path of the song file stripped of the catalog path
 	 *			used for mpd playback 
