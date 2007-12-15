@@ -4,6 +4,10 @@
 
 --------------------------------------------------------------------------
   v.3.4-Alpha4 
+	- Fixed incorrect extension and stream command being sent when using
+		transcode for type other then mp3
+	- Fixed default flac downsample command, removed -r as flac decode
+		appears to not be raw pcm
 	- Fixed download filename to match the catalog filename pattern
 	- Added downloads back to stats tracking 
 	- Fixed disable/re-enable of users

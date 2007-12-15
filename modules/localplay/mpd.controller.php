@@ -190,7 +190,7 @@ class AmpacheMpd extends localplay_controller {
 	 * If no instance is passed current is used
 	 */
 	public function get_instance($instance='') { 
-	
+
 		$instance = $instance ? $instance : $GLOBALS['user']->prefs['mpd_active'];
 		$instance = Dba::escape($instance); 
 
@@ -198,7 +198,7 @@ class AmpacheMpd extends localplay_controller {
 		$db_results = Dba::query($sql); 
 
 		$row = Dba::fetch_assoc($db_results); 
-		
+
 		return $row; 
 
 	} // get_instance

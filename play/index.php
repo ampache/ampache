@@ -254,6 +254,7 @@ if (Config::get('access_control') AND Config::get('downsample_remote')) {
 if (($GLOBALS['user']->prefs['transcode'] == 'always' || !$song->native_stream() || $not_local) && $GLOBALS['user']->prefs['transcode'] != 'never') { 
 	debug_event('downsample','Starting Downsample...','5');
 	$fp = Stream::start_downsample($song,$lastid,$song_name);
+	$song_name = $song->f_artist_full . " - " . $song->title . "." . $song->type;
 } // end if downsampling
 else { 
 	// Send file, possible at a byte offset

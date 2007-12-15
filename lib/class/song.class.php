@@ -888,9 +888,9 @@ class Song {
 
 		// Find the target for this transcode
 		$conf_type      = 'transcode_' . $this->type . '_target';
+		$stream_cmd = 'transcode_cmd_' . $this->type; 
 		$this->format_type(Config::get($conf_type));
 
-		$stream_cmd = 'transcode_cmd_' . $this->type; 
 		if (Config::get($stream_cmd)) { 
 			return $stream_cmd;
 		} 

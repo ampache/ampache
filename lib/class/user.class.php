@@ -137,11 +137,11 @@ class User {
 		// Fill out the user id
 		$user_id = $user_id ? Dba::escape($user_id) : Dba::escape($this->id); 
 
-		if (!Config::get('use_auth')) { $user_id = '-1'; }
-
 		if ($user_id != '-1') { 
 			$user_limit = "AND preference.catagory != 'system'";
 		}
+
+		if (!Config::get('use_auth')) { $user_id = '-1'; }
 			
 		if ($type != '0') { 
 			$user_limit = "AND preference.catagory = '" . Dba::escape($type) . "'";
@@ -173,7 +173,9 @@ class User {
 	 */
 	public function set_preferences() {
 
-		$sql = "SELECT preference.name,user_preference.value FROM preference,user_preference WHERE user_preference.user='$this->id' " .
+		$user_id = Dba::escape($this->id); 
+
+		$sql = "SELECT preference.name,user_preference.value FROM preference,user_preference WHERE user_preference.user='$user_id'" .
 			"AND user_preference.preference=preference.id AND preference.type != 'system'";
 		$db_results = Dba::query($sql);
 

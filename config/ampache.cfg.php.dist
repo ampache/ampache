@@ -492,8 +492,8 @@ transcode_flac_target	= mp3
 transcode_mp3_target	= mp3
 
 ; These are the commands that will be run to transcode the file
-transcode_cmd_flac 	= "flac -dc %FILE% | lame -r -b 128 -S - - "
-transcode_cmd_m4a 	= "faad -f 2 -w %FILE% | lame -r -b 128 -S - -"
+transcode_cmd_flac 	= "flac -dc %FILE% | lame -b %SAMPLE% -S - - "
+transcode_cmd_m4a 	= "faad -f 2 -w %FILE% | lame -r -b %SAMPLE% -S - -"
 transcode_cmd_mp3	= "mp3splt -qnf %FILE% %OFFSET% %EOF% -o - | lame --mp3input -q 3 -b %SAMPLE% -S - -"
 
 # This line seems to work better for windows, switch if needed
