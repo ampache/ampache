@@ -4,6 +4,8 @@
 
 --------------------------------------------------------------------------
   v.3.4-Alpha4 
+	- Added function exists check for session with redirect to /test.php
+		on failure
 	- Fixed incorrect extension and stream command being sent when using
 		transcode for type other then mp3
 	- Fixed default flac downsample command, removed -r as flac decode

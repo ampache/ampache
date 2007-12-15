@@ -32,12 +32,14 @@
 	<td><?php echo _('Start IP Address'); ?>:</td>
 	<td>
 		<input type="text" name="start" value="<?php echo scrub_out($_REQUEST['start']); ?>" size="20" maxlength="15" />
+		<span class="information">(0.0.0.0)</span>
 	</td>
 </tr>
 <tr>
 	<td><?php echo _('End IP Address'); ?>:</td>
 	<td>
 		<input type="text" name="end" value="<?php echo scrub_out($_REQUEST['end']); ?>" size="20" maxlength="15" />
+		<span class="information">(0.0.0.0)</span>
 	</td>
 </tr>
 <tr>
@@ -74,7 +76,7 @@
 <tr>
 	<td><?php echo _('Remote Key'); ?>:</td>
 	<td>
-		<input type="text" name="key" value="<?php echo scrub_out($_REQUEST['end']); ?>" size="32" maxlength="32" />
+		<input type="text" name="key" value="<?php echo scrub_out($_REQUEST['end']); ?>" maxlength="32" />
 	</td>
 </tr>
 </table>

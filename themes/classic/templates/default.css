@@ -682,3 +682,9 @@ a.button{padding:1px 3px;}
 	display: none;
 	text-indent:-9999em;
 } 
+
+.information { 
+	font-size: 0.9em; 
+	font-style: italic; 
+	color: #c0c0c0; 
+} 

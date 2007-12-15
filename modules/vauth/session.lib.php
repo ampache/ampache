@@ -25,6 +25,13 @@
  * and then contains the functions that the session handler references
  */
 
+// Quick check for the session functions if they don't exist redirect to /test.php
+if (!function_exists('session_set_save_handler')) { 
+	header("Location: " . Config::get('web_path') . "/test.php"); 
+	debug_event('ERROR','Missing PHP Session Module','1');
+	exit; 
+} 
+
 /* Always register the customer handler */
 session_set_save_handler(
 	'vauth_sess_open',
