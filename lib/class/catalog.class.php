@@ -791,6 +791,77 @@ class Catalog {
 	} //get_files
 
 	/**
+	 * get_duplicate_songs
+	 * This function takes a search type and returns a list of all song_ids that
+	 * are likely to be duplicates based on teh search method selected. 
+	 */
+	public static function get_duplicate_songs($search_method) { 
+
+	        // Setup the base SQL
+	        $sql = "SELECT song.id AS song,artist.id AS artist,album.id AS album,title,COUNT(title) AS ctitle".
+	                " FROM `song` LEFT JOIN `artist` ON `artist`.`id`=`song`.`artist` " . 
+			" LEFT JOIN `album` ON `album`.`id`=`song`.`album` ".
+	                " GROUP BY song.title";
+
+		// Add any Additional constraints
+	        if ($search_method == "artist_title" OR $search_method == "artist_album_title") {
+	                $sql = $sql.",artist.name";
+	        }
+
+	        if ($search_method == "artist_album_title") {
+	                $sql = $sql.",album.name";
+	        }
+
+	        // Final componets
+	        $sql = $sql." HAVING COUNT(title) > 1";
+	        $sql = $sql." ORDER BY `ctitle`";
+
+	        $db_results = Dba::query($sql); 
+
+	        $results = array();
+
+	        while ($item = Dba::fetch_assoc($db_results)) {
+	                $results[] = $item;
+	        } // end while
+
+	        return $results;
+
+	} // get_duplicate_songs
+
+	/**
+	 * get_duplicate_info
+	 * This takes a song, search type and auto flag and returns the duplicate songs in the correct
+	 * order, it sorts them by longest, higest bitrate, largest filesize, checking
+	 * the last one as most likely bad
+	 */
+	public static function get_duplicate_info($item,$search_type) { 
+	        // Build the SQL 
+	        $sql = "SELECT `song`.`id`" .
+	                " FROM song,artist,album".
+	                " WHERE song.artist=artist.id AND song.album=album.id".
+	                " AND song.title= '".Dba::escape($item['title'])."'";
+
+	        if ($search_type == "artist_title" || $search_type == "artist_album_title") {
+	                $sql .="  AND artist.id = '".Dba::escape($item['artist'])."'";
+	        }
+	        if ($search_type == "artist_album_title" ) {
+	                $sql .="  AND album.id = '".Dba::escape($item['album'])."'";
+	        }
+
+                $sql .= " ORDER BY `time`,`bitrate`,`size` LIMIT 2";
+	        $db_results = Dba::query($sql);
+
+	        $results = array();
+
+	        while ($item = Dba::fetch_assoc($db_results)) {
+	                $results[] = $item['id'];
+	        } // end while
+
+	        return $results;
+
+	} // get_duplicate_info
+
+	/**
 	 * dump_album_art (Added by Cucumber 20050216)
 	 * This runs through all of the albums and trys to dump the
 	 * art for them into the 'folder.jpg' file in the appropriate dir

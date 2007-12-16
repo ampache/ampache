@@ -26,7 +26,7 @@ require_once 'lib/init.php';
  * can't handle Cookie + Redirect 
  */
 vauth_session_cookie();
-Preference::init()
+Preference::init();
 
 /**
  * If Access Control is turned on then we don't

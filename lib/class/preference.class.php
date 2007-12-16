@@ -341,7 +341,6 @@ class Preference {
 
 	        Config::set_by_array($results,1);
 
-
 	} // init
 
 

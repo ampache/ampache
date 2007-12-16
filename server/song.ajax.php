@@ -19,26 +19,30 @@
 
 */
 
-require_once '../lib/init.php';
+/**
+ * Sub-Ajax page, requires AJAX_INCLUDE as one
+ */
+if (AJAX_INCLUDE != '1') { exit; } 
 
-if (!Access::check('interface','100')) { 
-	access_denied(); 
-	exit;
-}
+switch ($_REQUEST['action']) { 
+	case 'flip_state': 
+		if (!Access::check('interface','75')) { 
+			debug_event('DENIED',$GLOBALS['user']->username . ' attempted to change the state of a song','1'); 
+			exit; 
+		} 
 
-show_header(); 
+		$song = new Song($_REQUEST['song_id']); 
+		$new_enabled = $song->enabled ? '0' : '1'; 
+		$song->update_enabled($new_enabled,$song->id); 
 
-/* Switch on Action */
-switch ($_REQUEST['action']) {
-	case 'find_duplicates':
-		$duplicates = Catalog::get_duplicate_songs($_REQUEST['search_type']); 
-		require_once Config::get('prefix') . '/templates/show_duplicate.inc.php'; 
-		require_once Config::get('prefix') . '/templates/show_duplicates.inc.php'; 	
+		//FIXME: Re-display this	
+
 	break;
-	default:
-		require_once Config::get('prefix') . '/templates/show_duplicate.inc.php'; 
+	default: 
+		$results['rfc3514'] = '0x1'; 
 	break;
-} // end switch on action
+} // switch on action; 
 
-show_footer();
+// We always do this
+echo xml_from_array($results); 
 ?>

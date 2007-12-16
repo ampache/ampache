@@ -61,6 +61,10 @@ switch ($_REQUEST['page']) {
 		require_once Config::get('prefix') . '/server/stream.ajax.php';
 		exit; 
 	break;
+	case 'song': 
+		require_once Config::get('prefix') . '/server/song.ajax.php'; 
+		exit; 
+	break; 
 	case 'democratic': 
 		require_once Config::get('prefix') . '/server/democratic.ajax.php'; 
 		exit; 

@@ -557,10 +557,11 @@ input[type=checkbox]  { border:0;background:none; }
 }
 
 /* table rows */
-.odd, .even		{ background: url(../images/list_back.png) 0 50% repeat-x !important; background-image: none;}
+.odd, .even, .row-highlight		{ background: url(../images/list_back.png) 0 50% repeat-x !important; background-image: none;}
 .odd 					{ background-color: #111 !important;}
 .even					{ }
 .odd:hover, .even:hover 		{ background-color: #2b293d !important;}
+.row-highlight:hover			{ background-color: #cc3333 !important;}
 
 /* Misc */
 .border 	{ background: #000; }
