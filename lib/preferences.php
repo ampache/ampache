@@ -112,7 +112,7 @@ function update_preference($user_id,$name,$pref_id,$value) {
 	} 
 	
 	/* Else make sure that the current users has the right to do this */
-	if (has_preference_access($name)) { 
+	if (Preference::has_access($name)) { 
 		$sql = "UPDATE `user_preference` SET `value`='$value' WHERE `preference`='$pref_id' AND `user`='$user_id'";
 		$db_results = Dba::query($sql);
 		return true;
@@ -159,10 +159,13 @@ function has_preference_access($name) {
  */
 function create_preference_input($name,$value) { 
 
+	// Escape it for output
+	$value = scrub_out($value); 
+
 	$len = strlen($value);
 	if ($len <= 1) { $len = 8; }
 
-	if (!has_preference_access($name)) { 
+	if (!Preference::has_access($name)) { 
 		if ($value == '1') { 
 			echo "Enabled";
 		}

@@ -4,6 +4,7 @@
 
 --------------------------------------------------------------------------
   v.3.4-Alpha4 
+	- Fixed potential issue with display on some preferences
 	- Added Length to Advanced Random and removed Minutes from methods 
 	- Added function exists check for session with redirect to /test.php
 		on failure
