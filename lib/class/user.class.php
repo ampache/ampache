@@ -340,65 +340,6 @@ class User {
 	} // has_access
 
 	/**
-	 * update_preference
-	 * updates a single preference if the query fails
-	 * it attempts to insert the preference instead
-	 * @package User
-	 * @catagory Class
-	 * @todo Do a has_preference_access check
-	 */
-	function update_preference($preference_id, $value, $user_id=0) {
-	
-		if (!has_preference_access(get_preference_name($preference_id))) { 
-			return false; 
-		} 
-
-		if (!$user_id) { 
-			$user_id = $this->id;
-		}
-
-		if (!conf('use_auth')) { $user_id = '-1'; }
-
-		$value 		= sql_escape($value);
-		$preference_id 	= sql_escape($preference_id); 
-		$user_id	= sql_escape($user_id);
-
-		$sql = "UPDATE user_preference SET value='$value' WHERE user='$user_id' AND preference='$preference_id'";
-
-		$db_results = mysql_query($sql, dbh());
-
-	} // update_preference
-
-	/**
-	 * legacy_add_preference
-	 * adds a new preference
-	 * @package User
-	 * @catagory Class
-	 * @param $key	preference name
-	 * @param $value	preference value
-	 * @param $id	user is
-	 */
-	function add_preference($preference_id, $value, $username=0) { 
-	
-		if (!$username) { 
-			$username = $this->username;
-		}
-
-		$value = sql_escape($value);
-
-		if (!is_numeric($preference_id)) { 
-			$sql = "SELECT id FROM preference WHERE `name`='$preference_id'";
-			$db_results = mysql_query($sql, dbh());
-			$r = mysql_fetch_array($db_results);
-			$preference_id = $r[0];
-		} // end if it's not numeric
-
-		$sql = "INSERT user_preference SET `user`='$username' , `value`='$value' , `preference`='$preference_id'";
-		$db_results = mysql_query($sql, dbh());
-
-	} // add_preference
-
-	/**
 	 * update
 	 * This function is an all encompasing update function that
 	 * calls the mini ones does all the error checking and all that

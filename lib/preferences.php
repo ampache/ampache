@@ -19,19 +19,6 @@
 
 */
 
-/**
- * clean_preference_name
- * s/_/ /g & upper case first
- */
-function clean_preference_name($name) { 
-
-	$name = str_replace("_"," ",$name);
-	$name = ucwords($name);
-
-	return $name;
-
-} // clean_preference_name
-
 /*
  * update_preferences
  * grabs the current keys that should be added
@@ -101,14 +88,13 @@ function update_preference($user_id,$name,$pref_id,$value) {
 
 	/* First see if they are an administrator and we are applying this to everything */
 	if ($GLOBALS['user']->has_access(100) AND make_bool($_REQUEST[$apply_check])) { 
-		$sql = "UPDATE `user_preference` SET `value`='$value' WHERE `preference`='$pref_id'";
-		$db_results = Dba::query($sql);
+		Preference::update_all($pref_id,$value); 
 		return true;
 	}
 
 	/* Check and see if they are an admin and the level def is set */
 	if ($GLOBALS['user']->has_access(100) AND make_bool($_REQUEST[$level_check])) { 
-		update_preference_level($pref_id,$_REQUEST[$level_check]); 
+		Preference::update_level($pref_id,$_REQUEST[$level_check]); 
 	} 
 	
 	/* Else make sure that the current users has the right to do this */
@@ -121,37 +107,6 @@ function update_preference($user_id,$name,$pref_id,$value) {
 	return false;
 
 } // update_preference
-
-/**
- * has_preference_access
- * makes sure that the user has sufficient
- * rights to actually set this preference, handle
- * as allow all, deny X
- */
-function has_preference_access($name) { 
-
-	/* If it's a demo they don't get jack */
-        if (Config::get('demo_mode')) {
-	        return false;
-        }
-
-	$name = Dba::escape($name);
-
-	/* Check Against the Database Row */
-	$sql = "SELECT `level` FROM `preference` " . 
-		"WHERE `name`='$name'";
-	$db_results = Dba::query($sql);
-
-	$data = Dba::fetch_assoc($db_results);
-
-	if ($GLOBALS['user']->has_access($data['level'])) { 
-		return true;
-	}
-
-	return false;
-
-} //has_preference_access
-
 
 /**
  * create_preference_input
@@ -312,88 +267,5 @@ function create_preference_input($name,$value) {
 	} 
 
 } // create_preference_input
-
-/** 
- * get_preference_id
- * This takes the name of a preference and returns it's id this is usefull for calling
- * the user classes update_preference function
- * @package Preferences
- * @catagory Get
- */
-function get_preference_id($name) { 
-
-	$sql = "SELECT `id` FROM `preference` WHERE `name`='" . Dba::escape($name) . "'";
-	$db_results =Dba::query($sql);
-
-	$results = Dba::fetch_assoc($db_results);
-
-	return $results['id'];
-
-} // get_preference_id
-
-/**
- * init_preferences
- * Third times the charm, why rename a function once when you can do it three times :(
- * This grabs the preferences and then loads them into conf it should be run on page load
- * to initialize the needed variables
- */
-function init_preferences() {
-
-        /* Get Global Preferences */
-        $sql = "SELECT preference.name,user_preference.value FROM preference,user_preference WHERE user_preference.user='-1' " .
-                " AND user_preference.preference = preference.id AND preference.catagory='system'";
-        $db_results = Dba::query($sql);
-
-        while ($r = Dba::fetch_assoc($db_results)) {
-                $name = $r['name'];
-                $results[$name] = $r['value'];
-        } // end while sys prefs
-
-        /* Now we need to allow the user to override some stuff that's been set by the above */
-        $user_id = '-1';
-        if ($GLOBALS['user']->username) {
-                $user_id = Dba::escape($GLOBALS['user']->id);
-        }
-
-        $sql = "SELECT preference.name,user_preference.value FROM preference,user_preference WHERE user_preference.user='$user_id' " .
-                " AND user_preference.preference = preference.id AND preference.catagory != 'system'";
-        $db_results = Dba::query($sql);
-
-        while ($r = Dba::fetch_assoc($db_results)) {
-                $name = $r['name'];
-                $results[$name] = $r['value'];
-        } // end while
-
-        /* Set the Theme mojo */
-        if (strlen($results['theme_name']) > 0) {
-                $results['theme_path'] = '/themes/' . $results['theme_name'];
-        }
-	// Default to the classic theme if we don't get anything from their
-	// preferenecs because we're going to want at least something otherwise
-	// the page is going to be really ugly
-	else { 	
-		$results['theme_path'] = '/themes/classic'; 
-	} 
-
-        Config::set_by_array($results,1);
-
-} // init_preferences
-
-/**
- * update_preference_level
- * This function updates the level field in the preferences table
- * this has nothing to do with a users actuall preferences
- */
-function update_preference_level($pref_id,$level) { 
-
-	$name 	= Dba::escape($pref_id);
-	$level 	= Dba::escape($level);
-
-	$sql = "UPDATE `preference` SET `level`='$level' WHERE `id`='$pref_id'";
-	$db_results = Dba::query($sql);
-
-	return true;
-
-} // update_preference_level
 
 ?>

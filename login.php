@@ -26,7 +26,7 @@ require_once 'lib/init.php';
  * can't handle Cookie + Redirect 
  */
 vauth_session_cookie();
-init_preferences();
+Preference::init()
 
 /**
  * If Access Control is turned on then we don't
@@ -124,7 +124,7 @@ if ($auth['success']) {
 	}
 
 	// Reload the Preferences from the database
-	init_preferences();
+	Preference::init();
 	
 	/* Make sure they are actually trying to get to this site and don't try to redirect them back into 
 	 * an admin section

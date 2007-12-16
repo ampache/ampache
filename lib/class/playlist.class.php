@@ -493,7 +493,7 @@ class Playlist {
 		$id = Dba::escape($this->id); 
 	
 		$sql = "DELETE FROM `playlist_data` WHERE `playlist` = '$id'";
-		$db_results = Dba::query($sq);
+		$db_results = Dba::query($sql);
 
 		$sql = "DELETE FROM `playlist` WHERE `id`='$id'";
 		$db_results = Dba::query($sql);

@@ -70,6 +70,38 @@ class Preference {
 	} // update
 
 	/**
+	 * update_level
+	 * This takes a preference ID and updates the level required to update it (performed by an admin)
+	 */
+	public static function update_level($preference_id,$level) { 
+
+		$preference_id 	= Dba::escape($preference_id);
+		$level		= Dba::escape($level); 
+
+		$sql = "UPDATE `preference` SET `level`='$level' WHERE `id`='$preference_id'"; 
+		$db_results = Dba::query($sql); 
+
+		return true; 
+
+	} // update_level
+
+	/**
+	 * update_all
+	 * This takes a preference id and a value and updates all users with the new info
+	 */
+	public static function update_all($preference_id,$value) { 
+
+		$preference_id	= Dba::escape($preference_id);
+		$value		= Dba::escape($value); 
+
+		$sql = "UPDATE `user_preference` SET `value`='$value' WHERE `preference`='$preference_id'"; 
+		$db_results = Dba::query($sql); 
+
+		return true; 
+
+	} // update_all
+
+	/**
 	 * has_access
 	 * This checks to see if the current user has access to modify this preference
 	 * as defined by the preference name
@@ -263,6 +295,54 @@ class Preference {
         	return $results;
 
 	} // fix_preferences
+
+	/**
+ 	 * init
+	 * This grabs the preferences and then loads them into conf it should be run on page load
+	 * to initialize the needed variables
+	 */
+	public static function init() { 
+
+	        /* Get Global Preferences */
+	        $sql = "SELECT preference.name,user_preference.value FROM preference,user_preference WHERE user_preference.user='-1' " .
+	                " AND user_preference.preference = preference.id AND preference.catagory='system'";
+	        $db_results = Dba::query($sql);
+
+	        while ($r = Dba::fetch_assoc($db_results)) {
+	                $name = $r['name'];
+	                $results[$name] = $r['value'];
+	        } // end while sys prefs
+
+	        /* Now we need to allow the user to override some stuff that's been set by the above */
+	        $user_id = '-1';
+	        if ($GLOBALS['user']->username) {
+	                $user_id = Dba::escape($GLOBALS['user']->id);
+	        }
+
+	        $sql = "SELECT preference.name,user_preference.value FROM preference,user_preference WHERE user_preference.user='$user_id' " .
+	                " AND user_preference.preference = preference.id AND preference.catagory != 'system'";
+	        $db_results = Dba::query($sql);
+
+	        while ($r = Dba::fetch_assoc($db_results)) {
+	                $name = $r['name'];
+	                $results[$name] = $r['value'];
+	        } // end while
+
+	        /* Set the Theme mojo */
+	        if (strlen($results['theme_name']) > 0) {
+	                $results['theme_path'] = '/themes/' . $results['theme_name'];
+	        }
+	        // Default to the classic theme if we don't get anything from their
+	        // preferenecs because we're going to want at least something otherwise
+	        // the page is going to be really ugly
+	        else {
+	                $results['theme_path'] = '/themes/classic';
+	        }
+
+	        Config::set_by_array($results,1);
+
+
+	} // init
 
 
 } // end Preference class

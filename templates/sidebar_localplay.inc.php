@@ -24,6 +24,7 @@
 		// Requires a little work.. :(
 		$instances = $localplay->get_instances(); 
 		foreach ($instances as $uid=>$name) { 
+			$name = scrub_out($name); 
 			$class = '';
 			if ($uid == $current_instance) { 
 				$class = ' class="active_instance"'; 

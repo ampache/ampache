@@ -300,15 +300,16 @@ class Stream {
 
 	} // create_pls
 
-	/*!
-		@function create_asx
-		@discussion creates an ASZ playlist (Thx Samir Kuthiala)
-	*/
-	function create_asx() { 
+	/**
+	 * create_asx
+	 * creates an ASX playlist (Thx Samir Kuthiala) This should really only be used
+	 * if all of the content is ASF files. 
+	 */
+	public function create_asx() { 
 
 	        header("Cache-control: public");
         	header("Content-Disposition: filename=playlist.asx");
-		header("Content-Type: video/x-ms-asf;");
+		header("Content-Type: audio/x-ms-wax;");
  
 		echo "<ASX version = \"3.0\" BANNERBAR=\"AUTO\">\n";
                 echo "<TITLE>Ampache ASX Playlist</TITLE>";

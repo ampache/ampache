@@ -231,7 +231,7 @@ else {
 }
 
 // Load the Preferences from the database
-init_preferences();
+Preference::init();
 
 // We need to create the tmp playlist for our user
 $GLOBALS['user']->load_playlist(); 

@@ -42,7 +42,7 @@ switch($_REQUEST['action']) {
 
 		/* Update and reset preferences */
 		update_preferences($user_id);	
-		init_preferences();
+		Preference::init();
 
 		$preferences = $GLOBALS['user']->get_preferences($user_id,$_REQUEST['tab']);		
 	break;

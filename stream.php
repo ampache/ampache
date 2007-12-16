@@ -199,7 +199,12 @@ switch ($_REQUEST['method']) {
 					$GLOBALS['user']->prefs['play_type'] = 'stream'; 
 				}
 			default:
-				$stream_type = $GLOBALS['user']->prefs['play_type'];
+				if ($GLOBALS['user']->prefs['play_type'] == 'stream') { 
+					$stream_type = $GLOBALS['user']->prefs['playlist_type'];
+				} 
+				else { 
+					$stream_type = $GLOBALS['user']->prefs['play_type']; 
+				} 
 			break;
 		} 
 

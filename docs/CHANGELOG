@@ -4,6 +4,10 @@
 
 --------------------------------------------------------------------------
   v.3.4-Alpha4 
+	- Added Highest Rated option to Advanced Random
+	- Fixed incorrect mime type being set on ASX playlists
+	- Fixed problem where you couldn't change playlist type 
+		(Thx Karl Hungus) 
 	- Fixed potential issue with display on some preferences
 	- Added Length to Advanced Random and removed Minutes from methods 
 	- Added function exists check for session with redirect to /test.php

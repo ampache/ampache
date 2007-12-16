@@ -259,7 +259,7 @@ class Random {
 	        
 		/* If they've passed -1 as limit then don't get everything */
 	        if ($data['random'] == "-1") { unset($data['random']); }
-	        else { $limit_sql = "LIMIT " . $limit; }
+	        else { $limit_sql = "LIMIT " . Dba::escape($limit); }
 
 	        $where = "1=1 ";
 	        if (is_array($matchlist)) { 
@@ -279,52 +279,85 @@ class Random {
 	                        }
 	            } // end foreach
 		} // end if matchlist
-		
-	        if ($data['random_type'] == 'full_album') {
-	                $query = "SELECT `album`.`id` FROM `song` INNER JOIN `album` ON `song`.`album`=`album`.`id` " . 
-				"WHERE $where GROUP BY `song`.`album` ORDER BY RAND() $limit_sql";
-	                $db_results = Dba::query($query);
-	                while ($row = Dba::fetch_assoc($db_results)) {
-	                        $albums_where .= " OR `song`.`album`=" . $row['id'];
-	                }
-	                $albums_where = ltrim($albums_where," OR");
-	                $sql = "SELECT `song`.`id`,`song`.`size`,`song`.`time` FROM `song` WHERE $albums_where ORDER BY `song`.`album`,`song`.`track` ASC";
+	
+		switch ($data['random_type']) { 
+			case 'full_aldum': 
+	                	$query = "SELECT `album`.`id` FROM `song` INNER JOIN `album` ON `song`.`album`=`album`.`id` " . 
+					"WHERE $where GROUP BY `song`.`album` ORDER BY RAND() $limit_sql";
+		                $db_results = Dba::query($query);
+		                while ($row = Dba::fetch_assoc($db_results)) {
+		                        $albums_where .= " OR `song`.`album`=" . $row['id'];
+		                }
+		                $albums_where = ltrim($albums_where," OR");
+		                $sql = "SELECT `song`.`id`,`song`.`size`,`song`.`time` FROM `song` WHERE $albums_where ORDER BY `song`.`album`,`song`.`track` ASC";
+			break; 
+			case 'full_artist': 
+	                	$query = "SELECT `artist`.`id` FROM `song` INNER JOIN `artist` ON `song`.`artist`=`artist`.`id` " . 
+					"WHERE $where GROUP BY `song`.`artist` ORDER BY RAND()  $limit_sql";
+		                $db_results = Dba::query($query);
+		                while ($row = Dba::fetch_row($db_results)) {
+		                        $artists_where .= " OR song.artist=" . $row[0];
+		                }
+		                $artists_where = ltrim($artists_where," OR");
+		                $sql = "SELECT song.id,song.size,song.time FROM song WHERE $artists_where ORDER BY RAND()";
+		        break;
+			case 'unplayed': 
+				$uid = Dba::escape($GLOBALS['user']->id); 
+				$sql = "SELECT object_id,COUNT(`id`) AS `total` FROM `object_count` WHERE `user`='$uid' GROUP BY `object_id`";
+				$db_results = Dba::query($sql); 
 
-	        }
-	        elseif ($data['random_type'] == 'full_artist') {
-	                $query = "SELECT `artist`.`id` FROM `song` INNER JOIN `artist` ON `song`.`artist`=`artist`.`id` " . 
-				"WHERE $where GROUP BY `song`.`artist` ORDER BY RAND()  $limit_sql";
-	                $db_results = Dba::query($query);
-	                while ($row = Dba::fetch_row($db_results)) {
-	                        $artists_where .= " OR song.artist=" . $row[0];
-	                }
-	                $artists_where = ltrim($artists_where," OR");
-	                $sql = "SELECT song.id,song.size,song.time FROM song WHERE $artists_where ORDER BY RAND()";
-	        }	
-		elseif ($data['random_type'] == 'unplayed') {
-			$uid = Dba::escape($GLOBALS['user']->id); 
-			$sql = "SELECT object_id,COUNT(`id`) AS `total` FROM `object_count` WHERE `user`='$uid' GROUP BY `object_id`";
-			$db_results = Dba::query($sql); 
+				$in_sql = "`id` IN (";
 
-			$in_sql = "`id` IN (";
+				while ($row = Dba::fetch_assoc($db_results)) { 
+					$row['object_id'] = Dba::escape($row['object_id']); 
+					$in_sql .= "'" . $row['object_id'] . "',";  
+				} 
 
-			while ($row = Dba::fetch_assoc($db_results)) { 
-				$in_sql .= "'" . $row['object_id'] . "',";  
-			} 
+				$in_sql = rtrim($in_sql,',') . ')';
 
-			$in_sql = rtrim($in_sql,',') . ')';
+				$sql = "SELECT song.id,song.size,song.time FROM song " .
+					"WHERE ($where) AND $in_sql ORDER BY RAND() $limit_sql";
+			break; 
+			case 'high_rating': 
+				$sql = "SELECT `rating`.`object_id`,`rating`.`rating` FROM `rating` " . 
+					"WHERE `rating`.`object_type`='song' ORDER BY `rating` DESC"; 
+				$db_results = Dba::query($sql); 
 
-			$sql = "SELECT song.id,song.size,song.time FROM song " .
-				"WHERE ($where) AND $in_sql ORDER BY RAND() $limit_sql";
+				// Get all of the ratings for songs
+				while ($row = Dba::fetch_assoc($db_results)) { 
+					$results[$row['object_id']][] = $row['rating']; 
+				} 
+				// Calculate the averages 
+				foreach ($results as $key=>$rating_array) { 
+					$average = intval(array_sum($rating_array) / count($rating_array)); 
+					// We have to do this because array_slice doesn't maintain indexes
+					$new_key = $average . $key; 
+					$ratings[$new_key] = $key;
+				} 
 
-		} // If unplayed
-		elseif ($data['random_type'] == 'high_rating') { 
+				// Sort it by the value and slice at $limit * 2 so we have a little bit of randomness
+				krsort($ratings); 
+				$ratings = array_slice($ratings,0,$limit*2); 
+				
+				$in_sql = "`song`.`id` IN ("; 
+			
+				// Build the IN query, cause if you're OUT it ain't cool
+				foreach ($ratings as $song_id) { 
+					$key = Dba::escape($song_id);
+					$in_sql .= "'$key',"; 
+				} 
 
+				$in_sql = rtrim($in_sql,',') . ')'; 
 
-		} 
-		else { 
-			$sql = "SELECT `id`,`size`,`time` FROM `song` WHERE $where ORDER BY RAND() $limit_sql"; 
-		} 
+				// Apply true limit and order by rand
+				$sql = "SELECT song.id,song.size,song.time FROM song " . 
+					"WHERE ($where) AND $in_sql ORDER BY RAND() $limit_sql"; 
+			break;
+			default: 
+				$sql = "SELECT `id`,`size`,`time` FROM `song` WHERE $where ORDER BY RAND() $limit_sql"; 
+
+			break;
+		} // end switch on type of random play 
 
 		// Run the query generated above so we can while it
 		$db_results = Dba::query($sql); 

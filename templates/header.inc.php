@@ -41,7 +41,7 @@ if (Config::get('use_rss')) { ?>
 <link rel="alternate" type="application/rss+xml" title="Ampache Recently Played" href="<?php echo $web_path; ?>/rss.php?type=recentlyplayed" />
 <?php } ?>
 <meta http-equiv="Content-Type" content="application/xhtml+xml; charset=<?php echo Config::get('site_charset'); ?>" />
-<title><?php echo Config::get('site_title'); ?> - <?php echo $location['title']; ?></title>
+<title><?php echo scrub_out(Config::get('site_title')); ?> - <?php echo $location['title']; ?></title>
 <link rel="stylesheet" href="<?php echo $web_path; ?><?php echo Config::get('theme_path'); ?>/templates/default.css" type="text/css" media="screen" />
 <link rel="stylesheet" href="<?php echo $web_path; ?>/templates/print.css" type="text/css" media="print" />
 <link rel="stylesheet" href="<?php echo $web_path; ?>/templates/handheld.css" type="text/css" media="handheld" />
