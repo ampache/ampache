@@ -677,24 +677,23 @@ class Catalog {
 	} // get_catalog_albums
 	
 
-	/*!
-		@function get_catalog_files
-		@discussion Returns an array of song objects from a catalog
-		@param $catalog_id=0	Specify the catalog ID you want to get the files of
-	*/
-	function get_catalog_files($catalog_id=0) {
+	/**
+	 * get_catalog_files
+	 * Returns an array of song objects from a catalog, used by sort_files script
+	 */
+	public function get_catalog_files($catalog_id=0) {
 
 		$results = array();
 
 		/* Use $this->id if nothing passed */
-		if (!$catalog_id) { $catalog_id = $this->id; }
+		$catalog_id = $catalog_id ? Dba::escape($catalog_id) : Dba::escape($this->id); 
 
-		$sql = "SELECT id FROM song WHERE catalog='$catalog_id' AND enabled='1'";
-		$db_results = mysql_query($sql, dbh());
+		$sql = "SELECT `id` FROM `song` WHERE `catalog`='$catalog_id' AND `enabled`='1'";
+		$db_results = Dba::query($sql); 
 
                 $results = array(); // return an emty array instead of nothing if no objects
-		while ($r = mysql_fetch_object($db_results)) {
-			$results[] = new Song($r->id);
+		while ($r = Dba::fetch_assoc($db_results)) {
+			$results[] = new Song($r['id']);
 		} //end while
 
 		return $results;

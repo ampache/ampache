@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright 2001 - 2006 Ampache.org
+ Copyright 2001 - 2007 Ampache.org
  All Rights Reserved
 
  This program is free software; you can redistribute it and/or
@@ -34,19 +34,21 @@ $path = dirname(__FILE__);
 $prefix = realpath($path . '/../'); 
 require_once $prefix . '/lib/init.php';
 
+if ($debug) { echo "DEBUG ENABLED WILL NOT DELETE FILES!\n"; } 
+
 /* Get a list of filenames */
-$sql = "SELECT id,file FROM song WHERE enabled='0'"; 
-$db_results = mysql_query($sql,dbh()); 
+$sql = "SELECT `id`,`file` FROM song WHERE enabled='0'"; 
+$db_results = Dba::query($sql); 
 
-while ($r = mysql_fetch_assoc($db_results)) { 
-
+while ($row = Dba::fetch_assoc($db_results)) { 
 	if ($debug) { 
-		echo "Deleting: " . $r['file'] . "\n";
+		echo "Would Delete: " . $row['file'] . "\n";
 	}
 	else { 
-		unlink($r['file']); 
-		$sql = "DELETE FROM song WHERE id='" . sql_escape($r['id']) . "'";
-		$del_results = mysql_query($sql,dbh()); 
+		echo "Deleting: " . $row['file'] . "\n"; 
+		unlink($row['file']); 
+		$sql = "DELETE FROM `song` WHERE `id`='" . Dba::escape($row['id']) . "'";
+		$del_results = Dba::query($sql);
 	} 
 } // end while
 

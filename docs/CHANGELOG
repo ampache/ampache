@@ -4,6 +4,7 @@
 
 --------------------------------------------------------------------------
   v.3.4-Alpha4 
+	- Fixed Delete Disabled & Sort Files command line scripts
 	- Fixed Find Duplicates Functionality
 	- Added Highest Rated option to Advanced Random
 	- Fixed incorrect mime type being set on ASX playlists
