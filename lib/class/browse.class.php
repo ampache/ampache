@@ -169,7 +169,7 @@ class Browse {
 				$valid_array = array('name','year'); 
 			break;
 			case 'playlist': 
-				$valid_array = array('name');
+				$valid_array = array('name','user');
 			break; 
 			case 'live_stream': 
 				$valid_array = array('name','call_sign','frequency'); 
