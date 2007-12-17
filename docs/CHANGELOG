@@ -4,6 +4,8 @@
 
 --------------------------------------------------------------------------
   v.3.4-Alpha4 
+	- Fixed Mail functions, some features from old mail are missing for
+		now. 
 	- Fixed Delete Disabled & Sort Files command line scripts
 	- Fixed Find Duplicates Functionality
 	- Added Highest Rated option to Advanced Random

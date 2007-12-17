@@ -35,7 +35,7 @@ $htmllang = str_replace("_","-",Config::get('lang'));
 <link rel="stylesheet" href="<?php echo Config::get('web_path'); ?>/templates/print.css" type="text/css" media="print" />
 <link rel="stylesheet" href="<?php echo Config::get('web_path'); ?>/templates/handheld.css" type="text/css" media="handheld" />
 <link rel="stylesheet" href="<?php echo Config::get('web_path'); ?><?php echo Config::get('theme_path'); ?>/templates/default.css" type="text/css" media="screen" />
-<title> <?php echo Config::get('site_title'); ?> </title>
+<title> <?php echo scrub_out(Config::get('site_title')); ?> </title>
 <script type="text/javascript" language="javascript">
 function focus(){ document.login.username.focus(); }
 </script>
@@ -51,7 +51,7 @@ function focus(){ document.login.username.focus(); }
     </h1>
   </div>
 	<div id="loginbox">
-		<h2><?php echo Config::get('site_title'); ?></h2>
+		<h2><?php echo scrub_out(Config::get('site_title')); ?></h2>
 		<form name="login" method="post" enctype="multipart/form-data" action="<?php echo Config::get('web_path'); ?>/login.php">
 
 			<div class="loginfield" id="usernamefield">

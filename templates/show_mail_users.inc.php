@@ -1,13 +1,12 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2006 Ampache.org
+ Copyright (c) 2001 - 2007 Ampache.org
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
- as published by the Free Software Foundation; either version 2
- of the License, or (at your option) any later version.
+ as published by the Free Software Foundation; version 2 of the License.
 
  This program is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -22,20 +21,20 @@
 ?>
 
 <?php show_box_top(_('Send E-mail to Users')); ?>
-<form name="mail" method="post" action="<?php echo conf('web_path'); ?>/admin/mail.php" enctype="multipart/form-data">
+<form name="mail" method="post" action="<?php echo Config::get('web_path'); ?>/admin/mail.php?action=send_mail" enctype="multipart/form-data">
 <table>
   <tr>
     <td><?php echo _('Mail to'); ?>:</td>
     <td>
         <select name="to">
-                <option value="all" title="Mail Everyone" <?php if ($to == 'all') { echo "selected=\"selected\""; } ?>>All</option>
-                <option value="users" title="Mail Users" <?php if ($to == 'user') { echo "selected=\"selected\""; } ?>>Users</option>
-                <option value="admins" title="Mail Admins" <?php if ($to == 'admin') { echo "selected=\"selected\""; } ?>>Admins</option>
-		<option value="inactive" title="Mail Inactive Users" <?php if ($to == 'inactive') { echo "selected=\"selected\""; } ?>>Inactive</option>
+                <option value="all" title="Mail Everyone"><?php echo _('All'); ?></option>
+                <option value="users" title="Mail Users"><?php echo _('User'); ?></option>
+                <option value="admins" title="Mail Admins"><?php echo _('Admin'); ?></option>
+		<option value="inactive" title="Mail Inactive Users"><?php echo _('Inactive Users'); ?>&nbsp;</option>
         </select>
-	&nbsp;&nbsp;users that are inactive for more than&nbsp;&nbsp;<input type="text" title="This value is only used when mailing to inactive users" size="3" name="inactive" value="30" />&nbsp;&nbsp;days</title>
     </td>
   </tr>
+<!--
   <tr>
     <td colspan="2">	
  	 <table>
@@ -86,14 +85,14 @@
 		  <tr>
 		    <td colspan = "2"><?php echo _('Most Popular Threshold in days'); ?>:</td>
 		    <td>
-		        <input type="text" name="threshold" size="3" value="<?php echo conf('popular_threshold'); ?>" />
+		        <input type="text" name="threshold" size="3" value="<?php echo Config::get('popular_threshold'); ?>" />
 		    </td>
 		</tr>
 
 	</table>
     </td>
   </tr>
-
+-->
   <tr>
     <td><?php echo _('Subject'); ?>:</td>
     <td colspan="3">
@@ -104,13 +103,12 @@
   <tr>
     <td valign="top"><?php echo _('Message'); ?>:</td>
     <td>
-        <textarea class="input" name="message" rows="20" cols="70"><?php echo scrub_out($message); ?></textarea>
+        <textarea class="input" name="message" rows="10" cols="70"></textarea>
     </td>
   </tr>
 
 </table>
 <div class="formValidation">
-        <input type="hidden" name="action" value="send_mail" />
         <input class="button" type="submit" value="<?php echo _('Send Mail'); ?>" />
 </div>
 </form>
