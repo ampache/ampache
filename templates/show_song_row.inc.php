@@ -32,13 +32,17 @@
 <td class="cel_rating" id="rating_<?php echo $song->id; ?>_song"><?php Rating::show($song->id,'song'); ?></td>
 <?php } ?>
 <td class="cel_action">
+	<?php if (Config::get('shoutbox')) { ?>
+                <a href="<?php echo Config::get('web_path'); ?>/shout.php?action=show_add_shout&amp;type=song&amp;id=<?php echo $song->id; ?>">
+                <?php echo get_user_icon('comment',_('Post Shout')); ?>
+                </a>
+	<?php } ?>
 	<?php if ($GLOBALS['user']->prefs['download']) { ?>
 	<a href="<?php echo Config::get('web_path'); ?>/stream.php?action=download&amp;song_id=<?php echo $song->id; ?>">
 		<?php echo get_user_icon('download',_('Download')); ?>
 	</a>
 	<?php } ?>
-
-	<?php if ($GLOBALS['user']->has_access(100)) { ?>
-	<?php echo Ajax::button('?action=show_edit_object&type=song&id=' . $song->id,'edit',_('Edit'),'edit_song_' . $song->id); ?>
+	<?php if (Access::check('interface','75')) { ?>
+		<?php echo Ajax::button('?action=show_edit_object&type=song&id=' . $song->id,'edit',_('Edit'),'edit_song_' . $song->id); ?>
 	<?php } ?>
 </td>

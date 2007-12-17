@@ -28,13 +28,25 @@ if (isset($_REQUEST['xspf']) && isset ($_REQUEST['play_info'])){
 <div id="now_playing">
         <?php show_now_playing(); ?>
 </div> <!-- Close Now Playing Div -->
-<!-- Recently Played -->
+<!-- Sticky Objects, if sticky is enabled --> 
+<?php if (Config::get('shoutbox')) { ?>
+<div id="shout_objects">
+	<?php 
+		$shouts = shoutBox::get_top('5'); 
+		if (count($shouts)) { 
+			require_once Config::get('prefix') . '/templates/show_shoutbox.inc.php'; 
+		} 
+	?>
+</div>
+<?php } ?>
+<!-- Randomly selected albums of the moment --> 
 <div id="random_selection">
 	<?php
 		$albums = get_random_albums('6'); 
 		if (count($albums)) { require_once Config::get('prefix') . '/templates/show_random_albums.inc.php'; } 
 	?>
 </div> 
+<!-- Recently Played -->
 <div id="recently_played">
         <?php
                 $data = get_recently_played();

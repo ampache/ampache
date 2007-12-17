@@ -205,6 +205,14 @@ use_auth	= "yes"
 ; DEFAULT: true
 ratings = "true"
 
+; ShoutBox
+; Enabling this will allow any user to 'tag' an item and post
+; a comment about it which will then be put on the main pages 
+; shoutbox. Admins are allowed to create 'sticky' shoutbox items
+; POSSIBLE VALUES: false true
+; DEFAULT: false
+;shoutbox = "false" 
+
 ; This options will turn on/off Demo Mode
 ; If Demo mode is on you can not play songs or update your catalog
 ; in other words.. leave this commented out

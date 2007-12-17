@@ -687,7 +687,7 @@ a.button{padding:1px 3px;}
 	text-indent:-9999em;
 } 
 
-.information { 
+.information,.information a { 
 	font-size: 0.9em; 
 	font-style: italic; 
 	color: #c0c0c0; 

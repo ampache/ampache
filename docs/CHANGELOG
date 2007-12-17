@@ -4,6 +4,9 @@
 
 --------------------------------------------------------------------------
   v.3.4-Alpha4 
+	- Added Basic ShoutBox functionality, needs formating fixes
+		and needs to be moved to a better spot in classic theme it
+		must be turned on in the /config/ampache.cfg.php
 	- Fixed Mail functions, some features from old mail are missing for
 		now. 
 	- Fixed Delete Disabled & Sort Files command line scripts

@@ -35,12 +35,17 @@
 <td class="cel_songs"><?php echo $album->song_count; ?></td>
 <td class="cel_year"><?php echo $album->year; ?></td>
 <td class="cel_action">
+	<?php if (Config::get('shoutbox')) { ?>
+		<a href="<?php echo Config::get('web_path'); ?>/shout.php?action=show_add_shout&amp;type=album&amp;id=<?php echo $album->id; ?>">
+		<?php echo get_user_icon('comment',_('Post Shout')); ?>
+		</a>
+	<?php } ?>
 	<?php if (Access::check_function('batch_download')) { ?>
 		<a href="<?php echo Config::get('web_path'); ?>/batch.php?action=album&amp;id=<?php echo $album->id; ?>">
 			<?php echo get_user_icon('batch_download',_('Batch Download')); ?>
 		</a>
 	<?php } ?>
-	<?php if ($GLOBALS['user']->has_access('50')) { ?>
+	<?php if (Access::check('interface','50')) { ?>
 		<?php echo Ajax::button('?action=show_edit_object&type=album&id=' . $album->id,'edit',_('Edit'),'edit_album_' . $album->id); ?>
 	<?php } ?>
 </td>

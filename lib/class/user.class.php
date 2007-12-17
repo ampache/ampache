@@ -620,6 +620,9 @@ class User {
         	if (!$this->create_date) { $this->f_create_date = _('Unknown'); }
 		else { $this->f_create_date = date("m\/d\/Y - H:i",$this->create_date); }
 
+		// Base link
+		$this->f_link = '<a href="' . Config::get('web_path') . '/stats.php?action=show_user&user_id=' . $this->id . '">' . $this->fullname . '</a>';
+
 		/* Calculate their total Bandwidth Useage */
 		$sql = "SELECT `song`.`size` FROM `song` LEFT JOIN `object_count` ON `song`.`id`=`object_count`.`object_id` " . 
 			"WHERE `object_count`.`user`='$this->id' AND `object_count`.`object_type`='song'";

@@ -86,6 +86,7 @@ $time_unit = array('',_('seconds ago'),_('minutes ago'),_('hours ago'),_('days a
 </tr>
 <?php } ?>
 <tr class="th-bottom">
+	<th class="cel_add"><?php echo _('Add'); ?></th>
 	<th class="cel_username"><?php echo _('Username'); ?></th>
 	<th class="cel_song"><?php echo _('Song'); ?></th>
 	<th class="cel_album"><?php echo _('Album'); ?></th>
