@@ -4,6 +4,8 @@
 
 --------------------------------------------------------------------------
   v.3.4-Alpha4 
+	- Fixed it so that all errors should return an XML document when
+		using the XML API. 
 	- Added Basic ShoutBox functionality, needs formating fixes
 		and needs to be moved to a better spot in classic theme it
 		must be turned on in the /config/ampache.cfg.php

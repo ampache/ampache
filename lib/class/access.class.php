@@ -179,6 +179,7 @@ class Access {
 			/* This is here because we want to at least check IP before even creating the xml-rpc server
 			 * however we don't have the key that was passed yet so we've got to do just ip
 			 */
+			case 'init-rpc':
 			case 'init-xml-rpc':
 				$sql = "SELECT `id` FROM `access_list`" .
 					" WHERE `start` <= '$ip' AND `end` >= '$ip' AND `type`='rpc' AND `level` >= '$level'";
@@ -189,6 +190,7 @@ class Access {
 					" WHERE `start` <= '$ip' AND `end` >= '$ip'" . 
 					" AND  `key` = '$key' AND `level` >= '$level' AND `type`='rpc'";
 			break;
+			case 'init-api':
 			case 'network':
 			case 'interface':
 			case 'stream':

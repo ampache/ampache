@@ -27,17 +27,7 @@
 define('NO_SESSION','1');
 require_once '../lib/init.php';
 
-// If we don't even have access control on then we can't use this!
-if (!Config::get('access_control')) { access_denied(); exit; }  
 
-/** 
- * Verify the existance of the Session they passed in we do allow them to
- * login via this interface so we do have an exception for action=login
- */
-if (!Access::session_exists(array(),$_REQUEST['auth'],'api') AND $_REQUEST['action'] != 'handshake') { 
-	debug_event('Access Denied','Invalid Session or unthorized access attempt to API','5'); 
-	exit(); 
-}
 
 // If it's not a handshake then we can allow it to take up lots of time
 if (!$_REQUEST['action'] != 'handshake') { 
@@ -48,15 +38,36 @@ if (!$_REQUEST['action'] != 'handshake') {
 header("Content-type: text/xml; charset=" . Config::get('site_charset'));
 header("Content-Disposition: attachment; filename=information.xml");
 
+// If we don't even have access control on then we can't use this!
+if (!Config::get('access_control')) { 
+	ob_end_clean(); 
+	echo xmlData::error('Access Control not Enabled');
+	exit; 
+}  
+
+/** 
+ * Verify the existance of the Session they passed in we do allow them to
+ * login via this interface so we do have an exception for action=login
+ */
+if ((!Access::session_exists(array(),$_REQUEST['auth'],'api') AND $_REQUEST['action'] != 'handshake') || !Access::check_network('init-api',$_SERVER['REMOTE_ADDR'],$_REQUEST['user'])) { 
+	debug_event('Access Denied','Invalid Session or unathorized access attempt to API','5'); 
+	ob_end_clean(); 
+        echo xmlData::error('Access Denied due to ACL or unauthorized access attempt to API, attempt logged');
+	exit(); 
+}
+
+
 switch ($_REQUEST['action']) { 
 	case 'handshake': 
 		// Send the data we were sent to the API class so it can be chewed on 
 		$token = Api::handshake($_REQUEST['timestamp'],$_REQUEST['auth'],$_SERVER['REMOTE_ADDR'],$_REQUEST['user']); 
 		
 		if (!$token) { 
+			ob_end_clean(); 
 			echo xmlData::error('Error Invalid Handshake, attempt logged'); 
 		} 
 		else { 
+			ob_end_clean(); 
 			echo xmlData::keyed_array($token); 
 		} 
 
@@ -75,6 +86,7 @@ switch ($_REQUEST['action']) {
 
 		$artists = Browse::get_objects(); 
 		// echo out the resulting xml document
+		ob_end_clean(); 
 		echo xmlData::artists($artists); 
 	break; 
 	case 'artist_albums': 
@@ -84,7 +96,7 @@ switch ($_REQUEST['action']) {
 
                 // Set the offset
                 xmlData::set_offset($_REQUEST['offset']);
-
+		ob_end_clean(); 
 		echo xmlData::albums($albums); 
 	break; 
 	case 'artist_songs': 
@@ -93,7 +105,8 @@ switch ($_REQUEST['action']) {
 
 		// Set the offset
 		xmlData::set_offset($_REQUEST['offset']); 
-		xmlData::songs($songs); 
+		ob_end_clean(); 
+		echo xmlData::songs($songs); 
 	break; 
 	case 'albums': 
 		Browse::reset_filters(); 
@@ -107,7 +120,7 @@ switch ($_REQUEST['action']) {
 
                 // Set the offset
                 xmlData::set_offset($_REQUEST['offset']);
-
+		ob_end_clean(); 
 		echo xmlData::albums($albums); 
 	break; 
 	case 'album_songs': 
@@ -116,7 +129,7 @@ switch ($_REQUEST['action']) {
 
                 // Set the offset
                 xmlData::set_offset($_REQUEST['offset']);
-
+		ob_end_clean(); 
 		echo xmlData::songs($songs); 
 	break; 
 	case 'genres': 
@@ -131,25 +144,25 @@ switch ($_REQUEST['action']) {
 
                 // Set the offset
                 xmlData::set_offset($_REQUEST['offset']);
-
+		ob_end_clean(); 
 		echo xmlData::genres($genres); 
 	break; 
 	case 'genre_artists': 
 		$genre = new Genre($_REQUEST['filter']); 
 		$artists = $genre->get_artists(); 
-		
+		ob_end_clean(); 
 		echo xmlData::artists($artists); 	
 	break; 
 	case 'genre_albums': 
 		$genre = new Genre($_REQUEST['filter']); 
 		$albums = $genre->get_albums(); 
-
+		ob_end_clean(); 
 		echo xmlData::albums($albums); 
 	break;
 	case 'genre_songs': 
 		$genre = new Genre($_REQUEST['filter']); 
 		$songs = $genre->get_songs(); 
-	
+		ob_end_clean(); 	
 		echo xmlData::songs($songs); 
 	break; 
 	case 'songs': 
@@ -164,11 +177,12 @@ switch ($_REQUEST['action']) {
 
                 // Set the offset
                 xmlData::set_offset($_REQUEST['offset']);
-
+		ob_end_clean(); 
 		echo xmlData::songs($songs); 
 	break; 
 	default:
-		// Rien a faire
+                ob_end_clean();
+                echo xmlData::error('Invalid Request');
 	break;
 } // end switch action
 ?>
