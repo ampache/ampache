@@ -27,10 +27,8 @@
 define('NO_SESSION','1');
 require_once '../lib/init.php';
 
-
-
 // If it's not a handshake then we can allow it to take up lots of time
-if (!$_REQUEST['action'] != 'handshake') { 
+if ($_REQUEST['action'] != 'handshake') { 
 	set_time_limit(0); 
 } 
 

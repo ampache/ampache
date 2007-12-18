@@ -96,7 +96,7 @@ catalog_file_pattern = "mp3|mpc|m4p|m4a|mp4|aac|ogg|rm|wma|asf|flac|spx|ra|ape|s
 ; Use Access List 
 ; Toggle this on if you want ampache to pay attention to the access list
 ; and only allow streaming/downloading/xml-rpc from known hosts by default
-; xml-rpc will not working without this on.
+; xml-rpc will not work without this on.
 ; DEFAULT: false
 ;access_control	= "false"
 

@@ -48,12 +48,13 @@ class Api {
 	public static function handshake($timestamp,$passphrase,$ip,$username='') { 
 
 		// If the timestamp is over 2hr old sucks to be them
-//		if ($timestamp < (time() - 7200)) { 
-//			return 'Timestamp too old, try again'; 
-//		} 
+		if ($timestamp < (time() - 14400)) { 
+			debug_event('API','Login Failed, timestamp too old','1'); 
+			return false; 
+		} 
 
 		// First we'll filter by username and IP 
-		if (!$username) { 
+		if (!trim($username)) { 
 			$user_id = '-1'; 
 		} 
 		else { 

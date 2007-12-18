@@ -4,6 +4,9 @@
 
 --------------------------------------------------------------------------
   v.3.4-Alpha4 
+	- Added check to make sure timestamp passed to API is less then
+		four hours old. Set to four hours to allow for some 
+		difference in server/client time
 	- Fixed basic XML-RPC functionality, using insecure / old 
 		authentication method needs more work
 	- Fixed it so that all errors should return an XML document when
