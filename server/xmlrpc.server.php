@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright 2001 - 2006 Ampache.org
+ Copyright 2001 - 2007 Ampache.org
  All Rights Reserved
 
  This program is free software; you can redistribute it and/or
@@ -22,32 +22,36 @@
 define('NO_SESSION','1');
 require_once('../lib/init.php');
 
-if (conf('xml_rpc')) { 
-	require_once(conf('prefix') . "/modules/xmlrpc/xmlrpcs.inc");
-	require_once(conf('prefix') . "/modules/xmlrpc/xmlrpc.inc");
-}
-else { exit(); }
+/* Set the correct headers */
+header("Content-type: text/xml; charset=" . Config::get('site_charset'));
+header("Content-Disposition: attachment; filename=xmlrpc-server.xml");
 
-/* Setup the vars we are going to need */
-$access = new Access();
+if (Config::get('xml_rpc')) { 
+	require_once Config::get('prefix') . "/modules/xmlrpc/xmlrpcs.inc";
+	require_once Config::get('prefix') . "/modules/xmlrpc/xmlrpc.inc";
+}
+else { 
+	debug_event('DENIED','Attempted to Access XMLRPC server with xml_rpc disabled','1'); 
+	exit(); 
+}
 
 // ** check that the remote server has access to this catalog
-if ($access->check('init-xml-rpc',$_SERVER['REMOTE_ADDR'],'','5','')) {
+if (Access::check_network('init-rpc',$_SERVER['REMOTE_ADDR'],'','5','')) {
 
-	/* Setup Possible Actions */
-	$methods['remote_catalog_query'] 	= array('function' => 'remote_catalog_query');
-	$methods['remote_song_query']		= array('function' => 'remote_song_query');
-	$methods['remote_session_verify']	= array('function' => 'remote_session_verify');
+	// Define an array of classes we need to pull from for the 
+	$classes = array('xmlRpcServer'); 	
 
-	$s = new xmlrpc_server($methods);
-}
-else {
-	// Access Denied... Sucka!!
-        $methods['remote_catalog_query']        = array('function' => 'remote_server_denied');
-        $methods['remote_song_query']           = array('function' => 'remote_server_denied');
-        $methods['remote_session_verify']       = array('function' => 'remote_server_denied');
-		
-	$s = new xmlrpc_server($methods);
-}
+	foreach ($classes as $class) { 
+		$methods = get_class_methods($class); 
+
+		foreach ($methods as $method) { 
+			$name = strtolower($class) . '.' . strtolower($method); 
+			$functions[$name] = array('function'=>$class . '::' . $method); 
+		} 
+
+	} // end foreach of classes
+
+	$server = new xmlrpc_server($functions);
+} // test for ACL 
 
 ?>

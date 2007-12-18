@@ -84,7 +84,8 @@ function ampache_error_handler($errno, $errstr, $errfile, $errline) {
 	 * Yea now getid3() spews errors I love it :(
 	 */
 	if (strstr($errstr,"var: Deprecated. Please use the public/private/protected modifiers") OR
-	    strstr($errstr,"getimagesize() [") OR strstr($errstr,"Non-static method getid3")) { 
+	    strstr($errstr,"getimagesize() [") OR strstr($errstr,"Non-static method getid3") OR
+	    strstr($errstr,"Assigning the return value of new by reference is deprecated")) { 
 		return false; 
 	}
 

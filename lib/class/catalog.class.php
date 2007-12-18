@@ -223,7 +223,7 @@ class Catalog {
 		$path = Dba::escape($data['path']); 
 
 		// Make sure the path is readable/exists
-		if (!is_readable($data['path'])) { 
+		if (!is_readable($data['path']) AND $data['type'] == 'local') { 
 			Error::add('general','Error: ' . scrub_out($data['path']) . ' is not readable or does not exist'); 
 			return false; 
 		} 
@@ -270,6 +270,13 @@ class Catalog {
 	 * throught the path for this catalog
 	 */
 	public function run_add($options) { 
+
+		if ($this->catalog_type == 'remote') {
+			show_box_top(_('Running Remote Sync') . '. . .'); 
+                        $this->get_remote_catalog($type=0);
+			show_box_bottom(); 
+                        return true;
+                }
 
 		// Catalog Add start
 		$start_time = time(); 
@@ -1178,8 +1185,9 @@ class Catalog {
 	public function add_to_catalog() { 
 
 		if ($this->catalog_type == 'remote') { 
-			echo _('Running Remote Update') . ". . .<br />";
+			show_box_top(_('Running Remote Update') . '. . .'); 
 			$this->get_remote_catalog($type=0);
+			show_box_bottom(); 
 			return true;
 		} 
 	
@@ -1242,14 +1250,10 @@ class Catalog {
 
 	/**
 	 * get_remote_catalog
-	 * get a remote catalog and runs update if needed
-	 * @package XMLRPC
-	 * @catagory Client
-	 * @author Karl Vollmer
-	 * @todo Add support for something besides port 80
-	 * @todo Add a Pub/Private Key swap in here for extra security
+	 * get a remote catalog and runs update if needed this requires
+	 * the XML RPC stuff and a key to be passed
 	 */
-	function get_remote_catalog($type=0) { 
+	public function get_remote_catalog($type=0) { 
 
 		/* Make sure the xmlrpc lib is loaded */
 		if (!class_exists('xmlrpc_client')) { 
@@ -1273,13 +1277,15 @@ class Catalog {
 	        
 		/* encode the variables we need to send over */
 		$encoded_key	= new xmlrpcval($this->key,"string");
-		$encoded_path	= new xmlrpcval(conf('web_path'),"string");
+		$encoded_path	= new xmlrpcval(Config::get('web_path'),"string");
 		
-		$f = new xmlrpcmsg('remote_catalog_query', array($encoded_key,$encoded_path));
+		$xmlrpc_message = new xmlrpcmsg('xmlrpcserver.get_catalogs', array($encoded_key,$encoded_path));
 		
-	        if (conf('debug')) { $client->setDebug(1); }
+		// 6 that's right, the secret level because if you do have debug on most likely you're 
+		// going to just crash your browser... sorry folks
+	        if (Config::get('debug') AND Config::get('debug_level') == '6') { $client->setDebug(1); }
 		
-	        $response = $client->send($f,30);
+	        $response = $client->send($xmlrpc_message,30);
 	        $value = $response->value();
 
 	        if ( !$response->faultCode() ) {
@@ -1287,8 +1293,8 @@ class Catalog {
 			
 			// Print out the catalogs we are going to sync
 	                foreach ($data as $vars) { 
-				$catalog_name 	= $vars[0];
-				$count		= $vars[1];
+				$catalog_name 	= $vars['name'];
+				$count		= $vars['count'];
 	                        print("<b>Reading Remote Catalog: $catalog_name ($count Songs)</b> [$this->path]<br />\n");
 				$total += $count;
 	                } 
@@ -1298,7 +1304,7 @@ class Catalog {
 	        } // if we didn't get an error
 	        else {
 			$error_msg = _("Error connecting to") . " " . $server . " " . _("Code") . ": " . $response->faultCode() . " " . _("Reason") . ": " . $response->faultString();
-			debug_event('xmlrpc-client',$error_msg,'1','ampache-catalog');
+			debug_event('XMLCLIENT',$error_msg,'1');
 			echo "<p class=\"error\">$error_msg</p>";
 	                return;
 	        }
@@ -1324,11 +1330,8 @@ class Catalog {
 	 * get_remote_song
 	 * This functions takes a start and end point for gathering songs from a remote server. It is broken up
 	 * in attempt to get around the problem of very large target catalogs
-	 * @package XMLRPC
-	 * @catagory Client
-	 * @todo Allow specificion of single catalog
 	 */
-	function get_remote_song($client,$start,$end) { 
+	public function get_remote_song($client,$start,$end) { 
 
 		$encoded_start 	= new xmlrpcval($start,"int");
 		$encoded_end	= new xmlrpcval($end,"int");
@@ -1336,12 +1339,12 @@ class Catalog {
 
 		$query_array = array($encoded_key,$encoded_start,$encoded_end); 
 
-                $f = new xmlrpcmsg('remote_song_query',$query_array);
+                $xmlrpc_message = new xmlrpcmsg('xmlrpcserver.get_songs',$query_array);
                 /* Depending upon the size of the target catalog this can be a very slow/long process */
                 set_time_limit(0);
                         
 		// Sixty Second time out per chunk
-                $response = $client->send($f,60);
+                $response = $client->send($xmlrpc_message,60);
                 $value = $response->value();
 
                 if ( !$response->faultCode() ) {
@@ -1353,7 +1356,7 @@ class Catalog {
                 }
                 else {
                         $error_msg = _('Error connecting to') . " " . $server . " " . _("Code") . ": " . $response->faultCode() . " " . _("Reason") . ": " . $response->faultString();
-                        debug_event('xmlrpc-client',$error_msg,'1','ampache-catalog');
+                        debug_event('XMLCLIENT',$error_msg,'1');
                         echo "<p class=\"error\">$error_msg</p>";
                 }
 
@@ -1370,37 +1373,26 @@ class Catalog {
 	 * @todo This should be based off of seralize
 	 * @todo some kind of cleanup of dead songs? 
 	 */
-	function update_remote_catalog($songs,$root_path) {
+	function update_remote_catalog($data,$root_path) {
 
 		/* 
 		   We need to check the incomming songs
 		   to see which ones need to be added
 		*/
-		foreach ($songs as $song) {
+		foreach ($data as $serialized_song) {
 	
 			// Prevent a timeout
                         set_time_limit(0);
 			
-	                $song = base64_decode($song);
-
-	                $data = explode("::", $song);
-
-			$new_song->artist 	= self::check_artist($data[0]);
-			$new_song->album	= self::check_album($data[1],$data[4]);
-			$new_song->title	= $data[2];
-			$new_song->year		= $data[4];
-			$new_song->bitrate	= $data[5];
-			$new_song->rate		= $data[6];
-			$new_song->mode		= $data[7];
-			$new_song->size		= $data[8];
-			$new_song->time		= $data[9];
-			$new_song->track	= $data[10];
-			$new_song->genre	= self::check_genre($data[11]);
-			$new_song->file		= $root_path . "/play/index.php?song=" . $data[12];
-			$new_song->catalog	= $this->id;
+			$song = unserialize($serialized_song);
+			$song->artist	= self::check_artist($song->artist); 
+			$song->album	= self::check_album($song->album,$song->year); 
+			$song->genre	= self::check_genre($song->genre); 
+			$song->file	= $root_path . "/play/index.php?song=" . $data[12];
+			$song->catalog	= $this->id;
 	     
-			if (!$this->check_remote_song($new_song->file)) { 
-				$this->insert_remote_song($new_song);
+			if (!$this->check_remote_song($song->file)) { 
+				$this->insert_remote_song($song);
 			} 
 
 		} // foreach new Songs
@@ -2113,22 +2105,22 @@ class Catalog {
 
 	} // insert_local_song
 
-	/*!
-		@function insert_remote_song
-		@discussion takes the information gotten from XML-RPC and 
-			inserts it into the local database. The filename
-			ends up being the url.
-	*/
-	function insert_remote_song($song) {
+	/**
+	 * insert_remote_song
+	 * takes the information gotten from XML-RPC and 
+	 * inserts it into the local database. The filename
+	 * ends up being the url.
+	 */
+	public function insert_remote_song($song) {
 
-		$url 		= sql_escape($song->file);
+		$url 		= Dba::escape($song->file);
 		$title		= self::check_title($song->title);
-		$title		= sql_escape($title);
+		$title		= Dba::escape($title);
 		$current_time	= time();	
 		
 		$sql = "INSERT INTO song (file,catalog,album,artist,title,bitrate,rate,mode,size,time,track,genre,addition_time,year)" .
 			" VALUES ('$url','$song->catalog','$song->album','$song->artist','$title','$song->bitrate','$song->rate','$song->mode','$song->size','$song->time','$song->track','$song->genre','$current_time','$song->year')";
-		$db_results = mysql_query($sql, dbh());
+		$db_results = Dba::query($sql); 
 
 		if (!$db_results) { 
                         debug_event('insert',"Unable to Add Remote $url -- $sql",'5','ampache-catalog');
@@ -2138,20 +2130,19 @@ class Catalog {
 
 	} // insert_remote_song
 
-	/*!
-		@function check_remote_song
-		@discussion checks to see if a remote song exists in the database or not
-			if it find a song it returns the UID
-	*/
-	function check_remote_song($url) { 
+	/**
+	 * check_remote_song
+	 * checks to see if a remote song exists in the database or not
+	 * if it find a song it returns the UID
+	 */
+	public function check_remote_song($url) { 
 
-		$url = sql_escape($url);
+		$url = Dba::escape($url);
 
-		$sql = "SELECT id FROM song WHERE file='$url'";
-		
-		$db_results = mysql_query($sql, dbh());
+		$sql = "SELECT `id` FROM `song` WHERE `file`='$url'";
+		$db_results = Dba::query($sql); 		
 
-		if (mysql_num_rows($db_results)) { 
+		if (Dba::num_rows($db_results)) { 
 			return true;
 		}
 		
@@ -2159,12 +2150,11 @@ class Catalog {
 
 	} // check_remote_song
 
-
 	/**
 	 * check_local_mp3
 	 * Checks the song to see if it's there already returns true if found, false if not 
 	 */
-	function check_local_mp3($full_file, $gather_type='') {
+	public function check_local_mp3($full_file, $gather_type='') {
 
 		if ($gather_type == 'fast_add') {
 			$file_date = filemtime($full_file);

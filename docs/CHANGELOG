@@ -4,6 +4,8 @@
 
 --------------------------------------------------------------------------
   v.3.4-Alpha4 
+	- Fixed basic XML-RPC functionality, using insecure / old 
+		authentication method needs more work
 	- Fixed it so that all errors should return an XML document when
 		using the XML API. 
 	- Added Basic ShoutBox functionality, needs formating fixes

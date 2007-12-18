@@ -725,7 +725,7 @@ function show_catalog_select($name='catalog',$catalog_id=0,$style='') {
 function show_user_select($name,$selected='',$style='') { 
 
 	echo "<select name=\"$name\" style=\"$style\">\n";
-	echo "\t<option value=\"\">" . _('None') . "</option>\n";
+	echo "\t<option value=\"\">" . _('All') . "</option>\n";
 
 	$sql = "SELECT `id`,`username`,`fullname` FROM `user` ORDER BY `fullname`";
 	$db_results = Dba::query($sql);

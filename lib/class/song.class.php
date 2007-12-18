@@ -659,7 +659,7 @@ class Song {
 	 * and does a ton of formating on it creating f_??? variables on the current
 	 * object
 	 */
-	function format() { 
+	public function format() { 
 
 		$this->fill_ext_info(); 
 

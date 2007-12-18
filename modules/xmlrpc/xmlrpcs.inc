@@ -1061,7 +1061,7 @@
 				{
 					$r = call_user_func($func, $m);
 				}
-				if (!is_a($r, 'xmlrpcresp'))
+				if (!$r instanceof xmlrpcresp)
 				{
 					error_log("XML-RPC: xmlrpc_server::execute: function $func registered as method handler does not return an xmlrpcresp object");
 					if (is_a($r, 'xmlrpcval'))
