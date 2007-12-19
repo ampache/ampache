@@ -191,6 +191,7 @@ class Access {
 					" AND  `key` = '$key' AND `level` >= '$level' AND `type`='rpc'";
 			break;
 			case 'init-api':
+				$type = 'rpc';
 			case 'network':
 			case 'interface':
 			case 'stream':

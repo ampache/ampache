@@ -105,7 +105,7 @@ class Api {
 		$token = md5(uniqid(rand(), true));
 		$level = Dba::escape($level); 
 		$agent = Dba::escape($_SERVER['HTTP_USER_AGENT']); 
-		$expire = time() + Config::('session_length'); 
+		$expire = time() + Config::get('session_length'); 
 
 		$sql = "REPLACE INTO `session_api` (`id`,`user`,`agent`,`level`,`expire`,`ip`) " . 
 			"VALUES ('$token','$user_id','$agent','$level','$expire','$ip')"; 
