@@ -136,6 +136,34 @@ class xmlRpcServer {
 		$encoded_key 	= $xmlrpc_object->params['0']->me['string']; 
 		$timestamp	= $xmlrpc_object->params['0']->me['int'];
 
+		// Check the timestamp make sure it's recent
+		if ($timestamp < (time() - 14400)) { 
+			debug_event('XMLSERVER','Handshake failure, timestamp too old','1'); 
+			return new xmlrpcresp(php_xmlrpc_encoded("Handshake failure")); 
+		} 
+
+		// Log the attempt
+		debug_event('XMLSERVER','Login Attempt, IP: ' . $_SERVER['REMOTE_ADDR'] . ' Time: ' . $timestamp . ' Hash:' . $encoded_key,'5'); 
+
+		// Convert the IP Address to an int
+		$ip = ip2int($_SERVER['REMOTE_ADDR']); 
+
+		// Run the query and return the key's for ACLs of type RPC that would match this IP 
+		$sql = "SELECT * FROM `access_list` WHERE `type`='rpc' AND `start` <= '$ip' AND `end` >= '$ip'"; 
+		$db_results = Dba::query($sql);
+
+		while ($row = Dba::fetch_assoc($db_results)) { 
+			
+			// Build our encoded passphrase
+			$md5pass = md5($timestamp . $row['key']); 
+
+			if ($md5pass == $encoded_key) { 
+				$token = ''; 
+			} 
+
+		} // end while rows
+
+
 	} // handshake
 
 } // xmlRpcServer

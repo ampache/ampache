@@ -468,7 +468,7 @@ input[type=checkbox]  { border:0;background:none; }
 .box a:hover, .info-box a:hover { /*background-color: #8b3e38;*/ color: #e9ad51;}
 
 .box-inside { 
-	background: url(../images/right.gif) top right repeat-y;
+/*	background: url(../images/right.gif) top right repeat-y; */
 }
 .box-content {
 	padding:12px 12px;

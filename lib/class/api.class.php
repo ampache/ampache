@@ -72,7 +72,7 @@ class Api {
 		
 		// Run the query and return the passphrases as we'll have to mangle them
 		// to figure out if they match what we've got
-		$sql = "SELECT * FROM `access_list` WHERE `user`='$user_id' AND `start` <= '$ip' AND `end` >= '$ip'"; 
+		$sql = "SELECT * FROM `access_list` WHERE `type`='rpc' AND `user`='$user_id' AND `start` <= '$ip' AND `end` >= '$ip'"; 
 		$db_results = Dba::query($sql); 
 
 		while ($row = Dba::fetch_assoc($db_results)) { 

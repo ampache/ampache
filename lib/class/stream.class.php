@@ -521,7 +521,7 @@ class Stream {
 	 * opened file handled a reference to the song object is passed so that the changes we make
 	 * in here affect the external object, References++ 
 	 */
-	public static function start_downsample(&$song,$now_playing_id=0,$song_name=0) {
+	public static function start_downsample(&$song,$now_playing_id=0,$song_name=0,$start=0) {
 	
 	        /* Check to see if bitrates are set if so let's go ahead and optomize! */
 	        $max_bitrate = Config::get('max_bit_rate');
@@ -591,7 +591,7 @@ class Stream {
 		$song->size  = floor($sample_ratio*$song->size);
 
 	        /* Get Offset */
-	        $offset = ( $start*$song->time )/( $sample_ratio*$song->size );
+	        $offset = ( $start*$song->time )/( $song->size );
 	        $offsetmm = floor($offset/60);
 	        $offsetss = floor($offset-$offsetmm*60);
 	        $offset   = sprintf("%02d.%02d",$offsetmm,$offsetss);

@@ -4,6 +4,10 @@
 
 --------------------------------------------------------------------------
   v.3.4-Alpha4 
+	- Fixed some issues with downsampling + seeking and seeking in 
+		general (Thx Karl Hungus) 
+	- Fixed CSS references to missing files
+	- Fixed Missing Levels on Edit and incorrect level on edit
 	- Added check to make sure timestamp passed to API is less then
 		four hours old. Set to four hours to allow for some 
 		difference in server/client time

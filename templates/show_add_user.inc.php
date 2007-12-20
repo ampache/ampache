@@ -69,7 +69,7 @@
 		<?php echo  _('User Access Level'); ?>:
 	</td>
         <td>
-                <?php $var_name = "on_" . $working_user->access; ${$var_name} = 'selected="selected"'; ?>
+                <?php $var_name = "on_" . $client->access; ${$var_name} = 'selected="selected"'; ?>
                 <select name="access">
                 <option value="5" <?php echo $on_5; ?>><?php echo _('Guest'); ?></option>
                 <option value="25" <?php echo $on_25; ?>><?php echo _('User'); ?></option>

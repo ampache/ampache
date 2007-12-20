@@ -228,8 +228,8 @@ if ($_GET['action'] == 'download' AND $GLOBALS['user']->prefs['download']) {
 } // if they are trying to download and they can
 
 	
-$startArray = sscanf( $_SERVER[ "HTTP_RANGE" ], "bytes=%d-" );
-$start = $startArray[0];
+// Parse byte range request
+$n = sscanf($_SERVER['HTTP_RANGE'], "bytes=%d-%d",$start,$end);
 
 // Generate browser class for sending headers
 $browser = new Browser();
@@ -253,7 +253,7 @@ if (Config::get('access_control') AND Config::get('downsample_remote')) {
 // If they are downsampling, or if the song is not a native stream or it's non-local
 if (($GLOBALS['user']->prefs['transcode'] == 'always' || !$song->native_stream() || $not_local) && $GLOBALS['user']->prefs['transcode'] != 'never') { 
 	debug_event('downsample','Starting Downsample...','5');
-	$fp = Stream::start_downsample($song,$lastid,$song_name);
+	$fp = Stream::start_downsample($song,$lastid,$song_name,$start);
 	$song_name = $song->f_artist_full . " - " . $song->title . "." . $song->type;
 } // end if downsampling
 else { 
@@ -276,7 +276,16 @@ if ($start) {
 	$range = $start ."-". ($song->size-1) . "/" . $song->size;
 	header("HTTP/1.1 206 Partial Content");
 	header("Content-Range: bytes=$range");
-	header("Content-Length: ".($song->size-$start));
+
+	// Calculate stream size from byte range
+	if(isset($end)) {
+		$end = min($end,$song->size-1);
+        	$stream_size = ($end-$start)+1;
+	} 
+	else {
+		$stream_size = $song->size - $start;
+	}
+	header("Content-Length: ".($stream_size));
 }
 
 /* Last but not least pump em out */
@@ -284,24 +293,25 @@ else {
 	debug_event('stream','Starting stream of ' . $song->file . ' with size ' . $song->size,'5'); 
 	header("Content-Length: $song->size");
 	$browser->downloadHeaders($song_name, $song->mime, false, $song->size);
+	$stream_size = $song->size; 
 }
 	
 
 /* Let's force them to actually play a portion of the song before 
  * we count it in the statistics
  */
-$bytesStreamed = 0;
-$minBytesStreamed = $song->size / 2;
+$bytes_streamed = 0;
+$min_bytes_streamed = $song->size / 2;
 
 // Actually do the streaming 
 do { 
 	$buf = fread($fp, 2048);
         print($buf);
-        $bytesStreamed += 2048;
-} while (!feof($fp) && (connection_status() == 0));
+        $bytes_streamed += 2048;
+} while (!feof($fp) && (connection_status() == 0) AND $bytes_streamed < $stream_size);
 
 // Make sure that a good chunk of the song has been played
-if ($bytesStreamed > $minBytesStreamed) {
+if ($bytes_streamed > $min_bytes_streamed) {
 	debug_event('Stats','Registering stats for ' . $song->title,'5'); 
 	
         $user->update_stats($song->id);
@@ -319,7 +329,7 @@ if ($bytesStreamed > $minBytesStreamed) {
 
 } // if enough bytes are streamed
 else { 
-	debug_event('stream',$bytesStreamed .' of ' . $song->size . ' streamed, less than ' . $minBytesStreamed . ' not collecting stats','5'); 
+	debug_event('stream',$bytes_streamed .' of ' . $song->size . ' streamed, less than ' . $min_bytes_streamed . ' not collecting stats','5'); 
 } 
 
 
@@ -332,6 +342,6 @@ else {
 }
 
 // Note that the stream has ended
-debug_event('stream','Stream Ended at ' . $bytesStreamed . ' bytes out of ' . $song->size,'5'); 
+debug_event('stream','Stream Ended at ' . $bytes_streamed . ' bytes out of ' . $song->size,'5'); 
 
 ?>

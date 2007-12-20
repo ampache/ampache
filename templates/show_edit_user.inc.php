@@ -69,12 +69,14 @@
 		<?php echo  _('User Access Level'); ?>:
 	</td>
 	<td>
-		<?php $var_name = "on_" . $client->access; ${$var_name} = 'selected="selected"'; ?>
-		<select name="access">
-		<option value="5" <?php echo $on_5; ?>><?php echo _('Guest'); ?></option>
-		<option value="25" <?php echo $on_25; ?>><?php echo _('User'); ?></option>
-		<option value="100" <?php echo $on_100; ?>><?php echo _('Admin'); ?></option>
-		</select>
+                <?php $var_name = "on_" . $client->access; ${$var_name} = 'selected="selected"'; ?>
+                <select name="access">
+                <option value="5" <?php echo $on_5; ?>><?php echo _('Guest'); ?></option>
+                <option value="25" <?php echo $on_25; ?>><?php echo _('User'); ?></option>
+                <option value="50" <?php echo $on_50; ?>><?php echo _('Content Manager'); ?></option>
+                <option value="75" <?php echo $on_75; ?>><?php echo _('Catalog Manager'); ?></option>
+                <option value="100" <?php echo $on_100; ?>><?php echo _('Admin'); ?></option>
+                </select>
 	</td>
 </tr>
 </table>
