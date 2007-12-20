@@ -4,6 +4,8 @@
 
 --------------------------------------------------------------------------
   v.3.4-Alpha4 
+	- Migrated to 'new' auth system that unifies xml-rpc,api and normal
+		sessions in a single table
 	- Fixed some issues with downsampling + seeking and seeking in 
 		general (Thx Karl Hungus) 
 	- Fixed CSS references to missing files

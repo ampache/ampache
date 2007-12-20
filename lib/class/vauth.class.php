@@ -72,6 +72,7 @@ class vauth {
 	public static function read($key) { 
 
 		$results = self::get_session_data($key); 
+
 		if (strlen($results['value']) < 1) { 
 			debug_event('SESSION','Error unable to read session from key ' . $key . ' no data found','1'); 
 			return ''; 
@@ -96,6 +97,8 @@ class vauth {
 
 		$sql = "UPDATE `session` SET `value`='$value', `expire`='$expire' WHERE `id`='$key'"; 
 		$db_results = Dba::query($sql); 
+
+		debug_event('SESSION','Writing to ' . $key . ' with expire ' . $expire,'1'); 
 
 		return $db_results; 
 
@@ -140,8 +143,33 @@ class vauth {
 	 */
 	public static function logout($key) { 
 
+	        // Do a quick check to see if this is an AJAX'd logout request
+	        // if so use the iframe to redirect
+	        if (AJAX_INCLUDE == '1') {
+	                ob_end_clean();
+	                ob_start();
+
+	                /* Set the correct headers */
+	                header("Content-type: text/xml; charset=" . Config::get('site_charset'));
+	                header("Content-Disposition: attachment; filename=ajax.xml");
+	                header("Expires: Tuesday, 27 Mar 1984 05:00:00 GMT");
+	                header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
+	                header("Cache-Control: no-store, no-cache, must-revalidate");
+	                header("Pragma: no-cache");
+
+	                $target = Config::get('web_path') . '/login.php';
+	                $results['rfc3514'] = '<script type="text/javascript">reload_logout("'.$target.'")</script>';
+	                echo xml_from_array($results);
+	        }
+
 		self::destroy($key); 
-		return true; 
+
+	        /* Redirect them to the login page */
+	        if (AJAX_INCLUDE != '1') {
+	                header ('Location: ' . Config::get('web_path') . '/login.php');
+	        }
+
+		exit; 
 
 	} // logout
 
@@ -184,11 +212,27 @@ class vauth {
 
 		session_set_cookie_params($cookie_life,$cookie_path,$cookie_domain,$cookie_secure); 
 
+		session_name(Config::get('session_name')); 
+
 		/* Start the session */
 		self::ungimp_ie(); 
 		session_start(); 
 
 	} // create_cookie, just watch out for the cookie monster
+
+	/**
+	 * create_remember_cookie
+	 * This function just creates the remember me cookie, nothing special
+	 */
+	public static function create_remember_cookie() { 
+
+		$remember_length = Config::get('remember_length'); 
+		$session_name = Config::get('session_name'); 
+
+		Config::set('cookie_life',$remember_length,'1');
+		setcookie($session_name . '_remember',"Rappelez-vous, rappelez-vous le 27 mars",time() + $remember_length,'/',Config::get('cookie_domain'));
+
+	} // create_remember_cookie
 
 	/**
 	 * session_create
@@ -212,7 +256,7 @@ class vauth {
 	        $type           = Dba::escape($data['type']);
 	        $value          = Dba::escape($data['value']);
 		$agent		= Dba::escape($_SERVER['HTTP_USER_AGENT']); 
-	        $expire         = Dba::escape(time() + vauth_conf('session_length'));
+	        $expire         = Dba::escape(time() + Config::get('session_length'));
 
 	        /* We can't have null things here people */
 	        if (!strlen($value)) { $value = ' '; }
@@ -237,20 +281,21 @@ class vauth {
 	 */
 	public static function check_session() { 
 
-		// No cookie n go!
-		if (!isset($_COOKIE[Config::get('session_name')]) { return false; }
+		$session_name = Config::get('session_name'); 
 
-		$key = scrub_in($_COOKIE[Config::get('session_name')]); 
+		// No cookie n go!
+		if (!isset($_COOKIE[$session_name])) { return false; }
+
+		$key = scrub_in($_COOKIE[$session_name]); 
 		$data = self::get_session_data($key); 
 
-		if (!is_array($results)) { 
+		if (!is_array($data)) { 
 			return false; 
 		} 
 
 		// Check for a remember me
-		if (isset($_COOKIE[Config::get('session_name') . '_remember'])) { 
-			Config::set('cookie_life',Config::get('remember_length'),'1'); 
-			setcookie(Config::get('session_name') . '_remember',time() + Config::get('remember_length'),'/',Config::get('cookie_domain')); 
+		if (isset($_COOKIE[$session_name . '_remember'])) { 
+			self::create_remember_cookie(); 
 		} 
 
 		// Setup the cookie params before we start the session this is vital
@@ -261,10 +306,10 @@ class vauth {
 			Config::get('cookie_secure')); 
 		
 		// Set name
-		session_name(Config::get('session_name')); 
+		session_name($session_name); 
 
 		// Ungimp IE and go
-		self::ungimp_io(); 
+		self::ungimp_ie(); 
 		session_start(); 
 
 		return true; 
@@ -277,16 +322,27 @@ class vauth {
 	 * exists, it also provides an array of key'd data that may be required
 	 * based on the type
 	 */
-	public static function session_exists($data,$key,$type) { 
+	public static function session_exists($type,$key,$data=array()) { 
 
 		// Switch on the type they pass
 		switch ($type) { 
 			case 'xml-rpc': 
-			case 'interface':
 			case 'api': 
 				$key = Dba::escape($key); 
 				$time = time(); 
 				$sql = "SELECT * FROM `session` WHERE `id`='$key' AND `expire` > '$time' AND `type`='$type'"; 
+				$db_results = Dba::query($sql); 
+
+				if (Dba::num_rows($db_results)) { 
+					return true; 
+				} 
+			break; 
+			//FIXME: This should use the IN() mojo and compare against enabled auths
+			case 'interface':
+				$key = Dba::escape($key); 
+				$time = time(); 
+				$sql = "SELECT * FROM `session` WHERE `id`='$key' AND `expire` > '$time' AND `type`!='api' AND `type`!='xml-rpc'"; 
+debug_event('testo',$sql,'1');
 				$db_results = Dba::query($sql); 
 
 				if (Dba::num_rows($db_results)) { 
@@ -321,7 +377,7 @@ class vauth {
 	 */
 	public static function _auto_init() { 
 
-		session_set_save_handler('vauth::open','vauth::close','vauth::read','vauth::write','vauth::destroy','vauth::gc'); 
+		session_set_save_handler(array('vauth','open'),array('vauth','close'),array('vauth','read'),array('vauth','write'),array('vauth','destroy'),array('vauth','gc')); 
 
 	} // auto init
 
@@ -339,13 +395,209 @@ class vauth {
 		// Try to detect IE
 		$agent = trim($_SERVER['HTTP_USER_AGENT']); 
 
-		if ((preg_match('|MSIE ([0-9).]+)|',$agent)) || preg_match('|Internet Explorer/([0-9.]+)|',$agent))) { 
+		if (strstr($agent,'MSIE') || strstr($agent,'Internet Explorer/')) { 
 			session_cache_limiter('public'); 
 		} 
 
 		return true; 
 
 	} // ungimp_ie
+
+	/**
+ 	 * authenticate
+	 * This takes a username and password and then returns true or false
+	 * based on what happens when we try to do the auth then
+	 */
+	public static function authenticate($username,$password) { 
+
+		// Foreach the auth methods
+		foreach (Config::get('auth_methods') as $method) { 
+
+			// Build the function name and call the custom method on this class
+			$function_name = $method . '_auth'; 
+			
+			if (!method_exists('vauth',$function_name)) { continue; } 
+
+			$results = self::$function_name($username,$password); 
+
+			// If we achive victory return
+			if ($results['success']) { break; } 
+
+		} // end foreach 
+		
+		return $results; 
+
+	} // authenticate
+
+	/**
+ 	 * mysql_auth
+	 * This is a private function, it should only be called by authenticate
+	 */
+	private static function mysql_auth($username,$password) { 
+
+	        $username = Dba::escape($username);
+	        $password = Dba::escape($password);
+
+	        $password_check_sql = "PASSWORD('$password')";
+
+	        $sql = "SELECT `user`.`password`,`session`.`ip`,`user`.`id` FROM `user` " .
+	                "LEFT JOIN `session` ON `session`.`username`=`user`.`username` " .
+	                "WHERE `user`.`username`='$username'";
+	        $db_results = Dba::query($sql);
+	        $row = Dba::fetch_assoc($db_results);
+
+	        // If they don't have a password kick em ou
+	        if (!$row['password']) {
+	                Error::add('general','Error Username or Password incorrect, please try again');
+	                return false;
+	        }
+
+	        if (Config::get('prevent_multiple_logins')) {
+	                $client = new User($row['id']);
+	                $ip = $client->is_logged_in();
+	                if ($current_ip != ip2int($_SERVER['REMOTE_ADDR'])) {
+	                        Error::add('general','User Already Logged in');
+	                        return false;
+	                }
+	        } // if prevent_multiple_logins
+
+	        $sql = "SELECT version()";
+	        $db_results = Dba::query($sql);
+	        $version = Dba::fetch_row($db_results);
+	        $mysql_version = substr(preg_replace("/(\d+)\.(\d+)\.(\d+).*/","$1$2$3",$version[0]),0,3);
+
+	        if ($mysql_version > "409" AND substr($row['password'],0,1) !== "*") {
+	                $password_check_sql = "OLD_PASSWORD('$password')";
+	        }
+
+	        $sql = "SELECT username FROM user WHERE username='$username' AND password=$password_check_sql";
+	        $db_results = Dba::query($sql);
+
+	        $results = Dba::fetch_assoc($db_results);
+
+	        if (!$results) {
+	                Error::add('general','Error Username or Password incorrect, please try again');
+	                return false;
+	        }
+
+	        $results['type']        = 'mysql';
+	        $results['success']     = true;
+
+	        return $results;
+
+	} // mysql_auth
+
+	/**
+	 * ldap_auth
+	 * Step one, connect to the LDAP server and perform a search for teh username provided. 
+	 * If its found, attempt to bind using that username and the password provided.
+	 * Step two, figure out if they are authorized to use ampache:
+	 * TODO: need implimented still:
+	 *      * require-group "The DN fetched from the LDAP directory (or the username passed by the client) occurs in the LDAP group"
+	 *      * require-dn "Grant access if the DN in the directive matches the DN fetched from the LDAP directory"
+	 *      * require-attribute "an attribute fetched from the LDAP directory matches the given value"
+	 */
+	private static function ldap_auth($username,$password) { 
+
+	        $ldap_username  = Config::get('ldap_username');
+	        $ldap_password  = Config::get('ldap_password');
+
+	        /* Currently not implemented */
+	        $require_group  = Config::get('ldap_require_group');
+
+	        // This is the DN for the users (required)
+	        $ldap_dn        = Config::get('ldap_search_dn');
+
+	        // This is the server url (required)
+	        $ldap_url       = Config::get('ldap_url');
+
+	        // This is the ldap filter string (required)
+	        $ldap_filter    = Config::get('ldap_filter');
+
+	        //This is the ldap objectclass (required)
+	        $ldap_class     = Config::get('ldap_objectclass');
+
+	        $ldap_name_field        = Config::get('ldap_name_field');
+	        $ldap_email_field       = Config::get('ldap_email_field');
+
+	        if ($ldap_link = ldap_connect($ldap_url) ) {
+
+	                /* Set to Protocol 3 */
+	                ldap_set_option($ldap_link, LDAP_OPT_PROTOCOL_VERSION, 3);
+
+	                // bind using our auth, if we need to, for initial search for username
+	                if (!ldap_bind($ldap_link, $ldap_username, $ldap_password)) {
+	                        $results['success'] = false;
+	                        $results['error'] = "Could not bind to LDAP server.";
+	                        return $results;
+	                } // If bind fails
+
+	                $sr = ldap_search($ldap_link, $ldap_dn, "(&(objectclass=$ldap_class)($ldap_filter=$username))");
+	                $info = ldap_get_entries($ldap_link, $sr);
+
+	                if ($info["count"] == 1) {
+	                        $user_entry = ldap_first_entry($ldap_link, $sr);
+	                        $user_dn    = ldap_get_dn($ldap_link, $user_entry);
+	                        // bind using the user..
+	                        $retval = ldap_bind($ldap_link, $user_dn, $password);
+
+	                        if ($retval) {
+	                                ldap_close($ldap_link);
+	                                $results['success'] = true;
+	                                $results['type'] = "ldap";
+	                                $results['username'] = $username;
+	                                $results['name'] = $info[0][$ldap_name_field][0];
+	                                $results['email'] = $info[0][$ldap_email_field][0];
+
+	                                return $results;
+
+	                        } // if we get something good back
+
+	                } // if something was sent back 
+
+	        } // if failed connect 
+
+	        /* Default to bad news */
+	        $results['success'] = false;
+	        $results['error'] = "LDAP login attempt failed";
+	
+	        return $results;
+
+	} // ldap_auth
+
+	/**
+	 * http_auth
+	 * This auth method relies on HTTP auth from Apache
+	 * This is not a very secure method of authentication
+	 * defaulted to off. Because if they can load the page they
+	 * are considered to be authenticated we need to look and
+	 * see if their user exists and if not, by golly we just 
+	 * go ahead and created it. NOT SECURE!!!!!
+	 */
+	public static function http_auth($username) { 
+
+	        /* Check if the user exists */
+	        if ($user = new User($username)) {
+	                $results['success']     = true;
+	                $results['type']        = 'mysql';
+	                $results['username']    = $username;
+	                $results['name']        = $user->fullname;
+	                $results['email']       = $user->email;
+	                return $results;
+	        }
+
+	        /* If not then we auto-create the entry as a user.. :S */
+	        $user->create($username,$username,'',md5(rand()),'25');
+	        $user = new User($username);
+
+	        $results['success']     = true;
+	        $results['type']        = 'mysql';
+	        $results['username']    = $username;
+	        $results['name']        = $user->fullname;
+	        $results['email']       = $user->email;
+	        return $results;
+
+	} // http_auth
 
 } // end of vauth class
 

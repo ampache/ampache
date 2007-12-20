@@ -25,7 +25,7 @@ require_once 'lib/init.php';
 /* We have to create a cookie here because IIS
  * can't handle Cookie + Redirect 
  */
-vauth_session_cookie();
+vauth::create_cookie(); 
 Preference::init();
 
 /**
@@ -48,11 +48,7 @@ unset($auth);
 if ($_POST['username'] && $_POST['password']) {
 
         if ($_POST['rememberme']) {
-		$extended = vauth_conf('remember_length');
-		vauth_conf(array('cookie_life'=>$extended),1);
-		$cookie_name = vauth_conf('session_name') . "_remember";
-		$cookie_life = time() + $extended;
-		setcookie($cookie_name, '1', $cookie_life,'/',vauth_conf('cookie_domain'));
+		vauth::create_remember_cookie(); 
         } 
 
 	/* If we are in demo mode let's force auth success */
@@ -65,7 +61,7 @@ if ($_POST['username'] && $_POST['password']) {
 	else {
 		$username = scrub_in($_POST['username']);
 		$password = scrub_in($_POST['password']);
-		$auth = authenticate($username, $password);
+		$auth = vauth::authenticate($username, $password);
                 $user = User::get_from_username($username);
 		
 		if ($user->disabled == '1') { 	
@@ -105,7 +101,7 @@ if ($_POST['username'] && $_POST['password']) {
 if ($auth['success']) {
 	// $auth->info are the fields specified in the config file
 	//   to retrieve for each user
-	vauth_session_create($auth);
+	vauth::session_create($auth);
 	
 	// Generate the user we need for a few things
 	$user = User::get_from_username($username);

@@ -253,6 +253,10 @@ class Update {
 		
 		$version[] = array('version' => '340013','description'=>$update_string);
 
+		$update_string = '- Removed API Session table, been a nice run....<br />' . 
+				'- Alterted Session table to handle API sessions correctly.<br />';
+
+		$version[] = array('version' => '340014','description'=>$update_string); 
 
 		return $version;
 
@@ -1078,6 +1082,31 @@ class Update {
 		self::set_version('db_version','340013');	
 
 	} // update_340013
+
+	/**
+	 * update_340014
+	 * This update drops the session_api table that I added just two updates ago
+	 * it's been nice while it lasted but it's time to pack your stuff and GTFO
+	 * at the same time it updates the core session table to handle the additional
+	 * stuff we're going to ask it to do. 
+	 */
+	public static function update_340014() { 
+
+		$sql = "DROP TABLE `session_api`"; 
+		$db_results = Dba::query($sql); 
+
+		$sql = "ALTER TABLE `session` CHANGE `type` `type` ENUM ('mysql','ldap','http','api','xml-rpc') NOT NULL"; 
+		$db_results = Dba::query($sql); 
+
+		$sql = "ALTER TABLE `session` ADD `agent` VARCHAR ( 255 ) NOT NULL AFTER `type`"; 
+		$db_results = Dba::query($sql); 
+
+		$sql = "ALTER TABLE `session` ADD INDEX (`type`)"; 
+		$db_results = Dba::query($sql); 
+
+		self::set_version('db_version','340014'); 
+
+	} // update_340014
 
 } // end update class
 ?>

@@ -87,7 +87,6 @@ $results['int_config_version']	= '6';
 $results['raw_web_path']	= $results['web_path'];
 $results['web_path']		= $http_type . $_SERVER['HTTP_HOST'] . $results['web_path'];
 $results['http_port']		= $_SERVER['SERVER_PORT'];
-$results['stop_auth'] = $results['prefix'] . "/modules/vauth/gone.fishing";
 if (!$results['http_port']) { 
 	$results['http_port']	= '80';
 } 
@@ -104,7 +103,7 @@ if (!$results['user_ip_cardinality']) {
 	$results['user_ip_cardinality'] = 42;
 }
 
-/* Variables needed for vauth Module */
+/* Variables needed for vauth class */
 $results['cookie_path'] 	= $results['raw_web_path'];
 $results['cookie_domain']	= $_SERVER['SERVER_NAME'];
 $results['cookie_life']		= $results['session_cookielife'];
@@ -116,9 +115,6 @@ $results['mysql_db']		= $results['database_name'];
 
 // Define that we've loaded the INIT file
 define('INIT_LOADED','1');
-
-// Vauth Requires
-require_once $prefix . '/modules/vauth/init.php';
 
 // Library and module includes we can't do with the autoloader
 require_once $prefix . '/lib/album.lib.php';
@@ -157,8 +153,6 @@ if (Config::get('ratings')) {
 
 /* Set a new Error Handler */
 $old_error_handler = set_error_handler('ampache_error_handler');
-/* Initilize the Vauth Library */
-vauth_init($results);
 
 /* Check their PHP Vars to make sure we're cool here */
 $post_size = @ini_get('post_max_size');
@@ -178,12 +172,12 @@ set_memory_limit($results['memory_limit']);
 if (in_array("http",$results['auth_methods'])) { 
 
 	$username = scrub_in($_SERVER['PHP_AUTH_USER']);
-	$results = vauth_http_auth($username);
+	$results = vauth::http_auth($username);
 
 	if ($results['success']) { 
-		vauth_session_cookie();
-		vauth_session_create($results);
-		$session_name = vauth_conf('session_name');
+		vauth::create_cookie();
+		vauth::session_create($results);
+		$session_name = Config::get('session_name');
 		$_SESSION['userdata'] = $results;
 		$_COOKIE[$session_name] = session_id();
 	} 
@@ -193,13 +187,13 @@ if (in_array("http",$results['auth_methods'])) {
 // If we want a session
 if (NO_SESSION != '1' AND Config::get('use_auth')) { 
 	/* Verify Their session */
-	if (!vauth_check_session()) { logout(); exit; }
+	if (!vauth::check_session()) { vauth::logout(session_id()); exit; }
 
 	/* Create the new user */
 	$GLOBALS['user'] = User::get_from_username($_SESSION['userdata']['username']);
 	
 	/* If they user ID doesn't exist deny them */
-	if (!$GLOBALS['user']->id AND !Config::get('demo_mode')) { logout(); exit; } 
+	if (!$GLOBALS['user']->id AND !Config::get('demo_mode')) { vauth::logout(session_id()); exit; } 
 
 	/* Load preferences and theme */
 	$GLOBALS['user']->update_last_seen();
@@ -211,7 +205,7 @@ elseif (!Config::get('use_auth')) {
 	$auth['id'] = -1;
 	$auth['access'] = "admin";
 	$auth['offset_limit'] = 50;
-	if (!vauth_check_session()) { vauth_session_create($auth); }
+	if (!vauth::check_session()) { vauth::session_create($auth); }
 	$GLOBALS['user']	 	= new User(-1);
 	$GLOBALS['user']->fullname 	= 'Ampache User';
 	$GLOBALS['user']->offset_limit 	= $auth['offset_limit'];
@@ -222,7 +216,7 @@ elseif (!Config::get('use_auth')) {
 // If Auth, but no session is set
 else { 
 	if (isset($_REQUEST['sessid'])) { 
-		$sess_results = vauth_get_session($_REQUEST['sessid']);	
+		$sess_results = vauth::get_session_data($_REQUEST['sessid']);	
 		session_name(Config::get('session_name')); 
 		session_id(scrub_in($_REQUEST['sessid']));
 		session_start();

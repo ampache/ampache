@@ -30,8 +30,9 @@
 define('NO_SESSION','1'); 
 require 'lib/init.php';
 
-// Check their session manually
-if (!vauth_check_session() && !Access::session_exists(array(),$_REQUEST['auth'],'api')) { 
+// Check to see if they've got an interface session or a valid API session, if not GTFO
+if (!vauth::session_exists('interface',$_COOKIE[Config::get('session_name')]) AND !vauth::session_exists('api',$_REQUEST['auth'])) { 
+	debug_event('DENIED','Image Access from Sid:' . $_REQUEST['sid'] . ' OR Auth:' . $_REQUEST['auth'],'1');
 	exit; 
 } 
 
