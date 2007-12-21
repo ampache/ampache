@@ -26,6 +26,5 @@
 require_once 'lib/init.php';
 
 // To end a legitimate session, just call logout.
-setcookie("amp_longsess","",null); 
-logout();
+vauth::logout();
 ?>
