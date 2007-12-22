@@ -178,6 +178,35 @@ switch ($_REQUEST['action']) {
 		ob_end_clean(); 
 		echo xmlData::songs($songs); 
 	break; 
+	case 'playlists': 
+		Browse::reset_filters(); 
+		Browse::set_type('playlist'); 
+		Browse::set_sort('name','ASC'); 
+
+		if ($_REQUEST['filter']) { 
+			Browse::set_filter('alpha_match',$_REQUEST['filter']); 
+		} 
+
+		$playlist_ids = Browse::get_objects(); 
+
+		xmlData::set_offset($_REQUEST['offset']); 
+		ob_end_clean(); 
+		echo xmlData::playlists($playlist_ids);
+	break; 
+	case 'playlist_songs': 
+		$playlist = new Playlist($_REQUEST['filter']); 
+		$items = $playlist->get_items(); 
+
+		foreach ($items as $object) { 
+			if ($object['type'] == 'song') { 
+				$songs[] = $object['object_id']; 
+			} 
+		} // end foreach
+
+		xmlData::set_offset($_REQUEST['offset']); 
+		ob_end_clean(); 
+		echo xmlData::songs($songs); 
+	break; 
 	default:
                 ob_end_clean();
                 echo xmlData::error('Invalid Request');

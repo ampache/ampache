@@ -207,6 +207,41 @@ class xmlData {
 	} // genres
 
 	/**
+	 * playlists
+	 * This takes an array of playlist ids and then returns a nice pretty XML document
+	 */
+	public static function playlists($playlists) { 
+
+		if (count($playlists) > self::$limit) { 
+			$playlists = array_slice($playlists,self::$offset,self::$limit); 
+		} 
+
+		$string = ''; 
+
+		// Foreach the playlist ids
+		foreach ($playlists as $playlist_id) { 
+			$playlist = new Playlist($playlist_id); 
+			$playlist->format(); 
+			$item_total = $playlist->get_song_count(); 
+
+			// Build this element
+			$string .= "<playlist id=\"$playlist->id\">\n" . 
+				"\t<name><![CDATA[$playlist->name]]></name>\n" . 
+				"\t<owner><![CDATA[$playlist->f_user]]</owner>\n" . 
+				"\t<items>$item_total</items>\n" . 
+				"</playlist>\n";
+			
+
+		} // end foreach
+
+		// Build the final and then send her off 
+		$final = self::_header() . $string . self::_footer(); 
+
+		return $final;
+
+	} // playlists
+
+	/**
 	 * songs
 	 * This returns an xml document from an array of song ids spiffy isn't it!
 	 */

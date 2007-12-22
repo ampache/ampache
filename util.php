@@ -20,6 +20,11 @@
 */
 require_once 'lib/init.php';
 
+header("Expires: Tuesday, 27 Mar 1984 05:00:00 GMT");
+header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
+header("Cache-Control: no-store, no-cache, must-revalidate");
+header("Pragma: no-cache");
+
 // This is a little bit of a special file, it takes the
 // content of $_SESSION['iframe']['target'] and does a header
 // redirect to that spot!

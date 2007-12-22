@@ -4,6 +4,10 @@
 
 --------------------------------------------------------------------------
   v.3.4-Alpha4 
+	- Upgraded to Prototype 1.6
+	- Added playlists and playlist_songs methods to API
+	- Fixed a problem with the javascript that was causing Opera to not
+		get the playlist correctly. 
 	- Migrated to 'new' auth system that unifies xml-rpc,api and normal
 		sessions in a single table
 	- Fixed some issues with downsampling + seeking and seeking in 
