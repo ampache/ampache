@@ -63,7 +63,7 @@ class Stream {
 	 */
 	public function start() {
 
-		if (!is_array($this->songs)) { 
+		if (!count($this->songs) AND !count($this->urls)) { 
 			debug_event('stream','Error: No Songs Passed on ' . $this->type . ' stream','2');
 			return false; 
 		}
