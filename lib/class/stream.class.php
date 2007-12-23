@@ -728,6 +728,9 @@ class Stream {
 		// If this wasn't ajax included run away 
 		if (AJAX_INCLUDE != '1') { return false; } 
 
+		// If we're doin the flash magic then run away as well
+		if ($GLOBALS['user']->prefs['play_type'] == 'xspf_player') { return false; } 
+
 		switch ($GLOBALS['user']->prefs['playlist_method']) { 
 			default: 
 			case 'clear': 

@@ -2551,7 +2551,7 @@ xmlrpc_encode_entitites($this->errstr, $GLOBALS['xmlrpc_internalencoding'], $cha
 				xml_parser_free($parser);
 				if($this->debug)
 				{
-					print $errstr;
+					debug_event('XMLRPC',$errstr,'1','xmlrpc'); 
 				}
 				$r->hdrs = $GLOBALS['_xh']['headers'];
 				$r->_cookies = $GLOBALS['_xh']['cookies'];
@@ -2584,11 +2584,9 @@ xmlrpc_encode_entitites($this->errstr, $GLOBALS['xmlrpc_internalencoding'], $cha
 			{
 				if ($this->debug)
 				{
-					print "<PRE>---PARSED---\n";
 					// somehow htmlentities chokes on var_export, and some full html string...
 					//print htmlentitites(var_export($GLOBALS['_xh']['value'], true));
-					print htmlspecialchars(var_export($GLOBALS['_xh']['value'], true));
-					print "\n---END---</PRE>";
+					debug_event('XMLRPC',var_export($GLOBALS['_xh']['value'],true),'1','xmlrpc');
 				}
 
 				// note that using =& will raise an error if $GLOBALS['_xh']['st'] does not generate an object.

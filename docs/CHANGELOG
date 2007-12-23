@@ -4,6 +4,7 @@
 
 --------------------------------------------------------------------------
   v.3.4-Alpha4 
+	- Fixed Flash Player issue when Playlist Method wasn't default
 	- Fixed XML-RPC, now uses handshake method properly
 	- Fixed bug where stream would start even with no songs
 	- Upgraded to Prototype 1.6

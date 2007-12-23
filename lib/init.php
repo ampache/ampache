@@ -253,4 +253,8 @@ if (! preg_match('/update\.php/', $_SERVER['PHP_SELF'])) {
 		exit();
 	}
 }
+
+// For the XMLRPC stuff
+$GLOBALS['xmlrpc_internalencoding'] = Config::get('site_charset'); 
+
 ?>
