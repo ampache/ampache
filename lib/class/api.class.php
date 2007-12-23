@@ -82,7 +82,10 @@ class Api {
 
 			if ($md5pass === $passphrase) { 
 				// Create the Session, in this class for now needs to be moved
-				$token = self::create_session($row['level'],$ip,$user_id); 
+				$data['username']	= $client->username; 
+				$data['type']		= 'api'; 
+				$data['value']		= $timestamp; 
+				$token = vauth::session_create($data); 
 				debug_event('API','Login Success, passphrase matched','1'); 
 
 				return array('auth'=>$token,'api'=>self::$version); 
@@ -93,31 +96,6 @@ class Api {
 		debug_event('API','Login Failed, unable to match passphrase','1'); 
 
 	} // handhsake
-
-	/**
-	 * create_session
-	 * This actually creates the new session it takes the level, ip and user
-	 * and figures out the agent and expire then returns the token
-	 */
-	public static function create_session($level,$ip,$user_id) { 
-
-		// Generate the token 
-		$token = md5(uniqid(rand(), true));
-		$level = Dba::escape($level); 
-		$agent = Dba::escape($_SERVER['HTTP_USER_AGENT']); 
-		$expire = time() + Config::get('session_length'); 
-
-		$sql = "REPLACE INTO `session_api` (`id`,`user`,`agent`,`level`,`expire`,`ip`) " . 
-			"VALUES ('$token','$user_id','$agent','$level','$expire','$ip')"; 
-		$db_results = Dba::query($sql); 
-
-		if ($db_results) { 
-			return $token; 
-		} 
-
-		return false; 
-
-	} // create_session
 
 } // API class
 ?>

@@ -456,44 +456,6 @@ function get_languages() {
 } // get_languages
 
 /**
- * logout
- * This is the function that is called to log a user out! 
- */
-function logout() { 
-
-	// Do a quick check to see if this is an AJAX'd logout request
-	// if so use the iframe to redirect
-	if (AJAX_INCLUDE == '1') { 
-		ob_end_clean(); 
-		ob_start(); 
-
-		/* Set the correct headers */
-		header("Content-type: text/xml; charset=" . Config::get('site_charset'));
-		header("Content-Disposition: attachment; filename=ajax.xml");
-		header("Expires: Tuesday, 27 Mar 1984 05:00:00 GMT");
-		header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
-		header("Cache-Control: no-store, no-cache, must-revalidate");
-		header("Pragma: no-cache");
-
-		$target = Config::get('web_path') . '/login.php'; 
-		$results['rfc3514'] = '<script type="text/javascript">reload_logout("'.$target.'")</script>';
-		echo xml_from_array($results);
-	} 
-
-	/* First destory their session */
-	vauth_logout(session_id());
-
-
-	/* Redirect them to the login page */
-	if (AJAX_INCLUDE != '1') { 
-		header ('Location: ' . Config::get('web_path') . '/login.php');
-	} 
-	
-	return true;
-
-} // logout
-
-/**
  * format_time
  * This formats seconds into minutes:seconds
  */

@@ -243,13 +243,21 @@ class vauth {
 	public static function session_create($data) { 
 
 		// Regenerate the session ID to prevent fixation
-		session_regenerate_id(); 
-	
-		// Create our cookie!
-		self::create_cookie(); 
-
-		// Before refresh we don't have the cookie so we have to use session ID
-		$key = session_id(); 
+		switch ($data['type']) { 
+			case 'xml-rpc': 
+			case 'api': 
+				$key = md5(uniqid(rand(), true));
+			break;	
+			case 'mysql': 
+			default: 
+				// Create our cookie!
+				self::create_cookie(); 
+		
+				// Before refresh we don't have the cookie so we have to use session ID
+				$key = session_id(); 
+				session_regenerate_id(); 
+			break; 
+		} 
 		
 	        $username       = Dba::escape($data['username']);
 	        $ip             = Dba::escape(ip2int($_SERVER['REMOTE_ADDR']));
@@ -268,9 +276,12 @@ class vauth {
 
 	        if (!$db_results) {
 	                debug_event('SESSION',"Session Creation Failed with Query: $sql and " . Dba::error(),'1');
+			return false; 
 	        }
 
-	        return $db_results;
+		debug_event('SESSION','Session Created:' . $key,'1'); 
+
+	        return $key;
 
 	} // session_create
 

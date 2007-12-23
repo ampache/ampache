@@ -47,7 +47,7 @@ if (!Config::get('access_control')) {
  * Verify the existance of the Session they passed in we do allow them to
  * login via this interface so we do have an exception for action=login
  */
-if ((!Access::session_exists(array(),$_REQUEST['auth'],'api') AND $_REQUEST['action'] != 'handshake') || !Access::check_network('init-api',$_SERVER['REMOTE_ADDR'],$_REQUEST['user'],'5')) { 
+if ((!vauth::session_exists('api',$_REQUEST['auth']) AND $_REQUEST['action'] != 'handshake') || !Access::check_network('init-api',$_SERVER['REMOTE_ADDR'],$_REQUEST['user'],'5')) { 
 	debug_event('Access Denied','Invalid Session or unathorized access attempt to API','5'); 
 	ob_end_clean(); 
         echo xmlData::error('Access Denied due to ACL or unauthorized access attempt to API, attempt logged');
