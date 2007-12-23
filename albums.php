@@ -60,7 +60,7 @@ switch ($_REQUEST['action']) {
 	case 'find_art':
 
 		// If not a user then kick em out
-		if (!$GLOBALS['user']->has_access('25')) { access_denied(); exit; }
+		if (!Access::check('interface','25')) { access_denied(); exit; }
 
 		// get the Album information
 	        $album = new Album($_REQUEST['album_id']);
@@ -170,13 +170,6 @@ switch ($_REQUEST['action']) {
 		show_box_bottom(); 
 	break;
 	// Browse by Album
-} // end switch on action
-
-
-/**
- * switch on view
- */
-switch ($_REQUEST['action']) { 
 	default:
 	case 'show':
 		$album = new Album($_REQUEST['album']);

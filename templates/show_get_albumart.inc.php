@@ -21,14 +21,15 @@
 */
 ?>
 <?php show_box_top(_('Customize Search')); ?>
-<form enctype="multipart/form-data" name="coverart" method="post" action="<?php echo Config::get('web_path'); ?>/albums.php?action=find_art&amp;album_id=<?php echo $album->id; ?>&amp;artist_name=<?php echo $_REQUEST['artist_name'];?>&amp;album_name=<?php echo $_REQUEST['album_name']; ?>&amp;cover=<?php echo scrub_out($_REQUEST['cover']); ?>" style="Display:inline;">
+<?php print_r($_GET); ?>
+<form enctype="multipart/form-data" name="coverart" method="post" action="<?php echo Config::get('web_path'); ?>/albums.php?action=find_art&amp;album_id=<?php echo $album->id; ?>&amp;artist_name=<?php echo urlencode($_REQUEST['artist_name']);?>&amp;album_name=<?php echo urlencode($_REQUEST['album_name']); ?>&amp;cover=<?php echo urlencode($_REQUEST['cover']); ?>" style="Display:inline;">
 <table>
 <tr>
 	<td>
 		<?php echo _('Artist'); ?>&nbsp;
 	</td>
 	<td>
-		<input type="text" size="20" id="artist_name" name="artist_name" value="<?php echo scrub_out($artistname); ?>" />
+		<input type="text" size="20" id="artist_name" name="artist_name" value="<?php echo scrub_out(unhtmlentities($artistname)); ?>" />
 	</td>
 </tr>
 <tr>
@@ -36,7 +37,7 @@
 	 	<?php echo _('Album'); ?>&nbsp;
 	</td>
 	<td>
-		<input type="text" size="20" id="album_name" name="album_name" value="<?php echo scrub_out($albumname); ?>" />
+		<input type="text" size="20" id="album_name" name="album_name" value="<?php echo scrub_out(unhtmlentities($albumname)); ?>" />
 	</td>
 </tr>
 <tr>
