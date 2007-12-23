@@ -21,7 +21,6 @@
 */
 ?>
 <?php show_box_top(_('Customize Search')); ?>
-<?php print_r($_GET); ?>
 <form enctype="multipart/form-data" name="coverart" method="post" action="<?php echo Config::get('web_path'); ?>/albums.php?action=find_art&amp;album_id=<?php echo $album->id; ?>&amp;artist_name=<?php echo urlencode($_REQUEST['artist_name']);?>&amp;album_name=<?php echo urlencode($_REQUEST['album_name']); ?>&amp;cover=<?php echo urlencode($_REQUEST['cover']); ?>" style="Display:inline;">
 <table>
 <tr>

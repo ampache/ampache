@@ -1274,40 +1274,57 @@ class Catalog {
 	        else {
 	                $client = new xmlrpc_client("/$path/server/xmlrpc.server.php", $server, 80);
 	        }
-	        
-		/* encode the variables we need to send over */
-		$encoded_key	= new xmlrpcval($this->key,"string");
-		$encoded_path	= new xmlrpcval(Config::get('web_path'),"string");
-		
-		$xmlrpc_message = new xmlrpcmsg('xmlrpcserver.get_catalogs', array($encoded_key,$encoded_path));
-		
+
 		// 6 that's right, the secret level because if you do have debug on most likely you're 
 		// going to just crash your browser... sorry folks
 	        if (Config::get('debug') AND Config::get('debug_level') == '6') { $client->setDebug(1); }
-		
-	        $response = $client->send($xmlrpc_message,30);
-	        $value = $response->value();
 
-	        if ( !$response->faultCode() ) {
-	                $data = php_xmlrpc_decode($value);
+		// Before we do anything else we need to do a handshake with the remote server
+		$timestamp 	= time(); 
+		$handshake_key	= md5($timestamp . $this->key);
+
+		$encoded_key	= new xmlrpcval($handshake_key,"string"); 
+		$timestamp	= new xmlrpcval($timestamp,"int");
+		$xmlrpc_message = new xmlrpcmsg('xmlrpcserver.handshake',array($encoded_key,$timestamp));
+
+		// Send it off
+		$response = $client->send($xmlrpc_message,10); 
+		if ($response->faultCode()) { 
+			$error_msg = _("Error connecting to") . " " . $server . " " . _("Code") . ": " . $response->faultCode() . " " . _("Reason") . ": " . $response->faultString();
+			debug_event('XMLCLIENT',$error_msg,'1');
+			echo "<p class=\"error\">$error_msg</p>";
+			return;
+		} 
 			
-			// Print out the catalogs we are going to sync
-	                foreach ($data as $vars) { 
-				$catalog_name 	= $vars['name'];
-				$count		= $vars['count'];
-	                        print("<b>Reading Remote Catalog: $catalog_name ($count Songs)</b> [$this->path]<br />\n");
-				$total += $count;
-	                } 
-			// Flush the output
-			flush();
+		$token = php_xmlrpc_decode($response->value()); 
+	        
+		/* encode the variables we need to send over */
+		$encoded_key	= new xmlrpcval($token,"string");
+		$encoded_path	= new xmlrpcval(Config::get('web_path'),"string");
+		
+		$xmlrpc_message = new xmlrpcmsg('xmlrpcserver.get_catalogs', array($encoded_key,$encoded_path));
+	        $response = $client->send($xmlrpc_message,30);
 
-	        } // if we didn't get an error
-	        else {
+	        if ($response->faultCode() ) {
 			$error_msg = _("Error connecting to") . " " . $server . " " . _("Code") . ": " . $response->faultCode() . " " . _("Reason") . ": " . $response->faultString();
 			debug_event('XMLCLIENT',$error_msg,'1');
 			echo "<p class=\"error\">$error_msg</p>";
 	                return;
-	        }
+		} 
+	        
+
+		$data = php_xmlrpc_decode($response->value());
+			
+		// Print out the catalogs we are going to sync
+	        foreach ($data as $vars) { 
+			$catalog_name 	= $vars['name'];
+			$count		= $vars['count'];
+	                print("<b>Reading Remote Catalog: $catalog_name ($count Songs)</b> [$this->path]<br />\n");
+			$total += $count;
+		} 
+		
+		// Flush the output
+		flush();
 
 		// Hardcoded for now
 		$step = '500';
@@ -1316,7 +1333,7 @@ class Catalog {
 		while ($total > $current) { 
 			$start 	= $current;
 			$current += $step;
-			$this->get_remote_song($client,$start,$step);
+			$this->get_remote_song($client,$token,$start,$step);
 		}
 
 	        echo "<p>" . _('Completed updating remote catalog(s)') . ".</p><hr />\n";
@@ -1331,11 +1348,11 @@ class Catalog {
 	 * This functions takes a start and end point for gathering songs from a remote server. It is broken up
 	 * in attempt to get around the problem of very large target catalogs
 	 */
-	public function get_remote_song($client,$start,$end) { 
+	public function get_remote_song($client,$token,$start,$end) { 
 
 		$encoded_start 	= new xmlrpcval($start,"int");
 		$encoded_end	= new xmlrpcval($end,"int");
-		$encoded_key	= new xmlrpcval($this->key,"string");
+		$encoded_key	= new xmlrpcval($token,"string");
 
 		$query_array = array($encoded_key,$encoded_start,$encoded_end); 
 

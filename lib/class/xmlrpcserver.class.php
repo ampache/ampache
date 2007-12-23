@@ -41,7 +41,7 @@ class xmlRpcServer {
 		$key = $variable->scalarval(); 
 
 		// Check it and make sure we're super green
-		if (!Access::check_network('rpc',$_SERVER['REMOTE_ADDR'],'','5',$key)) { 
+		if (!vauth::session_exists('xml-rpc',$key)) { 
 			debug_event('XMLSERVER','Error ' . $_SERVER['REMOTE_ADDR'] . ' with key ' . $key . ' does not match any ACLs','1'); 
 			return new xmlrpcresp(0,'503','Key/IP Mis-match Access Denied'); 
 		} 
@@ -85,7 +85,7 @@ class xmlRpcServer {
                 $key = $variable->scalarval();
 
                 // Check it and make sure we're super green
-                if (!Access::check_network('rpc',$_SERVER['REMOTE_ADDR'],'','5',$key)) {
+                if (!vauth::session_exists('xml-rpc',$key)) {
                         debug_event('XMLSERVER','Error ' . $_SERVER['REMOTE_ADDR'] . ' with key ' . $key . ' does not match any ACLs','1');
                         return new xmlrpcresp(0,'503','Key/IP Mis-match Access Denied');
                 }
@@ -134,12 +134,12 @@ class xmlRpcServer {
 
 		// Pull out the params
 		$encoded_key 	= $xmlrpc_object->params['0']->me['string']; 
-		$timestamp	= $xmlrpc_object->params['0']->me['int'];
+		$timestamp	= $xmlrpc_object->params['1']->me['int'];
 
 		// Check the timestamp make sure it's recent
 		if ($timestamp < (time() - 14400)) { 
 			debug_event('XMLSERVER','Handshake failure, timestamp too old','1'); 
-			return new xmlrpcresp(php_xmlrpc_encoded("Handshake failure")); 
+			return new xmlrpcresp(0,'503','Handshaek failure, timestamp too old');
 		} 
 
 		// Log the attempt
@@ -158,11 +158,16 @@ class xmlRpcServer {
 			$md5pass = md5($timestamp . $row['key']); 
 
 			if ($md5pass == $encoded_key) { 
-				$token = ''; 
+				$data['type'] = 'xml-rpc';
+				$data['username'] = 'System'; 
+				$data['value'] = 'Handshake'; 
+				$token = vauth::session_create($data); 
+				return new xmlrpcresp(php_xmlrpc_encode($token));
 			} 
 
 		} // end while rows
 
+		return new xmlrpcresp(0,'503','Handshaek failure, Key/IP Incorrect');
 
 	} // handshake
 

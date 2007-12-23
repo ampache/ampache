@@ -1317,8 +1317,7 @@ $cp1252_to_xmlent =
 
 			if($this->debug > 1)
 			{
-				print "<PRE>\n---SENDING---\n" . htmlentities($op) . "\n---END---\n</PRE>";
-				// let the client see this now in case http times out...
+				debug_event('XMLRPC',"\n---SENDING---\n" . htmlentities($op) . "\n---END---\n</PRE>",'1','xmlrpc');
 				flush();
 			}
 
@@ -1458,11 +1457,8 @@ $cp1252_to_xmlent =
 				$encoding_hdr = '';
 			}
 
-			if($this->debug > 1)
-			{
-				print "<PRE>\n---SENDING---\n" . htmlentities($payload) . "\n---END---\n</PRE>";
-				// let the client see this now in case http times out...
-				flush();
+			if($this->debug > 1) {
+				debug_event('XMLRPC',"\n---SENDING---\n" . htmlentities($payload) . "\n---END---\n</PRE>",'1','xmlrpc');
 			}
 
 			if(!$keepalive || !$this->xmlrpc_curl_handle)
@@ -2338,18 +2334,17 @@ xmlrpc_encode_entitites($this->errstr, $GLOBALS['xmlrpc_internalencoding'], $cha
 
 				$data = substr($data, $bd);
 
-				if($this->debug && count($GLOBALS['_xh']['headers']))
-				{
-					print '<PRE>';
-					foreach($GLOBALS['_xh']['headers'] as $header => $value)
-					{
-						print htmlentities("HEADER: $header: $value\n");
+				// If we're debuging and we've got some headers
+				if($this->debug && count($GLOBALS['_xh']['headers'])) {
+					$debug_string = ''; 
+
+					foreach($GLOBALS['_xh']['headers'] as $header => $value) {
+						$debug_string .= "HEADER: $header: $value\n";
 					}
-					foreach($GLOBALS['_xh']['cookies'] as $header => $value)
-					{
-						print htmlentities("COOKIE: $header={$value['value']}\n");
+					foreach($GLOBALS['_xh']['cookies'] as $header => $value) {
+						$debug_string .= "COOKIE: $header={$value['value']}\n";
 					}
-					print "</PRE>\n";
+					debug_event('XMLRPC',"\n---SENDING---\n" . htmlentities($debug_string) . "\n---END---\n",'1','xmlrpc');
 				}
 
 				// if CURL was used for the call, http headers have been processed,
@@ -2381,13 +2376,13 @@ xmlrpc_encode_entitites($this->errstr, $GLOBALS['xmlrpc_internalencoding'], $cha
 								{
 									$data = $degzdata;
 									if($this->debug)
-									print "<PRE>---INFLATED RESPONSE---[".strlen($data)." chars]---\n" . htmlentities($data) . "\n---END---</PRE>";
+									debug_event('XMLRPC',"\n---RESPONSE---\n" . $data . "\n---END---\n",'1','xmlrpc');
 								}
 								elseif($GLOBALS['_xh']['headers']['content-encoding'] == 'gzip' && $degzdata = @gzinflate(substr($data, 10)))
 								{
 									$data = $degzdata;
 									if($this->debug)
-									print "<PRE>---INFLATED RESPONSE---[".strlen($data)." chars]---\n" . htmlentities($data) . "\n---END---</PRE>";
+									debug_event('XMLRPC',"\n---RESPONSE---\n" . $data . "\n---END---\n",'1','xmlrpc');
 								}
 								else
 								{
@@ -2425,7 +2420,7 @@ xmlrpc_encode_entitites($this->errstr, $GLOBALS['xmlrpc_internalencoding'], $cha
 			if($this->debug)
 			{
 				//by maHo, replaced htmlspecialchars with htmlentities
-				print "<PRE>---GOT---\n" . htmlentities($data) . "\n---END---\n</PRE>";
+				debug_event('XMLRPC',"\n---GOT---\n" . $data . "\n---END---\n",'1','xmlrpc');
 			}
 
 			if($data == '')
