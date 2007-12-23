@@ -253,11 +253,12 @@ class vauth {
 				// Create our cookie!
 				self::create_cookie(); 
 		
+				session_regenerate_id(); 
+
 				// Before refresh we don't have the cookie so we have to use session ID
 				$key = session_id(); 
-				session_regenerate_id(); 
 			break; 
-		} 
+		} // end switch on data type 
 		
 	        $username       = Dba::escape($data['username']);
 	        $ip             = Dba::escape(ip2int($_SERVER['REMOTE_ADDR']));
