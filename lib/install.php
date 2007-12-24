@@ -152,8 +152,17 @@ function install_insert_db($username,$password,$hostname,$database) {
 		}
 	} // end if we are creating a user
 
+	// Figure out which version of MySQL we're running, if possible we want to use the UTF-8 dump
+	$sql = "SELECT version()"; 
+	$db_results = @mysql_query($sql,$dbh); 
+
+	$data = mysql_fetch_assoc($db_results,$dbh); 
+	$mysql_version = substr(preg_replace("/(\d+)\.(\d+)\.(\d+).*/","$1$2$3",$version[0]),0,3);
+
+	$sql_file =  ($mysql_version < '500') ? 'sql/ampache40.sql' : 'sql/ampache.sql'; 
+
 	/* Attempt to insert database */
-         $query = fread(fopen("sql/ampache.sql", "r"), filesize("sql/ampache.sql"));
+         $query = fread(fopen($sql_file, "r"), filesize($sql_file));
          $pieces  = split_sql($query);
          for ($i=0; $i<count($pieces); $i++) {
                  $pieces[$i] = trim($pieces[$i]);
