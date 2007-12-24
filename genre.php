@@ -38,6 +38,7 @@ switch($_REQUEST['action']) {
 		Browse::reset_filters(); 
 		Browse::set_type('song'); 
 		Browse::set_sort('name','ASC'); 
+		Browse::set_static_content(1); 
 		Browse::save_objects($object_ids);
 		Browse::show_objects($object_ids); 
 		echo "</div>"; 
@@ -52,6 +53,7 @@ switch($_REQUEST['action']) {
 		Browse::reset_filters(); 
 		Browse::set_type('album'); 
 		Browse::set_sort('name','ASC'); 
+		Browse::set_static_content(1); 
 		Browse::save_objects($object_ids); 
 		Browse::show_objects($object_ids); 
 		echo "</div>"; 
@@ -64,6 +66,7 @@ switch($_REQUEST['action']) {
 		Browse::reset_filters(); 
 		Browse::set_type('artist'); 
 		Browse::set_sort('name','ASC'); 
+		Browse::set_static_content(1); 
 		Browse::save_objects($object_ids); 
 		Browse::show_objects($object_ids); 
 		echo "</div>"; 

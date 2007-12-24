@@ -26,19 +26,24 @@ if (AJAX_INCLUDE != '1') { exit; }
 
 switch ($_REQUEST['action']) { 
 	case 'browse': 
+
+		$object_ids = array(); 
+
                 if ($_REQUEST['key'] && $_REQUEST['value']) {
                         // Set any new filters we've just added
-                        Browse::set_filter($_REQUEST['key'],$_REQUEST['value']);
+			Browse::set_filter($_REQUEST['key'],$_REQUEST['value']); 
                 }
                 if ($_REQUEST['sort']) {
                         // Set the new sort value
                         Browse::set_sort($_REQUEST['sort']);
                 }
 
-                // Refresh the browse div with our new filter options
-                $object_ids = Browse::get_objects();
+		// Refresh the browse div with our new filter options if we're not static
+		if (!Browse::$static_content) { 
+	                $object_ids = Browse::get_objects();
+		} 
 
-                ob_start();
+		ob_start();
                 Browse::show_objects($object_ids);
                 $results['browse_content'] = ob_get_contents();
                 ob_end_clean();

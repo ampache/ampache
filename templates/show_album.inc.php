@@ -67,6 +67,7 @@ $title		= scrub_out($album->name) . '&nbsp;(' . $album->year . ')&nbsp;--&nbsp;'
 <?php 
 	$object_ids = $album->get_songs(); 
 	Browse::set_type('song');
+	Browse::set_static_content(1);
 	Browse::save_objects($object_ids); 
 	Browse::show_objects($object_ids); 
 ?>

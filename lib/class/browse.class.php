@@ -36,6 +36,10 @@ class Browse {
 	// Boolean if this is a simple browse method (use different paging code)
 	public static $simple_browse; 
 
+	// Static Content, this is defaulted to false, if set to true then wen can't
+	// apply any filters that would change the result set. 
+	public static $static_content = false; 
+
 	/**
 	 * constructor
 	 * This should never be called
@@ -58,9 +62,6 @@ class Browse {
 
 		switch ($key) { 
                         case 'show_art':
-                        case 'min_count':
-                        case 'unplayed':
-                        case 'rated':
                                 $key = $_REQUEST['key'];
 				if ($_SESSION['browse']['filter'][$key]) { 
 					unset($_SESSION['browse']['filter'][$key]);
@@ -69,14 +70,23 @@ class Browse {
 	                                $_SESSION['browse']['filter'][$key] = 1;
 				}
                         break;
+                        case 'min_count':
+                        case 'unplayed':
+                        case 'rated':
+
+			break; 
 			case 'alpha_match':
+				if (self::$static_content) { return false; } 
 				if ($value == _('All')) { $value = ''; } 
 				$_SESSION['browse']['filter'][$key] = $value; 
 			break;
                         default:
                                 // Rien a faire
+				return false; 
                         break;
                 } // end switch
+
+		return true; 
 	
 	} // set_filter
 
@@ -99,7 +109,6 @@ class Browse {
 	 * This clears any sup objects we've added, normally called on every set_type
 	 */
 	public static function reset_supplemental_objects() { 
-
 
 		$_SESSION['browse']['supplemental'] = array(); 
 
@@ -138,6 +147,7 @@ class Browse {
 				$_SESSION['browse']['type'] = $type;
 				// Resets the simple browse
 				self::set_simple_browse(0); 
+				self::set_static_content(0);
 				self::reset_supplemental_objects(); 
 			break;
 			default:
@@ -224,6 +234,21 @@ class Browse {
 		$_SESSION['browse']['simple'] = $value;  
 
 	} // set_simple_browse
+
+	/**
+	 * set_static_content
+	 * This sets true/false if the content of this browse
+	 * should be static, if they are then content filtering/altering
+	 * methods will be skipped
+	 */
+	public static function set_static_content($value) { 
+
+		$value = make_bool($value); 
+		self::$static_content = $value; 
+
+		$_SESSION['browse']['static'] = $value; 
+
+	} // set_static_content
 
 	/**
 	 * get_saved
@@ -723,6 +748,7 @@ class Browse {
 	public static function _auto_init() { 
 
 		self::$simple_browse = make_bool($_SESSION['browse']['simple']); 
+		self::$static_content = make_bool($_SESSION['browse']['static']); 
 
 	} // _auto_init
 

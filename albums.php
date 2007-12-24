@@ -151,12 +151,11 @@ switch ($_REQUEST['action']) {
 		$album = new Album($album_id);
 		$album->insert_art($image,$mime);
 
-
-		show_confirmation(_('Album Art Inserted'),'',"/albums.php?action=show&amp;album=$album_id");
+		header("Location:" . Config::get('web_path') . "/albums.php?action=show&album=" . $album->id); 
 	break;
 	case 'update_from_tags':
 		// Make sure they are a 'power' user at least
-		if (!$GLOBALS['user']->has_access('75')) { 
+		if (!Access::check('interface','75')) { 
 			access_denied(); 
 			exit; 
 		} 
@@ -176,9 +175,6 @@ switch ($_REQUEST['action']) {
 		$album->format();
 
 		require Config::get('prefix') . '/templates/show_album.inc.php';
-	
-		/* Get the song ids for this album */
-		$song_ids = $album->get_songs(0,$_REQUEST['artist']);
 	break;
 } // switch on view
 
