@@ -24,14 +24,13 @@ error_reporting(E_ALL ^ E_NOTICE);
 
 require_once 'lib/general.lib.php';
 require_once 'lib/class/config.class.php';
+require_once 'lib/class/vauth.class.php';
 require_once 'lib/ui.lib.php';
 require_once 'lib/log.lib.php'; 
 require_once 'modules/horde/Browser.php';
 require_once 'lib/install.php';
 require_once 'lib/debug.lib.php';
 require_once 'lib/gettext.php';
-
-require_once 'modules/vauth/init.php';
 
 if ($_SERVER['HTTPS'] == 'on') { $http_type = "https://"; }
 else { $http_type = "http://"; }

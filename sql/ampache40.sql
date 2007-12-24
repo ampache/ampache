@@ -144,6 +144,7 @@ CREATE TABLE `catalog` (
   `id` int(11) unsigned NOT NULL auto_increment,
   `name` varchar(128) NOT NULL,
   `path` varchar(255) NOT NULL,
+  `add_path` varchar(255) NOT NULL,
   `catalog_type` enum('local','remote') NOT NULL default 'local',
   `last_update` int(11) unsigned NOT NULL default '0',
   `last_add` int(11) unsigned NOT NULL default '0',
@@ -163,6 +164,32 @@ CREATE TABLE `catalog` (
 LOCK TABLES `catalog` WRITE;
 /*!40000 ALTER TABLE `catalog` DISABLE KEYS */;
 /*!40000 ALTER TABLE `catalog` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `democratic`
+--
+
+DROP TABLE IF EXISTS `democratic`;
+CREATE TABLE `democratic` (
+  `id` int(11) unsigned NOT NULL auto_increment,
+  `name` varchar(64) NOT NULL,
+  `cooldown` tinyint(4) unsigned default NULL,
+  `level` tinyint(4) unsigned NOT NULL default '25',
+  `user` int(11) NOT NULL,
+  `primary` tinyint(1) unsigned NOT NULL default '0',
+  PRIMARY KEY  (`id`),
+  KEY `primary_2` (`primary`),
+  KEY `level` (`level`)
+) TYPE=MyISAM;
+
+--
+-- Dumping data for table `democratic`
+--
+
+LOCK TABLES `democratic` WRITE;
+/*!40000 ALTER TABLE `democratic` DISABLE KEYS */;
+/*!40000 ALTER TABLE `democratic` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -394,7 +421,7 @@ CREATE TABLE `preference` (
 
 LOCK TABLES `preference` WRITE;
 /*!40000 ALTER TABLE `preference` DISABLE KEYS */;
-INSERT INTO `preference` VALUES (1,'download','0','Allow Downloads',100,'boolean','options'),(4,'popular_threshold','10','Popular Threshold',25,'integer','interface'),(19,'sample_rate','32','Transcode Bitrate',25,'string','streaming'),(22,'site_title','Ampache :: Pour l\'Amour de la Musique','Website Title',100,'string','system'),(23,'lock_songs','0','Lock Songs',100,'boolean','system'),(24,'force_http_play','1','Forces Http play regardless of port',100,'boolean','system'),(25,'http_port','80','Non-Standard Http Port',100,'integer','system'),(26,'catalog_echo_count','100','Catalog Echo Interval',100,'integer','system'),(41,'localplay_controller','0','Localplay Type',100,'special','options'),(29,'play_type','stream','Type of Playback',25,'special','streaming'),(30,'direct_link','1','Allow Direct Links',100,'boolean','options'),(31,'lang','en_US','Language',100,'special','interface'),(32,'playlist_type','m3u','Playlist Type',100,'special','playlist'),(33,'theme_name','classic','Theme',0,'special','interface'),(34,'ellipse_threshold_album','27','Album Ellipse Threshold',0,'integer','interface'),(35,'ellipse_threshold_artist','27','Artist Ellipse Threshold',0,'integer','interface'),(36,'ellipse_threshold_title','27','Title Ellipse Threshold',0,'integer','interface'),(51,'offset_limit','50','Offset Limit',5,'integer','interface'),(40,'localplay_level','0','Localplay Config',100,'special','options'),(44,'allow_stream_playback','1','Allow Streaming',100,'boolean','system'),(45,'allow_democratic_playback','0','Allow Democratic Play',100,'boolean','system'),(46,'allow_localplay_playback','0','Allow Localplay Play',100,'boolean','system'),(47,'stats_threshold','7','Statistics Day Threshold',25,'integer','interface'),(49,'min_object_count','1','Min Element Count',5,'integer','interface'),(52,'rate_limit','8192','Rate Limit',100,'integer','streaming'),(53,'playlist_method','default','Playlist Method',5,'string','playlist'),(55,'transcode','default','Transcoding',25,'string','streaming');
+INSERT INTO `preference` VALUES (1,'download','0','Allow Downloads',100,'boolean','options'),(4,'popular_threshold','10','Popular Threshold',25,'integer','interface'),(19,'sample_rate','32','Transcode Bitrate',25,'string','streaming'),(22,'site_title','Ampache :: Pour l\'Amour de la Musique','Website Title',100,'string','system'),(23,'lock_songs','0','Lock Songs',100,'boolean','system'),(24,'force_http_play','1','Forces Http play regardless of port',100,'boolean','system'),(25,'http_port','80','Non-Standard Http Port',100,'integer','system'),(41,'localplay_controller','0','Localplay Type',100,'special','options'),(29,'play_type','stream','Type of Playback',25,'special','streaming'),(31,'lang','en_US','Language',100,'special','interface'),(32,'playlist_type','m3u','Playlist Type',100,'special','playlist'),(33,'theme_name','classic','Theme',0,'special','interface'),(34,'ellipse_threshold_album','27','Album Ellipse Threshold',0,'integer','interface'),(35,'ellipse_threshold_artist','27','Artist Ellipse Threshold',0,'integer','interface'),(36,'ellipse_threshold_title','27','Title Ellipse Threshold',0,'integer','interface'),(51,'offset_limit','50','Offset Limit',5,'integer','interface'),(40,'localplay_level','0','Localplay Access',100,'special','options'),(44,'allow_stream_playback','1','Allow Streaming',100,'boolean','system'),(45,'allow_democratic_playback','0','Allow Democratic Play',100,'boolean','system'),(46,'allow_localplay_playback','0','Allow Localplay Play',100,'boolean','system'),(47,'stats_threshold','7','Statistics Day Threshold',25,'integer','interface'),(49,'min_object_count','1','Min Element Count',5,'integer','interface'),(52,'rate_limit','8192','Rate Limit',100,'integer','streaming'),(53,'playlist_method','default','Playlist Method',5,'string','playlist'),(55,'transcode','default','Transcoding',25,'string','streaming');
 /*!40000 ALTER TABLE `preference` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -433,9 +460,11 @@ CREATE TABLE `session` (
   `expire` int(11) unsigned NOT NULL default '0',
   `value` longtext NOT NULL,
   `ip` int(11) unsigned default NULL,
-  `type` enum('sso','mysql','ldap','http') NOT NULL default 'mysql',
+  `type` enum('mysql','ldap','http','api','xml-rpc') NOT NULL,
+  `agent` varchar(255) NOT NULL,
   PRIMARY KEY  (`id`),
-  KEY `expire` (`expire`)
+  KEY `expire` (`expire`),
+  KEY `type` (`type`)
 ) TYPE=MyISAM;
 
 --
@@ -445,30 +474,6 @@ CREATE TABLE `session` (
 LOCK TABLES `session` WRITE;
 /*!40000 ALTER TABLE `session` DISABLE KEYS */;
 /*!40000 ALTER TABLE `session` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `session_api`
---
-
-DROP TABLE IF EXISTS `session_api`;
-CREATE TABLE `session_api` (
-  `id` varchar(64) NOT NULL,
-  `user` int(11) unsigned NOT NULL,
-  `agent` varchar(255) default NULL,
-  `level` int(11) unsigned NOT NULL default '0',
-  `expire` int(11) unsigned NOT NULL,
-  `ip` int(11) unsigned default NULL,
-  PRIMARY KEY  (`id`)
-) TYPE=MyISAM;
-
---
--- Dumping data for table `session_api`
---
-
-LOCK TABLES `session_api` WRITE;
-/*!40000 ALTER TABLE `session_api` DISABLE KEYS */;
-/*!40000 ALTER TABLE `session_api` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -625,7 +630,7 @@ CREATE TABLE `tmp_playlist` (
   PRIMARY KEY  (`id`),
   KEY `session` (`session`),
   KEY `type` (`type`)
-) TYPE=MyISAM AUTO_INCREMENT=8;
+) TYPE=MyISAM AUTO_INCREMENT=12;
 
 --
 -- Dumping data for table `tmp_playlist`
@@ -676,7 +681,7 @@ CREATE TABLE `update_info` (
 
 LOCK TABLES `update_info` WRITE;
 /*!40000 ALTER TABLE `update_info` DISABLE KEYS */;
-INSERT INTO `update_info` VALUES ('db_version','340011');
+INSERT INTO `update_info` VALUES ('db_version','340014');
 /*!40000 ALTER TABLE `update_info` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -728,7 +733,7 @@ CREATE TABLE `user_preference` (
 
 LOCK TABLES `user_preference` WRITE;
 /*!40000 ALTER TABLE `user_preference` DISABLE KEYS */;
-INSERT INTO `user_preference` VALUES (-1,1,'0'),(-1,4,'10'),(-1,19,'32'),(-1,22,'Ampache :: Pour l\'Amour de la Musique'),(-1,23,'0'),(-1,24,'1'),(-1,25,'80'),(-1,26,'100'),(-1,41,'0'),(-1,29,'stream'),(-1,30,'1'),(-1,31,'en_US'),(-1,32,'m3u'),(-1,33,'classic'),(-1,34,'27'),(-1,35,'27'),(-1,36,'27'),(-1,51,'50'),(-1,40,'0'),(-1,44,'1'),(-1,45,'0'),(-1,46,'0'),(-1,47,'7'),(-1,49,'1'),(-1,52,'8192'),(-1,53,'normal'),(-1,54,'append'),(-1,55,'default');
+INSERT INTO `user_preference` VALUES (-1,1,'0'),(-1,4,'10'),(-1,19,'32'),(-1,22,'Ampache :: Pour l\'Amour de la Musique'),(-1,23,'0'),(-1,24,'1'),(-1,25,'80'),(-1,41,'0'),(-1,29,'stream'),(-1,31,'en_US'),(-1,32,'m3u'),(-1,33,'classic'),(-1,34,'27'),(-1,35,'27'),(-1,36,'27'),(-1,51,'50'),(-1,40,'0'),(-1,44,'1'),(-1,45,'0'),(-1,46,'0'),(-1,47,'7'),(-1,49,'1'),(-1,52,'8192'),(-1,53,'normal'),(-1,55,'default');
 /*!40000 ALTER TABLE `user_preference` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -789,4 +794,4 @@ UNLOCK TABLES;
 /*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2007-12-24  2:03:49
+-- Dump completed on 2007-12-24  2:18:10
