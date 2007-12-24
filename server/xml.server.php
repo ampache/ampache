@@ -54,6 +54,10 @@ if ((!vauth::session_exists('api',$_REQUEST['auth']) AND $_REQUEST['action'] != 
 	exit(); 
 }
 
+// If we make it past the check and we're not a hand-shaking then we should extend the session
+if ($_REQUEST['action'] != 'handshake') { 
+	vauth::session_extend($_REQUEST['auth']); 
+} 
 
 switch ($_REQUEST['action']) { 
 	case 'handshake': 

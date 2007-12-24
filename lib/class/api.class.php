@@ -86,6 +86,10 @@ class Api {
 				$data['type']		= 'api'; 
 				$data['value']		= $timestamp; 
 				$token = vauth::session_create($data); 
+				// Insert the token into the streamer
+				$stream = new Stream(); 
+				$stream->user_id = $client->id; 
+				$stream->insert_session($token); 
 				debug_event('API','Login Success, passphrase matched','1'); 
 
 				return array('auth'=>$token,'api'=>self::$version); 

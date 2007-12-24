@@ -67,7 +67,7 @@ if (Config::get('xml_rpc')) {
 
 // If require session is set then we need to make sure we're legit
 if (Config::get('require_session')) { 
-	if(!Stream::session_exists($sid) && !Access::session_exists(array(),$sid,'api')) {	
+	if(!Stream::session_exists($sid)) {	
 		debug_event('session_expired',"Streaming Access Denied: " . $GLOBALS['user']->username . "'s session has expired",'3');
     		die(_("Session Expired: please log in again at") . " " . Config::get('web_path') . "/login.php");
 	}
@@ -82,7 +82,7 @@ if (Config::get('require_session')) {
 $user->update_last_seen();
 
 /* If we are in demo mode.. die here */
-if (Config::get('demo_mode') || (!$GLOBALS['user']->has_access('25') && !$xml_rpc) ) {
+if (Config::get('demo_mode') || (!Access::check('interface','25') && !$xml_rpc) ) {
 	debug_event('access_denied',"Streaming Access Denied:" .Config::get('demo_mode') . "is the value of demo_mode. Current user level is " . $GLOBALS['user']->access,'3');
 	access_denied();
 	exit; 

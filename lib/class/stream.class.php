@@ -114,12 +114,14 @@ class Stream {
 	 * insert_session
 	 * This inserts a row into the session_stream table
 	 */
-	private function insert_session() { 
+	public function insert_session($sid='') { 
+
+		$sid = $sid ? Dba::escape($sid) : Dba::escape(self::$session); 
 
 		$expire = time() + Config::get('stream_length'); 
 
 		$sql = "INSERT INTO `session_stream` (`id`,`expire`,`user`) " . 
-			"VALUES('" . self::$session . "','$expire','$this->user_id')"; 
+			"VALUES('$sid','$expire','$this->user_id')"; 
 		$db_results = Dba::query($sql); 
 
 		if (!$db_results) { return false; } 

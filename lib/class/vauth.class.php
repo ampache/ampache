@@ -354,7 +354,6 @@ class vauth {
 				$key = Dba::escape($key); 
 				$time = time(); 
 				$sql = "SELECT * FROM `session` WHERE `id`='$key' AND `expire` > '$time' AND `type`!='api' AND `type`!='xml-rpc'"; 
-debug_event('testo',$sql,'1');
 				$db_results = Dba::query($sql); 
 
 				if (Dba::num_rows($db_results)) { 
@@ -382,6 +381,25 @@ debug_event('testo',$sql,'1');
 		return false; 
 
 	} // session_exists
+
+	/**
+	 * session_extend
+	 * This should really be extend_session but hey you gotta go with the flow
+	 * this takes a SID and extends it's expire
+	 */
+	public static function session_extend($sid) { 
+
+		$sid = Dba::escape($sid); 
+                $expire = isset($_COOKIE[Config::get('session_name') . '_remember']) ? time() + Config::get('remember_length') : time() + Config::get('session_length');
+
+		$sql = "UPDATE `session` SET `expire`='$expire' WHERE `id`='$sid'"; 
+		$db_results = Dba::query($sql); 
+
+		debug_event('SESSION','Session:' . $sid . ' Has been Extended to ' . $expire,'5'); 
+
+		return $db_results; 
+
+	} // session_extend
 
 	/**
 	 * _auto_init
