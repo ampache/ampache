@@ -157,7 +157,7 @@ function install_insert_db($username,$password,$hostname,$database) {
 	$db_results = @mysql_query($sql,$dbh); 
 
 	$data = mysql_fetch_assoc($db_results,$dbh); 
-	$mysql_version = substr(preg_replace("/(\d+)\.(\d+)\.(\d+).*/","$1$2$3",$version[0]),0,3);
+	$mysql_version = substr(preg_replace("/(\d+)\.(\d+)\.(\d+).*/","$1$2$3",$data[0]),0,3);
 
 	$sql_file =  ($mysql_version < '500') ? 'sql/ampache40.sql' : 'sql/ampache.sql'; 
 

@@ -98,7 +98,7 @@ class vauth {
 		$sql = "UPDATE `session` SET `value`='$value', `expire`='$expire' WHERE `id`='$key'"; 
 		$db_results = Dba::query($sql); 
 
-		debug_event('SESSION','Writing to ' . $key . ' with expire ' . $expire,'1'); 
+		debug_event('SESSION','Writing to ' . $key . ' with expire ' . $expire . ' DBError:' . Dba::error(),'5'); 
 
 		return $db_results; 
 
@@ -115,6 +115,8 @@ class vauth {
 		// Remove anything and EVERYTHING
 		$sql = "DELETE FROM `session` WHERE `id`='$key'"; 
 		$db_results = Dba::query($sql); 
+
+		debug_event('SESSION','Deleting Session with key:' . $key,'5'); 
 
 		// Destory our cookie!
 		setcookie(Config::get('session_name'),'',time() - 86400); 
@@ -141,7 +143,10 @@ class vauth {
 	 * This is called when you want to log out and nuke your session
 	 * //FIXME: move all logout logic here
 	 */
-	public static function logout($key) { 
+	public static function logout($key='') { 
+
+		// If no key is passed try to find the session id
+		$key = $key ? $key : session_id(); 
 
 	        // Do a quick check to see if this is an AJAX'd logout request
 	        // if so use the iframe to redirect
@@ -251,12 +256,12 @@ class vauth {
 			case 'mysql': 
 			default: 
 				// Create our cookie!
-				self::create_cookie(); 
 		
 				session_regenerate_id(); 
 
 				// Before refresh we don't have the cookie so we have to use session ID
 				$key = session_id(); 
+				self::create_cookie(); 
 			break; 
 		} // end switch on data type 
 		
@@ -280,7 +285,7 @@ class vauth {
 			return false; 
 	        }
 
-		debug_event('SESSION','Session Created:' . $key,'1'); 
+		debug_event('SESSION','Session Created:' . $key,'5'); 
 
 	        return $key;
 
@@ -470,26 +475,12 @@ class vauth {
 
 	        $password_check_sql = "PASSWORD('$password')";
 
-	        $sql = "SELECT `user`.`password`,`session`.`ip`,`user`.`id` FROM `user` " .
-	                "LEFT JOIN `session` ON `session`.`username`=`user`.`username` " .
-	                "WHERE `user`.`username`='$username'";
-	        $db_results = Dba::query($sql);
-	        $row = Dba::fetch_assoc($db_results);
-
 	        // If they don't have a password kick em ou
-	        if (!$row['password']) {
+	        if (!strlen($password)) {
 	                Error::add('general','Error Username or Password incorrect, please try again');
 	                return false;
 	        }
 
-	        if (Config::get('prevent_multiple_logins')) {
-	                $client = new User($row['id']);
-	                $ip = $client->is_logged_in();
-	                if ($current_ip != ip2int($_SERVER['REMOTE_ADDR'])) {
-	                        Error::add('general','User Already Logged in');
-	                        return false;
-	                }
-	        } // if prevent_multiple_logins
 
 	        $sql = "SELECT version()";
 	        $db_results = Dba::query($sql);
@@ -500,7 +491,7 @@ class vauth {
 	                $password_check_sql = "OLD_PASSWORD('$password')";
 	        }
 
-	        $sql = "SELECT username FROM user WHERE username='$username' AND password=$password_check_sql";
+	        $sql = "SELECT `username`,`id` FROM `user` WHERE `username`='$username' AND `password`=$password_check_sql";
 	        $db_results = Dba::query($sql);
 
 	        $results = Dba::fetch_assoc($db_results);
@@ -509,6 +500,16 @@ class vauth {
 	                Error::add('general','Error Username or Password incorrect, please try again');
 	                return false;
 	        }
+
+	        if (Config::get('prevent_multiple_logins')) {
+	                $client = new User($results['id']);
+	                $current_ip = $client->is_logged_in();
+	                if ($current_ip != ip2int($_SERVER['REMOTE_ADDR'])) {
+	                        Error::add('general','User Already Logged in');
+	                        return false;
+	                }
+	        } // if prevent_multiple_logins
+
 
 	        $results['type']        = 'mysql';
 	        $results['success']     = true;

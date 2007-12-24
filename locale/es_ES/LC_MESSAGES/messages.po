@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-11-25 18:00-0800\n"
+"POT-Creation-Date: 2007-12-23 21:59-0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,66 +16,981 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: ../../register.php:82
-msgid "Error Captcha Required"
-msgstr ""
-
-#: ../../register.php:89
-msgid "Error Captcha Failed"
-msgstr ""
-
-#: ../../register.php:96
-msgid "You <U>must</U> accept the user agreement"
-msgstr ""
-
-#: ../../register.php:101
-msgid "You did not enter a username"
-msgstr ""
-
-#: ../../register.php:105
-msgid "Please fill in your full name (Firstname Lastname)"
-msgstr ""
-
-#: ../../register.php:131
-msgid "You must enter a password"
-msgstr ""
-
-#: ../../register.php:135
-msgid "Your passwords do not match"
-msgstr ""
-
-#: ../../register.php:139 ../../admin/users.php:100
-msgid "Error Username already exists"
-msgstr "Error: Este usuario ya existe"
-
-#: ../../register.php:157
-msgid "Error: Insert Failed"
-msgstr ""
-
-#: ../../register.php:174
-msgid "Registration Complete"
-msgstr ""
-
-#: ../../update.php:51
-#, fuzzy
-msgid "Ampache Update"
-msgstr "Actualización rápida"
-
 #: ../../play/index.php:72
 msgid "Session Expired: please log in again at"
 msgstr ""
 
-#: ../../ratings.php:32
-msgid "Rating Updated"
+#: ../../lib/class/album.class.php:217
+msgid "Disk"
 msgstr ""
 
-#: ../../ratings.php:32
-msgid "Your rating for this object has been updated"
+#: ../../lib/class/album.class.php:229 ../../lib/class/browse.class.php:641
+#: ../../lib/ui.lib.php:535 ../../templates/show_genre.inc.php:35
+#: ../../templates/show_local_catalog_info.inc.php:30
+msgid "Artists"
+msgstr "Artistas"
+
+#: ../../lib/class/album.class.php:229 ../../lib/class/album.class.php:230
+#: ../../templates/show_edit_album_row.inc.php:35
+msgid "Various"
+msgstr "Varios"
+
+#: ../../lib/class/album.class.php:437 ../../lib/class/catalog.class.php:410
+#: ../../lib/class/catalog.class.php:746
+msgid "Error: Unable to open"
+msgstr "Error: No puede abrir"
+
+#: ../../lib/class/access.class.php:312 ../../lib/class/access.class.php:337
+#: ../../lib/class/browse.class.php:80 ../../lib/ui.lib.php:131
+#: ../../lib/ui.lib.php:728 ../../templates/show_random.inc.php:38
+#: ../../templates/show_admin_tools.inc.php:51
+#: ../../templates/show_edit_access.inc.php:77
+#: ../../templates/show_mail_users.inc.php:30
+#: ../../templates/show_add_access.inc.php:58
+msgid "All"
+msgstr "Todo"
+
+#: ../../lib/class/access.class.php:315
+#: ../../templates/show_edit_access.inc.php:74
+#: ../../templates/show_play_selected.inc.php:49
+#: ../../templates/show_add_access.inc.php:55
+msgid "View"
+msgstr "Mirar"
+
+#: ../../lib/class/access.class.php:318
+#: ../../templates/show_edit_access.inc.php:75
+#: ../../templates/show_add_access.inc.php:56
+#, fuzzy
+msgid "Read"
+msgstr "Al azar"
+
+#: ../../lib/class/access.class.php:321
+#: ../../templates/show_edit_access.inc.php:76
+#: ../../templates/show_add_access.inc.php:57
+msgid "Read/Write"
 msgstr ""
 
-#: ../../radio.php:50
-msgid "Radio Station Added"
+#: ../../lib/class/catalog.class.php:116 ../../lib/class/catalog.class.php:117
+#: ../../lib/class/user.class.php:616 ../../lib/preferences.php:258
+#: ../../templates/show_user.inc.php:22 ../../templates/show_users.inc.php:53
+msgid "Never"
 msgstr ""
+
+#: ../../lib/class/catalog.class.php:176
+msgid "day"
+msgstr "día"
+
+#: ../../lib/class/catalog.class.php:176
+msgid "days"
+msgstr "días"
+
+#: ../../lib/class/catalog.class.php:178
+msgid "hour"
+msgstr "hora"
+
+#: ../../lib/class/catalog.class.php:178
+#: ../../templates/show_random.inc.php:53
+#: ../../templates/show_random.inc.php:54
+#: ../../templates/show_random.inc.php:55
+#: ../../templates/show_random.inc.php:56
+#: ../../templates/show_random.inc.php:57
+msgid "hours"
+msgstr "horas"
+
+#: ../../lib/class/catalog.class.php:275
+#: ../../lib/class/catalog.class.php:1018
+msgid "Running Remote Sync"
+msgstr ""
+
+#: ../../lib/class/catalog.class.php:416 ../../lib/class/catalog.class.php:459
+msgid "Error: Unable to change to directory"
+msgstr ""
+
+#: ../../lib/class/catalog.class.php:487
+msgid "Error: Unable to get filesize for"
+msgstr "Error: No puede conseguir el tamaño de"
+
+#: ../../lib/class/catalog.class.php:493
+msgid "is not readable by ampache"
+msgstr "no puede estar leido por Ampache"
+
+#: ../../lib/class/catalog.class.php:1014
+msgid "Starting Catalog Build"
+msgstr ""
+
+#: ../../lib/class/catalog.class.php:1023
+#: ../../templates/show_adds_catalog.inc.php:24
+#: ../../templates/show_run_add_catalog.inc.php:24
+msgid "Found"
+msgstr "Encontrado"
+
+#: ../../lib/class/catalog.class.php:1023
+#: ../../lib/class/catalog.class.php:1050 ../../lib/preferences.php:170
+#: ../../lib/preferences.php:212 ../../lib/ui.lib.php:756
+#: ../../templates/show_adds_catalog.inc.php:24
+#: ../../templates/sidebar_localplay.inc.php:22
+#: ../../templates/show_gather_art.inc.php:24
+#, fuzzy
+msgid "None"
+msgstr "No"
+
+#: ../../lib/class/catalog.class.php:1042
+#: ../../lib/class/catalog.class.php:1215
+msgid "Added Playlist From"
+msgstr ""
+
+#: ../../lib/class/catalog.class.php:1049
+#: ../../templates/show_gather_art.inc.php:23
+msgid "Starting Album Art Search"
+msgstr ""
+
+#: ../../lib/class/catalog.class.php:1050
+#: ../../templates/show_gather_art.inc.php:24
+msgid "Searched"
+msgstr "Buscado"
+
+#: ../../lib/class/catalog.class.php:1060
+msgid "Catalog Finished"
+msgstr ""
+
+#: ../../lib/class/catalog.class.php:1060
+#: ../../lib/class/catalog.class.php:1244
+msgid "Total Time"
+msgstr "Tiempo en total"
+
+#: ../../lib/class/catalog.class.php:1060
+#: ../../lib/class/catalog.class.php:1245
+msgid "Total Songs"
+msgstr "Canciónes en total"
+
+#: ../../lib/class/catalog.class.php:1061
+#: ../../lib/class/catalog.class.php:1245
+msgid "Songs Per Seconds"
+msgstr ""
+
+#: ../../lib/class/catalog.class.php:1097 ../../admin/access.php:45
+#: ../../preferences.php:95
+msgid "Updated"
+msgstr ""
+
+#: ../../lib/class/catalog.class.php:1104
+msgid "No Update Needed"
+msgstr ""
+
+#: ../../lib/class/catalog.class.php:1188
+msgid "Running Remote Update"
+msgstr ""
+
+#: ../../lib/class/catalog.class.php:1244
+msgid "Catalog Update Finished"
+msgstr ""
+
+#: ../../lib/class/catalog.class.php:1261 ../../admin/users.php:131
+msgid "Error"
+msgstr ""
+
+#: ../../lib/class/catalog.class.php:1261
+msgid "Unable to load XMLRPC library, make sure XML-RPC is enabled"
+msgstr ""
+
+#: ../../lib/class/catalog.class.php:1293
+#: ../../lib/class/catalog.class.php:1309
+#: ../../lib/class/catalog.class.php:1375
+msgid "Error connecting to"
+msgstr "Error conectando a"
+
+#: ../../lib/class/catalog.class.php:1293
+#: ../../lib/class/catalog.class.php:1309
+#: ../../lib/class/catalog.class.php:1375
+msgid "Code"
+msgstr "Codigo"
+
+#: ../../lib/class/catalog.class.php:1293
+#: ../../lib/class/catalog.class.php:1309
+#: ../../lib/class/catalog.class.php:1375
+msgid "Reason"
+msgstr ""
+
+#: ../../lib/class/catalog.class.php:1339
+msgid "Completed updating remote catalog(s)"
+msgstr ""
+
+#: ../../lib/class/catalog.class.php:1371 ../../admin/access.php:40
+#: ../../templates/show_song.inc.php:77
+msgid "Added"
+msgstr "Agregado"
+
+#: ../../lib/class/catalog.class.php:1444
+msgid "Catalog Root unreadable, stopping clean"
+msgstr ""
+
+#: ../../lib/class/catalog.class.php:1501
+msgid "Catalog Clean Done"
+msgstr ""
+
+#: ../../lib/class/catalog.class.php:1501
+msgid "files removed"
+msgstr ""
+
+#: ../../lib/class/catalog.class.php:1502
+msgid "Optimizing Tables"
+msgstr ""
+
+#: ../../lib/class/catalog.class.php:1738
+msgid " FOUND"
+msgstr " ENCONTRADO"
+
+#: ../../lib/class/catalog.class.php:1740
+msgid "Searching for new Album Art"
+msgstr "Buscando nuevo arte de álbum"
+
+#: ../../lib/class/catalog.class.php:1788
+#, fuzzy
+msgid "Update Finished."
+msgstr "Actualizar el usuario"
+
+#: ../../lib/class/catalog.class.php:1788
+msgid "Checked"
+msgstr ""
+
+#: ../../lib/class/catalog.class.php:1788
+msgid "songs updated."
+msgstr ""
+
+#: ../../lib/class/catalog.class.php:1849
+#: ../../lib/class/catalog.class.php:1931
+#: ../../lib/class/catalog.class.php:2016
+#: ../../templates/show_album.inc.php:31
+msgid "Unknown (Orphaned)"
+msgstr ""
+
+#: ../../lib/class/song.class.php:333 ../../server/stats.ajax.php:84
+#: ../../templates/show_edit_song.inc.php:31
+#: ../../templates/show_song.inc.php:25
+#: ../../templates/show_duplicate.inc.php:33
+#: ../../templates/show_search.inc.php:40
+#: ../../templates/show_disabled_songs.inc.php:34
+#: ../../templates/show_disabled_songs.inc.php:57
+msgid "Title"
+msgstr "Título"
+
+#: ../../lib/class/song.class.php:333 ../../lib/class/song.class.php:337
+#: ../../lib/class/song.class.php:341 ../../lib/class/song.class.php:345
+#: ../../lib/class/song.class.php:349 ../../lib/class/song.class.php:353
+#: ../../lib/class/song.class.php:357 ../../lib/class/song.class.php:362
+#: ../../lib/class/song.class.php:367 ../../lib/class/song.class.php:371
+#: ../../lib/class/song.class.php:375 ../../lib/class/song.class.php:380
+msgid "updated to"
+msgstr ""
+
+#: ../../lib/class/song.class.php:337
+#: ../../templates/show_duplicates.inc.php:41
+#: ../../templates/show_duplicates.inc.php:79
+#: ../../templates/show_song.inc.php:61
+msgid "Bitrate"
+msgstr ""
+
+#: ../../lib/class/song.class.php:341
+msgid "Rate"
+msgstr ""
+
+#: ../../lib/class/song.class.php:345
+msgid "Mode"
+msgstr ""
+
+#: ../../lib/class/song.class.php:349 ../../templates/show_songs.inc.php:46
+#: ../../templates/show_songs.inc.php:68
+#: ../../templates/show_democratic_playlist.inc.php:53
+#: ../../templates/show_democratic_playlist.inc.php:88
+#: ../../templates/show_playlist_songs.inc.php:47
+#: ../../templates/show_playlist_songs.inc.php:68
+msgid "Time"
+msgstr "Tiempo"
+
+#: ../../lib/class/song.class.php:353 ../../server/stats.ajax.php:84
+#: ../../templates/show_songs.inc.php:45 ../../templates/show_songs.inc.php:67
+#: ../../templates/show_localplay_playlist.inc.php:31
+#: ../../templates/show_localplay_playlist.inc.php:57
+#: ../../templates/show_edit_song.inc.php:61
+#: ../../templates/show_playlist_songs.inc.php:41
+#: ../../templates/show_playlist_songs.inc.php:46
+#: ../../templates/show_playlist_songs.inc.php:62
+#: ../../templates/show_playlist_songs.inc.php:67
+msgid "Track"
+msgstr ""
+
+#: ../../lib/class/song.class.php:357
+msgid "Filesize"
+msgstr "Tamaño del archivo"
+
+#: ../../lib/class/song.class.php:362 ../../server/stats.ajax.php:84
+#: ../../templates/show_similar_artists.inc.php:33
+#: ../../templates/show_similar_artists.inc.php:86
+#: ../../templates/sidebar_browse.inc.php:12
+#: ../../templates/show_artists.inc.php:35
+#: ../../templates/show_artists.inc.php:52
+#: ../../templates/show_songs.inc.php:42 ../../templates/show_songs.inc.php:64
+#: ../../templates/show_edit_song.inc.php:45
+#: ../../templates/show_recently_played.inc.php:39
+#: ../../templates/show_recently_played.inc.php:93
+#: ../../templates/sidebar_home.inc.php:20
+#: ../../templates/show_now_playing_row.inc.php:59
+#: ../../templates/show_duplicates.inc.php:38
+#: ../../templates/show_duplicates.inc.php:76
+#: ../../templates/show_song.inc.php:29
+#: ../../templates/show_get_albumart.inc.php:28
+#: ../../templates/show_play_selected.inc.php:60
+#: ../../templates/show_albums.inc.php:43
+#: ../../templates/show_albums.inc.php:64
+#: ../../templates/show_search.inc.php:44
+#: ../../templates/show_playlist_songs.inc.php:43
+#: ../../templates/show_playlist_songs.inc.php:64
+#: ../../templates/show_disabled_songs.inc.php:36
+#: ../../templates/show_disabled_songs.inc.php:59
+msgid "Artist"
+msgstr "Artista"
+
+#: ../../lib/class/song.class.php:367 ../../templates/show_songs.inc.php:43
+#: ../../templates/show_songs.inc.php:65
+#: ../../templates/show_edit_song.inc.php:37
+#: ../../templates/show_recently_played.inc.php:38
+#: ../../templates/show_recently_played.inc.php:92
+#: ../../templates/sidebar_home.inc.php:19
+#: ../../templates/show_now_playing_row.inc.php:52
+#: ../../templates/show_duplicates.inc.php:39
+#: ../../templates/show_duplicates.inc.php:77
+#: ../../templates/show_song.inc.php:33
+#: ../../templates/show_get_albumart.inc.php:36
+#: ../../templates/show_play_selected.inc.php:59
+#: ../../templates/show_albums.inc.php:42
+#: ../../templates/show_albums.inc.php:63
+#: ../../templates/show_search.inc.php:50
+#: ../../templates/show_playlist_songs.inc.php:44
+#: ../../templates/show_playlist_songs.inc.php:65
+#: ../../templates/show_disabled_songs.inc.php:35
+#: ../../templates/show_disabled_songs.inc.php:58
+msgid "Album"
+msgstr "Álbum"
+
+#: ../../lib/class/song.class.php:371
+#: ../../templates/show_edit_album.inc.php:33
+#: ../../templates/show_edit_song.inc.php:67
+#: ../../templates/show_play_selected.inc.php:61
+#: ../../templates/show_albums.inc.php:45
+#: ../../templates/show_albums.inc.php:66
+#: ../../templates/show_search.inc.php:60
+msgid "Year"
+msgstr "Año"
+
+#: ../../lib/class/song.class.php:375 ../../templates/show_flag.inc.php:64
+#: ../../templates/show_edit_song.inc.php:73
+#: ../../templates/show_flagged.inc.php:40
+#: ../../templates/show_flagged.inc.php:76
+#: ../../templates/show_song.inc.php:45 ../../templates/show_search.inc.php:34
+msgid "Comment"
+msgstr ""
+
+#: ../../lib/class/song.class.php:380 ../../lib/ui.lib.php:539
+#: ../../templates/sidebar_browse.inc.php:13
+#: ../../templates/show_songs.inc.php:44 ../../templates/show_songs.inc.php:66
+#: ../../templates/show_edit_song.inc.php:53
+#: ../../templates/show_genre.inc.php:29
+#: ../../templates/show_genres.inc.php:37
+#: ../../templates/show_genres.inc.php:68 ../../templates/show_song.inc.php:37
+#: ../../templates/show_play_selected.inc.php:58
+#: ../../templates/show_live_streams.inc.php:39
+#: ../../templates/show_live_streams.inc.php:56
+#: ../../templates/show_edit_live_stream_row.inc.php:31
+#: ../../templates/show_add_live_stream.inc.php:61
+#: ../../templates/show_search.inc.php:54
+#: ../../templates/show_playlist_songs.inc.php:45
+#: ../../templates/show_playlist_songs.inc.php:66
+msgid "Genre"
+msgstr "Género"
+
+#: ../../lib/class/flag.class.php:280
+#, fuzzy
+msgid "Approved"
+msgstr "Modo"
+
+#: ../../lib/class/flag.class.php:281
+#, fuzzy
+msgid "Pending"
+msgstr "Añadiendo"
+
+#: ../../lib/class/flag.class.php:293 ../../templates/rightbar.inc.php:97
+#: ../../templates/show_admin_tools.inc.php:53
+#: ../../templates/show_flag.inc.php:56
+#: ../../templates/show_localplay_playlist.inc.php:48
+#: ../../templates/show_democratic_playlist.inc.php:77
+#: ../../templates/show_live_stream_row.inc.php:34
+#: ../../templates/show_playlist_row.inc.php:37
+#: ../../templates/show_playlist_song_row.inc.php:37
+#: ../../templates/show_catalog_row.inc.php:32
+#: ../../templates/show_localplay_instances.inc.php:39
+msgid "Delete"
+msgstr "Borrar"
+
+#: ../../lib/class/flag.class.php:296
+msgid "Re-Tag"
+msgstr ""
+
+#: ../../lib/class/flag.class.php:299 ../../templates/show_flag.inc.php:58
+msgid "Re-encode"
+msgstr ""
+
+#: ../../lib/class/flag.class.php:302 ../../templates/show_flag.inc.php:59
+#, fuzzy
+msgid "Other"
+msgstr "otro"
+
+#: ../../lib/class/flag.class.php:305 ../../lib/class/localplay.class.php:636
+#: ../../lib/class/user.class.php:620 ../../lib/general.lib.php:445
+#: ../../modules/localplay/icecast.controller.php:292
+#: ../../modules/localplay/mpd.controller.php:488
+#: ../../modules/localplay/httpq.controller.php:483
+#: ../../templates/show_user.inc.php:23 ../../templates/show_users.inc.php:54
+msgid "Unknown"
+msgstr "Desconocido"
+
+#: ../../lib/class/localplay.class.php:627
+#: ../../templates/show_now_playing.inc.php:32
+msgid "Now Playing"
+msgstr ""
+
+#: ../../lib/class/localplay.class.php:630
+msgid "Stopped"
+msgstr ""
+
+#: ../../lib/class/localplay.class.php:633
+#, fuzzy
+msgid "Paused"
+msgstr "Ya tocado"
+
+#: ../../lib/class/user.class.php:351 ../../admin/users.php:50
+#: ../../admin/users.php:94
+msgid "Error Username Required"
+msgstr ""
+
+#: ../../lib/class/user.class.php:355 ../../admin/users.php:53
+#: ../../admin/users.php:90
+msgid "Error Passwords don't match"
+msgstr ""
+
+#: ../../lib/class/browse.class.php:621
+#: ../../templates/show_artists.inc.php:36
+#: ../../templates/show_artists.inc.php:53
+#: ../../templates/show_genre.inc.php:38
+#: ../../templates/show_genres.inc.php:38
+#: ../../templates/show_genres.inc.php:69
+#: ../../templates/show_local_catalog_info.inc.php:31
+#: ../../templates/show_manage_democratic.inc.php:33
+#: ../../templates/show_albums.inc.php:44
+#: ../../templates/show_albums.inc.php:65
+msgid "Songs"
+msgstr "Canciónes"
+
+#: ../../lib/class/browse.class.php:626 ../../lib/ui.lib.php:531
+#: ../../templates/sidebar_browse.inc.php:11
+#: ../../templates/show_artists.inc.php:37
+#: ../../templates/show_artists.inc.php:54
+#: ../../templates/show_genre.inc.php:32
+#: ../../templates/show_local_catalog_info.inc.php:29
+msgid "Albums"
+msgstr "Álbumes"
+
+#: ../../lib/class/browse.class.php:631
+#: ../../templates/show_local_catalog_info.inc.php:32
+#, fuzzy
+msgid "Genres"
+msgstr "Género"
+
+#: ../../lib/class/browse.class.php:636
+msgid "Manage Users"
+msgstr ""
+
+#: ../../lib/class/browse.class.php:646
+#: ../../templates/sidebar_browse.inc.php:15
+msgid "Radio Stations"
+msgstr ""
+
+#: ../../lib/class/browse.class.php:651
+msgid "Playlists"
+msgstr "Listas de reproducción"
+
+#: ../../lib/class/browse.class.php:656
+msgid "Playlist Songs"
+msgstr ""
+
+#: ../../lib/class/browse.class.php:661
+#: ../../templates/show_admin_tools.inc.php:26
+#: ../../templates/sidebar_admin.inc.php:2
+#, fuzzy
+msgid "Catalogs"
+msgstr "Catálogo"
+
+#: ../../lib/class/random.class.php:423 ../../templates/rightbar.inc.php:65
+msgid "Related Album"
+msgstr ""
+
+#: ../../lib/class/random.class.php:426 ../../templates/rightbar.inc.php:68
+msgid "Related Genre"
+msgstr ""
+
+#: ../../lib/class/random.class.php:429 ../../templates/rightbar.inc.php:62
+msgid "Related Artist"
+msgstr ""
+
+#: ../../lib/class/random.class.php:432 ../../templates/rightbar.inc.php:59
+msgid "Pure Random"
+msgstr ""
+
+#: ../../lib/class/metadata.class.php:137
+msgid "Buy Track from MyStrands"
+msgstr ""
+
+#: ../../lib/rating.lib.php:51
+msgid "Don't Play"
+msgstr ""
+
+#: ../../lib/rating.lib.php:54
+msgid "It's Pretty Bad"
+msgstr "Horrible"
+
+#: ../../lib/rating.lib.php:57
+msgid "It's Ok"
+msgstr "Está bien"
+
+#: ../../lib/rating.lib.php:60
+msgid "It's Pretty Good"
+msgstr "Me gusta"
+
+#: ../../lib/rating.lib.php:63
+msgid "I Love It!"
+msgstr "¡Me encanta!"
+
+#: ../../lib/rating.lib.php:66
+msgid "It's Insane"
+msgstr "¡Totalmente loco!"
+
+#: ../../lib/rating.lib.php:70
+msgid "Off the Charts!"
+msgstr "¡Super chévere!"
+
+#: ../../lib/preferences.php:160
+msgid "Enable"
+msgstr ""
+
+#: ../../lib/preferences.php:161 ../../templates/show_duplicates.inc.php:36
+#: ../../templates/show_duplicates.inc.php:74
+#: ../../templates/show_localplay_controllers.inc.php:44
+msgid "Disable"
+msgstr ""
+
+#: ../../lib/preferences.php:172
+#: ../../templates/show_playtype_switch.inc.php:32
+msgid "Stream"
+msgstr ""
+
+#: ../../lib/preferences.php:175
+#: ../../modules/localplay/mpd.controller.php:472
+#: ../../modules/localplay/httpq.controller.php:467
+#: ../../templates/show_playtype_switch.inc.php:36
+#: ../../templates/sidebar_home.inc.php:10
+msgid "Democratic"
+msgstr ""
+
+#: ../../lib/preferences.php:178 ../../templates/sidebar.inc.php:29
+#: ../../templates/sidebar_localplay.inc.php:10
+#: ../../templates/show_playtype_switch.inc.php:34
+#: ../../templates/show_localplay.inc.php:26
+#, fuzzy
+msgid "Localplay"
+msgstr "Local"
+
+#: ../../lib/preferences.php:180
+#: ../../templates/show_playtype_switch.inc.php:38
+msgid "Flash Player"
+msgstr ""
+
+#: ../../lib/preferences.php:187
+msgid "M3U"
+msgstr "M3U"
+
+#: ../../lib/preferences.php:188
+msgid "Simple M3U"
+msgstr "M3U Simple"
+
+#: ../../lib/preferences.php:189
+msgid "PLS"
+msgstr "PLS"
+
+#: ../../lib/preferences.php:190
+msgid "Asx"
+msgstr "Asx"
+
+#: ../../lib/preferences.php:191
+msgid "RAM"
+msgstr "RAM"
+
+#: ../../lib/preferences.php:192
+msgid "XSPF"
+msgstr ""
+
+#: ../../lib/preferences.php:226
+msgid "Disabled"
+msgstr ""
+
+#: ../../lib/preferences.php:227 ../../admin/users.php:115
+#: ../../templates/show_preference_box.inc.php:59
+#: ../../templates/show_edit_access.inc.php:57
+#: ../../templates/show_mail_users.inc.php:31
+#: ../../templates/show_preference_admin.inc.php:42
+#: ../../templates/show_edit_user.inc.php:75
+#: ../../templates/show_flagged.inc.php:38
+#: ../../templates/show_flagged.inc.php:74
+#: ../../templates/show_add_user.inc.php:75
+#: ../../templates/show_access_list.inc.php:47
+#: ../../templates/show_add_access.inc.php:46
+msgid "User"
+msgstr "Usuario"
+
+#: ../../lib/preferences.php:228
+msgid "Manager"
+msgstr ""
+
+#: ../../lib/preferences.php:229 ../../admin/users.php:116
+#: ../../templates/sidebar.inc.php:31
+#: ../../templates/show_preference_box.inc.php:62
+#: ../../templates/show_mail_users.inc.php:32
+#: ../../templates/show_preference_admin.inc.php:43
+#: ../../templates/show_edit_user.inc.php:78
+#: ../../templates/show_democratic_playlist.inc.php:55
+#: ../../templates/show_democratic_playlist.inc.php:90
+#: ../../templates/show_add_user.inc.php:78
+msgid "Admin"
+msgstr ""
+
+#: ../../lib/preferences.php:249
+msgid "Send on Add"
+msgstr ""
+
+#: ../../lib/preferences.php:250
+msgid "Send and Clear on Add"
+msgstr ""
+
+#: ../../lib/preferences.php:251
+msgid "Clear on Send"
+msgstr ""
+
+#: ../../lib/preferences.php:252 ../../lib/preferences.php:259
+msgid "Default"
+msgstr ""
+
+#: ../../lib/preferences.php:260
+msgid "Always"
+msgstr ""
+
+#: ../../lib/general.lib.php:424 ../../lib/general.lib.php:435
+msgid "English"
+msgstr "Inglés"
+
+#: ../../lib/general.lib.php:436
+msgid "British English"
+msgstr "Inglés de Bretaña"
+
+#: ../../lib/general.lib.php:442
+msgid "Turkish"
+msgstr ""
+
+#: ../../lib/general.lib.php:443
+msgid "Simplified Chinese"
+msgstr "Chino simplificado"
+
+#: ../../lib/general.lib.php:504
+msgid "On"
+msgstr "Encender"
+
+#: ../../lib/general.lib.php:507
+msgid "Off"
+msgstr "Apagar"
+
+#: ../../lib/rss.php:180 ../../templates/show_recently_played.inc.php:23
+msgid "seconds ago"
+msgstr ""
+
+#: ../../lib/rss.php:180 ../../templates/show_recently_played.inc.php:23
+#, fuzzy
+msgid "minutes ago"
+msgstr "Minutos"
+
+#: ../../lib/rss.php:180 ../../templates/show_recently_played.inc.php:23
+#, fuzzy
+msgid "hours ago"
+msgstr "horas"
+
+#: ../../lib/rss.php:180 ../../templates/show_recently_played.inc.php:23
+#, fuzzy
+msgid "days ago"
+msgstr "días"
+
+#: ../../lib/rss.php:180 ../../templates/show_recently_played.inc.php:23
+msgid "weeks ago"
+msgstr ""
+
+#: ../../lib/rss.php:180 ../../templates/show_recently_played.inc.php:23
+msgid "months ago"
+msgstr ""
+
+#: ../../lib/rss.php:180 ../../templates/show_recently_played.inc.php:23
+#, fuzzy
+msgid "years ago"
+msgstr "año"
+
+#: ../../lib/ui.lib.php:478 ../../templates/sidebar.inc.php:27
+msgid "Home"
+msgstr ""
+
+#: ../../lib/ui.lib.php:481
+msgid "Upload"
+msgstr "Subir"
+
+#: ../../lib/ui.lib.php:484
+msgid "Local Play"
+msgstr ""
+
+#: ../../lib/ui.lib.php:487
+#, fuzzy
+msgid "Random Play"
+msgstr "Al azar"
+
+#: ../../lib/ui.lib.php:490 ../../templates/sidebar_browse.inc.php:14
+#: ../../templates/sidebar_home.inc.php:21
+#: ../../templates/show_playlist.inc.php:27
+#: ../../templates/show_manage_democratic.inc.php:31
+#: ../../templates/show_play_selected.inc.php:47
+msgid "Playlist"
+msgstr "Lista"
+
+#: ../../lib/ui.lib.php:493 ../../templates/show_search.inc.php:131
+#: ../../templates/show_search_bar.inc.php:29
+msgid "Search"
+msgstr "Buscar"
+
+#: ../../lib/ui.lib.php:496 ../../templates/sidebar.inc.php:30
+msgid "Preferences"
+msgstr "Preferencias"
+
+#: ../../lib/ui.lib.php:499 ../../lib/ui.lib.php:503
+#, fuzzy
+msgid "Admin-Catalog"
+msgstr "Añadir catálogo"
+
+#: ../../lib/ui.lib.php:507
+#, fuzzy
+msgid "Admin-User Management"
+msgstr "Nombre de usuario"
+
+#: ../../lib/ui.lib.php:511
+#, fuzzy
+msgid "Admin-Mail Users"
+msgstr "Mandar un correo a los usuarios"
+
+#: ../../lib/ui.lib.php:515
+#, fuzzy
+msgid "Admin-Manage Access Lists"
+msgstr "Listas de aceso"
+
+#: ../../lib/ui.lib.php:519
+#, fuzzy
+msgid "Admin-Site Preferences"
+msgstr "Preferencias del Admin"
+
+#: ../../lib/ui.lib.php:523
+msgid "Admin-Manage Modules"
+msgstr ""
+
+#: ../../lib/ui.lib.php:527
+msgid "Browse Music"
+msgstr ""
+
+#: ../../lib/ui.lib.php:543 ../../templates/sidebar_home.inc.php:5
+#, fuzzy
+msgid "Statistics"
+msgstr "Estadísticas del catálogo"
+
+#: ../../server/stats.ajax.php:41 ../../server/stats.ajax.php:66
+#: ../../templates/show_user_recommendations.inc.php:22
+msgid "Recommendations"
+msgstr ""
+
+#: ../../server/stats.ajax.php:52
+#: ../../templates/show_playlist_edit.inc.php:30
+#: ../../templates/show_admin_tools.inc.php:33
+#: ../../templates/show_admin_tools.inc.php:73
+#: ../../templates/show_localplay_playlist.inc.php:32
+#: ../../templates/show_localplay_playlist.inc.php:58
+#: ../../templates/show_edit_album.inc.php:27
+#: ../../templates/show_add_playlist.inc.php:28
+#: ../../templates/show_edit_catalog.inc.php:26
+#: ../../templates/show_edit_access.inc.php:26
+#: ../../templates/show_plugins.inc.php:32
+#: ../../templates/show_plugins.inc.php:61
+#: ../../templates/show_edit_artist.inc.php:27
+#: ../../templates/show_account.inc.php:28
+#: ../../templates/show_live_streams.inc.php:36
+#: ../../templates/show_live_streams.inc.php:53
+#: ../../templates/show_edit_live_stream_row.inc.php:26
+#: ../../templates/show_add_live_stream.inc.php:28
+#: ../../templates/show_localplay_controllers.inc.php:32
+#: ../../templates/show_localplay_controllers.inc.php:63
+#: ../../templates/show_catalogs.inc.php:32
+#: ../../templates/show_catalogs.inc.php:60
+#: ../../templates/show_access_list.inc.php:43
+#: ../../templates/show_add_access.inc.php:26
+#: ../../templates/show_create_democratic.inc.php:26
+msgid "Name"
+msgstr "Nombre"
+
+#: ../../server/stats.ajax.php:52 ../../server/stats.ajax.php:84
+msgid "Links"
+msgstr ""
+
+#: ../../server/stats.ajax.php:74 ../../server/stats.ajax.php:90
+#: ../../templates/show_album.inc.php:58
+msgid "Find Missing Tracks"
+msgstr ""
+
+#: ../../server/ajax.server.php:274 ../../templates/show_index.inc.php:53
+#: ../../templates/show_user.inc.php:68
+#, fuzzy
+msgid "Recently Played"
+msgstr "Menos tocado"
+
+#: ../../modules/localplay/mpd.controller.php:213
+#: ../../modules/localplay/httpq.controller.php:197
+msgid "Instance Name"
+msgstr ""
+
+#: ../../modules/localplay/mpd.controller.php:214
+#: ../../modules/localplay/httpq.controller.php:198
+msgid "Hostname"
+msgstr ""
+
+#: ../../modules/localplay/mpd.controller.php:215
+#: ../../modules/localplay/httpq.controller.php:199
+msgid "Port"
+msgstr ""
+
+#: ../../modules/localplay/mpd.controller.php:216
+#: ../../modules/localplay/httpq.controller.php:200
+#: ../../templates/show_install_account.inc.php:64
+#: ../../templates/show_login_form.inc.php:62
+#: ../../templates/show_user_registration.inc.php:103
+#: ../../templates/show_edit_user.inc.php:52
+#: ../../templates/show_add_user.inc.php:52
+msgid "Password"
+msgstr "Contraseña"
+
+#: ../../modules/horde/Browser.php:867
+msgid "file"
+msgstr "archivo"
+
+#: ../../modules/horde/Browser.php:871
+msgid "File uploads not supported."
+msgstr ""
+
+#: ../../modules/horde/Browser.php:889
+msgid "No file uploaded"
+msgstr "No archivo subido"
+
+#: ../../modules/horde/Browser.php:896
+#, php-format
+msgid "There was a problem with the file upload: No %s was uploaded."
+msgstr "Había una problema con subir el archivo: No %s fue subido."
+
+#: ../../modules/horde/Browser.php:901
+#, php-format
+msgid ""
+"There was a problem with the file upload: The %s was larger than the maximum "
+"allowed size (%d bytes)."
+msgstr ""
+"Había una problema con subir el archivo: El %s fue más grande que el tamaño "
+"máximo permitido (%d bytes)."
+
+#: ../../modules/horde/Browser.php:903
+#, php-format
+msgid ""
+"There was a problem with the file upload: The %s was only partially uploaded."
+msgstr ""
+"Había una problema con subir el archivo: El %s fue subido parcialmente."
+
+#: ../../admin/catalog.php:51 ../../admin/catalog.php:69
+#: ../../admin/catalog.php:92 ../../admin/catalog.php:150
+#, fuzzy
+msgid "Catalog Updated"
+msgstr "Actualización rápida"
+
+#: ../../admin/catalog.php:103
+#, fuzzy
+msgid "Catalog Deleted"
+msgstr "Tamaño del catálogo"
+
+#: ../../admin/catalog.php:103
+msgid "The Catalog and all associated records have been deleted"
+msgstr ""
+
+#: ../../admin/catalog.php:112
+msgid "Songs Removed"
+msgstr ""
+
+#: ../../admin/catalog.php:115
+msgid "No Songs Removed"
+msgstr ""
+
+#: ../../admin/catalog.php:118
+msgid "Disabled Songs Processed"
+msgstr ""
+
+#: ../../admin/catalog.php:138
+#, fuzzy
+msgid "Catalog Cleaned"
+msgstr "Nombre del catálogo"
+
+#: ../../admin/catalog.php:188
+#, fuzzy
+msgid "Catalog Created"
+msgstr "Tamaño del catálogo"
+
+#: ../../admin/catalog.php:205
+#, fuzzy
+msgid "Catalog statistics cleared"
+msgstr "Estadísticas del catálogo"
+
+#: ../../admin/catalog.php:220
+msgid "Now Playing Cleared"
+msgstr ""
+
+#: ../../admin/catalog.php:220
+msgid "All now playing data has been cleared"
+msgstr ""
+
+#: ../../admin/catalog.php:230
+msgid "No Disabled songs found"
+msgstr ""
+
+#: ../../admin/catalog.php:239
+#, fuzzy
+msgid "Delete Catalog"
+msgstr "Actualizar los catálogos"
+
+#: ../../admin/catalog.php:239
+msgid "Do you really want to delete this catalog?"
+msgstr "¿Confirmas que quiere borrar este catálogo?"
+
+#: ../../admin/catalog.php:258
+msgid "Album Art Search Finished"
+msgstr "Búsqueda de arte de álbum acabado"
 
 #: ../../admin/flag.php:97
 #, fuzzy
@@ -135,158 +1050,58 @@ msgstr ""
 msgid "Flagged Records"
 msgstr "Comentado por"
 
-#: ../../admin/catalog.php:51 ../../admin/catalog.php:69
-#: ../../admin/catalog.php:95 ../../admin/catalog.php:153
-#, fuzzy
-msgid "Catalog Updated"
-msgstr "Actualización rápida"
-
-#: ../../admin/catalog.php:106
-#, fuzzy
-msgid "Catalog Deleted"
-msgstr "Tamaño del catálogo"
-
-#: ../../admin/catalog.php:106
-msgid "The Catalog and all associated records have been deleted"
-msgstr ""
-
-#: ../../admin/catalog.php:115
-msgid "Songs Removed"
-msgstr ""
-
-#: ../../admin/catalog.php:118
-msgid "No Songs Removed"
-msgstr ""
-
-#: ../../admin/catalog.php:121
-msgid "Disabled Songs Processed"
-msgstr ""
-
-#: ../../admin/catalog.php:141
-#, fuzzy
-msgid "Catalog Cleaned"
-msgstr "Nombre del catálogo"
-
-#: ../../admin/catalog.php:191
-#, fuzzy
-msgid "Catalog Created"
-msgstr "Tamaño del catálogo"
-
-#: ../../admin/catalog.php:208
-#, fuzzy
-msgid "Catalog statistics cleared"
-msgstr "Estadísticas del catálogo"
-
-#: ../../admin/catalog.php:223
-msgid "Now Playing Cleared"
-msgstr ""
-
-#: ../../admin/catalog.php:223
-msgid "All now playing data has been cleared"
-msgstr ""
-
-#: ../../admin/catalog.php:233
-msgid "No Disabled songs found"
-msgstr ""
-
-#: ../../admin/catalog.php:242
-#, fuzzy
-msgid "Delete Catalog"
-msgstr "Actualizar los catálogos"
-
-#: ../../admin/catalog.php:242
-msgid "Do you really want to delete this catalog?"
-msgstr "¿Confirmas que quiere borrar este catálogo?"
-
-#: ../../admin/catalog.php:261
-msgid "Album Art Search Finished"
-msgstr "Búsqueda de arte de álbum acabado"
-
-#: ../../admin/users.php:51 ../../admin/users.php:95
-#: ../../lib/class/user.class.php:408
-msgid "Error Username Required"
-msgstr ""
-
-#: ../../admin/users.php:54 ../../admin/users.php:91
-#: ../../lib/class/user.class.php:412
-msgid "Error Passwords don't match"
-msgstr ""
-
-#: ../../admin/users.php:79
+#: ../../admin/users.php:78
 msgid "User Updated"
 msgstr ""
 
-#: ../../admin/users.php:79
+#: ../../admin/users.php:78
 msgid "updated"
 msgstr ""
 
-#: ../../admin/users.php:115 ../../templates/show_edit_user.inc.php:74
+#: ../../admin/users.php:99 ../../register.php:130
+msgid "Error Username already exists"
+msgstr "Error: Este usuario ya existe"
+
+#: ../../admin/users.php:114 ../../templates/show_preference_box.inc.php:58
 #: ../../templates/show_preference_admin.inc.php:41
+#: ../../templates/show_edit_user.inc.php:74
 #: ../../templates/show_add_user.inc.php:74
-#: ../../templates/show_preference_box.inc.php:58
 msgid "Guest"
 msgstr ""
 
-#: ../../admin/users.php:116 ../../templates/show_flagged.inc.php:38
-#: ../../templates/show_flagged.inc.php:74
-#: ../../templates/show_access_list.inc.php:47
-#: ../../templates/show_edit_user.inc.php:75
-#: ../../templates/show_preference_admin.inc.php:42
-#: ../../templates/show_edit_access.inc.php:55
-#: ../../templates/show_add_user.inc.php:75
-#: ../../templates/show_add_access.inc.php:44
-#: ../../templates/show_preference_box.inc.php:59
-#: ../../lib/preferences.php:312
-msgid "User"
-msgstr "Usuario"
-
-#: ../../admin/users.php:117 ../../templates/show_edit_user.inc.php:76
-#: ../../templates/sidebar.inc.php:31
-#: ../../templates/show_preference_admin.inc.php:43
-#: ../../templates/show_add_user.inc.php:78
-#: ../../templates/show_preference_box.inc.php:62
-#: ../../templates/show_democratic_playlist.inc.php:55
-#: ../../templates/show_democratic_playlist.inc.php:90
-msgid "Admin"
-msgstr ""
-
-#: ../../admin/users.php:119
+#: ../../admin/users.php:118
 msgid "New User Added"
 msgstr ""
 
-#: ../../admin/users.php:124
+#: ../../admin/users.php:123
 msgid "User Enabled"
 msgstr ""
 
-#: ../../admin/users.php:129
+#: ../../admin/users.php:128
 msgid "User Disabled"
 msgstr ""
 
-#: ../../admin/users.php:132 ../../lib/class/catalog.class.php:1187
-msgid "Error"
-msgstr ""
-
-#: ../../admin/users.php:132
+#: ../../admin/users.php:131
 msgid "Unable to Disabled last Administrator"
 msgstr ""
 
-#: ../../admin/users.php:154
+#: ../../admin/users.php:153
 msgid "User Deleted"
 msgstr "Usuario borrado"
 
-#: ../../admin/users.php:157
+#: ../../admin/users.php:156
 msgid "Delete Error"
 msgstr "Error de borrar"
 
-#: ../../admin/users.php:157
+#: ../../admin/users.php:156
 msgid "Unable to delete last Admin User"
 msgstr "No puede borrar el último usuario administrador"
 
-#: ../../admin/users.php:163
+#: ../../admin/users.php:162
 msgid "Deletion Request"
 msgstr ""
 
-#: ../../admin/users.php:164
+#: ../../admin/users.php:163
 msgid "Are you sure you want to permanently delete"
 msgstr ""
 
@@ -323,18 +1138,8 @@ msgstr "Borrado"
 msgid "Your Access List Entry has been removed"
 msgstr ""
 
-#: ../../admin/access.php:40 ../../templates/show_song.inc.php:55
-#: ../../lib/class/catalog.class.php:1281
-msgid "Added"
-msgstr "Agregado"
-
 #: ../../admin/access.php:40
 msgid "Your new Access List Entry has been created"
-msgstr ""
-
-#: ../../admin/access.php:45 ../../preferences.php:90
-#: ../../lib/class/catalog.class.php:1020
-msgid "Updated"
 msgstr ""
 
 #: ../../admin/access.php:45
@@ -342,202 +1147,610 @@ msgstr ""
 msgid "Access List Entry updated"
 msgstr "Listas de acceso"
 
-#: ../../admin/system.php:64
-msgid "Export Failed"
-msgstr ""
-
-#: ../../admin/mail.php:90
-msgid "No Catalogs Found!"
-msgstr ""
-
-#: ../../admin/mail.php:91 ../../templates/show_admin_tools.inc.php:82
-#: ../../templates/show_add_catalog.inc.php:26
-#: ../../templates/sidebar_admin.inc.php:4
-msgid "Add a Catalog"
-msgstr "Añadir un catálogo"
-
-#: ../../admin/mail.php:92 ../../templates/show_local_catalog_info.inc.php:24
-#: ../../templates/show_mail_users.inc.php:43
-msgid "Catalog Statistics"
-msgstr "Estadísticas del catálogo"
-
-#: ../../admin/mail.php:129 ../../lib/class/catalog.class.php:176
-msgid "day"
-msgstr "día"
-
-#: ../../admin/mail.php:129 ../../lib/class/catalog.class.php:176
-msgid "days"
-msgstr "días"
-
-#: ../../admin/mail.php:131 ../../lib/class/catalog.class.php:178
-msgid "hour"
-msgstr "hora"
-
-#: ../../admin/mail.php:131 ../../lib/class/catalog.class.php:178
-msgid "hours"
-msgstr "horas"
-
-#: ../../admin/mail.php:141 ../../templates/show_local_catalog_info.inc.php:28
-msgid "Total Users"
-msgstr "Usuarios en total"
-
-#: ../../admin/mail.php:142 ../../templates/show_local_catalog_info.inc.php:27
-msgid "Connected Users"
-msgstr "Usuarios conectados"
-
-#: ../../admin/mail.php:143 ../../templates/sidebar_browse.inc.php:11
-#: ../../templates/show_local_catalog_info.inc.php:29
-#: ../../templates/show_artists.inc.php:37
-#: ../../templates/show_artists.inc.php:54
-#: ../../templates/show_genre.inc.php:32 ../../lib/class/browse.class.php:532
-#: ../../lib/ui.lib.php:600 ../../genre.php:47
-msgid "Albums"
-msgstr "Álbumes"
-
-#: ../../admin/mail.php:144 ../../templates/show_local_catalog_info.inc.php:30
-#: ../../templates/show_genre.inc.php:35 ../../lib/class/browse.class.php:547
-#: ../../lib/class/album.class.php:229 ../../lib/ui.lib.php:604
-#: ../../genre.php:55
-msgid "Artists"
-msgstr "Artistas"
-
-#: ../../admin/mail.php:145 ../../templates/show_manage_democratic.inc.php:33
-#: ../../templates/show_genres.inc.php:38
-#: ../../templates/show_genres.inc.php:69
-#: ../../templates/show_albums.inc.php:44
-#: ../../templates/show_albums.inc.php:65
-#: ../../templates/show_local_catalog_info.inc.php:31
-#: ../../templates/show_artists.inc.php:36
-#: ../../templates/show_artists.inc.php:53
-#: ../../templates/show_genre.inc.php:38 ../../lib/class/browse.class.php:527
-#: ../../genre.php:37
-msgid "Songs"
-msgstr "Canciónes"
-
-#: ../../admin/mail.php:146 ../../templates/show_local_catalog_info.inc.php:33
-msgid "Catalog Size"
-msgstr "Tamaño del catálogo"
-
-#: ../../admin/mail.php:147 ../../templates/show_local_catalog_info.inc.php:34
-msgid "Catalog Time"
-msgstr "Tiempo del catálogo"
-
-#: ../../admin/mail.php:260
+#: ../../admin/mail.php:57
 #, fuzzy
 msgid "E-mail Sent"
 msgstr "Correo"
 
-#: ../../admin/mail.php:261
+#: ../../admin/mail.php:58
 msgid "Your E-mail was successfully sent."
 msgstr ""
 
-#: ../../preferences.php:35 ../../preferences.php:60
-#: ../../lib/preferences.php:311
-msgid "Server"
+#: ../../admin/system.php:64
+msgid "Export Failed"
 msgstr ""
 
-#: ../../preferences.php:86
-msgid "Error Update Failed"
+#: ../../templates/rightbar.inc.php:25
+#: ../../templates/show_localplay_control.inc.php:28
+msgid "Play"
+msgstr "Toca"
+
+#: ../../templates/rightbar.inc.php:28
+msgid "Add to Playlist"
 msgstr ""
 
-#: ../../preferences.php:91
-msgid "Your Account has been updated"
+#: ../../templates/rightbar.inc.php:31
+msgid "Add to New Playlist"
 msgstr ""
 
-#: ../../flag.php:45
+#: ../../templates/rightbar.inc.php:48
+#: ../../templates/show_album_row.inc.php:45
+#: ../../templates/show_artist_row.inc.php:32
+#: ../../templates/show_playlist_row.inc.php:32
+msgid "Batch Download"
+msgstr ""
+
+#: ../../templates/rightbar.inc.php:53
+#: ../../templates/show_localplay_status.inc.php:40
+#: ../../templates/show_localplay.inc.php:32
 #, fuzzy
-msgid "Item Flagged"
-msgstr "Comentado por"
+msgid "Clear Playlist"
+msgstr "Nueva lista"
 
-#: ../../flag.php:45
-msgid "The specified item has been flagged"
+#: ../../templates/rightbar.inc.php:56
+msgid "Add Dynamic Items"
 msgstr ""
 
-#: ../../templates/show_admin_tools.inc.php:26
-#: ../../templates/sidebar_admin.inc.php:2
-#: ../../lib/class/browse.class.php:562
-#, fuzzy
-msgid "Catalogs"
-msgstr "Catálogo"
+#: ../../templates/rightbar.inc.php:100
+#: ../../templates/show_user_stats.inc.php:34
+#: ../../templates/show_user_stats.inc.php:47
+#: ../../templates/show_user_stats.inc.php:60
+#: ../../templates/show_objects.inc.php:44
+#: ../../templates/show_user_recommendations.inc.php:32
+#: ../../templates/show_user_recommendations.inc.php:43
+#: ../../templates/show_user_recommendations.inc.php:54
+#: ../../templates/show_manage_democratic.inc.php:52
+msgid "Not Enough Data"
+msgstr "No hay suficiente información"
 
-#: ../../templates/show_admin_tools.inc.php:33
-#: ../../templates/show_admin_tools.inc.php:73
-#: ../../templates/show_catalogs.inc.php:32
-#: ../../templates/show_catalogs.inc.php:60
-#: ../../templates/show_access_list.inc.php:43
-#: ../../templates/show_create_democratic.inc.php:26
-#: ../../templates/show_localplay_controllers.inc.php:32
-#: ../../templates/show_localplay_controllers.inc.php:63
-#: ../../templates/show_add_playlist.inc.php:28
-#: ../../templates/show_localplay_playlist.inc.php:31
-#: ../../templates/show_localplay_playlist.inc.php:57
-#: ../../templates/show_add_live_stream.inc.php:28
-#: ../../templates/show_edit_access.inc.php:26
-#: ../../templates/show_add_access.inc.php:26
-#: ../../templates/show_playlist_edit.inc.php:30
-#: ../../templates/show_edit_catalog.inc.php:26
-#: ../../templates/show_edit_artist.inc.php:27
-#: ../../templates/show_edit_album.inc.php:27
-#: ../../templates/show_plugins.inc.php:32
-#: ../../templates/show_plugins.inc.php:61
-#: ../../templates/show_live_streams.inc.php:36
-#: ../../templates/show_live_streams.inc.php:53
-#: ../../templates/show_edit_live_stream_row.inc.php:26
-#: ../../templates/show_account.inc.php:28 ../../server/stats.ajax.php:52
-msgid "Name"
-msgstr "Nombre"
+#: ../../templates/rightbar.inc.php:104
+msgid "More"
+msgstr ""
 
-#: ../../templates/show_admin_tools.inc.php:34
-#: ../../templates/show_admin_tools.inc.php:74
-#: ../../templates/show_flagged.inc.php:42
-#: ../../templates/show_flagged.inc.php:78
-#: ../../templates/show_songs.inc.php:46 ../../templates/show_songs.inc.php:65
-#: ../../templates/show_access_list.inc.php:50
-#: ../../templates/show_users.inc.php:46
-#: ../../templates/show_users.inc.php:108
-#: ../../templates/show_manage_democratic.inc.php:34
-#: ../../templates/show_genres.inc.php:39
-#: ../../templates/show_genres.inc.php:70
-#: ../../templates/show_localplay_controllers.inc.php:35
-#: ../../templates/show_localplay_controllers.inc.php:66
-#: ../../templates/show_localplay_playlist.inc.php:32
-#: ../../templates/show_localplay_playlist.inc.php:58
-#: ../../templates/show_localplay_instances.inc.php:29
-#: ../../templates/show_artists.inc.php:38
-#: ../../templates/show_artists.inc.php:55
-#: ../../templates/show_democratic_playlist.inc.php:50
-#: ../../templates/show_democratic_playlist.inc.php:85
-#: ../../templates/show_plugins.inc.php:35
-#: ../../templates/show_plugins.inc.php:64
-#: ../../templates/show_playlist_songs.inc.php:48
-#: ../../templates/show_playlist_songs.inc.php:69
-#: ../../templates/show_live_streams.inc.php:40
-#: ../../templates/show_live_streams.inc.php:57
-msgid "Action"
-msgstr "Acción"
+#: ../../templates/show_install_account.inc.php:32
+#: ../../templates/show_install.inc.php:32
+#: ../../templates/show_install_lang.inc.php:32
+#: ../../templates/show_install_config.inc.php:32
+msgid "Ampache Installation"
+msgstr "Instalación de Ampache"
 
+#: ../../templates/show_install_account.inc.php:39
+#: ../../templates/show_install.inc.php:40
+#: ../../templates/show_install_lang.inc.php:39
+#: ../../templates/show_install_config.inc.php:38
+msgid ""
+"This Page handles the installation of the Ampache database and the creation "
+"of the ampache.cfg.php file. Before you continue please make sure that you "
+"have the following pre-requisites"
+msgstr ""
+"Este página se trata de la instalación de la base de datos Ampache y la "
+"creación del archivo ampache.cfg.php. Antes de seguir, por favor asegurase "
+"que tiene los requisitos siguientes."
+
+#: ../../templates/show_install_account.inc.php:42
+#: ../../templates/show_install.inc.php:43
+#: ../../templates/show_install_lang.inc.php:42
+#: ../../templates/show_install_config.inc.php:41
+msgid ""
+"A MySQL Server with a username and password that can create/modify databases"
+msgstr ""
+
+#: ../../templates/show_install_account.inc.php:43
+msgid ""
+"Your webserver has read access to the /sql/ampache.sql file and the /config/"
+"ampache.cfg.dist.php file"
+msgstr ""
+"Su servidor sí tiene aceso de leer el archivo /sql/ampache.sql y el archivo /"
+"config/ampache.cfg.dist.php"
+
+#: ../../templates/show_install_account.inc.php:45
+#: ../../templates/show_install.inc.php:47
+#: ../../templates/show_install_lang.inc.php:46
+#: ../../templates/show_install_config.inc.php:44
+msgid ""
+"Once you have ensured that you have the above requirements please fill out "
+"the information below. You will only be asked for the required config "
+"values. If you would like to make changes to your ampache install at a later "
+"date simply edit /config/ampache.cfg.php"
+msgstr ""
+
+#: ../../templates/show_install_account.inc.php:48
+#: ../../templates/show_install.inc.php:52
+#: ../../templates/show_install_config.inc.php:48
+msgid "Step 1 - Creating and Inserting the Ampache Database"
+msgstr ""
+
+#: ../../templates/show_install_account.inc.php:49
+msgid "Step 2 - Creating the ampache.cfg.php file"
+msgstr ""
+
+#: ../../templates/show_install_account.inc.php:50
+#: ../../templates/show_install.inc.php:57
+#: ../../templates/show_install_config.inc.php:53
+msgid "Step 3 - Setup Initial Account"
+msgstr ""
+
+#: ../../templates/show_install_account.inc.php:52
+msgid ""
+"This step creates your initial Ampache admin account. Once your admin "
+"account has been created you will be directed to the login page"
+msgstr ""
+
+#: ../../templates/show_install_account.inc.php:56
+msgid "Create Admin Account"
+msgstr ""
+
+#: ../../templates/show_install_account.inc.php:60
+#: ../../templates/show_user_registration.inc.php:75
+#: ../../templates/show_recently_played.inc.php:40
+#: ../../templates/show_recently_played.inc.php:90
+#: ../../templates/show_now_playing_row.inc.php:29
+#: ../../templates/show_edit_user.inc.php:29
+#: ../../templates/show_add_user.inc.php:29
+#: ../../templates/show_users.inc.php:39
+#: ../../templates/show_users.inc.php:104
+msgid "Username"
+msgstr ""
+
+#: ../../templates/show_install_account.inc.php:69
+msgid "Create Account"
+msgstr "Crear una cuenta"
+
+#: ../../templates/show_add_catalog.inc.php:26
+#: ../../templates/show_admin_tools.inc.php:82
+#: ../../templates/sidebar_admin.inc.php:4
+msgid "Add a Catalog"
+msgstr "Añadir un catálogo"
+
+#: ../../templates/show_add_catalog.inc.php:27
+msgid ""
+"In the form below enter either a local path (i.e. /data/music) or the URL to "
+"a remote Ampache installation (i.e http://theotherampache.com)"
+msgstr ""
+
+#: ../../templates/show_add_catalog.inc.php:32
+msgid "Catalog Name"
+msgstr ""
+
+#: ../../templates/show_add_catalog.inc.php:35
+#: ../../templates/show_edit_catalog.inc.php:29
+msgid "Auto-inserted Fields"
+msgstr ""
+
+#: ../../templates/show_add_catalog.inc.php:36
+#: ../../templates/show_edit_catalog.inc.php:30
+msgid "album name"
+msgstr "nombre del álbum"
+
+#: ../../templates/show_add_catalog.inc.php:37
+#: ../../templates/show_edit_catalog.inc.php:31
+msgid "artist name"
+msgstr "nombre del artista"
+
+#: ../../templates/show_add_catalog.inc.php:38
+#: ../../templates/show_edit_catalog.inc.php:32
+msgid "id3 comment"
+msgstr ""
+
+#: ../../templates/show_add_catalog.inc.php:39
+#: ../../templates/show_edit_catalog.inc.php:33
+msgid "genre"
+msgstr "género"
+
+#: ../../templates/show_add_catalog.inc.php:40
+#: ../../templates/show_edit_catalog.inc.php:34
+msgid "track number (padded with leading 0)"
+msgstr ""
+
+#: ../../templates/show_add_catalog.inc.php:41
+#: ../../templates/show_edit_catalog.inc.php:35
+msgid "song title"
+msgstr "título de la canción"
+
+#: ../../templates/show_add_catalog.inc.php:42
+#: ../../templates/show_edit_catalog.inc.php:36
+msgid "year"
+msgstr "año"
+
+#: ../../templates/show_add_catalog.inc.php:43
+#: ../../templates/show_edit_catalog.inc.php:37
+msgid "other"
+msgstr "otro"
+
+#: ../../templates/show_add_catalog.inc.php:48
+#: ../../templates/show_catalogs.inc.php:33
+#: ../../templates/show_catalogs.inc.php:61
+msgid "Path"
+msgstr ""
+
+#: ../../templates/show_add_catalog.inc.php:52
+#: ../../templates/show_edit_catalog.inc.php:41
+msgid "Catalog Type"
+msgstr ""
+
+#: ../../templates/show_add_catalog.inc.php:55
+msgid "Local"
+msgstr "Local"
+
+#: ../../templates/show_add_catalog.inc.php:56
+msgid "Remote"
+msgstr ""
+
+#: ../../templates/show_add_catalog.inc.php:61
+#: ../../templates/show_edit_catalog.inc.php:45
+msgid "XML-RPC Key"
+msgstr ""
+
+#: ../../templates/show_add_catalog.inc.php:62
+msgid "Required for Remote Catalogs"
+msgstr ""
+
+#: ../../templates/show_add_catalog.inc.php:65
+msgid "Filename Pattern"
+msgstr ""
+
+#: ../../templates/show_add_catalog.inc.php:70
+#: ../../templates/show_edit_catalog.inc.php:58
+msgid "Folder Pattern"
+msgstr ""
+
+#: ../../templates/show_add_catalog.inc.php:70
+#: ../../templates/show_edit_catalog.inc.php:58
+msgid "(no leading or ending '/')"
+msgstr ""
+
+#: ../../templates/show_add_catalog.inc.php:75
+#: ../../templates/show_admin_tools.inc.php:84
+msgid "Gather Album Art"
+msgstr "Recolectar arte del álbum"
+
+#: ../../templates/show_add_catalog.inc.php:79
+msgid "Build Playlists from m3u Files"
+msgstr ""
+
+#: ../../templates/show_add_catalog.inc.php:85
+msgid "Add Catalog"
+msgstr "Añadir catálogo"
+
+#: ../../templates/show_localplay_status.inc.php:26
+msgid "Localplay Control"
+msgstr ""
+
+#: ../../templates/show_localplay_status.inc.php:29
+msgid "Increase Volume"
+msgstr "Aumentar volumen"
+
+#: ../../templates/show_localplay_status.inc.php:30
+msgid "Decrease Volume"
+msgstr "Disminuir volumen"
+
+#: ../../templates/show_localplay_status.inc.php:31
+msgid "Mute"
+msgstr ""
+
+#: ../../templates/show_localplay_status.inc.php:32
+msgid "Volume"
+msgstr "Volumen"
+
+#: ../../templates/show_localplay_status.inc.php:34
+msgid "Repeat"
+msgstr ""
+
+#: ../../templates/show_localplay_status.inc.php:37
+#: ../../templates/show_album_row.inc.php:24
+#: ../../templates/sidebar_home.inc.php:17
+#: ../../templates/show_artist_row.inc.php:24
+#: ../../templates/show_playlist_row.inc.php:24
+msgid "Random"
+msgstr "Al azar"
+
+#: ../../templates/show_playlists.inc.php:33
+#: ../../templates/show_playlists.inc.php:50
+#: ../../templates/show_album_row.inc.php:23
 #: ../../templates/show_admin_tools.inc.php:45
-#: ../../templates/show_songs.inc.php:39 ../../templates/show_songs.inc.php:58
-#: ../../templates/show_song_row.inc.php:23
+#: ../../templates/show_artists.inc.php:34
+#: ../../templates/show_artists.inc.php:51
+#: ../../templates/show_songs.inc.php:40 ../../templates/show_songs.inc.php:62
+#: ../../templates/show_recently_played.inc.php:36
+#: ../../templates/show_recently_played.inc.php:75
+#: ../../templates/show_recently_played.inc.php:89
 #: ../../templates/show_genres.inc.php:36
 #: ../../templates/show_genres.inc.php:67
 #: ../../templates/show_albums.inc.php:38
 #: ../../templates/show_albums.inc.php:59
-#: ../../templates/show_playlist_song_row.inc.php:22
-#: ../../templates/show_add_live_stream.inc.php:74
-#: ../../templates/show_artists.inc.php:34
-#: ../../templates/show_artists.inc.php:51
-#: ../../templates/show_live_stream_row.inc.php:23
+#: ../../templates/show_song_row.inc.php:23
 #: ../../templates/show_artist_row.inc.php:23
+#: ../../templates/show_live_stream_row.inc.php:23
 #: ../../templates/show_live_streams.inc.php:35
 #: ../../templates/show_live_streams.inc.php:52
-#: ../../templates/show_album_row.inc.php:23
-#: ../../templates/show_catalog_row.inc.php:28
+#: ../../templates/show_add_live_stream.inc.php:74
 #: ../../templates/show_playlist_row.inc.php:23
-#: ../../templates/show_playlists.inc.php:33
-#: ../../templates/show_playlists.inc.php:50
+#: ../../templates/show_playlist_song_row.inc.php:22
+#: ../../templates/show_catalog_row.inc.php:28
 msgid "Add"
 msgstr ""
+
+#: ../../templates/show_playlists.inc.php:34
+#: ../../templates/show_playlists.inc.php:51
+msgid "Playlist Name"
+msgstr "Nombre de la lista"
+
+#: ../../templates/show_playlists.inc.php:35
+#: ../../templates/show_playlists.inc.php:52
+msgid "# Songs"
+msgstr "Numero de canciónes"
+
+#: ../../templates/show_playlists.inc.php:36
+#: ../../templates/show_playlists.inc.php:53
+msgid "Owner"
+msgstr "Dueño"
+
+#: ../../templates/show_playlists.inc.php:37
+#: ../../templates/show_playlists.inc.php:54
+#: ../../templates/show_artist_box.inc.php:32
+#: ../../templates/show_localplay.inc.php:30
+#: ../../templates/show_albums.inc.php:46
+#: ../../templates/show_albums.inc.php:67
+#: ../../templates/show_album.inc.php:43
+#: ../../templates/show_catalogs.inc.php:36
+#: ../../templates/show_catalogs.inc.php:64
+msgid "Actions"
+msgstr "Acciónes"
+
+#: ../../templates/show_album_row.inc.php:40
+#: ../../templates/show_song_row.inc.php:37
+msgid "Post Shout"
+msgstr ""
+
+#: ../../templates/show_album_row.inc.php:49
+#: ../../templates/show_play_selected.inc.php:50
+#: ../../templates/show_song_row.inc.php:46
+#: ../../templates/show_artist_row.inc.php:36
+#: ../../templates/show_live_stream_row.inc.php:31
+#: ../../templates/show_playlist_row.inc.php:36
+msgid "Edit"
+msgstr ""
+
+#: ../../templates/show_similar_artists.inc.php:23
+#, fuzzy
+msgid "Similar Artists"
+msgstr "Artistas"
+
+#: ../../templates/show_similar_artists.inc.php:25
+msgid "Please check the artists you want to merge with the current one"
+msgstr ""
+
+#: ../../templates/show_similar_artists.inc.php:66
+msgid "Back"
+msgstr ""
+
+#: ../../templates/show_similar_artists.inc.php:77
+#, fuzzy
+msgid "Rename selected"
+msgstr "Tocar la selección"
+
+#: ../../templates/show_similar_artists.inc.php:78
+#: ../../templates/show_confirmation.inc.php:27
+msgid "Cancel"
+msgstr "Cancelar"
+
+#: ../../templates/show_similar_artists.inc.php:91
+#, fuzzy
+msgid "Advanced Options"
+msgstr "Agregado"
+
+#: ../../templates/show_similar_artists.inc.php:152
+#, fuzzy
+msgid "Search Again"
+msgstr "Buscar"
+
+#: ../../templates/sidebar_browse.inc.php:3
+msgid "Browse By"
+msgstr ""
+
+#: ../../templates/sidebar_browse.inc.php:10
+#: ../../templates/show_songs.inc.php:41 ../../templates/show_songs.inc.php:63
+#: ../../templates/show_playlist_songs.inc.php:42
+#: ../../templates/show_playlist_songs.inc.php:63
+#, fuzzy
+msgid "Song Title"
+msgstr "Título de la canción"
+
+#: ../../templates/sidebar_browse.inc.php:18
+msgid "Filters"
+msgstr ""
+
+#: ../../templates/sidebar_browse.inc.php:23
+msgid "Minimum Count"
+msgstr ""
+
+#: ../../templates/sidebar_browse.inc.php:25
+msgid "Rated"
+msgstr ""
+
+#: ../../templates/sidebar_browse.inc.php:27
+msgid "Unplayed"
+msgstr ""
+
+#: ../../templates/sidebar_browse.inc.php:30
+msgid "Show Art"
+msgstr ""
+
+#: ../../templates/show_user_stats.inc.php:22
+msgid "Favorites"
+msgstr ""
+
+#: ../../templates/show_user_stats.inc.php:30
+#, fuzzy
+msgid "Favorite Artists"
+msgstr "Artistas"
+
+#: ../../templates/show_user_stats.inc.php:43
+#, fuzzy
+msgid "Favorite Albums"
+msgstr "Álbumes enteros"
+
+#: ../../templates/show_user_stats.inc.php:56
+#, fuzzy
+msgid "Favorite Songs"
+msgstr "Canciónes en total"
+
+#: ../../templates/show_random.inc.php:22
+msgid "Play Random Selection"
+msgstr "Tocar una canción al azar"
+
+#: ../../templates/show_random.inc.php:26
+msgid "Item count"
+msgstr ""
+
+#: ../../templates/show_random.inc.php:41
+msgid "From genre"
+msgstr "Del género"
+
+#: ../../templates/show_random.inc.php:47
+#: ../../templates/show_duplicates.inc.php:40
+#: ../../templates/show_duplicates.inc.php:78
+#: ../../templates/show_song.inc.php:41
+msgid "Length"
+msgstr "Longitud"
+
+#: ../../templates/show_random.inc.php:50
+#: ../../templates/show_random.inc.php:85
+#: ../../templates/show_search.inc.php:121
+msgid "Unlimited"
+msgstr "Sin límites"
+
+#: ../../templates/show_random.inc.php:51
+#: ../../templates/show_random.inc.php:52
+msgid "minutes"
+msgstr ""
+
+#: ../../templates/show_random.inc.php:62
+#: ../../templates/show_playlist_edit.inc.php:36
+#: ../../templates/show_add_playlist.inc.php:32
+#: ../../templates/show_access_list.inc.php:49
+msgid "Type"
+msgstr "Tipo"
+
+#: ../../templates/show_random.inc.php:65
+msgid "Standard"
+msgstr "Estándar"
+
+#: ../../templates/show_random.inc.php:66
+msgid "Less Played"
+msgstr "Menos tocado"
+
+#: ../../templates/show_random.inc.php:67
+msgid "Full Albums"
+msgstr "Álbumes enteros"
+
+#: ../../templates/show_random.inc.php:68
+msgid "Full Artist"
+msgstr ""
+
+#: ../../templates/show_random.inc.php:70
+msgid "Highest Rated"
+msgstr ""
+
+#: ../../templates/show_random.inc.php:76
+#, fuzzy
+msgid "From catalog"
+msgstr "del catálogo"
+
+#: ../../templates/show_random.inc.php:82
+#, fuzzy
+msgid "Size Limit"
+msgstr "Límite"
+
+#: ../../templates/show_random.inc.php:96
+msgid "Enqueue"
+msgstr "Ponerlos en el queue"
+
+#: ../../templates/show_adds_catalog.inc.php:23
+msgid "Starting New Song Search on"
+msgstr ""
+
+#: ../../templates/show_adds_catalog.inc.php:23
+msgid "catalog"
+msgstr "catálogo"
+
+#: ../../templates/show_adds_catalog.inc.php:25
+#: ../../templates/show_verify_catalog.inc.php:26
+#: ../../templates/show_gather_art.inc.php:25
+#: ../../templates/show_run_add_catalog.inc.php:25
+#: ../../templates/show_clean_catalog.inc.php:25
+msgid "Reading"
+msgstr ""
+
+#: ../../templates/show_playlist_edit.inc.php:26
+#, fuzzy
+msgid "Editing Playlist"
+msgstr "Cambia la lista de reproducción"
+
+#: ../../templates/show_playlist_edit.inc.php:39
+msgid "Public"
+msgstr "Público"
+
+#: ../../templates/show_playlist_edit.inc.php:40
+#, fuzzy
+msgid "Private"
+msgstr "Tu privado"
+
+#: ../../templates/show_playlist_edit.inc.php:47
+#: ../../templates/show_edit_access.inc.php:83
+#: ../../templates/show_preference_admin.inc.php:55
+#: ../../templates/show_flagged.inc.php:86
+#: ../../templates/show_play_selected.inc.php:64
+#, fuzzy
+msgid "Update"
+msgstr "Actualizar ID3"
+
+#: ../../templates/show_login_form.inc.php:58
+#: ../../templates/show_login_form.inc.php:73
+#: ../../templates/show_user_activate.inc.php:48
+msgid "Login"
+msgstr ""
+
+#: ../../templates/show_login_form.inc.php:66
+msgid "Remember Me"
+msgstr "Recordarme"
+
+#: ../../templates/show_login_form.inc.php:78
+msgid "Register"
+msgstr "Registrar"
+
+#: ../../templates/show_login_form.inc.php:87
+msgid "Message of the Day"
+msgstr ""
+
+#: ../../templates/show_admin_tools.inc.php:34
+#: ../../templates/show_admin_tools.inc.php:74
+#: ../../templates/show_artists.inc.php:38
+#: ../../templates/show_artists.inc.php:55
+#: ../../templates/show_songs.inc.php:50 ../../templates/show_songs.inc.php:69
+#: ../../templates/show_localplay_playlist.inc.php:33
+#: ../../templates/show_localplay_playlist.inc.php:59
+#: ../../templates/show_genres.inc.php:39
+#: ../../templates/show_genres.inc.php:70
+#: ../../templates/show_flagged.inc.php:42
+#: ../../templates/show_flagged.inc.php:78
+#: ../../templates/show_manage_democratic.inc.php:34
+#: ../../templates/show_plugins.inc.php:35
+#: ../../templates/show_plugins.inc.php:64
+#: ../../templates/show_democratic_playlist.inc.php:50
+#: ../../templates/show_democratic_playlist.inc.php:85
+#: ../../templates/show_users.inc.php:46
+#: ../../templates/show_users.inc.php:111
+#: ../../templates/show_live_streams.inc.php:40
+#: ../../templates/show_live_streams.inc.php:57
+#: ../../templates/show_playlist_songs.inc.php:48
+#: ../../templates/show_playlist_songs.inc.php:69
+#: ../../templates/show_localplay_controllers.inc.php:35
+#: ../../templates/show_localplay_controllers.inc.php:66
+#: ../../templates/show_access_list.inc.php:50
+#: ../../templates/show_localplay_instances.inc.php:29
+msgid "Action"
+msgstr "Acción"
 
 #: ../../templates/show_admin_tools.inc.php:47
 #: ../../templates/show_catalog_row.inc.php:29
@@ -549,28 +1762,6 @@ msgstr ""
 #, fuzzy
 msgid "Clean"
 msgstr "Borrar la información"
-
-#: ../../templates/show_admin_tools.inc.php:51
-#: ../../templates/show_edit_access.inc.php:77
-#: ../../templates/show_add_access.inc.php:56
-#: ../../templates/show_random.inc.php:38 ../../lib/class/access.class.php:268
-#: ../../lib/class/access.class.php:293 ../../lib/class/browse.class.php:70
-#: ../../lib/ui.lib.php:131
-msgid "All"
-msgstr "Todo"
-
-#: ../../templates/show_admin_tools.inc.php:53
-#: ../../templates/show_flag.inc.php:56
-#: ../../templates/show_playlist_song_row.inc.php:37
-#: ../../templates/show_localplay_playlist.inc.php:47
-#: ../../templates/show_localplay_instances.inc.php:39
-#: ../../templates/show_live_stream_row.inc.php:34
-#: ../../templates/show_democratic_playlist.inc.php:77
-#: ../../templates/show_catalog_row.inc.php:32
-#: ../../templates/show_playlist_row.inc.php:37
-#: ../../templates/rightbar.inc.php:90 ../../lib/class/flag.class.php:293
-msgid "Delete"
-msgstr "Borrar"
 
 #: ../../templates/show_admin_tools.inc.php:59
 msgid "Fast"
@@ -611,14 +1802,9 @@ msgid "Update All"
 msgstr "Actualizar perfil"
 
 #: ../../templates/show_admin_tools.inc.php:83
-#: ../../templates/sidebar_admin.inc.php:24
+#: ../../templates/sidebar_admin.inc.php:26
 msgid "Clear Catalog Stats"
 msgstr "Borrar las estadísticas del catálogo"
-
-#: ../../templates/show_admin_tools.inc.php:84
-#: ../../templates/show_add_catalog.inc.php:75
-msgid "Gather Album Art"
-msgstr "Recolectar arte del álbum"
 
 #: ../../templates/show_admin_tools.inc.php:88
 #: ../../templates/sidebar_admin.inc.php:21
@@ -630,7 +1816,7 @@ msgid "Show Duplicate Songs"
 msgstr "Mostrar las canciónes duplicados"
 
 #: ../../templates/show_admin_tools.inc.php:91
-#: ../../templates/sidebar_admin.inc.php:23
+#: ../../templates/sidebar_admin.inc.php:25
 msgid "Clear Now Playing"
 msgstr ""
 
@@ -656,461 +1842,6 @@ msgstr ""
 msgid "Check for New Version"
 msgstr ""
 
-#: ../../templates/show_flagged.inc.php:36
-#: ../../templates/show_flagged.inc.php:72
-#: ../../templates/show_disabled_songs.inc.php:33
-#: ../../templates/show_disabled_songs.inc.php:56
-msgid "Select"
-msgstr "Seleccionar"
-
-#: ../../templates/show_flagged.inc.php:37
-#: ../../templates/show_flagged.inc.php:73
-#, fuzzy
-msgid "Object"
-msgstr "Subjeto"
-
-#: ../../templates/show_flagged.inc.php:39
-#: ../../templates/show_flagged.inc.php:75
-#: ../../templates/show_flag.inc.php:69
-msgid "Flag"
-msgstr "Bandera"
-
-#: ../../templates/show_flagged.inc.php:40
-#: ../../templates/show_flagged.inc.php:76
-#: ../../templates/show_flag.inc.php:64 ../../templates/show_search.inc.php:34
-#: ../../templates/show_edit_song.inc.php:73
-#: ../../lib/class/song.class.php:375
-msgid "Comment"
-msgstr ""
-
-#: ../../templates/show_flagged.inc.php:41
-#: ../../templates/show_flagged.inc.php:77
-msgid "Status"
-msgstr ""
-
-#: ../../templates/show_flagged.inc.php:68
-#: ../../templates/show_disabled_songs.inc.php:52
-#: ../../templates/show_localplay_controllers.inc.php:59
-#: ../../templates/show_localplay_playlist.inc.php:52
-#: ../../templates/show_plugins.inc.php:57
-#: ../../templates/show_list_duplicates.inc.php:101
-#, fuzzy
-msgid "No Records Found"
-msgstr "No se encontraron resultados"
-
-#: ../../templates/show_flagged.inc.php:83
-msgid "Reject"
-msgstr ""
-
-#: ../../templates/show_flagged.inc.php:84
-msgid "Approve"
-msgstr ""
-
-#: ../../templates/show_flagged.inc.php:86
-#: ../../templates/show_preference_admin.inc.php:55
-#: ../../templates/show_edit_access.inc.php:83
-#: ../../templates/show_playlist_edit.inc.php:47
-#: ../../templates/show_play_selected.inc.php:64
-#, fuzzy
-msgid "Update"
-msgstr "Actualizar ID3"
-
-#: ../../templates/show_flagged.inc.php:91
-#: ../../templates/show_admin_info.inc.php:38
-#: ../../templates/show_ip_history.inc.php:28
-#, fuzzy
-msgid "Show All"
-msgstr "Mostrar todo"
-
-#: ../../templates/show_install_account.inc.php:32
-#: ../../templates/show_install_lang.inc.php:32
-#: ../../templates/show_install_config.inc.php:32
-#: ../../templates/show_install.inc.php:32
-msgid "Ampache Installation"
-msgstr "Instalación de Ampache"
-
-#: ../../templates/show_install_account.inc.php:39
-#: ../../templates/show_install_lang.inc.php:39
-#: ../../templates/show_install_config.inc.php:38
-#: ../../templates/show_install.inc.php:40
-msgid ""
-"This Page handles the installation of the Ampache database and the creation "
-"of the ampache.cfg.php file. Before you continue please make sure that you "
-"have the following pre-requisites"
-msgstr ""
-"Este página se trata de la instalación de la base de datos Ampache y la "
-"creación del archivo ampache.cfg.php. Antes de seguir, por favor asegurase "
-"que tiene los requisitos siguientes."
-
-#: ../../templates/show_install_account.inc.php:42
-#: ../../templates/show_install_lang.inc.php:42
-#: ../../templates/show_install_config.inc.php:41
-#: ../../templates/show_install.inc.php:43
-msgid ""
-"A MySQL Server with a username and password that can create/modify databases"
-msgstr ""
-
-#: ../../templates/show_install_account.inc.php:43
-msgid ""
-"Your webserver has read access to the /sql/ampache.sql file and the /config/"
-"ampache.cfg.dist.php file"
-msgstr ""
-"Su servidor sí tiene aceso de leer el archivo /sql/ampache.sql y el archivo /"
-"config/ampache.cfg.dist.php"
-
-#: ../../templates/show_install_account.inc.php:45
-#: ../../templates/show_install_lang.inc.php:46
-#: ../../templates/show_install_config.inc.php:44
-#: ../../templates/show_install.inc.php:47
-msgid ""
-"Once you have ensured that you have the above requirements please fill out "
-"the information below. You will only be asked for the required config "
-"values. If you would like to make changes to your ampache install at a later "
-"date simply edit /config/ampache.cfg.php"
-msgstr ""
-
-#: ../../templates/show_install_account.inc.php:48
-#: ../../templates/show_install_config.inc.php:48
-#: ../../templates/show_install.inc.php:52
-msgid "Step 1 - Creating and Inserting the Ampache Database"
-msgstr ""
-
-#: ../../templates/show_install_account.inc.php:49
-msgid "Step 2 - Creating the ampache.cfg.php file"
-msgstr ""
-
-#: ../../templates/show_install_account.inc.php:50
-#: ../../templates/show_install_config.inc.php:53
-#: ../../templates/show_install.inc.php:57
-msgid "Step 3 - Setup Initial Account"
-msgstr ""
-
-#: ../../templates/show_install_account.inc.php:52
-msgid ""
-"This step creates your initial Ampache admin account. Once your admin "
-"account has been created you will be directed to the login page"
-msgstr ""
-
-#: ../../templates/show_install_account.inc.php:56
-msgid "Create Admin Account"
-msgstr ""
-
-#: ../../templates/show_install_account.inc.php:60
-#: ../../templates/show_users.inc.php:39
-#: ../../templates/show_users.inc.php:101
-#: ../../templates/show_now_playing_row.inc.php:29
-#: ../../templates/show_edit_user.inc.php:29
-#: ../../templates/show_recently_played.inc.php:38
-#: ../../templates/show_recently_played.inc.php:84
-#: ../../templates/show_user_registration.inc.php:98
-#: ../../templates/show_add_user.inc.php:29
-msgid "Username"
-msgstr ""
-
-#: ../../templates/show_install_account.inc.php:64
-#: ../../templates/show_edit_user.inc.php:52
-#: ../../templates/show_user_registration.inc.php:126
-#: ../../templates/show_login_form.inc.php:62
-#: ../../templates/show_add_user.inc.php:52
-#: ../../modules/localplay/mpd.controller.php:216
-msgid "Password"
-msgstr "Contraseña"
-
-#: ../../templates/show_install_account.inc.php:69
-msgid "Create Account"
-msgstr "Crear una cuenta"
-
-#: ../../templates/show_catalogs.inc.php:33
-#: ../../templates/show_catalogs.inc.php:61
-#: ../../templates/show_add_catalog.inc.php:48
-msgid "Path"
-msgstr ""
-
-#: ../../templates/show_catalogs.inc.php:34
-#: ../../templates/show_catalogs.inc.php:62
-msgid "Last Verify"
-msgstr ""
-
-#: ../../templates/show_catalogs.inc.php:35
-#: ../../templates/show_catalogs.inc.php:63
-msgid "Last Add"
-msgstr ""
-
-#: ../../templates/show_catalogs.inc.php:36
-#: ../../templates/show_catalogs.inc.php:64
-#: ../../templates/show_albums.inc.php:46
-#: ../../templates/show_albums.inc.php:67
-#: ../../templates/show_artist_box.inc.php:32
-#: ../../templates/show_localplay.inc.php:30
-#: ../../templates/show_album.inc.php:43
-#: ../../templates/show_playlists.inc.php:37
-#: ../../templates/show_playlists.inc.php:54
-msgid "Actions"
-msgstr "Acciónes"
-
-#: ../../templates/show_catalogs.inc.php:52
-msgid "Gather All Art"
-msgstr ""
-
-#: ../../templates/show_embed_xspf.inc.php:24
-msgid "XSPF Player"
-msgstr ""
-
-#: ../../templates/show_song.inc.php:22
-msgid "Details"
-msgstr ""
-
-#: ../../templates/show_song.inc.php:25
-#: ../../templates/show_disabled_songs.inc.php:34
-#: ../../templates/show_disabled_songs.inc.php:57
-#: ../../templates/show_search.inc.php:40
-#: ../../templates/show_edit_song.inc.php:31
-#: ../../templates/show_duplicates.inc.php:35 ../../server/stats.ajax.php:84
-#: ../../lib/class/song.class.php:333
-msgid "Title"
-msgstr "Título"
-
-#: ../../templates/show_song.inc.php:29
-#: ../../templates/sidebar_browse.inc.php:12
-#: ../../templates/show_songs.inc.php:41 ../../templates/show_songs.inc.php:60
-#: ../../templates/show_disabled_songs.inc.php:36
-#: ../../templates/show_disabled_songs.inc.php:59
-#: ../../templates/show_now_playing_row.inc.php:59
-#: ../../templates/show_similar_artists.inc.php:33
-#: ../../templates/show_similar_artists.inc.php:86
-#: ../../templates/show_albums.inc.php:43
-#: ../../templates/show_albums.inc.php:64
-#: ../../templates/show_recently_played.inc.php:37
-#: ../../templates/show_recently_played.inc.php:87
-#: ../../templates/show_search.inc.php:44
-#: ../../templates/show_edit_song.inc.php:45
-#: ../../templates/show_artists.inc.php:35
-#: ../../templates/show_artists.inc.php:52
-#: ../../templates/show_get_albumart.inc.php:28
-#: ../../templates/show_play_selected.inc.php:60
-#: ../../templates/show_playlist_songs.inc.php:43
-#: ../../templates/show_playlist_songs.inc.php:64
-#: ../../templates/show_list_duplicates.inc.php:42
-#: ../../templates/show_list_duplicates.inc.php:87
-#: ../../templates/sidebar_home.inc.php:20 ../../server/stats.ajax.php:84
-#: ../../lib/class/song.class.php:362
-msgid "Artist"
-msgstr "Artista"
-
-#: ../../templates/show_song.inc.php:33 ../../templates/show_songs.inc.php:42
-#: ../../templates/show_songs.inc.php:61
-#: ../../templates/show_disabled_songs.inc.php:35
-#: ../../templates/show_disabled_songs.inc.php:58
-#: ../../templates/show_now_playing_row.inc.php:52
-#: ../../templates/show_albums.inc.php:42
-#: ../../templates/show_albums.inc.php:63
-#: ../../templates/show_recently_played.inc.php:36
-#: ../../templates/show_recently_played.inc.php:86
-#: ../../templates/show_search.inc.php:50
-#: ../../templates/show_edit_song.inc.php:37
-#: ../../templates/show_get_albumart.inc.php:36
-#: ../../templates/show_play_selected.inc.php:59
-#: ../../templates/show_playlist_songs.inc.php:44
-#: ../../templates/show_playlist_songs.inc.php:65
-#: ../../templates/show_list_duplicates.inc.php:43
-#: ../../templates/show_list_duplicates.inc.php:88
-#: ../../templates/sidebar_home.inc.php:19 ../../lib/class/song.class.php:367
-msgid "Album"
-msgstr "Álbum"
-
-#: ../../templates/show_song.inc.php:37
-#: ../../templates/sidebar_browse.inc.php:13
-#: ../../templates/show_songs.inc.php:43 ../../templates/show_songs.inc.php:62
-#: ../../templates/show_genres.inc.php:37
-#: ../../templates/show_genres.inc.php:68
-#: ../../templates/show_search.inc.php:54
-#: ../../templates/show_add_live_stream.inc.php:61
-#: ../../templates/show_edit_song.inc.php:53
-#: ../../templates/show_genre.inc.php:29
-#: ../../templates/show_play_selected.inc.php:58
-#: ../../templates/show_playlist_songs.inc.php:45
-#: ../../templates/show_playlist_songs.inc.php:66
-#: ../../templates/show_live_streams.inc.php:39
-#: ../../templates/show_live_streams.inc.php:56
-#: ../../templates/show_edit_live_stream_row.inc.php:31
-#: ../../lib/class/song.class.php:380 ../../lib/ui.lib.php:608
-msgid "Genre"
-msgstr "Género"
-
-#: ../../templates/show_song.inc.php:41
-#: ../../templates/show_list_duplicates.inc.php:45
-#: ../../templates/show_list_duplicates.inc.php:90
-#: ../../lib/class/song.class.php:337
-msgid "Bitrate"
-msgstr ""
-
-#: ../../templates/show_song.inc.php:45
-#: ../../templates/show_disabled_songs.inc.php:37
-#: ../../templates/show_disabled_songs.inc.php:60
-#: ../../templates/show_search.inc.php:66
-#: ../../templates/show_import_playlist.inc.php:28
-#: ../../templates/show_list_duplicates.inc.php:47
-#: ../../templates/show_list_duplicates.inc.php:92
-msgid "Filename"
-msgstr "Nombre del archivo"
-
-#: ../../templates/show_song.inc.php:50
-msgid "Last Updated"
-msgstr ""
-
-#: ../../templates/sidebar_browse.inc.php:3
-msgid "Browse By"
-msgstr ""
-
-#: ../../templates/sidebar_browse.inc.php:10
-#: ../../templates/show_songs.inc.php:40 ../../templates/show_songs.inc.php:59
-#: ../../templates/show_playlist_songs.inc.php:42
-#: ../../templates/show_playlist_songs.inc.php:63
-#, fuzzy
-msgid "Song Title"
-msgstr "Título de la canción"
-
-#: ../../templates/sidebar_browse.inc.php:14
-#: ../../templates/show_manage_democratic.inc.php:31
-#: ../../templates/show_playlist.inc.php:27
-#: ../../templates/show_play_selected.inc.php:47
-#: ../../templates/sidebar_home.inc.php:21 ../../lib/ui.lib.php:559
-msgid "Playlist"
-msgstr "Lista"
-
-#: ../../templates/sidebar_browse.inc.php:15
-msgid "Radio Stations"
-msgstr ""
-
-#: ../../templates/sidebar_browse.inc.php:18
-msgid "Filters"
-msgstr ""
-
-#: ../../templates/sidebar_browse.inc.php:23
-msgid "Minimum Count"
-msgstr ""
-
-#: ../../templates/sidebar_browse.inc.php:25
-msgid "Rated"
-msgstr ""
-
-#: ../../templates/sidebar_browse.inc.php:28
-msgid "Unplayed"
-msgstr ""
-
-#: ../../templates/sidebar_browse.inc.php:31
-msgid "Show Art"
-msgstr ""
-
-#: ../../templates/show_user.inc.php:22 ../../templates/show_users.inc.php:53
-#: ../../lib/class/user.class.php:673 ../../lib/preferences.php:341
-msgid "Never"
-msgstr ""
-
-#: ../../templates/show_user.inc.php:23 ../../templates/show_users.inc.php:54
-#: ../../lib/class/flag.class.php:305 ../../lib/class/user.class.php:677
-#: ../../lib/class/localplay.class.php:653 ../../lib/general.lib.php:505
-#: ../../modules/localplay/httpq.controller.php:379
-#: ../../modules/localplay/mpd.controller.php:476
-#: ../../modules/localplay/icecast.controller.php:292
-msgid "Unknown"
-msgstr "Desconocido"
-
-#: ../../templates/show_user.inc.php:30
-#: ../../templates/show_edit_user.inc.php:37
-#: ../../templates/show_user_registration.inc.php:108
-#: ../../templates/show_add_user.inc.php:37
-msgid "Full Name"
-msgstr "Nombre entero"
-
-#: ../../templates/show_user.inc.php:31
-msgid "Create Date"
-msgstr ""
-
-#: ../../templates/show_user.inc.php:32 ../../templates/show_users.inc.php:40
-#: ../../templates/show_users.inc.php:102
-msgid "Last Seen"
-msgstr "Último visto"
-
-#: ../../templates/show_user.inc.php:33 ../../templates/show_users.inc.php:42
-#: ../../templates/show_users.inc.php:104
-msgid "Activity"
-msgstr ""
-
-#: ../../templates/show_user.inc.php:35
-msgid "User is Online Now"
-msgstr ""
-
-#: ../../templates/show_user.inc.php:37
-msgid "User is Offline Now"
-msgstr ""
-
-#: ../../templates/show_user.inc.php:42
-msgid "Active Playlist"
-msgstr ""
-
-#: ../../templates/show_user.inc.php:68 ../../templates/show_index.inc.php:41
-#: ../../server/ajax.server.php:312
-#, fuzzy
-msgid "Recently Played"
-msgstr "Menos tocado"
-
-#: ../../templates/show_songs.inc.php:44 ../../templates/show_songs.inc.php:63
-#: ../../templates/show_localplay_playlist.inc.php:30
-#: ../../templates/show_localplay_playlist.inc.php:56
-#: ../../templates/show_edit_song.inc.php:61
-#: ../../templates/show_playlist_songs.inc.php:41
-#: ../../templates/show_playlist_songs.inc.php:46
-#: ../../templates/show_playlist_songs.inc.php:62
-#: ../../templates/show_playlist_songs.inc.php:67
-#: ../../server/stats.ajax.php:84 ../../lib/class/song.class.php:353
-msgid "Track"
-msgstr ""
-
-#: ../../templates/show_songs.inc.php:45 ../../templates/show_songs.inc.php:64
-#: ../../templates/show_democratic_playlist.inc.php:53
-#: ../../templates/show_democratic_playlist.inc.php:88
-#: ../../templates/show_playlist_songs.inc.php:47
-#: ../../templates/show_playlist_songs.inc.php:68
-#: ../../lib/class/song.class.php:349
-msgid "Time"
-msgstr "Tiempo"
-
-#: ../../templates/show_objects.inc.php:43
-#: ../../templates/show_manage_democratic.inc.php:52
-#: ../../templates/show_user_recommendations.inc.php:32
-#: ../../templates/show_user_recommendations.inc.php:43
-#: ../../templates/show_user_recommendations.inc.php:54
-#: ../../templates/show_user_stats.inc.php:34
-#: ../../templates/show_user_stats.inc.php:47
-#: ../../templates/show_user_stats.inc.php:60
-#: ../../templates/rightbar.inc.php:93
-msgid "Not Enough Data"
-msgstr "No hay suficiente información"
-
-#: ../../templates/show_big_art.inc.php:29
-msgid "Album Art"
-msgstr "Arte del álbum"
-
-#: ../../templates/show_big_art.inc.php:33
-msgid "Click to close window"
-msgstr "Haga click para cerrar la ventana"
-
-#: ../../templates/show_song_row.inc.php:34
-#: ../../templates/show_playlist_song_row.inc.php:33
-#: ../../templates/show_album.inc.php:55
-msgid "Download"
-msgstr "Bajar"
-
-#: ../../templates/show_song_row.inc.php:39
-#: ../../templates/show_live_stream_row.inc.php:31
-#: ../../templates/show_play_selected.inc.php:50
-#: ../../templates/show_artist_row.inc.php:36
-#: ../../templates/show_album_row.inc.php:44
-#: ../../templates/show_playlist_row.inc.php:36
-msgid "Edit"
-msgstr ""
-
 #: ../../templates/show_flag.inc.php:41
 msgid "Flag Song"
 msgstr "Marcar cancin."
@@ -1133,401 +1864,236 @@ msgstr ""
 msgid "Incorrect Tags"
 msgstr ""
 
-#: ../../templates/show_flag.inc.php:58 ../../lib/class/flag.class.php:299
-msgid "Re-encode"
-msgstr ""
-
-#: ../../templates/show_flag.inc.php:59 ../../lib/class/flag.class.php:302
-#, fuzzy
-msgid "Other"
-msgstr "otro"
-
-#: ../../templates/show_object_rating_static.inc.php:44
-msgid "out of"
-msgstr ""
-
-#: ../../templates/show_run_add_catalog.inc.php:24
-#: ../../templates/show_adds_catalog.inc.php:24
-#: ../../lib/class/catalog.class.php:946
-msgid "Found"
-msgstr "Encontrado"
-
-#: ../../templates/show_run_add_catalog.inc.php:25
-#: ../../templates/show_verify_catalog.inc.php:26
-#: ../../templates/show_gather_art.inc.php:25
-#: ../../templates/show_clean_catalog.inc.php:25
-#: ../../templates/show_adds_catalog.inc.php:25
-msgid "Reading"
-msgstr ""
-
-#: ../../templates/show_edit_artist_row.inc.php:32
-#: ../../templates/show_edit_album_row.inc.php:45
-#: ../../templates/show_edit_playlist_row.inc.php:32
-#: ../../templates/show_edit_playlist_song_row.inc.php:44
-#: ../../templates/show_edit_song_row.inc.php:43
-#: ../../templates/show_edit_live_stream_row.inc.php:56
-msgid "Save Changes"
-msgstr ""
-
-#: ../../templates/show_install_lang.inc.php:37
-#: ../../templates/show_install.inc.php:38
-msgid "Requirements"
-msgstr ""
-
-#: ../../templates/show_install_lang.inc.php:43
-#: ../../templates/show_install_config.inc.php:42
-#: ../../templates/show_install.inc.php:44
-msgid ""
-"Your webserver has read access to the /sql/ampache.sql file and the /config/"
-"ampache.cfg.php.dist file"
-msgstr ""
-
-#: ../../templates/show_install_lang.inc.php:72
-msgid "Start configuration"
-msgstr ""
-
-#: ../../templates/show_random_albums.inc.php:23
-msgid "Albums of the Moment"
-msgstr ""
-
-#: ../../templates/show_random_albums.inc.php:46
-#: ../../templates/show_album.inc.php:45
-msgid "Play Album"
-msgstr "Tocar el álbum"
-
-#: ../../templates/show_localplay_status.inc.php:51
-msgid "Volume"
-msgstr "Volumen"
-
-#: ../../templates/show_localplay_status.inc.php:55
-msgid "Repeat"
-msgstr ""
-
-#: ../../templates/show_localplay_status.inc.php:61
-#: ../../templates/show_artist_row.inc.php:24
-#: ../../templates/sidebar_home.inc.php:17
-#: ../../templates/show_album_row.inc.php:24
-#: ../../templates/show_playlist_row.inc.php:24
-msgid "Random"
-msgstr "Al azar"
-
-#: ../../templates/show_disabled_songs.inc.php:38
-#: ../../templates/show_disabled_songs.inc.php:61
-msgid "Addition Time"
-msgstr ""
-
-#: ../../templates/show_disabled_songs.inc.php:65
-#, fuzzy
-msgid "Remove"
-msgstr "Cambiar el nombre"
-
-#: ../../templates/show_access_list.inc.php:29
-msgid "Ampache Access Control"
-msgstr ""
-
-#: ../../templates/show_access_list.inc.php:38
-msgid "Add Entry"
-msgstr ""
-
-#: ../../templates/show_access_list.inc.php:44
-msgid "Start Address"
-msgstr "Dirección de empezar"
-
-#: ../../templates/show_access_list.inc.php:45
-msgid "End Address"
-msgstr "Dirección de acabar"
-
-#: ../../templates/show_access_list.inc.php:46
-#: ../../templates/show_preference_admin.inc.php:31
-#: ../../templates/show_preference_admin.inc.php:50
-#: ../../templates/show_edit_access.inc.php:70
-#: ../../templates/show_add_access.inc.php:50
-msgid "Level"
-msgstr "Nivel"
-
-#: ../../templates/show_access_list.inc.php:48
-msgid "Key"
-msgstr ""
-
-#: ../../templates/show_access_list.inc.php:49
-#: ../../templates/show_add_playlist.inc.php:32
-#: ../../templates/show_playlist_edit.inc.php:36
-#: ../../templates/show_random.inc.php:47
-msgid "Type"
-msgstr "Tipo"
-
-#: ../../templates/show_users.inc.php:39
-#: ../../templates/show_users.inc.php:101
-msgid "Fullname"
-msgstr "Nombre entero"
-
-#: ../../templates/show_users.inc.php:41
-#: ../../templates/show_users.inc.php:103
-msgid "Registration Date"
-msgstr "Fecha de registro"
-
-#: ../../templates/show_users.inc.php:44
-#: ../../templates/show_users.inc.php:106
-#, fuzzy
-msgid "Last Ip"
-msgstr "Último visto"
-
-#: ../../templates/show_users.inc.php:47
-#: ../../templates/show_users.inc.php:109
-msgid "On-line"
-msgstr "En linea"
-
-#: ../../templates/show_manage_democratic.inc.php:22
-msgid "Manage Democratic Playlists"
-msgstr ""
-
-#: ../../templates/show_manage_democratic.inc.php:32
-#: ../../templates/show_create_democratic.inc.php:30
-#, fuzzy
-msgid "Base Playlist"
-msgstr "Nueva lista"
-
-#: ../../templates/show_manage_democratic.inc.php:58
-msgid "Create New Playlist"
-msgstr "Crear nueva lista"
-
-#: ../../templates/show_now_playing_row.inc.php:36
-#: ../../templates/show_search.inc.php:91
-msgid "Rating"
-msgstr ""
-
-#: ../../templates/show_now_playing_row.inc.php:45
-#: ../../templates/show_recently_played.inc.php:35
-#: ../../templates/show_recently_played.inc.php:85
-#: ../../templates/show_democratic_playlist.inc.php:52
-#: ../../templates/show_democratic_playlist.inc.php:87
-#: ../../templates/show_list_duplicates.inc.php:41
-#: ../../templates/show_list_duplicates.inc.php:86
-msgid "Song"
-msgstr ""
-
-#: ../../templates/show_install_config.inc.php:49
-#: ../../templates/show_install.inc.php:56
-msgid "Step 2 - Creating the Ampache.cfg.php file"
-msgstr ""
-
-#: ../../templates/show_install_config.inc.php:51
-msgid ""
-"This steps takes the basic config values, and first attempts to write them "
-"out directly to your webserver. If access is denied it will prompt you to "
-"download the config file. Please put the downloaded config file in /config"
-msgstr ""
-
-#: ../../templates/show_install_config.inc.php:56
-msgid "Generate Config File"
-msgstr ""
-
-#: ../../templates/show_install_config.inc.php:60
-msgid "Web Path"
-msgstr ""
-
-#: ../../templates/show_install_config.inc.php:64
-#: ../../templates/show_install.inc.php:65
-msgid "Desired Database Name"
-msgstr ""
-
-#: ../../templates/show_install_config.inc.php:68
-#: ../../templates/show_install.inc.php:69
-msgid "MySQL Hostname"
-msgstr "Nombre del servidor MySQL"
-
-#: ../../templates/show_install_config.inc.php:72
-msgid "MySQL Username"
-msgstr "Nombre del usuario de MySQL"
-
-#: ../../templates/show_install_config.inc.php:76
-msgid "MySQL Password"
-msgstr "Contraseña de MySQL"
-
-#: ../../templates/show_install_config.inc.php:81
-msgid "Write Config"
-msgstr ""
-
-#: ../../templates/show_install_config.inc.php:88
-#: ../../templates/show_test.inc.php:153
-msgid "Ampache.cfg.php Exists"
-msgstr ""
-
-#: ../../templates/show_install_config.inc.php:105
-#: ../../templates/show_test.inc.php:172
-msgid "Ampache.cfg.php Configured?"
-msgstr ""
-
-#: ../../templates/show_install_config.inc.php:126
-msgid "Check for Config"
-msgstr ""
-
-#: ../../templates/show_install_config.inc.php:132
-msgid "Continue to Step 3"
-msgstr ""
-
-#: ../../templates/show_edit_user.inc.php:23
-msgid "Editing existing User"
-msgstr ""
-
-#: ../../templates/show_edit_user.inc.php:44
-#: ../../templates/show_user_registration.inc.php:117
-#: ../../templates/show_add_user.inc.php:44
-#: ../../templates/show_account.inc.php:34
-msgid "E-mail"
-msgstr "Correo"
-
-#: ../../templates/show_edit_user.inc.php:61
-#: ../../templates/show_user_registration.inc.php:135
-#: ../../templates/show_add_user.inc.php:61
-#: ../../templates/show_account.inc.php:47
-msgid "Confirm Password"
-msgstr ""
-
-#: ../../templates/show_edit_user.inc.php:69
-#: ../../templates/show_add_user.inc.php:69
-msgid "User Access Level"
-msgstr "Permisos de aceso del usuario"
-
-#: ../../templates/show_edit_user.inc.php:83
-msgid "Update User"
-msgstr "Actualizar el usuario"
-
-#: ../../templates/show_edit_album_row.inc.php:35
-#: ../../lib/class/album.class.php:229 ../../lib/class/album.class.php:230
-msgid "Various"
-msgstr "Varios"
-
-#: ../../templates/show_search_bar.inc.php:29
-#: ../../templates/show_search.inc.php:131
-#: ../../templates/show_duplicates.inc.php:50 ../../lib/ui.lib.php:562
-msgid "Search"
-msgstr "Buscar"
-
-#: ../../templates/show_search_bar.inc.php:30
-msgid "Advanced Search"
-msgstr ""
-
-#: ../../templates/show_create_democratic.inc.php:22
-msgid "Create Democratic Playlist"
-msgstr ""
-
-#: ../../templates/show_create_democratic.inc.php:34
-msgid "Make Default"
-msgstr ""
-
-#: ../../templates/show_create_democratic.inc.php:39
-#: ../../templates/show_add_playlist.inc.php:42
-#, fuzzy
-msgid "Create"
-msgstr "Crear una cuenta"
-
-#: ../../templates/show_confirmation.inc.php:25
-msgid "Continue"
-msgstr "Seguir"
-
-#: ../../templates/show_confirmation.inc.php:27
-#: ../../templates/show_similar_artists.inc.php:78
-msgid "Cancel"
-msgstr "Cancelar"
-
-#: ../../templates/sidebar.inc.php:27 ../../lib/ui.lib.php:547
-msgid "Home"
-msgstr ""
+#: ../../templates/show_flag.inc.php:69
+#: ../../templates/show_flagged.inc.php:39
+#: ../../templates/show_flagged.inc.php:75
+msgid "Flag"
+msgstr "Bandera"
 
 #: ../../templates/sidebar.inc.php:28
 msgid "Browse"
 msgstr ""
 
-#: ../../templates/sidebar.inc.php:29
-#: ../../templates/sidebar_localplay.inc.php:10
-#: ../../templates/show_playtype_switch.inc.php:34
-#: ../../templates/show_localplay.inc.php:26 ../../lib/preferences.php:263
-#, fuzzy
-msgid "Localplay"
-msgstr "Local"
-
-#: ../../templates/sidebar.inc.php:30 ../../lib/ui.lib.php:565
-msgid "Preferences"
-msgstr "Preferencias"
-
 #: ../../templates/sidebar.inc.php:66
 msgid "Logout"
 msgstr ""
 
-#: ../../templates/show_verify_catalog.inc.php:23
-msgid "Updating the"
+#: ../../templates/sidebar_localplay.inc.php:13
+#: ../../templates/show_localplay_add_instance.inc.php:35
+msgid "Add Instance"
 msgstr ""
 
-#: ../../templates/show_verify_catalog.inc.php:23
-#: ../../templates/show_add_live_stream.inc.php:67
-#: ../../templates/show_clean_catalog.inc.php:23
-msgid "Catalog"
-msgstr "Catálogo"
-
-#: ../../templates/show_verify_catalog.inc.php:24
-msgid "songs found checking tag information."
+#: ../../templates/sidebar_localplay.inc.php:14
+msgid "Show instances"
 msgstr ""
 
-#: ../../templates/show_verify_catalog.inc.php:25
-msgid "Verifed"
+#: ../../templates/sidebar_localplay.inc.php:16
+#: ../../templates/sidebar_home.inc.php:12
+msgid "Show Playlist"
 msgstr ""
 
+#: ../../templates/sidebar_localplay.inc.php:20
+msgid "Active Instance"
+msgstr ""
+
+#: ../../templates/sidebar_localplay.inc.php:39
+msgid "Localplay Disabled"
+msgstr ""
+
+#: ../../templates/show_user.inc.php:30
+#: ../../templates/show_user_registration.inc.php:85
+#: ../../templates/show_edit_user.inc.php:37
+#: ../../templates/show_add_user.inc.php:37
+msgid "Full Name"
+msgstr "Nombre entero"
+
+#: ../../templates/show_user.inc.php:31
+msgid "Create Date"
+msgstr ""
+
+#: ../../templates/show_user.inc.php:32 ../../templates/show_users.inc.php:40
+#: ../../templates/show_users.inc.php:105
+msgid "Last Seen"
+msgstr "Último visto"
+
+#: ../../templates/show_user.inc.php:33 ../../templates/show_users.inc.php:42
+#: ../../templates/show_users.inc.php:107
+msgid "Activity"
+msgstr ""
+
+#: ../../templates/show_user.inc.php:35
+msgid "User is Online Now"
+msgstr ""
+
+#: ../../templates/show_user.inc.php:37
+msgid "User is Offline Now"
+msgstr ""
+
+#: ../../templates/show_user.inc.php:42
+msgid "Active Playlist"
+msgstr ""
+
+#: ../../templates/show_artist_box.inc.php:23
+#: ../../templates/show_artist_box.inc.php:26
+msgid "Albums by"
+msgstr "Álbumes por"
+
+#: ../../templates/show_artist_box.inc.php:34
+msgid "Show All Songs By"
+msgstr "Mostrar todas las canciónes por"
+
+#: ../../templates/show_artist_box.inc.php:35
+msgid "Add All Songs By"
+msgstr ""
+
+#: ../../templates/show_artist_box.inc.php:36
+msgid "Add Random Songs By"
+msgstr ""
+
+#: ../../templates/show_artist_box.inc.php:38
+#: ../../templates/show_album.inc.php:52
+msgid "Update from tags"
+msgstr ""
+
+#: ../../templates/show_artist_box.inc.php:41
+msgid "Recommend Similar"
+msgstr ""
+
+#: ../../templates/show_songs.inc.php:48
+#: ../../templates/show_now_playing_row.inc.php:36
+#: ../../templates/show_search.inc.php:91
+msgid "Rating"
+msgstr ""
+
+#: ../../templates/show_localplay_playlist.inc.php:23
 #: ../../templates/show_democratic.inc.php:22
-#: ../../templates/show_localplay_playlist.inc.php:22
 #: ../../templates/show_localplay.inc.php:43
 #, fuzzy
 msgid "Current Playlist"
 msgstr "Crear nueva lista"
 
-#: ../../templates/show_localplay_control.inc.php:25
-msgid "Previous"
-msgstr ""
-
-#: ../../templates/show_localplay_control.inc.php:26
-msgid "Stop"
-msgstr ""
-
-#: ../../templates/show_localplay_control.inc.php:27
-msgid "Pause"
-msgstr ""
-
-#: ../../templates/show_localplay_control.inc.php:28
-#: ../../templates/rightbar.inc.php:25
-msgid "Play"
-msgstr "Toca"
-
-#: ../../templates/show_localplay_control.inc.php:29
-#: ../../templates/list_header.inc.php:100
-msgid "Next"
-msgstr ""
-
-#: ../../templates/show_localplay_controllers.inc.php:33
-#: ../../templates/show_localplay_controllers.inc.php:64
-#: ../../templates/show_plugins.inc.php:33
-#: ../../templates/show_plugins.inc.php:62
+#: ../../templates/show_localplay_playlist.inc.php:53
+#: ../../templates/show_flagged.inc.php:68
+#: ../../templates/show_plugins.inc.php:57
+#: ../../templates/show_localplay_controllers.inc.php:59
+#: ../../templates/show_disabled_songs.inc.php:52
 #, fuzzy
-msgid "Description"
+msgid "No Records Found"
+msgstr "No se encontraron resultados"
+
+#: ../../templates/show_preference_box.inc.php:40
+#: ../../templates/show_preference_box.inc.php:70
+#: ../../templates/show_preference_admin.inc.php:30
+#: ../../templates/show_preference_admin.inc.php:49
+#: ../../templates/show_user_preferences.inc.php:36
+msgid "Preference"
+msgstr "Preferencia"
+
+#: ../../templates/show_preference_box.inc.php:41
+#: ../../templates/show_preference_box.inc.php:71
+#: ../../templates/show_user_preferences.inc.php:37
+msgid "Value"
+msgstr "Valor"
+
+#: ../../templates/show_preference_box.inc.php:43
+#: ../../templates/show_preference_box.inc.php:73
+msgid "Apply to All"
+msgstr "Aplicar a todos"
+
+#: ../../templates/show_preference_box.inc.php:44
+#: ../../templates/show_preference_box.inc.php:74
+msgid "Access Level"
+msgstr ""
+
+#: ../../templates/show_preference_box.inc.php:49
+#: ../../templates/show_user_preferences.inc.php:41
+msgid "description"
 msgstr "descripción"
 
-#: ../../templates/show_localplay_controllers.inc.php:34
-#: ../../templates/show_localplay_controllers.inc.php:65
-#: ../../templates/show_plugins.inc.php:34
-#: ../../templates/show_plugins.inc.php:63
-#, fuzzy
-msgid "Version"
-msgstr "Versión de PHP"
-
-#: ../../templates/show_localplay_controllers.inc.php:44
-#: ../../templates/show_list_duplicates.inc.php:40
-#: ../../templates/show_list_duplicates.inc.php:85
-#: ../../lib/preferences.php:246
-msgid "Disable"
+#: ../../templates/show_preference_box.inc.php:60
+#: ../../templates/show_edit_user.inc.php:76
+#: ../../templates/show_add_user.inc.php:76
+msgid "Content Manager"
 msgstr ""
 
-#: ../../templates/show_localplay_controllers.inc.php:48
-#: ../../templates/show_plugins.inc.php:42
-msgid "Activate"
+#: ../../templates/show_preference_box.inc.php:61
+#: ../../templates/show_edit_user.inc.php:77
+#: ../../templates/show_add_user.inc.php:77
+msgid "Catalog Manager"
+msgstr ""
+
+#: ../../templates/header.inc.php:71
+msgid "Log out"
+msgstr ""
+
+#: ../../templates/header.inc.php:89
+msgid "Error Config File Out of Date"
+msgstr ""
+
+#: ../../templates/show_user_registration.inc.php:29
+#: ../../templates/show_user_registration.inc.php:36
+#: ../../templates/show_user_activate.inc.php:29
+#: ../../templates/show_user_activate.inc.php:36
+msgid "Registration"
+msgstr ""
+
+#: ../../templates/show_user_registration.inc.php:56
+msgid "User Agreement"
+msgstr ""
+
+#: ../../templates/show_user_registration.inc.php:65
+msgid "I Accept"
+msgstr ""
+
+#: ../../templates/show_user_registration.inc.php:71
+msgid "User Information"
+msgstr ""
+
+#: ../../templates/show_user_registration.inc.php:94
+#: ../../templates/show_edit_user.inc.php:44
+#: ../../templates/show_add_user.inc.php:44
+#: ../../templates/show_account.inc.php:34
+msgid "E-mail"
+msgstr "Correo"
+
+#: ../../templates/show_user_registration.inc.php:112
+#: ../../templates/show_edit_user.inc.php:61
+#: ../../templates/show_add_user.inc.php:61
+#: ../../templates/show_account.inc.php:47
+msgid "Confirm Password"
+msgstr ""
+
+#: ../../templates/show_user_registration.inc.php:133
+msgid "Register User"
+msgstr "Registrar usuario"
+
+#: ../../templates/show_edit_album.inc.php:23
+#, fuzzy
+msgid "Edit Album"
+msgstr "Álbum"
+
+#: ../../templates/show_edit_album.inc.php:41
+#: ../../templates/show_edit_song.inc.php:81
+#: ../../templates/show_edit_artist.inc.php:35
+msgid "Flag for Retagging"
+msgstr ""
+
+#: ../../templates/show_edit_album.inc.php:47
+#, fuzzy
+msgid "Update Album"
+msgstr "Recolectar arte del álbum"
+
+#: ../../templates/show_install.inc.php:38
+#: ../../templates/show_install_lang.inc.php:37
+msgid "Requirements"
+msgstr ""
+
+#: ../../templates/show_install.inc.php:44
+#: ../../templates/show_install_lang.inc.php:43
+#: ../../templates/show_install_config.inc.php:42
+msgid ""
+"Your webserver has read access to the /sql/ampache.sql file and the /config/"
+"ampache.cfg.php.dist file"
 msgstr ""
 
 #: ../../templates/show_install.inc.php:54
@@ -1540,9 +2106,24 @@ msgstr ""
 "una cuenta de MySQL con permisos de crear una base de datos.  Es posibleque "
 "tenga que esperar un ratito. Este dependa en cuán viejo es su computadora."
 
+#: ../../templates/show_install.inc.php:56
+#: ../../templates/show_install_config.inc.php:49
+msgid "Step 2 - Creating the Ampache.cfg.php file"
+msgstr ""
+
 #: ../../templates/show_install.inc.php:61
 msgid "Insert Ampache Database"
 msgstr ""
+
+#: ../../templates/show_install.inc.php:65
+#: ../../templates/show_install_config.inc.php:64
+msgid "Desired Database Name"
+msgstr ""
+
+#: ../../templates/show_install.inc.php:69
+#: ../../templates/show_install_config.inc.php:68
+msgid "MySQL Hostname"
+msgstr "Nombre del servidor MySQL"
 
 #: ../../templates/show_install.inc.php:73
 msgid "MySQL Administrative Username"
@@ -1572,50 +2153,386 @@ msgstr ""
 msgid "Insert Database"
 msgstr "Insertar una base de datos"
 
-#: ../../templates/show_similar_artists.inc.php:23
-#, fuzzy
-msgid "Similar Artists"
-msgstr "Artistas"
-
-#: ../../templates/show_similar_artists.inc.php:25
-msgid "Please check the artists you want to merge with the current one"
+#: ../../templates/show_install_lang.inc.php:72
+msgid "Start configuration"
 msgstr ""
-
-#: ../../templates/show_similar_artists.inc.php:66
-msgid "Back"
-msgstr ""
-
-#: ../../templates/show_similar_artists.inc.php:77
-#, fuzzy
-msgid "Rename selected"
-msgstr "Tocar la selección"
-
-#: ../../templates/show_similar_artists.inc.php:91
-#, fuzzy
-msgid "Advanced Options"
-msgstr "Agregado"
-
-#: ../../templates/show_similar_artists.inc.php:152
-#, fuzzy
-msgid "Search Again"
-msgstr "Buscar"
 
 #: ../../templates/show_add_playlist.inc.php:24
 msgid "Create a new playlist"
 msgstr "Crear una lista nueva"
 
+#: ../../templates/show_add_playlist.inc.php:42
+#: ../../templates/show_create_democratic.inc.php:39
+#: ../../templates/show_add_shout.inc.php:41
+#, fuzzy
+msgid "Create"
+msgstr "Crear una cuenta"
+
+#: ../../templates/show_edit_song.inc.php:23
+#, fuzzy
+msgid "Edit Song"
+msgstr "Numero de canciónes"
+
+#: ../../templates/show_edit_song.inc.php:40
+#: ../../templates/show_edit_song.inc.php:48
+#: ../../templates/show_edit_song.inc.php:56
+#: ../../templates/show_rename_artist.inc.php:33
+#: ../../templates/show_search.inc.php:106
+msgid "OR"
+msgstr "O"
+
+#: ../../templates/show_edit_song.inc.php:88
+#, fuzzy
+msgid "Update Song"
+msgstr "Actualizar los catálogos"
+
+#: ../../templates/show_edit_catalog.inc.php:22
+msgid "Settings for"
+msgstr ""
+
+#: ../../templates/show_edit_catalog.inc.php:51
+msgid "Filename pattern"
+msgstr ""
+
+#: ../../templates/show_edit_catalog.inc.php:68
+msgid "Save Catalog Settings"
+msgstr ""
+
+#: ../../templates/show_edit_access.inc.php:22
+msgid "Edit ACL"
+msgstr ""
+
+#: ../../templates/show_edit_access.inc.php:30
+#: ../../templates/show_add_access.inc.php:63
+#, fuzzy
+msgid "ACL Type"
+msgstr "Tipo"
+
+#: ../../templates/show_edit_access.inc.php:34
+#: ../../templates/show_add_access.inc.php:66
+#, fuzzy
+msgid "Stream Access"
+msgstr "Aceso"
+
+#: ../../templates/show_edit_access.inc.php:35
+#: ../../templates/show_add_access.inc.php:67
+msgid "Web Interface"
+msgstr ""
+
+#: ../../templates/show_edit_access.inc.php:36
+#: ../../templates/show_add_access.inc.php:68
+msgid "Local Network Definition"
+msgstr ""
+
+#: ../../templates/show_edit_access.inc.php:37
+#: ../../templates/show_add_access.inc.php:69
+msgid "RPC"
+msgstr ""
+
+#: ../../templates/show_edit_access.inc.php:43
+#: ../../templates/show_add_access.inc.php:32
+msgid "Start IP Address"
+msgstr "Primera dirección de IP"
+
+#: ../../templates/show_edit_access.inc.php:50
+#: ../../templates/show_add_access.inc.php:39
+#, fuzzy
+msgid "End IP Address"
+msgstr "Dirección de acabar"
+
+#: ../../templates/show_edit_access.inc.php:63
+#: ../../templates/show_add_access.inc.php:77
+msgid "Remote Key"
+msgstr ""
+
+#: ../../templates/show_edit_access.inc.php:70
+#: ../../templates/show_preference_admin.inc.php:31
+#: ../../templates/show_preference_admin.inc.php:50
+#: ../../templates/show_access_list.inc.php:46
+#: ../../templates/show_add_access.inc.php:52
+msgid "Level"
+msgstr "Nivel"
+
+#: ../../templates/show_random_albums.inc.php:23
+msgid "Albums of the Moment"
+msgstr ""
+
+#: ../../templates/show_random_albums.inc.php:46
+msgid "Play Album"
+msgstr "Tocar el álbum"
+
+#: ../../templates/show_recently_played.inc.php:37
+#: ../../templates/show_recently_played.inc.php:91
+#: ../../templates/show_now_playing_row.inc.php:45
+#: ../../templates/show_duplicates.inc.php:37
+#: ../../templates/show_duplicates.inc.php:75
+#: ../../templates/show_democratic_playlist.inc.php:52
+#: ../../templates/show_democratic_playlist.inc.php:87
+msgid "Song"
+msgstr ""
+
+#: ../../templates/show_recently_played.inc.php:41
+#: ../../templates/show_recently_played.inc.php:94
+msgid "Last Played"
+msgstr ""
+
+#: ../../templates/show_user_recommendations.inc.php:29
+msgid "Recommended Artists"
+msgstr ""
+
+#: ../../templates/show_user_recommendations.inc.php:40
+msgid "Recommended Albums"
+msgstr ""
+
+#: ../../templates/show_user_recommendations.inc.php:51
+msgid "Recommended Songs"
+msgstr ""
+
+#: ../../templates/show_ip_history.inc.php:23
+msgid "IP History"
+msgstr ""
+
+#: ../../templates/show_ip_history.inc.php:26
+msgid "Show Unique"
+msgstr ""
+
+#: ../../templates/show_ip_history.inc.php:28
+#: ../../templates/show_admin_info.inc.php:38
+#: ../../templates/show_flagged.inc.php:91
+#, fuzzy
+msgid "Show All"
+msgstr "Mostrar todo"
+
+#: ../../templates/show_ip_history.inc.php:37
+#: ../../templates/show_ip_history.inc.php:51
+msgid "Date"
+msgstr "Fecha"
+
+#: ../../templates/show_ip_history.inc.php:38
+#: ../../templates/show_ip_history.inc.php:52
+#, fuzzy
+msgid "IP Address"
+msgstr "Primera dirección de IP"
+
+#: ../../templates/show_import_playlist.inc.php:23
+msgid "Importing a Playlist from a File"
+msgstr ""
+
+#: ../../templates/show_import_playlist.inc.php:28
+#: ../../templates/show_duplicates.inc.php:43
+#: ../../templates/show_duplicates.inc.php:81
+#: ../../templates/show_song.inc.php:66 ../../templates/show_search.inc.php:66
+#: ../../templates/show_disabled_songs.inc.php:37
+#: ../../templates/show_disabled_songs.inc.php:60
+msgid "Filename"
+msgstr "Nombre del archivo"
+
+#: ../../templates/show_import_playlist.inc.php:35
+msgid "Playlist Type"
+msgstr "Tipo de lista"
+
+#: ../../templates/show_import_playlist.inc.php:47
+msgid "Import Playlist"
+msgstr ""
+
+#: ../../templates/show_genre.inc.php:29
+msgid "Viewing"
+msgstr "Mirando"
+
+#: ../../templates/show_mail_users.inc.php:23
+#, fuzzy
+msgid "Send E-mail to Users"
+msgstr "Mandar un correo a los usuarios"
+
+#: ../../templates/show_mail_users.inc.php:27
+msgid "Mail to"
+msgstr "Mandar a"
+
+#: ../../templates/show_mail_users.inc.php:33
+msgid "Inactive Users"
+msgstr ""
+
+#: ../../templates/show_mail_users.inc.php:42
+#: ../../templates/show_local_catalog_info.inc.php:24
+msgid "Catalog Statistics"
+msgstr "Estadísticas del catálogo"
+
+#: ../../templates/show_mail_users.inc.php:46
+#: ../../templates/show_all_popular.inc.php:29
+#: ../../templates/show_stats_popular.inc.php:25
+msgid "Most Popular Albums"
+msgstr "Los álbumes más populares"
+
+#: ../../templates/show_mail_users.inc.php:53
+#, fuzzy
+msgid "Latest Artist Additions"
+msgstr "Los artistas más nuevos"
+
+#: ../../templates/show_mail_users.inc.php:57
+#: ../../templates/show_all_popular.inc.php:26
+#: ../../templates/show_stats_popular.inc.php:31
+msgid "Most Popular Artists"
+msgstr "Los artistas más populares"
+
+#: ../../templates/show_mail_users.inc.php:64
+#, fuzzy
+msgid "Latest Album Additions"
+msgstr "Los álbumes más nuevos"
+
+#: ../../templates/show_mail_users.inc.php:68
+#: ../../templates/show_all_popular.inc.php:38
+msgid "Most Popular Songs"
+msgstr "Las canciónes más populares"
+
+#: ../../templates/show_mail_users.inc.php:74
+msgid "Flagged Songs"
+msgstr ""
+
+#: ../../templates/show_mail_users.inc.php:78
+#: ../../templates/show_admin_info.inc.php:34
+#, fuzzy
+msgid "Disabled Songs"
+msgstr "Canciónes duplicadas"
+
+#: ../../templates/show_mail_users.inc.php:86
+#, fuzzy
+msgid "Most Popular Threshold in days"
+msgstr "Las canciónes más populares"
+
+#: ../../templates/show_mail_users.inc.php:97
+msgid "Subject"
+msgstr "Subjeto"
+
+#: ../../templates/show_mail_users.inc.php:104
+msgid "Message"
+msgstr "Mensaje"
+
+#: ../../templates/show_mail_users.inc.php:112
+msgid "Send Mail"
+msgstr "Mandar un correo"
+
+#: ../../templates/sidebar_home.inc.php:2
+msgid "Information"
+msgstr ""
+
+#: ../../templates/sidebar_home.inc.php:4
+msgid "Currently Playing"
+msgstr ""
+
+#: ../../templates/sidebar_home.inc.php:6
+#: ../../templates/show_add_live_stream.inc.php:24
+msgid "Add Radio Station"
+msgstr ""
+
+#: ../../templates/sidebar_home.inc.php:13
+msgid "Manage Playlist"
+msgstr ""
+
+#: ../../templates/sidebar_home.inc.php:22
+msgid "Advanced"
+msgstr ""
+
+#: ../../templates/show_admin_info.inc.php:30
+msgid "Last Ten Flagged Records"
+msgstr ""
+
+#: ../../templates/show_preference_admin.inc.php:22
+#, fuzzy
+msgid "Preference Administration"
+msgstr "Preferencias"
+
+#: ../../templates/show_edit_user.inc.php:23
+msgid "Editing existing User"
+msgstr ""
+
+#: ../../templates/show_edit_user.inc.php:69
+#: ../../templates/show_add_user.inc.php:69
+msgid "User Access Level"
+msgstr "Permisos de aceso del usuario"
+
+#: ../../templates/show_edit_user.inc.php:85
+msgid "Update User"
+msgstr "Actualizar el usuario"
+
+#: ../../templates/show_local_catalog_info.inc.php:27
+msgid "Connected Users"
+msgstr "Usuarios conectados"
+
+#: ../../templates/show_local_catalog_info.inc.php:28
+msgid "Total Users"
+msgstr "Usuarios en total"
+
+#: ../../templates/show_local_catalog_info.inc.php:33
+msgid "Catalog Size"
+msgstr "Tamaño del catálogo"
+
+#: ../../templates/show_local_catalog_info.inc.php:34
+msgid "Catalog Time"
+msgstr "Tiempo del catálogo"
+
+#: ../../templates/show_duplicates.inc.php:22
+msgid "Duplicate Songs"
+msgstr "Canciónes duplicadas"
+
+#: ../../templates/show_duplicates.inc.php:42
+#: ../../templates/show_duplicates.inc.php:80
+msgid "Size"
+msgstr ""
+
+#: ../../templates/show_confirmation.inc.php:25
+msgid "Continue"
+msgstr "Seguir"
+
+#: ../../templates/show_flagged.inc.php:36
+#: ../../templates/show_flagged.inc.php:72
+#: ../../templates/show_disabled_songs.inc.php:33
+#: ../../templates/show_disabled_songs.inc.php:56
+msgid "Select"
+msgstr "Seleccionar"
+
+#: ../../templates/show_flagged.inc.php:37
+#: ../../templates/show_flagged.inc.php:73
+#, fuzzy
+msgid "Object"
+msgstr "Subjeto"
+
+#: ../../templates/show_flagged.inc.php:41
+#: ../../templates/show_flagged.inc.php:77
+msgid "Status"
+msgstr ""
+
+#: ../../templates/show_flagged.inc.php:83
+msgid "Reject"
+msgstr ""
+
+#: ../../templates/show_flagged.inc.php:84
+msgid "Approve"
+msgstr ""
+
+#: ../../templates/show_song.inc.php:22
+msgid "Details"
+msgstr ""
+
+#: ../../templates/show_song.inc.php:49
+msgid "Label"
+msgstr ""
+
+#: ../../templates/show_song.inc.php:53
+msgid "Language"
+msgstr ""
+
+#: ../../templates/show_song.inc.php:57
+msgid "Catalog Number"
+msgstr ""
+
+#: ../../templates/show_song.inc.php:72
+msgid "Last Updated"
+msgstr ""
+
 #: ../../templates/show_rename_artist.inc.php:29
 #: ../../templates/show_rename_artist.inc.php:38
 msgid "Rename"
 msgstr "Cambiar el nombre"
-
-#: ../../templates/show_rename_artist.inc.php:33
-#: ../../templates/show_search.inc.php:106
-#: ../../templates/show_edit_song.inc.php:40
-#: ../../templates/show_edit_song.inc.php:48
-#: ../../templates/show_edit_song.inc.php:56
-msgid "OR"
-msgstr "O"
 
 #: ../../templates/show_rename_artist.inc.php:35
 msgid "Insert current"
@@ -1625,333 +2542,132 @@ msgstr ""
 msgid "Update id3 tags"
 msgstr ""
 
+#: ../../templates/show_duplicate.inc.php:23
+#: ../../templates/show_duplicate.inc.php:40
+#: ../../templates/sidebar_admin.inc.php:23
+msgid "Find Duplicates"
+msgstr ""
+
+#: ../../templates/show_duplicate.inc.php:27
+msgid "Search Type"
+msgstr "Tipo de búsqueda"
+
+#: ../../templates/show_duplicate.inc.php:34
+msgid "Artist and Title"
+msgstr "Artista y Título"
+
+#: ../../templates/show_duplicate.inc.php:35
+msgid "Artist, Album and Title"
+msgstr "Artista, Álbum y Título"
+
 #: ../../templates/show_playlist.inc.php:30
 msgid "Normalize Tracks"
 msgstr ""
 
 #: ../../templates/show_playlist.inc.php:31
-msgid "Play All"
+msgid "Add All"
 msgstr ""
 
 #: ../../templates/show_playlist.inc.php:32
-msgid "Play Random"
-msgstr "Toca al azar"
-
-#: ../../templates/show_localplay_add_instance.inc.php:24
-msgid "Add Localplay Instance"
+msgid "Add Random"
 msgstr ""
 
-#: ../../templates/show_localplay_add_instance.inc.php:35
-#: ../../templates/sidebar_localplay.inc.php:12
-msgid "Add Instance"
+#: ../../templates/show_localplay_control.inc.php:25
+msgid "Previous"
 msgstr ""
 
-#: ../../templates/header.inc.php:71
-msgid "Log out"
+#: ../../templates/show_localplay_control.inc.php:26
+msgid "Stop"
 msgstr ""
 
-#: ../../templates/header.inc.php:89
-msgid "Error Config File Out of Date"
+#: ../../templates/show_localplay_control.inc.php:27
+msgid "Pause"
 msgstr ""
 
-#: ../../templates/show_albums.inc.php:40
-#: ../../templates/show_albums.inc.php:61
-msgid "Cover"
-msgstr "Portada"
+#: ../../templates/show_localplay_control.inc.php:29
+#: ../../templates/list_header.inc.php:100
+msgid "Next"
+msgstr ""
 
-#: ../../templates/show_albums.inc.php:45
-#: ../../templates/show_albums.inc.php:66
-#: ../../templates/show_search.inc.php:60
-#: ../../templates/show_edit_song.inc.php:67
-#: ../../templates/show_edit_album.inc.php:33
-#: ../../templates/show_play_selected.inc.php:61
-#: ../../lib/class/song.class.php:371
-msgid "Year"
-msgstr "Año"
+#: ../../templates/show_manage_democratic.inc.php:22
+msgid "Manage Democratic Playlists"
+msgstr ""
 
-#: ../../templates/show_preference_admin.inc.php:22
+#: ../../templates/show_manage_democratic.inc.php:32
+#: ../../templates/show_create_democratic.inc.php:30
 #, fuzzy
-msgid "Preference Administration"
-msgstr "Preferencias"
+msgid "Base Playlist"
+msgstr "Nueva lista"
 
-#: ../../templates/show_preference_admin.inc.php:30
-#: ../../templates/show_preference_admin.inc.php:49
-#: ../../templates/show_preference_box.inc.php:40
-#: ../../templates/show_preference_box.inc.php:70
-msgid "Preference"
-msgstr "Preferencia"
+#: ../../templates/show_manage_democratic.inc.php:58
+msgid "Create New Playlist"
+msgstr "Crear nueva lista"
 
-#: ../../templates/show_recently_played.inc.php:23 ../../lib/rss.php:180
-msgid "seconds ago"
+#: ../../templates/show_get_albumart.inc.php:23
+msgid "Customize Search"
 msgstr ""
 
-#: ../../templates/show_recently_played.inc.php:23 ../../lib/rss.php:180
+#: ../../templates/show_get_albumart.inc.php:44
+msgid "Direct URL to Image"
+msgstr ""
+
+#: ../../templates/show_get_albumart.inc.php:52
 #, fuzzy
-msgid "minutes ago"
-msgstr "Minutos"
+msgid "Local Image"
+msgstr "Local"
 
-#: ../../templates/show_recently_played.inc.php:23 ../../lib/rss.php:180
+#: ../../templates/show_get_albumart.inc.php:63
+msgid "Get Art"
+msgstr ""
+
+#: ../../templates/show_plugins.inc.php:33
+#: ../../templates/show_plugins.inc.php:62
+#: ../../templates/show_localplay_controllers.inc.php:33
+#: ../../templates/show_localplay_controllers.inc.php:64
 #, fuzzy
-msgid "hours ago"
-msgstr "horas"
+msgid "Description"
+msgstr "descripción"
 
-#: ../../templates/show_recently_played.inc.php:23 ../../lib/rss.php:180
+#: ../../templates/show_plugins.inc.php:34
+#: ../../templates/show_plugins.inc.php:63
+#: ../../templates/show_localplay_controllers.inc.php:34
+#: ../../templates/show_localplay_controllers.inc.php:65
 #, fuzzy
-msgid "days ago"
-msgstr "días"
+msgid "Version"
+msgstr "Versión de PHP"
 
-#: ../../templates/show_recently_played.inc.php:23 ../../lib/rss.php:180
-msgid "weeks ago"
+#: ../../templates/show_plugins.inc.php:42
+#: ../../templates/show_localplay_controllers.inc.php:48
+msgid "Activate"
 msgstr ""
 
-#: ../../templates/show_recently_played.inc.php:23 ../../lib/rss.php:180
-msgid "months ago"
+#: ../../templates/show_plugins.inc.php:46
+msgid "Deactivate"
 msgstr ""
 
-#: ../../templates/show_recently_played.inc.php:23 ../../lib/rss.php:180
+#: ../../templates/show_democratic_playlist.inc.php:38
 #, fuzzy
-msgid "years ago"
-msgstr "año"
+msgid "Playing from base Playlist"
+msgstr "Tocar esta lista"
 
-#: ../../templates/show_recently_played.inc.php:39
-#: ../../templates/show_recently_played.inc.php:88
-msgid "Last Played"
-msgstr ""
-
-#: ../../templates/show_search.inc.php:26
-msgid "Search Ampache"
-msgstr "Buscar"
-
-#: ../../templates/show_search.inc.php:30
-msgid "Keywords"
-msgstr "Palabras claves"
-
-#: ../../templates/show_search.inc.php:72
-msgid "Played"
-msgstr "Ya tocado"
-
-#: ../../templates/show_search.inc.php:76
-msgid "Yes"
-msgstr "Sí"
-
-#: ../../templates/show_search.inc.php:77
-msgid "No"
-msgstr "No"
-
-#: ../../templates/show_search.inc.php:80
-msgid "Min Bitrate"
-msgstr "Bitrate mínimo"
-
-#: ../../templates/show_search.inc.php:95
+#: ../../templates/show_democratic_playlist.inc.php:51
+#: ../../templates/show_democratic_playlist.inc.php:86
 #, fuzzy
-msgid "One Star"
-msgstr "Dueño"
+msgid "Votes"
+msgstr "otro"
 
-#: ../../templates/show_search.inc.php:96
-#, fuzzy
-msgid "Two Stars"
-msgstr "Usuarios en total"
-
-#: ../../templates/show_search.inc.php:97
-msgid "Three Stars"
+#: ../../templates/show_democratic_playlist.inc.php:67
+msgid "Remove Vote"
 msgstr ""
 
-#: ../../templates/show_search.inc.php:98
-msgid "Four Stars"
+#: ../../templates/show_democratic_playlist.inc.php:69
+msgid "Add Vote"
 msgstr ""
 
-#: ../../templates/show_search.inc.php:99
-msgid "Five Stars"
-msgstr ""
-
-#: ../../templates/show_search.inc.php:102
-msgid "Operator"
-msgstr "Operador"
-
-#: ../../templates/show_search.inc.php:105
-msgid "AND"
-msgstr "Y"
-
-#: ../../templates/show_search.inc.php:111
-msgid "Method"
-msgstr "Metód"
-
-#: ../../templates/show_search.inc.php:114
-msgid "Fuzzy"
-msgstr "No exacto"
-
-#: ../../templates/show_search.inc.php:115
-msgid "Exact"
-msgstr "Exacto"
-
-#: ../../templates/show_search.inc.php:118
-#, fuzzy
-msgid "Maximum Results"
-msgstr "Resultados máximos"
-
-#: ../../templates/show_search.inc.php:121
-#: ../../templates/show_random.inc.php:68
-msgid "Unlimited"
-msgstr "Sin límites"
-
-#: ../../templates/show_add_live_stream.inc.php:24
-#: ../../templates/sidebar_home.inc.php:6
-msgid "Add Radio Station"
-msgstr ""
-
-#: ../../templates/show_add_live_stream.inc.php:35
-#: ../../templates/show_edit_live_stream_row.inc.php:28
-msgid "Homepage"
-msgstr ""
-
-#: ../../templates/show_add_live_stream.inc.php:42
-#: ../../templates/show_edit_live_stream_row.inc.php:27
-msgid "Stream URL"
-msgstr ""
-
-#: ../../templates/show_add_live_stream.inc.php:49
-#: ../../templates/show_live_streams.inc.php:38
-#: ../../templates/show_live_streams.inc.php:55
-#: ../../templates/show_edit_live_stream_row.inc.php:30
-msgid "Frequency"
-msgstr ""
-
-#: ../../templates/show_add_live_stream.inc.php:55
-#: ../../templates/show_live_streams.inc.php:37
-#: ../../templates/show_live_streams.inc.php:54
-#: ../../templates/show_edit_live_stream_row.inc.php:29
-msgid "Callsign"
-msgstr ""
-
-#: ../../templates/show_edit_access.inc.php:22
-msgid "Edit ACL"
-msgstr ""
-
-#: ../../templates/show_edit_access.inc.php:30
-#: ../../templates/show_add_access.inc.php:61
-#, fuzzy
-msgid "ACL Type"
-msgstr "Tipo"
-
-#: ../../templates/show_edit_access.inc.php:34
-#: ../../templates/show_add_access.inc.php:64
-#, fuzzy
-msgid "Stream Access"
-msgstr "Aceso"
-
-#: ../../templates/show_edit_access.inc.php:35
-#: ../../templates/show_add_access.inc.php:65
-msgid "Web Interface"
-msgstr ""
-
-#: ../../templates/show_edit_access.inc.php:36
-#: ../../templates/show_add_access.inc.php:66
-msgid "Local Network Definition"
-msgstr ""
-
-#: ../../templates/show_edit_access.inc.php:37
-msgid "XML-RPC"
-msgstr ""
-
-#: ../../templates/show_edit_access.inc.php:43
-#: ../../templates/show_add_access.inc.php:32
-msgid "Start IP Address"
-msgstr "Primera dirección de IP"
-
-#: ../../templates/show_edit_access.inc.php:49
-#: ../../templates/show_add_access.inc.php:38
-#, fuzzy
-msgid "End IP Address"
-msgstr "Dirección de acabar"
-
-#: ../../templates/show_edit_access.inc.php:62
-#: ../../templates/show_add_access.inc.php:75
-msgid "Remote Key"
-msgstr ""
-
-#: ../../templates/show_edit_access.inc.php:74
-#: ../../templates/show_add_access.inc.php:53
-#: ../../templates/show_play_selected.inc.php:49
-#: ../../lib/class/access.class.php:271
-msgid "View"
-msgstr "Mirar"
-
-#: ../../templates/show_edit_access.inc.php:75
-#: ../../templates/show_add_access.inc.php:54
-#: ../../lib/class/access.class.php:274
-#, fuzzy
-msgid "Read"
-msgstr "Al azar"
-
-#: ../../templates/show_edit_access.inc.php:76
-#: ../../templates/show_add_access.inc.php:55
-#: ../../lib/class/access.class.php:277
-msgid "Read/Write"
-msgstr ""
-
-#: ../../templates/show_user_registration.inc.php:54
-msgid "Ampache New User Registration"
-msgstr ""
-
-#: ../../templates/show_user_registration.inc.php:69
-msgid "User Agreement"
-msgstr ""
-
-#: ../../templates/show_user_registration.inc.php:79
-msgid "I Accept"
-msgstr ""
-
-#: ../../templates/show_user_registration.inc.php:93
-msgid "User Information"
-msgstr ""
-
-#: ../../templates/show_user_registration.inc.php:155
-msgid "Clear Info"
-msgstr "Borrar la información"
-
-#: ../../templates/show_user_registration.inc.php:156
-msgid "Register User"
-msgstr "Registrar usuario"
-
-#: ../../templates/show_login_form.inc.php:58
-#: ../../templates/show_login_form.inc.php:73
-msgid "Login"
-msgstr ""
-
-#: ../../templates/show_login_form.inc.php:66
-msgid "Remember Me"
-msgstr "Recordarme"
-
-#: ../../templates/show_login_form.inc.php:78
-msgid "Register"
-msgstr "Registrar"
-
-#: ../../templates/show_login_form.inc.php:87
-msgid "Message of the Day"
-msgstr ""
-
-#: ../../templates/show_localplay_instances.inc.php:23
-msgid "Show Localplay Instances"
-msgstr ""
-
-#: ../../templates/show_all_popular.inc.php:26
-#: ../../templates/show_mail_users.inc.php:58 ../../stats.php:61
-msgid "Most Popular Artists"
-msgstr "Los artistas más populares"
-
-#: ../../templates/show_all_popular.inc.php:29
-#: ../../templates/show_mail_users.inc.php:47 ../../stats.php:55
-msgid "Most Popular Albums"
-msgstr "Los álbumes más populares"
-
-#: ../../templates/show_all_popular.inc.php:32 ../../stats.php:67
+#: ../../templates/show_all_popular.inc.php:32
+#: ../../templates/show_stats_popular.inc.php:37
 msgid "Most Popular Genres"
 msgstr "Los géneros más populares"
-
-#: ../../templates/show_all_popular.inc.php:38
-#: ../../templates/show_mail_users.inc.php:69
-msgid "Most Popular Songs"
-msgstr "Las canciónes más populares"
 
 #: ../../templates/show_all_popular.inc.php:41
 msgid "Most Popular Live Streams"
@@ -1961,267 +2677,170 @@ msgstr ""
 msgid "Most Popular Tags"
 msgstr ""
 
-#: ../../templates/show_edit_song.inc.php:23
+#: ../../templates/show_edit_artist.inc.php:23
 #, fuzzy
-msgid "Edit Song"
-msgstr "Numero de canciónes"
+msgid "Edit Artist"
+msgstr "Artista"
 
-#: ../../templates/show_edit_song.inc.php:81
-#: ../../templates/show_edit_artist.inc.php:35
-#: ../../templates/show_edit_album.inc.php:41
-msgid "Flag for Retagging"
+#: ../../templates/show_edit_artist.inc.php:41
+msgid "Update Artist"
 msgstr ""
 
-#: ../../templates/show_edit_song.inc.php:88
-#, fuzzy
-msgid "Update Song"
-msgstr "Actualizar los catálogos"
+#: ../../templates/show_play_selected.inc.php:28
+msgid "Play Selected"
+msgstr "Tocar la selección"
 
-#: ../../templates/show_local_catalog_info.inc.php:32
-#: ../../lib/class/browse.class.php:537
-#, fuzzy
-msgid "Genres"
-msgstr "Género"
+#: ../../templates/show_play_selected.inc.php:31
+msgid "Download Selected"
+msgstr "Bajar la selección"
 
-#: ../../templates/show_mail_users.inc.php:24
-#, fuzzy
-msgid "Send E-mail to Users"
-msgstr "Mandar un correo a los usuarios"
-
-#: ../../templates/show_mail_users.inc.php:28
-msgid "Mail to"
-msgstr "Mandar a"
-
-#: ../../templates/show_mail_users.inc.php:54
-#, fuzzy
-msgid "Latest Artist Additions"
-msgstr "Los artistas más nuevos"
-
-#: ../../templates/show_mail_users.inc.php:65
-#, fuzzy
-msgid "Latest Album Additions"
-msgstr "Los álbumes más nuevos"
-
-#: ../../templates/show_mail_users.inc.php:75
-msgid "Flagged Songs"
+#: ../../templates/show_play_selected.inc.php:40
+msgid "Set Track Numbers"
 msgstr ""
 
-#: ../../templates/show_mail_users.inc.php:79
-#: ../../templates/show_admin_info.inc.php:34
-#, fuzzy
-msgid "Disabled Songs"
-msgstr "Canciónes duplicadas"
+#: ../../templates/show_play_selected.inc.php:41
+msgid "Remove Selected Tracks"
+msgstr ""
 
-#: ../../templates/show_mail_users.inc.php:87
-#, fuzzy
-msgid "Most Popular Threshold in days"
-msgstr "Las canciónes más populares"
-
-#: ../../templates/show_mail_users.inc.php:98
-msgid "Subject"
-msgstr "Subjeto"
-
-#: ../../templates/show_mail_users.inc.php:105
-msgid "Message"
-msgstr "Mensaje"
-
-#: ../../templates/show_mail_users.inc.php:114
-msgid "Send Mail"
-msgstr "Mandar un correo"
+#: ../../templates/show_play_selected.inc.php:47
+msgid "Add to"
+msgstr "Añadir a"
 
 #: ../../templates/show_add_user.inc.php:23
 msgid "Adding a New User"
 msgstr "Añadiendo un usuario nuevo"
-
-#: ../../templates/show_add_user.inc.php:76
-#: ../../templates/show_preference_box.inc.php:60
-msgid "Content Manager"
-msgstr ""
-
-#: ../../templates/show_add_user.inc.php:77
-#: ../../templates/show_preference_box.inc.php:61
-msgid "Catalog Manager"
-msgstr ""
 
 #: ../../templates/show_add_user.inc.php:84
 #: ../../templates/sidebar_admin.inc.php:11
 msgid "Add User"
 msgstr "Añadir un usuario"
 
-#: ../../templates/show_add_access.inc.php:22
-msgid "Add Access for a Host"
-msgstr "Añadir aceso para un servidor"
-
-#: ../../templates/show_add_access.inc.php:67
-msgid "RPC"
+#: ../../templates/show_embed_xspf.inc.php:24
+msgid "XSPF Player"
 msgstr ""
 
-#: ../../templates/show_add_access.inc.php:72
-msgid "RPC Options"
+#: ../../templates/show_albums.inc.php:40
+#: ../../templates/show_albums.inc.php:61
+msgid "Cover"
+msgstr "Portada"
+
+#: ../../templates/show_album.inc.php:45
+msgid "Add Album"
 msgstr ""
 
-#: ../../templates/show_add_access.inc.php:82
+#: ../../templates/show_album.inc.php:46
+msgid "Add Random from Album"
+msgstr ""
+
+#: ../../templates/show_album.inc.php:48
+msgid "Reset Album Art"
+msgstr ""
+
+#: ../../templates/show_album.inc.php:50
+msgid "Find Album Art"
+msgstr "Encontrar arte del álbum"
+
+#: ../../templates/show_album.inc.php:55
+#: ../../templates/show_song_row.inc.php:42
+#: ../../templates/show_playlist_song_row.inc.php:33
+msgid "Download"
+msgstr "Bajar"
+
+#: ../../templates/show_users.inc.php:39
+#: ../../templates/show_users.inc.php:104
+msgid "Fullname"
+msgstr "Nombre entero"
+
+#: ../../templates/show_users.inc.php:41
+#: ../../templates/show_users.inc.php:106
+msgid "Registration Date"
+msgstr "Fecha de registro"
+
+#: ../../templates/show_users.inc.php:44
+#: ../../templates/show_users.inc.php:109
 #, fuzzy
-msgid "Create ACL"
-msgstr "Crear una cuenta"
+msgid "Last Ip"
+msgstr "Último visto"
 
-#: ../../templates/show_preference_box.inc.php:41
-#: ../../templates/show_preference_box.inc.php:71
-msgid "Value"
-msgstr "Valor"
+#: ../../templates/show_users.inc.php:47
+#: ../../templates/show_users.inc.php:112
+msgid "On-line"
+msgstr "En linea"
 
-#: ../../templates/show_preference_box.inc.php:43
-#: ../../templates/show_preference_box.inc.php:73
-msgid "Apply to All"
-msgstr "Aplicar a todos"
-
-#: ../../templates/show_preference_box.inc.php:44
-#: ../../templates/show_preference_box.inc.php:74
-msgid "Access Level"
+#: ../../templates/show_object_rating_static.inc.php:44
+msgid "out of"
 msgstr ""
 
-#: ../../templates/show_preference_box.inc.php:49
-msgid "description"
-msgstr "descripción"
-
-#: ../../templates/show_playlist_edit.inc.php:26
-#, fuzzy
-msgid "Editing Playlist"
-msgstr "Cambia la lista de reproducción"
-
-#: ../../templates/show_playlist_edit.inc.php:39
-msgid "Public"
-msgstr "Público"
-
-#: ../../templates/show_playlist_edit.inc.php:40
-#, fuzzy
-msgid "Private"
-msgstr "Tu privado"
-
-#: ../../templates/show_duplicates.inc.php:25
-msgid "Find Duplicates"
+#: ../../templates/show_verify_catalog.inc.php:23
+msgid "Updating the"
 msgstr ""
 
-#: ../../templates/show_duplicates.inc.php:29
-msgid "Search Type"
-msgstr "Tipo de búsqueda"
+#: ../../templates/show_verify_catalog.inc.php:23
+#: ../../templates/show_add_live_stream.inc.php:67
+#: ../../templates/show_clean_catalog.inc.php:23
+msgid "Catalog"
+msgstr "Catálogo"
 
-#: ../../templates/show_duplicates.inc.php:36
-msgid "Artist and Title"
-msgstr "Artista y Título"
-
-#: ../../templates/show_duplicates.inc.php:37
-msgid "Artist, Album and Title"
-msgstr "Artista, Álbum y Título"
-
-#: ../../templates/show_duplicates.inc.php:44
-msgid "Select Best Guess"
+#: ../../templates/show_verify_catalog.inc.php:24
+msgid "songs found checking tag information."
 msgstr ""
 
-#: ../../templates/show_gather_art.inc.php:23
-#: ../../lib/class/catalog.class.php:972
-msgid "Starting Album Art Search"
+#: ../../templates/show_verify_catalog.inc.php:25
+msgid "Verifed"
 msgstr ""
 
-#: ../../templates/show_gather_art.inc.php:24
-#: ../../lib/class/catalog.class.php:973
-msgid "Searched"
-msgstr "Buscado"
-
-#: ../../templates/show_gather_art.inc.php:24
-#: ../../templates/sidebar_localplay.inc.php:20
-#: ../../templates/show_adds_catalog.inc.php:24
-#: ../../lib/class/catalog.class.php:946 ../../lib/class/catalog.class.php:973
-#: ../../lib/preferences.php:255 ../../lib/preferences.php:297
-#: ../../lib/ui.lib.php:892 ../../lib/ui.lib.php:920
-#, fuzzy
-msgid "None"
-msgstr "No"
-
-#: ../../templates/show_artist_box.inc.php:23
-#: ../../templates/show_artist_box.inc.php:26
-msgid "Albums by"
-msgstr "Álbumes por"
-
-#: ../../templates/show_artist_box.inc.php:34
-msgid "Show All Songs By"
-msgstr "Mostrar todas las canciónes por"
-
-#: ../../templates/show_artist_box.inc.php:35
-msgid "Play All Songs By"
-msgstr "Tocar todas las canciónes por"
-
-#: ../../templates/show_artist_box.inc.php:36
-msgid "Play Random Songs By"
-msgstr "Tocar al azar las canciónes por"
-
-#: ../../templates/show_artist_box.inc.php:38
-#: ../../templates/show_album.inc.php:52
-msgid "Update from tags"
+#: ../../templates/show_edit_artist_row.inc.php:32
+#: ../../templates/show_edit_live_stream_row.inc.php:56
+#: ../../templates/show_edit_album_row.inc.php:45
+#: ../../templates/show_edit_song_row.inc.php:43
+#: ../../templates/show_edit_playlist_row.inc.php:32
+#: ../../templates/show_edit_playlist_song_row.inc.php:44
+msgid "Save Changes"
 msgstr ""
 
-#: ../../templates/show_artist_box.inc.php:39
-msgid "Find duplicate artists"
+#: ../../templates/show_big_art.inc.php:29
+msgid "Album Art"
+msgstr "Arte del álbum"
+
+#: ../../templates/show_big_art.inc.php:33
+msgid "Click to close window"
+msgstr "Haga click para cerrar la ventana"
+
+#: ../../templates/sidebar_admin.inc.php:5
+msgid "Show Catalogs"
 msgstr ""
 
-#: ../../templates/show_artist_box.inc.php:42
-msgid "Recommend Similar"
+#: ../../templates/sidebar_admin.inc.php:9
+msgid "User Tools"
 msgstr ""
 
-#: ../../templates/show_random.inc.php:22
-msgid "Play Random Selection"
-msgstr "Tocar una canción al azar"
-
-#: ../../templates/show_random.inc.php:26
-msgid "Item count"
+#: ../../templates/sidebar_admin.inc.php:12
+msgid "Browse Users"
 msgstr ""
 
-#: ../../templates/show_random.inc.php:41
-msgid "From genre"
-msgstr "Del género"
-
-#: ../../templates/show_random.inc.php:50
-msgid "Standard"
-msgstr "Estándar"
-
-#: ../../templates/show_random.inc.php:51
-msgid "Less Played"
-msgstr "Menos tocado"
-
-#: ../../templates/show_random.inc.php:52
-msgid "Full Albums"
-msgstr "Álbumes enteros"
-
-#: ../../templates/show_random.inc.php:53
-msgid "Full Artist"
+#: ../../templates/sidebar_admin.inc.php:15
+msgid "Access Control"
 msgstr ""
 
-#: ../../templates/show_random.inc.php:54
-msgid "Minutes"
-msgstr "Minutos"
-
-#: ../../templates/show_random.inc.php:59
-#, fuzzy
-msgid "From catalog"
-msgstr "del catálogo"
-
-#: ../../templates/show_random.inc.php:65
-#, fuzzy
-msgid "Size Limit"
-msgstr "Límite"
-
-#: ../../templates/show_random.inc.php:79
-msgid "Enqueue"
-msgstr "Ponerlos en el queue"
-
-#: ../../templates/show_now_playing.inc.php:32
-#: ../../lib/class/localplay.class.php:644
-msgid "Now Playing"
+#: ../../templates/sidebar_admin.inc.php:17
+msgid "Add ACL"
 msgstr ""
 
-#: ../../templates/show_genre.inc.php:29
-msgid "Viewing"
-msgstr "Mirando"
+#: ../../templates/sidebar_admin.inc.php:18
+msgid "Show ACL(s)"
+msgstr ""
+
+#: ../../templates/sidebar_admin.inc.php:24
+msgid "Mail Users"
+msgstr "Mandar un correo a los usuarios"
+
+#: ../../templates/list_header.inc.php:99
+msgid "Prev"
+msgstr ""
+
+#: ../../templates/show_denied.inc.php:32
+msgid "Access Denied"
+msgstr ""
 
 #: ../../templates/sidebar_preferences.inc.php:9
 msgid "Sections"
@@ -2248,38 +2867,47 @@ msgstr "Control local de reproducción"
 msgid "Available Plugins"
 msgstr ""
 
-#: ../../templates/sidebar_localplay.inc.php:13
-msgid "Show instances"
-msgstr ""
-
-#: ../../templates/sidebar_localplay.inc.php:14
-#: ../../templates/sidebar_home.inc.php:12
-msgid "Show Playlist"
-msgstr ""
-
-#: ../../templates/sidebar_localplay.inc.php:18
-msgid "Active Instance"
-msgstr ""
-
-#: ../../templates/sidebar_localplay.inc.php:36
-msgid "Localplay Disabled"
-msgstr ""
-
-#: ../../templates/show_get_albumart.inc.php:23
-msgid "Customize Search"
-msgstr ""
-
-#: ../../templates/show_get_albumart.inc.php:44
-msgid "Direct URL to Image"
-msgstr ""
-
-#: ../../templates/show_get_albumart.inc.php:52
+#: ../../templates/show_account.inc.php:40
 #, fuzzy
-msgid "Local Image"
-msgstr "Local"
+msgid "New Password"
+msgstr "Contraseña"
 
-#: ../../templates/show_get_albumart.inc.php:63
-msgid "Get Art"
+#: ../../templates/show_account.inc.php:53
+msgid "Clear Stats"
+msgstr "Borrar las estadísticas"
+
+#: ../../templates/show_account.inc.php:64
+#, fuzzy
+msgid "Update Account"
+msgstr "Crear una cuenta"
+
+#: ../../templates/show_live_streams.inc.php:37
+#: ../../templates/show_live_streams.inc.php:54
+#: ../../templates/show_edit_live_stream_row.inc.php:29
+#: ../../templates/show_add_live_stream.inc.php:55
+msgid "Callsign"
+msgstr ""
+
+#: ../../templates/show_live_streams.inc.php:38
+#: ../../templates/show_live_streams.inc.php:55
+#: ../../templates/show_edit_live_stream_row.inc.php:30
+#: ../../templates/show_add_live_stream.inc.php:49
+msgid "Frequency"
+msgstr ""
+
+#: ../../templates/show_preferences.inc.php:28
+#: ../../templates/show_user_preferences.inc.php:28
+msgid "Editing"
+msgstr ""
+
+#: ../../templates/show_preferences.inc.php:28
+#: ../../templates/show_user_preferences.inc.php:28
+msgid "preferences"
+msgstr "preferencias"
+
+#: ../../templates/show_preferences.inc.php:36
+#: ../../templates/show_user_preferences.inc.php:50
+msgid "Update Preferences"
 msgstr ""
 
 #: ../../templates/show_test_config.inc.php:40
@@ -2287,340 +2915,14 @@ msgstr ""
 msgid "Ampache Debug"
 msgstr ""
 
-#: ../../templates/show_edit_catalog.inc.php:22
-msgid "Settings for"
+#: ../../templates/show_edit_live_stream_row.inc.php:27
+#: ../../templates/show_add_live_stream.inc.php:42
+msgid "Stream URL"
 msgstr ""
 
-#: ../../templates/show_edit_catalog.inc.php:29
-#: ../../templates/show_add_catalog.inc.php:35
-msgid "Auto-inserted Fields"
-msgstr ""
-
-#: ../../templates/show_edit_catalog.inc.php:30
-#: ../../templates/show_add_catalog.inc.php:36
-msgid "album name"
-msgstr "nombre del álbum"
-
-#: ../../templates/show_edit_catalog.inc.php:31
-#: ../../templates/show_add_catalog.inc.php:37
-msgid "artist name"
-msgstr "nombre del artista"
-
-#: ../../templates/show_edit_catalog.inc.php:32
-#: ../../templates/show_add_catalog.inc.php:38
-msgid "id3 comment"
-msgstr ""
-
-#: ../../templates/show_edit_catalog.inc.php:33
-#: ../../templates/show_add_catalog.inc.php:39
-msgid "genre"
-msgstr "género"
-
-#: ../../templates/show_edit_catalog.inc.php:34
-#: ../../templates/show_add_catalog.inc.php:40
-msgid "track number (padded with leading 0)"
-msgstr ""
-
-#: ../../templates/show_edit_catalog.inc.php:35
-#: ../../templates/show_add_catalog.inc.php:41
-msgid "song title"
-msgstr "título de la canción"
-
-#: ../../templates/show_edit_catalog.inc.php:36
-#: ../../templates/show_add_catalog.inc.php:42
-msgid "year"
-msgstr "año"
-
-#: ../../templates/show_edit_catalog.inc.php:37
-#: ../../templates/show_add_catalog.inc.php:43
-msgid "other"
-msgstr "otro"
-
-#: ../../templates/show_edit_catalog.inc.php:41
-#: ../../templates/show_add_catalog.inc.php:52
-msgid "Catalog Type"
-msgstr ""
-
-#: ../../templates/show_edit_catalog.inc.php:45
-#: ../../templates/show_add_catalog.inc.php:61
-msgid "XML-RPC Key"
-msgstr ""
-
-#: ../../templates/show_edit_catalog.inc.php:51
-msgid "Filename pattern"
-msgstr ""
-
-#: ../../templates/show_edit_catalog.inc.php:58
-#: ../../templates/show_add_catalog.inc.php:70
-msgid "Folder Pattern"
-msgstr ""
-
-#: ../../templates/show_edit_catalog.inc.php:58
-#: ../../templates/show_add_catalog.inc.php:70
-msgid "(no leading or ending '/')"
-msgstr ""
-
-#: ../../templates/show_edit_catalog.inc.php:68
-msgid "Save Catalog Settings"
-msgstr ""
-
-#: ../../templates/show_democratic_playlist.inc.php:38
-#, fuzzy
-msgid "Playing from base Playlist"
-msgstr "Tocar esta lista"
-
-#: ../../templates/show_democratic_playlist.inc.php:51
-#: ../../templates/show_democratic_playlist.inc.php:86
-#, fuzzy
-msgid "Votes"
-msgstr "otro"
-
-#: ../../templates/show_democratic_playlist.inc.php:67
-msgid "Remove Vote"
-msgstr ""
-
-#: ../../templates/show_democratic_playlist.inc.php:69
-msgid "Add Vote"
-msgstr ""
-
-#: ../../templates/show_edit_artist.inc.php:23
-#, fuzzy
-msgid "Edit Artist"
-msgstr "Artista"
-
-#: ../../templates/show_edit_artist.inc.php:41
-msgid "Update Artist"
-msgstr ""
-
-#: ../../templates/show_edit_album.inc.php:23
-#, fuzzy
-msgid "Edit Album"
-msgstr "Álbum"
-
-#: ../../templates/show_edit_album.inc.php:47
-#, fuzzy
-msgid "Update Album"
-msgstr "Recolectar arte del álbum"
-
-#: ../../templates/show_admin_info.inc.php:30
-msgid "Last Ten Flagged Records"
-msgstr ""
-
-#: ../../templates/show_plugins.inc.php:46
-msgid "Deactivate"
-msgstr ""
-
-#: ../../templates/show_playtype_switch.inc.php:32
-#: ../../lib/preferences.php:257
-msgid "Stream"
-msgstr ""
-
-#: ../../templates/show_playtype_switch.inc.php:36
-#: ../../templates/sidebar_home.inc.php:10 ../../lib/preferences.php:260
-msgid "Democratic"
-msgstr ""
-
-#: ../../templates/show_playtype_switch.inc.php:38
-#: ../../lib/preferences.php:265
-msgid "Flash Player"
-msgstr ""
-
-#: ../../templates/show_play_selected.inc.php:28
-msgid "Play Selected"
-msgstr "Tocar la selección"
-
-#: ../../templates/show_play_selected.inc.php:31
-msgid "Download Selected"
-msgstr "Bajar la selección"
-
-#: ../../templates/show_play_selected.inc.php:40
-msgid "Set Track Numbers"
-msgstr ""
-
-#: ../../templates/show_play_selected.inc.php:41
-msgid "Remove Selected Tracks"
-msgstr ""
-
-#: ../../templates/show_play_selected.inc.php:47
-msgid "Add to"
-msgstr "Añadir a"
-
-#: ../../templates/show_ip_history.inc.php:23
-msgid "IP History"
-msgstr ""
-
-#: ../../templates/show_ip_history.inc.php:26
-msgid "Show Unique"
-msgstr ""
-
-#: ../../templates/show_ip_history.inc.php:37
-#: ../../templates/show_ip_history.inc.php:51
-msgid "Date"
-msgstr "Fecha"
-
-#: ../../templates/show_ip_history.inc.php:38
-#: ../../templates/show_ip_history.inc.php:52
-#, fuzzy
-msgid "IP Address"
-msgstr "Primera dirección de IP"
-
-#: ../../templates/show_add_catalog.inc.php:27
-msgid ""
-"In the form below enter either a local path (i.e. /data/music) or the URL to "
-"a remote Ampache installation (i.e http://theotherampache.com)"
-msgstr ""
-
-#: ../../templates/show_add_catalog.inc.php:32
-msgid "Catalog Name"
-msgstr ""
-
-#: ../../templates/show_add_catalog.inc.php:55
-msgid "Local"
-msgstr "Local"
-
-#: ../../templates/show_add_catalog.inc.php:56
-msgid "Remote"
-msgstr ""
-
-#: ../../templates/show_add_catalog.inc.php:62
-msgid "Required for Remote Catalogs"
-msgstr ""
-
-#: ../../templates/show_add_catalog.inc.php:65
-msgid "Filename Pattern"
-msgstr ""
-
-#: ../../templates/show_add_catalog.inc.php:79
-msgid "Build Playlists from m3u Files"
-msgstr ""
-
-#: ../../templates/show_add_catalog.inc.php:85
-msgid "Add Catalog"
-msgstr "Añadir catálogo"
-
-#: ../../templates/show_localplay.inc.php:32
-#: ../../templates/rightbar.inc.php:53
-#, fuzzy
-msgid "Clear Playlist"
-msgstr "Nueva lista"
-
-#: ../../templates/show_user_recommendations.inc.php:22
-#: ../../server/stats.ajax.php:41 ../../server/stats.ajax.php:66
-msgid "Recommendations"
-msgstr ""
-
-#: ../../templates/show_user_recommendations.inc.php:29
-msgid "Recommended Artists"
-msgstr ""
-
-#: ../../templates/show_user_recommendations.inc.php:40
-msgid "Recommended Albums"
-msgstr ""
-
-#: ../../templates/show_user_recommendations.inc.php:51
-msgid "Recommended Songs"
-msgstr ""
-
-#: ../../templates/show_import_playlist.inc.php:23
-msgid "Importing a Playlist from a File"
-msgstr ""
-
-#: ../../templates/show_import_playlist.inc.php:35
-msgid "Playlist Type"
-msgstr "Tipo de lista"
-
-#: ../../templates/show_import_playlist.inc.php:47
-msgid "Import Playlist"
-msgstr ""
-
-#: ../../templates/show_artist_row.inc.php:32
-#: ../../templates/show_album_row.inc.php:40
-#: ../../templates/show_playlist_row.inc.php:32
-#: ../../templates/rightbar.inc.php:48
-msgid "Batch Download"
-msgstr ""
-
-#: ../../templates/show_user_stats.inc.php:22
-msgid "Favorites"
-msgstr ""
-
-#: ../../templates/show_user_stats.inc.php:30
-#, fuzzy
-msgid "Favorite Artists"
-msgstr "Artistas"
-
-#: ../../templates/show_user_stats.inc.php:43
-#, fuzzy
-msgid "Favorite Albums"
-msgstr "Álbumes enteros"
-
-#: ../../templates/show_user_stats.inc.php:56
-#, fuzzy
-msgid "Favorite Songs"
-msgstr "Canciónes en total"
-
-#: ../../templates/show_list_duplicates.inc.php:26
-msgid "Duplicate Songs"
-msgstr "Canciónes duplicadas"
-
-#: ../../templates/show_list_duplicates.inc.php:44
-#: ../../templates/show_list_duplicates.inc.php:89
-msgid "Length"
-msgstr "Longitud"
-
-#: ../../templates/show_list_duplicates.inc.php:46
-#: ../../templates/show_list_duplicates.inc.php:91
-msgid "Size"
-msgstr ""
-
-#: ../../templates/show_list_duplicates.inc.php:96
-#, fuzzy
-msgid "Disable Songs"
-msgstr "Canciónes duplicadas"
-
-#: ../../templates/sidebar_home.inc.php:2
-msgid "Information"
-msgstr ""
-
-#: ../../templates/sidebar_home.inc.php:4
-msgid "Currently Playing"
-msgstr ""
-
-#: ../../templates/sidebar_home.inc.php:5 ../../lib/ui.lib.php:612
-#, fuzzy
-msgid "Statistics"
-msgstr "Estadísticas del catálogo"
-
-#: ../../templates/sidebar_home.inc.php:13
-msgid "Manage Playlist"
-msgstr ""
-
-#: ../../templates/sidebar_home.inc.php:22
-msgid "Advanced"
-msgstr ""
-
-#: ../../templates/sidebar_admin.inc.php:5
-msgid "Show Catalogs"
-msgstr ""
-
-#: ../../templates/sidebar_admin.inc.php:9
-msgid "User Tools"
-msgstr ""
-
-#: ../../templates/sidebar_admin.inc.php:12
-msgid "Browse Users"
-msgstr ""
-
-#: ../../templates/sidebar_admin.inc.php:15
-msgid "Access Control"
-msgstr ""
-
-#: ../../templates/sidebar_admin.inc.php:17
-msgid "Add ACL"
-msgstr ""
-
-#: ../../templates/sidebar_admin.inc.php:18
-msgid "Show ACL(s)"
+#: ../../templates/show_edit_live_stream_row.inc.php:28
+#: ../../templates/show_add_live_stream.inc.php:35
+msgid "Homepage"
 msgstr ""
 
 #: ../../templates/show_clean_catalog.inc.php:23
@@ -2630,14 +2932,6 @@ msgstr ""
 #: ../../templates/show_clean_catalog.inc.php:24
 msgid "Checking"
 msgstr ""
-
-#: ../../templates/show_adds_catalog.inc.php:23
-msgid "Starting New Song Search on"
-msgstr ""
-
-#: ../../templates/show_adds_catalog.inc.php:23
-msgid "catalog"
-msgstr "catálogo"
 
 #: ../../templates/show_test.inc.php:33
 msgid ""
@@ -2718,11 +3012,21 @@ msgid ""
 "some features of ampache may not work correctly"
 msgstr ""
 
+#: ../../templates/show_test.inc.php:153
+#: ../../templates/show_install_config.inc.php:88
+msgid "Ampache.cfg.php Exists"
+msgstr ""
+
 #: ../../templates/show_test.inc.php:166
 msgid ""
 "This attempts to read /config/ampache.cfg.php If this fails either the "
 "ampache.cfg.php is not in the correct locations or\n"
 "\tit is not currently readable by your webserver."
+msgstr ""
+
+#: ../../templates/show_test.inc.php:172
+#: ../../templates/show_install_config.inc.php:105
+msgid "Ampache.cfg.php Configured?"
 msgstr ""
 
 #: ../../templates/show_test.inc.php:189
@@ -2741,562 +3045,289 @@ msgid ""
 "cfg.php"
 msgstr ""
 
-#: ../../templates/show_index.inc.php:49
-msgid "Newest Albums"
-msgstr ""
+#: ../../templates/show_search.inc.php:26
+msgid "Search Ampache"
+msgstr "Buscar"
 
-#: ../../templates/show_index.inc.php:54
-msgid "Newest Artists"
-msgstr ""
+#: ../../templates/show_search.inc.php:30
+msgid "Keywords"
+msgstr "Palabras claves"
 
-#: ../../templates/show_index.inc.php:59
-msgid "Newest Genres"
-msgstr ""
+#: ../../templates/show_search.inc.php:72
+msgid "Played"
+msgstr "Ya tocado"
 
-#: ../../templates/show_preferences.inc.php:28
-msgid "Editing"
-msgstr ""
+#: ../../templates/show_search.inc.php:76
+msgid "Yes"
+msgstr "Sí"
 
-#: ../../templates/show_preferences.inc.php:28
-msgid "preferences"
-msgstr "preferencias"
+#: ../../templates/show_search.inc.php:77
+msgid "No"
+msgstr "No"
 
-#: ../../templates/show_preferences.inc.php:36
-msgid "Update Preferences"
-msgstr ""
+#: ../../templates/show_search.inc.php:80
+msgid "Min Bitrate"
+msgstr "Bitrate mínimo"
 
-#: ../../templates/show_account.inc.php:40
+#: ../../templates/show_search.inc.php:95
 #, fuzzy
-msgid "New Password"
-msgstr "Contraseña"
-
-#: ../../templates/show_account.inc.php:53
-msgid "Clear Stats"
-msgstr "Borrar las estadísticas"
-
-#: ../../templates/show_account.inc.php:64
-#, fuzzy
-msgid "Update Account"
-msgstr "Crear una cuenta"
-
-#: ../../templates/list_header.inc.php:99
-msgid "Prev"
-msgstr ""
-
-#: ../../templates/rightbar.inc.php:28
-msgid "Add to Playlist"
-msgstr ""
-
-#: ../../templates/rightbar.inc.php:31
-msgid "Add to New Playlist"
-msgstr ""
-
-#: ../../templates/rightbar.inc.php:56
-msgid "Add Dynamic Items"
-msgstr ""
-
-#: ../../templates/rightbar.inc.php:59 ../../lib/class/random.class.php:386
-msgid "Pure Random"
-msgstr ""
-
-#: ../../templates/rightbar.inc.php:62 ../../lib/class/random.class.php:383
-msgid "Related Artist"
-msgstr ""
-
-#: ../../templates/rightbar.inc.php:65 ../../lib/class/random.class.php:377
-msgid "Related Album"
-msgstr ""
-
-#: ../../templates/rightbar.inc.php:68 ../../lib/class/random.class.php:380
-msgid "Related Genre"
-msgstr ""
-
-#: ../../templates/show_album.inc.php:31
-#: ../../lib/class/catalog.class.php:1767
-#: ../../lib/class/catalog.class.php:1849
-#: ../../lib/class/catalog.class.php:1934
-msgid "Unknown (Orphaned)"
-msgstr ""
-
-#: ../../templates/show_album.inc.php:46
-msgid "Play Random from Album"
-msgstr "Tocar al azar del álbum"
-
-#: ../../templates/show_album.inc.php:48
-msgid "Reset Album Art"
-msgstr ""
-
-#: ../../templates/show_album.inc.php:50
-msgid "Find Album Art"
-msgstr "Encontrar arte del álbum"
-
-#: ../../templates/show_album.inc.php:58 ../../server/stats.ajax.php:74
-#: ../../server/stats.ajax.php:90
-msgid "Find Missing Tracks"
-msgstr ""
-
-#: ../../templates/show_playlists.inc.php:34
-#: ../../templates/show_playlists.inc.php:51
-msgid "Playlist Name"
-msgstr "Nombre de la lista"
-
-#: ../../templates/show_playlists.inc.php:35
-#: ../../templates/show_playlists.inc.php:52
-msgid "# Songs"
-msgstr "Numero de canciónes"
-
-#: ../../templates/show_playlists.inc.php:36
-#: ../../templates/show_playlists.inc.php:53
-msgid "Owner"
+msgid "One Star"
 msgstr "Dueño"
 
-#: ../../activate.php:42
-msgid "No user with this name registered"
-msgstr "No hay usuario registrado con este nombre"
+#: ../../templates/show_search.inc.php:96
+#, fuzzy
+msgid "Two Stars"
+msgstr "Usuarios en total"
 
-#: ../../activate.php:46
-msgid "The validation key used isn't correct."
+#: ../../templates/show_search.inc.php:97
+msgid "Three Stars"
 msgstr ""
 
-#: ../../activate.php:51
-msgid "User activated"
+#: ../../templates/show_search.inc.php:98
+msgid "Four Stars"
 msgstr ""
 
-#: ../../activate.php:51
+#: ../../templates/show_search.inc.php:99
+msgid "Five Stars"
+msgstr ""
+
+#: ../../templates/show_search.inc.php:102
+msgid "Operator"
+msgstr "Operador"
+
+#: ../../templates/show_search.inc.php:105
+msgid "AND"
+msgstr "Y"
+
+#: ../../templates/show_search.inc.php:111
+msgid "Method"
+msgstr "Metód"
+
+#: ../../templates/show_search.inc.php:114
+msgid "Fuzzy"
+msgstr "No exacto"
+
+#: ../../templates/show_search.inc.php:115
+msgid "Exact"
+msgstr "Exacto"
+
+#: ../../templates/show_search.inc.php:118
+#, fuzzy
+msgid "Maximum Results"
+msgstr "Resultados máximos"
+
+#: ../../templates/show_search_bar.inc.php:30
+msgid "Advanced Search"
+msgstr ""
+
+#: ../../templates/show_catalogs.inc.php:34
+#: ../../templates/show_catalogs.inc.php:62
+msgid "Last Verify"
+msgstr ""
+
+#: ../../templates/show_catalogs.inc.php:35
+#: ../../templates/show_catalogs.inc.php:63
+msgid "Last Add"
+msgstr ""
+
+#: ../../templates/show_catalogs.inc.php:52
+msgid "Gather All Art"
+msgstr ""
+
+#: ../../templates/show_localplay_add_instance.inc.php:24
+msgid "Add Localplay Instance"
+msgstr ""
+
+#: ../../templates/show_access_list.inc.php:29
+msgid "Ampache Access Control"
+msgstr ""
+
+#: ../../templates/show_access_list.inc.php:38
+msgid "Add Entry"
+msgstr ""
+
+#: ../../templates/show_access_list.inc.php:44
+msgid "Start Address"
+msgstr "Dirección de empezar"
+
+#: ../../templates/show_access_list.inc.php:45
+msgid "End Address"
+msgstr "Dirección de acabar"
+
+#: ../../templates/show_access_list.inc.php:48
+msgid "Key"
+msgstr ""
+
+#: ../../templates/show_add_access.inc.php:22
+msgid "Add Access for a Host"
+msgstr "Añadir aceso para un servidor"
+
+#: ../../templates/show_add_access.inc.php:74
+msgid "RPC Options"
+msgstr ""
+
+#: ../../templates/show_add_access.inc.php:84
+#, fuzzy
+msgid "Create ACL"
+msgstr "Crear una cuenta"
+
+#: ../../templates/show_localplay_instances.inc.php:23
+msgid "Show Localplay Instances"
+msgstr ""
+
+#: ../../templates/show_disabled_songs.inc.php:38
+#: ../../templates/show_disabled_songs.inc.php:61
+msgid "Addition Time"
+msgstr ""
+
+#: ../../templates/show_disabled_songs.inc.php:65
+#, fuzzy
+msgid "Remove"
+msgstr "Cambiar el nombre"
+
+#: ../../templates/show_install_config.inc.php:51
+msgid ""
+"This steps takes the basic config values, and first attempts to write them "
+"out directly to your webserver. If access is denied it will prompt you to "
+"download the config file. Please put the downloaded config file in /config"
+msgstr ""
+
+#: ../../templates/show_install_config.inc.php:56
+msgid "Generate Config File"
+msgstr ""
+
+#: ../../templates/show_install_config.inc.php:60
+msgid "Web Path"
+msgstr ""
+
+#: ../../templates/show_install_config.inc.php:72
+msgid "MySQL Username"
+msgstr "Nombre del usuario de MySQL"
+
+#: ../../templates/show_install_config.inc.php:76
+msgid "MySQL Password"
+msgstr "Contraseña de MySQL"
+
+#: ../../templates/show_install_config.inc.php:81
+msgid "Write Config"
+msgstr ""
+
+#: ../../templates/show_install_config.inc.php:126
+msgid "Check for Config"
+msgstr ""
+
+#: ../../templates/show_install_config.inc.php:132
+msgid "Continue to Step 3"
+msgstr ""
+
+#: ../../templates/show_user_activate.inc.php:46
+msgid "User Activated"
+msgstr ""
+
+#: ../../templates/show_user_activate.inc.php:48
 msgid "This User ID is activated and can be used"
 msgstr ""
 
-#: ../../server/stats.ajax.php:52 ../../server/stats.ajax.php:84
-msgid "Links"
+#: ../../templates/show_user_activate.inc.php:51
+msgid "Validation Failed"
 msgstr ""
 
-#: ../../democratic.php:80
+#: ../../templates/show_user_activate.inc.php:52
+msgid "The validation key used isn't correct"
+msgstr ""
+
+#: ../../templates/show_create_democratic.inc.php:22
+msgid "Create Democratic Playlist"
+msgstr ""
+
+#: ../../templates/show_create_democratic.inc.php:34
+msgid "Make Default"
+msgstr ""
+
+#: ../../templates/show_stats_newest.inc.php:25
+msgid "Newest Albums"
+msgstr ""
+
+#: ../../templates/show_stats_newest.inc.php:30
+msgid "Newest Artists"
+msgstr ""
+
+#: ../../templates/show_stats_newest.inc.php:35
+msgid "Newest Genres"
+msgstr ""
+
+#: ../../templates/show_add_shout.inc.php:23
+msgid "Post to Shoutbox"
+msgstr ""
+
+#: ../../templates/show_add_shout.inc.php:34
+msgid "Make Sticky"
+msgstr ""
+
+#: ../../templates/show_shoutbox.inc.php:22
+msgid "Shoutbox"
+msgstr ""
+
+#: ../../localplay.php:73 ../../localplay.php:81
+msgid "Song(s) Removed from Playlist"
+msgstr ""
+
+#: ../../search.php:38
+msgid "Error: No Keyword Entered"
+msgstr ""
+
+#: ../../ratings.php:32
+msgid "Rating Updated"
+msgstr ""
+
+#: ../../ratings.php:32
+msgid "Your rating for this object has been updated"
+msgstr ""
+
+#: ../../login.php:69
+msgid "User Disabled please contact Admin"
+msgstr ""
+
+#: ../../login.php:83
+msgid "Unable to create new account"
+msgstr ""
+
+#: ../../login.php:92
+msgid "No local account found"
+msgstr ""
+
+#: ../../preferences.php:35 ../../preferences.php:65
+msgid "Server"
+msgstr ""
+
+#: ../../preferences.php:91
+msgid "Error Update Failed"
+msgstr ""
+
+#: ../../preferences.php:96
+msgid "Your Account has been updated"
+msgstr ""
+
+#: ../../update.php:51
 #, fuzzy
-msgid "Playlist Cleared"
-msgstr "Lista creada"
+msgid "Ampache Update"
+msgstr "Actualización rápida"
 
-#: ../../lib/class/metadata.class.php:137
-msgid "Buy Track from MyStrands"
-msgstr ""
-
-#: ../../lib/class/flag.class.php:280
-#, fuzzy
-msgid "Approved"
-msgstr "Modo"
-
-#: ../../lib/class/flag.class.php:281
-#, fuzzy
-msgid "Pending"
-msgstr "Añadiendo"
-
-#: ../../lib/class/flag.class.php:296
-msgid "Re-Tag"
-msgstr ""
-
-#: ../../lib/class/song.class.php:333 ../../lib/class/song.class.php:337
-#: ../../lib/class/song.class.php:341 ../../lib/class/song.class.php:345
-#: ../../lib/class/song.class.php:349 ../../lib/class/song.class.php:353
-#: ../../lib/class/song.class.php:357 ../../lib/class/song.class.php:362
-#: ../../lib/class/song.class.php:367 ../../lib/class/song.class.php:371
-#: ../../lib/class/song.class.php:375 ../../lib/class/song.class.php:380
-msgid "updated to"
-msgstr ""
-
-#: ../../lib/class/song.class.php:341
-msgid "Rate"
-msgstr ""
-
-#: ../../lib/class/song.class.php:345
-msgid "Mode"
-msgstr ""
-
-#: ../../lib/class/song.class.php:357
-msgid "Filesize"
-msgstr "Tamaño del archivo"
-
-#: ../../lib/class/browse.class.php:542
-msgid "Manage Users"
-msgstr ""
-
-#: ../../lib/class/browse.class.php:552
-msgid "Radion Stations"
-msgstr ""
-
-#: ../../lib/class/browse.class.php:557
-msgid "Playlists"
-msgstr "Listas de reproducción"
-
-#: ../../lib/class/catalog.class.php:403 ../../lib/class/catalog.class.php:740
-#: ../../lib/class/album.class.php:434
-msgid "Error: Unable to open"
-msgstr "Error: No puede abrir"
-
-#: ../../lib/class/catalog.class.php:409 ../../lib/class/catalog.class.php:452
-msgid "Error: Unable to change to directory"
-msgstr ""
-
-#: ../../lib/class/catalog.class.php:480
-msgid "Error: Unable to get filesize for"
-msgstr "Error: No puede conseguir el tamaño de"
-
-#: ../../lib/class/catalog.class.php:486
-msgid "is not readable by ampache"
-msgstr "no puede estar leido por Ampache"
-
-#: ../../lib/class/catalog.class.php:937
-msgid "Starting Catalog Build"
-msgstr ""
-
-#: ../../lib/class/catalog.class.php:941
-msgid "Running Remote Sync"
-msgstr ""
-
-#: ../../lib/class/catalog.class.php:965
-#: ../../lib/class/catalog.class.php:1137
-msgid "Added Playlist From"
-msgstr ""
-
-#: ../../lib/class/catalog.class.php:983
-msgid "Catalog Finished"
-msgstr ""
-
-#: ../../lib/class/catalog.class.php:983
-#: ../../lib/class/catalog.class.php:1166
-msgid "Total Time"
-msgstr "Tiempo en total"
-
-#: ../../lib/class/catalog.class.php:983
-#: ../../lib/class/catalog.class.php:1167
-msgid "Total Songs"
-msgstr "Canciónes en total"
-
-#: ../../lib/class/catalog.class.php:984
-#: ../../lib/class/catalog.class.php:1167
-msgid "Songs Per Seconds"
-msgstr ""
-
-#: ../../lib/class/catalog.class.php:1027
-msgid "No Update Needed"
-msgstr ""
-
-#: ../../lib/class/catalog.class.php:1111
-msgid "Running Remote Update"
-msgstr ""
-
-#: ../../lib/class/catalog.class.php:1166
-msgid "Catalog Update Finished"
-msgstr ""
-
-#: ../../lib/class/catalog.class.php:1187
-msgid "Unable to load XMLRPC library, make sure XML-RPC is enabled"
-msgstr ""
-
-#: ../../lib/class/catalog.class.php:1230
-#: ../../lib/class/catalog.class.php:1285
-msgid "Error connecting to"
-msgstr "Error conectando a"
-
-#: ../../lib/class/catalog.class.php:1230
-#: ../../lib/class/catalog.class.php:1285
-msgid "Code"
-msgstr "Codigo"
-
-#: ../../lib/class/catalog.class.php:1230
-#: ../../lib/class/catalog.class.php:1285
-msgid "Reason"
-msgstr ""
-
-#: ../../lib/class/catalog.class.php:1246
-msgid "Completed updating remote catalog(s)"
-msgstr ""
-
-#: ../../lib/class/catalog.class.php:1362
-msgid "Catalog Root unreadable, stopping clean"
-msgstr ""
-
-#: ../../lib/class/catalog.class.php:1419
-msgid "Catalog Clean Done"
-msgstr ""
-
-#: ../../lib/class/catalog.class.php:1419
-msgid "files removed"
-msgstr ""
-
-#: ../../lib/class/catalog.class.php:1420
-msgid "Optimizing Tables"
-msgstr ""
-
-#: ../../lib/class/catalog.class.php:1656
-msgid " FOUND"
-msgstr " ENCONTRADO"
-
-#: ../../lib/class/catalog.class.php:1658
-msgid "Searching for new Album Art"
-msgstr "Buscando nuevo arte de álbum"
-
-#: ../../lib/class/catalog.class.php:1706
-#, fuzzy
-msgid "Update Finished."
-msgstr "Actualizar el usuario"
-
-#: ../../lib/class/catalog.class.php:1706
-msgid "Checked"
-msgstr ""
-
-#: ../../lib/class/catalog.class.php:1706
-msgid "songs updated."
-msgstr ""
-
-#: ../../lib/class/localplay.class.php:647
-msgid "Stopped"
-msgstr ""
-
-#: ../../lib/class/localplay.class.php:650
-#, fuzzy
-msgid "Paused"
-msgstr "Ya tocado"
-
-#: ../../lib/class/album.class.php:217
-msgid "Disk"
-msgstr ""
-
-#: ../../lib/preferences.php:245
-msgid "Enable"
-msgstr ""
-
-#: ../../lib/preferences.php:272
-msgid "M3U"
-msgstr "M3U"
-
-#: ../../lib/preferences.php:273
-msgid "Simple M3U"
-msgstr "M3U Simple"
-
-#: ../../lib/preferences.php:274
-msgid "PLS"
-msgstr "PLS"
-
-#: ../../lib/preferences.php:275
-msgid "Asx"
-msgstr "Asx"
-
-#: ../../lib/preferences.php:276
-msgid "RAM"
-msgstr "RAM"
-
-#: ../../lib/preferences.php:277
-msgid "XSPF"
-msgstr ""
-
-#: ../../lib/preferences.php:310
-msgid "Disabled"
-msgstr ""
-
-#: ../../lib/preferences.php:332
-msgid "Send on Add"
-msgstr ""
-
-#: ../../lib/preferences.php:333
-msgid "Send and Clear on Add"
-msgstr ""
-
-#: ../../lib/preferences.php:334
-msgid "Clear on Send"
-msgstr ""
-
-#: ../../lib/preferences.php:335 ../../lib/preferences.php:342
-msgid "Default"
-msgstr ""
-
-#: ../../lib/preferences.php:343
-msgid "Always"
-msgstr ""
-
-#: ../../lib/rating.lib.php:51
-msgid "Don't Play"
-msgstr ""
-
-#: ../../lib/rating.lib.php:54
-msgid "It's Pretty Bad"
-msgstr "Horrible"
-
-#: ../../lib/rating.lib.php:57
-msgid "It's Ok"
-msgstr "Está bien"
-
-#: ../../lib/rating.lib.php:60
-msgid "It's Pretty Good"
-msgstr "Me gusta"
-
-#: ../../lib/rating.lib.php:63
-msgid "I Love It!"
-msgstr "¡Me encanta!"
-
-#: ../../lib/rating.lib.php:66
-msgid "It's Insane"
-msgstr "¡Totalmente loco!"
-
-#: ../../lib/rating.lib.php:70
-msgid "Off the Charts!"
-msgstr "¡Super chévere!"
-
-#: ../../lib/general.lib.php:484 ../../lib/general.lib.php:495
-msgid "English"
-msgstr "Inglés"
-
-#: ../../lib/general.lib.php:496
-msgid "British English"
-msgstr "Inglés de Bretaña"
-
-#: ../../lib/general.lib.php:502
-msgid "Turkish"
-msgstr ""
-
-#: ../../lib/general.lib.php:503
-msgid "Simplified Chinese"
-msgstr "Chino simplificado"
-
-#: ../../lib/general.lib.php:580
-msgid "On"
-msgstr "Encender"
-
-#: ../../lib/general.lib.php:583
-msgid "Off"
-msgstr "Apagar"
-
-#: ../../lib/ui.lib.php:92
-msgid "Error Access Denied"
-msgstr ""
-
-#: ../../lib/ui.lib.php:550
-msgid "Upload"
-msgstr "Subir"
-
-#: ../../lib/ui.lib.php:553
-msgid "Local Play"
-msgstr ""
-
-#: ../../lib/ui.lib.php:556
-#, fuzzy
-msgid "Random Play"
-msgstr "Al azar"
-
-#: ../../lib/ui.lib.php:568 ../../lib/ui.lib.php:572
-#, fuzzy
-msgid "Admin-Catalog"
-msgstr "Añadir catálogo"
-
-#: ../../lib/ui.lib.php:576
-#, fuzzy
-msgid "Admin-User Management"
-msgstr "Nombre de usuario"
-
-#: ../../lib/ui.lib.php:580
-#, fuzzy
-msgid "Admin-Mail Users"
-msgstr "Mandar un correo a los usuarios"
-
-#: ../../lib/ui.lib.php:584
-#, fuzzy
-msgid "Admin-Manage Access Lists"
-msgstr "Listas de aceso"
-
-#: ../../lib/ui.lib.php:588
-#, fuzzy
-msgid "Admin-Site Preferences"
-msgstr "Preferencias del Admin"
-
-#: ../../lib/ui.lib.php:592
-msgid "Admin-Manage Modules"
-msgstr ""
-
-#: ../../lib/ui.lib.php:596
-msgid "Browse Music"
-msgstr ""
-
-#: ../../albums.php:32
-msgid "Album Art Cleared"
-msgstr ""
-
-#: ../../albums.php:32
-#, fuzzy
-msgid "Album Art information has been removed from the database"
-msgstr "Se eliminó el arte de álbumes de la base de datos"
-
-#: ../../albums.php:39 ../../albums.php:56 ../../albums.php:129
-msgid "Album Art Not Located"
-msgstr ""
-
-#: ../../albums.php:39 ../../albums.php:56 ../../albums.php:129
-msgid ""
-"Album Art could not be located at this time. This may be due to write access "
-"error, or the file is not received corectly."
-msgstr ""
-
-#: ../../albums.php:52 ../../albums.php:80 ../../albums.php:155
-msgid "Album Art Inserted"
-msgstr ""
-
-#: ../../albums.php:164 ../../artists.php:48
+#: ../../artists.php:48 ../../albums.php:163
 msgid "Starting Update from Tags"
 msgstr ""
 
-#: ../../albums.php:168 ../../artists.php:52
+#: ../../artists.php:52 ../../albums.php:167
 msgid "Update From Tags Complete"
 msgstr ""
 
-#: ../../albums.php:169 ../../artists.php:53
+#: ../../artists.php:53 ../../albums.php:168
 msgid "Return"
 msgstr ""
 
-#: ../../modules/localplay/mpd.controller.php:213
-msgid "Instance Name"
-msgstr ""
-
-#: ../../modules/localplay/mpd.controller.php:214
-msgid "Hostname"
-msgstr ""
-
-#: ../../modules/localplay/mpd.controller.php:215
-msgid "Port"
-msgstr ""
-
-#: ../../modules/horde/Browser.php:867
-msgid "file"
-msgstr "archivo"
-
-#: ../../modules/horde/Browser.php:871
-msgid "File uploads not supported."
-msgstr ""
-
-#: ../../modules/horde/Browser.php:889
-msgid "No file uploaded"
-msgstr "No archivo subido"
-
-#: ../../modules/horde/Browser.php:896
-#, php-format
-msgid "There was a problem with the file upload: No %s was uploaded."
-msgstr "Había una problema con subir el archivo: No %s fue subido."
-
-#: ../../modules/horde/Browser.php:901
-#, php-format
-msgid ""
-"There was a problem with the file upload: The %s was larger than the maximum "
-"allowed size (%d bytes)."
-msgstr ""
-"Había una problema con subir el archivo: El %s fue más grande que el tamaño "
-"máximo permitido (%d bytes)."
-
-#: ../../modules/horde/Browser.php:903
-#, php-format
-msgid ""
-"There was a problem with the file upload: The %s was only partially uploaded."
-msgstr ""
-"Había una problema con subir el archivo: El %s fue subido parcialmente."
-
-#: ../../localplay.php:72 ../../localplay.php:80
-msgid "Song(s) Removed from Playlist"
-msgstr ""
+#: ../../artists.php:186
+msgid "Show Artists starting with"
+msgstr "Mostrar los artistas que empiezan con"
 
 #: ../../playlist.php:57
 msgid "Playlist Created"
@@ -3324,25 +3355,82 @@ msgstr "Lista creada"
 msgid "Empty Playlists Deleted"
 msgstr "Lista borrada"
 
-#: ../../login.php:73
-msgid "User Disabled please contact Admin"
+#: ../../flag.php:45
+#, fuzzy
+msgid "Item Flagged"
+msgstr "Comentado por"
+
+#: ../../flag.php:45
+msgid "The specified item has been flagged"
 msgstr ""
 
-#: ../../login.php:87
-msgid "Unable to create new account"
+#: ../../albums.php:32
+msgid "Album Art Cleared"
 msgstr ""
 
-#: ../../login.php:96
-msgid "No local account found"
+#: ../../albums.php:32
+#, fuzzy
+msgid "Album Art information has been removed from the database"
+msgstr "Se eliminó el arte de álbumes de la base de datos"
+
+#: ../../albums.php:39 ../../albums.php:56 ../../albums.php:129
+msgid "Album Art Not Located"
 msgstr ""
 
-#: ../../search.php:38
-msgid "Error: No Keyword Entered"
+#: ../../albums.php:39 ../../albums.php:56 ../../albums.php:129
+msgid ""
+"Album Art could not be located at this time. This may be due to write access "
+"error, or the file is not received corectly."
 msgstr ""
 
-#: ../../artists.php:186
-msgid "Show Artists starting with"
-msgstr "Mostrar los artistas que empiezan con"
+#: ../../albums.php:52 ../../albums.php:80
+msgid "Album Art Inserted"
+msgstr ""
+
+#: ../../register.php:73
+msgid "Error Captcha Required"
+msgstr ""
+
+#: ../../register.php:80
+msgid "Error Captcha Failed"
+msgstr ""
+
+#: ../../register.php:87
+msgid "You <U>must</U> accept the user agreement"
+msgstr ""
+
+#: ../../register.php:92
+msgid "You did not enter a username"
+msgstr ""
+
+#: ../../register.php:96
+msgid "Please fill in your full name (Firstname Lastname)"
+msgstr ""
+
+#: ../../register.php:122
+msgid "You must enter a password"
+msgstr ""
+
+#: ../../register.php:126
+msgid "Your passwords do not match"
+msgstr ""
+
+#: ../../register.php:158
+msgid "Error: Insert Failed"
+msgstr ""
+
+#: ../../register.php:175
+msgid "Registration Complete"
+msgstr ""
+
+#: ../../radio.php:50
+msgid "Radio Station Added"
+msgstr ""
+
+#: ../../democratic.php:80
+#, fuzzy
+msgid "Playlist Cleared"
+msgstr "Lista creada"
 
 #: ../../bin/print_tags.inc:66
 msgid ""
@@ -3356,6 +3444,31 @@ msgstr ""
 #: ../../bin/print_tags.inc:72
 msgid "Filename:"
 msgstr "Nombre del archivo:"
+
+#~ msgid "Play Random"
+#~ msgstr "Toca al azar"
+
+#~ msgid "Clear Info"
+#~ msgstr "Borrar la información"
+
+#~ msgid "Play All Songs By"
+#~ msgstr "Tocar todas las canciónes por"
+
+#~ msgid "Play Random Songs By"
+#~ msgstr "Tocar al azar las canciónes por"
+
+#~ msgid "Minutes"
+#~ msgstr "Minutos"
+
+#, fuzzy
+#~ msgid "Disable Songs"
+#~ msgstr "Canciónes duplicadas"
+
+#~ msgid "Play Random from Album"
+#~ msgstr "Tocar al azar del álbum"
+
+#~ msgid "No user with this name registered"
+#~ msgstr "No hay usuario registrado con este nombre"
 
 #~ msgid "Album Art Already Found"
 #~ msgstr "Ya encontró el arte de álbum"
@@ -3406,9 +3519,6 @@ msgstr "Nombre del archivo:"
 
 #~ msgid "Users"
 #~ msgstr "Usuarios"
-
-#~ msgid "Mail Users"
-#~ msgstr "Mandar un correo a los usuarios"
 
 #~ msgid "Access List"
 #~ msgstr "Lista de aceso"
@@ -3662,12 +3772,6 @@ msgstr "Nombre del archivo:"
 
 #~ msgid "Playback"
 #~ msgstr "Reproduccin"
-
-#~ msgid "Increase Volume"
-#~ msgstr "Aumentar volumen"
-
-#~ msgid "Decrease Volume"
-#~ msgstr "Disminuir volumen"
 
 #~ msgid "Clear queue"
 #~ msgstr "Limpiar queue"

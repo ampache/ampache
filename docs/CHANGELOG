@@ -3,7 +3,8 @@
 --------------------------------------------------------------------------
 
 --------------------------------------------------------------------------
-  v.3.4-Alpha4 
+  v.3.4-Beta1 
+	- Fixed multiple login check 
 	- Fixed filters applying incorrectly to non-browse displays
 	- Fixed Flash Player issue when Playlist Method wasn't default
 	- Fixed XML-RPC, now uses handshake method properly

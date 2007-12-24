@@ -110,6 +110,7 @@ if ($auth['success']) {
 	// Not sure if it was me or php tripping out,
 	//   but naming this 'user' didn't work at all
 	//
+	session_start(); 
 	$_SESSION['userdata'] = $auth;
 	
 	// 
@@ -128,6 +129,7 @@ if ($auth['success']) {
 	if (substr($_POST['referrer'],0,strlen(Config::get('web_path'))) == Config::get('web_path') AND 
 		!strstr($_POST['referrer'],"install.php") AND 
 		!strstr($_POST['referrer'],"login.php") AND 
+		!strstr($_POST['referrer'],'logout.php') AND
 		!strstr($_POST['referrer'],"update.php") AND
 		!strstr($_POST['referrer'],"activate.php") AND
 		!strstr($_POST['referrer'],"admin")) { 
@@ -138,10 +140,6 @@ if ($auth['success']) {
 	header("Location: " . Config::get('web_path') . "/index.php");
 	exit();
 } // auth success
-/* If auth failed then setup the error */
-else { 
-	Error::add('general',$auth['error']);
-}
 
 require Config::get('prefix') . '/templates/show_login_form.inc.php';
 
