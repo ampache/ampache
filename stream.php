@@ -34,21 +34,6 @@ $web_path = Config::get('web_path');
  * action switch 
  */
 switch ($_REQUEST['action']) { 
-	case 'play_selected':
-		$type = scrub_in($_REQUEST['type']);
-		if ($type == 'album') { 
-			$song_ids = get_songs_from_type($type, $_POST['song'], $_REQUEST['artist_id']);
-		} 
-		elseif ($_REQUEST['playlist_id']) { 
-			$playlist = new Playlist($_REQUEST['playlist_id']);
-			$song_ids = $playlist->get_songs($_REQUEST['song']);
-		}
-		else { 
-			$song_ids = $_POST['song'];
-		}
-		// Make sure they actually passed soemthing
-		if (!count($song_ids)) { header("Location:" . return_referer()); exit; } 
-	break;
 	case 'basket': 
 		// Pull in our items (multiple types) 
 		$objects = $GLOBALS['user']->playlist->get_items(); 
@@ -77,8 +62,7 @@ switch ($_REQUEST['action']) {
 		} // end foreach
 
 		// Check to see if 'clear' was passed if it was then we need to reset the basket
-		// FIXME: We need to reload the rightbar when we do this... sigh... 
-		if ($_REQUEST['playlist_method'] == 'clear' || $GLOBALS['user']->prefs['playlist_method'] == 'clear') { 
+		if ( ($_REQUEST['playlist_method'] == 'clear' || $GLOBALS['user']->prefs['playlist_method'] == 'clear') AND $GLOBALS['user']->prefs['play_method'] != 'xspf_player') { 
 			$GLOBALS['user']->playlist->clear(); 
 		} 
 

@@ -73,9 +73,9 @@ class vauth {
 
 		$results = self::get_session_data($key); 
 
-		if (strlen($results['value']) < 1) { 
+		if (is_array($results)) { 
 			debug_event('SESSION','Error unable to read session from key ' . $key . ' no data found','1'); 
-			return ''; 
+			return false; 
 		} 
 
 		return $results['value']; 
@@ -98,7 +98,7 @@ class vauth {
 		$sql = "UPDATE `session` SET `value`='$value', `expire`='$expire' WHERE `id`='$key'"; 
 		$db_results = Dba::query($sql); 
 
-		debug_event('SESSION','Writing to ' . $key . ' with expire ' . $expire . ' DBError:' . Dba::error(),'5'); 
+		debug_event('SESSION','Writing to ' . $key . ' with expire ' . $expire . ' DBError:' . Dba::error(),'6'); 
 
 		return $db_results; 
 
@@ -116,7 +116,7 @@ class vauth {
 		$sql = "DELETE FROM `session` WHERE `id`='$key'"; 
 		$db_results = Dba::query($sql); 
 
-		debug_event('SESSION','Deleting Session with key:' . $key,'5'); 
+		debug_event('SESSION','Deleting Session with key:' . $key,'6'); 
 
 		// Destory our cookie!
 		setcookie(Config::get('session_name'),'',time() - 86400); 
@@ -141,7 +141,8 @@ class vauth {
 	/**
 	 * logout
 	 * This is called when you want to log out and nuke your session
-	 * //FIXME: move all logout logic here
+	 * This is the function used for the Ajax logouts, if no id is passed
+	 * it tries to find one from the session
 	 */
 	public static function logout($key='') { 
 
@@ -285,7 +286,7 @@ class vauth {
 			return false; 
 	        }
 
-		debug_event('SESSION','Session Created:' . $key,'5'); 
+		debug_event('SESSION','Session Created:' . $key,'6'); 
 
 	        return $key;
 
@@ -400,7 +401,7 @@ class vauth {
 		$sql = "UPDATE `session` SET `expire`='$expire' WHERE `id`='$sid'"; 
 		$db_results = Dba::query($sql); 
 
-		debug_event('SESSION','Session:' . $sid . ' Has been Extended to ' . $expire,'5'); 
+		debug_event('SESSION','Session:' . $sid . ' Has been Extended to ' . $expire,'6'); 
 
 		return $db_results; 
 
@@ -411,6 +412,11 @@ class vauth {
 	 * This function is called when the object is included, this sets up the session_save_handler
 	 */
 	public static function _auto_init() { 
+
+		if (!function_exists('session_start')) { 
+			header("Location:" . Config::get('web_path') . "/test.php"); 
+			exit; 
+		} 
 
 		session_set_save_handler(array('vauth','open'),array('vauth','close'),array('vauth','read'),array('vauth','write'),array('vauth','destroy'),array('vauth','gc')); 
 
