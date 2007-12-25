@@ -4,6 +4,8 @@
 
 --------------------------------------------------------------------------
   v.3.4-Beta1 
+	- Added Metadata (.directory or desktop.ini) when using the 
+		/bin/dump_album_art.inc file
 	- Added 'Add New...' option to Album on Song Edit (Thx picasso)
 	- Fixed multiple login check 
 	- Fixed filters applying incorrectly to non-browse displays

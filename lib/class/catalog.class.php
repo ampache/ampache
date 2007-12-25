@@ -902,6 +902,26 @@ class Catalog {
 	                $file = "$dir/$preferred_filename";
 	                if ($file_handle = fopen($file,"w")) {
 		        	if (fwrite($file_handle, $image['0']['raw'])) {
+
+					// Also check and see if we should write out some meta data
+					if ($methods['metadata']) { 
+						switch ($methods['metadata']) { 
+							case 'windows':
+								$meta_file = $dir . '/desktop.ini';
+								$string = "[.ShellClassInfo]\nIconFile=$file\nIconIndex=0\nInfoTip=$album->full_name";
+							break; 
+							default:
+							case 'linux': 
+								$meta_file = $dir . '/.directory'; 
+								$string = "Name=$album->full_name\nIcon=$file";	
+							break;
+						} // end switch 
+
+						$meta_handle = fopen($meta_file,"w"); 
+						fwrite($meta_handle,$string); 
+						fclose($meta_handle); 
+
+					} // end metadata
 			        	$i++;
 					if (!($i%100)) { 
 		                	        echo "Written: $i. . .\n";

@@ -24,10 +24,16 @@ $path = dirname(__FILE__);
 $prefix = realpath($path . '/../'); 
 require_once $prefix . '/lib/init.php';
 
+// If we specify extra meta data
+// Possible values are windows and linux
+// If Null then no meta data is dumped
+$meta = 'linux'; 
+
 $catalogs = Catalog::get_catalogs();
 
 foreach ($catalogs as $catalog_id) { 
-	Catalog::dump_album_art($catalog_id);
+	Catalog::dump_album_art($catalog_id,array('metadata'=>$meta));
 }
+
 
 ?>

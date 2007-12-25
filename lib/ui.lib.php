@@ -646,7 +646,7 @@ function show_album_select($name='album',$album_id=0,$allow_add=0,$song_id=0) {
 
 	if ($allow_add) {
 		// Append additional option to the end with value=-1
-		echo "\t<option value=\"-1\">Add New...</option>\n";
+		echo "\t<option value=\"-1\">" . _('Add New') . "...</option>\n";
 	}
 
 	echo "</select>\n";
