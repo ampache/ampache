@@ -172,16 +172,18 @@ class AmpacheLastfm {
 	 */
 	public function load($data,$user_id) { 
 
-		if (isset($data['lastfm_user'])) { 
+		if (strlen($data['lastfm_user'])) { 
 			$this->username = $data['lastfm_user']; 
 		} 
 		else { 
+			debug_event('LastFM','No Username, not scrobbling','3'); 
 			return false; 
 		} 
-		if (isset($data['lastfm_pass'])) { 
+		if (strlen($data['lastfm_pass'])) { 
 			$this->password = $data['lastfm_pass']; 
 		} 
 		else { 
+			debug_event('LastFM','No Password, not scrobbling','3'); 
 			return false; 
 		} 
 

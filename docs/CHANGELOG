@@ -4,6 +4,8 @@
 
 --------------------------------------------------------------------------
   v.3.4-Beta2 
+	- Fixed LastFM plugin username and password checking to not even try
+		if there is no username or password
 
 --------------------------------------------------------------------------
   v.3.4-Beta1 12/25/2007 
