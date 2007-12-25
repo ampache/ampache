@@ -29,7 +29,9 @@
 	<?php show_artist_select('artist',$song->artist); ?>
 </td>
 <td>
-	<?php show_album_select('album',$song->album); ?>
+	<?php show_album_select('album',$song->album,true,$song->id); ?>
+	<div id="album_select_song_<?php echo $song->id ?>"></div>
+<?php echo Ajax::observe('album_select_'.$song->id,'change','checkAlbum('.$song->id.')'); ?>
 </td>
 <td>
 	<?php show_genre_select('genre',$song->genre); ?>

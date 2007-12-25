@@ -613,9 +613,22 @@ function show_playlist_import() {
  * This displays a select of every album that we've got in Ampache, (it can be hella long) it's used
  * by the Edit page, it takes a $name and a $album_id 
  */
-function show_album_select($name='album',$album_id=0) { 
+function show_album_select($name='album',$album_id=0,$allow_add=0,$song_id=0) { 
+	// Probably superfluous code to ensure we never generate two album_select
+	// elements with the same ID on the same page.
+	static $id_inc;
+	static $keys;
+	if (!isset($keys)) $keys = array();
+	if (!isset($id_inc)) $id_inc = 1;
+	else $id_inc++;
+	$key = "album_select_$song_id";
+	if (!empty($keys[$key])) $key = "album_select_$name";
+	if (!empty($keys[$key])) $key = "album_select_x$id_inc";
+	if (!empty($keys[$key])) $key = "album_select_{$name}_x{$id_inc}";
+	$keys[$key] = true;
 
-	echo "<select name=\"$name\">\n";
+	// Added ID field so we can easily observe this element
+	echo "<select name=\"$name\" id=\"$key\">\n";
 
 	$sql = "SELECT `id`, `name`, `prefix` FROM `album` ORDER BY `name`";
 	$db_results = Dba::query($sql);
@@ -630,6 +643,11 @@ function show_album_select($name='album',$album_id=0) {
 		echo "\t<option value=\"" . $r['id'] . "\" $selected>" . scrub_out($album_name) . "</option>\n";
 		
 	} // end while
+
+	if ($allow_add) {
+		// Append additional option to the end with value=-1
+		echo "\t<option value=\"-1\">Add New...</option>\n";
+	}
 
 	echo "</select>\n";
 
