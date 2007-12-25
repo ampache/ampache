@@ -3,7 +3,10 @@
 --------------------------------------------------------------------------
 
 --------------------------------------------------------------------------
-  v.3.4-Beta1 
+  v.3.4-Beta2 
+
+--------------------------------------------------------------------------
+  v.3.4-Beta1 12/25/2007 
 	- Added Metadata (.directory or desktop.ini) when using the 
 		/bin/dump_album_art.inc file
 	- Added 'Add New...' option to Album on Song Edit (Thx picasso)

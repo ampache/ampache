@@ -352,8 +352,7 @@ class Stream {
 		$flash_hack = ''; 
 
 		if (isset($_REQUEST['flash_hack'])) { 
-			$flash_hack = '&flash_hack=' . $_REQUEST['flash_hack']; 
-			if (!Config::get('require_session')) { $flash_hack .= '&sid=' . session_id(); } 
+			if (!Config::get('require_session')) { $flash_hack = '&sid=' . session_id(); } 
 		} 
 
 		// Itterate through the songs
@@ -392,27 +391,15 @@ class Stream {
 	 */
 	function create_xspf_player() { 
 
-		/* First insert the songs we've got into
-		 * a tmp_playlist
-		 */
-		$tmp_playlist = new tmpPlaylist(); 
-		$playlist_id = $tmp_playlist->create($this->sess,'xspf','song',''); 
-		$tmp_playlist = new tmpPlaylist($playlist_id);
-
-		/* Add the songs to this new playlist */
-		foreach ($this->songs as $song_id) { 
-			$tmp_playlist->add_object($song_id,'song');
-		} // end foreach		
-		
 		/* Build the extra info we need to have it pass */
-		$play_info = "?action=show&tmpplaylist_id=" . $tmp_playlist->id;
+		$play_info = "?action=show&tmpplaylist_id=" . $GLOBALS['user']->playlist->id;
 
 	        // start ugly evil javascript code
 		//FIXME: This needs to go in a template, here for now though
 		//FIXME: This preference doesn't even exists, we'll eventually
 		//FIXME: just make it the default
 		if ($GLOBALS['user']->prefs['embed_xspf'] == 1 ){ 
-			header("Location: ".Config::get('web_path')."/index.php?xspf&play_info=".$tmp_playlist->id);
+			header("Location: ".Config::get('web_path')."/index.php?xspf&play_info=".$GLOBALS['user']->playlist->id);
 		}
 		else {
 	        echo "<html><head>\n";
