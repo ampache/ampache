@@ -88,7 +88,7 @@ auth_methods = "mysql"
 
 ; File Pattern
 ; This defines which file types Ampache will attempt to catalog
-; You can specify any file extension you want in here seperating them
+; You can specify any file extension you want in here separating them
 ; with a |
 ; DEFAULT: mp3|mpc|m4p|m4a|mp4|aac|ogg|rm|wma|asf|flac|spx|ra|ape|shn|wv
 catalog_file_pattern = "mp3|mpc|m4p|m4a|mp4|aac|ogg|rm|wma|asf|flac|spx|ra|ape|shn|wv"

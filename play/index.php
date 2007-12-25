@@ -60,11 +60,6 @@ if (make_bool($GLOBALS['user']->disabled)) {
 	exit; 
 }
 
-// If we're doing XML-RPC check _GET
-if (Config::get('xml_rpc')) { 
-	$xml_rpc = $_GET['xml_rpc'];
-}
-
 // If require session is set then we need to make sure we're legit
 if (Config::get('require_session')) { 
 	if(!Stream::session_exists($sid)) {	
@@ -82,7 +77,7 @@ if (Config::get('require_session')) {
 $user->update_last_seen();
 
 /* If we are in demo mode.. die here */
-if (Config::get('demo_mode') || (!Access::check('interface','25') && !$xml_rpc) ) {
+if (Config::get('demo_mode') || !Access::check('interface','25')) {
 	debug_event('access_denied',"Streaming Access Denied:" .Config::get('demo_mode') . "is the value of demo_mode. Current user level is " . $GLOBALS['user']->access,'3');
 	access_denied();
 	exit; 
@@ -157,13 +152,14 @@ if (Config::get('lock_songs')) {
 if ($catalog->catalog_type == 'remote') {
 	// redirect to the remote host's play path
 	/* Break Up the Web Path */
-	preg_match("/http:\/\/([^\/]+)\/*(.*)/", conf('web_path'), $match);
+	preg_match("/http:\/\/([^\/]+)\/*(.*)/", Config::get('web_path'), $match);
 	$server = rawurlencode($match[1]);
 	$path	= rawurlencode($match[2]);
 	$port 	= $_SERVER['SERVER_PORT'];
-	if ($_SERVER['HTTPS'] == 'on') { $ssl='1'; }
-	else { $ssl = '0'; }  
+	$ssl	= ($_SERVER['HTTPS'] == 'on') ? '1' : '0'; 
 	$catalog = $catalog->id;
+
+	//Fixme: We should do a handshake here so we can pass a valid SID
 	
 	$extra_info = "&xml_rpc=1&xml_path=$path&xml_server=$server&xml_port=$port&ssl=$ssl&catalog=$catalog&sid=$sid";
 	header("Location: " . $song->file . $extra_info);
