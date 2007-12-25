@@ -583,6 +583,29 @@ a.button{padding:1px 3px;}
 }
 
 /************************************************/
+/*               Shoutbox                       */
+/************************************************/
+
+#shoutbox {
+	font-size:0.8em;	
+} 
+
+#shoutbox div.shout { 
+	float:left;
+	margin-right:5px;
+} 
+
+#shoutbox span.information { 
+	float:left;
+	clear:left;
+} 
+
+img.shoutboximage { 
+	float:left;
+	margin-right:3px;
+} 
+
+/************************************************/
 /*             List Header                      */
 /************************************************/
 .list-header{margin:7px 0; padding:0 4em; text-align:center; font-size: 0.8em;position:relative;} 

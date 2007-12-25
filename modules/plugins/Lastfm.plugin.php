@@ -54,12 +54,12 @@ class AmpacheLastfm {
 	 */
 	public function install() { 
 
-		Preference::insert('lastfm_user','Last.FM Username',' ','25','string','plugins'); 
-		Preference::insert('lastfm_pass','Last.FM Password',' ','25','string','plugins'); 
-		Preference::insert('lastfm_port','Last.FM Submit Port',' ','25','string','internal'); 
-		Preference::insert('lastfm_host','Last.FM Submit Host',' ','25','string','internal'); 
-		Preference::insert('lastfm_url','Last.FM Submit URL',' ','25','string','internal'); 
-		Preference::insert('lastfm_challenge','Last.FM Submit Challenge',' ','25','string','internal'); 
+		Preference::insert('lastfm_user','Last.FM Username','','25','string','plugins'); 
+		Preference::insert('lastfm_pass','Last.FM Password','','25','string','plugins'); 
+		Preference::insert('lastfm_port','Last.FM Submit Port','','25','string','internal'); 
+		Preference::insert('lastfm_host','Last.FM Submit Host','','25','string','internal'); 
+		Preference::insert('lastfm_url','Last.FM Submit URL','','25','string','internal'); 
+		Preference::insert('lastfm_challenge','Last.FM Submit Challenge','','25','string','internal'); 
 
 	} // install
 
@@ -172,15 +172,15 @@ class AmpacheLastfm {
 	 */
 	public function load($data,$user_id) { 
 
-		if (strlen($data['lastfm_user'])) { 
-			$this->username = $data['lastfm_user']; 
+		if (strlen(trim($data['lastfm_user']))) { 
+			$this->username = trim($data['lastfm_user']); 
 		} 
 		else { 
 			debug_event('LastFM','No Username, not scrobbling','3'); 
 			return false; 
 		} 
-		if (strlen($data['lastfm_pass'])) { 
-			$this->password = $data['lastfm_pass']; 
+		if (strlen(trim($data['lastfm_pass']))) { 
+			$this->password = trim($data['lastfm_pass']); 
 		} 
 		else { 
 			debug_event('LastFM','No Password, not scrobbling','3'); 

@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2006 Ampache.org
+ Copyright (c) 2001 - 2007 Ampache.org
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
@@ -19,24 +19,16 @@
 
 */
 
-/**
- * Flag Admin Document
- * This document handles the administrative aspects of 
- * flagging. 
- */
+require '../lib/init.php';
 
-require('../lib/init.php');
-
-if (!$GLOBALS['user']->has_access('100')) { 
+if (!Access::check('interface','100')) { 
 	access_denied();
 	exit();
 }
 
-show_template('header');
+show_header(); 
 
-$action = scrub_in($_REQUEST['action']);
-
-switch ($action) {
+switch ($_REQUEST['action']) {
 	case 'edit_song':
 		$catalog = new Catalog();
 		$song = new Song($_REQUEST['song_id']);
@@ -299,14 +291,12 @@ switch ($action) {
 		} // end else
 	        show_confirmation(_('Songs Enabled'),_('The requested song(s) have been enabled'),return_referer());
         break;
-	case 'show_flagged':
-		$flag 		= new Flag();
-		$flagged 	= $flag->get_flagged();
-		show_box_top(_('Flagged Records')); 
-		require (conf('prefix') . '/templates/show_flagged.inc.php'); 
-		show_box_bottom(); 
-	break;
 	default:
+	case 'show_flagged':
+		$flagged = Flag::get_all();
+		Browse::set_type('flagged'); 
+		Browse::save_objects($flagged); 
+		Browse::show_objects($flagged);
 	break;
 } // end switch
 

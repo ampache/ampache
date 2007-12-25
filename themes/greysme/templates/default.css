@@ -638,6 +638,28 @@ background:#000;
   float:left;
 }
 
+/************************************************/
+/*               Shoutbox                       */
+/************************************************/
+
+#shoutbox {
+        font-size:0.8em;
+}
+
+#shoutbox div.shout {
+        float:left;
+        margin-right:5px;
+}
+
+#shoutbox span.information {
+        float:left;
+        clear:left;
+}
+
+img.shoutboximage {
+        float:left;
+        margin-right:3px;
+}
 
 /************************************************/
 /*             List Header                      */
@@ -706,6 +728,11 @@ background:#000;
 	margin:10px;
 }
 
+#motd {
+        margin:0 auto 0 auto;
+        width: 437px;
+}
+
 
 /************************************************/
 /*                Misc                          */
@@ -733,5 +760,11 @@ background:#000;
   background: url(../images/ajax-loader.gif) no-repeat;
 	text-indent:-9999em;
 	display: none;
+}
+
+.information,.information a {
+        font-size: 0.9em;
+        font-style: italic;
+        color: #c0c0c0;
 }
 

@@ -132,14 +132,14 @@ class shoutBox {
 
 		switch ($this->object_type) { 
 			case 'album': 
-				$image_string = "<img height=\"75\" width=\"75\" src=\"" . Config::get('web_path') . "/image.php?id=" . $this->object_id . "&amp;thumb=1\" />"; 
+				$image_string = "<img class=\"shoutboximage\" height=\"75\" width=\"75\" src=\"" . Config::get('web_path') . "/image.php?id=" . $this->object_id . "&amp;thumb=1\" />"; 
 			break; 
 			case 'artist': 
 
 			break;
 			case 'song': 
 				$song = new Song($this->object_id); 
-				$image_string = "<img height=\"75\" width=\"75\" src=\"" . Config::get('web_path') . "/image.php?id=" . $song->album . "&amp;thumb=1\" />"; 
+				$image_string = "<img class=\"shoutboximage\" height=\"75\" width=\"75\" src=\"" . Config::get('web_path') . "/image.php?id=" . $song->album . "&amp;thumb=1\" />"; 
 			break;
 			default: 
 				// Rien a faire

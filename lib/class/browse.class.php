@@ -139,6 +139,7 @@ class Browse {
 			case 'playlist':
 			case 'playlist_song': 
 			case 'song':
+			case 'flagged':
 			case 'catalog':
 			case 'album':
 			case 'artist':
@@ -346,6 +347,9 @@ class Browse {
                         case 'playlist':
                                 $sql = "SELECT `playlist`.`id` FROM `playlist` ";
                         break;
+			case 'flagged': 
+				$sql = "SELECT `flagged`.`id` FROM `flagged` ";
+			break;
 			case 'playlist_song': 
                         case 'song':
                         default:
@@ -660,6 +664,11 @@ class Browse {
 			case 'catalog': 
 				show_box_top(_('Catalogs'), $class); 
 				require_once Config::get('prefix') . '/templates/show_catalogs.inc.php';
+				show_box_bottom(); 
+			break;
+			case 'flagged':
+				show_box_top(_('Flagged Records'),$class); 
+				require_once Config::get('prefix') . '/templates/show_flagged.inc.php'; 
 				show_box_bottom(); 
 			break;
 			default: 

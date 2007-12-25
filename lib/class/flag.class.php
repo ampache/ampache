@@ -27,24 +27,24 @@
 class Flag {
 
 	/* DB based variables */
-	var $id; 
-	var $user;
-	var $object_id;
-	var $object_type;
-	var $comment;
-	var $flag;
-	var $date;
-	var $approved=0;
+	public $id; 
+	public $user;
+	public $object_id;
+	public $object_type;
+	public $comment;
+	public $flag;
+	public $date;
+	public $approved=0;
 
 	/* Generated Values */
-	var $name; // Blank
-	var $title; // Blank
+	public $name; // Blank
+	public $title; // Blank
 
 	/**
 	 * Constructor
 	 * This takes a flagged.id and then pulls in the information for said flag entry
 	 */
-	function Flag($flag_id=0) { 
+	public function __construct($flag_id=0) { 
 
 		$this->id = intval($flag_id);
 
@@ -125,24 +125,24 @@ class Flag {
 	 * This returns an array of ids of flagged songs if no limit is passed
 	 * it gets everything
 	 */
-	function get_flagged($count=0) { 
+	public static function get_all($count=0) { 
 
 		if ($count) { $limit_clause = "LIMIT " . intval($count); } 
 		
-		$sql = "SELECT id FROM flagged ORDER BY id $limit_clause";
-		$db_results = mysql_query($sql, dbh());
+		$sql = "SELECT `id` FROM `flagged` $limit_clause";
+		$db_results = Dba::query($sql);
 
 		/* Default it to an array */
 		$results = array();
 
 		/* While the query */
-		while ($r = mysql_fetch_assoc($db_results)) { 
-			$results[] = $r['id'];
+		while ($row = Dba::fetch_assoc($db_results)) { 
+			$results[] = $row['id'];
 		}
 
 		return $results;
 
-	} // get_flagged
+	} // get_all
 
 	/**
 	 * get_approved

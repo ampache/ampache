@@ -4,6 +4,7 @@
 
 --------------------------------------------------------------------------
   v.3.4-Beta2 
+	- Removed extra space on default Last.FM username/password
 	- Fixed LastFM plugin username and password checking to not even try
 		if there is no username or password
 

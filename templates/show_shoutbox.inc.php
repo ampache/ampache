@@ -20,7 +20,7 @@
 */
 ?>
 <?php show_box_top(_('Shoutbox')); ?>
-<table class="tabledata" cellpadding="0" cellspacing="0">
+<div id="shoutbox">
 <?php foreach ($shouts as $shout_id) { 
 	$shout = new shoutBox($shout_id); 
 	$object = shoutBox::get_object($shout->object_type,$shout->object_id); 
@@ -28,17 +28,12 @@
 	$client = new User($shout->user); 
 	$client->format(); 
 ?>
-<tr>
-	<td class="cel_image">
-	<?php echo $shout->get_image(); ?><br />
+<div class="shout">
 	<strong><?php echo ucfirst($shout->object_type); ?>:</strong> <?php echo $object->f_link; ?><br />
-	</td>
-	<td valign="top" class="cel_comment">
-		<?php echo scrub_out($shout->text); ?>
-		<br />
-		<span class="information">- <?php echo $client->f_link; ?> <?php echo date("d/m/Y H:i",$shout->date); ?></span>
-	</td>
-</tr>
+	<?php echo $shout->get_image(); ?><br />
+	<?php echo scrub_out($shout->text); ?><br />
+	<span class="information"><?php echo $client->f_link; ?> <?php echo date("d/m H:i",$shout->date); ?></span>
+</div>
 <?php } ?>
-</table>
+</div>
 <?php show_box_bottom(); ?>
