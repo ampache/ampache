@@ -484,6 +484,10 @@ class vauth {
 	                return false;
 	        }
 
+		// This has to still be here because lots of people use old_password in their config file
+		$sql = "SELECT `password` FROM `user` WHERE `username`='$username'"; 
+		$db_results = Dba::query($sql); 
+		$row = Dba::fetch_assoc($db_results); 
 
 	        $sql = "SELECT version()";
 	        $db_results = Dba::query($sql);
@@ -512,7 +516,6 @@ class vauth {
 	                        return false;
 	                }
 	        } // if prevent_multiple_logins
-
 
 	        $results['type']        = 'mysql';
 	        $results['success']     = true;

@@ -61,7 +61,7 @@ function check_database_inserted($dbh,$db_name) {
 	} 
 
 	// Make sure the whole table is there
-	if (Dba::num_rows($db_results) != '6') { 
+	if (Dba::num_rows($db_results) != '7') { 
 		return false;
 	}
 

@@ -119,9 +119,6 @@ if ($auth['success']) {
 		$user->insert_ip_history();	
 	}
 
-	// Reload the Preferences from the database
-	Preference::init();
-	
 	/* Make sure they are actually trying to get to this site and don't try to redirect them back into 
 	 * an admin section
 	**/
