@@ -110,9 +110,8 @@ if ($auth['success']) {
 	// Not sure if it was me or php tripping out,
 	//   but naming this 'user' didn't work at all
 	//
-	session_start(); 
 	$_SESSION['userdata'] = $auth;
-	
+
 	// 
 	// Record the IP of this person!
 	// 

@@ -73,7 +73,7 @@ class vauth {
 
 		$results = self::get_session_data($key); 
 
-		if (is_array($results)) { 
+		if (!is_array($results)) { 
 			debug_event('SESSION','Error unable to read session from key ' . $key . ' no data found','1'); 
 			return false; 
 		} 
@@ -256,13 +256,10 @@ class vauth {
 			break;	
 			case 'mysql': 
 			default: 
-				// Create our cookie!
-		
 				session_regenerate_id(); 
 
 				// Before refresh we don't have the cookie so we have to use session ID
 				$key = session_id(); 
-				self::create_cookie(); 
 			break; 
 		} // end switch on data type 
 		
