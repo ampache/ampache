@@ -31,7 +31,7 @@ $htmllang = str_replace("_","-",Config::get('lang'));
 <body onLoad="self.resizeTo(document.images[0].width+30, document.images[0].height+70)">
 <?php
 echo "<a href=\"javascript:window.close()\" title=\"" . _('Click to close window') . "\">";
-echo "<img src=\"" . Config::get('web_path') . "/image.php?id=" . scrub_out($_GET['id']) . "&amp;sid=" . session_id() . "\" />";
+echo "<img src=\"" . Config::get('web_path') . "/image.php?id=" . scrub_out($_GET['id']) . "&amp;sid=" . session_id() . "\" border=\"0\" alt=\"\" />";
 echo "</a>";
 ?>
 </body>

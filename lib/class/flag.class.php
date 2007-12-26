@@ -43,12 +43,10 @@ class Flag {
 	 * Constructor
 	 * This takes a flagged.id and then pulls in the information for said flag entry
 	 */
-	public function __construct($flag_id=0) { 
-
-		if (!$flag_id) { return false; } 
+	public function __construct($flag_id) { 
 
 		$info = $this->_get_info($flag_id);
-
+		
 		foreach ($info as $key=>$value) { 
 			$this->$key = $value; 
 		} 
@@ -61,7 +59,7 @@ class Flag {
 	 * _get_info
 	 * Private function for getting the information for this object from the database 
 	 */
-	private function _get_info() { 
+	private function _get_info($flag_id) { 
 
 		$id = Dba::escape($flag_id);
 
@@ -209,49 +207,35 @@ class Flag {
 
 		return true;
 	
-	 } // approve
-	 
-	/**
-	 * format_name
-	 * This function formats and sets the $this->name variable and $this->title 
-	 */
-	function format_name() { 
-
-		switch ($this->object_type) { 
-			case 'song':
-				$song = new Song($this->object_id);
-				$song->format();
-				$name 	= $song->f_title . " - " . $song->f_artist;
-				$title	= $song->title . " - " . $song->get_artist_name();
-			break;
-			default: 
-			
-			break;
-		} // end switch on object type
-		
-		$this->title = $title; 
-		$this->name = $name;
-	} // format_name()
+	} // approve
 	
 	/**
-	 * print_name
-	 * This function formats and prints out a userfriendly name of the flagged
-	 * object
+	 * format
+	 * This function figures out what kind of object we've got and sets up all the
+	 * vars all nice and fuzzy like
 	 */
-	function print_name() { 
+	public function format() { 
 
-		$this->format_name();
-		echo "<span title=\"" . $this->title . "\">" . $this->name . "</span>";
+		switch ($this->object_type) { 
+			case 'song': 
+				$song = new Song($this->object_id);
+				$song->format(); 
+				$this->f_name 	= $song->f_link;
+			break;
+		} // end switch on type 
 
-	} // print_name
+		$client = new User($this->user);
+		$client->format(); 
+		$this->f_user = $client->f_link; 
 
-
+	} // format
+ 
 	/**
 	 * print_status
 	 * This prints out a userfriendly version of the current status for this flagged
 	 * object
 	 */
-	function print_status() { 
+	public function print_status() { 
 
 		if ($this->approved) { echo _('Approved'); }
 		else { echo _('Pending'); }
@@ -262,7 +246,7 @@ class Flag {
 	 * print_flag
 	 * This prints out a userfriendly version of the current flag type
 	 */
-	function print_flag() { 
+	public function print_flag() { 
 
 		switch ($this->flag) { 
 			case 'delete':

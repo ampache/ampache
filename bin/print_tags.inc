@@ -33,7 +33,7 @@ else {
 echo "Reading: $filename\n";
 
 /* Attempt to figure out what catalog it comes from */
-$sql = "SELECT `catalog`.`id` FROM `song` INNER JOIN `catalog` ON `song`.`catalog`=`catalog`.`id` WHERE `song`.`file`='" . Dba::escape($filename) . "'";
+$sql = "SELECT `catalog`.`id` FROM `song` INNER JOIN `catalog` ON `song`.`catalog`=`catalog`.`id` WHERE `song`.`file`='%" . Dba::escape($filename) . "'";
 $db_results = Dba::query($sql);
 $results = Dba::fetch_assoc($db_results);
 

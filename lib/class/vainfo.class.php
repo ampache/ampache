@@ -181,7 +181,7 @@ class vainfo {
 		 * any tags to look at 
 		 */
 		if (!is_array($this->_raw['tags'])) { 
-			return false; 
+			return $results; 
 		}
 
 		/* The tags can come in many different shapes and colors 

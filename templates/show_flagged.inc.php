@@ -39,22 +39,22 @@ $web_path = Config::get('web_path');
 	<th class="cel_status"><?php echo _('Status'); ?></th>
 	<th class="cel_action"><?php echo _('Action'); ?></th>
 </tr>
-<?php foreach ($object_ids as $flag_id) { $flag = new Flag($flag_id); ?>
+<?php 
+foreach ($object_ids as $flag_id) { 
+	$flag = new Flag($flag_id); 
+	$flag->format(); 
+?>
 <tr class="<?php echo flip_class(); ?>">
-	<td class="cel_object"><a href="<?php echo Config::get('web_path'); ?>/admin/flag.php?action=show_edit_song&song=<?php echo $flag->object_id; ?>"><?php $flag->print_name(); ?></a></td>
-	<td class="cel_username"><?php echo scrub_out($flag->f_user_username); ?></td>
+	<td class="cel_object"><?php echo $flag->f_name; ?></td>
+	<td class="cel_username"><?php echo $flag->f_user; ?></td>
 	<td class="cel_flag"><?php $flag->print_flag(); ?></td>
 	<td class="cel_comment"><?php echo scrub_out($flag->comment); ?></td>
 	<td class="cel_status"><?php $flag->print_status(); ?></td>
 	<td class="cel_action">
 	<?php if ($flag->approved) { ?>
-		<a href="<?php echo $web_path; ?>/admin/flag.php?action=reject_flag&amp;flag_id=<?php echo $flag->id; ?>">
-			<?php echo get_user_icon('disable'); ?>
-		</a>
+		<?php echo Ajax::button('?page=flag&action=reject&flag_id=' . $flag->id,'disable',_('Reject'),'reject_flag_' . $flag->id); ?>
 	<?php } else { ?>
-		<a href="<?php echo $web_path; ?>/admin/flag.php?action=approve_flag&amp;flag_id=<?php echo $flag->id; ?>">
-			<?php echo get_user_icon('enable'); ?>
-		</a>
+		<?php echo Ajax::button('?page=flag&action=accept&flag_id=' . $flag->id,'enable',_('Enable'),'enable_flag_' . $flag->id); ?>
 	<?php } ?>
 	</td>
 </tr>
