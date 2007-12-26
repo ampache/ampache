@@ -39,7 +39,7 @@ $web_path = Config::get('web_path');
 	<th class="cel_status"><?php echo _('Status'); ?></th>
 	<th class="cel_action"><?php echo _('Action'); ?></th>
 </tr>
-<?php foreach ($flagged as $data) { $flag = new Flag($data); ?>
+<?php foreach ($object_ids as $flag_id) { $flag = new Flag($flag_id); ?>
 <tr class="<?php echo flip_class(); ?>">
 	<td class="cel_object"><a href="<?php echo Config::get('web_path'); ?>/admin/flag.php?action=show_edit_song&song=<?php echo $flag->object_id; ?>"><?php $flag->print_name(); ?></a></td>
 	<td class="cel_username"><?php echo scrub_out($flag->f_user_username); ?></td>
@@ -58,7 +58,7 @@ $web_path = Config::get('web_path');
 	<?php } ?>
 	</td>
 </tr>
-<?php } if (!count($flagged)) { ?>
+<?php } if (!count($object_ids)) { ?>
 <tr class="<?php echo flip_class(); ?>">
 	<td colspan="7" class="error"><?php echo _('No Records Found'); ?></td>
 </tr>

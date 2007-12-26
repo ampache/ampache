@@ -26,7 +26,7 @@
       <li id="sb_admin_ot_ClearCatStats"><a href="<?php echo $web_path; ?>/admin/catalog.php?action=clear_stats"><?php echo _('Clear Stats'); ?></a></li>
       <li id="sb_admin_ot_ManageFlagged"><a href="<?php echo $web_path; ?>/admin/flag.php"><?php echo _('Manage Flagged'); ?></a></li>
       <?php if (Config::get('shoutbox')) { ?>
-      <li id="sb_admin_ot_ManageShoutbox"><a href="<?php echo $web_path; ?>/admin/shout.php?action=show_manage"><?php echo _('Manage Shoutbox'); ?></a></li>
+      <li id="sb_admin_ot_ManageShoutbox"><a href="<?php echo $web_path; ?>/shout.php?action=show_manage"><?php echo _('Manage Shoutbox'); ?></a></li>
       <?php } ?>
     </ul>
   </li>

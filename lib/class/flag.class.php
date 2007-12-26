@@ -26,7 +26,6 @@
  */
 class Flag {
 
-	/* DB based variables */
 	public $id; 
 	public $user;
 	public $object_id;
@@ -46,25 +45,17 @@ class Flag {
 	 */
 	public function __construct($flag_id=0) { 
 
-		$this->id = intval($flag_id);
+		if (!$flag_id) { return false; } 
 
-		if (!$this->id) { return false; }
+		$info = $this->_get_info($flag_id);
 
-		$info = $this->_get_info();
+		foreach ($info as $key=>$value) { 
+			$this->$key = $value; 
+		} 
 
-		$this->user		= $info['user'];
-		$this->object_id	= $info['object_id'];
-		$this->object_type	= $info['object_type'];
-		$this->comment		= $info['comment'];
-		$this->flag		= $info['flag'];
-		$this->date		= $info['date'];
-		$this->approved		= $info['approved'];
-		$f_user 		= $this->format_user();
-		$this->f_user_fullname  = $f_user['fullname'];
-		$this->f_user_username  = $f_user['username'];
 		return true;
 
-	} // flag
+	} // Constructor
 
 	/**
 	 * _get_info
@@ -72,7 +63,7 @@ class Flag {
 	 */
 	private function _get_info() { 
 
-		$id = Dba::escape($this->id);
+		$id = Dba::escape($flag_id);
 
 		$sql = "SELECT * FROM `flagged` WHERE `id`='$id'";
 		$db_results = Dba::query($sql);
@@ -121,7 +112,7 @@ class Flag {
 	} // get_total
 
 	/**
-	 * get_flagged
+	 * get_all
 	 * This returns an array of ids of flagged songs if no limit is passed
 	 * it gets everything
 	 */
@@ -182,7 +173,7 @@ class Flag {
 		$approved	= '0';
 
 		/* If they are an content manager or higher, it's auto approved */
-		if ($GLOBALS['user']->has_access('75')) { $approved = '1'; } 
+		if (Access::check('interface','75')) { $approved = '1'; } 
 
 		$sql = "INSERT INTO `flagged` (`object_id`,`object_type`,`flag`,`comment`,`date`,`approved`,`user`) VALUES " . 
 			" ('$id','$type','$flag','$comment','$time','$approved','$user')";
@@ -220,21 +211,6 @@ class Flag {
 	
 	 } // approve
 	 
-	/**
-	 * format_user
-	 * This formats username etc
-	 */
-	function format_user() {
-		
-		$sql = "SELECT * FROM user WHERE id = '$this->user'";
-		$db_results = mysql_query($sql, dbh());
-
-		$f_user = mysql_fetch_assoc($db_results);
-		
-		return $f_user;
-	 
-	} // format_user
-
 	/**
 	 * format_name
 	 * This function formats and sets the $this->name variable and $this->title 

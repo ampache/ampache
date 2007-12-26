@@ -143,7 +143,7 @@ switch ($_REQUEST['action']) {
 		} 
 
 		// Make sure we've got them rights
-		if (!$GLOBALS['user']->has_access($level) || Config::get('demo_mode')) { 
+		if (!Access::check('interface',$level) || Config::get('demo_mode')) { 
 			exit; 
 		} 
 
@@ -151,24 +151,33 @@ switch ($_REQUEST['action']) {
 			case 'album': 
 				$key = 'album_' . $_POST['id']; 
 				$album = new Album($_POST['id']); 
+				$songs = $album->get_songs(); 
 				$new_id = $album->update($_POST); 
 				if ($new_id != $_POST['id']) { 
 					$album = new Album($new_id); 
+					foreach ($songs as $song_id) { 
+						Flag::add($song_id,'song','retag','Inline Album Update'); 
+					} 
 				} 
 				$album->format(); 
 			break;
 			case 'artist': 
 				$key = 'artist_' . $_POST['id']; 
 				$artist = new Artist($_POST['id']); 
+				$songs = $artist->get_songs(); 
 				$new_id = $artist->update($_POST); 
 				if ($new_id != $_POST['id']) { 
 					$artist = new Artist($new_id); 
+					foreach ($songs as $song_id) { 
+						Flag::add($song_id,'song','retag','Inline Artist Update'); 
+					} 
 				} 
 				$artist->format(); 
 			break;
 			case 'song': 
 				$key = 'song_' . $_POST['id']; 
 				$song = new Song($_POST['id']);
+				Flag::add($song->id,'song','retag','Inline Single Song Update'); 
 				$song->update($_POST); 
 				$song->format(); 
 			break;

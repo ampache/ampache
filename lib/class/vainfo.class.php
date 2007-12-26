@@ -482,6 +482,7 @@ class vainfo {
 		$preg_pattern = preg_quote($pattern);
 		$preg_pattern = preg_replace("/\%\w/","(.+)",$preg_pattern);
 		$preg_pattern = str_replace("/","\/",$preg_pattern);
+		$preg_pattern = str_replace(" ","\s",$preg_pattern);
 		$preg_pattern = "/" . $preg_pattern . "\..+$/";
 		preg_match($preg_pattern,$filename,$matches);
 		/* Cut out the Full line, we don't need that */
