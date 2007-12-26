@@ -37,6 +37,10 @@ header("Cache-Control: no-store, no-cache, must-revalidate");
 header("Pragma: no-cache"); 
 
 switch ($_REQUEST['page']) { 
+	case 'flag': 
+		require_once Config::get('prefix') . '/server/flag.ajax.php'; 
+		exit; 
+	break;
 	case 'stats': 
 		require_once Config::get('prefix') . '/server/stats.ajax.php'; 
 		exit; 
