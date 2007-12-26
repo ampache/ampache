@@ -265,22 +265,23 @@ else {
 // Put this song in the now_playing table
 Stream::insert_now_playing($song->id,$uid,$song->time,$sid);
 
-if ($start) {
-	debug_event('seek','Content-Range header recieved, skipping ahead ' . $start . ' bytes out of ' . $song->size,'5');
-	$browser->downloadHeaders($song_name, $song->mime, false, $song->size);
-	fseek( $fp, $start );
-	$range = $start ."-". ($song->size-1) . "/" . $song->size;
-	header("HTTP/1.1 206 Partial Content");
-	header("Content-Range: bytes=$range");
+if (isset($start)) {
 
 	// Calculate stream size from byte range
 	if(isset($end)) {
 		$end = min($end,$song->size-1);
-        	$stream_size = ($end-$start)+1;
+		$stream_size = ($end-$start)+1;
 	} 
 	else {
 		$stream_size = $song->size - $start;
 	}
+	
+	debug_event('seek','Content-Range header recieved, skipping ahead ' . $start . ' bytes out of ' . $song->size,'5');
+	$browser->downloadHeaders($song_name, $song->mime, false, $song->size);
+	fseek( $fp, $start );
+	$range = $start ."-". $end . "/" . $song->size;
+	header("HTTP/1.1 206 Partial Content");
+	header("Content-Range: bytes $range");
 	header("Content-Length: ".($stream_size));
 }
 
@@ -300,11 +301,16 @@ $bytes_streamed = 0;
 $min_bytes_streamed = $song->size / 2;
 
 // Actually do the streaming 
-do { 
-	$buf = fread($fp, 2048);
-        print($buf);
-        $bytes_streamed += 2048;
+do {
+	$buf = fread($fp, min(2048,$stream_size-$bytes_streamed));
+	print($buf);
+	$bytes_streamed += strlen($buf);
 } while (!feof($fp) && (connection_status() == 0) AND $bytes_streamed < $stream_size);
+
+// Need to make sure enough bytes were sent. Some players (Windows Media Player) won't work if specified content length is not sent.
+if($bytes_streamed < $stream_size AND (connection_status() == 0)) {
+	print(str_repeat(' ',$stream_size - $bytes_streamed));
+}
 
 // Make sure that a good chunk of the song has been played
 if ($bytes_streamed > $min_bytes_streamed) {
