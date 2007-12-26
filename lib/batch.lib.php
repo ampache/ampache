@@ -63,6 +63,8 @@ function send_zip( $name, $song_files ) {
 			$basedir = Config::get('file_zip_path'); 
 		} 
 
+	} else {
+		$in_memory = '1'; 
 	} // if file downloads
 
 	/* Require needed library */
