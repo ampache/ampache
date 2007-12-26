@@ -138,7 +138,7 @@ class Artist {
 	 */
 	public function get_songs() { 
 	
-		$sql = "SELECT `song`.`id` FROM `song` WHERE `song`.`artist`='" . Dba::escape($this->id) . "'";
+		$sql = "SELECT `song`.`id` FROM `song` WHERE `song`.`artist`='" . Dba::escape($this->id) . "' ORDER BY album, track";
 		$db_results = Dba::query($sql);
 
 		while ($r = Dba::fetch_assoc($db_results)) { 
