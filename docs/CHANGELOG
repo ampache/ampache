@@ -4,6 +4,8 @@
 
 --------------------------------------------------------------------------
   v.3.4-Beta2 
+	- Fixed session start failure when use_auth is off and you have
+		no pre-existing cookie
 	- Fixed print_tags.inc file to catalog matching, now fuzzy like it
 		should be
 	- Fixed bug where file pattern would be ignored if there were no

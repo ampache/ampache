@@ -203,9 +203,12 @@ elseif (!Config::get('use_auth')) {
 	$auth['username'] = '-1';
 	$auth['fullname'] = "Ampache User";
 	$auth['id'] = -1;
-	$auth['access'] = "admin";
+	$auth['access'] = '100';
 	$auth['offset_limit'] = 50;
-	if (!vauth::check_session()) { vauth::session_create($auth); }
+	if (!vauth::check_session()) { 
+		session_start(); 
+		vauth::session_create($auth); 
+	}
 	$GLOBALS['user']	 	= new User(-1);
 	$GLOBALS['user']->fullname 	= 'Ampache User';
 	$GLOBALS['user']->offset_limit 	= $auth['offset_limit'];
