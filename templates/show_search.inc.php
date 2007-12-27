@@ -92,11 +92,11 @@
 	<td>
 		<select id="s_rating" name="s_rating">
 			<option value="">&nbsp;</option>
-			<option value="1"><?php echo _('One Star'); ?></option>
-			<option value="2"><?php echo _('Two Stars'); ?></option>
-			<option value="3"><?php echo _('Three Stars'); ?></option>
-			<option value="4"><?php echo _('Four Stars'); ?></option>
-			<option value="5"><?php echo _('Five Stars'); ?></option>
+			<option value="1" <?php if($_REQUEST['s_rating']=="1") echo "selected=\"selected\""?>><?php echo _('One Star'); ?></option>
+			<option value="2" <?php if($_REQUEST['s_rating']=="2") echo "selected=\"selected\""?>><?php echo _('Two Stars'); ?></option>
+			<option value="3" <?php if($_REQUEST['s_rating']=="3") echo "selected=\"selected\""?>><?php echo _('Three Stars'); ?></option>
+			<option value="4" <?php if($_REQUEST['s_rating']=="4") echo "selected=\"selected\""?>><?php echo _('Four Stars'); ?></option>
+			<option value="5" <?php if($_REQUEST['s_rating']=="5") echo "selected=\"selected\""?>><?php echo _('Five Stars'); ?></option>
 		</select>
 	</td>
 	<td><?php echo _('Operator'); ?></td>
