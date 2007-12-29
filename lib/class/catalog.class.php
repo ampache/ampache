@@ -247,8 +247,8 @@ class Catalog {
 		if (!$key) { $key = ' '; } //FIXME 
 
 		// Ok we're good to go ahead and insert this record
-		$sql = "INSERT INTO `catalog` (`name`,`path`,`catalog_type`,`rename_pattern`,`sort_pattern`,`gather_types`,`key`) " . 
-			"VALUES ('$name','$path','$catalog_type','$rename_pattern','$sort_pattern','$gather_types','$key')";
+		$sql = "INSERT INTO `catalog` (`name`,`path`,`add_path`,`catalog_type`,`rename_pattern`,`sort_pattern`,`gather_types`,`key`) " . 
+			"VALUES ('$name','$path','','$catalog_type','$rename_pattern','$sort_pattern','$gather_types','$key')";
 		$db_results = Dba::query($sql); 
 
 		$insert_id = Dba::insert_id(); 
@@ -2367,39 +2367,52 @@ class Catalog {
 		@discussion it exports all songs in the database to the given export type.
 	*/
 	function export($type){
-	
-	    if ($type=="itunes"){
-		
-		$sql = "SELECT id FROM song ORDER BY album";
-		$db_results = mysql_query($sql, dbh());
 
-		while ($results = mysql_fetch_array($db_results)) { 
-		$song = new Song($results['id']);
-		$song->format_song();
-		
-		$xml = array();
-		$xml['key']= $results['id'];
-		$xml['dict']['Track ID']= $results['id'];
-		$xml['dict']['Name'] = utf8_encode($song->title);
-		$xml['dict']['Artist'] = utf8_encode($song->f_artist_full);
-		$xml['dict']['Album'] = utf8_encode($song->f_album_full);
-		$xml['dict']['Genre'] = $song->f_genre;
-		$xml['dict']['Total Time'] = $song->time;
-		$xml['dict']['Track Number'] = $song->track;
-		$xml['dict']['Year'] = $song->year;
-		$xml['dict']['Date Added'] = date("Y-m-d\TH:i:s\Z",$song->addition_time);
-		$xml['dict']['Bit Rate'] = intval($song->bitrate/1000);
-		$xml['dict']['Sample Rate'] = $song->rate;
-		$xml['dict']['Play Count'] = $song->played;
-		$xml['dict']['Track Type'] = "URL";
-		$xml['dict']['Location'] = $song->get_url();
-
-		$result .= xml_from_array($xml,1,'itunes');
+		// Select all songs in catalog
+		if($this->id) {
+			$sql = "SELECT id FROM song WHERE catalog = '$this->id' ORDER BY album,track";
+		} else {
+			$sql = "SELECT id FROM song ORDER BY album,track";
 		}
-		return $result;
+		$db_results = Dba::query($sql);
+		
+		if ($type=="itunes"){
+		
+			echo xml_get_header('itunes');
+			
+			while ($results = Dba::fetch_assoc($db_results)) { 
+				$song = new Song($results['id']);
+				$song->format();
 
-	    }
-	
+				$xml = array();
+				$xml['key']= $results['id'];
+				$xml['dict']['Track ID']= intval($results['id']);
+				$xml['dict']['Name'] = $song->title;
+				$xml['dict']['Artist'] = $song->f_artist_full;
+				$xml['dict']['Album'] = $song->f_album_full;
+				$xml['dict']['Genre'] = $song->f_genre;
+				$xml['dict']['Total Time'] = intval($song->time) * 1000; // iTunes uses milliseconds
+				$xml['dict']['Track Number'] = intval($song->track);
+				$xml['dict']['Year'] = intval($song->year);
+				$xml['dict']['Date Added'] = date("Y-m-d\TH:i:s\Z",$song->addition_time);
+				$xml['dict']['Bit Rate'] = intval($song->bitrate/1000);
+				$xml['dict']['Sample Rate'] = intval($song->rate);
+				$xml['dict']['Play Count'] = intval($song->played);
+				$xml['dict']['Track Type'] = "URL";
+				$xml['dict']['Location'] = $song->get_url();
+				
+				echo xml_from_array($xml,1,'itunes');
+				
+				// flush output buffer
+				ob_flush();
+				flush();
+
+			} // while result
+
+			echo xml_get_footer('itunes');
+
+		} // itunes
+
 	} // export
 
 } // end of catalog class

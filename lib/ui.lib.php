@@ -899,7 +899,7 @@ function xml_from_array($array,$callback=0,$type='') {
         	        else {
                 	        if ($key == "key"){
                         	$string .= "\t\t<$key>$value</$key>\n";
-	                        } elseif (is_numeric($value)) {
+	                        } elseif (is_int($value)) {
         	                $string .= "\t\t\t<key>$key</key><integer>$value</integer>\n";
                 	        } elseif ($key == "Date Added") {
                         	$string .= "\t\t\t<key>$key</key><date>$value</date>\n";
