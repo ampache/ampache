@@ -172,6 +172,12 @@ function clean_tag_info($results,$key,$filename) {
 	$info['bitrate']      	= intval($results['info']['bitrate']);
 	$info['rate']         	= intval($results['info']['sample_rate']);
 	$info['mode']         	= $results['info']['bitrate_mode'];
+
+	// Convert special version of constant bitrate mode to cbr
+	if($info['mode'] == 'con') {
+		$info['mode'] = 'cbr';
+	}
+
 	$info['size']         	= $results['info']['filesize']; 
 	$info['mime']		= $results['info']['mime'];
 	$into['encoding']	= $results['info']['encoding'];
