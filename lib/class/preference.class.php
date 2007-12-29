@@ -115,6 +115,7 @@ class Preference {
 
 		$sql = "SELECT `level` FROM `preference` WHERE `name`='$preference'"; 
 		$db_results = Dba::query($sql); 
+		$data = Dba::fetch_assoc($db_results);
 
 		if ($GLOBALS['user']->has_access($data['level'])) { 
 			return true; 
