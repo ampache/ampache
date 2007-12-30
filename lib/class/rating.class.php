@@ -117,6 +117,14 @@ class Rating {
 		
 		$score = Dba::escape($score);
 
+		// If score is -1, then remove rating
+		if ($score == '-1') {
+			$sql = "DELETE FROM `rating` WHERE `object_id`='$this->id' AND `object_type`='$this->type' " . 
+				"AND `user`='" . Dba::escape($GLOBALS['user']->id) . "'";
+			$db_results = Dba::query($sql);
+			return true;
+		}
+
 		/* Check if it exists */
 		$sql = "SELECT `id` FROM `rating` WHERE `object_id`='$this->id' AND `object_type`='$this->type' " . 
 			"AND `user`='" . Dba::escape($GLOBALS['user']->id) . "'";
