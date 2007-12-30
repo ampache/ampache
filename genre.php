@@ -34,14 +34,12 @@ switch($_REQUEST['action']) {
 		$genre = new Genre($_REQUEST['genre_id']);
 		show_genre($_REQUEST['genre_id']);
 		$object_ids = $genre->get_songs();
-		echo "<div id=\"browse_content\">"; 
 		Browse::reset_filters(); 
 		Browse::set_type('song'); 
 		Browse::set_sort('name','ASC'); 
 		Browse::set_static_content(1); 
 		Browse::save_objects($object_ids);
 		Browse::show_objects($object_ids); 
-		echo "</div>"; 
 	break;
 	case 'show_genre':
 	default:
@@ -49,27 +47,23 @@ switch($_REQUEST['action']) {
 		$genre = new Genre($_REQUEST['genre_id']);
 		show_genre($_REQUEST['genre_id']);
 		$object_ids = $genre->get_albums();
-		echo "<div id=\"browse_content\">"; 
 		Browse::reset_filters(); 
 		Browse::set_type('album'); 
 		Browse::set_sort('name','ASC'); 
 		Browse::set_static_content(1); 
 		Browse::save_objects($object_ids); 
 		Browse::show_objects($object_ids); 
-		echo "</div>"; 
 	break;
 	case 'show_artists':
 		$genre = new Genre($_REQUEST['genre_id']);
 		show_genre($_REQUEST['genre_id']);
 		$object_ids = $genre->get_artists();
-		echo "<div id=\"browse_content\">"; 
 		Browse::reset_filters(); 
 		Browse::set_type('artist'); 
 		Browse::set_sort('name','ASC'); 
 		Browse::set_static_content(1); 
 		Browse::save_objects($object_ids); 
 		Browse::show_objects($object_ids); 
-		echo "</div>"; 
 	break;
 } // action
 

@@ -49,7 +49,7 @@ function update_preferences($pref_id=0) {
 		$name 		= $data['name'];
 		$apply_to_all	= "check_" . $data['name'];
 		$id		= $data['id'];
-		$value 		= Dba::escape(scrub_in($_REQUEST[$name]));
+		$value 		= scrub_in($_REQUEST[$name]);
 
 		/* Some preferences require some extra checks to be performed */
 		switch ($name) { 

@@ -24,7 +24,6 @@ $web_path = Config::get('web_path');
 require Config::get('prefix') . '/templates/show_artist_box.inc.php';
 
 ?>
-<div id="browse_content">
 <?php 
 	Browse::reset_filters(); 
 	Browse::set_type('album'); 
@@ -32,4 +31,3 @@ require Config::get('prefix') . '/templates/show_artist_box.inc.php';
 	Browse::save_objects($albums);
 	Browse::show_objects($albums); 
 ?>
-</div>

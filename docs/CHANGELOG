@@ -4,6 +4,9 @@
 
 --------------------------------------------------------------------------
   v.3.4-Beta2 
+	- Fixed issue with page-a-nation on show catalogs page
+	- Fixed removal of rating from db when 'unrating' the object
+	- Fixed Itunes Export (Thx flashk)
 	- Fixed session start failure when use_auth is off and you have
 		no pre-existing cookie
 	- Fixed print_tags.inc file to catalog matching, now fuzzy like it

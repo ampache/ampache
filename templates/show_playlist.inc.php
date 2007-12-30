@@ -33,7 +33,6 @@ $web_path = Config::get('web_path');
 		</ul>
 		</div>
 <?php show_box_bottom(); ?>
-<div id="browse_content">
 <?php 
 	$object_ids = $playlist->get_items(); 
 	Browse::set_type('playlist_song'); 
@@ -42,4 +41,3 @@ $web_path = Config::get('web_path');
 	Browse::save_objects($object_ids); 
 	Browse::show_objects($object_ids); 
 ?>
-</div>

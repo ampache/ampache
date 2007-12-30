@@ -56,6 +56,7 @@ class Dba {
 
 		// Run the query
 		$resource = mysql_query($sql,self::dbh()); 
+		debug_event('Query',$sql,'6');
 		
 		// Save the query, to make debug easier
 		self::$_sql = $sql; 
@@ -85,7 +86,6 @@ class Dba {
 	public static function fetch_assoc($resource) { 
 
 		$result = mysql_fetch_assoc($resource); 
-		debug_event('Assoc',self::$_sql,'6'); 
 
 		if (!$result) { 
 			return array(); 

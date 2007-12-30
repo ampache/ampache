@@ -36,7 +36,6 @@ require_once 'lib/init.php';
 
 /* Display the headers and menus */
 show_header(); 
-echo '<div id="browse_content">'; 
 
 switch($_REQUEST['action']) {
 	case 'file':
@@ -97,8 +96,6 @@ switch($_REQUEST['action']) {
 
 	break; 
 } // end Switch $action
-
-echo '</div>';
 
 /* Show the Footer */
 show_footer();

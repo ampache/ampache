@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright 2001 - 2006 Ampache.org
+ Copyright 2001 - 2007 Ampache.org
  All Rights Reserved
 
  This program is free software; you can redistribute it and/or
@@ -30,6 +30,10 @@ define('NO_SESSION','1');
 $path = dirname(__FILE__); 
 $prefix = realpath($path . '/../'); 
 require_once $prefix . '/lib/init.php';
+
+// This is all broken currently so just jump ship
+echo "Writting of Tags to files is not currently supported by Getid3() exiting...\n"; 
+exit; 
 
 // Include getID3 libs, including the ability to write tags
 $getID3 = new getID3();

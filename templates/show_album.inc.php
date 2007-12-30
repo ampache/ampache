@@ -63,7 +63,6 @@ $title		= scrub_out($album->name) . '&nbsp;(' . $album->year . ')&nbsp;--&nbsp;'
 <div id="additional_information">
 &nbsp;
 </div>
-<div id="browse_content">
 <?php 
 	$object_ids = $album->get_songs(); 
 	Browse::set_type('song');
@@ -71,4 +70,3 @@ $title		= scrub_out($album->name) . '&nbsp;(' . $album->year . ')&nbsp;--&nbsp;'
 	Browse::save_objects($object_ids); 
 	Browse::show_objects($object_ids); 
 ?>
-</div>

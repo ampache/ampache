@@ -619,6 +619,8 @@ class Browse {
 			${$class_name} = new $class_name($id); 
 		} 
 
+		Ajax::start_container('browse_content');
+
 		// Switch on the type of browsing we're doing
 		switch ($_SESSION['browse']['type']) { 
 			case 'song': 
@@ -675,6 +677,8 @@ class Browse {
 				// Rien a faire
 			break;
 		} // end switch on type
+
+		Ajax::end_container(); 
 
 	} // show_object
 
