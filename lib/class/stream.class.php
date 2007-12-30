@@ -153,12 +153,22 @@ class Stream {
 	/**
 	 * gc_session
 	 * This function performes the garbage collection stuff, run on extend and on now playing refresh
+	 * There is an array of agents that we will never GC because of their nature, MPD being the best example
 	 */
 	public static function gc_session($ip='',$agent='',$uid='',$sid='') { 
+
+		$append_array = array('MPD'); 
 
 		$time = time(); 
 		$sql = "DELETE FROM `session_stream` WHERE `expire` < '$time'"; 
 		$db_results = Dba::query($sql); 
+		
+		foreach ($append_array as $append_agent) { 
+			if (strstr(strtoupper($agent),$append_agent)) { 
+				// We're done here jump ship!
+				return true; 
+			} 
+		} // end foreach
 
 		// We need all of this to run this query
 		if ($ip AND $agent AND $uid AND $sid) { 

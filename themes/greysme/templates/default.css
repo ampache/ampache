@@ -694,6 +694,10 @@ img.shoutboximage {
 	text-align: center; /*for compatibility, may be controlled by themers now*/
 }
 
+td.lp_current a {        
+        font-weight:bold;
+        text-decoration:none;
+}
 
 /************************************************/
 /*         Styles for Login template            */

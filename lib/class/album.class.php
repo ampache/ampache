@@ -351,6 +351,13 @@ class Album {
 		foreach ($coverart as $key=>$value) { 
 			$i++; 
 			$url = $coverart[$key]; 
+
+			// We need to check the URL for the /noimage/ stuff
+			if (strstr($url,"/noimage/")) { 
+				debug_event('LastFM','Detected as noimage, skipped ' . $url,'3'); 
+				continue; 
+			} 
+
 			$results = pathinfo($url); 
 			$mime = 'image/' . $results['extension']; 
 			$data[] = array('url'=>$url,'mime'=>$mime); 
@@ -358,6 +365,7 @@ class Album {
 		} // end foreach
 
 		return $data; 
+
 	} // get_lastfm_art
 
 	/*!

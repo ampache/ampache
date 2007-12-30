@@ -35,7 +35,7 @@
 <?php 
 foreach ($objects as $object) { 
 	$class = ' class="cel_name"';
-	if ($status['track'] == $song['track']) { $class=' class="cel_name lp_current"'; } 	
+	if ($status['track'] == $object['track']) { $class=' class="cel_name lp_current"'; } 	
 ?>
 <tr class="<?php echo flip_class(); ?>" id="localplay_playlist_<?php echo $object['id']; ?>">
 	<td class="cel_track">

@@ -4,6 +4,13 @@
 
 --------------------------------------------------------------------------
   v.3.4-Beta2 
+	- Fixed incorrect index on localplay playlist after track deletion
+	- Fixed lack of high-light of current playing item on localplay
+		playlist
+	- Fixed problem where second send to MPD would invalidate all 
+		previous songs on the playlist
+	- Fixed LastFM album art gather so it ignores noimage results from 
+		lastfm
 	- Fixed downsample remote so that is downsamples those not in the
 		network def rather then those inside the network def
 	- Fixed issue with page-a-nation on show catalogs page

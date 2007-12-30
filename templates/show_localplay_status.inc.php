@@ -20,7 +20,6 @@
 
 */
 $status = $localplay->status();  
-
 ?>
 <?php Ajax::start_container('localplay_status'); ?>
 <?php show_box_top(_('Localplay Control')); ?>

@@ -6,8 +6,8 @@
 
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
- as published by the Free Software Foundation; either version 2
- of the License, or (at your option) any later version.
+ as published by the Free Software Foundation; version 2
+ of the License.
 
  This program is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -79,15 +79,15 @@ class LastFMSearch {
 	
 	} // run_search
     
-	/*!
-		@function search
-		@discussion takes terms and a type
-	*/
-	function search($artist,$album) {
+	/**
+	 * search
+	 * takes terms and a type
+	 */
+	public function search($artist,$album) {
 
 		$url = $this->base_url . '/' . urlencode($artist) . '/' . urlencode($album) . '/info.xml';		
 		
-		debug_event('lastfm','Searching:' . $url,'3');
+		debug_event('lastfm','Searching: ' . $url,'3');
 		
 		$this->run_search($url);
 
@@ -95,8 +95,11 @@ class LastFMSearch {
 
 	} // search
     
-    
-	function start_element($parser, $tag, $attributes) { 
+    	/**
+ 	 * start_element
+	 * This function is called when we see the start of an xml element
+	 */
+	public function start_element($parser, $tag, $attributes) { 
 
 		if ($tag == 'coverart') { 
 			$this->_currentTag = $tag;
@@ -105,25 +108,32 @@ class LastFMSearch {
 			$this->_subTag = $tag;
 		} 
 
-    } // start_element
-    
-    function cdata($parser, $cdata) {
+	} // start_element
 
+	/**
+ 	 * cdata
+	 * This is called for the content of an XML tag
+	 */
+	public function cdata($parser, $cdata) {
 
-	if (!$this->_currentTag || !$this->_subTag || !trim($cdata)) { return false; } 
+		if (!$this->_currentTag || !$this->_subTag || !trim($cdata)) { return false; } 
 
-	$tag 	= $this->_currentTag;
-	$subtag = $this->_subTag;
+		$tag 	= $this->_currentTag;
+		$subtag = $this->_subTag;
 
-	$this->results[$tag][$subtag] = trim($cdata);
+		$this->results[$tag][$subtag] = trim($cdata);
 
-    } // cdata
-    
-	function end_element($parser, $tag) {
+	} // cdata
+
+	/**
+	 * end_element
+	 * This is called on the close of an XML tag
+	 */ 
+	public function end_element($parser, $tag) {
 	
 		if ($tag == 'coverart') { $this->_currentTag = ''; } 
 	
-    	} // end_element
+	} // end_element
 
 } // end LastFMSearch
 

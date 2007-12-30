@@ -109,8 +109,17 @@ switch ($_REQUEST['action']) {
 		$id = intval($_REQUEST['id']); 
 
 		$localplay->delete_track($id); 
+	
+		// Wait incase we just deleted what we were playing
+		sleep(1);
+		$objects = $localplay->get(); 
+		$status = $localplay->status(); 
 
-		$results['localplay_playlist_' . $id] = ''; 
+		ob_start(); 
+		require_once Config::get('prefix') . '/templates/show_localplay_playlist.inc.php'; 
+		$results['localplay_playlist'] = ob_get_contents(); 	
+		ob_end_clean(); 
+
 	break; 
 	case 'delete_instance': 
 		// Make sure that you have access to do this...
