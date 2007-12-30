@@ -4,6 +4,8 @@
 
 --------------------------------------------------------------------------
   v.3.4-Beta2 
+	- Fixed downsample remote so that is downsamples those not in the
+		network def rather then those inside the network def
 	- Fixed issue with page-a-nation on show catalogs page
 	- Fixed removal of rating from db when 'unrating' the object
 	- Fixed Itunes Export (Thx flashk)

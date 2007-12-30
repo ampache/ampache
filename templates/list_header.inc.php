@@ -34,7 +34,7 @@ $uid	  = Config::get('list_header_uid');
 $sides  = 5;
 
 // ++ the uid
-Config::set('list_header_uid',$uid+1); 
+Config::set('list_header_uid',$uid+1,1); 
 
 // Next
 $next_offset = $start + $limit;

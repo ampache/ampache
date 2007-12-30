@@ -239,12 +239,12 @@ if (Config::get('track_user_ip')) {
 	$user->insert_ip_history();
 }
 
-/* If access control is on and they aren't local, downsample! */
-if (Config::get('access_control') AND Config::get('downsample_remote')) { 
-	if (Access::check_network('network',$_SERVER['REMOTE_ADDR'],$GLOBALS['user']->id,'25')) { 
+// If we've got downsample remote enabled
+if (Config::get('downsample_remote')) { 
+	if (!Access::check_network('network',$_SERVER['REMOTE_ADDR'],$GLOBALS['user']->id,'25')) { 
 		$not_local = true;
 	}
-} // if access_control
+} // if downsample remote is enabled
 
 // If they are downsampling, or if the song is not a native stream or it's non-local
 if (($GLOBALS['user']->prefs['transcode'] == 'always' || !$song->native_stream() || $not_local) && $GLOBALS['user']->prefs['transcode'] != 'never') { 
