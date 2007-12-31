@@ -295,6 +295,7 @@ switch ($_REQUEST['action']) {
 	case 'show_flagged':
 		$flagged = Flag::get_all();
 		Browse::set_type('flagged'); 
+		Browse::set_static_content(1);
 		Browse::save_objects($flagged); 
 		Browse::show_objects($flagged);
 	break;

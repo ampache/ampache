@@ -182,28 +182,39 @@ class Flag {
 	} // add
 
 	/**
-	 * delete_flag
+	 * delete
 	 * This deletes the flagged entry and rescans the file to revert to the origional
 	 * state, in a perfect world, I could just roll the changes back... not until 3.4
+	 * or.. haha 3.5!
 	 */
-	function delete_flag() { 
+	public function delete() { 
 
-		$sql = "DELETE FROM flagged WHERE id='$this->id'";
-		$db_results = mysql_query($sql, dbh());
+		// Re-scan the file
+		$song = new Song($this->object_id); 
+		$info = Catalog::update_song_from_tags($song); 
+
+		// Delete the row
+		$sql = "DELETE FROM `flagged` WHERE `id`='$this->id'";
+		$db_results = Dba::query($sql);
+
+		// Reset the Last-Updated date so that it'll get re-scaned 	
+		$song->update_utime($song->id,1); 
 
 		return true;
 
-	} // delete_flag
+	} // delete
 
 	/**
 	 * approve
 	 * This approves the current flag object ($this->id) by setting approved to
 	 * 1
 	 */
-	 function approve() { 
+	 public function approve() { 
 
-		$sql = "UPDATE flagged SET approved='1' WHERE id='$this->id'";
-		$db_results = mysql_query($sql, dbh());
+		$sql = "UPDATE `flagged` SET `approved`='1' WHERE `id`='$this->id'";
+		$db_results = Dba::query($sql);
+
+		$this->approved = 1; 
 
 		return true;
 	

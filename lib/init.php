@@ -206,7 +206,7 @@ elseif (!Config::get('use_auth')) {
 	$auth['access'] = '100';
 	$auth['offset_limit'] = 50;
 	if (!vauth::check_session()) { 
-		session_start(); 
+		vauth::create_cookie(); 
 		vauth::session_create($auth); 
 	}
 	$GLOBALS['user']	 	= new User(-1);

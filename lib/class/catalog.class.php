@@ -1134,7 +1134,14 @@ class Catalog {
          * updates the song info based on tags, this is called from a bunch of different places
 	 * and passes in a full fledged song object, so it's a static function
 	 */
-        public static function update_song_from_tags($song,$sort_pattern,$rename_pattern) {
+        public static function update_song_from_tags($song,$sort_pattern='',$rename_pattern='') {
+
+		// If the patterns aren't passed go look them up
+		if (!$sort_pattern OR !$rename_pattern) { 
+			$catalog = new Catalog($song->catalog); 
+			$sort_pattern = $catalog->sort_pattern; 
+			$rename_pattern = $catalog->rename_pattern; 
+		} 
 
 		/* Record the reading of these tags */
 		debug_event('tag-read',"Reading Tags from $song->file",'5','ampache-catalog');

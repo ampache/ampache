@@ -43,21 +43,8 @@ $web_path = Config::get('web_path');
 foreach ($object_ids as $flag_id) { 
 	$flag = new Flag($flag_id); 
 	$flag->format(); 
+	require Config::get('prefix') . '/templates/show_flag_row.inc.php'; 
 ?>
-<tr class="<?php echo flip_class(); ?>">
-	<td class="cel_object"><?php echo $flag->f_name; ?></td>
-	<td class="cel_username"><?php echo $flag->f_user; ?></td>
-	<td class="cel_flag"><?php $flag->print_flag(); ?></td>
-	<td class="cel_comment"><?php echo scrub_out($flag->comment); ?></td>
-	<td class="cel_status"><?php $flag->print_status(); ?></td>
-	<td class="cel_action">
-	<?php if ($flag->approved) { ?>
-		<?php echo Ajax::button('?page=flag&action=reject&flag_id=' . $flag->id,'disable',_('Reject'),'reject_flag_' . $flag->id); ?>
-	<?php } else { ?>
-		<?php echo Ajax::button('?page=flag&action=accept&flag_id=' . $flag->id,'enable',_('Enable'),'enable_flag_' . $flag->id); ?>
-	<?php } ?>
-	</td>
-</tr>
 <?php } if (!count($object_ids)) { ?>
 <tr class="<?php echo flip_class(); ?>">
 	<td colspan="7" class="error"><?php echo _('No Records Found'); ?></td>

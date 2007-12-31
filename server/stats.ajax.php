@@ -86,6 +86,16 @@ switch ($_REQUEST['action']) {
 		// Ask the great and wise metadata
 		$objects = metadata::find_missing_tracks($_REQUEST['id']);
 
+		if ($error = ob_get_contents()) { 
+			ob_end_clean();
+			ob_start(); 
+			show_box_top(_('Find Missing Tracks')); 
+			echo $error; 
+			show_box_bottom(); 
+			$results['additional_information'] = ob_get_contents(); 
+			ob_end_clean();
+			break; 
+		} 
 		ob_start(); 
 		show_box_top(_('Find Missing Tracks')); 
 		require_once Config::get('prefix') . '/templates/show_objects.inc.php'; 
