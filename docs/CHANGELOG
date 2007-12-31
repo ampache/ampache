@@ -4,6 +4,7 @@
 
 --------------------------------------------------------------------------
   v.3.4-Beta2 
+	- Added Multi-Character Filter on browse pages
 	- Fixed Flag Management Interface
 	- Added Export Catalog to CSV
 	- Added 'Add New...' option to other fields on Song Edit (Thx picasso)

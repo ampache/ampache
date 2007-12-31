@@ -18,6 +18,10 @@
   <li><h4><?php echo _('Filters'); ?></h4>
     <div class="sb3">
       <?php show_alphabet_list($_REQUEST['alpha_match'],$_REQUEST['action']); ?>
+      <form id="multi_alpha_filter_form" method="post" action="javascript:void(0);">
+	      <input type="textbox" id="multi_alpha_filter" name="value" value="<?php echo scrub_out($_REQUEST['alpha_match']); ?>" onChange="<?php echo Ajax::action('?page=browse&action=browse&key=alpha_match','multi_alpha_filter','multi_alpha_filter_form'); ?>">
+	      <label id="multi_alpha_filterLabel" for="multi_art_filter"><?php echo _('Starts With'); ?></label>
+      </form>
   <!--
   <input type="checkbox" onclick="ajaxPut('<?php echo $ajax_info; ?>?action=browse&amp;key=min_count&amp;value=1');return true;" value="1" />
   	<?php echo _('Minimum Count'); ?><br />

@@ -264,6 +264,11 @@ a.button{padding:1px 3px;}
 	color:#fff;
 } 
 
+#multi_alpha_filter { 
+	width:40px; 
+	margin-bottom:4px;
+} 
+
 /* SIDEBAR : Localplay */
 /***********************/
 .active_instance {
