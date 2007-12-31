@@ -29,7 +29,6 @@
 			if ($uid == $current_instance) { 
 				$class = ' class="active_instance"'; 
 			} 
-			i
 	?>
 	<li id="sb_localplay_instances_<?php echo $uid; ?>"<?php echo $class; ?>><?php echo Ajax::text('?page=localplay&action=set_instance&instance=' . $uid,$name,'localplay_instance_' . $uid); ?></li>
 	<?php } ?>

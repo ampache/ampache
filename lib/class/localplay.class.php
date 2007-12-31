@@ -540,6 +540,18 @@ class Localplay {
 	} // get_instance
 
 	/**
+	 * update_instance
+	 * This updates the specified instance with a named array of data (_POST most likely)
+	 */
+	public function update_instance($uid,$data) { 
+
+		$data = $this->_player->update_instance($uid); 
+
+		return $data; 
+
+	} // update_instance
+
+	/**
 	 * add_instance
 	 * This adds a new instance for the current controller type
 	 */

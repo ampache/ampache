@@ -32,7 +32,7 @@ if (!Config::get('allow_localplay_playback') || !$GLOBALS['user']->has_access('2
 switch ($_REQUEST['action']) { 
 	case 'show_add_instance': 
 		// This requires 50 or better
-		if (!$GLOBALS['user']->has_access('50')) { access_denied(); break; } 
+		if (!Access::check('localplay','75')) { access_denied(); break; } 
 		
 		// Get the current localplay fields
 		$localplay = new Localplay($GLOBALS['user']->prefs['localplay_controller']); 
@@ -41,20 +41,42 @@ switch ($_REQUEST['action']) {
 	break;
 	case 'add_instance': 
 		// This requires 50 or better!
-		if (!$GLOBALS['user']->has_access('50')) { access_denied(); break; } 
+		if (!Access::check('localplay','75')) { access_denied(); break; } 
 		
 		// Setup the object
 		$localplay = new Localplay($GLOBALS['user']->prefs['localplay_controller']); 
 		$localplay->add_instance($_POST); 
 	break;
+	case 'update_instance': 
+		// Make sure they gots them rights
+		if (!Access::check('localplay','75')) { access_denied(); break; } 
+		$localplay = new Localplay($GLOBALS['user']->prefs['localplay_controller']); 
+		$localplay->update_instance($_REQUEST['instance'],$_POST); 
+		header("Location:" . Config::get('web_path') . "/localplay.php?action=show_instances"); 
+	break; 
+	case 'edit_instance': 
+		// Check to make sure they've got the access
+		if (!Access::check('localplay','75')) { access_denied(); break; } 
+		$localplay = new Localplay($GLOBALS['user']->prefs['localplay_controller']); 
+		$instance = $localplay->get_instance($_REQUEST['instance']); 
+		$fields = $localplay->get_instance_fields(); 
+		require_once Config::get('prefix') . '/templates/show_localplay_edit_instance.inc.php'; 
+	break; 
+	case 'test_instance': 
+		// Check to make sure they've got the rights
+		if (!Access::check('localplay','75')) { access_denied(); break; } 
+	break; 
 	case 'show_instances': 
 		// First build the localplay object and then get the instances
+		if (!Access::check('localplay','5')) { access_denied(); break; } 
 		$localplay = new Localplay($GLOBALS['user']->prefs['localplay_controller']); 
 		$instances = $localplay->get_instances(); 
 		$fields = $localplay->get_instance_fields(); 
 		require_once Config::get('prefix') . '/templates/show_localplay_instances.inc.php'; 
 	break; 
+	default: 
 	case 'show_playlist': 
+		if (!Access::check('localplay','5')) { access_denied(); break; } 
 		// Init and then connect to our localplay instance
 		$localplay = new Localplay($GLOBALS['user']->prefs['localplay_controller']); 
 		$localplay->connect(); 
@@ -63,37 +85,6 @@ switch ($_REQUEST['action']) {
 		$objects = $localplay->get(); 
 		require_once Config::get('prefix') . '/templates/show_localplay_status.inc.php';
 		require_once Config::get('prefix') . '/templates/show_localplay_playlist.inc.php';
-	break;
-	case 'delete_song':
-		$song_id = scrub_in($_REQUEST['song_id']);
-		$songs = array($song_id);
-		$localplay = init_localplay(); 
-		$localplay->delete($songs);
-		$url 	= $web_path . '/localplay.php';
-		$title	= _('Song(s) Removed from Playlist'); 
-		$body	= '';
-		show_confirmation($title,$body,$url);
-	break;
-	case 'delete_all':
-		$localplay = init_localplay(); 
-		$localplay->delete_all();
-		$url	= $web_path . '/localplay.php';
-		$title	= _('Song(s) Removed from Playlist');
-		$body	= '';
-		show_confirmation($title,$body,$url);
-	break;
-	case 'repeat':
-		$localplay = init_localplay(); 
-		$localplay->repeat(make_bool($_REQUEST['value']));
-		require_once (conf('prefix') . '/templates/show_localplay.inc.php');
-	break;
-	case 'random':
-		$localplay = init_localplay(); 
-		$localplay->random(make_bool($_REQUEST['value']));
-		require_once (conf('prefix') . '/templates/show_localplay.inc.php');
-	break;
-	default: 
-		// Rien a faire? 
 	break;
 } // end switch action
 
