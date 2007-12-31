@@ -4,6 +4,8 @@
 
 --------------------------------------------------------------------------
   v.3.4-Beta2 
+	- Added Export Catalog to CSV
+	- Added 'Add New...' option to other fields on Song Edit (Thx picasso)
 	- Fixed incorrect index on localplay playlist after track deletion
 	- Fixed lack of high-light of current playing item on localplay
 		playlist
@@ -14,7 +16,7 @@
 	- Fixed downsample remote so that is downsamples those not in the
 		network def rather then those inside the network def
 	- Fixed issue with page-a-nation on show catalogs page
-	- Fixed removal of rating from db when 'unrating' the object
+	- Fixed removal of rating from db when 'unrating' the object (Thx flashk)
 	- Fixed Itunes Export (Thx flashk)
 	- Fixed session start failure when use_auth is off and you have
 		no pre-existing cookie

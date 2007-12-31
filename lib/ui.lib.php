@@ -614,18 +614,13 @@ function show_playlist_import() {
  * by the Edit page, it takes a $name and a $album_id 
  */
 function show_album_select($name='album',$album_id=0,$allow_add=0,$song_id=0) { 
-	// Probably superfluous code to ensure we never generate two album_select
-	// elements with the same ID on the same page.
-	static $id_inc;
-	static $keys;
-	if (!isset($keys)) $keys = array();
-	if (!isset($id_inc)) $id_inc = 1;
-	else $id_inc++;
-	$key = "album_select_$song_id";
-	if (!empty($keys[$key])) $key = "album_select_$name";
-	if (!empty($keys[$key])) $key = "album_select_x$id_inc";
-	if (!empty($keys[$key])) $key = "album_select_{$name}_x{$id_inc}";
-	$keys[$key] = true;
+	// Generate key to use for HTML element ID
+	static $id_cnt;
+	if ($song_id) {
+		$key = "album_select_$song_id";
+	} else {
+		$key = "album_select_c" . ++$id_cnt;
+	}
 
 	// Added ID field so we can easily observe this element
 	echo "<select name=\"$name\" id=\"$key\">\n";
@@ -657,9 +652,16 @@ function show_album_select($name='album',$album_id=0,$allow_add=0,$song_id=0) {
  * show_artist_select
  * This is the same as the album select except it's *gasp* for artists how inventive!
  */
-function show_artist_select($name='artist', $artist_id=0) { 
+function show_artist_select($name='artist', $artist_id=0, $allow_add=0, $song_id=0) { 
+	// Generate key to use for HTML element ID
+	static $id_cnt;
+	if ($song_id) {
+		$key = "artist_select_$song_id";
+	} else {
+		$key = "artist_select_c" . ++$id_cnt;
+	}
 
-	echo "<select name=\"$name\">\n";
+	echo "<select name=\"$name\" id=\"$key\">\n";
 	
 	$sql = "SELECT `id`, `name`, `prefix` FROM `artist` ORDER BY `name`";
 	$db_results = Dba::query($sql);
@@ -675,6 +677,11 @@ function show_artist_select($name='artist', $artist_id=0) {
 
 	} // end while
 
+	if ($allow_add) {
+		// Append additional option to the end with value=-1
+		echo "\t<option value=\"-1\">Add New...</option>\n";
+	}
+
 	echo "</select>\n";
 
 } // show_artist_select
@@ -684,13 +691,20 @@ function show_artist_select($name='artist', $artist_id=0) {
  * It's amazing we have three of these funtions now, this one shows a select of genres and take s name
  * and a selected genre... Woot!
  */
-function show_genre_select($name='genre',$genre_id=0,$size='') { 
+function show_genre_select($name='genre',$genre_id=1,$size='', $allow_add=0, $song_id=0) { 
+	// Generate key to use for HTML element ID
+	static $id_cnt;
+	if ($song_id) {
+		$key = "genre_select_$song_id";
+	} else {
+		$key = "genre_select_c" . ++$id_cnt;
+	}
 
         if ($size > 0) {
                 $multiple_txt = " multiple=\"multiple\" size=\"$size\"";
         }
 
-	echo "<select name=\"$name\"$multiple_txt>\n";
+	echo "<select name=\"$name\"$multiple_txt id=\"$key\">\n";
 
 	$sql = "SELECT `id`, `name` FROM `genre` ORDER BY `name`";
 	$db_results = Dba::query($sql);
@@ -705,6 +719,11 @@ function show_genre_select($name='genre',$genre_id=0,$size='') {
 		echo "\t<option value=\"" . $r['id'] . "\" $selected>" . scrub_out($genre_name) . "</option>\n";
 	
 	} // end while
+
+	if ($allow_add) {
+		// Append additional option to the end with value=-1
+		echo "\t<option value=\"-1\">Add New...</option>\n";
+	}
 
 	echo "</select>\n";
 

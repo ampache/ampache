@@ -26,15 +26,19 @@
 	<input type="textbox" name="name" value="<?php echo scrub_out($song->title); ?>" />
 </td>
 <td>
-	<?php show_artist_select('artist',$song->artist); ?>
+	<?php show_artist_select('artist',$song->artist,true,$song->id); ?>
+	<div id="artist_select_song_<?php echo $song->id ?>"></div>
+<?php echo Ajax::observe('artist_select_'.$song->id,'change','check_inline_song_edit("artist", '.$song->id.')'); ?>
 </td>
 <td>
 	<?php show_album_select('album',$song->album,true,$song->id); ?>
 	<div id="album_select_song_<?php echo $song->id ?>"></div>
-<?php echo Ajax::observe('album_select_'.$song->id,'change','checkAlbum('.$song->id.')'); ?>
+<?php echo Ajax::observe('album_select_'.$song->id,'change','check_inline_song_edit("album", '.$song->id.')'); ?>
 </td>
 <td>
-	<?php show_genre_select('genre',$song->genre); ?>
+	<?php show_genre_select('genre',$song->genre,'',true,$song->id); ?>
+	<div id="genre_select_song_<?php echo $song->id ?>"></div>
+<?php echo Ajax::observe('genre_select_'.$song->id,'change','check_inline_song_edit("genre", '.$song->id.')'); ?>
 </td>
 <td>
 	<input type="textbox" name="track" size="3" value="<?php echo scrub_out($song->track); ?>" />

@@ -556,6 +556,10 @@ input[type=checkbox]  { border:0;background:none; }
 	background-image:url(../images/sort_on.gif);
 }
 
+.tableform select {
+        width: 150px;
+}
+
 /* table rows */
 .odd, .even, .row-highlight		{ background: url(../images/list_back.png) 0 50% repeat-x !important; background-image: none;}
 .odd 					{ background-color: #111 !important;}

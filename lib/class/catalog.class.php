@@ -2362,11 +2362,11 @@ class Catalog {
 
 	} // remove_songs
 
-	/*!
-		@function exports the catalog
-		@discussion it exports all songs in the database to the given export type.
-	*/
-	function export($type){
+	/**
+	 * exports the catalog
+	 * it exports all songs in the database to the given export type.
+	 */
+	public function export($type) {
 
 		// Select all songs in catalog
 		if($this->id) {
@@ -2375,43 +2375,49 @@ class Catalog {
 			$sql = "SELECT id FROM song ORDER BY album,track";
 		}
 		$db_results = Dba::query($sql);
-		
-		if ($type=="itunes"){
-		
-			echo xml_get_header('itunes');
+
+		switch ($type) { 
+			case 'itunes': 	
+				echo xml_get_header('itunes');
 			
-			while ($results = Dba::fetch_assoc($db_results)) { 
-				$song = new Song($results['id']);
-				$song->format();
+				while ($results = Dba::fetch_assoc($db_results)) { 
+					$song = new Song($results['id']);
+					$song->format();
 
-				$xml = array();
-				$xml['key']= $results['id'];
-				$xml['dict']['Track ID']= intval($results['id']);
-				$xml['dict']['Name'] = $song->title;
-				$xml['dict']['Artist'] = $song->f_artist_full;
-				$xml['dict']['Album'] = $song->f_album_full;
-				$xml['dict']['Genre'] = $song->f_genre;
-				$xml['dict']['Total Time'] = intval($song->time) * 1000; // iTunes uses milliseconds
-				$xml['dict']['Track Number'] = intval($song->track);
-				$xml['dict']['Year'] = intval($song->year);
-				$xml['dict']['Date Added'] = date("Y-m-d\TH:i:s\Z",$song->addition_time);
-				$xml['dict']['Bit Rate'] = intval($song->bitrate/1000);
-				$xml['dict']['Sample Rate'] = intval($song->rate);
-				$xml['dict']['Play Count'] = intval($song->played);
-				$xml['dict']['Track Type'] = "URL";
-				$xml['dict']['Location'] = $song->get_url();
-				
-				echo xml_from_array($xml,1,'itunes');
-				
-				// flush output buffer
-				ob_flush();
-				flush();
+					$xml = array();
+					$xml['key']= $results['id'];
+					$xml['dict']['Track ID']= intval($results['id']);
+					$xml['dict']['Name'] = $song->title;
+					$xml['dict']['Artist'] = $song->f_artist_full;
+					$xml['dict']['Album'] = $song->f_album_full;
+					$xml['dict']['Genre'] = $song->f_genre;
+					$xml['dict']['Total Time'] = intval($song->time) * 1000; // iTunes uses milliseconds
+					$xml['dict']['Track Number'] = intval($song->track);
+					$xml['dict']['Year'] = intval($song->year);
+					$xml['dict']['Date Added'] = date("Y-m-d\TH:i:s\Z",$song->addition_time);
+					$xml['dict']['Bit Rate'] = intval($song->bitrate/1000);
+					$xml['dict']['Sample Rate'] = intval($song->rate);
+					$xml['dict']['Play Count'] = intval($song->played);
+					$xml['dict']['Track Type'] = "URL";
+					$xml['dict']['Location'] = $song->get_url();
+					echo xml_from_array($xml,1,'itunes');
+					// flush output buffer
+				} // while result
+				echo xml_get_footer('itunes');
 
-			} // while result
-
-			echo xml_get_footer('itunes');
-
-		} // itunes
+			break; 
+			case 'csv':
+				echo "ID,Title,Artist,Album,Genre,Length,Track,Year,Date Added,Bitrate,Played,File\n"; 
+				while ($results = Dba::fetch_assoc($db_results)) { 
+					$song = new Song($results['id']); 
+					$song->format(); 
+					echo '"' . $song->id . '","' . $song->title . '","' . $song->artist_full . '","' . $song->album_full . 
+						'","' . $song->f_genre . '","' . $song->f_time . '","' . $song->f_track . '","' . $song->year . 
+						'","' . date("Y-m-d\TH:i:s\Z",$song->addition_time) . '","' . $song->f_bitrate . 
+						'","' . $song->played . '","' . $song->file . "\n"; 
+				} 	
+			break;
+		} // end switch
 
 	} // export
 

@@ -24,8 +24,8 @@
       <li id="sb_admin_ot_Mail"><a href="<?php echo $web_path; ?>/admin/mail.php"><?php echo _('Mail Users'); ?></a></li>
       <li id="sb_admin_ot_ClearNowPlaying"><a href="<?php echo $web_path; ?>/admin/catalog.php?action=clear_now_playing"><?php echo _('Clear Now Playing'); ?></a></li>
       <li id="sb_admin_ot_ClearCatStats"><a href="<?php echo $web_path; ?>/admin/catalog.php?action=clear_stats"><?php echo _('Clear Stats'); ?></a></li>
+      <li id="sb_admin_ot_ExportCatalog"><a href="<?php echo $web_path; ?>/admin/export.php"><?php echo _('Export Catalog'); ?></a></li>
       <li id="sb_admin_ot_ManageFlagged"><a href="<?php echo $web_path; ?>/admin/flag.php"><?php echo _('Manage Flagged'); ?></a></li>
-      <li id="sb_admin_ot_Export"><a href="<?php echo $web_path; ?>/admin/export.php"><?php echo _('Export'); ?></a></li>
       <?php if (Config::get('shoutbox')) { ?>
       <li id="sb_admin_ot_ManageShoutbox"><a href="<?php echo $web_path; ?>/shout.php?action=show_manage"><?php echo _('Manage Shoutbox'); ?></a></li>
       <?php } ?>

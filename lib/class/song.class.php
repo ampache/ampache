@@ -395,9 +395,6 @@ class Song {
 		foreach ($data as $key=>$value) { 
 			switch ($key) { 
 				case 'title': 
-				#case 'album': 
-				case 'artist': 
-				case 'genre': 
 				case 'track':
 					// Check to see if it needs to be updated
 					if ($value != $this->$key) { 
@@ -407,14 +404,18 @@ class Song {
 						$updated = 1; 
 					} 
 				break;
+				case 'artist':
 				case 'album':
+				case 'genre':
 					if ($value != $this->$key) {
 						if ($value == -1) {
-							// Add new album based on album_name
-							$value = Catalog::check_album($data['album_name']);
+							// Add new data
+							$fn = "check_$key";
+							$value = Catalog::$fn($data["{$key}_name"]);
 						}
 						if ($value) {
-							self::update_album($value, $this->id);
+							$fn = "update_$key";
+							self::$fn($value, $this->id);
 							$this->$key = $value;
 							$updated = 1;
 						}

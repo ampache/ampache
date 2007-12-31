@@ -505,6 +505,10 @@ a.button{padding:1px 3px;}
 	text-align:center;
 }
 
+.tableform select { 
+	width: 150px; 
+} 
+
 /* table rows */
 .odd, .odd td,
 .even, .even td, .row-highlight {

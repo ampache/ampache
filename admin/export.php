@@ -26,6 +26,8 @@ if (!Access::check('interface','100')) {
 	exit;
 }
 
+show_header(); 
+
 /* Switch on Action */
 switch ($_REQUEST['action']) {
 	case 'export':
@@ -35,22 +37,35 @@ switch ($_REQUEST['action']) {
 		
 		$catalog = new Catalog($_REQUEST['export_catalog']);
 
+		// Clear everything we've done so far
+		ob_end_clean(); 
+		ob_start(); 
 		header("Content-Transfer-Encoding: binary");
 		header("Cache-control: public");
 
+		$date = date("d/m/Y",time()); 
+
 		switch($_REQUEST['export_format']) {
-		case 'itunes':
-			header("Content-Type: application/itunes+xml; charset=utf-8");
-			header("Content-Disposition: attachment; filename=\"itunes.xml\"");
-			$catalog->export('itunes');
-		break;
-		}
+			case 'itunes':
+				header("Content-Type: application/itunes+xml; charset=utf-8");
+				header("Content-Disposition: attachment; filename=\"ampache-itunes-$date.xml\"");
+				$catalog->export('itunes');
+			break;
+			case 'csv': 
+				header("Content-Type: application/vnd.ms-excel"); 
+				header("Content-Disposition: filename=\"ampache-export-$date.csv\""); 
+				$catalog->export('csv'); 
+			break; 
+		} // end switch on format 
+
+		// We don't want the footer so we're done here
+		exit; 
 		
 	break;
 	default:
-		show_header(); 
 		require_once Config::get('prefix') . '/templates/show_export.inc.php'; 
-		show_footer();
 	break;
 } // end switch on action
+
+show_footer();
 ?>
