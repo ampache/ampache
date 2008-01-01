@@ -188,6 +188,16 @@ class AmpacheHttpq extends localplay_controller {
         } // get_instances
 
         /**
+         * update_instance
+         * This takes an ID and an array of data and updates the instance specified
+         */
+        public function update_instance($uid,$data) { 
+
+
+
+        } // update_instance
+
+        /**
          * instance_fields
          * This returns a key'd array of [NAME]=>array([DESCRIPTION]=>VALUE,[TYPE]=>VALUE) for the
          * fields so that we can on-the-fly generate a form

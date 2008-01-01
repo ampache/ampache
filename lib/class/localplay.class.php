@@ -545,7 +545,7 @@ class Localplay {
 	 */
 	public function update_instance($uid,$data) { 
 
-		$data = $this->_player->update_instance($uid); 
+		$data = $this->_player->update_instance($uid,$data); 
 
 		return $data; 
 

@@ -41,6 +41,7 @@ abstract class localplay_controller {
 	// For display we need the following 'instance' functions
 	abstract public function add_instance($data); 
 	abstract public function delete_instance($id); 
+	abstract public function update_instance($id,$post); 
 	abstract public function get_instances(); 
 	abstract public function instance_fields();
 	abstract public function set_active_instance($uid); 

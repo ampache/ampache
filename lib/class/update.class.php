@@ -1108,5 +1108,22 @@ class Update {
 
 	} // update_340014
 
+	/**
+	 * update_340015
+	 * This update tweaks the playlist table responding to complaints from usres
+	 * who say it doesn't work, unreproduceable. This also adds an index to the 
+	 * album art table to try to make the random album art faster
+	 */	
+	public static function update_340015() { 
+
+		$sql = "ALTER TABLE `album_data` ADD INDEX `album_art` `album_id`,`art`(5)"; 
+		$db_results = Dba::query($sql); 
+
+		$sql = "ALTER TABLE `playlist` CHANGE `date` `date` INT ( 11 ) UNSIGNED"; 
+		$db_results = Dba::query($sql); 
+
+		
+	} // update_340015
+
 } // end update class
 ?>

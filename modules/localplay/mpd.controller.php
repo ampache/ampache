@@ -204,6 +204,25 @@ class AmpacheMpd extends localplay_controller {
 	} // get_instance
 
 	/**
+	 * update_instance
+	 * This takes an ID and an array of data and updates the instance specified
+	 */
+	public function update_instance($uid,$data) { 
+
+		$uid 	= Dba::escape($uid); 
+		$host	= $data['host'] ? Dba::escape($data['host']) : '127.0.0.1'; 
+		$port	= $data['port'] ? Dba::escape($data['port']) : '6600'; 
+		$name	= Dba::escape($data['name']); 
+		$pass	= Dba::escape($data['password']); 
+
+		$sql = "UPDATE `localplay_mpd` SET `host`='$host', `port`='$port', `name`='$name', `password`='$pass' WHERE `id`='$uid'"; 
+		$db_results = Dba::query($sql); 
+
+		return true; 
+
+	} // update_instance
+
+	/**
 	 * instance_fields
 	 * This returns a key'd array of [NAME]=>array([DESCRIPTION]=>VALUE,[TYPE]=>VALUE) for the
 	 * fields so that we can on-the-fly generate a form

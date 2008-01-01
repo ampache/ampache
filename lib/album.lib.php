@@ -130,22 +130,24 @@ function get_random_albums($count=6) {
         $sql .= ' FROM `album`';
         $db_results = Dba::query($sql);
 
-        $sql = '';
+	$in_sql = '`album_id` IN ('; 
 
         $row = Dba::fetch_row($db_results);
         
 	for ($i = 0; $i < ceil($count * 1.5); $i++) {
-                if ($i > 0) $sql .= ' UNION ';
-                $sql .= "SELECT `id` FROM (SELECT `id` FROM `album` LIMIT $row[$i],1) t".$i ;
+		$in_sql .= "'$row[$i]',"; 
         }
-        
-	$db_results = Dba::query($sql);
+       
+	$in_sql = rtrim($in_sql,',') . ')'; 
 
+	$sql = "SELECT `album_id` FROM `album_data` WHERE $in_sql AND `art` IS NOT NULL"; 
+
+	$db_results = Dba::query($sql);
         $results = array();
 
         for ($i = 0; $i < $count; $i++) {
                 $row = Dba::fetch_assoc($db_results);
-                $results[] = $row['id'];
+                $results[] = $row['album_id'];
         }
 
         return $results;
