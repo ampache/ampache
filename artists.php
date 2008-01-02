@@ -39,6 +39,8 @@ switch($_REQUEST['action']) {
 		require_once Config::get('prefix') . '/templates/show_artist_box.inc.php';
 		$song_ids = $artist->get_songs();
 		Browse::set_type('song'); 
+		Browse::set_static_content(1); 
+		Browse::save_objects($song_ids);
 		Browse::show_objects($song_ids); 
         break;
 	case 'update_from_tags':
