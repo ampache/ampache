@@ -66,14 +66,12 @@ function update_preferences($pref_id=0) {
 			default: 
 			break;
 		}
-		
 		/* Run the update for this preference only if it's set */
 		if (isset($_REQUEST[$name])) { 
-			Preference::update($id,$pref_id,$value); 
+			Preference::update($id,$pref_id,$value,$_REQUEST[$apply_to_all]); 
 		}
 
 	} // end foreach preferences
-
 
 } // update_preferences
 

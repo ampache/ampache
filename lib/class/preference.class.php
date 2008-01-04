@@ -41,7 +41,7 @@ class Preference {
 	 * update
 	 * This updates a single preference from the given name or id
 	 */
-	public static function update($preference,$user_id,$value) { 
+	public static function update($preference,$user_id,$value,$applytoall='') { 
 
 		// First prepare
 		if (!is_numeric($preference)) { 
@@ -52,13 +52,19 @@ class Preference {
 			$name = self::name_from_id($preference); 
 			$id = $preference; 
 		} 
+		if ($applytoall AND Access::check('interface','100')) { 
+			$user_check = "";
+		}
+		else { 
+			$user_check = " AND `user`='$user_id'";
+		} 
 
 		// Now do
 		if (self::has_access($name)) { 
 			$value 		= Dba::escape($value); 
 			$user_id	= Dba::escape($user_id); 
 			$sql = "UPDATE `user_preference` SET `value`='$value' " . 
-				"WHERE `preference`='$id' AND `user`='$user_id'"; 
+				"WHERE `preference`='$id'$user_check"; 
 			$db_results = Dba::query($sql); 
 			return true; 
 		} 

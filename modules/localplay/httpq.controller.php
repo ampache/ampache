@@ -193,7 +193,16 @@ class AmpacheHttpq extends localplay_controller {
          */
         public function update_instance($uid,$data) { 
 
+		$uid	= Dba::escape($uid); 
+		$port	= Dba::escape($data['port']);
+		$host	= Dba::escape($data['host']); 
+		$name	= Dba::escape($data['name']); 
+		$pass	= Dba::escape($data['password']); 
+		
+		$sql = "UPDATE `localplay_httpq` SET `host`='$host', `port`='$port', `name`='$name', `password`='$password' WHERE `id`='$uid'"; 
+		$db_results = Dba::query($sql); 
 
+		return true; 
 
         } // update_instance
 
