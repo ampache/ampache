@@ -146,7 +146,7 @@ switch ($_REQUEST['action']) {
 	case 'democratic': 
 		$democratic = Democratic::get_current_playlist(); 
 		$urls[] = $democratic->get_url(); 
-		$song_ids = array(); 
+		$song_ids = array('0'); 
 	break;
 	case 'download': 
 		$song_ids[] = $_REQUEST['song_id']; 

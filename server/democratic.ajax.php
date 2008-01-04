@@ -63,6 +63,14 @@ switch ($_REQUEST['action']) {
 		ob_end_clean(); 
 	
 	break; 
+	case 'send_playlist': 
+		if (!Access::check('interface','75')) { 
+			exit; 
+		} 
+
+		$_SESSION['iframe']['target'] = Config::get('web_path') . '/stream.php?action=democratic'; 
+		$results['rfc3514'] = '<script type="text/javascript">reload_util("'.$_SESSION['iframe']['target'].'")</script>';
+	break; 
 	default: 
 		$results['rfc3514'] = '0x1'; 
 	break;

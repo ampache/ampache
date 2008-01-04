@@ -44,7 +44,7 @@ show_box_top(_('Manage Democratic Playlists'));  ?>
 	<td><?php echo $playlist->f_link; ?></td>
 	<td><?php echo $democratic->count_items(); ?></td>
 	<td>
-	<a href="<?php echo Config::get('web_path'); ?>/stream.php?action=democratic"><?php echo get_user_icon('all'); ?></a>
+	<?php echo Ajax::button('?page=democratic&action=send_playlist','all',_('Play'),'play_democratic'); ?>
 	</td>
 </tr>
 <?php } if (!count($playlists)) { ?>
