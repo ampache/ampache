@@ -432,21 +432,21 @@ class AmpacheHttpq extends localplay_controller {
        } // volume
 
        /**
-        * loop
+        * repeat
         * This tells HttpQ to set the repeating the playlist (i.e. loop) to either on or off
         */
-       function loop($state) {
+       public function repeat($state) {
 	
 		if (is_null($this->_httpq->repeat($state))) { return false; }
        		return true;
 
-       } // loop
+       } // repeat
 
        /**
         * random
         * This tells HttpQ to turn on or off the playing of songs from the playlist in random order
         */
-       function random($onoff) {
+       public function random($onoff) {
 
                if (is_null($this->_httpq->random($onoff))) { return false; }
                return true;
@@ -463,9 +463,11 @@ class AmpacheHttpq extends localplay_controller {
 
 		/* Get the Current Playlist */
 		$list = $this->_httpq->get_tracks();
-
-		$songs = explode("::",$list); 
 		
+		if (!$list) { return array(); } 
+	
+		$songs = explode("::",$list); 
+
 		foreach ($songs as $key=>$entry) { 
 			$data = array();
 			

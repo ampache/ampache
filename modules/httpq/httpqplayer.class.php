@@ -161,7 +161,7 @@ class HttpQPlayer {
 	 * pause
 	 * toggle pause mode on current song
 	 */  	
-	function pause() {
+	public function pause() {
 
 		$args = array();
 		$results = $this->sendCommand("pause", $args);
@@ -176,10 +176,10 @@ class HttpQPlayer {
 	 * stop
 	 * stops the current song amazing!
 	 */  	
-	function stop() {
+	public function stop() {
 
 		$args = array();
-		$results = $this->sendCommand('fadeoutandstop', $args);
+		$results = $this->sendCommand('stop', $args);
 
 		if ($results == '0') { $results = null; } 
 
@@ -191,7 +191,7 @@ class HttpQPlayer {
  	 * repeat
 	 * This toggles the repeat state of HttpQ
 	 */
-	function repeat($value) { 
+	public function repeat($value) { 
 		
 		$args = array('enable'=>$value); 
 		$results = $this->sendCommand('repeat',$args); 
@@ -206,7 +206,7 @@ class HttpQPlayer {
 	 * random
 	 * this toggles the random state of HttpQ
 	 */
-	function random($value) { 
+	public function random($value) { 
 
 		$args = array('enable'=>$value); 
 		$results = $this->sendCommand('shuffle',$args); 
