@@ -1,5 +1,5 @@
-# French translation for Ampache.
-# Copyright (C) 2007 THE v0.1a'S COPYRIGHT HOLDER
+# fr_FR Translation of Ampache.
+# Copyright (C) 2007 Ampache.org
 # This file is distributed under the same license as the Ampache package.
 # Thomas Legay <TomAmplius@yahoo.fr>, 2007.
 # FHAUTZ Gilles <cocobu@mail.pf>, 2007.

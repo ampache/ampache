@@ -47,7 +47,8 @@ function update_preferences($pref_id=0) {
 		/* Get the Value from POST/GET var called $data */
 		$type 		= $data['type'];
 		$name 		= $data['name'];
-		$apply_to_all	= "check_" . $data['name'];
+		$apply_to_all	= 'check_' . $data['name'];
+		$new_level	= 'level_' . $data['name']; 
 		$id		= $data['id'];
 		$value 		= scrub_in($_REQUEST[$name]);
 
@@ -69,6 +70,9 @@ function update_preferences($pref_id=0) {
 		/* Run the update for this preference only if it's set */
 		if (isset($_REQUEST[$name])) { 
 			Preference::update($id,$pref_id,$value,$_REQUEST[$apply_to_all]); 
+			if (Access::check('interface','100') AND $_REQUEST[$new_level]) { 
+				Preference::update_level($id,$_REQUEST[$new_level]); 
+			} 
 		}
 
 	} // end foreach preferences

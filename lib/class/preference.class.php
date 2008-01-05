@@ -79,7 +79,15 @@ class Preference {
 	 * update_level
 	 * This takes a preference ID and updates the level required to update it (performed by an admin)
 	 */
-	public static function update_level($preference_id,$level) { 
+	public static function update_level($preference,$level) { 
+
+                // First prepare
+                if (!is_numeric($preference)) { 
+                        $preference_id = self::id_from_name($preference);
+                } 
+                else { 
+                        $preference_id = $preference;
+                } 
 
 		$preference_id 	= Dba::escape($preference_id);
 		$level		= Dba::escape($level); 

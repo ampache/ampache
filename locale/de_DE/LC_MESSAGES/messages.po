@@ -1,6 +1,6 @@
-# translation of messages.po to
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
+# de_DE translation of Ampache
+# Copyright (C) 2007 Ampache.org
+# This file is distributed under the same license as the Ampache package.
 #
 # Nikolai Försterling <devel@fosternet.de>, 2007.
 msgid ""

@@ -401,10 +401,10 @@ function img_resize($image,$size,$type,$album_id) {
 			imagejpeg($img,null,100);
 			break;
 		case 'gif':
-			imagegif($img,null,100);
+			imagegif($img);
 			break;
 		case 'png':
-			imagepng($img,null,100);
+			imagepng($img);
 			break;
 	}
 

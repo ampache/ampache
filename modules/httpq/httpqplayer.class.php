@@ -134,7 +134,7 @@ class HttpQPlayer {
 	function skip($pos) { 
 
 		$args = array('index'=>$pos); 
-		$results = $this->sendCommand('sendplaylistpos',$args); 
+		$results = $this->sendCommand('setplaylistpos',$args); 
 
 		if ($results == '0') { return null; } 
 

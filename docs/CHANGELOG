@@ -4,6 +4,9 @@
 
 --------------------------------------------------------------------------
   v.3.4-Beta2 
+	- Fixed Admin Preference Level updates
+	- Fixed incorrect command for skip to on HttpQ (Thx usaf_pride)
+	- Fixed problem with gif and png resize
 	- Fixed problem where democratic play wouldn't send to localplay
 		and would just display a blank screen
 	- Added Multi-Character Filter on browse pages

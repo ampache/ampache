@@ -1,8 +1,6 @@
-# translation of messages.po to Italian
-# translation of messages.po to
-# This file is distributed under the same license as the PACKAGE package.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER, 2005.
-#
+# it_IT Translation of Ampache.
+# Copyright (C) 2007 Ampache.org
+# This file is distributed under the same license as the Ampache package.
 # Mr-miky <translate@mr-miky.com>, 2005, 2006.
 msgid ""
 msgstr ""
