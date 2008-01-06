@@ -1,7 +1,7 @@
 # Translations Base.
-# Copyright (C) 2007 Ampache.org
+# Copyright (C) 2008 Ampache.org
 # This file is distributed under the same license as the Ampache package.
-# Fuzzy <EMAIL@ADDRESS>, 2007.
+# LL <LL@li.org>, 2007.
 #
 #, fuzzy
 msgid ""
