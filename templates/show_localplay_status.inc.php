@@ -25,9 +25,9 @@ $status = $localplay->status();
 <?php show_box_top(_('Localplay Control')); ?>
 <strong><?php echo $localplay->get_user_state($status['state']) ?></strong><br />
 
-<?php echo Ajax::button('?page=localplay&action=command&command=volume_up','volumeup',_('Increase Volume'),'localplay_volume_up'); ?>
-<?php echo Ajax::button('?page=localplay&action=command&command=volume_down','volumedn',_('Decrease Volume'),'localplay_volume_dn'); ?>
 <?php echo Ajax::button('?page=localplay&action=command&command=volume_mute','volumemute',_('Mute'),'localplay_mute'); ?>
+<?php echo Ajax::button('?page=localplay&action=command&command=volume_down','volumedn',_('Decrease Volume'),'localplay_volume_dn'); ?>
+<?php echo Ajax::button('?page=localplay&action=command&command=volume_up','volumeup',_('Increase Volume'),'localplay_volume_up'); ?>
 <strong><?php echo _('Volume'); ?>:</strong><?php echo $status['volume']; ?>%
 <br />
 	<strong><?php echo _('Repeat') . ":"; ?></strong> <?php echo print_boolean($status['repeat']); ?> | 
