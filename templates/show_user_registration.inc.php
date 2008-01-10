@@ -32,7 +32,7 @@ $web_path = Config::get('web_path');
 <link rel="stylesheet" href="<?php echo Config::get('web_path'); ?>/templates/install.css" type="text/css" media="screen" />
 <link rel="shortcut icon" href="<?php echo Config::get('web_path'); ?>/favicon.ico" />
 <div id="header">
-<h1><?php echo Config::get('site_title'); ?></h1>
+<h1><?php echo scrub_out(Config::get('site_title')); ?></h1>
 <?php echo _('Registration'); ?>...
 </div>
 </head>
