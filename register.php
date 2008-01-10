@@ -110,7 +110,7 @@ switch ($_REQUEST['action']) {
 			$attempt++;
 		}
 
-		if ($validate_results[0]) {
+		if ($validate_results[0] OR strstr($validate_results[1],"greylist")) {
 			$mmsg = "MAILOK";
 		}
 	        else {
@@ -164,15 +164,8 @@ switch ($_REQUEST['action']) {
 		$validation = md5(uniqid(rand(), true));
 		$client->update_validation($validation);
 
-		$message = 'Your account has been created. However, this application requires account activation.' .
-				' An activation key has been sent to the e-mail address you provided. ' .
-				'Please check your e-mail for further information';
-
 		Registration::send_confirmation($username, $fullname, $email, $pass1, $validation);
-		?>
-		<link rel="stylesheet" href="<?php echo $web_path; ?><?php echo conf('theme_path'); ?>/templates/default.css" type="text/css" />
-		<?php
-		show_confirmation(_('Registration Complete'),$message,'/login.php');	
+		require_once Config::get('prefix') . '/templates/show_registration_confirmation.inc.php'; 
 	break;
 	case 'show_add_user':
 	default:

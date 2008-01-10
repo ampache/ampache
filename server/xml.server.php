@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2007 Ampache.org
+ Copyright (c) 2001 - 2008 Ampache.org
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
@@ -85,6 +85,7 @@ switch ($_REQUEST['action']) {
 
 		// Set the offset
 		xmlData::set_offset($_REQUEST['offset']); 
+		xmlData::set_limit($_REQUEST['limit']); 
 
 		$artists = Browse::get_objects(); 
 		// echo out the resulting xml document
@@ -98,6 +99,7 @@ switch ($_REQUEST['action']) {
 
                 // Set the offset
                 xmlData::set_offset($_REQUEST['offset']);
+		xmlData::set_limit($_REQUEST['limit']); 
 		ob_end_clean(); 
 		echo xmlData::albums($albums); 
 	break; 
@@ -107,6 +109,7 @@ switch ($_REQUEST['action']) {
 
 		// Set the offset
 		xmlData::set_offset($_REQUEST['offset']); 
+		xmlData::set_limit($_REQUEST['limit']); 
 		ob_end_clean(); 
 		echo xmlData::songs($songs); 
 	break; 
@@ -122,6 +125,7 @@ switch ($_REQUEST['action']) {
 
                 // Set the offset
                 xmlData::set_offset($_REQUEST['offset']);
+		xmlData::set_limit($_REQUEST['limit']); 
 		ob_end_clean(); 
 		echo xmlData::albums($albums); 
 	break; 
@@ -131,6 +135,8 @@ switch ($_REQUEST['action']) {
 
                 // Set the offset
                 xmlData::set_offset($_REQUEST['offset']);
+		xmlData::set_limit($_REQUEST['limit']); 
+
 		ob_end_clean(); 
 		echo xmlData::songs($songs); 
 	break; 
@@ -146,24 +152,38 @@ switch ($_REQUEST['action']) {
 
                 // Set the offset
                 xmlData::set_offset($_REQUEST['offset']);
+		xmlData::set_limit($_REQUEST['limit']); 
+
 		ob_end_clean(); 
 		echo xmlData::genres($genres); 
 	break; 
 	case 'genre_artists': 
 		$genre = new Genre($_REQUEST['filter']); 
 		$artists = $genre->get_artists(); 
+
+                xmlData::set_offset($_REQUEST['offset']);
+                xmlData::set_limit($_REQUEST['limit']);
+
 		ob_end_clean(); 
 		echo xmlData::artists($artists); 	
 	break; 
 	case 'genre_albums': 
 		$genre = new Genre($_REQUEST['filter']); 
 		$albums = $genre->get_albums(); 
+
+                xmlData::set_offset($_REQUEST['offset']);
+                xmlData::set_limit($_REQUEST['limit']);
+
 		ob_end_clean(); 
 		echo xmlData::albums($albums); 
 	break;
 	case 'genre_songs': 
 		$genre = new Genre($_REQUEST['filter']); 
 		$songs = $genre->get_songs(); 
+
+                xmlData::set_offset($_REQUEST['offset']);
+                xmlData::set_limit($_REQUEST['limit']);
+
 		ob_end_clean(); 	
 		echo xmlData::songs($songs); 
 	break; 
@@ -179,6 +199,8 @@ switch ($_REQUEST['action']) {
 
                 // Set the offset
                 xmlData::set_offset($_REQUEST['offset']);
+		xmlData::set_limit($_REQUEST['limit']); 
+
 		ob_end_clean(); 
 		echo xmlData::songs($songs); 
 	break; 
@@ -194,6 +216,8 @@ switch ($_REQUEST['action']) {
 		$playlist_ids = Browse::get_objects(); 
 
 		xmlData::set_offset($_REQUEST['offset']); 
+		xmlData::set_limit($_REQUEST['limit']); 
+
 		ob_end_clean(); 
 		echo xmlData::playlists($playlist_ids);
 	break; 
@@ -208,6 +232,7 @@ switch ($_REQUEST['action']) {
 		} // end foreach
 
 		xmlData::set_offset($_REQUEST['offset']); 
+		xmlData::set_limit($_REQUEST['limit']); 
 		ob_end_clean(); 
 		echo xmlData::songs($songs); 
 	break; 

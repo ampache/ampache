@@ -28,7 +28,7 @@
 class xmlData { 
 
 	// This is added so that we don't pop any webservers
-	public static $limit = '5000';
+	private static $limit = '5000';
 	private static $offset = '0'; 
 
 	/**
@@ -51,6 +51,17 @@ class xmlData {
 		self::$offset = $offset; 
 
 	} // set_offset
+
+	/**
+	 * set_limit
+	 * This sets the limit for any ampache transactions
+	 */
+	public static function set_limit($limit) { 
+
+		$limit = intval($limit); 
+		self::$limit = $limit; 
+
+	} // set_limit
 
 	/**
 	 * error

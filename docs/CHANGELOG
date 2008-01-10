@@ -4,6 +4,11 @@
 
 --------------------------------------------------------------------------
   v.3.4-Beta2 
+	- Added limit option to the XML API
+	- Fixed an issue where inline song editing wouldn't update the song 
+		title (Thx profner)
+	- Fixed conf error on registration confirmation and made it
+		aware of greylisting
 	- Fixed Admin Preference Level updates
 	- Fixed incorrect command for skip to on HttpQ (Thx usaf_pride)
 	- Fixed problem with gif and png resize

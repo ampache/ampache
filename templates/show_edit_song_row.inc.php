@@ -23,7 +23,7 @@
 <form method="post" id="edit_song_<?php echo $song->id; ?>">
 <table cellpadding="3" cellspacing="0">
 <td>
-	<input type="textbox" name="name" value="<?php echo scrub_out($song->title); ?>" />
+	<input type="textbox" name="title" value="<?php echo scrub_out($song->title); ?>" />
 </td>
 <td>
 	<?php show_artist_select('artist',$song->artist,true,$song->id); ?>
