@@ -137,17 +137,17 @@ class Flag {
 	 * get_approved
 	 * This returns an array of approved flagged songs
 	 */
-	function get_approved() { 
+	public static function get_approved() { 
 
-		$sql = "SELECT id FROM flagged WHERE approved='1'";
-		$db_results = mysql_query($sql,dbh()); 
+		$sql = "SELECT `id` FROM `flagged` WHERE `approved`='1'";
+		$db_results = Dba::query($sql);  
 
 
 		/* Default the results array */
 		$results = array(); 
 
 		/* While it */
-		while ($r = mysql_fetch_assoc($db_results)) { 
+		while ($r = Dba::fetch_assoc($db_results)) { 
 			$results[] = $r['id'];
 		}
 
@@ -301,6 +301,52 @@ class Flag {
 		} // end switch
 
 	} // validate_flag
+
+	/**
+	 * fill_tags
+	 * This is used by the write_tags script. 
+	 */
+	public static function fill_tags( $tagWriter, $song, $type = 'comment' ) {
+
+	        // Set all of the attributes for the tag to be written(All pulled from the song object)
+	        // Use a function since ID3v1, ID3v2, and vorbis/flac/ape are different
+		switch ($type) { 
+			case 'comment': 
+		                $tagWriter->comments['title'] = $song->title;
+		                $tagWriter->comments['date'] = $song->year;
+		                $tagWriter->comments['year'] = $song->year;
+		                $tagWriter->comments['comment'] = $song->comment;
+		                $tagWriter->comments['size'] = $song->size;
+		                $tagWriter->comments['time'] = $song->time;
+		                $tagWriter->comments['album'] = $song->get_album_name();
+		                $tagWriter->comments['artist'] = $song->get_artist_name();
+		                $tagWriter->comments['genre'] = $song->get_genre_name();
+		                $tagWriter->comments['track'] = $song->track;
+			break; 
+			case 'id3v1':
+	                	$tagWriter->title = $song->title;
+		                $tagWriter->year = $song->year;
+		                $tagWriter->comment = $song->comment;
+		                $tagWriter->artist = $song->get_artist_name();
+		                $tagWriter->album = $song->get_album_name();
+		                $tagWriter->genre = $song->get_genre_name();
+		                $tagWriter->track = $song->track;
+		                unset($tagWriter->genre_id);
+			break;
+			case 'id3v2':
+	                	$tagWriter->title = $song->title;
+		                $tagWriter->year = $song->year;
+		                $tagWriter->comment = $song->comment;
+		                $tagWriter->artist = $song->get_artist_name();
+		                $tagWriter->album = $song->get_album_name();
+		                $tagWriter->genre = $song->get_genre_name();
+		                $tagWriter->track = $song->track;
+		                unset($tagWriter->genre_id);
+			break;
+	        } // end switch on type
+
+	} // fill_tags
+
 
 } //end of flag class
 

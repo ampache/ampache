@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright 2001 - 2007 Ampache.org
+ Copyright 2001 - 2008 Ampache.org
  All Rights Reserved
 
  This program is free software; you can redistribute it and/or
@@ -32,64 +32,65 @@ $prefix = realpath($path . '/../');
 require_once $prefix . '/lib/init.php';
 
 // This is all broken currently so just jump ship
-echo "Writting of Tags to files is not currently supported by Getid3() exiting...\n"; 
-exit; 
+echo "Writting of Tags to files is not currently supported by Getid3() use at your own risk.\n"; 
+flush(); 
 
-// Include getID3 libs, including the ability to write tags
-$getID3 = new getID3();
-getid3_lib::IncludeDependency(GETID3_INCLUDEPATH . "write.php", __FILE__);
-
-$tagWriter = new getid3_writetags();
+require_once Config::get('prefix') . '/modules/getid3/write.vorbis.php';
+require_once Config::get('prefix') . '/modules/getid3/write.apetag.php';
+require_once Config::get('prefix') . '/modules/getid3/write.flac.php';
 
 $flag = new Flag();
-$flaggedIds = $flag->get_approved();
+$flagged_ids = Flag::get_approved();
+
+if (!count($flagged_ids)) { 
+	echo "No Flagged Songs Found, exiting...\n"; 
+	exit; 
+} 
 
 // Loop through every song that has an approved flag
-foreach($flaggedIds as $flagged){
+foreach($flagged_ids as $flagged){
 
-	$info = new Flag($flagged);
-	$song = new Song($info->object_id);
-	$tagWriter->filename = $song->file;
+	$flag = new Flag($flagged);
+	$song = new Song($flag->object_id);
 
 	// Decide on what type of tag format to use, base on song type(a better way maybe?)
 	switch($song->type){ 
 		case 'mp3':
 		case 'mp2':
 		case 'mp1':
-			$tagFormats = array('id3v1','id3v2.3','ape');
+			$tagWriter = new getid3_write_apetag($song->file);
+			Flag::fill_tags( &$tagWriter, &$song, 'comment' );
 			break;
 		case 'ogg':
-			$tagFormats = array('vorbiscomment');
+			$tagWriter = new getid3_write_vorbis($song->file);
+			Flag::fill_tags( &$tagWriter, &$song, 'comment' );
 			break;
 		case 'flac':
-			$tagFormats = array('metaflac');
+			$tagWriter = new getid3_write_flac($song->file);
+			Flag::fill_tags( &$tagWriter, &$song, 'comment' );
 			break;
 		default:
-			$tagFormats = array();
+			echo 'No Tag';
 	} // end switch 
-
-	// Set all of the attributes for the tag to be written(All pulled from the song object)
-	$tagWriter->tagformats = $tagFormats;
-	$tagData['title'][] = $song->title;
-	$tagData['date'][] = $song->year;
-	$tagData['year'][] = $song->year;
-	$tagData['comment'][] = $song->comment;
-	$tagData['size'][] = $song->size;
-	$tagData['time'][] = $song->time;
-	$tagData['album'][] = $song->get_album_name();
-	$tagData['artist'][] = $song->get_artist_name();
-	$tagData['genre'][] = $song->get_genre_name();
-	$tagData['track'][] = $song->track;
-	$tagWriter->tag_data = $tagData;
 	
-	// Write out the tag
-	if(!$tagWriter->WriteTags()){ 
-		//Pump out an error if it dies
-		var_dump($tagWriter->errors); 
+	if ( isset($tagWriter) ) {
+		
+		// Write out the tag
+		try {
+			$tagWriter->write();
+			echo 'Updated song ' . $song->title . ' by ' . $song->get_artist_name() . "\n"; 
+			flush(); 
+			$flag->delete();
+		}
+		catch ( Exception $e ) {
+			print_r( $e->message() );
+		}
 	}
 
-	//  Either way remove the flag cause we have no idea what's happened
-	$info->delete_flag();
+	// Unset objects between iterations. getID3 seems to need this
+	unset($tagWriter,$song,$flag);
+
 }
+
 ?>
 

@@ -4,6 +4,8 @@
 
 --------------------------------------------------------------------------
   v.3.4-Beta2 
+	- Implemented a semi-working write_tags.inc script limited by getid3()
+		support (Thx tomatopi)
 	- Added limit option to the XML API
 	- Fixed an issue where inline song editing wouldn't update the song 
 		title (Thx profner)
