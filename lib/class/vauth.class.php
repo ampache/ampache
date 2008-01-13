@@ -264,10 +264,10 @@ class vauth {
 		} // end switch on data type 
 		
 	        $username       = Dba::escape($data['username']);
-	        $ip             = Dba::escape(ip2int($_SERVER['REMOTE_ADDR']));
+	        $ip             = $_SERVER['REMOTE_ADDR'] ? Dba::escape(ip2int($_SERVER['REMOTE_ADDR'])) : '0'; 
 	        $type           = Dba::escape($data['type']);
 	        $value          = Dba::escape($data['value']);
-		$agent		= Dba::escape($_SERVER['HTTP_USER_AGENT']); 
+		$agent		= Dba::escape(substr($_SERVER['HTTP_USER_AGENT'],0,254)); 
 	        $expire         = Dba::escape(time() + Config::get('session_length'));
 
 	        /* We can't have null things here people */

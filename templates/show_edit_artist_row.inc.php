@@ -24,7 +24,7 @@
 <table cellpadding="3" cellspacing="0">
 <tr>
 <td>
-	<input type="textbox" name="name" value="<?php echo scrub_out($artist->f_name); ?>" />
+	<input type="textbox" name="name" value="<?php echo scrub_out($artist->f_full_name); ?>" />
 </td>
 <td>
 	<input type="hidden" name="id" value="<?php echo $artist->id; ?>" />

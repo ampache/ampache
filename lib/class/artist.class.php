@@ -223,7 +223,7 @@ class Artist {
 	public function format() {
 
 		/* Combine prefix and name, trim then add ... if needed */
-                $name = truncate_with_ellipsis(trim($this->prefix . " " . $this->name));
+                $name = truncate_with_ellipsis(trim($this->prefix . " " . $this->name),Config::get('ellipsis_threshold_artist'));
 		$this->f_name = $name;
 		$this->f_full_name = trim($this->prefix . " " . $this->name); 
 
