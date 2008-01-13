@@ -114,12 +114,6 @@ function get_random_albums($count=6) {
 	$rows = Dba::num_rows($db_results); 
 	if ($rows < 7) { return false; } 
 
-        // There's a slight chance with this logic that the number of albums
-        // returned will be less than the number requested if the id's for the
-        // albums have signifigant gaps, but the speed increase is probably
-        // worth it
-        // - Vlet
-
         $sql = 'SELECT ';
 
         for ($i = 0; $i < ceil($count * 1.5); $i++) {
@@ -140,15 +134,18 @@ function get_random_albums($count=6) {
        
 	$in_sql = rtrim($in_sql,',') . ')'; 
 
-	$sql = "SELECT `album_id` FROM `album_data` WHERE $in_sql AND `art` IS NOT NULL"; 
+	$sql = "SELECT `album_id`,ISNULL(`art`) AS `no_art` FROM `album_data` WHERE $in_sql"; 
 
 	$db_results = Dba::query($sql);
         $results = array();
 
-        for ($i = 0; $i < $count; $i++) {
-                $row = Dba::fetch_assoc($db_results);
-                $results[] = $row['album_id'];
-        }
+	while ($row = Dba::fetch_assoc($db_results)) { 
+	        $results[$row['album_id']] = $row['no_art'];
+        } // end for
+
+	asort($results); 
+	$albums = array_keys($results); 
+	$results = array_slice($albums,0,$count); 
 
         return $results;
 } // get_random_albums

@@ -1122,9 +1122,6 @@ class Update {
 	 */	
 	public static function update_340015() { 
 
-		$sql = "ALTER TABLE `album_data` ADD INDEX `album_art` `album_id`,`art`(5)"; 
-		$db_results = Dba::query($sql); 
-
 		$sql = "ALTER TABLE `playlist` CHANGE `date` `date` INT ( 11 ) UNSIGNED NOT NULL"; 
 		$db_results = Dba::query($sql); 
 
