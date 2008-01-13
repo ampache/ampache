@@ -102,8 +102,7 @@ function search_song($data,$operator,$method,$limit) {
 	/* Generate BASE SQL */
 
 	$where_sql 	= '';
-	$table_sql	= ',';
-        $join_sql       = '';
+	$table_sql	= '';
 	$group_sql 	= ' GROUP BY';
 	$select_sql	= ',';
 
@@ -137,26 +136,24 @@ function search_song($data,$operator,$method,$limit) {
                                                   ) ";
                                 }
                                 $where_sql .= " ) $operator";
-                                $join_sql  .= "song.album=album2.id AND song.artist=artist2.id AND song.genre=genre2.id AND ";
-                                $table_sql .= "album as album2,artist as artist2, genre as genre2";
+                                $table_sql .= " LEFT JOIN `album` as `album2` ON `song`.`album`=`album2`.`id`"; 
+				$table_sql .= " LEFT JOIN `artist` as `artist2` ON `song`.`artist`=`artist2`.`id`"; 
+				$table_sql .= " LEFT JOIN `genre` as `genre2` ON `song`.`genre`=`genre2`.`id`";
                         break;
 			case 'title':
 				$where_sql .= " song.title $value_string $operator";
 			break;
 			case 'album':
 				$where_sql .= " album.name $value_string $operator";
-                                $join_sql  .= "song.album=album.id AND ";
-				$table_sql .= "album,";
+				$table_sql .= " LEFT JOIN `album` ON `song`.`album`=`album`.`id`";
 			break;
 			case 'artist':
 				$where_sql .= " artist.name $value_string $operator";
-                                $join_sql  .= "song.artist=artist.id AND ";
-				$table_sql .= "artist,";
+				$table_sql .= " LEFT JOIN `artist` ON `song`.`artist`=`artist`.`id` ";
 			break;
 			case 'genre':
 				$where_sql .= " genre.name $value_string $operator";
-                                $join_sql  .= "song.genre=genre.id AND ";
-				$table_sql .= "genre,";
+				$table_sql .= " LEFT JOIN `genre` ON `song`.`genre`=`genre`.`id`";
 			break;
 			case 'year':
 				if (empty($data["year2"]) && is_numeric($data["year"])) {
@@ -170,14 +167,13 @@ function search_song($data,$operator,$method,$limit) {
 				$where_sql .= " song.file $value_string $operator";
 			break;
 			case 'comment':
-				$join_sql  .= 'song.id=song_data.song_id AND ';
-				$table_sql .= 'song_data,';
-				$where_sql .= " song_data.comment $value_string $operator";
+				$table_sql .= ' INNER JOIN `song_data` ON `song`.`id`=`song_data`.`song_id`';
+				$where_sql .= " `song_data`.`comment` $value_string $operator";
 			break;
 			case 'played':
 				/* This is a 0/1 value so bool it */
 				$value = make_bool($value);
-				$where_sql .= " song.played = '$value' $operator";
+				$where_sql .= " `song`.`played` = '$value' $operator";
 			break;
 			case 'minbitrate':
 				$value = intval($value);
@@ -185,11 +181,10 @@ function search_song($data,$operator,$method,$limit) {
 			break;
 			case 'rating':
 				$value = intval($value);
-				$select_sql .= "SUM(rating.rating)/(SELECT COUNT(song.id) FROM song,rating WHERE rating.object_id=song.id AND rating.object_type='song' AND rating.rating >= '$value') AS avgrating,";
-				$group_sql .= " rating.rating,";
-				$where_sql .= " (rating.rating >= '$value' AND rating.object_type='song')";
-				$table_sql .= "rating,";
-				$join_sql  .= "rating.object_id=song.id AND";
+				$select_sql .= "AVG(`rating`.`rating`) AS avgrating,";
+				$group_sql .= " rating.object_id,";
+				$where_sql .= " (`rating`.`rating` >= '$value' AND `rating`.`object_type`='song')";
+				$table_sql .= " RIGHT JOIN `rating` ON `rating`.`object_id`=`song`.`id`";
 				$limit_sql .= " ORDER BY avgrating DESC";
 			default:
 				// Notzing!
@@ -200,16 +195,15 @@ function search_song($data,$operator,$method,$limit) {
 	} // foreach data
 
 	/* Trim off the extra $method's and ,'s then combine the sucka! */
-	$table_sql = rtrim($table_sql,',');
 	$where_sql = rtrim($where_sql,$operator);
 	$group_sql = rtrim($group_sql,',');
 	$select_sql = rtrim($select_sql,',');
 
 	if ($group_sql == ' GROUP BY') { $group_sql = ''; } 
 	
-	$base_sql 	= "SELECT DISTINCT(song.id) $select_sql FROM song";
+	$base_sql 	= "SELECT DISTINCT(song.id) $select_sql FROM `song`";
 
-	$sql = $base_sql . $table_sql . " WHERE " . $join_sql . " (" . $where_sql . ")" . $group_sql . $limit_sql;
+	$sql = $base_sql . $table_sql . " WHERE (" . $where_sql . ")" . $group_sql . $limit_sql;
 	
 	/**
 	 * Because we might need this for Dynamic Playlist Action 

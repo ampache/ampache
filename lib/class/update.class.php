@@ -258,6 +258,12 @@ class Update {
 
 		$version[] = array('version' => '340014','description'=>$update_string); 
 
+		$update_string = '- Alter Playlist Date Field to fix issues with some MySQL configurations.<br />' . 
+				'- Add Index to Album_Data to improve album art random performance.<br />' . 
+				'- Alter Rating type to correct AVG issue on searching.<br />'; 
+		
+		//$version[] = array('version' => '340015','description'=>$update_string); 
+
 		return $version;
 
 	} // populate_version
@@ -1119,9 +1125,13 @@ class Update {
 		$sql = "ALTER TABLE `album_data` ADD INDEX `album_art` `album_id`,`art`(5)"; 
 		$db_results = Dba::query($sql); 
 
-		$sql = "ALTER TABLE `playlist` CHANGE `date` `date` INT ( 11 ) UNSIGNED"; 
+		$sql = "ALTER TABLE `playlist` CHANGE `date` `date` INT ( 11 ) UNSIGNED NOT NULL"; 
 		$db_results = Dba::query($sql); 
 
+		$sql = "ALTER TABLE `rating` CHANGE `rating` TINYINT ( 11 ) NOT NULL"; 
+		$db_results = Dba::query($sql); 
+
+		self::set_version('db_version','340015'); 
 		
 	} // update_340015
 

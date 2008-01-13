@@ -29,7 +29,7 @@ switch ($_REQUEST['action']) {
                 $album_id = Random::album();
 
 		// If we don't get anything stop
-		if (!$album_id) { break; } 
+		if (!$album_id) { $results['rfc3514'] = '0x1'; break; } 
 
                 $album = new Album($album_id);
                 $songs = $album->get_songs();
@@ -42,7 +42,7 @@ switch ($_REQUEST['action']) {
                 $artist_id = Random::artist();
 
 		// If we don't get anything stop
-		if (!$artist_id) { break; } 
+		if (!$artist_id) { $results['rfc3514'] = '0x1'; break; } 
 
                 $artist = new Artist($artist_id);
                 $songs = $artist->get_songs();
@@ -55,7 +55,7 @@ switch ($_REQUEST['action']) {
                 $playlist_id = Random::playlist();
 		
 		// If we don't get any results stop right here!
-		if (!$playlist_id) { break; } 
+		if (!$playlist_id) { $results['rfc3514'] = '0x1'; break; } 
 
                 $playlist = new Playlist($playlist_id);
                 $items = $playlist->get_items();

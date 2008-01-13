@@ -1161,11 +1161,14 @@ class Catalog {
                 $new_song->title        = $results['title'];
                 $new_song->year         = $results['year'];
                 $new_song->comment      = $results['comment'];
+		$new_song->language	= $results['language']; 
+		$new_song->lyrics	= $results['lyrics']; 
                 $new_song->bitrate      = $results['bitrate'];
                 $new_song->rate         = $results['rate'];
                 $new_song->mode         = $results['mode'];
                 $new_song->size         = $results['size'];
                 $new_song->time         = $results['time'];
+		$new_song->mime		= $results['mime']; 
                 $new_song->track        = $results['track'];
                 $artist                 = $results['artist'];
                 $album                  = $results['album'];

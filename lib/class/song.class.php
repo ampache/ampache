@@ -326,59 +326,36 @@ class Song {
 	 */
 	public static function compare_song_information($song,$new_song) {
 
-		if ($song->title == "No Title Found") { $song->title = false; }
+		// Remove some stuff we don't care about
+		unset($song->catalog,$song->played,$song->enabled,$song->addition_time,$song->update_time,$song->id,$song->type);
 
-		if (trim($song->title) != trim(stripslashes($new_song->title)) && strlen($new_song->title) > 0) { 
-			$array['change']	= true;
-			$array['text'] 		.= "<br />" . _("Title") . " [$song->title] " . _("updated to") . " [$new_song->title]\n";
-		} // if title
-		if ($song->bitrate != $new_song->bitrate) {
-			$array['change']	= true;
-			$array['text']		.= "<br />" . _("Bitrate") . " [$song->bitrate] " . _("updated to") . " [$new_song->bitrate]\n";
-		} // if bitrate
-		if ($song->rate != $new_song->rate) { 
-			$array['change']	= true;
-			$array['text']		.= "<br />" . _("Rate") . " [$song->rate] " . _("updated to") . " [$new_song->rate]\n";
-		} // if rate
-		if ($song->mode != $new_song->mode) { 
-			$array['change']	= true;
-			$array['text']		.= "<br />" . _("Mode") . " [$song->mode] " . _("updated to") . " [$new_song->mode]\n";
-		} // if mode
-		if ($song->time != $new_song->time) { 
-			$array['change']	= true;
-			$array['text']		.= "<br />" . _("Time") . " [$song->time] " . _("updated to") . " [$new_song->time]\n";
-		} // if time
-		if ($song->track != $new_song->track) {
-			$array['change']	= true;
-			$array['text']		.= "<br />" . _("Track") . " [$song->track] " . _("updated to") . " [$new_song->track]\n";
-		} // if track
-		if ($song->size != $new_song->size) {
-			$array['change']	= true;
-			$array['text']		.= "<br />" . _("Filesize") . " [$song->size] " . _("updated to") . " [$new_song->size]\n";
-		} // if artist
-		if ($song->artist != $new_song->artist) {
-			$array['change']	= true;
-			$name = $song->get_artist_name(); 
-			$array['text']		.= "<br />" . _("Artist") . " [$name] " . _("updated to") . " [$new_song->f_artist]\n";
-		} // if artist
-		if ($song->album != $new_song->album) {
-			$array['change']	= true;
-			$name = $song->get_album_name() . " - " . $song->year; 
-			$array['text']		.= "<br />" . _("Album") . " [$name] " . _("updated to") . " [$new_song->f_album]\n";
-		} // if album
-		if ($song->year != $new_song->year) { 
-			$array['change']	= true;
-			$array['text']		.= "<br />" . _("Year") . " [$song->year] " . _("updated to") . " [$new_song->year]\n";
-		} // if year
-		if (trim(stripslashes($song->comment)) != trim(stripslashes($new_song->comment))) { 
-			$array['change']	= true;
-			$array['text']		.= "<br />" . _("Comment") . " [$song->comment] " . _("updated to") . " [$new_song->comment]\n";
-		} // if comment
-		if ($song->genre != $new_song->genre) { 
-			$array['change']	= true;
-			$name = $song->get_genre_name();
-			$array['text']		.= "<br />" . _("Genre") . " [$name] " . _("updated to") . " [$new_song->f_genre]\n";
-		} // if genre
+		$string_array = array('title','comment','lyrics'); 
+
+		// Pull out all the currently set vars
+		$fields = get_object_vars($song); 
+
+		// Foreach them
+		foreach ($fields as $key=>$value) { 
+			// If it's a stringie thing
+			if (in_array($key,$string_array)) { 
+				if (trim(stripslashes($song->$key)) != trim(stripslashes($new_song->$key))) { 
+					$array['change'] = true; 
+					$array['element'][$key] = 'OLD: ' . $song->$key . ' <---> ' . $new_song->$key;
+				}
+			} // in array of stringies
+
+			else { 
+				if ($song->$key != $new_song->$key) { 
+					$array['change'] = true; 
+					$array['element'][$key] = '' . $song->$key . ' <---> ' . $new_song->$key;
+				} 
+			} // end else
+
+		} // end foreach
+
+		if ($array['change']) { 
+			debug_event('song-diff',print_r($array['element'],1),'5','ampache-catalog'); 
+		} 
 
 		return $array;
 
@@ -457,6 +434,9 @@ class Song {
 		self::update_album($new_song->album,$song_id);
 		self::update_year($new_song->year,$song_id);
 		self::update_comment($new_song->comment,$song_id);
+		self::update_language($new_song->language,$song_id); 
+		self::update_lyrics($new_song->lyrics,$song_id);
+		self::update_mime($new_song->mime,$song_id);
 		self::update_played(0,$song_id);
 		self::update_utime($song_id);
 
@@ -471,6 +451,26 @@ class Song {
 		self::_update_item('year',$new_year,$song_id,'50'); 
 		
 	} // update_year
+
+	/**
+	 * update_mime
+	 * This updates the mime type of the song object we're passed
+	 */
+	public static function update_mime($new_mime,$song_id) { 
+
+		self::_update_item('mime',$new_mime,$song_id,'50'); 
+
+	} // update_mime
+
+	/**
+	 * update_language
+	 * This updates the language tag of the song
+	 */
+	public static function update_language($new_lang,$song_id) { 
+
+		self::_update_ext_item('language',$new_lang,$song_id,'50'); 
+
+	} // update_language
 
 	/**
 	 * update_comment
@@ -634,7 +634,7 @@ class Song {
 	private static function _update_item($field,$value,$song_id,$level) {
 
 		/* Check them Rights! */
-		if (!$GLOBALS['user']->has_access($level)) { return false; }
+		if (!Access::check('interface',$level)) { return false; }
 
 		/* Can't update to blank */
 		if (!strlen(trim($value)) && $field != 'comment') { return false; } 
@@ -656,7 +656,7 @@ class Song {
 	private static function _update_ext_item($field,$value,$song_id,$level) { 
 
 		/* Check them rights boy! */
-		if (!$GLOBALS['user']->has_access($level)) { return false; } 
+		if (!Access::check('interface',$level)) { return false; } 
 	
 		$value = Dba::escape($value); 
 
@@ -962,7 +962,6 @@ class Song {
                 return $results;
 
         } // get_genres
-
 
 
 } // end of song class

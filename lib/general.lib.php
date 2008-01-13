@@ -167,6 +167,8 @@ function clean_tag_info($results,$key,$filename) {
 	$info['track']		= intval($results[$key]['track']);
 	$info['disk']		= intval($results[$key]['disk']);
 	$info['comment']      	= Dba::escape(str_replace($clean_array,$wipe_array,$results[$key]['comment']));
+	$info['language']	= Dba::escape($results[$key]['language']); 
+	$info['lyrics']		= Dba::escape($results[$key]['lyricist']); 
 
 	/* This are pulled from the info array */
 	$info['bitrate']      	= intval($results['info']['bitrate']);
@@ -304,10 +306,6 @@ function get_global_popular($type) {
 		} // end if genre
         } // end foreach
        
-/*	if (count($items) == 0) { 
-		$itemis[''] = "<li style=\"list-style-type: none\"><span class=\"error\">" . _('Not Enough Data') . "</span></li>\n";
-	}
- */
         return $items;
 
 } // get_global_popular

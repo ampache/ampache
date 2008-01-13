@@ -4,6 +4,11 @@
 
 --------------------------------------------------------------------------
   v.3.4-Beta2 
+	- Fixed search by stars so that it returns the correct results 
+		(Thx alex2008)
+	- Fixed issue where random didn't end correctly when no results found
+	- Fixed mime type never being updated on verify and added language
+		and lyrics to gather from id3v2
 	- Implemented a semi-working write_tags.inc script limited by getid3()
 		support (Thx tomatopi)
 	- Added limit option to the XML API

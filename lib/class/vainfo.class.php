@@ -373,8 +373,6 @@ class vainfo {
 				case 'track_number':
 					$array['track'] = $this->_clean_tag($data['0'],$this->_file_encoding);
 				break;	
-				//case 'content_type':
-				//	$array['genre'] = $this->_clean_tag($data['0'],$this->_file_encoding);
 				break;
 				case 'comments':
 					$array['comment'] = $this->_clean_tag($data['0'],$this->_file_encoding);
