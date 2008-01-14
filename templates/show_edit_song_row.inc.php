@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2007 Ampache.org
+ Copyright (c) 2001 - 2008 Ampache.org
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
@@ -21,7 +21,7 @@
 ?>
 <td colspan="8">
 <form method="post" id="edit_song_<?php echo $song->id; ?>">
-<table cellpadding="3" cellspacing="0">
+<table class="inline-edit" cellpadding="3" cellspacing="0">
 <td>
 	<input type="textbox" name="title" value="<?php echo scrub_out($song->title); ?>" />
 </td>

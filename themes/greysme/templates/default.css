@@ -596,6 +596,11 @@ td.cel_track {text-align:right;}
 #recently_played .th-bottom {display:none;}
 .box_preferences .th-bottom {display:none;}
 
+/* Inline Editing Tables */
+.inline-edit input, .inline-edit select {
+        font-size: 0.8em;
+}
+
 /************************************************/
 /*          Albums of the moment                */
 /************************************************/

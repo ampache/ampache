@@ -21,7 +21,7 @@
 ?>
 <td colspan="5">
 <form method="post" id="edit_artist_<?php echo $artist->id; ?>">
-<table cellpadding="3" cellspacing="0">
+<table class="inline-edit" cellpadding="3" cellspacing="0">
 <tr>
 <td>
 	<input type="textbox" name="name" value="<?php echo scrub_out($artist->f_full_name); ?>" />
