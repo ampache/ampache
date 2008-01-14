@@ -62,10 +62,6 @@ switch ($_REQUEST['action']) {
 		$fields = $localplay->get_instance_fields(); 
 		require_once Config::get('prefix') . '/templates/show_localplay_edit_instance.inc.php'; 
 	break; 
-	case 'test_instance': 
-		// Check to make sure they've got the rights
-		if (!Access::check('localplay','75')) { access_denied(); break; } 
-	break; 
 	case 'show_instances': 
 		// First build the localplay object and then get the instances
 		if (!Access::check('localplay','5')) { access_denied(); break; } 

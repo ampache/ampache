@@ -4,6 +4,8 @@
 
 --------------------------------------------------------------------------
   v.3.4-Beta2 
+	- Added Checkbox for All Playlists filter (Admin Only) also made
+		filters only appear when its logical for them to be there
 	- Fixed filtering of Private Playlists and fixed editing of type
 		of playlist. Default is still public on creation. 
 	- Fixed erronous fseek() when downsampling. 

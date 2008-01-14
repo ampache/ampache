@@ -129,6 +129,34 @@ class Browse {
 
 	} // get_filter
 
+	/**
+	 * get_allowed_filters
+	 * This returns an array of the allowed filters based on the type of object we are working
+	 * with, this is used to display the 'filter' sidebar stuff, must be called post browse stuff
+	 */
+	public static function get_allowed_filters() { 
+
+		switch ($_SESSION['browse']['type']) { 
+			case 'album': 
+				$valid_array = array('show_art','alpha_match'); 
+			break; 
+			case 'artist': 
+			case 'genre': 
+			case 'song': 
+			case 'live-stream': 
+				$valid_array = array('alpha_match'); 	
+			break; 
+			case 'playlist': 
+				$valid_array = array('alpha_match'); 
+				if (Access::check('interface','50')) { 
+					array_push($valid_array,'playlist_type'); 
+				} 
+			break; 
+		} // switch on the browsetype
+
+		return $valid_array; 
+
+	} // get_allowed_filters
 
 	/**
  	 * set_type
