@@ -558,6 +558,9 @@ class Browse {
 			break;
 			case 'playlist': 
 				switch ($field) { 
+					case 'type':
+						$sql = "`playlist`.`type`"; 
+					break; 
 					case 'name':
 						$sql = "`playlist`.`name`"; 
 					break;
