@@ -24,6 +24,7 @@
 	<?php echo Ajax::button('?action=basket&type=playlist_random&id=' . $playlist->id,'random',_('Random'),'random_playlist_' . $playlist->id); ?>
 </td>
 <td class="cel_playlist"><?php echo $playlist->f_link; ?></td>
+<td class="cel_type"><?php echo $playlist->f_type; ?></td>
 <td class="cel_songs"><?php echo $count; ?></td>
 <td class="cel_owner"><?php echo scrub_out($playlist->f_user); ?></td>
 <td class="cel_action">

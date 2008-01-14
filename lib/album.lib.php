@@ -116,7 +116,7 @@ function get_random_albums($count=6) {
 
         $sql = 'SELECT ';
 
-        for ($i = 0; $i < ceil($count * 1.5); $i++) {
+        for ($i = 0; $i < ceil($count * 2); $i++) {
                 if ($i > 0) $sql .= ', ';
 
                 $sql .= 'floor(rand() * count(id))';

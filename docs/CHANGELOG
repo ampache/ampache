@@ -4,6 +4,9 @@
 
 --------------------------------------------------------------------------
   v.3.4-Beta2 
+	- Fixed filtering of Private Playlists and fixed editing of type
+		of playlist. Default is still public on creation. 
+	- Fixed erronous fseek() when downsampling. 
 	- Fixed search by stars so that it returns the correct results 
 		(Thx alex2008)
 	- Fixed issue where random didn't end correctly when no results found

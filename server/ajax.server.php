@@ -126,8 +126,9 @@ switch ($_REQUEST['action']) {
 		} // end switch on type 
 
 		// Make sure they got them rights
-		if (!$GLOBALS['user']->has_access($level)) { 
-			exit; 
+		if (!Access::check('interface',$level)) { 
+			$results['rfc3514'] = '0x1'; 
+			break; 
 		} 
 
 		ob_start(); 
@@ -148,7 +149,8 @@ switch ($_REQUEST['action']) {
 
 		// Make sure we've got them rights
 		if (!Access::check('interface',$level) || Config::get('demo_mode')) { 
-			exit; 
+			$results['rfc3514'] = '0x1'; 
+			break; 
 		} 
 
 		switch ($_POST['type']) { 
@@ -189,6 +191,7 @@ switch ($_REQUEST['action']) {
 				$key = 'playlist_row_' . $_POST['id']; 
 				$playlist->update($_POST); 
 				$playlist->format(); 
+				$count = $playlist->get_song_count();
 			break;
 			case 'live_stream': 
 				$key = 'live_stream_' . $_POST['id']; 

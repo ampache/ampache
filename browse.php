@@ -87,6 +87,7 @@ switch($_REQUEST['action']) {
 		Browse::set_type('playlist'); 
 		Browse::set_simple_browse(1); 
 		Browse::set_sort('name','ASC');
+		Browse::set_filter('playlist_type','1');
 		$playlist_ids = Browse::get_objects(); 
 		Browse::show_objects($playlist_ids); 
 	break;

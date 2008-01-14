@@ -78,6 +78,8 @@ class Playlist {
 		$this->f_name =  truncate_with_ellipsis($this->name,Config::get('ellipse_threshold_title'));
 		$this->f_link = '<a href="' . Config::get('web_path') . '/playlist.php?action=show_playlist&amp;playlist_id=' . $this->id . '">' . $this->f_name . '</a>'; 
 
+		$this->f_type = ($this->type == 'private') ? get_user_icon('lock',_('Private')) : ''; 
+
 		$client = new User($this->user); 
 
 		$this->f_user = $client->fullname; 
@@ -263,6 +265,9 @@ class Playlist {
 		if ($data['name'] != $this->name) { 
 			$this->update_name($data['name']); 
 		} 
+		if ($data['pl_type'] != $this->type) { 
+			$this->update_type($data['pl_type']); 
+		} 
 
 	} // update
 
@@ -296,7 +301,7 @@ class Playlist {
 	 */
 	private function _update_item($field,$value,$level) { 
 
-		if ($GLOBALS['user']->id != $this->user AND !$GLOBALS['user']->has_access($level)) { 
+		if ($GLOBALS['user']->id != $this->user AND !Access::check('interface',$level)) { 
 			return false; 
 		}
 

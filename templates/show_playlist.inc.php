@@ -24,7 +24,7 @@
  */
 $web_path = Config::get('web_path'); 
 ?>
-<?php show_box_top($playlist->name . ' ' . _('Playlist')); ?>
+<?php show_box_top($playlist->f_type . ' ' . $playlist->name . ' ' . _('Playlist')); ?>
 		<div id="information_actions">
 		<ul>
 		<li><a href="<?php echo $web_path; ?>/playlist.php?action=normalize_tracks&amp;playlist_id=<?php echo $playlist->id; ?>"><?php echo _('Normalize Tracks'); ?></a></li>

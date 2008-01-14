@@ -25,6 +25,7 @@
 <colgroup>
   <col id="col_add" />
   <col id="col_playlist" />
+  <col id="col_type" />
   <col id="col_songs" />
   <col id="col_owner" />
   <col id="col_action" />
@@ -32,6 +33,7 @@
 <tr class="th-top">
   <th class="cel_add"><?php echo _('Add'); ?></th>
 	<th class="cel_playlist"><?php echo Ajax::text('?page=browse&action=set_sort&sort=name',_('Playlist Name'),'playlist_sort_name'); ?></th>
+	<th class="cel_type">&nbsp;</th>
 	<th class="cel_songs"><?php echo _('# Songs'); ?></th>
 	<th class="cel_owner"><?php echo Ajax::text('?page=browse&action=set_sort&sort=user',_('Owner'),'playlist_sort_owner'); ?></th>
 	<th class="cel_action"><?php echo _('Actions'); ?></th>
@@ -49,8 +51,9 @@ foreach ($object_ids as $playlist_id) {
 <tr class="th-bottom">
   <th class="cel_add"><?php echo _('Add'); ?></th>
 	<th class="cel_playlist"><?php echo Ajax::text('?page=browse&action=set_sort&sort=name',_('Playlist Name'),'playlist_sort_name_bottom'); ?></th>
+	<th class="cel_type">&nbsp;</th>
 	<th class="cel_songs"><?php echo _('# Songs'); ?></th>
-	<th class="cel_owner"><?php echo Ajax::text('?page=browse&action=set_sort&sort=user',_('Owner'),'playlist_sort_owner'); ?></th>
+	<th class="cel_owner"><?php echo Ajax::text('?page=browse&action=set_sort&sort=user',_('Owner'),'playlist_sort_owner_bottom'); ?></th>
 	<th class="cel_action"><?php echo _('Actions'); ?></th>
 </tr>
 </table>

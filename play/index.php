@@ -251,6 +251,8 @@ if (($GLOBALS['user']->prefs['transcode'] == 'always' || !$song->native_stream()
 	debug_event('downsample','Starting Downsample...','5');
 	$fp = Stream::start_downsample($song,$lastid,$song_name,$start);
 	$song_name = $song->f_artist_full . " - " . $song->title . "." . $song->type;
+	// Note that this is downsampling
+	$downsampled_song = true; 
 } // end if downsampling
 else { 
 	// Send file, possible at a byte offset
@@ -278,7 +280,9 @@ if (isset($start)) {
 	
 	debug_event('seek','Content-Range header recieved, skipping ahead ' . $start . ' bytes out of ' . $song->size,'5');
 	$browser->downloadHeaders($song_name, $song->mime, false, $song->size);
-	fseek( $fp, $start );
+	if (!$downsampled_song) { 
+		fseek( $fp, $start );
+	} 
 	$range = $start ."-". $end . "/" . $song->size;
 	header("HTTP/1.1 206 Partial Content");
 	header("Content-Range: bytes $range");

@@ -62,7 +62,6 @@ class Browse {
 
 		switch ($key) { 
                         case 'show_art':
-                                $key = $_REQUEST['key'];
 				if ($_SESSION['browse']['filter'][$key]) { 
 					unset($_SESSION['browse']['filter'][$key]);
 				} 
@@ -80,6 +79,11 @@ class Browse {
 				if ($value == _('All')) { $value = ''; } 
 				$_SESSION['browse']['filter'][$key] = $value; 
 			break;
+			case 'playlist_type': 
+				// They must be content managers to turn this off
+				if ($_SESSION['browse']['filter'][$key] AND Access::check('interface','50')) { unset($_SESSION['browse']['filter'][$key]); } 
+				else { $_SESSION['browse']['filter'][$key] = '1'; } 
+			break; 
                         default:
                                 // Rien a faire
 				return false; 
@@ -477,6 +481,10 @@ class Browse {
 				case 'alpha_match': 
 					$filter_sql = " `playlist`.`name` LIKE '" . Dba::escape($value) . "%' AND "; 
 				break;
+				case 'playlist_type': 
+					$user_id = intval($GLOBALS['user']->id); 
+					$filter_sql = " (`playlist`.`type` = 'public' OR `playlist`.`user`='$user_id') AND "; 
+				break; 
 				default; 
 					// Rien a faire
 				break;
@@ -553,6 +561,9 @@ class Browse {
 					case 'name':
 						$sql = "`playlist`.`name`"; 
 					break;
+					case 'user': 
+						$sql = "`playlist`.`user`";
+					break; 
 				} // end switch
 			break; 
 			case 'live_stream': 
