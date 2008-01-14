@@ -107,35 +107,21 @@ function get_image_from_source($data) {
  */
 function get_random_albums($count=6) {
 
-	// Make sure that we have anything to pick from
-	$sql = "SELECT `id` FROM `album` LIMIT 7"; 
-	$db_results = Dba::query($sql); 
-
-	$rows = Dba::num_rows($db_results); 
-	if ($rows < 7) { return false; } 
-
-        $sql = 'SELECT ';
-
-        for ($i = 0; $i < ceil($count * 2); $i++) {
-                if ($i > 0) $sql .= ', ';
-
-                $sql .= 'floor(rand() * count(id))';
-        }
-        $sql .= ' FROM `album`';
+        $sql = 'SELECT `id` FROM `album` ORDER BY RAND() LIMIT ' . ($count*2);
         $db_results = Dba::query($sql);
 
 	$in_sql = '`album_id` IN ('; 
 
-        $row = Dba::fetch_row($db_results);
-        
-	for ($i = 0; $i < ceil($count * 1.5); $i++) {
-		$in_sql .= "'$row[$i]',"; 
+        while ($row = Dba::fetch_assoc($db_results)) { 
+		$in_sql .= "'" . $row['id'] . "',"; 
+		$total++; 
         }
        
+	if ($total < $count) { return false; } 
+
 	$in_sql = rtrim($in_sql,',') . ')'; 
 
 	$sql = "SELECT `album_id`,ISNULL(`art`) AS `no_art` FROM `album_data` WHERE $in_sql"; 
-
 	$db_results = Dba::query($sql);
         $results = array();
 
