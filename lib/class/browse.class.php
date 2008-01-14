@@ -143,7 +143,7 @@ class Browse {
 			case 'artist': 
 			case 'genre': 
 			case 'song': 
-			case 'live-stream': 
+			case 'live_stream': 
 				$valid_array = array('alpha_match'); 	
 			break; 
 			case 'playlist': 
@@ -151,6 +151,9 @@ class Browse {
 				if (Access::check('interface','50')) { 
 					array_push($valid_array,'playlist_type'); 
 				} 
+			break; 
+			default: 
+				$valid_array = array(); 
 			break; 
 		} // switch on the browsetype
 
