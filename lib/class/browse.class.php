@@ -573,7 +573,7 @@ class Browse {
 			case 'album': 
 				switch($field) { 
 					case 'name': 
-						$sql = "`album`.`name`"; 
+						$sql = "`album`.`name` $order, `album`.`disk`"; 
 					break;
 					case 'year': 
 						$sql = "`album`.`year`"; 

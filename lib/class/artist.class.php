@@ -121,7 +121,7 @@ class Artist {
 		$results = array();
 
 		$sql = "SELECT `album`.`id` FROM album LEFT JOIN `song` ON `song`.`album`=`album`.`id` " . 
-			"WHERE `song`.`artist`='$this->id' GROUP BY `album`.`id` ORDER BY `album`.`name`,`album`.`year`";
+			"WHERE `song`.`artist`='$this->id' GROUP BY `album`.`id` ORDER BY `album`.`name`,`album`.`disk`,`album`.`year`";
 		$db_results = Dba::query($sql);
 
 		while ($r = Dba::fetch_assoc($db_results)) { 
