@@ -23,10 +23,13 @@
 	<?php echo Ajax::button('?action=basket&type=album&id=' . $album->id,'add',_('Add'),'add_album_' . $album->id); ?>
 	<?php echo Ajax::button('?action=basket&type=album_random&id=' . $album->id,'random',_('Random'),'random_album_' . $album->id); ?>
 </td>
-<?php if (Browse::get_filter('show_art')) { ?>
+<?php 
+  if (Browse::get_filter('show_art')) {
+  $name = '[' . $album->f_artist . '] ' . scrub_out($album->full_name);  
+?>
 <td class="cel_cover">
         <a href="<?php echo Config::get('web_path'); ?>/albums.php?action=show&amp;album=<?php echo $album->id; ?>">
-                <img height="75" width="75" src="<?php echo Config::get('web_path'); ?>/image.php?id=<?php echo $album->id; ?>&amp;thumb=1" />
+                <img height="75" width="75" alt="<?php echo($name) ?>" title="<?php echo($name) ?>" src="<?php echo Config::get('web_path'); ?>/image.php?id=<?php echo $album->id; ?>&amp;thumb=1" />
         </a>
 </td>
 <?php } ?>

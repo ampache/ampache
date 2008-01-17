@@ -28,12 +28,14 @@ $title		= scrub_out($album->name) . '&nbsp;(' . $album->year . ')&nbsp;--&nbsp;'
 <?php show_box_top($title,'info-box'); ?>
 	<div class="album_art">
 	<?php 
-        if ($album_name != _('Unknown (Orphaned)')) {
-		$aa_url = $web_path . "/image.php?id=" . $album->id . "&amp;type=popup&amp;sid=" . session_id();
-		echo "<a target=\"_blank\" href=\"$aa_url\" onclick=\"popup_art('$aa_url'); return false;\">";
-		echo "<img src=\"" . $web_path . "/image.php?id=" . $album->id . "&amp;thumb=2\" alt=\"Album Art\" height=\"128\" width=\"128\" />";
-		echo "</a>\n";
-        }
+    if ($album_name != _('Unknown (Orphaned)')) {
+        $name = '[' . $album->f_artist . '] ' . scrub_out($album->full_name);  
+
+		    $aa_url = $web_path . "/image.php?id=" . $album->id . "&amp;type=popup&amp;sid=" . session_id();
+		    echo "<a target=\"_blank\" href=\"$aa_url\" onclick=\"popup_art('$aa_url'); return false;\">";
+		    echo "<img src=\"" . $web_path . "/image.php?id=" . $album->id . "&amp;thumb=2\" alt=\"".$name."\" title=\"".$name."\" height=\"128\" width=\"128\" />";
+		    echo "</a>\n";
+    }
 	?>
 	</div>
 	<div style="display:table-cell;" id="rating_<?php echo $album->id; ?>_album">

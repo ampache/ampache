@@ -578,7 +578,7 @@ input[type=checkbox]  { border:0;background:none; }
 .discnb       { font-style: italic; font-size:0.8em; }
 
 /* specific cells */
-.cel_cover{padding:6px;}
+td.cel_cover{padding:6px;}
 .cel_select, .cel_action, .cel_date, .cel_applytoall, .cel_level {text-align:center;}
 td.cel_track {text-align:right;}
 /* specific cells : users login state */
