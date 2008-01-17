@@ -26,7 +26,7 @@ $web_path = Config::get('web_path');
 	foreach ($albums as $album_id) { 
 		$album = new Album($album_id); 
 		$album->format(); 
-		$name = scrub_out('[' . $album->f_artist . '] ' . $album->full_name); 
+		$name = '[' . $album->f_artist . '] ' . scrub_out($album->full_name); 
         ?>
         <div class="random_album">
                 <a href="<?php echo $web_path; ?>/albums.php?action=show&amp;album=<?php echo $album_id; ?>">

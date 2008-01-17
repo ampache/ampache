@@ -221,7 +221,7 @@ class Album {
 		$this->f_link 		= $this->f_name_link; 
 		$this->f_title		= $full_name; 
 		if ($this->artist_count == '1') { 
-			$artist = scrub_out(truncate_with_ellipsis(trim($this->artist_prefix . ' ' . $this->artist_name),Config::get('ellipsis_threshold_album')));
+			$artist = scrub_out(truncate_with_ellipsis(trim($this->artist_prefix . ' ' . $this->artist_name),Config::get('ellipsis_threshold_artist')));
 		        $this->f_artist_link = "<a href=\"$web_path/artists.php?action=show&amp;artist=" . $this->artist_id . "\">" . $artist . "</a>";
 			$this->f_artist = $artist; 
 		}
