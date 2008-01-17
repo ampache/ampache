@@ -327,7 +327,7 @@ class Song {
 	public static function compare_song_information($song,$new_song) {
 
 		// Remove some stuff we don't care about
-		unset($song->catalog,$song->played,$song->enabled,$song->addition_time,$song->update_time,$song->id,$song->type);
+		unset($song->catalog,$song->played,$song->enabled,$song->addition_time,$song->update_time,$song->type);
 
 		$string_array = array('title','comment','lyrics'); 
 
