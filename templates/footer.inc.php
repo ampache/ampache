@@ -27,7 +27,7 @@
 </div> <!-- end id="maincontainer"-->
 <div id="footer">
 	<a href="http://www.ampache.org/index.php">Ampache v.<?php echo Config::get('version'); ?></a><br />
-	Copyright (c) 2001 - 2007 Ampache.org 
+	Copyright (c) 2001 - 2008 Ampache.org 
 </div>
 </body>
 </html>
