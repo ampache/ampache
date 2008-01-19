@@ -236,6 +236,16 @@ switch ($_REQUEST['action']) {
 		ob_end_clean(); 
 		echo xmlData::songs($songs); 
 	break; 
+	case 'search_songs': 
+		$array['s_all'] = $_REQUEST['filter']; 
+		$results = run_search($array);
+		ob_end_clean(); 
+
+		xmlData::set_offset($_REQUEST['offset']); 
+		xmlData::set_limit($_REQUEST['limit']); 
+
+		echo xmlData::songs($results); 
+	break; 
 	default:
                 ob_end_clean();
                 echo xmlData::error('Invalid Request');

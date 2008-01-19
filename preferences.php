@@ -66,7 +66,7 @@ switch($_REQUEST['action']) {
 		$preferences = $GLOBALS['user']->get_preferences(-1,$_REQUEST['tab']); 
 	break;
 	case 'user':
-		if (!$GLOBALS['user']->has_access('100')) { 
+		if (!Access::check('interface','100')) { 
 			access_denied(); 
 			exit; 
 		} 
@@ -76,7 +76,7 @@ switch($_REQUEST['action']) {
 	break; 
 	case 'update_user': 
 		// Make sure we're a user and they came from the form
-		if (!$GLOBALS['user']->has_access('25') || $_POST['form_string'] != $_SESSION['forms']['account']) { 
+		if (!Access::check('interface','25') || $_POST['form_string'] != $_SESSION['forms']['account'] || !strlen($_SESSION['forms']['account'])) { 
 			access_denied(); 
 			exit; 
 		} 

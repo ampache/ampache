@@ -32,6 +32,11 @@ show_header();
 switch ($_REQUEST['action']) {
 	case 'update_user':
 	        if (Config::get('demo_mode')) { break; }
+		
+		if (!$_SESSION['forms']['adminuser'] || $_SESSION['forms']['adminuser'] != $_POST['formkey']) { 
+			access_denied(); 
+			exit; 
+		} 
 
 		/* Clean up the variables */
 		$user_id	= scrub_in($_REQUEST['user_id']);
@@ -79,6 +84,12 @@ switch ($_REQUEST['action']) {
 	break;
 	case 'add_user':
         	if (Config::get('demo_mode')) { break; }
+
+                if (!$_SESSION['forms']['adminuser'] || $_SESSION['forms']['adminuser'] != $_POST['formkey']) { 
+                        access_denied();
+                        exit;
+                } 
+
 		$username	= scrub_in($_REQUEST['username']);
 		$fullname	= scrub_in($_REQUEST['fullname']);
 		$email		= scrub_in($_REQUEST['email']);

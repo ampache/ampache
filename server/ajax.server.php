@@ -283,7 +283,7 @@ switch ($_REQUEST['action']) {
 	case 'reloadnp':
 		ob_start();
 		show_now_playing();	
-		$results['np_data'] = ob_get_contents();
+		$results['now_playing'] = ob_get_contents();
 		ob_clean();
 		$data = get_recently_played(); 
 		if (count($data)) { 

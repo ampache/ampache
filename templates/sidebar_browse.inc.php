@@ -38,6 +38,7 @@ $allowed_filters = Browse::get_allowed_filters();
       <li id="sb_browse_bb_RadioStation"><a href="<?php echo $web_path; ?>/browse.php?action=live_stream"><?php echo _('Radio Stations'); ?></a></li>
     </ul>
   </li>
+<?php if (count($allowed_filters)) { ?>
   <li><h4><?php echo _('Filters'); ?></h4>
     <div class="sb3">
 	<?php if (in_array('alpha_match',$allowed_filters)) { ?>
@@ -71,4 +72,5 @@ $allowed_filters = Browse::get_allowed_filters();
 	<?php } // if playlist_type ?>
     </div>
   </li>
+<?php } ?>
 </ul>

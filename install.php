@@ -122,7 +122,9 @@ switch ($_REQUEST['action']) {
 		$results = parse_ini_file($configfile);
 		Config::set_by_array($results,'1');
 
-		if (!install_create_account($username,$password)) { 
+		$password2 = scrub_in($_REQUEST['local_pass2']); 
+
+		if (!install_create_account($username,$password,$password2)) { 
 			require_once Config::get('prefix') . '/templates/show_install_account.inc.php';
 			break;
 		}

@@ -179,6 +179,7 @@ class Browse {
 			case 'album':
 			case 'artist':
 			case 'genre':
+			case 'shoutbox': 
 			case 'live_stream':
 				$_SESSION['browse']['type'] = $type;
 				// Resets the simple browse
@@ -216,6 +217,9 @@ class Browse {
 			break;
 			case 'playlist': 
 				$valid_array = array('name','user');
+			break; 
+			case 'shoutbox': 
+				$valud_array = array('date','user','sticky'); 
 			break; 
 			case 'live_stream': 
 				$valid_array = array('name','call_sign','frequency'); 
@@ -385,6 +389,9 @@ class Browse {
 			case 'flagged': 
 				$sql = "SELECT `flagged`.`id` FROM `flagged` ";
 			break;
+			case 'shoutbox': 
+				$sql - "SELECT `user_shout`.`id` FROM `user_shout` "; 
+			break; 
 			case 'playlist_song': 
                         case 'song':
                         default:
@@ -713,6 +720,11 @@ class Browse {
 				require_once Config::get('prefix') . '/templates/show_catalogs.inc.php';
 				show_box_bottom(); 
 			break;
+			case 'shoutbox': 
+				show_box_top(_('Shoutbox Records'),$class); 
+				require_once Config::get('prefix') . '/templates/show_manage_shoutbox.inc.php'; 
+				show_box_bottom(); 
+			break; 
 			case 'flagged':
 				show_box_top(_('Flagged Records'),$class); 
 				require_once Config::get('prefix') . '/templates/show_flagged.inc.php'; 

@@ -65,6 +65,10 @@ if (INSTALL != '1') { exit; }
 	<td><input type="password" name="local_pass" value="" /></td>
 </tr>
 <tr>
+	<td class="align"><?php echo _('Confirm Password'); ?></td>
+	<td><input type="password" name="local_pass2" value="" /></td>
+</tr>
+<tr>
 	<td>&nbsp;</td>
 	<td><input type="submit" value="<?php echo _('Create Account'); ?>" /></td>
 </tr>

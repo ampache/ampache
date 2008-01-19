@@ -1007,6 +1007,10 @@ class Catalog {
 		/* Flush anything that has happened so they don't think it's locked */
 		flush();
 
+		// Make sure they don't have a trailing / or \ on their path
+		$path = rtrim($path,"/"); 
+		$path = rtrim($path,"\\"); 
+
 		/*
 		 * Step one Add this to the catalog table if it's not
 		 * already there returns the new catalog_id
@@ -1016,10 +1020,6 @@ class Catalog {
 		if (!$catalog_id) {
 			$catalog_id = $this->create_catalog_entry($path,$name,$key, $ren, $sort, $type);
 		}
-
-		// Make sure they don't have a trailing / or \ on their path
-		$path = rtrim($path,"/"); 
-		$path = rtrim($path,"\\"); 
 
 		/* Setup the $this with the new information */
 		$this->id 		= $catalog_id;
@@ -1103,7 +1103,7 @@ class Catalog {
 				$songs = $artist->get_songs();
 				break;
 			case 'song':
-				$songs[0] = new Song($id);
+				$songs[] = $id; 
 				break;
 		} // end switch type
 
@@ -1114,14 +1114,14 @@ class Catalog {
                         if ($info['change']) {
 				$file = scrub_out($song->file);
                                 echo "<dl>\n\t<dd>";
-                                echo "<b>$file " . _('Updated') . "</b>\n";
+                                echo "<strong>$file " . _('Updated') . "</strong>\n";
                                 echo $info['text'];
                                 echo "\t</dd>\n</dl><hr align=\"left\" width=\"50%\" />";
                         	flush();
 	                } // if change
 			else {
 				echo"<dl>\n\t<dd>";
-				echo "<b>$song->file</b><br />" . _('No Update Needed') . "\n";
+				echo "<strong>" . scrub_out($song->file) . "</strong><br />" . _('No Update Needed') . "\n";
 				echo "\t</dd>\n</dl><hr align=\"left\" width=\"50%\" />";
 				flush();
 			}
@@ -1277,7 +1277,6 @@ class Catalog {
 
 	} // add_to_catalog
 
-
 	/**
 	 * get_remote_catalog
 	 * get a remote catalog and runs update if needed this requires
@@ -1342,7 +1341,6 @@ class Catalog {
 	                return;
 		} 
 	        
-
 		$data = php_xmlrpc_decode($response->value());
 			
 		// Print out the catalogs we are going to sync

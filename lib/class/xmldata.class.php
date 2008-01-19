@@ -58,6 +58,8 @@ class xmlData {
 	 */
 	public static function set_limit($limit) { 
 
+		if (!$limit) { return false; } 
+
 		$limit = intval($limit); 
 		self::$limit = $limit; 
 
@@ -139,6 +141,7 @@ class xmlData {
 		} // end foreach artists
 
 		$final = self::_header() . $string . self::_footer(); 
+
 		return $final; 
 
 	} // artists
@@ -240,6 +243,7 @@ class xmlData {
 				"\t<name><![CDATA[$playlist->name]]></name>\n" . 
 				"\t<owner><![CDATA[$playlist->f_user]]</owner>\n" . 
 				"\t<items>$item_total</items>\n" . 
+				"\t<type>$playlist->type</type>\n" . 
 				"</playlist>\n";
 			
 

@@ -227,12 +227,17 @@ function install_create_config($web_path,$username,$password,$hostname,$database
  * install_create_account
  * this creates your initial account and sets up the preferences for the -1 user and you
  */
-function install_create_account($username,$password) { 
+function install_create_account($username,$password,$password2) { 
 
 	if (!strlen($username) OR !strlen($password)) { 
-		Error::add('general',"No Username/Password specified");
+		Error::add('general',_('No Username/Password specified'));
 		return false; 
 	}
+
+	if ($password !== $password2) { 
+		Error::add('general',_('Passwords do not match'))
+		return false; 
+	} 
 
 	$dbh = Dba::dbh(); 	
 

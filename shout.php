@@ -42,7 +42,10 @@ switch ($_REQUEST['action']) {
 		require_once Config::get('prefix') . '/templates/show_add_shout.inc.php'; 
 	break; 
 	case 'show_manage': 
-
+		Browse::set_type('shoutbox'); 
+		Browse::set_simple_browse(1); 
+		$shoutbox_ids = Browse::get_objects(); 
+		Browse::show_objects($shoutbox_ids); 
 	break; 
 	default: 
 
