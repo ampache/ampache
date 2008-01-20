@@ -220,6 +220,9 @@ class Catalog {
 	 */
 	public static function create($data) { 
 
+		// Clean up the path just incase
+		$data['path'] = rtrim(rtrim(trim($data['path']),'/'),'\\'); 
+
 		$path = Dba::escape($data['path']); 
 
 		// Make sure the path is readable/exists
@@ -989,102 +992,6 @@ class Catalog {
 	} // update_settings
 
 	/**
-	 * new_catalog
-	 * The Main array for making a new catalog calls many other child functions within this class
-	 * @package Catalog
-	 * @catagory Create
-	 * @param $path Root path to start from for catalog
-	 * @param $name Name of the new catalog
-	 */
-	function new_catalog($path,$name, $key=0, $ren=0, $sort=0, $type=0,$gather_art=0,$parse_m3u=0,$art=array()) {
-
-		/* Record the time.. time the catalog gen */
-		$start_time = time();
-
-                // Prevent the script from timing out and flush what we've got
-                set_time_limit(0);
-
-		/* Flush anything that has happened so they don't think it's locked */
-		flush();
-
-		// Make sure they don't have a trailing / or \ on their path
-		$path = rtrim($path,"/"); 
-		$path = rtrim($path,"\\"); 
-
-		/*
-		 * Step one Add this to the catalog table if it's not
-		 * already there returns the new catalog_id
-		 */
-		$catalog_id = $this->check_catalog($path);
-
-		if (!$catalog_id) {
-			$catalog_id = $this->create_catalog_entry($path,$name,$key, $ren, $sort, $type);
-		}
-
-		/* Setup the $this with the new information */
-		$this->id 		= $catalog_id;
-		$this->path 		= $path;
-		$this->name 		= $name;
-		$this->key		= $key;
-		$this->rename_pattern 	= ($ren)?$ren:'';
-		$this->sort_pattern 	= ($sort)?$sort:'';
-		$this->catalog_type 	= $type;
-
-		/* Fluf */
-		echo _('Starting Catalog Build') . " [$name]<br />\n";
-
-
-	       if ($this->catalog_type == 'remote') {
-                        echo _("Running Remote Sync") . ". . .<br /><br />";
-                        $this->get_remote_catalog($type=0);
-                        return true;
-                }
-		
-		echo _('Found') . ": <span id=\"count_add_" . $this->id . "\">" . _('None') . "</span><br />\n";
-		flush();
-	
-                // Make sure the path doesn't end in a / or \
-                $this->path = rtrim($this->path,'/');
-                $this->path = rtrim($this->path,'\\');
-	
-		/* Get the songs and then insert them into the db */
-		$this->add_files($this->path,$type,$parse_m3u);
-
-                echo "<script type=\"text/javascript\">\n";
-                echo "update_txt('" . $this->count . "','count_add_" . $this->id ."');";
-                echo "\n</script>\n";
-                flush();
-
-
-		foreach ($this->_playlists as $full_file) { 
-	                if ($this->import_m3u($full_file)) {
-				$file = basename($full_file);
-	                        echo "&nbsp;&nbsp;&nbsp;" . _("Added Playlist From") . " $file . . . .<br />\n";
-		                flush();
-			} // end if import worked
-                } // end foreach playlist files
-
-		/* Now Adding Album Art? */
-		if ($gather_art) { 
-                        echo "<br />\n<b>" . _('Starting Album Art Search') . ". . .</b><br />\n";
-			echo _('Searched') . ": <span id=\"count_art_" . $this->id . "\">" . _('None') . "</span>";
-                        flush();
-                        $this->get_album_art();
-		} // if we want to gather album art
-
-		/* Do a little stats mojo here */
-		$current_time = time();
-
-		$time_diff = $current_time - $start_time;
-		if ($time_diff) { $song_per_sec = intval($this->count/$time_diff); }
-		echo _("Catalog Finished") . ". . . " . _("Total Time") . " [" . date("i:s",$time_diff) . "] " . _("Total Songs") . " [" . $this->count . "] " . 
-			_("Songs Per Seconds") . " [" . $song_per_sec . "]<br />\n";
-
-		return $catalog_id;
-
-	} //new_catalog
-
-	/**
 	 * update_single_item
 	 * updates a single album,artist,song from the tag data
 	 * this can be done by 75+
@@ -1594,6 +1501,30 @@ class Catalog {
 	} // clean_genres
 
 	/**
+	 * clean_shoutbox
+	 * This cleans out any shoutbox items that are now orphaned
+	 */
+	public static function clean_shoutbox() { 
+
+		// Clean songs
+		$sql = "DELETE FROM `user_shout` USING `user_shout` LEFT JOIN `song` ON `song`.`id`=`user_shout`.`object_id` " . 
+			"WHERE `song`.`id` IS NULL AND `user_shout`.`object_type`='song'"; 
+		$db_results = Dba::query($sql); 
+
+		// Clean albums
+                $sql = "DELETE FROM `user_shout` USING `user_shout` LEFT JOIN `album` ON `album`.`id`=`user_shout`.`object_id` " .
+                        "WHERE `album`.`id` IS NULL AND `user_shout`.`object_type`='album'";
+		$db_results = Dba::query($sql); 
+
+		// Clean artists
+                $sql = "DELETE FROM `user_shout` USING `user_shout` LEFT JOIN `artist` ON `artist`.`id`=`user_shout`.`object_id` " .
+                        "WHERE `artist`.`id` IS NULL AND `user_shout`.`object_type`='artist'";
+		$db_results = Dba::query($sql); 
+
+
+	} // clean_shoutbox
+
+	/**
 	 * clean_albums
 	 *This function cleans out unused albums
 	 */
@@ -1834,6 +1765,7 @@ class Catalog {
 		self::clean_stats($catalog_id); 
 		self::clean_ext_info($catalog_id); 
 		self::clean_playlists($catalog_id); 
+		self::clean_shoutbox($catalog_id); 
 
 	} // clean
 

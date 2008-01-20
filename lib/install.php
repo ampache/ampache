@@ -235,7 +235,7 @@ function install_create_account($username,$password,$password2) {
 	}
 
 	if ($password !== $password2) { 
-		Error::add('general',_('Passwords do not match'))
+		Error::add('general',_('Passwords do not match'));
 		return false; 
 	} 
 
