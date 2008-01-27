@@ -629,6 +629,8 @@ class Stream {
 	        /* Round to standard bitrates */
 	        $sample_rate = 8*(floor($bitrate/8));
 
+		return $sample_rate; 
+
 	} // validate_bitrate
 
 
