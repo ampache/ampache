@@ -4,6 +4,8 @@
 
 --------------------------------------------------------------------------
   v.3.4-Beta2 
+	- Added check for old database versions, prevent upgrade if too old
+	- Fixed issue with user creation (Thx yoog)
 	- Fixed Now Playing refresh
 	- Fixed single song update (Thx alex2008)
 	- Added Checkbox for All Playlists filter (Admin Only) also made

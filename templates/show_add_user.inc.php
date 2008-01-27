@@ -20,7 +20,7 @@
 
 */
 $form_string = generate_password('32'); 
-$_SESSION['forms']['createuser'] = $form_string; 
+$_SESSION['forms']['adminuser'] = $form_string; 
 ?>
 <?php show_box_top(_('Adding a New User')); ?>
 <?php Error::display('general'); ?>

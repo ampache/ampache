@@ -314,6 +314,8 @@ class Update {
 		// Prevent the script from timing out, which could be bad
 		set_time_limit(0);
 
+			
+
 		/* Verify that there are no plugins installed 
 		//FIXME: provide a link to remove all plugins, otherwise this could turn into a catch 22
 		if (!$self::plugins_installed()) { 
@@ -324,6 +326,14 @@ class Update {
 		$methods = array();
 		
 		$current_version = self::get_version();
+
+		// Run a check to make sure that they don't try to upgrade from a version that
+		// won't work. 
+		if ($current_version < '340001') { 
+			echo "<p align=\"center\">Database version too old, please upgrade to <a href=\"http://ampache.org/downloads/ampache-3.3.3.5.tar.gz\">Ampache-3.3.3.5</a> first</p>";			
+			return false; 
+		} 
+			
 		
 		$methods = get_class_methods('Update');
 		
