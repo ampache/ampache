@@ -231,26 +231,6 @@ function set_memory_limit($new_limit) {
 
 } // set_memory_limit
 
-/**
- *	cleanup_and_exit
- *	used specificly for the play/index.php file
- *		this functions nukes now playing and then exits
- * 	@package Streaming
- * 	@catagory Clean
- */
-function cleanup_and_exit($playing_id) { 
-
-	/* Clear now playing */
-	// 900 = 15 min
-	$expire = time() - 900;
-	$sql = "DELETE FROM now_playing WHERE now_playing.id='$lastid' OR now_playing.start_time < $expire";
-
-	$db_results = @mysql_query($sql, dbh());
-
-	exit();
-
-} // cleanup_and_exit
-
 /** 
  * 	get_global_popular
  *	this function gets the current globally popular items

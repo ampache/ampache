@@ -4,6 +4,7 @@
 
 --------------------------------------------------------------------------
   v.3.4-Beta2 
+	- Added new rating images (Thx greengeek)
 	- Added check for old database versions, prevent upgrade if too old
 	- Fixed issue with user creation (Thx yoog)
 	- Fixed Now Playing refresh

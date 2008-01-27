@@ -44,7 +44,7 @@ $htmllang = str_replace("_","-",Config::get('lang'));
 <link rel="shortcut icon" href="<?php echo Config::get('web_path'); ?>/favicon.ico" />
 <meta http-equiv="Content-Type" content="text/html; charset=<?php echo Config::get('site_charset'); ?>" />
 <link rel="stylesheet" type="text/css" media="screen" href="<?php echo Config::get('web_path') . '/templates/install.css'; ?>" />
-<title>Ampache - Update</title>
+<title><?php echo _('Ampache Update'); ?></title>
 </head>
 <body>
 <div id="header"> 
@@ -53,7 +53,7 @@ $htmllang = str_replace("_","-",Config::get('lang'));
 </div>
 <div id="text-box">
 	<div class="notify">
-This page handles all database updates to Ampache starting with 3.2. According to your database your current version is: <?php echo Update::format_version($version); ; ?>. 
+This page handles all database updates to Ampache starting with 3.3.3.5. According to your database your current version is: <?php echo Update::format_version($version); ; ?>. 
 the following updates need to be performed<br /><br />
 <div style="font-size:1.2em;font-weight:bold;text-align:center;"><?php Error::display('general'); ?></div>
 	</div>
