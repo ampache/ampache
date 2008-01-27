@@ -626,33 +626,8 @@ class Stream {
 	 */
 	public static function validate_bitrate($bitrate) {
 
-	        // Setup an array of valid bitrates for Lame (yea yea, others might be different :P)
-	        $valid_rate = array('32','40','56','64','80','96','112','128','160','192','224','256','320');
-
 	        /* Round to standard bitrates */
 	        $sample_rate = 8*(floor($bitrate/8));
-
-	        if (in_array($sample_rate,$valid_rate)) {
-	                return $sample_rate;
-	        }
-
-	        /* See if it's less than the lowest one */
-	        if ($sample_rate < $valid_rate['0']) {
-	                return $valid_rate['0'];
-	        }
-
-	        /* Check to see if it's over 320 */
-	        if ($sample_rate > 320) {
-	                return '320';
-	        }
-
-	        foreach ($valid_rate as $key=>$rate) {
-	                $next_key = $key+1;
-
-	                if ($sample_rate > $rate AND $sample_rate < $valid_rate[$next_key]) {
-	                        return $rate;
-	                }
-	        } // end foreach
 
 	} // validate_bitrate
 
