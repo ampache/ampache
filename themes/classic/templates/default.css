@@ -407,7 +407,7 @@ a.button{padding:1px 3px;}
 .star-rating .current-rating { z-index:1; background-position: left bottom; }
 
 .star-rating a.star0 {
-  left:80px;
+  left:0px;
   width:16px;
   background: url(../../../images/ratings/x_off.gif) left top;
 }
@@ -419,7 +419,9 @@ a.button{padding:1px 3px;}
 .dynamic-star-rating a:hover.star0 {
   background: url(../../../images/ratings/x.gif) left top;
 }
-
+.dynamic-star-rating ul {
+  left:16px;
+}
 
 /************************************************/
 /*              Box Related Styles              */
