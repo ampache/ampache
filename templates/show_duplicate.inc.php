@@ -33,6 +33,8 @@
 	<input type="radio" name="search_type" value="title"<?php echo $check_title; ?>/><?php echo _('Title'); ?><br />
         <input type="radio" name="search_type" value="artist_title"<?php echo $check_artist_title; ?>/><?php echo _('Artist and Title'); ?><br />
         <input type="radio" name="search_type" value="artist_album_title"<?php echo $check_artist_album_title; ?>/><?php echo _('Artist, Album and Title'); ?><br />
+        <?php if ($_REQUEST['search_disabled']) { $disabled_check = ' checked="checked"'; } ?>
+        <input type="checkbox" name="search_disabled" value="1" <?php echo $disabled_check; ?>/><?php echo _('Search Disabled Songs'); ?><br />
 	</td>
 </tr>
 </table>

@@ -804,14 +804,19 @@ class Catalog {
 	 * This function takes a search type and returns a list of all song_ids that
 	 * are likely to be duplicates based on teh search method selected. 
 	 */
-	public static function get_duplicate_songs($search_method) { 
+	public static function get_duplicate_songs($search_method) {
 
-	        // Setup the base SQL
+		$where_sql = ''; 
+
+		if (!$_REQUEST['search_disabled']) { 
+			$where_sql = 'WHERE enabled!=\'0\''; 
+		} 
+
+		// Setup the base SQL
 	        $sql = "SELECT song.id AS song,artist.id AS artist,album.id AS album,title,COUNT(title) AS ctitle".
 	                " FROM `song` LEFT JOIN `artist` ON `artist`.`id`=`song`.`artist` " . 
-			" LEFT JOIN `album` ON `album`.`id`=`song`.`album` ".
-	                " GROUP BY song.title";
-
+			" LEFT JOIN `album` ON `album`.`id`=`song`.`album` $where_sql GROUP BY `song`.`title`";
+	                
 		// Add any Additional constraints
 	        if ($search_method == "artist_title" OR $search_method == "artist_album_title") {
 	                $sql = $sql.",artist.name";
