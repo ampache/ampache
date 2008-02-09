@@ -192,6 +192,10 @@ class Access {
 			break;
 			case 'init-api':
 				$type = 'rpc';
+				if ($user) { 
+					$client = User::get_from_username($user); 
+					$user = $client->id; 
+				} 
 			case 'network':
 			case 'interface':
 			case 'stream':

@@ -665,6 +665,8 @@ class Catalog {
                 echo "\n</script>\n"; 
 	        flush();
 
+		self::$_art_albums = array(); 
+
 	} // get_album_art
 
 	/**

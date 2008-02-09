@@ -1135,7 +1135,7 @@ class Update {
 		$sql = "ALTER TABLE `playlist` CHANGE `date` `date` INT ( 11 ) UNSIGNED NOT NULL"; 
 		$db_results = Dba::query($sql); 
 
-		$sql = "ALTER TABLE `rating` CHANGE `rating` TINYINT ( 11 ) NOT NULL"; 
+		$sql = "ALTER TABLE `rating` CHANGE `rating` TINYINT ( 4 ) NOT NULL"; 
 		$db_results = Dba::query($sql); 
 
 		self::set_version('db_version','340015'); 
