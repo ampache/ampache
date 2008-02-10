@@ -44,7 +44,7 @@ class AmpacheMail {
 	 */
 	public static function get_users($filter) { 
 
-		switch ($fileter) { 
+		switch ($filter) { 
 			default: 
 			case 'all': 
 				$sql = "SELECT * FROM `user` WHERE `email` IS NOT NULL"; 

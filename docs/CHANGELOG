@@ -4,6 +4,7 @@
 
 --------------------------------------------------------------------------
   v.3.4-Beta2 
+	- Fixed typo that caused mail to always mail to everyone. 
 	- Fixed an issue with user auth in XML API always registering as
 		system (Thx purdyk)
 	- Fixed issue with Update All and multiple catalogs not correctly
