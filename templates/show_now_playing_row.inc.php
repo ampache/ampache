@@ -20,9 +20,9 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
 /* Prepare the variables */
-$title = scrub_out(truncate_with_ellipsis($song->title,'25'));
-$album = scrub_out(truncate_with_ellipsis($song->f_album_full,'25'));
-$artist = scrub_out(truncate_with_ellipsis($song->f_artist_full,'25'));
+$title = scrub_out(truncate_with_ellipsis($song->title));
+$album = scrub_out(truncate_with_ellipsis($song->f_album_full));
+$artist = scrub_out(truncate_with_ellipsis($song->f_artist_full));
 ?>
 <div class="np_group">
   <div class="np_cell cel_username">

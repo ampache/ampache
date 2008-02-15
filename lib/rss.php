@@ -226,14 +226,14 @@ switch ($type) {
 		$song = $r['song'];
 		$user = $r['user'];
                 $song->format();
-                        $artist = $song->f_artist;
-                        $album = $song->get_album_name();
-                        $text = "$artist - $song->f_title played by $user->fullname";
+                        $artist = $song->f_artist_full;
+                        $album = $song->f_album_full;
+                        $text = "$artist - $song->title played by $user->fullname";
                         echo "<item> \n";
                         echo " <title><![CDATA[$text]]></title> \n";
 			echo " <image>$web_path/image.php?id=$song->album</image>\n";
                         echo " <link>$web_path/albums.php?action=show&amp;album=$song->album</link>\n";
-                        echo " <description><![CDATA[$song->f_title @ $album is played by $user->fullname]]></description>\n";
+                        echo " <description><![CDATA[$song->title @ $album is played by $user->fullname]]></description>\n";
                         echo " <pubDate>$today</pubDate>\n";
                         echo "</item>\n";
         }
