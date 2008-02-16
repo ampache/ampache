@@ -546,8 +546,14 @@ class User {
 	 * address at this time in this place, doing this thing.. you get the point
 	 */
 	public function insert_ip_history() { 
-
-		$ip = ip2int($_SERVER['REMOTE_ADDR']);
+		if (isset($_SERVER['HTTP_X_FORWARDED_FOR'])){
+		    $sip = $_SERVER['HTTP_X_FORWARDED_FOR'];
+		    debug_event('User Ip', 'Login from ip adress: ' . $sip,'3');
+		} else {
+		    $sip = $_SERVER['REMOTE_ADDR'];
+		    debug_event('User Ip', 'Login from ip adress: ' . $sip,'3');
+		}
+		$ip = ip2int($sip);
 		$date = time(); 
 		$user = $this->id;
 
@@ -1000,10 +1006,10 @@ class User {
 	*/
 	function activate_user($username) {
 	
-		$username = sql_escape($username);
+		$username = Dba::escape($username); 
 	
 		$sql = "UPDATE user SET disabled='0' WHERE username='$username'";
-		$db_results = mysql_query($sql, dbh());
+		$db_results = Dba::query($sql);
 		
 	} // activate_user
 
@@ -1033,7 +1039,7 @@ class User {
 	 */
 	public static function check_username($username) { 
 
-		$usrename = Dba::escape($username); 
+		$username = Dba::escape($username); 
 
 		$sql = "SELECT `id` FROM `user` WHERE `username`='$username'"; 
 		$db_results = Dba::query($sql); 

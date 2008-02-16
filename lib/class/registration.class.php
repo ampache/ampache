@@ -60,7 +60,7 @@ class Registration {
 		if (Config::get('admin_notify_reg')) { 
 			$body = "A new user has registered\n\n" . 
 				"The following values were entered.\n\n" . 
-				"Username:$username\nFullname:$fullname\nE-mail:$mail\n\n"; 
+				"Username:$username\nFullname:$fullname\nE-mail:$email\n\n"; 
 			mail(Config::get('mail_from'),$subject,$body,$headers); 
 		} 
 				

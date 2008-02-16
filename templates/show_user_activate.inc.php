@@ -42,7 +42,10 @@ $web_path = Config::get('web_path');
 <script src="<?php echo $web_path; ?>/modules/prototype/prototype.js" language="javascript" type="text/javascript"></script>
 
 <div id="maincontainer">
-<?php if ($validation == User::get_validation($username) AND strlen($validation)) { ?>
+<?php 
+    if ($validation == User::get_validation($username) AND strlen($validation)) { 
+	User::activate_user($username);
+?>
 <h3><?php echo _('User Activated'); ?></h3>
 <p>
 	<?php echo _('This User ID is activated and can be used'); ?>. <a href="<?php echo Config::get('web_path'); ?>/login.php"><?php echo _('Login'); ?></a>
