@@ -24,10 +24,10 @@
 show_box_top(_('XSPF Player'));
 ?>
 <div id="mp3player">
-<script type="text/javascript" src="<?php echo conf('web_path'); ?>/modules/flash/swfobject.js"></script>
+<script type="text/javascript" src="<?php Config::get('web_path'); ?>/modules/flash/swfobject.js"></script>
 <script type="text/javascript">
 <!--
-var flashObj = new SWFObject ("<?php echo conf('web_path'); ?>/modules/flash/XSPF_RadioV.swf?action=play&playlist=<?php echo conf('web_path'); ?>/modules/flash/xspf_player.php?tmp_id=<?php echo $_REQUEST['play_info']; ?>&folder=<?php echo conf('web_path'); ?>/modules/flash/&textcolor=033066&color=E6E6E6&loop=playlist&lma=yes&viewinfo=true&vol=30&display=1@. - @2@ - @", "FMP3", "270", "190", 7, "#FFFFFF", true);
+var flashObj = new SWFObject ("<?php Config::get('web_path'); ?>/modules/flash/XSPF_RadioV.swf?action=play&playlist=<?php Config::get('web_path'); ?>/modules/flash/xspf_player.php?tmp_id=<?php echo $_REQUEST['play_info']; ?>&folder=<?php Config::get('web_path'); ?>/modules/flash/&textcolor=033066&color=E6E6E6&loop=playlist&lma=yes&viewinfo=true&vol=30&display=1@. - @2@ - @", "FMP3", "270", "190", 7, "#FFFFFF", true);
 flashObj.write ("mp3player");
 // -->
 </script>

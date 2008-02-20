@@ -224,6 +224,9 @@ class Browse {
 			case 'live_stream': 
 				$valid_array = array('name','call_sign','frequency'); 
 			break;
+                        case 'user':
+                                $valid_array = array('fullname','username','last_seen','create_date');
+                        break;
 		} // end switch  
 
 		// If it's not in our list, smeg off!
@@ -528,7 +531,7 @@ class Browse {
 				break;
 			} // end filter
 		} // end playlist
-	
+
 		return $filter_sql; 
 
 	} // sql_filter
@@ -626,7 +629,23 @@ class Browse {
 						$sql = "`genre`.`name`"; 
 					break;
 				} // end switch
-			break; 
+			break;
+                        case 'user':
+                                switch ($field) {
+                                        case 'username':
+                                                $sql = "`user`.`username`";
+                                        break;
+                                        case 'fullname':
+                                                $sql = "`user`.`fullname`";
+                                        break;
+                                        case 'last_seen':
+                                                $sql = "`user`.`last_seen`";
+                                        break;
+                                        case 'create_date':
+                                                $sql = "`user`.`create_date`";
+                                        break;
+                                } // end switch
+                        break;
 			default: 
 				// Rien a faire
 			break;
