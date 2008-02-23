@@ -30,7 +30,6 @@ switch ($_REQUEST['action']) {
 			access_denied(); 
 			exit; 
 		} 
-
 		$shout_id = shoutBox::create($_POST); 
 		header("Location:" . Config::get('web_path')); 
 	break; 
@@ -41,14 +40,8 @@ switch ($_REQUEST['action']) {
 		// Now go ahead and display the page where we let them add a comment etc
 		require_once Config::get('prefix') . '/templates/show_add_shout.inc.php'; 
 	break; 
-	case 'show_manage': 
-		Browse::set_type('shoutbox'); 
-		Browse::set_simple_browse(1); 
-		$shoutbox_ids = Browse::get_objects(); 
-		Browse::show_objects($shoutbox_ids); 
-	break; 
 	default: 
-
+		header("Location:" . Config::get('web_path')); 
 	break;
 } // end switch on action
 

@@ -883,6 +883,10 @@ class User {
 		$sql = "DELETE FROM `user_vote` WHERE `user`='$this->id'";
 		$db_results = Dba::query($sql); 
 
+		// Delete their shoutbox posts
+		$sql = "DELETE FROM `user_shout` WHERE `user='$this->id'";
+    		$db_results = Dba::query($sql); 
+		
 		// Delete the user itself
 		$sql = "DELETE FROM `user` WHERE `id`='$this->id'";
 		$db_results = Dba::query($sql);

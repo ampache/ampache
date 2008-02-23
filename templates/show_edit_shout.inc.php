@@ -20,25 +20,25 @@
 
 */
 ?>
-<?php show_box_top(_('Post to Shoutbox')); ?>
-<form method="post" enctype="multipart/form-data" action="<?php echo Config::get('web_path'); ?>/shout.php?action=add_shout">
+<?php show_box_top(_('Edit existing Shoutbox Post')); ?>
+<form method="post" enctype="multipart/form-data" action="<?php echo Config::get('web_path'); ?>/admin/shout.php?action=edit_shout">
+<input type="hidden" name="shout_id" value="<?php echo $shout->id; ?>" />
 <table class="tabledata" cellpadding="0" cellspacing="0">
+<tr>
+	<td><strong>Created by: <?php echo $client->f_link; ?> for <?php echo $object->f_link; ?></strong>
+<tr>
 <tr>
 	<td><strong>Comment:</strong>
 </tr>
 <tr>
-	<td><textarea rows="5" cols="70" name="comment"></textarea></td>
+	<td><textarea rows="5" cols="70" name="comment"><?php echo $shout->text; ?></textarea></td>
 </tr>
-<?php if (Access::check('interface','50')) { ?>
 <tr>
-	<td><input type="checkbox" name="sticky" /> <strong><?php echo _('Make Sticky'); ?></strong></td>
+	<td><input type="checkbox" name="sticky" <?php if ($shout->sticky == "1") { echo "checked"; } ?>/> <strong><?php echo _('Make Sticky'); ?></strong></td>
 </tr>
-<?php } ?>
 <tr>
 	<td>
-		<input type="hidden" name="object_id" value="<?php echo $object->id; ?>" />
-		<input type="hidden" name="object_type" value="<?php echo strtolower(get_class($object)); ?>" />
-		<input type="submit" value="<?php echo _('Create'); ?>" />
+		<input type="submit" value="<?php echo _('Update'); ?>" />
 	</td>
 </tr>
 </table>

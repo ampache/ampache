@@ -27,6 +27,7 @@ $web_path = Config::get('web_path');
   <col id="col_username" />
   <col id="col_sticky" />
   <col id="col_comment" />
+  <col id="col_date />
   <col id="col_action" />
 </colgroup>
 <tr class="th-top">
@@ -34,11 +35,18 @@ $web_path = Config::get('web_path');
 	<th class="cel_username"><?php echo _('User'); ?></th>
 	<th class="cel_flag"><?php echo _('Sticky'); ?></th>
 	<th class="cel_comment"><?php echo _('Comment'); ?></th>
+	<th class="cel_date"><?php echo _('Date Added'); ?></th>
 	<th class="cel_action"><?php echo _('Action'); ?></th>
 </tr>
 <?php 
 foreach ($object_ids as $shout_id) { 
 	$shout = new shoutBox($shout_id); 
+	$shout->format();
+        $object = shoutBox::get_object($shout->object_type,$shout->object_id);
+        $object->format();
+        $client = new User($shout->user);
+        $client->format();
+
 	require Config::get('prefix') . '/templates/show_shout_row.inc.php'; 
 ?>
 <?php } if (!count($object_ids)) { ?>
@@ -51,6 +59,7 @@ foreach ($object_ids as $shout_id) {
 	<th class="cel_username"><?php echo _('User'); ?></th>
 	<th class="cel_sticky"><?php echo _('Sticky'); ?></th>
 	<th class="cel_comment"><?php echo _('Comment'); ?></th>
+	<th class="cel_date"><?php echo _('Date Added'); ?></th>
 	<th class="cel_action"><?php echo _('Action'); ?></th>
 </tr>
 </table>

@@ -219,7 +219,7 @@ class Browse {
 				$valid_array = array('name','user');
 			break; 
 			case 'shoutbox': 
-				$valud_array = array('date','user','sticky'); 
+				$valid_array = array('date','user','sticky'); 
 			break; 
 			case 'live_stream': 
 				$valid_array = array('name','call_sign','frequency'); 
@@ -393,7 +393,7 @@ class Browse {
 				$sql = "SELECT `flagged`.`id` FROM `flagged` ";
 			break;
 			case 'shoutbox': 
-				$sql - "SELECT `user_shout`.`id` FROM `user_shout` "; 
+				$sql = "SELECT `user_shout`.`id` FROM `user_shout` "; 
 			break; 
 			case 'playlist_song': 
                         case 'song':

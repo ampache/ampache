@@ -123,7 +123,7 @@ if (Config::get('user_agreement')) { ?>
 </tr>
 </table>
 <?php if (Config::get('captcha_public_reg')) { ?>
-			<?php echo captcha::form(); ?>
+			<?php  echo captcha::form("&rarr;&nbsp;"); ?>
 			<?php Error::display('captcha'); ?>
 <?php } ?>
 <table>

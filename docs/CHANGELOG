@@ -4,6 +4,8 @@
 
 --------------------------------------------------------------------------
   v.3.4-Beta2 
+	- Fixed Sorting on Admin->Browse Users
+	- Fixed Shoutbox and shoutbox management (pb1dft)
 	- Fixed some minor glitches in user registration ( pb1dft )
 	- Fixed typo that caused mail to always mail to everyone. 
 	- Fixed an issue with user auth in XML API always registering as

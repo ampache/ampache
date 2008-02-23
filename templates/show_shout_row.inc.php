@@ -21,10 +21,19 @@
 
 ?>
 <tr id="flagged_<?php echo $shout->id; ?>" class="<?php echo flip_class(); ?>">
-	<td class="cel_object"><?php echo $shout->f_name; ?></td>
-	<td class="cel_username"><?php echo $shout->f_user; ?></td>
-	<td class="cel_sticky"><?php $shout->sticky; ?></td>
-	<td class="cel_comment"><?php echo scrub_out($shout->comment); ?></td>
+	<td class="cel_object"><?php echo $object->f_link; ?></td>
+	<td class="cel_username"><?php echo $client->f_link; ?></td>
+	<td class="cel_sticky"><?php echo $shout->sticky; ?></td>
+	<td class="cel_comment"><?php echo scrub_out($shout->text); ?></td>
+	<td class="cel_date"><?php echo $shout->date; ?></td>
 	<td class="cel_action">
+
+                <a href="<?php echo $web_path; ?>/admin/shout.php?action=show_edit&amp;shout_id=<?php echo $shout->id; ?>">
+                <?php echo get_user_icon('edit'); ?>
+                </a>
+
+                <a href="<?php echo $web_path; ?>/admin/shout.php?action=delete&amp;shout_id=<?php echo $shout->id; ?>">
+                <?php echo get_user_icon('delete'); ?>
+                </a>
 	</td>
 </tr>

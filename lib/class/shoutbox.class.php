@@ -173,5 +173,51 @@ class shoutBox {
 
 	} // create
 
+	/**
+	 * update
+	 * This takes a key'd array of data as input and updates a shoutbox entry
+	 */
+	public static function update($data) { 
+
+		$id		= Dba::escape($data['shout_id']); 
+		$text 		= Dba::escape(strip_tags($data['comment'])); 
+		$sticky 	= make_bool($data['sticky']); 
+
+		$sql = "UPDATE `user_shout` SET `text`='$text', `sticky`='$sticky' WHERE `id`='$id'";
+		$db_results = Dba::query($sql); 
+
+		return true; 
+
+	} // create
+
+        /**
+         * format
+         * this function takes the object and reformats some values
+         */
+	
+        public function format() {
+	    
+	    if ( $this->sticky == "0" ) { $this->sticky = "No"; } else { $this->sticky = "Yes"; }
+	    
+	    $this->date = date("m\/d\/Y - H:i",$this->date);
+	    	
+	    return true;
+	
+	} //format
+
+	/**
+	 * delete
+	 * this function deletes a specific shoutbox entry
+	 */
+
+        public function delete($shout_id) {
+
+                // Delete the shoutbox post
+		
+                $sql = "DELETE FROM `user_shout` WHERE `id`='$shout_id'";
+                $db_results = Dba::query($sql);
+		
+	} // delete
+
 } // shoutBox class
 ?>
