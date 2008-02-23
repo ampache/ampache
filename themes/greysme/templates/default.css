@@ -658,24 +658,32 @@ background:#000;
 /*               Shoutbox                       */
 /************************************************/
 
+
 #shoutbox {
-        font-size:0.8em;
-}
+	font-size:1em;
+	position:relative;
+} 
 
-#shoutbox div.shout {
-        float:left;
-        margin-right:5px;
-}
+#shoutbox div.shout { 
+	/*float:left;*/
+	padding:1em 85px 0 30px;  
+} 
 
-#shoutbox span.information {
-        float:left;
-        clear:left;
+#shoutbox span.information { 
+/*	float:left;
+	clear:left;*/
+} 
+#shoutbox .shouttext{display:block;}
+img.shoutboximage { 
+	margin-right:3px;
+	width:25px;
+	height:25px;
+	position:absolute;margin-left:-30px;
 }
+.shoutodd img.shoutboximage {/*float:right;*/}
+.shouteven img.shoutboximage {/*float:right;*/}
 
-img.shoutboximage {
-        float:left;
-        margin-right:3px;
-}
+div.shout:hover img.shoutboximage{width:75px;height:75px;position:absolute;top:50%;right:0;margin-top:-38px}
 
 /************************************************/
 /*             List Header                      */

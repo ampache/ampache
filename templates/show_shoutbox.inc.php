@@ -21,18 +21,22 @@
 ?>
 <?php show_box_top(_('Shoutbox')); ?>
 <div id="shoutbox">
-<?php foreach ($shouts as $shout_id) { 
+<?php 
+  $rowparity="shouteven";
+  foreach ($shouts as $shout_id) { 
 	$shout = new shoutBox($shout_id); 
 	$object = shoutBox::get_object($shout->object_type,$shout->object_id); 
 	$object->format(); 
 	$client = new User($shout->user); 
 	$client->format(); 
+	
+	$rowparity = ($rowparity=="shouteven") ? "shoutodd" : "shouteven";
 ?>
-<div class="shout">
-	<strong><?php echo ucfirst($shout->object_type); ?>:</strong> <?php echo $object->f_link; ?><br />
-	<?php echo $shout->get_image(); ?><br />
-	<?php echo scrub_out($shout->text); ?><br />
+<div class="shout <?php echo($rowparity) ?>">
+	<?php echo $shout->get_image(); ?>
+	<strong><?php echo ucfirst($shout->object_type); ?>:</strong> <?php echo $object->f_link; ?>
 	<span class="information"><?php echo $client->f_link; ?> <?php echo date("d/m H:i",$shout->date); ?></span>
+	<span class="shouttext"><?php echo scrub_out($shout->text); ?></span>
 </div>
 <?php } ?>
 </div>

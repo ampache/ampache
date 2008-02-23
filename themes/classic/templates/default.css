@@ -603,23 +603,23 @@ td.cel_cover{padding:6px;}
 /************************************************/
 
 #shoutbox {
-	font-size:0.8em;	
+	font-size:0.8em;
 } 
 
-#shoutbox div.shout { 
-	float:left;
-	margin-right:5px;
+#shoutbox div.shout {
+  padding-top:0.5em; 
+	margin:10px 5px 0 0;
+  border-top:1px dotted #c0c0c0;
 } 
 
-#shoutbox span.information { 
-	float:left;
-	clear:left;
-} 
+#shoutbox span.information {}
+#shoutbox .shouttext{display:block;}
+img.shoutboximage {	margin:0 3px;}
 
-img.shoutboximage { 
-	float:left;
-	margin-right:3px;
-} 
+#shoutbox div.shoutodd{margin-right:20%;text-align:left;}
+#shoutbox div.shouteven{margin-left:20%;text-align:right;}
+.shoutodd img.shoutboximage {float:left;}
+.shouteven img.shoutboximage {float:right;}
 
 /************************************************/
 /*             List Header                      */
