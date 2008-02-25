@@ -29,11 +29,9 @@ if (isset($_REQUEST['xspf']) && isset ($_REQUEST['play_info'])){
         <?php show_now_playing(); ?>
 </div> <!-- Close Now Playing Div -->
 <!-- Randomly selected albums of the moment --> 
+	<?php echo Ajax::observe('window','load',Ajax::action('?page=index&action=random_albums','random_albums')); ?>
 <div id="random_selection">
-	<?php
-		$albums = get_random_albums('6'); 
-		if (count($albums)) { require_once Config::get('prefix') . '/templates/show_random_albums.inc.php'; } 
-	?>
+	<?php show_box_top(_('Albums of the Moment')); echo _('Loading...'); show_box_bottom(); ?>
 </div> 
 <!-- Recently Played -->
 <div id="recently_played">

@@ -73,6 +73,10 @@ switch ($_REQUEST['page']) {
 		require_once Config::get('prefix') . '/server/democratic.ajax.php'; 
 		exit; 
 	break;
+	case 'index': 
+		require_once Config::get('prefix') . '/server/index.ajax.php'; 
+		exit; 
+	break; 
 	default: 
 		// A taste of compatibility
 	break;

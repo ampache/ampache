@@ -1138,6 +1138,9 @@ class Update {
 		$sql = "ALTER TABLE `rating` CHANGE `rating` TINYINT ( 4 ) NOT NULL"; 
 		$db_results = Dba::query($sql); 
 
+//		$sql = "ALTER TABLE `user` CHANGE `validation` VARCHAR ( 255 ) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL";  
+//		$db_results = Dba::query($sql); 
+
 		self::set_version('db_version','340015'); 
 		
 	} // update_340015
