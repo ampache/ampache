@@ -289,6 +289,16 @@ a.button{padding:1px 3px;}
 
 
 /************************************************/
+/*                  XSPF Player                 */
+/************************************************/
+#xspf_player { 
+	width:400px;
+	float: left;
+	background:#fff;
+	font-family: Verdana,Helvetica,sans-serif;
+} 
+
+/************************************************/
 /*                  Rightbar                    */
 /************************************************/
 #rightbar { 

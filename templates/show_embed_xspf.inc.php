@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2006 Ampache.org
+ Copyright (c) 2001 - 2007 Ampache.org
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
@@ -19,20 +19,55 @@
 
 */
 ?>
-<span class="xspf_player">
+<script language=JavaScript>
+<!--
+//Disable right mouse click Script to hide the source url for the flash player it prevents ripping music a bit.
+//When used together with locked songs this will help just a bit more.
+function clickIE4(){
+if (event.button==2){
+return false;
+}
+}
+
+function clickNS4(e){
+if (document.layers||document.getElementById&&!document.all){
+if (e.which==2||e.which==3){
+return false;
+}
+}
+}
+
+if (document.layers){
+document.captureEvents(Event.MOUSEDOWN);
+document.onmousedown=clickNS4;
+}
+else if (document.all&&!document.getElementById){
+document.onmousedown=clickIE4;
+}
+
+document.oncontextmenu=new Function("return false")
+
+// --> 
+</script>
+
 <?php
 show_box_top(_('XSPF Player'));
+$play_url = Config::get('web_path') . '/modules/flash/xspf_player.php?tmp_id=' . scrub_out($_REQUEST['tmpplaylist_id']); 
+$player_url = sprintf("%s/modules/flash/xspf_jukebox.swf?autoplay=true&repeat_playlist=false&crossFade=false&shuffle=false&skin_url=%s/modules/flash/Original/&playlist_url=%s",Config::get('web_path'),Config::get('web_path'),$play_url); 
 ?>
-<div id="mp3player">
-<script type="text/javascript" src="<?php Config::get('web_path'); ?>/modules/flash/swfobject.js"></script>
-<script type="text/javascript">
-<!--
-var flashObj = new SWFObject ("<?php Config::get('web_path'); ?>/modules/flash/XSPF_RadioV.swf?action=play&playlist=<?php Config::get('web_path'); ?>/modules/flash/xspf_player.php?tmp_id=<?php echo $_REQUEST['play_info']; ?>&folder=<?php Config::get('web_path'); ?>/modules/flash/&textcolor=033066&color=E6E6E6&loop=playlist&lma=yes&viewinfo=true&vol=30&display=1@. - @2@ - @", "FMP3", "270", "190", 7, "#FFFFFF", true);
-flashObj.write ("mp3player");
-// -->
-</script>
-</div>
+<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="http://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=7,0,0,0" width="400" height="170" id="xspf_player" align="middle">
+	<param name="pluginspage" value="http://www.macromedia.com/go/getflashplayer" />
+	<param name="allowScriptAccess" value="sameDomain" />
+	<param name="movie" value="<?php echo $player_url; ?>" />
+	<param name="quality" value="high" />
+	<param name="bgcolor" value="#ffffff" />
+	<param name="type"    value="application/x-shockwave-flash" />
+	<param name="width"   value="400" />
+	<param name="height"  value="170" />
+	<param name="name"    value="xspf_player" /> 
+	<param name="align"   value="middle" />
+	<embed src="<?php echo $player_url; ?>" quality="high" bgcolor="#ffffff" width="400" height="170" name="xspf_player" align="middle" allowScriptAccess="sameDomain" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer" />
+</object>
 <?php
 show_box_bottom();
 ?>
-</span>

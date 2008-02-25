@@ -98,13 +98,6 @@ body { behavior:url("templates/csshover2.htc"); }
 /* float clearing for everyone else */
 .clearfix:after{ clear: both; content: "."; display: block; height: 0; visibility: hidden; }
 
-/************************************************/
-/*                XSPF Player                   */
-/************************************************/
-.xspf_player {
-    right: 20px;
-    position: absolute;
-}
 
 /************************************************/
 /*             Main Container                   */
@@ -318,6 +311,16 @@ input[type=checkbox]  { border:0;background:none; }
   padding:0; 
   border:none; 
 }
+/************************************************/
+/*                  XSPF Player                 */
+/************************************************/
+#xspf_player { 
+        width:410px;
+	position: relative;
+	float: left;
+	font-family: Verdana,Helvetica,sans-serif;
+} 
+
 
 /************************************************/
 /*                  Rightbar                    */

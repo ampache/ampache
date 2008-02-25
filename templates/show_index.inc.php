@@ -19,11 +19,15 @@
 
 */
 ?>
+<div id="xspf_player"><!-- Start XSPF Player -->
 <?php
-if (isset($_REQUEST['xspf']) && isset ($_REQUEST['play_info'])){
-	require_once Config::get('prefix') . '/templates/show_embed_xspf.inc.php';
-}
+    if (isset($_REQUEST['xspf']) && isset ($_REQUEST['tmpplaylist_id'])){ 
+      require_once Config::get('prefix') . '/templates/show_embed_xspf.inc.php';
+    }
 ?>
+</div><!-- End XSPF Player -->
+
+
 
 <div id="now_playing">
         <?php show_now_playing(); ?>
