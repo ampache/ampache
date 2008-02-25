@@ -68,7 +68,7 @@ switch ($_REQUEST['action']) {
 
 		/* If we're using the captcha stuff */
 		if (Config::get('captcha_public_reg')) { 
-		    	$captcha 		= captcha::check(); 
+		    	$captcha 		= captcha::solved(); 
 			if(!isset ($captcha)) {
 				Error::add('captcha',_('Error Captcha Required'));
 			}	
