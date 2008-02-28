@@ -26,8 +26,8 @@
 function show_now_playing() {
 
 	// GC!
-//	Stream::gc_session(); 
-//	Stream::gc_now_playing();  
+	Stream::gc_session(); 
+	Stream::gc_now_playing();  
 
         $web_path = Config::get('web_path');
         $results = get_now_playing();
