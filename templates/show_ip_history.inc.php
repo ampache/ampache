@@ -43,7 +43,7 @@
 		<?php echo date("d/m/Y H\hi",$data['date']); ?>
 	</td>
 	<td class="cel_ipaddress">
-		<?php echo int2ip($data['ip']); ?>
+		<?php echo long2ip($data['ip']); ?>
 	</td>
 </tr>
 <?php } ?>

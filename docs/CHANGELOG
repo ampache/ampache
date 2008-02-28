@@ -4,6 +4,8 @@
 
 --------------------------------------------------------------------------
   v.3.4-Beta2 
+	- Fixed browse issue when adding filters under specific conditions
+	- Removed ip2int, int2ip and replaced with standard PHP functions
 	- Updated Russian Translation and plural fixes ( Thx littlesavage )
 	- Fixed Sorting on Admin->Browse Users
 	- Fixed Shoutbox and shoutbox management (pb1dft)

@@ -56,8 +56,8 @@ stream from this server.</p>
 ?>
 <tr class="<?php echo flip_class(); ?>">
 	<td><?php echo scrub_out($access->name); ?></td>
-	<td><?php echo int2ip($access->start); ?></td>
-	<td><?php echo int2ip($access->end); ?></td>
+	<td><?php echo long2ip($access->start); ?></td>
+	<td><?php echo long2ip($access->end); ?></td>
 	<td><?php echo $access->get_level_name(); ?></td>
 	<td><?php echo $access->get_user_name(); ?></td>
 	<td><?php echo $access->key; ?></td>

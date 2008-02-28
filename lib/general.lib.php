@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2007 Ampache.org
+ Copyright (c) 2001 - 2008 Ampache.org
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
@@ -19,29 +19,6 @@
 
 */
 
-
-/**
- * ip2int
- * turns a dotted quad ip into an int
- */
-function ip2int($ip) { 
-
-        $a=explode(".",$ip);
-	return $a[0]*256*256*256+$a[1]*256*256+$a[2]*256+$a[3];
-
-} // ip2int
-
-/*!
-	@function int2ip
-	@discussion turns a int into a dotted quad
-*/
-function int2ip($i) { 
-        $d[0]=(int)($i/256/256/256);
-        $d[1]=(int)(($i-$d[0]*256*256*256)/256/256);
-        $d[2]=(int)(($i-$d[0]*256*256*256-$d[1]*256*256)/256);
-        $d[3]=$i-$d[0]*256*256*256-$d[1]*256*256-$d[2]*256;
-	return "$d[0].$d[1].$d[2].$d[3]";
-} // int2ip
 
 /**
  * session_exists

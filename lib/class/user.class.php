@@ -553,7 +553,7 @@ class User {
 		    $sip = $_SERVER['REMOTE_ADDR'];
 		    debug_event('User Ip', 'Login from ip adress: ' . $sip,'3');
 		}
-		$ip = ip2int($sip);
+		$ip = ip2long($sip);
 		$date = time(); 
 		$user = $this->id;
 
@@ -658,16 +658,16 @@ class User {
 		
 		/* Get Users Last ip */
 		$data = $this->get_ip_history(1);
-		$this->ip_history = int2ip($data['0']['ip']);	
+		$this->ip_history = long2ip($data['0']['ip']);	
 
 	} // format_user
 
-	/*!
-		@function format_favorites
-		@discussion takes an array of objects and formats them corrrectly
-			and returns a simply array with just <a href values
-	*/
-	function format_favorites($items) { 
+	/**
+	 * format_favorites
+	 * takes an array of objects and formats them corrrectly
+	 * and returns a simply array with just <a href values
+	 */
+	public function format_favorites($items) { 
 
 		// The length of the longest item
 		$maxlen = strlen($items[0]->count);

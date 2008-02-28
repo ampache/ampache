@@ -80,8 +80,8 @@ class Access {
 
 		$name	= Dba::escape($data['name']); 
 		$type	= self::validate_type($data['type']); 
-		$start 	= ip2int($data['start']);
-		$end	= ip2int($data['end']);
+		$start 	= ip2long($data['start']);
+		$end	= ip2long($data['end']);
 		$level	= Dba::escape($data['level']);
 		$user	= $data['user'] ? Dba::escape($data['user']) : '-1'; 
 		$key	= Dba::escape($data['key']);
@@ -104,8 +104,8 @@ class Access {
 
 		/* We need to verify the incomming data a littlebit */
 
-		$start 	= ip2int($data['start']);
-		$end 	= ip2int($data['end']);
+		$start 	= ip2long($data['start']);
+		$end 	= ip2long($data['end']);
 		$name	= Dba::escape($data['name']);
 		$key	= Dba::escape($data['key']);
 		$user	= $data['user'] ? Dba::escape($data['user']) : '-1'; 
@@ -170,7 +170,7 @@ class Access {
 		} 
 
 		// Clean incomming variables
-		$ip 	= ip2int($ip);
+		$ip 	= ip2long($ip);
 		$user 	= Dba::escape($user);
 		$key 	= Dba::escape($key);
 		$level	= Dba::escape($level);

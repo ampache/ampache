@@ -433,7 +433,7 @@ class Browse {
 		} // if filters
 
 		// Now Add the Order 
-		$order_sql = "ORDER BY "; 	
+		$order_sql = " ORDER BY "; 	
 
 		// If we don't have a sort, then go ahead and return it now
 		if (!is_array($_SESSION['browse']['sort'])) { return $sql; }

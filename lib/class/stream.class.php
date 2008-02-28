@@ -188,7 +188,7 @@ class Stream {
 		$expire = time() + Config::get('stream_length'); 
 		$sid 	= Dba::escape($sid); 
 		$agent	= Dba::escape($_SERVER['HTTP_USER_AGENT']); 
-		$ip	= ip2int($_SERVER['REMOTE_ADDR']); 
+		$ip	= ip2long($_SERVER['REMOTE_ADDR']); 
 		$uid	= Dba::escape($uid); 
 
 		$sql = "UPDATE `session_stream` SET `expire`='$expire', `agent`='$agent', `ip`='$ip' " . 
