@@ -4,6 +4,8 @@
 
 --------------------------------------------------------------------------
   v.3.4-Beta2 
+	- Removed some invalid queries that were not needed, tweaked logic
+		of no_session to avoid useless query
 	- Added Greek Translation ( Thx Panayotis Tsirigotis )
 	- Fixed browse issue when adding filters under specific conditions
 	- Removed ip2int, int2ip and replaced with standard PHP functions

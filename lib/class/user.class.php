@@ -46,6 +46,8 @@ class User {
 	 * class, it currently takes a username
 	 */	
 	public function __construct($user_id=0) {
+		
+		if (!$user_id) { return false; } 
 
 		$this->id		= intval($user_id);
 		$info 			= $this->_get_info();
@@ -56,9 +58,6 @@ class User {
 			$this->$key = $value; 
 		} 
 		
-		// Set the preferences for this user
-		$this->set_preferences();
-
 		// Make sure the Full name is always filled
 		if (strlen($this->fullname) < 1) { $this->fullname = $this->username; }
 
@@ -150,7 +149,7 @@ class User {
 	
 		$sql = "SELECT preference.name, preference.description, preference.catagory, preference.level, user_preference.value " . 
 			"FROM preference INNER JOIN user_preference ON user_preference.preference=preference.id " .
-			"WHERE user_preference.user='$user_id' $user_limit";
+			"WHERE user_preference.user='$user_id' " . $user_limit;
 		$db_results = Dba::query($sql);
 
 		/* Ok this is crapy, need to clean this up or improve the code FIXME */
@@ -175,7 +174,7 @@ class User {
 
 		$user_id = Dba::escape($this->id); 
 
-		$sql = "SELECT preference.name,user_preference.value FROM preference,user_preference WHERE user_preference.user='$user_id'" .
+		$sql = "SELECT preference.name,user_preference.value FROM preference,user_preference WHERE user_preference.user='$user_id' " .
 			"AND user_preference.preference=preference.id AND preference.type != 'system'";
 		$db_results = Dba::query($sql);
 

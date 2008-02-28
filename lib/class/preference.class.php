@@ -319,8 +319,9 @@ class Preference {
 	public static function init() { 
 
 	        /* Get Global Preferences */
-	        $sql = "SELECT preference.name,user_preference.value FROM preference,user_preference WHERE user_preference.user='-1' " .
-	                " AND user_preference.preference = preference.id AND preference.catagory='system'";
+	        $sql = "SELECT `preference`.`name`,`user_preference`.`value` FROM `preference`,`user_preference` " . 
+			"WHERE `user_preference`.`user`='-1' " .
+	                "AND `user_preference`.`preference` = `preference`.`id` AND `preference`.`catagory` = 'system'";
 	        $db_results = Dba::query($sql);
 
 	        while ($r = Dba::fetch_assoc($db_results)) {
@@ -335,7 +336,7 @@ class Preference {
 	        }
 
 	        $sql = "SELECT preference.name,user_preference.value FROM preference,user_preference WHERE user_preference.user='$user_id' " .
-	                " AND user_preference.preference = preference.id AND preference.catagory != 'system'";
+	                "AND user_preference.preference = preference.id AND preference.catagory != 'system'";
 	        $db_results = Dba::query($sql);
 
 	        while ($r = Dba::fetch_assoc($db_results)) {

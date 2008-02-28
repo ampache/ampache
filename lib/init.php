@@ -223,15 +223,20 @@ else {
 		session_name(Config::get('session_name')); 
 		session_id(scrub_in($_REQUEST['sessid']));
 		session_start();
+		$GLOBALS['user'] = User::get_from_username($sess_results['username']);
 	}
-	$GLOBALS['user'] = User::get_from_username($sess_results['username']);
-}
+	else { 
+		$GLOBALS['user'] = new User(); 
+	} 
+} // If NO_SESSION passed
 
 // Load the Preferences from the database
 Preference::init();
 
-// We need to create the tmp playlist for our user
-$GLOBALS['user']->load_playlist(); 
+// We need to create the tmp playlist for our user only if we have a session
+if (session_id()) { 
+	$GLOBALS['user']->load_playlist(); 
+} 
 
 /* Add in some variables for ajax done here because we need the user */
 Config::set('ajax_url',Config::get('web_path') . '/server/ajax.server.php',1);
