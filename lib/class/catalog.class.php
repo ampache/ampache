@@ -173,9 +173,9 @@ class Catalog {
 		$hours = $hours%24; 
 		
 		$time_text = "$days ";
-		$time_text .= ($days == 1) ? _('day') : _('days'); 
+		$time_text .= ngettext('day','days',$days); 
 		$time_text .= ", $hours "; 
-		$time_text .= ($hours == 1) ? _('hour') : _('hours'); 
+		$time_text .= ngettext('hour','hours',$hours); 
 
 		$results['time_text'] = $time_text; 
 

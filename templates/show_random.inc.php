@@ -48,13 +48,13 @@
 	<td>
 		<select name="length">
 			<option value="0"><?php echo _('Unlimited'); ?></option>
-			<option value="15">15 <?php echo _('minutes'); ?></option>
-			<option value="30">30 <?php echo _('minutes'); ?></option>
-			<option value="60">1 <?php echo _('hours'); ?></option>
-			<option value="120">2 <?php echo _('hours'); ?></option>
-			<option value="240">4 <?php echo _('hours'); ?></option>
-			<option value="480">8 <?php echo _('hours'); ?></option>
-			<option value="960">16 <?php echo _('hours'); ?></option>
+			<option value="15">15 <?php echo ngettext('minute','minutes',15); ?></option>
+			<option value="30">30 <?php echo ngettext('minute','minutes',30); ?></option>
+			<option value="60">1 <?php echo ngettext('hour','hours',1); ?></option>
+			<option value="120">2 <?php echo ngettext('hour','hours',2); ?></option>
+			<option value="240">4 <?php echo ngettext('hour','hours',4); ?></option>
+			<option value="480">8 <?php echo ngettext('hour','hours',8); ?></option>
+			<option value="960">16 <?php echo ngettext('hour','hours',16); ?></option>
 		</select>
 	</td>
 </tr>

@@ -4,6 +4,7 @@
 
 --------------------------------------------------------------------------
   v.3.4-Beta2 
+	- Updated Russian Translation and plural fixes ( Thx littlesavage )
 	- Fixed Sorting on Admin->Browse Users
 	- Fixed Shoutbox and shoutbox management (pb1dft)
 	- Fixed some minor glitches in user registration ( pb1dft )

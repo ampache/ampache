@@ -114,7 +114,7 @@ Contents:
 2. Getting all the components
 
   Apache >= 1.3.x http://www.apache.org OR other webserver
-  PHP >= 5.0.x http://www.php.net
+  PHP >= 5.1.x http://www.php.net
   	PHP5-Mysql
 	PHP5-Session
 	PHP5-gd (recommended)
