@@ -394,8 +394,10 @@ function get_languages() {
 			switch($file) { 
 				case 'de_DE'; $name = 'Deutsch'; break;
 				case 'en_US'; $name = _('English'); break;
+				case 'ca_CA'; $name = 'Catal&#224;'; break;
 				case 'en_GB'; $name = _('British English'); break;
 				case 'es_ES'; $name = 'Espa&ntilde;ol'; break;
+				case 'el_GR'; $name = 'Greek (&#x0395;&#x03bb;&#x03bb;&#x03b7;&#x03bd;&#x03b9;&#x03ba;&#x03ac;)'; break; 
 				case 'fr_FR'; $name = 'Fran&ccedil;ais'; break;
 				case 'it_IT'; $name = 'Italiano'; break;
 				case 'is_IS'; $name = '&Iacute;slenska'; break;

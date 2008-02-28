@@ -102,6 +102,7 @@ switch ($_REQUEST['action']) {
 				  'en_GB' => 'UTF-8',
 				  'es_ES' => 'iso-8859-1',
 				  'fr_FR' => 'iso-8859-1',
+				  'el_GR' => 'el_GR.utf-8',
 				  'it_IT' => 'UTF-8',
 				  'nl_NL' => 'ISO-8859-15',
 				  'tr_TR' => 'iso-8859-9',
