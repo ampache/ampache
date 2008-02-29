@@ -223,9 +223,6 @@ class Stream {
 			} 
 			$song = new Song($song_id);
 			if ($song->type == ".flac") { $song->type = ".ogg"; }
-	                if ($GLOBALS['user']->prefs['play_type'] == 'downsample') {
-	                	$ds = $GLOBALS['user']->prefs['sample_rate'];
-	                }
 			echo $song->get_url(); 
 		} // end foreach
 
@@ -408,7 +405,7 @@ class Stream {
 		//FIXME: This needs to go in a template, here for now though
 		//FIXME: This preference doesn't even exists, we'll eventually
 		//FIXME: just make it the default
-		if ($GLOBALS['user']->prefs['embed_xspf'] == 1 ){ 
+		if (Config::get('embed_xspf') == 1 ){ 
 			header("Location: ".Config::get('web_path')."/index.php?xspf&play_info=".$GLOBALS['user']->playlist->id);
 		}
 		else {
@@ -446,7 +443,7 @@ class Stream {
 	function create_localplay() { 
 
 		// First figure out what their current one is and create the object
-		$localplay = new Localplay($GLOBALS['user']->prefs['localplay_controller']); 
+		$localplay = new Localplay(Config::get('localplay_controller')); 
 		$localplay->connect(); 
 		//HACK!!!
 		// Yea.. you know the baby jesus... he's crying right meow
@@ -526,7 +523,7 @@ class Stream {
 	        $max_bitrate = Config::get('max_bit_rate');
 	        $min_bitrate = Config::get('min_bit_rate');
 	        $time = time();
-	        $user_sample_rate = $GLOBALS['user']->prefs['sample_rate'];
+	        $user_sample_rate = Config::get('sample_rate');
 	        $browser = new Browser();
 
 	        if (!$song_name) {
@@ -705,9 +702,9 @@ class Stream {
 		if (AJAX_INCLUDE != '1') { return false; } 
 
 		// If we're doin the flash magic then run away as well
-		if ($GLOBALS['user']->prefs['play_type'] == 'xspf_player') { return false; } 
+		if (Config::get('play_type') == 'xspf_player') { return false; } 
 
-		switch ($GLOBALS['user']->prefs['playlist_method']) { 
+		switch (Config::get('playlist_method')) { 
 			default: 
 			case 'clear': 
 			case 'default': 

@@ -27,7 +27,7 @@
  */
 
 // Pull these variables out to allow shorthand (easier for lazy programmers)
-$limit	= $GLOBALS['user']->prefs['offset_limit'] ? $GLOBALS['user']->prefs['offset_limit'] : '25'; 
+$limit	= Config::get('offset_limit') ? Config::get('offset_limit') : '25'; 
 $start	= Browse::$start; 
 $total	= Browse::$total_objects; 
 $uid	  = Config::get('list_header_uid'); 

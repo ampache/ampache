@@ -145,7 +145,7 @@ class Access {
                                         return false;
                                 }
                                 if (Config::get('allow_zip_download') AND $GLOBALS['user']->has_access(25)) {
-                                        return $GLOBALS['user']->prefs['download'];
+                                        return Config::get('download');
                                 }
                         break;
 			default:
@@ -237,7 +237,7 @@ class Access {
 		switch ($type) { 
 			case 'localplay': 
 				// Check their localplay_level 
-				if ($GLOBALS['user']->prefs['localplay_level'] >= $level) { 
+				if (Config::get('localplay_level') >= $level) { 
 					return true; 
 				} 
 				else { 

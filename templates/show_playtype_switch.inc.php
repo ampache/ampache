@@ -20,7 +20,7 @@
 */
 ?>
 <?php 
-$name = "is_" . $GLOBALS['user']->prefs['play_type'];
+$name = "is_" . Config::get('play_type');
 ${$name} = 'selected="selected" ';
 
 if (Preference::has_access('play_type')) {
@@ -42,6 +42,6 @@ if (Preference::has_access('play_type')) {
 <?php
 } // if they have access
 // Else just show what it currently is
-else { echo ucwords($GLOBALS['user']->prefs['play_type']);}
+else { echo ucwords(Config::get('play_type'));}
 ?>
 </div>

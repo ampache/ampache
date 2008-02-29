@@ -18,14 +18,13 @@
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
-
 ?>
 
 <ul class="sb2" id="sb_localplay">
-<?php if (Config::get('allow_localplay_playback') AND $GLOBALS['user']->prefs['localplay_controller'] AND Access::check('localplay','5')) { ?>
+<?php if (Config::get('allow_localplay_playback') AND Config::get('localplay_controller') AND Access::check('localplay','5')) { ?>
 <?php
 	// Little bit of work to be done here
-	$localplay = new Localplay($GLOBALS['user']->prefs['localplay_controller']); 
+	$localplay = new Localplay(Config::get('localplay_controller')); 
 	$current_instance = $localplay->current_instance(); 
 	$class = $current_instance ? '' : ' class="active_instance"';
 ?>

@@ -181,7 +181,7 @@ $song_name = $song->f_artist_full . " - " . $song->title . "." . $song->type;
 /* If they are just trying to download make sure they have rights 
  * and then present them with the download file
  */
-if ($_GET['action'] == 'download' AND $GLOBALS['user']->prefs['download']) { 
+if ($_GET['action'] == 'download' AND Config::get('download')) { 
 	
 	// STUPID IE
 	$song->format_pattern(); 
@@ -199,9 +199,9 @@ if ($_GET['action'] == 'download' AND $GLOBALS['user']->prefs['download']) {
         }
 		
 	// Check to see if we should be throttling because we can get away with it
-	if ($GLOBALS['user']->prefs['rate_limit'] > 0) { 
+	if (Config::get('rate_limit') > 0) { 
 		while (!feof($fp)) { 
-			echo fread($fp,round($GLOBALS['user']->prefs['rate_limit']*1024)); 
+			echo fread($fp,round(Config::get('rate_limit')*1024)); 
 			flush(); 
 			sleep(1); 
 		} 
@@ -247,7 +247,7 @@ if (Config::get('downsample_remote')) {
 } // if downsample remote is enabled
 
 // If they are downsampling, or if the song is not a native stream or it's non-local
-if (($GLOBALS['user']->prefs['transcode'] == 'always' || !$song->native_stream() || $not_local) && $GLOBALS['user']->prefs['transcode'] != 'never') { 
+if ((Config::get('transcode') == 'always' || !$song->native_stream() || $not_local) && Config::get('transcode') != 'never') { 
 	debug_event('downsample','Starting Downsample...','5');
 	$fp = Stream::start_downsample($song,$lastid,$song_name,$start);
 	$song_name = $song->f_artist_full . " - " . $song->title . "." . $song->type;
@@ -340,7 +340,7 @@ else {
 
 
 /* Clean up any open ends */
-if ($GLOBALS['user']->prefs['play_type'] == 'downsample' || !$song->native_stream()) { 
+if (Config::get('play_type') == 'downsample' || !$song->native_stream()) { 
 	@pclose($fp);
 } 
 else { 

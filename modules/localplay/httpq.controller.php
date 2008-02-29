@@ -228,7 +228,7 @@ class AmpacheHttpq extends localplay_controller {
 	 */
 	public function get_instance($instance='') { 
 
-		$instance = $instance ? $instance : $GLOBALS['user']->prefs['httpq_active']; 
+		$instance = $instance ? $instance : Config::get('httpq_active'); 
 		$instance = Dba::escape($instance); 
 
 		$sql = "SELECT * FROM `localplay_httpq` WHERE `id`='$instance'"; 

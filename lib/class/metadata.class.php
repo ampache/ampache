@@ -47,7 +47,7 @@ class metadata {
 
 		// For now it's only mystrands
 		OpenStrands::set_auth_token(Config::get('mystrands_developer_key')); 
-		$openstrands = new OpenStrands($GLOBALS['user']->prefs['mystrands_user'],$GLOBALS['user']->prefs['mystrands_pass']); 
+		$openstrands = new OpenStrands(Config::get('mystrands_user'),Config::get('mystrands_pass')); 
 		
 		// Make sure auth worked
 		if (!$openstrands) { return false; } 
@@ -101,7 +101,7 @@ class metadata {
 
                 // For now it's only mystrands
                 OpenStrands::set_auth_token(Config::get('mystrands_developer_key'));
-                $openstrands = new OpenStrands($GLOBALS['user']->prefs['mystrands_user'],$GLOBALS['user']->prefs['mystrands_pass']);
+                $openstrands = new OpenStrands(Config::get('mystrands_user'),Config::get('mystrands_pass'));
 
 		if (!$openstrands) { return false; } 
 

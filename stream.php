@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2007 ampache.org
+ Copyright (c) 2001 - 2008 ampache.org
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
@@ -18,11 +18,11 @@
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
-
 require_once 'lib/init.php';
 
 /* If we are running a demo, quick while you still can! */
 if (Config::get('demo_mode') || !$GLOBALS['user']->has_access('25')) {
+
 	access_denied();
 	exit;
 }
@@ -62,7 +62,7 @@ switch ($_REQUEST['action']) {
 		} // end foreach
 
 		// Check to see if 'clear' was passed if it was then we need to reset the basket
-		if ( ($_REQUEST['playlist_method'] == 'clear' || $GLOBALS['user']->prefs['playlist_method'] == 'clear') AND $GLOBALS['user']->prefs['play_method'] != 'xspf_player') { 
+		if ( ($_REQUEST['playlist_method'] == 'clear' || Config::get('playlist_method') == 'clear') AND Config::get('play_method') != 'xspf_player') { 
 			$GLOBALS['user']->playlist->clear(); 
 		} 
 
@@ -179,15 +179,15 @@ switch ($_REQUEST['method']) {
 			break;
 			case 'democratic': 
 				// Don't let them loop it
-				if ($GLOBALS['user']->prefs['play_type'] == 'democratic') { 
-					$GLOBALS['user']->prefs['play_type'] = 'stream'; 
+				if (Config::get('play_type') == 'democratic') { 
+					Config::set('play_type','stream','1'); 
 				}
 			default:
-				if ($GLOBALS['user']->prefs['play_type'] == 'stream') { 
-					$stream_type = $GLOBALS['user']->prefs['playlist_type'];
+				if (Config::get('play_type') == 'stream') { 
+					$stream_type = Config::get('playlist_type');
 				} 
 				else { 
-					$stream_type = $GLOBALS['user']->prefs['play_type']; 
+					$stream_type = Config::get('play_type'); 
 				} 
 			break;
 		} 

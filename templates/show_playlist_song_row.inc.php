@@ -28,7 +28,7 @@
 <td class="cel_track"><?php echo $song->f_track; ?></td>
 <td class="cel_time"><?php echo $song->f_time; ?></td>
 <td class="cel_action">
-	<?php if ($GLOBALS['user']->prefs['download']) { ?>
+	<?php if (Config::get('download')) { ?>
 	<a href="<?php echo Config::get('web_path'); ?>/stream.php?action=download&amp;song_id=<?php echo $song->id; ?>">
 		<?php echo get_user_icon('download',_('Download')); ?>
 	</a>

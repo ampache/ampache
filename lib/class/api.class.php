@@ -86,13 +86,19 @@ class Api {
 				$data['type']		= 'api'; 
 				$data['value']		= $timestamp; 
 				$token = vauth::session_create($data); 
+
 				// Insert the token into the streamer
 				$stream = new Stream(); 
 				$stream->user_id = $client->id; 
 				$stream->insert_session($token); 
 				debug_event('API','Login Success, passphrase matched','1'); 
 
-				return array('auth'=>$token,'api'=>self::$version); 
+				// We need to also get the 'last update' of the catalog information in an RFC 2822 Format
+				$sql = "SELECT MAX(`last_update`) AS `update`,MAX(`last_add`) AS `add` FROM `catalog`"; 
+				$db_results = Dba::query($sql); 
+				$row = Dba::fetch_assoc($db_results); 	 
+
+				return array('auth'=>$token,'api'=>self::$version,'update'=>date("r",$row['update']),'add'=>date("r",$row['add'])); 
 			} // match 
 
 		} // end while

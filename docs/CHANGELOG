@@ -4,6 +4,8 @@
 
 --------------------------------------------------------------------------
   v.3.4-Beta2 
+	- Added Catalog Last Update and Last Add times to API Handshake. 
+	- Fixed Remember Me Cookie so it's actually set
 	- Removed some invalid queries that were not needed, tweaked logic
 		of no_session to avoid useless query
 	- Added Greek Translation ( Thx Panayotis Tsirigotis )

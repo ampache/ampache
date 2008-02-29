@@ -671,7 +671,7 @@ class Browse {
 		self::$total_objects = count($object_ids); 
 
 		// Limit is based on the users preferences
-		$limit = $GLOBALS['user']->prefs['offset_limit'] ? $GLOBALS['user']->prefs['offset_limit'] : '25'; 
+		$limit = Config::get('offset_limit') ? Config::get('offset_limit') : '25'; 
 
 		if (count($object_ids) > self::$start) { 
 			$object_ids = array_slice($object_ids,self::$start,$limit); 

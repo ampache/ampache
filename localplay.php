@@ -35,7 +35,7 @@ switch ($_REQUEST['action']) {
 		if (!Access::check('localplay','75')) { access_denied(); break; } 
 		
 		// Get the current localplay fields
-		$localplay = new Localplay($GLOBALS['user']->prefs['localplay_controller']); 
+		$localplay = new Localplay(Config::get('localplay_controller')); 
 		$fields = $localplay->get_instance_fields(); 
 		require_once Config::get('prefix') . '/templates/show_localplay_add_instance.inc.php'; 
 	break;
@@ -44,20 +44,20 @@ switch ($_REQUEST['action']) {
 		if (!Access::check('localplay','75')) { access_denied(); break; } 
 		
 		// Setup the object
-		$localplay = new Localplay($GLOBALS['user']->prefs['localplay_controller']); 
+		$localplay = new Localplay(Config::get('localplay_controller')); 
 		$localplay->add_instance($_POST); 
 	break;
 	case 'update_instance': 
 		// Make sure they gots them rights
 		if (!Access::check('localplay','75')) { access_denied(); break; } 
-		$localplay = new Localplay($GLOBALS['user']->prefs['localplay_controller']); 
+		$localplay = new Localplay(Config::get('localplay_controller')); 
 		$localplay->update_instance($_REQUEST['instance'],$_POST); 
 		header("Location:" . Config::get('web_path') . "/localplay.php?action=show_instances"); 
 	break; 
 	case 'edit_instance': 
 		// Check to make sure they've got the access
 		if (!Access::check('localplay','75')) { access_denied(); break; } 
-		$localplay = new Localplay($GLOBALS['user']->prefs['localplay_controller']); 
+		$localplay = new Localplay(Config::get('localplay_controller')); 
 		$instance = $localplay->get_instance($_REQUEST['instance']); 
 		$fields = $localplay->get_instance_fields(); 
 		require_once Config::get('prefix') . '/templates/show_localplay_edit_instance.inc.php'; 
@@ -65,7 +65,7 @@ switch ($_REQUEST['action']) {
 	case 'show_instances': 
 		// First build the localplay object and then get the instances
 		if (!Access::check('localplay','5')) { access_denied(); break; } 
-		$localplay = new Localplay($GLOBALS['user']->prefs['localplay_controller']); 
+		$localplay = new Localplay(Config::get('localplay_controller')); 
 		$instances = $localplay->get_instances(); 
 		$fields = $localplay->get_instance_fields(); 
 		require_once Config::get('prefix') . '/templates/show_localplay_instances.inc.php'; 
@@ -74,7 +74,7 @@ switch ($_REQUEST['action']) {
 	case 'show_playlist': 
 		if (!Access::check('localplay','5')) { access_denied(); break; } 
 		// Init and then connect to our localplay instance
-		$localplay = new Localplay($GLOBALS['user']->prefs['localplay_controller']); 
+		$localplay = new Localplay(Config::get('localplay_controller')); 
 		$localplay->connect(); 
 
 		// Pull the current playlist and require the template

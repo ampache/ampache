@@ -236,7 +236,7 @@ class vauth {
 		$session_name = Config::get('session_name'); 
 
 		Config::set('cookie_life',$remember_length,'1');
-		setcookie($session_name . '_remember',"Rappelez-vous, rappelez-vous le 27 mars",time() + $remember_length,'/',Config::get('cookie_domain'));
+		setcookie($session_name . '_remember',"Rappelez-vous, rappelez-vous le 27 mars",time() + $remember_length,'/');
 
 	} // create_remember_cookie
 
@@ -300,13 +300,6 @@ class vauth {
 
 		// No cookie n go!
 		if (!isset($_COOKIE[$session_name])) { return false; }
-
-		$key = scrub_in($_COOKIE[$session_name]); 
-		$data = self::get_session_data($key); 
-
-		if (!is_array($data)) { 
-			return false; 
-		} 
 
 		// Check for a remember me
 		if (isset($_COOKIE[$session_name . '_remember'])) { 

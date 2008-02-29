@@ -206,7 +206,7 @@ class Localplay {
 		$this->_player->uninstall(); 
 
 		// If its our current player, reset player to nothing
-		if ($GLOBALS['user']->prefs['localplay_controller'] == $this->type) { 
+		if (Config::get('localplay_controller') == $this->type) { 
 			Preference::update('localplay_controller',$GLOBALS['user']->id,''); 
 		} 
 

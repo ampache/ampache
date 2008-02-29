@@ -34,7 +34,7 @@ switch ($_REQUEST['action']) {
 
 		$type = $_REQUEST['instance'] ? 'localplay' : 'stream';
 
-		$localplay = new Localplay($GLOBALS['user']->prefs['localplay_controller']); 
+		$localplay = new Localplay(Config::get('localplay_controller')); 
 		$localplay->set_active_instance($_REQUEST['instance']); 
 		Preference::update('play_type',$GLOBALS['user']->id,$type); 
 
@@ -54,7 +54,7 @@ switch ($_REQUEST['action']) {
 			exit;
 		} 
 
-		$localplay = new Localplay($GLOBALS['user']->prefs['localplay_controller']); 
+		$localplay = new Localplay(Config::get('localplay_controller')); 
 		$localplay->connect(); 
 		
 		// Switch on valid commands
@@ -102,7 +102,7 @@ switch ($_REQUEST['action']) {
 			debug_event('DENIED','Attempted to delete track without access','1'); 
 			exit; 
 		} 
-		$localplay = new Localplay($GLOBALS['user']->prefs['localplay_controller']); 
+		$localplay = new Localplay(Config::get('localplay_controller')); 
 		$localplay->connect(); 
 
 		// Scrub in the delete request
@@ -129,7 +129,7 @@ switch ($_REQUEST['action']) {
 		} 
 
 		// Scrub it in
-		$localplay = new Localplay($GLOBALS['user']->prefs['localplay_controller']); 
+		$localplay = new Localplay(Config::get('localplay_controller')); 
 		$localplay->delete_instance($_REQUEST['instance']); 
 		
 		$key = 'localplay_instance_' . $_REQUEST['instance']; 
@@ -143,7 +143,7 @@ switch ($_REQUEST['action']) {
 		} 
 		
 		// Scrub her in 
-		$localplay = new Localplay($GLOBALS['user']->prefs['localplay_controller']); 
+		$localplay = new Localplay(Config::get('localplay_controller')); 
 		$localplay->connect(); 
 		$localplay->repeat(make_bool($_REQUEST['value']));
 
@@ -161,7 +161,7 @@ switch ($_REQUEST['action']) {
 		} 
 		
 		// Scrub her in
-		$localplay = new Localplay($GLOBALS['user']->prefs['localplay_controller']); 
+		$localplay = new Localplay(Config::get('localplay_controller')); 
 		$localplay->connect(); 
 		$localplay->random(make_bool($_REQUEST['value'])); 
 
