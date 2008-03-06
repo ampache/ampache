@@ -18,7 +18,6 @@
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
-$wang = 'util'; 
 require_once 'lib/init.php';
 
 header("Expires: Tuesday, 27 Mar 1984 05:00:00 GMT");

@@ -259,10 +259,9 @@ class Update {
 		$version[] = array('version' => '340014','description'=>$update_string); 
 
 		$update_string = '- Alter Playlist Date Field to fix issues with some MySQL configurations.<br />' . 
-				'- Add Index to Album_Data to improve album art random performance.<br />' . 
 				'- Alter Rating type to correct AVG issue on searching.<br />'; 
 		
-		//$version[] = array('version' => '340015','description'=>$update_string); 
+		$version[] = array('version' => '340015','description'=>$update_string); 
 
 		return $version;
 
@@ -1132,14 +1131,14 @@ class Update {
 	 */	
 	public static function update_340015() { 
 
-		$sql = "ALTER TABLE `playlist` CHANGE `date` `date` INT ( 11 ) UNSIGNED NOT NULL"; 
+		$sql = "ALTER TABLE `playlist` DROP `date`"; 
+		$db_results = Dba::query($sql); 	
+
+		$sql = "ALTER TABLE `playlist` ADD `date` INT ( 11 ) UNSIGNED NOT NULL"; 
 		$db_results = Dba::query($sql); 
 
 		$sql = "ALTER TABLE `rating` CHANGE `rating` TINYINT ( 4 ) NOT NULL"; 
 		$db_results = Dba::query($sql); 
-
-//		$sql = "ALTER TABLE `user` CHANGE `validation` VARCHAR ( 255 ) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL";  
-//		$db_results = Dba::query($sql); 
 
 		self::set_version('db_version','340015'); 
 		

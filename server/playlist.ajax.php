@@ -50,6 +50,7 @@ switch ($_REQUEST['action']) {
 	
 		// generate the new playlist
 		$playlist_id = Playlist::create($name,'public'); 
+		if (!$playlist_id) { break; } 
 		$playlist = new Playlist($playlist_id); 
 
 		// Itterate through and add them to our new playlist

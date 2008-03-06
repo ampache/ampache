@@ -522,6 +522,8 @@ class User {
 			return false;
 		} 
 
+		$this->set_preferences(); 
+
 		// Check if lastfm is loaded, if so run the update
 		if (Plugin::is_installed('Last.FM')) { 
 			$lastfm = new Plugin('Lastfm');

@@ -144,7 +144,6 @@ require_once $prefix . '/modules/infotools/openstrands.class.php';
 $results = Preference::fix_preferences($results);
 
 Config::set_by_array($results,1);
-debug_event('ZZWANG IS',$wang,'1'); 
 
 // Modules (These are conditionaly included depending upon config values)
 if (Config::get('ratings')) { 
