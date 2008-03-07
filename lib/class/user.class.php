@@ -547,14 +547,17 @@ class User {
 	 * address at this time in this place, doing this thing.. you get the point
 	 */
 	public function insert_ip_history() { 
+
 		if (isset($_SERVER['HTTP_X_FORWARDED_FOR'])){
-		    $sip = $_SERVER['HTTP_X_FORWARDED_FOR'];
-		    debug_event('User Ip', 'Login from ip adress: ' . $sip,'3');
-		} else {
-		    $sip = $_SERVER['REMOTE_ADDR'];
-		    debug_event('User Ip', 'Login from ip adress: ' . $sip,'3');
+			$sip = $_SERVER['HTTP_X_FORWARDED_FOR'];
+			debug_event('User Ip', 'Login from ip adress: ' . $sip,'3');
+		} 
+		else {
+			$sip = $_SERVER['REMOTE_ADDR'];
+			debug_event('User Ip', 'Login from ip adress: ' . $sip,'3');
 		}
-		$ip = ip2long($sip);
+
+		$ip = sprintf("%u",ip2long($sip)); 
 		$date = time(); 
 		$user = $this->id;
 

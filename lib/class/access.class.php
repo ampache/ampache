@@ -80,8 +80,8 @@ class Access {
 
 		$name	= Dba::escape($data['name']); 
 		$type	= self::validate_type($data['type']); 
-		$start 	= ip2long($data['start']);
-		$end	= ip2long($data['end']);
+		$start 	= sprintf("%u",ip2long($data['start']));
+		$end	= springf("%u",ip2long($data['end'])); 
 		$level	= Dba::escape($data['level']);
 		$user	= $data['user'] ? Dba::escape($data['user']) : '-1'; 
 		$key	= Dba::escape($data['key']);
@@ -104,16 +104,17 @@ class Access {
 
 		/* We need to verify the incomming data a littlebit */
 
-		$start 	= ip2long($data['start']);
-		$end 	= ip2long($data['end']);
+		$start 	= sprintf("%u",ip2long($data['start'])); 
+		$end 	= sprintf("%u",ip2long($data['end'])); 
 		$name	= Dba::escape($data['name']);
 		$key	= Dba::escape($data['key']);
 		$user	= $data['user'] ? Dba::escape($data['user']) : '-1'; 
 		$level	= intval($data['level']);
 		$type	= self::validate_type($data['type']);
+		$dns	= ' '; 
 
-		$sql = "INSERT INTO `access_list` (`name`,`level`,`start`,`end`,`key`,`user`,`type`) " . 
-			"VALUES ('$name','$level','$start','$end','$key','$user','$type')";
+		$sql = "INSERT INTO `access_list` (`name`,`level`,`start`,`end`,`key`,`user`,`type`,`dns`) " . 
+			"VALUES ('$name','$level','$start','$end','$key','$user','$type','$dns')";
 		$db_results = Dba::query($sql);
 
 		return true;
@@ -170,7 +171,7 @@ class Access {
 		} 
 
 		// Clean incomming variables
-		$ip 	= ip2long($ip);
+		$ip 	= sprintf("%u",ip2long($ip)); 
 		$user 	= Dba::escape($user);
 		$key 	= Dba::escape($key);
 		$level	= Dba::escape($level);

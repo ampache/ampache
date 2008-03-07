@@ -1144,5 +1144,19 @@ class Update {
 		
 	} // update_340015
 
+	/** 
+	 * update_340016
+	 * This adds in the base_playlist to the democratic table... should have
+ 	 * done this in the previous one but I screwed up... sigh
+	 */
+	public static function update_340016() { 
+
+		$sql = "ALTER TABLE `democratic` ADD `base_playlist` INT ( 11 ) UNSIGNED NOT NULL"; 
+		$db_results = Dba::query($sql); 
+
+		self::set_version('db_version','340016'); 
+
+	} // update_340016
+
 } // end update class
 ?>

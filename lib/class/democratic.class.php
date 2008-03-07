@@ -27,6 +27,51 @@
 class Democratic extends tmpPlaylist {
 
 	/**
+	 * constructor
+	 * We need a constructor for this class. It does it's own thing now
+	 */
+	public function __construct($id='') { 
+
+		if (!$id) { return false; } 
+
+		$info = $this->get_info($id); 
+		
+		foreach ($info as $key=>$value) { 
+			$this->$key = $value; 
+		} 
+
+	} // constructor
+
+
+	/**
+ 	 * get_info
+	 * This returns the data from the database
+	 */
+	private function get_info($id) { 
+
+		$id = Dba::escape($id); 
+
+		$sql = "SELECT * FROM `democratic` WHERE `id`='$id'"; 
+		$db_results = Dba::query($sql); 
+
+		$row = Dba::fetch_assoc($db_results); 
+
+		return $row; 
+
+	} // get_info
+
+	/**
+	 * format
+	 * This makes the objects variables all purrty so that they can be displayed
+	 */
+	public function format() { 
+
+		$this->f_cooldown	= $this->cooldown . ' ' . _('minutes'); 
+		$this->f_primary	= $this->primary ? _('Primary') : ''; 
+
+	} // format
+
+	/**
 	 * get_playlists
 	 * This returns all of the current valid 'Democratic' Playlists
 	 * that have been created.
@@ -36,7 +81,7 @@ class Democratic extends tmpPlaylist {
 		// Pull all tmp playlsits with a session of < 0 (as those are fake) 
 		// This is kind of hackish, should really think about tweaking the db
 		// and doing this right. 
-		$sql = "SELECT `id` FROM `tmp_playlist` WHERE `session`< '0'"; 
+		$sql = "SELECT `id` FROM `democratic` ORDER BY `name`"; 
 		$db_results = Dba::query($sql);  
 
 		$results = array(); 
@@ -327,6 +372,28 @@ class Democratic extends tmpPlaylist {
 		return true; 
 
 	} // delete_votes
+
+	/**
+	 * create
+	 * This is the democratic play create function it inserts this into the democratic table
+	 */
+	public static function create($data) { 
+
+		// Clean up the input
+		$name 	= Dba::escape($data['name']); 
+		$base 	= Dba::escape($data['democratic']); 
+		$cool	= Dba::escape($data['cooldown']); 
+		$level	= Dba::escape($data['level']); 
+		$default = Dba::escape($data['make_default']); 
+		$user	= Dba::escape($GLOBALS['user']->id); 
+
+		$sql = "INSERT INTO `democratic` (`name`,`cooldown`,`level`,`user`,`primary`) " . 
+			"VALUES ('$name','$cool','$level','$user','$default')"; 
+		$db_results = Dba::query($sql); 
+
+		return $db_results; 
+
+	} // create
 
 	/**
 	 * prune_tracks

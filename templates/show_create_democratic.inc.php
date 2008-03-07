@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2007 Ampache.org
+ Copyright (c) 2001 - 2008 Ampache.org
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
@@ -30,6 +30,20 @@ show_box_top(_('Create Democratic Playlist')); ?>
 	<td><?php echo _('Base Playlist'); ?></td>
 	<td><?php show_playlist_select('democratic'); ?></td>
 </tr>
+<tr>
+	<td><?php echo _('Cooldown Time'); ?></td>	
+	<td><input type="textbox" size="4" maxlength="6" name="cooldown" value="5" /><?php echo _('minutes'); ?></td>
+</tr>
+<tr>
+	<td><?php echo _('Level'); ?></td>
+	<td>
+		<select name="level">
+                <option value="25"><?php echo _('User'); ?></option>
+                <option value="50"><?php echo _('Content Manager'); ?></option>
+                <option value="75"><?php echo _('Catalog Manager'); ?></option>
+                <option value="100"><?php echo _('Admin'); ?></option>
+                </select>
+
 <tr>
 	<td><?php echo _('Make Default'); ?></td>
 	<td><input type="checkbox" name="make_default" value="1" /></td>

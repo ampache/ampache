@@ -32,24 +32,23 @@ show_header();
 // Switch on their action
 switch ($_REQUEST['action']) { 
 	case 'show_create': 
-		if (!$GLOBALS['user']->has_access('75')) { 
+		if (!Access::check('interface','75')) { 
 			access_denied(); 
 			break;
 		} 
 
 		// Show the create page
 		require_once Config::get('prefix') . '/templates/show_create_democratic.inc.php'; 
-
 	break; 
 	case 'create': 
 		// Only power users here 
-		if (!$GLOBALS['user']->has_access('75')) { 
+		if (!Access::check('interface','75')) { 
 			access_denied(); 
 			break;
 		} 
+
 		// Create the playlist
-		//FIXME: don't use hardcoded id value here, needs db rework to fix this
-		Democratic::create('-1','vote','song',$_REQUEST['democratic']); 
+		Democratic::create($_POST); 
 		header("Location: " . Config::get('web_path') . "/democratic.php?action=manage_playlists"); 	
 	break; 
 	case 'create_playlist':
@@ -92,7 +91,7 @@ switch ($_REQUEST['action']) {
 		exit; 
 	break;
 	case 'manage_playlists': 
-		if (!$GLOBALS['user']->has_access('75')) { 
+		if (!Access::check('interface','75')) { 
 			access_denied(); 
 			break;
 		} 
@@ -104,7 +103,7 @@ switch ($_REQUEST['action']) {
 	break;
 	case 'update_playlist':
 		/* Only Admins Here */
-		if (!$GLOBALS['user']->has_access(100)) { 
+		if (!Access::check('interface','100')) { 
 			access_denied();
 			break;
 		}

@@ -25,23 +25,33 @@ show_box_top(_('Manage Democratic Playlists'));  ?>
 	<col id="col_number" />
 	<col id="col_base_playlist" />
 	<col id="col_vote_count" />
+	<col id="col_cooldown" />
+	<col id="col_level" />
+	<col id="col_default" />
 	<col id="col_action" />
 </colgroup>
 <tr class="th-top">
 	<th class="cel_number"><?php echo _('Playlist'); ?></th>
 	<th class="cel_base_playlist"><?php echo _('Base Playlist'); ?></th>
+	<th class="cel_cooldown"><?php echo _('Cooldown'); ?></th>
+	<th class="cel_level"><?php echo _('Level'); ?></th>
+	<th class="cel_default"><?php echo _('Default'); ?></th>
 	<th class="cel_vote_count"><?php echo _('Songs'); ?></th>
 	<th class="cel_action"><?php echo _('Action'); ?></th>
 </tr>
 <?php
 	foreach ($playlists as $democratic_id) { 
 		$democratic = new Democratic($democratic_id); 
+		$democratic->format(); 
 		$playlist = new Playlist($democratic->base_playlist); 
 		$playlist->format(); 
 ?>
 <tr class="<?php echo flip_class(); ?>">
-	<td><?php echo abs($democratic->id); ?></td>
+	<td><?php echo scrub_out($democratic->name); ?></td>
 	<td><?php echo $playlist->f_link; ?></td>
+	<td><?php echo $democratic->f_cooldown; ?></td>
+	<td><?php echo $democratic->f_level; ?></td>
+	<td><?php echo $democratic->f_primary; ?></td>
 	<td><?php echo $democratic->count_items(); ?></td>
 	<td>
 	<?php echo Ajax::button('?page=democratic&action=send_playlist','all',_('Play'),'play_democratic'); ?>
@@ -49,7 +59,7 @@ show_box_top(_('Manage Democratic Playlists'));  ?>
 </tr>
 <?php } if (!count($playlists)) { ?>
 <tr>
-	<td colspan="4"><span class="fatalerror"><?php echo _('Not Enough Data'); ?></span></td>
+	<td colspan="7"><span class="fatalerror"><?php echo _('Not Enough Data'); ?></span></td>
 </tr>
 <?php } ?>
 </table>

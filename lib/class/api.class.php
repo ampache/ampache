@@ -65,7 +65,7 @@ class Api {
 		// Clean incomming variables
 		$user_id 	= Dba::escape($user_id); 
 		$timestamp 	= intval($timestamp); 
-		$ip 		= ip2long($ip); 
+		$ip 		= sprintf("%u",ip2long($ip)); 
 
 		// Log this attempt
 		debug_event('API','Login Attempt, IP:' . long2ip($ip) . ' Time:' . $timestamp . ' User:' . $user_id . ' Auth:' . $passphrase,'1'); 
