@@ -1158,5 +1158,19 @@ class Update {
 
 	} // update_340016
 
+	/**
+	 * update_340017
+	 * This finalizes the democratic table. 
+	 */
+	public static function update_340017() { 
+
+		$sql = "ALTER TABLE `democratic` ADD `base_playlist` INT( 11 ) UNSIGNED NOT NULL AFTER `name`"; 
+		$db_results = Dba::query($sql); 
+
+		self::set_version('db_version','340017'); 
+
+
+	} // update_340017
+
 } // end update class
 ?>

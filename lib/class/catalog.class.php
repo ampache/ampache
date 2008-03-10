@@ -1582,11 +1582,13 @@ class Catalog {
 	public static function clean_playlists() { 
 
 		/* Do a complex delete to get playlist songs where there are no songs */
-		$sql = "DELETE FROM playlist_data USING playlist_data LEFT JOIN song ON song.id = playlist_data.song WHERE song.file IS NULL";
+		$sql = "DELETE FROM `playlist_data` USING `playlist_data` LEFT JOIN `song` ON `song`.`id` = `playlist_data`.`object_id` " . 
+			"WHERE `song`.`file` IS NULL AND `playlist_data`.`object_type`='song'";
 		$db_results = Dba::query($sql);
 
 		// Clear TMP Playlist information as well
-		$sql = "DELETE FROM tmp_playlist_data USING tmp_playlist_data LEFT JOIN song ON tmp_playlist_data.object_id = song.id WHERE song.id IS NULL"; 
+		$sql = "DELETE FROM `tmp_playlist_data` USING `tmp_playlist_data` LEFT JOIN `song` ON `tmp_playlist_data`.`object_id` = `song`.`id` " . 
+			"WHERE `song`.`id` IS NULL"; 
 		$db_results = Dba::query($sql); 
 
 	} // clean_playlists

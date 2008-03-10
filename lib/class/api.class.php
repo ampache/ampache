@@ -98,7 +98,18 @@ class Api {
 				$db_results = Dba::query($sql); 
 				$row = Dba::fetch_assoc($db_results); 	 
 
-				return array('auth'=>$token,'api'=>self::$version,'update'=>date("r",$row['update']),'add'=>date("r",$row['add'])); 
+				// Now we need to quickly get the totals of songs
+				$sql = "SELECT COUNT(`id`) AS `song`,COUNT(DISTINCT(`album`)) AS `album`,COUNT(DISTINCT(`artist`)) AS `artist` FROM `song`";
+				$db_results = Dba::query($sql); 
+				$counts = Dba::fetch_assoc($db_results); 
+
+				return array('auth'=>$token,
+					'api'=>self::$version,
+					'update'=>date("r",$row['update']),
+					'add'=>date("r",$row['add']),
+					'songs'=>$counts['song'],
+					'albums'=>$counts['album'],
+					'artists'=>$counts['artist']); 
 			} // match 
 
 		} // end while

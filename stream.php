@@ -144,7 +144,7 @@ switch ($_REQUEST['action']) {
 		$song_ids = get_random_songs($options, $matchlist);
 	break;
 	case 'democratic': 
-		$democratic = Democratic::get_current_playlist(); 
+		$democratic = new Democratic($_REQUEST['democratic_id']); 
 		$urls[] = $democratic->get_url(); 
 		$song_ids = array('0'); 
 	break;

@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2007 Ampache.org
+ Copyright (c) 2001 - 2008 Ampache.org
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
@@ -39,6 +39,19 @@ switch ($_REQUEST['action']) {
 
 		// Show the create page
 		require_once Config::get('prefix') . '/templates/show_create_democratic.inc.php'; 
+	break; 
+	case 'delete': 
+		if (!Access::check('interface','75')) { 
+			access_denied(); 
+			break; 
+		} 
+	
+		Democratic::delete($_REQUEST['democratic_id']); 
+
+		$title = ''; 
+		$text = _('The Requested Playlist has been deleted.'); 
+		$url = Config::get('web_path') . '/democratic.php?action=manage_playlists'; 
+		show_confirmation($title,$text,$url); 
 	break; 
 	case 'create': 
 		// Only power users here 

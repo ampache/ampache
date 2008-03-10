@@ -374,6 +374,32 @@ class Democratic extends tmpPlaylist {
 	} // delete_votes
 
 	/**
+	 * delete
+	 * This deletes a democratic playlist
+	 */
+	public static function delete($democratic_id) { 
+		
+		$democratic_id = Dba::escape($democratic_id); 
+
+		$sql = "DELETE FROM `democratic` WHERE `id`='$democratic_id'"; 
+		$db_results = Dba::query($sql); 
+
+		return true; 
+
+	} // delete
+
+	/**
+	 * update
+	 * This updates an existing democratic playlist item. It takes a key'd array just like the create
+	 */
+	public function update($data) { 
+
+
+
+
+	} // update
+
+	/**
 	 * create
 	 * This is the democratic play create function it inserts this into the democratic table
 	 */
@@ -387,8 +413,8 @@ class Democratic extends tmpPlaylist {
 		$default = Dba::escape($data['make_default']); 
 		$user	= Dba::escape($GLOBALS['user']->id); 
 
-		$sql = "INSERT INTO `democratic` (`name`,`cooldown`,`level`,`user`,`primary`) " . 
-			"VALUES ('$name','$cool','$level','$user','$default')"; 
+		$sql = "INSERT INTO `democratic` (`name`,`base_playlist`,`cooldown`,`level`,`user`,`primary`) " . 
+			"VALUES ('$name','$base','$cool','$level','$user','$default')"; 
 		$db_results = Dba::query($sql); 
 
 		return $db_results; 
