@@ -212,7 +212,7 @@ switch ($_REQUEST['action']) {
 		$uid = scrub_in($_REQUEST['filter']); 
 
 		ob_end_clean(); 
-		echo xmlData:;songs(array($uid)); 
+		echo xmlData::songs(array($uid)); 
 	break; 
 	case 'playlists': 
 		Browse::reset_filters(); 
