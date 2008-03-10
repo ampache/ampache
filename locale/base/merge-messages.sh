@@ -19,6 +19,8 @@
 
 
 msgmerge -N ../de_DE/LC_MESSAGES/messages.po ./messages.po --output-file=../de_DE/LC_MESSAGES/messages.po
+msgmerge -N ../ca_CA/LC_MESSAGES/messages.po ./messages.po --output-file=../ca_CA/LC_MESSAGES/messages.po
+msgmerge -N ../el_GR/LC_MESSAGES/messages.po ./messages.po --output-file=../el_GR/LC_MESSAGES/messages.po
 msgmerge -N ../es_ES/LC_MESSAGES/messages.po ./messages.po --output-file=../es_ES/LC_MESSAGES/messages.po
 msgmerge -N ../en_GB/LC_MESSAGES/messages.po ./messages.po --output-file=../en_GB/LC_MESSAGES/messages.po
 msgmerge -N ../fr_FR/LC_MESSAGES/messages.po ./messages.po --output-file=../fr_FR/LC_MESSAGES/messages.po
