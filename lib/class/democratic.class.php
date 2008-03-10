@@ -104,6 +104,7 @@ class Democratic extends tmpPlaylist {
 		// If not passed user global
 		$user_id = $user_id ? $user_id : $GLOBALS['user']->id; 
 
+
 		/* Find the - 1 one for now */
 		$sql = "SELECT `id` FROM `tmp_playlist` WHERE `session`='-1'"; 
 		$db_results = Dba::query($sql); 
