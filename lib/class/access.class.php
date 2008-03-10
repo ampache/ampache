@@ -81,7 +81,7 @@ class Access {
 		$name	= Dba::escape($data['name']); 
 		$type	= self::validate_type($data['type']); 
 		$start 	= sprintf("%u",ip2long($data['start']));
-		$end	= springf("%u",ip2long($data['end'])); 
+		$end	= sprintf("%u",ip2long($data['end'])); 
 		$level	= Dba::escape($data['level']);
 		$user	= $data['user'] ? Dba::escape($data['user']) : '-1'; 
 		$key	= Dba::escape($data['key']);
