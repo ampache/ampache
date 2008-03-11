@@ -285,7 +285,7 @@ class tmpPlaylist {
 		// This prue is always run clears data for playlists that don't have tmp_playlist anymore
 		$sql = "DELETE FROM tmp_playlist_data USING tmp_playlist_data " . 
 			"LEFT JOIN tmp_playlist ON tmp_playlist_data.tmp_playlist=tmp_playlist.id " . 
-			"WHERE tmp_playlist.id IS NULL";
+			"WHERE tmp_playlist.id IS NULL AND tmp_playlist.type != 'vote'";
 		$db_results = Dba::query($sql);
 
 	} // prune_tracks
@@ -358,27 +358,4 @@ class tmpPlaylist {
 
 	} // delete_track
 	
-	/**
-	 * clear_playlist
-	 * This is really just a wrapper function, it clears the entire playlist
-	 * including all votes etc. 
-	 */
-	public function clear_playlist() { 
-
-		$tmp_id	= Dba::escape($this->id); 
-
-		/* Clear all votes then prune */
-		$sql = "DELETE FROM user_vote USING user_vote " . 
-			"LEFT JOIN tmp_playlist_data ON user_vote.object_id = tmp_playlist_data.id " . 
-			"WHERE tmp_playlist_data.tmp_playlist='$tmp_id'";
-		$db_results = Dba::query($sql); 
-
-		// Prune!
-		self::prune_tracks(); 
-
-		return true; 
-
-	} // clear_playlist
-
-
 } // class tmpPlaylist

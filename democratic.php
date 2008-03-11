@@ -79,30 +79,6 @@ switch ($_REQUEST['action']) {
 		$songs = $tmp_playlist->get_items();
 		require_once(conf('prefix') . '/templates/show_tv.inc.php');
 	break;
-	/* This clears the entire democratic playlist, admin only */
-	case 'clear_playlist':
-		if (!$GLOBALS['user']->has_access(100)) { 
-			access_denied(); 
-			break;
-		}
-
-		$tmp_playlist = new tmpPlaylist($_REQUEST['tmp_playlist_id']); 
-		$tmp_playlist->clear_playlist(); 
-		require_once(conf('prefix') . '/templates/header.inc');
-		show_confirmation(_('Playlist Cleared'),'',conf('web_path') . '/tv.php'); 
-		require_once(conf('prefix') . '/templates/footer.inc'); 
-	break;
-	/* This sends the playlist to the 'method' of their chosing */
-	case 'send_playlist':
-		/* Only Admins Here */
-		if (!$GLOBALS['user']->has_access(100)) { 
-			access_denied(); 
-			break;
-		}
-		// Tmp just to make this work
-		header("Location: " . Config::get('web_path') . "/stream.php?action=democratic"); 
-		exit; 
-	break;
 	case 'manage_playlists': 
 		if (!Access::check('interface','75')) { 
 			access_denied(); 

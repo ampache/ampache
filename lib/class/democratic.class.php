@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2007 Ampache.org
+ Copyright (c) 2001 - 2008 Ampache.org
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
@@ -69,6 +69,24 @@ class Democratic extends tmpPlaylist {
 		$this->f_cooldown	= $this->cooldown . ' ' . _('minutes'); 
 		$this->f_primary	= $this->primary ? _('Primary') : ''; 
 
+		switch ($this->level) { 
+			case '5': 
+				$this->f_level = _('Guest'); 
+			break; 
+			case '25': 
+				$this->f_level = _('User'); 
+			break; 
+			case '50': 
+				$this->f_level = _('Content Manager'); 
+			break; 
+			case '75': 
+				$this->f_level = _('Catalog Manager'); 
+			break; 
+			case '100': 
+				$this->f_level = _('Admin'); 
+			break; 
+		} 
+
 	} // format
 
 	/**
@@ -99,18 +117,20 @@ class Democratic extends tmpPlaylist {
 	 * This returns the curren users current playlist, or if specified
 	 * this current playlist of the user
 	 */
-	public static function get_current_playlist($user_id='') { 
+	public static function get_current_playlist() { 
 
-		// If not passed user global
-		$user_id = $user_id ? $user_id : $GLOBALS['user']->id; 
+		$democratic_id = Config::get('democratic_id'); 
 
+		if (!$democratic_id) { 
+			$level = Dba::escape($GLOBALS['user']->access); 
+			$sql = "SELECT `id` FROM `democratic` WHERE `level` <= '$level' " . 
+				" ORDER BY `level` DESC,`primary` DESC"; 
+			$db_results = Dba::query($sql); 
+			$row = Dba::fetch_assoc($db_results); 
+			$democratic_id = $row['id'];
+		} 
 
-		/* Find the - 1 one for now */
-		$sql = "SELECT `id` FROM `tmp_playlist` WHERE `session`='-1'"; 
-		$db_results = Dba::query($sql); 
-		$row = Dba::fetch_assoc($db_results); 
-
-		$object = new Democratic($row['id']); 
+		$object = new Democratic($democratic_id); 
 
 		return $object; 
 
@@ -439,6 +459,29 @@ class Democratic extends tmpPlaylist {
                 return true;
 
 	} // prune_tracks
+
+        /**
+         * clear
+         * This is really just a wrapper function, it clears the entire playlist
+         * including all votes etc. 
+         */
+        public function clear() {
+
+                $tmp_id = Dba::escape($this->id);
+
+                /* Clear all votes then prune */
+                $sql = "DELETE FROM user_vote USING user_vote " .
+                        "LEFT JOIN tmp_playlist_data ON user_vote.object_id = tmp_playlist_data.id " .
+                        "WHERE tmp_playlist_data.tmp_playlist='$tmp_id'";
+                $db_results = Dba::query($sql);
+
+                // Prune!
+                self::prune_tracks();
+
+                return true;
+
+        } // clear_playlist
+
 
 } // Democratic class
 ?>

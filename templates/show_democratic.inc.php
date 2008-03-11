@@ -19,7 +19,7 @@
 
 */
 
-show_box_top(_('Current Playlist')); 
+show_box_top($democratic->name . ' ' . _('Playlist')); 
 ?>
 <div id="democratic_playlist">
 <?php require_once Config::get('prefix') . '/templates/show_democratic_playlist.inc.php'; ?>
