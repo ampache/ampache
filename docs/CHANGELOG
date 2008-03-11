@@ -4,6 +4,7 @@
 
 --------------------------------------------------------------------------
   v.3.4-Beta2 
+	- Fixed issue with encoding of id3v1/v2 tags
 	- Fixed an issue with the clean function for playlists
 	- DB Update, fixes the playlist create issue with full strict on
 		MySQL 5.x

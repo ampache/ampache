@@ -63,12 +63,14 @@ class vainfo {
 
                 // Initialize getID3 engine
                 $this->_getID3 = new getID3();
-                $this->_getID3->option_md5_data          = false;
-                $this->_getID3->option_md5_data_source   = false;
-		$this->_getID3->option_tags_html	 = false;
-		$this->_getID3->option_extra_info	 = false;
-		$this->_getID3->option_tag_lyrics3	 = false;
-                $this->_getID3->encoding                 = $this->encoding;
+                $this->_getID3->option_md5_data		= false;
+                $this->_getID3->option_md5_data_source	= false;
+		$this->_getID3->option_tags_html	= false;
+		$this->_getID3->option_extra_info	= false;
+		$this->_getID3->option_tag_lyrics3	= false;
+                $this->_getID3->encoding		= $this->encoding;
+		$this->_getID3->encoding_id3v1		= $this->encoding; 
+		$this->_getID3->encoding_id3v2		= $this->encoding; 
 
 		/* Check for ICONV */
 		if (function_exists('iconv')) { 
