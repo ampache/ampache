@@ -422,23 +422,35 @@ class Song {
 	 */
 	public static function update_song($song_id, $new_song) {
 
-		self::update_title($new_song->title,$song_id);
-		self::update_bitrate($new_song->bitrate,$song_id);
-		self::update_rate($new_song->rate,$song_id);
-		self::update_mode($new_song->mode,$song_id);
-		self::update_size($new_song->size,$song_id);
-		self::update_time($new_song->time,$song_id);
-		self::update_track($new_song->track,$song_id);
-		self::update_artist($new_song->artist,$song_id);
-		self::update_genre($new_song->genre,$song_id);
-		self::update_album($new_song->album,$song_id);
-		self::update_year($new_song->year,$song_id);
-		self::update_comment($new_song->comment,$song_id);
-		self::update_language($new_song->language,$song_id); 
-		self::update_lyrics($new_song->lyrics,$song_id);
-		self::update_mime($new_song->mime,$song_id);
-		self::update_played(0,$song_id);
-		self::update_utime($song_id);
+		$title 		= Dba::escape($new_song->title); 
+		$bitrate	= Dba::escape($new_song->bitrate); 
+		$rate		= Dba::escape($new_song->rate); 
+		$mode		= Dba::escape($new_song->mode); 
+		$size		= Dba::escape($new_song->size); 
+		$time		= Dba::escape($new_song->time); 
+		$track		= Dba::escape($new_song->track); 
+		$artist		= Dba::escape($new_song->artist); 
+		$genre		= Dba::escape($new_song->genre); 
+		$album		= Dba::escape($new_song->album); 
+		$year		= Dba::escape($new_song->year); 
+		$song_id	= Dba::escape($song_id); 
+		$update_time	= time(); 
+	
+
+		$sql = "UPDATE `song` SET `album`='$album', `year`='$year', `artist`='$artist', " . 
+			"`title`='$title', `bitrate`='$bitrate', `rate`='$rate', `mode`='$mode', " . 
+			"`size`='$size', `time`='$time', `track`='$track', `genre`='$genre', " . 
+			"`update_time`='$update_time' WHERE `id`='$song_id'"; 
+		$db_results = Dba::query($sql); 
+		
+
+		$comment 	= Dba::escape($new_song->comment); 
+		$language	= Dba::escape($new_song->language); 
+		$lyrics		= Dba::escape($new_song->lyrics); 
+		
+		$sql = "UPDATE `song_data` SET `lyrics`='$lyrics', `language`='$language', `comment`='$comment' " . 
+			"WHERE `song_id`='$song_id'"; 
+		$db_results = Dba::query($sql); 
 
 	} // update_song
 
@@ -451,16 +463,6 @@ class Song {
 		self::_update_item('year',$new_year,$song_id,'50'); 
 		
 	} // update_year
-
-	/**
-	 * update_mime
-	 * This updates the mime type of the song object we're passed
-	 */
-	public static function update_mime($new_mime,$song_id) { 
-
-		self::_update_item('mime',$new_mime,$song_id,'50'); 
-
-	} // update_mime
 
 	/**
 	 * update_language

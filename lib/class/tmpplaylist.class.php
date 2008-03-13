@@ -88,7 +88,7 @@ class tmpPlaylist {
 		$results = Dba::fetch_row($db_results); 
 		
 		if (!$results['0']) { 
-			$results['0'] = tmpPlaylist::create($session_id,'user','song','0'); 
+			$results['0'] = tmpPlaylist::create($session_id,'user','song'); 
 		} 
 
 		$playlist = new tmpPlaylist($results['0']); 
@@ -201,15 +201,14 @@ class tmpPlaylist {
 	 * This function initializes a new tmpPlaylist it is assoicated with the current
 	 * session rather then a user, as you could have same user multiple locations
 	 */
-	public static function create($sessid,$type,$object_type,$base_playlist) { 
+	public static function create($sessid,$type,$object_type) { 
 
 		$sessid 	= Dba::escape($sessid);
 		$type		= Dba::escape($type);
 		$object_type	= Dba::escape($object_type);
-		$base_playlist	= Dba::escape($base_playlist);
 
-		$sql = "INSERT INTO `tmp_playlist` (`session`,`type`,`object_type`,`base_playlist`) " . 
-			" VALUES ('$sessid','$type','$object_type','$base_playlist')";
+		$sql = "INSERT INTO `tmp_playlist` (`session`,`type`,`object_type`) " . 
+			" VALUES ('$sessid','$type','$object_type')";
 		$db_results = Dba::query($sql);
 
 		$id = Dba::insert_id();
@@ -269,7 +268,7 @@ class tmpPlaylist {
 		/* Just delete if no matching session row */
 		$sql = "DELETE FROM `tmp_playlist` USING `tmp_playlist` " . 
 			"LEFT JOIN session ON session.id=tmp_playlist.session " . 
-			"WHERE session.id IS NULL AND tmp_playlist.session != '-1'";
+			"WHERE session.id IS NULL AND tmp_playlist.type != 'vote'";
 		$db_results = Dba::query($sql);
 
 		return true;
@@ -285,7 +284,7 @@ class tmpPlaylist {
 		// This prue is always run clears data for playlists that don't have tmp_playlist anymore
 		$sql = "DELETE FROM tmp_playlist_data USING tmp_playlist_data " . 
 			"LEFT JOIN tmp_playlist ON tmp_playlist_data.tmp_playlist=tmp_playlist.id " . 
-			"WHERE tmp_playlist.id IS NULL AND tmp_playlist.type != 'vote'";
+			"WHERE tmp_playlist.id IS NULL";
 		$db_results = Dba::query($sql);
 
 	} // prune_tracks

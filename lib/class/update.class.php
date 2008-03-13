@@ -263,6 +263,12 @@ class Update {
 		
 		$version[] = array('version' => '340015','description'=>$update_string); 
 
+		$update_string = '- Alter the Democratic Playlist table, adding base_playlist.<br />' . 
+				'- Alter tmp_playlist to account for Democratic changes.<br />' . 
+				'- Cleared Existing Democratic playlists due to changes.<br />'; 
+
+//		$version[] = array('version' => '340016','description'=>$update_string); 
+
 		return $version;
 
 	} // populate_version
@@ -1167,8 +1173,16 @@ class Update {
 		$sql = "ALTER TABLE `democratic` ADD `base_playlist` INT( 11 ) UNSIGNED NOT NULL AFTER `name`"; 
 		$db_results = Dba::query($sql); 
 
-		self::set_version('db_version','340017'); 
+		$sql = "ALTER TABLE `tmp_playlist` DROP `base_playlist`"; 
+		$db_results = Dba::query($sql); 
 
+		$sql = "DELETE FROM `tmp_playlist` WHERE `session`='-1'"; 
+		$db_results = Dba::query($sql); 
+
+		$sql = "TRUNCATE `democratic`"; 
+		$db_results = Dba::query($sql); 
+
+		self::set_version('db_version','340017'); 
 
 	} // update_340017
 

@@ -438,6 +438,12 @@ class Democratic extends tmpPlaylist {
 			"VALUES ('$name','$base','$cool','$level','$user','$default')"; 
 		$db_results = Dba::query($sql); 
 
+		if ($db_results) { 
+			$insert_id = Dba::insert_id(); 
+			parent::create($insert_id,'vote','song'); 
+		} 
+
+
 		return $db_results; 
 
 	} // create

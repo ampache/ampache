@@ -68,9 +68,8 @@ class vainfo {
 		$this->_getID3->option_tags_html	= false;
 		$this->_getID3->option_extra_info	= false;
 		$this->_getID3->option_tag_lyrics3	= false;
-                $this->_getID3->encoding		= $this->encoding;
-		$this->_getID3->encoding_id3v1		= $this->encoding; 
-		$this->_getID3->encoding_id3v2		= $this->encoding; 
+		$this->_getID3->encoding		= $this->encoding; 
+		$this->_getID3->option_tags_process    = true; 
 
 		/* Check for ICONV */
 		if (function_exists('iconv')) { 
@@ -99,11 +98,6 @@ class vainfo {
 		/* Figure out what type of file we are dealing with */
 		$this->type = $this->_get_type();
 
-		/* This is very important, figure out the encoding of the
-		 * file 
-		 */
-		$this->_set_encoding();
-
 		/* Get the general information about this file */
 		$info = $this->_get_info();
 
@@ -115,26 +109,6 @@ class vainfo {
 		unset($this->_raw);
 	
 	} // get_info
-
-	/**
-	 * _set_encoding
-	 * This function trys to figure out what the encoding 
-	 * is based on the file type and sets the _file_encoding
-	 * var to whatever it finds, the default is UTF-8 if we
-	 * can't find anything
-	 */
-	function _set_encoding() { 
-		/* Switch on the file type */
-		switch ($this->type) { 
-			case 'mp3':
-			case 'ogg':
-			case 'flac':
-			default: 
-				$this->_file_encoding = $this->_raw['encoding'];
-			break;
-		} // end switch
-	
-	} // _get_encoding
 
 	/**
 	 * _get_type
@@ -227,7 +201,7 @@ class vainfo {
 	 * This function gathers and returns the general information
 	 * about a song, vbr/cbr sample rate channels etc
 	 */
-	function _get_info() { 
+	private function _get_info() { 
 
 		$array = array();
 
@@ -268,7 +242,7 @@ class vainfo {
 	 * This standardizes the type that we are given into a reconized 
 	 * type
 	 */
-	function _clean_type($type) { 
+	private function _clean_type($type) { 
 
 		switch ($type) { 
 			case 'mp3':
@@ -297,7 +271,7 @@ class vainfo {
 	 * returns the elements translated using iconv if needed in a
 	 * pretty little format
 	 */
-	function _parse_vorbiscomment($tags) { 
+	private function _parse_vorbiscomment($tags) { 
 
 		/* Results array */
 		$array = array();
@@ -332,9 +306,11 @@ class vainfo {
 	 * returns the elements translated using iconv if needed in a 
 	 * pretty little format
 	 */
-	function _parse_id3v1($tags) { 
+	private function _parse_id3v1($tags) { 
 
 		$array = array();
+
+	//	$encoding = $this->_raw['id3v1']['encoding'];
 		
 		/* Go through all the tags */
 		foreach ($tags as $tag=>$data) { 
@@ -342,7 +318,7 @@ class vainfo {
 			/* This is our baseline for naming 
 			 * so no translation needed 
 			 */
-			$array[$tag]	= $this->_clean_tag($data['0'],$this->_file_encoding);
+			$array[$tag]	= $this->_clean_tag($data['0'],$encoding);
 			
 		} // end foreach
 
@@ -356,7 +332,7 @@ class vainfo {
 	 * returns the lelements translated using iconv if needed in a
 	 * pretty little format
 	 */
-	function _parse_id3v2($tags) { 
+	private function _parse_id3v2($tags) { 
 	
 		$array = array();
 
@@ -373,14 +349,14 @@ class vainfo {
 					$array['disk'] = $el[0];
 				break;
 				case 'track_number':
-					$array['track'] = $this->_clean_tag($data['0'],$this->_file_encoding);
+					$array['track'] = $this->_clean_tag($data['0'],'');
 				break;	
 				break;
 				case 'comments':
-					$array['comment'] = $this->_clean_tag($data['0'],$this->_file_encoding);
+					$array['comment'] = $this->_clean_tag($data['0'],'');
 				break;
 				default: 
-					$array[$tag]	= $this->_clean_tag($data['0'],$this->_file_encoding);
+					$array[$tag]	= $this->_clean_tag($data['0'],'');
 				break;
 			} // end switch on tag
 		
@@ -396,7 +372,7 @@ class vainfo {
 	 * returns the elements translated using iconv if needed in a
 	 * pretty little format
 	 */
-	function _parse_ape($tags) { 
+	private function _parse_ape($tags) { 
 
 		foreach ($tags as $tag=>$data) { 
 			
@@ -413,7 +389,7 @@ class vainfo {
 	 * this function takes the riff take information passed by getid3() and 
 	 * then reformats it so that it matches the other formats. May require iconv
 	 */
-	function _parse_riff($tags) { 
+	private function _parse_riff($tags) { 
 		
 		foreach ($tags as $tag=>$data) { 
 
@@ -438,7 +414,7 @@ class vainfo {
 	 * returns the elements translated using iconv if needed in a 
 	 * pretty little format
 	 */
-	function _parse_quicktime($tags) { 
+	private function _parse_quicktime($tags) { 
 
                 /* Results array */
                 $array = array();
@@ -472,7 +448,7 @@ class vainfo {
 	 * To pull out extra tag information and populate it into 
 	 * it's own array
 	 */
-	function _parse_filename($filename) { 
+	private function _parse_filename($filename) { 
 
 		$results = array();
 
@@ -508,7 +484,7 @@ class vainfo {
 	 * is, and or if it's different then the encoding recorded
 	 * in the file
 	 */
-	function _clean_tag($tag,$encoding='') { 
+	private function _clean_tag($tag,$encoding='') { 
 		
 		/* Guess that it's UTF-8 */
 		if (!$encoding) { $encoding = 'UTF-8'; }
@@ -517,6 +493,11 @@ class vainfo {
 			$charset = $this->encoding . '//TRANSLIT';
 			$tag = iconv($encoding,$charset,$tag);
 		}
+		elseif ($this->_iconv) { 
+			// We have to transcode anyway and protect from non-[CHARGET] chars
+			$charset = $this->encoding . '//IGNORE'; 
+			$tag = iconv($this->encoding,$charset,$tag); 
+		} 
 
 		return $tag;
 

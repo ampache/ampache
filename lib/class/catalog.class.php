@@ -1048,7 +1048,7 @@ class Catalog {
          * updates the song info based on tags, this is called from a bunch of different places
 	 * and passes in a full fledged song object, so it's a static function
 	 */
-        public static function update_song_from_tags($song,$sort_pattern='',$rename_pattern='') {
+        public static function update_song_from_tags(&$song,$sort_pattern='',$rename_pattern='') {
 
 		// If the patterns aren't passed go look them up
 		if (!$sort_pattern OR !$rename_pattern) { 
@@ -1112,6 +1112,8 @@ class Catalog {
                 if ($info['change']) {
 			debug_event('update',"$song->file difference found, updating database",'5','ampache-catalog'); 
                         $song->update_song($song->id,$new_song);
+			// Redfine our reference
+			$song = $new_song; 
                 }
 		else { 
 			debug_event('update',"$song->file no difference found returning",'5','ampache-catalog');
@@ -1659,7 +1661,7 @@ class Catalog {
 		$catalog = new Catalog($catalog_id); 
 
 		/* First get the filenames for the catalog */
-		$sql = "SELECT `id` FROM `song` WHERE `catalog`='$catalog_id'";
+		$sql = "SELECT `id`,`file` FROM `song` WHERE `catalog`='$catalog_id'";
 		$db_results = Dba::query($sql);
 		$number = Dba::num_rows($db_results);
 	
@@ -1669,6 +1671,9 @@ class Catalog {
 		/* Magical Fix so we don't run out of time */
 		set_time_limit(0);
 
+		// Caching array for album art, save us some time here
+		$album_art_check_cache = array(); 
+
 		/* Recurse through this catalogs files
 		 * and get the id3 tage information,
 		 * if it's not blank, and different in
@@ -1676,12 +1681,13 @@ class Catalog {
 		 */
 		while ($results = Dba::fetch_assoc($db_results)) {
 
-			/* Create the object from the existing database information */
-			$song = new Song($results['id']);
-
-			debug_event('verify',"Starting work on $song->file",'5','ampache-catalog');
+			debug_event('verify',"Starting work on " . $results['file'],'5','ampache-catalog');
 			
-			if (is_readable($song->file)) {
+			if (is_readable($results['file'])) {
+
+				/* Create the object from the existing database information */
+				$song = new Song($results['id']);
+	
 				unset($skip);
 
 				/* Make sure the song isn't flagged, we don't update flagged stuff */
@@ -1695,19 +1701,23 @@ class Catalog {
 					$info = self::update_song_from_tags($song,$this->sort_pattern,$this->rename_pattern);
 					$album_id = $song->album;
 					if ($info['change']) {
-						$update_string .= $info['text'] . "<br />\n"; 
 
-						$album = new Album($song->album);
-						if (!$album->has_art) { 
-							$found = $album->find_art($options,1);
-							if (count($found)) {
-								$image = get_image_from_source($found['0']); 
-								$album->insert_art($image,$found['mime']); 
-								$is_found = _(' FOUND');
+						// Check our cache, this avoids at the very least 2 queriest per song
+						if (!$album_art_check_cache[$song->album]) {
+							$album = new Album($song->album);
+							if (!$album->has_art) { 
+								$found = $album->find_art($options,1);
+								if (count($found)) {
+									$image = get_image_from_source($found['0']); 
+									$album->insert_art($image,$found['mime']); 
+									$album_art_check_cache[$album->id] = 1;
+								} 
+							} // if no art
+							else { 
+								$album_art_check_cache[$album->id] = 1; 
 							} 
-							$update_string .= "<b>" . _('Searching for new Album Art') . ". . .$is_found</b><br />\n";
-							unset($found,$is_found);
-						} 
+						} // if not in cache
+
 						flush();
 						$total_updated++;
 					}
