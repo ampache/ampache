@@ -96,6 +96,10 @@ switch ($_REQUEST['action']) {
 		ob_end_clean(); 
 		echo xmlData::artists($artists);
 	break; 
+	case 'artist': 
+		$uid = scrub_in($_REQUEST['filter']); 
+		echo xmlData::artists(array($uid)); 
+	break; 
 	case 'artist_albums': 
 		$artist = new Artist($_REQUEST['filter']); 
 
@@ -132,6 +136,10 @@ switch ($_REQUEST['action']) {
 		xmlData::set_limit($_REQUEST['limit']); 
 		ob_end_clean(); 
 		echo xmlData::albums($albums); 
+	break; 
+	case 'album': 
+		$uid = scrub_in($_REQUEST['filter']); 
+		echo xmlData::albums(array($uid)); 
 	break; 
 	case 'album_songs': 
 		$album = new Album($_REQUEST['filter']); 
