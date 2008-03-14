@@ -26,6 +26,9 @@
  */
 class Democratic extends tmpPlaylist {
 
+	// Build local, buy local
+	public $tmp_playlist; 
+
 	/**
 	 * constructor
 	 * We need a constructor for this class. It does it's own thing now
@@ -59,6 +62,24 @@ class Democratic extends tmpPlaylist {
 		return $row; 
 
 	} // get_info
+
+	/**
+	 * set_parent
+	 * This returns the tmpPlaylist for this democratic play instance
+	 */
+	public function set_parent() { 
+
+		$demo_id = Dba::escape($this->id); 
+
+		$sql = "SELECT * FROM `tmp_playlist` WHERE `session`='$demo_id'"; 
+		$db_results = Dba::query($sql); 
+
+		$row = Dba::fetch_assoc($db_results); 
+
+		$this->tmp_playlist = $row['id']; 
+
+
+	} // set_parent
 
 	/**
 	 * format
@@ -160,7 +181,7 @@ class Democratic extends tmpPlaylist {
                 /* Select all objects from this playlist */
                 $sql = "SELECT `tmp_playlist_data`.`id`,`tmp_playlist_data`.`object_type`, `user_vote`.`date`, `tmp_playlist_data`.`object_id` " .
                         "FROM `tmp_playlist_data` $vote_join " .
-                        "WHERE `tmp_playlist_data`.`tmp_playlist`='" . Dba::escape($this->id) . "' $order";
+                        "WHERE `tmp_playlist_data`.`tmp_playlist`='" . Dba::escape($this->tmp_playlist) . "' $order";
                 $db_results = Dba::query($sql);
 
                 /* Define the array */
@@ -300,7 +321,7 @@ class Democratic extends tmpPlaylist {
          */
         public function has_vote($object_id,$type='') {
 
-                $tmp_id		= Dba::escape($this->id);
+                $tmp_id		= Dba::escape($this->tmp_playlist);
 		$object_id 	= Dba::escape($object_id); 
 		$type		= $type ? Dba::escape($type) : 'song'; 
 		$user_id	= Dba::escape($GLOBALS['user']->id); 
@@ -329,7 +350,7 @@ class Democratic extends tmpPlaylist {
         public function add_vote($object_id,$object_type='') {
         
                 $object_id      = Dba::escape($object_id);
-                $tmp_playlist   = Dba::escape($this->id);
+                $tmp_playlist   = Dba::escape($this->tmp_playlist);
 		$object_type	= $object_type ? Dba::escape($object_type) : 'song'; 
                 
                 /* If it's on the playlist just vote */

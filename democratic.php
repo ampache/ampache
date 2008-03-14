@@ -64,21 +64,6 @@ switch ($_REQUEST['action']) {
 		Democratic::create($_POST); 
 		header("Location: " . Config::get('web_path') . "/democratic.php?action=manage_playlists"); 	
 	break; 
-	case 'create_playlist':
-		/* Only Admins Here */
-		if (!$GLOBALS['user']->has_access(100)) { 
-			access_denied(); 
-			break;
-		}
-		/* We need to make ourselfs a new tmp playlist */
-		$tmp_playlist	= new tmpPlaylist();
-		$id = $tmp_playlist->create('-1','vote','song',$_REQUEST['playlist_id']);	
-		
-		/* Re-generate the playlist */
-		$tmp_playlist = new tmpPlaylist($id);
-		$songs = $tmp_playlist->get_items();
-		require_once(conf('prefix') . '/templates/show_tv.inc.php');
-	break;
 	case 'manage_playlists': 
 		if (!Access::check('interface','75')) { 
 			access_denied(); 
@@ -90,17 +75,10 @@ switch ($_REQUEST['action']) {
 		require_once Config::get('prefix') . '/templates/show_manage_democratic.inc.php'; 
 
 	break;
-	case 'update_playlist':
-		/* Only Admins Here */
-		if (!Access::check('interface','100')) { 
-			access_denied();
-			break;
-		}
-		$tmp_playlist = new tmpPlaylist($_REQUEST['tmp_playlist_id']);
-		$tmp_playlist->update_playlist($_REQUEST['playlist_id']);
 	case 'show_playlist': 
 	default: 
 		$democratic = Democratic::get_current_playlist(); 
+		$democratic->set_parent(); 
 		$objects = $democratic->get_items();
 		require_once Config::get('prefix') . '/templates/show_democratic.inc.php';
 	break;
