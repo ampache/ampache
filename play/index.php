@@ -103,6 +103,7 @@ if (Config::get('access_control')) {
  */
 if ($demo_id) { 
 	$democratic = new Democratic($demo_id);
+	$democratic->set_parent(); 
 	/* This takes into account votes etc and removes the */
 	$song_id = $democratic->get_next_object();
 }

@@ -82,6 +82,16 @@ if (!function_exists('_')) {
 } // if _ isn't defined
 
 /**
+ * ngettext
+ * checks for ngettext and defines it if it doesn't exist
+ */
+if (!function_exists('ngettext')) { 
+	function ngettext($string) { 
+		return $string; 
+	} 
+} // if no ngettext
+
+/**
  *  access_denied
  * throws an error if they try to do something
  * 	that they aren't allowed to

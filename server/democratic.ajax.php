@@ -27,6 +27,7 @@ if (AJAX_INCLUDE != '1') { exit; }
 switch ($_REQUEST['action']) { 
 	case 'delete_vote': 
 		$democratic = Democratic::get_current_playlist(); 
+		$democratic->set_parent(); 
 		$democratic->remove_vote($_REQUEST['row_id']); 
 		
 		ob_start(); 
@@ -39,6 +40,7 @@ switch ($_REQUEST['action']) {
 	case 'add_vote': 
 
 		$democratic = Democratic::get_current_playlist(); 
+		$democratic->set_parent(); 
 		$democratic->add_vote($_REQUEST['object_id'],$_REQUEST['type']); 
 
 		ob_start(); 
