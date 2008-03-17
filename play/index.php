@@ -337,15 +337,6 @@ if ($bytes_streamed > $min_bytes_streamed) {
 	debug_event('Stats','Registering stats for ' . $song->title,'5'); 
 	
         $user->update_stats($song->id);
-	/* If this is a voting tmp playlist remove the entry */
-	if ($demo_id) { 
-		$row_id = $democratic->get_uid_from_object_id($song_id,'song'); 
-		if ($row_id) {
-			debug_event('Democratic','Removing ' . $song->title . ' from Democratic Playlist','1'); 
-			$democratic->delete_votes($row_id);
-		} 
-	} // if tmp_playlist
-	
 	/* Set the Song as Played if it isn't already */
 	$song->set_played();
 
@@ -354,6 +345,15 @@ else {
 	debug_event('stream',$bytes_streamed .' of ' . $song->size . ' streamed, less than ' . $min_bytes_streamed . ' not collecting stats','5'); 
 } 
 
+
+/* If this is a voting tmp playlist remove the entry, we do this regardless of play amount */
+if ($demo_id) {
+	$row_id = $democratic->get_uid_from_object_id($song_id,'song');
+        if ($row_id) {
+		debug_event('Democratic','Removing ' . $song->title . ' from Democratic Playlist','1');
+		$democratic->delete_votes($row_id);
+	}
+} // if tmp_playlist
 
 /* Clean up any open ends */
 if (Config::get('play_type') == 'downsample' || !$song->native_stream()) { 
