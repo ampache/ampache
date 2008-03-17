@@ -545,6 +545,7 @@ input[type=checkbox]  { border:0;background:none; }
 .tabledata .th-top, .tabledata .th-bottom {
 	background: #111;
 	vertical-align: top;
+	font-size:1em;
 }
 .tabledata th {
 	color:#8b3e38; 
@@ -571,10 +572,11 @@ input[type=checkbox]  { border:0;background:none; }
 }
 
 /* table rows */
-.odd, .even, .row-highlight		{ background: url(../images/list_back.png) 0 50% repeat-x !important; background-image: none;}
-.odd 					{ background-color: #111 !important;}
-.even					{ }
-.odd:hover, .even:hover 		{ background-color: #2b293d !important;}
+.tabledata .odd, .tabledata .even, .row-highlight		{ background: url(../images/list_back.png) 0 50% repeat-x !important; background-image: none;}
+.tabledata .odd 					{ background-color: #111 !important;}
+.tabledata .even					{ }
+.tabledata .odd:hover, 
+.tabledata .even:hover 		{ background-color: #2b293d !important;}
 .row-highlight:hover			{ background-color: #cc3333 !important;}
 
 /* Misc */
@@ -683,8 +685,8 @@ img.shoutboximage {
 	height:25px;
 	position:absolute;margin-left:-30px;
 }
-.shoutodd img.shoutboximage {/*float:right;*/}
-.shouteven img.shoutboximage {/*float:right;*/}
+#shoutbox .odd img.shoutboximage {/*float:right;*/}
+#shoutbox .even img.shoutboximage {/*float:right;*/}
 
 div.shout:hover img.shoutboximage{width:75px;height:75px;position:absolute;top:50%;right:0;margin-top:-38px}
 

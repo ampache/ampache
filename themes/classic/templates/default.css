@@ -527,12 +527,12 @@ a.button{padding:1px 3px;}
 } 
 
 /* table rows */
-.odd, .odd td,
-.even, .even td, .row-highlight {
+.tabledata .odd, .tabledata .odd td,
+.tabledata .even, .tabledata .even td, .row-highlight {
 	font-size: 12px;
 	border-bottom:1px dotted #c0c0c0;
 }
-.even:hover, .odd:hover { 
+.tabledata .even:hover, .tabledata .odd:hover { 
 	background:#99ccff;
 } 
 .row-highlight:hover { 
@@ -621,15 +621,16 @@ td.cel_cover{padding:6px;}
 	margin:10px 5px 0 0;
   border-top:1px dotted #c0c0c0;
 } 
+#shoutbox div.shout:hover{border-top:1px solid #9cf;}
 
 #shoutbox span.information {}
-#shoutbox .shouttext{display:block;}
+#shoutbox .shouttext{display:block;font-size:.9em;margin-top:.5em;}
 img.shoutboximage {	margin:0 3px;}
 
-#shoutbox div.shoutodd{margin-right:20%;text-align:left;}
-#shoutbox div.shouteven{margin-left:20%;text-align:right;}
-.shoutodd img.shoutboximage {float:left;}
-.shouteven img.shoutboximage {float:right;}
+#shoutbox div.odd{margin-right:20%;text-align:left;}
+#shoutbox div.even{margin-left:20%;text-align:right;}
+#shoutbox .odd img.shoutboximage {float:left;}
+#shoutbox .even img.shoutboximage {float:right;}
 
 /************************************************/
 /*             List Header                      */

@@ -22,7 +22,7 @@
 <?php show_box_top(_('Shoutbox')); ?>
 <div id="shoutbox">
 <?php 
-  $rowparity="shouteven";
+  $rowparity="even";
   foreach ($shouts as $shout_id) { 
 	$shout = new shoutBox($shout_id); 
 	$object = shoutBox::get_object($shout->object_type,$shout->object_id); 
@@ -30,7 +30,7 @@
 	$client = new User($shout->user); 
 	$client->format(); 
 	
-	$rowparity = ($rowparity=="shouteven") ? "shoutodd" : "shouteven";
+	$rowparity = ($rowparity=="even") ? "odd" : "even";
 ?>
 <div class="shout <?php echo($rowparity) ?>">
 	<?php echo $shout->get_image(); ?>
