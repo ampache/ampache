@@ -276,6 +276,7 @@ function validateEmail ( $email, $verbose=0 ) {
             
             // check that an MX record exists for Top-Level domain
             // If it exists, start our email address checking
+	    if (function_exists('checkdnsrr')) { 
             if ( checkdnsrr ( $domain, "MX" ) ) {
                 
                 // Okay -- we've got a valid DNS reverse record.
@@ -618,6 +619,8 @@ function validateEmail ( $email, $verbose=0 ) {
                 $return[0] = false;
                 $return[1] = "554 No DNS reverse record found for $domain";
             } // end checkdnsrr test
+
+	} // if function doesn't exist
             
         } // end walking through each domain possibility
     

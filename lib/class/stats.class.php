@@ -90,6 +90,33 @@ class Stats {
 	} // get_last_song
 
 	/**
+ 	 * get_object_history
+	 * This returns the objects that have happened for $user_id sometime after $time
+	 * used primarly by the democratic cooldown code
+	 */
+	public static function get_object_history($user_id='',$time) { 
+
+		$user_id = $user_id ? $user_id : $GLOBALS['user']->id;
+
+		$user_id = Dba::escape($user_id);
+
+		$time = Dba::escape($time); 
+
+		$sql = "SELECT * FROM `object_count` WHERE `user`='$user_id' AND `object_type`='song' AND `date`>='$time' " . 
+			"ORDER BY `date` DESC"; 
+		$db_results = Dba::query($sql); 
+
+		$results = array(); 
+
+		while ($row = Dba::fetch_assoc($db_results)) { 
+			$results[] = $row['object_id']; 
+		} 
+
+		return $results; 
+
+	} // get_object_history
+
+	/**
  	 * get_top
 	 * This returns the top X for type Y from the
 	 * last conf('stats_threshold') days

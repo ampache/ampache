@@ -267,7 +267,7 @@ class Update {
 				'- Alter tmp_playlist to account for Democratic changes.<br />' . 
 				'- Cleared Existing Democratic playlists due to changes.<br />'; 
 
-//		$version[] = array('version' => '340016','description'=>$update_string); 
+		$version[] = array('version' => '340016','description'=>$update_string); 
 
 		return $version;
 

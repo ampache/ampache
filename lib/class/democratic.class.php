@@ -26,6 +26,13 @@
  */
 class Democratic extends tmpPlaylist {
 
+	public $name; 
+	public $cooldown; 
+	public $level; 
+	public $user; 
+	public $primary; 
+	public $base_playlist; 
+
 	// Build local, buy local
 	public $tmp_playlist; 
 
@@ -248,7 +255,7 @@ class Democratic extends tmpPlaylist {
 		// We have to get all because of the pysco sorting
 		$items = self::get_items(); 
 
-		if (count($items)) { 
+		if (count($items) > $offset) { 
 			$array = array_slice($items,$offset,1); 
 			$item = array_shift($array); 
 			$results['object_id'] = $item['0'];
@@ -283,7 +290,7 @@ class Democratic extends tmpPlaylist {
 
 		$object_id	= Dba::escape($object_id); 
 		$object_type	= $object_type ? Dba::escape($object_type) : 'song'; 
-		$tmp_id		= Dba::escape($this->id);
+		$tmp_id		= Dba::escape($this->tmp_playlist);
 
 		$sql = "SELECT `tmp_playlist_data`.`id` FROM `tmp_playlist_data` WHERE `object_type`='$object_type' AND " . 
 			"`tmp_playlist`='$tmp_id' AND `object_id`='$object_id'"; 
@@ -294,6 +301,22 @@ class Democratic extends tmpPlaylist {
 		return $row['id']; 
 
 	} // get_uid_from_object_id
+
+	/**
+	 * get_cool_songs
+	 * This returns all of the song_ids for songs that have happened within the last 'cooldown'
+	 * for this user. 
+	 */
+	public function get_cool_songs() { 
+
+		// Convert cooldown time to a timestamp in the past
+		$cool_time = time() - ($this->cooldown * 60); 
+
+		$song_ids = Stats::get_object_history($GLOBALS['user']->id,$cool_time); 
+
+		return $song_ids; 
+
+	} // get_cool_songs
 
 	/**
          * vote

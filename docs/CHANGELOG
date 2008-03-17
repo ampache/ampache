@@ -4,6 +4,7 @@
 
 --------------------------------------------------------------------------
   v.3.4-Beta2 
+	- Added Cooldown Functionality to Democratic Play
 	- Added /bin/fix_filenames.inc for correcting filenames with
 		invalid chars
 	- Removed album art add on Verify now that there is a distinct

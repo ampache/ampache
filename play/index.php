@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2007 Ampache.org
+ Copyright (c) 2001 - 2008 Ampache.org
  All rights reserved.  
 
  This program is free software; you can redistribute it and/or
@@ -104,9 +104,24 @@ if (Config::get('access_control')) {
 if ($demo_id) { 
 	$democratic = new Democratic($demo_id);
 	$democratic->set_parent(); 
-	/* This takes into account votes etc and removes the */
-	$song_id = $democratic->get_next_object();
-}
+
+	// If there is a cooldown we need to make sure this song isn't a repeat
+	if (!$democratic->cooldown) { 
+		/* This takes into account votes etc and removes the */
+		$song_id = $democratic->get_next_object();
+	} 
+	else { 
+		// Pull history
+		$song_id = $democratic->get_next_object($song_cool_check);
+		$song_ids = $democratic->get_cool_songs(); 
+		while (in_array($song_id,$song_ids)) { 
+			$song_cool_check++; 
+			$song_id = $democratic->get_next_object($song_cool_check);
+			if ($song_cool_check >= '5') { break; } 
+		}
+		
+	} // end if we've got a cooldown 
+} // if democratic ID passed
 
 /**
  * if we are doing random let's pull the random object
