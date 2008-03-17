@@ -609,6 +609,29 @@ td.cel_track {text-align:right;}
 }
 
 /************************************************/
+/*          Song details                        */
+/************************************************/
+dl.song_details{font-size:1em;}
+.song_details dt {
+   float:left;
+   clear:both;
+   width:20%;
+   min-width:20%; /*Ie bugfix*/
+   font-weight:bold;
+}
+.song_details dd {
+   float:left;
+   width:79%;
+   min-width:79%; /*Ie bugfix*/
+   margin:0 0 0.2em .3em;
+   padding-left:.2em;
+}
+dt, dt + dd {background: url(../images/list_back.png) 0 50% repeat-x !important; background-image: none;}
+dt, dt + dd { background-color: #111 !important;}
+dt:hover, dt:hover + dd {background-color: #2b293d !important;}
+
+
+/************************************************/
 /*          Albums of the moment                */
 /************************************************/
 .random_album{

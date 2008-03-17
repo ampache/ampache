@@ -19,62 +19,38 @@
 
 */
 ?>
-<?php show_box_top($song->title . ' ' . _('Details')); ?>
-<table class="tabledata" cellspacing="0" cellpadding="0">
-<tr>
-	<td><?php echo _('Title'); ?></td>
-	<td><?php echo scrub_out($song->title); ?></td>
-</tr>
-<tr>
-	<td><?php echo _('Artist'); ?></td>
-	<td><?php echo $song->f_artist_link; ?></td>
-</tr>
-<tr>
-	<td><?php echo _('Album'); ?></td>
-	<td><?php echo $song->f_album_link; ?> (<?php echo scrub_out($song->year); ?>)</td>
-</tr>
-<tr>
-	<td><?php echo _('Genre'); ?></td>
-	<td><?php echo $song->f_genre_link; ?></td>
-</tr>
-<tr>
-	<td><?php echo _('Length'); ?></td>
-	<td><?php echo scrub_out($song->f_time); ?></td>
-</tr>
-<tr>
-	<td><?php echo _('Comment'); ?></td>
-	<td><?php echo scrub_out($song->comment); ?></td>
-</tr>
-<tr>
-	<td><?php echo _('Label'); ?></td>
-	<td><?php echo scrub_out($song->label); ?></td>
-</tr>
-<tr>
-	<td><?php echo _('Language'); ?></td>
-	<td><?php echo scrub_out($song->language); ?></td>
-</tr>
-<tr>
-	<td><?php echo _('Catalog Number'); ?></td>
-	<td><?php echo scrub_out($song->catalog_number); ?></td>
-</tr>
-<tr>
-	<td><?php echo _('Bitrate'); ?></td>
-	<td><?php echo scrub_out($song->f_bitrate); ?></td>
-</tr>
-<?php if ($GLOBALS['user']->has_access('75')) { ?>
-<tr>
-	<td><?php echo _('Filename'); ?></td>
-	<td><?php echo scrub_out($song->file); ?> (<?php echo $song->f_size; ?>MB)</td>
-</tr>
-<?php } ?>
-<?php if ($song->update_time) { ?>
-<tr>
-	<td><?php echo _('Last Updated'); ?></td>
-	<td><?php echo date("d/m/Y H:i",$song->update_time); ?></td>
-</tr>
-<?php } ?>
-<tr>
-	<td><?php echo _('Added'); ?></td>
-	<td><?php echo date("d/m/Y H:i",$song->addition_time); ?></td>
-</table>
+<?php 
+  show_box_top($song->title . ' ' . _('Details')); 
+  
+  $songprops['Title']   = scrub_out($song->title);
+  $songprops['Artist']  = $song->f_artist_link;
+  $songprops['Album']   = $song->f_album_link . " " . scrub_out($song->year);
+  $songprops['Genre']   = $song->f_genre_link;
+  $songprops['Length']  = scrub_out($song->f_time); 
+  $songprops['Comment'] = scrub_out($song->comment);
+  $songprops['Label']   = scrub_out($song->label);
+  $songprops['Language']= scrub_out($song->language); 
+  $songprops['Catalog Number']   = scrub_out($song->catalog_number);
+  $songprops['Bitrate']   = scrub_out($song->f_bitrate);
+  if ($GLOBALS['user']->has_access('75')) {
+    $songprops['Filename']   = scrub_out($song->file) . " " . $song->f_size . "MB";
+  }
+  if ($song->update_time) {
+    $songprops['Last Updated']   = date("d/m/Y H:i",$song->update_time);
+  }
+  $songprops['Added']   = date("d/m/Y H:i",$song->addition_time);
+  ?>
+  
+  <dl class="song_details">
+  <?php
+  foreach ($songprops as $key => $value)
+  {
+    if(trim($value))
+    {
+      $rowparity = flip_class();
+      echo "<dt class=\"".$rowparity."\">" . _($key) . "</dt><dd class=\"".$rowparity."\">" . $value . "</dd>";
+    }
+  }?>
+  </dl>
+  
 <?php show_box_bottom(); ?>

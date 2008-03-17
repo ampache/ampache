@@ -533,10 +533,10 @@ a.button{padding:1px 3px;}
 	border-bottom:1px dotted #c0c0c0;
 }
 .tabledata .even:hover, .tabledata .odd:hover { 
-	background:#99ccff;
+	background:#9cf;
 } 
 .row-highlight:hover { 
-	background:#cc3333;
+	background:#c33;
 } 
 	
 
@@ -561,6 +561,26 @@ td.cel_cover{padding:6px;}
 	font-size: 0.8em; 
 } 
 
+/************************************************/
+/*          Song details                        */
+/************************************************/
+dl.song_details{font-size:0.8em;}
+.song_details dt {
+   float:left;
+   clear:both;
+   width:20%;
+   min-width:20%; /*Ie bugfix*/
+   font-weight:bold;
+}
+.song_details dd {
+   float:left;
+   width:79%;
+   min-width:79%; /*Ie bugfix*/
+   margin:0 0 0.2em .3em;
+   padding-left:.2em;
+}
+dt + dd {border-bottom:1px dotted #c0c0c0;}
+dt:hover, dt:hover + dd {background:#9cf;}
 
 /************************************************/
 /*          Albums of the moment                */

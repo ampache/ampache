@@ -22,17 +22,14 @@
 <?php show_box_top(_('Shoutbox')); ?>
 <div id="shoutbox">
 <?php 
-  $rowparity="even";
   foreach ($shouts as $shout_id) { 
 	$shout = new shoutBox($shout_id); 
 	$object = shoutBox::get_object($shout->object_type,$shout->object_id); 
 	$object->format(); 
 	$client = new User($shout->user); 
 	$client->format(); 
-	
-	$rowparity = ($rowparity=="even") ? "odd" : "even";
 ?>
-<div class="shout <?php echo($rowparity) ?>">
+<div class="shout <?php echo flip_class(); ?>">
 	<?php echo $shout->get_image(); ?>
 	<strong><?php echo ucfirst($shout->object_type); ?>:</strong> <?php echo $object->f_link; ?>
 	<span class="information"><?php echo $client->f_link; ?> <?php echo date("d/m H:i",$shout->date); ?></span>
