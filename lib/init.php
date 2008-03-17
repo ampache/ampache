@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2007 Ampache.org
+ Copyright (c) 2001 - 2008 Ampache.org
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
@@ -81,7 +81,7 @@ if (!count($results)) {
 } 
 
 /** This is the version.... fluf nothing more... **/
-$results['version']		= '3.4-Beta2 Build (003)';
+$results['version']		= '3.4-Beta2';
 $results['int_config_version']	= '6'; 
 
 $results['raw_web_path']	= $results['web_path'];

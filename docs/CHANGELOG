@@ -3,7 +3,7 @@
 --------------------------------------------------------------------------
 
 --------------------------------------------------------------------------
-  v.3.4-Beta2 
+  v.3.4-Beta2 03/16/2008
 	- Added Cooldown Functionality to Democratic Play
 	- Added /bin/fix_filenames.inc for correcting filenames with
 		invalid chars

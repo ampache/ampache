@@ -1143,8 +1143,28 @@ class Update {
 		$sql = "ALTER TABLE `playlist` ADD `date` INT ( 11 ) UNSIGNED NOT NULL"; 
 		$db_results = Dba::query($sql); 
 
-		$sql = "ALTER TABLE `rating` CHANGE `rating` TINYINT ( 4 ) NOT NULL"; 
+		// Pull all of the rating information
+		$sql = "SELECT `id`,`rating` FROM `rating`"; 
 		$db_results = Dba::query($sql); 
+
+		$results = array(); 
+
+		while ($row = Dba::fetch_assoc($db_results)) { 
+			$results[] = $row; 
+		} 
+
+		$sql = "ALTER TABLE `rating` DROP `rating`"; 
+		$db_results = Dba::query($sql); 
+
+		$sql = "ALTER TABLE `rating` ADD `rating` TINYINT ( 4 ) NOT NULL"; 
+		$db_results = Dba::query($sql); 
+
+		foreach ($results as $row) { 
+			$rating = Dba::escape($row['rating']);
+			$id	= Dba::escape($row['id']); 
+			$sql = "UPDATE `rating` SET `rating`='$rating' WHERE `id`='$id'"; 
+			$db_results = Dba::query($sql); 
+		} 
 
 		self::set_version('db_version','340015'); 
 		

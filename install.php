@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2007 ampache.org
+ Copyright (c) 2001 - 2008 ampache.org
  All rights reserved.
 
  This program is free software; you can redistribute it and/or

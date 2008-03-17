@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2007 Ampache.org
+ Copyright (c) 2001 - 2008 Ampache.org
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
@@ -153,12 +153,11 @@ function install_insert_db($username,$password,$hostname,$database) {
 	} // end if we are creating a user
 
 	// Figure out which version of MySQL we're running, if possible we want to use the UTF-8 dump
-	$sql = "SELECT version()"; 
-	$db_results = @mysql_query($sql,$dbh); 
+	$sql = "SELECT VERSION()"; 
+	$db_results = mysql_query($sql,$dbh); 
 
-	$data = mysql_fetch_assoc($db_results,$dbh); 
+	$data = mysql_fetch_row($db_results); 
 	$mysql_version = substr(preg_replace("/(\d+)\.(\d+)\.(\d+).*/","$1$2$3",$data[0]),0,3);
-
 	$sql_file =  ($mysql_version < '500') ? 'sql/ampache40.sql' : 'sql/ampache.sql'; 
 
 	/* Attempt to insert database */
@@ -174,6 +173,11 @@ function install_insert_db($username,$password,$hostname,$database) {
                          } // end if
                  } // end if
          } // end for
+
+	if ($mysql_version >= '500') { 
+		$sql = "ALTER DATABASE `" . Dba::escape($database) . "` DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci";
+		$db_results = mysql_query($sql); 
+	} 
 
 	return true;
 
