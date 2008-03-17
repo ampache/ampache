@@ -55,6 +55,11 @@ $ajax_url = Config::get('ajax_url');
 	<?php require Config::get('prefix') . '/templates/show_album_row.inc.php'; ?> 
 </tr>
 <?php } //end foreach ($albums as $album) ?>
+<?php if (!count($object_ids)) { ?>
+<tr class="<?php echo flip_class(); ?>">
+	<td colspan="7"><span class="fatalerror"><?php echo _('Not Enough Data'); ?></span></td>
+</tr>
+<?php } ?>
 <tr class="th-bottom">
 	<th class="cel_add"><?php echo _('Add'); ?></th>
 	<?php if (Browse::get_filter('show_art')) { ?>

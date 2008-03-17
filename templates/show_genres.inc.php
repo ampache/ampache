@@ -63,6 +63,11 @@ foreach ($object_ids as $genre_id) {
 		</td>
 	</tr>
 <?php } // end foreach genres ?>
+<?php if (!count($object_ids)) { ?>
+<tr class="<?php echo flip_class(); ?>">
+	<td colspan="4"><span class="fatalerror"><?php echo _('Not Enough Data'); ?></span></td>
+</tr>
+<?php } ?>
 <tr class="th-bottom">
 	<th class="cel_add"><?php echo _('Add'); ?></th>
 	<th class="cel_genre"><?php echo Ajax::text('?page=browse&action=set_sort&sort=name',_('Genre'),'sort_genre_name_bottom'); ?></th>

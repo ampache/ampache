@@ -48,6 +48,11 @@ foreach ($object_ids as $playlist_id) {
 	<?php require Config::get('prefix') . '/templates/show_playlist_row.inc.php'; ?> 
 </tr>
 <?php } // end foreach ($playlists as $playlist) ?>
+<?php if (!count($object_ids)) { ?>
+<tr class="<?php echo flip_class(); ?>">
+	<td colspan="6"><span class="fatalerror"><?php echo _('Not Enough Data'); ?></span></td>
+</tr>
+<?php } ?>
 <tr class="th-bottom">
   <th class="cel_add"><?php echo _('Add'); ?></th>
 	<th class="cel_playlist"><?php echo Ajax::text('?page=browse&action=set_sort&sort=name',_('Playlist Name'),'playlist_sort_name_bottom'); ?></th>
