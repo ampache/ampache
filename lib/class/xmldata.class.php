@@ -284,7 +284,7 @@ class xmlData {
 					"\t<time>$song->time</time>\n" . 
 					"\t<url><![CDATA[" . $song->get_url($_REQUEST['auth']) . "]]></url>\n" . 
 					"\t<size>$song->size</size>\n" . 
-					"\t<art><![CDATA[" . $art_url . "]]</art>\n" . 
+					"\t<art><![CDATA[" . $art_url . "]]></art>\n" . 
 					"</song>\n"; 
 
 		} // end foreach
