@@ -92,8 +92,9 @@ class Catalog {
 	private function _create_filecache() { 
 
 		if (count($this->_filecache) == 0) { 
+			$catalog_id = Dba::escape($this->id); 
 			// Get _EVERYTHING_ 
-			$sql = "SELECT `id`,`file` FROM `song` WHERE `catalog`='$this->id'"; 
+			$sql = "SELECT `id`,`file` FROM `song` WHERE `catalog`='$catalog_id'"; 
 			$db_results = Dba::query($sql); 
 
 			// Populate the filecache
@@ -411,12 +412,14 @@ class Catalog {
 		if (!is_resource($handle)) {
                         debug_event('read',"Unable to Open $path",'5','ampache-catalog'); 
 			Error::add('catalog_add',_('Error: Unable to open') . ' ' . $path); 
+			return false; 
 		}
 
 		/* Change the dir so is_dir works correctly */
 		if (!chdir($path)) {
 			debug_event('read',"Unable to chdir $path",'2','ampache-catalog'); 
 			Error::add('catalog_add',_('Error: Unable to change to directory') . ' ' . $path); 
+			return false; 
 		}
 
 		// Ensure that we've got our cache
@@ -429,7 +432,6 @@ class Catalog {
 			if ($file == '.' || $file == '..') { continue; } 
 
 			debug_event('read',"Starting work on $file inside $path",'5','ampache-catalog');
-			
 
 			/* Create the new path */
 			$full_file = $path.$slash_type.$file;
@@ -483,7 +485,7 @@ class Catalog {
 			if (preg_match($pattern ,$file)) {
 
 				/* Now that we're sure its a file get filesize  */
-				$file_size = @filesize($full_file);
+				$file_size = filesize($full_file);
 
 				if (!$file_size) { 
 					debug_event('read',"Unable to get filesize for $full_file",'2','ampache-catalog'); 
@@ -496,31 +498,33 @@ class Catalog {
 					Error::add('catalog_add',"$full_file " . _('is not readable by ampache'));
 					continue; 
 				} 
+
+				// Check to make sure the filename is of the expected charset
+				if (function_exists('iconv')) { 
+					if (strcmp($full_file,iconv(Config::get('site_charset'),Config::get('site_charset') . '//IGNORE',$full_file)) != '0') { 
+						debug_event('read',$full_file . ' has non-' . Config::get('site_charset') . ' characters and can not be indexed','1'); 
+						Error::add('catalog_add',$full_file . ' ' . _('does not match site charset')); 
+						continue; 
+					} 
+				} // end if iconv
 		
 				if (substr($file,-3,3) == 'm3u' AND $parse_m3u > 0) { 
 					$this->_playlists[] = $full_file;
 				} // if it's an m3u
 
 				else {
-					
-					/* If not found then insert, gets id3 information
-					 * and then inserts it into the database
-					 */
-					if (!$found) {
-						$this->insert_local_song($full_file,$file_size);
+					$this->insert_local_song($full_file,$file_size);
 
-						/* Stupid little cutesie thing */
-						$this->count++;
-						if ( !($this->count%10)) {
-			                                $file = str_replace(array('(',')','\''),'',$full_file);
-			                                echo "<script type=\"text/javascript\">\n";
-			                                echo "update_txt('" . $this->count ."','add_count_" . $this->id . "');";
-			                                echo "update_txt('" . addslashes(htmlentities($file)) . "','add_dir_" . $this->id . "');"; 
-			                                echo "\n</script>\n";    	
-							flush(); 
-						} // update our current state
-
-					} // not found
+					/* Stupid little cutesie thing */
+					$this->count++;
+					if ( !($this->count%10)) {
+			                	$file = str_replace(array('(',')','\''),'',$full_file);
+			                        echo "<script type=\"text/javascript\">\n";
+			                        echo "update_txt('" . $this->count ."','add_count_" . $this->id . "');";
+			                        echo "update_txt('" . addslashes(htmlentities($file)) . "','add_dir_" . $this->id . "');"; 
+			                        echo "\n</script>\n";    	
+						flush(); 
+					} // update our current state
 
 				} // if it's not an m3u
 						
@@ -1701,27 +1705,8 @@ class Catalog {
 					$info = self::update_song_from_tags($song,$this->sort_pattern,$this->rename_pattern);
 					$album_id = $song->album;
 					if ($info['change']) {
-
-						// Check our cache, this avoids at the very least 2 queriest per song
-						if (!$album_art_check_cache[$song->album]) {
-							$album = new Album($song->album);
-							if (!$album->has_art) { 
-								$found = $album->find_art($options,1);
-								if (count($found)) {
-									$image = get_image_from_source($found['0']); 
-									$album->insert_art($image,$found['mime']); 
-									$album_art_check_cache[$album->id] = 1;
-								} 
-							} // if no art
-							else { 
-								$album_art_check_cache[$album->id] = 1; 
-							} 
-						} // if not in cache
-
-						flush();
 						$total_updated++;
 					}
-
 					unset($info);
 
 				} // end skip

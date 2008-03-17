@@ -120,8 +120,7 @@ Contents:
 	PHP5-gd (recommended)
 	PHP5 ICONV 
 	PHP5 ZLIB support (recommended)
-  MySQL >= 4.x http://www.mysql.com
-  32MB of Ram
+  MySQL >= 4.1+ http://www.mysql.com
 
 3. Setting Up
 
@@ -151,8 +150,8 @@ Contents:
   Public SVN: https://svn.ampache.org/
   IRC: irc.ampache.org #ampache (Freenode)
   Forums: http://ampache.org/forums
-  Bugs: http://bugs.ampache.org/open
-  Wiki: http://wiki.ampache.org
+  Bugs: http://trac.ampache.org/
+  Wiki: http://trac.ampache.org/wiki
   Demo: http://ampache.org/demo
 
   Ampache Development Team

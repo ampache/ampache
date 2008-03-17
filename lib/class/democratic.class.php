@@ -426,6 +426,11 @@ class Democratic extends tmpPlaylist {
 		$sql = "DELETE FROM `democratic` WHERE `id`='$democratic_id'"; 
 		$db_results = Dba::query($sql); 
 
+		$sql = "DELETE FROM `tmp_playlist` WHERE `session`='$democratic_id'"; 
+		$db_results = Dba::query($sql); 
+		
+		self::prune_tracks(); 
+
 		return true; 
 
 	} // delete
@@ -463,7 +468,6 @@ class Democratic extends tmpPlaylist {
 			$insert_id = Dba::insert_id(); 
 			parent::create($insert_id,'vote','song'); 
 		} 
-
 
 		return $db_results; 
 

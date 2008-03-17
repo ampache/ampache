@@ -4,6 +4,12 @@
 
 --------------------------------------------------------------------------
   v.3.4-Beta2 
+	- Added /bin/fix_filenames.inc for correcting filenames with
+		invalid chars
+	- Removed album art add on Verify now that there is a distinct
+		action for it 
+	- Added ICONV check to ensure filenames are of correct charset 
+		before inserting into the database
 	- Fixed issue with encoding of id3v1/v2 tags
 	- Fixed an issue with the clean function for playlists
 	- DB Update, fixes the playlist create issue with full strict on

@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2007 Ampache.org
+ Copyright (c) 2001 - 2008 Ampache.org
  All Rights Reserved
 
  this program is free software; you can redistribute it and/or
@@ -112,7 +112,7 @@
 	?>]
 	</td>
 	<td>
-	<?php echo _('This test checks to make sure you have Iconv support installed. Iconv support is not required for Ampache, but it is highly recommended'); ?>
+	<?php echo _('This test checks to make sure you have Iconv support installed. Iconv support is required for Ampache'); ?>
 	</td>
 </tr>
 <tr>

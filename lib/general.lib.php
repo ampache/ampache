@@ -382,7 +382,7 @@ function get_languages() {
 	$results = array(); 
 
 	/* Prepend English */
-	$results['en_US'] = _('English');
+	$results['en_US'] = 'English';
 
 	while ($file = readdir($handle)) { 
 
@@ -393,16 +393,16 @@ function get_languages() {
 				
 			switch($file) { 
 				case 'de_DE'; $name = 'Deutsch'; break;
-				case 'en_US'; $name = _('English'); break;
+				case 'en_US'; $name = 'English'; break;
 				case 'ca_CA'; $name = 'Catal&#224;'; break;
-				case 'en_GB'; $name = _('British English'); break;
+				case 'en_GB'; $name = 'British English'; break;
 				case 'es_ES'; $name = 'Espa&ntilde;ol'; break;
 				case 'el_GR'; $name = 'Greek (&#x0395;&#x03bb;&#x03bb;&#x03b7;&#x03bd;&#x03b9;&#x03ba;&#x03ac;)'; break; 
 				case 'fr_FR'; $name = 'Fran&ccedil;ais'; break;
 				case 'it_IT'; $name = 'Italiano'; break;
 				case 'is_IS'; $name = '&Iacute;slenska'; break;
 				case 'nl_NL'; $name = 'Nederlands'; break;
-				case 'tr_TR'; $name = _('Turkish'); break;
+				case 'tr_TR'; $name = 'Turkish'; break;
 				case 'zh_CN'; $name = _('Simplified Chinese') . " (&#x7b80;&#x4f53;&#x4e2d;&#x6587;)"; break;
 				case 'ru_RU'; $name = 'Russian (&#x0420;&#x0443;&#x0441;&#x0441;&#x043a;&#x0438;&#x0439;)'; break;
 				default: $name = _('Unknown'); break;
