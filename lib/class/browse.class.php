@@ -59,24 +59,23 @@ class Browse {
 	 * a single point for whitelist tweaks etc
 	 */
 	public static function set_filter($key,$value) { 
-
 		switch ($key) { 
-                        case 'show_art':
+      case 'show_art':
 				if ($_SESSION['browse']['filter'][$key]) { 
 					unset($_SESSION['browse']['filter'][$key]);
 				} 
 				else { 
-	                                $_SESSION['browse']['filter'][$key] = 1;
+	        $_SESSION['browse']['filter'][$key] = 1;
 				}
-                        break;
-                        case 'min_count':
-                        case 'unplayed':
-                        case 'rated':
+      break;
+      case 'min_count':
+      case 'unplayed':
+      case 'rated':
 
 			break; 
 			case 'alpha_match':
-				if (self::$static_content) { return false; } 
-				if ($value == _('All')) { $value = ''; } 
+				if (self::$static_content) { return false; }
+				//if ($value == _('All')) { $value = ''; } 
 				$_SESSION['browse']['filter'][$key] = $value; 
 			break;
 			case 'playlist_type': 

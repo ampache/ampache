@@ -310,7 +310,7 @@ switch ($_REQUEST['action']) {
 	break;
 	// Used to change filter/settings on browse
 	case 'browse':
-		if ($_REQUEST['key'] && $_REQUEST['value']) { 
+		if ($_REQUEST['key'] && $_REQUEST['value']) {
 			// Set any new filters we've just added
 			Browse::set_filter($_REQUEST['key'],$_REQUEST['value']); 
 		} 

@@ -147,7 +147,8 @@ function show_alphabet_list () {
 		$style_name = "style_" . strtolower($l);
 		$class = "link";
 		if ($l==$selected) $class .=" active";
-		echo "<span class=\"" . $class . "\" onclick=\"ajaxPut('". Config::get('ajax_url') ."?page=browse&action=browse&amp;key=alpha_match&amp;value=$l');return true;\">" . 
+		$value = ($l==_('All'))?'':$l;
+		echo "<span class=\"" . $class . "\" onclick=\"ajaxPut('". Config::get('ajax_url') ."?page=browse&action=browse&amp;key=alpha_match&amp;value=$value');return true;\">" . 
 			$l . "</span>\n";
 	}
 	echo "</div>";
