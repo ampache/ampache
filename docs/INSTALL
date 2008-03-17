@@ -1,18 +1,15 @@
 -------------------------------------------------------------------------------
 -----------------        INSTALL - Ampache v.3.4         ----------------------
 -------------------------------------------------------------------------------
-
+								www.ampache.org
   I'm assuming that you have Apache, PHP and MySQL running when you
   get to this point.
 
-  If you're upgrading from 3.0 to 3.1 please refer to the MIGRATION Notes.
-  Your database can't be re-used, but fear not the Ampache guys thoughtfully 
-  included scripts to port the data from your old database to the new one.  
-  (They get an extra beer for that one)
+  Unpack ampache from the tarball and name it ampache.  Please insure that you 
+  place ampache in your web path.
 
-  If you're upgrading from 3.1 to a newer version refer to the MIGRATION Notes.
-  There should be an automated update script which will allow you to keep your
-  current database. 
+  If you are migrating from an older version of Ampache to a newer version of
+  Ampache please see the MIGRATION notes.
 
   If at any time during this install you can't figure out where you have gone
   wrong check out /test.php for help.
@@ -121,10 +118,10 @@
 	will work. 
 
 		web_path
-		local_host
-		local_db
-		local_username
-		local_pass
+		database_hostname
+		database_name
+		database_username
+		database_password
 
 	It is strongly recommended that you read through the entire Ampache config
 	file as there are many different options that you may want to change. By 
@@ -206,19 +203,35 @@
 	   Filename pattern
 	   Sort Pattern
 
-	When these fields are populated a periodic update may be performed by scheduling
-	the fileupdate.pl program to run at timed intervals.  This program will query the 
-	database and attempt to sort and rename your files based on the patterns you have
-	specified and the tag information in the database. 
+	When these fields are populated a periodic update may be performed by
+	scheduling the fileupdate.pl program to run at timed intervals.  This
+	program will query the database and attempt to sort and rename your
+	files based on the patterns you have specified and the tag information
+	in the database. 
 
       3.5  Updating Tags from flagged information
 
-	Ampache has a flagging system that allows users and admins to flag songs to be 
-	re-encoded or modify their meta-data inside the website. Jirwin created a 
-	command line script called write_tags.php.inc located in /bin that will attempt
-	to write out the tags as set, and approved in your Ampache database. This is a
-	*EXPERIMENTAL* feature and caution should be used as it may destroy your audio 
-	files
+	Ampache has a flagging system that allows users and admins to flag songs
+	to be re-encoded or modify their meta-data inside the website. Jirwin
+	created a command line script called write_tags.php.inc located in /bin
+	that will attempt to write out the tags as set, and approved in your
+	Ampache database. 
+
+      3.6  Ampache Wiki
+
+	Ampache.org has a wiki set up at http://trac.ampache.org/wiki/ which is
+	full of additional information.  Such as specific install instructions
+	for different OS's like Debian, Slackware, FreeBSD and Windows.  It
+	also explains how to use the additional features and options such as
+	downsampling and transcoding, Access Control Lists, Ampache and XML-RPC,
+	Ampache + Amarok, Localplay, Democratic Playback and much much more.
+	http://trac.ampache.org/wiki/
 	
+      3.7  Repositories
+
+	Ampache is now available in rpm, ebuild and deb formats, which covers
+	most of the major linux distro's so please check your distro's
+	repositories to see if Ampache is available.  This will ease the
+	installation even more.
 
 

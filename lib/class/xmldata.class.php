@@ -137,6 +137,8 @@ class xmlData {
 
 			$string .= "<artist id=\"$artist->id\">\n" . 
 					"\t<name><![CDATA[$artist->f_full_name]]></name>\n" .  
+					"\t<albums>$artist->albums</albums>\n" . 
+					"\t<songs>$artist->songs</songs>\n" . 
 					"</artist>\n"; 
 		} // end foreach artists
 
@@ -271,6 +273,8 @@ class xmlData {
 			$song = new Song($song_id); 
 			$song->format(); 
 
+			$art_url = Config::get('web_path') . '/image.php?id=' . $song->album . '&auth=' . scrub_out($_REQUEST['auth']);
+
 			$string .= "<song id=\"$song->id\">\n" . 
 					"\t<title><![CDATA[$song->title]]></title>\n" . 
 					"\t<artist id=\"$song->artist\"><![CDATA[$song->f_artist_full]]></artist>\n" . 
@@ -280,6 +284,7 @@ class xmlData {
 					"\t<time>$song->time</time>\n" . 
 					"\t<url><![CDATA[" . $song->get_url($_REQUEST['auth']) . "]]></url>\n" . 
 					"\t<size>$song->size</size>\n" . 
+					"\t<art><![CDATA[" . $art_url . "]]</art>\n" . 
 					"</song>\n"; 
 
 		} // end foreach
