@@ -48,11 +48,18 @@ if (!Config::get('access_control')) {
  * login via this interface so we do have an exception for action=login
  */
 
-
-if ((!vauth::session_exists('api', $_REQUEST['auth']) AND $_REQUEST['action'] != 'handshake') || !Access::check_network('init-api',$_SERVER['REMOTE_ADDR'],$_REQUEST['user'],'5')) { 
-	debug_event('Access Denied','Invalid Session or unathorized access attempt to API [' . $_REQUEST['action'] . ']', '5');
+if ((!vauth::session_exists('api', $_REQUEST['auth']) AND $_REQUEST['action'] != 'handshake')) { 
+	debug_event('Access Denied','Invalid Session attempt to API [' . $_REQUEST['action'] . ']','5'); 
 	ob_end_clean(); 
-        echo xmlData::error('Access Denied due to ACL or unauthorized access attempt to API, attempt logged');
+	echo xmlData::error('Session Expired');
+	exit(); 
+} 
+
+
+if (!Access::check_network('init-api',$_SERVER['REMOTE_ADDR'],$_REQUEST['user'],'5')) { 
+	debug_event('Access Denied','Unathorized access attempt to API [' . $_SERVER['REMOTE_ADDR'] . ']', '5');
+	ob_end_clean(); 
+        echo xmlData::error('ACL Error');
 	exit(); 
 }
 
