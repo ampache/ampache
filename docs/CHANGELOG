@@ -3,6 +3,12 @@
 --------------------------------------------------------------------------
 
 --------------------------------------------------------------------------
+  v.3.4-Beta3 
+	- Split out ACL and Session Expire errors on XML API 
+	- Made Alpha Match box on browse "find as you type" (Thx Spocky)
+	- Modified Shoutbox Styles (Thx Spocky)
+
+--------------------------------------------------------------------------
   v.3.4-Beta2 03/16/2008
 	- Added Cooldown Functionality to Democratic Play
 	- Added /bin/fix_filenames.inc for correcting filenames with
