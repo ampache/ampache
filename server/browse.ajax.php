@@ -29,16 +29,17 @@ switch ($_REQUEST['action']) {
 
 		$object_ids = array(); 
 
-      // Check 'value' with isset because it can null
-      //(user type a "start with" word and deletes it)
-      if ($_REQUEST['key'] && isset($_REQUEST['value'])) {
-        // Set any new filters we've just added
-			  Browse::set_filter($_REQUEST['key'],$_REQUEST['value']); 
-      }
-      if ($_REQUEST['sort']) {
-        // Set the new sort value
-        Browse::set_sort($_REQUEST['sort']);
-      }
+		// Check 'value' with isset because it can null
+		//(user type a "start with" word and deletes it)
+		if ($_REQUEST['key'] && isset($_REQUEST['multi_alpha_filter'])) {
+			// Set any new filters we've just added
+			Browse::set_filter($_REQUEST['key'],$_REQUEST['multi_alpha_filter']); 
+		}
+
+		if ($_REQUEST['sort']) {
+			// Set the new sort value
+			Browse::set_sort($_REQUEST['sort']);
+		}
 
 		// Refresh the browse div with our new filter options if we're not static
 		if (!Browse::$static_content) { 

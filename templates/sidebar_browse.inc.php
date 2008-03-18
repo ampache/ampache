@@ -42,9 +42,8 @@ $allowed_filters = Browse::get_allowed_filters();
   <li><h4><?php echo _('Filters'); ?></h4>
     <div class="sb3">
 	<?php if (in_array('alpha_match',$allowed_filters)) { ?>
-	<?php show_alphabet_list($_REQUEST['alpha_match'],$_REQUEST['action']); ?>
 	<form id="multi_alpha_filter_form" method="post" action="javascript:void(0);">
-		<input type="textbox" id="multi_alpha_filter" name="value" value="<?php echo scrub_out($_REQUEST['alpha_match']); ?>" onKeyUp="<?php echo Ajax::action('?page=browse&action=browse&key=alpha_match','multi_alpha_filter','multi_alpha_filter_form'); ?>">
+		<input type="textbox" id="multi_alpha_filter" name="multi_alpha_filter" value="<?php echo scrub_out($_REQUEST['alpha_match']); ?>" onKeyUp="DelayRun(this,'400','ajaxState','<?php echo Config::get('ajax_url'); ?>?page=browse&action=browse&key=alpha_match','multi_alpha_filter');">
 	 	<label id="multi_alpha_filterLabel" for="multi_alpha_filter"><?php echo _('Starts With'); ?></label>
 	</form>
 	<?php } // end if alpha_match ?>

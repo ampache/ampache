@@ -44,7 +44,41 @@ function ajaxPut(url,source) {
        	http_request.send(null);	
 }
 
+// uid is an array of uids that need to be replaced             
+function ajaxState(url,input) {
 
+        var data = document.getElementById(input).value
+
+        var post_data = input + '=' + encodeURI(data); 
+
+        var http_request = false;
+        if (window.XMLHttpRequest) { // Mozilla, Safari,...
+                http_request = new XMLHttpRequest();
+        } else if (window.ActiveXObject) { // IE
+                try {
+                        http_request = new ActiveXObject("Msxml2.XMLHTTP");
+                } catch (e) {
+                try {
+                        http_request = new ActiveXObject("Microsoft.XMLHTTP");
+                } catch (e) {}
+                }
+        }
+        if (!http_request) {
+                return false;
+        }
+        http_request.onreadystatechange = function() { getContents(http_request); };
+        http_request.open('POST', url, true);
+        http_request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        http_request.setRequestHeader("Content-length", post_data.length);
+        http_request.setRequestHeader("Connection", "close");
+        http_request.send(post_data);
+
+} // ajaxState
+
+
+///
+// getContents
+// This is the nitty gritty wait for a good xml document and then decode it
 function getContents(http_request) {
 	
 	// Display the loading doodly
