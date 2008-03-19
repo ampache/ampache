@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2007 Ampache.org
+ Copyright (c) 2001 - 2008 Ampache.org
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
@@ -163,6 +163,16 @@ class Dba {
 
 		$dbh = mysql_connect($hostname,$username,$password); 
 		if (!$dbh) { debug_event('Database','Error unable to connect to database' . mysql_error(),'1'); } 
+
+		if (function_exists('mysql_set_charset')) { 
+			$sql_charset = str_replace("-","",Config::get('site_charset'));
+			$charset = mysql_set_charset($sql_charset,$dbh); 
+		} 
+		else { 
+			$sql = "SET NAMES " . mysql_real_escape_string(str_replace("-","",Config::get('site_charset'))); 
+			$charset = mysql_query($sql,$dbh); 
+		}
+		if (!$charset) { debug_event('Database','Error unable to set connection charset, function missing or set failed','1'); }  
 
 		$select_db = mysql_select_db($database,$dbh); 
 		if (!$select_db) { debug_event('Database','Error unable to select ' . $database . ' error ' . mysql_error(),'1'); } 
