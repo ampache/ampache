@@ -70,9 +70,10 @@ class xmlData {
 	 * This generates a standard XML Error message
 	 * nothing fancy here...
 	 */
-	public static function error($string) { 
+	public static function error($code,$string) { 
 
-		$string = self::_header() . "\t<error><![CDATA[$string]]></error>" . self::_footer(); 
+		
+		$string = self::_header() . "\t<error code=\"$code\"><![CDATA[$string]]></error>" . self::_footer(); 
 		return $string; 
 
 	} // error

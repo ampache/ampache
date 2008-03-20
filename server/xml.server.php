@@ -39,7 +39,7 @@ header("Content-Disposition: attachment; filename=information.xml");
 // If we don't even have access control on then we can't use this!
 if (!Config::get('access_control')) { 
 	ob_end_clean(); 
-	echo xmlData::error('Access Control not Enabled');
+	echo xmlData::error('501','Access Control not Enabled');
 	exit; 
 }  
 
@@ -47,19 +47,17 @@ if (!Config::get('access_control')) {
  * Verify the existance of the Session they passed in we do allow them to
  * login via this interface so we do have an exception for action=login
  */
+if (!Access::check_network('init-api',$_SERVER['REMOTE_ADDR'],$_REQUEST['user'],'5')) { 
+	debug_event('Access Denied','Unathorized access attempt to API [' . $_SERVER['REMOTE_ADDR'] . ']', '5');
+	ob_end_clean(); 
+        echo xmlData::error('403','ACL Error');
+	exit(); 
+}
 
 if ((!vauth::session_exists('api', $_REQUEST['auth']) AND $_REQUEST['action'] != 'handshake')) { 
 	debug_event('Access Denied','Invalid Session attempt to API [' . $_REQUEST['action'] . ']','5'); 
 	ob_end_clean(); 
-	echo xmlData::error('Session Expired');
-	exit(); 
-} 
-
-
-if (!Access::check_network('init-api',$_SERVER['REMOTE_ADDR'],$_REQUEST['user'],'5')) { 
-	debug_event('Access Denied','Unathorized access attempt to API [' . $_SERVER['REMOTE_ADDR'] . ']', '5');
-	ob_end_clean(); 
-        echo xmlData::error('ACL Error');
+	echo xmlData::error('401','Session Expired');
 	exit(); 
 }
 
@@ -77,7 +75,7 @@ switch ($_REQUEST['action']) {
 		
 		if (!$token) { 
 			ob_end_clean(); 
-			echo xmlData::error('Error Invalid Handshake, attempt logged'); 
+			echo xmlData::error('401','Error Invalid Handshake, attempt logged'); 
 		} 
 		else { 
 			ob_end_clean(); 
@@ -273,7 +271,7 @@ switch ($_REQUEST['action']) {
 	break; 
 	default:
                 ob_end_clean();
-                echo xmlData::error('Invalid Request');
+                echo xmlData::error('405','Invalid Request');
 	break;
 } // end switch action
 ?>
