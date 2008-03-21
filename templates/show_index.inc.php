@@ -40,7 +40,7 @@
 <!-- Recently Played -->
 <div id="recently_played">
         <?php
-                $data = get_recently_played();
+                $data = Song::get_recently_played();
 		show_box_top(_('Recently Played')); 
                 if (count($data)) { require_once Config::get('prefix') . '/templates/show_recently_played.inc.php'; }
 		show_box_bottom(); 

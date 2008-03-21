@@ -119,7 +119,6 @@ define('INIT_LOADED','1');
 // Library and module includes we can't do with the autoloader
 require_once $prefix . '/lib/album.lib.php';
 require_once $prefix . '/lib/artist.lib.php';
-require_once $prefix . '/lib/song.php';
 require_once $prefix . '/lib/search.php';
 require_once $prefix . '/lib/preferences.php';
 require_once $prefix . '/lib/rss.php';
@@ -132,7 +131,6 @@ require_once $prefix . '/lib/stream.lib.php';
 require_once $prefix . '/lib/xmlrpc.php';
 require_once $prefix . '/lib/class/localplay.abstract.php';
 require_once $prefix . '/modules/xmlrpc/xmlrpc.inc';
-require_once $prefix . '/modules/catalog.php';
 require_once $prefix . '/modules/getid3/getid3.php';
 require_once $prefix . '/modules/infotools/Snoopy.class.php';
 require_once $prefix . '/modules/infotools/AmazonSearchEngine.class.php';

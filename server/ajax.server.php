@@ -289,7 +289,7 @@ switch ($_REQUEST['action']) {
 		show_now_playing();	
 		$results['now_playing'] = ob_get_contents();
 		ob_clean();
-		$data = get_recently_played(); 
+		$data = Song::get_recently_played(); 
 		if (count($data)) { 
 			show_box_top(_('Recently Played')); 
 			require_once Config::get('prefix') . '/templates/show_recently_played.inc.php'; 

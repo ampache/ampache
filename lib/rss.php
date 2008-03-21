@@ -178,7 +178,7 @@ switch ($type) {
     case "recentlyplayed":
 
 	$time_unit = array('',_('seconds ago'),_('minutes ago'),_('hours ago'),_('days ago'),_('weeks ago'),_('months ago'),_('years ago'));
-	$recent = get_recently_played();
+	$recent = Song::get_recently_played();
 
         echo " <channel>\n  <title>$rss_recentlyplayed_title</title>\n";
         echo "  <link>$web_path</link>\n  <description>$rss_main_description</description>\n";

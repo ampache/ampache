@@ -831,7 +831,7 @@ class Song {
 	 * a stream URL taking into account the downsampling mojo and everything
 	 * else, this is used or will be used by _EVERYTHING_ 
 	 */
-	function get_url($session_id='',$force_http='') { 
+	public function get_url($session_id='',$force_http='') { 
 
 		/* Define Variables we are going to need */
 		$user_id 	= $GLOBALS['user']->id ? scrub_out($GLOBALS['user']->id) : '-1'; 
@@ -871,6 +871,38 @@ class Song {
 		return $url;
 
 	} // get_url
+
+	/**
+	 * get_recently_played
+	 * This function returns the last X songs that have been played
+	 * it uses the popular threshold to figure out how many to pull
+	 * it will only return unique object
+	 */
+	public static function get_recently_played($user_id='') { 
+
+		if ($user_id) { 
+			$user_limit = " AND `object_count`.`user`='" . Dba::escape($user_id) . "'"; 
+		} 
+
+
+		$sql = "SELECT `object_count`.`object_id`,`object_count`.`user`,`object_count`.`object_type`, " . 
+			"`object_count`.`date` " . 
+			"FROM `object_count` " . 
+			"WHERE `object_type`='song'$userlimit " . 
+			"GROUP BY `object_count`.`object_id` " . 
+			"ORDER BY `object_count`.`date` DESC " . 
+			"LIMIT " . intval(Config::get('popular_threshold')); 
+		$db_results = Dba::query($sql); 
+
+		$results = array(); 
+		
+		while ($row = Dba::fetch_assoc($db_results)) { 
+			$results[] = $row; 
+		} 
+
+		return $results; 
+
+	} // get_recently_played
 
 	/**
 	 * native_stream

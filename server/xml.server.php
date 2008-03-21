@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2008 Ampache.org
+ Copyright (c) Ampache.org
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
@@ -174,6 +174,11 @@ switch ($_REQUEST['action']) {
 		ob_end_clean(); 
 		echo xmlData::genres($genres); 
 	break; 
+	case 'genre': 
+		$uid = scrub_in($_REQUEST['filter']); 
+		ob_end_clean();
+		echo xmlData::genres(array($uid)); 
+	break; 
 	case 'genre_artists': 
 		$genre = new Genre($_REQUEST['filter']); 
 		$artists = $genre->get_artists(); 
@@ -243,6 +248,12 @@ switch ($_REQUEST['action']) {
 
 		ob_end_clean(); 
 		echo xmlData::playlists($playlist_ids);
+	break; 
+	case 'playlist': 
+		$uid = scrub_in($_REQUEST['filter']); 
+
+		ob_end_clean(); 
+		echo xmlData::playlists(array($uid)); 
 	break; 
 	case 'playlist_songs': 
 		$playlist = new Playlist($_REQUEST['filter']); 

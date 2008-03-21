@@ -66,7 +66,7 @@ $client->format();
 	<td>
 	<?php 
 		echo "<h2>" . _('Recently Played') . "</h2>\n"; 
-		$data = get_recently_played($client->id); 
+		$data = Song::get_recently_played($client->id); 
 		require Config::get('prefix') . '/templates/show_recently_played.inc.php'; 
 	?>
 	</td>

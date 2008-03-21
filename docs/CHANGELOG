@@ -4,6 +4,11 @@
 
 --------------------------------------------------------------------------
   v.3.4-Beta3 
+	- Fixed recently played, only shows distinct songs
+	- Fixed enabling of localplay modules, now correctly enables
+		localplay for the activating user
+	- Added single genre and playlist XML methods
+	- Changed erorr message on XML api, now based of HTTP error codes
 	- Split out ACL and Session Expire errors on XML API 
 	- Made Alpha Match box on browse "find as you type" (Thx Spocky)
 	- Modified Shoutbox Styles (Thx Spocky)
