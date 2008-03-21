@@ -4,6 +4,8 @@
 
 --------------------------------------------------------------------------
   v.3.4-Beta3 
+	- Fixed issue where verify updated all songs in the catalog even
+		if there was no change
 	- Fixed recently played, only shows distinct songs
 	- Fixed enabling of localplay modules, now correctly enables
 		localplay for the activating user

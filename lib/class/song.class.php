@@ -336,6 +336,7 @@ class Song {
 
 		// Foreach them
 		foreach ($fields as $key=>$value) { 
+			if ($key == 'id') { continue; } 
 			// If it's a stringie thing
 			if (in_array($key,$string_array)) { 
 				if (trim(stripslashes($song->$key)) != trim(stripslashes($new_song->$key))) { 
