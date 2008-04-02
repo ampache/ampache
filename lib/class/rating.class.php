@@ -32,6 +32,7 @@ class Rating {
 
 	/* Generated vars */
 	var $rating;	// The average rating as set by all users
+	var $preciserating;  // Rating rounded to 1 decimal
 
 	/**
 	 * Constructor
@@ -46,6 +47,7 @@ class Rating {
 		// Check for the users rating
 		if ($rating == $this->get_user($GLOBALS['user']->id)) { 
 			$this->rating = $rating;
+			$this->preciserating = $rating;
 		} 
 		else { 
 			$this->get_average();
@@ -93,17 +95,19 @@ class Rating {
 		} // while we're pulling results
 
 		if ($total > 0) { 
-			$average = floor($total/$i);
-			$this->rating = $average;
+			$average = round($total/$i, 1);
 		}
 		elseif ($i >= '1' AND $total == '0') { 
-			$this->rating = '-1';
+			$average = -1;
 		}
 		else { 
-			$this->rating = '0';
+			$average = 0;
 		}
 		
-		return $average;
+		$this->preciserating = $average;
+		$this->rating = floor($average);
+		
+		return $this->rating;
 
 	} // get_average
 

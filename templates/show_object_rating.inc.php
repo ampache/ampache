@@ -27,7 +27,7 @@ $base_url = '?action=set_rating&rating_type=' . $rating->type . '&object_id=' . 
   <ul>
     <?php
     // decide width of rating (5 stars -> 20% per star)
-    $width = $rating->rating*20;
+    $width = $rating->preciserating*20;
     if ($width < 0) $width = 0;
     
     //set the current rating background 
@@ -35,7 +35,7 @@ $base_url = '?action=set_rating&rating_type=' . $rating->type . '&object_id=' . 
     if ($rating->rating <= 0) {
     	echo "not rated yet </li>\n";
     }
-    else echo "$rating->rating of 5</li>\n";
+    else echo "$rating->preciserating of 5</li>\n";
     
     for ($i=1; $i<6; $i++)
     {
