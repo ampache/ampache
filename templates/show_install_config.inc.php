@@ -48,7 +48,7 @@ if (INSTALL != '1') { exit; }
 		<?php echo _("Step 1 - Creating and Inserting the Ampache Database"); ?><br />
 		<b><?php echo _("Step 2 - Creating the Ampache.cfg.php file"); ?></b><br />
 		<dl>
-		<dd><?php echo _("This steps takes the basic config values, and first attempts to write them out directly to your webserver. If access is denied it will prompt you to download the config file. Please put the downloaded config file in /config"); ?></dd>
+		<dd><?php echo _("This steps takes the basic config values and generates the config file. It will prompt you to download the config file. Please put the downloaded config file in /config"); ?></dd>
 		</dl>
 		<?php echo _("Step 3 - Setup Initial Account"); ?><br />
 		<?php Error::display('general'); ?>

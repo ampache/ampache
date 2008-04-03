@@ -106,6 +106,11 @@ function install_insert_db($username,$password,$hostname,$database) {
 		return false; 
 	} 
 
+	if (!strlen($data['database_password'])) { 
+		Error::add('general','Error: Password required for Database creation'); 
+		return false; 
+	} 
+
 	$data['database_username'] = $username; 
 	$data['database_password'] = $password; 
 	$data['database_hostname'] = $hostname; 
