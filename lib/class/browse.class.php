@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2007 Ampache.org
+ Copyright (c) Ampache.org
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
@@ -30,8 +30,9 @@ class Browse {
 
 	// Public static vars that are cached
 	public static $sql; 
-	public static $start = '0'; 
+	public static $start;
 	public static $total_objects; 
+	public static $type; 
 
 	// Boolean if this is a simple browse method (use different paging code)
 	public static $simple_browse; 
@@ -39,6 +40,7 @@ class Browse {
 	// Static Content, this is defaulted to false, if set to true then wen can't
 	// apply any filters that would change the result set. 
 	public static $static_content = false; 
+
 
 	/**
 	 * constructor
@@ -59,18 +61,19 @@ class Browse {
 	 * a single point for whitelist tweaks etc
 	 */
 	public static function set_filter($key,$value) { 
+
 		switch ($key) { 
-      case 'show_art':
+			case 'show_art':
 				if ($_SESSION['browse']['filter'][$key]) { 
 					unset($_SESSION['browse']['filter'][$key]);
 				} 
 				else { 
-	        $_SESSION['browse']['filter'][$key] = 1;
+				        $_SESSION['browse']['filter'][$key] = 1; 
 				}
-      break;
-      case 'min_count':
-      case 'unplayed':
-      case 'rated':
+			break;
+			case 'min_count':
+			case 'unplayed':
+			case 'rated':
 
 			break; 
 			case 'alpha_match':
@@ -180,7 +183,17 @@ class Browse {
 			case 'genre':
 			case 'shoutbox': 
 			case 'live_stream':
+				// Reset the start if they go to a different type
+				if ($type != $_SESSION['browse']['type']) { 
+					self::set_start('0'); 
+				} 
+				else { 
+					self::load_start(); 
+				} 
+
 				$_SESSION['browse']['type'] = $type;
+				
+
 				// Resets the simple browse
 				self::set_simple_browse(0); 
 				self::set_static_content(0);
@@ -256,10 +269,13 @@ class Browse {
 	/**
 	 * set_start
 	 * This sets the start point for our show functions
+	 * We need to store this in the session so that it can be pulled
+	 * back, if they hit the back button
 	 */
 	public static function set_start($start) { 
 
-		self::$start = intval($start); 
+		$_SESSION['browse'][self::$type]['start'] = intval($start); 
+		self::$start = $_SESSION['browse'][self::$type]['start']; 
 
 	} // set_start
 
@@ -291,6 +307,16 @@ class Browse {
 		$_SESSION['browse']['static'] = $value; 
 
 	} // set_static_content
+
+	/**
+	 * load_start
+	 * This returns a stored start point for the browse mojo
+	 */
+	public static function load_start() { 
+
+		self::$start = intval($_SESSION['browse'][self::$type]['start']); 
+
+	} // end load_start
 
 	/**
 	 * get_saved
@@ -837,6 +863,8 @@ class Browse {
 
 		self::$simple_browse = make_bool($_SESSION['browse']['simple']); 
 		self::$static_content = make_bool($_SESSION['browse']['static']); 
+		self::$type = $_SESSION['browse']['type']; 
+		self::$start = intval($_SESISON['browse'][self::$type]['start']); 
 
 	} // _auto_init
 

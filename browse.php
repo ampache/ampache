@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2007 Ampache.org
+ Copyright (c) Ampache.org
  All Rights Reserved
 
  This program is free software; you can redistribute it and/or
@@ -25,9 +25,6 @@
  * This page shows the browse menu, which allows you to browse by many different
  * fields including genre, artist, album, catalog, ??? 
  * this page also handles the actuall browse action
- * @package Web Interface
- * @catagory Browse
- * @author Karl Vollmer 06/24/05
  *
  */
 
