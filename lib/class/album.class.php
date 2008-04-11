@@ -209,7 +209,7 @@ class Album {
 		foreach ($data as $key=>$value) { $this->$key = $value; } 
 		
 		/* Truncate the string if it's to long */
-	  	$this->f_name		= truncate_with_ellipsis($this->full_name,Config::get('ellipsis_threshold_album'));
+	  	$this->f_name		= truncate_with_ellipsis($this->full_name,Config::get('ellipse_threshold_album'));
 
 		$this->f_name_link	= "<a href=\"$web_path/albums.php?action=show&amp;album=" . scrub_out($this->id) . "\" title=\"" . scrub_out($this->full_name) . "\">" . $this->f_name;
 		// If we've got a disk append it
@@ -221,7 +221,7 @@ class Album {
 		$this->f_link 		= $this->f_name_link; 
 		$this->f_title		= $full_name; 
 		if ($this->artist_count == '1') { 
-			$artist = scrub_out(truncate_with_ellipsis(trim($this->artist_prefix . ' ' . $this->artist_name),Config::get('ellipsis_threshold_artist')));
+			$artist = scrub_out(truncate_with_ellipsis(trim($this->artist_prefix . ' ' . $this->artist_name),Config::get('ellipse_threshold_artist')));
 		        $this->f_artist_link = "<a href=\"$web_path/artists.php?action=show&amp;artist=" . $this->artist_id . "\" title=\"" . scrub_out($this->artist_name) . "\">" . $artist . "</a>";
 			$this->f_artist = $artist; 
 		}
