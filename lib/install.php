@@ -99,7 +99,7 @@ function install_check_status($configfile) {
 function install_insert_db($username,$password,$hostname,$database) {
 
 	// Make sure that the database name is valid
-	$is_valid = preg_match("/([^\d\w\_])/",$database,$matches); 
+	$is_valid = preg_match("/([^\d\w\_\-])/",$database,$matches); 
 
 	if (count($matches)) { 
 		Error::add('general','Error: Database name invalid must not be a reserved word, and must be Alphanumeric'); 

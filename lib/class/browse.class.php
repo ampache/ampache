@@ -183,14 +183,11 @@ class Browse {
 			case 'genre':
 			case 'shoutbox': 
 			case 'live_stream':
-				// Reset the start if they go to a different type
-				if ($type != $_SESSION['browse']['type']) { 
-					self::set_start('0'); 
-				} 
-				else { 
-					self::load_start(); 
-				} 
+				// Set it
+				self::$type = $type; 
+				self::load_start(); 
 
+				// Save it in the session 
 				$_SESSION['browse']['type'] = $type;
 				
 
@@ -274,8 +271,10 @@ class Browse {
 	 */
 	public static function set_start($start) { 
 
-		$_SESSION['browse'][self::$type]['start'] = intval($start); 
-		self::$start = $_SESSION['browse'][self::$type]['start']; 
+		if (!self::$static_content) { 
+			$_SESSION['browse'][self::$type]['start'] = intval($start); 
+		} 
+		self::$start = intval($start);  
 
 	} // set_start
 
@@ -303,6 +302,11 @@ class Browse {
 
 		$value = make_bool($value); 
 		self::$static_content = $value; 
+
+		// We want to start at 0 it's static
+		if ($value) { 
+			self::set_start('0'); 
+		} 
 
 		$_SESSION['browse']['static'] = $value; 
 

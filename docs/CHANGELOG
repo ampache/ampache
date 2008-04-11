@@ -4,6 +4,8 @@
 
 --------------------------------------------------------------------------
   v.3.4-Beta3 
+	- Fixed page point not being remembered by the back button
+	- Fixed naming restrictions on database name during install
 	- Fixed issue where verify updated all songs in the catalog even
 		if there was no change
 	- Fixed recently played, only shows distinct songs
