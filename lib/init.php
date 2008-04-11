@@ -25,7 +25,7 @@
 
 // Use output buffering, this gains us a few things and 
 // fixes some CSS issues
-ob_start('ob_gzhandler');
+ob_start();
 
 // Do a check for PHP5 because nothing will work without it
 if (strcmp('5.0.0',phpversion()) > 0) {
