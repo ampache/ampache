@@ -410,7 +410,7 @@ class Update {
 			$user_id	= $user_array[$username]; 
 			$username	= Dba::escape($username); 
 
-			$sql = "UPDATE `access_list` SET `user`='$user_id' WERE `user`='$username'"; 
+			$sql = "UPDATE `access_list` SET `user`='$user_id' WHERE `user`='$username'"; 
 			$update_results = Dba::query($sql); 
 
 		} // end while access_list
