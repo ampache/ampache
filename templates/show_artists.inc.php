@@ -28,6 +28,7 @@ $web_path = Config::get('web_path');
   <col id="col_artist" />
   <col id="col_songs" />
   <col id="col_albums" />
+  <col id="col_rating" />
   <col id="col_action" />
 </colgroup>
 <tr class="th-top">
@@ -35,6 +36,7 @@ $web_path = Config::get('web_path');
 	<th class="cel_artist"><?php echo Ajax::text('?page=browse&action=set_sort&sort=name',_('Artist'),'artist_sort_name'); ?></th>
 	<th class="cel_songs"> <?php echo _('Songs');  ?> </th>
 	<th class="cel_albums"> <?php echo _('Albums'); ?> </th>
+	<th class="cel_rating"> <?php echo _('Rating'); ?> </th>
 	<th class="cel_action"> <?php echo _('Action'); ?> </th>
 </tr>
 <?php 
@@ -57,6 +59,7 @@ foreach ($object_ids as $artist_id) {
 	<th class="cel_artist"><?php echo Ajax::text('?page=browse&action=set_sort&sort=name',_('Artist'),'artist_sort_name_bottom'); ?></th>
 	<th class="cel_songs"> <?php echo _('Songs');  ?> </th>
 	<th class="cel_albums"> <?php echo _('Albums'); ?> </th>
+	<th class="cel_rating"> <?php echo _('Rating'); ?> </th>
 	<th class="cel_action"> <?php echo _('Action'); ?> </th>
 </tr>
 </table>

@@ -26,6 +26,7 @@
 <td class="cel_artist"><?php echo $artist->f_name_link; ?></td>
 <td class="cel_songs"><?php echo $artist->songs; ?></td>
 <td class="cel_albums"><?php echo $artist->albums; ?></td>
+<td class="cel_rating" id="rating_<?php echo $artist->id; ?>_artist"><?php Rating::show($artist->id,'artist'); ?></td>
 <td class="cel_action">
 <?php if (Access::check_function('batch_download')) { ?>
 	<a href="<?php echo Config::get('web_path'); ?>/batch.php?action=artist&amp;id=<?php echo $artist->id; ?>">

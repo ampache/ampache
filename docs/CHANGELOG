@@ -4,6 +4,7 @@
 
 --------------------------------------------------------------------------
   v.3.4-Beta3 
+	- Added Ratings links to Browse Albums and Browse Artist
 	- Fixed seeking on random track, giving you a new track every	
 		seek 
 	- Added additional error reporting if localplay access / config

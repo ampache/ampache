@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2007 Ampache.org
+ Copyright (c) Ampache.org
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
@@ -32,6 +32,7 @@ $ajax_url = Config::get('ajax_url');
   <col id="col_artist" />
   <col id="col_songs" />
   <col id="col_year" />
+  <col id="col_rating" />
   <col id="col_action" />
 </colgroup>
 <tr class="th-top">
@@ -43,6 +44,7 @@ $ajax_url = Config::get('ajax_url');
 	<th class="cel_artist"><?php echo _('Artist'); ?></th>
 	<th class="cel_songs"><?php echo _('Songs'); ?></th>
 	<th class="cel_year"><?php echo Ajax::text('?page=browse&action=set_sort&sort=year',_('Year'),'album_sort_year'); ?></th>
+	<th class="col_rating"><?php echo _('Rating'); ?></th>
 	<th class="cel_action"><?php echo _('Actions'); ?></th>
 </tr>
 <?php 
@@ -69,6 +71,7 @@ $ajax_url = Config::get('ajax_url');
 	<th class="cel_artist"><?php echo _('Artist'); ?></th>
 	<th class="cel_songs"><?php echo _('Songs'); ?></th>
 	<th class="cel_year"><?php echo Ajax::text('?page=browse&action=set_sort&sort=year',_('Year'),'album_sort_year_bottom'); ?></th>
+	<th class="col_rating"><?php echo _('Rating'); ?></th>
 	<th class="cel_action"><?php echo _('Actions'); ?></th>
 </tr>
 </table>
