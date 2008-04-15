@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2008 Ampache.org
+ Copyright (c) Ampache.org
  All rights reserved.  
 
  This program is free software; you can redistribute it and/or
@@ -34,16 +34,25 @@ ob_end_clean();
 $uid 		= scrub_in($_REQUEST['uid']);
 $song_id 	= scrub_in($_REQUEST['song']);
 $sid 		= scrub_in($_REQUEST['sid']);
+$xml_rpc	= scrub_in($_REQUEST['xml_rpc']); 
 
 /* This is specifically for tmp playlist requests */
 $demo_id	= scrub_in($_REQUEST['demo_id']);
 $random		= scrub_in($_REQUEST['random']); 
+
+// Parse byte range request
+$n = sscanf($_SERVER['HTTP_RANGE'], "bytes=%d-%d",$start,$end);
 
 /* First things first, if we don't have a uid/song_id stop here */
 if (empty($song_id) && empty($demo_id) && empty($random)) { 
 	debug_event('no_song',"Error: No Song UID Specified, nothing to play",'2');
 	exit; 
 }
+
+// If we're XML-RPC and it's enabled, use system user
+if (isset($xml_rpc) AND Config::get('xml_rpc') AND !isset($uid)) { 
+	$uid = '-1'; 
+} 
 
 if (!isset($uid)) { 
 	debug_event('no_user','Error: No User specified','2'); 
@@ -77,7 +86,7 @@ if (Config::get('require_session')) {
 $user->update_last_seen();
 
 /* If we are in demo mode.. die here */
-if (Config::get('demo_mode') || !Access::check('interface','25')) {
+if (Config::get('demo_mode') || (!Access::check('interface','25') AND !isset($xml_rpc))) {
 	debug_event('access_denied',"Streaming Access Denied:" .Config::get('demo_mode') . "is the value of demo_mode. Current user level is " . $GLOBALS['user']->access,'3');
 	access_denied();
 	exit; 
@@ -127,8 +136,15 @@ if ($demo_id) {
  * if we are doing random let's pull the random object
  */
 if ($random) { 
-	$song_id = Random::get_single_song($_REQUEST['type']); 
-} 
+	if (!isset($start)) { 
+		$song_id = Random::get_single_song($_REQUEST['type']); 
+		// Save this one incase we do a seek
+		$_SESSION['random']['last'] = $song_id; 
+	} 
+	else { 
+		$song_id = $_SESSION['random']['last']; 
+	} 
+} // if random 
 
 /* Base Checks passed create the song object */
 $song = new Song($song_id);
@@ -166,24 +182,24 @@ if (Config::get('lock_songs')) {
 
 /* Check to see if this is a 'remote' catalog */
 if ($catalog->catalog_type == 'remote') {
-	// redirect to the remote host's play path
-	/* Break Up the Web Path */
-	preg_match("/http:\/\/([^\/]+)\/*(.*)/", Config::get('web_path'), $match);
-	$server = rawurlencode($match[1]);
-	$path	= rawurlencode($match[2]);
-	$port 	= $_SERVER['SERVER_PORT'];
-	$ssl	= ($_SERVER['HTTPS'] == 'on') ? '1' : '0'; 
-	$catalog = $catalog->id;
 
-	//Fixme: We should do a handshake here so we can pass a valid SID
-	
-	$extra_info = "&xml_rpc=1&xml_path=$path&xml_server=$server&xml_port=$port&ssl=$ssl&catalog=$catalog&sid=$sid";
+	preg_match("/(.+)\/play\/index.+/",$song->file,$match); 
+
+	$token = xmlRpcClient::ampache_handshake($match['1'],$catalog->key); 
+
+	// If we don't get anything back we failed and should bail now
+	if (!$token) { 
+		debug_event('xmlrpc-stream','Error Unable to get Token from ' . $match['1'] . ' check target servers logs','1'); 
+		exit; 
+	} 
+
+	$sid   = xmlRpcClient::ampache_create_stream_session($match['1'],$token); 
+
+	$extra_info = "&xml_rpc=1&sid=$sid";
 	header("Location: " . $song->file . $extra_info);
 	debug_event('xmlrpc-stream',"Start XML-RPC Stream - " . $song->file . $extra_info,'5');
 	exit;
 } // end if remote catalog
-
-
 
 // make fread binary safe
 set_magic_quotes_runtime(0);
@@ -238,10 +254,6 @@ if ($_GET['action'] == 'download' AND Config::get('download')) {
 	exit(); 
 
 } // if they are trying to download and they can
-
-	
-// Parse byte range request
-$n = sscanf($_SERVER['HTTP_RANGE'], "bytes=%d-%d",$start,$end);
 
 // Generate browser class for sending headers
 $browser = new Browser();

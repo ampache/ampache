@@ -238,7 +238,7 @@ class Access {
 		switch ($type) { 
 			case 'localplay': 
 				// Check their localplay_level 
-				if (Config::get('localplay_level') >= $level) { 
+				if (Config::get('localplay_level') >= $level OR $GLOBALS['user']->access >= '100') { 
 					return true; 
 				} 
 				else { 

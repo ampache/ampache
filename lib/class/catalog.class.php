@@ -1211,45 +1211,27 @@ class Catalog {
 			return false;
 		} // end check for class
 
-	        // first, glean out the information from the path about the server and remote path
-		// this can't contain the http
-	        preg_match("/http:\/\/([^\/]+)\/*(.*)/", $this->path, $match);
-	        $server = $match[1];
-	        $path   = $match[2];
-	
-	        if ( ! $path ) {
-	                $client = new xmlrpc_client("/server/xmlrpc.server.php", $server, 80);
-	        }
-	        else {
-	                $client = new xmlrpc_client("/$path/server/xmlrpc.server.php", $server, 80);
-	        }
+		// Handshake and get our token for this little conversation
+		$token = xmlRpcClient::ampache_handshake($this->path,$this->key); 
 
-		// 6 that's right, the secret level because if you do have debug on most likely you're 
-		// going to just crash your browser... sorry folks
-	        if (Config::get('debug') AND Config::get('debug_level') == '6') { $client->setDebug(1); }
-
-		// Before we do anything else we need to do a handshake with the remote server
-		$timestamp 	= time(); 
-		$handshake_key	= md5($timestamp . $this->key);
-
-		$encoded_key	= new xmlrpcval($handshake_key,"string"); 
-		$timestamp	= new xmlrpcval($timestamp,"int");
-		$xmlrpc_message = new xmlrpcmsg('xmlrpcserver.handshake',array($encoded_key,$timestamp));
-
-		// Send it off
-		$response = $client->send($xmlrpc_message,10); 
-		if ($response->faultCode()) { 
-			$error_msg = _("Error connecting to") . " " . $server . " " . _("Code") . ": " . $response->faultCode() . " " . _("Reason") . ": " . $response->faultString();
-			debug_event('XMLCLIENT',$error_msg,'1');
-			echo "<p class=\"error\">$error_msg</p>";
+		if (!$token) { 
+			debug_event('XMLCLIENT','Error No Token returned'); 
+			Error::display('general'); 
 			return;
 		} 
-			
-		$token = php_xmlrpc_decode($response->value()); 
-	        
+
+                // Figure out the host etc
+                preg_match("/http:\/\/([^\/\:]+):?(\d*)\/*(.*)/", $this->path, $match);
+                $server = $match['1'];
+                $port   = $match['2'] ? intval($match['2']) : '80';
+                $path   = $match['3'];
+
+                $full_url = ltrim("/$path/server/xmlrpc.server.php",'/');
+                $client = new xmlrpc_client($full_url,$server,$port);
+
 		/* encode the variables we need to send over */
-		$encoded_key	= new xmlrpcval($token,"string");
-		$encoded_path	= new xmlrpcval(Config::get('web_path'),"string");
+		$encoded_key	= new xmlrpcval($token,'string');
+		$encoded_path	= new xmlrpcval(Config::get('web_path'),'string');
 		
 		$xmlrpc_message = new xmlrpcmsg('xmlrpcserver.get_catalogs', array($encoded_key,$encoded_path));
 	        $response = $client->send($xmlrpc_message,30);
@@ -1287,6 +1269,9 @@ class Catalog {
 	        echo "<p>" . _('Completed updating remote catalog(s)') . ".</p><hr />\n";
 		flush();
 
+		// Update the last update value
+		$this->update_last_update();
+
 		return true;
 
 	} // get_remote_catalog
@@ -1298,9 +1283,9 @@ class Catalog {
 	 */
 	public function get_remote_song($client,$token,$start,$end) { 
 
-		$encoded_start 	= new xmlrpcval($start,"int");
-		$encoded_end	= new xmlrpcval($end,"int");
-		$encoded_key	= new xmlrpcval($token,"string");
+		$encoded_start 	= new xmlrpcval($start,'int');
+		$encoded_end	= new xmlrpcval($end,'int');
+		$encoded_key	= new xmlrpcval($token,'string');
 
 		$query_array = array($encoded_key,$encoded_start,$encoded_end); 
 
@@ -1329,14 +1314,11 @@ class Catalog {
 
 	} // get_remote_song
 
-
 	/**
 	 * update_remote_catalog
 	 * actually updates from the remote data, takes an array of songs that are base64 encoded and parses them
 	 * @package XMLRPC
 	 * @catagory Client
-	 * @todo This should be based off of seralize
-	 * @todo some kind of cleanup of dead songs? 
 	 */
 	function update_remote_catalog($data,$root_path) {
 
@@ -1353,8 +1335,11 @@ class Catalog {
 			$song->artist	= self::check_artist($song->artist); 
 			$song->album	= self::check_album($song->album,$song->year); 
 			$song->genre	= self::check_genre($song->genre); 
-			$song->file	= $root_path . "/play/index.php?song=" . $data[12];
+			$song->file	= $root_path . "/play/index.php?song=" . $song->id;
 			$song->catalog	= $this->id;
+
+			// Clear out the song id
+			unset($song->id); 
 	     
 			if (!$this->check_remote_song($song->file)) { 
 				$this->insert_remote_song($song);
@@ -2157,8 +2142,6 @@ class Catalog {
 	return false;
 
 	} //check_local_mp3
-
-	
 
 	/*!
 		@function import_m3u

@@ -4,6 +4,11 @@
 
 --------------------------------------------------------------------------
   v.3.4-Beta3 
+	- Fixed seeking on random track, giving you a new track every	
+		seek 
+	- Added additional error reporting if localplay access / config
+		fails
+	- Give Admins Full Localplay Regardless
 	- Fixed incorrect reference to ellipsis thresholds 
 	- Fixed page point not being remembered by the back button
 	- Fixed naming restrictions on database name during install

@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2007 Ampache.org
+ Copyright (c) Ampache.org
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
@@ -21,7 +21,7 @@
 ?>
 
 <ul class="sb2" id="sb_localplay">
-<?php if (Config::get('allow_localplay_playback') AND Config::get('localplay_controller') AND Access::check('localplay','5')) { ?>
+<?php if ($server_allow = Config::get('allow_localplay_playback') AND $controller = Config::get('localplay_controller') AND $access_check = Access::check('localplay','5')) { ?>
 <?php
 	// Little bit of work to be done here
 	$localplay = new Localplay(Config::get('localplay_controller')); 
@@ -58,5 +58,12 @@
   </li>
 <?php } else { ?>
   <li><h4><?php echo _('Localplay Disabled'); ?></h4></li>
+  <?php if (!$server_allow) { ?>
+	<li><?php echo _('Allow Localplay set to False'); ?></li>
+  <?php } elseif (!$controller) { ?>
+	<li><?php echo _('Localplay Controller Not Defined'); ?></li>
+  <?php } elseif (!$access_check) { ?>
+	<li><?php echo _('Access Denied'); ?></li>
+  <?php } ?>
 <?php } ?>
 </ul>
