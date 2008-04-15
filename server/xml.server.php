@@ -232,6 +232,13 @@ switch ($_REQUEST['action']) {
 		ob_end_clean(); 
 		echo xmlData::songs(array($uid)); 
 	break; 
+	case 'url_to_song': 
+		$url = scrub_in($_REQUEST['url'); 
+
+		$song_id = Song::parse_song_url($url); 
+		ob_end_clean(); 
+		echo xmlData:;songs(array($song_id)); 
+	break; 
 	case 'playlists': 
 		Browse::reset_filters(); 
 		Browse::set_type('playlist'); 

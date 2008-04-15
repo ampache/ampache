@@ -874,6 +874,28 @@ class Song {
 	} // get_url
 
 	/**
+	 * parse_song_url
+	 * Takes a URL from this ampache install and returns the song that the url represents
+	 * used by the API, and used to parse out stream urls for localplay
+	 * right now just gets song id might do more later, hence the complexity
+	 */
+	public static function parse_song_url($url) { 
+
+		preg_match("/.+\/play\/index.php\?(.+)/",$url,$matches); 
+		$raw_data = $matches['1']; 
+
+		$elements = explode("&",$raw_data); 
+
+		foreach ($elements as $items) { 
+			list($key,$value) = explode("=",$items); 
+			if ($key == 'song') { 
+				return $value; 
+			} 
+		} // end foreach 	
+
+	} // parse_song_url 
+
+	/**
 	 * get_recently_played
 	 * This function returns the last X songs that have been played
 	 * it uses the popular threshold to figure out how many to pull
