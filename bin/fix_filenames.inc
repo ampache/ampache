@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright 2001 - 2008 Ampache.org
+ Copyright Ampache.org
  All Rights Reserved
 
  This program is free software; you can redistribute it and/or
@@ -41,6 +41,14 @@ if (!function_exists('iconv')) {
 	echo "ERROR: Iconv required for this functionality, quiting\n"; 
 	exit; 
 } 
+
+// Attempt a simple translation 
+$string = iconv(Config::get('site_charset'),Config::get('site_charset'),'For the Love of Music'); 
+echo "Testing Basic Translation, the two strings below should look the same\n"; 
+echo "Original: For the Love of Music\n"; 
+echo "Translated: $string\n"; 
+echo "---------------------------------------------------------------------\n"; 
+
 
 $sql = "SELECT * FROM `catalog` WHERE `catalog_type`='local'"; 
 $db_results = Dba::query($sql); 
@@ -98,6 +106,7 @@ function charset_directory_correct($path) {
 		$translated_filename = iconv(Config::get('site_charset'),Config::get('site_charset') . '//IGNORE',$full_file);
 
 		if (strcmp($full_file,$translated_filename) != '0') { 
+			echo "Attempting to Transcode to " . Config::get('site_charset') . "\n"; 
 			echo "--------------------------------------------------------------------------------------------\n";
 			echo "OLD:$full_file has invalid chars\nNEW:$translated_filename\n"; 
 			echo "--------------------------------------------------------------------------------------------\n";
