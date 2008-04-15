@@ -237,7 +237,7 @@ switch ($_REQUEST['action']) {
 
 		$song_id = Song::parse_song_url($url); 
 		ob_end_clean(); 
-		echo xmlData:;songs(array($song_id)); 
+		echo xmlData::songs(array($song_id)); 
 	break; 
 	case 'playlists': 
 		Browse::reset_filters(); 
