@@ -1,6 +1,6 @@
 <?php
 /*
- Copyright (c) 2001 - 2007 Ampache.org
+ Copyright (c) Ampache.org
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
@@ -22,16 +22,15 @@
  * This box is used for actions on the main screen and on a specific playlist page
  * It changes depending on where it is 
  */
-$web_path = Config::get('web_path'); 
 ?>
 <?php show_box_top($playlist->f_type . ' ' . $playlist->name . ' ' . _('Playlist')); ?>
-		<div id="information_actions">
-		<ul>
-		<li><a href="<?php echo $web_path; ?>/playlist.php?action=normalize_tracks&amp;playlist_id=<?php echo $playlist->id; ?>"><?php echo _('Normalize Tracks'); ?></a></li>
-		<li><?php echo Ajax::text('?action=basket&type=playlist&id=' . $playlist->id,_('Add All'),'play_playlist'); ?></li>
-		<li><?php echo Ajax::text('?action=basket&type=playlist_random&id=' . $playlist->id,_('Add Random'),'play_playlist'); ?></li>
-		</ul>
-		</div>
+<div id="information_actions">
+<ul>
+	<li><a href="<?php echo Config::get('web_path'); ?>/playlist.php?action=normalize_tracks&amp;playlist_id=<?php echo $playlist->id; ?>"><?php echo _('Normalize Tracks'); ?></a></li>
+	<li><?php echo Ajax::text('?action=basket&type=playlist&id=' . $playlist->id,_('Add All'),'play_playlist'); ?></li>
+	<li><?php echo Ajax::text('?action=basket&type=playlist_random&id=' . $playlist->id,_('Add Random'),'play_playlist_random'); ?></li>
+</ul>
+</div>
 <?php show_box_bottom(); ?>
 <?php 
 	$object_ids = $playlist->get_items(); 
