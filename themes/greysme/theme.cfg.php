@@ -31,7 +31,7 @@ name = "Greysme"
 ; This is just a way of giving credit to the 
 ; person who actually created this theme
 ; DEFAULT: N/A
-author = "Spocky"
+author = "Mickael Despesse (Spocky)"
 
 ; Theme Maintainer
 ; This is just a way of listing who is responsible for
