@@ -22,7 +22,7 @@
 /***************************************************************/
 
  Ampache Theme "Greysme"
- by Spocky v1.02 (2007/09/23)
+ by Mickael Despesse (Spocky) v1.03 (2008/04/18)
  
  Feel free to modify/reuse, just mention my name _somewhere_
   
@@ -58,7 +58,7 @@ body{
   font-size:1.1em;
 	font-family: Lucida Sans Unicode, Verdana, Arial, Helvetica, sans-serif;
 	background: #2b293d url(../images/background.jpg) 0 0 repeat-x fixed;
-	min-width:90em;
+	/*min-width:90em;*/
 	color:#e9ad51;
 }
 
@@ -102,13 +102,13 @@ body { behavior:url("templates/csshover2.htc"); }
 /************************************************/
 /*             Main Container                   */
 /************************************************/
-#maincontainer{}
+#maincontainer{ margin-top:18px;}
 
 /************************************************/
 /*             Header                           */
 /************************************************/
 #header 	{ padding: 0 0; }
-#headerbox  	{ font-size: 0.9em; text-align: right; color: #e9ad51; position: absolute; top: 15px; right: 0; padding: 3px; }
+#headerbox  	{ font-size: 0.9em; text-align: right; color: #e9ad51; position: absolute; top: 3px; right: 0; padding: 3px; }
 #headerbox b 	{ font-weight: normal }
 #headerbox a 	{ color: #e9ad51;}
 #headerlogo 	  { text-align: center; background: url(../images/ampache_back.gif) 0 0 repeat-x;}
@@ -174,24 +174,24 @@ input[type=checkbox]  { border:0;background:none; }
 	font-size: 0.8em;
 	padding-top:29px;
 	background:#2b293d url(../images/ampache_menu.gif) 50% 0 no-repeat;
+	z-index:20;
 }
 
 /* For supporting browsers *cough*... I mean not IE6... *cough*, fix sidebar position on the left */
 *>div#sidebar{ position: fixed; } 
 
 #sidebar select		    { width: 95%; }
-#sidebar ul           { list-style:none; }
 
 /* For sidebar tabs */
 /********************/
-#sidebar-tabs{
+#sidebar-tabs, #rightbar #rb_action{
 	border-top:1px solid #000;
 	background:#111;
 }
 
-#sidebar-tabs li.sb1 {
+#sidebar-tabs li.sb1, #rightbar #rb_action li {
   float: left;
-	padding:1px;
+  padding:1px;
   background: #111 ; 
   border-top:0.5em solid #8b3e38;
   border-right:1px solid #000;width:16px;
@@ -199,7 +199,7 @@ input[type=checkbox]  { border:0;background:none; }
 #sidebar-tabs li.active { 
 	border-top-color: #e9ad51;
 } 
-#sidebar-tabs li:hover.sb1
+#sidebar-tabs li:hover.sb1, #rightbar #rb_action li:hover
 {
   background:#000;
 	border-top-color: #e9ad51;
@@ -271,24 +271,6 @@ input[type=checkbox]  { border:0;background:none; }
 
 /* SIDEBAR : Browse */
 /********************/
-.alphabet { 
-  background:transparent; /* fix ie bug */
-	margin: 0.3em auto;
-	font-size: 0.9em;
-}
-
-.alphabet span.link { 
-	cursor: pointer;
-	margin: 0;
-	padding:3px 5px;
-	font-family: monospace, Courier, Georgia;
-} 
-.alphabet span.active{ color:#e9ad51; }
-.alphabet span.link:hover { 
-	background: #8b3e38;
-	color:#111;
-} 
-
 #multi_alpha_filter {
         width:40px;
         margin-bottom:4px;
@@ -296,7 +278,6 @@ input[type=checkbox]  { border:0;background:none; }
 
 /* SIDEBAR : Localplay */
 /***********************/
-
 .active_instance { 
 } 
 
@@ -327,22 +308,19 @@ input[type=checkbox]  { border:0;background:none; }
 /************************************************/
 #rightbar { 
 	width:13em;
-	background:#2b293d;
+	background:#000;
 	float:right;
+	z-index:21;
 } 
-#rightbar ul                      {	list-style:none; }
 #rightbar a                       { text-decoration:none; }
 
 
 /* Rightbar Menu */
-#rightbar #rb_action {	
-  padding:4px;
-}
-#rightbar #rb_action li         {	display:inline; }
-#rightbar li#rb_add,#rightbar li#pl_add              { position:relative; z-index:10;}
-#rightbar li#rb_add:hover, #rightbar li#pl_add:hover { background:#e9ad51; } 
+#rightbar #rb_action { }
+#rightbar #rb_action li         { }
+#rightbar li#rb_add, #rightbar li#pl_add             { position:relative; z-index:10; }
 /* Rightbar AddItems SubMenu */
-#rightbar li:hover .submenu  {	display:block; } 
+#rightbar li:hover .submenu  {	display:block;} 
 #rightbar .submenu { 
   display:none; 	
   position:absolute;
@@ -358,6 +336,7 @@ input[type=checkbox]  { border:0;background:none; }
 }
 * html #rightbar .submenu {right:100px;} /* IE6 fix */
 
+#rightbar #rb_action .submenu li {float:none; width:auto; border:none;}
 #rightbar .submenu a {
  display:block;
  padding:0.1em;
@@ -372,8 +351,17 @@ input[type=checkbox]  { border:0;background:none; }
 #rightbar #rb_current_playlist    {
   background: #111;
   padding-bottom:0.5em; 
+  clear:both;
 }
-#rightbar #rb_current_playlist li   { position:relative;font-size:0.9em;;line-height:14px; color:#5b5b5b; padding-right:20px;}
+#rightbar #rb_current_playlist li   { 
+  position:relative;
+  font-size:0.9em;
+  line-height:14px;
+  color:#5b5b5b;
+  padding-right:20px;
+  background: #111 url(../images/button_back.png) 0 100% repeat-x;
+  border-bottom: 1px solid #000;
+}
 #rightbar #rb_current_playlist li a { display:block; padding:0.2em;}
 #rightbar .delitem                  { position:absolute;right:0;top:0; }
 
@@ -755,7 +743,7 @@ td.lp_current a {
 /*         Styles for Login template            */
 /************************************************/
 #loginPage #maincontainer {
-	margin: 100px auto 0px auto;
+	margin: 5% auto 0px auto;
 	text-align:center;	
 }
 #loginPage h2{
@@ -766,16 +754,15 @@ td.lp_current a {
 	margin: 0 0 2em 0;
 }
 #loginPage #loginbox{
-  width:340px;
-  margin:auto;
 }
 .loginfield{
 	text-align:right;
-	padding-right:100px;
 	margin: 1px 0;
+	width:15em;
+	margin:auto;
 }
 .loginfield input.text_input{
-  width:12em;
+  width:8em;
   border:1px solid #74718a;
 }
 
