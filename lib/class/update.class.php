@@ -269,6 +269,10 @@ class Update {
 
 		$version[] = array('version' => '340016','description'=>$update_string); 
 
+		$update_string = '- Attempt to correct the charset of all columns in the database.<br />';
+
+		$version[] = array('version' => '340017','description'=>$update_string); 
+
 		return $version;
 
 	} // populate_version
@@ -1187,6 +1191,7 @@ class Update {
 	/**
 	 * update_340017
 	 * This finalizes the democratic table. 
+	 * and fixes the charset crap
 	 */
 	public static function update_340017() { 
 
@@ -1202,6 +1207,50 @@ class Update {
 		$sql = "TRUNCATE `democratic`"; 
 		$db_results = Dba::query($sql); 
 
+		// MySQL translte real charset names into fancy smancy MySQL land names
+		switch (strtoupper(Config::get('site_charset'))) { 
+			case 'EUC-KR': 
+				$target_charset = 'euckr'; 
+			break; 
+			case 'CP932': 
+				$target_charset = 'sjis'; 
+			break; 
+			case 'KOI8-U': 
+				$target_charset = 'koi8u'; 
+			break; 
+			case 'KOI8-R': 
+				$target_charset = 'koi8r';
+			break; 
+			case 'ISO-8859': 
+				$target_charset = 'latin2';
+			break; 
+			default; 
+			case 'UTF-8':
+				$target_charset = 'utf8'; 
+			break; 
+		} // end mysql charset translation
+	
+		$sql = "SHOW TABLES"; 
+		$db_results = Dba::query($sql); 
+
+		// Go through the tables!
+		while ($row = Dba::fetch_row($db_results)) { 
+			$sql = "DESCRIBE `" . $row['0'] . "`"; 
+			$describe_results = Dba::query($sql); 
+
+			// Itterate through the columns of the table
+			while ($table = Dba::fetch_assoc($describe_results)) { 
+				if (strstr($table['Type'],'varchar')) { 
+					$sql = "ALTER TABLE `" . $row['0'] . "` MODIFY `" . $table['Field'] . "` " . $table['Type'] . " CHARACTER SET " . $target_charset;
+					$charset_results = Dba::query($sql); 
+					if (!$charset_results) { 
+						debug_event('CHARSET','Unable to update the charset of ' . $table['Field'] . '.' . $table['Type'] . ' to ' . $target_charset,'3'); 
+					} // if it fails
+				} // if its a varchar 
+			} // end columns
+
+		} // end tables
+		
 		self::set_version('db_version','340017'); 
 
 	} // update_340017
