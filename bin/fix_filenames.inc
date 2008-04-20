@@ -42,12 +42,20 @@ if (!function_exists('iconv')) {
 	exit; 
 } 
 
+// Attempt to figure out what the System Charset is
+$source_encoding = iconv_get_encoding('output_encoding'); 
+
 // Attempt a simple translation 
 $string = iconv(Config::get('site_charset'),Config::get('site_charset'),'For the Love of Music'); 
 echo "Testing Basic Translation, the two strings below should look the same\n"; 
 echo "Original: For the Love of Music\n"; 
 echo "Translated: $string\n"; 
 echo "---------------------------------------------------------------------\n"; 
+echo "Input Charset ($source_encoding):";
+$input = trim(fgets(STDIN));
+
+if (strlen($input) > 0) { $source_encoding = trim($input); }
+echo "Using $source_encoding as source character set\n"; 
 
 
 $sql = "SELECT * FROM `catalog` WHERE `catalog_type`='local'"; 
@@ -55,9 +63,12 @@ $db_results = Dba::query($sql);
 
 while ($row = Dba::fetch_assoc($db_results)) { 
 
+	echo "Checking " . $row['name'] . " (" . $row['path'] . ")\n"; 
 	charset_directory_correct($row['path']); 	
 
 } // end of the catalogs
+
+echo "Finished checking filenames for valid chacters\n"; 
 
 
 /**************************************************
@@ -103,9 +114,10 @@ function charset_directory_correct($path) {
 			continue; 
 		} 
 
-		$translated_filename = iconv(Config::get('site_charset'),Config::get('site_charset') . '//IGNORE',$full_file);
+		$verify_filename = iconv(Config::get('site_charset'),Config::get('site_charset') . '//IGNORE',$full_file);
 
-		if (strcmp($full_file,$translated_filename) != '0') { 
+		if (strcmp($full_file,$verify_filename) != '0') { 
+			$translated_filename = iconv($source_encoding,Config::get('site_charset') . '//IGNORE',$full_file); 
 			echo "Attempting to Transcode to " . Config::get('site_charset') . "\n"; 
 			echo "--------------------------------------------------------------------------------------------\n";
 			echo "OLD:$full_file has invalid chars\nNEW:$translated_filename\n"; 

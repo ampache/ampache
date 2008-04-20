@@ -126,5 +126,5 @@ class xmlRpcClient {
 
 	} // create_client
 
-} // xmlRpcServer
+} // xmlRpcClient
 ?>

@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2008 Ampache.org
+ Copyright (c) Ampache.org
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
@@ -31,7 +31,8 @@
 ?>
 <div class="shout <?php echo flip_class(); ?>">
 	<?php echo $shout->get_image(); ?>
-	<strong><?php echo ucfirst($shout->object_type); ?>:</strong> <?php echo $object->f_link; ?>
+	<?php echo Ajax::button('?action=basket&type=' . $shout->object_type .' &id=' . $shout->object_id,'add',_('Add'),'add_' . $shout->object_type . '_' . $shout->object_id); ?>
+	<?php echo $object->f_link; ?>
 	<span class="information"><?php echo $client->f_link; ?> <?php echo date("d/m H:i",$shout->date); ?></span>
 	<span class="shouttext"><?php echo scrub_out($shout->text); ?></span>
 </div>

@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2007 Ampache.org
+ Copyright (c) Ampache.org
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
@@ -48,6 +48,11 @@ foreach ($object_ids as $radio_id) {
 	<?php require Config::get('prefix') . '/templates/show_live_stream_row.inc.php'; ?>
 </tr>
 <?php } //end foreach ($artists as $artist) ?>
+<?php if (!count($object_ids)) { ?>
+<tr>
+	<td colspan="6"><span class="fatalerror"><?php echo _('Not Enough Data'); ?></span></td>
+</tr>
+<?php } ?>
 <tr class="th-bottom">
 	<th class="cel_add"><?php echo _('Add'); ?></th>
 	<th class="cel_streamname"><?php echo Ajax::text('?page=browse&action=set_sort&sort=name',_('Name'),'live_stream_sort_name_bottom'); ?></th>

@@ -4,6 +4,9 @@
 
 --------------------------------------------------------------------------
   v.3.4-Beta3 
+	- Added prompt for input charset to fix_filenames.inc
+	- Updated Links in Readme
+	- Fixed Show Art filter on browse by albums
 	- Added Ratings links to Browse Albums and Browse Artist
 	- Fixed seeking on random track, giving you a new track every	
 		seek 

@@ -61,16 +61,16 @@ Contents:
 		- ASX
 		- RAM
 		- XSPF
-	- Realtime Downsampled
-	- XSPF Based Flash Player
+	- Realtime Downsampling
+	- Integrated Flash Player
 	- Automatic Downsampling based on load
 	- Local/Remote network definition based downsampling
 	- On the Fly Transcoding
 	- Localplay
 		- Music Player Daemon (MPD)
 		- Winamp using (HTTPQ)
-	- Democratic Vote based play
-	- 3rd Party clients using API (Amarok)
+	- Democratic Vote based playback
+	- 3rd Party clients using API (Amarok,Coherence)
 	
   C) Current Translations
 
@@ -150,8 +150,8 @@ Contents:
   Public SVN: https://svn.ampache.org/
   IRC: irc.ampache.org #ampache (Freenode)
   Forums: http://ampache.org/forums
-  Bugs: http://trac.ampache.org/
-  Wiki: http://trac.ampache.org/wiki
+  Bugs: http://ampache.org/bugs
+  Wiki: http://ampache.org/bugs/wiki
   Demo: http://ampache.org/demo
 
   Ampache Development Team
