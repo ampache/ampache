@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2006 ampache.org
+ Copyright (c) Ampache.org
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
@@ -181,11 +181,24 @@ function search_song($data,$operator,$method,$limit) {
 			break;
 			case 'rating':
 				$value = intval($value);
-				$select_sql .= "AVG(`rating`.`rating`) AS avgrating,";
-				$group_sql .= " rating.object_id,";
-				$where_sql .= " (`rating`.`rating` >= '$value' AND `rating`.`object_type`='song')";
-				$table_sql .= " RIGHT JOIN `rating` ON `rating`.`object_id`=`song`.`id`";
-				$limit_sql .= " ORDER BY avgrating DESC";
+
+				// This is a little more complext, pull a list of IDs that have this average rating
+				$rating_sql = "SELECT `object_id`,AVG(`rating`.`rating`) AS avgrating FROM `rating` " . 
+						"WHERE `object_type`='song' GROUP BY `object_id`"; 
+				$db_results = Dba::query($rating_sql); 
+
+				$where_sql .= " `song`.`id` IN (";
+				$end_rating = ''; 
+
+				while ($row = Dba::fetch_assoc($db_results)) { 
+					if ($row['avgrating'] < $value) { continue; } 
+					$where_sql .= $row['object_id'] . ','; 
+					$end_rating = ") $operator"; 
+				} 
+		
+				$where_sql = rtrim($where_sql,"`song`.`id` IN ("); 
+				$where_sql = rtrim($where_sql,",") . $end_rating;  
+				
 			default:
 				// Notzing!
 			break;

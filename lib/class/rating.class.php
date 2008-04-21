@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2008 Ampache.org
+ Copyright (c) Ampache.org
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
@@ -45,7 +45,7 @@ class Rating {
 		$this->type 	= Dba::escape($type);
 
 		// Check for the users rating
-		if ($rating == $this->get_user($GLOBALS['user']->id)) { 
+		if ($rating = $this->get_user($GLOBALS['user']->id)) { 
 			$this->rating = $rating;
 			$this->preciserating = $rating;
 		} 

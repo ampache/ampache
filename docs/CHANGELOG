@@ -4,6 +4,8 @@
 
 --------------------------------------------------------------------------
   v.3.4-Beta3 
+	- Fixed Rating display and Rating Advanced Search
+	- Added ability to specify new Genre when adding a Radio Station
 	- Fixed Recently Played to do Distinct over last X rather then
 		distinct over all time
 	- Added update the attempts to correct the charset on the db

@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2007 Ampache.org
+ Copyright (c) Ampache.org
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
@@ -26,7 +26,7 @@ show_header();
 // Switch on Action
 switch ($_REQUEST['action']) { 
 	case 'show_create': 
-		if (!$GLOBALS['user']->has_access('25')) { 
+		if (!Access::check('interface','25')) { 
 			access_denied(); 
 			exit; 
 		} 
@@ -35,7 +35,7 @@ switch ($_REQUEST['action']) {
 
 	break;
 	case 'create': 
-		if (!$GLOBALS['user']->has_access('25') || Config::get('demo_mode')) { 
+		if (!Access::check('interface','25') || Config::get('demo_mode')) { 
 			access_denied(); 
 			exit; 
 		} 

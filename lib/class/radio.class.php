@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright 2001 - 2007 Ampache.org
+ Copyright Ampache.org
  All Rights Reserved
 
  This program is free software; you can redistribute it and/or
@@ -166,6 +166,11 @@ class Radio {
 
 		if (!preg_match("/^https?:\/\/.+/",$data['url'])) { 
 			Error::add('url','Invalid URL must be http:// or https://'); 
+		} 
+
+		// If they specified other try to use that
+		if (strlen($data['other_genre'])) { 
+			$data['genre'] = Catalog::check_genre($data['other_genre']); 
 		} 
 
 		// Make sure it's a real genre

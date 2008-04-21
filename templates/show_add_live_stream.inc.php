@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2007 Ampache.org
+ Copyright (c) Ampache.org
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
@@ -54,13 +54,15 @@
 <tr>
 	<td><?php echo _('Callsign'); ?></td>
 	<td>
-		<input type="text" name="call_sign" value="<?Php echo scrub_out($_REQUEST['call_sign']); ?>" />
+		<input type="text" name="call_sign" value="<?php echo scrub_out($_REQUEST['call_sign']); ?>" />
 	</td>
 </tr>
 <tr>
-	<td><?php echo _('Genre'); ?></td>
+	<td valign="top"><?php echo _('Genre'); ?></td>
 	<td>
 		<?php echo show_genre_select('genre',intval($_REQUEST['genre'])); ?>
+		<br /><?php echo _('OR'); ?><br />
+		<input type="text" name="other_genre" value="<?php echo scrub_out($_REQUEST['other_genre']); ?>" />
 	</td>
 </tr>
 <tr>

@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright 2001 - 2007 Ampache.org
+ Copyright Ampache.org
  All Rights Reserved
 
  This program is free software; you can redistribute it and/or
@@ -281,7 +281,7 @@ class Random {
 		} // end if matchlist
 	
 		switch ($data['random_type']) { 
-			case 'full_aldum': 
+			case 'full_album': 
 	                	$query = "SELECT `album`.`id` FROM `song` INNER JOIN `album` ON `song`.`album`=`album`.`id` " . 
 					"WHERE $where GROUP BY `song`.`album` ORDER BY RAND() $limit_sql";
 		                $db_results = Dba::query($query);
