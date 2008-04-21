@@ -3,7 +3,7 @@
 --------------------------------------------------------------------------
 
 --------------------------------------------------------------------------
-  v.3.4-Beta3 
+  v.3.4-Beta3 04/20/2008 
 	- Fixed Rating display and Rating Advanced Search
 	- Added ability to specify new Genre when adding a Radio Station
 	- Fixed Recently Played to do Distinct over last X rather then
@@ -28,7 +28,7 @@
 	- Fixed enabling of localplay modules, now correctly enables
 		localplay for the activating user
 	- Added single genre and playlist XML methods
-	- Changed erorr message on XML api, now based of HTTP error codes
+	- Changed error message on XML api, now based of HTTP error codes
 	- Split out ACL and Session Expire errors on XML API 
 	- Made Alpha Match box on browse "find as you type" (Thx Spocky)
 	- Modified Shoutbox Styles (Thx Spocky)

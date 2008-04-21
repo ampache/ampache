@@ -1,4 +1,4 @@
--- Copyright (c) 2001 - 2008 Ampache.org
+-- Copyright (c) Ampache.org
 -- All rights reserved.
 --
 -- This program is free software; you can redistribute it and/or
@@ -13,7 +13,6 @@
 -- You should have received a copy of the GNU General Public License
 -- along with this program; if not, write to the Free Software
 -- Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
-
 -- MySQL dump 10.11
 --
 -- Host: localhost    Database: ampache
@@ -35,12 +34,12 @@ SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8;
 CREATE TABLE `access_list` (
   `id` int(11) unsigned NOT NULL auto_increment,
-  `name` varchar(255) NOT NULL,
+  `name` varchar(255) default NULL,
   `start` int(11) unsigned NOT NULL default '0',
   `end` int(11) unsigned NOT NULL default '0',
-  `dns` varchar(255) NOT NULL,
+  `dns` varchar(255) default NULL,
   `level` smallint(3) unsigned NOT NULL default '5',
-  `type` varchar(64) NOT NULL default 'interface',
+  `type` varchar(64) default NULL,
   `user` int(11) NOT NULL,
   `key` varchar(255) default NULL,
   PRIMARY KEY  (`id`),
@@ -68,7 +67,7 @@ SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8;
 CREATE TABLE `album` (
   `id` int(11) unsigned NOT NULL auto_increment,
-  `name` varchar(255) NOT NULL,
+  `name` varchar(255) default NULL,
   `prefix` enum('The','An','A','Der','Die','Das','Ein','Eine') default NULL,
   `year` int(4) unsigned NOT NULL default '1984',
   `disk` smallint(5) unsigned default NULL,
@@ -123,7 +122,7 @@ SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8;
 CREATE TABLE `artist` (
   `id` int(11) unsigned NOT NULL auto_increment,
-  `name` varchar(255) NOT NULL,
+  `name` varchar(255) default NULL,
   `prefix` enum('The','An','A','Der','Die','Das','Ein','Eine') default NULL,
   PRIMARY KEY  (`id`),
   KEY `name` (`name`)
@@ -149,9 +148,9 @@ SET character_set_client = utf8;
 CREATE TABLE `artist_data` (
   `artist_id` int(11) unsigned NOT NULL,
   `art` mediumblob NOT NULL,
-  `art_mime` varchar(32) NOT NULL,
+  `art_mime` varchar(32) default NULL,
   `thumb` blob NOT NULL,
-  `thumb_mime` varchar(32) NOT NULL,
+  `thumb_mime` varchar(32) default NULL,
   `bio` text NOT NULL,
   UNIQUE KEY `artist_id` (`artist_id`)
 ) TYPE=MyISAM;
@@ -175,17 +174,17 @@ SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8;
 CREATE TABLE `catalog` (
   `id` int(11) unsigned NOT NULL auto_increment,
-  `name` varchar(128) NOT NULL,
-  `path` varchar(255) NOT NULL,
-  `add_path` varchar(255) NOT NULL,
+  `name` varchar(128) default NULL,
+  `path` varchar(255) default NULL,
+  `add_path` varchar(255) default NULL,
   `catalog_type` enum('local','remote') NOT NULL default 'local',
   `last_update` int(11) unsigned NOT NULL default '0',
   `last_add` int(11) unsigned NOT NULL default '0',
   `enabled` tinyint(1) unsigned NOT NULL default '1',
-  `rename_pattern` varchar(255) NOT NULL default '%a - %T - %t.mp3',
-  `sort_pattern` varchar(255) NOT NULL default '%C/%a/%A',
-  `gather_types` varchar(255) NOT NULL,
-  `key` varchar(255) NOT NULL,
+  `rename_pattern` varchar(255) default NULL,
+  `sort_pattern` varchar(255) default NULL,
+  `gather_types` varchar(255) default NULL,
+  `key` varchar(255) default NULL,
   PRIMARY KEY  (`id`),
   KEY `enabled` (`enabled`)
 ) TYPE=MyISAM;
@@ -209,15 +208,15 @@ SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8;
 CREATE TABLE `democratic` (
   `id` int(11) unsigned NOT NULL auto_increment,
-  `name` varchar(64) NOT NULL,
+  `name` varchar(64) default NULL,
   `cooldown` tinyint(4) unsigned default NULL,
   `level` tinyint(4) unsigned NOT NULL default '25',
   `user` int(11) NOT NULL,
   `primary` tinyint(1) unsigned NOT NULL default '0',
   `base_playlist` int(11) unsigned NOT NULL,
   PRIMARY KEY  (`id`),
-  KEY `primary_2` (`primary`),
-  KEY `level` (`level`)
+  KEY `level` (`level`),
+  KEY `primary_2` (`primary`)
 ) TYPE=MyISAM;
 SET character_set_client = @saved_cs_client;
 
@@ -245,7 +244,7 @@ CREATE TABLE `flagged` (
   `flag` enum('delete','retag','reencode','other') NOT NULL default 'other',
   `date` int(11) unsigned NOT NULL default '0',
   `approved` tinyint(1) unsigned NOT NULL default '0',
-  `comment` varchar(255) NOT NULL,
+  `comment` varchar(255) default NULL,
   PRIMARY KEY  (`id`),
   KEY `date` (`date`,`approved`),
   KEY `object_id` (`object_id`),
@@ -272,7 +271,7 @@ SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8;
 CREATE TABLE `genre` (
   `id` int(11) unsigned NOT NULL auto_increment,
-  `name` varchar(255) NOT NULL,
+  `name` varchar(255) default NULL,
   PRIMARY KEY  (`id`),
   KEY `name` (`name`)
 ) TYPE=MyISAM;
@@ -324,13 +323,13 @@ SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8;
 CREATE TABLE `live_stream` (
   `id` int(11) unsigned NOT NULL auto_increment,
-  `name` varchar(128) NOT NULL,
-  `site_url` varchar(255) NOT NULL,
-  `url` varchar(255) NOT NULL,
+  `name` varchar(128) default NULL,
+  `site_url` varchar(255) default NULL,
+  `url` varchar(255) default NULL,
   `genre` int(11) unsigned NOT NULL default '0',
   `catalog` int(11) unsigned NOT NULL default '0',
-  `frequency` varchar(32) NOT NULL,
-  `call_sign` varchar(32) NOT NULL,
+  `frequency` varchar(32) default NULL,
+  `call_sign` varchar(32) default NULL,
   PRIMARY KEY  (`id`),
   KEY `catalog` (`catalog`),
   KEY `genre` (`genre`),
@@ -355,7 +354,7 @@ DROP TABLE IF EXISTS `now_playing`;
 SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8;
 CREATE TABLE `now_playing` (
-  `id` varchar(64) NOT NULL,
+  `id` varchar(64) NOT NULL default '',
   `song_id` int(11) unsigned NOT NULL default '0',
   `user` int(11) NOT NULL,
   `expire` int(11) unsigned NOT NULL default '0',
@@ -411,7 +410,7 @@ SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8;
 CREATE TABLE `playlist` (
   `id` int(11) unsigned NOT NULL auto_increment,
-  `name` varchar(128) NOT NULL,
+  `name` varchar(128) default NULL,
   `user` int(11) NOT NULL,
   `type` enum('private','public') NOT NULL default 'private',
   `genre` int(11) unsigned NOT NULL,
@@ -442,7 +441,7 @@ CREATE TABLE `playlist_data` (
   `id` int(11) unsigned NOT NULL auto_increment,
   `playlist` int(11) unsigned NOT NULL default '0',
   `object_id` int(11) unsigned default NULL,
-  `object_type` varchar(32) NOT NULL default 'song',
+  `object_type` varchar(32) default NULL,
   `dynamic_song` text,
   `track` int(11) unsigned NOT NULL default '0',
   PRIMARY KEY  (`id`),
@@ -468,12 +467,12 @@ SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8;
 CREATE TABLE `preference` (
   `id` int(11) unsigned NOT NULL auto_increment,
-  `name` varchar(128) NOT NULL,
-  `value` varchar(255) NOT NULL,
-  `description` varchar(255) NOT NULL,
+  `name` varchar(128) default NULL,
+  `value` varchar(255) default NULL,
+  `description` varchar(255) default NULL,
   `level` int(11) unsigned NOT NULL default '100',
-  `type` varchar(128) NOT NULL,
-  `catagory` varchar(128) NOT NULL,
+  `type` varchar(128) default NULL,
+  `catagory` varchar(128) default NULL,
   PRIMARY KEY  (`id`),
   KEY `catagory` (`catagory`),
   KEY `name` (`name`)
@@ -502,7 +501,7 @@ CREATE TABLE `rating` (
   `user` int(11) NOT NULL,
   `object_type` enum('artist','album','song','steam','video') NOT NULL default 'artist',
   `object_id` int(11) unsigned NOT NULL default '0',
-  `rating` enum('-1','0','1','2','3','4','5') NOT NULL default '0',
+  `rating` tinyint(4) NOT NULL,
   PRIMARY KEY  (`id`),
   KEY `object_id` (`object_id`)
 ) TYPE=MyISAM;
@@ -525,13 +524,13 @@ DROP TABLE IF EXISTS `session`;
 SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8;
 CREATE TABLE `session` (
-  `id` varchar(64) NOT NULL,
-  `username` varchar(16) NOT NULL,
+  `id` varchar(64) NOT NULL default '',
+  `username` varchar(16) default NULL,
   `expire` int(11) unsigned NOT NULL default '0',
   `value` longtext NOT NULL,
   `ip` int(11) unsigned default NULL,
   `type` enum('mysql','ldap','http','api','xml-rpc') NOT NULL,
-  `agent` varchar(255) NOT NULL,
+  `agent` varchar(255) default NULL,
   PRIMARY KEY  (`id`),
   KEY `expire` (`expire`),
   KEY `type` (`type`)
@@ -555,7 +554,7 @@ DROP TABLE IF EXISTS `session_stream`;
 SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8;
 CREATE TABLE `session_stream` (
-  `id` varchar(64) NOT NULL,
+  `id` varchar(64) NOT NULL default '',
   `user` int(11) unsigned NOT NULL,
   `agent` varchar(255) default NULL,
   `expire` int(11) unsigned NOT NULL,
@@ -582,12 +581,12 @@ SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8;
 CREATE TABLE `song` (
   `id` int(11) unsigned NOT NULL auto_increment,
-  `file` varchar(255) NOT NULL,
+  `file` varchar(255) default NULL,
   `catalog` int(11) unsigned NOT NULL default '0',
   `album` int(11) unsigned NOT NULL default '0',
   `year` mediumint(4) unsigned NOT NULL default '0',
   `artist` int(11) unsigned NOT NULL default '0',
-  `title` varchar(255) NOT NULL,
+  `title` varchar(255) default NULL,
   `bitrate` mediumint(8) unsigned NOT NULL default '0',
   `rate` mediumint(8) unsigned NOT NULL default '0',
   `mode` enum('abr','vbr','cbr') default 'cbr',
@@ -659,7 +658,7 @@ SET character_set_client = utf8;
 CREATE TABLE `tag_map` (
   `id` int(11) unsigned NOT NULL auto_increment,
   `object_id` int(11) unsigned NOT NULL,
-  `object_type` varchar(16) NOT NULL,
+  `object_type` varchar(16) default NULL,
   `user` int(11) NOT NULL,
   PRIMARY KEY  (`id`),
   KEY `object_id` (`object_id`),
@@ -686,7 +685,7 @@ SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8;
 CREATE TABLE `tags` (
   `map_id` int(11) unsigned NOT NULL,
-  `name` varchar(32) NOT NULL,
+  `name` varchar(32) default NULL,
   `order` tinyint(2) NOT NULL,
   KEY `order` (`order`),
   KEY `map_id` (`map_id`)
@@ -711,14 +710,13 @@ SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8;
 CREATE TABLE `tmp_playlist` (
   `id` int(11) unsigned NOT NULL auto_increment,
-  `session` varchar(32) NOT NULL,
-  `type` varchar(32) NOT NULL,
-  `object_type` varchar(32) NOT NULL,
-  `base_playlist` int(11) unsigned NOT NULL,
+  `session` varchar(32) default NULL,
+  `type` varchar(32) default NULL,
+  `object_type` varchar(32) default NULL,
   PRIMARY KEY  (`id`),
   KEY `session` (`session`),
   KEY `type` (`type`)
-) TYPE=MyISAM AUTO_INCREMENT=12;
+) TYPE=MyISAM AUTO_INCREMENT=8;
 SET character_set_client = @saved_cs_client;
 
 --
@@ -764,8 +762,8 @@ DROP TABLE IF EXISTS `update_info`;
 SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8;
 CREATE TABLE `update_info` (
-  `key` varchar(128) NOT NULL,
-  `value` varchar(255) NOT NULL,
+  `key` varchar(128) default NULL,
+  `value` varchar(255) default NULL,
   UNIQUE KEY `key` (`key`)
 ) TYPE=MyISAM;
 SET character_set_client = @saved_cs_client;
@@ -776,7 +774,7 @@ SET character_set_client = @saved_cs_client;
 
 LOCK TABLES `update_info` WRITE;
 /*!40000 ALTER TABLE `update_info` DISABLE KEYS */;
-INSERT INTO `update_info` VALUES ('db_version','340016');
+INSERT INTO `update_info` VALUES ('db_version','340017');
 /*!40000 ALTER TABLE `update_info` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -789,10 +787,10 @@ SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8;
 CREATE TABLE `user` (
   `id` int(11) NOT NULL auto_increment,
-  `username` varchar(128) NOT NULL,
-  `fullname` varchar(128) NOT NULL,
+  `username` varchar(128) default NULL,
+  `fullname` varchar(128) default NULL,
   `email` varchar(128) default NULL,
-  `password` varchar(64) NOT NULL,
+  `password` varchar(64) default NULL,
   `access` tinyint(4) unsigned NOT NULL,
   `disabled` tinyint(1) unsigned NOT NULL default '0',
   `last_seen` int(11) unsigned NOT NULL default '0',
@@ -822,7 +820,7 @@ SET character_set_client = utf8;
 CREATE TABLE `user_preference` (
   `user` int(11) NOT NULL,
   `preference` int(11) unsigned NOT NULL default '0',
-  `value` varchar(255) NOT NULL,
+  `value` varchar(255) default NULL,
   KEY `user` (`user`),
   KEY `preference` (`preference`)
 ) TYPE=MyISAM;
@@ -834,7 +832,7 @@ SET character_set_client = @saved_cs_client;
 
 LOCK TABLES `user_preference` WRITE;
 /*!40000 ALTER TABLE `user_preference` DISABLE KEYS */;
-INSERT INTO `user_preference` VALUES (-1,1,'0'),(-1,4,'10'),(-1,19,'32'),(-1,22,'Ampache :: Pour l\'Amour de la Musique'),(-1,23,'0'),(-1,24,'1'),(-1,25,'80'),(-1,41,'0'),(-1,29,'stream'),(-1,31,'en_US'),(-1,32,'m3u'),(-1,33,'classic'),(-1,34,'27'),(-1,35,'27'),(-1,36,'27'),(-1,51,'50'),(-1,40,'0'),(-1,44,'1'),(-1,45,'0'),(-1,46,'0'),(-1,47,'7'),(-1,49,'1'),(-1,52,'8192'),(-1,53,'normal'),(-1,55,'default');
+INSERT INTO `user_preference` VALUES (-1,1,'0'),(-1,4,'10'),(-1,19,'32'),(-1,22,'Ampache :: Pour l\'Amour de la Musique'),(-1,23,'0'),(-1,24,'1'),(-1,25,'80'),(-1,41,'0'),(-1,29,'stream'),(-1,31,'en_US'),(-1,32,'m3u'),(-1,33,'classic'),(-1,34,'27'),(-1,35,'27'),(-1,36,'27'),(-1,51,'50'),(-1,40,'0'),(-1,44,'1'),(-1,45,'0'),(-1,46,'0'),(-1,47,'7'),(-1,49,'1'),(-1,52,'8192'),(-1,53,'default'),(-1,55,'default');
 /*!40000 ALTER TABLE `user_preference` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -852,7 +850,7 @@ CREATE TABLE `user_shout` (
   `date` int(11) unsigned NOT NULL,
   `sticky` tinyint(1) unsigned NOT NULL default '0',
   `object_id` int(11) unsigned NOT NULL,
-  `object_type` varchar(32) NOT NULL,
+  `object_type` varchar(32) default NULL,
   PRIMARY KEY  (`id`),
   KEY `sticky` (`sticky`),
   KEY `date` (`date`),
@@ -901,4 +899,4 @@ UNLOCK TABLES;
 /*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2008-03-17  5:22:53
+-- Dump completed on 2008-04-21  2:08:18

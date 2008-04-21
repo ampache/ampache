@@ -136,14 +136,24 @@ function install_insert_db($username,$password,$hostname,$database) {
 		Error::add('general','Error: Database Already exists and Overwrite not checked'); 
 		return false; 
 	} 
-	if (!$db_selected) { 
-		$sql = "CREATE DATABASE `" . $database . "`";
+	elseif (!$db_selected) { 
+		$sql = "CREATE DATABASE `" . Dba::escape($database) . "`";
 		if (!$db_results = @mysql_query($sql, $dbh)) { 
 			Error::add('general',"Error: Unable to Create Database " . mysql_error());
 			return false;
 		}
 		@mysql_select_db($database, $dbh);
 	} // if db can't be selected
+	else { 
+		$sql = "DROP DATABASE `" . Dba::escape($database) . "`"; 
+		$db_results = @mysql_query($sql,$dbh); 
+		$sql = "CREATE DATABASE `" . Dba::escape($database) . "`"; 
+                if (!$db_results = @mysql_query($sql, $dbh)) {
+                        Error::add('general',"Error: Unable to Create Database " . mysql_error());
+                        return false;
+                }
+                @mysql_select_db($database, $dbh);
+	} // end if selected and overwrite
 
 	/* Check and see if we should create a user here */
 	if ($_REQUEST['db_user'] == 'create_db_user') { 

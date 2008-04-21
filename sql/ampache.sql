@@ -1,4 +1,4 @@
--- Copyright (c) 2001 - 2008 Ampache.org
+-- Copyright (c) Ampache.org
 -- All rights reserved.
 --
 -- This program is free software; you can redistribute it and/or
@@ -13,7 +13,6 @@
 -- You should have received a copy of the GNU General Public License
 -- along with this program; if not, write to the Free Software
 -- Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
-
 -- MySQL dump 10.11
 --
 -- Host: localhost    Database: ampache
@@ -40,14 +39,14 @@ SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8;
 CREATE TABLE `access_list` (
   `id` int(11) unsigned NOT NULL auto_increment,
-  `name` varchar(255) collate utf8_unicode_ci NOT NULL,
+  `name` varchar(255) character set utf8 default NULL,
   `start` int(11) unsigned NOT NULL default '0',
   `end` int(11) unsigned NOT NULL default '0',
-  `dns` varchar(255) collate utf8_unicode_ci NOT NULL,
+  `dns` varchar(255) character set utf8 default NULL,
   `level` smallint(3) unsigned NOT NULL default '5',
-  `type` varchar(64) collate utf8_unicode_ci NOT NULL default 'interface',
+  `type` varchar(64) character set utf8 default NULL,
   `user` int(11) NOT NULL,
-  `key` varchar(255) collate utf8_unicode_ci default NULL,
+  `key` varchar(255) character set utf8 default NULL,
   PRIMARY KEY  (`id`),
   KEY `start` (`start`),
   KEY `end` (`end`),
@@ -73,7 +72,7 @@ SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8;
 CREATE TABLE `album` (
   `id` int(11) unsigned NOT NULL auto_increment,
-  `name` varchar(255) collate utf8_unicode_ci NOT NULL,
+  `name` varchar(255) character set utf8 default NULL,
   `prefix` enum('The','An','A','Der','Die','Das','Ein','Eine') collate utf8_unicode_ci default NULL,
   `year` int(4) unsigned NOT NULL default '1984',
   `disk` smallint(5) unsigned default NULL,
@@ -103,9 +102,9 @@ SET character_set_client = utf8;
 CREATE TABLE `album_data` (
   `album_id` int(11) unsigned NOT NULL,
   `art` mediumblob,
-  `art_mime` varchar(64) collate utf8_unicode_ci default NULL,
+  `art_mime` varchar(64) character set utf8 default NULL,
   `thumb` blob,
-  `thumb_mime` varchar(64) collate utf8_unicode_ci default NULL,
+  `thumb_mime` varchar(64) character set utf8 default NULL,
   UNIQUE KEY `album_id` (`album_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 SET character_set_client = @saved_cs_client;
@@ -128,7 +127,7 @@ SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8;
 CREATE TABLE `artist` (
   `id` int(11) unsigned NOT NULL auto_increment,
-  `name` varchar(255) collate utf8_unicode_ci NOT NULL,
+  `name` varchar(255) character set utf8 default NULL,
   `prefix` enum('The','An','A','Der','Die','Das','Ein','Eine') collate utf8_unicode_ci default NULL,
   PRIMARY KEY  (`id`),
   KEY `name` (`name`)
@@ -154,9 +153,9 @@ SET character_set_client = utf8;
 CREATE TABLE `artist_data` (
   `artist_id` int(11) unsigned NOT NULL,
   `art` mediumblob NOT NULL,
-  `art_mime` varchar(32) collate utf8_unicode_ci NOT NULL,
+  `art_mime` varchar(32) character set utf8 default NULL,
   `thumb` blob NOT NULL,
-  `thumb_mime` varchar(32) collate utf8_unicode_ci NOT NULL,
+  `thumb_mime` varchar(32) character set utf8 default NULL,
   `bio` text collate utf8_unicode_ci NOT NULL,
   UNIQUE KEY `artist_id` (`artist_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
@@ -180,17 +179,17 @@ SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8;
 CREATE TABLE `catalog` (
   `id` int(11) unsigned NOT NULL auto_increment,
-  `name` varchar(128) collate utf8_unicode_ci NOT NULL,
-  `path` varchar(255) collate utf8_unicode_ci NOT NULL,
-  `add_path` varchar(255) collate utf8_unicode_ci NOT NULL,
+  `name` varchar(128) character set utf8 default NULL,
+  `path` varchar(255) character set utf8 default NULL,
+  `add_path` varchar(255) character set utf8 default NULL,
   `catalog_type` enum('local','remote') collate utf8_unicode_ci NOT NULL default 'local',
   `last_update` int(11) unsigned NOT NULL default '0',
   `last_add` int(11) unsigned NOT NULL default '0',
   `enabled` tinyint(1) unsigned NOT NULL default '1',
-  `rename_pattern` varchar(255) collate utf8_unicode_ci NOT NULL default '%a - %T - %t.mp3',
-  `sort_pattern` varchar(255) collate utf8_unicode_ci NOT NULL default '%C/%a/%A',
-  `gather_types` varchar(255) collate utf8_unicode_ci NOT NULL,
-  `key` varchar(255) collate utf8_unicode_ci NOT NULL,
+  `rename_pattern` varchar(255) character set utf8 default NULL,
+  `sort_pattern` varchar(255) character set utf8 default NULL,
+  `gather_types` varchar(255) character set utf8 default NULL,
+  `key` varchar(255) character set utf8 default NULL,
   PRIMARY KEY  (`id`),
   KEY `enabled` (`enabled`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
@@ -214,17 +213,15 @@ SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8;
 CREATE TABLE `democratic` (
   `id` int(11) unsigned NOT NULL auto_increment,
-  `name` varchar(64) collate utf8_unicode_ci NOT NULL,
+  `name` varchar(64) character set utf8 default NULL,
   `cooldown` tinyint(4) unsigned default NULL,
   `level` tinyint(4) unsigned NOT NULL default '25',
   `user` int(11) NOT NULL,
   `primary` tinyint(1) unsigned NOT NULL default '0',
   `base_playlist` int(11) unsigned NOT NULL,
   PRIMARY KEY  (`id`),
-  KEY `primary_2` (`primary`),
   KEY `level` (`level`),
-  KEY `primary_3` (`primary`),
-  KEY `level_2` (`level`)
+  KEY `primary_2` (`primary`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 SET character_set_client = @saved_cs_client;
 
@@ -252,7 +249,7 @@ CREATE TABLE `flagged` (
   `flag` enum('delete','retag','reencode','other') collate utf8_unicode_ci NOT NULL default 'other',
   `date` int(11) unsigned NOT NULL default '0',
   `approved` tinyint(1) unsigned NOT NULL default '0',
-  `comment` varchar(255) collate utf8_unicode_ci NOT NULL,
+  `comment` varchar(255) character set utf8 default NULL,
   PRIMARY KEY  (`id`),
   KEY `date` (`date`,`approved`),
   KEY `object_id` (`object_id`),
@@ -279,7 +276,7 @@ SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8;
 CREATE TABLE `genre` (
   `id` int(11) unsigned NOT NULL auto_increment,
-  `name` varchar(255) collate utf8_unicode_ci NOT NULL,
+  `name` varchar(255) character set utf8 default NULL,
   PRIMARY KEY  (`id`),
   KEY `name` (`name`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
@@ -331,13 +328,13 @@ SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8;
 CREATE TABLE `live_stream` (
   `id` int(11) unsigned NOT NULL auto_increment,
-  `name` varchar(128) collate utf8_unicode_ci NOT NULL,
-  `site_url` varchar(255) collate utf8_unicode_ci NOT NULL,
-  `url` varchar(255) collate utf8_unicode_ci NOT NULL,
+  `name` varchar(128) character set utf8 default NULL,
+  `site_url` varchar(255) character set utf8 default NULL,
+  `url` varchar(255) character set utf8 default NULL,
   `genre` int(11) unsigned NOT NULL default '0',
   `catalog` int(11) unsigned NOT NULL default '0',
-  `frequency` varchar(32) collate utf8_unicode_ci NOT NULL,
-  `call_sign` varchar(32) collate utf8_unicode_ci NOT NULL,
+  `frequency` varchar(32) character set utf8 default NULL,
+  `call_sign` varchar(32) character set utf8 default NULL,
   PRIMARY KEY  (`id`),
   KEY `catalog` (`catalog`),
   KEY `genre` (`genre`),
@@ -362,7 +359,7 @@ DROP TABLE IF EXISTS `now_playing`;
 SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8;
 CREATE TABLE `now_playing` (
-  `id` varchar(64) collate utf8_unicode_ci NOT NULL,
+  `id` varchar(64) character set utf8 NOT NULL default '',
   `song_id` int(11) unsigned NOT NULL default '0',
   `user` int(11) NOT NULL,
   `expire` int(11) unsigned NOT NULL default '0',
@@ -418,7 +415,7 @@ SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8;
 CREATE TABLE `playlist` (
   `id` int(11) unsigned NOT NULL auto_increment,
-  `name` varchar(128) collate utf8_unicode_ci NOT NULL,
+  `name` varchar(128) character set utf8 default NULL,
   `user` int(11) NOT NULL,
   `type` enum('private','public') collate utf8_unicode_ci NOT NULL default 'private',
   `genre` int(11) unsigned NOT NULL,
@@ -449,7 +446,7 @@ CREATE TABLE `playlist_data` (
   `id` int(11) unsigned NOT NULL auto_increment,
   `playlist` int(11) unsigned NOT NULL default '0',
   `object_id` int(11) unsigned default NULL,
-  `object_type` varchar(32) collate utf8_unicode_ci NOT NULL default 'song',
+  `object_type` varchar(32) character set utf8 default NULL,
   `dynamic_song` text collate utf8_unicode_ci,
   `track` int(11) unsigned NOT NULL default '0',
   PRIMARY KEY  (`id`),
@@ -475,12 +472,12 @@ SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8;
 CREATE TABLE `preference` (
   `id` int(11) unsigned NOT NULL auto_increment,
-  `name` varchar(128) collate utf8_unicode_ci NOT NULL,
-  `value` varchar(255) collate utf8_unicode_ci NOT NULL,
-  `description` varchar(255) collate utf8_unicode_ci NOT NULL,
+  `name` varchar(128) character set utf8 default NULL,
+  `value` varchar(255) character set utf8 default NULL,
+  `description` varchar(255) character set utf8 default NULL,
   `level` int(11) unsigned NOT NULL default '100',
-  `type` varchar(128) collate utf8_unicode_ci NOT NULL,
-  `catagory` varchar(128) collate utf8_unicode_ci NOT NULL,
+  `type` varchar(128) character set utf8 default NULL,
+  `catagory` varchar(128) character set utf8 default NULL,
   PRIMARY KEY  (`id`),
   KEY `catagory` (`catagory`),
   KEY `name` (`name`)
@@ -532,13 +529,13 @@ DROP TABLE IF EXISTS `session`;
 SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8;
 CREATE TABLE `session` (
-  `id` varchar(64) collate utf8_unicode_ci NOT NULL,
-  `username` varchar(16) collate utf8_unicode_ci NOT NULL,
+  `id` varchar(64) character set utf8 NOT NULL default '',
+  `username` varchar(16) character set utf8 default NULL,
   `expire` int(11) unsigned NOT NULL default '0',
   `value` longtext collate utf8_unicode_ci NOT NULL,
   `ip` int(11) unsigned default NULL,
   `type` enum('mysql','ldap','http','api','xml-rpc') collate utf8_unicode_ci NOT NULL,
-  `agent` varchar(255) collate utf8_unicode_ci NOT NULL,
+  `agent` varchar(255) character set utf8 default NULL,
   PRIMARY KEY  (`id`),
   KEY `expire` (`expire`),
   KEY `type` (`type`)
@@ -562,9 +559,9 @@ DROP TABLE IF EXISTS `session_stream`;
 SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8;
 CREATE TABLE `session_stream` (
-  `id` varchar(64) collate utf8_unicode_ci NOT NULL,
+  `id` varchar(64) character set utf8 NOT NULL default '',
   `user` int(11) unsigned NOT NULL,
-  `agent` varchar(255) collate utf8_unicode_ci default NULL,
+  `agent` varchar(255) character set utf8 default NULL,
   `expire` int(11) unsigned NOT NULL,
   `ip` int(11) unsigned default NULL,
   PRIMARY KEY  (`id`)
@@ -589,12 +586,12 @@ SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8;
 CREATE TABLE `song` (
   `id` int(11) unsigned NOT NULL auto_increment,
-  `file` varchar(255) collate utf8_unicode_ci NOT NULL,
+  `file` varchar(255) character set utf8 default NULL,
   `catalog` int(11) unsigned NOT NULL default '0',
   `album` int(11) unsigned NOT NULL default '0',
   `year` mediumint(4) unsigned NOT NULL default '0',
   `artist` int(11) unsigned NOT NULL default '0',
-  `title` varchar(255) collate utf8_unicode_ci NOT NULL,
+  `title` varchar(255) character set utf8 default NULL,
   `bitrate` mediumint(8) unsigned NOT NULL default '0',
   `rate` mediumint(8) unsigned NOT NULL default '0',
   `mode` enum('abr','vbr','cbr') collate utf8_unicode_ci default 'cbr',
@@ -606,7 +603,7 @@ CREATE TABLE `song` (
   `enabled` tinyint(1) unsigned NOT NULL default '1',
   `update_time` int(11) unsigned default '0',
   `addition_time` int(11) unsigned default '0',
-  `hash` varchar(64) collate utf8_unicode_ci default NULL,
+  `hash` varchar(64) character set utf8 default NULL,
   PRIMARY KEY  (`id`),
   KEY `genre` (`genre`),
   KEY `album` (`album`),
@@ -640,9 +637,9 @@ CREATE TABLE `song_data` (
   `song_id` int(11) unsigned NOT NULL,
   `comment` text collate utf8_unicode_ci,
   `lyrics` text collate utf8_unicode_ci,
-  `label` varchar(128) collate utf8_unicode_ci default NULL,
-  `catalog_number` varchar(128) collate utf8_unicode_ci default NULL,
-  `language` varchar(128) collate utf8_unicode_ci default NULL,
+  `label` varchar(128) character set utf8 default NULL,
+  `catalog_number` varchar(128) character set utf8 default NULL,
+  `language` varchar(128) character set utf8 default NULL,
   UNIQUE KEY `song_id` (`song_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 SET character_set_client = @saved_cs_client;
@@ -666,7 +663,7 @@ SET character_set_client = utf8;
 CREATE TABLE `tag_map` (
   `id` int(11) unsigned NOT NULL auto_increment,
   `object_id` int(11) unsigned NOT NULL,
-  `object_type` varchar(16) collate utf8_unicode_ci NOT NULL,
+  `object_type` varchar(16) character set utf8 default NULL,
   `user` int(11) NOT NULL,
   PRIMARY KEY  (`id`),
   KEY `object_id` (`object_id`),
@@ -693,7 +690,7 @@ SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8;
 CREATE TABLE `tags` (
   `map_id` int(11) unsigned NOT NULL,
-  `name` varchar(32) collate utf8_unicode_ci NOT NULL,
+  `name` varchar(32) character set utf8 default NULL,
   `order` tinyint(2) NOT NULL,
   KEY `order` (`order`),
   KEY `map_id` (`map_id`)
@@ -718,10 +715,9 @@ SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8;
 CREATE TABLE `tmp_playlist` (
   `id` int(11) unsigned NOT NULL auto_increment,
-  `session` varchar(32) collate utf8_unicode_ci NOT NULL,
-  `type` varchar(32) collate utf8_unicode_ci NOT NULL,
-  `object_type` varchar(32) collate utf8_unicode_ci NOT NULL,
-  `base_playlist` int(11) unsigned NOT NULL,
+  `session` varchar(32) character set utf8 default NULL,
+  `type` varchar(32) character set utf8 default NULL,
+  `object_type` varchar(32) character set utf8 default NULL,
   PRIMARY KEY  (`id`),
   KEY `session` (`session`),
   KEY `type` (`type`)
@@ -747,7 +743,7 @@ SET character_set_client = utf8;
 CREATE TABLE `tmp_playlist_data` (
   `id` int(11) unsigned NOT NULL auto_increment,
   `tmp_playlist` int(11) unsigned NOT NULL,
-  `object_type` varchar(32) collate utf8_unicode_ci default NULL,
+  `object_type` varchar(32) character set utf8 default NULL,
   `object_id` int(11) unsigned NOT NULL,
   PRIMARY KEY  (`id`),
   KEY `tmp_playlist` (`tmp_playlist`)
@@ -771,8 +767,8 @@ DROP TABLE IF EXISTS `update_info`;
 SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8;
 CREATE TABLE `update_info` (
-  `key` varchar(128) collate utf8_unicode_ci NOT NULL,
-  `value` varchar(255) collate utf8_unicode_ci NOT NULL,
+  `key` varchar(128) character set utf8 default NULL,
+  `value` varchar(255) character set utf8 default NULL,
   UNIQUE KEY `key` (`key`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 SET character_set_client = @saved_cs_client;
@@ -783,7 +779,7 @@ SET character_set_client = @saved_cs_client;
 
 LOCK TABLES `update_info` WRITE;
 /*!40000 ALTER TABLE `update_info` DISABLE KEYS */;
-INSERT INTO `update_info` VALUES ('db_version','340016');
+INSERT INTO `update_info` VALUES ('db_version','340017');
 /*!40000 ALTER TABLE `update_info` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -796,15 +792,15 @@ SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8;
 CREATE TABLE `user` (
   `id` int(11) NOT NULL auto_increment,
-  `username` varchar(128) collate utf8_unicode_ci NOT NULL,
-  `fullname` varchar(128) collate utf8_unicode_ci NOT NULL,
-  `email` varchar(128) collate utf8_unicode_ci default NULL,
-  `password` varchar(64) collate utf8_unicode_ci NOT NULL,
+  `username` varchar(128) character set utf8 default NULL,
+  `fullname` varchar(128) character set utf8 default NULL,
+  `email` varchar(128) character set utf8 default NULL,
+  `password` varchar(64) character set utf8 default NULL,
   `access` tinyint(4) unsigned NOT NULL,
   `disabled` tinyint(1) unsigned NOT NULL default '0',
   `last_seen` int(11) unsigned NOT NULL default '0',
   `create_date` int(11) unsigned default NULL,
-  `validation` varchar(128) collate utf8_unicode_ci default NULL,
+  `validation` varchar(128) character set utf8 default NULL,
   PRIMARY KEY  (`id`),
   UNIQUE KEY `username` (`username`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
@@ -829,7 +825,7 @@ SET character_set_client = utf8;
 CREATE TABLE `user_preference` (
   `user` int(11) NOT NULL,
   `preference` int(11) unsigned NOT NULL default '0',
-  `value` varchar(255) collate utf8_unicode_ci NOT NULL,
+  `value` varchar(255) character set utf8 default NULL,
   KEY `user` (`user`),
   KEY `preference` (`preference`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
@@ -841,7 +837,7 @@ SET character_set_client = @saved_cs_client;
 
 LOCK TABLES `user_preference` WRITE;
 /*!40000 ALTER TABLE `user_preference` DISABLE KEYS */;
-INSERT INTO `user_preference` VALUES (-1,1,'0'),(-1,4,'10'),(-1,19,'32'),(-1,22,'Ampache :: Pour l\'Amour de la Musique'),(-1,23,'0'),(-1,24,'1'),(-1,25,'80'),(-1,26,'100'),(-1,41,'0'),(-1,29,'stream'),(-1,30,'1'),(-1,31,'en_US'),(-1,32,'m3u'),(-1,33,'classic'),(-1,34,'27'),(-1,35,'27'),(-1,36,'27'),(-1,51,'50'),(-1,40,'0'),(-1,44,'1'),(-1,45,'0'),(-1,46,'0'),(-1,47,'7'),(-1,49,'1'),(-1,52,'8192'),(-1,53,'normal'),(-1,54,'append'),(-1,55,'default');
+INSERT INTO `user_preference` VALUES (-1,1,'0'),(-1,4,'10'),(-1,19,'32'),(-1,22,'Ampache :: Pour l\'Amour de la Musique'),(-1,23,'0'),(-1,24,'1'),(-1,25,'80'),(-1,41,'0'),(-1,29,'stream'),(-1,31,'en_US'),(-1,32,'m3u'),(-1,33,'classic'),(-1,34,'27'),(-1,35,'27'),(-1,36,'27'),(-1,51,'50'),(-1,40,'0'),(-1,44,'1'),(-1,45,'0'),(-1,46,'0'),(-1,47,'7'),(-1,49,'1'),(-1,52,'8192'),(-1,53,'default'),(-1,55,'default');
 /*!40000 ALTER TABLE `user_preference` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -859,7 +855,7 @@ CREATE TABLE `user_shout` (
   `date` int(11) unsigned NOT NULL,
   `sticky` tinyint(1) unsigned NOT NULL default '0',
   `object_id` int(11) unsigned NOT NULL,
-  `object_type` varchar(32) collate utf8_unicode_ci NOT NULL,
+  `object_type` varchar(32) character set utf8 default NULL,
   PRIMARY KEY  (`id`),
   KEY `sticky` (`sticky`),
   KEY `date` (`date`),
@@ -911,4 +907,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2008-03-17  5:40:22
+-- Dump completed on 2008-04-21  2:09:45

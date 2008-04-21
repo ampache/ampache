@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2006 Ampache.org
+ Copyright (c) Ampache.org
  All rights reserved
 
  This program is free software; you can redistribute it and/or
@@ -32,7 +32,7 @@
  */
 
 /* Don't do anything just tell me what you would do */
-$test_mode = true; 
+//$test_mode = true; 
 
 /* m(__)m */
 $alphabet_prefix = true;
@@ -46,12 +46,13 @@ ob_end_clean();
 
 /* First Clean the catalog to we don't try to write anything we shouldn't */
 
-$sql = "SELECT id FROM catalog WHERE catalog_type='local'";
+$sql = "SELECT `id` FROM `catalog` WHERE `catalog_type`='local'";
 $db_results = Dba::query($sql);
 
 $catalogs = array();
 
 while ($r = Dba::fetch_row($db_results)) { 
+
 
 	$catalog = new Catalog($r['0']);
 	$songs = $catalog->get_catalog_files();
@@ -256,13 +257,13 @@ function sort_move_file($song,$fullname) {
 		debug_event('copy','Copied ' . $song->file . ' to ' . $fullname,'5'); 
 		
 		/* Look for the folder art and copy that as well */
-		if (!conf('album_art_preferred_filename')) { 
+		if (!Config::get('album_art_preferred_filename')) { 
 			$folder_art 	= $directory . '/folder.jpg';
 			$old_art 	= $old_dir . '/folder.jpg';
 		}
 		else { 
-			$folder_art 	= $directory . "/" . conf('album_art_preferred_filename'); 
-			$old_art 	= $old_dir . "/" . conf('album_art_preferred_filename');
+			$folder_art 	= $directory . "/" . Config::get('album_art_preferred_filename'); 
+			$old_art 	= $old_dir . "/" . Config::get('album_art_preferred_filename');
 		}
 
 		debug_event('copy_art','Copied ' . $old_art . ' to ' . $folder_art,'5');

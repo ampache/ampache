@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2008 Ampache.org
+ Copyright (c) Ampache.org
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
@@ -128,6 +128,17 @@ class Dba {
 
 		return $result;
 	} // num_rows 
+
+	/**
+	 * finish
+	 * This closes a result handle and clears the memory assoicated with it
+	 */
+	public static function finish($resource) { 
+
+		// Clear the result memory
+		mysql_free_result($resource); 
+
+	} // finish
 
 	/**
 	 * affected_rows

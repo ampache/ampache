@@ -39,6 +39,7 @@ header("Content-Disposition: attachment; filename=information.xml");
 // If we don't even have access control on then we can't use this!
 if (!Config::get('access_control')) { 
 	ob_end_clean(); 
+	debug_event('Access Control','Error Attempted to use XML API with Access Control turned off','3'); 
 	echo xmlData::error('501','Access Control not Enabled');
 	exit; 
 }  
@@ -48,14 +49,14 @@ if (!Config::get('access_control')) {
  * login via this interface so we do have an exception for action=login
  */
 if (!Access::check_network('init-api',$_SERVER['REMOTE_ADDR'],$_REQUEST['user'],'5')) { 
-	debug_event('Access Denied','Unathorized access attempt to API [' . $_SERVER['REMOTE_ADDR'] . ']', '5');
+	debug_event('Access Denied','Unathorized access attempt to API [' . $_SERVER['REMOTE_ADDR'] . ']', '3');
 	ob_end_clean(); 
         echo xmlData::error('403','ACL Error');
 	exit(); 
 }
 
 if ((!vauth::session_exists('api', $_REQUEST['auth']) AND $_REQUEST['action'] != 'handshake')) { 
-	debug_event('Access Denied','Invalid Session attempt to API [' . $_REQUEST['action'] . ']','5'); 
+	debug_event('Access Denied','Invalid Session attempt to API [' . $_REQUEST['action'] . ']','3'); 
 	ob_end_clean(); 
 	echo xmlData::error('401','Session Expired');
 	exit(); 
