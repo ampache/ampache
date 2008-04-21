@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2007 Ampache.org
+ Copyright (c) Ampache.org
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
@@ -106,16 +106,20 @@ class Playlist {
 
 	/**
 	 * get_track
-	 * Takes a playlist_data.id and returns the current track value for said entry
+	 * Returns the single item on the playlist and all of it's information, restrict
+	 * it to this Playlist
 	 */
-	function get_track($id) { 
+	public function get_track($track_id) { 
 
-		$sql = "SELECT track FROM playlist_data WHERE id='" . sql_escape($id) . "'";
-		$db_results = mysql_query($sql, dbh());
+		$track_id = Dba::escape($track_id); 
+		$playlist_id = Dba::escape($this->id); 
 
-		$result = mysql_fetch_assoc($db_results);
+		$sql = "SELECT * FROM `playlist_data` WHERE `id`='$track_id' AND `playlist`='$playlist_id'";
+		$db_results = Dba::query($sql);
 
-		return $result['track'];
+		$row = Dba::fetch_assoc($db_results);
+
+		return $row; 
 
 	} // get_track
 
@@ -315,23 +319,19 @@ class Playlist {
 	} // update_item
 
 	/**
-	 * update_track_numbers
-	 * This function takes an array of $array['song_id'] $array['track'] where song_id is really the
-	 * playlist_data.id and updates them
+	 * update_track_number
+	 * This takes a playlist_data.id and a track (int) and updates the track value
 	 */
-	function update_track_numbers($data) { 
+	public function update_track_number($track_id,$track) { 
 
-		foreach ($data as $change) { 
-		
-			$track 	= sql_escape($change['track']);
-			$id	= sql_escape($change['song_id']);
+		$playlist_id	= Dba::escape($this->id); 
+		$track_id	= Dba::escape($track_id); 
+		$track		= Dba::escape($track); 
 
-			$sql = "UPDATE playlist_data SET track='$track' WHERE id='$id'";
-			$db_results = mysql_query($sql, dbh());
+		$sql = "UPDATE `playlist_data` SET `track`='$track' WHERE `id`='$track_id' AND `playlist`='$playlist_id'"; 
+		$db_results = Dba::query($sql); 
 
-		} // end foreach
-
-	} // update_track_numbers
+	} // update_track_number
 
 	/**
 	 * add_songs
@@ -461,18 +461,6 @@ class Playlist {
 
         } // normalize_tracks
 	
-	/**
-	 * check_type
-	 * This validates a type to make sure it's legit
-	 */
-	function check_type($type) { 
-
-		if ($type == 'public' || $type == 'private') { return true; }
-		
-		return false; 
-
-	} // check_type
-
 	/**
 	 * delete_track
 	 * this deletes a single track, you specify the playlist_data.id here

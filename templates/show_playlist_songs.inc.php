@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2007 Ampache.org
+ Copyright (c) Ampache.org
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
@@ -53,7 +53,7 @@ $ajax_url = Config::get('ajax_url');
 		$song->format(); 
 		$playlist_track = $object['track'];
 ?>
-<tr class="<?php echo flip_class(); ?>" id="song_<?php echo $song->id; ?>">
+<tr class="<?php echo flip_class(); ?>" id="track_<?php echo $object['track_id']; ?>">
 	<?php require Config::get('prefix') . '/templates/show_playlist_song_row.inc.php'; ?> 
 </tr>
 <?php } ?>

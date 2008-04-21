@@ -4,6 +4,10 @@
 
 --------------------------------------------------------------------------
   v.3.4-Beta3 
+	- Fixed Recently Played to do Distinct over last X rather then
+		distinct over all time
+	- Added update the attempts to correct the charset on the db
+		columns
 	- Added prompt for input charset to fix_filenames.inc
 	- Updated Links in Readme
 	- Fixed Show Art filter on browse by albums

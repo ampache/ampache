@@ -907,20 +907,18 @@ class Song {
 			$user_limit = " AND `object_count`.`user`='" . Dba::escape($user_id) . "'"; 
 		} 
 
-
 		$sql = "SELECT `object_count`.`object_id`,`object_count`.`user`,`object_count`.`object_type`, " . 
 			"`object_count`.`date` " . 
 			"FROM `object_count` " . 
 			"WHERE `object_type`='song'$userlimit " . 
-			"GROUP BY `object_count`.`object_id` " . 
-			"ORDER BY `object_count`.`date` DESC " . 
-			"LIMIT " . intval(Config::get('popular_threshold')); 
+			"ORDER BY `object_count`.`date` DESC ";
 		$db_results = Dba::query($sql); 
 
 		$results = array(); 
 		
 		while ($row = Dba::fetch_assoc($db_results)) { 
-			$results[] = $row; 
+			$results[$row['object_id']] = $row; 
+			if (count($results) > Config::get('popular_threshold')) { break; } 	
 		} 
 
 		return $results; 

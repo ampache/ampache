@@ -19,29 +19,23 @@
 
 */
 ?>
-<td colspan="8">
-<form method="post" id="edit_song_<?php echo $song->id; ?>" action="#">
+<td colspan="9">
+<form method="post" id="edit_track_<?php echo $track['id']; ?>" action="javascript:void(0);">
 <table class="inline-edit" cellpadding="3" cellspacing="0">
 <tr>
 <td>
-	<input type="textbox" name="name" value="<?php echo scrub_out($song->title); ?>" />
+	<input type="textbox" name="track" size="3" maxlength="4" value="<?php echo intval($track['track']); ?>" />
 </td>
-<td>
-	<?php show_artist_select('artist',$song->artist); ?>
-</td>
-<td>
-	<?php show_album_select('album',$song->album); ?>
-</td>
-<td>
-	<?php show_genre_select('genre',$song->genre); ?>
-</td>
-<td>
-	<input type="textbox" name="track" size="3" value="<?php echo scrub_out($song->track); ?>" />
-</td>
+<td class="cel_song"><?php echo $song->f_link; ?></td>
+<td class="cel_artist"><?php echo $song->f_artist_link; ?></td>
+<td class="cel_album"><?php echo $song->f_album_link; ?></td>
+<td class="cel_genre"><?php echo $song->f_genre_link; ?></td>
+<td class="cel_track"><?php echo $song->f_track; ?></td>
+<td class="cel_time"><?php echo $song->f_time; ?></td>
 <td>
 	<input type="hidden" name="id" value="<?php echo $song->id; ?>" />
 	<input type="hidden" name="type" value="song" />
-	<?php echo Ajax::button('?action=edit_object&id=' . $song->id . '&type=song','download',_('Save Changes'),'save_song_' . $song->id,'edit_song_' . $song->id); ?>
+	<?php echo Ajax::button('?page=playlist&action=save_track&playlist_id=' . $playlist->id . '&track_id=' . $track['id'],'download',_('Save Changes'),'save_track_' . $track['id'],'edit_track_' . $track['id']); ?>
 </td>
 </tr>
 </table>

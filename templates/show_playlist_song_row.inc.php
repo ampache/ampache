@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2007 Ampache.org
+ Copyright (c) Ampache.org
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
@@ -34,6 +34,7 @@
 	</a>
 	<?php } ?>
 	<?php if ($playlist->has_access()) { ?>
-		<?php echo Ajax::button('?page=playlist&action=delete_track&playlist_id=' . $playlist->id . '&track=' . $object['track_id'],'delete',_('Delete'),'track_del_' . $object['track_id']); ?>
+		<?php echo Ajax::button('?page=playlist&action=edit_track&playlist_id=' . $playlist->id . '&track_id=' . $object['track_id'],'edit',_('Edit'),'track_edit_' . $object['track_id']); ?>
+		<?php echo Ajax::button('?page=playlist&action=delete_track&playlist_id=' . $playlist->id . '&track_id=' . $object['track_id'],'delete',_('Delete'),'track_del_' . $object['track_id']); ?>
 	<?php } ?>
 </td>

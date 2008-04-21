@@ -30,7 +30,7 @@ switch ($_REQUEST['action']) {
 		$playlist = new Playlist($_REQUEST['playlist_id']); 
 		$playlist->format(); 
 		if ($playlist->has_access()) {
-			$playlist->delete_track($_REQUEST['track']); 
+			$playlist->delete_track($_REQUEST['track_id']); 
 		} 
 
 		$object_ids = $playlist->get_items(); 
@@ -39,9 +39,39 @@ switch ($_REQUEST['action']) {
 	        Browse::add_supplemental_object('playlist',$playlist->id);
 	        Browse::save_objects($object_ids);
 	        Browse::show_objects($object_ids);
-		$results['browse_content'] = ob_get_contents(); 
-		ob_end_clean(); 
+		$results['browse_content'] = ob_get_clean(); 
 	break;
+	case 'edit_track': 
+		$playlist = new Playlist($_REQUEST['playlist_id']); 
+		if (!$playlist->has_access()) { 
+			$results['rfc3514'] = '0x1'; 
+			break; 
+		} 
+
+		// They've got access, show the edit page
+		$track = $playlist->get_track($_REQUEST['track_id']); 
+		$song = new Song($track['object_id']); 
+		$song->format(); 
+		require_once Config::get('prefix') . '/templates/show_edit_playlist_song_row.inc.php';	
+		$results['track_' . $track['id']] = ob_get_clean(); 
+	break; 	
+	case 'save_track': 
+		$playlist = new Playlist($_REQUEST['playlist_id']); 
+		if (!$playlist->has_access()) { 
+			$results['rfc3514'] = '0x1'; 
+			break; 
+		} 
+		$playlist->format(); 
+
+		// They've got access, save this guy and re-display row
+		$playlist->update_track_number($_GET['track_id'],$_POST['track']); 
+		$track = $playlist->get_track($_GET['track_id']); 
+		$song = new Song($track['object_id']); 
+		$song->format(); 
+		$playlist_track = $track['track']; 
+		require Config::get('prefix') . '/templates/show_playlist_song_row.inc.php';
+		$results['track_' . $track['id']] = ob_get_clean(); 
+	break;	
 	case 'create':
 		// Pull the current active playlist items
 		$objects = $GLOBALS['user']->playlist->get_items(); 
@@ -66,8 +96,7 @@ switch ($_REQUEST['action']) {
 		$playlist->format(); 
 		ob_start(); 
 		require_once Config::get('prefix') . '/templates/show_playlist.inc.php'; 
-		$results['content'] = ob_get_contents(); 
-		ob_end_clean(); 
+		$results['content'] = ob_get_clean(); 
 	break;
 	case 'append': 
 		// Pull the current active playlist items
