@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2008 Ampache.org
+ Copyright (c) Ampache.org
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
@@ -410,7 +410,7 @@ class Democratic extends tmpPlaylist {
                 $object_id      = Dba::escape($row_id);
                 $user_id        = Dba::escape($GLOBALS['user']->id);
 
-		$sql = "DELETE FROM `user_vote` WHERE `object_id`='$object_id'";
+		$sql = "DELETE FROM `user_vote` WHERE `object_id`='$object_id' AND `user`='$user_id'";
                 $db_results = Dba::query($sql);
 
                 /* Clean up anything that has no votes */

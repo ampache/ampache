@@ -3,6 +3,10 @@
 --------------------------------------------------------------------------
 
 --------------------------------------------------------------------------
+  v.3.4 
+	- Fixed Remove one vote, removes all votes on democratic play
+
+--------------------------------------------------------------------------
   v.3.4-Beta3 04/20/2008 
 	- Fixed Rating display and Rating Advanced Search
 	- Added ability to specify new Genre when adding a Radio Station
