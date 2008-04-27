@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2007 Ampache.org
+ Copyright (c) Ampache.org
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
@@ -64,6 +64,9 @@ switch ($_REQUEST['action']) {
 		$song_ids = $genre->get_songs();
 		$name = $genre->name; 
 	break;
+	case 'browse': 
+		$song_ids = Browse::get_saved(); 
+		$name = 'Batch-' . date("dmY",time()); 
 	default:
 		// Rien a faire
 	break;

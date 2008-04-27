@@ -41,6 +41,7 @@ switch ($_REQUEST['action']) {
 		}
 	case 'search':
 		require_once Config::get('prefix') . '/templates/show_search.inc.php'; 
+		require_once Config::get('prefix') . '/templates/show_search_options.inc.php'; 
 		$results = run_search($_REQUEST);
 		Browse::set_type('song'); 
 		Browse::set_static_content(1);

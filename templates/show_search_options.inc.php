@@ -20,14 +20,13 @@
 
 */
 ?>
-<div id="sb_Subsearch">
-        <form name="search" method="post" action="<?php echo $web_path; ?>/search.php" enctype="multipart/form-data" style="Display:inline">
-        <input type="text" name="search_string" id="searchString"/>
-        <input type="hidden" name="action" value="quick_search" />
-        <input type="hidden" name="method" value="fuzzy" />
-        <input type="hidden" name="object_type" value="song" />
-        <input class="button" type="submit" value="<?php echo _('Search'); ?>" id="searchBtn" />
-      	<a href="<?php echo $web_path; ?>/search.php" class="button" id="advSearchBtn"><?php echo _('Advanced Search'); ?></a>
-        </form>
+<?php show_box_top(_('Options')); ?>
+<div id="search_options">
+<ul>
+	<li><?php echo Ajax::text('?action=basket&type=browse_set',_('Add Search Results'),'add_search_results'); ?></li>
+	<?php if (Access::check_function('batch_download')) { ?>
+	<li><a href="<?php echo Config::get('web_path'); ?>/batch.php?action=browse"><?php echo _('Batch Download'); ?></a></li>
+	<?php } ?>
+</ul>
 </div>
-
+<?php show_box_bottom(); ?>

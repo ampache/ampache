@@ -29,7 +29,7 @@
 	<li><a href="<?php echo Config::get('web_path'); ?>/playlist.php?action=normalize_tracks&amp;playlist_id=<?php echo $playlist->id; ?>"><?php echo _('Normalize Tracks'); ?></a></li>
         <?php if (Access::check_function('batch_download')) { ?>
                 <li><a href="<?php echo Config::get('web_path'); ?>/batch.php?action=playlist&amp;id=<?php echo $playlist->id; ?>">
-                        <?php echo get_user_icon('batch_download',_('Batch Download')); ?>
+                        <?php echo _('Batch Download')); ?>
                 </a></li>
         <?php } ?>
 	<li><?php echo Ajax::text('?action=basket&type=playlist&id=' . $playlist->id,_('Add All'),'play_playlist'); ?></li>

@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2007 Ampache.org
+ Copyright (c) Ampache.org
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
@@ -101,9 +101,9 @@ foreach ($object_ids as $user_id) {
 </tr>
 <?php } //end foreach users ?>
 <tr class="th-bottom">
-	<th class="cel_username"><?php echo Ajax::text('?page=browse&action=set_sort&sort=fullname',_('Fullname'),'users_sort_fullname'); ?>( <?php echo Ajax::text('?page=browse&action=set_sort&sort=username',_('Username'),'users_sort_username');?>)</th>
-  <th class="cel_lastseen"><?php echo Ajax::text('?page=browse&action=set_sort&sort=last_seen',_('Last Seen'),'users_sort_lastseen'); ?></th>
-  <th class="cel_registrationdate"><?php echo Ajax::text('?page=browse&action=set_sort&sort=create_date',_('Registration Date'),'users_sort_createdate'); ?></th>
+	<th class="cel_username"><?php echo Ajax::text('?page=browse&action=set_sort&sort=fullname',_('Fullname'),'users_sort_fullname1'); ?>( <?php echo Ajax::text('?page=browse&action=set_sort&sort=username',_('Username'),'users_sort_username1');?>)</th>
+  <th class="cel_lastseen"><?php echo Ajax::text('?page=browse&action=set_sort&sort=last_seen',_('Last Seen'),'users_sort_lastseen1'); ?></th>
+  <th class="cel_registrationdate"><?php echo Ajax::text('?page=browse&action=set_sort&sort=create_date',_('Registration Date'),'users_sort_createdate1'); ?></th>
   <th class="cel_activity"><?php echo _('Activity'); ?></th>
 	<?php if (Config::get('track_user_ip')) { ?>
   <th class="cel_lastip"><?php echo _('Last Ip'); ?></th>

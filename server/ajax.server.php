@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2007 Ampache.org
+ Copyright (c) Ampache.org
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
@@ -236,6 +236,12 @@ switch ($_REQUEST['action']) {
 					$GLOBALS['user']->playlist->add_object($song_id,'song'); 
 				} // end foreach
 			break;
+			case 'browse_set':
+				$objects = Browse::get_saved(); 
+				foreach ($objects as $object_id) { 
+					$GLOBALS['user']->playlist->add_object($object_id,'song'); 
+				} 
+			break; 
 			case 'album_random': 
 			case 'artist_random': 
 			case 'genre_random':

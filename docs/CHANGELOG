@@ -4,7 +4,10 @@
 
 --------------------------------------------------------------------------
   v.3.4 
+	- Added ability to Add Search Results to playlist, or download
+		if batch download is enabled
 	- Fixed Remove one vote, removes all votes on democratic play
+	- Fixed sorting issue on Browse Users
 
 --------------------------------------------------------------------------
   v.3.4-Beta3 04/20/2008 
