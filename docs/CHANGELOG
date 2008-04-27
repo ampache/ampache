@@ -4,6 +4,7 @@
 
 --------------------------------------------------------------------------
   v.3.4 
+	- Added Playlist and Genre Counts to the XMLAPI Handshake
 	- Added ability to Add Search Results to playlist, or download
 		if batch download is enabled
 	- Fixed Remove one vote, removes all votes on democratic play

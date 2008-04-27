@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2007 Ampache.org
+ Copyright (c) Ampache.org
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
@@ -99,9 +99,14 @@ class Api {
 				$row = Dba::fetch_assoc($db_results); 	 
 
 				// Now we need to quickly get the totals of songs
-				$sql = "SELECT COUNT(`id`) AS `song`,COUNT(DISTINCT(`album`)) AS `album`,COUNT(DISTINCT(`artist`)) AS `artist` FROM `song`";
+				$sql = "SELECT COUNT(`id`) AS `song`,COUNT(DISTINCT(`album`)) AS `album`," . 
+					"COUNT(DISTINCT(`artist`)) AS `artist`,COUNT(DISTINCT(`genre`)) as `genre` FROM `song`";
 				$db_results = Dba::query($sql); 
 				$counts = Dba::fetch_assoc($db_results); 
+
+				$sql = "SELECT COUNT(`id`) AS `playlist` FROM `playlist`"; 
+				$db_results = Dba::query($sql): 
+				$playlist = Dba::fetch_assoc($db_results); 
 
 				return array('auth'=>$token,
 					'api'=>self::$version,
@@ -109,7 +114,9 @@ class Api {
 					'add'=>date("r",$row['add']),
 					'songs'=>$counts['song'],
 					'albums'=>$counts['album'],
-					'artists'=>$counts['artist']); 
+					'artists'=>$counts['artist'],
+					'genres'=>$counts['genre'],
+					'playlists'=>$playlist['playlist']); 
 			} // match 
 
 		} // end while
