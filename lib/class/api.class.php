@@ -105,7 +105,7 @@ class Api {
 				$counts = Dba::fetch_assoc($db_results); 
 
 				$sql = "SELECT COUNT(`id`) AS `playlist` FROM `playlist`"; 
-				$db_results = Dba::query($sql): 
+				$db_results = Dba::query($sql);
 				$playlist = Dba::fetch_assoc($db_results); 
 
 				return array('auth'=>$token,
