@@ -758,13 +758,16 @@ class Album {
 
                 // Check for PHP:GD and if we have it make sure this image is of some size
         	if (function_exists('ImageCreateFromString')) {
-			$im = @ImageCreateFromString($image);
-			if (@imagesx($im) == 1 || @imagesy($im) == 1 && $im) {
+			$im = ImageCreateFromString($image);
+			if (imagesx($im) <= 5 || imagesy($im) <= 5 || !$im) {
 	                	return false;
 	               	}
 		} // if we have PHP:GD
+		elseif (strlen($image) < 5) { 
+			return false; 
+		} 
 
-		// Default to image/jpg as a guess if there is no passed mime type
+		// Default to image/jpeg as a guess if there is no passed mime type
 		$mime = $mime ? $mime : 'image/jpeg'; 
 
                 // Push the image into the database
@@ -791,8 +794,8 @@ class Album {
 		$mime = Dba::escape($mime); 
 		$album = Dba::escape($album); 
 
-		$sql = "UPDATE `album` SET `thumb`='$data',`thumb_mime`='$mime' " . 
-			"WHERE `album`.`id`='$album'";
+		$sql = "UPDATE `album_data` SET `thumb`='$data',`thumb_mime`='$mime' " . 
+			"WHERE `album_data`.`album_id`='$album'";
 		$db_results = Dba::query($sql); 
 
 	} // save_resized_art

@@ -728,10 +728,17 @@ class Song {
 	 * rename patterns 
 	 */
 	public function format_pattern() { 
+	        
+		$extension = ltrim(substr($this->file,strlen($this->file)-4,4),".");
 
 		$catalog = new Catalog($this->catalog); 
 
-	        $extension = ltrim(substr($this->file,strlen($this->file)-4,4),".");
+		// If we don't have a rename pattern then just return it
+		if (!trim($catalog->rename_pattern)) { 
+			$this->f_pattern	= $this->title;
+			$this->f_file		= $this->title . '.' . $extension;
+			return; 
+		} 
 
 	        /* Create the filename that this file should have */
 	        $album  = $this->f_album_full;
