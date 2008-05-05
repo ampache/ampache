@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2008 ampache.org
+ Copyright (c) Ampache.org
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
@@ -21,8 +21,7 @@
 require_once 'lib/init.php';
 
 /* If we are running a demo, quick while you still can! */
-if (Config::get('demo_mode') || !$GLOBALS['user']->has_access('25')) {
-
+if (Config::get('demo_mode') || !Access::check('interface','25')) {
 	access_denied();
 	exit;
 }
@@ -62,7 +61,7 @@ switch ($_REQUEST['action']) {
 		} // end foreach
 
 		// Check to see if 'clear' was passed if it was then we need to reset the basket
-		if ( ($_REQUEST['playlist_method'] == 'clear' || Config::get('playlist_method') == 'clear') AND Config::get('play_method') != 'xspf_player') { 
+		if ( ($_REQUEST['playlist_method'] == 'clear' || Config::get('playlist_method') == 'clear') AND Config::get('play_type') != 'xspf_player') { 
 			$GLOBALS['user']->playlist->clear(); 
 		} 
 

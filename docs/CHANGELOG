@@ -4,6 +4,7 @@
 
 --------------------------------------------------------------------------
   v.3.4 
+	- Fixed flash player not working if playlist_method included clear
 	- Fixed album art thumbs never saving due to incorrect table reference
 	- Fixed download having no filename if no catalog pattern
 	- Fixed issue where 0 sized images could be inserted into the database
