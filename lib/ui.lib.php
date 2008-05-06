@@ -1,7 +1,7 @@
 <?php
 /*
 
-   Copyright (c) 2001 - 2007 Ampache.org
+   Copyright (c) Ampache.org
    All rights reserved.
 
    This program is free software; you can redistribute it and/or
@@ -898,7 +898,7 @@ function xml_get_footer($type){
 
 	break;
 	}
-} //xml_get_footer
+} // xml_get_footer
 
 /**
  * ajax_include
@@ -916,5 +916,18 @@ function ajax_include($include) {
 	return $results; 
 
 } // ajax_include
+
+/**
+ * toggle_visible
+ * this is identicla to the javascript command that it actually calls
+ */
+function toggle_visible($element) { 
+
+	echo "<script type=\"text/javascript\">\n"; 
+	echo "toggle_visible('$element');"; 
+	echo "\n</script>\n"; 
+
+} // toggle_visible
+
 
 ?>

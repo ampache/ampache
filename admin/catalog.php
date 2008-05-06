@@ -40,6 +40,7 @@ switch ($_REQUEST['action']) {
 		$catalog = new Catalog();
 		$_REQUEST['catalogs'] = $catalog->get_catalog_ids();
 	case 'add_to_catalog':
+		toggle_visible('ajax-loading'); 
 		ob_end_flush(); 
 	    	if (Config::get('demo_mode')) { break; }
 		if ($_REQUEST['catalogs'] ) {
@@ -52,10 +53,12 @@ switch ($_REQUEST['action']) {
 		$title 	= _('Catalog Updated');
 		$body	= '';
 		show_confirmation($title,$body,$url);
+		toggle_visible('ajax-loading'); 
 	break;
 	case 'update_all_catalogs':
 		$_REQUEST['catalogs'] = Catalog::get_catalog_ids();
 	case 'update_catalog':
+		toggle_visible('ajax-loading'); 
 		ob_end_flush(); 
 	    	/* If they are in demo mode stop here */
 	        if (Config::get('demo_mode')) { break; }
@@ -70,8 +73,10 @@ switch ($_REQUEST['action']) {
 		$title	= _('Catalog Updated');
 		$body	= '';
 		show_confirmation($title,$body,$url);
+		toggle_visible('ajax-loading'); 
 	break;
 	case 'full_service':
+		toggle_visible('ajax-loading'); 
 		ob_end_flush(); 
 		/* Make sure they aren't in demo mode */
 		if (Config::get('demo_mode')) { access_denied(); break; } 
@@ -93,6 +98,7 @@ switch ($_REQUEST['action']) {
 		$title	= _('Catalog Updated');
 		$body	= '';
 		show_confirmation($title,$body,$url);
+		toggle_visible('ajax-loading'); 
 	break;
 	case 'delete_catalog':
 		/* Make sure they aren't in demo mode */
@@ -123,6 +129,7 @@ switch ($_REQUEST['action']) {
 		$catalog = new Catalog(); 
 		$_REQUEST['catalogs'] = Catalog::get_catalog_ids();
 	case 'clean_catalog':
+		toggle_visible('ajax-loading'); 
 		ob_end_flush(); 
 	    	/* If they are in demo mode stop them here */
 	        if (Config::get('demo_mode')) { break; }
@@ -139,6 +146,7 @@ switch ($_REQUEST['action']) {
 		$title	= _('Catalog Cleaned');
 		$body	= '';
 		show_confirmation($title,$body,$url);
+		toggle_visible('ajax-loading'); 
 	break;
 	case 'update_catalog_settings':
 		/* No Demo Here! */
@@ -246,6 +254,7 @@ switch ($_REQUEST['action']) {
 		require_once Config::get('prefix') . '/templates/show_edit_catalog.inc.php';
 	break;
 	case 'gather_album_art':
+		toggle_visible('ajax-loading'); 
 		ob_end_flush(); 
 
 		$catalogs = $_REQUEST['catalogs'] ? $_REQUEST['catalogs'] : Catalog::get_catalogs();

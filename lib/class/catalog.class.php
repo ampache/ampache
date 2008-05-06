@@ -504,7 +504,6 @@ class Catalog {
 					if (strcmp($full_file,iconv(Config::get('site_charset'),Config::get('site_charset') . '//IGNORE',$full_file)) != '0') { 
 						debug_event('read',$full_file . ' has non-' . Config::get('site_charset') . ' characters and can not be indexed','1'); 
 						Error::add('catalog_add',$full_file . ' ' . _('does not match site charset')); 
-						continue; 
 					} 
 				} // end if iconv
 		
@@ -1395,7 +1394,7 @@ class Catalog {
 				$file = str_replace(array('(',')','\''),'',$results['file']);
 			        echo "<script type=\"text/javascript\">\n";
 			        echo "update_txt('" . $count ."','clean_count_" . $this->id . "');";
-				echo "update_txt('" . htmlentities($file) . "','clean_dir_" . $this->id . "');"; 
+				echo "update_txt('" . addslashes(htmlentities($file)) . "','clean_dir_" . $this->id . "');"; 
 			        echo "\n</script>\n";	
 	                        flush();
                         } //echos song count
