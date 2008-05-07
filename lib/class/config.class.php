@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2007 Ampache.org
+ Copyright (c) Ampache.org
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
@@ -47,63 +47,52 @@ class Config {
 	} // constructor
 
 	/**
+	 * get
 	 * This checks to see if this is an instance or procedure
 	 * call, procedure == global, instance == local
 	 */
 	public static function get($name) {
 
-		if (is_object($this)) { 
-			return $this->_local[$name]; 
-		} 
-		else { 
-			return self::$_global[$name];
-		}
+		return self::$_global[$name];
 
 	} // get
+
+	/**
+	 * get_all
+	 * This returns all of the current config variables as an array
+	 */
+	public static function get_all() { 
+
+		return self::$_global; 
+
+	} // get_all
 	
 	/**
+	 * set
 	 * This checks to see if this is an instance or procedure calls
 	 * and then sets the correct variable based on that
 	 */
 	public static function set($name, $value, $clobber = 0) {
 
-		if (isset($this)) { 
-			if (isset($this->_local[$name]) && !$clobber) { 
-				Error::add('Config Instance',"Trying to clobber '$name' without setting clobber"); 
-				return; 
-			} 
-			else { 
-				$this->_local[$name] = $value; 
-			} 
-		} // if object
+		if (isset(self::$_global[$name]) && !$clobber) { 
+			Error::add('Config Global',"Trying to clobber'$name' without setting clobber"); 
+			return;
+		}
 		else { 
-			if (isset(self::$_global[$name]) && !$clobber) { 
-				Error::add('Config Global',"Trying to clobber'$name' without setting clobber"); 
-				return;
-			}
-			else { 
-				self::$_global[$name] = $value; 
-			} 
-		} // else not object, procedure call
+			self::$_global[$name] = $value; 
+		} 
 
 	} // set
 
 	/**
+	 * set_by_array
 	 * This is the same as the set function except it takes an array as input
 	 */
-	
 	public static function set_by_array($array, $clobber = 0) {
 		
-		if (isset($this)) { 			
-			foreach ($array as $name => $value) {
-				$this->set($name, $value, $clobber);
-			} // end foreach
-		} // if this is an object
-		else { 
-			foreach ($array as $name => $value) { 
-				self::set($name,$value,$clobber); 
-			} 
-		} // end if procedural call
+		foreach ($array as $name => $value) { 
+			self::set($name,$value,$clobber); 
+		} 
 
 	} // set_by_array
 	

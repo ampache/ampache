@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2007 Ampache.org
+ Copyright (c) Ampache.org
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
@@ -21,7 +21,7 @@
 
 require '../lib/init.php';
 
-if (!$GLOBALS['user']->has_access(100)) { 
+if (!Access::check('interface',100)) { 
 	access_denied();
 	exit();
 }

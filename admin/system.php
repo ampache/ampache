@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2006 Ampache.org
+ Copyright (c) Ampache.org
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
@@ -23,7 +23,7 @@ require '../lib/init.php';
 require_once Config::get('prefix') . '/lib/debug.lib.php';
 require_once Config::get('prefix') . '/modules/horde/Browser.php';
 
-if (!$GLOBALS['user']->has_access(100)) {
+if (!Access::check('interface',100)) {
 	access_denied();
 	exit();
 }
@@ -42,6 +42,18 @@ switch ($_REQUEST['action']) {
 	        echo $final; 
 
 	break;
+	case 'show_debug': 
+		show_header(); 
+                $configuration = Config::get_all();
+                require_once Config::get('prefix') . '/templates/show_debug.inc.php';
+		show_footer(); 
+	break; 
+	case 'check_php_settings':
+
+	break;
+	case 'check_iconv': 
+
+	break; 
 	/* Check this version against ampache.org's record */
 	case 'check_version':
 

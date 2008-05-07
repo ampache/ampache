@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2008 Ampache.org
+ Copyright (c) Ampache.org
  All Rights Reserved
 
  this program is free software; you can redistribute it and/or
@@ -210,7 +210,7 @@
 	</td>
 </tr>
 <tr>
-	<td valign="top">DB Inserted</td>
+	<td valign="top"><?php echo _('DB Inserted'); ?></td>
 	<td valign="top">[
 	<?php
 		$db_inserted = check_database_inserted($db,$results['local_db']);
@@ -232,7 +232,7 @@
 </tr>
 <tr>
 
-	<td valign="top">Web Path</td>
+	<td valign="top"><?php echo _('Web Path'); ?></td>
 	<td valign="top">[
 	<?php
 		/*
