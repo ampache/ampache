@@ -41,18 +41,32 @@ switch ($_REQUEST['action']) {
 					$results['rfc3514'] = '0x1'; 
 					break 2; 
 				} 
+				$new = $_POST['type']; 
 			break; 
 			case 'xspf_player': 
+				$new = $_POST['type']; 
 				// Rien a faire
 			break; 
 			default: 
+				$new = 'stream'; 
 				$results['rfc3514'] = '0x1'; 
 			break 2; 
 		} // end switch 
 
+		$current = Config::get('play_type'); 
+
 		// Go ahead and update their preference
-		Preference::update('play_type',$GLOBALS['user']->id,$_POST['type']); 
+		if (Preference::update('play_type',$GLOBALS['user']->id,$new)) { 
+			Config::set('play_type',$new,'1'); 
+		} 
+		
+
+		if (($new == 'localplay' AND $current != 'localplay') OR ($current == 'localplay' AND $new != 'localplay')) { 
+			$results['rightbar'] = ajax_include('rightbar.inc.php'); 
+		} 
+
 		$results['rfc3514'] = '0x0'; 
+
 	break;
 	case 'basket': 
 		// We need to set the basket up!

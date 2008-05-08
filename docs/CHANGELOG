@@ -4,6 +4,8 @@
 
 --------------------------------------------------------------------------
   v.3.4 
+	- Fixed lack of refresh of controls when switching between localplay
+		and other play methods
 	- Add Debug page with current configuration and php state information
 		as well as links to generate new config file and reset database
 		charset
