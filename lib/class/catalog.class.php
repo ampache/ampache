@@ -504,6 +504,7 @@ class Catalog {
 					if (strcmp($full_file,iconv(Config::get('site_charset'),Config::get('site_charset') . '//IGNORE',$full_file)) != '0') { 
 						debug_event('read',$full_file . ' has non-' . Config::get('site_charset') . ' characters and can not be indexed','1'); 
 						Error::add('catalog_add',$full_file . ' ' . _('does not match site charset')); 
+						continue; 
 					} 
 				} // end if iconv
 		
