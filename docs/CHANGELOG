@@ -4,6 +4,9 @@
 
 --------------------------------------------------------------------------
   v.3.4 
+	- Add Debug page with current configuration and php state information
+		as well as links to generate new config file and reset database
+		charset
 	- Relaxed Charset restrictions on catalog add filename with invalid
 		characters is now a warning, not a fatal error
 	- Fixed lack of loading indication during catalog processes

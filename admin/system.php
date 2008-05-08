@@ -28,6 +28,7 @@ if (!Access::check('interface',100)) {
 	exit();
 }
 
+show_header(); 
 
 /* Switch on action boys */
 switch ($_REQUEST['action']) { 
@@ -35,57 +36,28 @@ switch ($_REQUEST['action']) {
 	 * /config/ampache.cfg to .cfg.dist
 	 */
 	case 'generate_config':
+		ob_end_clean(); 
 		$current = parse_ini_file(Config::get('prefix') . '/config/ampache.cfg.php');
 		$final = generate_config($current);
 	        $browser = new Browser(); 
 	        $browser->downloadHeaders('ampache.cfg.php','text/plain',false,filesize(Config::get('prefix') . '/config/ampache.cfg.php.dist')); 
 	        echo $final; 
-
+		exit; 
 	break;
+	case 'reset_db_charset':
+		Dba::reset_db_charset(); 	
+		show_confirmation(_('Database Charset Updated'),_('Your Database and assoicated tables have been updated to match your currently configured charset'),'/admin/system.php?action=show_debug'); 
+	break; 
 	case 'show_debug': 
-		show_header(); 
                 $configuration = Config::get_all();
                 require_once Config::get('prefix') . '/templates/show_debug.inc.php';
-		show_footer(); 
 	break; 
-	case 'check_php_settings':
-
-	break;
-	case 'check_iconv': 
-
-	break; 
-	/* Check this version against ampache.org's record */
-	case 'check_version':
-
-
-	break;
-	/* Export Catalog to ItunesDB */
-	case 'export':
-	    $catalog = new Catalog();
-	    switch ($_REQUEST['export']) {
-	    case 'itunes':
-        	        header("Cache-control: public");
-                	header("Content-Disposition: filename=itunes.xml");
-	                header("Content-Type: application/itunes+xml; charset=utf-8");
-        	        echo xml_get_header('itunes');
-                	echo $catalog->export($_REQUEST['export']);
-	                echo xml_get_footer('itunes');
-	    break;
-	    default:
-        	$url    = conf('web_path') . '/admin/index.php';
-	        $title  = _('Export Failed');
-	        $body   = '';
-	        show_template('header');
-	        show_confirmation($title,$body,$url);
-	        show_template('footer');
-	    break;
-	    }
-	
-	break;
-
 	default: 
 		// Rien a faire
 	break;
 } // end switch
+
+
+show_footer(); 
 
 ?>

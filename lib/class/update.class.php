@@ -1211,24 +1211,34 @@ class Update {
 		switch (strtoupper(Config::get('site_charset'))) { 
 			case 'EUC-KR': 
 				$target_charset = 'euckr'; 
+				$target_collation = 'euckr_korean_ci'; 
 			break; 
 			case 'CP932': 
 				$target_charset = 'sjis'; 
+				$target_collation = 'sjis_japanese_ci'; 
 			break; 
 			case 'KOI8-U': 
 				$target_charset = 'koi8u'; 
+				$target_collation = 'koi8u_general_ci'; 
 			break; 
 			case 'KOI8-R': 
 				$target_charset = 'koi8r';
+				$target_collation = 'koi8r_general_ci'; 
 			break; 
 			case 'ISO-8859': 
 				$target_charset = 'latin2';
+				$target_collation = 'latin2_general_ci'; 
 			break; 
 			default; 
 			case 'UTF-8':
 				$target_charset = 'utf8'; 
+				$target_collation = 'utf8_unicode_ci'; 
 			break; 
 		} // end mysql charset translation
+
+                // Alter the charset for the entire database
+                $sql = "ALTER DATABASE `" . Config::get('database_name') . "` DEFAULT CHARACTER SET $target_charset COLLATE $target_collation"; 
+                $db_results = Dba::query($sql); 
 	
 		$sql = "SHOW TABLES"; 
 		$db_results = Dba::query($sql); 
@@ -1238,9 +1248,13 @@ class Update {
 			$sql = "DESCRIBE `" . $row['0'] . "`"; 
 			$describe_results = Dba::query($sql); 
 
+                        // Change the tables default charset and colliation
+                        $sql = "ALTER TABLE `" . $row['0'] . "`  DEFAULT CHARACTER SET $target_charset COLLATE $target_collation"; 
+                        $alter_table = Dba::query($sql); 
+
 			// Itterate through the columns of the table
 			while ($table = Dba::fetch_assoc($describe_results)) { 
-				if (strstr($table['Type'],'varchar')) { 
+				if (strstr($table['Type'],'varchar')  OR strstr($table['Type'],'enum') OR strstr($table['Table'],'text')) { 
 					$sql = "ALTER TABLE `" . $row['0'] . "` MODIFY `" . $table['Field'] . "` " . $table['Type'] . " CHARACTER SET " . $target_charset;
 					$charset_results = Dba::query($sql); 
 					if (!$charset_results) { 

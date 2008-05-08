@@ -22,10 +22,53 @@
 ?>
 <?php show_box_top(_('Debug Tools')); ?>
 <ul>
-	<li><a href="<?php echo Config::get('web_path'); ?>/system.php?action=generate_config"><?php echo _('Generate Configuration'); ?></a></li>
-	<li><a href="<?php echo Config::get('web_path'); ?>/system.php?action=check_php_settings"><?php echo _('Check PHP Settings'); ?></a></li>
-	<li><a href="<?php echo Config::get('web_path'); ?>/system.php?action=check_iconv"><?php echo _('Check Iconv'); ?></a></li>
+	<li><a href="<?php echo Config::get('web_path'); ?>/admin/system.php?action=generate_config"><?php echo _('Generate Configuration'); ?></a></li>
+	<li><a href="<?php echo Config::get('web_path'); ?>/admin/system.php?action=reset_db_charset"><?php echo _('Set Database Charset'); ?></a></li>
 </ul>
+<?php show_box_bottom(); ?>
+<?php show_box_top(_('PHP Settings')); ?>
+<table class="tabledata" cellpadding="0" cellspacing="0">
+<colgroup>
+	<col id="col_php_setting">
+	<col id="col_php_value">
+</colgroup>
+<tr class="th-top">
+	<th class="cel_php_setting"><?php echo _('Setting'); ?></th>
+	<th class="cel_php_value"><?php echo _('Value'); ?></th>
+</tr>
+<tr class="<?php echo flip_class(); ?>">
+	<td><?php echo _('Memory Limit'); ?></td>
+	<td><?php echo ini_get('memory_limit'); ?></td>
+</tr>
+<tr class="<?php echo flip_class(); ?>">
+	<td><?php echo _('Maximum Execution Time'); ?></td>
+	<td><?php echo ini_get('max_execution_time'); ?></td>
+</tr>
+<tr class="<?php echo flip_class(); ?>">
+	<td><?php echo _('Safe Mode'); ?></td>
+	<td><?php echo print_boolean(ini_get('safe_mode')); ?></td>
+</tr>
+<tr class="<?php echo flip_class(); ?>">
+	<td>Open Basedir</td>
+	<td><?php echo ini_get('open_basedir'); ?></td>
+</tr>
+<tr class="<?php echo flip_class(); ?>">
+	<td><?php echo _('Zlib Support'); ?></td>
+	<td><?php echo print_boolean(function_exists('gzcompress')); ?></td>
+</tr>
+<tr class="<?php echo flip_class(); ?>">
+	<td><?php echo _('GD Support'); ?></td>
+	<td><?php echo print_boolean(function_exists('ImageCreateFromString')); ?></td>
+</tr>
+<tr class="<?php echo flip_class(); ?>">
+	<td><?php echo _('Iconv Support'); ?></td>
+	<td><?php echo print_boolean(function_exists('iconv')); ?></td>
+</tr>
+<tr class="<?php echo flip_class(); ?>">
+	<td><?php echo _('Gettext Support'); ?></td>
+	<td><?php echo print_boolean(function_exists('bindtextdomain')); ?></td>
+</tr>
+</table>
 <?php show_box_bottom(); ?>
 
 <?php show_box_top(_('Current Configuration')); ?>
