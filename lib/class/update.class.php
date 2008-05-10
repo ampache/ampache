@@ -269,9 +269,10 @@ class Update {
 
 		$version[] = array('version' => '340016','description'=>$update_string); 
 
-		$update_string = '- Attempt to correct the charset of all columns in the database.<br />';
+		$update_string = '- Fix Tables for new Democratic Play methodology.<br />';
 
 		$version[] = array('version' => '340017','description'=>$update_string); 
+
 
 		return $version;
 
@@ -1206,9 +1207,36 @@ class Update {
 
 		$sql = "TRUNCATE `democratic`"; 
 		$db_results = Dba::query($sql); 
+		
+		self::set_version('db_version','340017'); 
+
+	} // update_340017
+
+	/**
+	 * update_340018
+	 * This attempts to correct the charset on your database, it does some checking
+	 * to make sure that if we do this it will actually will work. We will fail this update
+	 * if it would cause problems
+	 */
+	public static function update_340018() { 
 
 		// MySQL translte real charset names into fancy smancy MySQL land names
 		switch (strtoupper(Config::get('site_charset'))) { 
+			case 'CP1250': 
+			case 'WINDOWS-1250': 
+			case 'WINDOWS-1252': 
+				$target_charset = 'cp1250'; 
+				$target_collation = 'cp1250_general_ci'; 
+			break; 
+			case 'ISO-8859':  
+			case 'ISO-8859-2': 
+				$target_charset = 'latin2'; 
+				$target_collation = 'latin2_general_ci'; 
+			break; 
+			case 'ISO-8859-1': 
+				$target_charset = 'latin1'; 
+				$target_charset = 'latin1_general_ci'; 
+			break; 
 			case 'EUC-KR': 
 				$target_charset = 'euckr'; 
 				$target_collation = 'euckr_korean_ci'; 
@@ -1265,9 +1293,9 @@ class Update {
 
 		} // end tables
 		
-		self::set_version('db_version','340017'); 
+		//self::set_version('db_version','340018'); 
 
-	} // update_340017
+	} // update_340018
 
 } // end update class
 ?>

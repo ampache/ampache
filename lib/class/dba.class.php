@@ -262,6 +262,21 @@ class Dba {
 
                 // MySQL translte real charset names into fancy smancy MySQL land names
                 switch (strtoupper(Config::get('site_charset'))) {
+                        case 'CP1250':
+                        case 'WINDOWS-1250':
+                        case 'WINDOWS-1252':
+                                $target_charset = 'cp1250';
+                                $target_collation = 'cp1250_general_ci';
+                        break; 
+                        case 'ISO-8859': 
+                        case 'ISO-8859-2': 
+                                $target_charset = 'latin2'; 
+                                $target_collation = 'latin2_general_ci'; 
+                        break; 
+                        case 'ISO-8859-1': 
+                                $target_charset = 'latin1'; 
+                                $target_charset = 'latin1_general_ci'; 
+                        break; 
                         case 'EUC-KR':
                                 $target_charset = 'euckr';
                                 $target_collation = 'euckr_korean_ci';
@@ -277,10 +292,6 @@ class Dba {
                         case 'KOI8-R': 
                                 $target_charset = 'koi8r';
                                 $target_collation = 'koi8r_general_ci'; 
-                        break; 
-                        case 'ISO-8859': 
-                                $target_charset = 'latin2';
-                                $target_collation = 'latin2_general_ci'; 
                         break; 
                         default; 
                         case 'UTF-8':

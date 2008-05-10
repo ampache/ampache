@@ -1915,11 +1915,8 @@ class Catalog {
 
 		/* If not found create */
 		elseif (!$readonly) {
-                        $prefix_txt = 'NULL';
 
-                        if ($prefix) {
-                                $prefix_txt = "'$prefix'";
-                        }
+			$prefix_txt = $prefix ? "'$prefix'" : 'NULL'; 
 
 			$sql = "INSERT INTO `album` (`name`, `prefix`,`year`,`disk`) VALUES ('$album',$prefix_txt,'$album_year','$album_disk')";
 			$db_results = Dba::query($sql);

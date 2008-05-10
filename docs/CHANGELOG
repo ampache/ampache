@@ -4,6 +4,8 @@
 
 --------------------------------------------------------------------------
   v.3.4 
+	- Fixed an issue where the prefixes on albums were not being included
+		when checking for an existing album. 
 	- Fixed get recently played not correctly limiting to specified user
 		(Thx Xgizzmo)
 	- Fixed lack of refresh of controls when switching between localplay
