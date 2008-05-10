@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2007 Ampache.org
+ Copyright (c) Ampache.org
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
@@ -236,15 +236,14 @@ function generate_config($current) {
 	        	$value  = $matches[2];
 
 	                /* Put in the current value */
-	                if (isset($current[$key]) AND $key != 'config_version') {
+			if ($key == 'config_version') { 
+				$line = $key . ' = ' . $value; 
+			} 
+	                elseif (isset($current[$key])) {
 	                	$line = $key . ' = "' . $current[$key] . '"';
 	                        unset($current[$key]);
 			} // if set
-
-	                elseif (isset($array_value[$key])) {
-	                	$line = '';
-	                }
-
+			
 		} // if key
 
 	        $final .= $line . "\n";

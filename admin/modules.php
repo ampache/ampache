@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2007 Ampache.org
+ Copyright (c) Ampache.org
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
@@ -77,7 +77,14 @@ switch ($_REQUEST['action']) {
 			break;
 		}
 		$plugin = new Plugin($_REQUEST['plugin']); 
-		$plugin->install(); 
+		if (!$plugin->install()) { 
+			debug_event('plugins','Error: Plugin Install Failed, ' . $_REQUEST['plugin'],'1'); 
+			$url    = Config::get('web_path') . '/admin/modules.php?action=show_plugins';
+			$title = _('Unable to Install Plugin'); 
+			$body = ''; 
+			show_confirmation($title,$body,$url); 
+			break; 
+		} 
 
 		// Don't trust the plugin to this stuff
 		User::rebuild_all_preferences(); 

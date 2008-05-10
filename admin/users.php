@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2007 Ampache.org
+ Copyright (c) Ampache.org
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
@@ -97,7 +97,7 @@ switch ($_REQUEST['action']) {
 		$pass1		= scrub_in($_REQUEST['password_1']);
 		$pass2		= scrub_in($_REQUEST['password_2']);
 
-		if ($pass1 !== $pass2) { 
+		if ($pass1 !== $pass2 || !strlen($pass1)) { 
 			Error::add('password',_("Error Passwords don't match"));
 		}
 

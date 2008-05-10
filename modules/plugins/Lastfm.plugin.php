@@ -54,12 +54,17 @@ class AmpacheLastfm {
 	 */
 	public function install() { 
 
+		// Check and see if it's already installed (they've just hit refresh, those dorks)
+		if (Preference::exists('lastfm_user')) { return false; } 
+
 		Preference::insert('lastfm_user','Last.FM Username','','25','string','plugins'); 
 		Preference::insert('lastfm_pass','Last.FM Password','','25','string','plugins'); 
 		Preference::insert('lastfm_port','Last.FM Submit Port','','25','string','internal'); 
 		Preference::insert('lastfm_host','Last.FM Submit Host','','25','string','internal'); 
 		Preference::insert('lastfm_url','Last.FM Submit URL','','25','string','internal'); 
 		Preference::insert('lastfm_challenge','Last.FM Submit Challenge','','25','string','internal'); 
+
+		return true; 
 
 	} // install
 

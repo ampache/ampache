@@ -4,6 +4,14 @@
 
 --------------------------------------------------------------------------
   v.3.4 
+	- Fixed an issue where the plugins could be installed infinite times
+		if you kept refreshing the install page causing them to break
+	- Fixed a problem with creating new preferences using the class
+		functions, and also looking up setable preferences
+	- Fixed user creation allowing empty password, when login prohibits 
+		login without a password
+	- Fixed an issue with the config file generation and upped the config
+		file version to force everyone to get new config files. 
 	- Tweak Pruning of Temporary Playlists so it only happens sometimes, 
 		not on every single login. This might lead to a larger db but
 		should increase login speed
@@ -21,7 +29,7 @@
 	- Fixed album art thumbs never saving due to incorrect table reference
 	- Fixed download having no filename if no catalog pattern
 	- Fixed issue where 0 sized images could be inserted into the database
-		artifically inflating its size
+		artificially inflating its size
 	- Added Playlist and Genre Counts to the XMLAPI Handshake
 	- Added ability to Add Search Results to playlist, or download
 		if batch download is enabled
@@ -100,7 +108,7 @@
 		filters only appear when its logical for them to be there
 	- Fixed filtering of Private Playlists and fixed editing of type
 		of playlist. Default is still public on creation. 
-	- Fixed erronous fseek() when downsampling. 
+	- Fixed erroneous fseek() when downsampling. 
 	- Fixed search by stars so that it returns the correct results 
 		(Thx alex2008)
 	- Fixed issue where random didn't end correctly when no results found
@@ -204,7 +212,7 @@
 	- Database Update, removed useless config options and tweaked a few others
 	- Fixed last of the missing MPD functionality (Volume & Playlist Clear)
 	- Fixed HTTPQ and improved parsing for urls from MPD & HTTPQ
-		they now reconize Democratic Playlists
+		they now recognize Democratic Playlists
 	- Added paging to genre sub-pages
 	- Added missing song data fields to single song view
 	- Fixed display issue with playlists when deleting a song
@@ -214,7 +222,7 @@
 	- Fixed lack of prefix on Albums, improves album art search 
 		results (Thx darkside)
 	- Fixed problem with invalid urls populated to localplay methods
-		under certin conditions
+		under certain conditions
 	- Fixed Album Art dump bin script 
 	- Added paging to the Playlist Song view
 	- Fixed error on catalog Update All 
@@ -228,18 +236,18 @@
 		the bottom
 	- Fixed sending URLs directly to MPD
 	- Fixed a problem with automatic downsampling which was referencing
-		a now non-existant function 
+		a now non-existent function 
 	- Massive speed improvement on display and sorting of standard
 		browse functions
 	- Put Ratings back into single song view 
-	- Corrected potential consistancy issue with Play Type dropdown
+	- Corrected potential consistency issue with Play Type dropdown
 	- Made Access Denied page more friendly, added verbage for
 		demo access
 
 --------------------------------------------------------------------------
   v.3.4-Alpha3 11/25/2007 
 	- Fixed display problem and lack of link when creating a catalog
-	- Inital Version of Democratic play working, minor speed improvements
+	- Initial Version of Democratic play working, minor speed improvements
 		to normal tmpplaylist class due to simplification and removal
 		of democratic related code
 	- Added ability to do batch downloads on the FS failed downloads
@@ -249,7 +257,7 @@
 	- Tweaked catalog add function to improve speed (Thx Karl Hungus)
 	- Added XML API borrows authentication style from Last.FM's 
 		scrobbling, allows query of Ampache DB, returns XML
-		see https://ampache.bountysource.com/wiki/xmlapi
+		see http://ampache.org/bugs/wiki/XmlApi
 	- Added tweak for Wii so that Flash player opens in current window
 		(Thx Dgn)
 	- Fixed bug where Ampache would incorrectly search for album art
@@ -341,7 +349,7 @@
   	- Added Album Disk support for id3v2 (Thx Hugo Haas)
   	- Updated LastFM pluging, must uninstall/reinstall to make it work
 		will add in auto-update later
-  	- Adjusted LastFM reporting to reduce lag betwen songs. You must
+  	- Adjusted LastFM reporting to reduce lag between songs. You must
 		now currently be logged in for LastFM to report correctly
   	- Fixed a potential PHP error when browsing the last page or a 
 		search with 0 results
@@ -365,7 +373,7 @@
   	- Fixed an issue where albums of the moment would show when you 
 		had 0 albums
   	- Fixed warnings on Update & typo in Install
-  	- Removed redundent GPL licence file
+  	- Removed redundant GPL licence file
   	- Fixed filesize() issue on config re-gen
   	- Fixed an issue with seeking causing incorrect stats counts 
 	- Fixed a potential issue with the kajax.js and checkboxes
@@ -393,7 +401,7 @@
 		(Thx Vlet)
   	- Added Migration script for config file. Also added in sane
 		redirection on config parse failure
-  	- Added initial dyanmic playlist item support, only default
+  	- Added initial dynamic playlist item support, only default
 		and genre work right now. 
 	- Added support for Internet Radio Stations
 	- Updated LastFM submission formating to account for changes on 
@@ -401,7 +409,7 @@
 	- Fixed LastFM and increased timeout slightly in an attempt to 
 		improve success rate
 	- Disabled Search, Random Play & Localplay for Alpha release
-	- Repalced CC Flash player with the previous GPL based flash player
+	- Replaced CC Flash player with the previous GPL based flash player
 		used patched 0.2.3 version created by Sylvain of 
 		http://www.jamendo.com/fr/
 	- Round the downsampled content-length
@@ -419,7 +427,7 @@
   	- Start of Complete rewrite, config file format changed, requires
 		manual re-creation of /config/ampache.cfg.php
 	- Updated French and German translations
-  	- Added min song count to Browse Artist, refercing min object count
+  	- Added min song count to Browse Artist, referencing min object count
 		preference
   	- Fixed ratings so that it shows your rating if you've rated it
 		otherwise it shows an average rating
@@ -759,7 +767,7 @@
   	- Fixed file-based parsing so that it can now be given priority
 		over the tags in the files using tag_order in the config
 		file
-  	- Fixed Nowplaying, now div based layout and AJAX refreshed
+  	- Fixed Now playing, now div based layout and AJAX refreshed
 		based on config files refresh_limit
   	- Moved /modules/init.php to /lib/init.php
 	- Removed Checkboxes from Search page and added ability to 
@@ -810,7 +818,7 @@
 		types
   	- Fixed a missing web_path reference on playlist edit page
 	- Added Localplay API, check the wiki for more information
-		https://ampache.bountysource.com/wiki/Localplay
+		http://ampache.org/bugs/wiki/Localplay
   	- Added Download to Random play along with Size limitation
 		useful for downloading a set amount of music for your
 		mp3 player.
@@ -974,10 +982,8 @@
 		result, now shows all results and allows you to pick
 		the correct one. 
   	- Added ability to re-define album art search (Thx csammis)
-		https://ampache.bountysource.com/Task.View?task_id=86
   	- Fixed a logic flaw where it would attempt to parse the m3u
 		before all songs were cataloged 
-		https://ampache.bountysource.com/Task.View?task_id=122
   	- Fixed a problem where updating your normal preferences when
 		use_auth was off would clear admin prefs
 	- Found a few more <? and replaced them with <?php

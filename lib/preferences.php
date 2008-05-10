@@ -33,7 +33,7 @@ function update_preferences($pref_id=0) {
 	$sql = "SELECT `id`,`name`,`type` FROM `preference`";
 
 	/* If it isn't the System Account's preferences */
-	if ($pref_id != '-1') { $sql .= " WHERE `type` != 'system'"; }
+	if ($pref_id != '-1') { $sql .= " WHERE `catagory` != 'system'"; }
 	
 	$db_results = Dba::query($sql);
 

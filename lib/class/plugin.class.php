@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2006 Ampache.org
+ Copyright (c) Ampache.org
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
@@ -163,11 +163,15 @@ class Plugin {
 	 * at the end it inserts a row into the update_info table to indicate
 	 * That it's installed
 	 */
-	function install() { 
+	public function install() { 
 
-		$this->_plugin->install(); 
+		$installed = $this->_plugin->install(); 
 
-		$this->set_plugin_version($this->_plugin->version); 
+		$version = $this->set_plugin_version($this->_plugin->version); 
+
+		if (!$installed OR !$version) { return false; } 
+
+		return true; 
 
 	} // install
 
@@ -177,7 +181,7 @@ class Plugin {
 	 * at the end it removes the row from the update_info table to indicate
 	 * that it isn't installed
 	 */
-	function uninstall() { 
+	public function uninstall() { 
 
 		$this->_plugin->uninstall(); 
 

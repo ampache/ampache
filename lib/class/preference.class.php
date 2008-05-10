@@ -116,6 +116,21 @@ class Preference {
 	} // update_all
 
 	/**
+	 * exists
+	 * This just checks to see if a preference currently exists
+	 */
+	public static function exists($preference) { 
+
+		// We assume it's the name
+		$name = Dba::escape($preference); 
+		$sql = "SELECT * FROM `preference` WHERE `name`='$name'"; 
+		$db_results = Dba::query($sql); 
+
+		return Dba::num_rows($db_results); 
+
+	} // exists
+
+	/**
 	 * has_access
 	 * This checks to see if the current user has access to modify this preference
 	 * as defined by the preference name
@@ -238,8 +253,8 @@ class Preference {
 		$type		= Dba::escape($type); 
 		$catagory	= Dba::escape($catagory); 
 
-		$sql = "INSERT INTO `preference` (`name`,`description`,`value`,`level`,`catagory`) " . 
-			"VALUES ('$name','$description','$default','$level','$catagory')"; 
+		$sql = "INSERT INTO `preference` (`name`,`description`,`value`,`level`,`type`,`catagory`) " . 
+			"VALUES ('$name','$description','$default','$level','$type','$catagory')"; 
 		$db_results = Dba::query($sql); 
 
 		if (!$db_results) { return false; } 
@@ -256,18 +271,14 @@ class Preference {
 
                // First prepare
                 if (!is_numeric($preference)) {
-                        $id = self::id_from_name($preference);
-                        $name = $preference;
+			$name = Dba::escape($preference); 
+			$sql = "DELETE FROM `preference` WHERE `name`='$name'"; 
                 }
                 else {
-                        $name = self::name_from_id($preference);
-                        $id = $preference;
+			$id = Dba::escape($preference); 
+			$sql = "DELETE FROM `preference` WHERE `id`='$id'"; 
                 }
 
-		$id = Dba::escape($id); 
-
-		// Remove the preference, then the user records of it
-		$sql = "DELETE FROM `preference` WHERE `id`='$id'"; 
 		$db_results = Dba::query($sql); 
 
 		self::rebuild_preferences(); 

@@ -5,9 +5,9 @@
 
 ; This value is used to detect quickly
 ; if this config file is up to date 
-; this is compared against a value hardcoded
+; this is compared against a value hard-coded
 ; into the init script
-config_version = 6
+config_version = 7
 
 ;###################
 ; Path Vars        #
