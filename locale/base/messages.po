@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-04-20 18:31-0700\n"
+"POT-Creation-Date: 2008-05-10 02:21-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -59,14 +59,6 @@ msgstr ""
 
 #: ../../play/index.php:76
 msgid "Session Expired: please log in again at"
-msgstr ""
-
-#: ../../ratings.php:32
-msgid "Rating Updated"
-msgstr ""
-
-#: ../../ratings.php:32
-msgid "Your rating for this object has been updated"
 msgstr ""
 
 #: ../../radio.php:50
@@ -121,64 +113,64 @@ msgstr ""
 msgid "The requested song(s) have been enabled"
 msgstr ""
 
-#: ../../admin/catalog.php:52 ../../admin/catalog.php:70
-#: ../../admin/catalog.php:93 ../../admin/catalog.php:151
+#: ../../admin/catalog.php:53 ../../admin/catalog.php:73
+#: ../../admin/catalog.php:98 ../../admin/catalog.php:159
 msgid "Catalog Updated"
 msgstr ""
 
-#: ../../admin/catalog.php:104
+#: ../../admin/catalog.php:110
 msgid "Catalog Deleted"
 msgstr ""
 
-#: ../../admin/catalog.php:104
+#: ../../admin/catalog.php:110
 msgid "The Catalog and all associated records have been deleted"
 msgstr ""
 
-#: ../../admin/catalog.php:113
+#: ../../admin/catalog.php:119
 msgid "Songs Removed"
 msgstr ""
 
-#: ../../admin/catalog.php:116
+#: ../../admin/catalog.php:122
 msgid "No Songs Removed"
 msgstr ""
 
-#: ../../admin/catalog.php:119
+#: ../../admin/catalog.php:125
 msgid "Disabled Songs Processed"
 msgstr ""
 
-#: ../../admin/catalog.php:139
+#: ../../admin/catalog.php:146
 msgid "Catalog Cleaned"
 msgstr ""
 
-#: ../../admin/catalog.php:189
+#: ../../admin/catalog.php:197
 msgid "Catalog Created"
 msgstr ""
 
-#: ../../admin/catalog.php:206
+#: ../../admin/catalog.php:214
 msgid "Catalog statistics cleared"
 msgstr ""
 
-#: ../../admin/catalog.php:223
+#: ../../admin/catalog.php:231
 msgid "Now Playing Cleared"
 msgstr ""
 
-#: ../../admin/catalog.php:223
+#: ../../admin/catalog.php:231
 msgid "All now playing data has been cleared"
 msgstr ""
 
-#: ../../admin/catalog.php:233
+#: ../../admin/catalog.php:241
 msgid "No Disabled songs found"
 msgstr ""
 
-#: ../../admin/catalog.php:242
+#: ../../admin/catalog.php:250
 msgid "Delete Catalog"
 msgstr ""
 
-#: ../../admin/catalog.php:242
+#: ../../admin/catalog.php:250
 msgid "Do you really want to delete this catalog?"
 msgstr ""
 
-#: ../../admin/catalog.php:261
+#: ../../admin/catalog.php:270
 msgid "Album Art Search Finished"
 msgstr ""
 
@@ -335,8 +327,14 @@ msgstr ""
 msgid "Access List Entry updated"
 msgstr ""
 
-#: ../../admin/system.php:64
-msgid "Export Failed"
+#: ../../admin/system.php:49
+msgid "Database Charset Updated"
+msgstr ""
+
+#: ../../admin/system.php:49
+msgid ""
+"Your Database and assoicated tables have been updated to match your "
+"currently configured charset"
 msgstr ""
 
 #: ../../admin/mail.php:57
@@ -551,7 +549,7 @@ msgid "Show Duplicate Songs"
 msgstr ""
 
 #: ../../templates/show_admin_tools.inc.php:91
-#: ../../templates/sidebar_admin.inc.php:47
+#: ../../templates/sidebar_admin.inc.php:48
 msgid "Clear Now Playing"
 msgstr ""
 
@@ -914,7 +912,7 @@ msgid "Active Playlist"
 msgstr ""
 
 #: ../../templates/show_user.inc.php:68 ../../templates/show_index.inc.php:44
-#: ../../server/ajax.server.php:294
+#: ../../server/ajax.server.php:300
 msgid "Recently Played"
 msgstr ""
 
@@ -1292,6 +1290,7 @@ msgid "Generate Config File"
 msgstr ""
 
 #: ../../templates/show_install_config.inc.php:60
+#: ../../templates/show_test.inc.php:235
 msgid "Web Path"
 msgstr ""
 
@@ -1374,6 +1373,74 @@ msgstr ""
 #: ../../templates/show_edit_album_row.inc.php:35
 #: ../../lib/class/album.class.php:229 ../../lib/class/album.class.php:230
 msgid "Various"
+msgstr ""
+
+#: ../../templates/show_debug.inc.php:23
+msgid "Debug Tools"
+msgstr ""
+
+#: ../../templates/show_debug.inc.php:25
+msgid "Generate Configuration"
+msgstr ""
+
+#: ../../templates/show_debug.inc.php:26
+msgid "Set Database Charset"
+msgstr ""
+
+#: ../../templates/show_debug.inc.php:29
+msgid "PHP Settings"
+msgstr ""
+
+#: ../../templates/show_debug.inc.php:36
+msgid "Setting"
+msgstr ""
+
+#: ../../templates/show_debug.inc.php:37 ../../templates/show_debug.inc.php:82
+#: ../../templates/show_preference_box.inc.php:41
+#: ../../templates/show_preference_box.inc.php:71
+#: ../../templates/show_user_preferences.inc.php:37
+msgid "Value"
+msgstr ""
+
+#: ../../templates/show_debug.inc.php:40
+msgid "Memory Limit"
+msgstr ""
+
+#: ../../templates/show_debug.inc.php:44
+msgid "Maximum Execution Time"
+msgstr ""
+
+#: ../../templates/show_debug.inc.php:48
+msgid "Safe Mode"
+msgstr ""
+
+#: ../../templates/show_debug.inc.php:56
+msgid "Zlib Support"
+msgstr ""
+
+#: ../../templates/show_debug.inc.php:60
+msgid "GD Support"
+msgstr ""
+
+#: ../../templates/show_debug.inc.php:64
+msgid "Iconv Support"
+msgstr ""
+
+#: ../../templates/show_debug.inc.php:68
+msgid "Gettext Support"
+msgstr ""
+
+#: ../../templates/show_debug.inc.php:74
+msgid "Current Configuration"
+msgstr ""
+
+#: ../../templates/show_debug.inc.php:81
+#: ../../templates/show_preference_admin.inc.php:30
+#: ../../templates/show_preference_admin.inc.php:49
+#: ../../templates/show_preference_box.inc.php:40
+#: ../../templates/show_preference_box.inc.php:70
+#: ../../templates/show_user_preferences.inc.php:36
+msgid "Preference"
 msgstr ""
 
 #: ../../templates/show_search_bar.inc.php:29
@@ -1639,6 +1706,7 @@ msgid "Normalize Tracks"
 msgstr ""
 
 #: ../../templates/show_playlist.inc.php:32
+#: ../../templates/show_search_options.inc.php:28
 #: ../../templates/show_artist_row.inc.php:33
 #: ../../templates/show_album_row.inc.php:49
 #: ../../templates/show_playlist_row.inc.php:33
@@ -1687,14 +1755,6 @@ msgstr ""
 
 #: ../../templates/show_preference_admin.inc.php:22
 msgid "Preference Administration"
-msgstr ""
-
-#: ../../templates/show_preference_admin.inc.php:30
-#: ../../templates/show_preference_admin.inc.php:49
-#: ../../templates/show_preference_box.inc.php:40
-#: ../../templates/show_preference_box.inc.php:70
-#: ../../templates/show_user_preferences.inc.php:36
-msgid "Preference"
 msgstr ""
 
 #: ../../templates/show_localplay_playlist.inc.php:23
@@ -2092,12 +2152,6 @@ msgstr ""
 msgid "Create ACL"
 msgstr ""
 
-#: ../../templates/show_preference_box.inc.php:41
-#: ../../templates/show_preference_box.inc.php:71
-#: ../../templates/show_user_preferences.inc.php:37
-msgid "Value"
-msgstr ""
-
 #: ../../templates/show_preference_box.inc.php:43
 #: ../../templates/show_preference_box.inc.php:73
 msgid "Apply to All"
@@ -2106,11 +2160,6 @@ msgstr ""
 #: ../../templates/show_preference_box.inc.php:44
 #: ../../templates/show_preference_box.inc.php:74
 msgid "Access Level"
-msgstr ""
-
-#: ../../templates/show_preference_box.inc.php:49
-#: ../../templates/show_user_preferences.inc.php:41
-msgid "description"
 msgstr ""
 
 #: ../../templates/show_playlist_edit.inc.php:26
@@ -2294,7 +2343,7 @@ msgstr ""
 
 #: ../../templates/show_duplicate.inc.php:23
 #: ../../templates/show_duplicate.inc.php:42
-#: ../../templates/sidebar_admin.inc.php:45
+#: ../../templates/sidebar_admin.inc.php:46
 msgid "Find Duplicates"
 msgstr ""
 
@@ -2356,8 +2405,17 @@ msgid "Get Art"
 msgstr ""
 
 #: ../../templates/show_test_config.inc.php:40
+#: ../../templates/sidebar_admin.inc.php:45
 #: ../../templates/show_test.inc.php:32
 msgid "Ampache Debug"
+msgstr ""
+
+#: ../../templates/show_search_options.inc.php:23
+msgid "Options"
+msgstr ""
+
+#: ../../templates/show_search_options.inc.php:26
+msgid "Add Search Results"
 msgstr ""
 
 #: ../../templates/show_edit_catalog.inc.php:22
@@ -2589,7 +2647,7 @@ msgid "Add Catalog"
 msgstr ""
 
 #: ../../templates/show_export.inc.php:28
-#: ../../templates/sidebar_admin.inc.php:49
+#: ../../templates/sidebar_admin.inc.php:50
 msgid "Export Catalog"
 msgstr ""
 
@@ -2700,20 +2758,20 @@ msgstr ""
 msgid "Show ACL(s)"
 msgstr ""
 
-#: ../../templates/sidebar_admin.inc.php:46
+#: ../../templates/sidebar_admin.inc.php:47
 msgid "Mail Users"
 msgstr ""
 
-#: ../../templates/sidebar_admin.inc.php:48
+#: ../../templates/sidebar_admin.inc.php:49
 #: ../../templates/show_account.inc.php:53
 msgid "Clear Stats"
 msgstr ""
 
-#: ../../templates/sidebar_admin.inc.php:50
+#: ../../templates/sidebar_admin.inc.php:51
 msgid "Manage Flagged"
 msgstr ""
 
-#: ../../templates/sidebar_admin.inc.php:52
+#: ../../templates/sidebar_admin.inc.php:53
 msgid "Manage Shoutbox"
 msgstr ""
 
@@ -2835,6 +2893,10 @@ msgid ""
 "cfg.php"
 msgstr ""
 
+#: ../../templates/show_test.inc.php:213
+msgid "DB Inserted"
+msgstr ""
+
 #: ../../templates/show_user_preferences.inc.php:28
 #: ../../templates/show_preferences.inc.php:28
 msgid "Editing"
@@ -2905,7 +2967,7 @@ msgstr ""
 #: ../../templates/show_album.inc.php:35
 #: ../../lib/class/catalog.class.php:1798
 #: ../../lib/class/catalog.class.php:1880
-#: ../../lib/class/catalog.class.php:1965
+#: ../../lib/class/catalog.class.php:1963
 msgid "Unknown (Orphaned)"
 msgstr ""
 
@@ -3216,11 +3278,11 @@ msgstr ""
 msgid "Off"
 msgstr ""
 
-#: ../../lib/install.php:243
+#: ../../lib/install.php:253
 msgid "No Username/Password specified"
 msgstr ""
 
-#: ../../lib/install.php:248
+#: ../../lib/install.php:258
 msgid "Passwords do not match"
 msgstr ""
 

@@ -4,6 +4,9 @@
 
 --------------------------------------------------------------------------
   v.3.4 
+	- Tweak Pruning of Temporary Playlists so it only happens sometimes, 
+		not on every single login. This might lead to a larger db but
+		should increase login speed
 	- Fixed an issue where the prefixes on albums were not being included
 		when checking for an existing album. 
 	- Fixed get recently played not correctly limiting to specified user

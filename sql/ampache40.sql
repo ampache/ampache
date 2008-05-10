@@ -774,7 +774,7 @@ SET character_set_client = @saved_cs_client;
 
 LOCK TABLES `update_info` WRITE;
 /*!40000 ALTER TABLE `update_info` DISABLE KEYS */;
-INSERT INTO `update_info` VALUES ('db_version','340017');
+INSERT INTO `update_info` VALUES ('db_version','340018');
 /*!40000 ALTER TABLE `update_info` ENABLE KEYS */;
 UNLOCK TABLES;
 

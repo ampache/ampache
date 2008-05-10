@@ -18,7 +18,7 @@
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
-define(NO_SESSION,'1'); 
+define('NO_SESSION','1'); 
 
 $unmigratable = array('auth_methods'=>'mysql',
 	'tag_order'=>'id3v2,id3v1,vorbiscomment,quicktime,ape,asf',

@@ -17,7 +17,7 @@
 --
 -- Host: localhost    Database: ampache
 -- ------------------------------------------------------
--- Server version	5.0.51a-3-log
+-- Server version	5.0.51a-6-log
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -73,7 +73,7 @@ SET character_set_client = utf8;
 CREATE TABLE `album` (
   `id` int(11) unsigned NOT NULL auto_increment,
   `name` varchar(255) character set utf8 default NULL,
-  `prefix` enum('The','An','A','Der','Die','Das','Ein','Eine') collate utf8_unicode_ci default NULL,
+  `prefix` enum('The','An','A','Der','Die','Das','Ein','Eine') character set utf8 default NULL,
   `year` int(4) unsigned NOT NULL default '1984',
   `disk` smallint(5) unsigned default NULL,
   PRIMARY KEY  (`id`),
@@ -128,7 +128,7 @@ SET character_set_client = utf8;
 CREATE TABLE `artist` (
   `id` int(11) unsigned NOT NULL auto_increment,
   `name` varchar(255) character set utf8 default NULL,
-  `prefix` enum('The','An','A','Der','Die','Das','Ein','Eine') collate utf8_unicode_ci default NULL,
+  `prefix` enum('The','An','A','Der','Die','Das','Ein','Eine') character set utf8 default NULL,
   PRIMARY KEY  (`id`),
   KEY `name` (`name`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
@@ -182,7 +182,7 @@ CREATE TABLE `catalog` (
   `name` varchar(128) character set utf8 default NULL,
   `path` varchar(255) character set utf8 default NULL,
   `add_path` varchar(255) character set utf8 default NULL,
-  `catalog_type` enum('local','remote') collate utf8_unicode_ci NOT NULL default 'local',
+  `catalog_type` enum('local','remote') character set utf8 default NULL,
   `last_update` int(11) unsigned NOT NULL default '0',
   `last_add` int(11) unsigned NOT NULL default '0',
   `enabled` tinyint(1) unsigned NOT NULL default '1',
@@ -244,9 +244,9 @@ SET character_set_client = utf8;
 CREATE TABLE `flagged` (
   `id` int(11) unsigned NOT NULL auto_increment,
   `object_id` int(11) unsigned NOT NULL default '0',
-  `object_type` enum('artist','album','song') collate utf8_unicode_ci NOT NULL default 'song',
+  `object_type` enum('artist','album','song') character set utf8 default NULL,
   `user` int(11) NOT NULL,
-  `flag` enum('delete','retag','reencode','other') collate utf8_unicode_ci NOT NULL default 'other',
+  `flag` enum('delete','retag','reencode','other') character set utf8 default NULL,
   `date` int(11) unsigned NOT NULL default '0',
   `approved` tinyint(1) unsigned NOT NULL default '0',
   `comment` varchar(255) character set utf8 default NULL,
@@ -385,7 +385,7 @@ SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8;
 CREATE TABLE `object_count` (
   `id` int(11) unsigned NOT NULL auto_increment,
-  `object_type` enum('album','artist','song','playlist','genre','catalog','live_stream','video') collate utf8_unicode_ci NOT NULL default 'song',
+  `object_type` enum('album','artist','song','playlist','genre','catalog','live_stream','video') character set utf8 default NULL,
   `object_id` int(11) unsigned NOT NULL default '0',
   `date` int(11) unsigned NOT NULL default '0',
   `user` int(11) unsigned NOT NULL,
@@ -417,7 +417,7 @@ CREATE TABLE `playlist` (
   `id` int(11) unsigned NOT NULL auto_increment,
   `name` varchar(128) character set utf8 default NULL,
   `user` int(11) NOT NULL,
-  `type` enum('private','public') collate utf8_unicode_ci NOT NULL default 'private',
+  `type` enum('private','public') character set utf8 default NULL,
   `genre` int(11) unsigned NOT NULL,
   `date` int(11) unsigned NOT NULL,
   PRIMARY KEY  (`id`),
@@ -504,7 +504,7 @@ SET character_set_client = utf8;
 CREATE TABLE `rating` (
   `id` int(11) unsigned NOT NULL auto_increment,
   `user` int(11) NOT NULL,
-  `object_type` enum('artist','album','song','steam','video') collate utf8_unicode_ci NOT NULL default 'artist',
+  `object_type` enum('artist','album','song','steam','video') character set utf8 default NULL,
   `object_id` int(11) unsigned NOT NULL default '0',
   `rating` tinyint(4) NOT NULL,
   PRIMARY KEY  (`id`),
@@ -534,7 +534,7 @@ CREATE TABLE `session` (
   `expire` int(11) unsigned NOT NULL default '0',
   `value` longtext collate utf8_unicode_ci NOT NULL,
   `ip` int(11) unsigned default NULL,
-  `type` enum('mysql','ldap','http','api','xml-rpc') collate utf8_unicode_ci NOT NULL,
+  `type` enum('mysql','ldap','http','api','xml-rpc') character set utf8 default NULL,
   `agent` varchar(255) character set utf8 default NULL,
   PRIMARY KEY  (`id`),
   KEY `expire` (`expire`),
@@ -594,7 +594,7 @@ CREATE TABLE `song` (
   `title` varchar(255) character set utf8 default NULL,
   `bitrate` mediumint(8) unsigned NOT NULL default '0',
   `rate` mediumint(8) unsigned NOT NULL default '0',
-  `mode` enum('abr','vbr','cbr') collate utf8_unicode_ci default 'cbr',
+  `mode` enum('abr','vbr','cbr') character set utf8 default NULL,
   `size` int(11) unsigned NOT NULL default '0',
   `time` smallint(5) unsigned NOT NULL default '0',
   `track` smallint(5) unsigned default NULL,
@@ -779,7 +779,7 @@ SET character_set_client = @saved_cs_client;
 
 LOCK TABLES `update_info` WRITE;
 /*!40000 ALTER TABLE `update_info` DISABLE KEYS */;
-INSERT INTO `update_info` VALUES ('db_version','340017');
+INSERT INTO `update_info` VALUES ('db_version','340018');
 /*!40000 ALTER TABLE `update_info` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -907,4 +907,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2008-04-21  2:09:45
+-- Dump completed on 2008-05-10  9:15:23

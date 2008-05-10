@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2007 Ampache.org
+ Copyright (c) Ampache.org
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
@@ -24,8 +24,9 @@ require 'lib/init.php';
 show_header(); 
 
 // Check to see if we've got the rights to be here
-if (!Config::get('allow_localplay_playback') || !$GLOBALS['user']->has_access('25')) { 
+if (!Config::get('allow_localplay_playback') || !Access::check('interface','25')) { 
 	access_denied(); 
+	exit; 
 } 
 
 
