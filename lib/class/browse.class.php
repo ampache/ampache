@@ -868,7 +868,7 @@ class Browse {
 		self::$simple_browse = make_bool($_SESSION['browse']['simple']); 
 		self::$static_content = make_bool($_SESSION['browse']['static']); 
 		self::$type = $_SESSION['browse']['type']; 
-		self::$start = intval($_SESISON['browse'][self::$type]['start']); 
+		self::$start = intval($_SESSION['browse'][self::$type]['start']); 
 
 	} // _auto_init
 

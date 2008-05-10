@@ -47,7 +47,7 @@ switch ($_REQUEST['action']) {
 		
 		// Set the vars on the object
 		AmpacheMail::$recipient = $recipient; 
-		AmpacheMail::$from = $GLBOALS['user']->fullname."<".$GLOBALS['user']->email.">";
+		AmpacheMail::$from = $GLOBALS['user']->fullname."<".$GLOBALS['user']->email.">";
 		AmpacheMail::$subject = scrub_in($_REQUEST['subject']); 
 		AmpacheMail::$message = scrub_in($_REQUEST['message']); 
 		AmpacheMail::send(); 	
