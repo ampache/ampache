@@ -1898,6 +1898,7 @@ class Catalog {
 		$sql = "SELECT `id` FROM `album` WHERE `name` = '$album'";
 		if ($album_year) { $sql .= " AND `year`='$album_year'"; }
 		if ($album_disk) { $sql .= " AND `disk`='$album_disk'"; } 
+		if ($prefix) { $sql .= " AND `prefix`='" . Dba::escape($prefix) . "'"; }
 		$db_results = Dba::query($sql);
 
 		/* If it's found */
