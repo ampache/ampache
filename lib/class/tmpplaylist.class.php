@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2007 Ampache.org
+ Copyright (c) Ampache.org
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
@@ -213,8 +213,11 @@ class tmpPlaylist {
 
 		$id = Dba::insert_id();
 
-		/* Prune dead tmp_playlists */
-		self::prune_playlists();
+		$do_prune = rand(0,4); 
+		if ($do_prune%2) { 
+			self::prune_playlists();
+			self::prune_tracks(); 
+		} 
 
 		/* Clean any other playlists assoicated with this session */
 		self::delete($sessid,$id);

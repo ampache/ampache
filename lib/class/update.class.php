@@ -273,6 +273,10 @@ class Update {
 
 		$version[] = array('version' => '340017','description'=>$update_string); 
 
+		$update_string = '- Attempt to detect and correct charset issues between filesystem and database.<br />'; 
+
+		$version[] = array('version' => '340018','description'=>$update_string); 
+
 
 		return $version;
 
@@ -324,8 +328,6 @@ class Update {
 		// Prevent the script from timing out, which could be bad
 		set_time_limit(0);
 
-			
-
 		/* Verify that there are no plugins installed 
 		//FIXME: provide a link to remove all plugins, otherwise this could turn into a catch 22
 		if (!$self::plugins_installed()) { 
@@ -359,7 +361,13 @@ class Update {
 			if ($version['version'] > $current_version) { 
 				$update_function = "update_" . $version['version'];
 				if (in_array($update_function,$methods)) {
-					call_user_func(array('Update',$update_function)); 
+					$success = call_user_func(array('Update',$update_function)); 
+
+					// If the update fails drop out
+					if (!$success) { 
+						Error::display('update'); 
+						return false; 
+					} 
 				}
 
 			} 
@@ -721,6 +729,8 @@ class Update {
 
 		self::set_version('db_version','340003'); 
 
+		return true; 
+
 	} // update_340003
 
 	/**
@@ -959,6 +969,8 @@ class Update {
 
 		self::set_version('db_version','340008'); 
 
+		return true; 
+
 	} // update_340008
 
 	/**
@@ -987,6 +999,8 @@ class Update {
 		$db_results = Dba::query($sql); 
 
 		self::set_version('db_version','340009'); 
+
+		return true; 
 
 	} // update_340009
 
@@ -1023,6 +1037,8 @@ class Update {
 
 		self::set_version('db_version','340010'); 
 
+		return true; 
+
 	} // update_340010
 
 	/**
@@ -1045,8 +1061,9 @@ class Update {
                         ") ENGINE = MYISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci";
                 $db_results = Dba::query($sql);
 
-
 		self::set_version('db_version','340011'); 		
+
+		return true; 
 
 	} // 340011
 
@@ -1076,6 +1093,8 @@ class Update {
 		$db_results = Dba::query($sql);
 
 		self::set_version('db_version','340012'); 
+
+		return true; 
 
 	} // update_340012
 
@@ -1107,6 +1126,8 @@ class Update {
 		
 		self::set_version('db_version','340013');	
 
+		return true; 
+
 	} // update_340013
 
 	/**
@@ -1131,6 +1152,8 @@ class Update {
 		$db_results = Dba::query($sql); 
 
 		self::set_version('db_version','340014'); 
+
+		return true; 
 
 	} // update_340014
 
@@ -1172,6 +1195,8 @@ class Update {
 		} 
 
 		self::set_version('db_version','340015'); 
+
+		return true; 
 		
 	} // update_340015
 
@@ -1186,6 +1211,8 @@ class Update {
 		$db_results = Dba::query($sql); 
 
 		self::set_version('db_version','340016'); 
+
+		return true; 
 
 	} // update_340016
 
@@ -1209,6 +1236,8 @@ class Update {
 		$db_results = Dba::query($sql); 
 		
 		self::set_version('db_version','340017'); 
+
+		return true; 
 
 	} // update_340017
 
@@ -1293,7 +1322,9 @@ class Update {
 
 		} // end tables
 		
-		//self::set_version('db_version','340018'); 
+		self::set_version('db_version','340018'); 
+
+		return true; 
 
 	} // update_340018
 
