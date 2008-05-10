@@ -917,7 +917,7 @@ class Song {
 		$sql = "SELECT `object_count`.`object_id`,`object_count`.`user`,`object_count`.`object_type`, " . 
 			"`object_count`.`date` " . 
 			"FROM `object_count` " . 
-			"WHERE `object_type`='song'$userlimit " . 
+			"WHERE `object_type`='song'$user_limit " . 
 			"ORDER BY `object_count`.`date` DESC ";
 		$db_results = Dba::query($sql); 
 
