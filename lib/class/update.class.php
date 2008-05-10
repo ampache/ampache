@@ -1249,7 +1249,7 @@ class Update {
 	 */
 	public static function update_340018() { 
 
-		// MySQL translte real charset names into fancy smancy MySQL land names
+		// MySQL translate real charset names into fancy smancy MySQL land names
 		switch (strtoupper(Config::get('site_charset'))) { 
 			case 'CP1250': 
 			case 'WINDOWS-1250': 

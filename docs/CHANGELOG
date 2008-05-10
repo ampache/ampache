@@ -3,7 +3,7 @@
 --------------------------------------------------------------------------
 
 --------------------------------------------------------------------------
-  v.3.4 
+  v.3.4 05/10/2008 
 	- Fixed an issue where the plugins could be installed infinite times
 		if you kept refreshing the install page causing them to break
 	- Fixed a problem with creating new preferences using the class
