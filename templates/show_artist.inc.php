@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2007 Ampache.org
+ Copyright (c) Ampache.org
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
@@ -18,23 +18,13 @@
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
-
-$web_path = Config::get('web_path');
-
 require Config::get('prefix') . '/templates/show_artist_box.inc.php';
-//require Config::get('prefix') . '/templates/show_artist_tagcloud.inc.php';
 ?>
 <?php
 	Browse::reset_filters(); 
 	Browse::set_type('album'); 
-	//Browse::set_filter('artist', $artist->id);
-	Browse::set_filter_from_request($_REQUEST);
-	$objs = Browse::get_objects();
-	if (sizeof($objs)) {
-	  $tagcloudHead = _('Tags for albums of') . ' ' . $artist->f_name;
-	  $taglist = TagCloud::get_tags('album', $objs);
-	  $tagcloudList = TagCloud::filter_with_prefs($taglist);
-	  require Config::get('prefix') . '/templates/show_tagcloud.inc.php';
-	}
+	Browse::set_static_content(1); 
+	Browse::save_objects($albums); 
+	$taglist = Tag::get_many_tags('album', $object_ids);
 	Browse::show_objects(); 
 ?>

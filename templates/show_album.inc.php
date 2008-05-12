@@ -52,7 +52,7 @@ $title		= scrub_out($album->name) . '&nbsp;(' . $album->year . ')' . $disk .'&nb
 	<ul>
 	<li>Tags:
 	<?php
-	$tags = TagCloud::get_tags('album', array($album->id));
+	$tags = Tag::get_object_tags('album',$album->id);
 	foreach($tags as $i)
 	  echo ($i['name']) . ' ';
 	?>

@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2007 Ampache.org
+ Copyright (c) Ampache.org
  All Rights Reserved
 
  This program is free software; you can redistribute it and/or
@@ -21,18 +21,8 @@
 */ 
 $web_path = Config::get('web_path'); 
 ?>
-<?php
-function rebuild_query($ar) {
-  $ret = split('?', $_SERVER['REQUEST_URI']);
-  $ret = $ret[0] . '?';
-  foreach($ar as $k=>$v)
-  {
-    $ret .= urlencode($k).'='.urlencode($v).'&';
-  }
-  return $ret;
-}
-show_box_top($tagcloudHead, 'info-box');
-//make a map id->name
+<?php show_box_top('', 'info-box'); 
+/* make a map id->name
 $tagbyid = array();
 foreach ($tagcloudList as $f)
   $tagbyid[$f['id']] = $f;
@@ -81,6 +71,6 @@ foreach ($tagcloudList as $f) {
      . 'tag='.$stags.'">'.$n.'</a> ';
    }
 }
-
+*/
 ?>
 <?php show_box_bottom(); ?>

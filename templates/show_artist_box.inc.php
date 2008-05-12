@@ -34,7 +34,7 @@ if (Config::get('ratings')) {
 <div id="information_actions">
 Tags:
 	<?php
-	$tags = TagCloud::get_tags('artist', array($artist->id));
+	$tags = Tag::get_object_tags('artist', $artist->id);
 	foreach($tags as $i)
 	  echo ($i['name']) . ' ';
 	?>
