@@ -277,6 +277,11 @@ class Update {
 
 		$version[] = array('version' => '340018','description'=>$update_string); 
 
+		$update_string = '- Modify the Tag tables so that they actually work.<br />' . 
+				'- Alter the Prefix fields to allow for more prefixs.<br />'; 
+		
+		$version[] = array('version' => '350001','description'=>$update_string); 
+
 
 		return $version;
 
@@ -1327,6 +1332,34 @@ class Update {
 		return true; 
 
 	} // update_340018
+
+	/**
+ 	 * update_350001
+	 * This updates modifies the tag tables per codeunde1load's specs from his tag patch
+	 * it also adjusts the prefix fields so that we can use more prefixes
+	 */
+	public static function update_350001() { 
+
+		$sql = "ALTER TABLE `tag_map` ADD `tag_id` INT ( 11 ) UNSIGNED NOT NULL AFTER `id`"; 
+		$db_results = Dba::query($sql); 
+
+		$sql = "RENAME TABLE `ampache`.`tags`  TO `ampache`.`tag`"; 
+		$db_results = Dba::query($sql); 
+
+		$sql = "ALTER TABLE `tag` CHANGE `map_id` `id` INT ( 11 ) UNSIGNED NOT NULL auto_increment"; 
+		$db_results = Dba::query($sql); 
+
+		$sql = "ALTER TABLE `album` CHANGE `prefix` `prefix` VARCHAR ( 32 ) NULL"; 
+		$db_results = Dba::query($sql); 
+
+		$sql = "ALTER TABLE `artist` CHANGE `prefix` `prefix` VARCHAR ( 32 ) NULL"; 
+		$db_results = Dba::query($sql); 
+		
+		self::set_version('db_version','350001'); 
+
+		return true; 
+
+	} // update_350001
 
 } // end update class
 ?>

@@ -32,8 +32,9 @@ if (INIT_LOADED != '1') { exit; }
  */
 class Dba { 
 
-	private static $_default_db;
+	public static $stats = array('query'=>0); 
 
+	private static $_default_db;
 	private static $_sql; 
 	private static $config; 
 
@@ -53,16 +54,14 @@ class Dba {
 	 * The mysql_query function
 	 */
 	public static function query($sql) { 
-	  	/*if ($_REQUEST['profiling']) {
-		  $sql = rtrim($sql, '; ');
-		  $sql .= ' SQL_NO_CACHE';
-		}*/
+		
 		// Run the query
 		$resource = mysql_query($sql,self::dbh()); 
 		debug_event('Query',$sql,'6');
 		
 		// Save the query, to make debug easier
 		self::$_sql = $sql; 
+		self::$stats['query']++; 
 
 		return $resource; 
 
@@ -200,17 +199,23 @@ class Dba {
 
 	} // _connect
 
+	/**
+	 * show_profile
+	 * This function is used for debug, helps with profiling
+	 */
 	public static function show_profile() {
-	  if ($_REQUEST['profiling']) {
-	    print '<br/>Profiling data: <br/>';
-	    $res = Dba::query('show profiles');
-	    print '<table>';
-	    while ($r = Dba::fetch_row($res)) {
-	      print '<tr><td>' . implode('</td><td>', $r) . '</td></tr>';
-	    }
-	    print '</table>';
-	  }
-	}
+
+		if (Config::get('sql_profiling')) {
+		    print '<br/>Profiling data: <br/>';
+		    $res = Dba::query('show profiles');
+		    print '<table>';
+		    while ($r = Dba::fetch_row($res)) {
+		      print '<tr><td>' . implode('</td><td>', $r) . '</td></tr>';
+		    }
+		    print '</table>';
+		}
+	} // show_profile
+
 	/**
 	 * dbh
 	 * This is called by the class to return the database handle

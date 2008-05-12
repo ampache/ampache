@@ -24,7 +24,7 @@
  * This is an amalgamation(sp?) of code from SoundOfEmotion
  * to track ratings for songs, albums and artists. 
 */
-class Rating {
+class Rating extends database_object {
 
 	/* Provided vars */
 	var $id; 	// The ID of the object who's ratings we want to pull
@@ -56,31 +56,56 @@ class Rating {
 		return true; 
 
 	} // Constructor
+
+	/**
+ 	 * build_cache
+	 * This attempts to get everything we'll need for this page load in a single query, saving
+	 * the connection overhead
+	 * //FIXME: Improve logic so that misses get cached as average
+	 */
 	public static function build_cache($type, $ids) {
-	  $idlist = '(' . implode(',', $ids) . ')';
-	  $sql = "SELECT `rating`, object_id FROM `rating` WHERE `user`='$user_id' AND `object_id` in $idlist AND `object_type`='$type'";
-	  global $rating_cache;
-	  $rating_cache = array();
-	  $db_results = Dba::query($sql);
-	  while ($results = Dba::fetch_assoc($db_results)) {
-	    $rating_cache[intval($results['object_id'])] = $results;
-	  }
-	}
+	
+		$user_id = Dba::escape($GLOBALS['user']->id); 
+
+		$idlist = '(' . implode(',', $ids) . ')';
+		$sql = "SELECT `rating`, `object_id` FROM `rating` WHERE `user`='$user_id' AND `object_id` IN $idlist " . 
+			"AND `object_type`='$type'";
+		$db_results = Dba::query($sql);
+
+		while ($row = Dba::fetch_assoc($db_results)) {
+			$rating[$row['id']] = $row['rating'];
+		}
+		
+		$user_cache_name = 'rating_' . $type . '_user'; 
+
+		foreach ($ids as $id) { 
+			parent::add_to_cache($user_cache_name,$id,intval($rating[$id])); 
+		} // end foreach 
+
+
+	} // build_cache
+
 	/**
 	 * get_user
 	 * Get the user's rating this is based off the currently logged
 	 * in user. It returns the value
 	 */
 	 public function get_user($user_id) {
-	   global $rating_cache;
-	   if (isset($rating_cache[intval($this->id)]));
-	     return $rating_cache[intval($this->id)]['rating'];
-		$user_id	= Dba::escape($user_id); 
+		
+		$id = intval($this->id); 
 
-		$sql = "SELECT `rating` FROM `rating` WHERE `user`='$user_id' AND `object_id`='$this->id' AND `object_type`='$this->type'";
+		if (parent::is_cached('rating_' . $this->type . '_user',$id)) { 
+			return parent::get_from_cache('rating_' . $this->type . '_user',$id); 
+		} 
+
+		$user_id = Dba::escape($user_id); 
+
+		$sql = "SELECT `rating` FROM `rating` WHERE `user`='$user_id' AND `object_id`='$id' AND `object_type`='$this->type'";
 		$db_results = Dba::query($sql);
 		
 		$results = Dba::fetch_assoc($db_results);
+
+		parent::add_to_cache('rating_' . $this->type . '_user',$id,$results['rating']); 
 		
 		return $results['rating'];
 

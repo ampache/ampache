@@ -24,7 +24,7 @@
  * This is the class responsible for handling the Album object
  * it is related to the album table in the database.
  */
-class Album {
+class Album extends database_object {
 
 	/* Variables from DB */
 	public $id;
@@ -50,12 +50,13 @@ class Album {
 	 * pull the album or thumb art by default or
 	 * get any of the counts.
 	 */
-	public function __construct($album_id='') {
+	public function __construct($id='') {
 
-		if (!$album_id) { return false; } 
+		if (!$id) { return false; } 
+
 
 		/* Assign id for use in get_info() */
-		$this->id = intval($album_id);
+		$this->id = intval($id);
 
 		/* Get the information from the db */
 		$info = $this->_get_info();
@@ -70,7 +71,7 @@ class Album {
 
 		return true; 
 
-	} //constructor
+	} // constructor
 
 	/**
 	 * construct_from_array
@@ -90,30 +91,45 @@ class Album {
 		return $album; 
 
 	} // construct_from_array
-	public static function build_cache($ids, $fields='*') {
-	  $idlist = '(' . implode(',', $ids) . ')';
-	  $sql = "SELECT $fields FROM album WHERE id in $idlist";
-	  $db_results = Dba::query($sql);
-	  global $album_cache;
-	  $album_cache = array();
-	  while ($results = Dba::fetch_assoc($db_results)) {
-	    $album_cache[intval($results['id'])] = $results;
-	  }
-	}
+
+	/**
+	 * build_cache
+	 * This takes an array of object ids and caches all of their information
+	 * with a single query
+	 */
+	public static function build_cache($ids) {
+		$idlist = '(' . implode(',', $ids) . ')';
+
+		$sql = "SELECT * FROM `album` WHERE `id` IN $idlist";
+		$db_results = Dba::query($sql);
+	  
+		while ($row = Dba::fetch_assoc($db_results)) {
+			parent::add_to_cache('album',$row['id'],$row); 
+		}
+
+	} // build_cache
+
 	/**
 	 * _get_info
 	 * This is a private function that pulls the album 
 	 * from the database 
 	 */
 	private function _get_info() {
-	  global $album_cache;
-		if (isset($album_cache[intval($this->id)]))
-		  return $album_cache[intval($this->id)];
+
+		$id = intval($this->id); 
+
+		if (parent::is_cached('album',$id)) { 
+			return parent::get_from_cache('album',$id); 
+		} 
+
 		// Just get the album information
-		$sql = "SELECT * FROM `album` WHERE `id`='" . $this->id . "'"; 
+		$sql = "SELECT * FROM `album` WHERE `id`='$id'"; 
 		$db_results = Dba::query($sql);
 
 		$results = Dba::fetch_assoc($db_results);
+
+		// Cache the object
+		parent::add_to_cache('album',$id,$results); 
 
 		return $results;
 

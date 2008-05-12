@@ -19,7 +19,7 @@
 
 */
 
-class Song {
+class Song extends database_object {
 
 	/* Variables from DB */
 	public $id;
@@ -52,10 +52,10 @@ class Song {
 	 */
 	public function __construct($id='') {
 
+		if (!$id) { return false; } 
+
 		/* Assign id for use in get_info() */
 		$this->id = intval($id);
-
-		if (!$this->id) { return false; } 
 
 		/* Get the information from the db */
 		if ($info = $this->_get_info()) {
@@ -70,64 +70,59 @@ class Song {
 		return true; 
 
 	} // constructor
-	public static function build_cache($ids)
-	{
-	  $idlist = '(' . implode(',', $ids) . ')';
+
+	/**
+	 * build_cache
+	 * This attempts to reduce # of queries by asking for everything in the browse
+	 * all at once and storing it in the cache, this can help if the db connection
+	 * is the slow point
+	 */
+	public static function build_cache($song_ids) {
+
+		$idlist = '(' . implode(',', $song_ids) . ')';
 	  
-	  // Song data cache
-	  $sql = "SELECT song.id,file,catalog,album,year,artist,".
-			"title,bitrate,rate,mode,size,time,track,genre,played,song.enabled,update_time,".
-			"addition_time FROM `song` WHERE `song`.`id` in
-			$idlist";
-	  $db_results = Dba::query($sql);
-	  global $song_cache;
-	  $song_cache = array();
-	  while ($results = Dba::fetch_assoc($db_results))
-	  {
-	    $song_cache[intval($results['id'])] = $results;
-	  }
+		// Song data cache
+		$sql = "SELECT song.id,file,catalog,album,year,artist,".
+				"title,bitrate,rate,mode,size,time,track,genre,played,song.enabled,update_time,".
+				"addition_time FROM `song` WHERE `song`.`id` IN
+				$idlist";
+		$db_results = Dba::query($sql);
 	  
-	  // Extra sound data cache
-	  global $song_data_cache;
-	  $song_data_cache = array();
-	  $sql = "SELECT * FROM song_data WHERE song_id in $idlist";
-	  $db_results = Dba::query($sql);
-	  while ($results = Dba::fetch_assoc($db_results))
-	  {
-	    $song_data_cache[intval($results['song_id'])] = $results;
-	  }
-	  
-	  // Get all artist, album, genre ids.
-	  $artists = array();
-	  $albums = array();
-	  $genre = array();
-	  foreach ($song_cache as $i)
-	  {
-	    $artists[$i['artist']] = 1;
-	    $albums[$i['album']] = 1;
-	    $genre[$i['genre']] = 1;
-	  }
-	  Artist::build_cache(array_keys($artists), 'id,name');
-	  Album::build_cache(array_keys($albums), 'id,name');
-	  Genre::build_cache(array_keys($genre), 'id,name');
-	}
-	/*!
-		@function _get_info
-		@discussion get's the vars for $this out of the database 
-		@param $this->id	Taken from the object
-	*/
+		while ($row = Dba::fetch_assoc($db_results)) {
+			parent::add_to_cache('song',$row['id'],$row); 
+			$artists[$row['artist']]	= $row['artist']; 
+			$albums[$row['album']]		= $row['album']; 
+		}
+	
+		Artist::build_cache($artists);
+		Album::build_cache($albums); 
+ 
+		return true; 
+ 
+	} // build_cache
+
+	/**
+	 * _get_info
+	 * get's the vars for $this out of the database 
+	 * Taken from the object
+	 */
 	private function _get_info() {
-	  global $song_cache;
-	  if (isset($song_cache[intval($this->id)]))
-	    return $song_cache[intval($this->id)];
+		
+		$id = intval($this->id); 
+
+		if (parent::is_cached('song',$id)) { 
+			return parent::get_from_cache('song',$id); 
+		} 
+
 		/* Grab the basic information from the catalog and return it */
 		$sql = "SELECT song.id,file,catalog,album,year,artist,".
 			"title,bitrate,rate,mode,size,time,track,genre,played,song.enabled,update_time,".
-			"addition_time FROM `song` WHERE `song`.`id` = '$this->id'";
-			
+			"addition_time FROM `song` WHERE `song`.`id` = '$id'";
 		$db_results = Dba::query($sql);
 
 		$results = Dba::fetch_assoc($db_results);
+
+		parent::add_to_cache('song',$id,$results); 
 
 		return $results;
 
@@ -225,28 +220,11 @@ class Song {
 
 	} // format_type
 	
-	/*!
-		@function get_album_songs
-		@discussion gets an array of song objects based on album
-	*/
-	function get_album_songs($album_id) {
-
-		$sql = "SELECT id FROM song WHERE album='$album_id'";
-		$db_results = mysql_query($sql, dbh());
-
-		while ($r = mysql_fetch_object($db_results)) {
-			$results[] = new Song($r->id);
-		}
-
-		return $results;
-
-	} // get_album_songs
-
 	/**
 	 * get_album_name
 	 * gets the name of $this->album, allows passing of id 
 	 */
-	function get_album_name($album_id=0) {
+	public function get_album_name($album_id=0) {
 		if (!$album_id) { $album_id = $this->album; } 
 	  	$album = new Album($album_id);
 		if ($album->prefix)
@@ -259,7 +237,7 @@ class Song {
 	 * get_artist_name
 	 * gets the name of $this->artist, allows passing of id
 	 */
-	function get_artist_name($artist_id=0) {
+	public function get_artist_name($artist_id=0) {
 
 		if (!$artist_id) { $artist_id = $this->artist; } 
 		$artist = new Artist($artist_id);
@@ -275,34 +253,13 @@ class Song {
 	 * gets the name of the genre, allow passing of a specified
 	 * id
 	 */
-	function get_genre_name($genre_id=0) {
+	public function get_genre_name($genre_id=0) {
 
 		if (!$genre_id) { $genre_id = $this->genre; } 
 		$genre = new Genre($genre_id);
 		return $genre->name;
 	
 	} // get_genre_name
-
-	/**
-	 * get_flags
-	 * This gets any flag information this song may have, it always
-	 * returns an array as it may be possible to have more then
-	 * one flag
-	 */
-	function get_flags() { 
-
-		$sql = "SELECT id,flag,comment FROM flagged WHERE object_type='song' AND object_id='$this->id'";
-		$db_results = mysql_query($sql, dbh());
-
-		$results = array();
-
-		while ($r = mysql_fetch_assoc($db_results)) { 
-			$results[] = $r;
-		}
-
-		return $results;
-		
-	} // get_flag
 
 	/**
 	 * has_flag

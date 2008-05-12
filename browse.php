@@ -56,11 +56,13 @@ switch($_REQUEST['action']) {
 	case 'album':
 		Browse::set_sort('name','ASC');
 		$album_ids = Browse::get_objects(); 
+		Album::build_cache($album_ids); 
 		Browse::show_objects($album_ids); 
 	break;
 	case 'artist':
 		Browse::set_sort('name','ASC');
 		$artist_ids = Browse::get_objects(); 
+		Artist::build_cache($artist_ids); 
 		Browse::show_objects($artist_ids); 
 	break;
 	case 'genre':
@@ -71,6 +73,7 @@ switch($_REQUEST['action']) {
 	case 'song':
 		Browse::set_sort('title','ASC');
 		$song_ids = Browse::get_objects(); 
+		Song::build_cache($song_ids); 
 		Browse::show_objects($song_ids); 
 	break;
 	case 'live_stream':

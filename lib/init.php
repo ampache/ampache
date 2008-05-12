@@ -81,7 +81,7 @@ if (!count($results)) {
 } 
 
 /** This is the version.... fluf nothing more... **/
-$results['version']		= '3.4';
+$results['version']		= '3.5-Alpha1 (Build 001)';
 $results['int_config_version']	= '7'; 
 
 $results['raw_web_path']	= $results['web_path'];
@@ -130,6 +130,7 @@ require_once $prefix . '/lib/themes.php';
 require_once $prefix . '/lib/stream.lib.php';
 require_once $prefix . '/lib/xmlrpc.php';
 require_once $prefix . '/lib/class/localplay.abstract.php';
+require_once $prefix . '/lib/class/database_object.abstract.php'; 
 require_once $prefix . '/modules/xmlrpc/xmlrpc.inc';
 require_once $prefix . '/modules/getid3/getid3.php';
 require_once $prefix . '/modules/infotools/Snoopy.class.php';

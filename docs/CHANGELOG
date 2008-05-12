@@ -3,6 +3,14 @@
 --------------------------------------------------------------------------
 
 --------------------------------------------------------------------------
+  v.3.5-Alpha1
+	- Upped Minimum requirements to Mysql 5.x
+	- Add codeunde1load's Web 2.0 style tag patch
+	- Fixed typo in e-mail From: name (Thx Xgizzmo)
+	- Fixed typo in browse auto_init() which could cause ampache to not
+		remember your start point in some situations. (Thx Xgizzmo)
+
+--------------------------------------------------------------------------
   v.3.4 05/10/2008 
 	- Fixed an issue where the plugins could be installed infinite times
 		if you kept refreshing the install page causing them to break

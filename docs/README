@@ -120,7 +120,7 @@ Contents:
 	PHP5-gd (recommended)
 	PHP5 ICONV 
 	PHP5 ZLIB support (recommended)
-  MySQL >= 4.1+ http://www.mysql.com
+  MySQL >= 5.x+ http://www.mysql.com
 
 3. Setting Up
 

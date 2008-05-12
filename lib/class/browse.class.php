@@ -72,19 +72,20 @@ class Browse {
 				}
 			break;
                        case 'tag':
-			 //var_dump($value);
-			   if (is_array($value))
-			     $_SESSION['browse']['filter'][$key] = $value;
-			   else if (is_numeric($value))
-			     $_SESSION['browse']['filter'][$key] =
-			       array($value);
-			   else
-			     $_SESSION['browse']['filter'][$key] = array();
-			 break;
-      case 'artist':
-      case 'album':
-	$_SESSION['browse']['filter'][$key] = $value;
-	break;
+				if (is_array($value)) { 
+					$_SESSION['browse']['filter'][$key] = $value;
+				} 
+				elseif (is_numeric($value)) { 
+					$_SESSION['browse']['filter'][$key] = array($value);
+				} 
+				else { 
+					$_SESSION['browse']['filter'][$key] = array();
+				} 
+			break;
+			case 'artist':
+			case 'album':
+				$_SESSION['browse']['filter'][$key] = $value;
+			break;
 			case 'min_count':
 	
 			case 'unplayed':
@@ -93,7 +94,6 @@ class Browse {
 			break; 
 			case 'alpha_match':
 				if (self::$static_content) { return false; }
-				//if ($value == _('All')) { $value = ''; } 
 				$_SESSION['browse']['filter'][$key] = $value; 
 			break;
 			case 'playlist_type': 
@@ -364,9 +364,10 @@ class Browse {
 		$db_results = Dba::query($sql); 
 
 		$results = array(); 
-		while ($data = Dba::fetch_assoc($db_results))
-		  $results[] = $data;
-		var_dump($results);
+		while ($data = Dba::fetch_assoc($db_results)) { 
+			$results[] = $data;
+		}
+
 		$results = self::post_process($results);
 		$filtered = array();
 		foreach ($results as $data) { 
@@ -506,25 +507,40 @@ class Browse {
 		$order_sql = rtrim($order_sql,","); 
 
 		$sql = $sql . $order_sql; 
-		var_dump($sql);
 		return $sql;
 
 	} // get_sql 
-	private static function post_process($results)
-	{
-	  $tags = $_SESSION['browse']['filter']['tag'];
-	  if (!is_array($tags) || sizeof($tags) < 2)
-	    return $results;
-	  $cnt = sizeof($tags);
-	  $ar = array();
-	  foreach($results as $row)
-	    $ar[$row['id']]++;
-	  $res = array();
-	  foreach($ar as $k=>$v)
-	    if ($v >= $cnt)
-	      $res[] = array('id' => $k);
-	  return $res;
-	}
+
+	/**
+  	 * post_process
+	 * This does some additional work on the results that we've received before returning them
+	 */
+	private static function post_process($results) {
+
+		$tags = $_SESSION['browse']['filter']['tag'];
+
+		if (!is_array($tags) || sizeof($tags) < 2) { 
+			return $results;
+		} 
+		$cnt = sizeof($tags);
+		$ar = array();
+
+		foreach($results as $row) { 
+			$ar[$row['id']]++;
+		}
+
+		$res = array();
+
+		foreach($ar as $k=>$v) { 
+			if ($v >= $cnt) { 
+				$res[] = array('id' => $k);
+			}
+		} // end foreach 
+
+		return $res;
+
+	} // post_process
+
 	/**
 	 * sql_filter
 	 * This takes a filter name and value and if it is possible
@@ -540,7 +556,6 @@ class Browse {
 		  || $_SESSION['browse']['type'] == 'artist'
 		  || $_SESSION['browse']['type'] == 'album'
 		  )) {
-		//var_dump($value);
 		   if (is_array($value) && sizeof($value))
 		     $vals = '(' . implode(',',$value) . ')';
 		   else if (is_integer($value))
@@ -796,7 +811,6 @@ class Browse {
 
 		// Load any additional object we need for this
 		$extra_objects = self::get_supplemental_objects(); 
-		var_dump($object_ids);
 		foreach ($extra_objects as $class_name => $id) { 
 			${$class_name} = new $class_name($id); 
 		} 
@@ -805,11 +819,10 @@ class Browse {
 		if (!$ajax && in_array($_SESSION['browse']['type'],
 		  array('artist','album','song'))) {
 		  $tagcloudHead = "Matching tags";
-		  $tagcloudList =   
-		    TagCloud::get_tags($_SESSION['browse']['type'],  $all_ids);
+		  $tagcloudList = TagCloud::get_tags($_SESSION['browse']['type'],  $all_ids);
 		    require_once Config::get('prefix') . '/templates/show_tagcloud.inc.php'; 
 		}
-		Dba::show_profile();
+		
 		Ajax::start_container('browse_content');
 		// Switch on the type of browsing we're doing
 		switch ($_SESSION['browse']['type']) { 
@@ -965,11 +978,9 @@ class Browse {
 	
 	public static function set_filter_from_request($r)
 	{
-	  //var_dump($r);
 	  foreach ($r as $k=>$v) {
 	    //reinterpret v as a list of int
 	    $vl = explode(',', $v);
-	    //var_dump($vl);
 	    $ok = 1;
 	    foreach($vl as $i) {
 	      if (!is_numeric($i)) {

@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2008 Ampache.org
+ Copyright (c) Ampache.org
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
@@ -22,7 +22,7 @@
 /**
  * Artist Class
  */
-class Artist {
+class Artist extends database_object {
 
 	/* Variables from DB */
 	public $id;
@@ -76,29 +76,41 @@ class Artist {
 		return $artist;
 
 	} // construct_from_array
-	public static function build_cache($ids, $fields='*') {
-	  $idlist = '(' . implode(',', $ids) . ')';
-	  $sql = "SELECT $fields FROM artist WHERE id in $idlist";
-	  $db_results = Dba::query($sql);
-	  global $artist_cache;
-	  $artist_cache = array();
-	  while ($results = Dba::fetch_assoc($db_results)) {
-	    $artist_cache[intval($results['id'])] = $results;
-	  }
-	}
+
+	/**
+	 * this attempts to build a cache of the data from the passed albums all in one query
+	 */
+	public static function build_cache($ids) {
+		$idlist = '(' . implode(',', $ids) . ')';
+
+		$sql = "SELECT * FROM `artist` WHERE `id` IN $idlist";
+		$db_results = Dba::query($sql);
+
+	  	while ($row = Dba::fetch_assoc($db_results)) {
+	  		parent::add_to_cache('artist',$row['id'],$row); 
+		}
+
+	} // build_cache
+
 	/**
 	 * _get_info
 	 * get's the vars for $this out of the database taken from the object
 	*/
 	private function _get_info() {
-	  	global $artist_cache;
-		if (isset($artist_cache[intval($this->id)]))
-		  return $artist_cache[intval($this->id)];
+
+		$id = intval($this->id); 
+
+		if (parent::is_cached('artist',$id)) { 
+                        return parent::get_from_cache('artist',$id); 
+		} 
+	
 		/* Grab the basic information from the catalog and return it */
-		$sql = "SELECT * FROM artist WHERE id='" . Dba::escape($this->id) . "'";
+		$sql = "SELECT * FROM artist WHERE id='$id'";
 		$db_results = Dba::query($sql);
 
 		$results = Dba::fetch_assoc($db_results);
+
+		parent::add_to_cache('artist',$id,$results);
 
 		return $results;
 

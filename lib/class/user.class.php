@@ -24,7 +24,7 @@
  * and deletion of the user objects from the database by defualt you constrcut it
  * with a user_id from user.id
  */
-class User {
+class User extends database_object {
 
 	//Basic Componets
 	public $id;
@@ -49,8 +49,9 @@ class User {
 		
 		if (!$user_id) { return false; } 
 
-		$this->id		= intval($user_id);
-		$info 			= $this->_get_info();
+		$this->id = intval($user_id);
+
+		$info = $this->_get_info();
 
 		foreach ($info as $key=>$value) { 
 			// Let's not save the password in this object :S
@@ -69,21 +70,26 @@ class User {
 	 */
 	private function _get_info() {
 
+		$id = intval($this->id); 
+
+		if (parent::is_cached('user',$id)) { 
+			return parent::get_from_cache('user',$id); 
+		} 
+
 		// If the ID is -1 then
-		if ($this->id == '-1') { 
+		if ($id == '-1') { 
 			$data['username'] = 'System'; 
 			$data['fullname'] = 'Ampache User'; 
 			$data['access'] = '25'; 
 			return $data; 
 		} 
 
-		// Else...
-		$id = Dba::escape($this->id);
-
-		$sql = "SELECT * FROM `user` WHERE `id`='" . $id . "'";
+		$sql = "SELECT * FROM `user` WHERE `id`='$id'";
 		$db_results = Dba::query($sql);
 
 		$data = Dba::fetch_assoc($db_results);  
+
+		parent::add_to_cache('user',$id,$data); 
 
 		return $data; 
 
