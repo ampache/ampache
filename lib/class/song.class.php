@@ -70,14 +70,56 @@ class Song {
 		return true; 
 
 	} // constructor
-
+	public static function build_cache($ids)
+	{
+	  $idlist = '(' . implode(',', $ids) . ')';
+	  
+	  // Song data cache
+	  $sql = "SELECT song.id,file,catalog,album,year,artist,".
+			"title,bitrate,rate,mode,size,time,track,genre,played,song.enabled,update_time,".
+			"addition_time FROM `song` WHERE `song`.`id` in
+			$idlist";
+	  $db_results = Dba::query($sql);
+	  global $song_cache;
+	  $song_cache = array();
+	  while ($results = Dba::fetch_assoc($db_results))
+	  {
+	    $song_cache[intval($results['id'])] = $results;
+	  }
+	  
+	  // Extra sound data cache
+	  global $song_data_cache;
+	  $song_data_cache = array();
+	  $sql = "SELECT * FROM song_data WHERE song_id in $idlist";
+	  $db_results = Dba::query($sql);
+	  while ($results = Dba::fetch_assoc($db_results))
+	  {
+	    $song_data_cache[intval($results['song_id'])] = $results;
+	  }
+	  
+	  // Get all artist, album, genre ids.
+	  $artists = array();
+	  $albums = array();
+	  $genre = array();
+	  foreach ($song_cache as $i)
+	  {
+	    $artists[$i['artist']] = 1;
+	    $albums[$i['album']] = 1;
+	    $genre[$i['genre']] = 1;
+	  }
+	  Artist::build_cache(array_keys($artists), 'id,name');
+	  Album::build_cache(array_keys($albums), 'id,name');
+	  Genre::build_cache(array_keys($genre), 'id,name');
+	}
 	/*!
 		@function _get_info
 		@discussion get's the vars for $this out of the database 
 		@param $this->id	Taken from the object
 	*/
 	private function _get_info() {
-
+	  global $song_cache;
+	  if (isset($song_cache[intval($this->id)]))
+	    return $song_cache[intval($this->id)];
 		/* Grab the basic information from the catalog and return it */
 		$sql = "SELECT song.id,file,catalog,album,year,artist,".
 			"title,bitrate,rate,mode,size,time,track,genre,played,song.enabled,update_time,".
@@ -97,7 +139,9 @@ class Song {
 	 * current object
 	 */
 	public function _get_ext_info() { 
-
+	  global $song_data_cache;
+	  if (isset($song_data_cache[intval($this->id)]))
+	    return $song_data_cache[intval($this->id)];
 		$sql = "SELECT * FROM song_data WHERE `song_id`='" . Dba::escape($this->id) . "'";
 		$db_results = Dba::query($sql); 
 
@@ -203,21 +247,12 @@ class Song {
 	 * gets the name of $this->album, allows passing of id 
 	 */
 	function get_album_name($album_id=0) {
-
 		if (!$album_id) { $album_id = $this->album; } 
-
-		$sql = "SELECT `name`,`prefix` FROM `album` WHERE `id`='" . Dba::escape($album_id) . "'";
-		$db_results = Dba::query($sql);
-
-		$results = Dba::fetch_assoc($db_results);
-
-		if ($results['prefix']) { 
-			return $results['prefix'] . " " .$results['name'];
-		}
-		else {
-			return $results['name'];
-		}
-
+	  	$album = new Album($album_id);
+		if ($album->prefix)
+		  return $album->prefix . " " . $album->name;	
+		else
+		  return $album->name;
 	} // get_album_name
 
 	/**
@@ -227,18 +262,11 @@ class Song {
 	function get_artist_name($artist_id=0) {
 
 		if (!$artist_id) { $artist_id = $this->artist; } 
-
-		$sql = "SELECT name,prefix FROM artist WHERE id='" . Dba::escape($artist_id) . "'";
-		$db_results = Dba::query($sql);
-
-		$results = Dba::fetch_assoc($db_results);
-
-		if ($results['prefix']) {
-			return $results['prefix'] . " " . $results['name'];
-		}
-		else {
-			return $results['name'];
-		}
+		$artist = new Artist($artist_id);
+		if ($artist->prefix)
+		  return $artist->prefix . " " . $artist->name;	
+		else
+		  return $artist->name;
 
 	} // get_album_name
 
@@ -250,13 +278,8 @@ class Song {
 	function get_genre_name($genre_id=0) {
 
 		if (!$genre_id) { $genre_id = $this->genre; } 
-
-		$sql = "SELECT name FROM genre WHERE id='" . Dba::escape($genre_id) . "'";
-		$db_results = Dba::query($sql);
-
-		$results = Dba::fetch_assoc($db_results);
-
-		return $results['name'];
+		$genre = new Genre($genre_id);
+		return $genre->name;
 	
 	} // get_genre_name
 

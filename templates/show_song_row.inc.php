@@ -31,6 +31,12 @@
 <?php if (Config::get('ratings')) { ?>
 <td class="cel_rating" id="rating_<?php echo $song->id; ?>_song"><?php Rating::show($song->id,'song'); ?></td>
 <?php } ?>
+<td class="cel_tags"><?php
+global $tag_cache;
+$tags = $tag_cache[intval($song->id)]; //TagCloud::get_tags('song', array($song->id));
+foreach($tags as $i)
+  echo $i['name'] . ' ';
+?></td>
 <td class="cel_action">
 	<?php if (Config::get('shoutbox')) { ?>
                 <a href="<?php echo Config::get('web_path'); ?>/shout.php?action=show_add_shout&amp;type=song&amp;id=<?php echo $song->id; ?>">

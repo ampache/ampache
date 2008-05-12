@@ -42,13 +42,24 @@ class Genre {
 
 
 	} // Genre
-
+	public static function build_cache($ids, $fields='*') {
+	  $idlist = '(' . implode(',', $ids) . ')';
+	  $sql = "SELECT $fields FROM genre WHERE id in $idlist";
+	  $db_results = Dba::query($sql);
+	  global $genre_cache;
+	  $genre_cache = array();
+	  while ($results = Dba::fetch_assoc($db_results)) {
+	    $genre_cache[intval($results['id'])] = $results;
+	  }
+	}
 	/** 
 	 * Private Get Info 
 	 * This simply returns the information for this genre
 	 */
 	private function _get_info() { 
-
+	  global $genre_cache;
+		if (isset($genre_cache[intval($this->id)]))
+		  return $genre_cache[intval($this->id)];
 		$sql = "SELECT * FROM `genre`  WHERE `id`='$this->id'";
 		$db_results = Dba::query($sql);
 		

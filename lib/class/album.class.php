@@ -90,14 +90,25 @@ class Album {
 		return $album; 
 
 	} // construct_from_array
-
+	public static function build_cache($ids, $fields='*') {
+	  $idlist = '(' . implode(',', $ids) . ')';
+	  $sql = "SELECT $fields FROM album WHERE id in $idlist";
+	  $db_results = Dba::query($sql);
+	  global $album_cache;
+	  $album_cache = array();
+	  while ($results = Dba::fetch_assoc($db_results)) {
+	    $album_cache[intval($results['id'])] = $results;
+	  }
+	}
 	/**
 	 * _get_info
 	 * This is a private function that pulls the album 
 	 * from the database 
 	 */
 	private function _get_info() {
-
+	  global $album_cache;
+		if (isset($album_cache[intval($this->id)]))
+		  return $album_cache[intval($this->id)];
 		// Just get the album information
 		$sql = "SELECT * FROM `album` WHERE `id`='" . $this->id . "'"; 
 		$db_results = Dba::query($sql);

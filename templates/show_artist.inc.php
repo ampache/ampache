@@ -22,12 +22,19 @@
 $web_path = Config::get('web_path');
 
 require Config::get('prefix') . '/templates/show_artist_box.inc.php';
-
+//require Config::get('prefix') . '/templates/show_artist_tagcloud.inc.php';
 ?>
-<?php 
+<?php
 	Browse::reset_filters(); 
 	Browse::set_type('album'); 
-	Browse::set_static_content(1); 
-	Browse::save_objects($albums);
-	Browse::show_objects($albums); 
+	//Browse::set_filter('artist', $artist->id);
+	Browse::set_filter_from_request($_REQUEST);
+	$objs = Browse::get_objects();
+	if (sizeof($objs)) {
+	  $tagcloudHead = _('Tags for albums of') . ' ' . $artist->f_name;
+	  $taglist = TagCloud::get_tags('album', $objs);
+	  $tagcloudList = TagCloud::filter_with_prefs($taglist);
+	  require Config::get('prefix') . '/templates/show_tagcloud.inc.php';
+	}
+	Browse::show_objects(); 
 ?>

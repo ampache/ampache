@@ -44,12 +44,16 @@ $ajax_url = Config::get('ajax_url');
 	<th class="cel_genre"><?php echo _('Genre'); ?></th>
 	<th class="cel_track"><?php echo Ajax::text('?page=browse&action=set_sort&sort=track',_('Track'),'sort_song_track'); ?></th>
 	<th class="cel_time"><?php echo Ajax::text('?page=browse&action=set_sort&sort=time',_('Time'),'sort_song_time'); ?></th>
-<?php if (Config::get('ratings')) { ?>
+<?php if (Config::get('ratings')) {
+  Rating::build_cache('song', $object_ids);
+  ?>
 	<th class="cel_rating"><?php echo _('Rating'); ?></th>
 <?php } ?>
+        <th class="cel_tags"><?php echo _('Tags'); ?></th>
 	<th class="cel_action"><?php echo _('Action'); ?></th>
 </tr>
-<?php 
+<?php
+	Song::build_cache($object_ids);
 	foreach ($object_ids as $song_id) { 
 		$song = new Song($song_id); 
 		$song->format(); 
@@ -74,6 +78,7 @@ $ajax_url = Config::get('ajax_url');
 <?php if (Config::get('ratings')) { ?>
 	<th class="cel_rating"><?php echo _('Rating'); ?></th>
 <?php } ?>
+	<th class="cel_tags"><?php echo _('Tags'); ?></th>
 	<th class="cel_action"><?php echo _('Action'); ?></th>
 </tr>
 </table>

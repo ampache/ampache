@@ -53,7 +53,10 @@ class Dba {
 	 * The mysql_query function
 	 */
 	public static function query($sql) { 
-
+	  	/*if ($_REQUEST['profiling']) {
+		  $sql = rtrim($sql, '; ');
+		  $sql .= ' SQL_NO_CACHE';
+		}*/
 		// Run the query
 		$resource = mysql_query($sql,self::dbh()); 
 		debug_event('Query',$sql,'6');
@@ -188,10 +191,26 @@ class Dba {
 		$select_db = mysql_select_db($database,$dbh); 
 		if (!$select_db) { debug_event('Database','Error unable to select ' . $database . ' error ' . mysql_error(),'1'); } 
 		
+		if ($_REQUEST['profiling']) {
+		  mysql_query('set profiling=1', $dbh);
+		  mysql_query('set profiling_history_size=50', $dbh);
+		  mysql_query('set query_cache_type=0', $dbh);
+		}
 		return $dbh;
 
 	} // _connect
 
+	public static function show_profile() {
+	  if ($_REQUEST['profiling']) {
+	    print '<br/>Profiling data: <br/>';
+	    $res = Dba::query('show profiles');
+	    print '<table>';
+	    while ($r = Dba::fetch_row($res)) {
+	      print '<tr><td>' . implode('</td><td>', $r) . '</td></tr>';
+	    }
+	    print '</table>';
+	  }
+	}
 	/**
 	 * dbh
 	 * This is called by the class to return the database handle

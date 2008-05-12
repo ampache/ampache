@@ -171,10 +171,12 @@ switch ($_REQUEST['action']) {
 	// Browse by Album
 	default:
 	case 'show':
+	        
 		$album = new Album($_REQUEST['album']);
 		$album->format();
-
+		Browse::reset_filters();
 		require Config::get('prefix') . '/templates/show_album.inc.php';
+		
 	break;
 } // switch on view
 

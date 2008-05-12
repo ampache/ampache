@@ -56,14 +56,25 @@ class Rating {
 		return true; 
 
 	} // Constructor
-
+	public static function build_cache($type, $ids) {
+	  $idlist = '(' . implode(',', $ids) . ')';
+	  $sql = "SELECT `rating`, object_id FROM `rating` WHERE `user`='$user_id' AND `object_id` in $idlist AND `object_type`='$type'";
+	  global $rating_cache;
+	  $rating_cache = array();
+	  $db_results = Dba::query($sql);
+	  while ($results = Dba::fetch_assoc($db_results)) {
+	    $rating_cache[intval($results['object_id'])] = $results;
+	  }
+	}
 	/**
 	 * get_user
 	 * Get the user's rating this is based off the currently logged
 	 * in user. It returns the value
 	 */
-	public function get_user($user_id) { 
-
+	 public function get_user($user_id) {
+	   global $rating_cache;
+	   if (isset($rating_cache[intval($this->id)]));
+	     return $rating_cache[intval($this->id)]['rating'];
 		$user_id	= Dba::escape($user_id); 
 
 		$sql = "SELECT `rating` FROM `rating` WHERE `user`='$user_id' AND `object_id`='$this->id' AND `object_type`='$this->type'";

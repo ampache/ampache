@@ -60,7 +60,7 @@ switch ($_REQUEST['action']) {
 		$object_ids = Browse::get_saved(); 
 
 		ob_start(); 
-		Browse::show_objects($object_ids); 
+		Browse::show_objects($object_ids, true); 
 		$results['browse_content'] = ob_get_contents(); 
 		ob_end_clean(); 
 	break; 

@@ -61,6 +61,10 @@ switch ($_REQUEST['page']) {
 		require_once Config::get('prefix') . '/server/localplay.ajax.php'; 
 		exit; 
 	break;
+	case 'tag':
+		require_once Config::get('prefix') . '/server/tag.ajax.php';
+		exit; 
+	break;
 	case 'stream': 
 		require_once Config::get('prefix') . '/server/stream.ajax.php';
 		exit; 
@@ -329,7 +333,7 @@ switch ($_REQUEST['action']) {
 		$object_ids = Browse::get_objects(); 
 
 		ob_start(); 
-		Browse::show_objects($object_ids); 
+		Browse::show_objects($object_ids, true); 
 		$results['browse_content'] = ob_get_contents(); 
 		ob_end_clean(); 
 	break;
@@ -337,7 +341,7 @@ switch ($_REQUEST['action']) {
 		Browse::set_start($_REQUEST['start']); 
 
 		ob_start(); 
-		Browse::show_objects(); 
+		Browse::show_objects('', true); 
 		$results['browse_content'] = ob_get_contents(); 
 		ob_end_clean(); 
 	break;

@@ -71,7 +71,22 @@ class Browse {
 				        $_SESSION['browse']['filter'][$key] = 1; 
 				}
 			break;
+                       case 'tag':
+			 //var_dump($value);
+			   if (is_array($value))
+			     $_SESSION['browse']['filter'][$key] = $value;
+			   else if (is_numeric($value))
+			     $_SESSION['browse']['filter'][$key] =
+			       array($value);
+			   else
+			     $_SESSION['browse']['filter'][$key] = array();
+			 break;
+      case 'artist':
+      case 'album':
+	$_SESSION['browse']['filter'][$key] = $value;
+	break;
 			case 'min_count':
+	
 			case 'unplayed':
 			case 'rated':
 
@@ -346,22 +361,25 @@ class Browse {
 		// First we need to get the SQL statement we are going to run
 		// This has to run against any possible filters (dependent on type)
 		$sql = self::get_sql(); 
-		
 		$db_results = Dba::query($sql); 
 
 		$results = array(); 
-
-		while ($data = Dba::fetch_assoc($db_results)) { 
+		while ($data = Dba::fetch_assoc($db_results))
+		  $results[] = $data;
+		var_dump($results);
+		$results = self::post_process($results);
+		$filtered = array();
+		foreach ($results as $data) { 
 			// Make sure that this object passes the logic filter
 			if (self::logic_filter($data['id'])) { 
-				$results[] = $data['id']; 
+				$filtered[] = $data['id']; 
 			} 
 		} // end while
 	
 		// Save what we've found and then return it
-		self::save_objects($results); 
+		self::save_objects($filtered); 
 
-		return $results; 
+		return $filtered; 
 
 	} // get_objects
 
@@ -399,35 +417,51 @@ class Browse {
 	private static function get_base_sql() { 
 
                 // Get our base SQL must always return ID
+		$includetags = (is_array($_SESSION['browse']['filter']['tag']) 
+		  && sizeof($_SESSION['browse']['filter']['tag']));
+		$megajoin = '';
+		if ($includetags)
+		  $megajoin = ', tags.id as tagid';
+		$megajoin .= ' FROM song, artist, album ';
+		if ($includetags)
+		  $megajoin.= ', tags, tag_map ';
+		$megajoin .= 'WHERE song.album = album.id AND
+		  song.artist = artist.id AND ';
+		if ($includetags)
+		  $megajoin .= ' tag_map.tag_id = tags.id AND ';
+	       $w = " WHERE 1=1 AND ";
                 switch ($_SESSION['browse']['type']) {
                         case 'album':
-                                $sql = "SELECT `album`.`id` FROM `album` ";
+                                $sql = "SELECT DISTINCT `album`.`id` "
+				.$megajoin;
                         break;
                         case 'artist':
-                                $sql = "SELECT `artist`.`id` FROM `artist` ";
+                                $sql = "SELECT DISTINCT `artist`.`id` "
+				.$megajoin;
                         break;
                         case 'genre':
-                                $sql = "SELECT `genre`.`id` FROM `genre` ";
+                                $sql = "SELECT `genre`.`id` FROM `genre` ".$w;
                         break;
                         case 'user':
-                                $sql = "SELECT `user`.`id` FROM `user` ";
+                                $sql = "SELECT `user`.`id` FROM `user` ".$w;
                         break;
                         case 'live_stream':
-                                $sql = "SELECT `live_stream`.`id` FROM `live_stream` ";
+                                $sql = "SELECT `live_stream`.`id` FROM `live_stream` ".$w;
                         break;
                         case 'playlist':
-                                $sql = "SELECT `playlist`.`id` FROM `playlist` ";
+                                $sql = "SELECT `playlist`.`id` FROM `playlist` ".$w;
                         break;
 			case 'flagged': 
-				$sql = "SELECT `flagged`.`id` FROM `flagged` ";
+				$sql = "SELECT `flagged`.`id` FROM `flagged` "
+				.$w;
 			break;
 			case 'shoutbox': 
-				$sql = "SELECT `user_shout`.`id` FROM `user_shout` "; 
+				$sql = "SELECT `user_shout`.`id` FROM `user_shout` ".$w; 
 			break; 
 			case 'playlist_song': 
                         case 'song':
                         default:
-                                $sql = "SELECT `song`.`id` FROM `song` ";
+                                $sql = "SELECT DISTINCT `song`.`id` ".$megajoin;
                         break;
                 } // end base sql
 
@@ -450,17 +484,14 @@ class Browse {
 
 			// Foreach the filters and see if any of them can be applied
 			// as part of a where statement in this sql (type dependent)
-			$where_sql = "WHERE 1=1 AND ";
+			$where_sql = "";
 			
 			foreach ($_SESSION['browse']['filter'] as $key=>$value) { 
 				$where_sql .= self::sql_filter($key,$value); 	
 			} // end foreach
-
-			$where_sql = rtrim($where_sql,'AND ');
-
 			$sql .= $where_sql;
 		} // if filters
-
+		$sql = rtrim($sql,'AND ');
 		// Now Add the Order 
 		$order_sql = " ORDER BY "; 	
 
@@ -475,11 +506,25 @@ class Browse {
 		$order_sql = rtrim($order_sql,","); 
 
 		$sql = $sql . $order_sql; 
-		
+		var_dump($sql);
 		return $sql;
 
 	} // get_sql 
-
+	private static function post_process($results)
+	{
+	  $tags = $_SESSION['browse']['filter']['tag'];
+	  if (!is_array($tags) || sizeof($tags) < 2)
+	    return $results;
+	  $cnt = sizeof($tags);
+	  $ar = array();
+	  foreach($results as $row)
+	    $ar[$row['id']]++;
+	  $res = array();
+	  foreach($ar as $k=>$v)
+	    if ($v >= $cnt)
+	      $res[] = array('id' => $k);
+	  return $res;
+	}
 	/**
 	 * sql_filter
 	 * This takes a filter name and value and if it is possible
@@ -489,7 +534,29 @@ class Browse {
 	private static function sql_filter($filter,$value) { 
 
 		$filter_sql = ''; 
-
+		//tag
+		if ($filter == 'tag' && (
+		  $_SESSION['browse']['type'] == 'song'
+		  || $_SESSION['browse']['type'] == 'artist'
+		  || $_SESSION['browse']['type'] == 'album'
+		  )) {
+		//var_dump($value);
+		   if (is_array($value) && sizeof($value))
+		     $vals = '(' . implode(',',$value) . ')';
+		   else if (is_integer($value))
+		     $vals = '('.$value.')';
+		   else return '';
+		   $or_sql = '';
+		   $object_type = $_SESSION['browse']['type'];
+		   if ($object_type == 'artist' || $object_type == 'album')
+		     $or_sql=" or (tag_map.object_id = song.id AND
+		   tag_map.object_type='song' )";
+		   if ($object_type == 'artist')
+		     $or_sql.= " or (tag_map.object_id = album.id AND
+		   tag_map.object_type='album' )";
+		   $filter_sql = " `tags`.`id` in  $vals AND
+		     (($object_type.id = `tag_map`.`object_id` AND tag_map.object_type='$object_type')  $or_sql) AND ";
+		  }
 		if ($_SESSION['browse']['type'] == 'song') { 
 			switch($filter) { 
 				case 'alpha_match':
@@ -497,6 +564,16 @@ class Browse {
 				break;
 				case 'unplayed':
 					$filter_sql = " `song`.`played`='0' AND "; 
+				break;
+			        case 'album':
+				  if ($value)
+				    $filter_sql = " `album`.`id` = '".
+				      Dba::escape($value) . "' AND ";
+				break;
+				case 'artist':
+				  if ($value)
+				    $filter_sql = " `artist`.`id` = '".
+				      Dba::escape($value) . "' AND ";
 				break;
 				default: 
 					// Rien a faire
@@ -510,6 +587,11 @@ class Browse {
 				break;
 				case 'min_count': 
 
+				break;
+			        case 'artist':
+				  if ($value)
+				    $filter_sql = " `artist`.`id` = '".
+				      Dba::escape($value) . "' AND ";
 				break;
 				default: 
 					// Rien a faire
@@ -692,7 +774,7 @@ class Browse {
 	 * and requires the correct template based on the
 	 * type that we are currently browsing
 	 */
-	public static function show_objects($object_ids='') { 
+	public static function show_objects($object_ids='', $ajax=false) { 
 
 		$object_ids = $object_ids ? $object_ids : self::get_saved();
 
@@ -701,7 +783,7 @@ class Browse {
 
 		// Limit is based on the users preferences
 		$limit = Config::get('offset_limit') ? Config::get('offset_limit') : '25'; 
-
+		$all_ids = $object_ids;
 		if (count($object_ids) > self::$start) { 
 			$object_ids = array_slice($object_ids,self::$start,$limit); 
 		} 
@@ -714,13 +796,21 @@ class Browse {
 
 		// Load any additional object we need for this
 		$extra_objects = self::get_supplemental_objects(); 
-
+		var_dump($object_ids);
 		foreach ($extra_objects as $class_name => $id) { 
 			${$class_name} = new $class_name($id); 
 		} 
+		
 
+		if (!$ajax && in_array($_SESSION['browse']['type'],
+		  array('artist','album','song'))) {
+		  $tagcloudHead = "Matching tags";
+		  $tagcloudList =   
+		    TagCloud::get_tags($_SESSION['browse']['type'],  $all_ids);
+		    require_once Config::get('prefix') . '/templates/show_tagcloud.inc.php'; 
+		}
+		Dba::show_profile();
 		Ajax::start_container('browse_content');
-
 		// Switch on the type of browsing we're doing
 		switch ($_SESSION['browse']['type']) { 
 			case 'song': 
@@ -821,19 +911,20 @@ class Browse {
 
 			// If there's nothing there don't do anything
 			if (!count($objects)) { return false; } 
+			$type = $_SESSION['browse']['type'];
+			$where_sql .= "`$type`.`id` IN (";
 
-			$where_sql .= "`id` IN (";
-
-			foreach ($objects as $object_id) { 
-				$object_id = Dba::escape($object_id); 
-				$where_sql .= "'$object_id',"; 
+			foreach ($objects as $object_id) {
+				$object_id = Dba::escape($object_id);
+				$where_sql .= "'$object_id',";
 			} 
 			$where_sql = rtrim($where_sql,','); 
-			
-			$where_sql .= ")"; 
 
-			$sql = self::get_base_sql() . ' WHERE ' . $where_sql; 	
-		} 
+			$where_sql .= ")";
+
+			$sql = self::get_base_sql();
+			$sql .= $where_sql;
+		}
 
 
 		$order_sql = "ORDER BY ";
@@ -871,5 +962,27 @@ class Browse {
 		self::$start = intval($_SESSION['browse'][self::$type]['start']); 
 
 	} // _auto_init
+	
+	public static function set_filter_from_request($r)
+	{
+	  //var_dump($r);
+	  foreach ($r as $k=>$v) {
+	    //reinterpret v as a list of int
+	    $vl = explode(',', $v);
+	    //var_dump($vl);
+	    $ok = 1;
+	    foreach($vl as $i) {
+	      if (!is_numeric($i)) {
+		$ok = 0;
+		break;
+	      }
+	    }
+	    if ($ok)
+	      if (sizeof($vl) == 1)
+	        Browse::set_filter($k, $vl[0]);
+	      else
+	        Browse::set_filter($k, $vl);
+	  }
+	}
 
 } // browse

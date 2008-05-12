@@ -49,7 +49,7 @@ switch ($_REQUEST['action']) {
 } // end switch 
 
 show_header(); 
-
+Browse::set_filter_from_request($_REQUEST);
 switch($_REQUEST['action']) {
 	case 'file':
 	break; 

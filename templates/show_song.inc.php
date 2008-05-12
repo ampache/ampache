@@ -53,7 +53,17 @@
       $rowparity = flip_class();
       echo "<dt class=\"".$rowparity."\">" . _($key) . "</dt><dd class=\"".$rowparity."\">" . $value . "</dd>";
     }
-  }?>
+  }
+  echo '<dt> Tags </dt><dd>';
+  $tags = TagCloud::get_tags('song', array($song->id));
+  foreach($tags as $i)
+    echo $i['name'] . ' ';
+  ?><form type=POST action=coin>
+  <?php
+  echo Ajax::text('?page=tag&action=add&type=song&id=' . $song->id . "&val='+document.getElementById('tagname').value+'", _("Add tag"), 'tag_artist');
+  ?> 
+  <input type="text" size="10" maxlength="10"  id="tagname"></input></form>
+  </dd>
   </dl>
   
 <?php show_box_bottom(); ?>

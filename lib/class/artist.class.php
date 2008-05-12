@@ -76,13 +76,24 @@ class Artist {
 		return $artist;
 
 	} // construct_from_array
-
+	public static function build_cache($ids, $fields='*') {
+	  $idlist = '(' . implode(',', $ids) . ')';
+	  $sql = "SELECT $fields FROM artist WHERE id in $idlist";
+	  $db_results = Dba::query($sql);
+	  global $artist_cache;
+	  $artist_cache = array();
+	  while ($results = Dba::fetch_assoc($db_results)) {
+	    $artist_cache[intval($results['id'])] = $results;
+	  }
+	}
 	/**
 	 * _get_info
 	 * get's the vars for $this out of the database taken from the object
 	*/
 	private function _get_info() {
-
+	  	global $artist_cache;
+		if (isset($artist_cache[intval($this->id)]))
+		  return $artist_cache[intval($this->id)];
 		/* Grab the basic information from the catalog and return it */
 		$sql = "SELECT * FROM artist WHERE id='" . Dba::escape($this->id) . "'";
 		$db_results = Dba::query($sql);

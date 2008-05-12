@@ -208,6 +208,9 @@ function show_header() {
 function show_footer() {
 
 	require_once Config::get('prefix') . '/templates/footer.inc.php';
+	if ($_REQUEST['profiling']) {
+	  Dba::show_profile();
+	}
 
 } // show_footer
 

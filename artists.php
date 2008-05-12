@@ -37,11 +37,14 @@ switch($_REQUEST['action']) {
 	    	$artist = new Artist($_REQUEST['artist']);
 		$artist->format();
 		require_once Config::get('prefix') . '/templates/show_artist_box.inc.php';
-		$song_ids = $artist->get_songs();
+		//$song_ids = $artist->get_songs();
 		Browse::set_type('song'); 
-		Browse::set_static_content(1); 
-		Browse::save_objects($song_ids);
-		Browse::show_objects($song_ids); 
+		Browse::reset_filters();
+		//Browse::set_filter('artist', $artist->id);
+		Browse::set_filter_from_request($_REQUEST);
+		//Browse::set_static_content(1); 
+		Browse::get_objects();
+		Browse::show_objects(); 
         break;
 	case 'update_from_tags':
 

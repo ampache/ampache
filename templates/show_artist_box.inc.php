@@ -29,8 +29,22 @@ if (Config::get('ratings')) {
 	show_rating($artist->id, 'artist'); 
 	echo "</div>";
 } // end if ratings ?>
+
 <strong><?php echo _('Actions'); ?>:</strong>
 <div id="information_actions">
+Tags:
+	<?php
+	$tags = TagCloud::get_tags('artist', array($artist->id));
+	foreach($tags as $i)
+	  echo ($i['name']) . ' ';
+	?>
+	<br/>
+<form type=POST action=coin>
+<?php
+echo Ajax::text('?page=tag&action=add&type=artist&id=' . $artist->id . "&val='+document.getElementById('tagname').value+'", _("Add tag"), 'tag_artist');
+?>
+<input type="text" size="10" maxlength="10"  id="tagname"></input></form>
+
 <a href="<?php echo $web_path; ?>/artists.php?action=show_all_songs&amp;artist=<?php echo $artist->id; ?>"><?php echo _("Show All Songs By") . " " . $artist->f_name; ?></a><br />
 <?php echo Ajax::text('?action=basket&type=artist&id=' . $artist->id,_('Add All Songs By') . ' ' . $artist->f_name,'play_full_artist'); ?><br />
 <?php echo Ajax::text('?action=basket&type=artist_random&id=' . $artist->id,_('Add Random Songs By') . ' ' . $artist->f_name,'play_random_artist'); ?><br />

@@ -490,7 +490,7 @@ SET character_set_client = @saved_cs_client;
 
 LOCK TABLES `preference` WRITE;
 /*!40000 ALTER TABLE `preference` DISABLE KEYS */;
-INSERT INTO `preference` VALUES (1,'download','0','Allow Downloads',100,'boolean','options'),(4,'popular_threshold','10','Popular Threshold',25,'integer','interface'),(19,'sample_rate','32','Transcode Bitrate',25,'string','streaming'),(22,'site_title','Ampache :: Pour l\'Amour de la Musique','Website Title',100,'string','system'),(23,'lock_songs','0','Lock Songs',100,'boolean','system'),(24,'force_http_play','1','Forces Http play regardless of port',100,'boolean','system'),(25,'http_port','80','Non-Standard Http Port',100,'integer','system'),(41,'localplay_controller','0','Localplay Type',100,'special','options'),(29,'play_type','stream','Type of Playback',25,'special','streaming'),(31,'lang','en_US','Language',100,'special','interface'),(32,'playlist_type','m3u','Playlist Type',100,'special','playlist'),(33,'theme_name','classic','Theme',0,'special','interface'),(34,'ellipse_threshold_album','27','Album Ellipse Threshold',0,'integer','interface'),(35,'ellipse_threshold_artist','27','Artist Ellipse Threshold',0,'integer','interface'),(36,'ellipse_threshold_title','27','Title Ellipse Threshold',0,'integer','interface'),(51,'offset_limit','50','Offset Limit',5,'integer','interface'),(40,'localplay_level','0','Localplay Access',100,'special','options'),(44,'allow_stream_playback','1','Allow Streaming',100,'boolean','system'),(45,'allow_democratic_playback','0','Allow Democratic Play',100,'boolean','system'),(46,'allow_localplay_playback','0','Allow Localplay Play',100,'boolean','system'),(47,'stats_threshold','7','Statistics Day Threshold',25,'integer','interface'),(49,'min_object_count','1','Min Element Count',5,'integer','interface'),(52,'rate_limit','8192','Rate Limit',100,'integer','streaming'),(53,'playlist_method','default','Playlist Method',5,'string','playlist'),(55,'transcode','default','Transcoding',25,'string','streaming');
+INSERT INTO `preference` VALUES (1,'download','0','Allow Downloads',100,'boolean','options'),(4,'popular_threshold','10','Popular Threshold',25,'integer','interface'),(19,'sample_rate','32','Transcode Bitrate',25,'string','streaming'),(22,'site_title','Ampache :: Pour l\'Amour de la Musique','Website Title',100,'string','system'),(23,'lock_songs','0','Lock Songs',100,'boolean','system'),(24,'force_http_play','1','Forces Http play regardless of port',100,'boolean','system'),(25,'http_port','80','Non-Standard Http Port',100,'integer','system'),(41,'localplay_controller','0','Localplay Type',100,'special','options'),(29,'play_type','stream','Type of Playback',25,'special','streaming'),(31,'lang','en_US','Language',100,'special','interface'),(32,'playlist_type','m3u','Playlist Type',100,'special','playlist'),(33,'theme_name','classic','Theme',0,'special','interface'),(34,'ellipse_threshold_album','27','Album Ellipse Threshold',0,'integer','interface'),(35,'ellipse_threshold_artist','27','Artist Ellipse Threshold',0,'integer','interface'),(36,'ellipse_threshold_title','27','Title Ellipse Threshold',0,'integer','interface'),(51,'offset_limit','50','Offset Limit',5,'integer','interface'),(40,'localplay_level','0','Localplay Access',100,'special','options'),(44,'allow_stream_playback','1','Allow Streaming',100,'boolean','system'),(45,'allow_democratic_playback','0','Allow Democratic Play',100,'boolean','system'),(46,'allow_localplay_playback','0','Allow Localplay Play',100,'boolean','system'),(47,'stats_threshold','7','Statistics Day Threshold',25,'integer','interface'),(49,'min_object_count','1','Min Element Count',5,'integer','interface'),(52,'rate_limit','8192','Rate Limit',100,'integer','streaming'),(53,'playlist_method','default','Playlist Method',5,'string','playlist'),(55,'transcode','default','Transcoding',25,'string','streaming'),(57,'tags_userlist','','User to track', 0, 'string', 'tags');
 /*!40000 ALTER TABLE `preference` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -662,13 +662,15 @@ SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8;
 CREATE TABLE `tag_map` (
   `id` int(11) unsigned NOT NULL auto_increment,
+  `tag_id` int(11) unsigned NOT NULL,
   `object_id` int(11) unsigned NOT NULL,
   `object_type` varchar(16) character set utf8 default NULL,
   `user` int(11) NOT NULL,
   PRIMARY KEY  (`id`),
   KEY `object_id` (`object_id`),
   KEY `object_type` (`object_type`),
-  KEY `user_id` (`user`)
+  KEY `user_id` (`user`),
+  KEY `tag_id` (`tag_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 SET character_set_client = @saved_cs_client;
 
@@ -689,7 +691,7 @@ DROP TABLE IF EXISTS `tags`;
 SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8;
 CREATE TABLE `tags` (
-  `map_id` int(11) unsigned NOT NULL,
+  `map_id` int(11) unsigned NOT NULL auto_increment,
   `name` varchar(32) character set utf8 default NULL,
   `order` tinyint(2) NOT NULL,
   KEY `order` (`order`),

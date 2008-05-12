@@ -46,8 +46,24 @@ $title		= scrub_out($album->name) . '&nbsp;(' . $album->year . ')' . $disk .'&nb
 			<?php Rating::show($album->id,'album'); ?>
 	</div>
 	<div id="information_actions">
+	
+	
 	<h3><?php echo _('Actions'); ?>:</h3>
 	<ul>
+	<li>Tags:
+	<?php
+	$tags = TagCloud::get_tags('album', array($album->id));
+	foreach($tags as $i)
+	  echo ($i['name']) . ' ';
+	?>
+	</li>
+	<li>
+	<form type=POST action=coin>
+<?php
+echo Ajax::text('?page=tag&action=add&type=album&id=' . $album->id . "&val='+document.getElementById('tagname').value+'", _("Add tag"), 'tag_album');
+?>
+<input type="text" size="10" maxlength="10"  id="tagname"></input></form>
+</li>
 	<li><?php echo Ajax::text('?action=basket&type=album&id=' . $album->id,_('Add Album'),'play_full_' . $album->id); ?></li>
 	<li><?php echo Ajax::text('?action=basket&type=album_random&id=' . $album->id,_('Add Random from Album'),'play_random_' . $album->id); ?></li>
 	<?php if ($GLOBALS['user']->has_access('75')) { ?>
@@ -70,9 +86,8 @@ $title		= scrub_out($album->name) . '&nbsp;(' . $album->year . ')' . $disk .'&nb
 &nbsp;
 </div>
 <?php 
-	$object_ids = $album->get_songs(); 
 	Browse::set_type('song');
-	Browse::set_static_content(1);
-	Browse::save_objects($object_ids); 
-	Browse::show_objects($object_ids); 
+	Browse::set_filter('album', $album->id);
+	Browse::get_objects(); 
+	Browse::show_objects(); 
 ?>
