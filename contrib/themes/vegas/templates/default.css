@@ -1,0 +1,890 @@
+/*
+
+ Copyright (c) 2001 - 2007 Ampache.org
+ All rights reserved.
+
+ This program is free software; you can redistribute it and/or
+ modify it under the terms of the GNU General Public License v2
+ as published by the Free Software Foundation
+
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with this program; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+
+*/
+
+
+/************************************************/
+/*    Unify default browsers style rules        */
+/************************************************/
+h1, h2, h3, h4, h5, h6, pre, code	{ font-size: 1em; line-height: 1em; } /* avoid browser default inconsistent font-sizes */
+ol, ul { list-style: none; }
+table {	border-collapse: separate; border-spacing: 0; }
+caption, th, td {	text-align: left;	font-weight: normal; }
+*	{ margin: 0; padding: 0; } /* White space reset */
+a img, :link img, :visited img { border: 0; } /* no blue linked image borders */
+
+
+/************************************************/
+/*           General style rules                */
+/************************************************/
+
+/*  splitting the images over the html and body tags allows for two background images */
+/*  The height in the html tag is required or the second image will not show...odd */
+html {
+background:#9F0000 url(../images/martini.png) fixed no-repeat 0% 100%;
+height: 100%;
+}
+/* this is the famouns ff2 readable IE6 ignored override  tag */
+html>body {
+ min-height:100%;
+ height:auto;
+}
+
+
+body { 
+background: url(../images/cards.png) fixed no-repeat;
+background-position: 100% 100%;
+	font-family:Arial, Helvetica, Sans-Serif;
+	min-width:1000px;
+}
+p { 
+	color: #000000;
+	margin:1em 0;
+}
+a, a:visited, a:active{ 
+	color: #000000; 
+	font-family: Verdana, Helvetica, sans-serif; 
+}
+td { 
+	padding: 0 8px;
+	color: #000000; 
+	font:12px Verdana, Helvetica, sans-serif;
+}
+th {
+	padding-right: 10px;
+	font-family: Verdana, Helvetica, sans-serif;
+  font-size:13px; 
+  font-weight:bold;
+	color: #000000;
+}
+input, select, textarea{
+	font: 12px Verdana, Helvetica, sans-serif; 
+	background: #F7F9E0; 
+	color: #000000; 
+}
+input {
+	font-weight: bold;
+}
+
+/************************************************/
+/*             IE6 behaviors                    */
+/* - csshover2: :hover support on any element   */
+/************************************************/
+body { behavior:url("templates/csshover2.htc"); }
+
+/************************************************/
+/*         Float Clearer                        */
+/************************************************/
+/* float clearing for IE6 */
+* html .clearfix{ height: 1%; overflow: visible; }
+/* float clearing for IE7 */
+/**+html .clearfix{ min-height: 1%; }*/
+/* float clearing for everyone else */
+.clearfix:after{ clear: both; content: "."; display: block; height: 0; visibility: hidden; }
+
+/************************************************/
+/*                XSPF Player                   */
+/************************************************/
+.xspf_player {
+    right: 20px;
+    position: absolute;
+}
+
+/************************************************/
+/*             Main Container                   */
+/************************************************/
+#maincontainer { 
+	background:transparent url(../images/dancer.png) no-repeat 85% 100%;
+}
+
+#recently_played {
+position: relative;
+top: 10px;
+left: 20px;
+}
+
+/************************************************/
+/*             Header                           */
+/************************************************/
+#header { 
+	height: 184px;
+	padding: 0;
+}
+#headerbox { 
+	font-size: 10px;
+	background-color: #9f0000;
+	position: absolute;
+	top: 25px;
+	left: 204px;
+}
+
+#headerbox .box-top, #headerbox .box-left-top, #headerbox .box-right-top {
+	background: transparent none repeat scroll 0%;
+}
+
+#headerbox .box-content  {
+	padding-left: 51px;
+	background: transparent url(../images/dice.png) no-repeat left;
+}
+
+#sb_Subsearch .button {
+background: transparent none;
+border: none;
+}
+
+#play_type_select {
+font-style: italic;
+}
+
+#headerbox .box-bottom, #headerbox .box-left-bottom, #headerbox .box-right-bottom  {
+	background: transparent none repeat scroll 0%;
+}
+
+#headerlogo, #headerlogo a{ 
+	float: left;
+}
+
+.box_headerbox    {display:table;}
+.box_headerbox #loginInfo {
+	font-weight:bold;
+	display:block;
+	text-align:right;
+	margin-bottom:.3em;
+	color:#000000;
+}
+
+#play_type_switch { 
+	float:left;
+	margin-top:2px;
+} 
+
+/************************************************/
+/*               Content block                  */
+/************************************************/
+#content { 
+	overflow:visible;
+	height:auto;
+	margin-left: 135px;
+}
+
+/************************************************/
+/*                Footer                        */
+/************************************************/
+#footer {
+  clear:both;
+	text-align:center;
+	font-size:10px;
+	padding:3px;
+}
+
+/************************************************/
+/*                  Buttons                     */
+/************************************************/
+.button, input[type=button], input[type=submit] {
+  border: 1px solid #f0f0f0;
+  border-color: #cccccc #000000 #000000 #cccccc;
+  background: gold;
+	padding: 0 1px;
+	font-size: 11px;
+  font-weight:bold;
+  text-decoration:none;
+	cursor: pointer;
+}
+a.button{padding:1px 3px;}
+
+/************************************************/
+/*                  Sidebar                     */
+/************************************************/
+#sidebar{
+  position:absolute;
+  top:150px;
+  left:5;
+  padding-top:0px;
+  width:130px;	
+ /*  background: #cccccc url(../images/bf_menubg.png) top left no-repeat; */
+  font-size:0.9em;
+}
+
+#sidebar select	{	width: 95%; }
+#sidebar input  { vertical-align:middle; background: #F7F9E0; color:#000000; }
+#sidebar ul     { list-style:none; }
+#sidebar a      {	text-decoration:none; } 
+
+
+/* For sidebar tabs */
+/********************/
+#sidebar-tabs{ background: #9F0000;
+	}
+
+#sidebar-tabs li.sb1 {
+  float: left;
+	padding:2px;
+  background: #9F0000; 
+}
+#sidebar-tabs li.active {
+	background: transparent none repeat scroll 0%;
+	margin-top:2px;
+} 
+#sidebar-tabs li.active img{ 
+	margin-top:4px;position:relative;z-index:2;
+	border-right: 1px solid #000000;
+	border-top: 1px solid #cccccc;
+	border-left: 1px solid #cccccc;
+	border-bottom: 1px solid #000000;
+
+} 
+
+/* Tabs content */
+/****************/
+#sidebar-page {
+  position:absolute; 
+  left:0;
+  top:20px;
+	padding-bottom:0.5em;
+	color:#000000;
+	font-size: 1.1em;
+  width:130px;
+} 
+#sidebar-page ul.sb2 {
+  padding:2px 4px;
+
+}
+#sidebar-page ul.sb2 li{
+  font-weight:bold;
+  margin:1em auto;
+  padding-bottom: 0.5em;
+	border-bottom: 3px dotted yellow;
+}
+#sidebar-page ul.sb2 h4{ padding-bottom: 0.5em; }
+
+#sidebar-page ul.sb3, #sidebar-page div.sb3 {
+  font-size:0.8em;
+  margin-left:2px;
+  font-weight:normal;
+  color:#F7F9E0;
+}
+
+#sidebar-page ul.sb3 li{
+  margin:0;
+  padding:0;
+  border:none;
+  font-weight:normal;
+}
+* html #sidebar-page ul.sb3 li{display:inline;} /* fix ie6 */
+
+#sidebar-page .sb3 a{
+ padding:0.1em;
+ color:#C0FFFF;
+}
+
+
+#sidebar-page a{
+  display:block;
+}
+
+#sidebar-page a:hover{
+  background:#F7F9E0;
+  color:#000000;
+}
+
+/* SIDEBAR : Home */
+/******************/
+
+/* SIDEBAR : Browse */
+/********************/
+.alphabet { 
+  background:transparent; /* fix ie bug */
+  font-size:0.95em;
+	font-weight:normal;
+	margin: 0.3em auto;
+	color:#000;
+}
+.alphabet span.link { 
+	cursor: pointer;
+	margin: 0;
+	padding:0 5px;
+	font-family: monospace, Courier, Georgia;
+} 
+.alphabet span.active{ background: gold; color:#000; }
+.alphabet span.link:hover { 
+	background: gold;
+	color:#000000;
+} 
+
+#multi_alpha_filter { 
+	width:40px; 
+	margin-bottom:4px;
+} 
+
+/* SIDEBAR : Localplay */
+/***********************/
+.active_instance {
+	background:gold; 
+}
+
+/* SIDEBAR : Preferences */
+/*************************/
+
+/* SIDEBAR : Admin */
+/*******************/
+#sb_admin_catalogs li.sb_admin_catalogs_ctrls img {margin:0;}
+#sb_admin_catalogs li.sb_admin_catalogs_ctrls a{
+  display:inline; 
+  padding:0; 
+  border:none; 
+}
+
+
+/************************************************/
+/*                  Rightbar                    */
+/************************************************/
+#rightbar { 
+	width:200px;
+	background: none;
+	padding-top:20px;
+	position:absolute;
+	top: 200px;
+	right: 5px;
+	font-family: Verdana,Helvetica,sans-serif;
+	clear:both;
+} 
+
+#rightbar ul                      {	list-style:none; }
+#rightbar a                       { text-decoration:none; }
+
+
+/* Rightbar Menu */
+#rightbar #rb_action {	
+  padding:0px;
+}
+
+#rightbar #rb_action li         {	display:inline; }
+
+#rightbar li#rb_add, #rightbar li#pl_add             { position:relative; z-index:10;}
+#rightbar li#rb_add:hover, #rightbar li#pl_add:hover { background:#F7F9E0; } 
+
+/* Rightbar AddItems SubMenu */
+#rightbar li:hover .submenu {	display:block; } 
+
+#rightbar .submenu  { 
+  display:none; 	
+position:absolute;
+	background:#F7F9E0;
+	border-top:1px solid #cccccc;
+	border-left:1px solid #cccccc;
+	border-right:2px solid #000;
+	border-bottom:2px solid #000;
+	width:120px;
+	font-size:0.7em;
+	padding:0.3em;
+overflow:hidden;
+}
+
+#rightbar li:hover {background: #F7F9E0;}
+* html #rightbar .submenu {right:100px;} /* IE6 fix */
+
+#rightbar .submenu a {
+ display:block;
+ border-bottom:1px dotted #c0c0c0;
+ color:#999999;
+ text-decoration:none;
+ text-align:right;
+}
+
+#rightbar .submenu a:hover,
+#rightbar #rb_current_playlist a:hover { background: gold; color:#000000; }
+
+/* Rightbar playlist */
+#rightbar #rb_current_playlist    {
+ 	background: #F7F9E0 url(../images/playlist_bg.png) right top no-repeat;
+ 	padding-bottom:0.5em; 
+	padding-top: 18px;
+	border-top:1px solid #cccccc;
+        border-left:1px solid #cccccc;
+        border-right:1px solid #000000;
+        border-bottom:1px solid #000000;
+	color: #000000;
+}
+#rightbar #rb_current_playlist li   { position:relative; font-size:0.6em;line-height:14px; color:#000000; margin-right:30px; }
+#rightbar #rb_current_playlist li a { display:block;}
+#rightbar .delitem                  { position:absolute;right:0;top:0; }
+
+/* Rightbar Localplay Controls */
+#rightbar #localplay-control { 
+	padding-left: 5px;
+} 
+#localplay-control span { 
+	cursor: pointer; 
+} 
+
+
+/************************************************/
+/*        Styles for the star ratings           */
+/************************************************/
+.star-rating {
+  position:relative;
+}
+.dynamic-star-rating{
+  width:95px;
+}
+.star-rating ul,
+.star-rating a:hover,
+.star-rating .current-rating{
+  background: url(../../../images/ratings/star_rating.gif) left -1000px repeat-x;
+}
+.star-rating ul{
+  position:relative;
+  width:80px;
+  height:15px;
+  overflow:hidden;
+  list-style:none;
+  margin:0px 0px 0px 4px;
+  padding:0;
+  background-position: left top;
+}
+.star-rating li{
+  display: inline;
+}
+.star-rating a, .star-rating span,  
+.star-rating .current-rating{
+  position:absolute;
+  top:0;
+  left:0;
+  text-indent:-1000em;
+  height:15px;
+  line-height:15px;
+  outline:none;
+  overflow:hidden;
+  border:none;
+}
+.star-rating .star1 { width:20%; z-index:6; }
+.star-rating .star2 { width:40%; z-index:5; }
+.star-rating .star3 { width:60%; z-index:4; }
+.star-rating .star4 { width:80%; z-index:3; }
+.star-rating .star5 { width:100%; z-index:2;}
+.star-rating .current-rating { z-index:1; background-position: left bottom; }
+
+.star-rating a.star0 {
+  left:0px;
+  width:16px;
+  background: url(../../../images/ratings/x_off.gif) left top;
+}
+
+/* hovering effect only for dynamic star rating */
+.dynamic-star-rating a:hover{
+  background-position: left center;
+}
+.dynamic-star-rating a:hover.star0 {
+  background: url(../../../images/ratings/x.gif) left top;
+}
+.dynamic-star-rating ul {
+  left:16px;
+}
+
+/************************************************/
+/*              Box Related Styles              */
+/************************************************/
+ 
+.box-title { 
+	font-size: 1.05em;
+	font-weight: bold;
+	margin: 0 0px;
+	color: #000000;
+	background: #F7F9E0 url(../images/bar_horiz.gif) no-repeat right;
+	padding: 0px 4px;
+	height: 21px;
+}
+.box-list { 
+	padding-right: 10px;
+}
+
+/* Enclosing Boxes Styles */
+
+.box, .info-box { 
+	margin: 3px 1px 2px 1px;
+	float:left;
+	clear:left;
+	height:1%; /* IE6 : Holly Hack comes to rescue once again */
+}
+.box-inside { }
+
+.box-content {;
+	background:#F7F9E0 url(../images/bar_vert.gif) no-repeat scroll right top;
+	padding:8px 15px;
+	color: #000000;
+}
+
+.box-top { 
+	position:relative;
+	padding-bottom: 2px;
+	background-color: #F7F9E0;
+}
+
+.box-left-top { 
+	height:16px;
+	width:16px;
+	position:relative;left:0;top:0;
+	background: #9f0000 url(../images/corner_ul.png) top left ; 
+}
+.box-right-top {
+	height:16px;
+	width: 16px;
+	position:absolute;right:0;top:0;
+	background: #9F0000 url(../images/corner_ur.png) no-repeat top right; 
+
+}
+* html .box-right-top {right: expression(-this.parentNode.offsetWidth%2+"px");} /* Fixes an IE6 rounding error */
+.box-bottom { 
+	position:relative;
+	clear:both;
+	background-color: #F7F9E0;
+}
+.box-left-bottom {
+	height:16px;
+	width:16px;
+	position:relative;left:0;top:0;
+	background: #9F0000 url(../images/corner_ll.png) no-repeat; 
+
+}
+.box-right-bottom { 
+	height:16px;
+	width:16px;
+	position:absolute;right:0;top:0;
+	background: #9F0000 url(../images/corner_lr.png) no-repeat; 
+
+
+}
+* html .box-right-bottom {right: expression(-this.parentNode.offsetWidth%2+"px");} /* Fixes an IE6 rounding error */
+
+
+/* Specific to Info Boxes */
+.info-box .album_art {float:left;margin-right:10px;}
+#information_actions { margin-left:5px; font-size:0.7em; } 
+#information_actions h3 { font-size:1.2em; margin:0.2em; }
+
+/* Specific boxes */
+.box_newest_albums  {}
+.box_newest_artists {clear:none;}
+.box_newest_genres  {clear:none;}
+.box_popular_album  {}
+.box_popular_artists {clear:none;}
+.box_popular_genres {clear:none;}
+.box_preferences h4 {color:#000;font:bold 14px Verdana, Helvetica, sans-serif;padding:0.8em 0;}
+
+
+/************************************************/
+/*         Tables (songs lists...)              */
+/************************************************/
+.tabledata .th-top, .tabledata .th-bottom {
+	font-size:1.1em;
+	vertical-align: top;
+	text-align:center;
+}
+
+.tableform select { 
+	width: 150px; 
+} 
+
+/* table rows */
+.odd, .odd td,
+.even, .even td, .row-highlight {
+	font-size: 12px;
+	border-bottom:1px dotted #c0c0c0;
+}
+.even:hover, .odd:hover { 
+	background:gold;
+} 
+.row-highlight:hover { 
+	background:#ff0000;
+} 
+	
+
+/* Misc */
+.border 	{ background: #000; }
+.tabledata input, .tabledata select{ margin:2px 0;}
+
+/* specific cells */
+td.cel_cover{padding:6px;}
+.cel_select, .cel_action, .cel_date, .cel_applytoall, .cel_level {text-align:center;}
+/* specific cells : users login state */
+.user_online{background:#0f0;}
+.user_offline{background:#7f0000;}
+.user_disabled{background:#ccc;}
+
+/* specific tables */
+#recently_played .th-bottom {display:none;}
+.box_preferences .th-bottom {display:none;}
+
+/* Inline Editing Tables */
+.inline-edit input, .inline-edit select {
+	font-size: 0.8em; 
+} 
+
+
+/************************************************/
+/*          Albums of the moment                */
+/************************************************/
+
+#random_selection {
+position: absolute;
+top:5px ;
+left:620px ;
+}
+
+#random_selection  .box-top,#random_selection .box-left-top, #random_selection .box-right-top {
+	background: transparent none repeat scroll 0%;
+}
+
+#random_selection  .box-content, #random_selection  .box-title {
+	background: transparent none repeat scroll 0%;
+}
+
+#random_selection  .box-bottom, #random_selection .box-left-bottom, #random_selection .box-right-bottom {
+	background: transparent none repeat scroll 0%;
+}
+
+#random_selection .star-rating {display:none;}
+
+.random_album{
+	margin: 0px 0px 0px 0px !important; /* for complient browsers ... ie ignores this */
+	margin: 0px 0 0 0px; 
+	position:relative;
+	float:left;
+	padding:0px;
+  	width:90px;
+}
+ .random_album img {
+	border:1px solid #cccccc;
+	display:block;
+	position:relative;
+	background-color: #9F0000;
+}
+.random_album .play_album{
+  display:none;
+}
+
+ .play_album img {
+	border:none;
+	margin-top: 5px;
+	background-color:#ff0000;
+}
+
+/************************************************/
+/*          Now Playing                         */
+/************************************************/
+#now_playing{
+position:relative;
+left:20px;
+}
+
+.np_row {
+	padding: 3px;
+	float:left;
+	clear:both;
+	font-size:0.75em;
+}
+.np_cell {
+  padding-left:5px;
+  margin-left:5px;
+}
+
+.np_row label {
+  display:block;
+  font-weight:bold;
+color: #000;
+  margin:2px 0 0 -5px;
+}
+
+.np_group {
+  float:left;
+  padding-right:15px;
+}
+
+.np_row a {
+  font-size:0.8em;
+}
+
+.cel_albumart {
+	background: url(../images/record.png) no-repeat top right !important; /* for complient browsers ... ie ignores this */
+        background: url(../images/record.gif) no-repeat top right;
+        margin: 0px 0px 0px 0px !important; /* for complient browsers ... ie ignores this */
+        margin: 0px 0 0 0px;
+        position:relative;
+        float:left;
+        padding:0px;
+	width:120px;
+}
+ .cel_albumart img {
+        border:1px solid #cccccc;
+        display:block;
+        position:relative;
+        background-color: gold;
+        margin: 0px 10px 10px -3px;
+}
+
+
+/************************************************/
+/*               Shoutbox                       */
+/************************************************/
+
+#shoutbox {
+	font-size:0.8em;	
+} 
+
+#shoutbox div.shout { 
+	float:left;
+	margin-right:5px;
+} 
+
+#shoutbox span.information { 
+	float:left;
+	clear:left;
+} 
+
+img.shoutboximage { 
+	float:left;
+	margin-right:3px;
+} 
+
+/************************************************/
+/*             List Header                      */
+/************************************************/
+.list-header{margin:7px 15px; padding:0 4em; text-align:center; font-size: 0.8em;position:relative;} 
+.list-header .prev{position:absolute; top:0; left:0;}
+.list-header .next{position:absolute; top:0; right:0;}
+.list-header .selected{font-size:1.5em; background: gold;}
+.list-header .page-nb{padding:1px;border: 1px solid #ccc;text-decoration: none;}
+.list-header .page-nb:hover{background: #d0d0d0;}
+
+/************************************************/
+/*             Errors                           */
+/************************************************/
+.error { 
+	color:#903; 
+}
+
+.fatalerror {
+	display:table-cell;
+	padding:3px;
+	color:#903; 
+	font-weight:bold;
+	font-size:1.2em;
+}
+
+
+/************************************************/
+/*             LocalPlay                        */
+/************************************************/
+.lp_box_ctrl, .lp_box_vol {
+	text-align: center; /*for compatibility, may be controlled by themers now*/
+}
+
+td.lp_current a { 
+	font-weight:bold;
+	text-decoration:none;
+} 
+
+/************************************************/
+/*         Styles for Login template            */
+/************************************************/
+#loginPage #maincontainer{
+background-image: none;
+	margin:100px auto 0 auto;
+	width:437px;
+	font-size:12px;
+	text-align:center;
+}
+#loginPage #header{
+  padding:0;
+}
+
+#loginPage #loginbox{
+	background:url(../images/logincard.png) no-repeat;
+	height:500px;
+}
+#loginPage h2{
+  color:#333;
+  padding-top:20px;
+  font-weight: bolder;
+margin: 0px 14px 0px 0px;
+}
+.loginfield{
+	text-align:right;
+	padding-right:100px;
+	margin: 1em 0;
+}
+.loginfield input.text_input{
+  width:12em;
+  border:1px solid #999;
+}
+.loginfield label{
+	font-weight:bold;
+}
+.loginfield #rememberme{
+  margin-right:5em;
+  background:none;
+} 
+
+#loginPage div.fatalerror {
+	padding:5px;
+	margin:10px;
+}
+
+#loginbox form {
+margin: 93px 68px 0px 88px;
+}
+
+#motd { 
+        margin:0 auto 0 auto;
+	width: 437px;
+}
+
+/************************************************/
+/*                Misc                          */
+/************************************************/
+.formValidation{
+  margin-top:1em;
+  text-align:center;
+}
+
+.text-box, .confirmation-box {
+	display:table-cell;
+	padding:5px 5px 0 5px;
+	margin-bottom:10px;
+	background:#bbb;
+	border:2px solid #000;
+}
+
+#ajax-loading { 
+	position: absolute;  
+  	top:49px;
+  	left:205px; 
+  	width:51px;
+  	height:50px;
+	z-index:100;
+  	background: url(../images/dice.gif) no-repeat;
+	display: none;
+	text-indent:-9999em;
+} 
+
+.information,.information a { 
+	font-size: 0.9em; 
+	font-style: italic; 
+	color: #c0c0c0; 
+} 
