@@ -295,6 +295,9 @@ class Catalog {
 
 		// If they have checked the box then go ahead and gather the art
 		if ($options['gather_art']) {
+			$catalog_id = $this->id; 
+			require Config::get('prefix') . '/templates/show_gather_art.inc.php'; 
+			flush(); 
 			$this->get_album_art('',1); 
 		} 
 

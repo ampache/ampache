@@ -4,6 +4,10 @@
 
 --------------------------------------------------------------------------
   v.3.5-Alpha1
+	- Fixed endless loop on index if you haven't played a song in 
+		over two years
+	- Fixed gather art and parse m3u not working on catalog create
+		also added URL read support to m3u import
 	- Upped Minimum requirements to Mysql 5.x
 	- Add codeunde1load's Web 2.0 style tag patch
 	- Fixed typo in e-mail From: name (Thx Xgizzmo)

@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2007 Ampache.org
+ Copyright (c) Ampache.org
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
@@ -64,6 +64,10 @@ $time_unit = array('',_('seconds ago'),_('minutes ago'),_('hours ago'),_('days a
                 if ($time_place == '6') {
                         $amount = floor ($amount/12);
                 }
+		if ($time_place > '6') { 
+			$final = $amount . '+'; 
+			break; 
+		} 
 	}
 
 	$time_string = $final . ' ' . $time_unit[$time_place];

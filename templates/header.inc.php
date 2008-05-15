@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2006 Ampache.org
+ Copyright (c) Ampache.org
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
@@ -60,7 +60,7 @@ if (Config::get('use_rss')) { ?>
 		
 	<div id="header"><!-- This is the header -->
 		<h1 id="headerlogo">
-		  <a href="http://www.ampache.org">
+		  <a href="<?php echo Config::get('web_path'); ?>">
 		    <img src="<?php echo $web_path; ?><?php echo Config::get('theme_path'); ?>/images/ampache.png" title="<?php echo Config::get('site_title'); ?>" alt="<?php echo Config::get('site_title'); ?>" />
 		  </a>
 		</h1>
