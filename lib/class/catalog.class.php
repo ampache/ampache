@@ -293,6 +293,11 @@ class Catalog {
 
 		$this->add_files($this->path,$options); 
 
+		// If they have checked the box then go ahead and gather the art
+		if ($options['gather_art']) {
+			$this->get_album_art('',1); 
+		} 
+
 		return true;  
 
 	} // run_add
