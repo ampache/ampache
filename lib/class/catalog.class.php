@@ -2146,47 +2146,62 @@ class Catalog {
 
 	} //check_local_mp3
 
-	/*!
-		@function import_m3u
-		@discussion this takes m3u filename and then attempts
-			to create a Public Playlist based on the filenames
-			listed in the m3u
+	/**
+	 * import_m3u
+	 * this takes m3u filename and then attempts to create a Public Playlist based on the filenames
+	 * listed in the m3u
 	*/
-	function import_m3u($filename) { 
+	public function import_m3u($filename) { 
 
-		$m3u_handle = @fopen($filename,'r');
+		$m3u_handle = fopen($filename,'r');
 		
-		$data = @fread($m3u_handle,filesize($filename));
+		$data = fread($m3u_handle,filesize($filename));
 		
 		$results = explode("\n",$data);
 
-                $pattern = "/\.(" . conf('catalog_file_pattern');
-                $pattern .= ")$/i";
+                $pattern = '/\.(' . Config::get('catalog_file_pattern') . ')$/i';
 
+		// Foreach what we're able to pull out from the file
 		foreach ($results as $value) {
+
 			// Remove extra whitespace
 			$value = trim($value);
 			if (preg_match($pattern,$value)) { 
+
 				/* Translate from \ to / so basename works */
 				$value = str_replace("\\","/",$value);
 				$file = basename($value);
+
 				/* Search for this filename, cause it's a audio file */
-				$sql = "SELECT id FROM song WHERE file LIKE '%" . sql_escape($file) . "'";
-				$db_results = mysql_query($sql, dbh());
-				$results = mysql_fetch_assoc($db_results);
-				$song_id = $results['id'];
-				if ($song_id) { $songs[] = $song_id; }
+				$sql = "SELECT `id` FROM `song` WHERE `file` LIKE '%" . Dba::escape($file) . "'";
+				$db_results = Dba::query($sql); 
+				$results = Dba::fetch_assoc($db_results); 
+
+				if (isset($results['id'])) { $songs[] = $results['id']; }
+
 			} // if it's a file
+			// Check to see if it's a url from this ampache instance
+			elseif (substr($value,0,strlen(Config::get('web_path'))) == Config::get('web_path')) { 
+				$song_id = intval(Song::parse_song_url($value));
+				
+				$sql = "SELECT COUNT(*) FROM `song` WHERE `id`='$song_id'"; 
+				$db_results = Dba::query($sql); 
+	
+				if (Dba::num_rows($db_results)) { 
+					$songs[] = $song_id; 
+				} 
+
+			} // end if it's an http url
 
 		} // end foreach line
 
 		debug_event('m3u_parse',"Parsing $filename - Found: " . count($songs) . " Songs",'5'); 
+
 		if (count($songs)) { 
-			$playlist = new Playlist();
-			$value = str_replace("\\","/",$filename);
-			$playlist_name = "M3U - " . basename($filename,'.m3u');
-			
-			$playlist_id = $playlist->create($playlist_name,'public');
+			$name = "M3U - " . basename($filename,'.m3u');
+			$playlist_id = Playlist::create($name,'public'); 
+
+			if (!$playlist_id) { return false; } 	
 
 			/* Recreate the Playlist */
 			$playlist = new Playlist($playlist_id);
