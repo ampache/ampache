@@ -55,7 +55,7 @@
     }
   }
   echo '<dt> Tags </dt><dd>';
-  $tags = TagCloud::get_tags('song', array($song->id));
+  $tags = Tag::get_object_tags('song', array($song->id));
   foreach($tags as $i)
     echo $i['name'] . ' ';
   ?><form type=POST action=coin>
