@@ -38,9 +38,6 @@ switch ($_REQUEST['action']) {
 		$localplay->set_active_instance($_REQUEST['instance']); 
 		Preference::update('play_type',$GLOBALS['user']->id,$type); 
 
-		// Now reload the preferences into the user object
-		$GLOBALS['user']->set_preferences(); 
-
 		// We should also refesh the sidebar
 		ob_start(); 
 		require_once Config::get('prefix') . '/templates/sidebar.inc.php'; 
