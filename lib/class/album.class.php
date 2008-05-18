@@ -800,7 +800,8 @@ class Album extends database_object {
                 // Push the image into the database
                 $sql = "REPLACE INTO `album_data` SET `art` = '" . Dba::escape($image) . "'," .
                         " `art_mime` = '" . Dba::escape($mime) . "'" .
-        	        ", `album_id` = '$this->id'";
+        	        ", `album_id` = '$this->id',"
+			"`thumb` = NULL, `thumb_mime`=NULL";
 	        $db_results = Dba::query($sql);
 
 		return true;

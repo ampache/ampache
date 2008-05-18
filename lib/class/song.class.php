@@ -209,7 +209,6 @@ class Song extends database_object {
 			break;
 			case 'mpc':
 				$this->mime = "audio/x-musepack";
-				$this->type = "MPC";
 			break;
 			default:
 				$this->mime = "audio/mpeg";
