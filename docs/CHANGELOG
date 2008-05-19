@@ -4,6 +4,9 @@
 
 --------------------------------------------------------------------------
   v.3.5-Alpha1
+	- Fixed album art not clearing thumbnail correctly on gather 
+	- Fixed localplay instance not displaying correctly after change
+		until a page refresh
 	- Fixed endless loop on index if you haven't played a song in 
 		over two years
 	- Fixed gather art and parse m3u not working on catalog create

@@ -252,7 +252,7 @@ class AmpacheMpd extends localplay_controller {
 		$user_id = $user_id ? $user_id : $GLOBALS['user']->id; 
 
 		Preference::update('mpd_active',$user_id,intval($uid)); 
-		Config::set(array('mpd_active'=>intval($uid)),'1'); 
+		Config::set('mpd_active',intval($uid),'1'); 
 
 		return true; 
 
