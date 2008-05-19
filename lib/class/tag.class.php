@@ -346,7 +346,7 @@ return array();
 	 */
 	public static function clean_tag($value) { 
 
-		$tag = preg_replace("/[^\w\_\-]/","",$value); 
+		$tag = preg_replace("/[^\w\_\-\s]/","",$value); 
 
 		return $tag; 
 
