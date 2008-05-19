@@ -117,7 +117,14 @@ function charset_directory_correct($path) {
 		$verify_filename = iconv(Config::get('site_charset'),Config::get('site_charset') . '//IGNORE',$full_file);
 
 		if (strcmp($full_file,$verify_filename) != '0') { 
-			$translated_filename = iconv($source_encoding,Config::get('site_charset') . '//IGNORE',$full_file); 
+			$translated_filename = iconv($source_encoding,Config::get('site_charset') . '//TRANSLIT',$full_file); 
+
+			// Make sure the extension stayed the same
+			if (substr($translated_filename,strlen($translated_filename)-3,3) != substr($full_file,strlen($full_file)-3,3)) { 
+				echo "Translation failure, stripping non-valid characters\n"; 
+				$translated_filename = iconv($source_encoding,Config::get('site_charset') . '//IGNORE',$full_file); 
+			} 
+
 			echo "Attempting to Transcode to " . Config::get('site_charset') . "\n"; 
 			echo "--------------------------------------------------------------------------------------------\n";
 			echo "OLD:$full_file has invalid chars\nNEW:$translated_filename\n"; 

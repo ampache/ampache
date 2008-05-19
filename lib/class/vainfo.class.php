@@ -68,7 +68,7 @@ class vainfo {
 		$this->_getID3->option_tags_html	= false;
 		$this->_getID3->option_extra_info	= false;
 		$this->_getID3->option_tag_lyrics3	= false;
-		$this->_getID3->encoding		= $this->encoding; 
+//		$this->_getID3->encoding		= $this->encoding; 
 		$this->_getID3->option_tags_process    = true; 
 
 		/* Check for ICONV */
@@ -485,19 +485,14 @@ class vainfo {
 	 * in the file
 	 */
 	private function _clean_tag($tag,$encoding='') { 
-		
-		/* Guess that it's UTF-8 */
-		if (!$encoding) { $encoding = 'UTF-8'; }
 
-		if ($this->_iconv AND strcasecmp($encoding,$this->encoding) != 0) { 
+		// If we've got iconv then go ahead and clear her up		
+		if ($this->_iconv) { 
+			/* Guess that it's UTF-8 */
+			if (!$encoding) { $encoding = $this->_getID3->encoding; }
 			$charset = $this->encoding . '//TRANSLIT';
 			$tag = iconv($encoding,$charset,$tag);
 		}
-		elseif ($this->_iconv) { 
-			// We have to transcode anyway and protect from non-[CHARGET] chars
-			$charset = $this->encoding . '//IGNORE'; 
-			$tag = iconv($this->encoding,$charset,$tag); 
-		} 
 
 		return $tag;
 
