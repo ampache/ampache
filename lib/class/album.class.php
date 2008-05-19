@@ -98,6 +98,7 @@ class Album extends database_object {
 	 * with a single query
 	 */
 	public static function build_cache($ids) {
+
 		$idlist = '(' . implode(',', $ids) . ')';
 
 		$sql = "SELECT * FROM `album` WHERE `id` IN $idlist";

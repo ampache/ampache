@@ -44,7 +44,8 @@ class Catalog {
 	// Used in functions
 	private static $albums	= array();
 	private static $artists	= array();
-	private static $genres	= array();
+	private static $genres	= array(); //FIXME
+	private static $tags	= array();
 	private static $_art_albums = array(); 
 
 	/**
@@ -116,7 +117,6 @@ class Catalog {
 		$this->f_path		= truncate_with_ellipsis($this->path,Config::get('ellipse_threshold_title')); 
 		$this->f_update		= $this->last_update ? date('d/m/Y h:i',$this->last_update) : _('Never'); 
 		$this->f_add		= $this->last_add ? date('d/m/Y h:i',$this->last_add) : _('Never');
-
 
 	} // format
 
@@ -1507,6 +1507,32 @@ class Catalog {
 	} // clean_genres
 
 	/**
+	 * clean_tags
+	 * This cleans out tag_maps that are not assoicated with a 'living' object
+	 * and then cleans the tags that have no maps
+	 */
+	public static function clean_tags() { 
+
+		$sql = "DELETE FROM `tag_map` USING `tag_map` LEFT JOIN `song` ON `song`.`id`=`tag_map`.`object_id` " . 
+			"WHERE `tag_map`.`object_type`='song' AND `song`.`id` IS NULL"; 
+		$db_results = Dba::query($sql); 
+
+                $sql = "DELETE FROM `tag_map` USING `tag_map` LEFT JOIN `album` ON `album`.`id`=`tag_map`.`object_id` " .
+                        "WHERE `tag_map`.`object_type`='album' AND `album`.`id` IS NULL";
+		$db_results = Dba::query($sql); 
+
+                $sql = "DELETE FROM `tag_map` USING `tag_map` LEFT JOIN `artist` ON `artist`.`id`=`tag_map`.`object_id` " .
+                        "WHERE `tag_map`.`object_type`='artist' AND `artist`.`id` IS NULL";
+		$db_results = Dba::query($sql); 
+
+		// Now nuke the tags themselves
+		$sql = "DELETE FROM `tag` USING `tag` LEFT JOIN `tag_map` ON `tag`.`id`=`tag_map`.`tag_id` " . 
+			"WHERE `tag_map`.`id` IS NULL"; 
+		$db_results = Dba::query($sql); 
+
+	} // clean_tags
+
+	/**
 	 * clean_shoutbox
 	 * This cleans out any shoutbox items that are now orphaned
 	 */
@@ -1753,16 +1779,17 @@ class Catalog {
 	 * This is a wrapper function for all of the different cleaning
 	 * functions, it runs them in the correct order and takes a catalog_id
 	 */
-	public static function clean($catalog_id) { 
+	public static function clean() { 
 
-		self::clean_albums($catalog_id); 
-		self::clean_artists($catalog_id); 
-		self::clean_genres($catalog_id); 
-		self::clean_flagged($catalog_id); 
-		self::clean_stats($catalog_id); 
-		self::clean_ext_info($catalog_id); 
-		self::clean_playlists($catalog_id); 
-		self::clean_shoutbox($catalog_id); 
+		self::clean_albums(); 
+		self::clean_artists(); 
+		self::clean_genres(); 
+		self::clean_flagged(); 
+		self::clean_stats(); 
+		self::clean_ext_info(); 
+		self::clean_playlists(); 
+		self::clean_shoutbox(); 
+		self::clean_tags(); 
 
 	} // clean
 
@@ -1994,6 +2021,46 @@ class Catalog {
 		return $insert_id;
 
 	} // check_genre
+
+	/**
+	 * check_tag
+	 * This checks the tag we've been passed (name) 
+	 * and sees if it exists, and if so if it's mapped
+	 * to this object, this is only done for songs for now
+	 */
+	public static function check_tag($value,$object_id,$object_type='song') { 
+
+		// First see if the tag exists at all
+		$tag_id = self::$tags[$value]; 
+
+		if ($tag_id) { 
+
+			// At least we know the tag but sadly we still have to check the map
+			$tag = new Tag($tag_id); 
+			if ($tag->has_object($object_id,$object_type)) { 
+				return $tag->id;
+			} 
+			// Oooh well time to add it
+			Tag::add_tag_map($tag->id,$object_type,$object_id); 
+
+			return $tag->id; 
+
+		} // if cached already
+
+		// Clean it up and try to create it
+		$value = Tag::clean_tag($value); 
+		$tag = Tag::construct_from_name($value); 
+
+		// Figure out the ID so we can cache it
+		if (!$tag) { $insert_id = Tag::add_tag($object_type,$object_id,$value,'-1'); }  
+		else { $insert_id = $tag->id; } 
+			
+		// Add to the cache	
+		self::$tags[$value] = $insert_id; 
+
+		return $insert_id; 
+
+	} // check_tag
 	
 	/**
 	 * check_title
@@ -2065,6 +2132,8 @@ class Catalog {
 		} 
 			
 		$song_id = Dba::insert_id(); 
+
+		self::check_tag($genre,$song_id); 
 
 		/* Add the EXT information */
 		$sql = "INSERT INTO `song_data` (`song_id`,`comment`,`lyrics`) " . 

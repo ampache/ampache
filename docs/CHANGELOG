@@ -4,6 +4,7 @@
 
 --------------------------------------------------------------------------
   v.3.5-Alpha1
+	- Genre Tag is now used as a 'Tag', Browse Genre removed
 	- Ignore getid3() iconv stuff doesn't seem to work
 	- Improved fix_filenames.inc, tries a translation first then strips
 		invalid characters 

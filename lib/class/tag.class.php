@@ -25,11 +25,117 @@
  */
 class Tag extends database_object {
 
+	public $id; 
+	public $name; 
+
+	/**
+	 * constructor
+	 * This takes a tag id and returns all of the relevent information
+	 */
+	public function __construct($id) { 
+
+		if (!$id) { return false; } 
+
+		$info = $this->get_info($id); 
+
+		foreach ($info as $key=>$value) { 
+			$this->$key = $value; 
+		} // end foreach
+
+	} // constructor
+
+	/**
+	 * construct_from_name
+	 * This attempts to construct the tag from a name, rather then the ID
+	 */
+	public static function construct_from_name($name) { 
+
+		$name = Dba::escape($name); 
+
+		$sql = "SELECT * FROM `tag` WHERE `name`='$name'"; 
+		$db_results = Dba::query($sql); 
+
+		$row = Dba::fetch_assoc($db_results); 
+
+		if (!$row['id']) { return false; } 
+
+		parent::add_to_cache('tag',$row['id'],$row); 
+
+		$tag = new Tag(0); 
+		foreach ($row as $key=>$value) { 
+			$tag->$key = $value; 
+		} 
+
+		return $tag; 
+		
+	} // construct_from_name
+
+	/**
+	 * get_info	
+ 	 * This takes the id and returns an array of information, checks the cache
+	 * to see what's up
+	 */
+	private function get_info($id) { 
+
+		$id = intval($id); 
+
+		if (parent::is_cached('tag',$id)) { 
+			return parent::get_from_cache('tag',$id);
+		} 
+
+		$sql = "SELECT * FROM `tag` WHERE `id`='$id'"; 
+		$db_results = Dba::query($sql); 
+
+		$results = Dba::fetch_assoc($db_results); 
+
+		parent::add_to_cache('tag',$id,$results); 
+		
+		return $results; 
+
+	} // get_info
+
+	/**
+	 * build_cache
+	 * This takes an array of object ids and caches all of their information
+	 * in a single query, cuts down on the connections
+	 */
+	public function build_cache($ids) { 
+
+		$idlist = '(' . implode(',',$ids) . ')'; 
+		
+		$sql = "SELECT * FROM `tag` WHERE `id` IN $idlist"; 
+		$db_results = Dba::query($sql); 
+
+		while ($row = Dba::fetch_assoc($db_results)) { 
+			parent::add_to_cache('tag',$row['id'],$row); 
+		} 
+
+	} // build_cache
+
+	/**
+	 * has_object
+	 * This checks to see if the current tag element has the specified object
+	 * of the specified type
+	 */
+	public function has_object($object_type,$object_id) { 
+
+		$object_type = self::validate_type($object_type); 
+		$object_id = intval($object_id); 
+		$tag_id = intval($this->id); 
+		
+		$sql = "SELECT * FROM `tag_map` WHERE `object_type`='$object_type' AND `object_id`='$object_id' " . 
+			" AND `tag_id`='$tag_id'"; 
+		$db_results = Dba::query($sql); 
+
+		return Dba::num_rows($db_results); 
+
+	} // has_object
+
 	/**
 	 * add_tag
 	 * This function adds a new tag, for now we're going to limit the tagging a bit
 	 */
-	public static function add_tag($type, $id, $tagval) {
+	public static function add_tag($type, $id, $tagval,$user='') {
 		
 		if (!self::validate_type($type)) { 
 			return false; 
@@ -37,11 +143,13 @@ class Tag extends database_object {
 		if (!is_numeric($id)) { 
 			return false; 
 		} 
-		if (!preg_match('/^[A-Za-z_]+$/',$tagval)) { 
-			return false; 
-		} 
+
+		// Clean it up and make it tagish
+		$tagval = self::clean_tag($tagval); 
+
+		if (!strlen($tagval)) { return false; } 
 		
-		$uid = intval($GLOBALS['user']->id); 
+		$uid = $user ? intval($user) : intval($GLOBALS['user']->id);
 		$tagval = Dba::escape($tagval); 
 		$type = Dba::escape($type); 
 		$id = intval($id);
@@ -59,23 +167,44 @@ class Tag extends database_object {
 			$insert_id = Dba::insert_id(); 
 		}
 
-		// Now make sure this isn't a duplicate
-		$sql = "SELECT * FROM `tag_map " . 
-				"WHERE `tag_id`='$insert_id' AND `user`='$uid' AND `object_type`='$type' AND `object_id`='$id'"; 
-		$db_results = Dba::query($sql); 
+		self::add_tag_map($insert_id,$type,$id); 
 
-		$row = Dba::fetch_assoc($db_results); 
-
-		// Only insert it if the current tag for this user doesn't exist
-		if (!count($row)) { 
-			$sql = "INSERT INTO `tag_map` (`tag_id`,`user`,`object_type`,`object_id`) " . 
-				"VALUES ('$tid','$uid','$type','$id')";
-			$db_results = Dba::query($sql);	
-		} 
-
-		return true; 
+		return $insert_id; 
 
 	} // add_tag
+
+	/**
+	 * add_tag_map
+	 * This adds a specific tag to the map for specified object
+	 */
+	public static function add_tag_map($tag_id,$object_type,$object_id) { 
+		
+		$uid = intval($GLOBALS['user']->id); 
+		$tag_id = intval($tag_id); 
+		$type = self::validate_type($object_type);  
+		$id = intval($object_id); 
+
+                // Now make sure this isn't a duplicate
+                $sql = "SELECT * FROM `tag_map " .
+                                "WHERE `tag_id`='$insert_id' AND `user`='$uid' AND `object_type`='$type' AND `object_id`='$id'";
+                $db_results = Dba::query($sql);
+
+                $row = Dba::fetch_assoc($db_results);
+
+                // Only insert it if the current tag for this user doesn't exist
+                if (!count($row)) {
+                        $sql = "INSERT INTO `tag_map` (`tag_id`,`user`,`object_type`,`object_id`) " .
+                                "VALUES ('$tag_id','$uid','$type','$id')";
+                        $db_results = Dba::query($sql);
+			$insert_id = Dba::insert_id(); 
+                }
+		else { 
+			$insert_id = $row['id']; 
+		} 
+
+		return $insert_id;  
+
+	} // add_tag_map
 
 	/**
 	 * get_many_tags
@@ -205,11 +334,23 @@ return array();
 
 		$valid_array = array('song','artist','album'); 
 		
-		if (in_array($type,$valid_array)) { return true; } 
+		if (in_array($type,$valid_array)) { return $type; } 
 
 		return false; 
 
 	} // validate_type
 
-} // end of TagCloud class
+	/**
+	 * clean_tag
+	 * This takes a string and makes it Tagish
+	 */
+	public static function clean_tag($value) { 
+
+		$tag = preg_replace("/[^\w\_\-]/","",$value); 
+
+		return $tag; 
+
+	} // clean_tag
+
+} // end of Tag class
 ?>
