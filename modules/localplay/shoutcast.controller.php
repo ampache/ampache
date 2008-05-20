@@ -449,63 +449,7 @@ class AmpacheShoutCast extends localplay_controller {
 	 */
 	public function get() { 
 
-		// If we don't have the playlist yet, pull it
-		if (!isset($this->_mpd->playlist)) {
-			$this->_mpd->GetPlaylist(); 
-		} 
-
-		/* Get the Current Playlist */
-		$playlist = $this->_mpd->playlist;
-		
-		foreach ($playlist as $entry) { 
-			$data = array();
-
-			/* Required Elements */
-			$data['id'] 	= $entry['Pos'];
-			$data['raw']	= $entry['file'];		
-
-			$url_data = $this->parse_url($entry['file']); 
-		
-			switch ($url_data['primary_key']) { 
-				case 'song': 	
-					$song = new Song($url_data['song']); 
-					$song->format(); 
-					$data['name'] = $song->f_title . ' - ' . $song->f_album . ' - ' . $song->f_artist;					
-					$data['link']   = $song->f_link; 
-				break; 
-				case 'demo_id': 
-					$democratic = new Democratic($url_data['demo_id']); 
-					$data['name'] = _('Democratic') . ' - ' . $democratic->name; 	
-					$data['link']   = '';
-				break; 
-				default: 
-
-					/* If we don't know it, look up by filename */
-					$filename = Dba::escape($entry['file']);
-					$sql = "SELECT `id` FROM `song` WHERE `file` LIKE '%$filename'";
-					$db_results = Dba::query($sql);
-					if ($r = Dba::fetch_assoc($db_results)) { 
-						$song = new Song($r['id']);
-						$song->format(); 
-						$data['name'] = $song->f_title . ' - ' . $song->f_album . ' - ' . $song->f_artist;
-						$data['link'] = $song->f_link; 
-					}	
-					else { 
-						$data['name'] = _('Unknown');
-						$data['link']   = '';
-					}
-
-				break; 
-			} // end switch on primary key type
-	
-			/* Optional Elements */
-			$data['track']	= $entry['Pos']+1;
-
-			$results[] = $data;
-
-		} // foreach playlist items
-		
-		return $results;
+		return array(); 
 
 	} // get
 
@@ -516,21 +460,7 @@ class AmpacheShoutCast extends localplay_controller {
 	 */
 	public function status() { 
 
-		/* Construct the Array */
-		$array['state'] 	= $this->_mpd->state;
-		$array['volume']	= $this->_mpd->volume;
-		$array['repeat']	= $this->_mpd->repeat;
-		$array['random']	= $this->_mpd->random;
-		$array['track']		= $track+1;
-
-		preg_match("/song=(\d+)\&/",$this->_mpd->playlist[$track]['file'],$matches);
-		$song_id = $matches['1'];
-		$song = new Song($song_id);
-		$array['track_title'] 	= $song->title;
-		$array['track_artist'] 	= $song->get_artist_name();
-		$array['track_album']	= $song->get_album_name();
-
-		return $array;
+		return array();
 
 	} // get_status
 
@@ -556,6 +486,10 @@ class AmpacheShoutCast extends localplay_controller {
 		// Read and clean!
 		$pid = intval(trim(file_get_contents($this->pid))); 
 
+		if (!$pid) { 
+			debug_event('Shoutcast','Unable to read PID from ' . $this->pid,'1'); 
+		}
+
 		return $pid; 
 
 	} // get_pid
@@ -569,6 +503,10 @@ class AmpacheShoutCast extends localplay_controller {
 		$string = implode("\n",$this->files); 
 		
 		$handle = fopen($this->playlist,"w"); 
+
+		if (!is_resource($handle)) { 
+			debug_event('Shoutcast','Unable to open ' . $this->playlist . ' for writing playlist file','1'); 
+		} 
 
 		fwrite($handle,$string); 
 		fclose($handle); 
