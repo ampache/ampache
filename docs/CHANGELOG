@@ -4,6 +4,8 @@
 
 --------------------------------------------------------------------------
   v.3.5-Alpha1
+	- Added timeout override on update_single_item because the function
+		is a lie
 	- Fix translations so it's not all german
 	- Genre Tag is now used as a 'Tag', Browse Genre removed
 	- Ignore getid3() iconv stuff doesn't seem to work

@@ -1017,6 +1017,9 @@ class Catalog {
 	 */
 	public static function update_single_item($type,$id) { 
 
+		// Because single items are large numbers of things too
+		set_time_limit(0);
+
 		$songs = array();
 
 		switch ($type) {
