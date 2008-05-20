@@ -452,7 +452,15 @@ class vainfo {
 
 		$results = array();
 
-		$pattern = $this->_dir_pattern . '/' . $this->_file_pattern;
+                // Correctly detect the slash we need to use here
+                if (strstr($filename,"/")) {
+                        $slash_type = '/';
+                }
+                else {
+                        $slash_type = '\\';
+                }
+
+		$pattern = preg_quote($this->_dir_pattern) . $slash_type . preg_quote($this->_file_pattern); 
 		preg_match_all("/\%\w/",$pattern,$elements);
 		
 		$preg_pattern = preg_quote($pattern);
