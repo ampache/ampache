@@ -214,10 +214,10 @@ class AmpacheShoutCast extends localplay_controller {
 	public function update_instance($uid,$data) { 
 
 		$uid 	= Dba::escape($uid); 
-		$host	= Dba::escape($data['pid']);
-		$port	= Dba::escape($data['playlist']);
+		$pid	= Dba::escape($data['pid']);
+		$playlist	= Dba::escape($data['playlist']);
 		$name	= Dba::escape($data['name']); 
-		$pass	= Dba::escape($data['local_root']); 
+		$local_root	= Dba::escape($data['local_root']); 
 
 		$sql = "UPDATE `localplay_shoutcast` SET `pid`='$pid', `playlist`='$playlist', `name`='$name', `local_root`='$local_root' WHERE `id`='$uid'"; 
 		$db_results = Dba::query($sql); 
