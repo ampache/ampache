@@ -44,7 +44,8 @@ class AmpacheShoutCast extends localplay_controller {
 	 */
 	public function __construct() { 
 
-		// Nothing to do here really? 
+
+		
 	
 
 	} // AmpacheShoutCast
@@ -93,7 +94,7 @@ class AmpacheShoutCast extends localplay_controller {
                         "`name` VARCHAR( 128 ) COLLATE utf8_unicode_ci NOT NULL , " .
                         "`owner` INT( 11 ) NOT NULL , " .
                         "`pid` VARCHAR( 255 ) COLLATE utf8_unicode_ci NOT NULL , " .
-                        "`playlist` INT( 11 ) UNSIGNED NOT NULL DEFAULT '6600', " .
+                        "`playlist` VARCHAR ( 255 ) COLLATE utf8_unicode_ci NOT NULL, " .
                         "`local_root` VARCHAR( 255 ) COLLATE utf8_unicode_ci NOT NULL , " .
                         "`access` SMALLINT( 4 ) UNSIGNED NOT NULL DEFAULT '0'" .
                         ") ENGINE = MYISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci";
@@ -472,7 +473,15 @@ class AmpacheShoutCast extends localplay_controller {
 	 */
 	public function connect() { 
 	
-		// We could do some kind of check to see that the shoutcast server is up
+		// We should use this oppertunity to setup the current object
+		$info = $this->get_instance(); 
+
+		foreach ($info as $key=>$value) { 
+			$this->$key = $value; 
+		} 
+
+		if (!count($info)) { return false; } 
+	
 		return true; 
 
 	} // connect
@@ -529,7 +538,7 @@ class AmpacheShoutCast extends localplay_controller {
 			case 'hup': 
 				$pid = $this->get_pid(); 
 				if (!$pid) { return false; } 
-				$command = 'kill -l HUP ' . escapeshellarg($pid); 
+				$command = '/bin/kill -l HUP ' . escapeshellarg($pid); 
 				system($command,$return); 
 				debug_event('Shoutcast','Issued ' . $command . ' and received ' . $return,'3'); 
 				return true; 
