@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2007 Ampache.org
+ Copyright (c) Ampache.org
  All Rights Reserved
 
  This program is free software; you can redistribute it and/or
@@ -30,34 +30,17 @@ if (Config::get('ratings')) {
 	echo "</div>";
 } // end if ratings ?>
 
-<strong><?php echo _('Actions'); ?>:</strong>
 <div id="information_actions">
-Tags:
-	<?php
-	$tags = Tag::get_object_tags('artist', $artist->id);
-	foreach($tags as $i)
-	  echo ($i['name']) . ' ';
-	?>
-	<br/>
-<form type=POST action=coin>
-<?php
-echo Ajax::text('?page=tag&action=add&type=artist&id=' . $artist->id . "&val='+document.getElementById('tagname').value+'", _("Add tag"), 'tag_artist');
-?>
-<input type="text" size="10" maxlength="10"  id="tagname"></input></form>
-
-<a href="<?php echo $web_path; ?>/artists.php?action=show_all_songs&amp;artist=<?php echo $artist->id; ?>"><?php echo _("Show All Songs By") . " " . $artist->f_name; ?></a><br />
-<?php echo Ajax::text('?action=basket&type=artist&id=' . $artist->id,_('Add All Songs By') . ' ' . $artist->f_name,'play_full_artist'); ?><br />
-<?php echo Ajax::text('?action=basket&type=artist_random&id=' . $artist->id,_('Add Random Songs By') . ' ' . $artist->f_name,'play_random_artist'); ?><br />
-<?php if ($GLOBALS['user']->has_access('50')) { ?>
-	<a href="<?php echo $web_path; ?>/artists.php?action=update_from_tags&amp;artist=<?php echo $artist->id; ?>"><?php echo _("Update from tags"); ?></a><br />
+<ul>
+<li><a href="<?php echo $web_path; ?>/artists.php?action=show_all_songs&amp;artist=<?php echo $artist->id; ?>"><?php echo get_user_icon('view'); ?></a> <?php echo _("Show All Songs By") . " " . $artist->f_name; ?></li>
+<li><?php echo Ajax::button('?action=basket&type=artist&id=' . $artist->id,'add',_('Add'),'add_' . $artist->id); ?><?php echo _('Add All songs By') . ' ' . $artist->f_name; ?></li>
+<li><?php echo Ajax::button('?action=basket&type=artist_random&id=' . $artist->id,'random',_('Random'),'random_' . $artist->id); ?><?php echo _('Add Random Songs By') . ' ' . $artist->f_name; ?></li>
+<?php if (Access::check('interface','50')) { ?>
+	<li><a href="<?php echo $web_path; ?>/artists.php?action=update_from_tags&amp;artist=<?php echo $artist->id; ?>"><?php echo get_user_icon('cog'); ?></a> <?php echo _('Update from tags'); ?></li>
 <?php } ?>
-<?php if (Plugin::is_installed('OpenStrands')) { ?>
-<?php echo Ajax::text('?page=stats&action=show_recommend&type=artist&id=' . $artist->id,_('Recommend Similar'),'artist_recommend_similar'); ?>
-<?php } ?>
+<li>
+	<input type="checkbox" id="show_artist_artCB" <?php echo $string = Browse::get_filter('show_art') ? 'checked="checked"' : ''; ?>/> <?php echo _('Show Art'); ?>
+	<?php echo Ajax::observe('show_artist_artCB','click',Ajax::action('?page=browse&action=browse&key=show_art&value=1','')); ?>
+</ul>
 </div>
 <?php show_box_bottom(); ?>
-<div id="additional_information">
-&nbsp;
-</div>
-
-

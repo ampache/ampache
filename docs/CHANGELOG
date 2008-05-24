@@ -4,6 +4,8 @@
 
 --------------------------------------------------------------------------
   v.3.5-Alpha1
+	- Added checkbox to single artist view allowing you to enable/disable
+		album art thumbnails on albums of said artist
 	- Added timeout override on update_single_item because the function
 		is a lie
 	- Fix translations so it's not all german
