@@ -160,13 +160,10 @@ switch ($_REQUEST['action']) {
 			exit; 
 		} 
 
-		show_box_top(_('Starting Update from Tags')); 
-
-		Catalog::update_single_item('album',$_REQUEST['album_id']);
-
-		echo "<br /><strong>" . _('Update From Tags Complete') . "</strong> &nbsp;&nbsp;";
-		echo "<a href=\"" . Config::get('web_path') . "/albums.php?action=show&amp;album=" . scrub_out($_REQUEST['album_id']) . "\">[" . _('Return') . "]</a>";
-		show_box_bottom(); 
+		$type 		= 'album'; 
+		$object_id 	= intval($_REQUEST['album_id']); 
+		$target_url	= Config::get('web_path') . '/albums.php?action=show&amp;album=' . $object_id; 
+		require_once Config::get('prefix') . '/templates/show_update_items.inc.php'; 
 	break;
 	// Browse by Album
 	default:

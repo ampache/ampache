@@ -48,15 +48,10 @@ switch($_REQUEST['action']) {
         break;
 	case 'update_from_tags':
 
-	        $artist = new Artist($_REQUEST['artist']);
-
-        	show_box_top(_('Starting Update from Tags')); 
-
-		Catalog::update_single_item('artist',$_REQUEST['artist']);
-
-        	echo "<br /><strong>" . _('Update From Tags Complete') . "</strong> &nbsp;&nbsp;";
-	        echo "<a href=\"" . Config::get('web_path') . "/artists.php?action=show&amp;artist=" . $_REQUEST['artist'] . "\">[" . _('Return') . "]</a>";
-		show_box_bottom(); 
+		$type		= 'artist'; 
+		$object_id	= intval($_REQUEST['artist']); 
+		$target_url	= Config::get('web_path') . "/artists.php?action=show&amp;artist=" . $object_id; 
+		require_once Config::get('prefix') . '/templates/show_update_items.inc.php'; 
 	break;
 	case 'rename_similar':
 		if (!$user->has_access('100')) { access_denied(); }

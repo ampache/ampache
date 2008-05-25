@@ -25,7 +25,7 @@
 <td class="cel_song"><?php echo $song->f_link; ?></td>
 <td class="cel_artist"><?php echo $song->f_artist_link; ?></td>
 <td class="cel_album"><?php echo $song->f_album_link; ?></td>
-<td class="cel_tags"></td>
+<td class="cel_tags"><?php echo $song->f_tags; ?></td>
 <td class="cel_track"><?php echo $song->f_track; ?></td>
 <td class="cel_time"><?php echo $song->f_time; ?></td>
 <?php if (Config::get('ratings')) { ?>

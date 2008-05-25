@@ -319,15 +319,15 @@ class AmpacheShoutCast extends localplay_controller {
 	 * This just tells MPD to start playing, it does not
 	 * take any arguments
 	 */
-	function play() { 
+	public function play() { 
 
-		// If we have no files[] then just HUP the server nothing else
+		// If we have no files[] then just Reload the server nothing else
 		if (!count($this->files)) { 
-			$this->send_command('hup'); 
+			$this->send_command('reload'); 
 		} 
 		else { 
 			$this->write_playlist(); 
-			$this->send_command('hup'); 
+			$this->send_command('reload'); 
 		} 
 
 		return true;
@@ -336,11 +336,11 @@ class AmpacheShoutCast extends localplay_controller {
 
 	/**
 	 * stop
-	 * This just tells MPD to stop playing, it does not take
-	 * any arguments
+	 * This just stops the shoutcast server
 	 */
-	function stop() { 
+	public function stop() { 
 
+		$this->send_command('stop'); 
 		return true;
 
 	} // stop
@@ -379,6 +379,7 @@ class AmpacheShoutCast extends localplay_controller {
 	 */
 	public function next() { 
 
+		$this->send_command('next'); 
 		return true;
 
 	} // next
@@ -429,7 +430,8 @@ class AmpacheShoutCast extends localplay_controller {
         */
        public function random($onoff) {
 
-               return true;
+		$this->send_command('shuffle'); 
+		return true;
 
        } // random
 
@@ -450,7 +452,16 @@ class AmpacheShoutCast extends localplay_controller {
 	 */
 	public function get() { 
 
-		return array(); 
+		$songs = $this->get_playlist();
+
+		foreach ($songs as $key=>$file) { 
+			$data['id'] = $key; 
+			$data['raw'] = $file; 
+			$data['name'] = $file; 
+			$results[] = $data; 
+		}
+
+		return $results; 
 
 	} // get
 
@@ -511,10 +522,11 @@ class AmpacheShoutCast extends localplay_controller {
 
 		$string = implode("\n",$this->files); 
 		
-		$handle = fopen($this->playlist,"w"); 
+		$handle = fopen($this->playlist,'w'); 
 
 		if (!is_resource($handle)) { 
 			debug_event('Shoutcast','Unable to open ' . $this->playlist . ' for writing playlist file','1'); 
+			return false; 
 		} 
 
 		fwrite($handle,$string); 
@@ -525,6 +537,25 @@ class AmpacheShoutCast extends localplay_controller {
 	} // write_playlist
 
 	/**
+	 * get_playlist
+	 * This reads in the playlist and returns an array of filenames
+	 */
+	public function get_playlist() { 
+
+		$data = file_get_contents($this->playlist); 
+
+		if (!$data) {
+			debug_event('Shoutcast','Unable to open ' . $this->playlist . ' for reading or file empty','1'); 
+			return false; 
+		} 
+
+		$results = explode("\n",$data); 
+
+		return $results; 
+
+	} // get_playlist
+
+	/**
 	 * send_command
 	 * This is the single funciton that's used to send commands to the 
 	 * shoutcast server, one function makes it easier to ensure we've escaped our input
@@ -533,20 +564,40 @@ class AmpacheShoutCast extends localplay_controller {
 
 		// Just incase someone uses some crazy syntax
 		$command = strtolower($command); 
+		$pid = $this->get_pid(); 
+		if (!$pid) { return false; } 
 
 		switch ($command) { 
 			case 'hup': 
-				$pid = $this->get_pid(); 
-				if (!$pid) { return false; } 
 				$command = '/bin/kill -l HUP ' . escapeshellarg($pid); 
 				system($command,$return); 
-				debug_event('Shoutcast','Issued ' . $command . ' and received ' . $return,'3'); 
-				return true; 
+			break; 
+			case 'reload': 
+				$command = '/bin/kill -l USR1 ' . escapeshellarg($pid); 
+				system($command,$return); 
+			break; 
+			case 'next': 
+				$commend = '/bin/kill -l WINCH ' . escapeshellarg($pid); 
+				system($command,$return); 
+			break; 
+			case 'shuffle': 
+				$command = '/bin/kill -l USR2 ' . escapeshellarg($pid); 
+				system($command,$return); 
+			break; 
+			case 'stop': 
+				$command = '/bin/kill -l TERM ' . escapeshellarg($pid); 
+				system($command,$return); 
+			break; 
+			case 'start': 
+				$command = ''; 
+				system($command,$return); 
 			break; 
 			default: 
 				return false; 
 			break;  
 		} // end switch on the commands we allow
+				
+		debug_event('Shoutcat','Issued ' . $command . ' and received ' . $return,'3'); 
 
 		return false; 
 

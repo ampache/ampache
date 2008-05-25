@@ -44,7 +44,6 @@ class Catalog {
 	// Used in functions
 	private static $albums	= array();
 	private static $artists	= array();
-	private static $genres	= array(); //FIXME
 	private static $tags	= array();
 	private static $_art_albums = array(); 
 
@@ -331,15 +330,9 @@ class Catalog {
 		$data = Dba::fetch_row($db_results); 
 		$artists = $data['0']; 
 
-		$sql = "SELECT COUNT(DISTINCT(`genre`)) FROM `song` $catalog_search"; 
-		$db_results = Dba::query($sql); 
-		$data = Dba::fetch_row($db_results); 
-		$genres = $data['0']; 
-
 		$results['songs'] 	= $songs; 
 		$results['albums']	= $albums; 
 		$results['artists']	= $artists; 
-		$results['genres']	= $genres; 
 		$results['size']	= $size; 
 		$results['time']	= $time; 
 
@@ -1101,7 +1094,6 @@ class Catalog {
                 $new_song->track        = $results['track'];
                 $artist                 = $results['artist'];
                 $album                  = $results['album'];
-                $genre                  = $results['genre'];
 		$disk			= $results['disk'];
 
 		/* Clean up Old Vars */
@@ -1113,8 +1105,6 @@ class Catalog {
                 */
                 $new_song->artist       = self::check_artist($artist);
                 $new_song->f_artist     = $artist;
-                $new_song->genre        = self::check_genre($genre);
-                $new_song->f_genre      = $new_song->get_genre_name();
                 $new_song->album        = self::check_album($album,$new_song->year,$disk);
                 $new_song->f_album      = $album . " - " . $new_song->year;
                 $new_song->title        = self::check_title($new_song->title,$new_song->file);
@@ -1345,7 +1335,6 @@ class Catalog {
 			$song = unserialize($serialized_song);
 			$song->artist	= self::check_artist($song->artist); 
 			$song->album	= self::check_album($song->album,$song->year); 
-			$song->genre	= self::check_genre($song->genre); 
 			$song->file	= $root_path . "/play/index.php?song=" . $song->id;
 			$song->catalog	= $this->id;
 
@@ -1463,16 +1452,6 @@ class Catalog {
 
 		$results = array();
 
-		/* A'right let's check genre first */
-		$sql = "SELECT song.genre FROM song WHERE genre='" . $song->genre . "'";
-		$db_results = mysql_query($sql, dbh());
-
-		if (!mysql_num_rows($db_results)) { 
-			$sql = "DELETE FROM genre WHERE id='" . $song->genre . "'";
-			$db_results = mysql_query($sql, dbh());
-			$results['genre'] = true;
-		}
-
 		/* Now for the artist */
 		$sql = "SELECT song.artist FROM song WHERE artist='" . $song->artist . "'";
 		$db_results = mysql_query($sql, dbh());
@@ -1496,18 +1475,6 @@ class Catalog {
 		return $results;
 
 	} // clean_single_song
-
-	/**
-	 * clean_genres
-	 * This functions cleans up unused genres
-	 */
-	public static function clean_genres() { 
-
-                /* Do a complex delete to get albums where there are no songs */
-                $sql = "DELETE FROM genre USING genre LEFT JOIN song ON song.genre = genre.id WHERE song.id IS NULL";
-                $db_results = Dba::query($sql);
-
-	} // clean_genres
 
 	/**
 	 * clean_tags
@@ -1651,20 +1618,12 @@ class Catalog {
 		$sql = "DELETE FROM object_count USING object_count LEFT JOIN artist ON artist.id=object_count.object_id WHERE object_type='artist' AND artist.id IS NULL";
 		$db_results = Dba::query($sql);
 
-		// Delete genre stat information 
-		$sql = "DELETE FROM object_count USING object_count LEFT JOIN genre ON genre.id=object_count.object_id WHERE object_type='genre' AND genre.id IS NULL";
-		$db_results = Dba::query($sql); 
-
 		// Delete the live_stream stat information
 		$sql = "DELETE FROM object_count USING object_count LEFT JOIN live_stream ON live_stream.id=object_count.object_id WHERE object_type='live_stream' AND live_stream.id IS NULL";
 		$db_results = Dba::query($sql); 
 
 		// Delete Song Ratings information
 		$sql = "DELETE FROM rating USING rating LEFT JOIN song ON song.id=rating.object_id WHERE object_type='song' AND song.id IS NULL"; 
-		$db_results = Dba::query($sql); 
-
-		// Delete Genre Ratings Information
-		$sql = "DELETE FROM rating USING rating LEFT JOIN genre ON genre.id=rating.object_id WHERE object_type='genre' AND genre.id IS NULL"; 
 		$db_results = Dba::query($sql); 
 
 		// Delete Album Rating Information
@@ -1786,7 +1745,6 @@ class Catalog {
 
 		self::clean_albums(); 
 		self::clean_artists(); 
-		self::clean_genres(); 
 		self::clean_flagged(); 
 		self::clean_stats(); 
 		self::clean_ext_info(); 
@@ -1805,12 +1763,12 @@ class Catalog {
 	 public static function optimize_tables() { 
 
 		$sql = "OPTIMIZE TABLE `song_data`,`song`,`rating`,`catalog`,`session`,`object_count`,`album`,`album_data`" . 
-			",`artist`,`ip_history`,`genre`,`flagged`,`now_playing`,`user_preference`,`tags`,`tag_map`,`tmp_playlist`" . 
+			",`artist`,`ip_history`,`flagged`,`now_playing`,`user_preference`,`tag`,`tag_map`,`tmp_playlist`" . 
 			",`tmp_playlist_data`,`playlist`,`playlist_data`"; 
 		$db_results = Dba::query($sql); 
 
                 $sql = "ANALYZE TABLE `song_data`,`song`,`rating`,`catalog`,`session`,`object_count`,`album`,`album_data`" .
-		        ",`artist`,`ip_history`,`genre`,`flagged`,`now_playing`,`user_preference`,`tags`,`tag_map`,`tmp_playlist`" .
+		        ",`artist`,`ip_history`,`flagged`,`now_playing`,`user_preference`,`tag`,`tag_map`,`tmp_playlist`" .
 			",`tmp_playlist_data`,`playlist`,`playlist_data`";
 		$db_results = Dba::query($sql); 		
 
@@ -1823,9 +1781,6 @@ class Catalog {
 	 */
 	public static function check_artist($artist,$readonly='') {
 
-		// Only get the var ones.. less func calls
-		$cache_limit = Config::get('artist_cache_limit');
-
 		/* Clean up the artist */
 		$artist = trim($artist);
 		$artist = Dba::escape($artist);
@@ -1837,7 +1792,8 @@ class Catalog {
 		}
 
 		// Remove the prefix so we can sort it correctly
-		preg_match("/^(The\s|An\s|A\s|Die\s|Das\s|Ein\s|Eine\s)(.*)/i",$artist,$matches);
+		$prefix_pattern = '/^(' . implode('\\s|',explode('|',Config::get('catalog_prefix_pattern'))) . '\\s)(.*)/i'; 
+		preg_match($prefix_pattern,$artist,$matches);
 
 		if (count($matches)) {
 			$artist = $matches[2];
@@ -1881,18 +1837,9 @@ class Catalog {
 			return false; 
 		} 
 
-		if ($cache_limit) {
-
-			$artist_count = count($this->artists);
-			if ($artist_count == $cache_limit) {
-				self::$artists = array_slice(self::$artists,3);
-			}
-			debug_event('cache',"Adding $artist with $artist_id to Cache",'5','ampache-catalog'); 
-			$array = array($artist => $artist_id);
-			self::$artists = array_merge(self::$artists, $array);
-			unset($array);
-
-		} // if cache limit is on..
+		$array = array($artist => $artist_id);
+		self::$artists = array_merge(self::$artists, $array);
+		unset($array);
 
 		return $artist_id;
 
@@ -1910,9 +1857,6 @@ class Catalog {
 		$album_year = intval($album_year);
 		$album_disk = intval($disk);
 
-		// Set it once to reduce function calls
-		$cache_limit = Config::get('album_cache_limit');
-
 		/* Ohh no the album has lost it's mojo */
 		if (!$album) {
 			$album = _('Unknown (Orphaned)');
@@ -1920,7 +1864,9 @@ class Catalog {
 		}
 
 		// Remove the prefix so we can sort it correctly
-		preg_match("/^(The\s|An\s|A\s|Die\s|Das\s|Ein\s|Eine\s)(.*)/i",$album,$matches);
+		$prefix_pattern = '/^(' . implode('\\s|',explode('|',Config::get('catalog_prefix_pattern'))) . '\\s)(.*)/i'; 
+debug_event('prefix',$prefix_pattern,'3'); 
+		preg_match($prefix_pattern,$album,$matches);
 
 		if (count($matches)) {
 			$album = $matches[2];
@@ -1973,57 +1919,13 @@ class Catalog {
 			return false; 
 		} 
 
-                if ($cache_limit > 0) {
-
-                        $albums_count = count(self::$albums);
-
-                        if ($albums_count == $cache_limit) {
-        	                self::$albums = array_slice(self::$albums,3);
-                        }
-			$array = array($album => $album_id);
-			self::$albums = array_merge(self::$albums,$array);	               
-			unset($array);
-
-                } // if cache limit is on..
+		$array = array($album => $album_id);
+		self::$albums = array_merge(self::$albums,$array);	               
+		unset($array);
 
 		return $album_id;
 
 	} // check_album
-
-	/**
-	 * check_genre
-	 * Finds the Genre_id from the text name
-	 */
-	public static function check_genre($genre) {
-	
-		/* If a genre isn't specified force one */
-		if (strlen(trim($genre)) < 1) {
-			$genre = _('Unknown (Orphaned)');
-		}
-
-		if (self::$genres[$genre]) {
-			return self::$genres[$genre];
-		}
-
-		/* Look in the genre table */
-		$genre = Dba::escape($genre);
-		$sql = "SELECT `id` FROM `genre` WHERE `name` = '$genre'";	
-		$db_results = Dba::query($sql);
-
-		$results = Dba::fetch_assoc($db_results);
-
-		if (!$results['id']) { 
-			$sql = "INSERT INTO `genre` (`name`) VALUES ('$genre')";
-			$db_results = Dba::query($sql);
-			$insert_id = Dba::insert_id();
-		}
-		else { $insert_id = $results['id']; }
-
-		self::$genres[$genre] = $insert_id;
-
-		return $insert_id;
-
-	} // check_genre
 
 	/**
 	 * check_tag
@@ -2074,8 +1976,7 @@ class Catalog {
 	public static function check_title($title,$file=0) {
 
 		if (strlen(trim($title)) < 1) {
-			preg_match("/.+\/(.*)\.....?$/",$file,$matches);
-			$title = Dba::escape($matches[1]);
+			$title = Dba::escape($file);
 		}
 
 		return $title;
@@ -2102,7 +2003,6 @@ class Catalog {
 		$title 		= Dba::escape($results['title']);
 		$artist 	= $results['artist'];
 		$album 		= $results['album'];
-		$genre 		= $results['genre'];
 		$bitrate 	= $results['bitrate'];
 		$rate	 	= $results['rate'];
 		$mode 		= $results['mode'];
@@ -2112,6 +2012,7 @@ class Catalog {
 		$disk	 	= $results['disk'];
 		$year		= $results['year'];
 		$comment	= $results['comment'];
+		$tag		= $results['genre']; 
 		$current_time 	= time();
 		$lyrics 	= ' ';
 
@@ -2120,13 +2021,12 @@ class Catalog {
 		 * If found then add & return id, else return id
 		 */
 		$artist_id	= self::check_artist($artist);
-		$genre_id	= self::check_genre($genre);
 		$album_id	= self::check_album($album,$year,$disk);
 		$title		= self::check_title($title,$file);
 		$add_file	= Dba::escape($file);
 
-		$sql = "INSERT INTO `song` (file,catalog,album,artist,title,bitrate,rate,mode,size,time,track,genre,addition_time,year)" .
-			" VALUES ('$add_file','$this->id','$album_id','$artist_id','$title','$bitrate','$rate','$mode','$size','$song_time','$track','$genre_id','$current_time','$year')";
+		$sql = "INSERT INTO `song` (file,catalog,album,artist,title,bitrate,rate,mode,size,time,track,addition_time,year)" .
+			" VALUES ('$add_file','$this->id','$album_id','$artist_id','$title','$bitrate','$rate','$mode','$size','$song_time','$track','$current_time','$year')";
 		$db_results = Dba::query($sql);
 
 		if (!$db_results) { 
@@ -2136,7 +2036,7 @@ class Catalog {
 			
 		$song_id = Dba::insert_id(); 
 
-		self::check_tag($genre,$song_id); 
+		self::check_tag($tag,$song_id); 
 
 		/* Add the EXT information */
 		$sql = "INSERT INTO `song_data` (`song_id`,`comment`,`lyrics`) " . 
@@ -2162,8 +2062,8 @@ class Catalog {
 		$title		= Dba::escape($title);
 		$current_time	= time();	
 		
-		$sql = "INSERT INTO song (file,catalog,album,artist,title,bitrate,rate,mode,size,time,track,genre,addition_time,year)" .
-			" VALUES ('$url','$song->catalog','$song->album','$song->artist','$title','$song->bitrate','$song->rate','$song->mode','$song->size','$song->time','$song->track','$song->genre','$current_time','$song->year')";
+		$sql = "INSERT INTO song (file,catalog,album,artist,title,bitrate,rate,mode,size,time,track,addition_time,year)" .
+			" VALUES ('$url','$song->catalog','$song->album','$song->artist','$title','$song->bitrate','$song->rate','$song->mode','$song->size','$song->time','$song->track','$current_time','$song->year')";
 		$db_results = Dba::query($sql); 
 
 		if (!$db_results) { 
@@ -2200,11 +2100,10 @@ class Catalog {
 	 */
 	public function check_local_mp3($full_file, $gather_type='') {
 
-		if ($gather_type == 'fast_add') {
-			$file_date = filemtime($full_file);
-			if ($file_date < $this->last_add) {
-				return true;
-			}
+		$file_date = filemtime($full_file);
+		if ($file_date < $this->last_add) {
+			debug_event('Check','Skipping ' . $full_file . ' File modify time before last add run','3'); 
+			return true;
 		}
 
 		$full_file = Dba::escape($full_file);
@@ -2217,7 +2116,7 @@ class Catalog {
 			return true;
 		}
 
-	return false;
+		return false;
 
 	} //check_local_mp3
 
@@ -2410,7 +2309,7 @@ class Catalog {
 					$xml['dict']['Name'] = $song->title;
 					$xml['dict']['Artist'] = $song->f_artist_full;
 					$xml['dict']['Album'] = $song->f_album_full;
-					$xml['dict']['Genre'] = $song->f_genre;
+					$xml['dict']['Genre'] = $song->f_genre; // FIXME
 					$xml['dict']['Total Time'] = intval($song->time) * 1000; // iTunes uses milliseconds
 					$xml['dict']['Track Number'] = intval($song->track);
 					$xml['dict']['Year'] = intval($song->year);

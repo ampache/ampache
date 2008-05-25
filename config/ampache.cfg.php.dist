@@ -93,6 +93,12 @@ auth_methods = "mysql"
 ; DEFAULT: mp3|mpc|m4p|m4a|mp4|aac|ogg|rm|wma|asf|flac|spx|ra|ape|shn|wv
 catalog_file_pattern = "mp3|mpc|m4p|m4a|mp4|aac|ogg|rm|wma|asf|flac|spx|ra|ape|shn|wv"
 
+; Prefix Pattern
+; This defines which prefix Ampache will ignore when importing tags from
+; your music. You may add any prefix you want seperating them with a |
+; DEFAULT: The|An|A|Die|Das|Ein|Eine|Les|Le|La
+catalog_prefix_pattern = "The|An|A|Die|Das|Ein|Eine|Les|Le|La"
+
 ; Use Access List 
 ; Toggle this on if you want ampache to pay attention to the access list
 ; and only allow streaming/downloading/xml-rpc from known hosts xml-rpc 

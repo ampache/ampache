@@ -243,6 +243,16 @@ return array();
 	} // get_man_tags
 
 	/**
+	 * get_top_tags
+	 * This gets the top tags for the specified object using limit
+	 */
+	public static function get_top_tags($type,$object_id,$limit='2') { 
+
+
+
+	} // get_top_tags
+
+	/**
 	 * get_object_tags
 	 * Display all tags that apply to maching target type of the specified id
 	 */

@@ -34,7 +34,6 @@ class Song extends database_object {
 	public $size;
 	public $time;
 	public $track;
-	public $genre; // genre.id (Int)
 	public $type;
 	public $mime;
 	public $played;
@@ -83,7 +82,7 @@ class Song extends database_object {
 	  
 		// Song data cache
 		$sql = "SELECT song.id,file,catalog,album,year,artist,".
-				"title,bitrate,rate,mode,size,time,track,genre,played,song.enabled,update_time,".
+				"title,bitrate,rate,mode,size,time,track,played,song.enabled,update_time,".
 				"addition_time FROM `song` WHERE `song`.`id` IN
 				$idlist";
 		$db_results = Dba::query($sql);
@@ -116,7 +115,7 @@ class Song extends database_object {
 
 		/* Grab the basic information from the catalog and return it */
 		$sql = "SELECT song.id,file,catalog,album,year,artist,".
-			"title,bitrate,rate,mode,size,time,track,genre,played,song.enabled,update_time,".
+			"title,bitrate,rate,mode,size,time,track,played,song.enabled,update_time,".
 			"addition_time FROM `song` WHERE `song`.`id` = '$id'";
 		$db_results = Dba::query($sql);
 
@@ -248,19 +247,6 @@ class Song extends database_object {
 	} // get_album_name
 
 	/**
-	 * get_genre_name
-	 * gets the name of the genre, allow passing of a specified
-	 * id
-	 */
-	public function get_genre_name($genre_id=0) {
-
-		if (!$genre_id) { $genre_id = $this->genre; } 
-		$genre = new Genre($genre_id);
-		return $genre->name;
-	
-	} // get_genre_name
-
-	/**
 	 * has_flag
 	 * This just returns true or false depending on if this song is flagged for something
 	 * We don't care what so we limit the SELECT to 1
@@ -363,21 +349,6 @@ class Song extends database_object {
 				break;
 				case 'artist':
 				case 'album':
-				case 'genre':
-					if ($value != $this->$key) {
-						if ($value == -1) {
-							// Add new data
-							$fn = "check_$key";
-							$value = Catalog::$fn($data["{$key}_name"]);
-						}
-						if ($value) {
-							$fn = "update_$key";
-							self::$fn($value, $this->id);
-							$this->$key = $value;
-							$updated = 1;
-						}
-					}
-				break;
 				default: 
 					// Rien a faire
 				break;
@@ -410,7 +381,6 @@ class Song extends database_object {
 		$time		= Dba::escape($new_song->time); 
 		$track		= Dba::escape($new_song->track); 
 		$artist		= Dba::escape($new_song->artist); 
-		$genre		= Dba::escape($new_song->genre); 
 		$album		= Dba::escape($new_song->album); 
 		$year		= Dba::escape($new_song->year); 
 		$song_id	= Dba::escape($song_id); 
@@ -419,7 +389,7 @@ class Song extends database_object {
 
 		$sql = "UPDATE `song` SET `album`='$album', `year`='$year', `artist`='$artist', " . 
 			"`title`='$title', `bitrate`='$bitrate', `rate`='$rate', `mode`='$mode', " . 
-			"`size`='$size', `time`='$time', `track`='$track', `genre`='$genre', " . 
+			"`size`='$size', `time`='$time', `track`='$track', " . 
 			"`update_time`='$update_time' WHERE `id`='$song_id'"; 
 		$db_results = Dba::query($sql); 
 		
@@ -555,16 +525,6 @@ class Song extends database_object {
 	} // update_artist
 
 	/**
-	 * update_genre
-	 * updates the genre field
-	 */
-	public static function update_genre($new_genre,$song_id) { 
-
-		self::_update_item('genre',$new_genre,$song_id,'50');
-
-	} // update_genre
-
-	/**
 	 * update_album
 	 * updates the album field
 	 */
@@ -682,10 +642,6 @@ class Song extends database_object {
 		// Format the Bitrate
 		$this->f_bitrate = intval($this->bitrate/1000) . "-" . strtoupper($this->mode);
 
-		// Format Genre
-		$this->f_genre = $this->get_genre_name(); 
-		$this->f_genre_link = "<a href=\"" . Config::get('web_path') . "/genre.php?action=show_genre&amp;genre_id=" . $this->genre . "\">$this->f_genre</a>"; 
-
 		// Format the Time
 		$min = floor($this->time/60);
 		$sec = sprintf("%02d", ($this->time%60) );
@@ -693,6 +649,10 @@ class Song extends database_object {
 
 		// Format the track (there isn't really anything to do here)
 		$this->f_track = $this->track; 
+
+		// Get the top tags
+		$tags = Tag::get_top_tags('song',$this->id); 
+		$this->f_tags = implode(', ',$tags); 
 
 		// Format the size
 		$this->f_size = sprintf("%.2f",($this->size/1048576));
@@ -722,14 +682,13 @@ class Song extends database_object {
 	        /* Create the filename that this file should have */
 	        $album  = $this->f_album_full;
 	        $artist = $this->f_artist_full;
-	        $genre  = $this->f_genre;
 	        $track  = $this->track;
 	        $title  = $this->title;
 	        $year   = $this->year;
 
 	        /* Start replacing stuff */
-	        $replace_array = array('%a','%A','%t','%T','%y','%g','/','\\');
-	        $content_array = array($artist,$album,$title,$track,$year,$genre,'-','-');
+	        $replace_array = array('%a','%A','%t','%T','%y','/','\\');
+	        $content_array = array($artist,$album,$title,$track,$year,'-','-');
 
 	        $rename_pattern = str_replace($replace_array,$content_array,$catalog->rename_pattern);
 	
@@ -787,9 +746,6 @@ class Song extends database_object {
 		}
 		if (!strlen($results[$key]['artist'])) { 
 			$results[$key]['artist']	= $this->get_info_from_filename($filename,$pattern,"%a");
-		}
-		if (!strlen($results[$key]['genre'])) { 
-			$results[$key]['genre']		= $this->get_info_from_filename($filename,$pattern,"%g");
 		}
 
 		return $results;
@@ -957,54 +913,5 @@ class Song extends database_object {
 		
 	} // end stream_cmd
 
-        /**
-         * get_sql_from_match
-         * This is specificly for browsing it takes the match and returns the sql call that we want to use
-         * @package Song
-         * @catagory Class
-         */
-        function get_sql_from_match($match) {
-
-                switch ($match) {
-			case 'Show_all':
-                        case 'Show_All':
-                        case 'show_all':
-                                $sql = "SELECT id FROM song";
-                        break;
-                        case 'Browse':
-                        case 'show_genres':
-                                $sql = "SELECT id FROM song";
-                        break;
-                        default:
-                                $sql = "SELECT id FROM song WHERE title LIKE '" . sql_escape($match) . "%'";
-                        break;
-                } // end switch on match
-
-                return $sql;
-
-        } // get_sql_from_match
-
-        /**
-         * get_genres
-         * this returns an array of songs based on a sql statement that's passed
-         * @package songs
-         * @catagory Class
-         */
-        function get_songs($sql) {
-
-                $db_results = mysql_query($sql, dbh());
-
-                $results = array();
-
-                while ($r = mysql_fetch_assoc($db_results)) {
-                        $results[] = $r['id'];
-                }
-
-                return $results;
-
-        } // get_genres
-
-
 } // end of song class
-
 ?>
