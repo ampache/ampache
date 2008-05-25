@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2007 Ampache.org
+ Copyright (c) Ampache.org
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
@@ -25,7 +25,7 @@ ${$class_name} = ' active';
 
 // List of buttons ( id, title, icon, access level)
 $sidebar_items[] = array('id'=>'home', 'title'=>_('Home'), 'icon'=>'home', 'access'=>5);
-$sidebar_items[] = array('id'=>'browse', 'title'=>_('Browse'), 'icon'=>'browse', 'access'=>5);
+//$sidebar_items[] = array('id'=>'browse', 'title'=>_('Browse'), 'icon'=>'browse', 'access'=>5);
 $sidebar_items[] = array('id'=>'localplay', 'title'=>_('Localplay'), 'icon'=>'volumeup', 'access'=>5);
 $sidebar_items[] = array('id'=>'preferences', 'title'=>_('Preferences'), 'icon'=>'edit', 'access'=>5);
 $sidebar_items[] = array('id'=>'admin', 'title'=>_('Admin'), 'icon'=>'admin', 'access'=>100);
@@ -58,9 +58,6 @@ $ajax_url = Config::get('ajax_url');
      }
 	}
 ?>
-<!-- <li <?php echo $sidebar_player; ?> onclick="ajaxPut('<?php echo $ajax_url; ?>?action=sidebar&button=player');" >
-</li>
--->
 <li id="sb_tab_logout" class="sb1">
 	<a href="<?php echo Config::get('web_path'); ?>/logout.php" id="sidebar_logout" >
 	<?php echo get_user_icon('logout',_('Logout')); ?>

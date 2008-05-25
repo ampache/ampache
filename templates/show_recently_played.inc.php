@@ -21,7 +21,6 @@
 
 /* Define the time places starting at 0 */
 $time_unit = array('',_('seconds ago'),_('minutes ago'),_('hours ago'),_('days ago'),_('weeks ago'),_('months ago'),_('years ago')); 
-
 ?>
 <table class="tabledata" cellpadding="0" cellspacing="0">
 <colgroup>
@@ -87,6 +86,11 @@ $time_unit = array('',_('seconds ago'),_('minutes ago'),_('hours ago'),_('days a
 		</a>
 	</td>
 	<td class="cel_lastplayed"><?php echo $time_string; ?></td>
+</tr>
+<?php } ?>
+<?php if (!count($data)) { ?>
+<tr>
+	<td colspan="6"><span class="fatalerror"><?php echo _('Not Enough Data'); ?></span></td>
 </tr>
 <?php } ?>
 <tr class="th-bottom">

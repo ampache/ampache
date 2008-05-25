@@ -48,6 +48,5 @@ if (Config::get('ratings')) {
 	Browse::set_type('album'); 
 	Browse::set_static_content(1); 
 	Browse::save_objects($albums); 
-	$taglist = Tag::get_many_tags('album', $object_ids);
 	Browse::show_objects(); 
 ?>

@@ -25,18 +25,12 @@
 <td class="cel_song"><?php echo $song->f_link; ?></td>
 <td class="cel_artist"><?php echo $song->f_artist_link; ?></td>
 <td class="cel_album"><?php echo $song->f_album_link; ?></td>
-<td class="cel_genre"><?php echo $song->f_genre_link; ?></td>
+<td class="cel_tags"></td>
 <td class="cel_track"><?php echo $song->f_track; ?></td>
 <td class="cel_time"><?php echo $song->f_time; ?></td>
 <?php if (Config::get('ratings')) { ?>
 <td class="cel_rating" id="rating_<?php echo $song->id; ?>_song"><?php Rating::show($song->id,'song'); ?></td>
 <?php } ?>
-<td class="cel_tags"><?php
-global $tag_cache;
-$tags = $tag_cache[intval($song->id)]; //TagCloud::get_tags('song', array($song->id));
-foreach($tags as $i)
-  echo $i['name'] . ' ';
-?></td>
 <td class="cel_action">
 	<?php if (Config::get('shoutbox')) { ?>
                 <a href="<?php echo Config::get('web_path'); ?>/shout.php?action=show_add_shout&amp;type=song&amp;id=<?php echo $song->id; ?>">

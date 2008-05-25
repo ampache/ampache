@@ -1,6 +1,6 @@
 <?php
 /*
- Copyright (c) 2001 - 2007 Ampache.org
+ Copyright (c) Ampache.org
  All Rights Reserved
 
  This program is free software; you can redistribute it and/or
@@ -45,7 +45,7 @@ function focus(){ document.login.username.focus(); }
 <div id="maincontainer">
 	<div id="header"><!-- This is the header -->
 		<h1 id="headerlogo">
-		  <a href="http://www.ampache.org">
+		  <a href="<?php echo Config::get('web_path'); ?>/login.php">
 		    <img src="<?php echo Config::get('web_path'); ?><?php echo Config::get('theme_path'); ?>/images/ampache.png" title="<?php echo Config::get('site_title'); ?>" alt="<?php echo Config::get('site_title'); ?>" />
 		  </a>
     </h1>

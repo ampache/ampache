@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2007 Ampache.org
+ Copyright (c) Ampache.org
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
@@ -30,57 +30,56 @@ if ($album->disk)
 $title		= scrub_out($album->name) . '&nbsp;(' . $album->year . ')' . $disk .'&nbsp;-&nbsp;' . $album->f_artist_link;
 ?>
 <?php show_box_top($title,'info-box'); ?>
-	<div class="album_art">
+<div class="album_art">
 	<?php 
-    if ($album_name != _('Unknown (Orphaned)')) {
+	if ($album_name != _('Unknown (Orphaned)')) {
         $name = '[' . $album->f_artist . '] ' . scrub_out($album->full_name);  
 
 		    $aa_url = $web_path . "/image.php?id=" . $album->id . "&amp;type=popup&amp;sid=" . session_id();
 		    echo "<a target=\"_blank\" href=\"$aa_url\" onclick=\"popup_art('$aa_url'); return false;\">";
 		    echo "<img src=\"" . $web_path . "/image.php?id=" . $album->id . "&amp;thumb=2\" alt=\"".$name."\" title=\"".$name."\" height=\"128\" width=\"128\" />";
 		    echo "</a>\n";
-    }
+	}
 	?>
-	</div>
-	<div style="display:table-cell;" id="rating_<?php echo $album->id; ?>_album">
-			<?php Rating::show($album->id,'album'); ?>
-	</div>
-	<div id="information_actions">
-	
-	
-	<h3><?php echo _('Actions'); ?>:</h3>
-	<ul>
-	<li>Tags:
-	<?php
-	$tags = Tag::get_object_tags('album',$album->id);
-	foreach($tags as $i)
-	  echo ($i['name']) . ' ';
-	?>
+</div>
+<div style="display:table-cell;" id="rating_<?php echo $album->id; ?>_album">
+		<?php Rating::show($album->id,'album'); ?>
+</div>
+<div id="information_actions">
+<h3><?php echo _('Actions'); ?>:</h3>
+<ul>
+	<li>
+		<?php echo Ajax::button('?action=basket&type=album&id=' . $album->id,'add',_('Add'),'play_full_' . $album->id); ?> 
+		<?php echo _('Add Album'); ?>
 	</li>
 	<li>
-	<form type=POST action=coin>
-<?php
-echo Ajax::text('?page=tag&action=add&type=album&id=' . $album->id . "&val='+document.getElementById('tagname').value+'", _("Add tag"), 'tag_album');
-?>
-<input type="text" size="10" maxlength="10"  id="tagname"></input></form>
-</li>
-	<li><?php echo Ajax::text('?action=basket&type=album&id=' . $album->id,_('Add Album'),'play_full_' . $album->id); ?></li>
-	<li><?php echo Ajax::text('?action=basket&type=album_random&id=' . $album->id,_('Add Random from Album'),'play_random_' . $album->id); ?></li>
-	<?php if ($GLOBALS['user']->has_access('75')) { ?>
-	<li><a href="<?php echo $web_path; ?>/albums.php?action=clear_art&amp;album_id=<?php echo $album->id; ?>"><?php echo _('Reset Album Art'); ?></a></li>
+		<?php echo Ajax::button('?action=basket&type=album_random&id=' . $album->id,'random',_('Random'),'play_random_' . $album->id); ?>
+		<?php echo _('Add Random from Album'); ?>
+	</li>
+	<?php if (Access::check('interface','75')) { ?>
+	<li>
+		<a href="<?php echo $web_path; ?>/albums.php?action=clear_art&amp;album_id=<?php echo $album->id; ?>"><?php echo get_user_icon('delete'); ?></a>
+		<?php echo _('Reset Album Art'); ?>
+	</li>
 	<?php } ?>
-	<li><a href="<?php echo $web_path; ?>/albums.php?action=find_art&amp;album_id=<?php echo $album->id; ?>"><?php echo _('Find Album Art'); ?></a></li>
-	<?php  if (($GLOBALS['user']->has_access('75')) || (!Config::get('use_auth'))) { ?>
-	<li><a href="<?php echo $web_path; ?>/albums.php?action=update_from_tags&amp;album_id=<?php echo $album->id; ?>"><?php echo _('Update from tags'); ?></a></li>
+	<li>
+		<a href="<?php echo $web_path; ?>/albums.php?action=find_art&amp;album_id=<?php echo $album->id; ?>"><?php echo get_user_icon('view'); ?></a>
+		<?php echo _('Find Album Art'); ?>
+	</li>
+	<?php  if ((Access::check('interface','50'))) { ?>
+	<li>
+		<a href="<?php echo $web_path; ?>/albums.php?action=update_from_tags&amp;album_id=<?php echo $album->id; ?>"><?php echo get_user_icon('cog'); ?></a>
+		<?php echo _('Update from tags'); ?>
+	</li>
 	<?php  } ?>
 	<?php if (Access::check_function('batch_download')) { ?>
-	<li><a href="<?php echo $web_path; ?>/batch.php?action=album&amp;id=<?php echo $album->id; ?>"><?php echo _('Download'); ?></a></li>
+	<li>
+		<a href="<?php echo $web_path; ?>/batch.php?action=album&amp;id=<?php echo $album->id; ?>"><?php echo get_user_icon('batch_download'); ?></a>
+		<?php echo _('Download'); ?>
+	</li>
 	<?php } ?>
-	<?php if (Plugin::is_installed('OpenStrands')) { ?>
-	<li><?php echo Ajax::text('?page=stats&action=show_check_album_tracks&id=' . $album->id,_('Find Missing Tracks'),'album_missing_tracks'); ?></li>
-	<?php } ?>
-	</ul>
-  </div>
+</ul>
+</div>
 <?php show_box_bottom(); ?>
 <div id="additional_information">
 &nbsp;
