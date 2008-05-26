@@ -33,7 +33,7 @@
         	<?php echo get_user_icon('batch_download','',_('Batch Download')); ?>
         </a>
 <?php } ?>
-<?php if ($GLOBALS['user']->has_access(50)) { ?>
+<?php if (Access::check('interface','50')) { ?>
 	<?php echo Ajax::button('?action=show_edit_object&type=artist&id=' . $artist->id,'edit',_('Edit'),'edit_artist_' . $artist->id); ?>
 <?php } ?>
 </td>

@@ -40,6 +40,9 @@ $web_path = Config::get('web_path');
 	<th class="cel_action"> <?php echo _('Action'); ?> </th>
 </tr>
 <?php 
+// Cache the ratings we are going to use
+if (Config::get('ratings')) { Rating::build_cache('artist',$object_ids); } 
+
 /* Foreach through every artist that has been passed to us */
 foreach ($object_ids as $artist_id) { 
 		$artist = new Artist($artist_id); 

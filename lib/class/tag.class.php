@@ -110,7 +110,37 @@ class Tag extends database_object {
 			parent::add_to_cache('tag',$row['id'],$row); 
 		} 
 
+		return true; 
+
 	} // build_cache
+
+	/**
+	 * build_map_cache
+	 * This builds a cache of the mappings for the specified object, no limit is given
+	 */
+	public static function build_map_cache($type,$ids) { 
+
+                $type = self::validate_type($type);
+                $idlist = '(' . implode(',',$ids) . ')'; 
+
+                $sql = "SELECT COUNT(`tag_map`.`id`) AS `count`,`tag`.`id`,`tag_map`.`object_id` FROM `tag_map` " .
+                        "INNER JOIN `tag` ON `tag`.`id`=`tag_map`.`tag_id` " .
+                        "WHERE `tag_map`.`object_type`='$type' AND `tag_map`.`object_id` IN $idlist " .
+                        "GROUP BY `tag_map`.`object_id` ORDER BY `count` DESC";
+		$db_results = Dba::query($sql); 
+
+		while ($row = Dba::fetch_assoc($db_results)) { 
+			$tags[$row['object_id']][] = $row; 
+		} 
+
+	
+		foreach ($tags as $id=>$entry) { 	
+			parent::add_to_cache('tag_map_' . $type,$id,$entry); 
+		} 
+
+		return true; 
+
+	} // build_map_cache
 
 	/**
 	 * has_object
@@ -249,13 +279,18 @@ return array();
 	public static function get_top_tags($type,$object_id,$limit='2') { 
 
 		$type = self::validate_type($type); 
+
+		if (parent::is_cached('tag_map_' . $type,$object_id)) { 
+			return parent::get_from_cache('tag_map_' . $type,$object_id); 
+		} 
+
 		$object_id = intval($object_id); 
 		$limit = intval($limit); 
 
 		$sql = "SELECT COUNT(`tag_map`.`id`) AS `count`,`tag`.`id` FROM `tag_map` " . 
 			"INNER JOIN `tag` ON `tag`.`id`=`tag_map`.`tag_id` " . 
 			"WHERE `tag_map`.`object_type`='$type' AND `tag_map`.`object_id`='$object_id' " . 
-			"GROUP BY `tag_map`.`tag_id` ORDER BY `count` LIMIT $limit"; 
+			"GROUP BY `tag_map`.`object_id` ORDER BY `count` DESC LIMIT $limit"; 
 		$db_results = Dba::query($sql); 
 
 		$results = array(); 

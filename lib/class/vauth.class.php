@@ -88,6 +88,8 @@ class vauth {
 	 */
 	public static function write($key,$value) { 
 
+		if (NO_SESSION_UPDATE == '1') { return true; } 
+
 		$length		= Config::get('session_length'); 
 		$value		= Dba::escape($value); 
 		$key 		= Dba::escape($key); 

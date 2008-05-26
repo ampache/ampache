@@ -815,11 +815,6 @@ class Browse {
 			${$class_name} = new $class_name($id); 
 		} 
 		
-		if (!$ajax && Tag::validate_type($_SESSION['browse']['type'])) { 
-			$tagcloudList = Tag::get_many_tags($_SESSION['browse']['type'],  $all_ids);
-			require_once Config::get('prefix') . '/templates/show_tagcloud.inc.php'; 
-		}  
-		
 		Ajax::start_container('browse_content');
 		// Switch on the type of browsing we're doing
 		switch ($_SESSION['browse']['type']) { 

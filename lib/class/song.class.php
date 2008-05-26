@@ -98,6 +98,7 @@ class Song extends database_object {
 		Artist::build_cache($artists);
 		Album::build_cache($albums); 
 		Tag::build_cache($tags); 
+		Tag::build_map_cache('song',$song_ids); 
 
 		// Build a cache for the song's extended table
 		$sql = "SELECT * FROM `song_data` WHERE `song_id` IN $idlist"; 
@@ -669,6 +670,8 @@ class Song extends database_object {
 
 		// Get the top tags
 		$tags = Tag::get_top_tags('song',$this->id); 
+
+		$this->f_tags = ''; 
 		foreach ($tags as $tag_id) { 
 			$tag = new Tag($tag_id); 
 			$this->f_tags .= $tag->name . ', '; 
@@ -816,7 +819,11 @@ class Song extends database_object {
 		/* Account for retarded players */
 		if ($this->type == 'flac') { $type = 'ogg'; } 
 
-		$this->format();
+		// Only reformat if we need to 
+		if (!isset($this->f_title)) { 
+			$this->format();
+		} 
+
 		$song_name = rawurlencode($this->f_artist_full . " - " . $this->title . "." . $type);
 	
 		$web_path = Config::get('web_path');
