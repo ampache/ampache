@@ -4,6 +4,7 @@
 
 --------------------------------------------------------------------------
   v.3.5-Alpha1
+	- Remember Starts With value even if you switch tabs
 	- Fixed rating caching so it actually completely works now
 	- Removed redundent UPDATE on session table due to /util.php
 	- Added Batch Download to single Artist view
