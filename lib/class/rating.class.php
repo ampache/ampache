@@ -73,11 +73,30 @@ class Rating extends database_object {
 		$db_results = Dba::query($sql);
 
 		while ($row = Dba::fetch_assoc($db_results)) {
-			$results[$row['object_id']] = intval($row['rating']); 
+			$user[$row['object_id']] = $row['rating']; 
 		}
 		
+		$sql = "SELECT `rating`,`object_id` FROM `rating` WHERE `object_id` IN $idlist AND `object_type`='$type'"; 
+		$db_results = Dba::query($sql); 
+		
+		while ($row = Dba::fetch_assoc($db_results)) { 
+			$rating[$row['object_id']]['rating'] += $row['rating']; 
+			$rating[$row['object_id']]['total']++; 
+  		} 
+		
 		foreach ($ids as $id) { 
-			parent::add_to_cache('rating_' . $type . '_user',$id,intval($results[$id])); 
+			parent::add_to_cache('rating_' . $type . '_user',$id,intval($user[$id])); 
+
+			// Do the bit of math required to store this
+			if (!isset($rating[$id])) { 
+				$entry = array('average'=>'0','percise'=>'0'); 
+			} 
+			else { 
+				$average = round($rating[$id]['rating']/$rating[$id]['total'],1); 
+				$entry = array('average'=>floor($average),'percise'=>$average); 
+			} 
+				
+			parent::add_to_cache('rating_' . $type . '_all',$id,$entry); 
 		} 
 
 		return true; 
@@ -90,6 +109,8 @@ class Rating extends database_object {
 	 * in user. It returns the value
 	 */
 	 public function get_user($user_id) {
+		
+		$id = intval($this->id); 
 		
 		if (parent::is_cached('rating_' . $this->type . '_user',$id)) { 
 			return parent::get_from_cache('rating_' . $this->type . '_user',$id); 
@@ -117,7 +138,16 @@ class Rating extends database_object {
 	 */
 	public function get_average() { 
 
-		$sql = "SELECT `rating` FROM `rating` WHERE `object_id`='$this->id' AND `object_type`='$this->type'";
+		$id = intval($this->id); 
+
+		if (parent::is_cached('rating_' . $this->type . '_all',$id)) { 
+			$data = parent::get_from_cache('rating_' . $this->type . '_user',$id); 
+			$this->rating = $data['rating']; 
+			$this->perciserating = $data['percise']; 
+			return true; 
+		} 
+
+		$sql = "SELECT `rating` FROM `rating` WHERE `object_id`='$id' AND `object_type`='$this->type'";
 		$db_results = Dba::query($sql);
 
 		$i = 0;

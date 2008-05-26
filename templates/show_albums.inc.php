@@ -48,6 +48,9 @@ $ajax_url = Config::get('ajax_url');
 	<th class="cel_action"><?php echo _('Actions'); ?></th>
 </tr>
 <?php 
+	if (Config::get('ratings')) { 
+		Rating::build_cache('album',$object_ids); 
+	} 
 	/* Foreach through the albums */
 	foreach ($object_ids as $album_id) { 
 		$album = new Album($album_id); 

@@ -825,17 +825,14 @@ class Browse {
 		switch ($_SESSION['browse']['type']) { 
 			case 'song': 
 				show_box_top(_('Songs') . $match, $class); 
+				Song::build_cache($object_ids); 
 				require_once Config::get('prefix') . '/templates/show_songs.inc.php'; 
 				show_box_bottom(); 
 			break;
 			case 'album': 
 				show_box_top(_('Albums') . $match, $class); 
+				Album::build_cache($object_ids);
 				require_once Config::get('prefix') . '/templates/show_albums.inc.php';
-				show_box_bottom(); 
-			break;
-			case 'genre':
-				show_box_top(_('Genres') . $match, $class); 
-				require_once Config::get('prefix') . '/templates/show_genres.inc.php'; 
 				show_box_bottom(); 
 			break;
 			case 'user':
@@ -845,6 +842,7 @@ class Browse {
 			break;
 			case 'artist':
 				show_box_top(_('Artists') . $match, $class); 
+				Artist::build_cache($object_ids); 
 				require_once Config::get('prefix') . '/templates/show_artists.inc.php'; 
 				show_box_bottom(); 
 			break;
