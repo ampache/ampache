@@ -4,6 +4,7 @@
 
 --------------------------------------------------------------------------
   v.3.5-Alpha1
+	- Removed redundent UPDATE on session table due to /util.php
 	- Added Batch Download to single Artist view
 	- Added back in the direct links on songs, requires download set
 		to enabled as it's essentially the same thing except with

@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2007 ampache.org
+ Copyright (c) Ampache.org
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
@@ -18,6 +18,7 @@
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
+define('NO_SESSION','1'); 
 require_once 'lib/init.php';
 
 header("Expires: Tuesday, 27 Mar 1984 05:00:00 GMT");
@@ -25,12 +26,20 @@ header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
 header("Cache-Control: no-store, no-cache, must-revalidate");
 header("Pragma: no-cache");
 
+$session_name = Config::get('session_name'); 
+
+if (!vauth::session_exists('interface',$_COOKIE[$session_name])) { 
+	debug_event('Util','Invalid Session:' . $_COOKIE[$session_name] . 'for session ' . $session_name,'1'); 
+	exit; 
+} 
+
+$data = vauth::read($_COOKIE[$session_name]); 
 // This is a little bit of a special file, it takes the
 // content of $_SESSION['iframe']['target'] and does a header
 // redirect to that spot!
-if (isset($_SESSION['iframe']['target'])) { 
-	$target = $_SESSION['iframe']['target']; 
-	unset($_SESSION['iframe']['target']); 
+if (isset($data['iframe']['target'])) { 
+	$target = $data['iframe']['target']; 
+	unset($data['iframe']['target']); 
 	header("Location: " . $target); 
 } 
 ?>
