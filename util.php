@@ -34,12 +34,21 @@ if (!vauth::session_exists('interface',$_COOKIE[$session_name])) {
 } 
 
 $data = vauth::read($_COOKIE[$session_name]); 
+
+preg_match_all("/(\w+)\|(a\:[^\|]+;})/",$data,$matches); 
+
+foreach ($matches['1'] as $key=>$value) { 
+	if ($value == 'iframe') { 
+		$data = unserialize($matches['2'][$key]); 
+	}
+} 
+
 // This is a little bit of a special file, it takes the
 // content of $_SESSION['iframe']['target'] and does a header
 // redirect to that spot!
-if (isset($data['iframe']['target'])) { 
-	$target = $data['iframe']['target']; 
-	unset($data['iframe']['target']); 
+if (isset($data['target'])) { 
+	$target = $data['target']; 
+	unset($data['target']); 
 	header("Location: " . $target); 
 } 
 ?>
