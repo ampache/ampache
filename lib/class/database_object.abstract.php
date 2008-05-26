@@ -36,10 +36,10 @@ abstract class database_object {
 	 * this checks the cache to see if the specified object is there
 	 */
 	public static function is_cached($index,$id) { 
+		
+		$is_cached = isset(self::$object_cache[$index][$id]); 
 
-		$is_array = isset(self::$object_cache[$index][$id]); 
-
-		return $is_array; 
+		return $is_cached; 
 
 	} // is_cached
 

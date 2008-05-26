@@ -21,6 +21,9 @@
 ?>
 <td class="cel_add">
 	<?php echo Ajax::button('?action=basket&type=song&id=' . $song->id,'add',_('Add'),'add_' . $song->id); ?>
+	<?php if (Access::check_function('download')) { ?>
+		<a href="<?php echo $song->get_url(); ?>"><?php echo get_user_icon('link'); ?></a>
+	<?php } ?>
 </td>
 <td class="cel_song"><?php echo $song->f_link; ?></td>
 <td class="cel_artist"><?php echo $song->f_artist_link; ?></td>
@@ -37,7 +40,7 @@
                 <?php echo get_user_icon('comment',_('Post Shout')); ?>
                 </a>
 	<?php } ?>
-	<?php if (Config::get('download')) { ?>
+	<?php if (Access::check_function('download')) { ?>
 	<a href="<?php echo Config::get('web_path'); ?>/stream.php?action=download&amp;song_id=<?php echo $song->id; ?>">
 		<?php echo get_user_icon('download',_('Download')); ?>
 	</a>

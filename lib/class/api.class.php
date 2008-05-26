@@ -26,7 +26,7 @@
  */
 class Api { 
 
-	public static $version = '340001'; 
+	public static $version = '350001'; 
 	
 	/**
  	 * constructor
@@ -45,7 +45,12 @@ class Api {
 	 * can take a username, if non is passed the ACL must be non-use 
 	 * specific
 	 */
-	public static function handshake($timestamp,$passphrase,$ip,$username='') { 
+	public static function handshake($timestamp,$passphrase,$ip,$username='',$version) { 
+
+		if (intval($version) < self::$version) { 
+			debug_event('API','Login Failed version too old','1'); 
+			return false; 
+		} 			
 
 		// If the timestamp is over 2hr old sucks to be them
 		if ($timestamp < (time() - 14400)) { 
@@ -88,9 +93,7 @@ class Api {
 				$token = vauth::session_create($data); 
 
 				// Insert the token into the streamer
-				$stream = new Stream(); 
-				$stream->user_id = $client->id; 
-				$stream->insert_session($token); 
+				Stream::insert_session($token,$client->id); 
 				debug_event('API','Login Success, passphrase matched','1'); 
 
 				// We need to also get the 'last update' of the catalog information in an RFC 2822 Format
@@ -122,6 +125,7 @@ class Api {
 		} // end while
 
 		debug_event('API','Login Failed, unable to match passphrase','1'); 
+		return false; 
 
 	} // handhsake
 

@@ -141,10 +141,7 @@ class xmlRpcServer {
                         return new xmlrpcresp(0,'503','Key/IP Mis-match Access Denied');
                 }
 
-		$stream = new Stream(); 
-		$stream->user_id = '-1'; 
-
-		if (!$stream->insert_session($key)) { 
+		if (!Stream::insert_session($key,'-1')) { 
 			debug_event('XMLSERVER','Failed to create stream session','1'); 
 			return new xmlrpcresp(0,'503','Failed to Create Stream Session','1'); 
 		} 

@@ -39,6 +39,9 @@ class Stream {
 	// Generate once an object is constructed
 	public static $session; 
 
+	// Let's us tell if the session has been activated
+	private static $session_inserted; 
+
 	/**
 	 * Constructor for the stream class takes a type and an array
 	 * of song ids
@@ -69,7 +72,7 @@ class Stream {
 		}
 
 		// We're starting insert the session into session_stream
-		if (!$this->insert_session()) { 
+		if (!self::insert_session()) { 
 			debug_event('stream','Session Insertion failure, aborting','3'); 
 			return false; 
 		}
@@ -106,6 +109,10 @@ class Stream {
 	 */
 	public static function get_session() { 
 
+		if (!self::$session_inserted) { 
+			self::insert_session(self::$session);
+		} 
+
 		return self::$session; 
 
 	} // get_session
@@ -114,17 +121,20 @@ class Stream {
 	 * insert_session
 	 * This inserts a row into the session_stream table
 	 */
-	public function insert_session($sid='') { 
+	public static function insert_session($sid='',$uid='') { 
 
 		$sid = $sid ? Dba::escape($sid) : Dba::escape(self::$session); 
+		$uid = $uid ? Dba::escape($uid) : Dba::escape($GLOBALS['user']->id); 
 
 		$expire = time() + Config::get('stream_length'); 
 
 		$sql = "INSERT INTO `session_stream` (`id`,`expire`,`user`) " . 
-			"VALUES('$sid','$expire','$this->user_id')"; 
+			"VALUES('$sid','$expire','$uid')"; 
 		$db_results = Dba::query($sql); 
 
 		if (!$db_results) { return false; } 
+
+		self::$session_inserted = true; 
 
 		return true; 
 
@@ -678,7 +688,6 @@ class Stream {
 	        return true;
 
 	} // clear_now_playing
-
 
 	/**
 	 * auto_init

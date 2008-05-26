@@ -4,6 +4,14 @@
 
 --------------------------------------------------------------------------
   v.3.5-Alpha1
+	- Added Batch Download to single Artist view
+	- Added back in the direct links on songs, requires download set
+		to enabled as it's essentially the same thing except with
+		now playing information tied to it
+	- Bumped API Version to 350001 and require that a version is sent
+		with handshake to indicate the application will work
+	- Removed the MyStrands plugin as did not provide good data, and does
+		not appear to have been used
 	- Added Catalog Prefix config option used to determine which prefixes
 		should not be used for sorting
 	- Merged Browse Menu with Home

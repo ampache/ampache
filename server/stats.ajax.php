@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2007 Ampache.org
+ Copyright (c) Ampache.org
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
@@ -25,84 +25,6 @@
 if (AJAX_INCLUDE != '1') { exit; } 
 
 switch ($_REQUEST['action']) { 
-	case 'show_recommend': 
-		switch ($_REQUEST['type']) { 
-			case 'artist': 
-			case 'album': 
-			case 'track': 
-				// We're good
-			break;
-			default: 
-				$results['rfc3514'] = '0x1'; 
-			break 2;
-		} // verifying the type
-
-		ob_start(); 
-		show_box_top(_('Recommendations')); 
-		echo "Loading..."; 
-		$ajax_action = Ajax::action('?page=stats&action=recommend&type=' . $_REQUEST['type'] . '&id=' . $_REQUEST['id'],'show_recommend_refresh');  
-		Ajax::run($ajax_action); 
-		show_box_bottom(); 
-		$results['additional_information'] = ob_get_contents(); 
-		ob_end_clean(); 
-	break;
-	case 'recommend': 
-		switch ($_REQUEST['type']) { 
-			case 'artist':
-				$headers = array('name'=>_('Name'),'links'=>_('Links')); 
-			break;
-			case 'album': 
-			case 'track': 
-				// We're good
-			default: 
-				$results['rtc3514'] = '0x1'; 
-			break 2;
-		} 
-
-		// Get the recommendations
-		$objects = metadata::recommend_similar($_REQUEST['type'],$_REQUEST['id'],'7'); 
-
-		ob_start(); 
-		show_box_top(_('Recommendations')); 
-		require_once Config::get('prefix') . '/templates/show_objects.inc.php'; 
-		show_box_bottom(); 
-		$results['additional_information'] = ob_get_contents(); 
-		ob_end_clean(); 
-	break;
-	case 'show_check_album_tracks': 
-                ob_start();
-                show_box_top(_('Find Missing Tracks'));
-                echo "Loading...";
-                $ajax_action = Ajax::action('?page=stats&action=check_album_tracks&id=' . $_REQUEST['id'],'show_album_tracks_refresh');                Ajax::run($ajax_action);
-                show_box_bottom();
-                $results['additional_information'] = ob_get_contents();
-                ob_end_clean();
-	break;
-	case 'check_album_tracks': 
-
-		// Set the headers	
-		$headers = array('title'=>_('Title'),'track'=>_('Track'),'artist'=>_('Artist'),'links'=>_('Links')); 
-
-		// Ask the great and wise metadata
-		$objects = metadata::find_missing_tracks($_REQUEST['id']);
-
-		if ($error = ob_get_contents()) { 
-			ob_end_clean();
-			ob_start(); 
-			show_box_top(_('Find Missing Tracks')); 
-			echo $error; 
-			show_box_bottom(); 
-			$results['additional_information'] = ob_get_contents(); 
-			ob_end_clean();
-			break; 
-		} 
-		ob_start(); 
-		show_box_top(_('Find Missing Tracks')); 
-		require_once Config::get('prefix') . '/templates/show_objects.inc.php'; 
-		show_box_bottom(); 
-		$results['additional_information'] = ob_get_contents(); 
-		ob_end_clean(); 
-	break;
 	default: 
 		$results['rfc3514'] = '0x1'; 
 	break;

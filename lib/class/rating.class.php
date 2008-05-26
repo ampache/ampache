@@ -68,20 +68,19 @@ class Rating extends database_object {
 		$user_id = Dba::escape($GLOBALS['user']->id); 
 
 		$idlist = '(' . implode(',', $ids) . ')';
-		$sql = "SELECT `rating`, `object_id` FROM `rating` WHERE `user`='$user_id' AND `object_id` IN $idlist " . 
+		$sql = "SELECT `rating`, `object_id`,`rating`.`rating` FROM `rating` WHERE `user`='$user_id' AND `object_id` IN $idlist " . 
 			"AND `object_type`='$type'";
 		$db_results = Dba::query($sql);
 
 		while ($row = Dba::fetch_assoc($db_results)) {
-			$rating[$row['id']] = $row['rating'];
+			$results[$row['object_id']] = intval($row['rating']); 
 		}
 		
-		$user_cache_name = 'rating_' . $type . '_user'; 
-
 		foreach ($ids as $id) { 
-			parent::add_to_cache($user_cache_name,$id,intval($rating[$id])); 
-		} // end foreach 
+			parent::add_to_cache('rating_' . $type . '_user',$id,intval($results[$id])); 
+		} 
 
+		return true; 
 
 	} // build_cache
 
@@ -92,8 +91,6 @@ class Rating extends database_object {
 	 */
 	 public function get_user($user_id) {
 		
-		$id = intval($this->id); 
-
 		if (parent::is_cached('rating_' . $this->type . '_user',$id)) { 
 			return parent::get_from_cache('rating_' . $this->type . '_user',$id); 
 		} 

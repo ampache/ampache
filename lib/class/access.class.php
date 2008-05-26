@@ -140,6 +140,9 @@ class Access {
 	public static function check_function($type) { 
 
 		switch ($type) { 
+			case 'download': 
+				return Config::get('download'); 
+			break ;
 			case 'batch_download':
                                 if (!function_exists('gzcompress')) {
                                         debug_event('gzcompress','ZLIB Extensions not loaded, batch download disabled','3');

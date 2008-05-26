@@ -59,7 +59,6 @@ function update_preferences($pref_id=0) {
 			break;
 			/* MD5 the LastFM & MyStrands so it's not plainTXT */
 			case 'lastfm_pass':
-			case 'mystrands_pass':
 				/* If it's our default blanking thing then don't use it */
 				if ($value == '******') { unset($_REQUEST[$name]); break; } 
 				$value = md5($value); 
@@ -241,7 +240,6 @@ function create_preference_input($name,$value) {
 			} // foreach themes
 			echo "</select>\n";
 		break;
-		case 'mystrands_pass':
 		case 'lastfm_pass':
 			echo "<input type=\"password\" size=\"16\" name=\"$name\" value=\"******\" />";
 		break;

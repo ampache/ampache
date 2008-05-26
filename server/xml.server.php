@@ -72,7 +72,7 @@ if ($_REQUEST['action'] != 'handshake') {
 switch ($_REQUEST['action']) { 
 	case 'handshake': 
 		// Send the data we were sent to the API class so it can be chewed on 
-		$token = Api::handshake($_REQUEST['timestamp'],$_REQUEST['auth'],$_SERVER['REMOTE_ADDR'],$_REQUEST['user']); 
+		$token = Api::handshake($_REQUEST['timestamp'],$_REQUEST['auth'],$_SERVER['REMOTE_ADDR'],$_REQUEST['user'],$_REQUEST['version']); 
 		
 		if (!$token) { 
 			ob_end_clean(); 

@@ -264,12 +264,6 @@ album_art_order = "db,id3,folder,lastfm,amazon"
 ; DEFAULT: true
 show_album_art = "true"
 
-; MyStrands Developer ID
-; This is needed for any of the OpenStrands functionality to work correctly
-; this is the developer ID you obtained from http://www.mystrands.com/openstrands/overview.vm
-; DEFAULT: false
-;mystrands_developer_key = ""
-
 ; Amazon Developer Key
 ; This is needed in order to actually use the amazon album art
 ; DEFAULT: false
