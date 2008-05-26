@@ -99,7 +99,7 @@ class Tag extends database_object {
 	 * This takes an array of object ids and caches all of their information
 	 * in a single query, cuts down on the connections
 	 */
-	public function build_cache($ids) { 
+	public static function build_cache($ids) { 
 
 		$idlist = '(' . implode(',',$ids) . ')'; 
 		
@@ -149,7 +149,7 @@ class Tag extends database_object {
 
 		if (!strlen($tagval)) { return false; } 
 		
-		$uid = $user ? intval($user) : intval($GLOBALS['user']->id);
+		$uid = ($user == '') ? intval($user) : intval($GLOBALS['user']->id);
 		$tagval = Dba::escape($tagval); 
 		$type = Dba::escape($type); 
 		$id = intval($id);
@@ -177,9 +177,9 @@ class Tag extends database_object {
 	 * add_tag_map
 	 * This adds a specific tag to the map for specified object
 	 */
-	public static function add_tag_map($tag_id,$object_type,$object_id) { 
+	public static function add_tag_map($tag_id,$object_type,$object_id,$user='') { 
 		
-		$uid = intval($GLOBALS['user']->id); 
+		$uid = ($user == '') ? intval($GLOBALS['user']->id) : intval($user); 
 		$tag_id = intval($tag_id); 
 		$type = self::validate_type($object_type);  
 		$id = intval($object_id); 
@@ -248,7 +248,23 @@ return array();
 	 */
 	public static function get_top_tags($type,$object_id,$limit='2') { 
 
+		$type = self::validate_type($type); 
+		$object_id = intval($object_id); 
+		$limit = intval($limit); 
 
+		$sql = "SELECT COUNT(`tag_map`.`id`) AS `count`,`tag`.`id` FROM `tag_map` " . 
+			"INNER JOIN `tag` ON `tag`.`id`=`tag_map`.`tag_id` " . 
+			"WHERE `tag_map`.`object_type`='$type' AND `tag_map`.`object_id`='$object_id' " . 
+			"GROUP BY `tag_map`.`tag_id` ORDER BY `count` LIMIT $limit"; 
+		$db_results = Dba::query($sql); 
+
+		$results = array(); 
+
+		while ($row = Dba::fetch_assoc($db_results)) { 
+			$results[] = $row['id']; 
+		} 
+
+		return $results; 	
 
 	} // get_top_tags
 
@@ -356,7 +372,7 @@ return array();
 	 */
 	public static function clean_tag($value) { 
 
-		$tag = preg_replace("/[^\w\_\-\s]/","",$value); 
+		$tag = preg_replace("/[^\w\_\-\s\&]/","",$value); 
 
 		return $tag; 
 

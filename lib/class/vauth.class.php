@@ -98,7 +98,7 @@ class vauth {
 		$sql = "UPDATE `session` SET `value`='$value', `expire`='$expire' WHERE `id`='$key'"; 
 		$db_results = Dba::query($sql); 
 
-		debug_event('SESSION','Writing to ' . $key . ' with expire ' . $expire . ' DBError:' . Dba::error(),'6'); 
+		debug_event('SESSION','Writing to ' . $key . ' with expire ' . $expire . ' ' . Dba::error(),'6'); 
 
 		return $db_results; 
 

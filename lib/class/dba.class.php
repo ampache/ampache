@@ -174,15 +174,17 @@ class Dba {
 			// Do this later
 		} 
 
+
 		$dbh = mysql_connect($hostname,$username,$password); 
 		if (!$dbh) { debug_event('Database','Error unable to connect to database' . mysql_error(),'1'); } 
+			
+		$data = self::translate_to_mysqlcharset(Config::get('site_charset'));
 
 		if (function_exists('mysql_set_charset')) { 
-			$sql_charset = str_replace("-","",Config::get('site_charset'));
-			$charset = mysql_set_charset($sql_charset,$dbh); 
+			$charset = mysql_set_charset($data['charset'],$dbh); 
 		} 
 		else { 
-			$sql = "SET NAMES " . mysql_real_escape_string(str_replace("-","",Config::get('site_charset'))); 
+			$sql = "SET NAMES " . mysql_real_escape_string($data['charset']); 
 			$charset = mysql_query($sql,$dbh); 
 		}
 		if (!$charset) { debug_event('Database','Error unable to set connection charset, function missing or set failed','1'); }  
@@ -190,7 +192,7 @@ class Dba {
 		$select_db = mysql_select_db($database,$dbh); 
 		if (!$select_db) { debug_event('Database','Error unable to select ' . $database . ' error ' . mysql_error(),'1'); } 
 		
-		if ($_REQUEST['profiling']) {
+		if (Config::get('sql_profiling')) {
 		  mysql_query('set profiling=1', $dbh);
 		  mysql_query('set profiling_history_size=50', $dbh);
 		  mysql_query('set query_cache_type=0', $dbh);
@@ -276,6 +278,57 @@ class Dba {
 	} // auto_init
 
 	/**
+	 * translate_to_mysqlcharset
+	 * This translates the specified charset to a mysqlcharset, stupid ass mysql
+	 * demands that it's charset list is different!
+	 */	
+	public static function translate_to_mysqlcharset($charset) { 
+
+                // MySQL translte real charset names into fancy smancy MySQL land names
+                switch (strtoupper($charset)) {
+                        case 'CP1250':
+                        case 'WINDOWS-1250':
+                        case 'WINDOWS-1252':
+                                $target_charset = 'cp1250';
+                                $target_collation = 'cp1250_general_ci';
+                        break;
+                        case 'ISO-8859':
+                        case 'ISO-8859-2':
+                                $target_charset = 'latin2';
+                                $target_collation = 'latin2_general_ci';
+                        break;
+                        case 'ISO-8859-1':
+                                $target_charset = 'latin1';
+                                $target_charset = 'latin1_general_ci';
+                        break;
+                        case 'EUC-KR':
+                                $target_charset = 'euckr';
+                                $target_collation = 'euckr_korean_ci';
+                        break;
+                        case 'CP932':
+                                $target_charset = 'sjis';
+                                $target_collation = 'sjis_japanese_ci';
+                        break;
+                        case 'KOI8-U':
+                                $target_charset = 'koi8u';
+                                $target_collation = 'koi8u_general_ci';
+                        break;
+                        case 'KOI8-R':
+                                $target_charset = 'koi8r';
+                                $target_collation = 'koi8r_general_ci';
+                        break;
+                        default;
+                        case 'UTF-8':
+                                $target_charset = 'utf8';
+                                $target_collation = 'utf8_unicode_ci';
+                        break;
+                } // end mysql charset translation
+
+		return array('charset'=>$target_charset,'collation'=>$target_collation); 
+
+	} // translate_to_mysqlcharset
+
+	/**
 	 * reset_db_charset
 	 * This cruises through the database and trys to set the charset to the current
 	 * site charset, this is an admin function that can be run by an administrator
@@ -284,45 +337,9 @@ class Dba {
 	 */
 	public static function reset_db_charset() { 
 
-                // MySQL translte real charset names into fancy smancy MySQL land names
-                switch (strtoupper(Config::get('site_charset'))) {
-                        case 'CP1250':
-                        case 'WINDOWS-1250':
-                        case 'WINDOWS-1252':
-                                $target_charset = 'cp1250';
-                                $target_collation = 'cp1250_general_ci';
-                        break; 
-                        case 'ISO-8859': 
-                        case 'ISO-8859-2': 
-                                $target_charset = 'latin2'; 
-                                $target_collation = 'latin2_general_ci'; 
-                        break; 
-                        case 'ISO-8859-1': 
-                                $target_charset = 'latin1'; 
-                                $target_charset = 'latin1_general_ci'; 
-                        break; 
-                        case 'EUC-KR':
-                                $target_charset = 'euckr';
-                                $target_collation = 'euckr_korean_ci';
-                        break; 
-                        case 'CP932': 
-                                $target_charset = 'sjis'; 
-                                $target_collation = 'sjis_japanese_ci'; 
-                        break; 
-                        case 'KOI8-U': 
-                                $target_charset = 'koi8u'; 
-                                $target_collation = 'koi8u_general_ci'; 
-                        break; 
-                        case 'KOI8-R': 
-                                $target_charset = 'koi8r';
-                                $target_collation = 'koi8r_general_ci'; 
-                        break; 
-                        default; 
-                        case 'UTF-8':
-                                $target_charset = 'utf8'; 
-                                $target_collation = 'utf8_unicode_ci'; 
-                        break; 
-                } // end mysql charset translation
+		$translated_charset = self::translate_to_mysqlcharset(Config::get('site_charset')); 
+		$target_charset = $translated_charset['charset']; 
+		$target_collation = $translated_charset['collation']; 
 
 		// Alter the charset for the entire database
 		$sql = "ALTER DATABASE `" . Config::get('database_name') . "` DEFAULT CHARACTER SET $target_charset COLLATE $target_collation"; 

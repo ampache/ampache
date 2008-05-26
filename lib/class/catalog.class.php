@@ -1946,7 +1946,7 @@ debug_event('prefix',$prefix_pattern,'3');
 				return $tag->id;
 			} 
 			// Oooh well time to add it
-			Tag::add_tag_map($tag->id,$object_type,$object_id); 
+			Tag::add_tag_map($tag->id,$object_type,$object_id,'0'); 
 
 			return $tag->id; 
 
@@ -1957,7 +1957,7 @@ debug_event('prefix',$prefix_pattern,'3');
 		$tag = Tag::construct_from_name($value); 
 
 		// Figure out the ID so we can cache it
-		if (!$tag) { $insert_id = Tag::add_tag($object_type,$object_id,$value,'-1'); }  
+		if (!$tag) { $insert_id = Tag::add_tag($object_type,$object_id,$value,'0'); }  
 		else { $insert_id = $tag->id; } 
 			
 		// Add to the cache	

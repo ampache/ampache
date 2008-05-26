@@ -276,7 +276,7 @@ class Album extends database_object {
 	public function get_art() { 
 
 		// Attempt to get the resized art first
-		//$art = $this->get_resized_db_art(); 
+		$art = $this->get_resized_db_art(); 
 		
 		if (!is_array($art)) { 
 			$art = $this->get_db_art(); 

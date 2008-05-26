@@ -82,19 +82,30 @@ class Song extends database_object {
 	  
 		// Song data cache
 		$sql = "SELECT song.id,file,catalog,album,year,artist,".
-				"title,bitrate,rate,mode,size,time,track,played,song.enabled,update_time,".
-				"addition_time FROM `song` WHERE `song`.`id` IN
-				$idlist";
+				"title,bitrate,rate,mode,size,time,track,played,song.enabled,update_time,tag_map.tag_id,".
+				"addition_time FROM `song` " .
+				"LEFT JOIN `tag_map` ON `tag_map`.`object_id`=`song`.`id` AND `tag_map`.`object_type`='song' " . 
+				"WHERE `song`.`id` IN $idlist";
 		$db_results = Dba::query($sql);
 	  
 		while ($row = Dba::fetch_assoc($db_results)) {
 			parent::add_to_cache('song',$row['id'],$row); 
 			$artists[$row['artist']]	= $row['artist']; 
 			$albums[$row['album']]		= $row['album']; 
+			$tags[$row['tag_id']]		= $row['tag_id']; 
 		}
 	
 		Artist::build_cache($artists);
 		Album::build_cache($albums); 
+		Tag::build_cache($tags); 
+
+		// Build a cache for the song's extended table
+		$sql = "SELECT * FROM `song_data` WHERE `song_id` IN $idlist"; 
+		$db_results = Dba::query($sql); 
+
+		while ($row = Dba::fetch_assoc($db_results)) { 
+			parent::add_to_cache('song_data',$row['song_id'],$row); 
+		} 
  
 		return true; 
  
@@ -133,13 +144,19 @@ class Song extends database_object {
 	 * current object
 	 */
 	public function _get_ext_info() { 
-	  global $song_data_cache;
-	  if (isset($song_data_cache[intval($this->id)]))
-	    return $song_data_cache[intval($this->id)];
-		$sql = "SELECT * FROM song_data WHERE `song_id`='" . Dba::escape($this->id) . "'";
+
+		$id = intval($this->id); 
+
+		if (parent::is_cached('song_data',$id)) { 
+			return parent::get_from_cache('song_data',$id);
+		} 
+
+		$sql = "SELECT * FROM song_data WHERE `song_id`='$id'";
 		$db_results = Dba::query($sql); 
 
 		$results = Dba::fetch_assoc($db_results); 
+
+		parent::add_to_cache('song_data',$id,$results); 
 
 		return $results; 
 
@@ -652,7 +669,12 @@ class Song extends database_object {
 
 		// Get the top tags
 		$tags = Tag::get_top_tags('song',$this->id); 
-		$this->f_tags = implode(', ',$tags); 
+		foreach ($tags as $tag_id) { 
+			$tag = new Tag($tag_id); 
+			$this->f_tags .= $tag->name . ', '; 
+		} 
+	
+		$this->f_tags = rtrim($this->f_tags,', '); 
 
 		// Format the size
 		$this->f_size = sprintf("%.2f",($this->size/1048576));
