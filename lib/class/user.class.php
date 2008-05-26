@@ -542,7 +542,6 @@ class User extends database_object {
 		Stats::insert('song',$song_id,$user);
 		Stats::insert('album',$song_info->album,$user);
 		Stats::insert('artist',$song_info->artist,$user);
-		Stats::insert('genre',$song_info->genre,$user);
 
 
 	} // update_stats
