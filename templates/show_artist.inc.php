@@ -59,8 +59,8 @@ if (Config::get('ratings')) {
 <?php show_box_bottom(); ?>
 <?php
 	Browse::reset_filters(); 
-	Browse::set_type('album'); 
+	Browse::set_type($object_type); 
 	Browse::set_static_content(1); 
-	Browse::save_objects($albums); 
+	Browse::save_objects($object_ids); 
 	Browse::show_objects(); 
 ?>

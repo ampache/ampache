@@ -30,21 +30,16 @@ switch($_REQUEST['action']) {
 	case 'show':
 		$artist = new Artist($_REQUEST['artist']);
 		$artist->format(); 
-		$albums = $artist->get_albums(); 
+		$object_ids = $artist->get_albums(); 
+		$object_type = 'album'; 
 		require_once Config::get('prefix') . '/templates/show_artist.inc.php';
 	break;
 	case 'show_all_songs':
 	    	$artist = new Artist($_REQUEST['artist']);
 		$artist->format();
-		require_once Config::get('prefix') . '/templates/show_artist_box.inc.php';
-		//$song_ids = $artist->get_songs();
-		Browse::set_type('song'); 
-		Browse::reset_filters();
-		//Browse::set_filter('artist', $artist->id);
-		Browse::set_filter_from_request($_REQUEST);
-		//Browse::set_static_content(1); 
-		Browse::get_objects();
-		Browse::show_objects(); 
+		$object_type = 'song'; 
+		$object_ids = $artist->get_songs(); 
+		require_once Config::get('prefix') . '/templates/show_artist.inc.php';
         break;
 	case 'update_from_tags':
 
