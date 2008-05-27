@@ -22,13 +22,13 @@ $web_path = Config::get('web_path');
 $title = _('Albums by') . " " . $artist->full_name;
 ?>
 <?php
-show_box_top(_('Albums by') . ' ' . $artist->f_name,'info-box');
+show_box_top(_(ucfirst($object_type) . 's by') . ' ' . $artist->f_name,'info-box');
 if (Config::get('ratings')) { 
-        echo "<div id=\"rating_" . $artist->id . "_artist\" style=\"display:inline;\">";
-        show_rating($artist->id, 'artist');
-        echo "</div>";
-} // end if ratings ?>
-
+?>
+<div id="rating_"<?php echo intval($artist->id); ?>"_artist" style="display:inline;">
+	<?php show_rating($artist->id, 'artist'); ?>
+</div>
+<?php } ?>
 <div id="information_actions">
 <ul>
 <li>
