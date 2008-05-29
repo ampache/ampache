@@ -233,8 +233,8 @@ class Browse {
 			case 'artist': 
 				$valid_array = array('name'); 
 			break;
-			case 'genre': 
-				$valid_array = array('name'); 
+			case 'tag': 
+				$valid_array = array('tag'); 
 			break; 
 			case 'album': 
 				$valid_array = array('name','year'); 

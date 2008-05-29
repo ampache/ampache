@@ -25,6 +25,7 @@ error_reporting(E_ALL ^ E_NOTICE);
 require_once 'lib/general.lib.php';
 require_once 'lib/class/config.class.php';
 require_once 'lib/class/vauth.class.php';
+require_once 'lib/class/database_object.class.php';
 require_once 'lib/ui.lib.php';
 require_once 'lib/log.lib.php'; 
 require_once 'modules/horde/Browser.php';
