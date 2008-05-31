@@ -282,6 +282,10 @@ class Update {
 		
 		$version[] = array('version' => '350001','description'=>$update_string); 
 
+		$update_string = '- Remove Genre Field from song table.<br />' . 
+				'- Add user_catalog table for tracking user<-->catalog mappings.<br />' . 
+				'- Alter user table to handle SHA2 passwords.<br />'; 
+
 
 		return $version;
 

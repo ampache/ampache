@@ -386,7 +386,7 @@ class Stream {
 			$xml['track']['info'] = Config::get('web_path') . "/albums.php?action=show&album=" . $song->album;
 			$xml['track']['image'] = Config::get('web_path') . "/image.php?id=" . $song->album . "&thumb=3&sid=" . session_id();
 			$xml['track']['album'] = $song->f_album_full;
-			$xml['track']['duration'] = $song->time;
+			$xml['track']['duration'] = $song->time * 1000;
 			$result .= xml_from_array($xml,1,'xspf');
 
                 } // end foreach
