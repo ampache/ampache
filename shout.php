@@ -37,6 +37,12 @@ switch ($_REQUEST['action']) {
 		// Get our object first
 		$object = shoutBox::get_object($_REQUEST['type'],$_REQUEST['id']); 
 
+		if (!$object->id) { 
+			Error::add('general',_('Invalid Object Selected')); 
+			Error::display('general'); 
+			break;
+		} 
+
 		// Now go ahead and display the page where we let them add a comment etc
 		require_once Config::get('prefix') . '/templates/show_add_shout.inc.php'; 
 	break; 

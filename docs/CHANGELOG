@@ -4,6 +4,8 @@
 
 --------------------------------------------------------------------------
   v.3.5-Alpha1
+	- Fix an error if you try to add a shoutbox for an invalid object
+		(Thx atrophic)
 	- Fixed issue with art dump on jpeg files (Thx atrophic)
         - Fixed issue with force http play and port not correctly specifying
                 non-standard http port (Thx Deathcrow)
