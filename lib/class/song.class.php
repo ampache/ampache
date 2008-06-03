@@ -192,8 +192,8 @@ class Song extends database_object {
 			$this->type = $override; 
 		}
 		else {
-			preg_match('/\.([A-Za-z0-9]+)$/', $this->file,$results);
-			$this->type = strtolower($results['1']);
+			$data = pathinfo($this->file); 
+			$this->type = strtolower($data['extension']); 
 		} 
 		
 		switch ($this->type) { 

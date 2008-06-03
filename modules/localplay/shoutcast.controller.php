@@ -280,6 +280,15 @@ class AmpacheShoutCast extends localplay_controller {
 	 */
 	public function add($object) { 
 
+		// Before we add this it must be a mp3 
+		$object->format_type(); 
+		
+		if ($this->mime != 'audio/mpeg') { 
+			debug_event('ShoutCast','Error: Unable to play ' . $this->mime . ' files with shoutcast, skipping','3'); 
+			return false; 
+		} 
+
+
 		// Take the filename and strip off the catalog's root_path and put our
 		// prefix onto it
 		$filename = $object->file; 
