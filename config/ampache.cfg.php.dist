@@ -507,7 +507,7 @@ transcode_cmd_mp3	= "mp3splt -qnf %FILE% %OFFSET% %EOF% -o - | lame --mp3input -
 transcode_cmd_ogg       = "oggdec -o - %FILE%| lame -b %SAMPLE% -S - - "
 
 ; This line seems to work better for windows, switch if needed
-;transcode_cmd_mp3	= "mp3splt -qnf -o - %FILE% %OFFSET% %EOF% | lame --mp3input -q 3 -b %SAMPLE% -S - -" 
+;transcode_cmd_mp3	= "lame -q 3 -b %SAMPLE% -S %FILE% - -" 
 
 
 
