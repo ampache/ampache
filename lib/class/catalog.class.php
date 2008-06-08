@@ -1717,7 +1717,10 @@ class Catalog {
 
 			else {
 				Error::add('general',"$song->file does not exist or is not readable"); 
-				debug_event('read-error',"$song->file does not exist or is not readable",'5','ampache-catalog'); 
+				debug_event('read-error',"$song->file does not exist or is not readable, removing",'5','ampache-catalog'); 
+				// Let's go ahead and remove it!
+				$sql = "DELETE FROM `song` WHERE `id`='" . Dba::escape($song->id) . "'"; 
+				$del_results = Dba::query($sql); 
 			}
 
 		} //end foreach
