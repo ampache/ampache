@@ -535,7 +535,7 @@ class AmpacheShoutCast extends localplay_controller {
 	 */ 
 	public function write_playlist() { 
 
-		$string = implode("\n",$this->files); 
+		$string = implode("\n",$this->files) . "\n"; 
 		
 		$handle = fopen($this->playlist,'w'); 
 
