@@ -283,8 +283,12 @@ class AmpacheShoutCast extends localplay_controller {
 		// Before we add this it must be a mp3 
 		$object->format_type(); 
 		
-		if ($this->mime != 'audio/mpeg') { 
+		if ($object->mime != 'audio/mpeg') { 
 			debug_event('ShoutCast','Error: Unable to play ' . $this->mime . ' files with shoutcast, skipping','3'); 
+			return false; 
+		} 
+		if ($object->rate != '44100') { 
+			debug_event('Shoutcast','Error: Unable to play ' . $this->rate . ' files with shoutcast, skipping','3'); 
 			return false; 
 		} 
 
@@ -294,7 +298,9 @@ class AmpacheShoutCast extends localplay_controller {
 		$filename = $object->file; 
 		$catalog = new Catalog($object->catalog); 
 
-		$filename = str_replace($catalog->path,$this->local_path,$filename); 
+		if ($this->local_path) { 
+			$filename = str_replace($catalog->path,$this->local_path,$filename); 
+		} 
 
 		$this->files[] = $filename; 
 
