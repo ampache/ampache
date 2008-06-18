@@ -58,14 +58,6 @@
 	</td>
 </tr>
 <tr>
-	<td valign="top"><?php echo _('Genre'); ?></td>
-	<td>
-		<?php echo show_genre_select('genre',intval($_REQUEST['genre'])); ?>
-		<br /><?php echo _('OR'); ?><br />
-		<input type="text" name="other_genre" value="<?php echo scrub_out($_REQUEST['other_genre']); ?>" />
-	</td>
-</tr>
-<tr>
 	<td><?php echo _('Catalog'); ?></td>
 	<td>
 		<?php echo show_catalog_select('catalog',intval($_REQUEST['catalog'])); ?>

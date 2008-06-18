@@ -168,17 +168,6 @@ class Radio {
 			Error::add('url','Invalid URL must be http:// or https://'); 
 		} 
 
-		// If they specified other try to use that
-		if (strlen($data['other_genre'])) { 
-			$data['genre'] = Catalog::check_genre($data['other_genre']); 
-		} 
-
-		// Make sure it's a real genre
-		$genre = new Genre($data['genre']); 
-		if (!$genre->name) { 
-			Error::add('genre','Invalid Genre'); 
-		} 
-
 		// Make sure it's a real catalog
 		$catalog = new Catalog($data['catalog']); 
 		if (!$catalog->name) { 
@@ -191,14 +180,13 @@ class Radio {
 		$name		= Dba::escape($data['name']); 
 		$site_url	= Dba::escape($data['site_url']); 
 		$url		= Dba::escape($data['url']); 
-		$genre		= $genre->id; 
 		$catalog	= $catalog->id; 
 		$frequency	= Dba::escape($data['frequency']); 
 		$call_sign	= Dba::escape($data['call_sign']); 
 
 		// If we've made it this far everything must be ok... I hope
-		$sql = "INSERT INTO `live_stream` (`name`,`site_url`,`url`,`genre`,`catalog`,`frequency`,`call_sign`) " . 
-			"VALUES ('$name','$site_url','$url','$genre','$catalog','$frequency','$call_sign')"; 
+		$sql = "INSERT INTO `live_stream` (`name`,`site_url`,`url`,`catalog`,`frequency`,`call_sign`) " . 
+			"VALUES ('$name','$site_url','$url','$catalog','$frequency','$call_sign')"; 
 		$db_results = Dba::query($sql); 
 
 		return $db_results;  
