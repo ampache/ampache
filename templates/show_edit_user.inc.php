@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2007 Ampache.org
+ Copyright (c) Ampache.org
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
@@ -19,8 +19,6 @@
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
-$form_string = generate_password('32'); 
-$_SESSION['forms']['adminuser'] = $form_string; 
 ?>
 <?php show_box_top(_('Editing existing User')); ?>
 <?php Error::display('general'); ?>
@@ -85,7 +83,7 @@ $_SESSION['forms']['adminuser'] = $form_string;
 <div class="formValidation">
 		<input type="hidden" name="action" value="update_user" />
 		<input type="submit" value="<?php echo _('Update User'); ?>" />
-		<input type="hidden" name="formkey" value="<?php echo $form_string; ?>" />
+		<?php echo Core::form_register('edit_user'); ?>
 		<input type="hidden" name="user_id" value="<?php echo $client->id; ?>" />
 </div>
 </form>

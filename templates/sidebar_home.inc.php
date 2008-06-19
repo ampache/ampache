@@ -21,29 +21,6 @@
 $ajax_info = Config::get('ajax_url'); $web_path = Config::get('web_path');
 ?>
 <ul class="sb2" id="sb_home">
-  <li><h4><?php echo _('Information'); ?></h4>
-    <ul class="sb3" id="sb_home_info">
-      <li id="sb_home_info_CurrentlyPlaying"><a href="<?php echo $web_path; ?>/index.php"><?php echo _('Currently Playing'); ?></a></li>
-      <li id="sb_home_info_Statistics"><a href="<?php echo $web_path; ?>/stats.php"><?php echo _('Statistics'); ?></a></li>
-      <li id="sb_home_info_AddStationRadio"><a href="<?php echo $web_path; ?>/radio.php?action=show_create"><?php echo _('Add Radio Station'); ?></a></li>
-    </ul>
-  </li>
-<?php if (Config::get('allow_democratic_playback')) { ?>
-  <li><h4><?php echo _('Democratic'); ?></h4>
-    <ul class="sb3" id="sb_home_democratic">
-      <li id="sb_home_democratic_playlist"><a href="<?php echo $web_path; ?>/democratic.php?action=show_playlist"><?php echo _('Show Playlist'); ?></a></li>
-      <li id="sb_home_democratic_playlist"><a href="<?php echo $web_path; ?>/democratic.php?action=manage_playlists"><?php echo _('Manage Playlist'); ?></a></li>
-    </ul>
-  </li>
-<?php } ?>
-  <li><h4><?php echo _('Random'); ?></h4>
-    <ul class="sb3" id="sb_home_random">
-      <li id="sb_home_random_album"><?php echo Ajax::text('?page=random&action=album',_('Album'),'home_random_album'); ?></li>
-      <li id="sb_home_random_artist"><?php echo Ajax::text('?page=random&action=artist',_('Artist'),'home_random_artist'); ?></li>
-      <li id="sb_home_random_playlist"><?php echo Ajax::text('?page=random&action=playlist',_('Playlist'),'home_random_playlist'); ?></li>
-      <li id="sb_home_random_advanced"><a href="<?php echo $web_path; ?>/random.php?action=advanced"><?php echo _('Advanced'); ?></a></li>
-    </ul>
-  </li>
   <li><h4><?php echo _('Browse'); ?></h4>
   <?php
 	$allowed_filters = Browse::get_allowed_filters();
@@ -92,6 +69,31 @@ $ajax_info = Config::get('ajax_url'); $web_path = Config::get('web_path');
                 <?php echo Ajax::observe('show_allplCB','click',Ajax::action('?page=browse&action=browse&key=playlist_type&value=1','')); ?>
         <?php } // if playlist_type ?>
     </div>
+  </li>
+  <li><h4><?php echo _('Playlist'); ?></h4>
+    <ul class="sb3" id="sb_home_info">
+      <li id="sb_home_info_CurrentlyPlaying"><a href="<?php echo $web_path; ?>/index.php"><?php echo _('Currently Playing'); ?></a></li>
+<?php if (Config::get('allow_democratic_playback')) { ?>
+      <li id="sb_home_democratic_playlist"><a href="<?php echo $web_path; ?>/democratic.php?action=show_playlist"><?php echo _('Democratic'); ?></a></li>
+<?php } ?>
+<?php if ($server_allow = Config::get('allow_localplay_playback') AND $controller = Config::get('localplay_controller') AND $access_check = Access::check('localplay','5')) { ?>
+<?php
+        // Little bit of work to be done here
+        $localplay = new Localplay(Config::get('localplay_controller'));
+        $current_instance = $localplay->current_instance();
+        $class = $current_instance ? '' : ' class="active_instance"';
+?>
+        <li id="sb_localplay_info_show"><a href="<?php echo $web_path; ?>/localplay.php?action=show_playlist"><?php echo _('Localplay'); ?></a></li>
+<?php } ?>
+    </ul>
+  </li>
+  <li><h4><?php echo _('Random'); ?></h4>
+    <ul class="sb3" id="sb_home_random">
+      <li id="sb_home_random_album"><?php echo Ajax::text('?page=random&action=album',_('Album'),'home_random_album'); ?></li>
+      <li id="sb_home_random_artist"><?php echo Ajax::text('?page=random&action=artist',_('Artist'),'home_random_artist'); ?></li>
+      <li id="sb_home_random_playlist"><?php echo Ajax::text('?page=random&action=playlist',_('Playlist'),'home_random_playlist'); ?></li>
+      <li id="sb_home_random_advanced"><a href="<?php echo $web_path; ?>/random.php?action=advanced"><?php echo _('Advanced'); ?></a></li>
+    </ul>
   </li>
 <?php } ?>
 </ul>

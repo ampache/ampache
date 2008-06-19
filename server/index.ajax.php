@@ -34,6 +34,29 @@ switch ($_REQUEST['action']) {
 			ob_end_clean(); 
 		} 
 	break;
+	case 'sidebar': 
+                switch ($_REQUEST['button']) {
+                        case 'home':
+                        case 'modules':
+                        case 'localplay':
+                        case 'player':
+                        case 'preferences':
+                                $button = $_REQUEST['button'];
+                        break;
+                        case 'admin':
+                                if (Access::check('interface','100')) { $button = $_REQUEST['button']; }
+                                else { exit; }
+                        break;
+                        default:
+                                exit;
+                        break;
+                } // end switch on button  
+
+                ob_start();
+                $_SESSION['state']['sidebar_tab'] = $button;
+                require_once Config::get('prefix') . '/templates/sidebar.inc.php';
+                $results['sidebar'] = ob_get_contents();
+                ob_end_clean();
 	default: 
 		$results['rfc3514'] = '0x1'; 
 	break;

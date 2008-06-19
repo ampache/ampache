@@ -19,8 +19,6 @@
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
-$form_string = generate_password('32'); 
-$_SESSION['forms']['adminuser'] = $form_string; 
 ?>
 <?php show_box_top(_('Adding a New User')); ?>
 <?php Error::display('general'); ?>
@@ -83,8 +81,8 @@ $_SESSION['forms']['adminuser'] = $form_string;
 </tr>
 </table>
 <div class="formValidation">
-  <input type="hidden" name="formkey" value="<?php echo $form_string; ?>" />
-  <input type="submit" value="<?php echo _('Add User'); ?>" />
+	<?php echo Core::form_register('user_add'); ?>
+	<input type="submit" value="<?php echo _('Add User'); ?>" />
 </div>
 </form>
 <?php show_box_bottom(); ?>

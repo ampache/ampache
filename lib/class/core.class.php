@@ -36,5 +36,56 @@ class Core {
 
 	} // construction
 
+	/**
+	 * form_register
+	 * This registers a form with a SID, inserts it into the session variables
+	 * and then returns a string for use in the HTML form
+	 */
+	public static function form_register($name) { 
+
+		// Make ourselves a nice little sid
+		$sid =  md5(uniqid(rand(), true));
+
+		// Register it
+		$_SESSION['forms'][$name] = array('sid'=>$sid,'expire'=>time() + Config::get('session_length')); 
+
+		$string = '<input type="hidden" name="form_validation" value="' . $sid . '" />'; 
+
+		return $string; 
+
+	} // form_register
+
+	/**
+	 * form_verify
+	 * This takes a form name and then compares it with the posted sid, if they don't match
+	 * then it returns false and doesn't let the person continue
+	 */
+	public static function form_verify($name,$method='post') { 
+
+		switch ($method) { 
+			case 'post': 
+				$source = $_POST['form_validation']; 
+			break; 
+			case 'get': 
+				$source = $_GET['form_validation'];
+			break; 
+			case 'cookie': 
+				$source = $_COOKIE['form_validation']; 
+			break; 
+			case 'request': 
+				$source = $_REQUEST['form_validation']; 
+			break; 
+		} 
+
+		if ($source == $_SESSION['forms'][$name]['sid'] AND $_SESSION['forms'][$name]['expire'] > time()) { 
+			unset($_SESSION['forms'][$name]); 
+			return true; 
+		} 
+
+		unset($_SESSION['forms'][$name]); 
+		return false; 
+
+	} // form_verify
+
 } // Core
 ?>

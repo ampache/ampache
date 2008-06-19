@@ -103,12 +103,23 @@ switch ($_REQUEST['action']) {
 	case 'delete_catalog':
 		/* Make sure they aren't in demo mode */
 	        if (Config::get('demo_mode')) { break; }
+
+		if (!Core::form_verify('delete_catalog')) { 
+			access_denied(); 
+			exit; 
+		} 
 	
 		/* Delete the sucker, we don't need to check perms as thats done above */
-		Catalog::delete($_REQUEST['catalog_id']); 
+		Catalog::delete($_GET['catalog_id']); 
 		$next_url = Config::get('web_path') . '/admin/index.php';
 		show_confirmation(_('Catalog Deleted'),_('The Catalog and all associated records have been deleted'),$nexturl);
 	break;
+	case 'show_delete_catalog': 
+		$catalog_id = scrub_in($_GET['catalog_id']); 
+
+		$next_url = Config::get('web_path') . '/admin/catalog.php?action=delete_catalog'; 
+		show_confirmation(_('Catalog Delete'),_('Confirm Deletion Request'),$nexturl,1,'delete_catalog'); 
+	break; 
 	case 'remove_disabled':
 	        if (conf('demo_mode')) { break; }
 

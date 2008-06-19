@@ -28,6 +28,7 @@ $web_path = Config::get('web_path');
 	<a href="<?php echo $web_path; ?>/admin/catalog.php?action=add_to_catalog&amp;catalogs[]=<?php echo $catalog->id; ?>"><?php echo _('Add'); ?></a>
 	| <a href="<?php echo $web_path; ?>/admin/catalog.php?action=update_catalog&amp;catalogs[]=<?php echo $catalog->id; ?>"><?php echo _('Verify'); ?></a>
         | <a href="<?php echo $web_path; ?>/admin/catalog.php?action=clean_catalog&amp;catalogs[]=<?php echo $catalog->id; ?>"><?php echo _('Clean'); ?></a>
+	| <a href="<?php echo $web_path; ?>/admin/catalog.php?action=full_service&amp;catalogs[]=<?php echo $catalog->id; ?>"><?php echo _('Update'); ?></a>
 	| <a href="<?php echo $web_path; ?>/admin/catalog.php?action=gather_album_art&amp;catalogs[]=<?php echo $catalog->id; ?>"><?php echo _('Gather Art'); ?></a>
-	| <a href="<?php echo $web_path; ?>/admin/catalog.php?action=delete_catalog&amp;catalog_id=<?php echo $catalog->id; ?>"><?php echo _('Delete'); ?></a>
+	| <a href="<?php echo $web_path; ?>/admin/catalog.php?action=show_delete_catalog&amp;catalog_id=<?php echo $catalog->id; ?>"><?php echo _('Delete'); ?></a>
 </td>

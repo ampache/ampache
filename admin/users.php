@@ -33,19 +33,19 @@ switch ($_REQUEST['action']) {
 	case 'update_user':
 	        if (Config::get('demo_mode')) { break; }
 		
-		if (!$_SESSION['forms']['adminuser'] || $_SESSION['forms']['adminuser'] != $_POST['formkey']) { 
+		if (!Core::form_verify('edit_user','post')) { 
 			access_denied(); 
 			exit; 
 		} 
 
 		/* Clean up the variables */
-		$user_id	= scrub_in($_REQUEST['user_id']);
-		$username 	= scrub_in($_REQUEST['username']);
-		$fullname 	= scrub_in($_REQUEST['fullname']);
-		$email 		= scrub_in($_REQUEST['email']);
-		$access 	= scrub_in($_REQUEST['access']);
-		$pass1 		= scrub_in($_REQUEST['password_1']);
-		$pass2 		= scrub_in($_REQUEST['password_2']);
+		$user_id	= scrub_in($_POST['user_id']);
+		$username 	= scrub_in($_POST['username']);
+		$fullname 	= scrub_in($_POST['fullname']);
+		$email 		= scrub_in($_POST['email']);
+		$access 	= scrub_in($_POST['access']);
+		$pass1 		= scrub_in($_POST['password_1']);
+		$pass2 		= scrub_in($_POST['password_2']);
 	
 		/* Setup the temp user */	
 	    	$client = new User($user_id);
@@ -85,17 +85,17 @@ switch ($_REQUEST['action']) {
 	case 'add_user':
         	if (Config::get('demo_mode')) { break; }
 
-                if (!$_SESSION['forms']['adminuser'] || $_SESSION['forms']['adminuser'] != $_POST['formkey']) { 
+                if (!Core::form_verify('add_user','post')) { 
                         access_denied();
                         exit;
                 } 
 
-		$username	= scrub_in($_REQUEST['username']);
-		$fullname	= scrub_in($_REQUEST['fullname']);
-		$email		= scrub_in($_REQUEST['email']);
-		$access		= scrub_in($_REQUEST['access']);
-		$pass1		= scrub_in($_REQUEST['password_1']);
-		$pass2		= scrub_in($_REQUEST['password_2']);
+		$username	= scrub_in($_POST['username']);
+		$fullname	= scrub_in($_POST['fullname']);
+		$email		= scrub_in($_POST['email']);
+		$access		= scrub_in($_POST['access']);
+		$pass1		= scrub_in($_POST['password_1']);
+		$pass2		= scrub_in($_POST['password_2']);
 
 		if ($pass1 !== $pass2 || !strlen($pass1)) { 
 			Error::add('password',_("Error Passwords don't match"));

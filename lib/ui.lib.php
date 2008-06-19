@@ -35,7 +35,7 @@
  * $text	The details of the message
  * $cancel	T/F show a cancel button that uses return_referrer()
  */
-function show_confirmation($title,$text,$next_url,$cancel=0) {
+function show_confirmation($title,$text,$next_url,$cancel=0,$form_name='confirmation') {
 
 	if (substr_count($next_url,Config::get('web_path'))) {
 		$path = $next_url;

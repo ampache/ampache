@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2007 Ampache.org
+ Copyright (c) Ampache.org
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
@@ -18,12 +18,19 @@
  along with this program; if not, write to the Free Software
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
+$confirmation = Core::form_register($form_name); 
 ?>
 <?php show_box_top(scrub_out($title)); ?>
 <?php echo $text; ?>
 <br />
-	<a class="button" href="<?php echo $path; ?>"><?php echo _('Continue'); ?></a>
+	<form method="post" action="<?php echo $path; ?>" style="display:inline;">
+	<input type="submit" value="<?php echo _('Continue'); ?>" />
+	<?php echo $confirmation; ?>
+	</form>
 <?php if ($cancel) { ?>
-	<a class="button" href="<?php echo Config::get('web_path') . "/" . return_referer(); ?>"><?php echo _('Cancel'); ?></a>
+	<form method="post" action="<?php echo Config::get('web_path') . '/' . return_referer(); ?>" style="display:inline;">
+	<input type="submit" value="<?php echo _('Cancel'); ?>" />
+	<?php echo $confirmation; ?>
+	</form>
 <?php } ?>
 <?php show_box_bottom(); ?>

@@ -6,7 +6,7 @@
 $catagories = Preference::get_catagories();  
 ?>
 <ul class="sb2" id="sb_preferences">
-  <li><h4><?php echo _('Sections'); ?></h4>
+  <li><h4><?php echo _('Preferences'); ?></h4>
     <ul class="sb3" id="sb_preferences_sections">
 <?php 
 	foreach ($catagories as $name) { 
@@ -29,11 +29,5 @@ $catagories = Preference::get_catagories();
 <?php } ?>
     </ul>
   </li>
-<li><h4><?php echo _('Modules'); ?></h4>
-	<ul class="sb3" id="sb_Modules">
-	<li id="sb_preferences_mo_localplay"><a href="<?php echo $web_path; ?>/admin/modules.php?action=show_localplay"><?php echo _('Localplay Modules'); ?></a></li>
-	<li id="sb_preferences_mo_plugins"><a href="<?php echo $web_path; ?>/admin/modules.php?action=show_plugins"><?php echo _('Available Plugins'); ?></a></li>
-	</ul>
-</li>
 </ul>
 <?php } ?>
