@@ -81,7 +81,7 @@
 </tr>
 </table>
 <div class="formValidation">
-	<?php echo Core::form_register('user_add'); ?>
+	<?php echo Core::form_register('add_user'); ?>
 	<input type="submit" value="<?php echo _('Add User'); ?>" />
 </div>
 </form>
