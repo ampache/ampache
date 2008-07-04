@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2007 Ampache.org
+ Copyright (c) Ampache.org
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
@@ -44,18 +44,6 @@
 	<?php require Config::get('prefix') . '/templates/show_catalog_row.inc.php'; ?>
 </tr>
 <?php } ?>
-<tr class="<?php echo flip_class(); ?>">
-	<td colspan="3">
-	&nbsp;
-	</td>
-	<td class="cel_action" colspan="2">
-		<a href="<?php echo Config::get('web_path'); ?>/admin/catalog.php?action=gather_album_art"><?php echo _('Gather All Art'); ?></a>
-		| <a href="<?php echo Config::get('web_path'); ?>/admin/catalog.php?action=add_to_all_catalogs"><?php echo _('Add to All'); ?></a> 
-		| <a href="<?php echo Config::get('web_path'); ?>/admin/catalog.php?action=update_all_catalogs"><?php echo _('Verify All'); ?></a>
-		| <a href="<?php echo Config::get('web_path'); ?>/admin/catalog.php?action=clean_all_catalogs"><?php echo _('Clean All'); ?></a>
-		| <a href="<?php echo Config::get('web_path'); ?>/admin/catalog.php?action=full_service"><?php echo _('Update All'); ?></a>
-	</td>
-</tr>
 <tr class="th-bottom">
 	<th class="cel_catalog"><?php echo _('Name'); ?></th>
 	<th class="cel_path"><?php echo _('Path'); ?></th>

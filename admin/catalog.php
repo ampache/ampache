@@ -227,11 +227,7 @@ switch ($_REQUEST['action']) {
 		show_confirmation($title,$body,$url);
 	break;
 	case 'show_catalogs': 
-		$catalog_ids = Catalog::get_catalogs(); 
-		Browse::set_type('catalog'); 
-		Browse::set_static_content(1); 
-		Browse::save_objects($catalog_ids); 
-		Browse::show_objects($catalog_ids); 
+		require_once Config::get('prefix') . '/templates/show_manage_catalogs.inc.php'; 
 	break;
 	case 'show_add_catalog':
 		require Config::get('prefix') . '/templates/show_add_catalog.inc.php';
