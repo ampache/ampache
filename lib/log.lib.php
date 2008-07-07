@@ -90,7 +90,8 @@ function ampache_error_handler($errno, $errstr, $errfile, $errline) {
 	}
 
 	if (strstr($errstr,"date.timezone")) { 
-		$errstr = "You have not set a timezone (date.timezone) in your php.ini file. Please set it. This error is non-critical, and not caused by Ampache."; 
+		$error_name = "Warning"; 
+		$errstr = "You have not set a valid timezone (date.timezone) in your php.ini file. This may cause display issues with dates. This warning is non-critical and not caused by Ampache."; 
 	} 
 
 	/* The XML-RPC lib is broken, well kind of 
@@ -101,7 +102,7 @@ function ampache_error_handler($errno, $errstr, $errfile, $errline) {
 	}
 
 	$log_line = "[$error_name] $errstr on line $errline in $errfile";
-	debug_event('error',$log_line,$level);
+	debug_event('PHP Error',$log_line,$level);
 	
 } // ampache_error_handler
 
