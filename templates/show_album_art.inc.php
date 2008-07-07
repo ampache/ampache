@@ -33,15 +33,18 @@ while ($i <= $rows) {
 	while ($j < 4) { 
 		$key = $i*4+$j;
 		$image_url = Config::get('web_path') . '/image.php?type=session&amp;image_index=' . $key; 
+		$dimensions = Core::image_dimensions(get_image_from_source($_SESSION['form']['images'][$key])); 
 		if (!isset($images[$key])) { echo "<td>&nbsp;</td>\n"; } 
 		else { 
 ?>
 			<td align="center">
-				<a href="<?php echo $image_url; ?>" target="_blank">
-				<img src="<?php echo $image_url; ?>" alt="Album Art" border="0" height="175" width="175" /><br />
-				</a>
+				<a href="<?php echo $image_url; ?>" target="_blank"><img src="<?php echo $image_url; ?>" alt="Album Art" border="0" height="175" width="175" /></a>
+				<br />
 				<p align="center">
-				[<a href="<?php echo Config::get('web_path'); ?>/albums.php?action=select_art&amp;image=<?php echo $key; ?>&amp;album_id=<?php echo urlencode($_REQUEST['album_id']); ?>">Select</a>]
+				<?php if (is_array($dimensions)) { ?>
+				[<?php echo intval($dimensions['width']); ?>x<?php echo intval($dimensions['heigh']); ?>] 
+				<?php } ?>	
+				[<a href="<?php echo Config::get('web_path'); ?>/albums.php?action=select_art&amp;image=<?php echo $key; ?>&amp;album_id=<?php echo intval($_REQUEST['album_id']); ?>">Select</a>]
 				</p>
 			</td>
 <?php 

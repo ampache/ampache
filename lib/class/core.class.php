@@ -87,5 +87,28 @@ class Core {
 
 	} // form_verify
 
+	/**
+ 	* image_dimensions
+	* This returns the dimensions of the passed song of the passed type
+	* returns an empty array if PHP-GD is not currently installed, returns
+	* false on error
+	*/ 
+	public static function image_dimensions($image_data) { 
+
+		if (!function_exists('ImageCreateFromString')) { return false; } 
+
+		$image = ImageCreateFromString($image_data); 
+
+		if (!$image) { return false; } 
+
+		$width = imagesx($image); 
+		$height = imagesy($image); 
+
+		if (!$width || !$height) { return false; } 
+
+		return array('width'=>$width,'heigh'=>$height); 
+
+	} // image_dimensions
+
 } // Core
 ?>

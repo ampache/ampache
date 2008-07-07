@@ -4,6 +4,7 @@
 
 --------------------------------------------------------------------------
   v.3.5-Alpha1
+	- Added Image Dimensions on Find Album Art page
 	- Added Confirmation Screen to Catalog Deletion
 	- Reorganized Menu System and Added Modules section
 	- Fix an error if you try to add a shoutbox for an invalid object

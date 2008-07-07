@@ -494,6 +494,8 @@ class vainfo {
 	 */
 	private function _clean_tag($tag,$encoding='') { 
 
+		return $tag; 
+
 		// If we've got iconv then go ahead and clear her up		
 		if ($this->_iconv) { 
 			/* Guess that it's UTF-8 */
