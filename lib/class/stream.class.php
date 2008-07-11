@@ -248,7 +248,7 @@ class Stream {
 	 * creates an m3u file, this includes the EXTINFO and as such can be
 	 * large with very long playlsits
 	 */
-	public public function create_m3u() { 
+	public function create_m3u() { 
 
 	        // Send the client an m3u playlist
 	        header("Cache-control: public");
@@ -281,11 +281,12 @@ class Stream {
 
 	} // create_m3u
 
-	/*!
-		@function create_pls
-		@discussion creates a pls file
-	*/
-	function create_pls() { 
+	/**
+ 	 * create_pls
+	 * This creates a new pls file from an array of songs and
+	 * urls, exciting I know
+	 */
+	public function create_pls() { 
 
 		/* Count entries */
 		$total_entries = count($this->songs) + count($this->urls); 
@@ -364,7 +365,7 @@ class Stream {
 	 * create_xspf
 	 * creates an XSPF playlist (Thx PB1DFT)
 	 */
-	function create_xspf() { 
+	public function create_xspf() { 
 
 		$flash_hack = ''; 
 
@@ -406,7 +407,7 @@ class Stream {
 	 * have to do a little 'cheating' to make this work, we are going to take
 	 * advantage of tmp_playlists to do all of this hotness
 	 */
-	function create_xspf_player() { 
+	public function create_xspf_player() { 
 
 		/* Build the extra info we need to have it pass */
 		$play_info = "?action=show&tmpplaylist_id=" . $GLOBALS['user']->playlist->id;
@@ -450,7 +451,7 @@ class Stream {
 	 * This calls the Localplay API and attempts to 
 	 * add, and then start playback
 	 */
-	function create_localplay() { 
+	public function create_localplay() { 
 
 		// First figure out what their current one is and create the object
 		$localplay = new Localplay(Config::get('localplay_controller')); 
@@ -510,7 +511,7 @@ class Stream {
 	 * create_ram
 	 *this functions creates a RAM file for use by Real Player
 	 */
-	function create_ram() { 
+	public function create_ram() { 
 
                 header("Cache-control: public");
                 header("Content-Disposition: filename=playlist.ram");
@@ -541,7 +542,7 @@ class Stream {
 	                $song_name = $song->f_artist_full . " - " . $song->title . "." . $song->type;
 	        }
 
-	        if ($max_bitrate > 1 AND $min_bitrate < $max_bitrate) {
+	        if ($max_bitrate > 1 AND $min_bitrate < $max_bitrate AND $min_bitrate > 0) {
 	                $last_seen_time = $time - 1200; //20 min.
 
 	                $sql = "SELECT COUNT(*) FROM now_playing, user_preference, preference " .
@@ -550,8 +551,9 @@ class Stream {
 	                $db_results = Dba::query($sql);
 	                $results = Dba::fetch_row($db_results);
 
-	                // Current number of active streams (current is already in now playing)
-	                $active_streams = $results[0];
+	                // Current number of active streams (current is already in now playing, worst case make it 1)
+	                $active_streams = intval($results[0]); 
+			if (!$active_streams) { $active_streams = '1'; } 
 
 	                /* If only one user, they'll get all available.  Otherwise split up equally. */
 	                $sample_rate = floor($max_bitrate/$active_streams);
@@ -561,7 +563,6 @@ class Stream {
 
 	                        /* Log the failure */
 	                        debug_event('downsample',"Error: Max bandwidith already allocated. $active_streams Active Streams",'2');
-
 	                        echo "Maximum bandwidth already allocated.  Try again later.";
 	                        exit();
 
@@ -612,10 +613,14 @@ class Stream {
 
 	        /* Replace Variables */
 	        $downsample_command = Config::get($song->stream_cmd());
-	        $downsample_command = str_replace("%FILE%",$song_file,$downsample_command);
-	        $downsample_command = str_replace("%OFFSET%",$offset,$downsample_command);
-	        $downsample_command = str_replace("%EOF%",$eof,$downsample_command);
-	        $downsample_command = str_replace("%SAMPLE%",$sample_rate,$downsample_command);
+	        $downsample_command = str_replace("%FILE%",$song_file,$downsample_command,$file_exists);
+	        $downsample_command = str_replace("%OFFSET%",$offset,$downsample_command,$offset_exists);
+	        $downsample_command = str_replace("%EOF%",$eof,$downsample_command,$eof_exists);
+	        $downsample_command = str_replace("%SAMPLE%",$sample_rate,$downsample_command,$sample_exists);
+
+		if (!$file_exists || !$offset_exists || !$eof_exists || !$sample_exists) { 
+			debug_event('downsample','Error: Downsample command missing a varaible values are File:' . $file_exists . ' Offset:' . $offset_exists . ' Eof:' . $eof_exists . ' Sample:' . $sample_exists,'1'); 
+		} 
 
 	        // If we are debugging log this event
 	        $message = "Start Downsample: $downsample_command";
