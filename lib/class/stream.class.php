@@ -72,7 +72,7 @@ class Stream {
 		}
 
 		// We're starting insert the session into session_stream
-		if (!self::insert_session()) { 
+		if (!self::get_session()) { 
 			debug_event('stream','Session Insertion failure, aborting','3'); 
 			return false; 
 		}
