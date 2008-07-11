@@ -38,7 +38,7 @@ function check_database($host,$username,$pass) {
 	if (!is_resource($dbh)) {
 		return false;
 	}
-	if (!$host || !$username || !$pass) { 
+	if (!$host || !$username) { 
 		return false;
 	}
 	

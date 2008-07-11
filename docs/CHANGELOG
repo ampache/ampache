@@ -4,6 +4,8 @@
 
 --------------------------------------------------------------------------
   v.3.5-Alpha1
+	- Fix divide by 0 error during transcode in some configurations
+	- Remove root mysql pw requirement from installer
 	- Added Image Dimensions on Find Album Art page
 	- Added Confirmation Screen to Catalog Deletion
 	- Reorganized Menu System and Added Modules section
