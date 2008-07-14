@@ -31,6 +31,27 @@ abstract class database_object {
 	// Statistics for debugging
 	public static $cache_hit = 0; 
 
+	public function get_info($id,$table_name='') { 
+
+		$table_name = $table_name ? Dba::escape($table_name) : Dba::escape(strtolower(get_class($this)));
+
+		if (self::is_cached($table_name,$id)) { 
+			return self::get_from_cache($table_name,$id); 
+		} 
+
+		$sql = "SELECT * FROM `$table_name` WHERE `id`='$id'"; 
+		$db_results = Dba::query($sql); 
+
+		if (!$db_results) { return array(); } 
+
+		$row = Dba::fetch_assoc($db_results); 
+
+		self::add_to_cache($table_name,$id,$row); 
+
+		return $row; 	
+
+	} // get_info
+
 	/**
 	 * is_cached
 	 * this checks the cache to see if the specified object is there

@@ -71,30 +71,6 @@ class Tag extends database_object {
 	} // construct_from_name
 
 	/**
-	 * get_info	
- 	 * This takes the id and returns an array of information, checks the cache
-	 * to see what's up
-	 */
-	private function get_info($id) { 
-
-		$id = intval($id); 
-
-		if (parent::is_cached('tag',$id)) { 
-			return parent::get_from_cache('tag',$id);
-		} 
-
-		$sql = "SELECT * FROM `tag` WHERE `id`='$id'"; 
-		$db_results = Dba::query($sql); 
-
-		$results = Dba::fetch_assoc($db_results); 
-
-		parent::add_to_cache('tag',$id,$results); 
-		
-		return $results; 
-
-	} // get_info
-
-	/**
 	 * build_cache
 	 * This takes an array of object ids and caches all of their information
 	 * in a single query, cuts down on the connections

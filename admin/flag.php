@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2007 Ampache.org
+ Copyright (c) Ampache.org
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
@@ -18,7 +18,6 @@
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
-
 require '../lib/init.php';
 
 if (!Access::check('interface','100')) { 
@@ -291,9 +290,17 @@ switch ($_REQUEST['action']) {
 		} // end else
 	        show_confirmation(_('Songs Enabled'),_('The requested song(s) have been enabled'),return_referer());
         break;
+	case 'show_disabled': 
+		$disabled = Flag::get_disabled(); 
+		Browse::set_type('song'); 
+		Browse::set_static_content(1); 
+		Browse::save_objects($disabled); 
+		Browse::show_objects($disabled); 
+	break; 
 	default:
 	case 'show_flagged':
 		$flagged = Flag::get_all();
+		Flag::build_cache($flagged); 
 		Browse::set_type('flagged'); 
 		Browse::set_static_content(1);
 		Browse::save_objects($flagged); 

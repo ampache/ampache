@@ -48,7 +48,7 @@ class Artist extends database_object {
 		$this->id = intval($id);
 
 		/* Get the information from the db */
-		$info = $this->_get_info();
+		$info = $this->get_info();
 			
 		foreach ($info as $key=>$value) { 
 			$this->$key = $value; 
@@ -91,30 +91,6 @@ class Artist extends database_object {
 		}
 
 	} // build_cache
-
-	/**
-	 * _get_info
-	 * get's the vars for $this out of the database taken from the object
-	*/
-	private function _get_info() {
-
-		$id = intval($this->id); 
-
-		if (parent::is_cached('artist',$id)) { 
-                        return parent::get_from_cache('artist',$id); 
-		} 
-	
-		/* Grab the basic information from the catalog and return it */
-		$sql = "SELECT * FROM artist WHERE id='$id'";
-		$db_results = Dba::query($sql);
-
-		$results = Dba::fetch_assoc($db_results);
-
-		parent::add_to_cache('artist',$id,$results);
-
-		return $results;
-
-	} // _get_info
 
 	/**
 	 * get_from_name

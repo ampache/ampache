@@ -59,7 +59,7 @@ class Album extends database_object {
 		$this->id = intval($id);
 
 		/* Get the information from the db */
-		$info = $this->_get_info();
+		$info = $this->get_info();
 	
 		// Foreach what we've got
 		foreach ($info as $key=>$value) { 
@@ -109,32 +109,6 @@ class Album extends database_object {
 		}
 
 	} // build_cache
-
-	/**
-	 * _get_info
-	 * This is a private function that pulls the album 
-	 * from the database 
-	 */
-	private function _get_info() {
-
-		$id = intval($this->id); 
-
-		if (parent::is_cached('album',$id)) { 
-			return parent::get_from_cache('album',$id); 
-		} 
-
-		// Just get the album information
-		$sql = "SELECT * FROM `album` WHERE `id`='$id'"; 
-		$db_results = Dba::query($sql);
-
-		$results = Dba::fetch_assoc($db_results);
-
-		// Cache the object
-		parent::add_to_cache('album',$id,$results); 
-
-		return $results;
-
-	} // _get_info
 
 	/**
 	 * _get_extra_info

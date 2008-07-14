@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright 2001 - 2007 Ampache.org
+ Copyright Ampache.org
  All Rights Reserved
 
  This program is free software; you can redistribute it and/or
@@ -24,7 +24,7 @@
  * Flag Class
  * This handles flagging of songs, albums and artists	
  */
-class Flag {
+class Flag extends database_object {
 
 	public $id; 
 	public $user;
@@ -45,7 +45,7 @@ class Flag {
 	 */
 	public function __construct($flag_id) { 
 
-		$info = $this->_get_info($flag_id);
+		$info = $this->get_info($flag_id,'flagged');
 		
 		foreach ($info as $key=>$value) { 
 			$this->$key = $value; 
@@ -56,21 +56,22 @@ class Flag {
 	} // Constructor
 
 	/**
-	 * _get_info
-	 * Private function for getting the information for this object from the database 
+	 * build_cache
+	 * This takes an array of ids and builds up a nice little cache
+	 * for us
 	 */
-	private function _get_info($flag_id) { 
+	public static function build_cache($ids) { 
 
-		$id = Dba::escape($flag_id);
+		$idlist = '(' . implode(',',$ids) . ')'; 
 
-		$sql = "SELECT * FROM `flagged` WHERE `id`='$id'";
-		$db_results = Dba::query($sql);
+		$sql = "SELECT * FROM `flagged` WHERE `id` IN $idlist"; 
+		$db_results = Dba::query($sql); 
 
-		$results = Dba::fetch_assoc($db_results);
-		
-		return $results;
+		while ($row = Dba::fetch_assoc($db_results)) { 
+			parent::add_to_cache('flagged',$row['id'],$row); 
+		} 
 
-	} // _get_info
+	} // build_cache
 
 	/**
 	 * get_recent
@@ -95,19 +96,24 @@ class Flag {
 	} // get_recent
 
 	/**
-	 * get_total
-	 * Returns the total number of flagged objects
+	 * get_disabled
+	 * This returns all of the songs that have been disabled, this is
+	 * a form of being flagged
 	 */
-	function get_total() { 
+	public static function get_disabled() { 
 
-		$sql = "SELECT COUNT(id) FROM flagged";
-		$db_results = mysql_query($sql, dbh());
+		$sql = "SELECT `id` FROM `song` WHERE `enabled`='0'"; 
+		$db_results = Dba::query($sql); 
 
-		$results = mysql_fetch_row($db_results);
+		$results = array(); 
+		
+		while ($row = Dba::fetch_assoc($db_results)) { 
+			$results[] = $row['id']; 
+		} 
 
-		return $results['0'];
+		return $results; 
 
-	} // get_total
+	} // get_disabled
 
 	/**
 	 * get_all
