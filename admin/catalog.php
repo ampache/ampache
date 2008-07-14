@@ -117,8 +117,8 @@ switch ($_REQUEST['action']) {
 	case 'show_delete_catalog': 
 		$catalog_id = scrub_in($_GET['catalog_id']); 
 
-		$next_url = Config::get('web_path') . '/admin/catalog.php?action=delete_catalog'; 
-		show_confirmation(_('Catalog Delete'),_('Confirm Deletion Request'),$nexturl,1,'delete_catalog'); 
+		$next_url = Config::get('web_path') . '/admin/catalog.php?action=delete_catalog&catalog_id=' . scrub_out($catalog_id); 
+		show_confirmation(_('Catalog Delete'),_('Confirm Deletion Request'),$next_url,1,'delete_catalog'); 
 	break; 
 	case 'remove_disabled':
 	        if (conf('demo_mode')) { break; }
