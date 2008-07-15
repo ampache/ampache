@@ -575,7 +575,7 @@ class Browse {
 		if ($_SESSION['browse']['type'] == 'song') { 
 			switch($filter) { 
 				case 'alpha_match':
-					$filter_sql = " `song`.`title` LIKE '" . Dba::escape($value) . "%' AND ";
+					$filter_sql = " `song`.`title` LIKE '%" . Dba::escape($value) . "%' AND ";
 				break;
 				case 'unplayed':
 					$filter_sql = " `song`.`played`='0' AND "; 
@@ -598,7 +598,7 @@ class Browse {
 		elseif ($_SESSION['browse']['type'] == 'album') { 
 			switch($filter) { 
 				case 'alpha_match':
-					$filter_sql = " `album`.`name` LIKE '" . Dba::escape($value) . "%' AND "; 
+					$filter_sql = " `album`.`name` LIKE '%" . Dba::escape($value) . "%' AND "; 
 				break;
 				case 'min_count': 
 
@@ -616,7 +616,7 @@ class Browse {
 		elseif ($_SESSION['browse']['type'] == 'artist') { 
 			switch($filter) { 
 				case 'alpha_match':
-					$filter_sql = " `artist`.`name` LIKE '" . Dba::escape($value) . "%' AND ";
+					$filter_sql = " `artist`.`name` LIKE '%" . Dba::escape($value) . "%' AND ";
 				break;
 				default:
 					// Rien a faire
@@ -636,7 +636,7 @@ class Browse {
 		elseif ($_SESSION['browse']['type'] == 'live_stream') { 
 			switch ($filter) { 
 				case 'alpha_match':
-					$filter_sql = " `live_stream`.`name` LIKE '" . Dba::escape($value) . "%' AND "; 
+					$filter_sql = " `live_stream`.`name` LIKE '%" . Dba::escape($value) . "%' AND "; 
 				break;
 				default: 
 					// Rien a faire
@@ -646,7 +646,7 @@ class Browse {
 		elseif ($_SESSION['browse']['type'] == 'playlist') { 
 			switch ($filter) { 
 				case 'alpha_match': 
-					$filter_sql = " `playlist`.`name` LIKE '" . Dba::escape($value) . "%' AND "; 
+					$filter_sql = " `playlist`.`name` LIKE '%" . Dba::escape($value) . "%' AND "; 
 				break;
 				case 'playlist_type': 
 					$user_id = intval($GLOBALS['user']->id); 
