@@ -224,6 +224,7 @@ if ($_GET['action'] == 'download' AND Config::get('download')) {
 	$browser = new Browser(); 
 	$browser->downloadHeaders($song_name,$song->mime,false,$song->size); 
 	$fp = fopen($song->file,'rb'); 
+	$bytesStreamed = 0; 
 
 	if (!is_resource($fp)) { 
                 debug_event('file_read_error',"Error: Unable to open $song->file for downloading",'2');
@@ -234,6 +235,7 @@ if ($_GET['action'] == 'download' AND Config::get('download')) {
 	if (Config::get('rate_limit') > 0) { 
 		while (!feof($fp)) { 
 			echo fread($fp,round(Config::get('rate_limit')*1024)); 
+			$bytesStreamed += round(Config::get('rate_limit')*1024); 
 			flush(); 
 			sleep(1); 
 		} 
@@ -243,11 +245,9 @@ if ($_GET['action'] == 'download' AND Config::get('download')) {
 	} 
 
 	// Make sure that a good chunk of the song has been played
-	if ($bytesStreamed > $minBytesStreamed) {
+	if ($bytesStreamed >= $song->size) {
         	debug_event('Stats','Downloaded, Registering stats for ' . $song->title,'5');
-        
 	        $user->update_stats($song->id);
-        
 	} // if enough bytes are streamed
 		
 	fclose($fp); 

@@ -44,11 +44,8 @@ class Artist extends database_object {
 		/* If they failed to pass in an id, just run for it */
 		if (!$id) { return false; } 	
 
-		/* Assign id for use in get_info() */
-		$this->id = intval($id);
-
 		/* Get the information from the db */
-		$info = $this->get_info();
+		$info = $this->get_info($id);
 			
 		foreach ($info as $key=>$value) { 
 			$this->$key = $value; 

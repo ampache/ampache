@@ -54,12 +54,8 @@ class Album extends database_object {
 
 		if (!$id) { return false; } 
 
-
-		/* Assign id for use in get_info() */
-		$this->id = intval($id);
-
 		/* Get the information from the db */
-		$info = $this->get_info();
+		$info = $this->get_info($id);
 	
 		// Foreach what we've got
 		foreach ($info as $key=>$value) { 
