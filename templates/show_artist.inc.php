@@ -32,13 +32,13 @@ if (Config::get('ratings')) {
 <div id="information_actions">
 <ul>
 <li>
-	<a href="<?php echo $web_path; ?>/artists.php?action=show_all_songs&amp;artist=<?php echo $artist->id; ?>"><?php echo get_user_icon('view'); ?></a> <?php echo _("Show All Songs By") . " " . $artist->f_name; ?>
+	<a href="<?php echo $web_path; ?>/artists.php?action=show_all_songs&amp;artist=<?php echo $artist->id; ?>"><?php echo get_user_icon('view'); ?></a><?php printf(_("Show All Songs By %s"), $artist->f_name); ?>
 </li>
 <li>
-	<?php echo Ajax::button('?action=basket&type=artist&id=' . $artist->id,'add',_('Add'),'add_' . $artist->id); ?><?php echo _('Add All songs By') . ' ' . $artist->f_name; ?>
+	<?php echo Ajax::button('?action=basket&type=artist&id=' . $artist->id,'add',_('Add'),'add_' . $artist->id); ?><?php printf(_('Add All Songs By %s'), $artist->f_name); ?>
 </li>
 <li>
-	<?php echo Ajax::button('?action=basket&type=artist_random&id=' . $artist->id,'random',_('Random'),'random_' . $artist->id); ?><?php echo _('Add Random Songs By') . ' ' . $artist->f_name; ?>
+	<?php echo Ajax::button('?action=basket&type=artist_random&id=' . $artist->id,'random',_('Random'),'random_' . $artist->id); ?><?php printf(_('Add Random Songs By %s'), $artist->f_name); ?>>
 </li>
 <?php if (Access::check('interface','50')) { ?>
 <li>
