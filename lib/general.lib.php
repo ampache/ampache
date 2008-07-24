@@ -405,6 +405,7 @@ function get_languages() {
 				case 'tr_TR'; $name = 'Turkish'; break;
 				case 'zh_CN'; $name = _('Simplified Chinese') . " (&#x7b80;&#x4f53;&#x4e2d;&#x6587;)"; break;
 				case 'ru_RU'; $name = 'Russian (&#x0420;&#x0443;&#x0441;&#x0441;&#x043a;&#x0438;&#x0439;)'; break;
+				case 'ja_JP'; $name = 'Japanese (日本語)'; break;
 				default: $name = _('Unknown'); break;
 			} // end switch
 

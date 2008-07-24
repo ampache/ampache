@@ -20,8 +20,8 @@
 */
 
 show_box_top();
-echo _('Updating the') . " <b>[ $catalog->name ]</b> " . _('Catalog') . "<br />\n";
-echo $number . " " . _('songs found checking tag information.') . "<br />\n\n";
+printf(_('Updating the %s catalog', " <b>[ $catalog->name ]</b> "));
+echo "<br />\n" . $number . " " . _('songs found checking tag information.') . "<br />\n\n";
 echo _('Verifed') . ":<span id=\"verify_count_$catalog_id\">$catalog_verify_found</span><br />"; 
 echo _('Reading') . ":<span id=\"verify_dir_$catalog_id\">$catalog_verify_directory</span><br />";
 show_box_bottom(); 

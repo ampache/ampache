@@ -942,6 +942,7 @@ class Browser {
                 header('Content-Type: ' . trim($cType));
             } elseif ($this->isBrowser('msie')) {
                 header('Content-Type: application/x-msdownload');
+		$filename = rawurlencode($filename);
             } else {
                 header('Content-Type: application/octet-stream');
             }
@@ -949,6 +950,7 @@ class Browser {
         } else {
             if ($this->isBrowser('msie')) {
                 header('Content-Type: application/x-msdownload');
+		$filename = rawurlencode($filename);
             } elseif (!is_null($cType)) {
                 header('Content-Type: ' . trim($cType));
             } else {

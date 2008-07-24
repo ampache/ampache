@@ -101,6 +101,7 @@ switch ($_REQUEST['action']) {
 		$charsets = array('de_DE' => 'ISO-8859-15',
 				  'en_US' => 'iso-8859-1',
 				  'en_GB' => 'UTF-8',
+				  'ja_JP' => 'UTF-8',
 				  'es_ES' => 'iso-8859-1',
 				  'fr_FR' => 'iso-8859-1',
 				  'el_GR' => 'el_GR.utf-8',
@@ -158,6 +159,7 @@ switch ($_REQUEST['action']) {
 		// We need the charset for the different languages
 		$charsets = array('de_DE' => 'ISO-8859-15',
 				  'en_US' => 'iso-8859-1',
+				  'ja_JP' => 'UTF-8',
 				  'en_GB' => 'UTF-8',
 				  'es_ES' => 'iso-8859-1',
 				  'fr_FR' => 'iso-8859-1',
@@ -187,6 +189,7 @@ switch ($_REQUEST['action']) {
 		// We need the charset for the different languages
 		$charsets = array('de_DE' => 'ISO-8859-15',
 				  'en_US' => 'iso-8859-1',
+				  'ja_JP' => 'UTF-8',
 				  'en_GB' => 'UTF-8',
 				  'es_ES' => 'iso-8859-1',
 				  'fr_FR' => 'iso-8859-1',

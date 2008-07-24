@@ -4,6 +4,7 @@
 
 --------------------------------------------------------------------------
   v.3.5-Alpha1
+        - Corrected some translation strings and added jp_JP (Thx momo-i)
 	- Ignore filenames that start with . (hidden) solves an issue
 		with mac filesystems
 	- Fix tracking of stats for downloaded songs 

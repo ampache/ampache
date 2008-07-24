@@ -20,7 +20,8 @@
 */
 
 show_box_top();
-echo "\n" . _('Cleaning the') . " <b>[" . $this->name . "]</b> " . _('Catalog') . "...<br />\n";
+//echo "\n" . _('Cleaning the') . " <b>[" . $this->name . "]</b> " . _('Catalog') . "...<br />\n";
+echo "\n" . printf(_('Cleaning the %s Catalog'), " <b>[" . $this->name . "]</b> ") . "...<br />\n";
 echo _('Checking') . ": <span id=\"clean_count_" . $this->id . "\"></span>\n<br />";
 echo _('Reading') . ":<span id=\"clean_dir_" . $this->id . "\"></span><br />";
 show_box_bottom(); 
