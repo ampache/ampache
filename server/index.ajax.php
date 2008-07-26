@@ -30,10 +30,23 @@ switch ($_REQUEST['action']) {
 		if (count($albums)) { 
 			ob_start(); 
 			require_once Config::get('prefix') . '/templates/show_random_albums.inc.php'; 
-			$results['random_selection'] = ob_get_contents(); 
-			ob_end_clean(); 
+			$results['random_selection'] = ob_get_clean(); 
 		} 
 	break;
+	case 'reloadnp': 
+		ob_start(); 
+		show_now_playing(); 
+		$results['now_playing'] = ob_get_clean(); 
+		ob_start(); 
+		$data = Song::get_recently_played(); 
+		Song::build_cache(array_keys($data)); 
+		if (count($data)) { 
+			show_box_top(_('Recently Played')); 
+                        require_once Config::get('prefix') . '/templates/show_recently_played.inc.php';
+			show_box_bottom(); 
+		} 
+		$results['recently_played'] = ob_get_clean(); 
+	break; 
 	case 'sidebar': 
                 switch ($_REQUEST['button']) {
                         case 'home':

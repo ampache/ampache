@@ -360,7 +360,7 @@ class User extends database_object {
 			Error::add('password',_("Error Passwords don't match")); 
 		} 
 
-		if (Error::$state) { 
+		if (Error::occurred()) { 
 			return false; 
 		} 
 		
@@ -593,7 +593,7 @@ class User extends database_object {
 		/* Now Insert this new user */
 		$sql = "INSERT INTO `user` (`username`, `fullname`, `email`, `password`, `access`, `create_date`) VALUES" .
 			" ('$username','$fullname','$email',PASSWORD('$password'),'$access','" . time() ."')";
-		$db_results = Dba::query($sql);
+		$db_results = Dba::write($sql);
 		
 		if (!$db_results) { return false; }
 
@@ -613,9 +613,11 @@ class User extends database_object {
 	 */
 	public function update_password($new_password) { 
 
+		$new_password = hash('sha1',$new_password); 
+
 		$new_password = Dba::escape($new_password);
-		$sql = "UPDATE `user` SET `password`=PASSWORD('$new_password') WHERE `id`='$this->id'";
-		$db_results = Dba::query($sql);
+		$sql = "UPDATE `user` SET `password`='$new_password' WHERE `id`='$this->id'";
+		$db_results = Dba::write($sql);
 
 	} // update_password 
 
@@ -641,7 +643,7 @@ class User extends database_object {
 		/* Calculate their total Bandwidth Useage */
 		$sql = "SELECT `song`.`size` FROM `song` LEFT JOIN `object_count` ON `song`.`id`=`object_count`.`object_id` " . 
 			"WHERE `object_count`.`user`='$this->id' AND `object_count`.`object_type`='song'";
-		$db_results = Dba::query($sql);
+		$db_results = Dba::read($sql);
 
 		while ($r = Dba::fetch_assoc($db_results)) { 
 			$total = $total + $r['size'];

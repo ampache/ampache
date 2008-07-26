@@ -99,13 +99,23 @@ if ($_POST['username'] && $_POST['password']) {
 
 /* If the authentication was a success */
 if ($auth['success']) {
+
+	// Generate the user we need for a few things
+	$user = User::get_from_username($username);
+
+	if (Config::get('prevent_multiple_logins')) {
+		$current_ip = $user->is_logged_in();
+		if ($current_ip != sprintf("%u",ip2long($_SERVER['REMOTE_ADDR']))) {
+			Error::add('general',_('User Already Logged in'));
+			require Config::get('prefix') . '/templates/show_login_form.inc.php';
+			exit; 
+        	}
+	} // if prevent_multiple_logins
+
 	// $auth->info are the fields specified in the config file
 	//   to retrieve for each user
 	vauth::session_create($auth);
 	
-	// Generate the user we need for a few things
-	$user = User::get_from_username($username);
-
 	//
 	// Not sure if it was me or php tripping out,
 	//   but naming this 'user' didn't work at all

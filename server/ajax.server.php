@@ -293,21 +293,6 @@ switch ($_REQUEST['action']) {
 		
 		$results['rightbar'] = ajax_include('rightbar.inc.php'); 
 	break;
-	/* reloading the now playing information */
-	case 'reloadnp':
-		ob_start();
-		show_now_playing();	
-		$results['now_playing'] = ob_get_contents();
-		ob_clean();
-		$data = Song::get_recently_played(); 
-		if (count($data)) { 
-			show_box_top(_('Recently Played')); 
-			require_once Config::get('prefix') . '/templates/show_recently_played.inc.php'; 
-			show_box_bottom(); 
-		}
-		$results['recently_played'] = ob_get_contents(); 
-		ob_end_clean();
-	break;
 	/* Setting ratings */
 	case 'set_rating':
 		ob_start(); 

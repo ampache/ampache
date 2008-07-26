@@ -4,6 +4,10 @@
 
 --------------------------------------------------------------------------
   v.3.5-Alpha1
+	- Fixed home menu not always displaying the entire contents
+	- Fixed logic error with duplicate login setting which caused it
+		to only work if mysql auth was used
+	- Changed Passwords to SHA1 will prompt to reset password
         - Corrected some translation strings and added jp_JP (Thx momo-i)
 	- Ignore filenames that start with . (hidden) solves an issue
 		with mac filesystems

@@ -131,7 +131,7 @@ switch ($_REQUEST['action']) {
 		}
 
 		// If we've hit an error anywhere up there break!
-		if (Error::$state) {
+		if (Error::occurred()) {
 			require_once Config::get('prefix') . '/templates/show_user_registration.inc.php';
 			break;
 		}

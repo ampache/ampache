@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2007 Ampache.org
+ Copyright (c) Ampache.org
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
@@ -19,10 +19,9 @@
 
 */
 // Because this is a reset of the persons password make the form a little more secure
-$form_string = generate_password('32'); 
-$_SESSION['forms']['account'] = $form_string; 
 ?>
 <?php Error::display('general'); ?>
+<form method="post" name="preferences" action="<?php echo Config::get('web_path'); ?>/preferences.php?action=update_user" enctype="multipart/form-data">
 <table class="tabledata">
 <tr>
 	<td><?php echo _('Name'); ?>:</td>
@@ -58,8 +57,7 @@ $_SESSION['forms']['account'] = $form_string;
 </table>
 <div class="formValidation">
 		<input type="hidden" name="user_id" value="<?php echo scrub_out($client->id); ?>" />
-		<input type="hidden" name="action" value="update_user" />
+		<?php echo Core::form_register('update_user'); ?>
 		<input type="hidden" name="tab" value="<?php echo scrub_out($_REQUEST['tab']); ?>" />
-		<input type="hidden" name="form_string" value="<?php echo $form_string; ?>" />
 		<input class="button" type="submit" value="<?php echo _('Update Account'); ?>" />
 </div>

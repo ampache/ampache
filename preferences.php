@@ -28,6 +28,11 @@ switch($_REQUEST['action']) {
 			access_denied(); 
 			exit; 
 		} 
+
+		if (!Core::form_verify('update_preferences','post')) { 
+			access_denied(); 
+			exit; 
+		} 
 		
 		/* Reset the Theme */
 		if ($_REQUEST['method'] == 'admin') { 
@@ -53,6 +58,11 @@ switch($_REQUEST['action']) {
 			exit; 
 		} 
 
+                if (!Core::form_verify('update_preferences','post')) {
+                        access_denied();
+                        exit;
+                }
+
 		update_preferences($_REQUEST['user_id']); 
 		header("Location: " . Config::get('web_path') . "/admin/users.php?action=show_preferences&user_id=" . scrub_out($_REQUEST['user_id'])); 
 	break;
@@ -76,10 +86,16 @@ switch($_REQUEST['action']) {
 	break; 
 	case 'update_user': 
 		// Make sure we're a user and they came from the form
-		if (!Access::check('interface','25') || $_POST['form_string'] != $_SESSION['forms']['account'] || !strlen($_SESSION['forms']['account'])) { 
+		if (!Access::check('interface','25')) { 
 			access_denied(); 
 			exit; 
 		} 
+
+                if (!Core::form_verify('update_user','post')) {
+                        access_denied();
+                        exit;
+                }
+
 		// Remove the value
 		unset($_SESSION['forms']['account']); 
 

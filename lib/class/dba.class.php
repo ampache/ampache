@@ -68,6 +68,28 @@ class Dba {
 	} // query
 
 	/**
+	 * read
+	 * This is a wrapper for query, it's so that in the future if we ever wanted
+	 * to split reads and writes we could
+	 */
+	public static function read($sql) { 
+
+		return self::query($sql); 
+
+	} // read
+
+	/**
+	 * write
+	 * This is a wrapper for a write query, it is so that we can split out reads and
+	 * writes if we want to 
+	 */
+	public static function write($sql) { 
+
+		return self::query($sql); 
+
+	} // write
+
+	/**
 	 * escape
 	 * This runs a escape on a variable so that it can be safely inserted
 	 * into the sql 

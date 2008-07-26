@@ -462,21 +462,59 @@ class vauth {
 	} // authenticate
 
 	/**
- 	 * mysql_auth
-	 * This is a private function, it should only be called by authenticate
+	 * mysql_auth
+	 * This is the core function of authentication by ampache. It checks their current password
+	 * and then tries to figure out if it can use the new SHA password hash or if it needs to fall
+	 * back on the mysql method
 	 */
 	private static function mysql_auth($username,$password) { 
 
-	        $username = Dba::escape($username);
-	        $password = Dba::escape($password);
+		$username = Dba::escape($username); 
+		$password = Dba::escape($password); 
 
-	        $password_check_sql = "PASSWORD('$password')";
+		if (!strlen($password) OR !strlen($username)) { 
+			Error::add('general',_('Error Username or Password incorrect, please try again')); 
+			return false; 
+		} 
 
-	        // If they don't have a password kick em ou
-	        if (!strlen($password)) {
-	                Error::add('general','Error Username or Password incorrect, please try again');
-	                return false;
-	        }
+		// We have to pull the password in order to figure out how to handle it *cry*
+		$sql = "SELECT `password` FROM `user` WHERE `username`='$username'"; 
+		$db_results = Dba::read($sql); 
+		$row = Dba::fetch_assoc($db_results); 
+
+		// If it's using the old method then roll with that
+		if (substr($row['password'],0,1) == '*' OR strlen($row['password']) < 32) { 
+			$response = self::vieux_mysql_auth($username,$password); 
+			return $response; 
+		} 
+
+		// Use SHA1 for the password, we aren't using SHA2 because Amarok can't handle it *cry*
+		$password = hash('sha1',$password); 
+	
+		$sql = "SELECT `username`,`id` FROM `user` WHERE `password`='$password' AND `username`='$username'"; 	
+		$db_results = Dba::read($sql); 
+
+		$row = Dba::fetch_assoc($db_results); 
+
+		if (!count($row)) { 
+			Error::add('general',_('Error Username or Password incorrect, please try again')); 
+			return false; 
+		} 
+
+                $row['type']        = 'mysql';
+                $row['success']     = true;
+
+		return $row;
+
+	} // mysql_auth
+
+	/**
+ 	 * vieux_mysql_auth
+	 * This is a private function, it should only be called by authenticate
+	 */
+	private static function vieux_mysql_auth($username,$password) { 
+
+		$password_check_sql = "PASSWORD('$password')";
 
 		// This has to still be here because lots of people use old_password in their config file
 		$sql = "SELECT `password` FROM `user` WHERE `username`='$username'"; 
@@ -498,7 +536,7 @@ class vauth {
 	        $results = Dba::fetch_assoc($db_results);
 
 	        if (!$results) {
-	                Error::add('general','Error Username or Password incorrect, please try again');
+	                Error::add('general',_('Error Username or Password incorrect, please try again'));
 	                return false;
 	        }
 
@@ -512,11 +550,12 @@ class vauth {
 	        } // if prevent_multiple_logins
 
 	        $results['type']        = 'mysql';
+		$results['password']	= 'old'; 
 	        $results['success']     = true;
 
 	        return $results;
 
-	} // mysql_auth
+	} // vieux_mysql_auth
 
 	/**
 	 * ldap_auth

@@ -195,7 +195,7 @@ class Browse {
 			case 'catalog':
 			case 'album':
 			case 'artist':
-			case 'genre':
+			case 'tag':
 			case 'shoutbox': 
 			case 'live_stream':
 				// Set it

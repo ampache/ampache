@@ -35,10 +35,10 @@ require_once 'lib/init.php';
 // so we've got a little switch here that creates the type.. this feels hackish...
 
 switch ($_REQUEST['action']) { 
+	case 'tag': 
 	case 'file': 
 	case 'album': 
 	case 'artist': 
-	case 'genre': 
 	case 'playlist': 
 	case 'live_stream': 
 	case 'song': 
@@ -59,16 +59,17 @@ switch($_REQUEST['action']) {
 		Album::build_cache($album_ids); 
 		Browse::show_objects($album_ids); 
 	break;
+	case 'tag': 
+		Browse::set_sort('count','ASC'); 
+		$tags = Browse::get_objects(); 
+		Tag::build_cache($tags); 
+		Browse::show_objects($tags); 
+	break; 
 	case 'artist':
 		Browse::set_sort('name','ASC');
 		$artist_ids = Browse::get_objects(); 
 		Artist::build_cache($artist_ids); 
 		Browse::show_objects($artist_ids); 
-	break;
-	case 'genre':
-		Browse::set_sort('name','ASC');
-		$genre_ids = Browse::get_objects(); 
-		Browse::show_objects($genre_ids); 
 	break;
 	case 'song':
 		Browse::set_sort('title','ASC');

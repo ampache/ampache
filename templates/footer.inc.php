@@ -21,9 +21,10 @@
 */
 ?>
 <div style="clear:both;"></div>
+<?php if ($_SESSION['userdata']['password'] == 'old') {?>
+	<span class="fatalerror"><?php echo _('Using Old Password Encryption, Please Reset your Password'); ?></span>
+<?php } ?>
 </div> <!-- end id="content"-->
-<!-- I really hate IE
-</td></tr></table> -->
 </div> <!-- end id="maincontainer"-->
 <div id="footer">
 	<a href="http://www.ampache.org/index.php">Ampache v.<?php echo Config::get('version'); ?></a><br />

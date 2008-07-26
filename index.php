@@ -32,7 +32,7 @@ $action = scrub_in($_REQUEST['action']);
  */
 if (Config::get('refresh_limit') > 5) { 
 	$refresh_limit = Config::get('refresh_limit'); 
-	$ajax_url = Config::get('ajax_url') . '?action=reloadnp';
+	$ajax_url = Config::get('ajax_url') . '?page=index&action=reloadnp';
 	require_once Config::get('prefix') . '/templates/javascript_refresh.inc.php';
 }
 

@@ -86,7 +86,7 @@ class Song extends database_object {
 				"addition_time FROM `song` " .
 				"LEFT JOIN `tag_map` ON `tag_map`.`object_id`=`song`.`id` AND `tag_map`.`object_type`='song' " . 
 				"WHERE `song`.`id` IN $idlist";
-		$db_results = Dba::query($sql);
+		$db_results = Dba::read($sql);
 	  
 		while ($row = Dba::fetch_assoc($db_results)) {
 			parent::add_to_cache('song',$row['id'],$row); 
@@ -100,9 +100,14 @@ class Song extends database_object {
 		Tag::build_cache($tags); 
 		Tag::build_map_cache('song',$song_ids); 
 
+		// If we're rating this then cache them as well
+		if (Config::get('ratings')) { 
+			Rating::build_cache('song',$song_ids); 
+		} 
+
 		// Build a cache for the song's extended table
 		$sql = "SELECT * FROM `song_data` WHERE `song_id` IN $idlist"; 
-		$db_results = Dba::query($sql); 
+		$db_results = Dba::read($sql); 
 
 		while ($row = Dba::fetch_assoc($db_results)) { 
 			parent::add_to_cache('song_data',$row['song_id'],$row); 

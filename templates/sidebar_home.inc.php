@@ -70,6 +70,7 @@ $ajax_info = Config::get('ajax_url'); $web_path = Config::get('web_path');
         <?php } // if playlist_type ?>
     </div>
   </li>
+<?php } ?>
   <li><h4><?php echo _('Playlist'); ?></h4>
     <ul class="sb3" id="sb_home_info">
       <li id="sb_home_info_CurrentlyPlaying"><a href="<?php echo $web_path; ?>/index.php"><?php echo _('Currently Playing'); ?></a></li>
@@ -95,5 +96,4 @@ $ajax_info = Config::get('ajax_url'); $web_path = Config::get('web_path');
       <li id="sb_home_random_advanced"><a href="<?php echo $web_path; ?>/random.php?action=advanced"><?php echo _('Advanced'); ?></a></li>
     </ul>
   </li>
-<?php } ?>
 </ul>

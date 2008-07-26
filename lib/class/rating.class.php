@@ -64,26 +64,26 @@ class Rating extends database_object {
 	 * //FIXME: Improve logic so that misses get cached as average
 	 */
 	public static function build_cache($type, $ids) {
-	
+		
 		$user_id = Dba::escape($GLOBALS['user']->id); 
 
 		$idlist = '(' . implode(',', $ids) . ')';
 		$sql = "SELECT `rating`, `object_id`,`rating`.`rating` FROM `rating` WHERE `user`='$user_id' AND `object_id` IN $idlist " . 
 			"AND `object_type`='$type'";
-		$db_results = Dba::query($sql);
+		$db_results = Dba::read($sql);
 
 		while ($row = Dba::fetch_assoc($db_results)) {
 			$user[$row['object_id']] = $row['rating']; 
 		}
 		
 		$sql = "SELECT `rating`,`object_id` FROM `rating` WHERE `object_id` IN $idlist AND `object_type`='$type'"; 
-		$db_results = Dba::query($sql); 
+		$db_results = Dba::read($sql); 
 		
 		while ($row = Dba::fetch_assoc($db_results)) { 
 			$rating[$row['object_id']]['rating'] += $row['rating']; 
 			$rating[$row['object_id']]['total']++; 
   		} 
-		
+
 		foreach ($ids as $id) { 
 			parent::add_to_cache('rating_' . $type . '_user',$id,intval($user[$id])); 
 
