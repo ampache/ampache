@@ -190,7 +190,7 @@ switch ($_REQUEST['action']) {
 		} 
 
 		// If an error hasn't occured
-		if (!Error::$state) { 
+		if (!Error::occurred()) { 
 
 			$catalog_id = Catalog::Create($_REQUEST); 
 

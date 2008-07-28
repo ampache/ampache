@@ -59,7 +59,7 @@ switch ($_REQUEST['action']) {
 		}
 
 		/* If we've got an error then break! */
-		if (Error::$state) { 
+		if (Error::occurred()) { 
 			$_REQUEST['action'] = 'show_edit';
 			break;
 		} // if we've had an oops!
@@ -110,7 +110,7 @@ switch ($_REQUEST['action']) {
 			Error::add('username',_('Error Username already exists'));
 		} 
 
-		if (!Error::$state) { 
+		if (!Error::occurred()) { 
 			/* Attempt to create the user */
 			$user_id = User::create($username, $fullname, $email, $pass1, $access);
 			if (!$user_id) { 
