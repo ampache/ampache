@@ -345,10 +345,8 @@ class Preference {
 	public static function init() { 
 
 		// First go ahead and try to load it from the preferences
-		if (isset($_SESSION['userdata']['preferences'])) { 
-			if (self::load_from_session()) { 
-				return true; 	
-			} 
+		if (self::load_from_session()) { 
+			return true; 	
 		} 
 
 
