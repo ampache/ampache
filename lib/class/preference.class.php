@@ -323,17 +323,40 @@ class Preference {
 	} // fix_preferences
 
 	/**
+	 * load_from_session
+	 * This loads the preferences from the session rather then creating a connection to the database
+	 */ 
+	public static function load_from_session() { 
+
+		if (is_array($_SESSION['userdata']['preferences'])) { 
+			Config::set_by_array($_SESSION['userdata']['preferences'],1); 
+			return true; 
+		} 
+
+		return false; 
+
+	} // load_from_session
+
+	/**
  	 * init
 	 * This grabs the preferences and then loads them into conf it should be run on page load
 	 * to initialize the needed variables
 	 */
 	public static function init() { 
 
-		$user_id = $GLOBALS['user']->id ? Dba::escape($GLBOALS['user']->id) : '-1'; 
+		// First go ahead and try to load it from the preferences
+		if (isset($_SESSION['userdata']['preferences'])) { 
+			if (self::load_from_session()) { 
+				return true; 	
+			} 
+		} 
+
+
+		$user_id = $GLOBALS['user']->id ? Dba::escape($GLOBALS['user']->id) : '-1'; 
 
 	        /* Get Global Preferences */
-		$sql = "SELECT `preference`.`name`,`user_preference`.`value`,`syspref`.`value` AS `system_value` FROM `preference`" . 
-			"LEFT JOIN `user_preference` `syspref` ON `syspref`.`preference`=`preference`.`id` AND `syspref`.`user`='-1' AND  `preference`.`catagory`='system'" . 
+		$sql = "SELECT `preference`.`name`,`user_preference`.`value`,`syspref`.`value` AS `system_value` FROM `preference` " . 
+			"LEFT JOIN `user_preference` `syspref` ON `syspref`.`preference`=`preference`.`id` AND `syspref`.`user`='-1' AND `preference`.`catagory`='system' " . 
 			"LEFT JOIN `user_preference` ON `user_preference`.`preference`=`preference`.`id` AND `user_preference`.`user`='$user_id' AND `preference`.`catagory`!='system'"; 
 	        $db_results = Dba::query($sql);
 
@@ -355,6 +378,7 @@ class Preference {
 	        }
 
 	        Config::set_by_array($results,1);
+		$_SESSION['userdata']['preferences'] = $results; 
 
 	} // init
 

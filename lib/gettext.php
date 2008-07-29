@@ -62,5 +62,4 @@ function __($string,$subject,$replace) {
 
 } // __
 
-
 ?>

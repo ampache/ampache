@@ -4,6 +4,8 @@
 
 --------------------------------------------------------------------------
   v.3.5-Alpha1
+	- Added caching of user preferences to avoid a SQL query on load
+		(Thx Protagonist)
 	- Fixed home menu not always displaying the entire contents
 	- Fixed logic error with duplicate login setting which caused it
 		to only work if mysql auth was used

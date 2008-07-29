@@ -618,6 +618,9 @@ class User extends database_object {
 		$new_password = Dba::escape($new_password);
 		$sql = "UPDATE `user` SET `password`='$new_password' WHERE `id`='$this->id'";
 		$db_results = Dba::write($sql);
+	
+		// Clear this (temp fix)
+		if ($db_results) { unset($_SESSION['userdata']['password']); } 
 
 	} // update_password 
 

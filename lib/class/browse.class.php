@@ -418,6 +418,7 @@ class Browse {
 	private static function get_base_sql() { 
 
                 // Get our base SQL must always return ID
+/*
 		$includetags = (is_array($_SESSION['browse']['filter']['tag']) 
 		  && sizeof($_SESSION['browse']['filter']['tag']));
 		$megajoin = '';
@@ -431,6 +432,7 @@ class Browse {
 		if ($includetags)
 		  $megajoin .= ' tag_map.tag_id = tags.id AND ';
 	       $w = " WHERE 1=1 AND ";
+*/
                 switch ($_SESSION['browse']['type']) {
                         case 'album':
                                 $sql = "SELECT DISTINCT `album`.`id` "
