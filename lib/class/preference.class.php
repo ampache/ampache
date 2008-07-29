@@ -329,31 +329,19 @@ class Preference {
 	 */
 	public static function init() { 
 
+		$user_id = $GLOBALS['user']->id ? Dba::escape($GLBOALS['user']->id) : '-1'; 
+
 	        /* Get Global Preferences */
-	        $sql = "SELECT `preference`.`name`,`user_preference`.`value` FROM `preference`,`user_preference` " . 
-			"WHERE `user_preference`.`user`='-1' " .
-	                "AND `user_preference`.`preference` = `preference`.`id` AND `preference`.`catagory` = 'system'";
+		$sql = "SELECT `preference`.`name`,`user_preference`.`value`,`syspref`.`value` AS `system_value` FROM `preference`" . 
+			"LEFT JOIN `user_preference` `syspref` ON `syspref`.`preference`=`preference`.`id` AND `syspref`.`user`='-1' AND  `preference`.`catagory`='system'" . 
+			"LEFT JOIN `user_preference` ON `user_preference`.`preference`=`preference`.`id` AND `user_preference`.`user`='$user_id' AND `preference`.`catagory`!='system'"; 
 	        $db_results = Dba::query($sql);
 
-	        while ($r = Dba::fetch_assoc($db_results)) {
-	                $name = $r['name'];
-	                $results[$name] = $r['value'];
+	        while ($row = Dba::fetch_assoc($db_results)) {
+			$value = $row['system_value'] ? $row['system_value'] : $row['value']; 
+	                $name = $row['name'];
+	                $results[$name] = $value; 
 	        } // end while sys prefs
-
-	        /* Now we need to allow the user to override some stuff that's been set by the above */
-	        $user_id = '-1';
-	        if ($GLOBALS['user']->username) {
-	                $user_id = Dba::escape($GLOBALS['user']->id);
-	        }
-
-	        $sql = "SELECT preference.name,user_preference.value FROM preference,user_preference WHERE user_preference.user='$user_id' " .
-	                "AND user_preference.preference = preference.id AND preference.catagory != 'system'";
-	        $db_results = Dba::query($sql);
-
-	        while ($r = Dba::fetch_assoc($db_results)) {
-	                $name = $r['name'];
-	                $results[$name] = $r['value'];
-	        } // end while
 
 	        /* Set the Theme mojo */
 	        if (strlen($results['theme_name']) > 0) {
