@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2007 Ampache.org
+ Copyright (c) Ampache.org
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
@@ -44,6 +44,7 @@
 		<?php echo get_user_icon('comment',_('Post Shout')); ?>
 		</a>
 	<?php } ?>
+	<?php echo Ajax::button('?page=tag&action=show_add_tag&type=album&id=' . $album->id,'add_tag',_('Add Tag'),'add_album_tag_' . $album->id); ?>
 	<?php if (Access::check_function('batch_download')) { ?>
 		<a href="<?php echo Config::get('web_path'); ?>/batch.php?action=album&amp;id=<?php echo $album->id; ?>">
 			<?php echo get_user_icon('batch_download',_('Batch Download')); ?>

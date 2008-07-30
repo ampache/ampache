@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2007 Ampache.org
+ Copyright (c) Ampache.org
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
@@ -25,10 +25,15 @@
 if (AJAX_INCLUDE != '1') { exit; } 
 
 switch ($_REQUEST['action']) { 
-case 'add':
-  TagCloud::add_tag($_REQUEST['type'], $_REQUEST['id'], $_REQUEST['val']);
-  break;
- 
+	case 'show_add_tag':
+ 			
+	break;
+	case 'add_tag': 
+
+	break; 
+	default: 
+		$results['rfc3514'] = '0x1'; 
+	break; 
 } // switch on action; 
 
 
