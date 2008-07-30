@@ -61,6 +61,7 @@ if (!isset($uid)) {
 
 /* Misc Housework */
 $user = new User($uid);
+Preference::init(); 
 
 /* If the user has been disabled (true value) */
 if (make_bool($GLOBALS['user']->disabled)) {
@@ -198,6 +199,16 @@ if ($catalog->catalog_type == 'remote') {
 	$extra_info = "&xml_rpc=1&sid=$sid";
 	header("Location: " . $song->file . $extra_info);
 	debug_event('xmlrpc-stream',"Start XML-RPC Stream - " . $song->file . $extra_info,'5');
+
+	/* If this is a voting tmp playlist remove the entry, we do this regardless of play amount */
+	if ($demo_id) {
+	        $row_id = $democratic->get_uid_from_object_id($song_id,'song');
+	        if ($row_id) {
+	                debug_event('Democratic','Removing ' . $song->title . ' from Democratic Playlist','1');
+	                $democratic->delete_votes($row_id);
+	        }
+	} // if tmp_playlist
+
 	exit;
 } // end if remote catalog
 
