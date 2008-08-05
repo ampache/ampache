@@ -81,7 +81,10 @@ switch ($_REQUEST['action']) {
 		// Pull the current playlist and require the template
 		$objects = $localplay->get(); 
 		require_once Config::get('prefix') . '/templates/show_localplay_status.inc.php';
-		require_once Config::get('prefix') . '/templates/show_localplay_playlist.inc.php';
+		Browse::set_type('playlist_localplay'); 
+		Browse::set_static_content(1); 
+		Browse::save_objects($objects); 
+		Browse::show_objects(); 
 	break;
 } // end switch action
 

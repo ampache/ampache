@@ -66,6 +66,7 @@ class Preference {
 			$sql = "UPDATE `user_preference` SET `value`='$value' " . 
 				"WHERE `preference`='$id'$user_check"; 
 			$db_results = Dba::query($sql); 
+			Preference::clear_from_session();
 			return true; 
 		} 
 		else { 
@@ -336,6 +337,17 @@ class Preference {
 		return false; 
 
 	} // load_from_session
+
+	/**
+	 * clear_from_session
+	 * This clears the users preferences, this is done whenever modifications are made to the preferences
+	 * or the admin resets something
+	 */
+	public static function clear_from_session() { 
+
+		unset($_SESSION['userdata']['preferences']); 
+
+	} // clear_from_session
 
 	/**
  	 * init

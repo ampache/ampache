@@ -196,6 +196,7 @@ class Browse {
 			case 'album':
 			case 'artist':
 			case 'tag':
+			case 'playlist_localplay': 
 			case 'shoutbox': 
 			case 'live_stream':
 				// Set it
@@ -215,7 +216,6 @@ class Browse {
 				// Rien a faire
 			break;
 		} // end type whitelist
-
 	} // set_type
 
 	/**
@@ -790,10 +790,10 @@ class Browse {
 	 * and requires the correct template based on the
 	 * type that we are currently browsing
 	 */
-	public static function show_objects($object_ids='', $ajax=false) { 
+	public static function show_objects($object_ids=false, $ajax=false) { 
 
 		$object_ids = $object_ids ? $object_ids : self::get_saved();
-
+		
 		// Reset the total items
 		self::$total_objects = count($object_ids); 
 
@@ -818,7 +818,7 @@ class Browse {
 		
 		Ajax::start_container('browse_content');
 		// Switch on the type of browsing we're doing
-		switch ($_SESSION['browse']['type']) { 
+		switch (self::$type) { 
 			case 'song': 
 				show_box_top(_('Songs') . $match, $class); 
 				Song::build_cache($object_ids); 
@@ -857,6 +857,11 @@ class Browse {
 				require_once Config::get('prefix') . '/templates/show_playlist_songs.inc.php'; 
 				show_box_bottom(); 
 			break; 
+			case 'playlist_localplay': 
+				show_box_top(_('Current Playlist')); 
+				require_once Config::get('prefix') . '/templates/show_localplay_playlist.inc.php'; 
+				show_box_bottom(); 
+			break;
 			case 'catalog': 
 				show_box_top(_('Catalogs'), $class); 
 				require_once Config::get('prefix') . '/templates/show_catalogs.inc.php';

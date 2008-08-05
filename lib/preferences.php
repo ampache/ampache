@@ -76,6 +76,9 @@ function update_preferences($pref_id=0) {
 
 	} // end foreach preferences
 
+	// Now that we've done that we need to invalidate the cached preverences
+	Preference::clear_from_session(); 
+
 } // update_preferences
 
 /**

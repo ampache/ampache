@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2007 Ampache.org
+ Copyright (c) Ampache.org
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
@@ -18,9 +18,9 @@
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
+$localplay = new Localplay(Config::get('localplay_controller'));
 ?>
-<?php Ajax::start_container('localplay_playlist'); ?>
-<?php show_box_top(_('Current Playlist')); ?>
+<?php require Config::get('prefix') . '/templates/list_header.inc.php'; ?>
 <table class="tabledata" cellpadding="0" cellspacing="0">
 <colgroup>
   <col id="col_track" />
@@ -33,7 +33,7 @@
 	<th class="cel_action"><?php echo _('Action'); ?></th>
 </tr>
 <?php 
-foreach ($objects as $object) { 
+foreach ($object_ids as $object) { 
 	$class = ' class="cel_name"';
 	if ($status['track'] == $object['track']) { $class=' class="cel_name lp_current"'; } 	
 ?>
@@ -48,7 +48,7 @@ foreach ($objects as $object) {
 	<?php echo Ajax::button('?page=localplay&action=delete_track&id=' . intval($object['id']),'delete',_('Delete'),'localplay_delete_' . intval($object['id'])); ?>
 	</td>
 </tr>
-<?php } if (!count($objects)) { ?>
+<?php } if (!count($object_ids)) { ?>
 <tr class="<?php echo flip_class(); ?>">
 	<td colspan="3"><span class="error"><?php echo _('No Records Found'); ?></span></td>
 </tr>
@@ -59,5 +59,4 @@ foreach ($objects as $object) {
 	<th class="cel_action"><?php echo _('Action'); ?></th>
 </tr>
 </table>
-<?php show_box_bottom(); ?>
-<?php Ajax::end_container(); ?>
+<?php require Config::get('prefix') . '/templates/list_header.inc.php'; ?>
