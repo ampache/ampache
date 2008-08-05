@@ -1,17 +1,19 @@
+# translation of messages_new.po to German
 # de_DE translation of Ampache
 # Copyright (C) 2007 Ampache.org
 # This file is distributed under the same license as the Ampache package.
-# 
+#
 # Nikolai Försterling <devel@fosternet.de>, 2007.
-# Marco Meile <silicium@natural-geek.org>, 2008 - v3.4
+# Marco Meile <silicium@natural-geek.org>, 2008 - v3.4.
+# Laurent Baum <laurent.baum@gmail.com>, 2008.
 msgid ""
 msgstr ""
-"Project-Id-Version: messages\n"
+"Project-Id-Version: messages_new\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2008-05-10 02:21-0700\n"
-"PO-Revision-Date: 2007-09-13 13:17+0200\n"
-"Last-Translator: Silicium <silicium@natural-geek.org>\n"
-"Language-Team:  <contact@opensnom.org>\n"
+"PO-Revision-Date: 2008-07-31 23:41+0200\n"
+"Last-Translator: Laurent Baum <laurent.baum@gmail.com>\n"
+"Language-Team: German <en@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -43,7 +45,7 @@ msgstr "Sie müssen ein Passwort eingeben"
 
 #: ../../register.php:126
 msgid "Your passwords do not match"
-msgstr "Passwort falsch"
+msgstr "Ihre Passwörter stimmen nicht überein"
 
 #: ../../register.php:130 ../../admin/users.php:110
 msgid "Error Username already exists"
@@ -79,7 +81,7 @@ msgstr "Album aktualisiert"
 
 #: ../../admin/flag.php:173
 msgid "Artist Updated"
-msgstr "Interpreten aktualisiert"
+msgstr "Interpret aktualisiert"
 
 #: ../../admin/flag.php:238
 msgid "Songs Updated"
@@ -95,7 +97,7 @@ msgstr "Markierung entfernt von"
 
 #: ../../admin/flag.php:262
 msgid "Flags Updated"
-msgstr "Markierung aktualisiert"
+msgstr "Markierungen aktualisiert"
 
 #: ../../admin/flag.php:281
 msgid "Songs Disabled"
@@ -128,11 +130,11 @@ msgstr "Der Katalog und alle verknüpften Datenbankeinträge wurden gelöscht"
 
 #: ../../admin/catalog.php:119
 msgid "Songs Removed"
-msgstr "Song gelöscht"
+msgstr "Songs gelöscht"
 
 #: ../../admin/catalog.php:122
 msgid "No Songs Removed"
-msgstr "Keine Song gelöscht"
+msgstr "Keine Songs gelöscht"
 
 #: ../../admin/catalog.php:125
 msgid "Disabled Songs Processed"
@@ -140,7 +142,7 @@ msgstr "Sperren der Songs abgeschlossen"
 
 #: ../../admin/catalog.php:146
 msgid "Catalog Cleaned"
-msgstr "Katalog geleert"
+msgstr "Katalog bereinigt"
 
 #: ../../admin/catalog.php:197
 msgid "Catalog Created"
@@ -177,7 +179,7 @@ msgstr "Album Cover-Suche beendet"
 #: ../../admin/users.php:55 ../../admin/users.php:105
 #: ../../lib/class/user.class.php:350
 msgid "Error Username Required"
-msgstr "Fehler: Benutzername wird Benötigt"
+msgstr "Fehler: Benutzername wird benötigt"
 
 #: ../../admin/users.php:58 ../../admin/users.php:101
 #: ../../lib/class/user.class.php:354
@@ -276,7 +278,7 @@ msgstr "Installation Fehlgeschlagen, Controller Error"
 
 #: ../../admin/modules.php:56 ../../admin/modules.php:94
 msgid "Are you sure you want to remove this plugin?"
-msgstr "Wollen Sie das Modul wirklich deaktivieren?"
+msgstr "Wollen Sie das Plugin wirklich deaktivieren?"
 
 #: ../../admin/modules.php:68 ../../admin/modules.php:113
 msgid "Plugin Deactivated"
@@ -292,7 +294,7 @@ msgstr ""
 
 #: ../../admin/modules.php:128
 msgid "Localplay Controllers"
-msgstr ""
+msgstr "Controller für lokales Apielen"
 
 #: ../../admin/shout.php:35
 msgid "Shoutbox Post Updated"
@@ -329,13 +331,13 @@ msgstr "Eintrag aktualisiert"
 
 #: ../../admin/system.php:49
 msgid "Database Charset Updated"
-msgstr ""
+msgstr "Datenbankzeichensatz aktualisiert"
 
 #: ../../admin/system.php:49
 msgid ""
 "Your Database and assoicated tables have been updated to match your "
 "currently configured charset"
-msgstr ""
+msgstr "Ihre Datenbank und verknüpften Einträge wurden aktualisiert um mit dem momentan konfiguriertem Zeichensatz übereinzustimmen"
 
 #: ../../admin/mail.php:57
 msgid "E-mail Sent"
@@ -498,7 +500,7 @@ msgstr "Schnell"
 #: ../../templates/show_admin_tools.inc.php:60
 #: ../../templates/show_catalog_row.inc.php:31
 msgid "Gather Art"
-msgstr "Cover holen"
+msgstr "Cover suchen"
 
 #: ../../templates/show_admin_tools.inc.php:68
 msgid "No Catalogs Found"
@@ -635,8 +637,7 @@ msgstr ""
 #: ../../templates/show_install_lang.inc.php:42
 #: ../../templates/show_install_config.inc.php:41
 #: ../../templates/show_install.inc.php:43
-msgid ""
-"A MySQL Server with a username and password that can create/modify databases"
+msgid "A MySQL Server with a username and password that can create/modify databases"
 msgstr ""
 "Ein MySQL Server mit bekanntem Benutzername und Passwort auf dem Datenbanken "
 "erstellt/modifiziert werden können"
@@ -902,7 +903,7 @@ msgstr "Kompletter Name"
 
 #: ../../templates/show_user.inc.php:31
 msgid "Create Date"
-msgstr ""
+msgstr "Datum der Erstellung"
 
 #: ../../templates/show_user.inc.php:32 ../../templates/show_users.inc.php:40
 #: ../../templates/show_users.inc.php:105
@@ -1251,7 +1252,7 @@ msgstr "Basis-Wiedergabeliste"
 
 #: ../../templates/show_manage_democratic.inc.php:36
 msgid "Cooldown"
-msgstr ""
+msgstr "Zeit bevor der Song erneut abgespielt werden kann"
 
 #: ../../templates/show_manage_democratic.inc.php:38
 #: ../../lib/preferences.php:254 ../../lib/preferences.php:261
@@ -1300,7 +1301,7 @@ msgid ""
 "This steps takes the basic config values and generates the config file. It "
 "will prompt you to download the config file. Please put the downloaded "
 "config file in /config"
-msgstr ""
+msgstr "Dieser Schritt erstellt, ausgehend von der Standartkonfiguration, die Konfigurationsdatei. Sie werden aufgefordert die Konfigurationsdatei herunterzuladen. Bitte kopieren sie die Datei in /config"
 
 #: ../../templates/show_install_config.inc.php:56
 msgid "Generate Config File"
@@ -1394,23 +1395,23 @@ msgstr "Verschiedene"
 
 #: ../../templates/show_debug.inc.php:23
 msgid "Debug Tools"
-msgstr ""
+msgstr "Debug Werkzeuge"
 
 #: ../../templates/show_debug.inc.php:25
 msgid "Generate Configuration"
-msgstr ""
+msgstr "Konfiguration Erstellen"
 
 #: ../../templates/show_debug.inc.php:26
 msgid "Set Database Charset"
-msgstr ""
+msgstr "Datenbankzeichensatz setzen"
 
 #: ../../templates/show_debug.inc.php:29
 msgid "PHP Settings"
-msgstr ""
+msgstr "PHP Einstellungen"
 
 #: ../../templates/show_debug.inc.php:36
 msgid "Setting"
-msgstr ""
+msgstr "Einstellung"
 
 #: ../../templates/show_debug.inc.php:37 ../../templates/show_debug.inc.php:82
 #: ../../templates/show_preference_box.inc.php:41
@@ -1421,35 +1422,35 @@ msgstr "Wert"
 
 #: ../../templates/show_debug.inc.php:40
 msgid "Memory Limit"
-msgstr ""
+msgstr "Speicherbegrenzung"
 
 #: ../../templates/show_debug.inc.php:44
 msgid "Maximum Execution Time"
-msgstr ""
+msgstr "Maximale Ausführzeit"
 
 #: ../../templates/show_debug.inc.php:48
 msgid "Safe Mode"
-msgstr ""
+msgstr "Sicherheitsmodus"
 
 #: ../../templates/show_debug.inc.php:56
 msgid "Zlib Support"
-msgstr ""
+msgstr "Zlib Unterstützung"
 
 #: ../../templates/show_debug.inc.php:60
 msgid "GD Support"
-msgstr ""
+msgstr "GD Unterstützung"
 
 #: ../../templates/show_debug.inc.php:64
 msgid "Iconv Support"
-msgstr ""
+msgstr "Iconv Unterstützung"
 
 #: ../../templates/show_debug.inc.php:68
 msgid "Gettext Support"
-msgstr ""
+msgstr "Gettext Unterstützung"
 
 #: ../../templates/show_debug.inc.php:74
 msgid "Current Configuration"
-msgstr ""
+msgstr "Momentane Konfiguration"
 
 #: ../../templates/show_debug.inc.php:81
 #: ../../templates/show_preference_admin.inc.php:30
@@ -1476,7 +1477,7 @@ msgstr "Poste in Shoutbox"
 #: ../../templates/show_add_shout.inc.php:34
 #: ../../templates/show_edit_shout.inc.php:37
 msgid "Make Sticky"
-msgstr ""
+msgstr "Als beständig"
 
 #: ../../templates/show_add_shout.inc.php:41
 #: ../../templates/show_create_democratic.inc.php:53
@@ -1490,7 +1491,7 @@ msgstr "Erstelle Demokratische Wiedergabeliste"
 
 #: ../../templates/show_create_democratic.inc.php:34
 msgid "Cooldown Time"
-msgstr ""
+msgstr "Zeit bevor der Song erneut agespielt werden kann"
 
 #: ../../templates/show_create_democratic.inc.php:35
 #: ../../lib/class/democratic.class.php:97
@@ -1646,7 +1647,7 @@ msgstr "Ampache Datenbank Passwort"
 
 #: ../../templates/show_install.inc.php:93
 msgid "Overwrite Existing"
-msgstr "überschreibe existiere"
+msgstr "Überschreibe Bestehende"
 
 #: ../../templates/show_install.inc.php:98
 msgid "Insert Database"
@@ -1666,8 +1667,7 @@ msgstr "Ähnliche Interpreten"
 
 #: ../../templates/show_similar_artists.inc.php:25
 msgid "Please check the artists you want to merge with the current one"
-msgstr ""
-"Bitte den Interpreten markieren, den Sie mit dem aktuellen verbinden möchten"
+msgstr "Bitte den Interpreten markieren, den Sie mit dem aktuellen verbinden möchten"
 
 #: ../../templates/show_similar_artists.inc.php:66
 msgid "Back"
@@ -1751,7 +1751,7 @@ msgstr "Instanz zum Lokal-Abspielen hinzufügen"
 #: ../../templates/show_localplay_add_instance.inc.php:35
 #: ../../templates/sidebar_localplay.inc.php:35
 msgid "Add Instance"
-msgstr "Sitzung hinzufügen"
+msgstr "Instanz hinzufügen"
 
 #: ../../templates/header.inc.php:71
 msgid "Log out"
@@ -1936,7 +1936,7 @@ msgstr "Stream Zugriff"
 #: ../../templates/show_edit_access.inc.php:35
 #: ../../templates/show_add_access.inc.php:67
 msgid "Web Interface"
-msgstr "Grundeinstellungen"
+msgstr ""
 
 #: ../../templates/show_edit_access.inc.php:36
 #: ../../templates/show_add_access.inc.php:68
@@ -1988,7 +1988,7 @@ msgstr "Lesen/Schreiben"
 #: ../../templates/show_user_activate.inc.php:29
 #: ../../templates/show_user_activate.inc.php:36
 msgid "Registration"
-msgstr ""
+msgstr "Registrierung"
 
 #: ../../templates/show_user_registration.inc.php:56
 msgid "User Agreement"
@@ -2047,7 +2047,7 @@ msgstr "Meistgespielte Alben"
 #: ../../templates/show_all_popular.inc.php:32
 #: ../../templates/show_stats_popular.inc.php:37
 msgid "Most Popular Genres"
-msgstr "Die Populürsten Genres"
+msgstr "Meistgespielte Stile"
 
 #: ../../templates/show_all_popular.inc.php:38
 #: ../../templates/show_mail_users.inc.php:68
@@ -2056,11 +2056,11 @@ msgstr "Meistgespielte Songs"
 
 #: ../../templates/show_all_popular.inc.php:41
 msgid "Most Popular Live Streams"
-msgstr "Die populärsten Live Streams"
+msgstr "Meistgespielte Live Streams"
 
 #: ../../templates/show_all_popular.inc.php:44
 msgid "Most Popular Tags"
-msgstr "Die populärsten Tags"
+msgstr "Meistgespielte TAGS"
 
 #: ../../templates/show_edit_song.inc.php:23
 msgid "Edit Song"
@@ -2098,7 +2098,7 @@ msgstr "Interpreten"
 #: ../../templates/show_local_catalog_info.inc.php:32
 #: ../../lib/class/browse.class.php:737
 msgid "Genres"
-msgstr "Stil"
+msgstr "Stile"
 
 #: ../../templates/show_local_catalog_info.inc.php:33
 msgid "Catalog Size"
@@ -2312,11 +2312,11 @@ msgstr "selten gespielt"
 
 #: ../../templates/show_random.inc.php:67
 msgid "Full Albums"
-msgstr "Alle Alben"
+msgstr "konplette Alben"
 
 #: ../../templates/show_random.inc.php:68
 msgid "Full Artist"
-msgstr "Alle Interpreten"
+msgstr "Alles vom Interpret"
 
 #: ../../templates/show_random.inc.php:70
 msgid "Highest Rated"
@@ -2408,11 +2408,11 @@ msgstr "Lokales Abspielen Deaktiviert"
 
 #: ../../templates/sidebar_localplay.inc.php:62
 msgid "Allow Localplay set to False"
-msgstr ""
+msgstr "Lokales Apsielen nicht erlaubt"
 
 #: ../../templates/sidebar_localplay.inc.php:64
 msgid "Localplay Controller Not Defined"
-msgstr ""
+msgstr "Controller für Lokales Apspielen nicht definiert"
 
 #: ../../templates/show_get_albumart.inc.php:23
 msgid "Customize Search"
@@ -2442,7 +2442,7 @@ msgstr "Optionen"
 
 #: ../../templates/show_search_options.inc.php:26
 msgid "Add Search Results"
-msgstr ""
+msgstr "Suchergebnisse hinzufügen"
 
 #: ../../templates/show_edit_catalog.inc.php:22
 msgid "Settings for"
@@ -2519,7 +2519,7 @@ msgstr "(Ohne '/' an Anfang oder Ende"
 
 #: ../../templates/show_edit_catalog.inc.php:68
 msgid "Save Catalog Settings"
-msgstr "Katalogeinstellungen sichern"
+msgstr "Katalogeinstellungen speichern"
 
 #: ../../templates/show_democratic_playlist.inc.php:38
 msgid "Playing from base Playlist"
@@ -2758,7 +2758,7 @@ msgstr "Erweitert"
 #: ../../templates/show_manage_shoutbox.inc.php:36
 #: ../../templates/show_manage_shoutbox.inc.php:60
 msgid "Sticky"
-msgstr ""
+msgstr "Beständig"
 
 #: ../../templates/show_manage_shoutbox.inc.php:38
 #: ../../templates/show_manage_shoutbox.inc.php:62
@@ -2889,7 +2889,7 @@ msgstr "PHP ICONV Unterstützung"
 msgid ""
 "This test checks to make sure you have Iconv support installed. Iconv "
 "support is required for Ampache"
-msgstr ""
+msgstr "Dieser Test prüft ob Sie Iconv Unterstützung für PHP aktiviert haben. Ampache benötigt Iconv."
 
 #: ../../templates/show_test.inc.php:119
 msgid "PHP PCRE Support"
@@ -2949,7 +2949,7 @@ msgstr ""
 
 #: ../../templates/show_test.inc.php:213
 msgid "DB Inserted"
-msgstr ""
+msgstr "Datenbank eingefügt"
 
 #: ../../templates/show_user_preferences.inc.php:28
 #: ../../templates/show_preferences.inc.php:28
@@ -3071,7 +3071,7 @@ msgstr "Neueste Interpreten"
 
 #: ../../templates/show_stats_newest.inc.php:35
 msgid "Newest Genres"
-msgstr "Neueste Genres"
+msgstr "Neueste Stile"
 
 #: ../../server/stats.ajax.php:52 ../../server/stats.ajax.php:84
 msgid "Links"
@@ -3111,7 +3111,7 @@ msgstr "Wiedergabelisten"
 
 #: ../../lib/class/browse.class.php:762
 msgid "Playlist Songs"
-msgstr "Playlist Songs"
+msgstr "Songs der Wiedergabeliste"
 
 #: ../../lib/class/browse.class.php:772
 msgid "Shoutbox Records"
@@ -3142,11 +3142,10 @@ msgid "Reason"
 msgstr "Grund"
 
 #: ../../lib/class/catalog.class.php:177
-#, fuzzy
 msgid "day"
 msgid_plural "days"
 msgstr[0] "Tag"
-msgstr[1] "Tage"
+msgstr[1] "Tag"
 
 #: ../../lib/class/catalog.class.php:279
 msgid "Running Remote Sync"
@@ -3155,7 +3154,7 @@ msgstr "Remote Synchronisation läuft"
 #: ../../lib/class/catalog.class.php:414 ../../lib/class/catalog.class.php:755
 #: ../../lib/class/album.class.php:445
 msgid "Error: Unable to open"
-msgstr "Fehler: Fehler beim lesen"
+msgstr "Fehler: Fehler beim Öffnen"
 
 #: ../../lib/class/catalog.class.php:421 ../../lib/class/catalog.class.php:464
 msgid "Error: Unable to change to directory"
@@ -3171,7 +3170,7 @@ msgstr "ist von Ampache nicht lesbar"
 
 #: ../../lib/class/catalog.class.php:506
 msgid "does not match site charset"
-msgstr ""
+msgstr "stimmit nicht mit dem Site Zeichensatz überein"
 
 #: ../../lib/class/catalog.class.php:1042
 msgid "No Update Needed"
@@ -3213,7 +3212,7 @@ msgstr "Aktualisierung der Remote-Kataloge abgeschlossen"
 
 #: ../../lib/class/catalog.class.php:1377
 msgid "Catalog Root unreadable, stopping clean"
-msgstr "Katalogverzeichnis nicht lesbar. Bereinigung beendet"
+msgstr "Katalogverzeichnis nicht lesbar, beende Bereingung"
 
 #: ../../lib/class/catalog.class.php:1434
 msgid "Catalog Clean Done"
@@ -3321,7 +3320,7 @@ msgstr "Ist wahnsinnig"
 
 #: ../../lib/rating.lib.php:70
 msgid "Off the Charts!"
-msgstr "Aus der Hitparade!"
+msgstr "Absoluter Wahnsinn!"
 
 #: ../../lib/general.lib.php:406
 msgid "Simplified Chinese"
@@ -3468,8 +3467,7 @@ msgstr ""
 
 #: ../../modules/horde/Browser.php:903
 #, php-format
-msgid ""
-"There was a problem with the file upload: The %s was only partially uploaded."
+msgid "There was a problem with the file upload: The %s was only partially uploaded."
 msgstr ""
 "Ein Problem mit der hochgeladenen Datei wurde festgestellt: %s wurde nur "
 "teilweise hochgeladen."
@@ -3536,418 +3534,3 @@ msgstr ""
 msgid "Filename:"
 msgstr "Dateiname:"
 
-#~ msgid " FOUND"
-#~ msgstr "GEFUNDEN"
-
-#~ msgid "Searching for new Album Art"
-#~ msgstr "Suche nach neuen Album Covers"
-
-#~ msgid "English"
-#~ msgstr "Englisch"
-
-#~ msgid "British English"
-#~ msgstr "Britisch Englisch"
-
-#~ msgid "Turkish"
-#~ msgstr "Türkisch"
-
-#~ msgid "Export Failed"
-#~ msgstr "Export fehlgeschlagen"
-
-#~ msgid "description"
-#~ msgstr "Beschreibung"
-
-#~ msgid "Language"
-#~ msgstr "Sprache"
-
-#~ msgid "Catalog Number"
-#~ msgstr "Katalognummer"
-
-#~ msgid "Last Updated"
-#~ msgstr "Letzte Aktualisierung"
-
-#~ msgid ""
-#~ "This test checks to make sure you have Iconv support installed. Iconv "
-#~ "support is not required for Ampache, but it is highly recommended"
-#~ msgstr ""
-#~ "Dieser Test prüft ob Iconv Unterstützung installiert wurde. Icionv "
-#~ "Unterstützung wird nicht unbedingt benötigt für Ampache, aber es wird "
-#~ "dringend empfohlen"
-
-#~ msgid ""
-#~ "This steps takes the basic config values, and first attempts to write "
-#~ "them out directly to your webserver. If access is denied it will prompt "
-#~ "you to download the config file. Please put the downloaded config file "
-#~ "in /config"
-#~ msgstr ""
-#~ "In diesem Schritt werden die Werte für die  Basis-Konfiguration benötigt, "
-#~ "und versucht die Konfiguration direkt in Konfigurationsdatei zu "
-#~ "schreiben. Ist der Zugriff nicht erlaubt, erhalten Sie eine Meldung die "
-#~ "Konfigurationsdatei herunterzuladen. Bitte speichern Sie dann die "
-#~ "editierte Konfigurationsdatei im Verzeichnis /config"
-
-#~ msgid "Rating Updated"
-#~ msgstr "Bewertung aktualisiert"
-
-#~ msgid "Your rating for this object has been updated"
-#~ msgstr "Ihre Bewertung für dieses Objekt wurde aktualisiert"
-
-#~ msgid "Playlist Cleared"
-#~ msgstr "Playlist gelöscht"
-
-#~ msgid "days"
-#~ msgstr "Tage"
-
-#~ msgid "hours"
-#~ msgstr "Stunden"
-
-#~ msgid "Starting Catalog Build"
-#~ msgstr "Starte Katalogerstellung"
-
-#~ msgid "Catalog Finished"
-#~ msgstr "Katalog fertig"
-
-#~ msgid "updated to"
-#~ msgstr "aktualisiert zu"
-
-#~ msgid "Rate"
-#~ msgstr "Anteil"
-
-#~ msgid "Mode"
-#~ msgstr "Modus"
-
-#~ msgid "Filesize"
-#~ msgstr "Dateigröße"
-
-#~ msgid "Approve"
-#~ msgstr "Erlauben"
-
-#~ msgid "Song(s) Removed from Playlist"
-#~ msgstr "Stück(e) von der Wiedergabeliste gelöscht"
-
-#~ msgid "No Catalogs Found!"
-#~ msgstr "Keine Kataloge gefunden"
-
-#~ msgid "Play Random"
-#~ msgstr "Spiele zufällige Stücke"
-
-#~ msgid "XML-RPC"
-#~ msgstr "XML-RPC"
-
-#~ msgid "Ampache New User Registration"
-#~ msgstr "Ampache neuen Benutzer registrieren"
-
-#~ msgid "Clear Info"
-#~ msgstr "Info löschen"
-
-#~ msgid "Select Best Guess"
-#~ msgstr "Wähle vermutlich besten"
-
-#~ msgid "Play All Songs By"
-#~ msgstr "Spiele alle Stücke von"
-
-#~ msgid "Play Random Songs By"
-#~ msgstr "Spiele Zufallsauswahl von"
-
-#~ msgid "Find duplicate artists"
-#~ msgstr "Doppelte Stücke anzeigen"
-
-#~ msgid "Minutes"
-#~ msgstr "Minuten"
-
-#~ msgid "Disable Songs"
-#~ msgstr "Sperre Stücke"
-
-#~ msgid "Play Random from Album"
-#~ msgstr "Spiele zufällig vom Album"
-
-#~ msgid "No user with this name registered"
-#~ msgstr "Kein Benutzer mit diesem Namen registriert"
-
-#~ msgid "The validation key used isn't correct."
-#~ msgstr "Die Prüfung des Schlüssels ergab dass diese nicht korrekt ist"
-
-#~ msgid "User activated"
-#~ msgstr "Benutzer aktiviert"
-
-#~ msgid "Error Access Denied"
-#~ msgstr "Fehler Zugriff verweigert"
-
-#~ msgid "album's with art"
-#~ msgstr "Alben mit Cover"
-
-#~ msgid "Album Art Already Found"
-#~ msgstr "Album Cover bereits gefunden"
-
-#~ msgid "Error: Name Identical"
-#~ msgstr "Fehler: Name identisch"
-
-#~ msgid "Show Genres starting with"
-#~ msgstr "Zeige Genres beginnend mit"
-
-#~ msgid "No songs in this playlist."
-#~ msgstr "Keine Stücke in dieser Wiedergabeliste"
-
-#~ msgid "New Playlist"
-#~ msgstr "Neue Wiedergabeliste"
-
-#~ msgid "Show w/o art"
-#~ msgstr "Ohne Cover"
-
-#~ msgid "Show all"
-#~ msgstr "Zeige Alle"
-
-#~ msgid "Add a new user"
-#~ msgstr "Neuen Benutzer hinzufügen"
-
-#~ msgid ""
-#~ "You defined the option \"debug = on\" but didn't define a log path for "
-#~ "the log to be stored"
-#~ msgstr ""
-#~ "Sie haben die Option \"debug = on\" definiert und keinen Pfad für die "
-#~ "Logdatei angegeben"
-
-#~ msgid "The Catalog and all associated records has been deleted"
-#~ msgstr "Der Katalog und alle damit verbundenen Datensätze wurde gelöscht"
-
-#~ msgid "Catalog Created and Songs Indexed"
-#~ msgstr "Katalog erstellt und Stücke indiziert"
-
-#~ msgid "Do you really want to clear the statistics for this catalog?"
-#~ msgstr "Wollen sie wirklich die Katalogstatistik dieses Kataloges löschen?"
-
-#~ msgid "Site"
-#~ msgstr "Seite"
-
-#~ msgid "Confirm Delete"
-#~ msgstr "Löschen bestätigen"
-
-#~ msgid "Do you really want to delete this Access Record?"
-#~ msgstr "Wollen sie wirklich diesen Zugangs-Eintrag löschen?"
-
-#~ msgid "Entry Deleted"
-#~ msgstr "Eintrag gelöscht"
-
-#~ msgid "Entry Added"
-#~ msgstr "Eintrag hinzugefügt"
-
-#~ msgid "Entry Updated"
-#~ msgstr "Eintrag aktualisiert"
-
-#~ msgid "Module Activated"
-#~ msgstr "Modul aktiviert"
-
-#~ msgid "Are you sure you want to remove this module?"
-#~ msgstr "Wollen sie wirklich das Modul deaktivieren?"
-
-#~ msgid "Module Deactivated"
-#~ msgstr "Modul deaktiviert"
-
-#~ msgid "No Playlists Found"
-#~ msgstr "Keine Wiedergabelisten gefunden"
-
-#~ msgid "Controls"
-#~ msgstr "Bedienelemente"
-
-#~ msgid "Users"
-#~ msgstr "Benutzer"
-
-#~ msgid "Config"
-#~ msgstr "Konfiguration"
-
-#~ msgid "Access List"
-#~ msgstr "Zugriffsliste"
-
-#~ msgid "Democratic View"
-#~ msgstr "Demokratische Ansicht"
-
-#~ msgid "Rename Artist"
-#~ msgstr "Interpret umbenennen"
-
-#~ msgid "Results Per Page"
-#~ msgstr "Anzeigen pro Seite"
-
-#~ msgid "Module Name"
-#~ msgstr "Modul Name"
-
-#~ msgid "Admin Controls"
-#~ msgstr "Admin Bedienelement"
-
-#~ msgid "Newest Artist Additions"
-#~ msgstr "Neuste Interpretenzugänge"
-
-#~ msgid "Newest Album Additions"
-#~ msgstr "Neuste Albenzugänge"
-
-#~ msgid "Newest Live Stream Additions"
-#~ msgstr "Neuester Live Stream"
-
-#~ msgid "Playlist Actions"
-#~ msgstr "Wiedergabelisten-Aktionen"
-
-#~ msgid "Edit Playlist"
-#~ msgstr "Wiedergabeliste editieren"
-
-#~ msgid "Play This Playlist"
-#~ msgstr "Spiele diese Wiedergabeliste"
-
-#~ msgid "Delete This Playlist"
-#~ msgstr "Diese Wiedergabeliste löschen"
-
-#~ msgid "Import From File"
-#~ msgstr "Importiere von Datei"
-
-#~ msgid "Delete Empty Playlists"
-#~ msgstr "Lösche leere Wiedergabelisten"
-
-#~ msgid "Localplay Init Failed"
-#~ msgstr "Lokal abspielen fehlgeschlagen"
-
-#~ msgid "Show Albums starting with"
-#~ msgstr "Zeige Alben beginnend mit"
-
-#~ msgid "Show Titles Starting With"
-#~ msgstr "Zeige Titel mit folgendem Beginn"
-
-#~ msgid "Lists"
-#~ msgstr "Listen"
-
-#~ msgid "Error: Password Does Not Match or Empty"
-#~ msgstr "Fehler: Passwort falsch oder nicht ausgefüllt"
-
-#~ msgid "Password Updated"
-#~ msgstr "Passwort aktualisiert"
-
-#~ msgid "Playlist Deleted"
-#~ msgstr "Wiedergabeliste gelöscht"
-
-#~ msgid "The Requested Playlist has been deleted"
-#~ msgstr "Die gewünschte Wiedergabeliste wurde gelöscht"
-
-#~ msgid "Are you sure you want to delete this playlist"
-#~ msgstr "Wollen sie wirklich diese Wiedergabeliste löschen?"
-
-#~ msgid "Confirm Action"
-#~ msgstr "Aktion bestätigen"
-
-#~ msgid "Remote Selected Tracks"
-#~ msgstr "Entfernt Ausgewählte Stücke"
-
-#~ msgid "Error: Unable to write to"
-#~ msgstr "Fehler: Kann nicht schreiben in"
-
-#~ msgid "Error: Upload directory not inside a catalog"
-#~ msgstr "Fehler: Upload Verzeichnis liegt nicht innerhalb eines Kataloges"
-
-#~ msgid "Adding"
-#~ msgstr "Hinzufügen"
-
-#~ msgid "to database"
-#~ msgstr "in die Datenbank"
-
-#~ msgid ""
-#~ "\n"
-#~ "\t\n"
-#~ "************* WARNING *************\n"
-#~ "This script will move, and \n"
-#~ "potentially delete uploaded files.\n"
-#~ "************* WARNING *************\n"
-#~ "\n"
-#~ "All files marked for add will be moved to the upload directory. All "
-#~ "files \n"
-#~ "marked for deletion will be deleted. This script must be run as a user "
-#~ "with\n"
-#~ "sufficient rights to perform the above two functions. \n"
-#~ "\n"
-#~ "\t\n"
-#~ msgstr ""
-#~ "\n"
-#~ "\t\n"
-#~ "************* WARNUNG *************\n"
-#~ "Dieses Skript wird hochgeladene Dateien \n"
-#~ "verschieben potentiell löschen.\n"
-#~ "************* WARNUNG *************\n"
-#~ "\n"
-#~ "Alle zum hinzufügen markierten Dateien werden in das Upload-Verzeichnis "
-#~ "verschoben. Alle zum löschen \n"
-#~ "markierten Dateien werden gelöscht. Dieses Skript muss unter einem "
-#~ "Benutzer laufen der ausreichende Rechte \n"
-#~ "besitzt die beiden oben genannten Funktionen auszuführen. \n"
-#~ "\n"
-#~ "\t\n"
-
-#~ msgid "Continue?  (Y/N):"
-#~ msgstr "Weiter? (Y/N)"
-
-#~ msgid "Error:  "
-#~ msgstr "Fehler:"
-
-#~ msgid "You are currently logged in as"
-#~ msgstr "Momentan angemeldet als"
-
-#~ msgid "Song title"
-#~ msgstr "Titel"
-
-#~ msgid "Total"
-#~ msgstr "Insgesamt"
-
-#~ msgid "Rebuild Preferences"
-#~ msgstr "Einstellungen neu erstellen"
-
-#~ msgid "Interface"
-#~ msgstr "Grundeinstellungen"
-
-#~ msgid "Streaming"
-#~ msgstr "Datenstrom"
-
-#~ msgid ""
-#~ "Use the form below to add a host that you want to have access to your "
-#~ "Ampache catalog."
-#~ msgstr ""
-#~ "Um einem Rechner den Zugang zu Ihrem Katalog zu gewähren, füllen sie das "
-#~ "folgende Formular aus."
-
-#~ msgid "XML-RPC Options"
-#~ msgstr "XML-RPC Optionen"
-
-#~ msgid "Host Access to Your Catalog"
-#~ msgstr "Host Zugriff zu Ihrem Katalog"
-
-#~ msgid "Revoke"
-#~ msgstr "Zurückziehen"
-
-#~ msgid "Album Name"
-#~ msgstr "Album Name"
-
-#~ msgid "Album Year"
-#~ msgstr "Album Jahr"
-
-#~ msgid "Tracks"
-#~ msgstr "Titel"
-
-#~ msgid "Edit Access List"
-#~ msgstr "Zugriffsliste bearbeiten"
-
-#~ msgid ""
-#~ "This test makes sure that you have set all of the required configuration "
-#~ "variables and that we are able to \n"
-#~ "\tcompletely parse your config file"
-#~ msgstr ""
-#~ "Hier testen wir, dass alle erforderlichen Konfigurationsvariablen gesetzt "
-#~ "sind, und dass \n"
-#~ "wir ihre Konfigurationsdatei lesen können."
-
-#~ msgid "Ampache.cfg.php Up to Date?"
-#~ msgstr "Ampache.cfg konfiguriert?"
-
-#~ msgid "Ampache.cfg.php is missing the following:"
-#~ msgstr "In der Ampache.cfg.php wird folgendes vermisst:"
-
-#~ msgid "Reset Form"
-#~ msgstr "Formular zurücksetzen"
-
-#~ msgid "Save Search As Track on"
-#~ msgstr "Sichere Suchergebnis in"
-
-#~ msgid "Save"
-#~ msgstr "Speichern"

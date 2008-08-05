@@ -29,7 +29,7 @@ switch($_REQUEST['action']) {
 			exit; 
 		} 
 
-		if (!Core::form_verify('update_preferences','post')) { 
+		if (!Core::form_verify('update_preference','post')) { 
 			access_denied(); 
 			exit; 
 		} 
@@ -58,7 +58,7 @@ switch($_REQUEST['action']) {
 			exit; 
 		} 
 
-                if (!Core::form_verify('update_preferences','post')) {
+                if (!Core::form_verify('update_preference','post')) {
                         access_denied();
                         exit;
                 }
