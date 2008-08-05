@@ -64,27 +64,27 @@ class Browse {
 
 		switch ($key) { 
 			case 'show_art':
-				if ($_SESSION['browse']['filter'][$key]) { 
-					unset($_SESSION['browse']['filter'][$key]);
+				if (self::get_filter($key)) { 
+					unset($_SESSION['browse']['filter'][self::$type][$key]);
 				} 
 				else { 
-				        $_SESSION['browse']['filter'][$key] = 1; 
+				        $_SESSION['browse']['filter'][self::$type][$key] = 1; 
 				}
 			break;
                        case 'tag':
 				if (is_array($value)) { 
-					$_SESSION['browse']['filter'][$key] = $value;
+					$_SESSION['browse']['filter'][self::$type][$key] = $value;
 				} 
 				elseif (is_numeric($value)) { 
-					$_SESSION['browse']['filter'][$key] = array($value);
+					$_SESSION['browse']['filter'][self::$type][$key] = array($value);
 				} 
 				else { 
-					$_SESSION['browse']['filter'][$key] = array();
+					$_SESSION['browse']['filter'][self::$type][$key] = array();
 				} 
 			break;
 			case 'artist':
 			case 'album':
-				$_SESSION['browse']['filter'][$key] = $value;
+				$_SESSION['browse']['filter'][self::$type][$key] = $value;
 			break;
 			case 'min_count':
 	
@@ -93,13 +93,14 @@ class Browse {
 
 			break; 
 			case 'alpha_match':
+			case 'starts_with': 
 				if (self::$static_content) { return false; }
-				$_SESSION['browse']['filter'][$key] = $value; 
+				$_SESSION['browse']['filter'][self::$type][$key] = $value; 
 			break;
 			case 'playlist_type': 
 				// They must be content managers to turn this off
-				if ($_SESSION['browse']['filter'][$key] AND Access::check('interface','50')) { unset($_SESSION['browse']['filter'][$key]); } 
-				else { $_SESSION['browse']['filter'][$key] = '1'; } 
+				if ($_SESSION['browse']['filter'][self::$type][$key] AND Access::check('interface','50')) { unset($_SESSION['browse']['filter'][self::$type][$key]); } 
+				else { $_SESSION['browse']['filter'][self::$type][$key] = '1'; } 
 			break; 
                         default:
                                 // Rien a faire
@@ -117,11 +118,7 @@ class Browse {
 	 */
 	public static function reset_filters() { 
 
-		if (!is_array($_SESSION['browse']['filter'])) { return true; } 
-
-		foreach ($_SESSION['browse']['filter'] AS $key=>$value) { 
-			self::set_filter($key,''); 
-		} 
+		$_SESSION['browse']['filter'] = array(); 
 
 	} // reset_filters
 
@@ -142,7 +139,7 @@ class Browse {
 	public static function get_filter($key) { 
 	
 		// Simple enough, but if we ever move this crap 
-		return $_SESSION['browse']['filter'][$key]; 
+		return $_SESSION['browse']['filter'][self::$type][$key]; 
 
 	} // get_filter
 
@@ -155,16 +152,16 @@ class Browse {
 
 		switch ($_SESSION['browse']['type']) { 
 			case 'album': 
-				$valid_array = array('show_art','alpha_match'); 
+				$valid_array = array('show_art','starts_with','alpha_match'); 
 			break; 
 			case 'artist': 
 			case 'genre': 
 			case 'song': 
 			case 'live_stream': 
-				$valid_array = array('alpha_match'); 	
+				$valid_array = array('alpha_match','starts_with'); 	
 			break; 
 			case 'playlist': 
-				$valid_array = array('alpha_match'); 
+				$valid_array = array('alpha_match','starts_with'); 
 				if (Access::check('interface','50')) { 
 					array_push($valid_array,'playlist_type'); 
 				} 
@@ -482,13 +479,13 @@ class Browse {
 		$sql = self::get_base_sql(); 
 
 		// No sense to go further if we don't have filters
-		if (is_array($_SESSION['browse']['filter'])) { 
+		if (is_array($_SESSION['browse']['filter'][self::$type])) { 
 
 			// Foreach the filters and see if any of them can be applied
 			// as part of a where statement in this sql (type dependent)
 			$where_sql = "";
 			
-			foreach ($_SESSION['browse']['filter'] as $key=>$value) { 
+			foreach ($_SESSION['browse']['filter'][self::$type] as $key=>$value) { 
 				$where_sql .= self::sql_filter($key,$value); 	
 			} // end foreach
 			$sql .= $where_sql;
@@ -578,6 +575,9 @@ class Browse {
 				case 'alpha_match':
 					$filter_sql = " `song`.`title` LIKE '%" . Dba::escape($value) . "%' AND ";
 				break;
+				case 'starts_with': 
+					$filter_sql = " `song`.`title` LIKE '" . Dba::escape($value) . "%' AND "; 
+				break; 
 				case 'unplayed':
 					$filter_sql = " `song`.`played`='0' AND "; 
 				break;
@@ -601,6 +601,9 @@ class Browse {
 				case 'alpha_match':
 					$filter_sql = " `album`.`name` LIKE '%" . Dba::escape($value) . "%' AND "; 
 				break;
+				case 'starts_with': 
+					$filter_sql = " `album`.`name` LIKE '" . Dba::escape($value) . "%' AND "; 
+				break; 
 				case 'min_count': 
 
 				break;
@@ -619,26 +622,22 @@ class Browse {
 				case 'alpha_match':
 					$filter_sql = " `artist`.`name` LIKE '%" . Dba::escape($value) . "%' AND ";
 				break;
+				case 'starts_with': 
+					$filter_sql = " `artist`.`name` LIKE '" . Dba::escape($value) . "%' AND "; 
+				break;
 				default:
 					// Rien a faire
 				break;
 			} // end filter
 		} // end artist
-		elseif ($_SESSION['browse']['type'] == 'genre') { 
-			switch ($filter) { 
-				case 'alpha_match': 
-					$filter_sql = " `genre`.`name` LIKE '" . Dba::escape($value) . "%' AND "; 
-				break;
-				default: 
-					// Rien a faire
-				break;
-			} // end filter 
-		} // end if genre
 		elseif ($_SESSION['browse']['type'] == 'live_stream') { 
 			switch ($filter) { 
 				case 'alpha_match':
 					$filter_sql = " `live_stream`.`name` LIKE '%" . Dba::escape($value) . "%' AND "; 
 				break;
+				case 'starts_with': 
+					$filter_sql = " `live_stream`.`name` LIKE '" . Dba::escape($value) . "%' AND "; 
+				break; 
 				default: 
 					// Rien a faire
 				break;
@@ -648,6 +647,9 @@ class Browse {
 			switch ($filter) { 
 				case 'alpha_match': 
 					$filter_sql = " `playlist`.`name` LIKE '%" . Dba::escape($value) . "%' AND "; 
+				break;
+				case 'starts_with': 
+					$filter_sql = " `playlist`.`name` LIKE '" . Dba::escape($value) . "%' AND "; 
 				break;
 				case 'playlist_type': 
 					$user_id = intval($GLOBALS['user']->id); 
@@ -805,7 +807,12 @@ class Browse {
 		} 
 
 		// Format any matches we have so we can show them to the masses
-		$match = $_SESSION['browse']['filter']['alpha_match'] ? ' (' . $_SESSION['browse']['filter']['alpha_match'] . ')' : '';  
+		if ($filter_value = self::get_filter('alpha_match')) { 
+			$match = ' (' . $filter_value . ')'; 
+		}
+		elseif ($filter_value = self::get_filter('starts_with')) { 
+			$match = ' (' . $filter_value . ')'; 
+		} 
 
 		// Set the correct classes based on type
     		$class = "box browse_".$_SESSION['browse']['type'];
@@ -986,9 +993,9 @@ class Browse {
 	    }
 	    if ($ok)
 	      if (sizeof($vl) == 1)
-	        Browse::set_filter($k, $vl[0]);
+	        self::set_filter($k, $vl[0]);
 	      else
-	        Browse::set_filter($k, $vl);
+	        self::set_filter($k, $vl);
 	  }
 	}
 
