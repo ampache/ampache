@@ -173,7 +173,7 @@ class vainfo {
 					$results[$key] = $this->_parse_id3v1($tag_array);
 				break;
 				case 'id3v2':
-					$results[$key] = $this->_parse_id3v2($tag_array);
+					$results[$key] = $this->_parse_id3v2($this->_raw['id3v2']['comments']);
 				break;
 				case 'ape':
 					$results[$key] = $this->_parse_ape($tag_array);
@@ -186,7 +186,7 @@ class vainfo {
 				break;
 				default: 
 					debug_event('vainfo','Error: Unable to determine tag type of ' . $key . ' for file ' . $this->filename . ' Assuming id3v2','5');
-					$results[$key] = $this->_parse_id3v2($tag_array);
+					$results[$key] = $this->_parse_id3v2($this->_raw['id3v2']['comments']);
 				break;
 			} // end switch
 
@@ -310,7 +310,7 @@ class vainfo {
 
 		$array = array();
 
-	//	$encoding = $this->_raw['id3v1']['encoding'];
+		$encoding = $this->_raw['id3v1']['encoding'];
 		
 		/* Go through all the tags */
 		foreach ($tags as $tag=>$data) { 
@@ -338,7 +338,7 @@ class vainfo {
 
 		/* Go through the tags */
 		foreach ($tags as $tag=>$data) { 
-	
+
 			/**
 			 * the new getid3 handles this differently 
 			 * so we now need to account for it :(
@@ -355,8 +355,13 @@ class vainfo {
 				case 'comments':
 					$array['comment'] = $this->_clean_tag($data['0'],'');
 				break;
+				case 'title': 
+					$array['title'] = $this->_clean_tag($data['0'],$this->_raw['id3v2']['TIT2']['0']['encoding']); 
+				break; 
 				default: 
-					$array[$tag]	= $this->_clean_tag($data['0'],'');
+					$frame = $this->_id3v2_tag_to_frame($tag);
+					$encoding = $frame ? $this->_raw['id3v2'][$frame]['0']['encoding'] : ''; 
+					$array[$tag]	= $this->_clean_tag($data['0'],$encoding);
 				break;
 			} // end switch on tag
 		
@@ -441,7 +446,6 @@ class vainfo {
 
 	} // _parse_quicktime
 
-
 	/**
 	 * _parse_filename
 	 * This function uses the passed file and dir patterns
@@ -485,6 +489,32 @@ class vainfo {
 	} // _parse_filename
 
 	/**
+	 * _id3v2_tag_to_frame
+	 * This translates the tag name to a frame, if there a many it returns the first
+	 * one if finds that exists in the raw
+	 */
+	private function _id3v2_tag_to_frame($tag_name) { 
+
+		static $map = array(
+			'comment'=>array('COM','COMM'),
+			'cd_ident'=>array('MCDI','MCI'),
+			'album'=>array('TAL','TALB'),
+			'language'=>array('TLA','TLAN'),
+			'mood'=>array('TMOO'),
+			'artist'=>array('TPE1'),
+			'year'=>array('TDRC')); 
+
+		foreach ($map[$tag_name] as $frame) { 
+			if (isset($this->_raw['id3v2'][$frame])) { 
+				return $frame; 
+			} 
+		} 
+
+		return false; 
+
+	} // _id3v2_tag_to_frame 
+
+	/**
 	 * _clean_tag
 	 * This function cleans up the tag that it's passed using Iconv
 	 * if we've got it. It also takes an optional encoding param
@@ -493,8 +523,6 @@ class vainfo {
 	 * in the file
 	 */
 	private function _clean_tag($tag,$encoding='') { 
-
-		return $tag; 
 
 		// If we've got iconv then go ahead and clear her up		
 		if ($this->_iconv) { 
@@ -505,8 +533,6 @@ class vainfo {
 		}
 
 		return $tag;
-
-
 
 	} // _clean_tag
 

@@ -344,7 +344,7 @@ class Browse {
 	 */
 	public static function get_saved() { 
 
-		$objects = $_SESSION['browse']['save']; 
+		$objects = $_SESSION['browse']['save'][self::$type]; 
 		
 		return $objects; 
 
@@ -894,7 +894,7 @@ class Browse {
 	public static function save_objects($object_ids) { 
 
 		// save these objects
-		$_SESSION['browse']['save'] = $object_ids; 
+		$_SESSION['browse']['save'][self::$type] = $object_ids; 
 		self::$total_objects = count($object_ids); 
 		return true; 
 
