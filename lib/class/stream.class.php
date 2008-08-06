@@ -587,7 +587,7 @@ class Stream {
 
 	        /* Never Upsample a song */
 	        if (($sample_rate*1000) > $song->bitrate) {
-	                $sample_rate = self::validate_bitrate($song->bitrate)/1000;
+	                $sample_rate = self::validate_bitrate($song->bitrate/1000);
 	                $sample_ratio = '1';
 	        }
 	        else {

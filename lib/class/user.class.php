@@ -569,10 +569,12 @@ class User extends database_object {
 		$sql = "INSERT INTO `ip_history` (`ip`,`user`,`date`) VALUES ('$ip','$user','$date')";
 		$db_results = Dba::query($sql);
 
-		/* Clean up old records */
-		$date = time() - (86400*Config::get('user_ip_cardinality'));
-		$sql = "DELETE FROM `ip_history` WHERE `date` < $date";
-		$db_results = Dba::query($sql);
+		/* Clean up old records... sometimes  */
+		if (rand(1,100) > 60) { 
+			$date = time() - (86400*Config::get('user_ip_cardinality'));
+			$sql = "DELETE FROM `ip_history` WHERE `date` < $date";
+			$db_results = Dba::query($sql);
+		} 
 
 		return true;
 
