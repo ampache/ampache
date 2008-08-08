@@ -46,7 +46,7 @@ switch ($_REQUEST['action']) {
 		Browse::set_type('song'); 
 		Browse::set_static_content(1);
 		Browse::save_objects($results); 
-		Browse::show_objects($results); 
+		Browse::show_objects(); 
 	break;
 	case 'save_as_track':
 		$playlist_id = save_search($_REQUEST);

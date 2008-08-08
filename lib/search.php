@@ -72,7 +72,6 @@ function run_search($data) {
 	switch($_REQUEST['object_type']) { 
 		case 'artist':
 		case 'album':
-		case 'genre':
 		case 'song':
 			$function_name = 'search_' . $_REQUEST['object_type'];
 			if (function_exists($function_name)) { 
@@ -130,7 +129,6 @@ function search_song($data,$operator,$method,$limit) {
                                                     song.title LIKE '%$word%' OR
                                                     album2.name LIKE '%$word%' OR
                                                     artist2.name LIKE '%$word%' OR
-                                                    genre2.name LIKE '%$word%' OR
                                                     song.year LIKE '%$word%' OR
                                                     song.file LIKE '%$word%'
                                                   ) ";
@@ -138,7 +136,6 @@ function search_song($data,$operator,$method,$limit) {
                                 $where_sql .= " ) $operator";
                                 $table_sql .= " LEFT JOIN `album` as `album2` ON `song`.`album`=`album2`.`id`"; 
 				$table_sql .= " LEFT JOIN `artist` as `artist2` ON `song`.`artist`=`artist2`.`id`"; 
-				$table_sql .= " LEFT JOIN `genre` as `genre2` ON `song`.`genre`=`genre2`.`id`";
                         break;
 			case 'title':
 				$where_sql .= " song.title $value_string $operator";
@@ -150,10 +147,6 @@ function search_song($data,$operator,$method,$limit) {
 			case 'artist':
 				$where_sql .= " artist.name $value_string $operator";
 				$table_sql .= " LEFT JOIN `artist` ON `song`.`artist`=`artist`.`id` ";
-			break;
-			case 'genre':
-				$where_sql .= " genre.name $value_string $operator";
-				$table_sql .= " LEFT JOIN `genre` ON `song`.`genre`=`genre`.`id`";
 			break;
 			case 'year':
 				if (empty($data["year2"]) && is_numeric($data["year"])) {
@@ -250,9 +243,6 @@ function show_search($type,$results) {
 		
 		break;
 		case 'album':
-		
-		break;
-		case 'genre':
 		
 		break;
 		case 'song':
