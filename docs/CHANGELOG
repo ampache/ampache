@@ -4,6 +4,7 @@
 
 --------------------------------------------------------------------------
   v.3.5-Alpha1
+	- Improved gather script for translations (Thx momo-i)
 	- Added paging to the localplay playlist
 	- Updated German Translation (Thx Laurent)
 	- Fixed issue where Remote songs would never be removed from

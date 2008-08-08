@@ -17,8 +17,44 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #
 
+SCRIPTS=$0
+MAILADDR="translation@ampache.org"
+OLANG=`echo $LANG | sed 's/\..*//;'`
+POTNAME="messages.pot"
+PODIR="../$OLANG/LC_MESSAGES"
+PONAME="messages.po"
+MONAME="messages.mo"
 
-find ../../ -name *.php > /tmp/filelist
-find ../../ -name *.inc >> /tmp/filelist
+if [ ! -d $PODIR ]
+then
+       mkdir -p $PODIR
+       echo "$PODIR has created."
+fi
 
-xgettext -f /tmp/filelist -L PHP -o ./messages.po
+if [ $# = 0 ]; then
+    echo "usage: $SCRIPTS [--help|--get|--init|--merge]"
+    exit
+fi
+
+case $1 in
+        "--get"|"-g"|"get")
+                xgettext --from-code=UTF-8 --msgid-bugs-address=$MAILADDR -L php -o $POTNAME `find ../../ -name \*.php -type f` `find ../../ -name \*.inc -type f`;
+                if [ $? = 0 ]; then
+                        echo "pot file creation was done.";
+                else
+                        echo "pot file creation wasn't done.";
+                fi
+                ;;
+        "--init"|"-i"|"init")
+                msginit -l $LANG -i $POTNAME -o $PODIR/$PONAME;
+                ;;
+        "--format"|"-f"|"format")
+                msgfmt -v --check $PODIR/$PONAME -o $PODIR/$MONAME;
+                ;;
+        "--merge"|"-m"|"merge")
+                msgmerge --update $PODIR/$PONAME $POTNAME;
+                ;;
+        "--help"|"-h"|"help"|"*")
+                echo "usage: $SCRIPTS [--help|--get|--init|--merge]";
+                ;;
+esac
