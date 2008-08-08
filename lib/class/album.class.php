@@ -93,7 +93,7 @@ class Album extends database_object {
 	 * This takes an array of object ids and caches all of their information
 	 * with a single query
 	 */
-	public static function build_cache($ids) {
+	public static function build_cache($ids,$extra=false) {
 
 		$idlist = '(' . implode(',', $ids) . ')';
 
@@ -104,6 +104,23 @@ class Album extends database_object {
 			parent::add_to_cache('album',$row['id'],$row); 
 		}
 
+		// If we're extra'ing cache the extra info as well
+		if ($extra) { 
+			$sql = "SELECT COUNT(DISTINCT(song.artist)) as artist_count,COUNT(song.id) AS song_count,artist.name AS artist_name" .
+	                        ",artist.prefix AS artist_prefix,album_data.art AS has_art,album_data.thumb AS has_thumb, artist.id AS artist_id,`song`.`album`".
+	                        "FROM `song` " .
+	                        "INNER JOIN `artist` ON `artist`.`id`=`song`.`artist` " .
+	                        "LEFT JOIN `album_data` ON `album_data`.`album_id` = `song`.`album` " .
+	                        "WHERE `song`.`album` IN $idlist GROUP BY `song`.`album`";
+			$db_results = Dba::read($sql); 
+
+			while ($row = Dba::fetch_assoc($db_results)) { 
+		                $row['has_art'] = make_bool($row['has_art']); 
+		                $row['has_thumb'] = make_bool($row['has_thumb']); 
+				parent::add_to_cache('album_extra',$row['album'],$row); 
+			} // while rows
+		} // if extra				
+
 	} // build_cache
 
 	/**
@@ -112,6 +129,10 @@ class Album extends database_object {
 	 * do it
 	 */
 	private function _get_extra_info() { 
+
+		if (parent::is_cached('album_extra',$this->id)) { 
+			return parent::get_from_cache('album_extra',$this->id); 
+		} 
 
 		$sql = "SELECT COUNT(DISTINCT(song.artist)) as artist_count,COUNT(song.id) AS song_count,artist.name AS artist_name" . 
 			",artist.prefix AS artist_prefix,album_data.art AS has_art,album_data.thumb AS has_thumb, artist.id AS artist_id ".
@@ -125,6 +146,8 @@ class Album extends database_object {
 
 		if ($results['has_art']) { $results['has_art'] = 1; } 
 		if ($results['has_thumb']) { $results['has_thumb'] = 1; } 
+
+		parent::add_to_cache('album_extra',$this->id,$results); 
 
 		return $results; 
 

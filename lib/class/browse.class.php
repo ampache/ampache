@@ -858,7 +858,7 @@ class Browse {
 			break;
 			case 'album': 
 				show_box_top(_('Albums') . $match, $class); 
-				Album::build_cache($object_ids);
+				Album::build_cache($object_ids,'extra');
 				require_once Config::get('prefix') . '/templates/show_albums.inc.php';
 				show_box_bottom(); 
 			break;
