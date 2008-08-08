@@ -322,14 +322,6 @@ switch ($_REQUEST['action']) {
 		$results['browse_content'] = ob_get_contents(); 
 		ob_end_clean(); 
 	break;
-	case 'page': 
-		Browse::set_start($_REQUEST['start']); 
-
-		ob_start(); 
-		Browse::show_objects('', true); 
-		$results['browse_content'] = ob_get_contents(); 
-		ob_end_clean(); 
-	break;
 	default:
 		$results['rfc3514'] = '0x1';
 	break;

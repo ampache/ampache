@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2007 Ampache.org
+ Copyright (c) Ampache.org
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
@@ -90,14 +90,15 @@ while ($page <= $pages) {
 // Sort These Arrays of Hotness
 ksort($page_data['up']);
 ksort($page_data['down']);
+$browse_type = Browse::get_type(); 
 
 // are there enough items to even need this view?
 if ($pages > 1) {
 ?>
 <div class="list-header">
 
-  <?php echo Ajax::text('?action=page&start=' . $prev_offset,_('Prev'),'browse_' . $uid . 'prev','','prev'); ?>
-	<?php echo Ajax::text('?action=page&start=' . $next_offset,_('Next'),'browse_' . $uid . 'next','','next'); ?>
+  <?php echo Ajax::text('?page=browse&action=page&type=' . $browse_type . '&start=' . $prev_offset,_('Prev'),'browse_' . $uid . 'prev','','prev'); ?>
+	<?php echo Ajax::text('?page=browse&action=page&type=' . $browse_type . '&start=' . $next_offset,_('Next'),'browse_' . $uid . 'next','','next'); ?>
 	<?php 
 		/* Echo Everything below us */
 		foreach ($page_data['down'] as $page => $offset) { 
@@ -105,7 +106,7 @@ if ($pages > 1) {
 			else { 
 			// Hack Alert
 			$page++;
-				echo Ajax::text('?action=page&start=' . $offset,$page,'browse_' . $uid . 'page_' . $page,'','page-nb'); 
+				echo Ajax::text('?page=browse&action=page&type=' . $browse_type .'&start=' . $offset,$page,'browse_' . $uid . 'page_' . $page,'','page-nb'); 
 			}
 		} // end foreach down
 
@@ -119,7 +120,7 @@ if ($pages > 1) {
 		foreach ($page_data['up'] as $page=>$offset) { 
 			if ($offset === '...') { echo '...&nbsp;'; } 
 			else { 
-				echo Ajax::text('?action=page&start=' . $offset,$page,'browse_' . $uid . 'page_' . $page,'','page-nb'); 
+				echo Ajax::text('?page=browse&action=page&type=' . $browse_type . '&start=' . $offset,$page,'browse_' . $uid . 'page_' . $page,'','page-nb'); 
 			} // end else
 		} // end foreach up
 	?>

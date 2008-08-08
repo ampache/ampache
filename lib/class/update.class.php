@@ -284,7 +284,9 @@ class Update {
 
 		$update_string = '- Remove Genre Field from song table.<br />' . 
 				'- Add user_catalog table for tracking user<-->catalog mappings.<br />' . 
-				'- Alter user table to handle SHA2 passwords.<br />'; 
+				'- Add tmp_browse to handle caching rather then session table.<br />';  
+
+		$version[] = array('version' => '350002','description'=>$update_string); 
 
 
 		return $version;
@@ -1364,6 +1366,37 @@ class Update {
 		return true; 
 
 	} // update_350001
+
+	/**
+	 * update_350002
+	 * This update adds in the browse_cache table that we use to hold peoples cached browse results
+	 * rather then try to store everything in the session we split them out into one serilized array per
+	 * row, per person. A little slow this way when browsing, but faster when now browsing and more flexible
+	 */
+	public static function update_350002() { 
+
+		$sql = "CREATE TABLE `tmp_browse` (`sid` varchar(128) collate utf8_unicode_ci NOT NULL,`data` longtext collate utf8_unicode_ci NOT NULL," . 
+			" UNIQUE KEY `sid` (`sid`)) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci"; 
+		$db_results = Dba::write($sql); 
+
+		$sql = "ALTER TABLE `tmp_browse` ADD INDEX ( `type` )"; 
+		$db_results = Dba::write($sql); 
+
+		$sql = "ALTER TABLE `song` DROP `genre`"; 
+		$db_results = Dba::write($sql); 
+
+		$sql = "CREATE TABLE `user_catalog` (`user` INT( 11 ) UNSIGNED NOT NULL ,`catalog` INT( 11 ) UNSIGNED NOT NULL ,`level` SMALLINT( 4 ) UNSIGNED NOT NULL DEFAULT '5', " . 
+			"INDEX ( `user` )) ENGINE = MYISAM CHARACTER SET utf8 COLLATE utf8_unicode_ci";
+		$db_results = Dba::write($sql); 
+
+		$sql = "ALTER TABLE `user_catalog` ADD INDEX ( `catalog` )"; 
+		$db_results = Dba::write($sql); 
+
+		self::set_version('db_version','350002'); 
+
+		return true; 
+
+	} // update_350002
 
 } // end update class
 ?>

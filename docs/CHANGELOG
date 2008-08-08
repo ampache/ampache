@@ -4,6 +4,8 @@
 
 --------------------------------------------------------------------------
   v.3.5-Alpha1
+	- Fixed browsing so that you can browse two different types in two 
+		windows at the same time 
 	- Improved gather script for translations (Thx momo-i)
 	- Added paging to the localplay playlist
 	- Updated German Translation (Thx Laurent)

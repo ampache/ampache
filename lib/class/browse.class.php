@@ -40,6 +40,7 @@ class Browse {
 	// Static Content, this is defaulted to false, if set to true then wen can't
 	// apply any filters that would change the result set. 
 	public static $static_content = false; 
+	private static $_cache = array();  
 
 
 	/**
@@ -216,6 +217,16 @@ class Browse {
 	} // set_type
 
 	/**
+	 * get_type
+	 * This returns the type of the browse we currently are using
+	 */
+	public static function get_type() { 
+
+		return self::$type; 
+
+	} // get_type
+
+	/**
 	 * set_sort
 	 * This sets the current sort(s)
 	 */
@@ -341,8 +352,21 @@ class Browse {
 	 */
 	public static function get_saved() { 
 
-		$objects = $_SESSION['browse']['save'][self::$type]; 
-		
+		// See if we have it in the local cache first
+		if (is_array(self::$_cache['browse'][self::$type])) { 
+			return self::$_cache['browse'][self::$type]; 
+		} 
+
+		// If not then we're going to need to read from the database :(
+		$sid = session_id() . '::' . self::$type; 
+
+		$sql = "SELECT `data` FROM `tmp_browse` WHERE `sid`='$sid'"; 
+		$db_results = Dba::read($sql); 
+
+		$row = Dba::fetch_assoc($db_results); 
+
+		$objects = unserialize($row['data']); 
+
 		return $objects; 
 
 	} // get_saved
@@ -795,7 +819,7 @@ class Browse {
 	public static function show_objects($object_ids=false, $ajax=false) { 
 
 		$object_ids = $object_ids ? $object_ids : self::get_saved();
-		
+	
 		// Reset the total items
 		self::$total_objects = count($object_ids); 
 
@@ -900,8 +924,17 @@ class Browse {
 	 */
 	public static function save_objects($object_ids) { 
 
-		// save these objects
-		$_SESSION['browse']['save'][self::$type] = $object_ids; 
+		// Saving these objects has two operations, one hold it in 
+		// a local variable and then second hold it in a row in the tmp_browse
+		// table
+		self::$_cache['browse'][self::$type] = $object_ids; 	
+
+		$sid = session_id() . '::' . self::$type; 
+		$data = Dba::escape(serialize($object_ids)); 
+
+		$sql = "REPLACE INTO `tmp_browse` SET `data`='$data', `sid`='$sid'"; 
+		$db_results = Dba::write($sql); 
+
 		self::$total_objects = count($object_ids); 
 		return true; 
 
@@ -974,7 +1007,6 @@ class Browse {
 
 		self::$simple_browse = make_bool($_SESSION['browse']['simple']); 
 		self::$static_content = make_bool($_SESSION['browse']['static']); 
-		self::$type = $_SESSION['browse']['type']; 
 		self::$start = intval($_SESSION['browse'][self::$type]['start']); 
 
 	} // _auto_init

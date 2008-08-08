@@ -89,6 +89,15 @@ switch ($_REQUEST['action']) {
 		$results[$key] = ''; 
 
 	break; 
+	case 'page': 
+		Browse::set_type($_REQUEST['type']); 
+		Browse::set_start($_REQUEST['start']); 
+		
+		ob_start(); 
+		Browse::show_objects(false,true); 
+		$results['browse_content'] = ob_get_clean(); 	
+	
+	break; 
 	default: 
 		$results['rfc3514'] = '0x1'; 
 	break;
