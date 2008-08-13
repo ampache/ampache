@@ -119,7 +119,7 @@ class User extends database_object {
 		$username = Dba::escape($username); 
 		
 		$sql = "SELECT `id` FROM `user` WHERE `username`='$username'"; 
-		$db_results = Dba::query($sql);
+		$db_results = Dba::read($sql);
 		$results = Dba::fetch_assoc($db_results); 
 		
 		$user = new User($results['id']); 
@@ -127,6 +127,29 @@ class User extends database_object {
 		return $user; 
 
 	} // get_from_username
+
+	/**
+	 * get_catalogs
+	 * This returns the catalogs as an array of ids that this user is allowed to access
+	 */
+	public function get_catalogs() { 
+
+		if (parent::is_cached('user_catalog',$this->id)) { 
+			return parent::get_from_cache('user_catalog',$this->id); 
+		} 
+
+		$sql = "SELECT * FROM `user_catalog` WHERE `user`='$user_id'"; 
+		$db_results = Dba::read($sql); 
+
+		while ($row = Dba::fetch_assoc($db_results)) { 
+			$catalogs[] = $row['catalog']; 
+		} 
+
+		parent::add_to_cache('user_catalog',$this->id,$catalogs); 
+
+		return $catalogs;
+
+	} // get_catalogs
 
 	/**
 	 * get_preferences
@@ -964,27 +987,6 @@ class User extends database_object {
 
 	} // get_recently_played
 
-	/**
- 	 * get_recent
-	 * This returns users by thier last login date
-	 */
-	function get_recent($count=0) { 
-
-		if ($count) { $limit_clause = " LIMIT $count"; } 
-	
-		$results = array();		
-
-		$sql = "SELECT username FROM user ORDER BY last_seen $limit_clause";
-		$db_results = mysql_query($sql, dbh());
-
-		while ($r = mysql_fetch_assoc($db_results)) { 
-			$results[] = $r['username'];
-		} 
-
-		return $results;
-
-	} // get_recent
-
         /**
          * get_ip_history 
          * This returns the ip_history from the
@@ -1024,7 +1026,7 @@ class User extends database_object {
 		@function activate_user
 		@activates the user from public_registration
 	*/
-	function activate_user($username) {
+	public function activate_user($username) {
 	
 		$username = Dba::escape($username); 
 	

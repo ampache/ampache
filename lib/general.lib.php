@@ -422,8 +422,8 @@ function get_languages() {
 /**
  * format_time
  * This formats seconds into minutes:seconds
+ * //FIXME This should be removed, no reason for it!
  */
-
 function format_time($seconds) {
 
 return sprintf ("%d:%02d", $seconds/60, $seconds % 60);

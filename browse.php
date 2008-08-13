@@ -56,7 +56,7 @@ switch($_REQUEST['action']) {
 	case 'album':
 		Browse::set_sort('name','ASC');
 		$album_ids = Browse::get_objects(); 
-		Album::build_cache($album_ids); 
+		Album::build_cache($album_ids,'extra'); 
 		Browse::show_objects($album_ids); 
 	break;
 	case 'tag': 
@@ -68,7 +68,7 @@ switch($_REQUEST['action']) {
 	case 'artist':
 		Browse::set_sort('name','ASC');
 		$artist_ids = Browse::get_objects(); 
-		Artist::build_cache($artist_ids); 
+		Artist::build_cache($artist_ids,'extra'); 
 		Browse::show_objects($artist_ids); 
 	break;
 	case 'song':

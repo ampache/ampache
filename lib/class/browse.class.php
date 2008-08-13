@@ -31,6 +31,7 @@ class Browse {
 	// Public static vars that are cached
 	public static $sql; 
 	public static $start;
+	public static $offset; 
 	public static $total_objects; 
 	public static $type; 
 
@@ -143,6 +144,16 @@ class Browse {
 		return $_SESSION['browse']['filter'][self::$type][$key]; 
 
 	} // get_filter
+
+	/**
+	 * get_total
+	 * This returns the toal number of obejcts for this current sort type. If it's already cached used it!
+	 * if they pass us an array then use that!
+	 */
+	public static function get_total($objects=false) { 
+
+
+	} // get_total
 
 	/**
 	 * get_allowed_filters
@@ -311,7 +322,7 @@ class Browse {
 		$value = make_bool($value); 
 		self::$simple_browse = $value; 
 		
-		$_SESSION['browse']['simple'] = $value;  
+		$_SESSION['browse'][self::$type]['simple'] = $value;  
 
 	} // set_simple_browse
 
@@ -334,6 +345,16 @@ class Browse {
 		$_SESSION['browse']['static'] = $value; 
 
 	} // set_static_content
+
+	/**
+	 * is_simple_browse
+	 * this returns true or false if the current browse type is set to static
+	 */
+	public static function is_simple_browse() { 
+
+		return $_SESSION['browse'][self::$type]['simple']; 
+
+	} // is_simple_browse
 
 	/**
 	 * load_start
@@ -514,6 +535,10 @@ class Browse {
 			} // end foreach
 			$sql .= $where_sql;
 		} // if filters
+
+		// No matter what we have to check the catalog based filters... maybe I'm not sure about this
+		$where_sql .= self::sql_filter('catalog',''); 
+
 		$sql = rtrim($sql,'AND ');
 		// Now Add the Order 
 		$order_sql = " ORDER BY "; 	
@@ -527,6 +552,12 @@ class Browse {
 		// Clean her up
 		$order_sql = rtrim($order_sql,"ORDER BY "); 
 		$order_sql = rtrim($order_sql,","); 
+
+		if (self::is_simple_browse()) { 
+			// When doing a simple browse we need to get the total otherwise paging won't work
+			// so let's quickly do that before we add the limit
+			$order_sql .= ' LIMIT ' . intval(self::$start) . ',' . intval(self::$offset); 
+		} 
 
 		$sql = $sql . $order_sql; 
 		return $sql;
@@ -594,7 +625,8 @@ class Browse {
 		   $filter_sql = " `tags`.`id` in  $vals AND
 		     (($object_type.id = `tag_map`.`object_id` AND tag_map.object_type='$object_type')  $or_sql) AND ";
 		  }
-		if ($_SESSION['browse']['type'] == 'song') { 
+		
+		if (self::$type == 'song') { 
 			switch($filter) { 
 				case 'alpha_match':
 					$filter_sql = " `song`.`title` LIKE '%" . Dba::escape($value) . "%' AND ";
@@ -606,21 +638,23 @@ class Browse {
 					$filter_sql = " `song`.`played`='0' AND "; 
 				break;
 			        case 'album':
-				  if ($value)
-				    $filter_sql = " `album`.`id` = '".
-				      Dba::escape($value) . "' AND ";
+					$filter_sql = " `album`.`id` = '". Dba::escape($value) . "' AND ";
 				break;
 				case 'artist':
-				  if ($value)
-				    $filter_sql = " `artist`.`id` = '".
-				      Dba::escape($value) . "' AND ";
+					$filter_sql = " `artist`.`id` = '". Dba::escape($value) . "' AND ";
 				break;
+				case 'catalog': 
+					$catalogs = $GLOBALS['user']->get_catalogs(); 
+					if (!count($catalogs)) { break; } 
+					$filter_sql .= " `song`.`catalog` IN (" . implode(',',$GLOBALS['user']->get_catalogs()) . ") AND "; 
+				break; 
 				default: 
 					// Rien a faire
 				break;
 			} // end list of sqlable filters
+
 		} // if it is a song
-		elseif ($_SESSION['browse']['type'] == 'album') { 
+		elseif (self::$type == 'album') { 
 			switch($filter) { 
 				case 'alpha_match':
 					$filter_sql = " `album`.`name` LIKE '%" . Dba::escape($value) . "%' AND "; 
@@ -632,16 +666,14 @@ class Browse {
 
 				break;
 			        case 'artist':
-				  if ($value)
-				    $filter_sql = " `artist`.`id` = '".
-				      Dba::escape($value) . "' AND ";
+					$filter_sql = " `artist`.`id` = '". Dba::escape($value) . "' AND ";
 				break;
 				default: 
 					// Rien a faire
 				break;
 			} 
 		} // end album 
-		elseif ($_SESSION['browse']['type'] == 'artist') { 
+		elseif (self::$type == 'artist') { 
 			switch($filter) { 
 				case 'alpha_match':
 					$filter_sql = " `artist`.`name` LIKE '%" . Dba::escape($value) . "%' AND ";
@@ -654,7 +686,7 @@ class Browse {
 				break;
 			} // end filter
 		} // end artist
-		elseif ($_SESSION['browse']['type'] == 'live_stream') { 
+		elseif (self::$type == 'live_stream') { 
 			switch ($filter) { 
 				case 'alpha_match':
 					$filter_sql = " `live_stream`.`name` LIKE '%" . Dba::escape($value) . "%' AND "; 
@@ -667,7 +699,7 @@ class Browse {
 				break;
 			} // end filter
 		} // end live_stream
-		elseif ($_SESSION['browse']['type'] == 'playlist') { 
+		elseif (self::$type == 'playlist') { 
 			switch ($filter) { 
 				case 'alpha_match': 
 					$filter_sql = " `playlist`.`name` LIKE '%" . Dba::escape($value) . "%' AND "; 
@@ -713,7 +745,8 @@ class Browse {
 
 		if ($order != 'DESC') { $order == 'ASC'; } 
 
-		switch ($_SESSION['browse']['type']) { 
+		// Depending on the type of browsing we are doing we can apply different filters that apply to different fields
+		switch (self::$type) { 
 			case 'song': 
 				switch($field) { 
 					case 'title';
@@ -818,15 +851,18 @@ class Browse {
 	 */
 	public static function show_objects($object_ids=false, $ajax=false) { 
 
-		$object_ids = $object_ids ? $object_ids : self::get_saved();
+		if (self::is_simple_browse()) { 
+			$object_ids = self::get_objects(); 
+		} 
+		else { 
+			$object_ids = $object_ids ? $object_ids : self::get_saved();
+		} 
 	
 		// Reset the total items
-		self::$total_objects = count($object_ids); 
+		self::$total_objects = self::get_total(count($object_ids)); 
 
-		// Limit is based on the users preferences
-		$limit = Config::get('offset_limit') ? Config::get('offset_limit') : '25'; 
-		$all_ids = $object_ids;
-		if (count($object_ids) > self::$start) { 
+		// Limit is based on the users preferences if this is not a simple browse because we've got too much here
+		if (count($object_ids) > self::$start AND !self::is_simple_browse()) { 
 			$object_ids = array_slice($object_ids,self::$start,$limit); 
 		} 
 
@@ -839,7 +875,7 @@ class Browse {
 		} 
 
 		// Set the correct classes based on type
-    		$class = "box browse_".$_SESSION['browse']['type'];
+    		$class = "box browse_".self::$type;
 
 		// Load any additional object we need for this
 		$extra_objects = self::get_supplemental_objects(); 
@@ -869,7 +905,7 @@ class Browse {
 			break;
 			case 'artist':
 				show_box_top(_('Artists') . $match, $class); 
-				Artist::build_cache($object_ids); 
+				Artist::build_cache($object_ids,'extra'); 
 				require_once Config::get('prefix') . '/templates/show_artists.inc.php'; 
 				show_box_bottom(); 
 			break;
@@ -1005,9 +1041,8 @@ class Browse {
 	 */
 	public static function _auto_init() { 
 
-		self::$simple_browse = make_bool($_SESSION['browse']['simple']); 
-		self::$static_content = make_bool($_SESSION['browse']['static']); 
-		self::$start = intval($_SESSION['browse'][self::$type]['start']); 
+		self::$offset = Config::get('offset_limit') ? Config::get('offset_limit') : '25';
+
 
 	} // _auto_init
 	

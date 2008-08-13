@@ -77,7 +77,7 @@ class Artist extends database_object {
 	/**
 	 * this attempts to build a cache of the data from the passed albums all in one query
 	 */
-	public static function build_cache($ids) {
+	public static function build_cache($ids,$extra=false) {
 		$idlist = '(' . implode(',', $ids) . ')';
 
 		$sql = "SELECT * FROM `artist` WHERE `id` IN $idlist";
@@ -86,6 +86,18 @@ class Artist extends database_object {
 	  	while ($row = Dba::fetch_assoc($db_results)) {
 	  		parent::add_to_cache('artist',$row['id'],$row); 
 		}
+
+		// If we need to also pull the extra information, this is normally only used when we are doing the human display
+		if ($extra) { 
+	                $sql = "SELECT `song`.`artist`, COUNT(`song`.`id`) AS `song_count`, COUNT(`song`.`album`) AS `album_count`, SUM(`song`.`time`) AS `time` FROM `song` " .
+	                        "WHERE `song`.`artist` IN $idlist GROUP BY `song`.`artist`";
+	                $db_results = Dba::query($sql);
+
+			while ($row = Dba::fetch_assoc($db_results)) { 
+				parent::add_to_cache('artist_extra',$row['artist'],$row); 
+			} 
+
+		} // end if extra 
 
 	} // build_cache
 
@@ -145,24 +157,6 @@ class Artist extends database_object {
 
 	} // get_songs
 
-	/**
-	 * get_song_ids
-	 * This gets an array of song ids that are assoicated with this artist. This is great for using
-	 * with the show_songs function
-	 */
-	function get_song_ids() { 
-
-		$sql = "SELECT id FROM song WHERE artist='" . sql_escape($this->id) . "' ORDER BY album, track";
-		$db_results = mysql_query($sql, dbh());
-
-		while ($r = mysql_fetch_assoc($db_results)) { 
-			$results[] = $r['id'];
-		}
-
-		return $results;
-
-	} // get_song_ids
-
         /**
          * get_random_songs
 	 * Gets the songs from this artist in a random order
@@ -182,32 +176,33 @@ class Artist extends database_object {
 
         } // get_random_songs
 
-	/*!
-		@function get_count
-		@discussion gets the album and song count of 
-			this artist
-	*/
-	function get_count() { 
+	/**
+	 * _get_extra info
+	 * This returns the extra information for the artist, this means totals etc
+	 */
+	private function _get_extra_info() { 
 
-		/* Define vars */
-		$songs = 0;
-		$albums = 0;
-
-		$sql = "SELECT COUNT(song.id) FROM song WHERE song.artist='$this->id' GROUP BY song.album";
-		$db_results = Dba::query($sql);
-
-		while ($r = Dba::fetch_row($db_results)) { 
-			$songs += $r[0];
-			$albums++;
-		}
+		// Try to find it in the cache and save ourselves the trouble
+		if (parent::is_cached('artist_extra',$this->id)) { 
+			$row = parent::get_from_cache('artist_extra',$this->id); 
+		} 
+		else { 
+			$uid = Dba::escape($this->id); 
+			$sql = "SELECT `song`.`artist`,COUNT(`song`.`id`) AS `song_count`, COUNT(`song`.`album`) AS `album_count`, SUM(`song`.`time`) AS `time` FROM `song` " . 
+				"WHERE `song`.`artist`='$uid' GROUP BY `song`.`artist`";
+			$db_results = Dba::query($sql);
+			$row = Dba::fetch_assoc($db_results); 
+			parent::add_to_cache('artist_extra',$row['artist'],$row); 
+		} 
 		
 		/* Set Object Vars */
-		$this->songs = $songs;
-		$this->albums = $albums;
+		$this->songs = $row['song_count'];
+		$this->albums = $row['album_count'];
+		$this->time = $row['time']; 
 
-		return true;
+		return $row; 
 
-	} // get_count
+	} // _get_extra_info
 
 	/**
 	 * format
@@ -230,7 +225,16 @@ class Artist extends database_object {
 		$this->f_link = Config::get('web_path') . '/artists.php?action=show&amp;artist=' . $this->id; 
 
 		// Get the counts 
-		$this->get_count(); 
+		$extra_info = $this->_get_extra_info(); 
+
+		//Format the new time thingy that we just got
+		$min = sprintf("%02d",(floor($extra_info['time']/60)%60)); 
+		
+		$sec = sprintf("%02d",($extra_info['time']%60)); 
+		$hours = floor($extra_info['time']/3600);
+
+		$this->f_time = ltrim($hours . ':' . $min . ':' . $sec,'0:'); 
+		
 
 		return true; 
 

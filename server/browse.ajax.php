@@ -29,6 +29,8 @@ switch ($_REQUEST['action']) {
 
 		$object_ids = array(); 
 
+		Brosse::set_type($_REQUEST['type']); 
+
 		// Check 'value' with isset because it can null
 		//(user type a "start with" word and deletes it)
 		if ($_REQUEST['key'] && (isset($_REQUEST['multi_alpha_filter']) OR isset($_REQUEST['value']))) {
@@ -52,6 +54,9 @@ switch ($_REQUEST['action']) {
                 ob_end_clean();
 	break;
 	case 'set_sort':
+
+		Browse::set_type($_REQUEST['type']); 
+
 		if ($_REQUEST['sort']) { 
 			Browse::set_sort($_REQUEST['sort']); 
 		} 
