@@ -103,7 +103,7 @@ class Api {
 
 				// Now we need to quickly get the totals of songs
 				$sql = "SELECT COUNT(`id`) AS `song`,COUNT(DISTINCT(`album`)) AS `album`," . 
-					"COUNT(DISTINCT(`artist`)) AS `artist`,COUNT(DISTINCT(`genre`)) as `genre` FROM `song`";
+					"COUNT(DISTINCT(`artist`)) AS `artist` FROM `song`";
 				$db_results = Dba::query($sql); 
 				$counts = Dba::fetch_assoc($db_results); 
 
@@ -118,7 +118,6 @@ class Api {
 					'songs'=>$counts['song'],
 					'albums'=>$counts['album'],
 					'artists'=>$counts['artist'],
-					'genres'=>$counts['genre'],
 					'playlists'=>$playlist['playlist']); 
 			} // match 
 
