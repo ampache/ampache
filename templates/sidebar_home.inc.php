@@ -43,15 +43,15 @@ $ajax_info = Config::get('ajax_url'); $web_path = Config::get('web_path');
         <?php if (in_array('starts_with',$allowed_filters)) { ?>
         <form id="multi_alpha_filter_form" method="post" action="javascript:void(0);">
                 <label id="multi_alpha_filterLabel" for="multi_alpha_filter"><?php echo _('Starts With'); ?></label>
-                <input type="textbox" id="multi_alpha_filter" name="multi_alpha_filter" value="<?php echo scrub_out(Browse::get_filter('starts_with')); ?>" onKeyUp="DelayRun(this,'400','ajaxState','<?php echo Config::get('ajax_url'); ?>?page=browse&action=browse&key=starts_with','multi_alpha_filter');">
+                <input type="textbox" id="multi_alpha_filter" name="multi_alpha_filter" value="<?php echo scrub_out(Browse::get_filter('starts_with')); ?>" onKeyUp="DelayRun(this,'400','ajaxState','<?php echo Config::get('ajax_url'); ?>?page=browse&action=browse&type=<?php echo Browse::get_type(); ?>&key=starts_with','multi_alpha_filter');">
         </form>
         <?php } // end if alpha_match ?>
         <?php if (in_array('minimum_count',$allowed_filters)) { ?>
-                <input id="mincountCB" type="checkbox" onclick="ajaxPut('<?php echo $ajax_info; ?>?action=browse&amp;key=min_count&amp;value=1');return true;" value="1" />
+                <input id="mincountCB" type="checkbox" onclick="ajaxPut('<?php echo $ajax_info; ?>?action=browse&amp;key=min_count&amp;type=<?php echo Browse::get_type(); ?>&amp;value=1');return true;" value="1" />
                 <label id="mincountLabel" for="mincountCB"><?php echo _('Minimum Count'); ?></label><br />
         <?php } ?>
         <?php if (in_array('rated',$allowed_filters)) { ?>
-                <input id="ratedCB" type="checkbox" onclick="ajaxPut('<?php echo $ajax_info; ?>?action=browse&amp;key=rated&amp;value=1');return true;" value="1" />
+                <input id="ratedCB" type="checkbox" onclick="ajaxPut('<?php echo $ajax_info; ?>?action=browse&amp;type=<?php echo Browse::get_type(); ?>&amp;key=rated&amp;value=1');return true;" value="1" />
                 <label id="ratedLabel" for="ratedCB"><?php echo _('Rated'); ?></label><br />
         <?php } ?>
         <?php if (in_array('unplayed',$allowed_filters)) { ?>
@@ -61,12 +61,12 @@ $ajax_info = Config::get('ajax_url'); $web_path = Config::get('web_path');
         <?php if (in_array('show_art',$allowed_filters)) { ?>
                 <input id="show_artCB" type="checkbox" <?php echo $string = Browse::get_filter('show_art') ? 'checked="checked"' : ''; ?>/>
                 <label id="show_artLabel" for="show_artCB"><?php echo _('Show Art'); ?></label><br />
-                <?php echo Ajax::observe('show_artCB','click',Ajax::action('?page=browse&action=browse&key=show_art&value=1','')); ?>
+                <?php echo Ajax::observe('show_artCB','click',Ajax::action('?page=browse&action=browse&type=' . Browse::get_type() . '&key=show_art&value=1','')); ?>
         <?php } // if show_art ?>
         <?php if (in_array('playlist_type',$allowed_filters)) { ?>
                 <input id="show_allplCB" type="checkbox" <?php echo $string = Browse::get_filter('playlist_type') ? 'checked="checked"' : ''; ?>/>
                 <label id="show_allplLabel" for="showallplCB"><?php echo _('All Playlists'); ?></label><br />
-                <?php echo Ajax::observe('show_allplCB','click',Ajax::action('?page=browse&action=browse&key=playlist_type&value=1','')); ?>
+                <?php echo Ajax::observe('show_allplCB','click',Ajax::action('?page=browse&action=browse&type=' . Browse::get_type() . '&key=playlist_type&value=1','')); ?>
         <?php } // if playlist_type ?>
     </div>
   </li>

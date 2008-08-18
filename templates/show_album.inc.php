@@ -23,9 +23,8 @@ $web_path = Config::get('web_path');
 $ajax_url = Config::get('ajax_url'); 
 
 // Title for this album
-if ($album->disk)
-{
-  $disk = "<span class=\"discnb disc" .$album->disk. "\">, " . _('Disk') . " " . $album->disk . "</span>";
+if ($album->disk) {
+	$disk = "<span class=\"discnb disc" .$album->disk. "\">, " . _('Disk') . " " . $album->disk . "</span>";
 }
 $title		= scrub_out($album->name) . '&nbsp;(' . $album->year . ')' . $disk .'&nbsp;-&nbsp;' . $album->f_artist_link;
 ?>
@@ -86,6 +85,7 @@ $title		= scrub_out($album->name) . '&nbsp;(' . $album->year . ')' . $disk .'&nb
 </div>
 <?php 
 	Browse::set_type('song');
+	Browse::set_simple_browse(1); 
 	Browse::set_filter('album', $album->id);
 	Browse::set_sort('track','ASC'); 
 	Browse::get_objects(); 

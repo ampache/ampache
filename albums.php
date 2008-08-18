@@ -168,7 +168,6 @@ switch ($_REQUEST['action']) {
 	// Browse by Album
 	default:
 	case 'show':
-	        
 		$album = new Album($_REQUEST['album']);
 		$album->format();
 		Browse::reset_filters();

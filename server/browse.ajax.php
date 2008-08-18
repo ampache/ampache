@@ -29,7 +29,7 @@ switch ($_REQUEST['action']) {
 
 		$object_ids = array(); 
 
-		Brosse::set_type($_REQUEST['type']); 
+		Browse::set_type($_REQUEST['type']); 
 
 		// Check 'value' with isset because it can null
 		//(user type a "start with" word and deletes it)
@@ -43,15 +43,9 @@ switch ($_REQUEST['action']) {
 			Browse::set_sort($_REQUEST['sort']);
 		}
 
-		// Refresh the browse div with our new filter options if we're not static
-		if (!Browse::$static_content) { 
-	                $object_ids = Browse::get_objects();
-		} 
-
 		ob_start();
-                Browse::show_objects($object_ids);
-                $results['browse_content'] = ob_get_contents();
-                ob_end_clean();
+                Browse::show_objects(false);
+                $results['browse_content'] = ob_get_clean();
 	break;
 	case 'set_sort':
 
@@ -61,13 +55,9 @@ switch ($_REQUEST['action']) {
 			Browse::set_sort($_REQUEST['sort']); 
 		} 
 
-		// Refresh the browse div with our new hotness
-		$object_ids = Browse::get_saved(); 
-
 		ob_start(); 
-		Browse::show_objects($object_ids, true); 
-		$results['browse_content'] = ob_get_contents(); 
-		ob_end_clean(); 
+		Browse::show_objects(false); 
+		$results['browse_content'] = ob_get_clean(); 
 	break; 
 	case 'delete_object': 
 		switch ($_REQUEST['type']) { 
@@ -99,7 +89,7 @@ switch ($_REQUEST['action']) {
 		Browse::set_start($_REQUEST['start']); 
 		
 		ob_start(); 
-		Browse::show_objects(false,true); 
+		Browse::show_objects(false); 
 		$results['browse_content'] = ob_get_clean(); 	
 	
 	break; 
