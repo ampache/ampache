@@ -912,6 +912,7 @@ class Browse {
 		} 
 		else { 
 			$object_ids = $object_ids ? $object_ids : self::get_saved();
+			self::save_objects($object_ids); 
 		} 
 	
 		// Reset the total items
@@ -1057,7 +1058,7 @@ class Browse {
 			// If there's nothing there don't do anything
 			if (!count($objects)) { return false; } 
 			$type = self::$type;
-			$where_sql .= "`$type`.`id` IN (";
+			$where_sql = "WHERE `$type`.`id` IN (";
 
 			foreach ($objects as $object_id) {
 				$object_id = Dba::escape($object_id);
