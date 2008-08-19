@@ -115,6 +115,19 @@ class Browse {
 	} // set_filter
 
 	/**
+	 * reset
+	 * Reset everything
+	 */
+	public static function reset() { 
+
+		self::reset_filters(); 
+		self::reset_total(); 
+		self::reset_supplemental_objects(); 
+		self::set_simple_browse(0); 
+
+	} // reset
+
+	/**
 	 * reset_filter
 	 * This is a wrapper function that resets the filters 
 	 */
@@ -135,6 +148,16 @@ class Browse {
 	} // reset_supplemental_objects
 
 	/**
+	 * reset_total
+	 * This resets the total for the browse type
+	 */
+	public static function reset_total() { 
+
+		unset($_SESSION['browse']['total'][self::$type]); 
+
+	} // reset_total
+
+	/**
 	 * get_filter
 	 * returns the specified filter value
 	 */
@@ -151,7 +174,7 @@ class Browse {
 	 * if they pass us an array then use that!
 	 */
 	public static function get_total($objects=false) { 
-
+		
 		// If they pass something then just return that
 		if (is_array($objects)) { 
 			return count($objects); 
@@ -336,7 +359,7 @@ class Browse {
 	public static function set_simple_browse($value) { 
 
 		$value = make_bool($value); 
-		$_SESSION['browse'][self::$type]['simple'] = $value;  
+		$_SESSION['browse']['simple'][self::$type] = $value;  
 
 	} // set_simple_browse
 
@@ -366,7 +389,7 @@ class Browse {
 	 */
 	public static function is_simple_browse() { 
 
-		return $_SESSION['browse'][self::$type]['simple']; 
+		return $_SESSION['browse']['simple'][self::$type]; 
 
 	} // is_simple_browse
 
@@ -883,7 +906,7 @@ class Browse {
 	 * type that we are currently browsing
 	 */
 	public static function show_objects($object_ids=false) { 
-
+		
 		if (self::is_simple_browse()) { 
 			$object_ids = self::get_saved(); 
 		} 
@@ -892,7 +915,7 @@ class Browse {
 		} 
 	
 		// Reset the total items
-		self::$total_objects = self::get_total(count($object_ids)); 
+		self::$total_objects = self::get_total($object_ids); 
 
 		// Limit is based on the users preferences if this is not a simple browse because we've got too much here
 		if (count($object_ids) > self::$start AND !self::is_simple_browse()) { 

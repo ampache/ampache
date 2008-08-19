@@ -58,9 +58,7 @@ if (Config::get('ratings')) {
 </div>
 <?php show_box_bottom(); ?>
 <?php
-	Browse::reset_filters(); 
 	Browse::set_type($object_type); 
-	Browse::set_static_content(1); 
-	Browse::save_objects($object_ids); 
-	Browse::show_objects(); 
+	Browse::reset(); 
+	Browse::show_objects($object_ids); 
 ?>
