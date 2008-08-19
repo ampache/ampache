@@ -176,7 +176,7 @@ class Browse {
 	public static function get_total($objects=false) { 
 		
 		// If they pass something then just return that
-		if (is_array($objects)) { 
+		if (is_array($objects) and !self::is_simple_browse()) { 
 			return count($objects); 
 		} 
 

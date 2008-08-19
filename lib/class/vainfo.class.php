@@ -68,7 +68,7 @@ class vainfo {
 		$this->_getID3->option_tags_html	= false;
 		$this->_getID3->option_extra_info	= false;
 		$this->_getID3->option_tag_lyrics3	= false;
-//		$this->_getID3->encoding		= $this->encoding; 
+		$this->_getID3->encoding		= $this->encoding; 
 		$this->_getID3->option_tags_process    = true; 
 
 		/* Check for ICONV */
@@ -173,7 +173,7 @@ class vainfo {
 					$results[$key] = $this->_parse_id3v1($tag_array);
 				break;
 				case 'id3v2':
-					$results[$key] = $this->_parse_id3v2($this->_raw['id3v2']['comments']);
+					$results[$key] = $this->_parse_id3v2($tag_array);
 				break;
 				case 'ape':
 					$results[$key] = $this->_parse_ape($tag_array);
@@ -356,12 +356,10 @@ class vainfo {
 					$array['comment'] = $this->_clean_tag($data['0'],'');
 				break;
 				case 'title': 
-					$array['title'] = $this->_clean_tag($data['0'],$this->_raw['id3v2']['TIT2']['0']['encoding']); 
+					$array['title'] = $this->_clean_tag($data['0'],''); 
 				break; 
 				default: 
-					$frame = $this->_id3v2_tag_to_frame($tag);
-					$encoding = $frame ? $this->_raw['id3v2'][$frame]['0']['encoding'] : ''; 
-					$array[$tag]	= $this->_clean_tag($data['0'],$encoding);
+					$array[$tag]	= $this->_clean_tag($data['0'],'');
 				break;
 			} // end switch on tag
 		

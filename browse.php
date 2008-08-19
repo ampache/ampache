@@ -57,30 +57,30 @@ switch($_REQUEST['action']) {
 		Browse::set_sort('name','ASC');
 		$album_ids = Browse::get_objects(); 
 		Album::build_cache($album_ids,'extra'); 
-		Browse::show_objects($album_ids); 
+		Browse::show_objects(); 
 	break;
 	case 'tag': 
 		Browse::set_sort('count','ASC'); 
 		$tags = Browse::get_objects(); 
 		Tag::build_cache($tags); 
-		Browse::show_objects($tags); 
+		Browse::show_objects(); 
 	break; 
 	case 'artist':
 		Browse::set_sort('name','ASC');
 		$artist_ids = Browse::get_objects(); 
 		Artist::build_cache($artist_ids,'extra'); 
-		Browse::show_objects($artist_ids); 
+		Browse::show_objects(); 
 	break;
 	case 'song':
 		Browse::set_sort('title','ASC');
 		$song_ids = Browse::get_objects(); 
 		Song::build_cache($song_ids); 
-		Browse::show_objects($song_ids); 
+		Browse::show_objects(); 
 	break;
 	case 'live_stream':
 		Browse::set_sort('name','ASC');
 		$live_stream_ids = Browse::get_objects(); 
-		Browse::show_objects($live_stream_ids); 
+		Browse::show_objects(); 
 	break;
 	case 'catalog':
 	
@@ -89,7 +89,8 @@ switch($_REQUEST['action']) {
 		Browse::set_sort('type','ASC');
 		Browse::set_filter('playlist_type','1');
 		$playlist_ids = Browse::get_objects(); 
-		Browse::show_objects($playlist_ids); 
+		Playlist::build_cache($playlist_ids); 
+		Browse::show_objects(); 
 	break;
 	default: 
 

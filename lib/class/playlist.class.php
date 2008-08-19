@@ -23,7 +23,7 @@
  * Playlist Class
  * This class handles playlists in ampache. it references the playlist* tables
  */
-class Playlist { 
+class Playlist extends database_object { 
 
 	/* Variables from the Datbase */
 	public $id;
@@ -43,8 +43,7 @@ class Playlist {
 	 */
 	public function __construct($id) { 
 
-		$this->id 	= intval($id);
-		$info 		= $this->_get_info();
+		$info 		= $this->get_info($id);
 
 		foreach ($info as $key=>$value) { 
 			$this->$key = $value; 
@@ -52,21 +51,22 @@ class Playlist {
 	
 	} // Playlist
 
-	/** 
-	 * _get_info
-	 * This is an internal (private) function that gathers the information for this object from the 
-	 * playlist_id that was passed in. 
+	/**
+	 * build_cache
+	 * This is what builds the cache from the objects
 	 */
-	private function _get_info() { 
+	public static function build_cache($ids) { 
 
-		$sql = "SELECT * FROM `playlist` WHERE `id`='" . Dba::escape($this->id) . "'";	
-		$db_results = Dba::query($sql);
+		$idlist = '(' . implode(',',$ids) . ')'; 
 
-		$results = Dba::fetch_assoc($db_results);
+		$sql = "SELECT * FROM `playlist` WHERE `id` IN $idlist"; 
+		$db_results = Dba::query($sql); 
 
-		return $results;
+		while ($row = Dba::fetch_assoc($db_results)) { 
+			parent::add_to_cache('playlist',$row['id'],$row); 
+		} 
 
-	} // _get_info
+	} // build_cache
 
 	/**
 	 * format

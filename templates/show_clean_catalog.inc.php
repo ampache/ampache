@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2007 Ampache.org
+ Copyright (c) Ampache.org
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
@@ -21,7 +21,8 @@
 
 show_box_top();
 //echo "\n" . _('Cleaning the') . " <b>[" . $this->name . "]</b> " . _('Catalog') . "...<br />\n";
-echo "\n" . printf(_('Cleaning the %s Catalog'), " <b>[" . $this->name . "]</b> ") . "...<br />\n";
+printf(_('Cleaning the %s Catalog'), "<strong>[" . $this->name . "]</strong>");
+echo "...<br />"; 
 echo _('Checking') . ": <span id=\"clean_count_" . $this->id . "\"></span>\n<br />";
 echo _('Reading') . ":<span id=\"clean_dir_" . $this->id . "\"></span><br />";
 show_box_bottom(); 

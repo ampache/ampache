@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2007 Ampache.org
+ Copyright (c) Ampache.org
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
@@ -20,7 +20,8 @@
 */
 
 show_box_top();
-echo "\n" . printf(_('Starting New Song Search on %s catalog'), " <b>[$this->name]</b> ") . "<br />\n";
+printf(_('Starting New Song Search on %s catalog'), "<strong>[$this->name]</strong>"); 
+echo "<br />\n";
 echo _('Found') . ": <span id=\"add_count_" . $this->id ."\">" . _('None') . "</span><br />\n";
 echo _('Reading') . ":<span id=\"add_dir_" . $this->id . "\"></span><br />";
 show_box_bottom(); 
