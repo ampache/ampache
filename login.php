@@ -64,10 +64,16 @@ if ($_POST['username'] && $_POST['password']) {
 		$auth = vauth::authenticate($username, $password);
                 $user = User::get_from_username($username);
 		
+		if (!$auth['succes']) { 
+			debug_event('Login',scrub_out($username) . ' attempted to login and failed','1'); 
+		} 
+	
 		if ($user->disabled == '1') { 	
-                                $auth['success'] = false;
-				Error::add('general',_('User Disabled please contact Admin')); 
+                	$auth['success'] = false;
+			Error::add('general',_('User Disabled please contact Admin')); 
+			debug_event('Login',scrub_out($username) . ' is disabled and attempted to login','1'); 
                 } // if user disabled
+			
                 
 		elseif (!$user->username AND $auth['success']) { 
 			/* This is run if we want to auto_create users who don't exist (usefull for non mysql auth) */                
