@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2007 Ampache.org
+ Copyright (c) Ampache.org
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
@@ -32,10 +32,10 @@
 </colgroup>
 <tr class="th-top">
   <th class="cel_add"><?php echo _('Add'); ?></th>
-	<th class="cel_playlist"><?php echo Ajax::text('?page=browse&action=set_sort&sort=name',_('Playlist Name'),'playlist_sort_name'); ?></th>
+	<th class="cel_playlist"><?php echo Ajax::text('?page=browse&action=set_sort&type=playlist&sort=name',_('Playlist Name'),'playlist_sort_name'); ?></th>
 	<th class="cel_type">&nbsp;</th>
 	<th class="cel_songs"><?php echo _('# Songs'); ?></th>
-	<th class="cel_owner"><?php echo Ajax::text('?page=browse&action=set_sort&sort=user',_('Owner'),'playlist_sort_owner'); ?></th>
+	<th class="cel_owner"><?php echo Ajax::text('?page=browse&action=set_sort&type=playlist&sort=user',_('Owner'),'playlist_sort_owner'); ?></th>
 	<th class="cel_action"><?php echo _('Actions'); ?></th>
 </tr>
 <?php 
@@ -55,10 +55,10 @@ foreach ($object_ids as $playlist_id) {
 <?php } ?>
 <tr class="th-bottom">
   <th class="cel_add"><?php echo _('Add'); ?></th>
-	<th class="cel_playlist"><?php echo Ajax::text('?page=browse&action=set_sort&sort=name',_('Playlist Name'),'playlist_sort_name_bottom'); ?></th>
+	<th class="cel_playlist"><?php echo Ajax::text('?page=browse&action=set_sort&type=playlist&sort=name',_('Playlist Name'),'playlist_sort_name_bottom'); ?></th>
 	<th class="cel_type">&nbsp;</th>
 	<th class="cel_songs"><?php echo _('# Songs'); ?></th>
-	<th class="cel_owner"><?php echo Ajax::text('?page=browse&action=set_sort&sort=user',_('Owner'),'playlist_sort_owner_bottom'); ?></th>
+	<th class="cel_owner"><?php echo Ajax::text('?page=browse&action=set_sort&type=playlist&sort=user',_('Owner'),'playlist_sort_owner_bottom'); ?></th>
 	<th class="cel_action"><?php echo _('Actions'); ?></th>
 </tr>
 </table>
