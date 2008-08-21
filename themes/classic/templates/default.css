@@ -499,8 +499,9 @@ a.button{padding:1px 3px;}
 
 
 /* Specific to Info Boxes */
-.info-box .album_art {float:left;margin-right:10px;}
-#information_actions { margin-left:5px; font-size:0.7em; } 
+.info-box { float:left;margin-right:10px; }
+.album_art { float:left; margin-right:10px; } 
+#information_actions { margin-left:5px; font-size:0.7em; float:left; } 
 #information_actions h3 { font-size:1.2em; margin:0.2em; }
 
 /* Specific boxes */

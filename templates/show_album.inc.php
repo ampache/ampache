@@ -41,10 +41,10 @@ $title		= scrub_out($album->name) . '&nbsp;(' . $album->year . ')' . $disk .'&nb
 	}
 	?>
 </div>
+<div id="information_actions">
 <div style="display:table-cell;" id="rating_<?php echo $album->id; ?>_album">
 		<?php Rating::show($album->id,'album'); ?>
 </div>
-<div id="information_actions">
 <h3><?php echo _('Actions'); ?>:</h3>
 <ul>
 	<li>
