@@ -110,6 +110,10 @@ class Browse {
                         break;
                 } // end switch
 
+		// If we've set a filter we need to reset the totals
+		self::reset_total(); 
+		self::set_start(0); 
+
 		return true; 
 	
 	} // set_filter
@@ -124,6 +128,7 @@ class Browse {
 		self::reset_total(); 
 		self::reset_supplemental_objects(); 
 		self::set_simple_browse(0); 
+		self::set_start(0); 
 
 	} // reset
 
@@ -276,7 +281,7 @@ class Browse {
 		switch (self::get_type()) { 
 			case 'playlist_song': 
 			case 'song': 
-				$valid_array = array('title','year','track','time'); 
+				$valid_array = array('title','year','track','time','album','artist'); 
 			break;
 			case 'artist': 
 				$valid_array = array('name'); 
@@ -332,7 +337,7 @@ class Browse {
 	 */
 	public static function set_join($type,$table,$source,$dest) { 
 
-		$_SESSION['browse']['join'][self::$type] = strtoupper($type) . ' JOIN ' . $table . ' ON ' . $source . '=' . $dest; 
+		$_SESSION['browse']['join'][self::$type] = array($table=>strtoupper($type) . ' JOIN ' . $table . ' ON ' . $source . '=' . $dest); 
 
 	} // set_join
 
@@ -564,7 +569,7 @@ class Browse {
 	 * Returns the sort sql part 
 	 */
 	private static function get_sort_sql() { 
-
+		
 		if (!is_array($_SESSION['browse']['sort'][self::$type])) { return ''; } 
 
 		$sql = 'ORDER BY '; 
@@ -599,7 +604,7 @@ class Browse {
 	 * This returns the joins that this browse may need to work correctly
 	 */
 	private static function get_join_sql() { 
-
+		
 		if (!is_array($_SESSION['browse']['join'][self::$type])) { 
 			return ''; 
 		} 
@@ -609,7 +614,7 @@ class Browse {
 		foreach ($_SESSION['browse']['join'][self::$type] AS $join) { 
 			$sql .= $join . ' '; 
 		} 
-	
+
 		return $sql; 	
 
 	} // get_join_sql
@@ -815,7 +820,11 @@ class Browse {
 					break;
 					case 'album': 
 						$sql = '`album`.`name`'; 
-						self::set_join('left','`album`','`album`.`id`','`song`.`id`'); 
+						self::set_join('left','`album`','`album`.`id`','`song`.`album`'); 
+					break; 
+					case 'artist': 
+						$sql = '`artist`.`name`'; 
+						self::set_join('left','`artist`','`artist`.`id`','`song`.`artist`'); 
 					break; 
 					default: 
 						// Rien a faire
@@ -1079,7 +1088,7 @@ class Browse {
 	                // Clean her up
 	                $order_sql = rtrim($order_sql,"ORDER BY ");
 	                $order_sql = rtrim($order_sql,",");
-	                $sql = $sql . $order_sql;
+	                $sql = $sql . self::get_join_sql() . $order_sql;
 		} // if not simple
 
 		$db_results = Dba::query($sql); 

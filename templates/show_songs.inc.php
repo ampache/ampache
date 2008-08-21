@@ -38,7 +38,7 @@ $ajax_url = Config::get('ajax_url');
 <tr class="th-top">
 	<th class="cel_add"><?php echo _('Add'); ?></th>
 	<th class="cel_song"><?php echo Ajax::text('?page=browse&action=set_sort&type=song&sort=title',_('Song Title'),'sort_song_title'); ?></th>
-	<th class="cel_artist"><?php echo _('Artist'); ?></th>
+	<th class="cel_artist"><?php echo Ajax::text('?page=browse&action=set_sort&type=song&sort=artist',_('Artist'),'sort_song_artist'); ?></th>
 	<th class="cel_album"><?php echo Ajax::text('?page=browse&action=set_sort&type=song&sort=album',_('Album'),'sort_song_album'); ?></th>
         <th class="cel_tags"><?php echo _('Tags'); ?></th>
 	<th class="cel_track"><?php echo Ajax::text('?page=browse&action=set_sort&type=song&sort=track',_('Track'),'sort_song_track'); ?></th>
@@ -67,8 +67,8 @@ $ajax_url = Config::get('ajax_url');
 <tr class="th-bottom">
 	<th class="cel_add"><?php echo _('Add'); ?></th>
 	<th class="cel_song"><?php echo Ajax::text('?page=browse&action=set_sort&type=song&sort=title',_('Song Title'),'sort_song_title_bottom'); ?></th>
-	<th class="cel_artist"><?php echo _('Artist'); ?></th>
-	<th class="cel_album"><?php echo _('Album'); ?></th>
+	<th class="cel_artist"><?php echo Ajax::text('?page=browse&action=set_sort&type=song&sort=artist',_('Artist'),'sort_song_artist_bottom'); ?></th>
+	<th class="cel_album"><?php echo Ajax::text('?page=browse&action=set_sort&type=song&sort=album',_('Album'),'sort_song_album_bottom'); ?></th>
 	<th class="cel_tags"><?php echo _('Tags'); ?></th>
 	<th class="cel_track"><?php echo Ajax::text('?page=browse&action=set_sort&type=song&sort=track',_('Track'),'sort_song_track_bottom'); ?></th>
 	<th class="cel_time"><?php echo Ajax::text('?page=browse&action=set_sort&type=song&sort=time',_('Time'),'sort_song_time_bottom'); ?></th>

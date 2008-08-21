@@ -4,6 +4,7 @@
 
 --------------------------------------------------------------------------
   v.3.5-Alpha1
+	- Add ability to sort by artist name, album name on song browse
 	- Implemented caching on artist and album browse, added total
 		artist time to the many artist view
 	- Fixed test config page so it bounces you back to the test page
