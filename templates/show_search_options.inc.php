@@ -23,7 +23,7 @@
 <?php show_box_top(_('Options')); ?>
 <div id="search_options">
 <ul>
-	<li><?php echo Ajax::text('?action=basket&type=browse_set',_('Add Search Results'),'add_search_results'); ?></li>
+	<li><?php echo Ajax::text('?action=basket&type=browse_set&object_type=song',_('Add Search Results'),'add_search_results'); ?></li>
 	<?php if (Access::check_function('batch_download')) { ?>
 	<li><a href="<?php echo Config::get('web_path'); ?>/batch.php?action=browse"><?php echo _('Batch Download'); ?></a></li>
 	<?php } ?>

@@ -42,8 +42,8 @@ switch ($_REQUEST['action']) {
 	case 'playlist': 
 	case 'live_stream': 
 	case 'song': 
-		Browse::reset_filters(); 
 		Browse::set_type($_REQUEST['action']); 
+		Browse::reset(); 
 		Browse::set_simple_browse(1); 
 	break; 
 } // end switch 

@@ -241,6 +241,7 @@ switch ($_REQUEST['action']) {
 				} // end foreach
 			break;
 			case 'browse_set':
+				Browse::set_type($_REQUEST['object_type']); 
 				$objects = Browse::get_saved(); 
 				foreach ($objects as $object_id) { 
 					$GLOBALS['user']->playlist->add_object($object_id,'song'); 

@@ -126,11 +126,22 @@ class Browse {
 
 		self::reset_filters(); 
 		self::reset_total(); 
+		self::reset_join(); 
 		self::reset_supplemental_objects(); 
 		self::set_simple_browse(0); 
 		self::set_start(0); 
 
 	} // reset
+
+	/**
+	 * reset_join
+	 * clears the joins if there are any
+	 */
+	public static function reset_join() { 
+
+		unset($_SESSION['browse']['join'][self::$type]); 
+
+	} // reset_join
 
 	/**
 	 * reset_filter
@@ -284,13 +295,13 @@ class Browse {
 				$valid_array = array('title','year','track','time','album','artist'); 
 			break;
 			case 'artist': 
-				$valid_array = array('name'); 
+				$valid_array = array('name','album'); 
 			break;
 			case 'tag': 
 				$valid_array = array('tag'); 
 			break; 
 			case 'album': 
-				$valid_array = array('name','year'); 
+				$valid_array = array('name','year','artist'); 
 			break;
 			case 'playlist': 
 				$valid_array = array('name','user');
@@ -337,7 +348,7 @@ class Browse {
 	 */
 	public static function set_join($type,$table,$source,$dest) { 
 
-		$_SESSION['browse']['join'][self::$type] = array($table=>strtoupper($type) . ' JOIN ' . $table . ' ON ' . $source . '=' . $dest); 
+		$_SESSION['browse']['join'][self::$type][$table] = strtoupper($type) . ' JOIN ' . $table . ' ON ' . $source . '=' . $dest; 
 
 	} // set_join
 
@@ -835,6 +846,11 @@ class Browse {
 				switch($field) { 
 					case 'name': 
 						$sql = "`album`.`name` $order, `album`.`disk`"; 
+					break;
+					case 'artist': 
+						$sql = "`artist`.`name`"; 
+						self::set_join('left','`song`','`song`.`album`','`album`.`id`'); 
+						self::set_join('left','`artist`','`song`.`artist`','`artist`.`id`'); 
 					break;
 					case 'year': 
 						$sql = "`album`.`year`"; 

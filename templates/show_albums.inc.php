@@ -41,7 +41,7 @@ $ajax_url = Config::get('ajax_url');
 	<th class="cel_cover"><?php echo _('Cover'); ?></th>
 	<?php } ?>
 	<th class="cel_album"><?php echo Ajax::text('?page=browse&action=set_sort&type=album&sort=name',_('Album'),'album_sort_name'); ?></th>
-	<th class="cel_artist"><?php echo _('Artist'); ?></th>
+	<th class="cel_artist"><?php echo Ajax::text('?page=browse&action=set_sort&type=album&sort=artist',_('Artist'),'album_sort_artist'); ?></th>
 	<th class="cel_songs"><?php echo _('Songs'); ?></th>
 	<th class="cel_year"><?php echo Ajax::text('?page=browse&action=set_sort&type=album&sort=year',_('Year'),'album_sort_year'); ?></th>
 	<th class="col_rating"><?php echo _('Rating'); ?></th>

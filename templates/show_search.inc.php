@@ -51,9 +51,9 @@
 	<td>
 		<input type="text" id="s_album" name="s_album" value="<?php echo scrub_out($_REQUEST['s_album']); ?>" />
 	</td>
-	<td><?php echo _('Genre'); ?></td>
+	<td><?php echo _('Tag'); ?></td>
 	<td>
-		<input type="text" id="s_genre" name="s_genre" value="<?php echo scrub_out($_REQUEST['s_genre']); ?>" />
+		<input type="text" id="s_tag" name="s_tag" value="<?php echo scrub_out($_REQUEST['s_tag']); ?>" />
 	</td>
 </tr>
 <tr class="<?php echo flip_class(); ?>">
