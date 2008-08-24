@@ -1349,7 +1349,7 @@ class Update {
 		$sql = "ALTER TABLE `tag_map` ADD `tag_id` INT ( 11 ) UNSIGNED NOT NULL AFTER `id`"; 
 		$db_results = Dba::query($sql); 
 
-		$sql = "RENAME TABLE `ampache`.`tags`  TO `ampache`.`tag`"; 
+		$sql = "RENAME TABLE `tags`  TO `tag`"; 
 		$db_results = Dba::query($sql); 
 
 		$sql = "ALTER TABLE `tag` CHANGE `map_id` `id` INT ( 11 ) UNSIGNED NOT NULL auto_increment"; 
