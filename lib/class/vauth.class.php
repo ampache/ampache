@@ -543,7 +543,8 @@ class vauth {
 	        if (Config::get('prevent_multiple_logins')) {
 	                $client = new User($results['id']);
 	                $current_ip = $client->is_logged_in();
-	                if ($current_ip != sprintf("%u",ip2long($_SERVER['REMOTE_ADDR']))) {
+	                if ($current_ip AND $current_ip != sprintf("%u",ip2long($_SERVER['REMOTE_ADDR']))) {
+				debug_event('Login','Concurrent Login Failure, attempted to login from ' . $_SERVER['REMOTE_ADDR'] . ' and already logged in','1'); 
 	                        Error::add('general','User Already Logged in');
 	                        return false;
 	                }
