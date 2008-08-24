@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2007 Ampache.org
+ Copyright (c) Ampache.org
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
@@ -39,13 +39,11 @@ switch ($_REQUEST['action']) {
 
 		// Clear everything we've done so far
 		ob_end_clean(); 
-		ob_start(); 
 
 		// This will disable buffering so contents are sent immediately to browser.
 		// This is very useful for large catalogs because it will immediately display the download dialog to user,
 		// instead of waiting until contents are generated, which could take a long time.
 		ob_implicit_flush(true);
-		ob_end_flush();
 
 		header("Content-Transfer-Encoding: binary");
 		header("Cache-control: public");
