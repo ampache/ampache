@@ -48,7 +48,7 @@ msgstr "不明"
 #: lib/class/xmlrpcclient.class.php:64 lib/class/xmlrpcclient.class.php:97
 #: lib/class/catalog.class.php:1247 lib/class/catalog.class.php:1315
 msgid "Error connecting to"
-msgstr "エラー: 接続先:"
+msgstr "接続中のエラー:"
 
 #: lib/class/xmlrpcclient.class.php:64 lib/class/xmlrpcclient.class.php:97
 #: lib/class/catalog.class.php:1247 lib/class/catalog.class.php:1315
