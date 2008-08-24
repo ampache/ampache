@@ -34,7 +34,6 @@ class Radio {
 	public $url; 
 	public $frequency;
 	public $call_sign;
-	public $genre; 
 	public $catalog; 
 
 	/**
@@ -87,10 +86,6 @@ class Radio {
 		$this->f_callsign	= scrub_out($this->call_sign); 
 		$this->f_frequency	= scrub_out($this->frequency); 
 
-		$genre = new Genre($this->genre); 
-		$genre->format(); 
-		$this->f_genre		= $genre->f_link; 
-
 		return true; 
 
 	} // format
@@ -126,12 +121,7 @@ class Radio {
 			Error::add('general','Invalid URL must be https:// or http://'); 
 		} 
 
-		$genre = new Genre($data['genre']); 
-		if (!$genre->name) { 
-			Error::add('general','Invalid Genre Selected'); 
-		} 
-
-		if (Error::$state) { 
+		if (Error::occurred()) { 
 			return false; 
 		} 
 
@@ -141,10 +131,9 @@ class Radio {
 		$url		= Dba::escape($data['url']); 
 		$frequency	= Dba::escape($data['frequency']); 
 		$call_sign	= Dba::escape($data['call_sign']); 
-		$genre		= Dba::escape($data['genre']); 
 		$id		= Dba::escape($data['id']); 
 
-		$sql = "UPDATE `live_stream` SET `name`='$name',`site_url`='$site_url',`url`='$url',`genre`='$genre'" . 
+		$sql = "UPDATE `live_stream` SET `name`='$name',`site_url`='$site_url',`url`='$url'" . 
 			",`frequency`='$frequency',`call_sign`='$call_sign' WHERE `id`='$id'"; 
 		$db_results = Dba::query($sql); 
 
@@ -174,7 +163,7 @@ class Radio {
 			Error::add('catalog','Invalid Catalog'); 
 		} 
 
-		if (Error::$state) { return false; } 
+		if (Error::occurred()) { return false; } 
 
 		// Clean up the input
 		$name		= Dba::escape($data['name']); 

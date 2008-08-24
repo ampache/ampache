@@ -28,7 +28,7 @@ $web_path = Config::get('web_path');
   <col id="col_streamname" />
   <col id="col_callsign" />
   <col id="col_frequency" />
-  <col id="col_genre" />
+  <col id="col_tag" />
   <col id="col_action" />
 </colgroup>
 <tr class="th-top">
@@ -36,7 +36,7 @@ $web_path = Config::get('web_path');
 	<th class="cel_streamname"><?php echo Ajax::text('?page=browse&action=set_sort&sort=name',_('Name'),'live_stream_sort_name'); ?></th>
 	<th class="cel_callsign"><?php echo Ajax::text('?page=browse&action=set_sort&sort=call_sign',_('Callsign'),'live_stream_call_sign');  ?></th>
 	<th class="cel_frequency"><?php echo Ajax::text('?page=browse&action=set_sort&sort=frequency',_('Frequency'),'live_stream_frequency'); ?></th>
-	<th class="cel_genre"><?php echo _('Genre'); ?></th> 
+	<th class="cel_genre"><?php echo _('Tag'); ?></th> 
 	<th class="cel_action"><?php echo _('Action'); ?> </th>
 </tr>
 <?php 
@@ -58,7 +58,7 @@ foreach ($object_ids as $radio_id) {
 	<th class="cel_streamname"><?php echo Ajax::text('?page=browse&action=set_sort&sort=name',_('Name'),'live_stream_sort_name_bottom'); ?></th>
 	<th class="cel_callsign"><?php echo Ajax::text('?page=browse&action=set_sort&sort=call_sign',_('Callsign'),'live_stream_call_sign_bottom');  ?></th>
 	<th class="cel_frequency"><?php echo Ajax::text('?page=browse&action=set_sort&sort=frequency',_('Frequency'),'live_stream_frequency_bottom'); ?></th>
-	<th class="cel_genre"><?php echo _('Genre'); ?></th> 
+	<th class="cel_genre"><?php echo _('Tag'); ?></th> 
 	<th class="cel_action"><?php echo _('Action'); ?> </th>
 </tr>
 </table>

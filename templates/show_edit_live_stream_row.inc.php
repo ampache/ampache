@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2007 Ampache.org
+ Copyright (c) Ampache.org
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
@@ -28,7 +28,6 @@
 	<th><?php echo _('Homepage'); ?></th>
 	<th><?php echo _('Callsign'); ?></th>
 	<th><?php echo _('Frequency'); ?></th>
-	<th><?php echo _('Genre'); ?></th>
 	<th>&nbsp;</th>
 </tr>
 <tr>
@@ -46,9 +45,6 @@
 </td>
 <td>
 	<input type="textbox" name="frequency" value="<?php echo scrub_out($radio->frequency); ?>" size="6" />
-</td>
-<td>
-	<?php show_genre_select('genre',$radio->genre); ?>
 </td>
 <td>
 	<input type="hidden" name="id" value="<?php echo $radio->id; ?>" />

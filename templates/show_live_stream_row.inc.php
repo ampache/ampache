@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2007 Ampache.org
+ Copyright (c) Ampache.org
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
@@ -25,12 +25,12 @@
 <td class="cel_streamname"><?php echo $radio->f_name_link; ?></td>
 <td class="cel_callsign"><?php echo $radio->f_callsign; ?></td>
 <td class="cel_frequency"><?php echo $radio->f_frequency; ?></td>
-<td class="cel_genre"><?php echo $radio->f_genre; ?></td>
+<td class="cel_tag"><?php echo $radio->f_tag; ?></td>
 <td class="cel_action">
-	<?php if ($GLOBALS['user']->has_access('50')) { ?>
+	<?php if (Access::check('interface','50')) { ?>
 		<?php echo Ajax::button('?action=show_edit_object&type=live_stream&id=' . $radio->id,'edit',_('Edit'),'edit_radio_' . $radio->id); ?>
 	<?php } ?>
-	<?php if ($GLOBALS['user']->has_access('75')) { ?>
+	<?php if (Access::check('interface','75')) { ?>
 		<?php echo Ajax::button('?page=browse&action=delete_object&type=live_stream&id=' . $radio->id,'delete',_('Delete'),'delete_radio_' . $radio->id); ?>
 	<?php } ?>
 </td>
