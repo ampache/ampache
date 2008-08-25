@@ -26,6 +26,9 @@ class AmpacheMail {
 	public static $recipient; 
 	public static $from; 
 	public static $subject; 
+	public static $to;
+	public static $additional_header;
+	public static $sender;
 
 	/**
 	 * Constructor
@@ -89,7 +92,20 @@ class AmpacheMail {
 	 */
 	public static function send() { 
 
-		mail(self::$from,self::$subject,self::$message,"From: " . self::$from . "\r\nBcc: " . self::$recipient . "\r\n"); 
+		// Multi-byte Character Mail
+		if(function_exists('mb_send_mail')) {
+			mb_send_mail(self::$to,
+				     self::$subject,
+				     self::$message,
+				     implode("\n", self::$additional_header),
+				     '-f'.self::$sender);
+		} else {
+			mail(self::$to,
+			     self::$subject,
+			     self::$message,
+			     implode("\r\n", $additional_header),
+			     '-f'.self::$sender);
+		}
 
 		return true; 
 

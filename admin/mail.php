@@ -36,10 +36,20 @@ switch ($_REQUEST['action']) {
 			exit;
 		} 
 
+		// Multi-byte Character Mail
+		if(function_exists('mb_language')) {
+			ini_set("mbstring.internal_encoding","UTF-8");
+			mb_language("uni");
+		}
+
 		$clients = AmpacheMail::get_users($_REQUEST['to']); 
 
 		foreach ($clients as $client) { 
-			$recipient .= $client['fullname'] ." <" . $client['email'] . ">, ";
+			if(function_exists('mb_encode_mimeheader')) {
+				$recipient .= mb_encode_mimeheader($client['fullname']) ." <" . $client['email'] . ">, ";
+			} else {
+				$recipient .= $client['fullname'] ." <" . $client['email'] . ">, ";
+			}
 		}
 		
 		// Remove the last , from the recipient
@@ -47,9 +57,32 @@ switch ($_REQUEST['action']) {
 		
 		// Set the vars on the object
 		AmpacheMail::$recipient = $recipient; 
-		AmpacheMail::$from = $GLOBALS['user']->fullname."<".$GLOBALS['user']->email.">";
-		AmpacheMail::$subject = scrub_in($_REQUEST['subject']); 
-		AmpacheMail::$message = scrub_in($_REQUEST['message']); 
+		if(function_exists('mb_encode_mimeheader')) {
+			$fullname = mb_encode_mimeheader($GLOBALS['user']->fullname);
+		} else {
+			$fullname = $GLOBALS['user']->fullname;
+		}
+		AmpacheMail::$to = $fullname . "<" . $GLOBALS['user']->email . ">";
+		AmpacheMail::$from = $fullname . "<" . $GLOBALS['user']->email . ">";
+		AmpacheMail::$subject = scrub_in($_REQUEST['subject']);
+		if(function_exists('mb_eregi_replace')) {
+			AmpacheMail::$message = mb_eregi_replace("\r\n", "\n", scrub_in($_REQUEST['message']));
+		} else {
+			AmpacheMail::$message = scrub_in($_REQUEST['message']);
+		}
+		AmpacheMail::$additional_header = array();
+		AmpacheMail::$additional_header[] = 'X-Ampache-Mailer: 0.0.1';
+		if(function_exists('mb_send_mail')) {
+			AmpacheMail::$additional_header[] = 'Content-Type: text/plain; charset=UTF-8';
+			AmpacheMail::$additional_header[] = 'Content-Transfer-Encoding: 8bit';
+		} else {
+			AmpacheMail::$additional_header[] = 'Content-Type: text/plain; charset=us-ascii';
+			AmpacheMail::$additional_header[] = 'Content-Transfer-Encoding: 7bit';
+		}
+		AmpacheMail::$additional_header[] = "From: " . AmpacheMail::$from;
+		AmpacheMail::$additional_header[] = "Bcc: $recipient";
+		AmpacheMail::$sender = $GLOBALS['user']->email;
+
 		AmpacheMail::send(); 	
         
 		/* Confirmation Send */
