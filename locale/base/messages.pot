@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: translations at ampache.org\n"
-"POT-Creation-Date: 2008-08-25 09:18+0900\n"
+"POT-Creation-Date: 2008-08-25 13:02+0900\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -442,6 +442,7 @@ msgstr ""
 #: ../../templates/show_song.inc.php:26
 #: ../../templates/show_admin_tools.inc.php:34
 #: ../../templates/show_admin_tools.inc.php:74
+#: ../../templates/show_access_list.inc.php:52
 #: ../../templates/show_playlist_songs.inc.php:48
 #: ../../templates/show_playlist_songs.inc.php:69
 #: ../../templates/show_manage_shoutbox.inc.php:39
@@ -527,6 +528,7 @@ msgstr ""
 #: ../../templates/show_flagged.inc.php:35
 #: ../../templates/show_flagged.inc.php:54
 #: ../../templates/show_mail_users.inc.php:31
+#: ../../templates/show_access_list.inc.php:49
 #: ../../templates/show_manage_shoutbox.inc.php:35
 #: ../../templates/show_manage_shoutbox.inc.php:59
 #: ../../lib/class/democratic.class.php:105 ../../lib/preferences.php:231
@@ -589,6 +591,7 @@ msgstr ""
 #: ../../templates/show_add_playlist.inc.php:28
 #: ../../templates/show_admin_tools.inc.php:33
 #: ../../templates/show_admin_tools.inc.php:73
+#: ../../templates/show_access_list.inc.php:45
 #: ../../templates/show_playlist_edit.inc.php:30
 msgid "Name"
 msgstr ""
@@ -987,6 +990,7 @@ msgstr ""
 #: ../../templates/show_preference_admin.inc.php:50
 #: ../../templates/show_add_access.inc.php:52
 #: ../../templates/show_create_democratic.inc.php:38
+#: ../../templates/show_access_list.inc.php:48
 msgid "Level"
 msgstr ""
 
@@ -2131,6 +2135,7 @@ msgstr ""
 
 #: ../../templates/show_add_playlist.inc.php:32
 #: ../../templates/show_random.inc.php:62
+#: ../../templates/show_access_list.inc.php:51
 #: ../../templates/show_playlist_edit.inc.php:36
 msgid "Type"
 msgstr ""
@@ -2441,7 +2446,7 @@ msgstr ""
 
 #: ../../templates/show_democratic.inc.php:22
 #, php-format
-msgid "Playlist %s"
+msgid "%s Playlist"
 msgstr ""
 
 #: ../../templates/show_verify_catalog.inc.php:23
@@ -2658,7 +2663,25 @@ msgid ""
 msgstr ""
 
 #: ../../templates/show_access_list.inc.php:35
-msgid "Use tool below to add any server"
+msgid ""
+"Use tool below to add any server's IP address that you want to access your "
+"Ampache catalog or be able to stream from this server."
+msgstr ""
+
+#: ../../templates/show_access_list.inc.php:40
+msgid "Add Entry"
+msgstr ""
+
+#: ../../templates/show_access_list.inc.php:46
+msgid "Start Address"
+msgstr ""
+
+#: ../../templates/show_access_list.inc.php:47
+msgid "End Address"
+msgstr ""
+
+#: ../../templates/show_access_list.inc.php:50
+msgid "Key"
 msgstr ""
 
 #: ../../templates/show_rename_artist.inc.php:29
@@ -3381,11 +3404,11 @@ msgstr ""
 msgid "Local Path to Files"
 msgstr ""
 
-#: ../../admin/mail.php:57
+#: ../../admin/mail.php:84
 msgid "E-mail Sent"
 msgstr ""
 
-#: ../../admin/mail.php:58
+#: ../../admin/mail.php:85
 msgid "Your E-mail was successfully sent."
 msgstr ""
 
