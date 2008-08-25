@@ -1,0 +1,16 @@
+Localization Status Report for Ampache.
+
+LANG	Trans	Fuzzy	Untrans	Obsolete
+ca_CA	496	42	195	134	
+de_DE	645	43	45	14
+el_GR	634	42	57	32
+en_GB	249	181	303	187
+es_ES	182	133	418	150
+fr_FR	671	43	19	141
+it_IT	288	161	284	180
+ja_JP	700	20	13	7
+nl_NL	341	158	234	187
+ru_RU	635	40	58	77
+tr_TR	3	59	671	49
+zh_CN	0	5	728	6
+

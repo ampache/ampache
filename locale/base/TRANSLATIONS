@@ -28,7 +28,7 @@ Introduction:
     already working on a translation. Once you are ready to start your
     translation you will need to get a few tools
 
-        - Gettext
+        - Gettext http://www.gnu.org/software/gettext/
                 - xgettext (Generates PO files)
                 - msgmerge (Merges old and new PO files)
                 - msgfmt   (Generates the MO file from a PO file)
@@ -39,19 +39,21 @@ Introduction:
     a translation
 
 	# Gather All info
-	Run locale/base/gather-messages.sh
+	./gather-messages.sh --all
 
 	# Create New po file
-	xgettext -n *.php -L PHP -o /tmp/mesasge.po
+	LANG=YOURLANG ./gather-messages.sh --init
+	Example: LANG=ja_JP.UTF-8 ./gather-messages.sh --init
+                 locale/ja_JP/LC_MESSAGES/messages.po will create.
 
 	# Merge with existing po file
-	xgettext -o /tmp/messages.po -L PHP -n *.inc -j
+	./gather-messages.sh --merge
 
 	# Combine Old & New po files
 	msgmerge old.po messages.po --output-file=new.po
 
 	# Generate MO file for use by gettext
-	msgfmt messages.po -o /tmp/messages.mo
+	./gather-messages.sh --format
 
 Creating a New Translation:
 
@@ -116,8 +118,9 @@ Updating an Existing Translation:
 Questions:
 
   If you have any questions or are unable to get gettext to work for you please
-  feel free to contact us at translations@ampache.org. Thanks!
-
+  feel free to contact us at translations@ampache.org or forums 
+  http://ampache.org/forums/f7-Translations.html. Thanks!
+  
 
 Karl Vollmer
  http://www.ampache.org
