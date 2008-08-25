@@ -32,7 +32,7 @@ $web_path = Config::get('web_path');
 echo _('Since your catalog can be accessed remotely you may want to limit the access from remote sources so you are not in violation of copyright laws.');
 echo _('By default your server will allow anyone with an account to stream music.');
 echo _('It will not allow any other Ampache servers to connect to it to share catalog information.');
-echo _('Use tool below to add any server's IP address that you want to access your Ampache catalog or be able to stream from this server.');
+echo _('Use tool below to add any server\'s IP address that you want to access your Ampache catalog or be able to stream from this server.');
 ?>
 </p>
 
