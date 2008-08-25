@@ -23,7 +23,7 @@
  * It changes depending on where it is 
  */
 ?>
-<?php show_box_top($playlist->f_type . ' ' . $playlist->name . ' ' . _('Playlist')); ?>
+<?php show_box_top(sprintf(_('%s %s Playlist'), $playlist->f_type, $playlist->name)); ?>
 <div id="information_actions">
 <ul>
 	<li><a href="<?php echo Config::get('web_path'); ?>/playlist.php?action=normalize_tracks&amp;playlist_id=<?php echo $playlist->id; ?>"><?php echo _('Normalize Tracks'); ?></a></li>

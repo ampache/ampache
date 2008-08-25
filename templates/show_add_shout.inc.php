@@ -24,7 +24,7 @@
 <form method="post" enctype="multipart/form-data" action="<?php echo Config::get('web_path'); ?>/shout.php?action=add_shout">
 <table class="tabledata" cellpadding="0" cellspacing="0">
 <tr>
-	<td><strong>Comment:</strong>
+	<td><strong><?php echo _('Comment:'); ?></strong>
 </tr>
 <tr>
 	<td><textarea rows="5" cols="70" name="comment"></textarea></td>

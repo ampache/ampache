@@ -38,13 +38,13 @@ while ($i <= $rows) {
 		else { 
 ?>
 			<td align="center">
-				<a href="<?php echo $image_url; ?>" target="_blank"><img src="<?php echo $image_url; ?>" alt="Album Art" border="0" height="175" width="175" /></a>
+				<a href="<?php echo $image_url; ?>" target="_blank"><img src="<?php echo $image_url; ?>" alt="<?php echo _('Album Art'); ?>" border="0" height="175" width="175" /></a>
 				<br />
 				<p align="center">
 				<?php if (is_array($dimensions)) { ?>
 				[<?php echo intval($dimensions['width']); ?>x<?php echo intval($dimensions['heigh']); ?>] 
-				<?php } ?>	
-				[<a href="<?php echo Config::get('web_path'); ?>/albums.php?action=select_art&amp;image=<?php echo $key; ?>&amp;album_id=<?php echo intval($_REQUEST['album_id']); ?>">Select</a>]
+				<?php } ?>
+				[<a href="<?php echo Config::get('web_path'); ?>/albums.php?action=select_art&amp;image=<?php echo $key; ?>&amp;album_id=<?php echo intval($_REQUEST['album_id']); ?>"><?php echo _('Select'); ?></a>]
 				</p>
 			</td>
 <?php 

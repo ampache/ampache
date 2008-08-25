@@ -25,7 +25,7 @@
  */
 
 ?>
-<?php show_box_top(_('Editing') . ' ' . $client->fullname . ' ' . _('preferences'),'box box_preferences'); ?>
+<?php show_box_top(sprintf(_('Editing %s preferences'), $client->fullname),'box box_preferences'); ?>
 <form method="post" name="preferences" action="<?php echo Config::get('web_path'); ?>/preferences.php?action=admin_update_preferences" enctype="multipart/form-data">
 <table class="tabledata" cellspacing="0">
 <colgroup>

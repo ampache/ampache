@@ -25,10 +25,10 @@
 <input type="hidden" name="shout_id" value="<?php echo $shout->id; ?>" />
 <table class="tabledata" cellpadding="0" cellspacing="0">
 <tr>
-	<td><strong>Created by: <?php echo $client->f_link; ?> for <?php echo $object->f_link; ?></strong>
+	<td><strong><?php printf(_('Created by: %s for %s'), $client->f_link, $object->f_link); ?></strong>
 <tr>
 <tr>
-	<td><strong>Comment:</strong>
+	<td><strong><?php echo _('Comment:'); ?></strong>
 </tr>
 <tr>
 	<td><textarea rows="5" cols="70" name="comment"><?php echo $shout->text; ?></textarea></td>

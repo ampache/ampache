@@ -31,11 +31,11 @@ $base_url = Config::get('ajax_url') . '?action=set_rating&amp;rating_type=' . $r
     if ($width < 0) $width = 0;
     
     //set the current rating background
-    echo "<li class=\"current-rating\" style=\"width:${width}%\" >Current rating: ";
+    echo "<li class=\"current-rating\" style=\"width:${width}%\" >" . _('Current rating: ');
     if ($rating->rating <= 0) {
-        echo "not rated yet </li>\n";
+        echo _('not rated yet') . "</li>\n";
     }
-    else echo "$rating->preciserating of 5</li>\n";
+    else printf(_('%s of 5') ,$rating->preciserating); echo "</li>\n";
     
     for ($i=1; $i<6; $i++)
     {

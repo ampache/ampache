@@ -34,7 +34,7 @@ $filter=0;
 foreach ($_SESSION['browse']['filter']['tag'] as $t) {
     if (!$filter) {
       $filter = 1;
-      echo 'Filters(remove): ';
+      echo _('Filters(remove): ');
     }
     $ctags = $currentTags;
     unset($ctags[$t]);
@@ -56,7 +56,7 @@ foreach ($tagcloudList as $f) {
    if (!$currentTags[$id]) {
      if (!$filter) {
        $filter = 1;
-       echo 'Matching tags: ';
+       echo _('Matching tags: ');
      }
      $ctags = $currentTags;
      $ctags[$id] = 1;

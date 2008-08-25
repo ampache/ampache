@@ -34,11 +34,16 @@
 </div>
 <p class="error">
 <?php if (!Config::get('demo_mode')) { ?>
-You've been redirected to this page because you do not have access to this function. If you believe this is an error please 
-contact an Ampache administrator. This event has been logged
+<?php
+echo _("You've been redirected to this page because you do not have access to this function.");
+echo _("If you believe this is an error please contact an Ampache administrator.");
+echo _("This event has been logged");
+?>
 <?php } else { ?>
-You've been redirected to this page because you've attempted to access a function that is disabled in the demo. 
-Functions are disabled in the demo because previous users of the demo have used the functionality to post inappropriate materials 
+<?php
+echo _("You've been redirected to this page because you've attempted to access a function that is disabled in the demo.");
+echo _("Functions are disabled in the demo because previous users of the demo have used the functionality to post inappropriate materials");
+?>
 <?php } ?>
 </p>
 <div id="bottom">

@@ -44,7 +44,7 @@
 <tr>
 	<td><?php echo _('XML-RPC Key'); ?>:</td>
 	<td>
-		<input size="30" type="text" name="key" value="<?php echo scrub_out($catalog->key); ?>" />*<span class="error">Required for Remote Catalogs</span>
+		<input size="30" type="text" name="key" value="<?php echo scrub_out($catalog->key); ?>" />*<span class="error"><?php echo _('Required for Remote Catalogs'); ?></span>
 	</td>
 </tr>
 <tr>

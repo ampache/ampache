@@ -33,12 +33,12 @@ $location = get_location();
 <?php
 if (Config::get('use_rss')) { ?>
 <link rel="alternate" type="application/rss+xml" title="<?php echo Config::get('rss_main_title'); ?>" href="<?php echo $web_path; ?>/rss.php" />
-<link rel="alternate" type="application/rss+xml" title="Ampache Latest Artists Additions" href="<?php echo $web_path; ?>/rss.php?type=latestartist" />
-<link rel="alternate" type="application/rss+xml" title="Ampache Latest Albums Additions" href="<?php echo $web_path; ?>/rss.php?type=latestalbum" />
-<link rel="alternate" type="application/rss+xml" title="Ampache Most Popular Albums" href="<?php echo $web_path; ?>/rss.php?type=popularalbum" />
-<link rel="alternate" type="application/rss+xml" title="Ampache Most Popular Artists" href="<?php echo $web_path; ?>/rss.php?type=popularalbum" />
-<link rel="alternate" type="application/rss+xml" title="Ampache Most Popular Songs" href="<?php echo $web_path; ?>/rss.php?type=popularsong" />
-<link rel="alternate" type="application/rss+xml" title="Ampache Recently Played" href="<?php echo $web_path; ?>/rss.php?type=recentlyplayed" />
+<link rel="alternate" type="application/rss+xml" title="<?php echo _('Ampache Latest Artists Additions'); ?>" href="<?php echo $web_path; ?>/rss.php?type=latestartist" />
+<link rel="alternate" type="application/rss+xml" title="<?php echo _('Ampache Latest Albums Additions'); ?>" href="<?php echo $web_path; ?>/rss.php?type=latestalbum" />
+<link rel="alternate" type="application/rss+xml" title="<?php echo _('Ampache Most Popular Albums'); ?>" href="<?php echo $web_path; ?>/rss.php?type=popularalbum" />
+<link rel="alternate" type="application/rss+xml" title="<?php echo _('Ampache Most Popular Artists'); ?>" href="<?php echo $web_path; ?>/rss.php?type=popularalbum" />
+<link rel="alternate" type="application/rss+xml" title="<?php echo _('Ampache Most Popular Songs'); ?>" href="<?php echo $web_path; ?>/rss.php?type=popularsong" />
+<link rel="alternate" type="application/rss+xml" title="<?php echo _('Ampache Recently Played'); ?>" href="<?php echo $web_path; ?>/rss.php?type=recentlyplayed" />
 <?php } ?>
 <meta http-equiv="Content-Type" content="application/xhtml+xml; charset=<?php echo Config::get('site_charset'); ?>" />
 <title><?php echo scrub_out(Config::get('site_title')); ?> - <?php echo $location['title']; ?></title>

@@ -55,7 +55,7 @@ if (count($similar_artists) > 0) {
 			&nbsp;
 		</td>
 		<td>
-			No Similar Artists found
+			<?php echo _('No Similar Artists found'); ?>
 		</td>
 	</tr>
 	<tr class="<?php echo flip_class(); ?>">

@@ -19,7 +19,7 @@
 
 */
 ?>
-<?php show_box_top($working_user->fullname . ' ' . _('Favorites')); ?>
+<?php show_box_top(sprintf('%s Favorites'), $working_user->fullname); ?>
 <table class="tabledata">
 <tr>
 	<td valign="top">

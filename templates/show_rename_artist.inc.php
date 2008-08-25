@@ -26,7 +26,7 @@ function insert()
 	document.getElementById('artist_name').value = '<?php echo $artist->name; ?>';
 }
 </script>
-<?php show_box_top(_('Rename') . " " . $artist->name); ?>
+<?php show_box_top(sprintf(_('Rename %s'), $artist->name)); ?>
 <form name="rename_artist" method="post" action="<?php echo conf('web_path'); ?>/artists.php?action=rename&amp;artist=<?php echo $artist->id; ?>" style="Display:inline;">
         <?php show_artist_pulldown($artist->id, "artist_id", 4); ?>
 	<br />

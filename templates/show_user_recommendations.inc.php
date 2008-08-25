@@ -19,7 +19,7 @@
 
 */
 ?>
-<?php show_box_top($working_user->fullname . ' ' . _('Recommendations')); ?>
+<?php show_box_top(sprintf('%s Recommendations'), $working_user->fullname); ?>
 <table class="tabledata">
 <tr>
 	<td valign="top">
