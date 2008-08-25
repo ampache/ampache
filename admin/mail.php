@@ -43,7 +43,7 @@ switch ($_REQUEST['action']) {
 		}
 		
 		// Remove the last , from the recipient
-		$recipient = rtrim($recipient,",");
+		$recipient = rtrim($recipient,", ");
 		
 		// Set the vars on the object
 		AmpacheMail::$recipient = $recipient; 
