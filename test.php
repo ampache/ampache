@@ -46,7 +46,7 @@ switch ($_REQUEST['action']) {
 		$configfile = "$prefix/config/ampache.cfg.php";
 
 		// On every load of the config file check and see if it's working now
-		if (count(parse_ini_file($configfile)) {
+		if (count(parse_ini_file($configfile))) {
 			require_once $prefix . '/templates/show_test.inc.php'; 
 			break; 
 		} 
