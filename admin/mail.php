@@ -72,6 +72,8 @@ switch ($_REQUEST['action']) {
 		}
 		AmpacheMail::$additional_header = array();
 		AmpacheMail::$additional_header[] = 'X-Ampache-Mailer: 0.0.1';
+		AmpacheMail::$additional_header[] = "From: " . AmpacheMail::$from;
+		AmpacheMail::$additional_header[] = "Bcc: $recipient";
 		if(function_exists('mb_send_mail')) {
 			AmpacheMail::$additional_header[] = 'Content-Type: text/plain; charset=UTF-8';
 			AmpacheMail::$additional_header[] = 'Content-Transfer-Encoding: 8bit';
@@ -79,8 +81,6 @@ switch ($_REQUEST['action']) {
 			AmpacheMail::$additional_header[] = 'Content-Type: text/plain; charset=us-ascii';
 			AmpacheMail::$additional_header[] = 'Content-Transfer-Encoding: 7bit';
 		}
-		AmpacheMail::$additional_header[] = "From: " . AmpacheMail::$from;
-		AmpacheMail::$additional_header[] = "Bcc: $recipient";
 		AmpacheMail::$sender = $GLOBALS['user']->email;
 
 		AmpacheMail::send(); 	

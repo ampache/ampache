@@ -22,7 +22,7 @@ $web_path = Config::get('web_path');
 $title = sprintf(_('Albums by %s'), $artist->full_name);
 ?>
 <?php
-show_box_top(sprintf(ngettext('%s by %s', '%ss by %s', count(ucfirst($object_type))) , ucfirst($object_type) ,$artist->f_name),'info-box');
+show_box_top(sprintf(gettext('%s by %s'), ucfirst($object_type) ,$artist->f_name),'info-box');
 if (Config::get('ratings')) { 
 ?>
 <div id="rating_"<?php echo intval($artist->id); ?>"_artist" style="display:inline;">

@@ -48,13 +48,13 @@
 	<td>
 		<select name="length">
 			<option value="0"><?php echo _('Unlimited'); ?></option>
-			<option value="15"><?php printf(ngettext('%s minute','%s minutes',15), "15"); ?></option>
-			<option value="30"><?php printf(ngettext('%s minute','%s minutes',30), "30"); ?></option>
-			<option value="60"><?php printf(ngettext('%s hour','%s hours',1), "1"); ?></option>
-			<option value="120"><?php printf(ngettext('%s hour','%s hours',2), "2"); ?></option>
-			<option value="240"><?php printf(ngettext('%s hour','%s hours',4), "4"); ?></option>
-			<option value="480"><?php printf(ngettext('%s hour','%s hours',8), "8"); ?></option>
-			<option value="960"><?php printf(ngettext('%s hour','%s hours',16), "16"); ?></option>
+			<option value="15"><?php printf(ngettext('%d minute','%d minutes',15), "15"); ?></option>
+			<option value="30"><?php printf(ngettext('%d minute','%d minutes',30), "30"); ?></option>
+			<option value="60"><?php printf(ngettext('%d hour','%d hours',1), "1"); ?></option>
+			<option value="120"><?php printf(ngettext('%d hour','%d hours',2), "2"); ?></option>
+			<option value="240"><?php printf(ngettext('%d hour','%d hours',4), "4"); ?></option>
+			<option value="480"><?php printf(ngettext('%d hour','%d hours',8), "8"); ?></option>
+			<option value="960"><?php printf(ngettext('%d hour','%d hours',16), "16"); ?></option>
 		</select>
 	</td>
 </tr>

@@ -4,6 +4,16 @@
 
 --------------------------------------------------------------------------
   v.3.5-Alpha1
+	- Added Emulate gettext() from upgradephp-15
+		(http://freshmeat.net/p/upgradephp)
+	- Fixed Test.php parse error.
+	- Updated multibyte character strings mail.
+	- Fixed To send mail don't remove the last comma from recipient.
+	- Updated More translatable templates.
+	- Removed merge-messages.sh and Add LANGLIST (each languages 
+		translation statistics).
+	- Fixed If database name don't named ampache, can't renamed tags
+		to tag.
 	- Fixed count issue on browse Artists (Thx Sylvander)
 	- Fixed prevent_multiple_logins, preventing all logins (Thx hugh)
 	- Fixed Export catalog headers so it corretly prompts you to download
