@@ -21,7 +21,7 @@
 ?>
 <?php if (INSTALL != '1') { exit; } ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="$htmllang" lang="$htmllang">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php echo $htmllang; ?>" lang="<?php echo $htmllang; ?>">
 <head>
 <title>Ampache :: Pour l'Amour de la Musique - Install</title>
 <link rel="stylesheet" href="templates/install.css" type="text/css" media="screen" />
