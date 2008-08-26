@@ -4,6 +4,7 @@
 
 --------------------------------------------------------------------------
   v.3.5-Alpha1
+	- Fixed count issue on browse Artists (Thx Sylvander)
 	- Fixed prevent_multiple_logins, preventing all logins (Thx hugh)
 	- Fixed Export catalog headers so it corretly prompts you to download
 		the file

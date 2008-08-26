@@ -89,7 +89,7 @@ class Artist extends database_object {
 
 		// If we need to also pull the extra information, this is normally only used when we are doing the human display
 		if ($extra) { 
-	                $sql = "SELECT `song`.`artist`, COUNT(`song`.`id`) AS `song_count`, COUNT(`song`.`album`) AS `album_count`, SUM(`song`.`time`) AS `time` FROM `song` " .
+	                $sql = "SELECT `song`.`artist`, COUNT(`song`.`id`) AS `song_count`, COUNT(DISTINCT `song`.`album`) AS `album_count`, SUM(`song`.`time`) AS `time` FROM `song` " .
 	                        "WHERE `song`.`artist` IN $idlist GROUP BY `song`.`artist`";
 	                $db_results = Dba::query($sql);
 
@@ -188,7 +188,7 @@ class Artist extends database_object {
 		} 
 		else { 
 			$uid = Dba::escape($this->id); 
-			$sql = "SELECT `song`.`artist`,COUNT(`song`.`id`) AS `song_count`, COUNT(`song`.`album`) AS `album_count`, SUM(`song`.`time`) AS `time` FROM `song` " . 
+			$sql = "SELECT `song`.`artist`,COUNT(`song`.`id`) AS `song_count`, COUNT(DISTINCT `song`.`album`) AS `album_count`, SUM(`song`.`time`) AS `time` FROM `song` " . 
 				"WHERE `song`.`artist`='$uid' GROUP BY `song`.`artist`";
 			$db_results = Dba::query($sql);
 			$row = Dba::fetch_assoc($db_results); 
