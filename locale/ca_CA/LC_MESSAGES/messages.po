@@ -17,7 +17,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ampache 3.5.0\n"
 "Report-Msgid-Bugs-To: translations at ampache.org\n"
-"POT-Creation-Date: 2008-08-25 10:44+0900\n"
+"POT-Creation-Date: 2008-08-27 09:09+0900\n"
 "PO-Revision-Date: 2008-01-04 16:41+0100\n"
 "Last-Translator: Guillem Lluch Moll <glluch@ya.com>\n"
 "Language-Team: Catalan <ca@dodds.net>\n"
@@ -1357,14 +1357,14 @@ msgid "Preference Administration"
 msgstr "Preferències administratives"
 
 #: ../../templates/show_install_config.inc.php:32
-#: ../../templates/show_install_lang.inc.php:32
+#: ../../templates/show_install_lang.inc.php:33
 #: ../../templates/show_install.inc.php:32
 #: ../../templates/show_install_account.inc.php:32
 msgid "Ampache Installation"
 msgstr "Instalació de l'Ampache"
 
 #: ../../templates/show_install_config.inc.php:38
-#: ../../templates/show_install_lang.inc.php:39
+#: ../../templates/show_install_lang.inc.php:40
 #: ../../templates/show_install.inc.php:40
 #: ../../templates/show_install_account.inc.php:39
 msgid ""
@@ -1377,7 +1377,7 @@ msgstr ""
 "asseguri's que té els següents requisits previs "
 
 #: ../../templates/show_install_config.inc.php:41
-#: ../../templates/show_install_lang.inc.php:42
+#: ../../templates/show_install_lang.inc.php:43
 #: ../../templates/show_install.inc.php:43
 #: ../../templates/show_install_account.inc.php:42
 msgid ""
@@ -1387,7 +1387,7 @@ msgstr ""
 "modificar les bases de dades"
 
 #: ../../templates/show_install_config.inc.php:42
-#: ../../templates/show_install_lang.inc.php:43
+#: ../../templates/show_install_lang.inc.php:44
 #: ../../templates/show_install.inc.php:44
 msgid ""
 "Your webserver has read access to the /sql/ampache.sql file and the /config/"
@@ -1397,7 +1397,7 @@ msgstr ""
 "ampache.cfg.php.dist "
 
 #: ../../templates/show_install_config.inc.php:44
-#: ../../templates/show_install_lang.inc.php:46
+#: ../../templates/show_install_lang.inc.php:47
 #: ../../templates/show_install.inc.php:47
 #: ../../templates/show_install_account.inc.php:45
 msgid ""
@@ -1603,14 +1603,81 @@ msgstr "Mida del catàleg"
 msgid "Catalog Time"
 msgstr "Temps del catàleg"
 
-#: ../../templates/show_install_lang.inc.php:37
+#: ../../templates/show_install_lang.inc.php:38
+#: ../../templates/show_install_lang.inc.php:52
 #: ../../templates/show_install.inc.php:38
 msgid "Requirements"
 msgstr "Requisits"
 
-#: ../../templates/show_install_lang.inc.php:72
+#: ../../templates/show_install_lang.inc.php:51
+#, fuzzy
+msgid "System Checks"
+msgstr "Sistema"
+
+#: ../../templates/show_install_lang.inc.php:53
+#, fuzzy
+msgid "PHP Version:"
+msgstr "Versió PHP"
+
+#: ../../templates/show_install_lang.inc.php:63
+#, fuzzy
+msgid "Mysql for PHP:"
+msgstr "Mysql per PHP"
+
+#: ../../templates/show_install_lang.inc.php:77
+#, fuzzy
+msgid "PHP Session Support:"
+msgstr "Sessió de PHP suportada"
+
+#: ../../templates/show_install_lang.inc.php:87
+#, fuzzy
+msgid "PHP ICONV Support:"
+msgstr "PHP ICONV suportat"
+
+#: ../../templates/show_install_lang.inc.php:97
+#, fuzzy
+msgid "PHP PCRE Support:"
+msgstr "Suport PHP PCRE"
+
+#: ../../templates/show_install_lang.inc.php:107
+#, fuzzy
+msgid "PHP PutENV Support:"
+msgstr "Suport PHP PutENV"
+
+#: ../../templates/show_install_lang.inc.php:120
+msgid "PHP Safe Mode:"
+msgstr ""
+
+#: ../../templates/show_install_lang.inc.php:130
+#, fuzzy
+msgid "Optional"
+msgstr "Opcions"
+
+#: ../../templates/show_install_lang.inc.php:131
+#, fuzzy
+msgid "PHP GetText Support:"
+msgstr "Suport PHP PutENV"
+
+#: ../../templates/show_install_lang.inc.php:140
+#, fuzzy
+msgid "PHP Mbstring Support:"
+msgstr "Sessió de PHP suportada"
+
+#: ../../templates/show_install_lang.inc.php:152
+msgid "Choose installation language."
+msgstr ""
+
+#: ../../templates/show_install_lang.inc.php:173
 msgid "Start configuration"
 msgstr "Configuració inicial"
+
+#: ../../templates/show_install_lang.inc.php:179
+msgid "Ampache does not <strong>run</strong> correctly by this server."
+msgstr ""
+
+#: ../../templates/show_install_lang.inc.php:180
+msgid "Please contact your server administrator, and fix them."
+msgstr ""
 
 #: ../../templates/rightbar.inc.php:28
 msgid "Add to Playlist"
@@ -2361,8 +2428,8 @@ msgstr "Longitud"
 #: ../../templates/show_random.inc.php:51
 #: ../../templates/show_random.inc.php:52
 #, fuzzy, php-format
-msgid "%s minute"
-msgid_plural "%s minutes"
+msgid "%d minute"
+msgid_plural "%d minutes"
 msgstr[0] "Minuts"
 msgstr[1] "Minuts"
 
@@ -2372,8 +2439,8 @@ msgstr[1] "Minuts"
 #: ../../templates/show_random.inc.php:56
 #: ../../templates/show_random.inc.php:57
 #, fuzzy, php-format
-msgid "%s hour"
-msgid_plural "%s hours"
+msgid "%d hour"
+msgid_plural "%d hours"
 msgstr[0] "hora"
 msgstr[1] "hora"
 
@@ -2479,9 +2546,7 @@ msgstr "Albums de"
 #: ../../templates/show_artist.inc.php:25
 #, php-format
 msgid "%s by %s"
-msgid_plural "%ss by %s"
-msgstr[0] ""
-msgstr[1] ""
+msgstr ""
 
 #: ../../templates/show_artist.inc.php:35
 #, fuzzy, php-format
@@ -3482,11 +3547,11 @@ msgstr "Tipus de llista"
 msgid "Local Path to Files"
 msgstr "Inici de Reproducció local fallada"
 
-#: ../../admin/mail.php:84
+#: ../../admin/mail.php:90
 msgid "E-mail Sent"
 msgstr "Enviar e-mail"
 
-#: ../../admin/mail.php:85
+#: ../../admin/mail.php:91
 msgid "Your E-mail was successfully sent."
 msgstr "El teu e-mail s'ha enviat correctament"
 
@@ -3715,7 +3780,7 @@ msgstr "Realment vols esborrar aquest catàleg"
 msgid "Album Art Search Finished"
 msgstr "Finalitzat la cerca de portades"
 
-#: ../../bin/print_tags.inc:67
+#: ../../bin/print_tags.inc:66
 msgid ""
 "[print_tags.php.inc]\n"
 "This commandline script will display the tag information for the specified "
@@ -3729,7 +3794,7 @@ msgstr ""
 " apareixerà a l'ampache. \n"
 "            \n"
 
-#: ../../bin/print_tags.inc:73
+#: ../../bin/print_tags.inc:72
 msgid "Filename:"
 msgstr "Nom de l'arxiu:"
 
@@ -4129,9 +4194,6 @@ msgstr "Nom de l'arxiu:"
 
 #~ msgid "Streaming"
 #~ msgstr "Streaming"
-
-#~ msgid "System"
-#~ msgstr "Sistema"
 
 #~ msgid "XML-RPC"
 #~ msgstr "XML-RPC"

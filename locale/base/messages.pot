@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: translations at ampache.org\n"
-"POT-Creation-Date: 2008-08-25 13:02+0900\n"
+"POT-Creation-Date: 2008-08-27 09:56+0900\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1326,14 +1326,14 @@ msgid "Preference Administration"
 msgstr ""
 
 #: ../../templates/show_install_config.inc.php:32
-#: ../../templates/show_install_lang.inc.php:32
+#: ../../templates/show_install_lang.inc.php:33
 #: ../../templates/show_install.inc.php:32
 #: ../../templates/show_install_account.inc.php:32
 msgid "Ampache Installation"
 msgstr ""
 
 #: ../../templates/show_install_config.inc.php:38
-#: ../../templates/show_install_lang.inc.php:39
+#: ../../templates/show_install_lang.inc.php:40
 #: ../../templates/show_install.inc.php:40
 #: ../../templates/show_install_account.inc.php:39
 msgid ""
@@ -1343,7 +1343,7 @@ msgid ""
 msgstr ""
 
 #: ../../templates/show_install_config.inc.php:41
-#: ../../templates/show_install_lang.inc.php:42
+#: ../../templates/show_install_lang.inc.php:43
 #: ../../templates/show_install.inc.php:43
 #: ../../templates/show_install_account.inc.php:42
 msgid ""
@@ -1351,7 +1351,7 @@ msgid ""
 msgstr ""
 
 #: ../../templates/show_install_config.inc.php:42
-#: ../../templates/show_install_lang.inc.php:43
+#: ../../templates/show_install_lang.inc.php:44
 #: ../../templates/show_install.inc.php:44
 msgid ""
 "Your webserver has read access to the /sql/ampache.sql file and the /config/"
@@ -1359,7 +1359,7 @@ msgid ""
 msgstr ""
 
 #: ../../templates/show_install_config.inc.php:44
-#: ../../templates/show_install_lang.inc.php:46
+#: ../../templates/show_install_lang.inc.php:47
 #: ../../templates/show_install.inc.php:47
 #: ../../templates/show_install_account.inc.php:45
 msgid ""
@@ -1561,13 +1561,70 @@ msgstr ""
 msgid "Catalog Time"
 msgstr ""
 
-#: ../../templates/show_install_lang.inc.php:37
+#: ../../templates/show_install_lang.inc.php:38
+#: ../../templates/show_install_lang.inc.php:52
 #: ../../templates/show_install.inc.php:38
 msgid "Requirements"
 msgstr ""
 
-#: ../../templates/show_install_lang.inc.php:72
+#: ../../templates/show_install_lang.inc.php:51
+msgid "System Checks"
+msgstr ""
+
+#: ../../templates/show_install_lang.inc.php:53
+msgid "PHP Version:"
+msgstr ""
+
+#: ../../templates/show_install_lang.inc.php:63
+msgid "Mysql for PHP:"
+msgstr ""
+
+#: ../../templates/show_install_lang.inc.php:77
+msgid "PHP Session Support:"
+msgstr ""
+
+#: ../../templates/show_install_lang.inc.php:87
+msgid "PHP ICONV Support:"
+msgstr ""
+
+#: ../../templates/show_install_lang.inc.php:97
+msgid "PHP PCRE Support:"
+msgstr ""
+
+#: ../../templates/show_install_lang.inc.php:107
+msgid "PHP PutENV Support:"
+msgstr ""
+
+#: ../../templates/show_install_lang.inc.php:120
+msgid "PHP Safe Mode:"
+msgstr ""
+
+#: ../../templates/show_install_lang.inc.php:130
+msgid "Optional"
+msgstr ""
+
+#: ../../templates/show_install_lang.inc.php:131
+msgid "PHP GetText Support:"
+msgstr ""
+
+#: ../../templates/show_install_lang.inc.php:140
+msgid "PHP Mbstring Support:"
+msgstr ""
+
+#: ../../templates/show_install_lang.inc.php:152
+msgid "Choose installation language."
+msgstr ""
+
+#: ../../templates/show_install_lang.inc.php:173
 msgid "Start configuration"
+msgstr ""
+
+#: ../../templates/show_install_lang.inc.php:179
+msgid "Ampache does not <strong>run</strong> correctly by this server."
+msgstr ""
+
+#: ../../templates/show_install_lang.inc.php:180
+msgid "Please contact your server administrator, and fix them."
 msgstr ""
 
 #: ../../templates/rightbar.inc.php:28
@@ -2302,8 +2359,8 @@ msgstr ""
 #: ../../templates/show_random.inc.php:51
 #: ../../templates/show_random.inc.php:52
 #, php-format
-msgid "%s minute"
-msgid_plural "%s minutes"
+msgid "%d minute"
+msgid_plural "%d minutes"
 msgstr[0] ""
 msgstr[1] ""
 
@@ -2313,8 +2370,8 @@ msgstr[1] ""
 #: ../../templates/show_random.inc.php:56
 #: ../../templates/show_random.inc.php:57
 #, php-format
-msgid "%s hour"
-msgid_plural "%s hours"
+msgid "%d hour"
+msgid_plural "%d hours"
 msgstr[0] ""
 msgstr[1] ""
 
@@ -2420,9 +2477,7 @@ msgstr ""
 #: ../../templates/show_artist.inc.php:25
 #, php-format
 msgid "%s by %s"
-msgid_plural "%ss by %s"
-msgstr[0] ""
-msgstr[1] ""
+msgstr ""
 
 #: ../../templates/show_artist.inc.php:35
 #, php-format
@@ -3404,11 +3459,11 @@ msgstr ""
 msgid "Local Path to Files"
 msgstr ""
 
-#: ../../admin/mail.php:84
+#: ../../admin/mail.php:90
 msgid "E-mail Sent"
 msgstr ""
 
-#: ../../admin/mail.php:85
+#: ../../admin/mail.php:91
 msgid "Your E-mail was successfully sent."
 msgstr ""
 
@@ -3635,7 +3690,7 @@ msgstr ""
 msgid "Album Art Search Finished"
 msgstr ""
 
-#: ../../bin/print_tags.inc:67
+#: ../../bin/print_tags.inc:66
 msgid ""
 "[print_tags.php.inc]\n"
 "This commandline script will display the tag information for the specified "
@@ -3644,6 +3699,6 @@ msgid ""
 "        \n"
 msgstr ""
 
-#: ../../bin/print_tags.inc:73
+#: ../../bin/print_tags.inc:72
 msgid "Filename:"
 msgstr ""

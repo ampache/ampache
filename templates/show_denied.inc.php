@@ -47,7 +47,7 @@ echo _("Functions are disabled in the demo because previous users of the demo ha
 <?php } ?>
 </p>
 <div id="bottom">
-<p><b>Ampache</b><br />
+<p><strong>Ampache</strong><br />
 Pour l'Amour de la Musique.</p>
 </div>
 </body>

@@ -20,7 +20,7 @@
 */
 
 show_box_top();
-echo "<b>" . _('Starting Album Art Search') . ". . .</b><br />\n";
+echo "<strong>" . _('Starting Album Art Search') . ". . .</strong><br />\n";
 echo _('Searched') . ": <span id=\"count_art_" . $catalog_id . "\">" . _('None') . "</span><br />";
 echo _('Reading') . ":<span id=\"read_art_$catalog_id\"></span><br />";
 show_box_bottom(); 

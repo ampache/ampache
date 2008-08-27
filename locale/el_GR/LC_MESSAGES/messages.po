@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ampache 3.5.0\n"
 "Report-Msgid-Bugs-To: translations at ampache.org\n"
-"POT-Creation-Date: 2008-08-25 10:44+0900\n"
+"POT-Creation-Date: 2008-08-27 09:09+0900\n"
 "PO-Revision-Date: 2008-08-25 08:43+0900\n"
 "Last-Translator: Ampache <translations at ampache.org>\n"
 "Language-Team: Greek <LL@li.org>\n"
@@ -1340,14 +1340,14 @@ msgid "Preference Administration"
 msgstr "Προτιμήσεις Διαχείρισης"
 
 #: ../../templates/show_install_config.inc.php:32
-#: ../../templates/show_install_lang.inc.php:32
+#: ../../templates/show_install_lang.inc.php:33
 #: ../../templates/show_install.inc.php:32
 #: ../../templates/show_install_account.inc.php:32
 msgid "Ampache Installation"
 msgstr "Εγκατάσταση"
 
 #: ../../templates/show_install_config.inc.php:38
-#: ../../templates/show_install_lang.inc.php:39
+#: ../../templates/show_install_lang.inc.php:40
 #: ../../templates/show_install.inc.php:40
 #: ../../templates/show_install_account.inc.php:39
 msgid ""
@@ -1360,7 +1360,7 @@ msgstr ""
 "ικανοποιείτε τις ακόλουθες προϋποθέσεις"
 
 #: ../../templates/show_install_config.inc.php:41
-#: ../../templates/show_install_lang.inc.php:42
+#: ../../templates/show_install_lang.inc.php:43
 #: ../../templates/show_install.inc.php:43
 #: ../../templates/show_install_account.inc.php:42
 msgid ""
@@ -1370,7 +1370,7 @@ msgstr ""
 "τροποποιεί βάσεις"
 
 #: ../../templates/show_install_config.inc.php:42
-#: ../../templates/show_install_lang.inc.php:43
+#: ../../templates/show_install_lang.inc.php:44
 #: ../../templates/show_install.inc.php:44
 msgid ""
 "Your webserver has read access to the /sql/ampache.sql file and the /config/"
@@ -1380,7 +1380,7 @@ msgstr ""
 "αρχείο /config/ampache.cfg.php.dist"
 
 #: ../../templates/show_install_config.inc.php:44
-#: ../../templates/show_install_lang.inc.php:46
+#: ../../templates/show_install_lang.inc.php:47
 #: ../../templates/show_install.inc.php:47
 #: ../../templates/show_install_account.inc.php:45
 msgid ""
@@ -1586,14 +1586,80 @@ msgstr "Μέγεθος Καταλόγου"
 msgid "Catalog Time"
 msgstr "Χρόνος Καταλόγου"
 
-#: ../../templates/show_install_lang.inc.php:37
+#: ../../templates/show_install_lang.inc.php:38
+#: ../../templates/show_install_lang.inc.php:52
 #: ../../templates/show_install.inc.php:38
 msgid "Requirements"
 msgstr "Απαιτήσεις"
 
-#: ../../templates/show_install_lang.inc.php:72
+#: ../../templates/show_install_lang.inc.php:51
+msgid "System Checks"
+msgstr ""
+
+#: ../../templates/show_install_lang.inc.php:53
+#, fuzzy
+msgid "PHP Version:"
+msgstr "Έκδοση PHP"
+
+#: ../../templates/show_install_lang.inc.php:63
+#, fuzzy
+msgid "Mysql for PHP:"
+msgstr "MySQL για PHP"
+
+#: ../../templates/show_install_lang.inc.php:77
+#, fuzzy
+msgid "PHP Session Support:"
+msgstr "Υποστήριξη PHP Session"
+
+#: ../../templates/show_install_lang.inc.php:87
+#, fuzzy
+msgid "PHP ICONV Support:"
+msgstr "PHP ICONV Support"
+
+#: ../../templates/show_install_lang.inc.php:97
+#, fuzzy
+msgid "PHP PCRE Support:"
+msgstr "PHP PCRE Support"
+
+#: ../../templates/show_install_lang.inc.php:107
+#, fuzzy
+msgid "PHP PutENV Support:"
+msgstr "PHP PutENV Support"
+
+#: ../../templates/show_install_lang.inc.php:120
+msgid "PHP Safe Mode:"
+msgstr ""
+
+#: ../../templates/show_install_lang.inc.php:130
+#, fuzzy
+msgid "Optional"
+msgstr "Επιλογές RPC"
+
+#: ../../templates/show_install_lang.inc.php:131
+#, fuzzy
+msgid "PHP GetText Support:"
+msgstr "PHP PutENV Support"
+
+#: ../../templates/show_install_lang.inc.php:140
+#, fuzzy
+msgid "PHP Mbstring Support:"
+msgstr "Υποστήριξη PHP Session"
+
+#: ../../templates/show_install_lang.inc.php:152
+msgid "Choose installation language."
+msgstr ""
+
+#: ../../templates/show_install_lang.inc.php:173
 msgid "Start configuration"
 msgstr "Έναρξη ρύθμισης"
+
+#: ../../templates/show_install_lang.inc.php:179
+msgid "Ampache does not <strong>run</strong> correctly by this server."
+msgstr ""
+
+#: ../../templates/show_install_lang.inc.php:180
+msgid "Please contact your server administrator, and fix them."
+msgstr ""
 
 #: ../../templates/rightbar.inc.php:28
 msgid "Add to Playlist"
@@ -2344,8 +2410,8 @@ msgstr "Διάρκεια"
 #: ../../templates/show_random.inc.php:51
 #: ../../templates/show_random.inc.php:52
 #, fuzzy, php-format
-msgid "%s minute"
-msgid_plural "%s minutes"
+msgid "%d minute"
+msgid_plural "%d minutes"
 msgstr[0] "λεπτά"
 msgstr[1] "λεπτά"
 
@@ -2355,8 +2421,8 @@ msgstr[1] "λεπτά"
 #: ../../templates/show_random.inc.php:56
 #: ../../templates/show_random.inc.php:57
 #, fuzzy, php-format
-msgid "%s hour"
-msgid_plural "%s hours"
+msgid "%d hour"
+msgid_plural "%d hours"
 msgstr[0] "ώρα"
 msgstr[1] "ώρα"
 
@@ -2462,9 +2528,7 @@ msgstr "Άλμπουμς από"
 #: ../../templates/show_artist.inc.php:25
 #, php-format
 msgid "%s by %s"
-msgid_plural "%ss by %s"
-msgstr[0] ""
-msgstr[1] ""
+msgstr ""
 
 #: ../../templates/show_artist.inc.php:35
 #, fuzzy, php-format
@@ -3463,11 +3527,11 @@ msgstr "Τύπος playlist"
 msgid "Local Path to Files"
 msgstr "Λειτουργικές Μονάδες Τοπικής Αναπαραγωγής"
 
-#: ../../admin/mail.php:84
+#: ../../admin/mail.php:90
 msgid "E-mail Sent"
 msgstr "Στάλθηκε E-mail"
 
-#: ../../admin/mail.php:85
+#: ../../admin/mail.php:91
 msgid "Your E-mail was successfully sent."
 msgstr "To e-mail στάλθηκε επιτυχώς"
 
@@ -3696,7 +3760,7 @@ msgstr "Θέλετε σίγουρα να διαγράψετε αυτόν τον 
 msgid "Album Art Search Finished"
 msgstr "Ολοκληρώθηκε η αναζήτηση εξωφύλλων"
 
-#: ../../bin/print_tags.inc:67
+#: ../../bin/print_tags.inc:66
 msgid ""
 "[print_tags.php.inc]\n"
 "This commandline script will display the tag information for the specified "
@@ -3708,7 +3772,7 @@ msgstr ""
 "συγκεκριμένου αρχείου όπως θα εμφανιστούν στον ampache. \n"
 "\t\n"
 
-#: ../../bin/print_tags.inc:73
+#: ../../bin/print_tags.inc:72
 msgid "Filename:"
 msgstr "Όνομα Αρχείου"
 

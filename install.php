@@ -67,14 +67,19 @@ $php_self = $http_type . $_SERVER['HTTP_HOST'] . "/" . preg_replace("/^\/(.+\.ph
 /* Catch the Current Action */
 switch ($_REQUEST['action']) { 
 	case 'create_db':
-		if (!install_insert_db($username,$password,$hostname,$database)) { 
-			require_once 'templates/show_install.inc.php';
-			break;
-		}
-
 		/* Get the variables for the language */
 		$htmllang = $_REQUEST['htmllang'];
 		$charset  = $_REQUEST['charset'];
+
+		// Set the lang in the conf array
+		Config::set('lang', $htmllang,'1');
+		Config::set('site_charset', $charset, '1');
+		load_gettext();
+
+		if (!install_insert_db($username,$password,$hostname,$database)) {
+			require_once 'templates/show_install.inc.php';
+			break;
+		}
 		
 		header ("Location: " . $php_self . "?action=show_create_config&local_db=$database&local_host=$hostname&htmllang=$htmllang&charset=$charset");
 		
@@ -125,6 +130,15 @@ switch ($_REQUEST['action']) {
 		$results = parse_ini_file($configfile);
 		Config::set_by_array($results,'1');
 
+		/* Get the variables for the language */
+		$htmllang = $_REQUEST['htmllang'];
+		$charset  = $_REQUEST['charset'];
+
+		// Set the lang in the conf array
+		Config::set('lang', $htmllang,'1');
+		Config::set('site_charset', $charset, '1');
+		load_gettext();
+
 		$password2 = scrub_in($_REQUEST['local_pass2']); 
 
 		if (!install_create_account($username,$password,$password2)) { 
@@ -142,6 +156,15 @@ switch ($_REQUEST['action']) {
 	case 'show_create_account':
 	
 		$results = parse_ini_file($configfile);
+
+		/* Get the variables for the language */
+		$htmllang = $_REQUEST['htmllang'];
+		$charset  = $_REQUEST['charset'];
+
+		// Set the lang in the conf array
+		Config::set('lang', $htmllang,'1');
+		Config::set('site_charset', $charset, '1');
+		load_gettext();
 
 		/* Make sure we've got a valid config file */
 		if (!check_config_values($results)) { 
@@ -210,12 +233,23 @@ switch ($_REQUEST['action']) {
 		require_once 'templates/show_install.inc.php';
 	break;
         default:
-		/* Do some basic tests here... most common error, no mysql */
-		if (!function_exists('mysql_query')) { 
-			header ("Location: test.php");
+		if ($_ENV['LANG']) {
+			$lang = $_ENV['LANG'];
+		} else {
+			$lang = "en_US";
 		}
-		$htmllang = "en_US";
-		header ("Content-Type: text/html; charset=UTF-8");
+		if(strpos($lang, ".")) {
+			$langtmp = split("\.", $lang);
+			$htmllang = $langtmp[0];
+			$charset = $langtmp[1];
+		} else {
+			$htmllang = $lang;
+			$charset = "UTF-8";
+		}
+		Config::set('lang',$htmllang,'1');
+		Config::set('site_charset', $charset, '1');
+		load_gettext();
+		//header ("Content-Type: text/html; charset=$charset");
 		/* Show the language options first */
 		require_once 'templates/show_install_lang.inc.php';
 	break;

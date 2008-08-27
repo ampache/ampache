@@ -46,7 +46,7 @@ $web_path = Config::get('web_path');
 <a href="<?php echo Config::get('web_path'); ?>/login.php"><?php echo _('Return to Login Page'); ?></a>
 </div><!--end <div>id="maincontainer-->
 <div id="bottom">
-<p><b>Ampache</b><br />
+<p><strong>Ampache</strong><br />
 Pour l'Amour de la Musique.</p>
 </div>
 </body>

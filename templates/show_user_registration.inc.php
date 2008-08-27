@@ -137,7 +137,7 @@ if (Config::get('user_agreement')) { ?>
 </form>
 </div><!--end <div>id="maincontainer-->
 <div id="bottom">
-<p><b>Ampache</b><br />
+<p><strong>Ampache</strong><br />
 Pour l'Amour de la Musique.</p>
 </div>
 </body>

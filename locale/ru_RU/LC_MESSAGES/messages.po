@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ampache\n"
 "Report-Msgid-Bugs-To: translations at ampache.org\n"
-"POT-Creation-Date: 2008-08-25 10:44+0900\n"
+"POT-Creation-Date: 2008-08-27 09:09+0900\n"
 "PO-Revision-Date: 2007-02-05 21:58-0000\n"
 "Last-Translator: Alexey Illarionov <littlesavage@orionet.ru>\n"
 "Language-Team: British English <en@li.org>\n"
@@ -1346,14 +1346,14 @@ msgid "Preference Administration"
 msgstr "Управление предпочтениями"
 
 #: ../../templates/show_install_config.inc.php:32
-#: ../../templates/show_install_lang.inc.php:32
+#: ../../templates/show_install_lang.inc.php:33
 #: ../../templates/show_install.inc.php:32
 #: ../../templates/show_install_account.inc.php:32
 msgid "Ampache Installation"
 msgstr "Установка Ampache"
 
 #: ../../templates/show_install_config.inc.php:38
-#: ../../templates/show_install_lang.inc.php:39
+#: ../../templates/show_install_lang.inc.php:40
 #: ../../templates/show_install.inc.php:40
 #: ../../templates/show_install_account.inc.php:39
 msgid ""
@@ -1366,7 +1366,7 @@ msgstr ""
 "убедитесь что у вас выполнены следующие условия:"
 
 #: ../../templates/show_install_config.inc.php:41
-#: ../../templates/show_install_lang.inc.php:42
+#: ../../templates/show_install_lang.inc.php:43
 #: ../../templates/show_install.inc.php:43
 #: ../../templates/show_install_account.inc.php:42
 msgid ""
@@ -1375,7 +1375,7 @@ msgstr ""
 "MySQL сервер с пользователем и паролем с доступом на создавание/изменение БД"
 
 #: ../../templates/show_install_config.inc.php:42
-#: ../../templates/show_install_lang.inc.php:43
+#: ../../templates/show_install_lang.inc.php:44
 #: ../../templates/show_install.inc.php:44
 msgid ""
 "Your webserver has read access to the /sql/ampache.sql file and the /config/"
@@ -1385,7 +1385,7 @@ msgstr ""
 "cfg.php.dist"
 
 #: ../../templates/show_install_config.inc.php:44
-#: ../../templates/show_install_lang.inc.php:46
+#: ../../templates/show_install_lang.inc.php:47
 #: ../../templates/show_install.inc.php:47
 #: ../../templates/show_install_account.inc.php:45
 msgid ""
@@ -1591,14 +1591,81 @@ msgstr "Размер каталога"
 msgid "Catalog Time"
 msgstr "Время каталога"
 
-#: ../../templates/show_install_lang.inc.php:37
+#: ../../templates/show_install_lang.inc.php:38
+#: ../../templates/show_install_lang.inc.php:52
 #: ../../templates/show_install.inc.php:38
 msgid "Requirements"
 msgstr "Требования"
 
-#: ../../templates/show_install_lang.inc.php:72
+#: ../../templates/show_install_lang.inc.php:51
+#, fuzzy
+msgid "System Checks"
+msgstr "Система"
+
+#: ../../templates/show_install_lang.inc.php:53
+#, fuzzy
+msgid "PHP Version:"
+msgstr "Версия PHP"
+
+#: ../../templates/show_install_lang.inc.php:63
+#, fuzzy
+msgid "Mysql for PHP:"
+msgstr "Mysql для PHP"
+
+#: ../../templates/show_install_lang.inc.php:77
+#, fuzzy
+msgid "PHP Session Support:"
+msgstr "Поддержка PHP Session"
+
+#: ../../templates/show_install_lang.inc.php:87
+#, fuzzy
+msgid "PHP ICONV Support:"
+msgstr "Поддержка PHP ICONV"
+
+#: ../../templates/show_install_lang.inc.php:97
+#, fuzzy
+msgid "PHP PCRE Support:"
+msgstr "Поддержка PHP PCRE"
+
+#: ../../templates/show_install_lang.inc.php:107
+#, fuzzy
+msgid "PHP PutENV Support:"
+msgstr "Поддержка PHP PutENV"
+
+#: ../../templates/show_install_lang.inc.php:120
+msgid "PHP Safe Mode:"
+msgstr ""
+
+#: ../../templates/show_install_lang.inc.php:130
+#, fuzzy
+msgid "Optional"
+msgstr "Настройки"
+
+#: ../../templates/show_install_lang.inc.php:131
+#, fuzzy
+msgid "PHP GetText Support:"
+msgstr "Поддержка PHP PutENV"
+
+#: ../../templates/show_install_lang.inc.php:140
+#, fuzzy
+msgid "PHP Mbstring Support:"
+msgstr "Поддержка PHP Session"
+
+#: ../../templates/show_install_lang.inc.php:152
+msgid "Choose installation language."
+msgstr ""
+
+#: ../../templates/show_install_lang.inc.php:173
 msgid "Start configuration"
 msgstr "Начать конфигурацию"
+
+#: ../../templates/show_install_lang.inc.php:179
+msgid "Ampache does not <strong>run</strong> correctly by this server."
+msgstr ""
+
+#: ../../templates/show_install_lang.inc.php:180
+msgid "Please contact your server administrator, and fix them."
+msgstr ""
 
 #: ../../templates/rightbar.inc.php:28
 msgid "Add to Playlist"
@@ -2350,8 +2417,8 @@ msgstr "Продолжительность"
 #: ../../templates/show_random.inc.php:51
 #: ../../templates/show_random.inc.php:52
 #, fuzzy, php-format
-msgid "%s minute"
-msgid_plural "%s minutes"
+msgid "%d minute"
+msgid_plural "%d minutes"
 msgstr[0] "минуту"
 msgstr[1] "минуты"
 msgstr[2] "минут"
@@ -2362,8 +2429,8 @@ msgstr[2] "минут"
 #: ../../templates/show_random.inc.php:56
 #: ../../templates/show_random.inc.php:57
 #, fuzzy, php-format
-msgid "%s hour"
-msgid_plural "%s hours"
+msgid "%d hour"
+msgid_plural "%d hours"
 msgstr[0] "час"
 msgstr[1] "часа"
 msgstr[2] "часов"
@@ -2470,10 +2537,7 @@ msgstr "Альбомы"
 #: ../../templates/show_artist.inc.php:25
 #, php-format
 msgid "%s by %s"
-msgid_plural "%ss by %s"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr ""
 
 #: ../../templates/show_artist.inc.php:35
 #, fuzzy, php-format
@@ -3474,11 +3538,11 @@ msgstr "Тип плейлиста"
 msgid "Local Path to Files"
 msgstr "Модули локального воспроизведения"
 
-#: ../../admin/mail.php:84
+#: ../../admin/mail.php:90
 msgid "E-mail Sent"
 msgstr "Е-майл отправлен"
 
-#: ../../admin/mail.php:85
+#: ../../admin/mail.php:91
 msgid "Your E-mail was successfully sent."
 msgstr "Ваше е-майл сообщение успешно отправлено"
 
@@ -3707,7 +3771,7 @@ msgstr "Вы действительно хотите удалить этот каталог?"
 msgid "Album Art Search Finished"
 msgstr "Поиск альбомных обложек завершен"
 
-#: ../../bin/print_tags.inc:67
+#: ../../bin/print_tags.inc:66
 msgid ""
 "[print_tags.php.inc]\n"
 "This commandline script will display the tag information for the specified "
@@ -3720,7 +3784,7 @@ msgstr ""
 "как ее будет видеть Ampache\n"
 "        \n"
 
-#: ../../bin/print_tags.inc:73
+#: ../../bin/print_tags.inc:72
 msgid "Filename:"
 msgstr "Файл:"
 
@@ -3913,9 +3977,6 @@ msgstr "Файл:"
 
 #~ msgid "Streaming"
 #~ msgstr "Вещание"
-
-#~ msgid "System"
-#~ msgstr "Система"
 
 #~ msgid "Play Random from Album"
 #~ msgstr "Играть случайные с альбома"

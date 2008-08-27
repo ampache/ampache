@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ampache 3.5.0\n"
 "Report-Msgid-Bugs-To: translations at ampache.org\n"
-"POT-Creation-Date: 2008-08-25 10:44+0900\n"
+"POT-Creation-Date: 2008-08-27 09:09+0900\n"
 "PO-Revision-Date: 2008-08-01 00:52+0200\n"
 "Last-Translator: Erwan Velu <erwan.velu@free.fr>\n"
 "Language-Team: French <kde-i18n-doc@lists.kde.org>\n"
@@ -1354,14 +1354,14 @@ msgid "Preference Administration"
 msgstr "Pr&eacute;f&eacute;rences d'administration"
 
 #: ../../templates/show_install_config.inc.php:32
-#: ../../templates/show_install_lang.inc.php:32
+#: ../../templates/show_install_lang.inc.php:33
 #: ../../templates/show_install.inc.php:32
 #: ../../templates/show_install_account.inc.php:32
 msgid "Ampache Installation"
 msgstr "Installation d'Ampache"
 
 #: ../../templates/show_install_config.inc.php:38
-#: ../../templates/show_install_lang.inc.php:39
+#: ../../templates/show_install_lang.inc.php:40
 #: ../../templates/show_install.inc.php:40
 #: ../../templates/show_install_account.inc.php:39
 msgid ""
@@ -1374,7 +1374,7 @@ msgstr ""
 "assurez-vous d'avoir tous les pr&eacute;-requis"
 
 #: ../../templates/show_install_config.inc.php:41
-#: ../../templates/show_install_lang.inc.php:42
+#: ../../templates/show_install_lang.inc.php:43
 #: ../../templates/show_install.inc.php:43
 #: ../../templates/show_install_account.inc.php:42
 msgid ""
@@ -1384,7 +1384,7 @@ msgstr ""
 "modifier les bases de donn&eacute;es"
 
 #: ../../templates/show_install_config.inc.php:42
-#: ../../templates/show_install_lang.inc.php:43
+#: ../../templates/show_install_lang.inc.php:44
 #: ../../templates/show_install.inc.php:44
 msgid ""
 "Your webserver has read access to the /sql/ampache.sql file and the /config/"
@@ -1394,7 +1394,7 @@ msgstr ""
 "et /config/ampache.cfg.php.dist"
 
 #: ../../templates/show_install_config.inc.php:44
-#: ../../templates/show_install_lang.inc.php:46
+#: ../../templates/show_install_lang.inc.php:47
 #: ../../templates/show_install.inc.php:47
 #: ../../templates/show_install_account.inc.php:45
 msgid ""
@@ -1606,14 +1606,82 @@ msgstr "Taille du catalogue"
 msgid "Catalog Time"
 msgstr "Dur&eacute;e du catalogue"
 
-#: ../../templates/show_install_lang.inc.php:37
+#: ../../templates/show_install_lang.inc.php:38
+#: ../../templates/show_install_lang.inc.php:52
 #: ../../templates/show_install.inc.php:38
 msgid "Requirements"
 msgstr "Pr&eacute;-requis"
 
-#: ../../templates/show_install_lang.inc.php:72
+#: ../../templates/show_install_lang.inc.php:51
+#, fuzzy
+msgid "System Checks"
+msgstr "Système"
+
+#: ../../templates/show_install_lang.inc.php:53
+#, fuzzy
+msgid "PHP Version:"
+msgstr "Version de PHP"
+
+#: ../../templates/show_install_lang.inc.php:63
+#, fuzzy
+msgid "Mysql for PHP:"
+msgstr "Mysql pour PHP"
+
+#: ../../templates/show_install_lang.inc.php:77
+#, fuzzy
+msgid "PHP Session Support:"
+msgstr "Support des sessions PHP"
+
+#: ../../templates/show_install_lang.inc.php:87
+#, fuzzy
+msgid "PHP ICONV Support:"
+msgstr "Support de PHP ICONV"
+
+#: ../../templates/show_install_lang.inc.php:97
+#, fuzzy
+msgid "PHP PCRE Support:"
+msgstr "Support de PHP PCRE"
+
+#: ../../templates/show_install_lang.inc.php:107
+#, fuzzy
+msgid "PHP PutENV Support:"
+msgstr "Support de PHP ICONV"
+
+#: ../../templates/show_install_lang.inc.php:120
+#, fuzzy
+msgid "PHP Safe Mode:"
+msgstr "Mode sans &eacute;chec"
+
+#: ../../templates/show_install_lang.inc.php:130
+#, fuzzy
+msgid "Optional"
+msgstr "Options"
+
+#: ../../templates/show_install_lang.inc.php:131
+#, fuzzy
+msgid "PHP GetText Support:"
+msgstr "Support Gettext"
+
+#: ../../templates/show_install_lang.inc.php:140
+#, fuzzy
+msgid "PHP Mbstring Support:"
+msgstr "Support des sessions PHP"
+
+#: ../../templates/show_install_lang.inc.php:152
+msgid "Choose installation language."
+msgstr ""
+
+#: ../../templates/show_install_lang.inc.php:173
 msgid "Start configuration"
 msgstr "Lancer la configuration"
+
+#: ../../templates/show_install_lang.inc.php:179
+msgid "Ampache does not <strong>run</strong> correctly by this server."
+msgstr ""
+
+#: ../../templates/show_install_lang.inc.php:180
+msgid "Please contact your server administrator, and fix them."
+msgstr ""
 
 #: ../../templates/rightbar.inc.php:28
 msgid "Add to Playlist"
@@ -2373,8 +2441,8 @@ msgstr "Dur&eacute;e"
 #: ../../templates/show_random.inc.php:51
 #: ../../templates/show_random.inc.php:52
 #, fuzzy, php-format
-msgid "%s minute"
-msgid_plural "%s minutes"
+msgid "%d minute"
+msgid_plural "%d minutes"
 msgstr[0] "minute"
 msgstr[1] ""
 
@@ -2384,8 +2452,8 @@ msgstr[1] ""
 #: ../../templates/show_random.inc.php:56
 #: ../../templates/show_random.inc.php:57
 #, fuzzy, php-format
-msgid "%s hour"
-msgid_plural "%s hours"
+msgid "%d hour"
+msgid_plural "%d hours"
 msgstr[0] "heure"
 msgstr[1] "heure"
 
@@ -2491,9 +2559,7 @@ msgstr "Albums par %s"
 #: ../../templates/show_artist.inc.php:25
 #, fuzzy, php-format
 msgid "%s by %s"
-msgid_plural "%ss by %s"
-msgstr[0] "Albums par %s"
-msgstr[1] "Albums par %s"
+msgstr "Albums par %s"
 
 #: ../../templates/show_artist.inc.php:35
 #, php-format
@@ -3499,11 +3565,11 @@ msgstr "Fichier de liste de lecture"
 msgid "Local Path to Files"
 msgstr "Chemin d'accès aux fichiers"
 
-#: ../../admin/mail.php:84
+#: ../../admin/mail.php:90
 msgid "E-mail Sent"
 msgstr "E-Mail envoy&eacute;"
 
-#: ../../admin/mail.php:85
+#: ../../admin/mail.php:91
 msgid "Your E-mail was successfully sent."
 msgstr "Email envoy&eacute;"
 
@@ -3749,7 +3815,7 @@ msgstr "Voulez-vous vraiment supprimer ce catalogue ?"
 msgid "Album Art Search Finished"
 msgstr "Recherche de jaquettes d'albums termin&eacute;e"
 
-#: ../../bin/print_tags.inc:67
+#: ../../bin/print_tags.inc:66
 msgid ""
 "[print_tags.php.inc]\n"
 "This commandline script will display the tag information for the specified "
@@ -3763,7 +3829,7 @@ msgstr ""
 "sera pr&eacute;sent&eacute; dans Ampache. \n"
 "        \n"
 
-#: ../../bin/print_tags.inc:73
+#: ../../bin/print_tags.inc:72
 msgid "Filename:"
 msgstr "Nom de fichier :"
 
@@ -3779,9 +3845,6 @@ msgstr "Nom de fichier :"
 
 #~ msgid "Streaming"
 #~ msgstr "Flux"
-
-#~ msgid "System"
-#~ msgstr "Système"
 
 #~ msgid "Recommendations"
 #~ msgstr "Recommandations"

@@ -47,14 +47,14 @@ if (INSTALL != '1') { exit; }
 	<div class="content">
 	<?php echo _("Step 1 - Creating and Inserting the Ampache Database"); ?><br />
 	<?php echo _("Step 2 - Creating the ampache.cfg.php file"); ?><br />
-	<b><?php echo _("Step 3 - Setup Initial Account"); ?></b><br />
+	<strong><?php echo _("Step 3 - Setup Initial Account"); ?></strong><br />
 	<dl>
 	<dd><?php echo _("This step creates your initial Ampache admin account. Once your admin account has been created you will be directed to the login page"); ?></dd>
 	</dl>
 	<?php Error::display('general'); ?>
 	<br />
 	<span class="header2"><?php echo _('Create Admin Account'); ?></span>
-	<form method="post" action="<?php echo $GLOBALS['php_self'] . "?action=create_account"; ?>" enctype="multipart/form-data" >
+	<form method="post" action="<?php echo $GLOBALS['php_self'] . "?action=create_account&amp;htmllang=$htmllang&amp;charset=$charset"; ?>" enctype="multipart/form-data" >
 <table>
 <tr>
 	<td class="align"><?php echo _('Username'); ?></td>
@@ -76,7 +76,7 @@ if (INSTALL != '1') { exit; }
 	</form>
 	</div>
 	<div id="bottom">
-    	<p><b>Ampache Installation.</b><br />
+    	<p><strong>Ampache Installation.</strong><br />
     	For the love of Music.</p>
    </div>
 

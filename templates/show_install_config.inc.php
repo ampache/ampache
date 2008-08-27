@@ -46,7 +46,7 @@ if (INSTALL != '1') { exit; }
 
 	<div class="content">
 		<?php echo _("Step 1 - Creating and Inserting the Ampache Database"); ?><br />
-		<b><?php echo _("Step 2 - Creating the Ampache.cfg.php file"); ?></b><br />
+		<strong><?php echo _("Step 2 - Creating the Ampache.cfg.php file"); ?></strong><br />
 		<dl>
 		<dd><?php echo _("This steps takes the basic config values and generates the config file. It will prompt you to download the config file. Please put the downloaded config file in /config"); ?></dd>
 		</dl>
@@ -133,7 +133,7 @@ if (INSTALL != '1') { exit; }
 		</form>
 	</div>
 	<div id="bottom">
-    	<p><b>Ampache Installation.</b><br />
+    	<p><strong>Ampache Installation.</strong><br />
     	For the love of Music.</p>
 	</div>
 </div>

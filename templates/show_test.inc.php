@@ -264,7 +264,7 @@
 </table>
 </div>
 <div id="bottom">
-<p><b>Ampache Debug.</b><br />
+<p><strong>Ampache Debug.</strong><br />
 For the love of Music.</p>
 </div>
 </body>

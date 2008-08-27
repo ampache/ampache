@@ -56,7 +56,7 @@ $web_path = Config::get('web_path');
 <?php } ?>
 </div><!--end <div>id="maincontainer-->
 <div id="bottom">
-<p><b>Ampache</b><br />
+<p><strong>Ampache</strong><br />
 Pour l'Amour de la Musique.</p>
 </div>
 </body>
