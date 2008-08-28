@@ -4,6 +4,7 @@
 
 --------------------------------------------------------------------------
   v.3.5-Alpha1
+	- Updated language code and Fixed catalan language code
 	- Added Emulate gettext() from upgradephp-15
 		(http://freshmeat.net/p/upgradephp)
 	- Fixed Test.php parse error.
