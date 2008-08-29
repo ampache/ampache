@@ -1,0 +1,112 @@
+#: Database words
+msgid "Allow Downloads"
+msgstr ""
+
+#: Database words
+msgid "Popular Threshold"
+msgstr ""
+
+#: Database words
+msgid "Transcode Bitrate"
+msgstr ""
+
+#: Database words
+msgid "Ampache :: Pour l'Amour de la Musique"
+msgstr ""
+
+#: Database words
+msgid "Lock Songs"
+msgstr ""
+
+#: Database words
+msgid "Forces Http play regardless of port"
+msgstr ""
+
+#: Database words
+msgid "Non-Standard Http Port"
+msgstr ""
+
+#: Database words
+msgid "Localplay Type"
+msgstr ""
+
+#: Database words
+msgid "Type of Playback"
+msgstr ""
+
+#: Database words
+msgid "Language"
+msgstr ""
+
+#: Database words
+msgid "Theme"
+msgstr ""
+
+#: Database words
+msgid "Album Ellipse Threshold"
+msgstr ""
+
+#: Database words
+msgid "Artist Ellipse Threshold"
+msgstr ""
+
+#: Database words
+msgid "Title Ellipse Threshold"
+msgstr ""
+
+#: Database words
+msgid "Offset Limit"
+msgstr ""
+
+#: Database words
+msgid "Localplay Access"
+msgstr ""
+
+#: Database words
+msgid "Allow Streaming"
+msgstr ""
+
+#: Database words
+msgid "Allow Democratic Play"
+msgstr ""
+
+#: Database words
+msgid "Allow Localplay Play"
+msgstr ""
+
+#: Database words
+msgid "Statistics Day Threshold"
+msgstr ""
+
+#: Database words
+msgid "Min Element Count"
+msgstr ""
+
+#: Database words
+msgid "Rate Limit"
+msgstr ""
+
+#: Database words
+msgid "Playlist Method"
+msgstr ""
+
+#: Database words
+msgid "Transcoding"
+msgstr ""
+
+#: Database words
+msgid "User to track"
+msgstr ""
+
+#: Database words
+msgid "Streaming"
+msgstr ""
+
+#: Database words
+msgid "Interface"
+msgstr ""
+
+#: Database words
+msgid "System"
+msgstr ""
+

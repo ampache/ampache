@@ -49,6 +49,8 @@ case $1 in
 	"--all"|"-a"|"all")
 		xgettext --from-code=UTF-8 --msgid-bugs-address="$MAILADDR" -L php -o $POTNAME `find ../../ -name \*.php -type f` `find ../../ -name \*.inc -type f`
 		OLANG=`ls ../ | grep -v base`
+		echo "add database words add to pot file..."
+		cat translation-words.txt >> messages.pot
 		for i in $OLANG
 		do
 			echo "$i PO file merging..."
@@ -65,6 +67,8 @@ case $1 in
 		else
 			echo "pot file creation wasn't done.";
 		fi
+		echo "add database words to pot file..."
+		cat translation-words.txt >> messages.pot
 		;;
 	"--init"|"-i"|"init")
 		msginit -l $LANG -i $POTNAME -o $PODIR/$PONAME;

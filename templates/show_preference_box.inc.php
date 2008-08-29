@@ -26,7 +26,7 @@ if ((Access::check('interface','100') OR !Config::get('use_auth')) AND $_REQUEST
 	$is_admin = true; 
 }
 ?>
-<h4><?php echo $preferences['title']; ?></h4>
+<h4><?php echo _($preferences['title']); ?></h4>
 <table class="tabledata" cellpadding="0" cellspacing="0">
 <colgroup>
   <col id="col_preference" />

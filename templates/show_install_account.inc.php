@@ -26,6 +26,7 @@ if (INSTALL != '1') { exit; }
 <head>
 <title>Ampache :: For The Love Of Music - Install</title>
 <link rel="stylesheet" href="templates/install.css" type="text/css" media="screen" />
+<meta http-equiv="Content-Type" Content="text/html; Charset=<?php echo $charset; ?>" />
 </head>
 <body>
 <div id="header"> 

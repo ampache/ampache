@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ampache 3.5.0\n"
 "Report-Msgid-Bugs-To: translations at ampache.org\n"
-"POT-Creation-Date: 2008-08-27 09:09+0900\n"
+"POT-Creation-Date: 2008-08-29 16:03+0900\n"
 "PO-Revision-Date: 2008-07-14 20:44+0900\n"
 "Last-Translator: momo-i <webmaster at momo-i.org>\n"
 "Language-Team: Japanese\n"
@@ -90,6 +90,7 @@ msgid "Edit"
 msgstr "編集"
 
 #: ../../templates/show_user_preferences.inc.php:28
+#: ../../templates/show_preferences.inc.php:28
 #, php-format
 msgid "Editing %s preferences"
 msgstr "%s設定の編集"
@@ -244,7 +245,7 @@ msgstr ""
 "ない一方で、機能なしでは要求されないかもしれません"
 
 #: ../../templates/show_test.inc.php:153
-#: ../../templates/show_install_config.inc.php:88
+#: ../../templates/show_install_config.inc.php:89
 msgid "Ampache.cfg.php Exists"
 msgstr "Ampache.cfg.phpは存在します"
 
@@ -259,7 +260,7 @@ msgstr ""
 "現在判読可能でありません。"
 
 #: ../../templates/show_test.inc.php:172
-#: ../../templates/show_install_config.inc.php:105
+#: ../../templates/show_install_config.inc.php:106
 msgid "Ampache.cfg.php Configured?"
 msgstr "Ampache.cfg.phpは設定されていますか？"
 
@@ -288,7 +289,7 @@ msgid "DB Inserted"
 msgstr "DB挿入済"
 
 #: ../../templates/show_test.inc.php:235
-#: ../../templates/show_install_config.inc.php:60
+#: ../../templates/show_install_config.inc.php:61
 msgid "Web Path"
 msgstr "Webパス"
 
@@ -410,7 +411,7 @@ msgstr "フルネーム"
 #: ../../templates/show_users.inc.php:104
 #: ../../templates/show_edit_user.inc.php:29
 #: ../../templates/show_add_user.inc.php:29
-#: ../../templates/show_install_account.inc.php:60
+#: ../../templates/show_install_account.inc.php:61
 #: ../../templates/show_recently_played.inc.php:39
 #: ../../templates/show_recently_played.inc.php:98
 #: ../../templates/show_user_registration.inc.php:75
@@ -483,7 +484,7 @@ msgstr "Never"
 
 #: ../../templates/show_users.inc.php:54 ../../templates/show_user.inc.php:23
 #: ../../lib/class/flag.class.php:282 ../../lib/class/localplay.class.php:648
-#: ../../lib/class/user.class.php:665 ../../lib/general.lib.php:409
+#: ../../lib/class/user.class.php:665 ../../lib/general.lib.php:439
 #: ../../modules/localplay/mpd.controller.php:508
 #: ../../modules/localplay/httpq.controller.php:505
 msgid "Unknown"
@@ -509,7 +510,7 @@ msgstr "メールアドレス"
 
 #: ../../templates/show_edit_user.inc.php:52
 #: ../../templates/show_add_user.inc.php:52
-#: ../../templates/show_install_account.inc.php:64
+#: ../../templates/show_install_account.inc.php:65
 #: ../../templates/show_login_form.inc.php:62
 #: ../../templates/show_user_registration.inc.php:103
 #: ../../modules/localplay/mpd.controller.php:235
@@ -520,7 +521,7 @@ msgstr "パスワード"
 #: ../../templates/show_edit_user.inc.php:61
 #: ../../templates/show_add_user.inc.php:61
 #: ../../templates/show_account.inc.php:46
-#: ../../templates/show_install_account.inc.php:68
+#: ../../templates/show_install_account.inc.php:69
 #: ../../templates/show_user_registration.inc.php:112
 msgid "Confirm Password"
 msgstr "パスワード確認"
@@ -1346,17 +1347,17 @@ msgstr "Flashプレーヤー"
 msgid "Preference Administration"
 msgstr "設定管理"
 
-#: ../../templates/show_install_config.inc.php:32
-#: ../../templates/show_install_lang.inc.php:33
-#: ../../templates/show_install.inc.php:32
-#: ../../templates/show_install_account.inc.php:32
+#: ../../templates/show_install_config.inc.php:33
+#: ../../templates/show_install_lang.inc.php:34
+#: ../../templates/show_install.inc.php:33
+#: ../../templates/show_install_account.inc.php:33
 msgid "Ampache Installation"
 msgstr "Ampache インストール"
 
-#: ../../templates/show_install_config.inc.php:38
-#: ../../templates/show_install_lang.inc.php:40
-#: ../../templates/show_install.inc.php:40
-#: ../../templates/show_install_account.inc.php:39
+#: ../../templates/show_install_config.inc.php:39
+#: ../../templates/show_install_lang.inc.php:41
+#: ../../templates/show_install.inc.php:41
+#: ../../templates/show_install_account.inc.php:40
 msgid ""
 "This Page handles the installation of the Ampache database and the creation "
 "of the ampache.cfg.php file. Before you continue please make sure that you "
@@ -1365,17 +1366,17 @@ msgstr ""
 "このページはAmpacheデータベースとampache.cfg.phpファイルの生成のインストール"
 "を扱います。続ける前に以下の事前準備をお願いします。"
 
-#: ../../templates/show_install_config.inc.php:41
-#: ../../templates/show_install_lang.inc.php:43
-#: ../../templates/show_install.inc.php:43
-#: ../../templates/show_install_account.inc.php:42
+#: ../../templates/show_install_config.inc.php:42
+#: ../../templates/show_install_lang.inc.php:44
+#: ../../templates/show_install.inc.php:44
+#: ../../templates/show_install_account.inc.php:43
 msgid ""
 "A MySQL Server with a username and password that can create/modify databases"
 msgstr "データベースを作成/修正できるユーザ名とパスワードをもったMySQLサーバ"
 
-#: ../../templates/show_install_config.inc.php:42
-#: ../../templates/show_install_lang.inc.php:44
-#: ../../templates/show_install.inc.php:44
+#: ../../templates/show_install_config.inc.php:43
+#: ../../templates/show_install_lang.inc.php:45
+#: ../../templates/show_install.inc.php:45
 msgid ""
 "Your webserver has read access to the /sql/ampache.sql file and the /config/"
 "ampache.cfg.php.dist file"
@@ -1383,10 +1384,10 @@ msgstr ""
 "ウェブサーバが/sql/ampache.sqlファイルと/config/ampache.cfg.php.distファイル"
 "への読み取り権限を持っている"
 
-#: ../../templates/show_install_config.inc.php:44
-#: ../../templates/show_install_lang.inc.php:47
-#: ../../templates/show_install.inc.php:47
-#: ../../templates/show_install_account.inc.php:45
+#: ../../templates/show_install_config.inc.php:45
+#: ../../templates/show_install_lang.inc.php:48
+#: ../../templates/show_install.inc.php:48
+#: ../../templates/show_install_account.inc.php:46
 msgid ""
 "Once you have ensured that you have the above requirements please fill out "
 "the information below. You will only be asked for the required config "
@@ -1397,18 +1398,18 @@ msgstr ""
 "めるだけです。後々Ampacheへの変更を加えたい場合、単に/config/ampache.cfg.php"
 "を編集するだけです。"
 
-#: ../../templates/show_install_config.inc.php:48
-#: ../../templates/show_install.inc.php:52
-#: ../../templates/show_install_account.inc.php:48
+#: ../../templates/show_install_config.inc.php:49
+#: ../../templates/show_install.inc.php:53
+#: ../../templates/show_install_account.inc.php:49
 msgid "Step 1 - Creating and Inserting the Ampache Database"
 msgstr "ステップ1 - Ampacheデータベースの作成と挿入"
 
-#: ../../templates/show_install_config.inc.php:49
-#: ../../templates/show_install.inc.php:56
+#: ../../templates/show_install_config.inc.php:50
+#: ../../templates/show_install.inc.php:57
 msgid "Step 2 - Creating the Ampache.cfg.php file"
 msgstr "ステップ2 - Ampache.cfg.phpファイルの作成"
 
-#: ../../templates/show_install_config.inc.php:51
+#: ../../templates/show_install_config.inc.php:52
 msgid ""
 "This steps takes the basic config values and generates the config file. It "
 "will prompt you to download the config file. Please put the downloaded "
@@ -1418,43 +1419,43 @@ msgstr ""
 "す。それはコンフィグファイルをダウンロードするように促されます。ダウンロード"
 "したコンフィグファイルを/configディレクトリへ置いてください。"
 
-#: ../../templates/show_install_config.inc.php:53
-#: ../../templates/show_install.inc.php:57
-#: ../../templates/show_install_account.inc.php:50
+#: ../../templates/show_install_config.inc.php:54
+#: ../../templates/show_install.inc.php:58
+#: ../../templates/show_install_account.inc.php:51
 msgid "Step 3 - Setup Initial Account"
 msgstr "ステップ3 - 初期アカウントのセットアップ"
 
-#: ../../templates/show_install_config.inc.php:56
+#: ../../templates/show_install_config.inc.php:57
 msgid "Generate Config File"
 msgstr "設定ファイルの生成"
 
-#: ../../templates/show_install_config.inc.php:64
-#: ../../templates/show_install.inc.php:65
+#: ../../templates/show_install_config.inc.php:65
+#: ../../templates/show_install.inc.php:66
 msgid "Desired Database Name"
 msgstr "希望するデータベース名"
 
-#: ../../templates/show_install_config.inc.php:68
-#: ../../templates/show_install.inc.php:69
+#: ../../templates/show_install_config.inc.php:69
+#: ../../templates/show_install.inc.php:70
 msgid "MySQL Hostname"
 msgstr "MySQLのホスト名"
 
-#: ../../templates/show_install_config.inc.php:72
+#: ../../templates/show_install_config.inc.php:73
 msgid "MySQL Username"
 msgstr "MySQLのユーザ名"
 
-#: ../../templates/show_install_config.inc.php:76
+#: ../../templates/show_install_config.inc.php:77
 msgid "MySQL Password"
 msgstr "MySQLのパスワード"
 
-#: ../../templates/show_install_config.inc.php:81
+#: ../../templates/show_install_config.inc.php:82
 msgid "Write Config"
 msgstr "コンフィグの書込み"
 
-#: ../../templates/show_install_config.inc.php:126
+#: ../../templates/show_install_config.inc.php:127
 msgid "Check for Config"
 msgstr "コンフィグのチェック"
 
-#: ../../templates/show_install_config.inc.php:132
+#: ../../templates/show_install_config.inc.php:133
 msgid "Continue to Step 3"
 msgstr "ステップ3へ続ける"
 
@@ -1592,79 +1593,78 @@ msgstr "カタログサイズ"
 msgid "Catalog Time"
 msgstr "カタログ時間"
 
-#: ../../templates/show_install_lang.inc.php:38
-#: ../../templates/show_install_lang.inc.php:52
-#: ../../templates/show_install.inc.php:38
+#: ../../templates/show_install_lang.inc.php:39
+#: ../../templates/show_install_lang.inc.php:53
+#: ../../templates/show_install.inc.php:39
 msgid "Requirements"
 msgstr "必要条件"
 
-#: ../../templates/show_install_lang.inc.php:51
+#: ../../templates/show_install_lang.inc.php:52
 msgid "System Checks"
 msgstr ""
 
-#: ../../templates/show_install_lang.inc.php:53
+#: ../../templates/show_install_lang.inc.php:54
 #, fuzzy
 msgid "PHP Version:"
 msgstr "PHPバージョン"
 
-#: ../../templates/show_install_lang.inc.php:63
+#: ../../templates/show_install_lang.inc.php:64
 #, fuzzy
 msgid "Mysql for PHP:"
 msgstr "PHPのMysql"
 
-#: ../../templates/show_install_lang.inc.php:77
+#: ../../templates/show_install_lang.inc.php:78
 #, fuzzy
 msgid "PHP Session Support:"
 msgstr "PHPセッションサポート"
 
-#: ../../templates/show_install_lang.inc.php:87
+#: ../../templates/show_install_lang.inc.php:88
 #, fuzzy
 msgid "PHP ICONV Support:"
 msgstr "PHP ICONVサポート"
 
-#: ../../templates/show_install_lang.inc.php:97
+#: ../../templates/show_install_lang.inc.php:98
 #, fuzzy
 msgid "PHP PCRE Support:"
 msgstr "PHP PCREサポート"
 
-#: ../../templates/show_install_lang.inc.php:107
+#: ../../templates/show_install_lang.inc.php:108
 #, fuzzy
 msgid "PHP PutENV Support:"
 msgstr "PHP PutENVサポート"
 
-#: ../../templates/show_install_lang.inc.php:120
-#, fuzzy
-msgid "PHP Safe Mode:"
-msgstr "セーフモード"
-
-#: ../../templates/show_install_lang.inc.php:130
+#: ../../templates/show_install_lang.inc.php:119
 #, fuzzy
 msgid "Optional"
 msgstr "オプション"
 
-#: ../../templates/show_install_lang.inc.php:131
+#: ../../templates/show_install_lang.inc.php:120
 #, fuzzy
 msgid "PHP GetText Support:"
 msgstr "Gettextサポート"
 
-#: ../../templates/show_install_lang.inc.php:140
+#: ../../templates/show_install_lang.inc.php:123
+msgid "WARNING: This server will use gettext emulator."
+msgstr ""
+
+#: ../../templates/show_install_lang.inc.php:129
 #, fuzzy
 msgid "PHP Mbstring Support:"
 msgstr "PHPセッションサポート"
 
-#: ../../templates/show_install_lang.inc.php:152
+#: ../../templates/show_install_lang.inc.php:141
 msgid "Choose installation language."
 msgstr ""
 
-#: ../../templates/show_install_lang.inc.php:173
+#: ../../templates/show_install_lang.inc.php:162
 msgid "Start configuration"
 msgstr "設定の開始"
 
-#: ../../templates/show_install_lang.inc.php:179
+#: ../../templates/show_install_lang.inc.php:168
 msgid "Ampache does not <strong>run</strong> correctly by this server."
 msgstr ""
 
-#: ../../templates/show_install_lang.inc.php:180
+#: ../../templates/show_install_lang.inc.php:169
 msgid "Please contact your server administrator, and fix them."
 msgstr ""
 
@@ -2113,14 +2113,6 @@ msgstr "過去10のフラグされたレコード"
 msgid "Disabled Songs"
 msgstr "無効な曲"
 
-#: ../../templates/show_preferences.inc.php:28
-msgid "Editing"
-msgstr "編集中"
-
-#: ../../templates/show_preferences.inc.php:28
-msgid "preferences"
-msgstr "設定"
-
 #: ../../templates/show_localplay_instances.inc.php:23
 msgid "Show Localplay Instances"
 msgstr "ローカル再生インスタンスの表示"
@@ -2243,7 +2235,7 @@ msgstr "タイプ"
 msgid "Found"
 msgstr "見つかりました"
 
-#: ../../templates/show_install.inc.php:54
+#: ../../templates/show_install.inc.php:55
 msgid ""
 "This step creates and inserts the Ampache database, as such please provide a "
 "mysql account with database creation rights. This step may take a while "
@@ -2253,39 +2245,39 @@ msgstr ""
 "にAmpacheデータベースを作成し、データを挿入します。マシンの速度によってこのス"
 "テップはしばらく時間がかかるかもしれません。"
 
-#: ../../templates/show_install.inc.php:61
+#: ../../templates/show_install.inc.php:62
 msgid "Insert Ampache Database"
 msgstr "Ampacheデータベースの挿入"
 
-#: ../../templates/show_install.inc.php:73
+#: ../../templates/show_install.inc.php:74
 msgid "MySQL Administrative Username"
 msgstr "MySQL管理ユーザ名"
 
-#: ../../templates/show_install.inc.php:77
+#: ../../templates/show_install.inc.php:78
 msgid "MySQL Administrative Password"
 msgstr "MySQL管理パスワード"
 
-#: ../../templates/show_install.inc.php:81
+#: ../../templates/show_install.inc.php:82
 msgid "Create Database User for New Database"
 msgstr "新規データベースのユーザ作成"
 
-#: ../../templates/show_install.inc.php:85
+#: ../../templates/show_install.inc.php:86
 msgid "Ampache Database Username"
 msgstr "Ampacheデータベースユーザ名"
 
-#: ../../templates/show_install.inc.php:89
+#: ../../templates/show_install.inc.php:90
 msgid "Ampache Database User Password"
 msgstr "Ampacheデータベースユーザパスワード"
 
-#: ../../templates/show_install.inc.php:93
+#: ../../templates/show_install.inc.php:94
 msgid "Overwrite Existing"
 msgstr "既存を上書き"
 
-#: ../../templates/show_install.inc.php:98
+#: ../../templates/show_install.inc.php:99
 msgid "Insert Database"
 msgstr "データベース挿入"
 
-#: ../../templates/show_install_account.inc.php:43
+#: ../../templates/show_install_account.inc.php:44
 msgid ""
 "Your webserver has read access to the /sql/ampache.sql file and the /config/"
 "ampache.cfg.dist.php file"
@@ -2293,11 +2285,11 @@ msgstr ""
 "ウェブサーバは/sql/ampache.sqlファイル及び/config/ampache.cfg.dist.phpファイ"
 "ルの読込権限を持っている必要があります。"
 
-#: ../../templates/show_install_account.inc.php:49
+#: ../../templates/show_install_account.inc.php:50
 msgid "Step 2 - Creating the ampache.cfg.php file"
 msgstr "ステップ2 - ampache.cfg.phpファイルの作成"
 
-#: ../../templates/show_install_account.inc.php:52
+#: ../../templates/show_install_account.inc.php:53
 msgid ""
 "This step creates your initial Ampache admin account. Once your admin "
 "account has been created you will be directed to the login page"
@@ -2305,11 +2297,11 @@ msgstr ""
 "このステップはAmpacheの管理者アカウントを初期化します。一旦管理者アカウントが"
 "作成されるとログインページに飛びます。"
 
-#: ../../templates/show_install_account.inc.php:56
+#: ../../templates/show_install_account.inc.php:57
 msgid "Create Admin Account"
 msgstr "管理者アカウントの作成"
 
-#: ../../templates/show_install_account.inc.php:73
+#: ../../templates/show_install_account.inc.php:74
 msgid "Create Account"
 msgstr "アカウント作成"
 
@@ -3312,15 +3304,11 @@ msgstr "曲更新しました"
 msgid "Error Username or Password incorrect, please try again"
 msgstr "エラー: ユーザ名かパスワードが間違っています。再試行して下さい"
 
-#: ../../lib/general.lib.php:406
-msgid "Simplified Chinese"
-msgstr "簡体中文"
-
-#: ../../lib/general.lib.php:468
+#: ../../lib/general.lib.php:498
 msgid "On"
 msgstr "オン"
 
-#: ../../lib/general.lib.php:471
+#: ../../lib/general.lib.php:501
 msgid "Off"
 msgstr "オフ"
 
@@ -3767,8 +3755,132 @@ msgstr ""
 msgid "Filename:"
 msgstr "ファイル名:"
 
-#~ msgid "Playlist %s"
-#~ msgstr "%sプレイリスト"
+#: Database words
+#, fuzzy
+msgid "Allow Downloads"
+msgstr "ダウンロード"
 
-#~ msgid "Use tool below to add any server"
-#~ msgstr "全てのサーバを追加するために以下のツールを使用します"
+#: Database words
+#, fuzzy
+msgid "Popular Threshold"
+msgstr "1番人気にする日数の閾値"
+
+#: Database words
+#, fuzzy
+msgid "Transcode Bitrate"
+msgstr "最小ビットレート"
+
+#: Database words
+msgid "Ampache :: Pour l'Amour de la Musique"
+msgstr ""
+
+#: Database words
+#, fuzzy
+msgid "Lock Songs"
+msgstr "# 曲数"
+
+#: Database words
+msgid "Forces Http play regardless of port"
+msgstr ""
+
+#: Database words
+msgid "Non-Standard Http Port"
+msgstr ""
+
+#: Database words
+#, fuzzy
+msgid "Localplay Type"
+msgstr "ローカル再生"
+
+#: Database words
+msgid "Type of Playback"
+msgstr ""
+
+#: Database words
+#, fuzzy
+msgid "Language"
+msgstr "マネージャ"
+
+#: Database words
+#, fuzzy
+msgid "Theme"
+msgstr "時間"
+
+#: Database words
+msgid "Album Ellipse Threshold"
+msgstr ""
+
+#: Database words
+msgid "Artist Ellipse Threshold"
+msgstr ""
+
+#: Database words
+msgid "Title Ellipse Threshold"
+msgstr ""
+
+#: Database words
+#, fuzzy
+msgid "Offset Limit"
+msgstr "サイズ制限"
+
+#: Database words
+#, fuzzy
+msgid "Localplay Access"
+msgstr "ローカル再生モジュール"
+
+#: Database words
+msgid "Allow Streaming"
+msgstr ""
+
+#: Database words
+#, fuzzy
+msgid "Allow Democratic Play"
+msgstr "大衆的なプレイリスト作成"
+
+#: Database words
+#, fuzzy
+msgid "Allow Localplay Play"
+msgstr "ローカル再生の許可をFalseにセットします"
+
+#: Database words
+msgid "Statistics Day Threshold"
+msgstr ""
+
+#: Database words
+#, fuzzy
+msgid "Min Element Count"
+msgstr "最小カウント"
+
+#: Database words
+#, fuzzy
+msgid "Rate Limit"
+msgstr "サイズ制限"
+
+#: Database words
+#, fuzzy
+msgid "Playlist Method"
+msgstr "プレイリストを作成しました"
+
+#: Database words
+msgid "Transcoding"
+msgstr ""
+
+#: Database words
+msgid "User to track"
+msgstr ""
+
+#: Database words
+#, fuzzy
+msgid "Streaming"
+msgstr "ストリーム"
+
+#: Database words
+#, fuzzy
+msgid "Interface"
+msgstr "ウェブインタフェース"
+
+#: Database words
+#, fuzzy
+msgid "System"
+msgstr "アイテム"
+

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ampache SVN 693\n"
 "Report-Msgid-Bugs-To: translations at ampache.org\n"
-"POT-Creation-Date: 2008-08-27 09:09+0900\n"
+"POT-Creation-Date: 2008-08-29 16:03+0900\n"
 "PO-Revision-Date: 2006-11-14 08:00+0100\n"
 "Last-Translator: Terence Theijn <terence.theijn@gmail.com>\n"
 "Language-Team: Dutch <terence.theijn@gmail.com>\n"
@@ -90,6 +90,7 @@ msgid "Edit"
 msgstr "Bewerk"
 
 #: ../../templates/show_user_preferences.inc.php:28
+#: ../../templates/show_preferences.inc.php:28
 #, fuzzy, php-format
 msgid "Editing %s preferences"
 msgstr "Site Instellingen"
@@ -247,7 +248,7 @@ msgstr ""
 "van bepaalde onderdelen van Ampache"
 
 #: ../../templates/show_test.inc.php:153
-#: ../../templates/show_install_config.inc.php:88
+#: ../../templates/show_install_config.inc.php:89
 msgid "Ampache.cfg.php Exists"
 msgstr "Ampache.cfg.php Bestaat"
 
@@ -262,7 +263,7 @@ msgstr ""
 "\t niet leesbaar door de webserver."
 
 #: ../../templates/show_test.inc.php:172
-#: ../../templates/show_install_config.inc.php:105
+#: ../../templates/show_install_config.inc.php:106
 msgid "Ampache.cfg.php Configured?"
 msgstr "Ampache.cfg.php Geconfigureerd?"
 
@@ -288,7 +289,7 @@ msgid "DB Inserted"
 msgstr ""
 
 #: ../../templates/show_test.inc.php:235
-#: ../../templates/show_install_config.inc.php:60
+#: ../../templates/show_install_config.inc.php:61
 msgid "Web Path"
 msgstr "Web Directory"
 
@@ -410,7 +411,7 @@ msgstr "Volledige Naam"
 #: ../../templates/show_users.inc.php:104
 #: ../../templates/show_edit_user.inc.php:29
 #: ../../templates/show_add_user.inc.php:29
-#: ../../templates/show_install_account.inc.php:60
+#: ../../templates/show_install_account.inc.php:61
 #: ../../templates/show_recently_played.inc.php:39
 #: ../../templates/show_recently_played.inc.php:98
 #: ../../templates/show_user_registration.inc.php:75
@@ -484,7 +485,7 @@ msgstr ""
 
 #: ../../templates/show_users.inc.php:54 ../../templates/show_user.inc.php:23
 #: ../../lib/class/flag.class.php:282 ../../lib/class/localplay.class.php:648
-#: ../../lib/class/user.class.php:665 ../../lib/general.lib.php:409
+#: ../../lib/class/user.class.php:665 ../../lib/general.lib.php:439
 #: ../../modules/localplay/mpd.controller.php:508
 #: ../../modules/localplay/httpq.controller.php:505
 msgid "Unknown"
@@ -510,7 +511,7 @@ msgstr ""
 
 #: ../../templates/show_edit_user.inc.php:52
 #: ../../templates/show_add_user.inc.php:52
-#: ../../templates/show_install_account.inc.php:64
+#: ../../templates/show_install_account.inc.php:65
 #: ../../templates/show_login_form.inc.php:62
 #: ../../templates/show_user_registration.inc.php:103
 #: ../../modules/localplay/mpd.controller.php:235
@@ -521,7 +522,7 @@ msgstr "Paswoord"
 #: ../../templates/show_edit_user.inc.php:61
 #: ../../templates/show_add_user.inc.php:61
 #: ../../templates/show_account.inc.php:46
-#: ../../templates/show_install_account.inc.php:68
+#: ../../templates/show_install_account.inc.php:69
 #: ../../templates/show_user_registration.inc.php:112
 msgid "Confirm Password"
 msgstr "Typ Nogmaals uw paswoord"
@@ -1372,17 +1373,17 @@ msgstr ""
 msgid "Preference Administration"
 msgstr "Beheer Instellingen"
 
-#: ../../templates/show_install_config.inc.php:32
-#: ../../templates/show_install_lang.inc.php:33
-#: ../../templates/show_install.inc.php:32
-#: ../../templates/show_install_account.inc.php:32
+#: ../../templates/show_install_config.inc.php:33
+#: ../../templates/show_install_lang.inc.php:34
+#: ../../templates/show_install.inc.php:33
+#: ../../templates/show_install_account.inc.php:33
 msgid "Ampache Installation"
 msgstr "Ampache Installatie"
 
-#: ../../templates/show_install_config.inc.php:38
-#: ../../templates/show_install_lang.inc.php:40
-#: ../../templates/show_install.inc.php:40
-#: ../../templates/show_install_account.inc.php:39
+#: ../../templates/show_install_config.inc.php:39
+#: ../../templates/show_install_lang.inc.php:41
+#: ../../templates/show_install.inc.php:41
+#: ../../templates/show_install_account.inc.php:40
 msgid ""
 "This Page handles the installation of the Ampache database and the creation "
 "of the ampache.cfg.php file. Before you continue please make sure that you "
@@ -1392,19 +1393,19 @@ msgstr ""
 "aanmakenvan het ampache.cfg.php configuratie bestand. Voordat u verder gaat "
 "controleer of u voldoet aanonderstaande eisen"
 
-#: ../../templates/show_install_config.inc.php:41
-#: ../../templates/show_install_lang.inc.php:43
-#: ../../templates/show_install.inc.php:43
-#: ../../templates/show_install_account.inc.php:42
+#: ../../templates/show_install_config.inc.php:42
+#: ../../templates/show_install_lang.inc.php:44
+#: ../../templates/show_install.inc.php:44
+#: ../../templates/show_install_account.inc.php:43
 msgid ""
 "A MySQL Server with a username and password that can create/modify databases"
 msgstr ""
 "Een MySQL Server met gebruikersnaam en paswoord dat een database kan "
 "aanmaken/wijzigen"
 
-#: ../../templates/show_install_config.inc.php:42
-#: ../../templates/show_install_lang.inc.php:44
-#: ../../templates/show_install.inc.php:44
+#: ../../templates/show_install_config.inc.php:43
+#: ../../templates/show_install_lang.inc.php:45
+#: ../../templates/show_install.inc.php:45
 msgid ""
 "Your webserver has read access to the /sql/ampache.sql file and the /config/"
 "ampache.cfg.php.dist file"
@@ -1412,10 +1413,10 @@ msgstr ""
 "Uw webserver leesrechten heeft op de files /sql/ampache.sql en de file /"
 "config/ampache.cfg.php.dist"
 
-#: ../../templates/show_install_config.inc.php:44
-#: ../../templates/show_install_lang.inc.php:47
-#: ../../templates/show_install.inc.php:47
-#: ../../templates/show_install_account.inc.php:45
+#: ../../templates/show_install_config.inc.php:45
+#: ../../templates/show_install_lang.inc.php:48
+#: ../../templates/show_install.inc.php:48
+#: ../../templates/show_install_account.inc.php:46
 msgid ""
 "Once you have ensured that you have the above requirements please fill out "
 "the information below. You will only be asked for the required config "
@@ -1428,61 +1429,61 @@ msgstr ""
 "ampache installatie kan ditdoor het bestand /config/amache.cfg.php te "
 "bewerken"
 
-#: ../../templates/show_install_config.inc.php:48
-#: ../../templates/show_install.inc.php:52
-#: ../../templates/show_install_account.inc.php:48
+#: ../../templates/show_install_config.inc.php:49
+#: ../../templates/show_install.inc.php:53
+#: ../../templates/show_install_account.inc.php:49
 msgid "Step 1 - Creating and Inserting the Ampache Database"
 msgstr "Stap 1 - Aanmaken en vullen van de Ampache Database"
 
-#: ../../templates/show_install_config.inc.php:49
-#: ../../templates/show_install.inc.php:56
+#: ../../templates/show_install_config.inc.php:50
+#: ../../templates/show_install.inc.php:57
 msgid "Step 2 - Creating the Ampache.cfg.php file"
 msgstr " Stap 2 - Creeer het ampache.cfg.php bestand"
 
-#: ../../templates/show_install_config.inc.php:51
+#: ../../templates/show_install_config.inc.php:52
 msgid ""
 "This steps takes the basic config values and generates the config file. It "
 "will prompt you to download the config file. Please put the downloaded "
 "config file in /config"
 msgstr ""
 
-#: ../../templates/show_install_config.inc.php:53
-#: ../../templates/show_install.inc.php:57
-#: ../../templates/show_install_account.inc.php:50
+#: ../../templates/show_install_config.inc.php:54
+#: ../../templates/show_install.inc.php:58
+#: ../../templates/show_install_account.inc.php:51
 msgid "Step 3 - Setup Initial Account"
 msgstr "Stap 3 - Opzet Initeel Account"
 
-#: ../../templates/show_install_config.inc.php:56
+#: ../../templates/show_install_config.inc.php:57
 msgid "Generate Config File"
 msgstr ""
 
-#: ../../templates/show_install_config.inc.php:64
-#: ../../templates/show_install.inc.php:65
+#: ../../templates/show_install_config.inc.php:65
+#: ../../templates/show_install.inc.php:66
 msgid "Desired Database Name"
 msgstr "Gewenste Database Naam"
 
-#: ../../templates/show_install_config.inc.php:68
-#: ../../templates/show_install.inc.php:69
+#: ../../templates/show_install_config.inc.php:69
+#: ../../templates/show_install.inc.php:70
 msgid "MySQL Hostname"
 msgstr "MySQL Hostnaam"
 
-#: ../../templates/show_install_config.inc.php:72
+#: ../../templates/show_install_config.inc.php:73
 msgid "MySQL Username"
 msgstr "MySQl Gebruikersnaam"
 
-#: ../../templates/show_install_config.inc.php:76
+#: ../../templates/show_install_config.inc.php:77
 msgid "MySQL Password"
 msgstr "MySQL Paswoord"
 
-#: ../../templates/show_install_config.inc.php:81
+#: ../../templates/show_install_config.inc.php:82
 msgid "Write Config"
 msgstr "Schrijf Config"
 
-#: ../../templates/show_install_config.inc.php:126
+#: ../../templates/show_install_config.inc.php:127
 msgid "Check for Config"
 msgstr "Check voor Config"
 
-#: ../../templates/show_install_config.inc.php:132
+#: ../../templates/show_install_config.inc.php:133
 msgid "Continue to Step 3"
 msgstr ""
 
@@ -1622,78 +1623,78 @@ msgstr "Catalogus Grootte"
 msgid "Catalog Time"
 msgstr "Catalogus Tijd"
 
-#: ../../templates/show_install_lang.inc.php:38
-#: ../../templates/show_install_lang.inc.php:52
-#: ../../templates/show_install.inc.php:38
+#: ../../templates/show_install_lang.inc.php:39
+#: ../../templates/show_install_lang.inc.php:53
+#: ../../templates/show_install.inc.php:39
 msgid "Requirements"
 msgstr "Vereisten"
 
-#: ../../templates/show_install_lang.inc.php:51
+#: ../../templates/show_install_lang.inc.php:52
 msgid "System Checks"
 msgstr ""
 
-#: ../../templates/show_install_lang.inc.php:53
+#: ../../templates/show_install_lang.inc.php:54
 #, fuzzy
 msgid "PHP Version:"
 msgstr "PHP Versie"
 
-#: ../../templates/show_install_lang.inc.php:63
+#: ../../templates/show_install_lang.inc.php:64
 #, fuzzy
 msgid "Mysql for PHP:"
 msgstr "MySQL voor PHP"
 
-#: ../../templates/show_install_lang.inc.php:77
+#: ../../templates/show_install_lang.inc.php:78
 #, fuzzy
 msgid "PHP Session Support:"
 msgstr "PHP Sessie Ondersteuning"
 
-#: ../../templates/show_install_lang.inc.php:87
+#: ../../templates/show_install_lang.inc.php:88
 #, fuzzy
 msgid "PHP ICONV Support:"
 msgstr "PHP ICONV Ondersteuning"
 
-#: ../../templates/show_install_lang.inc.php:97
+#: ../../templates/show_install_lang.inc.php:98
 #, fuzzy
 msgid "PHP PCRE Support:"
 msgstr "PHP PCRE Ondersteuning"
 
-#: ../../templates/show_install_lang.inc.php:107
+#: ../../templates/show_install_lang.inc.php:108
 #, fuzzy
 msgid "PHP PutENV Support:"
 msgstr "PHP PutENV Ondersteuning"
 
-#: ../../templates/show_install_lang.inc.php:120
-msgid "PHP Safe Mode:"
-msgstr ""
-
-#: ../../templates/show_install_lang.inc.php:130
+#: ../../templates/show_install_lang.inc.php:119
 #, fuzzy
 msgid "Optional"
 msgstr "Acties"
 
-#: ../../templates/show_install_lang.inc.php:131
+#: ../../templates/show_install_lang.inc.php:120
 #, fuzzy
 msgid "PHP GetText Support:"
 msgstr "PHP PutENV Ondersteuning"
 
-#: ../../templates/show_install_lang.inc.php:140
+#: ../../templates/show_install_lang.inc.php:123
+msgid "WARNING: This server will use gettext emulator."
+msgstr ""
+
+#: ../../templates/show_install_lang.inc.php:129
 #, fuzzy
 msgid "PHP Mbstring Support:"
 msgstr "PHP Sessie Ondersteuning"
 
-#: ../../templates/show_install_lang.inc.php:152
+#: ../../templates/show_install_lang.inc.php:141
 msgid "Choose installation language."
 msgstr ""
 
-#: ../../templates/show_install_lang.inc.php:173
+#: ../../templates/show_install_lang.inc.php:162
 msgid "Start configuration"
 msgstr "Start Configuratie"
 
-#: ../../templates/show_install_lang.inc.php:179
+#: ../../templates/show_install_lang.inc.php:168
 msgid "Ampache does not <strong>run</strong> correctly by this server."
 msgstr ""
 
-#: ../../templates/show_install_lang.inc.php:180
+#: ../../templates/show_install_lang.inc.php:169
 msgid "Please contact your server administrator, and fix them."
 msgstr ""
 
@@ -2167,14 +2168,6 @@ msgstr "Laatste tien gemarkeerde records"
 msgid "Disabled Songs"
 msgstr "Laat gedeactiveerde Liedjes Zien"
 
-#: ../../templates/show_preferences.inc.php:28
-msgid "Editing"
-msgstr "Bezig met Bewerken"
-
-#: ../../templates/show_preferences.inc.php:28
-msgid "preferences"
-msgstr "instellingen"
-
 #: ../../templates/show_localplay_instances.inc.php:23
 msgid "Show Localplay Instances"
 msgstr ""
@@ -2303,7 +2296,7 @@ msgstr ""
 msgid "Found"
 msgstr "Gevonden"
 
-#: ../../templates/show_install.inc.php:54
+#: ../../templates/show_install.inc.php:55
 msgid ""
 "This step creates and inserts the Ampache database, as such please provide a "
 "mysql account with database creation rights. This step may take a while "
@@ -2313,39 +2306,39 @@ msgstr ""
 "met rechten om een database aan te mogen maken. Dit kan even duren naar "
 "gelang de snelheid van uw computer"
 
-#: ../../templates/show_install.inc.php:61
+#: ../../templates/show_install.inc.php:62
 msgid "Insert Ampache Database"
 msgstr ""
 
-#: ../../templates/show_install.inc.php:73
+#: ../../templates/show_install.inc.php:74
 msgid "MySQL Administrative Username"
 msgstr "MySQl Administratieve Gebruikersnaam"
 
-#: ../../templates/show_install.inc.php:77
+#: ../../templates/show_install.inc.php:78
 msgid "MySQL Administrative Password"
 msgstr "MySQl Administratieve Paswoord"
 
-#: ../../templates/show_install.inc.php:81
+#: ../../templates/show_install.inc.php:82
 msgid "Create Database User for New Database"
 msgstr "Maak Database Gebruiker aan voor nieuwe Database"
 
-#: ../../templates/show_install.inc.php:85
+#: ../../templates/show_install.inc.php:86
 msgid "Ampache Database Username"
 msgstr "Ampache Database Gebruikersnaam"
 
-#: ../../templates/show_install.inc.php:89
+#: ../../templates/show_install.inc.php:90
 msgid "Ampache Database User Password"
 msgstr "Ampache Database Gebruikers Paswoord"
 
-#: ../../templates/show_install.inc.php:93
+#: ../../templates/show_install.inc.php:94
 msgid "Overwrite Existing"
 msgstr ""
 
-#: ../../templates/show_install.inc.php:98
+#: ../../templates/show_install.inc.php:99
 msgid "Insert Database"
 msgstr "Maak Database"
 
-#: ../../templates/show_install_account.inc.php:43
+#: ../../templates/show_install_account.inc.php:44
 msgid ""
 "Your webserver has read access to the /sql/ampache.sql file and the /config/"
 "ampache.cfg.dist.php file"
@@ -2353,11 +2346,11 @@ msgstr ""
 "Uw webserver heeft lees rechten heeft op het bestand /sql/ampache.sql en "
 "hetampache.cfg.dist.php bestand"
 
-#: ../../templates/show_install_account.inc.php:49
+#: ../../templates/show_install_account.inc.php:50
 msgid "Step 2 - Creating the ampache.cfg.php file"
 msgstr "Stap 2 - Aanmaken vna het ampache.cfg.php bestand"
 
-#: ../../templates/show_install_account.inc.php:52
+#: ../../templates/show_install_account.inc.php:53
 msgid ""
 "This step creates your initial Ampache admin account. Once your admin "
 "account has been created you will be directed to the login page"
@@ -2365,11 +2358,11 @@ msgstr ""
 "Deze stap maakt uw initieele administratieve Ampache account aan. Alsuw "
 "account gemaakt is wordt u naar de login pagina gestuurt"
 
-#: ../../templates/show_install_account.inc.php:56
+#: ../../templates/show_install_account.inc.php:57
 msgid "Create Admin Account"
 msgstr "Maak een Beheer Account aan"
 
-#: ../../templates/show_install_account.inc.php:73
+#: ../../templates/show_install_account.inc.php:74
 msgid "Create Account"
 msgstr "Maak Account aan"
 
@@ -3416,15 +3409,11 @@ msgstr "liedjes bijgewerkt."
 msgid "Error Username or Password incorrect, please try again"
 msgstr ""
 
-#: ../../lib/general.lib.php:406
-msgid "Simplified Chinese"
-msgstr "Simpel Chinees"
-
-#: ../../lib/general.lib.php:468
+#: ../../lib/general.lib.php:498
 msgid "On"
 msgstr "Aan"
 
-#: ../../lib/general.lib.php:471
+#: ../../lib/general.lib.php:501
 msgid "Off"
 msgstr "Uit"
 
@@ -3898,6 +3887,138 @@ msgstr ""
 msgid "Filename:"
 msgstr "Bestandsnaam"
 
+#: Database words
+msgid "Allow Downloads"
+msgstr ""
+
+#: Database words
+#, fuzzy
+msgid "Popular Threshold"
+msgstr "Meest Populaire Nummers"
+
+#: Database words
+msgid "Transcode Bitrate"
+msgstr "Ampache :: Pour l'Amour de la Musique"
+
+#: Database words
+msgid "Ampache :: Pour l'Amour de la Musique"
+msgstr ""
+
+#: Database words
+#, fuzzy
+msgid "Lock Songs"
+msgstr "# Liedjes"
+
+#: Database words
+msgid "Forces Http play regardless of port"
+msgstr ""
+
+#: Database words
+msgid "Non-Standard Http Port"
+msgstr ""
+
+#: Database words
+#, fuzzy
+msgid "Localplay Type"
+msgstr "Lokaal Afspelen"
+
+#: Database words
+msgid "Type of Playback"
+msgstr ""
+
+#: Database words
+msgid "Language"
+msgstr ""
+
+#: Database words
+#, fuzzy
+msgid "Theme"
+msgstr "Tijd"
+
+#: Database words
+msgid "Album Ellipse Threshold"
+msgstr ""
+
+#: Database words
+msgid "Artist Ellipse Threshold"
+msgstr ""
+
+#: Database words
+msgid "Title Ellipse Threshold"
+msgstr ""
+
+#: Database words
+#, fuzzy
+msgid "Offset Limit"
+msgstr "Grootte Limiet"
+
+#: Database words
+#, fuzzy
+msgid "Localplay Access"
+msgstr "Lokaal Afspelen"
+
+#: Database words
+msgid "Allow Streaming"
+msgstr ""
+
+#: Database words
+#, fuzzy
+msgid "Allow Democratic Play"
+msgstr "Democratisch Spelen Actief"
+
+#: Database words
+#, fuzzy
+msgid "Allow Localplay Play"
+msgstr "Lokaal Afspelen"
+
+#: Database words
+msgid "Statistics Day Threshold"
+msgstr ""
+
+#: Database words
+msgid "Min Element Count"
+msgstr ""
+
+#: Database words
+#, fuzzy
+msgid "Rate Limit"
+msgstr "Grootte Limiet"
+
+#: Database words
+#, fuzzy
+msgid "Playlist Method"
+msgstr "Speellijst aangemaakt"
+
+#: Database words
+msgid "Transcoding"
+msgstr ""
+
+#: Database words
+msgid "User to track"
+msgstr ""
+
+#: Database words
+msgid "Streaming"
+msgstr ""
+
+#: Database words
+msgid "Interface"
+msgstr ""
+
+#: Database words
+#, fuzzy
+msgid "System"
+msgstr "Grootte"
+
+#~ msgid "Editing"
+#~ msgstr "Bezig met Bewerken"
+
+#~ msgid "preferences"
+#~ msgstr "instellingen"
+
+#~ msgid "Simplified Chinese"
+#~ msgstr "Simpel Chinees"
+
 #, fuzzy
 #~ msgid "Playlist %s"
 #~ msgstr "Speellijsten"
@@ -4110,10 +4231,6 @@ msgstr "Bestandsnaam"
 #~ msgstr ""
 #~ "Weet je zeker dat je alle Statistieken van deze catalogus wilt "
 #~ "verwijderen?"
-
-#, fuzzy
-#~ msgid "Site"
-#~ msgstr "Grootte"
 
 #, fuzzy
 #~ msgid "Confirm Delete"
@@ -4428,9 +4545,6 @@ msgstr "Bestandsnaam"
 
 #~ msgid "catalog path"
 #~ msgstr "catalogus directory"
-
-#~ msgid "Democratic Play Active"
-#~ msgstr "Democratisch Spelen Actief"
 
 #, fuzzy
 #~ msgid "You don't have any duplicate songs."

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ampache 3.5.0\n"
 "Report-Msgid-Bugs-To: translations at ampache.org\n"
-"POT-Creation-Date: 2008-08-27 09:09+0900\n"
+"POT-Creation-Date: 2008-08-29 16:03+0900\n"
 "PO-Revision-Date: 2008-05-10 02:21-0700\n"
 "Last-Translator: Ampache <translations at ampache.org>\n"
 "Language-Team: Turkish <translations at ampache.org>\n"
@@ -89,6 +89,7 @@ msgid "Edit"
 msgstr ""
 
 #: ../../templates/show_user_preferences.inc.php:28
+#: ../../templates/show_preferences.inc.php:28
 #, fuzzy, php-format
 msgid "Editing %s preferences"
 msgstr "Site genelinde geerli olan tercihleri dzenle"
@@ -230,7 +231,7 @@ msgid ""
 msgstr ""
 
 #: ../../templates/show_test.inc.php:153
-#: ../../templates/show_install_config.inc.php:88
+#: ../../templates/show_install_config.inc.php:89
 msgid "Ampache.cfg.php Exists"
 msgstr ""
 
@@ -242,7 +243,7 @@ msgid ""
 msgstr ""
 
 #: ../../templates/show_test.inc.php:172
-#: ../../templates/show_install_config.inc.php:105
+#: ../../templates/show_install_config.inc.php:106
 msgid "Ampache.cfg.php Configured?"
 msgstr ""
 
@@ -267,7 +268,7 @@ msgid "DB Inserted"
 msgstr ""
 
 #: ../../templates/show_test.inc.php:235
-#: ../../templates/show_install_config.inc.php:60
+#: ../../templates/show_install_config.inc.php:61
 msgid "Web Path"
 msgstr ""
 
@@ -389,7 +390,7 @@ msgstr ""
 #: ../../templates/show_users.inc.php:104
 #: ../../templates/show_edit_user.inc.php:29
 #: ../../templates/show_add_user.inc.php:29
-#: ../../templates/show_install_account.inc.php:60
+#: ../../templates/show_install_account.inc.php:61
 #: ../../templates/show_recently_played.inc.php:39
 #: ../../templates/show_recently_played.inc.php:98
 #: ../../templates/show_user_registration.inc.php:75
@@ -462,7 +463,7 @@ msgstr ""
 
 #: ../../templates/show_users.inc.php:54 ../../templates/show_user.inc.php:23
 #: ../../lib/class/flag.class.php:282 ../../lib/class/localplay.class.php:648
-#: ../../lib/class/user.class.php:665 ../../lib/general.lib.php:409
+#: ../../lib/class/user.class.php:665 ../../lib/general.lib.php:439
 #: ../../modules/localplay/mpd.controller.php:508
 #: ../../modules/localplay/httpq.controller.php:505
 msgid "Unknown"
@@ -488,7 +489,7 @@ msgstr ""
 
 #: ../../templates/show_edit_user.inc.php:52
 #: ../../templates/show_add_user.inc.php:52
-#: ../../templates/show_install_account.inc.php:64
+#: ../../templates/show_install_account.inc.php:65
 #: ../../templates/show_login_form.inc.php:62
 #: ../../templates/show_user_registration.inc.php:103
 #: ../../modules/localplay/mpd.controller.php:235
@@ -499,7 +500,7 @@ msgstr ""
 #: ../../templates/show_edit_user.inc.php:61
 #: ../../templates/show_add_user.inc.php:61
 #: ../../templates/show_account.inc.php:46
-#: ../../templates/show_install_account.inc.php:68
+#: ../../templates/show_install_account.inc.php:69
 #: ../../templates/show_user_registration.inc.php:112
 msgid "Confirm Password"
 msgstr ""
@@ -1332,43 +1333,43 @@ msgstr ""
 msgid "Preference Administration"
 msgstr ""
 
-#: ../../templates/show_install_config.inc.php:32
-#: ../../templates/show_install_lang.inc.php:33
-#: ../../templates/show_install.inc.php:32
-#: ../../templates/show_install_account.inc.php:32
+#: ../../templates/show_install_config.inc.php:33
+#: ../../templates/show_install_lang.inc.php:34
+#: ../../templates/show_install.inc.php:33
+#: ../../templates/show_install_account.inc.php:33
 msgid "Ampache Installation"
 msgstr ""
 
-#: ../../templates/show_install_config.inc.php:38
-#: ../../templates/show_install_lang.inc.php:40
-#: ../../templates/show_install.inc.php:40
-#: ../../templates/show_install_account.inc.php:39
+#: ../../templates/show_install_config.inc.php:39
+#: ../../templates/show_install_lang.inc.php:41
+#: ../../templates/show_install.inc.php:41
+#: ../../templates/show_install_account.inc.php:40
 msgid ""
 "This Page handles the installation of the Ampache database and the creation "
 "of the ampache.cfg.php file. Before you continue please make sure that you "
 "have the following pre-requisites"
 msgstr ""
 
-#: ../../templates/show_install_config.inc.php:41
-#: ../../templates/show_install_lang.inc.php:43
-#: ../../templates/show_install.inc.php:43
-#: ../../templates/show_install_account.inc.php:42
+#: ../../templates/show_install_config.inc.php:42
+#: ../../templates/show_install_lang.inc.php:44
+#: ../../templates/show_install.inc.php:44
+#: ../../templates/show_install_account.inc.php:43
 msgid ""
 "A MySQL Server with a username and password that can create/modify databases"
 msgstr ""
 
-#: ../../templates/show_install_config.inc.php:42
-#: ../../templates/show_install_lang.inc.php:44
-#: ../../templates/show_install.inc.php:44
+#: ../../templates/show_install_config.inc.php:43
+#: ../../templates/show_install_lang.inc.php:45
+#: ../../templates/show_install.inc.php:45
 msgid ""
 "Your webserver has read access to the /sql/ampache.sql file and the /config/"
 "ampache.cfg.php.dist file"
 msgstr ""
 
-#: ../../templates/show_install_config.inc.php:44
-#: ../../templates/show_install_lang.inc.php:47
-#: ../../templates/show_install.inc.php:47
-#: ../../templates/show_install_account.inc.php:45
+#: ../../templates/show_install_config.inc.php:45
+#: ../../templates/show_install_lang.inc.php:48
+#: ../../templates/show_install.inc.php:48
+#: ../../templates/show_install_account.inc.php:46
 msgid ""
 "Once you have ensured that you have the above requirements please fill out "
 "the information below. You will only be asked for the required config "
@@ -1376,61 +1377,61 @@ msgid ""
 "date simply edit /config/ampache.cfg.php"
 msgstr ""
 
-#: ../../templates/show_install_config.inc.php:48
-#: ../../templates/show_install.inc.php:52
-#: ../../templates/show_install_account.inc.php:48
+#: ../../templates/show_install_config.inc.php:49
+#: ../../templates/show_install.inc.php:53
+#: ../../templates/show_install_account.inc.php:49
 msgid "Step 1 - Creating and Inserting the Ampache Database"
 msgstr ""
 
-#: ../../templates/show_install_config.inc.php:49
-#: ../../templates/show_install.inc.php:56
+#: ../../templates/show_install_config.inc.php:50
+#: ../../templates/show_install.inc.php:57
 msgid "Step 2 - Creating the Ampache.cfg.php file"
 msgstr ""
 
-#: ../../templates/show_install_config.inc.php:51
+#: ../../templates/show_install_config.inc.php:52
 msgid ""
 "This steps takes the basic config values and generates the config file. It "
 "will prompt you to download the config file. Please put the downloaded "
 "config file in /config"
 msgstr ""
 
-#: ../../templates/show_install_config.inc.php:53
-#: ../../templates/show_install.inc.php:57
-#: ../../templates/show_install_account.inc.php:50
+#: ../../templates/show_install_config.inc.php:54
+#: ../../templates/show_install.inc.php:58
+#: ../../templates/show_install_account.inc.php:51
 msgid "Step 3 - Setup Initial Account"
 msgstr ""
 
-#: ../../templates/show_install_config.inc.php:56
+#: ../../templates/show_install_config.inc.php:57
 msgid "Generate Config File"
 msgstr ""
 
-#: ../../templates/show_install_config.inc.php:64
-#: ../../templates/show_install.inc.php:65
+#: ../../templates/show_install_config.inc.php:65
+#: ../../templates/show_install.inc.php:66
 msgid "Desired Database Name"
 msgstr ""
 
-#: ../../templates/show_install_config.inc.php:68
-#: ../../templates/show_install.inc.php:69
+#: ../../templates/show_install_config.inc.php:69
+#: ../../templates/show_install.inc.php:70
 msgid "MySQL Hostname"
 msgstr ""
 
-#: ../../templates/show_install_config.inc.php:72
+#: ../../templates/show_install_config.inc.php:73
 msgid "MySQL Username"
 msgstr ""
 
-#: ../../templates/show_install_config.inc.php:76
+#: ../../templates/show_install_config.inc.php:77
 msgid "MySQL Password"
 msgstr ""
 
-#: ../../templates/show_install_config.inc.php:81
+#: ../../templates/show_install_config.inc.php:82
 msgid "Write Config"
 msgstr ""
 
-#: ../../templates/show_install_config.inc.php:126
+#: ../../templates/show_install_config.inc.php:127
 msgid "Check for Config"
 msgstr ""
 
-#: ../../templates/show_install_config.inc.php:132
+#: ../../templates/show_install_config.inc.php:133
 msgid "Continue to Step 3"
 msgstr ""
 
@@ -1570,70 +1571,70 @@ msgstr ""
 msgid "Catalog Time"
 msgstr ""
 
-#: ../../templates/show_install_lang.inc.php:38
-#: ../../templates/show_install_lang.inc.php:52
-#: ../../templates/show_install.inc.php:38
+#: ../../templates/show_install_lang.inc.php:39
+#: ../../templates/show_install_lang.inc.php:53
+#: ../../templates/show_install.inc.php:39
 msgid "Requirements"
 msgstr ""
 
-#: ../../templates/show_install_lang.inc.php:51
+#: ../../templates/show_install_lang.inc.php:52
 msgid "System Checks"
 msgstr ""
 
-#: ../../templates/show_install_lang.inc.php:53
+#: ../../templates/show_install_lang.inc.php:54
 #, fuzzy
 msgid "PHP Version:"
 msgstr "Almanca"
 
-#: ../../templates/show_install_lang.inc.php:63
+#: ../../templates/show_install_lang.inc.php:64
 msgid "Mysql for PHP:"
 msgstr ""
 
-#: ../../templates/show_install_lang.inc.php:77
+#: ../../templates/show_install_lang.inc.php:78
 msgid "PHP Session Support:"
 msgstr ""
 
-#: ../../templates/show_install_lang.inc.php:87
+#: ../../templates/show_install_lang.inc.php:88
 msgid "PHP ICONV Support:"
 msgstr ""
 
-#: ../../templates/show_install_lang.inc.php:97
+#: ../../templates/show_install_lang.inc.php:98
 msgid "PHP PCRE Support:"
 msgstr ""
 
-#: ../../templates/show_install_lang.inc.php:107
+#: ../../templates/show_install_lang.inc.php:108
 msgid "PHP PutENV Support:"
 msgstr ""
 
-#: ../../templates/show_install_lang.inc.php:120
-msgid "PHP Safe Mode:"
-msgstr ""
-
-#: ../../templates/show_install_lang.inc.php:130
+#: ../../templates/show_install_lang.inc.php:119
 msgid "Optional"
 msgstr ""
 
-#: ../../templates/show_install_lang.inc.php:131
+#: ../../templates/show_install_lang.inc.php:120
 msgid "PHP GetText Support:"
 msgstr ""
 
-#: ../../templates/show_install_lang.inc.php:140
+#: ../../templates/show_install_lang.inc.php:123
+msgid "WARNING: This server will use gettext emulator."
+msgstr ""
+
+#: ../../templates/show_install_lang.inc.php:129
 msgid "PHP Mbstring Support:"
 msgstr ""
 
-#: ../../templates/show_install_lang.inc.php:152
+#: ../../templates/show_install_lang.inc.php:141
 msgid "Choose installation language."
 msgstr ""
 
-#: ../../templates/show_install_lang.inc.php:173
+#: ../../templates/show_install_lang.inc.php:162
 msgid "Start configuration"
 msgstr ""
 
-#: ../../templates/show_install_lang.inc.php:179
+#: ../../templates/show_install_lang.inc.php:168
 msgid "Ampache does not <strong>run</strong> correctly by this server."
 msgstr ""
 
-#: ../../templates/show_install_lang.inc.php:180
+#: ../../templates/show_install_lang.inc.php:169
 msgid "Please contact your server administrator, and fix them."
 msgstr ""
 
@@ -2091,14 +2092,6 @@ msgstr ""
 msgid "Disabled Songs"
 msgstr ""
 
-#: ../../templates/show_preferences.inc.php:28
-msgid "Editing"
-msgstr ""
-
-#: ../../templates/show_preferences.inc.php:28
-msgid "preferences"
-msgstr ""
-
 #: ../../templates/show_localplay_instances.inc.php:23
 msgid "Show Localplay Instances"
 msgstr ""
@@ -2223,66 +2216,66 @@ msgstr ""
 msgid "Found"
 msgstr ""
 
-#: ../../templates/show_install.inc.php:54
+#: ../../templates/show_install.inc.php:55
 msgid ""
 "This step creates and inserts the Ampache database, as such please provide a "
 "mysql account with database creation rights. This step may take a while "
 "depending upon the speed of your computer"
 msgstr ""
 
-#: ../../templates/show_install.inc.php:61
+#: ../../templates/show_install.inc.php:62
 msgid "Insert Ampache Database"
 msgstr ""
 
-#: ../../templates/show_install.inc.php:73
+#: ../../templates/show_install.inc.php:74
 msgid "MySQL Administrative Username"
 msgstr ""
 
-#: ../../templates/show_install.inc.php:77
+#: ../../templates/show_install.inc.php:78
 msgid "MySQL Administrative Password"
 msgstr ""
 
-#: ../../templates/show_install.inc.php:81
+#: ../../templates/show_install.inc.php:82
 msgid "Create Database User for New Database"
 msgstr ""
 
-#: ../../templates/show_install.inc.php:85
+#: ../../templates/show_install.inc.php:86
 msgid "Ampache Database Username"
 msgstr ""
 
-#: ../../templates/show_install.inc.php:89
+#: ../../templates/show_install.inc.php:90
 msgid "Ampache Database User Password"
 msgstr ""
 
-#: ../../templates/show_install.inc.php:93
+#: ../../templates/show_install.inc.php:94
 msgid "Overwrite Existing"
 msgstr ""
 
-#: ../../templates/show_install.inc.php:98
+#: ../../templates/show_install.inc.php:99
 msgid "Insert Database"
 msgstr ""
 
-#: ../../templates/show_install_account.inc.php:43
+#: ../../templates/show_install_account.inc.php:44
 msgid ""
 "Your webserver has read access to the /sql/ampache.sql file and the /config/"
 "ampache.cfg.dist.php file"
 msgstr ""
 
-#: ../../templates/show_install_account.inc.php:49
+#: ../../templates/show_install_account.inc.php:50
 msgid "Step 2 - Creating the ampache.cfg.php file"
 msgstr ""
 
-#: ../../templates/show_install_account.inc.php:52
+#: ../../templates/show_install_account.inc.php:53
 msgid ""
 "This step creates your initial Ampache admin account. Once your admin "
 "account has been created you will be directed to the login page"
 msgstr ""
 
-#: ../../templates/show_install_account.inc.php:56
+#: ../../templates/show_install_account.inc.php:57
 msgid "Create Admin Account"
 msgstr ""
 
-#: ../../templates/show_install_account.inc.php:73
+#: ../../templates/show_install_account.inc.php:74
 msgid "Create Account"
 msgstr ""
 
@@ -3295,15 +3288,11 @@ msgstr ""
 msgid "Error Username or Password incorrect, please try again"
 msgstr ""
 
-#: ../../lib/general.lib.php:406
-msgid "Simplified Chinese"
-msgstr ""
-
-#: ../../lib/general.lib.php:468
+#: ../../lib/general.lib.php:498
 msgid "On"
 msgstr ""
 
-#: ../../lib/general.lib.php:471
+#: ../../lib/general.lib.php:501
 msgid "Off"
 msgstr ""
 
@@ -3755,6 +3744,124 @@ msgstr ""
 msgid "Filename:"
 msgstr ""
 
+#: Database words
+msgid "Allow Downloads"
+msgstr ""
+
+#: Database words
+msgid "Popular Threshold"
+msgstr ""
+
+#: Database words
+msgid "Transcode Bitrate"
+msgstr "Ampache :: Pour l'Amour de la Musique"
+
+#: Database words
+msgid "Ampache :: Pour l'Amour de la Musique"
+msgstr ""
+
+#: Database words
+msgid "Lock Songs"
+msgstr ""
+
+#: Database words
+msgid "Forces Http play regardless of port"
+msgstr ""
+
+#: Database words
+msgid "Non-Standard Http Port"
+msgstr ""
+
+#: Database words
+#, fuzzy
+msgid "Localplay Type"
+msgstr "Yerel alma Dzeni"
+
+#: Database words
+#, fuzzy
+msgid "Type of Playback"
+msgstr "al"
+
+#: Database words
+msgid "Language"
+msgstr ""
+
+#: Database words
+msgid "Theme"
+msgstr ""
+
+#: Database words
+msgid "Album Ellipse Threshold"
+msgstr ""
+
+#: Database words
+msgid "Artist Ellipse Threshold"
+msgstr ""
+
+#: Database words
+msgid "Title Ellipse Threshold"
+msgstr ""
+
+#: Database words
+#, fuzzy
+msgid "Offset Limit"
+msgstr "Snrlar grntle"
+
+#: Database words
+#, fuzzy
+msgid "Localplay Access"
+msgstr "Yerel alma Dzeni"
+
+#: Database words
+msgid "Allow Streaming"
+msgstr ""
+
+#: Database words
+msgid "Allow Democratic Play"
+msgstr ""
+
+#: Database words
+msgid "Allow Localplay Play"
+msgstr ""
+
+#: Database words
+msgid "Statistics Day Threshold"
+msgstr ""
+
+#: Database words
+msgid "Min Element Count"
+msgstr ""
+
+#: Database words
+#, fuzzy
+msgid "Rate Limit"
+msgstr "Snrlar grntle"
+
+#: Database words
+#, fuzzy
+msgid "Playlist Method"
+msgstr "Sonu bulunamad"
+
+#: Database words
+msgid "Transcoding"
+msgstr ""
+
+#: Database words
+msgid "User to track"
+msgstr ""
+
+#: Database words
+msgid "Streaming"
+msgstr ""
+
+#: Database words
+msgid "Interface"
+msgstr ""
+
+#: Database words
+msgid "System"
+msgstr ""
+
 #, fuzzy
 #~ msgid "Playlist %s"
 #~ msgstr "Sonu bulunamad"
@@ -3820,9 +3927,6 @@ msgstr ""
 
 #~ msgid "Flagging song completed."
 #~ msgstr "ark iaretleme tamamland"
-
-#~ msgid "Playback"
-#~ msgstr "al"
 
 #~ msgid "Clear queue"
 #~ msgstr "Kuyruu sil"

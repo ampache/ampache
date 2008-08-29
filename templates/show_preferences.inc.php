@@ -25,7 +25,7 @@
  */
 
 ?>
-<?php show_box_top(_('Editing') . ' ' . $fullname . ' ' . _('preferences'),'box box_preferences'); ?>
+<?php show_box_top(sprintf(_('Editing %s preferences'), $fullname),'box box_preferences'); ?>
 <?php  if ($_REQUEST['tab'] != 'account' && $_REQUEST['tab'] != 'modules') { ?>
 
 <form method="post" name="preferences" action="<?php echo Config::get('web_path'); ?>/preferences.php?action=update_preferences" enctype="multipart/form-data">

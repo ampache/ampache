@@ -26,6 +26,7 @@
 <head>
 <title>Ampache :: Pour l'Amour de la Musique - Install</title>
 <link rel="stylesheet" href="templates/install.css" type="text/css" media="screen" />
+<meta http-equiv="Content-Type" Content="text/html; Charset=<?php echo $charset; ?>" />
 </head>
 <body>
 <script src="lib/javascript-base.js" language="javascript" type="text/javascript"></script>
@@ -52,7 +53,7 @@
 		<h4><?php echo _('Requirements'); ?></h4>
 		<p><?php echo _('PHP Version:'); ?>
 		<?php
-			if(strcmp('5.1.0',phpversion()) > 0) {
+			if(!check_php_ver()) {
 				echo " <font color=\"red\">ERROR</font> " . phpversion();
 				$results = $results + 1;
 			} else {
@@ -62,7 +63,7 @@
 		</p>
 		<p><?php echo _('Mysql for PHP:'); ?>
 		<?php
-			if (!function_exists('mysql_query')) {
+			if (!check_php_mysql()) {
 				echo " <font color=\"red\">ERROR</font> ";
 				$results = $results + 1;
 			} else {
@@ -76,7 +77,7 @@
 		</p>
 		<p><?php echo _('PHP Session Support:'); ?>
 		<?php
-			if (!function_exists('session_set_save_handler')) {
+			if (!check_php_session()) {
 				echo " <font color=\"red\">ERROR</font> ";
 				$results = $results + 1;
 			} else {
@@ -86,7 +87,7 @@
 		</p>
 		<p><?php echo _('PHP ICONV Support:'); ?>
 		<?php
-			if (!function_exists('iconv')) {
+			if (!check_php_iconv()) {
 				echo " <font color=\"red\">ERROR</font> ";
 				$results = $results + 1;
 			} else {
@@ -96,7 +97,7 @@
 		</p>
 		<p><?php echo _('PHP PCRE Support:'); ?>
 		<?php
-			if (!function_exists('preg_match')) {
+			if (!check_php_pcre()) {
 				echo " <font color=\"red\">ERROR</font> ";
 				$results = $results + 1;
 			} else {
@@ -106,21 +107,9 @@
 		</p>
 		<p><?php echo _('PHP PutENV Support:'); ?>
 		<?php
-			$current = ini_get('memory_limit');
-			$current = substr($current_memory,0,strlen($current_memory)-1);
-			$new_limit = ($current+1) . "M";
-			if (!ini_set(memory_limit,$new_limit)) {
+			if (!check_putenv()) {
 				echo " <font color=\"red\">ERROR</font> ";
 				$results = $results + 1;
-			} else {
-				echo " <font color=\"green\">&nbsp;&nbsp;&nbsp;OK&nbsp;&nbsp;&nbsp;&nbsp;</font> ";
-			}
-		?>
-		</p>
-		<p><?php echo _('PHP Safe Mode:'); ?>
-		<?php
-			if (ini_get('safe_mode')) {
-				echo " <font color=\"red\">Using Safe Mode.</font> ";
 			} else {
 				echo " <font color=\"green\">&nbsp;&nbsp;&nbsp;OK&nbsp;&nbsp;&nbsp;&nbsp;</font> ";
 			}
@@ -131,7 +120,7 @@
 		<p><?php echo _('PHP GetText Support:'); ?>
 		<?php
 			if (!function_exists('gettext')) {
-				echo " <font color=\"#FF6600\">WARNING: This server will use gettext emulator.</font> ";
+				echo " <font color=\"#FF6600\">" . _('WARNING: This server will use gettext emulator.') . "</font> ";
 			} else {
 				echo " <font color=\"green\">&nbsp;&nbsp;&nbsp;OK&nbsp;&nbsp;&nbsp;&nbsp;</font> ";
 			}

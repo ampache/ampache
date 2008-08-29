@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ampache 3.5.0\n"
 "Report-Msgid-Bugs-To: translations at ampache.org\n"
-"POT-Creation-Date: 2008-08-27 09:09+0900\n"
+"POT-Creation-Date: 2008-08-29 16:03+0900\n"
 "PO-Revision-Date: 2008-08-25 08:43+0900\n"
 "Last-Translator: Ampache <translations at ampache.org>\n"
 "Language-Team: Greek <LL@li.org>\n"
@@ -90,6 +90,7 @@ msgid "Edit"
 msgstr "Επεξεργασία"
 
 #: ../../templates/show_user_preferences.inc.php:28
+#: ../../templates/show_preferences.inc.php:28
 #, fuzzy, php-format
 msgid "Editing %s preferences"
 msgstr "προτιμήσεις"
@@ -236,7 +237,7 @@ msgstr ""
 "ορισμένα χαρακτηριστικά του ampache ίσως δε λειτουργούν σωστά"
 
 #: ../../templates/show_test.inc.php:153
-#: ../../templates/show_install_config.inc.php:88
+#: ../../templates/show_install_config.inc.php:89
 msgid "Ampache.cfg.php Exists"
 msgstr "Υπάρχει ήδη το αρχείο ρυθμίσεων ampache.cfg.php"
 
@@ -251,7 +252,7 @@ msgstr ""
 "δικαιώματα"
 
 #: ../../templates/show_test.inc.php:172
-#: ../../templates/show_install_config.inc.php:105
+#: ../../templates/show_install_config.inc.php:106
 msgid "Ampache.cfg.php Configured?"
 msgstr "Διαμορφώθηκε το αρχείο ampache.cfg.php;"
 
@@ -280,7 +281,7 @@ msgid "DB Inserted"
 msgstr ""
 
 #: ../../templates/show_test.inc.php:235
-#: ../../templates/show_install_config.inc.php:60
+#: ../../templates/show_install_config.inc.php:61
 msgid "Web Path"
 msgstr "Διαδρομή web"
 
@@ -402,7 +403,7 @@ msgstr "Ονοματεπώνυμο"
 #: ../../templates/show_users.inc.php:104
 #: ../../templates/show_edit_user.inc.php:29
 #: ../../templates/show_add_user.inc.php:29
-#: ../../templates/show_install_account.inc.php:60
+#: ../../templates/show_install_account.inc.php:61
 #: ../../templates/show_recently_played.inc.php:39
 #: ../../templates/show_recently_played.inc.php:98
 #: ../../templates/show_user_registration.inc.php:75
@@ -475,7 +476,7 @@ msgstr "Ποτέ"
 
 #: ../../templates/show_users.inc.php:54 ../../templates/show_user.inc.php:23
 #: ../../lib/class/flag.class.php:282 ../../lib/class/localplay.class.php:648
-#: ../../lib/class/user.class.php:665 ../../lib/general.lib.php:409
+#: ../../lib/class/user.class.php:665 ../../lib/general.lib.php:439
 #: ../../modules/localplay/mpd.controller.php:508
 #: ../../modules/localplay/httpq.controller.php:505
 msgid "Unknown"
@@ -501,7 +502,7 @@ msgstr "E-mail"
 
 #: ../../templates/show_edit_user.inc.php:52
 #: ../../templates/show_add_user.inc.php:52
-#: ../../templates/show_install_account.inc.php:64
+#: ../../templates/show_install_account.inc.php:65
 #: ../../templates/show_login_form.inc.php:62
 #: ../../templates/show_user_registration.inc.php:103
 #: ../../modules/localplay/mpd.controller.php:235
@@ -512,7 +513,7 @@ msgstr "Κωδικός"
 #: ../../templates/show_edit_user.inc.php:61
 #: ../../templates/show_add_user.inc.php:61
 #: ../../templates/show_account.inc.php:46
-#: ../../templates/show_install_account.inc.php:68
+#: ../../templates/show_install_account.inc.php:69
 #: ../../templates/show_user_registration.inc.php:112
 msgid "Confirm Password"
 msgstr "Επιβεβαίωση Κωδικού"
@@ -1339,17 +1340,17 @@ msgstr "Αναπαραγωγή Flash"
 msgid "Preference Administration"
 msgstr "Προτιμήσεις Διαχείρισης"
 
-#: ../../templates/show_install_config.inc.php:32
-#: ../../templates/show_install_lang.inc.php:33
-#: ../../templates/show_install.inc.php:32
-#: ../../templates/show_install_account.inc.php:32
+#: ../../templates/show_install_config.inc.php:33
+#: ../../templates/show_install_lang.inc.php:34
+#: ../../templates/show_install.inc.php:33
+#: ../../templates/show_install_account.inc.php:33
 msgid "Ampache Installation"
 msgstr "Εγκατάσταση"
 
-#: ../../templates/show_install_config.inc.php:38
-#: ../../templates/show_install_lang.inc.php:40
-#: ../../templates/show_install.inc.php:40
-#: ../../templates/show_install_account.inc.php:39
+#: ../../templates/show_install_config.inc.php:39
+#: ../../templates/show_install_lang.inc.php:41
+#: ../../templates/show_install.inc.php:41
+#: ../../templates/show_install_account.inc.php:40
 msgid ""
 "This Page handles the installation of the Ampache database and the creation "
 "of the ampache.cfg.php file. Before you continue please make sure that you "
@@ -1359,19 +1360,19 @@ msgstr ""
 "δημιουργία του αρχείου ρυθμίσεων. Πριν συνεχίσετε, βεβαιωθείτε ότι "
 "ικανοποιείτε τις ακόλουθες προϋποθέσεις"
 
-#: ../../templates/show_install_config.inc.php:41
-#: ../../templates/show_install_lang.inc.php:43
-#: ../../templates/show_install.inc.php:43
-#: ../../templates/show_install_account.inc.php:42
+#: ../../templates/show_install_config.inc.php:42
+#: ../../templates/show_install_lang.inc.php:44
+#: ../../templates/show_install.inc.php:44
+#: ../../templates/show_install_account.inc.php:43
 msgid ""
 "A MySQL Server with a username and password that can create/modify databases"
 msgstr ""
 "Ένας MySQL Server με όνομα χρήστη και κωδικό που μπορεί να δημιουργεί/"
 "τροποποιεί βάσεις"
 
-#: ../../templates/show_install_config.inc.php:42
-#: ../../templates/show_install_lang.inc.php:44
-#: ../../templates/show_install.inc.php:44
+#: ../../templates/show_install_config.inc.php:43
+#: ../../templates/show_install_lang.inc.php:45
+#: ../../templates/show_install.inc.php:45
 msgid ""
 "Your webserver has read access to the /sql/ampache.sql file and the /config/"
 "ampache.cfg.php.dist file"
@@ -1379,10 +1380,10 @@ msgstr ""
 "Ο webserver έχει δικαιώματα ανάγνωσης στο /sql/ampache.sql αρχείο και στο "
 "αρχείο /config/ampache.cfg.php.dist"
 
-#: ../../templates/show_install_config.inc.php:44
-#: ../../templates/show_install_lang.inc.php:47
-#: ../../templates/show_install.inc.php:47
-#: ../../templates/show_install_account.inc.php:45
+#: ../../templates/show_install_config.inc.php:45
+#: ../../templates/show_install_lang.inc.php:48
+#: ../../templates/show_install.inc.php:48
+#: ../../templates/show_install_account.inc.php:46
 msgid ""
 "Once you have ensured that you have the above requirements please fill out "
 "the information below. You will only be asked for the required config "
@@ -1394,61 +1395,61 @@ msgstr ""
 "για τις επιθυμητές ρυθμίσεις. Αν θελήσετε να κάνετε αργότερα αλλαγές απλώς "
 "επεξεργαστείτε το /config/ampache.cfg.php"
 
-#: ../../templates/show_install_config.inc.php:48
-#: ../../templates/show_install.inc.php:52
-#: ../../templates/show_install_account.inc.php:48
+#: ../../templates/show_install_config.inc.php:49
+#: ../../templates/show_install.inc.php:53
+#: ../../templates/show_install_account.inc.php:49
 msgid "Step 1 - Creating and Inserting the Ampache Database"
 msgstr "Βήμα 1 - Δημιουργία Βάσης Δεδομένων"
 
-#: ../../templates/show_install_config.inc.php:49
-#: ../../templates/show_install.inc.php:56
+#: ../../templates/show_install_config.inc.php:50
+#: ../../templates/show_install.inc.php:57
 msgid "Step 2 - Creating the Ampache.cfg.php file"
 msgstr "Βήμα 2 - Δημιουργία του ampache.cfg.php αρχείου"
 
-#: ../../templates/show_install_config.inc.php:51
+#: ../../templates/show_install_config.inc.php:52
 msgid ""
 "This steps takes the basic config values and generates the config file. It "
 "will prompt you to download the config file. Please put the downloaded "
 "config file in /config"
 msgstr ""
 
-#: ../../templates/show_install_config.inc.php:53
-#: ../../templates/show_install.inc.php:57
-#: ../../templates/show_install_account.inc.php:50
+#: ../../templates/show_install_config.inc.php:54
+#: ../../templates/show_install.inc.php:58
+#: ../../templates/show_install_account.inc.php:51
 msgid "Step 3 - Setup Initial Account"
 msgstr "Βήμα 3 - Δημιουργία αρχικού λογαριασμού"
 
-#: ../../templates/show_install_config.inc.php:56
+#: ../../templates/show_install_config.inc.php:57
 msgid "Generate Config File"
 msgstr "Δημιουργία Αρχείο Ρυθμίσεων"
 
-#: ../../templates/show_install_config.inc.php:64
-#: ../../templates/show_install.inc.php:65
+#: ../../templates/show_install_config.inc.php:65
+#: ../../templates/show_install.inc.php:66
 msgid "Desired Database Name"
 msgstr "Επιθυμητό όνομα βάσης"
 
-#: ../../templates/show_install_config.inc.php:68
-#: ../../templates/show_install.inc.php:69
+#: ../../templates/show_install_config.inc.php:69
+#: ../../templates/show_install.inc.php:70
 msgid "MySQL Hostname"
 msgstr "Όνομα Εξυπηρετητή MySQL"
 
-#: ../../templates/show_install_config.inc.php:72
+#: ../../templates/show_install_config.inc.php:73
 msgid "MySQL Username"
 msgstr "Όνομα χρήστη MySQL"
 
-#: ../../templates/show_install_config.inc.php:76
+#: ../../templates/show_install_config.inc.php:77
 msgid "MySQL Password"
 msgstr "Κωδικός MySQL"
 
-#: ../../templates/show_install_config.inc.php:81
+#: ../../templates/show_install_config.inc.php:82
 msgid "Write Config"
 msgstr "Εγγραφή ρυθμίσεων"
 
-#: ../../templates/show_install_config.inc.php:126
+#: ../../templates/show_install_config.inc.php:127
 msgid "Check for Config"
 msgstr "Έλεγχος για αρχείο ρυθμίσεων"
 
-#: ../../templates/show_install_config.inc.php:132
+#: ../../templates/show_install_config.inc.php:133
 msgid "Continue to Step 3"
 msgstr "Συνεχίστε στο Βήμα 3"
 
@@ -1586,78 +1587,78 @@ msgstr "Μέγεθος Καταλόγου"
 msgid "Catalog Time"
 msgstr "Χρόνος Καταλόγου"
 
-#: ../../templates/show_install_lang.inc.php:38
-#: ../../templates/show_install_lang.inc.php:52
-#: ../../templates/show_install.inc.php:38
+#: ../../templates/show_install_lang.inc.php:39
+#: ../../templates/show_install_lang.inc.php:53
+#: ../../templates/show_install.inc.php:39
 msgid "Requirements"
 msgstr "Απαιτήσεις"
 
-#: ../../templates/show_install_lang.inc.php:51
+#: ../../templates/show_install_lang.inc.php:52
 msgid "System Checks"
 msgstr ""
 
-#: ../../templates/show_install_lang.inc.php:53
+#: ../../templates/show_install_lang.inc.php:54
 #, fuzzy
 msgid "PHP Version:"
 msgstr "Έκδοση PHP"
 
-#: ../../templates/show_install_lang.inc.php:63
+#: ../../templates/show_install_lang.inc.php:64
 #, fuzzy
 msgid "Mysql for PHP:"
 msgstr "MySQL για PHP"
 
-#: ../../templates/show_install_lang.inc.php:77
+#: ../../templates/show_install_lang.inc.php:78
 #, fuzzy
 msgid "PHP Session Support:"
 msgstr "Υποστήριξη PHP Session"
 
-#: ../../templates/show_install_lang.inc.php:87
+#: ../../templates/show_install_lang.inc.php:88
 #, fuzzy
 msgid "PHP ICONV Support:"
 msgstr "PHP ICONV Support"
 
-#: ../../templates/show_install_lang.inc.php:97
+#: ../../templates/show_install_lang.inc.php:98
 #, fuzzy
 msgid "PHP PCRE Support:"
 msgstr "PHP PCRE Support"
 
-#: ../../templates/show_install_lang.inc.php:107
+#: ../../templates/show_install_lang.inc.php:108
 #, fuzzy
 msgid "PHP PutENV Support:"
 msgstr "PHP PutENV Support"
 
-#: ../../templates/show_install_lang.inc.php:120
-msgid "PHP Safe Mode:"
-msgstr ""
-
-#: ../../templates/show_install_lang.inc.php:130
+#: ../../templates/show_install_lang.inc.php:119
 #, fuzzy
 msgid "Optional"
 msgstr "Επιλογές RPC"
 
-#: ../../templates/show_install_lang.inc.php:131
+#: ../../templates/show_install_lang.inc.php:120
 #, fuzzy
 msgid "PHP GetText Support:"
 msgstr "PHP PutENV Support"
 
-#: ../../templates/show_install_lang.inc.php:140
+#: ../../templates/show_install_lang.inc.php:123
+msgid "WARNING: This server will use gettext emulator."
+msgstr ""
+
+#: ../../templates/show_install_lang.inc.php:129
 #, fuzzy
 msgid "PHP Mbstring Support:"
 msgstr "Υποστήριξη PHP Session"
 
-#: ../../templates/show_install_lang.inc.php:152
+#: ../../templates/show_install_lang.inc.php:141
 msgid "Choose installation language."
 msgstr ""
 
-#: ../../templates/show_install_lang.inc.php:173
+#: ../../templates/show_install_lang.inc.php:162
 msgid "Start configuration"
 msgstr "Έναρξη ρύθμισης"
 
-#: ../../templates/show_install_lang.inc.php:179
+#: ../../templates/show_install_lang.inc.php:168
 msgid "Ampache does not <strong>run</strong> correctly by this server."
 msgstr ""
 
-#: ../../templates/show_install_lang.inc.php:180
+#: ../../templates/show_install_lang.inc.php:169
 msgid "Please contact your server administrator, and fix them."
 msgstr ""
 
@@ -2114,14 +2115,6 @@ msgstr "Τελευταίες Δέκα μαρκαρισμένες εγγραφέ�
 msgid "Disabled Songs"
 msgstr "Απενεργοποιημένα Τραγούδια"
 
-#: ../../templates/show_preferences.inc.php:28
-msgid "Editing"
-msgstr "Επεξεργασία"
-
-#: ../../templates/show_preferences.inc.php:28
-msgid "preferences"
-msgstr "προτιμήσεις"
-
 #: ../../templates/show_localplay_instances.inc.php:23
 msgid "Show Localplay Instances"
 msgstr "Δείξε Στιγμιότυπα Τοπικής Αναπαραγωγής"
@@ -2245,7 +2238,7 @@ msgstr "Τύπος"
 msgid "Found"
 msgstr "Βρέθηκαν"
 
-#: ../../templates/show_install.inc.php:54
+#: ../../templates/show_install.inc.php:55
 msgid ""
 "This step creates and inserts the Ampache database, as such please provide a "
 "mysql account with database creation rights. This step may take a while "
@@ -2255,39 +2248,39 @@ msgstr ""
 "λογαριασμό mysql με δικαιώματα δημιουργίας βάσης. Αυτό μπορεί να διαρκέσει "
 "λίγο ανάλογα με την ταχύτητα του υπολογιστή σας"
 
-#: ../../templates/show_install.inc.php:61
+#: ../../templates/show_install.inc.php:62
 msgid "Insert Ampache Database"
 msgstr "Εισαγωγή στοιχείων στη βάση"
 
-#: ../../templates/show_install.inc.php:73
+#: ../../templates/show_install.inc.php:74
 msgid "MySQL Administrative Username"
 msgstr "Όνομα Διαχειριστή MySQL"
 
-#: ../../templates/show_install.inc.php:77
+#: ../../templates/show_install.inc.php:78
 msgid "MySQL Administrative Password"
 msgstr "Κωδικός Διαχειριστή MySQL"
 
-#: ../../templates/show_install.inc.php:81
+#: ../../templates/show_install.inc.php:82
 msgid "Create Database User for New Database"
 msgstr "Δημιουργία Χρήστη της νέας βάσης"
 
-#: ../../templates/show_install.inc.php:85
+#: ../../templates/show_install.inc.php:86
 msgid "Ampache Database Username"
 msgstr "Όνομα Χρήστη νέας βάσης"
 
-#: ../../templates/show_install.inc.php:89
+#: ../../templates/show_install.inc.php:90
 msgid "Ampache Database User Password"
 msgstr "Κωδικός Χρήστη νέας βάσης"
 
-#: ../../templates/show_install.inc.php:93
+#: ../../templates/show_install.inc.php:94
 msgid "Overwrite Existing"
 msgstr "Εγγραφή πάνω σε ήδη υπάρχουσα βάση"
 
-#: ../../templates/show_install.inc.php:98
+#: ../../templates/show_install.inc.php:99
 msgid "Insert Database"
 msgstr "Εισαγωγή βάσης"
 
-#: ../../templates/show_install_account.inc.php:43
+#: ../../templates/show_install_account.inc.php:44
 msgid ""
 "Your webserver has read access to the /sql/ampache.sql file and the /config/"
 "ampache.cfg.dist.php file"
@@ -2295,11 +2288,11 @@ msgstr ""
 "Ο webserver έχει δικαίωμα ανάγνωση των /sql/ampache.sql, /config/ampache.cfg."
 "dist.php αρχείων"
 
-#: ../../templates/show_install_account.inc.php:49
+#: ../../templates/show_install_account.inc.php:50
 msgid "Step 2 - Creating the ampache.cfg.php file"
 msgstr "Βήμα 2- Δημιουργία του ampache.cfg.php αρχείου"
 
-#: ../../templates/show_install_account.inc.php:52
+#: ../../templates/show_install_account.inc.php:53
 msgid ""
 "This step creates your initial Ampache admin account. Once your admin "
 "account has been created you will be directed to the login page"
@@ -2307,11 +2300,11 @@ msgstr ""
 "Αυτό το βήμα δημιουργεί τον αρχικό λογαριασμό Διαχειριστή του Ampache. Μόλις "
 "ο λογαριασμός δημιουργηθεί θα ανακατευθυνθείτε στη σελίδα ειδόδου"
 
-#: ../../templates/show_install_account.inc.php:56
+#: ../../templates/show_install_account.inc.php:57
 msgid "Create Admin Account"
 msgstr "Δημιουργία Λογαριασμού Διαχειριστή"
 
-#: ../../templates/show_install_account.inc.php:73
+#: ../../templates/show_install_account.inc.php:74
 msgid "Create Account"
 msgstr "Δημιουργία Λογαριασμού"
 
@@ -3320,15 +3313,11 @@ msgstr "τραγούδια ενημερώθηκαν"
 msgid "Error Username or Password incorrect, please try again"
 msgstr ""
 
-#: ../../lib/general.lib.php:406
-msgid "Simplified Chinese"
-msgstr "Απλοποιημένα κινέζικα"
-
-#: ../../lib/general.lib.php:468
+#: ../../lib/general.lib.php:498
 msgid "On"
 msgstr "Ενεργό"
 
-#: ../../lib/general.lib.php:471
+#: ../../lib/general.lib.php:501
 msgid "Off"
 msgstr "Ανενεργό"
 
@@ -3776,6 +3765,143 @@ msgstr ""
 msgid "Filename:"
 msgstr "Όνομα Αρχείου"
 
+#: Database words
+#, fuzzy
+msgid "Allow Downloads"
+msgstr "Κατέβασμα"
+
+#: Database words
+#, fuzzy
+msgid "Popular Threshold"
+msgstr "Δημοφιλέστερο Όριο εδώ και μέρες"
+
+#: Database words
+#, fuzzy
+msgid "Transcode Bitrate"
+msgstr "Ελάχιστο Bitrate"
+
+#: Database words
+msgid "Ampache :: Pour l'Amour de la Musique"
+msgstr ""
+
+#: Database words
+#, fuzzy
+msgid "Lock Songs"
+msgstr "Τραγούδια"
+
+#: Database words
+msgid "Forces Http play regardless of port"
+msgstr ""
+
+#: Database words
+msgid "Non-Standard Http Port"
+msgstr ""
+
+#: Database words
+#, fuzzy
+msgid "Localplay Type"
+msgstr "Τοπική Αναπαραγωγή"
+
+#: Database words
+msgid "Type of Playback"
+msgstr ""
+
+#: Database words
+msgid "Language"
+msgstr "Γλώσσα"
+
+#: Database words
+#, fuzzy
+msgid "Theme"
+msgstr "Χρόνος"
+
+#: Database words
+msgid "Album Ellipse Threshold"
+msgstr ""
+
+#: Database words
+msgid "Artist Ellipse Threshold"
+msgstr ""
+
+#: Database words
+msgid "Title Ellipse Threshold"
+msgstr ""
+
+#: Database words
+#, fuzzy
+msgid "Offset Limit"
+msgstr "Όριο μεγέθους"
+
+#: Database words
+#, fuzzy
+msgid "Localplay Access"
+msgstr "Λειτουργικές Μονάδες Τοπικής Αναπαραγωγής"
+
+#: Database words
+msgid "Allow Streaming"
+msgstr ""
+
+#: Database words
+#, fuzzy
+msgid "Allow Democratic Play"
+msgstr "Δημιουργία Δημοκρατικής playlist"
+
+#: Database words
+#, fuzzy
+msgid "Allow Localplay Play"
+msgstr "Τοπική Αναπαραγωγή"
+
+#: Database words
+msgid "Statistics Day Threshold"
+msgstr ""
+
+#: Database words
+#, fuzzy
+msgid "Min Element Count"
+msgstr "Ελάχιστο Πλήθος"
+
+#: Database words
+#, fuzzy
+msgid "Rate Limit"
+msgstr "Όριο μεγέθους"
+
+#: Database words
+#, fuzzy
+msgid "Playlist Method"
+msgstr "Η playlist δημιουργήθηκε"
+
+#: Database words
+msgid "Transcoding"
+msgstr ""
+
+#: Database words
+msgid "User to track"
+msgstr ""
+
+#: Database words
+#, fuzzy
+msgid "Streaming"
+msgstr "Ροή"
+
+#: Database words
+#, fuzzy
+msgid "Interface"
+msgstr "Περιβάλλον Web"
+
+#: Database words
+#, fuzzy
+msgid "System"
+msgstr "Στοιχείο"
+
+#~ msgid "Editing"
+#~ msgstr "Επεξεργασία"
+
+#~ msgid "preferences"
+#~ msgstr "προτιμήσεις"
+
+#~ msgid "Simplified Chinese"
+#~ msgstr "Απλοποιημένα κινέζικα"
+
 #, fuzzy
 #~ msgid "Playlist %s"
 #~ msgstr "Playlists"
@@ -3833,9 +3959,6 @@ msgstr "Όνομα Αρχείου"
 
 #~ msgid "Label"
 #~ msgstr "Ετικέτα"
-
-#~ msgid "Language"
-#~ msgstr "Γλώσσα"
 
 #~ msgid "Catalog Number"
 #~ msgstr "Αριθμός καταλόγους"
