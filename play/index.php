@@ -306,7 +306,7 @@ else {
 // Put this song in the now_playing table
 Stream::insert_now_playing($song->id,$uid,$song->time,$sid);
 
-if (isset($start)) {
+if ($start > 0) {
 
 	// Calculate stream size from byte range
 	if(isset($end)) {
