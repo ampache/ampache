@@ -51,7 +51,7 @@
 	<div class="content">
 		<h3><?php echo _('System Checks'); ?></h3>
 		<h4><?php echo _('Requirements'); ?></h4>
-		<p><?php echo _('PHP Version:'); ?>
+		<p><?php echo _('PHP Version'); ?>:
 		<?php
 			if(!check_php_ver()) {
 				echo " <font color=\"red\">ERROR</font> " . phpversion();
@@ -61,7 +61,7 @@
 			}
 		?>
 		</p>
-		<p><?php echo _('Mysql for PHP:'); ?>
+		<p><?php echo _('Mysql for PHP'); ?>:
 		<?php
 			if (!check_php_mysql()) {
 				echo " <font color=\"red\">ERROR</font> ";
@@ -75,7 +75,7 @@
 			}
 		?>
 		</p>
-		<p><?php echo _('PHP Session Support:'); ?>
+		<p><?php echo _('PHP Session Support'); ?>:
 		<?php
 			if (!check_php_session()) {
 				echo " <font color=\"red\">ERROR</font> ";
@@ -85,7 +85,7 @@
 			}
 		?>
 		</p>
-		<p><?php echo _('PHP ICONV Support:'); ?>
+		<p><?php echo _('PHP ICONV Support'); ?>:
 		<?php
 			if (!check_php_iconv()) {
 				echo " <font color=\"red\">ERROR</font> ";
@@ -95,7 +95,7 @@
 			}
 		?>
 		</p>
-		<p><?php echo _('PHP PCRE Support:'); ?>
+		<p><?php echo _('PHP PCRE Support'); ?>:
 		<?php
 			if (!check_php_pcre()) {
 				echo " <font color=\"red\">ERROR</font> ";
@@ -105,7 +105,7 @@
 			}
 		?>
 		</p>
-		<p><?php echo _('PHP PutENV Support:'); ?>
+		<p><?php echo _('PHP PutENV Support'); ?>:
 		<?php
 			if (!check_putenv()) {
 				echo " <font color=\"red\">ERROR</font> ";
@@ -116,8 +116,8 @@
 		?>
 		</p>
 		<hr />
-		<h4><?php echo _('Optional'); ?></h4>
-		<p><?php echo _('PHP GetText Support:'); ?>
+		<h4><?php echo _('Option'); ?></h4>
+		<p><?php echo _('Gettext Support'); ?>:
 		<?php
 			if (!function_exists('gettext')) {
 				echo " <font color=\"#FF6600\">" . _('WARNING: This server will use gettext emulator.') . "</font> ";
@@ -126,7 +126,7 @@
 			}
 		?>
 		</p>
-		<p><?php echo _('PHP Mbstring Support:'); ?>
+		<p><?php echo _('Mbstring Support'); ?>:
 		<?php
 			if (!function_exists('mb_check_encoding')) {
 				echo " <font color=\"#FF6600\">WARNING</font> ";

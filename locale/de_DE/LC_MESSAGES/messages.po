@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: messages\n"
 "Report-Msgid-Bugs-To: translations at ampache.org\n"
-"POT-Creation-Date: 2008-08-29 16:03+0900\n"
+"POT-Creation-Date: 2008-08-29 16:42+0900\n"
 "PO-Revision-Date: 2008-08-24 09:26+0200\n"
 "Last-Translator: Nikolai Försterling <devel@fosternet.de>\n"
 "Language-Team:  <de@li.org>\n"
@@ -177,6 +177,7 @@ msgid "DESCRIPTION"
 msgstr "BESCHREIBUNG"
 
 #: ../../templates/show_test.inc.php:44
+#: ../../templates/show_install_lang.inc.php:54
 msgid "PHP Version"
 msgstr "PHP Version"
 
@@ -189,6 +190,7 @@ msgstr ""
 "funktioniert."
 
 #: ../../templates/show_test.inc.php:63
+#: ../../templates/show_install_lang.inc.php:64
 msgid "Mysql for PHP"
 msgstr "MySQL für PHP"
 
@@ -201,6 +203,7 @@ msgstr ""
 "wird benötigt damit Ampache arbeitet."
 
 #: ../../templates/show_test.inc.php:82
+#: ../../templates/show_install_lang.inc.php:78
 msgid "PHP Session Support"
 msgstr "PHP Session Unterstützung"
 
@@ -213,6 +216,7 @@ msgstr ""
 "Unterstützung wird benötigt für die Funktion von Ampache."
 
 #: ../../templates/show_test.inc.php:101
+#: ../../templates/show_install_lang.inc.php:88
 msgid "PHP ICONV Support"
 msgstr "PHP ICONV Unterstützung"
 
@@ -225,6 +229,7 @@ msgstr ""
 "Ampache benötigt Iconv."
 
 #: ../../templates/show_test.inc.php:119
+#: ../../templates/show_install_lang.inc.php:98
 msgid "PHP PCRE Support"
 msgstr "PHP PCRE Unterstützung"
 
@@ -237,6 +242,7 @@ msgstr ""
 "eingebaut haben, dies wird für die Funktion von Ampache benötigt."
 
 #: ../../templates/show_test.inc.php:136
+#: ../../templates/show_install_lang.inc.php:108
 msgid "PHP PutENV Support"
 msgstr "PHP PutENV Unterstützung"
 
@@ -1620,44 +1626,14 @@ msgstr "Anforderungen"
 msgid "System Checks"
 msgstr ""
 
-#: ../../templates/show_install_lang.inc.php:54
-#, fuzzy
-msgid "PHP Version:"
-msgstr "PHP Version"
-
-#: ../../templates/show_install_lang.inc.php:64
-#, fuzzy
-msgid "Mysql for PHP:"
-msgstr "MySQL für PHP"
-
-#: ../../templates/show_install_lang.inc.php:78
-#, fuzzy
-msgid "PHP Session Support:"
-msgstr "PHP Session Unterstützung"
-
-#: ../../templates/show_install_lang.inc.php:88
-#, fuzzy
-msgid "PHP ICONV Support:"
-msgstr "PHP ICONV Unterstützung"
-
-#: ../../templates/show_install_lang.inc.php:98
-#, fuzzy
-msgid "PHP PCRE Support:"
-msgstr "PHP PCRE Unterstützung"
-
-#: ../../templates/show_install_lang.inc.php:108
-#, fuzzy
-msgid "PHP PutENV Support:"
-msgstr "PHP PutENV Unterstützung"
-
 #: ../../templates/show_install_lang.inc.php:119
 #, fuzzy
-msgid "Optional"
+msgid "Option"
 msgstr "Optionen"
 
 #: ../../templates/show_install_lang.inc.php:120
-#, fuzzy
-msgid "PHP GetText Support:"
+#: ../../templates/show_debug.inc.php:68
+msgid "Gettext Support"
 msgstr "Gettext Unterstützung"
 
 #: ../../templates/show_install_lang.inc.php:123
@@ -1666,7 +1642,7 @@ msgstr ""
 
 #: ../../templates/show_install_lang.inc.php:129
 #, fuzzy
-msgid "PHP Mbstring Support:"
+msgid "Mbstring Support"
 msgstr "PHP Session Unterstützung"
 
 #: ../../templates/show_install_lang.inc.php:141
@@ -2941,10 +2917,6 @@ msgstr "GD Unterstützung"
 msgid "Iconv Support"
 msgstr "Iconv Unterstützung"
 
-#: ../../templates/show_debug.inc.php:68
-msgid "Gettext Support"
-msgstr "Gettext Unterstützung"
-
 #: ../../templates/show_debug.inc.php:74
 msgid "Current Configuration"
 msgstr "Momentane Konfiguration"
@@ -3818,10 +3790,6 @@ msgid "Transcode Bitrate"
 msgstr "Min Bitrate"
 
 #: Database words
-msgid "Ampache :: Pour l'Amour de la Musique"
-msgstr ""
-
-#: Database words
 #, fuzzy
 msgid "Lock Songs"
 msgstr "# Lieder"
@@ -3929,6 +3897,42 @@ msgstr "Bitrate"
 #, fuzzy
 msgid "System"
 msgstr "Lied"
+
+#, fuzzy
+#~ msgid "GetText Support"
+#~ msgstr "Gettext Unterstützung"
+
+#, fuzzy
+#~ msgid "PHP GetText Support"
+#~ msgstr "Gettext Unterstützung"
+
+#, fuzzy
+#~ msgid "PHP Version:"
+#~ msgstr "PHP Version"
+
+#, fuzzy
+#~ msgid "Mysql for PHP:"
+#~ msgstr "MySQL für PHP"
+
+#, fuzzy
+#~ msgid "PHP Session Support:"
+#~ msgstr "PHP Session Unterstützung"
+
+#, fuzzy
+#~ msgid "PHP ICONV Support:"
+#~ msgstr "PHP ICONV Unterstützung"
+
+#, fuzzy
+#~ msgid "PHP PCRE Support:"
+#~ msgstr "PHP PCRE Unterstützung"
+
+#, fuzzy
+#~ msgid "PHP PutENV Support:"
+#~ msgstr "PHP PutENV Unterstützung"
+
+#, fuzzy
+#~ msgid "Optional"
+#~ msgstr "Optionen"
 
 #~ msgid "Editing"
 #~ msgstr "Editieren der"

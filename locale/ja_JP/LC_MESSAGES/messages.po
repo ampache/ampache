@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ampache 3.5.0\n"
 "Report-Msgid-Bugs-To: translations at ampache.org\n"
-"POT-Creation-Date: 2008-08-29 16:03+0900\n"
+"POT-Creation-Date: 2008-08-29 16:38+0900\n"
 "PO-Revision-Date: 2008-07-14 20:44+0900\n"
 "Last-Translator: momo-i <webmaster at momo-i.org>\n"
 "Language-Team: Japanese\n"
@@ -171,6 +171,7 @@ msgid "DESCRIPTION"
 msgstr "説明"
 
 #: ../../templates/show_test.inc.php:44
+#: ../../templates/show_install_lang.inc.php:54
 msgid "PHP Version"
 msgstr "PHPバージョン"
 
@@ -183,6 +184,7 @@ msgstr ""
 "ためにテストします。"
 
 #: ../../templates/show_test.inc.php:63
+#: ../../templates/show_install_lang.inc.php:64
 msgid "Mysql for PHP"
 msgstr "PHPのMysql"
 
@@ -195,6 +197,7 @@ msgstr ""
 "らはAmpacheが働くために要求されます。"
 
 #: ../../templates/show_test.inc.php:82
+#: ../../templates/show_install_lang.inc.php:78
 msgid "PHP Session Support"
 msgstr "PHPセッションサポート"
 
@@ -207,6 +210,7 @@ msgstr ""
 "ます。セッションは、Ampacheが働くことを必要とされます。"
 
 #: ../../templates/show_test.inc.php:101
+#: ../../templates/show_install_lang.inc.php:88
 msgid "PHP ICONV Support"
 msgstr "PHP ICONVサポート"
 
@@ -219,6 +223,7 @@ msgstr ""
 "す。IconvのサポートはAmpacheのために必要になります。"
 
 #: ../../templates/show_test.inc.php:119
+#: ../../templates/show_install_lang.inc.php:98
 msgid "PHP PCRE Support"
 msgstr "PHP PCREサポート"
 
@@ -231,6 +236,7 @@ msgstr ""
 "かめます。これはAmpacheに必要です。"
 
 #: ../../templates/show_test.inc.php:136
+#: ../../templates/show_install_lang.inc.php:108
 msgid "PHP PutENV Support"
 msgstr "PHP PutENVサポート"
 
@@ -1603,44 +1609,13 @@ msgstr "必要条件"
 msgid "System Checks"
 msgstr ""
 
-#: ../../templates/show_install_lang.inc.php:54
-#, fuzzy
-msgid "PHP Version:"
-msgstr "PHPバージョン"
-
-#: ../../templates/show_install_lang.inc.php:64
-#, fuzzy
-msgid "Mysql for PHP:"
-msgstr "PHPのMysql"
-
-#: ../../templates/show_install_lang.inc.php:78
-#, fuzzy
-msgid "PHP Session Support:"
-msgstr "PHPセッションサポート"
-
-#: ../../templates/show_install_lang.inc.php:88
-#, fuzzy
-msgid "PHP ICONV Support:"
-msgstr "PHP ICONVサポート"
-
-#: ../../templates/show_install_lang.inc.php:98
-#, fuzzy
-msgid "PHP PCRE Support:"
-msgstr "PHP PCREサポート"
-
-#: ../../templates/show_install_lang.inc.php:108
-#, fuzzy
-msgid "PHP PutENV Support:"
-msgstr "PHP PutENVサポート"
-
 #: ../../templates/show_install_lang.inc.php:119
-#, fuzzy
-msgid "Optional"
+msgid "Option"
 msgstr "オプション"
 
 #: ../../templates/show_install_lang.inc.php:120
-#, fuzzy
-msgid "PHP GetText Support:"
+#: ../../templates/show_debug.inc.php:68
+msgid "Gettext Support"
 msgstr "Gettextサポート"
 
 #: ../../templates/show_install_lang.inc.php:123
@@ -1648,13 +1623,12 @@ msgid "WARNING: This server will use gettext emulator."
 msgstr ""
 
 #: ../../templates/show_install_lang.inc.php:129
-#, fuzzy
-msgid "PHP Mbstring Support:"
-msgstr "PHPセッションサポート"
+msgid "Mbstring Support"
+msgstr "mbstringサポート"
 
 #: ../../templates/show_install_lang.inc.php:141
 msgid "Choose installation language."
-msgstr ""
+msgstr "インストールする言語を選択してください。"
 
 #: ../../templates/show_install_lang.inc.php:162
 msgid "Start configuration"
@@ -1662,11 +1636,11 @@ msgstr "設定の開始"
 
 #: ../../templates/show_install_lang.inc.php:168
 msgid "Ampache does not <strong>run</strong> correctly by this server."
-msgstr ""
+msgstr "Ampacheはこのサーバでは正しく<strong>動作</strong>しません。"
 
 #: ../../templates/show_install_lang.inc.php:169
 msgid "Please contact your server administrator, and fix them."
-msgstr ""
+msgstr "サーバの管理者へ連絡をして、これらを修正してください。"
 
 #: ../../templates/rightbar.inc.php:28
 msgid "Add to Playlist"
@@ -2398,20 +2372,20 @@ msgstr "長さ"
 
 #: ../../templates/show_random.inc.php:51
 #: ../../templates/show_random.inc.php:52
-#, fuzzy, php-format
+#, php-format
 msgid "%d minute"
 msgid_plural "%d minutes"
-msgstr[0] "%s分"
+msgstr[0] "%d分"
 
 #: ../../templates/show_random.inc.php:53
 #: ../../templates/show_random.inc.php:54
 #: ../../templates/show_random.inc.php:55
 #: ../../templates/show_random.inc.php:56
 #: ../../templates/show_random.inc.php:57
-#, fuzzy, php-format
+#, php-format
 msgid "%d hour"
 msgid_plural "%d hours"
-msgstr[0] "%s時間"
+msgstr[0] "%d時間"
 
 #: ../../templates/show_random.inc.php:65
 msgid "Standard"
@@ -2513,7 +2487,7 @@ msgid "Albums by %s"
 msgstr "%sによるアルバム"
 
 #: ../../templates/show_artist.inc.php:25
-#, fuzzy, php-format
+#, php-format
 msgid "%s by %s"
 msgstr "%2$sによる%1$s"
 
@@ -2908,10 +2882,6 @@ msgstr "GDサポート"
 #: ../../templates/show_debug.inc.php:64
 msgid "Iconv Support"
 msgstr "Iconvサポート"
-
-#: ../../templates/show_debug.inc.php:68
-msgid "Gettext Support"
-msgstr "Gettextサポート"
 
 #: ../../templates/show_debug.inc.php:74
 msgid "Current Configuration"
@@ -3360,11 +3330,11 @@ msgstr "送信をクリア"
 msgid "Always"
 msgstr "常に"
 
-#: ../../lib/install.php:253
+#: ../../lib/install.php:259
 msgid "No Username/Password specified"
 msgstr "指定されたユーザ名/パスワードはありません"
 
-#: ../../lib/install.php:258
+#: ../../lib/install.php:264
 msgid "Passwords do not match"
 msgstr "パスワードが一致しません"
 
@@ -3756,55 +3726,44 @@ msgid "Filename:"
 msgstr "ファイル名:"
 
 #: Database words
-#, fuzzy
 msgid "Allow Downloads"
-msgstr "ダウンロード"
+msgstr "ダウンロードの許可"
 
 #: Database words
-#, fuzzy
 msgid "Popular Threshold"
-msgstr "1番人気にする日数の閾値"
+msgstr "人気の閾値"
 
 #: Database words
-#, fuzzy
 msgid "Transcode Bitrate"
-msgstr "最小ビットレート"
+msgstr "トランスコードのビットレート"
 
 #: Database words
-msgid "Ampache :: Pour l'Amour de la Musique"
-msgstr ""
-
-#: Database words
-#, fuzzy
 msgid "Lock Songs"
-msgstr "# 曲数"
+msgstr "曲の固定"
 
 #: Database words
 msgid "Forces Http play regardless of port"
-msgstr ""
+msgstr "ポートに関わらずHTTP再生を強制"
 
 #: Database words
 msgid "Non-Standard Http Port"
-msgstr ""
+msgstr "非標準のHTTPポート"
 
 #: Database words
-#, fuzzy
 msgid "Localplay Type"
-msgstr "ローカル再生"
+msgstr "ローカル再生のタイプ"
 
 #: Database words
 msgid "Type of Playback"
-msgstr ""
+msgstr "プレイバックのタイプ"
 
 #: Database words
-#, fuzzy
 msgid "Language"
-msgstr "マネージャ"
+msgstr "言語"
 
 #: Database words
-#, fuzzy
 msgid "Theme"
-msgstr "時間"
+msgstr "テーマ"
 
 #: Database words
 msgid "Album Ellipse Threshold"
@@ -3819,68 +3778,57 @@ msgid "Title Ellipse Threshold"
 msgstr ""
 
 #: Database words
-#, fuzzy
 msgid "Offset Limit"
-msgstr "サイズ制限"
+msgstr "オフセット制限"
 
 #: Database words
-#, fuzzy
 msgid "Localplay Access"
-msgstr "ローカル再生モジュール"
+msgstr "ローカル再生アクセス"
 
 #: Database words
 msgid "Allow Streaming"
-msgstr ""
+msgstr "ストリーミングの許可"
 
 #: Database words
-#, fuzzy
 msgid "Allow Democratic Play"
-msgstr "大衆的なプレイリスト作成"
+msgstr "デモクラティック再生の許可"
 
 #: Database words
-#, fuzzy
 msgid "Allow Localplay Play"
-msgstr "ローカル再生の許可をFalseにセットします"
+msgstr "ローカル再生の許可"
 
 #: Database words
 msgid "Statistics Day Threshold"
 msgstr ""
 
 #: Database words
-#, fuzzy
 msgid "Min Element Count"
-msgstr "最小カウント"
+msgstr "最小要素数"
 
 #: Database words
-#, fuzzy
 msgid "Rate Limit"
-msgstr "サイズ制限"
+msgstr "レート制限"
 
 #: Database words
-#, fuzzy
 msgid "Playlist Method"
-msgstr "プレイリストを作成しました"
+msgstr "プレイリストの方法"
 
 #: Database words
 msgid "Transcoding"
-msgstr ""
+msgstr "トランスコーディング"
 
 #: Database words
 msgid "User to track"
-msgstr ""
+msgstr "追跡するユーザ"
 
 #: Database words
-#, fuzzy
 msgid "Streaming"
-msgstr "ストリーム"
+msgstr "ストリーミング"
 
 #: Database words
-#, fuzzy
 msgid "Interface"
-msgstr "ウェブインタフェース"
+msgstr "インタフェース"
 
 #: Database words
-#, fuzzy
 msgid "System"
-msgstr "アイテム"
-
+msgstr "システム"

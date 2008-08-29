@@ -11,10 +11,6 @@ msgid "Transcode Bitrate"
 msgstr ""
 
 #: Database words
-msgid "Ampache :: Pour l'Amour de la Musique"
-msgstr ""
-
-#: Database words
 msgid "Lock Songs"
 msgstr ""
 

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ampache SVN 693\n"
 "Report-Msgid-Bugs-To: translations at ampache.org\n"
-"POT-Creation-Date: 2008-08-29 16:03+0900\n"
+"POT-Creation-Date: 2008-08-29 16:42+0900\n"
 "PO-Revision-Date: 2006-11-14 08:00+0100\n"
 "Last-Translator: Terence Theijn <terence.theijn@gmail.com>\n"
 "Language-Team: Dutch <terence.theijn@gmail.com>\n"
@@ -173,6 +173,7 @@ msgid "DESCRIPTION"
 msgstr "OMSCHRIJVING"
 
 #: ../../templates/show_test.inc.php:44
+#: ../../templates/show_install_lang.inc.php:54
 msgid "PHP Version"
 msgstr "PHP Versie"
 
@@ -185,6 +186,7 @@ msgstr ""
 "werkt"
 
 #: ../../templates/show_test.inc.php:63
+#: ../../templates/show_install_lang.inc.php:64
 msgid "Mysql for PHP"
 msgstr "MySQL voor PHP"
 
@@ -197,6 +199,7 @@ msgstr ""
 "vereiste voor Ampache"
 
 #: ../../templates/show_test.inc.php:82
+#: ../../templates/show_install_lang.inc.php:78
 msgid "PHP Session Support"
 msgstr "PHP Sessie Ondersteuning"
 
@@ -209,6 +212,7 @@ msgstr ""
 "Ampache"
 
 #: ../../templates/show_test.inc.php:101
+#: ../../templates/show_install_lang.inc.php:88
 msgid "PHP ICONV Support"
 msgstr "PHP ICONV Ondersteuning"
 
@@ -219,6 +223,7 @@ msgid ""
 msgstr ""
 
 #: ../../templates/show_test.inc.php:119
+#: ../../templates/show_install_lang.inc.php:98
 #, fuzzy
 msgid "PHP PCRE Support"
 msgstr "PHP PCRE Ondersteuning"
@@ -233,6 +238,7 @@ msgstr ""
 "vereiste voor Ampache"
 
 #: ../../templates/show_test.inc.php:136
+#: ../../templates/show_install_lang.inc.php:108
 #, fuzzy
 msgid "PHP PutENV Support"
 msgstr "PHP PutENV Ondersteuning"
@@ -1633,45 +1639,15 @@ msgstr "Vereisten"
 msgid "System Checks"
 msgstr ""
 
-#: ../../templates/show_install_lang.inc.php:54
-#, fuzzy
-msgid "PHP Version:"
-msgstr "PHP Versie"
-
-#: ../../templates/show_install_lang.inc.php:64
-#, fuzzy
-msgid "Mysql for PHP:"
-msgstr "MySQL voor PHP"
-
-#: ../../templates/show_install_lang.inc.php:78
-#, fuzzy
-msgid "PHP Session Support:"
-msgstr "PHP Sessie Ondersteuning"
-
-#: ../../templates/show_install_lang.inc.php:88
-#, fuzzy
-msgid "PHP ICONV Support:"
-msgstr "PHP ICONV Ondersteuning"
-
-#: ../../templates/show_install_lang.inc.php:98
-#, fuzzy
-msgid "PHP PCRE Support:"
-msgstr "PHP PCRE Ondersteuning"
-
-#: ../../templates/show_install_lang.inc.php:108
-#, fuzzy
-msgid "PHP PutENV Support:"
-msgstr "PHP PutENV Ondersteuning"
-
 #: ../../templates/show_install_lang.inc.php:119
 #, fuzzy
-msgid "Optional"
+msgid "Option"
 msgstr "Acties"
 
 #: ../../templates/show_install_lang.inc.php:120
-#, fuzzy
-msgid "PHP GetText Support:"
-msgstr "PHP PutENV Ondersteuning"
+#: ../../templates/show_debug.inc.php:68
+msgid "Gettext Support"
+msgstr ""
 
 #: ../../templates/show_install_lang.inc.php:123
 msgid "WARNING: This server will use gettext emulator."
@@ -1679,7 +1655,7 @@ msgstr ""
 
 #: ../../templates/show_install_lang.inc.php:129
 #, fuzzy
-msgid "PHP Mbstring Support:"
+msgid "Mbstring Support"
 msgstr "PHP Sessie Ondersteuning"
 
 #: ../../templates/show_install_lang.inc.php:141
@@ -2992,10 +2968,6 @@ msgstr ""
 msgid "Iconv Support"
 msgstr ""
 
-#: ../../templates/show_debug.inc.php:68
-msgid "Gettext Support"
-msgstr ""
-
 #: ../../templates/show_debug.inc.php:74
 msgid "Current Configuration"
 msgstr ""
@@ -3901,10 +3873,6 @@ msgid "Transcode Bitrate"
 msgstr "Ampache :: Pour l'Amour de la Musique"
 
 #: Database words
-msgid "Ampache :: Pour l'Amour de la Musique"
-msgstr ""
-
-#: Database words
 #, fuzzy
 msgid "Lock Songs"
 msgstr "# Liedjes"
@@ -4009,6 +3977,38 @@ msgstr ""
 #, fuzzy
 msgid "System"
 msgstr "Grootte"
+
+#, fuzzy
+#~ msgid "GetText Support"
+#~ msgstr "PHP PutENV Ondersteuning"
+
+#, fuzzy
+#~ msgid "PHP Version:"
+#~ msgstr "PHP Versie"
+
+#, fuzzy
+#~ msgid "Mysql for PHP:"
+#~ msgstr "MySQL voor PHP"
+
+#, fuzzy
+#~ msgid "PHP Session Support:"
+#~ msgstr "PHP Sessie Ondersteuning"
+
+#, fuzzy
+#~ msgid "PHP ICONV Support:"
+#~ msgstr "PHP ICONV Ondersteuning"
+
+#, fuzzy
+#~ msgid "PHP PCRE Support:"
+#~ msgstr "PHP PCRE Ondersteuning"
+
+#, fuzzy
+#~ msgid "PHP PutENV Support:"
+#~ msgstr "PHP PutENV Ondersteuning"
+
+#, fuzzy
+#~ msgid "Optional"
+#~ msgstr "Acties"
 
 #~ msgid "Editing"
 #~ msgstr "Bezig met Bewerken"

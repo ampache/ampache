@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ampache 3.5.0\n"
 "Report-Msgid-Bugs-To: translations at ampache.org\n"
-"POT-Creation-Date: 2008-08-29 16:03+0900\n"
+"POT-Creation-Date: 2008-08-29 16:38+0900\n"
 "PO-Revision-Date: 2008-05-10 02:21-0700\n"
 "Last-Translator: Ampache <translations at ampache.org>\n"
 "Language-Team: Turkish <translations at ampache.org>\n"
@@ -170,6 +170,7 @@ msgid "DESCRIPTION"
 msgstr ""
 
 #: ../../templates/show_test.inc.php:44
+#: ../../templates/show_install_lang.inc.php:54
 msgid "PHP Version"
 msgstr ""
 
@@ -180,6 +181,7 @@ msgid ""
 msgstr ""
 
 #: ../../templates/show_test.inc.php:63
+#: ../../templates/show_install_lang.inc.php:64
 msgid "Mysql for PHP"
 msgstr ""
 
@@ -190,6 +192,7 @@ msgid ""
 msgstr ""
 
 #: ../../templates/show_test.inc.php:82
+#: ../../templates/show_install_lang.inc.php:78
 msgid "PHP Session Support"
 msgstr ""
 
@@ -200,6 +203,7 @@ msgid ""
 msgstr ""
 
 #: ../../templates/show_test.inc.php:101
+#: ../../templates/show_install_lang.inc.php:88
 msgid "PHP ICONV Support"
 msgstr ""
 
@@ -210,6 +214,7 @@ msgid ""
 msgstr ""
 
 #: ../../templates/show_test.inc.php:119
+#: ../../templates/show_install_lang.inc.php:98
 msgid "PHP PCRE Support"
 msgstr ""
 
@@ -220,6 +225,7 @@ msgid ""
 msgstr ""
 
 #: ../../templates/show_test.inc.php:136
+#: ../../templates/show_install_lang.inc.php:108
 msgid "PHP PutENV Support"
 msgstr ""
 
@@ -1581,37 +1587,13 @@ msgstr ""
 msgid "System Checks"
 msgstr ""
 
-#: ../../templates/show_install_lang.inc.php:54
-#, fuzzy
-msgid "PHP Version:"
-msgstr "Almanca"
-
-#: ../../templates/show_install_lang.inc.php:64
-msgid "Mysql for PHP:"
-msgstr ""
-
-#: ../../templates/show_install_lang.inc.php:78
-msgid "PHP Session Support:"
-msgstr ""
-
-#: ../../templates/show_install_lang.inc.php:88
-msgid "PHP ICONV Support:"
-msgstr ""
-
-#: ../../templates/show_install_lang.inc.php:98
-msgid "PHP PCRE Support:"
-msgstr ""
-
-#: ../../templates/show_install_lang.inc.php:108
-msgid "PHP PutENV Support:"
-msgstr ""
-
 #: ../../templates/show_install_lang.inc.php:119
-msgid "Optional"
+msgid "Option"
 msgstr ""
 
 #: ../../templates/show_install_lang.inc.php:120
-msgid "PHP GetText Support:"
+#: ../../templates/show_debug.inc.php:68
+msgid "Gettext Support"
 msgstr ""
 
 #: ../../templates/show_install_lang.inc.php:123
@@ -1619,7 +1601,7 @@ msgid "WARNING: This server will use gettext emulator."
 msgstr ""
 
 #: ../../templates/show_install_lang.inc.php:129
-msgid "PHP Mbstring Support:"
+msgid "Mbstring Support"
 msgstr ""
 
 #: ../../templates/show_install_lang.inc.php:141
@@ -2884,10 +2866,6 @@ msgstr ""
 msgid "Iconv Support"
 msgstr ""
 
-#: ../../templates/show_debug.inc.php:68
-msgid "Gettext Support"
-msgstr ""
-
 #: ../../templates/show_debug.inc.php:74
 msgid "Current Configuration"
 msgstr ""
@@ -3345,11 +3323,11 @@ msgstr ""
 msgid "Always"
 msgstr ""
 
-#: ../../lib/install.php:253
+#: ../../lib/install.php:259
 msgid "No Username/Password specified"
 msgstr ""
 
-#: ../../lib/install.php:258
+#: ../../lib/install.php:264
 msgid "Passwords do not match"
 msgstr ""
 
@@ -3757,10 +3735,6 @@ msgid "Transcode Bitrate"
 msgstr "Ampache :: Pour l'Amour de la Musique"
 
 #: Database words
-msgid "Ampache :: Pour l'Amour de la Musique"
-msgstr ""
-
-#: Database words
 msgid "Lock Songs"
 msgstr ""
 
@@ -3861,6 +3835,10 @@ msgstr ""
 #: Database words
 msgid "System"
 msgstr ""
+
+#, fuzzy
+#~ msgid "PHP Version:"
+#~ msgstr "Almanca"
 
 #, fuzzy
 #~ msgid "Playlist %s"
