@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2007 Ampache.org
+ Copyright (c) Ampache.org
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
@@ -55,7 +55,7 @@ if (INSTALL != '1') { exit; }
 		<?php Error::display('general'); ?>
 		<br />
 		<span class="header2"><?php echo _('Generate Config File'); ?></span>
-		<form method="post" action="<?php echo $_SERVER['PHP_SELF'] . "?action=create_config"; ?>" enctype="multipart/form-data" >
+		<form method="post" action="<?php echo WEB_PATH . "?action=create_config"; ?>" enctype="multipart/form-data" >
 		<table>
 <tr>
 	<td class="align"><?php echo _('Web Path'); ?></td>
@@ -123,13 +123,13 @@ if (INSTALL != '1') { exit; }
 <tr>
 	<td>&nbsp;</td>
 	<td>
-	<?php $check_url = $GLOBALS['php_self'] . "?action=show_create_config&amp;htmllang=$htmllang&amp;charset=$charset&amp;local_db=" . $_REQUEST['local_db'] . "&amp;local_host=" . $_REQUEST['local_host']; ?>
+	<?php $check_url = WEB_PATH . "?action=show_create_config&amp;htmllang=$htmllang&amp;charset=$charset&amp;local_db=" . $_REQUEST['local_db'] . "&amp;local_host=" . $_REQUEST['local_host']; ?>
 	<a href="<?php echo $check_url; ?>">[<?php echo _('Check for Config'); ?>]</a>
 	</td>
 		</tr>
 		</table>
 		<br />
-		<form method="post" action="<?php echo $GLOBALS['php_self'] . "?action=show_create_account&amp;htmllang=$htmllang&amp;charset=$charset"; ?>" enctype="multipart/form-data">
+		<form method="post" action="<?php echo WEB_PATH . "?action=show_create_account&amp;htmllang=$htmllang&amp;charset=$charset"; ?>" enctype="multipart/form-data">
 		<input type="submit" value="<?php echo _('Continue to Step 3'); ?>" />
 		</form>
 	</div>

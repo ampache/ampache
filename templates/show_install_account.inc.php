@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2007 Ampache.org
+ Copyright (c) Ampache.org
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
@@ -55,7 +55,7 @@ if (INSTALL != '1') { exit; }
 	<?php Error::display('general'); ?>
 	<br />
 	<span class="header2"><?php echo _('Create Admin Account'); ?></span>
-	<form method="post" action="<?php echo $GLOBALS['php_self'] . "?action=create_account&amp;htmllang=$htmllang&amp;charset=$charset"; ?>" enctype="multipart/form-data" >
+	<form method="post" action="<?php echo WEB_PATH . "?action=create_account&amp;htmllang=$htmllang&amp;charset=$charset"; ?>" enctype="multipart/form-data" >
 <table>
 <tr>
 	<td class="align"><?php echo _('Username'); ?></td>

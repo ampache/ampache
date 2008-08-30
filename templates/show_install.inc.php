@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2007 Ampache.org
+ Copyright (c) Ampache.org
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
@@ -60,7 +60,7 @@ if (INSTALL != '1') { exit; }
 		<?php Error::display('general'); ?>
 		<br />
 		<span class="header2"><?php echo _('Insert Ampache Database'); ?></span>
-		<form method="post" action="<?php echo $http_type . $_SERVER['HTTP_HOST'] .  $_SERVER['PHP_SELF'] . "?action=create_db&amp;htmllang=$htmllang&amp;charset=$charset"; ?>" enctype="multipart/form-data" >
+		<form method="post" action="<?php echo WEB_PATH . "?action=create_db&amp;htmllang=$htmllang&amp;charset=$charset"; ?>" enctype="multipart/form-data" >
 <table>
 <tr>
 	<td class="align"><?php echo _("Desired Database Name"); ?></td>
@@ -93,6 +93,10 @@ if (INSTALL != '1') { exit; }
 <tr>
 	<td class="align"><?php echo _('Overwrite Existing'); ?></td>
 	<td><input type="checkbox" name="overwrite_db" value="1" /></td>
+</tr>
+<tr>
+	<td class="align"><?php echo _('Use Existing Database'); ?></td>
+	<td><input type="checkbox" name="existing_db" value="1" /></td>
 </tr>
 <tr>
 	<td>&nbsp;</td>

@@ -106,17 +106,11 @@ function install_insert_db($username,$password,$hostname,$database) {
 		return false; 
 	} 
 
-
 	$data['database_username'] = $username; 
 	$data['database_password'] = $password; 
 	$data['database_hostname'] = $hostname; 
 	$data['database_name']	   = $database;
 
-	if (!strlen($data['database_password'])) { 
-		Error::add('general','Error: Password required for Database creation'); 
-		return false; 
-	} 
-	
 	Config::set_by_array($data,'1'); 
 	
 	unset($data); 
@@ -132,7 +126,10 @@ function install_insert_db($username,$password,$hostname,$database) {
 	/* Check/Create Database as needed */
 	$db_selected = @mysql_select_db($database, $dbh);
 
-	if ($db_selected && !$_POST['overwrite_db']) { 
+	if ($db_selected && $_POST['existing_db']) { 
+		// Rien a faire, we've got the db just blow through
+	} 
+	elseif ($db_selected && !$_POST['overwrite_db']) { 
 		Error::add('general','Error: Database Already exists and Overwrite not checked'); 
 		return false; 
 	} 

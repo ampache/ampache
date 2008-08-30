@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2007 Ampache.org
+ Copyright (c) Ampache.org
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
@@ -142,7 +142,7 @@
 		<p>
 		<?php Error::display('general'); ?>
 		</p>
-<form method="post" action="<?php echo $http_type . $_SERVER['HTTP_HOST'] .  $_SERVER['PHP_SELF'] . "?action=init"; ?>" enctype="multipart/form-data" >
+<form method="post" action="<?php echo WEB_PATH . "?action=init"; ?>" enctype="multipart/form-data" >
 
 <?php
 $languages = get_languages();
