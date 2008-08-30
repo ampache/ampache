@@ -42,7 +42,8 @@
         <?php
                 $data = Song::get_recently_played();
 		Song::build_cache(array_keys($data)); 
-		show_box_top(_('Recently Played')); 
+		$link = Config::get('use_rss') ? ' ' . RSS::get_display('recentlyplayed') :  '';
+		show_box_top(_('Recently Played') . $link); 
                 require_once Config::get('prefix') . '/templates/show_recently_played.inc.php'; 
 		show_box_bottom(); 
         ?>

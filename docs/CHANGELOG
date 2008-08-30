@@ -4,6 +4,7 @@
 
 --------------------------------------------------------------------------
   v.3.5-Alpha1
+	- Add links to RSS feeds and set default to TRUE in config.dist
         - Fixed Dynamic Random/Related URLs with players that always send
                 a byte offset (MPD)
 	- Added Checkbox to use existing Database

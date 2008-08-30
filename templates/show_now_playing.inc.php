@@ -1,7 +1,7 @@
 <?php
 /*
 
-Copyright (c) 2001 - 2007 Ampache.org
+Copyright (c) Ampache.org
 All rights reserved.
 
 This program is free software; you can redistribute it and/or
@@ -28,8 +28,9 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
 if (count($results)) {
+$link = Config::get('use_rss') ? ' ' . RSS::get_display('nowplaying') : ''; 
 ?>
-<?php show_box_top(_('Now Playing')); ?>
+<?php show_box_top(_('Now Playing') . $link); ?>
 <div class="np_row">
 <?php 
 foreach ($results as $item) {

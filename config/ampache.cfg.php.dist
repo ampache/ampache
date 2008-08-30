@@ -525,8 +525,8 @@ transcode_cmd_ogg   = "oggsplt -qn %FILE% %OFFSET% %EOF% -o - | oggdec -Q -o - -
 ;
 ; use_rss = false (values true | false)
 ;
-;DEFAULT: use_rss = false 
-;use_rss = false
+;DEFAULT: use_rss = true
+use_rss = true
 ;
 ;
 ; rss_main_title = the title for your feed.
