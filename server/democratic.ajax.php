@@ -56,6 +56,7 @@ switch ($_REQUEST['action']) {
 		} 
 
 		$democratic = Democratic::get_current_playlist(); 
+		$democratic->set_parent(); 
 		$democratic->delete_votes($_REQUEST['row_id']); 
 
 		ob_start(); 
