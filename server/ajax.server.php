@@ -233,7 +233,7 @@ switch ($_REQUEST['action']) {
 		switch ($_REQUEST['type']) { 
 			case 'album': 
 			case 'artist': 
-			case 'genre': 
+			case 'tag': 
 				$object = new $_REQUEST['type']($_REQUEST['id']); 
 				$songs = $object->get_songs(); 
 				foreach ($songs as $song_id) { 
@@ -249,7 +249,7 @@ switch ($_REQUEST['action']) {
 			break; 
 			case 'album_random': 
 			case 'artist_random': 
-			case 'genre_random':
+			case 'tag_random':
 				$data = explode('_',$_REQUEST['type']); 
 				$type = $data['0'];
 				$object = new $type($_REQUEST['id']); 

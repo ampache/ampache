@@ -65,7 +65,7 @@
 	    <?php echo Ajax::text('?action=basket&type=dynamic&random_type=album',_('Related Album'),'rb_add_related_album'); ?>
 	   </li>
 	   <li>
-	    <?php echo Ajax::text('?action=basket&type=dynamic&random_type=genre',_('Related Genre'),'rb_add_related_genre'); ?>
+	    <?php echo Ajax::text('?action=basket&type=dynamic&random_type=tag',_('Related Tag'),'rb_add_related_tag'); ?>
 	   </li>
 	  </ul>
 	</li>

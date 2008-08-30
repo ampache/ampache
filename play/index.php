@@ -137,7 +137,7 @@ if ($demo_id) {
  * if we are doing random let's pull the random object
  */
 if ($random) { 
-	if (!isset($start)) { 
+	if ($start < 1) { 
 		$song_id = Random::get_single_song($_REQUEST['type']); 
 		// Save this one incase we do a seek
 		$_SESSION['random']['last'] = $song_id; 
@@ -158,19 +158,7 @@ if (!make_bool($song->enabled)) {
 	exit;
 }
 
-/* If we don't have a file, or the file is not readable */
-if (!$song->file OR ( !is_readable($song->file) AND $catalog->catalog_type != 'remote' ) ) { 
 
-	// We need to make sure this isn't democratic play, if it is then remove the song
-	// from the vote list
-	if (is_object($tmp_playlist)) { 
-		$tmp_playlist->delete_track($song_id); 
-	}
-
-	debug_event('file_not_found',"Error song $song->file ($song->title) does not have a valid filename specified",'2');
-	echo "Error: Invalid Song Specified, file not found or file unreadable"; 
-	exit; 
-}
 
 	
 // If we are running in Legalize mode, don't play songs already playing
@@ -211,6 +199,20 @@ if ($catalog->catalog_type == 'remote') {
 
 	exit;
 } // end if remote catalog
+
+/* If we don't have a file, or the file is not readable */
+if (!$song->file OR !is_readable($song->file)) { 
+
+	// We need to make sure this isn't democratic play, if it is then remove the song
+	// from the vote list
+	if (is_object($tmp_playlist)) { 
+		$tmp_playlist->delete_track($song_id); 
+	}
+
+	debug_event('file_not_found',"Error song $song->file ($song->title) does not have a valid filename specified",'2');
+	echo "Error: Invalid Song Specified, file not found or file unreadable"; 
+	exit; 
+}
 
 // make fread binary safe
 set_magic_quotes_runtime(0);
