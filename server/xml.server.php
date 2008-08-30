@@ -48,25 +48,27 @@ if (!Config::get('access_control')) {
  * Verify the existance of the Session they passed in we do allow them to
  * login via this interface so we do have an exception for action=login
  */
-if (!Access::check_network('init-api',$_SERVER['REMOTE_ADDR'],$_REQUEST['user'],'5')) { 
-	debug_event('Access Denied','Unathorized access attempt to API [' . $_SERVER['REMOTE_ADDR'] . ']', '3');
-	ob_end_clean(); 
+if ((!vauth::session_exists('api', $_REQUEST['auth']) AND $_REQUEST['action'] != 'handshake')) {
+        debug_event('Access Denied','Invalid Session attempt to API [' . $_REQUEST['action'] . ']','3');
+        ob_end_clean();
+        echo xmlData::error('401','Session Expired');
+        exit();
+}
+
+// If the session exists then let's try to pull some data from it to see if we're still allowed to do this
+$session = vauth::get_session_data($_REQUEST['auth']);
+$username = ($_REQUEST['action'] == 'handshake') ? $_REQUEST['user'] : $session['username'];
+
+if (!Access::check_network('init-api',$_SERVER['REMOTE_ADDR'],$username,'5')) { 
+        debug_event('Access Denied','Unathorized access attempt to API [' . $_SERVER['REMOTE_ADDR'] . ']', '3');
+        ob_end_clean(); 
         echo xmlData::error('403','ACL Error');
-	exit(); 
+        exit(); 
 }
 
-if ((!vauth::session_exists('api', $_REQUEST['auth']) AND $_REQUEST['action'] != 'handshake')) { 
-	debug_event('Access Denied','Invalid Session attempt to API [' . $_REQUEST['action'] . ']','3'); 
-	ob_end_clean(); 
-	echo xmlData::error('401','Session Expired');
-	exit(); 
-}
-
-// If we make it past the check and we're not a hand-shaking then we should extend the session
-if ($_REQUEST['action'] != 'handshake') { 
-	vauth::session_extend($_REQUEST['auth']); 
-	$session = vauth::get_session_data($_REQUEST['auth']);
-	$GLOBALS['user'] = User::get_from_username($session['username']);
+if (!$_REQUEST['action'] != 'handshake') { 
+        vauth::session_extend($_REQUEST['auth']); 
+        $GLOBALS['user'] = User::get_from_username($session['username']);
 } 
 
 switch ($_REQUEST['action']) { 
