@@ -21,6 +21,8 @@
 
 /* Define the time places starting at 0 */
 $time_unit = array('',_('seconds ago'),_('minutes ago'),_('hours ago'),_('days ago'),_('weeks ago'),_('months ago'),_('years ago')); 
+$link = Config::get('use_rss') ? ' ' . RSS::get_display('recentlyplayed') :  '';
+show_box_top(_('Recently Played') . $link);
 ?>
 <table class="tabledata" cellpadding="0" cellspacing="0">
 <colgroup>
@@ -102,3 +104,4 @@ $time_unit = array('',_('seconds ago'),_('minutes ago'),_('hours ago'),_('days a
 	<th class="cel_lastplayed"><?php echo _('Last Played'); ?></th>
 </tr>
 </table>
+<?php show_box_bottom(); ?>
