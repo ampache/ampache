@@ -41,8 +41,6 @@ Dba::_auto_init();
 
 switch ($_REQUEST['action']) { 
 	case 'config': 
-		$ampache_path = dirname(__FILE__);
-		$prefix = realpath($ampache_path . "/../");
 		$configfile = "$prefix/config/ampache.cfg.php";
 
 		// On every load of the config file check and see if it's working now
