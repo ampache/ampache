@@ -95,9 +95,6 @@ abstract class localplay_controller {
 		// Define possible 'primary' keys
 		$primary_array = array('song','demo_id','random');  
 
-                // Delete everything before the first ? 
-                $file = preg_replace("/.*\?(.+)/",'$1',$url);
-
 		$variables = parse_url($url,PHP_URL_QUERY); 
 		parse_str($variables,$data); 
 
