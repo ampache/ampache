@@ -4,6 +4,8 @@
 
 --------------------------------------------------------------------------
   v.3.5-Alpha1
+        - Fixed use_auth = false not correctly re-creating the session if
+                you had just switched from use_auth = true
 	- Add links to RSS feeds and set default to TRUE in config.dist
         - Fixed Dynamic Random/Related URLs with players that always send
                 a byte offset (MPD)

@@ -85,7 +85,7 @@ if (!count($results)) {
 } 
 
 /** This is the version.... fluf nothing more... **/
-$results['version']		= '3.5-Alpha1 (Build 002)';
+$results['version']		= '3.5-Alpha1 (Build 003)';
 $results['int_config_version']	= '7'; 
 
 $results['raw_web_path']	= $results['web_path'];
@@ -206,10 +206,11 @@ elseif (!Config::get('use_auth')) {
 	$auth['id'] = -1;
 	$auth['access'] = '100';
 	$auth['offset_limit'] = 50;
-	if (!vauth::check_session()) { 
+	if (!vauth::session_exists('interface',$_COOKIE[Config::get('session_name')])) { 
 		vauth::create_cookie(); 
 		vauth::session_create($auth); 
 	}
+	vauth::check_session(); 
 	$GLOBALS['user']	 	= new User(-1);
 	$GLOBALS['user']->fullname 	= 'Ampache User';
 	$GLOBALS['user']->offset_limit 	= $auth['offset_limit'];
