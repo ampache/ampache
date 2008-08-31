@@ -85,7 +85,7 @@ function run_search($data) {
 		break;
 	} // end switch 
 
-	return false;
+	return array();
 
 } // run_search
 
@@ -219,6 +219,8 @@ function search_song($data,$operator,$method,$limit) {
 	$_SESSION['userdata']['stored_search'] = $sql;
 
 	$db_results = Dba::query($sql);
+
+	$results = array(); 
 	
 	while ($row = Dba::fetch_assoc($db_results)) { 
 		$results[] = $row['id'];

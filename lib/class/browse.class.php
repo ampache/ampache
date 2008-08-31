@@ -936,7 +936,7 @@ class Browse {
 			$object_ids = self::get_saved(); 
 		} 
 		else { 
-			$object_ids = $object_ids ? $object_ids : self::get_saved();
+			$object_ids = is_array($object_ids) ? $object_ids : self::get_saved();
 			self::save_objects($object_ids); 
 		} 
 	

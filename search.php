@@ -45,7 +45,6 @@ switch ($_REQUEST['action']) {
 		$results = run_search($_REQUEST);
 		Browse::set_type('song'); 
 		Browse::reset(); 
-		Browse::set_static_content(1);
 		Browse::show_objects($results); 
 	break;
 	case 'save_as_track':
