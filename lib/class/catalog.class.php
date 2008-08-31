@@ -640,7 +640,7 @@ class Catalog {
 			
 			if (count($results)) { 
 				// Pull the string representation from the source
-				$image = get_image_from_source($results['0']);  
+				$image = Album::get_image_from_source($results['0']);  
 				if (strlen($image) > '5') { 
 					$album->insert_art($image,$results['0']['mime']); 
 				} 

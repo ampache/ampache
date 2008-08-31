@@ -121,7 +121,6 @@ $results['mysql_db']		= $results['database_name'];
 define('INIT_LOADED','1');
 
 // Library and module includes we can't do with the autoloader
-require_once $prefix . '/lib/album.lib.php';
 require_once $prefix . '/lib/search.php';
 require_once $prefix . '/lib/preferences.php';
 require_once $prefix . '/lib/rss.php';

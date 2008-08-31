@@ -822,6 +822,105 @@ class Album extends database_object {
 
 	} // save_resized_art
 
+	/**
+	 * get_random_albums
+	 * This returns a random number of albums from the catalogs
+	 * this is used by the index to return some 'potential' albums to play
+	 */
+	public static function get_random_albums($count=6) {
+
+	        $sql = 'SELECT `id` FROM `album` ORDER BY RAND() LIMIT ' . ($count*2);
+	        $db_results = Dba::query($sql);
+
+	        $in_sql = '`album_id` IN (';
+
+	        while ($row = Dba::fetch_assoc($db_results)) {
+	                $in_sql .= "'" . $row['id'] . "',";
+	                $total++;
+	        }
+
+	        if ($total < $count) { return false; }
+
+	        $in_sql = rtrim($in_sql,',') . ')';
+
+	        $sql = "SELECT `album_id`,ISNULL(`art`) AS `no_art` FROM `album_data` WHERE $in_sql";
+	        $db_results = Dba::query($sql);
+	        $results = array();
+
+	        while ($row = Dba::fetch_assoc($db_results)) {
+	                $results[$row['album_id']] = $row['no_art'];
+	        } // end for
+	
+	        asort($results);
+	        $albums = array_keys($results);
+	        $results = array_slice($albums,0,$count);
+	
+	        return $results;
+
+	} // get_random_albums
+
+	/**
+	 * get_image_from_source
+	 * This gets an image for the album art from a source as 
+	 * defined in the passed array. Because we don't know where
+	 * its comming from we are a passed an array that can look like
+	 * ['url']      = URL *** OPTIONAL ***
+	 * ['file']     = FILENAME *** OPTIONAL ***
+	 * ['raw']      = Actual Image data, already captured
+	 */
+	public static function get_image_from_source($data) {
+
+	        // Already have the data, this often comes from id3tags
+	        if (isset($data['raw'])) {
+	                return $data['raw'];
+	        }
+
+	        // If it came from the database
+	        if (isset($data['db'])) {
+	                // Repull it 
+	                $album_id = Dba::escape($data['db']);
+	                $sql = "SELECT * FROM `album_data` WHERE `album_id`='$album_id'";
+	                $db_results = Dba::query($sql);
+	                $row = Dba::fetch_assoc($db_results);
+	                return $row['art'];
+	        } // came from the db
+
+	        // Check to see if it's a URL
+	        if (isset($data['url'])) {
+	                $snoopy = new Snoopy();
+	                $snoopy->fetch($data['url']);
+	                return $snoopy->results;
+	        }
+
+	        // Check to see if it's a FILE
+	        if (isset($data['file'])) {
+	                $handle = fopen($data['file'],'rb');
+	                $image_data = fread($handle,filesize($data['file']));
+	                fclose($handle);
+	                return $image_data;
+        	}
+	
+	        // Check to see if it is embedded in id3 of a song
+	        if (isset($data['song'])) {
+	                // If we find a good one, stop looking
+	                $getID3 = new getID3();
+	                $id3 = $getID3->analyze($data['song']);
+	
+	                if ($id3['format_name'] == "WMA") {
+	                        return $id3['asf']['extended_content_description_object']['content_descriptors']['13']['data'];
+	                }
+	                elseif (isset($id3['id3v2']['APIC'])) {
+	                        // Foreach incase they have more then one 
+	                        foreach ($id3['id3v2']['APIC'] as $image) {
+	                                return $image['data'];
+	                        }
+	                }
+	        } // if data song
+
+	        return false;
+
+	} // get_image_from_source
+
 } //end of album class
 
 ?>

@@ -67,7 +67,7 @@ switch ($_REQUEST['type']) {
 	case 'session':
 		vauth::check_session(); 
 		$key = scrub_in($_REQUEST['image_index']); 
-		$image = get_image_from_source($_SESSION['form']['images'][$key]);
+		$image = Album::get_image_from_source($_SESSION['form']['images'][$key]);
 		$mime = $_SESSION['form']['images'][$key]['mime'];
 		$data = explode("/",$mime); 
 		$extension = $data['1']; 

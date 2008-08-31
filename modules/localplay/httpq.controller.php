@@ -312,7 +312,7 @@ class AmpacheHttpq extends localplay_controller {
 	 * clear_playlist
 	 * This deletes the entire Httpq playlist... nuff said
 	 */
-	function clear_playlist() { 
+	public function clear_playlist() { 
 
 		if (is_null($this->_httpq->clear())) { return false; }
 
@@ -358,7 +358,7 @@ class AmpacheHttpq extends localplay_controller {
 	 * skip
 	 * This tells HttpQ to skip to the specified song
 	 */
-	function skip($song) { 
+	public function skip($song) { 
 
 		if (is_null($this->_httpq->skip($song))) { return false; }
 		return true; 
@@ -368,7 +368,7 @@ class AmpacheHttpq extends localplay_controller {
 	/**
 	 * This tells Httpq to increase the volume by WinAmps default amount
 	 */
-	function volume_up() { 
+	public function volume_up() { 
 
 		if (is_null($this->_httpq->volume_up())) { return false; } 
 		return true;
@@ -378,7 +378,7 @@ class AmpacheHttpq extends localplay_controller {
 	/**
 	 * This tells HttpQ to decrease the volume by Winamps default amount
 	 */
-	function volume_down() { 
+	public function volume_down() { 
 
 		if (is_null($this->_httpq->volume_down())) { return false; }
 		return true;
@@ -387,9 +387,9 @@ class AmpacheHttpq extends localplay_controller {
 
 	/**
 	 * next
-	 * This just tells MPD to skip to the next song 
+	 * This just tells HttpQ to skip to the next song 
 	 */
-	function next() { 
+	public function next() { 
 
 		if (is_null($this->_httpq->next())) { return false; } 
 
@@ -399,9 +399,9 @@ class AmpacheHttpq extends localplay_controller {
 
 	/**
 	 * prev
-	 * This just tells MPD to skip to the prev song
+	 * This just tells HttpQ to skip to the prev song
 	 */
-	function prev() { 
+	public function prev() { 
 
 		if (is_null($this->_httpq->prev())) { return false; } 
 
@@ -411,9 +411,9 @@ class AmpacheHttpq extends localplay_controller {
 
 	/**
 	 * pause
-	 * This tells MPD to pause the current song 
+	 * This tells HttpQ to pause the current song 
 	 */
-	function pause() { 
+	public function pause() { 
 		
 		if (is_null($this->_httpq->pause())) { return false; } 
 		return true;
@@ -425,7 +425,7 @@ class AmpacheHttpq extends localplay_controller {
         * This tells HttpQ to set the volume to the specified amount this
 	* is 0-100
         */
-       function volume($volume) {
+       public function volume($volume) {
 
                if (is_null($this->_httpq->set_volume($volume))) { return false; }
                return true;
@@ -477,6 +477,7 @@ class AmpacheHttpq extends localplay_controller {
 			$data['raw']	= $entry;		
 
 			$url_data = $this->parse_url($entry); 
+
                         switch ($url_data['primary_key']) {
                                 case 'song':
                                         $song = new Song($url_data['song']);
@@ -489,6 +490,10 @@ class AmpacheHttpq extends localplay_controller {
                                         $data['name'] = _('Democratic') . ' - ' . $democratic->name;
                                         $data['link']   = '';
                                 break;
+				case 'random': 
+					$data['name'] = _('Random') . ' - ' . scrub_out(ucfirst($url_data['type'])); 
+					$data['link'] = ''; 
+				break; 
                                 default:
 
                                         /* If we don't know it, look up by filename */
@@ -508,7 +513,6 @@ class AmpacheHttpq extends localplay_controller {
 
                                 break;
                         } // end switch on primary key type
-
 
 			$data['track']	= $key+1;
 

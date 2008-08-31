@@ -313,7 +313,7 @@ class AmpacheMpd extends localplay_controller {
 	 * clear_playlist
 	 * This deletes the entire MPD playlist... nuff said
 	 */
-	function clear_playlist() { 
+	public function clear_playlist() { 
 
 		if (is_null($this->_mpd->PLClear())) { return false; }
 
@@ -326,7 +326,7 @@ class AmpacheMpd extends localplay_controller {
 	 * This just tells MPD to start playing, it does not
 	 * take any arguments
 	 */
-	function play() { 
+	public function play() { 
 
 		if (is_null($this->_mpd->Play())) { return false; } 
 		return true;
@@ -338,7 +338,7 @@ class AmpacheMpd extends localplay_controller {
 	 * This just tells MPD to stop playing, it does not take
 	 * any arguments
 	 */
-	function stop() { 
+	public function stop() { 
 
 		if (is_null($this->_mpd->Stop())) { return false; } 
 		return true;
@@ -349,7 +349,7 @@ class AmpacheMpd extends localplay_controller {
 	 * skip
 	 * This tells MPD to skip to the specified song
 	 */
-	function skip($song) { 
+	public function skip($song) { 
 
 		if (is_null($this->_mpd->SkipTo($song))) { return false; }
 		return true; 
@@ -359,7 +359,7 @@ class AmpacheMpd extends localplay_controller {
 	/**
 	 * This tells MPD to increase the volume by 5
 	 */
-	function volume_up() { 
+	public function volume_up() { 
 
 		if (is_null($this->_mpd->AdjustVolume('5'))) { return false; } 
 		return true;
@@ -369,7 +369,7 @@ class AmpacheMpd extends localplay_controller {
 	/**
 	 * This tells MPD to decrese the volume by 5
 	 */
-	function volume_down() { 
+	public function volume_down() { 
 
 		if (is_null($this->_mpd->AdjustVolume('-5'))) { return false; }
 		return true;
@@ -380,7 +380,7 @@ class AmpacheMpd extends localplay_controller {
 	 * next
 	 * This just tells MPD to skip to the next song 
 	 */
-	function next() { 
+	public function next() { 
 
 		if (is_null($this->_mpd->Next())) { return false; } 
 		return true;
@@ -391,7 +391,7 @@ class AmpacheMpd extends localplay_controller {
 	 * prev
 	 * This just tells MPD to skip to the prev song
 	 */
-	function prev() { 
+	public function prev() { 
 
 		if (is_null($this->_mpd->Previous())) { return false; } 
 		return true;
@@ -402,7 +402,7 @@ class AmpacheMpd extends localplay_controller {
 	 * pause
 	 * This tells MPD to pause the current song 
 	 */
-	function pause() { 
+	public function pause() { 
 		
 		if (is_null($this->_mpd->Pause())) { return false; } 
 		return true;
@@ -414,7 +414,7 @@ class AmpacheMpd extends localplay_controller {
         * volume
         * This tells MPD to set the volume to the parameter
         */
-       function volume($volume) {
+	public function volume($volume) {
 
                if (is_null($this->_mpd->SetVolume($volume))) { return false; }
                return true;
@@ -425,19 +425,18 @@ class AmpacheMpd extends localplay_controller {
         * repeat
         * This tells MPD to set the repeating the playlist (i.e. loop) to either on or off
         */
-       function repeat($state) {
+	public function repeat($state) {
 	
 		if (is_null($this->_mpd->SetRepeat($state))) { return false; }
        		return true;
 
        } // repeat
 
-
        /**
         * random
         * This tells MPD to turn on or off the playing of songs from the playlist in random order
         */
-       function random($onoff) {
+       public function random($onoff) {
 
                if (is_null($this->_mpd->SetRandom($onoff))) { return false; }
                return true;
@@ -448,7 +447,7 @@ class AmpacheMpd extends localplay_controller {
         * move
         * This tells MPD to move song from SrcPos to DestPos
         */
-       function move($SrcPos, $DestPos) {
+       public function move($SrcPos, $DestPos) {
 
 		if (is_null($this->_mpd->PLMoveTrack($SrcPos, $DestPos))) { return false; }
 
