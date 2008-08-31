@@ -492,6 +492,10 @@ class AmpacheMpd extends localplay_controller {
 					$data['name'] = _('Democratic') . ' - ' . $democratic->name; 	
 					$data['link']   = '';
 				break; 
+				case 'random':
+					$data['name'] = _('Random') . ' - ' . scrub_out(ucfirst($url_data['type'])); 
+					$data['link'] = ''; 
+				break;
 				default: 
 
 					/* If we don't know it, look up by filename */
