@@ -1074,7 +1074,7 @@ class Catalog {
 		/* Record the reading of these tags */
 		debug_event('tag-read',"Reading Tags from $song->file",'5','ampache-catalog');
 		
-		$vainfo = new vainfo($song->file,'',$sort_pattern,$rename_pattern);
+		$vainfo = new vainfo($song->file,'','','',$sort_pattern,$rename_pattern);
 		$vainfo->get_info();
 
                 /* Find the correct key */
@@ -1502,7 +1502,7 @@ class Catalog {
 		$db_results = Dba::query($sql); 
 
 		// Now nuke the tags themselves
-		$sql = "DELETE FROM `tag` USING `tag` LEFT JOIN `tag_map` ON `tag`.`id`=`tag_map`.`tag_id` " . 
+		$sql = "DELETE FROM `tag` USING `tag` LEFT JOIN `tag_map` ON `tag`.`map_id`=`tag_map`.`tag_id` " . 
 			"WHERE `tag_map`.`id` IS NULL"; 
 		$db_results = Dba::query($sql); 
 
@@ -2000,7 +2000,7 @@ debug_event('prefix',$prefix_pattern,'3');
 	public function insert_local_song($file,$file_info) {
 
 		/* Create the vainfo object and get info */
-		$vainfo		= new vainfo($file,'',$this->sort_pattern,$this->rename_pattern);
+		$vainfo		= new vainfo($file,'','','',$this->sort_pattern,$this->rename_pattern);
 		$vainfo->get_info();
 
 		$key = get_tag_type($vainfo->tags);

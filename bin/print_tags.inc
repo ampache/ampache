@@ -39,7 +39,7 @@ $results = Dba::fetch_assoc($db_results);
 
 $catalog = new Catalog($results['id']);
 
-$info = new vainfo($filename,'',$catalog->sort_pattern,$catalog->rename_pattern);
+$info = new vainfo($filename,'','','',$catalog->sort_pattern,$catalog->rename_pattern);
 echo "Using: $catalog->sort_pattern AND $catalog->rename_pattern for file pattern matching\n";
 $info->get_info();
 $results = $info->tags;

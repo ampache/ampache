@@ -28,6 +28,8 @@ class vainfo {
 
 	/* Default Encoding */
 	var $encoding = '';
+	var $encoding_id3v1 = '';
+	var $encoding_id3v2 = '';
 	
 	/* Loaded Variables */
 	var $filename = '';
@@ -36,6 +38,7 @@ class vainfo {
 
 	/* Internal Information */
 	var $_raw 		= array();
+	var $_raw2		= array();
 	var $_getID3 		= '';
 	var $_iconv		= false; 
 	var $_file_encoding	= '';
@@ -47,7 +50,7 @@ class vainfo {
 	 * This function just sets up the class, it doesn't
 	 * actually pull the information
 	 */
-	function vainfo($file,$encoding='',$dir_pattern,$file_pattern) { 
+	function vainfo($file,$encoding='',$encoding_id3v1='',$encoding_id3v2='',$dir_pattern,$file_pattern) { 
 
 		$this->filename = $file;
 		if ($encoding) { 
@@ -63,12 +66,50 @@ class vainfo {
 
                 // Initialize getID3 engine
                 $this->_getID3 = new getID3();
+
+		// get id3tag encodings
+		$this->_raw2 = $this->_getID3->analyze($file);
+		if(function_exists('mb_detect_encoding')) {
+			$this->encoding_id3v1 = array();
+			$this->encoding_id3v1[] = mb_detect_encoding($this->_raw2['tags']['id3v1']['artist']['0']);
+			$this->encoding_id3v1[] = mb_detect_encoding($this->_raw2['tags']['id3v1']['album']['0']);
+			$this->encoding_id3v1[] = mb_detect_encoding($this->_raw2['tags']['id3v1']['genre']['0']);
+			$this->encoding_id3v1[] = mb_detect_encoding($this->_raw2['tags']['id3v1']['title']['0']);
+			array_multisort($this->encoding_id3v1);
+			array_splice($this->encoding_id3v1, -4, 3);
+			if($this->encoding_id3v1[0] != "ASCII") {
+				$this->encoding_id3v1 = $this->encoding_id3v1[0];
+			} else {
+				$this->encoding_id3v1 = "ISO-8859-1";
+			}
+			
+
+			$this->encoding_id3v2 = array();
+			$this->encoding_id3v2[] = mb_detect_encoding($this->_raw2['tags']['id3v2']['artist']['0']);
+			$this->encoding_id3v2[] = mb_detect_encoding($this->_raw2['tags']['id3v2']['album']['0']);
+			$this->encoding_id3v2[] = mb_detect_encoding($this->_raw2['tags']['id3v2']['genre']['0']);
+			$this->encoding_id3v2[] = mb_detect_encoding($this->_raw2['tags']['id3v2']['title']['0']);
+			array_multisort($this->encoding_id3v2);
+			array_splice($this->encoding_id3v2, -4, 3);
+			if($this->encoding_id3v2[0] != "ASCII"){
+				$this->encoding_id3v2 = $this->encoding_id3v2[0];
+			} else {
+				$this->encoding_id3v2 = "ISO-8859-1";
+			}
+		}
+		else {
+			$this->encoding_id3v1 = $encoding_id3v1;
+			$this->encoding_id3v2 = $encoding_id3v2;
+		}
+
                 $this->_getID3->option_md5_data		= false;
                 $this->_getID3->option_md5_data_source	= false;
 		$this->_getID3->option_tags_html	= false;
 		$this->_getID3->option_extra_info	= false;
 		$this->_getID3->option_tag_lyrics3	= false;
 		$this->_getID3->encoding		= $this->encoding; 
+		$this->_getID3->encoding_id3v1		= $this->encoding_id3v1;
+		$this->_getID3->encoding_id3v2		= $this->encoding_id3v2;
 		$this->_getID3->option_tags_process    = true; 
 
 		/* Check for ICONV */
