@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ampache 3.5.0\n"
 "Report-Msgid-Bugs-To: translations at ampache.org\n"
-"POT-Creation-Date: 2008-08-29 16:38+0900\n"
+"POT-Creation-Date: 2008-09-03 08:08+0900\n"
 "PO-Revision-Date: 2008-08-01 00:52+0200\n"
 "Last-Translator: Erwan Velu <erwan.velu@free.fr>\n"
 "Language-Team: French <kde-i18n-doc@lists.kde.org>\n"
@@ -44,9 +44,9 @@ msgstr "Erreur: Aucun mot cl&eacute; entr&eacute;"
 #: ../../templates/show_live_stream_row.inc.php:23
 #: ../../templates/show_shoutbox.inc.php:34
 #: ../../templates/show_songs.inc.php:39 ../../templates/show_songs.inc.php:68
-#: ../../templates/show_recently_played.inc.php:35
-#: ../../templates/show_recently_played.inc.php:78
-#: ../../templates/show_recently_played.inc.php:97
+#: ../../templates/show_recently_played.inc.php:37
+#: ../../templates/show_recently_played.inc.php:80
+#: ../../templates/show_recently_played.inc.php:99
 #: ../../templates/show_artist.inc.php:38
 #: ../../templates/show_album.inc.php:51
 #: ../../templates/show_playlist_song_row.inc.php:22
@@ -63,6 +63,8 @@ msgstr "Ajouter"
 #: ../../templates/show_artist.inc.php:41
 #: ../../templates/show_album.inc.php:55
 #: ../../templates/show_playlist_row.inc.php:24
+#: ../../modules/localplay/mpd.controller.php:495
+#: ../../modules/localplay/httpq.controller.php:494
 msgid "Random"
 msgstr "Al&eacute;atoire"
 
@@ -317,8 +319,8 @@ msgstr "Jacquette"
 #: ../../templates/show_search.inc.php:50
 #: ../../templates/show_songs.inc.php:42 ../../templates/show_songs.inc.php:71
 #: ../../templates/show_get_albumart.inc.php:36
-#: ../../templates/show_recently_played.inc.php:37
-#: ../../templates/show_recently_played.inc.php:100
+#: ../../templates/show_recently_played.inc.php:39
+#: ../../templates/show_recently_played.inc.php:102
 #: ../../templates/show_disabled_songs.inc.php:35
 #: ../../templates/show_disabled_songs.inc.php:58
 #: ../../templates/show_duplicates.inc.php:39
@@ -342,8 +344,8 @@ msgstr "Album"
 #: ../../templates/show_search.inc.php:44
 #: ../../templates/show_songs.inc.php:41 ../../templates/show_songs.inc.php:70
 #: ../../templates/show_get_albumart.inc.php:28
-#: ../../templates/show_recently_played.inc.php:38
-#: ../../templates/show_recently_played.inc.php:101
+#: ../../templates/show_recently_played.inc.php:40
+#: ../../templates/show_recently_played.inc.php:103
 #: ../../templates/show_disabled_songs.inc.php:36
 #: ../../templates/show_disabled_songs.inc.php:59
 #: ../../templates/show_duplicates.inc.php:38
@@ -409,7 +411,7 @@ msgstr "Actions"
 #: ../../templates/show_user_stats.inc.php:47
 #: ../../templates/show_user_stats.inc.php:60
 #: ../../templates/show_songs.inc.php:64
-#: ../../templates/show_recently_played.inc.php:93
+#: ../../templates/show_recently_played.inc.php:95
 msgid "Not Enough Data"
 msgstr "Pas assez de donn&eacute;es"
 
@@ -423,8 +425,8 @@ msgstr "Nom complet"
 #: ../../templates/show_edit_user.inc.php:29
 #: ../../templates/show_add_user.inc.php:29
 #: ../../templates/show_install_account.inc.php:61
-#: ../../templates/show_recently_played.inc.php:39
-#: ../../templates/show_recently_played.inc.php:98
+#: ../../templates/show_recently_played.inc.php:41
+#: ../../templates/show_recently_played.inc.php:100
 #: ../../templates/show_user_registration.inc.php:75
 #: ../../templates/show_now_playing_row.inc.php:29
 msgid "Username"
@@ -496,8 +498,8 @@ msgstr "Jamais"
 #: ../../templates/show_users.inc.php:54 ../../templates/show_user.inc.php:23
 #: ../../lib/class/flag.class.php:282 ../../lib/class/localplay.class.php:648
 #: ../../lib/class/user.class.php:665 ../../lib/general.lib.php:439
-#: ../../modules/localplay/mpd.controller.php:508
-#: ../../modules/localplay/httpq.controller.php:505
+#: ../../modules/localplay/mpd.controller.php:511
+#: ../../modules/localplay/httpq.controller.php:510
 msgid "Unknown"
 msgstr "Inconnu"
 
@@ -865,15 +867,14 @@ msgid "All Playlists"
 msgstr "Toutes les pistes de lecture"
 
 #: ../../templates/sidebar_home.inc.php:76
-#: ../../templates/sidebar_modules.inc.php:41
 msgid "Currently Playing"
 msgstr "En cours de lecture"
 
 #: ../../templates/sidebar_home.inc.php:78
 #: ../../templates/show_playtype_switch.inc.php:36
-#: ../../templates/sidebar_modules.inc.php:47 ../../lib/preferences.php:179
-#: ../../modules/localplay/mpd.controller.php:492
-#: ../../modules/localplay/httpq.controller.php:489
+#: ../../templates/sidebar_modules.inc.php:46 ../../lib/preferences.php:179
+#: ../../modules/localplay/mpd.controller.php:491
+#: ../../modules/localplay/httpq.controller.php:490
 msgid "Democratic"
 msgstr "Democratique"
 
@@ -1063,7 +1064,7 @@ msgid "Show instances"
 msgstr "Monter les instances"
 
 #: ../../templates/sidebar_localplay.inc.php:38
-#: ../../templates/sidebar_modules.inc.php:49
+#: ../../templates/sidebar_modules.inc.php:48
 msgid "Show Playlist"
 msgstr "Monter les listes de lectures"
 
@@ -1108,7 +1109,7 @@ msgid "Cache Hits:"
 msgstr ""
 
 #: ../../templates/show_add_live_stream.inc.php:24
-#: ../../templates/sidebar_modules.inc.php:43
+#: ../../templates/sidebar_modules.inc.php:42
 msgid "Add Radio Station"
 msgstr "Ajouter une station de radio"
 
@@ -1125,11 +1126,6 @@ msgstr "Les albums du moment"
 #: ../../templates/show_index.inc.php:38
 msgid "Loading..."
 msgstr "Chargement..."
-
-#: ../../templates/show_index.inc.php:45 ../../templates/show_user.inc.php:68
-#: ../../server/index.ajax.php:44
-msgid "Recently Played"
-msgstr "R&eacute;cemment jou&eacute;s"
 
 #: ../../templates/show_edit_artist.inc.php:23
 msgid "Edit Artist"
@@ -1495,6 +1491,11 @@ msgstr "Utilisateur est hors ligne "
 msgid "Active Playlist"
 msgstr "Liste de lecture active"
 
+#: ../../templates/show_user.inc.php:68
+#: ../../templates/show_recently_played.inc.php:25
+msgid "Recently Played"
+msgstr "R&eacute;cemment jou&eacute;s"
+
 #: ../../templates/show_add_access.inc.php:22
 msgid "Add Access for a Host"
 msgstr "Ajouter un acc&egrave;s pour un h&ocirc;te"
@@ -1688,9 +1689,10 @@ msgstr "Artiste associé "
 msgid "Related Album"
 msgstr "Album associé "
 
-#: ../../templates/rightbar.inc.php:68 ../../lib/class/random.class.php:426
-msgid "Related Genre"
-msgstr "Genre associé "
+#: ../../templates/rightbar.inc.php:68
+#, fuzzy
+msgid "Related Tag"
+msgstr "Album associé "
 
 #: ../../templates/rightbar.inc.php:104
 msgid "More"
@@ -1896,8 +1898,8 @@ msgstr "Votes"
 
 #: ../../templates/show_democratic_playlist.inc.php:52
 #: ../../templates/show_democratic_playlist.inc.php:87
-#: ../../templates/show_recently_played.inc.php:36
-#: ../../templates/show_recently_played.inc.php:99
+#: ../../templates/show_recently_played.inc.php:38
+#: ../../templates/show_recently_played.inc.php:101
 #: ../../templates/show_duplicates.inc.php:37
 #: ../../templates/show_duplicates.inc.php:75
 #: ../../templates/show_now_playing_row.inc.php:45
@@ -2279,7 +2281,12 @@ msgstr "Mot de passe de l'utilisateur de base de donn&eacute;es Ampache"
 msgid "Overwrite Existing"
 msgstr "Ecraser la configuration existante"
 
-#: ../../templates/show_install.inc.php:99
+#: ../../templates/show_install.inc.php:98
+#, fuzzy
+msgid "Use Existing Database"
+msgstr "Remplissage de la base de donn&eacute;es"
+
+#: ../../templates/show_install.inc.php:103
 msgid "Insert Database"
 msgstr "Remplissage de la base de donn&eacute;es"
 
@@ -2514,8 +2521,8 @@ msgstr "mois"
 msgid "years ago"
 msgstr "ann&eacute;e"
 
-#: ../../templates/show_recently_played.inc.php:40
-#: ../../templates/show_recently_played.inc.php:102
+#: ../../templates/show_recently_played.inc.php:42
+#: ../../templates/show_recently_played.inc.php:104
 msgid "Last Played"
 msgstr "Derniers titres jou&eacute;s"
 
@@ -2951,11 +2958,11 @@ msgstr "Morceaux d&eacute;sactiv&eacute;s"
 msgid "Information"
 msgstr "Information"
 
-#: ../../templates/sidebar_modules.inc.php:42 ../../lib/ui.lib.php:420
+#: ../../templates/sidebar_modules.inc.php:41 ../../lib/ui.lib.php:420
 msgid "Statistics"
 msgstr "Statistiques"
 
-#: ../../templates/sidebar_modules.inc.php:50
+#: ../../templates/sidebar_modules.inc.php:49
 msgid "Manage Playlist"
 msgstr "G&eacute;rer les listes de lectures"
 
@@ -2969,7 +2976,7 @@ msgstr "Permanent"
 msgid "Date Added"
 msgstr "Date ajout&eacute;e"
 
-#: ../../templates/show_now_playing.inc.php:32
+#: ../../templates/show_now_playing.inc.php:33
 #: ../../lib/class/localplay.class.php:639
 msgid "Now Playing"
 msgstr "En cours de lecture"
@@ -3137,6 +3144,10 @@ msgstr "Zone de commentaires"
 #: ../../lib/class/browse.class.php:1025
 msgid "Flagged Records"
 msgstr "Pistes Marqu&eacute;es"
+
+#: ../../lib/class/rss.class.php:59
+msgid "RSS Feed"
+msgstr ""
 
 #: ../../lib/class/flag.class.php:257
 msgid "Approved"
@@ -3313,6 +3324,10 @@ msgstr "Vérifi&eacute;es"
 msgid "songs updated."
 msgstr "morceaux mis &agrave; jour"
 
+#: ../../lib/class/random.class.php:426
+msgid "Related Genre"
+msgstr "Genre associé "
+
 #: ../../lib/class/vauth.class.php:476 ../../lib/class/vauth.class.php:500
 #: ../../lib/class/vauth.class.php:539
 msgid "Error Username or Password incorrect, please try again"
@@ -3374,11 +3389,11 @@ msgstr "Jouer et vider la liste"
 msgid "Always"
 msgstr "Toujours"
 
-#: ../../lib/install.php:259
+#: ../../lib/install.php:250
 msgid "No Username/Password specified"
 msgstr "Aucun nom d'utilisateur/mot de passe spécifié"
 
-#: ../../lib/install.php:264
+#: ../../lib/install.php:255
 msgid "Passwords do not match"
 msgstr "Les mots de passe ne correspondent pas"
 
@@ -3406,6 +3421,11 @@ msgstr "Session expir&eacute;e : reconnectez vous sur"
 #: ../../radio.php:50
 msgid "Radio Station Added"
 msgstr "Station de radio ajout&eacute;e"
+
+#: ../../install.php:168
+#, fuzzy
+msgid "Error: Config file not found or Unreadable"
+msgstr "Erreur: la configuration est trop vielle"
 
 #: ../../update.php:47 ../../update.php:51
 msgid "Ampache Update"

@@ -58,6 +58,8 @@ case $1 in
 			echo "$i MO file creating..."
 			msgfmt -v -c ../$i/LC_MESSAGES/messages.po -o ../$i/LC_MESSAGES/messages.mo
 			rm -f ../$i/LC_MESSAGES/messages.po~
+			obs=`cat ../$i/LC_MESSAGES/messages.po | grep '^#~' | wc -l`
+			echo "Obsolete: $obs"
 		done
 		;;
 	"--get"|"-g"|"get")

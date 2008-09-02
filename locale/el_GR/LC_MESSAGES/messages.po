@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ampache 3.5.0\n"
 "Report-Msgid-Bugs-To: translations at ampache.org\n"
-"POT-Creation-Date: 2008-08-29 16:38+0900\n"
+"POT-Creation-Date: 2008-09-03 08:08+0900\n"
 "PO-Revision-Date: 2008-08-25 08:43+0900\n"
 "Last-Translator: Ampache <translations at ampache.org>\n"
 "Language-Team: Greek <LL@li.org>\n"
@@ -38,9 +38,9 @@ msgstr "Σφάλμα: Δε δώσατε λέξη αναζήτησης"
 #: ../../templates/show_live_stream_row.inc.php:23
 #: ../../templates/show_shoutbox.inc.php:34
 #: ../../templates/show_songs.inc.php:39 ../../templates/show_songs.inc.php:68
-#: ../../templates/show_recently_played.inc.php:35
-#: ../../templates/show_recently_played.inc.php:78
-#: ../../templates/show_recently_played.inc.php:97
+#: ../../templates/show_recently_played.inc.php:37
+#: ../../templates/show_recently_played.inc.php:80
+#: ../../templates/show_recently_played.inc.php:99
 #: ../../templates/show_artist.inc.php:38
 #: ../../templates/show_album.inc.php:51
 #: ../../templates/show_playlist_song_row.inc.php:22
@@ -57,6 +57,8 @@ msgstr "Προσθήκη"
 #: ../../templates/show_artist.inc.php:41
 #: ../../templates/show_album.inc.php:55
 #: ../../templates/show_playlist_row.inc.php:24
+#: ../../modules/localplay/mpd.controller.php:495
+#: ../../modules/localplay/httpq.controller.php:494
 msgid "Random"
 msgstr "Τυχαία"
 
@@ -304,8 +306,8 @@ msgstr "Εξώφυλλο"
 #: ../../templates/show_search.inc.php:50
 #: ../../templates/show_songs.inc.php:42 ../../templates/show_songs.inc.php:71
 #: ../../templates/show_get_albumart.inc.php:36
-#: ../../templates/show_recently_played.inc.php:37
-#: ../../templates/show_recently_played.inc.php:100
+#: ../../templates/show_recently_played.inc.php:39
+#: ../../templates/show_recently_played.inc.php:102
 #: ../../templates/show_disabled_songs.inc.php:35
 #: ../../templates/show_disabled_songs.inc.php:58
 #: ../../templates/show_duplicates.inc.php:39
@@ -329,8 +331,8 @@ msgstr "Άλμπουμ"
 #: ../../templates/show_search.inc.php:44
 #: ../../templates/show_songs.inc.php:41 ../../templates/show_songs.inc.php:70
 #: ../../templates/show_get_albumart.inc.php:28
-#: ../../templates/show_recently_played.inc.php:38
-#: ../../templates/show_recently_played.inc.php:101
+#: ../../templates/show_recently_played.inc.php:40
+#: ../../templates/show_recently_played.inc.php:103
 #: ../../templates/show_disabled_songs.inc.php:36
 #: ../../templates/show_disabled_songs.inc.php:59
 #: ../../templates/show_duplicates.inc.php:38
@@ -396,7 +398,7 @@ msgstr "Ενέργειες"
 #: ../../templates/show_user_stats.inc.php:47
 #: ../../templates/show_user_stats.inc.php:60
 #: ../../templates/show_songs.inc.php:64
-#: ../../templates/show_recently_played.inc.php:93
+#: ../../templates/show_recently_played.inc.php:95
 msgid "Not Enough Data"
 msgstr "Ανεπαρκή δεδομένα"
 
@@ -410,8 +412,8 @@ msgstr "Ονοματεπώνυμο"
 #: ../../templates/show_edit_user.inc.php:29
 #: ../../templates/show_add_user.inc.php:29
 #: ../../templates/show_install_account.inc.php:61
-#: ../../templates/show_recently_played.inc.php:39
-#: ../../templates/show_recently_played.inc.php:98
+#: ../../templates/show_recently_played.inc.php:41
+#: ../../templates/show_recently_played.inc.php:100
 #: ../../templates/show_user_registration.inc.php:75
 #: ../../templates/show_now_playing_row.inc.php:29
 msgid "Username"
@@ -483,8 +485,8 @@ msgstr "Ποτέ"
 #: ../../templates/show_users.inc.php:54 ../../templates/show_user.inc.php:23
 #: ../../lib/class/flag.class.php:282 ../../lib/class/localplay.class.php:648
 #: ../../lib/class/user.class.php:665 ../../lib/general.lib.php:439
-#: ../../modules/localplay/mpd.controller.php:508
-#: ../../modules/localplay/httpq.controller.php:505
+#: ../../modules/localplay/mpd.controller.php:511
+#: ../../modules/localplay/httpq.controller.php:510
 msgid "Unknown"
 msgstr "Άγνωστο"
 
@@ -852,15 +854,14 @@ msgid "All Playlists"
 msgstr "Όλες οι playlists"
 
 #: ../../templates/sidebar_home.inc.php:76
-#: ../../templates/sidebar_modules.inc.php:41
 msgid "Currently Playing"
 msgstr "Τώρα παίζουν"
 
 #: ../../templates/sidebar_home.inc.php:78
 #: ../../templates/show_playtype_switch.inc.php:36
-#: ../../templates/sidebar_modules.inc.php:47 ../../lib/preferences.php:179
-#: ../../modules/localplay/mpd.controller.php:492
-#: ../../modules/localplay/httpq.controller.php:489
+#: ../../templates/sidebar_modules.inc.php:46 ../../lib/preferences.php:179
+#: ../../modules/localplay/mpd.controller.php:491
+#: ../../modules/localplay/httpq.controller.php:490
 msgid "Democratic"
 msgstr "Δημοκρατική"
 
@@ -1050,7 +1051,7 @@ msgid "Show instances"
 msgstr "Δείξε Στιγμιότυπα"
 
 #: ../../templates/sidebar_localplay.inc.php:38
-#: ../../templates/sidebar_modules.inc.php:49
+#: ../../templates/sidebar_modules.inc.php:48
 msgid "Show Playlist"
 msgstr "Δείξε playlist"
 
@@ -1095,7 +1096,7 @@ msgid "Cache Hits:"
 msgstr ""
 
 #: ../../templates/show_add_live_stream.inc.php:24
-#: ../../templates/sidebar_modules.inc.php:43
+#: ../../templates/sidebar_modules.inc.php:42
 msgid "Add Radio Station"
 msgstr "Προσθήκη Ραδιοφωνικού Σταθμού"
 
@@ -1112,11 +1113,6 @@ msgstr "Άλμπουμς της στιγμής"
 #: ../../templates/show_index.inc.php:38
 msgid "Loading..."
 msgstr ""
-
-#: ../../templates/show_index.inc.php:45 ../../templates/show_user.inc.php:68
-#: ../../server/index.ajax.php:44
-msgid "Recently Played"
-msgstr "Παίχτηκαν πρόσφατα"
 
 #: ../../templates/show_edit_artist.inc.php:23
 msgid "Edit Artist"
@@ -1475,6 +1471,11 @@ msgstr "Ο Χρήστης είναι εκτός τώρα"
 msgid "Active Playlist"
 msgstr "Ενεργή playlist"
 
+#: ../../templates/show_user.inc.php:68
+#: ../../templates/show_recently_played.inc.php:25
+msgid "Recently Played"
+msgstr "Παίχτηκαν πρόσφατα"
+
 #: ../../templates/show_add_access.inc.php:22
 msgid "Add Access for a Host"
 msgstr "Πρόσθεσε πρόσβαση από εξυπηρετητή"
@@ -1667,9 +1668,10 @@ msgstr "Σχετικό Καλλιτέχνης"
 msgid "Related Album"
 msgstr "Σχετικό άλμπουμ"
 
-#: ../../templates/rightbar.inc.php:68 ../../lib/class/random.class.php:426
-msgid "Related Genre"
-msgstr "Σχετικό Είδος"
+#: ../../templates/rightbar.inc.php:68
+#, fuzzy
+msgid "Related Tag"
+msgstr "Σχετικό άλμπουμ"
 
 #: ../../templates/rightbar.inc.php:104
 msgid "More"
@@ -1873,8 +1875,8 @@ msgstr "Ψήφοι"
 
 #: ../../templates/show_democratic_playlist.inc.php:52
 #: ../../templates/show_democratic_playlist.inc.php:87
-#: ../../templates/show_recently_played.inc.php:36
-#: ../../templates/show_recently_played.inc.php:99
+#: ../../templates/show_recently_played.inc.php:38
+#: ../../templates/show_recently_played.inc.php:101
 #: ../../templates/show_duplicates.inc.php:37
 #: ../../templates/show_duplicates.inc.php:75
 #: ../../templates/show_now_playing_row.inc.php:45
@@ -2252,7 +2254,12 @@ msgstr "Κωδικός Χρήστη νέας βάσης"
 msgid "Overwrite Existing"
 msgstr "Εγγραφή πάνω σε ήδη υπάρχουσα βάση"
 
-#: ../../templates/show_install.inc.php:99
+#: ../../templates/show_install.inc.php:98
+#, fuzzy
+msgid "Use Existing Database"
+msgstr "Εισαγωγή βάσης"
+
+#: ../../templates/show_install.inc.php:103
 msgid "Insert Database"
 msgstr "Εισαγωγή βάσης"
 
@@ -2484,8 +2491,8 @@ msgstr "μήνες νωρίτερα"
 msgid "years ago"
 msgstr "χρόνια νωρίτερα"
 
-#: ../../templates/show_recently_played.inc.php:40
-#: ../../templates/show_recently_played.inc.php:102
+#: ../../templates/show_recently_played.inc.php:42
+#: ../../templates/show_recently_played.inc.php:104
 msgid "Last Played"
 msgstr "Παίχτηκαν Τελευταία"
 
@@ -2918,11 +2925,11 @@ msgstr "Τραγούδια απενεργοποιήθηκαν"
 msgid "Information"
 msgstr "Πληροφορίες"
 
-#: ../../templates/sidebar_modules.inc.php:42 ../../lib/ui.lib.php:420
+#: ../../templates/sidebar_modules.inc.php:41 ../../lib/ui.lib.php:420
 msgid "Statistics"
 msgstr "Στατιστικά"
 
-#: ../../templates/sidebar_modules.inc.php:50
+#: ../../templates/sidebar_modules.inc.php:49
 msgid "Manage Playlist"
 msgstr "Διαχείριση playlist"
 
@@ -2936,7 +2943,7 @@ msgstr "Μόνιμο"
 msgid "Date Added"
 msgstr ""
 
-#: ../../templates/show_now_playing.inc.php:32
+#: ../../templates/show_now_playing.inc.php:33
 #: ../../lib/class/localplay.class.php:639
 msgid "Now Playing"
 msgstr "Τώρα παίζει"
@@ -3104,6 +3111,10 @@ msgstr "Εγγραφές Shoutbox"
 #: ../../lib/class/browse.class.php:1025
 msgid "Flagged Records"
 msgstr "Μαρκαρισμένες εγγραφές"
+
+#: ../../lib/class/rss.class.php:59
+msgid "RSS Feed"
+msgstr ""
 
 #: ../../lib/class/flag.class.php:257
 msgid "Approved"
@@ -3280,6 +3291,10 @@ msgstr "Ελέγχθηκαν"
 msgid "songs updated."
 msgstr "τραγούδια ενημερώθηκαν"
 
+#: ../../lib/class/random.class.php:426
+msgid "Related Genre"
+msgstr "Σχετικό Είδος"
+
 #: ../../lib/class/vauth.class.php:476 ../../lib/class/vauth.class.php:500
 #: ../../lib/class/vauth.class.php:539
 msgid "Error Username or Password incorrect, please try again"
@@ -3341,11 +3356,11 @@ msgstr "Καθάρισε με την αποστολή"
 msgid "Always"
 msgstr "Πάντα"
 
-#: ../../lib/install.php:259
+#: ../../lib/install.php:250
 msgid "No Username/Password specified"
 msgstr "Δεν ορίστηκε Όνομα Χρήστη/Κωδικός"
 
-#: ../../lib/install.php:264
+#: ../../lib/install.php:255
 msgid "Passwords do not match"
 msgstr "Οι κωδικοί δεν ταιριάζουν"
 
@@ -3373,6 +3388,11 @@ msgstr "Η συνεδρία εξέπνευσε: Παρακαλώ ξαναμπε�
 #: ../../radio.php:50
 msgid "Radio Station Added"
 msgstr "Ο Ραδιοφωνικός Σταθμός προστέθηκε"
+
+#: ../../install.php:168
+#, fuzzy
+msgid "Error: Config file not found or Unreadable"
+msgstr "Σφάλμα: Παλιό Αρχείο Ρυθμίσεων"
 
 #: ../../update.php:47 ../../update.php:51
 msgid "Ampache Update"

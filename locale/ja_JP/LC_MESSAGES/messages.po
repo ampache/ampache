@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ampache 3.5.0\n"
 "Report-Msgid-Bugs-To: translations at ampache.org\n"
-"POT-Creation-Date: 2008-08-29 16:38+0900\n"
+"POT-Creation-Date: 2008-09-03 08:08+0900\n"
 "PO-Revision-Date: 2008-07-14 20:44+0900\n"
 "Last-Translator: momo-i <webmaster at momo-i.org>\n"
 "Language-Team: Japanese\n"
@@ -39,9 +39,9 @@ msgstr "エラー: キーワードが何も入力されていません"
 #: ../../templates/show_live_stream_row.inc.php:23
 #: ../../templates/show_shoutbox.inc.php:34
 #: ../../templates/show_songs.inc.php:39 ../../templates/show_songs.inc.php:68
-#: ../../templates/show_recently_played.inc.php:35
-#: ../../templates/show_recently_played.inc.php:78
-#: ../../templates/show_recently_played.inc.php:97
+#: ../../templates/show_recently_played.inc.php:37
+#: ../../templates/show_recently_played.inc.php:80
+#: ../../templates/show_recently_played.inc.php:99
 #: ../../templates/show_artist.inc.php:38
 #: ../../templates/show_album.inc.php:51
 #: ../../templates/show_playlist_song_row.inc.php:22
@@ -58,6 +58,8 @@ msgstr "追加"
 #: ../../templates/show_artist.inc.php:41
 #: ../../templates/show_album.inc.php:55
 #: ../../templates/show_playlist_row.inc.php:24
+#: ../../modules/localplay/mpd.controller.php:495
+#: ../../modules/localplay/httpq.controller.php:494
 msgid "Random"
 msgstr "ランダム"
 
@@ -312,8 +314,8 @@ msgstr "カバー"
 #: ../../templates/show_search.inc.php:50
 #: ../../templates/show_songs.inc.php:42 ../../templates/show_songs.inc.php:71
 #: ../../templates/show_get_albumart.inc.php:36
-#: ../../templates/show_recently_played.inc.php:37
-#: ../../templates/show_recently_played.inc.php:100
+#: ../../templates/show_recently_played.inc.php:39
+#: ../../templates/show_recently_played.inc.php:102
 #: ../../templates/show_disabled_songs.inc.php:35
 #: ../../templates/show_disabled_songs.inc.php:58
 #: ../../templates/show_duplicates.inc.php:39
@@ -337,8 +339,8 @@ msgstr "アルバム"
 #: ../../templates/show_search.inc.php:44
 #: ../../templates/show_songs.inc.php:41 ../../templates/show_songs.inc.php:70
 #: ../../templates/show_get_albumart.inc.php:28
-#: ../../templates/show_recently_played.inc.php:38
-#: ../../templates/show_recently_played.inc.php:101
+#: ../../templates/show_recently_played.inc.php:40
+#: ../../templates/show_recently_played.inc.php:103
 #: ../../templates/show_disabled_songs.inc.php:36
 #: ../../templates/show_disabled_songs.inc.php:59
 #: ../../templates/show_duplicates.inc.php:38
@@ -404,7 +406,7 @@ msgstr "操作"
 #: ../../templates/show_user_stats.inc.php:47
 #: ../../templates/show_user_stats.inc.php:60
 #: ../../templates/show_songs.inc.php:64
-#: ../../templates/show_recently_played.inc.php:93
+#: ../../templates/show_recently_played.inc.php:95
 msgid "Not Enough Data"
 msgstr "データは全くありません"
 
@@ -418,8 +420,8 @@ msgstr "フルネーム"
 #: ../../templates/show_edit_user.inc.php:29
 #: ../../templates/show_add_user.inc.php:29
 #: ../../templates/show_install_account.inc.php:61
-#: ../../templates/show_recently_played.inc.php:39
-#: ../../templates/show_recently_played.inc.php:98
+#: ../../templates/show_recently_played.inc.php:41
+#: ../../templates/show_recently_played.inc.php:100
 #: ../../templates/show_user_registration.inc.php:75
 #: ../../templates/show_now_playing_row.inc.php:29
 msgid "Username"
@@ -491,8 +493,8 @@ msgstr "Never"
 #: ../../templates/show_users.inc.php:54 ../../templates/show_user.inc.php:23
 #: ../../lib/class/flag.class.php:282 ../../lib/class/localplay.class.php:648
 #: ../../lib/class/user.class.php:665 ../../lib/general.lib.php:439
-#: ../../modules/localplay/mpd.controller.php:508
-#: ../../modules/localplay/httpq.controller.php:505
+#: ../../modules/localplay/mpd.controller.php:511
+#: ../../modules/localplay/httpq.controller.php:510
 msgid "Unknown"
 msgstr "不明"
 
@@ -859,15 +861,14 @@ msgid "All Playlists"
 msgstr "全プレイリスト"
 
 #: ../../templates/sidebar_home.inc.php:76
-#: ../../templates/sidebar_modules.inc.php:41
 msgid "Currently Playing"
 msgstr "現在再生中のもの"
 
 #: ../../templates/sidebar_home.inc.php:78
 #: ../../templates/show_playtype_switch.inc.php:36
-#: ../../templates/sidebar_modules.inc.php:47 ../../lib/preferences.php:179
-#: ../../modules/localplay/mpd.controller.php:492
-#: ../../modules/localplay/httpq.controller.php:489
+#: ../../templates/sidebar_modules.inc.php:46 ../../lib/preferences.php:179
+#: ../../modules/localplay/mpd.controller.php:491
+#: ../../modules/localplay/httpq.controller.php:490
 msgid "Democratic"
 msgstr "大衆向け"
 
@@ -1057,7 +1058,7 @@ msgid "Show instances"
 msgstr "インスタンス表示"
 
 #: ../../templates/sidebar_localplay.inc.php:38
-#: ../../templates/sidebar_modules.inc.php:49
+#: ../../templates/sidebar_modules.inc.php:48
 msgid "Show Playlist"
 msgstr "再生リストの表示"
 
@@ -1103,7 +1104,7 @@ msgid "Cache Hits:"
 msgstr ""
 
 #: ../../templates/show_add_live_stream.inc.php:24
-#: ../../templates/sidebar_modules.inc.php:43
+#: ../../templates/sidebar_modules.inc.php:42
 msgid "Add Radio Station"
 msgstr "ラジオステーションの追加"
 
@@ -1120,11 +1121,6 @@ msgstr "現在のアルバム"
 #: ../../templates/show_index.inc.php:38
 msgid "Loading..."
 msgstr "読み込み中..."
-
-#: ../../templates/show_index.inc.php:45 ../../templates/show_user.inc.php:68
-#: ../../server/index.ajax.php:44
-msgid "Recently Played"
-msgstr "最近再生したもの"
 
 #: ../../templates/show_edit_artist.inc.php:23
 msgid "Edit Artist"
@@ -1481,6 +1477,11 @@ msgstr "ユーザは現在オフラインです"
 msgid "Active Playlist"
 msgstr "アクティブなプレイリスト"
 
+#: ../../templates/show_user.inc.php:68
+#: ../../templates/show_recently_played.inc.php:25
+msgid "Recently Played"
+msgstr "最近再生したもの"
+
 #: ../../templates/show_add_access.inc.php:22
 msgid "Add Access for a Host"
 msgstr "ホストのアクセスを追加"
@@ -1671,9 +1672,10 @@ msgstr "関連するアーティスト"
 msgid "Related Album"
 msgstr "関連するアルバム"
 
-#: ../../templates/rightbar.inc.php:68 ../../lib/class/random.class.php:426
-msgid "Related Genre"
-msgstr "関連するジャンル"
+#: ../../templates/rightbar.inc.php:68
+#, fuzzy
+msgid "Related Tag"
+msgstr "関連するアルバム"
 
 #: ../../templates/rightbar.inc.php:104
 msgid "More"
@@ -1871,8 +1873,8 @@ msgstr "投票"
 
 #: ../../templates/show_democratic_playlist.inc.php:52
 #: ../../templates/show_democratic_playlist.inc.php:87
-#: ../../templates/show_recently_played.inc.php:36
-#: ../../templates/show_recently_played.inc.php:99
+#: ../../templates/show_recently_played.inc.php:38
+#: ../../templates/show_recently_played.inc.php:101
 #: ../../templates/show_duplicates.inc.php:37
 #: ../../templates/show_duplicates.inc.php:75
 #: ../../templates/show_now_playing_row.inc.php:45
@@ -2247,7 +2249,12 @@ msgstr "Ampacheデータベースユーザパスワード"
 msgid "Overwrite Existing"
 msgstr "既存を上書き"
 
-#: ../../templates/show_install.inc.php:99
+#: ../../templates/show_install.inc.php:98
+#, fuzzy
+msgid "Use Existing Database"
+msgstr "データベース挿入"
+
+#: ../../templates/show_install.inc.php:103
 msgid "Insert Database"
 msgstr "データベース挿入"
 
@@ -2476,8 +2483,8 @@ msgstr "ヶ月前"
 msgid "years ago"
 msgstr "年前"
 
-#: ../../templates/show_recently_played.inc.php:40
-#: ../../templates/show_recently_played.inc.php:102
+#: ../../templates/show_recently_played.inc.php:42
+#: ../../templates/show_recently_played.inc.php:104
 msgid "Last Played"
 msgstr "最後に再生した"
 
@@ -2911,11 +2918,11 @@ msgstr "表示を無効にしました"
 msgid "Information"
 msgstr "情報"
 
-#: ../../templates/sidebar_modules.inc.php:42 ../../lib/ui.lib.php:420
+#: ../../templates/sidebar_modules.inc.php:41 ../../lib/ui.lib.php:420
 msgid "Statistics"
 msgstr "統計"
 
-#: ../../templates/sidebar_modules.inc.php:50
+#: ../../templates/sidebar_modules.inc.php:49
 msgid "Manage Playlist"
 msgstr "再生リストの管理"
 
@@ -2929,7 +2936,7 @@ msgstr "Sticky"
 msgid "Date Added"
 msgstr "追加日"
 
-#: ../../templates/show_now_playing.inc.php:32
+#: ../../templates/show_now_playing.inc.php:33
 #: ../../lib/class/localplay.class.php:639
 msgid "Now Playing"
 msgstr "現在の演奏曲"
@@ -3097,6 +3104,10 @@ msgstr "シャウトボックスレコード"
 #: ../../lib/class/browse.class.php:1025
 msgid "Flagged Records"
 msgstr "フラグされたレコード"
+
+#: ../../lib/class/rss.class.php:59
+msgid "RSS Feed"
+msgstr ""
 
 #: ../../lib/class/flag.class.php:257
 msgid "Approved"
@@ -3269,6 +3280,10 @@ msgstr "チェック済み"
 msgid "songs updated."
 msgstr "曲更新しました"
 
+#: ../../lib/class/random.class.php:426
+msgid "Related Genre"
+msgstr "関連するジャンル"
+
 #: ../../lib/class/vauth.class.php:476 ../../lib/class/vauth.class.php:500
 #: ../../lib/class/vauth.class.php:539
 msgid "Error Username or Password incorrect, please try again"
@@ -3330,11 +3345,11 @@ msgstr "送信をクリア"
 msgid "Always"
 msgstr "常に"
 
-#: ../../lib/install.php:259
+#: ../../lib/install.php:250
 msgid "No Username/Password specified"
 msgstr "指定されたユーザ名/パスワードはありません"
 
-#: ../../lib/install.php:264
+#: ../../lib/install.php:255
 msgid "Passwords do not match"
 msgstr "パスワードが一致しません"
 
@@ -3361,6 +3376,11 @@ msgstr "セッション期限切れ: 再ログインしてください"
 #: ../../radio.php:50
 msgid "Radio Station Added"
 msgstr "ラジオステーションを追加しました"
+
+#: ../../install.php:168
+#, fuzzy
+msgid "Error: Config file not found or Unreadable"
+msgstr "エラー: 設定ファイルは期限切れです"
 
 #: ../../update.php:47 ../../update.php:51
 msgid "Ampache Update"
