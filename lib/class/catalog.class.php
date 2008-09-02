@@ -1502,7 +1502,7 @@ class Catalog {
 		$db_results = Dba::query($sql); 
 
 		// Now nuke the tags themselves
-		$sql = "DELETE FROM `tag` USING `tag` LEFT JOIN `tag_map` ON `tag`.`map_id`=`tag_map`.`tag_id` " . 
+		$sql = "DELETE FROM `tag` USING `tag` LEFT JOIN `tag_map` ON `tag`.`id`=`tag_map`.`tag_id` " . 
 			"WHERE `tag_map`.`id` IS NULL"; 
 		$db_results = Dba::query($sql); 
 
