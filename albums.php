@@ -44,7 +44,7 @@ switch ($_REQUEST['action']) {
 		
 		// Pull the image information
 		$data = array('file'=>$_FILES['file']['tmp_name']); 
-		$image_data = get_image_from_source($data); 
+		$image_data = Album::get_image_from_source($data); 
 
 		// If we got something back insert it
 		if ($image_data) { 
@@ -73,7 +73,7 @@ switch ($_REQUEST['action']) {
 			$path_info = pathinfo($_FILES['file']['name']); 
 			$upload['file'] = $_FILES['file']['tmp_name'];
 			$upload['mime'] = 'image/' . $path_info['extension']; 
-			$image_data = get_image_from_source($upload); 
+			$image_data = Album::get_image_from_source($upload); 
 
 			if ($image_data) { 
 				$album->insert_art($image_data,$upload['0']['mime']); 
@@ -145,7 +145,7 @@ switch ($_REQUEST['action']) {
 		$image_id = $_REQUEST['image'];
 		$album_id = $_REQUEST['album_id'];
 		
-		$image 	= get_image_from_source($_SESSION['form']['images'][$image_id]);
+		$image 	= Album::get_image_from_source($_SESSION['form']['images'][$image_id]);
 		$mime	= $_SESSION['form']['images'][$image_id]['mime'];
 	
 		$album = new Album($album_id);
