@@ -263,4 +263,9 @@ if (!preg_match('/update\.php/', $_SERVER['PHP_SELF'])) {
 }
 // For the XMLRPC stuff
 $GLOBALS['xmlrpc_internalencoding'] = Config::get('site_charset'); 
+
+// If don't use Debug, no error report
+if (Config::get('debug') == 'false' || Config::get('debug') == NULL) {
+	error_reporting(0);
+}
 ?>
