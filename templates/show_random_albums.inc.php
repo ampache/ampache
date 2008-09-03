@@ -24,7 +24,7 @@ $button = Ajax::button('?page=index&action=random_albums','random',_('Refresh'),
 <?php show_box_top(_('Albums of the Moment') . ' ' . $button); ?>
 
 	<?php 
-	if ($album_id) {
+	if ($albums) {
 		foreach ($albums as $album_id) { 
 			$album = new Album($album_id); 
 			$album->format(); 
@@ -49,6 +49,6 @@ $button = Ajax::button('?page=index&action=random_albums','random',_('Refresh'),
         </div>
        
         	<?php } // end foreach ?>
-	<?php } // end if album_id ?>
+	<?php } // end if albums ?>
 
 <?php show_box_bottom(); ?>
