@@ -77,21 +77,18 @@ class Tag extends database_object {
 	 */
 	public static function build_cache($ids) { 
 
-		if ($ids) {
-			$idlist = '(' . implode(',',$ids) . ')'; 
-		
-			$sql = "SELECT * FROM `tag` WHERE `id` IN $idlist"; 
-			$db_results = Dba::query($sql); 
+		if (!is_array($ids) OR !count($ids)) { return false; }
 
-			while ($row = Dba::fetch_assoc($db_results)) { 
-				parent::add_to_cache('tag',$row['id'],$row); 
-			} 
+		$idlist = '(' . implode(',',$ids) . ')'; 
+	
+		$sql = "SELECT * FROM `tag` WHERE `id` IN $idlist"; 
+		$db_results = Dba::query($sql); 
 
-			return true;
-		} else {
-			return false;
-		}
+		while ($row = Dba::fetch_assoc($db_results)) { 
+			parent::add_to_cache('tag',$row['id'],$row); 
+		} 
 
+		return true;
 	} // build_cache
 
 	/**
@@ -100,28 +97,26 @@ class Tag extends database_object {
 	 */
 	public static function build_map_cache($type,$ids) { 
 
-		if ($ids) {
-	                $type = self::validate_type($type);
-	                $idlist = '(' . implode(',',$ids) . ')'; 
+		if (!is_array($ids) OR !count($ids)) { return false; }
 
-	                $sql = "SELECT COUNT(`tag_map`.`id`) AS `count`,`tag`.`id`,`tag_map`.`object_id` FROM `tag_map` " .
-	                        "INNER JOIN `tag` ON `tag`.`id`=`tag_map`.`tag_id` " .
-	                        "WHERE `tag_map`.`object_type`='$type' AND `tag_map`.`object_id` IN $idlist " .
-	                        "GROUP BY `tag_map`.`object_id` ORDER BY `count` DESC";
-			$db_results = Dba::query($sql); 
+                $type = self::validate_type($type);
+                $idlist = '(' . implode(',',$ids) . ')'; 
 
-			while ($row = Dba::fetch_assoc($db_results)) { 
-				$tags[$row['object_id']][] = $row; 
-			}
+                $sql = "SELECT COUNT(`tag_map`.`id`) AS `count`,`tag`.`id`,`tag_map`.`object_id` FROM `tag_map` " .
+                        "INNER JOIN `tag` ON `tag`.`id`=`tag_map`.`tag_id` " .
+                        "WHERE `tag_map`.`object_type`='$type' AND `tag_map`.`object_id` IN $idlist " .
+                        "GROUP BY `tag_map`.`object_id` ORDER BY `count` DESC";
+		$db_results = Dba::query($sql); 
 
-			foreach ($tags as $id=>$entry) { 	
-				parent::add_to_cache('tag_map_' . $type,$id,$entry); 
-			} 
-
-			return true; 
-		} else {
-			return false;
+		while ($row = Dba::fetch_assoc($db_results)) { 
+			$tags[$row['object_id']][] = $row; 
 		}
+
+		foreach ($tags as $id=>$entry) { 	
+			parent::add_to_cache('tag_map_' . $type,$id,$entry); 
+		} 
+
+		return true; 
 
 	} // build_map_cache
 

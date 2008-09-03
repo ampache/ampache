@@ -65,45 +65,43 @@ class Rating extends database_object {
 	 */
 	public static function build_cache($type, $ids) {
 		
-		if ($ids) {
-			$user_id = Dba::escape($GLOBALS['user']->id); 
+		if (!is_array($ids) OR !count($ids)) { return false; }
 
-			$idlist = '(' . implode(',', $ids) . ')';
-			$sql = "SELECT `rating`, `object_id`,`rating`.`rating` FROM `rating` WHERE `user`='$user_id' AND `object_id` IN $idlist " . 
-				"AND `object_type`='$type'";
-			$db_results = Dba::read($sql);
+		$user_id = Dba::escape($GLOBALS['user']->id); 
 
-			while ($row = Dba::fetch_assoc($db_results)) {
-				$user[$row['object_id']] = $row['rating']; 
-			}
-		
-			$sql = "SELECT `rating`,`object_id` FROM `rating` WHERE `object_id` IN $idlist AND `object_type`='$type'"; 
-			$db_results = Dba::read($sql); 
-		
-			while ($row = Dba::fetch_assoc($db_results)) { 
-				$rating[$row['object_id']]['rating'] += $row['rating']; 
-				$rating[$row['object_id']]['total']++; 
-	  		} 
+		$idlist = '(' . implode(',', $ids) . ')';
+		$sql = "SELECT `rating`, `object_id`,`rating`.`rating` FROM `rating` WHERE `user`='$user_id' AND `object_id` IN $idlist " . 
+			"AND `object_type`='$type'";
+		$db_results = Dba::read($sql);
 
-			foreach ($ids as $id) { 
-				parent::add_to_cache('rating_' . $type . '_user',$id,intval($user[$id])); 
-
-				// Do the bit of math required to store this
-				if (!isset($rating[$id])) { 
-					$entry = array('average'=>'0','percise'=>'0'); 
-				} 
-				else { 
-					$average = round($rating[$id]['rating']/$rating[$id]['total'],1); 
-					$entry = array('average'=>floor($average),'percise'=>$average); 
-				} 
-				
-				parent::add_to_cache('rating_' . $type . '_all',$id,$entry); 
-			} 
-
-			return true; 
-		} else {
-			return false;
+		while ($row = Dba::fetch_assoc($db_results)) {
+			$user[$row['object_id']] = $row['rating']; 
 		}
+		
+		$sql = "SELECT `rating`,`object_id` FROM `rating` WHERE `object_id` IN $idlist AND `object_type`='$type'"; 
+		$db_results = Dba::read($sql); 
+		
+		while ($row = Dba::fetch_assoc($db_results)) { 
+			$rating[$row['object_id']]['rating'] += $row['rating']; 
+			$rating[$row['object_id']]['total']++; 
+  		} 
+
+		foreach ($ids as $id) { 
+			parent::add_to_cache('rating_' . $type . '_user',$id,intval($user[$id])); 
+
+			// Do the bit of math required to store this
+			if (!isset($rating[$id])) { 
+				$entry = array('average'=>'0','percise'=>'0'); 
+			} 
+			else { 
+				$average = round($rating[$id]['rating']/$rating[$id]['total'],1); 
+				$entry = array('average'=>floor($average),'percise'=>$average); 
+			} 
+			
+			parent::add_to_cache('rating_' . $type . '_all',$id,$entry); 
+		} 
+
+		return true; 
 
 	} // build_cache
 
