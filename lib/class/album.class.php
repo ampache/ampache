@@ -95,37 +95,37 @@ class Album extends database_object {
 	 */
 	public static function build_cache($ids,$extra=false) {
 
-		if ($ids) {
-			$idlist = '(' . implode(',', $ids) . ')';
+		// Nothing to do if they pass us nothing
+		if (!is_array($ids) OR !count($ids)) { return false; } 
 
-			$sql = "SELECT * FROM `album` WHERE `id` IN $idlist";
-			$db_results = Dba::query($sql);
+		$idlist = '(' . implode(',', $ids) . ')';
+
+		$sql = "SELECT * FROM `album` WHERE `id` IN $idlist";
+		$db_results = Dba::query($sql);
 	  
-			while ($row = Dba::fetch_assoc($db_results)) {
-				parent::add_to_cache('album',$row['id'],$row); 
-			}
-
-			// If we're extra'ing cache the extra info as well
-			if ($extra) { 
-				$sql = "SELECT COUNT(DISTINCT(song.artist)) as artist_count,COUNT(song.id) AS song_count,artist.name AS artist_name" .
-		                        ",artist.prefix AS artist_prefix,album_data.art AS has_art,album_data.thumb AS has_thumb, artist.id AS artist_id,`song`.`album`".
-		                        "FROM `song` " .
-		                        "INNER JOIN `artist` ON `artist`.`id`=`song`.`artist` " .
-		                        "LEFT JOIN `album_data` ON `album_data`.`album_id` = `song`.`album` " .
-		                        "WHERE `song`.`album` IN $idlist GROUP BY `song`.`album`";
-				$db_results = Dba::read($sql); 
-
-				while ($row = Dba::fetch_assoc($db_results)) { 
-			                $row['has_art'] = make_bool($row['has_art']); 
-			                $row['has_thumb'] = make_bool($row['has_thumb']); 
-					parent::add_to_cache('album_extra',$row['album'],$row); 
-				} // while rows
-			} // if extra
-
-			return true;
-		} else {
-			return false;
+		while ($row = Dba::fetch_assoc($db_results)) {
+			parent::add_to_cache('album',$row['id'],$row); 
 		}
+
+		// If we're extra'ing cache the extra info as well
+		if ($extra) { 
+			$sql = "SELECT COUNT(DISTINCT(song.artist)) as artist_count,COUNT(song.id) AS song_count,artist.name AS artist_name" .
+				",artist.prefix AS artist_prefix,album_data.art AS has_art,album_data.thumb AS has_thumb, artist.id AS artist_id,`song`.`album`".
+		                "FROM `song` " .
+		                "INNER JOIN `artist` ON `artist`.`id`=`song`.`artist` " .
+		                "LEFT JOIN `album_data` ON `album_data`.`album_id` = `song`.`album` " .
+		                "WHERE `song`.`album` IN $idlist GROUP BY `song`.`album`";
+
+			$db_results = Dba::read($sql); 
+
+			while ($row = Dba::fetch_assoc($db_results)) { 
+		                $row['has_art'] = make_bool($row['has_art']); 
+		                $row['has_thumb'] = make_bool($row['has_thumb']); 
+				parent::add_to_cache('album_extra',$row['album'],$row); 
+			} // while rows
+		} // if extra
+
+		return true;
 
 	} // build_cache
 
