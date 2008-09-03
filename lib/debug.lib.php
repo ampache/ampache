@@ -193,9 +193,9 @@ function check_putenv() {
 	/* Check memory */
 	$current = ini_get('memory_limit');
 	$current = substr($current_memory,0,strlen($current_memory)-1);
-	$new_limit = ($current+1) . "M";
+	$new_limit = ($current+16) . "M";
 	
-	/* Bump it by one meg */
+	/* Bump it by 16 megs (for getid3)*/
 	if (!ini_set(memory_limit,$new_limit)) { 
 		return false; 
 	}

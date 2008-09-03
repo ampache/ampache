@@ -78,26 +78,32 @@ class Artist extends database_object {
 	 * this attempts to build a cache of the data from the passed albums all in one query
 	 */
 	public static function build_cache($ids,$extra=false) {
-		$idlist = '(' . implode(',', $ids) . ')';
+		if($ids) {
+			$idlist = '(' . implode(',', $ids) . ')';
 
-		$sql = "SELECT * FROM `artist` WHERE `id` IN $idlist";
-		$db_results = Dba::query($sql);
+			$sql = "SELECT * FROM `artist` WHERE `id` IN $idlist";
+			$db_results = Dba::query($sql);
 
-	  	while ($row = Dba::fetch_assoc($db_results)) {
-	  		parent::add_to_cache('artist',$row['id'],$row); 
+		  	while ($row = Dba::fetch_assoc($db_results)) {
+		  		parent::add_to_cache('artist',$row['id'],$row); 
+			}
+
+			// If we need to also pull the extra information, this is normally only used when we are doing the human display
+			if ($extra) { 
+		                $sql = "SELECT `song`.`artist`, COUNT(`song`.`id`) AS `song_count`, COUNT(DISTINCT `song`.`album`) AS `album_count`, SUM(`song`.`time`) AS `time` FROM `song` " .
+		                        "WHERE `song`.`artist` IN $idlist GROUP BY `song`.`artist`";
+		                $db_results = Dba::query($sql);
+
+				while ($row = Dba::fetch_assoc($db_results)) { 
+					parent::add_to_cache('artist_extra',$row['artist'],$row); 
+				} 
+
+			} // end if extra
+
+			return true;
+		} else {
+			return false;
 		}
-
-		// If we need to also pull the extra information, this is normally only used when we are doing the human display
-		if ($extra) { 
-	                $sql = "SELECT `song`.`artist`, COUNT(`song`.`id`) AS `song_count`, COUNT(DISTINCT `song`.`album`) AS `album_count`, SUM(`song`.`time`) AS `time` FROM `song` " .
-	                        "WHERE `song`.`artist` IN $idlist GROUP BY `song`.`artist`";
-	                $db_results = Dba::query($sql);
-
-			while ($row = Dba::fetch_assoc($db_results)) { 
-				parent::add_to_cache('artist_extra',$row['artist'],$row); 
-			} 
-
-		} // end if extra 
 
 	} // build_cache
 

@@ -24,10 +24,11 @@ $button = Ajax::button('?page=index&action=random_albums','random',_('Refresh'),
 <?php show_box_top(_('Albums of the Moment') . ' ' . $button); ?>
 
 	<?php 
-	foreach ($albums as $album_id) { 
-		$album = new Album($album_id); 
-		$album->format(); 
-		$name = '[' . $album->f_artist . '] ' . scrub_out($album->full_name); 
+	if ($album_id) {
+		foreach ($albums as $album_id) { 
+			$album = new Album($album_id); 
+			$album->format(); 
+			$name = '[' . $album->f_artist . '] ' . scrub_out($album->full_name);
         ?>
         <div class="random_album">
                 <a href="<?php echo $web_path; ?>/albums.php?action=show&amp;album=<?php echo $album_id; ?>">
@@ -47,6 +48,7 @@ $button = Ajax::button('?page=index&action=random_albums','random',_('Refresh'),
               	<span class="play_album"><?php echo Ajax::button('?action=basket&type=album&id=' . $album->id,'add',_('Play Album'),'play_full_' . $album->id); ?></span>
         </div>
        
-        <?php } ?>
+        	<?php } // end foreach ?>
+	<?php } // end if album_id ?>
 
 <?php show_box_bottom(); ?>
