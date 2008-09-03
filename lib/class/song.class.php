@@ -78,7 +78,7 @@ class Song extends database_object {
 	 */
 	public static function build_cache($song_ids) {
 
-		if ($ids) {
+		if ($song_ids) {
 			$idlist = '(' . implode(',', $song_ids) . ')';
 	  
 			// Song data cache
