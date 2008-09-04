@@ -68,7 +68,13 @@ class vainfo {
                 $this->_getID3 = new getID3();
 
 		// get id3tag encodings
-		$this->_raw2 = $this->_getID3->analyze($file);
+		try {
+			$this->_raw2 = $this->_getID3->analyze($file);
+		}
+		catch (Exception $error) {
+			debug_event('getid3',$error->message,'1');
+		}
+
 		if(function_exists('mb_detect_encoding')) {
 			$this->encoding_id3v1 = array();
 			$this->encoding_id3v1[] = mb_detect_encoding($this->_raw2['tags']['id3v1']['artist']['0']);
@@ -566,12 +572,16 @@ class vainfo {
 		// If we've got iconv then go ahead and clear her up		
 		if ($this->_iconv) { 
 			/* Guess that it's UTF-8 */
+			/* Try GNU iconv //TRANSLIT extension first */
 			if (!$encoding) { $encoding = $this->_getID3->encoding; }
 			$charset = $this->encoding . '//TRANSLIT';
-			$tag = iconv($encoding,$charset,$tag);
+			$enc_tag = iconv($encoding,$charset,$tag);
+			if(strcmp($enc_tag, "") == 0) {
+				$enc_tag = iconv($encoding,$this->encoding,$tag);
+			}
 		}
 
-		return $tag;
+		return $enc_tag;
 
 	} // _clean_tag
 

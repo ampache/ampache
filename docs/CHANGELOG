@@ -4,6 +4,8 @@
 
 --------------------------------------------------------------------------
   v.3.5-Alpha1
+	- Fixed vainfo.class.php didn't catch exception for first analyze.
+	- Fixed iconv() returns an empty strings (Thx abs0)
 	- Updated getid3 for multi-byte characters, but some wrong id3tags
 		have occurred exception error.
         - Fixed use_auth = false not correctly re-creating the session if
