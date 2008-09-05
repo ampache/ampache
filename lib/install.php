@@ -192,6 +192,13 @@ function install_insert_db($username,$password,$hostname,$database) {
 		$db_results = mysql_query($sql); 
 	} 
 
+	if(Config::get('lang') != 'en_US') {
+		$sql = "UPDATE `preference` SET `value`='" . Config::get('lang') . "' WHERE `id`=31";
+		$db_results = mysql_query($sql);
+		$sql = "UPDATE `user_preference` SET `value`='" .Config::get('lang') ."' WHERE `preference`=31";
+		$db_results = mysql_query($sql);
+	}
+
 	return true;
 
 } // install_insert_db
