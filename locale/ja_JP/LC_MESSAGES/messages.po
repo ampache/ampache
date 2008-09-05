@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ampache 3.5.0\n"
 "Report-Msgid-Bugs-To: translations at ampache.org\n"
-"POT-Creation-Date: 2008-09-03 08:08+0900\n"
+"POT-Creation-Date: 2008-09-05 08:49+0900\n"
 "PO-Revision-Date: 2008-07-14 20:44+0900\n"
 "Last-Translator: momo-i <webmaster at momo-i.org>\n"
 "Language-Team: Japanese\n"
@@ -1097,11 +1097,11 @@ msgstr ""
 
 #: ../../templates/footer.inc.php:32
 msgid "Queries:"
-msgstr ""
+msgstr "クエリ:"
 
 #: ../../templates/footer.inc.php:32
 msgid "Cache Hits:"
-msgstr ""
+msgstr "キャッシュヒット:"
 
 #: ../../templates/show_add_live_stream.inc.php:24
 #: ../../templates/sidebar_modules.inc.php:42
@@ -1584,7 +1584,7 @@ msgstr "合計ユーザ数"
 
 #: ../../templates/show_local_catalog_info.inc.php:30
 #: ../../templates/show_genre.inc.php:35 ../../lib/ui.lib.php:412
-#: ../../lib/class/browse.class.php:989 ../../lib/class/album.class.php:250
+#: ../../lib/class/browse.class.php:989 ../../lib/class/album.class.php:256
 msgid "Artists"
 msgstr "アーティスト"
 
@@ -1608,7 +1608,7 @@ msgstr "必要条件"
 
 #: ../../templates/show_install_lang.inc.php:52
 msgid "System Checks"
-msgstr ""
+msgstr "システムチェック"
 
 #: ../../templates/show_install_lang.inc.php:119
 msgid "Option"
@@ -1621,7 +1621,7 @@ msgstr "Gettextサポート"
 
 #: ../../templates/show_install_lang.inc.php:123
 msgid "WARNING: This server will use gettext emulator."
-msgstr ""
+msgstr "警告: このサーバはgettextエミュレータを使用します。"
 
 #: ../../templates/show_install_lang.inc.php:129
 msgid "Mbstring Support"
@@ -1673,9 +1673,8 @@ msgid "Related Album"
 msgstr "関連するアルバム"
 
 #: ../../templates/rightbar.inc.php:68
-#, fuzzy
 msgid "Related Tag"
-msgstr "関連するアルバム"
+msgstr "関連するタグ"
 
 #: ../../templates/rightbar.inc.php:104
 msgid "More"
@@ -1771,7 +1770,7 @@ msgstr "無効化"
 msgid "Refresh"
 msgstr "更新"
 
-#: ../../templates/show_random_albums.inc.php:47
+#: ../../templates/show_random_albums.inc.php:48
 msgid "Play Album"
 msgstr "アルバム再生"
 
@@ -2002,7 +2001,7 @@ msgstr "既存のシャウトボックス投稿を編集"
 #: ../../templates/show_edit_shout.inc.php:28
 #, php-format
 msgid "Created by: %s for %s"
-msgstr ""
+msgstr "作成: %sの%s"
 
 #: ../../templates/show_edit_shout.inc.php:31
 #: ../../templates/show_add_shout.inc.php:27
@@ -2022,13 +2021,13 @@ msgstr "現在の評価:"
 #: ../../templates/show_object_rating_static.inc.php:36
 #: ../../templates/show_object_rating.inc.php:36
 msgid "not rated yet"
-msgstr ""
+msgstr "まだ評価されていません"
 
 #: ../../templates/show_object_rating_static.inc.php:38
 #: ../../templates/show_object_rating.inc.php:38
 #, php-format
 msgid "%s of 5"
-msgstr ""
+msgstr "5点中%s点"
 
 #: ../../templates/show_object_rating_static.inc.php:44
 msgid "out of"
@@ -2250,9 +2249,8 @@ msgid "Overwrite Existing"
 msgstr "既存を上書き"
 
 #: ../../templates/show_install.inc.php:98
-#, fuzzy
 msgid "Use Existing Database"
-msgstr "データベース挿入"
+msgstr "既存のデータベースを使用する"
 
 #: ../../templates/show_install.inc.php:103
 msgid "Insert Database"
@@ -2540,12 +2538,12 @@ msgstr "確認済み"
 msgid ""
 "You've been redirected to this page because you do not have access to this "
 "function."
-msgstr ""
+msgstr "この機能へアクセスできないため、このページを表示しています。"
 
 #: ../../templates/show_denied.inc.php:39
 msgid ""
 "If you believe this is an error please contact an Ampache administrator."
-msgstr ""
+msgstr "これがエラーだと思われる場合、Ampache管理者へお問合せください。"
 
 #: ../../templates/show_denied.inc.php:40
 msgid "This event has been logged"
@@ -2555,15 +2553,15 @@ msgstr "このイベントは記録済みです"
 msgid ""
 "You've been redirected to this page because you've attempted to access a "
 "function that is disabled in the demo."
-msgstr ""
+msgstr "デモで無効になっている機能にアクセスを試みたため、このページにリダイレクトされました。"
 
 #: ../../templates/show_denied.inc.php:45
 msgid ""
 "Functions are disabled in the demo because previous users of the demo have "
 "used the functionality to post inappropriate materials"
-msgstr ""
+msgstr "デモの前のユーザが不適切な素材を投稿する機能を使用したので、機能はデモでは無効にされます。"
 
-#: ../../templates/show_album.inc.php:27 ../../lib/class/album.class.php:238
+#: ../../templates/show_album.inc.php:27 ../../lib/class/album.class.php:244
 msgid "Disk"
 msgstr "ディスク"
 
@@ -2632,7 +2630,7 @@ msgid "Remove"
 msgstr "削除"
 
 #: ../../templates/show_edit_album_row.inc.php:35
-#: ../../lib/class/album.class.php:250 ../../lib/class/album.class.php:251
+#: ../../lib/class/album.class.php:256 ../../lib/class/album.class.php:257
 msgid "Various"
 msgstr "いくつかの"
 
@@ -2723,7 +2721,7 @@ msgstr "Ampacheアクセスコントロール"
 msgid ""
 "Since your catalog can be accessed remotely you may want to limit the access "
 "from remote sources so you are not in violation of copyright laws."
-msgstr ""
+msgstr "カタログにリモートでアクセスできますが、リモートのソースからアクセスを制限しているかもしれないので、あなたは著作権法を違反していません。"
 
 #: ../../templates/show_access_list.inc.php:33
 msgid ""
@@ -2743,7 +2741,7 @@ msgstr ""
 msgid ""
 "Use tool below to add any server's IP address that you want to access your "
 "Ampache catalog or be able to stream from this server."
-msgstr ""
+msgstr "このサーバからストリームすることの出来る又はAmpacheカタログへアクセスしたい全てのサーバのIPアドレスを追加するために以下のツールを使用します。"
 
 #: ../../templates/show_access_list.inc.php:40
 msgid "Add Entry"
@@ -2792,7 +2790,7 @@ msgstr "ユーザ情報"
 
 #: ../../templates/show_user_registration.inc.php:133
 msgid "Register User"
-msgstr "登録ユーザ"
+msgstr "ユーザ登録"
 
 #: ../../templates/show_playlist_edit.inc.php:26
 msgid "Editing Playlist"
@@ -3107,7 +3105,7 @@ msgstr "フラグされたレコード"
 
 #: ../../lib/class/rss.class.php:59
 msgid "RSS Feed"
-msgstr ""
+msgstr "RSSフィード"
 
 #: ../../lib/class/flag.class.php:257
 msgid "Approved"
@@ -3143,7 +3141,7 @@ msgstr "エラー: ユーザ名は必須です"
 msgid "Error Passwords don't match"
 msgstr "エラー: パスワードが一致しません"
 
-#: ../../lib/class/album.class.php:466 ../../lib/class/catalog.class.php:415
+#: ../../lib/class/album.class.php:472 ../../lib/class/catalog.class.php:415
 #: ../../lib/class/catalog.class.php:756
 msgid "Error: Unable to open"
 msgstr "エラー: 開けませんでした"
@@ -3289,6 +3287,68 @@ msgstr "関連するジャンル"
 msgid "Error Username or Password incorrect, please try again"
 msgstr "エラー: ユーザ名かパスワードが間違っています。再試行して下さい"
 
+#: ../../lib/class/registration.class.php:51
+#: ../../lib/class/registration.class.php:53
+msgid "From: Ampache "
+msgstr "From: Ampache "
+
+#: ../../lib/class/registration.class.php:55
+#, php-format
+msgid "New User Registration at %s"
+msgstr "%sの新規ユーザ登録"
+
+#: ../../lib/class/registration.class.php:68
+#, php-format
+msgid ""
+"Thank you for registering\n"
+"\n"
+"\n"
+"Please keep this e-mail for your records. Your account information is as "
+"follows:\n"
+"----------------------\n"
+"Username: %s\n"
+"Password: %s\n"
+"----------------------\n"
+"\n"
+"Your account is currently inactive. You cannot use it until you've visited "
+"the following link:\n"
+"\n"
+"%s \n"
+"\n"
+"Thank you for registering\n"
+msgstr ""
+"登録ありがとうございます。\n"
+"\n"
+"\n"
+"記録のためのこのメールを保管してください。あなたのアカウント情報は以下の通り"
+"です:\n"
+"----------------------\n"
+"ユーザ名: %sパスワード: %s----------------------\n"
+"あなたのアカウントは現在有効ではありません。以下のリンクを訪れるまでそれを使"
+"用することは出来ません:\n"
+"\n"
+"%s\n"
+"\n"
+"登録ありがとうございました。\n"
+
+#: ../../lib/class/registration.class.php:98
+#, php-format
+msgid ""
+"A new user has registered\n"
+"The following values were entered.\n"
+"\n"
+"Username: %s\n"
+"Fullname: %s\n"
+"E-mail: %s\n"
+"\n"
+msgstr ""
+"新しいユーザが登録されました\n"
+"以下の値が入力されました\n"
+"ユーザ名: %s\n"
+"フルネーム: %s\n"
+"メールアドレス: %s\n"
+"\n"
+
 #: ../../lib/general.lib.php:498
 msgid "On"
 msgstr "オン"
@@ -3378,9 +3438,8 @@ msgid "Radio Station Added"
 msgstr "ラジオステーションを追加しました"
 
 #: ../../install.php:168
-#, fuzzy
 msgid "Error: Config file not found or Unreadable"
-msgstr "エラー: 設定ファイルは期限切れです"
+msgstr "エラー: 設定ファイルは見つからないか読み込めません"
 
 #: ../../update.php:47 ../../update.php:51
 msgid "Ampache Update"
@@ -3729,7 +3788,7 @@ msgstr "このカタログを削除してもよろしいですか？"
 msgid "Album Art Search Finished"
 msgstr "アルバムアーティスト検索が完了しました"
 
-#: ../../bin/print_tags.inc:66
+#: ../../bin/print_tags.inc:68
 msgid ""
 "[print_tags.php.inc]\n"
 "This commandline script will display the tag information for the specified "
@@ -3741,7 +3800,7 @@ msgstr ""
 "このコマンドラインスクリプトはAmpacheへ表示されるものとして指定されたファイル"
 "名のタグ情報を表示します。\n"
 
-#: ../../bin/print_tags.inc:72
+#: ../../bin/print_tags.inc:74
 msgid "Filename:"
 msgstr "ファイル名:"
 
@@ -3787,15 +3846,15 @@ msgstr "テーマ"
 
 #: Database words
 msgid "Album Ellipse Threshold"
-msgstr ""
+msgstr "アルバム周りの閾値"
 
 #: Database words
 msgid "Artist Ellipse Threshold"
-msgstr ""
+msgstr "アーティスト周りの閾値"
 
 #: Database words
 msgid "Title Ellipse Threshold"
-msgstr ""
+msgstr "タイトル周りの閾値"
 
 #: Database words
 msgid "Offset Limit"
@@ -3819,7 +3878,7 @@ msgstr "ローカル再生の許可"
 
 #: Database words
 msgid "Statistics Day Threshold"
-msgstr ""
+msgstr "1日の統計の閾値"
 
 #: Database words
 msgid "Min Element Count"
@@ -3852,3 +3911,4 @@ msgstr "インタフェース"
 #: Database words
 msgid "System"
 msgstr "システム"
+

@@ -41,27 +41,78 @@ class Registration {
 	 */
 	public static function send_confirmation($username,$fullname,$email,$password,$validation) { 
 
-		$headers = "From: Ampache <" . Config::get('mail_from') . ">"; 
-		$subject = "New User Registration at " . Config::get('site_title'); 
-		$body = "Thank you for registering\n\n" . 
-			"Please keep this e-mail for your records. Your account information is as follows:\n\n" . 
-			"----------------------\n" . 
-			"Username: $username\n" . 
-			"Password: $password\n" . 
-			"----------------------\n\n" . 
-			"Your account is currently inactive. You cannot use it until you've visited the following link:\n\n" . 
-			Config::get('web_path') . "/register.php?action=validate&username=$username&auth=$validation\n\n" . 
-			"Thank you for registering\n"; 
-		
-		// Send the mail!	
-		mail($email,$subject,$body,$headers); 	
+		// Multi-byte Character Mail
+		if(function_exists('mb_language')) {
+			ini_set("mbstring.internal_encoding","UTF-8");
+			mb_language("uni");
+		}
+
+		if(function_exists('mb_encode_mimeheader')) {
+			$from = mb_encode_mimeheader(_("From: Ampache "));
+		} else {
+			$from = _("From: Ampache ");
+		}
+		$subject = sprintf(_("New User Registration at %s"), Config::get('site_title'));
+
+		$additional_header = array();
+		$additional_header[] = 'X-Ampache-Mailer: 0.0.1';
+		$additional_header[] = $from . "<" .Config::get('mail_from') . ">";
+		if(function_exists('mb_send_mail')) {
+			$additional_header[] = 'Content-Type: text/plain; charset=UTF-8';
+			$additional_header[] = 'Content-Transfer-Encoding: 8bit';
+		} else {
+			$additional_header[] = 'Content-Type: text/plain; charset=us-ascii';
+			$additional_header[] = 'Content-Transfer-Encoding: 7bit';
+		}
+
+		$body = sprintf(_("Thank you for registering\n\n
+Please keep this e-mail for your records. Your account information is as follows:
+----------------------
+Username: %s
+Password: %s
+----------------------
+
+Your account is currently inactive. You cannot use it until you've visited the following link:
+
+%s 
+
+Thank you for registering
+"), $username, $password, Config::get('web_path') . "/register.php?action=validate&username=$username&auth=$validation");
+
+		if(function_exists('mb_eregi_replace')) {
+			$body = mb_eregi_replace("\r\n", "\n", $body);
+		}
+		// Send the mail!
+		if(function_exists('mb_send_mail')) {
+			mb_send_mail ($email,
+					$subject,
+					$body,
+					implode("\n", $additional_header),
+					'-f'.Config::get('mail_from'));
+		} else {
+			mail($email,$subject,$body,implode("\r\n", $additional_header),'-f'.Config::get('mail_from'));
+		}
 
 		// Check to see if the admin should be notified
 		if (Config::get('admin_notify_reg')) { 
-			$body = "A new user has registered\n\n" . 
-				"The following values were entered.\n\n" . 
-				"Username:$username\nFullname:$fullname\nE-mail:$email\n\n"; 
-			mail(Config::get('mail_from'),$subject,$body,$headers); 
+			$body = sprintf(_("A new user has registered
+The following values were entered.
+
+Username: %s
+Fullname: %s
+E-mail: %s
+
+"), $username, $fullname, $email);
+
+			if(function_exists('mb_send_mail')) {
+				mb_send_mail (Config::get('mail_from'),
+						$subject,
+						$body,
+						implode("\n", $additional_header),
+						'-f'.Config::get('mail_from'));
+			} else {
+				mail(Config::get('mail_from'),$subject,$body,implode("\r\n", $additional_header),'-f'.Config::get('mail_from')); 
+			}
 		} 
 				
 		return true; 

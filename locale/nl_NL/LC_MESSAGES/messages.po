@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ampache SVN 693\n"
 "Report-Msgid-Bugs-To: translations at ampache.org\n"
-"POT-Creation-Date: 2008-09-03 08:08+0900\n"
+"POT-Creation-Date: 2008-09-05 08:49+0900\n"
 "PO-Revision-Date: 2006-11-14 08:00+0100\n"
 "Last-Translator: Terence Theijn <terence.theijn@gmail.com>\n"
 "Language-Team: Dutch <terence.theijn@gmail.com>\n"
@@ -1614,7 +1614,7 @@ msgstr "Gebruikers Totaal"
 
 #: ../../templates/show_local_catalog_info.inc.php:30
 #: ../../templates/show_genre.inc.php:35 ../../lib/ui.lib.php:412
-#: ../../lib/class/browse.class.php:989 ../../lib/class/album.class.php:250
+#: ../../lib/class/browse.class.php:989 ../../lib/class/album.class.php:256
 msgid "Artists"
 msgstr "Artiesten"
 
@@ -1811,7 +1811,7 @@ msgstr "Deactiveer"
 msgid "Refresh"
 msgstr ""
 
-#: ../../templates/show_random_albums.inc.php:47
+#: ../../templates/show_random_albums.inc.php:48
 msgid "Play Album"
 msgstr "Speel Album"
 
@@ -2640,7 +2640,7 @@ msgid ""
 "used the functionality to post inappropriate materials"
 msgstr ""
 
-#: ../../templates/show_album.inc.php:27 ../../lib/class/album.class.php:238
+#: ../../templates/show_album.inc.php:27 ../../lib/class/album.class.php:244
 msgid "Disk"
 msgstr ""
 
@@ -2710,7 +2710,7 @@ msgid "Remove"
 msgstr "Verwijder"
 
 #: ../../templates/show_edit_album_row.inc.php:35
-#: ../../lib/class/album.class.php:250 ../../lib/class/album.class.php:251
+#: ../../lib/class/album.class.php:256 ../../lib/class/album.class.php:257
 msgid "Various"
 msgstr "Diverse"
 
@@ -3244,7 +3244,7 @@ msgstr "Fout Gebruikersnaam Verplicht"
 msgid "Error Passwords don't match"
 msgstr "Fout Paswoorden zijn niet gelijk"
 
-#: ../../lib/class/album.class.php:466 ../../lib/class/catalog.class.php:415
+#: ../../lib/class/album.class.php:472 ../../lib/class/catalog.class.php:415
 #: ../../lib/class/catalog.class.php:756
 msgid "Error: Unable to open"
 msgstr "Fout: Kan niet openen"
@@ -3393,6 +3393,50 @@ msgstr ""
 #: ../../lib/class/vauth.class.php:476 ../../lib/class/vauth.class.php:500
 #: ../../lib/class/vauth.class.php:539
 msgid "Error Username or Password incorrect, please try again"
+msgstr ""
+
+#: ../../lib/class/registration.class.php:51
+#: ../../lib/class/registration.class.php:53
+#, fuzzy
+msgid "From: Ampache "
+msgstr "Doorzoek Ampache"
+
+#: ../../lib/class/registration.class.php:55
+#, fuzzy, php-format
+msgid "New User Registration at %s"
+msgstr "Ampache Nieuwe Gebruikers Registratie"
+
+#: ../../lib/class/registration.class.php:68
+#, php-format
+msgid ""
+"Thank you for registering\n"
+"\n"
+"\n"
+"Please keep this e-mail for your records. Your account information is as "
+"follows:\n"
+"----------------------\n"
+"Username: %s\n"
+"Password: %s\n"
+"----------------------\n"
+"\n"
+"Your account is currently inactive. You cannot use it until you've visited "
+"the following link:\n"
+"\n"
+"%s \n"
+"\n"
+"Thank you for registering\n"
+msgstr ""
+
+#: ../../lib/class/registration.class.php:98
+#, php-format
+msgid ""
+"A new user has registered\n"
+"The following values were entered.\n"
+"\n"
+"Username: %s\n"
+"Fullname: %s\n"
+"E-mail: %s\n"
+"\n"
 msgstr ""
 
 #: ../../lib/general.lib.php:498
@@ -3864,7 +3908,7 @@ msgstr "Weet je zeker dat je deze catalogus wilt verwijderen?"
 msgid "Album Art Search Finished"
 msgstr "Album Hoes Zoeken beeindigd"
 
-#: ../../bin/print_tags.inc:66
+#: ../../bin/print_tags.inc:68
 msgid ""
 "[print_tags.php.inc]\n"
 "This commandline script will display the tag information for the specified "
@@ -3873,7 +3917,7 @@ msgid ""
 "        \n"
 msgstr ""
 
-#: ../../bin/print_tags.inc:72
+#: ../../bin/print_tags.inc:74
 msgid "Filename:"
 msgstr "Bestandsnaam"
 
@@ -3995,6 +4039,10 @@ msgstr ""
 #, fuzzy
 msgid "System"
 msgstr "Grootte"
+
+#, fuzzy
+#~ msgid "Catalog Debug Tools"
+#~ msgstr "Catalogus Tools"
 
 #, fuzzy
 #~ msgid "GetText Support"
@@ -4168,9 +4216,6 @@ msgstr "Grootte"
 #, fuzzy
 #~ msgid "Play Random"
 #~ msgstr "Speel Willekeurige Liedjes"
-
-#~ msgid "Ampache New User Registration"
-#~ msgstr "Ampache Nieuwe Gebruikers Registratie"
 
 #~ msgid "Clear Info"
 #~ msgstr "Wis Formulier"
@@ -4629,9 +4674,6 @@ msgstr "Grootte"
 
 #~ msgid "You don't have any catalogs."
 #~ msgstr "U heeft geen enkele Catalogus"
-
-#~ msgid "Catalog Tools"
-#~ msgstr "Catalogus Tools"
 
 #~ msgid "Uploading Music to Ampache"
 #~ msgstr "Uplouding Music naar Ampache"

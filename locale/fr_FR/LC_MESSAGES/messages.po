@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ampache 3.5.0\n"
 "Report-Msgid-Bugs-To: translations at ampache.org\n"
-"POT-Creation-Date: 2008-09-03 08:08+0900\n"
+"POT-Creation-Date: 2008-09-05 08:49+0900\n"
 "PO-Revision-Date: 2008-08-01 00:52+0200\n"
 "Last-Translator: Erwan Velu <erwan.velu@free.fr>\n"
 "Language-Team: French <kde-i18n-doc@lists.kde.org>\n"
@@ -1598,7 +1598,7 @@ msgstr "Total des utilisateurs"
 
 #: ../../templates/show_local_catalog_info.inc.php:30
 #: ../../templates/show_genre.inc.php:35 ../../lib/ui.lib.php:412
-#: ../../lib/class/browse.class.php:989 ../../lib/class/album.class.php:250
+#: ../../lib/class/browse.class.php:989 ../../lib/class/album.class.php:256
 msgid "Artists"
 msgstr "Artistes"
 
@@ -1795,7 +1795,7 @@ msgstr "Utilisateur activ&eacute;"
 msgid "Refresh"
 msgstr "Rafraichir"
 
-#: ../../templates/show_random_albums.inc.php:47
+#: ../../templates/show_random_albums.inc.php:48
 msgid "Play Album"
 msgstr "Jouer l'album"
 
@@ -2602,7 +2602,7 @@ msgid ""
 "used the functionality to post inappropriate materials"
 msgstr ""
 
-#: ../../templates/show_album.inc.php:27 ../../lib/class/album.class.php:238
+#: ../../templates/show_album.inc.php:27 ../../lib/class/album.class.php:244
 msgid "Disk"
 msgstr "Disque"
 
@@ -2671,7 +2671,7 @@ msgid "Remove"
 msgstr "Effacer"
 
 #: ../../templates/show_edit_album_row.inc.php:35
-#: ../../lib/class/album.class.php:250 ../../lib/class/album.class.php:251
+#: ../../lib/class/album.class.php:256 ../../lib/class/album.class.php:257
 msgid "Various"
 msgstr "Divers"
 
@@ -3183,7 +3183,7 @@ msgstr "Erreur: Le nom d'utilisateur est obligatoire"
 msgid "Error Passwords don't match"
 msgstr "Erreur: Les mots de passe ne correspondent pas"
 
-#: ../../lib/class/album.class.php:466 ../../lib/class/catalog.class.php:415
+#: ../../lib/class/album.class.php:472 ../../lib/class/catalog.class.php:415
 #: ../../lib/class/catalog.class.php:756
 msgid "Error: Unable to open"
 msgstr "Erreur: Impossible d'ouvrir"
@@ -3331,6 +3331,50 @@ msgstr "Genre associé "
 #: ../../lib/class/vauth.class.php:476 ../../lib/class/vauth.class.php:500
 #: ../../lib/class/vauth.class.php:539
 msgid "Error Username or Password incorrect, please try again"
+msgstr ""
+
+#: ../../lib/class/registration.class.php:51
+#: ../../lib/class/registration.class.php:53
+#, fuzzy
+msgid "From: Ampache "
+msgstr "Recherche dans Ampache"
+
+#: ../../lib/class/registration.class.php:55
+#, fuzzy, php-format
+msgid "New User Registration at %s"
+msgstr "Enregistrement d'un nouvel utilisateur Ampache"
+
+#: ../../lib/class/registration.class.php:68
+#, php-format
+msgid ""
+"Thank you for registering\n"
+"\n"
+"\n"
+"Please keep this e-mail for your records. Your account information is as "
+"follows:\n"
+"----------------------\n"
+"Username: %s\n"
+"Password: %s\n"
+"----------------------\n"
+"\n"
+"Your account is currently inactive. You cannot use it until you've visited "
+"the following link:\n"
+"\n"
+"%s \n"
+"\n"
+"Thank you for registering\n"
+msgstr ""
+
+#: ../../lib/class/registration.class.php:98
+#, php-format
+msgid ""
+"A new user has registered\n"
+"The following values were entered.\n"
+"\n"
+"Username: %s\n"
+"Fullname: %s\n"
+"E-mail: %s\n"
+"\n"
 msgstr ""
 
 #: ../../lib/general.lib.php:498
@@ -3795,7 +3839,7 @@ msgstr "Voulez-vous vraiment supprimer ce catalogue ?"
 msgid "Album Art Search Finished"
 msgstr "Recherche de jaquettes d'albums termin&eacute;e"
 
-#: ../../bin/print_tags.inc:66
+#: ../../bin/print_tags.inc:68
 msgid ""
 "[print_tags.php.inc]\n"
 "This commandline script will display the tag information for the specified "
@@ -3809,7 +3853,7 @@ msgstr ""
 "sera pr&eacute;sent&eacute; dans Ampache. \n"
 "        \n"
 
-#: ../../bin/print_tags.inc:72
+#: ../../bin/print_tags.inc:74
 msgid "Filename:"
 msgstr "Nom de fichier :"
 
@@ -3938,6 +3982,14 @@ msgstr "l'Interface"
 #, fuzzy
 msgid "System"
 msgstr "élément"
+
+#, fuzzy
+#~ msgid "Catalog Debug Tools"
+#~ msgstr "Outils de d&eacute;boggage"
+
+#, fuzzy
+#~ msgid "Debug"
+#~ msgstr "Outils de d&eacute;boggage"
 
 #, fuzzy
 #~ msgid "GetText Support"
@@ -4130,9 +4182,6 @@ msgstr "élément"
 
 #~ msgid "XML-RPC"
 #~ msgstr "XML-RPC"
-
-#~ msgid "Ampache New User Registration"
-#~ msgstr "Enregistrement d'un nouvel utilisateur Ampache"
 
 #~ msgid "Clear Info"
 #~ msgstr "Supprimer les informations"

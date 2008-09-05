@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: translations at ampache.org\n"
-"POT-Creation-Date: 2008-09-03 08:19+0900\n"
+"POT-Creation-Date: 2008-09-05 08:59+0900\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1553,7 +1553,7 @@ msgstr ""
 
 #: ../../templates/show_local_catalog_info.inc.php:30
 #: ../../templates/show_genre.inc.php:35 ../../lib/ui.lib.php:412
-#: ../../lib/class/browse.class.php:989 ../../lib/class/album.class.php:250
+#: ../../lib/class/browse.class.php:989 ../../lib/class/album.class.php:256
 msgid "Artists"
 msgstr ""
 
@@ -1739,7 +1739,7 @@ msgstr ""
 msgid "Refresh"
 msgstr ""
 
-#: ../../templates/show_random_albums.inc.php:47
+#: ../../templates/show_random_albums.inc.php:48
 msgid "Play Album"
 msgstr ""
 
@@ -2525,7 +2525,7 @@ msgid ""
 "used the functionality to post inappropriate materials"
 msgstr ""
 
-#: ../../templates/show_album.inc.php:27 ../../lib/class/album.class.php:238
+#: ../../templates/show_album.inc.php:27 ../../lib/class/album.class.php:244
 msgid "Disk"
 msgstr ""
 
@@ -2594,7 +2594,7 @@ msgid "Remove"
 msgstr ""
 
 #: ../../templates/show_edit_album_row.inc.php:35
-#: ../../lib/class/album.class.php:250 ../../lib/class/album.class.php:251
+#: ../../lib/class/album.class.php:256 ../../lib/class/album.class.php:257
 msgid "Various"
 msgstr ""
 
@@ -3098,7 +3098,7 @@ msgstr ""
 msgid "Error Passwords don't match"
 msgstr ""
 
-#: ../../lib/class/album.class.php:466 ../../lib/class/catalog.class.php:415
+#: ../../lib/class/album.class.php:472 ../../lib/class/catalog.class.php:415
 #: ../../lib/class/catalog.class.php:756
 msgid "Error: Unable to open"
 msgstr ""
@@ -3242,6 +3242,49 @@ msgstr ""
 #: ../../lib/class/vauth.class.php:476 ../../lib/class/vauth.class.php:500
 #: ../../lib/class/vauth.class.php:539
 msgid "Error Username or Password incorrect, please try again"
+msgstr ""
+
+#: ../../lib/class/registration.class.php:51
+#: ../../lib/class/registration.class.php:53
+msgid "From: Ampache "
+msgstr ""
+
+#: ../../lib/class/registration.class.php:55
+#, php-format
+msgid "New User Registration at %s"
+msgstr ""
+
+#: ../../lib/class/registration.class.php:68
+#, php-format
+msgid ""
+"Thank you for registering\n"
+"\n"
+"\n"
+"Please keep this e-mail for your records. Your account information is as "
+"follows:\n"
+"----------------------\n"
+"Username: %s\n"
+"Password: %s\n"
+"----------------------\n"
+"\n"
+"Your account is currently inactive. You cannot use it until you've visited "
+"the following link:\n"
+"\n"
+"%s \n"
+"\n"
+"Thank you for registering\n"
+msgstr ""
+
+#: ../../lib/class/registration.class.php:98
+#, php-format
+msgid ""
+"A new user has registered\n"
+"The following values were entered.\n"
+"\n"
+"Username: %s\n"
+"Fullname: %s\n"
+"E-mail: %s\n"
+"\n"
 msgstr ""
 
 #: ../../lib/general.lib.php:498
@@ -3675,7 +3718,7 @@ msgstr ""
 msgid "Album Art Search Finished"
 msgstr ""
 
-#: ../../bin/print_tags.inc:66
+#: ../../bin/print_tags.inc:68
 msgid ""
 "[print_tags.php.inc]\n"
 "This commandline script will display the tag information for the specified "
@@ -3684,7 +3727,7 @@ msgid ""
 "        \n"
 msgstr ""
 
-#: ../../bin/print_tags.inc:72
+#: ../../bin/print_tags.inc:74
 msgid "Filename:"
 msgstr ""
 #: Database words
