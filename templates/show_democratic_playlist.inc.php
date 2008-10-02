@@ -18,6 +18,7 @@
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
+$web_path = Config::get('web_path');
 ?>
 <table class="tabledata" cellpadding="0" cellspacing="0">
 <colgroup>
