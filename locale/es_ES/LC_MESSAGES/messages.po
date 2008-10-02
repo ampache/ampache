@@ -5,16 +5,15 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Ampache 3.5.0\n"
+"Project-Id-Version: Ampache SVN\n"
 "Report-Msgid-Bugs-To: translations at ampache.org\n"
-"POT-Creation-Date: 2008-09-05 08:49+0900\n"
-"PO-Revision-Date: 2008-08-25 08:43+0900\n"
-"Last-Translator: Ampache <translations at ampache.org>\n"
-"Language-Team: Spanish <LL@li.org>\n"
+"POT-Creation-Date: 2008-10-02 13:25+0900\n"
+"PO-Revision-Date: 2008-07-24 06:55-0700\n"
+"Last-Translator: juanjo <translations at ampache.org>\n"
+"Language-Team: Español <translations at ampache.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: ../../search.php:38
 msgid "Error: No Keyword Entered"
@@ -48,7 +47,7 @@ msgstr ""
 #: ../../templates/show_playlist_row.inc.php:23
 #: ../../templates/show_admin_tools.inc.php:45
 msgid "Add"
-msgstr ""
+msgstr "Anadir"
 
 #: ../../templates/show_album_row.inc.php:24
 #: ../../templates/sidebar_home.inc.php:91
@@ -127,15 +126,15 @@ msgstr "Bajar"
 
 #: ../../templates/show_localplay_control.inc.php:25
 msgid "Previous"
-msgstr ""
+msgstr "Previo"
 
 #: ../../templates/show_localplay_control.inc.php:26
 msgid "Stop"
-msgstr ""
+msgstr "Parar"
 
 #: ../../templates/show_localplay_control.inc.php:27
 msgid "Pause"
-msgstr ""
+msgstr "Pausa"
 
 #: ../../templates/show_localplay_control.inc.php:28
 #: ../../templates/show_manage_democratic.inc.php:57
@@ -146,7 +145,7 @@ msgstr "Toca"
 #: ../../templates/show_localplay_control.inc.php:29
 #: ../../templates/list_header.inc.php:101
 msgid "Next"
-msgstr ""
+msgstr "Siguiente"
 
 #: ../../templates/show_test.inc.php:32
 #: ../../templates/show_test_config.inc.php:40
@@ -360,7 +359,7 @@ msgstr "Año"
 #: ../../templates/show_songs.inc.php:49 ../../templates/show_songs.inc.php:76
 #: ../../templates/show_now_playing_row.inc.php:36
 msgid "Rating"
-msgstr ""
+msgstr "Valoracion"
 
 #: ../../templates/show_albums.inc.php:48
 #: ../../templates/show_albums.inc.php:78
@@ -393,7 +392,7 @@ msgstr "No hay suficiente información"
 #: ../../templates/show_users.inc.php:39
 #: ../../templates/show_users.inc.php:104
 msgid "Fullname"
-msgstr "Nombre entero"
+msgstr "Nombre completo"
 
 #: ../../templates/show_users.inc.php:39
 #: ../../templates/show_users.inc.php:104
@@ -405,7 +404,7 @@ msgstr "Nombre entero"
 #: ../../templates/show_user_registration.inc.php:75
 #: ../../templates/show_now_playing_row.inc.php:29
 msgid "Username"
-msgstr ""
+msgstr "Usuario"
 
 #: ../../templates/show_users.inc.php:40
 #: ../../templates/show_users.inc.php:105 ../../templates/show_user.inc.php:32
@@ -814,15 +813,15 @@ msgstr "Lista"
 #: ../../templates/sidebar_home.inc.php:37
 #: ../../lib/class/browse.class.php:995
 msgid "Radio Stations"
-msgstr ""
+msgstr "Radios"
 
 #: ../../templates/sidebar_home.inc.php:41
 msgid "Filters"
-msgstr ""
+msgstr "Filtros"
 
 #: ../../templates/sidebar_home.inc.php:45
 msgid "Starts With"
-msgstr ""
+msgstr "Comienza por"
 
 #: ../../templates/sidebar_home.inc.php:51
 msgid "Minimum Count"
@@ -830,7 +829,7 @@ msgstr ""
 
 #: ../../templates/sidebar_home.inc.php:55
 msgid "Rated"
-msgstr ""
+msgstr "Valorado"
 
 #: ../../templates/sidebar_home.inc.php:59
 msgid "Unplayed"
@@ -847,7 +846,7 @@ msgstr ""
 
 #: ../../templates/sidebar_home.inc.php:76
 msgid "Currently Playing"
-msgstr ""
+msgstr "Escuchando actualmente"
 
 #: ../../templates/sidebar_home.inc.php:78
 #: ../../templates/show_playtype_switch.inc.php:36
@@ -867,7 +866,7 @@ msgstr "Local"
 
 #: ../../templates/sidebar_home.inc.php:96
 msgid "Advanced"
-msgstr ""
+msgstr "Avanzado"
 
 #: ../../templates/show_confirmation.inc.php:27
 #: ../../templates/show_update_items.inc.php:27
@@ -1047,7 +1046,7 @@ msgstr ""
 #: ../../templates/sidebar_localplay.inc.php:38
 #: ../../templates/sidebar_modules.inc.php:48
 msgid "Show Playlist"
-msgstr ""
+msgstr "Muestra Lista"
 
 #: ../../templates/sidebar_localplay.inc.php:42
 msgid "Active Instance"
@@ -1093,7 +1092,7 @@ msgstr ""
 #: ../../templates/show_add_live_stream.inc.php:24
 #: ../../templates/sidebar_modules.inc.php:42
 msgid "Add Radio Station"
-msgstr ""
+msgstr "Anadir Radio"
 
 #: ../../templates/show_add_live_stream.inc.php:61
 #: ../../templates/show_export.inc.php:32
@@ -1103,11 +1102,11 @@ msgstr "Catálogo"
 #: ../../templates/show_index.inc.php:38
 #: ../../templates/show_random_albums.inc.php:24
 msgid "Albums of the Moment"
-msgstr ""
+msgstr "Albumes del momento"
 
 #: ../../templates/show_index.inc.php:38
 msgid "Loading..."
-msgstr ""
+msgstr "Cargando.."
 
 #: ../../templates/show_edit_artist.inc.php:23
 #, fuzzy
@@ -1246,9 +1245,9 @@ msgid "Search Again"
 msgstr "Buscar"
 
 #: ../../templates/show_clean_catalog.inc.php:23
-#, fuzzy, php-format
+#, php-format
 msgid "Cleaning the %s Catalog"
-msgstr "Limpiar catálogo(s)"
+msgstr ""
 
 #: ../../templates/show_clean_catalog.inc.php:25
 msgid "Checking"
@@ -1473,9 +1472,8 @@ msgstr ""
 
 #: ../../templates/show_user.inc.php:68
 #: ../../templates/show_recently_played.inc.php:25
-#, fuzzy
 msgid "Recently Played"
-msgstr "Menos tocado"
+msgstr "Escuchado recientemente"
 
 #: ../../templates/show_add_access.inc.php:22
 msgid "Add Access for a Host"
@@ -1648,13 +1646,12 @@ msgstr ""
 
 #: ../../templates/rightbar.inc.php:31
 msgid "Add to New Playlist"
-msgstr ""
+msgstr "Anadir a nueva lista"
 
 #: ../../templates/rightbar.inc.php:53
 #: ../../templates/show_localplay_status.inc.php:39
-#, fuzzy
 msgid "Clear Playlist"
-msgstr "Nueva lista"
+msgstr "Borrar lista"
 
 #: ../../templates/rightbar.inc.php:56
 msgid "Add Dynamic Items"
@@ -1662,19 +1659,20 @@ msgstr ""
 
 #: ../../templates/rightbar.inc.php:59 ../../lib/class/random.class.php:432
 msgid "Pure Random"
-msgstr ""
+msgstr "Aleatorio puro"
 
 #: ../../templates/rightbar.inc.php:62 ../../lib/class/random.class.php:429
 msgid "Related Artist"
-msgstr ""
+msgstr "Artista relacionado"
 
 #: ../../templates/rightbar.inc.php:65 ../../lib/class/random.class.php:423
 msgid "Related Album"
-msgstr ""
+msgstr "Album relacionado"
 
 #: ../../templates/rightbar.inc.php:68
+#, fuzzy
 msgid "Related Tag"
-msgstr ""
+msgstr "Album relacionado"
 
 #: ../../templates/rightbar.inc.php:104
 msgid "More"
@@ -1708,11 +1706,11 @@ msgstr "Las canciónes más populares"
 #: ../../templates/header.inc.php:41
 #, fuzzy
 msgid "Ampache Recently Played"
-msgstr "Menos tocado"
+msgstr "Escuchado recientemente"
 
 #: ../../templates/header.inc.php:71
 msgid "Log out"
-msgstr ""
+msgstr "Salir"
 
 #: ../../templates/header.inc.php:89
 msgid "Error Config File Out of Date"
@@ -1875,9 +1873,8 @@ msgid "Update Song"
 msgstr "Actualizar los catálogos"
 
 #: ../../templates/show_democratic_playlist.inc.php:38
-#, fuzzy
 msgid "Playing from base Playlist"
-msgstr "Tocar esta lista"
+msgstr "Escuchando de esta lista base"
 
 #: ../../templates/show_democratic_playlist.inc.php:51
 #: ../../templates/show_democratic_playlist.inc.php:86
@@ -1893,7 +1890,7 @@ msgstr "otro"
 #: ../../templates/show_duplicates.inc.php:75
 #: ../../templates/show_now_playing_row.inc.php:45
 msgid "Song"
-msgstr ""
+msgstr "Tema"
 
 #: ../../templates/show_democratic_playlist.inc.php:67
 msgid "Remove Vote"
@@ -1918,7 +1915,7 @@ msgstr "Buscar"
 
 #: ../../templates/show_search_bar.inc.php:30
 msgid "Advanced Search"
-msgstr ""
+msgstr "Busqueda avanzada"
 
 #: ../../templates/show_ip_history.inc.php:23
 #, php-format
@@ -2035,7 +2032,7 @@ msgstr ""
 #: ../../templates/show_object_rating.inc.php:34
 #, fuzzy
 msgid "Current rating: "
-msgstr "Crear nueva lista"
+msgstr "Escuchando actualmente"
 
 #: ../../templates/show_object_rating_static.inc.php:36
 #: ../../templates/show_object_rating.inc.php:36
@@ -2493,15 +2490,13 @@ msgstr ""
 
 #: ../../templates/show_recently_played.inc.php:23 ../../lib/rss.php:180
 msgid "seconds ago"
-msgstr ""
+msgstr "segundos"
 
 #: ../../templates/show_recently_played.inc.php:23 ../../lib/rss.php:180
-#, fuzzy
 msgid "minutes ago"
 msgstr "Minutos"
 
 #: ../../templates/show_recently_played.inc.php:23 ../../lib/rss.php:180
-#, fuzzy
 msgid "hours ago"
 msgstr "horas"
 
@@ -2526,12 +2521,12 @@ msgstr "año"
 #: ../../templates/show_recently_played.inc.php:42
 #: ../../templates/show_recently_played.inc.php:104
 msgid "Last Played"
-msgstr ""
+msgstr "Ultima vez escuchada"
 
 #: ../../templates/show_artist.inc.php:22
-#, fuzzy, php-format
+#, php-format
 msgid "Albums by %s"
-msgstr "Álbumes por"
+msgstr ""
 
 #: ../../templates/show_artist.inc.php:25
 #, php-format
@@ -2539,19 +2534,19 @@ msgid "%s by %s"
 msgstr ""
 
 #: ../../templates/show_artist.inc.php:35
-#, fuzzy, php-format
+#, php-format
 msgid "Show All Songs By %s"
-msgstr "Mostrar todas las canciónes por"
+msgstr ""
 
 #: ../../templates/show_artist.inc.php:38
-#, fuzzy, php-format
+#, php-format
 msgid "Add All Songs By %s"
-msgstr "Mostrar todas las canciónes por"
+msgstr ""
 
 #: ../../templates/show_artist.inc.php:41
-#, fuzzy, php-format
+#, php-format
 msgid "Add Random Songs By %s"
-msgstr "Tocar al azar las canciónes por"
+msgstr ""
 
 #: ../../templates/show_artist.inc.php:45
 #: ../../templates/show_album.inc.php:71
@@ -2561,7 +2556,7 @@ msgstr ""
 #: ../../templates/show_democratic.inc.php:22
 #, fuzzy, php-format
 msgid "%s Playlist"
-msgstr "Nueva lista"
+msgstr "Lista"
 
 #: ../../templates/show_verify_catalog.inc.php:23
 #, php-format
@@ -2793,9 +2788,8 @@ msgstr ""
 "Ampache"
 
 #: ../../templates/show_access_list.inc.php:40
-#, fuzzy
 msgid "Add Entry"
-msgstr "Añadir a"
+msgstr ""
 
 #: ../../templates/show_access_list.inc.php:46
 msgid "Start Address"
@@ -2963,16 +2957,15 @@ msgstr "Mostrar todo"
 
 #: ../../templates/sidebar_modules.inc.php:39
 msgid "Information"
-msgstr ""
+msgstr "Informacion"
 
 #: ../../templates/sidebar_modules.inc.php:41 ../../lib/ui.lib.php:420
-#, fuzzy
 msgid "Statistics"
-msgstr "Estadísticas del catálogo"
+msgstr "Estadisticas"
 
 #: ../../templates/sidebar_modules.inc.php:49
 msgid "Manage Playlist"
-msgstr ""
+msgstr "Gestionar lista"
 
 #: ../../templates/show_manage_shoutbox.inc.php:36
 #: ../../templates/show_manage_shoutbox.inc.php:60
@@ -2987,7 +2980,7 @@ msgstr ""
 #: ../../templates/show_now_playing.inc.php:33
 #: ../../lib/class/localplay.class.php:639
 msgid "Now Playing"
-msgstr ""
+msgstr "Se Escucha"
 
 #: ../../artists.php:181
 msgid "Show Artists starting with"
@@ -3345,7 +3338,7 @@ msgstr ""
 
 #: ../../lib/class/random.class.php:426
 msgid "Related Genre"
-msgstr ""
+msgstr "Genero relacionado"
 
 #: ../../lib/class/vauth.class.php:476 ../../lib/class/vauth.class.php:500
 #: ../../lib/class/vauth.class.php:539
@@ -3452,11 +3445,11 @@ msgstr ""
 msgid "Always"
 msgstr ""
 
-#: ../../lib/install.php:250
+#: ../../lib/install.php:257
 msgid "No Username/Password specified"
 msgstr ""
 
-#: ../../lib/install.php:255
+#: ../../lib/install.php:262
 msgid "Passwords do not match"
 msgstr ""
 
@@ -3593,19 +3586,16 @@ msgid "Port"
 msgstr ""
 
 #: ../../modules/localplay/shoutcast.controller.php:238
-#, fuzzy
 msgid "PID File"
-msgstr "archivo"
+msgstr ""
 
 #: ../../modules/localplay/shoutcast.controller.php:239
-#, fuzzy
 msgid "Playlist File"
-msgstr "Tipo de lista"
+msgstr ""
 
 #: ../../modules/localplay/shoutcast.controller.php:240
-#, fuzzy
 msgid "Local Path to Files"
-msgstr "Control local de reproducción"
+msgstr ""
 
 #: ../../admin/mail.php:90
 #, fuzzy
@@ -3854,7 +3844,7 @@ msgstr "¿Confirmas que quiere borrar este catálogo?"
 msgid "Album Art Search Finished"
 msgstr "Búsqueda de arte de álbum acabado"
 
-#: ../../bin/print_tags.inc:68
+#: ../../bin/print_tags.inc:66
 msgid ""
 "[print_tags.php.inc]\n"
 "This commandline script will display the tag information for the specified "
@@ -3863,7 +3853,7 @@ msgid ""
 "        \n"
 msgstr ""
 
-#: ../../bin/print_tags.inc:74
+#: ../../bin/print_tags.inc:72
 msgid "Filename:"
 msgstr "Nombre del archivo:"
 
@@ -3980,36 +3970,27 @@ msgid "Streaming"
 msgstr ""
 
 #: Database words
-#, fuzzy
 msgid "Interface"
-msgstr "Bitrate mínimo"
+msgstr ""
 
 #: Database words
-#, fuzzy
 msgid "System"
-msgstr "Título"
-
-#, fuzzy
-#~ msgid "Catalog Debug Tools"
-#~ msgstr "Herramientas del catálogo"
-
-#, fuzzy
-#~ msgid "PHP Version:"
-#~ msgstr "Versión de PHP"
-
-#, fuzzy
-#~ msgid "Optional"
-#~ msgstr "Acciónes"
-
-#~ msgid "preferences"
-#~ msgstr "preferencias"
+msgstr ""
 
 #~ msgid "Simplified Chinese"
 #~ msgstr "Chino simplificado"
 
-#, fuzzy
-#~ msgid "Playlist %s"
-#~ msgstr "Listas de reproducción"
+#~ msgid "preferences"
+#~ msgstr "preferencias"
+
+#~ msgid "Browse By"
+#~ msgstr "Navegar por"
+
+#~ msgid "Albums by"
+#~ msgstr "Álbumes por"
+
+#~ msgid "Show All Songs By"
+#~ msgstr "Mostrar todas las canciónes por"
 
 #~ msgid "catalog"
 #~ msgstr "catálogo"
@@ -4051,6 +4032,9 @@ msgstr "Título"
 #~ msgid "Play All Songs By"
 #~ msgstr "Tocar todas las canciónes por"
 
+#~ msgid "Play Random Songs By"
+#~ msgstr "Tocar al azar las canciónes por"
+
 #, fuzzy
 #~ msgid "Disable Songs"
 #~ msgstr "Canciónes duplicadas"
@@ -4081,6 +4065,10 @@ msgstr "Título"
 
 #~ msgid "Do you really want to clear the statistics for this catalog?"
 #~ msgstr "¿Confirmas borrar las estadísticas de este catálogo?"
+
+#, fuzzy
+#~ msgid "Site"
+#~ msgstr "Título"
 
 #~ msgid "Do you really want to delete this Access Record?"
 #~ msgstr "¿Confirmas borrar este registro de aceso?"
@@ -4139,6 +4127,10 @@ msgstr "Título"
 #, fuzzy
 #~ msgid "Delete Empty Playlists"
 #~ msgstr "Crear nueva lista"
+
+#, fuzzy
+#~ msgid "Localplay Init Failed"
+#~ msgstr "Control local de reproducción"
 
 #~ msgid "Show Albums starting with"
 #~ msgstr "Monstrar los álbumes que empiezan con"
@@ -4269,6 +4261,9 @@ msgstr "Título"
 #~ msgid "Error Connecting"
 #~ msgstr "Error de conneción"
 
+#~ msgid "Clean Catalog(s)"
+#~ msgstr "Limpiar catálogo(s)"
+
 #~ msgid "Do you really want to clear your catalog?"
 #~ msgstr "¿Confirmas limpiar el catlogo?"
 
@@ -4348,6 +4343,9 @@ msgstr "Título"
 
 #~ msgid "Dump Album Art"
 #~ msgstr "Ahorrar el arte del álbum"
+
+#~ msgid "Catalog Tools"
+#~ msgstr "Herramientas del catálogo"
 
 #~ msgid "Stats"
 #~ msgstr "Estadísticas"
