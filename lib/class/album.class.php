@@ -334,7 +334,8 @@ class Album extends database_object {
 
 				// Add the results we got to the current set
 				$total_results += count($data); 
-				$results = array_merge($results,$data); 
+				// HACK for PHP 5, $data must be cast as array $results = array_merge($results, (array)$data); 
+				$results = array_merge($results,(array)$data); 
 				
 				if ($total_results > $limit AND $limit > 0) { 
 					return $results;
