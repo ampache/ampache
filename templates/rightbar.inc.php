@@ -32,6 +32,7 @@
 		  </li>
 		<?php 
 			$playlists = Playlist::get_users($GLOBALS['user']->id); 
+			Playlist::build_cache($playlists); 
 			foreach ($playlists as $playlist_id) { 
 				$playlist = new Playlist($playlist_id);
 				$playlist->format(); 

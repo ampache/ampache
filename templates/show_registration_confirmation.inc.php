@@ -27,16 +27,14 @@ $web_path = Config::get('web_path');
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=<?php echo Config::get('site_charset'); ?>" />
 <title><?php echo Config::get('site_title'); ?> - <?php echo _('Registration'); ?></title>
-</head>
-<body bgcolor="#f0f0f0">
 <link rel="stylesheet" href="<?php echo Config::get('web_path'); ?>/templates/install.css" type="text/css" media="screen" />
 <link rel="shortcut icon" href="<?php echo Config::get('web_path'); ?>/favicon.ico" />
+</head>
+<body>
 <div id="header">
 <h1><?php echo scrub_out(Config::get('site_title')); ?></h1>
 <?php echo _('Registration Complete'); ?>...
 </div>
-</head>
-<body>
 <script src="<?php echo $web_path; ?>/lib/javascript-base.js" language="javascript" type="text/javascript"></script>
 <script src="<?php echo $web_path; ?>/modules/kajax/ajax.js" language="javascript" type="text/javascript"></script>
 <script src="<?php echo $web_path; ?>/modules/prototype/prototype.js" language="javascript" type="text/javascript"></script>

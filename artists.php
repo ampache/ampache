@@ -33,7 +33,7 @@ switch($_REQUEST['action']) {
 		$object_ids = $artist->get_albums(); 
 		$object_type = 'album'; 
 		require_once Config::get('prefix') . '/templates/show_artist.inc.php';
-	break;
+		break;
 	case 'show_all_songs':
 	    	$artist = new Artist($_REQUEST['artist']);
 		$artist->format();

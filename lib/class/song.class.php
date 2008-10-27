@@ -94,7 +94,9 @@ class Song extends database_object {
 			parent::add_to_cache('song',$row['id'],$row); 
 			$artists[$row['artist']]	= $row['artist']; 
 			$albums[$row['album']]		= $row['album']; 
-			$tags[$row['tag_id']]		= $row['tag_id']; 
+			if ($row['tag_id']) { 
+				$tags[$row['tag_id']]		= $row['tag_id']; 
+			} 
 		}
 
 		Artist::build_cache($artists);
@@ -362,6 +364,15 @@ class Song extends database_object {
 
 		foreach ($data as $key=>$value) { 
 			switch ($key) { 
+				case 'artist':
+					// Don't do anything if we've negative one'd this baby
+					if ($value == '-1') { 
+						$value = Catalog::check_artist($data['artist_name']); 
+					} 
+				case 'album':
+					if ($value == '-1') { 
+						$value = Catalog::check_album($data['album_name']); 
+					} 
 				case 'title': 
 				case 'track':
 					// Check to see if it needs to be updated
@@ -372,8 +383,6 @@ class Song extends database_object {
 						$updated = 1; 
 					} 
 				break;
-				case 'artist':
-				case 'album':
 				default: 
 					// Rien a faire
 				break;
@@ -677,11 +686,12 @@ class Song extends database_object {
 
 		// Get the top tags
 		$tags = Tag::get_top_tags('song',$this->id); 
-
 		$this->f_tags = ''; 
-		foreach ($tags as $tag_id) { 
+
+		foreach ($tags as $tag_id=>$values) { 
 			$tag = new Tag($tag_id); 
-			$this->f_tags .= $tag->name . ', '; 
+			$tag->format('song',$this->id); 
+			$this->f_tags .= $tag->f_name . ', '; 
 		} 
 	
 		$this->f_tags = rtrim($this->f_tags,', '); 
@@ -909,7 +919,7 @@ class Song extends database_object {
 
 		$conf_var 	= 'transcode_' . $this->type;
 		$conf_type	= 'transcode_' . $this->type . '_target'; 
-		
+
 		if (Config::get($conf_var)) { 
 			$this->_transcode = true; 
 			debug_event('auto_transcode','Transcoding to ' . $this->type,'5'); 

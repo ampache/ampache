@@ -30,7 +30,7 @@
   <col id="col_additiontime" />
 </colgroup>
 <tr class="th-top">
-	<th class="cel_select"><a href="#" onclick="check_select('song'); return false;"><?php echo _('Select'); ?></a></td>
+	<th class="cel_select"><a href="#" onclick="check_select('song'); return false;"><?php echo _('Select'); ?></a></th>
 	<th class="cel_song"><?php echo _('Title'); ?></th>
 	<th class="cel_album"><?php echo _('Album'); ?></th>
 	<th class="cel_artist"><?php echo _('Artist'); ?></th>
@@ -53,7 +53,7 @@
 	</tr>
 <?php } ?>
 <tr class="th-bottom">
-	<th class="cel_select"><a href="#" onclick="check_select('song'); return false;"><?php echo _('Select'); ?></a></td>
+	<th class="cel_select"><a href="#" onclick="check_select('song'); return false;"><?php echo _('Select'); ?></a></th>
 	<th class="cel_song"><?php echo _('Title'); ?></th>
 	<th class="cel_album"><?php echo _('Album'); ?></th>
 	<th class="cel_artist"><?php echo _('Artist'); ?></th>

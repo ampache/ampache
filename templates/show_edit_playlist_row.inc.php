@@ -24,7 +24,7 @@
 <table cellpadding="0" cellspacing="0">
 <tr>
 	<td>
-		<input type="textbox" name="name" size="9" value="<?php echo scrub_out($playlist->name); ?>" />
+		<input type="text" name="name" size="9" value="<?php echo scrub_out($playlist->name); ?>" />
 	</td>
 	<td>	
 		<?php $name = 'select_' . $playlist->type; ${$name} = ' selected="selected"'; ?> 

@@ -43,7 +43,7 @@ class Playlist extends database_object {
 	 */
 	public function __construct($id) { 
 
-		$info 		= $this->get_info($id);
+		$info = $this->get_info($id);
 
 		foreach ($info as $key=>$value) { 
 			$this->$key = $value; 

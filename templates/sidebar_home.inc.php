@@ -43,7 +43,7 @@ $ajax_info = Config::get('ajax_url'); $web_path = Config::get('web_path');
         <?php if (in_array('starts_with',$allowed_filters)) { ?>
         <form id="multi_alpha_filter_form" method="post" action="javascript:void(0);">
                 <label id="multi_alpha_filterLabel" for="multi_alpha_filter"><?php echo _('Starts With'); ?></label>
-                <input type="textbox" id="multi_alpha_filter" name="multi_alpha_filter" value="<?php echo scrub_out(Browse::get_filter('starts_with')); ?>" onKeyUp="DelayRun(this,'400','ajaxState','<?php echo Config::get('ajax_url'); ?>?page=browse&action=browse&type=<?php echo Browse::get_type(); ?>&key=starts_with','multi_alpha_filter');">
+                <input type="text" id="multi_alpha_filter" name="multi_alpha_filter" value="<?php echo scrub_out(Browse::get_filter('starts_with')); ?>" onKeyUp="DelayRun(this,'400','ajaxState','<?php echo Config::get('ajax_url'); ?>?page=browse&action=browse&type=<?php echo Browse::get_type(); ?>&key=starts_with','multi_alpha_filter');">
         </form>
         <?php } // end if alpha_match ?>
         <?php if (in_array('minimum_count',$allowed_filters)) { ?>

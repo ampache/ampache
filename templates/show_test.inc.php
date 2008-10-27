@@ -25,13 +25,14 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>Ampache -- Debug Page</title>
+<link rel="stylesheet" href="templates/install.css" type="text/css" media="screen" />
 </head>
 <body bgcolor="#f0f0f0">
-<link rel="stylesheet" href="templates/install.css" type="text/css" media="screen" />
 <div id="header">
 <h1><?php echo _('Ampache Debug'); ?></h1>
 <p><?php echo _('You\'ve reached this page because a configuration error has occured. Debug Information below'); ?></p>
 </div>
+<div>
 <table align="center" cellpadding="3" cellspacing="0">
 <tr>
 	<td><font size="+1"><?php echo _('CHECK'); ?></font></td>
@@ -246,7 +247,7 @@
 		}
 		$results['web_path'] = $http_type . $_SERVER['SERVER_NAME'] . ":" . $_SERVER['SERVER_PORT'] . Config::get('web_path');
 		if ($status['parse_config']) { 
-			echo "<img src=\"" . $results['web_path'] ."/images/ampache.png\" width=\"80\" height=\"15\"/>";
+			echo "&nbsp;&nbsp;&nbsp;<img src=\"" . $results['web_path'] ."/images/icon_enable.png\" />&nbsp;&nbsp;&nbsp;";
 		}
 		else {
 			$status['check_webpath'] = false;
@@ -257,15 +258,15 @@
 	]
 	</td>
 	<td>
-	This test makes sure that your web_path variable is set correctly and that we are able to get to the index page. If you do not see the ampache
-	logo here then your web_path is not set correctly. 
+	This test makes sure that your web_path variable is set correctly and that we are able to get to the index page. If you do not see a check mark
+	here then your web_path is not set correctly. 
 	</td>
 </tr>
 </table>
 </div>
 <div id="bottom">
 <p><strong>Ampache Debug.</strong><br />
-For the love of Music.</p>
+Pour l'Amour de la Musique.</p>
 </div>
 </body>
 </html>

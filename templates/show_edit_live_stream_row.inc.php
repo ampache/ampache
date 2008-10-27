@@ -32,19 +32,19 @@
 </tr>
 <tr>
 <td>
-	<input type="textbox" name="name" value="<?php echo scrub_out($radio->name); ?>" size="9" />
+	<input type="text" name="name" value="<?php echo scrub_out($radio->name); ?>" size="9" />
 </td>
 <td>
-	<input type="textbox" name="url" value="<?php echo scrub_out($radio->url); ?>" size ="12" />
+	<input type="text" name="url" value="<?php echo scrub_out($radio->url); ?>" size ="12" />
 </td>
 <td>
-	<input type="textbox" name="site_url" value="<?php echo scrub_out($radio->site_url); ?>" size="9" />
+	<input type="text" name="site_url" value="<?php echo scrub_out($radio->site_url); ?>" size="9" />
 </td>
 <td>
-	<input type="textbox" name="call_sign" value="<?php echo scrub_out($radio->call_sign); ?>" size="6" />
+	<input type="text" name="call_sign" value="<?php echo scrub_out($radio->call_sign); ?>" size="6" />
 </td>
 <td>
-	<input type="textbox" name="frequency" value="<?php echo scrub_out($radio->frequency); ?>" size="6" />
+	<input type="text" name="frequency" value="<?php echo scrub_out($radio->frequency); ?>" size="6" />
 </td>
 <td>
 	<input type="hidden" name="id" value="<?php echo $radio->id; ?>" />

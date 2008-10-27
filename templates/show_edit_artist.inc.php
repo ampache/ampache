@@ -26,7 +26,7 @@
 <tr class="<?php echo flip_class(); ?>">
 	<td><?php echo _('Name'); ?></td>
 	<td>
-		<input type="textbox" name="name" value="<?php echo scrub_out($artist->name); ?>">
+		<input type="text" name="name" value="<?php echo scrub_out($artist->name); ?>">
 	</td>
 </tr>
 <tr class="<?php echo flip_class(); ?>">

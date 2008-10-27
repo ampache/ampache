@@ -25,7 +25,7 @@
  * This handles the internet radio stuff, that is inserted into live_stream
  * this can include podcasts or what-have-you
  */
-class Radio {
+class Radio extends database_object {
 
 	/* DB based variables */
 	public $id; 
@@ -42,11 +42,7 @@ class Radio {
 	 */
 	public function __construct($id) { 
 
-		$this->id = intval($id);
-
-		if (!$this->id) { return false; }
-
-		$info = $this->_get_info();
+		$info = $this->get_info($id,'live_stream');
 
 		// Set the vars
 		foreach ($info as $key=>$value) { 
@@ -54,23 +50,6 @@ class Radio {
 		} 
 
 	} // constructor
-
-	/**
-	 * _get_info
-	 * Private function for getting the information for this object from the database 
-	 */
-	private function _get_info() { 
-
-		$id = Dba::escape($this->id);
-
-		$sql = "SELECT * FROM `live_stream` WHERE `id`='$id'";
-		$db_results = Dba::query($sql);
-
-		$results = Dba::fetch_assoc($db_results);
-		
-		return $results;
-
-	} // _get_info
 
 	/**
 	 * format

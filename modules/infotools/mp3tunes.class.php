@@ -288,7 +288,7 @@ class mp3tunes {
                 $limit  = $limit ? intval($limit) : $this->limit;
 		$offset = $offset ? intval($offset) : '0';
 
-		$xml_doc = self::run_query('general'"/lockerSearch?s=$name&count=$limit&set=$offset&type=album"); 
+		$xml_doc = self::run_query('general',"/lockerSearch?s=$name&count=$limit&set=$offset&type=album"); 
 
 		// Set the right parent 
 		$this->_containerTag = 'albumList'; 

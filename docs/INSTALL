@@ -1,7 +1,7 @@
 -------------------------------------------------------------------------------
------------------        INSTALL - Ampache v.3.4         ----------------------
+-----------------        INSTALL - Ampache v.3.5         ----------------------
 -------------------------------------------------------------------------------
-								www.ampache.org
+
   I'm assuming that you have Apache, PHP and MySQL running when you
   get to this point.
 
@@ -219,13 +219,13 @@
 
       3.6  Ampache Wiki
 
-	Ampache.org has a wiki set up at http://trac.ampache.org/wiki/ which is
+	Ampache.org has a wiki set up at http://ampache.org/wiki/ which is
 	full of additional information.  Such as specific install instructions
 	for different OS's like Debian, Slackware, FreeBSD and Windows.  It
 	also explains how to use the additional features and options such as
 	downsampling and transcoding, Access Control Lists, Ampache and XML-RPC,
 	Ampache + Amarok, Localplay, Democratic Playback and much much more.
-	http://trac.ampache.org/wiki/
+	http://ampache.org/wiki/
 	
       3.7  Repositories
 

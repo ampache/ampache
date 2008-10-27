@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2007 Ampache.org
+ Copyright (c) Ampache.org
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
@@ -33,10 +33,5 @@
                 require Config::get('prefix') . '/templates/show_objects.inc.php'; 
                 show_box_bottom(); 
 
-                $objects = Stats::get_top('genre'); 
-                $headers = array('f_link'=>_('Most Popular Genres')); 
-                show_box_top('','info-box box_popular_genres'); 
-                require Config::get('prefix') . '/templates/show_objects.inc.php'; 
-                show_box_bottom(); 
 ?>
 </div>

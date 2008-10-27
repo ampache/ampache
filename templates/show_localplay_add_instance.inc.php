@@ -27,7 +27,7 @@
 <?php foreach ($fields as $key=>$field) { ?>
 <tr>
 	<td><?php echo $field['description']; ?></td>
-	<td><input type="textbox" name="<?php echo $key; ?>" /></td>
+	<td><input type="text" name="<?php echo $key; ?>" /></td>
 </tr>
 <?php } ?>
 </table>

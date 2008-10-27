@@ -25,7 +25,7 @@ $title = sprintf(_('Albums by %s'), $artist->full_name);
 show_box_top(sprintf(gettext('%s by %s'), ucfirst($object_type) ,$artist->f_name),'info-box');
 if (Config::get('ratings')) { 
 ?>
-<div id="rating_"<?php echo intval($artist->id); ?>"_artist" style="display:inline;">
+<div id="rating_<?php echo intval($artist->id); ?>_artist" style="display:inline;">
 	<?php show_rating($artist->id, 'artist'); ?>
 </div>
 <?php } ?>
@@ -38,7 +38,7 @@ if (Config::get('ratings')) {
 	<?php echo Ajax::button('?action=basket&type=artist&id=' . $artist->id,'add',_('Add'),'add_' . $artist->id); ?><?php printf(_('Add All Songs By %s'), $artist->f_name); ?>
 </li>
 <li>
-	<?php echo Ajax::button('?action=basket&type=artist_random&id=' . $artist->id,'random',_('Random'),'random_' . $artist->id); ?><?php printf(_('Add Random Songs By %s'), $artist->f_name); ?>>
+	<?php echo Ajax::button('?action=basket&type=artist_random&id=' . $artist->id,'random',_('Random'),'random_' . $artist->id); ?><?php printf(_('Add Random Songs By %s'), $artist->f_name); ?>
 </li>
 <?php if (Access::check('interface','50')) { ?>
 <li>
@@ -53,7 +53,7 @@ if (Config::get('ratings')) {
 <?php } ?>
 <li>
         <input type="checkbox" id="show_artist_artCB" <?php echo $string = Browse::get_filter('show_art') ? 'checked="checked"' : ''; ?>/> <?php echo _('Show Art'); ?>
-        <?php echo Ajax::observe('show_artist_artCB','click',Ajax::action('?page=browse&action=browse&key=show_art&value=1','')); ?>
+        <?php echo Ajax::observe('show_artist_artCB','click',Ajax::action('?page=browse&action=browse&key=show_art&value=1&type=album','')); ?>
 </ul>
 </div>
 <?php show_box_bottom(); ?>

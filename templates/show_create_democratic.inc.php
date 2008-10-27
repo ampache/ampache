@@ -24,7 +24,7 @@ show_box_top(_('Create Democratic Playlist')); ?>
 <table class="tabledata" cellspacing="0" cellpadding="0">
 <tr>
 	<td><?php echo _('Name'); ?></td>
-	<td><input type="textbox" name="name" value="" /></td>
+	<td><input type="text" name="name" value="" /></td>
 </tr>
 <tr>
 	<td><?php echo _('Base Playlist'); ?></td>
@@ -32,7 +32,7 @@ show_box_top(_('Create Democratic Playlist')); ?>
 </tr>
 <tr>
 	<td><?php echo _('Cooldown Time'); ?></td>	
-	<td><input type="textbox" size="4" maxlength="6" name="cooldown" value="5" /><?php echo _('minutes'); ?></td>
+	<td><input type="text" size="4" maxlength="6" name="cooldown" value="5" /><?php echo _('minutes'); ?></td>
 </tr>
 <tr>
 	<td><?php echo _('Level'); ?></td>

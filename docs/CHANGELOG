@@ -4,6 +4,18 @@
 
 --------------------------------------------------------------------------
   v.3.5-Alpha1
+	- Many other minor improvements (Thx Dipsol)
+	- Fixed warnings in caching code (Thx Dipsol)
+	- Massive text cleanup (Thx Dipsol)
+	- Fixed tag searching and improved some other search methods to 
+		prevent SQL warnings on no results
+	- Improved Test page checks to more accuratly verify putENV support
+	- Make network downsampling a little more sane, don't require 
+		access level
+	- Added caching to Playlist dropdown 
+	- Fixed double caching on some objects
+	- Added base.css and 4 tag 'font' sizes depending on weight/count
+	- Fixed inline song edit
 	- Updated registration multi-byte mail.
 	- Fixed vainfo.class.php didn't catch exception for first analyze.
 	- Fixed iconv() returns an empty strings (Thx abs0)

@@ -35,7 +35,7 @@ $base_url = '?action=set_rating&rating_type=' . $rating->type . '&object_id=' . 
     if ($rating->rating <= 0) {
     	echo _('not rated yet') . "</li>\n";
     }
-    else printf(_('%s of 5', $rating->preciserating)); echo "</li>\n";
+    else printf(_('%s of 5'), $rating->preciserating); echo "</li>\n";
     
     for ($i=1; $i<6; $i++)
     {

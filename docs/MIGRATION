@@ -1,5 +1,5 @@
 -------------------------------------------------------------------------------
----------              MIGRATION - Ampache v.3.4                    -----------
+---------              MIGRATION - Ampache v.3.5                    -----------
 -------------------------------------------------------------------------------
 
 -- Upgrading ALL VERSIONS --
@@ -9,7 +9,13 @@
 	your old install is copied into the new directory, then follow any 
 	instructions provided via the web interface. 
 
+	*** If you have any tag issues always run a verify after upgrading **
+
 	Specifics for upgrading between versions are provided below
+
+- Migrating from Ampache 3.4.x --> 3.5
+
+	* No special instructions
 
 - Migrating from Ampache 3.3.x --> 3.4
 
@@ -50,6 +56,4 @@
 
 	The tools to migrate Ampache 3.0 to 3.1 Are no longer supported
 	and will not work against the newest versions of the software. 
-	Sorry for any inconvience. If you would like to upgrade from 3.0
-	to 3.1 without losing your data please download Ampache 3.1.
-	http://www.ampache.org/downloads/ampache.3.1.tar.gz
+	Sorry for any inconvience. 

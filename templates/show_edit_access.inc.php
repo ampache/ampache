@@ -24,7 +24,7 @@
 <table class="table-data">
 <tr>
 	<td><?php echo _('Name'); ?>: </td>
-	<td><input type="textbox" name="name" value="<?php echo scrub_out($access->name); ?>" /></td>
+	<td><input type="text" name="name" value="<?php echo scrub_out($access->name); ?>" /></td>
 </tr>
 <tr>
 	<td><?php echo _('ACL Type'); ?>: </td>
@@ -64,7 +64,6 @@
 	<td>
 		<input type="text" name="key" value="<?php echo scrub_out($access->key); ?>" size="32" maxlength="32" />
 	</td>
-</tr>
 </tr>
 <tr>
 	<td><?php echo _('Level'); ?>:</td>

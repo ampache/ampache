@@ -115,7 +115,7 @@ class vainfo {
 		$this->_getID3->option_tag_lyrics3	= false;
 		$this->_getID3->encoding		= $this->encoding; 
 		$this->_getID3->encoding_id3v1		= $this->encoding_id3v1;
-		$this->_getID3->encoding_id3v2		= $this->encoding_id3v2;
+//		$this->_getID3->encoding_id3v2		= $this->encoding_id3v2;
 		$this->_getID3->option_tags_process    = true; 
 
 		/* Check for ICONV */
@@ -139,7 +139,7 @@ class vainfo {
 			$this->_raw = $this->_getID3->analyze($this->filename);
 		} 
 		catch (Exception $error) { 
-			debug_event('getid3',$error->message,'1'); 
+			debug_event('getid3',$error->message,'1');
 		} 
 
 		/* Figure out what type of file we are dealing with */

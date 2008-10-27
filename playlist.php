@@ -65,23 +65,10 @@ switch ($_REQUEST['action']) {
 		$playlist->remove_songs($_REQUEST['song']);
 		show_playlist($playlist);
 	break;
-	case 'update_playlist':
-		/* Make sure they've got thems rights */
-		if (!$playlist->has_access()) { 
-			access_denied();
-			break;
-		}
-
-		$playlist->update_type($_REQUEST['type']);
-		$playlist->update_name($_REQUEST['playlist_name']);
-		$url 	= conf('web_path') . '/playlist.php?action=show_playlist&amp;playlist_id=' . $playlist->id;
-		$title	= _('Playlist Updated');
-		$body	= "$playlist->name " . _('has been updated and is now') . " $playlist->type";
-		show_confirmation($title,$body,$url);
-	break;
 	case 'show_playlist':
 		$playlist = new Playlist($_REQUEST['playlist_id']); 
 		$playlist->format(); 
+		$object_ids = $playlist->get_items(); 
 		require_once Config::get('prefix') . '/templates/show_playlist.inc.php'; 
 	break;
 	case 'show_import_playlist':

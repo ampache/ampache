@@ -24,7 +24,7 @@
 <table class="inline-edit" cellpadding="3" cellspacing="0">
 <tr>
 <td>
-	<input type="textbox" name="track" size="3" maxlength="4" value="<?php echo intval($track['track']); ?>" />
+	<input type="text" name="track" size="3" maxlength="4" value="<?php echo intval($track['track']); ?>" />
 </td>
 <td class="cel_song"><?php echo $song->f_link; ?></td>
 <td class="cel_artist"><?php echo $song->f_artist_link; ?></td>

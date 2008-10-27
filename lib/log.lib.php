@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2006 Ampache.org
+ Copyright (c) Ampache.org
  All Rights Reserved
 
  This program is free software; you can redistribute it and/or
@@ -25,15 +25,16 @@
         	or to a defined log file based on config options
 */
 function log_event($username='Unknown',$event_name,$event_description,$log_name='ampache') { 
-
 	/* Set it up here to make sure it's _always_ the same */
         $log_time = time();
 
 	/* must have some name */
 	if (!strlen($log_name)) { $log_name = 'ampache'; } 
 
+	$username = $username ? $username : 'ampache'; 
+
         $log_filename   = Config::get('log_path') . "/$log_name." . date("Ymd",$log_time) . ".log";
-        $log_line       = date("Y-m-d H:i:s",$log_time) . " { $username } ( $event_name ) - $event_description \n";  
+        $log_line       = date("Y-m-d H:i:s",$log_time) . " [$username] ($event_name) -> $event_description \n";  
 
 	$log_write = error_log($log_line, 3, $log_filename);
 	
@@ -49,7 +50,7 @@ function log_event($username='Unknown',$event_name,$event_description,$log_name=
 		as many errors as it can and logs em
 */
 function ampache_error_handler($errno, $errstr, $errfile, $errline) { 
-	
+
 	/* Default level of 1 */
 	$level = 1;
 	
@@ -79,6 +80,7 @@ function ampache_error_handler($errno, $errstr, $errfile, $errline) {
 			$level = 2;
 			break;
 	} // end switch
+	
 
 	/* Don't log var: Deprecated we know shutup!
 	 * Yea now getid3() spews errors I love it :(
@@ -101,8 +103,12 @@ function ampache_error_handler($errno, $errstr, $errfile, $errline) {
 		return false; 
 	}
 
-	$log_line = "[$error_name] $errstr on line $errline in $errfile";
+	$log_line = "[$error_name] $errstr in file $errfile($errline)";
 	debug_event('PHP Error',$log_line,$level);
+	
+	// When a dir is defined lets log it to a logfile
+	if (Config::get('log_path') != "") 
+		log_event("ampache","PHP Error", $log_line);
 	
 } // ampache_error_handler
 

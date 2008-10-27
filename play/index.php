@@ -282,7 +282,8 @@ if (Config::get('track_user_ip')) {
 
 // If we've got downsample remote enabled
 if (Config::get('downsample_remote')) { 
-	if (!Access::check_network('network',$_SERVER['REMOTE_ADDR'],$GLOBALS['user']->id,'25')) { 
+	if (!Access::check_network('network',$_SERVER['REMOTE_ADDR'],$GLOBALS['user']->id,'0')) { 
+		debug_event('downsample','Network Downsample ' . $_SERVER['REMOTE_ADDR'] . ' is not in Local definition','5'); 
 		$not_local = true;
 	}
 } // if downsample remote is enabled

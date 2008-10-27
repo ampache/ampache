@@ -49,11 +49,11 @@ $htmllang = str_replace("_","-",Config::get('lang'));
 <body>
 <div id="header"> 
 <h1><?php echo _('Ampache Update'); ?></h1>
-<p>For the love of Music</p>
+<p>Pour l'Amour de la Musique.</p>
 </div>
 <div id="text-box">
 	<div class="notify">
-This page handles all database updates to Ampache starting with 3.3.3.5. According to your database your current version is: <?php echo Update::format_version($version); ; ?>. 
+This page handles all database updates to Ampache starting with <strong>3.3.3.5</strong>. According to your database your current version is: <strong><?php echo Update::format_version($version); ; ?></strong>.
 the following updates need to be performed<br /><br />
 <div style="font-size:1.2em;font-weight:bold;text-align:center;"><?php Error::display('general'); ?></div>
 	</div>
@@ -61,7 +61,7 @@ the following updates need to be performed<br /><br />
 <?php Update::display_update(); ?>
 
 <form method="post" enctype="multipart/form-data" action="<?php echo Config::get('web_path'); ?>/update.php?action=update">
-<?php if (Update::need_update()) { ?><input type="submit" value="Update Now!" /> <?php } ?>
+<?php if (Update::need_update()) { ?><input type="submit" value="<?php echo _('Update Now!'); ?>" /> <?php } ?>
 </form>
 	</div>
 	<div id="bottom">

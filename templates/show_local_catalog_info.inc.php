@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2007 Ampache.org
+ Copyright (c) Ampache.org
  All Rights Reserved
 
  this program is free software; you can redistribute it and/or
@@ -21,7 +21,7 @@
 */
 
 ?>
-<?php show_box_top(_('Catalog Statistics')); ?>
+<i><?php echo _('Catalog Statistics'); ?></i>
 <table class="tabledata" cellpadding="3" cellspacing="1">
 <tr class="th-top">
 	<th><?php echo _('Connected Users'); ?></th>
@@ -44,4 +44,3 @@
 	<td><?php echo $stats['time_text']; ?></td>
 </tr>
 </table>
-<?php show_box_bottom(); ?>

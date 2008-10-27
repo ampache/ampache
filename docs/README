@@ -1,5 +1,5 @@
 -------------------------------------------------------------------------------
----------                    README - Ampache v.3.4                 -----------
+---------                    README - Ampache v.3.5                 -----------
 -------------------------------------------------------------------------------
 
 Contents:
@@ -69,8 +69,10 @@ Contents:
 	- Localplay
 		- Music Player Daemon (MPD)
 		- Winamp using (HTTPQ)
+		- Shoutcast 
+		- Icecast2
 	- Democratic Vote based playback
-	- 3rd Party clients using API (Amarok,Coherence)
+	- 3rd Party clients using API (Amarok,Coherence,Quickplay)
 	
   C) Current Translations
 
@@ -90,12 +92,11 @@ Contents:
 	- French	(fr_FR) 
 
   D) A Special Thanks:
-     Thanx to those who've helped us make Ampache so useable:
+     Thanks to those who've helped us make Ampache so useable:
 	 Scott Kveton - Head Nacho, inventer of all that is Ampache
 	 Robert Hopson - Libglue, Playlists, Ogg support.. and much more
-	 Andy Morgan - Protagonist
+	 Andy Morgan - Sage / Voice of Reason
 	 RosenSama - Previous Developer
-	 Ben Shields - Ampache Logo
 	 Randall Ehren (Initial XML-RPC)
 	 s1amson (lots of beta testing)
 	 Caleb Crome (bug fixes and enhancements)
@@ -151,7 +152,7 @@ Contents:
   IRC: irc.ampache.org #ampache (Freenode)
   Forums: http://ampache.org/forums
   Bugs: http://ampache.org/bugs
-  Wiki: http://ampache.org/bugs/wiki
+  Wiki: http://ampache.org/wiki
   Demo: http://ampache.org/demo
 
   Ampache Development Team

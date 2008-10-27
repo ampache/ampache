@@ -55,11 +55,11 @@ function focus(){ document.login.username.focus(); }
 		<form name="login" method="post" enctype="multipart/form-data" action="<?php echo Config::get('web_path'); ?>/login.php">
 
 			<div class="loginfield" id="usernamefield">
-        <label for="username"><?php echo  _('Login'); ; ?>:</label> 
+        <label for="username"><?php echo  _('Username'); ?>:</label> 
 			  <input class="text_input" type="text" id="username" name="username" value="<?php echo  $_REQUEST['username']; ; ?>" />
       </div>
 			<div class="loginfield" id="passwordfield">
-        <label for="password"><?php echo  _('Password'); ; ?>:</label> 
+        <label for="password"><?php echo  _('Password'); ?>:</label> 
   			<input class="text_input" type="password" id="password" name="password" value="" />
       </div>
 			<div class="loginfield" id="remembermefield"><label for="rememberme">

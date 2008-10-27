@@ -92,7 +92,7 @@ h3 {
 /* Table style */
 td{
 	padding:5px;
-	//background-color: #D9E0E8;
+	/*background-color: #D9E0E8;*/
     font-size: smaller;
 }
 
@@ -120,13 +120,13 @@ textarea:focus{
 .ok {
 font-weight:bold;
 color:#009900;
-margin:10px 10 10px 10px;
+margin:10px 10px 10px 10px;
 }
 
 .notok {
 font-weight:bold;
 color:#FF3300;
-margin:10px 10 10px 10px;
+margin:10px 10px 10px 10px;
 }
 
 /* Bottom */

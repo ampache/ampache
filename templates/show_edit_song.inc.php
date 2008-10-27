@@ -30,7 +30,7 @@
 <tr class="<?php echo flip_class(); ?>">
 	<td><?php echo _('Title'); ?></td>
 	<td>
-		<input type="textbox" name="title" value="<?php echo scrub_out($song->title); ?>" size="45" />
+		<input type="text" name="title" value="<?php echo scrub_out($song->title); ?>" size="45" />
 	</td>
 </tr>
 <tr class="<?php echo flip_class(); ?>">
@@ -38,7 +38,7 @@
 	<td>
 		<?php show_album_select('album',$song->album); ?>
 		<br /><?php echo _('OR'); ?><br />
-		<input type="textbox" name="album_string" value="<?php echo scrub_out($song->get_album_name()); ?>" />
+		<input type="text" name="album_string" value="<?php echo scrub_out($song->get_album_name()); ?>" />
 	</td>
 </tr>
 <tr class="<?php echo flip_class(); ?>">
@@ -46,7 +46,7 @@
 	<td>
 		<?php show_artist_select('artist',$song->artist); ?>
 		<br /><?php echo _('OR'); ?><br />
-		<input type="textbox" name="artist_string" value="<?php echo scrub_out($song->get_artist_name()); ?>" />
+		<input type="text" name="artist_string" value="<?php echo scrub_out($song->get_artist_name()); ?>" />
 	</td>
 </tr>
 <tr class="<?php echo flip_class(); ?>">
@@ -54,25 +54,25 @@
 	<td>
 		<?php show_genre_select('genre',$song->genre); ?>
 		<br /><?php echo _('OR'); ?><br />
-		<input type="textbox" name="genre_string" value="<?php echo scrub_out($song->f_genre); ?>" />
+		<input type="text" name="genre_string" value="<?php echo scrub_out($song->f_genre); ?>" />
 	</td>
 </tr>
 <tr class="<?php echo flip_class(); ?>">
 	<td><?php echo _('Track'); ?></td>
 	<td>
-		<input type="textbox" name="track" value="<?php echo scrub_out($song->track); ?>" size="3" />
+		<input type="text" name="track" value="<?php echo scrub_out($song->track); ?>" size="3" />
 	</td>
 </tr>
 <tr class="<?php echo flip_class(); ?>">
 	<td><?php echo _('Year'); ?></td>
 	<td>
-		<input type="textbox" name="year" value="<?php echo scrub_out($song->year); ?>" size="5" />
+		<input type="text" name="year" value="<?php echo scrub_out($song->year); ?>" size="5" />
 	</td>
 </tr>
 <tr class="<?php echo flip_class(); ?>">
 	<td><?php echo _('Comment'); ?></td>
 	<td>
-		<input type="textbox" name="comment" value="<?php echo scrub_out($song->comment); ?>" size="45" />
+		<input type="text" name="comment" value="<?php echo scrub_out($song->comment); ?>" size="45" />
 	</td>
 </tr>
 <tr class="<?php echo flip_class(); ?>">

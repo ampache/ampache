@@ -1,4 +1,3 @@
-<?php
 /*
 
  Copyright (c) Ampache.org
@@ -6,7 +5,7 @@
 
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License v2
- as published by the Free Software Foundation.
+ as published by the Free Software Foundation
 
  This program is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -18,29 +17,30 @@
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
+/*****************************************************************************/
+/* Base Definitions, may be overwridden by themes
+/*****************************************************************************/
 
-/**
- * Sub-Ajax page, requires AJAX_INCLUDE as one
- */
-if (AJAX_INCLUDE != '1') { exit; } 
+/*****************
+ * Tag Definitions
+ *****************/
+.tag_size1 { 
+	font-size:.6em;
+} 
+.tag_size2 { 
+	font-size:.8em; 
+} 
+.tag_size3 { 
+	font-size:1em; 
+} 
+.tag_size4 { 
+	font-size:1.2em; 
+} 
 
-switch ($_REQUEST['action']) { 
-	case 'show_add_tag':
- 			
-	break;
-	case 'add_tag': 
-		Tag::add_tag_map($_REQUEST['type'],$_REQUEST['object_id'],$_REQUEST['tag_id']); 
-	break; 
-	case 'remove_tag': 
-		$tag = new Tag($_REQUEST['tag_id']); 
-		$tag->remove_map($_REQUEST['type'],$_REQUEST['object_id']); 
-	break; 
-	default: 
-		$results['rfc3514'] = '0x1'; 
-	break; 
-} // switch on action; 
+a.tag_size1, a.tag_size2, a.tag_size3, a.tag_size4 { text-decoration: none; } 
+
+.hover-add:hover { font-weight:900; } 
+.hover-remove:hover { text-decoration:line-through;} 
 
 
-// We always do this
-echo xml_from_array($results); 
-?>
+

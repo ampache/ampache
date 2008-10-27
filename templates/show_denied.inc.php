@@ -25,9 +25,9 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>Ampache -- Debug Page</title>
+<link rel="stylesheet" href="<?php echo Config::get('web_path'); ?>/templates/install.css" type="text/css" media="screen" />
 </head>
 <body bgcolor="#f0f0f0">
-<link rel="stylesheet" href="<?php echo Config::get('web_path'); ?>/templates/install.css" type="text/css" media="screen" />
 <div id="header">
 <h1>Ampache :: <?php echo _('Access Denied'); ?></h1>
 <p>This Event has been logged</p>

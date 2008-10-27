@@ -33,23 +33,19 @@ $location = get_location();
 <?php
 if (Config::get('use_rss')) { ?>
 <link rel="alternate" type="application/rss+xml" title="<?php echo Config::get('rss_main_title'); ?>" href="<?php echo $web_path; ?>/rss.php" />
-<link rel="alternate" type="application/rss+xml" title="<?php echo _('Ampache Latest Artists Additions'); ?>" href="<?php echo $web_path; ?>/rss.php?type=latestartist" />
-<link rel="alternate" type="application/rss+xml" title="<?php echo _('Ampache Latest Albums Additions'); ?>" href="<?php echo $web_path; ?>/rss.php?type=latestalbum" />
-<link rel="alternate" type="application/rss+xml" title="<?php echo _('Ampache Most Popular Albums'); ?>" href="<?php echo $web_path; ?>/rss.php?type=popularalbum" />
-<link rel="alternate" type="application/rss+xml" title="<?php echo _('Ampache Most Popular Artists'); ?>" href="<?php echo $web_path; ?>/rss.php?type=popularalbum" />
-<link rel="alternate" type="application/rss+xml" title="<?php echo _('Ampache Most Popular Songs'); ?>" href="<?php echo $web_path; ?>/rss.php?type=popularsong" />
 <link rel="alternate" type="application/rss+xml" title="<?php echo _('Ampache Recently Played'); ?>" href="<?php echo $web_path; ?>/rss.php?type=recentlyplayed" />
 <?php } ?>
 <meta http-equiv="Content-Type" content="application/xhtml+xml; charset=<?php echo Config::get('site_charset'); ?>" />
 <title><?php echo scrub_out(Config::get('site_title')); ?> - <?php echo $location['title']; ?></title>
+<link rel="stylesheet" href="<?php echo $web_path; ?>/templates/base.css" type="text/css" media="screen" />
 <link rel="stylesheet" href="<?php echo $web_path; ?><?php echo Config::get('theme_path'); ?>/templates/default.css" type="text/css" media="screen" />
 <link rel="stylesheet" href="<?php echo $web_path; ?>/templates/print.css" type="text/css" media="print" />
-<link rel="stylesheet" href="<?php echo $web_path; ?>/templates/handheld.css" type="text/css" media="handheld" />
 </head>
 <body>
 <script src="<?php echo $web_path; ?>/lib/javascript-base.js" language="javascript" type="text/javascript"></script>
 <script src="<?php echo $web_path; ?>/modules/kajax/ajax.js" language="javascript" type="text/javascript"></script>
 <script src="<?php echo $web_path; ?>/modules/prototype/prototype.js" language="javascript" type="text/javascript"></script>
+<!-- rfc3514 implementation --> 
 <div id="rfc3514" style="display:none;">0x0</div>
 <div id="maincontainer" <?php 
 	if ($GLOBALS['theme']['orientation'] == 'horizontal') { 
@@ -78,8 +74,6 @@ if (Config::get('use_rss')) { ?>
 	<div id="rightbar"><!-- This is the rightbar -->
 		<?php require_once Config::get('prefix') . '/templates/rightbar.inc.php'; ?>
 	</div><!-- End rightbar -->
-<!-- I hate IE... 
-<table class="smeg-ie" width="100%"><tr><td> -->
 <!-- Tiny little iframe, used to cheat the system --> 
 <div id="ajax-loading">Loading . . .</div>
 <iframe name="util_iframe" id="util_iframe" style="display:none;" src="<?php echo Config::get('web_path'); ?>/util.php"></iframe>

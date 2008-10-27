@@ -84,7 +84,7 @@ br:before       { content: "\A" }
 :before, :after { white-space: pre }
 center          { text-align: center }
 :link, :visited { text-decoration: underline }
-:focus          { outline: thin dotted invert }
+/* :focus          { outline: thin invert }*/
 
 /* Begin bidirectionality settings (do not change) */
 BDO[DIR="ltr"]  { direction: ltr; unicode-bidi: bidi-override }
@@ -99,6 +99,7 @@ BDO[DIR="rtl"]  { direction: rtl; unicode-bidi: bidi-override }
   h1, h2, h3,
   h4, h5, h6    { page-break-after: avoid }
   ul, ol, dl    { page-break-before: avoid }
+}
 
 #sidebar {
 display: none;
@@ -123,4 +124,3 @@ display: none;
 select {
 display: none;
 }
-

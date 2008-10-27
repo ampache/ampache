@@ -180,18 +180,34 @@ function search_song($data,$operator,$method,$limit) {
 						"WHERE `object_type`='song' GROUP BY `object_id`"; 
 				$db_results = Dba::query($rating_sql); 
 
+				// Fill it with one value to prevent sql error on no results
 				$where_sql .= " `song`.`id` IN (";
-				$end_rating = ''; 
+
+				$ids = array('0'); 
 
 				while ($row = Dba::fetch_assoc($db_results)) { 
 					if ($row['avgrating'] < $value) { continue; } 
-					$where_sql .= $row['object_id'] . ','; 
-					$end_rating = ") $operator"; 
+					$ids[] = $row['object_id']; 
 				} 
-		
-				$where_sql = rtrim($where_sql,"`song`.`id` IN ("); 
-				$where_sql = rtrim($where_sql,",") . $end_rating;  
-				
+
+				$where_sql .= implode(',',$ids) . ')'; 
+			break;
+			case 'tag': 
+
+				// Fill it with one value to prevent sql error on no results
+				$ids = array('0'); 
+
+				$tag_sql = "SELECT `object_id` FROM `tag` LEFT JOIN `tag_map` ON `tag`.`id`=`tag_map`.`tag_id` " . 
+						"WHERE `tag_map`.`object_type`='song' AND `tag`.`name` $value_string "; 
+				$db_results = Dba::read($tag_sql); 
+
+				while ($row = Dba::fetch_assoc($db_results)) { 
+					$ids[] = $row['object_id']; 
+				} 
+
+				$where_sql  = " `song`.`id` IN (" . implode(',',$ids) . ")"; 
+
+			break; 				
 			default:
 				// Notzing!
 			break;

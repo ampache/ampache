@@ -997,6 +997,7 @@ class Browse {
 				show_box_bottom(); 
 			break;
 			case 'playlist': 
+				Playlist::build_cache($object_ids); 
 				show_box_top(_('Playlists') . $match, $class);
 				require_once Config::get('prefix') . '/templates/show_playlists.inc.php'; 
 				show_box_bottom(); 
@@ -1026,6 +1027,12 @@ class Browse {
 				require_once Config::get('prefix') . '/templates/show_flagged.inc.php'; 
 				show_box_bottom(); 
 			break;
+			case 'tag': 
+				Tag::build_cache($tags); 
+				show_box_top(_('Tag Cloud'),$class); 
+				require_once Config::get('prefix') . '/templates/show_tagcloud.inc.php'; 
+				show_box_bottom(); 
+			break; 
 			default: 
 				// Rien a faire
 			break;

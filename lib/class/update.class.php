@@ -1398,5 +1398,27 @@ class Update {
 
 	} // update_350002
 
+	/**
+	 * update_350003
+	 * This update tweakes the tag tables a little bit more, we're going to simplify things for the first little bit and then
+	 * then if it all works out we will worry about making it complex again. One thing at a time people...
+	 */
+	public static function update_350003() { 
+
+		$sql = "ALTER TABLE `tag` DROP `order`"; 
+		$db_results = Dba::write($sql); 
+
+		$sql = "ALTER TABLE `tag` DROP INDEX `order`"; 
+		$db_results = Dba::write($sql); 
+
+		$sql = "ALTER TABLE `tag` ADD UNIQUE ( `name` )"; 
+		$db_results = Dba::write($sql); 
+
+		$sql = "ALTER TABLE `tag` CHANGE `name` `name` VARCHAR( 255 )"; 
+		$db_results = Dba::write($sql); 
+
+
+	} // update_350003
+
 } // end update class
 ?>

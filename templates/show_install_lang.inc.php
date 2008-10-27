@@ -26,7 +26,7 @@
 <head>
 <title>Ampache :: Pour l'Amour de la Musique - Install</title>
 <link rel="stylesheet" href="templates/install.css" type="text/css" media="screen" />
-<meta http-equiv="Content-Type" Content="text/html; Charset=<?php echo $charset; ?>" />
+<meta http-equiv="Content-Type" content="text/html; Charset=<?php echo $charset; ?>" />
 </head>
 <body>
 <script src="lib/javascript-base.js" language="javascript" type="text/javascript"></script>

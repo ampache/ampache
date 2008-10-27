@@ -31,6 +31,14 @@ abstract class database_object {
 	// Statistics for debugging
 	public static $cache_hit = 0; 
 
+	/**
+	 * get_info
+	 * retrieves the info from the database and puts it in the cache
+	 * 
+	 * @param string $id
+	 * @param string $table_name
+	 * @return array
+	 */
 	public function get_info($id,$table_name='') { 
 
 		$table_name = $table_name ? Dba::escape($table_name) : Dba::escape(strtolower(get_class($this)));
@@ -58,19 +66,26 @@ abstract class database_object {
 	 */
 	public static function is_cached($index,$id) { 
 		
-		$is_cached = isset(self::$object_cache[$index][$id]); 
-
-		return $is_cached; 
+		return isset(self::$object_cache[$index][$id]); 
 
 	} // is_cached
 
 	/**
- 	 * get_from_cache
+	 * get_from_cache
 	 * This attempts to retrive the specified object from the cache we've got here
+	 * 
+	 * @param string $index
+	 * @param string $id
+	 * @return array
 	 */
 	public static function get_from_cache($index,$id) { 
 
-		if (isset(self::$object_cache[$index][$id])) { 
+		// Check if the object is set
+		if (isset(self::$object_cache) 
+			&& isset(self::$object_cache[$index])
+			&& isset(self::$object_cache[$index][$id])
+			) { 
+			
 			self::$cache_hit++; 		
 			return self::$object_cache[$index][$id]; 
 		} 
@@ -82,12 +97,22 @@ abstract class database_object {
 	/**
 	 * add_to_cache
 	 * This adds the specified object to the specified index in the cache
+	 *
+	 * @param string $index
+	 * @param string $id
+	 * @param array $data
+	 * @return boolean
 	 */
 	public static function add_to_cache($index,$id,$data) { 
-
-		self::$object_cache[$index][$id] = $data;
-
-		return true; 
+		$hasbeenset = false;
+		
+		// Set the data if it is set
+		if (isset($data)) {
+			self::$object_cache[$index][$id] = $data;
+			$hasbeenset = true;
+		}
+		
+		return $hasbeenset; 
 
 	} // add_to_cache
 

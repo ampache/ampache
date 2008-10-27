@@ -60,7 +60,7 @@ if (is_object($GLOBALS['playlist'])) { ?>
 		<option value="artist"><?php echo _('Artist'); ?></option> 
 		<option value="year"><?php echo _('Year'); ?></option> 
 	</select>
-	<input type="textbox" name="update_value" />
+	<input type="text" name="update_value" />
 	<input class="button" type="button" value="<?php echo _('Update'); ?>" onclick="return SubmitToPage('songs','<?php echo $web_path; ?>/admin/flag.php?action=mass_update');" />
 </td>
 </tr>

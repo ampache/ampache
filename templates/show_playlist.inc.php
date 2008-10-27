@@ -38,7 +38,6 @@
 </div>
 <?php show_box_bottom(); ?>
 <?php 
-	$object_ids = $playlist->get_items(); 
 	Browse::set_type('playlist_song'); 
 	Browse::add_supplemental_object('playlist',$playlist->id); 
 	Browse::set_static_content(1);

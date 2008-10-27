@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2007 Ampache.org
+ Copyright (c) Ampache.org
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
@@ -227,11 +227,12 @@ class Stats {
 
 		$sql = "SELECT DISTINCT($type) FROM `song` ORDER BY `addition_time` DESC " . 
 			"LIMIT $limit"; 
-		$db_results = Dba::query($sql); 
+		$db_results = Dba::read($sql); 
 
-		while ($r = Dba::fetch_row($db_results)) { 
-			$object = new $object_name($r['0']); 
-			$items[] = $object; 
+		$items = array(); 
+
+		while ($row = Dba::fetch_row($db_results)) { 
+			$items[] = $row['0']; 
 		} // end while results
 
 		return $items; 

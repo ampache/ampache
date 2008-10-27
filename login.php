@@ -156,5 +156,3 @@ if ($auth['success']) {
 require Config::get('prefix') . '/templates/show_login_form.inc.php';
 
 ?>
-</body>
-</html>

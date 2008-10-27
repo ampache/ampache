@@ -27,7 +27,7 @@ $web_path = Config::get('web_path');
   <col id="col_username" />
   <col id="col_sticky" />
   <col id="col_comment" />
-  <col id="col_date />
+  <col id="col_date" />
   <col id="col_action" />
 </colgroup>
 <tr class="th-top">

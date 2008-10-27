@@ -26,13 +26,13 @@
 <tr class="<?php echo flip_class(); ?>">
 	<td><?php echo _('Name'); ?></td>
 	<td>
-		<input type="textbox" name="name" value="<?php echo scrub_out($album->full_name); ?>">
+		<input type="text" name="name" value="<?php echo scrub_out($album->full_name); ?>">
 	</td>
 </tr>
 <tr class="<?php echo flip_class(); ?>">
 	<td><?php echo _('Year'); ?></td>
 	<td>
-		<input type="textbox" name="year" value="<?php echo scrub_out($album->year); ?>">
+		<input type="text" name="year" value="<?php echo scrub_out($album->year); ?>">
 	</td>
 </tr>
 <tr class="<?php echo flip_class(); ?>">

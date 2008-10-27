@@ -191,8 +191,8 @@ require_session = "true"
 ; POSSIBLE VALUES: id3v1 id3v2 file vorbiscomment 
 ;                  quicktime ape asf 
 ; DEFAULT: id3v2,id3v1 vorbiscomment quicktime ape
-; 		asf 
-tag_order = "id3v2,id3v1,vorbiscomment,quicktime,ape,asf"
+; 		asf file
+tag_order = "id3v2,id3v1,vorbiscomment,quicktime,ape,asf,file"
 
 ; Un comment if don't want ampache to follow symlinks
 ; DEFAULT: false
@@ -230,8 +230,8 @@ ratings = "true"
 ; This defines the "Min" memory limit for PHP if your php.ini
 ; has a lower value set Ampache will set it up to this. If you
 ; set it below 16MB getid3() will not work!
-; DEFAULT: 24
-;memory_limit = 24
+; DEFAULT: 32
+;memory_limit = 32
 
 ; Album Art Preferred Filename
 ; Specify a filename to look for if you always give the same filename
@@ -254,8 +254,8 @@ ratings = "true"
 ; ampache to search if you want to disable one of the search
 ; method simply comment it out valid values are
 ; POSSIBLE VALUES: db id3 folder amazon lastfm
-; DEFAULT: db,id3,folder,lastfm,amazon
-album_art_order = "db,id3,folder,lastfm,amazon"
+; DEFAULT: db,id3,folder,lastfm
+album_art_order = "db,id3,folder,lastfm"
 
 ; Album Art 
 ; Set this to true if you want album art displayed on pages besides the
@@ -464,25 +464,15 @@ refresh_limit = "60"
 ; DEFAULT: 48
 ;min_bit_rate = 48
 
-
-;######################################################
-; These options control how searching works           #
-;######################################################
-
-; choices are: artist,album,song_title,song_genre,song_year,song_bitrate,song_min_bitrate,song_filename
-; DEFAULT: song_title
-search_field = song_title
-
-; choices are: exact,fuzzy
-; DEFAULT: fuzzy
-search_type  = fuzzy 
-
 ;######################################################
 ; These are commands used to transcode non-streaming
 ; formats to the target file type for streaming. 
 ; This can be useful in re-encoding file types that don't stream
 ; very well, or if your player doesn't support some file types. 
 ; This is also the string used when 'downsampling' is selected
+; as some people have complained its not bloody obvious, any programs
+; referenced in the downsample commands must be installed manually and in
+; the web server path, and executable by the web server
 ; REQUIRED variables
 ; transcode_TYPE	= true/false ## True to force transcode regardless of prefs
 ; transcode_TYPE_target	= TARGET_FILE_TYPE
@@ -500,55 +490,26 @@ transcode_flac_target	= mp3
 ;transcode_mp3  	= false
 transcode_mp3_target	= mp3
 ;transcode_ogg 		= false
-transcode_ogg		= ogg
+transcode_ogg_target	= ogg
 
 ; These are the commands that will be run to transcode the file
 transcode_cmd_flac 	= "flac -dc %FILE% | lame -b %SAMPLE% -S - - "
 transcode_cmd_m4a 	= "faad -f 2 -w %FILE% | lame -r -b %SAMPLE% -S - -"
 transcode_cmd_mp3	= "mp3splt -qnf %FILE% %OFFSET% %EOF% -o - | lame --mp3input -q 3 -b %SAMPLE% -S - -"
-;transcode_cmd_ogg   = "mp3splt -qn %FILE% %OFFSET% %EOF% -o - | oggdec -Q -o - - | lame -S -q 3 -b %SAMPLE% -S - -"
-transcode_cmd_ogg   = "oggsplt -qn %FILE% %OFFSET% %EOF% -o - | oggdec -Q -o - - | lame -S -q 3 -b %SAMPLE% -S - -"
+transcode_cmd_ogg   	= "oggsplt -qn %FILE% %OFFSET% %EOF% -o - | oggdec -Q -o - - | lame -S -q 3 -b %SAMPLE% -S - -"
+
 ; Alternative command works better for some people
 ;transcode_cmd_m4a       =  "alac %FILE% | lame -h -b %SAMPLE% -S - -"
+;transcode_cmd_ogg   	= "mp3splt -qn %FILE% %OFFSET% %EOF% -o - | oggdec -Q -o - - | lame -S -q 3 -b %SAMPLE% -S - -"
 
 ; This line seems to work better for windows, switch if needed
 ;transcode_cmd_mp3	= "lame -q 3 -b %SAMPLE% -S %FILE% - -" 
 
-
-
 ;######################################################
 ; these options allow you to configure your rss-feed
-; layout. rss exists of two parts, main and song
-; main is the information about the feed
-; song is the information in the feed. can be multiple
-;      items.
-;
+; layout. rss exists of two parts, main and song main is the information about the feed
+; song is the information in the feed. can be multiple items.
 ; use_rss = false (values true | false)
-;
 ;DEFAULT: use_rss = true
 use_rss = true
-;
-;
-; rss_main_title = the title for your feed.
-; DEFAULT: Ampache for the love of Music
-rss_main_title = Ampache for the love of Music
-; rss_main_description = the description for your feed
-; DEFAULT: Rss feed for Ampache so you can monitor who is listening to what
-rss_main_description = Rss feed for Ampache so you can monitor who is listening to what
-; rss_main_copyright = here you can enter copyright information if you wish
-; DEFAULT: copyright (c) Speedy B for Ampache
-rss_main_copyright = copyright (c) Speedy B for Ampache
-; rss_song_description = The description of the song.
-;                        It has to start with <![CDATA[
-;                        and end with ]]>. this is because xml wont parse if strange
-;                        characters are used in the id3-tag
-; usable items:
-; $song->f_title
-; $song->f_album
-; $user->fullname
-; $artist
-; $album
-; DEFAULT:  <![CDATA[$song->f_title @ $album played by  $user->fullname]]>
-; FIXME it's hardcoded in lib/rss.lib.php now
-;rss_song_description = <![CDATA[$song->f_title @ $album played by  $user->fullname]]>
 ;#####################################################

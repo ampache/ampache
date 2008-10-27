@@ -49,9 +49,7 @@ switch ($_REQUEST['action']) {
 	default: 
 		// Global stuff first
 		$stats = Catalog::get_stats(); 
-		require_once Config::get('prefix') . '/templates/show_local_catalog_info.inc.php';
-		require_once Config::get('prefix') . '/templates/show_stats_popular.inc.php'; 
-		require_once Config::get('prefix') . '/templates/show_stats_newest.inc.php'; 
+		require_once Config::get('prefix') . '/templates/show_stats.inc.php'; 
 	break;
 } // end switch on action
 

@@ -28,7 +28,7 @@ $htmllang = str_replace("_","-",Config::get('lang'));
 <meta http-equiv="Content-Type" content="text/html; charset=<?php echo Config::get('site_charset'); ?>" />
 <title><?php echo Config::get('site_title'); ?> - <?php echo _("Album Art"); ?></title>
 </head>
-<body onLoad="self.resizeTo(document.images[0].width+30, document.images[0].height+70)">
+<body onload="self.resizeTo(document.images[0].width+30, document.images[0].height+70)">
 <?php
 echo "<a href=\"javascript:window.close()\" title=\"" . _('Click to close window') . "\">";
 echo "<img src=\"" . Config::get('web_path') . "/image.php?id=" . scrub_out($_GET['id']) . "&amp;sid=" . session_id() . "\" border=\"0\" alt=\"\" />";

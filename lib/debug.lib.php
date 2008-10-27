@@ -199,11 +199,21 @@ function check_putenv() {
 	if (!ini_set(memory_limit,$new_limit)) { 
 		return false; 
 	}
+
+	// Make sure it actually worked
+	$current = ini_get('memory_limit'); 
+
+	if ($new_limit != $current) { 
+		return false; 
+	} 
 	
 	/* Check if safe mode is on */
 	if (ini_get('safe_mode')) { 
 		return false; 
 	}
+
+	// See if we can override the set_time_limit(); 
+
 
 	return true;
 

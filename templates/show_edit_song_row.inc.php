@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2008 Ampache.org
+ Copyright (c) Ampache.org
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
@@ -22,8 +22,9 @@
 <td colspan="8">
 <form method="post" id="edit_song_<?php echo $song->id; ?>">
 <table class="inline-edit" cellpadding="3" cellspacing="0">
+<tr>
 <td>
-	<input type="textbox" name="title" value="<?php echo scrub_out($song->title); ?>" />
+	<input type="text" name="title" value="<?php echo scrub_out($song->title); ?>" />
 </td>
 <td>
 	<?php show_artist_select('artist',$song->artist,true,$song->id); ?>
@@ -36,18 +37,14 @@
 <?php echo Ajax::observe('album_select_'.$song->id,'change','check_inline_song_edit("album", '.$song->id.')'); ?>
 </td>
 <td>
-	<?php show_genre_select('genre',$song->genre,'',true,$song->id); ?>
-	<div id="genre_select_song_<?php echo $song->id ?>"></div>
-<?php echo Ajax::observe('genre_select_'.$song->id,'change','check_inline_song_edit("genre", '.$song->id.')'); ?>
-</td>
-<td>
-	<input type="textbox" name="track" size="3" value="<?php echo scrub_out($song->track); ?>" />
+	<input type="text" name="track" size="3" value="<?php echo scrub_out($song->track); ?>" />
 </td>
 <td>
 	<input type="hidden" name="id" value="<?php echo $song->id; ?>" />
 	<input type="hidden" name="type" value="song" />
 	<?php echo Ajax::button('?action=edit_object&id=' . $song->id . '&type=song','download',_('Save Changes'),'save_song_' . $song->id,'edit_song_' . $song->id); ?>
 </td>
+</tr>
 </table>
 </form>
 </td>
