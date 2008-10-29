@@ -222,7 +222,6 @@ class Browse {
 				$valid_array = array('show_art','starts_with','alpha_match'); 
 			break; 
 			case 'artist': 
-			case 'genre': 
 			case 'song': 
 			case 'live_stream': 
 				$valid_array = array('alpha_match','starts_with'); 	
@@ -232,6 +231,9 @@ class Browse {
 				if (Access::check('interface','50')) { 
 					array_push($valid_array,'playlist_type'); 
 				} 
+			break; 
+			case 'tag': 
+				$valid_array = array('object_type'); 
 			break; 
 			default: 
 				$valid_array = array(); 
@@ -541,6 +543,9 @@ class Browse {
 			break;
 			case 'shoutbox': 
 				$sql = "SELECT `user_shout`.`id` FROM `user_shout` "; 
+			break; 
+			case 'tag': 
+				$sql = "SELECT `tag`.`id` FROM `tag` LEFT JOIN `tag_map` ON `tag_map`.`tag_id`=`tag`.`id` "; 
 			break; 
 			case 'playlist_song': 
                         case 'song':

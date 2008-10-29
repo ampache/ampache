@@ -34,10 +34,6 @@ abstract class database_object {
 	/**
 	 * get_info
 	 * retrieves the info from the database and puts it in the cache
-	 * 
-	 * @param string $id
-	 * @param string $table_name
-	 * @return array
 	 */
 	public function get_info($id,$table_name='') { 
 
@@ -65,6 +61,9 @@ abstract class database_object {
 	 * this checks the cache to see if the specified object is there
 	 */
 	public static function is_cached($index,$id) { 
+
+		// Make sure we've got some parents here before we dive below
+		if (!isset(self::$object_cache) || !isset(self::$object_cache[$index])) { return false; } 
 		
 		return isset(self::$object_cache[$index][$id]); 
 
@@ -73,10 +72,6 @@ abstract class database_object {
 	/**
 	 * get_from_cache
 	 * This attempts to retrive the specified object from the cache we've got here
-	 * 
-	 * @param string $index
-	 * @param string $id
-	 * @return array
 	 */
 	public static function get_from_cache($index,$id) { 
 
@@ -97,23 +92,11 @@ abstract class database_object {
 	/**
 	 * add_to_cache
 	 * This adds the specified object to the specified index in the cache
-	 *
-	 * @param string $index
-	 * @param string $id
-	 * @param array $data
-	 * @return boolean
 	 */
 	public static function add_to_cache($index,$id,$data) { 
-		$hasbeenset = false;
-		
-		// Set the data if it is set
-		if (isset($data)) {
-			self::$object_cache[$index][$id] = $data;
-			$hasbeenset = true;
-		}
-		
-		return $hasbeenset; 
 
+		self::$object_cache[$index][$id] = $data;
+		
 	} // add_to_cache
 
 } // end database_object

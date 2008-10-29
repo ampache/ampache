@@ -171,6 +171,13 @@ switch ($_REQUEST['action']) {
 		$body	= '';
 		show_confirmation($title,$body,$url);
 	break;
+	case 'update_from': 
+		if (Config::get('demo_mode')) { break; } 
+		// First see if we need to do an add
+		if ($_POST['add_path'] != '/' AND strlen($_POST['add_path'])) { 
+
+		} 
+	break; 
 	case 'add_catalog':
 		/* Wah Demo! */
 		if (Config::get('demo_mode')) { break; }

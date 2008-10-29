@@ -21,6 +21,9 @@
 ?>
 <?php show_box_top(_('Show Catalogs')) ?>
 <div id="information_actions">
+<table>
+<tr>
+<td>
 <ul>
 	<li><a href="<?php echo Config::get('web_path'); ?>/admin/catalog.php?action=gather_album_art"><?php echo _('Gather All Art'); ?></a></li>
 	<li><a href="<?php echo Config::get('web_path'); ?>/admin/catalog.php?action=add_to_all_catalogs"><?php echo _('Add to All'); ?></a> </li>
@@ -29,6 +32,18 @@
 	<li><a href="<?php echo Config::get('web_path'); ?>/admin/catalog.php?action=full_service"><?php echo _('Update All'); ?></a></li>
 	<li><a href="<?php echo Config::get('web_path'); ?>/admin/catalog.php?action=clear_stats"><?php echo _('Clear Stats'); ?></a></li>
 </ul>
+</td>
+<td>
+	<form method="post" action="<?php echo Config::get('web_path'); ?>/admin/catalog.php?action=update_from">
+	<?php echo _('Add From'); ?> <span class="information">/data/myNewMusic</span><br />
+	<input type="text" name="add_path" value="/" /><br />
+	<?php echo _('Update From'); ?> <span class="information">/data/myUpdatedMusic</span><br />
+	<input type="text" name="update_path" value="/" /><br />
+<input type="submit" value="<?php echo _('Update'); ?>" />
+</form>
+</td>
+</tr>
+</table>
 </div>
 <?php show_box_bottom(); ?>
 <?php 
@@ -38,3 +53,4 @@
                 Browse::save_objects($catalog_ids);
                 Browse::show_objects($catalog_ids);
 ?>
+

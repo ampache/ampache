@@ -216,6 +216,9 @@ a.button{padding:1px 3px;}
   font-weight:normal;
   color:#5b5b5b;
 }
+#sidebar-page div.sb3 input[type=radio] { 
+	margin-left:2px; 
+} 
 
 #sidebar-page ul.sb3 li{
   margin:0;

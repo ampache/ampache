@@ -85,7 +85,7 @@ if (!count($results)) {
 } 
 
 /** This is the version.... fluf nothing more... **/
-$results['version']		= '3.5-Alpha1 (Build 004)';
+$results['version']		= '3.5-Alpha1 (Build 005)';
 $results['int_config_version']	= '7'; 
 
 $results['raw_web_path']	= $results['web_path'];
@@ -168,12 +168,14 @@ set_memory_limit($results['memory_limit']);
 
 /**** END Set PHP Vars ****/
 
-/* We have to check for HTTP Auth */
-if (in_array("http",$results['auth_methods'])) { 
+/* We have to check for HTTP Auth, only run this if we don't have an ampache session cookie */
+$session_name = Config::get('session_name');
+if (in_array("http",$results['auth_methods']) AND empty($_COOKIE[$session_name])) { 
 
 	$username = scrub_in($_SERVER['PHP_AUTH_USER']);
 	$results = vauth::http_auth($username);
 
+	// We've found someone or were able to create them, go ahead and generate the session
 	if ($results['success']) { 
 		vauth::create_cookie();
 		vauth::session_create($results);

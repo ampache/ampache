@@ -149,6 +149,9 @@ class vauth {
 
 		// If no key is passed try to find the session id
 		$key = $key ? $key : session_id(); 
+		
+		// Nuke the cookie before all else
+		self::destroy($key); 
 
 	        // Do a quick check to see if this is an AJAX'd logout request
 	        // if so use the iframe to redirect
@@ -169,7 +172,6 @@ class vauth {
 	                echo xml_from_array($results);
 	        }
 
-		self::destroy($key); 
 
 	        /* Redirect them to the login page */
 	        if (AJAX_INCLUDE != '1') {
@@ -648,7 +650,7 @@ class vauth {
 	public static function http_auth($username) { 
 
 	        /* Check if the user exists */
-	        if ($user = new User($username)) {
+	        if ($user = User::get_from_username($username)) {
 	                $results['success']     = true;
 	                $results['type']        = 'mysql';
 	                $results['username']    = $username;
@@ -658,8 +660,8 @@ class vauth {
 	        }
 
 	        /* If not then we auto-create the entry as a user.. :S */
-	        $user->create($username,$username,'',md5(rand()),'25');
-	        $user = new User($username);
+	        $user_id = $user->create($username,$username,'',md5(rand()),'25');
+	        $user = new User($user_id);
 
 	        $results['success']     = true;
 	        $results['type']        = 'mysql';

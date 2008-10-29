@@ -68,6 +68,17 @@ $ajax_info = Config::get('ajax_url'); $web_path = Config::get('web_path');
                 <label id="show_allplLabel" for="showallplCB"><?php echo _('All Playlists'); ?></label><br />
                 <?php echo Ajax::observe('show_allplCB','click',Ajax::action('?page=browse&action=browse&type=' . Browse::get_type() . '&key=playlist_type&value=1','')); ?>
         <?php } // if playlist_type ?>
+	<?php if (in_array('object_type',$allowed_filters)) { ?>
+		<input id="typeSongRadio" type="radio" name="object_type" value="1" />
+		<label id="typeSongLabel" for="typeSongRadio"><?php echo _('Song Title'); ?></label><br />
+		<?php echo Ajax::observe('typeSongRadio','click',Ajax::action('?page=tag&action=browse&type=song','')); ?>
+		<input id="typeAlbumRadio" type="radio" name="object_type" value="1" />
+		<label id="typeAlbumLabel" for="typeAlbumRadio"><?php echo _('Albums'); ?></label><br />
+		<?php echo Ajax::observe('typeAlbumRadio','click',Ajax::action('?page=tag&action=browse&type=album','')); ?>
+		<input id="typeArtistRadio" type="radio" name="object_type" value="1" />
+		<label id="typeArtistLabel" for="typeArtistRadio"><?php echo _('Artist'); ?></label><br />
+		<?php echo Ajax::observe('typeArtistRadio','click',Ajax::action('?page=tag&action=browse&type=artist','')); ?>
+	<?php } ?>
     </div>
   </li>
 <?php } ?>

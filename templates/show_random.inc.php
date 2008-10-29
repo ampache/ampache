@@ -38,9 +38,8 @@
 		<option value="-1"><?php echo _('All'); ?></option>
 		</select>
 	</td>
-	<td rowspan="5" valign="top"><?php echo  _('From genre'); ?></td>
+	<td rowspan="5" valign="top"><?php echo  _('Tags'); ?></td>
 	<td rowspan="5">
-	<?php show_genre_select('genre[]','','6'); ?>
 	</td>
 </tr>
 <tr>

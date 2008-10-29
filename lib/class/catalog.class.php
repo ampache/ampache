@@ -106,6 +106,17 @@ class Catalog {
 	} // _create_filecache
 
 	/**
+ 	 * get_from_path
+	 * Try to figure out which catalog path most closely resembles this one
+	 * This is useful when creating a new catalog to make sure we're not doubling up here
+	 */
+	public static function get_from_path($path) { 
+
+		// Break it down into its component parts and start looking for a catalog
+
+	} // get_from_path
+
+	/**
 	 * format
 	 * This makes the object human readable
 	 */

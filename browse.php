@@ -59,7 +59,11 @@ switch($_REQUEST['action']) {
 	break;
 	case 'tag': 
 		Browse::set_sort('count','ASC'); 
-		$tags = Browse::get_objects(); 
+		// This one's a doozy
+		Browse::set_simple_browse(0); 
+		Browse::save_objects(Tag::get_tags(Config::get('offset_limit'),array())); 
+		$keys = array_keys(Browse::get_saved()); 
+		Tag::build_cache($keys); 
 		Browse::show_objects(); 
 	break; 
 	case 'artist':

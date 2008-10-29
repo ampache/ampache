@@ -725,7 +725,7 @@ class Album extends database_object {
 
 		$current_id = $this->id; 
 
-		if ($artist != $this->artist_id AND $artist > 0) { 
+		if ($artist != $this->artist_id AND $artist) { 
 			// Update every song
 			$songs = $this->get_songs(); 
 			foreach ($songs as $song_id) { 

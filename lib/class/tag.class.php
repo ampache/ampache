@@ -70,14 +70,14 @@ class Tag extends database_object {
 	 */
 	public function format($type=0,$object_id=0) { 
 
-		if (!self::validate_type($type)) { return false; } 
+		if ($type AND !self::validate_type($type)) { return false; } 
 
 		if ($type) { 
 			$this->set_object($type,$object_id); 
 		} 
 
 		$size = 3 + ($this->weight-1) - ($this->count-1); 
-		if ($size > 4) { $size = 4; } 
+		if (abs($size) > 4) { $size = 4; } 
 
 		if ($this->owner == $GLOBALS['user']->id) { 
 			$action = '?page=tag&action=remove_tag&type=' . scrub_out($type) . '&tag_id=' . intval($this->id) . '&object_id=' . intval($object_id); 
@@ -89,6 +89,7 @@ class Tag extends database_object {
 		} 
 
 		$class .= 'tag_size' . $size; 
+		$this->f_class = $class; 
 
 		$this->f_name = Ajax::text($action,$this->name,'modify_tag_' . $this->id . '_' . $object_id,'',$class); 
 
@@ -361,7 +362,36 @@ class Tag extends database_object {
 		
 		return $results;
 
-	 } // get_object_tags
+	} // get_object_tags
+
+	/**
+ 	 * get_tags
+	 * This is a non-object non type depedent function that just returns tags
+	 * we've got, it can take filters (this is used by the tag cloud)
+	 */
+	public static function get_tags($limit,$filters=array()) { 
+
+		$sql = "SELECT `tag_map`.`tag_id`,COUNT(`tag_map`.`object_id`) AS `count` " . 
+			"FROM `tag_map` " .
+			"LEFT JOIN `tag` ON `tag`.`id`=`tag_map`.`tag_id` " . 
+			"GROUP BY `tag`.`name` ORDER BY `count` DESC " . 
+			"LIMIT $limit";
+		$db_results = Dba::read($sql); 
+
+		$results = array(); 
+
+		while ($row = Dba::fetch_assoc($db_results)) { 
+			if ($row['count'] > $top) { $top = $row['count']; } 
+			$results[$row['tag_id']] = array('id'=>$row['tag_id'],'count'=>$row['count']); 
+			$count+= $row['count']; 
+		} 
+
+		// Do something with this
+		$min = $row['count']; 
+
+		return $results; 
+
+	} // get_tags
 
 	/**
  	 * filter_with_prefs
