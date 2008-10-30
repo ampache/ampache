@@ -44,6 +44,7 @@ if (!Config::get('access_control')) {
 	exit; 
 }  
 
+
 /** 
  * Verify the existance of the Session they passed in we do allow them to
  * login via this interface so we do have an exception for action=login
@@ -59,12 +60,14 @@ if ((!vauth::session_exists('api', $_REQUEST['auth']) AND $_REQUEST['action'] !=
 $session = vauth::get_session_data($_REQUEST['auth']);
 $username = ($_REQUEST['action'] == 'handshake') ? $_REQUEST['user'] : $session['username'];
 
+
 if (!Access::check_network('init-api',$_SERVER['REMOTE_ADDR'],$username,'5')) { 
         debug_event('Access Denied','Unathorized access attempt to API [' . $_SERVER['REMOTE_ADDR'] . ']', '3');
         ob_end_clean(); 
         echo xmlData::error('403','ACL Error');
         exit(); 
 }
+
 
 if (!$_REQUEST['action'] != 'handshake') { 
         vauth::session_extend($_REQUEST['auth']); 
@@ -73,6 +76,7 @@ if (!$_REQUEST['action'] != 'handshake') {
 
 switch ($_REQUEST['action']) { 
 	case 'handshake': 
+
 		// Send the data we were sent to the API class so it can be chewed on 
 		$token = Api::handshake($_REQUEST['timestamp'],$_REQUEST['auth'],$_SERVER['REMOTE_ADDR'],$_REQUEST['user'],$_REQUEST['version']); 
 		

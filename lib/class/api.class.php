@@ -77,15 +77,28 @@ class Api {
 		
 		// Run the query and return the passphrases as we'll have to mangle them
 		// to figure out if they match what we've got
-		$sql = "SELECT * FROM `access_list` WHERE `type`='rpc' AND `user`='$user_id' AND `start` <= '$ip' AND `end` >= '$ip'"; 
-		$db_results = Dba::query($sql); 
+		$sql = "SELECT * FROM `access_list` " . 
+			"WHERE `type`='rpc' AND (`user`='$user_id' OR `access_list`.`user`='-1') " . 
+			"AND `start` <= '$ip' AND `end` >= '$ip'"; 
+		$db_results = Dba::read($sql); 
 
 		while ($row = Dba::fetch_assoc($db_results)) { 
 
-			// Combine and MD5 this mofo
-			$md5pass = md5($timestamp . $row['key']); 
+			// Now we're sure that there is an ACL line that matches this user or ALL USERS, 
+			// pull the users password and then see what we come out with 
+			$sql = "SELECT * FROM `user` WHERE `id`='$user_id'"; 
+			$user_results = Dba::read($sql); 
 
-			if ($md5pass === $passphrase) { 
+			$row = Dba::fetch_assoc($user_results); 
+
+			if (!$row['password']) { 
+				debug_event('API','Unable to find user with username of ' . $user_id,'1'); 
+				return false; 
+			} 
+
+			$sha1pass = hash('sha1',$timestamp . $row['password']); 
+
+			if ($sha1pass === $passphrase) { 
 				// Create the Session, in this class for now needs to be moved
 				$data['username']	= $client->username; 
 				$data['type']		= 'api'; 
