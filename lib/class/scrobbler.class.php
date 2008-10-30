@@ -108,6 +108,10 @@ class scrobbler {
                         $this->error_msg = 'Invalid Username';
                         return false;
                 }
+		if(substr($response[0],0,7) == 'BADTIME') { 
+			$this->error_msg = 'Your time is too far off from the server, or your timezone is incorrect'; 
+			return false; 
+		} 
                 if(substr($response[0], 0, 6) == 'UPDATE') {
                         $this->error_msg = 'You need to update your client: '.substr($response[0], 7);
                         return false;
@@ -118,7 +122,7 @@ class scrobbler {
                         $data['submit_port'] = $matches[2];
                         $data['submit_url'] = $matches[3];
                 } else {
-                        $this->error_msg = 'Invalid POST URL returned, unable to continue';
+                        $this->error_msg = "Invalid POST URL returned, unable to continue. Received:\n" . $buffer; 
                         return false;
                 }
 
