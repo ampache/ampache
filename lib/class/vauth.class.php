@@ -490,8 +490,8 @@ class vauth {
 			return $response; 
 		} 
 
-		// Use SHA1 for the password, we aren't using SHA2 because Amarok can't handle it *cry*
-		$password = hash('sha1',$password); 
+		// Use SHA2 now... cooking with fire, SHA3 in 2012 *excitement*
+		$password = hash('sha256',$password); 
 	
 		$sql = "SELECT `username`,`id` FROM `user` WHERE `password`='$password' AND `username`='$username'"; 	
 		$db_results = Dba::read($sql); 

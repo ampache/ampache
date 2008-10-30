@@ -638,7 +638,7 @@ class User extends database_object {
 	 */
 	public function update_password($new_password) { 
 
-		$new_password = hash('sha1',$new_password); 
+		$new_password = hash('sha256',$new_password); 
 
 		$new_password = Dba::escape($new_password);
 		$sql = "UPDATE `user` SET `password`='$new_password' WHERE `id`='$this->id'";

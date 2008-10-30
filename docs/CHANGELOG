@@ -4,6 +4,9 @@
 
 --------------------------------------------------------------------------
   v.3.5-Alpha1
+	- Switched to SHA256() for API and Passwords
+	- Added check for BADTIME error code from Last.FM and correctly
+		return the error rather then a generic one
 	- Fix http auth session issues, where every request blew away the 
 		old session information
 	- Many other minor improvements (Thx Dipsol)

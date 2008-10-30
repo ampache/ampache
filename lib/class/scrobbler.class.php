@@ -109,7 +109,7 @@ class scrobbler {
                         return false;
                 }
 		if(substr($response[0],0,7) == 'BADTIME') { 
-			$this->error_msg = 'Your time is too far off from the server, or your timezone is incorrect'; 
+			$this->error_msg = 'Your time is too far off from the server, or your PHP timezone is incorrect'; 
 			return false; 
 		} 
                 if(substr($response[0], 0, 6) == 'UPDATE') {

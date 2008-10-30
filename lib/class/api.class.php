@@ -96,7 +96,7 @@ class Api {
 				return false; 
 			} 
 
-			$sha1pass = hash('sha1',$timestamp . $row['password']); 
+			$sha1pass = hash('sha256',$timestamp . $row['password']); 
 
 			if ($sha1pass === $passphrase) { 
 				// Create the Session, in this class for now needs to be moved
