@@ -4,6 +4,7 @@
 
 --------------------------------------------------------------------------
   v.3.5-Alpha1
+	- Fixed problem with user creation using old method (Thx Purdyk)
 	- Switched to SHA256() for API and Passwords
 	- Added check for BADTIME error code from Last.FM and correctly
 		return the error rather then a generic one
