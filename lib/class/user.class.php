@@ -614,10 +614,11 @@ class User extends database_object {
 		$fullname	= Dba::escape($fullname);
 		$email		= Dba::escape($email);
 		$access		= Dba::escape($access);
-	
+		$password_hashed = hash('sha256', $password);
+
 		/* Now Insert this new user */
 		$sql = "INSERT INTO `user` (`username`, `fullname`, `email`, `password`, `access`, `create_date`) VALUES" .
-			" ('$username','$fullname','$email',PASSWORD('$password'),'$access','" . time() ."')";
+			" ('$username','$fullname','$email','$password_hashed','$access','" . time() ."')";
 		$db_results = Dba::write($sql);
 		
 		if (!$db_results) { return false; }
