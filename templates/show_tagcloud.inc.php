@@ -21,10 +21,12 @@
 */ 
 $web_path = Config::get('web_path'); 
 ?>
+<?php Ajax::start_container('tag_filter'); ?>
 <?php foreach ($object_ids as $data) { 
 	$tag = new Tag($data['id']); 
 	$tag->format(); 
 ?>
-<span class="<?php echo $tag->f_class; ?>"><?php echo $tag->name; ?></span>
-
+<span id="click_<?php echo intval($tag->id); ?>" class="<?php echo $tag->f_class; ?>"><?php echo $tag->name; ?></span> 
+<?php echo Ajax::observe('click_' . intval($tag->id),'click',Ajax::action('?page=browse&action=toggle_tag&tag_id=' . intval($tag->id),'')); ?>
 <?php } ?>
+<?php Ajax::end_container(); ?>

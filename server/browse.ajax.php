@@ -59,6 +59,14 @@ switch ($_REQUEST['action']) {
 		Browse::show_objects(false); 
 		$results['browse_content'] = ob_get_clean(); 
 	break; 
+	case 'toggle_tag': 
+		$type = $_SESSION['tagcloud_type'] ? $_SESSION['tagcloud_type'] : 'song';
+		Browse::set_type($type); 
+
+		
+
+
+	break; 
 	case 'delete_object': 
 		switch ($_REQUEST['type']) { 
 			case 'playlist': 

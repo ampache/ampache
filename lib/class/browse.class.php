@@ -73,7 +73,7 @@ class Browse {
 				        $_SESSION['browse']['filter'][self::$type][$key] = 1; 
 				}
 			break;
-                       case 'tag':
+			case 'tag':
 				if (is_array($value)) { 
 					$_SESSION['browse']['filter'][self::$type][$key] = $value;
 				} 
