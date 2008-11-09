@@ -47,5 +47,7 @@
 	<?php } ?>
 	<?php if (Access::check('interface','75')) { ?>
 		<?php echo Ajax::button('?action=show_edit_object&type=song&id=' . $song->id,'edit',_('Edit'),'edit_song_' . $song->id); ?>
+		<?php $icon = $song->enabled ? 'disable' : 'enable'; ?>
+		<?php echo Ajax::button('?page=song&action=flip_state&song_id=' . $song->id,$icon,_(ucfirst($icon)),'flip_song_' . $song->id); ?> 
 	<?php } ?>
 </td>

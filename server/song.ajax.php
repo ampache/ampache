@@ -34,8 +34,12 @@ switch ($_REQUEST['action']) {
 		$song = new Song($_REQUEST['song_id']); 
 		$new_enabled = $song->enabled ? '0' : '1'; 
 		$song->update_enabled($new_enabled,$song->id); 
+		$song->enabled = $new_enabled; 
+		$song->format(); 
 
-		//FIXME: Re-display this	
+		ob_start(); 
+		require Config::get('prefix') . '/templates/show_song_row.inc.php'; 
+		$results['song_' . $song->id] = ob_get_clean(); 
 
 	break;
 	default: 
