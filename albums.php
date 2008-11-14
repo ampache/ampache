@@ -36,7 +36,7 @@ switch ($_REQUEST['action']) {
 
 		// we didn't find anything 
 		if (empty($_FILES['file']['tmp_name'])) { 
-			show_confirmation(_('Album Art Not Located'),_('Album Art could not be located at this time. This may be due to write access error, or the file is not received corectly.'),"/albums.php?action=show&amp;album=" . $album->id);
+			show_confirmation(_('Album Art Not Located'),_('Album Art could not be located at this time. This may be due to write access error, or the file is not received correctly.'),"/albums.php?action=show&amp;album=" . $album->id);
 			break;
 		}
 
@@ -53,7 +53,7 @@ switch ($_REQUEST['action']) {
 		} 
 		// Else it failed
 		else { 
-			show_confirmation(_('Album Art Not Located'),_('Album Art could not be located at this time. This may be due to write access error, or the file is not received corectly.'),"/albums.php?action=show&amp;album=" . $album->id);
+			show_confirmation(_('Album Art Not Located'),_('Album Art could not be located at this time. This may be due to write access error, or the file is not received correctly.'),"/albums.php?action=show&amp;album=" . $album->id);
 		} 
 
 	break; 
@@ -126,7 +126,7 @@ switch ($_REQUEST['action']) {
 		}
 		// Else nothing
 		else {
-			show_confirmation(_('Album Art Not Located'),_('Album Art could not be located at this time. This may be due to write access error, or the file is not received corectly.'),"/albums.php?action=show&amp;album=" . $album->id);
+			show_confirmation(_('Album Art Not Located'),_('Album Art could not be located at this time. This may be due to write access error, or the file is not received correctly.'),"/albums.php?action=show&amp;album=" . $album->id);
 		}
 	  
 		$albumname = $album->name;
