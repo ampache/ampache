@@ -26,14 +26,24 @@
 <?php show_box_top(sprintf(_('%s %s Playlist'), $playlist->f_type, $playlist->name)); ?>
 <div id="information_actions">
 <ul>
-	<li><a href="<?php echo Config::get('web_path'); ?>/playlist.php?action=normalize_tracks&amp;playlist_id=<?php echo $playlist->id; ?>"><?php echo _('Normalize Tracks'); ?></a></li>
+	<li>
+		<a href="<?php echo Config::get('web_path'); ?>/playlist.php?action=normalize_tracks&amp;playlist_id=<?php echo $playlist->id; ?>"><?php echo get_user_icon('statistics'); ?></a>
+		<?php echo _('Normalize Tracks'); ?>
+	</li>
         <?php if (Access::check_function('batch_download')) { ?>
-                <li><a href="<?php echo Config::get('web_path'); ?>/batch.php?action=playlist&amp;id=<?php echo $playlist->id; ?>">
-                        <?php echo _('Batch Download'); ?>
-                </a></li>
+	<li>
+		<a href="<?php echo Config::get('web_path'); ?>/batch.php?action=playlist&amp;id=<?php echo $playlist->id; ?>"><?php echo get_user_icon('batch_download'); ?></a>
+		<?php echo _('Batch Download'); ?>
+	</li>
         <?php } ?>
-	<li><?php echo Ajax::text('?action=basket&type=playlist&id=' . $playlist->id,_('Add All'),'play_playlist'); ?></li>
-	<li><?php echo Ajax::text('?action=basket&type=playlist_random&id=' . $playlist->id,_('Add Random'),'play_playlist_random'); ?></li>
+	<li>
+		<?php echo Ajax::button('?action=basket&type=playlist&id=' . $playlist->id,'add',_('Add All'),'play_playlist'); ?>
+		<?php echo _('Add All'); ?>
+	</li>
+	<li>
+		<?php echo Ajax::button('?action=basket&type=playlist_random&id=' . $playlist->id,'random',_('Add Random'),'play_playlist_random'); ?>
+		<?php echo _('Add Random'); ?>
+	</li>
 </ul>
 </div>
 <?php show_box_bottom(); ?>
