@@ -392,6 +392,16 @@ class Stream {
 
                 } // end foreach
 
+		foreach ($this->urls as $url) { 
+			$xml = array(); 
+			$xml['track']['location'] = $url . $flash_hack; 
+			$xml['track']['identifier'] = $url . $flash_hack; 
+			$xml['track']['title'] = _('Ampache'); 
+			$xml['track']['creator'] = _('Random'); 
+			$xml['track']['duration'] = 9000; 	
+			$result .= xml_from_array($xml,1,'xspf'); 
+		} 
+
 	        header("Cache-control: public");
         	header("Content-Disposition: filename=ampache-playlist.xspf");
 		header("Content-Type: application/xspf+xml; charset=utf-8");

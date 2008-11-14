@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2007 Ampache.org
+ Copyright (c) Ampache.org
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
@@ -51,7 +51,6 @@ switch ($action) {
                                         // If there's something to actually add
                                         if ($random_url) {
                                                 $urls[] = $random_url;
-                                                $song_ids[] = '-1';
                                         }
                                 break;
                         } // end switch on type
