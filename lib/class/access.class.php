@@ -167,11 +167,16 @@ class Access {
 	 */
 	public static function check_network($type,$ip='',$user,$level,$key='') { 
 
-		// They aren't using access control 
-		// lets just keep on trucking
 		if (!Config::get('access_control')) { 
-			return true;
-		} 
+			switch ($type) { 
+				case 'interface': 
+				case 'stream': 
+					return true; 
+				break; 
+				default: 
+					return false; 
+			} // end switch
+		} // end if access control is turned off
 
 		// Clean incomming variables
 		$ip 	= $ip ? sprintf("%u",ip2long($ip)) : sprintf("%u",ip2long($_SERVER['REMOTE_ADDR'])); 

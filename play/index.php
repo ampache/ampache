@@ -72,7 +72,7 @@ if (make_bool($GLOBALS['user']->disabled)) {
 
 // If require session is set then we need to make sure we're legit
 if (Config::get('require_session')) { 
-	if (!Config::get('require_localnet_session') AND Config::get('access_control') AND Access::check_network('network',$_SERVER['REMOTE_ADDR'],$GLOBALS['user']->id,'5')) { 
+	if (!Config::get('require_localnet_session') AND Access::check_network('network',$_SERVER['REMOTE_ADDR'],$GLOBALS['user']->id,'5')) { 
 		// Localnet defined IP and require localnot session has been turned off we let this one through
 		debug_event('LocalNet','Streaming Access Granted to Localnet defined IP ' . $_SERVER['REMOTE_ADDR'],'5'); 
 	}
