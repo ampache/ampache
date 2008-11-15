@@ -114,6 +114,13 @@ catalog_prefix_pattern = "The|An|A|Die|Das|Ein|Eine|Les|Le|La"
 ; DEFAULT: true
 require_session = "true"
 
+; Require LocalNet Session
+; If this is set to true then ampache will require that a valid session
+; is passed even on hosts defined in the Local Network ACL. This setting
+; has no effect if access_control is not enabled
+; DEFAULT: true
+require_localnet_session = "true" 
+
 ; Multiple Logins
 ; Added by Vlet 07/25/07
 ; When this setting is enabled a user may only be logged in from a single

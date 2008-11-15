@@ -72,7 +72,11 @@ if (make_bool($GLOBALS['user']->disabled)) {
 
 // If require session is set then we need to make sure we're legit
 if (Config::get('require_session')) { 
-	if(!Stream::session_exists($sid)) {	
+	if (!Config::get('require_localnet_session') AND Access::check_network('network',$_SERVER['REMOTE_ADDR'],$GLOBALS['user']->id,'5')) { 
+		// Localnet defined IP and require localnot session has been turned off we let this one through
+		debug_event('LocalNet','Streaming Access Granted to Localnet defined IP ' . $_SERVER['REMOTE_ADDR'],'5'); 
+	}
+	elseif(!Stream::session_exists($sid)) {	
 		debug_event('session_expired',"Streaming Access Denied: " . $GLOBALS['user']->username . "'s session has expired",'3');
     		die(_("Session Expired: please log in again at") . " " . Config::get('web_path') . "/login.php");
 	}

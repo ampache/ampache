@@ -112,7 +112,27 @@ class Catalog {
 	 */
 	public static function get_from_path($path) { 
 
+		// First pull a list of all of the paths for the different catalogs
+		$sql = "SELECT `id`,`path` FROM `catalog` WHERE `type`='local'"; 
+		$db_results = Dba::read($sql); 
+
+		$catalog_paths = array(); 
+		$componet_path = $path; 
+
+		while ($row = Dba::fetch_assoc($db_results)) { 
+			$catalog_paths[$row['path']] = $row['id'];
+		} 
+
 		// Break it down into its component parts and start looking for a catalog
+		do { 
+			if ($catalog_paths[$component_path]) { 
+				return $catalog_paths[$component_path]; 
+			} 
+				
+			$component_path = realpath($component_path . '../'); 
+		} while (strlen($component_path) > 1); 
+
+		return false; 
 
 	} // get_from_path
 

@@ -165,7 +165,7 @@ class Access {
 	 * and then returns true or false if they have access to this
 	 * the IP is passed as a dotted quad
 	 */
-	public static function check_network($type,$ip,$user,$level,$key='') { 
+	public static function check_network($type,$ip='',$user,$level,$key='') { 
 
 		// They aren't using access control 
 		// lets just keep on trucking
@@ -174,7 +174,7 @@ class Access {
 		} 
 
 		// Clean incomming variables
-		$ip 	= sprintf("%u",ip2long($ip)); 
+		$ip 	= $ip ? sprintf("%u",ip2long($ip)) : sprintf("%u",ip2long($_SERVER['REMOTE_ADDR'])); 
 		$user 	= Dba::escape($user);
 		$key 	= Dba::escape($key);
 		$level	= Dba::escape($level);

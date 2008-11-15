@@ -4,6 +4,8 @@
 
 --------------------------------------------------------------------------
   v.3.5-Alpha1
+	- Added require_localnet_session config that allows you to exclude
+		IP(s) from session checks, see config.dist 
 	- Added Nusoap (http://sourceforge.net/projects/nusoap/) library
 		for use with future lyrics feature
 	- Fixed problem with flash player where random urls were not being
