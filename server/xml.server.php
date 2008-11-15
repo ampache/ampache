@@ -61,7 +61,7 @@ $session = vauth::get_session_data($_REQUEST['auth']);
 $username = ($_REQUEST['action'] == 'handshake') ? $_REQUEST['user'] : $session['username'];
 
 
-if (!Access::check_network('init-api',$_SERVER['REMOTE_ADDR'],$username,'5')) { 
+if (!Access::check_network('init-api',$username,'5')) { 
         debug_event('Access Denied','Unathorized access attempt to API [' . $_SERVER['REMOTE_ADDR'] . ']', '3');
         ob_end_clean(); 
         echo xmlData::error('403','ACL Error');

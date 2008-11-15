@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright 2001 - 2007 Ampache.org
+ Copyright Ampache.org
  All Rights Reserved
 
  This program is free software; you can redistribute it and/or
@@ -36,7 +36,7 @@ else {
 }
 
 // ** check that the remote server has access to this catalog
-if (Access::check_network('init-rpc',$_SERVER['REMOTE_ADDR'],'','5','')) {
+if (Access::check_network('init-rpc','','5')) {
 
 	// Define an array of classes we need to pull from for the 
 	$classes = array('xmlRpcServer'); 	

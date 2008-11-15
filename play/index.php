@@ -72,7 +72,7 @@ if (make_bool($GLOBALS['user']->disabled)) {
 
 // If require session is set then we need to make sure we're legit
 if (Config::get('require_session')) { 
-	if (!Config::get('require_localnet_session') AND Access::check_network('network',$_SERVER['REMOTE_ADDR'],$GLOBALS['user']->id,'5')) { 
+	if (!Config::get('require_localnet_session') AND Access::check_network('network',$GLOBALS['user']->id,'5')) { 
 		// Localnet defined IP and require localnot session has been turned off we let this one through
 		debug_event('LocalNet','Streaming Access Granted to Localnet defined IP ' . $_SERVER['REMOTE_ADDR'],'5'); 
 	}
@@ -102,8 +102,8 @@ if (Config::get('demo_mode') || (!Access::check('interface','25') AND !isset($xm
    that they have enough access to play this mojo
 */
 if (Config::get('access_control')) { 
-	if (!Access::check_network('stream',$_SERVER['REMOTE_ADDR'],$GLOBALS['user']->id,'25') AND
-		!Access::check_network('network',$_SERVER['REMOTE_ADDR'],$GLOBALS['user']->id,'25')) { 
+	if (!Access::check_network('stream',$GLOBALS['user']->id,'25') AND
+		!Access::check_network('network',$GLOBALS['user']->id,'25')) { 
 		debug_event('access_denied', "Streaming Access Denied: " . $_SERVER['REMOTE_ADDR'] . " does not have stream level access",'3');
 		access_denied();
 		exit; 
@@ -286,7 +286,7 @@ if (Config::get('track_user_ip')) {
 
 // If we've got downsample remote enabled
 if (Config::get('downsample_remote')) { 
-	if (!Access::check_network('network',$_SERVER['REMOTE_ADDR'],$GLOBALS['user']->id,'0')) { 
+	if (!Access::check_network('network',$GLOBALS['user']->id,'0')) { 
 		debug_event('downsample','Network Downsample ' . $_SERVER['REMOTE_ADDR'] . ' is not in Local definition','5'); 
 		$not_local = true;
 	}

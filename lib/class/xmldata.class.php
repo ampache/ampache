@@ -274,6 +274,8 @@ class xmlData {
 			$song = new Song($song_id); 
 			$song->format(); 
 
+			$rating = new Rating($song_id,'song'); 
+
 			$art_url = Config::get('web_path') . '/image.php?id=' . $song->album . '&auth=' . scrub_out($_REQUEST['auth']);
 
 			$string .= "<song id=\"$song->id\">\n" . 
@@ -286,6 +288,8 @@ class xmlData {
 					"\t<url><![CDATA[" . $song->get_url($_REQUEST['auth']) . "]]></url>\n" . 
 					"\t<size>$song->size</size>\n" . 
 					"\t<art><![CDATA[" . $art_url . "]]></art>\n" . 
+					"\t<preciserating>" . $rating->preciserating . "</preciserating>\n" . 
+					"\t<rating>" . $rating->rating . "</rating>\n" . 
 					"</song>\n"; 
 
 		} // end foreach

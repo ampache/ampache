@@ -34,7 +34,7 @@ Preference::init();
  * page if they aren't in the ACL
  */
 if (Config::get('access_control')) { 
-        if (!Access::check_network('interface',$_SERVER['REMOTE_ADDR'],'','5')) {
+        if (!Access::check_network('interface','','5')) {
                 debug_event('access_denied','Access Denied:' . $_SERVER['REMOTE_ADDR'] . ' is not in the Interface Access list','3');
                 access_denied();
 		exit(); 
