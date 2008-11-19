@@ -91,14 +91,18 @@ switch ($_REQUEST['action']) {
 
 	break; 
 	case 'ping': 
+		
+		$xmldata = array('version'=>Api::$version); 
 
 		// Check and see if we should extend the api sessions (done if valid sess is passed)
 		if (vauth::session_exists('api', $_REQUEST['auth'])) { 
 			vauth::session_extend($_REQUEST['auth']); 
+			$xmldata = array_merge(array('session_expire'=>date("r",time()+Config::get('session_length')-60)),$xmldata);
 		} 
 
-		
 
+		ob_end_clean(); 
+		echo xmlData::keyed_array($xmldata); 
 
 	break; 
 	case 'artists': 

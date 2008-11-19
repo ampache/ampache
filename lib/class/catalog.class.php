@@ -128,9 +128,12 @@ class Catalog {
 			if ($catalog_paths[$component_path]) { 
 				return $catalog_paths[$component_path]; 
 			} 
-				
+
+			// Keep going until the path stops changing
+			$old_path = $component_path; 	
 			$component_path = realpath($component_path . '../'); 
-		} while (strlen($component_path) > 1); 
+
+		} while ($old_path == $component_path); 
 
 		return false; 
 
