@@ -173,10 +173,23 @@ switch ($_REQUEST['action']) {
 	break;
 	case 'update_from': 
 		if (Config::get('demo_mode')) { break; } 
+
 		// First see if we need to do an add
 		if ($_POST['add_path'] != '/' AND strlen($_POST['add_path'])) { 
+			if ($catalog_id = Catalog::get_from_path($_POST['add_path'])) { 
+				$catalog = new Catalog($catalog_id); 
+				$catalog->run_add(array('subdirectory'=>$_POST['add_path'])); 
+			} 
+		} // end if add
+		
+		// Now check for an update
+		if ($_POST['update_path'] != '/' AND strlen($_POST['update_path'])) { 
+			if ($catalog_id = Catalog::get_from_path($_POST['update_path'])) { 
+				$songs = Song::get_from_path($_POST['update_path']); 
+				foreach ($songs as $song_id) { Catalog::update_single_item('song',$song_id); } 
+			} 
+		} // end if update
 
-		} 
 	break; 
 	case 'add_catalog':
 		/* Wah Demo! */
@@ -194,6 +207,11 @@ switch ($_REQUEST['action']) {
 		
 		if ($_REQUEST['type'] == 'remote' && !strlen($_REQUEST['key'])) { 
 			Error::add('general','Error Remote Catalog specified, but no key provided'); 
+		} 
+
+		// Make sure that there isn't a catalog with a directory above this one
+		if (Catalog::get_from_path($_REQUEST['path'])) { 
+			Error::add('general',_('Error: Defined Path is inside an existing catalog')); 
 		} 
 
 		// If an error hasn't occured

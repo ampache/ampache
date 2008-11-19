@@ -113,15 +113,16 @@ class Catalog {
 	public static function get_from_path($path) { 
 
 		// First pull a list of all of the paths for the different catalogs
-		$sql = "SELECT `id`,`path` FROM `catalog` WHERE `type`='local'"; 
+		$sql = "SELECT `id`,`path` FROM `catalog` WHERE `catalog_type`='local'"; 
 		$db_results = Dba::read($sql); 
 
 		$catalog_paths = array(); 
-		$componet_path = $path; 
+		$component_path = $path; 
 
 		while ($row = Dba::fetch_assoc($db_results)) { 
 			$catalog_paths[$row['path']] = $row['id'];
 		} 
+
 
 		// Break it down into its component parts and start looking for a catalog
 		do { 
@@ -131,9 +132,9 @@ class Catalog {
 
 			// Keep going until the path stops changing
 			$old_path = $component_path; 	
-			$component_path = realpath($component_path . '../'); 
+			$component_path = realpath($component_path . '/../'); 
 
-		} while ($old_path =! $component_path); 
+		} while (strcmp($component_path,$old_path) != 0); 
 
 		return false; 
 
@@ -409,6 +410,12 @@ class Catalog {
 	 * information against the db.
 	 */
 	public function add_files($path,$options) {
+
+		// See if we want a non-root path for the add
+		if (isset($options['subdirectory'])) { 
+			$path = $options['subdirectory']; 
+			unset($options['subdirectory']); 
+		} 
 
 		// Correctly detect the slash we need to use here
 		if (strstr($path,"/")) {
@@ -2265,20 +2272,6 @@ class Catalog {
 		self::clean($catalog_id);
 
 	} // delete
-
-	/*!
-		@function remove_songs
-		@discussion removes all songs sent in $songs array from the
-		database, it doesn't actually delete them...
-		*/
-	function remove_songs($songs) {
-
-		foreach($songs as $song) {
-			$sql = "DELETE FROM song WHERE id = '$song'";
-			$db_results = mysql_query($sql, dbh());
-		}
-
-	} // remove_songs
 
 	/**
 	 * exports the catalog

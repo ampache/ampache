@@ -742,11 +742,32 @@ class Song extends database_object {
 	} // format_pattern
 
 	/**
+	 * get_from_path
+	 * This returns all of the songs that exist under the specified path
+	 */
+	public static function get_from_path($path) { 
+
+		$path = Dba::escape($path); 
+
+		$sql = "SELECT * FROM `song` WHERE `file` LIKE '$path%'"; 
+		$db_results = Dba::read($sql); 
+
+		$songs = array(); 
+
+		while ($row = Dba::fetch_assoc($db_results)) { 
+			$songs[] = $row['id']; 
+		} 
+
+		return $songs; 
+
+	} // get_from_path
+
+	/**
 	 *       @function       get_rel_path
 	 *       @discussion    returns the path of the song file stripped of the catalog path
 	 *			used for mpd playback 
 	 */
-	function get_rel_path($file_path=0,$catalog_id=0) {
+	public function get_rel_path($file_path=0,$catalog_id=0) {
        
 		if (!$file_path) { 
 			$info = $this->_get_info();
