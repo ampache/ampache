@@ -352,7 +352,9 @@ $min_bytes_streamed = $song->size / 2;
 
 // Actually do the streaming 
 do {
-	$buf = fread($fp, min(2048,$stream_size-$bytes_streamed));
+	$read_size = min(2048,$stream_size-$bytes_streamed); 
+	if ($read_size < 1) { break; } 
+	$buf = fread($fp, $read_size);
 	print($buf);
 	$bytes_streamed += strlen($buf);
 } while (!feof($fp) && (connection_status() == 0) AND $bytes_streamed < $stream_size);

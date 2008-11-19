@@ -133,7 +133,7 @@ class Catalog {
 			$old_path = $component_path; 	
 			$component_path = realpath($component_path . '../'); 
 
-		} while ($old_path == $component_path); 
+		} while ($old_path =! $component_path); 
 
 		return false; 
 
