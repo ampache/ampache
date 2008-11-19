@@ -131,15 +131,21 @@ class xmlData {
 		} 
 
 		$string = ''; 
+		
+		Rating::build_cache('artist',$artists); 
 
 		foreach ($artists as $artist_id) { 
 			$artist = new Artist($artist_id); 
 			$artist->format(); 
 
+			$rating = new Rating($artist_id,'artist'); 
+
 			$string .= "<artist id=\"$artist->id\">\n" . 
 					"\t<name><![CDATA[$artist->f_full_name]]></name>\n" .  
 					"\t<albums>$artist->albums</albums>\n" . 
 					"\t<songs>$artist->songs</songs>\n" . 
+                                        "\t<preciserating>" . $rating->preciserating . "</preciserating>\n" .
+                                        "\t<rating>" . $rating->rating . "</rating>\n" .
 					"</artist>\n"; 
 		} // end foreach artists
 
@@ -158,10 +164,14 @@ class xmlData {
 		if (count($albums) > self::$limit) { 
 			$albums = array_splice($albums,self::$offset,self::$limit); 
 		} 
+		
+		Rating::build_cache('album',$albums); 
 
 		foreach ($albums as $album_id) { 
 			$album = new Album($album_id); 
 			$album->format(); 
+
+			$rating = new Rating($album_id,'album'); 
 
 			// Build the Art URL, include session 
 			$art_url = Config::get('web_path') . '/image.php?id=' . $album->id . '&auth=' . scrub_out($_REQUEST['auth']);  
@@ -181,6 +191,8 @@ class xmlData {
 					"\t<tracks>$album->song_count</tracks>\n" . 
 					"\t<disk>$album->disk</disk>\n" . 
 					"\t<art><![CDATA[$art_url]]></art>\n" . 
+                                        "\t<preciserating>" . $rating->preciserating . "</preciserating>\n" .
+                                        "\t<rating>" . $rating->rating . "</rating>\n" .
 					"</album>\n"; 
 		} // end foreach
 
@@ -189,39 +201,6 @@ class xmlData {
 		return $final; 
 
 	} // albums
-
-	/**
-	 * genres
-	 * This takes an array of genre ids and returns a nice little pretty xml doc
-	 */
-	public static function genres($genres) { 
-
-		if (count($genres) > self::$limit) { 
-			$genres = array_slice($genres,self::$offset,self::$limit); 
-		} 
-
-		// Foreach the ids
-		foreach ($genres as $genre_id) { 
-			$genre = new Genre($genre_id); 
-			$genre->format(); 
-			$song_count 	= $genre->get_song_count(); 
-			$album_count 	= $genre->get_album_count(); 
-			$artist_count 	= $genre->get_artist_count(); 
-
-			$string .= "<genre id=\"$genre->id\">\n" . 
-					"\t<name><![CDATA[$genre->name]]></name>\n" . 
-					"\t<songs>$song_count</songs>\n" . 
-					"\t<albums>$album_count</albums>\n" . 
-					"\t<artists>$artist_count</artists>\n" . 
-					"</genre>\n"; 
-
-		} // end foreach
-
-		$final = self::_header() . $string . self::_footer(); 
-
-		return $final; 
-
-	} // genres
 
 	/**
 	 * playlists
@@ -268,6 +247,8 @@ class xmlData {
 		if (count($songs) > self::$limit) { 
 			$songs = array_slice($songs,self::$offset,self::$limit); 
 		} 
+
+		Rating::build_cache('song',$songs); 
 
 		// Foreach the ids!
 		foreach ($songs as $song_id) { 

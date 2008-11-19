@@ -49,7 +49,7 @@ if (!Config::get('access_control')) {
  * Verify the existance of the Session they passed in we do allow them to
  * login via this interface so we do have an exception for action=login
  */
-if ((!vauth::session_exists('api', $_REQUEST['auth']) AND $_REQUEST['action'] != 'handshake')) {
+if (!vauth::session_exists('api', $_REQUEST['auth']) AND $_REQUEST['action'] != 'handshake' AND $_REQUEST['action'] != 'ping') {
         debug_event('Access Denied','Invalid Session attempt to API [' . $_REQUEST['action'] . ']','3');
         ob_end_clean();
         echo xmlData::error('401','Session Expired');
@@ -58,7 +58,7 @@ if ((!vauth::session_exists('api', $_REQUEST['auth']) AND $_REQUEST['action'] !=
 
 // If the session exists then let's try to pull some data from it to see if we're still allowed to do this
 $session = vauth::get_session_data($_REQUEST['auth']);
-$username = ($_REQUEST['action'] == 'handshake') ? $_REQUEST['user'] : $session['username'];
+$username = ($_REQUEST['action'] == 'handshake' || $_REQUEST['action'] == 'ping') ? $_REQUEST['user'] : $session['username'];
 
 
 if (!Access::check_network('init-api',$username,'5')) { 
@@ -69,7 +69,7 @@ if (!Access::check_network('init-api',$username,'5')) {
 }
 
 
-if (!$_REQUEST['action'] != 'handshake') { 
+if ($_REQUEST['action'] != 'handshake' AND $_REQUEST['action'] != 'ping') { 
         vauth::session_extend($_REQUEST['auth']); 
         $GLOBALS['user'] = User::get_from_username($session['username']);
 } 
@@ -88,6 +88,17 @@ switch ($_REQUEST['action']) {
 			ob_end_clean(); 
 			echo xmlData::keyed_array($token); 
 		} 
+
+	break; 
+	case 'ping': 
+
+		// Check and see if we should extend the api sessions (done if valid sess is passed)
+		if (vauth::session_exists('api', $_REQUEST['auth'])) { 
+			vauth::session_extend($_REQUEST['auth']); 
+		} 
+
+		
+
 
 	break; 
 	case 'artists': 
