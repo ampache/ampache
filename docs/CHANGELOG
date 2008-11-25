@@ -4,6 +4,7 @@
 
 --------------------------------------------------------------------------
   v.3.5-Alpha1
+	- Added Swedish (sv_SE) translation (Thanks yeager)
 	- Allow Add / Verify of sub directories of existing catalogs
 	- Prevent an fread of 0 bytes if you seek to the end of a file
 	- Added require_localnet_session config that allows you to exclude
