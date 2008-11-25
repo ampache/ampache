@@ -1,0 +1,4158 @@
+# Swedish translation of ampache.
+# Copyright (C) 2008 Free Software Foundation, Inc.
+# This file is distributed under the same license as the ampache package.
+# Daniel Nylander <po@danielnylander.se>, 2006, 2008.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: ampache\n"
+"Report-Msgid-Bugs-To: translations at ampache.org\n"
+"POT-Creation-Date: 2008-11-25 17:34+0100\n"
+"PO-Revision-Date: 2008-10-26 17:04+0100\n"
+"Last-Translator: Daniel Nylander <po@danielnylander.se>\n"
+"Language-Team: Swedish <tp-sv@listor.tp-sv.se>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: ../../play/index.php:81
+msgid "Session Expired: please log in again at"
+msgstr "Sessionen tog slut: logga in igen på"
+
+#: ../../lib/class/playlist.class.php:81
+#: ../../templates/show_playlist_edit.inc.php:40
+#: ../../templates/show_edit_playlist_row.inc.php:33
+msgid "Private"
+msgstr "Privat"
+
+#: ../../lib/class/stream.class.php:399
+#, fuzzy
+msgid "Ampache"
+msgstr "Felsökning för Ampache"
+
+#: ../../lib/class/stream.class.php:400
+#: ../../modules/localplay/mpd.controller.php:495
+#: ../../modules/localplay/httpq.controller.php:494
+#: ../../templates/show_localplay_status.inc.php:36
+#: ../../templates/show_album_row.inc.php:24
+#: ../../templates/sidebar_home.inc.php:102
+#: ../../templates/show_album.inc.php:55
+#: ../../templates/show_artist_row.inc.php:24
+#: ../../templates/show_artist.inc.php:41
+#: ../../templates/show_playlist_row.inc.php:24
+msgid "Random"
+msgstr "Slumpmässigt"
+
+#: ../../lib/class/album.class.php:244 ../../templates/show_album.inc.php:27
+msgid "Disk"
+msgstr "Disk"
+
+#: ../../lib/class/album.class.php:256 ../../lib/class/browse.class.php:994
+#: ../../lib/ui.lib.php:412 ../../templates/show_genre.inc.php:35
+#: ../../templates/show_local_catalog_info.inc.php:30
+msgid "Artists"
+msgstr "Artister"
+
+#: ../../lib/class/album.class.php:256 ../../lib/class/album.class.php:257
+#: ../../templates/show_edit_album_row.inc.php:35
+msgid "Various"
+msgstr "Diverse"
+
+#: ../../lib/class/album.class.php:473 ../../lib/class/catalog.class.php:433
+#: ../../lib/class/catalog.class.php:774
+msgid "Error: Unable to open"
+msgstr "Fel: Kunde inte öppna"
+
+#: ../../lib/class/access.class.php:325 ../../lib/class/access.class.php:350
+#: ../../lib/ui.lib.php:141 ../../lib/ui.lib.php:150 ../../lib/ui.lib.php:632
+#: ../../templates/show_random.inc.php:38
+#: ../../templates/show_admin_tools.inc.php:51
+#: ../../templates/show_edit_access.inc.php:76
+#: ../../templates/show_mail_users.inc.php:30
+#: ../../templates/show_export.inc.php:35
+#: ../../templates/show_add_access.inc.php:58
+msgid "All"
+msgstr "Alla"
+
+#: ../../lib/class/access.class.php:328
+#: ../../templates/show_edit_access.inc.php:73
+#: ../../templates/show_play_selected.inc.php:49
+#: ../../templates/show_add_access.inc.php:55
+msgid "View"
+msgstr "Visa"
+
+#: ../../lib/class/access.class.php:331
+#: ../../templates/show_edit_access.inc.php:74
+#: ../../templates/show_add_access.inc.php:56
+msgid "Read"
+msgstr "Läs"
+
+#: ../../lib/class/access.class.php:334
+#: ../../templates/show_edit_access.inc.php:75
+#: ../../templates/show_add_access.inc.php:57
+msgid "Read/Write"
+msgstr "Läs/Skriv"
+
+#: ../../lib/class/catalog.class.php:152 ../../lib/class/catalog.class.php:153
+#: ../../lib/class/user.class.php:662 ../../lib/preferences.php:261
+#: ../../templates/show_user.inc.php:22 ../../templates/show_users.inc.php:53
+msgid "Never"
+msgstr "Aldrig"
+
+#: ../../lib/class/catalog.class.php:211
+msgid "day"
+msgid_plural "days"
+msgstr[0] "dygn"
+msgstr[1] "dygn"
+
+#: ../../lib/class/catalog.class.php:213
+msgid "hour"
+msgid_plural "hours"
+msgstr[0] "timme"
+msgstr[1] "timmar"
+
+#: ../../lib/class/catalog.class.php:313
+msgid "Running Remote Sync"
+msgstr "Kör fjärrsynkronisering"
+
+#: ../../lib/class/catalog.class.php:440 ../../lib/class/catalog.class.php:483
+msgid "Error: Unable to change to directory"
+msgstr "Fel: Kunde inte byta till katalogen"
+
+#: ../../lib/class/catalog.class.php:511
+#, php-format
+msgid "Error: Unable to get filesize for %s"
+msgstr "Fel: Kunde inte få filstorlek för %s"
+
+#: ../../lib/class/catalog.class.php:517
+#, php-format
+msgid "%s is not readable by ampache"
+msgstr "%s är inte läsbar av ampache"
+
+#: ../../lib/class/catalog.class.php:525
+#, php-format
+msgid "%s does not match site charset"
+msgstr "%s matchar inte systemets teckenuppsättning"
+
+#: ../../lib/class/catalog.class.php:1063 ../../admin/access.php:45
+#: ../../preferences.php:111
+msgid "Updated"
+msgstr "Uppdaterad"
+
+#: ../../lib/class/catalog.class.php:1070
+msgid "No Update Needed"
+msgstr "Ingen uppdatering är nödvändig"
+
+#: ../../lib/class/catalog.class.php:1168
+msgid "Running Remote Update"
+msgstr "Kör fjärruppdatering"
+
+#: ../../lib/class/catalog.class.php:1195
+msgid "Added Playlist From"
+msgstr "Lade till spellista från"
+
+#: ../../lib/class/catalog.class.php:1224
+msgid "Catalog Update Finished"
+msgstr "Kataloguppdatering färdig"
+
+#: ../../lib/class/catalog.class.php:1224
+msgid "Total Time"
+msgstr "Total tid"
+
+#: ../../lib/class/catalog.class.php:1225
+msgid "Total Songs"
+msgstr "Totalt antal låtar"
+
+#: ../../lib/class/catalog.class.php:1225
+msgid "Songs Per Seconds"
+msgstr "Låtar per sekund"
+
+#: ../../lib/class/catalog.class.php:1240 ../../admin/users.php:142
+msgid "Error"
+msgstr "Fel"
+
+#: ../../lib/class/catalog.class.php:1240
+msgid "Unable to load XMLRPC library, make sure XML-RPC is enabled"
+msgstr ""
+"Kunde inte läsa in XMLRPC-biblioteket, se till att XML-RPC är aktiverat"
+
+#: ../../lib/class/catalog.class.php:1270
+#: ../../lib/class/catalog.class.php:1338
+#: ../../lib/class/xmlrpcclient.class.php:64
+#: ../../lib/class/xmlrpcclient.class.php:97
+msgid "Error connecting to"
+msgstr "Fel vid anslutning till"
+
+#: ../../lib/class/catalog.class.php:1270
+#: ../../lib/class/catalog.class.php:1338
+#: ../../lib/class/xmlrpcclient.class.php:64
+#: ../../lib/class/xmlrpcclient.class.php:97
+msgid "Code"
+msgstr "Kod"
+
+#: ../../lib/class/catalog.class.php:1270
+#: ../../lib/class/catalog.class.php:1338
+#: ../../lib/class/xmlrpcclient.class.php:64
+msgid "Reason"
+msgstr "Anledning"
+
+#: ../../lib/class/catalog.class.php:1299
+msgid "Completed updating remote catalog(s)"
+msgstr "Uppdatering av fjärrkatalog(er) färdig"
+
+#: ../../lib/class/catalog.class.php:1334 ../../admin/access.php:40
+msgid "Added"
+msgstr "Lades till"
+
+#: ../../lib/class/catalog.class.php:1406
+msgid "Catalog Root unreadable, stopping clean"
+msgstr "Katalogroten inte läsbar, stoppar tömning"
+
+#: ../../lib/class/catalog.class.php:1463
+msgid "Catalog Clean Done"
+msgstr "Tömning av katalog färdig"
+
+#: ../../lib/class/catalog.class.php:1463
+msgid "files removed"
+msgstr "filer borttagna"
+
+#: ../../lib/class/catalog.class.php:1464
+msgid "Optimizing Tables"
+msgstr "Optimerar tabeller"
+
+#: ../../lib/class/catalog.class.php:1764
+msgid "Update Finished."
+msgstr "Uppdatering färdig."
+
+#: ../../lib/class/catalog.class.php:1764
+#, fuzzy
+msgid "Checked"
+msgstr "Kontrollerar"
+
+#: ../../lib/class/catalog.class.php:1764
+msgid "songs updated."
+msgstr "låtar uppdaterade."
+
+#: ../../lib/class/catalog.class.php:1823
+#: ../../lib/class/catalog.class.php:1894
+#: ../../templates/show_album.inc.php:34
+msgid "Unknown (Orphaned)"
+msgstr "Okänd (föräldralös)"
+
+#: ../../lib/class/flag.class.php:257
+msgid "Approved"
+msgstr "Godkänd"
+
+#: ../../lib/class/flag.class.php:258
+msgid "Pending"
+msgstr "Väntar"
+
+#: ../../lib/class/flag.class.php:270 ../../templates/rightbar.inc.php:98
+#: ../../templates/show_admin_tools.inc.php:53
+#: ../../templates/show_flag.inc.php:56
+#: ../../templates/show_catalog_row.inc.php:33
+#: ../../templates/show_localplay_playlist.inc.php:48
+#: ../../templates/show_democratic_playlist.inc.php:78
+#: ../../templates/show_live_stream_row.inc.php:34
+#: ../../templates/show_playlist_row.inc.php:38
+#: ../../templates/show_playlist_song_row.inc.php:38
+#: ../../templates/show_localplay_instances.inc.php:40
+msgid "Delete"
+msgstr "Ta bort"
+
+#: ../../lib/class/flag.class.php:273
+msgid "Re-Tag"
+msgstr "Tagga om"
+
+#: ../../lib/class/flag.class.php:276 ../../templates/show_flag.inc.php:58
+msgid "Re-encode"
+msgstr "Koda om"
+
+#: ../../lib/class/flag.class.php:279 ../../templates/show_flag.inc.php:59
+msgid "Other"
+msgstr "Övrigt"
+
+#: ../../lib/class/flag.class.php:282 ../../lib/class/localplay.class.php:648
+#: ../../lib/class/user.class.php:666 ../../lib/general.lib.php:439
+#: ../../modules/localplay/mpd.controller.php:511
+#: ../../modules/localplay/httpq.controller.php:510
+#: ../../templates/show_user.inc.php:23 ../../templates/show_users.inc.php:54
+msgid "Unknown"
+msgstr "Okänd"
+
+#: ../../lib/class/localplay.class.php:639
+#: ../../templates/show_now_playing.inc.php:33
+msgid "Now Playing"
+msgstr "Spelar nu"
+
+#: ../../lib/class/localplay.class.php:642
+msgid "Stopped"
+msgstr "Stoppad"
+
+#: ../../lib/class/localplay.class.php:645
+msgid "Paused"
+msgstr "Pausad"
+
+#: ../../lib/class/browse.class.php:977
+#: ../../templates/show_artists.inc.php:37
+#: ../../templates/show_artists.inc.php:64
+#: ../../templates/show_genre.inc.php:38
+#: ../../templates/show_genres.inc.php:38
+#: ../../templates/show_genres.inc.php:74
+#: ../../templates/show_local_catalog_info.inc.php:31
+#: ../../templates/show_manage_democratic.inc.php:39
+#: ../../templates/show_albums.inc.php:45
+#: ../../templates/show_albums.inc.php:75
+msgid "Songs"
+msgstr "Låtar"
+
+#: ../../lib/class/browse.class.php:983 ../../lib/ui.lib.php:408
+#: ../../templates/show_artists.inc.php:38
+#: ../../templates/show_artists.inc.php:65
+#: ../../templates/show_genre.inc.php:32
+#: ../../templates/sidebar_home.inc.php:33
+#: ../../templates/sidebar_home.inc.php:76
+#: ../../templates/show_local_catalog_info.inc.php:29
+msgid "Albums"
+msgstr "Album"
+
+#: ../../lib/class/browse.class.php:989
+msgid "Manage Users"
+msgstr "Hantera användare"
+
+#: ../../lib/class/browse.class.php:1000
+#: ../../templates/sidebar_home.inc.php:37
+msgid "Radio Stations"
+msgstr "Radiostationer"
+
+#: ../../lib/class/browse.class.php:1006
+msgid "Playlists"
+msgstr "Spellistor"
+
+#: ../../lib/class/browse.class.php:1011
+#, fuzzy
+msgid "Playlist Songs"
+msgstr "Åtgärder för spellista"
+
+#: ../../lib/class/browse.class.php:1016
+msgid "Current Playlist"
+msgstr "Aktuell spellista"
+
+#: ../../lib/class/browse.class.php:1021
+#: ../../templates/show_admin_tools.inc.php:26
+#: ../../templates/sidebar_admin.inc.php:24
+msgid "Catalogs"
+msgstr "Kataloger"
+
+#: ../../lib/class/browse.class.php:1026
+msgid "Shoutbox Records"
+msgstr "Chattinlägg"
+
+#: ../../lib/class/browse.class.php:1031
+msgid "Flagged Records"
+msgstr "Flaggade poster"
+
+#: ../../lib/class/browse.class.php:1037
+#: ../../templates/sidebar_home.inc.php:35
+msgid "Tag Cloud"
+msgstr "Taggmoln"
+
+#: ../../lib/class/user.class.php:379 ../../admin/users.php:55
+#: ../../admin/users.php:105
+msgid "Error Username Required"
+msgstr "Fel - användarnamn krävs"
+
+#: ../../lib/class/user.class.php:383 ../../admin/users.php:58
+#: ../../admin/users.php:101
+msgid "Error Passwords don't match"
+msgstr "Fel - lösenorden stämmer inte överens"
+
+#: ../../lib/class/random.class.php:423 ../../templates/rightbar.inc.php:66
+msgid "Related Album"
+msgstr "Relaterat album"
+
+#: ../../lib/class/random.class.php:426
+msgid "Related Genre"
+msgstr "Relaterad genre"
+
+#: ../../lib/class/random.class.php:429 ../../templates/rightbar.inc.php:63
+msgid "Related Artist"
+msgstr "Relaterad artist"
+
+#: ../../lib/class/random.class.php:432 ../../templates/rightbar.inc.php:60
+msgid "Pure Random"
+msgstr "Helt slumpmässigt"
+
+#: ../../lib/class/rss.class.php:59
+msgid "RSS Feed"
+msgstr "RSS-kanal"
+
+#: ../../lib/class/democratic.class.php:97
+#: ../../templates/show_create_democratic.inc.php:35
+msgid "minutes"
+msgstr "minuter"
+
+#: ../../lib/class/democratic.class.php:98
+msgid "Primary"
+msgstr "Primär"
+
+#: ../../lib/class/democratic.class.php:102 ../../admin/users.php:125
+#: ../../templates/show_preference_box.inc.php:58
+#: ../../templates/show_preference_admin.inc.php:41
+#: ../../templates/show_edit_user.inc.php:74
+#: ../../templates/show_add_user.inc.php:74
+msgid "Guest"
+msgstr "Gäst"
+
+#: ../../lib/class/democratic.class.php:105 ../../lib/preferences.php:231
+#: ../../admin/users.php:126 ../../templates/show_preference_box.inc.php:59
+#: ../../templates/show_edit_access.inc.php:57
+#: ../../templates/show_mail_users.inc.php:31
+#: ../../templates/show_preference_admin.inc.php:42
+#: ../../templates/show_edit_user.inc.php:75
+#: ../../templates/show_flagged.inc.php:35
+#: ../../templates/show_flagged.inc.php:54
+#: ../../templates/show_add_user.inc.php:75
+#: ../../templates/show_access_list.inc.php:49
+#: ../../templates/show_add_access.inc.php:46
+#: ../../templates/show_create_democratic.inc.php:41
+#: ../../templates/show_manage_shoutbox.inc.php:35
+#: ../../templates/show_manage_shoutbox.inc.php:59
+msgid "User"
+msgstr "Användare"
+
+#: ../../lib/class/democratic.class.php:108
+#: ../../templates/show_preference_box.inc.php:60
+#: ../../templates/show_edit_user.inc.php:76
+#: ../../templates/show_add_user.inc.php:76
+#: ../../templates/show_create_democratic.inc.php:42
+msgid "Content Manager"
+msgstr "Innehållshanterare"
+
+#: ../../lib/class/democratic.class.php:111
+#: ../../templates/show_preference_box.inc.php:61
+#: ../../templates/show_edit_user.inc.php:77
+#: ../../templates/show_add_user.inc.php:77
+#: ../../templates/show_create_democratic.inc.php:43
+msgid "Catalog Manager"
+msgstr "Kataloghanterare"
+
+#: ../../lib/class/democratic.class.php:114 ../../lib/preferences.php:233
+#: ../../admin/users.php:127 ../../templates/show_preference_box.inc.php:62
+#: ../../templates/sidebar.inc.php:31
+#: ../../templates/show_mail_users.inc.php:32
+#: ../../templates/show_preference_admin.inc.php:43
+#: ../../templates/show_edit_user.inc.php:78
+#: ../../templates/show_democratic_playlist.inc.php:56
+#: ../../templates/show_democratic_playlist.inc.php:91
+#: ../../templates/show_add_user.inc.php:78
+#: ../../templates/show_create_democratic.inc.php:44
+msgid "Admin"
+msgstr "Administration"
+
+#: ../../lib/class/registration.class.php:51
+#: ../../lib/class/registration.class.php:53
+msgid "From: Ampache "
+msgstr "Från: Ampache "
+
+#: ../../lib/class/registration.class.php:55
+#, fuzzy, php-format
+msgid "New User Registration at %s"
+msgstr "Registrera ny användare i Ampache"
+
+#: ../../lib/class/registration.class.php:68
+#, php-format
+msgid ""
+"Thank you for registering\n"
+"\n"
+"\n"
+"Please keep this e-mail for your records. Your account information is as "
+"follows:\n"
+"----------------------\n"
+"Username: %s\n"
+"Password: %s\n"
+"----------------------\n"
+"\n"
+"Your account is currently inactive. You cannot use it until you've visited "
+"the following link:\n"
+"\n"
+"%s \n"
+"\n"
+"Thank you for registering\n"
+msgstr ""
+"Tack för att du registrerade dig\n"
+"\n"
+"\n"
+"Spara gärna detta e-postmeddelande. Din kontoinformation är som följer:\n"
+"----------------------\n"
+"Användarnamn: %s\n"
+"Lösenord: %s\n"
+"----------------------\n"
+"\n"
+"Ditt konto är för närvarande inaktiverat. Du kan inte använda det förrän du "
+"har besökt följande länk:\n"
+"\n"
+"%s \n"
+"\n"
+"Tack för att du registrerade dig\n"
+
+#: ../../lib/class/registration.class.php:98
+#, php-format
+msgid ""
+"A new user has registered\n"
+"The following values were entered.\n"
+"\n"
+"Username: %s\n"
+"Fullname: %s\n"
+"E-mail: %s\n"
+"\n"
+msgstr ""
+"En ny användare har registerats\n"
+"Följande värden angavs.\n"
+"\n"
+"Användarnamn: %s\n"
+"Fullständigt namn: %s\n"
+"E-postadress: %s\n"
+"\n"
+
+#: ../../lib/class/vauth.class.php:478 ../../lib/class/vauth.class.php:502
+#: ../../lib/class/vauth.class.php:541
+msgid "Error Username or Password incorrect, please try again"
+msgstr "Fel: Användarnamn eller lösenord är felaktiga. Försök igen"
+
+#: ../../lib/rating.lib.php:51
+msgid "Don't Play"
+msgstr "Spela inte"
+
+#: ../../lib/rating.lib.php:54
+msgid "It's Pretty Bad"
+msgstr "Det är ganska dåligt"
+
+#: ../../lib/rating.lib.php:57
+msgid "It's Ok"
+msgstr "Det är OK"
+
+#: ../../lib/rating.lib.php:60
+msgid "It's Pretty Good"
+msgstr "Det är ganska bra"
+
+#: ../../lib/rating.lib.php:63
+msgid "I Love It!"
+msgstr "Jag älskar det!"
+
+#: ../../lib/rating.lib.php:66
+msgid "It's Insane"
+msgstr "Det är sjukt bra"
+
+#: ../../lib/rating.lib.php:70
+msgid "Off the Charts!"
+msgstr "Helt underbart!"
+
+#: ../../lib/preferences.php:164 ../../templates/show_flag_row.inc.php:33
+msgid "Enable"
+msgstr "Aktivera"
+
+#: ../../lib/preferences.php:165 ../../templates/show_duplicates.inc.php:36
+#: ../../templates/show_duplicates.inc.php:74
+#: ../../templates/show_localplay_controllers.inc.php:44
+msgid "Disable"
+msgstr "Inaktivera"
+
+#: ../../lib/preferences.php:174 ../../lib/preferences.php:216
+#: ../../lib/ui.lib.php:660 ../../templates/sidebar_localplay.inc.php:44
+#: ../../templates/show_adds_catalog.inc.php:25
+#: ../../templates/show_gather_art.inc.php:24
+msgid "None"
+msgstr "Ingen"
+
+#: ../../lib/preferences.php:176
+#: ../../templates/show_playtype_switch.inc.php:32
+msgid "Stream"
+msgstr "Strömmande"
+
+#: ../../lib/preferences.php:179
+#: ../../modules/localplay/mpd.controller.php:491
+#: ../../modules/localplay/httpq.controller.php:490
+#: ../../templates/show_playtype_switch.inc.php:36
+#: ../../templates/sidebar_home.inc.php:89
+#: ../../templates/sidebar_modules.inc.php:46
+msgid "Democratic"
+msgstr "Demokratisk"
+
+#: ../../lib/preferences.php:182 ../../templates/sidebar_localplay.inc.php:32
+#: ../../templates/show_playtype_switch.inc.php:34
+#: ../../templates/sidebar.inc.php:28 ../../templates/sidebar_home.inc.php:98
+msgid "Localplay"
+msgstr "Lokal uppspelning"
+
+#: ../../lib/preferences.php:184
+#: ../../templates/show_playtype_switch.inc.php:38
+msgid "Flash Player"
+msgstr "Flash Player"
+
+#: ../../lib/preferences.php:191
+msgid "M3U"
+msgstr "M3U"
+
+#: ../../lib/preferences.php:192
+msgid "Simple M3U"
+msgstr "Enkel M3U"
+
+#: ../../lib/preferences.php:193
+msgid "PLS"
+msgstr "PLS"
+
+#: ../../lib/preferences.php:194
+msgid "Asx"
+msgstr "Asx"
+
+#: ../../lib/preferences.php:195
+msgid "RAM"
+msgstr "RAM"
+
+#: ../../lib/preferences.php:196
+msgid "XSPF"
+msgstr "XSPF"
+
+#: ../../lib/preferences.php:230
+msgid "Disabled"
+msgstr "Inaktiverad"
+
+#: ../../lib/preferences.php:232
+msgid "Manager"
+msgstr "Manager"
+
+#: ../../lib/preferences.php:252
+msgid "Send on Add"
+msgstr "Skicka vid Lägg till"
+
+#: ../../lib/preferences.php:253
+msgid "Send and Clear on Add"
+msgstr "Skicka och töm vid Lägg till"
+
+#: ../../lib/preferences.php:254
+msgid "Clear on Send"
+msgstr "Töm vid sändning"
+
+#: ../../lib/preferences.php:255 ../../lib/preferences.php:262
+#: ../../templates/show_manage_democratic.inc.php:38
+msgid "Default"
+msgstr "Standard"
+
+#: ../../lib/preferences.php:263
+msgid "Always"
+msgstr "Alltid"
+
+#: ../../lib/general.lib.php:498
+msgid "On"
+msgstr "På"
+
+#: ../../lib/general.lib.php:501
+msgid "Off"
+msgstr "Av"
+
+#: ../../lib/install.php:257
+msgid "No Username/Password specified"
+msgstr "Inget användarnamn/lösenord angavs"
+
+#: ../../lib/install.php:262
+msgid "Passwords do not match"
+msgstr "Lösenorden stämmer inte överens"
+
+#: ../../lib/rss.php:180 ../../templates/show_recently_played.inc.php:23
+msgid "seconds ago"
+msgstr "sekunder sedan"
+
+#: ../../lib/rss.php:180 ../../templates/show_recently_played.inc.php:23
+msgid "minutes ago"
+msgstr "minuter sedan"
+
+#: ../../lib/rss.php:180 ../../templates/show_recently_played.inc.php:23
+msgid "hours ago"
+msgstr "timmar sedan"
+
+#: ../../lib/rss.php:180 ../../templates/show_recently_played.inc.php:23
+msgid "days ago"
+msgstr "dygn sedan"
+
+#: ../../lib/rss.php:180 ../../templates/show_recently_played.inc.php:23
+msgid "weeks ago"
+msgstr "veckor sedan"
+
+#: ../../lib/rss.php:180 ../../templates/show_recently_played.inc.php:23
+msgid "months ago"
+msgstr "månader sedan"
+
+#: ../../lib/rss.php:180 ../../templates/show_recently_played.inc.php:23
+msgid "years ago"
+msgstr "år sedan"
+
+#: ../../lib/ui.lib.php:355 ../../templates/sidebar.inc.php:27
+msgid "Home"
+msgstr "Hem"
+
+#: ../../lib/ui.lib.php:358
+msgid "Upload"
+msgstr "Skicka"
+
+#: ../../lib/ui.lib.php:361
+msgid "Local Play"
+msgstr "Lokal uppspelning"
+
+#: ../../lib/ui.lib.php:364
+msgid "Random Play"
+msgstr "Slumpmässig uppspelning"
+
+#: ../../lib/ui.lib.php:367 ../../templates/sidebar_home.inc.php:36
+#: ../../templates/sidebar_home.inc.php:85
+#: ../../templates/sidebar_home.inc.php:106
+#: ../../templates/show_manage_democratic.inc.php:34
+#: ../../templates/show_play_selected.inc.php:47
+msgid "Playlist"
+msgstr "Spellista"
+
+#: ../../lib/ui.lib.php:370 ../../templates/show_search.inc.php:131
+#: ../../templates/show_search_bar.inc.php:29
+msgid "Search"
+msgstr "Sök"
+
+#: ../../lib/ui.lib.php:373 ../../templates/sidebar.inc.php:29
+#: ../../templates/sidebar_preferences.inc.php:9
+msgid "Preferences"
+msgstr "Inställningar"
+
+#: ../../lib/ui.lib.php:376 ../../lib/ui.lib.php:380
+msgid "Admin-Catalog"
+msgstr "Admin-Katalog"
+
+#: ../../lib/ui.lib.php:384
+msgid "Admin-User Management"
+msgstr "Admin-Hantera användare"
+
+#: ../../lib/ui.lib.php:388
+msgid "Admin-Mail Users"
+msgstr "Admin-Skicka e-post"
+
+#: ../../lib/ui.lib.php:392
+msgid "Admin-Manage Access Lists"
+msgstr "Admin-Hantera åtkomstlistor"
+
+#: ../../lib/ui.lib.php:396
+msgid "Admin-Site Preferences"
+msgstr "Admin-Systeminställningar"
+
+#: ../../lib/ui.lib.php:400
+msgid "Admin-Manage Modules"
+msgstr "Admin-Hantera moduler"
+
+#: ../../lib/ui.lib.php:404
+msgid "Browse Music"
+msgstr "Bläddra musik"
+
+#: ../../lib/ui.lib.php:416 ../../templates/show_edit_song.inc.php:53
+#: ../../templates/show_genres.inc.php:37
+#: ../../templates/show_genres.inc.php:73
+#: ../../templates/show_play_selected.inc.php:58
+#: ../../templates/show_playlist_songs.inc.php:45
+#: ../../templates/show_playlist_songs.inc.php:66
+msgid "Genre"
+msgstr "Genre"
+
+#: ../../lib/ui.lib.php:420 ../../templates/show_stats.inc.php:22
+#: ../../templates/sidebar_modules.inc.php:41
+msgid "Statistics"
+msgstr "Statistik"
+
+#: ../../lib/ui.lib.php:511
+msgid "Add New"
+msgstr "Lägg till ny"
+
+#: ../../modules/localplay/shoutcast.controller.php:237
+#: ../../modules/localplay/mpd.controller.php:232
+#: ../../modules/localplay/httpq.controller.php:216
+msgid "Instance Name"
+msgstr "Instansnamn"
+
+#: ../../modules/localplay/shoutcast.controller.php:238
+msgid "PID File"
+msgstr "PID-fil"
+
+#: ../../modules/localplay/shoutcast.controller.php:239
+msgid "Playlist File"
+msgstr "Spellistefil"
+
+#: ../../modules/localplay/shoutcast.controller.php:240
+msgid "Local Path to Files"
+msgstr "Lokal sökväg till filer"
+
+#: ../../modules/localplay/mpd.controller.php:233
+#: ../../modules/localplay/httpq.controller.php:217
+msgid "Hostname"
+msgstr "Värdnamn"
+
+#: ../../modules/localplay/mpd.controller.php:234
+#: ../../modules/localplay/httpq.controller.php:218
+msgid "Port"
+msgstr "Port"
+
+#: ../../modules/localplay/mpd.controller.php:235
+#: ../../modules/localplay/httpq.controller.php:219
+#: ../../templates/show_install_account.inc.php:65
+#: ../../templates/show_login_form.inc.php:62
+#: ../../templates/show_user_registration.inc.php:101
+#: ../../templates/show_edit_user.inc.php:52
+#: ../../templates/show_add_user.inc.php:52
+msgid "Password"
+msgstr "Lösenord"
+
+#: ../../modules/horde/Browser.php:867
+msgid "file"
+msgstr "fil"
+
+#: ../../modules/horde/Browser.php:871
+msgid "File uploads not supported."
+msgstr "Skicka upp filer stöds inte."
+
+#: ../../modules/horde/Browser.php:889
+msgid "No file uploaded"
+msgstr "Ingen fil uppskickad"
+
+#: ../../modules/horde/Browser.php:896
+#, php-format
+msgid "There was a problem with the file upload: No %s was uploaded."
+msgstr "Det inträffade ett problem med filsändningen: Ingen %s blev sänd."
+
+#: ../../modules/horde/Browser.php:901
+#, php-format
+msgid ""
+"There was a problem with the file upload: The %s was larger than the maximum "
+"allowed size (%d bytes)."
+msgstr ""
+"Det inträffade ett problem med filsändningen: %s var större än maximalt "
+"tillåten storlek (%d byte)."
+
+#: ../../modules/horde/Browser.php:903
+#, php-format
+msgid ""
+"There was a problem with the file upload: The %s was only partially uploaded."
+msgstr ""
+"Det inträffade ett problem med filsändningen: %s blev endast delvis sänd."
+
+#: ../../admin/catalog.php:53 ../../admin/catalog.php:73
+#: ../../admin/catalog.php:98 ../../admin/catalog.php:170
+msgid "Catalog Updated"
+msgstr "Katalog uppdaterad"
+
+#: ../../admin/catalog.php:115
+msgid "Catalog Deleted"
+msgstr "Katalog borttagen"
+
+#: ../../admin/catalog.php:115
+msgid "The Catalog and all associated records have been deleted"
+msgstr "Katalogen och alla associerade poster har tagits bort"
+
+#: ../../admin/catalog.php:121
+msgid "Catalog Delete"
+msgstr "Katalogborttagning"
+
+#: ../../admin/catalog.php:121
+msgid "Confirm Deletion Request"
+msgstr "Bekräfta borttagningsbegäran"
+
+#: ../../admin/catalog.php:130
+msgid "Songs Removed"
+msgstr "Låtar borttagna"
+
+#: ../../admin/catalog.php:133
+msgid "No Songs Removed"
+msgstr "Inga låtar togs bort"
+
+#: ../../admin/catalog.php:136
+msgid "Disabled Songs Processed"
+msgstr "Inaktiverade låtar behandlade"
+
+#: ../../admin/catalog.php:157
+msgid "Catalog Cleaned"
+msgstr "Katalogen tömdes"
+
+#: ../../admin/catalog.php:214
+msgid "Error: Defined Path is inside an existing catalog"
+msgstr ""
+
+#: ../../admin/catalog.php:233
+msgid "Catalog Created"
+msgstr "Katalog skapades"
+
+#: ../../admin/catalog.php:250
+msgid "Catalog statistics cleared"
+msgstr "Katalogstatistiken tömdes"
+
+#: ../../admin/catalog.php:263
+msgid "Now Playing Cleared"
+msgstr "Spelar nu tömdes"
+
+#: ../../admin/catalog.php:263
+msgid "All now playing data has been cleared"
+msgstr "Allt data om Nu spelas har tömts"
+
+#: ../../admin/catalog.php:273
+msgid "No Disabled songs found"
+msgstr "Inga inaktiverade låtar hittades"
+
+#: ../../admin/catalog.php:282
+msgid "Delete Catalog"
+msgstr "Ta bort katalog"
+
+#: ../../admin/catalog.php:282
+msgid "Do you really want to delete this catalog?"
+msgstr "Vill du verkligen ta bort denna katalog?"
+
+#: ../../admin/catalog.php:302
+msgid "Album Art Search Finished"
+msgstr "Sökning efter albumomslag färdig"
+
+#: ../../admin/flag.php:88
+msgid "Song Updated"
+msgstr "Låt uppdaterad"
+
+#: ../../admin/flag.php:88
+msgid "The requested song has been updated"
+msgstr "Den begärda låten har uppdaterats"
+
+#: ../../admin/flag.php:130
+msgid "Album Updated"
+msgstr "Album uppdaterat"
+
+#: ../../admin/flag.php:172
+msgid "Artist Updated"
+msgstr "Artist uppdaterad"
+
+#: ../../admin/flag.php:237
+msgid "Songs Updated"
+msgstr "Låtar uppdaterade"
+
+#: ../../admin/flag.php:245
+msgid "Flag Removed"
+msgstr "Flagga borttagen"
+
+#: ../../admin/flag.php:246
+msgid "Flag Removed from"
+msgstr "Flagga borttagen från"
+
+#: ../../admin/flag.php:261
+msgid "Flags Updated"
+msgstr "Flaggorr uppdaterade"
+
+#: ../../admin/flag.php:280
+msgid "Songs Disabled"
+msgstr "Låtar inaktiverade"
+
+#: ../../admin/flag.php:280
+msgid "The requested song(s) have been disabled"
+msgstr "De begärda låten/låtarna har inaktiverats"
+
+#: ../../admin/flag.php:291
+msgid "Songs Enabled"
+msgstr "Låtar aktiverade"
+
+#: ../../admin/flag.php:291
+msgid "The requested song(s) have been enabled"
+msgstr "De begärda låten/låtarna har aktiverats"
+
+#: ../../admin/users.php:83
+msgid "User Updated"
+msgstr "Användaren uppdaterad"
+
+#: ../../admin/users.php:83
+msgid "updated"
+msgstr "uppdaterad"
+
+#: ../../admin/users.php:110 ../../register.php:130
+msgid "Error Username already exists"
+msgstr "Fel - användarnamnet används redan"
+
+#: ../../admin/users.php:129
+msgid "New User Added"
+msgstr "Ny användare lades till"
+
+#: ../../admin/users.php:134
+msgid "User Enabled"
+msgstr "Användare aktiverad"
+
+#: ../../admin/users.php:139
+msgid "User Disabled"
+msgstr "Användare inaktiverad"
+
+#: ../../admin/users.php:142
+msgid "Unable to Disabled last Administrator"
+msgstr ""
+
+#: ../../admin/users.php:164
+msgid "User Deleted"
+msgstr "Användare borttagen"
+
+#: ../../admin/users.php:167
+msgid "Delete Error"
+msgstr "Fel vid borttagning"
+
+#: ../../admin/users.php:167
+msgid "Unable to delete last Admin User"
+msgstr ""
+
+#: ../../admin/users.php:173
+msgid "Deletion Request"
+msgstr "Begäran om borttagning"
+
+#: ../../admin/users.php:174
+msgid "Are you sure you want to permanently delete"
+msgstr "Är du säker på att du vill permanent ta bort"
+
+#: ../../admin/modules.php:38
+msgid "Install Failed, Controller Error"
+msgstr ""
+
+#: ../../admin/modules.php:56 ../../admin/modules.php:101
+msgid "Are you sure you want to remove this plugin?"
+msgstr "Är du säker på att du vill ta bort denna insticksmodul?"
+
+#: ../../admin/modules.php:68 ../../admin/modules.php:120
+msgid "Plugin Deactivated"
+msgstr "Insticksmodul inaktiverad"
+
+#: ../../admin/modules.php:83
+msgid "Unable to Install Plugin"
+msgstr "Kunde inte installera insticksmodulen"
+
+#: ../../admin/modules.php:94
+msgid "Plugin Activated"
+msgstr "Insticksmodul aktiverad"
+
+#: ../../admin/modules.php:129
+msgid "Plugins"
+msgstr "Insticksmoduler"
+
+#: ../../admin/modules.php:135
+#, fuzzy
+msgid "Localplay Controllers"
+msgstr "Lokal"
+
+#: ../../admin/access.php:35
+msgid "Deleted"
+msgstr "Borttagen"
+
+#: ../../admin/access.php:35
+msgid "Your Access List Entry has been removed"
+msgstr "Din behörighetspost har tagits bort"
+
+#: ../../admin/access.php:40
+msgid "Your new Access List Entry has been created"
+msgstr "Din nya behörighetspost har skapats"
+
+#: ../../admin/access.php:45
+msgid "Access List Entry updated"
+msgstr "Post i åtkomstlista uppdaterad"
+
+#: ../../admin/mail.php:90
+msgid "E-mail Sent"
+msgstr "E-postmeddelande skickat"
+
+#: ../../admin/mail.php:91
+msgid "Your E-mail was successfully sent."
+msgstr "Ditt e-postmeddelande skickades."
+
+#: ../../admin/system.php:49
+msgid "Database Charset Updated"
+msgstr "Databasens teckenuppsättning uppdaterad"
+
+#: ../../admin/system.php:49
+msgid ""
+"Your Database and associated tables have been updated to match your "
+"currently configured charset"
+msgstr ""
+"Din databas och associerade tabeller har uppdaterats för att matcha din "
+"nuvarande konfigurerade teckenuppsättning"
+
+#: ../../admin/shout.php:35
+msgid "Shoutbox Post Updated"
+msgstr "Chattinlägg uppdaterat"
+
+#: ../../admin/shout.php:47
+msgid "Shoutbox Post Deleted"
+msgstr "Chattinlägg togs bort"
+
+#: ../../templates/show_index.inc.php:38
+#: ../../templates/show_random_albums.inc.php:24
+msgid "Albums of the Moment"
+msgstr "Album för stunden"
+
+#: ../../templates/show_index.inc.php:38
+msgid "Loading..."
+msgstr "Läser in..."
+
+#: ../../templates/rightbar.inc.php:25
+#: ../../templates/show_localplay_control.inc.php:28
+#: ../../templates/show_manage_democratic.inc.php:57
+msgid "Play"
+msgstr "Spela"
+
+#: ../../templates/rightbar.inc.php:28
+msgid "Add to Playlist"
+msgstr "Lägg till i spellista"
+
+#: ../../templates/rightbar.inc.php:31
+msgid "Add to New Playlist"
+msgstr "Lägg till i ny spellista"
+
+#: ../../templates/rightbar.inc.php:49
+#: ../../templates/show_album_row.inc.php:49
+#: ../../templates/show_playlist.inc.php:36
+#: ../../templates/show_artist_row.inc.php:34
+#: ../../templates/show_playlist_row.inc.php:33
+#: ../../templates/show_search_options.inc.php:28
+msgid "Batch Download"
+msgstr "Hämta flera"
+
+#: ../../templates/rightbar.inc.php:54
+#: ../../templates/show_localplay_status.inc.php:39
+msgid "Clear Playlist"
+msgstr "Töm spellista"
+
+#: ../../templates/rightbar.inc.php:57
+msgid "Add Dynamic Items"
+msgstr "Lägg till dynamiska objekt"
+
+#: ../../templates/rightbar.inc.php:69
+msgid "Related Tag"
+msgstr "Relaterad tagg"
+
+#: ../../templates/rightbar.inc.php:101
+#: ../../templates/show_playlists.inc.php:53
+#: ../../templates/show_user_stats.inc.php:34
+#: ../../templates/show_user_stats.inc.php:47
+#: ../../templates/show_user_stats.inc.php:60
+#: ../../templates/show_artists.inc.php:58
+#: ../../templates/show_songs.inc.php:64
+#: ../../templates/show_recently_played.inc.php:95
+#: ../../templates/show_objects.inc.php:44
+#: ../../templates/show_user_recommendations.inc.php:32
+#: ../../templates/show_user_recommendations.inc.php:43
+#: ../../templates/show_user_recommendations.inc.php:54
+#: ../../templates/show_genres.inc.php:68
+#: ../../templates/show_manage_democratic.inc.php:63
+#: ../../templates/show_albums.inc.php:65
+#: ../../templates/show_live_streams.inc.php:53
+msgid "Not Enough Data"
+msgstr "Inte tillräckligt med data"
+
+#: ../../templates/rightbar.inc.php:105
+msgid "More"
+msgstr "Mer"
+
+#: ../../templates/show_install_account.inc.php:33
+#: ../../templates/show_install.inc.php:33
+#: ../../templates/show_install_lang.inc.php:34
+#: ../../templates/show_install_config.inc.php:33
+msgid "Ampache Installation"
+msgstr "Installation av Ampache"
+
+#: ../../templates/show_install_account.inc.php:40
+#: ../../templates/show_install.inc.php:41
+#: ../../templates/show_install_lang.inc.php:41
+#: ../../templates/show_install_config.inc.php:39
+msgid ""
+"This Page handles the installation of the Ampache database and the creation "
+"of the ampache.cfg.php file. Before you continue please make sure that you "
+"have the following pre-requisites"
+msgstr ""
+"Denna sida hanterar installationen av Ampache-databasen och skapandet av "
+"filen ampache.cfg. Innan du fortsätter, se till att du har följande "
+
+#: ../../templates/show_install_account.inc.php:43
+#: ../../templates/show_install.inc.php:44
+#: ../../templates/show_install_lang.inc.php:44
+#: ../../templates/show_install_config.inc.php:42
+msgid ""
+"A MySQL Server with a username and password that can create/modify databases"
+msgstr ""
+"En MySQL-server med ett användarnamn och lösenord som kan skapa/ändra "
+"databaser"
+
+#: ../../templates/show_install_account.inc.php:44
+msgid ""
+"Your webserver has read access to the /sql/ampache.sql file and the /config/"
+"ampache.cfg.dist.php file"
+msgstr ""
+"Din webbserver har lästillgång till filen /sql/ampache.sql och filen /config/"
+"ampache.cfg.dist.php"
+
+#: ../../templates/show_install_account.inc.php:46
+#: ../../templates/show_install.inc.php:48
+#: ../../templates/show_install_lang.inc.php:48
+#: ../../templates/show_install_config.inc.php:45
+msgid ""
+"Once you have ensured that you have the above requirements please fill out "
+"the information below. You will only be asked for the required config "
+"values. If you would like to make changes to your ampache install at a later "
+"date simply edit /config/ampache.cfg.php"
+msgstr ""
+"När du har sett till att ovanstående krav uppfylls kan du fyll i "
+"informationen nedan. Du kommer endast att bli frågad efter de "
+"konfigurationsvärden som krävs. Om du vill göra ändringar till din "
+"installation av Ampache vid en senare tidpunkt kan du helt enkelt redigera "
+"filen /config/ampache.cfg.php"
+
+#: ../../templates/show_install_account.inc.php:49
+#: ../../templates/show_install.inc.php:53
+#: ../../templates/show_install_config.inc.php:49
+msgid "Step 1 - Creating and Inserting the Ampache Database"
+msgstr "Steg 1 - Skapa Ampache-databasen och lägg in data"
+
+#: ../../templates/show_install_account.inc.php:50
+msgid "Step 2 - Creating the ampache.cfg.php file"
+msgstr "Steg 2 - Skapa filen ampache.cfg.php"
+
+#: ../../templates/show_install_account.inc.php:51
+#: ../../templates/show_install.inc.php:58
+#: ../../templates/show_install_config.inc.php:54
+msgid "Step 3 - Setup Initial Account"
+msgstr "Steg 3 - Ställ in första kontot"
+
+#: ../../templates/show_install_account.inc.php:53
+msgid ""
+"This step creates your initial Ampache admin account. Once your admin "
+"account has been created you will be directed to the login page"
+msgstr ""
+"Detta steg skapar ditt första administrationskonto för Ampache. När ditt "
+"administrationskonto har skapats kommer du att bli omdirigerad till "
+"inloggningssidan"
+
+#: ../../templates/show_install_account.inc.php:57
+msgid "Create Admin Account"
+msgstr "Skapa administrationskonto"
+
+#: ../../templates/show_install_account.inc.php:61
+#: ../../templates/show_login_form.inc.php:58
+#: ../../templates/show_user_registration.inc.php:73
+#: ../../templates/show_recently_played.inc.php:41
+#: ../../templates/show_recently_played.inc.php:100
+#: ../../templates/show_now_playing_row.inc.php:29
+#: ../../templates/show_edit_user.inc.php:29
+#: ../../templates/show_add_user.inc.php:29
+#: ../../templates/show_users.inc.php:39
+#: ../../templates/show_users.inc.php:104
+msgid "Username"
+msgstr "Användarnamn"
+
+#: ../../templates/show_install_account.inc.php:69
+#: ../../templates/show_user_registration.inc.php:110
+#: ../../templates/show_edit_user.inc.php:61
+#: ../../templates/show_add_user.inc.php:61
+#: ../../templates/show_account.inc.php:46
+msgid "Confirm Password"
+msgstr "Bekräfta lösenord"
+
+#: ../../templates/show_install_account.inc.php:74
+msgid "Create Account"
+msgstr "Skapa konto"
+
+#: ../../templates/show_add_catalog.inc.php:26
+#: ../../templates/show_admin_tools.inc.php:82
+#: ../../templates/sidebar_admin.inc.php:26
+msgid "Add a Catalog"
+msgstr "Lägg till en katalog"
+
+#: ../../templates/show_add_catalog.inc.php:27
+msgid ""
+"In the form below enter either a local path (i.e. /data/music) or the URL to "
+"a remote Ampache installation (i.e http://theotherampache.com)"
+msgstr ""
+"Ange en lokal sökväg i formuläret nedan (t.ex. /data/musik) eller url:en "
+"till en fjärrinstallation av Ampache (t.ex. http://denandraampache.com)"
+
+#: ../../templates/show_add_catalog.inc.php:32
+msgid "Catalog Name"
+msgstr "Katalognamn"
+
+#: ../../templates/show_add_catalog.inc.php:35
+#: ../../templates/show_edit_catalog.inc.php:29
+msgid "Auto-inserted Fields"
+msgstr "Automatiskt inlagda fält"
+
+#: ../../templates/show_add_catalog.inc.php:36
+#: ../../templates/show_edit_catalog.inc.php:30
+msgid "album name"
+msgstr "albumnamn"
+
+#: ../../templates/show_add_catalog.inc.php:37
+#: ../../templates/show_edit_catalog.inc.php:31
+msgid "artist name"
+msgstr "artistnamn"
+
+#: ../../templates/show_add_catalog.inc.php:38
+#: ../../templates/show_edit_catalog.inc.php:32
+msgid "id3 comment"
+msgstr "id3-kommentar"
+
+#: ../../templates/show_add_catalog.inc.php:39
+#: ../../templates/show_edit_catalog.inc.php:33
+msgid "genre"
+msgstr "genre"
+
+#: ../../templates/show_add_catalog.inc.php:40
+#: ../../templates/show_edit_catalog.inc.php:34
+msgid "track number (padded with leading 0)"
+msgstr "spårnummer (med inledande 0)"
+
+#: ../../templates/show_add_catalog.inc.php:41
+#: ../../templates/show_edit_catalog.inc.php:35
+msgid "song title"
+msgstr "låttitel"
+
+#: ../../templates/show_add_catalog.inc.php:42
+#: ../../templates/show_edit_catalog.inc.php:36
+msgid "year"
+msgstr "år"
+
+#: ../../templates/show_add_catalog.inc.php:43
+#: ../../templates/show_edit_catalog.inc.php:37
+msgid "other"
+msgstr "övrigt"
+
+#: ../../templates/show_add_catalog.inc.php:48
+#: ../../templates/show_catalogs.inc.php:33
+#: ../../templates/show_catalogs.inc.php:49
+msgid "Path"
+msgstr "Sökväg"
+
+#: ../../templates/show_add_catalog.inc.php:52
+#: ../../templates/show_edit_catalog.inc.php:41
+msgid "Catalog Type"
+msgstr "Katalogtyp"
+
+#: ../../templates/show_add_catalog.inc.php:55
+msgid "Local"
+msgstr "Lokal"
+
+#: ../../templates/show_add_catalog.inc.php:56
+msgid "Remote"
+msgstr "Fjärr"
+
+#: ../../templates/show_add_catalog.inc.php:61
+#: ../../templates/show_edit_catalog.inc.php:45
+msgid "XML-RPC Key"
+msgstr "XML-RPC-nyckel"
+
+#: ../../templates/show_add_catalog.inc.php:62
+#: ../../templates/show_edit_catalog.inc.php:47
+msgid "Required for Remote Catalogs"
+msgstr "Krävs för fjärrkataloger"
+
+#: ../../templates/show_add_catalog.inc.php:65
+msgid "Filename Pattern"
+msgstr "Filnamnsmönster"
+
+#: ../../templates/show_add_catalog.inc.php:70
+#: ../../templates/show_edit_catalog.inc.php:58
+msgid "Folder Pattern"
+msgstr "Mappmönster"
+
+#: ../../templates/show_add_catalog.inc.php:70
+#: ../../templates/show_edit_catalog.inc.php:58
+msgid "(no leading or ending '/')"
+msgstr "(inga inledande eller avslutande \"/\")"
+
+#: ../../templates/show_add_catalog.inc.php:75
+#: ../../templates/show_admin_tools.inc.php:84
+msgid "Gather Album Art"
+msgstr "Samla albumomslag"
+
+#: ../../templates/show_add_catalog.inc.php:79
+msgid "Build Playlists from m3u Files"
+msgstr "Bygg spellistor från m3u-filer"
+
+#: ../../templates/show_add_catalog.inc.php:85
+msgid "Add Catalog"
+msgstr "Lägg till katalog"
+
+#: ../../templates/show_localplay_status.inc.php:25
+msgid "Localplay Control"
+msgstr ""
+
+#: ../../templates/show_localplay_status.inc.php:28
+msgid "Mute"
+msgstr "Tyst"
+
+#: ../../templates/show_localplay_status.inc.php:29
+msgid "Decrease Volume"
+msgstr "Sänk volymen"
+
+#: ../../templates/show_localplay_status.inc.php:30
+msgid "Increase Volume"
+msgstr "Öka volymen"
+
+#: ../../templates/show_localplay_status.inc.php:31
+msgid "Volume"
+msgstr "Volym"
+
+#: ../../templates/show_localplay_status.inc.php:33
+msgid "Repeat"
+msgstr "Upprepa"
+
+#: ../../templates/show_playlists.inc.php:34
+#: ../../templates/show_playlists.inc.php:57
+#: ../../templates/show_album_row.inc.php:23
+#: ../../templates/show_admin_tools.inc.php:45
+#: ../../templates/show_catalog_row.inc.php:28
+#: ../../templates/show_artists.inc.php:35
+#: ../../templates/show_artists.inc.php:62
+#: ../../templates/show_songs.inc.php:39 ../../templates/show_songs.inc.php:68
+#: ../../templates/show_recently_played.inc.php:37
+#: ../../templates/show_recently_played.inc.php:80
+#: ../../templates/show_recently_played.inc.php:99
+#: ../../templates/show_genres.inc.php:36
+#: ../../templates/show_genres.inc.php:72 ../../templates/show_song.inc.php:28
+#: ../../templates/show_albums.inc.php:39
+#: ../../templates/show_albums.inc.php:69
+#: ../../templates/show_album.inc.php:51
+#: ../../templates/show_song_row.inc.php:23
+#: ../../templates/show_artist_row.inc.php:23
+#: ../../templates/show_live_stream_row.inc.php:23
+#: ../../templates/show_artist.inc.php:38
+#: ../../templates/show_live_streams.inc.php:35
+#: ../../templates/show_live_streams.inc.php:57
+#: ../../templates/show_add_live_stream.inc.php:68
+#: ../../templates/show_playlist_row.inc.php:23
+#: ../../templates/show_playlist_song_row.inc.php:22
+#: ../../templates/show_shoutbox.inc.php:34
+msgid "Add"
+msgstr "Lägg till"
+
+#: ../../templates/show_playlists.inc.php:35
+#: ../../templates/show_playlists.inc.php:58
+msgid "Playlist Name"
+msgstr "Spellista"
+
+#: ../../templates/show_playlists.inc.php:37
+#: ../../templates/show_playlists.inc.php:60
+msgid "# Songs"
+msgstr "# Låtar"
+
+#: ../../templates/show_playlists.inc.php:38
+#: ../../templates/show_playlists.inc.php:61
+msgid "Owner"
+msgstr "Ägare"
+
+#: ../../templates/show_playlists.inc.php:39
+#: ../../templates/show_playlists.inc.php:62
+#: ../../templates/show_albums.inc.php:48
+#: ../../templates/show_albums.inc.php:78
+#: ../../templates/show_album.inc.php:48
+#: ../../templates/show_catalogs.inc.php:36
+#: ../../templates/show_catalogs.inc.php:52
+msgid "Actions"
+msgstr "Åtgärder"
+
+#: ../../templates/show_album_row.inc.php:44
+#: ../../templates/show_song_row.inc.php:40
+msgid "Post Shout"
+msgstr "Posta inlägg"
+
+#: ../../templates/show_album_row.inc.php:53
+#: ../../templates/show_play_selected.inc.php:50
+#: ../../templates/show_song_row.inc.php:49
+#: ../../templates/show_artist_row.inc.php:38
+#: ../../templates/show_live_stream_row.inc.php:31
+#: ../../templates/show_playlist_row.inc.php:37
+#: ../../templates/show_playlist_song_row.inc.php:37
+msgid "Edit"
+msgstr "Redigera"
+
+#: ../../templates/show_similar_artists.inc.php:23
+msgid "Similar Artists"
+msgstr "Liknande artister"
+
+#: ../../templates/show_similar_artists.inc.php:25
+msgid "Please check the artists you want to merge with the current one"
+msgstr "Kryssa för de artister som du vill sammanfoga med den aktuella"
+
+#: ../../templates/show_similar_artists.inc.php:33
+#: ../../templates/show_similar_artists.inc.php:86
+#: ../../templates/show_artists.inc.php:36
+#: ../../templates/show_artists.inc.php:63
+#: ../../templates/show_songs.inc.php:41 ../../templates/show_songs.inc.php:70
+#: ../../templates/show_edit_song.inc.php:45
+#: ../../templates/show_recently_played.inc.php:40
+#: ../../templates/show_recently_played.inc.php:103
+#: ../../templates/sidebar_home.inc.php:34
+#: ../../templates/sidebar_home.inc.php:79
+#: ../../templates/sidebar_home.inc.php:105
+#: ../../templates/show_now_playing_row.inc.php:59
+#: ../../templates/show_duplicates.inc.php:38
+#: ../../templates/show_duplicates.inc.php:76
+#: ../../templates/show_get_albumart.inc.php:28
+#: ../../templates/show_play_selected.inc.php:60
+#: ../../templates/show_albums.inc.php:44
+#: ../../templates/show_albums.inc.php:74
+#: ../../templates/show_search.inc.php:44
+#: ../../templates/show_playlist_songs.inc.php:43
+#: ../../templates/show_playlist_songs.inc.php:64
+#: ../../templates/show_disabled_songs.inc.php:36
+#: ../../templates/show_disabled_songs.inc.php:59
+msgid "Artist"
+msgstr "Artist"
+
+#: ../../templates/show_similar_artists.inc.php:58
+msgid "No Similar Artists found"
+msgstr "Inga liknande artister hittades"
+
+#: ../../templates/show_similar_artists.inc.php:66
+msgid "Back"
+msgstr "Tillbaka"
+
+#: ../../templates/show_similar_artists.inc.php:77
+msgid "Rename selected"
+msgstr "Byt namn på markerad"
+
+#: ../../templates/show_similar_artists.inc.php:78
+#: ../../templates/show_confirmation.inc.php:32
+msgid "Cancel"
+msgstr "Avbryt"
+
+#: ../../templates/show_similar_artists.inc.php:91
+msgid "Advanced Options"
+msgstr "Avancerade inställningar"
+
+#: ../../templates/show_similar_artists.inc.php:152
+msgid "Search Again"
+msgstr "Sök igen"
+
+#: ../../templates/sidebar_localplay.inc.php:35
+#: ../../templates/show_localplay_add_instance.inc.php:35
+msgid "Add Instance"
+msgstr "Lägg till instans"
+
+#: ../../templates/sidebar_localplay.inc.php:36
+msgid "Show instances"
+msgstr "Visa instanser"
+
+#: ../../templates/sidebar_localplay.inc.php:38
+#: ../../templates/sidebar_modules.inc.php:48
+msgid "Show Playlist"
+msgstr "Visa spellista"
+
+#: ../../templates/sidebar_localplay.inc.php:42
+msgid "Active Instance"
+msgstr "Aktiv instans"
+
+#: ../../templates/sidebar_localplay.inc.php:60
+msgid "Localplay Disabled"
+msgstr "Lokal uppspelning inaktiverad"
+
+#: ../../templates/sidebar_localplay.inc.php:62
+msgid "Allow Localplay set to False"
+msgstr "Tillåt lokal uppspelning inställd till Falskt"
+
+#: ../../templates/sidebar_localplay.inc.php:64
+msgid "Localplay Controller Not Defined"
+msgstr ""
+
+#: ../../templates/sidebar_localplay.inc.php:66
+#: ../../templates/show_denied.inc.php:32
+msgid "Access Denied"
+msgstr "Åtkomst nekad"
+
+#: ../../templates/show_user_stats.inc.php:30
+msgid "Favorite Artists"
+msgstr "Favoritartister"
+
+#: ../../templates/show_user_stats.inc.php:43
+msgid "Favorite Albums"
+msgstr "Favoritalbum"
+
+#: ../../templates/show_user_stats.inc.php:56
+msgid "Favorite Songs"
+msgstr "Favoritlåtar"
+
+#: ../../templates/show_random.inc.php:22
+msgid "Play Random Selection"
+msgstr "Spela slumpmässigt val"
+
+#: ../../templates/show_random.inc.php:26
+msgid "Item count"
+msgstr "Antal objekt"
+
+#: ../../templates/show_random.inc.php:41
+#: ../../templates/show_songs.inc.php:43 ../../templates/show_songs.inc.php:72
+msgid "Tags"
+msgstr "Taggar"
+
+#: ../../templates/show_random.inc.php:46
+#: ../../templates/show_duplicates.inc.php:40
+#: ../../templates/show_duplicates.inc.php:78
+msgid "Length"
+msgstr "Speltid"
+
+#: ../../templates/show_random.inc.php:49
+#: ../../templates/show_random.inc.php:84
+#: ../../templates/show_search.inc.php:121
+msgid "Unlimited"
+msgstr "Obegränsat"
+
+#: ../../templates/show_random.inc.php:50
+#: ../../templates/show_random.inc.php:51
+#, php-format
+msgid "%d minute"
+msgid_plural "%d minutes"
+msgstr[0] "%d minut"
+msgstr[1] "%d minuter"
+
+#: ../../templates/show_random.inc.php:52
+#: ../../templates/show_random.inc.php:53
+#: ../../templates/show_random.inc.php:54
+#: ../../templates/show_random.inc.php:55
+#: ../../templates/show_random.inc.php:56
+#, php-format
+msgid "%d hour"
+msgid_plural "%d hours"
+msgstr[0] "%d timme"
+msgstr[1] "%d timmar"
+
+#: ../../templates/show_random.inc.php:61
+#: ../../templates/show_playlist_edit.inc.php:36
+#: ../../templates/show_add_playlist.inc.php:32
+#: ../../templates/show_access_list.inc.php:51
+msgid "Type"
+msgstr "Typ"
+
+#: ../../templates/show_random.inc.php:64
+msgid "Standard"
+msgstr "Standard"
+
+#: ../../templates/show_random.inc.php:65
+msgid "Less Played"
+msgstr "Mindre spelade"
+
+#: ../../templates/show_random.inc.php:66
+msgid "Full Albums"
+msgstr "Fullständiga album"
+
+#: ../../templates/show_random.inc.php:67
+msgid "Full Artist"
+msgstr "Fullständig artist"
+
+#: ../../templates/show_random.inc.php:69
+msgid "Highest Rated"
+msgstr "Högst betygsatta"
+
+#: ../../templates/show_random.inc.php:75
+msgid "From catalog"
+msgstr "Från katalog"
+
+#: ../../templates/show_random.inc.php:81
+msgid "Size Limit"
+msgstr "Storleksgräns"
+
+#: ../../templates/show_random.inc.php:95
+msgid "Enqueue"
+msgstr "Kölägg"
+
+#: ../../templates/show_adds_catalog.inc.php:23
+#, php-format
+msgid "Starting New Song Search on %s catalog"
+msgstr "Påbörjar ny låtsökning för %s-katalogen"
+
+#: ../../templates/show_adds_catalog.inc.php:25
+#: ../../templates/show_run_add_catalog.inc.php:24
+msgid "Found"
+msgstr "Hittade"
+
+#: ../../templates/show_adds_catalog.inc.php:26
+#: ../../templates/show_verify_catalog.inc.php:26
+#: ../../templates/show_gather_art.inc.php:25
+#: ../../templates/show_run_add_catalog.inc.php:25
+#: ../../templates/show_clean_catalog.inc.php:26
+msgid "Reading"
+msgstr "Läser"
+
+#: ../../templates/show_playlist_edit.inc.php:26
+msgid "Editing Playlist"
+msgstr "Redigerar spellista"
+
+#: ../../templates/show_playlist_edit.inc.php:30
+#: ../../templates/show_admin_tools.inc.php:33
+#: ../../templates/show_admin_tools.inc.php:73
+#: ../../templates/show_localplay_playlist.inc.php:32
+#: ../../templates/show_localplay_playlist.inc.php:58
+#: ../../templates/show_edit_album.inc.php:27
+#: ../../templates/show_add_playlist.inc.php:28
+#: ../../templates/show_edit_catalog.inc.php:26
+#: ../../templates/show_edit_access.inc.php:26
+#: ../../templates/show_plugins.inc.php:32
+#: ../../templates/show_plugins.inc.php:61
+#: ../../templates/show_edit_artist.inc.php:27
+#: ../../templates/show_account.inc.php:27
+#: ../../templates/show_live_streams.inc.php:36
+#: ../../templates/show_live_streams.inc.php:58
+#: ../../templates/show_edit_live_stream_row.inc.php:26
+#: ../../templates/show_add_live_stream.inc.php:28
+#: ../../templates/show_localplay_controllers.inc.php:32
+#: ../../templates/show_localplay_controllers.inc.php:63
+#: ../../templates/show_catalogs.inc.php:32
+#: ../../templates/show_catalogs.inc.php:48
+#: ../../templates/show_access_list.inc.php:45
+#: ../../templates/show_add_access.inc.php:26
+#: ../../templates/show_create_democratic.inc.php:26
+msgid "Name"
+msgstr "Namn"
+
+#: ../../templates/show_playlist_edit.inc.php:39
+#: ../../templates/show_edit_playlist_row.inc.php:32
+msgid "Public"
+msgstr "Publik"
+
+#: ../../templates/show_playlist_edit.inc.php:47
+#: ../../templates/show_catalog_row.inc.php:31
+#: ../../templates/show_edit_access.inc.php:82
+#: ../../templates/show_preference_admin.inc.php:55
+#: ../../templates/show_play_selected.inc.php:64
+#: ../../templates/show_edit_shout.inc.php:41
+#: ../../templates/show_manage_catalogs.inc.php:42
+msgid "Update"
+msgstr "Uppdatera"
+
+#: ../../templates/show_login_form.inc.php:66
+msgid "Remember Me"
+msgstr "Kom ihåg mig"
+
+#: ../../templates/show_login_form.inc.php:73
+msgid "Login"
+msgstr "Logga in"
+
+#: ../../templates/show_login_form.inc.php:78
+msgid "Register"
+msgstr "Registrera"
+
+#: ../../templates/show_login_form.inc.php:90
+msgid "Message of the Day"
+msgstr "Dagens meddelande"
+
+#: ../../templates/show_album_art.inc.php:41
+#: ../../templates/show_big_art.inc.php:29
+msgid "Album Art"
+msgstr "Albumomslag"
+
+#: ../../templates/show_album_art.inc.php:47
+#: ../../templates/show_disabled_songs.inc.php:33
+#: ../../templates/show_disabled_songs.inc.php:56
+msgid "Select"
+msgstr "Välj"
+
+#: ../../templates/show_admin_tools.inc.php:34
+#: ../../templates/show_admin_tools.inc.php:74
+#: ../../templates/show_artists.inc.php:41
+#: ../../templates/show_artists.inc.php:68
+#: ../../templates/show_songs.inc.php:51 ../../templates/show_songs.inc.php:78
+#: ../../templates/show_localplay_playlist.inc.php:33
+#: ../../templates/show_localplay_playlist.inc.php:59
+#: ../../templates/show_genres.inc.php:39
+#: ../../templates/show_genres.inc.php:75
+#: ../../templates/show_flagged.inc.php:39
+#: ../../templates/show_flagged.inc.php:58
+#: ../../templates/show_song.inc.php:26
+#: ../../templates/show_manage_democratic.inc.php:40
+#: ../../templates/show_plugins.inc.php:35
+#: ../../templates/show_plugins.inc.php:64
+#: ../../templates/show_democratic_playlist.inc.php:51
+#: ../../templates/show_democratic_playlist.inc.php:86
+#: ../../templates/show_users.inc.php:46
+#: ../../templates/show_users.inc.php:111
+#: ../../templates/show_live_streams.inc.php:40
+#: ../../templates/show_live_streams.inc.php:62
+#: ../../templates/show_playlist_songs.inc.php:48
+#: ../../templates/show_playlist_songs.inc.php:69
+#: ../../templates/show_localplay_controllers.inc.php:35
+#: ../../templates/show_localplay_controllers.inc.php:66
+#: ../../templates/show_access_list.inc.php:52
+#: ../../templates/show_localplay_instances.inc.php:29
+#: ../../templates/show_manage_shoutbox.inc.php:39
+#: ../../templates/show_manage_shoutbox.inc.php:63
+msgid "Action"
+msgstr "Åtgärd"
+
+#: ../../templates/show_admin_tools.inc.php:47
+#: ../../templates/show_catalog_row.inc.php:29
+msgid "Verify"
+msgstr "Verifiera"
+
+#: ../../templates/show_admin_tools.inc.php:49
+#: ../../templates/show_catalog_row.inc.php:30
+msgid "Clean"
+msgstr "Töm"
+
+#: ../../templates/show_admin_tools.inc.php:59
+msgid "Fast"
+msgstr "Snabb"
+
+#: ../../templates/show_admin_tools.inc.php:60
+#: ../../templates/show_catalog_row.inc.php:32
+msgid "Gather Art"
+msgstr "Samla albumomslag"
+
+#: ../../templates/show_admin_tools.inc.php:68
+msgid "No Catalogs Found"
+msgstr "Inga kataloger hittades"
+
+#: ../../templates/show_admin_tools.inc.php:78
+#: ../../templates/show_manage_catalogs.inc.php:31
+msgid "Clean All"
+msgstr "Töm allt"
+
+#: ../../templates/show_admin_tools.inc.php:79
+#: ../../templates/show_manage_catalogs.inc.php:30
+msgid "Verify All"
+msgstr "Verifiera alla"
+
+#: ../../templates/show_admin_tools.inc.php:80
+#: ../../templates/show_manage_catalogs.inc.php:29
+msgid "Add to All"
+msgstr "Lägg till i Alla"
+
+#: ../../templates/show_admin_tools.inc.php:81
+#: ../../templates/show_manage_catalogs.inc.php:32
+msgid "Update All"
+msgstr "Uppdatera alla"
+
+#: ../../templates/show_admin_tools.inc.php:83
+msgid "Clear Catalog Stats"
+msgstr "Töm katalogstatistik"
+
+#: ../../templates/show_admin_tools.inc.php:88
+#: ../../templates/sidebar_admin.inc.php:43
+#: ../../templates/sidebar_modules.inc.php:31
+msgid "Other Tools"
+msgstr "Övriga verktyg"
+
+#: ../../templates/show_admin_tools.inc.php:90
+msgid "Show Duplicate Songs"
+msgstr "Visa dubbletta låtar"
+
+#: ../../templates/show_admin_tools.inc.php:91
+#: ../../templates/sidebar_admin.inc.php:46
+msgid "Clear Now Playing"
+msgstr "Töm Spelar nu"
+
+#: ../../templates/show_admin_tools.inc.php:92
+#: ../../templates/header.inc.php:84
+msgid "Generate New Config"
+msgstr "Generera ny konfiguration"
+
+#: ../../templates/show_admin_tools.inc.php:93
+#, fuzzy
+msgid "Preferences Permissions"
+msgstr "Inställningar"
+
+#: ../../templates/show_admin_tools.inc.php:94
+msgid "Export To Itunes DB"
+msgstr "Exportera till Itunes-databas"
+
+#: ../../templates/show_admin_tools.inc.php:95
+msgid "Show Inactive Users"
+msgstr "Visa inaktiva användare"
+
+#: ../../templates/show_admin_tools.inc.php:96
+msgid "Check for New Version"
+msgstr "Leta efter ny version"
+
+#: ../../templates/show_flag.inc.php:41
+msgid "Flag Song"
+msgstr "Flagga låt"
+
+#: ../../templates/show_flag.inc.php:45
+#: ../../templates/show_edit_song.inc.php:27
+msgid "File"
+msgstr "Fil"
+
+#: ../../templates/show_flag.inc.php:49
+msgid "Item"
+msgstr "Objekt"
+
+#: ../../templates/show_flag.inc.php:53
+msgid "Reason to flag"
+msgstr "Anledning för flagga"
+
+#: ../../templates/show_flag.inc.php:57
+msgid "Incorrect Tags"
+msgstr "Felaktiga taggar"
+
+#: ../../templates/show_flag.inc.php:64
+#: ../../templates/show_edit_song.inc.php:73
+#: ../../templates/show_flagged.inc.php:37
+#: ../../templates/show_flagged.inc.php:56
+#: ../../templates/show_search.inc.php:34
+#: ../../templates/show_manage_shoutbox.inc.php:37
+#: ../../templates/show_manage_shoutbox.inc.php:61
+msgid "Comment"
+msgstr "Kommentar"
+
+#: ../../templates/show_flag.inc.php:69
+#: ../../templates/show_flagged.inc.php:36
+#: ../../templates/show_flagged.inc.php:55
+msgid "Flag"
+msgstr "Flagga"
+
+#: ../../templates/sidebar_admin.inc.php:27
+#: ../../templates/show_manage_catalogs.inc.php:22
+msgid "Show Catalogs"
+msgstr "Visa kataloger"
+
+#: ../../templates/sidebar_admin.inc.php:31
+msgid "User Tools"
+msgstr "Användarverktyg"
+
+#: ../../templates/sidebar_admin.inc.php:33
+#: ../../templates/show_add_user.inc.php:85
+msgid "Add User"
+msgstr "Lägg till användare"
+
+#: ../../templates/sidebar_admin.inc.php:34
+msgid "Browse Users"
+msgstr "Bläddra bland användare"
+
+#: ../../templates/sidebar_admin.inc.php:37
+msgid "Access Control"
+msgstr "Behörighetskontroll"
+
+#: ../../templates/sidebar_admin.inc.php:39
+msgid "Add ACL"
+msgstr "Lägg till behörighet"
+
+#: ../../templates/sidebar_admin.inc.php:40
+msgid "Show ACL(s)"
+msgstr "Visa behörigheter"
+
+#: ../../templates/sidebar_admin.inc.php:45
+#: ../../templates/show_test_config.inc.php:40
+#: ../../templates/show_test.inc.php:32
+msgid "Ampache Debug"
+msgstr "Felsökning för Ampache"
+
+#: ../../templates/sidebar_admin.inc.php:47
+#: ../../templates/show_export.inc.php:28
+msgid "Export Catalog"
+msgstr "Exportera katalog"
+
+#: ../../templates/sidebar_admin.inc.php:49
+msgid "Manage Shoutbox"
+msgstr "Hantera chattruta"
+
+#: ../../templates/show_user.inc.php:30
+#: ../../templates/show_user_registration.inc.php:83
+#: ../../templates/show_edit_user.inc.php:37
+#: ../../templates/show_add_user.inc.php:37
+msgid "Full Name"
+msgstr "Fullständigt namn"
+
+#: ../../templates/show_user.inc.php:31
+msgid "Create Date"
+msgstr "Skapad"
+
+#: ../../templates/show_user.inc.php:32 ../../templates/show_users.inc.php:40
+#: ../../templates/show_users.inc.php:105
+msgid "Last Seen"
+msgstr "Sågs senast"
+
+#: ../../templates/show_user.inc.php:33 ../../templates/show_users.inc.php:42
+#: ../../templates/show_users.inc.php:107
+msgid "Activity"
+msgstr "Aktivitet"
+
+#: ../../templates/show_user.inc.php:35
+msgid "User is Online Now"
+msgstr "Användaren än nu ansluten"
+
+#: ../../templates/show_user.inc.php:37
+msgid "User is Offline Now"
+msgstr "Användaren är nu frånkopplad"
+
+#: ../../templates/show_user.inc.php:42
+msgid "Active Playlist"
+msgstr "Aktiv spellista"
+
+#: ../../templates/show_user.inc.php:68
+#: ../../templates/show_recently_played.inc.php:25
+msgid "Recently Played"
+msgstr "Senast spelade"
+
+#: ../../templates/show_update_items.inc.php:22
+msgid "Starting Update from Tags"
+msgstr "Påbörjar uppdatering från taggar"
+
+#: ../../templates/show_update_items.inc.php:26
+msgid "Update from Tags Complete"
+msgstr "Uppdatering från taggar färdig"
+
+#: ../../templates/show_update_items.inc.php:27
+#: ../../templates/show_confirmation.inc.php:27
+msgid "Continue"
+msgstr "Fortsätt"
+
+#: ../../templates/show_artists.inc.php:39
+#: ../../templates/show_artists.inc.php:66
+#: ../../templates/show_songs.inc.php:45 ../../templates/show_songs.inc.php:74
+#: ../../templates/show_democratic_playlist.inc.php:54
+#: ../../templates/show_democratic_playlist.inc.php:89
+#: ../../templates/show_playlist_songs.inc.php:47
+#: ../../templates/show_playlist_songs.inc.php:68
+msgid "Time"
+msgstr "Tid"
+
+#: ../../templates/show_artists.inc.php:40
+#: ../../templates/show_artists.inc.php:67
+#: ../../templates/show_songs.inc.php:49 ../../templates/show_songs.inc.php:76
+#: ../../templates/show_now_playing_row.inc.php:36
+#: ../../templates/show_albums.inc.php:47
+#: ../../templates/show_albums.inc.php:77
+#: ../../templates/show_search.inc.php:91
+msgid "Rating"
+msgstr "Betyg"
+
+#: ../../templates/show_songs.inc.php:40 ../../templates/show_songs.inc.php:69
+#: ../../templates/sidebar_home.inc.php:32
+#: ../../templates/sidebar_home.inc.php:73
+#: ../../templates/show_playlist_songs.inc.php:42
+#: ../../templates/show_playlist_songs.inc.php:63
+msgid "Song Title"
+msgstr "Låttitel"
+
+#: ../../templates/show_songs.inc.php:42 ../../templates/show_songs.inc.php:71
+#: ../../templates/show_edit_song.inc.php:37
+#: ../../templates/show_recently_played.inc.php:39
+#: ../../templates/show_recently_played.inc.php:102
+#: ../../templates/sidebar_home.inc.php:104
+#: ../../templates/show_now_playing_row.inc.php:52
+#: ../../templates/show_duplicates.inc.php:39
+#: ../../templates/show_duplicates.inc.php:77
+#: ../../templates/show_get_albumart.inc.php:36
+#: ../../templates/show_play_selected.inc.php:59
+#: ../../templates/show_albums.inc.php:43
+#: ../../templates/show_albums.inc.php:73
+#: ../../templates/show_search.inc.php:50
+#: ../../templates/show_playlist_songs.inc.php:44
+#: ../../templates/show_playlist_songs.inc.php:65
+#: ../../templates/show_disabled_songs.inc.php:35
+#: ../../templates/show_disabled_songs.inc.php:58
+msgid "Album"
+msgstr "Album"
+
+#: ../../templates/show_songs.inc.php:44 ../../templates/show_songs.inc.php:73
+#: ../../templates/show_localplay_playlist.inc.php:31
+#: ../../templates/show_localplay_playlist.inc.php:57
+#: ../../templates/show_edit_song.inc.php:61
+#: ../../templates/show_playlist_songs.inc.php:41
+#: ../../templates/show_playlist_songs.inc.php:46
+#: ../../templates/show_playlist_songs.inc.php:62
+#: ../../templates/show_playlist_songs.inc.php:67
+msgid "Track"
+msgstr "Spår"
+
+#: ../../templates/show_localplay_playlist.inc.php:53
+#: ../../templates/show_flagged.inc.php:49
+#: ../../templates/show_plugins.inc.php:57
+#: ../../templates/show_localplay_controllers.inc.php:59
+#: ../../templates/show_disabled_songs.inc.php:52
+#: ../../templates/show_manage_shoutbox.inc.php:54
+msgid "No Records Found"
+msgstr "Inga poster hittades"
+
+#: ../../templates/show_preference_box.inc.php:40
+#: ../../templates/show_preference_box.inc.php:70
+#: ../../templates/show_preference_admin.inc.php:30
+#: ../../templates/show_preference_admin.inc.php:49
+#: ../../templates/show_debug.inc.php:81
+#: ../../templates/show_user_preferences.inc.php:36
+msgid "Preference"
+msgstr "Inställning"
+
+#: ../../templates/show_preference_box.inc.php:41
+#: ../../templates/show_preference_box.inc.php:71
+#: ../../templates/show_debug.inc.php:37 ../../templates/show_debug.inc.php:82
+#: ../../templates/show_user_preferences.inc.php:37
+msgid "Value"
+msgstr "Värde"
+
+#: ../../templates/show_preference_box.inc.php:43
+#: ../../templates/show_preference_box.inc.php:73
+msgid "Apply to All"
+msgstr "Utför för alla"
+
+#: ../../templates/show_preference_box.inc.php:44
+#: ../../templates/show_preference_box.inc.php:74
+msgid "Access Level"
+msgstr "Behörighetsnivå"
+
+#: ../../templates/header.inc.php:36
+msgid "Ampache Recently Played"
+msgstr "Senast spelade i Ampache"
+
+#: ../../templates/header.inc.php:67
+msgid "Log out"
+msgstr "Logga ut"
+
+#: ../../templates/header.inc.php:83
+msgid "Error Config File Out of Date"
+msgstr "Fel: Konfigurationsfilen utdaterad"
+
+#: ../../templates/show_user_registration.inc.php:29
+#: ../../templates/show_user_registration.inc.php:36
+#: ../../templates/show_user_activate.inc.php:29
+#: ../../templates/show_user_activate.inc.php:36
+#: ../../templates/show_registration_confirmation.inc.php:29
+msgid "Registration"
+msgstr "Registrering"
+
+#: ../../templates/show_user_registration.inc.php:54
+msgid "User Agreement"
+msgstr "Användarvillkor"
+
+#: ../../templates/show_user_registration.inc.php:63
+msgid "I Accept"
+msgstr "Jag godkänner"
+
+#: ../../templates/show_user_registration.inc.php:69
+msgid "User Information"
+msgstr "Användarinformation"
+
+#: ../../templates/show_user_registration.inc.php:92
+#: ../../templates/show_edit_user.inc.php:44
+#: ../../templates/show_add_user.inc.php:44
+#: ../../templates/show_account.inc.php:33
+msgid "E-mail"
+msgstr "E-post"
+
+#: ../../templates/show_user_registration.inc.php:131
+msgid "Register User"
+msgstr "Registrera användare"
+
+#: ../../templates/show_edit_album.inc.php:23
+msgid "Edit Album"
+msgstr "Redigera album"
+
+#: ../../templates/show_edit_album.inc.php:33
+#: ../../templates/show_edit_song.inc.php:67
+#: ../../templates/show_play_selected.inc.php:61
+#: ../../templates/show_albums.inc.php:46
+#: ../../templates/show_albums.inc.php:76
+#: ../../templates/show_search.inc.php:60
+msgid "Year"
+msgstr "År"
+
+#: ../../templates/show_edit_album.inc.php:41
+#: ../../templates/show_edit_song.inc.php:81
+#: ../../templates/show_edit_artist.inc.php:35
+msgid "Flag for Retagging"
+msgstr "Flagga för omtaggning"
+
+#: ../../templates/show_edit_album.inc.php:47
+msgid "Update Album"
+msgstr "Uppdatera album"
+
+#: ../../templates/show_install.inc.php:39
+#: ../../templates/show_install_lang.inc.php:39
+#: ../../templates/show_install_lang.inc.php:53
+msgid "Requirements"
+msgstr "Krav"
+
+#: ../../templates/show_install.inc.php:45
+#: ../../templates/show_install_lang.inc.php:45
+#: ../../templates/show_install_config.inc.php:43
+msgid ""
+"Your webserver has read access to the /sql/ampache.sql file and the /config/"
+"ampache.cfg.php.dist file"
+msgstr ""
+"Din webbserver har lästillgång till filen /sql/ampache.sql och filen /config/"
+"ampache.cfg.php.dist"
+
+#: ../../templates/show_install.inc.php:55
+msgid ""
+"This step creates and inserts the Ampache database, as such please provide a "
+"mysql account with database creation rights. This step may take a while "
+"depending upon the speed of your computer"
+msgstr ""
+"Detta steg skapar och lägger till data i Ampache-databasen så du bör "
+"tillhandahålla ett MySQL-konto med behörighet att skapa databaser. Detta "
+"steg kan ta lite tid beroende på hastigheten på din dator"
+
+#: ../../templates/show_install.inc.php:57
+#: ../../templates/show_install_config.inc.php:50
+msgid "Step 2 - Creating the Ampache.cfg.php file"
+msgstr "Steg 2 - Skapa filen Ampache.cfg.php"
+
+#: ../../templates/show_install.inc.php:62
+msgid "Insert Ampache Database"
+msgstr "Infoga Ampache-databas"
+
+#: ../../templates/show_install.inc.php:66
+#: ../../templates/show_install_config.inc.php:65
+msgid "Desired Database Name"
+msgstr "Önskat databasnamn"
+
+#: ../../templates/show_install.inc.php:70
+#: ../../templates/show_install_config.inc.php:69
+msgid "MySQL Hostname"
+msgstr "MySQL-värdnamn"
+
+#: ../../templates/show_install.inc.php:74
+msgid "MySQL Administrative Username"
+msgstr "Administrativ MySQL-användare"
+
+#: ../../templates/show_install.inc.php:78
+msgid "MySQL Administrative Password"
+msgstr "Lösenord för administrativ MySQL-användare"
+
+#: ../../templates/show_install.inc.php:82
+msgid "Create Database User for New Database"
+msgstr "Skapa databasanvändare för ny databas"
+
+#: ../../templates/show_install.inc.php:86
+msgid "Ampache Database Username"
+msgstr "Användare för Ampache-databas"
+
+#: ../../templates/show_install.inc.php:90
+msgid "Ampache Database User Password"
+msgstr "Lösenord för Ampache-databas"
+
+#: ../../templates/show_install.inc.php:94
+msgid "Overwrite Existing"
+msgstr "Skriv över befintlig"
+
+#: ../../templates/show_install.inc.php:98
+msgid "Use Existing Database"
+msgstr "Använd befintlig databas"
+
+#: ../../templates/show_install.inc.php:103
+msgid "Insert Database"
+msgstr "Lägg till databas"
+
+#: ../../templates/show_install_lang.inc.php:52
+msgid "System Checks"
+msgstr "Systemkontroller"
+
+#: ../../templates/show_install_lang.inc.php:54
+#: ../../templates/show_test.inc.php:45
+msgid "PHP Version"
+msgstr "PHP-version"
+
+#: ../../templates/show_install_lang.inc.php:64
+#: ../../templates/show_test.inc.php:64
+msgid "Mysql for PHP"
+msgstr "MySQL för PHP"
+
+#: ../../templates/show_install_lang.inc.php:78
+#: ../../templates/show_test.inc.php:83
+msgid "PHP Session Support"
+msgstr "PHP-sessionstöd"
+
+#: ../../templates/show_install_lang.inc.php:88
+#: ../../templates/show_test.inc.php:102
+msgid "PHP ICONV Support"
+msgstr "PHP ICONV-stöd"
+
+#: ../../templates/show_install_lang.inc.php:98
+#: ../../templates/show_test.inc.php:120
+msgid "PHP PCRE Support"
+msgstr "PHP PCRE-stöd"
+
+#: ../../templates/show_install_lang.inc.php:108
+#: ../../templates/show_test.inc.php:137
+msgid "PHP PutENV Support"
+msgstr "PHP PutENV-stöd"
+
+#: ../../templates/show_install_lang.inc.php:119
+msgid "Option"
+msgstr "Alternativ"
+
+#: ../../templates/show_install_lang.inc.php:120
+#: ../../templates/show_debug.inc.php:68
+msgid "Gettext Support"
+msgstr "Gettext-stöd"
+
+#: ../../templates/show_install_lang.inc.php:123
+msgid "WARNING: This server will use gettext emulator."
+msgstr "VARNING: Denna server kommer att använda gettext-emulatorn."
+
+#: ../../templates/show_install_lang.inc.php:129
+msgid "Mbstring Support"
+msgstr "Mbstring-stöd"
+
+#: ../../templates/show_install_lang.inc.php:141
+msgid "Choose installation language."
+msgstr "Välj installationsspråk."
+
+#: ../../templates/show_install_lang.inc.php:162
+msgid "Start configuration"
+msgstr "Påbörja konfiguration"
+
+#: ../../templates/show_install_lang.inc.php:168
+msgid "Ampache does not <strong>run</strong> correctly by this server."
+msgstr "Ampache <strong>kör inte</strong> korrekt enligt denna server."
+
+#: ../../templates/show_install_lang.inc.php:169
+msgid "Please contact your server administrator, and fix them."
+msgstr "Kontakta din serveradministratör och rätta till dem."
+
+#: ../../templates/show_add_playlist.inc.php:24
+msgid "Create a new playlist"
+msgstr "Skapa en ny spellista"
+
+#: ../../templates/show_add_playlist.inc.php:42
+#: ../../templates/show_create_democratic.inc.php:53
+#: ../../templates/show_add_shout.inc.php:41
+msgid "Create"
+msgstr "Skapa"
+
+#: ../../templates/show_edit_song.inc.php:23
+msgid "Edit Song"
+msgstr "Redigera låt"
+
+#: ../../templates/show_edit_song.inc.php:31
+#: ../../templates/show_duplicate.inc.php:33
+#: ../../templates/show_search.inc.php:40
+#: ../../templates/show_disabled_songs.inc.php:34
+#: ../../templates/show_disabled_songs.inc.php:57
+msgid "Title"
+msgstr "Titel"
+
+#: ../../templates/show_edit_song.inc.php:40
+#: ../../templates/show_edit_song.inc.php:48
+#: ../../templates/show_edit_song.inc.php:56
+#: ../../templates/show_rename_artist.inc.php:33
+#: ../../templates/show_search.inc.php:106
+msgid "OR"
+msgstr "ELLER"
+
+#: ../../templates/show_edit_song.inc.php:88
+msgid "Update Song"
+msgstr "Uppdatera låt"
+
+#: ../../templates/footer.inc.php:25
+msgid "Using Old Password Encryption, Please Reset your Password"
+msgstr "Använder gammal lösenordskryptering. Nollställ ditt lösenord"
+
+#: ../../templates/footer.inc.php:32
+msgid "Queries:"
+msgstr "Frågor:"
+
+#: ../../templates/footer.inc.php:32
+msgid "Cache Hits:"
+msgstr "Cacheträffar:"
+
+#: ../../templates/show_edit_catalog.inc.php:22
+#, php-format
+msgid "Settings for %s"
+msgstr "Inställningar för %s"
+
+#: ../../templates/show_edit_catalog.inc.php:51
+msgid "Filename pattern"
+msgstr "Filnamnsmönster"
+
+#: ../../templates/show_edit_catalog.inc.php:68
+msgid "Save Catalog Settings"
+msgstr "Spara kataloginställningar"
+
+#: ../../templates/show_edit_access.inc.php:22
+msgid "Edit ACL"
+msgstr "Redigera behörighet"
+
+#: ../../templates/show_edit_access.inc.php:30
+#: ../../templates/show_add_access.inc.php:63
+msgid "ACL Type"
+msgstr "Behörighetstyp"
+
+#: ../../templates/show_edit_access.inc.php:34
+#: ../../templates/show_add_access.inc.php:66
+msgid "Stream Access"
+msgstr "Strömmande åtkomst"
+
+#: ../../templates/show_edit_access.inc.php:35
+#: ../../templates/show_add_access.inc.php:67
+msgid "Web Interface"
+msgstr "Webbgränssnitt"
+
+#: ../../templates/show_edit_access.inc.php:36
+#: ../../templates/show_add_access.inc.php:68
+msgid "Local Network Definition"
+msgstr "Lokal nätverksdefinition"
+
+#: ../../templates/show_edit_access.inc.php:37
+#: ../../templates/show_add_access.inc.php:69
+msgid "RPC"
+msgstr "RPC"
+
+#: ../../templates/show_edit_access.inc.php:43
+#: ../../templates/show_add_access.inc.php:32
+msgid "Start IP Address"
+msgstr "Från IP-adress"
+
+#: ../../templates/show_edit_access.inc.php:50
+#: ../../templates/show_add_access.inc.php:39
+msgid "End IP Address"
+msgstr "Till IP-adress"
+
+#: ../../templates/show_edit_access.inc.php:63
+#: ../../templates/show_add_access.inc.php:77
+msgid "Remote Key"
+msgstr "Fjärrnyckel"
+
+#: ../../templates/show_edit_access.inc.php:69
+#: ../../templates/show_preference_admin.inc.php:31
+#: ../../templates/show_preference_admin.inc.php:50
+#: ../../templates/show_manage_democratic.inc.php:37
+#: ../../templates/show_access_list.inc.php:48
+#: ../../templates/show_add_access.inc.php:52
+#: ../../templates/show_create_democratic.inc.php:38
+msgid "Level"
+msgstr "Nivå"
+
+#: ../../templates/show_random_albums.inc.php:22
+msgid "Refresh"
+msgstr "Uppdatera"
+
+#: ../../templates/show_random_albums.inc.php:48
+msgid "Play Album"
+msgstr "Spela upp album"
+
+#: ../../templates/show_recently_played.inc.php:38
+#: ../../templates/show_recently_played.inc.php:101
+#: ../../templates/show_now_playing_row.inc.php:45
+#: ../../templates/show_duplicates.inc.php:37
+#: ../../templates/show_duplicates.inc.php:75
+#: ../../templates/show_democratic_playlist.inc.php:53
+#: ../../templates/show_democratic_playlist.inc.php:88
+msgid "Song"
+msgstr "Låt"
+
+#: ../../templates/show_recently_played.inc.php:42
+#: ../../templates/show_recently_played.inc.php:104
+msgid "Last Played"
+msgstr "Senast spelad"
+
+#: ../../templates/show_user_recommendations.inc.php:29
+msgid "Recommended Artists"
+msgstr "Rekommenderade artister"
+
+#: ../../templates/show_user_recommendations.inc.php:40
+msgid "Recommended Albums"
+msgstr "Rekommenderade album"
+
+#: ../../templates/show_user_recommendations.inc.php:51
+msgid "Recommended Songs"
+msgstr "Rekommenderade låtar"
+
+#: ../../templates/show_ip_history.inc.php:23
+#, php-format
+msgid "%s IP History"
+msgstr "IP-historik för %s"
+
+#: ../../templates/show_ip_history.inc.php:26
+msgid "Show Unique"
+msgstr "Visa unika"
+
+#: ../../templates/show_ip_history.inc.php:28
+#: ../../templates/show_admin_info.inc.php:38
+msgid "Show All"
+msgstr "Visa alla"
+
+#: ../../templates/show_ip_history.inc.php:37
+#: ../../templates/show_ip_history.inc.php:51
+msgid "Date"
+msgstr "Datum"
+
+#: ../../templates/show_ip_history.inc.php:38
+#: ../../templates/show_ip_history.inc.php:52
+msgid "IP Address"
+msgstr "IP-adress"
+
+#: ../../templates/sidebar.inc.php:30
+#: ../../templates/sidebar_modules.inc.php:25
+msgid "Modules"
+msgstr "Moduler"
+
+#: ../../templates/sidebar.inc.php:61
+msgid "Logout"
+msgstr "Logga ut"
+
+#: ../../templates/show_import_playlist.inc.php:23
+msgid "Importing a Playlist from a File"
+msgstr "Importerar en spellista från en fil"
+
+#: ../../templates/show_import_playlist.inc.php:28
+#: ../../templates/show_duplicates.inc.php:43
+#: ../../templates/show_duplicates.inc.php:81
+#: ../../templates/show_search.inc.php:66
+#: ../../templates/show_disabled_songs.inc.php:37
+#: ../../templates/show_disabled_songs.inc.php:60
+msgid "Filename"
+msgstr "Filnamn"
+
+#: ../../templates/show_import_playlist.inc.php:35
+msgid "Playlist Type"
+msgstr "Typ av spellista"
+
+#: ../../templates/show_import_playlist.inc.php:47
+msgid "Import Playlist"
+msgstr "Importera spellista"
+
+#: ../../templates/show_genre.inc.php:29
+#, php-format
+msgid "Viewing %s Genre"
+msgstr "Visar genren %s"
+
+#: ../../templates/show_mail_users.inc.php:23
+msgid "Send E-mail to Users"
+msgstr "Skicka e-post till användarna"
+
+#: ../../templates/show_mail_users.inc.php:27
+msgid "Mail to"
+msgstr "Skicka till"
+
+#: ../../templates/show_mail_users.inc.php:33
+msgid "Inactive Users"
+msgstr "Inaktiva användare"
+
+#: ../../templates/show_mail_users.inc.php:42
+#: ../../templates/show_local_catalog_info.inc.php:24
+msgid "Catalog Statistics"
+msgstr "Katalogstatistik"
+
+#: ../../templates/show_mail_users.inc.php:46
+#: ../../templates/show_all_popular.inc.php:29
+#: ../../templates/show_stats_popular.inc.php:25
+msgid "Most Popular Albums"
+msgstr "Mest populära album"
+
+#: ../../templates/show_mail_users.inc.php:53
+msgid "Latest Artist Additions"
+msgstr "Senaste tillagda artister"
+
+#: ../../templates/show_mail_users.inc.php:57
+#: ../../templates/show_all_popular.inc.php:26
+#: ../../templates/show_stats_popular.inc.php:31
+msgid "Most Popular Artists"
+msgstr "Mest populära artister"
+
+#: ../../templates/show_mail_users.inc.php:64
+msgid "Latest Album Additions"
+msgstr "Senaste tillagda album"
+
+#: ../../templates/show_mail_users.inc.php:68
+#: ../../templates/show_all_popular.inc.php:38
+msgid "Most Popular Songs"
+msgstr "Mest populära låtar"
+
+#: ../../templates/show_mail_users.inc.php:74
+msgid "Flagged Songs"
+msgstr "Flaggade låtar"
+
+#: ../../templates/show_mail_users.inc.php:78
+#: ../../templates/show_admin_info.inc.php:34
+msgid "Disabled Songs"
+msgstr "Inaktiverade låtar"
+
+#: ../../templates/show_mail_users.inc.php:86
+msgid "Most Popular Threshold in days"
+msgstr "Tröskelvärde för mest populära i dagar"
+
+#: ../../templates/show_mail_users.inc.php:97
+msgid "Subject"
+msgstr "Ämne"
+
+#: ../../templates/show_mail_users.inc.php:104
+msgid "Message"
+msgstr "Meddelande"
+
+#: ../../templates/show_mail_users.inc.php:112
+msgid "Send Mail"
+msgstr "Skicka e-post"
+
+#: ../../templates/sidebar_home.inc.php:24
+msgid "Browse"
+msgstr "Bläddra"
+
+#: ../../templates/sidebar_home.inc.php:41
+msgid "Filters"
+msgstr "Filter"
+
+#: ../../templates/sidebar_home.inc.php:45
+msgid "Starts With"
+msgstr "Börjar med"
+
+#: ../../templates/sidebar_home.inc.php:51
+msgid "Minimum Count"
+msgstr "Minimum antal"
+
+#: ../../templates/sidebar_home.inc.php:55
+msgid "Rated"
+msgstr "Betygsatt"
+
+#: ../../templates/sidebar_home.inc.php:59
+msgid "Unplayed"
+msgstr "Inte spelad"
+
+#: ../../templates/sidebar_home.inc.php:63
+#: ../../templates/show_artist.inc.php:55
+msgid "Show Art"
+msgstr "Visa omslagsbild"
+
+#: ../../templates/sidebar_home.inc.php:68
+msgid "All Playlists"
+msgstr "Alla spellistor"
+
+#: ../../templates/sidebar_home.inc.php:87
+msgid "Currently Playing"
+msgstr "Spelar just nu"
+
+#: ../../templates/sidebar_home.inc.php:107
+msgid "Advanced"
+msgstr "Avancerat"
+
+#: ../../templates/show_admin_info.inc.php:30
+msgid "Last Ten Flagged Records"
+msgstr "Senaste tio flaggade poster"
+
+#: ../../templates/show_object_rating.inc.php:34
+#: ../../templates/show_object_rating_static.inc.php:34
+msgid "Current rating: "
+msgstr "Aktuellt betyg: "
+
+#: ../../templates/show_object_rating.inc.php:36
+#: ../../templates/show_object_rating_static.inc.php:36
+msgid "not rated yet"
+msgstr "inte betygsatt än"
+
+#: ../../templates/show_object_rating.inc.php:38
+#: ../../templates/show_object_rating_static.inc.php:38
+#, php-format
+msgid "%s of 5"
+msgstr "%s av 5"
+
+#: ../../templates/show_democratic.inc.php:22
+#, php-format
+msgid "%s Playlist"
+msgstr "Spellistan %s"
+
+#: ../../templates/show_preference_admin.inc.php:22
+msgid "Preference Administration"
+msgstr "Administrera inställningar"
+
+#: ../../templates/show_edit_user.inc.php:23
+msgid "Editing existing User"
+msgstr "Redigerar befintlig användare"
+
+#: ../../templates/show_edit_user.inc.php:69
+#: ../../templates/show_add_user.inc.php:69
+msgid "User Access Level"
+msgstr "Behörighetsnivå"
+
+#: ../../templates/show_edit_user.inc.php:85
+msgid "Update User"
+msgstr "Uppdatera användare"
+
+#: ../../templates/show_local_catalog_info.inc.php:27
+msgid "Connected Users"
+msgstr "Anslutna användare"
+
+#: ../../templates/show_local_catalog_info.inc.php:28
+msgid "Total Users"
+msgstr "Totalt antal användare"
+
+#: ../../templates/show_local_catalog_info.inc.php:32
+msgid "Genres"
+msgstr "Genrer"
+
+#: ../../templates/show_local_catalog_info.inc.php:33
+msgid "Catalog Size"
+msgstr "Katalogstorlek"
+
+#: ../../templates/show_local_catalog_info.inc.php:34
+msgid "Catalog Time"
+msgstr "Totalt tid för katalog"
+
+#: ../../templates/show_duplicates.inc.php:22
+msgid "Duplicate Songs"
+msgstr "Dubblerade låtar"
+
+#: ../../templates/show_duplicates.inc.php:41
+#: ../../templates/show_duplicates.inc.php:79
+msgid "Bitrate"
+msgstr "Bitfrekvens"
+
+#: ../../templates/show_duplicates.inc.php:42
+#: ../../templates/show_duplicates.inc.php:80
+msgid "Size"
+msgstr "Storlek"
+
+#: ../../templates/show_flagged.inc.php:34
+#: ../../templates/show_flagged.inc.php:53
+#: ../../templates/show_manage_shoutbox.inc.php:34
+#: ../../templates/show_manage_shoutbox.inc.php:58
+msgid "Object"
+msgstr "Objekt"
+
+#: ../../templates/show_flagged.inc.php:38
+#: ../../templates/show_flagged.inc.php:57
+msgid "Status"
+msgstr "Status"
+
+#: ../../templates/show_song.inc.php:24
+msgid "Details"
+msgstr "Detaljer"
+
+#: ../../templates/show_rename_artist.inc.php:29
+#, php-format
+msgid "Rename %s"
+msgstr "Byt namn på %s"
+
+#: ../../templates/show_rename_artist.inc.php:35
+msgid "Insert current"
+msgstr "Lägg till nuvarande"
+
+#: ../../templates/show_rename_artist.inc.php:37
+msgid "Update id3 tags"
+msgstr "Uppdatera id3-taggar"
+
+#: ../../templates/show_rename_artist.inc.php:38
+msgid "Rename"
+msgstr "Byt namn"
+
+#: ../../templates/show_duplicate.inc.php:23
+#: ../../templates/show_duplicate.inc.php:42
+#: ../../templates/sidebar_modules.inc.php:33
+msgid "Find Duplicates"
+msgstr "Hitta dubbletter"
+
+#: ../../templates/show_duplicate.inc.php:27
+msgid "Search Type"
+msgstr "Söktyp"
+
+#: ../../templates/show_duplicate.inc.php:34
+msgid "Artist and Title"
+msgstr "Artist och titel"
+
+#: ../../templates/show_duplicate.inc.php:35
+msgid "Artist, Album and Title"
+msgstr "Artist, album och titel"
+
+#: ../../templates/show_duplicate.inc.php:37
+msgid "Search Disabled Songs"
+msgstr "Sök efter inaktiverade låtar"
+
+#: ../../templates/show_playlist.inc.php:26
+#, php-format
+msgid "%s %s Playlist"
+msgstr "Spellistan %s %s"
+
+#: ../../templates/show_playlist.inc.php:31
+msgid "Normalize Tracks"
+msgstr "Normalisera spår"
+
+#: ../../templates/show_playlist.inc.php:40
+#: ../../templates/show_playlist.inc.php:41
+msgid "Add All"
+msgstr "Lägg till alla"
+
+#: ../../templates/show_playlist.inc.php:44
+#: ../../templates/show_playlist.inc.php:45
+msgid "Add Random"
+msgstr "Lägg till slumpmässigt"
+
+#: ../../templates/show_debug.inc.php:23
+msgid "Debug Tools"
+msgstr "Felsökningsverktyg"
+
+#: ../../templates/show_debug.inc.php:25
+msgid "Generate Configuration"
+msgstr "Generera konfiguration"
+
+#: ../../templates/show_debug.inc.php:26
+msgid "Set Database Charset"
+msgstr "Ange teckenuppsättning för databas"
+
+#: ../../templates/show_debug.inc.php:29
+msgid "PHP Settings"
+msgstr "PHP-inställningar"
+
+#: ../../templates/show_debug.inc.php:36
+msgid "Setting"
+msgstr "Inställning"
+
+#: ../../templates/show_debug.inc.php:40
+msgid "Memory Limit"
+msgstr "Minnesgräns"
+
+#: ../../templates/show_debug.inc.php:44
+msgid "Maximum Execution Time"
+msgstr "Maximal exekveringstid"
+
+#: ../../templates/show_debug.inc.php:48
+msgid "Safe Mode"
+msgstr "Säkert läge"
+
+#: ../../templates/show_debug.inc.php:56
+msgid "Zlib Support"
+msgstr "Zlib-stöd"
+
+#: ../../templates/show_debug.inc.php:60
+msgid "GD Support"
+msgstr "GD-stöd"
+
+#: ../../templates/show_debug.inc.php:64
+msgid "Iconv Support"
+msgstr "Iconv-stöd"
+
+#: ../../templates/show_debug.inc.php:74
+msgid "Current Configuration"
+msgstr "Aktuell konfiguration"
+
+#: ../../templates/show_localplay_control.inc.php:25
+msgid "Previous"
+msgstr "Föregående"
+
+#: ../../templates/show_localplay_control.inc.php:26
+msgid "Stop"
+msgstr "Stoppa"
+
+#: ../../templates/show_localplay_control.inc.php:27
+msgid "Pause"
+msgstr "Pausa"
+
+#: ../../templates/show_localplay_control.inc.php:29
+#: ../../templates/list_header.inc.php:101
+msgid "Next"
+msgstr "Nästa"
+
+#: ../../templates/show_manage_democratic.inc.php:22
+msgid "Manage Democratic Playlists"
+msgstr "Hantera demokratiska spellistor"
+
+#: ../../templates/show_manage_democratic.inc.php:35
+#: ../../templates/show_create_democratic.inc.php:30
+msgid "Base Playlist"
+msgstr "Bas-spellista"
+
+#: ../../templates/show_manage_democratic.inc.php:36
+msgid "Cooldown"
+msgstr ""
+
+#: ../../templates/show_manage_democratic.inc.php:69
+msgid "Create New Playlist"
+msgstr "Skapa ny spellista"
+
+#: ../../templates/show_get_albumart.inc.php:23
+msgid "Customize Search"
+msgstr "Anpassa sökning"
+
+#: ../../templates/show_get_albumart.inc.php:44
+msgid "Direct URL to Image"
+msgstr "Direkt-url till bild"
+
+#: ../../templates/show_get_albumart.inc.php:52
+msgid "Local Image"
+msgstr "Lokal bild"
+
+#: ../../templates/show_get_albumart.inc.php:63
+msgid "Get Art"
+msgstr "Hämta omslag"
+
+#: ../../templates/show_plugins.inc.php:33
+#: ../../templates/show_plugins.inc.php:62
+#: ../../templates/show_localplay_controllers.inc.php:33
+#: ../../templates/show_localplay_controllers.inc.php:64
+msgid "Description"
+msgstr "Beskrivning"
+
+#: ../../templates/show_plugins.inc.php:34
+#: ../../templates/show_plugins.inc.php:63
+#: ../../templates/show_localplay_controllers.inc.php:34
+#: ../../templates/show_localplay_controllers.inc.php:65
+msgid "Version"
+msgstr "Version"
+
+#: ../../templates/show_plugins.inc.php:42
+#: ../../templates/show_localplay_controllers.inc.php:48
+msgid "Activate"
+msgstr "Aktivera"
+
+#: ../../templates/show_plugins.inc.php:46
+msgid "Deactivate"
+msgstr "Inaktivera"
+
+#: ../../templates/show_democratic_playlist.inc.php:39
+msgid "Playing from base Playlist"
+msgstr "Spelar upp från bas-spellista"
+
+#: ../../templates/show_democratic_playlist.inc.php:52
+#: ../../templates/show_democratic_playlist.inc.php:87
+msgid "Votes"
+msgstr "Röster"
+
+#: ../../templates/show_democratic_playlist.inc.php:68
+msgid "Remove Vote"
+msgstr "Ta bort röst"
+
+#: ../../templates/show_democratic_playlist.inc.php:70
+msgid "Add Vote"
+msgstr "Lägg till röst"
+
+#: ../../templates/show_all_popular.inc.php:32
+msgid "Most Popular Genres"
+msgstr "Mest populära genre"
+
+#: ../../templates/show_all_popular.inc.php:41
+msgid "Most Popular Live Streams"
+msgstr "Mest populära live-strömmar"
+
+#: ../../templates/show_all_popular.inc.php:44
+msgid "Most Popular Tags"
+msgstr "Mest populära taggar"
+
+#: ../../templates/show_edit_artist.inc.php:23
+msgid "Edit Artist"
+msgstr "Redigera artist"
+
+#: ../../templates/show_edit_artist.inc.php:41
+msgid "Update Artist"
+msgstr "Uppdatera artist"
+
+#: ../../templates/show_play_selected.inc.php:28
+msgid "Play Selected"
+msgstr "Spela upp markerad"
+
+#: ../../templates/show_play_selected.inc.php:31
+msgid "Download Selected"
+msgstr "Hämta markerade"
+
+#: ../../templates/show_play_selected.inc.php:40
+msgid "Set Track Numbers"
+msgstr "Ställ in spårnummer"
+
+#: ../../templates/show_play_selected.inc.php:41
+msgid "Remove Selected Tracks"
+msgstr "Ta bort markerade spår"
+
+#: ../../templates/show_play_selected.inc.php:47
+msgid "Add to"
+msgstr "Lägg till i"
+
+#: ../../templates/show_add_user.inc.php:23
+msgid "Adding a New User"
+msgstr "Lägger till en ny användare"
+
+#: ../../templates/show_export.inc.php:32
+#: ../../templates/show_add_live_stream.inc.php:61
+msgid "Catalog"
+msgstr "Katalog"
+
+#: ../../templates/show_export.inc.php:51
+msgid "Format"
+msgstr "Format"
+
+#: ../../templates/show_export.inc.php:61
+msgid "Export"
+msgstr "Exportera"
+
+#: ../../templates/show_embed_xspf.inc.php:54
+msgid "XSPF Player"
+msgstr "XSPF-spelare"
+
+#: ../../templates/show_albums.inc.php:41
+#: ../../templates/show_albums.inc.php:71
+msgid "Cover"
+msgstr "Omslag"
+
+#: ../../templates/show_album.inc.php:52
+msgid "Add Album"
+msgstr "Lägg till album"
+
+#: ../../templates/show_album.inc.php:56
+msgid "Add Random from Album"
+msgstr "Lägg till slumpmässigt från album"
+
+#: ../../templates/show_album.inc.php:61
+msgid "Reset Album Art"
+msgstr "Återställ albumomslag"
+
+#: ../../templates/show_album.inc.php:66
+msgid "Find Album Art"
+msgstr "Hitta albumomslag"
+
+#: ../../templates/show_album.inc.php:71
+#: ../../templates/show_artist.inc.php:45
+msgid "Update from tags"
+msgstr "Uppdatera från taggar"
+
+#: ../../templates/show_album.inc.php:77
+#: ../../templates/show_song_row.inc.php:45
+#: ../../templates/show_artist.inc.php:51
+#: ../../templates/show_playlist_song_row.inc.php:33
+msgid "Download"
+msgstr "Hämta"
+
+#: ../../templates/show_users.inc.php:39
+#: ../../templates/show_users.inc.php:104
+msgid "Fullname"
+msgstr "Fullständigt namn"
+
+#: ../../templates/show_users.inc.php:41
+#: ../../templates/show_users.inc.php:106
+msgid "Registration Date"
+msgstr "Registreringsdatum"
+
+#: ../../templates/show_users.inc.php:44
+#: ../../templates/show_users.inc.php:109
+msgid "Last Ip"
+msgstr "Senaste Ip"
+
+#: ../../templates/show_users.inc.php:47
+#: ../../templates/show_users.inc.php:112
+msgid "On-line"
+msgstr "Ansluten"
+
+#: ../../templates/show_object_rating_static.inc.php:44
+msgid "out of"
+msgstr "utav"
+
+#: ../../templates/show_verify_catalog.inc.php:23
+#, php-format
+msgid "Updating the %s catalog"
+msgstr "Uppdaterar %s-katalogen"
+
+#: ../../templates/show_verify_catalog.inc.php:24
+msgid "songs found checking tag information."
+msgstr "låtar hittades, kontrollerar tagginformation."
+
+#: ../../templates/show_verify_catalog.inc.php:25
+msgid "Verifed"
+msgstr "Verifierade"
+
+#: ../../templates/show_edit_artist_row.inc.php:32
+#: ../../templates/show_edit_live_stream_row.inc.php:52
+#: ../../templates/show_edit_album_row.inc.php:48
+#: ../../templates/show_edit_song_row.inc.php:45
+#: ../../templates/show_edit_playlist_row.inc.php:38
+#: ../../templates/show_edit_playlist_song_row.inc.php:38
+msgid "Save Changes"
+msgstr "Spara ändringar"
+
+#: ../../templates/show_big_art.inc.php:33
+msgid "Click to close window"
+msgstr "Klicka för att stänga fönster"
+
+#: ../../templates/show_artist.inc.php:22
+#, php-format
+msgid "Albums by %s"
+msgstr "Album av %s"
+
+#: ../../templates/show_artist.inc.php:25
+#, php-format
+msgid "%s by %s"
+msgstr "%s av %s"
+
+#: ../../templates/show_artist.inc.php:35
+#, php-format
+msgid "Show All Songs By %s"
+msgstr "Visa alla låtar av %s"
+
+#: ../../templates/show_artist.inc.php:38
+#, php-format
+msgid "Add All Songs By %s"
+msgstr "Lägg till alla låtar av %s"
+
+#: ../../templates/show_artist.inc.php:41
+#, php-format
+msgid "Add Random Songs By %s"
+msgstr "Lägg till slumpmässiga låtar av %s"
+
+#: ../../templates/list_header.inc.php:100
+msgid "Prev"
+msgstr "Föreg"
+
+#: ../../templates/show_edit_shout.inc.php:23
+msgid "Edit existing Shoutbox Post"
+msgstr "Redigera befintligt chattinlägg"
+
+#: ../../templates/show_edit_shout.inc.php:28
+#, php-format
+msgid "Created by: %s for %s"
+msgstr "Skapad av: %s för %s"
+
+#: ../../templates/show_edit_shout.inc.php:31
+#: ../../templates/show_add_shout.inc.php:27
+msgid "Comment:"
+msgstr "Kommentar:"
+
+#: ../../templates/show_edit_shout.inc.php:37
+#: ../../templates/show_add_shout.inc.php:34
+msgid "Make Sticky"
+msgstr "Gör klistrig"
+
+#: ../../templates/show_denied.inc.php:38
+msgid ""
+"You've been redirected to this page because you do not have access to this "
+"function."
+msgstr ""
+"Du har omdirigerats till denna sida därför att du inte har åtkomst till "
+"denna funktion."
+
+#: ../../templates/show_denied.inc.php:39
+msgid ""
+"If you believe this is an error please contact an Ampache administrator."
+msgstr "Kontakta en Ampache-administratör om du tror att detta är ett fel."
+
+#: ../../templates/show_denied.inc.php:40
+msgid "This event has been logged"
+msgstr "Denna händelse har loggats"
+
+#: ../../templates/show_denied.inc.php:44
+msgid ""
+"You've been redirected to this page because you've attempted to access a "
+"function that is disabled in the demo."
+msgstr ""
+"Du har omdirigerats till denna sida därför att du har försökt att komma åt "
+"en funktion som är inaktiverad i demonstrationen."
+
+#: ../../templates/show_denied.inc.php:45
+msgid ""
+"Functions are disabled in the demo because previous users of the demo have "
+"used the functionality to post inappropriate materials"
+msgstr ""
+"Funktioner är inaktiverade i demonstrationen därför att tidigare användare "
+"har använt funktionen för att posta olämpligt material"
+
+#: ../../templates/sidebar_preferences.inc.php:18
+msgid "Account"
+msgstr "Konto"
+
+#: ../../templates/sidebar_preferences.inc.php:22
+msgid "Server Config"
+msgstr "Serverkonfiguration"
+
+#: ../../templates/show_account.inc.php:39
+msgid "New Password"
+msgstr "Nytt lösenord"
+
+#: ../../templates/show_account.inc.php:52
+#: ../../templates/show_manage_catalogs.inc.php:33
+msgid "Clear Stats"
+msgstr "Töm statistik"
+
+#: ../../templates/show_account.inc.php:62
+msgid "Update Account"
+msgstr "Uppdatera konto"
+
+#: ../../templates/show_live_streams.inc.php:37
+#: ../../templates/show_live_streams.inc.php:59
+#: ../../templates/show_edit_live_stream_row.inc.php:29
+#: ../../templates/show_add_live_stream.inc.php:55
+msgid "Callsign"
+msgstr "Kortnamn"
+
+#: ../../templates/show_live_streams.inc.php:38
+#: ../../templates/show_live_streams.inc.php:60
+#: ../../templates/show_edit_live_stream_row.inc.php:30
+#: ../../templates/show_add_live_stream.inc.php:49
+msgid "Frequency"
+msgstr "Frekvens"
+
+#: ../../templates/show_live_streams.inc.php:39
+#: ../../templates/show_live_streams.inc.php:61
+#: ../../templates/show_search.inc.php:54
+msgid "Tag"
+msgstr "Tagg"
+
+#: ../../templates/show_search.inc.php:26
+msgid "Search Ampache"
+msgstr "Sök i Ampache"
+
+#: ../../templates/show_search.inc.php:30
+msgid "Keywords"
+msgstr "Nyckelord"
+
+#: ../../templates/show_search.inc.php:72
+msgid "Played"
+msgstr "Spelad"
+
+#: ../../templates/show_search.inc.php:76
+msgid "Yes"
+msgstr "Ja"
+
+#: ../../templates/show_search.inc.php:77
+msgid "No"
+msgstr "Nej"
+
+#: ../../templates/show_search.inc.php:80
+msgid "Min Bitrate"
+msgstr "Min bitfrekvens"
+
+#: ../../templates/show_search.inc.php:95
+msgid "One Star"
+msgstr "En stjärna"
+
+#: ../../templates/show_search.inc.php:96
+msgid "Two Stars"
+msgstr "Två stjärnor"
+
+#: ../../templates/show_search.inc.php:97
+msgid "Three Stars"
+msgstr "Tre stjärnor"
+
+#: ../../templates/show_search.inc.php:98
+msgid "Four Stars"
+msgstr "Fyra stjärnor"
+
+#: ../../templates/show_search.inc.php:99
+msgid "Five Stars"
+msgstr "Fem stjärnor"
+
+#: ../../templates/show_search.inc.php:102
+msgid "Operator"
+msgstr "Operator"
+
+#: ../../templates/show_search.inc.php:105
+msgid "AND"
+msgstr "OCH"
+
+#: ../../templates/show_search.inc.php:111
+msgid "Method"
+msgstr "Metod"
+
+#: ../../templates/show_search.inc.php:114
+msgid "Fuzzy"
+msgstr "Luddig"
+
+#: ../../templates/show_search.inc.php:115
+msgid "Exact"
+msgstr "Exakt"
+
+#: ../../templates/show_search.inc.php:118
+msgid "Maximum Results"
+msgstr "Maximalt antal resultat"
+
+#: ../../templates/show_preferences.inc.php:28
+#: ../../templates/show_user_preferences.inc.php:28
+#, php-format
+msgid "Editing %s preferences"
+msgstr "Redigerar inställningar för %s"
+
+#: ../../templates/show_preferences.inc.php:34
+#: ../../templates/show_user_preferences.inc.php:50
+msgid "Update Preferences"
+msgstr "Uppdatera inställningarna"
+
+#: ../../templates/show_edit_live_stream_row.inc.php:27
+#: ../../templates/show_add_live_stream.inc.php:42
+msgid "Stream URL"
+msgstr "URL för ström"
+
+#: ../../templates/show_edit_live_stream_row.inc.php:28
+#: ../../templates/show_add_live_stream.inc.php:35
+msgid "Homepage"
+msgstr "Hemsida"
+
+#: ../../templates/show_gather_art.inc.php:23
+msgid "Starting Album Art Search"
+msgstr "Startar sökning efter albumomslag"
+
+#: ../../templates/show_gather_art.inc.php:24
+msgid "Searched"
+msgstr "Genomsökta"
+
+#: ../../templates/show_add_live_stream.inc.php:24
+#: ../../templates/sidebar_modules.inc.php:42
+msgid "Add Radio Station"
+msgstr "Lägg till radiostation"
+
+#: ../../templates/show_test.inc.php:33
+msgid ""
+"You've reached this page because a configuration error has occured. Debug "
+"Information below"
+msgstr ""
+"Du har kommit till denna sida på grund av ett konfigurationsfel har "
+"inträffat. Felsökningsinformation finns nedan"
+
+#: ../../templates/show_test.inc.php:38
+msgid "CHECK"
+msgstr "KONTROLL"
+
+#: ../../templates/show_test.inc.php:40
+msgid "STATUS"
+msgstr "STATUS"
+
+#: ../../templates/show_test.inc.php:42
+msgid "DESCRIPTION"
+msgstr "BESKRIVNING"
+
+#: ../../templates/show_test.inc.php:60
+msgid ""
+"This tests to make sure that you are running a version of PHP that is known "
+"to work with Ampache."
+msgstr ""
+"Detta test kontrollerar om du kör en version av PHP som är känd att fungera "
+"med Ampache."
+
+#: ../../templates/show_test.inc.php:79
+msgid ""
+"This test checks to see if you have the mysql extensions loaded for PHP. "
+"These are required for Ampache to work."
+msgstr ""
+"Detta test kontrollerar om du har MySQL-utökningen inläst för PHP. Detta "
+"krävs för att Ampache ska fungera."
+
+#: ../../templates/show_test.inc.php:98
+msgid ""
+"This test checks to make sure that you have PHP session support enabled. "
+"Sessions are required for Ampache to work."
+msgstr ""
+"Detta test kontrollerar om du har PHP-sessionstöd aktiverat. Sessioner krävs "
+"för att Ampache ska fungera."
+
+#: ../../templates/show_test.inc.php:116
+msgid ""
+"This test checks to make sure you have Iconv support installed. Iconv "
+"support is required for Ampache"
+msgstr ""
+"Detta test kontrollerar om du har Iconv-stöd installerat. Iconv-stöd krävs "
+"av Ampache"
+
+#: ../../templates/show_test.inc.php:133
+msgid ""
+"This test makes sure you have PCRE support compiled into your version of "
+"PHP, this is required for Ampache."
+msgstr ""
+"Detta test kontrollerar om du har PCRE-sessionstöd inbyggt i din version av "
+"PHP. Detta krävs av Ampache."
+
+#: ../../templates/show_test.inc.php:150
+msgid ""
+"This test makes sure that PHP isn't running in SafeMode and that we are able "
+"to modify the memory limits. While not required, without these abilities "
+"some features of ampache may not work correctly"
+msgstr ""
+"Detta test försäkrar sig om att PHP inte kör i SafeMode och att vi kan ändra "
+"minnesgränserna. Det krävs inte men utan dessa förmågor kommer kanske vissa "
+"funktioner i Ampache inte att fungera korrekt"
+
+#: ../../templates/show_test.inc.php:154
+#: ../../templates/show_install_config.inc.php:89
+msgid "Ampache.cfg.php Exists"
+msgstr "Ampache.cfg.php finns redan"
+
+#: ../../templates/show_test.inc.php:167
+msgid ""
+"This attempts to read /config/ampache.cfg.php If this fails either the "
+"ampache.cfg.php is not in the correct locations or\n"
+"\tit is not currently readable by your webserver."
+msgstr ""
+"Detta försöker att läsa /config/ampache.cfg.php. Om det misslyckas är "
+"antingen ampache.cfg.php inte på rätt\n"
+"\tplats eller är för närvarande inte läsbar av din webbserver."
+
+#: ../../templates/show_test.inc.php:173
+#: ../../templates/show_install_config.inc.php:106
+msgid "Ampache.cfg.php Configured?"
+msgstr "Ampache.cfg.php konfigurerad?"
+
+#: ../../templates/show_test.inc.php:190
+msgid ""
+"This test makes sure that you have set all of the required configuration "
+"variables and that we are able to completely parse your config file"
+msgstr ""
+"Detta test ser till att du har ställt in alla nödvändiga "
+"konfigurationsvariabler och att vi kan fullständigt tolka din "
+"konfigurationsfil"
+
+#: ../../templates/show_test.inc.php:194
+msgid "DB Connection"
+msgstr "Databasanslutning"
+
+#: ../../templates/show_test.inc.php:210
+msgid ""
+"This attempts to connect to your database using the values from your ampache."
+"cfg.php"
+msgstr ""
+"Detta försöker att ansluta till din databas med värden från din ampache.cfg."
+"php"
+
+#: ../../templates/show_test.inc.php:214
+#, fuzzy
+msgid "DB Inserted"
+msgstr "Albumomslag lades till"
+
+#: ../../templates/show_test.inc.php:236
+#: ../../templates/show_install_config.inc.php:61
+msgid "Web Path"
+msgstr "Webbsökväg"
+
+#: ../../templates/show_clean_catalog.inc.php:23
+#, php-format
+msgid "Cleaning the %s Catalog"
+msgstr "Tömmer katalogen %s"
+
+#: ../../templates/show_clean_catalog.inc.php:25
+msgid "Checking"
+msgstr "Kontrollerar"
+
+#: ../../templates/sidebar_modules.inc.php:27
+msgid "Localplay Modules"
+msgstr "Moduler för lokal uppspelning"
+
+#: ../../templates/sidebar_modules.inc.php:28
+msgid "Available Plugins"
+msgstr "Tillgängliga insticksmoduler"
+
+#: ../../templates/sidebar_modules.inc.php:34
+msgid "Mail Users"
+msgstr "Skicka e-post"
+
+#: ../../templates/sidebar_modules.inc.php:35
+msgid "Manage Flagged"
+msgstr "Hantera flaggade"
+
+#: ../../templates/sidebar_modules.inc.php:36
+msgid "Show Disabled"
+msgstr "Visa inaktiverade"
+
+#: ../../templates/sidebar_modules.inc.php:39
+msgid "Information"
+msgstr "Information"
+
+#: ../../templates/sidebar_modules.inc.php:49
+msgid "Manage Playlist"
+msgstr "Hantera spellista"
+
+#: ../../templates/show_search_bar.inc.php:30
+msgid "Advanced Search"
+msgstr "Avancerad sökning"
+
+#: ../../templates/show_manage_catalogs.inc.php:28
+msgid "Gather All Art"
+msgstr "Samla in alla albumomslag"
+
+#: ../../templates/show_manage_catalogs.inc.php:38
+#, fuzzy
+msgid "Add From"
+msgstr "Lägg till i"
+
+#: ../../templates/show_manage_catalogs.inc.php:40
+#, fuzzy
+msgid "Update From"
+msgstr "Uppdatera från taggar"
+
+#: ../../templates/show_catalogs.inc.php:34
+#: ../../templates/show_catalogs.inc.php:50
+msgid "Last Verify"
+msgstr "Senast verifierad"
+
+#: ../../templates/show_catalogs.inc.php:35
+#: ../../templates/show_catalogs.inc.php:51
+msgid "Last Add"
+msgstr "Senast tillagd"
+
+#: ../../templates/show_localplay_add_instance.inc.php:24
+msgid "Add Localplay Instance"
+msgstr "Lägg till instans för lokal uppspelning"
+
+#: ../../templates/show_access_list.inc.php:29
+msgid "Ampache Access Control"
+msgstr "Ampache åtkomstkontroll"
+
+#: ../../templates/show_access_list.inc.php:32
+msgid ""
+"Since your catalog can be accessed remotely you may want to limit the access "
+"from remote sources so you are not in violation of copyright laws."
+msgstr ""
+"Eftersom din katalog kan kommas åt från nätverket så kanske du vill begränsa "
+"åtkomsten från fjärrkällor så att du inte bryter några upphovsrättslagar."
+
+#: ../../templates/show_access_list.inc.php:33
+msgid ""
+"By default your server will allow anyone with an account to stream music."
+msgstr ""
+"Som standard kommer din server att tillåta alla med ett konto att strömma "
+"musik."
+
+#: ../../templates/show_access_list.inc.php:34
+msgid ""
+"It will not allow any other Ampache servers to connect to it to share "
+"catalog information."
+msgstr ""
+"Den kommer inte att tillåta några andra Ampache-servrar att ansluta till den "
+"för att dela kataloginformation."
+
+#: ../../templates/show_access_list.inc.php:35
+msgid ""
+"Use tool below to add any server's IP address that you want to access your "
+"Ampache catalog or be able to stream from this server."
+msgstr ""
+"Använd verktyget nedan för att lägga till en servers IP-adress som du vill "
+"ska kunna komma åt din Ampache-katalog eller kunna strömma från denna server."
+
+#: ../../templates/show_access_list.inc.php:40
+msgid "Add Entry"
+msgstr "Lägg till post"
+
+#: ../../templates/show_access_list.inc.php:46
+msgid "Start Address"
+msgstr "Startadress"
+
+#: ../../templates/show_access_list.inc.php:47
+msgid "End Address"
+msgstr "Slutadress"
+
+#: ../../templates/show_access_list.inc.php:50
+msgid "Key"
+msgstr "Nyckel"
+
+#: ../../templates/show_add_access.inc.php:22
+msgid "Add Access for a Host"
+msgstr "Lägg till behörighet för en värd"
+
+#: ../../templates/show_add_access.inc.php:74
+msgid "RPC Options"
+msgstr "RPC-alternativ"
+
+#: ../../templates/show_add_access.inc.php:84
+msgid "Create ACL"
+msgstr "Skapa ACL"
+
+#: ../../templates/show_localplay_instances.inc.php:23
+msgid "Show Localplay Instances"
+msgstr "Visa instanser för lokal uppspelning"
+
+#: ../../templates/show_localplay_instances.inc.php:39
+msgid "Edit Instance"
+msgstr "Redigera instans"
+
+#: ../../templates/show_disabled_songs.inc.php:38
+#: ../../templates/show_disabled_songs.inc.php:61
+msgid "Addition Time"
+msgstr "Lades till"
+
+#: ../../templates/show_disabled_songs.inc.php:65
+msgid "Remove"
+msgstr "Ta bort"
+
+#: ../../templates/show_install_config.inc.php:52
+msgid ""
+"This steps takes the basic config values and generates the config file. It "
+"will prompt you to download the config file. Please put the downloaded "
+"config file in /config"
+msgstr ""
+"Detta steg tar emot de enklare konfigurationsvärdena och genererar "
+"konfigurationsfilen. Det kommer att tillfråga dig om att hämta ner "
+"konfigurationsfilen. Lägg den hämtade konfigurationsfilen i katalogen /config"
+
+#: ../../templates/show_install_config.inc.php:57
+msgid "Generate Config File"
+msgstr "Generera konfigurationsfil"
+
+#: ../../templates/show_install_config.inc.php:73
+msgid "MySQL Username"
+msgstr "MySQL-användarnamn"
+
+#: ../../templates/show_install_config.inc.php:77
+msgid "MySQL Password"
+msgstr "MySQL-lösenord"
+
+#: ../../templates/show_install_config.inc.php:82
+msgid "Write Config"
+msgstr "Skriv konfiguration"
+
+#: ../../templates/show_install_config.inc.php:127
+msgid "Check for Config"
+msgstr "Leta efter konfiguration"
+
+#: ../../templates/show_install_config.inc.php:133
+msgid "Continue to Step 3"
+msgstr "Fortsätt till steg 3"
+
+#: ../../templates/show_user_activate.inc.php:48
+msgid "User Activated"
+msgstr "Användare aktiverad"
+
+#: ../../templates/show_user_activate.inc.php:51
+#, php-format
+msgid "This User ID is activated and can be used %sLogin%s"
+msgstr "Detta användar-id är aktiverat och kan användas %sLogga in%s"
+
+#: ../../templates/show_user_activate.inc.php:54
+msgid "Validation Failed"
+msgstr "Validering misslyckades"
+
+#: ../../templates/show_user_activate.inc.php:55
+msgid "The validation key used isn't correct"
+msgstr "Valideringsnyckeln som användes är inte korrekt"
+
+#: ../../templates/show_create_democratic.inc.php:22
+msgid "Create Democratic Playlist"
+msgstr "Skapa demokratisk spellista"
+
+#: ../../templates/show_create_democratic.inc.php:34
+#, fuzzy
+msgid "Cooldown Time"
+msgstr "Totalt tid för katalog"
+
+#: ../../templates/show_create_democratic.inc.php:48
+msgid "Make Default"
+msgstr "Gör till standard"
+
+#: ../../templates/show_stats_newest.inc.php:22
+msgid "Newest Albums"
+msgstr "Senaste albumen"
+
+#: ../../templates/show_stats_newest.inc.php:26
+msgid "Newest Artists"
+msgstr "Senaste artisterna"
+
+#: ../../templates/show_add_shout.inc.php:23
+msgid "Post to Shoutbox"
+msgstr "Posta till chattruta"
+
+#: ../../templates/show_shoutbox.inc.php:22
+msgid "Shoutbox"
+msgstr "Chattruta"
+
+#: ../../templates/show_flag_row.inc.php:31
+msgid "Reject"
+msgstr "Vägra"
+
+#: ../../templates/show_localplay_edit_instance.inc.php:23
+msgid "Edit Localplay Instance"
+msgstr "Redigera instans för lokal uppspelning"
+
+#: ../../templates/show_localplay_edit_instance.inc.php:34
+msgid "Update Instance"
+msgstr "Uppdatera instans"
+
+#: ../../templates/show_registration_confirmation.inc.php:36
+msgid "Registration Complete"
+msgstr "Registrering färdig"
+
+#: ../../templates/show_registration_confirmation.inc.php:42
+msgid ""
+"Your account has been created. An activation key has been sent to the e-mail "
+"address you provided. Please check your e-mail for further information"
+msgstr ""
+"Ditt konto har skapats. En aktiveringsnyckel har skickats till den e-"
+"postadress som du angav. Kontrollera din e-post för ytterligare information"
+
+#: ../../templates/show_registration_confirmation.inc.php:44
+msgid "Return to Login Page"
+msgstr "Återgå till inloggningssidan"
+
+#: ../../templates/show_manage_shoutbox.inc.php:36
+#: ../../templates/show_manage_shoutbox.inc.php:60
+msgid "Sticky"
+msgstr "Klistrig"
+
+#: ../../templates/show_manage_shoutbox.inc.php:38
+#: ../../templates/show_manage_shoutbox.inc.php:62
+msgid "Date Added"
+msgstr "Lades till"
+
+#: ../../templates/show_search_options.inc.php:23
+msgid "Options"
+msgstr "Inställningar"
+
+#: ../../templates/show_search_options.inc.php:26
+msgid "Add Search Results"
+msgstr "Lägg till sökresultat"
+
+#: ../../search.php:38
+msgid "Error: No Keyword Entered"
+msgstr "Fel: Inget nyckelord angivit"
+
+#: ../../install.php:168
+msgid "Error: Config file not found or Unreadable"
+msgstr "Fel: Konfigurationsfilen hittades inte eller är oläsbar"
+
+#: ../../login.php:73
+msgid "User Disabled please contact Admin"
+msgstr "Användare inaktiverad. Kontakta administratören"
+
+#: ../../login.php:89
+msgid "Unable to create new account"
+msgstr "Kunde inte skapa nytt konto"
+
+#: ../../login.php:98
+msgid "No local account found"
+msgstr "Inget lokalt konto hittades"
+
+#: ../../login.php:115
+msgid "User Already Logged in"
+msgstr "Användaren redan inloggad"
+
+#: ../../preferences.php:40 ../../preferences.php:75
+msgid "Server"
+msgstr "Server"
+
+#: ../../preferences.php:107
+msgid "Error Update Failed"
+msgstr "Fel: Uppdateringen misslyckades"
+
+#: ../../preferences.php:112
+msgid "Your Account has been updated"
+msgstr "Ditt konto har uppdaterats"
+
+#: ../../update.php:47 ../../update.php:51
+msgid "Ampache Update"
+msgstr "Uppdatera Ampache"
+
+#: ../../update.php:64
+#, fuzzy
+msgid "Update Now!"
+msgstr "Uppdatera låt"
+
+#: ../../artists.php:181
+msgid "Show Artists starting with"
+msgstr "Visa artister som börjar med"
+
+#: ../../shout.php:41
+msgid "Invalid Object Selected"
+msgstr "Ogiltigt objekt markerat"
+
+#: ../../playlist.php:57
+msgid "Playlist Created"
+msgstr "Spellista skapad"
+
+#: ../../playlist.php:57
+msgid " has been created"
+msgstr " har skapats"
+
+#: ../../playlist.php:88
+msgid "Playlist Imported"
+msgstr "Spellista importerad"
+
+#: ../../playlist.php:117
+msgid "Empty Playlists Deleted"
+msgstr "Tomma spellistor togs bort"
+
+#: ../../register.php:73
+msgid "Error Captcha Required"
+msgstr "Fel: Captcha krävs"
+
+#: ../../register.php:80
+msgid "Error Captcha Failed"
+msgstr "Fel: Captcha misslyckades"
+
+#: ../../register.php:87
+msgid "You <U>must</U> accept the user agreement"
+msgstr "Du <U>måste</U> acceptera användarvillkoren"
+
+#: ../../register.php:92
+msgid "You did not enter a username"
+msgstr "Du angav inget användarnamn"
+
+#: ../../register.php:96
+msgid "Please fill in your full name (Firstname Lastname)"
+msgstr "Ange ditt fullständiga namn (Förnamn Efternamn)"
+
+#: ../../register.php:122
+msgid "You must enter a password"
+msgstr "Du måste ange ett lösenord"
+
+#: ../../register.php:126
+msgid "Your passwords do not match"
+msgstr "Dina lösenord stämmer inte överens"
+
+#: ../../register.php:158
+msgid "Error: Insert Failed"
+msgstr "Fel: Infogning misslyckades"
+
+#: ../../flag.php:45
+msgid "Item Flagged"
+msgstr "Objektet flaggat"
+
+#: ../../flag.php:45
+msgid "The specified item has been flagged"
+msgstr "Det angivna objektet har flaggats"
+
+#: ../../albums.php:32
+msgid "Album Art Cleared"
+msgstr "Albumomslag tömdes"
+
+#: ../../albums.php:32
+msgid "Album Art information has been removed from the database"
+msgstr "Information om omslagsbilder har tagits bort från databasen"
+
+#: ../../albums.php:39 ../../albums.php:56 ../../albums.php:129
+msgid "Album Art Not Located"
+msgstr "Albumomslag hittades inte"
+
+#: ../../albums.php:39 ../../albums.php:56 ../../albums.php:129
+#, fuzzy
+msgid ""
+"Album Art could not be located at this time. This may be due to write access "
+"error, or the file is not received correctly."
+msgstr ""
+"Omslagsbild kunde inte inte hittas just nu. Detta kan bero på skrivfel eller "
+"att filen inte har tagits emot korrekt."
+
+#: ../../albums.php:52 ../../albums.php:80
+msgid "Album Art Inserted"
+msgstr "Albumomslag lades till"
+
+#: ../../radio.php:50
+msgid "Radio Station Added"
+msgstr "Radiostation lades till"
+
+#: ../../democratic.php:52
+msgid "The Requested Playlist has been deleted."
+msgstr "Den begärda spellistan har tagits bort."
+
+#: ../../bin/print_tags.inc:66
+msgid ""
+"[print_tags.php.inc]\n"
+"This commandline script will display the tag information for the specified "
+"filename as it will \n"
+"appear to Ampache. \n"
+"        \n"
+msgstr ""
+"[print_tags.php.inc]\n"
+"Detta kommandoradsskript kommer att visa tagginformationen för angivet "
+"filnamn som det  \n"
+"kommer att visas i Ampache. \n"
+"        \n"
+
+#: ../../bin/print_tags.inc:72
+msgid "Filename:"
+msgstr "Filnamn:"
+
+#: Database words
+msgid "Allow Downloads"
+msgstr "Tillåt hämtningar"
+
+#: Database words
+msgid "Popular Threshold"
+msgstr "Tröskelvärde för popularitet"
+
+#: Database words
+msgid "Transcode Bitrate"
+msgstr "Bitfrekvens för omkodning"
+
+#: Database words
+msgid "Lock Songs"
+msgstr "Lås låtar"
+
+#: Database words
+msgid "Forces Http play regardless of port"
+msgstr "Tvingar http-uppspelning oavsett port"
+
+#: Database words
+msgid "Non-Standard Http Port"
+msgstr "Icke-standardport för http"
+
+#: Database words
+msgid "Localplay Type"
+msgstr "Typ av lokal uppspelning"
+
+#: Database words
+msgid "Type of Playback"
+msgstr "Typ av uppspelning"
+
+#: Database words
+msgid "Language"
+msgstr "Språk"
+
+#: Database words
+msgid "Theme"
+msgstr "Tema"
+
+#: Database words
+msgid "Album Ellipse Threshold"
+msgstr "Tröskelvärde för albumellips"
+
+#: Database words
+msgid "Artist Ellipse Threshold"
+msgstr "Tröskelvärde för artistellips"
+
+#: Database words
+msgid "Title Ellipse Threshold"
+msgstr "Tröskelvärde för titelellips"
+
+#: Database words
+msgid "Offset Limit"
+msgstr "Offsetgräns"
+
+#: Database words
+msgid "Localplay Access"
+msgstr "Åtkomst till lokal uppspelning"
+
+#: Database words
+msgid "Allow Streaming"
+msgstr "Tillåt strömmande"
+
+#: Database words
+msgid "Allow Democratic Play"
+msgstr "Tillåt demokratisk uppspelning"
+
+#: Database words
+msgid "Allow Localplay Play"
+msgstr "Tillåt lokal uppspelning"
+
+#: Database words
+msgid "Statistics Day Threshold"
+msgstr "Tröskelvärde för statistikdag"
+
+#: Database words
+msgid "Min Element Count"
+msgstr "Min elementantal"
+
+#: Database words
+msgid "Rate Limit"
+msgstr "Betygsgräns"
+
+#: Database words
+msgid "Playlist Method"
+msgstr "Spellistmetod"
+
+#: Database words
+msgid "Transcoding"
+msgstr "Omkodning"
+
+#: Database words
+msgid "User to track"
+msgstr ""
+
+#: Database words
+msgid "Streaming"
+msgstr "Strömmande"
+
+#: Database words
+msgid "Interface"
+msgstr "Gränssnitt"
+
+#: Database words
+msgid "System"
+msgstr "System"
+
+#~ msgid "Add Tag"
+#~ msgstr "Lägg till tagg"
+
+#~ msgid "Ampache Latest Artists Additions"
+#~ msgstr "Ampache - Senaste tillagda artister"
+
+#~ msgid "Ampache Latest Albums Additions"
+#~ msgstr "Ampache - Senaste tillagda album"
+
+#~ msgid "Ampache Most Popular Albums"
+#~ msgstr "Ampache - Mest populära album"
+
+#~ msgid "Ampache Most Popular Artists"
+#~ msgstr "Ampache - Mest populära artister"
+
+#~ msgid "Ampache Most Popular Songs"
+#~ msgstr "Ampache - Mest populära låtar"
+
+#~ msgid "Newest Genres"
+#~ msgstr "Senaste genrer"
+
+#~ msgid "From genre"
+#~ msgstr "Från genre"
+
+#~ msgid "Playlist Updated"
+#~ msgstr "Spellista uppdaterad"
+
+#~ msgid "has been updated and is now"
+#~ msgstr "har uppdaterats och är nu"
+
+#~ msgid "Starting Catalog Build"
+#~ msgstr "Startar katalogbyggnation"
+
+#~ msgid "Catalog Finished"
+#~ msgstr "Katalog färdig"
+
+#~ msgid "catalog"
+#~ msgstr "katalog"
+
+#~ msgid " FOUND"
+#~ msgstr " HITTADES"
+
+#~ msgid "Searching for new Album Art"
+#~ msgstr "Söker efter nytt albumomslag"
+
+#~ msgid "Album Art Already Found"
+#~ msgstr "Albumomslag redan hittat"
+
+#~ msgid "updated to"
+#~ msgstr "uppdaterad till"
+
+#~ msgid "Filesize"
+#~ msgstr "Filstorlek"
+
+#~ msgid "Error: Name Identical"
+#~ msgstr "Fel: Namnet är identiskt"
+
+#~ msgid "Show Genres starting with"
+#~ msgstr "Visa genre som börjar med"
+
+#~ msgid "No songs in this playlist."
+#~ msgstr "Inga låtar i denna spellista."
+
+#~ msgid "Show w/o art"
+#~ msgstr "Visa utan grafik"
+
+#~ msgid "Show all"
+#~ msgstr "Visa alla"
+
+#~ msgid "No Catalogs Found!"
+#~ msgstr "Inga kataloger hittades!"
+
+#~ msgid "hours"
+#~ msgstr "timmar"
+
+#~ msgid "Add a new user"
+#~ msgstr "Lägg till en ny användare"
+
+#~ msgid "English"
+#~ msgstr "Engelska"
+
+#~ msgid "British English"
+#~ msgstr "Britisk-engelska"
+
+#~ msgid "Turkish"
+#~ msgstr "Turkiska"
+
+#~ msgid "Simplified Chinese"
+#~ msgstr "Förenklad kinesiska"
+
+#, fuzzy
+#~ msgid "Catalog Created and Songs Indexed"
+#~ msgstr "Rensning av katalog färdig"
+
+#~ msgid "Do you really want to clear the statistics for this catalog?"
+#~ msgstr "Vill du verkligen rensa statistiken för denna katalog?"
+
+#~ msgid "Site"
+#~ msgstr "Platss"
+
+#~ msgid "Do you really want to delete this Access Record?"
+#~ msgstr "Vill du verkligen ta bort denna behörighetspost?"
+
+#~ msgid "Entry Deleted"
+#~ msgstr "Post borttagen"
+
+#~ msgid "Entry Added"
+#~ msgstr "Post tillagd"
+
+#~ msgid "Entry Updated"
+#~ msgstr "Post uppdaterad"
+
+#~ msgid "Module Activated"
+#~ msgstr "Modul aktiverad"
+
+#~ msgid "Are you sure you want to remove this module?"
+#~ msgstr "Är du säker på att du vill ta bort denna modul?"
+
+#~ msgid "Module Deactivated"
+#~ msgstr "Modul inaktiverad"
+
+#~ msgid "No Playlists Found"
+#~ msgstr "Inga spellistor hittades"
+
+#~ msgid "Select Best Guess"
+#~ msgstr "Välj bästa gissning"
+
+#~ msgid "Controls"
+#~ msgstr "Kontroller"
+
+#~ msgid "Users"
+#~ msgstr "Användare"
+
+#, fuzzy
+#~ msgid "Config"
+#~ msgstr "Skriv konfiguration"
+
+#~ msgid "Access List"
+#~ msgstr "Åtkomstkontroll"
+
+#~ msgid "Play All Songs By"
+#~ msgstr "Spela upp alla låtar av"
+
+#, fuzzy
+#~ msgid "Find duplicate artists"
+#~ msgstr "Hitta dubbletter"
+
+#~ msgid "Results Per Page"
+#~ msgstr "Resultat per sida"
+
+#~ msgid "Favorites"
+#~ msgstr "Favoriter"
+
+#~ msgid "description"
+#~ msgstr "beskrivning"
+
+#~ msgid "Module Name"
+#~ msgstr "Modulnamn"
+
+#~ msgid "Approve"
+#~ msgstr "Godkänn"
+
+#, fuzzy
+#~ msgid "Newest Live Stream Additions"
+#~ msgstr "Senaste artisterna"
+
+#~ msgid "Play This Playlist"
+#~ msgstr "Spela upp denna spellista"
+
+#~ msgid "Delete This Playlist"
+#~ msgstr "Ta bort denna spellista"
+
+#~ msgid "Import From File"
+#~ msgstr "Importera från fil"
+
+#~ msgid "Delete Empty Playlists"
+#~ msgstr "Ta bort tomma spellistor"
+
+#~ msgid "Disable Songs"
+#~ msgstr "Inaktivera låtar"
+
+#~ msgid "Recommendations"
+#~ msgstr "Rekommendationer"
+
+#~ msgid "Show Albums starting with"
+#~ msgstr "Visa album som börjar med"
+
+#, fuzzy
+#~ msgid "Show Titles Starting With"
+#~ msgstr "Visa artister som börjar med"
+
+#~ msgid "Lists"
+#~ msgstr "Listor"
+
+#~ msgid "Rating Updated"
+#~ msgstr "Betyg uppdaterat"
+
+#~ msgid "Your rating for this object has been updated"
+#~ msgstr "Ditt betyg för detta objekt har uppdaterats"
+
+#~ msgid "Error: Password Does Not Match or Empty"
+#~ msgstr "Fel: Lösenordet stämmer inte eller är blankt"
+
+#~ msgid "Password Updated"
+#~ msgstr "Lösenordet uppdaterat"
+
+#~ msgid "Playlist Cleared"
+#~ msgstr "Spellista tömd"
+
+#~ msgid "Return"
+#~ msgstr "Återgå"
+
+#~ msgid "No user with this name registered"
+#~ msgstr "Ingen användare med detta namn är registrerad"
+
+#~ msgid "Are you sure you want to delete this playlist"
+#~ msgstr "Är du säker på att du vill ta bort denna spellista"
+
+#~ msgid "Confirm Action"
+#~ msgstr "Bekräfta åtgärd"
