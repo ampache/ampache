@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2007 Ampache.org
+ Copyright (c) Ampache.org
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
@@ -73,6 +73,11 @@ switch ($_REQUEST['action']) {
 		$results['track_' . $track['id']] = ob_get_clean(); 
 	break;	
 	case 'create':
+		if (!Access::check('interface','25')) { 
+			debug_event('DENIED','Error:' . $GLOBALS['user']->username . ' does not have user access, unable to create playlist','1'); 
+			break; 
+		} 
+
 		// Pull the current active playlist items
 		$objects = $GLOBALS['user']->playlist->get_items(); 
 

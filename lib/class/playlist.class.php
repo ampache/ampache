@@ -93,11 +93,14 @@ class Playlist extends database_object {
 	 */
 	public function has_access() { 
 
+		if (!Access::check('interface','25')) { 
+			return false; 
+		} 
 		if ($this->user == $GLOBALS['user']->id) { 
 			return true; 
 		} 
-		else { 
-			return $GLOBALS['user']->has_access('100'); 
+		else {
+			return Access::check('interface','100'); 
 		} 	
 
 		return false; 

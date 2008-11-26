@@ -44,7 +44,7 @@ switch ($_REQUEST['action']) {
 	break;
 	case 'create_playlist':
 		/* Check rights */
-		if (!$GLOBALS['user']->has_access(25)) { 
+		if (!Access::check('interface','25')) { 
 			access_denied();
 			break;
 		} 
