@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright 2001 - 2006 Ampache.org
+ Copyright Ampache.org
  All Rights Reserved
 
  This program is free software; you can redistribute it and/or
@@ -22,9 +22,8 @@
         @function show_now_playingRSS
         @discussion creates a RSS fead for the now
                 playing information
+	FIXME: This needs to be updated, the whole rss stuff needs to be cleaned up
 */
-
-
 function show_RSS ($type = 'artist',$username = 0) {
 	header ("Content-Type: application/xml");
         $web_path = Config::get('web_path');
@@ -37,7 +36,7 @@ function show_RSS ($type = 'artist',$username = 0) {
 	$rss_popularsong_title = "Ampache Most Popular Songs";
 	$rss_recentlyplayed_title = "Ampache Recently Played";
 
-        $today = date("d-m-Y");
+        $today = date("r",time());
 
         echo "<rss version=\"2.0\">\n";
 
