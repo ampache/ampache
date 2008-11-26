@@ -130,12 +130,15 @@ function search_song($data,$operator,$method,$limit) {
                                                     album2.name LIKE '%$word%' OR
                                                     artist2.name LIKE '%$word%' OR
                                                     song.year LIKE '%$word%' OR
-                                                    song.file LIKE '%$word%'
+                                                    song.file LIKE '%$word%' OR
+						    tag2.name LIKE '%$word%' 
                                                   ) ";
                                 }
                                 $where_sql .= " ) $operator";
                                 $table_sql .= " LEFT JOIN `album` as `album2` ON `song`.`album`=`album2`.`id`"; 
-				$table_sql .= " LEFT JOIN `artist` as `artist2` ON `song`.`artist`=`artist2`.`id`"; 
+				$table_sql .= " LEFT JOIN `artist` AS `artist2` ON `song`.`artist`=`artist2`.`id`"; 
+				$table_sql .= " LEFT JOIN `tag_map` ON `song`.`id`=`tag_map`.`object_id` AND `tag_map`.`object_type`='song'"; 
+				$table_sql .= " LEFT JOIN `tag` AS `tag2` ON `tag_map`.`tag_id`=`tag2`.`id`"; 
                         break;
 			case 'title':
 				$where_sql .= " song.title $value_string $operator";
