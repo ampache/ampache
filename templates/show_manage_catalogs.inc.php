@@ -35,9 +35,9 @@
 </td>
 <td>
 	<form method="post" action="<?php echo Config::get('web_path'); ?>/admin/catalog.php?action=update_from">
-	<?php echo _('Add From'); ?> <span class="information">/data/myNewMusic</span><br />
+	<?php printf (_('Add From %s'), '<span class="information">/data/myNewMusic</span>'); ?><br />
 	<input type="text" name="add_path" value="/" /><br />
-	<?php echo _('Update From'); ?> <span class="information">/data/myUpdatedMusic</span><br />
+	<?php printf (_('Update From %s'), '<span class="information">/data/myUpdatedMusic</span>'); ?><br />
 	<input type="text" name="update_path" value="/" /><br />
 <input type="submit" value="<?php echo _('Update'); ?>" />
 </form>
