@@ -46,7 +46,7 @@ set_error_handler('ampache_error_handler');
    install ampache 
 */
 if (!install_check_status($configfile)) { 
-	echo "Error: Config file detected, Ampache is already installed"; 
+	Error::display('general'); 
 	exit; 
 }
 

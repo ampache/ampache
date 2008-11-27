@@ -77,14 +77,27 @@ function install_check_status($configfile) {
 	$results = parse_ini_file($configfile);
 	$dbh = check_database($results['database_hostname'],$results['database_username'],$results['database_password']);	
 
-	if (is_resource($dbh)) { 
-		@mysql_select_db($results['database_name'],$dbh);
-		$sql = "SELECT * FROM `user`";
-		$db_results = @mysql_query($sql, $dbh);
-		if (!@mysql_num_rows($db_results)) { 
-			return true;
-		}
+	if (!is_resource($dbh)) { 
+		Error::add('general',_('Unable to connect to database, check your ampache config')); 
+		return false; 
+	} 
+		
+	$select_db = mysql_select_db($results['database_name'],$dbh);
+
+	if (!$select_db) { 
+		Error::add('general',_('Unable to select database, check your ampache config')); 
+		return false; 
+	} 
+	
+	$sql = "SELECT * FROM `user`";
+	$db_results = mysql_query($sql, $dbh);
+	if (!mysql_num_rows($db_results)) { 
+		return true;
 	}
+	else { 
+		Error::add('general',_('Existing Database detected, unable to continue installation')); 
+		return false; 
+	} 
 
 	/* Defaut to no */
 	return false;
