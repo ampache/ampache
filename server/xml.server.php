@@ -82,7 +82,7 @@ switch ($_REQUEST['action']) {
 		
 		if (!$token) { 
 			ob_end_clean(); 
-			echo xmlData::error('401','Error Invalid Handshake, attempt logged'); 
+			echo xmlData::error('401',_('Error Invalid Handshake - ') . Error::get('api')); 
 		} 
 		else { 
 			ob_end_clean(); 
@@ -311,7 +311,7 @@ switch ($_REQUEST['action']) {
 	break; 
 	default:
                 ob_end_clean();
-                echo xmlData::error('405','Invalid Request');
+                echo xmlData::error('405',_('Invalid Request'));
 	break;
 } // end switch action
 ?>

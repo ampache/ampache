@@ -49,12 +49,14 @@ class Api {
 
 		if (intval($version) < self::$version) { 
 			debug_event('API','Login Failed version too old','1'); 
+			Error::add('api','Login Failed versoin too old'); 
 			return false; 
 		} 			
 
 		// If the timestamp is over 2hr old sucks to be them
 		if ($timestamp < (time() - 14400)) { 
 			debug_event('API','Login Failed, timestamp too old','1'); 
+			Error::add('api','Login Failed, timestamp too old'); 
 			return false; 
 		} 
 
@@ -93,6 +95,7 @@ class Api {
 
 			if (!$row['password']) { 
 				debug_event('API','Unable to find user with username of ' . $user_id,'1'); 
+				Error::add('api','Invalid Username/Password'); 
 				return false; 
 			} 
 
@@ -137,6 +140,7 @@ class Api {
 		} // end while
 
 		debug_event('API','Login Failed, unable to match passphrase','1'); 
+		Error::add('api','Invalid Username/Password'); 
 		return false; 
 
 	} // handhsake

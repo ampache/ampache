@@ -71,7 +71,6 @@ class xmlData {
 	 * nothing fancy here...
 	 */
 	public static function error($code,$string) { 
-
 		
 		$string = self::_header() . "\t<error code=\"$code\"><![CDATA[$string]]></error>" . self::_footer(); 
 		return $string; 
