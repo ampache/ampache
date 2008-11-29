@@ -132,7 +132,7 @@ function install_insert_db($username,$password,$hostname,$database) {
 	$dbh = Dba::dbh();
 	
 	if (!is_resource($dbh)) { 
-		Error::add('general','Error: Unable to make Database Connection ' . mysql_error()); 
+		Error::add('general',_('Error: Unable to make Database Connection') . mysql_error()); 
 		return false; 
 	}
 

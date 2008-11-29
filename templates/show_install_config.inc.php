@@ -54,9 +54,11 @@ if (INSTALL != '1') { exit; }
 		<?php echo _("Step 3 - Setup Initial Account"); ?><br />
 		<?php Error::display('general'); ?>
 		<br />
-		<span class="header2"><?php echo _('Generate Config File'); ?></span>
-		<form method="post" action="<?php echo WEB_PATH . "?action=create_config"; ?>" enctype="multipart/form-data" >
-		<table>
+
+<span class="header2"><?php echo _('Generate Config File'); ?></span>
+<?php Error::display('config'); ?>
+<form method="post" action="<?php echo WEB_PATH . "?action=create_config"; ?>" enctype="multipart/form-data" >
+<table>
 <tr>
 	<td class="align"><?php echo _('Web Path'); ?></td>
 	<td class="align"><input type="text" name="web_path" value="<?php echo $web_path; ?>" /></td>

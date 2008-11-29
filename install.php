@@ -87,7 +87,15 @@ switch ($_REQUEST['action']) {
 		
 	break;
 	case 'create_config':
-		$created_config = install_create_config($web_path,$username,$password,$hostname,$database);
+
+		// Test and make sure that the values they give us actually work
+		if (!check_database($hostname,$username,$password)) { 
+			Error::add('config',_('Error: Unable to make Database Connection') . mysql_error());
+		} 
+
+		if (!Error::occurred()) { 
+			$created_config = install_create_config($web_path,$username,$password,$hostname,$database);
+		} 
 
 		require_once 'templates/show_install_config.inc.php';
 	break;
