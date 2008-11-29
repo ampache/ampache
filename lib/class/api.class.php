@@ -49,7 +49,7 @@ class Api {
 
 		if (intval($version) < self::$version) { 
 			debug_event('API','Login Failed version too old','1'); 
-			Error::add('api','Login Failed versoin too old'); 
+			Error::add('api','Login Failed version too old'); 
 			return false; 
 		} 			
 

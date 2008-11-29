@@ -109,6 +109,9 @@ class Tag extends database_object {
 			$data = self::get_top_tags($type,$object_id); 
 		} 
 
+		// If nothing is found, then go ahead and return false
+		if (!is_array($data) OR !count($data)) { return false; } 
+
 		$this->weight = $data[$this->id]['count']; 
 
 		if (in_array($GLOBALS['user']->id,$data[$this->id]['users'])) { 

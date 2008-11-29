@@ -124,15 +124,8 @@ function search_song($data,$operator,$method,$limit) {
                                 {
                                     if($ii++ > 0)
                                         $where_sql .= " AND ";
-                                    $where_sql .= "
-                                                 ( 
-                                                    song.title LIKE '%$word%' OR
-                                                    album2.name LIKE '%$word%' OR
-                                                    artist2.name LIKE '%$word%' OR
-                                                    song.year LIKE '%$word%' OR
-                                                    song.file LIKE '%$word%' OR
-						    tag2.name LIKE '%$word%' 
-                                                  ) ";
+                                    $where_sql .= "(song.title LIKE '%$word%' OR album2.name LIKE '%$word%' OR artist2.name LIKE '%$word%' OR
+                                                    song.year LIKE '%$word%' OR song.file LIKE '%$word%' OR tag2.name LIKE '%$word%') ";
                                 }
                                 $where_sql .= " ) $operator";
                                 $table_sql .= " LEFT JOIN `album` as `album2` ON `song`.`album`=`album2`.`id`"; 

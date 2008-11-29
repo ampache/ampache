@@ -131,27 +131,17 @@ switch ($_REQUEST['action']) {
 	case 'enable':
 		$client = new User($_REQUEST['user_id']); 
 		$client->enable(); 
-		show_confirmation(_('User Enabled'),'','admin/users.php'); 
+		show_confirmation(_('User Enabled'),$client->fullname . ' (' . $client->username . ')','admin/users.php'); 
 	break;
 	case 'disable':
 		$client = new User($_REQUEST['user_id']); 
 		if ($client->disable()) { 
-			show_confirmation(_('User Disabled'),'','admin/users.php'); 
+			show_confirmation(_('User Disabled'),$client->fullname . ' (' . $client->username . ')','admin/users.php'); 
 		} 
 		else { 
 			show_confirmation(_('Error'),_('Unable to Disabled last Administrator'),'admin/users.php'); 
 		} 
 	break;
-
-} // End Work Switch
-
-
-/**
- * This is the second half, it handles displaying anything
- * the first half (work half) potentially has 'adjusted' the user
- * input
- */
-switch ($_REQUEST['action']) { 
 	case 'show_edit':
         	if (Config::get('demo_mode')) { break; }
 		$client	= new User($_REQUEST['user_id']); 
