@@ -355,6 +355,16 @@ class Browse {
 	} // set_join
 
 	/**
+	 * set_having
+	 * This sets the "HAVING" part of the query, we can only have one.. god this is ugly
+	 */
+	public static function set_having($condition) { 
+
+		$_SESSION['browse']['having'][self::$type] = " HAVING " . $condition;
+
+	} // set_having 
+
+	/**
 	 * set_start
 	 * This sets the start point for our show functions
 	 * We need to store this in the session so that it can be pulled
@@ -636,6 +646,18 @@ class Browse {
 	} // get_join_sql
 
 	/**
+	 * get_having_sql
+	 * this returns the having sql stuff, if we've got anything
+	 */
+	public static function get_having_sql() { 
+
+		$sql = $_SESSION['browse']['having'][self::$type]; 
+
+		return $sql; 
+
+	} // get_having_sql
+
+	/**
 	 * get_sql
 	 * This returns the sql statement we are going to use this has to be run
 	 * every time we get the objects because it depends on the filters and the
@@ -650,10 +672,11 @@ class Browse {
 
 		$filter_sql = self::get_filter_sql(); 
 		$join_sql = self::get_join_sql(); 
+		$having_sql = self::get_having_sql(); 
 		$order_sql = self::get_sort_sql(); 
 		$limit_sql = self::get_limit_sql(); 
 
-		$final_sql = $sql . $join_sql . $filter_sql . $order_sql . $limit_sql;  
+		$final_sql = $sql . $join_sql . $filter_sql . $having_sql . $order_sql . $limit_sql;  
 
 		return $final_sql;
 
@@ -735,9 +758,6 @@ class Browse {
 				case 'starts_with': 
 					$filter_sql = " `album`.`name` LIKE '" . Dba::escape($value) . "%' AND "; 
 				break; 
-				case 'min_count': 
-
-				break;
 			        case 'artist':
 					$filter_sql = " `artist`.`id` = '". Dba::escape($value) . "' AND ";
 				break;
