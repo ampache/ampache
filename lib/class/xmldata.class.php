@@ -222,7 +222,7 @@ class xmlData {
 			// Build this element
 			$string .= "<playlist id=\"$playlist->id\">\n" . 
 				"\t<name><![CDATA[$playlist->name]]></name>\n" . 
-				"\t<owner><![CDATA[$playlist->f_user]]</owner>\n" . 
+				"\t<owner><![CDATA[$playlist->f_user]]></owner>\n" . 
 				"\t<items>$item_total</items>\n" . 
 				"\t<type>$playlist->type</type>\n" . 
 				"</playlist>\n";
