@@ -20,7 +20,7 @@
 */
 $rowparity = flip_class(); 
 $icon = $song->enabled ? 'disable' : 'enable'; 
-$row_btnFlipState = 'btnFlipState_' . $song->id;
+$button_flip_state_id = 'button_flip_state_' . $song->id;
 ?>
 <?php show_box_top($song->title . ' ' . _('Details')); ?>
 <dl class="song_details">
@@ -32,7 +32,7 @@ $row_btnFlipState = 'btnFlipState_' . $song->id;
 			<a href="<?php echo Config::get('web_path'); ?>/stream.php?action=download&amp;song_id=<?php echo $song->id; ?>"><?php echo get_user_icon('download'); ?></a>
 		<?php } ?>
 		<?php if (Access::check('interface','75')) { ?>
-			<span id="<?php echo($row_btnFlipState); ?>">
+			<span id="<?php echo($button_flip_state_id); ?>">
 			<?php echo Ajax::button('?page=song&action=flip_state&song_id=' . $song->id,$icon,_(ucfirst($icon)),'flip_song_' . $song->id); ?>
 			</span>
 		<?php } ?>
