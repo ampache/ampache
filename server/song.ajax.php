@@ -36,10 +36,11 @@ switch ($_REQUEST['action']) {
 		$song->update_enabled($new_enabled,$song->id); 
 		$song->enabled = $new_enabled; 
 		$song->format(); 
-
-		ob_start(); 
-		require Config::get('prefix') . '/templates/show_song_row.inc.php'; 
-		$results['song_' . $song->id] = ob_get_clean(); 
+		
+		//Return the new Ajax::button
+		$id = 'btnFlipState_' . $song->id;
+		$button = $song->enabled ? 'disable' : 'enable';
+		$results[$id] = Ajax::button('?page=song&action=flip_state&song_id=' . $song->id,$button,_(ucfirst($button)),'flip_state_' . $song->id);  
 
 	break;
 	default: 
