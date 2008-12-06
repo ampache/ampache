@@ -124,6 +124,7 @@ class Browse {
 	 */
 	public static function reset() { 
 
+		self::reset_base(); 
 		self::reset_filters(); 
 		self::reset_total(); 
 		self::reset_join(); 
@@ -134,6 +135,16 @@ class Browse {
 		self::set_start(0); 
 
 	} // reset
+
+	/**
+	 * reset_base
+	 * this resets the base string
+	 */
+	public static function reset_base() { 
+
+		$_SESSION['browse']['base'][self::$type] = false; 
+
+	} // reset_base
 
 	/**
 	 * reset_select
@@ -557,51 +568,82 @@ class Browse {
 	} // add_supplemental_object
 
 	/**
-	 * get_base_sql
-	 * This returns the base SQL (select + from) for the different types
+	 * set_base_sql
+	 * This saves the base sql statement we are going to use.
 	 */
-	private static function get_base_sql() { 
+	private static function set_base_sql() { 
+
+		// Only allow it to be set once
+		if (strlen($_SESSION['browse']['base'][self::$type])) { return true; } 
 
                 switch (self::$type) {
                         case 'album':
-				self::set_select("`album`.`id`"); 
-                                $sql = "SELECT DISTINCT `album`.`id` FROM `album` ";
+				self::set_select("DISTINCT(`album`.`id`)"); 
+                                $sql = "SELECT %%SELECT%% FROM `album` ";
                         break;
                         case 'artist':
-				self::set_select("`artist`.`id`"); 
-                                $sql = "SELECT DISTINCT `artist`.`id` FROM `artist` ";
+				self::set_select("DISTINCT(`artist`.`id`)"); 
+                                $sql = "SELECT %%SELECT%% FROM `artist` ";
                         break;
                         case 'user':
 				self::set_select("`user`.`id`"); 
-                                $sql = "SELECT `user`.`id` FROM `user` ";
+                                $sql = "SELECT %%SELECT%% FROM `user` ";
                         break;
                         case 'live_stream':
 				self::set_select("`live_stream`.`id`");
-                                $sql = "SELECT `live_stream`.`id` FROM `live_stream` ";
+                                $sql = "SELECT %%SELECT%% FROM `live_stream` ";
                         break;
                         case 'playlist':
 				self::set_select("`playlist`.`id`"); 
-                                $sql = "SELECT `playlist`.`id` FROM `playlist` ";
+                                $sql = "SELECT %%SELECT%% FROM `playlist` ";
                         break;
 			case 'flagged': 
 				self::set_select("`flagged`.`id`"); 
-				$sql = "SELECT `flagged`.`id` FROM `flagged` ";
+				$sql = "SELECT %%SELECT%% FROM `flagged` ";
 			break;
 			case 'shoutbox': 
 				self::set_select("`user_shout`.`id`"); 
-				$sql = "SELECT `user_shout`.`id` FROM `user_shout` "; 
+				$sql = "SELECT %%SELECT%% FROM `user_shout` "; 
 			break; 
 			case 'tag': 
 				self::set_select("`tag`.`id`"); 
-				$sql = "SELECT `tag`.`id` FROM `tag` LEFT JOIN `tag_map` ON `tag_map`.`tag_id`=`tag`.`id` "; 
+				self::set_join('left','tag_map','`tag_map`.`tag_id`','`tag`.`id`',1); 
+				$sql = "SELECT %%SELECT%% FROM `tag` "; 
 			break; 
 			case 'playlist_song': 
                         case 'song':
                         default:
-				self::set_select("`song`.`id`"); 
-                                $sql = "SELECT DISTINCT `song`.`id` FROM `song` ";
+				self::set_select("DISTINCT(`song`.`id`)"); 
+                                $sql = "SELECT %%SELECT%% FROM `song` ";
                         break;
                 } // end base sql
+
+		$_SESSION['browse']['base'][self::$type] = $sql; 
+
+	} // set_base_sql
+
+	/**
+	 * get_select
+	 * This returns the selects in a format that is friendly for a sql statement
+	 */
+	private static function get_select() { 
+
+		$select_string = implode($_SESSION['browse']['select'][self::$type],", "); 
+		return $select_string; 
+
+	} // get_select
+
+	/**
+	 * get_base_sql
+	 * This returns the base sql statement all parsed up, this should be called after all set operations
+	 */
+	private static function get_base_sql() { 
+		
+		// Legacy code, should be removed once other code is updated
+		//FIXME: REMOVE
+		if (!$_SESSION['browse']['base'][self::$type]) { self::set_base_sql(); } 
+
+		$sql = str_replace("%%SELECT%%",self::get_select(),$_SESSION['browse']['base'][self::$type]); 
 
 		return $sql; 
 
