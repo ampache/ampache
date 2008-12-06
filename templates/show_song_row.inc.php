@@ -21,11 +21,8 @@
 ?>
 <td class="cel_add">
 	<?php echo Ajax::button('?action=basket&type=song&id=' . $song->id,'add',_('Add'),'add_' . $song->id); ?>
-	<?php if (Access::check_function('download')) { ?>
-		<a href="<?php echo $song->get_url(); ?>"><?php echo get_user_icon('link'); ?></a>
-	<?php } ?>
 </td>
-<td class="cel_song"><?php echo $song->f_link; ?></td>
+<td class="cel_song"><a href="<?php echo $song->get_url(); ?>"><?php echo $song->f_title; ?></a></td>
 <td class="cel_artist"><?php echo $song->f_artist_link; ?></td>
 <td class="cel_album"><?php echo $song->f_album_link; ?></td>
 <td class="cel_tags"><?php echo $song->f_tags; ?></td>
@@ -35,6 +32,7 @@
 <td class="cel_rating" id="rating_<?php echo $song->id; ?>_song"><?php Rating::show($song->id,'song'); ?></td>
 <?php } ?>
 <td class="cel_action">
+	<a href="<?php echo $song->link; ?>"><?php echo get_user_icon('preferences',_('Song Informatin')); ?></a>
 	<?php if (Config::get('shoutbox')) { ?>
                 <a href="<?php echo Config::get('web_path'); ?>/shout.php?action=show_add_shout&amp;type=song&amp;id=<?php echo $song->id; ?>">
                 <?php echo get_user_icon('comment',_('Post Shout')); ?>

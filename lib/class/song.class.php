@@ -669,7 +669,8 @@ class Song extends database_object {
 		$this->f_title = truncate_with_ellipsis($this->title,Config::get('ellipse_threshold_title'));
 
 		// Create Links for the different objects 
-		$this->f_link = "<a href=\"" . Config::get('web_path') . "/song.php?action=show_song&amp;song_id=" . $this->id . "\" title=\"" . scrub_out($this->title) . "\"> " . scrub_out($this->f_title) . "</a>";
+		$this->link = Config::get('web_path') . "/song.php?action=show_song&amp;song_id=" . $this->id;
+		$this->f_link = "<a href=\"" . $this->link . "\" title=\"" . scrub_out($this->title) . "\"> " . scrub_out($this->f_title) . "</a>";
 		$this->f_album_link = "<a href=\"" . Config::get('web_path') . "/albums.php?action=show&amp;album=" . $this->album . "\" title=\"" . scrub_out($this->f_album_full) . "\"> " . scrub_out($this->f_album) . "</a>";
 		$this->f_artist_link = "<a href=\"" . Config::get('web_path') . "/artists.php?action=show&amp;artist=" . $this->artist . "\" title=\"" . scrub_out($this->f_artist_full) . "\"> " . scrub_out($this->f_artist) . "</a>";	
 
