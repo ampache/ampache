@@ -127,11 +127,33 @@ class Browse {
 		self::reset_filters(); 
 		self::reset_total(); 
 		self::reset_join(); 
+		self::reset_select(); 
+		self::reset_having(); 
 		self::reset_supplemental_objects(); 
 		self::set_simple_browse(0); 
 		self::set_start(0); 
 
 	} // reset
+
+	/**
+	 * reset_select
+	 * This resets the select fields that we've added so far
+	 */
+	public static function reset_select() { 
+
+		$_SESSION['browse']['select'][self::$type] = array(); 
+
+	} // reset_select 
+
+	/**
+	 * reset_having
+	 * Null out the having clause
+	 */
+	public static function reset_having() { 
+
+		unset($_SESSION['browse']['having'][self::$type]); 
+
+	} // reset_having
 
 	/**
 	 * reset_join
@@ -345,12 +367,23 @@ class Browse {
 	} // set_sort
 
 	/**
+	 * set_select
+	 * This appends more information to the select part of the SQL statement, we're going to move to the
+	 * %%SELECT%% style queries, as I think it's the only way to do this.... 
+	 */
+	public static function set_select($field) { 
+
+		$_SESSION['browse']['select'][self::$type][] = $field; 
+
+	} // set_select
+
+	/**
 	 * set_join 
 	 * This sets the joins for the current browse object
 	 */
-	public static function set_join($type,$table,$source,$dest) { 
+	public static function set_join($type,$table,$source,$dest,$priority=100) { 
 
-		$_SESSION['browse']['join'][self::$type][$table] = strtoupper($type) . ' JOIN ' . $table . ' ON ' . $source . '=' . $dest; 
+		$_SESSION['browse']['join'][self::$type][$priority][$table] = strtoupper($type) . ' JOIN ' . $table . ' ON ' . $source . '=' . $dest; 
 
 	} // set_join
 
@@ -360,7 +393,7 @@ class Browse {
 	 */
 	public static function set_having($condition) { 
 
-		$_SESSION['browse']['having'][self::$type] = " HAVING " . $condition;
+		$_SESSION['browse']['having'][self::$type] = $condition; 
 
 	} // set_having 
 
@@ -531,35 +564,41 @@ class Browse {
 
                 switch (self::$type) {
                         case 'album':
+				self::set_select("`album`.`id`"); 
                                 $sql = "SELECT DISTINCT `album`.`id` FROM `album` ";
                         break;
                         case 'artist':
+				self::set_select("`artist`.`id`"); 
                                 $sql = "SELECT DISTINCT `artist`.`id` FROM `artist` ";
                         break;
-                        case 'genre':
-                                $sql = "SELECT `genre`.`id` FROM `genre` ";
-                        break;
                         case 'user':
+				self::set_select("`user`.`id`"); 
                                 $sql = "SELECT `user`.`id` FROM `user` ";
                         break;
                         case 'live_stream':
+				self::set_select("`live_stream`.`id`");
                                 $sql = "SELECT `live_stream`.`id` FROM `live_stream` ";
                         break;
                         case 'playlist':
+				self::set_select("`playlist`.`id`"); 
                                 $sql = "SELECT `playlist`.`id` FROM `playlist` ";
                         break;
 			case 'flagged': 
+				self::set_select("`flagged`.`id`"); 
 				$sql = "SELECT `flagged`.`id` FROM `flagged` ";
 			break;
 			case 'shoutbox': 
+				self::set_select("`user_shout`.`id`"); 
 				$sql = "SELECT `user_shout`.`id` FROM `user_shout` "; 
 			break; 
 			case 'tag': 
+				self::set_select("`tag`.`id`"); 
 				$sql = "SELECT `tag`.`id` FROM `tag` LEFT JOIN `tag_map` ON `tag_map`.`tag_id`=`tag`.`id` "; 
 			break; 
 			case 'playlist_song': 
                         case 'song':
                         default:
+				self::set_select("`song`.`id`"); 
                                 $sql = "SELECT DISTINCT `song`.`id` FROM `song` ";
                         break;
                 } // end base sql
@@ -637,9 +676,12 @@ class Browse {
 
 		$sql = ''; 
 
-		foreach ($_SESSION['browse']['join'][self::$type] AS $join) { 
-			$sql .= $join . ' '; 
-		} 
+		// We need to itterate through these from 0 - 100 so that we add the joins in the right order
+		foreach ($_SESSION['browse']['join'][self::$type] as $joins) {
+			foreach ($joins as $join) { 
+				$sql .= $join . ' '; 
+			} // end foreach joins at this level
+		} // end foreach of this level of joins
 
 		return $sql; 	
 
