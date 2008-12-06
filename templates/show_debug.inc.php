@@ -45,6 +45,10 @@
 	<td><?php echo ini_get('max_execution_time'); ?></td>
 </tr>
 <tr class="<?php echo flip_class(); ?>">
+	<td><?php echo _('Override Execution Time'); ?></td>
+	<td><?php set_time_limit(0); echo ini_get('max_execution_time') ? _('Failed') : _('Succeeded'); ?></td>
+</tr>
+<tr class="<?php echo flip_class(); ?>">
 	<td><?php echo _('Safe Mode'); ?></td>
 	<td><?php echo print_boolean(ini_get('safe_mode')); ?></td>
 </tr>

@@ -451,8 +451,8 @@ class getid3_id3v2 extends getid3_handler
             }
         }
         
-        // Use year from recording time if year not set
-        if (!isset($info_id3v2['comments']['year']) && ereg('^([0-9]{4})', @$info_id3v2['comments']['recording_time'][0], $matches)) {
+        // Use year from recording time if year is empty
+        if (!strlen($info_id3v2['comments']['year']) && ereg('^([0-9]{4})', @$info_id3v2['comments']['recording_time'][0], $matches)) {
 			$info_id3v2['comments']['year'] = array ($matches[1]);
 		}
 
