@@ -28,6 +28,12 @@ if (!Config::get('use_rss') || Config::get('demo_mode')) {
 	exit;
 }
 
+// Add in our base hearder defining the content type
+header("Content-Type: application/xml; charset=" . Config::get('site_charset')); 
+header("Content-Disposition: attachment; filename=rss.xml"); 
+
+// This is always going to be an rss feed, so make sure our header and footers are correct
+xmlData::set_type('rss'); 
 
 switch ($_REQUEST['action']) { 
 	case 'user':
@@ -36,6 +42,7 @@ switch ($_REQUEST['action']) {
 	case 'catalog_add': 
 
 	default: 
+		
 
 	break; 
 } // end data collection 

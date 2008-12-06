@@ -208,9 +208,6 @@ switch ($type) {
 	}
         echo "</channel>\n</rss>";
 	break;
-
-
-
     default:
 	$now_playing = get_now_playing();
         $rss_song_description = $rss_description;

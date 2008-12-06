@@ -53,7 +53,7 @@ function get_now_playing($filter='') {
                 $song = new Song($r['song_id']);
                 $song->format();
                 $np_user = new User($r['user']);
-                $results[] = array('song'=>$song,'user'=>$np_user,'agent'=>$r['agent']);
+                $results[] = array('song'=>$song,'user'=>$np_user,'agent'=>$r['agent'],'expire'=>$r['expire']);
         } // end while
 
         return $results;

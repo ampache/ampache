@@ -27,23 +27,37 @@
  */
 class RSS {
 
-	private static $types = array('nowplaying',
-				'latestartist',
-				'latestalbum',
-				'popularalbum',
-				'popularartist',
-				'popularsong',
-				'recentlyplayed');
+	public $type; 
+	public $data; 
 
 	/**
 	 * Constructor
 	 * This takes a flagged.id and then pulls in the information for said flag entry
 	 */
-	public function __construct() { 
+	public function __construct($type) { 	
 
-		// Nothing here for now
+		if (!RSS::valid_type($type)) { 
+			$type = 'now_playing'; 
+		} 			
 
 	} // constructor
+
+	/**
+	 * validate_type
+	 * this returns a valid type for an rss feed, if the specified type is invalid it returns a default value
+	 */
+	public static function validate_type($type) { 
+
+		$valid_types = array('now_playing','recently_played','latest_album','latest_artist','latest_song',
+				'popular_song','popular_album','popular_artist'); 
+		
+		if (!in_array($type,$valid_types)) { 
+			return 'now_playing'; 
+		} 
+
+		return $type; 
+
+	} // validate_type
 
 	/**
  	 * get_display
