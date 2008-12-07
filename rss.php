@@ -30,23 +30,10 @@ if (!Config::get('use_rss') || Config::get('demo_mode')) {
 
 // Add in our base hearder defining the content type
 header("Content-Type: application/xml; charset=" . Config::get('site_charset')); 
-header("Content-Disposition: attachment; filename=rss.xml"); 
 
-// This is always going to be an rss feed, so make sure our header and footers are correct
-xmlData::set_type('rss'); 
+$rss = new AmpacheRSS($_REQUEST['type']); 
+echo $rss->get_xml(); 
 
-switch ($_REQUEST['action']) { 
-	case 'user':
-
-	break;
-	case 'catalog_add': 
-
-	default: 
-		
-
-	break; 
-} // end data collection 
-
-show_RSS($_REQUEST['type'],$_REQUEST['username']);
+//show_RSS($_REQUEST['type'],$_REQUEST['username']);
 
 ?>

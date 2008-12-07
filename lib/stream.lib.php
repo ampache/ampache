@@ -41,7 +41,8 @@ function show_now_playing() {
  */
 function get_now_playing($filter='') {
 
-        $sql = "SELECT `session_stream`.`agent`,`now_playing`.`song_id`,`now_playing`.`user` FROM `now_playing` " . 
+        $sql = "SELECT `session_stream`.`agent`,`now_playing`.`song_id`,`now_playing`.`user`,`now_playing`.`expire` " . 
+		"FROM `now_playing` " . 
 		"LEFT JOIN `session_stream` ON `session_stream`.`id`=`now_playing`.`id` " . 
 		"ORDER BY `now_playing`.`expire` DESC";
         $db_results = Dba::query($sql);
