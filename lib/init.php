@@ -123,7 +123,6 @@ define('INIT_LOADED','1');
 // Library and module includes we can't do with the autoloader
 require_once $prefix . '/lib/search.php';
 require_once $prefix . '/lib/preferences.php';
-require_once $prefix . '/lib/rss.php';
 require_once $prefix . '/lib/log.lib.php';
 require_once $prefix . '/lib/ui.lib.php';
 require_once $prefix . '/lib/gettext.php';

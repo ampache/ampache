@@ -32,8 +32,8 @@ $location = get_location();
 <link rel="shortcut icon" href="<?php echo $web_path; ?>/favicon.ico" />
 <?php
 if (Config::get('use_rss')) { ?>
-<link rel="alternate" type="application/rss+xml" title="<?php echo Config::get('rss_main_title'); ?>" href="<?php echo $web_path; ?>/rss.php" />
-<link rel="alternate" type="application/rss+xml" title="<?php echo _('Ampache Recently Played'); ?>" href="<?php echo $web_path; ?>/rss.php?type=recentlyplayed" />
+<link rel="alternate" type="application/rss+xml" title="<?php echo _('Now Playing'); ?>" href="<?php echo $web_path; ?>/rss.php" />
+<link rel="alternate" type="application/rss+xml" title="<?php echo _('Recently Played'); ?>" href="<?php echo $web_path; ?>/rss.php?type=recently_played" />
 <?php } ?>
 <meta http-equiv="Content-Type" content="application/xhtml+xml; charset=<?php echo Config::get('site_charset'); ?>" />
 <title><?php echo scrub_out(Config::get('site_title')); ?> - <?php echo $location['title']; ?></title>
@@ -47,13 +47,7 @@ if (Config::get('use_rss')) { ?>
 <script src="<?php echo $web_path; ?>/modules/prototype/prototype.js" language="javascript" type="text/javascript"></script>
 <!-- rfc3514 implementation --> 
 <div id="rfc3514" style="display:none;">0x0</div>
-<div id="maincontainer" <?php 
-	if ($GLOBALS['theme']['orientation'] == 'horizontal') { 
-		echo " class=\"horizontal_menu\" ";
-	}else{
-		echo " class=\"vertical_menu\" ";
-	}?>>
-		
+<div id="maincontainer">
 	<div id="header"><!-- This is the header -->
 		<h1 id="headerlogo">
 		  <a href="<?php echo Config::get('web_path'); ?>">
