@@ -21,7 +21,7 @@
 
 /* Define the time places starting at 0 */
 $time_unit = array('',_('seconds ago'),_('minutes ago'),_('hours ago'),_('days ago'),_('weeks ago'),_('months ago'),_('years ago')); 
-$link = Config::get('use_rss') ? ' ' . AmpacheRSS::get_display('recentlyplayed') :  '';
+$link = Config::get('use_rss') ? ' ' . AmpacheRSS::get_display('recently_played') :  '';
 show_box_top(_('Recently Played') . $link);
 ?>
 <table class="tabledata" cellpadding="0" cellspacing="0">

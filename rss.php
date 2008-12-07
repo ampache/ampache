@@ -34,6 +34,4 @@ header("Content-Type: application/xml; charset=" . Config::get('site_charset'));
 $rss = new AmpacheRSS($_REQUEST['type']); 
 echo $rss->get_xml(); 
 
-//show_RSS($_REQUEST['type'],$_REQUEST['username']);
-
 ?>

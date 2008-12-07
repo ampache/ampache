@@ -72,7 +72,7 @@ class AmpacheRSS {
 				'latest_album'=>_('Newest Albums'),
 				'latest_artist'=>_('Newest Artists')); 
 
-		return $titles[$this->type]; 
+		return scrub_out(Config::get('site_title')) . ' - ' . $titles[$this->type]; 
 
 	} // get_title
 
@@ -108,7 +108,7 @@ class AmpacheRSS {
  	 * get_display
 	 * This dumps out some html and an icon for the type of rss that we specify
 	 */
-	public static function get_display($type='nowplaying') { 
+	public static function get_display($type='now_playing') { 
 
 		// Default to now playing
 		$type = self::validate_type($type); 
@@ -162,6 +162,78 @@ class AmpacheRSS {
 
 		return $element['expire']; 
 
-	} // pubdate_now_playing	
+	} // pubdate_now_playing
+
+	/**
+	 * load_recently_played
+	 * This loads in the recently played information and formats it up real nice like
+	 */
+	public static function load_recently_played() { 
+
+		//FIXME: The time stuff should be centralized, it's currently in two places, lame
+
+		$time_unit = array('',_('seconds ago'),_('minutes ago'),_('hours ago'),_('days ago'),_('weeks ago'),_('months ago'),_('years ago'));
+		$data = Song::get_recently_played(); 
+
+		$results = array(); 
+
+		foreach ($data as $item) { 
+			$client = new User($item['user']); 
+			$song = new Song($item['object_id']); 
+			$song->format(); 
+			$amount = intval(time() - $item['date']+2); 
+			$time_place = '0'; 
+		        while ($amount >= 1) {
+		                $final = $amount;
+		                $time_place++;
+	        	        if ($time_place <= 2) {
+	        	                $amount = floor($amount/60);
+		                }
+		                if ($time_place == '3') {
+		                        $amount = floor($amount/24);
+		                }
+		                if ($time_place == '4') {
+		                        $amount = floor($amount/7);
+		                }
+		                if ($time_place == '5') {
+		                        $amount = floor($amount/4);
+		                }
+		                if ($time_place == '6') {
+		                        $amount = floor ($amount/12);
+		                }
+		                if ($time_place > '6') {
+		                        $final = $amount . '+';
+		                        break;
+				} 
+		        } // end while
+
+			$time_string = $final . ' ' . $time_unit[$time_place];
+
+			$xml_array = array('title'=>$song->f_title . ' - ' . $song->f_artist . ' - ' . $song->f_album,
+						'link'=>$song->link,
+						'description'=>$song->title . ' - ' . $song->f_artist_full . ' - ' . $song->f_album_full . ' - ' . $time_string,
+						'comments'=>$client->username,
+						'pubDate'=>date("r",$item['date'])); 
+			$results[] = $xml_array; 
+
+		} // end foreach 
+
+		return $results; 
+
+	} // load_recently_played
+
+	/**
+	 * pubdate_recently_played
+	 * This just returns the 'newest' recently played entry
+	 */
+	public static function pubdate_recently_played() { 
+
+		$data = Song::get_recently_played(); 
+
+		$element = array_shift($data);
+		
+		return $element['date']; 
+
+	} // pubdate_recently_played
 
 } // end AmpacheRSS class
