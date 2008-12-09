@@ -32,7 +32,7 @@
 <td class="cel_rating" id="rating_<?php echo $song->id; ?>_song"><?php Rating::show($song->id,'song'); ?></td>
 <?php } ?>
 <td class="cel_action">
-	<a href="<?php echo $song->link; ?>"><?php echo get_user_icon('preferences',_('Song Informatin')); ?></a>
+	<a href="<?php echo $song->link; ?>"><?php echo get_user_icon('preferences',_('Song Information')); ?></a>
 	<?php if (Config::get('shoutbox')) { ?>
                 <a href="<?php echo Config::get('web_path'); ?>/shout.php?action=show_add_shout&amp;type=song&amp;id=<?php echo $song->id; ?>">
                 <?php echo get_user_icon('comment',_('Post Shout')); ?>
