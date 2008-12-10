@@ -1245,7 +1245,7 @@ class Catalog {
 		$token = xmlRpcClient::ampache_handshake($this->path,$this->key);
 
 		if (!$token) {
-			debug_event('XMLCLIENT','Error No Token returned');
+			debug_event('XMLCLIENT','Error No Token returned', 2);
 			Error::display('general');
 			return;
 		}
