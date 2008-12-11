@@ -222,8 +222,8 @@ class xmlRpcServer {
 		while ($row = Dba::fetch_assoc($db_results)) { 
 			
 			// Build our encoded passphrase
-			$md5pass = md5($timestamp . $row['key']); 
-			if ($md5pass == $encoded_key) { 
+			$sha256pass = hash('sha256',$timestamp . hash('sha256',$row['key']));
+			if ($sha256pass == $encoded_key) { 
 				$data['type'] = 'xml-rpc';
 				$data['username'] = 'System'; 
 				$data['value'] = 'Handshake'; 
