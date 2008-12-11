@@ -1355,7 +1355,7 @@ class Catalog {
 	 * get_album_images
 	 * This function retrieves the album information from the remote server
 	 */
-	public function get_remote_album_images($client,$token,$start,$end) {
+	public function get_remote_album_images($client,$token) {
 		
 		$encoded_key	= new XML_RPC_Value($token,'string');
 		$query_array    = array($encoded_key);
