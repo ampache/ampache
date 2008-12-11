@@ -34,7 +34,8 @@ if (strcmp('5.0.0',phpversion()) > 0) {
 }
 
 // Set the Error level manualy... I'm to lazy to fix notices
-error_reporting(E_ALL ^ E_NOTICE);
+//error_reporting(E_ALL|E_STRICT);	// use this only for development purposes
+error_reporting(E_ERROR);			// Only show fatal errors in production
 
 // This makes this file nolonger need customization
 // the config file is in the same dir as this (init.php) file.
@@ -103,7 +104,7 @@ if (!$results['raw_web_path']) {
 if (!$_SERVER['SERVER_NAME']) { 
 	$_SERVER['SERVER_NAME'] = '';
 }
-if (!$results['user_ip_cardinality']) { 
+if (isset($results['user_ip_cardinality']) && !$results['user_ip_cardinality']) { 
 	$results['user_ip_cardinality'] = 42;
 }
 
@@ -132,7 +133,7 @@ require_once $prefix . '/lib/stream.lib.php';
 require_once $prefix . '/lib/xmlrpc.php';
 require_once $prefix . '/lib/class/localplay.abstract.php';
 require_once $prefix . '/lib/class/database_object.abstract.php'; 
-require_once $prefix . '/modules/xmlrpc/xmlrpc.inc';
+require_once $prefix . '/modules/pearxmlrpc/rpc.php';
 require_once $prefix . '/modules/getid3/getid3.php';
 require_once $prefix . '/modules/infotools/Snoopy.class.php';
 require_once $prefix . '/modules/infotools/AmazonSearchEngine.class.php';

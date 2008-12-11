@@ -1233,13 +1233,12 @@ class Catalog {
 	 * the XML RPC stuff and a key to be passed
 	 */
 	public function get_remote_catalog($type=0) {
-
-		/* Make sure the xmlrpc lib is loaded */
-		if (!class_exists('xmlrpc_client')) {
-			debug_event('xmlrpc',"Unable to load XMLRPC library",'1');
-			echo "<span class=\"error\"><b>" . _("Error") . "</b>: " . _('Unable to load XMLRPC library, make sure XML-RPC is enabled') . "</span><br />\n";
+	
+		if (!class_exists('XML_RPC_Client')) {
+			debug_event('xmlrpc',"Unable to load pear XMLRPC library",'1');
+			echo "<span class=\"error\"><b>" . _("Error") . "</b>: " . _('Unable to load pear XMLRPC library, make sure XML-RPC is enabled') . "</span><br />\n";
 			return false;
-		} // end check for class
+		}
 
 		// Handshake and get our token for this little conversation
 		$token = xmlRpcClient::ampache_handshake($this->path,$this->key);
@@ -1248,6 +1247,8 @@ class Catalog {
 			debug_event('XMLCLIENT','Error No Token returned', 2);
 			Error::display('general');
 			return;
+		} else {
+			debug_event('xmlrpc',"token returned",'4');
 		}
 
 		// Figure out the host etc
@@ -1256,14 +1257,14 @@ class Catalog {
 		$port   = $match['2'] ? intval($match['2']) : '80';
 		$path   = $match['3'];
 
-		$full_url = ltrim("/$path/server/xmlrpc.server.php",'/');
-		$client = new xmlrpc_client($full_url,$server,$port);
+		$full_url = "/" . ltrim($path . "/server/xmlrpc.server.php",'/');
+		$client = new XML_RPC_Client($full_url,$server,$port);
 
 		/* encode the variables we need to send over */
-		$encoded_key	= new xmlrpcval($token,'string');
-		$encoded_path	= new xmlrpcval(Config::get('web_path'),'string');
+		$encoded_key	= new XML_RPC_Value($token,'string');
+		$encoded_path	= new XML_RPC_Value(Config::get('web_path'),'string');
 
-		$xmlrpc_message = new xmlrpcmsg('xmlrpcserver.get_catalogs', array($encoded_key,$encoded_path));
+		$xmlrpc_message = new XML_RPC_Message('xmlrpcserver.get_catalogs', array($encoded_key,$encoded_path));
 		$response = $client->send($xmlrpc_message,30);
 
 		if ($response->faultCode() ) {
@@ -1273,7 +1274,7 @@ class Catalog {
 			return;
 		}
 		 
-		$data = php_xmlrpc_decode($response->value());
+		$data = XML_RPC_Decode($response->value());
 			
 		// Print out the catalogs we are going to sync
 		foreach ($data as $vars) {
@@ -1313,13 +1314,13 @@ class Catalog {
 	 */
 	public function get_remote_song($client,$token,$start,$end) {
 
-		$encoded_start 	= new xmlrpcval($start,'int');
-		$encoded_end	= new xmlrpcval($end,'int');
-		$encoded_key	= new xmlrpcval($token,'string');
+		$encoded_start 	= new XML_RPC_Value($start,'int');
+		$encoded_end	= new XML_RPC_Value($end,'int');
+		$encoded_key	= new XML_RPC_Value($token,'string');
 
 		$query_array = array($encoded_key,$encoded_start,$encoded_end);
 
-		$xmlrpc_message = new xmlrpcmsg('xmlrpcserver.get_songs',$query_array);
+		$xmlrpc_message = new XML_RPC_Message('xmlrpcserver.get_songs',$query_array);
 		/* Depending upon the size of the target catalog this can be a very slow/long process */
 		set_time_limit(0);
 
@@ -1328,7 +1329,7 @@ class Catalog {
 		$value = $response->value();
 
 		if ( !$response->faultCode() ) {
-			$data = php_xmlrpc_decode($value);
+			$data = XML_RPC_Decode($value);
 			$this->update_remote_catalog($data,$this->path);
 			$total = $start + $end;
 			echo _('Added') . " $total...<br />";
@@ -2077,6 +2078,21 @@ class Catalog {
 			echo "<span style=\"color: #FOO;\">Error Adding Remote $url </span><br />$sql<br />\n";
 			flush();
 		}
+		
+		/**
+		 * TODO this data is not beïng passed through
+		 *
+		*/
+		/*
+		$song_id = Dba::insert_id();
+
+		self::check_tag($tag,$song_id);
+
+		// Add the EXT information
+		$sql = "INSERT INTO `song_data` (`song_id`,`comment`,`lyrics`) " .
+			" VALUES ('$song_id','$comment','$lyrics')"; 
+		$db_results = Dba::query($sql);
+		*/
 
 	} // insert_remote_song
 

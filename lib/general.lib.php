@@ -44,12 +44,12 @@ function session_exists($sid,$xml_rpc=0) {
 		$path = str_replace("//","/",$path);
 		
 		/* Create the XMLRPC client */
-		$client = new xmlrpc_client($path,$server,$port);
+		$client = new XML_RPC_Client($path,$server,$port);
 
 		/* Encode the SID of the incomming client */
-		$encoded_sid 		= new xmlrpcval($sid,"string");
+		$encoded_sid 		= new XML_RPC_Value($sid,"string");
 
-		$query = new xmlrpcmsg('remote_session_verify',array($encoded_sid) );
+		$query = new XML_RPC_Message('remote_session_verify',array($encoded_sid) );
 
 		/* Log this event */	
 		debug_event('xmlrpc-client',"Checking for Valid Remote Session:$sid",'3'); 
@@ -59,7 +59,7 @@ function session_exists($sid,$xml_rpc=0) {
 		$value = $response->value();
 
 		if (!$response->faultCode()) { 
-			$data = php_xmlrpc_decode($value);
+			$data = XML_RPC_Decode($value);
 			$found = $data;
 		}
 		

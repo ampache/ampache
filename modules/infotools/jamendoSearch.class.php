@@ -38,7 +38,7 @@ class jamendoSearch {
 	function jamendoSearch() { 
 
 		/* Load the XMLRPC client */
-		$this->_client = new xmlrpc_client('/xmlrpc/','www.jamendo.com',80); 
+		$this->_client = new XML_RPC_Client('/xmlrpc/','www.jamendo.com',80); 
 
 	} // jamendoSearch
 
@@ -48,13 +48,13 @@ class jamendoSearch {
 	 */
 	function query($command,$options) { 
 		
-		$encoded_command = new xmlrpcval($command);
-		$encoded_options = new xmlrpcval($options,'struct');
-		$message 	= new xmlrpcmsg('jamendo.get',array($encoded_command,$encoded_options)); 
+		$encoded_command = new XML_RPC_Value($command);
+		$encoded_options = new XML_RPC_Value($options,'struct');
+		$message 	= new XML_RPC_Message('jamendo.get',array($encoded_command,$encoded_options)); 
 		$response 	= $this->_client->send($message,15); 
 		$value 		= $response->value(); 
 
-		return php_xmlrpc_decode($value); 
+		return XML_RPC_Decode($value); 
 
 	} // query
 

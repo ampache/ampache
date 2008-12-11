@@ -18,17 +18,16 @@
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
-
 define('NO_SESSION','1');
 require_once('../lib/init.php');
 
 /* Set the correct headers */
-header("Content-type: text/xml; charset=" . Config::get('site_charset'));
-header("Content-Disposition: attachment; filename=xmlrpc-server.xml");
+//header("Content-type: text/xml; charset=" . Config::get('site_charset'));
+//header("Content-Disposition: attachment; filename=xmlrpc-server.xml");
 
 if (Config::get('xml_rpc')) { 
-	require_once Config::get('prefix') . "/modules/xmlrpc/xmlrpcs.inc";
-	require_once Config::get('prefix') . "/modules/xmlrpc/xmlrpc.inc";
+	require_once Config::get('prefix') . "/modules/pearxmlrpc/rpc.php";
+	require_once Config::get('prefix') . "/modules/pearxmlrpc/server.php";
 }
 else { 
 	debug_event('DENIED','Attempted to Access XMLRPC server with xml_rpc disabled','1'); 
@@ -37,7 +36,8 @@ else {
 
 // ** check that the remote server has access to this catalog
 if (Access::check_network('init-rpc','','5')) {
-
+	debug_event("init-rpc", "start listing functions ", '4');
+	
 	// Define an array of classes we need to pull from for the 
 	$classes = array('xmlRpcServer'); 	
 
@@ -46,12 +46,14 @@ if (Access::check_network('init-rpc','','5')) {
 
 		foreach ($methods as $method) { 
 			$name = strtolower($class) . '.' . strtolower($method); 
-			$functions[$name] = array('function'=>$class . '::' . $method); 
+			$functions[$name] = array('function'=>$class . '::' . $method);
+			debug_event("init-rpc", "add function: " . $name, '4'); 
 		} 
 
 	} // end foreach of classes
-
-	$server = new xmlrpc_server($functions);
+	debug_event("init-rpc", "starting rpc class XML_RPC_SERVER", '4');
+	$server = new XML_RPC_Server($functions,1);
+	debug_event("init-rpc", "done", '4');
 } // test for ACL 
 
 ?>

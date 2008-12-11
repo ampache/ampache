@@ -312,11 +312,16 @@ class Preference {
 	        $results['auth_methods']        = trim($results['auth_methods'])	? explode(",",$results['auth_methods']) : array(); 
 	        $results['tag_order']           = trim($results['tag_order'])		? explode(",",$results['tag_order']) : array(); 
 	        $results['album_art_order']     = trim($results['album_art_order'])	? explode(",",$results['album_art_order']) : array(); 
-	        $results['amazon_base_urls']    = trim($results['amazin_base_urls'])	? explode(",",$results['amazon_base_urls']) : array(); 
-
+	        if (isset($results['amazin_base_urls']))
+	        	$results['amazon_base_urls']    = trim($results['amazin_base_urls'])	? explode(",",$results['amazon_base_urls']) : array();
+	        else 
+				$results['amazon_base_urls']= array();
+				
 	        foreach ($results as $key=>$data) {
-	                if (strcasecmp($data,"true") == "0") { $results[$key] = 1; }
-	                if (strcasecmp($data,"false") == "0") { $results[$key] = 0; }
+        		if (!is_array($data)) {
+                	if (strcasecmp($data,"true") == "0") { $results[$key] = 1; }
+                	if (strcasecmp($data,"false") == "0") { $results[$key] = 0; }
+        		}
 	        }
 
         	return $results;
