@@ -86,8 +86,8 @@ if (!count($results)) {
 } 
 
 /** This is the version.... fluf nothing more... **/
-$results['version']		= '3.5-Alpha1 (Build 005)';
-$results['int_config_version']	= '7'; 
+$results['version']		= '3.5-Alpha1';
+$results['int_config_version']	= '9'; 
 
 $results['raw_web_path']	= $results['web_path'];
 $results['web_path']		= $http_type . $_SERVER['HTTP_HOST'] . $results['web_path'];
