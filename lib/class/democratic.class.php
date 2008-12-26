@@ -236,7 +236,12 @@ class Democratic extends tmpPlaylist {
          */
         public function get_url() {
 
-                $link = Config::get('web_path') . '/play/index.php?demo_id=' . scrub_out($this->id) .
+                if (Config::get('force_http_play') OR !empty($force_http)) {
+                        $port = Config::get('http_port') ? ':' . Config::get('http_port') : '';
+                        $web_path = str_replace("https://" . $_SERVER['HTTP_HOST'], "http://" . $_SERVER['SERVER_NAME'] . $port,$web_path);
+                }
+
+                $link = $web_path . '/play/index.php?demo_id=' . scrub_out($this->id) .
                         '&sid=' . Stream::get_session() . '&uid=' . scrub_out($GLOBALS['user']->id);
                 return $link;
 
