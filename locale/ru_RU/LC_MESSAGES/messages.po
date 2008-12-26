@@ -2,24 +2,24 @@
 # Copyright (C) 2007 Ampache.org
 # This file is distributed under the same license as the Ampache package.
 # Alexey Illarionov <littlesavage@orionet.ru>, 2007.
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: ampache\n"
 "Report-Msgid-Bugs-To: translations at ampache.org\n"
-"POT-Creation-Date: 2008-12-09 11:04+0900\n"
+"POT-Creation-Date: 2008-12-26 10:25+0900\n"
 "PO-Revision-Date: 2007-02-05 21:58-0000\n"
 "Last-Translator: Alexey Illarionov <littlesavage@orionet.ru>\n"
-"Language-Team: British English <en@li.org>\n"
+"Language-Team: Russian <translations@ampache.org>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=koi8-r\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3;    plural=n%10==1 && n%100!=11 ? 0 :        n%"
-"10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%"
+"10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
 #: ../../search.php:38
 msgid "Error: No Keyword Entered"
-msgstr "Ошибка: Не введены ключевые слова"
+msgstr "п·я┬п╦п╠п╨п╟: п²п╣ п╡п╡п╣п╢п╣п╫я▀ п╨п╩я▌я┤п╣п╡я▀п╣ я│п╩п╬п╡п╟"
 
 #: ../../templates/show_album_row.inc.php:23
 #: ../../templates/show_song_row.inc.php:23
@@ -49,7 +49,7 @@ msgstr "Ошибка: Не введены ключевые слова"
 #: ../../templates/show_playlist_row.inc.php:23
 #: ../../templates/show_admin_tools.inc.php:45
 msgid "Add"
-msgstr "Добавить"
+msgstr "п■п╬п╠п╟п╡п╦я┌я▄"
 
 #: ../../templates/show_album_row.inc.php:24
 #: ../../templates/sidebar_home.inc.php:102
@@ -62,12 +62,12 @@ msgstr "Добавить"
 #: ../../modules/localplay/mpd.controller.php:495
 #: ../../modules/localplay/httpq.controller.php:494
 msgid "Random"
-msgstr "Случайно"
+msgstr "п║п╩я┐я┤п╟п╧п╫п╬"
 
 #: ../../templates/show_album_row.inc.php:44
 #: ../../templates/show_song_row.inc.php:38
 msgid "Post Shout"
-msgstr "Выкрикнуть"
+msgstr "п▓я▀п╨я─п╦п╨п╫я┐я┌я▄"
 
 #: ../../templates/show_album_row.inc.php:49
 #: ../../templates/show_playlist.inc.php:36
@@ -76,7 +76,7 @@ msgstr "Выкрикнуть"
 #: ../../templates/show_search_options.inc.php:28
 #: ../../templates/show_playlist_row.inc.php:33
 msgid "Batch Download"
-msgstr "Скачка пакетом"
+msgstr "п║п╨п╟я┤п╨п╟ п©п╟п╨п╣я┌п╬п╪"
 
 #: ../../templates/show_album_row.inc.php:53
 #: ../../templates/show_song_row.inc.php:47
@@ -86,13 +86,13 @@ msgstr "Скачка пакетом"
 #: ../../templates/show_playlist_song_row.inc.php:37
 #: ../../templates/show_playlist_row.inc.php:37
 msgid "Edit"
-msgstr "Изменить"
+msgstr "п≤п╥п╪п╣п╫п╦я┌я▄"
 
 #: ../../templates/show_user_preferences.inc.php:28
 #: ../../templates/show_preferences.inc.php:28
 #, fuzzy, php-format
 msgid "Editing %s preferences"
-msgstr "предпочтения"
+msgstr "п©я─п╣п╢п©п╬я┤я┌п╣п╫п╦я▐"
 
 #: ../../templates/show_user_preferences.inc.php:36
 #: ../../templates/show_preference_box.inc.php:40
@@ -101,121 +101,121 @@ msgstr "предпочтения"
 #: ../../templates/show_preference_admin.inc.php:49
 #: ../../templates/show_debug.inc.php:85
 msgid "Preference"
-msgstr "Предпочтение"
+msgstr "п÷я─п╣п╢п©п╬я┤я┌п╣п╫п╦п╣"
 
 #: ../../templates/show_user_preferences.inc.php:37
 #: ../../templates/show_preference_box.inc.php:41
 #: ../../templates/show_preference_box.inc.php:71
 #: ../../templates/show_debug.inc.php:37 ../../templates/show_debug.inc.php:86
 msgid "Value"
-msgstr "Значение"
+msgstr "п≈п╫п╟я┤п╣п╫п╦п╣"
 
 #: ../../templates/show_user_preferences.inc.php:50
 #: ../../templates/show_preferences.inc.php:34
 msgid "Update Preferences"
-msgstr "Обновить настройки"
+msgstr "п·п╠п╫п╬п╡п╦я┌я▄ п╫п╟я│я┌я─п╬п╧п╨п╦"
 
 #: ../../templates/show_song_row.inc.php:35
 #, fuzzy
 msgid "Song Information"
-msgstr "Информация"
+msgstr "п≤п╫я└п╬я─п╪п╟я├п╦я▐"
 
 #: ../../templates/show_song_row.inc.php:43
 #: ../../templates/show_artist.inc.php:51
 #: ../../templates/show_album.inc.php:77
 #: ../../templates/show_playlist_song_row.inc.php:33
 msgid "Download"
-msgstr "Скачать"
+msgstr "п║п╨п╟я┤п╟я┌я▄"
 
 #: ../../templates/show_localplay_control.inc.php:25
 msgid "Previous"
-msgstr "Пред."
+msgstr "п÷я─п╣п╢."
 
 #: ../../templates/show_localplay_control.inc.php:26
 msgid "Stop"
-msgstr "Стоп"
+msgstr "п║я┌п╬п©"
 
 #: ../../templates/show_localplay_control.inc.php:27
 msgid "Pause"
-msgstr "Пауза"
+msgstr "п÷п╟я┐п╥п╟"
 
 #: ../../templates/show_localplay_control.inc.php:28
 #: ../../templates/show_manage_democratic.inc.php:57
 #: ../../templates/rightbar.inc.php:25
 msgid "Play"
-msgstr "Играть"
+msgstr "п≤пЁя─п╟я┌я▄"
 
 #: ../../templates/show_localplay_control.inc.php:29
 #: ../../templates/list_header.inc.php:101
 msgid "Next"
-msgstr "След."
+msgstr "п║п╩п╣п╢."
 
 #: ../../templates/show_test.inc.php:32
 #: ../../templates/show_test_config.inc.php:40
 #: ../../templates/sidebar_admin.inc.php:45
 msgid "Ampache Debug"
-msgstr "Отладка Ampache"
+msgstr "п·я┌п╩п╟п╢п╨п╟ Ampache"
 
 #: ../../templates/show_test.inc.php:33
 msgid ""
 "You've reached this page because a configuration error has occured. Debug "
 "Information below"
 msgstr ""
-"Вы вышли на эту страницу, так как возникла ошибка конфигурации. Отладочная "
-"информация представлена ниже."
+"п▓я▀ п╡я▀я┬п╩п╦ п╫п╟ я█я┌я┐ я│я┌я─п╟п╫п╦я├я┐, я┌п╟п╨ п╨п╟п╨ п╡п╬п╥п╫п╦п╨п╩п╟ п╬я┬п╦п╠п╨п╟ п╨п╬п╫я└п╦пЁя┐я─п╟я├п╦п╦. п·я┌п╩п╟п╢п╬я┤п╫п╟я▐ "
+"п╦п╫я└п╬я─п╪п╟я├п╦я▐ п©я─п╣п╢я│я┌п╟п╡п╩п╣п╫п╟ п╫п╦п╤п╣."
 
 #: ../../templates/show_test.inc.php:38
 msgid "CHECK"
-msgstr "ПРОВЕРКА"
+msgstr "п÷п═п·п▓п∙п═п п░"
 
 #: ../../templates/show_test.inc.php:40
 msgid "STATUS"
-msgstr "СТАТУС"
+msgstr "п║п╒п░п╒пёп║"
 
 #: ../../templates/show_test.inc.php:42
 msgid "DESCRIPTION"
-msgstr "ОПИСАНИЕ"
+msgstr "п·п÷п≤п║п░п²п≤п∙"
 
 #: ../../templates/show_test.inc.php:45
 #: ../../templates/show_install_lang.inc.php:54
 msgid "PHP Version"
-msgstr "Версия PHP"
+msgstr "п▓п╣я─я│п╦я▐ PHP"
 
 #: ../../templates/show_test.inc.php:60
 msgid ""
 "This tests to make sure that you are running a version of PHP that is known "
 "to work with Ampache."
-msgstr "Тест на возможность Ampache работать с имеющийся версией PHP."
+msgstr "п╒п╣я│я┌ п╫п╟ п╡п╬п╥п╪п╬п╤п╫п╬я│я┌я▄ Ampache я─п╟п╠п╬я┌п╟я┌я▄ я│ п╦п╪п╣я▌я┴п╦п╧я│я▐ п╡п╣я─я│п╦п╣п╧ PHP."
 
 #: ../../templates/show_test.inc.php:64
 #: ../../templates/show_install_lang.inc.php:64
 msgid "Mysql for PHP"
-msgstr "Mysql для PHP"
+msgstr "Mysql п╢п╩я▐ PHP"
 
 #: ../../templates/show_test.inc.php:79
 msgid ""
 "This test checks to see if you have the mysql extensions loaded for PHP. "
 "These are required for Ampache to work."
 msgstr ""
-"Тест на загрузку расширения mysql для PHP. Оно требуется для работы Ampache"
+"п╒п╣я│я┌ п╫п╟ п╥п╟пЁя─я┐п╥п╨я┐ я─п╟я│я┬п╦я─п╣п╫п╦я▐ mysql п╢п╩я▐ PHP. п·п╫п╬ я┌я─п╣п╠я┐п╣я┌я│я▐ п╢п╩я▐ я─п╟п╠п╬я┌я▀ Ampache"
 
 #: ../../templates/show_test.inc.php:83
 #: ../../templates/show_install_lang.inc.php:78
 msgid "PHP Session Support"
-msgstr "Поддержка PHP Session"
+msgstr "п÷п╬п╢п╢п╣я─п╤п╨п╟ PHP Session"
 
 #: ../../templates/show_test.inc.php:98
 msgid ""
 "This test checks to make sure that you have PHP session support enabled. "
 "Sessions are required for Ampache to work."
 msgstr ""
-"Тест на наличие поддержки Php Sessions. Поддержка Sessions требуется для "
-"работы Ampache"
+"п╒п╣я│я┌ п╫п╟ п╫п╟п╩п╦я┤п╦п╣ п©п╬п╢п╢п╣я─п╤п╨п╦ Php Sessions. п÷п╬п╢п╢п╣я─п╤п╨п╟ Sessions я┌я─п╣п╠я┐п╣я┌я│я▐ п╢п╩я▐ "
+"я─п╟п╠п╬я┌я▀ Ampache"
 
 #: ../../templates/show_test.inc.php:102
 #: ../../templates/show_install_lang.inc.php:88
 msgid "PHP ICONV Support"
-msgstr "Поддержка PHP ICONV"
+msgstr "п÷п╬п╢п╢п╣я─п╤п╨п╟ PHP ICONV"
 
 #: ../../templates/show_test.inc.php:116
 msgid ""
@@ -226,20 +226,20 @@ msgstr ""
 #: ../../templates/show_test.inc.php:120
 #: ../../templates/show_install_lang.inc.php:98
 msgid "PHP PCRE Support"
-msgstr "Поддержка PHP PCRE"
+msgstr "п÷п╬п╢п╢п╣я─п╤п╨п╟ PHP PCRE"
 
 #: ../../templates/show_test.inc.php:133
 msgid ""
 "This test makes sure you have PCRE support compiled into your version of "
 "PHP, this is required for Ampache."
 msgstr ""
-"Этот тест предназначен для проверки того, что PHP собран с поддержкой PCRE,"
-"необходимой для Ampache"
+"п╜я┌п╬я┌ я┌п╣я│я┌ п©я─п╣п╢п╫п╟п╥п╫п╟я┤п╣п╫ п╢п╩я▐ п©я─п╬п╡п╣я─п╨п╦ я┌п╬пЁп╬, я┤я┌п╬ PHP я│п╬п╠я─п╟п╫ я│ п©п╬п╢п╢п╣я─п╤п╨п╬п╧ PCRE,"
+"п╫п╣п╬п╠я┘п╬п╢п╦п╪п╬п╧ п╢п╩я▐ Ampache"
 
 #: ../../templates/show_test.inc.php:137
 #: ../../templates/show_install_lang.inc.php:108
 msgid "PHP PutENV Support"
-msgstr "Поддержка PHP PutENV"
+msgstr "п÷п╬п╢п╢п╣я─п╤п╨п╟ PHP PutENV"
 
 #: ../../templates/show_test.inc.php:150
 msgid ""
@@ -247,14 +247,14 @@ msgid ""
 "to modify the memory limits. While not required, without these abilities "
 "some features of ampache may not work correctly"
 msgstr ""
-"Тест на то что PHP запущен не в безопасном режиме(SafeMode), и что имеется "
-"возможность редактирования лимитовпамяти. Хотя это и не требуется, без этих "
-"возможностей некоторые функцииAmpache могут работать неправильно."
+"п╒п╣я│я┌ п╫п╟ я┌п╬ я┤я┌п╬ PHP п╥п╟п©я┐я┴п╣п╫ п╫п╣ п╡ п╠п╣п╥п╬п©п╟я│п╫п╬п╪ я─п╣п╤п╦п╪п╣(SafeMode), п╦ я┤я┌п╬ п╦п╪п╣п╣я┌я│я▐ "
+"п╡п╬п╥п╪п╬п╤п╫п╬я│я┌я▄ я─п╣п╢п╟п╨я┌п╦я─п╬п╡п╟п╫п╦я▐ п╩п╦п╪п╦я┌п╬п╡п©п╟п╪я▐я┌п╦. п╔п╬я┌я▐ я█я┌п╬ п╦ п╫п╣ я┌я─п╣п╠я┐п╣я┌я│я▐, п╠п╣п╥ я█я┌п╦я┘ "
+"п╡п╬п╥п╪п╬п╤п╫п╬я│я┌п╣п╧ п╫п╣п╨п╬я┌п╬я─я▀п╣ я└я┐п╫п╨я├п╦п╦Ampache п╪п╬пЁя┐я┌ я─п╟п╠п╬я┌п╟я┌я▄ п╫п╣п©я─п╟п╡п╦п╩я▄п╫п╬."
 
 #: ../../templates/show_test.inc.php:154
 #: ../../templates/show_install_config.inc.php:91
 msgid "Ampache.cfg.php Exists"
-msgstr "Ampache.cfg.php существует"
+msgstr "Ampache.cfg.php я│я┐я┴п╣я│я┌п╡я┐п╣я┌"
 
 #: ../../templates/show_test.inc.php:167
 msgid ""
@@ -262,22 +262,22 @@ msgid ""
 "ampache.cfg.php is not in the correct locations or\n"
 "\tit is not currently readable by your webserver."
 msgstr ""
-"Будет произведена попытка чтения /config/ampache.cfg.php Ее неудача будет "
-"означать что либо ampache.cfg.php имеет неверное местоположение,\n"
-"\tлибо он не может быть прочитан Вашим веб-сервером."
+"п▒я┐п╢п╣я┌ п©я─п╬п╦п╥п╡п╣п╢п╣п╫п╟ п©п╬п©я▀я┌п╨п╟ я┤я┌п╣п╫п╦я▐ /config/ampache.cfg.php п∙п╣ п╫п╣я┐п╢п╟я┤п╟ п╠я┐п╢п╣я┌ "
+"п╬п╥п╫п╟я┤п╟я┌я▄ я┤я┌п╬ п╩п╦п╠п╬ ampache.cfg.php п╦п╪п╣п╣я┌ п╫п╣п╡п╣я─п╫п╬п╣ п╪п╣я│я┌п╬п©п╬п╩п╬п╤п╣п╫п╦п╣,\n"
+"\tп╩п╦п╠п╬ п╬п╫ п╫п╣ п╪п╬п╤п╣я┌ п╠я▀я┌я▄ п©я─п╬я┤п╦я┌п╟п╫ п▓п╟я┬п╦п╪ п╡п╣п╠-я│п╣я─п╡п╣я─п╬п╪."
 
 #: ../../templates/show_test.inc.php:173
 #: ../../templates/show_install_config.inc.php:108
 msgid "Ampache.cfg.php Configured?"
-msgstr "Ampache.cfg.php настроен?"
+msgstr "Ampache.cfg.php п╫п╟я│я┌я─п╬п╣п╫?"
 
 #: ../../templates/show_test.inc.php:190
 msgid ""
 "This test makes sure that you have set all of the required configuration "
 "variables and that we are able to completely parse your config file"
 msgstr ""
-"Тест на наличие всех обязатаельных параметры конфигурации, и "
-"файлаконфигурации на чтение и возможность обработки"
+"п╒п╣я│я┌ п╫п╟ п╫п╟п╩п╦я┤п╦п╣ п╡я│п╣я┘ п╬п╠я▐п╥п╟я┌п╟п╣п╩я▄п╫я▀я┘ п©п╟я─п╟п╪п╣я┌я─я▀ п╨п╬п╫я└п╦пЁя┐я─п╟я├п╦п╦, п╦ "
+"я└п╟п╧п╩п╟п╨п╬п╫я└п╦пЁя┐я─п╟я├п╦п╦ п╫п╟ я┤я┌п╣п╫п╦п╣ п╦ п╡п╬п╥п╪п╬п╤п╫п╬я│я┌я▄ п╬п╠я─п╟п╠п╬я┌п╨п╦"
 
 #: ../../templates/show_test.inc.php:194
 msgid "DB Connection"
@@ -288,7 +288,7 @@ msgid ""
 "This attempts to connect to your database using the values from your ampache."
 "cfg.php"
 msgstr ""
-"Попытка подключенияк СУБД используя значения параметров  ampache.cfg.php"
+"п÷п╬п©я▀я┌п╨п╟ п©п╬п╢п╨п╩я▌я┤п╣п╫п╦я▐п╨ п║пёп▒п■ п╦я│п©п╬п╩я▄п╥я┐я▐ п╥п╫п╟я┤п╣п╫п╦я▐ п©п╟я─п╟п╪п╣я┌я─п╬п╡  ampache.cfg.php"
 
 #: ../../templates/show_test.inc.php:214
 msgid "DB Inserted"
@@ -297,12 +297,12 @@ msgstr ""
 #: ../../templates/show_test.inc.php:236
 #: ../../templates/show_install_config.inc.php:63
 msgid "Web Path"
-msgstr "Веб путь"
+msgstr "п▓п╣п╠ п©я┐я┌я▄"
 
 #: ../../templates/show_albums.inc.php:41
 #: ../../templates/show_albums.inc.php:71
 msgid "Cover"
-msgstr "Обложка"
+msgstr "п·п╠п╩п╬п╤п╨п╟"
 
 #: ../../templates/show_albums.inc.php:43
 #: ../../templates/show_albums.inc.php:73
@@ -322,7 +322,7 @@ msgstr "Обложка"
 #: ../../templates/show_playlist_songs.inc.php:65
 #: ../../templates/show_now_playing_row.inc.php:52
 msgid "Album"
-msgstr "Альбом"
+msgstr "п░п╩я▄п╠п╬п╪"
 
 #: ../../templates/show_albums.inc.php:44
 #: ../../templates/show_albums.inc.php:74
@@ -348,7 +348,7 @@ msgstr "Альбом"
 #: ../../templates/show_playlist_songs.inc.php:64
 #: ../../templates/show_now_playing_row.inc.php:59
 msgid "Artist"
-msgstr "Исполнитель"
+msgstr "п≤я│п©п╬п╩п╫п╦я┌п╣п╩я▄"
 
 #: ../../templates/show_albums.inc.php:45
 #: ../../templates/show_albums.inc.php:75
@@ -361,7 +361,7 @@ msgstr "Исполнитель"
 #: ../../templates/show_genres.inc.php:74
 #: ../../lib/class/browse.class.php:1081
 msgid "Songs"
-msgstr "Песни"
+msgstr "п÷п╣я│п╫п╦"
 
 #: ../../templates/show_albums.inc.php:46
 #: ../../templates/show_albums.inc.php:76
@@ -370,7 +370,7 @@ msgstr "Песни"
 #: ../../templates/show_edit_album.inc.php:33
 #: ../../templates/show_search.inc.php:60
 msgid "Year"
-msgstr "Год"
+msgstr "п⌠п╬п╢"
 
 #: ../../templates/show_albums.inc.php:47
 #: ../../templates/show_albums.inc.php:77
@@ -380,7 +380,7 @@ msgstr "Год"
 #: ../../templates/show_songs.inc.php:49 ../../templates/show_songs.inc.php:76
 #: ../../templates/show_now_playing_row.inc.php:36
 msgid "Rating"
-msgstr "Рейтинг"
+msgstr "п═п╣п╧я┌п╦п╫пЁ"
 
 #: ../../templates/show_albums.inc.php:48
 #: ../../templates/show_albums.inc.php:78
@@ -390,7 +390,7 @@ msgstr "Рейтинг"
 #: ../../templates/show_playlists.inc.php:62
 #: ../../templates/show_album.inc.php:48
 msgid "Actions"
-msgstr "Действия"
+msgstr "п■п╣п╧я│я┌п╡п╦я▐"
 
 #: ../../templates/show_albums.inc.php:65
 #: ../../templates/show_artists.inc.php:58
@@ -408,12 +408,12 @@ msgstr "Действия"
 #: ../../templates/show_songs.inc.php:64
 #: ../../templates/show_recently_played.inc.php:95
 msgid "Not Enough Data"
-msgstr "Недостаточно данных"
+msgstr "п²п╣п╢п╬я│я┌п╟я┌п╬я┤п╫п╬ п╢п╟п╫п╫я▀я┘"
 
 #: ../../templates/show_users.inc.php:39
 #: ../../templates/show_users.inc.php:104
 msgid "Fullname"
-msgstr "Полное имя"
+msgstr "п÷п╬п╩п╫п╬п╣ п╦п╪я▐"
 
 #: ../../templates/show_users.inc.php:39
 #: ../../templates/show_users.inc.php:104
@@ -426,27 +426,27 @@ msgstr "Полное имя"
 #: ../../templates/show_user_registration.inc.php:73
 #: ../../templates/show_now_playing_row.inc.php:29
 msgid "Username"
-msgstr "Имя пользователя"
+msgstr "п≤п╪я▐ п©п╬п╩я▄п╥п╬п╡п╟я┌п╣п╩я▐"
 
 #: ../../templates/show_users.inc.php:40
 #: ../../templates/show_users.inc.php:105 ../../templates/show_user.inc.php:32
 msgid "Last Seen"
-msgstr "Последнее появление"
+msgstr "п÷п╬я│п╩п╣п╢п╫п╣п╣ п©п╬я▐п╡п╩п╣п╫п╦п╣"
 
 #: ../../templates/show_users.inc.php:41
 #: ../../templates/show_users.inc.php:106
 msgid "Registration Date"
-msgstr "Дата регистрации"
+msgstr "п■п╟я┌п╟ я─п╣пЁп╦я│я┌я─п╟я├п╦п╦"
 
 #: ../../templates/show_users.inc.php:42
 #: ../../templates/show_users.inc.php:107 ../../templates/show_user.inc.php:33
 msgid "Activity"
-msgstr "Активность"
+msgstr "п░п╨я┌п╦п╡п╫п╬я│я┌я▄"
 
 #: ../../templates/show_users.inc.php:44
 #: ../../templates/show_users.inc.php:109
 msgid "Last Ip"
-msgstr "Последний IP"
+msgstr "п÷п╬я│п╩п╣п╢п╫п╦п╧ IP"
 
 #: ../../templates/show_users.inc.php:46
 #: ../../templates/show_users.inc.php:111
@@ -478,18 +478,18 @@ msgstr "Последний IP"
 #: ../../templates/show_manage_shoutbox.inc.php:39
 #: ../../templates/show_manage_shoutbox.inc.php:63
 msgid "Action"
-msgstr "Действие"
+msgstr "п■п╣п╧я│я┌п╡п╦п╣"
 
 #: ../../templates/show_users.inc.php:47
 #: ../../templates/show_users.inc.php:112
 msgid "On-line"
-msgstr "Онлайн"
+msgstr "п·п╫п╩п╟п╧п╫"
 
 #: ../../templates/show_users.inc.php:53 ../../templates/show_user.inc.php:22
 #: ../../lib/class/user.class.php:662 ../../lib/class/catalog.class.php:152
 #: ../../lib/class/catalog.class.php:153 ../../lib/preferences.php:261
 msgid "Never"
-msgstr "Никогда"
+msgstr "п²п╦п╨п╬пЁп╢п╟"
 
 #: ../../templates/show_users.inc.php:54 ../../templates/show_user.inc.php:23
 #: ../../lib/class/flag.class.php:282 ../../lib/class/localplay.class.php:648
@@ -497,25 +497,25 @@ msgstr "Никогда"
 #: ../../modules/localplay/mpd.controller.php:511
 #: ../../modules/localplay/httpq.controller.php:510
 msgid "Unknown"
-msgstr "Неизвестно"
+msgstr "п²п╣п╦п╥п╡п╣я│я┌п╫п╬"
 
 #: ../../templates/show_edit_user.inc.php:23
 msgid "Editing existing User"
-msgstr "Редактирование пользователя"
+msgstr "п═п╣п╢п╟п╨я┌п╦я─п╬п╡п╟п╫п╦п╣ п©п╬п╩я▄п╥п╬п╡п╟я┌п╣п╩я▐"
 
 #: ../../templates/show_edit_user.inc.php:37
 #: ../../templates/show_user.inc.php:30
 #: ../../templates/show_add_user.inc.php:37
 #: ../../templates/show_user_registration.inc.php:83
 msgid "Full Name"
-msgstr "Полное имя"
+msgstr "п÷п╬п╩п╫п╬п╣ п╦п╪я▐"
 
 #: ../../templates/show_edit_user.inc.php:44
 #: ../../templates/show_add_user.inc.php:44
 #: ../../templates/show_account.inc.php:33
 #: ../../templates/show_user_registration.inc.php:92
 msgid "E-mail"
-msgstr "Е-майл"
+msgstr "п∙-п╪п╟п╧п╩"
 
 #: ../../templates/show_edit_user.inc.php:52
 #: ../../templates/show_add_user.inc.php:52
@@ -525,7 +525,7 @@ msgstr "Е-майл"
 #: ../../modules/localplay/mpd.controller.php:235
 #: ../../modules/localplay/httpq.controller.php:219
 msgid "Password"
-msgstr "Пароль"
+msgstr "п÷п╟я─п╬п╩я▄"
 
 #: ../../templates/show_edit_user.inc.php:61
 #: ../../templates/show_add_user.inc.php:61
@@ -533,12 +533,12 @@ msgstr "Пароль"
 #: ../../templates/show_install_account.inc.php:69
 #: ../../templates/show_user_registration.inc.php:110
 msgid "Confirm Password"
-msgstr "Подтвердить пароль"
+msgstr "п÷п╬п╢я┌п╡п╣я─п╢п╦я┌я▄ п©п╟я─п╬п╩я▄"
 
 #: ../../templates/show_edit_user.inc.php:69
 #: ../../templates/show_add_user.inc.php:69
 msgid "User Access Level"
-msgstr "Уровень доступа пользователя"
+msgstr "пёя─п╬п╡п╣п╫я▄ п╢п╬я│я┌я┐п©п╟ п©п╬п╩я▄п╥п╬п╡п╟я┌п╣п╩я▐"
 
 #: ../../templates/show_edit_user.inc.php:74
 #: ../../templates/show_preference_box.inc.php:58
@@ -546,7 +546,7 @@ msgstr "Уровень доступа пользователя"
 #: ../../templates/show_add_user.inc.php:74
 #: ../../lib/class/democratic.class.php:102 ../../admin/users.php:125
 msgid "Guest"
-msgstr "Гость"
+msgstr "п⌠п╬я│я┌я▄"
 
 #: ../../templates/show_edit_user.inc.php:75
 #: ../../templates/show_preference_box.inc.php:59
@@ -564,7 +564,7 @@ msgstr "Гость"
 #: ../../lib/class/democratic.class.php:105 ../../lib/preferences.php:231
 #: ../../admin/users.php:126
 msgid "User"
-msgstr "Пользователь"
+msgstr "п÷п╬п╩я▄п╥п╬п╡п╟я┌п╣п╩я▄"
 
 #: ../../templates/show_edit_user.inc.php:76
 #: ../../templates/show_preference_box.inc.php:60
@@ -572,7 +572,7 @@ msgstr "Пользователь"
 #: ../../templates/show_create_democratic.inc.php:42
 #: ../../lib/class/democratic.class.php:108
 msgid "Content Manager"
-msgstr "Менеджер содержания"
+msgstr "п°п╣п╫п╣п╢п╤п╣я─ я│п╬п╢п╣я─п╤п╟п╫п╦я▐"
 
 #: ../../templates/show_edit_user.inc.php:77
 #: ../../templates/show_preference_box.inc.php:61
@@ -580,7 +580,7 @@ msgstr "Менеджер содержания"
 #: ../../templates/show_create_democratic.inc.php:43
 #: ../../lib/class/democratic.class.php:111
 msgid "Catalog Manager"
-msgstr "Менеджер каталогов"
+msgstr "п°п╣п╫п╣п╢п╤п╣я─ п╨п╟я┌п╟п╩п╬пЁп╬п╡"
 
 #: ../../templates/show_edit_user.inc.php:78
 #: ../../templates/show_preference_box.inc.php:62
@@ -593,11 +593,11 @@ msgstr "Менеджер каталогов"
 #: ../../lib/class/democratic.class.php:114 ../../lib/preferences.php:233
 #: ../../admin/users.php:127
 msgid "Admin"
-msgstr "Админ"
+msgstr "п░п╢п╪п╦п╫"
 
 #: ../../templates/show_edit_user.inc.php:85
 msgid "Update User"
-msgstr "Обновить пользователя"
+msgstr "п·п╠п╫п╬п╡п╦я┌я▄ п©п╬п╩я▄п╥п╬п╡п╟я┌п╣п╩я▐"
 
 #: ../../templates/show_catalogs.inc.php:32
 #: ../../templates/show_catalogs.inc.php:48
@@ -624,48 +624,48 @@ msgstr "Обновить пользователя"
 #: ../../templates/show_access_list.inc.php:45
 #: ../../templates/show_playlist_edit.inc.php:30
 msgid "Name"
-msgstr "Имя"
+msgstr "п≤п╪я▐"
 
 #: ../../templates/show_catalogs.inc.php:33
 #: ../../templates/show_catalogs.inc.php:49
 #: ../../templates/show_add_catalog.inc.php:48
 msgid "Path"
-msgstr "Путь"
+msgstr "п÷я┐я┌я▄"
 
 #: ../../templates/show_catalogs.inc.php:34
 #: ../../templates/show_catalogs.inc.php:50
 msgid "Last Verify"
-msgstr "Последняя проверка"
+msgstr "п÷п╬я│п╩п╣п╢п╫я▐я▐ п©я─п╬п╡п╣я─п╨п╟"
 
 #: ../../templates/show_catalogs.inc.php:35
 #: ../../templates/show_catalogs.inc.php:51
 msgid "Last Add"
-msgstr "Последнее добавление"
+msgstr "п÷п╬я│п╩п╣п╢п╫п╣п╣ п╢п╬п╠п╟п╡п╩п╣п╫п╦п╣"
 
 #: ../../templates/show_localplay_controllers.inc.php:33
 #: ../../templates/show_localplay_controllers.inc.php:64
 #: ../../templates/show_plugins.inc.php:33
 #: ../../templates/show_plugins.inc.php:62
 msgid "Description"
-msgstr "Описание"
+msgstr "п·п©п╦я│п╟п╫п╦п╣"
 
 #: ../../templates/show_localplay_controllers.inc.php:34
 #: ../../templates/show_localplay_controllers.inc.php:65
 #: ../../templates/show_plugins.inc.php:34
 #: ../../templates/show_plugins.inc.php:63
 msgid "Version"
-msgstr "Версия"
+msgstr "п▓п╣я─я│п╦я▐"
 
 #: ../../templates/show_localplay_controllers.inc.php:44
 #: ../../templates/show_duplicates.inc.php:36
 #: ../../templates/show_duplicates.inc.php:75 ../../lib/preferences.php:165
 msgid "Disable"
-msgstr "Выключено"
+msgstr "п▓я▀п╨п╩я▌я┤п╣п╫п╬"
 
 #: ../../templates/show_localplay_controllers.inc.php:48
 #: ../../templates/show_plugins.inc.php:42
 msgid "Activate"
-msgstr "Активировать"
+msgstr "п░п╨я┌п╦п╡п╦я─п╬п╡п╟я┌я▄"
 
 #: ../../templates/show_localplay_controllers.inc.php:59
 #: ../../templates/show_plugins.inc.php:57
@@ -674,26 +674,26 @@ msgstr "Активировать"
 #: ../../templates/show_disabled_songs.inc.php:52
 #: ../../templates/show_manage_shoutbox.inc.php:54
 msgid "No Records Found"
-msgstr "Записей не найдено"
+msgstr "п≈п╟п©п╦я│п╣п╧ п╫п╣ п╫п╟п╧п╢п╣п╫п╬"
 
 #: ../../templates/show_big_art.inc.php:29
 #: ../../templates/show_album_art.inc.php:41
 msgid "Album Art"
-msgstr "Обложка альбома"
+msgstr "п·п╠п╩п╬п╤п╨п╟ п╟п╩я▄п╠п╬п╪п╟"
 
 #: ../../templates/show_big_art.inc.php:33
 msgid "Click to close window"
-msgstr "Щелкните для закрытия окна"
+msgstr "п╘п╣п╩п╨п╫п╦я┌п╣ п╢п╩я▐ п╥п╟п╨я─я▀я┌п╦я▐ п╬п╨п╫п╟"
 
 #: ../../templates/show_preference_box.inc.php:43
 #: ../../templates/show_preference_box.inc.php:73
 msgid "Apply to All"
-msgstr "Применить ко всем"
+msgstr "п÷я─п╦п╪п╣п╫п╦я┌я▄ п╨п╬ п╡я│п╣п╪"
 
 #: ../../templates/show_preference_box.inc.php:44
 #: ../../templates/show_preference_box.inc.php:74
 msgid "Access Level"
-msgstr "Уровень доступа"
+msgstr "пёя─п╬п╡п╣п╫я▄ п╢п╬я│я┌я┐п©п╟"
 
 #: ../../templates/show_edit_song_row.inc.php:45
 #: ../../templates/show_edit_live_stream_row.inc.php:52
@@ -702,7 +702,7 @@ msgstr "Уровень доступа"
 #: ../../templates/show_edit_artist_row.inc.php:32
 #: ../../templates/show_edit_album_row.inc.php:48
 msgid "Save Changes"
-msgstr "Сохранить изменения"
+msgstr "п║п╬я┘я─п╟п╫п╦я┌я▄ п╦п╥п╪п╣п╫п╣п╫п╦я▐"
 
 #: ../../templates/show_artists.inc.php:38
 #: ../../templates/show_artists.inc.php:65
@@ -712,7 +712,7 @@ msgstr "Сохранить изменения"
 #: ../../templates/show_genre.inc.php:32 ../../lib/ui.lib.php:408
 #: ../../lib/class/browse.class.php:1087
 msgid "Albums"
-msgstr "Альбомы"
+msgstr "п░п╩я▄п╠п╬п╪я▀"
 
 #: ../../templates/show_artists.inc.php:39
 #: ../../templates/show_artists.inc.php:66
@@ -722,17 +722,17 @@ msgstr "Альбомы"
 #: ../../templates/show_playlist_songs.inc.php:47
 #: ../../templates/show_playlist_songs.inc.php:68
 msgid "Time"
-msgstr "Время"
+msgstr "п▓я─п╣п╪я▐"
 
 #: ../../templates/show_duplicate.inc.php:23
 #: ../../templates/show_duplicate.inc.php:42
 #: ../../templates/sidebar_modules.inc.php:33
 msgid "Find Duplicates"
-msgstr "Найти дубликаты"
+msgstr "п²п╟п╧я┌п╦ п╢я┐п╠п╩п╦п╨п╟я┌я▀"
 
 #: ../../templates/show_duplicate.inc.php:27
 msgid "Search Type"
-msgstr "Тип поиска"
+msgstr "п╒п╦п© п©п╬п╦я│п╨п╟"
 
 #: ../../templates/show_duplicate.inc.php:33
 #: ../../templates/show_edit_song.inc.php:31
@@ -740,23 +740,23 @@ msgstr "Тип поиска"
 #: ../../templates/show_disabled_songs.inc.php:34
 #: ../../templates/show_disabled_songs.inc.php:57
 msgid "Title"
-msgstr "Название"
+msgstr "п²п╟п╥п╡п╟п╫п╦п╣"
 
 #: ../../templates/show_duplicate.inc.php:34
 msgid "Artist and Title"
-msgstr "Исполнитель и название"
+msgstr "п≤я│п©п╬п╩п╫п╦я┌п╣п╩я▄ п╦ п╫п╟п╥п╡п╟п╫п╦п╣"
 
 #: ../../templates/show_duplicate.inc.php:35
 msgid "Artist, Album and Title"
-msgstr "Исполнитель, альбом и название"
+msgstr "п≤я│п©п╬п╩п╫п╦я┌п╣п╩я▄, п╟п╩я▄п╠п╬п╪ п╦ п╫п╟п╥п╡п╟п╫п╦п╣"
 
 #: ../../templates/show_duplicate.inc.php:37
 msgid "Search Disabled Songs"
-msgstr "Искать отключенные песни"
+msgstr "п≤я│п╨п╟я┌я▄ п╬я┌п╨п╩я▌я┤п╣п╫п╫я▀п╣ п©п╣я│п╫п╦"
 
 #: ../../templates/show_import_playlist.inc.php:23
 msgid "Importing a Playlist from a File"
-msgstr "Импортировать плейлист из файла"
+msgstr "п≤п╪п©п╬я─я┌п╦я─п╬п╡п╟я┌я▄ п©п╩п╣п╧п╩п╦я│я┌ п╦п╥ я└п╟п╧п╩п╟"
 
 #: ../../templates/show_import_playlist.inc.php:28
 #: ../../templates/show_search.inc.php:66
@@ -765,50 +765,50 @@ msgstr "Импортировать плейлист из файла"
 #: ../../templates/show_duplicates.inc.php:43
 #: ../../templates/show_duplicates.inc.php:82
 msgid "Filename"
-msgstr "Файл"
+msgstr "п╓п╟п╧п╩"
 
 #: ../../templates/show_import_playlist.inc.php:35
 msgid "Playlist Type"
-msgstr "Тип плейлиста"
+msgstr "п╒п╦п© п©п╩п╣п╧п╩п╦я│я┌п╟"
 
 #: ../../templates/show_import_playlist.inc.php:47
 msgid "Import Playlist"
-msgstr "Импортировать плейлист"
+msgstr "п≤п╪п©п╬я─я┌п╦я─п╬п╡п╟я┌я▄ п©п╩п╣п╧п╩п╦я│я┌"
 
 #: ../../templates/show_edit_live_stream_row.inc.php:27
 #: ../../templates/show_add_live_stream.inc.php:42
 msgid "Stream URL"
-msgstr "Потоковый URL"
+msgstr "п÷п╬я┌п╬п╨п╬п╡я▀п╧ URL"
 
 #: ../../templates/show_edit_live_stream_row.inc.php:28
 #: ../../templates/show_add_live_stream.inc.php:35
 msgid "Homepage"
-msgstr "Домашняя страница"
+msgstr "п■п╬п╪п╟я┬п╫я▐я▐ я│я┌я─п╟п╫п╦я├п╟"
 
 #: ../../templates/show_edit_live_stream_row.inc.php:29
 #: ../../templates/show_live_streams.inc.php:37
 #: ../../templates/show_live_streams.inc.php:59
 #: ../../templates/show_add_live_stream.inc.php:55
 msgid "Callsign"
-msgstr "Позывной"
+msgstr "п÷п╬п╥я▀п╡п╫п╬п╧"
 
 #: ../../templates/show_edit_live_stream_row.inc.php:30
 #: ../../templates/show_live_streams.inc.php:38
 #: ../../templates/show_live_streams.inc.php:60
 #: ../../templates/show_add_live_stream.inc.php:49
 msgid "Frequency"
-msgstr "Частота"
+msgstr "п╖п╟я│я┌п╬я┌п╟"
 
 #: ../../templates/show_live_streams.inc.php:39
 #: ../../templates/show_live_streams.inc.php:61
 #: ../../templates/show_search.inc.php:54
 #, fuzzy
 msgid "Tag"
-msgstr "Обновить тег"
+msgstr "п·п╠п╫п╬п╡п╦я┌я▄ я┌п╣пЁ"
 
 #: ../../templates/sidebar_home.inc.php:24
 msgid "Browse"
-msgstr "Просмотр"
+msgstr "п÷я─п╬я│п╪п╬я┌я─"
 
 #: ../../templates/sidebar_home.inc.php:32
 #: ../../templates/sidebar_home.inc.php:73
@@ -816,7 +816,7 @@ msgstr "Просмотр"
 #: ../../templates/show_playlist_songs.inc.php:42
 #: ../../templates/show_playlist_songs.inc.php:63
 msgid "Song Title"
-msgstr "Названия"
+msgstr "п²п╟п╥п╡п╟п╫п╦я▐"
 
 #: ../../templates/sidebar_home.inc.php:35
 #: ../../lib/class/browse.class.php:1141
@@ -829,45 +829,45 @@ msgstr ""
 #: ../../templates/show_manage_democratic.inc.php:34
 #: ../../templates/show_play_selected.inc.php:47 ../../lib/ui.lib.php:367
 msgid "Playlist"
-msgstr "Плейлист"
+msgstr "п÷п╩п╣п╧п╩п╦я│я┌"
 
 #: ../../templates/sidebar_home.inc.php:37
 #: ../../lib/class/browse.class.php:1104
 msgid "Radio Stations"
-msgstr "Радио станции"
+msgstr "п═п╟п╢п╦п╬ я│я┌п╟п╫я├п╦п╦"
 
 #: ../../templates/sidebar_home.inc.php:41
 msgid "Filters"
-msgstr "Фильтры"
+msgstr "п╓п╦п╩я▄я┌я─я▀"
 
 #: ../../templates/sidebar_home.inc.php:45
 msgid "Starts With"
-msgstr "Начинающиеся с"
+msgstr "п²п╟я┤п╦п╫п╟я▌я┴п╦п╣я│я▐ я│"
 
 #: ../../templates/sidebar_home.inc.php:51
 msgid "Minimum Count"
-msgstr "Минимальное количество"
+msgstr "п°п╦п╫п╦п╪п╟п╩я▄п╫п╬п╣ п╨п╬п╩п╦я┤п╣я│я┌п╡п╬"
 
 #: ../../templates/sidebar_home.inc.php:55
 msgid "Rated"
-msgstr "Оцененный"
+msgstr "п·я├п╣п╫п╣п╫п╫я▀п╧"
 
 #: ../../templates/sidebar_home.inc.php:59
 msgid "Unplayed"
-msgstr "Непроигранный"
+msgstr "п²п╣п©я─п╬п╦пЁя─п╟п╫п╫я▀п╧"
 
 #: ../../templates/sidebar_home.inc.php:63
 #: ../../templates/show_artist.inc.php:55
 msgid "Show Art"
-msgstr "Показать обложку"
+msgstr "п÷п╬п╨п╟п╥п╟я┌я▄ п╬п╠п╩п╬п╤п╨я┐"
 
 #: ../../templates/sidebar_home.inc.php:68
 msgid "All Playlists"
-msgstr "Все плейлисты"
+msgstr "п▓я│п╣ п©п╩п╣п╧п╩п╦я│я┌я▀"
 
 #: ../../templates/sidebar_home.inc.php:87
 msgid "Currently Playing"
-msgstr "Сейчас играет"
+msgstr "п║п╣п╧я┤п╟я│ п╦пЁя─п╟п╣я┌"
 
 #: ../../templates/sidebar_home.inc.php:89
 #: ../../templates/show_playtype_switch.inc.php:36
@@ -875,143 +875,143 @@ msgstr "Сейчас играет"
 #: ../../modules/localplay/mpd.controller.php:491
 #: ../../modules/localplay/httpq.controller.php:490
 msgid "Democratic"
-msgstr "Демократичный"
+msgstr "п■п╣п╪п╬п╨я─п╟я┌п╦я┤п╫я▀п╧"
 
 #: ../../templates/sidebar_home.inc.php:98
 #: ../../templates/sidebar_localplay.inc.php:32
 #: ../../templates/show_playtype_switch.inc.php:34
 #: ../../templates/sidebar.inc.php:28 ../../lib/preferences.php:182
 msgid "Localplay"
-msgstr "Локальное воспроизведение"
+msgstr "п⌡п╬п╨п╟п╩я▄п╫п╬п╣ п╡п╬я│п©я─п╬п╦п╥п╡п╣п╢п╣п╫п╦п╣"
 
 #: ../../templates/sidebar_home.inc.php:107
 msgid "Advanced"
-msgstr "Расширенный"
+msgstr "п═п╟я│я┬п╦я─п╣п╫п╫я▀п╧"
 
 #: ../../templates/show_confirmation.inc.php:27
 #: ../../templates/show_update_items.inc.php:27
 msgid "Continue"
-msgstr "Продолжить"
+msgstr "п÷я─п╬п╢п╬п╩п╤п╦я┌я▄"
 
 #: ../../templates/show_confirmation.inc.php:32
 #: ../../templates/show_similar_artists.inc.php:78
 msgid "Cancel"
-msgstr "Отменить"
+msgstr "п·я┌п╪п╣п╫п╦я┌я▄"
 
 #: ../../templates/show_flag_row.inc.php:31
 msgid "Reject"
-msgstr "Отклонить"
+msgstr "п·я┌п╨п╩п╬п╫п╦я┌я▄"
 
 #: ../../templates/show_flag_row.inc.php:33 ../../lib/preferences.php:164
 msgid "Enable"
-msgstr "Включено"
+msgstr "п▓п╨п╩я▌я┤п╣п╫п╬"
 
 #: ../../templates/show_playlists.inc.php:35
 #: ../../templates/show_playlists.inc.php:58
 msgid "Playlist Name"
-msgstr "Плейлист"
+msgstr "п÷п╩п╣п╧п╩п╦я│я┌"
 
 #: ../../templates/show_playlists.inc.php:37
 #: ../../templates/show_playlists.inc.php:60
 msgid "# Songs"
-msgstr "# Песни"
+msgstr "# п÷п╣я│п╫п╦"
 
 #: ../../templates/show_playlists.inc.php:38
 #: ../../templates/show_playlists.inc.php:61
 msgid "Owner"
-msgstr "Владелец"
+msgstr "п▓п╩п╟п╢п╣п╩п╣я├"
 
 #: ../../templates/show_edit_catalog.inc.php:22
 #, fuzzy, php-format
 msgid "Settings for %s"
-msgstr "Настройки для"
+msgstr "п²п╟я│я┌я─п╬п╧п╨п╦ п╢п╩я▐"
 
 #: ../../templates/show_edit_catalog.inc.php:29
 #: ../../templates/show_add_catalog.inc.php:35
 msgid "Auto-inserted Fields"
-msgstr "Автоматически заполненные поля"
+msgstr "п░п╡я┌п╬п╪п╟я┌п╦я┤п╣я│п╨п╦ п╥п╟п©п╬п╩п╫п╣п╫п╫я▀п╣ п©п╬п╩я▐"
 
 #: ../../templates/show_edit_catalog.inc.php:30
 #: ../../templates/show_add_catalog.inc.php:36
 msgid "album name"
-msgstr "название альбома"
+msgstr "п╫п╟п╥п╡п╟п╫п╦п╣ п╟п╩я▄п╠п╬п╪п╟"
 
 #: ../../templates/show_edit_catalog.inc.php:31
 #: ../../templates/show_add_catalog.inc.php:37
 msgid "artist name"
-msgstr "имя исполнителя"
+msgstr "п╦п╪я▐ п╦я│п©п╬п╩п╫п╦я┌п╣п╩я▐"
 
 #: ../../templates/show_edit_catalog.inc.php:32
 #: ../../templates/show_add_catalog.inc.php:38
 msgid "id3 comment"
-msgstr "id3 комментарий"
+msgstr "id3 п╨п╬п╪п╪п╣п╫я┌п╟я─п╦п╧"
 
 #: ../../templates/show_edit_catalog.inc.php:33
 #: ../../templates/show_add_catalog.inc.php:39
 msgid "genre"
-msgstr "стиль"
+msgstr "я│я┌п╦п╩я▄"
 
 #: ../../templates/show_edit_catalog.inc.php:34
 #: ../../templates/show_add_catalog.inc.php:40
 msgid "track number (padded with leading 0)"
-msgstr "номер трека (заполненный начальным 0)"
+msgstr "п╫п╬п╪п╣я─ я┌я─п╣п╨п╟ (п╥п╟п©п╬п╩п╫п╣п╫п╫я▀п╧ п╫п╟я┤п╟п╩я▄п╫я▀п╪ 0)"
 
 #: ../../templates/show_edit_catalog.inc.php:35
 #: ../../templates/show_add_catalog.inc.php:41
 msgid "song title"
-msgstr "название песни"
+msgstr "п╫п╟п╥п╡п╟п╫п╦п╣ п©п╣я│п╫п╦"
 
 #: ../../templates/show_edit_catalog.inc.php:36
 #: ../../templates/show_add_catalog.inc.php:42
 msgid "year"
-msgstr "год"
+msgstr "пЁп╬п╢"
 
 #: ../../templates/show_edit_catalog.inc.php:37
 #: ../../templates/show_add_catalog.inc.php:43
 msgid "other"
-msgstr "другое"
+msgstr "п╢я─я┐пЁп╬п╣"
 
 #: ../../templates/show_edit_catalog.inc.php:41
 #: ../../templates/show_add_catalog.inc.php:52
 msgid "Catalog Type"
-msgstr "Тип каталога"
+msgstr "п╒п╦п© п╨п╟я┌п╟п╩п╬пЁп╟"
 
 #: ../../templates/show_edit_catalog.inc.php:45
 #: ../../templates/show_add_catalog.inc.php:61
 msgid "XML-RPC Key"
-msgstr "XML-RPC ключ"
+msgstr "XML-RPC п╨п╩я▌я┤"
 
 #: ../../templates/show_edit_catalog.inc.php:47
 #: ../../templates/show_add_catalog.inc.php:62
 msgid "Required for Remote Catalogs"
-msgstr "Требуется для не локальных каталогов"
+msgstr "п╒я─п╣п╠я┐п╣я┌я│я▐ п╢п╩я▐ п╫п╣ п╩п╬п╨п╟п╩я▄п╫я▀я┘ п╨п╟я┌п╟п╩п╬пЁп╬п╡"
 
 #: ../../templates/show_edit_catalog.inc.php:51
 msgid "Filename pattern"
-msgstr "Шаблон имени файла"
+msgstr "п╗п╟п╠п╩п╬п╫ п╦п╪п╣п╫п╦ я└п╟п╧п╩п╟"
 
 #: ../../templates/show_edit_catalog.inc.php:58
 #: ../../templates/show_add_catalog.inc.php:70
 msgid "Folder Pattern"
-msgstr "Шаблон папки"
+msgstr "п╗п╟п╠п╩п╬п╫ п©п╟п©п╨п╦"
 
 #: ../../templates/show_edit_catalog.inc.php:58
 #: ../../templates/show_add_catalog.inc.php:70
 msgid "(no leading or ending '/')"
-msgstr "(без начального или завершающего '/')"
+msgstr "(п╠п╣п╥ п╫п╟я┤п╟п╩я▄п╫п╬пЁп╬ п╦п╩п╦ п╥п╟п╡п╣я─я┬п╟я▌я┴п╣пЁп╬ '/')"
 
 #: ../../templates/show_edit_catalog.inc.php:68
 msgid "Save Catalog Settings"
-msgstr "Сохранить настройки каталога"
+msgstr "п║п╬я┘я─п╟п╫п╦я┌я▄ п╫п╟я│я┌я─п╬п╧п╨п╦ п╨п╟я┌п╟п╩п╬пЁп╟"
 
 #: ../../templates/show_manage_democratic.inc.php:22
 msgid "Manage Democratic Playlists"
-msgstr "Работа с общим плейлистом"
+msgstr "п═п╟п╠п╬я┌п╟ я│ п╬п╠я┴п╦п╪ п©п╩п╣п╧п╩п╦я│я┌п╬п╪"
 
 #: ../../templates/show_manage_democratic.inc.php:35
 #: ../../templates/show_create_democratic.inc.php:30
 msgid "Base Playlist"
-msgstr "Главный плейлист"
+msgstr "п⌠п╩п╟п╡п╫я▀п╧ п©п╩п╣п╧п╩п╦я│я┌"
 
 #: ../../templates/show_manage_democratic.inc.php:36
 msgid "Cooldown"
@@ -1025,64 +1025,64 @@ msgstr ""
 #: ../../templates/show_create_democratic.inc.php:38
 #: ../../templates/show_access_list.inc.php:48
 msgid "Level"
-msgstr "Уровень"
+msgstr "пёя─п╬п╡п╣п╫я▄"
 
 #: ../../templates/show_manage_democratic.inc.php:38
 #: ../../lib/preferences.php:255 ../../lib/preferences.php:262
 msgid "Default"
-msgstr "По умолчанию"
+msgstr "п÷п╬ я┐п╪п╬п╩я┤п╟п╫п╦я▌"
 
 #: ../../templates/show_manage_democratic.inc.php:69
 msgid "Create New Playlist"
-msgstr "Создать плейлист"
+msgstr "п║п╬п╥п╢п╟я┌я▄ п©п╩п╣п╧п╩п╦я│я┌"
 
 #: ../../templates/show_playlist.inc.php:26
 #, fuzzy, php-format
 msgid "%s %s Playlist"
-msgstr "Главный плейлист"
+msgstr "п⌠п╩п╟п╡п╫я▀п╧ п©п╩п╣п╧п╩п╦я│я┌"
 
 #: ../../templates/show_playlist.inc.php:31
 msgid "Normalize Tracks"
-msgstr "Нормализировать треки"
+msgstr "п²п╬я─п╪п╟п╩п╦п╥п╦я─п╬п╡п╟я┌я▄ я┌я─п╣п╨п╦"
 
 #: ../../templates/show_playlist.inc.php:40
 #: ../../templates/show_playlist.inc.php:41
 msgid "Add All"
-msgstr "Добавить все"
+msgstr "п■п╬п╠п╟п╡п╦я┌я▄ п╡я│п╣"
 
 #: ../../templates/show_playlist.inc.php:44
 #: ../../templates/show_playlist.inc.php:45
 msgid "Add Random"
-msgstr "Добавить случайно"
+msgstr "п■п╬п╠п╟п╡п╦я┌я▄ я│п╩я┐я┤п╟п╧п╫п╬"
 
 #: ../../templates/sidebar_localplay.inc.php:35
 #: ../../templates/show_localplay_add_instance.inc.php:35
 msgid "Add Instance"
-msgstr "Добавить сущность"
+msgstr "п■п╬п╠п╟п╡п╦я┌я▄ я│я┐я┴п╫п╬я│я┌я▄"
 
 #: ../../templates/sidebar_localplay.inc.php:36
 msgid "Show instances"
-msgstr "Показать сущности"
+msgstr "п÷п╬п╨п╟п╥п╟я┌я▄ я│я┐я┴п╫п╬я│я┌п╦"
 
 #: ../../templates/sidebar_localplay.inc.php:38
 #: ../../templates/sidebar_modules.inc.php:48
 msgid "Show Playlist"
-msgstr "Показать плейлист"
+msgstr "п÷п╬п╨п╟п╥п╟я┌я▄ п©п╩п╣п╧п╩п╦я│я┌"
 
 #: ../../templates/sidebar_localplay.inc.php:42
 msgid "Active Instance"
-msgstr "Активная сущность"
+msgstr "п░п╨я┌п╦п╡п╫п╟я▐ я│я┐я┴п╫п╬я│я┌я▄"
 
 #: ../../templates/sidebar_localplay.inc.php:44
 #: ../../templates/show_gather_art.inc.php:24
 #: ../../templates/show_adds_catalog.inc.php:25 ../../lib/ui.lib.php:660
 #: ../../lib/preferences.php:174 ../../lib/preferences.php:216
 msgid "None"
-msgstr "Нет"
+msgstr "п²п╣я┌"
 
 #: ../../templates/sidebar_localplay.inc.php:60
 msgid "Localplay Disabled"
-msgstr "Локальное воспроизведение отключено"
+msgstr "п⌡п╬п╨п╟п╩я▄п╫п╬п╣ п╡п╬я│п©я─п╬п╦п╥п╡п╣п╢п╣п╫п╦п╣ п╬я┌п╨п╩я▌я┤п╣п╫п╬"
 
 #: ../../templates/sidebar_localplay.inc.php:62
 msgid "Allow Localplay set to False"
@@ -1095,7 +1095,7 @@ msgstr ""
 #: ../../templates/sidebar_localplay.inc.php:66
 #: ../../templates/show_denied.inc.php:32
 msgid "Access Denied"
-msgstr "Доступ запрещен"
+msgstr "п■п╬я│я┌я┐п© п╥п╟п©я─п╣я┴п╣п╫"
 
 #: ../../templates/footer.inc.php:25
 msgid "Using Old Password Encryption, Please Reset your Password"
@@ -1112,17 +1112,17 @@ msgstr ""
 #: ../../templates/show_add_live_stream.inc.php:24
 #: ../../templates/sidebar_modules.inc.php:42
 msgid "Add Radio Station"
-msgstr "Добавить радио станцию"
+msgstr "п■п╬п╠п╟п╡п╦я┌я▄ я─п╟п╢п╦п╬ я│я┌п╟п╫я├п╦я▌"
 
 #: ../../templates/show_add_live_stream.inc.php:61
 #: ../../templates/show_export.inc.php:32
 msgid "Catalog"
-msgstr "Каталог"
+msgstr "п п╟я┌п╟п╩п╬пЁ"
 
 #: ../../templates/show_index.inc.php:38
 #: ../../templates/show_random_albums.inc.php:24
 msgid "Albums of the Moment"
-msgstr "Случайные альбомы"
+msgstr "п║п╩я┐я┤п╟п╧п╫я▀п╣ п╟п╩я▄п╠п╬п╪я▀"
 
 #: ../../templates/show_index.inc.php:38
 msgid "Loading..."
@@ -1130,41 +1130,41 @@ msgstr ""
 
 #: ../../templates/show_edit_artist.inc.php:23
 msgid "Edit Artist"
-msgstr "Редактировать исполнителя"
+msgstr "п═п╣п╢п╟п╨я┌п╦я─п╬п╡п╟я┌я▄ п╦я│п©п╬п╩п╫п╦я┌п╣п╩я▐"
 
 #: ../../templates/show_edit_artist.inc.php:35
 #: ../../templates/show_edit_song.inc.php:81
 #: ../../templates/show_edit_album.inc.php:41
 msgid "Flag for Retagging"
-msgstr "Отметить для изменения тега"
+msgstr "п·я┌п╪п╣я┌п╦я┌я▄ п╢п╩я▐ п╦п╥п╪п╣п╫п╣п╫п╦я▐ я┌п╣пЁп╟"
 
 #: ../../templates/show_edit_artist.inc.php:41
 msgid "Update Artist"
-msgstr "Обновить исполнителя"
+msgstr "п·п╠п╫п╬п╡п╦я┌я▄ п╦я│п©п╬п╩п╫п╦я┌п╣п╩я▐"
 
 #: ../../templates/show_edit_access.inc.php:22
 msgid "Edit ACL"
-msgstr "Редактировать ACL"
+msgstr "п═п╣п╢п╟п╨я┌п╦я─п╬п╡п╟я┌я▄ ACL"
 
 #: ../../templates/show_edit_access.inc.php:30
 #: ../../templates/show_add_access.inc.php:63
 msgid "ACL Type"
-msgstr "Тип ACL"
+msgstr "п╒п╦п© ACL"
 
 #: ../../templates/show_edit_access.inc.php:34
 #: ../../templates/show_add_access.inc.php:66
 msgid "Stream Access"
-msgstr "Потоковый доступ"
+msgstr "п÷п╬я┌п╬п╨п╬п╡я▀п╧ п╢п╬я│я┌я┐п©"
 
 #: ../../templates/show_edit_access.inc.php:35
 #: ../../templates/show_add_access.inc.php:67
 msgid "Web Interface"
-msgstr "Веб интерфейс"
+msgstr "п▓п╣п╠ п╦п╫я┌п╣я─я└п╣п╧я│"
 
 #: ../../templates/show_edit_access.inc.php:36
 #: ../../templates/show_add_access.inc.php:68
 msgid "Local Network Definition"
-msgstr "Определение локальный сети"
+msgstr "п·п©я─п╣п╢п╣п╩п╣п╫п╦п╣ п╩п╬п╨п╟п╩я▄п╫я▀п╧ я│п╣я┌п╦"
 
 #: ../../templates/show_edit_access.inc.php:37
 #: ../../templates/show_add_access.inc.php:69
@@ -1174,36 +1174,36 @@ msgstr "RPC"
 #: ../../templates/show_edit_access.inc.php:43
 #: ../../templates/show_add_access.inc.php:32
 msgid "Start IP Address"
-msgstr "Начальный IP адрес"
+msgstr "п²п╟я┤п╟п╩я▄п╫я▀п╧ IP п╟п╢я─п╣я│"
 
 #: ../../templates/show_edit_access.inc.php:50
 #: ../../templates/show_add_access.inc.php:39
 msgid "End IP Address"
-msgstr "Конечный IP адрес"
+msgstr "п п╬п╫п╣я┤п╫я▀п╧ IP п╟п╢я─п╣я│"
 
 #: ../../templates/show_edit_access.inc.php:63
 #: ../../templates/show_add_access.inc.php:77
 msgid "Remote Key"
-msgstr "Удаленный ключ"
+msgstr "пёп╢п╟п╩п╣п╫п╫я▀п╧ п╨п╩я▌я┤"
 
 #: ../../templates/show_edit_access.inc.php:73
 #: ../../templates/show_add_access.inc.php:55
 #: ../../templates/show_play_selected.inc.php:49
 #: ../../lib/class/access.class.php:328
 msgid "View"
-msgstr "Просмотр"
+msgstr "п÷я─п╬я│п╪п╬я┌я─"
 
 #: ../../templates/show_edit_access.inc.php:74
 #: ../../templates/show_add_access.inc.php:56
 #: ../../lib/class/access.class.php:331
 msgid "Read"
-msgstr "Чтение"
+msgstr "п╖я┌п╣п╫п╦п╣"
 
 #: ../../templates/show_edit_access.inc.php:75
 #: ../../templates/show_add_access.inc.php:57
 #: ../../lib/class/access.class.php:334
 msgid "Read/Write"
-msgstr "Чтение/Запись"
+msgstr "п╖я┌п╣п╫п╦п╣/п≈п╟п©п╦я│я▄"
 
 #: ../../templates/show_edit_access.inc.php:76
 #: ../../templates/show_add_access.inc.php:58
@@ -1214,7 +1214,7 @@ msgstr "Чтение/Запись"
 #: ../../lib/ui.lib.php:150 ../../lib/ui.lib.php:632
 #: ../../lib/class/access.class.php:325 ../../lib/class/access.class.php:350
 msgid "All"
-msgstr "Все"
+msgstr "п▓я│п╣"
 
 #: ../../templates/show_edit_access.inc.php:82
 #: ../../templates/show_preference_admin.inc.php:55
@@ -1224,46 +1224,46 @@ msgstr "Все"
 #: ../../templates/show_manage_catalogs.inc.php:42
 #: ../../templates/show_playlist_edit.inc.php:47
 msgid "Update"
-msgstr "Обновить"
+msgstr "п·п╠п╫п╬п╡п╦я┌я▄"
 
 #: ../../templates/show_similar_artists.inc.php:23
 msgid "Similar Artists"
-msgstr "Схожие исполнители"
+msgstr "п║я┘п╬п╤п╦п╣ п╦я│п©п╬п╩п╫п╦я┌п╣п╩п╦"
 
 #: ../../templates/show_similar_artists.inc.php:25
 msgid "Please check the artists you want to merge with the current one"
 msgstr ""
-"Пожалуйста выделите исполнителей, которых вы хотите объединить с текущим"
+"п÷п╬п╤п╟п╩я┐п╧я│я┌п╟ п╡я▀п╢п╣п╩п╦я┌п╣ п╦я│п©п╬п╩п╫п╦я┌п╣п╩п╣п╧, п╨п╬я┌п╬я─я▀я┘ п╡я▀ я┘п╬я┌п╦я┌п╣ п╬п╠я┼п╣п╢п╦п╫п╦я┌я▄ я│ я┌п╣п╨я┐я┴п╦п╪"
 
 #: ../../templates/show_similar_artists.inc.php:58
 #, fuzzy
 msgid "No Similar Artists found"
-msgstr "Схожие исполнители"
+msgstr "п║я┘п╬п╤п╦п╣ п╦я│п©п╬п╩п╫п╦я┌п╣п╩п╦"
 
 #: ../../templates/show_similar_artists.inc.php:66
 msgid "Back"
-msgstr "Назад"
+msgstr "п²п╟п╥п╟п╢"
 
 #: ../../templates/show_similar_artists.inc.php:77
 msgid "Rename selected"
-msgstr "Переименовать выделенные"
+msgstr "п÷п╣я─п╣п╦п╪п╣п╫п╬п╡п╟я┌я▄ п╡я▀п╢п╣п╩п╣п╫п╫я▀п╣"
 
 #: ../../templates/show_similar_artists.inc.php:91
 msgid "Advanced Options"
-msgstr "Дополнительные настройки"
+msgstr "п■п╬п©п╬п╩п╫п╦я┌п╣п╩я▄п╫я▀п╣ п╫п╟я│я┌я─п╬п╧п╨п╦"
 
 #: ../../templates/show_similar_artists.inc.php:152
 msgid "Search Again"
-msgstr "Искать заново"
+msgstr "п≤я│п╨п╟я┌я▄ п╥п╟п╫п╬п╡п╬"
 
 #: ../../templates/show_clean_catalog.inc.php:23
 #, fuzzy, php-format
 msgid "Cleaning the %s Catalog"
-msgstr "Очистка"
+msgstr "п·я┤п╦я│я┌п╨п╟"
 
 #: ../../templates/show_clean_catalog.inc.php:25
 msgid "Checking"
-msgstr "Проверка"
+msgstr "п÷я─п╬п╡п╣я─п╨п╟"
 
 #: ../../templates/show_clean_catalog.inc.php:26
 #: ../../templates/show_run_add_catalog.inc.php:25
@@ -1271,37 +1271,37 @@ msgstr "Проверка"
 #: ../../templates/show_adds_catalog.inc.php:26
 #: ../../templates/show_verify_catalog.inc.php:26
 msgid "Reading"
-msgstr "Чтение"
+msgstr "п╖я┌п╣п╫п╦п╣"
 
 #: ../../templates/sidebar_preferences.inc.php:9
 #: ../../templates/sidebar.inc.php:29 ../../lib/ui.lib.php:373
 msgid "Preferences"
-msgstr "Предпочтения"
+msgstr "п÷я─п╣п╢п©п╬я┤я┌п╣п╫п╦я▐"
 
 #: ../../templates/sidebar_preferences.inc.php:18
 msgid "Account"
-msgstr "Аккаунт"
+msgstr "п░п╨п╨п╟я┐п╫я┌"
 
 #: ../../templates/sidebar_preferences.inc.php:22
 msgid "Server Config"
-msgstr "Настройки сервера"
+msgstr "п²п╟я│я┌я─п╬п╧п╨п╦ я│п╣я─п╡п╣я─п╟"
 
 #: ../../templates/show_flag.inc.php:41
 msgid "Flag Song"
-msgstr "Отметить песню"
+msgstr "п·я┌п╪п╣я┌п╦я┌я▄ п©п╣я│п╫я▌"
 
 #: ../../templates/show_flag.inc.php:45
 #: ../../templates/show_edit_song.inc.php:27
 msgid "File"
-msgstr "Файл"
+msgstr "п╓п╟п╧п╩"
 
 #: ../../templates/show_flag.inc.php:49
 msgid "Item"
-msgstr "Позиция"
+msgstr "п÷п╬п╥п╦я├п╦я▐"
 
 #: ../../templates/show_flag.inc.php:53
 msgid "Reason to flag"
-msgstr "Причина отметки"
+msgstr "п÷я─п╦я┤п╦п╫п╟ п╬я┌п╪п╣я┌п╨п╦"
 
 #: ../../templates/show_flag.inc.php:56 ../../templates/rightbar.inc.php:98
 #: ../../templates/show_catalog_row.inc.php:33
@@ -1314,19 +1314,19 @@ msgstr "Причина отметки"
 #: ../../templates/show_admin_tools.inc.php:53
 #: ../../lib/class/flag.class.php:270
 msgid "Delete"
-msgstr "Удалить"
+msgstr "пёп╢п╟п╩п╦я┌я▄"
 
 #: ../../templates/show_flag.inc.php:57
 msgid "Incorrect Tags"
-msgstr "Неверные теги"
+msgstr "п²п╣п╡п╣я─п╫я▀п╣ я┌п╣пЁп╦"
 
 #: ../../templates/show_flag.inc.php:58 ../../lib/class/flag.class.php:276
 msgid "Re-encode"
-msgstr "Перекодировать"
+msgstr "п÷п╣я─п╣п╨п╬п╢п╦я─п╬п╡п╟я┌я▄"
 
 #: ../../templates/show_flag.inc.php:59 ../../lib/class/flag.class.php:279
 msgid "Other"
-msgstr "Другое"
+msgstr "п■я─я┐пЁп╬п╣"
 
 #: ../../templates/show_flag.inc.php:64
 #: ../../templates/show_edit_song.inc.php:73
@@ -1336,18 +1336,18 @@ msgstr "Другое"
 #: ../../templates/show_manage_shoutbox.inc.php:37
 #: ../../templates/show_manage_shoutbox.inc.php:61
 msgid "Comment"
-msgstr "Комментарий"
+msgstr "п п╬п╪п╪п╣п╫я┌п╟я─п╦п╧"
 
 #: ../../templates/show_flag.inc.php:69
 #: ../../templates/show_flagged.inc.php:36
 #: ../../templates/show_flagged.inc.php:55
 msgid "Flag"
-msgstr "Отмеченные"
+msgstr "п·я┌п╪п╣я┤п╣п╫п╫я▀п╣"
 
 #: ../../templates/show_playtype_switch.inc.php:32
 #: ../../lib/preferences.php:176
 msgid "Stream"
-msgstr "Потоковое вещание"
+msgstr "п÷п╬я┌п╬п╨п╬п╡п╬п╣ п╡п╣я┴п╟п╫п╦п╣"
 
 #: ../../templates/show_playtype_switch.inc.php:38
 #: ../../lib/preferences.php:184
@@ -1356,14 +1356,14 @@ msgstr ""
 
 #: ../../templates/show_preference_admin.inc.php:22
 msgid "Preference Administration"
-msgstr "Управление предпочтениями"
+msgstr "пёп©я─п╟п╡п╩п╣п╫п╦п╣ п©я─п╣п╢п©п╬я┤я┌п╣п╫п╦я▐п╪п╦"
 
 #: ../../templates/show_install_config.inc.php:33
 #: ../../templates/show_install_lang.inc.php:34
 #: ../../templates/show_install.inc.php:33
 #: ../../templates/show_install_account.inc.php:33
 msgid "Ampache Installation"
-msgstr "Установка Ampache"
+msgstr "пёя│я┌п╟п╫п╬п╡п╨п╟ Ampache"
 
 #: ../../templates/show_install_config.inc.php:39
 #: ../../templates/show_install_lang.inc.php:41
@@ -1374,9 +1374,9 @@ msgid ""
 "of the ampache.cfg.php file. Before you continue please make sure that you "
 "have the following pre-requisites"
 msgstr ""
-"Данная страница предназначена для установки базы данных Ampache и "
-"длясоздания файла ampache.cfg.php. Перед тем, как продолжить, пожалуйста, "
-"убедитесь что у вас выполнены следующие условия:"
+"п■п╟п╫п╫п╟я▐ я│я┌я─п╟п╫п╦я├п╟ п©я─п╣п╢п╫п╟п╥п╫п╟я┤п╣п╫п╟ п╢п╩я▐ я┐я│я┌п╟п╫п╬п╡п╨п╦ п╠п╟п╥я▀ п╢п╟п╫п╫я▀я┘ Ampache п╦ "
+"п╢п╩я▐я│п╬п╥п╢п╟п╫п╦я▐ я└п╟п╧п╩п╟ ampache.cfg.php. п÷п╣я─п╣п╢ я┌п╣п╪, п╨п╟п╨ п©я─п╬п╢п╬п╩п╤п╦я┌я▄, п©п╬п╤п╟п╩я┐п╧я│я┌п╟, "
+"я┐п╠п╣п╢п╦я┌п╣я│я▄ я┤я┌п╬ я┐ п╡п╟я│ п╡я▀п©п╬п╩п╫п╣п╫я▀ я│п╩п╣п╢я┐я▌я┴п╦п╣ я┐я│п╩п╬п╡п╦я▐:"
 
 #: ../../templates/show_install_config.inc.php:42
 #: ../../templates/show_install_lang.inc.php:44
@@ -1385,7 +1385,7 @@ msgstr ""
 msgid ""
 "A MySQL Server with a username and password that can create/modify databases"
 msgstr ""
-"MySQL сервер с пользователем и паролем с доступом на создавание/изменение БД"
+"MySQL я│п╣я─п╡п╣я─ я│ п©п╬п╩я▄п╥п╬п╡п╟я┌п╣п╩п╣п╪ п╦ п©п╟я─п╬п╩п╣п╪ я│ п╢п╬я│я┌я┐п©п╬п╪ п╫п╟ я│п╬п╥п╢п╟п╡п╟п╫п╦п╣/п╦п╥п╪п╣п╫п╣п╫п╦п╣ п▒п■"
 
 #: ../../templates/show_install_config.inc.php:43
 #: ../../templates/show_install_lang.inc.php:45
@@ -1394,7 +1394,7 @@ msgid ""
 "Your webserver has read access to the /sql/ampache.sql file and the /config/"
 "ampache.cfg.php.dist file"
 msgstr ""
-"У сервера есть доступ на чтение файлов /sql/ampache.sql и /config/ampache."
+"пё я│п╣я─п╡п╣я─п╟ п╣я│я┌я▄ п╢п╬я│я┌я┐п© п╫п╟ я┤я┌п╣п╫п╦п╣ я└п╟п╧п╩п╬п╡ /sql/ampache.sql п╦ /config/ampache."
 "cfg.php.dist"
 
 #: ../../templates/show_install_config.inc.php:45
@@ -1407,21 +1407,21 @@ msgid ""
 "values. If you would like to make changes to your ampache install at a later "
 "date simply edit /config/ampache.cfg.php"
 msgstr ""
-"Пожалуйста, проверьте выполнение всех требований и заполните "
-"запрошеннуюинформацию. У вас будет будут запрошены только необходимые "
-"значения конфига. Если Вы захотите внести изменения в вашу установку "
-"Ampache, просто отредактируйте /config/ampache.cfg.php"
+"п÷п╬п╤п╟п╩я┐п╧я│я┌п╟, п©я─п╬п╡п╣я─я▄я┌п╣ п╡я▀п©п╬п╩п╫п╣п╫п╦п╣ п╡я│п╣я┘ я┌я─п╣п╠п╬п╡п╟п╫п╦п╧ п╦ п╥п╟п©п╬п╩п╫п╦я┌п╣ "
+"п╥п╟п©я─п╬я┬п╣п╫п╫я┐я▌п╦п╫я└п╬я─п╪п╟я├п╦я▌. пё п╡п╟я│ п╠я┐п╢п╣я┌ п╠я┐п╢я┐я┌ п╥п╟п©я─п╬я┬п╣п╫я▀ я┌п╬п╩я▄п╨п╬ п╫п╣п╬п╠я┘п╬п╢п╦п╪я▀п╣ "
+"п╥п╫п╟я┤п╣п╫п╦я▐ п╨п╬п╫я└п╦пЁп╟. п∙я│п╩п╦ п▓я▀ п╥п╟я┘п╬я┌п╦я┌п╣ п╡п╫п╣я│я┌п╦ п╦п╥п╪п╣п╫п╣п╫п╦я▐ п╡ п╡п╟я┬я┐ я┐я│я┌п╟п╫п╬п╡п╨я┐ "
+"Ampache, п©я─п╬я│я┌п╬ п╬я┌я─п╣п╢п╟п╨я┌п╦я─я┐п╧я┌п╣ /config/ampache.cfg.php"
 
 #: ../../templates/show_install_config.inc.php:49
 #: ../../templates/show_install.inc.php:53
 #: ../../templates/show_install_account.inc.php:49
 msgid "Step 1 - Creating and Inserting the Ampache Database"
-msgstr "Шаг 1 - Создание базы данных Ampache"
+msgstr "п╗п╟пЁ 1 - п║п╬п╥п╢п╟п╫п╦п╣ п╠п╟п╥я▀ п╢п╟п╫п╫я▀я┘ Ampache"
 
 #: ../../templates/show_install_config.inc.php:50
 #: ../../templates/show_install.inc.php:57
 msgid "Step 2 - Creating the Ampache.cfg.php file"
-msgstr "Шаг 2 - Создание файла Ampache.cfg.php"
+msgstr "п╗п╟пЁ 2 - п║п╬п╥п╢п╟п╫п╦п╣ я└п╟п╧п╩п╟ Ampache.cfg.php"
 
 #: ../../templates/show_install_config.inc.php:52
 msgid ""
@@ -1434,197 +1434,197 @@ msgstr ""
 #: ../../templates/show_install.inc.php:58
 #: ../../templates/show_install_account.inc.php:51
 msgid "Step 3 - Setup Initial Account"
-msgstr "Шаг 3 - Настройка основного аккаунта"
+msgstr "п╗п╟пЁ 3 - п²п╟я│я┌я─п╬п╧п╨п╟ п╬я│п╫п╬п╡п╫п╬пЁп╬ п╟п╨п╨п╟я┐п╫я┌п╟"
 
 #: ../../templates/show_install_config.inc.php:58
 msgid "Generate Config File"
-msgstr "Создать новый конфиг"
+msgstr "п║п╬п╥п╢п╟я┌я▄ п╫п╬п╡я▀п╧ п╨п╬п╫я└п╦пЁ"
 
 #: ../../templates/show_install_config.inc.php:67
 #: ../../templates/show_install.inc.php:66
 msgid "Desired Database Name"
-msgstr "Желаемое имя базы данных"
+msgstr "п√п╣п╩п╟п╣п╪п╬п╣ п╦п╪я▐ п╠п╟п╥я▀ п╢п╟п╫п╫я▀я┘"
 
 #: ../../templates/show_install_config.inc.php:71
 #: ../../templates/show_install.inc.php:70
 msgid "MySQL Hostname"
-msgstr "MySQL Хост"
+msgstr "MySQL п╔п╬я│я┌"
 
 #: ../../templates/show_install_config.inc.php:75
 msgid "MySQL Username"
-msgstr "MySQL пользователь"
+msgstr "MySQL п©п╬п╩я▄п╥п╬п╡п╟я┌п╣п╩я▄"
 
 #: ../../templates/show_install_config.inc.php:79
 msgid "MySQL Password"
-msgstr "MySQL пароль"
+msgstr "MySQL п©п╟я─п╬п╩я▄"
 
 #: ../../templates/show_install_config.inc.php:84
 msgid "Write Config"
-msgstr "Сохранить конфигурацию"
+msgstr "п║п╬я┘я─п╟п╫п╦я┌я▄ п╨п╬п╫я└п╦пЁя┐я─п╟я├п╦я▌"
 
 #: ../../templates/show_install_config.inc.php:129
 msgid "Check for Config"
-msgstr "Проверить конфигурацию"
+msgstr "п÷я─п╬п╡п╣я─п╦я┌я▄ п╨п╬п╫я└п╦пЁя┐я─п╟я├п╦я▌"
 
 #: ../../templates/show_install_config.inc.php:135
 msgid "Continue to Step 3"
-msgstr "Перейти на шаг 3"
+msgstr "п÷п╣я─п╣п╧я┌п╦ п╫п╟ я┬п╟пЁ 3"
 
 #: ../../templates/show_user.inc.php:31
 msgid "Create Date"
-msgstr "Дата создания"
+msgstr "п■п╟я┌п╟ я│п╬п╥п╢п╟п╫п╦я▐"
 
 #: ../../templates/show_user.inc.php:35
 msgid "User is Online Now"
-msgstr "Пользователь сейчас на сайте"
+msgstr "п÷п╬п╩я▄п╥п╬п╡п╟я┌п╣п╩я▄ я│п╣п╧я┤п╟я│ п╫п╟ я│п╟п╧я┌п╣"
 
 #: ../../templates/show_user.inc.php:37
 msgid "User is Offline Now"
-msgstr "Пользователь сейчас не на сайте"
+msgstr "п÷п╬п╩я▄п╥п╬п╡п╟я┌п╣п╩я▄ я│п╣п╧я┤п╟я│ п╫п╣ п╫п╟ я│п╟п╧я┌п╣"
 
 #: ../../templates/show_user.inc.php:42
 msgid "Active Playlist"
-msgstr "Активный плейлист"
+msgstr "п░п╨я┌п╦п╡п╫я▀п╧ п©п╩п╣п╧п╩п╦я│я┌"
 
 #: ../../templates/show_user.inc.php:68 ../../templates/header.inc.php:36
 #: ../../templates/show_recently_played.inc.php:25
 #: ../../lib/class/ampacherss.class.php:71
 msgid "Recently Played"
-msgstr "Последние проигранные"
+msgstr "п÷п╬я│п╩п╣п╢п╫п╦п╣ п©я─п╬п╦пЁя─п╟п╫п╫я▀п╣"
 
 #: ../../templates/show_add_access.inc.php:22
 msgid "Add Access for a Host"
-msgstr "Добавить доступ для хоста"
+msgstr "п■п╬п╠п╟п╡п╦я┌я▄ п╢п╬я│я┌я┐п© п╢п╩я▐ я┘п╬я│я┌п╟"
 
 #: ../../templates/show_add_access.inc.php:74
 msgid "RPC Options"
-msgstr "Опции XML-RPC"
+msgstr "п·п©я├п╦п╦ XML-RPC"
 
 #: ../../templates/show_add_access.inc.php:84
 msgid "Create ACL"
-msgstr "Создать ACL"
+msgstr "п║п╬п╥п╢п╟я┌я▄ ACL"
 
 #: ../../templates/sidebar_admin.inc.php:24
 #: ../../templates/show_admin_tools.inc.php:26
 #: ../../lib/class/browse.class.php:1125
 msgid "Catalogs"
-msgstr "Каталоги"
+msgstr "п п╟я┌п╟п╩п╬пЁп╦"
 
 #: ../../templates/sidebar_admin.inc.php:26
 #: ../../templates/show_admin_tools.inc.php:82
 #: ../../templates/show_add_catalog.inc.php:26
 msgid "Add a Catalog"
-msgstr "Добавить каталог"
+msgstr "п■п╬п╠п╟п╡п╦я┌я▄ п╨п╟я┌п╟п╩п╬пЁ"
 
 #: ../../templates/sidebar_admin.inc.php:27
 #: ../../templates/show_manage_catalogs.inc.php:22
 msgid "Show Catalogs"
-msgstr "Показать каталоги"
+msgstr "п÷п╬п╨п╟п╥п╟я┌я▄ п╨п╟я┌п╟п╩п╬пЁп╦"
 
 #: ../../templates/sidebar_admin.inc.php:31
 msgid "User Tools"
-msgstr "Пользователи"
+msgstr "п÷п╬п╩я▄п╥п╬п╡п╟я┌п╣п╩п╦"
 
 #: ../../templates/sidebar_admin.inc.php:33
 #: ../../templates/show_add_user.inc.php:85
 msgid "Add User"
-msgstr "Добавить пользователя"
+msgstr "п■п╬п╠п╟п╡п╦я┌я▄ п©п╬п╩я▄п╥п╬п╡п╟я┌п╣п╩я▐"
 
 #: ../../templates/sidebar_admin.inc.php:34
 msgid "Browse Users"
-msgstr "Список пользователей"
+msgstr "п║п©п╦я│п╬п╨ п©п╬п╩я▄п╥п╬п╡п╟я┌п╣п╩п╣п╧"
 
 #: ../../templates/sidebar_admin.inc.php:37
 msgid "Access Control"
-msgstr "Списки доступа"
+msgstr "п║п©п╦я│п╨п╦ п╢п╬я│я┌я┐п©п╟"
 
 #: ../../templates/sidebar_admin.inc.php:39
 msgid "Add ACL"
-msgstr "Добавить ACL"
+msgstr "п■п╬п╠п╟п╡п╦я┌я▄ ACL"
 
 #: ../../templates/sidebar_admin.inc.php:40
 msgid "Show ACL(s)"
-msgstr "Список ACL"
+msgstr "п║п©п╦я│п╬п╨ ACL"
 
 #: ../../templates/sidebar_admin.inc.php:43
 #: ../../templates/show_admin_tools.inc.php:88
 #: ../../templates/sidebar_modules.inc.php:31
 msgid "Other Tools"
-msgstr "Другие средства"
+msgstr "п■я─я┐пЁп╦п╣ я│я─п╣п╢я│я┌п╡п╟"
 
 #: ../../templates/sidebar_admin.inc.php:46
 #: ../../templates/show_admin_tools.inc.php:91
 msgid "Clear Now Playing"
-msgstr "Очистить сейчас играет"
+msgstr "п·я┤п╦я│я┌п╦я┌я▄ я│п╣п╧я┤п╟я│ п╦пЁя─п╟п╣я┌"
 
 #: ../../templates/sidebar_admin.inc.php:47
 #: ../../templates/show_export.inc.php:28
 msgid "Export Catalog"
-msgstr "Экспортировать каталог"
+msgstr "п╜п╨я│п©п╬я─я┌п╦я─п╬п╡п╟я┌я▄ п╨п╟я┌п╟п╩п╬пЁ"
 
 #: ../../templates/sidebar_admin.inc.php:49
 msgid "Manage Shoutbox"
-msgstr "Управление кричалкой"
+msgstr "пёп©я─п╟п╡п╩п╣п╫п╦п╣ п╨я─п╦я┤п╟п╩п╨п╬п╧"
 
 #: ../../templates/sidebar.inc.php:27 ../../lib/ui.lib.php:355
 msgid "Home"
-msgstr "Главная"
+msgstr "п⌠п╩п╟п╡п╫п╟я▐"
 
 #: ../../templates/sidebar.inc.php:30
 #: ../../templates/sidebar_modules.inc.php:25
 msgid "Modules"
-msgstr "Модули"
+msgstr "п°п╬п╢я┐п╩п╦"
 
 #: ../../templates/sidebar.inc.php:61
 msgid "Logout"
-msgstr "Выйти"
+msgstr "п▓я▀п╧я┌п╦"
 
 #: ../../templates/show_local_catalog_info.inc.php:24
 #: ../../templates/show_mail_users.inc.php:42
 msgid "Catalog Statistics"
-msgstr "Статистика каталога"
+msgstr "п║я┌п╟я┌п╦я│я┌п╦п╨п╟ п╨п╟я┌п╟п╩п╬пЁп╟"
 
 #: ../../templates/show_local_catalog_info.inc.php:27
 msgid "Connected Users"
-msgstr "Подключено"
+msgstr "п÷п╬п╢п╨п╩я▌я┤п╣п╫п╬"
 
 #: ../../templates/show_local_catalog_info.inc.php:28
 msgid "Total Users"
-msgstr "Всего пользователей"
+msgstr "п▓я│п╣пЁп╬ п©п╬п╩я▄п╥п╬п╡п╟я┌п╣п╩п╣п╧"
 
 #: ../../templates/show_local_catalog_info.inc.php:30
 #: ../../templates/show_genre.inc.php:35 ../../lib/ui.lib.php:412
 #: ../../lib/class/browse.class.php:1098 ../../lib/class/album.class.php:256
 msgid "Artists"
-msgstr "Исполнители"
+msgstr "п≤я│п©п╬п╩п╫п╦я┌п╣п╩п╦"
 
 #: ../../templates/show_local_catalog_info.inc.php:32
 msgid "Genres"
-msgstr "Стили"
+msgstr "п║я┌п╦п╩п╦"
 
 #: ../../templates/show_local_catalog_info.inc.php:33
 msgid "Catalog Size"
-msgstr "Размер каталога"
+msgstr "п═п╟п╥п╪п╣я─ п╨п╟я┌п╟п╩п╬пЁп╟"
 
 #: ../../templates/show_local_catalog_info.inc.php:34
 msgid "Catalog Time"
-msgstr "Время каталога"
+msgstr "п▓я─п╣п╪я▐ п╨п╟я┌п╟п╩п╬пЁп╟"
 
 #: ../../templates/show_install_lang.inc.php:39
 #: ../../templates/show_install_lang.inc.php:53
 #: ../../templates/show_install.inc.php:39
 msgid "Requirements"
-msgstr "Требования"
+msgstr "п╒я─п╣п╠п╬п╡п╟п╫п╦я▐"
 
 #: ../../templates/show_install_lang.inc.php:52
 #, fuzzy
 msgid "System Checks"
-msgstr "Система"
+msgstr "п║п╦я│я┌п╣п╪п╟"
 
 #: ../../templates/show_install_lang.inc.php:119
 #, fuzzy
 msgid "Option"
-msgstr "Настройки"
+msgstr "п²п╟я│я┌я─п╬п╧п╨п╦"
 
 #: ../../templates/show_install_lang.inc.php:120
 #: ../../templates/show_debug.inc.php:72
@@ -1638,7 +1638,7 @@ msgstr ""
 #: ../../templates/show_install_lang.inc.php:129
 #, fuzzy
 msgid "Mbstring Support"
-msgstr "Поддержка PHP Session"
+msgstr "п÷п╬п╢п╢п╣я─п╤п╨п╟ PHP Session"
 
 #: ../../templates/show_install_lang.inc.php:141
 msgid "Choose installation language."
@@ -1646,7 +1646,7 @@ msgstr ""
 
 #: ../../templates/show_install_lang.inc.php:162
 msgid "Start configuration"
-msgstr "Начать конфигурацию"
+msgstr "п²п╟я┤п╟я┌я▄ п╨п╬п╫я└п╦пЁя┐я─п╟я├п╦я▌"
 
 #: ../../templates/show_install_lang.inc.php:168
 msgid "Ampache does not <strong>run</strong> correctly by this server."
@@ -1658,81 +1658,81 @@ msgstr ""
 
 #: ../../templates/rightbar.inc.php:28
 msgid "Add to Playlist"
-msgstr "Добавить в плейлист"
+msgstr "п■п╬п╠п╟п╡п╦я┌я▄ п╡ п©п╩п╣п╧п╩п╦я│я┌"
 
 #: ../../templates/rightbar.inc.php:31
 msgid "Add to New Playlist"
-msgstr "Добавить в новый плейлист"
+msgstr "п■п╬п╠п╟п╡п╦я┌я▄ п╡ п╫п╬п╡я▀п╧ п©п╩п╣п╧п╩п╦я│я┌"
 
 #: ../../templates/rightbar.inc.php:54
 #: ../../templates/show_localplay_status.inc.php:39
 msgid "Clear Playlist"
-msgstr "Очистить плейлист"
+msgstr "п·я┤п╦я│я┌п╦я┌я▄ п©п╩п╣п╧п╩п╦я│я┌"
 
 #: ../../templates/rightbar.inc.php:57
 msgid "Add Dynamic Items"
-msgstr "Добавить"
+msgstr "п■п╬п╠п╟п╡п╦я┌я▄"
 
 #: ../../templates/rightbar.inc.php:60 ../../lib/class/random.class.php:432
 msgid "Pure Random"
-msgstr "Случайно"
+msgstr "п║п╩я┐я┤п╟п╧п╫п╬"
 
 #: ../../templates/rightbar.inc.php:63 ../../lib/class/random.class.php:429
 msgid "Related Artist"
-msgstr "Похожего исполнителя"
+msgstr "п÷п╬я┘п╬п╤п╣пЁп╬ п╦я│п©п╬п╩п╫п╦я┌п╣п╩я▐"
 
 #: ../../templates/rightbar.inc.php:66 ../../lib/class/random.class.php:423
 msgid "Related Album"
-msgstr "Похожий альбом"
+msgstr "п÷п╬я┘п╬п╤п╦п╧ п╟п╩я▄п╠п╬п╪"
 
 #: ../../templates/rightbar.inc.php:69
 #, fuzzy
 msgid "Related Tag"
-msgstr "Похожий альбом"
+msgstr "п÷п╬я┘п╬п╤п╦п╧ п╟п╩я▄п╠п╬п╪"
 
 #: ../../templates/rightbar.inc.php:105
 msgid "More"
-msgstr "Еще"
+msgstr "п∙я┴п╣"
 
 #: ../../templates/header.inc.php:35
 #: ../../templates/show_now_playing.inc.php:33
 #: ../../lib/class/localplay.class.php:639
 #: ../../lib/class/ampacherss.class.php:70
 msgid "Now Playing"
-msgstr "Сейчас играет"
+msgstr "п║п╣п╧я┤п╟я│ п╦пЁя─п╟п╣я┌"
 
 #: ../../templates/header.inc.php:61
 msgid "Log out"
-msgstr "Выйти"
+msgstr "п▓я▀п╧я┌п╦"
 
 #: ../../templates/header.inc.php:77
 msgid "Error Config File Out of Date"
-msgstr "Ошибка: конфигурационный файл устарел"
+msgstr "п·я┬п╦п╠п╨п╟: п╨п╬п╫я└п╦пЁя┐я─п╟я├п╦п╬п╫п╫я▀п╧ я└п╟п╧п╩ я┐я│я┌п╟я─п╣п╩"
 
 #: ../../templates/header.inc.php:78
 #: ../../templates/show_admin_tools.inc.php:92
 msgid "Generate New Config"
-msgstr "Создать новый конфиг"
+msgstr "п║п╬п╥п╢п╟я┌я▄ п╫п╬п╡я▀п╧ п╨п╬п╫я└п╦пЁ"
 
 #: ../../templates/show_edit_playlist_row.inc.php:32
 #: ../../templates/show_playlist_edit.inc.php:39
 msgid "Public"
-msgstr "Общее"
+msgstr "п·п╠я┴п╣п╣"
 
 #: ../../templates/show_edit_playlist_row.inc.php:33
 #: ../../templates/show_playlist_edit.inc.php:40
 #: ../../lib/class/playlist.class.php:81
 msgid "Private"
-msgstr "Частное"
+msgstr "п╖п╟я│я┌п╫п╬п╣"
 
 #: ../../templates/show_add_user.inc.php:23
 msgid "Adding a New User"
-msgstr "Добавление нового пользователя"
+msgstr "п■п╬п╠п╟п╡п╩п╣п╫п╦п╣ п╫п╬п╡п╬пЁп╬ п©п╬п╩я▄п╥п╬п╡п╟я┌п╣п╩я▐"
 
 #: ../../templates/show_genre.inc.php:29
 #, fuzzy, php-format
 msgid "Viewing %s Genre"
-msgstr "Последние жанры"
+msgstr "п÷п╬я│п╩п╣п╢п╫п╦п╣ п╤п╟п╫я─я▀"
 
 #: ../../templates/show_user_activate.inc.php:29
 #: ../../templates/show_user_activate.inc.php:36
@@ -1740,28 +1740,28 @@ msgstr "Последние жанры"
 #: ../../templates/show_user_registration.inc.php:36
 #: ../../templates/show_registration_confirmation.inc.php:29
 msgid "Registration"
-msgstr "Регистрация"
+msgstr "п═п╣пЁп╦я│я┌я─п╟я├п╦я▐"
 
 #: ../../templates/show_user_activate.inc.php:48
 msgid "User Activated"
-msgstr "Пользователь активирован"
+msgstr "п÷п╬п╩я▄п╥п╬п╡п╟я┌п╣п╩я▄ п╟п╨я┌п╦п╡п╦я─п╬п╡п╟п╫"
 
 #: ../../templates/show_user_activate.inc.php:51
 #, fuzzy, php-format
 msgid "This User ID is activated and can be used %sLogin%s"
-msgstr "Этот ID пользователя активирован и может быть использован"
+msgstr "п╜я┌п╬я┌ ID п©п╬п╩я▄п╥п╬п╡п╟я┌п╣п╩я▐ п╟п╨я┌п╦п╡п╦я─п╬п╡п╟п╫ п╦ п╪п╬п╤п╣я┌ п╠я▀я┌я▄ п╦я│п©п╬п╩я▄п╥п╬п╡п╟п╫"
 
 #: ../../templates/show_user_activate.inc.php:54
 msgid "Validation Failed"
-msgstr "Валидация не удалась"
+msgstr "п▓п╟п╩п╦п╢п╟я├п╦я▐ п╫п╣ я┐п╢п╟п╩п╟я│я▄"
 
 #: ../../templates/show_user_activate.inc.php:55
 msgid "The validation key used isn't correct"
-msgstr "Ключ валидации не верен"
+msgstr "п п╩я▌я┤ п╡п╟п╩п╦п╢п╟я├п╦п╦ п╫п╣ п╡п╣я─п╣п╫"
 
 #: ../../templates/show_plugins.inc.php:46
 msgid "Deactivate"
-msgstr "Деактивировать"
+msgstr "п■п╣п╟п╨я┌п╦п╡п╦я─п╬п╡п╟я┌я▄"
 
 #: ../../templates/show_random_albums.inc.php:22
 msgid "Refresh"
@@ -1769,26 +1769,26 @@ msgstr ""
 
 #: ../../templates/show_random_albums.inc.php:48
 msgid "Play Album"
-msgstr "Воспроизвести альбом"
+msgstr "п▓п╬я│п©я─п╬п╦п╥п╡п╣я│я┌п╦ п╟п╩я▄п╠п╬п╪"
 
 #: ../../templates/show_catalog_row.inc.php:29
 #: ../../templates/show_admin_tools.inc.php:47
 msgid "Verify"
-msgstr "Проверить"
+msgstr "п÷я─п╬п╡п╣я─п╦я┌я▄"
 
 #: ../../templates/show_catalog_row.inc.php:30
 #: ../../templates/show_admin_tools.inc.php:49
 msgid "Clean"
-msgstr "Очистить"
+msgstr "п·я┤п╦я│я┌п╦я┌я▄"
 
 #: ../../templates/show_catalog_row.inc.php:32
 #: ../../templates/show_admin_tools.inc.php:60
 msgid "Gather Art"
-msgstr "Выбрать обложку"
+msgstr "п▓я▀п╠я─п╟я┌я▄ п╬п╠п╩п╬п╤п╨я┐"
 
 #: ../../templates/show_create_democratic.inc.php:22
 msgid "Create Democratic Playlist"
-msgstr "Создать общий плейлист"
+msgstr "п║п╬п╥п╢п╟я┌я▄ п╬п╠я┴п╦п╧ п©п╩п╣п╧п╩п╦я│я┌"
 
 #: ../../templates/show_create_democratic.inc.php:34
 msgid "Cooldown Time"
@@ -1801,30 +1801,30 @@ msgstr ""
 
 #: ../../templates/show_create_democratic.inc.php:48
 msgid "Make Default"
-msgstr "Принять по умолчанию"
+msgstr "п÷я─п╦п╫я▐я┌я▄ п©п╬ я┐п╪п╬п╩я┤п╟п╫п╦я▌"
 
 #: ../../templates/show_create_democratic.inc.php:53
 #: ../../templates/show_add_playlist.inc.php:42
 #: ../../templates/show_add_shout.inc.php:41
 msgid "Create"
-msgstr "Создать"
+msgstr "п║п╬п╥п╢п╟я┌я▄"
 
 #: ../../templates/show_account.inc.php:39
 msgid "New Password"
-msgstr "Новый пароль"
+msgstr "п²п╬п╡я▀п╧ п©п╟я─п╬п╩я▄"
 
 #: ../../templates/show_account.inc.php:52
 #: ../../templates/show_manage_catalogs.inc.php:33
 msgid "Clear Stats"
-msgstr "Очистить статистику"
+msgstr "п·я┤п╦я│я┌п╦я┌я▄ я│я┌п╟я┌п╦я│я┌п╦п╨я┐"
 
 #: ../../templates/show_account.inc.php:62
 msgid "Update Account"
-msgstr "Обновить аккаунт"
+msgstr "п·п╠п╫п╬п╡п╦я┌я▄ п╟п╨п╨п╟я┐п╫я┌"
 
 #: ../../templates/show_edit_song.inc.php:23
 msgid "Edit Song"
-msgstr "Редактировать песню"
+msgstr "п═п╣п╢п╟п╨я┌п╦я─п╬п╡п╟я┌я▄ п©п╣я│п╫я▌"
 
 #: ../../templates/show_edit_song.inc.php:40
 #: ../../templates/show_edit_song.inc.php:48
@@ -1832,7 +1832,7 @@ msgstr "Редактировать песню"
 #: ../../templates/show_search.inc.php:106
 #: ../../templates/show_rename_artist.inc.php:33
 msgid "OR"
-msgstr "ИЛИ"
+msgstr "п≤п⌡п≤"
 
 #: ../../templates/show_edit_song.inc.php:53
 #: ../../templates/show_play_selected.inc.php:58
@@ -1841,7 +1841,7 @@ msgstr "ИЛИ"
 #: ../../templates/show_playlist_songs.inc.php:45
 #: ../../templates/show_playlist_songs.inc.php:66 ../../lib/ui.lib.php:416
 msgid "Genre"
-msgstr "Стиль"
+msgstr "п║я┌п╦п╩я▄"
 
 #: ../../templates/show_edit_song.inc.php:61
 #: ../../templates/show_localplay_playlist.inc.php:31
@@ -1852,20 +1852,20 @@ msgstr "Стиль"
 #: ../../templates/show_playlist_songs.inc.php:62
 #: ../../templates/show_playlist_songs.inc.php:67
 msgid "Track"
-msgstr "Трек"
+msgstr "п╒я─п╣п╨"
 
 #: ../../templates/show_edit_song.inc.php:88
 msgid "Update Song"
-msgstr "Обновить песню"
+msgstr "п·п╠п╫п╬п╡п╦я┌я▄ п©п╣я│п╫я▌"
 
 #: ../../templates/show_democratic_playlist.inc.php:39
 msgid "Playing from base Playlist"
-msgstr "Играет из главного плейлиста"
+msgstr "п≤пЁя─п╟п╣я┌ п╦п╥ пЁп╩п╟п╡п╫п╬пЁп╬ п©п╩п╣п╧п╩п╦я│я┌п╟"
 
 #: ../../templates/show_democratic_playlist.inc.php:52
 #: ../../templates/show_democratic_playlist.inc.php:87
 msgid "Votes"
-msgstr "Голосов"
+msgstr "п⌠п╬п╩п╬я│п╬п╡"
 
 #: ../../templates/show_democratic_playlist.inc.php:53
 #: ../../templates/show_democratic_playlist.inc.php:88
@@ -1875,121 +1875,121 @@ msgstr "Голосов"
 #: ../../templates/show_duplicates.inc.php:76
 #: ../../templates/show_now_playing_row.inc.php:45
 msgid "Song"
-msgstr "Песня"
+msgstr "п÷п╣я│п╫я▐"
 
 #: ../../templates/show_democratic_playlist.inc.php:68
 msgid "Remove Vote"
-msgstr "Удалить голос"
+msgstr "пёп╢п╟п╩п╦я┌я▄ пЁп╬п╩п╬я│"
 
 #: ../../templates/show_democratic_playlist.inc.php:70
 msgid "Add Vote"
-msgstr "Добавить голос"
+msgstr "п■п╬п╠п╟п╡п╦я┌я▄ пЁп╬п╩п╬я│"
 
 #: ../../templates/show_localplay_edit_instance.inc.php:23
 msgid "Edit Localplay Instance"
-msgstr "Редактировать запись локального воспроизведения"
+msgstr "п═п╣п╢п╟п╨я┌п╦я─п╬п╡п╟я┌я▄ п╥п╟п©п╦я│я▄ п╩п╬п╨п╟п╩я▄п╫п╬пЁп╬ п╡п╬я│п©я─п╬п╦п╥п╡п╣п╢п╣п╫п╦я▐"
 
 #: ../../templates/show_localplay_edit_instance.inc.php:34
 msgid "Update Instance"
-msgstr "Обновить запись"
+msgstr "п·п╠п╫п╬п╡п╦я┌я▄ п╥п╟п©п╦я│я▄"
 
 #: ../../templates/show_search_bar.inc.php:29
 #: ../../templates/show_search.inc.php:131 ../../lib/ui.lib.php:370
 msgid "Search"
-msgstr "Поиск"
+msgstr "п÷п╬п╦я│п╨"
 
 #: ../../templates/show_search_bar.inc.php:30
 msgid "Advanced Search"
-msgstr "Расширенный"
+msgstr "п═п╟я│я┬п╦я─п╣п╫п╫я▀п╧"
 
 #: ../../templates/show_stats.inc.php:22
 #: ../../templates/sidebar_modules.inc.php:41 ../../lib/ui.lib.php:420
 msgid "Statistics"
-msgstr "Статистика"
+msgstr "п║я┌п╟я┌п╦я│я┌п╦п╨п╟"
 
 #: ../../templates/show_ip_history.inc.php:23
 #, fuzzy, php-format
 msgid "%s IP History"
-msgstr "История IP"
+msgstr "п≤я│я┌п╬я─п╦я▐ IP"
 
 #: ../../templates/show_ip_history.inc.php:26
 msgid "Show Unique"
-msgstr "Показать уникальные"
+msgstr "п÷п╬п╨п╟п╥п╟я┌я▄ я┐п╫п╦п╨п╟п╩я▄п╫я▀п╣"
 
 #: ../../templates/show_ip_history.inc.php:28
 #: ../../templates/show_admin_info.inc.php:38
 msgid "Show All"
-msgstr "Показать все"
+msgstr "п÷п╬п╨п╟п╥п╟я┌я▄ п╡я│п╣"
 
 #: ../../templates/show_ip_history.inc.php:37
 #: ../../templates/show_ip_history.inc.php:51
 msgid "Date"
-msgstr "Дата"
+msgstr "п■п╟я┌п╟"
 
 #: ../../templates/show_ip_history.inc.php:38
 #: ../../templates/show_ip_history.inc.php:52
 msgid "IP Address"
-msgstr "IP адрес"
+msgstr "IP п╟п╢я─п╣я│"
 
 #: ../../templates/show_embed_xspf.inc.php:54
 msgid "XSPF Player"
-msgstr "XSPF проигрыватель"
+msgstr "XSPF п©я─п╬п╦пЁя─я▀п╡п╟я┌п╣п╩я▄"
 
 #: ../../templates/show_play_selected.inc.php:28
 msgid "Play Selected"
-msgstr "Играть отмеченные"
+msgstr "п≤пЁя─п╟я┌я▄ п╬я┌п╪п╣я┤п╣п╫п╫я▀п╣"
 
 #: ../../templates/show_play_selected.inc.php:31
 msgid "Download Selected"
-msgstr "Скачать отмеченные"
+msgstr "п║п╨п╟я┤п╟я┌я▄ п╬я┌п╪п╣я┤п╣п╫п╫я▀п╣"
 
 #: ../../templates/show_play_selected.inc.php:40
 msgid "Set Track Numbers"
-msgstr "Проставить номера треков"
+msgstr "п÷я─п╬я│я┌п╟п╡п╦я┌я▄ п╫п╬п╪п╣я─п╟ я┌я─п╣п╨п╬п╡"
 
 #: ../../templates/show_play_selected.inc.php:41
 msgid "Remove Selected Tracks"
-msgstr "Удалить выделенные треки"
+msgstr "пёп╢п╟п╩п╦я┌я▄ п╡я▀п╢п╣п╩п╣п╫п╫я▀п╣ я┌я─п╣п╨п╦"
 
 #: ../../templates/show_play_selected.inc.php:47
 msgid "Add to"
-msgstr "Добавить в"
+msgstr "п■п╬п╠п╟п╡п╦я┌я▄ п╡"
 
 #: ../../templates/show_flagged.inc.php:34
 #: ../../templates/show_flagged.inc.php:53
 #: ../../templates/show_manage_shoutbox.inc.php:34
 #: ../../templates/show_manage_shoutbox.inc.php:58
 msgid "Object"
-msgstr "Объект"
+msgstr "п·п╠я┼п╣п╨я┌"
 
 #: ../../templates/show_flagged.inc.php:38
 #: ../../templates/show_flagged.inc.php:57
 msgid "Status"
-msgstr "Статус"
+msgstr "п║я┌п╟я┌я┐я│"
 
 #: ../../templates/show_stats_popular.inc.php:25
 #: ../../templates/show_mail_users.inc.php:46
 #: ../../templates/show_all_popular.inc.php:29
 msgid "Most Popular Albums"
-msgstr "Самые популярные альбомы"
+msgstr "п║п╟п╪я▀п╣ п©п╬п©я┐п╩я▐я─п╫я▀п╣ п╟п╩я▄п╠п╬п╪я▀"
 
 #: ../../templates/show_stats_popular.inc.php:31
 #: ../../templates/show_mail_users.inc.php:57
 #: ../../templates/show_all_popular.inc.php:26
 msgid "Most Popular Artists"
-msgstr "Самые популярные исполнители"
+msgstr "п║п╟п╪я▀п╣ п©п╬п©я┐п╩я▐я─п╫я▀п╣ п╦я│п©п╬п╩п╫п╦я┌п╣п╩п╦"
 
 #: ../../templates/show_user_recommendations.inc.php:29
 msgid "Recommended Artists"
-msgstr "Рекомендуемые исполнители"
+msgstr "п═п╣п╨п╬п╪п╣п╫п╢я┐п╣п╪я▀п╣ п╦я│п©п╬п╩п╫п╦я┌п╣п╩п╦"
 
 #: ../../templates/show_user_recommendations.inc.php:40
 msgid "Recommended Albums"
-msgstr "Рекомендуемые альбомы"
+msgstr "п═п╣п╨п╬п╪п╣п╫п╢я┐п╣п╪я▀п╣ п╟п╩я▄п╠п╬п╪я▀"
 
 #: ../../templates/show_user_recommendations.inc.php:51
 msgid "Recommended Songs"
-msgstr "Рекомендуемые песни"
+msgstr "п═п╣п╨п╬п╪п╣п╫п╢я┐п╣п╪я▀п╣ п©п╣я│п╫п╦"
 
 #: ../../templates/show_edit_shout.inc.php:23
 msgid "Edit existing Shoutbox Post"
@@ -2004,18 +2004,18 @@ msgstr ""
 #: ../../templates/show_add_shout.inc.php:27
 #, fuzzy
 msgid "Comment:"
-msgstr "Комментарий"
+msgstr "п п╬п╪п╪п╣п╫я┌п╟я─п╦п╧"
 
 #: ../../templates/show_edit_shout.inc.php:37
 #: ../../templates/show_add_shout.inc.php:34
 msgid "Make Sticky"
-msgstr "Прикрепить"
+msgstr "п÷я─п╦п╨я─п╣п©п╦я┌я▄"
 
 #: ../../templates/show_object_rating_static.inc.php:34
 #: ../../templates/show_object_rating.inc.php:34
 #, fuzzy
 msgid "Current rating: "
-msgstr "Сейчас играет"
+msgstr "п║п╣п╧я┤п╟я│ п╦пЁя─п╟п╣я┌"
 
 #: ../../templates/show_object_rating_static.inc.php:36
 #: ../../templates/show_object_rating.inc.php:36
@@ -2030,185 +2030,185 @@ msgstr ""
 
 #: ../../templates/show_object_rating_static.inc.php:44
 msgid "out of"
-msgstr "из"
+msgstr "п╦п╥"
 
 #: ../../templates/show_export.inc.php:51
 msgid "Format"
-msgstr "Формат"
+msgstr "п╓п╬я─п╪п╟я┌"
 
 #: ../../templates/show_export.inc.php:61
 msgid "Export"
-msgstr "Экспорт"
+msgstr "п╜п╨я│п©п╬я─я┌"
 
 #: ../../templates/show_edit_album.inc.php:23
 msgid "Edit Album"
-msgstr "Редактировать альбом"
+msgstr "п═п╣п╢п╟п╨я┌п╦я─п╬п╡п╟я┌я▄ п╟п╩я▄п╠п╬п╪"
 
 #: ../../templates/show_edit_album.inc.php:47
 msgid "Update Album"
-msgstr "Обновить альбом"
+msgstr "п·п╠п╫п╬п╡п╦я┌я▄ п╟п╩я▄п╠п╬п╪"
 
 #: ../../templates/show_album_art.inc.php:47
 #: ../../templates/show_disabled_songs.inc.php:33
 #: ../../templates/show_disabled_songs.inc.php:56
 msgid "Select"
-msgstr "Выбрать"
+msgstr "п▓я▀п╠я─п╟я┌я▄"
 
 #: ../../templates/show_localplay_status.inc.php:25
 msgid "Localplay Control"
-msgstr "Управление локальным вопроизведением"
+msgstr "пёп©я─п╟п╡п╩п╣п╫п╦п╣ п╩п╬п╨п╟п╩я▄п╫я▀п╪ п╡п╬п©я─п╬п╦п╥п╡п╣п╢п╣п╫п╦п╣п╪"
 
 #: ../../templates/show_localplay_status.inc.php:28
 msgid "Mute"
-msgstr "Заглушить"
+msgstr "п≈п╟пЁп╩я┐я┬п╦я┌я▄"
 
 #: ../../templates/show_localplay_status.inc.php:29
 msgid "Decrease Volume"
-msgstr "Уменьшить громкость"
+msgstr "пёп╪п╣п╫я▄я┬п╦я┌я▄ пЁя─п╬п╪п╨п╬я│я┌я▄"
 
 #: ../../templates/show_localplay_status.inc.php:30
 msgid "Increase Volume"
-msgstr "Увеличить громкость"
+msgstr "пёп╡п╣п╩п╦я┤п╦я┌я▄ пЁя─п╬п╪п╨п╬я│я┌я▄"
 
 #: ../../templates/show_localplay_status.inc.php:31
 msgid "Volume"
-msgstr "Громкость"
+msgstr "п⌠я─п╬п╪п╨п╬я│я┌я▄"
 
 #: ../../templates/show_localplay_status.inc.php:33
 msgid "Repeat"
-msgstr "Повторять"
+msgstr "п÷п╬п╡я┌п╬я─я▐я┌я▄"
 
 #: ../../templates/show_admin_info.inc.php:30
 msgid "Last Ten Flagged Records"
-msgstr "Последние десять отмеченных записей"
+msgstr "п÷п╬я│п╩п╣п╢п╫п╦п╣ п╢п╣я│я▐я┌я▄ п╬я┌п╪п╣я┤п╣п╫п╫я▀я┘ п╥п╟п©п╦я│п╣п╧"
 
 #: ../../templates/show_admin_info.inc.php:34
 #: ../../templates/show_mail_users.inc.php:78
 msgid "Disabled Songs"
-msgstr "Отключенные песни"
+msgstr "п·я┌п╨п╩я▌я┤п╣п╫п╫я▀п╣ п©п╣я│п╫п╦"
 
 #: ../../templates/show_localplay_instances.inc.php:23
 msgid "Show Localplay Instances"
-msgstr "Показать сущности локального воспроизведения"
+msgstr "п÷п╬п╨п╟п╥п╟я┌я▄ я│я┐я┴п╫п╬я│я┌п╦ п╩п╬п╨п╟п╩я▄п╫п╬пЁп╬ п╡п╬я│п©я─п╬п╦п╥п╡п╣п╢п╣п╫п╦я▐"
 
 #: ../../templates/show_localplay_instances.inc.php:39
 msgid "Edit Instance"
-msgstr "Редактировать запись"
+msgstr "п═п╣п╢п╟п╨я┌п╦я─п╬п╡п╟я┌я▄ п╥п╟п©п╦я│я▄"
 
 #: ../../templates/show_update_items.inc.php:22
 msgid "Starting Update from Tags"
-msgstr "Начинаю обновления из тегов"
+msgstr "п²п╟я┤п╦п╫п╟я▌ п╬п╠п╫п╬п╡п╩п╣п╫п╦я▐ п╦п╥ я┌п╣пЁп╬п╡"
 
 #: ../../templates/show_update_items.inc.php:26
 #, fuzzy
 msgid "Update from Tags Complete"
-msgstr "Обновление из тегов завершено"
+msgstr "п·п╠п╫п╬п╡п╩п╣п╫п╦п╣ п╦п╥ я┌п╣пЁп╬п╡ п╥п╟п╡п╣я─я┬п╣п╫п╬"
 
 #: ../../templates/show_user_stats.inc.php:30
 msgid "Favorite Artists"
-msgstr "Любимые исполнители"
+msgstr "п⌡я▌п╠п╦п╪я▀п╣ п╦я│п©п╬п╩п╫п╦я┌п╣п╩п╦"
 
 #: ../../templates/show_user_stats.inc.php:43
 msgid "Favorite Albums"
-msgstr "Любимые альбомы"
+msgstr "п⌡я▌п╠п╦п╪я▀п╣ п╟п╩я▄п╠п╬п╪я▀"
 
 #: ../../templates/show_user_stats.inc.php:56
 msgid "Favorite Songs"
-msgstr "Любимые песни"
+msgstr "п⌡я▌п╠п╦п╪я▀п╣ п©п╣я│п╫п╦"
 
 #: ../../templates/show_shoutbox.inc.php:22
 msgid "Shoutbox"
-msgstr "Кричалка"
+msgstr "п я─п╦я┤п╟п╩п╨п╟"
 
 #: ../../templates/show_search.inc.php:26
 msgid "Search Ampache"
-msgstr "Искать"
+msgstr "п≤я│п╨п╟я┌я▄"
 
 #: ../../templates/show_search.inc.php:30
 msgid "Keywords"
-msgstr "Ключевые слова"
+msgstr "п п╩я▌я┤п╣п╡я▀п╣ я│п╩п╬п╡п╟"
 
 #: ../../templates/show_search.inc.php:72
 msgid "Played"
-msgstr "Проигранный"
+msgstr "п÷я─п╬п╦пЁя─п╟п╫п╫я▀п╧"
 
 #: ../../templates/show_search.inc.php:76
 msgid "Yes"
-msgstr "Да"
+msgstr "п■п╟"
 
 #: ../../templates/show_search.inc.php:77
 msgid "No"
-msgstr "Нет"
+msgstr "п²п╣я┌"
 
 #: ../../templates/show_search.inc.php:80
 msgid "Min Bitrate"
-msgstr "Мин битрейд"
+msgstr "п°п╦п╫ п╠п╦я┌я─п╣п╧п╢"
 
 #: ../../templates/show_search.inc.php:95
 msgid "One Star"
-msgstr "Одна звезда"
+msgstr "п·п╢п╫п╟ п╥п╡п╣п╥п╢п╟"
 
 #: ../../templates/show_search.inc.php:96
 msgid "Two Stars"
-msgstr "Две звезды"
+msgstr "п■п╡п╣ п╥п╡п╣п╥п╢я▀"
 
 #: ../../templates/show_search.inc.php:97
 msgid "Three Stars"
-msgstr "Три звезды"
+msgstr "п╒я─п╦ п╥п╡п╣п╥п╢я▀"
 
 #: ../../templates/show_search.inc.php:98
 msgid "Four Stars"
-msgstr "Четыре звезды"
+msgstr "п╖п╣я┌я▀я─п╣ п╥п╡п╣п╥п╢я▀"
 
 #: ../../templates/show_search.inc.php:99
 msgid "Five Stars"
-msgstr "Пять звезд"
+msgstr "п÷я▐я┌я▄ п╥п╡п╣п╥п╢"
 
 #: ../../templates/show_search.inc.php:102
 msgid "Operator"
-msgstr "Оператор"
+msgstr "п·п©п╣я─п╟я┌п╬я─"
 
 #: ../../templates/show_search.inc.php:105
 msgid "AND"
-msgstr "И"
+msgstr "п≤"
 
 #: ../../templates/show_search.inc.php:111
 msgid "Method"
-msgstr "Метод"
+msgstr "п°п╣я┌п╬п╢"
 
 #: ../../templates/show_search.inc.php:114
 msgid "Fuzzy"
-msgstr "Нечеткий"
+msgstr "п²п╣я┤п╣я┌п╨п╦п╧"
 
 #: ../../templates/show_search.inc.php:115
 msgid "Exact"
-msgstr "Четкий"
+msgstr "п╖п╣я┌п╨п╦п╧"
 
 #: ../../templates/show_search.inc.php:118
 msgid "Maximum Results"
-msgstr "Максимум результатов"
+msgstr "п°п╟п╨я│п╦п╪я┐п╪ я─п╣п╥я┐п╩я▄я┌п╟я┌п╬п╡"
 
 #: ../../templates/show_search.inc.php:121
 #: ../../templates/show_random.inc.php:49
 #: ../../templates/show_random.inc.php:84
 msgid "Unlimited"
-msgstr "Неограниченно"
+msgstr "п²п╣п╬пЁя─п╟п╫п╦я┤п╣п╫п╫п╬"
 
 #: ../../templates/show_add_playlist.inc.php:24
 msgid "Create a new playlist"
-msgstr "Создать новый плейлист"
+msgstr "п║п╬п╥п╢п╟я┌я▄ п╫п╬п╡я▀п╧ п©п╩п╣п╧п╩п╦я│я┌"
 
 #: ../../templates/show_add_playlist.inc.php:32
 #: ../../templates/show_random.inc.php:61
 #: ../../templates/show_access_list.inc.php:51
 #: ../../templates/show_playlist_edit.inc.php:36
 msgid "Type"
-msgstr "Тип"
+msgstr "п╒п╦п©"
 
 #: ../../templates/show_run_add_catalog.inc.php:24
 #: ../../templates/show_adds_catalog.inc.php:25
 msgid "Found"
-msgstr "Найдено"
+msgstr "п²п╟п╧п╢п╣п╫п╬"
 
 #: ../../templates/show_install.inc.php:55
 msgid ""
@@ -2216,171 +2216,171 @@ msgid ""
 "mysql account with database creation rights. This step may take a while "
 "depending upon the speed of your computer"
 msgstr ""
-"На данном шаге будет создана и добавлена база данных Ampache. Пожалуйста, "
-"предоставьте mysql аккаунт с правами создания баз данных. Данный шаг может "
-"занять некоторое время в зависимости от скорости Вашего компьютера."
+"п²п╟ п╢п╟п╫п╫п╬п╪ я┬п╟пЁп╣ п╠я┐п╢п╣я┌ я│п╬п╥п╢п╟п╫п╟ п╦ п╢п╬п╠п╟п╡п╩п╣п╫п╟ п╠п╟п╥п╟ п╢п╟п╫п╫я▀я┘ Ampache. п÷п╬п╤п╟п╩я┐п╧я│я┌п╟, "
+"п©я─п╣п╢п╬я│я┌п╟п╡я▄я┌п╣ mysql п╟п╨п╨п╟я┐п╫я┌ я│ п©я─п╟п╡п╟п╪п╦ я│п╬п╥п╢п╟п╫п╦я▐ п╠п╟п╥ п╢п╟п╫п╫я▀я┘. п■п╟п╫п╫я▀п╧ я┬п╟пЁ п╪п╬п╤п╣я┌ "
+"п╥п╟п╫я▐я┌я▄ п╫п╣п╨п╬я┌п╬я─п╬п╣ п╡я─п╣п╪я▐ п╡ п╥п╟п╡п╦я│п╦п╪п╬я│я┌п╦ п╬я┌ я│п╨п╬я─п╬я│я┌п╦ п▓п╟я┬п╣пЁп╬ п╨п╬п╪п©я▄я▌я┌п╣я─п╟."
 
 #: ../../templates/show_install.inc.php:62
 msgid "Insert Ampache Database"
-msgstr "Добавить базу"
+msgstr "п■п╬п╠п╟п╡п╦я┌я▄ п╠п╟п╥я┐"
 
 #: ../../templates/show_install.inc.php:74
 msgid "MySQL Administrative Username"
-msgstr "MySQL пользователь-администратор"
+msgstr "MySQL п©п╬п╩я▄п╥п╬п╡п╟я┌п╣п╩я▄-п╟п╢п╪п╦п╫п╦я│я┌я─п╟я┌п╬я─"
 
 #: ../../templates/show_install.inc.php:78
 msgid "MySQL Administrative Password"
-msgstr "MySQL пароль администратора"
+msgstr "MySQL п©п╟я─п╬п╩я▄ п╟п╢п╪п╦п╫п╦я│я┌я─п╟я┌п╬я─п╟"
 
 #: ../../templates/show_install.inc.php:82
 msgid "Create Database User for New Database"
-msgstr "Создать пользователя базы данных"
+msgstr "п║п╬п╥п╢п╟я┌я▄ п©п╬п╩я▄п╥п╬п╡п╟я┌п╣п╩я▐ п╠п╟п╥я▀ п╢п╟п╫п╫я▀я┘"
 
 #: ../../templates/show_install.inc.php:86
 msgid "Ampache Database Username"
-msgstr "Ampache имя пользователя БД"
+msgstr "Ampache п╦п╪я▐ п©п╬п╩я▄п╥п╬п╡п╟я┌п╣п╩я▐ п▒п■"
 
 #: ../../templates/show_install.inc.php:90
 msgid "Ampache Database User Password"
-msgstr "Ampache пароль пользователя БД"
+msgstr "Ampache п©п╟я─п╬п╩я▄ п©п╬п╩я▄п╥п╬п╡п╟я┌п╣п╩я▐ п▒п■"
 
 #: ../../templates/show_install.inc.php:94
 msgid "Overwrite Existing"
-msgstr "Заменить существующие"
+msgstr "п≈п╟п╪п╣п╫п╦я┌я▄ я│я┐я┴п╣я│я┌п╡я┐я▌я┴п╦п╣"
 
 #: ../../templates/show_install.inc.php:98
 #, fuzzy
 msgid "Use Existing Database"
-msgstr "Добавить базу"
+msgstr "п■п╬п╠п╟п╡п╦я┌я▄ п╠п╟п╥я┐"
 
 #: ../../templates/show_install.inc.php:103
 msgid "Insert Database"
-msgstr "Добавить базу"
+msgstr "п■п╬п╠п╟п╡п╦я┌я▄ п╠п╟п╥я┐"
 
 #: ../../templates/show_install_account.inc.php:44
 msgid ""
 "Your webserver has read access to the /sql/ampache.sql file and the /config/"
 "ampache.cfg.dist.php file"
 msgstr ""
-"У сервера есть доступ на чтение файлов /sql/ampache.sql и /config/ampache."
+"пё я│п╣я─п╡п╣я─п╟ п╣я│я┌я▄ п╢п╬я│я┌я┐п© п╫п╟ я┤я┌п╣п╫п╦п╣ я└п╟п╧п╩п╬п╡ /sql/ampache.sql п╦ /config/ampache."
 "cfg.php.dist"
 
 #: ../../templates/show_install_account.inc.php:50
 msgid "Step 2 - Creating the ampache.cfg.php file"
-msgstr "Шаг 2 - Создание файла Ampache.cfg.php"
+msgstr "п╗п╟пЁ 2 - п║п╬п╥п╢п╟п╫п╦п╣ я└п╟п╧п╩п╟ Ampache.cfg.php"
 
 #: ../../templates/show_install_account.inc.php:53
 msgid ""
 "This step creates your initial Ampache admin account. Once your admin "
 "account has been created you will be directed to the login page"
 msgstr ""
-"На этом шаге будет создан Ваш  первичный аккаунт администратора.Как только "
-"аккаунт администратора будет создан, Вы будете перенаправленыНа страницу "
-"входа."
+"п²п╟ я█я┌п╬п╪ я┬п╟пЁп╣ п╠я┐п╢п╣я┌ я│п╬п╥п╢п╟п╫ п▓п╟я┬  п©п╣я─п╡п╦я┤п╫я▀п╧ п╟п╨п╨п╟я┐п╫я┌ п╟п╢п╪п╦п╫п╦я│я┌я─п╟я┌п╬я─п╟.п п╟п╨ я┌п╬п╩я▄п╨п╬ "
+"п╟п╨п╨п╟я┐п╫я┌ п╟п╢п╪п╦п╫п╦я│я┌я─п╟я┌п╬я─п╟ п╠я┐п╢п╣я┌ я│п╬п╥п╢п╟п╫, п▓я▀ п╠я┐п╢п╣я┌п╣ п©п╣я─п╣п╫п╟п©я─п╟п╡п╩п╣п╫я▀п²п╟ я│я┌я─п╟п╫п╦я├я┐ "
+"п╡я┘п╬п╢п╟."
 
 #: ../../templates/show_install_account.inc.php:57
 msgid "Create Admin Account"
-msgstr "Создание аккаунта админа"
+msgstr "п║п╬п╥п╢п╟п╫п╦п╣ п╟п╨п╨п╟я┐п╫я┌п╟ п╟п╢п╪п╦п╫п╟"
 
 #: ../../templates/show_install_account.inc.php:74
 msgid "Create Account"
-msgstr "Создать аккаунт"
+msgstr "п║п╬п╥п╢п╟я┌я▄ п╟п╨п╨п╟я┐п╫я┌"
 
 #: ../../templates/show_gather_art.inc.php:23
 msgid "Starting Album Art Search"
-msgstr "Запуск поиска альбомных обложек"
+msgstr "п≈п╟п©я┐я│п╨ п©п╬п╦я│п╨п╟ п╟п╩я▄п╠п╬п╪п╫я▀я┘ п╬п╠п╩п╬п╤п╣п╨"
 
 #: ../../templates/show_gather_art.inc.php:24
 msgid "Searched"
-msgstr "Пройдено"
+msgstr "п÷я─п╬п╧п╢п╣п╫п╬"
 
 #: ../../templates/show_add_shout.inc.php:23
 msgid "Post to Shoutbox"
-msgstr "Написать в кричалку"
+msgstr "п²п╟п©п╦я│п╟я┌я▄ п╡ п╨я─п╦я┤п╟п╩п╨я┐"
 
 #: ../../templates/show_stats_newest.inc.php:22
 #: ../../lib/class/ampacherss.class.php:72
 msgid "Newest Albums"
-msgstr "Последние альбомы"
+msgstr "п÷п╬я│п╩п╣п╢п╫п╦п╣ п╟п╩я▄п╠п╬п╪я▀"
 
 #: ../../templates/show_stats_newest.inc.php:26
 #: ../../lib/class/ampacherss.class.php:73
 msgid "Newest Artists"
-msgstr "Последние исполнители"
+msgstr "п÷п╬я│п╩п╣п╢п╫п╦п╣ п╦я│п©п╬п╩п╫п╦я┌п╣п╩п╦"
 
 #: ../../templates/show_songs.inc.php:43 ../../templates/show_songs.inc.php:72
 #: ../../templates/show_random.inc.php:41
 #, fuzzy
 msgid "Tags"
-msgstr "Обновить тег"
+msgstr "п·п╠п╫п╬п╡п╦я┌я▄ я┌п╣пЁ"
 
 #: ../../templates/show_mail_users.inc.php:23
 msgid "Send E-mail to Users"
-msgstr "Послать Е-майл пользователям"
+msgstr "п÷п╬я│п╩п╟я┌я▄ п∙-п╪п╟п╧п╩ п©п╬п╩я▄п╥п╬п╡п╟я┌п╣п╩я▐п╪"
 
 #: ../../templates/show_mail_users.inc.php:27
 msgid "Mail to"
-msgstr "Написать письмо"
+msgstr "п²п╟п©п╦я│п╟я┌я▄ п©п╦я│я▄п╪п╬"
 
 #: ../../templates/show_mail_users.inc.php:33
 msgid "Inactive Users"
-msgstr "Неактивные пользователи"
+msgstr "п²п╣п╟п╨я┌п╦п╡п╫я▀п╣ п©п╬п╩я▄п╥п╬п╡п╟я┌п╣п╩п╦"
 
 #: ../../templates/show_mail_users.inc.php:53
 msgid "Latest Artist Additions"
-msgstr "Последние исполнители"
+msgstr "п÷п╬я│п╩п╣п╢п╫п╦п╣ п╦я│п©п╬п╩п╫п╦я┌п╣п╩п╦"
 
 #: ../../templates/show_mail_users.inc.php:64
 msgid "Latest Album Additions"
-msgstr "Последние альбомы"
+msgstr "п÷п╬я│п╩п╣п╢п╫п╦п╣ п╟п╩я▄п╠п╬п╪я▀"
 
 #: ../../templates/show_mail_users.inc.php:68
 #: ../../templates/show_all_popular.inc.php:38
 msgid "Most Popular Songs"
-msgstr "Самые популярные песни"
+msgstr "п║п╟п╪я▀п╣ п©п╬п©я┐п╩я▐я─п╫я▀п╣ п©п╣я│п╫п╦"
 
 #: ../../templates/show_mail_users.inc.php:74
 msgid "Flagged Songs"
-msgstr "Отмеченные песни"
+msgstr "п·я┌п╪п╣я┤п╣п╫п╫я▀п╣ п©п╣я│п╫п╦"
 
 #: ../../templates/show_mail_users.inc.php:86
 msgid "Most Popular Threshold in days"
-msgstr "Самый популярный порог в днях"
+msgstr "п║п╟п╪я▀п╧ п©п╬п©я┐п╩я▐я─п╫я▀п╧ п©п╬я─п╬пЁ п╡ п╢п╫я▐я┘"
 
 #: ../../templates/show_mail_users.inc.php:97
 msgid "Subject"
-msgstr "Тема"
+msgstr "п╒п╣п╪п╟"
 
 #: ../../templates/show_mail_users.inc.php:104
 msgid "Message"
-msgstr "Сообщение"
+msgstr "п║п╬п╬п╠я┴п╣п╫п╦п╣"
 
 #: ../../templates/show_mail_users.inc.php:112
 msgid "Send Mail"
-msgstr "Послать сообщение"
+msgstr "п÷п╬я│п╩п╟я┌я▄ я│п╬п╬п╠я┴п╣п╫п╦п╣"
 
 #: ../../templates/show_random.inc.php:22
 msgid "Play Random Selection"
-msgstr "Воспроизвести случайно"
+msgstr "п▓п╬я│п©я─п╬п╦п╥п╡п╣я│я┌п╦ я│п╩я┐я┤п╟п╧п╫п╬"
 
 #: ../../templates/show_random.inc.php:26
 msgid "Item count"
-msgstr "Количество"
+msgstr "п п╬п╩п╦я┤п╣я│я┌п╡п╬"
 
 #: ../../templates/show_random.inc.php:46
 #: ../../templates/show_duplicates.inc.php:40
 #: ../../templates/show_duplicates.inc.php:79
 msgid "Length"
-msgstr "Продолжительность"
+msgstr "п÷я─п╬п╢п╬п╩п╤п╦я┌п╣п╩я▄п╫п╬я│я┌я▄"
 
 #: ../../templates/show_random.inc.php:50
 #: ../../templates/show_random.inc.php:51
 #, fuzzy, php-format
 msgid "%d minute"
 msgid_plural "%d minutes"
-msgstr[0] "минуту"
-msgstr[1] "минуты"
-msgstr[2] "минут"
+msgstr[0] "п╪п╦п╫я┐я┌я┐"
+msgstr[1] "п╪п╦п╫я┐я┌я▀"
+msgstr[2] "п╪п╦п╫я┐я┌"
 
 #: ../../templates/show_random.inc.php:52
 #: ../../templates/show_random.inc.php:53
@@ -2390,45 +2390,45 @@ msgstr[2] "минут"
 #, fuzzy, php-format
 msgid "%d hour"
 msgid_plural "%d hours"
-msgstr[0] "час"
-msgstr[1] "часа"
-msgstr[2] "часов"
+msgstr[0] "я┤п╟я│"
+msgstr[1] "я┤п╟я│п╟"
+msgstr[2] "я┤п╟я│п╬п╡"
 
 #: ../../templates/show_random.inc.php:64
 msgid "Standard"
-msgstr "Стандартный"
+msgstr "п║я┌п╟п╫п╢п╟я─я┌п╫я▀п╧"
 
 #: ../../templates/show_random.inc.php:65
 msgid "Less Played"
-msgstr "Редко проигрываемые"
+msgstr "п═п╣п╢п╨п╬ п©я─п╬п╦пЁя─я▀п╡п╟п╣п╪я▀п╣"
 
 #: ../../templates/show_random.inc.php:66
 msgid "Full Albums"
-msgstr "Альбомы"
+msgstr "п░п╩я▄п╠п╬п╪я▀"
 
 #: ../../templates/show_random.inc.php:67
 msgid "Full Artist"
-msgstr "Исполнители"
+msgstr "п≤я│п©п╬п╩п╫п╦я┌п╣п╩п╦"
 
 #: ../../templates/show_random.inc.php:69
 msgid "Highest Rated"
-msgstr "С высокими оценками"
+msgstr "п║ п╡я▀я│п╬п╨п╦п╪п╦ п╬я├п╣п╫п╨п╟п╪п╦"
 
 #: ../../templates/show_random.inc.php:75
 msgid "From catalog"
-msgstr "Из каталога"
+msgstr "п≤п╥ п╨п╟я┌п╟п╩п╬пЁп╟"
 
 #: ../../templates/show_random.inc.php:81
 msgid "Size Limit"
-msgstr "Максимальный размер"
+msgstr "п°п╟п╨я│п╦п╪п╟п╩я▄п╫я▀п╧ я─п╟п╥п╪п╣я─"
 
 #: ../../templates/show_random.inc.php:95
 msgid "Enqueue"
-msgstr "В очередь"
+msgstr "п▓ п╬я┤п╣я─п╣п╢я▄"
 
 #: ../../templates/show_search_options.inc.php:23
 msgid "Options"
-msgstr "Настройки"
+msgstr "п²п╟я│я┌я─п╬п╧п╨п╦"
 
 #: ../../templates/show_search_options.inc.php:26
 msgid "Add Search Results"
@@ -2436,69 +2436,69 @@ msgstr ""
 
 #: ../../templates/show_get_albumart.inc.php:23
 msgid "Customize Search"
-msgstr "Настроить поиск"
+msgstr "п²п╟я│я┌я─п╬п╦я┌я▄ п©п╬п╦я│п╨"
 
 #: ../../templates/show_get_albumart.inc.php:44
 msgid "Direct URL to Image"
-msgstr "Прямой URL к изображению"
+msgstr "п÷я─я▐п╪п╬п╧ URL п╨ п╦п╥п╬п╠я─п╟п╤п╣п╫п╦я▌"
 
 #: ../../templates/show_get_albumart.inc.php:52
 msgid "Local Image"
-msgstr "Локальное изображение"
+msgstr "п⌡п╬п╨п╟п╩я▄п╫п╬п╣ п╦п╥п╬п╠я─п╟п╤п╣п╫п╦п╣"
 
 #: ../../templates/show_get_albumart.inc.php:63
 msgid "Get Art"
-msgstr "Найти обложку"
+msgstr "п²п╟п╧я┌п╦ п╬п╠п╩п╬п╤п╨я┐"
 
 #: ../../templates/show_adds_catalog.inc.php:23
 #, fuzzy, php-format
 msgid "Starting New Song Search on %s catalog"
-msgstr "Начат поиск новых песен в"
+msgstr "п²п╟я┤п╟я┌ п©п╬п╦я│п╨ п╫п╬п╡я▀я┘ п©п╣я│п╣п╫ п╡"
 
 #: ../../templates/show_recently_played.inc.php:23
 #: ../../lib/class/ampacherss.class.php:175
 msgid "seconds ago"
-msgstr "секунд назад"
+msgstr "я│п╣п╨я┐п╫п╢ п╫п╟п╥п╟п╢"
 
 #: ../../templates/show_recently_played.inc.php:23
 #: ../../lib/class/ampacherss.class.php:175
 msgid "minutes ago"
-msgstr "минут назад"
+msgstr "п╪п╦п╫я┐я┌ п╫п╟п╥п╟п╢"
 
 #: ../../templates/show_recently_played.inc.php:23
 #: ../../lib/class/ampacherss.class.php:175
 msgid "hours ago"
-msgstr "часов назад"
+msgstr "я┤п╟я│п╬п╡ п╫п╟п╥п╟п╢"
 
 #: ../../templates/show_recently_played.inc.php:23
 #: ../../lib/class/ampacherss.class.php:175
 msgid "days ago"
-msgstr "дней назад"
+msgstr "п╢п╫п╣п╧ п╫п╟п╥п╟п╢"
 
 #: ../../templates/show_recently_played.inc.php:23
 #: ../../lib/class/ampacherss.class.php:175
 msgid "weeks ago"
-msgstr "недель назад"
+msgstr "п╫п╣п╢п╣п╩я▄ п╫п╟п╥п╟п╢"
 
 #: ../../templates/show_recently_played.inc.php:23
 #: ../../lib/class/ampacherss.class.php:175
 msgid "months ago"
-msgstr "месяцев назад"
+msgstr "п╪п╣я│я▐я├п╣п╡ п╫п╟п╥п╟п╢"
 
 #: ../../templates/show_recently_played.inc.php:23
 #: ../../lib/class/ampacherss.class.php:175
 msgid "years ago"
-msgstr "лет назад"
+msgstr "п╩п╣я┌ п╫п╟п╥п╟п╢"
 
 #: ../../templates/show_recently_played.inc.php:42
 #: ../../templates/show_recently_played.inc.php:104
 msgid "Last Played"
-msgstr "Последние проигранные"
+msgstr "п÷п╬я│п╩п╣п╢п╫п╦п╣ п©я─п╬п╦пЁя─п╟п╫п╫я▀п╣"
 
 #: ../../templates/show_artist.inc.php:22
 #, fuzzy, php-format
 msgid "Albums by %s"
-msgstr "Альбомы"
+msgstr "п░п╩я▄п╠п╬п╪я▀"
 
 #: ../../templates/show_artist.inc.php:25
 #, php-format
@@ -2508,40 +2508,40 @@ msgstr ""
 #: ../../templates/show_artist.inc.php:35
 #, fuzzy, php-format
 msgid "Show All Songs By %s"
-msgstr "Показать все песни"
+msgstr "п÷п╬п╨п╟п╥п╟я┌я▄ п╡я│п╣ п©п╣я│п╫п╦"
 
 #: ../../templates/show_artist.inc.php:38
 #, fuzzy, php-format
 msgid "Add All Songs By %s"
-msgstr "Добавить все песни"
+msgstr "п■п╬п╠п╟п╡п╦я┌я▄ п╡я│п╣ п©п╣я│п╫п╦"
 
 #: ../../templates/show_artist.inc.php:41
 #, fuzzy, php-format
 msgid "Add Random Songs By %s"
-msgstr "Добавить случайные песни"
+msgstr "п■п╬п╠п╟п╡п╦я┌я▄ я│п╩я┐я┤п╟п╧п╫я▀п╣ п©п╣я│п╫п╦"
 
 #: ../../templates/show_artist.inc.php:45
 #: ../../templates/show_album.inc.php:71
 msgid "Update from tags"
-msgstr "Обновить из тегов"
+msgstr "п·п╠п╫п╬п╡п╦я┌я▄ п╦п╥ я┌п╣пЁп╬п╡"
 
 #: ../../templates/show_democratic.inc.php:22
 #, fuzzy, php-format
 msgid "%s Playlist"
-msgstr "Главный плейлист"
+msgstr "п⌠п╩п╟п╡п╫я▀п╧ п©п╩п╣п╧п╩п╦я│я┌"
 
 #: ../../templates/show_verify_catalog.inc.php:23
 #, fuzzy, php-format
 msgid "Updating the %s catalog"
-msgstr "Обновление"
+msgstr "п·п╠п╫п╬п╡п╩п╣п╫п╦п╣"
 
 #: ../../templates/show_verify_catalog.inc.php:24
 msgid "songs found checking tag information."
-msgstr "Проверка информации из тегов найденных песен"
+msgstr "п÷я─п╬п╡п╣я─п╨п╟ п╦п╫я└п╬я─п╪п╟я├п╦п╦ п╦п╥ я┌п╣пЁп╬п╡ п╫п╟п╧п╢п╣п╫п╫я▀я┘ п©п╣я│п╣п╫"
 
 #: ../../templates/show_verify_catalog.inc.php:25
 msgid "Verifed"
-msgstr "Проверено"
+msgstr "п÷я─п╬п╡п╣я─п╣п╫п╬"
 
 #: ../../templates/show_denied.inc.php:38
 msgid ""
@@ -2557,7 +2557,7 @@ msgstr ""
 #: ../../templates/show_denied.inc.php:40
 #, fuzzy
 msgid "This event has been logged"
-msgstr "Указанная позиция отмечена"
+msgstr "пёп╨п╟п╥п╟п╫п╫п╟я▐ п©п╬п╥п╦я├п╦я▐ п╬я┌п╪п╣я┤п╣п╫п╟"
 
 #: ../../templates/show_denied.inc.php:44
 msgid ""
@@ -2573,172 +2573,172 @@ msgstr ""
 
 #: ../../templates/show_album.inc.php:27 ../../lib/class/album.class.php:244
 msgid "Disk"
-msgstr "Диск"
+msgstr "п■п╦я│п╨"
 
 #: ../../templates/show_album.inc.php:34
-#: ../../lib/class/catalog.class.php:1823
-#: ../../lib/class/catalog.class.php:1894
+#: ../../lib/class/catalog.class.php:1920
+#: ../../lib/class/catalog.class.php:1991
 msgid "Unknown (Orphaned)"
-msgstr "Неизвестный (сирота)"
+msgstr "п²п╣п╦п╥п╡п╣я│я┌п╫я▀п╧ (я│п╦я─п╬я┌п╟)"
 
 #: ../../templates/show_album.inc.php:52
 msgid "Add Album"
-msgstr "Добавить альбом"
+msgstr "п■п╬п╠п╟п╡п╦я┌я▄ п╟п╩я▄п╠п╬п╪"
 
 #: ../../templates/show_album.inc.php:56
 msgid "Add Random from Album"
-msgstr "Добавить случайно с альбома"
+msgstr "п■п╬п╠п╟п╡п╦я┌я▄ я│п╩я┐я┤п╟п╧п╫п╬ я│ п╟п╩я▄п╠п╬п╪п╟"
 
 #: ../../templates/show_album.inc.php:61
 msgid "Reset Album Art"
-msgstr "Очистить обложку альбома"
+msgstr "п·я┤п╦я│я┌п╦я┌я▄ п╬п╠п╩п╬п╤п╨я┐ п╟п╩я▄п╠п╬п╪п╟"
 
 #: ../../templates/show_album.inc.php:66
 msgid "Find Album Art"
-msgstr "Найти обложку альбома"
+msgstr "п²п╟п╧я┌п╦ п╬п╠п╩п╬п╤п╨я┐ п╟п╩я▄п╠п╬п╪п╟"
 
 #: ../../templates/show_localplay_add_instance.inc.php:24
 msgid "Add Localplay Instance"
-msgstr "Добавить сущность локального воспроизведения"
+msgstr "п■п╬п╠п╟п╡п╦я┌я▄ я│я┐я┴п╫п╬я│я┌я▄ п╩п╬п╨п╟п╩я▄п╫п╬пЁп╬ п╡п╬я│п©я─п╬п╦п╥п╡п╣п╢п╣п╫п╦я▐"
 
 #: ../../templates/show_login_form.inc.php:66
 msgid "Remember Me"
-msgstr "Запомнить меня"
+msgstr "п≈п╟п©п╬п╪п╫п╦я┌я▄ п╪п╣п╫я▐"
 
 #: ../../templates/show_login_form.inc.php:73
 msgid "Login"
-msgstr "Логин"
+msgstr "п⌡п╬пЁп╦п╫"
 
 #: ../../templates/show_login_form.inc.php:78
 msgid "Register"
-msgstr "Регистрация"
+msgstr "п═п╣пЁп╦я│я┌я─п╟я├п╦я▐"
 
 #: ../../templates/show_login_form.inc.php:90
 msgid "Message of the Day"
-msgstr "Фраза дня"
+msgstr "п╓я─п╟п╥п╟ п╢п╫я▐"
 
 #: ../../templates/show_all_popular.inc.php:32
 msgid "Most Popular Genres"
-msgstr "Самые популярные жанры"
+msgstr "п║п╟п╪я▀п╣ п©п╬п©я┐п╩я▐я─п╫я▀п╣ п╤п╟п╫я─я▀"
 
 #: ../../templates/show_all_popular.inc.php:41
 msgid "Most Popular Live Streams"
-msgstr "Самые популярные потоки"
+msgstr "п║п╟п╪я▀п╣ п©п╬п©я┐п╩я▐я─п╫я▀п╣ п©п╬я┌п╬п╨п╦"
 
 #: ../../templates/show_all_popular.inc.php:44
 msgid "Most Popular Tags"
-msgstr "Самые популярные теги"
+msgstr "п║п╟п╪я▀п╣ п©п╬п©я┐п╩я▐я─п╫я▀п╣ я┌п╣пЁп╦"
 
 #: ../../templates/show_song.inc.php:25
 msgid "Details"
-msgstr "Детали"
+msgstr "п■п╣я┌п╟п╩п╦"
 
 #: ../../templates/show_disabled_songs.inc.php:38
 #: ../../templates/show_disabled_songs.inc.php:61
 msgid "Addition Time"
-msgstr "Время добавления"
+msgstr "п▓я─п╣п╪я▐ п╢п╬п╠п╟п╡п╩п╣п╫п╦я▐"
 
 #: ../../templates/show_disabled_songs.inc.php:65
 msgid "Remove"
-msgstr "Удалить"
+msgstr "пёп╢п╟п╩п╦я┌я▄"
 
 #: ../../templates/show_edit_album_row.inc.php:35
 #: ../../lib/class/album.class.php:256 ../../lib/class/album.class.php:257
 msgid "Various"
-msgstr "Различные"
+msgstr "п═п╟п╥п╩п╦я┤п╫я▀п╣"
 
 #: ../../templates/list_header.inc.php:100
 msgid "Prev"
-msgstr "Пред."
+msgstr "п÷я─п╣п╢."
 
 #: ../../templates/show_duplicates.inc.php:22
 msgid "Duplicate Songs"
-msgstr "Дублирующиеся песни"
+msgstr "п■я┐п╠п╩п╦я─я┐я▌я┴п╦п╣я│я▐ п©п╣я│п╫п╦"
 
 #: ../../templates/show_duplicates.inc.php:41
 #: ../../templates/show_duplicates.inc.php:80
 msgid "Bitrate"
-msgstr "Битрейд"
+msgstr "п▒п╦я┌я─п╣п╧п╢"
 
 #: ../../templates/show_duplicates.inc.php:42
 #: ../../templates/show_duplicates.inc.php:81
 msgid "Size"
-msgstr "Размер"
+msgstr "п═п╟п╥п╪п╣я─"
 
 #: ../../templates/show_manage_catalogs.inc.php:28
 msgid "Gather All Art"
-msgstr "Собрать все обложки"
+msgstr "п║п╬п╠я─п╟я┌я▄ п╡я│п╣ п╬п╠п╩п╬п╤п╨п╦"
 
 #: ../../templates/show_manage_catalogs.inc.php:29
 #: ../../templates/show_admin_tools.inc.php:80
 msgid "Add to All"
-msgstr "Добавить во все"
+msgstr "п■п╬п╠п╟п╡п╦я┌я▄ п╡п╬ п╡я│п╣"
 
 #: ../../templates/show_manage_catalogs.inc.php:30
 #: ../../templates/show_admin_tools.inc.php:79
 msgid "Verify All"
-msgstr "Проверить все"
+msgstr "п÷я─п╬п╡п╣я─п╦я┌я▄ п╡я│п╣"
 
 #: ../../templates/show_manage_catalogs.inc.php:31
 #: ../../templates/show_admin_tools.inc.php:78
 msgid "Clean All"
-msgstr "Очистить все"
+msgstr "п·я┤п╦я│я┌п╦я┌я▄ п╡я│п╣"
 
 #: ../../templates/show_manage_catalogs.inc.php:32
 #: ../../templates/show_admin_tools.inc.php:81
 msgid "Update All"
-msgstr "Обновить все"
+msgstr "п·п╠п╫п╬п╡п╦я┌я▄ п╡я│п╣"
 
 #: ../../templates/show_manage_catalogs.inc.php:38
-#, fuzzy, php-format
+#, php-format
 msgid "Add From %s"
-msgstr "Добавить в"
+msgstr ""
 
 #: ../../templates/show_manage_catalogs.inc.php:40
 #, fuzzy, php-format
 msgid "Update From %s"
-msgstr "Обновить из тегов"
+msgstr "п·п╠п╫п╬п╡п╦я┌я▄ п╦п╥ я┌п╣пЁп╬п╡"
 
 #: ../../templates/show_admin_tools.inc.php:59
 msgid "Fast"
-msgstr "Быстро"
+msgstr "п▒я▀я│я┌я─п╬"
 
 #: ../../templates/show_admin_tools.inc.php:68
 msgid "No Catalogs Found"
-msgstr "Каталогов не найдено"
+msgstr "п п╟я┌п╟п╩п╬пЁп╬п╡ п╫п╣ п╫п╟п╧п╢п╣п╫п╬"
 
 #: ../../templates/show_admin_tools.inc.php:83
 msgid "Clear Catalog Stats"
-msgstr "Очистить статистику каталогов"
+msgstr "п·я┤п╦я│я┌п╦я┌я▄ я│я┌п╟я┌п╦я│я┌п╦п╨я┐ п╨п╟я┌п╟п╩п╬пЁп╬п╡"
 
 #: ../../templates/show_admin_tools.inc.php:84
 #: ../../templates/show_add_catalog.inc.php:75
 msgid "Gather Album Art"
-msgstr "Собрать обложки альбомов"
+msgstr "п║п╬п╠я─п╟я┌я▄ п╬п╠п╩п╬п╤п╨п╦ п╟п╩я▄п╠п╬п╪п╬п╡"
 
 #: ../../templates/show_admin_tools.inc.php:90
 msgid "Show Duplicate Songs"
-msgstr "Показать дублирующиеся песни"
+msgstr "п÷п╬п╨п╟п╥п╟я┌я▄ п╢я┐п╠п╩п╦я─я┐я▌я┴п╦п╣я│я▐ п©п╣я│п╫п╦"
 
 #: ../../templates/show_admin_tools.inc.php:93
 msgid "Preferences Permissions"
-msgstr "Доступ к предпочтениям"
+msgstr "п■п╬я│я┌я┐п© п╨ п©я─п╣п╢п©п╬я┤я┌п╣п╫п╦я▐п╪"
 
 #: ../../templates/show_admin_tools.inc.php:94
 msgid "Export To Itunes DB"
-msgstr "Экспортировать в Itunes БД"
+msgstr "п╜п╨я│п©п╬я─я┌п╦я─п╬п╡п╟я┌я▄ п╡ Itunes п▒п■"
 
 #: ../../templates/show_admin_tools.inc.php:95
 msgid "Show Inactive Users"
-msgstr "Показывать неактивных пользователей"
+msgstr "п÷п╬п╨п╟п╥я▀п╡п╟я┌я▄ п╫п╣п╟п╨я┌п╦п╡п╫я▀я┘ п©п╬п╩я▄п╥п╬п╡п╟я┌п╣п╩п╣п╧"
 
 #: ../../templates/show_admin_tools.inc.php:96
 msgid "Check for New Version"
-msgstr "Проверить новую версию"
+msgstr "п÷я─п╬п╡п╣я─п╦я┌я▄ п╫п╬п╡я┐я▌ п╡п╣я─я│п╦я▌"
 
 #: ../../templates/show_access_list.inc.php:29
 msgid "Ampache Access Control"
-msgstr "Ampache Контроль доступа"
+msgstr "Ampache п п╬п╫я┌я─п╬п╩я▄ п╢п╬я│я┌я┐п©п╟"
 
 #: ../../templates/show_access_list.inc.php:32
 msgid ""
@@ -2763,109 +2763,109 @@ msgid ""
 "Use tool below to add any server's IP address that you want to access your "
 "Ampache catalog or be able to stream from this server."
 msgstr ""
-"Используйте форму для добавления узла, которому вы хотите предоставитьдоступ "
-"к Ampcahe"
+"п≤я│п©п╬п╩я▄п╥я┐п╧я┌п╣ я└п╬я─п╪я┐ п╢п╩я▐ п╢п╬п╠п╟п╡п╩п╣п╫п╦я▐ я┐п╥п╩п╟, п╨п╬я┌п╬я─п╬п╪я┐ п╡я▀ я┘п╬я┌п╦я┌п╣ п©я─п╣п╢п╬я│я┌п╟п╡п╦я┌я▄п╢п╬я│я┌я┐п© "
+"п╨ Ampcahe"
 
 #: ../../templates/show_access_list.inc.php:40
 msgid "Add Entry"
-msgstr "Добавить запись"
+msgstr "п■п╬п╠п╟п╡п╦я┌я▄ п╥п╟п©п╦я│я▄"
 
 #: ../../templates/show_access_list.inc.php:46
 msgid "Start Address"
-msgstr "Начальный адрес"
+msgstr "п²п╟я┤п╟п╩я▄п╫я▀п╧ п╟п╢я─п╣я│"
 
 #: ../../templates/show_access_list.inc.php:47
 msgid "End Address"
-msgstr "Конечный адрес"
+msgstr "п п╬п╫п╣я┤п╫я▀п╧ п╟п╢я─п╣я│"
 
 #: ../../templates/show_access_list.inc.php:50
 msgid "Key"
-msgstr "Ключ"
+msgstr "п п╩я▌я┤"
 
 #: ../../templates/show_rename_artist.inc.php:29
 #, fuzzy, php-format
 msgid "Rename %s"
-msgstr "Переименовать"
+msgstr "п÷п╣я─п╣п╦п╪п╣п╫п╬п╡п╟я┌я▄"
 
 #: ../../templates/show_rename_artist.inc.php:35
 msgid "Insert current"
-msgstr "Добавить текущую"
+msgstr "п■п╬п╠п╟п╡п╦я┌я▄ я┌п╣п╨я┐я┴я┐я▌"
 
 #: ../../templates/show_rename_artist.inc.php:37
 msgid "Update id3 tags"
-msgstr "Обновить id3 теги"
+msgstr "п·п╠п╫п╬п╡п╦я┌я▄ id3 я┌п╣пЁп╦"
 
 #: ../../templates/show_rename_artist.inc.php:38
 msgid "Rename"
-msgstr "Переименовать"
+msgstr "п÷п╣я─п╣п╦п╪п╣п╫п╬п╡п╟я┌я▄"
 
 #: ../../templates/show_user_registration.inc.php:54
 msgid "User Agreement"
-msgstr "Пользовательское соглашение"
+msgstr "п÷п╬п╩я▄п╥п╬п╡п╟я┌п╣п╩я▄я│п╨п╬п╣ я│п╬пЁп╩п╟я┬п╣п╫п╦п╣"
 
 #: ../../templates/show_user_registration.inc.php:63
 msgid "I Accept"
-msgstr "Я принимаю"
+msgstr "п╞ п©я─п╦п╫п╦п╪п╟я▌"
 
 #: ../../templates/show_user_registration.inc.php:69
 msgid "User Information"
-msgstr "Информация о пользователе"
+msgstr "п≤п╫я└п╬я─п╪п╟я├п╦я▐ п╬ п©п╬п╩я▄п╥п╬п╡п╟я┌п╣п╩п╣"
 
 #: ../../templates/show_user_registration.inc.php:131
 msgid "Register User"
-msgstr "Регистрация пользователя"
+msgstr "п═п╣пЁп╦я│я┌я─п╟я├п╦я▐ п©п╬п╩я▄п╥п╬п╡п╟я┌п╣п╩я▐"
 
 #: ../../templates/show_playlist_edit.inc.php:26
 msgid "Editing Playlist"
-msgstr "Редактирование плейлиста"
+msgstr "п═п╣п╢п╟п╨я┌п╦я─п╬п╡п╟п╫п╦п╣ п©п╩п╣п╧п╩п╦я│я┌п╟"
 
 #: ../../templates/show_add_catalog.inc.php:27
 msgid ""
 "In the form below enter either a local path (i.e. /data/music) or the URL to "
 "a remote Ampache installation (i.e http://theotherampache.com)"
 msgstr ""
-"Введите в следующую форму локальный путь (напр. /data/music), или URL "
-"удаленной инсталяции Apache (напр.http://theotherampache.com)"
+"п▓п╡п╣п╢п╦я┌п╣ п╡ я│п╩п╣п╢я┐я▌я┴я┐я▌ я└п╬я─п╪я┐ п╩п╬п╨п╟п╩я▄п╫я▀п╧ п©я┐я┌я▄ (п╫п╟п©я─. /data/music), п╦п╩п╦ URL "
+"я┐п╢п╟п╩п╣п╫п╫п╬п╧ п╦п╫я│я┌п╟п╩я▐я├п╦п╦ Apache (п╫п╟п©я─.http://theotherampache.com)"
 
 #: ../../templates/show_add_catalog.inc.php:32
 msgid "Catalog Name"
-msgstr "Имя каталога"
+msgstr "п≤п╪я▐ п╨п╟я┌п╟п╩п╬пЁп╟"
 
 #: ../../templates/show_add_catalog.inc.php:55
 msgid "Local"
-msgstr "Локальный"
+msgstr "п⌡п╬п╨п╟п╩я▄п╫я▀п╧"
 
 #: ../../templates/show_add_catalog.inc.php:56
 msgid "Remote"
-msgstr "Удаленный"
+msgstr "пёп╢п╟п╩п╣п╫п╫я▀п╧"
 
 #: ../../templates/show_add_catalog.inc.php:65
 msgid "Filename Pattern"
-msgstr "Шаблон имени фалйла"
+msgstr "п╗п╟п╠п╩п╬п╫ п╦п╪п╣п╫п╦ я└п╟п╩п╧п╩п╟"
 
 #: ../../templates/show_add_catalog.inc.php:79
 msgid "Build Playlists from m3u Files"
-msgstr "Создавать плейлисты из m3u файлов"
+msgstr "п║п╬п╥п╢п╟п╡п╟я┌я▄ п©п╩п╣п╧п╩п╦я│я┌я▀ п╦п╥ m3u я└п╟п╧п╩п╬п╡"
 
 #: ../../templates/show_add_catalog.inc.php:85
 msgid "Add Catalog"
-msgstr "Добавить каталог"
+msgstr "п■п╬п╠п╟п╡п╦я┌я▄ п╨п╟я┌п╟п╩п╬пЁ"
 
 #: ../../templates/show_registration_confirmation.inc.php:36
 msgid "Registration Complete"
-msgstr "Регистрация завершена"
+msgstr "п═п╣пЁп╦я│я┌я─п╟я├п╦я▐ п╥п╟п╡п╣я─я┬п╣п╫п╟"
 
 #: ../../templates/show_registration_confirmation.inc.php:42
 msgid ""
 "Your account has been created. An activation key has been sent to the e-mail "
 "address you provided. Please check your e-mail for further information"
 msgstr ""
-"Аккаунт создан. На Ваш е-майл был отослан ключ активацииПожалуйста проверьте "
-"Ваш ящик для дальнейших действий"
+"п░п╨п╨п╟я┐п╫я┌ я│п╬п╥п╢п╟п╫. п²п╟ п▓п╟я┬ п╣-п╪п╟п╧п╩ п╠я▀п╩ п╬я┌п╬я│п╩п╟п╫ п╨п╩я▌я┤ п╟п╨я┌п╦п╡п╟я├п╦п╦п÷п╬п╤п╟п╩я┐п╧я│я┌п╟ п©я─п╬п╡п╣я─я▄я┌п╣ "
+"п▓п╟я┬ я▐я┴п╦п╨ п╢п╩я▐ п╢п╟п╩я▄п╫п╣п╧я┬п╦я┘ п╢п╣п╧я│я┌п╡п╦п╧"
 
 #: ../../templates/show_registration_confirmation.inc.php:44
 msgid "Return to Login Page"
-msgstr "Вернуться на главную"
+msgstr "п▓п╣я─п╫я┐я┌я▄я│я▐ п╫п╟ пЁп╩п╟п╡п╫я┐я▌"
 
 #: ../../templates/show_debug.inc.php:23
 msgid "Debug Tools"
@@ -2898,12 +2898,12 @@ msgstr ""
 #: ../../templates/show_debug.inc.php:48
 #, fuzzy
 msgid "Override Execution Time"
-msgstr "Заменить существующие"
+msgstr "п≈п╟п╪п╣п╫п╦я┌я▄ я│я┐я┴п╣я│я┌п╡я┐я▌я┴п╦п╣"
 
 #: ../../templates/show_debug.inc.php:49
 #, fuzzy
 msgid "Failed"
-msgstr "Файл"
+msgstr "п╓п╟п╧п╩"
 
 #: ../../templates/show_debug.inc.php:49
 msgid "Succeeded"
@@ -2931,37 +2931,37 @@ msgstr ""
 
 #: ../../templates/sidebar_modules.inc.php:27
 msgid "Localplay Modules"
-msgstr "Модули локального воспроизведения"
+msgstr "п°п╬п╢я┐п╩п╦ п╩п╬п╨п╟п╩я▄п╫п╬пЁп╬ п╡п╬я│п©я─п╬п╦п╥п╡п╣п╢п╣п╫п╦я▐"
 
 #: ../../templates/sidebar_modules.inc.php:28
 msgid "Available Plugins"
-msgstr "Доступные плагины"
+msgstr "п■п╬я│я┌я┐п©п╫я▀п╣ п©п╩п╟пЁп╦п╫я▀"
 
 #: ../../templates/sidebar_modules.inc.php:34
 msgid "Mail Users"
-msgstr "Почтовые пользователи"
+msgstr "п÷п╬я┤я┌п╬п╡я▀п╣ п©п╬п╩я▄п╥п╬п╡п╟я┌п╣п╩п╦"
 
 #: ../../templates/sidebar_modules.inc.php:35
 msgid "Manage Flagged"
-msgstr "Управление отмеченными"
+msgstr "пёп©я─п╟п╡п╩п╣п╫п╦п╣ п╬я┌п╪п╣я┤п╣п╫п╫я▀п╪п╦"
 
 #: ../../templates/sidebar_modules.inc.php:36
 #, fuzzy
 msgid "Show Disabled"
-msgstr "Песен отключено"
+msgstr "п÷п╣я│п╣п╫ п╬я┌п╨п╩я▌я┤п╣п╫п╬"
 
 #: ../../templates/sidebar_modules.inc.php:39
 msgid "Information"
-msgstr "Информация"
+msgstr "п≤п╫я└п╬я─п╪п╟я├п╦я▐"
 
 #: ../../templates/sidebar_modules.inc.php:49
 msgid "Manage Playlist"
-msgstr "Работа с плейлистом"
+msgstr "п═п╟п╠п╬я┌п╟ я│ п©п╩п╣п╧п╩п╦я│я┌п╬п╪"
 
 #: ../../templates/show_manage_shoutbox.inc.php:36
 #: ../../templates/show_manage_shoutbox.inc.php:60
 msgid "Sticky"
-msgstr "Фиксированный"
+msgstr "п╓п╦п╨я│п╦я─п╬п╡п╟п╫п╫я▀п╧"
 
 #: ../../templates/show_manage_shoutbox.inc.php:38
 #: ../../templates/show_manage_shoutbox.inc.php:62
@@ -2970,19 +2970,19 @@ msgstr ""
 
 #: ../../artists.php:181
 msgid "Show Artists starting with"
-msgstr "Показать исполнителей начинающихся с "
+msgstr "п÷п╬п╨п╟п╥п╟я┌я▄ п╦я│п©п╬п╩п╫п╦я┌п╣п╩п╣п╧ п╫п╟я┤п╦п╫п╟я▌я┴п╦я┘я│я▐ я│ "
 
 #: ../../flag.php:45
 msgid "Item Flagged"
-msgstr "Позиция отмечена"
+msgstr "п÷п╬п╥п╦я├п╦я▐ п╬я┌п╪п╣я┤п╣п╫п╟"
 
 #: ../../flag.php:45
 msgid "The specified item has been flagged"
-msgstr "Указанная позиция отмечена"
+msgstr "пёп╨п╟п╥п╟п╫п╫п╟я▐ п©п╬п╥п╦я├п╦я▐ п╬я┌п╪п╣я┤п╣п╫п╟"
 
 #: ../../register.php:73
 msgid "Error Captcha Required"
-msgstr "Ошибка требуется капча"
+msgstr "п·я┬п╦п╠п╨п╟ я┌я─п╣п╠я┐п╣я┌я│я▐ п╨п╟п©я┤п╟"
 
 #: ../../register.php:80
 msgid "Error Captcha Failed"
@@ -2990,43 +2990,43 @@ msgstr ""
 
 #: ../../register.php:87
 msgid "You <U>must</U> accept the user agreement"
-msgstr "Вы <U>должны</U> принять пользовательское соглашение"
+msgstr "п▓я▀ <U>п╢п╬п╩п╤п╫я▀</U> п©я─п╦п╫я▐я┌я▄ п©п╬п╩я▄п╥п╬п╡п╟я┌п╣п╩я▄я│п╨п╬п╣ я│п╬пЁп╩п╟я┬п╣п╫п╦п╣"
 
 #: ../../register.php:92
 msgid "You did not enter a username"
-msgstr "Вы не ввели имя пользователя"
+msgstr "п▓я▀ п╫п╣ п╡п╡п╣п╩п╦ п╦п╪я▐ п©п╬п╩я▄п╥п╬п╡п╟я┌п╣п╩я▐"
 
 #: ../../register.php:96
 msgid "Please fill in your full name (Firstname Lastname)"
-msgstr "Пожалуйста, введите ваше полное имя (Имя Фамилия)"
+msgstr "п÷п╬п╤п╟п╩я┐п╧я│я┌п╟, п╡п╡п╣п╢п╦я┌п╣ п╡п╟я┬п╣ п©п╬п╩п╫п╬п╣ п╦п╪я▐ (п≤п╪я▐ п╓п╟п╪п╦п╩п╦я▐)"
 
 #: ../../register.php:122
 msgid "You must enter a password"
-msgstr "Вы должны ввести пароль"
+msgstr "п▓я▀ п╢п╬п╩п╤п╫я▀ п╡п╡п╣я│я┌п╦ п©п╟я─п╬п╩я▄"
 
 #: ../../register.php:126
 msgid "Your passwords do not match"
-msgstr "Ваш пароль не совпадает"
+msgstr "п▓п╟я┬ п©п╟я─п╬п╩я▄ п╫п╣ я│п╬п╡п©п╟п╢п╟п╣я┌"
 
 #: ../../register.php:130 ../../admin/users.php:110
 msgid "Error Username already exists"
-msgstr "Ошибка: Пользователь с таким именем уже существует"
+msgstr "п·я┬п╦п╠п╨п╟: п÷п╬п╩я▄п╥п╬п╡п╟я┌п╣п╩я▄ я│ я┌п╟п╨п╦п╪ п╦п╪п╣п╫п╣п╪ я┐п╤п╣ я│я┐я┴п╣я│я┌п╡я┐п╣я┌"
 
 #: ../../register.php:158
 msgid "Error: Insert Failed"
-msgstr "Ошибка:  Добавление закончилось неудачей"
+msgstr "п·я┬п╦п╠п╨п╟:  п■п╬п╠п╟п╡п╩п╣п╫п╦п╣ п╥п╟п╨п╬п╫я┤п╦п╩п╬я│я▄ п╫п╣я┐п╢п╟я┤п╣п╧"
 
 #: ../../login.php:73
 msgid "User Disabled please contact Admin"
-msgstr "Пользователь отключен. Пожалуйста, свяжитесь с администратором"
+msgstr "п÷п╬п╩я▄п╥п╬п╡п╟я┌п╣п╩я▄ п╬я┌п╨п╩я▌я┤п╣п╫. п÷п╬п╤п╟п╩я┐п╧я│я┌п╟, я│п╡я▐п╤п╦я┌п╣я│я▄ я│ п╟п╢п╪п╦п╫п╦я│я┌я─п╟я┌п╬я─п╬п╪"
 
 #: ../../login.php:89
 msgid "Unable to create new account"
-msgstr "Не удалось создать новый аккаунт"
+msgstr "п²п╣ я┐п╢п╟п╩п╬я│я▄ я│п╬п╥п╢п╟я┌я▄ п╫п╬п╡я▀п╧ п╟п╨п╨п╟я┐п╫я┌"
 
 #: ../../login.php:98
 msgid "No local account found"
-msgstr "Аккаунт не был найден"
+msgstr "п░п╨п╨п╟я┐п╫я┌ п╫п╣ п╠я▀п╩ п╫п╟п╧п╢п╣п╫"
 
 #: ../../login.php:115
 msgid "User Already Logged in"
@@ -3038,23 +3038,23 @@ msgstr ""
 
 #: ../../lib/rating.lib.php:51
 msgid "Don't Play"
-msgstr "Не играть"
+msgstr "п²п╣ п╦пЁя─п╟я┌я▄"
 
 #: ../../lib/rating.lib.php:54
 msgid "It's Pretty Bad"
-msgstr "Плохо"
+msgstr "п÷п╩п╬я┘п╬"
 
 #: ../../lib/rating.lib.php:57
 msgid "It's Ok"
-msgstr "Хорошо"
+msgstr "п╔п╬я─п╬я┬п╬"
 
 #: ../../lib/rating.lib.php:60
 msgid "It's Pretty Good"
-msgstr "Очень хорошо"
+msgstr "п·я┤п╣п╫я▄ я┘п╬я─п╬я┬п╬"
 
 #: ../../lib/rating.lib.php:63
 msgid "I Love It!"
-msgstr "Просто супер!"
+msgstr "п÷я─п╬я│я┌п╬ я│я┐п©п╣я─!"
 
 #: ../../lib/rating.lib.php:66
 msgid "It's Insane"
@@ -3066,91 +3066,91 @@ msgstr ""
 
 #: ../../lib/ui.lib.php:358
 msgid "Upload"
-msgstr "Закачать"
+msgstr "п≈п╟п╨п╟я┤п╟я┌я▄"
 
 #: ../../lib/ui.lib.php:361
 msgid "Local Play"
-msgstr "Локальное воспроизведение"
+msgstr "п⌡п╬п╨п╟п╩я▄п╫п╬п╣ п╡п╬я│п©я─п╬п╦п╥п╡п╣п╢п╣п╫п╦п╣"
 
 #: ../../lib/ui.lib.php:364
 msgid "Random Play"
-msgstr "Случайное воспроизведение"
+msgstr "п║п╩я┐я┤п╟п╧п╫п╬п╣ п╡п╬я│п©я─п╬п╦п╥п╡п╣п╢п╣п╫п╦п╣"
 
 #: ../../lib/ui.lib.php:376 ../../lib/ui.lib.php:380
 msgid "Admin-Catalog"
-msgstr "Админка-Каталог"
+msgstr "п░п╢п╪п╦п╫п╨п╟-п п╟я┌п╟п╩п╬пЁ"
 
 #: ../../lib/ui.lib.php:384
 msgid "Admin-User Management"
-msgstr "Админка-Управление пользователями"
+msgstr "п░п╢п╪п╦п╫п╨п╟-пёп©я─п╟п╡п╩п╣п╫п╦п╣ п©п╬п╩я▄п╥п╬п╡п╟я┌п╣п╩я▐п╪п╦"
 
 #: ../../lib/ui.lib.php:388
 msgid "Admin-Mail Users"
-msgstr "Админка-Почтовые пользователи"
+msgstr "п░п╢п╪п╦п╫п╨п╟-п÷п╬я┤я┌п╬п╡я▀п╣ п©п╬п╩я▄п╥п╬п╡п╟я┌п╣п╩п╦"
 
 #: ../../lib/ui.lib.php:392
 msgid "Admin-Manage Access Lists"
-msgstr "Админка-управление списками доступа"
+msgstr "п░п╢п╪п╦п╫п╨п╟-я┐п©я─п╟п╡п╩п╣п╫п╦п╣ я│п©п╦я│п╨п╟п╪п╦ п╢п╬я│я┌я┐п©п╟"
 
 #: ../../lib/ui.lib.php:396
 msgid "Admin-Site Preferences"
-msgstr "Админка-настройки сайта"
+msgstr "п░п╢п╪п╦п╫п╨п╟-п╫п╟я│я┌я─п╬п╧п╨п╦ я│п╟п╧я┌п╟"
 
 #: ../../lib/ui.lib.php:400
 msgid "Admin-Manage Modules"
-msgstr "Админка-управление модулями"
+msgstr "п░п╢п╪п╦п╫п╨п╟-я┐п©я─п╟п╡п╩п╣п╫п╦п╣ п╪п╬п╢я┐п╩я▐п╪п╦"
 
 #: ../../lib/ui.lib.php:404
 msgid "Browse Music"
-msgstr "Список композиций"
+msgstr "п║п©п╦я│п╬п╨ п╨п╬п╪п©п╬п╥п╦я├п╦п╧"
 
 #: ../../lib/ui.lib.php:511
 msgid "Add New"
-msgstr "Добавить новый"
+msgstr "п■п╬п╠п╟п╡п╦я┌я▄ п╫п╬п╡я▀п╧"
 
 #: ../../lib/class/browse.class.php:1093
 msgid "Manage Users"
-msgstr "Управление пользователями"
+msgstr "пёп©я─п╟п╡п╩п╣п╫п╦п╣ п©п╬п╩я▄п╥п╬п╡п╟я┌п╣п╩я▐п╪п╦"
 
 #: ../../lib/class/browse.class.php:1110
 msgid "Playlists"
-msgstr "Плейлисты"
+msgstr "п÷п╩п╣п╧п╩п╦я│я┌я▀"
 
 #: ../../lib/class/browse.class.php:1115
 msgid "Playlist Songs"
-msgstr "Песни плейлиста"
+msgstr "п÷п╣я│п╫п╦ п©п╩п╣п╧п╩п╦я│я┌п╟"
 
 #: ../../lib/class/browse.class.php:1120
 msgid "Current Playlist"
-msgstr "Текущий плейлист"
+msgstr "п╒п╣п╨я┐я┴п╦п╧ п©п╩п╣п╧п╩п╦я│я┌"
 
 #: ../../lib/class/browse.class.php:1130
 msgid "Shoutbox Records"
-msgstr "Записи кричалки"
+msgstr "п≈п╟п©п╦я│п╦ п╨я─п╦я┤п╟п╩п╨п╦"
 
 #: ../../lib/class/browse.class.php:1135
 msgid "Flagged Records"
-msgstr "Отмеченные записи"
+msgstr "п·я┌п╪п╣я┤п╣п╫п╫я▀п╣ п╥п╟п©п╦я│п╦"
 
 #: ../../lib/class/flag.class.php:257
 msgid "Approved"
-msgstr "Одобрено"
+msgstr "п·п╢п╬п╠я─п╣п╫п╬"
 
 #: ../../lib/class/flag.class.php:258
 msgid "Pending"
-msgstr "Ожидающий"
+msgstr "п·п╤п╦п╢п╟я▌я┴п╦п╧"
 
 #: ../../lib/class/flag.class.php:273
 msgid "Re-Tag"
-msgstr "Обновить тег"
+msgstr "п·п╠п╫п╬п╡п╦я┌я▄ я┌п╣пЁ"
 
 #: ../../lib/class/localplay.class.php:642
 msgid "Stopped"
-msgstr "Остановлено"
+msgstr "п·я│я┌п╟п╫п╬п╡п╩п╣п╫п╬"
 
 #: ../../lib/class/localplay.class.php:645
 msgid "Paused"
-msgstr "Остановлен"
+msgstr "п·я│я┌п╟п╫п╬п╡п╩п╣п╫"
 
 #: ../../lib/class/democratic.class.php:98
 msgid "Primary"
@@ -3159,17 +3159,17 @@ msgstr ""
 #: ../../lib/class/user.class.php:379 ../../admin/users.php:55
 #: ../../admin/users.php:105
 msgid "Error Username Required"
-msgstr "Ошибка: требуется имя пользователя"
+msgstr "п·я┬п╦п╠п╨п╟: я┌я─п╣п╠я┐п╣я┌я│я▐ п╦п╪я▐ п©п╬п╩я▄п╥п╬п╡п╟я┌п╣п╩я▐"
 
 #: ../../lib/class/user.class.php:383 ../../admin/users.php:58
 #: ../../admin/users.php:101
 msgid "Error Passwords don't match"
-msgstr "Ошибка: Пароль не совпадает"
+msgstr "п·я┬п╦п╠п╨п╟: п÷п╟я─п╬п╩я▄ п╫п╣ я│п╬п╡п©п╟п╢п╟п╣я┌"
 
 #: ../../lib/class/album.class.php:473 ../../lib/class/catalog.class.php:433
 #: ../../lib/class/catalog.class.php:774
 msgid "Error: Unable to open"
-msgstr "Ошибка: не удалось открыть "
+msgstr "п·я┬п╦п╠п╨п╟: п╫п╣ я┐п╢п╟п╩п╬я│я▄ п╬я┌п╨я─я▀я┌я▄ "
 
 #: ../../lib/class/ampacherss.class.php:116
 msgid "RSS Feed"
@@ -3178,34 +3178,34 @@ msgstr ""
 #: ../../lib/class/catalog.class.php:211
 msgid "day"
 msgid_plural "days"
-msgstr[0] "день"
-msgstr[1] "дня"
-msgstr[2] "дней"
+msgstr[0] "п╢п╣п╫я▄"
+msgstr[1] "п╢п╫я▐"
+msgstr[2] "п╢п╫п╣п╧"
 
 #: ../../lib/class/catalog.class.php:213
 msgid "hour"
 msgid_plural "hours"
-msgstr[0] "час"
-msgstr[1] "часа"
-msgstr[2] "часов"
+msgstr[0] "я┤п╟я│"
+msgstr[1] "я┤п╟я│п╟"
+msgstr[2] "я┤п╟я│п╬п╡"
 
 #: ../../lib/class/catalog.class.php:313
 msgid "Running Remote Sync"
-msgstr "Запущено удаленное обновление"
+msgstr "п≈п╟п©я┐я┴п╣п╫п╬ я┐п╢п╟п╩п╣п╫п╫п╬п╣ п╬п╠п╫п╬п╡п╩п╣п╫п╦п╣"
 
 #: ../../lib/class/catalog.class.php:440 ../../lib/class/catalog.class.php:483
 msgid "Error: Unable to change to directory"
-msgstr "Ошибка: не удалось изменить директорию"
+msgstr "п·я┬п╦п╠п╨п╟: п╫п╣ я┐п╢п╟п╩п╬я│я▄ п╦п╥п╪п╣п╫п╦я┌я▄ п╢п╦я─п╣п╨я┌п╬я─п╦я▌"
 
 #: ../../lib/class/catalog.class.php:511
 #, fuzzy, php-format
 msgid "Error: Unable to get filesize for %s"
-msgstr "Ошибка: не удалось определить размер файла "
+msgstr "п·я┬п╦п╠п╨п╟: п╫п╣ я┐п╢п╟п╩п╬я│я▄ п╬п©я─п╣п╢п╣п╩п╦я┌я▄ я─п╟п╥п╪п╣я─ я└п╟п╧п╩п╟ "
 
 #: ../../lib/class/catalog.class.php:517
 #, fuzzy, php-format
 msgid "%s is not readable by ampache"
-msgstr "не читаем программой ampache"
+msgstr "п╫п╣ я┤п╦я┌п╟п╣п╪ п©я─п╬пЁя─п╟п╪п╪п╬п╧ ampache"
 
 #: ../../lib/class/catalog.class.php:525
 #, php-format
@@ -3215,108 +3215,124 @@ msgstr ""
 #: ../../lib/class/catalog.class.php:1063 ../../preferences.php:111
 #: ../../admin/access.php:45
 msgid "Updated"
-msgstr "Обновлено"
+msgstr "п·п╠п╫п╬п╡п╩п╣п╫п╬"
 
 #: ../../lib/class/catalog.class.php:1070
 msgid "No Update Needed"
-msgstr "Обновление не требуется"
+msgstr "п·п╠п╫п╬п╡п╩п╣п╫п╦п╣ п╫п╣ я┌я─п╣п╠я┐п╣я┌я│я▐"
 
 #: ../../lib/class/catalog.class.php:1168
 msgid "Running Remote Update"
-msgstr "Запущено удаленное обновление"
+msgstr "п≈п╟п©я┐я┴п╣п╫п╬ я┐п╢п╟п╩п╣п╫п╫п╬п╣ п╬п╠п╫п╬п╡п╩п╣п╫п╦п╣"
 
 #: ../../lib/class/catalog.class.php:1195
 msgid "Added Playlist From"
-msgstr "Добавлен плейлист из"
+msgstr "п■п╬п╠п╟п╡п╩п╣п╫ п©п╩п╣п╧п╩п╦я│я┌ п╦п╥"
 
 #: ../../lib/class/catalog.class.php:1224
 msgid "Catalog Update Finished"
-msgstr "Обновление каталога завершено"
+msgstr "п·п╠п╫п╬п╡п╩п╣п╫п╦п╣ п╨п╟я┌п╟п╩п╬пЁп╟ п╥п╟п╡п╣я─я┬п╣п╫п╬"
 
 #: ../../lib/class/catalog.class.php:1224
 msgid "Total Time"
-msgstr "Общее время"
+msgstr "п·п╠я┴п╣п╣ п╡я─п╣п╪я▐"
 
 #: ../../lib/class/catalog.class.php:1225
 msgid "Total Songs"
-msgstr "Всего песен"
+msgstr "п▓я│п╣пЁп╬ п©п╣я│п╣п╫"
 
 #: ../../lib/class/catalog.class.php:1225
 msgid "Songs Per Seconds"
-msgstr "Песен в секунду"
+msgstr "п÷п╣я│п╣п╫ п╡ я│п╣п╨я┐п╫п╢я┐"
 
-#: ../../lib/class/catalog.class.php:1240 ../../admin/users.php:142
+#: ../../lib/class/catalog.class.php:1239 ../../admin/users.php:142
 msgid "Error"
-msgstr "Ошибка"
+msgstr "п·я┬п╦п╠п╨п╟"
 
-#: ../../lib/class/catalog.class.php:1240
-msgid "Unable to load XMLRPC library, make sure XML-RPC is enabled"
-msgstr "Невозможно загрузить библиотеку XMLRPC, убедитесь что XML-RPC включено"
+#: ../../lib/class/catalog.class.php:1239
+#, fuzzy
+msgid "Unable to load pear XMLRPC library, make sure XML-RPC is enabled"
+msgstr "п²п╣п╡п╬п╥п╪п╬п╤п╫п╬ п╥п╟пЁя─я┐п╥п╦я┌я▄ п╠п╦п╠п╩п╦п╬я┌п╣п╨я┐ XMLRPC, я┐п╠п╣п╢п╦я┌п╣я│я▄ я┤я┌п╬ XML-RPC п╡п╨п╩я▌я┤п╣п╫п╬"
 
-#: ../../lib/class/catalog.class.php:1270
-#: ../../lib/class/catalog.class.php:1338
+#: ../../lib/class/catalog.class.php:1271
+#: ../../lib/class/catalog.class.php:1345
+#: ../../lib/class/catalog.class.php:1378
 #: ../../lib/class/xmlrpcclient.class.php:64
 #: ../../lib/class/xmlrpcclient.class.php:97
 msgid "Error connecting to"
-msgstr "Ошибка при соединении с"
+msgstr "п·я┬п╦п╠п╨п╟ п©я─п╦ я│п╬п╣п╢п╦п╫п╣п╫п╦п╦ я│"
 
-#: ../../lib/class/catalog.class.php:1270
-#: ../../lib/class/catalog.class.php:1338
+#: ../../lib/class/catalog.class.php:1271
+#: ../../lib/class/catalog.class.php:1345
+#: ../../lib/class/catalog.class.php:1378
 #: ../../lib/class/xmlrpcclient.class.php:64
 #: ../../lib/class/xmlrpcclient.class.php:97
 msgid "Code"
-msgstr "Код"
+msgstr "п п╬п╢"
 
-#: ../../lib/class/catalog.class.php:1270
-#: ../../lib/class/catalog.class.php:1338
+#: ../../lib/class/catalog.class.php:1271
+#: ../../lib/class/catalog.class.php:1345
+#: ../../lib/class/catalog.class.php:1378
 #: ../../lib/class/xmlrpcclient.class.php:64
 msgid "Reason"
-msgstr "Причина"
+msgstr "п÷я─п╦я┤п╦п╫п╟"
 
-#: ../../lib/class/catalog.class.php:1299
+#: ../../lib/class/catalog.class.php:1300
 msgid "Completed updating remote catalog(s)"
-msgstr "Закончено обновление удаленных каталогов"
+msgstr "п≈п╟п╨п╬п╫я┤п╣п╫п╬ п╬п╠п╫п╬п╡п╩п╣п╫п╦п╣ я┐п╢п╟п╩п╣п╫п╫я▀я┘ п╨п╟я┌п╟п╩п╬пЁп╬п╡"
 
-#: ../../lib/class/catalog.class.php:1334 ../../admin/access.php:40
+#: ../../lib/class/catalog.class.php:1304
+msgid "Starting synchronisation of album images"
+msgstr ""
+
+#: ../../lib/class/catalog.class.php:1306
+msgid "Completed synchronisation of album images"
+msgstr ""
+
+#: ../../lib/class/catalog.class.php:1341 ../../admin/access.php:40
 msgid "Added"
-msgstr "Добавлено"
+msgstr "п■п╬п╠п╟п╡п╩п╣п╫п╬"
 
-#: ../../lib/class/catalog.class.php:1406
+#: ../../lib/class/catalog.class.php:1374
+msgid "images synchronized: "
+msgstr ""
+
+#: ../../lib/class/catalog.class.php:1503
 msgid "Catalog Root unreadable, stopping clean"
-msgstr "Корневой каталог не читаем, остановка очистки"
+msgstr "п п╬я─п╫п╣п╡п╬п╧ п╨п╟я┌п╟п╩п╬пЁ п╫п╣ я┤п╦я┌п╟п╣п╪, п╬я│я┌п╟п╫п╬п╡п╨п╟ п╬я┤п╦я│я┌п╨п╦"
 
-#: ../../lib/class/catalog.class.php:1463
+#: ../../lib/class/catalog.class.php:1560
 msgid "Catalog Clean Done"
-msgstr "Очистка каталога завершена"
+msgstr "п·я┤п╦я│я┌п╨п╟ п╨п╟я┌п╟п╩п╬пЁп╟ п╥п╟п╡п╣я─я┬п╣п╫п╟"
 
-#: ../../lib/class/catalog.class.php:1463
+#: ../../lib/class/catalog.class.php:1560
 msgid "files removed"
-msgstr "файлы удалены"
+msgstr "я└п╟п╧п╩я▀ я┐п╢п╟п╩п╣п╫я▀"
 
-#: ../../lib/class/catalog.class.php:1464
+#: ../../lib/class/catalog.class.php:1561
 msgid "Optimizing Tables"
-msgstr "Оптимизация таблиц"
+msgstr "п·п©я┌п╦п╪п╦п╥п╟я├п╦я▐ я┌п╟п╠п╩п╦я├"
 
-#: ../../lib/class/catalog.class.php:1764
+#: ../../lib/class/catalog.class.php:1861
 msgid "Update Finished."
-msgstr "Обновление завершено"
+msgstr "п·п╠п╫п╬п╡п╩п╣п╫п╦п╣ п╥п╟п╡п╣я─я┬п╣п╫п╬"
 
-#: ../../lib/class/catalog.class.php:1764
+#: ../../lib/class/catalog.class.php:1861
 msgid "Checked"
-msgstr "Отмечен"
+msgstr "п·я┌п╪п╣я┤п╣п╫"
 
-#: ../../lib/class/catalog.class.php:1764
+#: ../../lib/class/catalog.class.php:1861
 msgid "songs updated."
-msgstr "песен обновлено."
+msgstr "п©п╣я│п╣п╫ п╬п╠п╫п╬п╡п╩п╣п╫п╬."
 
 #: ../../lib/class/random.class.php:426
 msgid "Related Genre"
-msgstr "Похожий жанр"
+msgstr "п÷п╬я┘п╬п╤п╦п╧ п╤п╟п╫я─"
 
 #: ../../lib/class/stream.class.php:399
 #, fuzzy
 msgid "Ampache"
-msgstr "Отладка Ampache"
+msgstr "п·я┌п╩п╟п╢п╨п╟ Ampache"
 
 #: ../../lib/class/vauth.class.php:478 ../../lib/class/vauth.class.php:502
 #: ../../lib/class/vauth.class.php:541
@@ -3327,12 +3343,12 @@ msgstr ""
 #: ../../lib/class/registration.class.php:53
 #, fuzzy
 msgid "From: Ampache "
-msgstr "Искать"
+msgstr "п≤я│п╨п╟я┌я▄"
 
 #: ../../lib/class/registration.class.php:55
 #, fuzzy, php-format
 msgid "New User Registration at %s"
-msgstr "Дата регистрации"
+msgstr "п■п╟я┌п╟ я─п╣пЁп╦я│я┌я─п╟я├п╦п╦"
 
 #: ../../lib/class/registration.class.php:68
 #, php-format
@@ -3369,11 +3385,11 @@ msgstr ""
 
 #: ../../lib/general.lib.php:498
 msgid "On"
-msgstr "Вкл"
+msgstr "п▓п╨п╩"
 
 #: ../../lib/general.lib.php:501
 msgid "Off"
-msgstr "Выкл"
+msgstr "п▓я▀п╨п╩"
 
 #: ../../lib/preferences.php:191
 msgid "M3U"
@@ -3381,7 +3397,7 @@ msgstr "M3U"
 
 #: ../../lib/preferences.php:192
 msgid "Simple M3U"
-msgstr "Простой M3U"
+msgstr "п÷я─п╬я│я┌п╬п╧ M3U"
 
 #: ../../lib/preferences.php:193
 msgid "PLS"
@@ -3401,33 +3417,33 @@ msgstr "XSPF"
 
 #: ../../lib/preferences.php:230
 msgid "Disabled"
-msgstr "Отключено"
+msgstr "п·я┌п╨п╩я▌я┤п╣п╫п╬"
 
 #: ../../lib/preferences.php:232
 msgid "Manager"
-msgstr "Менеджер"
+msgstr "п°п╣п╫п╣п╢п╤п╣я─"
 
 #: ../../lib/preferences.php:252
 msgid "Send on Add"
-msgstr "Послать при добавлении"
+msgstr "п÷п╬я│п╩п╟я┌я▄ п©я─п╦ п╢п╬п╠п╟п╡п╩п╣п╫п╦п╦"
 
 #: ../../lib/preferences.php:253
 msgid "Send and Clear on Add"
-msgstr "Послать и очистить при добавлении"
+msgstr "п÷п╬я│п╩п╟я┌я▄ п╦ п╬я┤п╦я│я┌п╦я┌я▄ п©я─п╦ п╢п╬п╠п╟п╡п╩п╣п╫п╦п╦"
 
 #: ../../lib/preferences.php:254
 msgid "Clear on Send"
-msgstr "Очистить при посылке"
+msgstr "п·я┤п╦я│я┌п╦я┌я▄ п©я─п╦ п©п╬я│я▀п╩п╨п╣"
 
 #: ../../lib/preferences.php:263
 msgid "Always"
-msgstr "Всегда"
+msgstr "п▓я│п╣пЁп╢п╟"
 
 #: ../../lib/install.php:81
 #, fuzzy
 msgid "Unable to connect to database, check your ampache config"
 msgstr ""
-"Попытка подключенияк СУБД используя значения параметров  ampache.cfg.php"
+"п÷п╬п©я▀я┌п╨п╟ п©п╬п╢п╨п╩я▌я┤п╣п╫п╦я▐п╨ п║пёп▒п■ п╦я│п©п╬п╩я▄п╥я┐я▐ п╥п╫п╟я┤п╣п╫п╦я▐ п©п╟я─п╟п╪п╣я┌я─п╬п╡  ampache.cfg.php"
 
 #: ../../lib/install.php:88
 msgid "Unable to select database, check your ampache config"
@@ -3440,20 +3456,20 @@ msgstr ""
 #: ../../lib/install.php:135 ../../install.php:93
 #, fuzzy
 msgid "Error: Unable to make Database Connection"
-msgstr "Ошибка: не удалось изменить директорию"
+msgstr "п·я┬п╦п╠п╨п╟: п╫п╣ я┐п╢п╟п╩п╬я│я▄ п╦п╥п╪п╣п╫п╦я┌я▄ п╢п╦я─п╣п╨я┌п╬я─п╦я▌"
 
 #: ../../lib/install.php:270
 msgid "No Username/Password specified"
-msgstr "Не указаны пользователь или пароль"
+msgstr "п²п╣ я┐п╨п╟п╥п╟п╫я▀ п©п╬п╩я▄п╥п╬п╡п╟я┌п╣п╩я▄ п╦п╩п╦ п©п╟я─п╬п╩я▄"
 
 #: ../../lib/install.php:275
 msgid "Passwords do not match"
-msgstr "Пароль не совпадает"
+msgstr "п÷п╟я─п╬п╩я▄ п╫п╣ я│п╬п╡п©п╟п╢п╟п╣я┌"
 
 #: ../../shout.php:41
 #, fuzzy
 msgid "Invalid Object Selected"
-msgstr "Скачать отмеченные"
+msgstr "п║п╨п╟я┤п╟я┌я▄ п╬я┌п╪п╣я┤п╣п╫п╫я▀п╣"
 
 #: ../../server/xml.server.php:85
 msgid "Error Invalid Handshake - "
@@ -3462,53 +3478,53 @@ msgstr ""
 #: ../../server/xml.server.php:314
 #, fuzzy
 msgid "Invalid Request"
-msgstr "Запрос на удаление"
+msgstr "п≈п╟п©я─п╬я│ п╫п╟ я┐п╢п╟п╩п╣п╫п╦п╣"
 
 #: ../../preferences.php:40 ../../preferences.php:75
 msgid "Server"
-msgstr "Сервер"
+msgstr "п║п╣я─п╡п╣я─"
 
 #: ../../preferences.php:107
 msgid "Error Update Failed"
-msgstr "Ошибка обновление не удалось"
+msgstr "п·я┬п╦п╠п╨п╟ п╬п╠п╫п╬п╡п╩п╣п╫п╦п╣ п╫п╣ я┐п╢п╟п╩п╬я│я▄"
 
 #: ../../preferences.php:112
 msgid "Your Account has been updated"
-msgstr "Аккаунт обновлен"
+msgstr "п░п╨п╨п╟я┐п╫я┌ п╬п╠п╫п╬п╡п╩п╣п╫"
 
 #: ../../play/index.php:81
 msgid "Session Expired: please log in again at"
-msgstr "Время сессии исчерпано: пожалуйста, зайдите еще раз"
+msgstr "п▓я─п╣п╪я▐ я│п╣я│я│п╦п╦ п╦я│я┤п╣я─п©п╟п╫п╬: п©п╬п╤п╟п╩я┐п╧я│я┌п╟, п╥п╟п╧п╢п╦я┌п╣ п╣я┴п╣ я─п╟п╥"
 
 #: ../../radio.php:50
 msgid "Radio Station Added"
-msgstr "Радио станция добавленя"
+msgstr "п═п╟п╢п╦п╬ я│я┌п╟п╫я├п╦я▐ п╢п╬п╠п╟п╡п╩п╣п╫я▐"
 
 #: ../../install.php:176
 #, fuzzy
 msgid "Error: Config file not found or Unreadable"
-msgstr "Ошибка: конфигурационный файл устарел"
+msgstr "п·я┬п╦п╠п╨п╟: п╨п╬п╫я└п╦пЁя┐я─п╟я├п╦п╬п╫п╫я▀п╧ я└п╟п╧п╩ я┐я│я┌п╟я─п╣п╩"
 
 #: ../../update.php:47 ../../update.php:51
 msgid "Ampache Update"
-msgstr "Обновление Ampache"
+msgstr "п·п╠п╫п╬п╡п╩п╣п╫п╦п╣ Ampache"
 
 #: ../../update.php:64
 #, fuzzy
 msgid "Update Now!"
-msgstr "Обновить песню"
+msgstr "п·п╠п╫п╬п╡п╦я┌я▄ п©п╣я│п╫я▌"
 
 #: ../../albums.php:32
 msgid "Album Art Cleared"
-msgstr "Обложка альбома очищена"
+msgstr "п·п╠п╩п╬п╤п╨п╟ п╟п╩я▄п╠п╬п╪п╟ п╬я┤п╦я┴п╣п╫п╟"
 
 #: ../../albums.php:32
 msgid "Album Art information has been removed from the database"
-msgstr "Информация об обложке альбома была удалена из базы данных"
+msgstr "п≤п╫я└п╬я─п╪п╟я├п╦я▐ п╬п╠ п╬п╠п╩п╬п╤п╨п╣ п╟п╩я▄п╠п╬п╪п╟ п╠я▀п╩п╟ я┐п╢п╟п╩п╣п╫п╟ п╦п╥ п╠п╟п╥я▀ п╢п╟п╫п╫я▀я┘"
 
 #: ../../albums.php:39 ../../albums.php:56 ../../albums.php:129
 msgid "Album Art Not Located"
-msgstr "Обложка альбома не найдена"
+msgstr "п·п╠п╩п╬п╤п╨п╟ п╟п╩я▄п╠п╬п╪п╟ п╫п╣ п╫п╟п╧п╢п╣п╫п╟"
 
 #: ../../albums.php:39 ../../albums.php:56 ../../albums.php:129
 #, fuzzy
@@ -3516,45 +3532,45 @@ msgid ""
 "Album Art could not be located at this time. This may be due to write access "
 "error, or the file is not received correctly."
 msgstr ""
-"Обложка альбома не может быть найдена. Это может быть вызвано ошибкой "
-"доступана запись, или тем что файл не был получен корректно."
+"п·п╠п╩п╬п╤п╨п╟ п╟п╩я▄п╠п╬п╪п╟ п╫п╣ п╪п╬п╤п╣я┌ п╠я▀я┌я▄ п╫п╟п╧п╢п╣п╫п╟. п╜я┌п╬ п╪п╬п╤п╣я┌ п╠я▀я┌я▄ п╡я▀п╥п╡п╟п╫п╬ п╬я┬п╦п╠п╨п╬п╧ "
+"п╢п╬я│я┌я┐п©п╟п╫п╟ п╥п╟п©п╦я│я▄, п╦п╩п╦ я┌п╣п╪ я┤я┌п╬ я└п╟п╧п╩ п╫п╣ п╠я▀п╩ п©п╬п╩я┐я┤п╣п╫ п╨п╬я─я─п╣п╨я┌п╫п╬."
 
 #: ../../albums.php:52 ../../albums.php:80
 msgid "Album Art Inserted"
-msgstr "Обложка альбома добавлена"
+msgstr "п·п╠п╩п╬п╤п╨п╟ п╟п╩я▄п╠п╬п╪п╟ п╢п╬п╠п╟п╡п╩п╣п╫п╟"
 
 #: ../../playlist.php:57
 msgid "Playlist Created"
-msgstr "Плейлист создан"
+msgstr "п÷п╩п╣п╧п╩п╦я│я┌ я│п╬п╥п╢п╟п╫"
 
 #: ../../playlist.php:57
 msgid " has been created"
-msgstr " был очищен"
+msgstr " п╠я▀п╩ п╬я┤п╦я┴п╣п╫"
 
 #: ../../playlist.php:88
 msgid "Playlist Imported"
-msgstr "Плейлист импортирован"
+msgstr "п÷п╩п╣п╧п╩п╦я│я┌ п╦п╪п©п╬я─я┌п╦я─п╬п╡п╟п╫"
 
 #: ../../playlist.php:117
 msgid "Empty Playlists Deleted"
-msgstr "Пустой плейлист удален"
+msgstr "п÷я┐я│я┌п╬п╧ п©п╩п╣п╧п╩п╦я│я┌ я┐п╢п╟п╩п╣п╫"
 
 #: ../../modules/horde/Browser.php:867
 msgid "file"
-msgstr "файл"
+msgstr "я└п╟п╧п╩"
 
 #: ../../modules/horde/Browser.php:871
 msgid "File uploads not supported."
-msgstr "Загрузка файла не поддерживается."
+msgstr "п≈п╟пЁя─я┐п╥п╨п╟ я└п╟п╧п╩п╟ п╫п╣ п©п╬п╢п╢п╣я─п╤п╦п╡п╟п╣я┌я│я▐."
 
 #: ../../modules/horde/Browser.php:889
 msgid "No file uploaded"
-msgstr "Нет загруженных файлов"
+msgstr "п²п╣я┌ п╥п╟пЁя─я┐п╤п╣п╫п╫я▀я┘ я└п╟п╧п╩п╬п╡"
 
 #: ../../modules/horde/Browser.php:896
 #, php-format
 msgid "There was a problem with the file upload: No %s was uploaded."
-msgstr "Была проблема с загрузкой файла: %s не был загружен."
+msgstr "п▒я▀п╩п╟ п©я─п╬п╠п╩п╣п╪п╟ я│ п╥п╟пЁя─я┐п╥п╨п╬п╧ я└п╟п╧п╩п╟: %s п╫п╣ п╠я▀п╩ п╥п╟пЁя─я┐п╤п╣п╫."
 
 #: ../../modules/horde/Browser.php:901
 #, php-format
@@ -3562,53 +3578,53 @@ msgid ""
 "There was a problem with the file upload: The %s was larger than the maximum "
 "allowed size (%d bytes)."
 msgstr ""
-"Была проблема с загрузкой файла: размер загружаемого файла %s превышает "
-"макимально домустимый размер (%d байт)."
+"п▒я▀п╩п╟ п©я─п╬п╠п╩п╣п╪п╟ я│ п╥п╟пЁя─я┐п╥п╨п╬п╧ я└п╟п╧п╩п╟: я─п╟п╥п╪п╣я─ п╥п╟пЁя─я┐п╤п╟п╣п╪п╬пЁп╬ я└п╟п╧п╩п╟ %s п©я─п╣п╡я▀я┬п╟п╣я┌ "
+"п╪п╟п╨п╦п╪п╟п╩я▄п╫п╬ п╢п╬п╪я┐я│я┌п╦п╪я▀п╧ я─п╟п╥п╪п╣я─ (%d п╠п╟п╧я┌)."
 
 #: ../../modules/horde/Browser.php:903
 #, php-format
 msgid ""
 "There was a problem with the file upload: The %s was only partially uploaded."
-msgstr "Была проблема с загрузкой файла: файл %s был загружен частично."
+msgstr "п▒я▀п╩п╟ п©я─п╬п╠п╩п╣п╪п╟ я│ п╥п╟пЁя─я┐п╥п╨п╬п╧ я└п╟п╧п╩п╟: я└п╟п╧п╩ %s п╠я▀п╩ п╥п╟пЁя─я┐п╤п╣п╫ я┤п╟я│я┌п╦я┤п╫п╬."
 
 #: ../../modules/localplay/mpd.controller.php:232
 #: ../../modules/localplay/shoutcast.controller.php:237
 #: ../../modules/localplay/httpq.controller.php:216
 msgid "Instance Name"
-msgstr "Имя сущности"
+msgstr "п≤п╪я▐ я│я┐я┴п╫п╬я│я┌п╦"
 
 #: ../../modules/localplay/mpd.controller.php:233
 #: ../../modules/localplay/httpq.controller.php:217
 msgid "Hostname"
-msgstr "Имя узла"
+msgstr "п≤п╪я▐ я┐п╥п╩п╟"
 
 #: ../../modules/localplay/mpd.controller.php:234
 #: ../../modules/localplay/httpq.controller.php:218
 msgid "Port"
-msgstr "Порт"
+msgstr "п÷п╬я─я┌"
 
 #: ../../modules/localplay/shoutcast.controller.php:238
 #, fuzzy
 msgid "PID File"
-msgstr "Файл"
+msgstr "п╓п╟п╧п╩"
 
 #: ../../modules/localplay/shoutcast.controller.php:239
 #, fuzzy
 msgid "Playlist File"
-msgstr "Тип плейлиста"
+msgstr "п╒п╦п© п©п╩п╣п╧п╩п╦я│я┌п╟"
 
 #: ../../modules/localplay/shoutcast.controller.php:240
 #, fuzzy
 msgid "Local Path to Files"
-msgstr "Модули локального воспроизведения"
+msgstr "п°п╬п╢я┐п╩п╦ п╩п╬п╨п╟п╩я▄п╫п╬пЁп╬ п╡п╬я│п©я─п╬п╦п╥п╡п╣п╢п╣п╫п╦я▐"
 
 #: ../../admin/mail.php:90
 msgid "E-mail Sent"
-msgstr "Е-майл отправлен"
+msgstr "п∙-п╪п╟п╧п╩ п╬я┌п©я─п╟п╡п╩п╣п╫"
 
 #: ../../admin/mail.php:91
 msgid "Your E-mail was successfully sent."
-msgstr "Ваше е-майл сообщение успешно отправлено"
+msgstr "п▓п╟я┬п╣ п╣-п╪п╟п╧п╩ я│п╬п╬п╠я┴п╣п╫п╦п╣ я┐я│п©п╣я┬п╫п╬ п╬я┌п©я─п╟п╡п╩п╣п╫п╬"
 
 #: ../../admin/modules.php:38
 msgid "Install Failed, Controller Error"
@@ -3616,11 +3632,11 @@ msgstr ""
 
 #: ../../admin/modules.php:56 ../../admin/modules.php:101
 msgid "Are you sure you want to remove this plugin?"
-msgstr "Вы уверены что хотите удалить этот плагин?"
+msgstr "п▓я▀ я┐п╡п╣я─п╣п╫я▀ я┤я┌п╬ я┘п╬я┌п╦я┌п╣ я┐п╢п╟п╩п╦я┌я▄ я█я┌п╬я┌ п©п╩п╟пЁп╦п╫?"
 
 #: ../../admin/modules.php:68 ../../admin/modules.php:120
 msgid "Plugin Deactivated"
-msgstr "Плагин деактивирован"
+msgstr "п÷п╩п╟пЁп╦п╫ п╢п╣п╟п╨я┌п╦п╡п╦я─п╬п╡п╟п╫"
 
 #: ../../admin/modules.php:83
 msgid "Unable to Install Plugin"
@@ -3628,63 +3644,63 @@ msgstr ""
 
 #: ../../admin/modules.php:94
 msgid "Plugin Activated"
-msgstr "Плагин активирован"
+msgstr "п÷п╩п╟пЁп╦п╫ п╟п╨я┌п╦п╡п╦я─п╬п╡п╟п╫"
 
 #: ../../admin/modules.php:129
 msgid "Plugins"
-msgstr "Плагины"
+msgstr "п÷п╩п╟пЁп╦п╫я▀"
 
 #: ../../admin/modules.php:135
 msgid "Localplay Controllers"
-msgstr "Управление локальным проигрыванием"
+msgstr "пёп©я─п╟п╡п╩п╣п╫п╦п╣ п╩п╬п╨п╟п╩я▄п╫я▀п╪ п©я─п╬п╦пЁя─я▀п╡п╟п╫п╦п╣п╪"
 
 #: ../../admin/flag.php:88
 msgid "Song Updated"
-msgstr "Песня обновлена"
+msgstr "п÷п╣я│п╫я▐ п╬п╠п╫п╬п╡п╩п╣п╫п╟"
 
 #: ../../admin/flag.php:88
 msgid "The requested song has been updated"
-msgstr "Запрошенная песня была обновлена"
+msgstr "п≈п╟п©я─п╬я┬п╣п╫п╫п╟я▐ п©п╣я│п╫я▐ п╠я▀п╩п╟ п╬п╠п╫п╬п╡п╩п╣п╫п╟"
 
 #: ../../admin/flag.php:130
 msgid "Album Updated"
-msgstr "Альбом обновлен"
+msgstr "п░п╩я▄п╠п╬п╪ п╬п╠п╫п╬п╡п╩п╣п╫"
 
 #: ../../admin/flag.php:172
 msgid "Artist Updated"
-msgstr "Исполнитель обновлен"
+msgstr "п≤я│п©п╬п╩п╫п╦я┌п╣п╩я▄ п╬п╠п╫п╬п╡п╩п╣п╫"
 
 #: ../../admin/flag.php:237
 msgid "Songs Updated"
-msgstr "Песни обновлены"
+msgstr "п÷п╣я│п╫п╦ п╬п╠п╫п╬п╡п╩п╣п╫я▀"
 
 #: ../../admin/flag.php:245
 msgid "Flag Removed"
-msgstr "Флаг удален"
+msgstr "п╓п╩п╟пЁ я┐п╢п╟п╩п╣п╫"
 
 #: ../../admin/flag.php:246
 msgid "Flag Removed from"
-msgstr "Флаг снят с"
+msgstr "п╓п╩п╟пЁ я│п╫я▐я┌ я│"
 
 #: ../../admin/flag.php:261
 msgid "Flags Updated"
-msgstr "Флаги обновлены"
+msgstr "п╓п╩п╟пЁп╦ п╬п╠п╫п╬п╡п╩п╣п╫я▀"
 
 #: ../../admin/flag.php:280
 msgid "Songs Disabled"
-msgstr "Песен отключено"
+msgstr "п÷п╣я│п╣п╫ п╬я┌п╨п╩я▌я┤п╣п╫п╬"
 
 #: ../../admin/flag.php:280
 msgid "The requested song(s) have been disabled"
-msgstr "Запрашиваемые песня(и) отключены"
+msgstr "п≈п╟п©я─п╟я┬п╦п╡п╟п╣п╪я▀п╣ п©п╣я│п╫я▐(п╦) п╬я┌п╨п╩я▌я┤п╣п╫я▀"
 
 #: ../../admin/flag.php:291
 msgid "Songs Enabled"
-msgstr "Песни включены"
+msgstr "п÷п╣я│п╫п╦ п╡п╨п╩я▌я┤п╣п╫я▀"
 
 #: ../../admin/flag.php:291
 msgid "The requested song(s) have been enabled"
-msgstr "Запрашиваемая(ые) песня(и) включены"
+msgstr "п≈п╟п©я─п╟я┬п╦п╡п╟п╣п╪п╟я▐(я▀п╣) п©п╣я│п╫я▐(п╦) п╡п╨п╩я▌я┤п╣п╫я▀"
 
 #: ../../admin/shout.php:35
 msgid "Shoutbox Post Updated"
@@ -3696,63 +3712,63 @@ msgstr ""
 
 #: ../../admin/access.php:35
 msgid "Deleted"
-msgstr "Удален"
+msgstr "пёп╢п╟п╩п╣п╫"
 
 #: ../../admin/access.php:35
 msgid "Your Access List Entry has been removed"
-msgstr "Запись списка доступа была удалена"
+msgstr "п≈п╟п©п╦я│я▄ я│п©п╦я│п╨п╟ п╢п╬я│я┌я┐п©п╟ п╠я▀п╩п╟ я┐п╢п╟п╩п╣п╫п╟"
 
 #: ../../admin/access.php:40
 msgid "Your new Access List Entry has been created"
-msgstr "Новая запись списка доступа создана"
+msgstr "п²п╬п╡п╟я▐ п╥п╟п©п╦я│я▄ я│п©п╦я│п╨п╟ п╢п╬я│я┌я┐п©п╟ я│п╬п╥п╢п╟п╫п╟"
 
 #: ../../admin/access.php:45
 msgid "Access List Entry updated"
-msgstr "Запись списка доступа обновлена"
+msgstr "п≈п╟п©п╦я│я▄ я│п©п╦я│п╨п╟ п╢п╬я│я┌я┐п©п╟ п╬п╠п╫п╬п╡п╩п╣п╫п╟"
 
 #: ../../admin/users.php:83
 msgid "User Updated"
-msgstr "Пльзователь Обновлен"
+msgstr "п÷п╩я▄п╥п╬п╡п╟я┌п╣п╩я▄ п·п╠п╫п╬п╡п╩п╣п╫"
 
 #: ../../admin/users.php:83
 msgid "updated"
-msgstr "обновлен"
+msgstr "п╬п╠п╫п╬п╡п╩п╣п╫"
 
 #: ../../admin/users.php:129
 msgid "New User Added"
-msgstr "ПОльзователь добавлен"
+msgstr "п÷п·п╩я▄п╥п╬п╡п╟я┌п╣п╩я▄ п╢п╬п╠п╟п╡п╩п╣п╫"
 
 #: ../../admin/users.php:134
 msgid "User Enabled"
-msgstr "Пользователь включен"
+msgstr "п÷п╬п╩я▄п╥п╬п╡п╟я┌п╣п╩я▄ п╡п╨п╩я▌я┤п╣п╫"
 
 #: ../../admin/users.php:139
 msgid "User Disabled"
-msgstr "Пользователь отключен"
+msgstr "п÷п╬п╩я▄п╥п╬п╡п╟я┌п╣п╩я▄ п╬я┌п╨п╩я▌я┤п╣п╫"
 
 #: ../../admin/users.php:142
 msgid "Unable to Disabled last Administrator"
-msgstr "Нельзя отключить последнего администратора"
+msgstr "п²п╣п╩я▄п╥я▐ п╬я┌п╨п╩я▌я┤п╦я┌я▄ п©п╬я│п╩п╣п╢п╫п╣пЁп╬ п╟п╢п╪п╦п╫п╦я│я┌я─п╟я┌п╬я─п╟"
 
 #: ../../admin/users.php:154
 msgid "User Deleted"
-msgstr "Пользователь удален"
+msgstr "п÷п╬п╩я▄п╥п╬п╡п╟я┌п╣п╩я▄ я┐п╢п╟п╩п╣п╫"
 
 #: ../../admin/users.php:157
 msgid "Delete Error"
-msgstr "Ошибка удаления"
+msgstr "п·я┬п╦п╠п╨п╟ я┐п╢п╟п╩п╣п╫п╦я▐"
 
 #: ../../admin/users.php:157
 msgid "Unable to delete last Admin User"
-msgstr "Нельзя удалить последнего пользователя - администратора"
+msgstr "п²п╣п╩я▄п╥я▐ я┐п╢п╟п╩п╦я┌я▄ п©п╬я│п╩п╣п╢п╫п╣пЁп╬ п©п╬п╩я▄п╥п╬п╡п╟я┌п╣п╩я▐ - п╟п╢п╪п╦п╫п╦я│я┌я─п╟я┌п╬я─п╟"
 
 #: ../../admin/users.php:163
 msgid "Deletion Request"
-msgstr "Запрос на удаление"
+msgstr "п≈п╟п©я─п╬я│ п╫п╟ я┐п╢п╟п╩п╣п╫п╦п╣"
 
 #: ../../admin/users.php:164
 msgid "Are you sure you want to permanently delete"
-msgstr "Вы уверены что хотите удалить полностью"
+msgstr "п▓я▀ я┐п╡п╣я─п╣п╫я▀ я┤я┌п╬ я┘п╬я┌п╦я┌п╣ я┐п╢п╟п╩п╦я┌я▄ п©п╬п╩п╫п╬я│я┌я▄я▌"
 
 #: ../../admin/system.php:49
 msgid "Database Charset Updated"
@@ -3767,41 +3783,41 @@ msgstr ""
 #: ../../admin/catalog.php:53 ../../admin/catalog.php:73
 #: ../../admin/catalog.php:98 ../../admin/catalog.php:170
 msgid "Catalog Updated"
-msgstr "Каталог обновлен"
+msgstr "п п╟я┌п╟п╩п╬пЁ п╬п╠п╫п╬п╡п╩п╣п╫"
 
 #: ../../admin/catalog.php:115
 msgid "Catalog Deleted"
-msgstr "Каталог Удален"
+msgstr "п п╟я┌п╟п╩п╬пЁ пёп╢п╟п╩п╣п╫"
 
 #: ../../admin/catalog.php:115
 msgid "The Catalog and all associated records have been deleted"
-msgstr "Каталог и все связанные записи удалены"
+msgstr "п п╟я┌п╟п╩п╬пЁ п╦ п╡я│п╣ я│п╡я▐п╥п╟п╫п╫я▀п╣ п╥п╟п©п╦я│п╦ я┐п╢п╟п╩п╣п╫я▀"
 
 #: ../../admin/catalog.php:121
 #, fuzzy
 msgid "Catalog Delete"
-msgstr "Каталог Удален"
+msgstr "п п╟я┌п╟п╩п╬пЁ пёп╢п╟п╩п╣п╫"
 
 #: ../../admin/catalog.php:121
 #, fuzzy
 msgid "Confirm Deletion Request"
-msgstr "Запрос на удаление"
+msgstr "п≈п╟п©я─п╬я│ п╫п╟ я┐п╢п╟п╩п╣п╫п╦п╣"
 
 #: ../../admin/catalog.php:130
 msgid "Songs Removed"
-msgstr "Песен удалено"
+msgstr "п÷п╣я│п╣п╫ я┐п╢п╟п╩п╣п╫п╬"
 
 #: ../../admin/catalog.php:133
 msgid "No Songs Removed"
-msgstr "Песни не удалены"
+msgstr "п÷п╣я│п╫п╦ п╫п╣ я┐п╢п╟п╩п╣п╫я▀"
 
 #: ../../admin/catalog.php:136
 msgid "Disabled Songs Processed"
-msgstr "Отключенные песни обработаны"
+msgstr "п·я┌п╨п╩я▌я┤п╣п╫п╫я▀п╣ п©п╣я│п╫п╦ п╬п╠я─п╟п╠п╬я┌п╟п╫я▀"
 
 #: ../../admin/catalog.php:157
 msgid "Catalog Cleaned"
-msgstr "Каталог очищен"
+msgstr "п п╟я┌п╟п╩п╬пЁ п╬я┤п╦я┴п╣п╫"
 
 #: ../../admin/catalog.php:214
 msgid "Error: Defined Path is inside an existing catalog"
@@ -3809,35 +3825,35 @@ msgstr ""
 
 #: ../../admin/catalog.php:233
 msgid "Catalog Created"
-msgstr "Каталог создан"
+msgstr "п п╟я┌п╟п╩п╬пЁ я│п╬п╥п╢п╟п╫"
 
 #: ../../admin/catalog.php:250
 msgid "Catalog statistics cleared"
-msgstr "Статистика каталога удалена"
+msgstr "п║я┌п╟я┌п╦я│я┌п╦п╨п╟ п╨п╟я┌п╟п╩п╬пЁп╟ я┐п╢п╟п╩п╣п╫п╟"
 
 #: ../../admin/catalog.php:263
 msgid "Now Playing Cleared"
-msgstr "Текущее воспроизведение очищено"
+msgstr "п╒п╣п╨я┐я┴п╣п╣ п╡п╬я│п©я─п╬п╦п╥п╡п╣п╢п╣п╫п╦п╣ п╬я┤п╦я┴п╣п╫п╬"
 
 #: ../../admin/catalog.php:263
 msgid "All now playing data has been cleared"
-msgstr "Вся данные по сейчас играющим трекам удалены"
+msgstr "п▓я│я▐ п╢п╟п╫п╫я▀п╣ п©п╬ я│п╣п╧я┤п╟я│ п╦пЁя─п╟я▌я┴п╦п╪ я┌я─п╣п╨п╟п╪ я┐п╢п╟п╩п╣п╫я▀"
 
 #: ../../admin/catalog.php:273
 msgid "No Disabled songs found"
-msgstr "Отключенных песен не найдено"
+msgstr "п·я┌п╨п╩я▌я┤п╣п╫п╫я▀я┘ п©п╣я│п╣п╫ п╫п╣ п╫п╟п╧п╢п╣п╫п╬"
 
 #: ../../admin/catalog.php:282
 msgid "Delete Catalog"
-msgstr "Удалить каталог"
+msgstr "пёп╢п╟п╩п╦я┌я▄ п╨п╟я┌п╟п╩п╬пЁ"
 
 #: ../../admin/catalog.php:282
 msgid "Do you really want to delete this catalog?"
-msgstr "Вы действительно хотите удалить этот каталог?"
+msgstr "п▓я▀ п╢п╣п╧я│я┌п╡п╦я┌п╣п╩я▄п╫п╬ я┘п╬я┌п╦я┌п╣ я┐п╢п╟п╩п╦я┌я▄ я█я┌п╬я┌ п╨п╟я┌п╟п╩п╬пЁ?"
 
 #: ../../admin/catalog.php:302
 msgid "Album Art Search Finished"
-msgstr "Поиск альбомных обложек завершен"
+msgstr "п÷п╬п╦я│п╨ п╟п╩я▄п╠п╬п╪п╫я▀я┘ п╬п╠п╩п╬п╤п╣п╨ п╥п╟п╡п╣я─я┬п╣п╫"
 
 #: ../../bin/print_tags.inc:66
 msgid ""
@@ -3848,33 +3864,33 @@ msgid ""
 "        \n"
 msgstr ""
 "[print_tags.php.inc]\n"
-"Этот скрипт командной строки покажет информацию из тега указанного файла, "
-"как ее будет видеть Ampache\n"
+"п╜я┌п╬я┌ я│п╨я─п╦п©я┌ п╨п╬п╪п╟п╫п╢п╫п╬п╧ я│я┌я─п╬п╨п╦ п©п╬п╨п╟п╤п╣я┌ п╦п╫я└п╬я─п╪п╟я├п╦я▌ п╦п╥ я┌п╣пЁп╟ я┐п╨п╟п╥п╟п╫п╫п╬пЁп╬ я└п╟п╧п╩п╟, "
+"п╨п╟п╨ п╣п╣ п╠я┐п╢п╣я┌ п╡п╦п╢п╣я┌я▄ Ampache\n"
 "        \n"
 
 #: ../../bin/print_tags.inc:72
 msgid "Filename:"
-msgstr "Файл:"
+msgstr "п╓п╟п╧п╩:"
 
 #: Database words
 #, fuzzy
 msgid "Allow Downloads"
-msgstr "Скачать"
+msgstr "п║п╨п╟я┤п╟я┌я▄"
 
 #: Database words
 #, fuzzy
 msgid "Popular Threshold"
-msgstr "Самый популярный порог в днях"
+msgstr "п║п╟п╪я▀п╧ п©п╬п©я┐п╩я▐я─п╫я▀п╧ п©п╬я─п╬пЁ п╡ п╢п╫я▐я┘"
 
 #: Database words
 #, fuzzy
 msgid "Transcode Bitrate"
-msgstr "Мин битрейд"
+msgstr "п°п╦п╫ п╠п╦я┌я─п╣п╧п╢"
 
 #: Database words
 #, fuzzy
 msgid "Lock Songs"
-msgstr "# Песни"
+msgstr "# п÷п╣я│п╫п╦"
 
 #: Database words
 msgid "Forces Http play regardless of port"
@@ -3887,7 +3903,7 @@ msgstr ""
 #: Database words
 #, fuzzy
 msgid "Localplay Type"
-msgstr "Локальное воспроизведение"
+msgstr "п⌡п╬п╨п╟п╩я▄п╫п╬п╣ п╡п╬я│п©я─п╬п╦п╥п╡п╣п╢п╣п╫п╦п╣"
 
 #: Database words
 msgid "Type of Playback"
@@ -3895,12 +3911,12 @@ msgstr ""
 
 #: Database words
 msgid "Language"
-msgstr "Язык"
+msgstr "п╞п╥я▀п╨"
 
 #: Database words
 #, fuzzy
 msgid "Theme"
-msgstr "Время"
+msgstr "п▓я─п╣п╪я▐"
 
 #: Database words
 msgid "Album Ellipse Threshold"
@@ -3917,27 +3933,27 @@ msgstr ""
 #: Database words
 #, fuzzy
 msgid "Offset Limit"
-msgstr "Максимальный размер"
+msgstr "п°п╟п╨я│п╦п╪п╟п╩я▄п╫я▀п╧ я─п╟п╥п╪п╣я─"
 
 #: Database words
 #, fuzzy
 msgid "Localplay Access"
-msgstr "Модули локального воспроизведения"
+msgstr "п°п╬п╢я┐п╩п╦ п╩п╬п╨п╟п╩я▄п╫п╬пЁп╬ п╡п╬я│п©я─п╬п╦п╥п╡п╣п╢п╣п╫п╦я▐"
 
 #: Database words
 #, fuzzy
 msgid "Allow Streaming"
-msgstr "Вещание"
+msgstr "п▓п╣я┴п╟п╫п╦п╣"
 
 #: Database words
 #, fuzzy
 msgid "Allow Democratic Play"
-msgstr "Создать общий плейлист"
+msgstr "п║п╬п╥п╢п╟я┌я▄ п╬п╠я┴п╦п╧ п©п╩п╣п╧п╩п╦я│я┌"
 
 #: Database words
 #, fuzzy
 msgid "Allow Localplay Play"
-msgstr "Локальное воспроизведение"
+msgstr "п⌡п╬п╨п╟п╩я▄п╫п╬п╣ п╡п╬я│п©я─п╬п╦п╥п╡п╣п╢п╣п╫п╦п╣"
 
 #: Database words
 msgid "Statistics Day Threshold"
@@ -3946,17 +3962,17 @@ msgstr ""
 #: Database words
 #, fuzzy
 msgid "Min Element Count"
-msgstr "Минимальное количество"
+msgstr "п°п╦п╫п╦п╪п╟п╩я▄п╫п╬п╣ п╨п╬п╩п╦я┤п╣я│я┌п╡п╬"
 
 #: Database words
 #, fuzzy
 msgid "Rate Limit"
-msgstr "Максимальный размер"
+msgstr "п°п╟п╨я│п╦п╪п╟п╩я▄п╫я▀п╧ я─п╟п╥п╪п╣я─"
 
 #: Database words
 #, fuzzy
 msgid "Playlist Method"
-msgstr "Плейлист создан"
+msgstr "п÷п╩п╣п╧п╩п╦я│я┌ я│п╬п╥п╢п╟п╫"
 
 #: Database words
 msgid "Transcoding"
@@ -3967,169 +3983,174 @@ msgid "User to track"
 msgstr ""
 
 #: Database words
-#, fuzzy
 msgid "Streaming"
-msgstr "Вещание"
+msgstr "п▓п╣я┴п╟п╫п╦п╣"
 
 #: Database words
-#, fuzzy
 msgid "Interface"
-msgstr "Интерфейс"
+msgstr "п≤п╫я┌п╣я─я└п╣п╧я│"
 
 #: Database words
-#, fuzzy
 msgid "System"
-msgstr "Позиция"
+msgstr "п║п╦я│я┌п╣п╪п╟"
 
 #, fuzzy
-#~ msgid "Ampache Recently Played"
-#~ msgstr "Последние проигранные"
+#~ msgid "Catalan"
+#~ msgstr "п п╟я┌п╟п╩п╬пЁ"
 
 #, fuzzy
-#~ msgid "Add Tag"
-#~ msgstr "Добавить каталог"
+#~ msgid "Danish"
+#~ msgstr "п■п╣я┌п╟п╩п╦"
 
 #, fuzzy
-#~ msgid "Ampache Latest Artists Additions"
-#~ msgstr "Последние исполнители"
+#~ msgid "Greek"
+#~ msgstr "п║я┌п╦п╩я▄"
 
 #, fuzzy
-#~ msgid "Ampache Latest Albums Additions"
-#~ msgstr "Последние альбомы"
-
-#, fuzzy
-#~ msgid "Ampache Most Popular Albums"
-#~ msgstr "Самые популярные альбомы"
-
-#, fuzzy
-#~ msgid "Ampache Most Popular Artists"
-#~ msgstr "Самые популярные исполнители"
-
-#, fuzzy
-#~ msgid "Ampache Most Popular Songs"
-#~ msgstr "Самые популярные песни"
-
-#~ msgid "Newest Genres"
-#~ msgstr "Последние жанры"
-
-#~ msgid "From genre"
-#~ msgstr "Жанр"
-
-#~ msgid "Playlist Updated"
-#~ msgstr "Плейлист обновлен"
-
-#~ msgid "has been updated and is now"
-#~ msgstr "обновлен"
-
-#, fuzzy
-#~ msgid "Catalog Debug Tools"
-#~ msgstr "Каталог Удален"
-
-#, fuzzy
-#~ msgid "GetText Support"
-#~ msgstr "Поддержка PHP PutENV"
-
-#, fuzzy
-#~ msgid "PHP Version:"
-#~ msgstr "Версия PHP"
-
-#, fuzzy
-#~ msgid "Mysql for PHP:"
-#~ msgstr "Mysql для PHP"
-
-#, fuzzy
-#~ msgid "PHP Session Support:"
-#~ msgstr "Поддержка PHP Session"
-
-#, fuzzy
-#~ msgid "PHP ICONV Support:"
-#~ msgstr "Поддержка PHP ICONV"
-
-#, fuzzy
-#~ msgid "PHP PCRE Support:"
-#~ msgstr "Поддержка PHP PCRE"
-
-#, fuzzy
-#~ msgid "PHP PutENV Support:"
-#~ msgstr "Поддержка PHP PutENV"
-
-#, fuzzy
-#~ msgid "Optional"
-#~ msgstr "Настройки"
-
-#~ msgid "Editing"
-#~ msgstr "Редактирование"
-
-#~ msgid "preferences"
-#~ msgstr "предпочтения"
-
-#, fuzzy
-#~ msgid "Playlist %s"
-#~ msgstr "Плейлисты"
-
-#~ msgid "Browse By"
-#~ msgstr "Просмотреть"
-
-#~ msgid "Recommend Similar"
-#~ msgstr "Рекомендовать сходного"
-
-#~ msgid "Viewing"
-#~ msgstr "Просмотр"
-
-#~ msgid "Sections"
-#~ msgstr "Профили"
-
-#~ msgid "Recommendations"
-#~ msgstr "Рекомендации"
-
-#~ msgid "Favorites"
-#~ msgstr "Любимые"
-
-#~ msgid "catalog"
-#~ msgstr "каталог"
-
-#~ msgid "Find Missing Tracks"
-#~ msgstr "Найти отсутствующие треки"
-
-#~ msgid "Links"
-#~ msgstr "Ссылки"
-
-#~ msgid "Buy Track from MyStrands"
-#~ msgstr "Купить трек на MyStrands"
-
-#~ msgid "Return"
-#~ msgstr "Возврат"
-
-#~ msgid " FOUND"
-#~ msgstr " НАЙДЕНО"
-
-#~ msgid "Searching for new Album Art"
-#~ msgstr "Поиск новой обложки альбома"
+#~ msgid "British English"
+#~ msgstr "English"
 
 #~ msgid "English"
 #~ msgstr "English"
 
+#, fuzzy
+#~ msgid "Persian"
+#~ msgstr "п▓п╣я─я│п╦я▐"
+
+#, fuzzy
+#~ msgid "French"
+#~ msgstr "п╖п╟я│я┌п╬я┌п╟"
+
+#, fuzzy
+#~ msgid "Korean"
+#~ msgstr "п∙я┴п╣"
+
+#, fuzzy
+#~ msgid "Latvian"
+#~ msgstr "п═п╣п╧я┌п╦п╫пЁ"
+
+#, fuzzy
+#~ msgid "Polish"
+#~ msgstr "п÷п╩п╟пЁп╦п╫я▀"
+
+#, fuzzy
+#~ msgid "Turkish"
+#~ msgstr "п÷п╣я│п╫п╦"
+
+#, fuzzy
+#~ msgid "Vietnamese"
+#~ msgstr "п╓п╟п╧п╩"
+
+#~ msgid "Playlist Updated"
+#~ msgstr "п÷п╩п╣п╧п╩п╦я│я┌ п╬п╠п╫п╬п╡п╩п╣п╫"
+
+#~ msgid "has been updated and is now"
+#~ msgstr "п╬п╠п╫п╬п╡п╩п╣п╫"
+
+#, fuzzy
+#~ msgid "Add Tag"
+#~ msgstr "п■п╬п╠п╟п╡п╦я┌я▄ п╨п╟я┌п╟п╩п╬пЁ"
+
+#~ msgid "Editing"
+#~ msgstr "п═п╣п╢п╟п╨я┌п╦я─п╬п╡п╟п╫п╦п╣"
+
+#~ msgid "preferences"
+#~ msgstr "п©я─п╣п╢п©п╬я┤я┌п╣п╫п╦я▐"
+
+#, fuzzy
+#~ msgid "Playlist %s"
+#~ msgstr "п÷п╩п╣п╧п╩п╦я│я┌я▀"
+
+#~ msgid "Newest Genres"
+#~ msgstr "п÷п╬я│п╩п╣п╢п╫п╦п╣ п╤п╟п╫я─я▀"
+
+#, fuzzy
+#~ msgid "Ampache Latest Artists Additions"
+#~ msgstr "п÷п╬я│п╩п╣п╢п╫п╦п╣ п╦я│п©п╬п╩п╫п╦я┌п╣п╩п╦"
+
+#, fuzzy
+#~ msgid "Ampache Latest Albums Additions"
+#~ msgstr "п÷п╬я│п╩п╣п╢п╫п╦п╣ п╟п╩я▄п╠п╬п╪я▀"
+
+#, fuzzy
+#~ msgid "Ampache Most Popular Albums"
+#~ msgstr "п║п╟п╪я▀п╣ п©п╬п©я┐п╩я▐я─п╫я▀п╣ п╟п╩я▄п╠п╬п╪я▀"
+
+#, fuzzy
+#~ msgid "Ampache Most Popular Artists"
+#~ msgstr "п║п╟п╪я▀п╣ п©п╬п©я┐п╩я▐я─п╫я▀п╣ п╦я│п©п╬п╩п╫п╦я┌п╣п╩п╦"
+
+#, fuzzy
+#~ msgid "Ampache Most Popular Songs"
+#~ msgstr "п║п╟п╪я▀п╣ п©п╬п©я┐п╩я▐я─п╫я▀п╣ п©п╣я│п╫п╦"
+
+#, fuzzy
+#~ msgid "Ampache Recently Played"
+#~ msgstr "п÷п╬я│п╩п╣п╢п╫п╦п╣ п©я─п╬п╦пЁя─п╟п╫п╫я▀п╣"
+
+#~ msgid "From genre"
+#~ msgstr "п√п╟п╫я─"
+
+#~ msgid "Favorites"
+#~ msgstr "п⌡я▌п╠п╦п╪я▀п╣"
+
+#~ msgid "Recommendations"
+#~ msgstr "п═п╣п╨п╬п╪п╣п╫п╢п╟я├п╦п╦"
+
+#~ msgid "Viewing"
+#~ msgstr "п÷я─п╬я│п╪п╬я┌я─"
+
+#~ msgid "Browse By"
+#~ msgstr "п÷я─п╬я│п╪п╬я┌я─п╣я┌я▄"
+
+#~ msgid "Recommend Similar"
+#~ msgstr "п═п╣п╨п╬п╪п╣п╫п╢п╬п╡п╟я┌я▄ я│я┘п╬п╢п╫п╬пЁп╬"
+
+#~ msgid "Sections"
+#~ msgstr "п÷я─п╬я└п╦п╩п╦"
+
+#~ msgid "catalog"
+#~ msgstr "п╨п╟я┌п╟п╩п╬пЁ"
+
+#~ msgid "Find Missing Tracks"
+#~ msgstr "п²п╟п╧я┌п╦ п╬я┌я│я┐я┌я│я┌п╡я┐я▌я┴п╦п╣ я┌я─п╣п╨п╦"
+
+#~ msgid "Links"
+#~ msgstr "п║я│я▀п╩п╨п╦"
+
+#~ msgid "Buy Track from MyStrands"
+#~ msgstr "п я┐п©п╦я┌я▄ я┌я─п╣п╨ п╫п╟ MyStrands"
+
+#~ msgid "Return"
+#~ msgstr "п▓п╬п╥п╡я─п╟я┌"
+
+#~ msgid " FOUND"
+#~ msgstr " п²п░п≥п■п∙п²п·"
+
+#~ msgid "Searching for new Album Art"
+#~ msgstr "п÷п╬п╦я│п╨ п╫п╬п╡п╬п╧ п╬п╠п╩п╬п╤п╨п╦ п╟п╩я▄п╠п╬п╪п╟"
+
 #~ msgid "Export Failed"
-#~ msgstr "Экспорт не удался"
+#~ msgstr "п╜п╨я│п©п╬я─я┌ п╫п╣ я┐п╢п╟п╩я│я▐"
 
 #~ msgid "description"
-#~ msgstr "описание"
+#~ msgstr "п╬п©п╦я│п╟п╫п╦п╣"
 
 #~ msgid "Label"
-#~ msgstr "Метка"
+#~ msgstr "п°п╣я┌п╨п╟"
 
 #~ msgid "Catalog Number"
-#~ msgstr "Номер каталога"
+#~ msgstr "п²п╬п╪п╣я─ п╨п╟я┌п╟п╩п╬пЁп╟"
 
 #~ msgid "Last Updated"
-#~ msgstr "Последнее обновление"
+#~ msgstr "п÷п╬я│п╩п╣п╢п╫п╣п╣ п╬п╠п╫п╬п╡п╩п╣п╫п╦п╣"
 
 #~ msgid ""
 #~ "This test checks to make sure you have Iconv support installed. Iconv "
 #~ "support is not required for Ampache, but it is highly recommended"
 #~ msgstr ""
-#~ "Тест на поддержку Iconv.Поддержка Iconv не требуется для Ampache, но она "
-#~ "строго рекомендуется."
+#~ "п╒п╣я│я┌ п╫п╟ п©п╬п╢п╢п╣я─п╤п╨я┐ Iconv.п÷п╬п╢п╢п╣я─п╤п╨п╟ Iconv п╫п╣ я┌я─п╣п╠я┐п╣я┌я│я▐ п╢п╩я▐ Ampache, п╫п╬ п╬п╫п╟ "
+#~ "я│я┌я─п╬пЁп╬ я─п╣п╨п╬п╪п╣п╫п╢я┐п╣я┌я│я▐."
 
 #~ msgid ""
 #~ "This steps takes the basic config values, and first attempts to write "
@@ -4137,148 +4158,145 @@ msgstr "Позиция"
 #~ "you to download the config file. Please put the downloaded config file "
 #~ "in /config"
 #~ msgstr ""
-#~ "На этих шагах будут запрошены основные конфигурационные значения и будет "
-#~ "произведена попытка записать их напрямую на веб сервер. Если доступ будет "
-#~ "запрещен, будет запрос на скачивание конфигурационного файла. Пожалуйста, "
-#~ "положите скачанный конфигурационный файл в /config"
+#~ "п²п╟ я█я┌п╦я┘ я┬п╟пЁп╟я┘ п╠я┐п╢я┐я┌ п╥п╟п©я─п╬я┬п╣п╫я▀ п╬я│п╫п╬п╡п╫я▀п╣ п╨п╬п╫я└п╦пЁя┐я─п╟я├п╦п╬п╫п╫я▀п╣ п╥п╫п╟я┤п╣п╫п╦я▐ п╦ п╠я┐п╢п╣я┌ "
+#~ "п©я─п╬п╦п╥п╡п╣п╢п╣п╫п╟ п©п╬п©я▀я┌п╨п╟ п╥п╟п©п╦я│п╟я┌я▄ п╦я┘ п╫п╟п©я─я▐п╪я┐я▌ п╫п╟ п╡п╣п╠ я│п╣я─п╡п╣я─. п∙я│п╩п╦ п╢п╬я│я┌я┐п© п╠я┐п╢п╣я┌ "
+#~ "п╥п╟п©я─п╣я┴п╣п╫, п╠я┐п╢п╣я┌ п╥п╟п©я─п╬я│ п╫п╟ я│п╨п╟я┤п╦п╡п╟п╫п╦п╣ п╨п╬п╫я└п╦пЁя┐я─п╟я├п╦п╬п╫п╫п╬пЁп╬ я└п╟п╧п╩п╟. п÷п╬п╤п╟п╩я┐п╧я│я┌п╟, "
+#~ "п©п╬п╩п╬п╤п╦я┌п╣ я│п╨п╟я┤п╟п╫п╫я▀п╧ п╨п╬п╫я└п╦пЁя┐я─п╟я├п╦п╬п╫п╫я▀п╧ я└п╟п╧п╩ п╡ /config"
 
 #~ msgid "Rating Updated"
-#~ msgstr "Рейтинг обновлен"
+#~ msgstr "п═п╣п╧я┌п╦п╫пЁ п╬п╠п╫п╬п╡п╩п╣п╫"
 
 #~ msgid "Your rating for this object has been updated"
-#~ msgstr "Ваш рейтинг для данного объекта обновлен"
+#~ msgstr "п▓п╟я┬ я─п╣п╧я┌п╦п╫пЁ п╢п╩я▐ п╢п╟п╫п╫п╬пЁп╬ п╬п╠я┼п╣п╨я┌п╟ п╬п╠п╫п╬п╡п╩п╣п╫"
 
 #~ msgid "Playlist Cleared"
-#~ msgstr "Плейлист очищен"
+#~ msgstr "п÷п╩п╣п╧п╩п╦я│я┌ п╬я┤п╦я┴п╣п╫"
 
 #~ msgid "No songs in this playlist."
-#~ msgstr "В этом плейлисте нет песен"
+#~ msgstr "п▓ я█я┌п╬п╪ п©п╩п╣п╧п╩п╦я│я┌п╣ п╫п╣я┌ п©п╣я│п╣п╫"
 
 #~ msgid "New Playlist"
-#~ msgstr "Новый плейлист"
+#~ msgstr "п²п╬п╡я▀п╧ п©п╩п╣п╧п╩п╦я│я┌"
 
 #~ msgid "Controls"
-#~ msgstr "Управление"
+#~ msgstr "пёп©я─п╟п╡п╩п╣п╫п╦п╣"
 
 #~ msgid "Module Name"
-#~ msgstr "Имя модуля"
+#~ msgstr "п≤п╪я▐ п╪п╬п╢я┐п╩я▐"
 
 #~ msgid "Disable Songs"
-#~ msgstr "Отключить песни"
+#~ msgstr "п·я┌п╨п╩я▌я┤п╦я┌я▄ п©п╣я│п╫п╦"
 
 #~ msgid "Admin Controls"
-#~ msgstr "Управление администратора"
+#~ msgstr "пёп©я─п╟п╡п╩п╣п╫п╦п╣ п╟п╢п╪п╦п╫п╦я│я┌я─п╟я┌п╬я─п╟"
 
 #~ msgid "Downsample"
-#~ msgstr "Понижать качество"
+#~ msgstr "п÷п╬п╫п╦п╤п╟я┌я▄ п╨п╟я┤п╣я│я┌п╡п╬"
 
 #~ msgid "Newest Artist Additions"
-#~ msgstr "Последние исполнители"
+#~ msgstr "п÷п╬я│п╩п╣п╢п╫п╦п╣ п╦я│п©п╬п╩п╫п╦я┌п╣п╩п╦"
 
 #~ msgid "Newest Album Additions"
-#~ msgstr "Последние альбомы"
+#~ msgstr "п÷п╬я│п╩п╣п╢п╫п╦п╣ п╟п╩я▄п╠п╬п╪я▀"
 
 #~ msgid "Newest Live Stream Additions"
-#~ msgstr "Последние потоки"
+#~ msgstr "п÷п╬я│п╩п╣п╢п╫п╦п╣ п©п╬я┌п╬п╨п╦"
 
 #~ msgid "Playlist Actions"
-#~ msgstr "Действия"
+#~ msgstr "п■п╣п╧я│я┌п╡п╦я▐"
 
 #~ msgid "Edit Playlist"
-#~ msgstr "Редактировать плейлист"
+#~ msgstr "п═п╣п╢п╟п╨я┌п╦я─п╬п╡п╟я┌я▄ п©п╩п╣п╧п╩п╦я│я┌"
 
 #~ msgid "Play This Playlist"
-#~ msgstr "Играть плейлист"
+#~ msgstr "п≤пЁя─п╟я┌я▄ п©п╩п╣п╧п╩п╦я│я┌"
 
 #~ msgid "Play Random"
-#~ msgstr "Играть случайные"
+#~ msgstr "п≤пЁя─п╟я┌я▄ я│п╩я┐я┤п╟п╧п╫я▀п╣"
 
 #~ msgid "Delete This Playlist"
-#~ msgstr "Удалить плейлист"
+#~ msgstr "пёп╢п╟п╩п╦я┌я▄ п©п╩п╣п╧п╩п╦я│я┌"
 
 #~ msgid "Import From File"
-#~ msgstr "Импортировать файл"
+#~ msgstr "п≤п╪п©п╬я─я┌п╦я─п╬п╡п╟я┌я▄ я└п╟п╧п╩"
 
 #~ msgid "Delete Empty Playlists"
-#~ msgstr "Удалить пустые плейлисты"
+#~ msgstr "пёп╢п╟п╩п╦я┌я▄ п©я┐я│я┌я▀п╣ п©п╩п╣п╧п╩п╦я│я┌я▀"
 
 #~ msgid "Site"
-#~ msgstr "Страница"
+#~ msgstr "п║я┌я─п╟п╫п╦я├п╟"
 
 #~ msgid "No user with this name registered"
-#~ msgstr "Пользователь с таким именем не зарегистрирован"
+#~ msgstr "п÷п╬п╩я▄п╥п╬п╡п╟я┌п╣п╩я▄ я│ я┌п╟п╨п╦п╪ п╦п╪п╣п╫п╣п╪ п╫п╣ п╥п╟я─п╣пЁп╦я│я┌я─п╦я─п╬п╡п╟п╫"
 
 #~ msgid "The validation key used isn't correct."
-#~ msgstr "Ключ валидации не верен"
+#~ msgstr "п п╩я▌я┤ п╡п╟п╩п╦п╢п╟я├п╦п╦ п╫п╣ п╡п╣я─п╣п╫"
 
 #~ msgid "User activated"
-#~ msgstr "Пользователь активирован"
+#~ msgstr "п÷п╬п╩я▄п╥п╬п╡п╟я┌п╣п╩я▄ п╟п╨я┌п╦п╡п╦я─п╬п╡п╟п╫"
 
 #~ msgid "Error: Unable to write to"
-#~ msgstr "Ошибка: не могу записать в "
+#~ msgstr "п·я┬п╦п╠п╨п╟: п╫п╣ п╪п╬пЁя┐ п╥п╟п©п╦я│п╟я┌я▄ п╡ "
 
 #~ msgid "Adding"
-#~ msgstr "Добавление"
+#~ msgstr "п■п╬п╠п╟п╡п╩п╣п╫п╦п╣"
 
 #~ msgid "to database"
-#~ msgstr "в базу данных"
+#~ msgstr "п╡ п╠п╟п╥я┐ п╢п╟п╫п╫я▀я┘"
 
 #~ msgid "Continue?  (Y/N):"
-#~ msgstr "Продолжить? (Y/N):"
+#~ msgstr "п÷я─п╬п╢п╬п╩п╤п╦я┌я▄? (Y/N):"
 
 #~ msgid "Error:  "
-#~ msgstr "Ошибка: "
+#~ msgstr "п·я┬п╦п╠п╨п╟: "
 
 #~ msgid "!\n"
 #~ msgstr "!\n"
 
 #~ msgid "You are currently logged in as"
-#~ msgstr "Вы зашли как"
+#~ msgstr "п▓я▀ п╥п╟я┬п╩п╦ п╨п╟п╨"
 
 #~ msgid "Song title"
-#~ msgstr "Название"
+#~ msgstr "п²п╟п╥п╡п╟п╫п╦п╣"
 
 #~ msgid "Total"
-#~ msgstr "Всего"
+#~ msgstr "п▓я│п╣пЁп╬"
 
 #~ msgid "Rebuild Preferences"
-#~ msgstr "Перестроить настройки"
+#~ msgstr "п÷п╣я─п╣я│я┌я─п╬п╦я┌я▄ п╫п╟я│я┌я─п╬п╧п╨п╦"
 
 #~ msgid "Play Random from Album"
-#~ msgstr "Играть случайные с альбома"
+#~ msgstr "п≤пЁя─п╟я┌я▄ я│п╩я┐я┤п╟п╧п╫я▀п╣ я│ п╟п╩я▄п╠п╬п╪п╟"
 
 #~ msgid "Minutes"
-#~ msgstr "Минут"
+#~ msgstr "п°п╦п╫я┐я┌"
 
 #~ msgid "Host Access to Your Catalog"
-#~ msgstr "Доступ узла к каталогу"
+#~ msgstr "п■п╬я│я┌я┐п© я┐п╥п╩п╟ п╨ п╨п╟я┌п╟п╩п╬пЁя┐"
 
 #~ msgid "Revoke"
-#~ msgstr "Отозвать"
+#~ msgstr "п·я┌п╬п╥п╡п╟я┌я▄"
 
 #~ msgid "Album Name"
-#~ msgstr "Альбом"
+#~ msgstr "п░п╩я▄п╠п╬п╪"
 
 #~ msgid "Album Year"
-#~ msgstr "Год"
-
-#~ msgid "Tracks"
-#~ msgstr "Песни"
+#~ msgstr "п⌠п╬п╢"
 
 #~ msgid "Edit Access List"
-#~ msgstr "Редактировать списки доступа"
+#~ msgstr "п═п╣п╢п╟п╨я┌п╦я─п╬п╡п╟я┌я▄ я│п©п╦я│п╨п╦ п╢п╬я│я┌я┐п©п╟"
 
 #~ msgid "Ampache.cfg.php Up to Date?"
-#~ msgstr "Ampache.cfg.php обновлен?"
+#~ msgstr "Ampache.cfg.php п╬п╠п╫п╬п╡п╩п╣п╫?"
 
 #~ msgid "Ampache.cfg.php is missing the following:"
-#~ msgstr "ampache.cfg.php не нашел следующее:"
+#~ msgstr "ampache.cfg.php п╫п╣ п╫п╟я┬п╣п╩ я│п╩п╣п╢я┐я▌я┴п╣п╣:"
 
 #~ msgid "Reset Form"
-#~ msgstr "Сбросить"
+#~ msgstr "п║п╠я─п╬я│п╦я┌я▄"
 
 #~ msgid "Save Search As Track on"
-#~ msgstr "Сохранить найденное как трек"
+#~ msgstr "п║п╬я┘я─п╟п╫п╦я┌я▄ п╫п╟п╧п╢п╣п╫п╫п╬п╣ п╨п╟п╨ я┌я─п╣п╨"
 
 #~ msgid "Save"
-#~ msgstr "Сохранить"
+#~ msgstr "п║п╬я┘я─п╟п╫п╦я┌я▄"
