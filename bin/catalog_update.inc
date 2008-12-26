@@ -1,7 +1,7 @@
 <?php 
 /*
 
- Copyright 2001 - 2006 Ampache.org
+ Copyright Ampache.org
  All Rights Reserved
 
  This program is free software; you can redistribute it and/or
@@ -25,7 +25,8 @@ $prefix = realpath($path . '/../');
 require_once $prefix . '/lib/init.php';
 
 
-echo "[catalog_update.php.inc]\nStarting Catalog Clean/Update And Add\n\n";
+echo "- Catalog Update -\n Useage: catalog_update.inc %catalog%\nStarting Catalog Clean, Verify and Add...\n\n";
+ob_end_flush(); 
 
 if (count($_SERVER['argv']) > 1) {
        for ($x = 1; $x < count($_SERVER['argv']); $x++) {
@@ -39,26 +40,23 @@ $sql = "SELECT id FROM catalog";
 if ($where) $sql .= " WHERE $where";
 $db_results = Dba::query($sql);
 
-while ($r = Dba::fetch_row($db_results)) { 
+while ($row = Dba::fetch_row($db_results)) { 
 
-	$catalog = new Catalog($r[0]);
+	$catalog = new Catalog($row['0']);
 	
 	// Clean out dead files
-	$catalog->clean_catalog(0,0);
-
-	$catalog->count = 0;
+	$catalog->clean_catalog();
 
 	// Verify Existing
-	$catalog->verify_catalog(0,0,0);
+	$catalog->verify_catalog($row['0']);
 
-	$catalog->count = 0;
-	
 	echo "\n\n";
 
 	// Look for new files
 	$catalog->add_to_catalog();
 	echo "\n\n";
-}
+
+} // end foreach 
 
 
 ?>
