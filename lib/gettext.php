@@ -35,7 +35,7 @@ function load_gettext() {
 				$lang . '.UTF-8', //. Config::get('site_charset'),
 				$lang . '.UTF-8',
 				$lang . '.UTF-8',
-				$lang . '.UTF-8' // . Config::get('lc_charset'));
+				$lang . '.UTF-8'); // . Config::get('lc_charset'));
 
 		/* Bind the Text Domain */
 		bindtextdomain('messages', Config::get('prefix') . "/locale/");
