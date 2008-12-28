@@ -609,8 +609,9 @@ dt:hover, dt:hover + dd {background:#9cf;}
 .np_row {
 	padding: 3px;
 	float:left;
-	clear:both;
 	font-size:0.75em;
+	display:block;
+	
 }
 .np_cell {
   padding-left:5px;

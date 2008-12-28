@@ -31,7 +31,6 @@ if (count($results)) {
 $link = Config::get('use_rss') ? ' ' . AmpacheRSS::get_display('nowplaying') : ''; 
 ?>
 <?php show_box_top(_('Now Playing') . $link); ?>
-<div class="np_row">
 <?php 
 foreach ($results as $item) {
 	$song = $item['song'];
@@ -41,11 +40,12 @@ foreach ($results as $item) {
 	/* If we've gotten a non-song object just skip this row */
 	if (!is_object($song)) { continue; }
 	if (!$np_user->fullname) { $np_user->fullname = "Ampache User"; }
-
-	require Config::get('prefix') . '/templates/show_now_playing_row.inc.php';
-
+?>
+<div class="np_row">
+<?php require Config::get('prefix') . '/templates/show_now_playing_row.inc.php'; ?>
+</div>
+<?php
 } // end foreach
 ?>
-</div>
 <?php show_box_bottom(); ?>
 <?php } // end if count results ?>
