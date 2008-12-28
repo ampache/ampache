@@ -31,11 +31,7 @@ define('NO_SESSION','1');
 require 'lib/init.php';
 
 // Check to see if they've got an interface session or a valid API session, if not GTFO
-if (    !vauth::session_exists('interface',$_COOKIE[Config::get('session_name')]) 
-	AND !vauth::session_exists('api',$_REQUEST['auth'])
-	AND !vauth::session_exists('xml-rpc',$_REQUEST['auth'])
-	) 
-{ 
+if (!vauth::session_exists('interface',$_COOKIE[Config::get('session_name')]) AND !vauth::session_exists('api',$_REQUEST['auth']) AND !vauth::session_exists('xml-rpc',$_REQUEST['auth'])) { 
 	debug_event('DENIED','Image Access, Checked Cookie Session and Auth:' . $_REQUEST['auth'],'1');
 	exit; 
 } 
@@ -50,18 +46,20 @@ switch ($_REQUEST['thumb']) {
 	case '2':
 		$size['height']	= '128';
 		$size['width']	= '128';
+		$return_raw = true; 
 	break;
 	case '3':
 		/* This is used by the flash player */
 		$size['height']	= '80';
 		$size['width']	= '80';
+		$return_raw = true; 
 	break;
-
 	default:
 		$size['height'] = '275';
 		$size['width']	= '275';
+		$return_raw = true; 
 	break;
-}
+} // define size based on thumbnail
 
 switch ($_REQUEST['type']) { 
 	case 'popup':
@@ -89,7 +87,7 @@ switch ($_REQUEST['type']) {
 		$album = new Album($_REQUEST['id']);
 
 		// Attempt to pull art from the database
-		$art = $album->get_art();
+		$art = $album->get_art($return_raw);
 		$mime = $art['mime'];
 		
 		if (!$mime) { 

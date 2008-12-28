@@ -272,10 +272,12 @@ class Album extends database_object {
 	 * it trys to pull the resized art instead, if resized art is found then
 	 * it returns an additional resized=true in the array
 	 */
-	public function get_art() { 
+	public function get_art($return_raw=false) { 
 
 		// Attempt to get the resized art first
-		$art = $this->get_resized_db_art(); 
+		if (!$return_raw) { 
+			$art = $this->get_resized_db_art(); 
+		} 
 		
 		if (!is_array($art)) { 
 			$art = $this->get_db_art(); 

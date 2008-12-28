@@ -4,6 +4,8 @@
 
 --------------------------------------------------------------------------
   v.3.5-Alpha1
+	- Fixed issue where small thumbnails were used for larger images
+		if gd based resizing was enabled in the config
 	- Fixed catalog_update.inc so it doesn't produce errors
 	- Made democratic play respect force http play
 	- Make installation error messages more helpful
