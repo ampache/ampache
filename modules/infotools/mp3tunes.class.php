@@ -470,6 +470,6 @@ class mp3tunes {
 	
     	} // end_element
 
-} // end openstrands
+} // end mp3tunes
 
 ?>

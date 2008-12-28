@@ -236,7 +236,9 @@ class Democratic extends tmpPlaylist {
          */
         public function get_url() {
 
-                if (Config::get('force_http_play') OR !empty($force_http)) {
+		$web_path = Config::get('web_path'); 
+
+                if (Config::get('force_http_play')) {
                         $port = Config::get('http_port') ? ':' . Config::get('http_port') : '';
                         $web_path = str_replace("https://" . $_SERVER['HTTP_HOST'], "http://" . $_SERVER['SERVER_NAME'] . $port,$web_path);
                 }
