@@ -100,10 +100,10 @@ function sort_find_home($song,$sort_pattern,$base) {
 	/* Create the filename that this file should have */
 	$album 	= sort_clean_name($song->f_album_full);
 	$artist = sort_clean_name($song->f_artist_full);
-	$genre 	= sort_clean_name($song->f_genre);
 	$track	= sort_clean_name($song->track);
 	$title	= sort_clean_name($song->title);
 	$year	= sort_clean_name($song->year);
+	$comment = sort_clean_name($song->comment); 
 
 	/* Do the various check */
 	$album_object = new Album($song->album);
@@ -125,8 +125,8 @@ function sort_find_home($song,$sort_pattern,$base) {
 	}
 
 	/* Replace everything we can find */
-	$replace_array = array('%a','%A','%t','%T','%y','%g','%C');
-	$content_array = array($artist,$album,$title,$track,$year,$genre,'C');
+	$replace_array = array('%a','%A','%t','%T','%y','%c');
+	$content_array = array($artist,$album,$title,$track,$year,$comment);
 	$sort_pattern = str_replace($replace_array,$content_array,$sort_pattern);
 
 	/* Remove non A-Z0-9 chars */
@@ -159,9 +159,6 @@ function sort_element_name($key) {
 		break;
 		case '%y':
 			return 'year';
-		break;
-		case '%g':
-			return 'genre';
 		break;
 		default: 
 		break;

@@ -36,7 +36,6 @@ $default_sort = "%a/%A";
 		%A = <?php echo _('album name'); ?><br />
 		%a = <?php echo _('artist name'); ?><br />
 		%c = <?php echo _('id3 comment'); ?><br />
-		%g = <?php echo _('genre'); ?><br />
 		%T = <?php echo _('track number (padded with leading 0)'); ?><br />
 		%t = <?php echo _('song title'); ?><br />
 		%y = <?php echo _('year'); ?><br />

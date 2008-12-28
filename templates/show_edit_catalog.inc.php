@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2007 Ampache.org
+ Copyright (c) Ampache.org
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
@@ -30,7 +30,6 @@
 		%A = <?php echo _('album name'); ?><br />
 		%a = <?php echo _('artist name'); ?><br />
 		%c = <?php echo _('id3 comment'); ?><br />
-		%g = <?php echo _('genre'); ?><br />
 		%T = <?php echo _('track number (padded with leading 0)'); ?><br />
 		%t = <?php echo _('song title'); ?><br />
 		%y = <?php echo _('year'); ?><br />
