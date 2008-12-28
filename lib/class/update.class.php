@@ -1417,6 +1417,9 @@ class Update {
 		$sql = "ALTER TABLE `tag` CHANGE `name` `name` VARCHAR( 255 )"; 
 		$db_results = Dba::write($sql); 
 
+		self::set_version('db_version','350003'); 
+
+		return true; 
 
 	} // update_350003
 

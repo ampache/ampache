@@ -78,6 +78,7 @@ class Tag extends database_object {
 
 		$size = 3 + ($this->weight-1) - ($this->count-1); 
 		if (abs($size) > 4) { $size = 4; } 
+		if (abs($size) < 1) { $size = 1; } 
 
 		if ($this->owner == $GLOBALS['user']->id) { 
 			$action = '?page=tag&action=remove_tag&type=' . scrub_out($type) . '&tag_id=' . intval($this->id) . '&object_id=' . intval($object_id); 
@@ -395,6 +396,31 @@ class Tag extends database_object {
 		return $results; 
 
 	} // get_tags
+
+	/**
+	 * get_display
+	 * This returns a human formated version of the tags that we are given
+	 * it also takes a type so that it knows how to return it, this is used
+	 * by the formating functions of the different objects
+	 */
+	public static function get_display($tags,$element_id,$type='song') { 
+
+		if (!is_array($tags)) { return ''; } 
+
+		$results = ''; 
+
+		// Itterate through the tags, format them according to type and element id
+		foreach ($tags as $tag_id=>$value) { 
+			$tag = new Tag($tag_id); 
+			$tag->format($type,$element_id); 
+			$results .= $tag->f_name . ', '; 
+		} 
+
+		$results = rtrim($results,', '); 
+
+		return $results; 
+
+	} // get_display
 
 	/**
  	 * filter_with_prefs

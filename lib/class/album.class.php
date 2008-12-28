@@ -261,6 +261,10 @@ class Album extends database_object {
 			$this->year = "N/A";
 		}
 
+		$tags = Tag::get_top_tags('album',$this->id); 
+		$this->f_tags = Tag::get_display($tags,$this->id,'album'); 	
+		
+
 		// Format the artist name to include the prefix
 		$this->f_artist_name = trim($this->artist_prefix . ' ' . $this->artist_name); 
 

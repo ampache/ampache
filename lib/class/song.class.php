@@ -687,15 +687,7 @@ class Song extends database_object {
 
 		// Get the top tags
 		$tags = Tag::get_top_tags('song',$this->id); 
-		$this->f_tags = ''; 
-
-		foreach ($tags as $tag_id=>$values) { 
-			$tag = new Tag($tag_id); 
-			$tag->format('song',$this->id); 
-			$this->f_tags .= $tag->f_name . ', '; 
-		} 
-	
-		$this->f_tags = rtrim($this->f_tags,', '); 
+		$this->f_tags = Tag::get_display($tags,$this->id,'song');  
 
 		// Format the size
 		$this->f_size = sprintf("%.2f",($this->size/1048576));

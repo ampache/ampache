@@ -238,7 +238,10 @@ class Artist extends database_object {
 		$hours = floor($extra_info['time']/3600);
 
 		$this->f_time = ltrim($hours . ':' . $min . ':' . $sec,'0:'); 
-		
+
+		$tags = Tag::get_top_tags('artist',$this->id); 
+		$this->f_tags = Tag::get_display($tags,$this->id,'artist'); 
+
 
 		return true; 
 

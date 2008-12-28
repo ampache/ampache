@@ -1137,6 +1137,8 @@ class Catalog {
 		
 		// Nothing to assign here this is a multi-value doodly
 		self::check_tag($tag,$song->id); 
+		self::check_tag($tag,$new_song->album,'album'); 
+		self::check_tag($tag,$new_song->artist,'artist'); 
 
 		/* Since we're doing a full compare make sure we fill the extended information */
 		$song->fill_ext_info();
@@ -2134,12 +2136,14 @@ class Catalog {
 
 		if (!$db_results) {
 			debug_event('insert',"Unable to insert $file -- $sql" . Dba::error(),'5','ampache-catalog');
-			Error::add('catalog_add','Error Adding ' . $file . ' SQL:' . $sql);
+			Error::add('catalog_add','SQL Error Adding ' . $file);
 		}
 			
 		$song_id = Dba::insert_id();
 
 		self::check_tag($tag,$song_id);
+		self::check_tag($tag,$album_id,'album'); 
+		self::check_tag($tag,$artist_id,'artist'); 
 
 		/* Add the EXT information */
 		$sql = "INSERT INTO `song_data` (`song_id`,`comment`,`lyrics`) " .
