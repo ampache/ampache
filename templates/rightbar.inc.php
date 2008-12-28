@@ -74,8 +74,13 @@
 <?php if (Config::get('play_type') == 'localplay') { require_once Config::get('prefix') . '/templates/show_localplay_control.inc.php'; } ?> 
 <ul id="rb_current_playlist">
 <?php 
-	//FIXME :: this feels kludgy
-	$objects = $GLOBALS['user']->playlist->get_items(); 
+
+	$objects = array(); 
+
+	//FIXME :: this is kludgy
+	if (NO_SONGS != '1') { 	
+		$objects = $GLOBALS['user']->playlist->get_items(); 
+	} 
 
 	// Limit the number of objects we show here
 	if (count($objects) > 100) { 

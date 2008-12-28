@@ -1417,6 +1417,11 @@ class Update {
 		$sql = "ALTER TABLE `tag` CHANGE `name` `name` VARCHAR( 255 )"; 
 		$db_results = Dba::write($sql); 
 
+		// Make sure that they don't have any of the mystrands crap left
+		$sql = "DELETE FROM `preference` WHERE `name`='mystrands_user' OR `name`='mystrands_pass'"; 
+		$db_results = Dba::write($sql); 
+
+
 		self::set_version('db_version','350003'); 
 
 		return true; 
