@@ -76,9 +76,17 @@ function check_database_inserted($dbh,$db_name) {
  */
 function check_php_ver($level=0) {
 
-	if (strcmp('5.1.0',phpversion()) > 0) {
+	if (strcmp('5.1.2',phpversion()) > 0) {
 		return false;
 	}
+
+	// Make sure that they have the sha256() algo installed
+	if (!function_exists('hash_algos')) { return false; } 
+	$algos = hash_algos(); 
+
+	if (!in_array('sha256',$algos)) { 
+		return false; 
+	} 
 
 	return true;
 
