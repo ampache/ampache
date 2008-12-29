@@ -2438,7 +2438,7 @@ class Catalog {
 				while ($results = Dba::fetch_assoc($db_results)) {
 					$song = new Song($results['id']);
 					$song->format();
-					echo '"' . $song->id . '","' . $song->title . '","' . $song->artist_full . '","' . $song->album_full .
+					echo '"' . $song->id . '","' . $song->title . '","' . $song->f_artist_full . '","' . $song->f_album_full .
 						'","' . $song->f_genre . '","' . $song->f_time . '","' . $song->f_track . '","' . $song->year . 
 						'","' . date("Y-m-d\TH:i:s\Z",$song->addition_time) . '","' . $song->f_bitrate . 
 						'","' . $song->played . '","' . $song->file . "\n"; 
