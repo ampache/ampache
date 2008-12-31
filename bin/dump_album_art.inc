@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright 2001 - 2007 Ampache.org
+ Copyright Ampache.org
  All Rights Reserved
 
  This program is free software; you can redistribute it and/or
@@ -24,10 +24,15 @@ $path = dirname(__FILE__);
 $prefix = realpath($path . '/../'); 
 require_once $prefix . '/lib/init.php';
 
-// If we specify extra meta data
-// Possible values are windows and linux
-// If Null then no meta data is dumped
+// Turn off output buffering we don't need it for a command line script
+ob_end_clean(); 
+
 $meta = 'linux'; 
+
+// Take input from the command line, two options linux or windows
+if (count($_SERVER['argv']) > 1) { 
+	$meta = ($_SERVER['argv']['1'] == 'windows') ? 'windows' : 'linux';  
+}
 
 $catalogs = Catalog::get_catalogs();
 
