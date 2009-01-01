@@ -288,6 +288,12 @@ class Update {
 
 		$version[] = array('version' => '350002','description'=>$update_string); 
 
+		$update_string = '- Modify Tag tables.<br />' . 
+				'- Remove useless config preferences.<br />'; 
+
+		$version[] = array('version'=> '350003','description'=>$update_string); 
+
+
 
 		return $version;
 
@@ -1420,7 +1426,6 @@ class Update {
 		// Make sure that they don't have any of the mystrands crap left
 		$sql = "DELETE FROM `preference` WHERE `name`='mystrands_user' OR `name`='mystrands_pass'"; 
 		$db_results = Dba::write($sql); 
-
 
 		self::set_version('db_version','350003'); 
 
