@@ -3,7 +3,9 @@
 --------------------------------------------------------------------------
 
 --------------------------------------------------------------------------
-  v.3.5-Alpha1
+  v.3.5-Alpha1 12/31/2008
+	- Fixed sort_files script so that it properly handles variable
+		album art file names in the directories
 	- Fixed issue where small thumbnails were used for larger images
 		if gd based resizing was enabled in the config
 	- Fixed catalog_update.inc so it doesn't produce errors

@@ -293,8 +293,6 @@ class Update {
 
 		$version[] = array('version'=> '350003','description'=>$update_string); 
 
-
-
 		return $version;
 
 	} // populate_version

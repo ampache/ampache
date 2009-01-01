@@ -57,7 +57,7 @@
 				echo " <font color=\"red\">ERROR</font> " . phpversion();
 				$results = $results + 1;
 			} else {
-				echo " <font color=\"green\">&nbsp;&nbsp;&nbsp;OK&nbsp;&nbsp;&nbsp;&nbsp;</font> " . phpversion();
+				echo " <font color=\"green\">&nbsp;&nbsp;&nbsp;OK&nbsp;&nbsp;&nbsp;&nbsp;</font><i>" . phpversion() . "</i>"; 
 			}
 		?>
 		</p>
@@ -67,10 +67,11 @@
 				echo " <font color=\"red\">ERROR</font> ";
 				$results = $results + 1;
 			} else {
-				if(strcmp('5.0.0',mysql_get_server_info()) > 0) {
-					echo " <font color=\"#FF6600\">&nbsp;&nbsp;&nbsp;WARNING&nbsp;&nbsp;&nbsp;&nbsp;</font> " . mysql_get_server_info() . "<strong>We recommend MySQL version more than 5.0.0</strong>";
+				if(strcmp('5.0.0',mysql_get_client_info()) > 0) {
+					echo " <font color=\"#FF6600\">&nbsp;&nbsp;&nbsp;WARNING&nbsp;&nbsp;&nbsp;&nbsp;</font> " . mysql_get_client_info() . "<strong>We recommend MySQL version more than 5.0.0</strong>";
 				} else {
-					echo " <font color=\"green\">&nbsp;&nbsp;&nbsp;OK&nbsp;&nbsp;&nbsp;&nbsp;</font> " . mysql_get_server_info();
+					echo " <font color=\"green\">&nbsp;&nbsp;&nbsp;OK&nbsp;&nbsp;&nbsp;&nbsp;</font>";
+					echo "<i>" . mysql_get_client_info() . "</i>"; 
 				}
 			}
 		?>
@@ -116,7 +117,7 @@
 		?>
 		</p>
 		<hr />
-		<h4><?php echo _('Option'); ?></h4>
+		<h4><?php echo _('Optional'); ?></h4>
 		<p><?php echo _('Gettext Support'); ?>:
 		<?php
 			if (!function_exists('gettext')) {
