@@ -1,23 +1,13 @@
-# Copyright (c) 2001 - 2007 Ampache.org
-# All rights reserved.
-# This program is free software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License v2
-# as published by the Free Software Foundation.
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-# You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
-#  <>, 2008.
+# translation of Ampache to ca_ES
+# Copyright (c) Ampache.org
+# This file is distributed under the same license as the Ampache package.
 #
-#
+#Guillem Lluch Moll <glluch@ya.com>, 2008
 msgid ""
 msgstr ""
 "Project-Id-Version: Ampache 3.5.0\n"
 "Report-Msgid-Bugs-To: translations at ampache.org\n"
-"POT-Creation-Date: 2008-12-09 11:04+0900\n"
+"POT-Creation-Date: 2009-01-06 07:40+0900\n"
 "PO-Revision-Date: 2008-01-04 16:41+0100\n"
 "Last-Translator: Guillem Lluch Moll <glluch@ya.com>\n"
 "Language-Team: Catalan <ca@dodds.net>\n"
@@ -32,10 +22,10 @@ msgstr "Error: no s'ha entrat cap lletre"
 
 #: ../../templates/show_album_row.inc.php:23
 #: ../../templates/show_song_row.inc.php:23
-#: ../../templates/show_albums.inc.php:39
-#: ../../templates/show_albums.inc.php:69
-#: ../../templates/show_artists.inc.php:35
-#: ../../templates/show_artists.inc.php:62
+#: ../../templates/show_albums.inc.php:40
+#: ../../templates/show_albums.inc.php:71
+#: ../../templates/show_artists.inc.php:36
+#: ../../templates/show_artists.inc.php:64
 #: ../../templates/show_live_streams.inc.php:35
 #: ../../templates/show_live_streams.inc.php:57
 #: ../../templates/show_playlists.inc.php:34
@@ -73,24 +63,24 @@ msgstr "Afegir"
 msgid "Random"
 msgstr "Aleatori"
 
-#: ../../templates/show_album_row.inc.php:44
+#: ../../templates/show_album_row.inc.php:45
 #: ../../templates/show_song_row.inc.php:38
 msgid "Post Shout"
 msgstr ""
 
-#: ../../templates/show_album_row.inc.php:49
+#: ../../templates/show_album_row.inc.php:50
 #: ../../templates/show_playlist.inc.php:36
 #: ../../templates/rightbar.inc.php:49
-#: ../../templates/show_artist_row.inc.php:34
+#: ../../templates/show_artist_row.inc.php:35
 #: ../../templates/show_search_options.inc.php:28
 #: ../../templates/show_playlist_row.inc.php:33
 msgid "Batch Download"
 msgstr ""
 
-#: ../../templates/show_album_row.inc.php:53
+#: ../../templates/show_album_row.inc.php:54
 #: ../../templates/show_song_row.inc.php:47
 #: ../../templates/show_play_selected.inc.php:50
-#: ../../templates/show_artist_row.inc.php:38
+#: ../../templates/show_artist_row.inc.php:39
 #: ../../templates/show_live_stream_row.inc.php:31
 #: ../../templates/show_playlist_song_row.inc.php:37
 #: ../../templates/show_playlist_row.inc.php:37
@@ -212,7 +202,7 @@ msgstr ""
 "per que l'Ampache funcioni"
 
 #: ../../templates/show_test.inc.php:83
-#: ../../templates/show_install_lang.inc.php:78
+#: ../../templates/show_install_lang.inc.php:79
 msgid "PHP Session Support"
 msgstr "Sessió de PHP suportada"
 
@@ -225,7 +215,7 @@ msgstr ""
 "necessàries perque l'Ampache funcioni"
 
 #: ../../templates/show_test.inc.php:102
-#: ../../templates/show_install_lang.inc.php:88
+#: ../../templates/show_install_lang.inc.php:89
 msgid "PHP ICONV Support"
 msgstr "PHP ICONV suportat"
 
@@ -236,7 +226,7 @@ msgid ""
 msgstr ""
 
 #: ../../templates/show_test.inc.php:120
-#: ../../templates/show_install_lang.inc.php:98
+#: ../../templates/show_install_lang.inc.php:99
 msgid "PHP PCRE Support"
 msgstr "Suport PHP PCRE"
 
@@ -249,7 +239,7 @@ msgstr ""
 "teva versió dePHP, aquest·és·necessari·per·l'Ampache"
 
 #: ../../templates/show_test.inc.php:137
-#: ../../templates/show_install_lang.inc.php:108
+#: ../../templates/show_install_lang.inc.php:109
 msgid "PHP PutENV Support"
 msgstr "Suport PHP PutENV"
 
@@ -311,13 +301,13 @@ msgstr ""
 msgid "Web Path"
 msgstr "Patrh del web"
 
-#: ../../templates/show_albums.inc.php:41
-#: ../../templates/show_albums.inc.php:71
+#: ../../templates/show_albums.inc.php:42
+#: ../../templates/show_albums.inc.php:73
 msgid "Cover"
 msgstr "Cover"
 
-#: ../../templates/show_albums.inc.php:43
-#: ../../templates/show_albums.inc.php:73
+#: ../../templates/show_albums.inc.php:44
+#: ../../templates/show_albums.inc.php:75
 #: ../../templates/sidebar_home.inc.php:104
 #: ../../templates/show_edit_song.inc.php:37
 #: ../../templates/show_play_selected.inc.php:59
@@ -336,10 +326,10 @@ msgstr "Cover"
 msgid "Album"
 msgstr "Album"
 
-#: ../../templates/show_albums.inc.php:44
-#: ../../templates/show_albums.inc.php:74
-#: ../../templates/show_artists.inc.php:36
-#: ../../templates/show_artists.inc.php:63
+#: ../../templates/show_albums.inc.php:45
+#: ../../templates/show_albums.inc.php:76
+#: ../../templates/show_artists.inc.php:37
+#: ../../templates/show_artists.inc.php:65
 #: ../../templates/sidebar_home.inc.php:34
 #: ../../templates/sidebar_home.inc.php:79
 #: ../../templates/sidebar_home.inc.php:105
@@ -362,10 +352,10 @@ msgstr "Album"
 msgid "Artist"
 msgstr "Artista"
 
-#: ../../templates/show_albums.inc.php:45
-#: ../../templates/show_albums.inc.php:75
-#: ../../templates/show_artists.inc.php:37
-#: ../../templates/show_artists.inc.php:64
+#: ../../templates/show_albums.inc.php:46
+#: ../../templates/show_albums.inc.php:77
+#: ../../templates/show_artists.inc.php:38
+#: ../../templates/show_artists.inc.php:66
 #: ../../templates/show_manage_democratic.inc.php:39
 #: ../../templates/show_local_catalog_info.inc.php:31
 #: ../../templates/show_genre.inc.php:38
@@ -375,8 +365,8 @@ msgstr "Artista"
 msgid "Songs"
 msgstr "Cançons"
 
-#: ../../templates/show_albums.inc.php:46
-#: ../../templates/show_albums.inc.php:76
+#: ../../templates/show_albums.inc.php:47
+#: ../../templates/show_albums.inc.php:78
 #: ../../templates/show_edit_song.inc.php:67
 #: ../../templates/show_play_selected.inc.php:61
 #: ../../templates/show_edit_album.inc.php:33
@@ -384,18 +374,28 @@ msgstr "Cançons"
 msgid "Year"
 msgstr "Any"
 
-#: ../../templates/show_albums.inc.php:47
-#: ../../templates/show_albums.inc.php:77
-#: ../../templates/show_artists.inc.php:40
-#: ../../templates/show_artists.inc.php:67
+#: ../../templates/show_albums.inc.php:48
+#: ../../templates/show_albums.inc.php:79
+#: ../../templates/show_artists.inc.php:41
+#: ../../templates/show_artists.inc.php:69
+#: ../../templates/show_songs.inc.php:43 ../../templates/show_songs.inc.php:72
+#: ../../templates/show_random.inc.php:41
+#, fuzzy
+msgid "Tags"
+msgstr "Re-tag"
+
+#: ../../templates/show_albums.inc.php:49
+#: ../../templates/show_albums.inc.php:80
+#: ../../templates/show_artists.inc.php:42
+#: ../../templates/show_artists.inc.php:70
 #: ../../templates/show_search.inc.php:91
 #: ../../templates/show_songs.inc.php:49 ../../templates/show_songs.inc.php:76
 #: ../../templates/show_now_playing_row.inc.php:36
 msgid "Rating"
 msgstr "Calificació"
 
-#: ../../templates/show_albums.inc.php:48
-#: ../../templates/show_albums.inc.php:78
+#: ../../templates/show_albums.inc.php:50
+#: ../../templates/show_albums.inc.php:81
 #: ../../templates/show_catalogs.inc.php:36
 #: ../../templates/show_catalogs.inc.php:52
 #: ../../templates/show_playlists.inc.php:39
@@ -404,13 +404,13 @@ msgstr "Calificació"
 msgid "Actions"
 msgstr "Accions"
 
-#: ../../templates/show_albums.inc.php:65
-#: ../../templates/show_artists.inc.php:58
+#: ../../templates/show_albums.inc.php:67
+#: ../../templates/show_artists.inc.php:60
 #: ../../templates/show_live_streams.inc.php:53
 #: ../../templates/show_playlists.inc.php:53
 #: ../../templates/show_manage_democratic.inc.php:63
 #: ../../templates/show_objects.inc.php:44
-#: ../../templates/rightbar.inc.php:101 ../../templates/show_genres.inc.php:68
+#: ../../templates/rightbar.inc.php:106 ../../templates/show_genres.inc.php:68
 #: ../../templates/show_user_recommendations.inc.php:32
 #: ../../templates/show_user_recommendations.inc.php:43
 #: ../../templates/show_user_recommendations.inc.php:54
@@ -464,8 +464,8 @@ msgstr "Últim IP"
 #: ../../templates/show_users.inc.php:111
 #: ../../templates/show_localplay_controllers.inc.php:35
 #: ../../templates/show_localplay_controllers.inc.php:66
-#: ../../templates/show_artists.inc.php:41
-#: ../../templates/show_artists.inc.php:68
+#: ../../templates/show_artists.inc.php:43
+#: ../../templates/show_artists.inc.php:71
 #: ../../templates/show_live_streams.inc.php:40
 #: ../../templates/show_live_streams.inc.php:62
 #: ../../templates/show_manage_democratic.inc.php:40
@@ -640,7 +640,7 @@ msgstr "Nom"
 
 #: ../../templates/show_catalogs.inc.php:33
 #: ../../templates/show_catalogs.inc.php:49
-#: ../../templates/show_add_catalog.inc.php:48
+#: ../../templates/show_add_catalog.inc.php:47
 msgid "Path"
 msgstr "Path"
 
@@ -716,8 +716,8 @@ msgstr ""
 msgid "Save Changes"
 msgstr ""
 
-#: ../../templates/show_artists.inc.php:38
-#: ../../templates/show_artists.inc.php:65
+#: ../../templates/show_artists.inc.php:39
+#: ../../templates/show_artists.inc.php:67
 #: ../../templates/sidebar_home.inc.php:33
 #: ../../templates/sidebar_home.inc.php:76
 #: ../../templates/show_local_catalog_info.inc.php:29
@@ -726,8 +726,8 @@ msgstr ""
 msgid "Albums"
 msgstr "Àlbums"
 
-#: ../../templates/show_artists.inc.php:39
-#: ../../templates/show_artists.inc.php:66
+#: ../../templates/show_artists.inc.php:40
+#: ../../templates/show_artists.inc.php:68
 #: ../../templates/show_democratic_playlist.inc.php:54
 #: ../../templates/show_democratic_playlist.inc.php:89
 #: ../../templates/show_songs.inc.php:45 ../../templates/show_songs.inc.php:74
@@ -960,59 +960,54 @@ msgstr "comentari (id3)"
 
 #: ../../templates/show_edit_catalog.inc.php:33
 #: ../../templates/show_add_catalog.inc.php:39
-msgid "genre"
-msgstr "gènere"
-
-#: ../../templates/show_edit_catalog.inc.php:34
-#: ../../templates/show_add_catalog.inc.php:40
 msgid "track number (padded with leading 0)"
 msgstr "rastregi el nombre (embuatat amb l'administració 0) "
 
-#: ../../templates/show_edit_catalog.inc.php:35
-#: ../../templates/show_add_catalog.inc.php:41
+#: ../../templates/show_edit_catalog.inc.php:34
+#: ../../templates/show_add_catalog.inc.php:40
 msgid "song title"
 msgstr "Títol de la cançó"
 
-#: ../../templates/show_edit_catalog.inc.php:36
-#: ../../templates/show_add_catalog.inc.php:42
+#: ../../templates/show_edit_catalog.inc.php:35
+#: ../../templates/show_add_catalog.inc.php:41
 msgid "year"
 msgstr "any"
 
-#: ../../templates/show_edit_catalog.inc.php:37
-#: ../../templates/show_add_catalog.inc.php:43
+#: ../../templates/show_edit_catalog.inc.php:36
+#: ../../templates/show_add_catalog.inc.php:42
 msgid "other"
 msgstr "altre"
 
-#: ../../templates/show_edit_catalog.inc.php:41
-#: ../../templates/show_add_catalog.inc.php:52
+#: ../../templates/show_edit_catalog.inc.php:40
+#: ../../templates/show_add_catalog.inc.php:51
 msgid "Catalog Type"
 msgstr "Tipus de catàleg"
 
-#: ../../templates/show_edit_catalog.inc.php:45
-#: ../../templates/show_add_catalog.inc.php:61
+#: ../../templates/show_edit_catalog.inc.php:44
+#: ../../templates/show_add_catalog.inc.php:60
 msgid "XML-RPC Key"
 msgstr "Clau XML-RPC"
 
-#: ../../templates/show_edit_catalog.inc.php:47
-#: ../../templates/show_add_catalog.inc.php:62
+#: ../../templates/show_edit_catalog.inc.php:46
+#: ../../templates/show_add_catalog.inc.php:61
 msgid "Required for Remote Catalogs"
 msgstr "Necessari pels catàlegs remots"
 
-#: ../../templates/show_edit_catalog.inc.php:51
+#: ../../templates/show_edit_catalog.inc.php:50
 msgid "Filename pattern"
 msgstr "Patró de arxiu"
 
-#: ../../templates/show_edit_catalog.inc.php:58
-#: ../../templates/show_add_catalog.inc.php:70
+#: ../../templates/show_edit_catalog.inc.php:57
+#: ../../templates/show_add_catalog.inc.php:69
 msgid "Folder Pattern"
 msgstr "Patró de carpeta"
 
-#: ../../templates/show_edit_catalog.inc.php:58
-#: ../../templates/show_add_catalog.inc.php:70
+#: ../../templates/show_edit_catalog.inc.php:57
+#: ../../templates/show_add_catalog.inc.php:69
 msgid "(no leading or ending '/')"
 msgstr "(no començant ni acabant en '/')"
 
-#: ../../templates/show_edit_catalog.inc.php:68
+#: ../../templates/show_edit_catalog.inc.php:67
 msgid "Save Catalog Settings"
 msgstr "Guarda la configuració del catàleg"
 
@@ -1314,7 +1309,7 @@ msgstr "Ítem"
 msgid "Reason to flag"
 msgstr "Motiu del senyal"
 
-#: ../../templates/show_flag.inc.php:56 ../../templates/rightbar.inc.php:98
+#: ../../templates/show_flag.inc.php:56 ../../templates/rightbar.inc.php:103
 #: ../../templates/show_catalog_row.inc.php:33
 #: ../../templates/show_democratic_playlist.inc.php:78
 #: ../../templates/show_live_stream_row.inc.php:34
@@ -1633,38 +1628,38 @@ msgstr "Requisits"
 msgid "System Checks"
 msgstr "Sistema"
 
-#: ../../templates/show_install_lang.inc.php:119
+#: ../../templates/show_install_lang.inc.php:120
 #, fuzzy
-msgid "Option"
+msgid "Optional"
 msgstr "Opcions"
 
-#: ../../templates/show_install_lang.inc.php:120
+#: ../../templates/show_install_lang.inc.php:121
 #: ../../templates/show_debug.inc.php:72
 msgid "Gettext Support"
 msgstr ""
 
-#: ../../templates/show_install_lang.inc.php:123
+#: ../../templates/show_install_lang.inc.php:124
 msgid "WARNING: This server will use gettext emulator."
 msgstr ""
 
-#: ../../templates/show_install_lang.inc.php:129
+#: ../../templates/show_install_lang.inc.php:130
 #, fuzzy
 msgid "Mbstring Support"
 msgstr "Sessió de PHP suportada"
 
-#: ../../templates/show_install_lang.inc.php:141
+#: ../../templates/show_install_lang.inc.php:142
 msgid "Choose installation language."
 msgstr ""
 
-#: ../../templates/show_install_lang.inc.php:162
+#: ../../templates/show_install_lang.inc.php:163
 msgid "Start configuration"
 msgstr "Configuració inicial"
 
-#: ../../templates/show_install_lang.inc.php:168
+#: ../../templates/show_install_lang.inc.php:169
 msgid "Ampache does not <strong>run</strong> correctly by this server."
 msgstr ""
 
-#: ../../templates/show_install_lang.inc.php:169
+#: ../../templates/show_install_lang.inc.php:170
 msgid "Please contact your server administrator, and fix them."
 msgstr ""
 
@@ -1701,7 +1696,7 @@ msgstr ""
 msgid "Related Tag"
 msgstr ""
 
-#: ../../templates/rightbar.inc.php:105
+#: ../../templates/rightbar.inc.php:110
 msgid "More"
 msgstr ""
 
@@ -2318,12 +2313,6 @@ msgstr ""
 msgid "Newest Artists"
 msgstr ""
 
-#: ../../templates/show_songs.inc.php:43 ../../templates/show_songs.inc.php:72
-#: ../../templates/show_random.inc.php:41
-#, fuzzy
-msgid "Tags"
-msgstr "Re-tag"
-
 #: ../../templates/show_mail_users.inc.php:23
 msgid "Send E-mail to Users"
 msgstr "Envia un e-mail als usuaris"
@@ -2584,8 +2573,8 @@ msgid "Disk"
 msgstr ""
 
 #: ../../templates/show_album.inc.php:34
-#: ../../lib/class/catalog.class.php:1823
-#: ../../lib/class/catalog.class.php:1894
+#: ../../lib/class/catalog.class.php:1922
+#: ../../lib/class/catalog.class.php:1993
 msgid "Unknown (Orphaned)"
 msgstr ""
 
@@ -2720,7 +2709,7 @@ msgid "Clear Catalog Stats"
 msgstr "Esborrar les estadístiques del catàleg"
 
 #: ../../templates/show_admin_tools.inc.php:84
-#: ../../templates/show_add_catalog.inc.php:75
+#: ../../templates/show_add_catalog.inc.php:74
 msgid "Gather Album Art"
 msgstr "Recollir portades"
 
@@ -2839,23 +2828,23 @@ msgstr ""
 msgid "Catalog Name"
 msgstr "Nom del catàleg"
 
-#: ../../templates/show_add_catalog.inc.php:55
+#: ../../templates/show_add_catalog.inc.php:54
 msgid "Local"
 msgstr "Local"
 
-#: ../../templates/show_add_catalog.inc.php:56
+#: ../../templates/show_add_catalog.inc.php:55
 msgid "Remote"
 msgstr "Remot"
 
-#: ../../templates/show_add_catalog.inc.php:65
+#: ../../templates/show_add_catalog.inc.php:64
 msgid "Filename Pattern"
 msgstr "Patró d'arxiu"
 
-#: ../../templates/show_add_catalog.inc.php:79
+#: ../../templates/show_add_catalog.inc.php:78
 msgid "Build Playlists from m3u Files"
 msgstr "Crea una lllista de reproducció des d'arxius m3u"
 
-#: ../../templates/show_add_catalog.inc.php:85
+#: ../../templates/show_add_catalog.inc.php:84
 msgid "Add Catalog"
 msgstr "Afegir al catàleg"
 
@@ -3171,7 +3160,7 @@ msgstr "Errada Cal el nom d'usuari"
 msgid "Error Passwords don't match"
 msgstr "Errada no hi poden faltar les contrasenyes"
 
-#: ../../lib/class/album.class.php:473 ../../lib/class/catalog.class.php:433
+#: ../../lib/class/album.class.php:479 ../../lib/class/catalog.class.php:433
 #: ../../lib/class/catalog.class.php:774
 msgid "Error: Unable to open"
 msgstr "Error: impossible d'obrir"
@@ -3226,93 +3215,109 @@ msgstr "Actualitzat"
 msgid "No Update Needed"
 msgstr "No es necessita cap actualització "
 
-#: ../../lib/class/catalog.class.php:1168
+#: ../../lib/class/catalog.class.php:1170
 msgid "Running Remote Update"
 msgstr "Engegant actualització remota"
 
-#: ../../lib/class/catalog.class.php:1195
+#: ../../lib/class/catalog.class.php:1197
 msgid "Added Playlist From"
 msgstr "Afeguit llista des de"
 
-#: ../../lib/class/catalog.class.php:1224
+#: ../../lib/class/catalog.class.php:1226
 msgid "Catalog Update Finished"
 msgstr "Actualització del catàleg finalitzada"
 
-#: ../../lib/class/catalog.class.php:1224
+#: ../../lib/class/catalog.class.php:1226
 msgid "Total Time"
 msgstr "Temps total"
 
-#: ../../lib/class/catalog.class.php:1225
+#: ../../lib/class/catalog.class.php:1227
 msgid "Total Songs"
 msgstr "Cançons en total"
 
-#: ../../lib/class/catalog.class.php:1225
+#: ../../lib/class/catalog.class.php:1227
 msgid "Songs Per Seconds"
 msgstr "Cançons per segon"
 
-#: ../../lib/class/catalog.class.php:1240 ../../admin/users.php:142
+#: ../../lib/class/catalog.class.php:1241 ../../admin/users.php:142
 msgid "Error"
 msgstr "Error"
 
-#: ../../lib/class/catalog.class.php:1240
-msgid "Unable to load XMLRPC library, make sure XML-RPC is enabled"
+#: ../../lib/class/catalog.class.php:1241
+#, fuzzy
+msgid "Unable to load pear XMLRPC library, make sure XML-RPC is enabled"
 msgstr ""
 "Ha estat impossible de carregar la llibreria XMLRPC, asegureu-vos que XML-"
 "RPC és actiu"
 
-#: ../../lib/class/catalog.class.php:1270
-#: ../../lib/class/catalog.class.php:1338
+#: ../../lib/class/catalog.class.php:1273
+#: ../../lib/class/catalog.class.php:1347
+#: ../../lib/class/catalog.class.php:1380
 #: ../../lib/class/xmlrpcclient.class.php:64
 #: ../../lib/class/xmlrpcclient.class.php:97
 msgid "Error connecting to"
 msgstr "Error connectant a"
 
-#: ../../lib/class/catalog.class.php:1270
-#: ../../lib/class/catalog.class.php:1338
+#: ../../lib/class/catalog.class.php:1273
+#: ../../lib/class/catalog.class.php:1347
+#: ../../lib/class/catalog.class.php:1380
 #: ../../lib/class/xmlrpcclient.class.php:64
 #: ../../lib/class/xmlrpcclient.class.php:97
 msgid "Code"
 msgstr "Codi"
 
-#: ../../lib/class/catalog.class.php:1270
-#: ../../lib/class/catalog.class.php:1338
+#: ../../lib/class/catalog.class.php:1273
+#: ../../lib/class/catalog.class.php:1347
+#: ../../lib/class/catalog.class.php:1380
 #: ../../lib/class/xmlrpcclient.class.php:64
 msgid "Reason"
 msgstr "Raó"
 
-#: ../../lib/class/catalog.class.php:1299
+#: ../../lib/class/catalog.class.php:1302
 msgid "Completed updating remote catalog(s)"
 msgstr "Catàleg(s) remots completament actualitzats"
 
-#: ../../lib/class/catalog.class.php:1334 ../../admin/access.php:40
+#: ../../lib/class/catalog.class.php:1306
+msgid "Starting synchronisation of album images"
+msgstr ""
+
+#: ../../lib/class/catalog.class.php:1308
+msgid "Completed synchronisation of album images"
+msgstr ""
+
+#: ../../lib/class/catalog.class.php:1343 ../../admin/access.php:40
 msgid "Added"
 msgstr "Afegit"
 
-#: ../../lib/class/catalog.class.php:1406
+#: ../../lib/class/catalog.class.php:1376
+msgid "images synchronized: "
+msgstr ""
+
+#: ../../lib/class/catalog.class.php:1505
 msgid "Catalog Root unreadable, stopping clean"
 msgstr ""
 
-#: ../../lib/class/catalog.class.php:1463
+#: ../../lib/class/catalog.class.php:1562
 msgid "Catalog Clean Done"
 msgstr "Netetja del catàleg feta"
 
-#: ../../lib/class/catalog.class.php:1463
+#: ../../lib/class/catalog.class.php:1562
 msgid "files removed"
 msgstr "arxius esborrats"
 
-#: ../../lib/class/catalog.class.php:1464
+#: ../../lib/class/catalog.class.php:1563
 msgid "Optimizing Tables"
 msgstr ""
 
-#: ../../lib/class/catalog.class.php:1764
+#: ../../lib/class/catalog.class.php:1863
 msgid "Update Finished."
 msgstr "Actualització acabada"
 
-#: ../../lib/class/catalog.class.php:1764
+#: ../../lib/class/catalog.class.php:1863
 msgid "Checked"
 msgstr "Comprovant"
 
-#: ../../lib/class/catalog.class.php:1764
+#: ../../lib/class/catalog.class.php:1863
 msgid "songs updated."
 msgstr "cançons actualitzades"
 
@@ -3990,6 +3995,13 @@ msgstr "Interfície"
 msgid "System"
 msgstr "Ítem"
 
+#~ msgid "genre"
+#~ msgstr "gènere"
+
+#, fuzzy
+#~ msgid "Option"
+#~ msgstr "Opcions"
+
 #, fuzzy
 #~ msgid "Ampache Recently Played"
 #~ msgstr "Escoltat recentment"
@@ -4058,10 +4070,6 @@ msgstr "Ítem"
 #, fuzzy
 #~ msgid "PHP PutENV Support:"
 #~ msgstr "Suport PHP PutENV"
-
-#, fuzzy
-#~ msgid "Optional"
-#~ msgstr "Opcions"
 
 #~ msgid "Editing"
 #~ msgstr "Editant"
