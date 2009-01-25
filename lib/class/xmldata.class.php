@@ -278,6 +278,7 @@ class xmlData {
 					"\t<genre id=\"$song->genre\"><![CDATA[$song->genre]]></genre>\n" . 
 					"\t<track>$song->track</track>\n" . 
 					"\t<time>$song->time</time>\n" . 
+					"\t<mime>$song->mime</mime>\n" . 
 					"\t<url><![CDATA[" . $song->get_url($_REQUEST['auth']) . "]]></url>\n" . 
 					"\t<size>$song->size</size>\n" . 
 					"\t<art><![CDATA[" . $art_url . "]]></art>\n" . 
