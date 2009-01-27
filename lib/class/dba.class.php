@@ -310,7 +310,6 @@ class Dba {
                 switch (strtoupper($charset)) {
                         case 'CP1250':
                         case 'WINDOWS-1250':
-                        case 'WINDOWS-1252':
                                 $target_charset = 'cp1250';
                                 $target_collation = 'cp1250_general_ci';
                         break;
@@ -320,8 +319,10 @@ class Dba {
                                 $target_collation = 'latin2_general_ci';
                         break;
                         case 'ISO-8859-1':
+			case 'CP1252':
+                        case 'WINDOWS-1252':
                                 $target_charset = 'latin1';
-                                $target_charset = 'latin1_general_ci';
+                                $target_collation = 'latin1_general_ci';
                         break;
                         case 'EUC-KR':
                                 $target_charset = 'euckr';
