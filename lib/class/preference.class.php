@@ -355,6 +355,34 @@ class Preference {
 	} // clear_from_session
 
 	/**
+	 * is_boolean
+	 * This returns true / false if the preference in question is a boolean preference
+	 * This is currently only used by the debug view, could be used other places.. wouldn't be a half
+	 * bad idea
+	 */
+	public static function is_boolean($key) { 
+
+		$boolean_array = array('session_cookiesecure','require_session',
+					'access_control','require_localnet_session',
+					'downsample_remote','track_user_ip',
+					'xml_rpc','allow_zip_download',
+					'file_zip_download','ratings',
+					'shoutbox','resize_images',
+					'show_album_art','allow_public_registration',
+					'captcha_public_reg','admin_notify_reg',
+					'use_rss','download','force_http_play',
+					'allow_stream_playback','allow_democratic_playback',
+					'use_auth','allow_localplay_playback','debug','lock_songs'); 
+
+		if (in_array($key,$boolean_array)) { 
+			return true; 
+		} 
+
+		return false; 
+
+	} // is_boolean
+
+	/**
  	 * init
 	 * This grabs the preferences and then loads them into conf it should be run on page load
 	 * to initialize the needed variables

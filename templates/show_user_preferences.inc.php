@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2007 Ampache.org
+ Copyright (c) Ampache.org
  All rights reserved
 
  This program is free software; you can redistribute it and/or
@@ -48,6 +48,7 @@
 	<td>
 	<div class="formValidation">
 	<input class="button" type="submit" value="<?php echo _('Update Preferences'); ?>" />
+	<?php echo Core::form_register('update_preference'); ?> 
 	<input type="hidden" name="user_id" value="<?php echo scrub_out($_REQUEST['user_id']); ?>" />
 	</div>
 	</td>

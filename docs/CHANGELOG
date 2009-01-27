@@ -4,6 +4,8 @@
 
 --------------------------------------------------------------------------
   v.3-5-Alpha2
+	- Fixed bug where you admins couldn't edit preferences of
+		users due to missing 'key' on form
 	- Added Mime type to Song XML 
 
 --------------------------------------------------------------------------

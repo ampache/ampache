@@ -24,6 +24,7 @@
 /*****************
  * Tag Definitions
  *****************/
+
 .tag_size1 { 
 	font-size:.6em;
 } 
@@ -42,5 +43,12 @@ a.tag_size1, a.tag_size2, a.tag_size3, a.tag_size4 { text-decoration: none; }
 .hover-add:hover { font-weight:900; } 
 .hover-remove:hover { text-decoration:line-through;} 
 
-
-
+/*****************
+ * Generic / Misc 
+ *****************/
+.item_on { 
+	color: #347C17;
+}
+.item_off { 
+	color: #FF0000; 
+} 

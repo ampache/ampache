@@ -94,6 +94,9 @@
 		} 
 		$value = $string; 
 	} 
+	if (Preference::is_boolean($key)) { 
+		$value = print_boolean($value); 
+	} 
 ?>
 <tr class="<?php echo flip_class(); ?>">
 	<td valign="top"><strong><?php echo $key; ?></strong></td>
