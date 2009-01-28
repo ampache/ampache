@@ -1190,14 +1190,19 @@ class Browse {
 		// and the vollmer way, hopefully we don't have to
 		// do it the vollmer way
 		if (self::is_simple_browse()) { 
+			debug_event('resort_objects','is_simple_browse','4');
 			$sql = self::get_sql(); 
 		} 
 		else { 
+			debug_event('resort_objects','not is_simple_browse','4');
 			// First pull the objects
 			$objects = self::get_saved(); 
 
 			// If there's nothing there don't do anything
-			if (!count($objects)) { return false; } 
+			if (!count($objects)) {
+				debug_event('resort_objects','no objects found','4'); 
+				return false;
+			} 
 			$type = self::$type;
 			$where_sql = "WHERE `$type`.`id` IN (";
 
@@ -1210,7 +1215,6 @@ class Browse {
 			$where_sql .= ")";
 
 			$sql = self::get_base_sql();
-			$sql .= $where_sql;
 
 			$order_sql = " ORDER BY ";
 
@@ -1220,9 +1224,11 @@ class Browse {
 	                // Clean her up
 	                $order_sql = rtrim($order_sql,"ORDER BY ");
 	                $order_sql = rtrim($order_sql,",");
-	                $sql = $sql . self::get_join_sql() . $order_sql;
+	                
+	                $sql = $sql . self::get_join_sql() . $where_sql . $order_sql;
 		} // if not simple
-
+		
+		debug_event('resort_objects','final sql: ' . $sql,'4');
 		$db_results = Dba::query($sql); 
 
 		while ($row = Dba::fetch_assoc($db_results)) { 
