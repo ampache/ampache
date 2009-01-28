@@ -119,12 +119,6 @@ function install_insert_db($username,$password,$hostname,$database) {
 		return false; 
 	}
 	
-	// Check if the password has been set
-	if (!$password) {
-		Error::add('general','Error: MySQL administrative password is empty. That is not allowed!'); 
-		return false; 
-	}
-
 	$data['database_username'] = $username; 
 	$data['database_password'] = $password; 
 	$data['database_hostname'] = $hostname; 
@@ -180,7 +174,7 @@ function install_insert_db($username,$password,$hostname,$database) {
 
 		// Check if the password has been set
 		if (!$password) {
-			Error::add('general','Error: Ampache database user password is empty. That is not allowed!'); 
+			Error::add('general','Error: Ampache SQL user must have a password'); 
 			return false; 
 		}
 		
