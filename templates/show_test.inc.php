@@ -194,20 +194,34 @@
 	<td valign="top"><?php echo _("DB Connection"); ?></td>
 	<td valign="top">[
 	<?php
-		$db = check_database($results['database_hostname'], $results['database_username'], $results['database_password'],$results['database_name']);
-		if (!$db) { 
+		$add_error_info = "";
+		if(!$results['database_password']) {
 			$status['check_db'] = 'false';
+			$add_error_info = "Database password is empty! This is not allowed.";
 			echo " <font color=\"red\">ERROR</font> ";
-		}
-		else {
-			$status['check_db'] = 'true';
-			echo " <font color=\"green\">&nbsp;&nbsp;&nbsp;OK&nbsp;&nbsp;&nbsp;&nbsp;</font> ";
+		} else {
+			$db = check_database($results['database_hostname'], $results['database_username'], $results['database_password'],$results['database_name']);
+			if (!$db) { 
+				$status['check_db'] = 'false';
+				echo " <font color=\"red\">ERROR</font> ";
+			}
+			else {
+				$status['check_db'] = 'true';
+				echo " <font color=\"green\">&nbsp;&nbsp;&nbsp;OK&nbsp;&nbsp;&nbsp;&nbsp;</font> ";
+			}
 		}		
 	?>
 	]
 	</td>
 	<td>
-	<?php echo _("This attempts to connect to your database using the values from your ampache.cfg.php"); ?>
+	<?php 
+		echo _("This attempts to connect to your database using the values from your ampache.cfg.php");
+		if ($add_error_info) {
+			echo ("<br /><b>");
+			echo _($add_error_info);
+			echo ("</b>");
+		} 
+	?>
 	</td>
 </tr>
 <tr>

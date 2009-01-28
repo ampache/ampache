@@ -117,7 +117,13 @@ function install_insert_db($username,$password,$hostname,$database) {
 	if (count($matches)) { 
 		Error::add('general','Error: Database name invalid must not be a reserved word, and must be Alphanumeric'); 
 		return false; 
-	} 
+	}
+	
+	// Check if the password has been set
+	if (!$password) {
+		Error::add('general','Error: MySQL administrative password is empty. That is not allowed!'); 
+		return false; 
+	}
 
 	$data['database_username'] = $username; 
 	$data['database_password'] = $password; 
@@ -132,7 +138,7 @@ function install_insert_db($username,$password,$hostname,$database) {
 	$dbh = Dba::dbh();
 	
 	if (!is_resource($dbh)) { 
-		Error::add('general',_('Error: Unable to make Database Connection') . mysql_error()); 
+		Error::add('general',_('Error: Unable to make Database Connection') . "&nbsp;" . mysql_error()); 
 		return false; 
 	}
 
@@ -172,6 +178,12 @@ function install_insert_db($username,$password,$hostname,$database) {
 		$sql = "GRANT ALL PRIVILEGES ON " . Dba::escape($database) . ".* TO " .
 			"'" . Dba::escape($db_user) . "'@'" . Dba::escape($hostname) . "' IDENTIFIED BY '" . Dba::escape($db_pass) . "' WITH GRANT OPTION";	
 
+		// Check if the password has been set
+		if (!$password) {
+			Error::add('general','Error: Ampache database user password is empty. That is not allowed!'); 
+			return false; 
+		}
+		
 		if (!$db_results = @mysql_query($sql, $dbh)) { 
 			Error::add('general',"Error: Unable to Insert $db_user with permissions to $database on $hostname " . mysql_error());
 			return false;
