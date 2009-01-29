@@ -203,11 +203,15 @@ class Dba {
 		$data = self::translate_to_mysqlcharset(Config::get('site_charset'));
 
 		if (function_exists('mysql_set_charset')) { 
-			$charset = mysql_set_charset($data['charset'],$dbh); 
+			if (!$charset = mysql_set_charset($data['charset'],$dbh)) { 
+				debug_event('Database','Error unable to set MySQL Connection charset to ' . $data['charset'] . ' this may cause issues...','1'); 
+			} 
 		} 
 		else { 
 			$sql = "SET NAMES " . mysql_real_escape_string($data['charset']); 
 			$charset = mysql_query($sql,$dbh); 
+			if (mysql_error($dbh)) { debug_event('Database','Error unable to set MySQL Connection charset to ' . $data['charset'] . ' using SET NAMES, you may have issues','1'); } 
+
 		}
 		if (!$charset) { debug_event('Database','Error unable to set connection charset, function missing or set failed','1'); }  
 
