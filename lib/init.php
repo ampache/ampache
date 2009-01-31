@@ -23,7 +23,7 @@
  ***/
 
 // SVN Fluf
-$svn_version = trim('$Rev$','$'); 
+$svn_version = 'Subversion ' . trim('$Rev$','$ '); 
 
 // Use output buffering, this gains us a few things and 
 // fixes some CSS issues
@@ -88,7 +88,7 @@ if (!count($results)) {
 } 
 
 /** This is the version.... fluf nothing more... **/
-$results['version']		= '3.5-Alpha2 Build (' . $svn_version . ')';
+$results['version']		= '3.5-Alpha2 '. $svn_version; 
 $results['int_config_version']	= '9'; 
 
 $results['raw_web_path']	= $results['web_path'];

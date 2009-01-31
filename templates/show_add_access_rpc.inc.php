@@ -19,7 +19,7 @@
 
 */
 ?>
-<?php show_box_top(_('Advanced Add')); ?>
+<?php show_box_top(_('Add API / RPC Host')); ?>
 <form name="update_catalog" method="post" enctype="multipart/form-data" action="<?php echo Config::get('web_path'); ?>/admin/access.php?action=add_host">
 <table class="tabledata" cellpadding="5" cellspacing="0">
 <tr>
@@ -31,9 +31,9 @@
 <tr>
 	<td><?php echo _('Level'); ?>:</td>
 	<td colspan="3">
-		<input name="level" type="radio" checked="checked" value="5" /> <?php echo _('View'); ?>
+		<input name="level" type="radio" value="5" /> <?php echo _('View'); ?>
 		<input name="level" type="radio" value="25" /> <?php echo _('Read'); ?>
-		<input name="level" type="radio" value="50" /> <?php echo _('Read/Write'); ?>
+		<input name="level" type="radio" checked="checked" value="50" /> <?php echo _('Read/Write'); ?>
 		<input name="level" type="radio" value="75" /> <?php echo _('All'); ?>
 	</td>
 </tr>
@@ -45,14 +45,11 @@
 </tr>
 
 <tr>
-	<td><?php echo _('ACL Type'); ?>:</td>
+	<td valign="top"><?php echo _('Type'); ?>:</td>
 	<td colspan="3">
-		<select name="type">
-			<option selected="selected" value="stream"><?php echo _('Stream Access'); ?></option>
-			<option value="interface"><?php echo _('Web Interface'); ?></option>
-			<option value="network"><?php echo _('Local Network Definition'); ?></option>
-			<option value="rpc"><?php echo _('RPC'); ?></option>
-		</select>
+		<input type="radio" name="type" value="rpc" /><?php echo _('RPC'); ?><br />
+		<input type="radio" name="type" value="streamrpc" checked="checked" /><?php echo _('RPC'); ?> + <?php echo _('Stream Access'); ?><br />
+		<input type="radio" name="type" value="allrpc" /><?php echo _('RPC'); ?> + <?php echo _('All'); ?>
 	</td>
 </tr>
 <tr>

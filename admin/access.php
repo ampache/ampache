@@ -45,12 +45,13 @@ switch ($_REQUEST['action']) {
 		show_confirmation(_('Updated'),_('Access List Entry updated'),'admin/access.php');
 	break;
 	case 'show_add_current': 
-
+		require_once Config::get('prefix') . '/templates/show_add_access_current.inc.php'; 
 	break; 
 	case 'show_add_rpc': 
+		require_once Config::get('prefix') . '/templates/show_add_access_rpc.inc.php'; 
 	break; 
 	case 'show_add_local': 
-	
+		require_once Config::get('prefix') . '/templates/show_add_access_local.inc.php'; 
 	break; 
 	case 'show_add_advanced':
 		require_once Config::get('prefix') . '/templates/show_add_access.inc.php';

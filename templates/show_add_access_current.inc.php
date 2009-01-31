@@ -19,7 +19,7 @@
 
 */
 ?>
-<?php show_box_top(_('Advanced Add')); ?>
+<?php show_box_top(_('Add Current Host')); ?>
 <form name="update_catalog" method="post" enctype="multipart/form-data" action="<?php echo Config::get('web_path'); ?>/admin/access.php?action=add_host">
 <table class="tabledata" cellpadding="5" cellspacing="0">
 <tr>
@@ -31,9 +31,9 @@
 <tr>
 	<td><?php echo _('Level'); ?>:</td>
 	<td colspan="3">
-		<input name="level" type="radio" checked="checked" value="5" /> <?php echo _('View'); ?>
+		<input name="level" type="radio" value="5" /> <?php echo _('View'); ?>
 		<input name="level" type="radio" value="25" /> <?php echo _('Read'); ?>
-		<input name="level" type="radio" value="50" /> <?php echo _('Read/Write'); ?>
+		<input name="level" type="radio" checked="checked" value="50" /> <?php echo _('Read/Write'); ?>
 		<input name="level" type="radio" value="75" /> <?php echo _('All'); ?>
 	</td>
 </tr>
@@ -43,41 +43,13 @@
 		<?php show_user_select('user'); ?>
 	</td>
 </tr>
-
-<tr>
-	<td><?php echo _('ACL Type'); ?>:</td>
-	<td colspan="3">
-		<select name="type">
-			<option selected="selected" value="stream"><?php echo _('Stream Access'); ?></option>
-			<option value="interface"><?php echo _('Web Interface'); ?></option>
-			<option value="network"><?php echo _('Local Network Definition'); ?></option>
-			<option value="rpc"><?php echo _('RPC'); ?></option>
-		</select>
-	</td>
-</tr>
 <tr>
 	<td colspan="4"><h4><?php echo _('RPC Options'); ?></h4></td>
 </tr>
 <tr>
 	<td><?php echo _('Remote Key'); ?>:</td>
 	<td colspan="3">
-		<input type="text" name="key" value="<?php echo scrub_out($_REQUEST['key']); ?>" maxlength="32" />
-	</td>
-</tr>
-
-<tr>
-	<td colspan="4"><h3><?php echo _('IPv4 or IPv6 Addresses'); ?></h3>
-		<span class="information">(255.255.255.255) / (ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff)</span>
-	</td>
-</tr>
-<tr>
-	<td><?php echo _('Start'); ?>:</td>
-	<td>
-		<input type="text" name="start" value="<?php echo scrub_out($_REQUEST['start']); ?>" size="20" maxlength="15" />
-	</td>
-	<td><?php echo _('End'); ?>:</td>
-	<td>
-		<input type="text" name="end" value="<?php echo scrub_out($_REQUEST['end']); ?>" size="20" maxlength="15" />
+		<input type="text" name="key" value="<?php echo scrub_out($_REQUEST['end']); ?>" maxlength="32" />
 	</td>
 </tr>
 </table>
