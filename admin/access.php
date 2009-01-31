@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2007 Ampache.org
+ Copyright (c) Ampache.org
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
@@ -44,7 +44,15 @@ switch ($_REQUEST['action']) {
 		$access->update($_POST);
 		show_confirmation(_('Updated'),_('Access List Entry updated'),'admin/access.php');
 	break;
-	case 'show_add_host':
+	case 'show_add_current': 
+
+	break; 
+	case 'show_add_rpc': 
+	break; 
+	case 'show_add_local': 
+	
+	break; 
+	case 'show_add_advanced':
 		require_once Config::get('prefix') . '/templates/show_add_access.inc.php';
 	break;
 	case 'show_edit_record':

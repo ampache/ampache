@@ -24,21 +24,31 @@
 	@discussion default display for access admin page
 
 */
-$web_path = Config::get('web_path');
 ?>
-<?php show_box_top(_('Ampache Access Control')); ?>
-<p>
-<?php
-echo _('Since your catalog can be accessed remotely you may want to limit the access from remote sources so you are not in violation of copyright laws.');
-echo _('By default your server will allow anyone with an account to stream music.');
-echo _('It will not allow any other Ampache servers to connect to it to share catalog information.');
-echo _('Use tool below to add any server\'s IP address that you want to access your Ampache catalog or be able to stream from this server.');
-?>
-</p>
+<?php show_box_top(_('Access Control')); ?>
+<div id="information_actions" class="left-column">
+<ul>
+	<li>
+		<a href="<?php echo Config::get('web_path'); ?>/admin/access.php?action=show_add_current"><?php echo get_user_icon('add_user',_('Add Current Host')); ?></a>
+		<?php echo _('Add Current Host'); ?>
+	</li>
+	<li>
+		<a href="<?php echo Config::get('web_path'); ?>/admin/access.php?action=show_add_rpc"><?php echo get_user_icon('cog',_('Add API / RPC Host')); ?></a>
+		<?php echo _('Add API / RPC Host'); ?>
+	</li>
+	<li>
+		<a href="<?php echo Config::get('web_path'); ?>/admin/access.php?action=show_add_local"><?php echo get_user_icon('home',_('Add Local Network Definition')); ?></a>
+		<?php echo _('Add Local Network Definition'); ?>
+	<li>
+		<a href="<?php echo Config::get('web_path'); ?>/admin/access.php?action=show_add_advanced"><?php echo get_user_icon('add_key',_('Advanced Add')); ?></a>
+		<?php echo _('Advanced Add'); ?>
+	</li>
 
-<p>
-<a class="button" href="<?php echo $web_path; ?>/admin/access.php?action=show_add_host"><?php echo _('Add Entry'); ?></a>
-</p>
+</ul>
+</div>
+<?php show_box_bottom(); ?>
+<?php show_box_top(_('Access Control Entries')); ?>
+<?php Ajax::start_container('browse_content'); ?>
 <?php if (count($list)) { ?>
 <table cellspacing="1" cellpadding="3" class="tabledata">
 <tr class="table-data">
@@ -55,15 +65,16 @@ echo _('Use tool below to add any server\'s IP address that you want to access y
 	/* Start foreach List Item */
 	foreach ($list as $access_id) { 
 		$access = new Access($access_id); 
+		$access->format(); 
 ?>
 <tr class="<?php echo flip_class(); ?>">
 	<td><?php echo scrub_out($access->name); ?></td>
-	<td><?php echo long2ip($access->start); ?></td>
-	<td><?php echo long2ip($access->end); ?></td>
-	<td><?php echo $access->get_level_name(); ?></td>
-	<td><?php echo $access->get_user_name(); ?></td>
+	<td><?php echo $access->f_start; ?></td>
+	<td><?php echo $access->f_end; ?></td>
+	<td><?php echo $access->f_level; ?></td>
+	<td><?php echo $access->f_user; ?></td>
 	<td><?php echo $access->key; ?></td>
-	<td><?php echo $access->get_type_name(); ?></td>
+	<td><?php echo $access->f_type; ?></td>
 	<td>
 		<a href="<?php echo $web_path; ?>/admin/access.php?action=show_edit_record&amp;access_id=<?php echo scrub_out($access->id); ?>"><?php echo get_user_icon('edit'); ?></a>
 		<a href="<?php echo $web_path; ?>/admin/access.php?action=delete_record&amp;access_id=<?php echo scrub_out($access->id); ?>"><?php echo get_user_icon('delete'); ?></a>
@@ -72,5 +83,5 @@ echo _('Use tool below to add any server\'s IP address that you want to access y
 	<?php  } // end foreach ?>
 </table>
 <?php  } // end if count ?>
+<?php Ajax::end_container(); ?>
 <?php show_box_bottom(); ?>
-

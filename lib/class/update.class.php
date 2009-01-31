@@ -293,6 +293,10 @@ class Update {
 
 		$version[] = array('version'=> '350003','description'=>$update_string); 
 
+		$update_string = '- Modify ACL table to enable IPv6 ACL support'; 
+
+//		$version[] = array('version'=>'350004','description'=>$update_string); 
+
 		return $version;
 
 	} // populate_version
@@ -1430,6 +1434,76 @@ class Update {
 		return true; 
 
 	} // update_350003
+
+
+	/**
+	 * update_350004
+	 * This update makes some changes to the ACL table so that it can support IPv6 entries as well as some other feature 
+	 * enhancements
+	 */
+	public static function update_350004() { 
+	
+		// First pull all of their current ACL's
+		$sql = "SELECT * FROM `access_list`"; 
+		$db_results = Dba::read($sql); 
+
+		$acl_information = array(); 
+
+		while ($row = Dba::fetch_assoc($db_results)) { 
+			$row['start'] = sprintf('%u',long2ip($row['start'])); 
+			$row['end'] = sprintf('%u',long2ip($row['end'])); 
+			$acl_information[] = $row; 
+		} 
+
+		$sql = "TRUNCATE `access_list`"; 
+		$db_results = Dba::write($sql); 
+
+		// Make the changes to the database
+		$sql = "ALTER TABLE `access_list` CHANGE `start` `start` VARBINARY( 255 ) NOT NULL"; 
+		$db_results = Dba::write($sql); 
+
+		$sql = "ALTER TABLE `access_list` CHANGE `end` `end` VARBINARY( 255 ) NOT NULL"; 
+		$db_results = Dba::write($sql); 
+
+		$sql = "ALTER TABLE `access_list` DROP `dns`"; 	
+		$db_results = Dba::write($sql); 
+
+		$sql = "ALTER TABLE `access_list` ADD `enabled` TINYINT( 1 ) UNSIGNED NOT NULL DEFAULT '1' AFTER `key`"; 
+		$db_results = Dba::write($sql); 
+
+		// If we had nothing in there before add some base ALLOW ALL stuff as we're going
+		// to start defaulting Access Control to On. 
+		if (!count($acl_information)) { 
+			$v6_start = Dba::escape(inet_pton('::')); 
+			$v6_end = Dba::escape(inet_pton('ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff')); 
+			$v4_start = Dba::escape(inet_pton('0.0.0.0')); 
+			$v4_end = Dba::escape(inet_pton('255.255.255.255')); 
+			$sql = "INSERT INTO `access_list` (`name`,`level`,`start`,`end`,`key`,`user`,`type`,`enabled`) " . 
+				"VALUES ('DEFAULTv4','100','$v4_start','$v4_end',NULL,'-1','interface','1')"; 
+			$db_results = Dba::write($sql); 
+			$sql = "INSERT INTO `access_list` (`name`,`level`,`start`,`end`,`key`,`user`,`type`,`enabled`) " . 
+				"VALUES ('DEFAULTv4','100','$v4_start','$v4_end',NULL,'-1','stream','1')"; 
+			$db_results = Dba::write($sql); 
+			$sql = "INSERT INTO `access_list` (`name`,`level`,`start`,`end`,`key`,`user`,`type`,`enabled`) " . 
+				"VALUES ('DEFAULTv6','100','$v6_start','$v6_end',NULL,'-1','interface','1')"; 
+			$db_results = Dba::write($sql); 
+			$sql = "INSERT INTO `access_list` (`name`,`level`,`start`,`end`,`key`,`user`,`type`,`enabled`) " . 
+				"VALUES ('DEFAULTv6','100','$v6_start','$v6_end',NULL,'-1','stream','1')"; 
+			$db_results = Dba::write($sql); 
+		} // Adding default information
+
+		foreach ($acl_information as $row) { 
+			$row['start'] = Dba::escape(inet_pton($row['start'])); 
+			$row['end'] = Dba::escape(inet_pton($row['end'])); 
+			$sql = "INSERT INTO `access_list` (`name`,`level`,`start`,`end`,`key`,`user`,`type`,`enabled`) " . 
+				"VALUES ('" . Dba::escape($row['name']) . "','" . intval($row['level']) . 
+				"','" . $row['start'] . "','" . $row['end'] . "','" . intval($row['user']) . "','" . 
+				$row['type'] . "','1')"; 
+			$db_results = Dba::write($sql); 
+		} // end foreach of existing rows
+		
+
+	} // update_350004
 
 } // end update class
 ?>

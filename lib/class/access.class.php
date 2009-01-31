@@ -34,6 +34,7 @@ class Access {
 	public $user;
 	public $type;
 	public $key;
+	public $enabled;
 
 	/**
 	 * constructor
@@ -73,6 +74,21 @@ class Access {
 	} // _get_info
 
 	/**
+	 * format
+	 * This makes the Access object a nice fuzzy human readable object, spiffy ain't it. 
+	 */
+	public function format() { 
+
+		$this->f_start = inet_ntop($this->start); 
+		$this->f_end = inet_ntop($this->end); 
+
+		$this->f_user = $this->get_user_name(); 
+		$this->f_level = $this->get_level_name(); 
+		$this->f_type = $this->get_type_name(); 
+
+	} // format
+
+	/**
 	 * update
 	 * This function takes a named array as a datasource and updates the current access list entry
 	 */
@@ -80,15 +96,16 @@ class Access {
 
 		$name	= Dba::escape($data['name']); 
 		$type	= self::validate_type($data['type']); 
-		$start 	= sprintf("%u",ip2long($data['start']));
-		$end	= sprintf("%u",ip2long($data['end'])); 
+		$start 	= Dba::escape(inet_pton($data['start']));
+		$end	= Dba::escape(inet_pton($data['end'])); 
 		$level	= Dba::escape($data['level']);
 		$user	= $data['user'] ? Dba::escape($data['user']) : '-1'; 
 		$key	= Dba::escape($data['key']);
+		$enabled = make_bool($data['enabled']); 
 		
 		$sql = "UPDATE `access_list` " . 
 			"SET `start`='$start', `end`='$end', `level`='$level', `user`='$user', `key`='$key', " . 
-			"`name`='$name', `type`='$type' WHERE `id`='" . Dba::escape($this->id) . "'";
+			"`name`='$name', `type`='$type',`enabled`='$enabled' WHERE `id`='" . Dba::escape($this->id) . "'";
 		$db_results = Dba::query($sql);
 
 		return true;
@@ -104,17 +121,17 @@ class Access {
 
 		/* We need to verify the incomming data a littlebit */
 
-		$start 	= sprintf("%u",ip2long($data['start'])); 
-		$end 	= sprintf("%u",ip2long($data['end'])); 
+		$start 	= Dba::escape(inet_pton($data['start'])); 
+		$end 	= Dba::escape(inet_pton($data['end']));
 		$name	= Dba::escape($data['name']);
 		$key	= Dba::escape($data['key']);
 		$user	= $data['user'] ? Dba::escape($data['user']) : '-1'; 
 		$level	= intval($data['level']);
 		$type	= self::validate_type($data['type']);
-		$dns	= ' '; 
+		$enabled = make_bool($data['enabled']); 
 
-		$sql = "INSERT INTO `access_list` (`name`,`level`,`start`,`end`,`key`,`user`,`type`,`dns`) " . 
-			"VALUES ('$name','$level','$start','$end','$key','$user','$type','$dns')";
+		$sql = "INSERT INTO `access_list` (`name`,`level`,`start`,`end`,`key`,`user`,`type`,`enabled`) " . 
+			"VALUES ('$name','$level','$start','$end','$key','$user','$type','$enabled')";
 		$db_results = Dba::query($sql);
 
 		return true;
@@ -179,7 +196,7 @@ class Access {
 		} // end if access control is turned off
 
 		// Clean incomming variables
-		$ip 	= $ip ? sprintf("%u",ip2long($ip)) : sprintf("%u",ip2long($_SERVER['REMOTE_ADDR'])); 
+		$ip 	= $ip ? inet_pton($ip) : inet_pton($_SERVER['REMOTE_ADDR']); 
 		$user 	= Dba::escape($user);
 		$key 	= Dba::escape($key);
 		$level	= Dba::escape($level);
@@ -217,7 +234,7 @@ class Access {
 			break;
 		} // end switch on type
 		
-		$db_results = Dba::query($sql);
+		$db_results = Dba::read($sql);
 
 		// Yah they have access they can use the mojo
 		if (Dba::fetch_row($db_results)) { 
@@ -301,7 +318,7 @@ class Access {
 	public static function get_access_lists() { 
 
 		$sql = "SELECT `id` FROM `access_list`";
-		$db_results = Dba::query($sql);
+		$db_results = Dba::read($sql);
 	
 		$results = array(); 
 	
@@ -321,7 +338,7 @@ class Access {
 	 */
 	public function get_level_name() { 
 
-		if ($this->level == '75') { 
+		if ($this->level >= '75') { 
 			return _('All');
 		}
 		if ($this->level == '5') { 
@@ -341,14 +358,12 @@ class Access {
 	 * Take a user and return their full name
 	 */
 	public function get_user_name() { 
+
+		if ($this->user == '-1') { return _('All'); } 
 		
 		$user = new User($this->user);
-		if ($user->username) { 
-			return $user->fullname . " (" . $user->username . ")";
-		}
+		return $user->fullname . " (" . $user->username . ")";
 		
-		return _('All');
-
 	} // get_user_name
 
 	/**
@@ -360,17 +375,17 @@ class Access {
 		switch ($this->type) { 
 			case 'xml-rpc': 
 			case 'rpc':
-				return 'RPC';
+				return _('API/RPC');
 			break;
 			case 'network':
-				return 'Local Network Definition';
+				return _('Local Network Definition');
 			break;
 			case 'interface':
-				return 'Web Interface';
+				return _('Web Interface');
 			break;
 			case 'stream':
 			default: 
-				return 'Stream Access';
+				return _('Stream Access');
 			break;
 		} // end switch
 

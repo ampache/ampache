@@ -104,8 +104,8 @@ catalog_prefix_pattern = "The|An|A|Die|Das|Ein|Eine|Les|Le|La"
 ; and only allow streaming/downloading/xml-rpc from known hosts xml-rpc 
 ; will not work without this on.
 ; NOTE: Default Behavior is DENY FROM ALL 
-; DEFAULT: false
-;access_control	= "false"
+; DEFAULT: true
+access_control	= "true"
 
 ; Require Session
 ; If this is set to true ampache will make sure that the URL passed when
