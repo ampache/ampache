@@ -20,7 +20,7 @@
 */
 ?>
 <?php show_box_top(_('Add API / RPC Host')); ?>
-<form name="update_catalog" method="post" enctype="multipart/form-data" action="<?php echo Config::get('web_path'); ?>/admin/access.php?action=add_host">
+<form name="update_catalog" method="post" enctype="multipart/form-data" action="<?php echo Config::get('web_path'); ?>/admin/access.php?action=add_host&method=rpc">
 <table class="tabledata" cellpadding="5" cellspacing="0">
 <tr>
 	<td><?php echo _('Name'); ?>:</td>
@@ -47,9 +47,9 @@
 <tr>
 	<td valign="top"><?php echo _('Type'); ?>:</td>
 	<td colspan="3">
-		<input type="radio" name="type" value="rpc" /><?php echo _('RPC'); ?><br />
-		<input type="radio" name="type" value="streamrpc" checked="checked" /><?php echo _('RPC'); ?> + <?php echo _('Stream Access'); ?><br />
-		<input type="radio" name="type" value="allrpc" /><?php echo _('RPC'); ?> + <?php echo _('All'); ?>
+		<input type="radio" name="addtype" value="rpc" /><?php echo _('RPC'); ?><br />
+		<input type="radio" name="addtype" value="streamrpc" checked="checked" /><?php echo _('RPC'); ?> + <?php echo _('Stream Access'); ?><br />
+		<input type="radio" name="addtype" value="allrpc" /><?php echo _('RPC'); ?> + <?php echo _('All'); ?>
 	</td>
 </tr>
 <tr>

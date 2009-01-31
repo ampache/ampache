@@ -20,7 +20,7 @@
 */
 ?>
 <?php show_box_top(_('Add Current Host')); ?>
-<form name="update_catalog" method="post" enctype="multipart/form-data" action="<?php echo Config::get('web_path'); ?>/admin/access.php?action=add_host">
+<form name="update_catalog" method="post" enctype="multipart/form-data" action="<?php echo Config::get('web_path'); ?>/admin/access.php?action=add_host&method=current">
 <table class="tabledata" cellpadding="5" cellspacing="0">
 <tr>
 	<td><?php echo _('Name'); ?>:</td>

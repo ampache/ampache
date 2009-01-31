@@ -20,7 +20,7 @@
 */
 ?>
 <?php show_box_top(_('Add Local Network Definition')); ?>
-<form name="update_catalog" method="post" enctype="multipart/form-data" action="<?php echo Config::get('web_path'); ?>/admin/access.php?action=add_host">
+<form name="update_catalog" method="post" enctype="multipart/form-data" action="<?php echo Config::get('web_path'); ?>/admin/access.php?action=add_host&method=local">
 <table class="tabledata" cellpadding="5" cellspacing="0">
 <tr>
 	<td><?php echo _('Name'); ?>:</td>
@@ -47,9 +47,9 @@
 <tr>
 	<td valign="top"><?php echo _('Type'); ?>:</td>
 	<td colspan="3">
-		<input type="radio" name="type" value="network" /><?php echo _('Local Network Definition'); ?><br />
-		<input type="radio" name="type" value="streamnetwork" /><?php echo _('Local Network Definition'); ?> + <?php echo _('Stream Access'); ?> + <?php echo _('Web Interface'); ?><br />
-		<input type="radio" name="type" value="allnetwork" checked="checked" /><?php echo _('Local Network Definition'); ?> + <?php echo _('All'); ?><br />
+		<input type="radio" name="addtype" value="network" /><?php echo _('Local Network Definition'); ?><br />
+		<input type="radio" name="addtype" value="streamnetwork" /><?php echo _('Local Network Definition'); ?> + <?php echo _('Stream Access'); ?> + <?php echo _('Web Interface'); ?><br />
+		<input type="radio" name="addtype" value="allnetwork" checked="checked" /><?php echo _('Local Network Definition'); ?> + <?php echo _('All'); ?><br />
 	</td>
 </tr>
 <tr>

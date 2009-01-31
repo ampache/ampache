@@ -120,9 +120,27 @@ class Access {
 	public static function create($data) { 
 
 		/* We need to verify the incomming data a littlebit */
+		$start = @inet_pton($data['start']); 
+		$end = @inet_pton($data['end']); 
 
-		$start 	= Dba::escape(inet_pton($data['start'])); 
-		$end 	= Dba::escape(inet_pton($data['end']));
+		if (!$start AND $data['start'] != '0.0.0.0' AND $data['start'] != '::') { 
+			Error::add('start',_('Invalid IPv4 / IPv6 Address Entered')); 
+			return false; 
+		} 
+		if (!$end) { 
+			Error::add('end',_('Invalid IPv4 / IPv6 Address Entered')); 
+			return false; 
+		} 
+
+		// Check existing ACL's to make sure we're not duplicating values here
+		if (self::exists($data)) { 
+			debug_event('ACL Create','Error did not create duplicate ACL entrie for ' . $data['start'] . ' - ' . $data['end'],'1'); 
+			return false; 
+		} 
+
+
+		$start 	= Dba::escape($start); 
+		$end 	= Dba::escape($end);
 		$name	= Dba::escape($data['name']);
 		$key	= Dba::escape($data['key']);
 		$user	= $data['user'] ? Dba::escape($data['user']) : '-1'; 
@@ -137,6 +155,29 @@ class Access {
 		return true;
 
 	} // create
+
+	/**
+	 * exists
+	 * this sees if the ACL that we've specified already exists, prevent duplicates. This ignores the name
+	 */
+	public static function exists($data) { 
+
+		$start = Dba::escape(inet_pton($data['start'])); 
+		$end = Dba::escape(inet_pton($data['end'])); 
+		$type = self::validate_type($data['type']); 
+		$user = $data['user'] ? Dba::escape($data['user']) : '-1'; 
+
+		$sql = "SELECT * FROM `access_list` WHERE `start`='$start' AND `end` = '$end' " . 
+			"AND `type`='$type' AND `user`='$user'"; 
+		$db_results = Dba::read($sql); 
+
+		if (Dba::fetch_assoc($db_results)) { 
+			return true; 
+		} 
+
+		return false; 
+
+	} // exists
 
 	/**
 	 * delete
