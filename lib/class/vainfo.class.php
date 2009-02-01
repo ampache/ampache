@@ -50,7 +50,7 @@ class vainfo {
 	 * This function just sets up the class, it doesn't
 	 * actually pull the information
 	 */
-	function vainfo($file,$encoding='',$encoding_id3v1='',$encoding_id3v2='',$dir_pattern,$file_pattern) { 
+	public function __construct($file,$encoding='',$encoding_id3v1='',$encoding_id3v2='',$dir_pattern,$file_pattern) { 
 
 		$this->filename = $file;
 		if ($encoding) { 
@@ -132,7 +132,7 @@ class vainfo {
 	 * all filled up with tagie goodness or if specified filename
 	 * pattern goodness
 	 */
-	function get_info() {
+	public function get_info() {
 
 		/* Get the Raw file information */
 		try { 
@@ -197,12 +197,59 @@ class vainfo {
 	} // get_tag_type
 
 	/**
+	 * clean_tag_info
+	 * This function takes the array from vainfo along with the 
+	 * key we've decided on and the filename and returns it in a 
+	 * sanatized format that ampache can actually use
+	 */
+	public static function clean_tag_info($results,$key,$filename) {
+
+	        $info = array();
+
+	        $clean_array = array("\n","\t","\r","\0");
+        	$wipe_array  = array("","","","");
+
+	        $info['file']           = $filename;
+	        $info['title']          = stripslashes(trim($results[$key]['title']));
+	        $info['year']           = intval($results[$key]['year']);
+	        $info['track']          = intval($results[$key]['track']);
+	        $info['disk']           = intval($results[$key]['disk']);
+	        $info['comment']        = Dba::escape(str_replace($clean_array,$wipe_array,$results[$key]['comment']));
+	        $info['language']       = Dba::escape($results[$key]['language']);
+	        $info['lyrics']         = Dba::escape($results[$key]['lyricist']);
+
+	        /* This are pulled from the info array */
+	        $info['bitrate']        = intval($results['info']['bitrate']);
+	        $info['rate']           = intval($results['info']['sample_rate']);
+        	$info['mode']           = $results['info']['bitrate_mode'];
+
+	        // Convert special version of constant bitrate mode to cbr
+	        if($info['mode'] == 'con') {
+	                $info['mode'] = 'cbr';
+	        }
+
+	        $info['size']           = $results['info']['filesize'];
+	        $info['mime']           = $results['info']['mime'];
+	        $into['encoding']       = $results['info']['encoding'];
+	        $info['time']           = intval($results['info']['playing_time']);
+	        $info['channels']       = intval($results['info']['channels']);
+
+	        /* These are used to generate the correct ID's later */
+	        $info['artist']         = trim($results[$key]['artist']);
+	        $info['album']          = trim($results[$key]['album']);
+	        $info['genre']          = trim($results[$key]['genre']);
+
+        	return $info;
+
+	} // clean_tag_info
+
+	/**
 	 * _get_type
 	 * This function takes the raw information and figures out
 	 * what type of file we are dealing with for use by the tag 
 	 * function
 	 */
-	function _get_type() { 
+	public function _get_type() { 
 
 		/* There are a few places that the file type can
 		 * come from, in the end we trust the encoding 
@@ -232,7 +279,7 @@ class vainfo {
 	 * attempts to gather the tags and then normalize them into
 	 * ['tag_name']['var'] = value
 	 */
-	function _get_tags() { 
+	public function _get_tags() { 
 
 		$results = array();
 
