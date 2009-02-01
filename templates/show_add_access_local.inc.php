@@ -70,16 +70,18 @@
 <tr>
 	<td><?php echo _('Start'); ?>:</td>
 	<td>
+		<?php Error::display('start'); ?>
 		<input type="text" name="start" value="<?php echo scrub_out($_REQUEST['start']); ?>" size="20" maxlength="15" />
 	</td>
 	<td><?php echo _('End'); ?>:</td>
 	<td>
+		<?php Error::display('end'); ?>
 		<input type="text" name="end" value="<?php echo scrub_out($_REQUEST['end']); ?>" size="20" maxlength="15" />
 	</td>
 </tr>
 </table>
 <div class="formValidation">
-		<?php Core::form_register('add_acl'); ?>
+		<?php echo Core::form_register('add_acl'); ?>
 		<input class="button" type="submit" value="<?php echo _('Create ACL'); ?>" />
 </div>
 </form>

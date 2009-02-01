@@ -344,7 +344,7 @@ class User extends database_object {
 		$db_results = Dba::query($sql);
 
 		if ($row = Dba::fetch_assoc($db_results)) { 
-			$ip = $row['ip'] ? $row['ip'] : '1'; 
+			$ip = $row['ip'] ? $row['ip'] : NULL; 
 			return $ip;
 		}
 
@@ -585,11 +585,12 @@ class User extends database_object {
 			debug_event('User Ip', 'Login from ip adress: ' . $sip,'3');
 		}
 
-		$ip = sprintf("%u",ip2long($sip)); 
+		$ip = Dba::escape(inet_pton($sip)); 
 		$date = time(); 
 		$user = $this->id;
+		$agent = Dba::escape($_SERVER['HTTP_USER_AGENT']); 
 
-		$sql = "INSERT INTO `ip_history` (`ip`,`user`,`date`) VALUES ('$ip','$user','$date')";
+		$sql = "INSERT INTO `ip_history` (`ip`,`user`,`date`,`agent`) VALUES ('$ip','$user','$date','$agent')";
 		$db_results = Dba::query($sql);
 
 		/* Clean up old records... sometimes  */

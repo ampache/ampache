@@ -213,7 +213,7 @@ class xmlRpcServer {
 		debug_event('XMLSERVER','Login Attempt, IP: ' . $_SERVER['REMOTE_ADDR'] . ' Time: ' . $timestamp . ' Hash:' . $encoded_key,'1'); 
 
 		// Convert the IP Address to an int
-		$ip = sprintf("%u",ip2long($_SERVER['REMOTE_ADDR']));
+		$ip = Dba::escape(inet_pton($_SERVER['REMOTE_ADDR']));
 
 		// Run the query and return the key's for ACLs of type RPC that would match this IP 
 		$sql = "SELECT * FROM `access_list` WHERE `type`='rpc' AND `start` <= '$ip' AND `end` >= '$ip'"; 

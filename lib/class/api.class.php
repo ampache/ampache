@@ -72,10 +72,10 @@ class Api {
 		// Clean incomming variables
 		$user_id 	= Dba::escape($user_id); 
 		$timestamp 	= intval($timestamp); 
-		$ip 		= sprintf("%u",ip2long($ip)); 
+		$ip 		= Dba::escape(inet_pton($ip)); 
 
 		// Log this attempt
-		debug_event('API','Login Attempt, IP:' . long2ip($ip) . ' Time:' . $timestamp . ' User:' . $username . '(' . $user_id . ') Auth:' . $passphrase,'1'); 
+		debug_event('API','Login Attempt, IP:' . inet_ntop($ip) . ' Time:' . $timestamp . ' User:' . $username . '(' . $user_id . ') Auth:' . $passphrase,'1'); 
 		
 		// Run the query and return the passphrases as we'll have to mangle them
 		// to figure out if they match what we've got

@@ -47,10 +47,12 @@
 <tr>
 	<td><?php echo _('Start'); ?>:</td>
 	<td>
+		<?php Error::display('start'); ?>
 		<input type="text" name="start" value="<?php echo $access->f_start; ?>" size="20" maxlength="15" />
 	</td>
 	<td><?php echo _('End'); ?>:</td>
 	<td>
+		<?php Error::display('end'); ?>
 		<input type="text" name="end" value="<?php echo $access->f_end; ?>" size="20" maxlength="15" />
 	</td>
 </tr>

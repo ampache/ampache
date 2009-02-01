@@ -267,7 +267,7 @@ class vauth {
 		} // end switch on data type 
 		
 	        $username       = Dba::escape($data['username']);
-	        $ip             = $_SERVER['REMOTE_ADDR'] ? Dba::escape(sprintf("%u",ip2long($_SERVER['REMOTE_ADDR']))) : '0'; 
+	        $ip             = $_SERVER['REMOTE_ADDR'] ? Dba::escape(inet_pton($_SERVER['REMOTE_ADDR'])) : '0'; 
 	        $type           = Dba::escape($data['type']);
 	        $value          = Dba::escape($data['value']);
 		$agent		= Dba::escape(substr($_SERVER['HTTP_USER_AGENT'],0,254)); 
@@ -361,7 +361,7 @@ class vauth {
 			break; 
 			case 'stream': 
 				$key	= Dba::escape($key); 
-				$ip	= sprintf("%u",ip2long($data['ip'])); 
+				$ip	= Dba::escape(inet_pton($data['ip'])); 
 				$agent	= Dba::escape($data['agent']); 
 				$sql = "SELECT * FROM `session_stream` WHERE `id`='$key' AND `expire` > '$time' AND `ip`='$ip' AND `agent`='$agent'"; 
 				$db_results = Dba::query($sql); 
@@ -545,7 +545,7 @@ class vauth {
 	        if (Config::get('prevent_multiple_logins')) {
 	                $client = new User($results['id']);
 	                $current_ip = $client->is_logged_in();
-	                if ($current_ip AND $current_ip != sprintf("%u",ip2long($_SERVER['REMOTE_ADDR']))) {
+	                if ($current_ip AND $current_ip != inet_pton($_SERVER['REMOTE_ADDR'])) {
 				debug_event('Login','Concurrent Login Failure, attempted to login from ' . $_SERVER['REMOTE_ADDR'] . ' and already logged in','1'); 
 	                        Error::add('general','User Already Logged in');
 	                        return false;

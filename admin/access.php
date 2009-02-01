@@ -62,6 +62,8 @@ switch ($_REQUEST['action']) {
 				} 
 			break; 
 			case 'current': 
+				$_POST['start'] = $_SERVER['REMOTE_ADDR']; 
+				$_POST['end'] = $_SERVER['REMOTE_ADDR']; 
 				$_POST['type'] = 'interface'; 
 				Access::create($_POST); 
 				$_POST['type'] = 'stream'; 
@@ -103,7 +105,13 @@ switch ($_REQUEST['action']) {
 	case 'update_record':
 		$access = new Access($_REQUEST['access_id']); 
 		$access->update($_POST);
-		show_confirmation(_('Updated'),_('Access List Entry updated'),'admin/access.php');
+		if (!Error::occurred()) { 
+			show_confirmation(_('Updated'),_('Access List Entry updated'),'admin/access.php');
+		} 
+		else { 
+			$access->format(); 
+			require_once Config::get('prefix') . '/templates/show_edit_access.inc.php'; 
+		}
 	break;
 	case 'show_add_current': 
 		require_once Config::get('prefix') . '/templates/show_add_access_current.inc.php'; 

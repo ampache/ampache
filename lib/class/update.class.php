@@ -293,9 +293,11 @@ class Update {
 
 		$version[] = array('version'=> '350003','description'=>$update_string); 
 
-		$update_string = '- Modify ACL table to enable IPv6 ACL support'; 
+		$update_string = '- Modify ACL table to enable IPv6 ACL support<br />' . 
+				'- Modify Session Tables to store IPv6 addresses if provided<br />' . 
+				'- Modify IP History table to store IPv6 addresses and User Agent<br />'; 
 
-//		$version[] = array('version'=>'350004','description'=>$update_string); 
+		$version[] = array('version'=>'350004','description'=>$update_string); 
 
 		return $version;
 
@@ -1442,6 +1444,41 @@ class Update {
 	 * enhancements
 	 */
 	public static function update_350004() { 
+
+		$sql = "ALTER TABLE `session` CHANGE `ip` `ip` VARBINARY( 255 ) NULL"; 
+		$db_results = Dba::write($sql); 
+
+		$sql = "ALTER TABLE `session_stream` CHANGE `ip` `ip` VARBINARY( 255 ) NULL"; 
+		$db_results = Dba::write($sql); 
+
+		// Pull all of the IP history, this could take a while
+		$sql = "SELECT * FROM `ip_history`"; 
+		$db_results = Dba::read($sql); 
+
+		$ip_history = array(); 
+
+		while ($row = Dba::fetch_assoc($db_results)) { 
+			$row['ip'] = sprintf('%u',long2ip($row['start']));
+			$ip_history[] = $row; 
+		} 
+
+		// Clear the table before we make the changes
+		$sql = "TRUNCATE `ip_history`"; 
+		$db_results = Dba::write($sql); 
+
+		$sql = "ALTER TABLE `ip_history` CHANGE `ip` `ip` VARBINARY( 255 ) NULL"; 
+		$db_results = Dba::write($sql); 
+		
+		$sql = "ALTER TABLE `ip_history` ADD `agent` VARCHAR ( 255 ) NULL AFTER `date`"; 
+		$db_results = Dba::write($sql); 
+
+		// Reinsert the old rows
+		foreach ($ip_history as $row) { 
+			$ip = Dba::escape(inet_pton($row['ip'])); 
+			$sql = "INSERT INTO `ip_history` (`user`,`ip`,`date`,`agent`) " . 
+				"VALUES ('" . $row['user'] . "','" . $ip . "','" . $row['date'] . "',NULL)"; 
+			$db_results = Dba::write($sql); 
+		} 
 	
 		// First pull all of their current ACL's
 		$sql = "SELECT * FROM `access_list`"; 
@@ -1479,16 +1516,16 @@ class Update {
 			$v4_start = Dba::escape(inet_pton('0.0.0.0')); 
 			$v4_end = Dba::escape(inet_pton('255.255.255.255')); 
 			$sql = "INSERT INTO `access_list` (`name`,`level`,`start`,`end`,`key`,`user`,`type`,`enabled`) " . 
-				"VALUES ('DEFAULTv4','100','$v4_start','$v4_end',NULL,'-1','interface','1')"; 
+				"VALUES ('DEFAULTv4','75','$v4_start','$v4_end',NULL,'-1','interface','1')"; 
 			$db_results = Dba::write($sql); 
 			$sql = "INSERT INTO `access_list` (`name`,`level`,`start`,`end`,`key`,`user`,`type`,`enabled`) " . 
-				"VALUES ('DEFAULTv4','100','$v4_start','$v4_end',NULL,'-1','stream','1')"; 
+				"VALUES ('DEFAULTv4','75','$v4_start','$v4_end',NULL,'-1','stream','1')"; 
 			$db_results = Dba::write($sql); 
 			$sql = "INSERT INTO `access_list` (`name`,`level`,`start`,`end`,`key`,`user`,`type`,`enabled`) " . 
-				"VALUES ('DEFAULTv6','100','$v6_start','$v6_end',NULL,'-1','interface','1')"; 
+				"VALUES ('DEFAULTv6','75','$v6_start','$v6_end',NULL,'-1','interface','1')"; 
 			$db_results = Dba::write($sql); 
 			$sql = "INSERT INTO `access_list` (`name`,`level`,`start`,`end`,`key`,`user`,`type`,`enabled`) " . 
-				"VALUES ('DEFAULTv6','100','$v6_start','$v6_end',NULL,'-1','stream','1')"; 
+				"VALUES ('DEFAULTv6','75','$v6_start','$v6_end',NULL,'-1','stream','1')"; 
 			$db_results = Dba::write($sql); 
 		} // Adding default information
 
@@ -1502,6 +1539,7 @@ class Update {
 			$db_results = Dba::write($sql); 
 		} // end foreach of existing rows
 		
+		self::set_version('db_version','350004');
 
 	} // update_350004
 

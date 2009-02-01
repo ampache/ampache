@@ -56,6 +56,8 @@ class Playlist extends database_object {
 	 * This is what builds the cache from the objects
 	 */
 	public static function build_cache($ids) { 
+		
+		if (!count($ids)) { return false; } 
 
 		$idlist = '(' . implode(',',$ids) . ')'; 
 

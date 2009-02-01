@@ -94,6 +94,25 @@ class Access {
 	 */
 	public function update($data) { 
 
+                /* We need to verify the incomming data a littlebit */
+                $start = @inet_pton($data['start']);
+                $end = @inet_pton($data['end']);
+
+                if (!$start AND $data['start'] != '0.0.0.0' AND $data['start'] != '::') {
+                        Error::add('start',_('Invalid IPv4 / IPv6 Address Entered'));
+                        return false;
+                }
+                if (!$end) {
+                        Error::add('end',_('Invalid IPv4 / IPv6 Address Entered'));
+                        return false;
+                }
+
+                if (strlen(bin2hex($start)) != strlen(bin2hex($end))) {
+                        Error::add('start',_('IP Address Version Mismatch'));
+                        Error::add('end',_('IP Address Version Mismatch'));
+                        return false;
+                }
+
 		$name	= Dba::escape($data['name']); 
 		$type	= self::validate_type($data['type']); 
 		$start 	= Dba::escape(inet_pton($data['start']));
@@ -132,12 +151,17 @@ class Access {
 			return false; 
 		} 
 
+		if (strlen(bin2hex($start)) != strlen(bin2hex($end))) { 
+			Error::add('start',_('IP Address Version Mismatch')); 
+			Error::add('end',_('IP Address Version Mismatch')); 
+			return false; 
+		} 
+
 		// Check existing ACL's to make sure we're not duplicating values here
 		if (self::exists($data)) { 
 			debug_event('ACL Create','Error did not create duplicate ACL entrie for ' . $data['start'] . ' - ' . $data['end'],'1'); 
 			return false; 
 		} 
-
 
 		$start 	= Dba::escape($start); 
 		$end 	= Dba::escape($end);
@@ -237,7 +261,7 @@ class Access {
 		} // end if access control is turned off
 
 		// Clean incomming variables
-		$ip 	= $ip ? inet_pton($ip) : inet_pton($_SERVER['REMOTE_ADDR']); 
+		$ip 	= $ip ? Dba::escape(inet_pton($ip)) : Dba::escape(inet_pton($_SERVER['REMOTE_ADDR'])); 
 		$user 	= Dba::escape($user);
 		$key 	= Dba::escape($key);
 		$level	= Dba::escape($level);
