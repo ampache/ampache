@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: messages\n"
 "Report-Msgid-Bugs-To: translations at ampache.org\n"
-"POT-Creation-Date: 2009-01-06 07:40+0900\n"
+"POT-Creation-Date: 2009-02-02 07:39+0900\n"
 "PO-Revision-Date: 2008-08-24 09:26+0200\n"
 "Last-Translator: Nikolai Försterling <devel@fosternet.de>\n"
 "Language-Team:  <de@li.org>\n"
@@ -491,7 +491,7 @@ msgstr "Letzte IP-Adr."
 #: ../../templates/show_song.inc.php:27
 #: ../../templates/show_admin_tools.inc.php:34
 #: ../../templates/show_admin_tools.inc.php:74
-#: ../../templates/show_access_list.inc.php:52
+#: ../../templates/show_access_list.inc.php:62
 #: ../../templates/show_playlist_songs.inc.php:48
 #: ../../templates/show_playlist_songs.inc.php:69
 #: ../../templates/show_manage_shoutbox.inc.php:39
@@ -505,14 +505,14 @@ msgid "On-line"
 msgstr "Verbunden"
 
 #: ../../templates/show_users.inc.php:53 ../../templates/show_user.inc.php:22
-#: ../../lib/class/user.class.php:662 ../../lib/class/catalog.class.php:152
+#: ../../lib/class/user.class.php:663 ../../lib/class/catalog.class.php:152
 #: ../../lib/class/catalog.class.php:153 ../../lib/preferences.php:261
 msgid "Never"
 msgstr "Nie"
 
 #: ../../templates/show_users.inc.php:54 ../../templates/show_user.inc.php:23
 #: ../../lib/class/flag.class.php:282 ../../lib/class/localplay.class.php:648
-#: ../../lib/class/user.class.php:666 ../../lib/general.lib.php:439
+#: ../../lib/class/user.class.php:667 ../../lib/general.lib.php:337
 #: ../../modules/localplay/mpd.controller.php:511
 #: ../../modules/localplay/httpq.controller.php:510
 msgid "Unknown"
@@ -569,15 +569,18 @@ msgstr "Gast"
 
 #: ../../templates/show_edit_user.inc.php:75
 #: ../../templates/show_preference_box.inc.php:59
-#: ../../templates/show_edit_access.inc.php:57
+#: ../../templates/show_add_access_local.inc.php:41
+#: ../../templates/show_add_access_rpc.inc.php:41
+#: ../../templates/show_edit_access.inc.php:60
 #: ../../templates/show_preference_admin.inc.php:42
-#: ../../templates/show_add_access.inc.php:46
+#: ../../templates/show_add_access.inc.php:41
 #: ../../templates/show_add_user.inc.php:75
 #: ../../templates/show_create_democratic.inc.php:41
 #: ../../templates/show_flagged.inc.php:35
 #: ../../templates/show_flagged.inc.php:54
+#: ../../templates/show_add_access_current.inc.php:44
 #: ../../templates/show_mail_users.inc.php:31
-#: ../../templates/show_access_list.inc.php:49
+#: ../../templates/show_access_list.inc.php:59
 #: ../../templates/show_manage_shoutbox.inc.php:35
 #: ../../templates/show_manage_shoutbox.inc.php:59
 #: ../../lib/class/democratic.class.php:105 ../../lib/preferences.php:231
@@ -626,6 +629,8 @@ msgstr "Benutzer aktualisieren"
 #: ../../templates/show_live_streams.inc.php:36
 #: ../../templates/show_live_streams.inc.php:58
 #: ../../templates/show_edit_catalog.inc.php:26
+#: ../../templates/show_add_access_local.inc.php:26
+#: ../../templates/show_add_access_rpc.inc.php:26
 #: ../../templates/show_add_live_stream.inc.php:28
 #: ../../templates/show_edit_artist.inc.php:27
 #: ../../templates/show_edit_access.inc.php:26
@@ -635,12 +640,13 @@ msgstr "Benutzer aktualisieren"
 #: ../../templates/show_create_democratic.inc.php:26
 #: ../../templates/show_account.inc.php:27
 #: ../../templates/show_edit_album.inc.php:27
+#: ../../templates/show_add_access_current.inc.php:26
 #: ../../templates/show_localplay_playlist.inc.php:32
 #: ../../templates/show_localplay_playlist.inc.php:58
 #: ../../templates/show_add_playlist.inc.php:28
 #: ../../templates/show_admin_tools.inc.php:33
 #: ../../templates/show_admin_tools.inc.php:73
-#: ../../templates/show_access_list.inc.php:45
+#: ../../templates/show_access_list.inc.php:55
 #: ../../templates/show_playlist_edit.inc.php:30
 msgid "Name"
 msgstr "Name"
@@ -1032,12 +1038,15 @@ msgid "Cooldown"
 msgstr "Zeit bevor der Lied erneut abgespielt werden kann"
 
 #: ../../templates/show_manage_democratic.inc.php:37
-#: ../../templates/show_edit_access.inc.php:69
+#: ../../templates/show_add_access_local.inc.php:32
+#: ../../templates/show_add_access_rpc.inc.php:32
+#: ../../templates/show_edit_access.inc.php:72
 #: ../../templates/show_preference_admin.inc.php:31
 #: ../../templates/show_preference_admin.inc.php:50
-#: ../../templates/show_add_access.inc.php:52
+#: ../../templates/show_add_access.inc.php:32
 #: ../../templates/show_create_democratic.inc.php:38
-#: ../../templates/show_access_list.inc.php:48
+#: ../../templates/show_add_access_current.inc.php:35
+#: ../../templates/show_access_list.inc.php:58
 msgid "Level"
 msgstr "Level"
 
@@ -1049,6 +1058,136 @@ msgstr "Voreinstellung"
 #: ../../templates/show_manage_democratic.inc.php:69
 msgid "Create New Playlist"
 msgstr "Neue Wiedergabeliste erstellen"
+
+#: ../../templates/show_add_access_local.inc.php:22
+#: ../../templates/show_access_list.inc.php:40
+#: ../../templates/show_access_list.inc.php:41
+#, fuzzy
+msgid "Add Local Network Definition"
+msgstr "Lokale Netzwerkeinstellung"
+
+#: ../../templates/show_add_access_local.inc.php:34
+#: ../../templates/show_add_access_rpc.inc.php:34
+#: ../../templates/show_edit_access.inc.php:75
+#: ../../templates/show_add_access.inc.php:34
+#: ../../templates/show_play_selected.inc.php:49
+#: ../../templates/show_add_access_current.inc.php:37
+#: ../../lib/class/access.class.php:410
+msgid "View"
+msgstr "Anzeigen"
+
+#: ../../templates/show_add_access_local.inc.php:35
+#: ../../templates/show_add_access_rpc.inc.php:35
+#: ../../templates/show_edit_access.inc.php:76
+#: ../../templates/show_add_access.inc.php:35
+#: ../../templates/show_add_access_current.inc.php:38
+#: ../../lib/class/access.class.php:413
+msgid "Read"
+msgstr "Lesen"
+
+#: ../../templates/show_add_access_local.inc.php:36
+#: ../../templates/show_add_access_rpc.inc.php:36
+#: ../../templates/show_edit_access.inc.php:77
+#: ../../templates/show_add_access.inc.php:36
+#: ../../templates/show_add_access_current.inc.php:39
+#: ../../lib/class/access.class.php:416
+msgid "Read/Write"
+msgstr "Lesen/Schreiben"
+
+#: ../../templates/show_add_access_local.inc.php:37
+#: ../../templates/show_add_access_local.inc.php:52
+#: ../../templates/show_add_access_rpc.inc.php:37
+#: ../../templates/show_add_access_rpc.inc.php:52
+#: ../../templates/show_edit_access.inc.php:78
+#: ../../templates/show_add_access.inc.php:37
+#: ../../templates/show_export.inc.php:35
+#: ../../templates/show_add_access_current.inc.php:40
+#: ../../templates/show_mail_users.inc.php:30
+#: ../../templates/show_random.inc.php:38
+#: ../../templates/show_admin_tools.inc.php:51 ../../lib/ui.lib.php:141
+#: ../../lib/ui.lib.php:150 ../../lib/ui.lib.php:632
+#: ../../lib/class/access.class.php:407 ../../lib/class/access.class.php:427
+msgid "All"
+msgstr "Alle"
+
+#: ../../templates/show_add_access_local.inc.php:48
+#: ../../templates/show_add_access_rpc.inc.php:48
+#: ../../templates/show_add_playlist.inc.php:32
+#: ../../templates/show_random.inc.php:61
+#: ../../templates/show_access_list.inc.php:61
+#: ../../templates/show_playlist_edit.inc.php:36
+msgid "Type"
+msgstr "Typ"
+
+#: ../../templates/show_add_access_local.inc.php:50
+#: ../../templates/show_add_access_local.inc.php:51
+#: ../../templates/show_add_access_local.inc.php:52
+#: ../../templates/show_edit_access.inc.php:36
+#: ../../templates/show_add_access.inc.php:53
+#: ../../lib/class/access.class.php:446
+msgid "Local Network Definition"
+msgstr "Lokale Netzwerkeinstellung"
+
+#: ../../templates/show_add_access_local.inc.php:51
+#: ../../templates/show_add_access_rpc.inc.php:51
+#: ../../templates/show_edit_access.inc.php:34
+#: ../../templates/show_add_access.inc.php:51
+#: ../../lib/class/access.class.php:453
+msgid "Stream Access"
+msgstr "Stream Zugriff"
+
+#: ../../templates/show_add_access_local.inc.php:51
+#: ../../templates/show_edit_access.inc.php:35
+#: ../../templates/show_add_access.inc.php:52
+#: ../../lib/class/access.class.php:449
+msgid "Web Interface"
+msgstr ""
+
+#: ../../templates/show_add_access_local.inc.php:56
+#: ../../templates/show_add_access_rpc.inc.php:56
+#: ../../templates/show_add_access.inc.php:59
+#: ../../templates/show_add_access_current.inc.php:50
+msgid "RPC Options"
+msgstr "RPC Optionen"
+
+#: ../../templates/show_add_access_local.inc.php:59
+#: ../../templates/show_add_access_rpc.inc.php:59
+#: ../../templates/show_edit_access.inc.php:66
+#: ../../templates/show_add_access.inc.php:62
+#: ../../templates/show_add_access_current.inc.php:53
+msgid "Remote Key"
+msgstr "Entfernter Schlüssel"
+
+#: ../../templates/show_add_access_local.inc.php:66
+#: ../../templates/show_add_access_rpc.inc.php:66
+#: ../../templates/show_edit_access.inc.php:43
+#: ../../templates/show_add_access.inc.php:69
+#: ../../templates/show_add_access_current.inc.php:32
+#, fuzzy
+msgid "IPv4 or IPv6 Addresses"
+msgstr "Von IP Adresse"
+
+#: ../../templates/show_add_access_local.inc.php:71
+#: ../../templates/show_add_access_rpc.inc.php:71
+#: ../../templates/show_edit_access.inc.php:48
+#: ../../templates/show_add_access.inc.php:74
+#, fuzzy
+msgid "Start"
+msgstr "Status"
+
+#: ../../templates/show_add_access_local.inc.php:76
+#: ../../templates/show_add_access_rpc.inc.php:76
+#: ../../templates/show_edit_access.inc.php:53
+#: ../../templates/show_add_access.inc.php:79
+msgid "End"
+msgstr ""
+
+#: ../../templates/show_add_access_local.inc.php:85
+#: ../../templates/show_add_access_rpc.inc.php:85
+#: ../../templates/show_add_access.inc.php:88
+#: ../../templates/show_add_access_current.inc.php:61
+msgid "Create ACL"
+msgstr "Erstelle ACL"
 
 #: ../../templates/show_playlist.inc.php:26
 #, fuzzy, php-format
@@ -1123,6 +1262,21 @@ msgstr ""
 msgid "Cache Hits:"
 msgstr ""
 
+#: ../../templates/show_add_access_rpc.inc.php:22
+#: ../../templates/show_access_list.inc.php:36
+#: ../../templates/show_access_list.inc.php:37
+#, fuzzy
+msgid "Add API / RPC Host"
+msgstr "Zugang für einen Rechner einrichten"
+
+#: ../../templates/show_add_access_rpc.inc.php:50
+#: ../../templates/show_add_access_rpc.inc.php:51
+#: ../../templates/show_add_access_rpc.inc.php:52
+#: ../../templates/show_edit_access.inc.php:37
+#: ../../templates/show_add_access.inc.php:54
+msgid "RPC"
+msgstr ""
+
 #: ../../templates/show_add_live_stream.inc.php:24
 #: ../../templates/sidebar_modules.inc.php:42
 msgid "Add Radio Station"
@@ -1157,80 +1311,16 @@ msgid "Update Artist"
 msgstr "Interpret aktualisieren"
 
 #: ../../templates/show_edit_access.inc.php:22
-msgid "Edit ACL"
-msgstr "ACL bearbeiten"
+#, fuzzy
+msgid "Edit Access Control List"
+msgstr "Zugangskontrolle"
 
 #: ../../templates/show_edit_access.inc.php:30
-#: ../../templates/show_add_access.inc.php:63
+#: ../../templates/show_add_access.inc.php:48
 msgid "ACL Type"
 msgstr "ACL Typ"
 
-#: ../../templates/show_edit_access.inc.php:34
-#: ../../templates/show_add_access.inc.php:66
-msgid "Stream Access"
-msgstr "Stream Zugriff"
-
-#: ../../templates/show_edit_access.inc.php:35
-#: ../../templates/show_add_access.inc.php:67
-msgid "Web Interface"
-msgstr ""
-
-#: ../../templates/show_edit_access.inc.php:36
-#: ../../templates/show_add_access.inc.php:68
-msgid "Local Network Definition"
-msgstr "Lokale Netzwerkeinstellung"
-
-#: ../../templates/show_edit_access.inc.php:37
-#: ../../templates/show_add_access.inc.php:69
-msgid "RPC"
-msgstr ""
-
-#: ../../templates/show_edit_access.inc.php:43
-#: ../../templates/show_add_access.inc.php:32
-msgid "Start IP Address"
-msgstr "Von IP Adresse"
-
-#: ../../templates/show_edit_access.inc.php:50
-#: ../../templates/show_add_access.inc.php:39
-msgid "End IP Address"
-msgstr "Bis IP Adresse"
-
-#: ../../templates/show_edit_access.inc.php:63
-#: ../../templates/show_add_access.inc.php:77
-msgid "Remote Key"
-msgstr "Entfernter Schlüssel"
-
-#: ../../templates/show_edit_access.inc.php:73
-#: ../../templates/show_add_access.inc.php:55
-#: ../../templates/show_play_selected.inc.php:49
-#: ../../lib/class/access.class.php:328
-msgid "View"
-msgstr "Anzeigen"
-
-#: ../../templates/show_edit_access.inc.php:74
-#: ../../templates/show_add_access.inc.php:56
-#: ../../lib/class/access.class.php:331
-msgid "Read"
-msgstr "Lesen"
-
-#: ../../templates/show_edit_access.inc.php:75
-#: ../../templates/show_add_access.inc.php:57
-#: ../../lib/class/access.class.php:334
-msgid "Read/Write"
-msgstr "Lesen/Schreiben"
-
-#: ../../templates/show_edit_access.inc.php:76
-#: ../../templates/show_add_access.inc.php:58
-#: ../../templates/show_export.inc.php:35
-#: ../../templates/show_mail_users.inc.php:30
-#: ../../templates/show_random.inc.php:38
-#: ../../templates/show_admin_tools.inc.php:51 ../../lib/ui.lib.php:141
-#: ../../lib/ui.lib.php:150 ../../lib/ui.lib.php:632
-#: ../../lib/class/access.class.php:325 ../../lib/class/access.class.php:350
-msgid "All"
-msgstr "Alle"
-
-#: ../../templates/show_edit_access.inc.php:82
+#: ../../templates/show_edit_access.inc.php:84
 #: ../../templates/show_preference_admin.inc.php:55
 #: ../../templates/show_catalog_row.inc.php:31
 #: ../../templates/show_play_selected.inc.php:64
@@ -1513,16 +1603,11 @@ msgid "Recently Played"
 msgstr "kürzlich gespielt"
 
 #: ../../templates/show_add_access.inc.php:22
-msgid "Add Access for a Host"
-msgstr "Zugang für einen Rechner einrichten"
-
-#: ../../templates/show_add_access.inc.php:74
-msgid "RPC Options"
-msgstr "RPC Optionen"
-
-#: ../../templates/show_add_access.inc.php:84
-msgid "Create ACL"
-msgstr "Erstelle ACL"
+#: ../../templates/show_access_list.inc.php:43
+#: ../../templates/show_access_list.inc.php:44
+#, fuzzy
+msgid "Advanced Add"
+msgstr "Erweitert"
 
 #: ../../templates/sidebar_admin.inc.php:24
 #: ../../templates/show_admin_tools.inc.php:26
@@ -1558,6 +1643,7 @@ msgid "Browse Users"
 msgstr "Zeige Benutzer"
 
 #: ../../templates/sidebar_admin.inc.php:37
+#: ../../templates/show_access_list.inc.php:28
 msgid "Access Control"
 msgstr "Zugangskontrolle"
 
@@ -1743,7 +1829,7 @@ msgstr "öffentliche"
 
 #: ../../templates/show_edit_playlist_row.inc.php:33
 #: ../../templates/show_playlist_edit.inc.php:40
-#: ../../lib/class/playlist.class.php:81
+#: ../../lib/class/playlist.class.php:83
 msgid "Private"
 msgstr "privat"
 
@@ -2109,6 +2195,13 @@ msgstr "Die letzten 10 markierten Lieder"
 msgid "Disabled Songs"
 msgstr "Gesperrte Lieder"
 
+#: ../../templates/show_add_access_current.inc.php:22
+#: ../../templates/show_access_list.inc.php:32
+#: ../../templates/show_access_list.inc.php:33
+#, fuzzy
+msgid "Add Current Host"
+msgstr "Aktuelle Wiedergabeliste"
+
 #: ../../templates/show_localplay_instances.inc.php:23
 msgid "Show Localplay Instances"
 msgstr "Lokal-Abspiel-Instanzen anzeigen"
@@ -2219,13 +2312,6 @@ msgstr "Unbegrenzt"
 #: ../../templates/show_add_playlist.inc.php:24
 msgid "Create a new playlist"
 msgstr "Neue Wiedergabeliste erstellen"
-
-#: ../../templates/show_add_playlist.inc.php:32
-#: ../../templates/show_random.inc.php:61
-#: ../../templates/show_access_list.inc.php:51
-#: ../../templates/show_playlist_edit.inc.php:36
-msgid "Type"
-msgstr "Typ"
 
 #: ../../templates/show_run_add_catalog.inc.php:24
 #: ../../templates/show_adds_catalog.inc.php:25
@@ -2590,8 +2676,8 @@ msgid "Disk"
 msgstr ""
 
 #: ../../templates/show_album.inc.php:34
-#: ../../lib/class/catalog.class.php:1922
-#: ../../lib/class/catalog.class.php:1993
+#: ../../lib/class/catalog.class.php:1931
+#: ../../lib/class/catalog.class.php:2002
 msgid "Unknown (Orphaned)"
 msgstr "Unbekannt (Verwaist)"
 
@@ -2750,46 +2836,20 @@ msgstr "Inaktive Benutzer anzeigen"
 msgid "Check for New Version"
 msgstr "Nach neuer Version suchen"
 
-#: ../../templates/show_access_list.inc.php:29
-msgid "Ampache Access Control"
-msgstr "Ampache Zugriffsverwaltung"
+#: ../../templates/show_access_list.inc.php:50
+#, fuzzy
+msgid "Access Control Entries"
+msgstr "Zugangskontrolle"
 
-#: ../../templates/show_access_list.inc.php:32
-msgid ""
-"Since your catalog can be accessed remotely you may want to limit the access "
-"from remote sources so you are not in violation of copyright laws."
-msgstr ""
-
-#: ../../templates/show_access_list.inc.php:33
-msgid ""
-"By default your server will allow anyone with an account to stream music."
-msgstr ""
-
-#: ../../templates/show_access_list.inc.php:34
-msgid ""
-"It will not allow any other Ampache servers to connect to it to share "
-"catalog information."
-msgstr ""
-
-#: ../../templates/show_access_list.inc.php:35
-msgid ""
-"Use tool below to add any server's IP address that you want to access your "
-"Ampache catalog or be able to stream from this server."
-msgstr ""
-
-#: ../../templates/show_access_list.inc.php:40
-msgid "Add Entry"
-msgstr "Eintrag hinzufügen"
-
-#: ../../templates/show_access_list.inc.php:46
+#: ../../templates/show_access_list.inc.php:56
 msgid "Start Address"
 msgstr "Startadresse"
 
-#: ../../templates/show_access_list.inc.php:47
+#: ../../templates/show_access_list.inc.php:57
 msgid "End Address"
 msgstr "Endadresse"
 
-#: ../../templates/show_access_list.inc.php:50
+#: ../../templates/show_access_list.inc.php:60
 msgid "Key"
 msgstr "Schlüssel"
 
@@ -3147,6 +3207,20 @@ msgstr "Shoutbox Aufzeichnungen"
 msgid "Flagged Records"
 msgstr "Markierte Datensätze"
 
+#: ../../lib/class/access.class.php:102 ../../lib/class/access.class.php:106
+#: ../../lib/class/access.class.php:146 ../../lib/class/access.class.php:150
+msgid "Invalid IPv4 / IPv6 Address Entered"
+msgstr ""
+
+#: ../../lib/class/access.class.php:111 ../../lib/class/access.class.php:112
+#: ../../lib/class/access.class.php:155 ../../lib/class/access.class.php:156
+msgid "IP Address Version Mismatch"
+msgstr ""
+
+#: ../../lib/class/access.class.php:443
+msgid "API/RPC"
+msgstr ""
+
 #: ../../lib/class/flag.class.php:257
 msgid "Approved"
 msgstr "Erlaubt"
@@ -3182,7 +3256,7 @@ msgid "Error Passwords don't match"
 msgstr "Fehler: Falsches Passwort"
 
 #: ../../lib/class/album.class.php:479 ../../lib/class/catalog.class.php:433
-#: ../../lib/class/catalog.class.php:774
+#: ../../lib/class/catalog.class.php:783
 msgid "Error: Unable to open"
 msgstr "Fehler: Fehler beim Öffnen"
 
@@ -3211,133 +3285,133 @@ msgstr "Remote Synchronisation läuft"
 msgid "Error: Unable to change to directory"
 msgstr "Fehler: Das Verzeichnis kann nicht gewechselt werden"
 
-#: ../../lib/class/catalog.class.php:511
+#: ../../lib/class/catalog.class.php:519
 #, fuzzy, php-format
 msgid "Error: Unable to get filesize for %s"
 msgstr "Fehler: Probleme beim lesen der Dateigrösse für"
 
-#: ../../lib/class/catalog.class.php:517
+#: ../../lib/class/catalog.class.php:525
 #, fuzzy, php-format
 msgid "%s is not readable by ampache"
 msgstr "ist von Ampache nicht lesbar"
 
-#: ../../lib/class/catalog.class.php:525
+#: ../../lib/class/catalog.class.php:533
 #, fuzzy, php-format
 msgid "%s does not match site charset"
 msgstr "stimmit nicht mit dem Site Zeichensatz überein"
 
-#: ../../lib/class/catalog.class.php:1063 ../../preferences.php:111
-#: ../../admin/access.php:45
+#: ../../lib/class/catalog.class.php:1072 ../../preferences.php:111
+#: ../../admin/access.php:109
 msgid "Updated"
 msgstr "Aktualisiert"
 
-#: ../../lib/class/catalog.class.php:1070
+#: ../../lib/class/catalog.class.php:1079
 msgid "No Update Needed"
 msgstr "Keine Aktualisierung nötig"
 
-#: ../../lib/class/catalog.class.php:1170
+#: ../../lib/class/catalog.class.php:1179
 msgid "Running Remote Update"
 msgstr "Starte Remote Update"
 
-#: ../../lib/class/catalog.class.php:1197
+#: ../../lib/class/catalog.class.php:1206
 msgid "Added Playlist From"
 msgstr "Wiedergabeliste hinzugefügt von"
 
-#: ../../lib/class/catalog.class.php:1226
+#: ../../lib/class/catalog.class.php:1235
 msgid "Catalog Update Finished"
 msgstr "Katalog-Aktualisierung abgeschlossen"
 
-#: ../../lib/class/catalog.class.php:1226
+#: ../../lib/class/catalog.class.php:1235
 msgid "Total Time"
 msgstr "Spielzeit"
 
-#: ../../lib/class/catalog.class.php:1227
+#: ../../lib/class/catalog.class.php:1236
 msgid "Total Songs"
 msgstr "Alle Lieder"
 
-#: ../../lib/class/catalog.class.php:1227
+#: ../../lib/class/catalog.class.php:1236
 msgid "Songs Per Seconds"
 msgstr "Lieder pro Sekunde"
 
-#: ../../lib/class/catalog.class.php:1241 ../../admin/users.php:142
+#: ../../lib/class/catalog.class.php:1250 ../../admin/users.php:142
 msgid "Error"
 msgstr "Fehler"
 
-#: ../../lib/class/catalog.class.php:1241
+#: ../../lib/class/catalog.class.php:1250
 #, fuzzy
 msgid "Unable to load pear XMLRPC library, make sure XML-RPC is enabled"
 msgstr ""
 "Kann XMLRPC Library nicht laden, bitte stellen Sie sicher, dass XML-RPC "
 "aktiviert ist"
 
-#: ../../lib/class/catalog.class.php:1273
-#: ../../lib/class/catalog.class.php:1347
-#: ../../lib/class/catalog.class.php:1380
+#: ../../lib/class/catalog.class.php:1282
+#: ../../lib/class/catalog.class.php:1356
+#: ../../lib/class/catalog.class.php:1389
 #: ../../lib/class/xmlrpcclient.class.php:64
 #: ../../lib/class/xmlrpcclient.class.php:97
 msgid "Error connecting to"
 msgstr "Fehler beim Verbinden zu"
 
-#: ../../lib/class/catalog.class.php:1273
-#: ../../lib/class/catalog.class.php:1347
-#: ../../lib/class/catalog.class.php:1380
+#: ../../lib/class/catalog.class.php:1282
+#: ../../lib/class/catalog.class.php:1356
+#: ../../lib/class/catalog.class.php:1389
 #: ../../lib/class/xmlrpcclient.class.php:64
 #: ../../lib/class/xmlrpcclient.class.php:97
 msgid "Code"
 msgstr ""
 
-#: ../../lib/class/catalog.class.php:1273
-#: ../../lib/class/catalog.class.php:1347
-#: ../../lib/class/catalog.class.php:1380
+#: ../../lib/class/catalog.class.php:1282
+#: ../../lib/class/catalog.class.php:1356
+#: ../../lib/class/catalog.class.php:1389
 #: ../../lib/class/xmlrpcclient.class.php:64
 msgid "Reason"
 msgstr "Grund"
 
-#: ../../lib/class/catalog.class.php:1302
+#: ../../lib/class/catalog.class.php:1311
 msgid "Completed updating remote catalog(s)"
 msgstr "Aktualisierung der entfernten-Kataloge abgeschlossen"
 
-#: ../../lib/class/catalog.class.php:1306
+#: ../../lib/class/catalog.class.php:1315
 msgid "Starting synchronisation of album images"
 msgstr ""
 
-#: ../../lib/class/catalog.class.php:1308
+#: ../../lib/class/catalog.class.php:1317
 msgid "Completed synchronisation of album images"
 msgstr ""
 
-#: ../../lib/class/catalog.class.php:1343 ../../admin/access.php:40
+#: ../../lib/class/catalog.class.php:1352 ../../admin/access.php:93
 msgid "Added"
 msgstr "Hinzugefügt"
 
-#: ../../lib/class/catalog.class.php:1376
+#: ../../lib/class/catalog.class.php:1385
 msgid "images synchronized: "
 msgstr ""
 
-#: ../../lib/class/catalog.class.php:1505
+#: ../../lib/class/catalog.class.php:1514
 msgid "Catalog Root unreadable, stopping clean"
 msgstr "Katalogverzeichnis nicht lesbar, beende Bereingung"
 
-#: ../../lib/class/catalog.class.php:1562
+#: ../../lib/class/catalog.class.php:1571
 msgid "Catalog Clean Done"
 msgstr "Bereinigen des Kataloges abgeschlossen"
 
-#: ../../lib/class/catalog.class.php:1562
+#: ../../lib/class/catalog.class.php:1571
 msgid "files removed"
 msgstr "Dateien gelöscht"
 
-#: ../../lib/class/catalog.class.php:1563
+#: ../../lib/class/catalog.class.php:1572
 msgid "Optimizing Tables"
 msgstr "Tabellen optimieren"
 
-#: ../../lib/class/catalog.class.php:1863
+#: ../../lib/class/catalog.class.php:1872
 msgid "Update Finished."
 msgstr "Aktualisierung abgeschlossen."
 
-#: ../../lib/class/catalog.class.php:1863
+#: ../../lib/class/catalog.class.php:1872
 msgid "Checked"
 msgstr "Geprüft"
 
-#: ../../lib/class/catalog.class.php:1863
+#: ../../lib/class/catalog.class.php:1872
 msgid "songs updated."
 msgstr "Lieder aktualisiert."
 
@@ -3399,11 +3473,11 @@ msgid ""
 "\n"
 msgstr ""
 
-#: ../../lib/general.lib.php:498
+#: ../../lib/general.lib.php:396
 msgid "On"
 msgstr "Ein"
 
-#: ../../lib/general.lib.php:501
+#: ../../lib/general.lib.php:399
 msgid "Off"
 msgstr "Aus"
 
@@ -3475,11 +3549,11 @@ msgstr ""
 msgid "Error: Unable to make Database Connection"
 msgstr "Fehler: Das Verzeichnis kann nicht gewechselt werden"
 
-#: ../../lib/install.php:270
+#: ../../lib/install.php:276
 msgid "No Username/Password specified"
 msgstr "Kein Benutzer/Passwort angegeben"
 
-#: ../../lib/install.php:275
+#: ../../lib/install.php:281
 msgid "Passwords do not match"
 msgstr "Passwörter nicht identisch"
 
@@ -3739,11 +3813,12 @@ msgstr "Gelöscht"
 msgid "Your Access List Entry has been removed"
 msgstr "Eintrag gelöscht!"
 
-#: ../../admin/access.php:40
-msgid "Your new Access List Entry has been created"
+#: ../../admin/access.php:93
+#, fuzzy
+msgid "Your new Access Control List(s) have been created"
 msgstr "der neue Eintrag wurde erstellt"
 
-#: ../../admin/access.php:45
+#: ../../admin/access.php:109
 msgid "Access List Entry updated"
 msgstr "Eintrag aktualisiert"
 
@@ -4020,6 +4095,18 @@ msgstr "Bitrate"
 #, fuzzy
 msgid "System"
 msgstr "Lied"
+
+#~ msgid "Edit ACL"
+#~ msgstr "ACL bearbeiten"
+
+#~ msgid "End IP Address"
+#~ msgstr "Bis IP Adresse"
+
+#~ msgid "Ampache Access Control"
+#~ msgstr "Ampache Zugriffsverwaltung"
+
+#~ msgid "Add Entry"
+#~ msgstr "Eintrag hinzufügen"
 
 #~ msgid "genre"
 #~ msgstr "Stil"
