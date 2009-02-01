@@ -499,9 +499,17 @@ class Catalog {
 			else {
 				$pattern .= ")$/i";
 			}
+
+			$is_audio_file = preg_match($pattern,$file); 
 				
+			// Define the Video file pattern
+			if (!$is_audio_file AND Config::get('catalog_video_pattern')) {
+				$video_pattern = "/\.(" . Config::get('catalog_video_pattern') . "$/i"; 
+				$is_video_file = preg_match($video_pattern,$file); 
+			}
+
 			/* see if this is a valid audio file or playlist file */
-			if (preg_match($pattern ,$file)) {
+			if ($is_audio_file OR $is_video_file) {
 
 				/* Now that we're sure its a file get filesize  */
 				$file_size = filesize($full_file);
@@ -527,12 +535,13 @@ class Catalog {
 					}
 				} // end if iconv
 
-				if (substr($file,-3,3) == 'm3u' AND $parse_m3u > 0) {
+				if ($options['parse_m3u'] AND substr($file,-3,3) == 'm3u') {
 					$this->_playlists[] = $full_file;
 				} // if it's an m3u
 
 				else {
-					$this->insert_local_song($full_file,$file_size);
+					if ($is_audio_file) { $this->insert_local_song($full_file,$file_size); }
+					else { $this->insert_local_video($full_file,$file_size); } 
 
 					/* Stupid little cutesie thing */
 					$this->count++;
@@ -1097,10 +1106,10 @@ class Catalog {
 		$vainfo->get_info();
 
                 /* Find the correct key */
-                $key = get_tag_type($vainfo->tags);
+                $key = vainfo::get_tag_type($vainfo->tags);
 
                 /* Clean up the tags */
-                $results = clean_tag_info($vainfo->tags,$key,$song->file);
+                $results = vainfo::clean_tag_info($vainfo->tags,$key,$song->file);
 
                 /* Setup the vars */
 		$new_song 		= new Song();
@@ -2099,10 +2108,10 @@ class Catalog {
 		$vainfo		= new vainfo($file,'','','',$this->sort_pattern,$this->rename_pattern);
 		$vainfo->get_info();
 
-		$key = get_tag_type($vainfo->tags);
+		$key = vainfo::get_tag_type($vainfo->tags);
 
 		/* Clean Up the tags */
-		$results = clean_tag_info($vainfo->tags,$key,$file);
+		$results = vainfo::clean_tag_info($vainfo->tags,$key,$file);
 
 		/* Set the vars here... so we don't have to do the '" . $blah['asd'] . "' */
 		$title 		= Dba::escape($results['title']);
@@ -2179,22 +2188,22 @@ class Catalog {
 			flush();
 		}
 		
-		/**
-		 * TODO this data is not beïng passed through
-		 *
-		*/
-		/*
-		$song_id = Dba::insert_id();
-
-		self::check_tag($tag,$song_id);
-
-		// Add the EXT information
-		$sql = "INSERT INTO `song_data` (`song_id`,`comment`,`lyrics`) " .
-			" VALUES ('$song_id','$comment','$lyrics')"; 
-		$db_results = Dba::query($sql);
-		*/
-
 	} // insert_remote_song
+
+	/**
+	 * insert_local_video
+	 * This inserts a video file into the video file table the tag
+	 * information we can get is super sketchy so it's kind of a crap shoot
+	 * here
+	 */
+	public function insert_local_video($file,$filesize) { 
+
+                /* Create the vainfo object and get info */
+                $vainfo         = new vainfo($file,'','','',$this->sort_pattern,$this->rename_pattern);
+                $vainfo->get_info();
+
+
+	} // insert_local_video
 
 	/**
 	 * check_remote_song

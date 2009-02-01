@@ -1543,5 +1543,28 @@ class Update {
 
 	} // update_350004
 
+	/**
+	 * update_350005
+	 * This update adds the video table... *gasp* no you didn't <head shake>
+	 */
+	public static function update_350005() { 
+
+		$sql = " CREATE TABLE `ampache`.`video` (" . 
+			"`id` INT( 11 ) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY ," . 
+			"`file` VARCHAR( 255 ) NOT NULL , " . 
+			"`catalog` INT( 11 ) UNSIGNED NOT NULL ," . 
+			"`title` VARCHAR( 255 ) NOT NULL ," . 
+			"`video_codec` VARCHAR( 255 ) NOT NULL ," . 
+			"`audio_codec` VARCHAR( 255 ) NOT NULL ," . 
+			"`resolution_x` MEDIUMINT UNSIGNED NOT NULL ," . 
+			"`resolution_y` MEDIUMINT UNSIGNED NOT NULL ," . 
+			"`time` INT( 11 ) UNSIGNED NOT NULL ," . 
+			"`size` BIGINT UNSIGNED NOT NULL," . 
+			"`mime` VARCHAR( 255 ) NOT NULL" . 
+			") ENGINE = MYISAM "; 
+		$db_results = Dba::write($sql); 
+
+	} // update_350005
+
 } // end update class
 ?>

@@ -85,93 +85,6 @@ function extend_session($sid) {
 
 } // extend_session
 
-/**
- * get_tag_type
- * This takes the result set, and the the tag_order
- * As defined by your config file and trys to figure out
- * which tag type it should use, if your tag_order
- * doesn't match anything then it just takes the first one
- * it finds in the results. 
- */
-function get_tag_type($results) {
-
-	/* Pull In the config option */
-	$order = Config::get('tag_order');
-
-        if (!is_array($order)) {
-		$order = array($order);
-        }
-
-	/* Foreach through the defined key order
-	 * the first one we find is the first one we use 
-	 */
-        foreach($order as $key) {
-                if ($results[$key]) {
-			$returned_key = $key;
-                	break;
-        	}
-	}
-
-	/* If we didn't find anything then default it to the
-	 * first in the results set
-	 */
-	if (!isset($returned_key)) { 
-		$keys = array_keys($results);
-		$returned_key = $keys['0'];
-	}
-
-	return $returned_key;
-
-} // get_tag_type
-
-
-/**
- * clean_tag_info
- * This function takes the array from vainfo along with the 
- * key we've decided on and the filename and returns it in a 
- * sanatized format that ampache can actually use
- */
-function clean_tag_info($results,$key,$filename) { 
-
-	$info = array();
-
-	$clean_array = array("\n","\t","\r","\0");
-	$wipe_array  = array("","","","");
-
-	$info['file']		= $filename;
-	$info['title']        	= stripslashes(trim($results[$key]['title']));
-	$info['year']         	= intval($results[$key]['year']);
-	$info['track']		= intval($results[$key]['track']);
-	$info['disk']		= intval($results[$key]['disk']);
-	$info['comment']      	= Dba::escape(str_replace($clean_array,$wipe_array,$results[$key]['comment']));
-	$info['language']	= Dba::escape($results[$key]['language']); 
-	$info['lyrics']		= Dba::escape($results[$key]['lyricist']); 
-
-	/* This are pulled from the info array */
-	$info['bitrate']      	= intval($results['info']['bitrate']);
-	$info['rate']         	= intval($results['info']['sample_rate']);
-	$info['mode']         	= $results['info']['bitrate_mode'];
-
-	// Convert special version of constant bitrate mode to cbr
-	if($info['mode'] == 'con') {
-		$info['mode'] = 'cbr';
-	}
-
-	$info['size']         	= $results['info']['filesize']; 
-	$info['mime']		= $results['info']['mime'];
-	$into['encoding']	= $results['info']['encoding'];
-	$info['time']         	= intval($results['info']['playing_time']);
-	$info['channels']	= intval($results['info']['channels']);
-
-        /* These are used to generate the correct ID's later */
-        $info['artist'] 	= trim($results[$key]['artist']);
-	$info['album']  	= trim($results[$key]['album']);
-        $info['genre']  	= trim($results[$key]['genre']);
-
-	return $info;
-
-} // clean_tag_info
-
 /*!
 	@function scrub_in()
 	@discussion Run on inputs, stuff that might get stuck in our db
@@ -266,21 +179,6 @@ function get_global_popular($type) {
         return $items;
 
 } // get_global_popular
-
-/*!
-	@function get_file_extension
-	@discussion returns all characters after the last "." in $filename
-	Should I be using pathinfo() instead?
-*/
-function get_file_extension( $filename ) {
-	$file_name_parts = explode( ".", $filename );
-	$num_parts = count( $file_name_parts );
-	if( $num_parts <= 1 ) {
-		return;
-	} else {
-		return $file_name_parts[$num_parts - 1];
-	}
-} // get_file_extension
 
 /**
  * generate_password

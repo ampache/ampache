@@ -93,6 +93,13 @@ auth_methods = "mysql"
 ; DEFAULT: mp3|mpc|m4p|m4a|mp4|aac|ogg|rm|wma|asf|flac|spx|ra|ape|shn|wv
 catalog_file_pattern = "mp3|mpc|m4p|m4a|mp4|aac|ogg|rm|wma|asf|flac|spx|ra|ape|shn|wv"
 
+; Video Pattern
+; This defines which video file types Ampache will attempt to catalog
+; You can specify any file extension you want in here seperating them with
+; a | but ampache may not be able to parse them
+; DEAFULT: avi|mpg
+catalog_video_pattern = "avi|mpg"
+
 ; Prefix Pattern
 ; This defines which prefix Ampache will ignore when importing tags from
 ; your music. You may add any prefix you want seperating them with a |

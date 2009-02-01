@@ -158,6 +158,45 @@ class vainfo {
 	} // get_info
 
 	/**
+	 * get_tag_type
+	 * This takes the result set, and the the tag_order
+	 * As defined by your config file and trys to figure out
+	 * which tag type it should use, if your tag_order
+	 * doesn't match anything then it just takes the first one
+	 * it finds in the results. 
+	 */
+	public static function get_tag_type($results) {
+
+	        /* Pull In the config option */
+	        $order = Config::get('tag_order');
+	
+	        if (!is_array($order)) {
+	                $order = array($order);
+	        }
+	
+	        /* Foreach through the defined key order
+	         * the first one we find is the first one we use 
+	         */
+	        foreach($order as $key) {
+	                if ($results[$key]) {
+	                        $returned_key = $key;
+	                        break;
+	                }
+	        }
+
+	        /* If we didn't find anything then default it to the
+	         * first in the results set
+	         */
+	        if (!isset($returned_key)) {
+	                $keys = array_keys($results);
+	                $returned_key = $keys['0'];
+	        }
+
+	        return $returned_key;
+
+	} // get_tag_type
+
+	/**
 	 * _get_type
 	 * This function takes the raw information and figures out
 	 * what type of file we are dealing with for use by the tag 
