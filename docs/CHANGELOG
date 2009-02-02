@@ -4,6 +4,8 @@
 
 --------------------------------------------------------------------------
   v.3-5-Alpha2
+	- Fixed adding object to playlist so that it correctly shows the 
+		songs rather then an empty playlist
 	- Added User Agent to IP History information gathering
 	- Added Access Control List Wizards to make API interface
 		setup easier

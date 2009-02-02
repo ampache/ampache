@@ -1458,7 +1458,7 @@ class Update {
 		$ip_history = array(); 
 
 		while ($row = Dba::fetch_assoc($db_results)) { 
-			$row['ip'] = sprintf('%u',long2ip($row['start']));
+			$row['ip'] = long2ip($row['ip']);
 			$ip_history[] = $row; 
 		} 
 
@@ -1487,8 +1487,8 @@ class Update {
 		$acl_information = array(); 
 
 		while ($row = Dba::fetch_assoc($db_results)) { 
-			$row['start'] = sprintf('%u',long2ip($row['start'])); 
-			$row['end'] = sprintf('%u',long2ip($row['end'])); 
+			$row['start'] = long2ip($row['start']);
+			$row['end'] = long2ip($row['end']);
 			$acl_information[] = $row; 
 		} 
 
@@ -1530,11 +1530,13 @@ class Update {
 		} // Adding default information
 
 		foreach ($acl_information as $row) { 
+			debug_event('Crap',print_r($row,1),1); 
 			$row['start'] = Dba::escape(inet_pton($row['start'])); 
 			$row['end'] = Dba::escape(inet_pton($row['end'])); 
+			$row['key'] = Dba::escape($row['key']); 
 			$sql = "INSERT INTO `access_list` (`name`,`level`,`start`,`end`,`key`,`user`,`type`,`enabled`) " . 
 				"VALUES ('" . Dba::escape($row['name']) . "','" . intval($row['level']) . 
-				"','" . $row['start'] . "','" . $row['end'] . "','" . intval($row['user']) . "','" . 
+				"','" . $row['start'] . "','" . $row['end'] . "','" . $row['key'] . "','" . intval($row['user']) . "','" . 
 				$row['type'] . "','1')"; 
 			$db_results = Dba::write($sql); 
 		} // end foreach of existing rows

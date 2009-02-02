@@ -99,6 +99,7 @@ switch ($_REQUEST['action']) {
 		// Add our new songs
 		$playlist->add_songs($songs); 
 		$playlist->format(); 
+		$object_ids = $playlist->get_items(); 
 		ob_start(); 
 		require_once Config::get('prefix') . '/templates/show_playlist.inc.php'; 
 		$results['content'] = ob_get_clean(); 
