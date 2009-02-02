@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2007 Ampache.org
+ Copyright (c) Ampache.org
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
@@ -23,19 +23,29 @@ $status = $localplay->status();
 ?>
 <?php Ajax::start_container('localplay_status'); ?>
 <?php show_box_top(_('Localplay Control')); ?>
-<strong><?php echo $localplay->get_user_state($status['state']) ?></strong><br />
-
+<?php echo _('Now Playing'); ?>:<i><?php echo $status['track_title']; ?> - <?php echo $status['track_album']; ?> - <?php echo $status['track_artist']; ?></i>
+<div id="information_actions">
+<ul>
+<li>
 <?php echo Ajax::button('?page=localplay&action=command&command=volume_mute','volumemute',_('Mute'),'localplay_mute'); ?>
 <?php echo Ajax::button('?page=localplay&action=command&command=volume_down','volumedn',_('Decrease Volume'),'localplay_volume_dn'); ?>
 <?php echo Ajax::button('?page=localplay&action=command&command=volume_up','volumeup',_('Increase Volume'),'localplay_volume_up'); ?>
-<strong><?php echo _('Volume'); ?>:</strong><?php echo $status['volume']; ?>%
-<br />
-	<strong><?php echo _('Repeat') . ":"; ?></strong> <?php echo print_boolean($status['repeat']); ?> | 
+<?php echo _('Volume'); ?>:<?php echo $status['volume']; ?>%
+</li>
+<li>
+	<?php echo print_boolean($status['repeat']); ?> | 
 	<?php echo Ajax::text('?page=localplay&action=repeat&value=' . invert_boolean($status['repeat']),print_boolean(invert_boolean($status['repeat'])),'localplay_repeat'); ?>
-	
-	<strong><?php echo _('Random') . ":"; ?></strong> <?php echo print_boolean($status['random']); ?> | 
+	<?php echo _('Repeat'); ?>
+</li>
+<li>
+	<?php echo print_boolean($status['random']); ?> | 
 	<?php echo Ajax::text('?page=localplay&action=random&value=' . invert_boolean($status['random']),print_boolean(invert_boolean($status['random'])),'localplay_random'); ?>
-	<br />
-<?php echo Ajax::text('?page=localplay&action=command&command=delete_all',_('Clear Playlist'),'localplay_clear_all'); ?>
+	<?php echo _('Random'); ?>
+</li>
+<li>
+	<?php echo Ajax::button('?page=localplay&action=command&command=delete_all','delete',_('Clear Playlist'),'localplay_clear_all'); ?><?php echo _('Clear Playlist'); ?>
+</li>
+</ul>
+</div>
 <?php show_box_bottom(); ?>
 <?php Ajax::end_container(); ?>

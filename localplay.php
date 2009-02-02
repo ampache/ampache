@@ -88,8 +88,5 @@ switch ($_REQUEST['action']) {
 	break;
 } // end switch action
 
-
-
 show_footer();
-
 ?>

@@ -4,6 +4,8 @@
 
 --------------------------------------------------------------------------
   v.3-5-Alpha2
+	- Fixed now playing now showing currently playing song
+	- Fixed now playing clear all not correctly refreshing screen
 	- Fixed adding object to playlist so that it correctly shows the 
 		songs rather then an empty playlist
 	- Added User Agent to IP History information gathering

@@ -78,10 +78,10 @@ switch ($_REQUEST['action']) {
 			break;
 			case 'delete_all': 
 				$localplay->delete_all(); 
-				
+				Browse::save_objects(array()); 	
 				ob_start(); 
-				require_once Config::get('prefix') . '/templates/show_localplay_playlist.inc.php'; 
-				$results['localplay_playlist'] = ob_get_contents(); 
+				Browse::show_objects(); 
+				$results['browse_content'] = ob_get_contents(); 
 				ob_end_clean(); 
 			break;
 			case 'skip': 

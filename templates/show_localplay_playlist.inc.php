@@ -19,6 +19,8 @@
 
 */
 $localplay = new Localplay(Config::get('localplay_controller'));
+$localplay->connect(); 
+$status = $localplay->status(); 
 ?>
 <?php require Config::get('prefix') . '/templates/list_header.inc.php'; ?>
 <table class="tabledata" cellpadding="0" cellspacing="0">
