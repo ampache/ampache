@@ -32,9 +32,10 @@ ob_end_clean();
 
 /* These parameters had better come in on the url. */
 $uid 		= scrub_in($_REQUEST['uid']);
-$song_id 	= scrub_in($_REQUEST['song']);
+$song_id 	= $_REQUEST['song'] ? scrub_in($_REQUEST['song']) : scrub_in($_REQUEST['oid']); 
 $sid 		= scrub_in($_REQUEST['sid']);
 $xml_rpc	= scrub_in($_REQUEST['xml_rpc']); 
+$video		= make_bool($_REQUEST['video']); 
 
 /* This is specifically for tmp playlist requests */
 $demo_id	= scrub_in($_REQUEST['demo_id']);
@@ -151,9 +152,16 @@ if ($random) {
 	} 
 } // if random 
 
-/* Base Checks passed create the song object */
-$song = new Song($song_id);
-$song->format();
+if (!$video) { 
+	/* Base Checks passed create the song object */
+	$song = new Song($song_id);
+	$song->format();
+}
+else { 
+	$song = new Video($song_id); 
+	$song->format(); 
+} 
+
 $catalog = new Catalog($song->catalog);
 
 /* If the song is disabled */
@@ -162,9 +170,6 @@ if (!make_bool($song->enabled)) {
 	exit;
 }
 
-
-
-	
 // If we are running in Legalize mode, don't play songs already playing
 if (Config::get('lock_songs')) {
 	if (!check_lock_songs($song->id)) { 
@@ -303,7 +308,7 @@ if ((Config::get('transcode') == 'always' || !$song->native_stream() || $not_loc
 else { 
 	// Send file, possible at a byte offset
 	$fp = fopen($song->file, 'rb');
-	
+
 	if (!is_resource($fp)) { 
 		debug_event('file_read_error',"Error: Unable to open $song->file for reading",'2');
 		cleanup_and_exit($lastid);

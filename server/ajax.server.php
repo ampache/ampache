@@ -286,6 +286,9 @@ switch ($_REQUEST['action']) {
 				$random_type = Random::validate_type($_REQUEST['random_type']); 
 				$GLOBALS['user']->playlist->add_object('0',$random_type); 
 			break;
+			case 'video': 
+				$GLOBALS['user']->playlist->add_object($_REQUEST['id'],'video'); 
+			break; 
 			default: 
 			case 'song': 
 				$GLOBALS['user']->playlist->add_object($_REQUEST['id'],'song'); 

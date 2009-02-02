@@ -212,11 +212,8 @@ class vainfo {
 	        $info['file']           = $filename;
 	        $info['title']          = stripslashes(trim($results[$key]['title']));
 	        $info['year']           = intval($results[$key]['year']);
-	        $info['track']          = intval($results[$key]['track']);
 	        $info['disk']           = intval($results[$key]['disk']);
 	        $info['comment']        = Dba::escape(str_replace($clean_array,$wipe_array,$results[$key]['comment']));
-	        $info['language']       = Dba::escape($results[$key]['language']);
-	        $info['lyrics']         = Dba::escape($results[$key]['lyricist']);
 
 	        /* This are pulled from the info array */
 	        $info['bitrate']        = intval($results['info']['bitrate']);
@@ -234,10 +231,22 @@ class vainfo {
 	        $info['time']           = intval($results['info']['playing_time']);
 	        $info['channels']       = intval($results['info']['channels']);
 
-	        /* These are used to generate the correct ID's later */
-	        $info['artist']         = trim($results[$key]['artist']);
-	        $info['album']          = trim($results[$key]['album']);
-	        $info['genre']          = trim($results[$key]['genre']);
+		// Specific Audio Flags
+		if (!$results[$key]['video_codec']) { 
+		        /* These are used to generate the correct ID's later */
+		        $info['artist']         = trim($results[$key]['artist']);
+		        $info['album']          = trim($results[$key]['album']);
+		        $info['genre']          = trim($results[$key]['genre']);
+		        $info['language']       = Dba::escape($results[$key]['language']);
+		        $info['lyrics']         = Dba::escape($results[$key]['lyrics']);
+		        $info['track']          = intval($results[$key]['track']);
+		}
+		else { 
+			$info['resolution_x']	= intval($results[$key]['resolution_x']); 
+			$info['resolution_y']	= intval($results[$key]['resolution_y']); 
+			$info['audio_codec']	= Dba::escape($results[$key]['audio_codec']); 
+			$info['video_codec']	= Dba::escape($results[$key]['video_codec']); 
+		} 
 
         	return $info;
 
@@ -255,6 +264,12 @@ class vainfo {
 		 * come from, in the end we trust the encoding 
 		 * type
 		 */
+		if ($type = $this->_raw['video']['dataformat']) { 
+			// Manually set the tag information
+			$this->_raw['tags']['avi'] = array(); 
+			$this->_clean_type($type); 
+			return $type; 
+		} 
 		if ($type = $this->_raw['audio']['streams']['0']['dataformat']) { 
 			$this->_clean_type($type);
 			return $type;
@@ -283,8 +298,6 @@ class vainfo {
 
 		$results = array();
 
-		/* Gather Tag information from the filenames */
-		$results['file']	= $this->_parse_filename($this->filename);
 
 		/* Return false if we don't have 
 		 * any tags to look at 
@@ -317,6 +330,9 @@ class vainfo {
 				case 'riff':
 					$results[$key] = $this->_parse_riff($tag_array); 
 				break;
+				case 'avi': 
+					$results[$key] = $this->_parse_avi($this->_raw2); 
+				break; 
 				default: 
 					debug_event('vainfo','Error: Unable to determine tag type of ' . $key . ' for file ' . $this->filename . ' Assuming id3v2','5');
 					$results[$key] = $this->_parse_id3v2($this->_raw['id3v2']['comments']);
@@ -324,6 +340,9 @@ class vainfo {
 			} // end switch
 
 		} // end foreach
+
+		/* Gather Tag information from the filenames */
+		$results['file']	= $this->_parse_filename($this->filename);
 
 		return $results;
 
@@ -389,6 +408,9 @@ class vainfo {
 			case 'vorbis':
 				return 'ogg';
 			break;
+			case 'avi': 
+				return 'avi';
+			break; 
 			default: 
 				/* Log the fact that we couldn't figure it out */
 				debug_event('vainfo','Unable to determine file type from ' . $type . ' on file ' . $this->filename,'5');
@@ -576,6 +598,26 @@ class vainfo {
                 return $array;
 
 	} // _parse_quicktime
+
+	/**
+	 * _parse_avi	
+	 * This attempts to parse our the information on an avi file and present it in some
+	 * kind of sane format, this is a little hard as these files don't have tags
+	 */
+	private function _parse_avi($tags) { 
+
+		$array = array(); 
+
+		$array['video_codec'] 	= $tags['video']['fourcc']; 
+		$array['audio_codec'] 	= $tags['audio']['dataformat']; 
+		$array['resolution_x']	= $tags['video']['resolution_x']; 
+		$array['resolution_y']	= $tags['video']['resolution_y']; 
+		$array['mime']		= $tags['mime_type']; 
+		$array['comment']	= $tags['video']['codec']; 
+
+		return $array; 
+
+	} // _parse_avi
 
 	/**
 	 * _parse_filename

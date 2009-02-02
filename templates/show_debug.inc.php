@@ -21,10 +21,18 @@
 */
 ?>
 <?php show_box_top(_('Debug Tools')); ?>
+<div id="information_actions">
 <ul>
-	<li><a href="<?php echo Config::get('web_path'); ?>/admin/system.php?action=generate_config"><?php echo _('Generate Configuration'); ?></a></li>
-	<li><a href="<?php echo Config::get('web_path'); ?>/admin/system.php?action=reset_db_charset"><?php echo _('Set Database Charset'); ?></a></li>
+<li>
+	<a href="<?php echo Config::get('web_path'); ?>/admin/system.php?action=generate_config"><?php echo get_user_icon('cog'); ?></a>
+	<?php echo _('Generate Configuration'); ?>
+</li>
+<li>
+	<a href="<?php echo Config::get('web_path'); ?>/admin/system.php?action=reset_db_charset"><?php echo get_user_icon('server_lightning'); ?></a>
+	<?php echo _('Set Database Charset'); ?>
+</li>
 </ul>
+</div>
 <?php show_box_bottom(); ?>
 <?php show_box_top(_('PHP Settings')); ?>
 <table class="tabledata" cellpadding="0" cellspacing="0">

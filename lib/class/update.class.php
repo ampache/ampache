@@ -299,6 +299,10 @@ class Update {
 
 		$version[] = array('version'=>'350004','description'=>$update_string); 
 
+		$update_string = "- Add table for Video files<br />"; 
+
+		$version[] = array('version'=>'350005','description'=>$update_string); 
+
 		return $version;
 
 	} // populate_version
@@ -1437,7 +1441,6 @@ class Update {
 
 	} // update_350003
 
-
 	/**
 	 * update_350004
 	 * This update makes some changes to the ACL table so that it can support IPv6 entries as well as some other feature 
@@ -1543,6 +1546,8 @@ class Update {
 		
 		self::set_version('db_version','350004');
 
+		return true; 
+
 	} // update_350004
 
 	/**
@@ -1562,9 +1567,26 @@ class Update {
 			"`resolution_y` MEDIUMINT UNSIGNED NOT NULL ," . 
 			"`time` INT( 11 ) UNSIGNED NOT NULL ," . 
 			"`size` BIGINT UNSIGNED NOT NULL," . 
-			"`mime` VARCHAR( 255 ) NOT NULL" . 
+			"`mime` VARCHAR( 255 ) NOT NULL," . 
+			"`enabled` TINYINT( 1) NOT NULL DEFAULT '1'" .
 			") ENGINE = MYISAM "; 
 		$db_results = Dba::write($sql); 
+
+		$sql = "ALTER TABLE `access_list` ADD INDEX ( `enabled` )";
+		$db_results = Dba::write($sql); 
+
+		$sql = "ALTER TABLE `video` ADD INDEX ( `file` )"; 
+		$db_results = Dba::write($sql); 
+
+		$sql = "ALTER TABLE `video` ADD INDEX ( `enabled` )"; 
+		$db_results = Dba::write($sql); 
+
+		$sql = "ALTER TABLE `video` ADD INDEX ( `title` )"; 
+		$db_results = Dba::write($sql); 
+
+		self::set_version('db_version','350005');
+
+		return true; 
 
 	} // update_350005
 

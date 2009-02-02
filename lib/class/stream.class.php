@@ -751,6 +751,34 @@ class Stream {
 
 	} // run_playlist_method
 
+	/**
+	 * get_base_url
+	 * This returns the base requirements for a stream URL this does not include anything after the index.php?sid=????
+	 */
+	public static function get_base_url($session_id='',$force_http='') { 
+
+                if (Config::get('require_session')) {
+                        $session_string = 'sid=' . Stream::get_session() . '&';
+                }
+
+                $web_path = Config::get('web_path');
+
+                if (Config::get('force_http_play') OR !empty($force_http)) {
+                        $port = Config::get('http_port');
+                        if (preg_match("/:\d+/",$web_path)) {
+                                $web_path = str_replace("https://", "http://",$web_path);
+                        }
+                        else {
+                                $web_path = str_replace("https://", "http://",$web_path);
+                        }
+                }
+
+		$url = $web_path . "/play/index.php?$session_string"; 
+
+		return $url; 
+
+	} // get_base_url
+
 } //end of stream class
 
 ?>

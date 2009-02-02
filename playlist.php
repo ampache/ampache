@@ -129,6 +129,7 @@ switch ($_REQUEST['action']) {
 		
 		/* Normalize the tracks */
 		$playlist->normalize_tracks();
+		$object_ids = $playlist->get_items(); 
 	default:
 		require_once Config::get('prefix') . '/templates/show_playlist.inc.php'; 
 	break;

@@ -287,6 +287,7 @@ class Browse {
 
 		switch($type) { 
 			case 'user':
+			case 'video': 
 			case 'playlist':
 			case 'playlist_song': 
 			case 'song':
@@ -347,6 +348,9 @@ class Browse {
 			case 'live_stream': 
 				$valid_array = array('name','call_sign','frequency'); 
 			break;
+			case 'video': 
+				$valid_array = array('title','video_codec','audio_codec'); 
+			break; 
                         case 'user':
                                 $valid_array = array('fullname','username','last_seen','create_date');
                         break;
@@ -604,6 +608,10 @@ class Browse {
 			case 'shoutbox': 
 				self::set_select("`user_shout`.`id`"); 
 				$sql = "SELECT %%SELECT%% FROM `user_shout` "; 
+			break; 
+			case 'video': 
+				self::set_select("`video`.`id`"); 
+				$sql = "SELECT %%SELECT%% FROM `video` ";
 			break; 
 			case 'tag': 
 				self::set_select("`tag`.`id`"); 
@@ -1022,6 +1030,13 @@ class Browse {
                                         break;
                                 } // end switch
                         break;
+			case 'video': 
+				switch ($field) { 
+					case 'title': 
+						$sql = "`video`.`title`"; 
+					break; 
+				}
+			break; 
 			default: 
 				// Rien a faire
 			break;
@@ -1140,6 +1155,11 @@ class Browse {
 				Tag::build_cache($tags); 
 				show_box_top(_('Tag Cloud'),$class); 
 				require_once Config::get('prefix') . '/templates/show_tagcloud.inc.php'; 
+				show_box_bottom(); 
+			break; 
+			case 'video': 
+				show_box_top(_('Videos'),$class); 
+				require_once Config::get('prefix') . '/templates/show_videos.inc.php'; 
 				show_box_bottom(); 
 			break; 
 			default: 

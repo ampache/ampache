@@ -95,13 +95,22 @@ class Catalog {
 			$catalog_id = Dba::escape($this->id);
 			// Get _EVERYTHING_
 			$sql = "SELECT `id`,`file` FROM `song` WHERE `catalog`='$catalog_id'";
-			$db_results = Dba::query($sql);
+			$db_results = Dba::read($sql);
 
 			// Populate the filecache
 			while ($results = Dba::fetch_assoc($db_results)) {
 				$this->_filecache[strtolower($results['file'])] = $results['id'];
 			}
+
+			$sql = "SELECT `id`,`file` FROM `video` WHERE `catalog`='$catalog_id'"; 
+			$db_results = Dba::read($sql); 
+
+			while ($results = Dba::fetch_assoc($db_results)) { 
+				$this->_filecache[strtolower($results['file'])] = 'v_' . $results['id']; 
+			} 
 		} // end if empty filecache
+
+		return true; 
 
 	} // _create_filecache
 
@@ -504,7 +513,7 @@ class Catalog {
 				
 			// Define the Video file pattern
 			if (!$is_audio_file AND Config::get('catalog_video_pattern')) {
-				$video_pattern = "/\.(" . Config::get('catalog_video_pattern') . "$/i"; 
+				$video_pattern = "/\.(" . Config::get('catalog_video_pattern') . ")$/i"; 
 				$is_video_file = preg_match($video_pattern,$file); 
 			}
 
@@ -1401,7 +1410,7 @@ class Catalog {
 	 * @package XMLRPC
 	 * @catagory Client
 	 */
-	function update_remote_catalog($data,$root_path) {
+	public function update_remote_catalog($data,$root_path) {
 
 		/*
 		 We need to check the incomming songs
@@ -1438,7 +1447,7 @@ class Catalog {
 	 * @package XMLRPC
 	 * @catagory Client
 	 */
-	function update_remote_album_images($data, $remote_server, $auth) {
+	public function update_remote_album_images($data, $remote_server, $auth) {
 		$label = "catalog.class.php::update_remote_album_images";
 		
 		$total_updated = 0;
@@ -1904,12 +1913,12 @@ class Catalog {
 
 		$sql = "OPTIMIZE TABLE `song_data`,`song`,`rating`,`catalog`,`session`,`object_count`,`album`,`album_data`" .
 			",`artist`,`ip_history`,`flagged`,`now_playing`,`user_preference`,`tag`,`tag_map`,`tmp_playlist`" . 
-			",`tmp_playlist_data`,`playlist`,`playlist_data`"; 
+			",`tmp_playlist_data`,`playlist`,`playlist_data`,`session_stream`"; 
 		$db_results = Dba::query($sql);
 
 		$sql = "ANALYZE TABLE `song_data`,`song`,`rating`,`catalog`,`session`,`object_count`,`album`,`album_data`" .
 		        ",`artist`,`ip_history`,`flagged`,`now_playing`,`user_preference`,`tag`,`tag_map`,`tmp_playlist`" .
-			",`tmp_playlist_data`,`playlist`,`playlist_data`";
+			",`tmp_playlist_data`,`playlist`,`playlist_data`,`session_stream`";
 		$db_results = Dba::query($sql);
 
 	} // optimize_tables;
@@ -2202,6 +2211,29 @@ class Catalog {
                 $vainfo         = new vainfo($file,'','','',$this->sort_pattern,$this->rename_pattern);
                 $vainfo->get_info();
 
+		$tag_name = vainfo::get_tag_type($vainfo->tags); 
+		$results = vainfo::clean_tag_info($vainfo->tags,$tag_name,$file); 
+
+		$file 		= Dba::escape($file); 
+		$catalog_id 	= Dba::escape($this->id); 
+		$title 		= Dba::escape(basename($file)); 
+		$vcodec 	= $results['video_codec']; 
+		$acodec 	= $results['audio_codec']; 
+		$rezx 		= $results['resolution_x']; 
+		$rezy 		= $results['resolution_y']; 
+		$filesize 	= Dba::escape($filesize); 
+		$time 		= Dba::escape($results['time']); 
+		$mime		= Dba::escape($results['mime']); 
+		// UNUSED CURRENTLY
+		$comment	= Dba::escape($results['comment']); 
+		$year		= Dba::escape($results['year']); 
+		$disk		= Dba::escape($results['disk']); 
+
+		$sql = "INSERT INTO `video` (`file`,`catalog`,`title`,`video_codec`,`audio_codec`,`resolution_x`,`resolution_y`,`size`,`time`,`mime`) " . 
+			" VALUES ('$file','$catalog_id','$title','$vcodec','$acodec','$rezx','$rezy','$filesize','$time','$mime')"; 
+		$db_results = Dba::write($sql); 
+
+		return true; 
 
 	} // insert_local_video
 

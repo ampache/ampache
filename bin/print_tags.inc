@@ -44,8 +44,8 @@ echo "Using: $catalog->sort_pattern AND $catalog->rename_pattern for file patter
 $info->get_info();
 $results = $info->tags;
 $results['file'] = $filename;
-$key = get_tag_type($results);
-$ampache_results = clean_tag_info($results,$key,$filename);
+$key = vainfo::get_tag_type($results);
+$ampache_results = vainfo::clean_tag_info($results,$key,$filename);
 
 if ($send_mail) { 
 	$getid3_results = print_r($info,1);

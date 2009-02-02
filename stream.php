@@ -44,18 +44,18 @@ switch ($_REQUEST['action']) {
 				case 'radio': 
 					$radio = new Radio($object_data['0']); 
 					$urls[] = $radio->url;
-					$song_ids[] = '-1'; 
 				break;
 				case 'song': 
 					$song_ids[] = $object_data['0'];
 				break;
+				case 'video': 
+					$video_url = Video::play_url($object_data['0']); 
+					if ($video_url) { $urls[] = $video_url; }  
+				break; 
 				default: 
 					$random_url = Random::play_url($object_data['1']); 
 					// If there's something to actually add
-					if ($random_url) { 
-						$urls[] = $random_url; 
-						$song_ids[] = '-1'; 
-					} 
+					if ($random_url) { $urls[] = $random_url; } 
 				break;
 			} // end switch on type
 		} // end foreach

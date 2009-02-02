@@ -40,6 +40,7 @@ switch ($_REQUEST['action']) {
 	case 'artist': 
 	case 'playlist': 
 	case 'live_stream': 
+	case 'video': 
 	case 'song': 
 		Browse::set_type($_REQUEST['action']); 
 		Browse::reset(); 
@@ -90,6 +91,11 @@ switch($_REQUEST['action']) {
 		$playlist_ids = Browse::get_objects(); 
 		Browse::show_objects(); 
 	break;
+	case 'video': 
+		Browse::set_sort('title','ASC'); 
+		$video_ids = Browse::get_objects(); 
+		Browse::show_objects(); 
+	break; 
 	default: 
 
 	break; 

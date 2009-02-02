@@ -859,13 +859,13 @@ class Song extends database_object {
 	
 		$web_path = Config::get('web_path');
 
-
+		//FIXME: REPLACE WITH Stream::get_base_url
                 if (Config::get('force_http_play') OR !empty($force_http)) {
                         $port = Config::get('http_port') ? ':' . Config::get('http_port') : ''; 
 			$web_path = str_replace("https://" . $_SERVER['HTTP_HOST'], "http://" . $_SERVER['SERVER_NAME'] . $port,$web_path);
                 }
 	
-		$url = $web_path . "/play/index.php?song=$song_id&uid=$user_id$session_string$ds_string&name=/$song_name";
+		$url = $web_path . "/play/index.php?oid=$song_id&uid=$user_id$session_string$ds_string&name=/$song_name";
 
 		return $url;
 

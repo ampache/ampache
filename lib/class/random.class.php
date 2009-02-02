@@ -97,25 +97,9 @@ class Random {
 			return false; 
 		} 
 	
-		if (Config::get('require_session')) { 
-			$session_string = '&sid=' . Stream::get_session();
-		} 
-
-                $web_path = Config::get('web_path');
-
-                if (Config::get('force_http_play') OR !empty($force_http)) {
-                        $port = Config::get('http_port');
-                        if (preg_match("/:\d+/",$web_path)) {
-                                $web_path = str_replace("https://", "http://",$web_path);
-                        }
-                        else {
-                                $web_path = str_replace("https://", "http://",$web_path);
-                        }
-                }
-		
 		$uid = $GLOBALS['user']->id; 
 	
-		$url = $web_path . "/play/index.php?random=1&type=$type&uid=$uid$session_string";
+		$url = Stream::get_base_url() . "random=1&type=$type&uid=$uid$session_string";
 
 		return $url; 
 

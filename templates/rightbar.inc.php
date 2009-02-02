@@ -88,8 +88,10 @@
 		$objects = array_slice($objects,0,100); 
 	} 
 
+	$normal_array = array('radio','song','video'); 
+
 	foreach ($objects as $uid=>$object_data) { 
-		if ($object_data['1'] == 'radio' || $object_data['1'] == 'song') { 
+		if (in_array($object_data['1'],$normal_array)) { 
 			$object = new $object_data['1']($object_data['0']); 
 			$object->format(); 
 		} 

@@ -4,6 +4,8 @@
 
 --------------------------------------------------------------------------
   v.3-5-Alpha2
+	- Added Video support
+	- Fixed normalize tracks not re-displaying playlist correctly
 	- Fixed now playing now showing currently playing song
 	- Fixed now playing clear all not correctly refreshing screen
 	- Fixed adding object to playlist so that it correctly shows the 
