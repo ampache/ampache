@@ -440,6 +440,11 @@ refresh_limit = "60"
 ; You need to change this when you activate public_registration.
 ;mail_from = "info@domain.tld"
 
+; It defines whether this setup checks a mail address strictly.
+; You can select "strict" or "easy" or "none".
+; DEFAULT: strict
+;mail_check = "strict"
+
 ; This setting turns on/off admin notify off registration.
 ; DEFAULT: false
 ;admin_notify_reg = "false"
