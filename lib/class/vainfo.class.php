@@ -608,6 +608,9 @@ class vainfo {
 
 		$array = array(); 
 
+		$info = pathinfo($this->filename); 
+
+		$array['title'] 	= $info['filename']; 
 		$array['video_codec'] 	= $tags['video']['fourcc']; 
 		$array['audio_codec'] 	= $tags['audio']['dataformat']; 
 		$array['resolution_x']	= $tags['video']['resolution_x']; 

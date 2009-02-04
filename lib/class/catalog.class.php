@@ -2214,9 +2214,10 @@ class Catalog {
 		$tag_name = vainfo::get_tag_type($vainfo->tags); 
 		$results = vainfo::clean_tag_info($vainfo->tags,$tag_name,$file); 
 
+
 		$file 		= Dba::escape($file); 
 		$catalog_id 	= Dba::escape($this->id); 
-		$title 		= Dba::escape(basename($file)); 
+		$title 		= Dba::escape($results['title']); 
 		$vcodec 	= $results['video_codec']; 
 		$acodec 	= $results['audio_codec']; 
 		$rezx 		= $results['resolution_x']; 

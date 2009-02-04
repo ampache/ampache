@@ -50,6 +50,9 @@ class Video extends database_object {
 
 		$this->f_title = scrub_out($this->title); 
 		$this->f_link = scrub_out($this->title);  
+		$this->f_codec = $this->video_codec . ' / ' . $this->audio_codec; 
+		$this->f_resolution = $this->resolution_x . 'x' . $this->resolution_y; 
+		$this->f_tags = ''; 
 
 	} // format
 

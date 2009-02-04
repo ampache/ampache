@@ -23,3 +23,6 @@
 	<?php echo Ajax::button('?action=basket&type=video&id=' . $video->id,'add',_('Add'),'add_video_' . $video->id); ?>
 </td>
 <td class="cel_title"><?php echo $video->f_title; ?></td>
+<td class="cel_codec"><?php echo $video->f_codec; ?></td>
+<td class="cel_resolution"><?php echo $video->f_resolution; ?></td>
+<td class="cel_tags"><?php $video->f_tags; ?></td>

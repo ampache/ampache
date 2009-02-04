@@ -26,10 +26,16 @@ $web_path = Config::get('web_path');
 <colgroup>
   <col id="col_add" />
   <col id="col_title" />
+  <col id="col_codec" />
+  <col id="col_resolution" />
+  <col id="col_tags" />
 </colgroup>
 <tr class="th-top">
 	<th class="cel_add"><?php echo _('Add'); ?></th>
 	<th class="cel_title"><?php echo _('Title'); ?></th>
+	<th class="cel_codec"><?php echo _('Codec'); ?></th>
+	<th class="cel_resolution"><?php echo _('Resolution'); ?></th>
+	<th class="cel_tags"><?php echo _('Tags'); ?></th>
 </tr>
 <?php 
 /* Foreach through every artist that has been passed to us */
@@ -49,6 +55,10 @@ foreach ($object_ids as $video_id) {
 <tr class="th-bottom">
 	<th class="cel_add"><?php echo _('Add'); ?></th>
         <th class="cel_title"><?php echo _('Title'); ?></th>
+	<th class="cel_codec"><?php echo _('Codec'); ?></th>
+	<th class="cel_resolution"><?php echo _('Resolution'); ?></th>
+	<th class="cel_tags"><?php echo _('Tags'); ?></th>
+
 </tr>
 </table>
 <?php require Config::get('prefix') . '/templates/list_header.inc.php'; ?>
