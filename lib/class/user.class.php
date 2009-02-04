@@ -699,7 +699,7 @@ class User extends database_object {
 		
 		/* Get Users Last ip */
 		$data = $this->get_ip_history(1);
-		$this->ip_history = long2ip($data['0']['ip']);	
+		$this->ip_history = inet_ntop($data['0']['ip']);	
 
 	} // format_user
 
@@ -997,27 +997,24 @@ class User extends database_object {
         public function get_ip_history($count='',$distinct='') { 
 
 		$username 	= Dba::escape($this->id);
-
-		if ($count) { 
-			$limit_sql = "LIMIT " . intval($count);
-		}
-		else { 
-			$limit_sql = "LIMIT " . intval(Config::get('user_ip_cardinality'));
-		} 
-		if ($distinct) { 
-			$group_sql = "GROUP BY `ip`";
-		}
+		$count		= $count ? intval($count) : intval(Config::get('user_ip_cardinality')); 
+		
+		// Make sure it's something 
+		if ($count < 1) { $count = '1'; } 
+		$limit_sql = "LIMIT " . intval($count);
+		
+		if ($distinct) { $group_sql = "GROUP BY `ip`"; }
                         
                 /* Select ip history */
                 $sql = "SELECT `ip`,`date` FROM `ip_history`" .
                         " WHERE `user`='$username'" .
                         " $group_sql ORDER BY `date` DESC $limit_sql";
-                $db_results = Dba::query($sql);
+                $db_results = Dba::read($sql);
 
                 $results = array();
          
-                while ($r = Dba::fetch_assoc($db_results)) {
-                        $results[] = $r;
+                while ($row = Dba::fetch_assoc($db_results)) {
+                        $results[] = $row;
                 }
         
                 return $results;

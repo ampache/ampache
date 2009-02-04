@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2007 Ampache.org
+ Copyright (c) Ampache.org
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
@@ -43,7 +43,7 @@
 		<?php echo date("d/m/Y H\hi",$data['date']); ?>
 	</td>
 	<td class="cel_ipaddress">
-		<?php echo long2ip($data['ip']); ?>
+		<?php echo inet_ntop($data['ip']); ?>
 	</td>
 </tr>
 <?php } ?>
