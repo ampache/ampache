@@ -4,6 +4,8 @@
 
 --------------------------------------------------------------------------
   v.3-5-Alpha2
+	- Fixed password not updating when editing an HTTPQ localplay
+		instance
 	- Added Video support
 	- Fixed normalize tracks not re-displaying playlist correctly
 	- Fixed now playing now showing currently playing song
