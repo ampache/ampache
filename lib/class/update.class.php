@@ -1556,7 +1556,7 @@ class Update {
 	 */
 	public static function update_350005() { 
 
-		$sql = " CREATE TABLE `ampache`.`video` (" . 
+		$sql = " CREATE TABLE `video` (" . 
 			"`id` INT( 11 ) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY ," . 
 			"`file` VARCHAR( 255 ) NOT NULL , " . 
 			"`catalog` INT( 11 ) UNSIGNED NOT NULL ," . 
