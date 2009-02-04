@@ -457,6 +457,12 @@ function __autoload($class) {
 
 } // __autoload
 
+/**
+ * win_checkdnsrr
+ * This is a windows emulation of the normal PHP functions
+ * not sure how I feel about the exec in here, but it's escaped
+ * this most likely won't work on a lot of systems
+ */
 function win_checkdnsrr($host, $type='MX') {
     if (strtoupper(substr(PHP_OS, 0, 3)) != 'WIN') { return; }
     if (empty($host)) { return; }
@@ -469,15 +475,20 @@ function win_checkdnsrr($host, $type='MX') {
     foreach($output as $line){
         if (preg_match('/^'.$host.'/',$line)) { return true; }
     }
-}
+} // win_checkdnsrr
 
-// Define
+// See if the function exists, and return as needed
 if (!function_exists('checkdnsrr')) {
     function checkdnsrr($host, $type='MX') {
         return win_checkdnsrr($host, $type);
     }
 }
 
+/**
+ * win_getmxrr
+ * This emulates the normal PHP function for getting MX records
+ * most likely won't work on systems due to use of exec
+ */
 function win_getmxrr($hostname, &$mxhosts, &$mxweight=false) {
     if (strtoupper(substr(PHP_OS, 0, 3)) != 'WIN') return;
     if (!is_array ($mxhosts) ) $mxhosts = array();
@@ -498,9 +509,9 @@ function win_getmxrr($hostname, &$mxhosts, &$mxweight=false) {
         }
     }
     return ($i!=-1);
-}
+} // win_getmxrr
 
-// Define
+// If no getmxrr return
 if (!function_exists('getmxrr')) {
     function getmxrr($hostname, &$mxhosts, &$mxweight=false) {
         return win_getmxrr($hostname, $mxhosts, $mxweight);

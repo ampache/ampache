@@ -63,6 +63,23 @@ class Dba {
 		self::$_sql = $sql; 
 		self::$stats['query']++; 
 
+		// Do a little error checking here and try to recover from some forms of failure
+		if (!$resource) { 
+			switch (mysql_errno(self::dbh())) { 
+				case '2006': 
+				case '2013': 
+				case '2055': 
+					debug_event('DBH','Lost connection to database server, trying to re-connect and hope nobody noticed','1'); 
+					self::disconnect(); 
+					// Try again
+					$resource = mysql_query($sql,self::dbh()); 
+				break;
+				default:
+					debug_event('DBH',mysql_error(self::dbh()) . ' ['. mysql_errno(self::dbh()) . ']','1'); 
+				break; 
+			} // end switch on error #
+		} // if failed query
+
 		return $resource; 
 
 	} // query
@@ -219,9 +236,9 @@ class Dba {
 		if (!$select_db) { debug_event('Database','Error unable to select ' . $database . ' error ' . mysql_error(),'1'); } 
 		
 		if (Config::get('sql_profiling')) {
-		  mysql_query('set profiling=1', $dbh);
-		  mysql_query('set profiling_history_size=50', $dbh);
-		  mysql_query('set query_cache_type=0', $dbh);
+			mysql_query('set profiling=1', $dbh);
+			mysql_query('set profiling_history_size=50', $dbh);
+			mysql_query('set query_cache_type=0', $dbh);
 		}
 		return $dbh;
 
@@ -267,6 +284,26 @@ class Dba {
 
 
 	} // dbh
+
+	/**
+	 * disconnect
+	 * This nukes the dbh connection based, this isn't used very often...
+	 */
+	public static function disconnect($database='') { 
+
+		if (!$database) { $database = self::$_default_db; } 
+
+		$handle = 'dbh_' . $database; 
+
+		// Try to close it correctly
+		mysql_close(Config::get($handle)); 
+
+		// Nuke it
+		Config::set($handle,false,1); 
+
+		return true; 
+
+	} // disconnect
 
 	/**
 	 * insert_id
