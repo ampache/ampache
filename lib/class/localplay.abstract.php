@@ -93,7 +93,8 @@ abstract class localplay_controller {
 	public function parse_url($url) { 
 
 		// Define possible 'primary' keys
-		$primary_array = array('song','demo_id','random');  
+		$primary_array = array('oid','demo_id','random');  
+		$data = array(); 
 
 		$variables = parse_url($url,PHP_URL_QUERY); 
 		parse_str($variables,$data); 
@@ -105,7 +106,6 @@ abstract class localplay_controller {
 			}
 
         	} // end foreach
-
 		return $data;
 
 	} // parse_url 

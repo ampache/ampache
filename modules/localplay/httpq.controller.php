@@ -199,7 +199,7 @@ class AmpacheHttpq extends localplay_controller {
 		$name	= Dba::escape($data['name']); 
 		$pass	= Dba::escape($data['password']); 
 		
-		$sql = "UPDATE `localplay_httpq` SET `host`='$host', `port`='$port', `name`='$name', `password`='$password' WHERE `id`='$uid'"; 
+		$sql = "UPDATE `localplay_httpq` SET `host`='$host', `port`='$port', `name`='$name', `password`='$pass' WHERE `id`='$uid'"; 
 		$db_results = Dba::query($sql); 
 
 		return true; 
@@ -464,7 +464,7 @@ class AmpacheHttpq extends localplay_controller {
 
 		/* Get the Current Playlist */
 		$list = $this->_httpq->get_tracks();
-		
+
 		if (!$list) { return array(); } 
 	
 		$songs = explode("::",$list); 
@@ -477,10 +477,9 @@ class AmpacheHttpq extends localplay_controller {
 			$data['raw']	= $entry;		
 
 			$url_data = $this->parse_url($entry); 
-
                         switch ($url_data['primary_key']) {
-                                case 'song':
-                                        $song = new Song($url_data['song']);
+                                case 'oid':
+                                        $song = new Song($url_data['oid']);
                                         $song->format();
                                         $data['name'] = $song->f_title . ' - ' . $song->f_album . ' - ' . $song->f_artist;
                                         $data['link']   = $song->f_link;
@@ -495,7 +494,6 @@ class AmpacheHttpq extends localplay_controller {
 					$data['link'] = ''; 
 				break; 
                                 default:
-
                                         /* If we don't know it, look up by filename */
                                         $filename = Dba::escape(basename($entry));
                                         $sql = "SELECT `id` FROM `song` WHERE `file` LIKE '%$filename'";
