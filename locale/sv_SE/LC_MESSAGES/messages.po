@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ampache\n"
 "Report-Msgid-Bugs-To: translations at ampache.org\n"
-"POT-Creation-Date: 2009-02-02 07:39+0900\n"
+"POT-Creation-Date: 2009-02-05 10:49+0900\n"
 "PO-Revision-Date: 2008-10-26 17:04+0100\n"
 "Last-Translator: Daniel Nylander <po@danielnylander.se>\n"
 "Language-Team: Swedish <tp-sv@listor.tp-sv.se>\n"
@@ -30,8 +30,11 @@ msgstr "Fel: Inget nyckelord angivit"
 #: ../../templates/show_live_streams.inc.php:57
 #: ../../templates/show_playlists.inc.php:34
 #: ../../templates/show_playlists.inc.php:57
+#: ../../templates/show_videos.inc.php:34
+#: ../../templates/show_videos.inc.php:56
 #: ../../templates/show_add_live_stream.inc.php:68
 #: ../../templates/show_catalog_row.inc.php:28
+#: ../../templates/show_video_row.inc.php:23
 #: ../../templates/show_artist_row.inc.php:23
 #: ../../templates/show_genres.inc.php:36
 #: ../../templates/show_genres.inc.php:72
@@ -51,15 +54,15 @@ msgid "Add"
 msgstr "Lägg till"
 
 #: ../../templates/show_album_row.inc.php:24
-#: ../../templates/sidebar_home.inc.php:102
+#: ../../templates/sidebar_home.inc.php:103
 #: ../../templates/show_artist_row.inc.php:24
-#: ../../templates/show_localplay_status.inc.php:36
+#: ../../templates/show_localplay_status.inc.php:43
 #: ../../templates/show_artist.inc.php:41
 #: ../../templates/show_album.inc.php:55
 #: ../../templates/show_playlist_row.inc.php:24
 #: ../../lib/class/stream.class.php:400
 #: ../../modules/localplay/mpd.controller.php:495
-#: ../../modules/localplay/httpq.controller.php:494
+#: ../../modules/localplay/httpq.controller.php:493
 msgid "Random"
 msgstr "Slumpmässigt"
 
@@ -98,14 +101,14 @@ msgstr "Redigerar inställningar för %s"
 #: ../../templates/show_preference_box.inc.php:70
 #: ../../templates/show_preference_admin.inc.php:30
 #: ../../templates/show_preference_admin.inc.php:49
-#: ../../templates/show_debug.inc.php:85
+#: ../../templates/show_debug.inc.php:93
 msgid "Preference"
 msgstr "Inställning"
 
 #: ../../templates/show_user_preferences.inc.php:37
 #: ../../templates/show_preference_box.inc.php:41
 #: ../../templates/show_preference_box.inc.php:71
-#: ../../templates/show_debug.inc.php:37 ../../templates/show_debug.inc.php:86
+#: ../../templates/show_debug.inc.php:45 ../../templates/show_debug.inc.php:94
 msgid "Value"
 msgstr "Värde"
 
@@ -313,7 +316,7 @@ msgstr "Omslag"
 
 #: ../../templates/show_albums.inc.php:44
 #: ../../templates/show_albums.inc.php:75
-#: ../../templates/sidebar_home.inc.php:104
+#: ../../templates/sidebar_home.inc.php:105
 #: ../../templates/show_edit_song.inc.php:37
 #: ../../templates/show_play_selected.inc.php:59
 #: ../../templates/show_search.inc.php:50
@@ -336,8 +339,8 @@ msgstr "Album"
 #: ../../templates/show_artists.inc.php:37
 #: ../../templates/show_artists.inc.php:65
 #: ../../templates/sidebar_home.inc.php:34
-#: ../../templates/sidebar_home.inc.php:79
-#: ../../templates/sidebar_home.inc.php:105
+#: ../../templates/sidebar_home.inc.php:80
+#: ../../templates/sidebar_home.inc.php:106
 #: ../../templates/show_similar_artists.inc.php:33
 #: ../../templates/show_similar_artists.inc.php:86
 #: ../../templates/show_edit_song.inc.php:45
@@ -366,7 +369,7 @@ msgstr "Artist"
 #: ../../templates/show_genre.inc.php:38
 #: ../../templates/show_genres.inc.php:38
 #: ../../templates/show_genres.inc.php:74
-#: ../../lib/class/browse.class.php:1081
+#: ../../lib/class/browse.class.php:1096
 msgid "Songs"
 msgstr "Låtar"
 
@@ -383,6 +386,8 @@ msgstr "År"
 #: ../../templates/show_albums.inc.php:79
 #: ../../templates/show_artists.inc.php:41
 #: ../../templates/show_artists.inc.php:69
+#: ../../templates/show_videos.inc.php:38
+#: ../../templates/show_videos.inc.php:60
 #: ../../templates/show_songs.inc.php:43 ../../templates/show_songs.inc.php:72
 #: ../../templates/show_random.inc.php:41
 msgid "Tags"
@@ -413,8 +418,9 @@ msgstr "Åtgärder"
 #: ../../templates/show_live_streams.inc.php:53
 #: ../../templates/show_playlists.inc.php:53
 #: ../../templates/show_manage_democratic.inc.php:63
+#: ../../templates/show_videos.inc.php:52
 #: ../../templates/show_objects.inc.php:44
-#: ../../templates/rightbar.inc.php:106 ../../templates/show_genres.inc.php:68
+#: ../../templates/rightbar.inc.php:108 ../../templates/show_genres.inc.php:68
 #: ../../templates/show_user_recommendations.inc.php:32
 #: ../../templates/show_user_recommendations.inc.php:43
 #: ../../templates/show_user_recommendations.inc.php:54
@@ -482,8 +488,8 @@ msgstr "Senaste Ip"
 #: ../../templates/show_genres.inc.php:39
 #: ../../templates/show_genres.inc.php:75
 #: ../../templates/show_localplay_instances.inc.php:29
-#: ../../templates/show_localplay_playlist.inc.php:33
-#: ../../templates/show_localplay_playlist.inc.php:59
+#: ../../templates/show_localplay_playlist.inc.php:35
+#: ../../templates/show_localplay_playlist.inc.php:61
 #: ../../templates/show_songs.inc.php:51 ../../templates/show_songs.inc.php:78
 #: ../../templates/show_song.inc.php:27
 #: ../../templates/show_admin_tools.inc.php:34
@@ -502,8 +508,8 @@ msgid "On-line"
 msgstr "Ansluten"
 
 #: ../../templates/show_users.inc.php:53 ../../templates/show_user.inc.php:22
-#: ../../lib/class/user.class.php:663 ../../lib/class/catalog.class.php:152
-#: ../../lib/class/catalog.class.php:153 ../../lib/preferences.php:261
+#: ../../lib/class/user.class.php:663 ../../lib/class/catalog.class.php:161
+#: ../../lib/class/catalog.class.php:162 ../../lib/preferences.php:261
 msgid "Never"
 msgstr "Aldrig"
 
@@ -511,7 +517,7 @@ msgstr "Aldrig"
 #: ../../lib/class/flag.class.php:282 ../../lib/class/localplay.class.php:648
 #: ../../lib/class/user.class.php:667 ../../lib/general.lib.php:337
 #: ../../modules/localplay/mpd.controller.php:511
-#: ../../modules/localplay/httpq.controller.php:510
+#: ../../modules/localplay/httpq.controller.php:508
 msgid "Unknown"
 msgstr "Okänd"
 
@@ -638,8 +644,8 @@ msgstr "Uppdatera användare"
 #: ../../templates/show_account.inc.php:27
 #: ../../templates/show_edit_album.inc.php:27
 #: ../../templates/show_add_access_current.inc.php:26
-#: ../../templates/show_localplay_playlist.inc.php:32
-#: ../../templates/show_localplay_playlist.inc.php:58
+#: ../../templates/show_localplay_playlist.inc.php:34
+#: ../../templates/show_localplay_playlist.inc.php:60
 #: ../../templates/show_add_playlist.inc.php:28
 #: ../../templates/show_admin_tools.inc.php:33
 #: ../../templates/show_admin_tools.inc.php:73
@@ -692,7 +698,7 @@ msgstr "Aktivera"
 #: ../../templates/show_localplay_controllers.inc.php:59
 #: ../../templates/show_plugins.inc.php:57
 #: ../../templates/show_flagged.inc.php:49
-#: ../../templates/show_localplay_playlist.inc.php:53
+#: ../../templates/show_localplay_playlist.inc.php:55
 #: ../../templates/show_disabled_songs.inc.php:52
 #: ../../templates/show_manage_shoutbox.inc.php:54
 msgid "No Records Found"
@@ -729,10 +735,10 @@ msgstr "Spara ändringar"
 #: ../../templates/show_artists.inc.php:39
 #: ../../templates/show_artists.inc.php:67
 #: ../../templates/sidebar_home.inc.php:33
-#: ../../templates/sidebar_home.inc.php:76
+#: ../../templates/sidebar_home.inc.php:77
 #: ../../templates/show_local_catalog_info.inc.php:29
 #: ../../templates/show_genre.inc.php:32 ../../lib/ui.lib.php:408
-#: ../../lib/class/browse.class.php:1087
+#: ../../lib/class/browse.class.php:1102
 msgid "Albums"
 msgstr "Album"
 
@@ -757,6 +763,8 @@ msgid "Search Type"
 msgstr "Söktyp"
 
 #: ../../templates/show_duplicate.inc.php:33
+#: ../../templates/show_videos.inc.php:35
+#: ../../templates/show_videos.inc.php:57
 #: ../../templates/show_edit_song.inc.php:31
 #: ../../templates/show_search.inc.php:40
 #: ../../templates/show_disabled_songs.inc.php:34
@@ -832,7 +840,7 @@ msgid "Browse"
 msgstr "Bläddra"
 
 #: ../../templates/sidebar_home.inc.php:32
-#: ../../templates/sidebar_home.inc.php:73
+#: ../../templates/sidebar_home.inc.php:74
 #: ../../templates/show_songs.inc.php:40 ../../templates/show_songs.inc.php:69
 #: ../../templates/show_playlist_songs.inc.php:42
 #: ../../templates/show_playlist_songs.inc.php:63
@@ -840,72 +848,77 @@ msgid "Song Title"
 msgstr "Låttitel"
 
 #: ../../templates/sidebar_home.inc.php:35
-#: ../../lib/class/browse.class.php:1141
+#: ../../lib/class/browse.class.php:1156
 msgid "Tag Cloud"
 msgstr "Taggmoln"
 
 #: ../../templates/sidebar_home.inc.php:36
-#: ../../templates/sidebar_home.inc.php:85
-#: ../../templates/sidebar_home.inc.php:106
+#: ../../templates/sidebar_home.inc.php:86
+#: ../../templates/sidebar_home.inc.php:107
 #: ../../templates/show_manage_democratic.inc.php:34
 #: ../../templates/show_play_selected.inc.php:47 ../../lib/ui.lib.php:367
 msgid "Playlist"
 msgstr "Spellista"
 
 #: ../../templates/sidebar_home.inc.php:37
-#: ../../lib/class/browse.class.php:1104
+#: ../../lib/class/browse.class.php:1119
 msgid "Radio Stations"
 msgstr "Radiostationer"
 
-#: ../../templates/sidebar_home.inc.php:41
+#: ../../templates/sidebar_home.inc.php:38
+#, fuzzy
+msgid "Video"
+msgstr "Visa"
+
+#: ../../templates/sidebar_home.inc.php:42
 msgid "Filters"
 msgstr "Filter"
 
-#: ../../templates/sidebar_home.inc.php:45
+#: ../../templates/sidebar_home.inc.php:46
 msgid "Starts With"
 msgstr "Börjar med"
 
-#: ../../templates/sidebar_home.inc.php:51
+#: ../../templates/sidebar_home.inc.php:52
 msgid "Minimum Count"
 msgstr "Minimum antal"
 
-#: ../../templates/sidebar_home.inc.php:55
+#: ../../templates/sidebar_home.inc.php:56
 msgid "Rated"
 msgstr "Betygsatt"
 
-#: ../../templates/sidebar_home.inc.php:59
+#: ../../templates/sidebar_home.inc.php:60
 msgid "Unplayed"
 msgstr "Inte spelad"
 
-#: ../../templates/sidebar_home.inc.php:63
+#: ../../templates/sidebar_home.inc.php:64
 #: ../../templates/show_artist.inc.php:55
 msgid "Show Art"
 msgstr "Visa omslagsbild"
 
-#: ../../templates/sidebar_home.inc.php:68
+#: ../../templates/sidebar_home.inc.php:69
 msgid "All Playlists"
 msgstr "Alla spellistor"
 
-#: ../../templates/sidebar_home.inc.php:87
+#: ../../templates/sidebar_home.inc.php:88
 msgid "Currently Playing"
 msgstr "Spelar just nu"
 
-#: ../../templates/sidebar_home.inc.php:89
+#: ../../templates/sidebar_home.inc.php:90
 #: ../../templates/show_playtype_switch.inc.php:36
 #: ../../templates/sidebar_modules.inc.php:46 ../../lib/preferences.php:179
 #: ../../modules/localplay/mpd.controller.php:491
-#: ../../modules/localplay/httpq.controller.php:490
+#: ../../modules/localplay/httpq.controller.php:489
 msgid "Democratic"
 msgstr "Demokratisk"
 
-#: ../../templates/sidebar_home.inc.php:98
+#: ../../templates/sidebar_home.inc.php:99
 #: ../../templates/sidebar_localplay.inc.php:32
 #: ../../templates/show_playtype_switch.inc.php:34
 #: ../../templates/sidebar.inc.php:28 ../../lib/preferences.php:182
 msgid "Localplay"
 msgstr "Lokal uppspelning"
 
-#: ../../templates/sidebar_home.inc.php:107
+#: ../../templates/sidebar_home.inc.php:108
 msgid "Advanced"
 msgstr "Avancerat"
 
@@ -1258,6 +1271,18 @@ msgstr "Frågor:"
 msgid "Cache Hits:"
 msgstr "Cacheträffar:"
 
+#: ../../templates/show_videos.inc.php:36
+#: ../../templates/show_videos.inc.php:58
+#, fuzzy
+msgid "Codec"
+msgstr "Kod"
+
+#: ../../templates/show_videos.inc.php:37
+#: ../../templates/show_videos.inc.php:59
+#, fuzzy
+msgid "Resolution"
+msgstr "Registrering"
+
 #: ../../templates/show_add_access_rpc.inc.php:22
 #: ../../templates/show_access_list.inc.php:36
 #: ../../templates/show_access_list.inc.php:37
@@ -1401,12 +1426,12 @@ msgstr "Objekt"
 msgid "Reason to flag"
 msgstr "Anledning för flagga"
 
-#: ../../templates/show_flag.inc.php:56 ../../templates/rightbar.inc.php:103
+#: ../../templates/show_flag.inc.php:56 ../../templates/rightbar.inc.php:105
 #: ../../templates/show_catalog_row.inc.php:33
 #: ../../templates/show_democratic_playlist.inc.php:78
 #: ../../templates/show_live_stream_row.inc.php:34
 #: ../../templates/show_localplay_instances.inc.php:40
-#: ../../templates/show_localplay_playlist.inc.php:48
+#: ../../templates/show_localplay_playlist.inc.php:50
 #: ../../templates/show_playlist_song_row.inc.php:38
 #: ../../templates/show_playlist_row.inc.php:38
 #: ../../templates/show_admin_tools.inc.php:53
@@ -1603,7 +1628,7 @@ msgstr "Avancerat"
 
 #: ../../templates/sidebar_admin.inc.php:24
 #: ../../templates/show_admin_tools.inc.php:26
-#: ../../lib/class/browse.class.php:1125
+#: ../../lib/class/browse.class.php:1140
 msgid "Catalogs"
 msgstr "Kataloger"
 
@@ -1692,7 +1717,7 @@ msgstr "Totalt antal användare"
 
 #: ../../templates/show_local_catalog_info.inc.php:30
 #: ../../templates/show_genre.inc.php:35 ../../lib/ui.lib.php:412
-#: ../../lib/class/browse.class.php:1098 ../../lib/class/album.class.php:256
+#: ../../lib/class/browse.class.php:1113 ../../lib/class/album.class.php:256
 msgid "Artists"
 msgstr "Artister"
 
@@ -1724,7 +1749,7 @@ msgid "Optional"
 msgstr "Alternativ"
 
 #: ../../templates/show_install_lang.inc.php:121
-#: ../../templates/show_debug.inc.php:72
+#: ../../templates/show_debug.inc.php:80
 msgid "Gettext Support"
 msgstr "Gettext-stöd"
 
@@ -1761,7 +1786,7 @@ msgid "Add to New Playlist"
 msgstr "Lägg till i ny spellista"
 
 #: ../../templates/rightbar.inc.php:54
-#: ../../templates/show_localplay_status.inc.php:39
+#: ../../templates/show_localplay_status.inc.php:46
 msgid "Clear Playlist"
 msgstr "Töm spellista"
 
@@ -1769,15 +1794,15 @@ msgstr "Töm spellista"
 msgid "Add Dynamic Items"
 msgstr "Lägg till dynamiska objekt"
 
-#: ../../templates/rightbar.inc.php:60 ../../lib/class/random.class.php:432
+#: ../../templates/rightbar.inc.php:60 ../../lib/class/random.class.php:416
 msgid "Pure Random"
 msgstr "Helt slumpmässigt"
 
-#: ../../templates/rightbar.inc.php:63 ../../lib/class/random.class.php:429
+#: ../../templates/rightbar.inc.php:63 ../../lib/class/random.class.php:413
 msgid "Related Artist"
 msgstr "Relaterad artist"
 
-#: ../../templates/rightbar.inc.php:66 ../../lib/class/random.class.php:423
+#: ../../templates/rightbar.inc.php:66 ../../lib/class/random.class.php:407
 msgid "Related Album"
 msgstr "Relaterat album"
 
@@ -1785,11 +1810,12 @@ msgstr "Relaterat album"
 msgid "Related Tag"
 msgstr "Relaterad tagg"
 
-#: ../../templates/rightbar.inc.php:110
+#: ../../templates/rightbar.inc.php:112
 msgid "More"
 msgstr "Mer"
 
 #: ../../templates/header.inc.php:35
+#: ../../templates/show_localplay_status.inc.php:26
 #: ../../templates/show_now_playing.inc.php:33
 #: ../../lib/class/localplay.class.php:639
 #: ../../lib/class/ampacherss.class.php:70
@@ -1940,8 +1966,8 @@ msgid "Genre"
 msgstr "Genre"
 
 #: ../../templates/show_edit_song.inc.php:61
-#: ../../templates/show_localplay_playlist.inc.php:31
-#: ../../templates/show_localplay_playlist.inc.php:57
+#: ../../templates/show_localplay_playlist.inc.php:33
+#: ../../templates/show_localplay_playlist.inc.php:59
 #: ../../templates/show_songs.inc.php:44 ../../templates/show_songs.inc.php:73
 #: ../../templates/show_playlist_songs.inc.php:41
 #: ../../templates/show_playlist_songs.inc.php:46
@@ -2152,23 +2178,23 @@ msgstr "Välj"
 msgid "Localplay Control"
 msgstr ""
 
-#: ../../templates/show_localplay_status.inc.php:28
+#: ../../templates/show_localplay_status.inc.php:30
 msgid "Mute"
 msgstr "Tyst"
 
-#: ../../templates/show_localplay_status.inc.php:29
+#: ../../templates/show_localplay_status.inc.php:31
 msgid "Decrease Volume"
 msgstr "Sänk volymen"
 
-#: ../../templates/show_localplay_status.inc.php:30
+#: ../../templates/show_localplay_status.inc.php:32
 msgid "Increase Volume"
 msgstr "Öka volymen"
 
-#: ../../templates/show_localplay_status.inc.php:31
+#: ../../templates/show_localplay_status.inc.php:33
 msgid "Volume"
 msgstr "Volym"
 
-#: ../../templates/show_localplay_status.inc.php:33
+#: ../../templates/show_localplay_status.inc.php:38
 msgid "Repeat"
 msgstr "Upprepa"
 
@@ -2665,8 +2691,8 @@ msgid "Disk"
 msgstr "Disk"
 
 #: ../../templates/show_album.inc.php:34
-#: ../../lib/class/catalog.class.php:1931
-#: ../../lib/class/catalog.class.php:2002
+#: ../../lib/class/catalog.class.php:1940
+#: ../../lib/class/catalog.class.php:2011
 msgid "Unknown (Orphaned)"
 msgstr "Okänd (föräldralös)"
 
@@ -2932,61 +2958,61 @@ msgstr "Återgå till inloggningssidan"
 msgid "Debug Tools"
 msgstr "Felsökningsverktyg"
 
-#: ../../templates/show_debug.inc.php:25
+#: ../../templates/show_debug.inc.php:28
 msgid "Generate Configuration"
 msgstr "Generera konfiguration"
 
-#: ../../templates/show_debug.inc.php:26
+#: ../../templates/show_debug.inc.php:32
 msgid "Set Database Charset"
 msgstr "Ange teckenuppsättning för databas"
 
-#: ../../templates/show_debug.inc.php:29
+#: ../../templates/show_debug.inc.php:37
 msgid "PHP Settings"
 msgstr "PHP-inställningar"
 
-#: ../../templates/show_debug.inc.php:36
+#: ../../templates/show_debug.inc.php:44
 msgid "Setting"
 msgstr "Inställning"
 
-#: ../../templates/show_debug.inc.php:40
+#: ../../templates/show_debug.inc.php:48
 msgid "Memory Limit"
 msgstr "Minnesgräns"
 
-#: ../../templates/show_debug.inc.php:44
+#: ../../templates/show_debug.inc.php:52
 msgid "Maximum Execution Time"
 msgstr "Maximal exekveringstid"
 
-#: ../../templates/show_debug.inc.php:48
+#: ../../templates/show_debug.inc.php:56
 #, fuzzy
 msgid "Override Execution Time"
 msgstr "Maximal exekveringstid"
 
-#: ../../templates/show_debug.inc.php:49
+#: ../../templates/show_debug.inc.php:57
 #, fuzzy
 msgid "Failed"
 msgstr "Fil"
 
-#: ../../templates/show_debug.inc.php:49
+#: ../../templates/show_debug.inc.php:57
 msgid "Succeeded"
 msgstr ""
 
-#: ../../templates/show_debug.inc.php:52
+#: ../../templates/show_debug.inc.php:60
 msgid "Safe Mode"
 msgstr "Säkert läge"
 
-#: ../../templates/show_debug.inc.php:60
+#: ../../templates/show_debug.inc.php:68
 msgid "Zlib Support"
 msgstr "Zlib-stöd"
 
-#: ../../templates/show_debug.inc.php:64
+#: ../../templates/show_debug.inc.php:72
 msgid "GD Support"
 msgstr "GD-stöd"
 
-#: ../../templates/show_debug.inc.php:68
+#: ../../templates/show_debug.inc.php:76
 msgid "Iconv Support"
 msgstr "Iconv-stöd"
 
-#: ../../templates/show_debug.inc.php:78
+#: ../../templates/show_debug.inc.php:86
 msgid "Current Configuration"
 msgstr "Aktuell konfiguration"
 
@@ -3168,30 +3194,35 @@ msgstr "Bläddra musik"
 msgid "Add New"
 msgstr "Lägg till ny"
 
-#: ../../lib/class/browse.class.php:1093
+#: ../../lib/class/browse.class.php:1108
 msgid "Manage Users"
 msgstr "Hantera användare"
 
-#: ../../lib/class/browse.class.php:1110
+#: ../../lib/class/browse.class.php:1125
 msgid "Playlists"
 msgstr "Spellistor"
 
-#: ../../lib/class/browse.class.php:1115
+#: ../../lib/class/browse.class.php:1130
 #, fuzzy
 msgid "Playlist Songs"
 msgstr "Åtgärder för spellista"
 
-#: ../../lib/class/browse.class.php:1120
+#: ../../lib/class/browse.class.php:1135
 msgid "Current Playlist"
 msgstr "Aktuell spellista"
 
-#: ../../lib/class/browse.class.php:1130
+#: ../../lib/class/browse.class.php:1145
 msgid "Shoutbox Records"
 msgstr "Chattinlägg"
 
-#: ../../lib/class/browse.class.php:1135
+#: ../../lib/class/browse.class.php:1150
 msgid "Flagged Records"
 msgstr "Flaggade poster"
+
+#: ../../lib/class/browse.class.php:1161
+#, fuzzy
+msgid "Videos"
+msgstr "Diverse"
 
 #: ../../lib/class/access.class.php:102 ../../lib/class/access.class.php:106
 #: ../../lib/class/access.class.php:146 ../../lib/class/access.class.php:150
@@ -3242,8 +3273,8 @@ msgstr "Fel - användarnamn krävs"
 msgid "Error Passwords don't match"
 msgstr "Fel - lösenorden stämmer inte överens"
 
-#: ../../lib/class/album.class.php:479 ../../lib/class/catalog.class.php:433
-#: ../../lib/class/catalog.class.php:783
+#: ../../lib/class/album.class.php:479 ../../lib/class/catalog.class.php:442
+#: ../../lib/class/catalog.class.php:792
 msgid "Error: Unable to open"
 msgstr "Fel: Kunde inte öppna"
 
@@ -3251,157 +3282,157 @@ msgstr "Fel: Kunde inte öppna"
 msgid "RSS Feed"
 msgstr "RSS-kanal"
 
-#: ../../lib/class/catalog.class.php:211
+#: ../../lib/class/catalog.class.php:220
 msgid "day"
 msgid_plural "days"
 msgstr[0] "dygn"
 msgstr[1] "dygn"
 
-#: ../../lib/class/catalog.class.php:213
+#: ../../lib/class/catalog.class.php:222
 msgid "hour"
 msgid_plural "hours"
 msgstr[0] "timme"
 msgstr[1] "timmar"
 
-#: ../../lib/class/catalog.class.php:313
+#: ../../lib/class/catalog.class.php:322
 msgid "Running Remote Sync"
 msgstr "Kör fjärrsynkronisering"
 
-#: ../../lib/class/catalog.class.php:440 ../../lib/class/catalog.class.php:483
+#: ../../lib/class/catalog.class.php:449 ../../lib/class/catalog.class.php:492
 msgid "Error: Unable to change to directory"
 msgstr "Fel: Kunde inte byta till katalogen"
 
-#: ../../lib/class/catalog.class.php:519
+#: ../../lib/class/catalog.class.php:528
 #, php-format
 msgid "Error: Unable to get filesize for %s"
 msgstr "Fel: Kunde inte få filstorlek för %s"
 
-#: ../../lib/class/catalog.class.php:525
+#: ../../lib/class/catalog.class.php:534
 #, php-format
 msgid "%s is not readable by ampache"
 msgstr "%s är inte läsbar av ampache"
 
-#: ../../lib/class/catalog.class.php:533
+#: ../../lib/class/catalog.class.php:542
 #, php-format
 msgid "%s does not match site charset"
 msgstr "%s matchar inte systemets teckenuppsättning"
 
-#: ../../lib/class/catalog.class.php:1072 ../../preferences.php:111
+#: ../../lib/class/catalog.class.php:1081 ../../preferences.php:111
 #: ../../admin/access.php:109
 msgid "Updated"
 msgstr "Uppdaterad"
 
-#: ../../lib/class/catalog.class.php:1079
+#: ../../lib/class/catalog.class.php:1088
 msgid "No Update Needed"
 msgstr "Ingen uppdatering är nödvändig"
 
-#: ../../lib/class/catalog.class.php:1179
+#: ../../lib/class/catalog.class.php:1188
 msgid "Running Remote Update"
 msgstr "Kör fjärruppdatering"
 
-#: ../../lib/class/catalog.class.php:1206
+#: ../../lib/class/catalog.class.php:1215
 msgid "Added Playlist From"
 msgstr "Lade till spellista från"
 
-#: ../../lib/class/catalog.class.php:1235
+#: ../../lib/class/catalog.class.php:1244
 msgid "Catalog Update Finished"
 msgstr "Kataloguppdatering färdig"
 
-#: ../../lib/class/catalog.class.php:1235
+#: ../../lib/class/catalog.class.php:1244
 msgid "Total Time"
 msgstr "Total tid"
 
-#: ../../lib/class/catalog.class.php:1236
+#: ../../lib/class/catalog.class.php:1245
 msgid "Total Songs"
 msgstr "Totalt antal låtar"
 
-#: ../../lib/class/catalog.class.php:1236
+#: ../../lib/class/catalog.class.php:1245
 msgid "Songs Per Seconds"
 msgstr "Låtar per sekund"
 
-#: ../../lib/class/catalog.class.php:1250 ../../admin/users.php:142
+#: ../../lib/class/catalog.class.php:1259 ../../admin/users.php:142
 msgid "Error"
 msgstr "Fel"
 
-#: ../../lib/class/catalog.class.php:1250
+#: ../../lib/class/catalog.class.php:1259
 #, fuzzy
 msgid "Unable to load pear XMLRPC library, make sure XML-RPC is enabled"
 msgstr ""
 "Kunde inte läsa in XMLRPC-biblioteket, se till att XML-RPC är aktiverat"
 
-#: ../../lib/class/catalog.class.php:1282
-#: ../../lib/class/catalog.class.php:1356
-#: ../../lib/class/catalog.class.php:1389
+#: ../../lib/class/catalog.class.php:1291
+#: ../../lib/class/catalog.class.php:1365
+#: ../../lib/class/catalog.class.php:1398
 #: ../../lib/class/xmlrpcclient.class.php:64
 #: ../../lib/class/xmlrpcclient.class.php:97
 msgid "Error connecting to"
 msgstr "Fel vid anslutning till"
 
-#: ../../lib/class/catalog.class.php:1282
-#: ../../lib/class/catalog.class.php:1356
-#: ../../lib/class/catalog.class.php:1389
+#: ../../lib/class/catalog.class.php:1291
+#: ../../lib/class/catalog.class.php:1365
+#: ../../lib/class/catalog.class.php:1398
 #: ../../lib/class/xmlrpcclient.class.php:64
 #: ../../lib/class/xmlrpcclient.class.php:97
 msgid "Code"
 msgstr "Kod"
 
-#: ../../lib/class/catalog.class.php:1282
-#: ../../lib/class/catalog.class.php:1356
-#: ../../lib/class/catalog.class.php:1389
+#: ../../lib/class/catalog.class.php:1291
+#: ../../lib/class/catalog.class.php:1365
+#: ../../lib/class/catalog.class.php:1398
 #: ../../lib/class/xmlrpcclient.class.php:64
 msgid "Reason"
 msgstr "Anledning"
 
-#: ../../lib/class/catalog.class.php:1311
+#: ../../lib/class/catalog.class.php:1320
 msgid "Completed updating remote catalog(s)"
 msgstr "Uppdatering av fjärrkatalog(er) färdig"
 
-#: ../../lib/class/catalog.class.php:1315
+#: ../../lib/class/catalog.class.php:1324
 msgid "Starting synchronisation of album images"
 msgstr ""
 
-#: ../../lib/class/catalog.class.php:1317
+#: ../../lib/class/catalog.class.php:1326
 msgid "Completed synchronisation of album images"
 msgstr ""
 
-#: ../../lib/class/catalog.class.php:1352 ../../admin/access.php:93
+#: ../../lib/class/catalog.class.php:1361 ../../admin/access.php:93
 msgid "Added"
 msgstr "Lades till"
 
-#: ../../lib/class/catalog.class.php:1385
+#: ../../lib/class/catalog.class.php:1394
 msgid "images synchronized: "
 msgstr ""
 
-#: ../../lib/class/catalog.class.php:1514
+#: ../../lib/class/catalog.class.php:1523
 msgid "Catalog Root unreadable, stopping clean"
 msgstr "Katalogroten inte läsbar, stoppar tömning"
 
-#: ../../lib/class/catalog.class.php:1571
+#: ../../lib/class/catalog.class.php:1580
 msgid "Catalog Clean Done"
 msgstr "Tömning av katalog färdig"
 
-#: ../../lib/class/catalog.class.php:1571
+#: ../../lib/class/catalog.class.php:1580
 msgid "files removed"
 msgstr "filer borttagna"
 
-#: ../../lib/class/catalog.class.php:1572
+#: ../../lib/class/catalog.class.php:1581
 msgid "Optimizing Tables"
 msgstr "Optimerar tabeller"
 
-#: ../../lib/class/catalog.class.php:1872
+#: ../../lib/class/catalog.class.php:1881
 msgid "Update Finished."
 msgstr "Uppdatering färdig."
 
-#: ../../lib/class/catalog.class.php:1872
+#: ../../lib/class/catalog.class.php:1881
 #, fuzzy
 msgid "Checked"
 msgstr "Kontrollerar"
 
-#: ../../lib/class/catalog.class.php:1872
+#: ../../lib/class/catalog.class.php:1881
 msgid "songs updated."
 msgstr "låtar uppdaterade."
 
-#: ../../lib/class/random.class.php:426
+#: ../../lib/class/random.class.php:410
 msgid "Related Genre"
 msgstr "Relaterad genre"
 
@@ -3589,7 +3620,7 @@ msgstr "Fel: Uppdateringen misslyckades"
 msgid "Your Account has been updated"
 msgstr "Ditt konto har uppdaterats"
 
-#: ../../play/index.php:81
+#: ../../play/index.php:82
 msgid "Session Expired: please log in again at"
 msgstr "Sessionen tog slut: logga in igen på"
 
