@@ -104,13 +104,15 @@ Contents:
 2. Getting all the components
 
   Apache >= 1.3.x http://www.apache.org OR other web server
-  PHP >= 5.1.x http://www.php.net
+  PHP >= 5.1.x http://www.php.net **
   	PHP5-Mysql
 	PHP5-Session
 	PHP5-gd (recommended)
 	PHP5 ICONV 
 	PHP5 ZLIB support (recommended)
   MySQL >= 5.x+ http://www.mysql.com
+
+  ** PHP 5.3.x is required for Windows systems
 
 3. Setting Up
 
