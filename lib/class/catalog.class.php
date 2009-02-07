@@ -24,7 +24,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  * @package Catalog
  * @catagory Class
  */
-class Catalog {
+class Catalog extends database_object {
 
 	public $name;
 	public $last_update;
@@ -60,29 +60,13 @@ class Catalog {
 		$this->id = intval($catalog_id);
 
 		/* Get the information from the db */
-		$info = $this->_get_info();
+		$info = $this->get_info($catalog_id);
 
 		foreach ($info as $key=>$value) {
 			$this->$key = $value;
 		}
 
 	} //constructor
-
-	/**
-	 * _get_info
-	 * get's the vars for $this out of the database requires an id
-	 */
-	private function _get_info() {
-
-		/* Grab the basic information from the catalog and return it */
-		$sql = "SELECT * FROM `catalog` WHERE `id`='$this->id'";
-		$db_results = Dba::query($sql);
-
-		$results = Dba::fetch_assoc($db_results);
-
-		return $results;
-
-	} // _get_info
 
 	/**
 	 * _create_filecache

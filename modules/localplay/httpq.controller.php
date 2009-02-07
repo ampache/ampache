@@ -329,7 +329,6 @@ class AmpacheHttpq extends localplay_controller {
 	 * take any arguments
 	 */
 	public function play() { 
-
 		/* A play when it's already playing causes a track restart
 		 * which we don't want to doublecheck its state
 		 */

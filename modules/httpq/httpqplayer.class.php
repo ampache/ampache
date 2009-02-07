@@ -395,7 +395,7 @@ class HttpQPlayer {
 	 * This is the core of this library it takes care of sending the HTTP
 	 * request to the HttpQ server and getting the response 
 	 */	
-	function sendCommand($cmd, $args) {
+	private function sendCommand($cmd, $args) {
 
   		$fp = fsockopen($this->host, $this->port, $errno, $errstr); 
 
@@ -414,7 +414,6 @@ class HttpQPlayer {
 
       		$msg = $msg . " HTTP/1.0\r\n\r\n";      		
     		fputs($fp, $msg);
-
 		$data = '';
 
     		while(!feof($fp)) {

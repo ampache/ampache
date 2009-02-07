@@ -32,7 +32,7 @@ ob_end_clean();
 
 /* These parameters had better come in on the url. */
 $uid 		= scrub_in($_REQUEST['uid']);
-$song_id 	= $_REQUEST['song'] ? scrub_in($_REQUEST['song']) : scrub_in($_REQUEST['oid']); 
+$oid	 	= $_REQUEST['song'] ? scrub_in($_REQUEST['song']) : scrub_in($_REQUEST['oid']); 
 $sid 		= scrub_in($_REQUEST['sid']);
 $xml_rpc	= scrub_in($_REQUEST['xml_rpc']); 
 $video		= make_bool($_REQUEST['video']); 
@@ -44,9 +44,10 @@ $random		= scrub_in($_REQUEST['random']);
 // Parse byte range request
 $n = sscanf($_SERVER['HTTP_RANGE'], "bytes=%d-%d",$start,$end);
 
-/* First things first, if we don't have a uid/song_id stop here */
-if (empty($song_id) && empty($demo_id) && empty($random)) { 
-	debug_event('no_song',"Error: No Song UID Specified, nothing to play",'2');
+/* First things first, if we don't have a uid/oid stop here */
+if (empty($oid) && empty($demo_id) && empty($random)) { 
+	debug_event('Play',"Error: No Object UID Specified, nothing to play",'2');
+	echo "Error: No Object UID Specified, nothing to play";
 	exit; 
 }
 
@@ -56,7 +57,8 @@ if (isset($xml_rpc) AND Config::get('xml_rpc') AND !isset($uid)) {
 } 
 
 if (!isset($uid)) { 
-	debug_event('no_user','Error: No User specified','2'); 
+	debug_event('Play','Error: No User specified','2'); 
+	echo "Error: No User Specified"; 
 	exit;
 }
 
@@ -123,17 +125,17 @@ if ($demo_id) {
 	// If there is a cooldown we need to make sure this song isn't a repeat
 	if (!$democratic->cooldown) { 
 		/* This takes into account votes etc and removes the */
-		$song_id = $democratic->get_next_object();
+		$oid = $democratic->get_next_object();
 	} 
 	else { 
 		// Pull history
-		$song_id = $democratic->get_next_object($song_cool_check);
-		$song_ids = $democratic->get_cool_songs(); 
-		while (in_array($song_id,$song_ids)) { 
+		$oid = $democratic->get_next_object($song_cool_check);
+		$oids = $democratic->get_cool_songs(); 
+		while (in_array($oid,$oids)) { 
 			$song_cool_check++; 
-			$song_id = $democratic->get_next_object($song_cool_check);
+			$oid = $democratic->get_next_object($song_cool_check);
 			if ($song_cool_check >= '5') { break; } 
-		}
+		} // while we've got the 'new' song in old the array
 		
 	} // end if we've got a cooldown 
 } // if democratic ID passed
@@ -143,37 +145,38 @@ if ($demo_id) {
  */
 if ($random) { 
 	if ($start < 1) { 
-		$song_id = Random::get_single_song($_REQUEST['type']); 
+		$oid = Random::get_single_song($_REQUEST['type']); 
 		// Save this one incase we do a seek
-		$_SESSION['random']['last'] = $song_id; 
+		$_SESSION['random']['last'] = $oid; 
 	} 
 	else { 
-		$song_id = $_SESSION['random']['last']; 
+		$oid = $_SESSION['random']['last']; 
 	} 
 } // if random 
 
 if (!$video) { 
 	/* Base Checks passed create the song object */
-	$song = new Song($song_id);
-	$song->format();
+	$media = new Song($oid);
+	$media->format();
 }
 else { 
-	$song = new Video($song_id); 
-	$song->format(); 
+	$media = new Video($oid); 
+	$media->format(); 
 } 
 
-$catalog = new Catalog($song->catalog);
+// Build up the catalog for our current object
+$catalog = new Catalog($media->catalog);
 
 /* If the song is disabled */
-if (!make_bool($song->enabled)) { 
-	debug_event('song_disabled',"Error: $song->file is currently disabled, song skipped",'5');
+if (!make_bool($media->enabled)) { 
+	debug_event('Play',"Error: $media->file is currently disabled, song skipped",'5');
 	exit;
 }
 
 // If we are running in Legalize mode, don't play songs already playing
 if (Config::get('lock_songs')) {
-	if (!check_lock_songs($song->id)) { 
-		debug_event('Denied','Song ' . $song->id . ' is currently being played and lock songs is enabled','1'); 
+	if (!check_lock_songs($media->id)) { 
+		debug_event('Play','Song ' . $media->id . ' is currently being played and lock songs is enabled','1'); 
 		exit(); 
 	}
 }
@@ -181,7 +184,7 @@ if (Config::get('lock_songs')) {
 /* Check to see if this is a 'remote' catalog */
 if ($catalog->catalog_type == 'remote') {
 
-	preg_match("/(.+)\/play\/index.+/",$song->file,$match); 
+	preg_match("/(.+)\/play\/index.+/",$media->file,$match); 
 
 	$token = xmlRpcClient::ampache_handshake($match['1'],$catalog->key); 
 
@@ -194,14 +197,14 @@ if ($catalog->catalog_type == 'remote') {
 	$sid   = xmlRpcClient::ampache_create_stream_session($match['1'],$token); 
 
 	$extra_info = "&xml_rpc=1&sid=$sid";
-	header("Location: " . $song->file . $extra_info);
-	debug_event('xmlrpc-stream',"Start XML-RPC Stream - " . $song->file . $extra_info,'5');
+	header("Location: " . $media->file . $extra_info);
+	debug_event('xmlrpc-stream',"Start XML-RPC Stream - " . $media->file . $extra_info,'5');
 
 	/* If this is a voting tmp playlist remove the entry, we do this regardless of play amount */
 	if ($demo_id) {
-	        $row_id = $democratic->get_uid_from_object_id($song_id,'song');
+	        $row_id = $democratic->get_uid_from_object_id($oid,'song');
 	        if ($row_id) {
-	                debug_event('Democratic','Removing ' . $song->title . ' from Democratic Playlist','1');
+	                debug_event('Democratic','Removing ' . $media->title . ' from Democratic Playlist','1');
 	                $democratic->delete_votes($row_id);
 	        }
 	} // if tmp_playlist
@@ -210,15 +213,15 @@ if ($catalog->catalog_type == 'remote') {
 } // end if remote catalog
 
 /* If we don't have a file, or the file is not readable */
-if (!$song->file OR !is_readable($song->file)) { 
+if (!$media->file OR !is_readable($media->file)) { 
 
 	// We need to make sure this isn't democratic play, if it is then remove the song
 	// from the vote list
 	if (is_object($tmp_playlist)) { 
-		$tmp_playlist->delete_track($song_id); 
+		$tmp_playlist->delete_track($oid); 
 	}
 
-	debug_event('file_not_found',"Error song $song->file ($song->title) does not have a valid filename specified",'2');
+	debug_event('Play',"Error song $media->file ($media->title) does not have a valid filename specified",'2');
 	echo "Error: Invalid Song Specified, file not found or file unreadable"; 
 	exit; 
 }
@@ -230,7 +233,7 @@ set_magic_quotes_runtime(0);
 ignore_user_abort(TRUE);
 
 // Format the song name
-$song_name = $song->f_artist_full . " - " . $song->title . "." . $song->type;
+$media_name = $media->f_artist_full . " - " . $media->title . "." . $media->type;
 
 /* If they are just trying to download make sure they have rights 
  * and then present them with the download file
@@ -238,18 +241,18 @@ $song_name = $song->f_artist_full . " - " . $song->title . "." . $song->type;
 if ($_GET['action'] == 'download' AND Config::get('download')) { 
 	
 	// STUPID IE
-	$song->format_pattern(); 
-	$song_name = str_replace(array('?','/','\\'),"_",$song->f_file);
+	$media->format_pattern(); 
+	$media_name = str_replace(array('?','/','\\'),"_",$media->f_file);
 
 	// Use Horde's Browser class to send the headers
-	header("Content-Length: " . $song->size); 
+	header("Content-Length: " . $media->size); 
 	$browser = new Browser(); 
-	$browser->downloadHeaders($song_name,$song->mime,false,$song->size); 
-	$fp = fopen($song->file,'rb'); 
+	$browser->downloadHeaders($media_name,$media->mime,false,$media->size); 
+	$fp = fopen($media->file,'rb'); 
 	$bytesStreamed = 0; 
 
 	if (!is_resource($fp)) { 
-                debug_event('file_read_error',"Error: Unable to open $song->file for downloading",'2');
+                debug_event('Play',"Error: Unable to open $media->file for downloading",'2');
 		exit(); 
         }
 		
@@ -267,9 +270,9 @@ if ($_GET['action'] == 'download' AND Config::get('download')) {
 	} 
 
 	// Make sure that a good chunk of the song has been played
-	if ($bytesStreamed >= $song->size) {
-        	debug_event('Stats','Downloaded, Registering stats for ' . $song->title,'5');
-	        $user->update_stats($song->id);
+	if ($bytesStreamed >= $media->size) {
+        	debug_event('Play','Downloaded, Registering stats for ' . $media->title,'5');
+	        $user->update_stats($media->id);
 	} // if enough bytes are streamed
 		
 	fclose($fp); 
@@ -292,49 +295,49 @@ if (Config::get('track_user_ip')) {
 // If we've got downsample remote enabled
 if (Config::get('downsample_remote')) { 
 	if (!Access::check_network('network',$GLOBALS['user']->id,'0')) { 
-		debug_event('downsample','Network Downsample ' . $_SERVER['REMOTE_ADDR'] . ' is not in Local definition','5'); 
+		debug_event('Downsample','Network Downsample ' . $_SERVER['REMOTE_ADDR'] . ' is not in Local definition','5'); 
 		$not_local = true;
 	}
 } // if downsample remote is enabled
 
 // If they are downsampling, or if the song is not a native stream or it's non-local
-if ((Config::get('transcode') == 'always' || !$song->native_stream() || $not_local) && Config::get('transcode') != 'never') { 
-	debug_event('downsample','Starting Downsample...','5');
+if ((Config::get('transcode') == 'always' || !$media->native_stream() || $not_local) && Config::get('transcode') != 'never') { 
+	debug_event('Downsample','Starting Downsample...','5');
 	$fp = Stream::start_downsample($song,$lastid,$song_name,$start);
-	$song_name = $song->f_artist_full . " - " . $song->title . "." . $song->type;
+	$song_name = $media->f_artist_full . " - " . $media->title . "." . $media->type;
 	// Note that this is downsampling
 	$downsampled_song = true; 
 } // end if downsampling
 else { 
 	// Send file, possible at a byte offset
-	$fp = fopen($song->file, 'rb');
+	$fp = fopen($media->file, 'rb');
 
 	if (!is_resource($fp)) { 
-		debug_event('file_read_error',"Error: Unable to open $song->file for reading",'2');
+		debug_event('Play',"Error: Unable to open $media->file for reading",'2');
 		cleanup_and_exit($lastid);
 	}
 } // else not downsampling
 
 // Put this song in the now_playing table
-Stream::insert_now_playing($song->id,$uid,$song->time,$sid);
+Stream::insert_now_playing($media->id,$uid,$media->time,$sid);
 
 if ($start > 0) {
 
 	// Calculate stream size from byte range
 	if(isset($end)) {
-		$end = min($end,$song->size-1);
+		$end = min($end,$media->size-1);
 		$stream_size = ($end-$start)+1;
 	} 
 	else {
-		$stream_size = $song->size - $start;
+		$stream_size = $media->size - $start;
 	}
 	
-	debug_event('seek','Content-Range header recieved, skipping ahead ' . $start . ' bytes out of ' . $song->size,'5');
-	$browser->downloadHeaders($song_name, $song->mime, false, $song->size);
+	debug_event('Play','Content-Range header recieved, skipping ahead ' . $start . ' bytes out of ' . $media->size,'5');
+	$browser->downloadHeaders($song_name, $media->mime, false, $media->size);
 	if (!$downsampled_song) { 
 		fseek( $fp, $start );
 	} 
-	$range = $start ."-". $end . "/" . $song->size;
+	$range = $start ."-". $end . "/" . $media->size;
 	header("HTTP/1.1 206 Partial Content");
 	header("Content-Range: bytes $range");
 	header("Content-Length: ".($stream_size));
@@ -342,18 +345,17 @@ if ($start > 0) {
 
 /* Last but not least pump em out */
 else {
-	debug_event('stream','Starting stream of ' . $song->file . ' with size ' . $song->size,'5'); 
-	header("Content-Length: $song->size");
-	$browser->downloadHeaders($song_name, $song->mime, false, $song->size);
-	$stream_size = $song->size; 
+	debug_event('Play','Starting stream of ' . $media->file . ' with size ' . $media->size,'5'); 
+	header("Content-Length: $media->size");
+	$browser->downloadHeaders($song_name, $media->mime, false, $media->size);
+	$stream_size = $media->size; 
 }
 	
-
 /* Let's force them to actually play a portion of the song before 
  * we count it in the statistics
  */
 $bytes_streamed = 0;
-$min_bytes_streamed = $song->size / 2;
+$min_bytes_streamed = $media->size / 2;
 
 // Actually do the streaming 
 do {
@@ -371,29 +373,29 @@ if($bytes_streamed < $stream_size AND (connection_status() == 0)) {
 
 // Make sure that a good chunk of the song has been played
 if ($bytes_streamed > $min_bytes_streamed) {
-	debug_event('Stats','Registering stats for ' . $song->title,'5'); 
+	debug_event('Play','Registering stats for ' . $media->title,'5'); 
 	
-        $user->update_stats($song->id);
+        $user->update_stats($media->id);
 	/* Set the Song as Played if it isn't already */
-	$song->set_played();
+	$media->set_played();
 
 } // if enough bytes are streamed
 else { 
-	debug_event('stream',$bytes_streamed .' of ' . $song->size . ' streamed, less than ' . $min_bytes_streamed . ' not collecting stats','5'); 
+	debug_event('Play',$bytes_streamed .' of ' . $media->size . ' streamed, less than ' . $min_bytes_streamed . ' not collecting stats','5'); 
 } 
 
 
 /* If this is a voting tmp playlist remove the entry, we do this regardless of play amount */
 if ($demo_id) {
-	$row_id = $democratic->get_uid_from_object_id($song_id,'song');
+	$row_id = $democratic->get_uid_from_object_id($oid,'song');
         if ($row_id) {
-		debug_event('Democratic','Removing ' . $song->title . ' from Democratic Playlist','1');
+		debug_event('Democratic','Removing ' . $media->title . ' from Democratic Playlist','1');
 		$democratic->delete_votes($row_id);
 	}
 } // if tmp_playlist
 
 /* Clean up any open ends */
-if (Config::get('play_type') == 'downsample' || !$song->native_stream()) { 
+if (Config::get('play_type') == 'downsample' || !$media->native_stream()) { 
 	@pclose($fp);
 } 
 else { 
@@ -401,6 +403,6 @@ else {
 }
 
 // Note that the stream has ended
-debug_event('stream','Stream Ended at ' . $bytes_streamed . ' bytes out of ' . $song->size,'5'); 
+debug_event('Play','Stream Ended at ' . $bytes_streamed . ' bytes out of ' . $media->size,'5'); 
 
 ?>
