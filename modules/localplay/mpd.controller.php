@@ -541,10 +541,9 @@ class AmpacheMpd extends localplay_controller {
 		$array['repeat']	= $this->_mpd->repeat;
 		$array['random']	= $this->_mpd->random;
 		$array['track']		= $track+1;
-
-		preg_match("/song=(\d+)\&/",$this->_mpd->playlist[$track]['file'],$matches);
-		$song_id = $matches['1'];
-		$song = new Song($song_id);
+		
+		$url_data = $this->parse_url($this->_mpd->playlist[$track]['file']);
+		$song = new Song($url_data['oid']);
 		$array['track_title'] 	= $song->title;
 		$array['track_artist'] 	= $song->get_artist_name();
 		$array['track_album']	= $song->get_album_name();

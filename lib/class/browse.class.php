@@ -1070,7 +1070,7 @@ class Browse {
 
 		// Limit is based on the users preferences if this is not a simple browse because we've got too much here
 		if (count($object_ids) > self::$start AND !self::is_simple_browse()) { 
-			$object_ids = array_slice($object_ids,self::$start,self::$offset); 
+			$object_ids = array_slice($object_ids,self::$start,self::$offset,TRUE); 
 		} 
 
 		// Format any matches we have so we can show them to the masses

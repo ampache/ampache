@@ -24,7 +24,9 @@ $web_path = Config::get('web_path');
 <colgroup>
   <col id="col_action" />
   <col id="col_votes" />
-  <col id="col_song" />
+  <col id="col_title" />
+  <col id="col_album" />
+  <col id="col_artist" />
   <col id="col_time" />
   <?php if (Access::check('interface','100')) { ?>
   <col id="col_admin" />
@@ -50,7 +52,9 @@ else {
 <tr class="th-top">
 	<th class="cel_action"><?php echo _('Action'); ?></th>
 	<th class="cel_votes"><?php echo _('Votes'); ?></th>
-	<th class="cel_song"><?php echo _('Song'); ?></th>
+	<th class="cel_title"><?php echo _('Title'); ?></th>
+	<th class="cel_album"><?php echo _('Album'); ?></th>
+	<th class="cel_artist"><?php echo _('Artist'); ?></th>
 	<th class="cel_time"><?php echo _('Time'); ?></th>
 	<?php if (Access::check('interface','100')) { ?>
 	<th class="cel_admin"><?php echo _('Admin'); ?></th>
@@ -72,7 +76,9 @@ foreach($object_ids as $row_id=>$object_data) {
 	<?php } ?>
 	</td>
 	<td class="cel_votes"><?php echo scrub_out($democratic->get_vote($row_id)); ?></td>
-	<td class="cel_song"><?php echo $song->f_link . " / " . $song->f_album_link . " / " . $song->f_artist_link; ?></td>
+	<td class="cel_title"><?php echo $song->f_link; ?></td>
+	<td class="cel_album"><?php echo $song->f_album_link; ?></td>
+	<td class="cel_artist"><?php echo $song->f_artist_link; ?></td>
 	<td class="cel_time"><?php echo $song->f_time; ?></td>
 	<?php if ($GLOBALS['user']->has_access(100)) { ?>
 	<td class="cel_admin">

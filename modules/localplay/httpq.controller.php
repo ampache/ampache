@@ -535,9 +535,8 @@ class AmpacheHttpq extends localplay_controller {
 		$array['random']	= $this->_httpq->get_random();
 		$array['track']		= $this->_httpq->get_now_playing();
 
-		preg_match("/song=(\d+)\&/",$array['track'],$matches);
-		$song_id = $matches['1'];
-		$song = new Song($song_id);
+		$url_data = $this->parse_url($array['track']); 
+		$song = new Song($url_data['oid']);
 		$array['track_title'] 	= $song->title;
 		$array['track_artist'] 	= $song->get_artist_name();
 		$array['track_album']	= $song->get_album_name();
