@@ -480,8 +480,8 @@ class AmpacheMpd extends localplay_controller {
 			$url_data = $this->parse_url($entry['file']); 
 		
 			switch ($url_data['primary_key']) { 
-				case 'song': 	
-					$song = new Song($url_data['song']); 
+				case 'oid': 	
+					$song = new Song($url_data['oid']); 
 					$song->format(); 
 					$data['name'] = $song->f_title . ' - ' . $song->f_album . ' - ' . $song->f_artist;					
 					$data['link']   = $song->f_link; 
