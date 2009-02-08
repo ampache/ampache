@@ -27,8 +27,6 @@ show_box_top(sprintf(_('%s Playlist') ,$democratic->name));
 	<?php echo _('Cooldown'); ?>:<?php echo $democratic->f_cooldown; ?>
 </li>
 <li>
-	<?php echo _('Now Playing'); ?>:<i>....</i>
-<li>
 	<?php echo Ajax::button('?page=democratic&action=send_playlist&democratic_id=' . scrub_out($democratic->id),'all',_('Play'),'play_democratic'); ?>
 	<?php echo _('Play'); ?>
 </li>

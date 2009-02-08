@@ -92,7 +92,9 @@ foreach($object_ids as $row_id=>$object_data) {
 <tr class="th-bottom">
 	<th class="cel_action"><?php echo _('Action'); ?></th>
 	<th class="cel_votes"><?php echo _('Votes'); ?></th>
-	<th class="cel_song"><?php echo _('Song'); ?></th>
+	<th class="cel_title"><?php echo _('Title'); ?></th>
+	<th class="cel_album"><?php echo _('Album'); ?></th>
+	<th class="cel_artist"><?php echo _('Artist'); ?></th>
 	<th class="cel_time"><?php echo _('Time'); ?></th>
 	<?php if ($GLOBALS['user']->has_access(100)) { ?>
 	<th class="cel_admin"><?php echo _('Admin'); ?></th>
