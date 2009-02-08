@@ -303,7 +303,7 @@ if (Config::get('downsample_remote')) {
 // If they are downsampling, or if the song is not a native stream or it's non-local
 if ((Config::get('transcode') == 'always' || !$media->native_stream() || $not_local) && Config::get('transcode') != 'never') { 
 	debug_event('Downsample','Starting Downsample...','5');
-	$fp = Stream::start_downsample($song,$lastid,$song_name,$start);
+	$fp = Stream::start_downsample($media,$lastid,$song_name,$start);
 	$song_name = $media->f_artist_full . " - " . $media->title . "." . $media->type;
 	// Note that this is downsampling
 	$downsampled_song = true; 

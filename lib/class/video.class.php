@@ -86,4 +86,16 @@ class Video extends database_object implements media {
 
 	} // play_url
 
+	/**
+	 * stream_cmd
+	 * test and see if the video needs to be natively streamed
+	 * if not it returns the transocding command from the config file
+	 * we can't use this->type because its been formated for the downsampling
+	 */
+	public function stream_cmd() { 
+
+
+
+	} // stream_cmd
+
 } // end Video class

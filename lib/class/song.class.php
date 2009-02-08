@@ -962,7 +962,7 @@ class Song extends database_object implements media {
 	 * we can't use this->type because its been formated for the
 	 * downsampling
 	 */
-	function stream_cmd() {
+	public function stream_cmd() {
 
 		// Find the target for this transcode
 		$conf_type      = 'transcode_' . $this->type . '_target';
