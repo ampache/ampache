@@ -77,10 +77,14 @@ switch ($_REQUEST['action']) {
 	break;
 	case 'show_playlist': 
 	default: 
+		require_once Config::get('prefix') . '/templates/show_democratic.inc.php'; 
 		$democratic = Democratic::get_current_playlist(); 
 		$democratic->set_parent(); 
 		$objects = $democratic->get_items();
-		require_once Config::get('prefix') . '/templates/show_democratic.inc.php';
+		Browse::set_type('democratic'); 
+		Browse::reset(); 
+		Browse::set_static_content(1); 
+		Browse::show_objects($objects); 
 	break;
 } // end switch on action
 

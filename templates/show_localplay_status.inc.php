@@ -20,10 +20,11 @@
 
 */
 $status = $localplay->status();  
+$now_playing = $status['track_title'] ? $status['track_title'] . ' - ' . $status['track_album'] . ' - ' . $status['track_artist'] : ''; 
 ?>
 <?php Ajax::start_container('localplay_status'); ?>
 <?php show_box_top(_('Localplay Control')); ?>
-<?php echo _('Now Playing'); ?>:<i><?php echo $status['track_title']; ?> - <?php echo $status['track_album']; ?> - <?php echo $status['track_artist']; ?></i>
+<?php echo _('Now Playing'); ?>:<i><?php echo $now_playing; ?></i>
 <div id="information_actions">
 <ul>
 <li>

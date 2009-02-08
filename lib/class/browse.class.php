@@ -38,7 +38,7 @@ class Browse {
 	// Boolean if this is a simple browse method (use different paging code)
 	public static $simple_browse; 
 
-	// Static Content, this is defaulted to false, if set to true then wen can't
+	// Static Content, this is defaulted to false, if set to true then when we can't
 	// apply any filters that would change the result set. 
 	public static $static_content = false; 
 	private static $_cache = array();  
@@ -299,6 +299,7 @@ class Browse {
 			case 'playlist_localplay': 
 			case 'shoutbox': 
 			case 'live_stream':
+			case 'democratic': 
 				// Set it
 				self::$type = $type; 
 				self::load_start(); 
@@ -1162,6 +1163,10 @@ class Browse {
 				require_once Config::get('prefix') . '/templates/show_videos.inc.php'; 
 				show_box_bottom(); 
 			break; 
+			case 'democratic': 
+				show_box_top(_('Democratic Playlist'),$class); 
+				require_once Config::get('prefix') . '/templates/show_democratic_playlist.inc.php'; 
+				show_box_bottom(); 
 			default: 
 				// Rien a faire
 			break;

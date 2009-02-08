@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2007 Ampache.org
+ Copyright (c) Ampache.org
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
@@ -26,12 +26,12 @@ $web_path = Config::get('web_path');
   <col id="col_votes" />
   <col id="col_song" />
   <col id="col_time" />
-  <?php if ($GLOBALS['user']->has_access(100)) { ?>
+  <?php if (Access::check('interface','100')) { ?>
   <col id="col_admin" />
   <?php } ?>
 </colgroup>
 <?php
-if (!count($objects)) { 
+if (!count($object_ids)) { 
 	$playlist = new Playlist($democratic->base_playlist);
 ?>
 <tr>
@@ -52,13 +52,14 @@ else {
 	<th class="cel_votes"><?php echo _('Votes'); ?></th>
 	<th class="cel_song"><?php echo _('Song'); ?></th>
 	<th class="cel_time"><?php echo _('Time'); ?></th>
-	<?php if ($GLOBALS['user']->has_access(100)) { ?>
+	<?php if (Access::check('interface','100')) { ?>
 	<th class="cel_admin"><?php echo _('Admin'); ?></th>
 	<?php } ?>
 </tr>
 <?php 
-
-foreach($objects as $row_id=>$object_data) { 
+$democratic = Democratic::get_current_playlist(); 
+$democratic->set_parent(); 
+foreach($object_ids as $row_id=>$object_data) { 
 	$song = new Song($object_data['0']);
 	$song->format();
 ?>
