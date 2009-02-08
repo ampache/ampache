@@ -19,7 +19,7 @@
 
 */
 
-class Video extends database_object {
+class Video extends database_object implements media {
 
 	public $id; 
 	public $title; 

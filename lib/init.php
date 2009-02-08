@@ -134,6 +134,7 @@ require_once $prefix . '/lib/stream.lib.php';
 require_once $prefix . '/lib/xmlrpc.php';
 require_once $prefix . '/lib/class/localplay.abstract.php';
 require_once $prefix . '/lib/class/database_object.abstract.php'; 
+require_once $prefix . '/lib/class/media.interface.php'; 
 require_once $prefix . '/modules/pearxmlrpc/rpc.php';
 require_once $prefix . '/modules/getid3/getid3.php';
 require_once $prefix . '/modules/infotools/Snoopy.class.php';

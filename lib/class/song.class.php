@@ -19,7 +19,7 @@
 
 */
 
-class Song extends database_object {
+class Song extends database_object implements media {
 
 	/* Variables from DB */
 	public $id;
@@ -823,6 +823,17 @@ class Song extends database_object {
 		return stripslashes($matches[1]);
 
 	} // get_info_from_filename
+
+	/**
+	 * play_url
+	 * This function takes all the song information and correctly formats a
+	 * a stream URL taking into account the downsmapling mojo and everything
+	 * else, this is the true function
+	 */
+	public function play_url($oid,$session_id='',$force_http='') { 
+
+
+	} // play_url
 
 	/**
 	 * get_url
