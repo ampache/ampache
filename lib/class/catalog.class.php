@@ -1776,7 +1776,7 @@ class Catalog extends database_object {
 		$catalog = new Catalog($catalog_id);
 
 		/* First get the filenames for the catalog */
-		$sql = "SELECT `id`,`file` FROM `song` WHERE `catalog`='$catalog_id'";
+		$sql = "SELECT `id`,`file` FROM `song` WHERE `catalog`='$catalog_id'";  
 		$db_results = Dba::query($sql);
 		$number = Dba::num_rows($db_results);
 
@@ -1897,12 +1897,12 @@ class Catalog extends database_object {
 
 		$sql = "OPTIMIZE TABLE `song_data`,`song`,`rating`,`catalog`,`session`,`object_count`,`album`,`album_data`" .
 			",`artist`,`ip_history`,`flagged`,`now_playing`,`user_preference`,`tag`,`tag_map`,`tmp_playlist`" . 
-			",`tmp_playlist_data`,`playlist`,`playlist_data`,`session_stream`"; 
+			",`tmp_playlist_data`,`playlist`,`playlist_data`,`session_stream`,`video`"; 
 		$db_results = Dba::query($sql);
 
 		$sql = "ANALYZE TABLE `song_data`,`song`,`rating`,`catalog`,`session`,`object_count`,`album`,`album_data`" .
 		        ",`artist`,`ip_history`,`flagged`,`now_playing`,`user_preference`,`tag`,`tag_map`,`tmp_playlist`" .
-			",`tmp_playlist_data`,`playlist`,`playlist_data`,`session_stream`";
+			",`tmp_playlist_data`,`playlist`,`playlist_data`,`session_stream`,`video`";
 		$db_results = Dba::query($sql);
 
 	} // optimize_tables;
@@ -2401,14 +2401,19 @@ class Catalog extends database_object {
 
 		// First remove the songs in this catalog
 		$sql = "DELETE FROM `song` WHERE `catalog` = '$catalog_id'";
-		$db_results = Dba::query($sql);
+		$db_results = Dba::write($sql);
 
 		// Only if the previous one works do we go on
 		if (!$db_results) { return false; }
 
+		$sql = "DELETE FROM `video` WHERE `catalog` = '$catalog_id'"; 
+		$db_results = Dba::write($sql); 
+
+		if (!$db_results) { return false; } 
+
 		// Next Remove the Catalog Entry it's self
 		$sql = "DELETE FROM `catalog` WHERE `id` = '$catalog_id'";
-		$db_results = Dba::query($sql);
+		$db_results = Dba::write($sql);
 
 		// Run the Aritst/Album Cleaners...
 		self::clean($catalog_id);

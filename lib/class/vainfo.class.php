@@ -266,7 +266,12 @@ class vainfo {
 		 */
 		if ($type = $this->_raw['video']['dataformat']) { 
 			// Manually set the tag information
-			$this->_raw['tags']['avi'] = array(); 
+			if ($type == 'flv') { 
+				$this->_raw['tags']['flv'] = array(); 
+			} 
+			else { 
+				$this->_raw['tags']['avi'] = array(); 
+			} 
 			$this->_clean_type($type); 
 			return $type; 
 		} 
@@ -330,6 +335,9 @@ class vainfo {
 				case 'riff':
 					$results[$key] = $this->_parse_riff($tag_array); 
 				break;
+				case 'flv': 
+					$results[$key] = $this->_parse_flv($this->_raw2); 
+				break; 
 				case 'avi': 
 					$results[$key] = $this->_parse_avi($this->_raw2); 
 				break; 
@@ -408,6 +416,9 @@ class vainfo {
 			case 'vorbis':
 				return 'ogg';
 			break;
+			case 'flv':
+				return 'flv'; 
+			break; 
 			case 'avi': 
 				return 'avi';
 			break; 
@@ -621,6 +632,29 @@ class vainfo {
 		return $array; 
 
 	} // _parse_avi
+
+	/**
+	 * _parse_flv
+	 * This attempts to parse our the information on an flv file and present it in some
+	 * kind of sane format, this is a little hard as these files don't have tags
+	 */
+	private function _parse_flv($tags) { 
+
+		$array = array(); 
+
+		$info = pathinfo($this->filename); 
+
+		$array['title'] 	= $info['filename']; 
+		$array['video_codec'] 	= $tags['video']['codec']; 
+		$array['audio_codec'] 	= $tags['audio']['dataformat']; 
+		$array['resolution_x']	= $tags['video']['resolution_x']; 
+		$array['resolution_y']	= $tags['video']['resolution_y']; 
+		$array['mime']		= $tags['mime_type']; 
+		$array['comment']	= $tags['video']['codec']; 
+
+		return $array; 
+
+	} // _parse_flv
 
 	/**
 	 * _parse_filename
