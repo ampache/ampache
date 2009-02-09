@@ -830,7 +830,7 @@ class Song extends database_object implements media {
 	 * a stream URL taking into account the downsmapling mojo and everything
 	 * else, this is the true function
 	 */
-	public function play_url($oid,$session_id='',$force_http='') { 
+	public static function play_url($oid,$session_id='',$force_http='') { 
 
 
 	} // play_url

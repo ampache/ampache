@@ -76,8 +76,8 @@
 	<td><?php echo $access->key; ?></td>
 	<td><?php echo $access->f_type; ?></td>
 	<td>
-		<a href="<?php echo $web_path; ?>/admin/access.php?action=show_edit_record&amp;access_id=<?php echo scrub_out($access->id); ?>"><?php echo get_user_icon('edit'); ?></a>
-		<a href="<?php echo $web_path; ?>/admin/access.php?action=delete_record&amp;access_id=<?php echo scrub_out($access->id); ?>"><?php echo get_user_icon('delete'); ?></a>
+		<a href="<?php echo Config::get('web_path'); ?>/admin/access.php?action=show_edit_record&amp;access_id=<?php echo scrub_out($access->id); ?>"><?php echo get_user_icon('edit'); ?></a>
+		<a href="<?php echo Config::get('web_path'); ?>/admin/access.php?action=delete_record&amp;access_id=<?php echo scrub_out($access->id); ?>"><?php echo get_user_icon('delete'); ?></a>
 	</td>
 </tr>
 	<?php  } // end foreach ?>

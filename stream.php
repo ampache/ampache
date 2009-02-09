@@ -145,7 +145,6 @@ switch ($_REQUEST['action']) {
 	case 'democratic': 
 		$democratic = new Democratic($_REQUEST['democratic_id']); 
 		$urls[] = $democratic->get_url(); 
-		$song_ids = array('0'); 
 	break;
 	case 'download': 
 		$song_ids[] = $_REQUEST['song_id']; 

@@ -71,9 +71,9 @@ class Video extends database_object implements media {
 	 * This returns a "PLAY" url for the video in question here, this currently feels a little
 	 * like a hack, might need to adjust it in the future
 	 */
-	public static function play_url($id) { 
+	public static function play_url($oid,$sid='',$force_http='') { 
 
-		$video = new Video($id); 
+		$video = new Video($oid); 
 
 		if (!$video->id) { return false; } 
 
