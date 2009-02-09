@@ -154,6 +154,10 @@ function validateEmail ( $email, $verbose=0 ) {
 		$mail_check = "strict";
 	}
 
+	if ($mail_check == 'strict' && strncmp(PHP_OS,'WIN',3) === TRUE) {
+		$mail_check = "easy";
+	}
+
     if (Config::get('mail_domain')) {
 	    $serverName = Config::get('mail_domain');
     } 
@@ -629,7 +633,7 @@ function validateEmail ( $email, $verbose=0 ) {
             } // end checkdnsrr test
 
 	} // if function doesn't exist
-    } elseif ($mail_check == "easy") {
+    } elseif ($mail_check == "easy") { // easy email address check
 		$pattern = "^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,3})$";
 		if(eregi($pattern, $email)) {
 			$return[0] = true;
@@ -638,7 +642,7 @@ function validateEmail ( $email, $verbose=0 ) {
 			$return[0] = false;
 			$return[1] = "NG";
 		}
-	} else {//
+	} else { // Nothing to do
 		$return[0] = true;
 		$return[1] = "No Check";
 	}
