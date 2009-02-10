@@ -63,7 +63,7 @@
 		<?php echo Ajax::button('?page=random&action=add_rule','add',_('Add Rule'),'add_random_rule'); ?><?php echo _('Add Rule'); ?>
 	</td>
 	<td>
-		<?php echo Ajax::button('?page=random&action=save_rules','download',_('Save Rules'),'save_random_rules'); ?><?php echo _('Save Rules As...'); ?>
+		<?php echo Ajax::button('?page=random&action=save_rules','download',_('Save Rules As'),'save_random_rules'); ?><?php echo _('Save Rules As'); ?>
 	</td>
 	<td>
 		<?php echo Ajax::button('?page=random&action=load_rules','cog',_('Load Saved Rules'),'load_random_rules'); ?><?php echo _('Load Saved Rules'); ?>
