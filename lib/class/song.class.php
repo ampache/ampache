@@ -353,6 +353,7 @@ class Song extends database_object implements media {
 		return $array;
 
 	} // compare_song_information
+	
 
 	/**
 	 * update
@@ -733,6 +734,28 @@ class Song extends database_object implements media {
 	        $this->f_file 		= $rename_pattern . "." . $extension;
 
 	} // format_pattern
+
+	/**
+	 * get_fields
+	 * This returns all of the 'data' fields for this object, we need to filter out some that we don't
+	 * want to present to a user, and add some that don't exist directly on the object but are related
+	 */
+	public static function get_fields() { 
+
+		$fields = get_class_vars('Song'); 
+
+		unset($fields['id'],$fields['_transcoded'],$fields['_fake'],$fields['cache_hit'],$fields['mime'],$fields['type']); 
+
+		// Some additional fields
+		$fields['tag'] = true; 
+		$fields['catalog'] = true; 
+//FIXME: These are here to keep the ideas, don't want to have to worry about them for now
+//		$fields['rating'] = true; 
+//		$fields['recently Played'] = true; 
+
+		return $fields; 
+
+	} // get_fields
 
 	/**
 	 * get_from_path

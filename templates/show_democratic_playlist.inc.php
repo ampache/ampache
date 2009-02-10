@@ -70,9 +70,9 @@ foreach($object_ids as $row_id=>$object_data) {
 <tr class="<?php echo flip_class(); ?>">
 	<td class="cel_action">
 	<?php if ($democratic->has_vote($song->id)) { ?>
-	<?php echo Ajax::button('?page=democratic&action=delete_vote&row_id=' . $row_id,'thumb_down',_('Remove Vote'),'remove_vote_' . $row_id); ?>
+	<?php echo Ajax::button('?page=democratic&action=delete_vote&row_id=' . $row_id,'delete',_('Remove Vote'),'remove_vote_' . $row_id); ?>
 	<?php } else { ?>
-	<?php echo Ajax::button('?page=democratic&action=add_vote&object_id=' . $song->id . '&type=' . scrub_out($object_data['1']),'thumb_up',_('Add Vote'),'remove_vote_' . $row_id); ?>
+	<?php echo Ajax::button('?page=democratic&action=add_vote&object_id=' . $song->id . '&type=' . scrub_out($object_data['1']),'tick',_('Add Vote'),'remove_vote_' . $row_id); ?>
 	<?php } ?>
 	</td>
 	<td class="cel_votes"><?php echo scrub_out($democratic->get_vote($row_id)); ?></td>
@@ -82,7 +82,7 @@ foreach($object_ids as $row_id=>$object_data) {
 	<td class="cel_time"><?php echo $song->f_time; ?></td>
 	<?php if ($GLOBALS['user']->has_access(100)) { ?>
 	<td class="cel_admin">
-	<?php echo Ajax::button('?page=democratic&action=delete&row_id=' . $row_id,'delete',_('Delete'),'delete_row_' . $row_id); ?>
+	<?php echo Ajax::button('?page=democratic&action=delete&row_id=' . $row_id,'disable',_('Delete'),'delete_row_' . $row_id); ?>
 	</td>
 	<?php } ?>
 </tr>
