@@ -1,0 +1,787 @@
+<html>
+<head>
+<title>Docs For Class XML_RPC_Client</title>
+<link rel="stylesheet" type="text/css" href="../media/style.css">
+</head>
+<body>
+
+<table border="0" cellspacing="0" cellpadding="0" height="48" width="100%">
+  <tr>
+    <td class="header_top">XML_RPC</td>
+  </tr>
+  <tr><td class="header_line"><img src="../media/empty.png" width="1" height="1" border="0" alt=""  /></td></tr>
+  <tr>
+    <td class="header_menu">
+        
+                                                                                                                                                            
+                              		  [ <a href="../classtrees_XML_RPC.html" class="menu">class tree: XML_RPC</a> ]
+		  [ <a href="../elementindex_XML_RPC.html" class="menu">index: XML_RPC</a> ]
+		  	    [ <a href="../elementindex.html" class="menu">all elements</a> ]
+    </td>
+  </tr>
+  <tr><td class="header_line"><img src="../media/empty.png" width="1" height="1" border="0" alt=""  /></td></tr>
+</table>
+
+<table width="100%" border="0" cellpadding="0" cellspacing="0">
+  <tr valign="top">
+    <td width="200" class="menu">
+	<div id="todolist">
+			<p><a href="../todolist.html">Todo List</a></p>
+	</div>
+      <b>Packages:</b><br />
+              <a href="../li_Ampache.html">Ampache</a><br />
+              <a href="../li_Catalog.html">Catalog</a><br />
+              <a href="../li_Horde_Browser.html">Horde_Browser</a><br />
+              <a href="../li_Search.html">Search</a><br />
+              <a href="../li_Web.html">Web</a><br />
+              <a href="../li_XMLRPC.html">XMLRPC</a><br />
+              <a href="../li_XML_RPC.html">XML_RPC</a><br />
+            <br /><br />
+                        <b>Files:</b><br />
+      	  <div class="package">
+			<a href="../XML_RPC/_modules---pearxmlrpc---Dump.php.html">		Dump.php
+		</a><br>
+			<a href="../XML_RPC/_modules---pearxmlrpc---rpc.php.html">		rpc.php
+		</a><br>
+			<a href="../XML_RPC/_modules---pearxmlrpc---server.php.html">		server.php
+		</a><br>
+	  </div><br />
+      
+      
+            <b>Classes:</b><br />
+        <div class="package">
+		    		<a href="../XML_RPC/XML_RPC_Base.html">XML_RPC_Base</a><br />
+	    		<a href="../XML_RPC/XML_RPC_Client.html">XML_RPC_Client</a><br />
+	    		<a href="../XML_RPC/XML_RPC_Dump.html">XML_RPC_Dump</a><br />
+	    		<a href="../XML_RPC/XML_RPC_Message.html">XML_RPC_Message</a><br />
+	    		<a href="../XML_RPC/XML_RPC_Response.html">XML_RPC_Response</a><br />
+	    		<a href="../XML_RPC/XML_RPC_Server.html">XML_RPC_Server</a><br />
+	    		<a href="../XML_RPC/XML_RPC_Value.html">XML_RPC_Value</a><br />
+	  </div>
+                </td>
+    <td>
+      <table cellpadding="10" cellspacing="0" width="100%" border="0"><tr><td valign="top">
+
+<h1>Class: XML_RPC_Client</h1>
+Source Location: /modules/pearxmlrpc/rpc.php<br /><br />
+
+
+<table width="100%" border="0">
+<tr><td valign="top">
+
+<h3><a href="#class_details">Class Overview</a></h3>
+<pre><a href="../XML_RPC/XML_RPC_Base.html">XML_RPC_Base</a>
+   |
+   --XML_RPC_Client</pre><br />
+<div class="description">The methods and properties for submitting XML RPC requests</div><br /><br />
+<h4>Author(s):</h4>
+<ul>
+          <li>Daniel Convissor &lt;<a href="mailto:danielc@php.net">danielc@php.net</a>&gt;</li>
+              <li>Stig Bakken &lt;<a href="mailto:stig@php.net">stig@php.net</a>&gt;</li>
+              <li>Edd Dumbill &lt;<a href="mailto:edd@usefulinc.com">edd@usefulinc.com</a>&gt;</li>
+              <li>Martin Jansen &lt;<a href="mailto:mj@php.net">mj@php.net</a>&gt;</li>
+                        </ul>
+
+
+
+
+                    
+          
+      
+<h4>Version:</h4>
+<ul>
+  <li>Release: 1.5.1</li>
+</ul>
+
+<h4>Copyright:</h4>
+<ul>
+  <li>1999-2001 Edd Dumbill, 2001-2006 The PHP Group</li>
+</ul>
+        
+</td>
+
+<td valign="top">
+<h3><a href="#class_vars">Variables</a></h3>
+<ul>
+    <li><a href="../XML_RPC/XML_RPC_Client.html#var$debug">$debug</a></li>
+    <li><a href="../XML_RPC/XML_RPC_Client.html#var$errno">$errno</a></li>
+    <li><a href="../XML_RPC/XML_RPC_Client.html#var$errstr">$errstr</a></li>
+    <li><a href="../XML_RPC/XML_RPC_Client.html#var$headers">$headers</a></li>
+    <li><a href="../XML_RPC/XML_RPC_Client.html#var$password">$password</a></li>
+    <li><a href="../XML_RPC/XML_RPC_Client.html#var$path">$path</a></li>
+    <li><a href="../XML_RPC/XML_RPC_Client.html#var$port">$port</a></li>
+    <li><a href="../XML_RPC/XML_RPC_Client.html#var$protocol">$protocol</a></li>
+    <li><a href="../XML_RPC/XML_RPC_Client.html#var$proxy">$proxy</a></li>
+    <li><a href="../XML_RPC/XML_RPC_Client.html#var$proxy_pass">$proxy_pass</a></li>
+    <li><a href="../XML_RPC/XML_RPC_Client.html#var$proxy_port">$proxy_port</a></li>
+    <li><a href="../XML_RPC/XML_RPC_Client.html#var$proxy_protocol">$proxy_protocol</a></li>
+    <li><a href="../XML_RPC/XML_RPC_Client.html#var$proxy_user">$proxy_user</a></li>
+    <li><a href="../XML_RPC/XML_RPC_Client.html#var$server">$server</a></li>
+    <li><a href="../XML_RPC/XML_RPC_Client.html#var$username">$username</a></li>
+  </ul>
+</td>
+
+
+<td valign="top">
+<h3><a href="#class_methods">Methods</a></h3>
+<ul>
+    <li><a href="../XML_RPC/XML_RPC_Client.html#methodXML_RPC_Client">XML_RPC_Client</a></li>
+    <li><a href="../XML_RPC/XML_RPC_Client.html#methodcreateHeaders">createHeaders</a></li>
+    <li><a href="../XML_RPC/XML_RPC_Client.html#methodsend">send</a></li>
+    <li><a href="../XML_RPC/XML_RPC_Client.html#methodsendPayloadHTTP10">sendPayloadHTTP10</a></li>
+    <li><a href="../XML_RPC/XML_RPC_Client.html#methodsetAutoBase64">setAutoBase64</a></li>
+    <li><a href="../XML_RPC/XML_RPC_Client.html#methodsetCredentials">setCredentials</a></li>
+    <li><a href="../XML_RPC/XML_RPC_Client.html#methodsetDebug">setDebug</a></li>
+  </ul>
+</td>
+
+</tr></table>
+<hr />
+
+<table width="100%" border="0"><tr>
+
+
+
+
+
+<td valign="top">
+<h3>Inherited Methods</h3>
+<div class="tags">
+<h4>Class: <a href="../XML_RPC/XML_RPC_Base.html">XML_RPC_Base</a></h4>
+<dl>
+    <dt>
+    <a href="../XML_RPC/XML_RPC_Base.html#methodisError">XML_RPC_Base::isError()</a>
+  </dt>
+  <dd>
+    Tell whether something is a PEAR_Error object
+  </dd>
+    <dt>
+    <a href="../XML_RPC/XML_RPC_Base.html#methodraiseError">XML_RPC_Base::raiseError()</a>
+  </dt>
+  <dd>
+    PEAR Error handling
+  </dd>
+  </dl>
+</div>
+</td>
+
+</tr></table>
+<hr />
+
+<a name="class_details"></a>
+<h3>Class Details</h3>
+<div class="tags">
+[line 625]<br />
+The methods and properties for submitting XML RPC requests<br /><br /><br /><br />
+<h4>Tags:</h4>
+<div class="tags">
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td><b>author:</b>&nbsp;&nbsp;</td><td>Daniel Convissor &lt;<a href="mailto:danielc@php.net">danielc@php.net</a>&gt;</td>
+  </tr>
+  <tr>
+    <td><b>author:</b>&nbsp;&nbsp;</td><td>Stig Bakken &lt;<a href="mailto:stig@php.net">stig@php.net</a>&gt;</td>
+  </tr>
+  <tr>
+    <td><b>author:</b>&nbsp;&nbsp;</td><td>Edd Dumbill &lt;<a href="mailto:edd@usefulinc.com">edd@usefulinc.com</a>&gt;</td>
+  </tr>
+  <tr>
+    <td><b>author:</b>&nbsp;&nbsp;</td><td>Martin Jansen &lt;<a href="mailto:mj@php.net">mj@php.net</a>&gt;</td>
+  </tr>
+  <tr>
+    <td><b>version:</b>&nbsp;&nbsp;</td><td>Release: 1.5.1</td>
+  </tr>
+  <tr>
+    <td><b>copyright:</b>&nbsp;&nbsp;</td><td>1999-2001 Edd Dumbill, 2001-2006 The PHP Group</td>
+  </tr>
+  <tr>
+    <td><b>link:</b>&nbsp;&nbsp;</td><td><a href="http://pear.php.net/package/XML_RPC">http://pear.php.net/package/XML_RPC</a></td>
+  </tr>
+</table>
+</div>
+</div><br /><br />
+<div class="top">[ <a href="#top">Top</a> ]</div><br />
+
+<hr />
+<a name="class_vars"></a>
+<h3>Class Variables</h3>
+<div class="tags">
+	<a name="var$debug"></a>
+	<p></p>
+	<h4>$debug = <span class="value">&nbsp;0</span></h4>
+	<p>[line 719]</p>
+  The current debug mode (1 = on, 0 = off)<br /><br />
+  <br />
+	<div class="tags">
+  <table border="0" cellspacing="0" cellpadding="0">
+    <tr>
+      <td><b>Type:</b>&nbsp;&nbsp;</td>
+      <td>integer</td>
+    </tr>
+      </table>
+	</div><br /><br />
+	<div class="top">[ <a href="#top">Top</a> ]</div><br />
+	<a name="var$errno"></a>
+	<p></p>
+	<h4>$errno = <span class="value">&nbsp;0</span></h4>
+	<p>[line 707]</p>
+  The error number, if any<br /><br />
+  <br />
+	<div class="tags">
+  <table border="0" cellspacing="0" cellpadding="0">
+    <tr>
+      <td><b>Type:</b>&nbsp;&nbsp;</td>
+      <td>integer</td>
+    </tr>
+      </table>
+	</div><br /><br />
+	<div class="top">[ <a href="#top">Top</a> ]</div><br />
+	<a name="var$errstr"></a>
+	<p></p>
+	<h4>$errstr = <span class="value">&nbsp;''</span></h4>
+	<p>[line 713]</p>
+  The error message, if any<br /><br />
+  <br />
+	<div class="tags">
+  <table border="0" cellspacing="0" cellpadding="0">
+    <tr>
+      <td><b>Type:</b>&nbsp;&nbsp;</td>
+      <td>string</td>
+    </tr>
+      </table>
+	</div><br /><br />
+	<div class="top">[ <a href="#top">Top</a> ]</div><br />
+	<a name="var$headers"></a>
+	<p></p>
+	<h4>$headers = <span class="value">&nbsp;''</span></h4>
+	<p>[line 725]</p>
+  The HTTP headers for the current request.<br /><br />
+  <br />
+	<div class="tags">
+  <table border="0" cellspacing="0" cellpadding="0">
+    <tr>
+      <td><b>Type:</b>&nbsp;&nbsp;</td>
+      <td>string</td>
+    </tr>
+      </table>
+	</div><br /><br />
+	<div class="top">[ <a href="#top">Top</a> ]</div><br />
+	<a name="var$password"></a>
+	<p></p>
+	<h4>$password = <span class="value">&nbsp;''</span></h4>
+	<p>[line 667]</p>
+  A password for accessing the RPC server<br /><br /><br /><br />
+<h4>Tags:</h4>
+<div class="tags">
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td><b>see:</b>&nbsp;&nbsp;</td><td><a href="../XML_RPC/XML_RPC_Client.html#methodsetCredentials">XML_RPC_Client::setCredentials()</a></td>
+  </tr>
+</table>
+</div>
+
+  <br />
+	<div class="tags">
+  <table border="0" cellspacing="0" cellpadding="0">
+    <tr>
+      <td><b>Type:</b>&nbsp;&nbsp;</td>
+      <td>string</td>
+    </tr>
+      </table>
+	</div><br /><br />
+	<div class="top">[ <a href="#top">Top</a> ]</div><br />
+	<a name="var$path"></a>
+	<p></p>
+	<h4>$path = <span class="value">&nbsp;''</span></h4>
+	<p>[line 631]</p>
+  The path and name of the RPC server script you want the request to go to<br /><br />
+  <br />
+	<div class="tags">
+  <table border="0" cellspacing="0" cellpadding="0">
+    <tr>
+      <td><b>Type:</b>&nbsp;&nbsp;</td>
+      <td>string</td>
+    </tr>
+      </table>
+	</div><br /><br />
+	<div class="top">[ <a href="#top">Top</a> ]</div><br />
+	<a name="var$port"></a>
+	<p></p>
+	<h4>$port = <span class="value">&nbsp;80</span></h4>
+	<p>[line 653]</p>
+  The port for connecting to the remote server<br /><br /><p>The default is 80 for http:// connections  and 443 for https:// and ssl:// connections.</p><br />
+  <br />
+	<div class="tags">
+  <table border="0" cellspacing="0" cellpadding="0">
+    <tr>
+      <td><b>Type:</b>&nbsp;&nbsp;</td>
+      <td>integer</td>
+    </tr>
+      </table>
+	</div><br /><br />
+	<div class="top">[ <a href="#top">Top</a> ]</div><br />
+	<a name="var$protocol"></a>
+	<p></p>
+	<h4>$protocol = <span class="value">&nbsp;'http://'</span></h4>
+	<p>[line 643]</p>
+  The protocol to use in contacting the remote server<br /><br />
+  <br />
+	<div class="tags">
+  <table border="0" cellspacing="0" cellpadding="0">
+    <tr>
+      <td><b>Type:</b>&nbsp;&nbsp;</td>
+      <td>string</td>
+    </tr>
+      </table>
+	</div><br /><br />
+	<div class="top">[ <a href="#top">Top</a> ]</div><br />
+	<a name="var$proxy"></a>
+	<p></p>
+	<h4>$proxy = <span class="value">&nbsp;''</span></h4>
+	<p>[line 673]</p>
+  The name of the proxy server to use, if any<br /><br />
+  <br />
+	<div class="tags">
+  <table border="0" cellspacing="0" cellpadding="0">
+    <tr>
+      <td><b>Type:</b>&nbsp;&nbsp;</td>
+      <td>string</td>
+    </tr>
+      </table>
+	</div><br /><br />
+	<div class="top">[ <a href="#top">Top</a> ]</div><br />
+	<a name="var$proxy_pass"></a>
+	<p></p>
+	<h4>$proxy_pass = <span class="value">&nbsp;''</span></h4>
+	<p>[line 701]</p>
+  A password for accessing the proxy server<br /><br />
+  <br />
+	<div class="tags">
+  <table border="0" cellspacing="0" cellpadding="0">
+    <tr>
+      <td><b>Type:</b>&nbsp;&nbsp;</td>
+      <td>string</td>
+    </tr>
+      </table>
+	</div><br /><br />
+	<div class="top">[ <a href="#top">Top</a> ]</div><br />
+	<a name="var$proxy_port"></a>
+	<p></p>
+	<h4>$proxy_port = <span class="value">&nbsp;8080</span></h4>
+	<p>[line 689]</p>
+  The port for connecting to the proxy server<br /><br /><p>The default is 8080 for http:// connections  and 443 for https:// and ssl:// connections.</p><br />
+  <br />
+	<div class="tags">
+  <table border="0" cellspacing="0" cellpadding="0">
+    <tr>
+      <td><b>Type:</b>&nbsp;&nbsp;</td>
+      <td>integer</td>
+    </tr>
+      </table>
+	</div><br /><br />
+	<div class="top">[ <a href="#top">Top</a> ]</div><br />
+	<a name="var$proxy_protocol"></a>
+	<p></p>
+	<h4>$proxy_protocol = <span class="value">&nbsp;'http://'</span></h4>
+	<p>[line 679]</p>
+  The protocol to use in contacting the proxy server, if any<br /><br />
+  <br />
+	<div class="tags">
+  <table border="0" cellspacing="0" cellpadding="0">
+    <tr>
+      <td><b>Type:</b>&nbsp;&nbsp;</td>
+      <td>string</td>
+    </tr>
+      </table>
+	</div><br /><br />
+	<div class="top">[ <a href="#top">Top</a> ]</div><br />
+	<a name="var$proxy_user"></a>
+	<p></p>
+	<h4>$proxy_user = <span class="value">&nbsp;''</span></h4>
+	<p>[line 695]</p>
+  A user name for accessing the proxy server<br /><br />
+  <br />
+	<div class="tags">
+  <table border="0" cellspacing="0" cellpadding="0">
+    <tr>
+      <td><b>Type:</b>&nbsp;&nbsp;</td>
+      <td>string</td>
+    </tr>
+      </table>
+	</div><br /><br />
+	<div class="top">[ <a href="#top">Top</a> ]</div><br />
+	<a name="var$server"></a>
+	<p></p>
+	<h4>$server = <span class="value">&nbsp;''</span></h4>
+	<p>[line 637]</p>
+  The name of the remote server to connect to<br /><br />
+  <br />
+	<div class="tags">
+  <table border="0" cellspacing="0" cellpadding="0">
+    <tr>
+      <td><b>Type:</b>&nbsp;&nbsp;</td>
+      <td>string</td>
+    </tr>
+      </table>
+	</div><br /><br />
+	<div class="top">[ <a href="#top">Top</a> ]</div><br />
+	<a name="var$username"></a>
+	<p></p>
+	<h4>$username = <span class="value">&nbsp;''</span></h4>
+	<p>[line 660]</p>
+  A user name for accessing the RPC server<br /><br /><br /><br />
+<h4>Tags:</h4>
+<div class="tags">
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td><b>see:</b>&nbsp;&nbsp;</td><td><a href="../XML_RPC/XML_RPC_Client.html#methodsetCredentials">XML_RPC_Client::setCredentials()</a></td>
+  </tr>
+</table>
+</div>
+
+  <br />
+	<div class="tags">
+  <table border="0" cellspacing="0" cellpadding="0">
+    <tr>
+      <td><b>Type:</b>&nbsp;&nbsp;</td>
+      <td>string</td>
+    </tr>
+      </table>
+	</div><br /><br />
+	<div class="top">[ <a href="#top">Top</a> ]</div><br />
+</div><br />
+
+<hr />
+<a name="class_methods"></a>
+<h3>Class Methods</h3>
+<div class="tags">
+
+  <hr />
+	<a name="methodXML_RPC_Client"></a>
+	<h3>constructor XML_RPC_Client <span class="smalllinenumber">[line 752]</span></h3>
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code_border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">
+		<code>void XML_RPC_Client(
+string
+$path, string
+$server, [integer
+$port = 0], [string
+$proxy = ''], [integer
+$proxy_port = 0], [string
+$proxy_user = ''], [string
+$proxy_pass = ''])</code>
+    </td></tr></table>
+    </td></tr></table><br />
+	
+		Sets the object's properties<br /><br /><br /><br />
+
+	
+        <h4>Parameters:</h4>
+    <div class="tags">
+    <table border="0" cellspacing="0" cellpadding="0">
+          <tr>
+        <td class="type">string&nbsp;&nbsp;</td>
+        <td><b>$path</b>&nbsp;&nbsp;</td>
+        <td>the path and name of the RPC server script                               you want the request to go to</td>
+      </tr>
+          <tr>
+        <td class="type">string&nbsp;&nbsp;</td>
+        <td><b>$server</b>&nbsp;&nbsp;</td>
+        <td>the URL of the remote server to connect to.                               If this parameter doesn't specify a                               protocol and $port is 443, ssl:// is                               assumed.</td>
+      </tr>
+          <tr>
+        <td class="type">integer&nbsp;&nbsp;</td>
+        <td><b>$port</b>&nbsp;&nbsp;</td>
+        <td>a port for connecting to the remote server.                               Defaults to 80 for http:// connections and                               443 for https:// and ssl:// connections.</td>
+      </tr>
+          <tr>
+        <td class="type">string&nbsp;&nbsp;</td>
+        <td><b>$proxy</b>&nbsp;&nbsp;</td>
+        <td>the URL of the proxy server to use, if any.                               If this parameter doesn't specify a                               protocol and $port is 443, ssl:// is                               assumed.</td>
+      </tr>
+          <tr>
+        <td class="type">integer&nbsp;&nbsp;</td>
+        <td><b>$proxy_port</b>&nbsp;&nbsp;</td>
+        <td>a port for connecting to the remote server.                               Defaults to 8080 for http:// connections and                               443 for https:// and ssl:// connections.</td>
+      </tr>
+          <tr>
+        <td class="type">string&nbsp;&nbsp;</td>
+        <td><b>$proxy_user</b>&nbsp;&nbsp;</td>
+        <td>a user name for accessing the proxy server</td>
+      </tr>
+          <tr>
+        <td class="type">string&nbsp;&nbsp;</td>
+        <td><b>$proxy_pass</b>&nbsp;&nbsp;</td>
+        <td>a password for accessing the proxy server</td>
+      </tr>
+        </table>
+    </div><br />
+        <div class="top">[ <a href="#top">Top</a> ]</div>
+  </div>
+  <hr />
+	<a name="methodcreateHeaders"></a>
+	<h3>method createHeaders <span class="smalllinenumber">[line 1022]</span></h3>
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code_border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">
+		<code>boolean createHeaders(
+object
+$msg)</code>
+    </td></tr></table>
+    </td></tr></table><br />
+	
+		Determines the HTTP headers and puts it in the $headers property<br /><br /><br /><br />
+<h4>Tags:</h4>
+<div class="tags">
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td><b>return:</b>&nbsp;&nbsp;</td><td>TRUE if okay, FALSE if the message payload isn't set.</td>
+  </tr>
+  <tr>
+    <td><b>access:</b>&nbsp;&nbsp;</td><td>protected</td>
+  </tr>
+</table>
+</div>
+<br /><br />
+
+	
+        <h4>Parameters:</h4>
+    <div class="tags">
+    <table border="0" cellspacing="0" cellpadding="0">
+          <tr>
+        <td class="type">object&nbsp;&nbsp;</td>
+        <td><b>$msg</b>&nbsp;&nbsp;</td>
+        <td>the XML_RPC_Message object</td>
+      </tr>
+        </table>
+    </div><br />
+        <div class="top">[ <a href="#top">Top</a> ]</div>
+  </div>
+  <hr />
+	<a name="methodsend"></a>
+	<h3>method send <span class="smalllinenumber">[line 881]</span></h3>
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code_border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">
+		<code>object an send(
+object
+$msg, [int
+$timeout = 0])</code>
+    </td></tr></table>
+    </td></tr></table><br />
+	
+		Transmit the RPC request via HTTP 1.0 protocol<br /><br /><br /><br />
+<h4>Tags:</h4>
+<div class="tags">
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td><b>return:</b>&nbsp;&nbsp;</td><td>XML_RPC_Response object.  0 is returned if any                   problems happen.</td>
+  </tr>
+  <tr>
+    <td><b>see:</b>&nbsp;&nbsp;</td><td><a href="../XML_RPC/XML_RPC_Message.html">XML_RPC_Message</a>, <a href="../XML_RPC/XML_RPC_Client.html#methodXML_RPC_Client">XML_RPC_Client::XML_RPC_Client()</a>, <a href="../XML_RPC/XML_RPC_Client.html#methodsetCredentials">XML_RPC_Client::setCredentials()</a></td>
+  </tr>
+</table>
+</div>
+<br /><br />
+
+	
+        <h4>Parameters:</h4>
+    <div class="tags">
+    <table border="0" cellspacing="0" cellpadding="0">
+          <tr>
+        <td class="type">object&nbsp;&nbsp;</td>
+        <td><b>$msg</b>&nbsp;&nbsp;</td>
+        <td>the XML_RPC_Message object</td>
+      </tr>
+          <tr>
+        <td class="type">int&nbsp;&nbsp;</td>
+        <td><b>$timeout</b>&nbsp;&nbsp;</td>
+        <td>how many seconds to wait for the request</td>
+      </tr>
+        </table>
+    </div><br />
+        <div class="top">[ <a href="#top">Top</a> ]</div>
+  </div>
+  <hr />
+	<a name="methodsendPayloadHTTP10"></a>
+	<h3>method sendPayloadHTTP10 <span class="smalllinenumber">[line 916]</span></h3>
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code_border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">
+		<code>object an sendPayloadHTTP10(
+object
+$msg, string
+$server, int
+$port, [int
+$timeout = 0], [string
+$username = ''], [string
+$password = ''])</code>
+    </td></tr></table>
+    </td></tr></table><br />
+	
+		Transmit the RPC request via HTTP 1.0 protocol<br /><br /><p>Requests should be sent using XML_RPC_Client send() rather than  calling this method directly.</p><br /><br /><br />
+<h4>Tags:</h4>
+<div class="tags">
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td><b>return:</b>&nbsp;&nbsp;</td><td>XML_RPC_Response object.  0 is returned if any                   problems happen.</td>
+  </tr>
+  <tr>
+    <td><b>see:</b>&nbsp;&nbsp;</td><td><a href="../XML_RPC/XML_RPC_Client.html#methodsend">XML_RPC_Client::send()</a></td>
+  </tr>
+  <tr>
+    <td><b>access:</b>&nbsp;&nbsp;</td><td>protected</td>
+  </tr>
+</table>
+</div>
+<br /><br />
+
+	
+        <h4>Parameters:</h4>
+    <div class="tags">
+    <table border="0" cellspacing="0" cellpadding="0">
+          <tr>
+        <td class="type">object&nbsp;&nbsp;</td>
+        <td><b>$msg</b>&nbsp;&nbsp;</td>
+        <td>the XML_RPC_Message object</td>
+      </tr>
+          <tr>
+        <td class="type">string&nbsp;&nbsp;</td>
+        <td><b>$server</b>&nbsp;&nbsp;</td>
+        <td>the server to send the request to</td>
+      </tr>
+          <tr>
+        <td class="type">int&nbsp;&nbsp;</td>
+        <td><b>$port</b>&nbsp;&nbsp;</td>
+        <td>the server port send the request to</td>
+      </tr>
+          <tr>
+        <td class="type">int&nbsp;&nbsp;</td>
+        <td><b>$timeout</b>&nbsp;&nbsp;</td>
+        <td>how many seconds to wait for the request                            before giving up</td>
+      </tr>
+          <tr>
+        <td class="type">string&nbsp;&nbsp;</td>
+        <td><b>$username</b>&nbsp;&nbsp;</td>
+        <td>a user name for accessing the RPC server</td>
+      </tr>
+          <tr>
+        <td class="type">string&nbsp;&nbsp;</td>
+        <td><b>$password</b>&nbsp;&nbsp;</td>
+        <td>a password for accessing the RPC server</td>
+      </tr>
+        </table>
+    </div><br />
+        <div class="top">[ <a href="#top">Top</a> ]</div>
+  </div>
+  <hr />
+	<a name="methodsetAutoBase64"></a>
+	<h3>method setAutoBase64 <span class="smalllinenumber">[line 844]</span></h3>
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code_border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">
+		<code>void setAutoBase64(
+int
+$in)</code>
+    </td></tr></table>
+    </td></tr></table><br />
+	
+		Sets whether strings that contain characters which may cause PHP's  SAX-based XML parser to break should be automatically base64 encoded<br /><br /><p>This is is a workaround for systems that don't have PHP's mbstring  extension available.</p><br /><br /><br />
+
+	
+        <h4>Parameters:</h4>
+    <div class="tags">
+    <table border="0" cellspacing="0" cellpadding="0">
+          <tr>
+        <td class="type">int&nbsp;&nbsp;</td>
+        <td><b>$in</b>&nbsp;&nbsp;</td>
+        <td>where 1 = on, 0 = off</td>
+      </tr>
+        </table>
+    </div><br />
+        <div class="top">[ <a href="#top">Top</a> ]</div>
+  </div>
+  <hr />
+	<a name="methodsetCredentials"></a>
+	<h3>method setCredentials <span class="smalllinenumber">[line 863]</span></h3>
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code_border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">
+		<code>void setCredentials(
+string
+$u, string
+$p)</code>
+    </td></tr></table>
+    </td></tr></table><br />
+	
+		Set username and password properties for connecting to the RPC server<br /><br /><br /><br />
+<h4>Tags:</h4>
+<div class="tags">
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td><b>see:</b>&nbsp;&nbsp;</td><td><a href="../XML_RPC/XML_RPC_Client.html#var$username">XML_RPC_Client::$username</a>, <a href="../XML_RPC/XML_RPC_Client.html#var$password">XML_RPC_Client::$password</a></td>
+  </tr>
+</table>
+</div>
+<br /><br />
+
+	
+        <h4>Parameters:</h4>
+    <div class="tags">
+    <table border="0" cellspacing="0" cellpadding="0">
+          <tr>
+        <td class="type">string&nbsp;&nbsp;</td>
+        <td><b>$u</b>&nbsp;&nbsp;</td>
+        <td>the user name</td>
+      </tr>
+          <tr>
+        <td class="type">string&nbsp;&nbsp;</td>
+        <td><b>$p</b>&nbsp;&nbsp;</td>
+        <td>the password</td>
+      </tr>
+        </table>
+    </div><br />
+        <div class="top">[ <a href="#top">Top</a> ]</div>
+  </div>
+  <hr />
+	<a name="methodsetDebug"></a>
+	<h3>method setDebug <span class="smalllinenumber">[line 824]</span></h3>
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code_border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">
+		<code>void setDebug(
+int
+$in)</code>
+    </td></tr></table>
+    </td></tr></table><br />
+	
+		Change the current debug mode<br /><br /><br /><br />
+
+	
+        <h4>Parameters:</h4>
+    <div class="tags">
+    <table border="0" cellspacing="0" cellpadding="0">
+          <tr>
+        <td class="type">int&nbsp;&nbsp;</td>
+        <td><b>$in</b>&nbsp;&nbsp;</td>
+        <td>where 1 = on, 0 = off</td>
+      </tr>
+        </table>
+    </div><br />
+        <div class="top">[ <a href="#top">Top</a> ]</div>
+  </div>
+</div><br />
+
+
+        <div class="credit">
+		    <hr />
+		    Documentation generated on Thu, 12 Feb 2009 08:00:07 +0900 by <a href="http://www.phpdoc.org">phpDocumentor 1.4.2</a>
+	      </div>
+      </td></tr></table>
+    </td>
+  </tr>
+</table>
+
+</body>
+</html>

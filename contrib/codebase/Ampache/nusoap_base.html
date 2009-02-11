@@ -1,0 +1,1456 @@
+<html>
+<head>
+<title>Docs For Class nusoap_base</title>
+<link rel="stylesheet" type="text/css" href="../media/style.css">
+</head>
+<body>
+
+<table border="0" cellspacing="0" cellpadding="0" height="48" width="100%">
+  <tr>
+    <td class="header_top">Ampache</td>
+  </tr>
+  <tr><td class="header_line"><img src="../media/empty.png" width="1" height="1" border="0" alt=""  /></td></tr>
+  <tr>
+    <td class="header_menu">
+        
+                                    
+                                                                                                                                                      		  [ <a href="../classtrees_Ampache.html" class="menu">class tree: Ampache</a> ]
+		  [ <a href="../elementindex_Ampache.html" class="menu">index: Ampache</a> ]
+		  	    [ <a href="../elementindex.html" class="menu">all elements</a> ]
+    </td>
+  </tr>
+  <tr><td class="header_line"><img src="../media/empty.png" width="1" height="1" border="0" alt=""  /></td></tr>
+</table>
+
+<table width="100%" border="0" cellpadding="0" cellspacing="0">
+  <tr valign="top">
+    <td width="200" class="menu">
+	<div id="todolist">
+			<p><a href="../todolist.html">Todo List</a></p>
+	</div>
+      <b>Packages:</b><br />
+              <a href="../li_Ampache.html">Ampache</a><br />
+              <a href="../li_Catalog.html">Catalog</a><br />
+              <a href="../li_Horde_Browser.html">Horde_Browser</a><br />
+              <a href="../li_Search.html">Search</a><br />
+              <a href="../li_Web.html">Web</a><br />
+              <a href="../li_XMLRPC.html">XMLRPC</a><br />
+              <a href="../li_XML_RPC.html">XML_RPC</a><br />
+            <br /><br />
+                        <b>Files:</b><br />
+      	  <div class="package">
+			<a href="../Ampache/_lib---class---access.class.php.html">		access.class.php
+		</a><br>
+			<a href="../Ampache/_admin---access.php.html">		access.php
+		</a><br>
+			<a href="../Ampache/_lib---class---ajax.class.php.html">		ajax.class.php
+		</a><br>
+			<a href="../Ampache/_server---ajax.server.php.html">		ajax.server.php
+		</a><br>
+			<a href="../Ampache/_lib---class---album.class.php.html">		album.class.php
+		</a><br>
+			<a href="../Ampache/_albums.php.html">		albums.php
+		</a><br>
+			<a href="../Ampache/_modules---infotools---AmazonSearchEngine.class.php.html">		AmazonSearchEngine.class.php
+		</a><br>
+			<a href="../Ampache/_lib---class---ampachemail.class.php.html">		ampachemail.class.php
+		</a><br>
+			<a href="../Ampache/_lib---class---ampacherss.class.php.html">		ampacherss.class.php
+		</a><br>
+			<a href="../Ampache/_lib---class---api.class.php.html">		api.class.php
+		</a><br>
+			<a href="../Ampache/_modules---archive---archive.lib.php.html">		archive.lib.php
+		</a><br>
+			<a href="../Ampache/_lib---class---artist.class.php.html">		artist.class.php
+		</a><br>
+			<a href="../Ampache/_artists.php.html">		artists.php
+		</a><br>
+			<a href="../Ampache/_lib---batch.lib.php.html">		batch.lib.php
+		</a><br>
+			<a href="../Ampache/_batch.php.html">		batch.php
+		</a><br>
+			<a href="../Ampache/_server---browse.ajax.php.html">		browse.ajax.php
+		</a><br>
+			<a href="../Ampache/_lib---class---browse.class.php.html">		browse.class.php
+		</a><br>
+			<a href="../Ampache/_browse.php.html">		browse.php
+		</a><br>
+			<a href="../Ampache/_modules---captcha---captcha.php.html">		captcha.php
+		</a><br>
+			<a href="../Ampache/_admin---catalog.php.html">		catalog.php
+		</a><br>
+			<a href="../Ampache/_bin---catalog_update.inc.html">		catalog_update.inc
+		</a><br>
+			<a href="../Ampache/_modules---nusoap---class.nusoap_base.php.html">		class.nusoap_base.php
+		</a><br>
+			<a href="../Ampache/_modules---nusoap---class.soapclient.php.html">		class.soapclient.php
+		</a><br>
+			<a href="../Ampache/_modules---nusoap---class.soap_fault.php.html">		class.soap_fault.php
+		</a><br>
+			<a href="../Ampache/_modules---nusoap---class.soap_parser.php.html">		class.soap_parser.php
+		</a><br>
+			<a href="../Ampache/_modules---nusoap---class.soap_server.php.html">		class.soap_server.php
+		</a><br>
+			<a href="../Ampache/_modules---nusoap---class.soap_transport_http.php.html">		class.soap_transport_http.php
+		</a><br>
+			<a href="../Ampache/_modules---nusoap---class.soap_val.php.html">		class.soap_val.php
+		</a><br>
+			<a href="../Ampache/_modules---nusoap---class.wsdl.php.html">		class.wsdl.php
+		</a><br>
+			<a href="../Ampache/_modules---nusoap---class.wsdlcache.php.html">		class.wsdlcache.php
+		</a><br>
+			<a href="../Ampache/_modules---nusoap---class.xmlschema.php.html">		class.xmlschema.php
+		</a><br>
+			<a href="../Ampache/_lib---class---config.class.php.html">		config.class.php
+		</a><br>
+			<a href="../Ampache/_lib---class---core.class.php.html">		core.class.php
+		</a><br>
+			<a href="../Ampache/_lib---class---database_object.abstract.php.html">		database_object.abstract.php
+		</a><br>
+			<a href="../Ampache/_lib---class---dba.class.php.html">		dba.class.php
+		</a><br>
+			<a href="../Ampache/_lib---debug.lib.php.html">		debug.lib.php
+		</a><br>
+			<a href="../Ampache/_bin---delete_disabled.inc.html">		delete_disabled.inc
+		</a><br>
+			<a href="../Ampache/_server---democratic.ajax.php.html">		democratic.ajax.php
+		</a><br>
+			<a href="../Ampache/_lib---class---democratic.class.php.html">		democratic.class.php
+		</a><br>
+			<a href="../Ampache/_democratic.php.html">		democratic.php
+		</a><br>
+			<a href="../Ampache/_bin---dump_album_art.inc.html">		dump_album_art.inc
+		</a><br>
+			<a href="../Ampache/_admin---duplicates.php.html">		duplicates.php
+		</a><br>
+			<a href="../Ampache/_lib---class---error.class.php.html">		error.class.php
+		</a><br>
+			<a href="../Ampache/_admin---export.php.html">		export.php
+		</a><br>
+			<a href="../Ampache/_bin---fix_filenames.inc.html">		fix_filenames.inc
+		</a><br>
+			<a href="../Ampache/_server---flag.ajax.php.html">		flag.ajax.php
+		</a><br>
+			<a href="../Ampache/_lib---class---flag.class.php.html">		flag.class.php
+		</a><br>
+			<a href="../Ampache/_admin---flag.php.html">		flag.php
+		</a><br>
+			<a href="../Ampache/_flag.php.html">		flag.php
+		</a><br>
+			<a href="../Ampache/_lib---general.lib.php.html">		general.lib.php
+		</a><br>
+			<a href="../Ampache/_lib---class---genre.class.php.html">		genre.class.php
+		</a><br>
+			<a href="../Ampache/_genre.php.html">		genre.php
+		</a><br>
+			<a href="../Ampache/_modules---emulator---gettext.php.html">		gettext.php
+		</a><br>
+			<a href="../Ampache/_lib---gettext.php.html">		gettext.php
+		</a><br>
+			<a href="../Ampache/_modules---localplay---httpq.controller.php.html">		httpq.controller.php
+		</a><br>
+			<a href="../Ampache/_modules---httpq---httpqplayer.class.php.html">		httpqplayer.class.php
+		</a><br>
+			<a href="../Ampache/_image.php.html">		image.php
+		</a><br>
+			<a href="../Ampache/_server---index.ajax.php.html">		index.ajax.php
+		</a><br>
+			<a href="../Ampache/_admin---index.php.html">		index.php
+		</a><br>
+			<a href="../Ampache/_index.php.html">		index.php
+		</a><br>
+			<a href="../Ampache/_play---index.php.html">		index.php
+		</a><br>
+			<a href="../Ampache/_lib---init.php.html">		init.php
+		</a><br>
+			<a href="../Ampache/_install.php.html">		install.php
+		</a><br>
+			<a href="../Ampache/_lib---install.php.html">		install.php
+		</a><br>
+			<a href="../Ampache/_modules---infotools---jamendoSearch.class.php.html">		jamendoSearch.class.php
+		</a><br>
+			<a href="../Ampache/_modules---infotools---lastfm.class.php.html">		lastfm.class.php
+		</a><br>
+			<a href="../Ampache/_modules---plugins---Lastfm.plugin.php.html">		Lastfm.plugin.php
+		</a><br>
+			<a href="../Ampache/_lib---class---localplay.abstract.php.html">		localplay.abstract.php
+		</a><br>
+			<a href="../Ampache/_server---localplay.ajax.php.html">		localplay.ajax.php
+		</a><br>
+			<a href="../Ampache/_lib---class---localplay.class.php.html">		localplay.class.php
+		</a><br>
+			<a href="../Ampache/_localplay.php.html">		localplay.php
+		</a><br>
+			<a href="../Ampache/_lib---log.lib.php.html">		log.lib.php
+		</a><br>
+			<a href="../Ampache/_login.php.html">		login.php
+		</a><br>
+			<a href="../Ampache/_logout.php.html">		logout.php
+		</a><br>
+			<a href="../Ampache/_admin---mail.php.html">		mail.php
+		</a><br>
+			<a href="../Ampache/_lib---class---media.interface.php.html">		media.interface.php
+		</a><br>
+			<a href="../Ampache/_bin---migrate_config.inc.html">		migrate_config.inc
+		</a><br>
+			<a href="../Ampache/_admin---modules.php.html">		modules.php
+		</a><br>
+			<a href="../Ampache/_modules---infotools---mp3tunes.class.php.html">		mp3tunes.class.php
+		</a><br>
+			<a href="../Ampache/_modules---mpd---mpd.class.php.html">		mpd.class.php
+		</a><br>
+			<a href="../Ampache/_modules---localplay---mpd.controller.php.html">		mpd.controller.php
+		</a><br>
+			<a href="../Ampache/_modules---nusoap---nusoap.php.html">		nusoap.php
+		</a><br>
+			<a href="../Ampache/_modules---nusoap---nusoapmime.php.html">		nusoapmime.php
+		</a><br>
+			<a href="../Ampache/_server---playlist.ajax.php.html">		playlist.ajax.php
+		</a><br>
+			<a href="../Ampache/_lib---class---playlist.class.php.html">		playlist.class.php
+		</a><br>
+			<a href="../Ampache/_playlist.php.html">		playlist.php
+		</a><br>
+			<a href="../Ampache/_lib---class---plugin.class.php.html">		plugin.class.php
+		</a><br>
+			<a href="../Ampache/_lib---class---preference.class.php.html">		preference.class.php
+		</a><br>
+			<a href="../Ampache/_preferences.php.html">		preferences.php
+		</a><br>
+			<a href="../Ampache/_lib---preferences.php.html">		preferences.php
+		</a><br>
+			<a href="../Ampache/_bin---print_tags.inc.html">		print_tags.inc
+		</a><br>
+			<a href="../Ampache/_lib---class---radio.class.php.html">		radio.class.php
+		</a><br>
+			<a href="../Ampache/_radio.php.html">		radio.php
+		</a><br>
+			<a href="../Ampache/_server---random.ajax.php.html">		random.ajax.php
+		</a><br>
+			<a href="../Ampache/_lib---class---random.class.php.html">		random.class.php
+		</a><br>
+			<a href="../Ampache/_random.php.html">		random.php
+		</a><br>
+			<a href="../Ampache/_lib---class---rating.class.php.html">		rating.class.php
+		</a><br>
+			<a href="../Ampache/_lib---rating.lib.php.html">		rating.lib.php
+		</a><br>
+			<a href="../Ampache/_register.php.html">		register.php
+		</a><br>
+			<a href="../Ampache/_lib---class---registration.class.php.html">		registration.class.php
+		</a><br>
+			<a href="../Ampache/_modules---plugins---RioPlayer.plugin.php.html">		RioPlayer.plugin.php
+		</a><br>
+			<a href="../Ampache/_rss.php.html">		rss.php
+		</a><br>
+			<a href="../Ampache/_lib---class---scrobbler.class.php.html">		scrobbler.class.php
+		</a><br>
+			<a href="../Ampache/_search.php.html">		search.php
+		</a><br>
+			<a href="../Ampache/_admin---shout.php.html">		shout.php
+		</a><br>
+			<a href="../Ampache/_shout.php.html">		shout.php
+		</a><br>
+			<a href="../Ampache/_lib---class---shoutbox.class.php.html">		shoutbox.class.php
+		</a><br>
+			<a href="../Ampache/_modules---localplay---shoutcast.controller.php.html">		shoutcast.controller.php
+		</a><br>
+			<a href="../Ampache/_modules---infotools---Snoopy.class.php.html">		Snoopy.class.php
+		</a><br>
+			<a href="../Ampache/_server---song.ajax.php.html">		song.ajax.php
+		</a><br>
+			<a href="../Ampache/_lib---class---song.class.php.html">		song.class.php
+		</a><br>
+			<a href="../Ampache/_song.php.html">		song.php
+		</a><br>
+			<a href="../Ampache/_bin---sort_files.inc.html">		sort_files.inc
+		</a><br>
+			<a href="../Ampache/_server---stats.ajax.php.html">		stats.ajax.php
+		</a><br>
+			<a href="../Ampache/_lib---class---stats.class.php.html">		stats.class.php
+		</a><br>
+			<a href="../Ampache/_stats.php.html">		stats.php
+		</a><br>
+			<a href="../Ampache/_server---stream.ajax.php.html">		stream.ajax.php
+		</a><br>
+			<a href="../Ampache/_lib---class---stream.class.php.html">		stream.class.php
+		</a><br>
+			<a href="../Ampache/_lib---stream.lib.php.html">		stream.lib.php
+		</a><br>
+			<a href="../Ampache/_stream.php.html">		stream.php
+		</a><br>
+			<a href="../Ampache/_admin---system.php.html">		system.php
+		</a><br>
+			<a href="../Ampache/_server---tag.ajax.php.html">		tag.ajax.php
+		</a><br>
+			<a href="../Ampache/_lib---class---tag.class.php.html">		tag.class.php
+		</a><br>
+			<a href="../Ampache/_test.php.html">		test.php
+		</a><br>
+			<a href="../Ampache/_lib---themes.php.html">		themes.php
+		</a><br>
+			<a href="../Ampache/_lib---class---tmpplaylist.class.php.html">		tmpplaylist.class.php
+		</a><br>
+			<a href="../Ampache/_lib---class---update.class.php.html">		update.class.php
+		</a><br>
+			<a href="../Ampache/_update.php.html">		update.php
+		</a><br>
+			<a href="../Ampache/_lib---class---user.class.php.html">		user.class.php
+		</a><br>
+			<a href="../Ampache/_admin---users.php.html">		users.php
+		</a><br>
+			<a href="../Ampache/_util.php.html">		util.php
+		</a><br>
+			<a href="../Ampache/_lib---class---vainfo.class.php.html">		vainfo.class.php
+		</a><br>
+			<a href="../Ampache/_modules---validatemail---validateEmail.php.html">		validateEmail.php
+		</a><br>
+			<a href="../Ampache/_modules---validatemail---validateEmailFormat.php.html">		validateEmailFormat.php
+		</a><br>
+			<a href="../Ampache/_lib---class---vauth.class.php.html">		vauth.class.php
+		</a><br>
+			<a href="../Ampache/_lib---class---video.class.php.html">		video.class.php
+		</a><br>
+			<a href="../Ampache/_bin---write_playlists.inc.html">		write_playlists.inc
+		</a><br>
+			<a href="../Ampache/_bin---write_tags.inc.html">		write_tags.inc
+		</a><br>
+			<a href="../Ampache/_server---xml.server.php.html">		xml.server.php
+		</a><br>
+			<a href="../Ampache/_lib---class---xmldata.class.php.html">		xmldata.class.php
+		</a><br>
+			<a href="../Ampache/_server---xmlrpc.server.php.html">		xmlrpc.server.php
+		</a><br>
+			<a href="../Ampache/_lib---class---xmlrpcclient.class.php.html">		xmlrpcclient.class.php
+		</a><br>
+			<a href="../Ampache/_lib---class---xmlrpcserver.class.php.html">		xmlrpcserver.class.php
+		</a><br>
+			<a href="../Ampache/_modules---flash---xspf_player.php.html">		xspf_player.php
+		</a><br>
+	  </div><br />
+      
+            <b>Interfaces:</b><br />
+        <div class="package">
+		    		<a href="../Ampache/media.html">media</a><br />
+	  </div>
+      
+            <b>Classes:</b><br />
+        <div class="package">
+		    		<a href="../Ampache/Access.html">Access</a><br />
+	    		<a href="../Ampache/Ajax.html">Ajax</a><br />
+	    		<a href="../Ampache/Album.html">Album</a><br />
+	    		<a href="../Ampache/AmazonSearch.html">AmazonSearch</a><br />
+	    		<a href="../Ampache/AmpacheHttpq.html">AmpacheHttpq</a><br />
+	    		<a href="../Ampache/AmpacheLastfm.html">AmpacheLastfm</a><br />
+	    		<a href="../Ampache/AmpacheMail.html">AmpacheMail</a><br />
+	    		<a href="../Ampache/AmpacheMpd.html">AmpacheMpd</a><br />
+	    		<a href="../Ampache/AmpacheRioPlayer.html">AmpacheRioPlayer</a><br />
+	    		<a href="../Ampache/AmpacheRSS.html">AmpacheRSS</a><br />
+	    		<a href="../Ampache/AmpacheShoutCast.html">AmpacheShoutCast</a><br />
+	    		<a href="../Ampache/Api.html">Api</a><br />
+	    		<a href="../Ampache/archive.html">archive</a><br />
+	    		<a href="../Ampache/Artist.html">Artist</a><br />
+	    		<a href="../Ampache/Browse.html">Browse</a><br />
+	    		<a href="../Ampache/bzip_file.html">bzip_file</a><br />
+	    		<a href="../Ampache/captcha.html">captcha</a><br />
+	    		<a href="../Ampache/Config.html">Config</a><br />
+	    		<a href="../Ampache/Core.html">Core</a><br />
+	    		<a href="../Ampache/database_object.html">database_object</a><br />
+	    		<a href="../Ampache/Dba.html">Dba</a><br />
+	    		<a href="../Ampache/Democratic.html">Democratic</a><br />
+	    		<a href="../Ampache/easy_captcha.html">easy_captcha</a><br />
+	    		<a href="../Ampache/easy_captcha_dxy_spike.html">easy_captcha_dxy_spike</a><br />
+	    		<a href="../Ampache/easy_captcha_dxy_wave.html">easy_captcha_dxy_wave</a><br />
+	    		<a href="../Ampache/easy_captcha_fuzzy.html">easy_captcha_fuzzy</a><br />
+	    		<a href="../Ampache/easy_captcha_graphic.html">easy_captcha_graphic</a><br />
+	    		<a href="../Ampache/easy_captcha_graphic_image_disturbed.html">easy_captcha_graphic_image_disturbed</a><br />
+	    		<a href="../Ampache/easy_captcha_graphic_image_waved.html">easy_captcha_graphic_image_waved</a><br />
+	    		<a href="../Ampache/easy_captcha_persistent_grant.html">easy_captcha_persistent_grant</a><br />
+	    		<a href="../Ampache/easy_captcha_spamfree_no_new_urls.html">easy_captcha_spamfree_no_new_urls</a><br />
+	    		<a href="../Ampache/easy_captcha_text_disable.html">easy_captcha_text_disable</a><br />
+	    		<a href="../Ampache/easy_captcha_text_math_formula.html">easy_captcha_text_math_formula</a><br />
+	    		<a href="../Ampache/easy_captcha_utility.html">easy_captcha_utility</a><br />
+	    		<a href="../Ampache/Error.html">Error</a><br />
+	    		<a href="../Ampache/Flag.html">Flag</a><br />
+	    		<a href="../Ampache/Genre.html">Genre</a><br />
+	    		<a href="../Ampache/gzip_file.html">gzip_file</a><br />
+	    		<a href="../Ampache/HttpQPlayer.html">HttpQPlayer</a><br />
+	    		<a href="../Ampache/jamendoSearch.html">jamendoSearch</a><br />
+	    		<a href="../Ampache/LastFMSearch.html">LastFMSearch</a><br />
+	    		<a href="../Ampache/Localplay.html">Localplay</a><br />
+	    		<a href="../Ampache/localplay_controller.html">localplay_controller</a><br />
+	    		<a href="../Ampache/mp3tunes.html">mp3tunes</a><br />
+	    		<a href="../Ampache/mpd.html">mpd</a><br />
+	    		<a href="../Ampache/nusoapservermime.html">nusoapservermime</a><br />
+	    		<a href="../Ampache/nusoap_base.html">nusoap_base</a><br />
+	    		<a href="../Ampache/nusoap_client.html">nusoap_client</a><br />
+	    		<a href="../Ampache/nusoap_client_mime.html">nusoap_client_mime</a><br />
+	    		<a href="../Ampache/nusoap_fault.html">nusoap_fault</a><br />
+	    		<a href="../Ampache/nusoap_parser.html">nusoap_parser</a><br />
+	    		<a href="../Ampache/nusoap_server.html">nusoap_server</a><br />
+	    		<a href="../Ampache/nusoap_server_mime.html">nusoap_server_mime</a><br />
+	    		<a href="../Ampache/nusoap_wsdlcache.html">nusoap_wsdlcache</a><br />
+	    		<a href="../Ampache/nusoap_xmlschema.html">nusoap_xmlschema</a><br />
+	    		<a href="../Ampache/Playlist.html">Playlist</a><br />
+	    		<a href="../Ampache/Plugin.html">Plugin</a><br />
+	    		<a href="../Ampache/Preference.html">Preference</a><br />
+	    		<a href="../Ampache/Radio.html">Radio</a><br />
+	    		<a href="../Ampache/Random.html">Random</a><br />
+	    		<a href="../Ampache/Rating.html">Rating</a><br />
+	    		<a href="../Ampache/Registration.html">Registration</a><br />
+	    		<a href="../Ampache/scrobbler.html">scrobbler</a><br />
+	    		<a href="../Ampache/shoutBox.html">shoutBox</a><br />
+	    		<a href="../Ampache/Snoopy.html">Snoopy</a><br />
+	    		<a href="../Ampache/soapclient.html">soapclient</a><br />
+	    		<a href="../Ampache/soapclientmime.html">soapclientmime</a><br />
+	    		<a href="../Ampache/soapval.html">soapval</a><br />
+	    		<a href="../Ampache/soap_fault.html">soap_fault</a><br />
+	    		<a href="../Ampache/soap_parser.html">soap_parser</a><br />
+	    		<a href="../Ampache/soap_server.html">soap_server</a><br />
+	    		<a href="../Ampache/soap_transport_http.html">soap_transport_http</a><br />
+	    		<a href="../Ampache/Song.html">Song</a><br />
+	    		<a href="../Ampache/Stats.html">Stats</a><br />
+	    		<a href="../Ampache/Stream.html">Stream</a><br />
+	    		<a href="../Ampache/Tag.html">Tag</a><br />
+	    		<a href="../Ampache/tar_file.html">tar_file</a><br />
+	    		<a href="../Ampache/tmpPlaylist.html">tmpPlaylist</a><br />
+	    		<a href="../Ampache/Update.html">Update</a><br />
+	    		<a href="../Ampache/User.html">User</a><br />
+	    		<a href="../Ampache/vainfo.html">vainfo</a><br />
+	    		<a href="../Ampache/vauth.html">vauth</a><br />
+	    		<a href="../Ampache/Video.html">Video</a><br />
+	    		<a href="../Ampache/wsdl.html">wsdl</a><br />
+	    		<a href="../Ampache/wsdlcache.html">wsdlcache</a><br />
+	    		<a href="../Ampache/xmlData.html">xmlData</a><br />
+	    		<a href="../Ampache/xmlRpcClient.html">xmlRpcClient</a><br />
+	    		<a href="../Ampache/xmlRpcServer.html">xmlRpcServer</a><br />
+	    		<a href="../Ampache/XMLSchema.html">XMLSchema</a><br />
+	    		<a href="../Ampache/zip_file.html">zip_file</a><br />
+	  </div>
+                </td>
+    <td>
+      <table cellpadding="10" cellspacing="0" width="100%" border="0"><tr><td valign="top">
+
+<h1>Class: nusoap_base</h1>
+Source Location: /modules/nusoap/class.nusoap_base.php<br /><br />
+
+
+<table width="100%" border="0">
+<tr><td valign="top">
+
+<h3><a href="#class_details">Class Overview</a></h3>
+<pre></pre><br />
+<div class="description">nusoap_base</div><br /><br />
+<h4>Author(s):</h4>
+<ul>
+          <li>Scott Nichol &lt;<a href="mailto:snichol@users.sourceforge.net">snichol@users.sourceforge.net</a>&gt;</li>
+              <li>Dietrich Ayala &lt;<a href="mailto:dietrich@ganx4.com">dietrich@ganx4.com</a>&gt;</li>
+                  </ul>
+
+
+
+
+            
+        
+<h4>Version:</h4>
+<ul>
+  <li>$Id$</li>
+</ul>
+
+        
+</td>
+
+<td valign="top">
+<h3><a href="#class_vars">Variables</a></h3>
+<ul>
+    <li><a href="../Ampache/nusoap_base.html#var$namespaces">$namespaces</a></li>
+    <li><a href="../Ampache/nusoap_base.html#var$soap_defencoding">$soap_defencoding</a></li>
+    <li><a href="../Ampache/nusoap_base.html#var$typemap">$typemap</a></li>
+    <li><a href="../Ampache/nusoap_base.html#var$xmlEntities">$xmlEntities</a></li>
+    <li><a href="../Ampache/nusoap_base.html#var$XMLSchemaVersion">$XMLSchemaVersion</a></li>
+  </ul>
+</td>
+
+
+<td valign="top">
+<h3><a href="#class_methods">Methods</a></h3>
+<ul>
+    <li><a href="../Ampache/nusoap_base.html#methodnusoap_base">nusoap_base</a></li>
+    <li><a href="../Ampache/nusoap_base.html#methodappendDebug">appendDebug</a></li>
+    <li><a href="../Ampache/nusoap_base.html#methodclearDebug">clearDebug</a></li>
+    <li><a href="../Ampache/nusoap_base.html#methodformatDump">formatDump</a></li>
+    <li><a href="../Ampache/nusoap_base.html#methodgetDebug">getDebug</a></li>
+    <li><a href="../Ampache/nusoap_base.html#methodgetDebugAsXMLComment">getDebugAsXMLComment</a></li>
+    <li><a href="../Ampache/nusoap_base.html#methodgetDebugLevel">getDebugLevel</a></li>
+    <li><a href="../Ampache/nusoap_base.html#methodgetError">getError</a></li>
+    <li><a href="../Ampache/nusoap_base.html#methodgetGlobalDebugLevel">getGlobalDebugLevel</a></li>
+    <li><a href="../Ampache/nusoap_base.html#methodgetLocalPart">getLocalPart</a></li>
+    <li><a href="../Ampache/nusoap_base.html#methodgetmicrotime">getmicrotime</a></li>
+    <li><a href="../Ampache/nusoap_base.html#methodgetNamespaceFromPrefix">getNamespaceFromPrefix</a></li>
+    <li><a href="../Ampache/nusoap_base.html#methodgetPrefix">getPrefix</a></li>
+    <li><a href="../Ampache/nusoap_base.html#methodgetPrefixFromNamespace">getPrefixFromNamespace</a></li>
+    <li><a href="../Ampache/nusoap_base.html#methodserializeEnvelope">serializeEnvelope</a></li>
+    <li><a href="../Ampache/nusoap_base.html#methodserialize_val">serialize_val</a></li>
+    <li><a href="../Ampache/nusoap_base.html#methodsetDebugLevel">setDebugLevel</a></li>
+    <li><a href="../Ampache/nusoap_base.html#methodsetGlobalDebugLevel">setGlobalDebugLevel</a></li>
+    <li><a href="../Ampache/nusoap_base.html#methodvarDump">varDump</a></li>
+    <li><a href="../Ampache/nusoap_base.html#method__toString">__toString</a></li>
+  </ul>
+</td>
+
+</tr></table>
+<hr />
+
+<table width="100%" border="0"><tr>
+
+
+
+
+
+
+</tr></table>
+<hr />
+
+<a name="class_details"></a>
+<h3>Class Details</h3>
+<div class="tags">
+[line 86]<br />
+nusoap_base<br /><br /><br /><br />
+<h4>Tags:</h4>
+<div class="tags">
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td><b>author:</b>&nbsp;&nbsp;</td><td>Scott Nichol &lt;<a href="mailto:snichol@users.sourceforge.net">snichol@users.sourceforge.net</a>&gt;</td>
+  </tr>
+  <tr>
+    <td><b>author:</b>&nbsp;&nbsp;</td><td>Dietrich Ayala &lt;<a href="mailto:dietrich@ganx4.com">dietrich@ganx4.com</a>&gt;</td>
+  </tr>
+  <tr>
+    <td><b>version:</b>&nbsp;&nbsp;</td><td>$Id$</td>
+  </tr>
+  <tr>
+    <td><b>access:</b>&nbsp;&nbsp;</td><td>public</td>
+  </tr>
+</table>
+</div>
+</div><br /><br />
+<div class="top">[ <a href="#top">Top</a> ]</div><br />
+
+<hr />
+<a name="class_vars"></a>
+<h3>Class Variables</h3>
+<div class="tags">
+	<a name="var$namespaces"></a>
+	<p></p>
+	<h4>$namespaces = <span class="value">array(<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'SOAP-ENV'&nbsp;=&gt;&nbsp;'http://schemas.xmlsoap.org/soap/envelope/',<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'xsd'&nbsp;=&gt;&nbsp;'http://www.w3.org/2001/XMLSchema',<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'xsi'&nbsp;=&gt;&nbsp;'http://www.w3.org/2001/XMLSchema-instance',<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'SOAP-ENC'&nbsp;=&gt;&nbsp;'http://schemas.xmlsoap.org/soap/encoding/'<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)</span></h4>
+	<p>[line 163]</p>
+  namespaces in an array of prefix =&gt; uri<br /><br /><p>this is &quot;seeded&quot; by a set of constants, but it may be altered by code</p><br /><br /><br />
+<h4>Tags:</h4>
+<div class="tags">
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td><b>access:</b>&nbsp;&nbsp;</td><td>public</td>
+  </tr>
+</table>
+</div>
+
+  <br />
+	<div class="tags">
+  <table border="0" cellspacing="0" cellpadding="0">
+    <tr>
+      <td><b>Type:</b>&nbsp;&nbsp;</td>
+      <td>array</td>
+    </tr>
+      </table>
+	</div><br /><br />
+	<div class="top">[ <a href="#top">Top</a> ]</div><br />
+	<a name="var$soap_defencoding"></a>
+	<p></p>
+	<h4>$soap_defencoding = <span class="value">&nbsp;'ISO-8859-1'</span></h4>
+	<p>[line 152]</p>
+  charset encoding for outgoing messages<br /><br /><br /><br />
+<h4>Tags:</h4>
+<div class="tags">
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td><b>access:</b>&nbsp;&nbsp;</td><td>public</td>
+  </tr>
+</table>
+</div>
+
+  <br />
+	<div class="tags">
+  <table border="0" cellspacing="0" cellpadding="0">
+    <tr>
+      <td><b>Type:</b>&nbsp;&nbsp;</td>
+      <td>string</td>
+    </tr>
+      </table>
+	</div><br /><br />
+	<div class="top">[ <a href="#top">Top</a> ]</div><br />
+	<a name="var$typemap"></a>
+	<p></p>
+	<h4>$typemap = <span class="value">array(
+<br>
+&nbsp;&nbsp;&nbsp;'http://www.w3.org/2001/XMLSchema'&nbsp;=&gt;&nbsp;array(
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'string'=&gt;'string','boolean'=&gt;'boolean','float'=&gt;'double','double'=&gt;'double','decimal'=&gt;'double',
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'duration'=&gt;'','dateTime'=&gt;'string','time'=&gt;'string','date'=&gt;'string','gYearMonth'=&gt;'',
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'gYear'=&gt;'','gMonthDay'=&gt;'','gDay'=&gt;'','gMonth'=&gt;'','hexBinary'=&gt;'string','base64Binary'=&gt;'string',
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;abstract&nbsp;&quot;any&quot;&nbsp;types
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'anyType'=&gt;'string','anySimpleType'=&gt;'string',
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;derived&nbsp;datatypes
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'normalizedString'=&gt;'string','token'=&gt;'string','language'=&gt;'','NMTOKEN'=&gt;'','NMTOKENS'=&gt;'','Name'=&gt;'','NCName'=&gt;'','ID'=&gt;'',
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'IDREF'=&gt;'','IDREFS'=&gt;'','ENTITY'=&gt;'','ENTITIES'=&gt;'','integer'=&gt;'integer','nonPositiveInteger'=&gt;'integer',
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'negativeInteger'=&gt;'integer','long'=&gt;'integer','int'=&gt;'integer','short'=&gt;'integer','byte'=&gt;'integer','nonNegativeInteger'=&gt;'integer',
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'unsignedLong'=&gt;'','unsignedInt'=&gt;'','unsignedShort'=&gt;'','unsignedByte'=&gt;'','positiveInteger'=&gt;''),'http://www.w3.org/2000/10/XMLSchema'=&gt;array('i4'=&gt;'','int'=&gt;'integer','boolean'=&gt;'boolean','string'=&gt;'string','double'=&gt;'double','float'=&gt;'double','dateTime'=&gt;'string','timeInstant'=&gt;'string','base64Binary'=&gt;'string','base64'=&gt;'string','ur-type'=&gt;'array'),'http://www.w3.org/1999/XMLSchema'=&gt;array('i4'=&gt;'','int'=&gt;'integer','boolean'=&gt;'boolean','string'=&gt;'string','double'=&gt;'double','float'=&gt;'double','dateTime'=&gt;'string','timeInstant'=&gt;'string','base64Binary'=&gt;'string','base64'=&gt;'string','ur-type'=&gt;'array'),'http://soapinterop.org/xsd'=&gt;array('SOAPStruct'=&gt;'struct'),'http://schemas.xmlsoap.org/soap/encoding/'=&gt;array('base64'=&gt;'string','array'=&gt;'array','Array'=&gt;'array'),'http://xml.apache.org/xml-soap'=&gt;array('Map'))</span></h4>
+	<p>[line 185]</p>
+  XML Schema types in an array of uri =&gt; (array of xml type =&gt; php type)  is this legacy yet?  no, this is used by the nusoap_xmlschema class to verify type =&gt; namespace mappings.<br /><br /><br /><br />
+<h4>Tags:</h4>
+<div class="tags">
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td><b>access:</b>&nbsp;&nbsp;</td><td>public</td>
+  </tr>
+</table>
+</div>
+
+  <br />
+	<div class="tags">
+  <table border="0" cellspacing="0" cellpadding="0">
+    <tr>
+      <td><b>Type:</b>&nbsp;&nbsp;</td>
+      <td>array</td>
+    </tr>
+      </table>
+	</div><br /><br />
+	<div class="top">[ <a href="#top">Top</a> ]</div><br />
+	<a name="var$xmlEntities"></a>
+	<p></p>
+	<h4>$xmlEntities = <span class="value">array('quot'&nbsp;=&gt;&nbsp;'&quot;','amp'&nbsp;=&gt;&nbsp;'&amp;',
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'lt'&nbsp;=&gt;&nbsp;'&lt;','gt'&nbsp;=&gt;&nbsp;'&gt;','apos'&nbsp;=&gt;&nbsp;&quot;'&quot;)</span></h4>
+	<p>[line 218]</p>
+  XML entities to convert<br /><br /><br /><br />
+<h4>Tags:</h4>
+<div class="tags">
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td><b>see:</b>&nbsp;&nbsp;</td><td>expandEntities</td>
+  </tr>
+  <tr>
+    <td><b>deprecated:</b>&nbsp;&nbsp;</td><td></td>
+  </tr>
+  <tr>
+    <td><b>access:</b>&nbsp;&nbsp;</td><td>public</td>
+  </tr>
+</table>
+</div>
+
+  <br />
+	<div class="tags">
+  <table border="0" cellspacing="0" cellpadding="0">
+    <tr>
+      <td><b>Type:</b>&nbsp;&nbsp;</td>
+      <td>array</td>
+    </tr>
+      </table>
+	</div><br /><br />
+	<div class="top">[ <a href="#top">Top</a> ]</div><br />
+	<a name="var$XMLSchemaVersion"></a>
+	<p></p>
+	<h4>$XMLSchemaVersion = <span class="value">&nbsp;'http://www.w3.org/2001/XMLSchema'</span></h4>
+	<p>[line 144]</p>
+  set schema version<br /><br /><br /><br />
+<h4>Tags:</h4>
+<div class="tags">
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td><b>access:</b>&nbsp;&nbsp;</td><td>public</td>
+  </tr>
+</table>
+</div>
+
+  <br />
+	<div class="tags">
+  <table border="0" cellspacing="0" cellpadding="0">
+    <tr>
+      <td><b>Type:</b>&nbsp;&nbsp;</td>
+      <td>string</td>
+    </tr>
+      </table>
+	</div><br /><br />
+	<div class="top">[ <a href="#top">Top</a> ]</div><br />
+</div><br />
+
+<hr />
+<a name="class_methods"></a>
+<h3>Class Methods</h3>
+<div class="tags">
+
+  <hr />
+	<a name="methodnusoap_base"></a>
+	<h3>constructor nusoap_base <span class="smalllinenumber">[line 226]</span></h3>
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code_border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">
+		<code>nusoap_base nusoap_base(
+)</code>
+    </td></tr></table>
+    </td></tr></table><br />
+	
+		constructor<br /><br /><br /><br />
+<h4>Tags:</h4>
+<div class="tags">
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td><b>access:</b>&nbsp;&nbsp;</td><td>public</td>
+  </tr>
+</table>
+</div>
+<br /><br />
+
+	
+        <div class="top">[ <a href="#top">Top</a> ]</div>
+  </div>
+  <hr />
+	<a name="methodappendDebug"></a>
+	<h3>method appendDebug <span class="smalllinenumber">[line 288]</span></h3>
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code_border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">
+		<code>void appendDebug(
+string
+$string)</code>
+    </td></tr></table>
+    </td></tr></table><br />
+	
+		adds debug data to the instance debug string without formatting<br /><br /><br /><br />
+<h4>Tags:</h4>
+<div class="tags">
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td><b>access:</b>&nbsp;&nbsp;</td><td>public</td>
+  </tr>
+</table>
+</div>
+<br /><br />
+
+	
+        <h4>Parameters:</h4>
+    <div class="tags">
+    <table border="0" cellspacing="0" cellpadding="0">
+          <tr>
+        <td class="type">string&nbsp;&nbsp;</td>
+        <td><b>$string</b>&nbsp;&nbsp;</td>
+        <td>debug data</td>
+      </tr>
+        </table>
+    </div><br />
+        <div class="top">[ <a href="#top">Top</a> ]</div>
+  </div>
+  <hr />
+	<a name="methodclearDebug"></a>
+	<h3>method clearDebug <span class="smalllinenumber">[line 301]</span></h3>
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code_border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">
+		<code>void clearDebug(
+)</code>
+    </td></tr></table>
+    </td></tr></table><br />
+	
+		clears the current debug data for this instance<br /><br /><br /><br />
+<h4>Tags:</h4>
+<div class="tags">
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td><b>access:</b>&nbsp;&nbsp;</td><td>public</td>
+  </tr>
+</table>
+</div>
+<br /><br />
+
+	
+        <div class="top">[ <a href="#top">Top</a> ]</div>
+  </div>
+  <hr />
+	<a name="methodformatDump"></a>
+	<h3>method formatDump <span class="smalllinenumber">[line 729]</span></h3>
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code_border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">
+		<code>string formatDump(
+string
+$str)</code>
+    </td></tr></table>
+    </td></tr></table><br />
+	
+		formats a string to be inserted into an HTML stream<br /><br /><br /><br />
+<h4>Tags:</h4>
+<div class="tags">
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td><b>return:</b>&nbsp;&nbsp;</td><td>The formatted string</td>
+  </tr>
+  <tr>
+    <td><b>deprecated:</b>&nbsp;&nbsp;</td><td></td>
+  </tr>
+  <tr>
+    <td><b>access:</b>&nbsp;&nbsp;</td><td>public</td>
+  </tr>
+</table>
+</div>
+<br /><br />
+
+	
+        <h4>Parameters:</h4>
+    <div class="tags">
+    <table border="0" cellspacing="0" cellpadding="0">
+          <tr>
+        <td class="type">string&nbsp;&nbsp;</td>
+        <td><b>$str</b>&nbsp;&nbsp;</td>
+        <td>The string to format</td>
+      </tr>
+        </table>
+    </div><br />
+        <div class="top">[ <a href="#top">Top</a> ]</div>
+  </div>
+  <hr />
+	<a name="methodgetDebug"></a>
+	<h3>method getDebug <span class="smalllinenumber">[line 313]</span></h3>
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code_border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">
+		<code>debug &amp;getDebug(
+)</code>
+    </td></tr></table>
+    </td></tr></table><br />
+	
+		gets the current debug data for this instance<br /><br /><br /><br />
+<h4>Tags:</h4>
+<div class="tags">
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td><b>return:</b>&nbsp;&nbsp;</td><td>data</td>
+  </tr>
+  <tr>
+    <td><b>access:</b>&nbsp;&nbsp;</td><td>public</td>
+  </tr>
+</table>
+</div>
+<br /><br />
+
+	
+        <div class="top">[ <a href="#top">Top</a> ]</div>
+  </div>
+  <hr />
+	<a name="methodgetDebugAsXMLComment"></a>
+	<h3>method getDebugAsXMLComment <span class="smalllinenumber">[line 326]</span></h3>
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code_border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">
+		<code>debug &amp;getDebugAsXMLComment(
+)</code>
+    </td></tr></table>
+    </td></tr></table><br />
+	
+		gets the current debug data for this instance as an XML comment  this may change the contents of the debug data<br /><br /><br /><br />
+<h4>Tags:</h4>
+<div class="tags">
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td><b>return:</b>&nbsp;&nbsp;</td><td>data as an XML comment</td>
+  </tr>
+  <tr>
+    <td><b>access:</b>&nbsp;&nbsp;</td><td>public</td>
+  </tr>
+</table>
+</div>
+<br /><br />
+
+	
+        <div class="top">[ <a href="#top">Top</a> ]</div>
+  </div>
+  <hr />
+	<a name="methodgetDebugLevel"></a>
+	<h3>method getDebugLevel <span class="smalllinenumber">[line 256]</span></h3>
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code_border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">
+		<code>int getDebugLevel(
+)</code>
+    </td></tr></table>
+    </td></tr></table><br />
+	
+		gets the debug level for this instance<br /><br /><br /><br />
+<h4>Tags:</h4>
+<div class="tags">
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td><b>return:</b>&nbsp;&nbsp;</td><td>Debug level 0-9, where 0 turns off</td>
+  </tr>
+  <tr>
+    <td><b>access:</b>&nbsp;&nbsp;</td><td>public</td>
+  </tr>
+</table>
+</div>
+<br /><br />
+
+	
+        <div class="top">[ <a href="#top">Top</a> ]</div>
+  </div>
+  <hr />
+	<a name="methodgetError"></a>
+	<h3>method getError <span class="smalllinenumber">[line 359]</span></h3>
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code_border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">
+		<code>mixed getError(
+)</code>
+    </td></tr></table>
+    </td></tr></table><br />
+	
+		returns error string if present<br /><br /><br /><br />
+<h4>Tags:</h4>
+<div class="tags">
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td><b>return:</b>&nbsp;&nbsp;</td><td>error string or false</td>
+  </tr>
+  <tr>
+    <td><b>access:</b>&nbsp;&nbsp;</td><td>public</td>
+  </tr>
+</table>
+</div>
+<br /><br />
+
+	
+        <div class="top">[ <a href="#top">Top</a> ]</div>
+  </div>
+  <hr />
+	<a name="methodgetGlobalDebugLevel"></a>
+	<h3>method getGlobalDebugLevel <span class="smalllinenumber">[line 236]</span></h3>
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code_border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">
+		<code>integer getGlobalDebugLevel(
+)</code>
+    </td></tr></table>
+    </td></tr></table><br />
+	
+		gets the global debug level, which applies to future instances<br /><br /><br /><br />
+<h4>Tags:</h4>
+<div class="tags">
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td><b>return:</b>&nbsp;&nbsp;</td><td>Debug level 0-9, where 0 turns off</td>
+  </tr>
+  <tr>
+    <td><b>access:</b>&nbsp;&nbsp;</td><td>public</td>
+  </tr>
+</table>
+</div>
+<br /><br />
+
+	
+        <div class="top">[ <a href="#top">Top</a> ]</div>
+  </div>
+  <hr />
+	<a name="methodgetLocalPart"></a>
+	<h3>method getLocalPart <span class="smalllinenumber">[line 791]</span></h3>
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code_border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">
+		<code>string getLocalPart(
+string
+$str)</code>
+    </td></tr></table>
+    </td></tr></table><br />
+	
+		returns the local part of a prefixed string  returns the original string, if not prefixed<br /><br /><br /><br />
+<h4>Tags:</h4>
+<div class="tags">
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td><b>return:</b>&nbsp;&nbsp;</td><td>The local part</td>
+  </tr>
+  <tr>
+    <td><b>access:</b>&nbsp;&nbsp;</td><td>public</td>
+  </tr>
+</table>
+</div>
+<br /><br />
+
+	
+        <h4>Parameters:</h4>
+    <div class="tags">
+    <table border="0" cellspacing="0" cellpadding="0">
+          <tr>
+        <td class="type">string&nbsp;&nbsp;</td>
+        <td><b>$str</b>&nbsp;&nbsp;</td>
+        <td>The prefixed string</td>
+      </tr>
+        </table>
+    </div><br />
+        <div class="top">[ <a href="#top">Top</a> ]</div>
+  </div>
+  <hr />
+	<a name="methodgetmicrotime"></a>
+	<h3>method getmicrotime <span class="smalllinenumber">[line 855]</span></h3>
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code_border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">
+		<code>string getmicrotime(
+)</code>
+    </td></tr></table>
+    </td></tr></table><br />
+	
+		returns the time in ODBC canonical form with microseconds<br /><br /><br /><br />
+<h4>Tags:</h4>
+<div class="tags">
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td><b>return:</b>&nbsp;&nbsp;</td><td>The time in ODBC canonical form with microseconds</td>
+  </tr>
+  <tr>
+    <td><b>access:</b>&nbsp;&nbsp;</td><td>public</td>
+  </tr>
+</table>
+</div>
+<br /><br />
+
+	
+        <div class="top">[ <a href="#top">Top</a> ]</div>
+  </div>
+  <hr />
+	<a name="methodgetNamespaceFromPrefix"></a>
+	<h3>method getNamespaceFromPrefix <span class="smalllinenumber">[line 823]</span></h3>
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code_border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">
+		<code>mixed getNamespaceFromPrefix(
+string
+$prefix)</code>
+    </td></tr></table>
+    </td></tr></table><br />
+	
+		pass it a prefix, it returns a namespace<br /><br /><br /><br />
+<h4>Tags:</h4>
+<div class="tags">
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td><b>return:</b>&nbsp;&nbsp;</td><td>The namespace, false if no namespace has the specified prefix</td>
+  </tr>
+  <tr>
+    <td><b>access:</b>&nbsp;&nbsp;</td><td>public</td>
+  </tr>
+</table>
+</div>
+<br /><br />
+
+	
+        <h4>Parameters:</h4>
+    <div class="tags">
+    <table border="0" cellspacing="0" cellpadding="0">
+          <tr>
+        <td class="type">string&nbsp;&nbsp;</td>
+        <td><b>$prefix</b>&nbsp;&nbsp;</td>
+        <td>The prefix</td>
+      </tr>
+        </table>
+    </div><br />
+        <div class="top">[ <a href="#top">Top</a> ]</div>
+  </div>
+  <hr />
+	<a name="methodgetPrefix"></a>
+	<h3>method getPrefix <span class="smalllinenumber">[line 808]</span></h3>
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code_border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">
+		<code>mixed getPrefix(
+string
+$str)</code>
+    </td></tr></table>
+    </td></tr></table><br />
+	
+		returns the prefix part of a prefixed string  returns false, if not prefixed<br /><br /><br /><br />
+<h4>Tags:</h4>
+<div class="tags">
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td><b>return:</b>&nbsp;&nbsp;</td><td>The prefix or false if there is no prefix</td>
+  </tr>
+  <tr>
+    <td><b>access:</b>&nbsp;&nbsp;</td><td>public</td>
+  </tr>
+</table>
+</div>
+<br /><br />
+
+	
+        <h4>Parameters:</h4>
+    <div class="tags">
+    <table border="0" cellspacing="0" cellpadding="0">
+          <tr>
+        <td class="type">string&nbsp;&nbsp;</td>
+        <td><b>$str</b>&nbsp;&nbsp;</td>
+        <td>The prefixed string</td>
+      </tr>
+        </table>
+    </div><br />
+        <div class="top">[ <a href="#top">Top</a> ]</div>
+  </div>
+  <hr />
+	<a name="methodgetPrefixFromNamespace"></a>
+	<h3>method getPrefixFromNamespace <span class="smalllinenumber">[line 839]</span></h3>
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code_border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">
+		<code>mixed getPrefixFromNamespace(
+string
+$ns)</code>
+    </td></tr></table>
+    </td></tr></table><br />
+	
+		returns the prefix for a given namespace (or prefix)  or false if no prefixes registered for the given namespace<br /><br /><br /><br />
+<h4>Tags:</h4>
+<div class="tags">
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td><b>return:</b>&nbsp;&nbsp;</td><td>The prefix, false if the namespace has no prefixes</td>
+  </tr>
+  <tr>
+    <td><b>access:</b>&nbsp;&nbsp;</td><td>public</td>
+  </tr>
+</table>
+</div>
+<br /><br />
+
+	
+        <h4>Parameters:</h4>
+    <div class="tags">
+    <table border="0" cellspacing="0" cellpadding="0">
+          <tr>
+        <td class="type">string&nbsp;&nbsp;</td>
+        <td><b>$ns</b>&nbsp;&nbsp;</td>
+        <td>The namespace</td>
+      </tr>
+        </table>
+    </div><br />
+        <div class="top">[ <a href="#top">Top</a> ]</div>
+  </div>
+  <hr />
+	<a name="methodserializeEnvelope"></a>
+	<h3>method serializeEnvelope <span class="smalllinenumber">[line 674]</span></h3>
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code_border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">
+		<code>string serializeEnvelope(
+string
+$body, [mixed
+$headers = false], [array
+$namespaces = array()], [string
+$style = 'rpc'], [string
+$use = 'encoded'], [string
+$encodingStyle = 'http://schemas.xmlsoap.org/soap/encoding/'])</code>
+    </td></tr></table>
+    </td></tr></table><br />
+	
+		serializes a message<br /><br /><br /><br />
+<h4>Tags:</h4>
+<div class="tags">
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td><b>return:</b>&nbsp;&nbsp;</td><td>the message</td>
+  </tr>
+  <tr>
+    <td><b>access:</b>&nbsp;&nbsp;</td><td>public</td>
+  </tr>
+</table>
+</div>
+<br /><br />
+
+	
+        <h4>Parameters:</h4>
+    <div class="tags">
+    <table border="0" cellspacing="0" cellpadding="0">
+          <tr>
+        <td class="type">string&nbsp;&nbsp;</td>
+        <td><b>$body</b>&nbsp;&nbsp;</td>
+        <td>the XML of the SOAP body</td>
+      </tr>
+          <tr>
+        <td class="type">mixed&nbsp;&nbsp;</td>
+        <td><b>$headers</b>&nbsp;&nbsp;</td>
+        <td>optional string of XML with SOAP header content, or array of soapval objects for SOAP headers, or associative array</td>
+      </tr>
+          <tr>
+        <td class="type">array&nbsp;&nbsp;</td>
+        <td><b>$namespaces</b>&nbsp;&nbsp;</td>
+        <td>optional the namespaces used in generating the body and headers</td>
+      </tr>
+          <tr>
+        <td class="type">string&nbsp;&nbsp;</td>
+        <td><b>$style</b>&nbsp;&nbsp;</td>
+        <td>optional (rpc|document)</td>
+      </tr>
+          <tr>
+        <td class="type">string&nbsp;&nbsp;</td>
+        <td><b>$use</b>&nbsp;&nbsp;</td>
+        <td>optional (encoded|literal)</td>
+      </tr>
+          <tr>
+        <td class="type">string&nbsp;&nbsp;</td>
+        <td><b>$encodingStyle</b>&nbsp;&nbsp;</td>
+        <td>optional (usually 'http://schemas.xmlsoap.org/soap/encoding/' for encoded)</td>
+      </tr>
+        </table>
+    </div><br />
+        <div class="top">[ <a href="#top">Top</a> ]</div>
+  </div>
+  <hr />
+	<a name="methodserialize_val"></a>
+	<h3>method serialize_val <span class="smalllinenumber">[line 408]</span></h3>
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code_border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">
+		<code>string serialize_val(
+mixed
+$val, [string
+$name = false], [string
+$type = false], [string
+$name_ns = false], [string
+$type_ns = false], [array
+$attributes = false], [string
+$use = 'encoded'], [boolean
+$soapval = false])</code>
+    </td></tr></table>
+    </td></tr></table><br />
+	
+		serializes PHP values in accordance w/ section 5. Type information is  not serialized if $use == 'literal'.<br /><br /><br /><br />
+<h4>Tags:</h4>
+<div class="tags">
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td><b>return:</b>&nbsp;&nbsp;</td><td>The serialized element, possibly with child elements</td>
+  </tr>
+  <tr>
+    <td><b>access:</b>&nbsp;&nbsp;</td><td>public</td>
+  </tr>
+</table>
+</div>
+<br /><br />
+
+	
+        <h4>Parameters:</h4>
+    <div class="tags">
+    <table border="0" cellspacing="0" cellpadding="0">
+          <tr>
+        <td class="type">mixed&nbsp;&nbsp;</td>
+        <td><b>$val</b>&nbsp;&nbsp;</td>
+        <td>The value to serialize</td>
+      </tr>
+          <tr>
+        <td class="type">string&nbsp;&nbsp;</td>
+        <td><b>$name</b>&nbsp;&nbsp;</td>
+        <td>The name (local part) of the XML element</td>
+      </tr>
+          <tr>
+        <td class="type">string&nbsp;&nbsp;</td>
+        <td><b>$type</b>&nbsp;&nbsp;</td>
+        <td>The XML schema type (local part) for the element</td>
+      </tr>
+          <tr>
+        <td class="type">string&nbsp;&nbsp;</td>
+        <td><b>$name_ns</b>&nbsp;&nbsp;</td>
+        <td>The namespace for the name of the XML element</td>
+      </tr>
+          <tr>
+        <td class="type">string&nbsp;&nbsp;</td>
+        <td><b>$type_ns</b>&nbsp;&nbsp;</td>
+        <td>The namespace for the type of the element</td>
+      </tr>
+          <tr>
+        <td class="type">array&nbsp;&nbsp;</td>
+        <td><b>$attributes</b>&nbsp;&nbsp;</td>
+        <td>The attributes to serialize as name=&gt;value pairs</td>
+      </tr>
+          <tr>
+        <td class="type">string&nbsp;&nbsp;</td>
+        <td><b>$use</b>&nbsp;&nbsp;</td>
+        <td>The WSDL &quot;use&quot; (encoded|literal)</td>
+      </tr>
+          <tr>
+        <td class="type">boolean&nbsp;&nbsp;</td>
+        <td><b>$soapval</b>&nbsp;&nbsp;</td>
+        <td>Whether this is called from soapval.</td>
+      </tr>
+        </table>
+    </div><br />
+        <div class="top">[ <a href="#top">Top</a> ]</div>
+  </div>
+  <hr />
+	<a name="methodsetDebugLevel"></a>
+	<h3>method setDebugLevel <span class="smalllinenumber">[line 266]</span></h3>
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code_border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">
+		<code>void setDebugLevel(
+int
+$level)</code>
+    </td></tr></table>
+    </td></tr></table><br />
+	
+		sets the debug level for this instance<br /><br /><br /><br />
+<h4>Tags:</h4>
+<div class="tags">
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td><b>access:</b>&nbsp;&nbsp;</td><td>public</td>
+  </tr>
+</table>
+</div>
+<br /><br />
+
+	
+        <h4>Parameters:</h4>
+    <div class="tags">
+    <table border="0" cellspacing="0" cellpadding="0">
+          <tr>
+        <td class="type">int&nbsp;&nbsp;</td>
+        <td><b>$level</b>&nbsp;&nbsp;</td>
+        <td>Debug level 0-9, where 0 turns off</td>
+      </tr>
+        </table>
+    </div><br />
+        <div class="top">[ <a href="#top">Top</a> ]</div>
+  </div>
+  <hr />
+	<a name="methodsetGlobalDebugLevel"></a>
+	<h3>method setGlobalDebugLevel <span class="smalllinenumber">[line 246]</span></h3>
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code_border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">
+		<code>void setGlobalDebugLevel(
+int
+$level)</code>
+    </td></tr></table>
+    </td></tr></table><br />
+	
+		sets the global debug level, which applies to future instances<br /><br /><br /><br />
+<h4>Tags:</h4>
+<div class="tags">
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td><b>access:</b>&nbsp;&nbsp;</td><td>public</td>
+  </tr>
+</table>
+</div>
+<br /><br />
+
+	
+        <h4>Parameters:</h4>
+    <div class="tags">
+    <table border="0" cellspacing="0" cellpadding="0">
+          <tr>
+        <td class="type">int&nbsp;&nbsp;</td>
+        <td><b>$level</b>&nbsp;&nbsp;</td>
+        <td>Debug level 0-9, where 0 turns off</td>
+      </tr>
+        </table>
+    </div><br />
+        <div class="top">[ <a href="#top">Top</a> ]</div>
+  </div>
+  <hr />
+	<a name="methodvarDump"></a>
+	<h3>method varDump <span class="smalllinenumber">[line 874]</span></h3>
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code_border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">
+		<code>string varDump(
+mixed
+$data)</code>
+    </td></tr></table>
+    </td></tr></table><br />
+	
+		Returns a string with the output of var_dump<br /><br /><br /><br />
+<h4>Tags:</h4>
+<div class="tags">
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td><b>return:</b>&nbsp;&nbsp;</td><td>The output of var_dump</td>
+  </tr>
+  <tr>
+    <td><b>access:</b>&nbsp;&nbsp;</td><td>public</td>
+  </tr>
+</table>
+</div>
+<br /><br />
+
+	
+        <h4>Parameters:</h4>
+    <div class="tags">
+    <table border="0" cellspacing="0" cellpadding="0">
+          <tr>
+        <td class="type">mixed&nbsp;&nbsp;</td>
+        <td><b>$data</b>&nbsp;&nbsp;</td>
+        <td>The variable to var_dump</td>
+      </tr>
+        </table>
+    </div><br />
+        <div class="top">[ <a href="#top">Top</a> ]</div>
+  </div>
+  <hr />
+	<a name="method__toString"></a>
+	<h3>method __toString <span class="smalllinenumber">[line 888]</span></h3>
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code_border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">
+		<code>string __toString(
+)</code>
+    </td></tr></table>
+    </td></tr></table><br />
+	
+		represents the object as a string<br /><br /><br /><br />
+<h4>Tags:</h4>
+<div class="tags">
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td><b>access:</b>&nbsp;&nbsp;</td><td>public</td>
+  </tr>
+</table>
+</div>
+<br /><br />
+
+	
+        <div class="top">[ <a href="#top">Top</a> ]</div>
+  </div>
+</div><br />
+
+
+        <div class="credit">
+		    <hr />
+		    Documentation generated on Thu, 12 Feb 2009 07:59:53 +0900 by <a href="http://www.phpdoc.org">phpDocumentor 1.4.2</a>
+	      </div>
+      </td></tr></table>
+    </td>
+  </tr>
+</table>
+
+</body>
+</html>

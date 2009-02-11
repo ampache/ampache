@@ -1,0 +1,406 @@
+<html>
+<head>
+<title>Docs For Class XML_RPC_Dump</title>
+<link rel="stylesheet" type="text/css" href="../media/style.css">
+</head>
+<body>
+
+<table border="0" cellspacing="0" cellpadding="0" height="48" width="100%">
+  <tr>
+    <td class="header_top">XML_RPC</td>
+  </tr>
+  <tr><td class="header_line"><img src="../media/empty.png" width="1" height="1" border="0" alt=""  /></td></tr>
+  <tr>
+    <td class="header_menu">
+        
+                                                                                                                                                            
+                              		  [ <a href="../classtrees_XML_RPC.html" class="menu">class tree: XML_RPC</a> ]
+		  [ <a href="../elementindex_XML_RPC.html" class="menu">index: XML_RPC</a> ]
+		  	    [ <a href="../elementindex.html" class="menu">all elements</a> ]
+    </td>
+  </tr>
+  <tr><td class="header_line"><img src="../media/empty.png" width="1" height="1" border="0" alt=""  /></td></tr>
+</table>
+
+<table width="100%" border="0" cellpadding="0" cellspacing="0">
+  <tr valign="top">
+    <td width="200" class="menu">
+	<div id="todolist">
+			<p><a href="../todolist.html">Todo List</a></p>
+	</div>
+      <b>Packages:</b><br />
+              <a href="../li_Ampache.html">Ampache</a><br />
+              <a href="../li_Catalog.html">Catalog</a><br />
+              <a href="../li_Horde_Browser.html">Horde_Browser</a><br />
+              <a href="../li_Search.html">Search</a><br />
+              <a href="../li_Web.html">Web</a><br />
+              <a href="../li_XMLRPC.html">XMLRPC</a><br />
+              <a href="../li_XML_RPC.html">XML_RPC</a><br />
+            <br /><br />
+                        <b>Files:</b><br />
+      	  <div class="package">
+			<a href="../XML_RPC/_modules---pearxmlrpc---Dump.php.html">		Dump.php
+		</a><br>
+			<a href="../XML_RPC/_modules---pearxmlrpc---rpc.php.html">		rpc.php
+		</a><br>
+			<a href="../XML_RPC/_modules---pearxmlrpc---server.php.html">		server.php
+		</a><br>
+	  </div><br />
+      
+      
+            <b>Classes:</b><br />
+        <div class="package">
+		    		<a href="../XML_RPC/XML_RPC_Base.html">XML_RPC_Base</a><br />
+	    		<a href="../XML_RPC/XML_RPC_Client.html">XML_RPC_Client</a><br />
+	    		<a href="../XML_RPC/XML_RPC_Dump.html">XML_RPC_Dump</a><br />
+	    		<a href="../XML_RPC/XML_RPC_Message.html">XML_RPC_Message</a><br />
+	    		<a href="../XML_RPC/XML_RPC_Response.html">XML_RPC_Response</a><br />
+	    		<a href="../XML_RPC/XML_RPC_Server.html">XML_RPC_Server</a><br />
+	    		<a href="../XML_RPC/XML_RPC_Value.html">XML_RPC_Value</a><br />
+	  </div>
+                </td>
+    <td>
+      <table cellpadding="10" cellspacing="0" width="100%" border="0"><tr><td valign="top">
+
+<h1>Class: XML_RPC_Dump</h1>
+Source Location: /modules/pearxmlrpc/Dump.php<br /><br />
+
+
+<table width="100%" border="0">
+<tr><td valign="top">
+
+<h3><a href="#class_details">Class Overview</a></h3>
+<pre></pre><br />
+<div class="description">Class which generates a dump of a XML_RPC_Value object</div><br /><br />
+<h4>Author(s):</h4>
+<ul>
+          <li>Christian Weiske &lt;<a href="mailto:cweiske@php.net">cweiske@php.net</a>&gt;</li>
+                  </ul>
+
+
+
+
+        
+        
+<h4>Version:</h4>
+<ul>
+  <li>Release: 1.5.1</li>
+</ul>
+
+        
+</td>
+
+<td valign="top">
+<h3><a href="#class_vars">Variables</a></h3>
+<ul>
+    <li><a href="../XML_RPC/XML_RPC_Dump.html#var$arIndent">$arIndent</a></li>
+    <li><a href="../XML_RPC/XML_RPC_Dump.html#var$strBaseIndent">$strBaseIndent</a></li>
+  </ul>
+</td>
+
+
+<td valign="top">
+<h3><a href="#class_methods">Methods</a></h3>
+<ul>
+    <li><a href="../XML_RPC/XML_RPC_Dump.html#methodgenArray">genArray</a></li>
+    <li><a href="../XML_RPC/XML_RPC_Dump.html#methodgenerateDump">generateDump</a></li>
+    <li><a href="../XML_RPC/XML_RPC_Dump.html#methodgenScalar">genScalar</a></li>
+    <li><a href="../XML_RPC/XML_RPC_Dump.html#methodgenStruct">genStruct</a></li>
+    <li><a href="../XML_RPC/XML_RPC_Dump.html#methodgetIndent">getIndent</a></li>
+  </ul>
+</td>
+
+</tr></table>
+<hr />
+
+<table width="100%" border="0"><tr>
+
+
+
+
+
+
+</tr></table>
+<hr />
+
+<a name="class_details"></a>
+<h3>Class Details</h3>
+<div class="tags">
+[line 48]<br />
+Class which generates a dump of a XML_RPC_Value object<br /><br /><br /><br />
+<h4>Tags:</h4>
+<div class="tags">
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td><b>author:</b>&nbsp;&nbsp;</td><td>Christian Weiske &lt;<a href="mailto:cweiske@php.net">cweiske@php.net</a>&gt;</td>
+  </tr>
+  <tr>
+    <td><b>version:</b>&nbsp;&nbsp;</td><td>Release: 1.5.1</td>
+  </tr>
+  <tr>
+    <td><b>link:</b>&nbsp;&nbsp;</td><td><a href="http://pear.php.net/package/XML_RPC">http://pear.php.net/package/XML_RPC</a></td>
+  </tr>
+</table>
+</div>
+</div><br /><br />
+<div class="top">[ <a href="#top">Top</a> ]</div><br />
+
+<hr />
+<a name="class_vars"></a>
+<h3>Class Variables</h3>
+<div class="tags">
+	<a name="var$arIndent"></a>
+	<p></p>
+	<h4>$arIndent = <span class="value">array()</span></h4>
+	<p>[line 54]</p>
+  The indentation array cache<br /><br />
+  <br />
+	<div class="tags">
+  <table border="0" cellspacing="0" cellpadding="0">
+    <tr>
+      <td><b>Type:</b>&nbsp;&nbsp;</td>
+      <td>array</td>
+    </tr>
+      </table>
+	</div><br /><br />
+	<div class="top">[ <a href="#top">Top</a> ]</div><br />
+	<a name="var$strBaseIndent"></a>
+	<p></p>
+	<h4>$strBaseIndent = <span class="value">&nbsp;'&nbsp;&nbsp;&nbsp;&nbsp;'</span></h4>
+	<p>[line 60]</p>
+  The spaces used for indenting the XML<br /><br />
+  <br />
+	<div class="tags">
+  <table border="0" cellspacing="0" cellpadding="0">
+    <tr>
+      <td><b>Type:</b>&nbsp;&nbsp;</td>
+      <td>string</td>
+    </tr>
+      </table>
+	</div><br /><br />
+	<div class="top">[ <a href="#top">Top</a> ]</div><br />
+</div><br />
+
+<hr />
+<a name="class_methods"></a>
+<h3>Class Methods</h3>
+<div class="tags">
+
+  <hr />
+	<a name="methodgenArray"></a>
+	<h3>method genArray <span class="smalllinenumber">[line 151]</span></h3>
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code_border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">
+		<code>string genArray(
+object
+$value, int
+$nLevel)</code>
+    </td></tr></table>
+    </td></tr></table><br />
+	
+		Returns the dump of an array<br /><br /><br /><br />
+<h4>Tags:</h4>
+<div class="tags">
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td><b>return:</b>&nbsp;&nbsp;</td><td>Dumped version of the scalar value</td>
+  </tr>
+</table>
+</div>
+<br /><br />
+
+	
+        <h4>Parameters:</h4>
+    <div class="tags">
+    <table border="0" cellspacing="0" cellpadding="0">
+          <tr>
+        <td class="type">object&nbsp;&nbsp;</td>
+        <td><b>$value</b>&nbsp;&nbsp;</td>
+        <td>the array XML_RPC_Value object to dump</td>
+      </tr>
+          <tr>
+        <td class="type">int&nbsp;&nbsp;</td>
+        <td><b>$nLevel</b>&nbsp;&nbsp;</td>
+        <td>the level of indentation</td>
+      </tr>
+        </table>
+    </div><br />
+        <div class="top">[ <a href="#top">Top</a> ]</div>
+  </div>
+  <hr />
+	<a name="methodgenerateDump"></a>
+	<h3>method generateDump <span class="smalllinenumber">[line 70]</span></h3>
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code_border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">
+		<code>string generateDump(
+object
+$value, [int
+$nLevel = 0])</code>
+    </td></tr></table>
+    </td></tr></table><br />
+	
+		Returns the dump in XML format without printing it out<br /><br /><br /><br />
+<h4>Tags:</h4>
+<div class="tags">
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td><b>return:</b>&nbsp;&nbsp;</td><td>the dump</td>
+  </tr>
+</table>
+</div>
+<br /><br />
+
+	
+        <h4>Parameters:</h4>
+    <div class="tags">
+    <table border="0" cellspacing="0" cellpadding="0">
+          <tr>
+        <td class="type">object&nbsp;&nbsp;</td>
+        <td><b>$value</b>&nbsp;&nbsp;</td>
+        <td>the XML_RPC_Value object to dump</td>
+      </tr>
+          <tr>
+        <td class="type">int&nbsp;&nbsp;</td>
+        <td><b>$nLevel</b>&nbsp;&nbsp;</td>
+        <td>the level of indentation</td>
+      </tr>
+        </table>
+    </div><br />
+        <div class="top">[ <a href="#top">Top</a> ]</div>
+  </div>
+  <hr />
+	<a name="methodgenScalar"></a>
+	<h3>method genScalar <span class="smalllinenumber">[line 113]</span></h3>
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code_border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">
+		<code>string genScalar(
+object
+$value, int
+$nLevel)</code>
+    </td></tr></table>
+    </td></tr></table><br />
+	
+		Returns the scalar value dump<br /><br /><br /><br />
+<h4>Tags:</h4>
+<div class="tags">
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td><b>return:</b>&nbsp;&nbsp;</td><td>Dumped version of the scalar value</td>
+  </tr>
+</table>
+</div>
+<br /><br />
+
+	
+        <h4>Parameters:</h4>
+    <div class="tags">
+    <table border="0" cellspacing="0" cellpadding="0">
+          <tr>
+        <td class="type">object&nbsp;&nbsp;</td>
+        <td><b>$value</b>&nbsp;&nbsp;</td>
+        <td>the scalar XML_RPC_Value object to dump</td>
+      </tr>
+          <tr>
+        <td class="type">int&nbsp;&nbsp;</td>
+        <td><b>$nLevel</b>&nbsp;&nbsp;</td>
+        <td>the level of indentation</td>
+      </tr>
+        </table>
+    </div><br />
+        <div class="top">[ <a href="#top">Top</a> ]</div>
+  </div>
+  <hr />
+	<a name="methodgenStruct"></a>
+	<h3>method genStruct <span class="smalllinenumber">[line 132]</span></h3>
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code_border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">
+		<code>string genStruct(
+object
+$value, int
+$nLevel)</code>
+    </td></tr></table>
+    </td></tr></table><br />
+	
+		Returns the dump of a struct<br /><br /><br /><br />
+<h4>Tags:</h4>
+<div class="tags">
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td><b>return:</b>&nbsp;&nbsp;</td><td>Dumped version of the scalar value</td>
+  </tr>
+</table>
+</div>
+<br /><br />
+
+	
+        <h4>Parameters:</h4>
+    <div class="tags">
+    <table border="0" cellspacing="0" cellpadding="0">
+          <tr>
+        <td class="type">object&nbsp;&nbsp;</td>
+        <td><b>$value</b>&nbsp;&nbsp;</td>
+        <td>the struct XML_RPC_Value object to dump</td>
+      </tr>
+          <tr>
+        <td class="type">int&nbsp;&nbsp;</td>
+        <td><b>$nLevel</b>&nbsp;&nbsp;</td>
+        <td>the level of indentation</td>
+      </tr>
+        </table>
+    </div><br />
+        <div class="top">[ <a href="#top">Top</a> ]</div>
+  </div>
+  <hr />
+	<a name="methodgetIndent"></a>
+	<h3>method getIndent <span class="smalllinenumber">[line 170]</span></h3>
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code_border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">
+		<code>string getIndent(
+int
+$nLevel)</code>
+    </td></tr></table>
+    </td></tr></table><br />
+	
+		Returns the indent for a specific level and caches it for faster use<br /><br /><br /><br />
+<h4>Tags:</h4>
+<div class="tags">
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td><b>return:</b>&nbsp;&nbsp;</td><td>the indented string</td>
+  </tr>
+</table>
+</div>
+<br /><br />
+
+	
+        <h4>Parameters:</h4>
+    <div class="tags">
+    <table border="0" cellspacing="0" cellpadding="0">
+          <tr>
+        <td class="type">int&nbsp;&nbsp;</td>
+        <td><b>$nLevel</b>&nbsp;&nbsp;</td>
+        <td>the level</td>
+      </tr>
+        </table>
+    </div><br />
+        <div class="top">[ <a href="#top">Top</a> ]</div>
+  </div>
+</div><br />
+
+
+        <div class="credit">
+		    <hr />
+		    Documentation generated on Thu, 12 Feb 2009 07:59:57 +0900 by <a href="http://www.phpdoc.org">phpDocumentor 1.4.2</a>
+	      </div>
+      </td></tr></table>
+    </td>
+  </tr>
+</table>
+
+</body>
+</html>

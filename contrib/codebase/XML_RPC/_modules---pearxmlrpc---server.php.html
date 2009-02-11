@@ -1,0 +1,377 @@
+<html>
+<head>
+<title>Docs for page server.php</title>
+<link rel="stylesheet" type="text/css" href="../media/style.css">
+</head>
+<body>
+
+<table border="0" cellspacing="0" cellpadding="0" height="48" width="100%">
+  <tr>
+    <td class="header_top">XML_RPC</td>
+  </tr>
+  <tr><td class="header_line"><img src="../media/empty.png" width="1" height="1" border="0" alt=""  /></td></tr>
+  <tr>
+    <td class="header_menu">
+        
+                                                                                                                                                            
+                              		  [ <a href="../classtrees_XML_RPC.html" class="menu">class tree: XML_RPC</a> ]
+		  [ <a href="../elementindex_XML_RPC.html" class="menu">index: XML_RPC</a> ]
+		  	    [ <a href="../elementindex.html" class="menu">all elements</a> ]
+    </td>
+  </tr>
+  <tr><td class="header_line"><img src="../media/empty.png" width="1" height="1" border="0" alt=""  /></td></tr>
+</table>
+
+<table width="100%" border="0" cellpadding="0" cellspacing="0">
+  <tr valign="top">
+    <td width="200" class="menu">
+	<div id="todolist">
+			<p><a href="../todolist.html">Todo List</a></p>
+	</div>
+      <b>Packages:</b><br />
+              <a href="../li_Ampache.html">Ampache</a><br />
+              <a href="../li_Catalog.html">Catalog</a><br />
+              <a href="../li_Horde_Browser.html">Horde_Browser</a><br />
+              <a href="../li_Search.html">Search</a><br />
+              <a href="../li_Web.html">Web</a><br />
+              <a href="../li_XMLRPC.html">XMLRPC</a><br />
+              <a href="../li_XML_RPC.html">XML_RPC</a><br />
+            <br /><br />
+                        <b>Files:</b><br />
+      	  <div class="package">
+			<a href="../XML_RPC/_modules---pearxmlrpc---Dump.php.html">		Dump.php
+		</a><br>
+			<a href="../XML_RPC/_modules---pearxmlrpc---rpc.php.html">		rpc.php
+		</a><br>
+			<a href="../XML_RPC/_modules---pearxmlrpc---server.php.html">		server.php
+		</a><br>
+	  </div><br />
+      
+      
+            <b>Classes:</b><br />
+        <div class="package">
+		    		<a href="../XML_RPC/XML_RPC_Base.html">XML_RPC_Base</a><br />
+	    		<a href="../XML_RPC/XML_RPC_Client.html">XML_RPC_Client</a><br />
+	    		<a href="../XML_RPC/XML_RPC_Dump.html">XML_RPC_Dump</a><br />
+	    		<a href="../XML_RPC/XML_RPC_Message.html">XML_RPC_Message</a><br />
+	    		<a href="../XML_RPC/XML_RPC_Response.html">XML_RPC_Response</a><br />
+	    		<a href="../XML_RPC/XML_RPC_Server.html">XML_RPC_Server</a><br />
+	    		<a href="../XML_RPC/XML_RPC_Value.html">XML_RPC_Value</a><br />
+	  </div>
+                </td>
+    <td>
+      <table cellpadding="10" cellspacing="0" width="100%" border="0"><tr><td valign="top">
+
+<h1>Procedural File: server.php</h1>
+Source Location: /modules/pearxmlrpc/server.php<br /><br />
+
+<br>
+<br>
+
+<div class="contents">
+<h2>Classes:</h2>
+<dt><a href="../XML_RPC/XML_RPC_Server.html">XML_RPC_Server</a></dt>
+	<dd>A server for receiving and replying to XML RPC requests</dd>
+</div><br /><br />
+
+<h2>Page Details:</h2>
+Server commands for our PHP implementation of the XML-RPC protocol<br /><br /><p>This is a PEAR-ified version of Useful inc's XML-RPC for PHP.  It has support for HTTP transport, proxies and authentication.</p><p>PHP versions 4 and 5</p><p>LICENSE: License is granted to use or modify this software  (&quot;XML-RPC for PHP&quot;) for commercial or non-commercial use provided the  copyright of the author is preserved in any distributed or derivative work.</p><p>THIS SOFTWARE IS PROVIDED BY THE AUTHOR &quot;AS IS&quot; AND ANY EXPRESSED OR  IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.</p><br /><br /><br />
+<h4>Tags:</h4>
+<div class="tags">
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td><b>author:</b>&nbsp;&nbsp;</td><td>Daniel Convissor &lt;<a href="mailto:danielc@php.net">danielc@php.net</a>&gt;</td>
+  </tr>
+  <tr>
+    <td><b>author:</b>&nbsp;&nbsp;</td><td>Stig Bakken &lt;<a href="mailto:stig@php.net">stig@php.net</a>&gt;</td>
+  </tr>
+  <tr>
+    <td><b>author:</b>&nbsp;&nbsp;</td><td>Edd Dumbill &lt;<a href="mailto:edd@usefulinc.com">edd@usefulinc.com</a>&gt;</td>
+  </tr>
+  <tr>
+    <td><b>author:</b>&nbsp;&nbsp;</td><td>Martin Jansen &lt;<a href="mailto:mj@php.net">mj@php.net</a>&gt;</td>
+  </tr>
+  <tr>
+    <td><b>version:</b>&nbsp;&nbsp;</td><td>CVS: $Id$</td>
+  </tr>
+  <tr>
+    <td><b>copyright:</b>&nbsp;&nbsp;</td><td>1999-2001 Edd Dumbill, 2001-2006 The PHP Group</td>
+  </tr>
+  <tr>
+    <td><b>link:</b>&nbsp;&nbsp;</td><td><a href="http://pear.php.net/package/XML_RPC">http://pear.php.net/package/XML_RPC</a></td>
+  </tr>
+</table>
+</div>
+<br /><br />
+<br /><br />
+  <hr />
+	<a name="global$GLOBALS['XML_RPC_Server_debuginfo']"></a>
+	<h4><i>string</i> $GLOBALS['XML_RPC_Server_debuginfo'] <span class="smalllinenumber">[line 129]</span></h4>
+	<div class="tags">
+  
+  <table border="0" cellspacing="0" cellpadding="0">
+    <tr>
+      <td><b>Default value:</b>&nbsp;&nbsp;</td>
+      <td>''</td>
+    </tr>
+	  </table>
+	</div><br /><br />
+	<div class="top">[ <a href="#top">Top</a> ]</div><br /><br />
+  <hr />
+	<a name="global$GLOBALS['XML_RPC_Server_dmap']"></a>
+	<h4><i>array</i> $GLOBALS['XML_RPC_Server_dmap'] <span class="smalllinenumber">[line 108]</span></h4>
+	<div class="tags">
+  	dispatch map for the automatically declared XML-RPC methods.<br /><br />  
+  <table border="0" cellspacing="0" cellpadding="0">
+    <tr>
+      <td><b>Default value:</b>&nbsp;&nbsp;</td>
+      <td>array(<br />
+&nbsp;&nbsp;&nbsp;&nbsp;'system.listMethods'&nbsp;=&gt;&nbsp;array(<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'function'&nbsp;&nbsp;=&gt;&nbsp;'XML_RPC_Server_listMethods',<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'signature'&nbsp;=&gt;&nbsp;$GLOBALS['XML_RPC_Server_listMethods_sig'],<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'docstring'&nbsp;=&gt;&nbsp;$GLOBALS['XML_RPC_Server_listMethods_doc']<br />
+&nbsp;&nbsp;&nbsp;&nbsp;),'system.methodHelp'=&gt;array('function'=&gt;'XML_RPC_Server_methodHelp','signature'=&gt;$GLOBALS['XML_RPC_Server_methodHelp_sig'],'docstring'=&gt;$GLOBALS['XML_RPC_Server_methodHelp_doc']),'system.methodSignature'=&gt;array('function'=&gt;'XML_RPC_Server_methodSignature','signature'=&gt;$GLOBALS['XML_RPC_Server_methodSignature_sig'],'docstring'=&gt;$GLOBALS['XML_RPC_Server_methodSignature_doc']))</td>
+    </tr>
+	  </table>
+	</div><br /><br />
+	<div class="top">[ <a href="#top">Top</a> ]</div><br /><br />
+  <hr />
+	<a name="global$GLOBALS['XML_RPC_Server_listMethods_doc']"></a>
+	<h4><i>string</i> $GLOBALS['XML_RPC_Server_listMethods_doc'] <span class="smalllinenumber">[line 63]</span></h4>
+	<div class="tags">
+  	docstring for system.listMethods<br /><br />  
+  <table border="0" cellspacing="0" cellpadding="0">
+    <tr>
+      <td><b>Default value:</b>&nbsp;&nbsp;</td>
+      <td>'This&nbsp;method&nbsp;lists&nbsp;all&nbsp;the'<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.&nbsp;'&nbsp;methods&nbsp;that&nbsp;the&nbsp;XML-RPC&nbsp;server&nbsp;knows&nbsp;how&nbsp;to&nbsp;dispatch'</td>
+    </tr>
+	  </table>
+	</div><br /><br />
+	<div class="top">[ <a href="#top">Top</a> ]</div><br /><br />
+  <hr />
+	<a name="global$GLOBALS['XML_RPC_Server_listMethods_sig']"></a>
+	<h4><i>array</i> $GLOBALS['XML_RPC_Server_listMethods_sig'] <span class="smalllinenumber">[line 52]</span></h4>
+	<div class="tags">
+  	signature for system.listMethods: return = array,<br /><br /><p>parameters = a string or nothing</p><br />  
+  <table border="0" cellspacing="0" cellpadding="0">
+    <tr>
+      <td><b>Default value:</b>&nbsp;&nbsp;</td>
+      <td>array(<br />
+&nbsp;&nbsp;&nbsp;&nbsp;array($GLOBALS['XML_RPC_Array'],<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$GLOBALS['XML_RPC_String']<br />
+&nbsp;&nbsp;&nbsp;&nbsp;),array($GLOBALS['XML_RPC_Array']))</td>
+    </tr>
+	  </table>
+	</div><br /><br />
+	<div class="top">[ <a href="#top">Top</a> ]</div><br /><br />
+  <hr />
+	<a name="global$GLOBALS['XML_RPC_Server_methodHelp_doc']"></a>
+	<h4><i>string</i> $GLOBALS['XML_RPC_Server_methodHelp_doc'] <span class="smalllinenumber">[line 101]</span></h4>
+	<div class="tags">
+  	docstring for methodHelp<br /><br />  
+  <table border="0" cellspacing="0" cellpadding="0">
+    <tr>
+      <td><b>Default value:</b>&nbsp;&nbsp;</td>
+      <td>'Returns&nbsp;help&nbsp;text&nbsp;if&nbsp;defined'<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.&nbsp;'&nbsp;for&nbsp;the&nbsp;method&nbsp;passed,&nbsp;otherwise&nbsp;returns&nbsp;an&nbsp;empty&nbsp;string'</td>
+    </tr>
+	  </table>
+	</div><br /><br />
+	<div class="top">[ <a href="#top">Top</a> ]</div><br /><br />
+  <hr />
+	<a name="global$GLOBALS['XML_RPC_Server_methodHelp_sig']"></a>
+	<h4><i>array</i> $GLOBALS['XML_RPC_Server_methodHelp_sig'] <span class="smalllinenumber">[line 91]</span></h4>
+	<div class="tags">
+  	signature for system.methodHelp: return = string,<br /><br /><p>parameters = string</p><br />  
+  <table border="0" cellspacing="0" cellpadding="0">
+    <tr>
+      <td><b>Default value:</b>&nbsp;&nbsp;</td>
+      <td>array(<br />
+&nbsp;&nbsp;&nbsp;&nbsp;array($GLOBALS['XML_RPC_String'],<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$GLOBALS['XML_RPC_String']<br />
+&nbsp;&nbsp;&nbsp;&nbsp;))</td>
+    </tr>
+	  </table>
+	</div><br /><br />
+	<div class="top">[ <a href="#top">Top</a> ]</div><br /><br />
+  <hr />
+	<a name="global$GLOBALS['XML_RPC_Server_methodSignature_doc']"></a>
+	<h4><i>string</i> $GLOBALS['XML_RPC_Server_methodSignature_doc'] <span class="smalllinenumber">[line 81]</span></h4>
+	<div class="tags">
+  	docstring for system.methodSignature<br /><br />  
+  <table border="0" cellspacing="0" cellpadding="0">
+    <tr>
+      <td><b>Default value:</b>&nbsp;&nbsp;</td>
+      <td>'Returns&nbsp;an&nbsp;array&nbsp;of&nbsp;known'<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.&nbsp;'&nbsp;signatures&nbsp;(an&nbsp;array&nbsp;of&nbsp;arrays)&nbsp;for&nbsp;the&nbsp;method&nbsp;name&nbsp;passed.&nbsp;If'<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.&nbsp;'&nbsp;no&nbsp;signatures&nbsp;are&nbsp;known,&nbsp;returns&nbsp;a&nbsp;none-array&nbsp;(test&nbsp;for&nbsp;type&nbsp;!='<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.&nbsp;'&nbsp;array&nbsp;to&nbsp;detect&nbsp;missing&nbsp;signature)'</td>
+    </tr>
+	  </table>
+	</div><br /><br />
+	<div class="top">[ <a href="#top">Top</a> ]</div><br /><br />
+  <hr />
+	<a name="global$GLOBALS['XML_RPC_Server_methodSignature_sig']"></a>
+	<h4><i>array</i> $GLOBALS['XML_RPC_Server_methodSignature_sig'] <span class="smalllinenumber">[line 71]</span></h4>
+	<div class="tags">
+  	signature for system.methodSignature: return = array,<br /><br /><p>parameters = string</p><br />  
+  <table border="0" cellspacing="0" cellpadding="0">
+    <tr>
+      <td><b>Default value:</b>&nbsp;&nbsp;</td>
+      <td>array(<br />
+&nbsp;&nbsp;&nbsp;&nbsp;array($GLOBALS['XML_RPC_Array'],<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$GLOBALS['XML_RPC_String']<br />
+&nbsp;&nbsp;&nbsp;&nbsp;))</td>
+    </tr>
+	  </table>
+	</div><br /><br />
+	<div class="top">[ <a href="#top">Top</a> ]</div><br /><br />
+<br /><br />
+<br />
+  <hr />
+	<a name="functionXML_RPC_Server_debugmsg"></a>
+	<h3>XML_RPC_Server_debugmsg <span class="smalllinenumber">[line 236]</span></h3>
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code_border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">
+		<code>void XML_RPC_Server_debugmsg(
+ $m)</code>
+    </td></tr></table>
+    </td></tr></table><br />
+
+		    <br /><br />
+	
+    		<h4>Parameters</h4>
+    <table border="0" cellspacing="0" cellpadding="0">
+		      <tr>
+        <td class="type">&nbsp;&nbsp;</td>
+        <td><b>$m</b>&nbsp;&nbsp;</td>
+        <td></td>
+      </tr>
+				</table>
+    	<div class="top">[ <a href="#top">Top</a> ]</div><br /><br />
+	</div>
+  <hr />
+	<a name="functionXML_RPC_Server_listMethods"></a>
+	<h3>XML_RPC_Server_listMethods <span class="smalllinenumber">[line 137]</span></h3>
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code_border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">
+		<code>object a XML_RPC_Server_listMethods(
+ $server,  $m)</code>
+    </td></tr></table>
+    </td></tr></table><br />
+
+		Lists all the methods that the XML-RPC server knows how to dispatch<br /><br /><br /><br />
+<h4>Tags:</h4>
+<div class="tags">
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td><b>return:</b>&nbsp;&nbsp;</td><td>new XML_RPC_Response object</td>
+  </tr>
+</table>
+</div>
+    <br /><br />
+	
+    		<h4>Parameters</h4>
+    <table border="0" cellspacing="0" cellpadding="0">
+		      <tr>
+        <td class="type">&nbsp;&nbsp;</td>
+        <td><b>$server</b>&nbsp;&nbsp;</td>
+        <td></td>
+      </tr>
+		      <tr>
+        <td class="type">&nbsp;&nbsp;</td>
+        <td><b>$m</b>&nbsp;&nbsp;</td>
+        <td></td>
+      </tr>
+				</table>
+    	<div class="top">[ <a href="#top">Top</a> ]</div><br /><br />
+	</div>
+  <hr />
+	<a name="functionXML_RPC_Server_methodHelp"></a>
+	<h3>XML_RPC_Server_methodHelp <span class="smalllinenumber">[line 205]</span></h3>
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code_border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">
+		<code>object a XML_RPC_Server_methodHelp(
+ $server,  $m)</code>
+    </td></tr></table>
+    </td></tr></table><br />
+
+		Returns help text if defined for the method passed, otherwise returns  an empty string<br /><br /><br /><br />
+<h4>Tags:</h4>
+<div class="tags">
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td><b>return:</b>&nbsp;&nbsp;</td><td>new XML_RPC_Response object</td>
+  </tr>
+</table>
+</div>
+    <br /><br />
+	
+    		<h4>Parameters</h4>
+    <table border="0" cellspacing="0" cellpadding="0">
+		      <tr>
+        <td class="type">&nbsp;&nbsp;</td>
+        <td><b>$server</b>&nbsp;&nbsp;</td>
+        <td></td>
+      </tr>
+		      <tr>
+        <td class="type">&nbsp;&nbsp;</td>
+        <td><b>$m</b>&nbsp;&nbsp;</td>
+        <td></td>
+      </tr>
+				</table>
+    	<div class="top">[ <a href="#top">Top</a> ]</div><br /><br />
+	</div>
+  <hr />
+	<a name="functionXML_RPC_Server_methodSignature"></a>
+	<h3>XML_RPC_Server_methodSignature <span class="smalllinenumber">[line 162]</span></h3>
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code_border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">
+		<code>object a XML_RPC_Server_methodSignature(
+ $server,  $m)</code>
+    </td></tr></table>
+    </td></tr></table><br />
+
+		Returns an array of known signatures (an array of arrays)  for the given method<br /><br /><p>If no signatures are known, returns a none-array  (test for type != array to detect missing signature)</p><br /><br /><br />
+<h4>Tags:</h4>
+<div class="tags">
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td><b>return:</b>&nbsp;&nbsp;</td><td>new XML_RPC_Response object</td>
+  </tr>
+</table>
+</div>
+    <br /><br />
+	
+    		<h4>Parameters</h4>
+    <table border="0" cellspacing="0" cellpadding="0">
+		      <tr>
+        <td class="type">&nbsp;&nbsp;</td>
+        <td><b>$server</b>&nbsp;&nbsp;</td>
+        <td></td>
+      </tr>
+		      <tr>
+        <td class="type">&nbsp;&nbsp;</td>
+        <td><b>$m</b>&nbsp;&nbsp;</td>
+        <td></td>
+      </tr>
+				</table>
+    	<div class="top">[ <a href="#top">Top</a> ]</div><br /><br />
+	</div>
+
+        <div class="credit">
+		    <hr />
+		    Documentation generated on Thu, 12 Feb 2009 08:00:08 +0900 by <a href="http://www.phpdoc.org">phpDocumentor 1.4.2</a>
+	      </div>
+      </td></tr></table>
+    </td>
+  </tr>
+</table>
+
+</body>
+</html>
