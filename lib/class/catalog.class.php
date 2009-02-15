@@ -1511,8 +1511,10 @@ class Catalog extends database_object {
 
 
 		/* Get all songs in this catalog */
-		$sql = "SELECT `id`,`file` FROM `song` WHERE `catalog`='$this->id' AND enabled='1'";
-		$db_results = Dba::query($sql);
+		$sql = "SELECT `id`,`file`,'song' AS `type` FROM `song` WHERE `catalog`='$this->id' AND `enabled`='1'" . 
+			"UNION ALL " . 
+			"SELECT `id`,`file`,'video' AS `type` FROM `video` WHERE `catalog`='$this->id' AND `enabled`='1'"; 
+		$db_results = Dba::read($sql);
 
 		$dead_files = 0;
 
@@ -1539,9 +1541,11 @@ class Catalog extends database_object {
 				/* Add Error */
 				Error::add('general',"Error File Not Found or 0 Bytes: " . $results['file']);
 
+				$table = ($results['type'] == 'video') ? 'video' : 'song'; 
+
 				/* Remove the file! */
-				$sql = "DELETE FROM `song` WHERE `id`='" . $results['id'] . "'";
-				$delete_results = Dba::query($sql);
+				$sql = "DELETE FROM `$table` WHERE `id`='" . $results['id'] . "'";
+				$delete_results = Dba::write($sql);
 
 				// Count em!
 				$dead_files++;
