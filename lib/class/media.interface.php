@@ -30,6 +30,7 @@ interface media {
 	public function native_stream(); 
 	public static function play_url($oid,$sid='',$force_http=''); 
 	public function stream_cmd(); 
+	public function has_flag(); 
 
 } // end interface
 

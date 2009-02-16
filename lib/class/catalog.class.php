@@ -1619,20 +1619,24 @@ class Catalog extends database_object {
 
 		$sql = "DELETE FROM `tag_map` USING `tag_map` LEFT JOIN `song` ON `song`.`id`=`tag_map`.`object_id` " .
 			"WHERE `tag_map`.`object_type`='song' AND `song`.`id` IS NULL"; 
-		$db_results = Dba::query($sql);
+		$db_results = Dba::write($sql);
 
 		$sql = "DELETE FROM `tag_map` USING `tag_map` LEFT JOIN `album` ON `album`.`id`=`tag_map`.`object_id` " .
                         "WHERE `tag_map`.`object_type`='album' AND `album`.`id` IS NULL";
-		$db_results = Dba::query($sql);
+		$db_results = Dba::write($sql);
 
 		$sql = "DELETE FROM `tag_map` USING `tag_map` LEFT JOIN `artist` ON `artist`.`id`=`tag_map`.`object_id` " .
                         "WHERE `tag_map`.`object_type`='artist' AND `artist`.`id` IS NULL";
-		$db_results = Dba::query($sql);
+		$db_results = Dba::write($sql);
+
+		$sql = "DELETE FROM `tag_map` USING `tag_map` LEFT JOIN `video` ON `video`.`id`=`tag_map`.`object_id` " . 
+			"WHERE `tag_map`.`object_type`='video' AND `video`.`id` IS NULL"; 
+		$db_results = Dba::write($sql); 
 
 		// Now nuke the tags themselves
 		$sql = "DELETE FROM `tag` USING `tag` LEFT JOIN `tag_map` ON `tag`.`id`=`tag_map`.`tag_id` " .
 			"WHERE `tag_map`.`id` IS NULL"; 
-		$db_results = Dba::query($sql);
+		$db_results = Dba::write($sql);
 
 	} // clean_tags
 
@@ -1742,31 +1746,41 @@ class Catalog extends database_object {
 
 		// Crazy SQL Mojo to remove stats where there are no songs
 		$sql = "DELETE FROM object_count USING object_count LEFT JOIN song ON song.id=object_count.object_id WHERE object_type='song' AND song.id IS NULL";
-		$db_results = Dba::query($sql);
+		$db_results = Dba::write($sql);
 
 		// Crazy SQL Mojo to remove stats where there are no albums
 		$sql = "DELETE FROM object_count USING object_count LEFT JOIN album ON album.id=object_count.object_id WHERE object_type='album' AND album.id IS NULL";
-		$db_results = Dba::query($sql);
+		$db_results = Dba::write($sql);
 
 		// Crazy SQL Mojo to remove stats where ther are no artists
 		$sql = "DELETE FROM object_count USING object_count LEFT JOIN artist ON artist.id=object_count.object_id WHERE object_type='artist' AND artist.id IS NULL";
-		$db_results = Dba::query($sql);
+		$db_results = Dba::write($sql);
 
 		// Delete the live_stream stat information
 		$sql = "DELETE FROM object_count USING object_count LEFT JOIN live_stream ON live_stream.id=object_count.object_id WHERE object_type='live_stream' AND live_stream.id IS NULL";
-		$db_results = Dba::query($sql);
+		$db_results = Dba::write($sql);
+
+		// Clean the stats
+		$sql = "DELETE FROM `object_count` USING `object_count` LEFT JOIN `video` ON `video`.`id`=`object_count`.`object_id` " . 
+			"WHERE `object_count`.`object_type`='video' AND `video`.`id` IS NULL"; 
+		$db_results = Dba::write($sql); 
 
 		// Delete Song Ratings information
 		$sql = "DELETE FROM rating USING rating LEFT JOIN song ON song.id=rating.object_id WHERE object_type='song' AND song.id IS NULL";
-		$db_results = Dba::query($sql);
+		$db_results = Dba::write($sql);
 
 		// Delete Album Rating Information
 		$sql = "DELETE FROM rating USING rating LEFT JOIN album ON album.id=rating.object_id WHERE object_type='album' AND album.id IS NULL";
-		$db_results = Dba::query($sql);
+		$db_results = Dba::write($sql);
 
 		// Delete Artist Rating Information
 		$sql = "DELETE FROM rating USING rating LEFT JOIN artist ON artist.id=rating.object_id WHERE object_type='artist' AND artist.id IS NULL";
-		$db_results = Dba::query($sql);
+		$db_results = Dba::write($sql);
+
+		// Delete the Video Rating Informations
+		$sql = "DELETE FROM `rating` USING `rating` LEFT JOIN `video` ON `video`.`id`=`rating`.`object_id` " . 
+			"WHERE `rating`.`object_type`='video' AND `video`.`id` IS NULL"; 
+		$db_results = Dba::write($sql);
 
 	} // clean_stats
 
@@ -1780,7 +1794,9 @@ class Catalog extends database_object {
 		$catalog = new Catalog($catalog_id);
 
 		/* First get the filenames for the catalog */
-		$sql = "SELECT `id`,`file` FROM `song` WHERE `catalog`='$catalog_id'";  
+		$sql = "SELECT `id`,`file`,'song' AS `type` FROM `song` WHERE `song`.`catalog`='$catalog_id' " . 
+			"UNION ALL " . 
+			"SELECT `id`,`file`,'video' AS `type` FROM `video` WHERE `video`.`catalog`='$catalog_id'"; 
 		$db_results = Dba::query($sql);
 		$number = Dba::num_rows($db_results);
 
@@ -1801,24 +1817,26 @@ class Catalog extends database_object {
 		while ($results = Dba::fetch_assoc($db_results)) {
 
 			debug_event('verify',"Starting work on " . $results['file'],'5','ampache-catalog');
+			$type = ($results['type'] == 'video') ? 'video' : 'song';
 				
 			if (is_readable($results['file'])) {
 
+
 				/* Create the object from the existing database information */
-				$song = new Song($results['id']);
+				$media = new $type($results['id']);
 
 				unset($skip);
 
 				/* Make sure the song isn't flagged, we don't update flagged stuff */
-				if ($song->has_flag()) {
+				if ($media->has_flag()) {
 					$skip = true;
 				}
 
 				// if the file hasn't been modified since the last_update
 				if (!$skip) {
 
-					$info = self::update_song_from_tags($song,$this->sort_pattern,$this->rename_pattern);
-					$album_id = $song->album;
+					$info = self::update_song_from_tags($media,$this->sort_pattern,$this->rename_pattern);
+					$album_id = $media->album;
 					if ($info['change']) {
 						$total_updated++;
 					}
@@ -1827,13 +1845,13 @@ class Catalog extends database_object {
 				} // end skip
 
 				if ($skip) {
-					debug_event('skip',"$song->file has been skipped due to newer local update or file mod time",'5','ampache-catalog');
+					debug_event('skip',"$media->file has been skipped due to newer local update or file mod time",'5','ampache-catalog');
 				}
 
 				/* Stupid little cutesie thing */
 				$count++;
 				if (!($count%10) ) {
-					$file = str_replace(array('(',')','\''),'',$song->file);
+					$file = str_replace(array('(',')','\''),'',$media->file);
 					echo "<script type=\"text/javascript\">\n";
 					echo "update_txt('" . $count . "','verify_count_" . $catalog_id . "');";
 					echo "update_txt('" . scrub_out($file) . "','verify_dir_" . $catalog_id . "');";
@@ -1844,11 +1862,11 @@ class Catalog extends database_object {
 			} // end if file exists
 
 			else {
-				Error::add('general',"$song->file does not exist or is not readable");
-				debug_event('read-error',"$song->file does not exist or is not readable, removing",'5','ampache-catalog');
+				Error::add('general',"$media->file does not exist or is not readable");
+				debug_event('read-error',"$media->file does not exist or is not readable, removing",'5','ampache-catalog');
 				// Let's go ahead and remove it!
-				$sql = "DELETE FROM `song` WHERE `id`='" . Dba::escape($song->id) . "'";
-				$del_results = Dba::query($sql);
+				$sql = "DELETE FROM `$type` WHERE `id`='" . Dba::escape($media->id) . "'";
+				$del_results = Dba::write($sql);
 			}
 
 		} //end foreach

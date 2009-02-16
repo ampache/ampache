@@ -98,4 +98,15 @@ class Video extends database_object implements media {
 
 	} // stream_cmd
 
+	/**
+	 * has_flag
+	 * returns true if the video has been flagged and we shouldn't try to re-read
+	 * the meta data
+	 */
+	public function has_flag() { 
+
+
+
+	} // has_flag
+
 } // end Video class
