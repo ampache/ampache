@@ -197,7 +197,7 @@ class Flag extends database_object {
 
 		// Re-scan the file
 		$song = new Song($this->object_id); 
-		$info = Catalog::update_song_from_tags($song); 
+		$info = Catalog::update_media_from_tags($song); 
 
 		// Delete the row
 		$sql = "DELETE FROM `flagged` WHERE `id`='$this->id'";

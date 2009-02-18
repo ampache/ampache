@@ -100,6 +100,7 @@ switch ($_REQUEST['action']) {
 			$xmldata = array_merge(array('session_expire'=>date("r",time()+Config::get('session_length')-60)),$xmldata);
 		} 
 
+		debug_event('API','Ping Received from ' . $_SERVER['REMOTE_ADDR'] . ' :: ' . $_REQUEST['auth'],'5'); 
 
 		ob_end_clean(); 
 		echo xmlData::keyed_array($xmldata); 
