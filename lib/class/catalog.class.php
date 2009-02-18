@@ -1077,32 +1077,61 @@ class Catalog extends database_object {
 
 	} // update_single_item
 
+	/**
+	 * update_media_from_tags
+	 * This is a 'wrapper' function calls the update function for the media type
+	 * in question
+	 */
+	public static function update_media_from_tags(&$media,$sort_pattern='',$rename_pattern='') { 
+
+		// Check for patterns
+		if (!$sort_pattern OR !$rename_pattern) { 
+			$catalog = new Catalog($media->catalog); 
+			$sort_pattern = $catalog->sort_pattern; 
+			$rename_pattern = $catalog->rename_pattern; 
+		} 
+
+
+		debug_event('tag-read','Reading tags from ' . $media->file,'5','ampache-catalog'); 
+
+		$vainfo = new vainfo($media->file,'','','',$sort_pattern,$rename_pattern); 
+		$vainfo->get_info(); 
+
+		$key = vainfo::get_tag_type($vainfo->tags); 
+
+		$results = vainfo::clean_tag_info($vainfo->tags,$key,$media->file); 
+
+		// Figure out what type of object this is and call the right function
+		// giving it the stuff we've figured out above
+		$name = (get_class($media) == 'song') ? 'song' : 'video'; 
+
+		$function = 'update_' . $name . '_from_tags'; 
+
+		$return = call_user_func(array('Catalog',$function),$results,$media); 	
+
+		return $return; 
+
+	} // update_media_from_tags
+
+	/**
+	 * update_video_from_tags
+	 * updates the video info based on tags this is called from a bunch of different places
+	 * and passes in a full song object and the vainfo results
+	 */
+	public static function update_video_from_tags($results,$video) { 
+
+		// Pretty sweet function here
+		return $results; 
+
+	} // update_video_from_tags
+
         /**
          * update_song_from_tags
          * updates the song info based on tags, this is called from a bunch of different places
 	 * and passes in a full fledged song object, so it's a static function
 	 * FIXME: This is an ugly mess, this really needs to be consolidated and cleaned up
 	 */
-        public static function update_song_from_tags(&$song,$sort_pattern='',$rename_pattern='') {
-
-		// If the patterns aren't passed go look them up
-		if (!$sort_pattern OR !$rename_pattern) { 
-			$catalog = new Catalog($song->catalog); 
-			$sort_pattern = $catalog->sort_pattern; 
-			$rename_pattern = $catalog->rename_pattern; 
-		} 
-
-		/* Record the reading of these tags */
-		debug_event('tag-read',"Reading Tags from $song->file",'5','ampache-catalog');
-		
-		$vainfo = new vainfo($song->file,'','','',$sort_pattern,$rename_pattern);
-		$vainfo->get_info();
-
-                /* Find the correct key */
-                $key = vainfo::get_tag_type($vainfo->tags);
-
-                /* Clean up the tags */
-                $results = vainfo::clean_tag_info($vainfo->tags,$key,$song->file);
+        public static function update_song_from_tags($results,$song) {
 
                 /* Setup the vars */
 		$new_song 		= new Song();
@@ -1123,9 +1152,6 @@ class Catalog extends database_object {
                 $album                  = $results['album'];
 		$disk			= $results['disk'];
 		$tag			= $results['genre']; 
-
-		/* Clean up Old Vars */
-		unset($vainfo,$key);
 
                 /*
                 * We have the artist/genre/album name need to check it in the tables
@@ -1835,8 +1861,7 @@ class Catalog extends database_object {
 				// if the file hasn't been modified since the last_update
 				if (!$skip) {
 
-					$info = self::update_song_from_tags($media,$this->sort_pattern,$this->rename_pattern);
-					$album_id = $media->album;
+					$info = self::update_media_from_tags($media,$this->sort_pattern,$this->rename_pattern);
 					if ($info['change']) {
 						$total_updated++;
 					}
