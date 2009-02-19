@@ -180,7 +180,7 @@ switch ($_REQUEST['action']) {
 		ob_end_clean(); 
 		echo xmlData::songs($songs); 
 	break; 
-	case 'genres': 
+	case 'tags':
 		Browse::reset_filters(); 
 		Browse::set_type('genre'); 
 		Browse::set_sort('name','ASC'); 
@@ -197,12 +197,12 @@ switch ($_REQUEST['action']) {
 		ob_end_clean(); 
 		echo xmlData::genres($genres); 
 	break; 
-	case 'genre': 
+	case 'tag':
 		$uid = scrub_in($_REQUEST['filter']); 
 		ob_end_clean();
 		echo xmlData::genres(array($uid)); 
 	break; 
-	case 'genre_artists': 
+	case 'tag_artists':
 		$genre = new Genre($_REQUEST['filter']); 
 		$artists = $genre->get_artists(); 
 
@@ -212,7 +212,7 @@ switch ($_REQUEST['action']) {
 		ob_end_clean(); 
 		echo xmlData::artists($artists); 	
 	break; 
-	case 'genre_albums': 
+	case 'tag_albums':
 		$genre = new Genre($_REQUEST['filter']); 
 		$albums = $genre->get_albums(); 
 
@@ -222,7 +222,7 @@ switch ($_REQUEST['action']) {
 		ob_end_clean(); 
 		echo xmlData::albums($albums); 
 	break;
-	case 'genre_songs': 
+	case 'tag_songs': 
 		$genre = new Genre($_REQUEST['filter']); 
 		$songs = $genre->get_songs(); 
 

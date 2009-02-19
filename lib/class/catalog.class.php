@@ -1735,13 +1735,32 @@ class Catalog extends database_object {
 		// Create the object so we have some information on it
 		$catalog = new Catalog($catalog_id);
 
-		/* First get the filenames for the catalog */
-		$sql = "SELECT `id`,`file`,'song' AS `type` FROM `song` WHERE `song`.`catalog`='$catalog_id' " . 
-			"UNION ALL " . 
-			"SELECT `id`,`file`,'video' AS `type` FROM `video` WHERE `video`.`catalog`='$catalog_id'"; 
-		$db_results = Dba::query($sql);
-		$number = Dba::num_rows($db_results);
+		$cache = array(); 
+		$songs = array(); 
 
+		/* First get the filenames for the catalog */
+		$sql = "SELECT `id`,`file`,'song' AS `type` FROM `song` WHERE `song`.`catalog`='$catalog_id' ";
+		$db_results = Dba::read($sql); 
+		
+		while ($row = Dba::fetch_assoc($db_results)) { 
+			$cache[] = $row['id']; 
+			$songs[] = $row; 
+		} 
+		Song::build_cache($cache); 
+
+		$cache = array(); 
+		$videos = array(); 
+		$sql = "SELECT `id`,`file`,'video' AS `type` FROM `video` WHERE `video`.`catalog`='$catalog_id'"; 
+		$db_results = Dba::read($sql); 
+
+		while ($row = Dba::fetch_assoc($db_results)) { 
+			$cache[] = $row['id'];
+			$videos[] = $row; 
+		} 
+		Video::build_cache($cache); 
+		$cached_results = array_merge($songs,$videos); 
+
+		$number = count($results); 
 		require_once Config::get('prefix') . '/templates/show_verify_catalog.inc.php';
 		flush();
 
@@ -1756,7 +1775,7 @@ class Catalog extends database_object {
 		 * if it's not blank, and different in
 		 * in the file then update!
 		 */
-		while ($results = Dba::fetch_assoc($db_results)) {
+		foreach ($cached_results as $results) { 
 
 			debug_event('verify',"Starting work on " . $results['file'],'5','ampache-catalog');
 			$type = ($results['type'] == 'video') ? 'video' : 'song';
@@ -1825,7 +1844,7 @@ class Catalog extends database_object {
 		flush();
 
 		show_box_top();
-		echo _('Update Finished.') . ' ' . _('Checked') . " $count. $total_updated " . _('songs updated.') . "<br /><br />";
+		echo _('Update Finished.') . ' ' . _('Checked') .  intval($count) . '.' . intval($total_updated) .  ' ' . _('songs updated.') . '<br /><br />';
 		show_box_bottom();
 
 		return true;

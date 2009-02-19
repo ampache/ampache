@@ -27,23 +27,27 @@
 class vainfo { 
 
 	/* Default Encoding */
-	var $encoding = '';
-	var $encoding_id3v1 = '';
-	var $encoding_id3v2 = '';
+	public $encoding = '';
+	public $encoding_id3v1 = '';
+	public $encoding_id3v2 = '';
 	
 	/* Loaded Variables */
-	var $filename = '';
-	var $type = '';
-	var $tags = array();
+	public $filename = '';
+	public $type = '';
+	public $tags = array();
 
 	/* Internal Information */
-	var $_raw 		= array();
-	var $_raw2		= array();
-	var $_getID3 		= '';
-	var $_iconv		= false; 
-	var $_file_encoding	= '';
-	var $_file_pattern	= '';
-	var $_dir_pattern	= '';
+	public $_raw 		= array();
+	public $_raw2		= array();
+	public $_getID3 	= '';
+	public $_iconv		= false; 
+	public $_file_encoding	= '';
+	public $_file_pattern	= '';
+	public $_dir_pattern	= '';
+
+	/* Internal Private */
+	private $_binary_parse	= array(); 
+	private $_pathinfo; 
 
 	/**
 	 * Constructor
@@ -51,6 +55,11 @@ class vainfo {
 	 * actually pull the information
 	 */
 	public function __construct($file,$encoding='',$encoding_id3v1='',$encoding_id3v2='',$dir_pattern,$file_pattern) { 
+
+		/* Check for ICONV */
+		if (function_exists('iconv')) { 
+			$this->_iconv = true;
+		}
 
 		$this->filename = $file;
 		if ($encoding) { 
@@ -64,10 +73,25 @@ class vainfo {
 		$this->_file_pattern = $file_pattern;
 		$this->_dir_pattern  = $dir_pattern;
 
+		$this->_pathinfo = pathinfo($this->filename); 
+		$this->_pathinfo['extension'] = strtolower($this->_pathinfo['extension']); 
+
+		// Before we roll the _getID3 route let's see about using exec + a binary
+/*
+		if (!isset($this->_binary_parse[$this->_pathinfo['extension']])) { 
+			// Figure out if we've got binary parse ninja-skills here
+			$this->_binary_parse[$this->_pathinfo['extension']] = $this->can_binary_parse(); 
+			debug_event('BinaryParse','Binary Parse for ' . $this->_pathinfo['extension'] . ' set to ' . make_bool($this->_binary_parse[$this->_pathinfo['extension']]),'5'); 
+		} 
+*/
                 // Initialize getID3 engine
                 $this->_getID3 = new getID3();
 
+//		if ($this->_binary_parse[$this->_pathinfo['extension']]) { return true; } 
+
 		// get id3tag encodings
+		// we have to run this right here because we don't know what we have in the files
+		// and so we pull broken, then pull good later... this needs to be fixed
 		try {
 			$this->_raw2 = $this->_getID3->analyze($file);
 		}
@@ -118,10 +142,6 @@ class vainfo {
 //		$this->_getID3->encoding_id3v2		= $this->encoding_id3v2;
 		$this->_getID3->option_tags_process    = true; 
 
-		/* Check for ICONV */
-		if (function_exists('iconv')) { 
-			$this->_iconv = true;
-		}
 
 	} // vainfo
 
@@ -134,20 +154,27 @@ class vainfo {
 	 */
 	public function get_info() {
 
-		/* Get the Raw file information */
-		try { 
-			$this->_raw = $this->_getID3->analyze($this->filename);
-		} 
-		catch (Exception $error) { 
-			debug_event('getid3',$error->message,'1');
-		} 
+		// If we've got a green light try out the binary
+//		if ($this->_binary_parse[$this->_pathinfo['extension']]) { 
+//			$this->run_binary_parse(); 	
+//		} 
+		
+//		else { 
 
-		/* Figure out what type of file we are dealing with */
-		$this->type = $this->_get_type();
+			/* Get the Raw file information */
+			try { 
+				$this->_raw = $this->_getID3->analyze($this->filename);
+			} 
+			catch (Exception $error) { 
+				debug_event('getid3',$error->message,'1');
+			} 
 
-		/* Get the general information about this file */
-		$info = $this->_get_info();
+			/* Figure out what type of file we are dealing with */
+			$this->type = $this->_get_type();
 
+			/* Get the general information about this file */
+			$info = $this->_get_info();
+//		} 
 
 		/* Gets the Tags */
 		$this->tags = $this->_get_tags();
@@ -302,7 +329,6 @@ class vainfo {
 	public function _get_tags() { 
 
 		$results = array();
-
 
 		/* Return false if we don't have 
 		 * any tags to look at 
@@ -499,7 +525,7 @@ class vainfo {
 	 * pretty little format
 	 */
 	private function _parse_id3v2($tags) { 
-	
+
 		$array = array();
 
 		/* Go through the tags */
@@ -530,7 +556,7 @@ class vainfo {
 			} // end switch on tag
 		
 		} // end foreach
-
+		
 		return $array;
 
 	} // _parse_id3v2
@@ -619,9 +645,7 @@ class vainfo {
 
 		$array = array(); 
 
-		$info = pathinfo($this->filename); 
-
-		$array['title'] 	= $info['filename']; 
+		$array['title'] 	= $this->_pathinfo['filename']; 
 		$array['video_codec'] 	= $tags['video']['fourcc']; 
 		$array['audio_codec'] 	= $tags['audio']['dataformat']; 
 		$array['resolution_x']	= $tags['video']['resolution_x']; 
@@ -642,9 +666,7 @@ class vainfo {
 
 		$array = array(); 
 
-		$info = pathinfo($this->filename); 
-
-		$array['title'] 	= $info['filename']; 
+		$array['title'] 	= $this->_pathinfo['filename']; 
 		$array['video_codec'] 	= $tags['video']['codec']; 
 		$array['audio_codec'] 	= $tags['audio']['dataformat']; 
 		$array['resolution_x']	= $tags['video']['resolution_x']; 
@@ -749,6 +771,104 @@ class vainfo {
 		return $enc_tag;
 
 	} // _clean_tag
+
+	/**
+	 * can_binary_parse
+	 * This returns true/false if we can do a binary parse of the file in question
+	 * only the extension is passed so this can be inaccurate
+	 */
+	public function can_binary_parse() { 
+
+		// We're going to need exec for this
+		if (!is_callable('exec')) { 
+			return false; 
+		} 
+
+
+		// For now I'm going to use an approved list of apps, later we should allow user config
+		switch ($this->_pathinfo['extension']) { 
+			case 'mp3': 			
+				// Verify the application is there and callable
+				exec('id3v2 -v',$results,$retval); 
+				if ($retval == 0) { return true; } 
+			break; 
+			default:
+				//FAILURE
+			break; 
+		}
+
+		return false; 
+
+	} // can_binary_parse
+
+	/**
+	 * run_binary_parse
+	 * This runs the binary parse operations here down in Ampache land
+	 * it is passed the filename, and only called if can_binary_parse passes
+	 */
+	public function run_binary_parse() { 
+
+		// Switch on the extension
+		switch ($this->_pathinfo['extension']) { 
+			case 'mp3': 
+				$this->_raw['tags'] = $this->mp3_binary_parse();
+			break; 
+			default:
+				$this->_raw['tags'] = array(); 
+			break; 
+		} // switch on extension
+
+	} // run_binary_parse
+
+	/**
+	 * mp3_binary_parse
+	 * This tries to read the tag information from mp3s using a binary and the exec() command
+	 * This will not work on a lot of systems... but it should be faster
+	 */
+	public function mp3_binary_parse() { 
+
+		require_once(Config::get('prefix') . '/modules/getid3/module.tag.id3v2.php'); 
+
+		$filename = escapeshellarg($this->filename); 
+
+		exec('id3v2 -l ' . $filename,$info,$retval); 
+
+		if ($retval != 0) { return array(); } 
+
+		$position=0; 
+		$results = array(); 
+
+		// If we've got Id3v1 tag information
+		if (substr($info[$position],0,5) == 'id3v1') { 
+			$position++; 
+			$v1['title'][]	= trim(substr($info[$position],8,30)); 
+			$v1['artist'][]	= trim(substr($info[$position],49,79));
+			$position++; 
+			$v1['album'][]	= trim(substr($info[$position],8,30)); 
+			$v1['year'][]	= trim(substr($info[$position],47,53)); 
+			$v1['genre'][]	= trim(preg_replace("/\(\d+\)/","",substr($info[$position],60,strlen($info[$position])))); 
+			$position++; 
+			$v1['comment'][]= trim(substr($info[$position],8,30)); 
+			$v1['track'][]	= trim(substr($info[$position],48,3)); 
+			$results['id3v1'] = $v1; 
+			$position++; 
+		}
+		if (substr($info[$position],0,5) == 'id3v2') { 
+			$position++; 
+			$element_count = count($info);
+			while ($position < $element_count) { 
+				$position++;
+				$element = getid3_id3v2::FrameNameShortLookup(substr($info[$position],0,4));
+				if (!$element) { continue; } 
+				$data = explode(":",$info[$position],2); 
+				$value = array_pop($data); 
+				$results['id3v2'][$element][] = $value; 
+			} 
+
+		} // end if id3v2
+		return $results; 
+
+	} // mp3_binary_parse
 
 } // end class vainfo
 ?>

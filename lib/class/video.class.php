@@ -43,6 +43,15 @@ class Video extends database_object implements media {
 	} // Constructor
 
 	/**
+	 * build_cache
+	 * Build a cache based on the array of ids passed, saves lots of little queries
+	 */
+	public static function build_cache($ids=array()) { 
+
+
+	} // build_cache
+
+	/**
 	 * format
 	 * This formats a video object so that it is human readable
 	 */
