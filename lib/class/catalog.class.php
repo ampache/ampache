@@ -1747,6 +1747,7 @@ class Catalog extends database_object {
 			$songs[] = $row; 
 		} 
 		Song::build_cache($cache); 
+		Flag::build_map_cache($cache,'song'); 
 
 		$cache = array(); 
 		$videos = array(); 
@@ -1758,6 +1759,8 @@ class Catalog extends database_object {
 			$videos[] = $row; 
 		} 
 		Video::build_cache($cache); 
+		Flag::build_map_cache($cache,'video'); 
+
 		$cached_results = array_merge($songs,$videos); 
 
 		$number = count($results); 
@@ -1789,7 +1792,7 @@ class Catalog extends database_object {
 				unset($skip);
 
 				/* Make sure the song isn't flagged, we don't update flagged stuff */
-				if ($media->has_flag()) {
+				if (Flag::has_flag($media->id,$type)) {
 					$skip = true;
 				}
 
@@ -1844,7 +1847,7 @@ class Catalog extends database_object {
 		flush();
 
 		show_box_top();
-		echo _('Update Finished.') . ' ' . _('Checked') .  intval($count) . '.' . intval($total_updated) .  ' ' . _('songs updated.') . '<br /><br />';
+		echo '<strong>' . _('Update Finished') . '</strong><br />' . _('Checked') . ' ' .   intval($count) . '.<br />' . _('Updated') . ' ' . intval($total_updated) .  '<br /><br />';
 		show_box_bottom();
 
 		return true;

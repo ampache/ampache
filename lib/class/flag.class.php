@@ -62,6 +62,8 @@ class Flag extends database_object {
 	 */
 	public static function build_cache($ids) { 
 
+		if (!is_array($ids) OR !count($ids)) { return false; } 
+
 		$idlist = '(' . implode(',',$ids) . ')'; 
 
 		$sql = "SELECT * FROM `flagged` WHERE `id` IN $idlist"; 
@@ -72,6 +74,54 @@ class Flag extends database_object {
 		} 
 
 	} // build_cache
+
+	/**
+	 * build_map_cache
+	 * This takes an array of ids and builds a map cache to avoid some of the object_type calls
+	 * we would normally have to make
+	 */
+	public static function build_map_cache($ids,$type) { 
+
+		if (!is_array($ids) OR !count($ids)) { return false; } 
+
+		$idlist = '(' . implode(',',$ids) . ')'; 
+		$type = Dba::escape($type); 
+
+		$sql = "SELECT * FROM `flagged` " . 
+			"WHERE `flagged`.`object_type`='$type' AND `flagged`.`object_id` IN $idlist"; 
+		$db_results = Dba::read($sql); 
+
+		while ($row = Dba::fetch_assoc($db_results)) { 
+			parent::add_to_cache('flagged_' . $type,$row['object_id'],$row); 
+		} 
+	
+		return true; 	
+
+	} // build_map_cache
+
+	/**
+	 * has_flag
+	 * Static function, tries to check the cache, but falls back on a query
+	 */
+	public static function has_flag($id,$type) { 
+
+		if (parent::is_cached('flagged_' . $type,$id)) { 
+			$data = parent::get_from_cache('flagged_' . $type,$id); 
+			return $data['date']; 
+		} 
+
+		// Ok we have to query this
+		$type = Dba::escape($type); 
+
+		$sql = "SELECT * FROM `flagged` WHERE `flagged`.`object_type`='$type' AND `flagged`.`object_id`='$id'"; 
+		$db_results = Dba::read($sql); 
+
+		$row = Dba::fetch_assoc($db_results);
+		parent::add_to_cache('flagged_' . $type,$row['object_id'],$row); 
+
+		return $row['date']; 
+
+	} // has_flag
 
 	/**
 	 * get_recent
