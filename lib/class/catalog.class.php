@@ -1057,7 +1057,7 @@ class Catalog extends database_object {
 
 		foreach($songs as $song_id) {
 			$song = new Song($song_id);
-			$info = self::update_song_from_tags($song,'','');
+			$info = self::update_media_from_tags($song,'','');
 
 			if ($info['change']) {
 				$file = scrub_out($song->file);
