@@ -330,6 +330,7 @@ function get_languages() {
 				case 'zn_TW'; $name = '&#32321;&#39636;&#20013;&#25991;'; break; /* Chinese */
 				case 'ko_KR'; $name = '&#xd55c;&#xad6d;&#xb9d0;'; break; /* Korean */
 				case 'ja_JP'; $name = '&#x65e5;&#x672c;&#x8a9e;'; break; /* Japanese */
+				case 'nb_NO'; $name = 'Norsk'; break; /* Norwegian */
 				/* These languages are right to left. */
 				case 'ar_SA'; $name = '&#1575;&#1604;&#1593;&#1585;&#1576;&#1610;&#1577;'; break; /* Arabic */
 				case 'he_IL'; $name = '&#1506;&#1489;&#1512;&#1497;&#1514;'; break; /* Hebrew */

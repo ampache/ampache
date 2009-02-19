@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: translations at ampache.org\n"
-"POT-Creation-Date: 2009-02-19 11:31+0900\n"
+"POT-Creation-Date: 2009-02-19 11:37+0900\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -499,7 +499,7 @@ msgstr ""
 
 #: ../../templates/show_users.inc.php:54 ../../templates/show_user.inc.php:23
 #: ../../lib/class/flag.class.php:282 ../../lib/class/localplay.class.php:648
-#: ../../lib/class/user.class.php:667 ../../lib/general.lib.php:337
+#: ../../lib/class/user.class.php:667 ../../lib/general.lib.php:338
 #: ../../modules/localplay/mpd.controller.php:511
 #: ../../modules/localplay/httpq.controller.php:507
 msgid "Unknown"
@@ -3391,11 +3391,11 @@ msgid ""
 "\n"
 msgstr ""
 
-#: ../../lib/general.lib.php:396
+#: ../../lib/general.lib.php:397
 msgid "On"
 msgstr ""
 
-#: ../../lib/general.lib.php:399
+#: ../../lib/general.lib.php:400
 msgid "Off"
 msgstr ""
 
