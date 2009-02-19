@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: translations at ampache.org\n"
-"POT-Creation-Date: 2009-02-05 10:53+0900\n"
+"POT-Creation-Date: 2009-02-19 11:31+0900\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -57,13 +57,13 @@ msgstr ""
 #: ../../templates/show_album_row.inc.php:24
 #: ../../templates/sidebar_home.inc.php:103
 #: ../../templates/show_artist_row.inc.php:24
-#: ../../templates/show_localplay_status.inc.php:43
+#: ../../templates/show_localplay_status.inc.php:44
 #: ../../templates/show_artist.inc.php:41
 #: ../../templates/show_album.inc.php:55
 #: ../../templates/show_playlist_row.inc.php:24
 #: ../../lib/class/stream.class.php:400
 #: ../../modules/localplay/mpd.controller.php:495
-#: ../../modules/localplay/httpq.controller.php:493
+#: ../../modules/localplay/httpq.controller.php:492
 msgid "Random"
 msgstr ""
 
@@ -109,6 +109,8 @@ msgstr ""
 #: ../../templates/show_user_preferences.inc.php:37
 #: ../../templates/show_preference_box.inc.php:41
 #: ../../templates/show_preference_box.inc.php:71
+#: ../../templates/show_random_rules.inc.php:33
+#: ../../templates/show_random.inc.php:32
 #: ../../templates/show_debug.inc.php:45 ../../templates/show_debug.inc.php:94
 msgid "Value"
 msgstr ""
@@ -144,6 +146,8 @@ msgstr ""
 #: ../../templates/show_localplay_control.inc.php:28
 #: ../../templates/show_manage_democratic.inc.php:57
 #: ../../templates/rightbar.inc.php:25
+#: ../../templates/show_democratic.inc.php:30
+#: ../../templates/show_democratic.inc.php:31
 msgid "Play"
 msgstr ""
 
@@ -294,6 +298,8 @@ msgstr ""
 #: ../../templates/show_albums.inc.php:75
 #: ../../templates/sidebar_home.inc.php:105
 #: ../../templates/show_edit_song.inc.php:37
+#: ../../templates/show_democratic_playlist.inc.php:56
+#: ../../templates/show_democratic_playlist.inc.php:96
 #: ../../templates/show_play_selected.inc.php:59
 #: ../../templates/show_search.inc.php:50
 #: ../../templates/show_songs.inc.php:42 ../../templates/show_songs.inc.php:71
@@ -320,6 +326,8 @@ msgstr ""
 #: ../../templates/show_similar_artists.inc.php:33
 #: ../../templates/show_similar_artists.inc.php:86
 #: ../../templates/show_edit_song.inc.php:45
+#: ../../templates/show_democratic_playlist.inc.php:57
+#: ../../templates/show_democratic_playlist.inc.php:97
 #: ../../templates/show_play_selected.inc.php:60
 #: ../../templates/show_search.inc.php:44
 #: ../../templates/show_songs.inc.php:41 ../../templates/show_songs.inc.php:70
@@ -345,7 +353,7 @@ msgstr ""
 #: ../../templates/show_genre.inc.php:38
 #: ../../templates/show_genres.inc.php:38
 #: ../../templates/show_genres.inc.php:74
-#: ../../lib/class/browse.class.php:1096
+#: ../../lib/class/browse.class.php:1097
 msgid "Songs"
 msgstr ""
 
@@ -365,7 +373,6 @@ msgstr ""
 #: ../../templates/show_videos.inc.php:38
 #: ../../templates/show_videos.inc.php:60
 #: ../../templates/show_songs.inc.php:43 ../../templates/show_songs.inc.php:72
-#: ../../templates/show_random.inc.php:41
 msgid "Tags"
 msgstr ""
 
@@ -457,13 +464,14 @@ msgstr ""
 #: ../../templates/show_manage_democratic.inc.php:40
 #: ../../templates/show_plugins.inc.php:35
 #: ../../templates/show_plugins.inc.php:64
-#: ../../templates/show_democratic_playlist.inc.php:51
-#: ../../templates/show_democratic_playlist.inc.php:86
+#: ../../templates/show_democratic_playlist.inc.php:53
+#: ../../templates/show_democratic_playlist.inc.php:93
 #: ../../templates/show_flagged.inc.php:39
 #: ../../templates/show_flagged.inc.php:58
 #: ../../templates/show_genres.inc.php:39
 #: ../../templates/show_genres.inc.php:75
 #: ../../templates/show_localplay_instances.inc.php:29
+#: ../../templates/show_random_rules.inc.php:34
 #: ../../templates/show_localplay_playlist.inc.php:35
 #: ../../templates/show_localplay_playlist.inc.php:61
 #: ../../templates/show_songs.inc.php:51 ../../templates/show_songs.inc.php:78
@@ -484,8 +492,8 @@ msgid "On-line"
 msgstr ""
 
 #: ../../templates/show_users.inc.php:53 ../../templates/show_user.inc.php:22
-#: ../../lib/class/user.class.php:663 ../../lib/class/catalog.class.php:161
-#: ../../lib/class/catalog.class.php:162 ../../lib/preferences.php:261
+#: ../../lib/class/user.class.php:663 ../../lib/class/catalog.class.php:145
+#: ../../lib/class/catalog.class.php:146 ../../lib/preferences.php:261
 msgid "Never"
 msgstr ""
 
@@ -493,7 +501,7 @@ msgstr ""
 #: ../../lib/class/flag.class.php:282 ../../lib/class/localplay.class.php:648
 #: ../../lib/class/user.class.php:667 ../../lib/general.lib.php:337
 #: ../../modules/localplay/mpd.controller.php:511
-#: ../../modules/localplay/httpq.controller.php:508
+#: ../../modules/localplay/httpq.controller.php:507
 msgid "Unknown"
 msgstr ""
 
@@ -588,8 +596,8 @@ msgstr ""
 #: ../../templates/show_preference_admin.inc.php:43
 #: ../../templates/sidebar.inc.php:31 ../../templates/show_add_user.inc.php:78
 #: ../../templates/show_create_democratic.inc.php:44
-#: ../../templates/show_democratic_playlist.inc.php:56
-#: ../../templates/show_democratic_playlist.inc.php:91
+#: ../../templates/show_democratic_playlist.inc.php:60
+#: ../../templates/show_democratic_playlist.inc.php:100
 #: ../../templates/show_mail_users.inc.php:32
 #: ../../lib/class/democratic.class.php:114 ../../lib/preferences.php:233
 #: ../../admin/users.php:127
@@ -714,14 +722,14 @@ msgstr ""
 #: ../../templates/sidebar_home.inc.php:77
 #: ../../templates/show_local_catalog_info.inc.php:29
 #: ../../templates/show_genre.inc.php:32 ../../lib/ui.lib.php:408
-#: ../../lib/class/browse.class.php:1102
+#: ../../lib/class/browse.class.php:1103
 msgid "Albums"
 msgstr ""
 
 #: ../../templates/show_artists.inc.php:40
 #: ../../templates/show_artists.inc.php:68
-#: ../../templates/show_democratic_playlist.inc.php:54
-#: ../../templates/show_democratic_playlist.inc.php:89
+#: ../../templates/show_democratic_playlist.inc.php:58
+#: ../../templates/show_democratic_playlist.inc.php:98
 #: ../../templates/show_songs.inc.php:45 ../../templates/show_songs.inc.php:74
 #: ../../templates/show_playlist_songs.inc.php:47
 #: ../../templates/show_playlist_songs.inc.php:68
@@ -742,6 +750,8 @@ msgstr ""
 #: ../../templates/show_videos.inc.php:35
 #: ../../templates/show_videos.inc.php:57
 #: ../../templates/show_edit_song.inc.php:31
+#: ../../templates/show_democratic_playlist.inc.php:55
+#: ../../templates/show_democratic_playlist.inc.php:95
 #: ../../templates/show_search.inc.php:40
 #: ../../templates/show_disabled_songs.inc.php:34
 #: ../../templates/show_disabled_songs.inc.php:57
@@ -824,7 +834,7 @@ msgid "Song Title"
 msgstr ""
 
 #: ../../templates/sidebar_home.inc.php:35
-#: ../../lib/class/browse.class.php:1156
+#: ../../lib/class/browse.class.php:1157
 msgid "Tag Cloud"
 msgstr ""
 
@@ -837,7 +847,7 @@ msgid "Playlist"
 msgstr ""
 
 #: ../../templates/sidebar_home.inc.php:37
-#: ../../lib/class/browse.class.php:1119
+#: ../../lib/class/browse.class.php:1120
 msgid "Radio Stations"
 msgstr ""
 
@@ -882,7 +892,7 @@ msgstr ""
 #: ../../templates/show_playtype_switch.inc.php:36
 #: ../../templates/sidebar_modules.inc.php:46 ../../lib/preferences.php:179
 #: ../../modules/localplay/mpd.controller.php:491
-#: ../../modules/localplay/httpq.controller.php:489
+#: ../../modules/localplay/httpq.controller.php:488
 msgid "Democratic"
 msgstr ""
 
@@ -1018,6 +1028,7 @@ msgid "Base Playlist"
 msgstr ""
 
 #: ../../templates/show_manage_democratic.inc.php:36
+#: ../../templates/show_democratic.inc.php:27
 msgid "Cooldown"
 msgstr ""
 
@@ -1086,7 +1097,6 @@ msgstr ""
 #: ../../templates/show_export.inc.php:35
 #: ../../templates/show_add_access_current.inc.php:40
 #: ../../templates/show_mail_users.inc.php:30
-#: ../../templates/show_random.inc.php:38
 #: ../../templates/show_admin_tools.inc.php:51 ../../lib/ui.lib.php:141
 #: ../../lib/ui.lib.php:150 ../../lib/ui.lib.php:632
 #: ../../lib/class/access.class.php:407 ../../lib/class/access.class.php:427
@@ -1096,7 +1106,6 @@ msgstr ""
 #: ../../templates/show_add_access_local.inc.php:48
 #: ../../templates/show_add_access_rpc.inc.php:48
 #: ../../templates/show_add_playlist.inc.php:32
-#: ../../templates/show_random.inc.php:61
 #: ../../templates/show_access_list.inc.php:61
 #: ../../templates/show_playlist_edit.inc.php:36
 msgid "Type"
@@ -1396,7 +1405,7 @@ msgstr ""
 
 #: ../../templates/show_flag.inc.php:56 ../../templates/rightbar.inc.php:105
 #: ../../templates/show_catalog_row.inc.php:33
-#: ../../templates/show_democratic_playlist.inc.php:78
+#: ../../templates/show_democratic_playlist.inc.php:85
 #: ../../templates/show_live_stream_row.inc.php:34
 #: ../../templates/show_localplay_instances.inc.php:40
 #: ../../templates/show_localplay_playlist.inc.php:50
@@ -1581,7 +1590,7 @@ msgstr ""
 
 #: ../../templates/sidebar_admin.inc.php:24
 #: ../../templates/show_admin_tools.inc.php:26
-#: ../../lib/class/browse.class.php:1140
+#: ../../lib/class/browse.class.php:1141
 msgid "Catalogs"
 msgstr ""
 
@@ -1670,7 +1679,7 @@ msgstr ""
 
 #: ../../templates/show_local_catalog_info.inc.php:30
 #: ../../templates/show_genre.inc.php:35 ../../lib/ui.lib.php:412
-#: ../../lib/class/browse.class.php:1113 ../../lib/class/album.class.php:256
+#: ../../lib/class/browse.class.php:1114 ../../lib/class/album.class.php:256
 msgid "Artists"
 msgstr ""
 
@@ -1738,7 +1747,9 @@ msgid "Add to New Playlist"
 msgstr ""
 
 #: ../../templates/rightbar.inc.php:54
-#: ../../templates/show_localplay_status.inc.php:46
+#: ../../templates/show_localplay_status.inc.php:47
+#: ../../templates/show_democratic.inc.php:34
+#: ../../templates/show_democratic.inc.php:35
 msgid "Clear Playlist"
 msgstr ""
 
@@ -1767,7 +1778,7 @@ msgid "More"
 msgstr ""
 
 #: ../../templates/header.inc.php:35
-#: ../../templates/show_localplay_status.inc.php:26
+#: ../../templates/show_localplay_status.inc.php:27
 #: ../../templates/show_now_playing.inc.php:33
 #: ../../lib/class/localplay.class.php:639
 #: ../../lib/class/ampacherss.class.php:70
@@ -1931,30 +1942,20 @@ msgstr ""
 msgid "Update Song"
 msgstr ""
 
-#: ../../templates/show_democratic_playlist.inc.php:39
+#: ../../templates/show_democratic_playlist.inc.php:41
 msgid "Playing from base Playlist"
 msgstr ""
 
-#: ../../templates/show_democratic_playlist.inc.php:52
-#: ../../templates/show_democratic_playlist.inc.php:87
+#: ../../templates/show_democratic_playlist.inc.php:54
+#: ../../templates/show_democratic_playlist.inc.php:94
 msgid "Votes"
 msgstr ""
 
-#: ../../templates/show_democratic_playlist.inc.php:53
-#: ../../templates/show_democratic_playlist.inc.php:88
-#: ../../templates/show_recently_played.inc.php:38
-#: ../../templates/show_recently_played.inc.php:101
-#: ../../templates/show_duplicates.inc.php:37
-#: ../../templates/show_duplicates.inc.php:76
-#: ../../templates/show_now_playing_row.inc.php:45
-msgid "Song"
-msgstr ""
-
-#: ../../templates/show_democratic_playlist.inc.php:68
+#: ../../templates/show_democratic_playlist.inc.php:73
 msgid "Remove Vote"
 msgstr ""
 
-#: ../../templates/show_democratic_playlist.inc.php:70
+#: ../../templates/show_democratic_playlist.inc.php:75
 msgid "Add Vote"
 msgstr ""
 
@@ -2125,27 +2126,27 @@ msgstr ""
 msgid "Select"
 msgstr ""
 
-#: ../../templates/show_localplay_status.inc.php:25
+#: ../../templates/show_localplay_status.inc.php:26
 msgid "Localplay Control"
 msgstr ""
 
-#: ../../templates/show_localplay_status.inc.php:30
+#: ../../templates/show_localplay_status.inc.php:31
 msgid "Mute"
 msgstr ""
 
-#: ../../templates/show_localplay_status.inc.php:31
+#: ../../templates/show_localplay_status.inc.php:32
 msgid "Decrease Volume"
 msgstr ""
 
-#: ../../templates/show_localplay_status.inc.php:32
+#: ../../templates/show_localplay_status.inc.php:33
 msgid "Increase Volume"
 msgstr ""
 
-#: ../../templates/show_localplay_status.inc.php:33
+#: ../../templates/show_localplay_status.inc.php:34
 msgid "Volume"
 msgstr ""
 
-#: ../../templates/show_localplay_status.inc.php:38
+#: ../../templates/show_localplay_status.inc.php:39
 msgid "Repeat"
 msgstr ""
 
@@ -2190,6 +2191,21 @@ msgstr ""
 
 #: ../../templates/show_user_stats.inc.php:56
 msgid "Favorite Songs"
+msgstr ""
+
+#: ../../templates/show_random_rules.inc.php:22
+msgid "Rules"
+msgstr ""
+
+#: ../../templates/show_random_rules.inc.php:31
+#: ../../templates/show_random.inc.php:30
+msgid "Field"
+msgstr ""
+
+#: ../../templates/show_random_rules.inc.php:32
+#: ../../templates/show_search.inc.php:102
+#: ../../templates/show_random.inc.php:31
+msgid "Operator"
 msgstr ""
 
 #: ../../templates/show_shoutbox.inc.php:22
@@ -2240,10 +2256,6 @@ msgstr ""
 msgid "Five Stars"
 msgstr ""
 
-#: ../../templates/show_search.inc.php:102
-msgid "Operator"
-msgstr ""
-
 #: ../../templates/show_search.inc.php:105
 msgid "AND"
 msgstr ""
@@ -2265,8 +2277,6 @@ msgid "Maximum Results"
 msgstr ""
 
 #: ../../templates/show_search.inc.php:121
-#: ../../templates/show_random.inc.php:49
-#: ../../templates/show_random.inc.php:84
 msgid "Unlimited"
 msgstr ""
 
@@ -2414,68 +2424,23 @@ msgid "Send Mail"
 msgstr ""
 
 #: ../../templates/show_random.inc.php:22
-msgid "Play Random Selection"
+msgid "Advanced Random Rules"
 msgstr ""
 
-#: ../../templates/show_random.inc.php:26
-msgid "Item count"
-msgstr ""
-
-#: ../../templates/show_random.inc.php:46
-#: ../../templates/show_duplicates.inc.php:40
-#: ../../templates/show_duplicates.inc.php:79
-msgid "Length"
-msgstr ""
-
-#: ../../templates/show_random.inc.php:50
-#: ../../templates/show_random.inc.php:51
-#, php-format
-msgid "%d minute"
-msgid_plural "%d minutes"
-msgstr[0] ""
-msgstr[1] ""
-
-#: ../../templates/show_random.inc.php:52
-#: ../../templates/show_random.inc.php:53
 #: ../../templates/show_random.inc.php:54
-#: ../../templates/show_random.inc.php:55
-#: ../../templates/show_random.inc.php:56
-#, php-format
-msgid "%d hour"
-msgid_plural "%d hours"
-msgstr[0] ""
-msgstr[1] ""
-
-#: ../../templates/show_random.inc.php:64
-msgid "Standard"
+msgid "Like"
 msgstr ""
 
-#: ../../templates/show_random.inc.php:65
-msgid "Less Played"
+#: ../../templates/show_random.inc.php:63
+msgid "Add Rule"
 msgstr ""
 
 #: ../../templates/show_random.inc.php:66
-msgid "Full Albums"
-msgstr ""
-
-#: ../../templates/show_random.inc.php:67
-msgid "Full Artist"
+msgid "Save Rules As"
 msgstr ""
 
 #: ../../templates/show_random.inc.php:69
-msgid "Highest Rated"
-msgstr ""
-
-#: ../../templates/show_random.inc.php:75
-msgid "From catalog"
-msgstr ""
-
-#: ../../templates/show_random.inc.php:81
-msgid "Size Limit"
-msgstr ""
-
-#: ../../templates/show_random.inc.php:95
-msgid "Enqueue"
+msgid "Load Saved Rules"
 msgstr ""
 
 #: ../../templates/show_search_options.inc.php:23
@@ -2540,6 +2505,14 @@ msgstr ""
 #: ../../templates/show_recently_played.inc.php:23
 #: ../../lib/class/ampacherss.class.php:175
 msgid "years ago"
+msgstr ""
+
+#: ../../templates/show_recently_played.inc.php:38
+#: ../../templates/show_recently_played.inc.php:101
+#: ../../templates/show_duplicates.inc.php:37
+#: ../../templates/show_duplicates.inc.php:76
+#: ../../templates/show_now_playing_row.inc.php:45
+msgid "Song"
 msgstr ""
 
 #: ../../templates/show_recently_played.inc.php:42
@@ -2627,8 +2600,8 @@ msgid "Disk"
 msgstr ""
 
 #: ../../templates/show_album.inc.php:34
-#: ../../lib/class/catalog.class.php:1940
-#: ../../lib/class/catalog.class.php:2011
+#: ../../lib/class/catalog.class.php:1887
+#: ../../lib/class/catalog.class.php:1958
 msgid "Unknown (Orphaned)"
 msgstr ""
 
@@ -2704,6 +2677,11 @@ msgstr ""
 
 #: ../../templates/show_duplicates.inc.php:22
 msgid "Duplicate Songs"
+msgstr ""
+
+#: ../../templates/show_duplicates.inc.php:40
+#: ../../templates/show_duplicates.inc.php:79
+msgid "Length"
 msgstr ""
 
 #: ../../templates/show_duplicates.inc.php:41
@@ -3122,32 +3100,36 @@ msgstr ""
 msgid "Add New"
 msgstr ""
 
-#: ../../lib/class/browse.class.php:1108
+#: ../../lib/class/browse.class.php:1109
 msgid "Manage Users"
 msgstr ""
 
-#: ../../lib/class/browse.class.php:1125
+#: ../../lib/class/browse.class.php:1126
 msgid "Playlists"
 msgstr ""
 
-#: ../../lib/class/browse.class.php:1130
+#: ../../lib/class/browse.class.php:1131
 msgid "Playlist Songs"
 msgstr ""
 
-#: ../../lib/class/browse.class.php:1135
+#: ../../lib/class/browse.class.php:1136
 msgid "Current Playlist"
 msgstr ""
 
-#: ../../lib/class/browse.class.php:1145
+#: ../../lib/class/browse.class.php:1146
 msgid "Shoutbox Records"
 msgstr ""
 
-#: ../../lib/class/browse.class.php:1150
+#: ../../lib/class/browse.class.php:1151
 msgid "Flagged Records"
 msgstr ""
 
-#: ../../lib/class/browse.class.php:1161
+#: ../../lib/class/browse.class.php:1162
 msgid "Videos"
+msgstr ""
+
+#: ../../lib/class/browse.class.php:1167
+msgid "Democratic Playlist"
 msgstr ""
 
 #: ../../lib/class/access.class.php:102 ../../lib/class/access.class.php:106
@@ -3198,8 +3180,7 @@ msgstr ""
 msgid "Error Passwords don't match"
 msgstr ""
 
-#: ../../lib/class/album.class.php:479 ../../lib/class/catalog.class.php:442
-#: ../../lib/class/catalog.class.php:792
+#: ../../lib/class/album.class.php:479 ../../lib/class/catalog.class.php:426
 msgid "Error: Unable to open"
 msgstr ""
 
@@ -3207,150 +3188,150 @@ msgstr ""
 msgid "RSS Feed"
 msgstr ""
 
-#: ../../lib/class/catalog.class.php:220
+#: ../../lib/class/catalog.class.php:204
 msgid "day"
 msgid_plural "days"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../../lib/class/catalog.class.php:222
+#: ../../lib/class/catalog.class.php:206
 msgid "hour"
 msgid_plural "hours"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../../lib/class/catalog.class.php:322
+#: ../../lib/class/catalog.class.php:306
 msgid "Running Remote Sync"
 msgstr ""
 
-#: ../../lib/class/catalog.class.php:449 ../../lib/class/catalog.class.php:492
+#: ../../lib/class/catalog.class.php:433 ../../lib/class/catalog.class.php:476
 msgid "Error: Unable to change to directory"
 msgstr ""
 
-#: ../../lib/class/catalog.class.php:528
+#: ../../lib/class/catalog.class.php:512
 #, php-format
 msgid "Error: Unable to get filesize for %s"
 msgstr ""
 
-#: ../../lib/class/catalog.class.php:534
+#: ../../lib/class/catalog.class.php:518
 #, php-format
 msgid "%s is not readable by ampache"
 msgstr ""
 
-#: ../../lib/class/catalog.class.php:542
+#: ../../lib/class/catalog.class.php:526
 #, php-format
 msgid "%s does not match site charset"
 msgstr ""
 
-#: ../../lib/class/catalog.class.php:1081 ../../preferences.php:111
+#: ../../lib/class/catalog.class.php:981 ../../preferences.php:111
 #: ../../admin/access.php:109
 msgid "Updated"
 msgstr ""
 
-#: ../../lib/class/catalog.class.php:1088
+#: ../../lib/class/catalog.class.php:988
 msgid "No Update Needed"
 msgstr ""
 
-#: ../../lib/class/catalog.class.php:1188
+#: ../../lib/class/catalog.class.php:1114
 msgid "Running Remote Update"
 msgstr ""
 
-#: ../../lib/class/catalog.class.php:1215
+#: ../../lib/class/catalog.class.php:1141
 msgid "Added Playlist From"
 msgstr ""
 
-#: ../../lib/class/catalog.class.php:1244
+#: ../../lib/class/catalog.class.php:1170
 msgid "Catalog Update Finished"
 msgstr ""
 
-#: ../../lib/class/catalog.class.php:1244
+#: ../../lib/class/catalog.class.php:1170
 msgid "Total Time"
 msgstr ""
 
-#: ../../lib/class/catalog.class.php:1245
+#: ../../lib/class/catalog.class.php:1171
 msgid "Total Songs"
 msgstr ""
 
-#: ../../lib/class/catalog.class.php:1245
+#: ../../lib/class/catalog.class.php:1171
 msgid "Songs Per Seconds"
 msgstr ""
 
-#: ../../lib/class/catalog.class.php:1259 ../../admin/users.php:142
+#: ../../lib/class/catalog.class.php:1185 ../../admin/users.php:142
 msgid "Error"
 msgstr ""
 
-#: ../../lib/class/catalog.class.php:1259
+#: ../../lib/class/catalog.class.php:1185
 msgid "Unable to load pear XMLRPC library, make sure XML-RPC is enabled"
 msgstr ""
 
+#: ../../lib/class/catalog.class.php:1217
 #: ../../lib/class/catalog.class.php:1291
-#: ../../lib/class/catalog.class.php:1365
-#: ../../lib/class/catalog.class.php:1398
+#: ../../lib/class/catalog.class.php:1324
 #: ../../lib/class/xmlrpcclient.class.php:64
 #: ../../lib/class/xmlrpcclient.class.php:97
 msgid "Error connecting to"
 msgstr ""
 
+#: ../../lib/class/catalog.class.php:1217
 #: ../../lib/class/catalog.class.php:1291
-#: ../../lib/class/catalog.class.php:1365
-#: ../../lib/class/catalog.class.php:1398
+#: ../../lib/class/catalog.class.php:1324
 #: ../../lib/class/xmlrpcclient.class.php:64
 #: ../../lib/class/xmlrpcclient.class.php:97
 msgid "Code"
 msgstr ""
 
+#: ../../lib/class/catalog.class.php:1217
 #: ../../lib/class/catalog.class.php:1291
-#: ../../lib/class/catalog.class.php:1365
-#: ../../lib/class/catalog.class.php:1398
+#: ../../lib/class/catalog.class.php:1324
 #: ../../lib/class/xmlrpcclient.class.php:64
 msgid "Reason"
 msgstr ""
 
-#: ../../lib/class/catalog.class.php:1320
+#: ../../lib/class/catalog.class.php:1246
 msgid "Completed updating remote catalog(s)"
 msgstr ""
 
-#: ../../lib/class/catalog.class.php:1324
+#: ../../lib/class/catalog.class.php:1250
 msgid "Starting synchronisation of album images"
 msgstr ""
 
-#: ../../lib/class/catalog.class.php:1326
+#: ../../lib/class/catalog.class.php:1252
 msgid "Completed synchronisation of album images"
 msgstr ""
 
-#: ../../lib/class/catalog.class.php:1361 ../../admin/access.php:93
+#: ../../lib/class/catalog.class.php:1287 ../../admin/access.php:93
 msgid "Added"
 msgstr ""
 
-#: ../../lib/class/catalog.class.php:1394
+#: ../../lib/class/catalog.class.php:1320
 msgid "images synchronized: "
 msgstr ""
 
-#: ../../lib/class/catalog.class.php:1523
+#: ../../lib/class/catalog.class.php:1449
 msgid "Catalog Root unreadable, stopping clean"
 msgstr ""
 
-#: ../../lib/class/catalog.class.php:1580
+#: ../../lib/class/catalog.class.php:1510
 msgid "Catalog Clean Done"
 msgstr ""
 
-#: ../../lib/class/catalog.class.php:1580
+#: ../../lib/class/catalog.class.php:1510
 msgid "files removed"
 msgstr ""
 
-#: ../../lib/class/catalog.class.php:1581
+#: ../../lib/class/catalog.class.php:1511
 msgid "Optimizing Tables"
 msgstr ""
 
-#: ../../lib/class/catalog.class.php:1881
+#: ../../lib/class/catalog.class.php:1828
 msgid "Update Finished."
 msgstr ""
 
-#: ../../lib/class/catalog.class.php:1881
+#: ../../lib/class/catalog.class.php:1828
 msgid "Checked"
 msgstr ""
 
-#: ../../lib/class/catalog.class.php:1881
+#: ../../lib/class/catalog.class.php:1828
 msgid "songs updated."
 msgstr ""
 
@@ -3498,7 +3479,7 @@ msgstr ""
 msgid "Error Invalid Handshake - "
 msgstr ""
 
-#: ../../server/xml.server.php:314
+#: ../../server/xml.server.php:315
 msgid "Invalid Request"
 msgstr ""
 
@@ -3514,7 +3495,7 @@ msgstr ""
 msgid "Your Account has been updated"
 msgstr ""
 
-#: ../../play/index.php:82
+#: ../../play/index.php:84
 msgid "Session Expired: please log in again at"
 msgstr ""
 

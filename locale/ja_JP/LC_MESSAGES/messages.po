@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ampache 3.5.0\n"
 "Report-Msgid-Bugs-To: translations at ampache.org\n"
-"POT-Creation-Date: 2009-02-05 10:49+0900\n"
+"POT-Creation-Date: 2009-02-19 11:31+0900\n"
 "PO-Revision-Date: 2008-07-14 20:44+0900\n"
 "Last-Translator: momo-i <webmaster at momo-i.org>\n"
 "Language-Team: Japanese\n"
@@ -57,13 +57,13 @@ msgstr "追加"
 #: ../../templates/show_album_row.inc.php:24
 #: ../../templates/sidebar_home.inc.php:103
 #: ../../templates/show_artist_row.inc.php:24
-#: ../../templates/show_localplay_status.inc.php:43
+#: ../../templates/show_localplay_status.inc.php:44
 #: ../../templates/show_artist.inc.php:41
 #: ../../templates/show_album.inc.php:55
 #: ../../templates/show_playlist_row.inc.php:24
 #: ../../lib/class/stream.class.php:400
 #: ../../modules/localplay/mpd.controller.php:495
-#: ../../modules/localplay/httpq.controller.php:493
+#: ../../modules/localplay/httpq.controller.php:492
 msgid "Random"
 msgstr "ランダム"
 
@@ -109,6 +109,8 @@ msgstr "設定"
 #: ../../templates/show_user_preferences.inc.php:37
 #: ../../templates/show_preference_box.inc.php:41
 #: ../../templates/show_preference_box.inc.php:71
+#: ../../templates/show_random_rules.inc.php:33
+#: ../../templates/show_random.inc.php:32
 #: ../../templates/show_debug.inc.php:45 ../../templates/show_debug.inc.php:94
 msgid "Value"
 msgstr "値"
@@ -144,6 +146,8 @@ msgstr "一時停止"
 #: ../../templates/show_localplay_control.inc.php:28
 #: ../../templates/show_manage_democratic.inc.php:57
 #: ../../templates/rightbar.inc.php:25
+#: ../../templates/show_democratic.inc.php:30
+#: ../../templates/show_democratic.inc.php:31
 msgid "Play"
 msgstr "再生"
 
@@ -314,6 +318,8 @@ msgstr "カバー"
 #: ../../templates/show_albums.inc.php:75
 #: ../../templates/sidebar_home.inc.php:105
 #: ../../templates/show_edit_song.inc.php:37
+#: ../../templates/show_democratic_playlist.inc.php:56
+#: ../../templates/show_democratic_playlist.inc.php:96
 #: ../../templates/show_play_selected.inc.php:59
 #: ../../templates/show_search.inc.php:50
 #: ../../templates/show_songs.inc.php:42 ../../templates/show_songs.inc.php:71
@@ -340,6 +346,8 @@ msgstr "アルバム"
 #: ../../templates/show_similar_artists.inc.php:33
 #: ../../templates/show_similar_artists.inc.php:86
 #: ../../templates/show_edit_song.inc.php:45
+#: ../../templates/show_democratic_playlist.inc.php:57
+#: ../../templates/show_democratic_playlist.inc.php:97
 #: ../../templates/show_play_selected.inc.php:60
 #: ../../templates/show_search.inc.php:44
 #: ../../templates/show_songs.inc.php:41 ../../templates/show_songs.inc.php:70
@@ -365,7 +373,7 @@ msgstr "アーティスト"
 #: ../../templates/show_genre.inc.php:38
 #: ../../templates/show_genres.inc.php:38
 #: ../../templates/show_genres.inc.php:74
-#: ../../lib/class/browse.class.php:1096
+#: ../../lib/class/browse.class.php:1097
 msgid "Songs"
 msgstr "曲"
 
@@ -385,7 +393,6 @@ msgstr "年"
 #: ../../templates/show_videos.inc.php:38
 #: ../../templates/show_videos.inc.php:60
 #: ../../templates/show_songs.inc.php:43 ../../templates/show_songs.inc.php:72
-#: ../../templates/show_random.inc.php:41
 msgid "Tags"
 msgstr "タグ"
 
@@ -477,13 +484,14 @@ msgstr "最終IP"
 #: ../../templates/show_manage_democratic.inc.php:40
 #: ../../templates/show_plugins.inc.php:35
 #: ../../templates/show_plugins.inc.php:64
-#: ../../templates/show_democratic_playlist.inc.php:51
-#: ../../templates/show_democratic_playlist.inc.php:86
+#: ../../templates/show_democratic_playlist.inc.php:53
+#: ../../templates/show_democratic_playlist.inc.php:93
 #: ../../templates/show_flagged.inc.php:39
 #: ../../templates/show_flagged.inc.php:58
 #: ../../templates/show_genres.inc.php:39
 #: ../../templates/show_genres.inc.php:75
 #: ../../templates/show_localplay_instances.inc.php:29
+#: ../../templates/show_random_rules.inc.php:34
 #: ../../templates/show_localplay_playlist.inc.php:35
 #: ../../templates/show_localplay_playlist.inc.php:61
 #: ../../templates/show_songs.inc.php:51 ../../templates/show_songs.inc.php:78
@@ -504,8 +512,8 @@ msgid "On-line"
 msgstr "オンライン"
 
 #: ../../templates/show_users.inc.php:53 ../../templates/show_user.inc.php:22
-#: ../../lib/class/user.class.php:663 ../../lib/class/catalog.class.php:161
-#: ../../lib/class/catalog.class.php:162 ../../lib/preferences.php:261
+#: ../../lib/class/user.class.php:663 ../../lib/class/catalog.class.php:145
+#: ../../lib/class/catalog.class.php:146 ../../lib/preferences.php:261
 msgid "Never"
 msgstr "Never"
 
@@ -513,7 +521,7 @@ msgstr "Never"
 #: ../../lib/class/flag.class.php:282 ../../lib/class/localplay.class.php:648
 #: ../../lib/class/user.class.php:667 ../../lib/general.lib.php:337
 #: ../../modules/localplay/mpd.controller.php:511
-#: ../../modules/localplay/httpq.controller.php:508
+#: ../../modules/localplay/httpq.controller.php:507
 msgid "Unknown"
 msgstr "不明"
 
@@ -608,8 +616,8 @@ msgstr "カタログマネージャ"
 #: ../../templates/show_preference_admin.inc.php:43
 #: ../../templates/sidebar.inc.php:31 ../../templates/show_add_user.inc.php:78
 #: ../../templates/show_create_democratic.inc.php:44
-#: ../../templates/show_democratic_playlist.inc.php:56
-#: ../../templates/show_democratic_playlist.inc.php:91
+#: ../../templates/show_democratic_playlist.inc.php:60
+#: ../../templates/show_democratic_playlist.inc.php:100
 #: ../../templates/show_mail_users.inc.php:32
 #: ../../lib/class/democratic.class.php:114 ../../lib/preferences.php:233
 #: ../../admin/users.php:127
@@ -734,14 +742,14 @@ msgstr "変更を保存"
 #: ../../templates/sidebar_home.inc.php:77
 #: ../../templates/show_local_catalog_info.inc.php:29
 #: ../../templates/show_genre.inc.php:32 ../../lib/ui.lib.php:408
-#: ../../lib/class/browse.class.php:1102
+#: ../../lib/class/browse.class.php:1103
 msgid "Albums"
 msgstr "アルバム"
 
 #: ../../templates/show_artists.inc.php:40
 #: ../../templates/show_artists.inc.php:68
-#: ../../templates/show_democratic_playlist.inc.php:54
-#: ../../templates/show_democratic_playlist.inc.php:89
+#: ../../templates/show_democratic_playlist.inc.php:58
+#: ../../templates/show_democratic_playlist.inc.php:98
 #: ../../templates/show_songs.inc.php:45 ../../templates/show_songs.inc.php:74
 #: ../../templates/show_playlist_songs.inc.php:47
 #: ../../templates/show_playlist_songs.inc.php:68
@@ -762,6 +770,8 @@ msgstr "検索タイプ"
 #: ../../templates/show_videos.inc.php:35
 #: ../../templates/show_videos.inc.php:57
 #: ../../templates/show_edit_song.inc.php:31
+#: ../../templates/show_democratic_playlist.inc.php:55
+#: ../../templates/show_democratic_playlist.inc.php:95
 #: ../../templates/show_search.inc.php:40
 #: ../../templates/show_disabled_songs.inc.php:34
 #: ../../templates/show_disabled_songs.inc.php:57
@@ -844,7 +854,7 @@ msgid "Song Title"
 msgstr "曲タイトル"
 
 #: ../../templates/sidebar_home.inc.php:35
-#: ../../lib/class/browse.class.php:1156
+#: ../../lib/class/browse.class.php:1157
 msgid "Tag Cloud"
 msgstr "タグクラウド"
 
@@ -857,7 +867,7 @@ msgid "Playlist"
 msgstr "再生リスト"
 
 #: ../../templates/sidebar_home.inc.php:37
-#: ../../lib/class/browse.class.php:1119
+#: ../../lib/class/browse.class.php:1120
 msgid "Radio Stations"
 msgstr "ラジオステーション"
 
@@ -902,7 +912,7 @@ msgstr "現在再生中のもの"
 #: ../../templates/show_playtype_switch.inc.php:36
 #: ../../templates/sidebar_modules.inc.php:46 ../../lib/preferences.php:179
 #: ../../modules/localplay/mpd.controller.php:491
-#: ../../modules/localplay/httpq.controller.php:489
+#: ../../modules/localplay/httpq.controller.php:488
 msgid "Democratic"
 msgstr "大衆向け"
 
@@ -1038,6 +1048,7 @@ msgid "Base Playlist"
 msgstr "基となるプレイリスト"
 
 #: ../../templates/show_manage_democratic.inc.php:36
+#: ../../templates/show_democratic.inc.php:27
 msgid "Cooldown"
 msgstr "クールダウン"
 
@@ -1106,7 +1117,6 @@ msgstr "読取/書込"
 #: ../../templates/show_export.inc.php:35
 #: ../../templates/show_add_access_current.inc.php:40
 #: ../../templates/show_mail_users.inc.php:30
-#: ../../templates/show_random.inc.php:38
 #: ../../templates/show_admin_tools.inc.php:51 ../../lib/ui.lib.php:141
 #: ../../lib/ui.lib.php:150 ../../lib/ui.lib.php:632
 #: ../../lib/class/access.class.php:407 ../../lib/class/access.class.php:427
@@ -1116,7 +1126,6 @@ msgstr "全て"
 #: ../../templates/show_add_access_local.inc.php:48
 #: ../../templates/show_add_access_rpc.inc.php:48
 #: ../../templates/show_add_playlist.inc.php:32
-#: ../../templates/show_random.inc.php:61
 #: ../../templates/show_access_list.inc.php:61
 #: ../../templates/show_playlist_edit.inc.php:36
 msgid "Type"
@@ -1417,7 +1426,7 @@ msgstr "フラグする理由"
 
 #: ../../templates/show_flag.inc.php:56 ../../templates/rightbar.inc.php:105
 #: ../../templates/show_catalog_row.inc.php:33
-#: ../../templates/show_democratic_playlist.inc.php:78
+#: ../../templates/show_democratic_playlist.inc.php:85
 #: ../../templates/show_live_stream_row.inc.php:34
 #: ../../templates/show_localplay_instances.inc.php:40
 #: ../../templates/show_localplay_playlist.inc.php:50
@@ -1612,7 +1621,7 @@ msgstr "高度を追加"
 
 #: ../../templates/sidebar_admin.inc.php:24
 #: ../../templates/show_admin_tools.inc.php:26
-#: ../../lib/class/browse.class.php:1140
+#: ../../lib/class/browse.class.php:1141
 msgid "Catalogs"
 msgstr "カタログ"
 
@@ -1701,7 +1710,7 @@ msgstr "合計ユーザ数"
 
 #: ../../templates/show_local_catalog_info.inc.php:30
 #: ../../templates/show_genre.inc.php:35 ../../lib/ui.lib.php:412
-#: ../../lib/class/browse.class.php:1113 ../../lib/class/album.class.php:256
+#: ../../lib/class/browse.class.php:1114 ../../lib/class/album.class.php:256
 msgid "Artists"
 msgstr "アーティスト"
 
@@ -1769,7 +1778,9 @@ msgid "Add to New Playlist"
 msgstr "新規プレイリストへ追加"
 
 #: ../../templates/rightbar.inc.php:54
-#: ../../templates/show_localplay_status.inc.php:46
+#: ../../templates/show_localplay_status.inc.php:47
+#: ../../templates/show_democratic.inc.php:34
+#: ../../templates/show_democratic.inc.php:35
 msgid "Clear Playlist"
 msgstr "プレイリストをクリア"
 
@@ -1798,7 +1809,7 @@ msgid "More"
 msgstr "More"
 
 #: ../../templates/header.inc.php:35
-#: ../../templates/show_localplay_status.inc.php:26
+#: ../../templates/show_localplay_status.inc.php:27
 #: ../../templates/show_now_playing.inc.php:33
 #: ../../lib/class/localplay.class.php:639
 #: ../../lib/class/ampacherss.class.php:70
@@ -1962,30 +1973,20 @@ msgstr "トラック"
 msgid "Update Song"
 msgstr "曲を更新"
 
-#: ../../templates/show_democratic_playlist.inc.php:39
+#: ../../templates/show_democratic_playlist.inc.php:41
 msgid "Playing from base Playlist"
 msgstr "ベースのプレイリストから再生"
 
-#: ../../templates/show_democratic_playlist.inc.php:52
-#: ../../templates/show_democratic_playlist.inc.php:87
+#: ../../templates/show_democratic_playlist.inc.php:54
+#: ../../templates/show_democratic_playlist.inc.php:94
 msgid "Votes"
 msgstr "投票"
 
-#: ../../templates/show_democratic_playlist.inc.php:53
-#: ../../templates/show_democratic_playlist.inc.php:88
-#: ../../templates/show_recently_played.inc.php:38
-#: ../../templates/show_recently_played.inc.php:101
-#: ../../templates/show_duplicates.inc.php:37
-#: ../../templates/show_duplicates.inc.php:76
-#: ../../templates/show_now_playing_row.inc.php:45
-msgid "Song"
-msgstr "曲"
-
-#: ../../templates/show_democratic_playlist.inc.php:68
+#: ../../templates/show_democratic_playlist.inc.php:73
 msgid "Remove Vote"
 msgstr "投票削除"
 
-#: ../../templates/show_democratic_playlist.inc.php:70
+#: ../../templates/show_democratic_playlist.inc.php:75
 msgid "Add Vote"
 msgstr "投票追加"
 
@@ -2156,27 +2157,27 @@ msgstr "アルバム更新"
 msgid "Select"
 msgstr "選択"
 
-#: ../../templates/show_localplay_status.inc.php:25
+#: ../../templates/show_localplay_status.inc.php:26
 msgid "Localplay Control"
 msgstr "ローカル再生のコントロール"
 
-#: ../../templates/show_localplay_status.inc.php:30
+#: ../../templates/show_localplay_status.inc.php:31
 msgid "Mute"
 msgstr "消音"
 
-#: ../../templates/show_localplay_status.inc.php:31
+#: ../../templates/show_localplay_status.inc.php:32
 msgid "Decrease Volume"
 msgstr "音量を下げる"
 
-#: ../../templates/show_localplay_status.inc.php:32
+#: ../../templates/show_localplay_status.inc.php:33
 msgid "Increase Volume"
 msgstr "音量を上げる"
 
-#: ../../templates/show_localplay_status.inc.php:33
+#: ../../templates/show_localplay_status.inc.php:34
 msgid "Volume"
 msgstr "音量"
 
-#: ../../templates/show_localplay_status.inc.php:38
+#: ../../templates/show_localplay_status.inc.php:39
 msgid "Repeat"
 msgstr "リピート"
 
@@ -2222,6 +2223,23 @@ msgstr "お気に入りアルバム"
 #: ../../templates/show_user_stats.inc.php:56
 msgid "Favorite Songs"
 msgstr "お気に入りの曲"
+
+#: ../../templates/show_random_rules.inc.php:22
+#, fuzzy
+msgid "Rules"
+msgstr "モジュール"
+
+#: ../../templates/show_random_rules.inc.php:31
+#: ../../templates/show_random.inc.php:30
+#, fuzzy
+msgid "Field"
+msgstr "失敗"
+
+#: ../../templates/show_random_rules.inc.php:32
+#: ../../templates/show_search.inc.php:102
+#: ../../templates/show_random.inc.php:31
+msgid "Operator"
+msgstr "オペレータ"
 
 #: ../../templates/show_shoutbox.inc.php:22
 msgid "Shoutbox"
@@ -2271,10 +2289,6 @@ msgstr "4点"
 msgid "Five Stars"
 msgstr "5点"
 
-#: ../../templates/show_search.inc.php:102
-msgid "Operator"
-msgstr "オペレータ"
-
 #: ../../templates/show_search.inc.php:105
 msgid "AND"
 msgstr "AND"
@@ -2296,8 +2310,6 @@ msgid "Maximum Results"
 msgstr "最大結果"
 
 #: ../../templates/show_search.inc.php:121
-#: ../../templates/show_random.inc.php:49
-#: ../../templates/show_random.inc.php:84
 msgid "Unlimited"
 msgstr "無制限"
 
@@ -2452,67 +2464,26 @@ msgid "Send Mail"
 msgstr "メール送信"
 
 #: ../../templates/show_random.inc.php:22
-msgid "Play Random Selection"
-msgstr "ランダム選択を再生"
+#, fuzzy
+msgid "Advanced Random Rules"
+msgstr "ランダムを追加"
 
-#: ../../templates/show_random.inc.php:26
-msgid "Item count"
-msgstr "アイテムカウント"
-
-#: ../../templates/show_random.inc.php:46
-#: ../../templates/show_duplicates.inc.php:40
-#: ../../templates/show_duplicates.inc.php:79
-msgid "Length"
-msgstr "長さ"
-
-#: ../../templates/show_random.inc.php:50
-#: ../../templates/show_random.inc.php:51
-#, php-format
-msgid "%d minute"
-msgid_plural "%d minutes"
-msgstr[0] "%d分"
-
-#: ../../templates/show_random.inc.php:52
-#: ../../templates/show_random.inc.php:53
 #: ../../templates/show_random.inc.php:54
-#: ../../templates/show_random.inc.php:55
-#: ../../templates/show_random.inc.php:56
-#, php-format
-msgid "%d hour"
-msgid_plural "%d hours"
-msgstr[0] "%d時間"
+msgid "Like"
+msgstr ""
 
-#: ../../templates/show_random.inc.php:64
-msgid "Standard"
-msgstr "基本"
-
-#: ../../templates/show_random.inc.php:65
-msgid "Less Played"
-msgstr "以下を再生"
+#: ../../templates/show_random.inc.php:63
+#, fuzzy
+msgid "Add Rule"
+msgstr "全て追加"
 
 #: ../../templates/show_random.inc.php:66
-msgid "Full Albums"
-msgstr "完全なアルバム"
-
-#: ../../templates/show_random.inc.php:67
-msgid "Full Artist"
-msgstr "完全なアーティスト"
+msgid "Save Rules As"
+msgstr ""
 
 #: ../../templates/show_random.inc.php:69
-msgid "Highest Rated"
-msgstr "高評価"
-
-#: ../../templates/show_random.inc.php:75
-msgid "From catalog"
-msgstr "カタログから"
-
-#: ../../templates/show_random.inc.php:81
-msgid "Size Limit"
-msgstr "サイズ制限"
-
-#: ../../templates/show_random.inc.php:95
-msgid "Enqueue"
-msgstr "エンキュー"
+msgid "Load Saved Rules"
+msgstr ""
 
 #: ../../templates/show_search_options.inc.php:23
 msgid "Options"
@@ -2577,6 +2548,14 @@ msgstr "ヶ月前"
 #: ../../lib/class/ampacherss.class.php:175
 msgid "years ago"
 msgstr "年前"
+
+#: ../../templates/show_recently_played.inc.php:38
+#: ../../templates/show_recently_played.inc.php:101
+#: ../../templates/show_duplicates.inc.php:37
+#: ../../templates/show_duplicates.inc.php:76
+#: ../../templates/show_now_playing_row.inc.php:45
+msgid "Song"
+msgstr "曲"
 
 #: ../../templates/show_recently_played.inc.php:42
 #: ../../templates/show_recently_played.inc.php:104
@@ -2667,8 +2646,8 @@ msgid "Disk"
 msgstr "ディスク"
 
 #: ../../templates/show_album.inc.php:34
-#: ../../lib/class/catalog.class.php:1940
-#: ../../lib/class/catalog.class.php:2011
+#: ../../lib/class/catalog.class.php:1887
+#: ../../lib/class/catalog.class.php:1958
 msgid "Unknown (Orphaned)"
 msgstr "不明(孤立)"
 
@@ -2745,6 +2724,11 @@ msgstr "前へ"
 #: ../../templates/show_duplicates.inc.php:22
 msgid "Duplicate Songs"
 msgstr "重複している曲"
+
+#: ../../templates/show_duplicates.inc.php:40
+#: ../../templates/show_duplicates.inc.php:79
+msgid "Length"
+msgstr "長さ"
 
 #: ../../templates/show_duplicates.inc.php:41
 #: ../../templates/show_duplicates.inc.php:80
@@ -3166,33 +3150,38 @@ msgstr "ミュージック閲覧"
 msgid "Add New"
 msgstr "新規追加"
 
-#: ../../lib/class/browse.class.php:1108
+#: ../../lib/class/browse.class.php:1109
 msgid "Manage Users"
 msgstr "ユーザ管理"
 
-#: ../../lib/class/browse.class.php:1125
+#: ../../lib/class/browse.class.php:1126
 msgid "Playlists"
 msgstr "プレイリスト"
 
-#: ../../lib/class/browse.class.php:1130
+#: ../../lib/class/browse.class.php:1131
 msgid "Playlist Songs"
 msgstr "プレイリスト曲"
 
-#: ../../lib/class/browse.class.php:1135
+#: ../../lib/class/browse.class.php:1136
 msgid "Current Playlist"
 msgstr "現在のプレイリスト"
 
-#: ../../lib/class/browse.class.php:1145
+#: ../../lib/class/browse.class.php:1146
 msgid "Shoutbox Records"
 msgstr "シャウトボックスレコード"
 
-#: ../../lib/class/browse.class.php:1150
+#: ../../lib/class/browse.class.php:1151
 msgid "Flagged Records"
 msgstr "フラグされたレコード"
 
-#: ../../lib/class/browse.class.php:1161
+#: ../../lib/class/browse.class.php:1162
 msgid "Videos"
 msgstr "動画"
+
+#: ../../lib/class/browse.class.php:1167
+#, fuzzy
+msgid "Democratic Playlist"
+msgstr "大衆的なプレイリスト作成"
 
 #: ../../lib/class/access.class.php:102 ../../lib/class/access.class.php:106
 #: ../../lib/class/access.class.php:146 ../../lib/class/access.class.php:150
@@ -3242,8 +3231,7 @@ msgstr "エラー: ユーザ名は必須です"
 msgid "Error Passwords don't match"
 msgstr "エラー: パスワードが一致しません"
 
-#: ../../lib/class/album.class.php:479 ../../lib/class/catalog.class.php:442
-#: ../../lib/class/catalog.class.php:792
+#: ../../lib/class/album.class.php:479 ../../lib/class/catalog.class.php:426
 msgid "Error: Unable to open"
 msgstr "エラー: 開けませんでした"
 
@@ -3251,150 +3239,150 @@ msgstr "エラー: 開けませんでした"
 msgid "RSS Feed"
 msgstr "RSSフィード"
 
-#: ../../lib/class/catalog.class.php:220
+#: ../../lib/class/catalog.class.php:204
 msgid "day"
 msgid_plural "days"
 msgstr[0] "日"
 
-#: ../../lib/class/catalog.class.php:222
+#: ../../lib/class/catalog.class.php:206
 msgid "hour"
 msgid_plural "hours"
 msgstr[0] "時間"
 
-#: ../../lib/class/catalog.class.php:322
+#: ../../lib/class/catalog.class.php:306
 msgid "Running Remote Sync"
 msgstr "リモート同期実行中"
 
-#: ../../lib/class/catalog.class.php:449 ../../lib/class/catalog.class.php:492
+#: ../../lib/class/catalog.class.php:433 ../../lib/class/catalog.class.php:476
 msgid "Error: Unable to change to directory"
 msgstr "エラー: ディレクトリを変更できませんでした"
 
-#: ../../lib/class/catalog.class.php:528
+#: ../../lib/class/catalog.class.php:512
 #, php-format
 msgid "Error: Unable to get filesize for %s"
 msgstr "エラー: %sのファイルサイズの取得に失敗しました"
 
-#: ../../lib/class/catalog.class.php:534
+#: ../../lib/class/catalog.class.php:518
 #, php-format
 msgid "%s is not readable by ampache"
 msgstr "%sはAmpacheで読み込めません"
 
-#: ../../lib/class/catalog.class.php:542
+#: ../../lib/class/catalog.class.php:526
 #, php-format
 msgid "%s does not match site charset"
 msgstr "%sはサイトのCharsetと一致しません"
 
-#: ../../lib/class/catalog.class.php:1081 ../../preferences.php:111
+#: ../../lib/class/catalog.class.php:981 ../../preferences.php:111
 #: ../../admin/access.php:109
 msgid "Updated"
 msgstr "更新しました"
 
-#: ../../lib/class/catalog.class.php:1088
+#: ../../lib/class/catalog.class.php:988
 msgid "No Update Needed"
 msgstr "必要な更新はありません"
 
-#: ../../lib/class/catalog.class.php:1188
+#: ../../lib/class/catalog.class.php:1114
 msgid "Running Remote Update"
 msgstr "リモート更新実行中"
 
-#: ../../lib/class/catalog.class.php:1215
+#: ../../lib/class/catalog.class.php:1141
 msgid "Added Playlist From"
 msgstr "次からプレイリストを追加:"
 
-#: ../../lib/class/catalog.class.php:1244
+#: ../../lib/class/catalog.class.php:1170
 msgid "Catalog Update Finished"
 msgstr "カタログ更新完了"
 
-#: ../../lib/class/catalog.class.php:1244
+#: ../../lib/class/catalog.class.php:1170
 msgid "Total Time"
 msgstr "合計時間"
 
-#: ../../lib/class/catalog.class.php:1245
+#: ../../lib/class/catalog.class.php:1171
 msgid "Total Songs"
 msgstr "合計曲"
 
-#: ../../lib/class/catalog.class.php:1245
+#: ../../lib/class/catalog.class.php:1171
 msgid "Songs Per Seconds"
 msgstr "1秒毎の曲"
 
-#: ../../lib/class/catalog.class.php:1259 ../../admin/users.php:142
+#: ../../lib/class/catalog.class.php:1185 ../../admin/users.php:142
 msgid "Error"
 msgstr "エラー"
 
-#: ../../lib/class/catalog.class.php:1259
+#: ../../lib/class/catalog.class.php:1185
 msgid "Unable to load pear XMLRPC library, make sure XML-RPC is enabled"
 msgstr ""
 "pear XMLRPCライブラリを読み込めませんでした。XML-RPCが有効になっているか確認"
 "してください。"
 
+#: ../../lib/class/catalog.class.php:1217
 #: ../../lib/class/catalog.class.php:1291
-#: ../../lib/class/catalog.class.php:1365
-#: ../../lib/class/catalog.class.php:1398
+#: ../../lib/class/catalog.class.php:1324
 #: ../../lib/class/xmlrpcclient.class.php:64
 #: ../../lib/class/xmlrpcclient.class.php:97
 msgid "Error connecting to"
 msgstr "接続中のエラー:"
 
+#: ../../lib/class/catalog.class.php:1217
 #: ../../lib/class/catalog.class.php:1291
-#: ../../lib/class/catalog.class.php:1365
-#: ../../lib/class/catalog.class.php:1398
+#: ../../lib/class/catalog.class.php:1324
 #: ../../lib/class/xmlrpcclient.class.php:64
 #: ../../lib/class/xmlrpcclient.class.php:97
 msgid "Code"
 msgstr "コード"
 
+#: ../../lib/class/catalog.class.php:1217
 #: ../../lib/class/catalog.class.php:1291
-#: ../../lib/class/catalog.class.php:1365
-#: ../../lib/class/catalog.class.php:1398
+#: ../../lib/class/catalog.class.php:1324
 #: ../../lib/class/xmlrpcclient.class.php:64
 msgid "Reason"
 msgstr "理由"
 
-#: ../../lib/class/catalog.class.php:1320
+#: ../../lib/class/catalog.class.php:1246
 msgid "Completed updating remote catalog(s)"
 msgstr "リモートカタログの更新完了"
 
-#: ../../lib/class/catalog.class.php:1324
+#: ../../lib/class/catalog.class.php:1250
 msgid "Starting synchronisation of album images"
 msgstr "アルバム画像の同期を開始しています"
 
-#: ../../lib/class/catalog.class.php:1326
+#: ../../lib/class/catalog.class.php:1252
 msgid "Completed synchronisation of album images"
 msgstr "アルバム画像の同期が完了しました"
 
-#: ../../lib/class/catalog.class.php:1361 ../../admin/access.php:93
+#: ../../lib/class/catalog.class.php:1287 ../../admin/access.php:93
 msgid "Added"
 msgstr "追加しました"
 
-#: ../../lib/class/catalog.class.php:1394
+#: ../../lib/class/catalog.class.php:1320
 msgid "images synchronized: "
 msgstr "同期した画像: "
 
-#: ../../lib/class/catalog.class.php:1523
+#: ../../lib/class/catalog.class.php:1449
 msgid "Catalog Root unreadable, stopping clean"
 msgstr "カタログルートに到達できません。クリーンを停止します"
 
-#: ../../lib/class/catalog.class.php:1580
+#: ../../lib/class/catalog.class.php:1510
 msgid "Catalog Clean Done"
 msgstr "カタログのクリーン完了"
 
-#: ../../lib/class/catalog.class.php:1580
+#: ../../lib/class/catalog.class.php:1510
 msgid "files removed"
 msgstr "ファイルを削除しました"
 
-#: ../../lib/class/catalog.class.php:1581
+#: ../../lib/class/catalog.class.php:1511
 msgid "Optimizing Tables"
 msgstr "テーブルを最適化中"
 
-#: ../../lib/class/catalog.class.php:1881
+#: ../../lib/class/catalog.class.php:1828
 msgid "Update Finished."
 msgstr "更新完了"
 
-#: ../../lib/class/catalog.class.php:1881
+#: ../../lib/class/catalog.class.php:1828
 msgid "Checked"
 msgstr "チェック済み"
 
-#: ../../lib/class/catalog.class.php:1881
+#: ../../lib/class/catalog.class.php:1828
 msgid "songs updated."
 msgstr "曲更新しました"
 
@@ -3566,7 +3554,7 @@ msgstr "不正なオブジェクトが選択されました"
 msgid "Error Invalid Handshake - "
 msgstr "不正なハンドシェイクエラー - "
 
-#: ../../server/xml.server.php:314
+#: ../../server/xml.server.php:315
 msgid "Invalid Request"
 msgstr "不正なリクエスト"
 
@@ -3582,7 +3570,7 @@ msgstr "エラー: 更新失敗"
 msgid "Your Account has been updated"
 msgstr "アカウントを更新しました"
 
-#: ../../play/index.php:82
+#: ../../play/index.php:84
 msgid "Session Expired: please log in again at"
 msgstr "セッション期限切れ: 再ログインしてください"
 
@@ -4064,3 +4052,41 @@ msgstr "インタフェース"
 #: Database words
 msgid "System"
 msgstr "システム"
+
+#~ msgid "Play Random Selection"
+#~ msgstr "ランダム選択を再生"
+
+#~ msgid "Item count"
+#~ msgstr "アイテムカウント"
+
+#~ msgid "%d minute"
+#~ msgid_plural "%d minutes"
+#~ msgstr[0] "%d分"
+
+#~ msgid "%d hour"
+#~ msgid_plural "%d hours"
+#~ msgstr[0] "%d時間"
+
+#~ msgid "Standard"
+#~ msgstr "基本"
+
+#~ msgid "Less Played"
+#~ msgstr "以下を再生"
+
+#~ msgid "Full Albums"
+#~ msgstr "完全なアルバム"
+
+#~ msgid "Full Artist"
+#~ msgstr "完全なアーティスト"
+
+#~ msgid "Highest Rated"
+#~ msgstr "高評価"
+
+#~ msgid "From catalog"
+#~ msgstr "カタログから"
+
+#~ msgid "Size Limit"
+#~ msgstr "サイズ制限"
+
+#~ msgid "Enqueue"
+#~ msgstr "エンキュー"

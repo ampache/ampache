@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ampache\n"
 "Report-Msgid-Bugs-To: translations at ampache.org\n"
-"POT-Creation-Date: 2009-02-05 10:49+0900\n"
+"POT-Creation-Date: 2009-02-19 11:31+0900\n"
 "PO-Revision-Date: 2007-02-05 21:58-0000\n"
 "Last-Translator: Alexey Illarionov <littlesavage@orionet.ru>\n"
 "Language-Team: Russian <translations@ampache.org>\n"
@@ -57,13 +57,13 @@ msgstr "Добавить"
 #: ../../templates/show_album_row.inc.php:24
 #: ../../templates/sidebar_home.inc.php:103
 #: ../../templates/show_artist_row.inc.php:24
-#: ../../templates/show_localplay_status.inc.php:43
+#: ../../templates/show_localplay_status.inc.php:44
 #: ../../templates/show_artist.inc.php:41
 #: ../../templates/show_album.inc.php:55
 #: ../../templates/show_playlist_row.inc.php:24
 #: ../../lib/class/stream.class.php:400
 #: ../../modules/localplay/mpd.controller.php:495
-#: ../../modules/localplay/httpq.controller.php:493
+#: ../../modules/localplay/httpq.controller.php:492
 msgid "Random"
 msgstr "Случайно"
 
@@ -109,6 +109,8 @@ msgstr "Предпочтение"
 #: ../../templates/show_user_preferences.inc.php:37
 #: ../../templates/show_preference_box.inc.php:41
 #: ../../templates/show_preference_box.inc.php:71
+#: ../../templates/show_random_rules.inc.php:33
+#: ../../templates/show_random.inc.php:32
 #: ../../templates/show_debug.inc.php:45 ../../templates/show_debug.inc.php:94
 msgid "Value"
 msgstr "Значение"
@@ -145,6 +147,8 @@ msgstr "Пауза"
 #: ../../templates/show_localplay_control.inc.php:28
 #: ../../templates/show_manage_democratic.inc.php:57
 #: ../../templates/rightbar.inc.php:25
+#: ../../templates/show_democratic.inc.php:30
+#: ../../templates/show_democratic.inc.php:31
 msgid "Play"
 msgstr "Играть"
 
@@ -311,6 +315,8 @@ msgstr "Обложка"
 #: ../../templates/show_albums.inc.php:75
 #: ../../templates/sidebar_home.inc.php:105
 #: ../../templates/show_edit_song.inc.php:37
+#: ../../templates/show_democratic_playlist.inc.php:56
+#: ../../templates/show_democratic_playlist.inc.php:96
 #: ../../templates/show_play_selected.inc.php:59
 #: ../../templates/show_search.inc.php:50
 #: ../../templates/show_songs.inc.php:42 ../../templates/show_songs.inc.php:71
@@ -337,6 +343,8 @@ msgstr "Альбом"
 #: ../../templates/show_similar_artists.inc.php:33
 #: ../../templates/show_similar_artists.inc.php:86
 #: ../../templates/show_edit_song.inc.php:45
+#: ../../templates/show_democratic_playlist.inc.php:57
+#: ../../templates/show_democratic_playlist.inc.php:97
 #: ../../templates/show_play_selected.inc.php:60
 #: ../../templates/show_search.inc.php:44
 #: ../../templates/show_songs.inc.php:41 ../../templates/show_songs.inc.php:70
@@ -362,7 +370,7 @@ msgstr "Исполнитель"
 #: ../../templates/show_genre.inc.php:38
 #: ../../templates/show_genres.inc.php:38
 #: ../../templates/show_genres.inc.php:74
-#: ../../lib/class/browse.class.php:1096
+#: ../../lib/class/browse.class.php:1097
 msgid "Songs"
 msgstr "Песни"
 
@@ -382,7 +390,6 @@ msgstr "Год"
 #: ../../templates/show_videos.inc.php:38
 #: ../../templates/show_videos.inc.php:60
 #: ../../templates/show_songs.inc.php:43 ../../templates/show_songs.inc.php:72
-#: ../../templates/show_random.inc.php:41
 #, fuzzy
 msgid "Tags"
 msgstr "Обновить тег"
@@ -475,13 +482,14 @@ msgstr "Последний IP"
 #: ../../templates/show_manage_democratic.inc.php:40
 #: ../../templates/show_plugins.inc.php:35
 #: ../../templates/show_plugins.inc.php:64
-#: ../../templates/show_democratic_playlist.inc.php:51
-#: ../../templates/show_democratic_playlist.inc.php:86
+#: ../../templates/show_democratic_playlist.inc.php:53
+#: ../../templates/show_democratic_playlist.inc.php:93
 #: ../../templates/show_flagged.inc.php:39
 #: ../../templates/show_flagged.inc.php:58
 #: ../../templates/show_genres.inc.php:39
 #: ../../templates/show_genres.inc.php:75
 #: ../../templates/show_localplay_instances.inc.php:29
+#: ../../templates/show_random_rules.inc.php:34
 #: ../../templates/show_localplay_playlist.inc.php:35
 #: ../../templates/show_localplay_playlist.inc.php:61
 #: ../../templates/show_songs.inc.php:51 ../../templates/show_songs.inc.php:78
@@ -502,8 +510,8 @@ msgid "On-line"
 msgstr "Онлайн"
 
 #: ../../templates/show_users.inc.php:53 ../../templates/show_user.inc.php:22
-#: ../../lib/class/user.class.php:663 ../../lib/class/catalog.class.php:161
-#: ../../lib/class/catalog.class.php:162 ../../lib/preferences.php:261
+#: ../../lib/class/user.class.php:663 ../../lib/class/catalog.class.php:145
+#: ../../lib/class/catalog.class.php:146 ../../lib/preferences.php:261
 msgid "Never"
 msgstr "Никогда"
 
@@ -511,7 +519,7 @@ msgstr "Никогда"
 #: ../../lib/class/flag.class.php:282 ../../lib/class/localplay.class.php:648
 #: ../../lib/class/user.class.php:667 ../../lib/general.lib.php:337
 #: ../../modules/localplay/mpd.controller.php:511
-#: ../../modules/localplay/httpq.controller.php:508
+#: ../../modules/localplay/httpq.controller.php:507
 msgid "Unknown"
 msgstr "Неизвестно"
 
@@ -606,8 +614,8 @@ msgstr "Менеджер каталогов"
 #: ../../templates/show_preference_admin.inc.php:43
 #: ../../templates/sidebar.inc.php:31 ../../templates/show_add_user.inc.php:78
 #: ../../templates/show_create_democratic.inc.php:44
-#: ../../templates/show_democratic_playlist.inc.php:56
-#: ../../templates/show_democratic_playlist.inc.php:91
+#: ../../templates/show_democratic_playlist.inc.php:60
+#: ../../templates/show_democratic_playlist.inc.php:100
 #: ../../templates/show_mail_users.inc.php:32
 #: ../../lib/class/democratic.class.php:114 ../../lib/preferences.php:233
 #: ../../admin/users.php:127
@@ -732,14 +740,14 @@ msgstr "Сохранить изменения"
 #: ../../templates/sidebar_home.inc.php:77
 #: ../../templates/show_local_catalog_info.inc.php:29
 #: ../../templates/show_genre.inc.php:32 ../../lib/ui.lib.php:408
-#: ../../lib/class/browse.class.php:1102
+#: ../../lib/class/browse.class.php:1103
 msgid "Albums"
 msgstr "Альбомы"
 
 #: ../../templates/show_artists.inc.php:40
 #: ../../templates/show_artists.inc.php:68
-#: ../../templates/show_democratic_playlist.inc.php:54
-#: ../../templates/show_democratic_playlist.inc.php:89
+#: ../../templates/show_democratic_playlist.inc.php:58
+#: ../../templates/show_democratic_playlist.inc.php:98
 #: ../../templates/show_songs.inc.php:45 ../../templates/show_songs.inc.php:74
 #: ../../templates/show_playlist_songs.inc.php:47
 #: ../../templates/show_playlist_songs.inc.php:68
@@ -760,6 +768,8 @@ msgstr "Тип поиска"
 #: ../../templates/show_videos.inc.php:35
 #: ../../templates/show_videos.inc.php:57
 #: ../../templates/show_edit_song.inc.php:31
+#: ../../templates/show_democratic_playlist.inc.php:55
+#: ../../templates/show_democratic_playlist.inc.php:95
 #: ../../templates/show_search.inc.php:40
 #: ../../templates/show_disabled_songs.inc.php:34
 #: ../../templates/show_disabled_songs.inc.php:57
@@ -843,7 +853,7 @@ msgid "Song Title"
 msgstr "Названия"
 
 #: ../../templates/sidebar_home.inc.php:35
-#: ../../lib/class/browse.class.php:1156
+#: ../../lib/class/browse.class.php:1157
 msgid "Tag Cloud"
 msgstr ""
 
@@ -856,7 +866,7 @@ msgid "Playlist"
 msgstr "Плейлист"
 
 #: ../../templates/sidebar_home.inc.php:37
-#: ../../lib/class/browse.class.php:1119
+#: ../../lib/class/browse.class.php:1120
 msgid "Radio Stations"
 msgstr "Радио станции"
 
@@ -902,7 +912,7 @@ msgstr "Сейчас играет"
 #: ../../templates/show_playtype_switch.inc.php:36
 #: ../../templates/sidebar_modules.inc.php:46 ../../lib/preferences.php:179
 #: ../../modules/localplay/mpd.controller.php:491
-#: ../../modules/localplay/httpq.controller.php:489
+#: ../../modules/localplay/httpq.controller.php:488
 msgid "Democratic"
 msgstr "Демократичный"
 
@@ -1038,6 +1048,7 @@ msgid "Base Playlist"
 msgstr "Главный плейлист"
 
 #: ../../templates/show_manage_democratic.inc.php:36
+#: ../../templates/show_democratic.inc.php:27
 msgid "Cooldown"
 msgstr ""
 
@@ -1107,7 +1118,6 @@ msgstr "Чтение/Запись"
 #: ../../templates/show_export.inc.php:35
 #: ../../templates/show_add_access_current.inc.php:40
 #: ../../templates/show_mail_users.inc.php:30
-#: ../../templates/show_random.inc.php:38
 #: ../../templates/show_admin_tools.inc.php:51 ../../lib/ui.lib.php:141
 #: ../../lib/ui.lib.php:150 ../../lib/ui.lib.php:632
 #: ../../lib/class/access.class.php:407 ../../lib/class/access.class.php:427
@@ -1117,7 +1127,6 @@ msgstr "Все"
 #: ../../templates/show_add_access_local.inc.php:48
 #: ../../templates/show_add_access_rpc.inc.php:48
 #: ../../templates/show_add_playlist.inc.php:32
-#: ../../templates/show_random.inc.php:61
 #: ../../templates/show_access_list.inc.php:61
 #: ../../templates/show_playlist_edit.inc.php:36
 msgid "Type"
@@ -1425,7 +1434,7 @@ msgstr "Причина отметки"
 
 #: ../../templates/show_flag.inc.php:56 ../../templates/rightbar.inc.php:105
 #: ../../templates/show_catalog_row.inc.php:33
-#: ../../templates/show_democratic_playlist.inc.php:78
+#: ../../templates/show_democratic_playlist.inc.php:85
 #: ../../templates/show_live_stream_row.inc.php:34
 #: ../../templates/show_localplay_instances.inc.php:40
 #: ../../templates/show_localplay_playlist.inc.php:50
@@ -1621,7 +1630,7 @@ msgstr "Расширенный"
 
 #: ../../templates/sidebar_admin.inc.php:24
 #: ../../templates/show_admin_tools.inc.php:26
-#: ../../lib/class/browse.class.php:1140
+#: ../../lib/class/browse.class.php:1141
 msgid "Catalogs"
 msgstr "Каталоги"
 
@@ -1710,7 +1719,7 @@ msgstr "Всего пользователей"
 
 #: ../../templates/show_local_catalog_info.inc.php:30
 #: ../../templates/show_genre.inc.php:35 ../../lib/ui.lib.php:412
-#: ../../lib/class/browse.class.php:1113 ../../lib/class/album.class.php:256
+#: ../../lib/class/browse.class.php:1114 ../../lib/class/album.class.php:256
 msgid "Artists"
 msgstr "Исполнители"
 
@@ -1781,7 +1790,9 @@ msgid "Add to New Playlist"
 msgstr "Добавить в новый плейлист"
 
 #: ../../templates/rightbar.inc.php:54
-#: ../../templates/show_localplay_status.inc.php:46
+#: ../../templates/show_localplay_status.inc.php:47
+#: ../../templates/show_democratic.inc.php:34
+#: ../../templates/show_democratic.inc.php:35
 msgid "Clear Playlist"
 msgstr "Очистить плейлист"
 
@@ -1811,7 +1822,7 @@ msgid "More"
 msgstr "Еще"
 
 #: ../../templates/header.inc.php:35
-#: ../../templates/show_localplay_status.inc.php:26
+#: ../../templates/show_localplay_status.inc.php:27
 #: ../../templates/show_now_playing.inc.php:33
 #: ../../lib/class/localplay.class.php:639
 #: ../../lib/class/ampacherss.class.php:70
@@ -1975,30 +1986,20 @@ msgstr "Трек"
 msgid "Update Song"
 msgstr "Обновить песню"
 
-#: ../../templates/show_democratic_playlist.inc.php:39
+#: ../../templates/show_democratic_playlist.inc.php:41
 msgid "Playing from base Playlist"
 msgstr "Играет из главного плейлиста"
 
-#: ../../templates/show_democratic_playlist.inc.php:52
-#: ../../templates/show_democratic_playlist.inc.php:87
+#: ../../templates/show_democratic_playlist.inc.php:54
+#: ../../templates/show_democratic_playlist.inc.php:94
 msgid "Votes"
 msgstr "Голосов"
 
-#: ../../templates/show_democratic_playlist.inc.php:53
-#: ../../templates/show_democratic_playlist.inc.php:88
-#: ../../templates/show_recently_played.inc.php:38
-#: ../../templates/show_recently_played.inc.php:101
-#: ../../templates/show_duplicates.inc.php:37
-#: ../../templates/show_duplicates.inc.php:76
-#: ../../templates/show_now_playing_row.inc.php:45
-msgid "Song"
-msgstr "Песня"
-
-#: ../../templates/show_democratic_playlist.inc.php:68
+#: ../../templates/show_democratic_playlist.inc.php:73
 msgid "Remove Vote"
 msgstr "Удалить голос"
 
-#: ../../templates/show_democratic_playlist.inc.php:70
+#: ../../templates/show_democratic_playlist.inc.php:75
 msgid "Add Vote"
 msgstr "Добавить голос"
 
@@ -2171,27 +2172,27 @@ msgstr "Обновить альбом"
 msgid "Select"
 msgstr "Выбрать"
 
-#: ../../templates/show_localplay_status.inc.php:25
+#: ../../templates/show_localplay_status.inc.php:26
 msgid "Localplay Control"
 msgstr "Управление локальным вопроизведением"
 
-#: ../../templates/show_localplay_status.inc.php:30
+#: ../../templates/show_localplay_status.inc.php:31
 msgid "Mute"
 msgstr "Заглушить"
 
-#: ../../templates/show_localplay_status.inc.php:31
+#: ../../templates/show_localplay_status.inc.php:32
 msgid "Decrease Volume"
 msgstr "Уменьшить громкость"
 
-#: ../../templates/show_localplay_status.inc.php:32
+#: ../../templates/show_localplay_status.inc.php:33
 msgid "Increase Volume"
 msgstr "Увеличить громкость"
 
-#: ../../templates/show_localplay_status.inc.php:33
+#: ../../templates/show_localplay_status.inc.php:34
 msgid "Volume"
 msgstr "Громкость"
 
-#: ../../templates/show_localplay_status.inc.php:38
+#: ../../templates/show_localplay_status.inc.php:39
 msgid "Repeat"
 msgstr "Повторять"
 
@@ -2239,6 +2240,23 @@ msgstr "Любимые альбомы"
 #: ../../templates/show_user_stats.inc.php:56
 msgid "Favorite Songs"
 msgstr "Любимые песни"
+
+#: ../../templates/show_random_rules.inc.php:22
+#, fuzzy
+msgid "Rules"
+msgstr "Модули"
+
+#: ../../templates/show_random_rules.inc.php:31
+#: ../../templates/show_random.inc.php:30
+#, fuzzy
+msgid "Field"
+msgstr "Файл"
+
+#: ../../templates/show_random_rules.inc.php:32
+#: ../../templates/show_search.inc.php:102
+#: ../../templates/show_random.inc.php:31
+msgid "Operator"
+msgstr "Оператор"
 
 #: ../../templates/show_shoutbox.inc.php:22
 msgid "Shoutbox"
@@ -2288,10 +2306,6 @@ msgstr "Четыре звезды"
 msgid "Five Stars"
 msgstr "Пять звезд"
 
-#: ../../templates/show_search.inc.php:102
-msgid "Operator"
-msgstr "Оператор"
-
 #: ../../templates/show_search.inc.php:105
 msgid "AND"
 msgstr "И"
@@ -2313,8 +2327,6 @@ msgid "Maximum Results"
 msgstr "Максимум результатов"
 
 #: ../../templates/show_search.inc.php:121
-#: ../../templates/show_random.inc.php:49
-#: ../../templates/show_random.inc.php:84
 msgid "Unlimited"
 msgstr "Неограниченно"
 
@@ -2471,71 +2483,26 @@ msgid "Send Mail"
 msgstr "Послать сообщение"
 
 #: ../../templates/show_random.inc.php:22
-msgid "Play Random Selection"
-msgstr "Воспроизвести случайно"
+#, fuzzy
+msgid "Advanced Random Rules"
+msgstr "Добавить случайно"
 
-#: ../../templates/show_random.inc.php:26
-msgid "Item count"
-msgstr "Количество"
-
-#: ../../templates/show_random.inc.php:46
-#: ../../templates/show_duplicates.inc.php:40
-#: ../../templates/show_duplicates.inc.php:79
-msgid "Length"
-msgstr "Продолжительность"
-
-#: ../../templates/show_random.inc.php:50
-#: ../../templates/show_random.inc.php:51
-#, fuzzy, php-format
-msgid "%d minute"
-msgid_plural "%d minutes"
-msgstr[0] "минуту"
-msgstr[1] "минуты"
-msgstr[2] "минут"
-
-#: ../../templates/show_random.inc.php:52
-#: ../../templates/show_random.inc.php:53
 #: ../../templates/show_random.inc.php:54
-#: ../../templates/show_random.inc.php:55
-#: ../../templates/show_random.inc.php:56
-#, fuzzy, php-format
-msgid "%d hour"
-msgid_plural "%d hours"
-msgstr[0] "час"
-msgstr[1] "часа"
-msgstr[2] "часов"
+msgid "Like"
+msgstr ""
 
-#: ../../templates/show_random.inc.php:64
-msgid "Standard"
-msgstr "Стандартный"
-
-#: ../../templates/show_random.inc.php:65
-msgid "Less Played"
-msgstr "Редко проигрываемые"
+#: ../../templates/show_random.inc.php:63
+#, fuzzy
+msgid "Add Rule"
+msgstr "Добавить все"
 
 #: ../../templates/show_random.inc.php:66
-msgid "Full Albums"
-msgstr "Альбомы"
-
-#: ../../templates/show_random.inc.php:67
-msgid "Full Artist"
-msgstr "Исполнители"
+msgid "Save Rules As"
+msgstr ""
 
 #: ../../templates/show_random.inc.php:69
-msgid "Highest Rated"
-msgstr "С высокими оценками"
-
-#: ../../templates/show_random.inc.php:75
-msgid "From catalog"
-msgstr "Из каталога"
-
-#: ../../templates/show_random.inc.php:81
-msgid "Size Limit"
-msgstr "Максимальный размер"
-
-#: ../../templates/show_random.inc.php:95
-msgid "Enqueue"
-msgstr "В очередь"
+msgid "Load Saved Rules"
+msgstr ""
 
 #: ../../templates/show_search_options.inc.php:23
 msgid "Options"
@@ -2600,6 +2567,14 @@ msgstr "месяцев назад"
 #: ../../lib/class/ampacherss.class.php:175
 msgid "years ago"
 msgstr "лет назад"
+
+#: ../../templates/show_recently_played.inc.php:38
+#: ../../templates/show_recently_played.inc.php:101
+#: ../../templates/show_duplicates.inc.php:37
+#: ../../templates/show_duplicates.inc.php:76
+#: ../../templates/show_now_playing_row.inc.php:45
+msgid "Song"
+msgstr "Песня"
 
 #: ../../templates/show_recently_played.inc.php:42
 #: ../../templates/show_recently_played.inc.php:104
@@ -2687,8 +2662,8 @@ msgid "Disk"
 msgstr "Диск"
 
 #: ../../templates/show_album.inc.php:34
-#: ../../lib/class/catalog.class.php:1940
-#: ../../lib/class/catalog.class.php:2011
+#: ../../lib/class/catalog.class.php:1887
+#: ../../lib/class/catalog.class.php:1958
 msgid "Unknown (Orphaned)"
 msgstr "Неизвестный (сирота)"
 
@@ -2765,6 +2740,11 @@ msgstr "Пред."
 #: ../../templates/show_duplicates.inc.php:22
 msgid "Duplicate Songs"
 msgstr "Дублирующиеся песни"
+
+#: ../../templates/show_duplicates.inc.php:40
+#: ../../templates/show_duplicates.inc.php:79
+msgid "Length"
+msgstr "Продолжительность"
 
 #: ../../templates/show_duplicates.inc.php:41
 #: ../../templates/show_duplicates.inc.php:80
@@ -3190,34 +3170,39 @@ msgstr "Список композиций"
 msgid "Add New"
 msgstr "Добавить новый"
 
-#: ../../lib/class/browse.class.php:1108
+#: ../../lib/class/browse.class.php:1109
 msgid "Manage Users"
 msgstr "Управление пользователями"
 
-#: ../../lib/class/browse.class.php:1125
+#: ../../lib/class/browse.class.php:1126
 msgid "Playlists"
 msgstr "Плейлисты"
 
-#: ../../lib/class/browse.class.php:1130
+#: ../../lib/class/browse.class.php:1131
 msgid "Playlist Songs"
 msgstr "Песни плейлиста"
 
-#: ../../lib/class/browse.class.php:1135
+#: ../../lib/class/browse.class.php:1136
 msgid "Current Playlist"
 msgstr "Текущий плейлист"
 
-#: ../../lib/class/browse.class.php:1145
+#: ../../lib/class/browse.class.php:1146
 msgid "Shoutbox Records"
 msgstr "Записи кричалки"
 
-#: ../../lib/class/browse.class.php:1150
+#: ../../lib/class/browse.class.php:1151
 msgid "Flagged Records"
 msgstr "Отмеченные записи"
 
-#: ../../lib/class/browse.class.php:1161
+#: ../../lib/class/browse.class.php:1162
 #, fuzzy
 msgid "Videos"
 msgstr "Различные"
+
+#: ../../lib/class/browse.class.php:1167
+#, fuzzy
+msgid "Democratic Playlist"
+msgstr "Создать общий плейлист"
 
 #: ../../lib/class/access.class.php:102 ../../lib/class/access.class.php:106
 #: ../../lib/class/access.class.php:146 ../../lib/class/access.class.php:150
@@ -3268,8 +3253,7 @@ msgstr "Ошибка: требуется имя пользователя"
 msgid "Error Passwords don't match"
 msgstr "Ошибка: Пароль не совпадает"
 
-#: ../../lib/class/album.class.php:479 ../../lib/class/catalog.class.php:442
-#: ../../lib/class/catalog.class.php:792
+#: ../../lib/class/album.class.php:479 ../../lib/class/catalog.class.php:426
 msgid "Error: Unable to open"
 msgstr "Ошибка: не удалось открыть "
 
@@ -3277,153 +3261,153 @@ msgstr "Ошибка: не удалось открыть "
 msgid "RSS Feed"
 msgstr ""
 
-#: ../../lib/class/catalog.class.php:220
+#: ../../lib/class/catalog.class.php:204
 msgid "day"
 msgid_plural "days"
 msgstr[0] "день"
 msgstr[1] "дня"
 msgstr[2] "дней"
 
-#: ../../lib/class/catalog.class.php:222
+#: ../../lib/class/catalog.class.php:206
 msgid "hour"
 msgid_plural "hours"
 msgstr[0] "час"
 msgstr[1] "часа"
 msgstr[2] "часов"
 
-#: ../../lib/class/catalog.class.php:322
+#: ../../lib/class/catalog.class.php:306
 msgid "Running Remote Sync"
 msgstr "Запущено удаленное обновление"
 
-#: ../../lib/class/catalog.class.php:449 ../../lib/class/catalog.class.php:492
+#: ../../lib/class/catalog.class.php:433 ../../lib/class/catalog.class.php:476
 msgid "Error: Unable to change to directory"
 msgstr "Ошибка: не удалось изменить директорию"
 
-#: ../../lib/class/catalog.class.php:528
+#: ../../lib/class/catalog.class.php:512
 #, fuzzy, php-format
 msgid "Error: Unable to get filesize for %s"
 msgstr "Ошибка: не удалось определить размер файла "
 
-#: ../../lib/class/catalog.class.php:534
+#: ../../lib/class/catalog.class.php:518
 #, fuzzy, php-format
 msgid "%s is not readable by ampache"
 msgstr "не читаем программой ampache"
 
-#: ../../lib/class/catalog.class.php:542
+#: ../../lib/class/catalog.class.php:526
 #, php-format
 msgid "%s does not match site charset"
 msgstr ""
 
-#: ../../lib/class/catalog.class.php:1081 ../../preferences.php:111
+#: ../../lib/class/catalog.class.php:981 ../../preferences.php:111
 #: ../../admin/access.php:109
 msgid "Updated"
 msgstr "Обновлено"
 
-#: ../../lib/class/catalog.class.php:1088
+#: ../../lib/class/catalog.class.php:988
 msgid "No Update Needed"
 msgstr "Обновление не требуется"
 
-#: ../../lib/class/catalog.class.php:1188
+#: ../../lib/class/catalog.class.php:1114
 msgid "Running Remote Update"
 msgstr "Запущено удаленное обновление"
 
-#: ../../lib/class/catalog.class.php:1215
+#: ../../lib/class/catalog.class.php:1141
 msgid "Added Playlist From"
 msgstr "Добавлен плейлист из"
 
-#: ../../lib/class/catalog.class.php:1244
+#: ../../lib/class/catalog.class.php:1170
 msgid "Catalog Update Finished"
 msgstr "Обновление каталога завершено"
 
-#: ../../lib/class/catalog.class.php:1244
+#: ../../lib/class/catalog.class.php:1170
 msgid "Total Time"
 msgstr "Общее время"
 
-#: ../../lib/class/catalog.class.php:1245
+#: ../../lib/class/catalog.class.php:1171
 msgid "Total Songs"
 msgstr "Всего песен"
 
-#: ../../lib/class/catalog.class.php:1245
+#: ../../lib/class/catalog.class.php:1171
 msgid "Songs Per Seconds"
 msgstr "Песен в секунду"
 
-#: ../../lib/class/catalog.class.php:1259 ../../admin/users.php:142
+#: ../../lib/class/catalog.class.php:1185 ../../admin/users.php:142
 msgid "Error"
 msgstr "Ошибка"
 
-#: ../../lib/class/catalog.class.php:1259
+#: ../../lib/class/catalog.class.php:1185
 #, fuzzy
 msgid "Unable to load pear XMLRPC library, make sure XML-RPC is enabled"
 msgstr "Невозможно загрузить библиотеку XMLRPC, убедитесь что XML-RPC включено"
 
+#: ../../lib/class/catalog.class.php:1217
 #: ../../lib/class/catalog.class.php:1291
-#: ../../lib/class/catalog.class.php:1365
-#: ../../lib/class/catalog.class.php:1398
+#: ../../lib/class/catalog.class.php:1324
 #: ../../lib/class/xmlrpcclient.class.php:64
 #: ../../lib/class/xmlrpcclient.class.php:97
 msgid "Error connecting to"
 msgstr "Ошибка при соединении с"
 
+#: ../../lib/class/catalog.class.php:1217
 #: ../../lib/class/catalog.class.php:1291
-#: ../../lib/class/catalog.class.php:1365
-#: ../../lib/class/catalog.class.php:1398
+#: ../../lib/class/catalog.class.php:1324
 #: ../../lib/class/xmlrpcclient.class.php:64
 #: ../../lib/class/xmlrpcclient.class.php:97
 msgid "Code"
 msgstr "Код"
 
+#: ../../lib/class/catalog.class.php:1217
 #: ../../lib/class/catalog.class.php:1291
-#: ../../lib/class/catalog.class.php:1365
-#: ../../lib/class/catalog.class.php:1398
+#: ../../lib/class/catalog.class.php:1324
 #: ../../lib/class/xmlrpcclient.class.php:64
 msgid "Reason"
 msgstr "Причина"
 
-#: ../../lib/class/catalog.class.php:1320
+#: ../../lib/class/catalog.class.php:1246
 msgid "Completed updating remote catalog(s)"
 msgstr "Закончено обновление удаленных каталогов"
 
-#: ../../lib/class/catalog.class.php:1324
+#: ../../lib/class/catalog.class.php:1250
 msgid "Starting synchronisation of album images"
 msgstr ""
 
-#: ../../lib/class/catalog.class.php:1326
+#: ../../lib/class/catalog.class.php:1252
 msgid "Completed synchronisation of album images"
 msgstr ""
 
-#: ../../lib/class/catalog.class.php:1361 ../../admin/access.php:93
+#: ../../lib/class/catalog.class.php:1287 ../../admin/access.php:93
 msgid "Added"
 msgstr "Добавлено"
 
-#: ../../lib/class/catalog.class.php:1394
+#: ../../lib/class/catalog.class.php:1320
 msgid "images synchronized: "
 msgstr ""
 
-#: ../../lib/class/catalog.class.php:1523
+#: ../../lib/class/catalog.class.php:1449
 msgid "Catalog Root unreadable, stopping clean"
 msgstr "Корневой каталог не читаем, остановка очистки"
 
-#: ../../lib/class/catalog.class.php:1580
+#: ../../lib/class/catalog.class.php:1510
 msgid "Catalog Clean Done"
 msgstr "Очистка каталога завершена"
 
-#: ../../lib/class/catalog.class.php:1580
+#: ../../lib/class/catalog.class.php:1510
 msgid "files removed"
 msgstr "файлы удалены"
 
-#: ../../lib/class/catalog.class.php:1581
+#: ../../lib/class/catalog.class.php:1511
 msgid "Optimizing Tables"
 msgstr "Оптимизация таблиц"
 
-#: ../../lib/class/catalog.class.php:1881
+#: ../../lib/class/catalog.class.php:1828
 msgid "Update Finished."
 msgstr "Обновление завершено"
 
-#: ../../lib/class/catalog.class.php:1881
+#: ../../lib/class/catalog.class.php:1828
 msgid "Checked"
 msgstr "Отмечен"
 
-#: ../../lib/class/catalog.class.php:1881
+#: ../../lib/class/catalog.class.php:1828
 msgid "songs updated."
 msgstr "песен обновлено."
 
@@ -3577,7 +3561,7 @@ msgstr "Скачать отмеченные"
 msgid "Error Invalid Handshake - "
 msgstr ""
 
-#: ../../server/xml.server.php:314
+#: ../../server/xml.server.php:315
 #, fuzzy
 msgid "Invalid Request"
 msgstr "Запрос на удаление"
@@ -3594,7 +3578,7 @@ msgstr "Ошибка обновление не удалось"
 msgid "Your Account has been updated"
 msgstr "Аккаунт обновлен"
 
-#: ../../play/index.php:82
+#: ../../play/index.php:84
 msgid "Session Expired: please log in again at"
 msgstr "Время сессии исчерпано: пожалуйста, зайдите еще раз"
 
@@ -4096,6 +4080,50 @@ msgstr "Интерфейс"
 #: Database words
 msgid "System"
 msgstr "Система"
+
+#~ msgid "Play Random Selection"
+#~ msgstr "Воспроизвести случайно"
+
+#~ msgid "Item count"
+#~ msgstr "Количество"
+
+#, fuzzy
+#~ msgid "%d minute"
+#~ msgid_plural "%d minutes"
+#~ msgstr[0] "минуту"
+#~ msgstr[1] "минуты"
+#~ msgstr[2] "минут"
+
+#, fuzzy
+#~ msgid "%d hour"
+#~ msgid_plural "%d hours"
+#~ msgstr[0] "час"
+#~ msgstr[1] "часа"
+#~ msgstr[2] "часов"
+
+#~ msgid "Standard"
+#~ msgstr "Стандартный"
+
+#~ msgid "Less Played"
+#~ msgstr "Редко проигрываемые"
+
+#~ msgid "Full Albums"
+#~ msgstr "Альбомы"
+
+#~ msgid "Full Artist"
+#~ msgstr "Исполнители"
+
+#~ msgid "Highest Rated"
+#~ msgstr "С высокими оценками"
+
+#~ msgid "From catalog"
+#~ msgstr "Из каталога"
+
+#~ msgid "Size Limit"
+#~ msgstr "Максимальный размер"
+
+#~ msgid "Enqueue"
+#~ msgstr "В очередь"
 
 #~ msgid "Edit ACL"
 #~ msgstr "Редактировать ACL"
