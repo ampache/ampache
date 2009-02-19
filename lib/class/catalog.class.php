@@ -573,23 +573,6 @@ class Catalog extends database_object {
 
 	} // add_files
 
-	/*!
-		@function get_albums
-		@discussion This gets albums for all songs passed in an array
-		*/
-	function get_albums($songs=array()) {
-
-		foreach ($songs as $song_id) {
-			$sql = "SELECT album FROM song WHERE id='$song_id'";
-			$db_results = mysql_query($sql, dbh());
-			$results = mysql_fetch_array($db_results);
-			$albums[] = new Album($results[0]);
-		} // files
-
-		return $albums;
-
-	} // get_albums
-
 	/**
 	 * get_album_ids
 	 * This returns an array of ids of albums that have songs in this
@@ -737,7 +720,6 @@ class Catalog extends database_object {
 
 	} //get_catalog_files
 
-
 	/**
 	 * get_disabled
 	 * Gets an array of the disabled songs for all catalogs
@@ -749,8 +731,8 @@ class Catalog extends database_object {
 
 		if ($count) { $limit_clause = " LIMIT $count"; }
 
-		$sql = "SELECT id FROM song WHERE enabled='0' $limit_clause";
-		$db_results = Dba::query($sql);
+		$sql = "SELECT `id` FROM `song` WHERE `enabled`='0' $limit_clause";
+		$db_results = Dba::read($sql);
 
 		while ($r = Dba::fetch_assoc($db_results)) {
 			$results[] = new Song($r['id']);
@@ -759,72 +741,6 @@ class Catalog extends database_object {
 		return $results;
 
 	} // get_disabled
-
-	/*!
-		@function get_files
-		@discussion  Get's an array of .mp3s and returns the filenames
-		@param $path 	Get files starting at root $path
-		*/
-	function get_files($path) {
-
-		/* Set it as an empty array */
-		$files = array();
-
-		/* Open up the directory */
-		$handle = @opendir($path);
-
-		if (!is_resource($handle)) { echo "<font class=\"error\">" . _("Error: Unable to open") . " $path</font><br />\n"; }
-
-		/* Change dir so we can tell if it's a directory */
-		if (!@chdir($path)) {
-			echo "<font class=\"error\">Error: Unable to change to $path directory</font><br />\n";
-		}
-
-		// Determine the slash type and go from there
-		if (strstr($path,"/")) {
-			$slash_type = '/';
-		}
-		else {
-			$slash_type = '\\';
-		}
-
-		/* Recurse through this dir and create the files array */
-		while ( FALSE !== ($file = @readdir($handle)) ) {
-
-			$full_file = $path . $slash_type . $file;
-
-			/* Incase this is the second time through, unset it before checking */
-			unset($failed_check);
-
-			if (conf('no_symlinks')) {
-				if (is_link($full_file)) { $failed_check = true; }
-			}
-
-			/* It's a dir */
-			if (is_dir($full_file) AND $file != "." AND $file != ".." AND !$failed_check) {
-				/* Merge the results of the get_files with the current results */
-				$files = array_merge($files,$this->get_files($full_file));
-			} //isdir
-
-			/* Get the file information */
-			$file_info = filesize($full_file);
-
-			$pattern = "/\.[" . conf('catalog_file_pattern') . "]$/i";
-
-			// REMOVE SECOND PREG_MATCH
-			if ( preg_match($pattern ,$file) && ($file_info > 0) && (!preg_match("/\.AppleDouble/", $file)) ) {
-				$files[] = $full_file;
-			} //is mp3 of at least some size
-
-		} //end while
-
-		/* Close the dir handle */
-		@closedir($handle);
-
-		/* Return the files array */
-		return $files;
-
-	} //get_files
 
 	/**
 	 * get_duplicate_songs

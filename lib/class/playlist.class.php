@@ -208,27 +208,6 @@ class Playlist extends database_object {
 	} // get_songs
 
 	/**
- 	 * get_dyn_songs
-	 * This returns an array of song_ids for a single dynamic playlist entry
-	 */
-	function get_dyn_songs($dyn_string) { 
-
-		/* Ok honestly I know this is risky, so we have to be
-		 * 100% sure that the user never got to touch this. This
-		 * Query has to return id which must be a song.id
-		 */
-		$db_results = mysql_query($dyn_string, dbh());
-		$results = array();
-
-		while ($r = mysql_fetch_assoc($db_results)) { 
-			$results[] = $r['id'];
-		} // end while
-
-		return $results;
-
-	} // get_dyn_songs
-
-	/**
 	 * get_song_count
 	 * This simply returns a int of how many song elements exist in this playlist
 	 * For now let's consider a dyn_song a single entry
@@ -373,33 +352,6 @@ class Playlist extends database_object {
 		} // end foreach songs
 
 	} // add_songs
-
-	/**
-	 * add_dyn_song
-	 * This adds a dynamic song to a specified playlist this is just called as the
-	 * song its self is stored in the session to keep it away from evil users
-	 */
-	function add_dyn_song() { 
-	
-		$dyn_song = $_SESSION['userdata']['stored_search'];
-
-		if (strlen($dyn_song) < 1) { echo "FAILED1"; return false; }
-
-		if (substr($dyn_song,0,6) != 'SELECT') { echo "$dyn_song"; return false; }
-
-		/* Test the query before we put it in */
-		$db_results = @mysql_query($dyn_song, dbh());
-
-		if (!$db_results) { return false; }
-
-		/* Ok now let's add it */
-		$sql = "INSERT INTO playlist_data (`playlist`,`dyn_song`,`track`) " . 
-			" VALUES ('" . sql_escape($this->id) . "','" . sql_escape($dyn_song) . "','0')";
-		$db_results = mysql_query($sql, dbh());
-
-		return true;
-
-	} // add_dyn_song
 
 	/**
 	 * create

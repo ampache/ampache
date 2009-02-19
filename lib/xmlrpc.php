@@ -52,9 +52,9 @@ function remote_catalog_query($m) {
         $sql = "SELECT name,COUNT(song.id) FROM catalog " . 
 		"LEFT JOIN song ON catalog.id = song.catalog " . 
 		"WHERE catalog_type='local' GROUP BY catalog.id";
-	$db_result = mysql_query($sql, dbh());
+	$db_results = Dba::read($sql); 
 
-        while ( $i = mysql_fetch_row($db_result) ) {
+        while ( $i = Dba::fetch_row($db_result) ) {
                 $result[] = $i;
         }
 	
@@ -93,14 +93,14 @@ function remote_song_query($params) {
 
 	// Get me a list of all local catalogs
 	$sql = "SELECT catalog.id FROM catalog WHERE catalog_type='local'";
-	$db_results = mysql_query($sql, dbh());
+	$db_results = Dba::read($sql); 
 
 	$results = array();
 	
 	$sql = "SELECT song.id FROM song WHERE song.enabled='1' AND (";
 	
 	// Get the catalogs and build the query!
-	while ($r = mysql_fetch_object($db_results)) { 
+	while ($r = Dba::fetch_object($db_results)) { 
 			$sql .= " song.catalog='$r->id' OR";
 	} // build query
 
@@ -108,11 +108,11 @@ function remote_song_query($params) {
 
 	$sql .= ") LIMIT $start,$step";
 	
-	$db_results = mysql_query($sql, dbh());
+	$db_results = Dba::read($sql); 
 	
 	// Recurse through the songs and build a results
 	// array that is base64_encoded
-	while ($r = mysql_fetch_object($db_results)) { 
+	while ($r = Dba::fetch_object($db_results)) { 
 
 		$song 		= new Song($r->id);
 		$song->fill_ext_info(); 

@@ -852,17 +852,6 @@ class User extends database_object {
 
 	} // fix_preferences
 
-	/*!
-		@function delete_stats
-		@discussion deletes the stats for this user 
-	*/
-	function delete_stats() { 
-
-		$sql = "DELETE FROM object_count WHERE user='" . $this->id . "'";
-		$db_results = mysql_query($sql, dbh());
-
-	} // delete_stats
-
 	/**
 	 * delete
 	 * deletes this user and everything assoicated with it. This will affect
