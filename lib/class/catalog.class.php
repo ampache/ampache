@@ -441,7 +441,7 @@ class Catalog extends database_object {
 		while ( false !== ( $file = readdir($handle) ) ) {
 
 			/* Skip to next if we've got . or .. */
-			if (substr($file,0,1) == '.' || $file == '..') { continue; }
+			if (substr($file,0,1) == '.') { continue; }
 
 			debug_event('read',"Starting work on $file inside $path",'5','ampache-catalog');
 

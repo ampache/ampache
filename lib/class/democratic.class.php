@@ -511,11 +511,11 @@ class Democratic extends tmpPlaylist {
 	public static function prune_tracks() { 
 
                 // This deletes data without votes, if it's a voting democratic playlist
-                $sql = "DELETE FROM tmp_playlist_data USING tmp_playlist_data " .
-                        "LEFT JOIN user_vote ON tmp_playlist_data.id=user_vote.object_id " .
-                        "LEFT JOIN tmp_playlist ON tmp_playlist.id=tmp_playlist.tmp_playlist " .
-                        "WHERE user_vote.object_id IS NULL AND tmp_playlist.type = 'vote'";
-                $db_results = Dba::query($sql);
+                $sql = "DELETE FROM `tmp_playlist_data` USING `tmp_playlist_data` " .
+                        "LEFT JOIN `user_vote` ON `tmp_playlist_data`.`id`=`user_vote`.`object_id` " .
+                        "LEFT JOIN `tmp_playlist` ON `tmp_playlist`.`id`=`tmp_playlist_data`.`tmp_playlist` " .
+                        "WHERE `user_vote`.`object_id` IS NULL AND `tmp_playlist`.`type` = 'vote'";
+                $db_results = Dba::write($sql);
 
                 return true;
 
@@ -528,21 +528,39 @@ class Democratic extends tmpPlaylist {
          */
         public function clear() {
 
-                $tmp_id = Dba::escape($this->id);
+                $tmp_id = Dba::escape($this->tmp_playlist);
 
                 /* Clear all votes then prune */
-                $sql = "DELETE FROM user_vote USING user_vote " .
-                        "LEFT JOIN tmp_playlist_data ON user_vote.object_id = tmp_playlist_data.id " .
-                        "WHERE tmp_playlist_data.tmp_playlist='$tmp_id'";
-                $db_results = Dba::query($sql);
+                $sql = "DELETE FROM `user_vote` USING `user_vote` " .
+                        "LEFT JOIN `tmp_playlist_data` ON `user_vote`.`object_id` = `tmp_playlist_data`.`id` " .
+                        "WHERE `tmp_playlist_data`.`tmp_playlist`='$tmp_id'";
+                $db_results = Dba::write($sql);
 
                 // Prune!
                 self::prune_tracks();
+
+		// Clean the votes
+		self::clean_votes(); 
+
 
                 return true;
 
         } // clear_playlist
 
+	/**
+	 * clean_votes
+	 * This removes in left over garbage in the votes table
+	 */
+	public function clear_votes() { 
+
+		$sql = "DELETE FROM `user_vote` USING `user_vote` " . 
+			"LEFT JOIN `tmp_playlist_data` ON `user_vote`.`object_id`=`tmp_playlist_data`.`id` " . 
+			"WHERE `tmp_playlist_data`.`id` IS NULL"; 
+		$db_results = Dba::write($sql); 
+
+		return true; 
+
+	} // clear_votes
 
 } // Democratic class
 ?>

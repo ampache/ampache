@@ -23,7 +23,7 @@ require '../lib/init.php';
 require_once Config::get('prefix') . '/lib/debug.lib.php';
 require_once Config::get('prefix') . '/modules/horde/Browser.php';
 
-if (!Access::check('interface',100)) {
+if (!Access::check('interface',100) OR Config::get('demo_mode')) {
 	access_denied();
 	exit();
 }

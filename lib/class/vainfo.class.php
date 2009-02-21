@@ -364,6 +364,7 @@ class vainfo {
 				case 'flv': 
 					$results[$key] = $this->_parse_flv($this->_raw2); 
 				break; 
+				case 'mpeg': 
 				case 'avi': 
 					$results[$key] = $this->_parse_avi($this->_raw2); 
 				break; 
