@@ -35,6 +35,7 @@ class Democratic extends tmpPlaylist {
 
 	// Build local, buy local
 	public $tmp_playlist; 
+	public $object_ids = array(); 
 
 	/**
 	 * constructor
@@ -194,8 +195,13 @@ class Democratic extends tmpPlaylist {
                 /* Define the array */
                 $items = array();
 		$votes = array(); 
+		$object_ids = array(); 
+
 		// Itterate and build the sortable array
                 while ($results = Dba::fetch_assoc($db_results)) {
+
+			// Extra set of data for caching!
+			$this->object_ids[] = $results['object_id']; 
 
 			// First build a variable that holds the number of votes for an object
 			$name		= 'vc_' . $results['object_id'];
@@ -215,6 +221,8 @@ class Democratic extends tmpPlaylist {
 
 		// Sort highest voted stuff to the top
 		krsort($items); 
+
+		$sorted_items = array(); 
 
 		// re-collapse the array
 		foreach ($items as $vote_count=>$date_array) { 

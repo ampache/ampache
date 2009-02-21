@@ -26,6 +26,7 @@ show_box_top(sprintf(_('%s Playlist') ,$democratic->name));
 <li>
 	<?php echo _('Cooldown'); ?>:<?php echo $democratic->f_cooldown; ?>
 </li>
+<?php if (Access::check('interface','75')) { ?>
 <li>
 	<?php echo Ajax::button('?page=democratic&action=send_playlist&democratic_id=' . scrub_out($democratic->id),'all',_('Play'),'play_democratic'); ?>
 	<?php echo _('Play'); ?>
@@ -34,6 +35,7 @@ show_box_top(sprintf(_('%s Playlist') ,$democratic->name));
 	<?php echo Ajax::button('?page=democratic&action=clear_playlist&democratic_id=' . scrub_out($democratic->id),'delete',_('Clear Playlist'),'clear_democratic'); ?>
 	<?php echo _('Clear Playlist'); ?>
 </li>
+<?php } ?>
 </ul>
 
 </div>
