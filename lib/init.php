@@ -166,6 +166,10 @@ if (substr($post_size,strlen($post_size)-1,strlen($post_size)) != 'M') {
 if ($results['memory_limit'] < 24) { 
 	$results['memory_limit'] = 24;
 }
+
+// Incase the local setting is 0 
+ini_set('session.gc_probability','2'); 
+
 set_memory_limit($results['memory_limit']);
 
 /**** END Set PHP Vars ****/

@@ -133,7 +133,7 @@ class vauth {
 	public static function gc($maxlifetime) { 
 
 		$sql = "DELETE FROM `session` WHERE `expire` < '" . time() . "'"; 
-		$db_results = Dba::query($sql); 
+		$db_results = Dba::write($sql); 
 
 		return true; 
 
