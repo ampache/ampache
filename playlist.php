@@ -72,7 +72,7 @@ switch ($_REQUEST['action']) {
 		require_once Config::get('prefix') . '/templates/show_playlist.inc.php'; 
 	break;
 	case 'show_import_playlist':
-		show_import_playlist();
+		require_once Config::get('prefix') . '/templates/show_import_playlist.inc.php';
 	break;
 	case 'import_playlist':
 		/* first we rename the file to it's original name before importing.
@@ -84,7 +84,7 @@ switch ($_REQUEST['action']) {
 		$catalog = new Catalog();
 		$catalog->import_m3u($filename);
 
-		$url	= conf('web_path') . '/playlist.php';
+		$url	= Config::get('web_path') . '/playlist.php';
 		$title = _('Playlist Imported');
 		$body  = basename($_FILES['filename']['name']);
 		show_confirmation($title,$body,$url);
@@ -113,7 +113,7 @@ switch ($_REQUEST['action']) {
 		}
 
 		prune_empty_playlists(); 
-		$url = conf('web_path') . '/playlist.php';
+		$url = Config::get('web_path') . '/playlist.php';
 		$title = _('Empty Playlists Deleted'); 
 		$body  = '';
 		show_confirmation($title,$body,$url);

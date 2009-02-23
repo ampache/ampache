@@ -21,12 +21,11 @@
 */
 ?>
 <?php show_box_top(_('Importing a Playlist from a File')); ?>
-<form method="post" name="import_playlist" action="<?php echo conf('web_path'); ?>/playlist.php" enctype="multipart/form-data">
+<form method="post" name="import_playlist" action="<?php echo Config::get('web_path'); ?>/playlist.php" enctype="multipart/form-data">
 <table cellpadding="0" cellspacing="0">
 <tr>
         <td>
 		<?php echo _('Filename'); ?>:
-		<?php $GLOBALS['error']->print_error('filename'); ?>
 	</td>
 	<td><input type="file" name="filename" value="<?php echo scrub_out($_REQUEST['filename']); ?>" size="45" /></td>	
 </tr>
