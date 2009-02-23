@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ampache 3.5.0\n"
 "Report-Msgid-Bugs-To: translations at ampache.org\n"
-"POT-Creation-Date: 2009-02-19 11:31+0900\n"
+"POT-Creation-Date: 2009-02-23 07:53+0900\n"
 "PO-Revision-Date: 2008-08-01 00:52+0200\n"
 "Last-Translator: Erwan Velu <erwan.velu@free.fr>\n"
 "Language-Team: French <kde-i18n-doc@lists.kde.org>\n"
@@ -152,8 +152,8 @@ msgstr "Pause"
 #: ../../templates/show_localplay_control.inc.php:28
 #: ../../templates/show_manage_democratic.inc.php:57
 #: ../../templates/rightbar.inc.php:25
-#: ../../templates/show_democratic.inc.php:30
 #: ../../templates/show_democratic.inc.php:31
+#: ../../templates/show_democratic.inc.php:32
 msgid "Play"
 msgstr "Jouer"
 
@@ -524,8 +524,8 @@ msgid "Never"
 msgstr "Jamais"
 
 #: ../../templates/show_users.inc.php:54 ../../templates/show_user.inc.php:23
-#: ../../lib/class/flag.class.php:282 ../../lib/class/localplay.class.php:648
-#: ../../lib/class/user.class.php:667 ../../lib/general.lib.php:337
+#: ../../lib/class/flag.class.php:332 ../../lib/class/localplay.class.php:648
+#: ../../lib/class/user.class.php:667 ../../lib/general.lib.php:338
 #: ../../modules/localplay/mpd.controller.php:511
 #: ../../modules/localplay/httpq.controller.php:507
 msgid "Unknown"
@@ -576,7 +576,7 @@ msgstr "Niveau d'acc&egrave;s utilisateur"
 #: ../../templates/show_preference_box.inc.php:58
 #: ../../templates/show_preference_admin.inc.php:41
 #: ../../templates/show_add_user.inc.php:74
-#: ../../lib/class/democratic.class.php:102 ../../admin/users.php:125
+#: ../../lib/class/democratic.class.php:103 ../../admin/users.php:125
 msgid "Guest"
 msgstr "Invite"
 
@@ -596,7 +596,7 @@ msgstr "Invite"
 #: ../../templates/show_access_list.inc.php:59
 #: ../../templates/show_manage_shoutbox.inc.php:35
 #: ../../templates/show_manage_shoutbox.inc.php:59
-#: ../../lib/class/democratic.class.php:105 ../../lib/preferences.php:231
+#: ../../lib/class/democratic.class.php:106 ../../lib/preferences.php:231
 #: ../../admin/users.php:126
 msgid "User"
 msgstr "Utilisateur"
@@ -605,7 +605,7 @@ msgstr "Utilisateur"
 #: ../../templates/show_preference_box.inc.php:60
 #: ../../templates/show_add_user.inc.php:76
 #: ../../templates/show_create_democratic.inc.php:42
-#: ../../lib/class/democratic.class.php:108
+#: ../../lib/class/democratic.class.php:109
 msgid "Content Manager"
 msgstr "Gestionnaire de contenu "
 
@@ -613,7 +613,7 @@ msgstr "Gestionnaire de contenu "
 #: ../../templates/show_preference_box.inc.php:61
 #: ../../templates/show_add_user.inc.php:77
 #: ../../templates/show_create_democratic.inc.php:43
-#: ../../lib/class/democratic.class.php:111
+#: ../../lib/class/democratic.class.php:112
 msgid "Catalog Manager"
 msgstr "Gestionnaire de catalogues "
 
@@ -625,7 +625,7 @@ msgstr "Gestionnaire de catalogues "
 #: ../../templates/show_democratic_playlist.inc.php:60
 #: ../../templates/show_democratic_playlist.inc.php:100
 #: ../../templates/show_mail_users.inc.php:32
-#: ../../lib/class/democratic.class.php:114 ../../lib/preferences.php:233
+#: ../../lib/class/democratic.class.php:115 ../../lib/preferences.php:233
 #: ../../admin/users.php:127
 msgid "Admin"
 msgstr "Administration"
@@ -1449,7 +1449,7 @@ msgstr "Raison du marquage"
 #: ../../templates/show_playlist_song_row.inc.php:38
 #: ../../templates/show_playlist_row.inc.php:38
 #: ../../templates/show_admin_tools.inc.php:53
-#: ../../lib/class/flag.class.php:270
+#: ../../lib/class/flag.class.php:320
 msgid "Delete"
 msgstr "Supprimer"
 
@@ -1457,11 +1457,11 @@ msgstr "Supprimer"
 msgid "Incorrect Tags"
 msgstr "Mauvaise balises"
 
-#: ../../templates/show_flag.inc.php:58 ../../lib/class/flag.class.php:276
+#: ../../templates/show_flag.inc.php:58 ../../lib/class/flag.class.php:326
 msgid "Re-encode"
 msgstr "R&eacute;encoder"
 
-#: ../../templates/show_flag.inc.php:59 ../../lib/class/flag.class.php:279
+#: ../../templates/show_flag.inc.php:59 ../../lib/class/flag.class.php:329
 msgid "Other"
 msgstr "Autre"
 
@@ -1806,8 +1806,8 @@ msgstr "Ajouter &agrave; une nouvelle liste de lecture"
 
 #: ../../templates/rightbar.inc.php:54
 #: ../../templates/show_localplay_status.inc.php:47
-#: ../../templates/show_democratic.inc.php:34
 #: ../../templates/show_democratic.inc.php:35
+#: ../../templates/show_democratic.inc.php:36
 msgid "Clear Playlist"
 msgstr "Effacer liste de lecture"
 
@@ -1939,7 +1939,7 @@ msgid "Cooldown Time"
 msgstr "Temps avant de pouvoir rejouer une piste"
 
 #: ../../templates/show_create_democratic.inc.php:35
-#: ../../lib/class/democratic.class.php:97
+#: ../../lib/class/democratic.class.php:98
 msgid "minutes"
 msgstr "minutes "
 
@@ -2686,8 +2686,8 @@ msgid "Disk"
 msgstr "Disque"
 
 #: ../../templates/show_album.inc.php:34
-#: ../../lib/class/catalog.class.php:1887
-#: ../../lib/class/catalog.class.php:1958
+#: ../../lib/class/catalog.class.php:1909
+#: ../../lib/class/catalog.class.php:1980
 msgid "Unknown (Orphaned)"
 msgstr "Inconnu (orphelin)"
 
@@ -3243,15 +3243,15 @@ msgstr ""
 msgid "API/RPC"
 msgstr "RPC"
 
-#: ../../lib/class/flag.class.php:257
+#: ../../lib/class/flag.class.php:307
 msgid "Approved"
 msgstr "Accept&eacute;"
 
-#: ../../lib/class/flag.class.php:258
+#: ../../lib/class/flag.class.php:308
 msgid "Pending"
 msgstr "En attente"
 
-#: ../../lib/class/flag.class.php:273
+#: ../../lib/class/flag.class.php:323
 msgid "Re-Tag"
 msgstr "Re-marquer"
 
@@ -3263,7 +3263,7 @@ msgstr "Stopp&eacute;"
 msgid "Paused"
 msgstr "En pause"
 
-#: ../../lib/class/democratic.class.php:98
+#: ../../lib/class/democratic.class.php:99
 msgid "Primary"
 msgstr "Primaire "
 
@@ -3322,7 +3322,8 @@ msgstr "n'est pas lisible par ampache"
 msgid "%s does not match site charset"
 msgstr "ne correspond pas &agrave; l'encodage de carat&egrave;res du site"
 
-#: ../../lib/class/catalog.class.php:981 ../../preferences.php:111
+#: ../../lib/class/catalog.class.php:981
+#: ../../lib/class/catalog.class.php:1850 ../../preferences.php:111
 #: ../../admin/access.php:109
 msgid "Updated"
 msgstr "Mis &agrave; jour"
@@ -3425,17 +3426,14 @@ msgstr "fichiers enlev&eacute;s"
 msgid "Optimizing Tables"
 msgstr "Optimisation des tables"
 
-#: ../../lib/class/catalog.class.php:1828
-msgid "Update Finished."
+#: ../../lib/class/catalog.class.php:1850
+#, fuzzy
+msgid "Update Finished"
 msgstr "Mise &agrave; jour termin&eacute;e"
 
-#: ../../lib/class/catalog.class.php:1828
+#: ../../lib/class/catalog.class.php:1850
 msgid "Checked"
 msgstr "Vérifi&eacute;es"
-
-#: ../../lib/class/catalog.class.php:1828
-msgid "songs updated."
-msgstr "morceaux mis &agrave; jour"
 
 #: ../../lib/class/random.class.php:410
 msgid "Related Genre"
@@ -3495,11 +3493,11 @@ msgid ""
 "\n"
 msgstr ""
 
-#: ../../lib/general.lib.php:396
+#: ../../lib/general.lib.php:397
 msgid "On"
 msgstr "actif"
 
-#: ../../lib/general.lib.php:399
+#: ../../lib/general.lib.php:400
 msgid "Off"
 msgstr "inactif"
 
@@ -4133,6 +4131,9 @@ msgstr "l'Interface"
 #, fuzzy
 msgid "System"
 msgstr "élément"
+
+#~ msgid "songs updated."
+#~ msgstr "morceaux mis &agrave; jour"
 
 #~ msgid "Play Random Selection"
 #~ msgstr "Jouer al&eacute;atoirement une s&eacute;lection"
