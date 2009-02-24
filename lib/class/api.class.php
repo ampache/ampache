@@ -129,8 +129,8 @@ class Api {
 
 				return array('auth'=>$token,
 					'api'=>self::$version,
-					'update'=>date("r",$row['update']),
-					'add'=>date("r",$row['add']),
+					'update'=>date("c",$row['update']),
+					'add'=>date("c",$row['add']),
 					'songs'=>$counts['song'],
 					'albums'=>$counts['album'],
 					'artists'=>$counts['artist'],
