@@ -320,7 +320,7 @@ class Artist extends database_object {
 				else {
 					// if returned "Not found" do not add
 					if($result['lyrics'] == "Not found") {
-						$sorry = sprintf(_('Sorry Lyrics %s.'), $result['lyrics']);
+						$sorry = _('Sorry Lyrics Not Found.');
 						return $sorry;
 					}
 					else {
