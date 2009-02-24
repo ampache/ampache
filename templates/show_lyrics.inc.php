@@ -25,18 +25,19 @@
  *
  * Al Ayres
  * al.ayres@gmail.com
- * Modified: 01/01/2008
+ * Modified: 02/24/2009
  *
+ * @todo get lyrics from id3tag, if possible.
 */
 ?>
-<?php show_box_top($song->title . ' ' . _('Lyrics')); ?>
+<?php show_box_top(sprintf(_('%s Lyrics'), $song->title)); ?>
 <table class="tabledata" cellspacing="0" cellpadding="0">
 <tr>
        <td>
                <?php
                        $return = scrub_out(Artist::get_song_lyrics($song->id, ucwords($song->f_artist), ucwords($song->title)));
                        if($return =="Sorry Lyrics, Not found") {
-                               echo _("Sorry Lyrics, not found\n\n");
+                               echo _("Sorry Lyrics Not Found.");
                        }
                        else {
                                echo "<pre>" . $return . "</pre>";

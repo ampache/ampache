@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ampache 3.5.0\n"
 "Report-Msgid-Bugs-To: translations at ampache.org\n"
-"POT-Creation-Date: 2009-02-23 07:53+0900\n"
+"POT-Creation-Date: 2009-02-24 14:20+0900\n"
 "PO-Revision-Date: 2008-07-14 20:44+0900\n"
 "Last-Translator: momo-i <webmaster at momo-i.org>\n"
 "Language-Team: Japanese\n"
@@ -55,7 +55,7 @@ msgid "Add"
 msgstr "追加"
 
 #: ../../templates/show_album_row.inc.php:24
-#: ../../templates/sidebar_home.inc.php:103
+#: ../../templates/sidebar_home.inc.php:104
 #: ../../templates/show_artist_row.inc.php:24
 #: ../../templates/show_localplay_status.inc.php:44
 #: ../../templates/show_artist.inc.php:41
@@ -316,7 +316,7 @@ msgstr "カバー"
 
 #: ../../templates/show_albums.inc.php:44
 #: ../../templates/show_albums.inc.php:75
-#: ../../templates/sidebar_home.inc.php:105
+#: ../../templates/sidebar_home.inc.php:106
 #: ../../templates/show_edit_song.inc.php:37
 #: ../../templates/show_democratic_playlist.inc.php:56
 #: ../../templates/show_democratic_playlist.inc.php:96
@@ -341,8 +341,8 @@ msgstr "アルバム"
 #: ../../templates/show_artists.inc.php:37
 #: ../../templates/show_artists.inc.php:65
 #: ../../templates/sidebar_home.inc.php:34
-#: ../../templates/sidebar_home.inc.php:80
-#: ../../templates/sidebar_home.inc.php:106
+#: ../../templates/sidebar_home.inc.php:81
+#: ../../templates/sidebar_home.inc.php:107
 #: ../../templates/show_similar_artists.inc.php:33
 #: ../../templates/show_similar_artists.inc.php:86
 #: ../../templates/show_edit_song.inc.php:45
@@ -691,6 +691,7 @@ msgstr "バージョン"
 #: ../../templates/show_localplay_controllers.inc.php:44
 #: ../../templates/show_duplicates.inc.php:36
 #: ../../templates/show_duplicates.inc.php:75 ../../lib/preferences.php:165
+#: ../../lib/preferences.php:271
 msgid "Disable"
 msgstr "無効"
 
@@ -739,7 +740,7 @@ msgstr "変更を保存"
 #: ../../templates/show_artists.inc.php:39
 #: ../../templates/show_artists.inc.php:67
 #: ../../templates/sidebar_home.inc.php:33
-#: ../../templates/sidebar_home.inc.php:77
+#: ../../templates/sidebar_home.inc.php:78
 #: ../../templates/show_local_catalog_info.inc.php:29
 #: ../../templates/show_genre.inc.php:32 ../../lib/ui.lib.php:408
 #: ../../lib/class/browse.class.php:1103
@@ -803,11 +804,12 @@ msgstr "ファイルからプレイリストをインポート中"
 msgid "Filename"
 msgstr "フルネーム"
 
-#: ../../templates/show_import_playlist.inc.php:35
+#: ../../templates/show_import_playlist.inc.php:34
 msgid "Playlist Type"
 msgstr "プレイリストタイプ"
 
-#: ../../templates/show_import_playlist.inc.php:47
+#: ../../templates/show_import_playlist.inc.php:46
+#: ../../templates/sidebar_home.inc.php:39
 msgid "Import Playlist"
 msgstr "プレイリストのインポート"
 
@@ -846,7 +848,7 @@ msgid "Browse"
 msgstr "閲覧"
 
 #: ../../templates/sidebar_home.inc.php:32
-#: ../../templates/sidebar_home.inc.php:74
+#: ../../templates/sidebar_home.inc.php:75
 #: ../../templates/show_songs.inc.php:40 ../../templates/show_songs.inc.php:69
 #: ../../templates/show_playlist_songs.inc.php:42
 #: ../../templates/show_playlist_songs.inc.php:63
@@ -859,8 +861,8 @@ msgid "Tag Cloud"
 msgstr "タグクラウド"
 
 #: ../../templates/sidebar_home.inc.php:36
-#: ../../templates/sidebar_home.inc.php:86
-#: ../../templates/sidebar_home.inc.php:107
+#: ../../templates/sidebar_home.inc.php:87
+#: ../../templates/sidebar_home.inc.php:108
 #: ../../templates/show_manage_democratic.inc.php:34
 #: ../../templates/show_play_selected.inc.php:47 ../../lib/ui.lib.php:367
 msgid "Playlist"
@@ -875,40 +877,40 @@ msgstr "ラジオステーション"
 msgid "Video"
 msgstr "動画"
 
-#: ../../templates/sidebar_home.inc.php:42
+#: ../../templates/sidebar_home.inc.php:43
 msgid "Filters"
 msgstr "フィルタ"
 
-#: ../../templates/sidebar_home.inc.php:46
+#: ../../templates/sidebar_home.inc.php:47
 msgid "Starts With"
 msgstr "開始 :"
 
-#: ../../templates/sidebar_home.inc.php:52
+#: ../../templates/sidebar_home.inc.php:53
 msgid "Minimum Count"
 msgstr "最小カウント"
 
-#: ../../templates/sidebar_home.inc.php:56
+#: ../../templates/sidebar_home.inc.php:57
 msgid "Rated"
 msgstr "評価"
 
-#: ../../templates/sidebar_home.inc.php:60
+#: ../../templates/sidebar_home.inc.php:61
 msgid "Unplayed"
 msgstr "未再生"
 
-#: ../../templates/sidebar_home.inc.php:64
+#: ../../templates/sidebar_home.inc.php:65
 #: ../../templates/show_artist.inc.php:55
 msgid "Show Art"
 msgstr "アーティスト表示"
 
-#: ../../templates/sidebar_home.inc.php:69
+#: ../../templates/sidebar_home.inc.php:70
 msgid "All Playlists"
 msgstr "全プレイリスト"
 
-#: ../../templates/sidebar_home.inc.php:88
+#: ../../templates/sidebar_home.inc.php:89
 msgid "Currently Playing"
 msgstr "現在再生中のもの"
 
-#: ../../templates/sidebar_home.inc.php:90
+#: ../../templates/sidebar_home.inc.php:91
 #: ../../templates/show_playtype_switch.inc.php:36
 #: ../../templates/sidebar_modules.inc.php:46 ../../lib/preferences.php:179
 #: ../../modules/localplay/mpd.controller.php:491
@@ -916,14 +918,14 @@ msgstr "現在再生中のもの"
 msgid "Democratic"
 msgstr "デモクラティック"
 
-#: ../../templates/sidebar_home.inc.php:99
+#: ../../templates/sidebar_home.inc.php:100
 #: ../../templates/sidebar_localplay.inc.php:32
 #: ../../templates/show_playtype_switch.inc.php:34
 #: ../../templates/sidebar.inc.php:28 ../../lib/preferences.php:182
 msgid "Localplay"
 msgstr "ローカル再生"
 
-#: ../../templates/sidebar_home.inc.php:108
+#: ../../templates/sidebar_home.inc.php:109
 msgid "Advanced"
 msgstr "高度"
 
@@ -942,6 +944,7 @@ msgid "Reject"
 msgstr "拒否"
 
 #: ../../templates/show_flag_row.inc.php:33 ../../lib/preferences.php:164
+#: ../../lib/preferences.php:270
 msgid "Enable"
 msgstr "有効"
 
@@ -2663,6 +2666,15 @@ msgstr "アルバムアートのリセット"
 msgid "Find Album Art"
 msgstr "アルバムアートを見つける"
 
+#: ../../templates/show_lyrics.inc.php:33
+#, php-format
+msgid "%s Lyrics"
+msgstr "%sの歌詞"
+
+#: ../../templates/show_lyrics.inc.php:40 ../../lib/class/artist.class.php:323
+msgid "Sorry Lyrics Not Found."
+msgstr "すみません歌詞は見つかりませんでした。"
+
 #: ../../templates/show_localplay_add_instance.inc.php:24
 msgid "Add Localplay Instance"
 msgstr "ローカル再生インスタンス追加"
@@ -3216,6 +3228,15 @@ msgstr "一時停止"
 msgid "Primary"
 msgstr "プライマリ"
 
+#: ../../lib/class/artist.class.php:311
+msgid "Fault"
+msgstr "失敗"
+
+#: ../../lib/class/artist.class.php:318 ../../lib/class/catalog.class.php:1185
+#: ../../admin/users.php:142
+msgid "Error"
+msgstr "エラー"
+
 #: ../../lib/class/user.class.php:379 ../../admin/users.php:55
 #: ../../admin/users.php:105
 msgid "Error Username Required"
@@ -3300,10 +3321,6 @@ msgstr "合計曲"
 #: ../../lib/class/catalog.class.php:1171
 msgid "Songs Per Seconds"
 msgstr "1秒毎の曲"
-
-#: ../../lib/class/catalog.class.php:1185 ../../admin/users.php:142
-msgid "Error"
-msgstr "エラー"
 
 #: ../../lib/class/catalog.class.php:1185
 msgid "Unable to load pear XMLRPC library, make sure XML-RPC is enabled"
@@ -3578,9 +3595,28 @@ msgstr "エラー: 設定ファイルは見つからないか読み込めませ�
 msgid "Ampache Update"
 msgstr "Apmache更新"
 
+#: ../../update.php:56
+#, php-format
+msgid ""
+"This page handles all database updates to Ampache starting with "
+"<strong>3.3.3.5</strong>. According to your database your current version "
+"is: <strong>%s</strong>."
+msgstr ""
+"このページは<strong>3.3.3.5</strong>から始まるAmpacheの全データベースの更新を"
+"扱います。あなたのデータベースによると、あなたの最新版は以下の通りです: "
+"<strong>%s</strong>"
+
+#: ../../update.php:57
+msgid "the following updates need to be performed"
+msgstr "以下の必要な更新が実行されました"
+
 #: ../../update.php:64
 msgid "Update Now!"
 msgstr "今すぐ更新！"
+
+#: ../../update.php:68
+msgid "Ampache Installation."
+msgstr "Ampache インストール"
 
 #: ../../albums.php:32
 msgid "Album Art Cleared"
@@ -4044,3 +4080,7 @@ msgstr "インタフェース"
 #: Database words
 msgid "System"
 msgstr "システム"
+
+#: Database words
+msgid "Show Lyrics"
+msgstr "歌詞の表示"

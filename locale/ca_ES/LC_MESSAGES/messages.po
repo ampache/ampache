@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ampache 3.5.0\n"
 "Report-Msgid-Bugs-To: translations at ampache.org\n"
-"POT-Creation-Date: 2009-02-23 07:53+0900\n"
+"POT-Creation-Date: 2009-02-24 14:20+0900\n"
 "PO-Revision-Date: 2008-01-04 16:41+0100\n"
 "Last-Translator: Guillem Lluch Moll <glluch@ya.com>\n"
 "Language-Team: Catalan <ca@dodds.net>\n"
@@ -54,7 +54,7 @@ msgid "Add"
 msgstr "Afegir"
 
 #: ../../templates/show_album_row.inc.php:24
-#: ../../templates/sidebar_home.inc.php:103
+#: ../../templates/sidebar_home.inc.php:104
 #: ../../templates/show_artist_row.inc.php:24
 #: ../../templates/show_localplay_status.inc.php:44
 #: ../../templates/show_artist.inc.php:41
@@ -315,7 +315,7 @@ msgstr "Cover"
 
 #: ../../templates/show_albums.inc.php:44
 #: ../../templates/show_albums.inc.php:75
-#: ../../templates/sidebar_home.inc.php:105
+#: ../../templates/sidebar_home.inc.php:106
 #: ../../templates/show_edit_song.inc.php:37
 #: ../../templates/show_democratic_playlist.inc.php:56
 #: ../../templates/show_democratic_playlist.inc.php:96
@@ -340,8 +340,8 @@ msgstr "Album"
 #: ../../templates/show_artists.inc.php:37
 #: ../../templates/show_artists.inc.php:65
 #: ../../templates/sidebar_home.inc.php:34
-#: ../../templates/sidebar_home.inc.php:80
-#: ../../templates/sidebar_home.inc.php:106
+#: ../../templates/sidebar_home.inc.php:81
+#: ../../templates/sidebar_home.inc.php:107
 #: ../../templates/show_similar_artists.inc.php:33
 #: ../../templates/show_similar_artists.inc.php:86
 #: ../../templates/show_edit_song.inc.php:45
@@ -691,6 +691,7 @@ msgstr "Versió"
 #: ../../templates/show_localplay_controllers.inc.php:44
 #: ../../templates/show_duplicates.inc.php:36
 #: ../../templates/show_duplicates.inc.php:75 ../../lib/preferences.php:165
+#: ../../lib/preferences.php:271
 msgid "Disable"
 msgstr "No permés"
 
@@ -739,7 +740,7 @@ msgstr ""
 #: ../../templates/show_artists.inc.php:39
 #: ../../templates/show_artists.inc.php:67
 #: ../../templates/sidebar_home.inc.php:33
-#: ../../templates/sidebar_home.inc.php:77
+#: ../../templates/sidebar_home.inc.php:78
 #: ../../templates/show_local_catalog_info.inc.php:29
 #: ../../templates/show_genre.inc.php:32 ../../lib/ui.lib.php:408
 #: ../../lib/class/browse.class.php:1103
@@ -803,11 +804,12 @@ msgstr "Importar un llista des d'un fitxer"
 msgid "Filename"
 msgstr "Nom de l'arxiu"
 
-#: ../../templates/show_import_playlist.inc.php:35
+#: ../../templates/show_import_playlist.inc.php:34
 msgid "Playlist Type"
 msgstr "Tipus de llista"
 
-#: ../../templates/show_import_playlist.inc.php:47
+#: ../../templates/show_import_playlist.inc.php:46
+#: ../../templates/sidebar_home.inc.php:39
 msgid "Import Playlist"
 msgstr "Importa una llista de reproducció"
 
@@ -847,7 +849,7 @@ msgid "Browse"
 msgstr "Mostra"
 
 #: ../../templates/sidebar_home.inc.php:32
-#: ../../templates/sidebar_home.inc.php:74
+#: ../../templates/sidebar_home.inc.php:75
 #: ../../templates/show_songs.inc.php:40 ../../templates/show_songs.inc.php:69
 #: ../../templates/show_playlist_songs.inc.php:42
 #: ../../templates/show_playlist_songs.inc.php:63
@@ -860,8 +862,8 @@ msgid "Tag Cloud"
 msgstr ""
 
 #: ../../templates/sidebar_home.inc.php:36
-#: ../../templates/sidebar_home.inc.php:86
-#: ../../templates/sidebar_home.inc.php:107
+#: ../../templates/sidebar_home.inc.php:87
+#: ../../templates/sidebar_home.inc.php:108
 #: ../../templates/show_manage_democratic.inc.php:34
 #: ../../templates/show_play_selected.inc.php:47 ../../lib/ui.lib.php:367
 msgid "Playlist"
@@ -877,40 +879,40 @@ msgstr ""
 msgid "Video"
 msgstr "Veure"
 
-#: ../../templates/sidebar_home.inc.php:42
+#: ../../templates/sidebar_home.inc.php:43
 msgid "Filters"
 msgstr ""
 
-#: ../../templates/sidebar_home.inc.php:46
+#: ../../templates/sidebar_home.inc.php:47
 msgid "Starts With"
 msgstr ""
 
-#: ../../templates/sidebar_home.inc.php:52
+#: ../../templates/sidebar_home.inc.php:53
 msgid "Minimum Count"
 msgstr ""
 
-#: ../../templates/sidebar_home.inc.php:56
+#: ../../templates/sidebar_home.inc.php:57
 msgid "Rated"
 msgstr ""
 
-#: ../../templates/sidebar_home.inc.php:60
+#: ../../templates/sidebar_home.inc.php:61
 msgid "Unplayed"
 msgstr ""
 
-#: ../../templates/sidebar_home.inc.php:64
+#: ../../templates/sidebar_home.inc.php:65
 #: ../../templates/show_artist.inc.php:55
 msgid "Show Art"
 msgstr ""
 
-#: ../../templates/sidebar_home.inc.php:69
+#: ../../templates/sidebar_home.inc.php:70
 msgid "All Playlists"
 msgstr ""
 
-#: ../../templates/sidebar_home.inc.php:88
+#: ../../templates/sidebar_home.inc.php:89
 msgid "Currently Playing"
 msgstr ""
 
-#: ../../templates/sidebar_home.inc.php:90
+#: ../../templates/sidebar_home.inc.php:91
 #: ../../templates/show_playtype_switch.inc.php:36
 #: ../../templates/sidebar_modules.inc.php:46 ../../lib/preferences.php:179
 #: ../../modules/localplay/mpd.controller.php:491
@@ -918,14 +920,14 @@ msgstr ""
 msgid "Democratic"
 msgstr "Democràtic"
 
-#: ../../templates/sidebar_home.inc.php:99
+#: ../../templates/sidebar_home.inc.php:100
 #: ../../templates/sidebar_localplay.inc.php:32
 #: ../../templates/show_playtype_switch.inc.php:34
 #: ../../templates/sidebar.inc.php:28 ../../lib/preferences.php:182
 msgid "Localplay"
 msgstr "Sona localment"
 
-#: ../../templates/sidebar_home.inc.php:108
+#: ../../templates/sidebar_home.inc.php:109
 msgid "Advanced"
 msgstr ""
 
@@ -944,6 +946,7 @@ msgid "Reject"
 msgstr "Refusa"
 
 #: ../../templates/show_flag_row.inc.php:33 ../../lib/preferences.php:164
+#: ../../lib/preferences.php:270
 msgid "Enable"
 msgstr "Permés"
 
@@ -2683,6 +2686,15 @@ msgstr "Reiniciar portada"
 msgid "Find Album Art"
 msgstr "Trobar la portada"
 
+#: ../../templates/show_lyrics.inc.php:33
+#, fuzzy, php-format
+msgid "%s Lyrics"
+msgstr "LListes de reproducció"
+
+#: ../../templates/show_lyrics.inc.php:40 ../../lib/class/artist.class.php:323
+msgid "Sorry Lyrics Not Found."
+msgstr ""
+
 #: ../../templates/show_localplay_add_instance.inc.php:24
 msgid "Add Localplay Instance"
 msgstr ""
@@ -3238,6 +3250,16 @@ msgstr "Pausat"
 msgid "Primary"
 msgstr ""
 
+#: ../../lib/class/artist.class.php:311
+#, fuzzy
+msgid "Fault"
+msgstr "Ràpid"
+
+#: ../../lib/class/artist.class.php:318 ../../lib/class/catalog.class.php:1185
+#: ../../admin/users.php:142
+msgid "Error"
+msgstr "Error"
+
 #: ../../lib/class/user.class.php:379 ../../admin/users.php:55
 #: ../../admin/users.php:105
 msgid "Error Username Required"
@@ -3326,10 +3348,6 @@ msgstr "Cançons en total"
 #: ../../lib/class/catalog.class.php:1171
 msgid "Songs Per Seconds"
 msgstr "Cançons per segon"
-
-#: ../../lib/class/catalog.class.php:1185 ../../admin/users.php:142
-msgid "Error"
-msgstr "Error"
 
 #: ../../lib/class/catalog.class.php:1185
 #, fuzzy
@@ -3591,10 +3609,27 @@ msgstr "Errror l'arxiu de configuració ha caducat"
 msgid "Ampache Update"
 msgstr "Ampache actualitzat"
 
+#: ../../update.php:56
+#, php-format
+msgid ""
+"This page handles all database updates to Ampache starting with "
+"<strong>3.3.3.5</strong>. According to your database your current version "
+"is: <strong>%s</strong>."
+msgstr ""
+
+#: ../../update.php:57
+msgid "the following updates need to be performed"
+msgstr ""
+
 #: ../../update.php:64
 #, fuzzy
 msgid "Update Now!"
 msgstr "Actualitza la cançó"
+
+#: ../../update.php:68
+#, fuzzy
+msgid "Ampache Installation."
+msgstr "Instalació de l'Ampache"
 
 #: ../../albums.php:32
 msgid "Album Art Cleared"
@@ -4081,6 +4116,10 @@ msgstr "Interfície"
 msgid "System"
 msgstr "Ítem"
 
+#: Database words
+msgid "Show Lyrics"
+msgstr ""
+
 #~ msgid "songs updated."
 #~ msgstr "cançons actualitzades"
 
@@ -4221,10 +4260,6 @@ msgstr "Ítem"
 
 #~ msgid "Simplified Chinese"
 #~ msgstr "Xinés simplificat"
-
-#, fuzzy
-#~ msgid "Playlist %s"
-#~ msgstr "LListes de reproducció"
 
 #, fuzzy
 #~ msgid "Catalan"
