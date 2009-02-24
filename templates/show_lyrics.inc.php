@@ -1,0 +1,48 @@
+<?php
+/*
+
+ Copyright (c) 2001 - 2007 Ampache.org
+ All rights reserved.
+
+ This program is free software; you can redistribute it and/or
+ modify it under the terms of the GNU General Public License v2
+ as published by the Free Software Foundation.
+
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with this program; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+
+*/
+
+/*
+ * show_lyrics.inc.php
+ * show lyrics for selected song, if user has selected to do so in preferences
+ *
+ * Al Ayres
+ * al.ayres@gmail.com
+ * Modified: 01/01/2008
+ *
+*/
+?>
+<?php show_box_top($song->title . ' ' . _('Lyrics')); ?>
+<table class="tabledata" cellspacing="0" cellpadding="0">
+<tr>
+       <td>
+               <?php
+                       $return = scrub_out(Artist::get_song_lyrics($song->id, ucwords($song->f_artist), ucwords($song->title)));
+                       if($return =="Sorry Lyrics, Not found") {
+                               echo _("Sorry Lyrics, not found\n\n");
+                       }
+                       else {
+                               echo "<pre>" . $return . "</pre>";
+                       }
+               ?>
+       </td>
+</tr>
+</table>
+<?php show_box_bottom(); ?>
