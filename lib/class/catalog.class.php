@@ -1019,10 +1019,10 @@ class Catalog extends database_object {
 
 		// Figure out what type of object this is and call the right function
 		// giving it the stuff we've figured out above
-		$name = (get_class($media) == 'song') ? 'song' : 'video'; 
+		$name = (get_class($media) == 'Song') ? 'song' : 'video'; 
 
 		$function = 'update_' . $name . '_from_tags'; 
-
+echo $function;
 		$return = call_user_func(array('Catalog',$function),$results,$media); 	
 
 		return $return; 
