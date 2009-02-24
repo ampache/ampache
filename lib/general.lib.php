@@ -519,4 +519,14 @@ if (!function_exists('getmxrr')) {
     }
 }
 
+/**
+ * debug_print
+ * print_r with <pre> tag
+ */
+function debug_print($var) {
+    echo "<pre>";
+    print_r($var);
+    echo "</pre>";
+}
+
 ?>

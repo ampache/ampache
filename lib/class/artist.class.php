@@ -294,8 +294,23 @@ class Artist extends database_object {
 
 		$results = Dba::fetch_assoc($db_results); 
 
+		$rs = Dba::read("SELECT file FROM song WHERE `id`='" . Dba::escape($song_id) . "'");
+		$filename = Dba::fetch_row($rs);
+		$vainfo = new vainfo($filename[0], '','','',$catalog->sort_pattern,$catalog->rename_pattern);
+		$vainfo->get_info();
+		$key = vainfo::get_tag_type($vainfo->tags);
+		$tag_lyrics = vainfo::clean_tag_info($vainfo->tags,$key,$filename);
+		$lyrics = $tag_lyrics['lyrics'];
+		if(function_exists('mb_detect_encoding') AND function_exists('mb_convert_encoding')) {
+			$enc = mb_detect_encoding($lyrics);
+			$lyrics = mb_convert_encoding($lyrics, 'UTF-8', $enc);
+		}
+
 		if (strlen($results['lyrics']) > 1) {
 			return html_entity_decode(strip_tags(($results['lyrics'])), ENT_QUOTES);
+		} elseif (strlen($lyrics) > 1) {
+			/// get lyrics from id3tag
+			return $lyrics;
 		}
 		else {
 			$client = new nusoap_client('http://lyricwiki.org/server.php?wsdl', 'wsdl');

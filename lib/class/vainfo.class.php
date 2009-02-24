@@ -132,15 +132,15 @@ class vainfo {
 			$this->encoding_id3v2 = $encoding_id3v2;
 		}
 
-                $this->_getID3->option_md5_data		= false;
-                $this->_getID3->option_md5_data_source	= false;
-		$this->_getID3->option_tags_html	= false;
-		$this->_getID3->option_extra_info	= false;
-		$this->_getID3->option_tag_lyrics3	= false;
-		$this->_getID3->encoding		= $this->encoding; 
-		$this->_getID3->encoding_id3v1		= $this->encoding_id3v1;
-//		$this->_getID3->encoding_id3v2		= $this->encoding_id3v2;
-		$this->_getID3->option_tags_process    = true; 
+		$this->_getID3->option_md5_data			= false;
+		$this->_getID3->option_md5_data_source	= false;
+		$this->_getID3->option_tags_html		= false;
+		$this->_getID3->option_extra_info		= true;
+		$this->_getID3->option_tag_lyrics3		= true;
+		$this->_getID3->encoding				= $this->encoding; 
+		$this->_getID3->encoding_id3v1			= $this->encoding_id3v1;
+		$this->_getID3->encoding_id3v2			= $this->encoding_id3v2;
+		$this->_getID3->option_tags_process		= true; 
 
 
 	} // vainfo
@@ -231,51 +231,52 @@ class vainfo {
 	 */
 	public static function clean_tag_info($results,$key,$filename) {
 
-	        $info = array();
+		$info = array();
 
-	        $clean_array = array("\n","\t","\r","\0");
-        	$wipe_array  = array("","","","");
+		$clean_array = array("\n","\t","\r","\0");
+		$wipe_array  = array("","","","");
 
-	        $info['file']           = $filename;
-	        $info['title']          = stripslashes(trim($results[$key]['title']));
-	        $info['year']           = intval($results[$key]['year']);
-	        $info['disk']           = intval($results[$key]['disk']);
-	        $info['comment']        = Dba::escape(str_replace($clean_array,$wipe_array,$results[$key]['comment']));
+		$info['file']           = $filename;
+		$info['title']          = stripslashes(trim($results[$key]['title']));
+		$info['year']           = intval($results[$key]['year']);
+		$info['disk']           = intval($results[$key]['disk']);
+		$info['comment']        = Dba::escape(str_replace($clean_array,$wipe_array,$results[$key]['comment']));
 
-	        /* This are pulled from the info array */
-	        $info['bitrate']        = intval($results['info']['bitrate']);
-	        $info['rate']           = intval($results['info']['sample_rate']);
-        	$info['mode']           = $results['info']['bitrate_mode'];
+		/* This are pulled from the info array */
+		$info['bitrate']        = intval($results['info']['bitrate']);
+		$info['rate']           = intval($results['info']['sample_rate']);
+		$info['mode']           = $results['info']['bitrate_mode'];
 
-	        // Convert special version of constant bitrate mode to cbr
-	        if($info['mode'] == 'con') {
-	                $info['mode'] = 'cbr';
-	        }
+		// Convert special version of constant bitrate mode to cbr
+		if($info['mode'] == 'con') {
+			$info['mode'] = 'cbr';
+		}
 
-	        $info['size']           = $results['info']['filesize'];
-	        $info['mime']           = $results['info']['mime'];
-	        $into['encoding']       = $results['info']['encoding'];
-	        $info['time']           = intval($results['info']['playing_time']);
-	        $info['channels']       = intval($results['info']['channels']);
+		$info['size']           = $results['info']['filesize'];
+		$info['mime']           = $results['info']['mime'];
+		$into['encoding']       = $results['info']['encoding'];
+		$info['time']           = intval($results['info']['playing_time']);
+		$info['channels']       = intval($results['info']['channels']);
 
 		// Specific Audio Flags
 		if (!$results[$key]['video_codec']) { 
-		        /* These are used to generate the correct ID's later */
-		        $info['artist']         = trim($results[$key]['artist']);
-		        $info['album']          = trim($results[$key]['album']);
-		        $info['genre']          = trim($results[$key]['genre']);
-		        $info['language']       = Dba::escape($results[$key]['language']);
-		        $info['lyrics']         = Dba::escape($results[$key]['lyrics']);
-		        $info['track']          = intval($results[$key]['track']);
+			/* These are used to generate the correct ID's later */
+			$info['artist']         = trim($results[$key]['artist']);
+			$info['album']          = trim($results[$key]['album']);
+			$info['genre']          = trim($results[$key]['genre']);
+			$info['language']       = Dba::escape($results[$key]['language']);
+			//$info['lyrics']         = Dba::escape($results[$key]['lyrics']);
+			$info['lyrics']			= $results['info']['lyrics']['unsynchedlyrics'];
+			$info['track']          = intval($results[$key]['track']);
 		}
 		else { 
 			$info['resolution_x']	= intval($results[$key]['resolution_x']); 
 			$info['resolution_y']	= intval($results[$key]['resolution_y']); 
 			$info['audio_codec']	= Dba::escape($results[$key]['audio_codec']); 
 			$info['video_codec']	= Dba::escape($results[$key]['video_codec']); 
-		} 
+		}
 
-        	return $info;
+		return $info;
 
 	} // clean_tag_info
 
@@ -368,6 +369,9 @@ class vainfo {
 				case 'avi': 
 					$results[$key] = $this->_parse_avi($this->_raw2); 
 				break; 
+				case 'lyrics3':
+					$results[$key] = $this->_parse_lyrics($tag_array);
+				break;
 				default: 
 					debug_event('vainfo','Error: Unable to determine tag type of ' . $key . ' for file ' . $this->filename . ' Assuming id3v2','5');
 					$results[$key] = $this->_parse_id3v2($this->_raw['id3v2']['comments']);
@@ -419,6 +423,9 @@ class vainfo {
 		if ($this->_raw['playtime_seconds']) { 
 			$array['playing_time']	= $this->_raw['playtime_seconds'];
 		}
+		if ($this->_raw['lyrics3']) {
+			$array['lyrics'] = $this->_raw['lyrics3'];
+		}
 
 		return $array;
 	
@@ -457,6 +464,27 @@ class vainfo {
 		} // end switch on type
 
 	} // _clean_type
+
+	/**
+	 * _parse_lyrics
+	 * This function takes a lyrics3 from getid3()
+	 * nothing to do?
+	 */
+	private function _parse_lyrics($tags) {
+
+		/* Results array */
+		$array = array();
+
+		/* go through them all! */
+		foreach ($tags as $tag=>$data) {
+
+			$array[$tag] = $this->_clean_tag($data['0']);
+
+		} // end foreach
+
+		return $array;
+
+	} // _parse_lyrics
 
 	/**
 	 * _parse_vorbiscomment
@@ -735,7 +763,7 @@ class vainfo {
 			'language'=>array('TLA','TLAN'),
 			'mood'=>array('TMOO'),
 			'artist'=>array('TPE1'),
-			'year'=>array('TDRC')); 
+			'year'=>array('TDRC'));
 
 		foreach ($map[$tag_name] as $frame) { 
 			if (isset($this->_raw['id3v2'][$frame])) { 

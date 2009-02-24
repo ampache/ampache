@@ -36,7 +36,7 @@
        <td>
                <?php
                        $return = scrub_out(Artist::get_song_lyrics($song->id, ucwords($song->f_artist), ucwords($song->title)));
-                       if($return =="Sorry Lyrics, Not found") {
+                       if($return == "Sorry Lyrics, Not found") {
                                echo _("Sorry Lyrics Not Found.");
                        }
                        else {
