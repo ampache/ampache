@@ -137,6 +137,7 @@ require_once $prefix . '/lib/class/database_object.abstract.php';
 require_once $prefix . '/lib/class/media.interface.php'; 
 require_once $prefix . '/modules/pearxmlrpc/rpc.php';
 require_once $prefix . '/modules/getid3/getid3.php';
+require_once $prefix . '/modules/nusoap/nusoap.php';
 require_once $prefix . '/modules/infotools/Snoopy.class.php';
 require_once $prefix . '/modules/infotools/AmazonSearchEngine.class.php';
 require_once $prefix . '/modules/infotools/lastfm.class.php';

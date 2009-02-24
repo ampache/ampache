@@ -303,6 +303,10 @@ class Update {
 
 		$version[] = array('version'=>'350005','description'=>$update_string); 
 
+		$update_string = "- Add data for Lyrics<br />";
+
+		$version[] = array('version'=>'350006','description'=>$update_string);
+
 		return $version;
 
 	} // populate_version
@@ -1589,6 +1593,23 @@ class Update {
 		return true; 
 
 	} // update_350005
+
+	/**
+	 * update_350006
+	 * This update inserts the Lyrics pref table... 
+	 */
+	public static function update_350006() {
+
+		$sql = "INSERT INTO `preference` VALUES (69,'show_lyrics','0','Show Lyrics',0,'boolean','interface')";
+		$db_results = Dba::write($sql);
+
+		$sql = "INSERT INTO `user_preference` VALUES (1,69,'0')";
+		$db_results = Dba::write($sql);
+
+		self::set_version('db_version','350006');
+
+		return true;
+	} // update_350006
 
 } // end update class
 ?>

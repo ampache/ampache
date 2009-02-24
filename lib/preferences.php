@@ -263,6 +263,14 @@ function create_preference_input($name,$value) {
 			echo "\t<option value=\"always\"$always>" . _('Always') . "</option>\n"; 
 			echo "</select>\n";
 		break;
+		case 'show_lyrics':
+			if ($value == '1') { $is_true = "selected=\"selected\""; } 
+			else { $is_false = "selected=\"selected\""; }
+			echo "<select name=\"$name\">\n";
+			echo "\t<option value=\"1\" $is_true>" . _("Enable") . "</option>\n";
+			echo "\t<option value=\"0\" $is_false>" . _("Disable") . "</option>\n";
+			echo "</select>\n";
+		break;
 		default:
 			echo "<input type=\"text\" size=\"$len\" name=\"$name\" value=\"$value\" />";
 		break;

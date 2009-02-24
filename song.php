@@ -31,6 +31,11 @@ switch ($_REQUEST['action']) {
 		$song->format(); 
 		$song->fill_ext_info(); 
 		require_once Config::get('prefix') . '/templates/show_song.inc.php'; 
+		// does user want to display lyrics?
+		$show_lyrics = Config::get('show_lyrics');
+		if($show_lyrics == 1) {
+			require_once Config::get('prefix') . '/templates/show_lyrics.inc.php';
+		}
 	break; 
 } // end data collection 
 

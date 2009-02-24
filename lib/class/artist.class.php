@@ -281,6 +281,59 @@ class Artist extends database_object {
 		return $current_id;
 
 	} // update
-	
+
+	/**
+	 * get_song_lyrics
+	 * gets the lyrics of $this->song
+	 * if they are not in the database, fetch using LyricWiki (SOAP) and insert
+	 */
+	function get_song_lyrics($song_id, $artist_name, $song_title) {
+
+		$sql = "SELECT lyrics FROM song_data WHERE `song_id`='" . Dba::escape($song_id) . "'";
+		$db_results = Dba::query($sql); 
+
+		$results = Dba::fetch_assoc($db_results); 
+
+		if (strlen($results['lyrics']) > 1) {
+			return html_entity_decode(strip_tags(($results['lyrics'])), ENT_QUOTES);
+		}
+		else {
+			$client = new nusoap_client('http://lyricwiki.org/server.php?wsdl', 'wsdl');
+
+			$err = $client->getError();
+
+			if ($err) { return $results =  $err; }
+
+			// sall SOAP method
+			$result = $client->call("getSongResult", array("artist" => $artist_name, "song" => $song_title ));
+			// check for fault
+			if ($client->fault) {
+				return $results = "<h2>" . _('Fault') . "</h2>" . print_r($result);
+			}
+			else {
+				// check for errors
+				$err = $client->getError();
+
+				if ($err) {
+					return $results = "<h2>" . _('Error') . "</h2>" . $err;
+				}
+				else {
+					// if returned "Not found" do not add
+					if($result['lyrics'] == "Not found") {
+						$sorry = sprintf(_('Sorry Lyrics %s.'), $result['lyrics']);
+						return $sorry;
+					}
+					else {
+						// since we got lyrics, might as well add them to the database now (for future use)
+						$sql = "UPDATE `song_data` SET `lyrics` = '" . htmlspecialchars(strip_tags(($result['lyrics'])), ENT_QUOTES) . "' WHERE `song_id`='" . Dba::escape($song_id) . "'";
+						$db_results = Dba::query($sql);
+						// display result (lyrics)
+						//print_r($result);
+						return $results = strip_tags($result['lyrics']);
+					}
+				}
+			}
+		}
+	} // get_song_lyrics
 } // end of artist class
 ?>

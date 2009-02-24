@@ -53,8 +53,8 @@ $htmllang = str_replace("_","-",Config::get('lang'));
 </div>
 <div id="text-box">
 	<div class="notify">
-This page handles all database updates to Ampache starting with <strong>3.3.3.5</strong>. According to your database your current version is: <strong><?php echo Update::format_version($version); ; ?></strong>.
-the following updates need to be performed<br /><br />
+<?php printf(_('This page handles all database updates to Ampache starting with <strong>3.3.3.5</strong>. According to your database your current version is: <strong>%s</strong>.'), Update::format_version($version)); ?>
+<?php echo _('the following updates need to be performed'); ?><br /><br />
 <div style="font-size:1.2em;font-weight:bold;text-align:center;"><?php Error::display('general'); ?></div>
 	</div>
 	<div class="content">
@@ -65,7 +65,7 @@ the following updates need to be performed<br /><br />
 </form>
 	</div>
 	<div id="bottom">
-    	<p><b>Ampache Installation.</b><br />
+    	<p><b><?php echo _('Ampache Installation.'); ?></b><br />
     	Pour l'Amour de la Musique.</p>
    </div>
 </div>
