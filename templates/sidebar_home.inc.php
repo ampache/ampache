@@ -36,7 +36,6 @@ $ajax_info = Config::get('ajax_url'); $web_path = Config::get('web_path');
       <li id="sb_browse_bb_Playlist"><a href="<?php echo $web_path; ?>/browse.php?action=playlist"><?php echo _('Playlist'); ?></a></li>
       <li id="sb_browse_bb_RadioStation"><a href="<?php echo $web_path; ?>/browse.php?action=live_stream"><?php echo _('Radio Stations'); ?></a></li>
       <li id="sb_browse_bb_Video"><a href="<?php echo $web_path; ?>/browse.php?action=video"><?php echo _('Video'); ?></a></li>
-      <li id="sb_browse_bb_Playlist"><a href="<?php echo $web_path; ?>/playlist.php?action=show_import_playlist"><?php echo _('Import Playlist'); ?></a></li>
     </ul>
   </li>
 <?php if (count($allowed_filters)) { ?>
@@ -99,6 +98,7 @@ $ajax_info = Config::get('ajax_url'); $web_path = Config::get('web_path');
 ?>
         <li id="sb_localplay_info_show"><a href="<?php echo $web_path; ?>/localplay.php?action=show_playlist"><?php echo _('Localplay'); ?></a></li>
 <?php } ?>
+      <li id="sb_browse_bb_Playlist"><a href="<?php echo $web_path; ?>/playlist.php?action=show_import_playlist"><?php echo _('Import'); ?></a></li>
     </ul>
   </li>
   <li><h4><?php echo _('Random'); ?></h4>
