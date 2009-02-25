@@ -4,6 +4,10 @@
 
 --------------------------------------------------------------------------
   v.3-5-Alpha2
+	- Changed API Date format to ISO 8601 
+	- Fixed Incorrect Caching of Album records that caused the 
+		Name + Year + Disk to not be respected
+	- Added Lyrics Patch (Thx alister55 & momo-i)
 	- Fixed password not updating when editing an HTTPQ localplay
 		instance
 	- Added Video support

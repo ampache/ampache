@@ -991,6 +991,8 @@ class Catalog extends database_object {
 			}
 		} // foreach songs
 
+		self::clean(); 
+
 	} // update_single_item
 
 	/**
@@ -1022,7 +1024,7 @@ class Catalog extends database_object {
 		$name = (get_class($media) == 'Song') ? 'song' : 'video'; 
 
 		$function = 'update_' . $name . '_from_tags'; 
-echo $function;
+
 		$return = call_user_func(array('Catalog',$function),$results,$media); 	
 
 		return $return; 
@@ -1983,7 +1985,7 @@ echo $function;
 
 		// Remove the prefix so we can sort it correctly
 		$prefix_pattern = '/^(' . implode('\\s|',explode('|',Config::get('catalog_prefix_pattern'))) . '\\s)(.*)/i';
-		debug_event('prefix',$prefix_pattern,'3');
+		debug_event('prefix',$prefix_pattern,'5');
 		preg_match($prefix_pattern,$album,$matches);
 
 		if (count($matches)) {
@@ -1992,8 +1994,8 @@ echo $function;
 		}
 
 		// Check to see if we've seen this album before
-		if (isset(self::$albums[$album])) {
-			return self::$albums[$album];
+		if (isset(self::$albums[$album][$year][$disk])) {
+			return self::$albums[$album][$year][$disk];
 		}
 
 		/* Setup the Query */
@@ -2037,9 +2039,8 @@ echo $function;
 			return false;
 		}
 
-		$array = array($album => $album_id);
-		self::$albums = array_merge(self::$albums,$array);
-		unset($array);
+		// Save the cache
+		self::$albums[$album][$year][$disk] = $album_id; 
 
 		return $album_id;
 
