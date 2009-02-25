@@ -320,7 +320,7 @@ switch ($_REQUEST['action']) {
 			break; 
 			default:
 				// They are doing it wrong
-				echo xmlData::error('40t',_('Invalid Request'));
+				echo xmlData::error('405',_('Invalid Request'));
 			break;
 		} // end switch on command
 
