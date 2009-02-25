@@ -111,9 +111,7 @@ switch ($_REQUEST['action']) {
 		Browse::set_type('artist'); 
 		Browse::set_sort('name','ASC'); 
 	
-		if ($_REQUEST['filter']) { 
-			Browse::set_filter('alpha_match',$_REQUEST['filter']); 
-		} 
+		Api::set_filter('alpha_match',$_REQUEST['filter']); 
 
 		// Set the offset
 		xmlData::set_offset($_REQUEST['offset']); 
@@ -154,9 +152,7 @@ switch ($_REQUEST['action']) {
 		Browse::set_type('album'); 
 		Browse::set_sort('name','ASC'); 
 		
-		if ($_REQUEST['filter']) { 
-			Browse::set_filter('alpha_match',$_REQUEST['filter']); 
-		} 
+		Api::set_filter('alpha_match',$_REQUEST['filter']); 
 		$albums = Browse::get_objects(); 
 
                 // Set the offset
@@ -184,10 +180,8 @@ switch ($_REQUEST['action']) {
 		Browse::reset_filters(); 
 		Browse::set_type('genre'); 
 		Browse::set_sort('name','ASC'); 
-		
-		if ($_REQUEST['filter']) { 
-			Browse::set_filter('alpha_match',$_REQUEST['filter']); 
-		} 
+
+		Api::set_filter('alpha_match',$_REQUEST['filter']); 
 		$genres = Browse::get_objects(); 
 
                 // Set the offset
@@ -236,10 +230,10 @@ switch ($_REQUEST['action']) {
 		Browse::reset_filters(); 
 		Browse::set_type('song'); 
 		Browse::set_sort('title','ASC'); 
+
+		Api::set_filter('alpha_match',$_REQUEST['filter']); 
+		Api::set_filter('add',$_REQUEST['add']); 
 		
-		if ($_REQUEST['filter']) { 
-			Browse::set_filter('alpha_match',$_REQUEST['filter']); 
-		} 
 		$songs = Browse::get_objects(); 
 
                 // Set the offset
@@ -309,6 +303,27 @@ switch ($_REQUEST['action']) {
 		xmlData::set_limit($_REQUEST['limit']); 
 
 		echo xmlData::songs($results); 
+	break; 
+	case 'localplay': 
+		// Load their localplay instance
+		$localplay = new Localplay(Config::get('localplay_controller')); 
+		$localplay->connect(); 
+
+		switch ($_REQUEST['command']) { 
+			case 'next': 
+			case 'prev':
+			case 'play': 
+			case 'stop': 
+				$result_status = $localplay->$command(); 
+				$xml_array = array('localplay'=>array('command'=>array($command=>make_bool($result_status))));
+				echo xmlData::build_from_array($xml_array); 
+			break; 
+			default:
+				// They are doing it wrong
+				echo xmlData::error('40t',_('Invalid Request'));
+			break;
+		} // end switch on command
+
 	break; 
 	default:
                 ob_end_clean();

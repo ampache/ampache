@@ -675,5 +675,5 @@ class Localplay {
 	} // get_user_playing
 
 
-} //end localplay class
+} // end localplay class
 ?>

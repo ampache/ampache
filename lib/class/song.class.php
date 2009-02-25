@@ -920,7 +920,7 @@ class Song extends database_object implements media {
 
 		foreach ($elements as $items) { 
 			list($key,$value) = explode("=",$items); 
-			if ($key == 'song') { 
+			if ($key == 'oid') { 
 				return $value; 
 			} 
 		} // end foreach 	

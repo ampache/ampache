@@ -4,6 +4,9 @@
 
 --------------------------------------------------------------------------
   v.3-5-Alpha2
+	- Added Localplay controls to API 
+	- Added Added/Updated filters to API include the ability to specify
+		a date range using ISO 8601 format with [START]/[END]
 	- Changed API Date format to ISO 8601 
 	- Fixed Incorrect Caching of Album records that caused the 
 		Name + Year + Disk to not be respected

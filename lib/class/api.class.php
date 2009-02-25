@@ -39,6 +39,40 @@ class Api {
 	} // constructor
 
 	/**
+	 * set_filter
+	 * This is a play on the browse function, it's different as we expose the filters in a slightly different
+	 * and vastly simplier way to the end users so we have to do a little handy work to make them
+	 * work internally
+	 */
+	public static function set_filter($filter,$value) { 
+
+		if (!strlen($value)) { return false; } 
+
+		switch ($filter) { 
+			case 'add': 
+	                        // Check for a range, if no range default to gt
+	                        if (strpos('/',$value)) {
+	                                $elements = explode('/',$value);
+	                                Browse::set_filter('add_lt',$elements['1']);
+	                                Browse::set_filter('add_gt',$elements['0']);
+	                        }
+	                        else {
+	                                Browse::set_filter('add',strtotime($value));
+	                        }
+			break; 
+			case 'alpha_match':
+				Browse::set_filter('alpha_match',$value); 
+			break; 
+			default: 
+				// Rien a faire
+			break; 
+		} // end filter
+
+		return true; 
+
+	} // set_filter
+
+	/**
 	 * handshake
 	 * This is the function that handles the verifying a new handshake
 	 * this takes a timestamp, auth key, and client IP. Optionally it

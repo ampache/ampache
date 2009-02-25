@@ -94,6 +94,12 @@ class Browse {
 			case 'rated':
 
 			break; 
+			case 'add_lt': 
+			case 'add_gt': 
+			case 'update_lt': 
+			case 'update_gt':
+				$_SESSION['browse']['filter'][self::$type][$key] = intval($value); 	
+			break; 
 			case 'alpha_match':
 			case 'starts_with': 
 				if (self::$static_content) { return false; }
@@ -252,10 +258,12 @@ class Browse {
 
 		switch (self::$type) { 
 			case 'album': 
-				$valid_array = array('show_art','starts_with','alpha_match'); 
+				$valid_array = array('show_art','starts_with','alpha_match','add','update'); 
 			break; 
 			case 'artist': 
 			case 'song': 
+				$valid_array = array('add_lt','add_gt','update_lt','update_gt','alpha_match','starts_with'); 
+			break; 
 			case 'live_stream': 
 				$valid_array = array('alpha_match','starts_with'); 	
 			break; 
@@ -832,6 +840,18 @@ class Browse {
 				case 'artist':
 					$filter_sql = " `song`.`artist` = '". Dba::escape($value) . "' AND ";
 				break;
+				case 'add_gt': 
+					$filter_sql = " `song`.`addition_time` >= '" . Dba::escape($value) . "' AND "; 
+				break; 
+				case 'add_lt': 
+					$filter_sql = " `song`.`addition_time` <= '" . Dba::escape($value) . "` AND "; 
+				break; 
+				case 'update_gt': 
+					$filter_sql = " `song`.`update_time` >= '" . Dba::escape($value) . "' AND "; 
+				break; 
+				case 'update_lt': 
+					$filter_sql = " `song`.`update_time` <= '" . Dba::escape($value) . "' AND "; 
+				break; 
 				case 'catalog': 
 					$catalogs = $GLOBALS['user']->get_catalogs(); 
 					if (!count($catalogs)) { break; } 
@@ -854,6 +874,10 @@ class Browse {
 			        case 'artist':
 					$filter_sql = " `artist`.`id` = '". Dba::escape($value) . "' AND ";
 				break;
+				case 'add': 
+					self::set_join('left','`song`','`song`.`album`','`album`.`id`');	
+				case 'update': 
+					self::set_join('left','`song`','`song`.`album`','`album`.`id`');
 				default: 
 					// Rien a faire
 				break;
