@@ -4,6 +4,7 @@
 
 --------------------------------------------------------------------------
   v.3-5-Alpha2
+	- Fixed bug where saved Thumbnails were almost never used
 	- Fixed Localplay HTTPQ and MPD controls to reconize Live Stream
 		urls. 
 	- Added Localplay controls to API 

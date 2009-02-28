@@ -46,18 +46,18 @@ switch ($_REQUEST['thumb']) {
 	case '2':
 		$size['height']	= '128';
 		$size['width']	= '128';
-		$return_raw = true; 
+	//	$return_raw = true; 
 	break;
 	case '3':
 		/* This is used by the flash player */
 		$size['height']	= '80';
 		$size['width']	= '80';
-		$return_raw = true; 
+	//	$return_raw = true; 
 	break;
 	default:
 		$size['height'] = '275';
 		$size['width']	= '275';
-		$return_raw = true; 
+	//	$return_raw = true; 
 	break;
 } // define size based on thumbnail
 
