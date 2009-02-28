@@ -853,57 +853,25 @@ class Song extends database_object implements media {
 	 * a stream URL taking into account the downsmapling mojo and everything
 	 * else, this is the true function
 	 */
-	public static function play_url($oid,$session_id='',$force_http='') { 
+	public static function play_url($oid) { 
 
-
-	} // play_url
-
-	/**
-	 * get_url
-	 * This function takes all the song information and correctly formats
-	 * a stream URL taking into account the downsampling mojo and everything
-	 * else, this is used or will be used by _EVERYTHING_ 
-	 */
-	public function get_url($session_id='',$force_http='') { 
-
-		/* Define Variables we are going to need */
+		$song = new Song($oid); 
 		$user_id 	= $GLOBALS['user']->id ? scrub_out($GLOBALS['user']->id) : '-1'; 
-		$song_id	= $this->id;
+		$type		= $song->type;
 
-		if (Config::get('require_session')) { 
-			if ($session_id) { 
-				$session_string = "&sid=" . $session_id; 
-			} 
-			else { 
-				$session_string	= "&sid=" . Stream::get_session(); 
-			}
-		} // if they are requiring a session
+		// Required for some versions of winamp that won't work if the stream doesn't end in 
+		// .ogg This will not break any properly working player, don't report this as a bug! 
+		if ($song->type == 'flac') { $type = 'ogg'; } 
 
-		$type		= $this->type;
+		$song->format();
 
-		/* Account for retarded players */
-		if ($this->type == 'flac') { $type = 'ogg'; } 
-
-		// Only reformat if we need to 
-		if (!isset($this->f_title)) { 
-			$this->format();
-		} 
-
-		$song_name = rawurlencode($this->f_artist_full . " - " . $this->title . "." . $type);
+		$song_name = rawurlencode($song->f_artist_full . " - " . $song->title . "." . $type);
 	
-		$web_path = Config::get('web_path');
-
-		//FIXME: REPLACE WITH Stream::get_base_url
-                if (Config::get('force_http_play') OR !empty($force_http)) {
-                        $port = Config::get('http_port') ? ':' . Config::get('http_port') : ''; 
-			$web_path = str_replace("https://" . $_SERVER['HTTP_HOST'], "http://" . $_SERVER['SERVER_NAME'] . $port,$web_path);
-                }
-	
-		$url = $web_path . "/play/index.php?oid=$song_id&uid=$user_id$session_string$ds_string&name=/$song_name";
+		$url = Stream::get_base_url() . "/play/index.php?oid=$song_id&uid=$user_id$session_string$ds_string&name=/$song_name";
 
 		return $url;
 
-	} // get_url
+	} // play_url
 
 	/**
 	 * parse_song_url

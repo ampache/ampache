@@ -2443,7 +2443,7 @@ class Catalog extends database_object {
 					$xml['dict']['Sample Rate'] = intval($song->rate);
 					$xml['dict']['Play Count'] = intval($song->played);
 					$xml['dict']['Track Type'] = "URL";
-					$xml['dict']['Location'] = $song->get_url();
+					$xml['dict']['Location'] = Song::play_url($song->id);
 					echo xml_from_array($xml,1,'itunes');
 					// flush output buffer
 				} // while result

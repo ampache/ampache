@@ -25,7 +25,7 @@
  * This handles the internet radio stuff, that is inserted into live_stream
  * this can include podcasts or what-have-you
  */
-class Radio extends database_object {
+class Radio extends database_object implements media {
 
 	/* DB based variables */
 	public $id; 
@@ -68,16 +68,6 @@ class Radio extends database_object {
 		return true; 
 
 	} // format
-
-	/**
-	 * get_url	
-	 * This returns the URL for this live stream
-	 */
-	public function get_url() { 
-
-		
-
-	} // get_url 
 
 	/**
 	 * update
@@ -175,6 +165,47 @@ class Radio extends database_object {
 		return true; 
 
 	} // delete
+
+	/**
+	 * native_stream
+	 * This is needed by the media interface
+	 */
+	public function native_stream() { 
+
+
+
+	} // native_stream 
+
+	/**
+	 * play_url
+	 * This is needed by the media interface
+	 */
+	public static function play_url($oid,$sid='',$force_http='') { 
+
+		$radio = new Radio($oid); 
+		
+		return $radio->url; 
+
+	} // play_url  
+
+	/**
+	 * has_flag
+	 * This is needed by the media interface
+	 */
+	public function has_flag() { 
+
+
+
+	} // has_flag
+
+	/**
+	 * stream_cmd
+	 * Needed by the media interface
+	 */
+	public function stream_cmd() { 
+
+
+	} // stream_cmd
 
 } //end of radio class
 

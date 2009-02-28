@@ -28,7 +28,7 @@ $button_flip_state_id = 'button_flip_state_' . $song->id;
 	<dd class"<?php echo $rowparity; ?>">
 		<?php echo Ajax::button('?action=basket&type=song&id=' . $song->id,'add',_('Add'),'add_song_' . $song->id); ?>
 		<?php if (Access::check_function('download')) { ?>
-			<a href="<?php echo $song->get_url(); ?>"><?php echo get_user_icon('link'); ?></a>
+			<a href="<?php echo Song::play_url($song->id); ?>"><?php echo get_user_icon('link'); ?></a>
 			<a href="<?php echo Config::get('web_path'); ?>/stream.php?action=download&amp;song_id=<?php echo $song->id; ?>"><?php echo get_user_icon('download'); ?></a>
 		<?php } ?>
 		<?php if (Access::check('interface','75')) { ?>

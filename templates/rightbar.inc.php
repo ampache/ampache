@@ -88,16 +88,13 @@
 		$objects = array_slice($objects,0,100); 
 	} 
 
-	$normal_array = array('radio','song','video'); 
+	$normal_array = array('radio','song','video','random'); 
 
 	foreach ($objects as $uid=>$object_data) { 
-		if (in_array($object_data['1'],$normal_array)) { 
-			$object = new $object_data['1']($object_data['0']); 
+		$type = array_shift($object_data);
+		if (in_array($type,$normal_array)) { 
+			$object = new $type(array_shift($object_data)); 
 			$object->format(); 
-		} 
-		else { 
-			$object = new Random(); 
-			$object->f_link = Random::get_type_name($object_data['1']); 
 		} 
 ?>
 <li class="<?php echo flip_class(); ?>" >

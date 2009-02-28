@@ -26,7 +26,7 @@ if (Config::get('demo_mode') || !Access::check('interface','25')) {
 	exit;
 }
 
-$song_ids = array();
+$media_ids = array();
 $web_path = Config::get('web_path');
 
 /**
@@ -35,30 +35,7 @@ $web_path = Config::get('web_path');
 switch ($_REQUEST['action']) { 
 	case 'basket': 
 		// Pull in our items (multiple types) 
-		$objects = $GLOBALS['user']->playlist->get_items(); 
-
-		//Recurse through the objects 
-		foreach ($objects as $object_data) { 
-			// Switch on the type of object we've got in here
-			switch ($object_data['1']) { 
-				case 'radio': 
-					$radio = new Radio($object_data['0']); 
-					$urls[] = $radio->url;
-				break;
-				case 'song': 
-					$song_ids[] = $object_data['0'];
-				break;
-				case 'video': 
-					$video_url = Video::play_url($object_data['0']); 
-					if ($video_url) { $urls[] = $video_url; }  
-				break; 
-				default: 
-					$random_url = Random::play_url($object_data['1']); 
-					// If there's something to actually add
-					if ($random_url) { $urls[] = $random_url; } 
-				break;
-			} // end switch on type
-		} // end foreach
+		$media_ids = $GLOBALS['user']->playlist->get_items(); 
 
 		// Check to see if 'clear' was passed if it was then we need to reset the basket
 		if ( ($_REQUEST['playlist_method'] == 'clear' || Config::get('playlist_method') == 'clear') AND Config::get('play_type') != 'xspf_player') { 
@@ -69,67 +46,67 @@ switch ($_REQUEST['action']) {
 	/* This is run if we need to gather info based on a tmp playlist */
 	case 'tmp_playlist':
 		$tmp_playlist = new tmpPlaylist($_REQUEST['tmpplaylist_id']);
-		$song_ids = $tmp_playlist->get_items();
+		$media_ids = $tmp_playlist->get_items();
 	break;
 	case 'play_favorite':
 		$data = $GLOBALS['user']->get_favorites($_REQUEST['type']); 
-		$song_ids = array(); 
+		$media_ids = array(); 
 		switch ($_REQUEST['type']) { 
 			case 'artist':
 			case 'album':
 				foreach ($data as $value) { 
 					$songs = $value->get_songs(); 
-					$song_ids = array_merge($song_ids,$songs); 
+					$media_ids = array_merge($media_ids,$songs); 
 				} 
 			break;
 			case 'song':
 				foreach ($data as $value) { 
-					$song_ids[] = $value->id; 
+					$media_ids[] = $value->id; 
 				} 
 			break;
 		} // end switch on type
 	break;
 	case 'single_song':
-		$song_ids[] = scrub_in($_REQUEST['song_id']);
+		$media_ids[] = scrub_in($_REQUEST['song_id']);
 	break;
 	case 'your_popular_songs':
-		$song_ids = get_popular_songs($_REQUEST['limit'], 'your', $GLOBALS['user']->id);
+		$media_ids = get_popular_songs($_REQUEST['limit'], 'your', $GLOBALS['user']->id);
 	break;
 	case 'popular_songs':
-		$song_ids = get_popular_songs($_REQUEST['limit'], 'global');
+		$media_ids = get_popular_songs($_REQUEST['limit'], 'global');
 	break;
 	case 'genre':
 		$genre = new Genre($_REQUEST['genre']);
-		$song_ids = $genre->get_songs();
+		$media_ids = $genre->get_songs();
 	break;
 	case 'artist':
 		$artist = new Artist($_REQUEST['artist_id']);
-		$song_ids = $artist->get_songs();
+		$media_ids = $artist->get_songs();
 	break;
 	case 'artist_random':
 		$artist = new Artist($_REQUEST['artist_id']);
 		$artist->get_count();
-		$song_ids = $artist->get_random_songs();
+		$media_ids = $artist->get_random_songs();
 	break;
 	case 'album_random':
 		$album = new Album($_REQUEST['album_id']);
-		$song_ids = $album->get_random_songs();
+		$media_ids = $album->get_random_songs();
 	break;
 	case 'album':
 		$album = new Album($_REQUEST['album_id']);
-		$song_ids = $album->get_songs();
+		$media_ids = $album->get_songs();
 	break;
 	case 'random_genre':
 		$genre 		= new Genre($_REQUEST['genre']);
-		$song_ids 	= $genre->get_random_songs();
+		$media_ids 	= $genre->get_random_songs();
 	break;
 	case 'playlist':
 		$playlist	= new Playlist($_REQUEST['playlist_id']);
-		$song_ids	= $playlist->get_songs($_REQUEST['song']);
+		$media_ids	= $playlist->get_songs($_REQUEST['song']);
 	break;
 	case 'playlist_random':
 		$playlist	= new Playlist($_REQUEST['playlist_id']);
-		$song_ids	= $playlist->get_random_songs();
+		$media_ids	= $playlist->get_random_songs();
 	break;
 	case 'random':
 		if($_REQUEST['genre'][0] != '-1') {
@@ -140,14 +117,14 @@ switch ($_REQUEST['action']) {
 		}
 		/* Setup the options array */
 		$options = array('limit' => $_REQUEST['random'], 'random_type' => $_REQUEST['random_type'],'size_limit'=>$_REQUEST['size_limit']);
-		$song_ids = get_random_songs($options, $matchlist);
+		$media_ids = get_random_songs($options, $matchlist);
 	break;
 	case 'democratic': 
 		$democratic = new Democratic($_REQUEST['democratic_id']); 
-		$urls[] = $democratic->get_url(); 
+		$urls[] = $democratic->play_url(); 
 	break;
 	case 'download': 
-		$song_ids[] = $_REQUEST['song_id']; 
+		$media_ids[] = $_REQUEST['song_id']; 
 	default:
 	break;
 } // end action switch
@@ -164,7 +141,7 @@ switch ($_REQUEST['method']) {
 
 		// Format the zip file
 		$name = "AmpacheZip-" . date("m-d-Y",time());
-		$song_files = get_song_files($song_ids);
+		$song_files = get_song_files($media_ids);
 		set_memory_limit($song_files[1]+32);
 		send_zip($name,$song_files[0]);
 	break;
@@ -191,11 +168,9 @@ switch ($_REQUEST['method']) {
 		} 
 
 		/* Start the Stream */
-		$stream = new Stream($stream_type,$song_ids);
+		$stream = new Stream($stream_type,$media_ids);
 		if (is_array($urls)) { 
-			foreach ($urls as $url) { 
-				$stream->manual_url_add($url); 
-			} 
+			$stream->manual_url_add($urls); 
 		} 
 		$stream->start();
 	break;

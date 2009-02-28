@@ -28,7 +28,7 @@ interface media {
 
 	public function format(); 
 	public function native_stream(); 
-	public static function play_url($oid,$sid='',$force_http=''); 
+	public static function play_url($oid); 
 	public function stream_cmd(); 
 	public function has_flag(); 
 

@@ -239,23 +239,16 @@ class Democratic extends tmpPlaylist {
         } // get_items
 
         /**
-         * get_url
+         * play_url
          * This returns the special play URL for democratic play, only open to ADMINs
          */
-        public function get_url() {
+        public function play_url() {
 
-		$web_path = Config::get('web_path'); 
+                $link = Stream::get_base_url() . 'demo_id=' . scrub_out($this->id); 
 
-                if (Config::get('force_http_play')) {
-                        $port = Config::get('http_port') ? ':' . Config::get('http_port') : '';
-                        $web_path = str_replace("https://" . $_SERVER['HTTP_HOST'], "http://" . $_SERVER['SERVER_NAME'] . $port,$web_path);
-                }
-
-                $link = $web_path . '/play/index.php?demo_id=' . scrub_out($this->id) .
-                        '&sid=' . Stream::get_session() . '&uid=' . scrub_out($GLOBALS['user']->id);
                 return $link;
 
-        } // get_url
+        } // play_url
 
         /**             
          * get_next_object

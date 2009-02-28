@@ -59,17 +59,9 @@ abstract class localplay_controller {
 			return $object; 		
 		} 
 
-		// This can get a little complicated
-		switch ($object_type) { 
-			case 'random': 
+		$class = get_class($object); 
 		
-			break; 
-			case 'radio': 
-			case 'song': 
-			default: 
-				$url = $object->get_url(Stream::get_session()); 	
-			break;
-		} // end switch on objecttype
+		$url = call_user_func(array($class,'play_url'),$object->id); 
 
 		return $url;
 

@@ -26,7 +26,7 @@
  * by this class, there isn't a table for this class so most of it's functions
  * are static
  */
-class Random {
+class Random implements media {
 
 	/**
 	 * Constructor
@@ -91,7 +91,7 @@ class Random {
 	 * This generates a random play url based on the passed type
 	 * and returns it
 	 */
-	public static function play_url($type) { 
+	public static function play_url($type,$sid='',$force_http='') { 
 
 		if (!$type = self::validate_type($type)) { 
 			return false; 
@@ -99,7 +99,7 @@ class Random {
 	
 		$uid = $GLOBALS['user']->id; 
 	
-		$url = Stream::get_base_url() . "random=1&type=$type&uid=$uid$session_string";
+		$url = Stream::get_base_url() . "random=1&type=$type&uid=$uid";
 
 		return $url; 
 
@@ -441,6 +441,11 @@ class Random {
 		return $type; 
 
 	} // validate_type
+
+	public function native_stream() { } 
+	public function stream_cmd() { } 
+	public function has_flag() { }
+	public function format() { }
 
 } //end of random class
 
