@@ -75,10 +75,6 @@ switch ($_REQUEST['action']) {
 	case 'popular_songs':
 		$media_ids = get_popular_songs($_REQUEST['limit'], 'global');
 	break;
-	case 'genre':
-		$genre = new Genre($_REQUEST['genre']);
-		$media_ids = $genre->get_songs();
-	break;
 	case 'artist':
 		$artist = new Artist($_REQUEST['artist_id']);
 		$media_ids = $artist->get_songs();

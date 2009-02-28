@@ -4,6 +4,8 @@
 
 --------------------------------------------------------------------------
   v.3-5-Alpha2
+	- Fixed Localplay HTTPQ and MPD controls to reconize Live Stream
+		urls. 
 	- Added Localplay controls to API 
 	- Added Added/Updated filters to API include the ability to specify
 		a date range using ISO 8601 format with [START]/[END]

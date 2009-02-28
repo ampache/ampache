@@ -494,19 +494,28 @@ class AmpacheHttpq extends localplay_controller {
 				break; 
                                 default:
                                         /* If we don't know it, look up by filename */
-                                        $filename = Dba::escape(basename($entry));
-                                        $sql = "SELECT `id` FROM `song` WHERE `file` LIKE '%$filename'";
-                                        $db_results = Dba::query($sql);
-                                        if ($r = Dba::fetch_assoc($db_results)) {
-                                                $song = new Song($r['id']);
-                                                $song->format();
-                                                $data['name'] = $song->f_title . ' - ' . $song->f_album . ' - ' . $song->f_artist;
-                                                $data['link'] = $song->f_link;
-                                        }
-                                        else {
-                                                $data['name'] = _('Unknown');
-                                                $data['link']   = '';
-                                        }
+                                        $filename = Dba::escape($entry['file']);
+                                        $sql = "SELECT `id`,'song' AS `type` FROM `song` WHERE `file` LIKE '%$filename' " .
+                                                "UNION ALL " .
+                                                "SELECT `id`,'radio' AS `type` FROM `live_stream` WHERE `url`='$filename' ";
+
+                                        $db_results = Dba::read($sql);
+                                        if ($row = Dba::fetch_assoc($db_results)) {
+                                                $media = new $row['type']($row['id']);
+                                                $media->format();
+                                                switch ($row['type']) {
+                                                        case 'song':
+                                                                $data['name'] = $media->f_title . ' - ' . $media->f_album . ' - ' . $media->f_artist;
+                                                                $data['link'] = $media->f_link;
+                                                        break;
+                                                        case 'radio':
+                                                                $frequency = $media->frequency ? '[' . $media->frequency . ']' : '';
+                                                                $site_url = $media->site_url ? '(' . $media->site_url . ')' : '';
+                                                                $data['name'] = "$media->name $frequency $site_url";
+                                                                $data['link'] = $media->site_url; 
+                                                        break; 
+                                                } // end switch on type 
+                                        } // end if results
 
                                 break;
                         } // end switch on primary key type
