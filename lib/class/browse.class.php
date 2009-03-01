@@ -1141,6 +1141,7 @@ class Browse {
 				show_box_bottom(); 
 			break;
 			case 'live_stream': 
+				require_once Config::get('prefix') . '/templates/show_live_stream.inc.php'; 
 				show_box_top(_('Radio Stations') . $match, $class); 
 				require_once Config::get('prefix') . '/templates/show_live_streams.inc.php';
 				show_box_bottom(); 
