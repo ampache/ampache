@@ -107,11 +107,13 @@ class vauth {
 
 	/**
 	 * destroy
-	 * This removes the specified sessoin from the database
+	 * This removes the specified session from the database
 	 */
 	public static function destroy($key) { 
 
 		$key = Dba::escape($key); 
+
+		if (!strlen($key)) { return false; } 
 
 		// Remove anything and EVERYTHING
 		$sql = "DELETE FROM `session` WHERE `id`='$key'"; 

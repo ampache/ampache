@@ -25,15 +25,18 @@
 	<col id="col_field" />
 	<col id="col_operator" />
 	<col id="col_value" />
+	<col id="col_method" />
 	<col id="col_action" />
 </colgroup>
 <tr class="th-top">
 	<th class="col_field"><?php echo _('Field'); ?></th>
 	<th class="col_operator"><?php echo _('Operator'); ?></th>
 	<th class="col_value"><?php echo _('Value'); ?></th>
+	<th class="col_method"><?php echo _('Method'); ?></th>
 	<th class="col_action"><?php echo _('Action'); ?></th>
 </tr>
 <tr>
+	<td></td>
 	<td></td>
 	<td></td>
 	<td></td>

@@ -235,9 +235,8 @@ function img_resize($image,$size,$type,$album_id) {
 	$width = imagesx($src);
 	$height = imagesy($src);
 
-	// Make it the largest always
-	$new_w = '275'; 
-	$new_h = '275'; 
+	$new_w = $size['width'];
+	$new_h = $size['height'];
 
 	$img = imagecreatetruecolor($new_w,$new_h);
 	

@@ -24,6 +24,7 @@ $web_path = Config::get('web_path');
 <td class="cel_path"><?php echo scrub_out($catalog->f_path); ?></td>
 <td class="cel_lastverify"><?php echo scrub_out($catalog->f_update); ?></td>
 <td class="cel_lastadd"><?php echo scrub_out($catalog->f_add); ?></td>
+<td class="cel_lastclean"><?php echo scrub_out($catalog->f_clean); ?></td>
 <td class="cel_action">
 	<a href="<?php echo $web_path; ?>/admin/catalog.php?action=add_to_catalog&amp;catalogs[]=<?php echo $catalog->id; ?>"><?php echo _('Add'); ?></a>
 	| <a href="<?php echo $web_path; ?>/admin/catalog.php?action=update_catalog&amp;catalogs[]=<?php echo $catalog->id; ?>"><?php echo _('Verify'); ?></a>

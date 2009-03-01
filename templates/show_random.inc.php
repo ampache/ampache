@@ -25,11 +25,13 @@
 	<col id="col_field" />
 	<col id="col_operator" />
 	<col id="col_value" />
+	<col id="col_method" />
 </colgroup>
 <tr class="th-top">
 	<th class="col_field"><?php echo _('Field'); ?></th>
 	<th class="col_operator"><?php echo _('Operator'); ?></th>
 	<th class="col_value"><?php echo _('Value'); ?></th>
+	<th class="col_method"><?php echo _('Method'); ?></th>
 </tr>
 <tr>
 	<td valign="top">
@@ -57,6 +59,12 @@
 	<td valign="top">
 		<input type="textbox" name="value" />
 	</td>
+	<td valign="top">
+		<select name="method">
+			<option value="OR"><?php echo _('OR'); ?></option>
+			<option value="AND"><?php echo _('AND'); ?></option>
+		</select>
+	</td>
 </tr>
 <tr>
 	<td>
@@ -65,12 +73,13 @@
 	<td>
 		<?php echo Ajax::button('?page=random&action=save_rules','download',_('Save Rules As'),'save_random_rules'); ?><?php echo _('Save Rules As'); ?>
 	</td>
-	<td>
+	<td colspan="2">
 		<?php echo Ajax::button('?page=random&action=load_rules','cog',_('Load Saved Rules'),'load_random_rules'); ?><?php echo _('Load Saved Rules'); ?>
 	</td>
+	
 </tr>
 <tr>
-	<td colspan="3">
+	<td colspan="4">
 		<div id="rule_status"></div>
 	</td>
 </tr>

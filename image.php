@@ -46,7 +46,7 @@ switch ($_REQUEST['thumb']) {
 	case '2':
 		$size['height']	= '128';
 		$size['width']	= '128';
-		$return_raw = true; 
+	//	$return_raw = true; 
 	break;
 	case '3':
 		/* This is used by the flash player */
@@ -57,7 +57,7 @@ switch ($_REQUEST['thumb']) {
 	default:
 		$size['height'] = '275';
 		$size['width']	= '275';
-		$return_raw = true; 
+	//	$return_raw = true; 
 	break;
 } // define size based on thumbnail
 
@@ -104,7 +104,7 @@ switch ($_REQUEST['type']) {
 			$art_data = $art['raw'];
 		}
 		else { 
-			$art_data = img_resize($art,$size,$extension,$_REQUEST['id']);
+			$art_data = img_resize($art,array('width'=>'275','height'=>'275'),$extension,$_REQUEST['id']);
 		}
 		
 		// Send the headers and output the image

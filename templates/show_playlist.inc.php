@@ -51,6 +51,5 @@
 	Browse::set_type('playlist_song'); 
 	Browse::add_supplemental_object('playlist',$playlist->id); 
 	Browse::set_static_content(1);
-	Browse::save_objects($object_ids); 
 	Browse::show_objects($object_ids); 
 ?>

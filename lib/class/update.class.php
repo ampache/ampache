@@ -307,6 +307,15 @@ class Update {
 
 		$version[] = array('version'=>'350006','description'=>$update_string);
 
+		$update_string = '- Remove unused fields from catalog, playlist, playlist_data<br />' . 
+				'- Add tables for dynamic playlists<br />' . 
+				'- Add last_clean to catalog table<br />' . 
+				'- Add track to tmp_playlist_data<br />' . 
+				'- Increase Thumbnail blob size<br />'; 
+
+		$version[] = array('version'=>'350007','description'=>$update_string); 
+
+
 		return $version;
 
 	} // populate_version
@@ -1629,10 +1638,10 @@ class Update {
 	public static function update_350007() { 
 
 		// We need to clear the thumbs as they will need to be re-generated
-		$sql = "UPDATE `album_data` SET `thumb`=NULL"; 
+		$sql = "UPDATE `album_data` SET `thumb`=NULL,`thumb_mime`=NULL"; 
 		$db_results = Dba::write($sql); 
 
-		$sql = "UPDATE `artist_data` SET `thumb`=NULL"; 
+		$sql = "UPDATE `artist_data` SET `thumb`=NULL,`thumb_mime`=NULL"; 
 		$db_results = Dba::write($sql); 
 
 		// Change the db thumb sizes
@@ -1663,7 +1672,24 @@ class Update {
 		$sql = "ALTER TABLE `catalog` DROP `add_path`"; 
 		$db_results = Dba::write($sql); 
 
-		
+		$sql = "CREATE TABLE `dynamic_playlist` (" . 
+			"`id` INT( 11 ) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY ," . 
+			"`name` VARCHAR( 255 ) NOT NULL ," . 
+			"`user` INT( 11 ) NOT NULL ," . 
+			"`date` INT( 11 ) UNSIGNED NOT NULL ," . 
+			"`type` VARCHAR( 128 ) NOT NULL" . 
+			") ENGINE = MYISAM ";
+		$db_results = Dba::write($sql); 
+
+		$sql = "CREATE TABLE `dynamic_playlist_data` (" . 
+			"`id` INT( 11 ) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY ," . 
+			"`dynamic_id` INT( 11 ) UNSIGNED NOT NULL ," . 
+			"`field` VARCHAR( 255 ) NOT NULL ," . 
+			"`internal_operator` VARCHAR( 64 ) NOT NULL ," . 
+			"`external_operator` VARCHAR( 64 ) NOT NULL ," . 
+			"`value` VARCHAR( 255 ) NOT NULL" .
+			") ENGINE = MYISAM"; 
+		$db_results = Dba::write($sql); 
 
 		self::set_version('db_version','350007'); 
 

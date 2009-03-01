@@ -26,6 +26,7 @@
   <col id="col_path" />
   <col id="col_lastverify" />
   <col id="col_lastadd" />
+  <col id="col_lastclean" />
   <col id="col_action" />
 </colgroup>
 <tr class="th-top">
@@ -33,6 +34,7 @@
 	<th class="cel_path"><?php echo _('Path'); ?></th>
 	<th class="cel_lastverify"><?php echo _('Last Verify'); ?></th>
 	<th class="cel_lastadd"><?php echo _('Last Add'); ?></th>
+	<th class="cel_lastclean"><?php echo _('Last Clean'); ?></th>
 	<th class="cel_action"><?php echo _('Actions'); ?></th>
 </tr>
 <?php 
@@ -49,6 +51,7 @@
 	<th class="cel_path"><?php echo _('Path'); ?></th>
 	<th class="cel_lastverify"><?php echo _('Last Verify'); ?></th>
 	<th class="cel_lastadd"><?php echo _('Last Add'); ?></th>
+	<th class="cel_lastclean"><?php echo _('Last Clean'); ?></th>
 	<th class="cel_action"><?php echo _('Actions'); ?></th>
 </tr>
 </table>

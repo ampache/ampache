@@ -42,7 +42,9 @@ while ($i <= $rows) {
 				<br />
 				<p align="center">
 				<?php if (is_array($dimensions)) { ?>
-				[<?php echo intval($dimensions['width']); ?>x<?php echo intval($dimensions['heigh']); ?>] 
+				[<?php echo intval($dimensions['width']); ?>x<?php echo intval($dimensions['height']); ?>] 
+				<?php } else { ?>
+				<span class="error"><?php echo _('Invalid'); ?></span>
 				<?php } ?>
 				[<a href="<?php echo Config::get('web_path'); ?>/albums.php?action=select_art&amp;image=<?php echo $key; ?>&amp;album_id=<?php echo intval($_REQUEST['album_id']); ?>"><?php echo _('Select'); ?></a>]
 				</p>

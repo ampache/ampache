@@ -29,6 +29,7 @@ class Catalog extends database_object {
 	public $name;
 	public $last_update;
 	public $last_add;
+	public $last_clean; 
 	public $key;
 	public $rename_pattern;
 	public $sort_pattern;
@@ -144,6 +145,7 @@ class Catalog extends database_object {
 		$this->f_path		= truncate_with_ellipsis($this->path,Config::get('ellipse_threshold_title'));
 		$this->f_update		= $this->last_update ? date('d/m/Y h:i',$this->last_update) : _('Never');
 		$this->f_add		= $this->last_add ? date('d/m/Y h:i',$this->last_add) : _('Never');
+		$this->f_clean		= $this->last_clean ? date('d/m/Y h:i',$this->last_clean) : _('Never'); 
 
 	} // format
 
@@ -908,7 +910,7 @@ class Catalog extends database_object {
 
 		$date = time();
 		$sql = "UPDATE `catalog` SET `last_update`='$date' WHERE `id`='$this->id'";
-		$db_results = Dba::query($sql);
+		$db_results = Dba::write($sql);
 
 	} // update_last_update
 
@@ -917,13 +919,25 @@ class Catalog extends database_object {
 	 * updates the last_add of the catalog
 	 * @package Catalog
 	 */
-	function update_last_add() {
+	public function update_last_add() {
 
 		$date = time();
 		$sql = "UPDATE `catalog` SET `last_add`='$date' WHERE `id`='$this->id'";
-		$db_results = Dba::query($sql);
+		$db_results = Dba::write($sql);
 
 	} // update_last_add
+
+	/**
+	 * update_last_clean
+	 * This updates the last clean information
+	 */
+	public function update_last_clean() { 
+
+		$date = time(); 
+		$sql = "UPDATE `catalog` SET `last_clean`='$date' WHERE `id`='$this->id'"; 
+		$db_results = Dba::write($sql);  
+
+	} // update_last_clean
 
 	/**
 	 * update_settings
@@ -1515,6 +1529,9 @@ class Catalog extends database_object {
 		show_box_bottom();
 		flush();
 
+		// Set the last clean date
+		$this->update_last_clean(); 
+
 	} //clean_catalog
 
 	/**
@@ -1765,7 +1782,7 @@ class Catalog extends database_object {
 
 		$cached_results = array_merge($songs,$videos); 
 
-		$number = count($results); 
+		$number = count($cached_results); 
 		require_once Config::get('prefix') . '/templates/show_verify_catalog.inc.php';
 		flush();
 
@@ -1994,8 +2011,8 @@ class Catalog extends database_object {
 		}
 
 		// Check to see if we've seen this album before
-		if (isset(self::$albums[$album][$year][$disk])) {
-			return self::$albums[$album][$year][$disk];
+		if (isset(self::$albums[$album][$album_year][$disk])) {
+			return self::$albums[$album][$album_year][$disk];
 		}
 
 		/* Setup the Query */
@@ -2040,7 +2057,7 @@ class Catalog extends database_object {
 		}
 
 		// Save the cache
-		self::$albums[$album][$year][$disk] = $album_id; 
+		self::$albums[$album][$album_year][$disk] = $album_id; 
 
 		return $album_id;
 

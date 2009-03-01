@@ -137,15 +137,10 @@ class Playlist extends database_object {
 
 		$results = array(); 
 
-		$sql = "SELECT `id`,`object_id`,`object_type`,`dynamic_song`,`track` FROM `playlist_data` WHERE `playlist`='" . Dba::escape($this->id) . "' ORDER BY `track`";
+		$sql = "SELECT `id`,`object_id`,`object_type`,`track` FROM `playlist_data` WHERE `playlist`='" . Dba::escape($this->id) . "' ORDER BY `track`";
 		$db_results = Dba::query($sql);
 
 		while ($row = Dba::fetch_assoc($db_results)) { 
-
-			if (strlen($row['dynamic_song'])) { 
-				// Do something here FIXME!
-			} 
-
 			$results[] = array('type'=>$row['object_type'],'object_id'=>$row['object_id'],'track'=>$row['track'],'track_id'=>$row['id']); 
 		} // end while
 
@@ -163,15 +158,11 @@ class Playlist extends database_object {
 
 		$limit_sql = $limit ? 'LIMIT ' . intval($limit) : ''; 
 
-		$sql = "SELECT `object_id`,`object_type`,`dynamic_song` FROM `playlist_data` " . 
+		$sql = "SELECT `object_id`,`object_type` FROM `playlist_data` " . 
 			"WHERE `playlist`='" . Dba::escape($this->id) . "' ORDER BY RAND() $limit_sql"; 
 		$db_results = Dba::query($sql); 
 
 		while ($row = Dba::fetch_assoc($db_results)) { 
-
-			if (strlen($row['dynamic_song'])) { 
-				// Do something here FIXME!!!
-			} 
 
                         $results[] = array('type'=>$row['object_type'],'object_id'=>$row['object_id']);
                 } // end while
