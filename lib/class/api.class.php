@@ -63,6 +63,9 @@ class Api {
 			case 'alpha_match':
 				Browse::set_filter('alpha_match',$value); 
 			break; 
+			case 'exact_match': 
+				Browse::set_filter('exact_match',$value);
+			break; 
 			default: 
 				// Rien a faire
 			break; 

@@ -18,12 +18,10 @@
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
-
 /**
  * This is accessed remotly to allow outside scripts access to ampache information 
  * as such it needs to verify the session id that is passed 
  */
-
 define('NO_SESSION','1');
 require_once '../lib/init.php';
 
@@ -44,7 +42,6 @@ if (!Config::get('access_control')) {
 	exit; 
 }  
 
-
 /** 
  * Verify the existance of the Session they passed in we do allow them to
  * login via this interface so we do have an exception for action=login
@@ -60,14 +57,12 @@ if (!vauth::session_exists('api', $_REQUEST['auth']) AND $_REQUEST['action'] != 
 $session = vauth::get_session_data($_REQUEST['auth']);
 $username = ($_REQUEST['action'] == 'handshake' || $_REQUEST['action'] == 'ping') ? $_REQUEST['user'] : $session['username'];
 
-
 if (!Access::check_network('init-api',$username,'5')) { 
         debug_event('Access Denied','Unathorized access attempt to API [' . $_SERVER['REMOTE_ADDR'] . ']', '3');
         ob_end_clean(); 
         echo xmlData::error('403','ACL Error');
         exit(); 
 }
-
 
 if ($_REQUEST['action'] != 'handshake' AND $_REQUEST['action'] != 'ping') { 
         vauth::session_extend($_REQUEST['auth']); 
@@ -111,8 +106,8 @@ switch ($_REQUEST['action']) {
 		Browse::set_type('artist'); 
 		Browse::set_sort('name','ASC'); 
 	
-		Api::set_filter('alpha_match',$_REQUEST['filter']); 
-		Api::set_filter('exact_match',$_REQUEST['exact']); 
+		$method = $_REQUEST['exact'] ? 'exact_match' : 'alpha_match'; 
+		Api::set_filter($method,$_REQUEST['filter']); 
 
 		// Set the offset
 		xmlData::set_offset($_REQUEST['offset']); 
@@ -153,8 +148,8 @@ switch ($_REQUEST['action']) {
 		Browse::set_type('album'); 
 		Browse::set_sort('name','ASC'); 
 		
-		Api::set_filter('alpha_match',$_REQUEST['filter']); 
-		Api::set_filter('exact_match',$_REQUEST['exact']); 
+		$method = $_REQUEST['exact'] ? 'exact_match' : 'alpha_match'; 
+		Api::set_filter($method,$_REQUEST['filter']); 
 		$albums = Browse::get_objects(); 
 
                 // Set the offset
@@ -183,8 +178,8 @@ switch ($_REQUEST['action']) {
 		Browse::set_type('genre'); 
 		Browse::set_sort('name','ASC'); 
 
-		Api::set_filter('alpha_match',$_REQUEST['filter']); 
-		Api::set_filter('exact_match',$_REQUEST['exact']); 
+		$method = $_REQUEST['exact'] ? 'exact_match' : 'alpha_match'; 
+		Api::set_filter($method,$_REQUEST['filter']); 
 		$genres = Browse::get_objects(); 
 
                 // Set the offset
@@ -234,8 +229,8 @@ switch ($_REQUEST['action']) {
 		Browse::set_type('song'); 
 		Browse::set_sort('title','ASC'); 
 
-		Api::set_filter('alpha_match',$_REQUEST['filter']); 
-		Api::set_filter('exact_match',$_REQUEST['exact']); 
+		$method = $_REQUEST['exact'] ? 'exact_match' : 'alpha_match';
+		Api::set_filter($method,$_REQUEST['filter']); 
 		Api::set_filter('add',$_REQUEST['add']); 
 		
 		$songs = Browse::get_objects(); 
@@ -265,8 +260,8 @@ switch ($_REQUEST['action']) {
 		Browse::set_type('playlist'); 
 		Browse::set_sort('name','ASC'); 
 
-		Api::set_filter('exact_match',$_REQUEST['exact']); 
-		Api::set_filter('alpha_match',$_REQUEST['filter']); 
+		$method = $_REQUEST['exact'] ? 'exact_match' : 'alpha_match';
+		Api::set_filter($method,$_REQUEST['filter']); 
 
 		$playlist_ids = Browse::get_objects(); 
 
