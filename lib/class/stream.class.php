@@ -236,7 +236,7 @@ class Stream {
 	public function create_simple_m3u() {
 
 		header("Cache-control: public");
-		header("Content-Disposition: filename=playlist.m3u");
+		header("Content-Disposition: filename=ampache_playlist.m3u");
 		header("Content-Type: audio/x-mpegurl;");
 
 		// Flip for the poping!
@@ -434,7 +434,7 @@ class Stream {
 			} // type
 
 	                $xml = array();
-			$xml['track']['location'] = call_user_func($type,'play_url',$media->id) . $flash_hack;
+			$xml['track']['location'] = call_user_func(array($type,'play_url'),$media->id) . $flash_hack;
 			$xml['track']['identifier'] = $xml['track']['location'];
 			$xml['track']['duration'] = $length * 1000;
 
@@ -445,7 +445,7 @@ class Stream {
 		xmlData::set_type('xspf'); 
 
 	        header("Cache-control: public");
-        	header("Content-Disposition: filename=ampache-playlist.xspf");
+        	header("Content-Disposition: filename=ampache_playlist.xspf");
 		header("Content-Type: application/xspf+xml; charset=utf-8");
 		echo xmlData::header(); 
 		echo $result;
@@ -569,11 +569,11 @@ class Stream {
 	public function create_ram() { 
 
                 header("Cache-control: public");
-                header("Content-Disposition: filename=playlist.ram");
+                header("Content-Disposition: filename=ampache_playlist.ram");
                 header("Content-Type: audio/x-pn-realaudio ram;");
-                foreach ($this->media as $song_id) {
-                        $song = new Song($song_id);
-			echo $song->get_url(); 
+                foreach ($this->media as $element) {
+			$type = array_shift($element);
+			echo $url = call_user_func(array($type,'play_url'),array_shift($element)) . "\n"; 
 		} // foreach songs
 
 	} // create_ram

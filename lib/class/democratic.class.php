@@ -336,9 +336,9 @@ class Democratic extends tmpPlaylist {
         public function vote($items) {
 
                 /* Itterate through the objects if no vote, add to playlist and vote */
-                foreach ($items as $type=>$object_id) {
-			//FIXME: This is a hack until we fix everything else
-			if (intval($type) == $type) { $type = 'song'; } 
+                foreach ($items as $element) {
+			$type = array_shift($element); 
+			$object_id = array_shift($element); 
                         if (!$this->has_vote($object_id,$type)) {
                                 $this->add_vote($object_id,$type);
                         }
@@ -541,8 +541,7 @@ class Democratic extends tmpPlaylist {
                 self::prune_tracks();
 
 		// Clean the votes
-		self::clean_votes(); 
-
+		self::clear_votes(); 
 
                 return true;
 

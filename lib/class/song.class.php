@@ -867,7 +867,7 @@ class Song extends database_object implements media {
 
 		$song_name = rawurlencode($song->f_artist_full . " - " . $song->title . "." . $type);
 	
-		$url = Stream::get_base_url() . "/play/index.php?oid=$song_id&uid=$user_id$session_string$ds_string&name=/$song_name";
+		$url = Stream::get_base_url() . "oid=$song_id&uid=$user_id$session_string$ds_string&name=/$song_name";
 
 		return $url;
 

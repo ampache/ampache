@@ -132,30 +132,6 @@ function return_referer() {
 } // return_referer
 
 /**
- *  show_alphabet_list
- * shows the A-Z,0-9 lists for albums and artist page
- * It takes a selected and an action 
- */
-function show_alphabet_list () {
-
-	$list = array(A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z,1,2,3,4,5,6,7,8,9,"0",_('All'));
-  
-	$selected = $_SESSION['browse']['filter']['alpha_match'];
-	
-	echo "<div class=\"alphabet\">";
-	foreach ($list as $l) {
-		$style_name = "style_" . strtolower($l);
-		$class = "link";
-		if ($l==$selected) $class .=" active";
-		$value = ($l==_('All'))?'':$l;
-		echo "<span class=\"" . $class . "\" onclick=\"ajaxPut('". Config::get('ajax_url') ."?page=browse&action=browse&amp;key=alpha_match&amp;value=$value');return true;\">" . 
-			$l . "</span>\n";
-	}
-	echo "</div>";
-
-} // show_alphabet_list
-
-/**
  * truncate_with_ellipsis
  * Correct Spelling function that truncates text to a specific lenght
  * and appends three dots, or an ellipsis to the end
@@ -259,8 +235,9 @@ function img_resize($image,$size,$type,$album_id) {
 	$width = imagesx($src);
 	$height = imagesy($src);
 
-	$new_w = $size['width'];
-	$new_h = $size['height'];
+	// Make it the largest always
+	$new_w = '275'; 
+	$new_h = '275'; 
 
 	$img = imagecreatetruecolor($new_w,$new_h);
 	

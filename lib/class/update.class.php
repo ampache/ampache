@@ -1606,10 +1606,71 @@ class Update {
 		$sql = "INSERT INTO `user_preference` VALUES (1,69,'0')";
 		$db_results = Dba::write($sql);
 
+                $sql = "SELECT `id` FROM `user`";
+                $db_results = Dba::query($sql);
+
+                User::fix_preferences('-1');
+
+                while ($r = Dba::fetch_assoc($db_results)) {
+                        User::fix_preferences($r['id']);
+                } // while we're fixing the useres stuff
+
 		self::set_version('db_version','350006');
 
 		return true;
+
 	} // update_350006
+
+	/**
+	 * update_350007
+	 * This update adds in the random rules tables, and also increases the size of the blobs
+	 * on the album and artist data. Also add track to tmp_playlist_data 
+	 */
+	public static function update_350007() { 
+
+		// We need to clear the thumbs as they will need to be re-generated
+		$sql = "UPDATE `album_data` SET `thumb`=NULL"; 
+		$db_results = Dba::write($sql); 
+
+		$sql = "UPDATE `artist_data` SET `thumb`=NULL"; 
+		$db_results = Dba::write($sql); 
+
+		// Change the db thumb sizes
+		$sql = "ALTER TABLE `album_data` CHANGE `thumb` `thumb` MEDIUMBLOB NULL"; 
+		$db_results = Dba::write($sql); 
+
+		$sql = "ALTER TABLE `artist_data` CHANGE `thumb` `thumb` MEDIUMBLOB NULL"; 
+		$db_results = Dba::write($sql); 
+
+		// Remove dead column
+		$sql = "ALTER TABLE `playlist_data` DROP `dynamic_song`"; 
+		$db_results = Dba::write($sql); 
+
+		$sql = "ALTER TABLE `playlist` DROP `genre`"; 
+		$db_results = Dba::write($sql); 
+
+		// Add track item to tmp_playlist_data so we can order this stuff manually
+		$sql = "ALTER TABLE `tmp_playlist_data` ADD `track` INT ( 11 ) UNSIGNED NULL"; 
+		$db_results = Dba::write($sql); 
+
+		$sql = "DROP TABLE `genre`"; 
+		$db_results = Dba::write($sql); 
+
+		// Clean up the catalog and add last_clean to it
+		$sql = "ALTER TABLE `catalog` ADD `last_clean` INT ( 11 ) UNSIGNED NULL AFTER `last_update`"; 
+		$db_results = Dba::write($sql); 
+	
+		$sql = "ALTER TABLE `catalog` DROP `add_path`"; 
+		$db_results = Dba::write($sql); 
+
+		
+
+		self::set_version('db_version','350007'); 
+
+		return true; 
+
+	} // update_350007
+
 
 } // end update class
 ?>

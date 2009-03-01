@@ -88,7 +88,7 @@ switch ($_REQUEST['action']) {
 		$democratic->clear(); 
 
 		ob_start(); 
-		$object_ids = $democratic->get_items(); 
+		$object_ids = array();  
 		Browse::set_type('democratic'); 
 		Browse::reset(); 
 		Browse::set_static_content(1); 
