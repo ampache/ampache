@@ -26,35 +26,34 @@
 <!--
 //Disable right mouse click Script to hide the source url for the flash player it prevents ripping music a bit.
 //When used together with locked songs this will help just a bit more.
-function clickIE4(){
-if (event.button==2){
-return false;
-}
-}
+//function clickIE4(){
+//if (event.button==2){
+//return false;
+//}
+//}
 
-function clickNS4(e){
-if (document.layers||document.getElementById&&!document.all){
-if (e.which==2||e.which==3){
-return false;
-}
-}
-}
+//function clickNS4(e){
+//if (document.layers||document.getElementById&&!document.all){
+//if (e.which==2||e.which==3){
+//return false;
+//}
+//}
+//}
 
-if (document.layers){
-document.captureEvents(Event.MOUSEDOWN);
-document.onmousedown=clickNS4;
-}
-else if (document.all&&!document.getElementById){
-document.onmousedown=clickIE4;
-}
-
-document.oncontextmenu=new Function("return false")
+//if (document.layers){
+//document.captureEvents(Event.MOUSEDOWN);
+//document.onmousedown=clickNS4;
+//}
+//else if (document.all&&!document.getElementById){
+//document.onmousedown=clickIE4;
+//}
+//document.oncontextmenu=new Function("return false")
 
 // --> 
 </script>
 <div id="mp3player">
 <?php 
-$player_url = sprintf("%s/modules/flash/xspf_jukebox.swf?autoplay=true&repeat_playlist=false&crossFade=false&shuffle=false&skin_url=%s/modules/flash/Original/&playlist_url=%s",Config::get('web_path'),Config::get('web_path'),$play_url); 
+$player_url = sprintf("%s/modules/flash/xspf_jukebox.swf?autoplay=true&repeat_playlist=true&crossFade=false&shuffle=false&skin_url=%s/modules/flash/Original/&playlist_url=%s",Config::get('web_path'),Config::get('web_path'),$play_url); 
 ?>
 <object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="http://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=7,0,0,0" width="400" height="170" id="xspf_player" align="middle">
 	<param name="pluginspage" value="http://www.macromedia.com/go/getflashplayer" />

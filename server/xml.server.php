@@ -112,6 +112,7 @@ switch ($_REQUEST['action']) {
 		Browse::set_sort('name','ASC'); 
 	
 		Api::set_filter('alpha_match',$_REQUEST['filter']); 
+		Api::set_filter('exact_match',$_REQUEST['exact']); 
 
 		// Set the offset
 		xmlData::set_offset($_REQUEST['offset']); 
@@ -153,6 +154,7 @@ switch ($_REQUEST['action']) {
 		Browse::set_sort('name','ASC'); 
 		
 		Api::set_filter('alpha_match',$_REQUEST['filter']); 
+		Api::set_filter('exact_match',$_REQUEST['exact']); 
 		$albums = Browse::get_objects(); 
 
                 // Set the offset
@@ -182,6 +184,7 @@ switch ($_REQUEST['action']) {
 		Browse::set_sort('name','ASC'); 
 
 		Api::set_filter('alpha_match',$_REQUEST['filter']); 
+		Api::set_filter('exact_match',$_REQUEST['exact']); 
 		$genres = Browse::get_objects(); 
 
                 // Set the offset
@@ -232,6 +235,7 @@ switch ($_REQUEST['action']) {
 		Browse::set_sort('title','ASC'); 
 
 		Api::set_filter('alpha_match',$_REQUEST['filter']); 
+		Api::set_filter('exact_match',$_REQUEST['exact']); 
 		Api::set_filter('add',$_REQUEST['add']); 
 		
 		$songs = Browse::get_objects(); 
@@ -261,9 +265,8 @@ switch ($_REQUEST['action']) {
 		Browse::set_type('playlist'); 
 		Browse::set_sort('name','ASC'); 
 
-		if ($_REQUEST['filter']) { 
-			Browse::set_filter('alpha_match',$_REQUEST['filter']); 
-		} 
+		Api::set_filter('exact_match',$_REQUEST['exact']); 
+		Api::set_filter('alpha_match',$_REQUEST['filter']); 
 
 		$playlist_ids = Browse::get_objects(); 
 

@@ -46,16 +46,13 @@ class Stream {
 	 * Constructor for the stream class takes a type and an array
 	 * of song ids
 	 */
-	public function __construct($type='m3u', $media_ids=0) {
+	public function __construct($type='m3u', $media_ids) {
 
 		$this->type = $type;
 		$this->media = $media_ids;
-		$this->web_path = Config::get('web_path');
 		$this->user_id = $GLOBALS['user']->id;
 		
-		if (Config::get('force_http_play')) { 
-			$this->web_path = preg_replace("/https/", "http",$this->web_path);
-		}
+		if (!is_array($this->media)) { settype($this->media,'array'); } 
 
 	} // Constructor
 
@@ -438,7 +435,7 @@ class Stream {
 			$xml['track']['identifier'] = $xml['track']['location'];
 			$xml['track']['duration'] = $length * 1000;
 
-			$result .= xmlData::keyed_array($xml,1); 
+			$result .= xmlData::keyed_array($xml,1) 
 
                 } // end foreach
 		

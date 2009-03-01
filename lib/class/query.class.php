@@ -20,13 +20,11 @@
 */
 
 /**
- * Browse Class
- * This handles all of the sql/filtering
- * on the data before it's thrown out to the templates
- * it also handles pulling back the object_ids and then
- * calling the correct template for the object we are displaying
+ * Query Class
+ * This handles all of the sql/filtering for the ampache database
+ * this was seperated out from browse, to accomodate Dynamic Playlists
  */
-class Browse { 
+class Query { 
 
 	// Public static vars that are cached
 	public static $sql; 
@@ -42,7 +40,7 @@ class Browse {
 	// apply any filters that would change the result set. 
 	public static $static_content = false; 
 	private static $_cache = array();  
-
+	private static $_state = array(); 
 
 	/**
 	 * constructor
@@ -67,26 +65,26 @@ class Browse {
 		switch ($key) { 
 			case 'show_art':
 				if (self::get_filter($key)) { 
-					unset($_SESSION['browse']['filter'][self::$type][$key]);
+					unset(self::$_state['filter'][self::$type][$key]);
 				} 
 				else { 
-				        $_SESSION['browse']['filter'][self::$type][$key] = 1; 
+				        self::$_state['filter'][self::$type][$key] = 1; 
 				}
 			break;
 			case 'tag':
 				if (is_array($value)) { 
-					$_SESSION['browse']['filter'][self::$type][$key] = $value;
+					self::$_state['filter'][self::$type][$key] = $value;
 				} 
 				elseif (is_numeric($value)) { 
-					$_SESSION['browse']['filter'][self::$type][$key] = array($value);
+					self::$_state['filter'][self::$type][$key] = array($value);
 				} 
 				else { 
-					$_SESSION['browse']['filter'][self::$type][$key] = array();
+					self::$_state['filter'][self::$type][$key] = array();
 				} 
 			break;
 			case 'artist':
 			case 'album':
-				$_SESSION['browse']['filter'][self::$type][$key] = $value;
+				self::$_state['filter'][self::$type][$key] = $value;
 			break;
 			case 'min_count':
 	
@@ -98,18 +96,18 @@ class Browse {
 			case 'add_gt': 
 			case 'update_lt': 
 			case 'update_gt':
-				$_SESSION['browse']['filter'][self::$type][$key] = intval($value); 	
+				self::$_state['filter'][self::$type][$key] = intval($value); 	
 			break; 
 			case 'exact_match': 
 			case 'alpha_match':
 			case 'starts_with': 
 				if (self::$static_content) { return false; }
-				$_SESSION['browse']['filter'][self::$type][$key] = $value; 
+				self::$_state['filter'][self::$type][$key] = $value; 
 			break;
 			case 'playlist_type': 
 				// They must be content managers to turn this off
-				if ($_SESSION['browse']['filter'][self::$type][$key] AND Access::check('interface','50')) { unset($_SESSION['browse']['filter'][self::$type][$key]); } 
-				else { $_SESSION['browse']['filter'][self::$type][$key] = '1'; } 
+				if (self::$_state['filter'][self::$type][$key] AND Access::check('interface','50')) { unset(self::$_state['filter'][self::$type][$key]); } 
+				else { self::$_state['filter'][self::$type][$key] = '1'; } 
 			break; 
                         default:
                                 // Rien a faire
@@ -149,7 +147,7 @@ class Browse {
 	 */
 	public static function reset_base() { 
 
-		$_SESSION['browse']['base'][self::$type] = false; 
+		self::$_state['base'][self::$type] = false; 
 
 	} // reset_base
 
@@ -159,7 +157,7 @@ class Browse {
 	 */
 	public static function reset_select() { 
 
-		$_SESSION['browse']['select'][self::$type] = array(); 
+		self::$_state['select'][self::$type] = array(); 
 
 	} // reset_select 
 
@@ -169,7 +167,7 @@ class Browse {
 	 */
 	public static function reset_having() { 
 
-		unset($_SESSION['browse']['having'][self::$type]); 
+		unset(self::$_state['having'][self::$type]); 
 
 	} // reset_having
 
@@ -179,7 +177,7 @@ class Browse {
 	 */
 	public static function reset_join() { 
 
-		unset($_SESSION['browse']['join'][self::$type]); 
+		unset(self::$_state['join'][self::$type]); 
 
 	} // reset_join
 
@@ -189,7 +187,7 @@ class Browse {
 	 */
 	public static function reset_filters() { 
 
-		$_SESSION['browse']['filter'] = array(); 
+		self::$_state['filter'] = array(); 
 
 	} // reset_filters
 
@@ -199,7 +197,7 @@ class Browse {
 	 */
 	public static function reset_supplemental_objects() { 
 
-		$_SESSION['browse'][self::$type]['supplemental'] = array(); 
+		self::$_state[self::$type]['supplemental'] = array(); 
 
 	} // reset_supplemental_objects
 
@@ -209,7 +207,7 @@ class Browse {
 	 */
 	public static function reset_total() { 
 
-		unset($_SESSION['browse']['total'][self::$type]); 
+		unset(self::$_state['total'][self::$type]); 
 
 	} // reset_total
 
@@ -220,7 +218,7 @@ class Browse {
 	public static function get_filter($key) { 
 	
 		// Simple enough, but if we ever move this crap 
-		return $_SESSION['browse']['filter'][self::$type][$key]; 
+		return self::$_state['filter'][self::$type][$key]; 
 
 	} // get_filter
 
@@ -237,14 +235,14 @@ class Browse {
 		} 
 
 		// See if we can find it in the cache
-		if (isset($_SESSION['browse']['total'][self::$type])) { 
-			return $_SESSION['browse']['total'][self::$type]; 
+		if (isset(self::$_state['total'][self::$type])) { 
+			return self::$_state['total'][self::$type]; 
 		} 
 
 		$db_results = Dba::query(self::get_base_sql() . self::get_filter_sql() . self::get_sort_sql()); 
 		$num_rows = Dba::num_rows($db_results); 
 
-		$_SESSION['browse']['total'][self::$type] = $num_rows; 
+		self::$_state['total'][self::$type] = $num_rows; 
 
 		return $num_rows; 
 
@@ -373,18 +371,18 @@ class Browse {
 
 		if ($order) { 
 			$order = ($order == 'DESC') ? 'DESC' : 'ASC'; 
-			$_SESSION['browse']['sort'][self::$type] = array(); 
-			$_SESSION['browse']['sort'][self::$type][$sort] = $order; 
+			self::$_state['sort'][self::$type] = array(); 
+			self::$_state['sort'][self::$type][$sort] = $order; 
 		} 	 
-		elseif ($_SESSION['browse']['sort'][self::$type][$sort] == 'DESC') { 
+		elseif (self::$_state['sort'][self::$type][$sort] == 'DESC') { 
 			// Reset it till I can figure out how to interface the hotness
-			$_SESSION['browse']['sort'][self::$type] = array(); 
-			$_SESSION['browse']['sort'][self::$type][$sort] = 'ASC'; 
+			self::$_state['sort'][self::$type] = array(); 
+			self::$_state['sort'][self::$type][$sort] = 'ASC'; 
 		}
 		else { 
 			// Reset it till I can figure out how to interface the hotness
-			$_SESSION['browse']['sort'][self::$type] = array(); 
-			$_SESSION['browse']['sort'][self::$type][$sort] = 'DESC'; 
+			self::$_state['sort'][self::$type] = array(); 
+			self::$_state['sort'][self::$type][$sort] = 'DESC'; 
 		} 
 		
 		self::resort_objects(); 
@@ -398,7 +396,7 @@ class Browse {
 	 */
 	public static function set_select($field) { 
 
-		$_SESSION['browse']['select'][self::$type][] = $field; 
+		self::$_state['select'][self::$type][] = $field; 
 
 	} // set_select
 
@@ -408,7 +406,7 @@ class Browse {
 	 */
 	public static function set_join($type,$table,$source,$dest,$priority=100) { 
 
-		$_SESSION['browse']['join'][self::$type][$priority][$table] = strtoupper($type) . ' JOIN ' . $table . ' ON ' . $source . '=' . $dest; 
+		self::$_state['join'][self::$type][$priority][$table] = strtoupper($type) . ' JOIN ' . $table . ' ON ' . $source . '=' . $dest; 
 
 	} // set_join
 
@@ -418,7 +416,7 @@ class Browse {
 	 */
 	public static function set_having($condition) { 
 
-		$_SESSION['browse']['having'][self::$type] = $condition; 
+		self::$_state['having'][self::$type] = $condition; 
 
 	} // set_having 
 
@@ -431,7 +429,7 @@ class Browse {
 	public static function set_start($start) { 
 
 		if (!self::$static_content) { 
-			$_SESSION['browse'][self::$type]['start'] = intval($start); 
+			self::$_state[self::$type]['start'] = intval($start); 
 		} 
 		self::$start = intval($start);  
 
@@ -445,7 +443,7 @@ class Browse {
 	public static function set_simple_browse($value) { 
 
 		$value = make_bool($value); 
-		$_SESSION['browse']['simple'][self::$type] = $value;  
+		self::$_state['simple'][self::$type] = $value;  
 
 	} // set_simple_browse
 
@@ -465,7 +463,7 @@ class Browse {
 			self::set_start('0'); 
 		} 
 
-		$_SESSION['browse'][self::$type]['static'] = $value; 
+		self::$_state[self::$type]['static'] = $value; 
 
 	} // set_static_content
 
@@ -475,7 +473,7 @@ class Browse {
 	 */
 	public static function is_simple_browse() { 
 
-		return $_SESSION['browse']['simple'][self::$type]; 
+		return self::$_state['simple'][self::$type]; 
 
 	} // is_simple_browse
 
@@ -485,7 +483,7 @@ class Browse {
 	 */
 	public static function load_start() { 
 
-		self::$start = intval($_SESSION['browse'][self::$type]['start']); 
+		self::$start = intval(self::$_state[self::$type]['start']); 
 
 	} // end load_start
 
@@ -561,7 +559,7 @@ class Browse {
 	 */
 	public static function get_supplemental_objects() { 
 
-		$objects = $_SESSION['browse']['supplemental'][self::$type]; 
+		$objects = self::$_state['supplemental'][self::$type]; 
 		
 		if (!is_array($objects)) { $objects = array(); } 
 
@@ -575,7 +573,7 @@ class Browse {
 	 */
 	public static function add_supplemental_object($class,$uid) { 
 
-		$_SESSION['browse']['supplemental'][self::$type][$class] = intval($uid); 
+		self::$_state['supplemental'][self::$type][$class] = intval($uid); 
 
 		return true; 
 
@@ -588,7 +586,7 @@ class Browse {
 	private static function set_base_sql() { 
 
 		// Only allow it to be set once
-		if (strlen($_SESSION['browse']['base'][self::$type])) { return true; } 
+		if (strlen(self::$_state['base'][self::$type])) { return true; } 
 
                 switch (self::$type) {
                         case 'album':
@@ -636,7 +634,7 @@ class Browse {
                         break;
                 } // end base sql
 
-		$_SESSION['browse']['base'][self::$type] = $sql; 
+		self::$_state['base'][self::$type] = $sql; 
 
 	} // set_base_sql
 
@@ -646,7 +644,7 @@ class Browse {
 	 */
 	private static function get_select() { 
 
-		$select_string = implode($_SESSION['browse']['select'][self::$type],", "); 
+		$select_string = implode(self::$_state['select'][self::$type],", "); 
 		return $select_string; 
 
 	} // get_select
@@ -659,9 +657,9 @@ class Browse {
 		
 		// Legacy code, should be removed once other code is updated
 		//FIXME: REMOVE
-		if (!$_SESSION['browse']['base'][self::$type]) { self::set_base_sql(); } 
+		if (!self::$_state['base'][self::$type]) { self::set_base_sql(); } 
 
-		$sql = str_replace("%%SELECT%%",self::get_select(),$_SESSION['browse']['base'][self::$type]); 
+		$sql = str_replace("%%SELECT%%",self::get_select(),self::$_state['base'][self::$type]); 
 
 		return $sql; 
 
@@ -673,13 +671,13 @@ class Browse {
 	 */
 	private static function get_filter_sql() { 
 
-		if (!is_array($_SESSION['browse']['filter'][self::$type])) { 
+		if (!is_array(self::$_state['filter'][self::$type])) { 
 			return ''; 
 		} 
 
 		$sql = "WHERE 1=1 AND ";
 
-		foreach ($_SESSION['browse']['filter'][self::$type] as $key=>$value) { 
+		foreach (self::$_state['filter'][self::$type] as $key=>$value) { 
 			$sql .= self::sql_filter($key,$value); 
 		} 
 
@@ -695,11 +693,11 @@ class Browse {
 	 */
 	private static function get_sort_sql() { 
 		
-		if (!is_array($_SESSION['browse']['sort'][self::$type])) { return ''; } 
+		if (!is_array(self::$_state['sort'][self::$type])) { return ''; } 
 
 		$sql = 'ORDER BY '; 
 
-		foreach ($_SESSION['browse']['sort'][self::$type] as $key=>$value) { 
+		foreach (self::$_state['sort'][self::$type] as $key=>$value) { 
 			$sql .= self::sql_sort($key,$value); 
 		} 
 
@@ -730,14 +728,14 @@ class Browse {
 	 */
 	private static function get_join_sql() { 
 		
-		if (!is_array($_SESSION['browse']['join'][self::$type])) { 
+		if (!is_array(self::$_state['join'][self::$type])) { 
 			return ''; 
 		} 
 
 		$sql = ''; 
 
 		// We need to itterate through these from 0 - 100 so that we add the joins in the right order
-		foreach ($_SESSION['browse']['join'][self::$type] as $joins) {
+		foreach (self::$_state['join'][self::$type] as $joins) {
 			foreach ($joins as $join) { 
 				$sql .= $join . ' '; 
 			} // end foreach joins at this level
@@ -753,7 +751,7 @@ class Browse {
 	 */
 	public static function get_having_sql() { 
 
-		$sql = $_SESSION['browse']['having'][self::$type]; 
+		$sql = self::$_state['having'][self::$type]; 
 
 		return $sql; 
 
@@ -790,7 +788,7 @@ class Browse {
 	 */
 	private static function post_process($results) {
 
-		$tags = $_SESSION['browse']['filter']['tag'];
+		$tags = self::$_state['filter']['tag'];
 
 		if (!is_array($tags) || sizeof($tags) < 2) { 
 			return $results;
@@ -1084,161 +1082,6 @@ class Browse {
 	} // sql_sort
 
 	/**
-	 * show_objects
-	 * This takes an array of objects
-	 * and requires the correct template based on the
-	 * type that we are currently browsing
-	 */
-	public static function show_objects($object_ids=false) { 
-		
-		if (self::is_simple_browse()) { 
-			$object_ids = self::get_saved(); 
-		} 
-		else { 
-			$object_ids = is_array($object_ids) ? $object_ids : self::get_saved();
-			self::save_objects($object_ids); 
-		} 
-	
-		// Reset the total items
-		self::$total_objects = self::get_total($object_ids); 
-
-		// Limit is based on the users preferences if this is not a simple browse because we've got too much here
-		if (count($object_ids) > self::$start AND !self::is_simple_browse()) { 
-			$object_ids = array_slice($object_ids,self::$start,self::$offset,TRUE); 
-		} 
-
-		// Format any matches we have so we can show them to the masses
-		if ($filter_value = self::get_filter('alpha_match')) { 
-			$match = ' (' . $filter_value . ')'; 
-		}
-		elseif ($filter_value = self::get_filter('starts_with')) { 
-			$match = ' (' . $filter_value . ')'; 
-		} 
-
-		// Set the correct classes based on type
-    		$class = "box browse_".self::$type;
-
-		// Load any additional object we need for this
-		$extra_objects = self::get_supplemental_objects(); 
-		foreach ($extra_objects as $class_name => $id) { 
-			${$class_name} = new $class_name($id); 
-		} 
-		
-		Ajax::start_container('browse_content');
-		// Switch on the type of browsing we're doing
-		switch (self::$type) { 
-			case 'song': 
-				show_box_top(_('Songs') . $match, $class); 
-				Song::build_cache($object_ids); 
-				require_once Config::get('prefix') . '/templates/show_songs.inc.php'; 
-				show_box_bottom(); 
-			break;
-			case 'album': 
-				show_box_top(_('Albums') . $match, $class); 
-				Album::build_cache($object_ids,'extra');
-				require_once Config::get('prefix') . '/templates/show_albums.inc.php';
-				show_box_bottom(); 
-			break;
-			case 'user':
-				show_box_top(_('Manage Users') . $match, $class); 
-				require_once Config::get('prefix') . '/templates/show_users.inc.php'; 
-				show_box_bottom(); 
-			break;
-			case 'artist':
-				show_box_top(_('Artists') . $match, $class); 
-				Artist::build_cache($object_ids,'extra'); 
-				require_once Config::get('prefix') . '/templates/show_artists.inc.php'; 
-				show_box_bottom(); 
-			break;
-			case 'live_stream': 
-				require_once Config::get('prefix') . '/templates/show_live_stream.inc.php'; 
-				show_box_top(_('Radio Stations') . $match, $class); 
-				require_once Config::get('prefix') . '/templates/show_live_streams.inc.php';
-				show_box_bottom(); 
-			break;
-			case 'playlist': 
-				Playlist::build_cache($object_ids); 
-				show_box_top(_('Playlists') . $match, $class);
-				require_once Config::get('prefix') . '/templates/show_playlists.inc.php'; 
-				show_box_bottom(); 
-			break;
-			case 'playlist_song': 
-				show_box_top(_('Playlist Songs') . $match,$class); 
-				require_once Config::get('prefix') . '/templates/show_playlist_songs.inc.php'; 
-				show_box_bottom(); 
-			break; 
-			case 'playlist_localplay': 
-				show_box_top(_('Current Playlist')); 
-				require_once Config::get('prefix') . '/templates/show_localplay_playlist.inc.php'; 
-				show_box_bottom(); 
-			break;
-			case 'catalog': 
-				show_box_top(_('Catalogs'), $class); 
-				require_once Config::get('prefix') . '/templates/show_catalogs.inc.php';
-				show_box_bottom(); 
-			break;
-			case 'shoutbox': 
-				show_box_top(_('Shoutbox Records'),$class); 
-				require_once Config::get('prefix') . '/templates/show_manage_shoutbox.inc.php'; 
-				show_box_bottom(); 
-			break; 
-			case 'flagged':
-				show_box_top(_('Flagged Records'),$class); 
-				require_once Config::get('prefix') . '/templates/show_flagged.inc.php'; 
-				show_box_bottom(); 
-			break;
-			case 'tag': 
-				Tag::build_cache($tags); 
-				show_box_top(_('Tag Cloud'),$class); 
-				require_once Config::get('prefix') . '/templates/show_tagcloud.inc.php'; 
-				show_box_bottom(); 
-			break; 
-			case 'video': 
-				show_box_top(_('Videos'),$class); 
-				require_once Config::get('prefix') . '/templates/show_videos.inc.php'; 
-				show_box_bottom(); 
-			break; 
-			case 'democratic': 
-				show_box_top(_('Democratic Playlist'),$class); 
-				require_once Config::get('prefix') . '/templates/show_democratic_playlist.inc.php'; 
-				show_box_bottom(); 
-			default: 
-				// Rien a faire
-			break;
-		} // end switch on type
-
-		Ajax::end_container(); 
-
-	} // show_object
-
-	/**
-	 * save_objects
-	 * This takes the full array of object ides, often passed into show and then
-	 * if nessecary it saves them into the session
-	 */
-	public static function save_objects($object_ids) { 
-
-		// Saving these objects has two operations, one hold it in 
-		// a local variable and then second hold it in a row in the tmp_browse
-		// table
-		self::$_cache['browse'][self::$type] = $object_ids; 	
-
-		// Only do this if it's a not a simple browse
-		if (!self::is_simple_browse()) { 
-			$sid = session_id() . '::' . self::$type; 
-			$data = Dba::escape(serialize($object_ids)); 
-
-			$sql = "REPLACE INTO `tmp_browse` SET `data`='$data', `sid`='$sid'"; 
-			$db_results = Dba::write($sql); 
-
-			self::$total_objects = count($object_ids); 
-		} // save it 
-
-		return true; 
-
-	} // save_objects
-
-	/**
 	 * resort_objects
 	 * This takes the existing objects, looks at the current
 	 * sort method and then re-sorts them This is internally
@@ -1278,7 +1121,7 @@ class Browse {
 
 			$order_sql = " ORDER BY ";
 
-	                foreach ($_SESSION['browse']['sort'][self::$type] as $key=>$value) {
+	                foreach (self::$_state['sort'][self::$type] as $key=>$value) {
 	                        $order_sql .= self::sql_sort($key,$value);
 	                } 
 	                // Clean her up
@@ -1309,27 +1152,19 @@ class Browse {
 	public static function _auto_init() { 
 
 		self::$offset = Config::get('offset_limit') ? Config::get('offset_limit') : '25';
+		self::$_state = $_SESSION['browse']; 
 
 	} // _auto_init
-	
-	public static function set_filter_from_request($r)
-	{
-	  foreach ($r as $k=>$v) {
-	    //reinterpret v as a list of int
-	    $vl = explode(',', $v);
-	    $ok = 1;
-	    foreach($vl as $i) {
-	      if (!is_numeric($i)) {
-		$ok = 0;
-		break;
-	      }
-	    }
-	    if ($ok)
-	      if (sizeof($vl) == 1)
-	        self::set_filter($k, $vl[0]);
-	      else
-	        self::set_filter($k, $vl);
-	  }
-	}
 
-} // browse
+	/**
+	 * Desctruction 
+	 * This is run on object destrunction, done here to allow for changes
+	 * later
+	 */
+	public function __destruct() { 
+
+		$_SESSION['browse'] = self::$_state; 
+
+	} // destructor
+	
+} // query

@@ -20,12 +20,18 @@
 
 */
 ?>
-<?php show_box_top(_('Options')); ?>
-<div id="search_options">
+<?php show_box_top(_('Options'),'info-box'); ?>
+<div id="information_actions">
 <ul>
-	<li><?php echo Ajax::text('?action=basket&type=browse_set&object_type=song',_('Add Search Results'),'add_search_results'); ?></li>
+<li>
+	<?php echo Ajax::button('?action=basket&type=browse_set&object_type=song','add',_('Add Search Results'),'add_search_results'); ?>
+	<?php echo _('Add Search Results'); ?>
+</li>
 	<?php if (Access::check_function('batch_download')) { ?>
-	<li><a href="<?php echo Config::get('web_path'); ?>/batch.php?action=browse"><?php echo _('Batch Download'); ?></a></li>
+<li>
+	<a href="<?php echo Config::get('web_path'); ?>/batch.php?action=browse"><?php echo get_user_icon('batch_download'); ?></a>
+	<?php echo _('Batch Download'); ?>
+</li>
 	<?php } ?>
 </ul>
 </div>

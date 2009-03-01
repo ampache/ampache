@@ -67,7 +67,7 @@ switch ($_REQUEST['action']) {
 		} // end switch on type
 	break;
 	case 'single_song':
-		$media_ids[] = scrub_in($_REQUEST['song_id']);
+		$media_ids[] = array('song',scrub_in($_REQUEST['song_id'])); 
 	break;
 	case 'your_popular_songs':
 		$media_ids = get_popular_songs($_REQUEST['limit'], 'your', $GLOBALS['user']->id);
@@ -91,10 +91,6 @@ switch ($_REQUEST['action']) {
 	case 'album':
 		$album = new Album($_REQUEST['album_id']);
 		$media_ids = $album->get_songs();
-	break;
-	case 'random_genre':
-		$genre 		= new Genre($_REQUEST['genre']);
-		$media_ids 	= $genre->get_random_songs();
 	break;
 	case 'playlist':
 		$playlist	= new Playlist($_REQUEST['playlist_id']);
@@ -168,7 +164,7 @@ switch ($_REQUEST['method']) {
 		if (is_array($urls)) { 
 			$stream->manual_url_add($urls); 
 		} 
-		$stream->start();
-	break;
+		$stream->start(); 
+
 } // end method switch 
 ?>
