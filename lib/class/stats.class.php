@@ -144,8 +144,8 @@ class Stats {
 
 		$results = array();
 
-		while ($r = Dba::fetch_assoc($db_results)) { 
-			$results[] = new $type($r['object_id']);
+		while ($row = Dba::fetch_assoc($db_results)) { 
+			$results[] = $row['object_id'];  
 		}
 
 		return $results;
@@ -197,15 +197,11 @@ class Stats {
 
 		switch ($type) { 
 			case 'artist':
-				return 'artist';
-			break;
 			case 'album':
-				return 'album';
-			break;
 			case 'genre':
-				return 'genre';
-			break;
 			case 'song':
+			case 'video': 
+				return $type; 
 			default:
 				return 'song';
 			break;

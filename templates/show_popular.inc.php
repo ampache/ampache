@@ -20,5 +20,13 @@
 */
 ?>
 <?php show_box_top(_('Information')); ?>
-<?php require_once Config::get('prefix') . '/templates/show_stats_newest.inc.php'; ?>
+<em><?php echo _('Songs'); ?></em>
+<?php $object_ids = Stats::get_top('song'); ?>
+<?php require_once Config::get('prefix') . '/templates/show_songs.inc.php'; ?>
+<em><?php echo _('Albums'); ?></em>
+<?php $object_ids = Stats::get_top('album'); ?>
+<?php require_once Config::get('prefix') . '/templates/show_albums.inc.php'; ?>
+<em><?php echo _('Artists'); ?></em>
+<?php $object_ids = Stats::get_top('artist'); ?>
+<?php require_once Config::get('prefix') . '/templates/show_artists.inc.php'; ?>
 <?php show_box_bottom(); ?>
