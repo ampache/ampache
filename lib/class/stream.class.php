@@ -435,7 +435,7 @@ class Stream {
 			$xml['track']['identifier'] = $xml['track']['location'];
 			$xml['track']['duration'] = $length * 1000;
 
-			$result .= xmlData::keyed_array($xml,1) 
+			$result .= xmlData::keyed_array($xml,1);
 
                 } // end foreach
 		
