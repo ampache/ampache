@@ -265,8 +265,12 @@ class vainfo {
 			$info['album']          = trim($results[$key]['album']);
 			$info['genre']          = trim($results[$key]['genre']);
 			$info['language']       = Dba::escape($results[$key]['language']);
-			//$info['lyrics']         = Dba::escape($results[$key]['lyrics']);
-			$info['lyrics']			= $results['info']['lyrics']['unsynchedlyrics'];
+			if (!empty($results[$key]['unsynchedlyrics'])) { // ID3v2 USLT
+				$info['lyrics']		= $results[$key]['unsynchedlyrics'];
+			}
+			else { // Lyrics3 v2.0
+				$info['lyrics']		= $results['info']['lyrics']['unsynchedlyrics'];
+			}
 			$info['track']          = intval($results[$key]['track']);
 		}
 		else { 
