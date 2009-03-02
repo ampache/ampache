@@ -36,11 +36,6 @@ $ajax_info = Config::get('ajax_url'); $web_path = Config::get('web_path');
       <li id="sb_admin_ot_ShowDisabled"><a href="<?php echo $web_path; ?>/admin/flag.php?action=show_disabled"><?php echo _('Show Disabled'); ?></a></li>
     </ul>
   </li>
-  <li><h4><?php echo _('Information'); ?></h4>
-    <ul class="sb3" id="sb_home_info">
-      <li id="sb_home_info_Statistics"><a href="<?php echo $web_path; ?>/stats.php"><?php echo _('Statistics'); ?></a></li>
-    </ul>
-  </li>
 <?php if (Config::get('allow_democratic_playback')) { ?>
   <li><h4><?php echo _('Democratic'); ?></h4>
     <ul class="sb3" id="sb_home_democratic">

@@ -661,6 +661,13 @@ class vainfo {
 
                 } // end foreach
 
+		// Also add in any video related stuff we might find
+		if (strpos('video',$this->_raw2['mime_type'])) { 
+			$info = $this->_parse_avi(&$this->_raw2); 
+			$info['video_codec'] = $this->_raw2['quicktime']['ftyp']['fourcc']; 
+			$array = array_merge($info,$array); 
+		} 
+
                 return $array;
 
 	} // _parse_quicktime

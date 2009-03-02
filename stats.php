@@ -46,9 +46,14 @@ switch ($_REQUEST['action']) {
 	
 	break;
 	// Show stats
+	case 'newest': 
+		require_once Config::get('prefix') . '/templates/show_newest.inc.php'; 
+	break; 
+	case 'popular': 
+		require_once Config::get('preifx') . '/templates/show_popular.inc.php'; 
+	break; 
+	case 'show': 
 	default: 
-		// Global stuff first
-		$stats = Catalog::get_stats(); 
 		require_once Config::get('prefix') . '/templates/show_stats.inc.php'; 
 	break;
 } // end switch on action

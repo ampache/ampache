@@ -18,10 +18,29 @@
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
+$stats = Catalog::get_stats();
 ?>
-<?php show_box_top(_('Statistics')); ?>
-<?php require_once Config::get('prefix') . '/templates/show_local_catalog_info.inc.php'; ?>
-<?php require_once Config::get('prefix') . '/templates/show_stats_newest.inc.php'; ?>
-
-
+<?php show_box_top(_('Catalog Statistics')); ?>
+<table class="tabledata" cellpadding="3" cellspacing="1">
+<tr class="th-top">
+        <th><?php echo _('Connected Users'); ?></th>
+        <th><?php echo _('Total Users'); ?></th>
+        <th><?php echo _('Albums'); ?></th>
+        <th><?php echo _('Artists'); ?></th>
+        <th><?php echo _('Songs'); ?></th>
+        <th><?php echo _('Genres'); ?></th>
+        <th><?php echo _('Catalog Size'); ?></th>
+        <th><?php echo _('Catalog Time'); ?></th>
+</tr>
+<tr>
+        <td><?php echo $stats['connected']; ?></td>
+        <td><?php echo $stats['users'] ?></td>
+        <td><?php echo $stats['albums']; ?></td>
+        <td><?php echo $stats['artists']; ?></td>
+        <td><?php echo $stats['songs']; ?></td>
+        <td><?php echo $stats['genres']; ?></td>
+        <td><?php echo $stats['total_size']; ?> <?php echo $stats['size_unit']; ?></td>
+        <td><?php echo $stats['time_text']; ?></td>
+</tr>
+</table>
 <?php show_box_bottom(); ?>

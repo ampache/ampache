@@ -109,4 +109,11 @@ $ajax_info = Config::get('ajax_url'); $web_path = Config::get('web_path');
       <li id="sb_home_random_advanced"><a href="<?php echo $web_path; ?>/random.php?action=advanced"><?php echo _('Advanced'); ?></a></li>
     </ul>
   </li>
+  <li><h4><?php echo _('Information'); ?></h4>
+    <ul class="sb3" id="sb_home_info">
+      <li id="sb_home_info_Statistics"><a href="<?php echo $web_path; ?>/stats.php?action=show"><?php echo _('Statistics'); ?></a></li>
+      <li id="sb_home_info_Newest"><a href="<?php echo $web_path; ?>/stats.php?action=newest"><?php echo _('Newest'); ?></a></li>
+      <li id="sb_home_info_Popular"><a href="<?php echo $web_path; ?>/stats.php?action=popular"><?php echo _('Popular'); ?></a></li>
+    </ul>
+  </li>
 </ul>
