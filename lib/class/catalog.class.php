@@ -196,6 +196,8 @@ class Catalog extends database_object {
 
 		$results 		= self::count_songs($catalog_id);
 		$results	 	= array_merge(self::count_users($catalog_id),$results);
+		$results['tags']	= self::count_tags(); 
+		$results 		= array_merge(self::count_video($catalog_id),$results); 
 
 		$hours = floor($results['time']/3600);
 		$size = $results['size']/1048576;
@@ -335,13 +337,47 @@ class Catalog extends database_object {
 	} // run_add
 
 	/**
+	 * count_video
+	 * This returns the current # of video files we've got in the db
+	 */
+	public static function count_video($catalog_id=0) { 
+
+		$catalog_search = $catalog_id ? "WHERE `catalog`='" . Dba::escape($catalog_id) . "'" : ''; 
+
+		$sql = "SELECT COUNT(`id`) AS `video` FROM `video` $catalog_search"; 
+		$db_results = Dba::read($sql); 
+
+		$row = Dba::fetch_assoc($db_results); 
+	
+		return $row; 
+
+	} // count_video 
+
+	/**
+	 * count_tags
+	 * This returns the current # of unique tags that exist in the database
+	 */
+	public static function count_tags($catalog_id=0) { 
+
+//		$catalog_search = $catalog_id ? "WHERE `catalog`='" . Dba::escape($catalog_id) . "'" : ''; 
+
+		$sql = "SELECT COUNT(`id`) FROM `tag`"; 
+		$db_results = Dba::read($sql); 
+
+		$info = Dba::fetch_row($db_results); 
+
+		return $info['0']; 
+
+	} // count_tags
+
+	/**
 	 * count_songs
 	 * This returns the current # of songs, albums, artists, genres
 	 * in this catalog
 	 */
 	public static function count_songs($catalog_id='') {
 
-		if ($catalog_id) { $catalog_search = "WHERE `catalog`='" . Dba::escape($catalog_id) . "'"; }
+		$catalog_search = $catalog_id ? "WHERE `catalog`='" . Dba::escape($catalog_id) . "'" : ''; 
 
 		$sql = "SELECT COUNT(`id`),SUM(`time`),SUM(`size`) FROM `song` $catalog_search";
 		$db_results = Dba::query($sql);
