@@ -76,7 +76,7 @@ function check_database_inserted($dbh,$db_name) {
  */
 function check_php_ver($level=0) {
 
-	if (strcmp('5.1.2',phpversion()) > 0) {
+	if (floatval(phpversion()) < 5.1) {
 		return false;
 	}
 
