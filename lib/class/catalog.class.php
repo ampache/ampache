@@ -276,15 +276,13 @@ class Catalog extends database_object {
 		$catalog_type	= Dba::escape($data['type']);
 		$rename_pattern	= Dba::escape($data['rename_pattern']);
 		$sort_pattern	= Dba::escape($data['sort_pattern']);
-		$gather_types	= ' '; //FIXME
-		$key		= Dba::escape($data['key']);
-
-		if (!$key) { $key = ' '; } //FIXME
+		$gather_types	= 'NULL';
+		$key		= $data['key'] ? '\'' . Dba::escape($data['key']) . '\'' : 'NULL';
 
 		// Ok we're good to go ahead and insert this record
-		$sql = "INSERT INTO `catalog` (`name`,`path`,`add_path`,`catalog_type`,`rename_pattern`,`sort_pattern`,`gather_types`,`key`) " .
-			"VALUES ('$name','$path','','$catalog_type','$rename_pattern','$sort_pattern','$gather_types','$key')";
-		$db_results = Dba::query($sql);
+		$sql = "INSERT INTO `catalog` (`name`,`path`,`catalog_type`,`rename_pattern`,`sort_pattern`,`gather_types`,`key`) " .
+			"VALUES ('$name','$path','$catalog_type','$rename_pattern','$sort_pattern',$gather_types,$key)";
+		$db_results = Dba::write($sql);
 
 		$insert_id = Dba::insert_id();
 
@@ -1571,43 +1569,6 @@ class Catalog extends database_object {
 	} //clean_catalog
 
 	/**
-	 * clean_single_song
-	 * This function takes the elements of a single song object
-	 * And checks to see if those specific elements are now orphaned
-	 * this is often used in flagging, and is a faster way then calling
-	 * the normal clean functions. The assumption is made that this is
-	 * an old song object whoes information has already been updated in the
-	 * database
-	 */
-	function clean_single_song($song) {
-
-		$results = array();
-
-		/* Now for the artist */
-		$sql = "SELECT song.artist FROM song WHERE artist='" . $song->artist . "'";
-		$db_results = mysql_query($sql, dbh());
-
-		if (!mysql_num_rows($db_results)) {
-			$sql = "DELETE FROM artist WHERE id='" . $song->artist . "'";
-			$db_results = mysql_query($sql, dbh());
-			$results['artist'] = true;
-		}
-
-		/* Now for the album */
-		$sql = "SELECT song.album FROM song WHERE album='" . $song->album . "'";
-		$db_results = mysql_query($sql, dbh());
-
-		if (!mysql_num_rows($db_results)) {
-			$sql = "DELETE FROM album WHERE id='" . $song->album . "'";
-			$db_results = mysql_query($sql, dbh());
-			$results['album'] = true;
-		}
-
-		return $results;
-
-	} // clean_single_song
-
-	/**
 	 * clean_tags
 	 * This cleans out tag_maps that are not assoicated with a 'living' object
 	 * and then cleans the tags that have no maps
@@ -2373,61 +2334,6 @@ class Catalog extends database_object {
 		return false;
 
 	} // import_m3u
-
-	/*!
-	 @function merge_stats
-	 @discussion merge stats entries
-	 @param $type the object_type row in object_count to use
-	 @param $oldid the old object_id
-	 @param $newid the new object_id to merge to
-	 @return the number of stats changed
-	 @todo move this to the right file
-	 */
-	function merge_stats ($type,$oldid,$newid) {
-
-		//check data
-		$accepted_types = array ("artist");
-		if (!in_array($type,$accepted_types)) { return false; }
-
-		//now retrieve all of type and oldid
-		$stats_qstring = "SELECT id,count,userid," .
-			"(SELECT id FROM object_count WHERE object_type = '$type' AND object_id = '$newid' AND userid=o.userid) AS existingid " .
-			"FROM object_count AS o WHERE object_type = '$type' AND object_id = '$oldid'";
-
-		$stats_query = mysql_query($stats_qstring,dbh());
-		$oldstats = array();
-		//now collect needed data into a array
-		while ($stats_result = mysql_fetch_assoc($stats_query)) {
-			$userid = $stats_result['userid'];
-			$oldstats[$userid]['id'] = $stats_result['id'];
-			$oldstats[$userid]['count'] = $stats_result['count'];
-			$oldstats[$userid]['existingid'] = $stats_result['existingid'];
-		}
-		//now foreach that array, changeing/updateing object_count and if needed deleting old row
-		$num_changed = 0;
-		foreach ($oldstats as $userid => $stats) {
-			//first check if it is a update or insert
-			if (is_numeric($stats['existingid'])) {
-					
-				$stats_count_change_qstring = "UPDATE object_count SET count = count + '" . $stats['count'] . "' WHERE id = '" . $stats['existingid'] . "'";
-				mysql_query($stats_count_change_qstring,dbh());
-
-				//then, delete old row
-				$old_stats_delete_qstring = "DELETE FROM object_count WHERE id ='" . $stats['id'] . "'";
-				mysql_query($old_stats_delete_qstring,dbh());
-
-				$num_changed++;
-			} else {
-				//hasn't yet listened, just change object_id
-				$stats_artist_change_qstring = "UPDATE object_count SET object_id = '$newid' WHERE id ='" . $stats['id'] . "'";
-				mysql_query($stats_artist_change_qstring,dbh());
-				//done!
-				$num_changed++;
-			}
-		}
-		return $num_changed;
-
-	} // merge_stats
 
 	/**
 	 * delete

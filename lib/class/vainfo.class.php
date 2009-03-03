@@ -301,22 +301,25 @@ class vainfo {
 			if ($type == 'flv') { 
 				$this->_raw['tags']['flv'] = array(); 
 			} 
+			if ($type == 'quicktime') { 
+				$this->_raw['tags']['quicktime'] = array(); 
+			} 
 			else { 
 				$this->_raw['tags']['avi'] = array(); 
 			} 
-			$this->_clean_type($type); 
+			$type = $this->_clean_type($type); 
 			return $type; 
 		} 
 		if ($type = $this->_raw['audio']['streams']['0']['dataformat']) { 
-			$this->_clean_type($type);
+			$type = $this->_clean_type($type);
 			return $type;
 		}
 		if ($type = $this->_raw['audio']['dataformat']) { 
-			$this->_clean_type($type);
+			$type = $this->_clean_type($type);
 			return $type;
 		}
 		if ($type = $this->_raw['fileformat']) { 
-			$this->_clean_type($type);
+			$type = $this->_clean_type($type);
 			return $type;
 		}
 		
@@ -448,22 +451,18 @@ class vainfo {
 			case 'mpeg3':
 				return 'mp3';
 			break;
-			case 'flac':
-				return 'flac';
-			break;
 			case 'vorbis':
 				return 'ogg';
 			break;
+			case 'flac': 
 			case 'flv':
-				return 'flv'; 
-			break; 
 			case 'avi': 
-				return 'avi';
-			break; 
+			case 'quicktime': 
+				return $type; 	
 			default: 
 				/* Log the fact that we couldn't figure it out */
 				debug_event('vainfo','Unable to determine file type from ' . $type . ' on file ' . $this->filename,'5');
-				return 'unknown';
+				return $type;
 			break;
 		} // end switch on type
 
@@ -664,10 +663,10 @@ class vainfo {
                         $array[$tag] = $this->_clean_tag($data['0']);
 
                 } // end foreach
-
+		
 		// Also add in any video related stuff we might find
-		if (strpos('video',$this->_raw2['mime_type'])) { 
-			$info = $this->_parse_avi(&$this->_raw2); 
+		if (strpos($this->_raw2['mime_type'],'video') !== false) { 
+			$info = $this->_parse_avi($this->_raw2); 
 			$info['video_codec'] = $this->_raw2['quicktime']['ftyp']['fourcc']; 
 			$array = array_merge($info,$array); 
 		} 
