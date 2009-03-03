@@ -27,11 +27,11 @@ $svn_version = 'Subversion ' . trim('$Rev$','$ ');
 ob_start();
 
 // Do a check for PHP5 because nothing will work without it
-if (strcmp('5.0.0',phpversion()) > 0) {
+if (floatval(phpversion()) < 5) {
 	echo "ERROR: Ampache requires PHP5";
 	exit; 
 }
-if (strtoupper(substr(PHP_OS,0,3)) == 'WIN' AND strcmp('5.3.0',phpversion()) > 0) { 
+if (strtoupper(substr(PHP_OS,0,3)) == 'WIN' AND floatval(phpversion()) < 5.3) { 
 	echo "Error: Ampache Requires PHP5.3 when running on Windows"; 
 	exit; 
 } 
