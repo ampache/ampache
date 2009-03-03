@@ -54,7 +54,8 @@
 		<p><?php echo _('PHP Version'); ?>:
 		<?php
 			if(!check_php_ver()) {
-				echo " <font color=\"red\">ERROR</font> " . phpversion();
+				echo " <font color=\"red\">ERROR</font> " . phpversion() . " " . _('Hash Function Exists') . " "
+					 . print_boolean(function_exists('hash_algos')) . " " . _('SHA256 Support') . " " . print_boolean(in_array('sha256',$algos)); 
 				$results = $results + 1;
 			} else {
 				echo " <font color=\"green\">&nbsp;&nbsp;&nbsp;OK&nbsp;&nbsp;&nbsp;&nbsp;</font><i>" . phpversion() . "</i>"; 
