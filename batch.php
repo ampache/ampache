@@ -33,39 +33,32 @@ set_time_limit(0);
 
 switch ($_REQUEST['action']) {
 	case 'tmp_playlist': 
-		$tmpPlaylist = new tmpPlaylist($_REQUEST['id']); 
-		$data = $tmpPlaylist->get_items(); 
-	
-		// We have to translate these :(
-		foreach ($data as $row) { 
-			$song_ids[] = $row['0'];
-		} 
-
+		$media_ids = $GLOBALS['user']->playlist->get_items(); 
 		$name = $GLOBALS['user']->username . ' - Playlist';
 	break;
 	case 'playlist':
 		$playlist = new Playlist($_REQUEST['id']);
-		$song_ids = $playlist->get_songs();
+		$media_ids = $playlist->get_songs();
 		$name = $playlist->name;
 	break;
 	case 'album':
 		$album = new Album($_REQUEST['id']);
-		$song_ids = $album->get_songs();
+		$media_ids = $album->get_songs();
 		$name = $album->name;
 	break;
 	case 'artist': 
 		$artist = new Artist($_REQUEST['id']); 
-		$song_ids = $artist->get_songs(); 
+		$media_ids = $artist->get_songs(); 
 		$name = $artist->name; 
 	break;
 	case 'genre':
 		$id = scrub_in($_REQUEST['id']); 
 		$genre = new Genre($id); 
-		$song_ids = $genre->get_songs();
+		$media_ids = $genre->get_songs();
 		$name = $genre->name; 
 	break;
 	case 'browse': 
-		$song_ids = Browse::get_saved(); 
+		$media_ids = Browse::get_saved(); 
 		$name = 'Batch-' . date("dmY",time()); 
 	default:
 		// Rien a faire
@@ -73,7 +66,7 @@ switch ($_REQUEST['action']) {
 } // action switch		
 
 // Take whatever we've got and send the zip
-$song_files = get_song_files($song_ids); 
+$song_files = get_song_files($media_ids); 
 set_memory_limit($song_files['1']+32); 
 send_zip($name,$song_files['0']); 
 

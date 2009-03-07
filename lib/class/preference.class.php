@@ -394,14 +394,13 @@ class Preference {
 			return true; 	
 		} 
 
-
 		$user_id = $GLOBALS['user']->id ? Dba::escape($GLOBALS['user']->id) : '-1'; 
 
 	        /* Get Global Preferences */
 		$sql = "SELECT `preference`.`name`,`user_preference`.`value`,`syspref`.`value` AS `system_value` FROM `preference` " . 
 			"LEFT JOIN `user_preference` `syspref` ON `syspref`.`preference`=`preference`.`id` AND `syspref`.`user`='-1' AND `preference`.`catagory`='system' " . 
 			"LEFT JOIN `user_preference` ON `user_preference`.`preference`=`preference`.`id` AND `user_preference`.`user`='$user_id' AND `preference`.`catagory`!='system'"; 
-	        $db_results = Dba::query($sql);
+	        $db_results = Dba::read($sql);
 
 	        while ($row = Dba::fetch_assoc($db_results)) {
 			$value = $row['system_value'] ? $row['system_value'] : $row['value']; 

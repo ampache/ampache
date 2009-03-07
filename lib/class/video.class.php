@@ -23,6 +23,7 @@ class Video extends database_object implements media {
 
 	public $id; 
 	public $title; 
+	public $enabled; 
 	public $file; 	
 
 	/**

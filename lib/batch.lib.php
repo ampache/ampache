@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2007 Ampache.org
+ Copyright (c) Ampache.org
  All Rights Reserved
 
  This program is free software; you can redistribute it and/or
@@ -25,19 +25,25 @@
  * tmakes array of song ids and returns
  *	array of path to actual files
  */
-function get_song_files($song_ids) {
+function get_song_files($media_ids) {
 
-        $song_files = array();
-        foreach ($song_ids as $song_id) {
-                $song = new Song($song_id);
-		/* Don't archive disabled songs */
-		if ($song->enabled) { 
-	                $total_size += sprintf("%.2f",($song->size/1048576));
-	                array_push($song_files, $song->file);
-		} // if song isn't disabled
+	$media_files = array(); 
+	
+	foreach ($media_ids as $element) {
+		if (is_array($element)) { 
+			$type = array_shift($element); 
+			$media = new $type(array_shift($element)); 
+		} 
+		else { 
+			$media = new Song($element); 
+		} 
+		if ($media->enabled) { 
+	                $total_size += sprintf("%.2f",($media->size/1048576));
+	                array_push($media_files, $media->file);
+		} 
         }
 
-        return array($song_files,$total_size);
+        return array($media_files,$total_size);
 } //get_song_files
 
 

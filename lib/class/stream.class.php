@@ -547,8 +547,7 @@ class Stream {
 
 		// Build up our object
 		$song_id = $this->media['0']; 
-		$song = new Song($song_id); 
-		$url = $song->get_url(); 
+		$url = Song::play_url($song_id); 
 
 		// Append the fact we are downloading
 		$url .= '&action=download'; 
