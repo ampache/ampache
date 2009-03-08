@@ -17,7 +17,7 @@
 --
 -- Host: localhost    Database: ampache
 -- ------------------------------------------------------
--- Server version	5.0.51a-6-log
+-- Server version	5.0.77-1-log
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -40,18 +40,19 @@ SET character_set_client = utf8;
 CREATE TABLE `access_list` (
   `id` int(11) unsigned NOT NULL auto_increment,
   `name` varchar(255) character set utf8 default NULL,
-  `start` int(11) unsigned NOT NULL default '0',
-  `end` int(11) unsigned NOT NULL default '0',
-  `dns` varchar(255) character set utf8 default NULL,
+  `start` varbinary(255) NOT NULL,
+  `end` varbinary(255) NOT NULL,
   `level` smallint(3) unsigned NOT NULL default '5',
   `type` varchar(64) character set utf8 default NULL,
   `user` int(11) NOT NULL,
   `key` varchar(255) character set utf8 default NULL,
+  `enabled` tinyint(1) unsigned NOT NULL default '1',
   PRIMARY KEY  (`id`),
   KEY `start` (`start`),
   KEY `end` (`end`),
-  KEY `level` (`level`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+  KEY `level` (`level`),
+  KEY `enabled` (`enabled`)
+) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 SET character_set_client = @saved_cs_client;
 
 --
@@ -60,6 +61,7 @@ SET character_set_client = @saved_cs_client;
 
 LOCK TABLES `access_list` WRITE;
 /*!40000 ALTER TABLE `access_list` DISABLE KEYS */;
+INSERT INTO `access_list` VALUES (1,'DEFAULTv4','\0\0\0\0','ÿÿÿÿ',75,'interface',-1,NULL,1),(2,'DEFAULTv4','\0\0\0\0','ÿÿÿÿ',75,'stream',-1,NULL,1),(3,'DEFAULTv6','\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0','ÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿ',75,'interface',-1,NULL,1),(4,'DEFAULTv6','\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0','ÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿ',75,'stream',-1,NULL,1);
 /*!40000 ALTER TABLE `access_list` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -73,7 +75,7 @@ SET character_set_client = utf8;
 CREATE TABLE `album` (
   `id` int(11) unsigned NOT NULL auto_increment,
   `name` varchar(255) character set utf8 default NULL,
-  `prefix` enum('The','An','A','Der','Die','Das','Ein','Eine') character set utf8 default NULL,
+  `prefix` varchar(32) collate utf8_unicode_ci default NULL,
   `year` int(4) unsigned NOT NULL default '1984',
   `disk` smallint(5) unsigned default NULL,
   PRIMARY KEY  (`id`),
@@ -103,7 +105,7 @@ CREATE TABLE `album_data` (
   `album_id` int(11) unsigned NOT NULL,
   `art` mediumblob,
   `art_mime` varchar(64) character set utf8 default NULL,
-  `thumb` blob,
+  `thumb` mediumblob,
   `thumb_mime` varchar(64) character set utf8 default NULL,
   UNIQUE KEY `album_id` (`album_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
@@ -128,7 +130,7 @@ SET character_set_client = utf8;
 CREATE TABLE `artist` (
   `id` int(11) unsigned NOT NULL auto_increment,
   `name` varchar(255) character set utf8 default NULL,
-  `prefix` enum('The','An','A','Der','Die','Das','Ein','Eine') character set utf8 default NULL,
+  `prefix` varchar(32) collate utf8_unicode_ci default NULL,
   PRIMARY KEY  (`id`),
   KEY `name` (`name`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
@@ -154,7 +156,7 @@ CREATE TABLE `artist_data` (
   `artist_id` int(11) unsigned NOT NULL,
   `art` mediumblob NOT NULL,
   `art_mime` varchar(32) character set utf8 default NULL,
-  `thumb` blob NOT NULL,
+  `thumb` mediumblob,
   `thumb_mime` varchar(32) character set utf8 default NULL,
   `bio` text collate utf8_unicode_ci NOT NULL,
   UNIQUE KEY `artist_id` (`artist_id`)
@@ -181,9 +183,9 @@ CREATE TABLE `catalog` (
   `id` int(11) unsigned NOT NULL auto_increment,
   `name` varchar(128) character set utf8 default NULL,
   `path` varchar(255) character set utf8 default NULL,
-  `add_path` varchar(255) character set utf8 default NULL,
   `catalog_type` enum('local','remote') character set utf8 default NULL,
   `last_update` int(11) unsigned NOT NULL default '0',
+  `last_clean` int(11) unsigned default NULL,
   `last_add` int(11) unsigned NOT NULL default '0',
   `enabled` tinyint(1) unsigned NOT NULL default '1',
   `rename_pattern` varchar(255) character set utf8 default NULL,
@@ -235,6 +237,59 @@ LOCK TABLES `democratic` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `dynamic_playlist`
+--
+
+DROP TABLE IF EXISTS `dynamic_playlist`;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+CREATE TABLE `dynamic_playlist` (
+  `id` int(11) unsigned NOT NULL auto_increment,
+  `name` varchar(255) collate utf8_unicode_ci NOT NULL,
+  `user` int(11) NOT NULL,
+  `date` int(11) unsigned NOT NULL,
+  `type` varchar(128) collate utf8_unicode_ci NOT NULL,
+  PRIMARY KEY  (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Dumping data for table `dynamic_playlist`
+--
+
+LOCK TABLES `dynamic_playlist` WRITE;
+/*!40000 ALTER TABLE `dynamic_playlist` DISABLE KEYS */;
+/*!40000 ALTER TABLE `dynamic_playlist` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `dynamic_playlist_data`
+--
+
+DROP TABLE IF EXISTS `dynamic_playlist_data`;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+CREATE TABLE `dynamic_playlist_data` (
+  `id` int(11) unsigned NOT NULL auto_increment,
+  `dynamic_id` int(11) unsigned NOT NULL,
+  `field` varchar(255) collate utf8_unicode_ci NOT NULL,
+  `internal_operator` varchar(64) collate utf8_unicode_ci NOT NULL,
+  `external_operator` varchar(64) collate utf8_unicode_ci NOT NULL,
+  `value` varchar(255) collate utf8_unicode_ci NOT NULL,
+  PRIMARY KEY  (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Dumping data for table `dynamic_playlist_data`
+--
+
+LOCK TABLES `dynamic_playlist_data` WRITE;
+/*!40000 ALTER TABLE `dynamic_playlist_data` DISABLE KEYS */;
+/*!40000 ALTER TABLE `dynamic_playlist_data` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `flagged`
 --
 
@@ -268,30 +323,6 @@ LOCK TABLES `flagged` WRITE;
 UNLOCK TABLES;
 
 --
--- Table structure for table `genre`
---
-
-DROP TABLE IF EXISTS `genre`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `genre` (
-  `id` int(11) unsigned NOT NULL auto_increment,
-  `name` varchar(255) character set utf8 default NULL,
-  PRIMARY KEY  (`id`),
-  KEY `name` (`name`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-SET character_set_client = @saved_cs_client;
-
---
--- Dumping data for table `genre`
---
-
-LOCK TABLES `genre` WRITE;
-/*!40000 ALTER TABLE `genre` DISABLE KEYS */;
-/*!40000 ALTER TABLE `genre` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `ip_history`
 --
 
@@ -301,8 +332,9 @@ SET character_set_client = utf8;
 CREATE TABLE `ip_history` (
   `id` int(11) unsigned NOT NULL auto_increment,
   `user` int(11) NOT NULL,
-  `ip` int(11) unsigned NOT NULL default '0',
+  `ip` varbinary(255) default NULL,
   `date` int(11) unsigned NOT NULL default '0',
+  `agent` varchar(255) collate utf8_unicode_ci default NULL,
   PRIMARY KEY  (`id`),
   KEY `username` (`user`),
   KEY `date` (`date`),
@@ -418,7 +450,6 @@ CREATE TABLE `playlist` (
   `name` varchar(128) character set utf8 default NULL,
   `user` int(11) NOT NULL,
   `type` enum('private','public') character set utf8 default NULL,
-  `genre` int(11) unsigned NOT NULL,
   `date` int(11) unsigned NOT NULL,
   PRIMARY KEY  (`id`),
   KEY `name` (`name`),
@@ -447,7 +478,6 @@ CREATE TABLE `playlist_data` (
   `playlist` int(11) unsigned NOT NULL default '0',
   `object_id` int(11) unsigned default NULL,
   `object_type` varchar(32) character set utf8 default NULL,
-  `dynamic_song` text collate utf8_unicode_ci,
   `track` int(11) unsigned NOT NULL default '0',
   PRIMARY KEY  (`id`),
   KEY `playlist` (`playlist`)
@@ -481,7 +511,7 @@ CREATE TABLE `preference` (
   PRIMARY KEY  (`id`),
   KEY `catagory` (`catagory`),
   KEY `name` (`name`)
-) ENGINE=MyISAM AUTO_INCREMENT=56 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=70 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 SET character_set_client = @saved_cs_client;
 
 --
@@ -490,7 +520,7 @@ SET character_set_client = @saved_cs_client;
 
 LOCK TABLES `preference` WRITE;
 /*!40000 ALTER TABLE `preference` DISABLE KEYS */;
-INSERT INTO `preference` VALUES (1,'download','0','Allow Downloads',100,'boolean','options'),(4,'popular_threshold','10','Popular Threshold',25,'integer','interface'),(19,'sample_rate','32','Transcode Bitrate',25,'string','streaming'),(22,'site_title','Ampache :: Pour l\'Amour de la Musique','Website Title',100,'string','system'),(23,'lock_songs','0','Lock Songs',100,'boolean','system'),(24,'force_http_play','1','Forces Http play regardless of port',100,'boolean','system'),(25,'http_port','80','Non-Standard Http Port',100,'integer','system'),(41,'localplay_controller','0','Localplay Type',100,'special','options'),(29,'play_type','stream','Type of Playback',25,'special','streaming'),(31,'lang','en_US','Language',100,'special','interface'),(32,'playlist_type','m3u','Playlist Type',100,'special','playlist'),(33,'theme_name','classic','Theme',0,'special','interface'),(34,'ellipse_threshold_album','27','Album Ellipse Threshold',0,'integer','interface'),(35,'ellipse_threshold_artist','27','Artist Ellipse Threshold',0,'integer','interface'),(36,'ellipse_threshold_title','27','Title Ellipse Threshold',0,'integer','interface'),(51,'offset_limit','50','Offset Limit',5,'integer','interface'),(40,'localplay_level','0','Localplay Access',100,'special','options'),(44,'allow_stream_playback','1','Allow Streaming',100,'boolean','system'),(45,'allow_democratic_playback','0','Allow Democratic Play',100,'boolean','system'),(46,'allow_localplay_playback','0','Allow Localplay Play',100,'boolean','system'),(47,'stats_threshold','7','Statistics Day Threshold',25,'integer','interface'),(49,'min_object_count','1','Min Element Count',5,'integer','interface'),(52,'rate_limit','8192','Rate Limit',100,'integer','streaming'),(53,'playlist_method','default','Playlist Method',5,'string','playlist'),(55,'transcode','default','Transcoding',25,'string','streaming'),(57,'tags_userlist','','User to track', 0, 'string', 'tags'),(69,'show_lyrics','0','Show Lyrics',0,'boolean','interface');
+INSERT INTO `preference` VALUES (1,'download','0','Allow Downloads',100,'boolean','options'),(4,'popular_threshold','10','Popular Threshold',25,'integer','interface'),(19,'sample_rate','32','Transcode Bitrate',25,'string','streaming'),(22,'site_title','Ampache :: Pour l\'Amour de la Musique','Website Title',100,'string','system'),(23,'lock_songs','0','Lock Songs',100,'boolean','system'),(24,'force_http_play','1','Forces Http play regardless of port',100,'boolean','system'),(25,'http_port','80','Non-Standard Http Port',100,'integer','system'),(41,'localplay_controller','0','Localplay Type',100,'special','options'),(29,'play_type','stream','Type of Playback',25,'special','streaming'),(31,'lang','en_US','Language',100,'special','interface'),(32,'playlist_type','m3u','Playlist Type',100,'special','playlist'),(33,'theme_name','classic','Theme',0,'special','interface'),(34,'ellipse_threshold_album','27','Album Ellipse Threshold',0,'integer','interface'),(35,'ellipse_threshold_artist','27','Artist Ellipse Threshold',0,'integer','interface'),(36,'ellipse_threshold_title','27','Title Ellipse Threshold',0,'integer','interface'),(51,'offset_limit','50','Offset Limit',5,'integer','interface'),(40,'localplay_level','0','Localplay Access',100,'special','options'),(44,'allow_stream_playback','1','Allow Streaming',100,'boolean','system'),(45,'allow_democratic_playback','0','Allow Democratic Play',100,'boolean','system'),(46,'allow_localplay_playback','0','Allow Localplay Play',100,'boolean','system'),(47,'stats_threshold','7','Statistics Day Threshold',25,'integer','interface'),(49,'min_object_count','1','Min Element Count',5,'integer','interface'),(52,'rate_limit','8192','Rate Limit',100,'integer','streaming'),(53,'playlist_method','default','Playlist Method',5,'string','playlist'),(55,'transcode','default','Transcoding',25,'string','streaming'),(57,'tags_userlist','','User to track',0,'string','tags'),(69,'show_lyrics','0','Show Lyrics',0,'boolean','interface');
 /*!40000 ALTER TABLE `preference` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -533,7 +563,7 @@ CREATE TABLE `session` (
   `username` varchar(16) character set utf8 default NULL,
   `expire` int(11) unsigned NOT NULL default '0',
   `value` longtext collate utf8_unicode_ci NOT NULL,
-  `ip` int(11) unsigned default NULL,
+  `ip` varbinary(255) default NULL,
   `type` enum('mysql','ldap','http','api','xml-rpc') character set utf8 default NULL,
   `agent` varchar(255) character set utf8 default NULL,
   PRIMARY KEY  (`id`),
@@ -563,7 +593,7 @@ CREATE TABLE `session_stream` (
   `user` int(11) unsigned NOT NULL,
   `agent` varchar(255) character set utf8 default NULL,
   `expire` int(11) unsigned NOT NULL,
-  `ip` int(11) unsigned default NULL,
+  `ip` varbinary(255) default NULL,
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 SET character_set_client = @saved_cs_client;
@@ -598,14 +628,12 @@ CREATE TABLE `song` (
   `size` int(11) unsigned NOT NULL default '0',
   `time` smallint(5) unsigned NOT NULL default '0',
   `track` smallint(5) unsigned default NULL,
-  `genre` int(11) unsigned default NULL,
   `played` tinyint(1) unsigned NOT NULL default '0',
   `enabled` tinyint(1) unsigned NOT NULL default '1',
   `update_time` int(11) unsigned default '0',
   `addition_time` int(11) unsigned default '0',
   `hash` varchar(64) character set utf8 default NULL,
   PRIMARY KEY  (`id`),
-  KEY `genre` (`genre`),
   KEY `album` (`album`),
   KEY `artist` (`artist`),
   KEY `file` (`file`),
@@ -654,6 +682,30 @@ LOCK TABLES `song_data` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `tag`
+--
+
+DROP TABLE IF EXISTS `tag`;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+CREATE TABLE `tag` (
+  `id` int(11) unsigned NOT NULL auto_increment,
+  `name` varchar(255) collate utf8_unicode_ci default NULL,
+  UNIQUE KEY `name` (`name`),
+  KEY `map_id` (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Dumping data for table `tag`
+--
+
+LOCK TABLES `tag` WRITE;
+/*!40000 ALTER TABLE `tag` DISABLE KEYS */;
+/*!40000 ALTER TABLE `tag` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `tag_map`
 --
 
@@ -684,28 +736,26 @@ LOCK TABLES `tag_map` WRITE;
 UNLOCK TABLES;
 
 --
--- Table structure for table `tags`
+-- Table structure for table `tmp_browse`
 --
 
-DROP TABLE IF EXISTS `tags`;
+DROP TABLE IF EXISTS `tmp_browse`;
 SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8;
-CREATE TABLE `tags` (
-  `map_id` int(11) unsigned NOT NULL auto_increment,
-  `name` varchar(32) character set utf8 default NULL,
-  `order` tinyint(2) NOT NULL,
-  KEY `order` (`order`),
-  KEY `map_id` (`map_id`)
+CREATE TABLE `tmp_browse` (
+  `sid` varchar(128) collate utf8_unicode_ci NOT NULL,
+  `data` longtext collate utf8_unicode_ci NOT NULL,
+  UNIQUE KEY `sid` (`sid`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 SET character_set_client = @saved_cs_client;
 
 --
--- Dumping data for table `tags`
+-- Dumping data for table `tmp_browse`
 --
 
-LOCK TABLES `tags` WRITE;
-/*!40000 ALTER TABLE `tags` DISABLE KEYS */;
-/*!40000 ALTER TABLE `tags` ENABLE KEYS */;
+LOCK TABLES `tmp_browse` WRITE;
+/*!40000 ALTER TABLE `tmp_browse` DISABLE KEYS */;
+/*!40000 ALTER TABLE `tmp_browse` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -747,6 +797,7 @@ CREATE TABLE `tmp_playlist_data` (
   `tmp_playlist` int(11) unsigned NOT NULL,
   `object_type` varchar(32) character set utf8 default NULL,
   `object_id` int(11) unsigned NOT NULL,
+  `track` int(11) unsigned default NULL,
   PRIMARY KEY  (`id`),
   KEY `tmp_playlist` (`tmp_playlist`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
@@ -781,7 +832,7 @@ SET character_set_client = @saved_cs_client;
 
 LOCK TABLES `update_info` WRITE;
 /*!40000 ALTER TABLE `update_info` DISABLE KEYS */;
-INSERT INTO `update_info` VALUES ('db_version','340018');
+INSERT INTO `update_info` VALUES ('db_version','350007');
 /*!40000 ALTER TABLE `update_info` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -805,7 +856,7 @@ CREATE TABLE `user` (
   `validation` varchar(128) character set utf8 default NULL,
   PRIMARY KEY  (`id`),
   UNIQUE KEY `username` (`username`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 SET character_set_client = @saved_cs_client;
 
 --
@@ -815,6 +866,31 @@ SET character_set_client = @saved_cs_client;
 LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `user_catalog`
+--
+
+DROP TABLE IF EXISTS `user_catalog`;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+CREATE TABLE `user_catalog` (
+  `user` int(11) unsigned NOT NULL,
+  `catalog` int(11) unsigned NOT NULL,
+  `level` smallint(4) unsigned NOT NULL default '5',
+  KEY `user` (`user`),
+  KEY `catalog` (`catalog`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Dumping data for table `user_catalog`
+--
+
+LOCK TABLES `user_catalog` WRITE;
+/*!40000 ALTER TABLE `user_catalog` DISABLE KEYS */;
+/*!40000 ALTER TABLE `user_catalog` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -839,7 +915,7 @@ SET character_set_client = @saved_cs_client;
 
 LOCK TABLES `user_preference` WRITE;
 /*!40000 ALTER TABLE `user_preference` DISABLE KEYS */;
-INSERT INTO `user_preference` VALUES (-1,1,'0'),(-1,4,'10'),(-1,19,'32'),(-1,22,'Ampache :: Pour l\'Amour de la Musique'),(-1,23,'0'),(-1,24,'1'),(-1,25,'80'),(-1,41,'0'),(-1,29,'stream'),(-1,31,'en_US'),(-1,32,'m3u'),(-1,33,'classic'),(-1,34,'27'),(-1,35,'27'),(-1,36,'27'),(-1,51,'50'),(-1,40,'0'),(-1,44,'1'),(-1,45,'0'),(-1,46,'0'),(-1,47,'7'),(-1,49,'1'),(-1,52,'8192'),(-1,53,'default'),(-1,55,'default'),(1,69,'0');
+INSERT INTO `user_preference` VALUES (-1,1,'0'),(-1,4,'10'),(-1,19,'32'),(-1,22,'Ampache :: Pour l\'Amour de la Musique'),(-1,23,'0'),(-1,24,'1'),(-1,25,'80'),(-1,41,'0'),(-1,29,'stream'),(-1,31,'en_US'),(-1,32,'m3u'),(-1,33,'classic'),(-1,34,'27'),(-1,35,'27'),(-1,36,'27'),(-1,51,'50'),(-1,40,'0'),(-1,44,'1'),(-1,45,'0'),(-1,46,'0'),(-1,47,'7'),(-1,49,'1'),(-1,52,'8192'),(-1,53,'default'),(-1,55,'default'),(-1,57,''),(-1,69,'0');
 /*!40000 ALTER TABLE `user_preference` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -899,6 +975,42 @@ LOCK TABLES `user_vote` WRITE;
 /*!40000 ALTER TABLE `user_vote` DISABLE KEYS */;
 /*!40000 ALTER TABLE `user_vote` ENABLE KEYS */;
 UNLOCK TABLES;
+
+--
+-- Table structure for table `video`
+--
+
+DROP TABLE IF EXISTS `video`;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+CREATE TABLE `video` (
+  `id` int(11) unsigned NOT NULL auto_increment,
+  `file` varchar(255) collate utf8_unicode_ci NOT NULL,
+  `catalog` int(11) unsigned NOT NULL,
+  `title` varchar(255) collate utf8_unicode_ci NOT NULL,
+  `video_codec` varchar(255) collate utf8_unicode_ci NOT NULL,
+  `audio_codec` varchar(255) collate utf8_unicode_ci NOT NULL,
+  `resolution_x` mediumint(8) unsigned NOT NULL,
+  `resolution_y` mediumint(8) unsigned NOT NULL,
+  `time` int(11) unsigned NOT NULL,
+  `size` bigint(20) unsigned NOT NULL,
+  `mime` varchar(255) collate utf8_unicode_ci NOT NULL,
+  `enabled` tinyint(1) NOT NULL default '1',
+  PRIMARY KEY  (`id`),
+  KEY `file` (`file`),
+  KEY `enabled` (`enabled`),
+  KEY `title` (`title`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Dumping data for table `video`
+--
+
+LOCK TABLES `video` WRITE;
+/*!40000 ALTER TABLE `video` DISABLE KEYS */;
+/*!40000 ALTER TABLE `video` ENABLE KEYS */;
+UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -909,4 +1021,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2008-05-10  9:15:23
+-- Dump completed on 2009-03-08  5:04:46

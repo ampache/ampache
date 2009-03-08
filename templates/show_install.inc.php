@@ -36,7 +36,7 @@ if (INSTALL != '1') { exit; }
 <div id="text-box">
 
 	<div class="notify">
-		<strong><?php echo _('Requirements'); ?></strong>
+		<h3><?php echo _('Requirements'); ?></h3>
 		<p>
 		<?php echo _("This Page handles the installation of the Ampache database and the creation of the ampache.cfg.php file. Before you continue please make sure that you have the following pre-requisites"); ?>
 		</p>

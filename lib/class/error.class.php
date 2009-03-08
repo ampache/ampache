@@ -134,5 +134,4 @@ class Error {
 
 	} // auto_init
 
-
 } // Error

@@ -92,12 +92,10 @@ if (INSTALL != '1') { exit; }
         <td>[ 
         <?php
                 if (!is_readable($configfile)) {
-                        $status['read_config'] = 'false';
-                        echo " <span class=\"notok\">ERROR</span> "; 
+			echo debug_result('',false); 
                 }
                 else {
-                        $status['read_config'] = 'true';
-                        echo " <span class=\"ok\">OK</span> ";
+			echo debug_result('',true); 
                 }
         ?>
         ]
@@ -111,12 +109,10 @@ if (INSTALL != '1') { exit; }
         <?php
                 $results = @parse_ini_file($configfile);
                 if (!check_config_values($results)) { 
-                        $status['parse_config'] = 'false';
-                        echo " <span class=\"notok\">ERROR</span> ";
+			echo debug_result('',false); 
                 }
                 else {
-                        $status['parse_config'] = 'true';
-                        echo " <span class=\"ok\">OK</span> ";
+			echo debug_result('',true); 
                 }
         ?>
         ]

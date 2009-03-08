@@ -79,6 +79,11 @@ function check_php_ver($level=0) {
 	if (floatval(phpversion()) < 5.1) {
 		return false;
 	}
+	
+	// Poor windows users if only their OS wasn't behind the times
+	if (strtoupper(substr(PHP_OS,0,3)) == 'WIN' AND floatval(phpversion()) < 5.3) {
+		return false; 
+	} 
 
 	// Make sure that they have the sha256() algo installed
 	if (!function_exists('hash_algos')) { return false; } 
@@ -228,6 +233,34 @@ function check_putenv() {
 } // check_putenv
 
 /**
+ * check_gettext
+ * This checks to see if you've got gettext installed
+ */
+function check_gettext() { 
+
+	if (!function_exists('gettext')) { 
+		return false; 
+	} 
+
+	return true; 
+
+} // check_gettext
+
+/**
+ * check_mbstring
+ * This checks for mbstring support
+ */
+function check_mbstring() { 
+
+	if (!function_exists('mb_check_encoding')) { 
+		return false; 
+	} 
+
+	return true; 
+
+} // check_mbstring 
+
+/**
  * generate_config
  * This takes an array of results and re-generates the config file
  * this is used by the installer and by the admin/system page
@@ -272,4 +305,20 @@ function generate_config($current) {
 
 } // generate_config
 
+/**
+ * debug_ok
+ * Return an "OK" with the specified string
+ */
+function debug_result($comment,$status=false,$value=false) { 
+
+	$class = $status ? 'ok' : 'notok'; 
+	if (!$value) { 
+		$value = $status ? 'OK' : 'ERROR'; 
+	} 
+
+	$final = '<span class="' . $class . '">' . scrub_out($value) . '</span> <em>' . scrub_out($comment) . '</em>'; 
+
+	return $final;
+
+} // debug_ok
 ?>

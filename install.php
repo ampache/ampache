@@ -24,6 +24,7 @@ error_reporting(E_ALL ^ E_NOTICE);
 
 require_once 'lib/general.lib.php';
 require_once 'lib/class/config.class.php';
+require_once 'lib/class/error.class.php'; 
 require_once 'lib/class/vauth.class.php';
 require_once 'lib/class/database_object.abstract.php';
 require_once 'lib/ui.lib.php';

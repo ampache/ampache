@@ -46,12 +46,10 @@
 	<td valign="top">[
 	<?php
 		if (!check_php_ver()) { 
-			$status['php_ver'] = 'false';
-			echo " <font color=\"red\">ERROR</font> ";
+			echo debug_result('',false);
 		}
 		else {
-			$status['php_ver'] = 'true';
-			echo " <font color=\"green\">&nbsp;&nbsp;&nbsp;OK&nbsp;&nbsp;&nbsp;&nbsp;</font> ";
+			echo debug_result('',true); 
 		}
 	?>
 	]
@@ -65,12 +63,10 @@
         <td valign="top">[
         <?php
                 if (!check_php_mysql()) {
-                        $status['mysql_php'] = 'false';
-                        echo " <font color=\"red\">ERROR</font> ";
+			echo debug_result('',false); 
                 }
                 else {
-                        $status['mysql_php'] = 'true';
-                        echo " <font color=\"green\">&nbsp;&nbsp;&nbsp;OK&nbsp;&nbsp;&nbsp;&nbsp;</font> ";
+			echo debug_result('',true); 
                 }
         ?>
         ]
@@ -84,12 +80,10 @@
 	<td valign="top">[
 	<?php
 		if (!check_php_session()) { 
-			$status['session_php'] = 'false';
-			echo " <font color=\"red\">ERROR</font> ";
+			echo debug_result('',false); 
 		}
 		else {
-			$status['session_php'] = 'true';
-			echo " <font color=\"green\">&nbsp;&nbsp;&nbsp;OK&nbsp;&nbsp;&nbsp;&nbsp;</font> ";
+			echo debug_result('',true); 
 		}
 	?>
 	]
@@ -103,12 +97,10 @@
 	<td valign="top">[
 	<?php
 		if (!check_php_iconv()) { 
-			$status['iconv_php'] = 'false';
-			echo " <font color=\"red\">ERROR</font> ";
+			echo debug_result('',false); 
 		}
 		else {
-			$status['iconv_php'] = 'true';
-			echo "<font color=\"green\">&nbsp;&nbsp;&nbsp;OK&nbsp;&nbsp;&nbsp;&nbsp;</font> ";
+			echo debug_result('',true); 
 		}
 	?>]
 	</td>
@@ -121,11 +113,10 @@
 	<td valign="top">[
 	<?php
 		if (!check_php_pcre()) { 
-			$status['pcre_php'] = 'false';
-			echo " <font color=\"red\">ERROR</font> ";
+			echo debug_result('',false); 
 		}
 		else { 
-			echo "<font color=\"green\">&nbsp;&nbsp;&nbsp;OK&nbsp;&nbsp;&nbsp;&nbsp;</font> ";
+			echo debug_result('',true); 
 		}
 	?>]
 	</td>
@@ -138,11 +129,10 @@
 	<td valign="top">[
 	<?php
 		if (!check_putenv()) { 
-			$status['putevn_php'] = false;
-			echo " <font color=\"red\">ERROR</font> ";
+			echo debug_result('',false); 
 		}
 		else { 
-			echo "<font color=\"green\">&nbsp;&nbsp;&nbsp;OK&nbsp;&nbsp;&nbsp;&nbsp;</font> ";
+			echo debug_result('',true); 
 		} 
 	?>]
 	</td>
@@ -155,10 +145,10 @@
 	<td valign="top">[ 
 	<?php
 		if (!is_readable($configfile)) { 
-			echo " <font color=\"red\">ERROR</font> "; 
+			echo debug_result('',false); 
 		}
 		else {
-			echo " <font color=\"green\">&nbsp;&nbsp;&nbsp;OK&nbsp;&nbsp&nbsp;&nbsp;</font> ";
+			echo debug_result('',true); 
 		}
 	?>
 	]
@@ -177,11 +167,10 @@
 		$results = @parse_ini_file($configfile);
 		Config::set_by_array($results);
 		if (!check_config_values($results)) { 
-			echo " <font color=\"red\">ERROR</font> ";
+			echo debug_result('',false); 
 		}
 		else {
-			$status['parse_config'] = true; 
-			echo " <font color=\"green\">&nbsp;&nbsp;&nbsp;OK&nbsp;&nbsp;&nbsp;&nbsp;</font> ";
+			echo debug_result('',true); 
 		}
 	?>
 	]
@@ -196,12 +185,10 @@
 	<?php
 		$db = check_database($results['database_hostname'], $results['database_username'], $results['database_password'],$results['database_name']);
 		if (!$db) { 
-			$status['check_db'] = 'false';
-			echo " <font color=\"red\">ERROR</font> ";
+			echo debug_result('',false); 
 		}
 		else {
-			$status['check_db'] = 'true';
-			echo " <font color=\"green\">&nbsp;&nbsp;&nbsp;OK&nbsp;&nbsp;&nbsp;&nbsp;</font> ";
+			echo debug_result('',true); 
 		}		
 	?>
 	]
@@ -216,19 +203,16 @@
 	<?php
 		$db_inserted = check_database_inserted($db,$results['local_db']);
 		if (!$db_inserted) { 
-			$status['check_db_insert'] = 'false';
-			echo " <font color=\"red\">ERROR</font> ";
+			echo debug_result('',false); 
 		}
 		else {
-			$status['check_db_insert'] = 'true';
-			echo " <font color=\"green\">&nbsp;&nbsp;&nbsp;OK&nbsp;&nbsp;&nbsp;&nbsp;</font> ";
+			echo debug_result('',true); 
 		}
 	?>
 	]
 	</td>
 	<td>
-	This checks a few key tables to make sure that you have successfully inserted the ampache database and 
-	that the user has access to the database
+	<?php echo _('This checks a few key tables to make sure that you have successfully inserted the ampache database and that the user has access to the database'); ?>
 	</td>
 </tr>
 <tr>
@@ -250,16 +234,14 @@
 			echo "&nbsp;&nbsp;&nbsp;<img src=\"" . $results['web_path'] ."/images/icon_enable.png\" />&nbsp;&nbsp;&nbsp;";
 		}
 		else {
-			$status['check_webpath'] = false;
-			echo "<font color=\"red\">ERROR</font>";
+			echo debug_result('',false); 
 		}
 
 	?>
 	]
 	</td>
 	<td>
-	This test makes sure that your web_path variable is set correctly and that we are able to get to the index page. If you do not see a check mark
-	here then your web_path is not set correctly. 
+	<?php echo _('This test makes sure that your web_path variable is set correctly and that we are able to get to the index page. If you do not see a check mark here then your web_path is not set correctly.'); ?>
 	</td>
 </tr>
 </table>
