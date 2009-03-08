@@ -58,7 +58,7 @@ if (Config::get('use_rss')) { ?>
 			<?php show_box_top('','box box_headerbox'); ?>
 			<?php require_once Config::get('prefix') . '/templates/show_search_bar.inc.php'; ?>
 			<?php require_once Config::get('prefix') . '/templates/show_playtype_switch.inc.php'; ?>
-			<span id="loginInfo"><?php echo $GLOBALS['user']->fullname; ?> [<a href="<?php echo Config::get('web_path'); ?>/logout.php"><?php echo _('Log out'); ?></a>]</span>
+			<span id="loginInfo"><a href="<?php echo Config::get('web_path'); ?>/preferences.php?tab=account"><?php echo $GLOBALS['user']->fullname; ?></a> [<a href="<?php echo Config::get('web_path'); ?>/logout.php"><?php echo _('Log out'); ?></a>]</span>
 			<?php show_box_bottom(); ?>
 		</div> <!-- End headerbox -->
 	</div><!-- End header -->

@@ -319,7 +319,7 @@ else {
 } // else not downsampling
 
 // Put this song in the now_playing table
-Stream::insert_now_playing($media->id,$uid,$media->time,$sid);
+Stream::insert_now_playing($media->id,$uid,$media->time,$sid,get_class($media));
 
 if ($start > 0) {
 

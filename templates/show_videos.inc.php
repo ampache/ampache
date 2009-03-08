@@ -28,6 +28,7 @@ $web_path = Config::get('web_path');
   <col id="col_title" />
   <col id="col_codec" />
   <col id="col_resolution" />
+  <col id="col_length" />
   <col id="col_tags" />
 </colgroup>
 <tr class="th-top">
@@ -35,6 +36,7 @@ $web_path = Config::get('web_path');
 	<th class="cel_title"><?php echo _('Title'); ?></th>
 	<th class="cel_codec"><?php echo _('Codec'); ?></th>
 	<th class="cel_resolution"><?php echo _('Resolution'); ?></th>
+	<th class="cel_length"><?php echo _('Length'); ?></th>
 	<th class="cel_tags"><?php echo _('Tags'); ?></th>
 </tr>
 <?php 
@@ -49,7 +51,7 @@ foreach ($object_ids as $video_id) {
 <?php } //end foreach  ?>
 <?php if (!count($object_ids)) { ?>
 <tr class="<?php echo flip_class(); ?>">
-	<td colspan="5"><span class="fatalerror"><?php echo _('Not Enough Data'); ?></span></td>
+	<td colspan="6"><span class="fatalerror"><?php echo _('Not Enough Data'); ?></span></td>
 </tr>
 <?php } ?>
 <tr class="th-bottom">

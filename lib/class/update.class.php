@@ -315,6 +315,10 @@ class Update {
 
 		$version[] = array('version'=>'350007','description'=>$update_string); 
 
+		$update_string = '- Modify Now Playing table to handle Videos';
+
+		//$version[] = array('version'=>'350008','description'=>$update_string); 
+
 
 		return $version;
 
@@ -1696,6 +1700,24 @@ class Update {
 		return true; 
 
 	} // update_350007
+
+	/**
+	 * update_350008
+	 * Change song_id references to be object so they are a little more general 
+	 * add a type to now playing table so that we can handle different playing information
+	 */
+	public static function update_350008() { 
+
+		$sql = "ALTER TABLE `now_playing` ALTER `song_id` `object_id` INT( 11 ) UNSIGNED NOT NULL"; 
+		$db_results = Dba::write($sql); 
+
+		$sql = "ALTER TABLE `now_playing` ADD `object_type` VARCHAR ( 255 ) NOT NULL AFTER `object_id`"; 
+		$db_results = Dba::write($sql); 
+	
+
+		//self::set_version('db_version','350008'); 
+
+	} // update_350008
 
 
 } // end update class

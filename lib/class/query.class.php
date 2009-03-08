@@ -33,12 +33,11 @@ class Query {
 	public static $total_objects; 
 	public static $type; 
 
-	// Boolean if this is a simple browse method (use different paging code)
-	public static $simple_browse; 
-
 	// Static Content, this is defaulted to false, if set to true then when we can't
 	// apply any filters that would change the result set. 
 	public static $static_content = false; 
+
+	// Private cache information
 	private static $_cache = array();  
 	private static $_state = array(); 
 
@@ -51,7 +50,6 @@ class Query {
 		// Rien a faire
 
 	} // __construct
-
 
 	/**
 	 * set_filter
@@ -87,7 +85,6 @@ class Query {
 				self::$_state['filter'][self::$type][$key] = $value;
 			break;
 			case 'min_count':
-	
 			case 'unplayed':
 			case 'rated':
 
@@ -136,7 +133,7 @@ class Query {
 		self::reset_select(); 
 		self::reset_having(); 
 		self::reset_supplemental_objects(); 
-		self::set_simple_browse(0); 
+		self::set_is_simple(0); 
 		self::set_start(0); 
 
 	} // reset
@@ -147,7 +144,7 @@ class Query {
 	 */
 	public static function reset_base() { 
 
-		self::$_state['base'][self::$type] = false; 
+		self::$_state['base'][self::$type] = NULL; 
 
 	} // reset_base
 
@@ -230,7 +227,7 @@ class Query {
 	public static function get_total($objects=false) { 
 		
 		// If they pass something then just return that
-		if (is_array($objects) and !self::is_simple_browse()) { 
+		if (is_array($objects) and !self::is_simple()) { 
 			return count($objects); 
 		} 
 
@@ -239,7 +236,7 @@ class Query {
 			return self::$_state['total'][self::$type]; 
 		} 
 
-		$db_results = Dba::query(self::get_base_sql() . self::get_filter_sql() . self::get_sort_sql()); 
+		$db_results = Dba::read(self::get_sql(false)); 
 		$num_rows = Dba::num_rows($db_results); 
 
 		self::$_state['total'][self::$type] = $num_rows; 
@@ -436,16 +433,16 @@ class Query {
 	} // set_start
 
 	/**
-	 * set_simple_browse
+	 * set_is_simple
 	 * This sets the current browse object to a 'simple' browse method
 	 * which means use the base query provided and expand from there
 	 */
-	public static function set_simple_browse($value) { 
+	public static function set_is_simple($value) { 
 
 		$value = make_bool($value); 
 		self::$_state['simple'][self::$type] = $value;  
 
-	} // set_simple_browse
+	} // set_is_simple
 
 	/**
 	 * set_static_content
@@ -468,14 +465,14 @@ class Query {
 	} // set_static_content
 
 	/**
-	 * is_simple_browse
+	 * is_simple
 	 * this returns true or false if the current browse type is set to static
 	 */
-	public static function is_simple_browse() { 
+	public static function is_simple() { 
 
 		return self::$_state['simple'][self::$type]; 
 
-	} // is_simple_browse
+	} // is_simple
 
 	/**
 	 * load_start
@@ -499,7 +496,7 @@ class Query {
 			return self::$_cache['browse'][self::$type]; 
 		} 
 
-		if (!self::is_simple_browse()) { 
+		if (!self::is_simple()) { 
 			// If not then we're going to need to read from the database :(
 			$sid = session_id() . '::' . self::$type; 
 
@@ -714,7 +711,7 @@ class Query {
 	 */
 	private static function get_limit_sql() { 
 
-		if (!self::is_simple_browse()) { return ''; } 
+		if (!self::is_simple()) { return ''; } 
 
 		$sql = ' LIMIT ' . intval(self::$start) . ',' . intval(self::$offset); 
 
@@ -763,7 +760,7 @@ class Query {
 	 * every time we get the objects because it depends on the filters and the
 	 * type of object we are currently browsing
 	 */
-	public static function get_sql() { 
+	public static function get_sql($limit=true) { 
 
 		$sql = self::get_base_sql(); 
 
@@ -774,7 +771,7 @@ class Query {
 		$join_sql = self::get_join_sql(); 
 		$having_sql = self::get_having_sql(); 
 		$order_sql = self::get_sort_sql(); 
-		$limit_sql = self::get_limit_sql(); 
+		$limit_sql = $limit ? self::get_limit_sql() : ''; 
 
 		$final_sql = $sql . $join_sql . $filter_sql . $having_sql . $order_sql . $limit_sql;  
 
@@ -846,7 +843,7 @@ class Query {
 					$filter_sql = " `song`.`addition_time` >= '" . Dba::escape($value) . "' AND "; 
 				break; 
 				case 'add_lt': 
-					$filter_sql = " `song`.`addition_time` <= '" . Dba::escape($value) . "` AND "; 
+					$filter_sql = " `song`.`addition_time` <= '" . Dba::escape($value) . "' AND "; 
 				break; 
 				case 'update_gt': 
 					$filter_sql = " `song`.`update_time` >= '" . Dba::escape($value) . "' AND "; 
@@ -879,10 +876,22 @@ class Query {
 			        case 'artist':
 					$filter_sql = " `artist`.`id` = '". Dba::escape($value) . "' AND ";
 				break;
-				case 'add': 
+				case 'add_lt': 
 					self::set_join('left','`song`','`song`.`album`','`album`.`id`');	
-				case 'update': 
+					$filter_sql = " `song`.`addition_time` <= '" . Dba::escape($value) . "' AND "; 
+				break;
+				case 'add_gt': 
+					self::set_join('left','`song`','`song`.`album`','`album`.`id`'); 
+					$filter_sql = " `song`.`addition_time` >= '" . Dba::escape($value) . "' AND "; 
+				break;
+				case 'update_lt': 
 					self::set_join('left','`song`','`song`.`album`','`album`.`id`');
+					$filter_sql = " `song`.`update_time` <= '" . Dba::escape($value) . "' AND "; 
+				break;
+				case 'update_gt': 
+					self::set_join('left','`song`','`song`.`album`','`album`.`id`'); 
+					$filter_sql = " `song`.`update_time` >= '" . Dba::escape($value) . "' AND "; 
+				break; 
 				default: 
 					// Rien a faire
 				break;
@@ -899,6 +908,22 @@ class Query {
 				case 'starts_with': 
 					$filter_sql = " `artist`.`name` LIKE '" . Dba::escape($value) . "%' AND "; 
 				break;
+				case 'add_lt': 
+					self::set_join('left','`song`','`song`.`artist`','`artist`.`id`'); 
+					$filter_sql = " `song`.`addition_time` <= '" . Dba::escape($value) . "' AND "; 
+				break;
+				case 'add_gt': 
+					self::set_join('left','`song`','`song`.`artist`','`artist`.`id`'); 
+					$filter_sql = " `song`.`addition_time` >= '" . Dba::escape($value) . "' AND "; 
+				break;
+				case 'update_lt':
+					self::set_join('left','`song`','`song`.`artist`','`artist`.`id`'); 
+					$filter_sql = " `song`.`update_time` <= '" . Dba::escape($value) . "' AND "; 
+				break; 
+				case 'update_gt': 	
+					self::set_join('left','`song`','`song`.`artist`','`artist`.`id`'); 
+					$filter_sql = " `song`.`update_time` >= '" . Dba::escape($value) . "' AND "; 
+				break; 
 				default:
 					// Rien a faire
 				break;
@@ -1092,18 +1117,15 @@ class Query {
 		// There are two ways to do this.. the easy way... 
 		// and the vollmer way, hopefully we don't have to
 		// do it the vollmer way
-		if (self::is_simple_browse()) { 
-			debug_event('resort_objects','is_simple_browse','4');
+		if (self::is_simple()) { 
 			$sql = self::get_sql(); 
 		} 
 		else { 
-			debug_event('resort_objects','not is_simple_browse','4');
 			// First pull the objects
 			$objects = self::get_saved(); 
 
 			// If there's nothing there don't do anything
 			if (!count($objects)) {
-				debug_event('resort_objects','no objects found','4'); 
 				return false;
 			} 
 			$type = self::$type;
@@ -1131,8 +1153,7 @@ class Query {
 	                $sql = $sql . self::get_join_sql() . $where_sql . $order_sql;
 		} // if not simple
 		
-		debug_event('resort_objects','final sql: ' . $sql,'4');
-		$db_results = Dba::query($sql); 
+		$db_results = Dba::read($sql); 
 
 		while ($row = Dba::fetch_assoc($db_results)) { 
 			$results[] = $row['id']; 

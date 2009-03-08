@@ -719,15 +719,15 @@ class Stream {
 	 * This fucntion is used by the /play/index.php song
 	 * primarily, but could be used by other people
 	 */
-	public static function insert_now_playing($song_id,$uid,$song_length,$sid) {
+	public static function insert_now_playing($song_id,$uid,$length,$sid,$type) {
 
-	        $time = time()+$song_length;
+	        $time = time()+$length;
 	        $session_id = Dba::escape($sid);
 
 	        // Do a replace into ensuring that this client always only has a single row
 	        $sql = "REPLACE INTO `now_playing` (`id`,`song_id`, `user`, `expire`)" .
 	                " VALUES ('$session_id','$song_id', '$uid', '$time')";
-	        $db_result = Dba::query($sql);
+	        $db_result = Dba::write($sql);
 
 	} // insert_now_playing
 
