@@ -64,62 +64,7 @@ class Browse {
 	 */
 	public static function set_filter($key,$value) { 
 
-		switch ($key) { 
-			case 'show_art':
-				if (self::get_filter($key)) { 
-					unset($_SESSION['browse']['filter'][self::$type][$key]);
-				} 
-				else { 
-				        $_SESSION['browse']['filter'][self::$type][$key] = 1; 
-				}
-			break;
-			case 'tag':
-				if (is_array($value)) { 
-					$_SESSION['browse']['filter'][self::$type][$key] = $value;
-				} 
-				elseif (is_numeric($value)) { 
-					$_SESSION['browse']['filter'][self::$type][$key] = array($value);
-				} 
-				else { 
-					$_SESSION['browse']['filter'][self::$type][$key] = array();
-				} 
-			break;
-			case 'artist':
-			case 'album':
-				$_SESSION['browse']['filter'][self::$type][$key] = $value;
-			break;
-			case 'min_count':
-	
-			case 'unplayed':
-			case 'rated':
-
-			break; 
-			case 'add_lt': 
-			case 'add_gt': 
-			case 'update_lt': 
-			case 'update_gt':
-				$_SESSION['browse']['filter'][self::$type][$key] = intval($value); 	
-			break; 
-			case 'exact_match': 
-			case 'alpha_match':
-			case 'starts_with': 
-				if (self::$static_content) { return false; }
-				$_SESSION['browse']['filter'][self::$type][$key] = $value; 
-			break;
-			case 'playlist_type': 
-				// They must be content managers to turn this off
-				if ($_SESSION['browse']['filter'][self::$type][$key] AND Access::check('interface','50')) { unset($_SESSION['browse']['filter'][self::$type][$key]); } 
-				else { $_SESSION['browse']['filter'][self::$type][$key] = '1'; } 
-			break; 
-                        default:
-                                // Rien a faire
-				return false; 
-                        break;
-                } // end switch
-
-		// If we've set a filter we need to reset the totals
-		self::reset_total(); 
-		self::set_start(0); 
+		Query::set_filter($key,$value); 
 
 		return true; 
 	
@@ -131,87 +76,9 @@ class Browse {
 	 */
 	public static function reset() { 
 
-		self::reset_base(); 
-		self::reset_filters(); 
-		self::reset_total(); 
-		self::reset_join(); 
-		self::reset_select(); 
-		self::reset_having(); 
-		self::reset_supplemental_objects(); 
-		self::set_simple_browse(0); 
-		self::set_start(0); 
+		Query::reset(); 
 
 	} // reset
-
-	/**
-	 * reset_base
-	 * this resets the base string
-	 */
-	public static function reset_base() { 
-
-		$_SESSION['browse']['base'][self::$type] = false; 
-
-	} // reset_base
-
-	/**
-	 * reset_select
-	 * This resets the select fields that we've added so far
-	 */
-	public static function reset_select() { 
-
-		$_SESSION['browse']['select'][self::$type] = array(); 
-
-	} // reset_select 
-
-	/**
-	 * reset_having
-	 * Null out the having clause
-	 */
-	public static function reset_having() { 
-
-		unset($_SESSION['browse']['having'][self::$type]); 
-
-	} // reset_having
-
-	/**
-	 * reset_join
-	 * clears the joins if there are any
-	 */
-	public static function reset_join() { 
-
-		unset($_SESSION['browse']['join'][self::$type]); 
-
-	} // reset_join
-
-	/**
-	 * reset_filter
-	 * This is a wrapper function that resets the filters 
-	 */
-	public static function reset_filters() { 
-
-		$_SESSION['browse']['filter'] = array(); 
-
-	} // reset_filters
-
-	/**
-	 * reset_supplemental_objects
-	 * This clears any sup objects we've added, normally called on every set_type
-	 */
-	public static function reset_supplemental_objects() { 
-
-		$_SESSION['browse'][self::$type]['supplemental'] = array(); 
-
-	} // reset_supplemental_objects
-
-	/**
-	 * reset_total
-	 * This resets the total for the browse type
-	 */
-	public static function reset_total() { 
-
-		unset($_SESSION['browse']['total'][self::$type]); 
-
-	} // reset_total
 
 	/**
 	 * get_filter
@@ -219,8 +86,7 @@ class Browse {
 	 */
 	public static function get_filter($key) { 
 	
-		// Simple enough, but if we ever move this crap 
-		return $_SESSION['browse']['filter'][self::$type][$key]; 
+		return Query::get_filter($key); 
 
 	} // get_filter
 
@@ -294,40 +160,10 @@ class Browse {
 	 */
 	public static function set_type($type) { 
 
-		switch($type) { 
-			case 'user':
-			case 'video': 
-			case 'playlist':
-			case 'playlist_song': 
-			case 'song':
-			case 'flagged':
-			case 'catalog':
-			case 'album':
-			case 'artist':
-			case 'tag':
-			case 'playlist_localplay': 
-			case 'shoutbox': 
-			case 'live_stream':
-			case 'democratic': 
-				// Set it
-				self::$type = $type; 
-				self::load_start(); 
-			break;
-			default:
-				// Rien a faire
-			break;
-		} // end type whitelist
+		Query::set_type($type); 
+		Query::load_start(); 
+	
 	} // set_type
-
-	/**
-	 * get_type
-	 * This returns the type of the browse we currently are using
-	 */
-	public static function get_type() { 
-
-		return self::$type; 
-
-	} // get_type
 
 	/**
 	 * set_sort
@@ -335,107 +171,11 @@ class Browse {
 	 */
 	public static function set_sort($sort,$order='') { 
 
-		switch (self::get_type()) { 
-			case 'playlist_song': 
-			case 'song': 
-				$valid_array = array('title','year','track','time','album','artist'); 
-			break;
-			case 'artist': 
-				$valid_array = array('name','album'); 
-			break;
-			case 'tag': 
-				$valid_array = array('tag'); 
-			break; 
-			case 'album': 
-				$valid_array = array('name','year','artist'); 
-			break;
-			case 'playlist': 
-				$valid_array = array('name','user');
-			break; 
-			case 'shoutbox': 
-				$valid_array = array('date','user','sticky'); 
-			break; 
-			case 'live_stream': 
-				$valid_array = array('name','call_sign','frequency'); 
-			break;
-			case 'video': 
-				$valid_array = array('title','video_codec','audio_codec'); 
-			break; 
-                        case 'user':
-                                $valid_array = array('fullname','username','last_seen','create_date');
-                        break;
-		} // end switch  
+		Query::set_sort($sort,$order); 
 
-		// If it's not in our list, smeg off!
-		if (!in_array($sort,$valid_array)) { 
-			return false; 
-		}
-
-		if ($order) { 
-			$order = ($order == 'DESC') ? 'DESC' : 'ASC'; 
-			$_SESSION['browse']['sort'][self::$type] = array(); 
-			$_SESSION['browse']['sort'][self::$type][$sort] = $order; 
-		} 	 
-		elseif ($_SESSION['browse']['sort'][self::$type][$sort] == 'DESC') { 
-			// Reset it till I can figure out how to interface the hotness
-			$_SESSION['browse']['sort'][self::$type] = array(); 
-			$_SESSION['browse']['sort'][self::$type][$sort] = 'ASC'; 
-		}
-		else { 
-			// Reset it till I can figure out how to interface the hotness
-			$_SESSION['browse']['sort'][self::$type] = array(); 
-			$_SESSION['browse']['sort'][self::$type][$sort] = 'DESC'; 
-		} 
-		
-		self::resort_objects(); 
+		return true; 
 
 	} // set_sort
-
-	/**
-	 * set_select
-	 * This appends more information to the select part of the SQL statement, we're going to move to the
-	 * %%SELECT%% style queries, as I think it's the only way to do this.... 
-	 */
-	public static function set_select($field) { 
-
-		$_SESSION['browse']['select'][self::$type][] = $field; 
-
-	} // set_select
-
-	/**
-	 * set_join 
-	 * This sets the joins for the current browse object
-	 */
-	public static function set_join($type,$table,$source,$dest,$priority=100) { 
-
-		$_SESSION['browse']['join'][self::$type][$priority][$table] = strtoupper($type) . ' JOIN ' . $table . ' ON ' . $source . '=' . $dest; 
-
-	} // set_join
-
-	/**
-	 * set_having
-	 * This sets the "HAVING" part of the query, we can only have one.. god this is ugly
-	 */
-	public static function set_having($condition) { 
-
-		$_SESSION['browse']['having'][self::$type] = $condition; 
-
-	} // set_having 
-
-	/**
-	 * set_start
-	 * This sets the start point for our show functions
-	 * We need to store this in the session so that it can be pulled
-	 * back, if they hit the back button
-	 */
-	public static function set_start($start) { 
-
-		if (!self::$static_content) { 
-			$_SESSION['browse'][self::$type]['start'] = intval($start); 
-		} 
-		self::$start = intval($start);  
-
-	} // set_start
 
 	/**
 	 * set_simple_browse
@@ -444,8 +184,7 @@ class Browse {
 	 */
 	public static function set_simple_browse($value) { 
 
-		$value = make_bool($value); 
-		$_SESSION['browse']['simple'][self::$type] = $value;  
+		Query::set_is_simple($value); 
 
 	} // set_simple_browse
 
@@ -457,37 +196,9 @@ class Browse {
 	 */
 	public static function set_static_content($value) { 
 
-		$value = make_bool($value); 
-		self::$static_content = $value; 
-
-		// We want to start at 0 it's static
-		if ($value) { 
-			self::set_start('0'); 
-		} 
-
-		$_SESSION['browse'][self::$type]['static'] = $value; 
+		Query::set_static_content($value); 
 
 	} // set_static_content
-
-	/**
-	 * is_simple_browse
-	 * this returns true or false if the current browse type is set to static
-	 */
-	public static function is_simple_browse() { 
-
-		return $_SESSION['browse']['simple'][self::$type]; 
-
-	} // is_simple_browse
-
-	/**
-	 * load_start
-	 * This returns a stored start point for the browse mojo
-	 */
-	public static function load_start() { 
-
-		self::$start = intval($_SESSION['browse'][self::$type]['start']); 
-
-	} // end load_start
 
 	/**
 	 * get_saved
@@ -501,7 +212,7 @@ class Browse {
 			return self::$_cache['browse'][self::$type]; 
 		} 
 
-		if (!self::is_simple_browse()) { 
+		if (!Query::is_simple()) { 
 			// If not then we're going to need to read from the database :(
 			$sid = session_id() . '::' . self::$type; 
 
@@ -513,276 +224,12 @@ class Browse {
 			$objects = unserialize($row['data']); 
 		} 
 		else { 
-			$objects = self::get_objects(); 
+			$objects = Query::get_objects(); 
 		} 
 
 		return $objects; 
 
 	} // get_saved
-
-	/**
-	 * get_objects
-	 * This gets an array of the ids of the objects that we are
-	 * currently browsing by it applies the sql and logic based
-	 * filters
-	 */
-	public static function get_objects() { 
-
-		// First we need to get the SQL statement we are going to run
-		// This has to run against any possible filters (dependent on type)
-		$sql = self::get_sql(); 
-		$db_results = Dba::query($sql); 
-
-		$results = array(); 
-		while ($data = Dba::fetch_assoc($db_results)) { 
-			$results[] = $data;
-		}
-
-		$results = self::post_process($results);
-		$filtered = array();
-		foreach ($results as $data) { 
-			// Make sure that this object passes the logic filter
-			if (self::logic_filter($data['id'])) { 
-				$filtered[] = $data['id']; 
-			} 
-		} // end while
-	
-		// Save what we've found and then return it
-		self::save_objects($filtered); 
-
-		return $filtered; 
-
-	} // get_objects
-
-	/**
-	 * get_supplemental_objects
-	 * This returns an array of 'class','id' for additional objects that need to be
-	 * created before we start this whole browsing thing
-	 */
-	public static function get_supplemental_objects() { 
-
-		$objects = $_SESSION['browse']['supplemental'][self::$type]; 
-		
-		if (!is_array($objects)) { $objects = array(); } 
-
-		return $objects; 
-
-	} // get_supplemental_objects
-
-	/**
-	 * add_supplemental_object
-	 * This will add a suplemental object that has to be created
-	 */
-	public static function add_supplemental_object($class,$uid) { 
-
-		$_SESSION['browse']['supplemental'][self::$type][$class] = intval($uid); 
-
-		return true; 
-
-	} // add_supplemental_object
-
-	/**
-	 * set_base_sql
-	 * This saves the base sql statement we are going to use.
-	 */
-	private static function set_base_sql() { 
-
-		// Only allow it to be set once
-		if (strlen($_SESSION['browse']['base'][self::$type])) { return true; } 
-
-                switch (self::$type) {
-                        case 'album':
-				self::set_select("DISTINCT(`album`.`id`)"); 
-                                $sql = "SELECT %%SELECT%% FROM `album` ";
-                        break;
-                        case 'artist':
-				self::set_select("DISTINCT(`artist`.`id`)"); 
-                                $sql = "SELECT %%SELECT%% FROM `artist` ";
-                        break;
-                        case 'user':
-				self::set_select("`user`.`id`"); 
-                                $sql = "SELECT %%SELECT%% FROM `user` ";
-                        break;
-                        case 'live_stream':
-				self::set_select("`live_stream`.`id`");
-                                $sql = "SELECT %%SELECT%% FROM `live_stream` ";
-                        break;
-                        case 'playlist':
-				self::set_select("`playlist`.`id`"); 
-                                $sql = "SELECT %%SELECT%% FROM `playlist` ";
-                        break;
-			case 'flagged': 
-				self::set_select("`flagged`.`id`"); 
-				$sql = "SELECT %%SELECT%% FROM `flagged` ";
-			break;
-			case 'shoutbox': 
-				self::set_select("`user_shout`.`id`"); 
-				$sql = "SELECT %%SELECT%% FROM `user_shout` "; 
-			break; 
-			case 'video': 
-				self::set_select("`video`.`id`"); 
-				$sql = "SELECT %%SELECT%% FROM `video` ";
-			break; 
-			case 'tag': 
-				self::set_select("`tag`.`id`"); 
-				self::set_join('left','tag_map','`tag_map`.`tag_id`','`tag`.`id`',1); 
-				$sql = "SELECT %%SELECT%% FROM `tag` "; 
-			break; 
-			case 'playlist_song': 
-                        case 'song':
-                        default:
-				self::set_select("DISTINCT(`song`.`id`)"); 
-                                $sql = "SELECT %%SELECT%% FROM `song` ";
-                        break;
-                } // end base sql
-
-		$_SESSION['browse']['base'][self::$type] = $sql; 
-
-	} // set_base_sql
-
-	/**
-	 * get_select
-	 * This returns the selects in a format that is friendly for a sql statement
-	 */
-	private static function get_select() { 
-
-		$select_string = implode($_SESSION['browse']['select'][self::$type],", "); 
-		return $select_string; 
-
-	} // get_select
-
-	/**
-	 * get_base_sql
-	 * This returns the base sql statement all parsed up, this should be called after all set operations
-	 */
-	private static function get_base_sql() { 
-		
-		// Legacy code, should be removed once other code is updated
-		//FIXME: REMOVE
-		if (!$_SESSION['browse']['base'][self::$type]) { self::set_base_sql(); } 
-
-		$sql = str_replace("%%SELECT%%",self::get_select(),$_SESSION['browse']['base'][self::$type]); 
-
-		return $sql; 
-
-	} // get_base_sql
-
-	/**
-	 * get_filter_sql
-	 * This returns the filter part of the sql statement
-	 */
-	private static function get_filter_sql() { 
-
-		if (!is_array($_SESSION['browse']['filter'][self::$type])) { 
-			return ''; 
-		} 
-
-		$sql = "WHERE 1=1 AND ";
-
-		foreach ($_SESSION['browse']['filter'][self::$type] as $key=>$value) { 
-			$sql .= self::sql_filter($key,$value); 
-		} 
-
-		$sql = rtrim($sql,'AND ') . ' ';  
-
-		return $sql; 
-
-	} // get_filter_sql
-
-	/**
-	 * get_sort_sql
-	 * Returns the sort sql part 
-	 */
-	private static function get_sort_sql() { 
-		
-		if (!is_array($_SESSION['browse']['sort'][self::$type])) { return ''; } 
-
-		$sql = 'ORDER BY '; 
-
-		foreach ($_SESSION['browse']['sort'][self::$type] as $key=>$value) { 
-			$sql .= self::sql_sort($key,$value); 
-		} 
-
-		$sql = rtrim($sql,'ORDER BY '); 
-		$sql = rtrim($sql,','); 
-
-		return $sql; 	
-
-	} // get_sort_sql
-
-	/**
-	 * get_limit_sql
-	 * This returns the limit part of the sql statement
-	 */
-	private static function get_limit_sql() { 
-
-		if (!self::is_simple_browse()) { return ''; } 
-
-		$sql = ' LIMIT ' . intval(self::$start) . ',' . intval(self::$offset); 
-
-		return $sql; 
-
-	} // get_limit_sql 
-
-	/**
-	 * get_join_sql
-	 * This returns the joins that this browse may need to work correctly
-	 */
-	private static function get_join_sql() { 
-		
-		if (!is_array($_SESSION['browse']['join'][self::$type])) { 
-			return ''; 
-		} 
-
-		$sql = ''; 
-
-		// We need to itterate through these from 0 - 100 so that we add the joins in the right order
-		foreach ($_SESSION['browse']['join'][self::$type] as $joins) {
-			foreach ($joins as $join) { 
-				$sql .= $join . ' '; 
-			} // end foreach joins at this level
-		} // end foreach of this level of joins
-
-		return $sql; 	
-
-	} // get_join_sql
-
-	/**
-	 * get_having_sql
-	 * this returns the having sql stuff, if we've got anything
-	 */
-	public static function get_having_sql() { 
-
-		$sql = $_SESSION['browse']['having'][self::$type]; 
-
-		return $sql; 
-
-	} // get_having_sql
-
-	/**
-	 * get_sql
-	 * This returns the sql statement we are going to use this has to be run
-	 * every time we get the objects because it depends on the filters and the
-	 * type of object we are currently browsing
-	 */
-	public static function get_sql() { 
-
-		$sql = self::get_base_sql(); 
-
-		// No matter what we have to check the catalog based filters... maybe I'm not sure about this
-		//$where_sql .= self::sql_filter('catalog',''); 
-
-		$filter_sql = self::get_filter_sql(); 
-		$join_sql = self::get_join_sql(); 
-		$having_sql = self::get_having_sql(); 
-		$order_sql = self::get_sort_sql(); 
-		$limit_sql = self::get_limit_sql(); 
-
-		$final_sql = $sql . $join_sql . $filter_sql . $having_sql . $order_sql . $limit_sql;  
-
-		return $final_sql;
-
-	} // get_sql 
 
 	/**
   	 * post_process
@@ -815,275 +262,6 @@ class Browse {
 	} // post_process
 
 	/**
-	 * sql_filter
-	 * This takes a filter name and value and if it is possible
-	 * to filter by this name on this type returns the approiate sql
-	 * if not returns nothing
-	 */
-	private static function sql_filter($filter,$value) { 
-
-		$filter_sql = ''; 
-		
-		if (self::$type == 'song') { 
-			switch($filter) { 
-				case 'exact_match': 
-					$filter_sql = " `song`.`title` = '" . Dba::escape($value) . "' AND "; 
-				break; 
-				case 'alpha_match':
-					$filter_sql = " `song`.`title` LIKE '%" . Dba::escape($value) . "%' AND ";
-				break;
-				case 'starts_with': 
-					$filter_sql = " `song`.`title` LIKE '" . Dba::escape($value) . "%' AND "; 
-				break; 
-				case 'unplayed':
-					$filter_sql = " `song`.`played`='0' AND "; 
-				break;
-			        case 'album':
-					$filter_sql = " `song`.`album` = '". Dba::escape($value) . "' AND ";
-				break;
-				case 'artist':
-					$filter_sql = " `song`.`artist` = '". Dba::escape($value) . "' AND ";
-				break;
-				case 'add_gt': 
-					$filter_sql = " `song`.`addition_time` >= '" . Dba::escape($value) . "' AND "; 
-				break; 
-				case 'add_lt': 
-					$filter_sql = " `song`.`addition_time` <= '" . Dba::escape($value) . "` AND "; 
-				break; 
-				case 'update_gt': 
-					$filter_sql = " `song`.`update_time` >= '" . Dba::escape($value) . "' AND "; 
-				break; 
-				case 'update_lt': 
-					$filter_sql = " `song`.`update_time` <= '" . Dba::escape($value) . "' AND "; 
-				break; 
-				case 'catalog': 
-					$catalogs = $GLOBALS['user']->get_catalogs(); 
-					if (!count($catalogs)) { break; } 
-					$filter_sql .= " `song`.`catalog` IN (" . implode(',',$GLOBALS['user']->get_catalogs()) . ") AND "; 
-				break; 
-				default: 
-					// Rien a faire
-				break;
-			} // end list of sqlable filters
-
-		} // if it is a song
-		elseif (self::$type == 'album') { 
-			switch($filter) { 
-				case 'exact_match': 
-					$filter_sql = " `album`.`name` = '" . Dba::escape($value) . "' AND "; 
-				break; 
-				case 'alpha_match':
-					$filter_sql = " `album`.`name` LIKE '%" . Dba::escape($value) . "%' AND "; 
-				break;
-				case 'starts_with': 
-					$filter_sql = " `album`.`name` LIKE '" . Dba::escape($value) . "%' AND "; 
-				break; 
-			        case 'artist':
-					$filter_sql = " `artist`.`id` = '". Dba::escape($value) . "' AND ";
-				break;
-				case 'add': 
-					self::set_join('left','`song`','`song`.`album`','`album`.`id`');	
-				case 'update': 
-					self::set_join('left','`song`','`song`.`album`','`album`.`id`');
-				default: 
-					// Rien a faire
-				break;
-			} 
-		} // end album 
-		elseif (self::$type == 'artist') { 
-			switch($filter) { 
-				case 'exact_match': 
-					$filter_sql = " `artist`.`name` = '" . Dba::escape($value) . "' AND "; 
-				break; 
-				case 'alpha_match':
-					$filter_sql = " `artist`.`name` LIKE '%" . Dba::escape($value) . "%' AND ";
-				break;
-				case 'starts_with': 
-					$filter_sql = " `artist`.`name` LIKE '" . Dba::escape($value) . "%' AND "; 
-				break;
-				default:
-					// Rien a faire
-				break;
-			} // end filter
-		} // end artist
-		elseif (self::$type == 'live_stream') { 
-			switch ($filter) { 
-				case 'alpha_match':
-					$filter_sql = " `live_stream`.`name` LIKE '%" . Dba::escape($value) . "%' AND "; 
-				break;
-				case 'starts_with': 
-					$filter_sql = " `live_stream`.`name` LIKE '" . Dba::escape($value) . "%' AND "; 
-				break; 
-				default: 
-					// Rien a faire
-				break;
-			} // end filter
-		} // end live_stream
-		elseif (self::$type == 'playlist') { 
-			switch ($filter) { 
-				case 'alpha_match': 
-					$filter_sql = " `playlist`.`name` LIKE '%" . Dba::escape($value) . "%' AND "; 
-				break;
-				case 'starts_with': 
-					$filter_sql = " `playlist`.`name` LIKE '" . Dba::escape($value) . "%' AND "; 
-				break;
-				case 'playlist_type': 
-					$user_id = intval($GLOBALS['user']->id); 
-					$filter_sql = " (`playlist`.`type` = 'public' OR `playlist`.`user`='$user_id') AND "; 
-				break; 
-				default; 
-					// Rien a faire
-				break;
-			} // end filter
-		} // end playlist
-
-		return $filter_sql; 
-
-	} // sql_filter
-
-	/**
-	 * logic_filter
-	 * This runs the filters that we can't easily apply
-	 * to the sql so they have to be done after the fact
-	 * these should be limited as they are often intensive and
-	 * require additional queries per object... :(
-	 */
-	private static function logic_filter($object_id) { 
-
-		return true; 
-
-	} // logic_filter
-
-	/**
-	 * sql_sort
-	 * This builds any order bys we need to do
-	 * to sort the results as best we can, there is also
-	 * a logic based sort that will come later as that's
-	 * a lot more complicated
-	 */
-	private static function sql_sort($field,$order) { 
-
-		if ($order != 'DESC') { $order == 'ASC'; } 
-
-		// Depending on the type of browsing we are doing we can apply different filters that apply to different fields
-		switch (self::$type) { 
-			case 'song': 
-				switch($field) { 
-					case 'title';
-						$sql = "`song`.`title`"; 
-					break;
-					case 'year':
-						$sql = "`song`.`year`"; 
-					break;
-					case 'time': 
-						$sql = "`song`.`time`"; 
-					break;
-					case 'track': 
-						$sql = "`song`.`track`"; 
-					break;
-					case 'album': 
-						$sql = '`album`.`name`'; 
-						self::set_join('left','`album`','`album`.`id`','`song`.`album`'); 
-					break; 
-					case 'artist': 
-						$sql = '`artist`.`name`'; 
-						self::set_join('left','`artist`','`artist`.`id`','`song`.`artist`'); 
-					break; 
-					default: 
-						// Rien a faire
-					break;
-				} // end switch
-			break;
-			case 'album': 
-				switch($field) { 
-					case 'name': 
-						$sql = "`album`.`name` $order, `album`.`disk`"; 
-					break;
-					case 'artist': 
-						$sql = "`artist`.`name`"; 
-						self::set_join('left','`song`','`song`.`album`','`album`.`id`'); 
-						self::set_join('left','`artist`','`song`.`artist`','`artist`.`id`'); 
-					break;
-					case 'year': 
-						$sql = "`album`.`year`"; 
-					break;
-				} // end switch
-			break;
-			case 'artist': 
-				switch ($field) { 
-					case 'name': 
-						$sql = "`artist`.`name`"; 
-					break;
-				} // end switch 
-			break;
-			case 'playlist': 
-				switch ($field) { 
-					case 'type':
-						$sql = "`playlist`.`type`"; 
-					break; 
-					case 'name':
-						$sql = "`playlist`.`name`"; 
-					break;
-					case 'user': 
-						$sql = "`playlist`.`user`";
-					break; 
-				} // end switch
-			break; 
-			case 'live_stream': 
-				switch ($field) { 
-					case 'name':
-						$sql = "`live_stream`.`name`"; 
-					break;
-					case 'call_sign':
-						$sql = "`live_stream`.`call_sign`";
-					break;
-					case 'frequency': 
-						$sql = "`live_stream`.`frequency`"; 
-					break; 
-				} // end switch
-			break;
-			case 'genre': 
-				switch ($field) { 
-					case 'name': 
-						$sql = "`genre`.`name`"; 
-					break;
-				} // end switch
-			break;
-                        case 'user':
-                                switch ($field) {
-                                        case 'username':
-                                                $sql = "`user`.`username`";
-                                        break;
-                                        case 'fullname':
-                                                $sql = "`user`.`fullname`";
-                                        break;
-                                        case 'last_seen':
-                                                $sql = "`user`.`last_seen`";
-                                        break;
-                                        case 'create_date':
-                                                $sql = "`user`.`create_date`";
-                                        break;
-                                } // end switch
-                        break;
-			case 'video': 
-				switch ($field) { 
-					case 'title': 
-						$sql = "`video`.`title`"; 
-					break; 
-				}
-			break; 
-			default: 
-				// Rien a faire
-			break;
-		} // end switch
-
-		if ($sql) { $sql_sort = "$sql $order,"; } 
-		
-		return $sql_sort; 
-
-	} // sql_sort
-
-	/**
 	 * show_objects
 	 * This takes an array of objects
 	 * and requires the correct template based on the
@@ -1091,42 +269,36 @@ class Browse {
 	 */
 	public static function show_objects($object_ids=false) { 
 		
-		if (self::is_simple_browse()) { 
-			$object_ids = self::get_saved(); 
+		if (Query::is_simple()) { 
+			$object_ids = Query::get_saved(); 
 		} 
 		else { 
-			$object_ids = is_array($object_ids) ? $object_ids : self::get_saved();
-			self::save_objects($object_ids); 
+			$object_ids = is_array($object_ids) ? $object_ids : Query::get_saved();
+			Query::save_objects($object_ids); 
 		} 
-	
+		
 		// Reset the total items
-		self::$total_objects = self::get_total($object_ids); 
-
+		self::$total_objects = Query::get_total($object_ids); 
+		
 		// Limit is based on the users preferences if this is not a simple browse because we've got too much here
-		if (count($object_ids) > self::$start AND !self::is_simple_browse()) { 
-			$object_ids = array_slice($object_ids,self::$start,self::$offset,TRUE); 
+		if (count($object_ids) > Query::get_start() AND !Query::is_simple()) { 
+			$object_ids = array_slice($object_ids,Query::get_start(),Query::get_offset(),TRUE); 
 		} 
 
 		// Format any matches we have so we can show them to the masses
-		if ($filter_value = self::get_filter('alpha_match')) { 
+		if ($filter_value = Query::get_filter('alpha_match')) { 
 			$match = ' (' . $filter_value . ')'; 
 		}
-		elseif ($filter_value = self::get_filter('starts_with')) { 
+		elseif ($filter_value = Query::get_filter('starts_with')) { 
 			$match = ' (' . $filter_value . ')'; 
 		} 
 
 		// Set the correct classes based on type
     		$class = "box browse_".self::$type;
 
-		// Load any additional object we need for this
-		$extra_objects = self::get_supplemental_objects(); 
-		foreach ($extra_objects as $class_name => $id) { 
-			${$class_name} = new $class_name($id); 
-		} 
-		
 		Ajax::start_container('browse_content');
 		// Switch on the type of browsing we're doing
-		switch (self::$type) { 
+		switch (Query::get_type()) { 
 			case 'song': 
 				show_box_top(_('Songs') . $match, $class); 
 				Song::build_cache($object_ids); 
@@ -1212,94 +384,45 @@ class Browse {
 	} // show_object
 
 	/**
-	 * save_objects
-	 * This takes the full array of object ides, often passed into show and then
-	 * if nessecary it saves them into the session
+	 * get_objects
+	 * This really should not be called anymore, but it's here for legacy shit
+	 * call the query get objects method. 
 	 */
-	public static function save_objects($object_ids) { 
+	public static function get_objects() { 
 
-		// Saving these objects has two operations, one hold it in 
-		// a local variable and then second hold it in a row in the tmp_browse
-		// table
-		self::$_cache['browse'][self::$type] = $object_ids; 	
+		return Query::get_objects(); 
 
-		// Only do this if it's a not a simple browse
-		if (!self::is_simple_browse()) { 
-			$sid = session_id() . '::' . self::$type; 
-			$data = Dba::escape(serialize($object_ids)); 
-
-			$sql = "REPLACE INTO `tmp_browse` SET `data`='$data', `sid`='$sid'"; 
-			$db_results = Dba::write($sql); 
-
-			self::$total_objects = count($object_ids); 
-		} // save it 
-
-		return true; 
-
-	} // save_objects
+	} // get_objects
 
 	/**
-	 * resort_objects
-	 * This takes the existing objects, looks at the current
-	 * sort method and then re-sorts them This is internally
-	 * called by the set_sort() function 
+	 * get_start
+	 * Returns the current start point
 	 */
-	private static function resort_objects() { 
+	public static function get_start() { 
+	
+		return Query::get_start(); 
 
-		// There are two ways to do this.. the easy way... 
-		// and the vollmer way, hopefully we don't have to
-		// do it the vollmer way
-		if (self::is_simple_browse()) { 
-			debug_event('resort_objects','is_simple_browse','4');
-			$sql = self::get_sql(); 
-		} 
-		else { 
-			debug_event('resort_objects','not is_simple_browse','4');
-			// First pull the objects
-			$objects = self::get_saved(); 
+	} // get_start
 
-			// If there's nothing there don't do anything
-			if (!count($objects)) {
-				debug_event('resort_objects','no objects found','4'); 
-				return false;
-			} 
-			$type = self::$type;
-			$where_sql = "WHERE `$type`.`id` IN (";
+	/**
+	 * get_type
+	 * this is a wrapper function just returns the current type
+	 */
+	public static function get_type() { 
 
-			foreach ($objects as $object_id) {
-				$object_id = Dba::escape($object_id);
-				$where_sql .= "'$object_id',";
-			} 
-			$where_sql = rtrim($where_sql,','); 
+		return Query::get_type(); 
 
-			$where_sql .= ")";
+	} // get_type
 
-			$sql = self::get_base_sql();
+	/**
+	 * set_start
+	 * This sets the start of the browse, really calls the query functions
+	 */
+	public static function set_start($value) { 
 
-			$order_sql = " ORDER BY ";
+		Query::set_start($value); 
 
-	                foreach ($_SESSION['browse']['sort'][self::$type] as $key=>$value) {
-	                        $order_sql .= self::sql_sort($key,$value);
-	                } 
-	                // Clean her up
-	                $order_sql = rtrim($order_sql,"ORDER BY ");
-	                $order_sql = rtrim($order_sql,",");
-	                
-	                $sql = $sql . self::get_join_sql() . $where_sql . $order_sql;
-		} // if not simple
-		
-		debug_event('resort_objects','final sql: ' . $sql,'4');
-		$db_results = Dba::query($sql); 
-
-		while ($row = Dba::fetch_assoc($db_results)) { 
-			$results[] = $row['id']; 
-		} 
-		
-		self::save_objects($results); 
-
-		return true; 
-
-	} // resort_objects
+	} // set_start
 
 	/**
 	 * _auto_init
@@ -1308,7 +431,8 @@ class Browse {
 	 */
 	public static function _auto_init() { 
 
-		self::$offset = Config::get('offset_limit') ? Config::get('offset_limit') : '25';
+		$offset = Config::get('offset_limit') ? Config::get('offset_limit') : '25';
+		Query::set_offset($offset); 
 
 	} // _auto_init
 	

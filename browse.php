@@ -44,18 +44,17 @@ switch ($_REQUEST['action']) {
 	case 'song': 
 		Browse::set_type($_REQUEST['action']); 
 		Browse::reset(); 
-		Browse::set_simple_browse(1); 
+		Browse::set_simple_browse(true); 
 	break; 
 } // end switch 
 
 show_header(); 
-Browse::set_filter_from_request($_REQUEST);
+
 switch($_REQUEST['action']) {
 	case 'file':
 	break; 
 	case 'album':
 		Browse::set_sort('name','ASC');
-		$album_ids = Browse::get_objects(); 
 		Browse::show_objects(); 
 	break;
 	case 'tag': 
@@ -69,17 +68,14 @@ switch($_REQUEST['action']) {
 	break; 
 	case 'artist':
 		Browse::set_sort('name','ASC');
-		$artist_ids = Browse::get_objects(); 
 		Browse::show_objects(); 
 	break;
 	case 'song':
 		Browse::set_sort('title','ASC');
-		$song_ids = Browse::get_objects(); 
 		Browse::show_objects(); 
 	break;
 	case 'live_stream':
 		Browse::set_sort('name','ASC');
-		$live_stream_ids = Browse::get_objects(); 
 		Browse::show_objects(); 
 	break;
 	case 'catalog':
@@ -88,12 +84,10 @@ switch($_REQUEST['action']) {
 	case 'playlist': 
 		Browse::set_sort('type','ASC');
 		Browse::set_filter('playlist_type','1');
-		$playlist_ids = Browse::get_objects(); 
 		Browse::show_objects(); 
 	break;
 	case 'video': 
 		Browse::set_sort('title','ASC'); 
-		$video_ids = Browse::get_objects(); 
 		Browse::show_objects(); 
 	break; 
 	default: 

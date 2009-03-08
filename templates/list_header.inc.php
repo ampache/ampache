@@ -28,7 +28,7 @@
 
 // Pull these variables out to allow shorthand (easier for lazy programmers)
 $limit	= Config::get('offset_limit') ? Config::get('offset_limit') : '25'; 
-$start	= Browse::$start; 
+$start	= Browse::get_start(); 
 $total	= Browse::$total_objects; 
 $uid	  = Config::get('list_header_uid'); 
 $sides  = 5;

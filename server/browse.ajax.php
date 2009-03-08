@@ -95,9 +95,9 @@ switch ($_REQUEST['action']) {
 	case 'page': 
 		Browse::set_type($_REQUEST['type']); 
 		Browse::set_start($_REQUEST['start']); 
-		
+
 		ob_start(); 
-		Browse::show_objects(false); 
+		Browse::show_objects(); 
 		$results['browse_content'] = ob_get_clean(); 	
 	
 	break; 

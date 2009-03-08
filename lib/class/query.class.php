@@ -122,7 +122,7 @@ class Query {
 
 	/**
 	 * reset
-	 * Reset everything
+	 * Reset everything, this should only be called when we are starting fresh
 	 */
 	public static function reset() { 
 
@@ -132,7 +132,6 @@ class Query {
 		self::reset_join(); 
 		self::reset_select(); 
 		self::reset_having(); 
-		self::reset_supplemental_objects(); 
 		self::set_is_simple(0); 
 		self::set_start(0); 
 
@@ -189,16 +188,6 @@ class Query {
 	} // reset_filters
 
 	/**
-	 * reset_supplemental_objects
-	 * This clears any sup objects we've added, normally called on every set_type
-	 */
-	public static function reset_supplemental_objects() { 
-
-		self::$_state[self::$type]['supplemental'] = array(); 
-
-	} // reset_supplemental_objects
-
-	/**
 	 * reset_total
 	 * This resets the total for the browse type
 	 */
@@ -218,6 +207,26 @@ class Query {
 		return self::$_state['filter'][self::$type][$key]; 
 
 	} // get_filter
+
+	/**
+	 * get_start
+	 * This returns the current value of the start
+	 */ 
+	public static function get_start() { 
+
+		return self::$start;
+	
+	} // get_start
+
+	/**
+	 * get_offset
+	 * This returns the current offset
+	 */
+	public static function get_offset() { 
+
+		return self::$offset;
+
+	} // get_offset
 
 	/**
 	 * get_total
@@ -387,6 +396,16 @@ class Query {
 	} // set_sort
 
 	/**
+	 * set_offset
+	 * This sets the current offset of this query
+	 */
+	public static function set_offset($offset) { 
+
+		self::$offset = abs($offset);
+
+	} // set_offset
+
+	/**
 	 * set_select
 	 * This appends more information to the select part of the SQL statement, we're going to move to the
 	 * %%SELECT%% style queries, as I think it's the only way to do this.... 
@@ -548,33 +567,6 @@ class Query {
 		return $filtered; 
 
 	} // get_objects
-
-	/**
-	 * get_supplemental_objects
-	 * This returns an array of 'class','id' for additional objects that need to be
-	 * created before we start this whole browsing thing
-	 */
-	public static function get_supplemental_objects() { 
-
-		$objects = self::$_state['supplemental'][self::$type]; 
-		
-		if (!is_array($objects)) { $objects = array(); } 
-
-		return $objects; 
-
-	} // get_supplemental_objects
-
-	/**
-	 * add_supplemental_object
-	 * This will add a suplemental object that has to be created
-	 */
-	public static function add_supplemental_object($class,$uid) { 
-
-		self::$_state['supplemental'][self::$type][$class] = intval($uid); 
-
-		return true; 
-
-	} // add_supplemental_object
 
 	/**
 	 * set_base_sql
@@ -1165,6 +1157,33 @@ class Query {
 
 	} // resort_objects
 
+        /**
+         * save_objects
+         * This takes the full array of object ides, often passed into show and then
+         * if nessecary it saves them into the session
+         */
+        public static function save_objects($object_ids) {
+
+                // Saving these objects has two operations, one hold it in 
+                // a local variable and then second hold it in a row in the tmp_browse
+                // table
+                self::$_cache['browse'][self::$type] = $object_ids;
+
+                // Only do this if it's a not a simple browse
+                if (!self::is_simple()) {
+                        $sid = session_id() . '::' . self::$type;
+                        $data = Dba::escape(serialize($object_ids));
+
+                        $sql = "REPLACE INTO `tmp_browse` SET `data`='$data', `sid`='$sid'";
+                        $db_results = Dba::write($sql);
+
+                        self::$total_objects = count($object_ids);
+                } // save it 
+
+                return true;
+
+        } // save_objects
+
 	/**
 	 * _auto_init
 	 * this function reloads information back from the session 
@@ -1173,19 +1192,18 @@ class Query {
 	public static function _auto_init() { 
 
 		self::$offset = Config::get('offset_limit') ? Config::get('offset_limit') : '25';
-		self::$_state = $_SESSION['browse']; 
+		self::$_state = &$_SESSION['browse']; 
 
 	} // _auto_init
 
 	/**
-	 * Desctruction 
-	 * This is run on object destrunction, done here to allow for changes
-	 * later
+	 * get_state
+	 * This is a debug only function
 	 */
-	public function __destruct() { 
+	public static function get_state() { 
 
-		$_SESSION['browse'] = self::$_state; 
+		return self::$_state; 
 
-	} // destructor
-	
+	} // get_state 
+
 } // query
