@@ -21,7 +21,9 @@
 
 show_box_top();
 printf(_('Updating the %s catalog'), "<strong>[ $catalog->name ]</strong>");
-echo "<br />\n" . $number . " " . _('items found checking tag information.') . "<br />\n\n";
+echo "<br />\n";
+printf(ngettext('%s item found checking tag information', '%s items found checking tag information', $number), $number);
+echo "<br />\n\n";
 echo _('Verifed') . ":<span id=\"verify_count_$catalog_id\">$catalog_verify_found</span><br />"; 
 echo _('Reading') . ":<span id=\"verify_dir_$catalog_id\">$catalog_verify_directory</span><br />";
 show_box_bottom(); 
