@@ -155,7 +155,7 @@ class Tag extends database_object {
                 $type = self::validate_type($type);
                 $idlist = '(' . implode(',',$ids) . ')'; 
 
-                $sql = "SELECT `tag_map`.`tag_id`,`tag_map`.`object_id`,`tag_map`.`user` FROM `tag_map` " .
+                $sql = "SELECT `tag_map`.`id`,`tag_map`.`tag_id`,`tag_map`.`object_id`,`tag_map`.`user` FROM `tag_map` " .
                         "WHERE `tag_map`.`object_type`='$type' AND `tag_map`.`object_id` IN $idlist ";
 		$db_results = Dba::query($sql); 
 
@@ -164,11 +164,13 @@ class Tag extends database_object {
 		while ($row = Dba::fetch_assoc($db_results)) { 
 			$tags[$row['object_id']][$row['tag_id']]['users'][] = $row['user']; 
 			$tags[$row['object_id']][$row['tag_id']]['count']++; 
+			$tag_map[$row['object_id']] = array('id'=>$row['id'],'tag_id'=>$row['tag_id'],'user'=>$row['user'],'object_type'=>$type,'object_id'=>$row['object_id']);
 		}
 
 		// Run through our origional ids as we want to cache NULL results
 		foreach ($ids as $id) { 	
 			parent::add_to_cache('tag_top_' . $type,$id,$tags[$id]); 
+			parent::add_to_cache('tag_map_' . $type,$id,$tag_map[$id]); 
 		} 
 
 		return true; 
@@ -180,7 +182,7 @@ class Tag extends database_object {
 	 * This is a wrapper function, it figures out what we need to add, be it a tag
 	 * and map, or just the mapping 
 	 */
-	public static function add($type,$id,$value,$user='') { 
+	public static function add($type,$id,$value,$user=false) { 
 
 		// Validate the tag type
 		if (!self::validate_type($type)) { return false; } 
@@ -191,7 +193,7 @@ class Tag extends database_object {
 
 		if (!strlen($cleaned_value)) { return false; } 
 
-		$uid = ($user == '') ? intval($user) : intval($GLOBALS['user']->id);
+		$uid = ($user === false) ? intval($user) : intval($GLOBALS['user']->id);
 
 		// Check and see if the tag exists, if not create it, we need the tag id from this
 		if (!$tag_id = self::tag_exists($cleaned_value)) { 
@@ -289,7 +291,7 @@ class Tag extends database_object {
 	public static function tag_map_exists($type,$object_id,$tag_id,$user) { 
 
 		if (!self::validate_type($type)) { return false; } 
-		
+
 		if (parent::is_cached('tag_map_' . $type,$object_id)) { 
 			$data = parent::get_from_cache('tag_map_' . $type,$object_id);
 			return $data['id']; 

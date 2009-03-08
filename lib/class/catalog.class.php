@@ -1057,7 +1057,6 @@ class Catalog extends database_object {
 			$rename_pattern = $catalog->rename_pattern; 
 		} 
 
-
 		debug_event('tag-read','Reading tags from ' . $media->file,'5','ampache-catalog'); 
 
 		$vainfo = new vainfo($media->file,'','','',$sort_pattern,$rename_pattern); 
@@ -1113,7 +1112,7 @@ class Catalog extends database_object {
                 $new_song->size         = $results['size'];
                 $new_song->time         = $results['time'];
 		$new_song->mime		= $results['mime']; 
-                $new_song->track        = $results['track'];
+                $new_song->track        = intval($results['track']); 
                 $artist                 = $results['artist'];
                 $album                  = $results['album'];
 		$disk			= $results['disk'];
@@ -1142,7 +1141,7 @@ class Catalog extends database_object {
 		if ($info['change']) {
 			debug_event('update',"$song->file difference found, updating database",'5','ampache-catalog');
 			$song->update_song($song->id,$new_song);
-			// Redfine our reference
+			// Refine our reference
 			$song = $new_song;
 		}
 		else {
@@ -1755,15 +1754,20 @@ class Catalog extends database_object {
 		$songs = array(); 
 
 		/* First get the filenames for the catalog */
-		$sql = "SELECT `id`,`file`,'song' AS `type` FROM `song` WHERE `song`.`catalog`='$catalog_id' ";
+		$sql = "SELECT `id`,`file`,`artist`,`album`,'song' AS `type` FROM `song` WHERE `song`.`catalog`='$catalog_id' ";
 		$db_results = Dba::read($sql); 
 		
 		while ($row = Dba::fetch_assoc($db_results)) { 
 			$cache[] = $row['id']; 
+			$artists[] = $row['artist']; 
+			$albums[] = $row['album']; 
 			$songs[] = $row; 
 		} 
 		Song::build_cache($cache); 
 		Flag::build_map_cache($cache,'song'); 
+		Tag::build_map_cache('album',$albums); 
+		Tag::build_map_cache('artist',$artists); 
+		Tag::build_map_cache('song',$cache); 
 
 		$cache = array(); 
 		$videos = array(); 
@@ -1800,7 +1804,6 @@ class Catalog extends database_object {
 			$type = ($results['type'] == 'video') ? 'video' : 'song';
 				
 			if (is_readable($results['file'])) {
-
 
 				/* Create the object from the existing database information */
 				$media = new $type($results['id']);
@@ -1999,7 +2002,6 @@ class Catalog extends database_object {
 
 		// Remove the prefix so we can sort it correctly
 		$prefix_pattern = '/^(' . implode('\\s|',explode('|',Config::get('catalog_prefix_pattern'))) . '\\s)(.*)/i';
-		debug_event('prefix',$prefix_pattern,'5');
 		preg_match($prefix_pattern,$album,$matches);
 
 		if (count($matches)) {

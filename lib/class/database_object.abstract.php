@@ -63,7 +63,7 @@ abstract class database_object {
 	public static function is_cached($index,$id) { 
 
 		// Make sure we've got some parents here before we dive below
-		if (!isset(self::$object_cache) || !isset(self::$object_cache[$index])) { return false; } 
+		if (!isset(self::$object_cache[$index])) { return false; } 
 		
 		return isset(self::$object_cache[$index][$id]); 
 
@@ -76,8 +76,7 @@ abstract class database_object {
 	public static function get_from_cache($index,$id) { 
 
 		// Check if the object is set
-		if (isset(self::$object_cache) 
-			&& isset(self::$object_cache[$index])
+		if (isset(self::$object_cache[$index])
 			&& isset(self::$object_cache[$index][$id])
 			) { 
 			
@@ -95,8 +94,9 @@ abstract class database_object {
 	 */
 	public static function add_to_cache($index,$id,$data) { 
 
-		self::$object_cache[$index][$id] = $data;
-		
+		$value = is_null($data) ? false : $data; 	
+		self::$object_cache[$index][$id] = $value;
+
 	} // add_to_cache
 
 } // end database_object

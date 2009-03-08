@@ -322,25 +322,25 @@ class Song extends database_object implements media {
 		unset($song->catalog,$song->played,$song->enabled,$song->addition_time,$song->update_time,$song->type);
 
 		$string_array = array('title','comment','lyrics'); 
+		$skip_array = array('id','tag_id','mime'); 
 
 		// Pull out all the currently set vars
 		$fields = get_object_vars($song); 
 
 		// Foreach them
 		foreach ($fields as $key=>$value) { 
-			if ($key == 'id') { continue; } 
+			if (in_array($key,$skip_array)) { continue; } 
 			// If it's a stringie thing
 			if (in_array($key,$string_array)) { 
 				if (trim(stripslashes($song->$key)) != trim(stripslashes($new_song->$key))) { 
 					$array['change'] = true; 
-					$array['element'][$key] = 'OLD: ' . $song->$key . ' <---> ' . $new_song->$key;
+					$array['element'][$key] = 'OLD: ' . $song->$key . ' --> ' . $new_song->$key;
 				}
 			} // in array of stringies
-
 			else { 
 				if ($song->$key != $new_song->$key) { 
 					$array['change'] = true; 
-					$array['element'][$key] = '' . $song->$key . ' <---> ' . $new_song->$key;
+					$array['element'][$key] = 'OLD:' . $song->$key . ' --> ' . $new_song->$key;
 				} 
 			} // end else
 

@@ -90,11 +90,16 @@ class Flag extends database_object {
 		$sql = "SELECT * FROM `flagged` " . 
 			"WHERE `flagged`.`object_type`='$type' AND `flagged`.`object_id` IN $idlist"; 
 		$db_results = Dba::read($sql); 
-
+		
 		while ($row = Dba::fetch_assoc($db_results)) { 
-			parent::add_to_cache('flagged_' . $type,$row['object_id'],$row); 
+			$results[$row['object_id']] = $row; 
 		} 
-	
+		
+		// Itterate through the passed ids as we need to cache 'nulls' 
+		foreach ($ids as $id) { 
+			parent::add_to_cache('flagged_' . $type,$id,$results[$id]); 
+		} 	
+
 		return true; 	
 
 	} // build_map_cache
@@ -109,7 +114,7 @@ class Flag extends database_object {
 			$data = parent::get_from_cache('flagged_' . $type,$id); 
 			return $data['date']; 
 		} 
-
+		
 		// Ok we have to query this
 		$type = Dba::escape($type); 
 

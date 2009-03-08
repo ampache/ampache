@@ -4,6 +4,9 @@
 
 --------------------------------------------------------------------------
   v.3-5-Alpha2
+	- Fixed caching of objects with no return value
+	- Fixed updating of songs that should not be updated during catalog
+		verify
 	- Added default_user_level config option that allows you to define
 		the user level when use_auth is false. Also allows manual
 		login of admin users when use_auth is false. 
