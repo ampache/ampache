@@ -212,19 +212,32 @@ elseif (!Config::get('use_auth')) {
 	$auth['username'] = '-1';
 	$auth['fullname'] = "Ampache User";
 	$auth['id'] = -1;
-	$auth['access'] = '100';
 	$auth['offset_limit'] = 50;
+	$auth['access'] = Config::get('default_auth_level') ? User::access_name_to_level(Config::get('default_auth_level')) : '100'; 
 	if (!vauth::session_exists('interface',$_COOKIE[Config::get('session_name')])) { 
 		vauth::create_cookie(); 
 		vauth::session_create($auth); 
+		vauth::check_session(); 
+		$GLOBALS['user'] = new User($auth['username']);   
+		$GLOBALS['user']->username = $auth['username']; 
+		$GLOBALS['user']->fullname = $auth['fullname']; 
+		$GLOBALS['user']->access = $auth['access']; 
 	}
-	vauth::check_session(); 
-	$GLOBALS['user']	 	= new User(-1);
-	$GLOBALS['user']->fullname 	= 'Ampache User';
-	$GLOBALS['user']->offset_limit 	= $auth['offset_limit'];
-	$GLOBALS['user']->username 	= '-1';
-	$GLOBALS['user']->access	= $auth['access'];
-	$_SESSION['userdata']['username'] 	= $auth['username'];
+	else { 
+		vauth::check_session(); 
+		if ($_SESSION['userdata']['username']) { 
+			$GLOBALS['user'] = User::get_from_username($_SESSION['userdata']['username']);
+		} 	
+		else { 
+			$GLOBALS['user'] = new User($auth['username']); 
+			$GLOBALS['user']->id = '-1'; 
+	                $GLOBALS['user']->username = $auth['username']; 
+	                $GLOBALS['user']->fullname = $auth['fullname']; 
+	                $GLOBALS['user']->access = $auth['access']; 
+		} 
+		if (!$GLOBALS['user']->id AND !Config::get('demo_mode')) { vauth::logout(session_id()); exit; }
+		$GLOBALS['user']->update_last_seen();
+	} 
 }
 // If Auth, but no session is set
 else { 

@@ -230,7 +230,7 @@ class Access {
                                         debug_event('gzcompress','ZLIB Extensions not loaded, batch download disabled','3');
                                         return false;
                                 }
-                                if (Config::get('allow_zip_download') AND $GLOBALS['user']->has_access(25)) {
+                                if (Config::get('allow_zip_download') AND $GLOBALS['user']->has_access('25')) {
                                         return Config::get('download');
                                 }
                         break;
@@ -320,7 +320,7 @@ class Access {
 	 */
 	public static function check($type,$level) { 
 
-		if (!Config::get('use_auth') || Config::get('demo_mode')) { return true; } 
+		if (Config::get('demo_mode')) { return true; } 
 
 		$level = intval($level); 
 

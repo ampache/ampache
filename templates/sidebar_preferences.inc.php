@@ -18,7 +18,7 @@ $catagories = Preference::get_catagories();
       <li id="sb_preferences_sections_account"><a href="<?php echo $web_path; ?>/preferences.php?tab=account"><?php echo _('Account'); ?></a></li>
     </ul>
   </li>
-<?php if ($GLOBALS['user']->has_access('100')) { ?>
+<?php if (Access::check('interface','100')) { ?>
   <li><h4><?php echo _('Server Config'); ?></h4>
     <ul class="sb3" id="sb_preferences_sc">
 <?php 

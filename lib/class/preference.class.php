@@ -147,7 +147,7 @@ class Preference {
 		$db_results = Dba::query($sql); 
 		$data = Dba::fetch_assoc($db_results);
 
-		if ($GLOBALS['user']->has_access($data['level'])) { 
+		if (Access::check('interface',$data['level'])) { 
 			return true; 
 		} 
 

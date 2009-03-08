@@ -4,6 +4,9 @@
 
 --------------------------------------------------------------------------
   v.3-5-Alpha2
+	- Added default_user_level config option that allows you to define
+		the user level when use_auth is false. Also allows manual
+		login of admin users when use_auth is false. 
 	- Fix Version checking and Version Error Message on install (Thx Paleo)
 	- Moved Statistics to main menu, split out newest/popular/stats
 	- Fixed bug where saved Thumbnails were almost never used

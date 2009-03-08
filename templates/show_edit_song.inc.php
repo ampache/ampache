@@ -50,14 +50,6 @@
 	</td>
 </tr>
 <tr class="<?php echo flip_class(); ?>">
-	<td><?php echo _('Genre'); ?></td>
-	<td>
-		<?php show_genre_select('genre',$song->genre); ?>
-		<br /><?php echo _('OR'); ?><br />
-		<input type="text" name="genre_string" value="<?php echo scrub_out($song->f_genre); ?>" />
-	</td>
-</tr>
-<tr class="<?php echo flip_class(); ?>">
 	<td><?php echo _('Track'); ?></td>
 	<td>
 		<input type="text" name="track" value="<?php echo scrub_out($song->track); ?>" size="3" />

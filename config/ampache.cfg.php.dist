@@ -218,7 +218,16 @@ tag_order = "id3v2,id3v1,vorbiscomment,quicktime,ape,asf,file"
 ; will not ask you for a username and password. false is only
 ; recommended for internal only instances
 ; DEFAULT true
-use_auth	= "yes"
+use_auth	= "true"
+
+; Default Auth Level
+; If use_auth is set to false then this option is used
+; to determine the permission level of the 'default' users
+; default is administrator. This setting only takes affect
+; if use_auth if false
+; POSSIBLE VALUES: user, admin, manager, guest
+; DEFAULT: admin
+default_auth_level = "admin"
 
 ; 5 Star Ratings
 ; This allows ratings for almost any object in ampache

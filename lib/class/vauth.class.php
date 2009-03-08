@@ -344,7 +344,7 @@ class vauth {
 				$key = Dba::escape($key); 
 				$time = time(); 
 				$sql = "SELECT * FROM `session` WHERE `id`='$key' AND `expire` > '$time' AND `type`='$type'"; 
-				$db_results = Dba::query($sql); 
+				$db_results = Dba::read($sql); 
 
 				if (Dba::num_rows($db_results)) { 
 					return true; 
@@ -355,7 +355,7 @@ class vauth {
 				$key = Dba::escape($key); 
 				$time = time(); 
 				$sql = "SELECT * FROM `session` WHERE `id`='$key' AND `expire` > '$time' AND `type`!='api' AND `type`!='xml-rpc'"; 
-				$db_results = Dba::query($sql); 
+				$db_results = Dba::read($sql); 
 
 				if (Dba::num_rows($db_results)) { 
 					return true; 

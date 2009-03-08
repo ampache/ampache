@@ -767,6 +767,34 @@ class User extends database_object {
 	 } // format_recommendations
 
 	/**
+	 * access_name_to_level
+	 * This takes the access name for the user and returns the level
+	 */
+	public static function access_name_to_level($level) { 
+
+		switch ($level) { 
+			case 'admin': 
+				return '100'; 
+			break; 
+			case 'user': 
+				return '25'; 
+			break; 
+			case 'manager': 
+				return '75';
+			break; 
+			case 'guest': 
+				return '5'; 
+			break;
+			default:
+				return '0'; 
+			break; 
+		} 
+
+		return false;
+
+	} // access_name_to_level
+
+	/**
  	 * fix_preferences
 	 * This is the new fix_preferences function, it does the following
 	 * Remove Duplicates from user, add in missing

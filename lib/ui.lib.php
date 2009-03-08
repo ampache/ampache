@@ -279,28 +279,6 @@ function img_resize($image,$size,$type,$album_id) {
 } // img_resize
 
 /**
- * show_genres
- * this shows the 'many' genre form, it takes an array of genre objects and the view object
- */
-function show_genres($genres,$view) {
-
-	require Config::get('prefix') . '/templates/show_genres.inc.php';
-
-} // show_genres
-
-/**
- * show_genre
- * this shows a single genre item which is basicly just a link to the albums/artists/songs of said genre
- */
-function show_genre($genre_id) {
-
-	$genre = new Genre($genre_id);
-
-	require Config::get('prefix') . '/templates/show_genre.inc.php';
-
-} // show_genre
-
-/**
  * get_location
  * This function gets the information about said persons currently location
  * this is used for A) Sidebar highlighting & submenu showing and B) Titlebar information
@@ -528,49 +506,6 @@ function show_artist_select($name='artist', $artist_id=0, $allow_add=0, $song_id
 	echo "</select>\n";
 
 } // show_artist_select
-
-/**
- * show_genre_select
- * It's amazing we have three of these funtions now, this one shows a select of genres and take s name
- * and a selected genre... Woot!
- */
-function show_genre_select($name='genre',$genre_id=1,$size='', $allow_add=0, $song_id=0) { 
-	// Generate key to use for HTML element ID
-	static $id_cnt;
-	if ($song_id) {
-		$key = "genre_select_$song_id";
-	} else {
-		$key = "genre_select_c" . ++$id_cnt;
-	}
-
-        if ($size > 0) {
-                $multiple_txt = " multiple=\"multiple\" size=\"$size\"";
-        }
-
-	echo "<select name=\"$name\"$multiple_txt id=\"$key\">\n";
-
-	$sql = "SELECT `id`, `name` FROM `genre` ORDER BY `name`";
-	$db_results = Dba::query($sql);
-
-	while ($r = Dba::fetch_assoc($db_results)) { 
-		$selected = '';
-		$genre_name = $r['name'];
-		if ($r['id'] == $genre_id) { 
-			$selected = "selected=\"selected\"";
-		}
-	
-		echo "\t<option value=\"" . $r['id'] . "\" $selected>" . scrub_out($genre_name) . "</option>\n";
-	
-	} // end while
-
-	if ($allow_add) {
-		// Append additional option to the end with value=-1
-		echo "\t<option value=\"-1\">Add New...</option>\n";
-	}
-
-	echo "</select>\n";
-
-} // show_genre_select
 
 /**
  * show_catalog_select

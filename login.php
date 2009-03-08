@@ -54,7 +54,7 @@ if ($_POST['username'] && $_POST['password']) {
 	/* If we are in demo mode let's force auth success */
 	if (Config::get('demo_mode')) {
 		$auth['success'] = 1;
-		$auth['info']['username'] = "Admin- DEMO";
+		$auth['info']['username'] = "Admin - DEMO";
 		$auth['info']['fullname'] = "Administrative User";
 		$auth['info']['offset_limit']	= 25;
 	}
@@ -78,13 +78,13 @@ if ($_POST['username'] && $_POST['password']) {
 		elseif (!$user->username AND $auth['success']) { 
 			/* This is run if we want to auto_create users who don't exist (usefull for non mysql auth) */                
 			if (Config::get('auto_create')) {
-				if (!$access = Config::get('auto_user')) { $access = '5'; } 
-				
+
+				$access = Config::get('auto_user') ? User::access_name_to_level(Config::get('auto_user')) : '5'; 
                         	$name = $auth['name'];
                         	$email = $auth['email'];
                         
 				/* Attempt to create the user */	
-				if (!$user->create($username, $name, $email,md5(mt_rand()), $access)) {
+				if (!$user->create($username, $name, $email,hash('sha256',mt_rand()), $access)) {
                                 	$auth['success'] = false;
 					Error::add('general',_('Unable to create new account')); 
                             	}

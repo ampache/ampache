@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2007 Ampache.org
+ Copyright (c) Ampache.org
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
@@ -19,13 +19,13 @@
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 ?>
+<div id="play_type_switch">
 <?php 
 $name = "is_" . Config::get('play_type');
 ${$name} = 'selected="selected" ';
 
 if (Preference::has_access('play_type')) {
 ?>
-<div id="play_type_switch">
 <form method="post" id="play_type_form" action="javascript.void(0);">
 <select id="play_type_select" name="type"> 
 	<?php if (Config::get('allow_stream_playback')) { ?>
@@ -42,6 +42,6 @@ if (Preference::has_access('play_type')) {
 <?php
 } // if they have access
 // Else just show what it currently is
-else { echo ucwords(Config::get('play_type'));}
+else { echo ucwords(Config::get('play_type')); }
 ?>
 </div>
