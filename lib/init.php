@@ -20,7 +20,7 @@
 */
 
 // SVN Fluf
-$svn_version = 'Subversion ' . trim('$Rev$','$ '); 
+//$svn_version = 'Subversion ' . trim('$Rev$','$ '); 
 
 // Use output buffering, this gains us a few things and 
 // fixes some CSS issues
