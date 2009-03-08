@@ -263,7 +263,8 @@ class Query {
 
 		switch (self::$type) { 
 			case 'album': 
-				$valid_array = array('show_art','starts_with','exact_match','alpha_match','add','update'); 
+				$valid_array = array('add_lt','add_gt','update_lt','update_gt','show_art',
+						'starts_with','exact_match','alpha_match'); 
 			break; 
 			case 'artist': 
 			case 'song': 
@@ -280,6 +281,9 @@ class Query {
 			break; 
 			case 'tag': 
 				$valid_array = array('object_type'); 
+			break; 
+			case 'video': 
+				$valid_array = array('starts_with','exact_match','alpha_match'); 
 			break; 
 			default: 
 				$valid_array = array(); 
@@ -363,7 +367,7 @@ class Query {
 				$valid_array = array('name','call_sign','frequency'); 
 			break;
 			case 'video': 
-				$valid_array = array('title','video_codec','audio_codec'); 
+				$valid_array = array('title','resolution','length','codec'); 
 			break; 
                         case 'user':
                                 $valid_array = array('fullname','username','last_seen','create_date');
@@ -756,9 +760,6 @@ class Query {
 
 		$sql = self::get_base_sql(); 
 
-		// No matter what we have to check the catalog based filters... maybe I'm not sure about this
-		//$where_sql .= self::sql_filter('catalog',''); 
-
 		$filter_sql = self::get_filter_sql(); 
 		$join_sql = self::get_join_sql(); 
 		$having_sql = self::get_having_sql(); 
@@ -811,7 +812,8 @@ class Query {
 
 		$filter_sql = ''; 
 		
-		if (self::$type == 'song') { 
+		switch (self::$type) { 
+		case 'song': 
 			switch($filter) { 
 				case 'exact_match': 
 					$filter_sql = " `song`.`title` = '" . Dba::escape($value) . "' AND "; 
@@ -852,9 +854,8 @@ class Query {
 					// Rien a faire
 				break;
 			} // end list of sqlable filters
-
-		} // if it is a song
-		elseif (self::$type == 'album') { 
+		break; 
+		case 'album': 
 			switch($filter) { 
 				case 'exact_match': 
 					$filter_sql = " `album`.`name` = '" . Dba::escape($value) . "' AND "; 
@@ -888,8 +889,8 @@ class Query {
 					// Rien a faire
 				break;
 			} 
-		} // end album 
-		elseif (self::$type == 'artist') { 
+		break;
+		case 'artist': 
 			switch($filter) { 
 				case 'exact_match': 
 					$filter_sql = " `artist`.`name` = '" . Dba::escape($value) . "' AND "; 
@@ -920,8 +921,8 @@ class Query {
 					// Rien a faire
 				break;
 			} // end filter
-		} // end artist
-		elseif (self::$type == 'live_stream') { 
+		break;
+		case 'live_stream': 
 			switch ($filter) { 
 				case 'alpha_match':
 					$filter_sql = " `live_stream`.`name` LIKE '%" . Dba::escape($value) . "%' AND "; 
@@ -933,8 +934,8 @@ class Query {
 					// Rien a faire
 				break;
 			} // end filter
-		} // end live_stream
-		elseif (self::$type == 'playlist') { 
+		break; 
+		case 'playlist': 
 			switch ($filter) { 
 				case 'alpha_match': 
 					$filter_sql = " `playlist`.`name` LIKE '%" . Dba::escape($value) . "%' AND "; 
@@ -950,7 +951,21 @@ class Query {
 					// Rien a faire
 				break;
 			} // end filter
-		} // end playlist
+		break; 
+		case 'video': 
+			switch ($filter) { 
+				case 'alpha_match': 
+					$filter_sql = " `video`.`title` LIKE '%" . Dba::escape($value) . "%' AND "; 
+				break; 
+				case 'starts_with': 
+					$filter_sql = " `video`.`title` LIKE '" . Dba::escape($value) . "%' AND "; 
+				break;
+				default: 
+					// Rien a faire
+				break; 
+			} // end filter
+		break; 
+		} // end switch on type 
 
 		return $filter_sql; 
 
@@ -1085,7 +1100,16 @@ class Query {
 					case 'title': 
 						$sql = "`video`.`title`"; 
 					break; 
-				}
+					case 'resolution': 
+						$sql = "`video`.`resolution_x`"; 
+					break;
+					case 'length': 
+						$sql = "`video`.`time`"; 
+					break;
+					case 'codec': 
+						$sql = "`video`.`video_codec`"; 
+					break; 
+				} // end switch on field
 			break; 
 			default: 
 				// Rien a faire
