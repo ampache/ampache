@@ -26,7 +26,7 @@
  * it also handles pulling back the object_ids and then
  * calling the correct template for the object we are displaying
  */
-class Browse { 
+class Browse extends Query { 
 
 	// Public static vars that are cached
 	public static $sql; 
@@ -54,139 +54,6 @@ class Browse {
 
 	} // __construct
 
-
-	/**
-	 * set_filter
-	 * This saves the filter data we pass it into the session
-	 * This is done here so that it's easy to modify where the data
-	 * is saved should I change my mind in the future. It also makes
-	 * a single point for whitelist tweaks etc
-	 */
-	public static function set_filter($key,$value) { 
-
-		Query::set_filter($key,$value); 
-
-		return true; 
-	
-	} // set_filter
-
-	/**
-	 * reset
-	 * Reset everything
-	 */
-	public static function reset() { 
-
-		Query::reset(); 
-
-	} // reset
-
-	/**
-	 * reset_filters
-	 * This calles the filter reseting
-	 */
-	public static function reset_filters() { 
-
-		Query::reset_filters(); 
-
-	} // reset_filters
-
-	/**
-	 * get_filter
-	 * returns the specified filter value
-	 */
-	public static function get_filter($key) { 
-	
-		return Query::get_filter($key); 
-
-	} // get_filter
-
-	/**
-	 * get_total
-	 * This returns the toal number of obejcts for this current sort type. If it's already cached used it!
-	 * if they pass us an array then use that!
-	 */
-	public static function get_total($objects=false) { 
-		
-		// If they pass something then just return that
-		if (is_array($objects) and !self::is_simple_browse()) { 
-			return count($objects); 
-		} 
-
-		// See if we can find it in the cache
-		if (isset($_SESSION['browse']['total'][self::$type])) { 
-			return $_SESSION['browse']['total'][self::$type]; 
-		} 
-
-		$db_results = Dba::query(self::get_base_sql() . self::get_filter_sql() . self::get_sort_sql()); 
-		$num_rows = Dba::num_rows($db_results); 
-
-		$_SESSION['browse']['total'][self::$type] = $num_rows; 
-
-		return $num_rows; 
-
-	} // get_total
-
-	/**
-	 * get_allowed_filters
-	 * This returns an array of the allowed filters based on the type of object we are working
-	 * with, this is used to display the 'filter' sidebar stuff, must be called post browse stuff
-	 */
-	public static function get_allowed_filters() { 
-
-		switch (self::$type) { 
-			case 'album': 
-				$valid_array = array('show_art','starts_with','exact_match','alpha_match','add','update'); 
-			break; 
-			case 'artist': 
-			case 'song': 
-				$valid_array = array('add_lt','add_gt','update_lt','update_gt','exact_match','alpha_match','starts_with'); 
-			break; 
-			case 'live_stream': 
-				$valid_array = array('alpha_match','starts_with'); 	
-			break; 
-			case 'playlist': 
-				$valid_array = array('alpha_match','starts_with'); 
-				if (Access::check('interface','50')) { 
-					array_push($valid_array,'playlist_type'); 
-				} 
-			break; 
-			case 'tag': 
-				$valid_array = array('object_type'); 
-			break; 
-			default: 
-				$valid_array = array(); 
-			break; 
-		} // switch on the browsetype
-
-		return $valid_array; 
-
-	} // get_allowed_filters
-
-	/**
- 	 * set_type
-	 * This sets the type of object that we want to browse by
-	 * we do this here so we only have to maintain a single whitelist
-	 * and if I want to change the location I only have to do it here
-	 */
-	public static function set_type($type) { 
-
-		Query::set_type($type); 
-		Query::load_start(); 
-	
-	} // set_type
-
-	/**
-	 * set_sort
-	 * This sets the current sort(s)
-	 */
-	public static function set_sort($sort,$order='') { 
-
-		Query::set_sort($sort,$order); 
-
-		return true; 
-
-	} // set_sort
-
 	/**
 	 * set_simple_browse
 	 * This sets the current browse object to a 'simple' browse method
@@ -194,92 +61,9 @@ class Browse {
 	 */
 	public static function set_simple_browse($value) { 
 
-		Query::set_is_simple($value); 
+		parent::set_is_simple($value); 
 
 	} // set_simple_browse
-
-	/**
-	 * set_static_content
-	 * This sets true/false if the content of this browse
-	 * should be static, if they are then content filtering/altering
-	 * methods will be skipped
-	 */
-	public static function set_static_content($value) { 
-
-		Query::set_static_content($value); 
-
-	} // set_static_content
-
-	/**
-	 * save_objects
-	 * This calles the internal query stuff
-	 */
-	public static function save_objects($results) { 
-
-		Query::save_objects($results); 
-
-	} // save_objects
-
-	/**
-	 * get_saved
-	 * This looks in the session for the saved 
-	 * stuff and returns what it finds
-	 */
-	public static function get_saved() { 
-
-		// See if we have it in the local cache first
-		if (is_array(self::$_cache['browse'][self::$type])) { 
-			return self::$_cache['browse'][self::$type]; 
-		} 
-
-		if (!Query::is_simple()) { 
-			// If not then we're going to need to read from the database :(
-			$sid = session_id() . '::' . Query::get_type();  
-
-			$sql = "SELECT `data` FROM `tmp_browse` WHERE `sid`='$sid'"; 
-			$db_results = Dba::read($sql); 
-
-			$row = Dba::fetch_assoc($db_results); 
-
-			$objects = unserialize($row['data']); 
-		} 
-		else { 
-			$objects = Query::get_objects(); 
-		} 
-
-		return $objects; 
-
-	} // get_saved
-
-	/**
-  	 * post_process
-	 * This does some additional work on the results that we've received before returning them
-	 */
-	private static function post_process($results) {
-
-		$tags = $_SESSION['browse']['filter']['tag'];
-
-		if (!is_array($tags) || sizeof($tags) < 2) { 
-			return $results;
-		} 
-		$cnt = sizeof($tags);
-		$ar = array();
-
-		foreach($results as $row) { 
-			$ar[$row['id']]++;
-		}
-
-		$res = array();
-
-		foreach($ar as $k=>$v) { 
-			if ($v >= $cnt) { 
-				$res[] = array('id' => $k);
-			}
-		} // end foreach 
-
-		return $res;
-
-	} // post_process
 
 	/**
 	 * show_objects
@@ -289,27 +73,27 @@ class Browse {
 	 */
 	public static function show_objects($object_ids=false) { 
 		
-		if (Query::is_simple()) { 
-			$object_ids = Query::get_saved(); 
+		if (parent::is_simple()) { 
+			$object_ids = parent::get_saved(); 
 		} 
 		else { 
-			$object_ids = is_array($object_ids) ? $object_ids : Query::get_saved();
-			Query::save_objects($object_ids); 
+			$object_ids = is_array($object_ids) ? $object_ids : parent::get_saved();
+			parent::save_objects($object_ids); 
 		} 
 		
 		// Reset the total items
-		self::$total_objects = Query::get_total($object_ids); 
+		self::$total_objects = parent::get_total($object_ids); 
 		
 		// Limit is based on the users preferences if this is not a simple browse because we've got too much here
-		if (count($object_ids) > Query::get_start() AND !Query::is_simple()) { 
-			$object_ids = array_slice($object_ids,Query::get_start(),Query::get_offset(),TRUE); 
+		if (count($object_ids) > parent::get_start() AND !parent::is_simple()) { 
+			$object_ids = array_slice($object_ids,parent::get_start(),parent::get_offset(),TRUE); 
 		} 
 
 		// Format any matches we have so we can show them to the masses
-		if ($filter_value = Query::get_filter('alpha_match')) { 
+		if ($filter_value = parent::get_filter('alpha_match')) { 
 			$match = ' (' . $filter_value . ')'; 
 		}
-		elseif ($filter_value = Query::get_filter('starts_with')) { 
+		elseif ($filter_value = parent::get_filter('starts_with')) { 
 			$match = ' (' . $filter_value . ')'; 
 		} 
 
@@ -318,7 +102,7 @@ class Browse {
 
 		Ajax::start_container('browse_content');
 		// Switch on the type of browsing we're doing
-		switch (Query::get_type()) { 
+		switch (parent::get_type()) { 
 			case 'song': 
 				show_box_top(_('Songs') . $match, $class); 
 				Song::build_cache($object_ids); 
@@ -404,47 +188,6 @@ class Browse {
 	} // show_object
 
 	/**
-	 * get_objects
-	 * This really should not be called anymore, but it's here for legacy shit
-	 * call the query get objects method. 
-	 */
-	public static function get_objects() { 
-
-		return Query::get_objects(); 
-
-	} // get_objects
-
-	/**
-	 * get_start
-	 * Returns the current start point
-	 */
-	public static function get_start() { 
-	
-		return Query::get_start(); 
-
-	} // get_start
-
-	/**
-	 * get_type
-	 * this is a wrapper function just returns the current type
-	 */
-	public static function get_type() { 
-
-		return Query::get_type(); 
-
-	} // get_type
-
-	/**
-	 * set_start
-	 * This sets the start of the browse, really calls the query functions
-	 */
-	public static function set_start($value) { 
-
-		Query::set_start($value); 
-
-	} // set_start
-
-	/**
 	 * _auto_init
 	 * this function reloads information back from the session 
 	 * it is called on creation of the class
@@ -452,7 +195,7 @@ class Browse {
 	public static function _auto_init() { 
 
 		$offset = Config::get('offset_limit') ? Config::get('offset_limit') : '25';
-		Query::set_offset($offset); 
+		parent::set_offset($offset); 
 
 	} // _auto_init
 	
