@@ -53,12 +53,23 @@ class Api {
 	                        // Check for a range, if no range default to gt
 	                        if (strpos('/',$value)) {
 	                                $elements = explode('/',$value);
-	                                Browse::set_filter('add_lt',$elements['1']);
-	                                Browse::set_filter('add_gt',$elements['0']);
+	                                Browse::set_filter('add_lt',strtotime($elements['1']));
+	                                Browse::set_filter('add_gt',strtotime($elements['0']));
 	                        }
 	                        else {
-	                                Browse::set_filter('add',strtotime($value));
+	                                Browse::set_filter('add_gt',strtotime($value));
 	                        }
+			break; 
+			case 'update': 
+				// Check for a range, if no range default to gt
+				if (strpos('/',$value)) { 
+					$elements = explode('/',$value); 
+					Browse::set_filter('update_lt',strtotime($elements['1'])); 
+					Browse::set_filter('update_gt',strtotime($elements['0'])); 		
+				}
+				else { 
+					Browse::set_filter('update_gt',strtotime($value)); 
+				}
 			break; 
 			case 'alpha_match':
 				Browse::set_filter('alpha_match',$value); 

@@ -108,6 +108,8 @@ switch ($_REQUEST['action']) {
 	
 		$method = $_REQUEST['exact'] ? 'exact_match' : 'alpha_match'; 
 		Api::set_filter($method,$_REQUEST['filter']); 
+		Api::set_filter('add',$_REQUEST['add']); 
+		Api::set_filter('update',$_REQUEST['update']); 
 
 		// Set the offset
 		xmlData::set_offset($_REQUEST['offset']); 
@@ -150,6 +152,9 @@ switch ($_REQUEST['action']) {
 		
 		$method = $_REQUEST['exact'] ? 'exact_match' : 'alpha_match'; 
 		Api::set_filter($method,$_REQUEST['filter']); 
+		Api::set_filter('add',$_REQUEST['add']); 
+		Api::set_filter('update',$_REQUEST['update']); 
+
 		$albums = Browse::get_objects(); 
 
                 // Set the offset
@@ -232,6 +237,7 @@ switch ($_REQUEST['action']) {
 		$method = $_REQUEST['exact'] ? 'exact_match' : 'alpha_match';
 		Api::set_filter($method,$_REQUEST['filter']); 
 		Api::set_filter('add',$_REQUEST['add']); 
+		Api::set_filter('update',$_REQUEST['update']); 
 		
 		$songs = Browse::get_objects(); 
 
