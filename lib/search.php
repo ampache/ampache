@@ -182,7 +182,7 @@ function search_song($data,$operator,$method,$limit) {
 				// This is a little more complext, pull a list of IDs that have this average rating
 				$rating_sql = "SELECT `object_id`,AVG(`rating`.`rating`) AS avgrating FROM `rating` " . 
 						"WHERE `object_type`='song' GROUP BY `object_id`"; 
-				$db_results = Dba::query($rating_sql); 
+				$db_results = Dba::read($rating_sql); 
 
 				// Fill it with one value to prevent sql error on no results
 				$where_sql .= " `song`.`id` IN (";
@@ -238,7 +238,7 @@ function search_song($data,$operator,$method,$limit) {
 	 */
 	$_SESSION['userdata']['stored_search'] = $sql;
 
-	$db_results = Dba::query($sql);
+	$db_results = Dba::read($sql);
 
 	$results = array(); 
 	
@@ -250,29 +250,5 @@ function search_song($data,$operator,$method,$limit) {
 
 } // search_songs
 
-
-/** 
- * show_search
- * This shows the results of a search, it takes the input from a run_search function call
- * @package Search
- * @catagory Display
- */
-function show_search($type,$results) { 
-
-	/* Display based on the type of object we are trying to view */
-	switch ($type) { 
-		case 'artist':
-		
-		break;
-		case 'album':
-		
-		break;
-		case 'song':
-		default:
-			show_songs($results,0);
-		break;
-	} // end type switch
-
-} // show_search
 
 ?>

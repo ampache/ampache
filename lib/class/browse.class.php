@@ -211,6 +211,16 @@ class Browse {
 	} // set_static_content
 
 	/**
+	 * save_objects
+	 * This calles the internal query stuff
+	 */
+	public static function save_objects($results) { 
+
+		Query::save_objects($results); 
+
+	} // save_objects
+
+	/**
 	 * get_saved
 	 * This looks in the session for the saved 
 	 * stuff and returns what it finds
@@ -224,7 +234,7 @@ class Browse {
 
 		if (!Query::is_simple()) { 
 			// If not then we're going to need to read from the database :(
-			$sid = session_id() . '::' . self::$type; 
+			$sid = session_id() . '::' . Query::get_type();  
 
 			$sql = "SELECT `data` FROM `tmp_browse` WHERE `sid`='$sid'"; 
 			$db_results = Dba::read($sql); 

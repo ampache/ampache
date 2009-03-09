@@ -83,8 +83,7 @@ switch ($_REQUEST['action']) {
 		require_once Config::get('prefix') . '/templates/show_localplay_status.inc.php';
 		Browse::set_type('playlist_localplay'); 
 		Browse::set_static_content(1); 
-		Browse::save_objects($objects); 
-		Browse::show_objects(); 
+		Browse::show_objects($objects); 
 	break;
 } // end switch action
 
