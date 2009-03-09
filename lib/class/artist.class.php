@@ -288,29 +288,36 @@ class Artist extends database_object {
 	 * gets the lyrics of $this->song
 	 * if they are not in the database, fetch using LyricWiki (SOAP) and insert
 	 */
-	function get_song_lyrics($song_id, $artist_name, $song_title) {
+	public function get_song_lyrics($song_id, $artist_name, $song_title) {
 
-		$sql = "SELECT lyrics FROM song_data WHERE `song_id`='" . Dba::escape($song_id) . "'";
+		$sql = "SELECT `lyrics`.`song_data` FROM `song_data` WHERE `song_id`='" . Dba::escape($song_id) . "'";
 		$db_results = Dba::query($sql); 
 
 		$results = Dba::fetch_assoc($db_results); 
 
-		$rs = Dba::read("SELECT file FROM song WHERE `id`='" . Dba::escape($song_id) . "'");
+		// Get Lyrics From id3tag (Lyrics3)
+		$rs = Dba::read("SELECT `file`.`song` FROM `song` WHERE `id`='" . Dba::escape($song_id) . "'");
 		$filename = Dba::fetch_row($rs);
 		$vainfo = new vainfo($filename[0], '','','',$catalog->sort_pattern,$catalog->rename_pattern);
 		$vainfo->get_info();
 		$key = vainfo::get_tag_type($vainfo->tags);
 		$tag_lyrics = vainfo::clean_tag_info($vainfo->tags,$key,$filename);
 		$lyrics = $tag_lyrics['lyrics'];
-		if(function_exists('mb_detect_encoding') AND function_exists('mb_convert_encoding')) {
-			$enc = mb_detect_encoding($lyrics);
-			$lyrics = mb_convert_encoding($lyrics, 'UTF-8', $enc);
+
+		if (empty($lyrics)) {
+			// Get Lyrics From id3tag (id3v2 USLT/SYLT)
 		}
 
 		if (strlen($results['lyrics']) > 1) {
 			return html_entity_decode(strip_tags(($results['lyrics'])), ENT_QUOTES);
 		} elseif (strlen($lyrics) > 1) {
-			/// get lyrics from id3tag
+			// encode lyrics utf8
+			if (function_exists('mb_detect_encoding') AND function_exists('mb_convert_encoding')) {
+				$enc = mb_detect_encoding($lyrics);
+				if ($enc != "ASCII" OR $enc != "UTF-8") {
+					$lyrics = mb_convert_encoding($lyrics, 'UTF-8', $enc);
+				}
+			}
 			return $lyrics;
 		}
 		else {
