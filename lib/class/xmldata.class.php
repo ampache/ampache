@@ -288,6 +288,14 @@ class xmlData {
 			$song = new Song($song_id); 
 			$song->format(); 
 
+			$tag_string = ''; 
+
+			// Build up the tag's text
+			foreach ($song->tags as $tag_id) { 
+				$tag = new Tag($tag_id); 
+				$tag_string .= "\t<tag id=\"$tag->id\"><![CDATA[$tag->name]]></tag>\n"; 
+			} 
+
 			$rating = new Rating($song_id,'song'); 
 
 			$art_url = Config::get('web_path') . '/image.php?id=' . $song->album . '&auth=' . scrub_out($_REQUEST['auth']);
@@ -296,7 +304,8 @@ class xmlData {
 					"\t<title><![CDATA[$song->title]]></title>\n" . 
 					"\t<artist id=\"$song->artist\"><![CDATA[$song->f_artist_full]]></artist>\n" . 
 					"\t<album id=\"$song->album\"><![CDATA[$song->f_album_full]]></album>\n" . 
-					"\t<genre id=\"$song->genre\"><![CDATA[$song->genre]]></genre>\n" . 
+					"\t<genre id=\"$song->genre\"><![CDATA[$song->f_genre]]></genre>\n" . 
+					$tag_string . 
 					"\t<track>$song->track</track>\n" . 
 					"\t<time>$song->time</time>\n" . 
 					"\t<mime>$song->mime</mime>\n" . 
