@@ -4,6 +4,9 @@
 
 --------------------------------------------------------------------------
   v.3.5-Alpha3 
+	- Remove redundent code from Browse class by making it extend
+		nwe Query class
+	- Update Prototype to 1.6.0.3
 	- Add Time range to advanced search
 	- Add sorting to Video Browse
 	- Changed to new Query backend for Browsing and Dynamic Playlists
