@@ -36,7 +36,7 @@ $web_path = Config::get('web_path');
 	<th class="cel_title"><?php echo Ajax::text('?page=browse&action=set_sort&type=video&sort=title',_('Title'),'sort_video_title'); ?></th>
 	<th class="cel_codec"><?php echo Ajax::text('?page=browse&action=set_sort&type=video&sort=codec',_('Codec'),'sort_video_codec'); ?></th>
 	<th class="cel_resolution"><?php echo Ajax::text('?page=browse&action=set_sort&type=video&sort=resolution',_('Resolution'),'sort_video_rez'); ?></th>
-	<th class="cel_length"><?php echo Ajax::text('?page=browse&action=set_sort&type=video&sort=length',_('Length'),'sort_video_length'); ?></th>
+	<th class="cel_length"><?php echo Ajax::text('?page=browse&action=set_sort&type=video&sort=length',_('Time'),'sort_video_length'); ?></th>
 	<th class="cel_tags"><?php echo _('Tags'); ?></th>
 </tr>
 <?php 
@@ -59,6 +59,7 @@ foreach ($object_ids as $video_id) {
         <th class="cel_title"><?php echo _('Title'); ?></th>
 	<th class="cel_codec"><?php echo _('Codec'); ?></th>
 	<th class="cel_resolution"><?php echo _('Resolution'); ?></th>
+	<th class="cel_length"><?php echo Ajax::text('?page=browse&action=set_sort&type=video&sort=length',_('Time'),'sort_video_length_bottom'); ?></th>
 	<th class="cel_tags"><?php echo _('Tags'); ?></th>
 
 </tr>

@@ -152,6 +152,14 @@ function search_song($data,$operator,$method,$limit) {
 					$where_sql .= " (song.year BETWEEN ".$data["year"]." AND ".$data["year2"].") $operator";
 				}
 			break;
+			case 'time': 
+				if (!empty($data['time2'])) { 
+					$where_sql .= " `song`.`time` <= " . Dba::escape(intval($data['time2'])*60) . " $operator"; 
+				}
+				if (!empty($data['time'])) { 
+					$where_sql .= " `song`.`time` >= " . Dba::escape(intval($data['time'])*60) . " $operator"; 
+				} 
+			break; 
 			case 'filename':
 				$where_sql .= " song.file $value_string $operator";
 			break;

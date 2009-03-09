@@ -50,7 +50,6 @@
                 $catalog_ids = Catalog::get_catalogs();
                 Browse::set_type('catalog');
                 Browse::set_static_content(1);
-                Browse::save_objects($catalog_ids);
                 Browse::show_objects($catalog_ids);
 ?>
 

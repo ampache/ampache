@@ -69,6 +69,19 @@
 	</td>
 </tr>
 <tr class="<?php echo flip_class(); ?>">
+	<td><?php echo _('Time'); ?></td>
+	<td>
+		<input type="text" id="s_time" name="s_time" size="3" value="<?php echo scrub_out($_REQUEST['s_time']); ?>" />
+		-
+		<input type="text" id="s_time2" name="s_time2" size="3" value="<?php echo scrub_out($_REQUEST['s_time2']); ?>" />
+		<?php echo _('minutes'); ?>
+	</td>
+	<td><?php echo _('Codec'); ?></td>
+	<td>
+		<input type="text" id="s_codec" name="s_codec" size="5" value="<?php echo scrub_out($_REQUEST['s_codec']); ?>" />
+	</td>
+</tr>
+<tr class="<?php echo flip_class(); ?>">
 	<td><?php echo _('Played'); ?></td>
 	<td>
 		<select id="s_played" name="s_played" >

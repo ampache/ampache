@@ -4,6 +4,7 @@
 
 --------------------------------------------------------------------------
   v.3.5-Alpha3 
+	- Add Time range to advanced search
 	- Add sorting to Video Browse
 	- Changed to new Query backend for Browsing and Dynamic Playlists
 
