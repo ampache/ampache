@@ -183,7 +183,7 @@ class Democratic extends tmpPlaylist {
          */
         public function get_items() {
 
-                $order          = "ORDER BY `user_vote`.`date` ASC";
+                $order          = "ORDER BY `user_vote`.`date` ASC, `tmp_playlist_data`.`track` ASC";
                 $vote_join 	= "INNER JOIN `user_vote` ON `user_vote`.`object_id`=`tmp_playlist_data`.`id`";
 
                 /* Select all objects from this playlist */
@@ -383,17 +383,19 @@ class Democratic extends tmpPlaylist {
                 $object_id      = Dba::escape($object_id);
                 $tmp_playlist   = Dba::escape($this->tmp_playlist);
 		$object_type	= $object_type ? Dba::escape($object_type) : 'song'; 
+		$media = new $object_type($object_id); 
+		$track = isset($media->track) ? "'" . intval($media->track) . "'" : "NULL"; 
                 
                 /* If it's on the playlist just vote */
                 $sql = "SELECT `id` FROM `tmp_playlist_data` " .
                         "WHERE `tmp_playlist_data`.`object_id`='$object_id' AND `tmp_playlist_data`.`tmp_playlist`='$tmp_playlist'";
-                $db_results = Dba::query($sql);
+                $db_results = Dba::write($sql);
 
                 /* If it's not there, add it and pull ID */
                 if (!$results = Dba::fetch_assoc($db_results)) {
-                        $sql = "INSERT INTO `tmp_playlist_data` (`tmp_playlist`,`object_id`,`object_type`) " .
-                                "VALUES ('$tmp_playlist','$object_id','$object_type')";
-                        $db_results = Dba::query($sql);
+                        $sql = "INSERT INTO `tmp_playlist_data` (`tmp_playlist`,`object_id`,`object_type`,`track`) " .
+                                "VALUES ('$tmp_playlist','$object_id','$object_type',$track)";
+                        $db_results = Dba::write($sql);
                         $results['id'] = Dba::insert_id();
                 }
 

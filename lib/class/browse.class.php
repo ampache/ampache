@@ -81,6 +81,16 @@ class Browse {
 	} // reset
 
 	/**
+	 * reset_filters
+	 * This calles the filter reseting
+	 */
+	public static function reset_filters() { 
+
+		Query::reset_filters(); 
+
+	} // reset_filters
+
+	/**
 	 * get_filter
 	 * returns the specified filter value
 	 */

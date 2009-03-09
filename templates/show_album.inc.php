@@ -88,7 +88,6 @@ $title		= scrub_out($album->name) . '&nbsp;(' . $album->year . ')' . $disk .'&nb
 	Browse::set_simple_browse(1); 
 	Browse::set_filter('album', $album->id);
 	Browse::set_sort('track','ASC'); 
-	Browse::reset_total(); 
 	Browse::get_objects(); 
 	Browse::show_objects(); 
 ?>
