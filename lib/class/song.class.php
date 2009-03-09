@@ -690,12 +690,6 @@ class Song extends database_object implements media {
 		$tags = Tag::get_top_tags('song',$this->id); 
 		$this->tags = $tags; 
 		
-		$tag = new Tag($tags['0']); 
-
-		// Emulate the genre information for legacy crap (API)
-		$this->f_genre = $tag->name; 
-		$this->genre = $tag->id; 
-
 		$this->f_tags = Tag::get_display($tags,$this->id,'song');  
 
 		// Format the size

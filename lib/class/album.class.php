@@ -262,6 +262,8 @@ class Album extends database_object {
 		}
 
 		$tags = Tag::get_top_tags('album',$this->id); 
+		$this->tags = $tags; 
+
 		$this->f_tags = Tag::get_display($tags,$this->id,'album'); 	
 		
 

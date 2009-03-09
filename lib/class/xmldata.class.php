@@ -123,6 +123,23 @@ class xmlData {
 	} // header 
 
 	/**
+	 * tags_string
+	 * This returns the formated 'tags' string for an xml document 
+	 */
+	private static function tags_string($tags) { 
+
+		$string = ''; 
+
+		foreach ($tags as $tag_id) { 
+			$tag = new Tag($tag_id); 
+			$string .= "\t<tag id=\"$tag->id\"><![CDATA[$tag->name]]></tag>\n";
+		} 
+
+		return $string; 
+
+	} // tags_string
+
+	/**
 	 * keyed_array
 	 * This will build an xml document from a key'd array, 
 	 */
@@ -171,9 +188,11 @@ class xmlData {
 			$artist->format(); 
 
 			$rating = new Rating($artist_id,'artist'); 
+			$tag_string = self::tags_string($artist->tags); 
 
 			$string .= "<artist id=\"$artist->id\">\n" . 
 					"\t<name><![CDATA[$artist->f_full_name]]></name>\n" .  
+					$tag_string . 
 					"\t<albums>$artist->albums</albums>\n" . 
 					"\t<songs>$artist->songs</songs>\n" . 
                                         "\t<preciserating>" . $rating->preciserating . "</preciserating>\n" .
@@ -222,6 +241,7 @@ class xmlData {
 			$string .= "\t<year>$album->year</year>\n" . 
 					"\t<tracks>$album->song_count</tracks>\n" . 
 					"\t<disk>$album->disk</disk>\n" . 
+					self::tags_string($album->tags) . 
 					"\t<art><![CDATA[$art_url]]></art>\n" . 
                                         "\t<preciserating>" . $rating->preciserating . "</preciserating>\n" .
                                         "\t<rating>" . $rating->rating . "</rating>\n" .
@@ -289,6 +309,10 @@ class xmlData {
 			$song->format(); 
 
 			$tag_string = ''; 
+
+			$tag = new Tag($song->tags['0']); 
+			$song->genre = $tag->id;
+			$song->f_genre = $tag->name; 
 
 			// Build up the tag's text
 			foreach ($song->tags as $tag_id) { 
