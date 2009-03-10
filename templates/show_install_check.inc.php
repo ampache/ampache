@@ -26,7 +26,7 @@
 	if(!check_php_ver()) {
 		$string = phpversion() . " " . _('Hash Function Exists') . " " . print_boolean(function_exists('hash_algos')) . " " . _('SHA256 Support') . " " . print_boolean(in_array('sha256',$algos));
 		echo debug_result($string,false); 
-		Error::add_error('install',_('PHP Version')); 
+		Error::add('install',_('PHP Version')); 
 	} 
 	else { 
 		echo debug_result(phpversion(),true); 
@@ -37,7 +37,7 @@
 <?php
 	if (!check_php_mysql()) {
 		echo debug_result('',false); 
-		Error::add_error('install',_('Mysql for PHP')); 
+		Error::add('install',_('Mysql for PHP')); 
 	} 
 	else {
 		echo debug_result(mysql_get_client_info(),true); 
@@ -48,7 +48,7 @@
 <?php
 	if (!check_php_session()) {
 		echo debug_result('',false); 
-		Error::add_error('install',_('PHP Session Support')); 
+		Error::add('install',_('PHP Session Support')); 
 	} 
 	else {
 		echo debug_result('',true); 
@@ -59,7 +59,7 @@
 <?php
 	if (!check_php_iconv()) {
 		echo debug_result('',false); 
-		Error::add_error('install',_('PHP ICONV Support')); 
+		Error::add('install',_('PHP ICONV Support')); 
 	} 
 	else {
 		echo debug_result('',true); 	
@@ -70,7 +70,7 @@
 <?php
 	if (!check_php_pcre()) {
 		echo debug_result('',false); 
-		Error::add_error('install',_('PHP PCRE Support')); 
+		Error::add('install',_('PHP PCRE Support')); 
 	} 
 	else {
 		echo debug_result('',true); 
@@ -81,7 +81,7 @@
 <?php
 	if (!check_putenv()) {
 		echo debug_result('',false); 
-		Error::add_error('install',_('PHP PutENV Support')); 
+		Error::add('install',_('PHP PutENV Support')); 
 	} 
 	else {
 		echo debug_result('',true); 
