@@ -4,6 +4,9 @@
 
 --------------------------------------------------------------------------
   v.3.5-Alpha3 
+	- Correct Issues with multi-byte characters in Lyrics (Thx Momo-i)
+	- Added caching to Video
+	- Added Video calls to the API
 	- Remove redundent code from Browse class by making it extend
 		nwe Query class
 	- Update Prototype to 1.6.0.3

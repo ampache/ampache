@@ -170,6 +170,7 @@ class Browse extends Query {
 				show_box_bottom(); 
 			break; 
 			case 'video': 
+				Video::build_cache($object_ids); 
 				show_box_top(_('Videos'),$class); 
 				require_once Config::get('prefix') . '/templates/show_videos.inc.php'; 
 				show_box_bottom(); 
