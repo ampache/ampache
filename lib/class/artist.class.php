@@ -289,7 +289,7 @@ class Artist extends database_object {
 	 */
 	public function get_song_lyrics($song_id, $artist_name, $song_title) {
 
-		$sql = "SELECT `lyrics`.`song_data` FROM `song_data` WHERE `song_id`='" . Dba::escape($song_id) . "'";
+		$sql = "SELECT `song_data`.`lyrics` FROM `song_data` WHERE `song_id`='" . Dba::escape($song_id) . "'";
 		$db_results = Dba::read($sql); 
 		$results = Dba::fetch_assoc($db_results); 
 
