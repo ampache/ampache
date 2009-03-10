@@ -91,8 +91,8 @@ switch ($_REQUEST['type']) {
 		$mime = $art['mime'];
 		
 		if (!$mime) { 
-			header('Content-type: image/gif');
-			readfile(Config::get('prefix') . Config::get('theme_path') . '/images/blankalbum.gif');
+			header('Content-type: image/jpeg');
+			readfile(Config::get('prefix') . Config::get('theme_path') . '/images/blankalbum.jpg');
 			break;
 		} // else no image
 
