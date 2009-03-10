@@ -126,13 +126,14 @@ class xmlData {
 	 * tags_string
 	 * This returns the formated 'tags' string for an xml document 
 	 */
-	private static function tags_string($tags) { 
+	private static function tags_string($tags,$type,$object_id) { 
 
 		$string = ''; 
 
 		foreach ($tags as $tag_id) { 
 			$tag = new Tag($tag_id); 
-			$string .= "\t<tag id=\"$tag->id\"><![CDATA[$tag->name]]></tag>\n";
+			$tag->format($type,$object_id);
+			$string .= "\t<tag id=\"$tag->id\" count=\"$tag->weight\"><![CDATA[$tag->name]]></tag>\n";
 		} 
 
 		return $string; 
@@ -188,7 +189,7 @@ class xmlData {
 			$artist->format(); 
 
 			$rating = new Rating($artist_id,'artist'); 
-			$tag_string = self::tags_string($artist->tags); 
+			$tag_string = self::tags_string($artist->tags,'artist',$artist->id); 
 
 			$string .= "<artist id=\"$artist->id\">\n" . 
 					"\t<name><![CDATA[$artist->f_full_name]]></name>\n" .  
@@ -241,7 +242,7 @@ class xmlData {
 			$string .= "\t<year>$album->year</year>\n" . 
 					"\t<tracks>$album->song_count</tracks>\n" . 
 					"\t<disk>$album->disk</disk>\n" . 
-					self::tags_string($album->tags) . 
+					self::tags_string($album->tags,'album',$album->id) . 
 					"\t<art><![CDATA[$art_url]]></art>\n" . 
                                         "\t<preciserating>" . $rating->preciserating . "</preciserating>\n" .
                                         "\t<rating>" . $rating->rating . "</rating>\n" .
@@ -314,11 +315,7 @@ class xmlData {
 			$song->genre = $tag->id;
 			$song->f_genre = $tag->name; 
 
-			// Build up the tag's text
-			foreach ($song->tags as $tag_id) { 
-				$tag = new Tag($tag_id); 
-				$tag_string .= "\t<tag id=\"$tag->id\"><![CDATA[$tag->name]]></tag>\n"; 
-			} 
+			$tag_string = self::tags_string($song->tags,'song',$song->id); 
 
 			$rating = new Rating($song_id,'song'); 
 
@@ -347,6 +344,40 @@ class xmlData {
 		return $final;
 
 	} // songs
+
+	/**
+	 * videos
+	 * This builds the xml document for displaying video objects
+	 */
+	public static function videos($videos) { 
+
+                if (count($videos) > self::$limit) {
+                        $videos = array_slice($videos,self::$offset,self::$limit);
+                }
+
+		$string = ''; 
+
+		foreach ($videos as $video_id) { 
+			$video = new Video($video_id); 
+			$video->format(); 
+
+			$string .= "<video id=\"$video->id\">\n" . 
+					"\t<title><![CDATA[$video->title]]</title>\n" . 
+					"\t<mime><![CDATA[$video->mime]]</mime>\n" . 
+					"\t<resolution>$this->f_resolution</resolution>\n" .
+					"\t<size>$this->size</size>\n" . 
+					self::tags_string($video->tags,'video',$video->id) . 
+					"\t<url><![CDATA[" . Video::play_url($video->id) . "]]</url>\n" .
+					"</video>\n";
+
+		} // end foreach 
+
+		$final = self::_header() . $string . self::_footer(); 
+
+		return $final; 
+
+
+	} // videos
 
 	/**
 	 * rss_feed

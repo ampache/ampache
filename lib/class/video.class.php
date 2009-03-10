@@ -25,6 +25,7 @@ class Video extends database_object implements media {
 	public $title; 
 	public $enabled; 
 	public $file; 	
+	public $size; 
 
 	/**
 	 * Constructor
@@ -49,6 +50,16 @@ class Video extends database_object implements media {
 	 */
 	public static function build_cache($ids=array()) { 
 
+		if (!is_array($ids) OR !count($ids)) { return false; } 
+
+		$idlist = '(' . implode(',',$ids) . ')'; 
+
+		$sql = "SELECT * FROM `video` WHERE `video`.`id` IN $idlist"; 
+		$db_results = Dba::read($sql); 
+
+		while ($row = Dba::fetch_assoc($db_results)) { 
+			parent::add_to_cache('video',$row['id'],$row); 
+		} 
 
 	} // build_cache
 

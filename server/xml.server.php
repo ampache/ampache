@@ -308,6 +308,26 @@ switch ($_REQUEST['action']) {
 
 		echo xmlData::songs($results); 
 	break; 
+	case 'videos':
+                Browse::reset_filters();
+                Browse::set_type('video');
+                Browse::set_sort('title','ASC');
+
+                $method = $_REQUEST['exact'] ? 'exact_match' : 'alpha_match';
+                Api::set_filter($method,$_REQUEST['filter']);
+		
+                $video_ids = Browse::get_objects();
+
+                xmlData::set_offset($_REQUEST['offset']);
+                xmlData::set_limit($_REQUEST['limit']);
+		
+		echo xmlData::videos($video_ids); 
+	break; 
+	case 'video': 
+		$video_id = scrub_in($_REQUEST['filter']); 
+
+		echo xmlData::videos(array($video_id)); 
+	break; 
 	case 'localplay': 
 		// Load their localplay instance
 		$localplay = new Localplay(Config::get('localplay_controller')); 
