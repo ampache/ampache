@@ -130,10 +130,10 @@ class xmlData {
 
 		$string = ''; 
 
-		foreach ($tags as $tag_id) { 
+		foreach ($tags as $tag_id=>$data) { 
+			
 			$tag = new Tag($tag_id); 
-			$tag->format($type,$object_id);
-			$string .= "\t<tag id=\"$tag->id\" count=\"$tag->weight\"><![CDATA[$tag->name]]></tag>\n";
+			$string .= "\t<tag id=\"" . $tag->id . "\" count=\"" . $data['count'] . "\"><![CDATA[$tag->name]]></tag>\n";
 		} 
 
 		return $string; 

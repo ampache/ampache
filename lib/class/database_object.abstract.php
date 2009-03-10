@@ -39,6 +39,9 @@ abstract class database_object {
 
 		$table_name = $table_name ? Dba::escape($table_name) : Dba::escape(strtolower(get_class($this)));
 
+		// Make sure we've got a real id
+		if (!is_numeric($id)) { return array(); } 
+
 		if (self::is_cached($table_name,$id)) { 
 			return self::get_from_cache($table_name,$id); 
 		} 

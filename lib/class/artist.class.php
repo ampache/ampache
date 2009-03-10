@@ -243,7 +243,6 @@ class Artist extends database_object {
 
 		$this->f_tags = Tag::get_display($this->tags,$this->id,'artist'); 
 
-
 		return true; 
 
 	} // format

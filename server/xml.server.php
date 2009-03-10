@@ -149,7 +149,6 @@ switch ($_REQUEST['action']) {
 		Browse::reset_filters(); 
 		Browse::set_type('album'); 
 		Browse::set_sort('name','ASC'); 
-		
 		$method = $_REQUEST['exact'] ? 'exact_match' : 'alpha_match'; 
 		Api::set_filter($method,$_REQUEST['filter']); 
 		Api::set_filter('add',$_REQUEST['add']); 
