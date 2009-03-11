@@ -34,6 +34,8 @@ switch ($_REQUEST['action']) {
 		// does user want to display lyrics?
 		$show_lyrics = Config::get('show_lyrics');
 		if($show_lyrics == 1) {
+			$lyric = new Artist();
+			$return = scrub_out($lyric->get_song_lyrics($song->id, ucwords($song->f_artist), ucwords($song->title)));
 			require_once Config::get('prefix') . '/templates/show_lyrics.inc.php';
 		}
 	break; 
