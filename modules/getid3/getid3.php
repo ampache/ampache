@@ -61,7 +61,7 @@ class getid3
     protected $iconv_present;
 
     // Class constants
-    const VERSION           = '2.0.0b4';
+    const VERSION           = '2.0.0b5';
     const FREAD_BUFFER_SIZE = 16384;                      // Read buffer size in bytes.
     const ICONV_TEST_STRING = ' !"#$%&\'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~€‚ƒ„…†‡ˆ‰Š‹ŒŽ‘’“”•–—˜™š›œžŸ ¡¢£¤¥¦§¨©ª«¬­®¯°±²³´µ¶·¸¹º»¼½¾¿ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖ×ØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõö÷øùúûüýþÿ';
 
@@ -286,7 +286,7 @@ class getid3
         // Supported format signature pattern detected, but module deleted.
         if (!file_exists($this->include_path.$determined_format['include'])) {
             fclose($this->fp);
-            throw new getid3_exception('Format not supported, module, '.$determined_format['include'].', was removed.');
+            throw new getid3_exception('Format not supported, module "'.$determined_format['include'].'" was removed.');
         }
 
         // Include module
@@ -295,7 +295,7 @@ class getid3
         // Instantiate module class and analyze
         $class_name = 'getid3_'.$determined_format['module'];
         if (!class_exists($class_name)) {
-            throw new getid3_exception('Format not supported, module, '.$determined_format['include'].', is corrupt.');
+            throw new getid3_exception('Format not supported, module "'.$determined_format['include'].'" is corrupt.');
         }
         $class = new $class_name($this);
 
@@ -320,95 +320,11 @@ class getid3
 
         //// Optional - perform more calculations
         if ($this->option_extra_info) {
-
-            // Set channelmode on audio
-            if (@$this->info['audio']['channels'] == '1') {
-                $this->info['audio']['channelmode'] = 'mono';
-            } elseif (@$this->info['audio']['channels'] == '2') {
-                $this->info['audio']['channelmode'] = 'stereo';
-            }
-
-            // Calculate combined bitrate - audio + video
-            $combined_bitrate  = 0;
-            $combined_bitrate += (isset($this->info['audio']['bitrate']) ? $this->info['audio']['bitrate'] : 0);
-            $combined_bitrate += (isset($this->info['video']['bitrate']) ? $this->info['video']['bitrate'] : 0);
-            if (($combined_bitrate > 0) && empty($this->info['bitrate'])) {
-                $this->info['bitrate'] = $combined_bitrate;
-            }
-            if (!isset($this->info['playtime_seconds']) && !empty($this->info['bitrate'])) {
-                $this->info['playtime_seconds'] = (($this->info['avdataend'] - $this->info['avdataoffset']) * 8) / $this->info['bitrate'];
-            }
-
-            // Set playtime string
-            if (!empty($this->info['playtime_seconds']) && empty($this->info['playtime_string'])) {
-                $this->info['playtime_string'] =  floor(round($this->info['playtime_seconds']) / 60) . ':' . str_pad(floor(round($this->info['playtime_seconds']) % 60), 2, 0, STR_PAD_LEFT);;
-            }
-
-
-            // CalculateCompressionRatioVideo() {
-            if (@$this->info['video'] && @$this->info['video']['resolution_x'] && @$this->info['video']['resolution_y'] && @$this->info['video']['bits_per_sample']) {
-
-                // From static image formats
-                if (in_array($this->info['video']['dataformat'], array ('bmp', 'gif', 'jpeg', 'jpg', 'png', 'tiff'))) {
-                    $frame_rate         = 1;
-                    $bitrate_compressed = $this->info['filesize'] * 8;
-                }
-
-                // From video formats
-                else {
-                    $frame_rate         = @$this->info['video']['frame_rate'];
-                    $bitrate_compressed = @$this->info['video']['bitrate'];
-                }
-
-                if ($frame_rate && $bitrate_compressed) {
-                    $this->info['video']['compression_ratio'] = $bitrate_compressed / ($this->info['video']['resolution_x'] * $this->info['video']['resolution_y'] * $this->info['video']['bits_per_sample'] * $frame_rate);
-                }
-            }
-
-
-            // CalculateCompressionRatioAudio() {
-            if (@$this->info['audio']['bitrate'] && @$this->info['audio']['channels'] && @$this->info['audio']['sample_rate']) {
-                $this->info['audio']['compression_ratio'] = $this->info['audio']['bitrate'] / ($this->info['audio']['channels'] * $this->info['audio']['sample_rate'] * (@$this->info['audio']['bits_per_sample'] ? $this->info['audio']['bits_per_sample'] : 16));
-            }
-
-            if (@$this->info['audio']['streams']) {
-                foreach ($this->info['audio']['streams'] as $stream_number => $stream_data) {
-                    if (@$stream_data['bitrate'] && @$stream_data['channels'] && @$stream_data['sample_rate']) {
-                        $this->info['audio']['streams'][$stream_number]['compression_ratio'] = $stream_data['bitrate'] / ($stream_data['channels'] * $stream_data['sample_rate'] * (@$stream_data['bits_per_sample'] ? $stream_data['bits_per_sample'] : 16));
-                    }
-                }
-            }
-
-
-            // CalculateReplayGain() {
-            if (@$this->info['replay_gain']) {
-                if (!@$this->info['replay_gain']['reference_volume']) {
-                     $this->info['replay_gain']['reference_volume'] = 89;
-                }
-                if (isset($this->info['replay_gain']['track']['adjustment'])) {
-                    $this->info['replay_gain']['track']['volume'] = $this->info['replay_gain']['reference_volume'] - $this->info['replay_gain']['track']['adjustment'];
-                }
-                if (isset($this->info['replay_gain']['album']['adjustment'])) {
-                    $this->info['replay_gain']['album']['volume'] = $this->info['replay_gain']['reference_volume'] - $this->info['replay_gain']['album']['adjustment'];
-                }
-
-                if (isset($this->info['replay_gain']['track']['peak'])) {
-                    $this->info['replay_gain']['track']['max_noclip_gain'] = 0 - 20 * log10($this->info['replay_gain']['track']['peak']);
-                }
-                if (isset($this->info['replay_gain']['album']['peak'])) {
-                    $this->info['replay_gain']['album']['max_noclip_gain'] = 0 - 20 * log10($this->info['replay_gain']['album']['peak']);
-                }
-            }
-
-
-            // ProcessAudioStreams() {
-            if (@!$this->info['audio']['streams'] && (@$this->info['audio']['bitrate'] || @$this->info['audio']['channels'] || @$this->info['audio']['sample_rate'])) {
-                  foreach ($this->info['audio'] as $key => $value) {
-                    if ($key != 'streams') {
-                        $this->info['audio']['streams'][0][$key] = $value;
-                    }
-                }
-            }
+			$this->ChannelsBitratePlaytimeCalculations();
+			$this->CalculateCompressionRatioVideo();
+			$this->CalculateCompressionRatioAudio();
+			$this->CalculateReplayGain();
+			$this->ProcessAudioStreams();
         }
 
 
@@ -662,11 +578,19 @@ class getid3
                             'mime_type' => 'audio/s3m',
                           ),
 
-                // MPC  - audio       - Musepack / MPEGplus SV7+
-                'mpc'  => array (
+                // MPC  - audio       - Musepack SV7
+                'mpc8' => array (
+                            'pattern'   => '^(MPCK)',
+                            'group'     => 'audio',
+                            'module'    => 'mpc8',
+                            'mime_type' => 'audio/x-musepack',
+                          ),
+
+                // MPC  - audio       - Musepack SV7
+                'mpc7' => array (
                             'pattern'   => '^(MP\+)',
                             'group'     => 'audio',
-                            'module'    => 'mpc',
+                            'module'    => 'mpc7',
                             'mime_type' => 'audio/x-musepack',
                           ),
 
@@ -1035,6 +959,173 @@ class getid3
 
 
 
+	protected function ChannelsBitratePlaytimeCalculations() {
+
+		// set channelmode on audio
+		if (@$this->info['audio']['channels'] == '1') {
+			$this->info['audio']['channelmode'] = 'mono';
+		} elseif (@$this->info['audio']['channels'] == '2') {
+			$this->info['audio']['channelmode'] = 'stereo';
+		}
+
+		// Calculate combined bitrate - audio + video
+		$CombinedBitrate  = 0;
+		$CombinedBitrate += (isset($this->info['audio']['bitrate']) ? $this->info['audio']['bitrate'] : 0);
+		$CombinedBitrate += (isset($this->info['video']['bitrate']) ? $this->info['video']['bitrate'] : 0);
+		if (($CombinedBitrate > 0) && empty($this->info['bitrate'])) {
+			$this->info['bitrate'] = $CombinedBitrate;
+		}
+		//if ((isset($this->info['video']) && !isset($this->info['video']['bitrate'])) || (isset($this->info['audio']) && !isset($this->info['audio']['bitrate']))) {
+		//	// for example, VBR MPEG video files cannot determine video bitrate:
+		//	// should not set overall bitrate and playtime from audio bitrate only
+		//	unset($this->info['bitrate']);
+		//}
+
+		// video bitrate undetermined, but calculable
+		if (isset($this->info['video']['dataformat']) && $this->info['video']['dataformat'] && (!isset($this->info['video']['bitrate']) || ($this->info['video']['bitrate'] == 0))) {
+			// if video bitrate not set
+			if (isset($this->info['audio']['bitrate']) && ($this->info['audio']['bitrate'] > 0) && ($this->info['audio']['bitrate'] == $this->info['bitrate'])) {
+				// AND if audio bitrate is set to same as overall bitrate
+				if (isset($this->info['playtime_seconds']) && ($this->info['playtime_seconds'] > 0)) {
+					// AND if playtime is set
+					if (isset($this->info['avdataend']) && isset($this->info['avdataoffset'])) {
+						// AND if AV data offset start/end is known
+						// THEN we can calculate the video bitrate
+						$this->info['bitrate'] = round((($this->info['avdataend'] - $this->info['avdataoffset']) * 8) / $this->info['playtime_seconds']);
+						$this->info['video']['bitrate'] = $this->info['bitrate'] - $this->info['audio']['bitrate'];
+					}
+				}
+			}
+		}
+
+		if ((!isset($this->info['playtime_seconds']) || ($this->info['playtime_seconds'] <= 0)) && !empty($this->info['bitrate'])) {
+			$this->info['playtime_seconds'] = (($this->info['avdataend'] - $this->info['avdataoffset']) * 8) / $this->info['bitrate'];
+		}
+
+		if (!isset($this->info['bitrate']) && !empty($this->info['playtime_seconds'])) {
+			$this->info['bitrate'] = (($this->info['avdataend'] - $this->info['avdataoffset']) * 8) / $this->info['playtime_seconds'];
+		}
+//echo '<pre>';
+//var_dump($this->info['bitrate']);
+//var_dump($this->info['audio']['bitrate']);
+//var_dump($this->info['video']['bitrate']);
+//echo '</pre>';
+		if (isset($this->info['bitrate']) && empty($this->info['audio']['bitrate']) && empty($this->info['video']['bitrate'])) {
+			if (isset($this->info['audio']['dataformat']) && empty($this->info['video']['resolution_x'])) {
+				// audio only
+				$this->info['audio']['bitrate'] = $this->info['bitrate'];
+			} elseif (isset($this->info['video']['resolution_x']) && empty($this->info['audio']['dataformat'])) {
+				// video only
+				$this->info['video']['bitrate'] = $this->info['bitrate'];
+			}
+		}
+
+		// Set playtime string
+		if (!empty($this->info['playtime_seconds']) && empty($this->info['playtime_string'])) {
+			$this->info['playtime_string'] = getid3_lib::PlaytimeString($this->info['playtime_seconds']);
+		}
+	}
+
+
+	protected function CalculateCompressionRatioVideo() {
+		if (empty($this->info['video'])) {
+			return false;
+		}
+		if (empty($this->info['video']['resolution_x']) || empty($this->info['video']['resolution_y'])) {
+			return false;
+		}
+		if (empty($this->info['video']['bits_per_sample'])) {
+			return false;
+		}
+
+		switch ($this->info['video']['dataformat']) {
+			case 'bmp':
+			case 'gif':
+			case 'jpeg':
+			case 'jpg':
+			case 'png':
+			case 'tiff':
+				$FrameRate = 1;
+				$PlaytimeSeconds = 1;
+				$BitrateCompressed = $this->info['filesize'] * 8;
+				break;
+
+			default:
+				if (!empty($this->info['video']['frame_rate'])) {
+					$FrameRate = $this->info['video']['frame_rate'];
+				} else {
+					return false;
+				}
+				if (!empty($this->info['playtime_seconds'])) {
+					$PlaytimeSeconds = $this->info['playtime_seconds'];
+				} else {
+					return false;
+				}
+				if (!empty($this->info['video']['bitrate'])) {
+					$BitrateCompressed = $this->info['video']['bitrate'];
+				} else {
+					return false;
+				}
+				break;
+		}
+		$BitrateUncompressed = $this->info['video']['resolution_x'] * $this->info['video']['resolution_y'] * $this->info['video']['bits_per_sample'] * $FrameRate;
+
+		$this->info['video']['compression_ratio'] = $BitrateCompressed / $BitrateUncompressed;
+		return true;
+	}
+
+
+	protected function CalculateCompressionRatioAudio() {
+		if (empty($this->info['audio']['bitrate']) || empty($this->info['audio']['channels']) || empty($this->info['audio']['sample_rate'])) {
+			return false;
+		}
+		$this->info['audio']['compression_ratio'] = $this->info['audio']['bitrate'] / ($this->info['audio']['channels'] * $this->info['audio']['sample_rate'] * (!empty($this->info['audio']['bits_per_sample']) ? $this->info['audio']['bits_per_sample'] : 16));
+
+		if (!empty($this->info['audio']['streams'])) {
+			foreach ($this->info['audio']['streams'] as $streamnumber => $streamdata) {
+				if (!empty($streamdata['bitrate']) && !empty($streamdata['channels']) && !empty($streamdata['sample_rate'])) {
+					$this->info['audio']['streams'][$streamnumber]['compression_ratio'] = $streamdata['bitrate'] / ($streamdata['channels'] * $streamdata['sample_rate'] * (!empty($streamdata['bits_per_sample']) ? $streamdata['bits_per_sample'] : 16));
+				}
+			}
+		}
+		return true;
+	}
+
+
+	protected function CalculateReplayGain() {
+		if (isset($this->info['replay_gain'])) {
+			$this->info['replay_gain']['reference_volume'] = 89;
+			if (isset($this->info['replay_gain']['track']['adjustment'])) {
+				$this->info['replay_gain']['track']['volume'] = $this->info['replay_gain']['reference_volume'] - $this->info['replay_gain']['track']['adjustment'];
+			}
+			if (isset($this->info['replay_gain']['album']['adjustment'])) {
+				$this->info['replay_gain']['album']['volume'] = $this->info['replay_gain']['reference_volume'] - $this->info['replay_gain']['album']['adjustment'];
+			}
+
+			if (isset($this->info['replay_gain']['track']['peak'])) {
+				$this->info['replay_gain']['track']['max_noclip_gain'] = 0 - getid3_lib::RGADamplitude2dB($this->info['replay_gain']['track']['peak']);
+			}
+			if (isset($this->info['replay_gain']['album']['peak'])) {
+				$this->info['replay_gain']['album']['max_noclip_gain'] = 0 - getid3_lib::RGADamplitude2dB($this->info['replay_gain']['album']['peak']);
+			}
+		}
+		return true;
+	}
+
+	protected function ProcessAudioStreams() {
+		if (!empty($this->info['audio']['bitrate']) || !empty($this->info['audio']['channels']) || !empty($this->info['audio']['sample_rate'])) {
+			if (!isset($this->info['audio']['streams'])) {
+				foreach ($this->info['audio'] as $key => $value) {
+					if ($key != 'streams') {
+						$this->info['audio']['streams'][0][$key] = $value;
+					}
+				}
+			}
+		}
+		return true;
+	}
+
+
     // Convert and copy tags
     protected function HandleAllTags() {
 
@@ -1275,18 +1366,18 @@ abstract class getid3_handler_write
 
         ignore_user_abort($this->user_abort);
     }
-    
-    
+
+
     protected function save_permissions() {
-        
+
         $this->owner = fileowner($this->filename);
         $this->group = filegroup($this->filename);
         $this->perms = fileperms($this->filename);
     }
-    
-    
+
+
     protected function restore_permissions() {
-        
+
         @chown($this->filename, $this->owner);
         @chgrp($this->filename, $this->group);
         @chmod($this->filename, $this->perms);
@@ -1485,6 +1576,11 @@ class getid3_lib
 	}
 
 
+	public static function RGADamplitude2dB($amplitude) {
+		return 20 * log10($amplitude);
+	}
+
+
 	public static function PrintHexBytes($string, $hex=true, $spaces=true, $html_safe=true) {
 
         $return_string = '';
@@ -1504,6 +1600,18 @@ class getid3_lib
         return $return_string;
     }
 
+
+	public static function PlaytimeString($playtimeseconds) {
+		$sign = (($playtimeseconds < 0) ? '-' : '');
+		$playtimeseconds = abs($playtimeseconds);
+		$contentseconds = round((($playtimeseconds / 60) - floor($playtimeseconds / 60)) * 60);
+		$contentminutes = floor($playtimeseconds / 60);
+		if ($contentseconds >= 60) {
+			$contentseconds -= 60;
+			$contentminutes++;
+		}
+		return $sign.intval($contentminutes).':'.str_pad($contentseconds, 2, 0, STR_PAD_LEFT);
+	}
 
 
     // Process header data string - read several values with algorithm and add to target

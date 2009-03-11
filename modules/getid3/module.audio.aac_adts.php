@@ -93,8 +93,7 @@ class getid3_aac_adts extends getid3_handler
         $info_aac        = &$getid3->info['aac'];
         $info_aac_header = & $info_aac['header'];
 
-        $byte_offset  = $getid3->info['avdataoffset']; 
-	$frame_number = 0;
+        $byte_offset  = $frame_number = 0;
 
         while (true) {
             

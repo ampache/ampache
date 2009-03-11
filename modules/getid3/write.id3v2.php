@@ -375,7 +375,7 @@ class getid3_write_id3v2 extends getid3_handler_write
 
         // rewrite file - no tag present or new tag longer than old tag
         else
-        {
+
             if (!$fp_source = @fopen($this->filename, 'rb')) {
                 throw new getid3_exception('Could not open '.$this->filename.' mode "rb"');
             }
