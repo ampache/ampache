@@ -113,7 +113,7 @@ switch ($_REQUEST['action']) {
 	break;
 	case 'democratic': 
 		$democratic = new Democratic($_REQUEST['democratic_id']); 
-		$urls[] = $democratic->play_url(); 
+		$urls = array($democratic->play_url()); 
 	break;
 	case 'download': 
 		$media_ids[] = $_REQUEST['song_id']; 
@@ -161,9 +161,7 @@ switch ($_REQUEST['method']) {
 
 		/* Start the Stream */
 		$stream = new Stream($stream_type,$media_ids);
-		if (is_array($urls)) { 
-			$stream->manual_url_add($urls); 
-		} 
+		$stream->add_urls($urls); 
 		$stream->start(); 
 
 } // end method switch 

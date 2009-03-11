@@ -89,19 +89,15 @@ class Stream {
 	} // start
 
 	/**
-	 * manual_url_add
-	 * This manually adds a URL to the stream object for passing
-	 * to whatever, this is an exception for when we don't actually
-	 * have a object_id but instead a weird or special URL
+	 * add_urls
+	 * Add an array of urls, it may be a single one who knows, this 
+	 * is used for things that aren't coming from media objects
 	 */
-	public function manual_url_add($url) { 
+	public function add_urls($urls=array()) { 
 
-		if (is_array($url)) { 
-			$this->urls[] = array_merge($url,$this->urls); 
-		} 
-		else { 
-			$this->urls[] = $url; 
-		}  
+		if (!is_array($urls)) { return false; } 
+		
+		$this->urls = array_merge($urls,$this->urls); 
 
 	} // manual_url_add
 
@@ -520,6 +516,13 @@ class Stream {
 			} // switch on types 
 			$localplay->add($media); 
 		} // foreach object
+
+		/**
+ 		 * Add urls after the fact
+	 	 */
+		foreach ($this->urls as $url) { 
+			$localplay->add($url); 
+		} 
 		
 		$localplay->play();
 

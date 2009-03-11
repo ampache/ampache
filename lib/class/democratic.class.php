@@ -36,6 +36,8 @@ class Democratic extends tmpPlaylist {
 	// Build local, buy local
 	public $tmp_playlist; 
 	public $object_ids = array(); 
+	public $vote_ids = array(); 
+	public $user_votes = array(); 
 
 	/**
 	 * constructor
@@ -53,23 +55,26 @@ class Democratic extends tmpPlaylist {
 
 	} // constructor
 
-
 	/**
- 	 * get_info
-	 * This returns the data from the database
+	 * build_vote_cache
+	 * This builds a vote cache of the objects we've got in the playlist
 	 */
-	private function get_info($id) { 
+	public static function build_vote_cache($ids) { 
 
-		$id = Dba::escape($id); 
+		if (!is_array($ids) OR !count($ids)) { return false; } 
 
-		$sql = "SELECT * FROM `democratic` WHERE `id`='$id'"; 
-		$db_results = Dba::query($sql); 
+		$idlist = '(' . implode(',',$ids) . ')'; 
 
-		$row = Dba::fetch_assoc($db_results); 
+		$sql = "SELECT `object_id`,COUNT(`user`) AS `count` FROM user_vote WHERE `object_id` IN $idlist GROUP BY `object_id`"; 
+		$db_results = Dba::read($sql); 
 
-		return $row; 
+		while ($row = Dba::fetch_assoc($db_results)) { 
+			parent::add_to_cache('democratic_vote',$row['object_id'],$row['count']); 
+		} 
 
-	} // get_info
+		return true; 
+
+	} // build_vote_cache
 
 	/**
 	 * set_parent
@@ -187,7 +192,7 @@ class Democratic extends tmpPlaylist {
                 $vote_join 	= "INNER JOIN `user_vote` ON `user_vote`.`object_id`=`tmp_playlist_data`.`id`";
 
                 /* Select all objects from this playlist */
-                $sql = "SELECT `tmp_playlist_data`.`id`,`tmp_playlist_data`.`object_type`, `user_vote`.`date`, `tmp_playlist_data`.`object_id` " .
+                $sql = "SELECT `user_vote`.`object_id` AS `vote_id`,`user_vote`.`user`,`tmp_playlist_data`.`id`,`tmp_playlist_data`.`object_type`, `user_vote`.`date`, `tmp_playlist_data`.`object_id` " .
                         "FROM `tmp_playlist_data` $vote_join " .
                         "WHERE `tmp_playlist_data`.`tmp_playlist`='" . Dba::escape($this->tmp_playlist) . "' $order";
                 $db_results = Dba::query($sql);
@@ -199,9 +204,11 @@ class Democratic extends tmpPlaylist {
 
 		// Itterate and build the sortable array
                 while ($results = Dba::fetch_assoc($db_results)) {
-
+			
 			// Extra set of data for caching!
 			$this->object_ids[] = $results['object_id']; 
+			$this->vote_ids[] = $results['vote_id']; 
+			$this->user_votes[$results['vote_id']][] = $results['user']; 
 
 			// First build a variable that holds the number of votes for an object
 			$name		= 'vc_' . $results['object_id'];
@@ -212,12 +219,16 @@ class Democratic extends tmpPlaylist {
 			} 
 
 
-			// Append oen to the vote
+			// Append one to the vote
 			${$name}++; 
 			$primary_key 	= ${$name}; 
 			$secondary_key	= $votes[$results['object_id']]; 
-			$items[$primary_key][$secondary_key][$results['id']] = array($results['object_id'],$results['object_type'],$results['id']);
-                }
+			$items[$primary_key][$secondary_key][$results['id']] = array('object_id'=>$results['object_id'],'object_type'=>$results['object_type'],'id'=>$results['id']);
+                } // gather data
+
+		foreach ($this->user_votes as $key=>$data) { 
+			parent::add_to_cache('democratic_voters',$key,$data); 
+		} 
 
 		// Sort highest voted stuff to the top
 		krsort($items); 
@@ -266,7 +277,7 @@ class Democratic extends tmpPlaylist {
 		if (count($items) > $offset) { 
 			$array = array_slice($items,$offset,1); 
 			$item = array_shift($array); 
-			$results['object_id'] = $item['0'];
+			$results['object_id'] = $item['object_id'];
 		} 
 
                 /* If nothing was found and this is a voting playlist then get from base_playlist */
@@ -563,6 +574,40 @@ class Democratic extends tmpPlaylist {
 		return true; 
 
 	} // clear_votes
+
+        /**
+         * get_vote
+         * This returns the current count for a specific song on this tmp_playlist
+         */
+        public function get_vote($object_id) {
+
+		if (parent::is_cached('democratic_vote',$object_id)) { 
+			return parent::get_from_cache('democratic_vote',$object_id); 
+		} 
+
+                $object_id = Dba::escape($object_id);
+
+                $sql = "SELECT COUNT(`user`) AS `count` FROM user_vote " .
+                        "WHERE `object_id`='$object_id'";
+                $db_results = Dba::read($sql);
+
+                $results = Dba::fetch_assoc($db_results);
+
+                return $results['count'];
+
+        } // get_vote
+
+	/**
+	 * get_voters
+	 * This returns the users that voted for the specified object
+	 * This is an array of user ids
+	 */
+	public function get_voters($object_id) { 
+
+		return parent::get_from_cache('democratic_voters',$object_id);  
+
+	} // get_voters
+
 
 } // Democratic class
 ?>

@@ -83,6 +83,7 @@ switch ($_REQUEST['action']) {
 		require_once Config::get('prefix') . '/templates/show_democratic.inc.php'; 
 		$objects = $democratic->get_items();
 		Song::build_cache($democratic->object_ids); 
+		Democratic::build_vote_cache($democratic->vote_ids); 
 		Browse::set_type('democratic'); 
 		Browse::reset(); 
 		Browse::set_static_content(1); 
