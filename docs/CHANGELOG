@@ -4,6 +4,9 @@
 
 --------------------------------------------------------------------------
   v.3.5-Alpha3 
+	- Added lyricswiki link Ticket #70
+	- Updated README language
+	- Updated getid3 library 2.0.0b4 to 2.0.0b5
 	- Make the Democratic playlist be assoicated with the user
 		who sends it to a 'player' 
 	- Fixed missing page headers on democratic playlist

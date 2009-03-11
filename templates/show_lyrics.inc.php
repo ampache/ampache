@@ -33,16 +33,17 @@
 <?php show_box_top(sprintf(_('%s Lyrics'), $song->title)); ?>
 <table class="tabledata" cellspacing="0" cellpadding="0">
 <tr>
-       <td>
-               <?php
-                       if($return == "Sorry Lyrics, Not found") {
-                               echo _("Sorry Lyrics Not Found.");
-                       }
-                       else {
-                               echo "<pre>" . $return . "</pre>";
-                       }
-               ?>
-       </td>
+	<td>
+		<?php
+		if($return == "Sorry Lyrics, Not found") {
+			echo _("Sorry Lyrics Not Found.");
+		}
+		else {
+			echo $link;
+			echo "<pre>" . $return . "</pre>";
+		}
+		?>
+	</td>
 </tr>
 </table>
 <?php show_box_bottom(); ?>

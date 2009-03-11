@@ -36,7 +36,7 @@ Contents:
      contact us on irc, or the forums and we will investigate adding 
      them. Thanks
 
-     	- MP3 (id3v1 && id3v2)
+	- MP3 (id3v1 && id3v2)
 	- OGG
 	- WMA/ASF
 	- FLAC
@@ -85,15 +85,18 @@ Contents:
      a new one please contact us at translation@ampache.org or see
      /locale/base/TRANSLATIONS for more instructions. 
 
-     	- English	(en_US)
+	- English	(en_US)
 	- German	(de_DE)
-	- Turkish	(tr_TR)
 	- Spanish	(es_ES)
 	- Dutch		(nl_NL)
-	- Chinese	(zh_CN)
+	- Norwegian	(nb_NO)
 	- UK English	(en_GB)
 	- Italian	(it_IT)
-	- French	(fr_FR) 
+	- French	(fr_FR)
+	- Swedish	(sv_SE)
+	- Japanese	(ja_JP) 
+	- Catalan	(ca_ES)
+	- Russian	(ru_RU)
 
   D) A Special Thanks:
      Thanks to those who've helped us make Ampache so useable:
