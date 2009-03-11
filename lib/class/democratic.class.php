@@ -255,7 +255,7 @@ class Democratic extends tmpPlaylist {
          */
         public function play_url() {
 
-                $link = Stream::get_base_url() . 'demo_id=' . scrub_out($this->id); 
+                $link = Stream::get_base_url() . 'uid=' . scrub_out($GLOBALS['user']->id) . '&demo_id=' . scrub_out($this->id); 
 
                 return $link;
 
