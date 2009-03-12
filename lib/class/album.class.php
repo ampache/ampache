@@ -376,6 +376,14 @@ class Album extends database_object {
 			$album = $this->full_name; 
 		} 
 
+		if(Config::get('proxy_host') AND Config::get('proxy_port')) {
+			$proxyhost = Config::get('proxy_host');
+			$proxyport = Config::get('proxy_port');
+			$proxyuser = Config::get('proxy_user');
+			$proxypass = Config::get('proxy_pass');
+			debug_event("lastfm", "set Proxy", "5");
+			$lastfm->setProxy($proxyhost, $proxyport, $proxyuser, $proxypass);
+		}
 		$raw_data = $lastfm->search($artist,$album); 
 
 		if (!count($raw_data)) { return array(); } 
@@ -609,6 +617,15 @@ class Album extends database_object {
 
 		    	// Create the Search Object
 	        	$amazon = new AmazonSearch(Config::get('amazon_developer_key'), $amazon_base);
+				if(Config::get('proxy_host') AND Config::get('proxy_port')) {
+					$proxyhost = Config::get('proxy_host');
+					$proxyport = Config::get('proxy_port');
+					$proxyuser = Config::get('proxy_user');
+					$proxypass = Config::get('proxy_pass');
+					debug_print("amazon", "setProxy", "5");
+					$amazon->setProxy($proxyhost, $proxyport, $proxyuser, $proxypass);
+				}
+
 			$search_results = array();
 
 			/* Setup the needed variables */
@@ -903,6 +920,12 @@ class Album extends database_object {
 	        // Check to see if it's a URL
 	        if (isset($data['url'])) {
 	                $snoopy = new Snoopy();
+					if(Config::get('proxy_host') AND Config::get('proxy_port')) {
+						$snoopy->proxy_user = Config::get('proxy_host');
+						$snoopy->proxy_port = Config::get('proxy_port');
+						$snoopy->proxy_user = Config::get('proxy_user');
+						$snoopy->proxy_pass = Config::get('proxy_pass');
+					}
 	                $snoopy->fetch($data['url']);
 	                return $snoopy->results;
 	        }

@@ -45,6 +45,10 @@ class AmazonSearch {
 	var $_currentPage=0;
 	var $_maxPage=1;
 	var $_default_results_pages=1;
+	var $_proxy_host=""; // Proxy host
+	var $_proxy_port=""; // Proxy port
+	var $_proxy_user=""; // Proxy user
+	var $_proxy_pass=""; // Proxy pass
     
 	function AmazonSearch($token,  $base_url_param = '', $associates_id = 'none') {
 	  
@@ -69,7 +73,21 @@ class AmazonSearch {
 			'SmallImage','MediumImage','LargeImage');
 	
 	} // AmazonSearch
-    
+
+	/**
+	 * setProxy
+	 * Set the class up to search through an http proxy.
+	 * The parameters are the proxy's hostname or IP address (a string)
+	 * port, username, and password. These are passed directly to the
+	 * Snoopy class when the search is done.
+	 */
+	function setProxy($host='', $port='', $user='', $pass='') {
+		if($host) $this->_proxy_host = $host;
+		if($port) $this->_proxy_port = $port;
+		if($user) $this->_proxy_user = $user;
+		if($pass) $this->_proxy_pass = $pass;
+	}
+
 	/*!	
 		@create_parser
 		@discussion this sets up an XML Parser
@@ -97,6 +115,15 @@ class AmazonSearch {
 		$this->create_parser();
 	
 		$snoopy = new Snoopy;
+		if($this->_proxy_host)
+			$snoopy->proxy_host = $this->_proxy_host;
+		if($this->_proxy_port)
+			$snoopy->proxy_port = $this->_proxy_port;
+		if($this->_proxy_user)
+			$snoopy->proxy_user = $this->_proxy_user;
+		if($this->_proxy_pass)
+			$snoopy->proxy_pass = $this->_proxy_pass;
+
 		$snoopy->fetch($url);
 		$contents = $snoopy->results;
 	
