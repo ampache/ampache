@@ -289,6 +289,7 @@ class Artist extends database_object {
 	 */
 	public function get_song_lyrics($song_id, $artist_name, $song_title) {
 
+		debug_event("lyrics", "Initialized Function", "5");
 		$sql = "SELECT `song_data`.`lyrics` FROM `song_data` WHERE `song_id`='" . Dba::escape($song_id) . "'";
 		$db_results = Dba::read($sql); 
 		$results = Dba::fetch_assoc($db_results); 
@@ -304,8 +305,9 @@ class Artist extends database_object {
 		$lyrics = $tag_lyrics['lyrics'];
 
 		if (strlen($results['lyrics']) > 1) {
-			$sql = "UPDATE `song_data` SET `lyrics` = '" . htmlspecialchars(strip_tags($results['lyrics']), ENT_QUOTES) . "' WHERE `song_id`='" . Dba::escape($song_id) . "'";
-			$db_results = Dba::write($sql);
+			//$sql = "UPDATE `song_data` SET `lyrics` = '" . htmlspecialchars(strip_tags($results['lyrics']), ENT_QUOTES) . "' WHERE `song_id`='" . Dba::escape($song_id) . "'";
+			//$db_results = Dba::write($sql);
+			debug_event("lyrics", "Use DB", "5");
 			return html_entity_decode(strip_tags(($results['lyrics'])), ENT_QUOTES);
 		} elseif (strlen($lyrics) > 1) {
 			// encode lyrics utf8
@@ -317,10 +319,20 @@ class Artist extends database_object {
 			}
 			$sql = "UPDATE `song_data` SET `lyrics` = '" . htmlspecialchars(strip_tags($lyrics), ENT_QUOTES) . "' WHERE `song_id`='" . Dba::escape($song_id) . "'";
 			$db_results = Dba::write($sql);
+			debug_event("lyrics", "Use id3v2 tag (USLT or lyrics3)", "5");
 			return $lyrics;
 		}
 		else {
-			$client = new nusoap_client('http://lyricwiki.org/server.php?wsdl', 'wsdl');
+			debug_event("lyrics", "Start to get from lyricswiki", "5");
+			$proxyhost = $proxyport = $proxyuser = $proxypass = false;
+			if(Config::get('proxy_host') AND Config::get('proxy_port')) {
+				$proxyhost = Config::get('proxy_host');
+				$proxyport = Config::get('proxy_port');
+				debug_event("lyrics", "Use proxy server: $proxyhost:$proxyport", '5');
+				if(Config::get('proxy_user')) { $proxyuser = Config::get('proxy_user'); }
+				if(Config::get('proxy_pass')) { $proxypass = Config::get('proxy_pass'); }
+			}
+			$client = new nusoap_client('http://lyricwiki.org/server.php?wsdl', 'wsdl', $proxyhost, $proxyport, $proxyuser, $proxypass);
 
 			$err = $client->getError();
 
@@ -330,6 +342,7 @@ class Artist extends database_object {
 			$result = $client->call("getSongResult", array("artist" => $artist_name, "song" => $song_title ));
 			// check for fault
 			if ($client->fault) {
+				debug_event("lyrics", "Can't get lyrics", "1");
 				return $results = "<h2>" . _('Fault') . "</h2>" . print_r($result);
 			}
 			else {
@@ -337,6 +350,7 @@ class Artist extends database_object {
 				$err = $client->getError();
 
 				if ($err) {
+					debug_event("lyrics", "Getting error: $err", "1");
 					return $results = "<h2>" . _('Error') . "</h2>" . $err;
 				}
 				else {
@@ -350,7 +364,7 @@ class Artist extends database_object {
 						$sql = "UPDATE `song_data` SET `lyrics` = '" . htmlspecialchars(strip_tags(($result['lyrics'])), ENT_QUOTES) . "' WHERE `song_id`='" . Dba::escape($song_id) . "'";
 						$db_results = Dba::write($sql);
 						// display result (lyrics)
-						//print_r($result);
+						debug_event("lyrics", "get successful", "5");
 						return $results = strip_tags($result['lyrics']);
 					}
 				}
