@@ -98,7 +98,11 @@ class LastFMSearch {
 		if ($contents == 'Artist not found') { 
 			debug_event('lastfm','Error: Artist not found with ' . $url,'3'); 
 			return false; 
-		}  
+		}
+		elseif($contents == 'No such album for this artist') {
+			debug_event('lastfm','Error: No such album for this artist with '. $url, '3');
+			return false;
+		} 
 		
 		if (!xml_parse($this->_parser, $contents)) {
 			debug_event('lastfm','Error:' . sprintf('XML error: %s at line %d',xml_error_string(xml_get_error_code($this->_parser)),xml_get_current_line_number($this->_parser)),'1');
