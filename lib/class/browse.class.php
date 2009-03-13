@@ -66,6 +66,34 @@ class Browse extends Query {
 	} // set_simple_browse
 
 	/**
+	 * add_supplemental_object
+	 * Legacy function, need to find a better way to do that
+	 */
+	public static function add_supplemental_object($class,$uid) { 
+
+		$_SESSION['browse']['supplemental'][$class] = intval($uid); 
+
+		return true; 
+
+	} // add_supplemental_object
+
+	/**
+	 * get_supplemental_objects
+	 * This returns an array of 'class','id' for additional objects that need to be
+	 * created before we start this whole browsing thing
+	 */
+	public static function get_supplemental_objects() { 
+
+		$objects = $_SESSION['browse']['supplemental']; 
+		
+		if (!is_array($objects)) { $objects = array(); } 
+
+		return $objects; 
+
+	} // get_supplemental_objects
+
+
+	/**
 	 * show_objects
 	 * This takes an array of objects
 	 * and requires the correct template based on the
@@ -87,6 +115,13 @@ class Browse extends Query {
 		// Limit is based on the users preferences if this is not a simple browse because we've got too much here
 		if (count($object_ids) > parent::get_start() AND !parent::is_simple()) { 
 			$object_ids = array_slice($object_ids,parent::get_start(),parent::get_offset(),TRUE); 
+		} 
+
+		// Load any additional object we need for this
+		$extra_objects = self::get_supplemental_objects(); 
+
+		foreach ($extra_objects as $class_name => $id) { 
+			${$class_name} = new $class_name($id); 
 		} 
 
 		// Format any matches we have so we can show them to the masses

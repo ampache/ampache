@@ -77,6 +77,18 @@ class Democratic extends tmpPlaylist {
 	} // build_vote_cache
 
 	/**
+	 * is_enabled
+	 * This function just returns true / false if the current democraitc playlist
+	 * is currently enabled / configured
+	 */
+	public function is_enabled() { 
+
+		if ($this->tmp_playlist) { return true; } 
+
+		return false; 
+
+	} // is_enabled
+	/**
 	 * set_parent
 	 * This returns the tmpPlaylist for this democratic play instance
 	 */
@@ -208,7 +220,6 @@ class Democratic extends tmpPlaylist {
 			// Extra set of data for caching!
 			$this->object_ids[] = $results['object_id']; 
 			$this->vote_ids[] = $results['vote_id']; 
-			$this->user_votes[$results['vote_id']][] = $results['user']; 
 
 			// First build a variable that holds the number of votes for an object
 			$name		= 'vc_' . $results['object_id'];
@@ -225,10 +236,6 @@ class Democratic extends tmpPlaylist {
 			$secondary_key	= $votes[$results['object_id']]; 
 			$items[$primary_key][$secondary_key][$results['id']] = array('object_id'=>$results['object_id'],'object_type'=>$results['object_type'],'id'=>$results['id']);
                 } // gather data
-
-		foreach ($this->user_votes as $key=>$data) { 
-			parent::add_to_cache('democratic_voters',$key,$data); 
-		} 
 
 		// Sort highest voted stuff to the top
 		krsort($items); 

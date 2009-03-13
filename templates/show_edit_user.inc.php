@@ -25,6 +25,9 @@
 <form name="update_user" enctype="multipart/form-data" method="post" action="<?php echo Config::get('web_path') . "/admin/users.php"; ?>">
 <table class="tabledata" cellspacing="0" cellpadding="0">
 <tr>
+	<th colspan="2"><?php echo _('User Properties'); ?></td>
+</tr>
+<tr>
 	<td>
 		<?php echo _('Username'); ?>:
 	</td>
@@ -77,6 +80,27 @@
                 <option value="75" <?php echo $on_75; ?>><?php echo _('Catalog Manager'); ?></option>
                 <option value="100" <?php echo $on_100; ?>><?php echo _('Admin'); ?></option>
                 </select>
+	</td>
+</tr>
+<tr>
+	<th colspan="2"><?php echo _('Other Options'); ?></th>
+</tr>
+<tr>
+	<td><?php echo _('Config Preset'); ?></td>
+	<td>
+		<select name="preset">
+			<option value=""></option>
+			<option value="democratic"><?php echo _('Democratic'); ?></option>
+			<option value="localplay"><?php echo _('Localplay'); ?></option>
+			<option value="flash"><?php echo _('Flash'); ?></option>
+			<option value="stream"><?php echo _('Stream'); ?></option>
+		</select>
+	</td>
+</tr>
+<tr>
+	<td><?php echo _('Prevent Preset Override'); ?></td>
+	<td>
+		<input type="checkbox" value="1" name="prevent_override" /><span class="information"> <?php echo _('This Affects all non-Admin accounts'); ?></span>
 	</td>
 </tr>
 </table>

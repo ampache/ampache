@@ -1,7 +1,7 @@
 <?php
 /*
 
- Copyright (c) 2001 - 2008 Ampache.org
+ Copyright (c) Ampache.org
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
@@ -19,21 +19,22 @@
 
 */
 
-show_box_top(_('Create Democratic Playlist')); ?>
+show_box_top(_('Configure Democratic Playlist')); ?>
 <form method="post" action="<?php echo Config::get('web_path'); ?>/democratic.php?action=create" enctype="multipart/form-data">
 <table class="tabledata" cellspacing="0" cellpadding="0">
 <tr>
 	<td><?php echo _('Name'); ?></td>
-	<td><input type="text" name="name" value="" /></td>
+	<td><input type="text" name="name" value="<?php echo scrub_out($democratic->name); ?>" /></td>
 </tr>
 <tr>
 	<td><?php echo _('Base Playlist'); ?></td>
-	<td><?php show_playlist_select('democratic'); ?></td>
+	<td><?php show_playlist_select('democratic',$democratic->base_playlist); ?></td>
 </tr>
 <tr>
 	<td><?php echo _('Cooldown Time'); ?></td>	
-	<td><input type="text" size="4" maxlength="6" name="cooldown" value="5" /><?php echo _('minutes'); ?></td>
+	<td><input type="text" size="4" maxlength="6" name="cooldown" value="<?php echo $democratic->cooldown; ?>" /><?php echo _('minutes'); ?></td>
 </tr>
+<!--
 <tr>
 	<td><?php echo _('Level'); ?></td>
 	<td>
@@ -48,9 +49,14 @@ show_box_top(_('Create Democratic Playlist')); ?>
 	<td><?php echo _('Make Default'); ?></td>
 	<td><input type="checkbox" name="make_default" value="1" /></td>
 </tr>
+-->
+<tr>
+	<td><?php echo _('Force Democratic Play'); ?></td>
+	<td><input type="checkbox" value="1" name="force_democratic" /></td>
+</tr>
 </table>
 <div class="formValidation">
-		<input type="submit" value="<?php echo _('Create'); ?>" />
+		<input type="submit" value="<?php echo _('Update'); ?>" />
 </div>
 </form>
 <?php show_box_bottom(); ?>

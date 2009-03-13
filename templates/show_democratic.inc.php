@@ -18,23 +18,31 @@
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
-
-show_box_top(sprintf(_('%s Playlist') ,$democratic->name)); 
+$string = $democratic->is_enabled() ? sprintf(_('%s Playlist') ,$democratic->name) : _('Democratic Playlist'); 
+show_box_top($string); 
 ?>
 <div id="information_actions">
 <ul>
+<?php if ($democratic->is_enabled()) { ?>
 <li>
 	<?php echo _('Cooldown'); ?>:<?php echo $democratic->f_cooldown; ?>
 </li>
+<?php } ?>
 <?php if (Access::check('interface','75')) { ?>
 <li>
+	<a href="<?php echo Config::get('web_path'); ?>/democratic.php?action=manage"><?php echo get_user_icon('server_lightning'); ?></a>
+	<?php echo _('Configure Democratic Playlist'); ?>
+</li>
+<?php if ($democratic->is_enabled()) { ?>
+<li>
 	<?php echo Ajax::button('?page=democratic&action=send_playlist&democratic_id=' . scrub_out($democratic->id),'all',_('Play'),'play_democratic'); ?>
-	<?php echo _('Play'); ?>
+	<?php echo _('Play Democratic Playlist'); ?>
 </li>
 <li>
 	<?php echo Ajax::button('?page=democratic&action=clear_playlist&democratic_id=' . scrub_out($democratic->id),'delete',_('Clear Playlist'),'clear_democratic'); ?>
 	<?php echo _('Clear Playlist'); ?>
 </li>
+<?php } ?>
 <?php } ?>
 </ul>
 

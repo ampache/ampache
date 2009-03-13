@@ -31,6 +31,10 @@ show_header();
 
 // Switch on their action
 switch ($_REQUEST['action']) { 
+	case 'manage': 
+                $democratic = Democratic::get_current_playlist();
+                $democratic->set_parent();
+                $democratic->format();
 	case 'show_create': 
 		if (!Access::check('interface','75')) { 
 			access_denied(); 

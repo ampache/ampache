@@ -1720,6 +1720,16 @@ class Update {
 		$sql = "ALTER TABLE `video` ADD `update_time` INT( 11 ) UNSIGNED NULL AFTER `addition_time`"; 
 		$db_results = Dba::write($sql); 	
 
+                $sql = "ALTER TABLE `artist_data` ADD INDEX ( `art_mime` )";
+                $db_results = Dba::write($sql);
+
+		$sql = "ALTER TABLE `album_data` ADD INDEX ( `art_mime` )"; 
+		$db_results = Dba::write($sql); 
+
+		$sql = "ALTER TABLE `tmp_browse` ADD `type` VARCHAR ( 255 ) NOT NULL AFTER `sid`"; 
+		$db_results = Dba::wirte($sql); 
+
+
 		//self::set_version('db_version','350008'); 
 
 	} // update_350008
