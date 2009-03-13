@@ -530,6 +530,7 @@ transcode_cmd_ogg   	= "oggsplt -qn %FILE% %OFFSET% %EOF% -o - | oggdec -Q -o - 
 ; Alternative command works better for some people
 ;transcode_cmd_m4a       =  "alac %FILE% | lame -h -b %SAMPLE% -S - -"
 ;transcode_cmd_ogg   	= "mp3splt -qn %FILE% %OFFSET% %EOF% -o - | oggdec -Q -o - - | lame -S -q 3 -b %SAMPLE% -S - -"
+;transcode_cmd_flac	= "flac -dc %FILE% | lame -rb %SAMPLE% -S - -"
 
 ; This line seems to work better for windows, switch if needed
 ;transcode_cmd_mp3	= "lame -q 3 -b %SAMPLE% -S %FILE% - -" 
