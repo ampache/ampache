@@ -103,6 +103,12 @@
 		<input type="checkbox" value="1" name="prevent_override" /><span class="information"> <?php echo _('This Affects all non-Admin accounts'); ?></span>
 	</td>
 </tr>
+<tr>
+	<td><?php echo _('Clear Stats'); ?></td>
+	<td>
+		<input type="checkbox" value="1" name="reset_stats" />
+	</td>
+</tr>
 </table>
 <div class="formValidation">
 		<input type="hidden" name="action" value="update_user" />

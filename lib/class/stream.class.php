@@ -411,8 +411,12 @@ class Stream {
 		foreach ($this->media as $element) {
 			$type = array_shift($element); 
 			$media = new $type(array_shift($element)); 
+			$media->format(); 
+
+			$xml = array();
 
 			switch ($type) { 
+				default:
 				case 'song': 
 					$xml['track']['title'] = $media->title;
 					$xml['track']['creator'] = $media->f_artist_full;
@@ -421,12 +425,8 @@ class Stream {
 					$xml['track']['album'] = $media->f_album_full;
 					$length = $media->time; 
 				break; 
-				default:
-
-				break; 
 			} // type
 
-	                $xml = array();
 			$xml['track']['location'] = call_user_func(array($type,'play_url'),$media->id) . $flash_hack;
 			$xml['track']['identifier'] = $xml['track']['location'];
 			$xml['track']['duration'] = $length * 1000;
