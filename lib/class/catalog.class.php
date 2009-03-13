@@ -2334,7 +2334,7 @@ class Catalog extends database_object {
 			/* Recreate the Playlist */
 			$playlist = new Playlist($playlist_id);
 			$playlist->add_songs($songs);
-			$reason = sprintf(_('Playlist Import and Recreate Successful. Total: %s Songs'), count($songs));
+			$reason = sprintf(_('Playlist Import and Recreate Successful. Total: %d Songs'), count($songs));
 			return true;
 		}
 
