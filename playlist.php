@@ -84,11 +84,12 @@ switch ($_REQUEST['action']) {
 		$catalog = new Catalog();
 		$result = $catalog->import_m3u($filename);
 
-		$url	= Config::get('web_path') . '/playlist.php?action=show_playlist&amp;playlist_id='.$playlist_id;
 		if($result == false) {
+			$url   = Config::get('web_path') . '/playlist.php?action=show_import_playlist';
 			$title = _('Playlist Not Imported');
 			$body  = $reason;
 		} else {
+			$url   = Config::get('web_path') . '/playlist.php?action=show_playlist&amp;playlist_id='.$playlist_id;
 			$title = _('Playlist Imported');
 			$body  = basename($_FILES['filename']['name']);
 			$body .= "<br />";
