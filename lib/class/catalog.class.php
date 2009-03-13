@@ -2276,7 +2276,7 @@ class Catalog extends database_object {
 	 * listed in the m3u
 	 */
 	public function import_m3u($filename) {
-		global $reason;
+		global $reason, $playlist_id;
 
 		$m3u_handle = fopen($filename,'r');
 

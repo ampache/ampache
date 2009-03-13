@@ -84,7 +84,7 @@ switch ($_REQUEST['action']) {
 		$catalog = new Catalog();
 		$result = $catalog->import_m3u($filename);
 
-		$url	= Config::get('web_path') . '/playlist.php';
+		$url	= Config::get('web_path') . '/playlist.php?action=show_playlist&amp;playlist_id='.$playlist_id;
 		if($result == false) {
 			$title = _('Playlist Not Imported');
 			$body  = $reason;
