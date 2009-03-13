@@ -82,11 +82,18 @@ switch ($_REQUEST['action']) {
 		move_uploaded_file($_FILES['filename']['tmp_name'], $filename );
 
 		$catalog = new Catalog();
-		$catalog->import_m3u($filename);
+		$result = $catalog->import_m3u($filename);
 
 		$url	= Config::get('web_path') . '/playlist.php';
-		$title = _('Playlist Imported');
-		$body  = basename($_FILES['filename']['name']);
+		if($result == false) {
+			$title = _('Playlist Not Imported');
+			$body  = $reason;
+		} else {
+			$title = _('Playlist Imported');
+			$body  = basename($_FILES['filename']['name']);
+			$body .= "<br />";
+			$body .= $reason;
+		}
 		show_confirmation($title,$body,$url);
 	break;
 	case 'set_track_numbers':

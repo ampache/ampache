@@ -356,9 +356,9 @@ class Playlist extends database_object {
 		$user = Dba::escape($GLOBALS['user']->id);
 		$date = time();
 
-		$sql = "INSERT INTO `playlist` (`name`,`user`,`type`,`genre`,`date`) " . 
-			" VALUES ('$name','$user','$type','0','$date')";
-		$db_results = Dba::query($sql);
+		$sql = "INSERT INTO `playlist` (`name`,`user`,`type`,`date`) " . 
+			" VALUES ('$name','$user','$type','$date')";
+		$db_results = Dba::write($sql);
 
 		$insert_id = Dba::insert_id();
 

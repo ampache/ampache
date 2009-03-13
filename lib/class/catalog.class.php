@@ -2276,6 +2276,7 @@ class Catalog extends database_object {
 	 * listed in the m3u
 	 */
 	public function import_m3u($filename) {
+		global $reason;
 
 		$m3u_handle = fopen($filename,'r');
 
@@ -2325,14 +2326,19 @@ class Catalog extends database_object {
 			$name = "M3U - " . basename($filename,'.m3u');
 			$playlist_id = Playlist::create($name,'public');
 
-			if (!$playlist_id) { return false; }
+			if (!$playlist_id) { 
+				$reason = _('Playlist creation error.');
+				return false;
+			}
 
 			/* Recreate the Playlist */
 			$playlist = new Playlist($playlist_id);
 			$playlist->add_songs($songs);
+			$reason = sprintf(_('Playlist Import and Recreate Successful. Total: %s Songs'), count($songs));
 			return true;
 		}
 
+		$reason = sprintf(_('Parsing %s - Not Found: %d Songs. Please check your m3u file.'), $filename, count($songs));
 		return false;
 
 	} // import_m3u
