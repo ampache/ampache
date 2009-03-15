@@ -76,7 +76,7 @@ foreach($object_ids as $row_id=>$data) {
 	<?php echo Ajax::button('?page=democratic&action=add_vote&object_id=' . $media->id . '&type=' . scrub_out($data['object_type']),'tick',_('Add Vote'),'remove_vote_' . $row_id); ?>
 	<?php } ?>
 	</td>
-	<td class="cel_votes" >(<?php echo scrub_out($democratic->get_vote($row_id)); ?>)</td>
+	<td class="cel_votes" ><?php echo scrub_out($democratic->get_vote($row_id)); ?></td>
 	<td class="cel_title"><?php echo $media->f_link; ?></td>
 	<td class="cel_album"><?php echo $media->f_album_link; ?></td>
 	<td class="cel_artist"><?php echo $media->f_artist_link; ?></td>

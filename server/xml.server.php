@@ -355,9 +355,45 @@ switch ($_REQUEST['action']) {
 		
 		switch ($_REQUEST['method']) { 
 			case 'vote': 
+				$type = 'song'; 
+				$media = new $type($_REQUEST['oid']);
+				if (!$media->id) { 
+					echo xmlData::error('400',_('Media Object Invalid or Not Specified')); 
+					break; 
+				} 
+				Democratic::vote(array($media->id)); 
+
+				// If everything was ok
+				$xml_array = array('action'=>$_REQUEST['action'],'method'=>$_REQUEST['method'],'result'=>true); 	
+				echo xmlData::build_from_array($xml_array); 
+			break; 
 			case 'devote': 
+				$type = 'song'; 
+				$media = new $type($_REQUEST['oid']); 
+				if (!$media->id) { 
+					echo xmlData::error('400',_('Media Object Invalid or Not Specified')); 
+				} 
+				
+				Democratic::remove_vote(array($media->id)); 
+				
+				// Everything was ok
+				$xml_array = array('action'=>$_REQUEST['action'],'method'=>$_REQUEST['method'],'result'=>true); 
+				echo xmlData::build_from_array($xml_array); 
+			break; 
 			case 'playlist': 
+				$objects = $democratic->get_items(); 
+				Song::build_cache($democratic->object_ids); 
+				Democratic::build_vote_cache($democratic->vote_ids); 
+				xmlData::democratic($objects); 
+			break; 
 			case 'play': 
+				$url = $democratic->play_url(); 
+				$xml_array = array('url'=>$url); 
+				echo xmlData::build_from_array($xml_array); 
+			break; 
+			default: 
+				echo xmlData::error('405',_('Invalid Request')); 
+			break; 
 		} // switch on method
 
 		

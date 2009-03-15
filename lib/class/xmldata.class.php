@@ -362,12 +362,12 @@ class xmlData {
 			$video->format(); 
 
 			$string .= "<video id=\"$video->id\">\n" . 
-					"\t<title><![CDATA[$video->title]]</title>\n" . 
-					"\t<mime><![CDATA[$video->mime]]</mime>\n" . 
+					"\t<title><![CDATA[$video->title]]></title>\n" . 
+					"\t<mime><![CDATA[$video->mime]]></mime>\n" . 
 					"\t<resolution>$this->f_resolution</resolution>\n" .
 					"\t<size>$this->size</size>\n" . 
 					self::tags_string($video->tags,'video',$video->id) . 
-					"\t<url><![CDATA[" . Video::play_url($video->id) . "]]</url>\n" .
+					"\t<url><![CDATA[" . Video::play_url($video->id) . "]]></url>\n" .
 					"</video>\n";
 
 		} // end foreach 
@@ -378,6 +378,59 @@ class xmlData {
 
 
 	} // videos
+
+	/**
+	 * democratic
+	 * This handles creating an xml document for democratic items, this can be a little complicated
+	 * due to the votes and all of that
+	 */
+	public static function democratic($object_ids=array()) { 
+
+		if (!is_array($object_ids)) { $object_ids = array(); } 
+		
+		$string = ''; 
+
+		foreach ($object_ids as $row_id=>$data) { 
+			$song = new $data['object_type']($data['object_id']); 
+			$song->format(); 
+
+			//FIXME: This is duplicate code and so wrong, functions need to be improved
+                        $tag_string = '';
+
+                        $tag = new Tag($song->tags['0']);
+                        $song->genre = $tag->id;
+                        $song->f_genre = $tag->name;
+
+                        $tag_string = self::tags_string($song->tags,'song',$song->id);
+
+                        $rating = new Rating($song_id,'song');
+
+                        $art_url = Album::get_art_url($song->album,$_REQUEST['auth']);
+
+                        $string .= "<song id=\"$song->id\">\n" .
+                                        "\t<title><![CDATA[$song->title]]></title>\n" .
+                                        "\t<artist id=\"$song->artist\"><![CDATA[$song->f_artist_full]]></artist>\n" .
+                                        "\t<album id=\"$song->album\"><![CDATA[$song->f_album_full]]></album>\n" .
+                                        "\t<genre id=\"$song->genre\"><![CDATA[$song->f_genre]]></genre>\n" .
+                                        $tag_string .
+                                        "\t<track>$song->track</track>\n" .
+                                        "\t<time>$song->time</time>\n" .
+                                        "\t<mime>$song->mime</mime>\n" .
+                                        "\t<url><![CDATA[" . Song::play_url($song->id) . "]]></url>\n" .
+                                        "\t<size>$song->size</size>\n" .
+                                        "\t<art><![CDATA[" . $art_url . "]]></art>\n" .
+                                        "\t<preciserating>" . $rating->preciserating . "</preciserating>\n" .
+                                        "\t<rating>" . $rating->rating . "</rating>\n" .
+					"\t<vote>" . $democratic->get_vote($row_id) . "</vote>\n" .  
+                                        "</song>\n";
+
+		} // end foreach 
+		
+		$final = self::_header() . $string . self::_footer(); 
+
+		return $final; 
+
+	} // democratic
 
 	/**
 	 * rss_feed

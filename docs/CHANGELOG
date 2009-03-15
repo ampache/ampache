@@ -3,7 +3,10 @@
 --------------------------------------------------------------------------
 
 --------------------------------------------------------------------------
-  v.3.5-Alpha3 
+  v.3.5-Beta1
+	- Add democratic methods to api, can now vote, devote, get url
+		and the current democratic playlist through the api
+	- Revert to old Random Play method
 	- Added proxy use for xmlrpcclient
 	- Added Configuration 'Wizard' for democratic play
 	- Fixed interface feedback issues with democratic play actions
