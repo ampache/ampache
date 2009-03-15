@@ -1297,7 +1297,7 @@ class Catalog extends database_object {
 		
 		// Try to sync the album images from the remote catalog
 		echo "<p>" . _('Starting synchronisation of album images') . ".</p><br />\n";
-		$this->get_remote_album_images($client, $token);
+		$this->get_remote_album_images($client, $token, $path);
 		echo "<p>" . _('Completed synchronisation of album images') . ".</p><hr />\n";
 		flush();
 		
@@ -1350,7 +1350,7 @@ class Catalog extends database_object {
 	 * get_album_images
 	 * This function retrieves the album information from the remote server
 	 */
-	public function get_remote_album_images($client,$token) {
+	public function get_remote_album_images($client,$token,$path) {
 		
 		$encoded_key	= new XML_RPC_Value($token,'string');
 		$query_array    = array($encoded_key);
@@ -1365,7 +1365,7 @@ class Catalog extends database_object {
 
 		if ( !$response->faultCode() ) {
 			$data = XML_RPC_Decode($value);
-			$total = $this->update_remote_album_images($data, $client->server, $token);
+			$total = $this->update_remote_album_images($data, $client->server, $token, $path);
 			echo _('images synchronized: ') . ' ' . $total . "<br />";
 			flush();
 		}
@@ -1422,7 +1422,7 @@ class Catalog extends database_object {
 	 * @package XMLRPC
 	 * @catagory Client
 	 */
-	public function update_remote_album_images($data, $remote_server, $auth) {
+	public function update_remote_album_images($data, $remote_server, $auth, $path) {
 		$label = "catalog.class.php::update_remote_album_images";
 		
 		$total_updated = 0;
@@ -1450,8 +1450,10 @@ class Catalog extends database_object {
 			
 			if ($local_album_id != 0) {
 				// Local album found lets add the cover
+				if(isset($path) AND !eregi("^/", $path)) { $path = "/".$path; }
+				debug_event($label, "remote_server: " . $remote_server,'4');
 				$server_path = "http://" . ltrim($remote_server, "http://");
-				$server_path.= "/image.php?id=" . $remote_album->id;
+				$server_path.= $path."/image.php?id=" . $remote_album->id;
 				$server_path.= "&auth=" . $auth;
 				debug_event($label, "image_url: " . $server_path,'4');
 				$data['url'] = $server_path;

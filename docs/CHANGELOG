@@ -4,6 +4,7 @@
 
 --------------------------------------------------------------------------
   v.3.5-Beta1
+	- Fixed xmlrpc get image. getEncoding doesn't static function
 	- Add democratic methods to api, can now vote, devote, get url
 		and the current democratic playlist through the api
 	- Revert to old Random Play method
