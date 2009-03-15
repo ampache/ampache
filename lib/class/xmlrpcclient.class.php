@@ -118,10 +118,16 @@ class xmlRpcClient {
                 $server = $match['1'];
                 $port   = $match['2'] ? intval($match['2']) : '80';
                 $path   = $match['3'];
+                if(Config::get('proxy_host') AND Config::get('proxy_port')) {
+                    $proxy_host = Config::get('proxy_host');
+                    $proxy_port = Config::get('proxy_port');
+                    $proxy_user = Config::get('proxy_user');
+                    $proxy_pass = Config::get('proxy_pass');
+                }
 
                 $full_url = "/" . ltrim($path . "/server/xmlrpc.server.php",'/');
                 
-                $client = new XML_RPC_Client($full_url,$server,$port);
+                $client = new XML_RPC_Client($full_url,$server,$port,$proxy_host,$proxy_port,$proxy_user,$proxy_pass);
                 
 		return $client; 
 

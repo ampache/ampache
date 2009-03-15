@@ -4,6 +4,7 @@
 
 --------------------------------------------------------------------------
   v.3.5-Alpha3 
+	- Added proxy use for xmlrpcclient
 	- Added Configuration 'Wizard' for democratic play
 	- Fixed interface feedback issues with democratic play actions
 	- Add extension to image urls for the API will add to others as
