@@ -102,7 +102,8 @@ CREATE TABLE `album_data` (
   `art_mime` varchar(64) default NULL,
   `thumb` mediumblob,
   `thumb_mime` varchar(64) default NULL,
-  UNIQUE KEY `album_id` (`album_id`)
+  UNIQUE KEY `album_id` (`album_id`),
+  KEY `art_mime` (`art_mime`)
 ) TYPE=MyISAM;
 SET character_set_client = @saved_cs_client;
 
@@ -154,7 +155,8 @@ CREATE TABLE `artist_data` (
   `thumb` mediumblob,
   `thumb_mime` varchar(32) default NULL,
   `bio` text NOT NULL,
-  UNIQUE KEY `artist_id` (`artist_id`)
+  UNIQUE KEY `artist_id` (`artist_id`),
+  KEY `art_mime` (`art_mime`)
 ) TYPE=MyISAM;
 SET character_set_client = @saved_cs_client;
 
@@ -387,10 +389,12 @@ SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8;
 CREATE TABLE `now_playing` (
   `id` varchar(64) NOT NULL default '',
-  `song_id` int(11) unsigned NOT NULL default '0',
+  `object_id` int(11) unsigned NOT NULL,
+  `object_type` varchar(255) NOT NULL,
   `user` int(11) NOT NULL,
   `expire` int(11) unsigned NOT NULL default '0',
-  PRIMARY KEY  (`id`)
+  PRIMARY KEY  (`id`),
+  KEY `expire` (`expire`)
 ) TYPE=MyISAM;
 SET character_set_client = @saved_cs_client;
 
@@ -627,7 +631,6 @@ CREATE TABLE `song` (
   `enabled` tinyint(1) unsigned NOT NULL default '1',
   `update_time` int(11) unsigned default '0',
   `addition_time` int(11) unsigned default '0',
-  `hash` varchar(64) default NULL,
   PRIMARY KEY  (`id`),
   KEY `album` (`album`),
   KEY `artist` (`artist`),
@@ -739,6 +742,7 @@ SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8;
 CREATE TABLE `tmp_browse` (
   `sid` varchar(128) NOT NULL,
+  `type` varchar(255) NOT NULL,
   `data` longtext NOT NULL,
   UNIQUE KEY `sid` (`sid`)
 ) TYPE=MyISAM;
@@ -827,7 +831,7 @@ SET character_set_client = @saved_cs_client;
 
 LOCK TABLES `update_info` WRITE;
 /*!40000 ALTER TABLE `update_info` DISABLE KEYS */;
-INSERT INTO `update_info` VALUES ('db_version','350007');
+INSERT INTO `update_info` VALUES ('db_version','350008');
 /*!40000 ALTER TABLE `update_info` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -851,7 +855,7 @@ CREATE TABLE `user` (
   `validation` varchar(128) default NULL,
   PRIMARY KEY  (`id`),
   UNIQUE KEY `username` (`username`)
-) TYPE=MyISAM AUTO_INCREMENT=2;
+) TYPE=MyISAM;
 SET character_set_client = @saved_cs_client;
 
 --
@@ -990,11 +994,15 @@ CREATE TABLE `video` (
   `time` int(11) unsigned NOT NULL,
   `size` bigint(20) unsigned NOT NULL,
   `mime` varchar(255) NOT NULL,
+  `addition_time` int(11) unsigned NOT NULL,
+  `update_time` int(11) unsigned default NULL,
   `enabled` tinyint(1) NOT NULL default '1',
   PRIMARY KEY  (`id`),
   KEY `file` (`file`),
   KEY `enabled` (`enabled`),
-  KEY `title` (`title`)
+  KEY `title` (`title`),
+  KEY `addition_time` (`addition_time`),
+  KEY `update_time` (`update_time`)
 ) TYPE=MyISAM;
 SET character_set_client = @saved_cs_client;
 
@@ -1013,4 +1021,4 @@ UNLOCK TABLES;
 /*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2009-03-08  5:05:52
+-- Dump completed on 2009-03-15 23:54:50

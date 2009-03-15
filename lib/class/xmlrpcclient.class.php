@@ -51,7 +51,7 @@ class xmlRpcClient {
 
 		// Build our key
 		$timestamp      = time();
-        $handshake_key  = hash('sha256',$timestamp . hash('sha256',$key)); 
+	        $handshake_key  = hash('sha256',$timestamp . hash('sha256',$key)); 
 
 		$encoded_key    = new XML_RPC_Value($handshake_key,'string');
 		$timestamp      = new XML_RPC_Value($timestamp,'int');

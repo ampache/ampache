@@ -38,8 +38,6 @@
 		<option value="-1"><?php echo _('All'); ?></option>
 		</select>
 	</td>
-	<td rowspan="5" valign="top"><?php echo  _('Tags'); ?></td>
-	<td rowspan="5">
 	</td>
 </tr>
 <tr>
