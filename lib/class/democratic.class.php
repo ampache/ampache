@@ -88,6 +88,7 @@ class Democratic extends tmpPlaylist {
 		return false; 
 
 	} // is_enabled
+
 	/**
 	 * set_parent
 	 * This returns the tmpPlaylist for this democratic play instance
@@ -105,6 +106,30 @@ class Democratic extends tmpPlaylist {
 
 
 	} // set_parent
+
+	/**
+	 * set_user_preferences
+	 * This sets up a (or all) user(s) to use democratic play. This sets their play method
+	 * and playlist method (clear on send) If no user is passed it does it for everyone and 
+	 * also locks down the ability to change to admins only
+	 */
+	public static function set_user_preferences($user=NULL) { 
+
+		//FIXME: Code in single user stuff
+
+		$preference_id = Preference::id_from_name('play_type'); 
+		Preference::update_level($preference_id,'75'); 
+		Preference::update_all($preference_id,'democratic'); 
+
+		$allow_demo = Preference::id_from_name('allow_democratic_playback'); 
+		Preference::update_all($allow_demo,'1'); 
+
+		$play_method = Preference::id_from_name('playlist_method'); 
+		Preference::update_all($play_method,'clear'); 
+
+		return true; 
+
+	} // set_user_preferences
 
 	/**
 	 * format
@@ -492,8 +517,15 @@ class Democratic extends tmpPlaylist {
 	 */
 	public function update($data) { 
 
+		$name = Dba::escape($data['name']); 
+		$base = Dba::escape($data['democratic']); 
+		$cool = Dba::escape($data['cooldown']); 
+		$id = Dba::escape($this->id); 	
 
+		$sql = "UPDATE `democratic` SET `name`='$name', `base_playlist`='$base',`cooldown`='$cool' WHERE `id`='$id'"; 
+		$db_results = Dba::write($sql); 
 
+		return true; 
 
 	} // update
 

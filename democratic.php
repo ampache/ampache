@@ -63,10 +63,25 @@ switch ($_REQUEST['action']) {
 			access_denied(); 
 			break;
 		} 
+		
+		$democratic = Democratic::get_current_playlist(); 
 
-		// Create the playlist
-		Democratic::create($_POST); 
-		header("Location: " . Config::get('web_path') . "/democratic.php?action=manage_playlists"); 	
+		// If we don't have anything currently create something
+		if (!$democratic->id) { 
+			// Create the playlist
+			Democratic::create($_POST); 
+			$democratic = Democratic::get_current_playlist(); 
+		} 
+		else { 
+			$democratic->update($_POST); 
+		} 
+
+		// Now check for additional things we might have to do
+		if ($_POST['force_democratic']) { 
+			Democratic::set_user_preferences(); 
+		} 
+
+		header("Location: " . Config::get('web_path') . "/democratic.php?action=show"); 	
 	break; 
 	case 'manage_playlists': 
 		if (!Access::check('interface','75')) { 
@@ -82,6 +97,11 @@ switch ($_REQUEST['action']) {
 	case 'show_playlist': 
 	default: 
 		$democratic = Democratic::get_current_playlist(); 
+		if (!$democratic->id) { 
+			require_once Config::get('prefix') . '/templates/show_democratic.inc.php'; 
+			break; 
+		} 
+
 		$democratic->set_parent(); 
 		$democratic->format(); 
 		require_once Config::get('prefix') . '/templates/show_democratic.inc.php'; 

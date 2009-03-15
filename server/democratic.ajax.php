@@ -31,9 +31,14 @@ switch ($_REQUEST['action']) {
 		$democratic->remove_vote($_REQUEST['row_id']); 
 		
 		ob_start(); 
-		$objects = $democratic->get_items(); 
+		$object_ids = $democratic->get_items(); 
+		Browse::set_type('democratic');
+		Browse::reset(); 
+		Browse::set_static_content(1); 
+		Browse::show_objects($object_ids); 
+
 		require_once Config::get('prefix') . '/templates/show_democratic_playlist.inc.php'; 
-		$results['democratic_playlist'] = ob_get_contents();
+		$results['browse_content'] = ob_get_contents();
 		ob_end_clean(); 
 
 	break;
@@ -44,9 +49,14 @@ switch ($_REQUEST['action']) {
 		$democratic->add_vote($_REQUEST['object_id'],$_REQUEST['type']); 
 
 		ob_start(); 
-		$objects = $democratic->get_items(); 
+		$object_ids = $democratic->get_items(); 
+		Browse::set_type('democratic');
+		Browse::reset(); 
+		Browse::set_static_content(1); 
+		Browse::show_objects($object_ids); 
+
 		require_once Config::get('prefix') . '/templates/show_democratic_playlist.inc.php'; 
-		$results['democratic_playlist'] = ob_get_contents(); 
+		$results['browse_content'] = ob_get_contents(); 
 		ob_end_clean(); 
 
 	break; 
@@ -65,7 +75,7 @@ switch ($_REQUEST['action']) {
 		Browse::reset(); 
 		Browse::set_static_content(1); 
 		Browse::show_objects($object_ids); 
-		$results['democratic_playlist'] = ob_get_contents(); 
+		$results['browse_content'] = ob_get_contents(); 
 		ob_end_clean(); 
 	
 	break; 

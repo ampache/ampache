@@ -4,6 +4,8 @@
 
 --------------------------------------------------------------------------
   v.3.5-Alpha3 
+	- Added Configuration 'Wizard' for democratic play
+	- Fixed interface feedback issues with democratic play actions
 	- Add extension to image urls for the API will add to others as
 		needed due to additional query requirement. Needed to fix
 		some DLNA devices
