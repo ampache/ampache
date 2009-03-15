@@ -19,69 +19,91 @@
 
 */
 ?>
-<?php show_box_top(_('Advanced Random Rules')); ?>
-<table class="tabledata" cellpadding="0" cellspacing="0">
-<colgroup>
-	<col id="col_field" />
-	<col id="col_operator" />
-	<col id="col_value" />
-	<col id="col_method" />
-</colgroup>
-<tr class="th-top">
-	<th class="col_field"><?php echo _('Field'); ?></th>
-	<th class="col_operator"><?php echo _('Operator'); ?></th>
-	<th class="col_value"><?php echo _('Value'); ?></th>
-	<th class="col_method"><?php echo _('Method'); ?></th>
+<?php show_box_top(_('Play Random Selection')); ?>
+<form id="random" method="post" enctype="multipart/form-data" action="<?php echo Config::get('web_path'); ?>/random.php?action=get_advanced">
+<table class="table-data" cellspacing="0" cellpadding="3">
+<tr>
+	<td><?php echo _('Item count'); ?></td>
+	<td>
+		<select name="random">
+		<option value="1">1</option>
+		<option value="5" selected="selected">5</option>
+		<option value="10">10</option>
+		<option value="20">20</option>
+		<option value="30">30</option>
+		<option value="50">50</option>
+		<option value="100">100</option>
+		<option value="500">500</option>
+		<option value="1000">1000</option>
+		<option value="-1"><?php echo _('All'); ?></option>
+		</select>
+	</td>
+	<td rowspan="5" valign="top"><?php echo  _('Tags'); ?></td>
+	<td rowspan="5">
+	</td>
 </tr>
 <tr>
-	<td valign="top">
-		<select name="field">
-		<?php 
-			$fields = Song::get_fields(); 
-			foreach ($fields as $key=>$value) { 
-				$name = ucfirst(str_replace('_',' ',$key));
-		?>
-			<option name="<?php echo scrub_out($key); ?>"><?php echo scrub_out($name); ?></option>
-		<?php } ?>
-		</select>
-	</td>
+	<td><?php echo _('Length'); ?></td>
 	<td>
-		<select name="operator">
-			<option value="=">=</option>
-			<option value="!=">!=</option>
-			<option value=">">&gt;</option>
-			<option value=">=">&gt;=</option>
-			<option value="<">&lt;</option>
-			<option value="<=">&lt;=</option>
-			<option value="LIKE"><?php echo _('Like'); ?></option>
-		</select>
-	</td>
-	<td valign="top">
-		<input type="textbox" name="value" />
-	</td>
-	<td valign="top">
-		<select name="method">
-			<option value="OR"><?php echo _('OR'); ?></option>
-			<option value="AND"><?php echo _('AND'); ?></option>
+		<select name="length">
+			<option value="0"><?php echo _('Unlimited'); ?></option>
+			<option value="15"><?php printf(ngettext('%d minute','%d minutes',15), "15"); ?></option>
+			<option value="30"><?php printf(ngettext('%d minute','%d minutes',30), "30"); ?></option>
+			<option value="60"><?php printf(ngettext('%d hour','%d hours',1), "1"); ?></option>
+			<option value="120"><?php printf(ngettext('%d hour','%d hours',2), "2"); ?></option>
+			<option value="240"><?php printf(ngettext('%d hour','%d hours',4), "4"); ?></option>
+			<option value="480"><?php printf(ngettext('%d hour','%d hours',8), "8"); ?></option>
+			<option value="960"><?php printf(ngettext('%d hour','%d hours',16), "16"); ?></option>
 		</select>
 	</td>
 </tr>
 <tr>
+	<td><?php echo _('Type'); ?></td>
 	<td>
-		<?php echo Ajax::button('?page=random&action=add_rule','add',_('Add Rule'),'add_random_rule'); ?><?php echo _('Add Rule'); ?>
+		<select name="random_type">
+			<option value="normal"><?php echo _('Standard'); ?></option>
+			<option value="unplayed"><?php echo _('Less Played'); ?></option>
+			<option value="full_album"><?php echo _('Full Albums'); ?></option>
+			<option value="full_artist"><?php echo _('Full Artist'); ?></option>
+			<?php if (Config::get('ratings')) { ?>
+			<option value="high_rating"><?php echo _('Highest Rated'); ?></option>
+			<?php } ?>
+		</select>
 	</td>
-	<td>
-		<?php echo Ajax::button('?page=random&action=save_rules','download',_('Save Rules As'),'save_random_rules'); ?><?php echo _('Save Rules As'); ?>
-	</td>
-	<td colspan="2">
-		<?php echo Ajax::button('?page=random&action=load_rules','cog',_('Load Saved Rules'),'load_random_rules'); ?><?php echo _('Load Saved Rules'); ?>
-	</td>
-	
 </tr>
 <tr>
-	<td colspan="4">
-		<div id="rule_status"></div>
+	<td nowrap="nowrap"><?php echo _('From catalog'); ?></td>
+	<td>
+	<?php show_catalog_select('catalog',''); ?>
+	</td>
+</tr>
+<tr>
+	<td><?php echo _('Size Limit'); ?></td>
+	<td>
+		<select name="size_limit">
+			<option value="0"><?php echo _('Unlimited'); ?></option>
+			<option value="64">64MB</option>
+			<option value="128">128MB</option>
+			<option value="256">256MB</option>
+			<option value="512">512MB</option>
+			<option value="1024">1024MB</option>
+		</select>
 	</td>
 </tr>
 </table>
+<div class="formValidation">
+	<input type="submit" value="<?php echo _('Enqueue'); ?>" />
+</div>
+</form>
 <?php show_box_bottom(); ?>
+<div id="browse">
+<?php
+	if (is_array($object_ids)) { 
+		Browse::reset_filters(); 
+		Browse::set_type('song');
+		Browse::save_objects($object_ids); 
+		Browse::show_objects(); 
+		echo Ajax::observe('window','load',Ajax::action('?action=refresh_rightbar','playlist_refresh_load'));
+	}  
+?>	
+</div>

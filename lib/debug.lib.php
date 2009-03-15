@@ -316,7 +316,7 @@ function debug_result($comment,$status=false,$value=false) {
 		$value = $status ? 'OK' : 'ERROR'; 
 	} 
 
-	$final = '<span class="' . $class . '">' . scrub_out($value) . '</span> <em>' . scrub_out($comment) . '</em>'; 
+	$final = '<span class="' . $class . '">' . scrub_out($value) . '</span> <em>' . $comment . '</em>'; 
 
 	return $final;
 

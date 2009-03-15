@@ -43,21 +43,21 @@ $artist = scrub_out(truncate_with_ellipsis($media->f_artist_full));
 <div class="np_group">
   <div class="np_cell cel_song">
   	<label><?php echo _('Song'); ?></label>
-  	<a title="<?php echo scrub_out($media->title); ?>" href="<?php echo $web_path; ?>/stream.php?action=single_song&amp;song_id=<?php echo $song->id; ?>">
+  	<a title="<?php echo scrub_out($media->title); ?>" href="<?php echo $web_path; ?>/stream.php?action=single_song&amp;song_id=<?php echo $media->id; ?>">
           <?php echo $title; ?>
   	</a>
   </div>
 
   <div class="np_cell cel_album">
   	<label><?php echo _('Album'); ?></label>
-  	<a title="<?php echo scrub_out($media->f_album_full); ?>" href="<?php echo $web_path; ?>/albums.php?action=show&amp;album=<?php echo $song->album; ?>">
+  	<a title="<?php echo scrub_out($media->f_album_full); ?>" href="<?php echo $web_path; ?>/albums.php?action=show&amp;album=<?php echo $media->album; ?>">
           	<?php echo $album; ?>
   	</a>
   </div>
 
   <div class="np_cell cel_artist">
   	<label><?php echo _('Artist'); ?></label>
-  	<a title="<?php echo scrub_out($media->f_artist_full); ?>" href="<?php echo $web_path; ?>/artists.php?action=show&amp;artist=<?php echo $song->artist; ?>">
+  	<a title="<?php echo scrub_out($media->f_artist_full); ?>" href="<?php echo $web_path; ?>/artists.php?action=show&amp;artist=<?php echo $media->artist; ?>">
   	        <?php echo $artist; ?>
   	</a>
   </div>
@@ -66,8 +66,8 @@ $artist = scrub_out(truncate_with_ellipsis($media->f_artist_full));
 <?php if (Config::get('show_album_art')) { ?>
 <div class="np_group">
   <div class="np_cell cel_albumart">
-      <a target="_blank" href="<?php echo $web_path; ?>/image.php?id=<?php echo $media->album; ?>&amp;type=popup&amp;sid=<?php echo session_id(); ?>" onclick="popup_art('<?php echo $web_path; ?>/image.php?id=<?php echo $song->album; ?>&amp;type=popup&amp;sid=<?php echo session_id(); ?>'); return false;">
-        <img align="middle" src="<?php echo $web_path; ?>/image.php?id=<?php echo $media->album; ?>&amp;thumb=1&amp;sid=<?php echo session_id(); ?>" alt="<?php echo scrub_out($song->f_album_full); ?>" title="<?php echo scrub_out($song->f_album_full); ?>" height="75" width="75" />
+      <a target="_blank" href="<?php echo $web_path; ?>/image.php?id=<?php echo $media->album; ?>&amp;type=popup&amp;sid=<?php echo session_id(); ?>" onclick="popup_art('<?php echo $web_path; ?>/image.php?id=<?php echo $media->album; ?>&amp;type=popup&amp;sid=<?php echo session_id(); ?>'); return false;">
+        <img align="middle" src="<?php echo $web_path; ?>/image.php?id=<?php echo $media->album; ?>&amp;thumb=1&amp;sid=<?php echo session_id(); ?>" alt="<?php echo scrub_out($media->f_album_full); ?>" title="<?php echo scrub_out($media->f_album_full); ?>" height="75" width="75" />
       </a>
   </div>
 </div>
