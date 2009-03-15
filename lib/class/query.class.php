@@ -521,9 +521,10 @@ class Query {
 
 		if (!self::is_simple()) { 
 			// If not then we're going to need to read from the database :(
-			$sid = session_id() . '::' . self::$type; 
+			$sid = session_id();
+			$type = Dba::escape(self::$type); 
 
-			$sql = "SELECT `data` FROM `tmp_browse` WHERE `sid`='$sid'"; 
+			$sql = "SELECT `data` FROM `tmp_browse` WHERE `sid`='$sid' AND `type`='$type'"; 
 			$db_results = Dba::read($sql); 
 
 			$row = Dba::fetch_assoc($db_results); 
@@ -1195,10 +1196,11 @@ class Query {
 
                 // Only do this if it's a not a simple browse
                 if (!self::is_simple()) {
-                        $sid = session_id() . '::' . self::$type;
+                        $sid = Dba::escape(session_id()); 
                         $data = Dba::escape(serialize($object_ids));
+			$type = Dba::escape(self::$type); 
 
-                        $sql = "REPLACE INTO `tmp_browse` SET `data`='$data', `sid`='$sid'";
+                        $sql = "REPLACE INTO `tmp_browse` SET `data`='$data', `sid`='$sid',`type`='$type'";
                         $db_results = Dba::write($sql);
 
                         self::$total_objects = count($object_ids);

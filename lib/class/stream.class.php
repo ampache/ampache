@@ -722,14 +722,15 @@ class Stream {
 	 * This fucntion is used by the /play/index.php song
 	 * primarily, but could be used by other people
 	 */
-	public static function insert_now_playing($song_id,$uid,$length,$sid,$type) {
+	public static function insert_now_playing($oid,$uid,$length,$sid,$type) {
 
 	        $time = time()+$length;
 	        $session_id = Dba::escape($sid);
+		$object_type = 'song'; 
 
 	        // Do a replace into ensuring that this client always only has a single row
-	        $sql = "REPLACE INTO `now_playing` (`id`,`song_id`, `user`, `expire`)" .
-	                " VALUES ('$session_id','$song_id', '$uid', '$time')";
+	        $sql = "REPLACE INTO `now_playing` (`id`,`object_id`,`object_type`, `user`, `expire`)" .
+	                " VALUES ('$session_id','$oid','$object_type', '$uid', '$time')";
 	        $db_result = Dba::write($sql);
 
 	} // insert_now_playing
@@ -747,6 +748,54 @@ class Stream {
 	        return true;
 
 	} // clear_now_playing
+
+	/**
+	 * get_now_playing
+	 * This returns the now playing information
+	 */
+	public static function get_now_playing($filter=NULL) { 
+
+		$sql = "SELECT `session_stream`.`agent`,`now_playing`.* " .
+			"FROM `now_playing` " .
+			"LEFT JOIN `session_stream` ON `session_stream`.`id`=`now_playing`.`id` " .
+			"ORDER BY `now_playing`.`expire` DESC";
+	        $db_results = Dba::read($sql);
+
+		$results = array(); 
+
+		while ($row = Dba::fetch_assoc($db_results)) { 
+			$type = $row['object_type']; 
+			$media = new $type($row['object_id']); 
+			$media->format(); 
+			$client = new User($row['user']); 
+			$results[] = array('media'=>$media,'client'=>$client,'agent'=>$row['agent'],'expire'=>$row['expire']); 
+		} // end while
+
+		return $results; 
+
+	} // get_now_playing
+
+	/**
+ 	 * check_lock_media
+	 * This checks to see if the media is already being played, if it is then it returns false
+	 * else return true
+	 */
+	public static function check_lock_media($media_id,$type) { 
+
+		$media_id = Dba::escape($media_id); 
+		$type = Dba::escape($type); 
+
+		$sql = "SELECT `object_id` FROM `now_playing` WHERE `object_id`='$media_id' AND `object_type`='$type'"; 
+		$db_results = Dba::read($sql); 
+
+		if (Dba::num_rows($db_results)) { 
+			debug_event('Stream','Unable to play media currently locked by another user','3'); 
+			return false;
+		} 
+
+		return true; 
+
+	} // check_lock_media
 
 	/**
 	 * auto_init

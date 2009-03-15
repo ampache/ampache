@@ -33,12 +33,12 @@ $link = Config::get('use_rss') ? ' ' . AmpacheRSS::get_display('nowplaying') : '
 <?php show_box_top(_('Now Playing') . $link); ?>
 <?php 
 foreach ($results as $item) {
-	$song = $item['song'];
-	$np_user = $item['user'];
+	$media = $item['media'];
+	$np_user = $item['client'];
 	$agent = $item['agent'];
 
 	/* If we've gotten a non-song object just skip this row */
-	if (!is_object($song)) { continue; }
+	if (!is_object($media)) { continue; }
 	if (!$np_user->fullname) { $np_user->fullname = "Ampache User"; }
 ?>
 <div class="np_row">

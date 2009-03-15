@@ -175,9 +175,8 @@ if (!make_bool($media->enabled)) {
 
 // If we are running in Legalize mode, don't play songs already playing
 if (Config::get('lock_songs')) {
-	if (!check_lock_songs($media->id)) { 
-		debug_event('Play','Song ' . $media->id . ' is currently being played and lock songs is enabled','1'); 
-		exit(); 
+	if (!Stream::check_lock_media($media->id,get_class($media))) { 
+		exit; 
 	}
 }
 

@@ -959,6 +959,40 @@ class Album extends database_object {
 
 	} // get_image_from_source
 
+	/**
+	 * get_art_url
+	 * This returns the art URL for the album
+	 */
+	public static function get_art_url($album_id,$sid=false) { 
+
+		$sid = $sid ? scrub_out($sid) : session_id(); 
+
+		$sql = "SELECT `art_mime`,`thumb_mime` FROM `album_data` WHERE `album_id`='" . Dba::escape($album_id) . "'"; 
+		$db_results = Dba::read($sql); 
+
+		$row = Dba::fetch_assoc($db_results); 
+
+		$mime = $row['thumb_mime'] ? $row['thumb_mime'] : $row['art_mime']; 
+
+		switch ($type) { 
+			case 'image/gif': 
+				$type = 'gif'; 
+			break; 
+			case 'image/png': 
+				$type = 'png'; 
+			break; 
+			default:
+			case 'image/jpeg': 
+				$type = 'jpg'; 
+			break; 
+		} // end type translation
+
+		$name = 'art.' . $type;  
+
+		Config::get('web_path') . '/image.php?id=' . scrub_out($album_id) . '&auth=' . $sid . '&name=' . $name;
+
+	} // get_art_url
+
 } //end of album class
 
 ?>

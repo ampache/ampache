@@ -130,7 +130,6 @@ require_once $prefix . '/lib/ui.lib.php';
 require_once $prefix . '/lib/gettext.php';
 require_once $prefix . '/lib/batch.lib.php';
 require_once $prefix . '/lib/themes.php';
-require_once $prefix . '/lib/stream.lib.php';
 require_once $prefix . '/lib/xmlrpc.php';
 require_once $prefix . '/lib/class/localplay.abstract.php';
 require_once $prefix . '/lib/class/database_object.abstract.php'; 

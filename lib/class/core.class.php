@@ -106,7 +106,7 @@ class Core {
 
 		if (!$width || !$height) { return false; } 
 
-		return array('width'=>$width,'heigh'=>$height); 
+		return array('width'=>$width,'height'=>$height); 
 
 	} // image_dimensions
 

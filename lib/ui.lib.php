@@ -844,5 +844,21 @@ function toggle_visible($element) {
 
 } // toggle_visible
 
+/**
+ * show_now_playing
+ * This shows the now playing templates and does some garbage colleciont
+ * this should really be somewhere else
+ */
+function show_now_playing() { 
+	
+	Stream::gc_session(); 
+	Stream::gc_now_playing(); 
+
+	$web_path = Config::get('web_path'); 
+	$results = Stream::get_now_playing(); 
+	require_once Config::get('prefix') . '/templates/show_now_playing.inc.php'; 
+
+} // show_now_playing
+
 
 ?>

@@ -315,9 +315,13 @@ class Update {
 
 		$version[] = array('version'=>'350007','description'=>$update_string); 
 
-		$update_string = '- Modify Now Playing table to handle Videos';
+		$update_string = '- Modify Now Playing table to handle Videos<br />' . 
+				'- Modify tmp_browse to make it easier to prune<br />' . 
+				'- Add missing indexes to the _data tables<br />' . 
+				'- Drop unused song.hash<br />' . 
+				'- Add addition_time and update_time to video table<br />'; 
 
-		//$version[] = array('version'=>'350008','description'=>$update_string); 
+		$version[] = array('version'=>'350008','description'=>$update_string); 
 
 
 		return $version;
@@ -365,7 +369,7 @@ class Update {
 	
 		/* Nuke All Active session before we start the mojo */
 		$sql = "TRUNCATE session";
-		$db_results = Dba::query($sql);
+		$db_results = Dba::write($sql);
                 
 		// Prevent the script from timing out, which could be bad
 		set_time_limit(0);
@@ -1708,10 +1712,13 @@ class Update {
 	 */
 	public static function update_350008() { 
 
-		$sql = "ALTER TABLE `now_playing` ALTER `song_id` `object_id` INT( 11 ) UNSIGNED NOT NULL"; 
+		$sql = "ALTER TABLE `now_playing` CHANGE `song_id` `object_id` INT( 11 ) UNSIGNED NOT NULL"; 
 		$db_results = Dba::write($sql); 
 
 		$sql = "ALTER TABLE `now_playing` ADD `object_type` VARCHAR ( 255 ) NOT NULL AFTER `object_id`"; 
+		$db_results = Dba::write($sql); 
+
+		$sql = "ALTER TABLE `now_playing` ADD INDEX ( `expire` )"; 
 		$db_results = Dba::write($sql); 
 
 		$sql = "ALTER TABLE `video` ADD `addition_time` INT( 11 ) UNSIGNED NOT NULL AFTER `mime`"; 
@@ -1720,6 +1727,12 @@ class Update {
 		$sql = "ALTER TABLE `video` ADD `update_time` INT( 11 ) UNSIGNED NULL AFTER `addition_time`"; 
 		$db_results = Dba::write($sql); 	
 
+		$sql = "ALTER TABLE `video` ADD INDEX (`addition_time`)"; 
+		$db_results = Dba::write($sql); 
+
+		$sql = "ALTER TABLE `video` ADD INDEX (`update_time`)"; 
+		$db_results = Dba::write($sql); 
+
                 $sql = "ALTER TABLE `artist_data` ADD INDEX ( `art_mime` )";
                 $db_results = Dba::write($sql);
 
@@ -1727,10 +1740,15 @@ class Update {
 		$db_results = Dba::write($sql); 
 
 		$sql = "ALTER TABLE `tmp_browse` ADD `type` VARCHAR ( 255 ) NOT NULL AFTER `sid`"; 
-		$db_results = Dba::wirte($sql); 
+		$db_results = Dba::write($sql); 
 
+		$sql = "ALTER TABLE `tmp_browse` ADD INDEX (`type)"; 
+		$db_results = Dba::write($sql); 
 
-		//self::set_version('db_version','350008'); 
+		$sql = "ALTER TABLE `song` DROP `hash`"; 
+		$db_results = Dba::write($sql); 
+
+		self::set_version('db_version','350008'); 
 
 	} // update_350008
 
