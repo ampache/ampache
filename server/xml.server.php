@@ -348,6 +348,20 @@ switch ($_REQUEST['action']) {
 		} // end switch on command
 
 	break; 
+	case 'democratic': 
+		// Load up democratic information 
+		$democratic = Democratic::get_current_playlist();
+		$democratic->set_parent(); 
+		
+		switch ($_REQUEST['method']) { 
+			case 'vote': 
+			case 'devote': 
+			case 'playlist': 
+			case 'play': 
+		} // switch on method
+
+		
+	break; 
 	default:
                 ob_end_clean();
                 echo xmlData::error('405',_('Invalid Request'));
