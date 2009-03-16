@@ -359,8 +359,9 @@ class Artist extends database_object {
 						return $sorry;
 					}
 					else {
+						$lyrics = str_replace(array("\r\n","\r","\n"), '<br />',strip_tags($result['lyrics']));
 						// since we got lyrics, might as well add them to the database now (for future use)
-						$sql = "UPDATE `song_data` SET `lyrics` = '" . htmlspecialchars(strip_tags(($result['lyrics'])), ENT_QUOTES) . "' WHERE `song_id`='" . Dba::escape($song_id) . "'";
+						$sql = "UPDATE `song_data` SET `lyrics` = '" . htmlspecialchars($lyrics, ENT_QUOTES) . "' WHERE `song_id`='" . Dba::escape($song_id) . "'";
 						$db_results = Dba::write($sql);
 						// display result (lyrics)
 						debug_event("lyrics", "get successful", "5");
