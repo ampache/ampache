@@ -11,8 +11,8 @@
 // +----------------------------------------------------------------------+
 // | getID3() - http://getid3.sourceforge.net or http://www.getid3.org    |
 // +----------------------------------------------------------------------+
-// | Authors: James Heinrich <infoØgetid3*org>                            |
-// |          Allan Hansen <ahØartemis*dk>                                |
+// | Authors: James Heinrich <infoï¿½getid3*org>                            |
+// |          Allan Hansen <ahï¿½artemis*dk>                                |
 // +----------------------------------------------------------------------+
 // | write.id3v1.php                                                      |
 // | writing module for id3v1 tags                                        |
@@ -374,9 +374,8 @@ class getid3_write_id3v2 extends getid3_handler_write
         }
 
         // rewrite file - no tag present or new tag longer than old tag
-        else
-
-            if (!$fp_source = @fopen($this->filename, 'rb')) {
+        else {
+        	if (!$fp_source = @fopen($this->filename, 'rb')) {
                 throw new getid3_exception('Could not open '.$this->filename.' mode "rb"');
             }
             fseek($fp_source, $engine->info['avdataoffset'], SEEK_SET);
@@ -1745,7 +1744,7 @@ class getid3_write_id3v2 extends getid3_handler_write
 
     static public function is_hash($var) {
 
-        // written by dev-nullØchristophe*vg
+        // written by dev-nullï¿½christophe*vg
         // taken from http://www.php.net/manual/en/function.array-merge-recursive.php
         if (is_array($var)) {
             $keys = array_keys($var);
