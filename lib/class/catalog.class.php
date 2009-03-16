@@ -1503,7 +1503,7 @@ class Catalog extends database_object {
 		/* Do a quick check to make sure that the root of the catalog is readable, error if not
 		 * this will minimize the loss of catalog data if mount points fail
 		 */
-		if (!is_readable($this->path) AND !eregi("^http", $this->path)) {
+		if (!is_readable($this->path) AND $this->catalog_type == 'local') {
 			debug_event('catalog','Catalog path:' . $this->path . ' unreadable, clean failed','1');
 			Error::add('general',_('Catalog Root unreadable, stopping clean'));
 			Error::display('general');
@@ -1533,24 +1533,29 @@ class Catalog extends database_object {
 			} //echos song count
 
 			/* Also check the file information */
-			$file_info = filesize($results['file']);
+			if($this->catalog_type == 'local') {
+				$file_info = filesize($results['file']);
 
-			/* If it errors somethings splated, or the files empty */
-			if (!file_exists($results['file']) OR $file_info < 1) {
+				/* If it errors somethings splated, or the files empty */
+				if (!file_exists($results['file']) OR $file_info < 1) {
 					
-				/* Add Error */
-				Error::add('general',"Error File Not Found or 0 Bytes: " . $results['file']);
+					/* Add Error */
+					Error::add('general',"Error File Not Found or 0 Bytes: " . $results['file']);
 
-				$table = ($results['type'] == 'video') ? 'video' : 'song'; 
+					$table = ($results['type'] == 'video') ? 'video' : 'song'; 
 
-				/* Remove the file! */
-				$sql = "DELETE FROM `$table` WHERE `id`='" . $results['id'] . "'";
-				$delete_results = Dba::write($sql);
+					/* Remove the file! */
+					$sql = "DELETE FROM `$table` WHERE `id`='" . $results['id'] . "'";
+					$delete_results = Dba::write($sql);
 
-				// Count em!
-				$dead_files++;
+					// Count em!
+					$dead_files++;
 
-			} //if error
+				} //if error
+			} // if localtype
+			else {
+				//do remote url check
+			} // remote catalog
 
 		} //while gettings songs
 
