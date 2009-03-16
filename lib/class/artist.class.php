@@ -315,7 +315,7 @@ class Artist extends database_object {
 					$lyrics = mb_convert_encoding($lyrics, "UTF-8", $enc);
 				}
 			}
-			$sql = "UPDATE `song_data` SET `lyrics` = '" . htmlspecialchars($lyrics, ENT_QUOTES) . "' WHERE `song_id`='" . Dba::escape($song_id) . "'";
+			$sql = "UPDATE `song_data` SET `lyrics` = '" . Dba::escape(htmlspecialchars($lyrics, ENT_QUOTES)) . "' WHERE `song_id`='" . Dba::escape($song_id) . "'";
 			$db_results = Dba::write($sql);
 
 			debug_event("lyrics", "Use id3v2 tag (USLT or lyrics3)", "5");
@@ -361,7 +361,7 @@ class Artist extends database_object {
 					else {
 						$lyrics = str_replace(array("\r\n","\r","\n"), '<br />',strip_tags($result['lyrics']));
 						// since we got lyrics, might as well add them to the database now (for future use)
-						$sql = "UPDATE `song_data` SET `lyrics` = '" . htmlspecialchars($lyrics, ENT_QUOTES) . "' WHERE `song_id`='" . Dba::escape($song_id) . "'";
+						$sql = "UPDATE `song_data` SET `lyrics` = '" . Dba::escape(htmlspecialchars($lyrics, ENT_QUOTES)) . "' WHERE `song_id`='" . Dba::escape($song_id) . "'";
 						$db_results = Dba::write($sql);
 						// display result (lyrics)
 						debug_event("lyrics", "get successful", "5");
