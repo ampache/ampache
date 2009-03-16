@@ -133,7 +133,7 @@ class AmpacheRSS {
 		$results = array(); 
 
 		foreach ($data as $element) { 
-			$song = $element['song']; 
+			$song = $element['media']; 
 			$client = $element['user']; 
 			$xml_array = array('title'=>$song->f_title . ' - ' . $song->f_artist . ' - ' . $song->f_album,
 					'link'=>$song->link, 
