@@ -57,7 +57,7 @@
 		</select>
 	</td>
 	<td valign="top">
-		<input type="textbox" name="value" />
+		<input type="text" name="value" />
 	</td>
 	<td valign="top">
 		<select name="method">
