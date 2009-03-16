@@ -1253,7 +1253,13 @@ class Catalog extends database_object {
 		$path   = $match['3'];
 
 		$full_url = "/" . ltrim($path . "/server/xmlrpc.server.php",'/');
-		$client = new XML_RPC_Client($full_url,$server,$port);
+		if(Config::get('proxy_host') AND Config::get('proxy_port')) {
+			$proxy_host = Config::get('proxy_host');
+			$proxy_port = Config::get('proxy_port');
+			$proxy_user = Config::get('proxy_user');
+			$proxy_pass = Config::get('proxy_pass');
+		}
+		$client = new XML_RPC_Client($full_url,$server,$port,$proxy_host,$proxy_port,$proxy_user,$proxy_pass);
 
 		/* encode the variables we need to send over */
 		$encoded_key	= new XML_RPC_Value($token,'string');
@@ -1264,7 +1270,7 @@ class Catalog extends database_object {
 
 		if ($response->faultCode() ) {
 			$error_msg = _("Error connecting to") . " " . $server . " " . _("Code") . ": " . $response->faultCode() . " " . _("Reason") . ": " . $response->faultString();
-			debug_event('XMLCLIENT',$error_msg,'1');
+			debug_event('XMLCLIENT(get_remote_catalog)',$error_msg,'1');
 			echo "<p class=\"error\">$error_msg</p>";
 			return;
 		}
@@ -1325,6 +1331,8 @@ class Catalog extends database_object {
 		/* Depending upon the size of the target catalog this can be a very slow/long process */
 		set_time_limit(0);
 
+        /* @TODO If lyrics contain into db, It will make an error of the return value of xml. */
+        /* @See vainfo.class.php line 269 and artist.class.php line 290 @momo-i */
 		// Sixty Second time out per chunk
 		$response = $client->send($xmlrpc_message,60);
 		$value = $response->value();
@@ -1338,7 +1346,7 @@ class Catalog extends database_object {
 		}
 		else {
 			$error_msg = _('Error connecting to') . " " . $server . " " . _("Code") . ": " . $response->faultCode() . " " . _("Reason") . ": " . $response->faultString();
-			debug_event('XMLCLIENT',$error_msg,'1');
+			debug_event('XMLCLIENT(get_remote_song)',$error_msg,'1');
 			echo "<p class=\"error\">$error_msg</p>";
 		}
 
@@ -1371,7 +1379,7 @@ class Catalog extends database_object {
 		}
 		else {
 			$error_msg = _('Error connecting to') . " " . $server . " " . _("Code") . ": " . $response->faultCode() . " " . _("Reason") . ": " . $response->faultString();
-			debug_event('XMLCLIENT',$error_msg,'1');
+			debug_event('XMLCLIENT(get_remote_album_images)',$error_msg,'1');
 			echo "<p class=\"error\">$error_msg</p>";
 		}
 
@@ -1495,16 +1503,15 @@ class Catalog extends database_object {
 		/* Do a quick check to make sure that the root of the catalog is readable, error if not
 		 * this will minimize the loss of catalog data if mount points fail
 		 */
-		if (!is_readable($this->path)) {
+		if (!is_readable($this->path) AND !eregi("^http", $this->path)) {
 			debug_event('catalog','Catalog path:' . $this->path . ' unreadable, clean failed','1');
 			Error::add('general',_('Catalog Root unreadable, stopping clean'));
 			Error::display('general');
 			return false;
 		}
 
-
 		/* Get all songs in this catalog */
-		$sql = "SELECT `id`,`file`,'song' AS `type` FROM `song` WHERE `catalog`='$this->id' AND `enabled`='1'" . 
+		$sql = "SELECT `id`,`file`,'song' AS `type` FROM `song` WHERE `catalog`='$this->id' AND `enabled`='1' " . 
 			"UNION ALL " . 
 			"SELECT `id`,`file`,'video' AS `type` FROM `video` WHERE `catalog`='$this->id' AND `enabled`='1'"; 
 		$db_results = Dba::read($sql);

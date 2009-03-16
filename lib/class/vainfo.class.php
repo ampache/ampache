@@ -264,7 +264,9 @@ class vainfo {
 			$info['artist']         = trim($results[$key]['artist']);
 			$info['album']          = trim($results[$key]['album']);
 			$info['genre']          = trim($results[$key]['genre']);
+			/* @TODO language doesn't import from id3tag. @momo-i */
 			$info['language']       = Dba::escape($results[$key]['language']);
+			/* @TODO returned lyrics are raw data. An appropriate escape is necessary for this. @momo-i */
 			if (!empty($results[$key]['unsynchronised lyric'])) { // ID3v2 USLT
 				$info['lyrics']		= $results[$key]['unsynchronised lyric'];
 			}

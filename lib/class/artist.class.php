@@ -305,8 +305,6 @@ class Artist extends database_object {
 		$lyrics = $tag_lyrics['lyrics'];
 
 		if (strlen($results['lyrics']) > 1) {
-			//$sql = "UPDATE `song_data` SET `lyrics` = '" . htmlspecialchars(strip_tags($results['lyrics']), ENT_QUOTES) . "' WHERE `song_id`='" . Dba::escape($song_id) . "'";
-			//$db_results = Dba::write($sql);
 			debug_event("lyrics", "Use DB", "5");
 			return html_entity_decode(strip_tags(($results['lyrics'])), ENT_QUOTES);
 		} elseif (strlen($lyrics) > 1) {
@@ -314,7 +312,7 @@ class Artist extends database_object {
 			if (function_exists('mb_detect_encoding') AND function_exists('mb_convert_encoding')) {
 				$enc = mb_detect_encoding($lyrics);
 				if ($enc != "ASCII" OR $enc != "UTF-8") {
-					$lyrics = mb_convert_encoding($lyrics, 'UTF-8', $enc);
+					$lyrics = mb_convert_encoding($lyrics, "UTF-8", $enc);
 				}
 			}
 			$sql = "UPDATE `song_data` SET `lyrics` = '" . htmlspecialchars(strip_tags($lyrics), ENT_QUOTES) . "' WHERE `song_id`='" . Dba::escape($song_id) . "'";
