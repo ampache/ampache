@@ -306,7 +306,7 @@ class Artist extends database_object {
 
 		if (strlen($results['lyrics']) > 1) {
 			debug_event("lyrics", "Use DB", "5");
-			return html_entity_decode(strip_tags(($results['lyrics'])), ENT_QUOTES);
+			return html_entity_decode($results['lyrics'], ENT_QUOTES);
 		} elseif (strlen($lyrics) > 1) {
 			// encode lyrics utf8
 			if (function_exists('mb_detect_encoding') AND function_exists('mb_convert_encoding')) {
@@ -315,8 +315,9 @@ class Artist extends database_object {
 					$lyrics = mb_convert_encoding($lyrics, "UTF-8", $enc);
 				}
 			}
-			$sql = "UPDATE `song_data` SET `lyrics` = '" . htmlspecialchars(strip_tags($lyrics), ENT_QUOTES) . "' WHERE `song_id`='" . Dba::escape($song_id) . "'";
+			$sql = "UPDATE `song_data` SET `lyrics` = '" . htmlspecialchars($lyrics, ENT_QUOTES) . "' WHERE `song_id`='" . Dba::escape($song_id) . "'";
 			$db_results = Dba::write($sql);
+
 			debug_event("lyrics", "Use id3v2 tag (USLT or lyrics3)", "5");
 			return $lyrics;
 		}

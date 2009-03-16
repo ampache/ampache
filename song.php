@@ -35,7 +35,7 @@ switch ($_REQUEST['action']) {
 		$show_lyrics = Config::get('show_lyrics');
 		if($show_lyrics == 1) {
 			$lyric = new Artist();
-			$return = scrub_out($lyric->get_song_lyrics($song->id, ucwords($song->f_artist), ucwords($song->title)));
+			$return = $lyric->get_song_lyrics($song->id, ucwords($song->f_artist), ucwords($song->title));
 			$link = '<a href="http://lyricwiki.org/' . rawurlencode(ucwords($song->f_artist)) . ':' . rawurlencode(ucwords($song->title)) . '" target="_blank">';
 			$link .= sprintf(_('%1$s - %2$s Lyrics Detail'), ucwords($song->f_artist), ucwords($song->title));
 			$link .= "</a><br /><br />";

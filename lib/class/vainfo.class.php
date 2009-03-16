@@ -268,10 +268,10 @@ class vainfo {
 			$info['language']       = Dba::escape($results[$key]['language']);
 			/* @TODO returned lyrics are raw data. An appropriate escape is necessary for this. @momo-i */
 			if (!empty($results[$key]['unsynchronised lyric'])) { // ID3v2 USLT
-				$info['lyrics']		= $results[$key]['unsynchronised lyric'];
+				$info['lyrics']		= str_replace(array("\r\n","\r","\n"), '<br />',strip_tags($results[$key]['unsynchronised lyric']));
 			}
 			else { // Lyrics3 v2.0
-				$info['lyrics']		= $results['info']['lyrics']['unsynchedlyrics'];
+				$info['lyrics']		= str_replace(array("\r\n","\r","\n"), '<br />',strip_tags($results['info']['lyrics']['unsynchedlyrics']);
 			}
 			$info['track']          = intval($results[$key]['track']);
 		}
