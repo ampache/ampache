@@ -271,7 +271,7 @@ class vainfo {
 				$info['lyrics']		= str_replace(array("\r\n","\r","\n"), '<br />',strip_tags($results[$key]['unsynchronised lyric']));
 			}
 			else { // Lyrics3 v2.0
-				$info['lyrics']		= str_replace(array("\r\n","\r","\n"), '<br />',strip_tags($results['info']['lyrics']['unsynchedlyrics']);
+				$info['lyrics']		= str_replace(array("\r\n","\r","\n"), '<br />',strip_tags($results['info']['lyrics']['unsynchedlyrics']));
 			}
 			$info['track']          = intval($results[$key]['track']);
 		}
