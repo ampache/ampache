@@ -128,7 +128,8 @@ class AmpacheRSS {
 	 */
 	public static function load_now_playing() { 
 
-		$data = get_now_playing(); 
+		$stream = new Stream();
+		$data = $stream->get_now_playing(); 
 
 		$results = array(); 
 
@@ -156,7 +157,8 @@ class AmpacheRSS {
 	public static function pubdate_now_playing() { 
 
 		// Little redundent, should be fixed by an improvement in the get_now_playing stuff
-		$data = get_now_playing(); 
+		$stream = new Stream();
+		$data = $stream->get_now_playing(); 
 
 		$element = array_shift($data); 
 
