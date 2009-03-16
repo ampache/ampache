@@ -25,7 +25,7 @@
 <form name="update_user" enctype="multipart/form-data" method="post" action="<?php echo Config::get('web_path') . "/admin/users.php"; ?>">
 <table class="tabledata" cellspacing="0" cellpadding="0">
 <tr>
-	<th colspan="2"><?php echo _('User Properties'); ?></td>
+	<th colspan="2"><?php echo _('User Properties'); ?></th>
 </tr>
 <tr>
 	<td>

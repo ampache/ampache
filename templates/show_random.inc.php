@@ -38,7 +38,6 @@
 		<option value="-1"><?php echo _('All'); ?></option>
 		</select>
 	</td>
-	</td>
 </tr>
 <tr>
 	<td><?php echo _('Length'); ?></td>
