@@ -1331,8 +1331,6 @@ class Catalog extends database_object {
 		/* Depending upon the size of the target catalog this can be a very slow/long process */
 		set_time_limit(0);
 
-        /* @TODO If lyrics contain into db, It will make an error of the return value of xml. */
-        /* @See vainfo.class.php line 269 and artist.class.php line 290 @momo-i */
 		// Sixty Second time out per chunk
 		$response = $client->send($xmlrpc_message,60);
 		$value = $response->value();
