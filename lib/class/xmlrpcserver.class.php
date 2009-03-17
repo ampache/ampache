@@ -80,7 +80,6 @@ class xmlRpcServer {
 
 		// We're going to be here a while
 		set_time_limit(0); 
-
 	
 		// Pull out the key
 		$variable = $xmlrpc_object->getParam(0);
@@ -198,7 +197,7 @@ class xmlRpcServer {
 	public static function check_song($xmlrpc_object) {
 
 		$var = $xmlrpc_object->params['0']->me['int'];
-		$sql = "SELECT `song`.`id` FROM `song` WHERE `id`='" . $var ."'";
+		$sql = "SELECT `song`.`id` FROM `song` WHERE `id`='" . Dba::escape($var) ."'";
 		$db_results = Dba::read($sql);
 		if(Dba::num_rows($db_results) == '0') {
 			$return = 0;
