@@ -192,6 +192,25 @@ class xmlRpcServer {
 	} // create_stream_session
 
 	/**
+	 * check_song
+	 * This checks remote catalog
+	 */
+	public static function check_song($xmlrpc_object) {
+
+		$var = $xmlrpc_object->params['0']->me['int'];
+		$sql = "SELECT `song`.`id` FROM `song` WHERE `id`='" . $var ."'";
+		$db_results = Dba::read($sql);
+		if(Dba::num_rows($db_results) == '0') {
+			$return = 0;
+		} else {
+			$return = 1;
+		}
+
+		return new XML_RPC_Response(XML_RPC_encode($return));
+
+	}
+
+	/**
 	 * handshake
 	 * This should be run before any other XMLRPC actions, it checks the KEY encoded with a timestamp then returns a valid TOKEN to be
 	 * used in all further communication 

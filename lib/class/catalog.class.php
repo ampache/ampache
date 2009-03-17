@@ -1434,7 +1434,10 @@ class Catalog extends database_object {
 		$label = "catalog.class.php::update_remote_album_images";
 		
 		$total_updated = 0;
-		
+
+		/* If album images don't exist, return value will be 0. */
+		if(empty($data)) { return $total_updated; }
+
 		/*
 		 * We need to check the incomming albums to see which needs to receive an image
 		 */
@@ -1555,6 +1558,21 @@ class Catalog extends database_object {
 			} // if localtype
 			else {
 				//do remote url check
+				$file_info = $this->exists_remote_song($results['file']);
+
+				/* If it errors somethings splated, or the files empty */
+				if ($file_info == false) {
+					/* Add Error */
+					Error::add('general',"Error Remote File Not Found or 0 Bytes: " . $results['file']);
+
+					$table = ($results['type'] == 'video') ? 'video' : 'song';
+					/* Remove the file! */
+					$sql = "DELETE FROM `$table` WHERE `id`='" . $results['id'] . "'";
+					$delete_results = Dba::write($sql);
+
+					// Count em!
+					$dead_files++;
+				} //if error
 			} // remote catalog
 
 		} //while gettings songs
@@ -2257,6 +2275,60 @@ class Catalog extends database_object {
 		return false;
 
 	} // check_remote_song
+
+	/**
+	 * exists_remote_song
+	 * checks to see if a remote song exists in the remote file or not
+	 * if it can't find a song it return the false
+	 */
+	public function exists_remote_song($url) {
+
+		$url = parse_url(Dba::escape($url));
+
+		list($arg,$value) = split('=', $url['query']);
+		$token = xmlRpcClient::ampache_handshake($this->path,$this->key);
+		if (!$token) {
+			debug_event('XMLCLIENT','Error No Token returned', 2);
+			Error::display('general');
+			return;
+		} else {
+			debug_event('xmlrpc',"token returned",'4');
+		}
+
+		preg_match("/http:\/\/([^\/\:]+):?(\d*)\/*(.*)/", $this->path, $match);
+		$server = $match['1'];
+		$port   = $match['2'] ? intval($match['2']) : '80';
+		$path   = $match['3'];
+
+		$full_url = "/" . ltrim($path . "/server/xmlrpc.server.php",'/');
+		if(Config::get('proxy_host') AND Config::get('proxy_port')) {
+			$proxy_host = Config::get('proxy_host');
+			$proxy_port = Config::get('proxy_port');
+			$proxy_user = Config::get('proxy_user');
+			$proxy_pass = Config::get('proxy_pass');
+		}
+
+		$client = new XML_RPC_Client($full_url,$server,$port,$proxy_host,$proxy_port,$proxy_user,$proxy_pass);
+
+		$song_id   = new XML_RPC_Value($value,'int');
+		$xmlrpc_message = new XML_RPC_Message('xmlrpcserver.check_song', array($song_id));
+		$response = $client->send($xmlrpc_message,30);
+
+		if ($response->faultCode() ) {
+			$error_msg = _("Error connecting to") . " " . $server . " " . _("Code") . ": " . $response->faultCode() . " " . _("Reason") . ": " . $response->faultString();
+			debug_event('XMLCLIENT(exists_remote_song)',$error_msg,'1');
+			echo "<p class=\"error\">$error_msg</p>";
+			return;
+		}
+
+		$data = XML_RPC_Decode($response->value());
+
+		if($data == '0') {
+			return false;
+		} else {
+			return true;
+		}
+	}
 
 	/**
 	 * check_local_mp3
