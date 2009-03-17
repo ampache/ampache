@@ -196,6 +196,16 @@ class xmlRpcServer {
 	 */
 	public static function check_song($xmlrpc_object) {
 
+		// Pull out the key
+		$variable = $xmlrpc_object->getParam(1);
+		$key = $variable->scalarval();
+
+		// Check it and make sure we're super green
+		if (!vauth::session_exists('xml-rpc',$key)) {
+			debug_event('XMLSERVER','Error ' . $_SERVER['REMOTE_ADDR'] . ' with key ' . $key . ' does not match any ACLs','1');
+			return new XML_RPC_Response(0,'503','Key/IP Mis-match Access Denied');
+		}
+
 		$var = $xmlrpc_object->params['0']->me['int'];
 		$sql = "SELECT `song`.`id` FROM `song` WHERE `id`='" . Dba::escape($var) ."'";
 		$db_results = Dba::read($sql);

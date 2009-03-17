@@ -2308,8 +2308,12 @@ class Catalog extends database_object {
 
 		$client = new XML_RPC_Client($full_url,$server,$port,$proxy_host,$proxy_port,$proxy_user,$proxy_pass);
 
+		/* encode the variables we need to send over */
+		$encoded_key    = new XML_RPC_Value($token,'string');
+		$encoded_path   = new XML_RPC_Value(Config::get('web_path'),'string');
 		$song_id   = new XML_RPC_Value($value,'int');
-		$xmlrpc_message = new XML_RPC_Message('xmlrpcserver.check_song', array($song_id));
+
+		$xmlrpc_message = new XML_RPC_Message('xmlrpcserver.check_song', array($song_id,$encoded_key,$encoded_path));
 		$response = $client->send($xmlrpc_message,30);
 
 		if ($response->faultCode() ) {
