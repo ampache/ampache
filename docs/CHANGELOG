@@ -3,9 +3,15 @@
 --------------------------------------------------------------------------
 
 --------------------------------------------------------------------------
-  v.3.5-Beta1 03/15/2009
+  v.3.5-Beta2
+	- Move Server Preferences to Admin menu (Thx geekdawg)
+	- Fixed missing web_path reference on radio creation link
 	- Fixed remote catalog_clean doesn't work
 	- Fixed xmlrpc get image. getEncoding doesn't static function
+
+
+--------------------------------------------------------------------------
+  v.3.5-Beta1 03/15/2009
 	- Add democratic methods to api, can now vote, devote, get url
 		and the current democratic playlist through the api
 	- Revert to old Random Play method

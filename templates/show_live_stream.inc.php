@@ -23,7 +23,7 @@
 <div id="information_actions">
 <ul>
 <li>
-	<a href="<?php echo $web_path; ?>/radio.php?action=show_create"><?php echo get_user_icon('add'); ?></a> <?php echo _('Add Radio Station'); ?>
+	<a href="<?php echo Config::get('web_path'); ?>/radio.php?action=show_create"><?php echo get_user_icon('add'); ?></a> <?php echo _('Add Radio Station'); ?>
 </li>
 <li>
 	<a href="javascript:void(0);"><?php echo get_user_icon('world_link'); ?></a> <?php echo _('Import'); ?>

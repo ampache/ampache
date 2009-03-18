@@ -50,7 +50,19 @@
       <?php } ?>
     </ul>
   </li>
-
+<?php if (Access::check('interface','100')) { ?>
+  <li><h4><?php echo _('Server Config'); ?></h4>
+    <ul class="sb3" id="sb_preferences_sc">
+<?php
+	$catagories = Preference::get_catagories();
+        foreach ($catagories as $name) {
+                $f_name = ucfirst($name);
+?>
+      <li id="sb_preferences_sc_<?php echo $f_name; ?>"><a href="<?php echo $web_path; ?>/preferences.php?action=admin&amp;tab=<?php echo $name; ?>"><?php echo _($f_name); ?></a></li>
+<?php } ?>
+    </ul>
+  </li>
+<?php } ?>
 </ul>
 
 

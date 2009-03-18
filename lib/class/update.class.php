@@ -1411,7 +1411,7 @@ class Update {
 	public static function update_350002() { 
 
 		$sql = "CREATE TABLE `tmp_browse` (`sid` varchar(128) collate utf8_unicode_ci NOT NULL,`data` longtext collate utf8_unicode_ci NOT NULL," . 
-			" UNIQUE KEY `sid` (`sid`)) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci"; 
+			" UNIQUE KEY `sid` (`sid`)) ENGINE=MyISAM"; 
 		$db_results = Dba::write($sql); 
 
 		$sql = "ALTER TABLE `tmp_browse` ADD INDEX ( `type` )"; 
@@ -1421,7 +1421,7 @@ class Update {
 		$db_results = Dba::write($sql); 
 
 		$sql = "CREATE TABLE `user_catalog` (`user` INT( 11 ) UNSIGNED NOT NULL ,`catalog` INT( 11 ) UNSIGNED NOT NULL ,`level` SMALLINT( 4 ) UNSIGNED NOT NULL DEFAULT '5', " . 
-			"INDEX ( `user` )) ENGINE = MYISAM CHARACTER SET utf8 COLLATE utf8_unicode_ci";
+			"INDEX ( `user` )) ENGINE = MYISAM";
 		$db_results = Dba::write($sql); 
 
 		$sql = "ALTER TABLE `user_catalog` ADD INDEX ( `catalog` )"; 
