@@ -4,6 +4,8 @@
 
 --------------------------------------------------------------------------
   v.3.5-Beta2
+	- Remove manage democratic playlist as it has no meaning in the 
+		current version
 	- Run Dba::reset_db_charset() after upgrade incase people are playing
 		hot potato with their charsets. 
 	- Move Server Preferences to Admin menu (Thx geekdawg)

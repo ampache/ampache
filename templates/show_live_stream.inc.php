@@ -26,7 +26,7 @@
 	<a href="<?php echo Config::get('web_path'); ?>/radio.php?action=show_create"><?php echo get_user_icon('add'); ?></a> <?php echo _('Add Radio Station'); ?>
 </li>
 <li>
-	<a href="javascript:void(0);"><?php echo get_user_icon('world_link'); ?></a> <?php echo _('Import'); ?>
+	<a href="<?php echo Config::get('web_path'); ?>/playlist.php?action=show_import_playlist"><?php echo get_user_icon('world_link',_('Import')); ?></a> <?php echo _('Import'); ?>
 </li>
 </ul>
 </div>

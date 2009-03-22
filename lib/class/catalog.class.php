@@ -2236,8 +2236,8 @@ class Catalog extends database_object {
 		$title 		= Dba::escape($results['title']); 
 		$vcodec 	= $results['video_codec']; 
 		$acodec 	= $results['audio_codec']; 
-		$rezx 		= $results['resolution_x']; 
-		$rezy 		= $results['resolution_y']; 
+		$rezx 		= intval($results['resolution_x']); 
+		$rezy 		= intval($results['resolution_y']); 
 		$filesize 	= Dba::escape($filesize); 
 		$time 		= Dba::escape($results['time']); 
 		$mime		= Dba::escape($results['mime']); 

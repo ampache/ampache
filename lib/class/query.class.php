@@ -1142,7 +1142,7 @@ class Query {
 			$objects = self::get_saved(); 
 
 			// If there's nothing there don't do anything
-			if (!count($objects)) {
+			if (!count($objects) or !is_array($objects)) {
 				return false;
 			} 
 			$type = self::$type;
