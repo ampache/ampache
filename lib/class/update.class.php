@@ -420,6 +420,10 @@ class Update {
 		
 		} // end foreach version
 
+		// Once we've run all of the updates let's re-sync the character set as the user
+		// can change this between updates and cause mis-matches on any new tables
+		Dba::reset_db_charset(); 
+
 	} // run_update
 
 	/**

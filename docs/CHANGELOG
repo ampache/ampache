@@ -4,6 +4,8 @@
 
 --------------------------------------------------------------------------
   v.3.5-Beta2
+	- Run Dba::reset_db_charset() after upgrade incase people are playing
+		hot potato with their charsets. 
 	- Move Server Preferences to Admin menu (Thx geekdawg)
 	- Fixed missing web_path reference on radio creation link
 	- Fixed remote catalog_clean doesn't work
