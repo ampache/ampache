@@ -1,0 +1,109 @@
+.\" Hey, EMACS: -*- nroff -*-
+.\" First parameter, NAME, should be all caps
+.\" Second parameter, SECTION, should be 1-8, maybe w/ subsection
+.\" other parameters are allowed: see man(7), man(1)
+.\" Please adjust this date whenever revising the manpage.
+.\" 
+.\" Some roff macros, for reference:
+.\" .nh        disable hyphenation
+.\" .hy        enable hyphenation
+.\" .ad l      left justify
+.\" .ad b      justify to both left and right margins
+.\" .nf        disable filling
+.\" .fi        enable filling
+.\" .br        insert line break
+.\" .sp <n>    insert n+1 empty lines
+.\" for manpage-specific macros, see man(7)
+.TH "AMPACHE" "1" "December 27, 2008" "Karl Vollmer" "Sound"
+.SH "NAME"
+Ampache \- is a Web\-based Audio file manager. 
+.SH "DESCRIPTION"
+Ampache is implemented with MySQL, and PHP. It allows you to view, edit, and
+play your audio files via the web. It has support for playlists, artist and album
+views, album art, random play, playback via Http/On the Fly Transcoding and
+Downsampling, Vote based playback, Mpd and Icecast, Integrated Flash Player, as
+well as per user themes and song play tracking. You can also Link multiple Ampache
+servers together using XML\-RPC. Ampache supports GETTEXT translations and has a
+full translation of many languages
+.SH "OPTIONS"
+The following php scripts are included in Ampache and can be used to automate some
+aspects of Ampache.
+
+catalog_update.inc
+
+You can automate the update of all, or some of your local catalogs by using the
+bin/catalog_update.inc file. By default this will run a clean, verify and update
+on all of your local catalogs.  You can optionally specify the name of the catalog
+and it will only update the specified catalog.  Very useful when used with cron or
+crontab.
+
+dump_art.inc
+
+You can output all of the album art stored in ampache to the filesystem. It will
+output the image stored in the database to the directory of the first file in the
+album. This can cause problems f your files are not in their own directories. You
+can specify the filename to be written by modifying the config file options
+relating to album_art_preferred_filename. Ampache will by default output meta
+data directory files for linux.
+
+delete_disabled.inc
+
+If you would like to delete all of the disabled songs in Ampache you can run the
+bin/delete_disabled.inc to delete all of the songs that are disabled in Ampache.
+Naturally this requires the user you run the script as to have permissions to
+delete the files in question. By default this script will not work if you run
+it. You must open it and delete or comment out the line that says $debug=true for
+it to actually work.
+
+sort_files.inc
+
+You can have Ampache automatically rename and move all of your files based on the
+meta data in Ampache using the bin/sort_files.inc script. This requires write
+access to the files in question. The files will be renamed and moved based on
+their respective File and Folder patterns as defined by the catalog. Ampache
+will also by default sort your files into A\-Z sub\-folders to reduce the number
+of folders at the top level. You can turn this off by editing the file and
+setting the $alphabet_prefix to false, or commenting it out.
+
+fix_filenames.inc
+
+Ampache provides some additional tools to help you cope with Character set
+mis\-matches. These scripts must be run from the command line. After making any
+changes to your tags or the filenames please make sure you update your catalog
+and that your local client has the character set and fonts required to display the
+tag information.  This script looks through the path of your local catalogs for
+filenames who contain characters that do not exist in the currently configured
+site_charset. It will prompt you for a source character charset, if none is
+specified it will use the current output_encoding value from iconv().
+
+print_tags.inc
+
+You can also look at the raw tags inside a file by running the included
+print_tags.inc file. This example takes advantage of the hexcat application to get
+the hex values of the output. You will need to compare the reported HEX value to
+the HEX value according to the defined charset.
+
+		php ./bin/print_tags.inc [FILE]
+
+migrate_config.inc
+
+This is used to migrate your ampache.cfg.php config file from php4 formating to php5
+formating.  This is done to decrease the parsing time of ampache.cfg.php.  This is
+generally not needed unless you are upgrading from 3.3.3.5 to 3.4.x.
+debian/ampache.postinst runs this script automatically if needed.  
+.SH "EXAMPLES"
+php /usr/share/ampache/www/bin/update_catalog.inc
+
+php /usr/share/ampache/www/bin/print_tag.inc [path to music file]
+.SH "FILES"
+/usr/share/ampache/www/bin
+.SH "SEE ALSO"
+/usr/share/doc/ampache/README.Debian.gz
+/usr/share/doc/ampache/README.gz
+
+http://ampache.org/wiki
+.SH "AUTHOR"
+Ampache was written by Karl Vollmer <vollmer@ampache.org>.
+.PP 
+This manual page was written by Charlie Smotherman
+<cjsmo@cableone.net>, for the Debian project and Karl Vollmer.
