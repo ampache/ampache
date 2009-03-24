@@ -96,6 +96,10 @@
 			$object = new $type(array_shift($object_data)); 
 			$object->format(); 
 		} 
+		elseif ($type == Random::validate_type($type)) { 
+			$object = new Random(); 
+			$object->f_link = Random::get_type_name($type); 	
+		} 
 ?>
 <li class="<?php echo flip_class(); ?>" >
   <?php echo $object->f_link; ?>
