@@ -64,7 +64,7 @@ if ($_POST['username'] && $_POST['password']) {
 		$auth = vauth::authenticate($username, $password);
                 $user = User::get_from_username($username);
 		
-		if (!$auth['succes']) { 
+		if (!$auth['success']) { 
 			debug_event('Login',scrub_out($username) . ' attempted to login and failed','1'); 
 		} 
 	
