@@ -4,6 +4,10 @@
 
 --------------------------------------------------------------------------
   v.3.5-Beta2
+	- Add text to /test.php for hash() and SHA256() support under PHP
+		section
+	- Fix SHA256 Support so that it references something that exists
+	- Fix incorrect debug_event() on login due to typo
 	- Remove manage democratic playlist as it has no meaning in the 
 		current version
 	- Run Dba::reset_db_charset() after upgrade incase people are playing

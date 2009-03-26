@@ -374,7 +374,8 @@ refresh_limit = "60"
 
 ; This setting will silently create an ampache account
 ; for anyone who can login using ldap (or any other login
-; extension) 
+; extension). The default is to create new users as guests
+; see auto_user config option if you would like to change this
 ; DEFAULT: false
 ;auto_create = "false"
 
@@ -459,9 +460,9 @@ refresh_limit = "60"
 ; DEFAULT: false
 ;admin_notify_reg = "false"
 
-; This setting will allow all registrants to be auto-approved
-; as a user. By default, they will be added as a guest and
-; must be "promoted" by the admin.
+; This setting will allow all registrants/ldap/http users 
+; to be auto-approved as a user. By default, they will be 
+; added as a guest and must be promoted by the admin.
 ; POSSIBLE VALUES: guest, user, admin
 ; DEFAULT: guest
 ;auto_user = "guest"
