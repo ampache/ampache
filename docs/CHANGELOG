@@ -4,6 +4,9 @@
 
 --------------------------------------------------------------------------
   v.3.5-Beta2
+	- Fix some issues with filenames with Multi-byte characters 
+		(Thx Momo-i)
+	- Add WMV/MPG specific parsing functions (Thx Momo-i)
 	- Add text to /test.php for hash() and SHA256() support under PHP
 		section
 	- Fix SHA256 Support so that it references something that exists

@@ -73,7 +73,13 @@ class vainfo {
 		$this->_file_pattern = $file_pattern;
 		$this->_dir_pattern  = $dir_pattern;
 
-		$this->_pathinfo = pathinfo($this->filename); 
+		if(strtoupper(substr(PHP_OS,0,3)) == 'WIN') {
+			$this->_pathinfo = str_replace('%3A', ':', urlencode($this->filename));
+			$this->_pathinfo = pathinfo(str_replace('%5C', '\\', $this->_pathinfo));
+		}
+		else {
+			$this->_pathinfo = pathinfo(str_replace('%2F', '/', urlencode($this->filename)));
+		}
 		$this->_pathinfo['extension'] = strtolower($this->_pathinfo['extension']); 
 
 		// Before we roll the _getID3 route let's see about using exec + a binary
@@ -84,8 +90,8 @@ class vainfo {
 			debug_event('BinaryParse','Binary Parse for ' . $this->_pathinfo['extension'] . ' set to ' . make_bool($this->_binary_parse[$this->_pathinfo['extension']]),'5'); 
 		} 
 */
-                // Initialize getID3 engine
-                $this->_getID3 = new getID3();
+		// Initialize getID3 engine
+		$this->_getID3 = new getID3();
 
 //		if ($this->_binary_parse[$this->_pathinfo['extension']]) { return true; } 
 
@@ -194,32 +200,32 @@ class vainfo {
 	 */
 	public static function get_tag_type($results) {
 
-	        /* Pull In the config option */
-	        $order = Config::get('tag_order');
-	
-	        if (!is_array($order)) {
-	                $order = array($order);
-	        }
-	
-	        /* Foreach through the defined key order
-	         * the first one we find is the first one we use 
-	         */
-	        foreach($order as $key) {
-	                if ($results[$key]) {
-	                        $returned_key = $key;
-	                        break;
-	                }
-	        }
+		/* Pull In the config option */
+		$order = Config::get('tag_order');
 
-	        /* If we didn't find anything then default it to the
-	         * first in the results set
-	         */
-	        if (!isset($returned_key)) {
-	                $keys = array_keys($results);
-	                $returned_key = $keys['0'];
-	        }
+		if (!is_array($order)) {
+			$order = array($order);
+		}
+	
+		/* Foreach through the defined key order
+		 * the first one we find is the first one we use 
+		 */
+		foreach($order as $key) {
+			if ($results[$key]) {
+				$returned_key = $key;
+				break;
+			}
+		}
 
-	        return $returned_key;
+		/* If we didn't find anything then default it to the
+		 * first in the results set
+		 */
+		if (!isset($returned_key)) {
+			$keys = array_keys($results);
+			$returned_key = $keys['0'];
+		}
+
+		return $returned_key;
 
 	} // get_tag_type
 
@@ -236,44 +242,43 @@ class vainfo {
 		$clean_array = array("\n","\t","\r","\0");
 		$wipe_array  = array("","","","");
 
-		$info['file']           = $filename;
-		$info['title']          = stripslashes(trim($results[$key]['title']));
-		$info['year']           = intval($results[$key]['year']);
-		$info['disk']           = intval($results[$key]['disk']);
-		$info['comment']        = Dba::escape(str_replace($clean_array,$wipe_array,$results[$key]['comment']));
+		$info['file']		= $filename;
+		$info['title']		= stripslashes(trim($results[$key]['title']));
+		$info['comment']	= Dba::escape(str_replace($clean_array,$wipe_array,$results[$key]['comment']));
 
 		/* This are pulled from the info array */
-		$info['bitrate']        = intval($results['info']['bitrate']);
-		$info['rate']           = intval($results['info']['sample_rate']);
-		$info['mode']           = $results['info']['bitrate_mode'];
+		$info['bitrate']	= intval($results['info']['bitrate']);
+		$info['rate']		= intval($results['info']['sample_rate']);
+		$info['mode']		= $results['info']['bitrate_mode'];
 
 		// Convert special version of constant bitrate mode to cbr
 		if($info['mode'] == 'con') {
 			$info['mode'] = 'cbr';
 		}
 
-		$info['size']           = $results['info']['filesize'];
-		$info['mime']           = $results['info']['mime'];
-		$into['encoding']       = $results['info']['encoding'];
-		$info['time']           = intval($results['info']['playing_time']);
-		$info['channels']       = intval($results['info']['channels']);
+		$info['size']			= $results['info']['filesize'];
+		$info['mime']			= $results['info']['mime'];
+		$into['encoding']		= $results['info']['encoding'];
+		$info['time']			= intval($results['info']['playing_time']);
+		$info['channels']		= intval($results['info']['channels']);
 
 		// Specific Audio Flags
 		if (!$results[$key]['video_codec']) { 
 			/* These are used to generate the correct ID's later */
-			$info['artist']         = trim($results[$key]['artist']);
-			$info['album']          = trim($results[$key]['album']);
-			$info['genre']          = trim($results[$key]['genre']);
+			$info['year']		= intval($results[$key]['year']);
+			$info['disk']		= intval($results[$key]['disk']);
+			$info['artist']		= trim($results[$key]['artist']);
+			$info['album']		= trim($results[$key]['album']);
+			$info['genre']		= trim($results[$key]['genre']);
 			/* @TODO language doesn't import from id3tag. @momo-i */
-			$info['language']       = Dba::escape($results[$key]['language']);
-			/* @TODO returned lyrics are raw data. An appropriate escape is necessary for this. @momo-i */
+			$info['language']	= Dba::escape($results[$key]['language']);
 			if (!empty($results[$key]['unsynchronised lyric'])) { // ID3v2 USLT
-				$info['lyrics']		= str_replace(array("\r\n","\r","\n"), '<br />',strip_tags($results[$key]['unsynchronised lyric']));
+				$info['lyrics']	= str_replace(array("\r\n","\r","\n"), '<br />',strip_tags($results[$key]['unsynchronised lyric']));
 			}
 			else { // Lyrics3 v2.0
-				$info['lyrics']		= str_replace(array("\r\n","\r","\n"), '<br />',strip_tags($results['info']['lyrics']['unsynchedlyrics']));
+				$info['lyrics']	= str_replace(array("\r\n","\r","\n"), '<br />',strip_tags($results['info']['lyrics']['unsynchedlyrics']));
 			}
-			$info['track']          = intval($results[$key]['track']);
+			$info['track']		= intval($results[$key]['track']);
 		}
 		else { 
 			$info['resolution_x']	= intval($results[$key]['resolution_x']); 
@@ -306,6 +311,15 @@ class vainfo {
 			if ($type == 'quicktime') { 
 				$this->_raw['tags']['quicktime'] = array(); 
 			} 
+			if($type == 'mpeg' OR $type == 'mpg') {
+				$this->_raw['tags']['mpeg'] = array();
+			}
+			if($type == 'asf') {
+				$this->_raw['tags']['asf'] = array();
+			}
+			if($type == 'wmv') {
+				$this->_raw['tags']['wmv'] = array();
+			}
 			else { 
 				$this->_raw['tags']['avi'] = array(); 
 			} 
@@ -354,31 +368,49 @@ class vainfo {
 		foreach ($this->_raw['tags'] as $key=>$tag_array) { 
 			switch ($key) { 
 				case 'vorbiscomment':
+					debug_event('_get_tags', 'Parsing vorbis', '5');
 					$results[$key] = $this->_parse_vorbiscomment($tag_array);
 				break;
 				case 'id3v1':
+					debug_event('_get_tags', 'Parsing id3v1', '5');
 					$results[$key] = $this->_parse_id3v1($tag_array);
 				break;
 				case 'id3v2':
+					debug_event('_get_tags', 'Parsing id3v2', '5');
 					$results[$key] = $this->_parse_id3v2($tag_array);
 				break;
 				case 'ape':
+					debug_event('_get_tags', 'Parsing ape', '5');
 					$results[$key] = $this->_parse_ape($tag_array);
 				break;
 				case 'quicktime':
+					debug_event('_get_tags', 'Parsing quicktime', '5');
 					$results[$key] = $this->_parse_quicktime($tag_array);
 				break;
 				case 'riff':
+					debug_event('_get_tags', 'Parsing riff', '5');
 					$results[$key] = $this->_parse_riff($tag_array); 
 				break;
 				case 'flv': 
+					debug_event('_get_tags', 'Parsing flv', '5');
 					$results[$key] = $this->_parse_flv($this->_raw2); 
 				break; 
+				case 'mpg':
 				case 'mpeg': 
+					debug_event('_get_tags', 'Parsing MPEG', '5');
+					$results[$key] = $this->_parse_mpg($this->_raw2);
+				break;
+				case 'asf':
+				case 'wmv':
+					debug_event('_get_tags', 'Parsing WMV/WMA/ASF', '5');
+					$results[$key] = $this->_parse_wmv($this->_raw2);
+				break;
 				case 'avi': 
+					debug_event('_get_tags', 'Parsing avi', '5');
 					$results[$key] = $this->_parse_avi($this->_raw2); 
 				break; 
 				case 'lyrics3':
+					debug_event('_get_tags', 'Parsing lyrics3', '5');
 					$results[$key] = $this->_parse_lyrics($tag_array);
 				break;
 				default: 
@@ -458,6 +490,10 @@ class vainfo {
 			break;
 			case 'flac': 
 			case 'flv':
+			case 'mpg':
+			case 'mpeg':
+			case 'asf':
+			case 'wmv':
 			case 'avi': 
 			case 'quicktime': 
 				return $type; 	
@@ -645,26 +681,26 @@ class vainfo {
 	 */
 	private function _parse_quicktime($tags) { 
 
-                /* Results array */
-                $array = array();
+		/* Results array */
+		$array = array();
 
-                /* go through them all! */
-                foreach ($tags as $tag=>$data) {
+		/* go through them all! */
+		foreach ($tags as $tag=>$data) {
 
-                        /* We need to translate a few of these tags */
-                        switch ($tag) {
-                                case 'creation_date':
+			/* We need to translate a few of these tags */
+			switch ($tag) {
+				case 'creation_date':
 					if (strlen($data['0']) > 4) { 
 						/* Weird Date format, attempt to normalize */
 						$data['0'] = date("Y",strtotime($data['0']));
 					}
-                                        $array['year']  = $this->_clean_tag($data['0']);
-                                break;
-                        } // end switch
+					$array['year']  = $this->_clean_tag($data['0']);
+				break;
+			} // end switch
 
-                        $array[$tag] = $this->_clean_tag($data['0']);
+			$array[$tag] = $this->_clean_tag($data['0']);
 
-                } // end foreach
+		} // end foreach
 		
 		// Also add in any video related stuff we might find
 		if (strpos($this->_raw2['mime_type'],'video') !== false) { 
@@ -673,7 +709,7 @@ class vainfo {
 			$array = array_merge($info,$array); 
 		} 
 
-                return $array;
+		return $array;
 
 	} // _parse_quicktime
 
@@ -686,17 +722,70 @@ class vainfo {
 
 		$array = array(); 
 
-		$array['title'] 	= $this->_pathinfo['filename']; 
-		$array['video_codec'] 	= $tags['video']['fourcc']; 
-		$array['audio_codec'] 	= $tags['audio']['dataformat']; 
-		$array['resolution_x']	= $tags['video']['resolution_x']; 
-		$array['resolution_y']	= $tags['video']['resolution_y']; 
-		$array['mime']		= $tags['mime_type']; 
-		$array['comment']	= $tags['video']['codec']; 
+		$array['title'] 		= urldecode($this->_pathinfo['filename']);
+		$array['video_codec'] 		= $tags['video']['fourcc']; 
+		$array['audio_codec'] 		= $tags['audio']['dataformat']; 
+		$array['resolution_x']		= $tags['video']['resolution_x']; 
+		$array['resolution_y']		= $tags['video']['resolution_y']; 
+		$array['mime']			= $tags['mime_type']; 
+		$array['comment']		= $tags['video']['codec']; 
 
 		return $array; 
 
 	} // _parse_avi
+
+	/**
+	 * _parse_mpg
+	 * This attempts to parse our the information on a mpg file and present it in some
+	 * kind of sane format, this is a little hard as these files don't have tags
+	 */
+	private function _parse_mpg($tags) {
+
+		$array = array();
+
+		$array['title']			= urldecode($this->_pathinfo['filename']);
+		$array['video_codec']		= $tags['video']['codec'];
+		$array['audio_codec']		= $tags['audio']['dataformat'];
+		$array['resolution_x']		= $tags['video']['resolution_x'];
+		$array['resolution_y']		= $tags['video']['resolution_y'];
+		$array['mime']			= $tags['mime_type'];
+		$array['comment']		= $tags['video']['codec'];
+
+		return $array;
+
+	} // _parse_mpg
+
+	/**
+	 * _parse_wmv
+	 * This attempts to parse our the information on a asf/wmv file and present it in some
+	 * kind of sane format, this is a little hard as these files don't have tags
+	 */
+	private function _parse_wmv($tags) {
+
+		$array = array();
+
+		$array['mime']		= $tags['mime_type'];
+
+		switch($array['mime']) {
+			default:
+			case 'video/x-ms-wmv':
+				if(isset($tags['tags']['asf']['title']['0'])) {
+					$array['title']		= $tags['tags']['asf']['title']['0'];
+				} 
+				else {
+					$array['title']		= urldecode($this->_pathinfo['filename']);
+				}
+				$array['video_codec']		= $tags['video']['streams']['2']['codec'];
+				$array['audio_codec']		= $tags['audio']['streams']['1']['codec'];
+				$array['resolution_x']		= $tags['video']['streams']['2']['resolution_x'];
+				$array['resolution_y']		= $tags['video']['streams']['2']['resolution_y'];
+				$array['comment']		= $tags['tags']['asf']['title']['1'];
+			break;
+		}
+
+		return $array;
+
+	} // _parse_wmv
 
 	/**
 	 * _parse_flv
@@ -707,15 +796,15 @@ class vainfo {
 
 		$array = array(); 
 
-		$array['title'] 	= $this->_pathinfo['filename']; 
-		$array['video_codec'] 	= $tags['video']['codec']; 
-		$array['audio_codec'] 	= $tags['audio']['dataformat']; 
-		$array['resolution_x']	= $tags['video']['resolution_x']; 
-		$array['resolution_y']	= $tags['video']['resolution_y']; 
-		$array['mime']		= $tags['mime_type']; 
-		$array['comment']	= $tags['video']['codec']; 
+		$array['title']			= urldecode($this->_pathinfo['filename']);
+		$array['video_codec']		= $tags['video']['codec']; 
+		$array['audio_codec']		= $tags['audio']['dataformat']; 
+		$array['resolution_x']		= $tags['video']['resolution_x']; 
+		$array['resolution_y']		= $tags['video']['resolution_y']; 
+		$array['mime']			= $tags['mime_type']; 
+		$array['comment']		= $tags['video']['codec']; 
 
-		return $array; 
+		return $array;
 
 	} // _parse_flv
 
@@ -729,13 +818,13 @@ class vainfo {
 
 		$results = array();
 
-                // Correctly detect the slash we need to use here
-                if (strstr($filename,"/")) {
-                        $slash_type = '/';
-                }
-                else {
-                        $slash_type = '\\';
-                }
+		// Correctly detect the slash we need to use here
+		if (strstr($filename,"/")) {
+			$slash_type = '/';
+		}
+		else {
+			$slash_type = '\\';
+		}
 
 		$pattern = preg_quote($this->_dir_pattern) . $slash_type . preg_quote($this->_file_pattern); 
 		preg_match_all("/\%\w/",$pattern,$elements);
