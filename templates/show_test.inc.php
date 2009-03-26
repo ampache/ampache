@@ -48,7 +48,7 @@
 		if (!check_php_ver()) { 
 			echo debug_result('',false);
 			if (function_exists('hash_algos')) { $algos = hash_algos(); } 
-			$string = ."<strong>" .  phpversion() . " " . _('Hash Function Exists') . " " . print_boolean(function_exists('hash_algos')) . " " . _('SHA256 Support') . " " . print_boolean(in_array('sha256',$algos)) . "</strong>"; 
+			$string = "<strong>" .  phpversion() . " " . _('Hash Function Exists') . " " . print_boolean(function_exists('hash_algos')) . " " . _('SHA256 Support') . " " . print_boolean(in_array('sha256',$algos)) . "</strong>"; 
 		}
 		else {
 			echo debug_result('',true); 
