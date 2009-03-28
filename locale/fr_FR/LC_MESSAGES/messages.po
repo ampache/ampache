@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ampache 3.5.0\n"
 "Report-Msgid-Bugs-To: translations at ampache.org\n"
-"POT-Creation-Date: 2009-03-25 07:17+0900\n"
+"POT-Creation-Date: 2009-03-28 18:27+0900\n"
 "PO-Revision-Date: 2009-03-24 21:54+0100\n"
 "Last-Translator: \n"
 "Language-Team: French <kde-i18n-doc@lists.kde.org>\n"
@@ -193,11 +193,22 @@ msgstr "DESCRIPTION"
 
 #: ../../templates/show_test.inc.php:45
 #: ../../templates/show_install_check.inc.php:24
-#: ../../templates/show_install_check.inc.php:29
+#: ../../templates/show_install_check.inc.php:30
 msgid "PHP Version"
 msgstr "Version de PHP"
 
-#: ../../templates/show_test.inc.php:58
+#: ../../templates/show_test.inc.php:51
+#: ../../templates/show_install_check.inc.php:28
+msgid "Hash Function Exists"
+msgstr "Fonction de hashage existante"
+
+#: ../../templates/show_test.inc.php:51
+#: ../../templates/show_install_check.inc.php:28
+#, fuzzy
+msgid "SHA256 Support"
+msgstr "Support GD"
+
+#: ../../templates/show_test.inc.php:60
 msgid ""
 "This tests to make sure that you are running a version of PHP that is known "
 "to work with Ampache."
@@ -205,13 +216,13 @@ msgstr ""
 "Ce test pour vérifier que vous utilisez une version de PHP connue pour etre "
 "compatible avec Ampache"
 
-#: ../../templates/show_test.inc.php:62
-#: ../../templates/show_install_check.inc.php:36
-#: ../../templates/show_install_check.inc.php:40
+#: ../../templates/show_test.inc.php:65
+#: ../../templates/show_install_check.inc.php:37
+#: ../../templates/show_install_check.inc.php:41
 msgid "Mysql for PHP"
 msgstr "Mysql pour PHP"
 
-#: ../../templates/show_test.inc.php:75
+#: ../../templates/show_test.inc.php:78
 msgid ""
 "This test checks to see if you have the mysql extensions loaded for PHP. "
 "These are required for Ampache to work."
@@ -219,13 +230,13 @@ msgstr ""
 "Ce test pour vérifier si vous avez l'extension mysql chargée pour PHP. Ceci "
 "est requis pour qu'Ampache puisse fonctionner"
 
-#: ../../templates/show_test.inc.php:79
-#: ../../templates/show_install_check.inc.php:47
-#: ../../templates/show_install_check.inc.php:51
+#: ../../templates/show_test.inc.php:82
+#: ../../templates/show_install_check.inc.php:48
+#: ../../templates/show_install_check.inc.php:52
 msgid "PHP Session Support"
 msgstr "Support des sessions PHP"
 
-#: ../../templates/show_test.inc.php:92
+#: ../../templates/show_test.inc.php:95
 msgid ""
 "This test checks to make sure that you have PHP session support enabled. "
 "Sessions are required for Ampache to work."
@@ -233,37 +244,37 @@ msgstr ""
 "Ce test pour s assurer qur que le support de session PHP est activé. Les "
 "sessions sont indispensable au bon fonctionnement d'Ampache"
 
-#: ../../templates/show_test.inc.php:96
-#: ../../templates/show_install_check.inc.php:58
-#: ../../templates/show_install_check.inc.php:62
+#: ../../templates/show_test.inc.php:99
+#: ../../templates/show_install_check.inc.php:59
+#: ../../templates/show_install_check.inc.php:63
 msgid "PHP ICONV Support"
 msgstr "Support de PHP ICONV"
 
-#: ../../templates/show_test.inc.php:108
+#: ../../templates/show_test.inc.php:111
 msgid ""
 "This test checks to make sure you have Iconv support installed. Iconv "
 "support is required for Ampache"
 msgstr "The test vérifie que le support ICONV est activé"
 
-#: ../../templates/show_test.inc.php:112
-#: ../../templates/show_install_check.inc.php:69
-#: ../../templates/show_install_check.inc.php:73
+#: ../../templates/show_test.inc.php:115
+#: ../../templates/show_install_check.inc.php:70
+#: ../../templates/show_install_check.inc.php:74
 msgid "PHP PCRE Support"
 msgstr "Support de PHP PCRE"
 
-#: ../../templates/show_test.inc.php:124
+#: ../../templates/show_test.inc.php:127
 msgid ""
 "This test makes sure you have PCRE support compiled into your version of "
 "PHP, this is required for Ampache."
 msgstr "Ce test s'assure que le support de PCRE est activé. "
 
-#: ../../templates/show_test.inc.php:128
-#: ../../templates/show_install_check.inc.php:80
-#: ../../templates/show_install_check.inc.php:84
+#: ../../templates/show_test.inc.php:131
+#: ../../templates/show_install_check.inc.php:81
+#: ../../templates/show_install_check.inc.php:85
 msgid "PHP PutENV Support"
 msgstr "Support de PHP ICONV"
 
-#: ../../templates/show_test.inc.php:140
+#: ../../templates/show_test.inc.php:143
 msgid ""
 "This test makes sure that PHP isn't running in SafeMode and that we are able "
 "to modify the memory limits. While not required, without these abilities "
@@ -272,12 +283,12 @@ msgstr ""
 "Ce test vérifie que le mode sans échec de PHP n'est pas active. Ce n'est pas "
 "nécessaire mais cela pourrai gener certaines fonctionnalités de ampache"
 
-#: ../../templates/show_test.inc.php:144
+#: ../../templates/show_test.inc.php:147
 #: ../../templates/show_install_config.inc.php:91
 msgid "Ampache.cfg.php Exists"
 msgstr "Ampache.cfg.php existe"
 
-#: ../../templates/show_test.inc.php:157
+#: ../../templates/show_test.inc.php:160
 msgid ""
 "This attempts to read /config/ampache.cfg.php If this fails either the "
 "ampache.cfg.php is not in the correct locations or\n"
@@ -287,12 +298,12 @@ msgstr ""
 "ampache.cfg.php n'est pas au bon endroit ou \n"
 "\t n'est pas lisible par votre serveur web"
 
-#: ../../templates/show_test.inc.php:163
+#: ../../templates/show_test.inc.php:166
 #: ../../templates/show_install_config.inc.php:106
 msgid "Ampache.cfg.php Configured?"
 msgstr "Ampache.cfg.php configuré ?"
 
-#: ../../templates/show_test.inc.php:179
+#: ../../templates/show_test.inc.php:182
 msgid ""
 "This test makes sure that you have set all of the required configuration "
 "variables and that we are able to completely parse your config file"
@@ -300,11 +311,11 @@ msgstr ""
 "Ce test vérifie que tous les variables prérequises sont correctement "
 "configurées et que le fichier de configuration est lisible"
 
-#: ../../templates/show_test.inc.php:183
+#: ../../templates/show_test.inc.php:186
 msgid "DB Connection"
 msgstr "Connexion à la base de données"
 
-#: ../../templates/show_test.inc.php:197
+#: ../../templates/show_test.inc.php:200
 msgid ""
 "This attempts to connect to your database using the values from your ampache."
 "cfg.php"
@@ -312,11 +323,11 @@ msgstr ""
 "Ceci test la connexion à votre base de données en utilisant les valeurs de "
 "ampache.cfg.php"
 
-#: ../../templates/show_test.inc.php:201
+#: ../../templates/show_test.inc.php:204
 msgid "DB Inserted"
 msgstr "Base de données inséré"
 
-#: ../../templates/show_test.inc.php:215
+#: ../../templates/show_test.inc.php:218
 msgid ""
 "This checks a few key tables to make sure that you have successfully "
 "inserted the ampache database and that the user has access to the database"
@@ -324,12 +335,12 @@ msgstr ""
 "Ceci vérifie l'ajout de quelques tables pour valider que l'utilisateur peut "
 "accéder à votre base Ampache"
 
-#: ../../templates/show_test.inc.php:220
+#: ../../templates/show_test.inc.php:223
 #: ../../templates/show_install_config.inc.php:63
 msgid "Web Path"
 msgstr "Chemin d'accès web"
 
-#: ../../templates/show_test.inc.php:244
+#: ../../templates/show_test.inc.php:247
 msgid ""
 "This test makes sure that your web_path variable is set correctly and that "
 "we are able to get to the index page. If you do not see a check mark here "
@@ -455,7 +466,7 @@ msgstr "Actions"
 #: ../../templates/show_manage_democratic.inc.php:63
 #: ../../templates/show_videos.inc.php:54
 #: ../../templates/show_objects.inc.php:44
-#: ../../templates/rightbar.inc.php:105 ../../templates/show_genres.inc.php:68
+#: ../../templates/rightbar.inc.php:109 ../../templates/show_genres.inc.php:68
 #: ../../templates/show_user_recommendations.inc.php:32
 #: ../../templates/show_user_recommendations.inc.php:43
 #: ../../templates/show_user_recommendations.inc.php:54
@@ -1548,7 +1559,7 @@ msgstr "élément"
 msgid "Reason to flag"
 msgstr "Raison du marquage"
 
-#: ../../templates/show_flag.inc.php:56 ../../templates/rightbar.inc.php:102
+#: ../../templates/show_flag.inc.php:56 ../../templates/rightbar.inc.php:106
 #: ../../templates/show_catalog_row.inc.php:34
 #: ../../templates/show_democratic_playlist.inc.php:86
 #: ../../templates/show_live_stream_row.inc.php:34
@@ -1815,35 +1826,26 @@ msgstr "Configuration du serveur"
 msgid "Required"
 msgstr "Pré-requis"
 
-#: ../../templates/show_install_check.inc.php:27
-msgid "Hash Function Exists"
-msgstr "Fonction de hashage existante"
-
-#: ../../templates/show_install_check.inc.php:27
-#, fuzzy
-msgid "SHA256 Support"
-msgstr "Support GD"
-
-#: ../../templates/show_install_check.inc.php:92
+#: ../../templates/show_install_check.inc.php:93
 #, fuzzy
 msgid "Optional"
 msgstr "Options"
 
-#: ../../templates/show_install_check.inc.php:93
+#: ../../templates/show_install_check.inc.php:94
 #: ../../templates/show_debug.inc.php:80
 msgid "Gettext Support"
 msgstr "Support Gettext"
 
-#: ../../templates/show_install_check.inc.php:96
+#: ../../templates/show_install_check.inc.php:97
 msgid "Gettext Emulator will be used"
 msgstr "L'émulateur gettext sera utilisé"
 
-#: ../../templates/show_install_check.inc.php:103
+#: ../../templates/show_install_check.inc.php:104
 #, fuzzy
 msgid "Mbstring Support"
 msgstr "Support des sessions PHP"
 
-#: ../../templates/show_install_check.inc.php:106
+#: ../../templates/show_install_check.inc.php:107
 msgid "Multibyte Chracter may not detect correct"
 msgstr ""
 
@@ -1913,7 +1915,7 @@ msgstr "Album associé "
 msgid "Related Tag"
 msgstr "Album associé "
 
-#: ../../templates/rightbar.inc.php:109
+#: ../../templates/rightbar.inc.php:113
 msgid "More"
 msgstr "Plus"
 
@@ -3304,15 +3306,15 @@ msgstr "Erreur : Enregistrement non effectué"
 msgid "User Disabled please contact Admin"
 msgstr "Utilisateur suspendu, contactez l'administrateur"
 
-#: ../../login.php:89
+#: ../../login.php:87
 msgid "Unable to create new account"
 msgstr "Impossible de créer ce compte"
 
-#: ../../login.php:98
+#: ../../login.php:95
 msgid "No local account found"
 msgstr "Pas de compte local correspondant"
 
-#: ../../login.php:115
+#: ../../login.php:112
 msgid "User Already Logged in"
 msgstr "Utilisateur déjà connecté"
 
@@ -3569,7 +3571,7 @@ msgstr ""
 #: ../../lib/class/catalog.class.php:1272
 #: ../../lib/class/catalog.class.php:1346
 #: ../../lib/class/catalog.class.php:1379
-#: ../../lib/class/catalog.class.php:2320
+#: ../../lib/class/catalog.class.php:2321
 #: ../../lib/class/xmlrpcclient.class.php:64
 #: ../../lib/class/xmlrpcclient.class.php:97
 msgid "Error connecting to"
@@ -3578,7 +3580,7 @@ msgstr "Erreur de connexion à"
 #: ../../lib/class/catalog.class.php:1272
 #: ../../lib/class/catalog.class.php:1346
 #: ../../lib/class/catalog.class.php:1379
-#: ../../lib/class/catalog.class.php:2320
+#: ../../lib/class/catalog.class.php:2321
 #: ../../lib/class/xmlrpcclient.class.php:64
 #: ../../lib/class/xmlrpcclient.class.php:97
 msgid "Code"
@@ -3587,7 +3589,7 @@ msgstr "Code"
 #: ../../lib/class/catalog.class.php:1272
 #: ../../lib/class/catalog.class.php:1346
 #: ../../lib/class/catalog.class.php:1379
-#: ../../lib/class/catalog.class.php:2320
+#: ../../lib/class/catalog.class.php:2321
 #: ../../lib/class/xmlrpcclient.class.php:64
 msgid "Reason"
 msgstr "Raison"
@@ -3637,18 +3639,18 @@ msgstr "Mise à jour terminée"
 msgid "Checked"
 msgstr "Vérifiées"
 
-#: ../../lib/class/catalog.class.php:2418
+#: ../../lib/class/catalog.class.php:2419
 #, fuzzy
 msgid "Playlist creation error."
 msgstr "Liste de lecture créée"
 
-#: ../../lib/class/catalog.class.php:2425
+#: ../../lib/class/catalog.class.php:2426
 #, php-format
 msgid "Playlist Import and Recreate Successful. Total: %d Songs"
 msgstr ""
 "Import et recréation des listes de lecture réussie. Total : %d chansons"
 
-#: ../../lib/class/catalog.class.php:2429
+#: ../../lib/class/catalog.class.php:2430
 #, php-format
 msgid "Parsing %s - Not Found: %d Songs. Please check your m3u file."
 msgstr "Analyse de %s - Non trouvé: %d chansons. Verifiez votre fichier m3u."

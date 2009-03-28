@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ampache 3.5.0\n"
 "Report-Msgid-Bugs-To: translations at ampache.org\n"
-"POT-Creation-Date: 2009-03-16 09:11+0900\n"
+"POT-Creation-Date: 2009-03-28 18:27+0900\n"
 "PO-Revision-Date: 2008-07-14 20:44+0900\n"
 "Last-Translator: momo-i <webmaster at momo-i.org>\n"
 "Language-Team: Japanese\n"
@@ -185,11 +185,21 @@ msgstr "説明"
 
 #: ../../templates/show_test.inc.php:45
 #: ../../templates/show_install_check.inc.php:24
-#: ../../templates/show_install_check.inc.php:29
+#: ../../templates/show_install_check.inc.php:30
 msgid "PHP Version"
 msgstr "PHPバージョン"
 
-#: ../../templates/show_test.inc.php:58
+#: ../../templates/show_test.inc.php:51
+#: ../../templates/show_install_check.inc.php:28
+msgid "Hash Function Exists"
+msgstr "ハッシュ関数は存在します"
+
+#: ../../templates/show_test.inc.php:51
+#: ../../templates/show_install_check.inc.php:28
+msgid "SHA256 Support"
+msgstr "SHA256 サポート"
+
+#: ../../templates/show_test.inc.php:60
 msgid ""
 "This tests to make sure that you are running a version of PHP that is known "
 "to work with Ampache."
@@ -197,13 +207,13 @@ msgstr ""
 "これはAmpacheで働くと知られているPHPのバージョンを実行していることを確かめる"
 "ためにテストします。"
 
-#: ../../templates/show_test.inc.php:62
-#: ../../templates/show_install_check.inc.php:36
-#: ../../templates/show_install_check.inc.php:40
+#: ../../templates/show_test.inc.php:65
+#: ../../templates/show_install_check.inc.php:37
+#: ../../templates/show_install_check.inc.php:41
 msgid "Mysql for PHP"
 msgstr "PHPのMysql"
 
-#: ../../templates/show_test.inc.php:75
+#: ../../templates/show_test.inc.php:78
 msgid ""
 "This test checks to see if you have the mysql extensions loaded for PHP. "
 "These are required for Ampache to work."
@@ -211,13 +221,13 @@ msgstr ""
 "このテストは、PHPのためにあなたがmysql拡張をロードするかチェックします。これ"
 "らはAmpacheが働くために要求されます。"
 
-#: ../../templates/show_test.inc.php:79
-#: ../../templates/show_install_check.inc.php:47
-#: ../../templates/show_install_check.inc.php:51
+#: ../../templates/show_test.inc.php:82
+#: ../../templates/show_install_check.inc.php:48
+#: ../../templates/show_install_check.inc.php:52
 msgid "PHP Session Support"
 msgstr "PHPセッションサポート"
 
-#: ../../templates/show_test.inc.php:92
+#: ../../templates/show_test.inc.php:95
 msgid ""
 "This test checks to make sure that you have PHP session support enabled. "
 "Sessions are required for Ampache to work."
@@ -225,13 +235,13 @@ msgstr ""
 "このテストはPHPセッションのサポートを可能にすることを確かめるためにチェックし"
 "ます。セッションは、Ampacheが働くことを必要とされます。"
 
-#: ../../templates/show_test.inc.php:96
-#: ../../templates/show_install_check.inc.php:58
-#: ../../templates/show_install_check.inc.php:62
+#: ../../templates/show_test.inc.php:99
+#: ../../templates/show_install_check.inc.php:59
+#: ../../templates/show_install_check.inc.php:63
 msgid "PHP ICONV Support"
 msgstr "PHP ICONVサポート"
 
-#: ../../templates/show_test.inc.php:108
+#: ../../templates/show_test.inc.php:111
 msgid ""
 "This test checks to make sure you have Iconv support installed. Iconv "
 "support is required for Ampache"
@@ -239,13 +249,13 @@ msgstr ""
 "このテストはIconvのサポートをインストールすることを確かめるためにチェックしま"
 "す。IconvのサポートはAmpacheのために必要になります。"
 
-#: ../../templates/show_test.inc.php:112
-#: ../../templates/show_install_check.inc.php:69
-#: ../../templates/show_install_check.inc.php:73
+#: ../../templates/show_test.inc.php:115
+#: ../../templates/show_install_check.inc.php:70
+#: ../../templates/show_install_check.inc.php:74
 msgid "PHP PCRE Support"
 msgstr "PHP PCREサポート"
 
-#: ../../templates/show_test.inc.php:124
+#: ../../templates/show_test.inc.php:127
 msgid ""
 "This test makes sure you have PCRE support compiled into your version of "
 "PHP, this is required for Ampache."
@@ -253,13 +263,13 @@ msgstr ""
 "このテストは、あなたがPHPのバージョンへPCREのサポートをコンパイルすることを確"
 "かめます。これはAmpacheに必要です。"
 
-#: ../../templates/show_test.inc.php:128
-#: ../../templates/show_install_check.inc.php:80
-#: ../../templates/show_install_check.inc.php:84
+#: ../../templates/show_test.inc.php:131
+#: ../../templates/show_install_check.inc.php:81
+#: ../../templates/show_install_check.inc.php:85
 msgid "PHP PutENV Support"
 msgstr "PHP PutENVサポート"
 
-#: ../../templates/show_test.inc.php:140
+#: ../../templates/show_test.inc.php:143
 msgid ""
 "This test makes sure that PHP isn't running in SafeMode and that we are able "
 "to modify the memory limits. While not required, without these abilities "
@@ -269,12 +279,12 @@ msgstr ""
 "とができることを確かめます。ampacheのいくつかの機能が正確に動かさないかもしれ"
 "ない一方で、機能なしでは要求されないかもしれません"
 
-#: ../../templates/show_test.inc.php:144
+#: ../../templates/show_test.inc.php:147
 #: ../../templates/show_install_config.inc.php:91
 msgid "Ampache.cfg.php Exists"
 msgstr "Ampache.cfg.phpは存在します"
 
-#: ../../templates/show_test.inc.php:157
+#: ../../templates/show_test.inc.php:160
 msgid ""
 "This attempts to read /config/ampache.cfg.php If this fails either the "
 "ampache.cfg.php is not in the correct locations or\n"
@@ -284,12 +294,12 @@ msgstr ""
 "むことを試みます、正確な位置あるいはそれにない、あなたのウェブサーバによって"
 "現在判読可能でありません。"
 
-#: ../../templates/show_test.inc.php:163
+#: ../../templates/show_test.inc.php:166
 #: ../../templates/show_install_config.inc.php:106
 msgid "Ampache.cfg.php Configured?"
 msgstr "Ampache.cfg.phpは設定されていますか？"
 
-#: ../../templates/show_test.inc.php:179
+#: ../../templates/show_test.inc.php:182
 msgid ""
 "This test makes sure that you have set all of the required configuration "
 "variables and that we are able to completely parse your config file"
@@ -297,11 +307,11 @@ msgstr ""
 "このテストは、あなたが要求された配置変数をすべてセットしており、私たちが"
 "configファイルを完全に解析することができることを確かめます。"
 
-#: ../../templates/show_test.inc.php:183
+#: ../../templates/show_test.inc.php:186
 msgid "DB Connection"
 msgstr "DB接続"
 
-#: ../../templates/show_test.inc.php:197
+#: ../../templates/show_test.inc.php:200
 msgid ""
 "This attempts to connect to your database using the values from your ampache."
 "cfg.php"
@@ -309,11 +319,11 @@ msgstr ""
 "これは、あなたのampache.cfg.phpからの値を使用して、あなたのデータベースに接続"
 "することを試みます。"
 
-#: ../../templates/show_test.inc.php:201
+#: ../../templates/show_test.inc.php:204
 msgid "DB Inserted"
 msgstr "DB挿入済"
 
-#: ../../templates/show_test.inc.php:215
+#: ../../templates/show_test.inc.php:218
 msgid ""
 "This checks a few key tables to make sure that you have successfully "
 "inserted the ampache database and that the user has access to the database"
@@ -321,12 +331,12 @@ msgstr ""
 "これはAmpacheのデータベース挿入が成功することとユーザがデータベースへアクセス"
 "できることを確実にするためにいくつかのキーテーブルをチェックします"
 
-#: ../../templates/show_test.inc.php:220
+#: ../../templates/show_test.inc.php:223
 #: ../../templates/show_install_config.inc.php:63
 msgid "Web Path"
 msgstr "Webパス"
 
-#: ../../templates/show_test.inc.php:244
+#: ../../templates/show_test.inc.php:247
 msgid ""
 "This test makes sure that your web_path variable is set correctly and that "
 "we are able to get to the index page. If you do not see a check mark here "
@@ -451,7 +461,7 @@ msgstr "操作"
 #: ../../templates/show_manage_democratic.inc.php:63
 #: ../../templates/show_videos.inc.php:54
 #: ../../templates/show_objects.inc.php:44
-#: ../../templates/rightbar.inc.php:105 ../../templates/show_genres.inc.php:68
+#: ../../templates/rightbar.inc.php:109 ../../templates/show_genres.inc.php:68
 #: ../../templates/show_user_recommendations.inc.php:32
 #: ../../templates/show_user_recommendations.inc.php:43
 #: ../../templates/show_user_recommendations.inc.php:54
@@ -661,7 +671,7 @@ msgstr "コンフィグプリセット"
 #: ../../templates/show_edit_user.inc.php:93
 #: ../../templates/sidebar_home.inc.php:90
 #: ../../templates/show_playtype_switch.inc.php:36
-#: ../../templates/sidebar_modules.inc.php:40 ../../lib/preferences.php:179
+#: ../../templates/sidebar_modules.inc.php:41 ../../lib/preferences.php:179
 #: ../../modules/localplay/mpd.controller.php:491
 #: ../../modules/localplay/httpq.controller.php:488
 msgid "Democratic"
@@ -1226,7 +1236,7 @@ msgstr "全て"
 #: ../../templates/show_add_access_local.inc.php:48
 #: ../../templates/show_add_access_rpc.inc.php:48
 #: ../../templates/show_add_playlist.inc.php:32
-#: ../../templates/show_random.inc.php:59
+#: ../../templates/show_random.inc.php:58
 #: ../../templates/show_access_list.inc.php:61
 #: ../../templates/show_playlist_edit.inc.php:36
 msgid "Type"
@@ -1512,10 +1522,6 @@ msgstr "設定"
 msgid "Account"
 msgstr "アカウント"
 
-#: ../../templates/sidebar_preferences.inc.php:22
-msgid "Server Config"
-msgstr "サーバ設定"
-
 #: ../../templates/show_flag.inc.php:41
 msgid "Flag Song"
 msgstr "フラグ曲"
@@ -1533,7 +1539,7 @@ msgstr "アイテム"
 msgid "Reason to flag"
 msgstr "フラグする理由"
 
-#: ../../templates/show_flag.inc.php:56 ../../templates/rightbar.inc.php:102
+#: ../../templates/show_flag.inc.php:56 ../../templates/rightbar.inc.php:106
 #: ../../templates/show_catalog_row.inc.php:34
 #: ../../templates/show_democratic_playlist.inc.php:86
 #: ../../templates/show_live_stream_row.inc.php:34
@@ -1787,36 +1793,32 @@ msgstr "カタログのエクスポート"
 msgid "Manage Shoutbox"
 msgstr "シャウトボックスの管理"
 
+#: ../../templates/sidebar_admin.inc.php:54
+msgid "Server Config"
+msgstr "サーバ設定"
+
 #: ../../templates/show_install_check.inc.php:23
 msgid "Required"
 msgstr "必要条件"
 
-#: ../../templates/show_install_check.inc.php:27
-msgid "Hash Function Exists"
-msgstr "ハッシュ関数は存在します"
-
-#: ../../templates/show_install_check.inc.php:27
-msgid "SHA256 Support"
-msgstr "SHA256 サポート"
-
-#: ../../templates/show_install_check.inc.php:92
+#: ../../templates/show_install_check.inc.php:93
 msgid "Optional"
 msgstr "オプション"
 
-#: ../../templates/show_install_check.inc.php:93
+#: ../../templates/show_install_check.inc.php:94
 #: ../../templates/show_debug.inc.php:80
 msgid "Gettext Support"
 msgstr "Gettextサポート"
 
-#: ../../templates/show_install_check.inc.php:96
+#: ../../templates/show_install_check.inc.php:97
 msgid "Gettext Emulator will be used"
 msgstr "Gettextエミュレータが使用されるでしょう"
 
-#: ../../templates/show_install_check.inc.php:103
+#: ../../templates/show_install_check.inc.php:104
 msgid "Mbstring Support"
 msgstr "mbstringサポート"
 
-#: ../../templates/show_install_check.inc.php:106
+#: ../../templates/show_install_check.inc.php:107
 msgid "Multibyte Chracter may not detect correct"
 msgstr "マルチバイト文字列を正しく検出できないかもしれません"
 
@@ -1885,7 +1887,7 @@ msgstr "関連するアルバム"
 msgid "Related Tag"
 msgstr "関連するタグ"
 
-#: ../../templates/rightbar.inc.php:109
+#: ../../templates/rightbar.inc.php:113
 msgid "More"
 msgstr "More"
 
@@ -2401,8 +2403,8 @@ msgid "Maximum Results"
 msgstr "最大結果"
 
 #: ../../templates/show_search.inc.php:134
-#: ../../templates/show_random.inc.php:47
-#: ../../templates/show_random.inc.php:82
+#: ../../templates/show_random.inc.php:46
+#: ../../templates/show_random.inc.php:81
 msgid "Unlimited"
 msgstr "無制限"
 
@@ -2573,58 +2575,58 @@ msgstr "ランダムな選択を再生"
 msgid "Item count"
 msgstr "アイテムカウント"
 
-#: ../../templates/show_random.inc.php:44
+#: ../../templates/show_random.inc.php:43
 #: ../../templates/show_duplicates.inc.php:40
 #: ../../templates/show_duplicates.inc.php:79
 msgid "Length"
 msgstr "長さ"
 
+#: ../../templates/show_random.inc.php:47
 #: ../../templates/show_random.inc.php:48
-#: ../../templates/show_random.inc.php:49
 #, php-format
 msgid "%d minute"
 msgid_plural "%d minutes"
 msgstr[0] "%d分"
 
+#: ../../templates/show_random.inc.php:49
 #: ../../templates/show_random.inc.php:50
 #: ../../templates/show_random.inc.php:51
 #: ../../templates/show_random.inc.php:52
 #: ../../templates/show_random.inc.php:53
-#: ../../templates/show_random.inc.php:54
 #, php-format
 msgid "%d hour"
 msgid_plural "%d hours"
 msgstr[0] "%d時間"
 
-#: ../../templates/show_random.inc.php:62
+#: ../../templates/show_random.inc.php:61
 msgid "Standard"
 msgstr "基本"
 
-#: ../../templates/show_random.inc.php:63
+#: ../../templates/show_random.inc.php:62
 msgid "Less Played"
 msgstr "未再生"
 
-#: ../../templates/show_random.inc.php:64
+#: ../../templates/show_random.inc.php:63
 msgid "Full Albums"
 msgstr "フルアルバム"
 
-#: ../../templates/show_random.inc.php:65
+#: ../../templates/show_random.inc.php:64
 msgid "Full Artist"
 msgstr "フルアーティスト"
 
-#: ../../templates/show_random.inc.php:67
+#: ../../templates/show_random.inc.php:66
 msgid "Highest Rated"
 msgstr "高評価"
 
-#: ../../templates/show_random.inc.php:73
+#: ../../templates/show_random.inc.php:72
 msgid "From catalog"
 msgstr "カタログから"
 
-#: ../../templates/show_random.inc.php:79
+#: ../../templates/show_random.inc.php:78
 msgid "Size Limit"
 msgstr "サイズ制限"
 
-#: ../../templates/show_random.inc.php:93
+#: ../../templates/show_random.inc.php:92
 msgid "Enqueue"
 msgstr "エンキュー"
 
@@ -2821,8 +2823,8 @@ msgid "Disk"
 msgstr "ディスク"
 
 #: ../../templates/show_album.inc.php:34
-#: ../../lib/class/catalog.class.php:1936
-#: ../../lib/class/catalog.class.php:2007
+#: ../../lib/class/catalog.class.php:1958
+#: ../../lib/class/catalog.class.php:2029
 msgid "Unknown (Orphaned)"
 msgstr "不明(孤立)"
 
@@ -2847,7 +2849,7 @@ msgstr "アルバムアートを見つける"
 msgid "%s Lyrics"
 msgstr "%sの歌詞"
 
-#: ../../templates/show_lyrics.inc.php:39 ../../lib/class/artist.class.php:357
+#: ../../templates/show_lyrics.inc.php:39 ../../lib/class/artist.class.php:358
 msgid "Sorry Lyrics Not Found."
 msgstr "すみません歌詞は見つかりませんでした。"
 
@@ -3175,7 +3177,7 @@ msgstr "フラグ済みの管理"
 msgid "Show Disabled"
 msgstr "表示を無効にしました"
 
-#: ../../templates/sidebar_modules.inc.php:42
+#: ../../templates/sidebar_modules.inc.php:43
 msgid "Manage Playlist"
 msgstr "再生リストの管理"
 
@@ -3241,15 +3243,15 @@ msgstr "エラー: 挿入失敗"
 msgid "User Disabled please contact Admin"
 msgstr "ユーザは無効なので管理者にお問合せください"
 
-#: ../../login.php:89
+#: ../../login.php:87
 msgid "Unable to create new account"
 msgstr "新規アカウントを作成できませんでした"
 
-#: ../../login.php:98
+#: ../../login.php:95
 msgid "No local account found"
 msgstr "ローカルアカウントが見つかりませんでした"
 
-#: ../../login.php:115
+#: ../../login.php:112
 msgid "User Already Logged in"
 msgstr "ユーザはすでにログインしています"
 
@@ -3395,11 +3397,11 @@ msgstr "一時停止"
 msgid "Primary"
 msgstr "プライマリ"
 
-#: ../../lib/class/artist.class.php:344
+#: ../../lib/class/artist.class.php:345
 msgid "Fault"
 msgstr "失敗"
 
-#: ../../lib/class/artist.class.php:352 ../../lib/class/catalog.class.php:1234
+#: ../../lib/class/artist.class.php:353 ../../lib/class/catalog.class.php:1234
 #: ../../admin/users.php:142
 msgid "Error"
 msgstr "エラー"
@@ -3456,7 +3458,7 @@ msgid "%s does not match site charset"
 msgstr "%sはサイトのCharsetと一致しません"
 
 #: ../../lib/class/catalog.class.php:1029
-#: ../../lib/class/catalog.class.php:1877 ../../preferences.php:111
+#: ../../lib/class/catalog.class.php:1899 ../../preferences.php:111
 #: ../../admin/access.php:109
 msgid "Updated"
 msgstr "更新しました"
@@ -3495,86 +3497,90 @@ msgstr ""
 "pear XMLRPCライブラリを読み込めませんでした。XML-RPCが有効になっているか確認"
 "してください。"
 
-#: ../../lib/class/catalog.class.php:1266
-#: ../../lib/class/catalog.class.php:1340
-#: ../../lib/class/catalog.class.php:1373
+#: ../../lib/class/catalog.class.php:1272
+#: ../../lib/class/catalog.class.php:1346
+#: ../../lib/class/catalog.class.php:1379
+#: ../../lib/class/catalog.class.php:2321
 #: ../../lib/class/xmlrpcclient.class.php:64
 #: ../../lib/class/xmlrpcclient.class.php:97
 msgid "Error connecting to"
 msgstr "接続中のエラー:"
 
-#: ../../lib/class/catalog.class.php:1266
-#: ../../lib/class/catalog.class.php:1340
-#: ../../lib/class/catalog.class.php:1373
+#: ../../lib/class/catalog.class.php:1272
+#: ../../lib/class/catalog.class.php:1346
+#: ../../lib/class/catalog.class.php:1379
+#: ../../lib/class/catalog.class.php:2321
 #: ../../lib/class/xmlrpcclient.class.php:64
 #: ../../lib/class/xmlrpcclient.class.php:97
 msgid "Code"
 msgstr "コード"
 
-#: ../../lib/class/catalog.class.php:1266
-#: ../../lib/class/catalog.class.php:1340
-#: ../../lib/class/catalog.class.php:1373
+#: ../../lib/class/catalog.class.php:1272
+#: ../../lib/class/catalog.class.php:1346
+#: ../../lib/class/catalog.class.php:1379
+#: ../../lib/class/catalog.class.php:2321
 #: ../../lib/class/xmlrpcclient.class.php:64
 msgid "Reason"
 msgstr "理由"
 
-#: ../../lib/class/catalog.class.php:1295
+#: ../../lib/class/catalog.class.php:1301
 msgid "Completed updating remote catalog(s)"
 msgstr "リモートカタログの更新完了"
 
-#: ../../lib/class/catalog.class.php:1299
+#: ../../lib/class/catalog.class.php:1305
 msgid "Starting synchronisation of album images"
 msgstr "アルバム画像の同期を開始しています"
 
-#: ../../lib/class/catalog.class.php:1301
+#: ../../lib/class/catalog.class.php:1307
 msgid "Completed synchronisation of album images"
 msgstr "アルバム画像の同期が完了しました"
 
-#: ../../lib/class/catalog.class.php:1336 ../../admin/access.php:93
+#: ../../lib/class/catalog.class.php:1342 ../../admin/access.php:93
 msgid "Added"
 msgstr "追加しました"
 
-#: ../../lib/class/catalog.class.php:1369
+#: ../../lib/class/catalog.class.php:1375
 msgid "images synchronized: "
 msgstr "同期した画像: "
 
-#: ../../lib/class/catalog.class.php:1505
+#: ../../lib/class/catalog.class.php:1509
 msgid "Catalog Root unreadable, stopping clean"
 msgstr "カタログルートに到達できません。クリーンを停止します"
 
-#: ../../lib/class/catalog.class.php:1567
+#: ../../lib/class/catalog.class.php:1589
 msgid "Catalog Clean Done"
 msgstr "カタログのクリーン完了"
 
-#: ../../lib/class/catalog.class.php:1567
+#: ../../lib/class/catalog.class.php:1589
 msgid "files removed"
 msgstr "ファイルを削除しました"
 
-#: ../../lib/class/catalog.class.php:1568
+#: ../../lib/class/catalog.class.php:1590
 msgid "Optimizing Tables"
 msgstr "テーブルを最適化中"
 
-#: ../../lib/class/catalog.class.php:1877
+#: ../../lib/class/catalog.class.php:1899
 msgid "Update Finished"
 msgstr "更新完了"
 
-#: ../../lib/class/catalog.class.php:1877
+#: ../../lib/class/catalog.class.php:1899
 msgid "Checked"
 msgstr "チェック済み"
 
-#: ../../lib/class/catalog.class.php:2338
+#: ../../lib/class/catalog.class.php:2419
 msgid "Playlist creation error."
 msgstr "プレイリスト作成エラーです。"
 
-#: ../../lib/class/catalog.class.php:2345
+#: ../../lib/class/catalog.class.php:2426
 #, php-format
 msgid "Playlist Import and Recreate Successful. Total: %d Songs"
 msgstr "プレイリストのインポートと再生性に成功しました。合計: %d曲"
 
-#: ../../lib/class/catalog.class.php:2349
+#: ../../lib/class/catalog.class.php:2430
 #, php-format
 msgid "Parsing %s - Not Found: %d Songs. Please check your m3u file."
-msgstr "%sを展開中 - 見つかりませんでした: %d曲。m3uファイルを確認してください。"
+msgstr ""
+"%sを展開中 - 見つかりませんでした: %d曲。m3uファイルを確認してください。"
 
 #: ../../lib/class/random.class.php:410
 msgid "Related Genre"
@@ -4143,7 +4149,7 @@ msgstr "このカタログを削除してもよろしいですか？"
 msgid "Album Art Search Finished"
 msgstr "アルバムアート検索が完了しました"
 
-#: ../../bin/print_tags.inc:66
+#: ../../bin/print_tags.inc:68
 msgid ""
 "[print_tags.php.inc]\n"
 "This commandline script will display the tag information for the specified "
@@ -4155,7 +4161,7 @@ msgstr ""
 "このコマンドラインスクリプトはAmpacheへ表示されるものとして指定されたファイル"
 "名のタグ情報を表示します。\n"
 
-#: ../../bin/print_tags.inc:72
+#: ../../bin/print_tags.inc:74
 msgid "Filename:"
 msgstr "ファイル名:"
 
