@@ -1076,6 +1076,8 @@ class getid3_mp3 extends getid3_handler
         fseek($fd, $avdata_offset, SEEK_SET);
         
         $sync_seek_buffer_size = min(128 * 1024, $info['avdataend'] - $avdata_offset);
+	// If sync < 1 then resort to default of 128 * 1024
+	if ($sync_seek_buffer_size < 1) { $sync_seek_buffer_size = 128 * 1024; }
         $header = fread($fd, $sync_seek_buffer_size);
         $sync_seek_buffer_size = strlen($header);
         $synch_seek_offset = 0;
