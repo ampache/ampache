@@ -919,6 +919,7 @@ class Song extends database_object implements media {
 		$results = array(); 
 		
 		while ($row = Dba::fetch_assoc($db_results)) { 
+			if (isset($results[$row['object_id']])) { continue; } 
 			$results[$row['object_id']] = $row; 
 			if (count($results) > Config::get('popular_threshold')) { break; } 	
 		} 

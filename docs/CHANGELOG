@@ -4,6 +4,8 @@
 
 --------------------------------------------------------------------------
   v.3.5-Beta2
+	- Fixed Recently played so that it correctly shows unique songs
+		with the correct data
 	- Fix some issues with filenames with Multi-byte characters 
 		(Thx Momo-i)
 	- Add WMV/MPG specific parsing functions (Thx Momo-i)
