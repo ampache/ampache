@@ -353,7 +353,7 @@ class Stream {
 
 	        header("Cache-control: public");
         	header("Content-Disposition: filename=ampache_playlist.asx");
-		header("Content-Type: audio/x-ms-wmv;");
+		header("Content-Type: video/x-ms-wmv;");
  
 		echo "<ASX version = \"3.0\" BANNERBAR=\"AUTO\">\n";
                 echo "<TITLE>Ampache ASX Playlist</TITLE>";
