@@ -169,11 +169,11 @@ switch ($_REQUEST['action']) {
 		/* get the user and their history */
 		$working_user	= new User($_REQUEST['user_id']); 
 		
-		if (!isset ($_REQUEST['all'])){
-			$history	= $working_user->get_ip_history('',1);
+		if (!isset($_REQUEST['all'])){
+			$history	= $working_user->get_ip_history(0,1);
 		} 
 		else {
-			$history	= $working_user->get_ip_history('','');
+			$history	= $working_user->get_ip_history();
 		}
 		require Config::get('prefix') . '/templates/show_ip_history.inc.php';
 	break;
