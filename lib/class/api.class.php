@@ -164,17 +164,22 @@ class Api {
 
 				// We need to also get the 'last update' of the catalog information in an RFC 2822 Format
 				$sql = "SELECT MAX(`last_update`) AS `update`,MAX(`last_add`) AS `add`, MAX(`last_clean`) AS `clean` FROM `catalog`"; 
-				$db_results = Dba::query($sql); 
+				$db_results = Dba::read($sql); 
 				$row = Dba::fetch_assoc($db_results); 	 
 
 				// Now we need to quickly get the totals of songs
 				$sql = "SELECT COUNT(`id`) AS `song`,COUNT(DISTINCT(`album`)) AS `album`," . 
 					"COUNT(DISTINCT(`artist`)) AS `artist` FROM `song`";
-				$db_results = Dba::query($sql); 
+				$db_results = Dba::read($sql); 
 				$counts = Dba::fetch_assoc($db_results); 
 
+				// Next the video counts
+				$sql = "SELECT COUNT(`id`) AS `video` FROM `video`"; 
+				$db_results = Dba::read($sql); 
+				$vcounts = Dba::fetch_assoc($db_results); 
+
 				$sql = "SELECT COUNT(`id`) AS `playlist` FROM `playlist`"; 
-				$db_results = Dba::query($sql);
+				$db_results = Dba::read($sql);
 				$playlist = Dba::fetch_assoc($db_results); 
 
 				return array('auth'=>$token,
@@ -185,7 +190,8 @@ class Api {
 					'songs'=>$counts['song'],
 					'albums'=>$counts['album'],
 					'artists'=>$counts['artist'],
-					'playlists'=>$playlist['playlist']); 
+					'playlists'=>$playlist['playlist'],
+					'videos'=>$vcounts['video']); 
 			} // match 
 
 		} // end while
