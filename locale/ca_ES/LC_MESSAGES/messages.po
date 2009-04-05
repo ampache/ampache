@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ampache 3.5.0\n"
 "Report-Msgid-Bugs-To: translations at ampache.org\n"
-"POT-Creation-Date: 2009-03-28 18:27+0900\n"
-"PO-Revision-Date: 2008-01-04 16:41+0100\n"
+"POT-Creation-Date: 2009-04-06 08:25+0900\n"
+"PO-Revision-Date: 2009-04-04 14:00+0200\n"
 "Last-Translator: Guillem Lluch Moll <glluch@ya.com>\n"
 "Language-Team: Catalan <ca@dodds.net>\n"
 "MIME-Version: 1.0\n"
@@ -18,12 +18,12 @@ msgstr ""
 
 #: ../../search.php:38
 msgid "Error: No Keyword Entered"
-msgstr "Error: no s'ha entrat cap lletre"
+msgstr "Error: no s'ha entrat cap lletra"
 
 #: ../../song.php:40
 #, php-format
 msgid "%1$s - %2$s Lyrics Detail"
-msgstr ""
+msgstr "Detalls de les lletes de %1$s - %2$s"
 
 #: ../../templates/show_album_row.inc.php:23
 #: ../../templates/show_song_row.inc.php:23
@@ -73,7 +73,7 @@ msgstr "Aleatori"
 #: ../../templates/show_album_row.inc.php:45
 #: ../../templates/show_song_row.inc.php:38
 msgid "Post Shout"
-msgstr ""
+msgstr "Enviar el post"
 
 #: ../../templates/show_album_row.inc.php:50
 #: ../../templates/show_playlist.inc.php:36
@@ -82,7 +82,7 @@ msgstr ""
 #: ../../templates/show_search_options.inc.php:33
 #: ../../templates/show_playlist_row.inc.php:33
 msgid "Batch Download"
-msgstr ""
+msgstr "Agrupar baixada"
 
 #: ../../templates/show_album_row.inc.php:54
 #: ../../templates/show_song_row.inc.php:47
@@ -96,9 +96,9 @@ msgstr "Editar"
 
 #: ../../templates/show_user_preferences.inc.php:28
 #: ../../templates/show_preferences.inc.php:28
-#, fuzzy, php-format
+#, php-format
 msgid "Editing %s preferences"
-msgstr "preferències"
+msgstr "Editant les %s preferències"
 
 #: ../../templates/show_user_preferences.inc.php:36
 #: ../../templates/show_preference_box.inc.php:40
@@ -107,7 +107,7 @@ msgstr "preferències"
 #: ../../templates/show_preference_admin.inc.php:49
 #: ../../templates/show_debug.inc.php:93
 msgid "Preference"
-msgstr "Preferències"
+msgstr "Preferència"
 
 #: ../../templates/show_user_preferences.inc.php:37
 #: ../../templates/show_preference_box.inc.php:41
@@ -121,12 +121,11 @@ msgstr "Valor"
 #: ../../templates/show_user_preferences.inc.php:50
 #: ../../templates/show_preferences.inc.php:34
 msgid "Update Preferences"
-msgstr "Actualitzant les preferències"
+msgstr "Actualitza les preferències"
 
 #: ../../templates/show_song_row.inc.php:35
-#, fuzzy
 msgid "Song Information"
-msgstr "Informació de l'usuari"
+msgstr "Informació de la cançó"
 
 #: ../../templates/show_song_row.inc.php:43
 #: ../../templates/show_artist.inc.php:51
@@ -137,15 +136,15 @@ msgstr "Baixar"
 
 #: ../../templates/show_localplay_control.inc.php:25
 msgid "Previous"
-msgstr ""
+msgstr "Previ"
 
 #: ../../templates/show_localplay_control.inc.php:26
 msgid "Stop"
-msgstr ""
+msgstr "Atura"
 
 #: ../../templates/show_localplay_control.inc.php:27
 msgid "Pause"
-msgstr ""
+msgstr "Pausa"
 
 #: ../../templates/show_localplay_control.inc.php:28
 #: ../../templates/show_manage_democratic.inc.php:57
@@ -163,7 +162,7 @@ msgstr "Següent"
 #: ../../templates/show_test_config.inc.php:40
 #: ../../templates/sidebar_admin.inc.php:45
 msgid "Ampache Debug"
-msgstr "Ampache·Debug"
+msgstr "Depurar Ampache"
 
 #: ../../templates/show_test.inc.php:33
 msgid ""
@@ -175,15 +174,15 @@ msgstr ""
 
 #: ../../templates/show_test.inc.php:38
 msgid "CHECK"
-msgstr "Comprovant"
+msgstr "COMPROVA"
 
 #: ../../templates/show_test.inc.php:40
 msgid "STATUS"
-msgstr "Estat"
+msgstr "ESTAT"
 
 #: ../../templates/show_test.inc.php:42
 msgid "DESCRIPTION"
-msgstr "Descripció"
+msgstr "DESCRIPCIÓ"
 
 #: ../../templates/show_test.inc.php:45
 #: ../../templates/show_install_check.inc.php:24
@@ -194,13 +193,12 @@ msgstr "Versió PHP"
 #: ../../templates/show_test.inc.php:51
 #: ../../templates/show_install_check.inc.php:28
 msgid "Hash Function Exists"
-msgstr ""
+msgstr "Existeix ja la funció hash"
 
 #: ../../templates/show_test.inc.php:51
 #: ../../templates/show_install_check.inc.php:28
-#, fuzzy
 msgid "SHA256 Support"
-msgstr "Suport PHP PCRE"
+msgstr "Suport SHA256"
 
 #: ../../templates/show_test.inc.php:60
 msgid ""
@@ -221,8 +219,8 @@ msgid ""
 "This test checks to see if you have the mysql extensions loaded for PHP. "
 "These are required for Ampache to work."
 msgstr ""
-"Aquest test mira si tens la extensió de Mysql carregada per PHPÉs necessari "
-"per que l'Ampache funcioni"
+"Aquest test mira si tens la extensió de Mysql carregada per PHP. És "
+"necessari perque l'Ampache funcioni"
 
 #: ../../templates/show_test.inc.php:82
 #: ../../templates/show_install_check.inc.php:48
@@ -235,7 +233,7 @@ msgid ""
 "This test checks to make sure that you have PHP session support enabled. "
 "Sessions are required for Ampache to work."
 msgstr ""
-"Aquest test comprova que tens suport per sessions a PHPLes session són "
+"Aquest test comprova que tens suport per sessions a PHP. Les session són "
 "necessàries perque l'Ampache funcioni"
 
 #: ../../templates/show_test.inc.php:99
@@ -249,6 +247,8 @@ msgid ""
 "This test checks to make sure you have Iconv support installed. Iconv "
 "support is required for Ampache"
 msgstr ""
+"Aquest tes comprova que tens el suport Iconv instal.lat ja que és necessari "
+"perque l'ampache funcioni"
 
 #: ../../templates/show_test.inc.php:115
 #: ../../templates/show_install_check.inc.php:70
@@ -277,9 +277,9 @@ msgid ""
 "some features of ampache may not work correctly"
 msgstr ""
 "Aquest·test·serveix·per·assegurar·que·PHP no funciona en SafeMode i que es "
-"possiblemodificar els límits de memòria. Encara que no sigui imprescindible, "
-"sense aquestes habilitatsalgunes funcions de l'ampache tal vegada no aniran "
-"bé"
+"possible modificar els límits de memòria. Encara que no sigui "
+"imprescindible, sense aquestes habilitats algunes funcions de l'ampache tal "
+"vegada no aniran bé"
 
 #: ../../templates/show_test.inc.php:147
 #: ../../templates/show_install_config.inc.php:91
@@ -292,20 +292,22 @@ msgid ""
 "ampache.cfg.php is not in the correct locations or\n"
 "\tit is not currently readable by your webserver."
 msgstr ""
-"Això intenta lleguir /config/ampache.cfg.php Si fall o bél'ampache.cfg.php "
+"Això intenta lleguir /config/ampache.cfg.php Si falla o bé l'ampache.cfg.php "
 "no és al lloc correcte o\n"
 "\tit no és pot llegir pel teu servidor web"
 
 #: ../../templates/show_test.inc.php:166
 #: ../../templates/show_install_config.inc.php:106
 msgid "Ampache.cfg.php Configured?"
-msgstr "Està configurat AMpache.cfg.php?"
+msgstr "Està configurat Ampache.cfg.php?"
 
 #: ../../templates/show_test.inc.php:182
 msgid ""
 "This test makes sure that you have set all of the required configuration "
 "variables and that we are able to completely parse your config file"
 msgstr ""
+"Aquest test assegura que tens totes les variable necessàries de configuració "
+"i que es pot tractar completament el teu fixter de configuració "
 
 #: ../../templates/show_test.inc.php:186
 msgid "DB Connection"
@@ -321,18 +323,20 @@ msgstr ""
 
 #: ../../templates/show_test.inc.php:204
 msgid "DB Inserted"
-msgstr ""
+msgstr "BD inserida"
 
 #: ../../templates/show_test.inc.php:218
 msgid ""
 "This checks a few key tables to make sure that you have successfully "
 "inserted the ampache database and that the user has access to the database"
 msgstr ""
+"Comprova algunes taules clau per assegurar-se que vostè potinserir la base "
+"de dades de l'ampache i que l'usuari té accés a la base de dades"
 
 #: ../../templates/show_test.inc.php:223
 #: ../../templates/show_install_config.inc.php:63
 msgid "Web Path"
-msgstr "Patrh del web"
+msgstr "Ruta del web"
 
 #: ../../templates/show_test.inc.php:247
 msgid ""
@@ -340,11 +344,14 @@ msgid ""
 "we are able to get to the index page. If you do not see a check mark here "
 "then your web_path is not set correctly."
 msgstr ""
+"Aquesta prova assegura que el seu directori web path s'ha definit "
+"correctament i quees pot arribar a la pàgina índex. Si no veus una marca de "
+"verificació aquíllavors el seu directori web no està configurat correctament."
 
 #: ../../templates/show_albums.inc.php:42
 #: ../../templates/show_albums.inc.php:73
 msgid "Cover"
-msgstr "Cover"
+msgstr "Portada"
 
 #: ../../templates/show_albums.inc.php:44
 #: ../../templates/show_albums.inc.php:75
@@ -366,7 +373,7 @@ msgstr "Cover"
 #: ../../templates/show_playlist_songs.inc.php:65
 #: ../../templates/show_now_playing_row.inc.php:52
 msgid "Album"
-msgstr "Album"
+msgstr "Àlbum"
 
 #: ../../templates/show_albums.inc.php:45
 #: ../../templates/show_albums.inc.php:76
@@ -426,9 +433,8 @@ msgstr "Any"
 #: ../../templates/show_videos.inc.php:63
 #: ../../templates/show_stats.inc.php:34 ../../templates/show_songs.inc.php:43
 #: ../../templates/show_songs.inc.php:72
-#, fuzzy
 msgid "Tags"
-msgstr "Re-tag"
+msgstr "Etiquestes"
 
 #: ../../templates/show_albums.inc.php:49
 #: ../../templates/show_albums.inc.php:80
@@ -438,7 +444,7 @@ msgstr "Re-tag"
 #: ../../templates/show_songs.inc.php:49 ../../templates/show_songs.inc.php:76
 #: ../../templates/show_now_playing_row.inc.php:36
 msgid "Rating"
-msgstr "Calificació"
+msgstr "Qualificat"
 
 #: ../../templates/show_albums.inc.php:50
 #: ../../templates/show_albums.inc.php:81
@@ -467,7 +473,7 @@ msgstr "Accions"
 #: ../../templates/show_songs.inc.php:64
 #: ../../templates/show_recently_played.inc.php:95
 msgid "Not Enough Data"
-msgstr "No hi ha dades"
+msgstr "No hi ha prou dades"
 
 #: ../../templates/show_users.inc.php:39 ../../templates/show_users.inc.php:61
 msgid "Fullname"
@@ -544,7 +550,7 @@ msgstr "En línia"
 #: ../../lib/class/catalog.class.php:147 ../../lib/class/catalog.class.php:148
 #: ../../lib/preferences.php:261
 msgid "Never"
-msgstr ""
+msgstr "Mai"
 
 #: ../../templates/show_users.inc.php:54 ../../templates/show_user.inc.php:23
 #: ../../lib/class/flag.class.php:337 ../../lib/class/localplay.class.php:648
@@ -555,11 +561,11 @@ msgstr "Desconegut"
 
 #: ../../templates/show_edit_user.inc.php:23
 msgid "Editing existing User"
-msgstr "Editar l'usuari existent"
+msgstr "Editant l'usuari existent"
 
 #: ../../templates/show_edit_user.inc.php:28
 msgid "User Properties"
-msgstr ""
+msgstr "Propietats de l'usuari"
 
 #: ../../templates/show_edit_user.inc.php:40
 #: ../../templates/show_user.inc.php:30
@@ -633,7 +639,7 @@ msgstr "Usuari"
 #: ../../templates/show_create_democratic.inc.php:43
 #: ../../lib/class/democratic.class.php:151
 msgid "Content Manager"
-msgstr ""
+msgstr "Administrador de contingut"
 
 #: ../../templates/show_edit_user.inc.php:80
 #: ../../templates/show_preference_box.inc.php:61
@@ -641,7 +647,7 @@ msgstr ""
 #: ../../templates/show_create_democratic.inc.php:44
 #: ../../lib/class/democratic.class.php:154
 msgid "Catalog Manager"
-msgstr ""
+msgstr "Administrador del catàleg"
 
 #: ../../templates/show_edit_user.inc.php:81
 #: ../../templates/show_preference_box.inc.php:62
@@ -654,17 +660,15 @@ msgstr ""
 #: ../../lib/class/democratic.class.php:157 ../../lib/preferences.php:233
 #: ../../admin/users.php:127
 msgid "Admin"
-msgstr "Administrar"
+msgstr "Administrador"
 
 #: ../../templates/show_edit_user.inc.php:86
-#, fuzzy
 msgid "Other Options"
-msgstr "Opcions"
+msgstr "Altres opcions"
 
 #: ../../templates/show_edit_user.inc.php:89
-#, fuzzy
 msgid "Config Preset"
-msgstr "Confirma l'esborrada"
+msgstr "Configuració per defecte"
 
 #: ../../templates/show_edit_user.inc.php:93
 #: ../../templates/sidebar_home.inc.php:90
@@ -681,12 +685,11 @@ msgstr "Democràtic"
 #: ../../templates/show_playtype_switch.inc.php:34
 #: ../../templates/sidebar.inc.php:28 ../../lib/preferences.php:182
 msgid "Localplay"
-msgstr "Sona localment"
+msgstr "Reproducció local"
 
 #: ../../templates/show_edit_user.inc.php:95
-#, fuzzy
 msgid "Flash"
-msgstr "Senyal"
+msgstr "Flash"
 
 #: ../../templates/show_edit_user.inc.php:96
 #: ../../templates/show_playtype_switch.inc.php:32
@@ -696,11 +699,11 @@ msgstr "Stream"
 
 #: ../../templates/show_edit_user.inc.php:101
 msgid "Prevent Preset Override"
-msgstr ""
+msgstr "Evitar la sobreescritura de la configuració per defecte"
 
 #: ../../templates/show_edit_user.inc.php:103
 msgid "This Affects all non-Admin accounts"
-msgstr ""
+msgstr "Afectarà tots el comptes no administratius"
 
 #: ../../templates/show_edit_user.inc.php:107
 #: ../../templates/show_account.inc.php:52
@@ -748,26 +751,25 @@ msgstr "Nom"
 #: ../../templates/show_stats.inc.php:64
 #: ../../templates/show_add_catalog.inc.php:47
 msgid "Path"
-msgstr "Path"
+msgstr "Ruta"
 
 #: ../../templates/show_catalogs.inc.php:35
 #: ../../templates/show_catalogs.inc.php:52
 #: ../../templates/show_stats.inc.php:65
 msgid "Last Verify"
-msgstr ""
+msgstr "Última verificació"
 
 #: ../../templates/show_catalogs.inc.php:36
 #: ../../templates/show_catalogs.inc.php:53
 #: ../../templates/show_stats.inc.php:66
 msgid "Last Add"
-msgstr ""
+msgstr "Últim afegit"
 
 #: ../../templates/show_catalogs.inc.php:37
 #: ../../templates/show_catalogs.inc.php:54
 #: ../../templates/show_stats.inc.php:67
-#, fuzzy
 msgid "Last Clean"
-msgstr "Última vegada vist"
+msgstr "Última neteja"
 
 #: ../../templates/show_localplay_controllers.inc.php:33
 #: ../../templates/show_localplay_controllers.inc.php:64
@@ -788,12 +790,12 @@ msgstr "Versió"
 #: ../../templates/show_duplicates.inc.php:75 ../../lib/preferences.php:165
 #: ../../lib/preferences.php:271
 msgid "Disable"
-msgstr "No permés"
+msgstr "Desactiva"
 
 #: ../../templates/show_localplay_controllers.inc.php:48
 #: ../../templates/show_plugins.inc.php:42
 msgid "Activate"
-msgstr "Activar"
+msgstr "Activa"
 
 #: ../../templates/show_localplay_controllers.inc.php:59
 #: ../../templates/show_plugins.inc.php:57
@@ -811,7 +813,7 @@ msgstr "Portades"
 
 #: ../../templates/show_big_art.inc.php:33
 msgid "Click to close window"
-msgstr "Fes click per tancar la finestra"
+msgstr "Click per tancar la finestra"
 
 #: ../../templates/show_preference_box.inc.php:43
 #: ../../templates/show_preference_box.inc.php:73
@@ -821,7 +823,7 @@ msgstr "Aplica a tot"
 #: ../../templates/show_preference_box.inc.php:44
 #: ../../templates/show_preference_box.inc.php:74
 msgid "Access Level"
-msgstr ""
+msgstr "Nivell d'accés"
 
 #: ../../templates/show_edit_song_row.inc.php:45
 #: ../../templates/show_edit_live_stream_row.inc.php:52
@@ -830,7 +832,7 @@ msgstr ""
 #: ../../templates/show_edit_artist_row.inc.php:32
 #: ../../templates/show_edit_album_row.inc.php:48
 msgid "Save Changes"
-msgstr ""
+msgstr "Guarda els canvis"
 
 #: ../../templates/show_artists.inc.php:39
 #: ../../templates/show_artists.inc.php:67
@@ -859,7 +861,7 @@ msgstr "Temps"
 #: ../../templates/show_duplicate.inc.php:42
 #: ../../templates/sidebar_modules.inc.php:33
 msgid "Find Duplicates"
-msgstr "Trobar les repetides"
+msgstr "Troba les repetides"
 
 #: ../../templates/show_duplicate.inc.php:27
 msgid "Search Type"
@@ -887,11 +889,11 @@ msgstr "Artista, àlbum i títol"
 
 #: ../../templates/show_duplicate.inc.php:37
 msgid "Search Disabled Songs"
-msgstr ""
+msgstr "Cerca cançons desactivades"
 
 #: ../../templates/show_import_playlist.inc.php:23
 msgid "Importing a Playlist from a File"
-msgstr "Importar un llista des d'un fitxer"
+msgstr "Important un llista des d'un fitxer"
 
 #: ../../templates/show_import_playlist.inc.php:28
 #: ../../templates/show_search.inc.php:66
@@ -913,33 +915,32 @@ msgstr "Importa una llista de reproducció"
 #: ../../templates/show_edit_live_stream_row.inc.php:27
 #: ../../templates/show_add_live_stream.inc.php:42
 msgid "Stream URL"
-msgstr ""
+msgstr "URL de l'stream"
 
 #: ../../templates/show_edit_live_stream_row.inc.php:28
 #: ../../templates/show_add_live_stream.inc.php:35
 msgid "Homepage"
-msgstr ""
+msgstr "Pàgina d'inici"
 
 #: ../../templates/show_edit_live_stream_row.inc.php:29
 #: ../../templates/show_live_streams.inc.php:37
 #: ../../templates/show_live_streams.inc.php:59
 #: ../../templates/show_add_live_stream.inc.php:55
 msgid "Callsign"
-msgstr ""
+msgstr "Senyal de la crida"
 
 #: ../../templates/show_edit_live_stream_row.inc.php:30
 #: ../../templates/show_live_streams.inc.php:38
 #: ../../templates/show_live_streams.inc.php:60
 #: ../../templates/show_add_live_stream.inc.php:49
 msgid "Frequency"
-msgstr ""
+msgstr "Freqüència"
 
 #: ../../templates/show_live_streams.inc.php:39
 #: ../../templates/show_live_streams.inc.php:61
 #: ../../templates/show_search.inc.php:54
-#, fuzzy
 msgid "Tag"
-msgstr "Re-tag"
+msgstr "Etiqueta"
 
 #: ../../templates/sidebar_home.inc.php:24
 msgid "Browse"
@@ -956,7 +957,7 @@ msgstr "Títol de la cançó"
 #: ../../templates/sidebar_home.inc.php:35
 #: ../../lib/class/browse.class.php:203
 msgid "Tag Cloud"
-msgstr ""
+msgstr "Núvol d'etiquetes"
 
 #: ../../templates/sidebar_home.inc.php:36
 #: ../../templates/sidebar_home.inc.php:86
@@ -969,61 +970,60 @@ msgstr "LLista"
 #: ../../templates/sidebar_home.inc.php:37
 #: ../../lib/class/browse.class.php:166
 msgid "Radio Stations"
-msgstr ""
+msgstr "Estació de ràdio"
 
 #: ../../templates/sidebar_home.inc.php:38
 #: ../../templates/show_stats.inc.php:33 ../../templates/show_stats.inc.php:69
-#, fuzzy
 msgid "Video"
-msgstr "Veure"
+msgstr "Vídeo"
 
 #: ../../templates/sidebar_home.inc.php:42
 msgid "Filters"
-msgstr ""
+msgstr "Filtres"
 
 #: ../../templates/sidebar_home.inc.php:46
 msgid "Starts With"
-msgstr ""
+msgstr "Comença per"
 
 #: ../../templates/sidebar_home.inc.php:52
 msgid "Minimum Count"
-msgstr ""
+msgstr "Compta mínim"
 
 #: ../../templates/sidebar_home.inc.php:56
 msgid "Rated"
-msgstr ""
+msgstr "Valorat"
 
 #: ../../templates/sidebar_home.inc.php:60
 msgid "Unplayed"
-msgstr ""
+msgstr "Encara sense reproduir"
 
 #: ../../templates/sidebar_home.inc.php:64
 #: ../../templates/show_artist.inc.php:55
 msgid "Show Art"
-msgstr ""
+msgstr "Mostra la portada"
 
 #: ../../templates/sidebar_home.inc.php:69
 msgid "All Playlists"
-msgstr ""
+msgstr "Totes les llistes"
 
 #: ../../templates/sidebar_home.inc.php:88
 msgid "Currently Playing"
-msgstr ""
+msgstr "Actualment reproduint"
 
 #: ../../templates/sidebar_home.inc.php:101
 #: ../../templates/show_live_stream.inc.php:29
 msgid "Import"
-msgstr ""
+msgstr "Importa"
 
 #: ../../templates/sidebar_home.inc.php:109
 msgid "Advanced"
-msgstr ""
+msgstr "Avançat"
 
 #: ../../templates/sidebar_home.inc.php:112
 #: ../../templates/show_popular.inc.php:22
 #: ../../templates/show_newest.inc.php:22
 msgid "Information"
-msgstr ""
+msgstr "Informació"
 
 #: ../../templates/sidebar_home.inc.php:114
 #: ../../templates/show_stats.inc.php:24 ../../lib/ui.lib.php:374
@@ -1031,13 +1031,12 @@ msgid "Statistics"
 msgstr "Estadístiques"
 
 #: ../../templates/sidebar_home.inc.php:115
-#, fuzzy
 msgid "Newest"
-msgstr "Següent"
+msgstr "El més nou"
 
 #: ../../templates/sidebar_home.inc.php:116
 msgid "Popular"
-msgstr ""
+msgstr "Popular"
 
 #: ../../templates/show_confirmation.inc.php:27
 #: ../../templates/show_update_items.inc.php:27
@@ -1047,7 +1046,7 @@ msgstr "Continua"
 #: ../../templates/show_confirmation.inc.php:32
 #: ../../templates/show_similar_artists.inc.php:78
 msgid "Cancel"
-msgstr "Cancel·la"
+msgstr "Cancel.la"
 
 #: ../../templates/show_flag_row.inc.php:31
 msgid "Reject"
@@ -1056,12 +1055,12 @@ msgstr "Refusa"
 #: ../../templates/show_flag_row.inc.php:33 ../../lib/preferences.php:164
 #: ../../lib/preferences.php:270
 msgid "Enable"
-msgstr "Permés"
+msgstr "Permet"
 
 #: ../../templates/show_playlists.inc.php:35
 #: ../../templates/show_playlists.inc.php:58
 msgid "Playlist Name"
-msgstr "No de la llista"
+msgstr "Nom de la llista"
 
 #: ../../templates/show_playlists.inc.php:37
 #: ../../templates/show_playlists.inc.php:60
@@ -1074,24 +1073,24 @@ msgid "Owner"
 msgstr "Propietari"
 
 #: ../../templates/show_edit_catalog.inc.php:22
-#, fuzzy, php-format
+#, php-format
 msgid "Settings for %s"
-msgstr "Configuració per"
+msgstr "Configuració per a %s"
 
 #: ../../templates/show_edit_catalog.inc.php:29
 #: ../../templates/show_add_catalog.inc.php:35
 msgid "Auto-inserted Fields"
-msgstr "Auto-insereix els camps"
+msgstr "Camps auto-inserits"
 
 #: ../../templates/show_edit_catalog.inc.php:30
 #: ../../templates/show_add_catalog.inc.php:36
 msgid "album name"
-msgstr "àlbum-nom"
+msgstr "nom de l'àlbum"
 
 #: ../../templates/show_edit_catalog.inc.php:31
 #: ../../templates/show_add_catalog.inc.php:37
 msgid "artist name"
-msgstr "artiste nom"
+msgstr "nom de l'artista"
 
 #: ../../templates/show_edit_catalog.inc.php:32
 #: ../../templates/show_add_catalog.inc.php:38
@@ -1101,12 +1100,12 @@ msgstr "comentari (id3)"
 #: ../../templates/show_edit_catalog.inc.php:33
 #: ../../templates/show_add_catalog.inc.php:39
 msgid "track number (padded with leading 0)"
-msgstr "rastregi el nombre (embuatat amb l'administració 0) "
+msgstr "ordre de la cançó (encoixinada amb els principals 0) "
 
 #: ../../templates/show_edit_catalog.inc.php:34
 #: ../../templates/show_add_catalog.inc.php:40
 msgid "song title"
-msgstr "Títol de la cançó"
+msgstr "títol de la cançó"
 
 #: ../../templates/show_edit_catalog.inc.php:35
 #: ../../templates/show_add_catalog.inc.php:41
@@ -1135,7 +1134,7 @@ msgstr "Necessari pels catàlegs remots"
 
 #: ../../templates/show_edit_catalog.inc.php:50
 msgid "Filename pattern"
-msgstr "Patró de arxiu"
+msgstr "Patró d'arxiu"
 
 #: ../../templates/show_edit_catalog.inc.php:57
 #: ../../templates/show_add_catalog.inc.php:69
@@ -1153,7 +1152,7 @@ msgstr "Guarda la configuració del catàleg"
 
 #: ../../templates/show_manage_democratic.inc.php:22
 msgid "Manage Democratic Playlists"
-msgstr ""
+msgstr "Gestiona les llistes democràtiques"
 
 #: ../../templates/show_manage_democratic.inc.php:35
 #: ../../templates/show_create_democratic.inc.php:30
@@ -1163,7 +1162,7 @@ msgstr "LLista base"
 #: ../../templates/show_manage_democratic.inc.php:36
 #: ../../templates/show_democratic.inc.php:28
 msgid "Cooldown"
-msgstr ""
+msgstr "Refredament"
 
 #: ../../templates/show_manage_democratic.inc.php:37
 #: ../../templates/show_add_access_local.inc.php:32
@@ -1181,7 +1180,7 @@ msgstr "Nivell"
 #: ../../templates/show_manage_democratic.inc.php:38
 #: ../../lib/preferences.php:255 ../../lib/preferences.php:262
 msgid "Default"
-msgstr ""
+msgstr "Per defecte"
 
 #: ../../templates/show_manage_democratic.inc.php:69
 msgid "Create New Playlist"
@@ -1190,9 +1189,8 @@ msgstr "Crea una nova llista"
 #: ../../templates/show_add_access_local.inc.php:22
 #: ../../templates/show_access_list.inc.php:40
 #: ../../templates/show_access_list.inc.php:41
-#, fuzzy
 msgid "Add Local Network Definition"
-msgstr "Definició de la xarxa local"
+msgstr "Afegeix definició de xarxa local"
 
 #: ../../templates/show_add_access_local.inc.php:34
 #: ../../templates/show_add_access_rpc.inc.php:34
@@ -1211,7 +1209,7 @@ msgstr "Veure"
 #: ../../templates/show_add_access_current.inc.php:38
 #: ../../lib/class/access.class.php:413
 msgid "Read"
-msgstr "LLegit"
+msgstr "LLegeix"
 
 #: ../../templates/show_add_access_local.inc.php:36
 #: ../../templates/show_add_access_rpc.inc.php:36
@@ -1220,7 +1218,7 @@ msgstr "LLegit"
 #: ../../templates/show_add_access_current.inc.php:39
 #: ../../lib/class/access.class.php:416
 msgid "Read/Write"
-msgstr "LLegit/Escrit"
+msgstr "LLegir/Escriure"
 
 #: ../../templates/show_add_access_local.inc.php:37
 #: ../../templates/show_add_access_local.inc.php:52
@@ -1253,7 +1251,7 @@ msgstr "Tipus"
 #: ../../templates/show_add_access.inc.php:53
 #: ../../lib/class/access.class.php:446
 msgid "Local Network Definition"
-msgstr "Definició de la xarxa local"
+msgstr "Definició de xarxa local"
 
 #: ../../templates/show_add_access_local.inc.php:51
 #: ../../templates/show_add_access_rpc.inc.php:51
@@ -1275,7 +1273,7 @@ msgstr "Interfície Web"
 #: ../../templates/show_add_access.inc.php:59
 #: ../../templates/show_add_access_current.inc.php:50
 msgid "RPC Options"
-msgstr ""
+msgstr "Opcions RPC"
 
 #: ../../templates/show_add_access_local.inc.php:59
 #: ../../templates/show_add_access_rpc.inc.php:59
@@ -1290,36 +1288,34 @@ msgstr "Clau remota"
 #: ../../templates/show_edit_access.inc.php:43
 #: ../../templates/show_add_access.inc.php:69
 #: ../../templates/show_add_access_current.inc.php:32
-#, fuzzy
 msgid "IPv4 or IPv6 Addresses"
-msgstr "Adreça IP inicial"
+msgstr "Adreça IPv4 o IPv6"
 
 #: ../../templates/show_add_access_local.inc.php:71
 #: ../../templates/show_add_access_rpc.inc.php:71
 #: ../../templates/show_edit_access.inc.php:48
 #: ../../templates/show_add_access.inc.php:74
-#, fuzzy
 msgid "Start"
-msgstr "Estat"
+msgstr "Comença"
 
 #: ../../templates/show_add_access_local.inc.php:76
 #: ../../templates/show_add_access_rpc.inc.php:76
 #: ../../templates/show_edit_access.inc.php:53
 #: ../../templates/show_add_access.inc.php:79
 msgid "End"
-msgstr ""
+msgstr "Acaba"
 
 #: ../../templates/show_add_access_local.inc.php:85
 #: ../../templates/show_add_access_rpc.inc.php:85
 #: ../../templates/show_add_access.inc.php:88
 #: ../../templates/show_add_access_current.inc.php:61
 msgid "Create ACL"
-msgstr "Crear ACL"
+msgstr "Crea ACL"
 
 #: ../../templates/show_playlist.inc.php:26
-#, fuzzy, php-format
+#, php-format
 msgid "%s %s Playlist"
-msgstr "LLista base"
+msgstr "Llista %s %s"
 
 #: ../../templates/show_playlist.inc.php:31
 msgid "Normalize Tracks"
@@ -1328,29 +1324,29 @@ msgstr "Normalitza les cançons"
 #: ../../templates/show_playlist.inc.php:40
 #: ../../templates/show_playlist.inc.php:41
 msgid "Add All"
-msgstr ""
+msgstr "Afegeix a tot"
 
 #: ../../templates/show_playlist.inc.php:44
 #: ../../templates/show_playlist.inc.php:45
 msgid "Add Random"
-msgstr ""
+msgstr "Afegeix aleatòriament"
 
 #: ../../templates/sidebar_localplay.inc.php:35
 #: ../../templates/show_localplay_add_instance.inc.php:35
 msgid "Add Instance"
-msgstr ""
+msgstr "Afegeix una instància"
 
 #: ../../templates/sidebar_localplay.inc.php:36
 msgid "Show instances"
-msgstr ""
+msgstr "Mostra les instàncies"
 
 #: ../../templates/sidebar_localplay.inc.php:38
 msgid "Show Playlist"
-msgstr ""
+msgstr "Mostra la llista"
 
 #: ../../templates/sidebar_localplay.inc.php:42
 msgid "Active Instance"
-msgstr ""
+msgstr "Instància activa"
 
 #: ../../templates/sidebar_localplay.inc.php:44
 #: ../../templates/show_gather_art.inc.php:24
@@ -1361,52 +1357,51 @@ msgstr "No cap"
 
 #: ../../templates/sidebar_localplay.inc.php:60
 msgid "Localplay Disabled"
-msgstr ""
+msgstr "Reproducció local desactivada"
 
 #: ../../templates/sidebar_localplay.inc.php:62
 msgid "Allow Localplay set to False"
-msgstr ""
+msgstr "Permetre posar la reproducció local a falsa"
 
 #: ../../templates/sidebar_localplay.inc.php:64
 msgid "Localplay Controller Not Defined"
-msgstr ""
+msgstr "No s'ha definit el controlador de reproducció local"
 
 #: ../../templates/sidebar_localplay.inc.php:66
 #: ../../templates/show_denied.inc.php:32
 msgid "Access Denied"
-msgstr ""
+msgstr "Accés denegat"
 
 #: ../../templates/footer.inc.php:25
 msgid "Using Old Password Encryption, Please Reset your Password"
 msgstr ""
+"Emprant la vella encriptació per a la contrasenya, Per favor actualitza la "
+"teva contrasenya"
 
 #: ../../templates/footer.inc.php:32
 msgid "Queries:"
-msgstr ""
+msgstr "Petitions:"
 
 #: ../../templates/footer.inc.php:32
 msgid "Cache Hits:"
-msgstr ""
+msgstr "Hits al cache:"
 
 #: ../../templates/show_videos.inc.php:37
 #: ../../templates/show_videos.inc.php:60
 #: ../../templates/show_search.inc.php:79
-#, fuzzy
 msgid "Codec"
-msgstr "Codi"
+msgstr "Codec"
 
 #: ../../templates/show_videos.inc.php:38
 #: ../../templates/show_videos.inc.php:61
-#, fuzzy
 msgid "Resolution"
-msgstr "Raó"
+msgstr "Resolució"
 
 #: ../../templates/show_add_access_rpc.inc.php:22
 #: ../../templates/show_access_list.inc.php:36
 #: ../../templates/show_access_list.inc.php:37
-#, fuzzy
 msgid "Add API / RPC Host"
-msgstr "Afegir accés per un host"
+msgstr "Afegir una màquina API / RPC"
 
 #: ../../templates/show_add_access_rpc.inc.php:50
 #: ../../templates/show_add_access_rpc.inc.php:51
@@ -1414,12 +1409,12 @@ msgstr "Afegir accés per un host"
 #: ../../templates/show_edit_access.inc.php:37
 #: ../../templates/show_add_access.inc.php:54
 msgid "RPC"
-msgstr ""
+msgstr "RPC"
 
 #: ../../templates/show_add_live_stream.inc.php:24
 #: ../../templates/show_live_stream.inc.php:26
 msgid "Add Radio Station"
-msgstr ""
+msgstr "Afegir estació de ràdio"
 
 #: ../../templates/show_add_live_stream.inc.php:61
 #: ../../templates/show_export.inc.php:32
@@ -1433,7 +1428,7 @@ msgstr "Àlbums del moment"
 
 #: ../../templates/show_index.inc.php:38
 msgid "Loading..."
-msgstr ""
+msgstr "Carregant..."
 
 #: ../../templates/show_edit_artist.inc.php:23
 msgid "Edit Artist"
@@ -1443,11 +1438,11 @@ msgstr "Edita l'artista"
 #: ../../templates/show_edit_song.inc.php:73
 #: ../../templates/show_edit_album.inc.php:41
 msgid "Flag for Retagging"
-msgstr "Assenyala per revisar els tags"
+msgstr "Assenyala per a revisar-ne les etiquetes"
 
 #: ../../templates/show_edit_artist.inc.php:41
 msgid "Update Artist"
-msgstr ""
+msgstr "Actualitza l'artista"
 
 #: ../../templates/show_edit_access.inc.php:22
 #, fuzzy
@@ -1468,7 +1463,7 @@ msgstr "Tipus ACL"
 #: ../../templates/show_manage_catalogs.inc.php:42
 #: ../../templates/show_playlist_edit.inc.php:47
 msgid "Update"
-msgstr "Actualitzar"
+msgstr "Actualitza"
 
 #: ../../templates/show_popular.inc.php:29
 #: ../../templates/show_genre.inc.php:35 ../../templates/show_stats.inc.php:31
@@ -1486,9 +1481,8 @@ msgid "Please check the artists you want to merge with the current one"
 msgstr "Per favor, comprova els artistes que vols ajuntar amb l'actual"
 
 #: ../../templates/show_similar_artists.inc.php:58
-#, fuzzy
 msgid "No Similar Artists found"
-msgstr "Artistes similars"
+msgstr "No s'han trobat artistes similars"
 
 #: ../../templates/show_similar_artists.inc.php:66
 msgid "Back"
@@ -1507,9 +1501,9 @@ msgid "Search Again"
 msgstr "Cerca de nou"
 
 #: ../../templates/show_clean_catalog.inc.php:23
-#, fuzzy, php-format
+#, php-format
 msgid "Cleaning the %s Catalog"
-msgstr "Netetgant el"
+msgstr "Netetgant el catàleg %s"
 
 #: ../../templates/show_clean_catalog.inc.php:25
 msgid "Checking"
@@ -1521,7 +1515,7 @@ msgstr "Comprovant"
 #: ../../templates/show_adds_catalog.inc.php:26
 #: ../../templates/show_verify_catalog.inc.php:28
 msgid "Reading"
-msgstr ""
+msgstr "Llegint"
 
 #: ../../templates/sidebar_preferences.inc.php:9
 #: ../../templates/sidebar.inc.php:29 ../../lib/ui.lib.php:327
@@ -1564,7 +1558,7 @@ msgstr "Borra"
 
 #: ../../templates/show_flag.inc.php:57
 msgid "Incorrect Tags"
-msgstr "Tags incorectes"
+msgstr "Etiquetes incorrectes"
 
 #: ../../templates/show_flag.inc.php:58 ../../lib/class/flag.class.php:331
 msgid "Re-encode"
@@ -1593,11 +1587,11 @@ msgstr "Senyal"
 #: ../../templates/show_playtype_switch.inc.php:38
 #: ../../lib/preferences.php:184
 msgid "Flash Player"
-msgstr ""
+msgstr "Reproductor flash"
 
 #: ../../templates/show_preference_admin.inc.php:22
 msgid "Preference Administration"
-msgstr "Preferències administratives"
+msgstr "Preferència administrativa"
 
 #: ../../templates/show_install_config.inc.php:33
 #: ../../templates/show_install_lang.inc.php:34
@@ -1616,7 +1610,7 @@ msgid ""
 "have the following pre-requisites"
 msgstr ""
 "Aquesta pàgina s'encarrega de la instal·lació de la base de dades Ampache i "
-"la creació De l'arxiu ampache.cfg.php. Abans de continuar, per favor "
+"la creació de l'arxiu ampache.cfg.php. Abans de continuar, per favor "
 "asseguri's que té els següents requisits previs "
 
 #: ../../templates/show_install_config.inc.php:42
@@ -1671,16 +1665,19 @@ msgid ""
 "will prompt you to download the config file. Please put the downloaded "
 "config file in /config"
 msgstr ""
+"Aquests passos fan la configuració dels valors bàsics i generem un fitxer de "
+"configuració. Se te demanarà que descarreguis l'arxiu de configuració. Per "
+"favor, posar el fitxerde configuració a / config"
 
 #: ../../templates/show_install_config.inc.php:54
 #: ../../templates/show_install.inc.php:58
 #: ../../templates/show_install_account.inc.php:51
 msgid "Step 3 - Setup Initial Account"
-msgstr "Pas 3 - Compte inicial"
+msgstr "Pas 3 - Establir el compte inicial"
 
 #: ../../templates/show_install_config.inc.php:58
 msgid "Generate Config File"
-msgstr ""
+msgstr "Genera l'arxiu de configuració"
 
 #: ../../templates/show_install_config.inc.php:67
 #: ../../templates/show_install.inc.php:66
@@ -1698,35 +1695,35 @@ msgstr "Usuari de MySQL"
 
 #: ../../templates/show_install_config.inc.php:79
 msgid "MySQL Password"
-msgstr "Contresenya de MySQL"
+msgstr "Contrasenya de MySQL"
 
 #: ../../templates/show_install_config.inc.php:84
 msgid "Write Config"
-msgstr "Escriure configuració"
+msgstr "Escriure la configuració"
 
 #: ../../templates/show_install_config.inc.php:125
 msgid "Check for Config"
-msgstr "Comprovant per la configuració"
+msgstr "Comprova la configuració"
 
 #: ../../templates/show_install_config.inc.php:131
 msgid "Continue to Step 3"
-msgstr ""
+msgstr "Ves al pas 3"
 
 #: ../../templates/show_user.inc.php:31
 msgid "Create Date"
-msgstr ""
+msgstr "Crear data"
 
 #: ../../templates/show_user.inc.php:35
 msgid "User is Online Now"
-msgstr ""
+msgstr "L'usuari és en línea ara"
 
 #: ../../templates/show_user.inc.php:37
 msgid "User is Offline Now"
-msgstr ""
+msgstr "L'usuari és fora de línia ara"
 
 #: ../../templates/show_user.inc.php:42
 msgid "Active Playlist"
-msgstr ""
+msgstr "Llista activa"
 
 #: ../../templates/show_user.inc.php:68 ../../templates/header.inc.php:36
 #: ../../templates/show_recently_played.inc.php:25
@@ -1737,9 +1734,8 @@ msgstr "Escoltat recentment"
 #: ../../templates/show_add_access.inc.php:22
 #: ../../templates/show_access_list.inc.php:43
 #: ../../templates/show_access_list.inc.php:44
-#, fuzzy
 msgid "Advanced Add"
-msgstr "Opcions avançades"
+msgstr "Afegir detalladament"
 
 #: ../../templates/sidebar_admin.inc.php:24
 #: ../../templates/show_stats.inc.php:25
@@ -1757,11 +1753,11 @@ msgstr "Afegeix un catàleg"
 #: ../../templates/sidebar_admin.inc.php:27
 #: ../../templates/show_manage_catalogs.inc.php:22
 msgid "Show Catalogs"
-msgstr ""
+msgstr "Mostra els catàlegs"
 
 #: ../../templates/sidebar_admin.inc.php:31
 msgid "User Tools"
-msgstr ""
+msgstr "Eines d'usuari"
 
 #: ../../templates/sidebar_admin.inc.php:33
 #: ../../templates/show_add_user.inc.php:85
@@ -1770,20 +1766,20 @@ msgstr "Afegir usuari"
 
 #: ../../templates/sidebar_admin.inc.php:34
 msgid "Browse Users"
-msgstr ""
+msgstr "Mostra els usuaris"
 
 #: ../../templates/sidebar_admin.inc.php:37
 #: ../../templates/show_access_list.inc.php:28
 msgid "Access Control"
-msgstr ""
+msgstr "Control d'accés"
 
 #: ../../templates/sidebar_admin.inc.php:39
 msgid "Add ACL"
-msgstr ""
+msgstr "Afegir ACL"
 
 #: ../../templates/sidebar_admin.inc.php:40
 msgid "Show ACL(s)"
-msgstr ""
+msgstr "Mostra els ACL(s)"
 
 #: ../../templates/sidebar_admin.inc.php:43
 #: ../../templates/show_admin_tools.inc.php:88
@@ -1794,48 +1790,45 @@ msgstr "Altres eines"
 #: ../../templates/sidebar_admin.inc.php:46
 #: ../../templates/show_admin_tools.inc.php:91
 msgid "Clear Now Playing"
-msgstr "Esborra ara escoltant"
+msgstr "Esborra escoltant ara"
 
 #: ../../templates/sidebar_admin.inc.php:47
 #: ../../templates/show_export.inc.php:28
 msgid "Export Catalog"
-msgstr ""
+msgstr "Exporta el catàleg"
 
 #: ../../templates/sidebar_admin.inc.php:49
 msgid "Manage Shoutbox"
-msgstr ""
+msgstr "Gestiona Shoutbox"
 
 #: ../../templates/sidebar_admin.inc.php:54
 msgid "Server Config"
-msgstr ""
+msgstr "Configuració del servidor"
 
 #: ../../templates/show_install_check.inc.php:23
-#, fuzzy
 msgid "Required"
-msgstr "Requisits"
+msgstr "Necessari"
 
 #: ../../templates/show_install_check.inc.php:93
-#, fuzzy
 msgid "Optional"
-msgstr "Opcions"
+msgstr "Opcional"
 
 #: ../../templates/show_install_check.inc.php:94
 #: ../../templates/show_debug.inc.php:80
 msgid "Gettext Support"
-msgstr ""
+msgstr "Suport gettext"
 
 #: ../../templates/show_install_check.inc.php:97
 msgid "Gettext Emulator will be used"
-msgstr ""
+msgstr "S'emprarà l'emulador de gettext"
 
 #: ../../templates/show_install_check.inc.php:104
-#, fuzzy
 msgid "Mbstring Support"
-msgstr "Sessió de PHP suportada"
+msgstr "Suport de Mbstring"
 
 #: ../../templates/show_install_check.inc.php:107
 msgid "Multibyte Chracter may not detect correct"
-msgstr ""
+msgstr "Els caràcters mulibytes poden no ser detectats correctament"
 
 #: ../../templates/sidebar.inc.php:27 ../../lib/ui.lib.php:309
 msgid "Home"
@@ -1858,53 +1851,54 @@ msgstr "Requisits"
 #: ../../templates/show_install_lang.inc.php:54
 msgid "Minimum Requirements not met. Unable to Install Ampache."
 msgstr ""
+"No s'acompleixen els requisits mínims. És impossible instal.lar l'Ampache"
 
 #: ../../templates/show_install_lang.inc.php:59
 msgid "Choose installation language."
-msgstr ""
+msgstr "Tria la llengua d'instal.lació"
 
 #: ../../templates/show_install_lang.inc.php:80
 msgid "Start configuration"
-msgstr "Configuració inicial"
+msgstr "Comença la configuració"
 
 #: ../../templates/rightbar.inc.php:28
 msgid "Add to Playlist"
-msgstr ""
+msgstr "Afegeix a la llista"
 
 #: ../../templates/rightbar.inc.php:31
 msgid "Add to New Playlist"
-msgstr ""
+msgstr "Afegeix a la nova llista"
 
 #: ../../templates/rightbar.inc.php:54
 #: ../../templates/show_localplay_status.inc.php:47
 #: ../../templates/show_democratic.inc.php:42
 #: ../../templates/show_democratic.inc.php:43
 msgid "Clear Playlist"
-msgstr "Netejar la llista"
+msgstr "Neteja la llista"
 
 #: ../../templates/rightbar.inc.php:57
 msgid "Add Dynamic Items"
-msgstr ""
+msgstr "Afegeix ítems dinàmics"
 
 #: ../../templates/rightbar.inc.php:60 ../../lib/class/random.class.php:416
 msgid "Pure Random"
-msgstr ""
+msgstr "Aleatòri pur"
 
 #: ../../templates/rightbar.inc.php:63 ../../lib/class/random.class.php:413
 msgid "Related Artist"
-msgstr ""
+msgstr "Artistes relacionats"
 
 #: ../../templates/rightbar.inc.php:66 ../../lib/class/random.class.php:407
 msgid "Related Album"
-msgstr ""
+msgstr "Àlbums relacionats"
 
 #: ../../templates/rightbar.inc.php:69
 msgid "Related Tag"
-msgstr ""
+msgstr "Etiquetes relacionades"
 
 #: ../../templates/rightbar.inc.php:113
 msgid "More"
-msgstr ""
+msgstr "Més"
 
 #: ../../templates/header.inc.php:35
 #: ../../templates/show_localplay_status.inc.php:27
@@ -1912,11 +1906,11 @@ msgstr ""
 #: ../../lib/class/localplay.class.php:639
 #: ../../lib/class/ampacherss.class.php:70
 msgid "Now Playing"
-msgstr "Ara sonant"
+msgstr "Sonant ara"
 
 #: ../../templates/header.inc.php:61
 msgid "Log out"
-msgstr ""
+msgstr "Surt"
 
 #: ../../templates/header.inc.php:77
 msgid "Error Config File Out of Date"
@@ -1936,16 +1930,16 @@ msgstr "Públic"
 #: ../../templates/show_playlist_edit.inc.php:40
 #: ../../lib/class/playlist.class.php:83
 msgid "Private"
-msgstr "Privada"
+msgstr "Privat"
 
 #: ../../templates/show_add_user.inc.php:23
 msgid "Adding a New User"
 msgstr "Afegir un nou usuari"
 
 #: ../../templates/show_genre.inc.php:29
-#, fuzzy, php-format
+#, php-format
 msgid "Viewing %s Genre"
-msgstr "Veient"
+msgstr "Veient el gènere %s"
 
 #: ../../templates/show_user_activate.inc.php:29
 #: ../../templates/show_user_activate.inc.php:36
@@ -1953,24 +1947,24 @@ msgstr "Veient"
 #: ../../templates/show_user_registration.inc.php:36
 #: ../../templates/show_registration_confirmation.inc.php:29
 msgid "Registration"
-msgstr ""
+msgstr "Registre"
 
 #: ../../templates/show_user_activate.inc.php:48
 msgid "User Activated"
-msgstr ""
+msgstr "Usuari activat"
 
 #: ../../templates/show_user_activate.inc.php:51
-#, fuzzy, php-format
+#, php-format
 msgid "This User ID is activated and can be used %sLogin%s"
-msgstr "L'usuari ID està activat i es pot emprar"
+msgstr "L'usuari ID està activat i es pot emprar com a %sLogin%s"
 
 #: ../../templates/show_user_activate.inc.php:54
 msgid "Validation Failed"
-msgstr ""
+msgstr "Ha fallat la validació"
 
 #: ../../templates/show_user_activate.inc.php:55
 msgid "The validation key used isn't correct"
-msgstr ""
+msgstr "La clau de validació no és correcta"
 
 #: ../../templates/show_plugins.inc.php:46
 msgid "Deactivate"
@@ -1978,7 +1972,7 @@ msgstr "Desactivar"
 
 #: ../../templates/show_random_albums.inc.php:22
 msgid "Refresh"
-msgstr ""
+msgstr "Actualitzar"
 
 #: ../../templates/show_random_albums.inc.php:48
 msgid "Play Album"
@@ -1987,12 +1981,12 @@ msgstr "Reproduir l'àlbum"
 #: ../../templates/show_catalog_row.inc.php:30
 #: ../../templates/show_admin_tools.inc.php:47
 msgid "Verify"
-msgstr "Verificar"
+msgstr "Verifica"
 
 #: ../../templates/show_catalog_row.inc.php:31
 #: ../../templates/show_admin_tools.inc.php:49
 msgid "Clean"
-msgstr "Netejar"
+msgstr "Neteja"
 
 #: ../../templates/show_catalog_row.inc.php:33
 #: ../../templates/show_admin_tools.inc.php:60
@@ -2001,28 +1995,26 @@ msgstr "Recollir portades"
 
 #: ../../templates/show_create_democratic.inc.php:22
 #: ../../templates/show_democratic.inc.php:34
-#, fuzzy
 msgid "Configure Democratic Playlist"
-msgstr "Importa una llista de reproducció"
+msgstr "Configura la llista de reproducció democràtica"
 
 #: ../../templates/show_create_democratic.inc.php:34
 msgid "Cooldown Time"
-msgstr ""
+msgstr "Temps de refredament"
 
 #: ../../templates/show_create_democratic.inc.php:35
 #: ../../templates/show_search.inc.php:77
 #: ../../lib/class/democratic.class.php:140 ../../lib/class/video.class.php:77
 msgid "minutes"
-msgstr ""
+msgstr "minuts"
 
 #: ../../templates/show_create_democratic.inc.php:49
 msgid "Make Default"
-msgstr ""
+msgstr "Converteix-ho en predeterminat"
 
 #: ../../templates/show_create_democratic.inc.php:54
-#, fuzzy
 msgid "Force Democratic Play"
-msgstr "Democràtic"
+msgstr "Força la reproducció democràtica"
 
 #: ../../templates/show_account.inc.php:39
 msgid "New Password"
@@ -2042,7 +2034,7 @@ msgstr "Edita la cançó"
 #: ../../templates/show_dynamic.inc.php:64
 #: ../../templates/show_rename_artist.inc.php:33
 msgid "OR"
-msgstr "OR"
+msgstr "O"
 
 #: ../../templates/show_edit_song.inc.php:53
 #: ../../templates/show_localplay_playlist.inc.php:33
@@ -2053,7 +2045,7 @@ msgstr "OR"
 #: ../../templates/show_playlist_songs.inc.php:62
 #: ../../templates/show_playlist_songs.inc.php:67
 msgid "Track"
-msgstr "Ordre"
+msgstr "Peça"
 
 #: ../../templates/show_edit_song.inc.php:80
 msgid "Update Song"
@@ -2061,7 +2053,7 @@ msgstr "Actualitza la cançó"
 
 #: ../../templates/show_democratic_playlist.inc.php:42
 msgid "Playing from base Playlist"
-msgstr "Escoltant de la llista"
+msgstr "Escoltant de la llista base"
 
 #: ../../templates/show_democratic_playlist.inc.php:55
 #: ../../templates/show_democratic_playlist.inc.php:95
@@ -2070,19 +2062,19 @@ msgstr "Vots"
 
 #: ../../templates/show_democratic_playlist.inc.php:74
 msgid "Remove Vote"
-msgstr ""
+msgstr "Borra el vot"
 
 #: ../../templates/show_democratic_playlist.inc.php:76
 msgid "Add Vote"
-msgstr ""
+msgstr "Afegeix un vot"
 
 #: ../../templates/show_localplay_edit_instance.inc.php:23
 msgid "Edit Localplay Instance"
-msgstr ""
+msgstr "Edita la instància de reprodució local"
 
 #: ../../templates/show_localplay_edit_instance.inc.php:34
 msgid "Update Instance"
-msgstr ""
+msgstr "Actualitza la instància"
 
 #: ../../templates/show_search_bar.inc.php:29
 #: ../../templates/show_search.inc.php:144 ../../lib/ui.lib.php:324
@@ -2091,7 +2083,7 @@ msgstr "Cerca"
 
 #: ../../templates/show_search_bar.inc.php:30
 msgid "Advanced Search"
-msgstr ""
+msgstr "Cerca avançada"
 
 #: ../../templates/show_stats.inc.php:28
 msgid "Connected Users"
@@ -2110,26 +2102,26 @@ msgid "Catalog Time"
 msgstr "Temps del catàleg"
 
 #: ../../templates/show_ip_history.inc.php:23
-#, fuzzy, php-format
+#, php-format
 msgid "%s IP History"
-msgstr "IP històric"
+msgstr "%s IP històric"
 
-#: ../../templates/show_ip_history.inc.php:26
+#: ../../templates/show_ip_history.inc.php:29
 msgid "Show Unique"
 msgstr "Mostra unics"
 
-#: ../../templates/show_ip_history.inc.php:28
+#: ../../templates/show_ip_history.inc.php:32
 #: ../../templates/show_admin_info.inc.php:38
 msgid "Show All"
 msgstr "Mostra-ho tot"
 
-#: ../../templates/show_ip_history.inc.php:37
-#: ../../templates/show_ip_history.inc.php:51
+#: ../../templates/show_ip_history.inc.php:45
+#: ../../templates/show_ip_history.inc.php:59
 msgid "Date"
 msgstr "Data"
 
-#: ../../templates/show_ip_history.inc.php:38
-#: ../../templates/show_ip_history.inc.php:52
+#: ../../templates/show_ip_history.inc.php:46
+#: ../../templates/show_ip_history.inc.php:60
 msgid "IP Address"
 msgstr "Adreça IP"
 
@@ -2147,7 +2139,7 @@ msgstr "Baixa els triats"
 
 #: ../../templates/show_play_selected.inc.php:40
 msgid "Set Track Numbers"
-msgstr "Posa el nombre de cançó"
+msgstr "Posa l'ordre de les cançons"
 
 #: ../../templates/show_play_selected.inc.php:41
 msgid "Remove Selected Tracks"
@@ -2203,40 +2195,38 @@ msgstr "Cançons recomanades"
 
 #: ../../templates/show_edit_shout.inc.php:23
 msgid "Edit existing Shoutbox Post"
-msgstr ""
+msgstr "Editar una Shoutbox existent pels post"
 
 #: ../../templates/show_edit_shout.inc.php:28
 #, php-format
 msgid "Created by: %s for %s"
-msgstr ""
+msgstr "Creat per %s de %s"
 
 #: ../../templates/show_edit_shout.inc.php:31
 #: ../../templates/show_add_shout.inc.php:27
-#, fuzzy
 msgid "Comment:"
-msgstr "Comentari"
+msgstr "Comentari:"
 
 #: ../../templates/show_edit_shout.inc.php:37
 #: ../../templates/show_add_shout.inc.php:34
 msgid "Make Sticky"
-msgstr ""
+msgstr "Fer adhesives"
 
 #: ../../templates/show_object_rating_static.inc.php:34
 #: ../../templates/show_object_rating.inc.php:34
-#, fuzzy
 msgid "Current rating: "
-msgstr "LLista actual"
+msgstr "Qualificació actual:"
 
 #: ../../templates/show_object_rating_static.inc.php:36
 #: ../../templates/show_object_rating.inc.php:36
 msgid "not rated yet"
-msgstr ""
+msgstr "encara no valorat"
 
 #: ../../templates/show_object_rating_static.inc.php:38
 #: ../../templates/show_object_rating.inc.php:38
 #, php-format
 msgid "%s of 5"
-msgstr ""
+msgstr "%s de 5"
 
 #: ../../templates/show_object_rating_static.inc.php:44
 msgid "out of"
@@ -2244,11 +2234,11 @@ msgstr "fora de"
 
 #: ../../templates/show_export.inc.php:51
 msgid "Format"
-msgstr ""
+msgstr "Format"
 
 #: ../../templates/show_export.inc.php:61
 msgid "Export"
-msgstr ""
+msgstr "Exporta"
 
 #: ../../templates/show_edit_album.inc.php:23
 msgid "Edit Album"
@@ -2259,9 +2249,8 @@ msgid "Update Album"
 msgstr "Actualitza l'Àlbum"
 
 #: ../../templates/show_album_art.inc.php:47
-#, fuzzy
 msgid "Invalid"
-msgstr "Necessari borrar"
+msgstr "Invàlid"
 
 #: ../../templates/show_album_art.inc.php:49
 #: ../../templates/show_disabled_songs.inc.php:33
@@ -2271,19 +2260,19 @@ msgstr "Tria"
 
 #: ../../templates/show_localplay_status.inc.php:26
 msgid "Localplay Control"
-msgstr ""
+msgstr "Control de reproducció local"
 
 #: ../../templates/show_localplay_status.inc.php:31
 msgid "Mute"
-msgstr ""
+msgstr "Mute"
 
 #: ../../templates/show_localplay_status.inc.php:32
 msgid "Decrease Volume"
-msgstr ""
+msgstr "Baixa el volum"
 
 #: ../../templates/show_localplay_status.inc.php:33
 msgid "Increase Volume"
-msgstr ""
+msgstr "Puja el volum"
 
 #: ../../templates/show_localplay_status.inc.php:34
 msgid "Volume"
@@ -2291,7 +2280,7 @@ msgstr "Volum"
 
 #: ../../templates/show_localplay_status.inc.php:39
 msgid "Repeat"
-msgstr "Repetix"
+msgstr "Repeteix"
 
 #: ../../templates/show_admin_info.inc.php:30
 msgid "Last Ten Flagged Records"
@@ -2305,26 +2294,24 @@ msgstr "Cançons no disponibles"
 #: ../../templates/show_add_access_current.inc.php:22
 #: ../../templates/show_access_list.inc.php:32
 #: ../../templates/show_access_list.inc.php:33
-#, fuzzy
 msgid "Add Current Host"
-msgstr "LLista actual"
+msgstr "Afegeix màquina actual"
 
 #: ../../templates/show_localplay_instances.inc.php:23
 msgid "Show Localplay Instances"
-msgstr ""
+msgstr "Mostra instàncies de reproducció local"
 
 #: ../../templates/show_localplay_instances.inc.php:39
 msgid "Edit Instance"
-msgstr ""
+msgstr "Edita la instància"
 
 #: ../../templates/show_update_items.inc.php:22
 msgid "Starting Update from Tags"
-msgstr "Començant a actualitzar des de els tags"
+msgstr "Començant a actualitzar des de les etiquetes"
 
 #: ../../templates/show_update_items.inc.php:26
-#, fuzzy
 msgid "Update from Tags Complete"
-msgstr "Actualització des de els tags completada"
+msgstr "Actualització des de les etiquetes completada"
 
 #: ../../templates/show_user_stats.inc.php:30
 msgid "Favorite Artists"
@@ -2339,15 +2326,13 @@ msgid "Favorite Songs"
 msgstr "Cançons preferides"
 
 #: ../../templates/show_random_rules.inc.php:22
-#, fuzzy
 msgid "Rules"
-msgstr "Mòduls"
+msgstr "Regles"
 
 #: ../../templates/show_random_rules.inc.php:32
 #: ../../templates/show_dynamic.inc.php:31
-#, fuzzy
 msgid "Field"
-msgstr "Arxiu"
+msgstr "Camp"
 
 #: ../../templates/show_random_rules.inc.php:33
 #: ../../templates/show_search.inc.php:115
@@ -2363,7 +2348,7 @@ msgstr "Mètode"
 
 #: ../../templates/show_shoutbox.inc.php:22
 msgid "Shoutbox"
-msgstr ""
+msgstr "Shoutbox"
 
 #: ../../templates/show_search.inc.php:26
 msgid "Search Ampache"
@@ -2412,11 +2397,11 @@ msgstr "5 estrelles"
 #: ../../templates/show_search.inc.php:118
 #: ../../templates/show_dynamic.inc.php:65
 msgid "AND"
-msgstr "Y"
+msgstr "I"
 
 #: ../../templates/show_search.inc.php:127
 msgid "Fuzzy"
-msgstr "Fuzzy"
+msgstr "Aproximat"
 
 #: ../../templates/show_search.inc.php:128
 msgid "Exact"
@@ -2458,15 +2443,15 @@ msgstr ""
 
 #: ../../templates/show_install.inc.php:62
 msgid "Insert Ampache Database"
-msgstr ""
+msgstr "Inserix la BD de l'ampache"
 
 #: ../../templates/show_install.inc.php:74
 msgid "MySQL Administrative Username"
-msgstr "Nom d'usuari de l'administrador de Mysql"
+msgstr "Nom d'usuari administrador de Mysql"
 
 #: ../../templates/show_install.inc.php:78
 msgid "MySQL Administrative Password"
-msgstr "Contresenya de l'administrador de Mysql"
+msgstr "Contrasenya de l'administrador de Mysql"
 
 #: ../../templates/show_install.inc.php:82
 msgid "Create Database User for New Database"
@@ -2482,16 +2467,15 @@ msgstr "Contrasenya de l'usuari de la base de dades de l'Ampache"
 
 #: ../../templates/show_install.inc.php:94
 msgid "Overwrite Existing"
-msgstr ""
+msgstr "Sobreescriure"
 
 #: ../../templates/show_install.inc.php:98
-#, fuzzy
 msgid "Use Existing Database"
-msgstr "Inserar base de dades"
+msgstr "Emprar una BD existent"
 
 #: ../../templates/show_install.inc.php:103
 msgid "Insert Database"
-msgstr "Inserar base de dades"
+msgstr "Inserir base de dades"
 
 #: ../../templates/show_install_account.inc.php:44
 msgid ""
@@ -2503,19 +2487,19 @@ msgstr ""
 
 #: ../../templates/show_install_account.inc.php:50
 msgid "Step 2 - Creating the ampache.cfg.php file"
-msgstr "Pas 2 - Crear l'arxiu ampache.cfg.php"
+msgstr "Pas 2 - Creant l'arxiu ampache.cfg.php"
 
 #: ../../templates/show_install_account.inc.php:53
 msgid ""
 "This step creates your initial Ampache admin account. Once your admin "
 "account has been created you will be directed to the login page"
 msgstr ""
-"Aquests passos generen la teva compte administrativa inicial de l'ampache. "
-"Despré de crear-la seràs dirigit a la pagina d'entrada"
+"Aquests passos generen el teu compte administratiu inicial per l'ampache. "
+"Despré de crear-lo seràs dirigit a la pagina d'entrada"
 
 #: ../../templates/show_install_account.inc.php:57
 msgid "Create Admin Account"
-msgstr "Compte d'administració creada"
+msgstr "Crea compte d'administració"
 
 #: ../../templates/show_install_account.inc.php:74
 msgid "Create Account"
@@ -2527,21 +2511,21 @@ msgstr "Començant a cercar portades"
 
 #: ../../templates/show_gather_art.inc.php:24
 msgid "Searched"
-msgstr "Cercant"
+msgstr "Cercat"
 
 #: ../../templates/show_add_shout.inc.php:23
 msgid "Post to Shoutbox"
-msgstr ""
+msgstr "Posa al Shoutbox"
 
 #: ../../templates/show_stats_newest.inc.php:22
 #: ../../lib/class/ampacherss.class.php:72
 msgid "Newest Albums"
-msgstr ""
+msgstr "Els àlbums més nous"
 
 #: ../../templates/show_stats_newest.inc.php:26
 #: ../../lib/class/ampacherss.class.php:73
 msgid "Newest Artists"
-msgstr ""
+msgstr "Els artistes més nous"
 
 #: ../../templates/show_mail_users.inc.php:23
 msgid "Send E-mail to Users"
@@ -2553,7 +2537,7 @@ msgstr "E-mail a "
 
 #: ../../templates/show_mail_users.inc.php:33
 msgid "Inactive Users"
-msgstr ""
+msgstr "Usuaris inactius"
 
 #: ../../templates/show_mail_users.inc.php:42
 msgid "Catalog Statistics"
@@ -2561,11 +2545,11 @@ msgstr "Estadísitques del catàleg"
 
 #: ../../templates/show_mail_users.inc.php:53
 msgid "Latest Artist Additions"
-msgstr "Últims artistes afegits"
+msgstr "Els últims artistes afegits"
 
 #: ../../templates/show_mail_users.inc.php:64
 msgid "Latest Album Additions"
-msgstr "Últims albums afegits"
+msgstr "Els últims albums afegits"
 
 #: ../../templates/show_mail_users.inc.php:68
 #: ../../templates/show_all_popular.inc.php:38
@@ -2578,7 +2562,7 @@ msgstr "Cançons senyalades"
 
 #: ../../templates/show_mail_users.inc.php:86
 msgid "Most Popular Threshold in days"
-msgstr "El més popular Threshold en díes"
+msgstr "L'entrada més popular en dies"
 
 #: ../../templates/show_mail_users.inc.php:97
 msgid "Subject"
@@ -2608,26 +2592,26 @@ msgstr "Longitud"
 
 #: ../../templates/show_random.inc.php:47
 #: ../../templates/show_random.inc.php:48
-#, fuzzy, php-format
+#, php-format
 msgid "%d minute"
 msgid_plural "%d minutes"
-msgstr[0] "Minuts"
-msgstr[1] "Minuts"
+msgstr[0] "%d minut"
+msgstr[1] "%d minuts"
 
 #: ../../templates/show_random.inc.php:49
 #: ../../templates/show_random.inc.php:50
 #: ../../templates/show_random.inc.php:51
 #: ../../templates/show_random.inc.php:52
 #: ../../templates/show_random.inc.php:53
-#, fuzzy, php-format
+#, php-format
 msgid "%d hour"
 msgid_plural "%d hours"
-msgstr[0] "hora"
-msgstr[1] "hora"
+msgstr[0] "%d hora"
+msgstr[1] "%d hores"
 
 #: ../../templates/show_random.inc.php:61
 msgid "Standard"
-msgstr "Estàndart"
+msgstr "Estàndard"
 
 #: ../../templates/show_random.inc.php:62
 msgid "Less Played"
@@ -2643,7 +2627,7 @@ msgstr "Artists sencers"
 
 #: ../../templates/show_random.inc.php:66
 msgid "Highest Rated"
-msgstr ""
+msgstr "El més valorats"
 
 #: ../../templates/show_random.inc.php:72
 msgid "From catalog"
@@ -2655,7 +2639,7 @@ msgstr "Mida límit"
 
 #: ../../templates/show_random.inc.php:92
 msgid "Enqueue"
-msgstr "Encua"
+msgstr "Posa a la cua"
 
 #: ../../templates/show_search_options.inc.php:23
 msgid "Options"
@@ -2664,29 +2648,27 @@ msgstr "Opcions"
 #: ../../templates/show_search_options.inc.php:27
 #: ../../templates/show_search_options.inc.php:28
 msgid "Add Search Results"
-msgstr ""
+msgstr "Afegeix els resultats de la cerca"
 
 #: ../../templates/show_dynamic.inc.php:22
-#, fuzzy
 msgid "Advanced Random Rules"
-msgstr "Opcions avançades"
+msgstr "Regles aleatòries avançades"
 
 #: ../../templates/show_dynamic.inc.php:56
 msgid "Like"
-msgstr ""
+msgstr "Semblant a"
 
 #: ../../templates/show_dynamic.inc.php:71
-#, fuzzy
 msgid "Add Rule"
-msgstr "Afegir usuari"
+msgstr "Afegir regla"
 
 #: ../../templates/show_dynamic.inc.php:74
 msgid "Save Rules As"
-msgstr ""
+msgstr "Guarda les regles com a"
 
 #: ../../templates/show_dynamic.inc.php:77
 msgid "Load Saved Rules"
-msgstr ""
+msgstr "Carrega regles guardades"
 
 #: ../../templates/show_get_albumart.inc.php:23
 msgid "Customize Search"
@@ -2705,44 +2687,44 @@ msgid "Get Art"
 msgstr "Aconsegueix la portada"
 
 #: ../../templates/show_adds_catalog.inc.php:23
-#, fuzzy, php-format
+#, php-format
 msgid "Starting New Song Search on %s catalog"
-msgstr "Començant a cercar noves cançons a"
+msgstr "Començant a cercar noves cançons al catàleg %s"
 
 #: ../../templates/show_recently_played.inc.php:23
 #: ../../lib/class/ampacherss.class.php:175
 msgid "seconds ago"
-msgstr "segons enrrera"
+msgstr "segons"
 
 #: ../../templates/show_recently_played.inc.php:23
 #: ../../lib/class/ampacherss.class.php:175
 msgid "minutes ago"
-msgstr "minuts enrrera"
+msgstr "minuts"
 
 #: ../../templates/show_recently_played.inc.php:23
 #: ../../lib/class/ampacherss.class.php:175
 msgid "hours ago"
-msgstr "hores enrera"
+msgstr "hores"
 
 #: ../../templates/show_recently_played.inc.php:23
 #: ../../lib/class/ampacherss.class.php:175
 msgid "days ago"
-msgstr "dies arrera"
+msgstr "dies"
 
 #: ../../templates/show_recently_played.inc.php:23
 #: ../../lib/class/ampacherss.class.php:175
 msgid "weeks ago"
-msgstr "semanes arrera"
+msgstr "semanes"
 
 #: ../../templates/show_recently_played.inc.php:23
 #: ../../lib/class/ampacherss.class.php:175
 msgid "months ago"
-msgstr "mesos arrera"
+msgstr "mesos"
 
 #: ../../templates/show_recently_played.inc.php:23
 #: ../../lib/class/ampacherss.class.php:175
 msgid "years ago"
-msgstr "anys arrera"
+msgstr "anys"
 
 #: ../../templates/show_recently_played.inc.php:38
 #: ../../templates/show_recently_played.inc.php:101
@@ -2758,62 +2740,60 @@ msgid "Last Played"
 msgstr "Últim escoltat"
 
 #: ../../templates/show_artist.inc.php:22
-#, fuzzy, php-format
+#, php-format
 msgid "Albums by %s"
-msgstr "Albums de"
+msgstr "Albums de %s"
 
 #: ../../templates/show_artist.inc.php:25
 #, php-format
 msgid "%s by %s"
-msgstr ""
+msgstr "%s per %s"
 
 #: ../../templates/show_artist.inc.php:35
-#, fuzzy, php-format
+#, php-format
 msgid "Show All Songs By %s"
-msgstr "Mostra totes les cançons de"
+msgstr "Mostra totes les cançons de %s"
 
 #: ../../templates/show_artist.inc.php:38
-#, fuzzy, php-format
+#, php-format
 msgid "Add All Songs By %s"
-msgstr "Mostra totes les cançons de"
+msgstr "Mostra totes les cançons de %s"
 
 #: ../../templates/show_artist.inc.php:41
-#, fuzzy, php-format
+#, php-format
 msgid "Add Random Songs By %s"
-msgstr "Escolta aleatoriament cançons de"
+msgstr "Afegeix aleatoriament cançons de %s"
 
 #: ../../templates/show_artist.inc.php:45
 #: ../../templates/show_album.inc.php:71
 msgid "Update from tags"
-msgstr "Actualitza des de els tags"
+msgstr "Actualitza des de les etiquetes"
 
 #: ../../templates/show_democratic.inc.php:21
-#, fuzzy, php-format
+#, php-format
 msgid "%s Playlist"
-msgstr "LLista base"
+msgstr "LLista %s"
 
 #: ../../templates/show_democratic.inc.php:21
 #: ../../lib/class/browse.class.php:214
-#, fuzzy
 msgid "Democratic Playlist"
-msgstr "Importa una llista de reproducció"
+msgstr "Llista democràtica"
 
 #: ../../templates/show_democratic.inc.php:39
-#, fuzzy
 msgid "Play Democratic Playlist"
-msgstr "Importa una llista de reproducció"
+msgstr "Escolta una llista democràtica"
 
 #: ../../templates/show_verify_catalog.inc.php:23
-#, fuzzy, php-format
+#, php-format
 msgid "Updating the %s catalog"
-msgstr "Actualitzant el"
+msgstr "Actualitzant el cataleg %s"
 
 #: ../../templates/show_verify_catalog.inc.php:25
-#, fuzzy, php-format
+#, php-format
 msgid "%d item found checking tag information"
 msgid_plural "%d items found checking tag information"
-msgstr[0] "cançons trobades comprovant la informació dels tags"
-msgstr[1] "cançons trobades comprovant la informació dels tags"
+msgstr[0] "%d cançó trobada, comprovant la informació dels tags"
+msgstr[1] "%d cançons trobades, comprovant la informació dels tags"
 
 #: ../../templates/show_verify_catalog.inc.php:27
 msgid "Verifed"
@@ -2824,46 +2804,53 @@ msgid ""
 "You've been redirected to this page because you do not have access to this "
 "function."
 msgstr ""
+"Has estat redireccionat a aquesta pàgina perquè no tens accés a aquesta "
+"funció."
 
 #: ../../templates/show_denied.inc.php:39
 msgid ""
 "If you believe this is an error please contact an Ampache administrator."
 msgstr ""
+"Si creus que això és un error, si us plau poseu-vos en contacte amb un "
+"administrador de l'Ampache"
 
 #: ../../templates/show_denied.inc.php:40
-#, fuzzy
 msgid "This event has been logged"
-msgstr "L'ítem especificat s'ha senyalat"
+msgstr "Aquest esdeveniment s'ha registat"
 
 #: ../../templates/show_denied.inc.php:44
 msgid ""
 "You've been redirected to this page because you've attempted to access a "
 "function that is disabled in the demo."
 msgstr ""
+"Has estat redireccionat a aquesta pàgina perquè has tractat d'accedir a una "
+"funció desactivada en la demo."
 
 #: ../../templates/show_denied.inc.php:45
 msgid ""
 "Functions are disabled in the demo because previous users of the demo have "
 "used the functionality to post inappropriate materials"
 msgstr ""
+"Hi ha funcions desactivades a la demo perquè usuaris anteriors hanutilitza "
+"funcionalitats per enviar materials inapropiats"
 
 #: ../../templates/show_album.inc.php:27 ../../lib/class/album.class.php:244
 msgid "Disk"
-msgstr ""
+msgstr "Disc"
 
 #: ../../templates/show_album.inc.php:34
 #: ../../lib/class/catalog.class.php:1958
 #: ../../lib/class/catalog.class.php:2029
 msgid "Unknown (Orphaned)"
-msgstr ""
+msgstr "Desconegut (orfa)"
 
 #: ../../templates/show_album.inc.php:52
 msgid "Add Album"
-msgstr ""
+msgstr "Afegeix àlbum"
 
 #: ../../templates/show_album.inc.php:56
 msgid "Add Random from Album"
-msgstr ""
+msgstr "Afegeix aleatòriament des de l'àlbum"
 
 #: ../../templates/show_album.inc.php:61
 msgid "Reset Album Art"
@@ -2871,20 +2858,20 @@ msgstr "Reiniciar portada"
 
 #: ../../templates/show_album.inc.php:66
 msgid "Find Album Art"
-msgstr "Trobar la portada"
+msgstr "Troba la portada"
 
 #: ../../templates/show_lyrics.inc.php:33
-#, fuzzy, php-format
+#, php-format
 msgid "%s Lyrics"
-msgstr "LListes de reproducció"
+msgstr "LLetres %s"
 
 #: ../../templates/show_lyrics.inc.php:39 ../../lib/class/artist.class.php:358
 msgid "Sorry Lyrics Not Found."
-msgstr ""
+msgstr "No s'ha trobat la lletra"
 
 #: ../../templates/show_localplay_add_instance.inc.php:24
 msgid "Add Localplay Instance"
-msgstr ""
+msgstr "Afegir instància de reproducció local"
 
 #: ../../templates/show_login_form.inc.php:65
 msgid "Remember Me"
@@ -2892,11 +2879,11 @@ msgstr "Recorda'm"
 
 #: ../../templates/show_login_form.inc.php:72
 msgid "Login"
-msgstr "Login"
+msgstr "Entrada"
 
 #: ../../templates/show_login_form.inc.php:77
 msgid "Register"
-msgstr "Registrar-se"
+msgstr "Registre"
 
 #: ../../templates/show_login_form.inc.php:89
 msgid "Message of the Day"
@@ -2908,15 +2895,15 @@ msgstr "Els gèneres més populars"
 
 #: ../../templates/show_all_popular.inc.php:41
 msgid "Most Popular Live Streams"
-msgstr "Els més populars Streams"
+msgstr "Els streams més populars"
 
 #: ../../templates/show_all_popular.inc.php:44
 msgid "Most Popular Tags"
-msgstr "Els tags més populars"
+msgstr "Les etiquetes més populars"
 
 #: ../../templates/show_song.inc.php:25
 msgid "Details"
-msgstr ""
+msgstr "Detalls"
 
 #: ../../templates/show_disabled_songs.inc.php:38
 #: ../../templates/show_disabled_songs.inc.php:61
@@ -2943,7 +2930,7 @@ msgstr "Cançons repetides"
 #: ../../templates/show_duplicates.inc.php:41
 #: ../../templates/show_duplicates.inc.php:80
 msgid "Bitrate"
-msgstr "Bitratge"
+msgstr "Bitrate"
 
 #: ../../templates/show_duplicates.inc.php:42
 #: ../../templates/show_duplicates.inc.php:81
@@ -2952,11 +2939,11 @@ msgstr "Mida"
 
 #: ../../templates/show_live_stream.inc.php:22
 msgid "Manage Radio Stations"
-msgstr ""
+msgstr "Gestiona les estacions de ràdio"
 
 #: ../../templates/show_manage_catalogs.inc.php:28
 msgid "Gather All Art"
-msgstr ""
+msgstr "Aconseguir totes les portades"
 
 #: ../../templates/show_manage_catalogs.inc.php:29
 #: ../../templates/show_admin_tools.inc.php:80
@@ -2966,27 +2953,27 @@ msgstr "Afegeix a tot"
 #: ../../templates/show_manage_catalogs.inc.php:30
 #: ../../templates/show_admin_tools.inc.php:79
 msgid "Verify All"
-msgstr "Verifica tot"
+msgstr "Verifica-ho tot"
 
 #: ../../templates/show_manage_catalogs.inc.php:31
 #: ../../templates/show_admin_tools.inc.php:78
 msgid "Clean All"
-msgstr "Esborra tot"
+msgstr "Esborra-ho tot"
 
 #: ../../templates/show_manage_catalogs.inc.php:32
 #: ../../templates/show_admin_tools.inc.php:81
 msgid "Update All"
-msgstr "Actualitza tot"
+msgstr "Actualitza-ho tot"
 
 #: ../../templates/show_manage_catalogs.inc.php:38
-#, fuzzy, php-format
+#, php-format
 msgid "Add From %s"
-msgstr "Afegeix a"
+msgstr "Afegeix des de %s"
 
 #: ../../templates/show_manage_catalogs.inc.php:40
-#, fuzzy, php-format
+#, php-format
 msgid "Update From %s"
-msgstr "Actualitza des de els tags"
+msgstr "Actualitza des de %s"
 
 #: ../../templates/show_admin_tools.inc.php:59
 msgid "Fast"
@@ -3019,7 +3006,7 @@ msgstr "Exporta a la base de dades d'itunes"
 
 #: ../../templates/show_admin_tools.inc.php:95
 msgid "Show Inactive Users"
-msgstr ""
+msgstr "Mostra usaris inactius"
 
 #: ../../templates/show_admin_tools.inc.php:96
 msgid "Check for New Version"
@@ -3027,7 +3014,7 @@ msgstr "Comprova si hi ha una nova versió"
 
 #: ../../templates/show_access_list.inc.php:50
 msgid "Access Control Entries"
-msgstr ""
+msgstr "Control d'accés"
 
 #: ../../templates/show_access_list.inc.php:56
 msgid "Start Address"
@@ -3042,9 +3029,9 @@ msgid "Key"
 msgstr "Clau"
 
 #: ../../templates/show_rename_artist.inc.php:29
-#, fuzzy, php-format
+#, php-format
 msgid "Rename %s"
-msgstr "Reanomena"
+msgstr "Reanomena %s"
 
 #: ../../templates/show_rename_artist.inc.php:35
 msgid "Insert current"
@@ -3052,7 +3039,7 @@ msgstr "Insereix l'actual"
 
 #: ../../templates/show_rename_artist.inc.php:37
 msgid "Update id3 tags"
-msgstr "id3 tags actualitzats"
+msgstr "Actualitza les etiquetes id3"
 
 #: ../../templates/show_rename_artist.inc.php:38
 msgid "Rename"
@@ -3072,7 +3059,7 @@ msgstr "Informació de l'usuari"
 
 #: ../../templates/show_user_registration.inc.php:131
 msgid "Register User"
-msgstr "Registra l'usuari"
+msgstr "Registra usuari"
 
 #: ../../templates/show_playlist_edit.inc.php:26
 msgid "Editing Playlist"
@@ -3108,7 +3095,7 @@ msgstr "Crea una lllista de reproducció des d'arxius m3u"
 
 #: ../../templates/show_add_catalog.inc.php:84
 msgid "Add Catalog"
-msgstr "Afegir al catàleg"
+msgstr "Afegeix al catàleg"
 
 #: ../../templates/show_registration_confirmation.inc.php:36
 msgid "Registration Complete"
@@ -3119,71 +3106,73 @@ msgid ""
 "Your account has been created. An activation key has been sent to the e-mail "
 "address you provided. Please check your e-mail for further information"
 msgstr ""
+"El teu compte ha estat creada. La clau d'activació s'ha enviat a l'adreça "
+"d'e-mailque ens has facilitat. Si us plau, comprova el teu e-mail per a més "
+"informació"
 
 #: ../../templates/show_registration_confirmation.inc.php:44
 msgid "Return to Login Page"
-msgstr ""
+msgstr "Torna a la pàgina d'entrada"
 
 #: ../../templates/show_debug.inc.php:23
 msgid "Debug Tools"
-msgstr ""
+msgstr "Eines de depuració"
 
 #: ../../templates/show_debug.inc.php:28
 msgid "Generate Configuration"
-msgstr ""
+msgstr "Genera la configuració"
 
 #: ../../templates/show_debug.inc.php:32
 msgid "Set Database Charset"
-msgstr ""
+msgstr "Estableix el joc de caràcters"
 
 #: ../../templates/show_debug.inc.php:37
 msgid "PHP Settings"
-msgstr ""
+msgstr "Configuració PHP"
 
 #: ../../templates/show_debug.inc.php:44
 msgid "Setting"
-msgstr ""
+msgstr "Opcions"
 
 #: ../../templates/show_debug.inc.php:48
 msgid "Memory Limit"
-msgstr ""
+msgstr "Límit de memòria"
 
 #: ../../templates/show_debug.inc.php:52
 msgid "Maximum Execution Time"
-msgstr ""
+msgstr "Temps d'execució màxim"
 
 #: ../../templates/show_debug.inc.php:56
 msgid "Override Execution Time"
-msgstr ""
+msgstr "Sobreescriu el temps d'execució"
 
 #: ../../templates/show_debug.inc.php:57
-#, fuzzy
 msgid "Failed"
-msgstr "Arxiu"
+msgstr "Fallat"
 
 #: ../../templates/show_debug.inc.php:57
 msgid "Succeeded"
-msgstr ""
+msgstr "Aconseguit"
 
 #: ../../templates/show_debug.inc.php:60
 msgid "Safe Mode"
-msgstr ""
+msgstr "Mode segur"
 
 #: ../../templates/show_debug.inc.php:68
 msgid "Zlib Support"
-msgstr ""
+msgstr "Suport Zlib"
 
 #: ../../templates/show_debug.inc.php:72
 msgid "GD Support"
-msgstr ""
+msgstr "Suport GD"
 
 #: ../../templates/show_debug.inc.php:76
 msgid "Iconv Support"
-msgstr ""
+msgstr "Suport Iconv"
 
 #: ../../templates/show_debug.inc.php:86
 msgid "Current Configuration"
-msgstr ""
+msgstr "Configuració actual"
 
 #: ../../templates/sidebar_modules.inc.php:27
 msgid "Localplay Modules"
@@ -3199,7 +3188,7 @@ msgstr "Correu dels usuaris"
 
 #: ../../templates/sidebar_modules.inc.php:35
 msgid "Manage Flagged"
-msgstr ""
+msgstr "Gestiona els assenyalats"
 
 #: ../../templates/sidebar_modules.inc.php:36
 #, fuzzy
@@ -3208,17 +3197,17 @@ msgstr "Cançons desactivades"
 
 #: ../../templates/sidebar_modules.inc.php:43
 msgid "Manage Playlist"
-msgstr ""
+msgstr "Gestiona la llista"
 
 #: ../../templates/show_manage_shoutbox.inc.php:36
 #: ../../templates/show_manage_shoutbox.inc.php:60
 msgid "Sticky"
-msgstr ""
+msgstr "Adhesives"
 
 #: ../../templates/show_manage_shoutbox.inc.php:38
 #: ../../templates/show_manage_shoutbox.inc.php:62
 msgid "Date Added"
-msgstr ""
+msgstr "Data afegida"
 
 #: ../../artists.php:181
 msgid "Show Artists starting with"
@@ -3226,7 +3215,7 @@ msgstr "Mostra artistes que comencen per"
 
 #: ../../flag.php:45
 msgid "Item Flagged"
-msgstr "Item asenyalat"
+msgstr "Item assenyalat"
 
 #: ../../flag.php:45
 msgid "The specified item has been flagged"
@@ -3258,7 +3247,7 @@ msgstr "Has d'entrar una contresenya"
 
 #: ../../register.php:126
 msgid "Your passwords do not match"
-msgstr "No s'ha trobat la teva contrasenya"
+msgstr "Les teves contrasenyes no coincideixen"
 
 #: ../../register.php:130 ../../admin/users.php:110
 msgid "Error Username already exists"
@@ -3282,11 +3271,11 @@ msgstr "No s'ha trobat cap compte local"
 
 #: ../../login.php:112
 msgid "User Already Logged in"
-msgstr ""
+msgstr "L'usuari ja ha entrat"
 
 #: ../../democratic.php:56
 msgid "The Requested Playlist has been deleted."
-msgstr ""
+msgstr "La llista esmentada s'ha esborrat"
 
 #: ../../lib/rating.lib.php:51
 msgid "Don't Play"
@@ -3298,7 +3287,7 @@ msgstr "Es prou dolent"
 
 #: ../../lib/rating.lib.php:57
 msgid "It's Ok"
-msgstr "És OK"
+msgstr "Està bé"
 
 #: ../../lib/rating.lib.php:60
 msgid "It's Pretty Good"
@@ -3314,7 +3303,7 @@ msgstr "És dolent"
 
 #: ../../lib/rating.lib.php:70
 msgid "Off the Charts!"
-msgstr "Off·the·Charts!"
+msgstr "Fora de les llistes!"
 
 #: ../../lib/ui.lib.php:312
 msgid "Upload"
@@ -3358,7 +3347,7 @@ msgstr "Mostra la música"
 
 #: ../../lib/ui.lib.php:465
 msgid "Add New"
-msgstr ""
+msgstr "Afegeix nou"
 
 #: ../../lib/class/browse.class.php:154
 msgid "Manage Users"
@@ -3370,7 +3359,7 @@ msgstr "LListes de reproducció"
 
 #: ../../lib/class/browse.class.php:177
 msgid "Playlist Songs"
-msgstr ""
+msgstr "Cançons de la llista"
 
 #: ../../lib/class/browse.class.php:182
 msgid "Current Playlist"
@@ -3378,30 +3367,29 @@ msgstr "LLista actual"
 
 #: ../../lib/class/browse.class.php:192
 msgid "Shoutbox Records"
-msgstr ""
+msgstr "Registre de Shoutbox"
 
 #: ../../lib/class/browse.class.php:197
 msgid "Flagged Records"
 msgstr "Registres assenyalats"
 
 #: ../../lib/class/browse.class.php:209
-#, fuzzy
 msgid "Videos"
-msgstr "Varis"
+msgstr "Vídeos"
 
 #: ../../lib/class/access.class.php:102 ../../lib/class/access.class.php:106
 #: ../../lib/class/access.class.php:146 ../../lib/class/access.class.php:150
 msgid "Invalid IPv4 / IPv6 Address Entered"
-msgstr ""
+msgstr "S'ha entrat una adreça IPv4 / IPv6 invàlida"
 
 #: ../../lib/class/access.class.php:111 ../../lib/class/access.class.php:112
 #: ../../lib/class/access.class.php:155 ../../lib/class/access.class.php:156
 msgid "IP Address Version Mismatch"
-msgstr ""
+msgstr "Hi falta el tipus d'adreça IP"
 
 #: ../../lib/class/access.class.php:443
 msgid "API/RPC"
-msgstr ""
+msgstr "API/RPC"
 
 #: ../../lib/class/flag.class.php:312
 msgid "Approved"
@@ -3413,7 +3401,7 @@ msgstr "Pendent"
 
 #: ../../lib/class/flag.class.php:328
 msgid "Re-Tag"
-msgstr "Re-tag"
+msgstr "Re-etiqueta"
 
 #: ../../lib/class/localplay.class.php:642
 msgid "Stopped"
@@ -3425,12 +3413,11 @@ msgstr "Pausat"
 
 #: ../../lib/class/democratic.class.php:141
 msgid "Primary"
-msgstr ""
+msgstr "Primari"
 
 #: ../../lib/class/artist.class.php:345
-#, fuzzy
 msgid "Fault"
-msgstr "Ràpid"
+msgstr "Falta"
 
 #: ../../lib/class/artist.class.php:353 ../../lib/class/catalog.class.php:1234
 #: ../../admin/users.php:142
@@ -3440,12 +3427,12 @@ msgstr "Error"
 #: ../../lib/class/user.class.php:379 ../../admin/users.php:55
 #: ../../admin/users.php:105
 msgid "Error Username Required"
-msgstr "Errada Cal el nom d'usuari"
+msgstr "Errada cal el nom d'usuari"
 
 #: ../../lib/class/user.class.php:383 ../../admin/users.php:58
 #: ../../admin/users.php:101
 msgid "Error Passwords don't match"
-msgstr "Errada no hi poden faltar les contrasenyes"
+msgstr "Errada les contrasenyes no coincideixen"
 
 #: ../../lib/class/album.class.php:489 ../../lib/class/catalog.class.php:462
 msgid "Error: Unable to open"
@@ -3453,21 +3440,19 @@ msgstr "Error: impossible d'obrir"
 
 #: ../../lib/class/ampacherss.class.php:116
 msgid "RSS Feed"
-msgstr ""
+msgstr "Canal RSS"
 
 #: ../../lib/class/catalog.class.php:208
-#, fuzzy
 msgid "day"
 msgid_plural "days"
 msgstr[0] "dia"
-msgstr[1] "dia"
+msgstr[1] "dies"
 
 #: ../../lib/class/catalog.class.php:210
-#, fuzzy
 msgid "hour"
 msgid_plural "hours"
 msgstr[0] "hora"
-msgstr[1] "hora"
+msgstr[1] "hores"
 
 #: ../../lib/class/catalog.class.php:308
 msgid "Running Remote Sync"
@@ -3478,19 +3463,19 @@ msgid "Error: Unable to change to directory"
 msgstr "Error: impossible canviar de directori"
 
 #: ../../lib/class/catalog.class.php:548
-#, fuzzy, php-format
+#, php-format
 msgid "Error: Unable to get filesize for %s"
-msgstr "Error: impossible de aconseguit la mida"
+msgstr "Error: impossible de aconseguit la mida de %s"
 
 #: ../../lib/class/catalog.class.php:554
-#, fuzzy, php-format
+#, php-format
 msgid "%s is not readable by ampache"
-msgstr "ampache no ho pot llegir"
+msgstr "ampache no ho pot llegir %s"
 
 #: ../../lib/class/catalog.class.php:562
 #, php-format
 msgid "%s does not match site charset"
-msgstr ""
+msgstr "%s no coincideix amb el joc de caràcters"
 
 #: ../../lib/class/catalog.class.php:1029
 #: ../../lib/class/catalog.class.php:1899 ../../preferences.php:111
@@ -3565,11 +3550,11 @@ msgstr "Catàleg(s) remots completament actualitzats"
 
 #: ../../lib/class/catalog.class.php:1305
 msgid "Starting synchronisation of album images"
-msgstr ""
+msgstr "Començant la sincronització de les imatges dels àlbums"
 
 #: ../../lib/class/catalog.class.php:1307
 msgid "Completed synchronisation of album images"
-msgstr ""
+msgstr "S'ha completat la sincronització de les imatges dels àlbums"
 
 #: ../../lib/class/catalog.class.php:1342 ../../admin/access.php:93
 msgid "Added"
@@ -3577,11 +3562,11 @@ msgstr "Afegit"
 
 #: ../../lib/class/catalog.class.php:1375
 msgid "images synchronized: "
-msgstr ""
+msgstr "imatges sincronitzades: "
 
 #: ../../lib/class/catalog.class.php:1509
 msgid "Catalog Root unreadable, stopping clean"
-msgstr ""
+msgstr "L'arrel del catàleg illegible, aturant la neteja"
 
 #: ../../lib/class/catalog.class.php:1589
 msgid "Catalog Clean Done"
@@ -3593,7 +3578,7 @@ msgstr "arxius esborrats"
 
 #: ../../lib/class/catalog.class.php:1590
 msgid "Optimizing Tables"
-msgstr ""
+msgstr "Optimitzant les taules"
 
 #: ../../lib/class/catalog.class.php:1899
 #, fuzzy
@@ -3605,39 +3590,37 @@ msgid "Checked"
 msgstr "Comprovant"
 
 #: ../../lib/class/catalog.class.php:2419
-#, fuzzy
 msgid "Playlist creation error."
-msgstr "LLista creada"
+msgstr "Error creant la llista"
 
 #: ../../lib/class/catalog.class.php:2426
 #, php-format
 msgid "Playlist Import and Recreate Successful. Total: %d Songs"
-msgstr ""
+msgstr "S'ha importat la llista i s'hi han creat un total de %d cançons"
 
 #: ../../lib/class/catalog.class.php:2430
 #, php-format
 msgid "Parsing %s - Not Found: %d Songs. Please check your m3u file."
-msgstr ""
+msgstr "No s'ha analitzat %s: %d cançons. Per favor comprova el teu arxiu m3u"
 
 #: ../../lib/class/random.class.php:410
 msgid "Related Genre"
-msgstr ""
+msgstr "Gènere relacionat"
 
 #: ../../lib/class/vauth.class.php:484 ../../lib/class/vauth.class.php:508
 #: ../../lib/class/vauth.class.php:547
 msgid "Error Username or Password incorrect, please try again"
-msgstr ""
+msgstr "Error nom d'usuari o contrasenya incorrecta, tornau a provar"
 
 #: ../../lib/class/registration.class.php:51
 #: ../../lib/class/registration.class.php:53
-#, fuzzy
 msgid "From: Ampache "
-msgstr "Cerca Ampache"
+msgstr "Des de Ampache"
 
 #: ../../lib/class/registration.class.php:55
-#, fuzzy, php-format
+#, php-format
 msgid "New User Registration at %s"
-msgstr "Registre d'un nou usuari a l'Ampache"
+msgstr "Nou usuari registrat a %s"
 
 #: ../../lib/class/registration.class.php:68
 #, php-format
@@ -3659,6 +3642,21 @@ msgid ""
 "\n"
 "Thank you for registering\n"
 msgstr ""
+"Gràcies pel teu registre\n"
+"\n"
+"\n"
+"Per favor guarda aquest e-mail per recordar-ho. La informació del teu compte "
+"és la següent:\n"
+"----------------------\n"
+"Nom d'usuari: %s\n"
+"Contrasenya: %s\n"
+"----------------------\n"
+"El teu compte actualment és inactiu. No el pots emprar fins que no "
+"visitisl'enllaç següent:\n"
+"\n"
+"%s \n"
+"\n"
+"Gràcies pel teu registre\n"
 
 #: ../../lib/class/registration.class.php:98
 #, php-format
@@ -3671,14 +3669,21 @@ msgid ""
 "E-mail: %s\n"
 "\n"
 msgstr ""
+"S'ha registrat un usuari nou\n"
+"Ha entrat el següent\n"
+"\n"
+"Nom d'usuari: %s\n"
+"Nom sencer: %s\n"
+"E-mail: %s\n"
+"\n"
 
 #: ../../lib/general.lib.php:397
 msgid "On"
-msgstr "Engegat"
+msgstr "Engega"
 
 #: ../../lib/general.lib.php:400
 msgid "Off"
-msgstr "Parat"
+msgstr "Atura"
 
 #: ../../lib/preferences.php:191
 msgid "M3U"
@@ -3710,82 +3715,79 @@ msgstr "Desactivat"
 
 #: ../../lib/preferences.php:232
 msgid "Manager"
-msgstr ""
+msgstr "Gestionar"
 
 #: ../../lib/preferences.php:252
 msgid "Send on Add"
-msgstr ""
+msgstr "Afegir enviar a"
 
 #: ../../lib/preferences.php:253
 msgid "Send and Clear on Add"
-msgstr ""
+msgstr "Afegir enviar i esborrar a"
 
 #: ../../lib/preferences.php:254
 msgid "Clear on Send"
-msgstr ""
+msgstr "Enviar netejar a"
 
 #: ../../lib/preferences.php:263
 msgid "Always"
-msgstr ""
+msgstr "Sempre"
 
 #: ../../lib/install.php:81
-#, fuzzy
 msgid "Unable to connect to database, check your ampache config"
 msgstr ""
-"Això intenta connectar a la teva base de dates usant els valors del teu "
-"ampache.cfg.php"
+"Impossible connectar a la BD, comprova la teva configuració de l'ampache"
 
 #: ../../lib/install.php:88
 msgid "Unable to select database, check your ampache config"
-msgstr ""
+msgstr "Impossible sel.leccionar la BD, comprova la configuració de l'ampache"
 
 #: ../../lib/install.php:98
 msgid "Existing Database detected, unable to continue installation"
 msgstr ""
+"S'ha detectat un base de dades existent, és impossible continuar amb la "
+"instal.lació"
 
 #: ../../lib/install.php:135 ../../install.php:94
-#, fuzzy
 msgid "Error: Unable to make Database Connection"
-msgstr "Error: impossible canviar de directori"
+msgstr "Error: impossible fer la connexió amb la BD"
 
 #: ../../lib/install.php:276
 msgid "No Username/Password specified"
-msgstr ""
+msgstr "No s'ha especificat Usuari/Contrasenya"
 
 #: ../../lib/install.php:281
 msgid "Passwords do not match"
-msgstr ""
+msgstr "Les contrasenyes no coincideixen"
 
 #: ../../shout.php:41
-#, fuzzy
 msgid "Invalid Object Selected"
-msgstr "Baixa els triats"
+msgstr "Objecte sel-lecionat invàlid"
 
 #: ../../server/xml.server.php:80
 msgid "Error Invalid Handshake - "
-msgstr ""
+msgstr "Error Handshake invàlid"
 
 #: ../../server/xml.server.php:346 ../../server/xml.server.php:395
 #: ../../server/xml.server.php:403
-#, fuzzy
 msgid "Invalid Request"
-msgstr "Necessari borrar"
+msgstr "Petició invàlida"
 
 #: ../../server/xml.server.php:361 ../../server/xml.server.php:374
 msgid "Media Object Invalid or Not Specified"
-msgstr ""
+msgstr "Invàlid mitjà o no especificat"
 
 #: ../../preferences.php:40 ../../preferences.php:75
 msgid "Server"
-msgstr ""
+msgstr "Servidor"
 
 #: ../../preferences.php:107
 msgid "Error Update Failed"
-msgstr ""
+msgstr "Error ha fallat la actualització"
 
 #: ../../preferences.php:112
 msgid "Your Account has been updated"
-msgstr ""
+msgstr "El teu compte s'ha actualitzat"
 
 #: ../../play/index.php:84
 msgid "Session Expired: please log in again at"
@@ -3793,16 +3795,15 @@ msgstr "La sessió ha acabat: entra de nou"
 
 #: ../../radio.php:50
 msgid "Radio Station Added"
-msgstr ""
+msgstr "S'ha afegit l'estació de ràdio"
 
 #: ../../install.php:177
-#, fuzzy
 msgid "Error: Config file not found or Unreadable"
-msgstr "Errror l'arxiu de configuració ha caducat"
+msgstr "Errror no s'ha trobat l'arxiu de configuració o no es pot llegir"
 
 #: ../../update.php:47 ../../update.php:51
 msgid "Ampache Update"
-msgstr "Ampache actualitzat"
+msgstr "Actualitza Ampache"
 
 #: ../../update.php:56
 #, php-format
@@ -3811,15 +3812,17 @@ msgid ""
 "<strong>3.3.3.5</strong>. According to your database your current version "
 "is: <strong>%s</strong>."
 msgstr ""
+"Aquesta pàgina s'ocupa de totes les actualitzacions de la base de dades "
+"Ampache des de<strong>3.3.3.5</strong>. D'acord amb la nostra base de dades "
+"la teva versióés: <strong>%s</strong>."
 
 #: ../../update.php:57
 msgid "the following updates need to be performed"
-msgstr ""
+msgstr "s'han de fer les segúent actualitzacions"
 
 #: ../../update.php:64
-#, fuzzy
 msgid "Update Now!"
-msgstr "Actualitza la cançó"
+msgstr "Actualitza ara!"
 
 #: ../../update.php:68
 #, fuzzy
@@ -3832,20 +3835,20 @@ msgstr "Portada netejada"
 
 #: ../../albums.php:32
 msgid "Album Art information has been removed from the database"
-msgstr "L'informació de l'àlbum s'ha esborrat de la base de dades"
+msgstr ""
+"L'informació de la portada de l'àlbum s'ha esborrat de la base de dades"
 
 #: ../../albums.php:39 ../../albums.php:56 ../../albums.php:129
 msgid "Album Art Not Located"
 msgstr "No s'ha trobat la portada"
 
 #: ../../albums.php:39 ../../albums.php:56 ../../albums.php:129
-#, fuzzy
 msgid ""
 "Album Art could not be located at this time. This may be due to write access "
 "error, or the file is not received correctly."
 msgstr ""
-"La portada no s'ha pogut guardar ara mateix. Potser que no hi ha permisos "
-"d'escriptura, o que l'arxiu no s'ha rebut correctament"
+"La portada no s'ha pogut trobar ara mateix. Potser que no hi ha permisos "
+"d'escriptura, o que arxiu no s'ha rebut correctament"
 
 #: ../../albums.php:52 ../../albums.php:80
 msgid "Album Art Inserted"
@@ -3860,9 +3863,8 @@ msgid " has been created"
 msgstr "s'ha creat"
 
 #: ../../playlist.php:89
-#, fuzzy
 msgid "Playlist Not Imported"
-msgstr "LLista importada"
+msgstr "LLista no importada"
 
 #: ../../playlist.php:93
 msgid "Playlist Imported"
@@ -3908,32 +3910,29 @@ msgstr ""
 #: ../../modules/localplay/shoutcast.controller.php:237
 #: ../../modules/localplay/httpq.controller.php:216
 msgid "Instance Name"
-msgstr ""
+msgstr "Nom de la instància"
 
 #: ../../modules/localplay/mpd.controller.php:233
 #: ../../modules/localplay/httpq.controller.php:217
 msgid "Hostname"
-msgstr ""
+msgstr "Nom de la màquina"
 
 #: ../../modules/localplay/mpd.controller.php:234
 #: ../../modules/localplay/httpq.controller.php:218
 msgid "Port"
-msgstr ""
+msgstr "Port"
 
 #: ../../modules/localplay/shoutcast.controller.php:238
-#, fuzzy
 msgid "PID File"
-msgstr "Arxiu"
+msgstr "Arxiu PID"
 
 #: ../../modules/localplay/shoutcast.controller.php:239
-#, fuzzy
 msgid "Playlist File"
-msgstr "Tipus de llista"
+msgstr "Arxiu de la llista"
 
 #: ../../modules/localplay/shoutcast.controller.php:240
-#, fuzzy
 msgid "Local Path to Files"
-msgstr "Inici de Reproducció local fallada"
+msgstr "Ruta local als arxius"
 
 #: ../../admin/mail.php:90
 msgid "E-mail Sent"
@@ -3945,7 +3944,7 @@ msgstr "El teu e-mail s'ha enviat correctament"
 
 #: ../../admin/modules.php:38
 msgid "Install Failed, Controller Error"
-msgstr ""
+msgstr "Instal.lació fallada, error de controlador"
 
 #: ../../admin/modules.php:56 ../../admin/modules.php:101
 msgid "Are you sure you want to remove this plugin?"
@@ -3957,7 +3956,7 @@ msgstr "Plugin desactivat"
 
 #: ../../admin/modules.php:83
 msgid "Unable to Install Plugin"
-msgstr ""
+msgstr "Impossible instal.lar el Plugin"
 
 #: ../../admin/modules.php:94
 msgid "Plugin Activated"
@@ -3965,11 +3964,11 @@ msgstr "Plugin activat"
 
 #: ../../admin/modules.php:129
 msgid "Plugins"
-msgstr ""
+msgstr "Plugins"
 
 #: ../../admin/modules.php:135
 msgid "Localplay Controllers"
-msgstr ""
+msgstr "Controladors locals"
 
 #: ../../admin/flag.php:88
 msgid "Song Updated"
@@ -3993,15 +3992,15 @@ msgstr "Cançons actualitzades"
 
 #: ../../admin/flag.php:245
 msgid "Flag Removed"
-msgstr "Bandera llevada"
+msgstr "Senyal llevat"
 
 #: ../../admin/flag.php:246
 msgid "Flag Removed from"
-msgstr "Bandera llevada de"
+msgstr "Senyal llevat de"
 
 #: ../../admin/flag.php:261
 msgid "Flags Updated"
-msgstr "Bandera actualitzat"
+msgstr "Senyals actualitzats"
 
 #: ../../admin/flag.php:280
 msgid "Songs Disabled"
@@ -4021,11 +4020,11 @@ msgstr "Les cançons demanades han estat activades"
 
 #: ../../admin/shout.php:35
 msgid "Shoutbox Post Updated"
-msgstr ""
+msgstr "Shoutbox post actualitzat"
 
 #: ../../admin/shout.php:47
 msgid "Shoutbox Post Deleted"
-msgstr ""
+msgstr "Shoutbox post esborrat"
 
 #: ../../admin/access.php:35
 msgid "Deleted"
@@ -4036,9 +4035,8 @@ msgid "Your Access List Entry has been removed"
 msgstr "La teva llista d'accés ha esta esborrada"
 
 #: ../../admin/access.php:93
-#, fuzzy
 msgid "Your new Access Control List(s) have been created"
-msgstr "La teva llista d'accés ha estat creada"
+msgstr "La teva nova llista d'accés ha estat creada"
 
 #: ../../admin/access.php:109
 msgid "Access List Entry updated"
@@ -4046,27 +4044,27 @@ msgstr "Actualitzada la llistra d'entrada"
 
 #: ../../admin/users.php:83
 msgid "User Updated"
-msgstr ""
+msgstr "Usuari actualitzat"
 
 #: ../../admin/users.php:83
 msgid "updated"
-msgstr ""
+msgstr "actualitzat"
 
 #: ../../admin/users.php:129
 msgid "New User Added"
-msgstr ""
+msgstr "Nou usuari afegit"
 
 #: ../../admin/users.php:134
 msgid "User Enabled"
-msgstr ""
+msgstr "Usuari permès"
 
 #: ../../admin/users.php:139
 msgid "User Disabled"
-msgstr ""
+msgstr "Usuari desactivat"
 
 #: ../../admin/users.php:142
 msgid "Unable to Disabled last Administrator"
-msgstr ""
+msgstr "Impossible desactivar l'últim administrador"
 
 #: ../../admin/users.php:154
 msgid "User Deleted"
@@ -4082,7 +4080,7 @@ msgstr "Impossible esborrar l'últim usuari administrador"
 
 #: ../../admin/users.php:163
 msgid "Deletion Request"
-msgstr "Necessari borrar"
+msgstr "Petició d'esborrar"
 
 #: ../../admin/users.php:164
 msgid "Are you sure you want to permanently delete"
@@ -4090,36 +4088,36 @@ msgstr "Estàs segur que ho vols esborrar permanentment"
 
 #: ../../admin/system.php:49
 msgid "Database Charset Updated"
-msgstr ""
+msgstr "Jos de caràcters de la BD actualitzats"
 
 #: ../../admin/system.php:49
 msgid ""
 "Your Database and associated tables have been updated to match your "
 "currently configured charset"
 msgstr ""
+"La teva base de dades i les seves taules han estat actualitzades per a que "
+"coincideixi amb el teu joc de caràcters actual"
 
 #: ../../admin/catalog.php:53 ../../admin/catalog.php:73
 #: ../../admin/catalog.php:98 ../../admin/catalog.php:170
 msgid "Catalog Updated"
-msgstr "Catàleg pujat"
+msgstr "Catàleg actualitzat"
 
 #: ../../admin/catalog.php:115
 msgid "Catalog Deleted"
-msgstr "Catàleg borrat"
+msgstr "Catàleg esborrat"
 
 #: ../../admin/catalog.php:115
 msgid "The Catalog and all associated records have been deleted"
-msgstr ""
+msgstr "S'ha esborrat el catàleg i tots els seus registres"
 
 #: ../../admin/catalog.php:121
-#, fuzzy
 msgid "Catalog Delete"
-msgstr "Catàleg borrat"
+msgstr "Catàleg esborrat"
 
 #: ../../admin/catalog.php:121
-#, fuzzy
 msgid "Confirm Deletion Request"
-msgstr "Necessari borrar"
+msgstr "Confirma la petició d'esborrar"
 
 #: ../../admin/catalog.php:130
 msgid "Songs Removed"
@@ -4127,7 +4125,7 @@ msgstr "Cançons esborrades"
 
 #: ../../admin/catalog.php:133
 msgid "No Songs Removed"
-msgstr "No cap cançó esborrada"
+msgstr "Cap cançó no esborrada"
 
 #: ../../admin/catalog.php:136
 msgid "Disabled Songs Processed"
@@ -4138,9 +4136,8 @@ msgid "Catalog Cleaned"
 msgstr "Catàleg netejat"
 
 #: ../../admin/catalog.php:214
-#, fuzzy
 msgid "Error: Defined Path is inside an existing catalog"
-msgstr "Error: el directori de pujada no és al catàleg"
+msgstr "Error: la ruta de pujada no és al catàleg"
 
 #: ../../admin/catalog.php:233
 msgid "Catalog Created"
@@ -4156,7 +4153,7 @@ msgstr "Ara escoltant netejat"
 
 #: ../../admin/catalog.php:263
 msgid "All now playing data has been cleared"
-msgstr "Tots els \"ara escoltant\" s'ha esborrat"
+msgstr "Tots els ara escoltant s'ha esborrat"
 
 #: ../../admin/catalog.php:273
 msgid "No Disabled songs found"
@@ -4168,13 +4165,13 @@ msgstr "Esborra el catàleg"
 
 #: ../../admin/catalog.php:282
 msgid "Do you really want to delete this catalog?"
-msgstr "Realment vols esborrar aquest catàleg"
+msgstr "Realment vols esborrar aquest catàleg?"
 
 #: ../../admin/catalog.php:302
 msgid "Album Art Search Finished"
 msgstr "Finalitzat la cerca de portades"
 
-#: ../../bin/print_tags.inc:68
+#: ../../bin/print_tags.inc:66
 msgid ""
 "[print_tags.php.inc]\n"
 "This commandline script will display the tag information for the specified "
@@ -4184,41 +4181,37 @@ msgid ""
 msgstr ""
 "[print_tags.php.inc]\n"
 "Aquest·script en línia d'ordres mostrarà la informació del tag per l'arxiu "
-"especificat i també així com \n"
+"especificat i també com \n"
 " apareixerà a l'ampache. \n"
 "            \n"
 
-#: ../../bin/print_tags.inc:74
+#: ../../bin/print_tags.inc:72
 msgid "Filename:"
 msgstr "Nom de l'arxiu:"
 
 #: Database words
-#, fuzzy
 msgid "Allow Downloads"
-msgstr "Baixar"
+msgstr "Permetre baixar"
 
 #: Database words
-#, fuzzy
 msgid "Popular Threshold"
-msgstr "El més popular Threshold en díes"
+msgstr "Entrada popular"
 
 #: Database words
-#, fuzzy
 msgid "Transcode Bitrate"
-msgstr "Bitrate mínim"
+msgstr "Transcodificar elbBitrate"
 
 #: Database words
-#, fuzzy
 msgid "Lock Songs"
-msgstr "# Cançons"
+msgstr "Cançons tancades"
 
 #: Database words
 msgid "Forces Http play regardless of port"
-msgstr ""
+msgstr "Obliga Http a reproduir independentment del port"
 
 #: Database words
 msgid "Non-Standard Http Port"
-msgstr ""
+msgstr "Port Http no estàndard"
 
 #: Database words
 #, fuzzy
@@ -4227,79 +4220,71 @@ msgstr "Sona localment"
 
 #: Database words
 msgid "Type of Playback"
-msgstr ""
+msgstr "Tipus de playback"
 
 #: Database words
 msgid "Language"
-msgstr ""
+msgstr "Llengua"
 
 #: Database words
-#, fuzzy
 msgid "Theme"
-msgstr "Temps"
+msgstr "Tema"
 
 #: Database words
 msgid "Album Ellipse Threshold"
-msgstr ""
+msgstr "Entrada eliptica d'àlbum"
 
 #: Database words
 msgid "Artist Ellipse Threshold"
-msgstr ""
+msgstr "Entrada eliptica d'artista"
 
 #: Database words
 msgid "Title Ellipse Threshold"
-msgstr ""
+msgstr "Entrada eliptica de títol"
 
 #: Database words
-#, fuzzy
 msgid "Offset Limit"
-msgstr "Mida límit"
+msgstr "Fora del límit"
 
 #: Database words
-#, fuzzy
 msgid "Localplay Access"
-msgstr "Mòduls de reproducció local"
+msgstr "Accés a la reproducció local"
 
 #: Database words
-#, fuzzy
 msgid "Allow Streaming"
-msgstr "Streaming"
+msgstr "Permetre streaming"
 
 #: Database words
-#, fuzzy
 msgid "Allow Democratic Play"
-msgstr "Democràtic"
+msgstr "Permetre la reproducció democràtica"
 
 #: Database words
-#, fuzzy
 msgid "Allow Localplay Play"
-msgstr "Reproduir localment"
+msgstr "Permetre reproduir localment"
 
 #: Database words
 msgid "Statistics Day Threshold"
-msgstr ""
+msgstr "Estadístiques de les entrades del dia"
 
 #: Database words
 msgid "Min Element Count"
-msgstr ""
+msgstr "Mínim compte de element"
 
 #: Database words
-#, fuzzy
 msgid "Rate Limit"
-msgstr "Mida límit"
+msgstr "Límit de taxa"
 
 #: Database words
-#, fuzzy
 msgid "Playlist Method"
-msgstr "LLista creada"
+msgstr "Mètode de llista"
 
 #: Database words
 msgid "Transcoding"
-msgstr ""
+msgstr "Decodificant"
 
 #: Database words
 msgid "User to track"
-msgstr ""
+msgstr "Usuari a la peça"
 
 #: Database words
 #, fuzzy
@@ -4312,547 +4297,9 @@ msgid "Interface"
 msgstr "Interfície"
 
 #: Database words
-#, fuzzy
 msgid "System"
-msgstr "Ítem"
+msgstr "Sistema"
 
 #: Database words
 msgid "Show Lyrics"
-msgstr ""
-
-#, fuzzy
-#~ msgid "System Checks"
-#~ msgstr "Sistema"
-
-#, fuzzy
-#~ msgid "Ampache"
-#~ msgstr "Ampache·Debug"
-
-#, fuzzy
-#~ msgid "Last Updated"
-#~ msgstr "Bandera actualitzat"
-
-#~ msgid "songs updated."
-#~ msgstr "cançons actualitzades"
-
-#~ msgid "End IP Address"
-#~ msgstr "Adreça IP final"
-
-#, fuzzy
-#~ msgid ""
-#~ "Use tool below to add any server's IP address that you want to access "
-#~ "your Ampache catalog or be able to stream from this server."
-#~ msgstr ""
-#~ "Utilitza el formulari de sota per afegir un host que tu vulguis que "
-#~ "tengui accés al teu catàleg de l'Ampache"
-
-#~ msgid "Add Entry"
-#~ msgstr "Afegir entrada"
-
-#~ msgid "genre"
-#~ msgstr "gènere"
-
-#, fuzzy
-#~ msgid "Option"
-#~ msgstr "Opcions"
-
-#, fuzzy
-#~ msgid "Ampache Recently Played"
-#~ msgstr "Escoltat recentment"
-
-#, fuzzy
-#~ msgid "Add Tag"
-#~ msgstr "Afegir al catàleg"
-
-#, fuzzy
-#~ msgid "Ampache Latest Artists Additions"
-#~ msgstr "Últims artistes afegits"
-
-#, fuzzy
-#~ msgid "Ampache Latest Albums Additions"
-#~ msgstr "Últims albums afegits"
-
-#, fuzzy
-#~ msgid "Ampache Most Popular Albums"
-#~ msgstr "Àlbums més populars"
-
-#, fuzzy
-#~ msgid "Ampache Most Popular Artists"
-#~ msgstr "Artistes més populars"
-
-#, fuzzy
-#~ msgid "Ampache Most Popular Songs"
-#~ msgstr "Les cançons més populars"
-
-#~ msgid "From genre"
-#~ msgstr "Del gènere"
-
-#~ msgid "Playlist Updated"
-#~ msgstr "LLista actualitzada"
-
-#~ msgid "has been updated and is now"
-#~ msgstr "s'ha actualitzat i és ara"
-
-#, fuzzy
-#~ msgid "Catalog Debug Tools"
-#~ msgstr "Catàleg borrat"
-
-#, fuzzy
-#~ msgid "GetText Support"
-#~ msgstr "Suport PHP PutENV"
-
-#, fuzzy
-#~ msgid "PHP Version:"
-#~ msgstr "Versió PHP"
-
-#, fuzzy
-#~ msgid "Mysql for PHP:"
-#~ msgstr "Mysql per PHP"
-
-#, fuzzy
-#~ msgid "PHP Session Support:"
-#~ msgstr "Sessió de PHP suportada"
-
-#, fuzzy
-#~ msgid "PHP ICONV Support:"
-#~ msgstr "PHP ICONV suportat"
-
-#, fuzzy
-#~ msgid "PHP PCRE Support:"
-#~ msgstr "Suport PHP PCRE"
-
-#, fuzzy
-#~ msgid "PHP PutENV Support:"
-#~ msgstr "Suport PHP PutENV"
-
-#~ msgid "Editing"
-#~ msgstr "Editant"
-
-#~ msgid "preferences"
-#~ msgstr "preferències"
-
-#~ msgid "Simplified Chinese"
-#~ msgstr "Xinés simplificat"
-
-#, fuzzy
-#~ msgid "Catalan"
-#~ msgstr "Catàleg"
-
-#, fuzzy
-#~ msgid "Danish"
-#~ msgstr "Anglès"
-
-#, fuzzy
-#~ msgid "Greek"
-#~ msgstr "Gènere"
-
-#~ msgid "British English"
-#~ msgstr "Anglès britànic"
-
-#~ msgid "English"
-#~ msgstr "Anglès"
-
-#, fuzzy
-#~ msgid "Persian"
-#~ msgstr "Versió"
-
-#, fuzzy
-#~ msgid "Irish"
-#~ msgstr "Turc"
-
-#, fuzzy
-#~ msgid "Latvian"
-#~ msgstr "Calificació"
-
-#, fuzzy
-#~ msgid "Polish"
-#~ msgstr "Anglès"
-
-#~ msgid "Turkish"
-#~ msgstr "Turc"
-
-#, fuzzy
-#~ msgid "Vietnamese"
-#~ msgstr "Nom de l'arxiu"
-
-#~ msgid "Favorites"
-#~ msgstr "Preferits"
-
-#~ msgid "Recommendations"
-#~ msgstr "Recomenacions"
-
-#~ msgid "catalog"
-#~ msgstr "catàleg"
-
-#~ msgid "Return"
-#~ msgstr "Tornar"
-
-#~ msgid " FOUND"
-#~ msgstr "TROBAT"
-
-#~ msgid "Searching for new Album Art"
-#~ msgstr "Cercant noves portades"
-
-#~ msgid "Export Failed"
-#~ msgstr "Ha fallat l'exportació"
-
-#~ msgid "description"
-#~ msgstr "descripció"
-
-#~ msgid ""
-#~ "This test checks to make sure you have Iconv support installed. Iconv "
-#~ "support is not required for Ampache, but it is highly recommended"
-#~ msgstr ""
-#~ "Aquest test serveix per assegurar que tens el suport ICONV instalataquest "
-#~ "suport no és necessari per l'Ampache, però és molt recomanable"
-
-#~ msgid ""
-#~ "This steps takes the basic config values, and first attempts to write "
-#~ "them out directly to your webserver. If access is denied it will prompt "
-#~ "you to download the config file. Please put the downloaded config file "
-#~ "in /config"
-#~ msgstr ""
-#~ "Aquests passos adopten la configuració dels valors bàsics; primer "
-#~ "intentarà escriure'ls directament al teu servidor web. Si se li nega "
-#~ "l'accés et farà preguntes i descarregarà l'arxiu de configuració. Per "
-#~ "favor, posa la descàrrega en el directori de configuració /config "
-
-#~ msgid "Rating Updated"
-#~ msgstr "Calificació actualitzada"
-
-#~ msgid "Your rating for this object has been updated"
-#~ msgstr "La teva calificació per aquest objecte s'ha actualitzat"
-
-#~ msgid "Playlist Cleared"
-#~ msgstr "Llista netejada"
-
-#~ msgid "album's with art"
-#~ msgstr "album amb portada"
-
-#~ msgid "Starting Catalog Build"
-#~ msgstr "Començant a crear el catàleg"
-
-#~ msgid "Catalog Finished"
-#~ msgstr "Catàleg acabat"
-
-#~ msgid "Album Art Already Found"
-#~ msgstr "La portada ja hi és"
-
-#~ msgid "updated to"
-#~ msgstr "actualitzat a"
-
-#~ msgid "Rate"
-#~ msgstr "Calificació"
-
-#~ msgid "Mode"
-#~ msgstr "Mode"
-
-#~ msgid "Filesize"
-#~ msgstr "Mida"
-
-#~ msgid "Error: Name Identical"
-#~ msgstr "Error: nom idèntic"
-
-#~ msgid "Show Genres starting with"
-#~ msgstr "Mostra gèneres que comencin per"
-
-#~ msgid "Downsample"
-#~ msgstr "Downsample"
-
-#~ msgid "Global"
-#~ msgstr "Global"
-
-#~ msgid "No songs in this playlist."
-#~ msgstr "No hi ha cançons a la llista"
-
-#~ msgid "New Playlist"
-#~ msgstr "LLista nova"
-
-#~ msgid "Error Access Denied"
-#~ msgstr "Error accés denegat"
-
-#~ msgid "Show w/o art"
-#~ msgstr "Mostra w/o"
-
-#~ msgid "Show all"
-#~ msgstr "Mostra-ho tot"
-
-#~ msgid "No Catalogs Found!"
-#~ msgstr "No s'han trobat catàlegs"
-
-#~ msgid "days"
-#~ msgstr "dies"
-
-#~ msgid "hours"
-#~ msgstr "hores"
-
-#~ msgid "Add a new user"
-#~ msgstr "Afegir un nou usuari"
-
-#~ msgid ""
-#~ "You defined the option \"debug = on\" but didn't define a log path for "
-#~ "the log to be stored"
-#~ msgstr ""
-#~ "Has definit l'opció \"debug = on\", però no defineixes la ruta de l'arxiu"
-
-#~ msgid "The Catalog and all associated records has been deleted"
-#~ msgstr "El catàleg i tots els seus registres han estat borrats"
-
-#~ msgid "Catalog Created and Songs Indexed"
-#~ msgstr "El catàleg ha estat creat i les cançons indexades"
-
-#~ msgid "Do you really want to clear the statistics for this catalog?"
-#~ msgstr "Realment vols esborrar les estadístiques d'aquest catàleg"
-
-#~ msgid "Site"
-#~ msgstr "Lloc"
-
-#~ msgid "Do you really want to delete this Access Record?"
-#~ msgstr "Realment vols esborrar aquest Accés record?"
-
-#~ msgid "Entry Deleted"
-#~ msgstr "Entrada esborrada"
-
-#~ msgid "Entry Added"
-#~ msgstr "Entrada afegida"
-
-#~ msgid "Entry Updated"
-#~ msgstr "Entrada actualitzada"
-
-#~ msgid "Module Activated"
-#~ msgstr "Mòdul activat"
-
-#~ msgid "Are you sure you want to remove this module?"
-#~ msgstr "Estàs segur que vols esborrar aquest mòdul?"
-
-#~ msgid "Module Deactivated"
-#~ msgstr "Mòdul desactivat"
-
-#~ msgid "No Playlists Found"
-#~ msgstr "No s'ha trobar cap llista"
-
-#~ msgid "Select Best Guess"
-#~ msgstr "Triar el millor convidat"
-
-#~ msgid "Controls"
-#~ msgstr "Controls"
-
-#~ msgid "Users"
-#~ msgstr "Usuaris"
-
-#~ msgid "Config"
-#~ msgstr "Configurar"
-
-#~ msgid "Access List"
-#~ msgstr "Llista d'accés"
-
-#~ msgid "Democratic View"
-#~ msgstr "Vista democràtica"
-
-#~ msgid "Play All Songs By"
-#~ msgstr "Escolta totes les cançons de"
-
-#~ msgid "Rename Artist"
-#~ msgstr "Reanomena l'artista"
-
-#~ msgid "Find duplicate artists"
-#~ msgstr "Troba artistes repetits"
-
-#~ msgid "Results Per Page"
-#~ msgstr "Resultats per pàgina"
-
-#~ msgid "Clear Info"
-#~ msgstr "Neteja l'informació"
-
-#~ msgid "Module Name"
-#~ msgstr "Nom del mòdul"
-
-#~ msgid "Admin Controls"
-#~ msgstr "Controls administratius"
-
-#~ msgid "Approve"
-#~ msgstr "Aprova"
-
-#~ msgid "Newest Artist Additions"
-#~ msgstr "Últims artistes afegits"
-
-#~ msgid "Newest Album Additions"
-#~ msgstr "Últims àlbums afegits"
-
-#~ msgid "Newest Live Stream Additions"
-#~ msgstr "Últims Streams afegits"
-
-#~ msgid "Playlist Actions"
-#~ msgstr "Accions de la llista"
-
-#~ msgid "Edit Playlist"
-#~ msgstr "Edita la llista"
-
-#~ msgid "Play This Playlist"
-#~ msgstr "Reprodueix la llista"
-
-#~ msgid "Play Random"
-#~ msgstr "Reprodueix aleatoriament"
-
-#~ msgid "Delete This Playlist"
-#~ msgstr "Esborra aquesta llista"
-
-#~ msgid "Import From File"
-#~ msgstr "Importa des de un arxiu"
-
-#~ msgid "Delete Empty Playlists"
-#~ msgstr "Esborra les llistes buides"
-
-#~ msgid "Disable Songs"
-#~ msgstr "Cançons desactivades"
-
-#~ msgid "Song(s) Removed from Playlist"
-#~ msgstr "Cançó (ns) esborrades de la llista"
-
-#~ msgid "Show Albums starting with"
-#~ msgstr "Mostra àlbums que comencen amb"
-
-#~ msgid "Show Titles Starting With"
-#~ msgstr "Mostra títols que comencen per"
-
-#~ msgid "Lists"
-#~ msgstr "LListes"
-
-#~ msgid "Error: Password Does Not Match or Empty"
-#~ msgstr "Error: s'han perdut la contrasenya o és buida"
-
-#~ msgid "Password Updated"
-#~ msgstr "Contrasenya actualitzada"
-
-#~ msgid "No user with this name registered"
-#~ msgstr "No hi cap usuari registrat amb aquest nom"
-
-#~ msgid "The validation key used isn't correct."
-#~ msgstr "La clau de validació emprada no és correcte"
-
-#~ msgid "User activated"
-#~ msgstr "Usuari activat"
-
-#~ msgid "Playlist Deleted"
-#~ msgstr "Llista esborrada"
-
-#~ msgid "The Requested Playlist has been deleted"
-#~ msgstr "La llista demanada s'ha esborrat"
-
-#~ msgid "Are you sure you want to delete this playlist"
-#~ msgstr "Estas segur que vols esborrar aquesta llista"
-
-#~ msgid "Confirm Action"
-#~ msgstr "Confirma l'acció"
-
-#~ msgid "Remote Selected Tracks"
-#~ msgstr "Esborra cançons remotes"
-
-#~ msgid "Error: Unable to write to"
-#~ msgstr "Error: impossible escriure a"
-
-#~ msgid "Adding"
-#~ msgstr "Afegint"
-
-#~ msgid "to database"
-#~ msgstr "a la base de dades"
-
-#~ msgid ""
-#~ "\n"
-#~ "\t\n"
-#~ "************* WARNING *************\n"
-#~ "This script will move, and \n"
-#~ "potentially delete uploaded files.\n"
-#~ "************* WARNING *************\n"
-#~ "\n"
-#~ "All files marked for add will be moved to the upload directory. All "
-#~ "files \n"
-#~ "marked for deletion will be deleted. This script must be run as a user "
-#~ "with\n"
-#~ "sufficient rights to perform the above two functions. \n"
-#~ "\n"
-#~ "\t\n"
-#~ msgstr ""
-#~ "\n"
-#~ "\t\n"
-#~ "*************·ALERTA·*************\n"
-#~ "Aquest script mourà i·\n"
-#~ "potencialment esborrarà arxius pujats.\n"
-#~ "*************·ALERTA·*************\n"
-#~ "\n"
-#~ "Tots els arxius marcats per afegir seran moguts al directori de pujada. "
-#~ "Tots els arxius·\n"
-#~ "marcat per esborrar seran esborrats. Aquest script s'ha d'ejecutar com "
-#~ "usuari amb\n"
-#~ "suficients permisos per dur a terme ambdues accions.·\n"
-#~ "\n"
-#~ "\t\n"
-
-#~ msgid "Continue?  (Y/N):"
-#~ msgstr "Continuar?  (Y/N)"
-
-#~ msgid "Error:  "
-#~ msgstr "Error:  "
-
-#~ msgid "!\n"
-#~ msgstr "!/n"
-
-#~ msgid "You are currently logged in as"
-#~ msgstr "Has entrat com"
-
-#~ msgid "Song title"
-#~ msgstr "Títol de la cançó"
-
-#~ msgid "Total"
-#~ msgstr "Total"
-
-#~ msgid "Play Random from Album"
-#~ msgstr "Reproduir aleatoriament l'àlbum"
-
-#~ msgid "Rebuild Preferences"
-#~ msgstr "Reconstruint les preferències"
-
-#~ msgid "XML-RPC"
-#~ msgstr "XML-RPC"
-
-#~ msgid "XML-RPC Options"
-#~ msgstr "Opcions XML-RPC"
-
-#~ msgid "Host Access to Your Catalog"
-#~ msgstr "Host que accedeixen al teu catàleg"
-
-#~ msgid "Revoke"
-#~ msgstr "Revoca"
-
-#~ msgid "Album Name"
-#~ msgstr "Nom de l'álbum"
-
-#~ msgid "Album Year"
-#~ msgstr "Any de l'àlbum"
-
-#~ msgid "Tracks"
-#~ msgstr "Cançons"
-
-#~ msgid ""
-#~ "This test makes sure that you have set all of the required configuration "
-#~ "variables and that we are able to \n"
-#~ "\tcompletely parse your config file"
-#~ msgstr ""
-#~ "Aquest test s'assegura que tens totes les variables de configuració "
-#~ "necessàries i que es possible\n"
-#~ "\t preparar completament el teu arxiu de configuració"
-
-#~ msgid "Ampache.cfg.php Up to Date?"
-#~ msgstr "ampache.cfg.php al dia?"
-
-#~ msgid "Ampache.cfg.php is missing the following:"
-#~ msgstr "ampache.cfg.php ha perdut el següent:"
-
-#~ msgid "Reset Form"
-#~ msgstr "Reinicia el formulari"
-
-#~ msgid "Save Search As Track on"
-#~ msgstr "Guarda la com track on"
-
-#~ msgid "Save"
-#~ msgstr "Guardar"
+msgstr "Mostra la lletra"
