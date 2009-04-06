@@ -28,8 +28,8 @@ class vainfo {
 
 	/* Default Encoding */
 	public $encoding = '';
-	public $encoding_id3v1 = '';
-	public $encoding_id3v2 = '';
+	public $encoding_id3v1 = 'ISO-8859-1';
+	public $encoding_id3v2 = 'ISO-8859-1';
 	
 	/* Loaded Variables */
 	public $filename = '';
@@ -134,8 +134,8 @@ class vainfo {
 			}
 		}
 		else {
-			$this->encoding_id3v1 = $encoding_id3v1;
-			$this->encoding_id3v2 = $encoding_id3v2;
+			$this->encoding_id3v1 = "ISO-8859-1";
+			$this->encoding_id3v2 = "ISO-8859-1";
 		}
 
 		$this->_getID3->option_md5_data			= false;
