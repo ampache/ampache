@@ -24,26 +24,26 @@
 /************************************************/
 h1, h2, h3, h4, h5, h6, pre, code { font-size:1em; line-height:1em; } /* avoid browser default inconsistent font-sizes */
 ol, ul {list-style:none;}
-table {border-collapse:separate; border-spacing:0;}
+table {width:100%;border-collapse:separate; border-spacing:0;}
 caption, th, td {text-align:left; font-weight:normal;}
 * {margin:0; padding:0;} /* White space reset */
 body {margin:0; padding:0;}
 a img, :link img, :visited img {border:0;} /* no blue linked image borders */
-
+form{display:inline-block;margin:0;zoom:1; *display:inline;}
 /************************************************/
 /*           General style rules                */
 /************************************************/
 body {
 	background:#d3d3d3;
-	font-family:Arial, Helvetica, Sans-Serif;
+	font-family:arial, Helvetica, Sans-Serif;
 }
 p {
 	color:#000;
-	margin:1em 0;
+	margin:12px 0;
 }
 a, a:visited, a:active {
 	color:#000; 
-	font-family:Verdana, Helvetica, sans-serif; 
+	font-family:verdana, Helvetica, sans-serif; 
 }
 td {
 	padding:0 8px;
@@ -86,30 +86,31 @@ body {behavior:url("templates/csshover2.htc");}
 /*             Header                           */
 /************************************************/
 #header { 
-	height:90px;
-	padding:3px 0 0 10px;
+	height:60px;
+	padding:3px 0 0 5px;
 }
 #headerbox { 
-	position:absolute;
-	right:0;
-	top:3px;
+	float:right;
 	font-size:10px;
-	margin-top:-4px;
-	width:400px;
+	width:430px;
+	margin-top:-3px;
 }
+#headerbox .box-content{height:44px;}
+
 #headerlogo, #headerlogo a{float:left;}
 .box_headerbox {display:table;}
-.box_headerbox #loginInfo {font-weight:bold;display:block;text-align:right;margin-bottom:.3em;}
-
+.box_headerbox #loginInfo {font-weight:bold;display:block;text-align:right;}
+#sb_Subsearch {margin-left:8px;}
 #play_type_switch {
 	float:left;
+	margin-left:8px;
 	margin-top:2px;
 }
 
 /************************************************/
 /*               Content block                  */
 /************************************************/
-#content {margin:-10px 0px 20px 135px;}
+#content {margin:55px 0px 20px 135px;}
 
 /************************************************/
 /*                Footer                        */
@@ -139,29 +140,20 @@ a.button{padding:1px 3px;}
 /************************************************/
 /*				Browser Specific Fixes			*/
 /************************************************/
-html>body #sidebar { *padding-bottom:47px;}		/* IE7 */
-html>body #sidebar-page {*height:71px;}			/* IE7 */
-html>body #sidebar-page .sb3 a { *display:inline-block; } /* IE7 */
-* html #sidebar-page ul.sb3 li{display:inline;} /* IE6 */
-* html #sidebar-page .sb3 a {display:inline-block;}/* IE6 */
-* html #rightbar .submenu {right:120px;} /* IE6 */
-
 /************************************************/
 /*                  Sidebar                     */
 /************************************************/
 #sidebar {
 	position:absolute;
-	top:4px;
-	right:698px; /*680 is default*/
-	font-size:0.9em;
-	padding-bottom:52px;
+	top:3px;
+	right:718px; /*680 is default*/
+	font-size:15px;
 	width:125px;
-	background:#f7f7f7 url(../images/menu.png) bottom no-repeat;
+	height:108px;
+	background:#f7f7f7 url(../images/menu.png) top no-repeat;
 	display:inline;
 }
-@media screen {
-#sidebar {padding-bottom:55px;} /* Opera Hack - Leave here otherwise Opera gets messed up if it's in the broswer specific fixes area. */
-}
+
 #sidebar select {text-align:center;}
 #sidebar input {vertical-align:middle; background:#fff;}
 #sidebar ul {list-style:none; display:inline;}
@@ -172,11 +164,12 @@ html>body #sidebar-page .sb3 a { *display:inline-block; } /* IE7 */
 #sidebar-tabs{background:#f7f7f7;}
 
 #sidebar-tabs li.sb1 {
+	margin-top:28px;
 	float:left;
 	padding:2px;
 	background: #f7f7f7;
 }
-#sidebar-tabs li.active {margin-top:0;}
+#sidebar-tabs li.active {}
 #sidebar-tabs li.active img{ 
 	padding:1px;
 	position:relative;
@@ -189,46 +182,37 @@ html>body #sidebar-page .sb3 a { *display:inline-block; } /* IE7 */
 	position:absolute;
 	top:0;
 	left:125px;
-	width:310px;
-	height:76px;
+	width:300px;
+	height:106px;
 	background:#f7f7f7;
 	font-size:0.8em;
-	padding:0px 0px 3px 2px;
-	display:inline;
+	padding-top:2px;padding-left:10px;
 }
 
-#sidebar-page ul.sb2 {padding:2px 1px;}
+#sidebar-page ul.sb2 {padding-top:10px;}
 
 #sidebar-page ul.sb2 li{
-	font-weight:bold;
-	margin:1em auto;
-	padding-bottom:0.5em;
-	display:inline;
-	list-style:none;
+	font-weight:bold;padding:1px;
+	display:inline-block;
+	zoom:1; *display:inline;
 }
 #sidebar-page ul.sb2 h4 {
-	padding-bottom:0.5em;
 	display:inline;
-	list-style:none;
 }
 
 #sidebar-page ul.sb3, #sidebar-page div.sb3 {
-	font-size:0.9em;
-	margin-left:2px;
+	font-size:9px;
 	font-weight:normal;
 	color:#5b5b5b;
 	display:inline;
 }
-
 #sidebar-page ul.sb3 li{
-	margin:0;
-	padding:0;
 	border:none;
 	font-weight:normal;
 }
 
 #sidebar-page .sb3 a{
-	padding:0 0.1em;
+	padding:0 1px;
 	border-bottom:1px dotted #c0c0c0;
 	color:#5b5b5b;
 	display:inline;
@@ -266,8 +250,10 @@ html>body #sidebar-page .sb3 a { *display:inline-block; } /* IE7 */
 } 
 
 #multi_alpha_filter {
-	width:40px; 
-	margin-bottom:4px;
+	width:30px;
+	height:14px;
+	font-size:10px;
+	/*margin-bottom:4px;*/
 }
 
 /* SIDEBAR : Localplay */
@@ -306,11 +292,11 @@ html>body #sidebar-page .sb3 a { *display:inline-block; } /* IE7 */
 /*                  Rightbar                    */
 /************************************************/
 #rightbar {
-	padding-bottom:28px;
-	background:#f7f7f7 url(../images/playlist.png) no-repeat bottom;
+	padding-top:25px;
+	background:#f7f7f7 url(../images/playlist.png) no-repeat top;
 	position:absolute;
-	top:50px;
-	left:10px;
+	top:47px;
+	left:5px;
 	width:125px;
 	font-family:Verdana,Helvetica,sans-serif;
 	clear:both;
@@ -444,8 +430,9 @@ html>body #sidebar-page .sb3 a { *display:inline-block; } /* IE7 */
 /* Enclosing Boxes Styles */
 
 .box, .info-box { 
-	background: #f7f7f7 url(../images/left.gif) top left repeat-y;
+	background: #f7f7f7;
 	float:left;
+	margin:3px 0;
 	clear:left;
 	width:100%;
 	height:1%; /* IE6 : Holly Hack comes to rescue once again */
@@ -458,37 +445,36 @@ html>body #sidebar-page .sb3 a { *display:inline-block; } /* IE7 */
 }
 
 .box-top { 
-	background: url(../images/top.gif) 0 0 repeat-x;
 	position:relative;
 }
 .box-left-top { 
 	background: url(../images/topleft.gif) no-repeat;
-	height:16px;
-	width:16px;
+	height:24px;
+	width:24px;
 	position:relative;left:0;top:0;
 }
 .box-right-top {
-	background: url(../images/topright.gif) no-repeat;
-	height:16px;
-	width:20px;
-	position:absolute;right:0;top:0;
+	background:#d3d3d3 url(../images/topright.gif) no-repeat;
+	height:24px;
+	width:24px;
+	position:absolute;right:9px;top:0;
 }
 * html .box-right-top {right: expression(-this.parentNode.offsetWidth%2+"px");} /* Fixes an IE6 rounding error */
 .box-bottom { 
-	background: #d6d6d6 url(../images/bottom.gif);
+	background: #f7f7f7;
 
 	position:relative;clear:both;
 }
 .box-left-bottom {
 	background:  url(../images/bottomleft.gif) no-repeat;
-	height:18px;
-	width:16px;
+	height:24px;
+	width:24px;
 	position:relative;left:0;top:0;
 }
 .box-right-bottom { 
-	background: url(../images/bottomright.gif) no-repeat;
-	height:18px;
-	width:20px;
+	background:#d3d3d3 url(../images/bottomright.gif) no-repeat;
+	height:24px;
+	width:33px;
 	position:absolute;right:0;top:0;
 }
 * html .box-right-bottom {right: expression(-this.parentNode.offsetWidth%2+"px");} /* Fixes an IE6 rounding error */
@@ -548,7 +534,7 @@ td.cel_cover{padding:6px;}
 .box_preferences .th-bottom {display:none;}
 
 /* Inline Editing Tables */
-.inline-edit input, .inline-edit select {font-size:0.8em;}
+.inline-edit input, .inline-edit select {font-size:0.8em; width:100%;}
 
 /************************************************/
 /*          Song details                        */
@@ -671,7 +657,7 @@ td.lp_current a {
 /*         Styles for Login template            */
 /************************************************/
 #loginPage #maincontainer{
-	margin:100px auto 0 auto;
+	margin:70px auto 0 auto;
 	width:437px;
 	font-size:12px;
 	text-align:center;

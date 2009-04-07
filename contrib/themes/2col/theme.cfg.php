@@ -27,6 +27,12 @@
 ; DEFAULT: ampache-theme
 name = "2Col"
 
+; Version
+; This is the version of the theme itself
+; Unless you are updating the theme, don't
+; change this.
+version = "1.2"
+
 ; Theme Author
 ; This is just a way of giving credit to the 
 ; person who actually created this theme
@@ -40,14 +46,4 @@ author = "admiralfreak"
 ; DEFAULT: N/A
 maintainer = "admiralfreak - hime927@wi.rr.com"
 
-; Orientation
-; This was added as of 3.3.2-Alpha4, this tells Ampache if this theme
-; uses vertical or horizontal orientation of the menu, if this is a horizontal
-; theme then it will not show the quick search and quick random play forms
-;orientation = "horizontal"
-
-; Submenu
-; If this is set to simple the sub menu's will only be shown when you're on one of the
-; respective pages. If you want to make the menu's something like the classic theme
-; comment this out
-;submenu = "simple"
+; I deleted orientation and submenu because they don't do anything.
