@@ -3,7 +3,7 @@
 --------------------------------------------------------------------------
 
 --------------------------------------------------------------------------
-  v.3.5-Beta2
+  v.3.5-Beta2i 04/07/2009
 	- Fix ASX playlists so more data shows up in WMP (Thx Jon611)
 	- Fix dynamic playlist items so they work in stream methods again
 	- Fixed Recently played so that it correctly shows unique songs
@@ -21,8 +21,8 @@
 		hot potato with their charsets. 
 	- Move Server Preferences to Admin menu (Thx geekdawg)
 	- Fixed missing web_path reference on radio creation link
-	- Fixed remote catalog_clean doesn't work
-	- Fixed xmlrpc get image. getEncoding doesn't static function
+	- Fixed remote catalog_clean not working
+	- Fixed xmlrpc get image. getEncoding wasn't static 
 
 
 --------------------------------------------------------------------------
