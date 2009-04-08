@@ -28,13 +28,18 @@
  */
 class Random implements media {
 
+	public $type;
+	public $id; 
+
+
 	/**
 	 * Constructor
 	 * nothing to see here, move along
 	 */
-	public function __construct() { 
+	public function __construct($id) { 
 
-		// Rien a faire
+		$this->type = Random::get_id_type($id); 
+		$this->id = intval($id); 
 
 	} // constructor
 
@@ -91,9 +96,9 @@ class Random implements media {
 	 * This generates a random play url based on the passed type
 	 * and returns it
 	 */
-	public static function play_url($type,$sid='',$force_http='') { 
+	public static function play_url($id,$sid='',$force_http='') { 
 
-		if (!$type = self::validate_type($type)) { 
+		if (!$type = self::get_id_type($id)) { 
 			return false; 
 		} 
 	
@@ -418,6 +423,56 @@ class Random implements media {
 		} // end switch 
 
 	} // get_type_name
+
+	/**
+	 * get_type_id
+	 * This takes random type and returns the ID
+	 * MOTHER OF PEARL THIS MAKES BABY JESUS CRY
+	 * HACK HACK HACK HACK HACK HACK HACK HACK
+	 */
+	public static function get_type_id($type) { 
+
+		switch ($type) { 
+			case 'album': 
+				return '1'; 
+			break; 
+			case 'artist': 
+				return '2'; 
+			break; 
+			case 'tag': 
+				return '3'; 
+			break; 
+			default: 
+				return '4'; 
+			break; 
+		} 
+
+	} // get_type_id
+
+	/**
+	 * get_id_name
+	 * This takes an ID and returns the 'name' of the random dealie
+	 * HACK HACK HACK HACK HACK HACK HACK
+	 * Can you tell I don't like this code? 
+	 */
+	public static function get_id_type($id) { 
+
+		switch ($id) { 
+			case '1': 
+				return 'album';
+			break;
+			case '2': 
+				return 'artist';
+			break; 
+			case '3': 
+				return 'tag';
+			break; 
+			default: 
+				return 'default'; 
+			break; 
+		} // end switch 
+
+	} // get_id_name
 
 	/**
 	 * validiate_type

@@ -4,6 +4,8 @@
 
 --------------------------------------------------------------------------
   v.3.5-Beta2
+	- Fix ASX playlists so more data shows up in WMP (Thx Jon611)
+	- Fix dynamic playlist items so they work in stream methods again
 	- Fixed Recently played so that it correctly shows unique songs
 		with the correct data
 	- Fix some issues with filenames with Multi-byte characters 

@@ -376,7 +376,13 @@ class Stream {
 
                         echo "<ENTRY>\n";
                         echo "<TITLE>$name</TITLE>\n";
-                        echo "<AUTHOR>$author</AUTHOR>\n";
+			echo "<AUTHOR>$author</AUTHOR>\n";
+			echo "\t\t<COPYRIGHT>".$media->year."</COPYRIGHT>\n";
+			echo "\t\t<DURATION VALUE=\"00:00:".$media->time."\" />\n";
+			echo "\t\t<PARAM NAME=\"Album\" Value=\"".$media->f_album_full."\" />\n";
+			echo "\t\t<PARAM NAME=\"Genre\" Value=\"".$media->get_genre_name()."\" />\n";
+			echo "\t\t<PARAM NAME=\"Composer\" Value=\"".$media->f_artist_full."\" />\n";
+			echo "\t\t<PARAM NAME=\"Prebuffer\" Value=\"false\" />\n";
         	        echo "<REF HREF = \"". $url . "\" />\n";
                         echo "</ENTRY>\n";
 			

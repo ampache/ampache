@@ -283,8 +283,8 @@ switch ($_REQUEST['action']) {
 				} 
 			break;
 			case 'dynamic': 
-				$random_type = Random::validate_type($_REQUEST['random_type']); 
-				$GLOBALS['user']->playlist->add_object('0',$random_type); 
+				$random_id = Random::get_type_id($_REQUEST['random_type']); 
+				$GLOBALS['user']->playlist->add_object($random_id,'random'); 
 			break;
 			case 'video': 
 				$GLOBALS['user']->playlist->add_object($_REQUEST['id'],'video'); 
