@@ -264,6 +264,10 @@ class vainfo {
 
 		// Specific Audio Flags
 		if (!$results[$key]['video_codec']) { 
+			$slash_point = strpos($results[$key]['disk'],'/'); 
+			if ($slash_point !== FALSE) { 
+				$results[$key]['disk'] = substr($results[$key]['disk'],0,$slash_point); 
+			} 
 			/* These are used to generate the correct ID's later */
 			$info['year']		= intval($results[$key]['year']);
 			$info['disk']		= intval($results[$key]['disk']);

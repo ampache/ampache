@@ -3155,6 +3155,7 @@ class getid3_id3v2 extends getid3_handler
             'TPE3' => 'conductor',
             'TPE4' => 'remixer',
             'TPUB' => 'publisher',
+	    'TPOS' => 'disk',
             'TRC'  => 'isrc',
             'TRCK' => 'track',
             'TRK'  => 'track',
