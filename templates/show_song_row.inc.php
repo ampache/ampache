@@ -22,7 +22,7 @@
 <td class="cel_add">
 	<?php echo Ajax::button('?action=basket&type=song&id=' . $song->id,'add',_('Add'),'add_' . $song->id); ?>
 </td>
-<td class="cel_song"><a href="<?php echo Song::play_url($song->id); ?>"><?php echo $song->f_title; ?></a></td>
+<td class="cel_song"><a href="<?php echo Song::play_url($song->id); ?>" title="<?php echo scrub_out($song->title); ?>"><?php echo $song->f_title; ?></a></td
 <td class="cel_artist"><?php echo $song->f_artist_link; ?></td>
 <td class="cel_album"><?php echo $song->f_album_link; ?></td>
 <td class="cel_tags"><?php echo $song->f_tags; ?></td>
