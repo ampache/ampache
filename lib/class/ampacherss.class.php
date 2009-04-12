@@ -136,7 +136,7 @@ class AmpacheRSS {
 			$song = $element['media']; 
 			$client = $element['user']; 
 			$xml_array = array('title'=>$song->f_title . ' - ' . $song->f_artist . ' - ' . $song->f_album,
-					'link'=>$song->link, 
+					'link'=>str_replace('&amp;', '&', $song->link),
 					'description'=>$song->title . ' - ' . $song->f_artist_full . ' - ' . $song->f_album_full,
 					'comments'=>$client->fullname . ' - ' . $element['agent'],
 					'pubDate'=>date("r",$element['expire'])
@@ -210,7 +210,7 @@ class AmpacheRSS {
 			$time_string = $final . ' ' . $time_unit[$time_place];
 
 			$xml_array = array('title'=>$song->f_title . ' - ' . $song->f_artist . ' - ' . $song->f_album,
-						'link'=>$song->link,
+						'link'=>str_replace('&amp;', '&', $song->link),
 						'description'=>$song->title . ' - ' . $song->f_artist_full . ' - ' . $song->f_album_full . ' - ' . $time_string,
 						'comments'=>$client->username,
 						'pubDate'=>date("r",$item['date'])); 
