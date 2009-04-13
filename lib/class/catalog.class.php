@@ -1532,11 +1532,11 @@ class Catalog extends database_object {
 				echo "\n</script>\n";
 				flush();
 			} //echos song count
-
+			
 			/* Also check the file information */
 			if($this->catalog_type == 'local') {
 				$file_info = filesize($results['file']);
-
+				
 				/* If it errors somethings splated, or the files empty */
 				if (!file_exists($results['file']) OR $file_info < 1) {
 					
@@ -1553,6 +1553,9 @@ class Catalog extends database_object {
 					$dead_files++;
 
 				} //if error
+				if (!is_readable($results['file'])) { 
+					debug_event('Clean','Error ' . $results['file'] . ' is not readable, but does exist','1'); 
+				} 
 			} // if localtype
 			else {
 				//do remote url check

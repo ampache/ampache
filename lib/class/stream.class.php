@@ -863,14 +863,16 @@ class Stream {
                 $web_path = Config::get('web_path');
 
                 if (Config::get('force_http_play') OR !empty(self::$force_http)) {
-                        $port = Config::get('http_port');
-                        if (preg_match("/:\d+/",$web_path)) {
-                                $web_path = str_replace("https://", "http://",$web_path);
-                        }
-                        else {
-                                $web_path = str_replace("https://", "http://",$web_path);
-                        }
+                        $web_path = str_replace("https://", "http://",$web_path);
                 }
+		if (Config::get('http_port') != '80') { 
+			if (preg_match("/:(\d+)/",$web_path,$matches)) { 
+				$web_path = str_replace(':' . $matches['1'],':' . Config::get('http_port'),$web_path); 
+			} 
+			else { 
+				$web_path = str_replace($_SERVER['HTTP_HOST'],$_SERVER['HTTP_HOST'] . ':' . Config::get('http_port'),$web_path); 
+			} 	
+		} 
 
 		$url = $web_path . "/play/index.php?$session_string"; 
 

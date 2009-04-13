@@ -136,7 +136,7 @@ class AmpacheRSS {
 			$song = $element['media']; 
 			$client = $element['user']; 
 			$xml_array = array('title'=>$song->f_title . ' - ' . $song->f_artist . ' - ' . $song->f_album,
-					'link'=>str_replace('&amp;', '&', $song->link),
+					'link'=>$song->link,
 					'description'=>$song->title . ' - ' . $song->f_artist_full . ' - ' . $song->f_album_full,
 					'comments'=>$client->fullname . ' - ' . $element['agent'],
 					'pubDate'=>date("r",$element['expire'])

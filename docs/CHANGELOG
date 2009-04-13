@@ -4,8 +4,13 @@
 
 --------------------------------------------------------------------------
   v.3.5
+	- Add error message when file exists but is unreadable do not
+		remove unreadable songs from catalog
 	- Fixed missing title tag on song browse for the title 
 		(Thx flowerysong)
+	- Fix htmlchar'd rss feed url
+	- Fix Port not correctly being added to URL in most cases
+		even when defined in config
 	
 
 --------------------------------------------------------------------------
