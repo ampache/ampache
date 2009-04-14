@@ -364,8 +364,8 @@ class xmlData {
 			$string .= "<video id=\"$video->id\">\n" . 
 					"\t<title><![CDATA[$video->title]]></title>\n" . 
 					"\t<mime><![CDATA[$video->mime]]></mime>\n" . 
-					"\t<resolution>$this->f_resolution</resolution>\n" .
-					"\t<size>$this->size</size>\n" . 
+					"\t<resolution>$video->f_resolution</resolution>\n" .
+					"\t<size>$video->size</size>\n" . 
 					self::tags_string($video->tags,'video',$video->id) . 
 					"\t<url><![CDATA[" . Video::play_url($video->id) . "]]></url>\n" .
 					"</video>\n";
