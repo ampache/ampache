@@ -71,12 +71,12 @@
 	<td><?php echo _('Start'); ?>:</td>
 	<td>
 		<?php Error::display('start'); ?>
-		<input type="text" name="start" value="<?php echo scrub_out($_REQUEST['start']); ?>" size="20" maxlength="15" />
+		<input type="text" name="start" value="<?php echo scrub_out($_REQUEST['start']); ?>" size="20" />
 	</td>
 	<td><?php echo _('End'); ?>:</td>
 	<td>
 		<?php Error::display('end'); ?>
-		<input type="text" name="end" value="<?php echo scrub_out($_REQUEST['end']); ?>" size="20" maxlength="15" />
+		<input type="text" name="end" value="<?php echo scrub_out($_REQUEST['end']); ?>" size="20" />
 	</td>
 </tr>
 </table>

@@ -4,6 +4,7 @@
 
 --------------------------------------------------------------------------
   v.3.5
+	- Fix maxlength on acl fields being to small for all IPv6 addresses
 	- Add error message when file exists but is unreadable do not
 		remove unreadable songs from catalog
 	- Fixed missing title tag on song browse for the title 
