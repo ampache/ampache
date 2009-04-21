@@ -251,7 +251,7 @@ function img_resize($image,$size,$type,$album_id) {
 	switch ($type) {
 		case 'jpg':
 		case 'jpeg':
-			imagejpeg($img,null,100);
+			imagejpeg($img,null,75);
 			break;
 		case 'gif':
 			imagegif($img);
