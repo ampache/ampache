@@ -51,6 +51,7 @@ Contents:
 	- AVI
 	- MPG
 	- M4V
+	- WMV
 
   B) Supported Stream Methods
 
@@ -77,6 +78,7 @@ Contents:
 		- Icecast2
 	- Democratic Vote based playback
 	- 3rd Party clients using API (Amarok,Coherence,Quickplay)
+	- 3rd Party Mobile clients using API (Amdroid - Android,Amphone - Iphone)
 	
   C) Current Translations
 
@@ -119,7 +121,8 @@ Contents:
 	PHP5 ZLIB support (recommended)
   MySQL >= 5.x+ http://www.mysql.com
 
-  ** PHP 5.3.x is required for Windows systems
+  ** PHP 5.3.x is required for Windows systems due to use of inet_pton
+     and inet_aton functions.
 
 3. Setting Up
 

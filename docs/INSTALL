@@ -2,6 +2,10 @@
 -----------------        INSTALL - Ampache v.3.5         ----------------------
 -------------------------------------------------------------------------------
 
+  For the sake of this installation document we will be using Apache and Linux
+  however these are by no means requirements. Lighttpd, IIS, whatever could be
+  used in Apache's place. 
+
   I'm assuming that you have Apache, PHP and MySQL running when you
   get to this point.
 

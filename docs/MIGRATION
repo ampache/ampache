@@ -15,7 +15,11 @@
 
 - Migrating from Ampache 3.4.x --> 3.5
 
-	* No special instructions
+	If Ampache reports that your config file is 'unreadable' after
+	upgrading open your config file and remove all configuration
+	options relating to RSS Feeds, these options should be at the bottom. 
+	This is due to a change in PHP versions which is often done at the
+	same time as an Ampache upgrade. 
 
 - Migrating from Ampache 3.3.x --> 3.4
 
