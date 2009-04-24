@@ -57,7 +57,7 @@ switch ($_REQUEST['thumb']) {
 	default:
 		$size['height'] = '275';
 		$size['width']	= '275';
-	//	$return_raw = true; 
+		if (!isset($_REQUEST['thumb'])) { $return_raw = true; }
 	break;
 } // define size based on thumbnail
 

@@ -4,6 +4,8 @@
 
 --------------------------------------------------------------------------
   v.3.5
+	- Fix an issue where the full version of the album art was never
+		used even when requested
 	- Fix maxlength on acl fields being to small for all IPv6 addresses
 	- Add error message when file exists but is unreadable do not
 		remove unreadable songs from catalog
