@@ -79,15 +79,22 @@ class Radio extends database_object implements media {
 
 		// Verify the incoming data
 		if (!$data['id']) { 
+			// FIXME: Untranslated
 			Error::add('general','Missing ID'); 
 		} 
 
 		if (!$data['name']) { 
+			// FIXME: Untranslated
 			Error::add('general','Name Required'); 
 		} 
 
-		if (!preg_match("/^https?:\/\/.+/",$data['url'])) { 
-			Error::add('general','Invalid URL must be https:// or http://'); 
+		$allowed_array = array('https','http','mms','mmsh','mmsu','mmst','rtsp'); 
+
+		$elements = explode(":",$data['url']); 
+		
+		if (!in_array($elements['0'],$allowed_array)) { 
+			// FIXME: Untranslated
+			Error::add('general','Invalid URL must be mms:// , https:// or http://'); 
 		} 
 
 		if (Error::occurred()) { 
@@ -119,16 +126,22 @@ class Radio extends database_object implements media {
 
 		// Make sure we've got a name
 		if (!strlen($data['name'])) { 
+			// FIXME: Untranslated
 			Error::add('name','Name Required'); 
 		} 
 
-		if (!preg_match("/^https?:\/\/.+/",$data['url'])) { 
+		$allowed_array = array('https','http','mms','mmsh','mmsu','mmst','rtsp'); 
+
+		$elements = explode(":",$data['url']); 
+		
+		if (!in_array($elements['0'],$allowed_array)) { 
 			Error::add('url','Invalid URL must be http:// or https://'); 
 		} 
 
 		// Make sure it's a real catalog
 		$catalog = new Catalog($data['catalog']); 
 		if (!$catalog->name) { 
+			// FIXME: Untranslated
 			Error::add('catalog','Invalid Catalog'); 
 		} 
 
