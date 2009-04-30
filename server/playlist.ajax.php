@@ -128,6 +128,9 @@ switch ($_REQUEST['action']) {
 			} // end switch 	
 		} // foreach
 
+		// Override normal include procedure 
+		Ajax::set_include_override(true); 
+
 		// Add our new songs
 		$playlist->add_songs($songs); 
 		$playlist->format(); 

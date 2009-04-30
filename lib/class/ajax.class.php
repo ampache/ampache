@@ -26,6 +26,8 @@
  */
 class Ajax { 
 
+	private static $include_override; 
+
 	/**
 	 * constructor
 	 * This is what is called when the class is loaded
@@ -158,13 +160,23 @@ class Ajax {
 	} // run
 
 	/**
+ 	 * set_include_override
+	 * This sets the cinlduing div override, used only one place kind of a hack
+	 */
+	public static function set_include_override($value) { 
+
+		self::$include_override = make_bool($value); 
+
+	} // set_include_override
+
+	/**
  	 * start_container
 	 * This checks to see if we're AJAX'in if we aren't then it echos out the 
 	 * html needed to start a container that can be replaced by Ajax
 	 */
 	public static function start_container($name) { 
 
-		if (AJAX_INCLUDE == '1') { return true; } 
+		if (AJAX_INCLUDE == '1' AND !self::$include_override) { return true; } 
 
 		echo '<div id="' . scrub_out($name) . '">'; 
 
@@ -176,9 +188,11 @@ class Ajax {
 	 */
 	public static function end_container() { 
 
-		if (AJAX_INCLUDE == '1') { return true; } 
+		if (AJAX_INCLUDE == '1' AND !self::$include_override) { return true; } 
 
 		echo "</div>"; 
+
+		self::$include_override = false; 
 
 	} // end_container
 

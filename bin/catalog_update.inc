@@ -46,14 +46,16 @@ while ($row = Dba::fetch_row($db_results)) {
 	
 	// Clean out dead files
 	$catalog->clean_catalog();
-
+ob_end_flush();
 	// Verify Existing
 	$catalog->verify_catalog($row['0']);
 
+ob_end_flush();
 	echo "\n\n";
 
 	// Look for new files
 	$catalog->add_to_catalog();
+ob_end_flush();
 	echo "\n\n";
 
 } // end foreach 

@@ -4,6 +4,9 @@
 
 --------------------------------------------------------------------------
   v.3.5
+	- Fixed a problem where after adding a track to a saved playlist
+		there was no UI response upon deleting the track without
+		a page refresh
 	- Fix an issue where the full version of the album art was never
 		used even when requested
 	- Fix maxlength on acl fields being to small for all IPv6 addresses
