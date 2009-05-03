@@ -40,22 +40,33 @@ $sql = "SELECT id FROM catalog";
 if ($where) $sql .= " WHERE $where";
 $db_results = Dba::query($sql);
 
+ob_start("ob_html_strip",'4096',true); 
+
 while ($row = Dba::fetch_row($db_results)) { 
 
 	$catalog = new Catalog($row['0']);
-	
+	echo "Reading: $catalog->name \n"; 
+	echo "- Starting Clean -"; 	
 	// Clean out dead files
 	$catalog->clean_catalog();
+
+	echo "- Starting Verify -"; 
 	// Verify Existing
 	$catalog->verify_catalog($row['0']);
 
-	echo "\n\n";
-
+	echo "- Starting Add - \n"; 
 	// Look for new files
 	$catalog->add_to_catalog();
-	echo "\n\n";
 
 } // end foreach 
 
+function ob_html_strip($string) { 
+
+	$string = preg_replace("/update_txt\('.+'\);update_txt\('(.+)','.+'\);/","$1",$string);
+	$string = preg_replace("/update_.+/","",$string); 
+	$string = strip_tags($string); 
+	return $string; 
+
+} // ob_html_strip
 
 ?>
