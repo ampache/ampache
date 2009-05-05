@@ -31,10 +31,6 @@ if (floatval(phpversion()) < 5) {
 	echo "ERROR: Ampache requires PHP5";
 	exit; 
 }
-if (strtoupper(substr(PHP_OS,0,3)) == 'WIN' AND floatval(phpversion()) < 5.3) { 
-	echo "Error: Ampache Requires PHP5.3 when running on Windows"; 
-	exit; 
-} 
 
 error_reporting(E_ERROR);			// Only show fatal errors in production
 
@@ -52,7 +48,6 @@ if (!function_exists('gettext')) {
 
 // Define some base level config options
 Config::set('prefix',$prefix); 
-
 
 /*
  Check to see if this is Http or https
@@ -84,6 +79,14 @@ if (!count($results)) {
 	$link = $http_type . $_SERVER['HTTP_HOST'] . $path . "/test.php?action=config";
 	header ("Location: $link");
 	exit();
+} 
+
+/** Verify a few commonly removed PHP functions exist and re-direct to /test if not **/
+if (!function_exists('hash') OR !function_exists('inet_pton') OR (strtoupper(substr(PHP_OS,0,3)) == 'WIN' AND floatval(phpversion()) < 5.3)) { 
+	$path = preg_replace("/(.*)\/(\w+\.php)$/","\${1}", $_SERVER['PHP_SELF']);
+	$link = $http_type . $_SERVER['HTTP_HOST'] . $path . "/test.php";
+	header ("Location: $link"); 
+	exit();  
 } 
 
 /** This is the version.... fluf nothing more... **/

@@ -4,6 +4,9 @@
 
 --------------------------------------------------------------------------
   v.3.5
+	- Make the Lang Install page prettier
+	- Added Check for hash,inet_pton,windows PHP Version to init so
+		that upgrades without pre-reqs are handled correctly
 	- Allow mms,mmsh,mmsu,mmst,rstp in Radio Stream URLs
 	- Fixed a problem where after adding a track to a saved playlist
 		there was no UI response upon deleting the track without

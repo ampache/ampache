@@ -21,7 +21,10 @@
 ?>
 <?php if (INSTALL != '1') { exit; } ?>
 <h4><?php echo _('Required'); ?></h4>
-<p><?php echo _('PHP Version'); ?>:
+<table border="0" cellspacing="0" cellpadding="3">
+<tr>
+<td><?php echo _('PHP Version'); ?>:</td>
+<td>
 <?php
 	if(!check_php_ver()) {
 		if (function_exists('hash_algos')) { $algos = hash_algos(); }
@@ -33,8 +36,10 @@
 		echo debug_result(phpversion(),true); 
 	}
 ?>
-</p>
-<p><?php echo _('Mysql for PHP'); ?>:
+</td>
+</tr><tr>
+<td><?php echo _('Mysql for PHP'); ?>:</td>
+<td>
 <?php
 	if (!check_php_mysql()) {
 		echo debug_result('',false); 
@@ -44,8 +49,10 @@
 		echo debug_result(mysql_get_client_info(),true); 
 	}
 ?>
-</p>
-<p><?php echo _('PHP Session Support'); ?>:
+</td>
+</tr><tr>
+<td><?php echo _('PHP Session Support'); ?>:</td>
+<td>
 <?php
 	if (!check_php_session()) {
 		echo debug_result('',false); 
@@ -55,8 +62,10 @@
 		echo debug_result('',true); 
 	}
 ?>
-</p>
-<p><?php echo _('PHP ICONV Support'); ?>:
+</td>
+</tr><tr>
+<td><?php echo _('PHP ICONV Support'); ?>:</td>
+<td>
 <?php
 	if (!check_php_iconv()) {
 		echo debug_result('',false); 
@@ -66,8 +75,10 @@
 		echo debug_result('',true); 	
 	}
 ?>
-</p>
-<p><?php echo _('PHP PCRE Support'); ?>:
+</td>
+</tr><tr>
+<td><?php echo _('PHP PCRE Support'); ?>:</td>
+<td>
 <?php
 	if (!check_php_pcre()) {
 		echo debug_result('',false); 
@@ -77,8 +88,10 @@
 		echo debug_result('',true); 
 	}
 ?>
-</p>
-<p><?php echo _('PHP PutENV Support'); ?>:
+</td>
+</tr><tr>
+<td><?php echo _('PHP PutENV Support'); ?>:</td>
+<td>
 <?php
 	if (!check_putenv()) {
 		echo debug_result('',false); 
@@ -88,10 +101,12 @@
 		echo debug_result('',true); 
 	}
 ?>
-</p>
-<hr />
-<h4><?php echo _('Optional'); ?></h4>
-<p><?php echo _('Gettext Support'); ?>:
+</td>
+</tr><tr>
+<th colspan="2"><h4><?php echo _('Optional'); ?></h4></th>
+</tr><tr>
+<td><?php echo _('Gettext Support'); ?>:</td>
+<td>
 <?php
 	if (!check_gettext()) { 	
 		echo debug_result(_('Gettext Emulator will be used'),false); 
@@ -100,8 +115,10 @@
 		echo debug_result('',true); 
 	}
 ?>
-</p>
-<p><?php echo _('Mbstring Support'); ?>:
+</td>
+</tr><tr>
+<td><?php echo _('Mbstring Support'); ?>:</td>
+<td>
 <?php
 	if (!check_mbstring()) { 
 		echo debug_result(_('Multibyte Chracter may not detect correct'),false); 
@@ -110,4 +127,6 @@
 		echo debug_result('',true); 
 	}
 ?>
-</p>
+</td>
+</tr>
+</table>
