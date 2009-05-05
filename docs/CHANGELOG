@@ -4,6 +4,9 @@
 
 --------------------------------------------------------------------------
   v.3.5
+	- Add the AlmightyOatmeal-Sanity check to prevent a clean from
+		removing all songs if your mount failed, but is still
+		readable by ampache
 	- Make the Lang Install page prettier
 	- Added Check for hash,inet_pton,windows PHP Version to init so
 		that upgrades without pre-reqs are handled correctly

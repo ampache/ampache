@@ -1492,9 +1492,6 @@ class Catalog extends database_object {
 	 */
 	public function clean_catalog() {
 
-		/* Define the Arrays we will need */
-		$dead_files = array();
-
 		// Added set time limit because this runs out of time for some people
 		set_time_limit(0);
 
@@ -1517,6 +1514,7 @@ class Catalog extends database_object {
 			"SELECT `id`,`file`,'video' AS `type` FROM `video` WHERE `catalog`='$this->id' AND `enabled`='1'"; 
 		$db_results = Dba::read($sql);
 
+		// Set to 0 our starting point
 		$dead_files = 0;
 
 		/* Recurse through files, put @ to prevent errors poping up */
@@ -1543,11 +1541,10 @@ class Catalog extends database_object {
 					/* Add Error */
 					Error::add('general',"Error File Not Found or 0 Bytes: " . $results['file']);
 
-					$table = ($results['type'] == 'video') ? 'video' : 'song'; 
+					$table = ($results['type'] == 'video') ? 'dead_video' : 'dead_song'; 
 
-					/* Remove the file! */
-					$sql = "DELETE FROM `$table` WHERE `id`='" . $results['id'] . "'";
-					$delete_results = Dba::write($sql);
+					// Store it in an array we'll delete it later... 
+					${$table}[] = $results['id']; 
 
 					// Count em!
 					$dead_files++;
@@ -1566,17 +1563,39 @@ class Catalog extends database_object {
 					/* Add Error */
 					Error::add('general',"Error Remote File Not Found or 0 Bytes: " . $results['file']);
 
-					$table = ($results['type'] == 'video') ? 'video' : 'song';
-					/* Remove the file! */
-					$sql = "DELETE FROM `$table` WHERE `id`='" . $results['id'] . "'";
-					$delete_results = Dba::write($sql);
+
+					$table = ($results['type'] == 'video') ? 'dead_video' : 'dead_song'; 
+
+					// Store it in an array we'll delete it later... 
+					${$table}[] = $results['id']; 
 
 					// Count em!
 					$dead_files++;
+
 				} //if error
 			} // remote catalog
 
 		} //while gettings songs
+
+		// Check and see if _everything_ has gone away, might indicate a dead mount
+		// We call this the AlmightyOatmeal Sanity check
+		if ($dead_files == $count) { 
+			//UNTRANSLATED FIXME
+			Error::add('general','Error All songs would be removed, doing nothing'); 
+			return false; 
+		} 
+		else { 
+			$idlist = '(' . implode(',',$dead_video) . ')'; 
+	
+			$sql = "DELETE FROM `video` WHERE `id` IN $idlist"; 
+			$db_results = Dba::write($sql); 
+		
+			$idlist = '(' . implode(',',$dead_song) . ')'; 
+			
+			$sql = "DELETE FROM `song` WHERE `id` IN $idlist"; 
+			$db_results = Dba::write($sql); 
+
+		}
 
 		/* Step two find orphaned Arists/Albums
 		 * This finds artists and albums that no
