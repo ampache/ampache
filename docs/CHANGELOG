@@ -3,7 +3,8 @@
 --------------------------------------------------------------------------
 
 --------------------------------------------------------------------------
-  v.3.5
+  v.3.5 05/05/2009
+	- Added complete Czech translation (Thx martin hason)
 	- Add the AlmightyOatmeal-Sanity check to prevent a clean from
 		removing all songs if your mount failed, but is still
 		readable by ampache
