@@ -1492,6 +1492,9 @@ class Catalog extends database_object {
 	 */
 	public function clean_catalog() {
 
+		$dead_video = array(); 
+		$dead_song = array(); 
+
 		// Added set time limit because this runs out of time for some people
 		set_time_limit(0);
 
@@ -1585,16 +1588,16 @@ class Catalog extends database_object {
 			return false; 
 		} 
 		else { 
-			$idlist = '(' . implode(',',$dead_video) . ')'; 
-	
-			$sql = "DELETE FROM `video` WHERE `id` IN $idlist"; 
-			$db_results = Dba::write($sql); 
-		
-			$idlist = '(' . implode(',',$dead_song) . ')'; 
-			
-			$sql = "DELETE FROM `song` WHERE `id` IN $idlist"; 
-			$db_results = Dba::write($sql); 
-
+			if (count($dead_video)) { 
+				$idlist = '(' . implode(',',$dead_video) . ')'; 
+				$sql = "DELETE FROM `video` WHERE `id` IN $idlist"; 
+				$db_results = Dba::write($sql); 
+			}
+			if (count($dead_song)) { 
+				$idlist = '(' . implode(',',$dead_song) . ')'; 		
+				$sql = "DELETE FROM `song` WHERE `id` IN $idlist"; 
+				$db_results = Dba::write($sql); 
+			} 
 		}
 
 		/* Step two find orphaned Arists/Albums
