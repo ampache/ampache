@@ -555,3 +555,44 @@ use_rss = true
 ;proxy_port = "8080"
 ;proxy_user = ""
 ;proxy_pass = ""
+
+;#############################
+;   Mail Settings            #
+;#############################
+; This is needed to use phpmailer
+
+; Mail Send Type. 
+; smtp or sendmail or php.
+;DEFAULT: php
+;mail_type = "smtp"
+
+; Sendmail path
+; if you are using sendmail, please set to sendmail path.
+;DEFAULT: /usr/sbin/sendmail
+;sendmail_path = "/usr/sbin/sendmail"
+
+;#############################
+;   Mail SMTP Settings       #
+;#############################
+; If you want to use smtp on phpmailer,
+; please set following configs.
+
+; Mail server hostname or IP address
+;DEFAULT: localhost
+;mail_host = "localhost"
+
+; Mail server port
+;DEFAULT: 25
+;mail_port = 25
+
+; SMTPAuth true or false
+;DEFAULT: false
+;mail_auth = true
+
+; SMTP Username
+; your mail auth username.
+;mail_auth_user = ""
+
+; SMTP Password
+; your mail auth password.
+;mail_auth_pass = ""

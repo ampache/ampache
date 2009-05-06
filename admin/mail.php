@@ -63,27 +63,16 @@ switch ($_REQUEST['action']) {
 			$fullname = $GLOBALS['user']->fullname;
 		}
 		AmpacheMail::$to = $fullname . "<" . $GLOBALS['user']->email . ">";
-		AmpacheMail::$from = $fullname . "<" . $GLOBALS['user']->email . ">";
 		AmpacheMail::$subject = scrub_in($_REQUEST['subject']);
 		if(function_exists('mb_eregi_replace')) {
 			AmpacheMail::$message = mb_eregi_replace("\r\n", "\n", scrub_in($_REQUEST['message']));
 		} else {
 			AmpacheMail::$message = scrub_in($_REQUEST['message']);
 		}
-		AmpacheMail::$additional_header = array();
-		AmpacheMail::$additional_header[] = 'X-Ampache-Mailer: 0.0.1';
-		AmpacheMail::$additional_header[] = "From: " . AmpacheMail::$from;
-		AmpacheMail::$additional_header[] = "Bcc: $recipient";
-		if(function_exists('mb_send_mail')) {
-			AmpacheMail::$additional_header[] = 'Content-Type: text/plain; charset=UTF-8';
-			AmpacheMail::$additional_header[] = 'Content-Transfer-Encoding: 8bit';
-		} else {
-			AmpacheMail::$additional_header[] = 'Content-Type: text/plain; charset=us-ascii';
-			AmpacheMail::$additional_header[] = 'Content-Transfer-Encoding: 7bit';
-		}
 		AmpacheMail::$sender = $GLOBALS['user']->email;
 
-		AmpacheMail::send(); 	
+		AmpacheMail::$fromname	= $fullname;
+		AmpacheMail::send();
         
 		/* Confirmation Send */
 		$url 	= Config::get('web_path') . '/admin/mail.php';

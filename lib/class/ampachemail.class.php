@@ -24,10 +24,9 @@ class AmpacheMail {
 	// The message, recipient and from
 	public static $message; 
 	public static $recipient; 
-	public static $from; 
+	public static $fromname;
 	public static $subject; 
 	public static $to;
-	public static $additional_header;
 	public static $sender;
 
 	/**
@@ -92,23 +91,49 @@ class AmpacheMail {
 	 */
 	public static function send() { 
 
-		// Multi-byte Character Mail
-		if(function_exists('mb_send_mail')) {
-			mb_send_mail(self::$to,
-				     self::$subject,
-				     self::$message,
-				     implode("\n", self::$additional_header),
-				     '-f'.self::$sender);
-		} else {
-			mail(self::$to,
-			     self::$subject,
-			     self::$message,
-			     implode("\r\n", $additional_header),
-			     '-f'.self::$sender);
+		$mailtype = Config::get('mail_type');
+		$mail = new PHPMailer();
+		
+		$mail->AddAddress(self::$to);
+		$mail->CharSet	= Config::get('site_charset');
+		$mail->Encoding	= "base64";
+		$mail->From		= self::$sender;
+		$mail->FromName	= self::$fromname;
+		$mail->Subject	= self::$subject;
+		$mail->Body		= self::$message;
+		$mailhost		= Config::get('mail_host');
+		$mailport		= Config::get('mail_port');
+		$mailauth		= Config::get('mail_auth');
+		switch($mailtype) {
+			case 'smtp':
+				$mail->IsSMTP();
+				isset($mailhost) ? $mail->Host = $mailhost : $mail->Host = "localhost";
+				isset($mailport) ? $mail->Port = $mailport : $mail->Port = 25;
+				if($mailauth == true) {
+					$mail->SMTPAuth(true);
+					$mailuser	= Config::get('mail_auth_user');
+					$mailpass	= Config::get('mail_auth_pass');
+					isset($mailuser) ? $mail->Username = $mailuser : $mail->Username = "";
+					isset($mailpass) ? $mail->Password = $mailpass : $mail->Password = "";
+				}
+			break;
+			case 'sendmail':
+				$mail->IsSendmail();
+				$sendmail	= Config::get('sendmail_path');
+				isset($sendmail) ? $mail->Sendmail = $sendmail : $mail->Sendmail = "/usr/sbin/sendmail";
+			break;
+			case 'php':
+			default:
+				$mail->IsMail();
+			break;
 		}
 
-		return true; 
-
+		$retval = $mail->send();
+		if( $retval == true ) {
+			return true;
+		} else {
+			return false;
+		}
 	} // send
 
 } // AmpacheMail class

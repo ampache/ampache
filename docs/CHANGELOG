@@ -6,6 +6,7 @@
   v.3.6-Alpha1
 	- Fixed bug where video was registering as songs for now playing
 		and stats
+	- Add phpmailer and change ampache.cfg.php.dist
 
 --------------------------------------------------------------------------
   v.3.5 05/05/2009
