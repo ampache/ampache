@@ -175,7 +175,7 @@ switch ($_REQUEST['action']) {
 	/* Done by 'Select' code passes array of song ids */
 	case 'mass_update': 
 		$songs = $_REQUEST['song'];	
-	        $catalog = new Catalog();
+		$catalog = new Catalog();
 		$object = $_REQUEST['update_field']; 
 		$flag = new Flag(); 
 
@@ -199,10 +199,10 @@ switch ($_REQUEST['action']) {
 		foreach ($songs as $song_id) { 
 
 			$new_song = new Song($song_id);
-	                $old_song               = new Song();
-	                $old_song->artist       = $new_song->artist;
-	                $old_song->album        = $new_song->album;
-	                $old_song->genre        = $new_song->genre;
+			$old_song			   = new Song();
+			$old_song->artist	   = $new_song->artist;
+			$old_song->album		= $new_song->album;
+			$old_song->genre		= $new_song->genre;
 
 			/* Restrict which fields can be updated */
 			switch ($object) { 
@@ -223,11 +223,11 @@ switch ($_REQUEST['action']) {
 				break;
 			} // end switch
 
-	                /* Update this mofo, store an old copy for cleaning */
-	                $new_song->update_song($song_id,$new_song);
+			/* Update this mofo, store an old copy for cleaning */
+			$new_song->update_song($song_id,$new_song);
 
-	                /* Now that it's been updated clean old junk entries */
-	                $cleaned = $catalog->clean_single_song($old_song);
+			/* Now that it's been updated clean old junk entries */
+			$cleaned = $catalog->clean_single_song($old_song);
 
 			$flag->add($song_id,'song','retag','Edited Song, auto-tag');
 
@@ -267,13 +267,13 @@ switch ($_REQUEST['action']) {
 		$song->fill_ext_info(); 
 		$song->format_song();
 		require_once (conf('prefix') . '/templates/show_edit_song.inc.php');
-        break;
+		break;
 	case 'disable':
 		$song_obj = new Song();
 		// If we pass just one, make it still work
-	    	if (!is_array($_REQUEST['song_ids'])) { $song_obj->update_enabled(0,$_REQUEST['song_ids']); }
+		if (!is_array($_REQUEST['song_ids'])) { $song_obj->update_enabled(0,$_REQUEST['song_ids']); }
 		else {
-		    	foreach ($_REQUEST['song_ids'] as $song_id) {
+			foreach ($_REQUEST['song_ids'] as $song_id) {
 				$song_obj->update_enabled(0,$song_id);
 			} // end foreach
 		} // end else
@@ -282,14 +282,14 @@ switch ($_REQUEST['action']) {
 	case 'enabled':
 		$song_obj = new Song();
 		// If we pass just one, make it still work
-	        if (!is_array($_REQUEST['song_ids'])) { $song_obj->update_enabled(1,$_REQUEST['song_ids']); }
+		if (!is_array($_REQUEST['song_ids'])) { $song_obj->update_enabled(1,$_REQUEST['song_ids']); }
 		else {
-		        foreach ($_REQUEST['song_ids'] as $song_id) {
+			foreach ($_REQUEST['song_ids'] as $song_id) {
 				$song_obj->update_enabled(1,$song_id);
 			} // end foreach
 		} // end else
-	        show_confirmation(_('Songs Enabled'),_('The requested song(s) have been enabled'),return_referer());
-        break;
+			show_confirmation(_('Songs Enabled'),_('The requested song(s) have been enabled'),return_referer());
+		break;
 	case 'show_disabled': 
 		$disabled = Flag::get_disabled(); 
 		Browse::set_type('song'); 
@@ -310,4 +310,3 @@ switch ($_REQUEST['action']) {
 
 show_footer();
 ?>
-

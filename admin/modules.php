@@ -63,11 +63,11 @@ switch ($_REQUEST['action']) {
 		$localplay = new Localplay($type); 
 		$localplay->uninstall(); 
 			
-                /* Show Confirmation */
-                $url    = Config::get('web_path') . '/admin/modules.php?action=show_localplay';
-                $title  = _('Plugin Deactivated');
-                $body   = '';
-                show_confirmation($title,$body,$url);
+		/* Show Confirmation */
+		$url	= Config::get('web_path') . '/admin/modules.php?action=show_localplay';
+		$title  = _('Plugin Deactivated');
+		$body   = '';
+		show_confirmation($title,$body,$url);
 	break;
 	case 'install_plugin':
 		/* Verify that this plugin exists */
@@ -79,7 +79,7 @@ switch ($_REQUEST['action']) {
 		$plugin = new Plugin($_REQUEST['plugin']); 
 		if (!$plugin->install()) { 
 			debug_event('plugins','Error: Plugin Install Failed, ' . $_REQUEST['plugin'],'1'); 
-			$url    = Config::get('web_path') . '/admin/modules.php?action=show_plugins';
+			$url	= Config::get('web_path') . '/admin/modules.php?action=show_plugins';
 			$title = _('Unable to Install Plugin'); 
 			$body = ''; 
 			show_confirmation($title,$body,$url); 
@@ -104,22 +104,22 @@ switch ($_REQUEST['action']) {
 	break; 
 	case 'uninstall_plugin':
 		/* Verify that this plugin exists */
-                $plugins = Plugin::get_plugins(); 
-                if (!array_key_exists($_REQUEST['plugin'],$plugins)) {
-                        debug_event('plugins','Error: Invalid Plugin: ' . $_REQUEST['plugin'] . ' selected','1');
-                        break;
-                }
-                $plugin = new Plugin($_REQUEST['plugin']);
+		$plugins = Plugin::get_plugins(); 
+		if (!array_key_exists($_REQUEST['plugin'],$plugins)) {
+			debug_event('plugins','Error: Invalid Plugin: ' . $_REQUEST['plugin'] . ' selected','1');
+			break;
+		}
+		$plugin = new Plugin($_REQUEST['plugin']);
 		$plugin->uninstall(); 
 
 		// Don't trust the plugin to do it
 		User::rebuild_all_preferences(); 
 
-                /* Show Confirmation */
-                $url    = Config::get('web_path') . '/admin/modules.php?action=show_plugins';
-                $title  = _('Plugin Deactivated');
-                $body   = '';
-                show_confirmation($title,$body,$url);
+		/* Show Confirmation */
+		$url	= Config::get('web_path') . '/admin/modules.php?action=show_plugins';
+		$title  = _('Plugin Deactivated');
+		$body   = '';
+		show_confirmation($title,$body,$url);
 	break;
 	case 'upgrade_plugin':
 
@@ -142,6 +142,5 @@ switch ($_REQUEST['action']) {
 } // end switch
 
 show_footer(); 
-
 
 ?>

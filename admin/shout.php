@@ -21,8 +21,8 @@
 require_once '../lib/init.php';
 
 if (!Access::check('interface','100')) {
-        access_denied();
-        exit;
+	access_denied();
+	exit;
 }
 
 show_header(); 
@@ -32,19 +32,19 @@ switch ($_REQUEST['action']) {
 	case 'edit_shout': 
 		$shout_id = $_POST['shout_id']; 
 		$update = shoutBox::update($_POST); 
-		show_confirmation(_('Shoutbox Post Updated'),'','admin/shout.php');
+		show_confirmation(_('Shoutbox Post Updated'),'',Config::get('web_path').'/admin/shout.php');
 	break; 
-        case 'show_edit':
-                $shout = new shoutBox($_REQUEST['shout_id']);
+	case 'show_edit':
+		$shout = new shoutBox($_REQUEST['shout_id']);
 		$object = shoutBox::get_object($shout->object_type,$shout->object_id); 
 		$object->format();
 		$client = new User($shout->user);
 		$client->format();
-                require_once Config::get('prefix') . '/templates/show_edit_shout.inc.php';
-        break;
+		require_once Config::get('prefix') . '/templates/show_edit_shout.inc.php';
+		break;
 	case 'delete':
 		$shout_id = shoutBox::delete($_REQUEST['shout_id']);
-		 show_confirmation(_('Shoutbox Post Deleted'),'','admin/shout.php');
+		show_confirmation(_('Shoutbox Post Deleted'),'',Config::get('web_path').'/admin/shout.php');
 	break;
 	default:
 		Browse::set_type('shoutbox'); 

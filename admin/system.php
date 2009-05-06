@@ -39,24 +39,23 @@ switch ($_REQUEST['action']) {
 		ob_end_clean(); 
 		$current = parse_ini_file(Config::get('prefix') . '/config/ampache.cfg.php');
 		$final = generate_config($current);
-	        $browser = new Browser(); 
-	        $browser->downloadHeaders('ampache.cfg.php','text/plain',false,filesize(Config::get('prefix') . '/config/ampache.cfg.php.dist')); 
-	        echo $final; 
+		$browser = new Browser(); 
+		$browser->downloadHeaders('ampache.cfg.php','text/plain',false,filesize(Config::get('prefix') . '/config/ampache.cfg.php.dist')); 
+		echo $final; 
 		exit; 
 	break;
 	case 'reset_db_charset':
 		Dba::reset_db_charset(); 	
-		show_confirmation(_('Database Charset Updated'),_('Your Database and associated tables have been updated to match your currently configured charset'),'/admin/system.php?action=show_debug'); 
+		show_confirmation(_('Database Charset Updated'),_('Your Database and associated tables have been updated to match your currently configured charset'), Config::get('web_path').'/admin/system.php?action=show_debug'); 
 	break; 
 	case 'show_debug': 
-                $configuration = Config::get_all();
-                require_once Config::get('prefix') . '/templates/show_debug.inc.php';
+		$configuration = Config::get_all();
+		require_once Config::get('prefix') . '/templates/show_debug.inc.php';
 	break; 
 	default: 
 		// Rien a faire
 	break;
 } // end switch
-
 
 show_footer(); 
 

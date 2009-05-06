@@ -73,7 +73,7 @@ switch ($_REQUEST['action']) {
 
 		AmpacheMail::$fromname	= $fullname;
 		AmpacheMail::send();
-        
+
 		/* Confirmation Send */
 		$url 	= Config::get('web_path') . '/admin/mail.php';
 		$title 	= _('E-mail Sent'); 

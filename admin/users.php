@@ -31,8 +31,8 @@ show_header();
 // Switch on the actions  
 switch ($_REQUEST['action']) {
 	case 'update_user':
-	        if (Config::get('demo_mode')) { break; }
-		
+		if (Config::get('demo_mode')) { break; }
+
 		if (!Core::form_verify('edit_user','post')) { 
 			access_denied(); 
 			exit; 
@@ -48,7 +48,7 @@ switch ($_REQUEST['action']) {
 		$pass2 		= scrub_in($_POST['password_2']);
 	
 		/* Setup the temp user */	
-	    	$client = new User($user_id);
+		$client = new User($user_id);
 	
 		/* Verify Input */
 		if (empty($username)) { 
@@ -80,15 +80,15 @@ switch ($_REQUEST['action']) {
 			$client->update_password($pass1);
 		} 
 		
-		show_confirmation(_('User Updated'), $client->fullname . "(" . $client->username . ")" . _('updated'),'admin/users.php');
+		show_confirmation(_('User Updated'), $client->fullname . "(" . $client->username . ")" . _('updated'), Config::get('web_path'). '/admin/users.php');
 	break;
 	case 'add_user':
-        	if (Config::get('demo_mode')) { break; }
+		if (Config::get('demo_mode')) { break; }
 
-                if (!Core::form_verify('add_user','post')) { 
-                        access_denied();
-                        exit;
-                } 
+		if (!Core::form_verify('add_user','post')) { 
+			access_denied();
+			exit;
+		} 
 
 		$username	= scrub_in($_POST['username']);
 		$fullname	= scrub_in($_POST['fullname']);
@@ -114,9 +114,9 @@ switch ($_REQUEST['action']) {
 			/* Attempt to create the user */
 			$user_id = User::create($username, $fullname, $email, $pass1, $access);
 			if (!$user_id) { 
-				Error::add('general',"Error: Insert Failed");
+				Error::add('general',_("Error: Insert Failed"));
 			}
-			
+
 		} // if no errors
 		else { 
 			$_REQUEST['action'] = 'show_add_user';
@@ -126,49 +126,49 @@ switch ($_REQUEST['action']) {
 		elseif ($access == 25){ $access = _('User');}
 		elseif ($access == 100){ $access = _('Admin');}
 		
-		show_confirmation(_('New User Added'),__('%user% has been created with an access level of ' . $access,'%user%',$username),'admin/users.php');	
+		show_confirmation(_('New User Added'),__('%user% has been created with an access level of ' . $access,'%user%',$username), Config::get('web_path').'/admin/users.php');
 	break;
 	case 'enable':
 		$client = new User($_REQUEST['user_id']); 
 		$client->enable(); 
-		show_confirmation(_('User Enabled'),$client->fullname . ' (' . $client->username . ')','admin/users.php'); 
+		show_confirmation(_('User Enabled'),$client->fullname . ' (' . $client->username . ')', Config::get('web_path'). '/admin/users.php'); 
 	break;
 	case 'disable':
 		$client = new User($_REQUEST['user_id']); 
 		if ($client->disable()) { 
-			show_confirmation(_('User Disabled'),$client->fullname . ' (' . $client->username . ')','admin/users.php'); 
+			show_confirmation(_('User Disabled'),$client->fullname . ' (' . $client->username . ')', Config::get('web_path'). '/admin/users.php'); 
 		} 
 		else { 
-			show_confirmation(_('Error'),_('Unable to Disabled last Administrator'),'admin/users.php'); 
+			show_confirmation(_('Error'),_('Unable to Disabled last Administrator'), Config::get('web_path').'/admin/users.php'); 
 		} 
 	break;
 	case 'show_edit':
-        	if (Config::get('demo_mode')) { break; }
+		if (Config::get('demo_mode')) { break; }
 		$client	= new User($_REQUEST['user_id']); 
 		require_once Config::get('prefix') . '/templates/show_edit_user.inc.php';
 	break;
 	case 'confirm_delete':
-	        if (Config::get('demo_mode')) { break; }
+			if (Config::get('demo_mode')) { break; }
 		$client = new User($_REQUEST['user_id']); 
 		if ($client->delete()) { 
-			show_confirmation(_('User Deleted'), "$client->username has been Deleted","admin/users.php");
+			show_confirmation(_('User Deleted'), sprintf(_('%s has been Deleted'), $client->username), Config::get('web_path'). "/admin/users.php");
 		}
 		else { 
-			show_confirmation(_('Delete Error'), _("Unable to delete last Admin User"),"admin/users.php");
+			show_confirmation(_('Delete Error'), _("Unable to delete last Admin User"), Config::get('web_path')."/admin/users.php");
 		}
 	break;
 	case 'delete':
-        	if (Config::get('demo_mode')) { break; }
+		if (Config::get('demo_mode')) { break; }
 		$client = new User($_REQUEST['user_id']); 
 		show_confirmation(_('Deletion Request'),
-			_('Are you sure you want to permanently delete') . " $client->fullname ($client->username)?",
-			"admin/users.php?action=confirm_delete&amp;user_id=" . $_REQUEST['user_id'],1);
+			sprintf(_('Are you sure you want to permanently delete %s?'), $client->fullname),
+			Config::get('web_path')."/admin/users.php?action=confirm_delete&amp;user_id=" . $_REQUEST['user_id'],1);
 	break;
 	/* Show IP History for the Specified User */
 	case 'show_ip_history':
 		/* get the user and their history */
 		$working_user	= new User($_REQUEST['user_id']); 
-		
+
 		if (!isset($_REQUEST['all'])){
 			$history	= $working_user->get_ip_history(0,1);
 		} 
@@ -178,7 +178,7 @@ switch ($_REQUEST['action']) {
 		require Config::get('prefix') . '/templates/show_ip_history.inc.php';
 	break;
 	case 'show_add_user':
-	        if (Config::get('demo_mode')) { break; }
+			if (Config::get('demo_mode')) { break; }
 		require_once Config::get('prefix') . '/templates/show_add_user.inc.php';
 	break;
 	case 'show_preferences': 

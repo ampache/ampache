@@ -32,6 +32,7 @@ show_header();
 /* Big switch statement to handle various actions */
 switch ($_REQUEST['action']) {
 	case 'fixed':
+		/* Does this use now? */
 		delete_flagged($flag);
 		$type = 'show_flagged_songs';
 		include(conf('prefix') . '/templates/flag.inc');
@@ -42,13 +43,13 @@ switch ($_REQUEST['action']) {
 	case 'add_to_catalog':
 		toggle_visible('ajax-loading'); 
 		ob_end_flush(); 
-	    	if (Config::get('demo_mode')) { break; }
+			if (Config::get('demo_mode')) { break; }
 		if ($_REQUEST['catalogs'] ) {
 			foreach ($_REQUEST['catalogs'] as $catalog_id) {
 				$catalog = new Catalog($catalog_id);
 				$catalog->add_to_catalog();
 			}
-	       	}
+		}
 		$url 	= Config::get('web_path') . '/admin/index.php';
 		$title 	= _('Catalog Updated');
 		$body	= '';
@@ -60,8 +61,8 @@ switch ($_REQUEST['action']) {
 	case 'update_catalog':
 		toggle_visible('ajax-loading'); 
 		ob_end_flush(); 
-	    	/* If they are in demo mode stop here */
-	        if (Config::get('demo_mode')) { break; }
+			/* If they are in demo mode stop here */
+			if (Config::get('demo_mode')) { break; }
 
 		if (isset($_REQUEST['catalogs'])) {
 			foreach ($_REQUEST['catalogs'] as $catalog_id) {
@@ -102,7 +103,7 @@ switch ($_REQUEST['action']) {
 	break;
 	case 'delete_catalog':
 		/* Make sure they aren't in demo mode */
-	        if (Config::get('demo_mode')) { break; }
+			if (Config::get('demo_mode')) { break; }
 
 		if (!Core::form_verify('delete_catalog')) { 
 			access_denied(); 
@@ -121,7 +122,7 @@ switch ($_REQUEST['action']) {
 		show_confirmation(_('Catalog Delete'),_('Confirm Deletion Request'),$next_url,1,'delete_catalog'); 
 	break; 
 	case 'remove_disabled':
-	        if (conf('demo_mode')) { break; }
+		if (conf('demo_mode')) { break; }
 
 		$song = $_REQUEST['song'];
 
@@ -142,8 +143,8 @@ switch ($_REQUEST['action']) {
 	case 'clean_catalog':
 		toggle_visible('ajax-loading'); 
 		ob_end_flush(); 
-	    	/* If they are in demo mode stop them here */
-	        if (Config::get('demo_mode')) { break; }
+			/* If they are in demo mode stop them here */
+			if (Config::get('demo_mode')) { break; }
 	
 		// Make sure they checked something
 		if (isset($_REQUEST['catalogs'])) {	
@@ -161,7 +162,7 @@ switch ($_REQUEST['action']) {
 	break;
 	case 'update_catalog_settings':
 		/* No Demo Here! */
-        	if (Config::get('demo_mode')) { break; }
+		if (Config::get('demo_mode')) { break; }
 
 		/* Update the catalog */
 		Catalog::update_settings($_REQUEST);
@@ -198,20 +199,20 @@ switch ($_REQUEST['action']) {
 		ob_end_flush(); 
 
 		if (!strlen($_REQUEST['path']) || !strlen($_REQUEST['name'])) { 
-			Error::add('general','Error Name and path not specified'); 
+			Error::add('general',_('Error: Name and path not specified')); 
 		} 
 
 		if (substr($_REQUEST['path'],0,7) != 'http://' && $_REQUEST['type'] == 'remote') { 
-			Error::add('general','Error Remote selected, but path is not a URL'); 
+			Error::add('general',_('Error: Remote selected, but path is not a URL'));
 		} 
 		
 		if ($_REQUEST['type'] == 'remote' && !strlen($_REQUEST['key'])) { 
-			Error::add('general','Error Remote Catalog specified, but no key provided'); 
+			Error::add('general',_('Error: Remote Catalog specified, but no key provided'));
 		} 
 
 		// Make sure that there isn't a catalog with a directory above this one
 		if (Catalog::get_from_path($_REQUEST['path'])) { 
-			Error::add('general',_('Error: Defined Path is inside an existing catalog')); 
+			Error::add('general',_('Error: Defined Path is inside an existing catalog'));
 		} 
 
 		// If an error hasn't occured
@@ -222,10 +223,10 @@ switch ($_REQUEST['action']) {
 			if (!$catalog_id) { 
 				require Config::get('prefix') . '/templates/show_add_catalog.inc.php'; 
 				break; 
-			} 
+			}
 
 			$catalog = new Catalog($catalog_id); 
-			
+
 			// Run our initial add
 			$catalog->run_add($_REQUEST); 
 
@@ -243,7 +244,7 @@ switch ($_REQUEST['action']) {
 		}
 	break;
 	case 'clear_stats':
-    		if (Config::get('demo_mode')) { access_denied(); break; }
+			if (Config::get('demo_mode')) { access_denied(); break; }
 		
 		Catalog::clear_stats(); 
 		$url	= Config::get('web_path') . '/admin/index.php';
@@ -258,12 +259,13 @@ switch ($_REQUEST['action']) {
 		require Config::get('prefix') . '/templates/show_add_catalog.inc.php';
 	break;
 	case 'clear_now_playing':
-	        if (Config::get('demo_mode')) { access_denied(); break; }
-	    	Stream::clear_now_playing();
+			if (Config::get('demo_mode')) { access_denied(); break; }
+			Stream::clear_now_playing();
 		show_confirmation(_('Now Playing Cleared'),_('All now playing data has been cleared'),Config::get('web_path') . '/admin/index.php');
 	break;
 	case 'show_disabled':
-	        if (conf('demo_mode')) { break; }
+		/* Stop the demo hippies */
+		if (conf('demo_mode')) { break; }
 		
 		$songs = $catalog->get_disabled();
 		if (count($songs)) { 
@@ -275,7 +277,7 @@ switch ($_REQUEST['action']) {
 	break;
 	case 'show_delete_catalog':
 		/* Stop the demo hippies */
-	        if (Config::get('demo_mode')) { access_denied(); break; } 
+		if (Config::get('demo_mode')) { access_denied(); break; } 
 
 		$catalog = new Catalog($_REQUEST['catalog_id']); 	
 		$nexturl = Config::get('web_path') . '/admin/catalog.php?action=delete_catalog&amp;catalog_id=' . scrub_out($_REQUEST['catalog_id']);
@@ -302,7 +304,7 @@ switch ($_REQUEST['action']) {
 		$title 	= _('Album Art Search Finished');
 		$body	= '';
 		show_confirmation($title,$body,$url);
-        break;
+		break;
 	default:
 		/* Not sure what to put here anymore */
 	break;

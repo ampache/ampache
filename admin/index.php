@@ -38,3 +38,4 @@ switch ($_REQUEST['action']) {
 } 
 
 show_footer(); 
+?>
