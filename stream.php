@@ -160,6 +160,7 @@ switch ($_REQUEST['method']) {
 		} 
 
 		/* Start the Stream */
+		debug_event('stream.php' , 'Stream Type: '.$stream_type.' Media IDs: '.$media_ids, '5');
 		$stream = new Stream($stream_type,$media_ids);
 		$stream->add_urls($urls); 
 		$stream->start(); 

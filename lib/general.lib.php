@@ -349,6 +349,14 @@ function get_languages() {
 } // get_languages
 
 /**
+ * is_rtl
+ * This checks whether to be a rtl language.
+ */
+function is_rtl($locale) {
+	return in_array($locale, array("he_IL", "fa_IR", "ar_SA"));
+}
+
+/**
  * format_time
  * This formats seconds into minutes:seconds
  * //FIXME This should be removed, no reason for it!
