@@ -106,7 +106,7 @@ switch ($_REQUEST['action']) {
 		$access = new Access($_REQUEST['access_id']); 
 		$access->update($_POST);
 		if (!Error::occurred()) { 
-			show_confirmation(_('Updated'),_('Access List Entry updated'),'admin/access.php');
+			show_confirmation(_('Updated'),_('Access List Entry updated'), Config::get('web_path').'/admin/access.php');
 		} 
 		else { 
 			$access->format(); 

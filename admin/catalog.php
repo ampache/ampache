@@ -113,7 +113,7 @@ switch ($_REQUEST['action']) {
 		/* Delete the sucker, we don't need to check perms as thats done above */
 		Catalog::delete($_GET['catalog_id']); 
 		$next_url = Config::get('web_path') . '/admin/index.php';
-		show_confirmation(_('Catalog Deleted'),_('The Catalog and all associated records have been deleted'),$nexturl);
+		show_confirmation(_('Catalog Deleted'),_('The Catalog and all associated records have been deleted'),$next_url);
 	break;
 	case 'show_delete_catalog': 
 		$catalog_id = scrub_in($_GET['catalog_id']); 
@@ -133,7 +133,7 @@ switch ($_REQUEST['action']) {
 		else {
 			$body = _('No Songs Removed');
 		}
-		$url	= conf('web_path') . '/admin/index.php';
+		$url	= Config::get('web_path') . '/admin/index.php';
 		$title	= ngettext('Disabled Song Processed','Disabled Songs Processed',count($song));
 		show_confirmation($title,$body,$url);
 	break;
@@ -236,7 +236,7 @@ switch ($_REQUEST['action']) {
 			Error::display('catalog_add'); 
 			show_box_bottom(); 
 
-			show_confirmation('','','/admin/index.php'); 
+			show_confirmation('','', Config::get('web_path').'/admin/index.php'); 
 
 		}
 		else {
@@ -259,8 +259,8 @@ switch ($_REQUEST['action']) {
 		require Config::get('prefix') . '/templates/show_add_catalog.inc.php';
 	break;
 	case 'clear_now_playing':
-			if (Config::get('demo_mode')) { access_denied(); break; }
-			Stream::clear_now_playing();
+		if (Config::get('demo_mode')) { access_denied(); break; }
+		Stream::clear_now_playing();
 		show_confirmation(_('Now Playing Cleared'),_('All now playing data has been cleared'),Config::get('web_path') . '/admin/index.php');
 	break;
 	case 'show_disabled':

@@ -126,7 +126,7 @@ switch ($_REQUEST['action']) {
 		elseif ($access == 25){ $access = _('User');}
 		elseif ($access == 100){ $access = _('Admin');}
 		
-		show_confirmation(_('New User Added'),__('%user% has been created with an access level of ' . $access,'%user%',$username), Config::get('web_path').'/admin/users.php');
+		show_confirmation(_('New User Added'),sprintf(_('%%user%% has been created with an access level of %s'), $access),'%user%',$username), Config::get('web_path').'/admin/users.php');
 	break;
 	case 'enable':
 		$client = new User($_REQUEST['user_id']); 

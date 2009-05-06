@@ -83,7 +83,7 @@ switch ($_REQUEST['action']) {
 			$flag->add($song->id,'song','retag','Edited Song, auto-tag');
 		}
 
-		if (isset($cleaned['artist']) || isset($cleaned['album'])) { $_SESSION['source'] = conf('web_path') . '/index.php'; } 
+		if (isset($cleaned['artist']) || isset($cleaned['album'])) { $_SESSION['source'] = Config::get('web_path') . '/index.php'; } 
 		
 		show_confirmation(_('Song Updated'),_('The requested song has been updated'),$_SESSION['source']);
 	break;
@@ -127,7 +127,7 @@ switch ($_REQUEST['action']) {
 		// Clean out the old album 
 		$catalog->clean_albums();
 
-		show_confirmation(_('Album Updated'),'',conf('web_path') . '/admin/index.php'); 
+		show_confirmation(_('Album Updated'),'',Config::get('web_path') . '/admin/index.php'); 
 
 	break;
 	// Show the page for editing a full artist
@@ -169,7 +169,7 @@ switch ($_REQUEST['action']) {
 		// Clean out the old artist(s)
 		$catalog->clean_artists(); 
 
-		show_confirmation(_('Artist Updated'),'',conf('web_path') . '/admin/index.php'); 
+		show_confirmation(_('Artist Updated'),'',Config::get('web_path') . '/admin/index.php');
 
 	break; 
 	/* Done by 'Select' code passes array of song ids */
