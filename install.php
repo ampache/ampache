@@ -27,6 +27,8 @@ require_once 'lib/class/config.class.php';
 require_once 'lib/class/error.class.php'; 
 require_once 'lib/class/vauth.class.php';
 require_once 'lib/class/database_object.abstract.php';
+require_once 'lib/class/preference.class.php'; 
+require_once 'lib/class/access.class.php'; 
 require_once 'lib/ui.lib.php';
 require_once 'lib/log.lib.php'; 
 require_once 'modules/horde/Browser.php';
@@ -83,6 +85,9 @@ switch ($_REQUEST['action']) {
 			require_once 'templates/show_install.inc.php';
 			break;
 		}
+
+		// Now that it's inserted save the lang preference
+		Preference::update('lang','-1',$htmllang);
 		
 		header ("Location: " . WEB_PATH . "?action=show_create_config&local_db=$database&local_host=$hostname&htmllang=$htmllang&charset=$charset");
 		
@@ -219,6 +224,7 @@ switch ($_REQUEST['action']) {
 		// We need the charset for the different languages
 		$charsets = array('de_DE' => 'ISO-8859-15',
 				  'en_US' => 'iso-8859-1',
+				  'cs_CZ' => 'UTF-8',
 				  'ja_JP' => 'UTF-8',
 				  'en_GB' => 'UTF-8',
 				  'es_ES' => 'iso-8859-1',

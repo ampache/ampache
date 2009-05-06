@@ -321,6 +321,7 @@ class Access {
 	public static function check($type,$level) { 
 
 		if (Config::get('demo_mode')) { return true; } 
+		if (INSTALL == '1') { return true; } 
 
 		$level = intval($level); 
 
