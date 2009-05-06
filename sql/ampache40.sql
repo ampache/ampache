@@ -242,10 +242,10 @@ SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8;
 CREATE TABLE `dynamic_playlist` (
   `id` int(11) unsigned NOT NULL auto_increment,
-  `name` varchar(255) NOT NULL,
+  `name` varchar(255) default NULL,
   `user` int(11) NOT NULL,
   `date` int(11) unsigned NOT NULL,
-  `type` varchar(128) NOT NULL,
+  `type` varchar(128) default NULL,
   PRIMARY KEY  (`id`)
 ) TYPE=MyISAM;
 SET character_set_client = @saved_cs_client;
@@ -269,10 +269,10 @@ SET character_set_client = utf8;
 CREATE TABLE `dynamic_playlist_data` (
   `id` int(11) unsigned NOT NULL auto_increment,
   `dynamic_id` int(11) unsigned NOT NULL,
-  `field` varchar(255) NOT NULL,
-  `internal_operator` varchar(64) NOT NULL,
-  `external_operator` varchar(64) NOT NULL,
-  `value` varchar(255) NOT NULL,
+  `field` varchar(255) default NULL,
+  `internal_operator` varchar(64) default NULL,
+  `external_operator` varchar(64) default NULL,
+  `value` varchar(255) default NULL,
   PRIMARY KEY  (`id`)
 ) TYPE=MyISAM;
 SET character_set_client = @saved_cs_client;
@@ -381,6 +381,90 @@ LOCK TABLES `live_stream` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `localplay_httpq`
+--
+
+DROP TABLE IF EXISTS `localplay_httpq`;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+CREATE TABLE `localplay_httpq` (
+  `id` int(11) unsigned NOT NULL auto_increment,
+  `name` varchar(128) default NULL,
+  `owner` int(11) NOT NULL,
+  `host` varchar(255) default NULL,
+  `port` int(11) unsigned NOT NULL,
+  `password` varchar(255) default NULL,
+  `access` smallint(4) unsigned NOT NULL default '0',
+  PRIMARY KEY  (`id`)
+) TYPE=MyISAM;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Dumping data for table `localplay_httpq`
+--
+
+LOCK TABLES `localplay_httpq` WRITE;
+/*!40000 ALTER TABLE `localplay_httpq` DISABLE KEYS */;
+/*!40000 ALTER TABLE `localplay_httpq` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `localplay_mpd`
+--
+
+DROP TABLE IF EXISTS `localplay_mpd`;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+CREATE TABLE `localplay_mpd` (
+  `id` int(11) unsigned NOT NULL auto_increment,
+  `name` varchar(128) default NULL,
+  `owner` int(11) NOT NULL,
+  `host` varchar(255) default NULL,
+  `port` int(11) unsigned NOT NULL default '6600',
+  `password` varchar(255) default NULL,
+  `access` smallint(4) unsigned NOT NULL default '0',
+  PRIMARY KEY  (`id`)
+) TYPE=MyISAM;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Dumping data for table `localplay_mpd`
+--
+
+LOCK TABLES `localplay_mpd` WRITE;
+/*!40000 ALTER TABLE `localplay_mpd` DISABLE KEYS */;
+/*!40000 ALTER TABLE `localplay_mpd` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `localplay_shoutcast`
+--
+
+DROP TABLE IF EXISTS `localplay_shoutcast`;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+CREATE TABLE `localplay_shoutcast` (
+  `id` int(11) unsigned NOT NULL auto_increment,
+  `name` varchar(128) default NULL,
+  `owner` int(11) NOT NULL,
+  `pid` varchar(255) default NULL,
+  `playlist` varchar(255) default NULL,
+  `local_root` varchar(255) default NULL,
+  `access` smallint(4) unsigned NOT NULL default '0',
+  PRIMARY KEY  (`id`)
+) TYPE=MyISAM;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Dumping data for table `localplay_shoutcast`
+--
+
+LOCK TABLES `localplay_shoutcast` WRITE;
+/*!40000 ALTER TABLE `localplay_shoutcast` DISABLE KEYS */;
+/*!40000 ALTER TABLE `localplay_shoutcast` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `now_playing`
 --
 
@@ -390,7 +474,7 @@ SET character_set_client = utf8;
 CREATE TABLE `now_playing` (
   `id` varchar(64) NOT NULL default '',
   `object_id` int(11) unsigned NOT NULL,
-  `object_type` varchar(255) NOT NULL,
+  `object_type` varchar(255) default NULL,
   `user` int(11) NOT NULL,
   `expire` int(11) unsigned NOT NULL default '0',
   PRIMARY KEY  (`id`),
@@ -510,7 +594,7 @@ CREATE TABLE `preference` (
   PRIMARY KEY  (`id`),
   KEY `catagory` (`catagory`),
   KEY `name` (`name`)
-) TYPE=MyISAM AUTO_INCREMENT=70;
+) TYPE=MyISAM AUTO_INCREMENT=79;
 SET character_set_client = @saved_cs_client;
 
 --
@@ -519,7 +603,7 @@ SET character_set_client = @saved_cs_client;
 
 LOCK TABLES `preference` WRITE;
 /*!40000 ALTER TABLE `preference` DISABLE KEYS */;
-INSERT INTO `preference` VALUES (1,'download','0','Allow Downloads',100,'boolean','options'),(4,'popular_threshold','10','Popular Threshold',25,'integer','interface'),(19,'sample_rate','32','Transcode Bitrate',25,'string','streaming'),(22,'site_title','Ampache :: Pour l\'Amour de la Musique','Website Title',100,'string','system'),(23,'lock_songs','0','Lock Songs',100,'boolean','system'),(24,'force_http_play','1','Forces Http play regardless of port',100,'boolean','system'),(25,'http_port','80','Non-Standard Http Port',100,'integer','system'),(41,'localplay_controller','0','Localplay Type',100,'special','options'),(29,'play_type','stream','Type of Playback',25,'special','streaming'),(31,'lang','en_US','Language',100,'special','interface'),(32,'playlist_type','m3u','Playlist Type',100,'special','playlist'),(33,'theme_name','classic','Theme',0,'special','interface'),(34,'ellipse_threshold_album','27','Album Ellipse Threshold',0,'integer','interface'),(35,'ellipse_threshold_artist','27','Artist Ellipse Threshold',0,'integer','interface'),(36,'ellipse_threshold_title','27','Title Ellipse Threshold',0,'integer','interface'),(51,'offset_limit','50','Offset Limit',5,'integer','interface'),(40,'localplay_level','0','Localplay Access',100,'special','options'),(44,'allow_stream_playback','1','Allow Streaming',100,'boolean','system'),(45,'allow_democratic_playback','0','Allow Democratic Play',100,'boolean','system'),(46,'allow_localplay_playback','0','Allow Localplay Play',100,'boolean','system'),(47,'stats_threshold','7','Statistics Day Threshold',25,'integer','interface'),(49,'min_object_count','1','Min Element Count',5,'integer','interface'),(52,'rate_limit','8192','Rate Limit',100,'integer','streaming'),(53,'playlist_method','default','Playlist Method',5,'string','playlist'),(55,'transcode','default','Transcoding',25,'string','streaming'),(57,'tags_userlist','','User to track',0,'string','tags'),(69,'show_lyrics','0','Show Lyrics',0,'boolean','interface');
+INSERT INTO `preference` VALUES (1,'download','0','Allow Downloads',100,'boolean','options'),(4,'popular_threshold','10','Popular Threshold',25,'integer','interface'),(19,'sample_rate','32','Transcode Bitrate',25,'string','streaming'),(22,'site_title','Ampache :: Pour l\'Amour de la Musique','Website Title',100,'string','system'),(23,'lock_songs','0','Lock Songs',100,'boolean','system'),(24,'force_http_play','1','Forces Http play regardless of port',100,'boolean','system'),(25,'http_port','80','Non-Standard Http Port',100,'integer','system'),(41,'localplay_controller','0','Localplay Type',100,'special','options'),(29,'play_type','stream','Type of Playback',25,'special','streaming'),(31,'lang','fr_FR','Language',100,'special','interface'),(32,'playlist_type','m3u','Playlist Type',100,'special','playlist'),(33,'theme_name','classic','Theme',0,'special','interface'),(34,'ellipse_threshold_album','27','Album Ellipse Threshold',0,'integer','interface'),(35,'ellipse_threshold_artist','27','Artist Ellipse Threshold',0,'integer','interface'),(36,'ellipse_threshold_title','27','Title Ellipse Threshold',0,'integer','interface'),(51,'offset_limit','50','Offset Limit',5,'integer','interface'),(40,'localplay_level','0','Localplay Access',100,'special','options'),(44,'allow_stream_playback','1','Allow Streaming',100,'boolean','system'),(45,'allow_democratic_playback','0','Allow Democratic Play',100,'boolean','system'),(46,'allow_localplay_playback','0','Allow Localplay Play',100,'boolean','system'),(47,'stats_threshold','7','Statistics Day Threshold',25,'integer','interface'),(49,'min_object_count','1','Min Element Count',5,'integer','interface'),(52,'rate_limit','8192','Rate Limit',100,'integer','streaming'),(53,'playlist_method','default','Playlist Method',5,'string','playlist'),(55,'transcode','default','Transcoding',25,'string','streaming'),(57,'tags_userlist','','User to track',0,'string','tags'),(69,'show_lyrics','0','Show Lyrics',0,'boolean','interface'),(70,'mpd_active','0','MPD Active Instance',25,'integer','internal'),(71,'httpq_active','0','HTTPQ Active Instance',25,'integer','internal'),(72,'shoutcast_active','0','Shoutcast Active Instance',25,'integer','internal'),(73,'lastfm_user','','Last.FM Username',25,'string','plugins'),(74,'lastfm_pass','','Last.FM Password',25,'string','plugins'),(75,'lastfm_port','','Last.FM Submit Port',25,'string','internal'),(76,'lastfm_host','','Last.FM Submit Host',25,'string','internal'),(77,'lastfm_url','','Last.FM Submit URL',25,'string','internal'),(78,'lastfm_challenge','','Last.FM Submit Challenge',25,'string','internal');
 /*!40000 ALTER TABLE `preference` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -741,8 +825,8 @@ DROP TABLE IF EXISTS `tmp_browse`;
 SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8;
 CREATE TABLE `tmp_browse` (
-  `sid` varchar(128) NOT NULL,
-  `type` varchar(255) NOT NULL,
+  `sid` varchar(128) default NULL,
+  `type` varchar(255) default NULL,
   `data` longtext NOT NULL,
   UNIQUE KEY `sid` (`sid`)
 ) TYPE=MyISAM;
@@ -772,7 +856,7 @@ CREATE TABLE `tmp_playlist` (
   PRIMARY KEY  (`id`),
   KEY `session` (`session`),
   KEY `type` (`type`)
-) TYPE=MyISAM AUTO_INCREMENT=8;
+) TYPE=MyISAM;
 SET character_set_client = @saved_cs_client;
 
 --
@@ -831,7 +915,7 @@ SET character_set_client = @saved_cs_client;
 
 LOCK TABLES `update_info` WRITE;
 /*!40000 ALTER TABLE `update_info` DISABLE KEYS */;
-INSERT INTO `update_info` VALUES ('db_version','350008');
+INSERT INTO `update_info` VALUES ('db_version','350008'),('Plugin_Last.FM','000003');
 /*!40000 ALTER TABLE `update_info` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -914,7 +998,7 @@ SET character_set_client = @saved_cs_client;
 
 LOCK TABLES `user_preference` WRITE;
 /*!40000 ALTER TABLE `user_preference` DISABLE KEYS */;
-INSERT INTO `user_preference` VALUES (-1,1,'0'),(-1,4,'10'),(-1,19,'32'),(-1,22,'Ampache :: Pour l\'Amour de la Musique'),(-1,23,'0'),(-1,24,'1'),(-1,25,'80'),(-1,41,'0'),(-1,29,'stream'),(-1,31,'en_US'),(-1,32,'m3u'),(-1,33,'classic'),(-1,34,'27'),(-1,35,'27'),(-1,36,'27'),(-1,51,'50'),(-1,40,'0'),(-1,44,'1'),(-1,45,'0'),(-1,46,'0'),(-1,47,'7'),(-1,49,'1'),(-1,52,'8192'),(-1,53,'default'),(-1,55,'default'),(-1,57,''),(-1,69,'0');
+INSERT INTO `user_preference` VALUES (-1,1,'1'),(-1,4,'10'),(-1,19,'32'),(-1,22,'Ampache :: Pour l\'Amour de la Musique'),(-1,23,'0'),(-1,24,'1'),(-1,25,'80'),(-1,41,'mpd'),(-1,29,'stream'),(-1,31,'fr_FR'),(-1,32,'m3u'),(-1,33,'classic'),(-1,34,'27'),(-1,35,'27'),(-1,36,'27'),(-1,51,'50'),(-1,40,'100'),(-1,44,'1'),(-1,45,'1'),(-1,46,'1'),(-1,47,'7'),(-1,49,'1'),(-1,52,'8192'),(-1,53,'default'),(-1,55,'default'),(-1,57,''),(-1,69,'0'),(-1,70,'0'),(-1,71,'0'),(-1,72,'0'),(-1,73,''),(-1,74,''),(-1,75,''),(-1,76,''),(-1,77,''),(-1,78,'');
 /*!40000 ALTER TABLE `user_preference` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -984,16 +1068,16 @@ SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8;
 CREATE TABLE `video` (
   `id` int(11) unsigned NOT NULL auto_increment,
-  `file` varchar(255) NOT NULL,
+  `file` varchar(255) default NULL,
   `catalog` int(11) unsigned NOT NULL,
-  `title` varchar(255) NOT NULL,
-  `video_codec` varchar(255) NOT NULL,
-  `audio_codec` varchar(255) NOT NULL,
+  `title` varchar(255) default NULL,
+  `video_codec` varchar(255) default NULL,
+  `audio_codec` varchar(255) default NULL,
   `resolution_x` mediumint(8) unsigned NOT NULL,
   `resolution_y` mediumint(8) unsigned NOT NULL,
   `time` int(11) unsigned NOT NULL,
   `size` bigint(20) unsigned NOT NULL,
-  `mime` varchar(255) NOT NULL,
+  `mime` varchar(255) default NULL,
   `addition_time` int(11) unsigned NOT NULL,
   `update_time` int(11) unsigned default NULL,
   `enabled` tinyint(1) NOT NULL default '1',
@@ -1021,4 +1105,4 @@ UNLOCK TABLES;
 /*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2009-03-15 23:54:50
+-- Dump completed on 2009-05-06  0:00:20
