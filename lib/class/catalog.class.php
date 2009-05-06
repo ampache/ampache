@@ -1113,8 +1113,11 @@ class Catalog extends database_object {
                 $new_song->time         = $results['time'];
 		$new_song->mime		= $results['mime']; 
                 $new_song->track        = intval($results['track']); 
+		$new_song->mbid		= $results['mb_trackid']; 
                 $artist                 = $results['artist'];
+		$artist_mbid		= $results['mb_artistid']; 
                 $album                  = $results['album'];
+		$album_mbid		= $results['mb_albumid']; 
 		$disk			= $results['disk'];
 		$tag			= $results['genre']; 
 
@@ -1122,9 +1125,9 @@ class Catalog extends database_object {
                 * We have the artist/genre/album name need to check it in the tables
                 * If found then add & return id, else return id
                 */
-                $new_song->artist       = self::check_artist($artist);
+                $new_song->artist       = self::check_artist($artist,$artist_mbid);
                 $new_song->f_artist     = $artist;
-                $new_song->album        = self::check_album($album,$new_song->year,$disk);
+                $new_song->album        = self::check_album($album,$new_song->year,$disk,$album_mbid);
                 $new_song->f_album      = $album . " - " . $new_song->year;
                 $new_song->title        = self::check_title($new_song->title,$new_song->file);
 		
@@ -1454,7 +1457,7 @@ class Catalog extends database_object {
 			debug_event($label, $debug_text, '4');
 			
 			// check the album if it exists by checking the name and the year of the album
-			$local_album_id = self::check_album($remote_album->name, $remote_album->year,"", true);
+			$local_album_id = self::check_album($remote_album->name, $remote_album->year,"","", true);
 			debug_event($label, "local_album_id: " . $local_album_id, '4');	
 			
 			if ($local_album_id != 0) {
@@ -1494,6 +1497,9 @@ class Catalog extends database_object {
 
 		// Added set time limit because this runs out of time for some people
 		set_time_limit(0);
+	
+		$dead_video = array(); 
+		$dead_song = array(); 
 
 		require_once Config::get('prefix') . '/templates/show_clean_catalog.inc.php';
 		flush();
@@ -1584,16 +1590,16 @@ class Catalog extends database_object {
 			return false; 
 		} 
 		else { 
-			$idlist = '(' . implode(',',$dead_video) . ')'; 
-	
-			$sql = "DELETE FROM `video` WHERE `id` IN $idlist"; 
-			$db_results = Dba::write($sql); 
-		
-			$idlist = '(' . implode(',',$dead_song) . ')'; 
-			
-			$sql = "DELETE FROM `song` WHERE `id` IN $idlist"; 
-			$db_results = Dba::write($sql); 
-
+			if count($dead_video)) { 
+				$idlist = '(' . implode(',',$dead_video) . ')'; 
+				$sql = "DELETE FROM `video` WHERE `id` IN $idlist"; 
+				$db_results = Dba::write($sql); 
+			} 
+			if (count($dead_song)) { 
+				$idlist = '(' . implode(',',$dead_song) . ')'; 		
+				$sql = "DELETE FROM `song` WHERE `id` IN $idlist"; 
+				$db_results = Dba::write($sql); 
+			} 
 		}
 
 		/* Step two find orphaned Arists/Albums
@@ -2039,7 +2045,7 @@ class Catalog extends database_object {
 	 * check_album
 	 * Takes $album and checks if there then return id else insert and return id
 	 */
-	public static function check_album($album,$album_year=0,$disk='',$readonly='') {
+	public static function check_album($album,$album_year=0,$disk='',$mbid='',$readonly='') {
 
 		/* Clean up the album name */
 		$album = trim($album);
@@ -2182,8 +2188,8 @@ class Catalog extends database_object {
 		 * We have the artist/genre/album name need to check it in the tables
 		 * If found then add & return id, else return id
 		 */
-		$artist_id	= self::check_artist($artist);
-		$album_id	= self::check_album($album,$year,$disk);
+		$artist_id	= self::check_artist($artist,$artist_mbid);
+		$album_id	= self::check_album($album,$year,$disk,$album_mbid);
 		$title		= self::check_title($title,$file);
 		$add_file	= Dba::escape($file);
 
