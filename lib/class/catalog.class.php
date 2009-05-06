@@ -809,7 +809,7 @@ class Catalog extends database_object {
 		$sql = $sql." HAVING COUNT(title) > 1";
 		$sql = $sql." ORDER BY `ctitle`";
 
-		$db_results = Dba::query($sql);
+		$db_results = Dba::read($sql);
 
 		$results = array();
 
@@ -842,7 +842,7 @@ class Catalog extends database_object {
 		}
 
 		$sql .= " ORDER BY `time`,`bitrate`,`size` LIMIT 2";
-		$db_results = Dba::query($sql);
+		$db_results = Dba::read($sql);
 
 		$results = array();
 
@@ -987,7 +987,7 @@ class Catalog extends database_object {
 
 		$sql = "UPDATE `catalog` SET `name`='$name', `key`='$key', `rename_pattern`='$rename', " .
 			"`sort_pattern`='$sort' WHERE `id` = '$id'";
-		$db_results = Dba::query($sql);
+		$db_results = Dba::write($sql);
 
 		return true;
 
@@ -1539,7 +1539,7 @@ class Catalog extends database_object {
 				if (!file_exists($results['file']) OR $file_info < 1) {
 					
 					/* Add Error */
-					Error::add('general',"Error File Not Found or 0 Bytes: " . $results['file']);
+					Error::add('general',_('Error File Not Found or 0 Bytes:') . $results['file']);
 
 					$table = ($results['type'] == 'video') ? 'dead_video' : 'dead_song'; 
 
@@ -1561,7 +1561,7 @@ class Catalog extends database_object {
 				/* If it errors somethings splated, or the files empty */
 				if ($file_info == false) {
 					/* Add Error */
-					Error::add('general',"Error Remote File Not Found or 0 Bytes: " . $results['file']);
+					Error::add('general',_('Error Remote File Not Found or 0 Bytes:') . $results['file']);
 
 
 					$table = ($results['type'] == 'video') ? 'dead_video' : 'dead_song'; 
@@ -1580,8 +1580,7 @@ class Catalog extends database_object {
 		// Check and see if _everything_ has gone away, might indicate a dead mount
 		// We call this the AlmightyOatmeal Sanity check
 		if ($dead_files == $count) { 
-			//UNTRANSLATED FIXME
-			Error::add('general','Error All songs would be removed, doing nothing'); 
+			Error::add('general',_('Error All songs would be removed, doing nothing')); 
 			return false; 
 		} 
 		else { 
@@ -1609,9 +1608,7 @@ class Catalog extends database_object {
 		echo "\n</script>\n";
 		show_box_top();
 		echo "<strong>";
-		printf (ngettext('Catalog Clean Done. %d file removed.',
-		   'Catalog Clean Done. %d files removed.',
-		   $dead_files), $dead_files);
+		printf (ngettext('Catalog Clean Done. %d file removed.','Catalog Clean Done. %d files removed.',$dead_files), $dead_files);
 		echo "</strong><br />\n";
 		echo "<strong>" . _('Optimizing Tables') . "...</strong><br />\n";
 		self::optimize_tables();
@@ -1662,17 +1659,17 @@ class Catalog extends database_object {
 		// Clean songs
 		$sql = "DELETE FROM `user_shout` USING `user_shout` LEFT JOIN `song` ON `song`.`id`=`user_shout`.`object_id` " .
 			"WHERE `song`.`id` IS NULL AND `user_shout`.`object_type`='song'"; 
-		$db_results = Dba::query($sql);
+		$db_results = Dba::write($sql);
 
 		// Clean albums
 		$sql = "DELETE FROM `user_shout` USING `user_shout` LEFT JOIN `album` ON `album`.`id`=`user_shout`.`object_id` " .
                         "WHERE `album`.`id` IS NULL AND `user_shout`.`object_type`='album'";
-		$db_results = Dba::query($sql);
+		$db_results = Dba::write($sql);
 
 		// Clean artists
 		$sql = "DELETE FROM `user_shout` USING `user_shout` LEFT JOIN `artist` ON `artist`.`id`=`user_shout`.`object_id` " .
                         "WHERE `artist`.`id` IS NULL AND `user_shout`.`object_type`='artist'";
-		$db_results = Dba::query($sql);
+		$db_results = Dba::write($sql);
 
 
 	} // clean_shoutbox
@@ -1685,15 +1682,15 @@ class Catalog extends database_object {
 
 		/* Do a complex delete to get albums where there are no songs */
 		$sql = "DELETE FROM album USING album LEFT JOIN song ON song.album = album.id WHERE song.id IS NULL";
-		$db_results = Dba::query($sql);
+		$db_results = Dba::write($sql);
 
 		/* Now remove any album art that is now dead */
 		$sql = "DELETE FROM `album_data` USING `album_data` LEFT JOIN `album` ON `album`.`id`=`album_data`.`album_id` WHERE `album`.`id` IS NULL";
-		$db_results = Dba::query($sql);
+		$db_results = Dba::write($sql);
 
 		// This can save a lot of space so always optomize
 		$sql = "OPTIMIZE TABLE `album_data`";
-		$db_results = Dba::query($sql);
+		$db_results = Dba::write($sql);
 
 	} // clean_albums
 
@@ -1705,7 +1702,7 @@ class Catalog extends database_object {
 
 		/* Do a complex delete to get flagged items where the songs are now gone */
 		$sql = "DELETE FROM flagged USING flagged LEFT JOIN song ON song.id = flagged.object_id WHERE song.id IS NULL AND object_type='song'";
-		$db_results = Dba::query($sql);
+		$db_results = Dba::write($sql);
 
 	} // clean_flagged
 
@@ -1717,7 +1714,7 @@ class Catalog extends database_object {
 
 		/* Do a complex delete to get artists where there are no songs */
 		$sql = "DELETE FROM artist USING artist LEFT JOIN song ON song.artist = artist.id WHERE song.id IS NULL";
-		$db_results = Dba::query($sql);
+		$db_results = Dba::write($sql);
 
 	} //clean_artists
 
@@ -1730,12 +1727,12 @@ class Catalog extends database_object {
 		/* Do a complex delete to get playlist songs where there are no songs */
 		$sql = "DELETE FROM `playlist_data` USING `playlist_data` LEFT JOIN `song` ON `song`.`id` = `playlist_data`.`object_id` " .
 			"WHERE `song`.`file` IS NULL AND `playlist_data`.`object_type`='song'";
-		$db_results = Dba::query($sql);
+		$db_results = Dba::write($sql);
 
 		// Clear TMP Playlist information as well
 		$sql = "DELETE FROM `tmp_playlist_data` USING `tmp_playlist_data` LEFT JOIN `song` ON `tmp_playlist_data`.`object_id` = `song`.`id` " .
 			"WHERE `song`.`id` IS NULL"; 
-		$db_results = Dba::query($sql);
+		$db_results = Dba::write($sql);
 
 	} // clean_playlists
 
@@ -1747,7 +1744,7 @@ class Catalog extends database_object {
 
 		$sql = "DELETE FROM `song_data` USING `song_data` LEFT JOIN `song` ON `song`.`id` = `song_data`.`song_id` " .
 			"WHERE `song`.`id` IS NULL"; 
-		$db_results = Dba::query($sql);
+		$db_results = Dba::write($sql);
 
 	} // clean_ext_info
 
@@ -1900,7 +1897,7 @@ class Catalog extends database_object {
 			} // end if file exists
 
 			else {
-				Error::add('general',"$media->file does not exist or is not readable");
+				Error::add('general',sprintf(_('%s does not exist or is not readable'),$media->file));
 				debug_event('read-error',"$media->file does not exist or is not readable, removing",'5','ampache-catalog');
 				// Let's go ahead and remove it!
 				$sql = "DELETE FROM `$type` WHERE `id`='" . Dba::escape($media->id) . "'";
@@ -1958,12 +1955,12 @@ class Catalog extends database_object {
 		$sql = "OPTIMIZE TABLE `song_data`,`song`,`rating`,`catalog`,`session`,`object_count`,`album`,`album_data`" .
 			",`artist`,`ip_history`,`flagged`,`now_playing`,`user_preference`,`tag`,`tag_map`,`tmp_playlist`" . 
 			",`tmp_playlist_data`,`playlist`,`playlist_data`,`session_stream`,`video`"; 
-		$db_results = Dba::query($sql);
+		$db_results = Dba::write($sql);
 
 		$sql = "ANALYZE TABLE `song_data`,`song`,`rating`,`catalog`,`session`,`object_count`,`album`,`album_data`" .
 		        ",`artist`,`ip_history`,`flagged`,`now_playing`,`user_preference`,`tag`,`tag_map`,`tmp_playlist`" .
 			",`tmp_playlist_data`,`playlist`,`playlist_data`,`session_stream`,`video`";
-		$db_results = Dba::query($sql);
+		$db_results = Dba::write($sql);
 
 	} // optimize_tables;
 
@@ -2500,15 +2497,15 @@ class Catalog extends database_object {
 		// Select all songs in catalog
 		if($this->id) {
 			$sql = "SELECT id FROM song WHERE catalog = '$this->id' ORDER BY album,track";
-		} else {
+		} 
+		else {
 			$sql = "SELECT id FROM song ORDER BY album,track";
 		}
-		$db_results = Dba::query($sql);
+		$db_results = Dba::read($sql);
 
 		switch ($type) {
 			case 'itunes':
 				echo xml_get_header('itunes');
-					
 				while ($results = Dba::fetch_assoc($db_results)) {
 					$song = new Song($results['id']);
 					$song->format();
