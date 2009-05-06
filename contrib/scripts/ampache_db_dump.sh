@@ -1,5 +1,15 @@
 #!/bin/bash
- 
+###############################################
+# Shell script to backup contents of the Ampache
+#  www directory, settings file, and dump the
+#  contents of the Ampache database to compressed
+#  files suitable for backups offsite or to
+#  migrate the database to a new server
+#
+# Information:
+#  This script takes no arguments.  You will need
+#  to modify the 3 lines below to match your system.
+
 ###############################################
 # CHANGE THESE OPTIONS TO MATCH YOUR SYSTEM ! #
 ###############################################
@@ -22,13 +32,15 @@ mysqlopt="--host=$ampacheDBserver --user=$ampacheDBuser --password=$ampacheDBpas
 timestamp=`date +%Y-%m-%d`
  
 dbdump="$backupdir/ampache-$timestamp.sql.gz"
-filedump="$backupdir/ampache-$timestamp.files.tgz"
+filedump="$backupdir/ampache-$timestamp.files.tar.gz"
+cfgdump="$backupdir/ampache-$timestamp.cfg.tar.gz"
  
 date
 echo "Ampache backup."
-echo "Database: $ampacheDB"
-echo "Login: $ampacheDBuser / $ampacheDBpassword"
+echo "Database:  $ampacheDB"
+echo "Login:     $ampacheDBuser / $ampacheDBpassword"
 echo "Directory: $ampachedir"
+echo "Config:    $cfgfile"
 echo "Backup to: $backupdir"
 echo
 echo "creating database dump..."
@@ -37,10 +49,14 @@ mysqldump --default-character-set=utf8 $mysqlopt "$ampacheDB" | gzip > "$dbdump"
 echo "creating file archive of $ampachedir ..."
 cd "$ampachedir"
 tar --exclude .svn -zcf "$filedump" . || exit $?
- 
+
+echo "backing up $cfgfile ..."
+tar --exclude .svn -zcf "$cfgdump" $cfgfile || exit $?
+
 echo "Done!"
 echo "Backup files:"
 ls -l $dbdump
 ls -l $filedump
+ls -l $cfgdump
 echo "******************************************"
 echo
