@@ -3,6 +3,11 @@
 --------------------------------------------------------------------------
 
 --------------------------------------------------------------------------
+  v.3.5.1
+	- Fixed issue with Videos being incorrectly registered with stats
+		and now playing as songs. 
+
+--------------------------------------------------------------------------
   v.3.5 05/05/2009
 	- Added complete Czech translation (Thx martin hason)
 	- Add the AlmightyOatmeal-Sanity check to prevent a clean from
