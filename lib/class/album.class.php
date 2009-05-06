@@ -33,6 +33,7 @@ class Album extends database_object {
 	public $disk; 
 	public $year;
 	public $prefix;
+	public $mbid; // MusicBrainz ID
 
 	/* Art Related Fields */
 	public $art;
@@ -747,6 +748,7 @@ class Album extends database_object {
 		$artist		= $data['artist']; 
 		$name		= $data['name']; 
 		$disk		= $data['disk'];
+		$mbid		= $data['mbid']; 
 
 		$current_id = $this->id; 
 
@@ -760,7 +762,7 @@ class Album extends database_object {
 			Catalog::clean_artists(); 
 		} 
 
-		$album_id = Catalog::check_album($name,$year,$disk); 
+		$album_id = Catalog::check_album($name,$year,$disk,$mbid); 
 		if ($album_id != $this->id) { 
 			if (!is_array($songs)) { $songs = $this->get_songs(); } 
 			foreach ($songs as $song_id) { 

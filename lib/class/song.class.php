@@ -40,6 +40,7 @@ class Song extends database_object implements media {
 	public $enabled;
 	public $addition_time;
 	public $update_time;
+	public $mbid; // MusicBrainz ID
 
 	/* Setting Variables */
 	public $_transcoded = false;

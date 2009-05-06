@@ -317,8 +317,10 @@ else {
 	}
 } // else not downsampling
 
-// Put this song in the now_playing table
-Stream::insert_now_playing($media->id,$uid,$media->time,$sid,get_class($media));
+// Put this song in the now_playing table only if it's a song for now... 
+if (get_class($media) == 'song') { 
+	Stream::insert_now_playing($media->id,$uid,$media->time,$sid,get_class($media));
+}
 
 if ($start > 0) {
 
@@ -371,7 +373,7 @@ if($bytes_streamed < $stream_size AND (connection_status() == 0)) {
 }
 
 // Make sure that a good chunk of the song has been played
-if ($bytes_streamed > $min_bytes_streamed) {
+if ($bytes_streamed > $min_bytes_streamed AND get_class($media) == 'song') {
 	debug_event('Play','Registering stats for ' . $media->title,'5'); 
 	
         $user->update_stats($media->id);

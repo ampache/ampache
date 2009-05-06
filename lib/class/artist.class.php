@@ -30,6 +30,7 @@ class Artist extends database_object {
 	public $songs;
 	public $albums;
 	public $prefix;
+	public $mbid; // MusicBrainz ID
 
 	// Constructed vars
 	public $_fake = false; // Set if construct_from_array() used

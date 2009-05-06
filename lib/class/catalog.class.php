@@ -1590,7 +1590,7 @@ class Catalog extends database_object {
 			return false; 
 		} 
 		else { 
-			if count($dead_video)) { 
+			if (count($dead_video)) { 
 				$idlist = '(' . implode(',',$dead_video) . ')'; 
 				$sql = "DELETE FROM `video` WHERE `id` IN $idlist"; 
 				$db_results = Dba::write($sql); 
