@@ -27,12 +27,12 @@
 <div id="information_actions">
 <ul>
 	<li>
-		<a href="<?php echo Config::get('web_path'); ?>/playlist.php?action=normalize_tracks&amp;playlist_id=<?php echo $playlist->id; ?>"><?php echo get_user_icon('statistics'); ?></a>
+		<a href="<?php echo Config::get('web_path'); ?>/playlist.php?action=normalize_tracks&amp;playlist_id=<?php echo $playlist->id; ?>"><?php echo get_user_icon('statistics',_('Normalize Tracks')); ?></a>
 		<?php echo _('Normalize Tracks'); ?>
 	</li>
         <?php if (Access::check_function('batch_download')) { ?>
 	<li>
-		<a href="<?php echo Config::get('web_path'); ?>/batch.php?action=playlist&amp;id=<?php echo $playlist->id; ?>"><?php echo get_user_icon('batch_download'); ?></a>
+		<a href="<?php echo Config::get('web_path'); ?>/batch.php?action=playlist&amp;id=<?php echo $playlist->id; ?>"><?php echo get_user_icon('batch_download', _('Batch Download')); ?></a>
 		<?php echo _('Batch Download'); ?>
 	</li>
         <?php } ?>

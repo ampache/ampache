@@ -29,7 +29,7 @@
 </li>
 	<?php if (Access::check_function('batch_download')) { ?>
 <li>
-	<a href="<?php echo Config::get('web_path'); ?>/batch.php?action=browse"><?php echo get_user_icon('batch_download'); ?></a>
+	<a href="<?php echo Config::get('web_path'); ?>/batch.php?action=browse"><?php echo get_user_icon('batch_download', _('Batch Download')); ?></a>
 	<?php echo _('Batch Download'); ?>
 </li>
 	<?php } ?>

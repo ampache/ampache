@@ -46,10 +46,10 @@ foreach ($object_ids as $genre_id) {
 	<tr class="<?php echo flip_class(); ?>">
 		<td class="cel_add">
 		<span onclick="ajaxPut('<?php echo Config::get('ajax_url'); ?>?action=basket&amp;type=genre&amp;id=<?php echo $genre->id; ?>');return true;" >
-				<?php echo get_user_icon('add'); ?>
+				<?php echo get_user_icon('add', _('Add')); ?>
 		</span>
 		<span onclick="ajaxPut('<?php echo Config::get('ajax_url'); ?>?action=basket&amp;type=genre_random&amp;id=<?php echo $genre->id; ?>');return true;" >
-				<?php echo get_user_icon('random'); ?>
+				<?php echo get_user_icon('random', _('Random')); ?>
 		</span>
 		</td>
 		<td class="cel_genre"><?php echo $genre->f_link; ?></td>
@@ -57,7 +57,7 @@ foreach ($object_ids as $genre_id) {
 		<td class="cel_action">
 			<?php if (Access::check_function('batch_download')) { ?>
 			<a href="<?php echo $genre->download_link; ?>">
-				<?php echo get_user_icon('batch_download'); ?>
+				<?php echo get_user_icon('batch_download', _('Batch Download')); ?>
 			</a>
 			<?php } ?>
 		</td>

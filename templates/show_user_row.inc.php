@@ -35,18 +35,18 @@
 		</td>
 	<?php } ?>
 	<td class="cel_action">
-		<a href="<?php echo $web_path; ?>/admin/users.php?action=show_edit&amp;user_id=<?php echo $client->id; ?>"><?php echo get_user_icon('edit'); ?></a>
-		<a href="<?php echo $web_path; ?>/admin/users.php?action=show_preferences&amp;user_id=<?php echo $client->id; ?>"><?php echo get_user_icon('preferences'); ?></a>
+		<a href="<?php echo $web_path; ?>/admin/users.php?action=show_edit&amp;user_id=<?php echo $client->id; ?>"><?php echo get_user_icon('edit', _('Edit')); ?></a>
+		<a href="<?php echo $web_path; ?>/admin/users.php?action=show_preferences&amp;user_id=<?php echo $client->id; ?>"><?php echo get_user_icon('preferences', _('Preferences')); ?></a>
 	<?php
 	//FIXME: Fix this for the extra permission levels
 	if ($client->disabled == '1') { 
-		echo "<a href=\"".$web_path."/admin/users.php?action=enable&amp;user_id=$client->id\">" . get_user_icon('enable') . "</a>";
+		echo "<a href=\"".$web_path."/admin/users.php?action=enable&amp;user_id=$client->id\">" . get_user_icon('enable', _('Enable')) . "</a>";
 	}
 	else {
-		echo "<a href=\"".$web_path."/admin/users.php?action=disable&amp;user_id=$client->id\">" . get_user_icon('disable') ."</a>";
+		echo "<a href=\"".$web_path."/admin/users.php?action=disable&amp;user_id=$client->id\">" . get_user_icon('disable', _('Disable')) ."</a>";
 	}
 	?>
-		<a href="<?php echo $web_path; ?>/admin/users.php?action=delete&amp;user_id=<?php echo $client->id; ?>"><?php echo get_user_icon('delete'); ?></a>
+		<a href="<?php echo $web_path; ?>/admin/users.php?action=delete&amp;user_id=<?php echo $client->id; ?>"><?php echo get_user_icon('delete', _('Delete')); ?></a>
 	</td>
        <?php
 	if (($client->is_logged_in()) AND ($client->is_online())) {

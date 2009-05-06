@@ -127,13 +127,13 @@ switch ($_REQUEST['action']) {
 
 		if (count($song)) { 
 			$catalog->remove_songs($song);
-			$body = _('Songs Removed');
+			$body = ngettext('Song Removed', 'Songs Removed', count($song));
 		}
 		else {
 			$body = _('No Songs Removed');
 		}
 		$url	= conf('web_path') . '/admin/index.php';
-		$title	= _('Disabled Songs Processed');
+		$title	= ngettext('Disabled Song Processed','Disabled Songs Processed',count($song));
 		show_confirmation($title,$body,$url);
 	break;
 	case 'clean_all_catalogs':

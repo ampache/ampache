@@ -55,7 +55,7 @@ show_box_top(_('Manage Democratic Playlists'));  ?>
 	<td><?php echo $democratic->count_items(); ?></td>
 	<td>
 	<?php echo Ajax::button('?page=democratic&action=send_playlist&democratic_id=' . $democratic->id,'all',_('Play'),'play_democratic'); ?>
-	<a href="<?php echo Config::get('web_path'); ?>/democratic.php?action=delete&amp;democratic_id=<?php echo scrub_out($democratic->id); ?>"><?php echo get_user_icon('delete'); ?></a>
+	<a href="<?php echo Config::get('web_path'); ?>/democratic.php?action=delete&amp;democratic_id=<?php echo scrub_out($democratic->id); ?>"><?php echo get_user_icon('delete', _('Delete')); ?></a>
 	</td>
 </tr>
 <?php } if (!count($playlists)) { ?>

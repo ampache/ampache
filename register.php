@@ -114,7 +114,8 @@ switch ($_REQUEST['action']) {
 			$mmsg = "MAILOK";
 		}
 	        else {
-	                Error::add('email',_("Error Email address not confirmed<br />$validate_results[1]"));
+	                Error::add('email',_("Error Email address not confirmed") 
+			   . "<br />$validate_results[1]");
 	        }
 		/* End of mailcheck */
 	

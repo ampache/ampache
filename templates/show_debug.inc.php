@@ -24,11 +24,11 @@
 <div id="information_actions">
 <ul>
 <li>
-	<a href="<?php echo Config::get('web_path'); ?>/admin/system.php?action=generate_config"><?php echo get_user_icon('cog'); ?></a>
+	<a href="<?php echo Config::get('web_path'); ?>/admin/system.php?action=generate_config"><?php echo get_user_icon('cog', _('Generate Configuration')); ?></a>
 	<?php echo _('Generate Configuration'); ?>
 </li>
 <li>
-	<a href="<?php echo Config::get('web_path'); ?>/admin/system.php?action=reset_db_charset"><?php echo get_user_icon('server_lightning'); ?></a>
+	<a href="<?php echo Config::get('web_path'); ?>/admin/system.php?action=reset_db_charset"><?php echo get_user_icon('server_lightning', _('Set Database Charset')); ?></a>
 	<?php echo _('Set Database Charset'); ?>
 </li>
 </ul>

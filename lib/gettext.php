@@ -62,4 +62,8 @@ function __($string,$subject,$replace) {
 
 } // __
 
+function gettext_noop($string) {
+	return $string;
+}
+
 ?>

@@ -57,23 +57,23 @@ $title		= scrub_out($album->name) . '&nbsp;(' . $album->year . ')' . $disk .'&nb
 	</li>
 	<?php if (Access::check('interface','75')) { ?>
 	<li>
-		<a href="<?php echo $web_path; ?>/albums.php?action=clear_art&amp;album_id=<?php echo $album->id; ?>"><?php echo get_user_icon('delete'); ?></a>
+		<a href="<?php echo $web_path; ?>/albums.php?action=clear_art&amp;album_id=<?php echo $album->id; ?>"><?php echo get_user_icon('delete',_('Reset Album Art')); ?></a>
 		<?php echo _('Reset Album Art'); ?>
 	</li>
 	<?php } ?>
 	<li>
-		<a href="<?php echo $web_path; ?>/albums.php?action=find_art&amp;album_id=<?php echo $album->id; ?>"><?php echo get_user_icon('view'); ?></a>
+		<a href="<?php echo $web_path; ?>/albums.php?action=find_art&amp;album_id=<?php echo $album->id; ?>"><?php echo get_user_icon('view',_('Find Album Art')); ?></a>
 		<?php echo _('Find Album Art'); ?>
 	</li>
 	<?php  if ((Access::check('interface','50'))) { ?>
 	<li>
-		<a href="<?php echo $web_path; ?>/albums.php?action=update_from_tags&amp;album_id=<?php echo $album->id; ?>"><?php echo get_user_icon('cog'); ?></a>
+		<a href="<?php echo $web_path; ?>/albums.php?action=update_from_tags&amp;album_id=<?php echo $album->id; ?>"><?php echo get_user_icon('cog', _('Update from tags')); ?></a>
 		<?php echo _('Update from tags'); ?>
 	</li>
 	<?php  } ?>
 	<?php if (Access::check_function('batch_download')) { ?>
 	<li>
-		<a href="<?php echo $web_path; ?>/batch.php?action=album&amp;id=<?php echo $album->id; ?>"><?php echo get_user_icon('batch_download'); ?></a>
+		<a href="<?php echo $web_path; ?>/batch.php?action=album&amp;id=<?php echo $album->id; ?>"><?php echo get_user_icon('batch_download', _('Download')); ?></a>
 		<?php echo _('Download'); ?>
 	</li>
 	<?php } ?>

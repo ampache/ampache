@@ -115,7 +115,7 @@ if (Config::get('user_agreement')) { ?>
 </tr>
 <tr>
 	<td align='center' height='20'>
-		<span style="color:red;">* Required fields</span>
+		<span style="color:red;"><?php echo _('* Required fields'); ?></span>
 	</td>
 	<td>&nbsp;</td>
 </tr>

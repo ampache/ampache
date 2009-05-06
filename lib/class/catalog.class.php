@@ -1608,7 +1608,11 @@ class Catalog extends database_object {
 		echo "update_txt('" . $count ."','clean_count_" . $this->id . "');";
 		echo "\n</script>\n";
 		show_box_top();
-		echo "<strong>" . _('Catalog Clean Done') . " [" . $dead_files . "] " . _('files removed') . "</strong><br />\n";
+		echo "<strong>";
+		printf (ngettext('Catalog Clean Done. %d file removed.',
+		   'Catalog Clean Done. %d files removed.',
+		   $dead_files), $dead_files);
+		echo "</strong><br />\n";
 		echo "<strong>" . _('Optimizing Tables') . "...</strong><br />\n";
 		self::optimize_tables();
 		show_box_bottom();
@@ -2444,11 +2448,15 @@ class Catalog extends database_object {
 			/* Recreate the Playlist */
 			$playlist = new Playlist($playlist_id);
 			$playlist->add_songs($songs);
-			$reason = sprintf(_('Playlist Import and Recreate Successful. Total: %d Songs'), count($songs));
+			$reason = sprintf(ngettext('Playlist Import and Recreate Successful. Total: %d Song', 
+			   'Playlist Import and Recreate Successful. Total: %d Songs',
+			   count($songs)), count($songs));
 			return true;
 		}
 
-		$reason = sprintf(_('Parsing %s - Not Found: %d Songs. Please check your m3u file.'), $filename, count($songs));
+		$reason = sprintf(ngettext('Parsing %s - Not Found: %d Song. Please check your m3u file.', 
+		   'Parsing %s - Not Found: %d Songs. Please check your m3u file.',
+		   count($songs)), $filename, count($songs));
 		return false;
 
 	} // import_m3u

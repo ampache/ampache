@@ -30,7 +30,7 @@ show_box_top($string);
 <?php } ?>
 <?php if (Access::check('interface','75')) { ?>
 <li>
-	<a href="<?php echo Config::get('web_path'); ?>/democratic.php?action=manage"><?php echo get_user_icon('server_lightning'); ?></a>
+	<a href="<?php echo Config::get('web_path'); ?>/democratic.php?action=manage"><?php echo get_user_icon('server_lightning',_('Configure Democratic Playlist')); ?></a>
 	<?php echo _('Configure Democratic Playlist'); ?>
 </li>
 <?php if ($democratic->is_enabled()) { ?>

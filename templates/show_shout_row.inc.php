@@ -29,11 +29,11 @@
 	<td class="cel_action">
 
                 <a href="<?php echo $web_path; ?>/admin/shout.php?action=show_edit&amp;shout_id=<?php echo $shout->id; ?>">
-                <?php echo get_user_icon('edit'); ?>
+                <?php echo get_user_icon('edit', _('Edit')); ?>
                 </a>
 
                 <a href="<?php echo $web_path; ?>/admin/shout.php?action=delete&amp;shout_id=<?php echo $shout->id; ?>">
-                <?php echo get_user_icon('delete'); ?>
+                <?php echo get_user_icon('delete', _('Delete')); ?>
                 </a>
 	</td>
 </tr>
