@@ -1975,12 +1975,11 @@ class Catalog extends database_object {
 	 * $artist checks if there then return id else insert and return id
 	 * If readonly is passed then don't create, return false on not found
 	 */
-	public static function check_artist($artist,$readonly='') {
+	public static function check_artist($artist,$mbid='',$readonly='') {
 
 		/* Clean up the artist */
 		$artist = trim($artist);
 		$artist = Dba::escape($artist);
-
 
 		/* Ohh no the artist has lost it's mojo! */
 		if (!$artist) {
