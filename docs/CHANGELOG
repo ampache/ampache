@@ -7,6 +7,7 @@
 	- Fixed bug where video was registering as songs for now playing
 		and stats
 	- Add phpmailer and change ampache.cfg.php.dist
+	- Fixed manpage (Thx Porthose)
 
 --------------------------------------------------------------------------
   v.3.5 05/05/2009
