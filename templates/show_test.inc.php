@@ -233,7 +233,7 @@
 	        	$http_type = "http://";
 		}
 		$results['web_path'] = $http_type . $_SERVER['SERVER_NAME'] . ":" . $_SERVER['SERVER_PORT'] . Config::get('web_path');
-		if ($status['parse_config']) { 
+		if (check_config_values($results)) { 
 			echo "&nbsp;&nbsp;&nbsp;<img src=\"" . $results['web_path'] ."/images/icon_enable.png\" />&nbsp;&nbsp;&nbsp;";
 		}
 		else {

@@ -4,6 +4,8 @@
 
 --------------------------------------------------------------------------
   v.3.5.1
+	- Fixed show test page always returning false on web path
+	- Update Man page to adhear to newer Debian rules
 	- Fixed issue with Videos being incorrectly registered with stats
 		and now playing as songs. 
 	- Fixed missing > in HTML for song row
