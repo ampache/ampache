@@ -4,6 +4,8 @@
 
 --------------------------------------------------------------------------
   v.3.6-Alpha1
+	- Fixed web path always returning false on /test.php
+	- Updated Man Page to fix litian problems for Debian packaging
 	- Fixed bug where video was registering as songs for now playing
 		and stats
 	- Add phpmailer and change ampache.cfg.php.dist
