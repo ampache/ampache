@@ -30,6 +30,7 @@ $web_path = Config::get('web_path');
   <col id="col_resolution" />
   <col id="col_length" />
   <col id="col_tags" />
+  <col id="col-action" />
 </colgroup>
 <tr class="th-top">
 	<th class="cel_add"><?php echo _('Add'); ?></th>
@@ -38,6 +39,7 @@ $web_path = Config::get('web_path');
 	<th class="cel_resolution"><?php echo Ajax::text('?page=browse&action=set_sort&type=video&sort=resolution',_('Resolution'),'sort_video_rez'); ?></th>
 	<th class="cel_length"><?php echo Ajax::text('?page=browse&action=set_sort&type=video&sort=length',_('Time'),'sort_video_length'); ?></th>
 	<th class="cel_tags"><?php echo _('Tags'); ?></th>
+	<th class="cel_action"><?php echo _('Action'); ?></th>
 </tr>
 <?php 
 /* Foreach through every artist that has been passed to us */
@@ -51,7 +53,7 @@ foreach ($object_ids as $video_id) {
 <?php } //end foreach  ?>
 <?php if (!count($object_ids)) { ?>
 <tr class="<?php echo flip_class(); ?>">
-	<td colspan="6"><span class="fatalerror"><?php echo _('Not Enough Data'); ?></span></td>
+	<td colspan="7"><span class="fatalerror"><?php echo _('Not Enough Data'); ?></span></td>
 </tr>
 <?php } ?>
 <tr class="th-bottom">
@@ -61,7 +63,7 @@ foreach ($object_ids as $video_id) {
 	<th class="cel_resolution"><?php echo _('Resolution'); ?></th>
 	<th class="cel_length"><?php echo Ajax::text('?page=browse&action=set_sort&type=video&sort=length',_('Time'),'sort_video_length_bottom'); ?></th>
 	<th class="cel_tags"><?php echo _('Tags'); ?></th>
-
+	<th class="cel_action"><?php echo _('Action'); ?></th>
 </tr>
 </table>
 <?php require Config::get('prefix') . '/templates/list_header.inc.php'; ?>

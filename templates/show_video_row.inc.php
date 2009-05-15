@@ -27,3 +27,8 @@
 <td class="cel_resolution"><?php echo $video->f_resolution; ?></td>
 <td class="cel_length"><?php echo $video->f_length; ?></td>
 <td class="cel_tags"><?php $video->f_tags; ?></td>
+<td class="cel_action">
+<?php if (Access::check_function('download')) { ?>
+	<a href="<?php echo Config::get('web_path'); ?>/stream.php?action=download&type=video&oid=<?php echo $video->id; ?>"><?php echo get_user_icon('download',_('Download')); ?></a>
+<?php } ?>
+</td>

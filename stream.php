@@ -116,7 +116,7 @@ switch ($_REQUEST['action']) {
 		$urls = array($democratic->play_url()); 
 	break;
 	case 'download': 
-		$media_ids[] = $_REQUEST['song_id']; 
+		$media_ids[] = $_REQUEST['song_id']; 	
 	default:
 	break;
 } // end action switch
@@ -130,6 +130,7 @@ switch ($_REQUEST['method']) {
 	case 'download':
 		// Run the access check and exit if they are not allowed to download
 		if (!Access::check_function('batch_download')) { access_denied(); exit; } 
+
 
 		// Format the zip file
 		$name = "AmpacheZip-" . date("m-d-Y",time());

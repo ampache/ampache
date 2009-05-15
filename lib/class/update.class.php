@@ -1756,6 +1756,17 @@ class Update {
 
 	} // update_350008
 
+	/**
+	 * update_360001
+	 * This adds the mbid id's to the different tables as well as some additional cleanup
+	 */	
+	public static function update_360001() { 
+
+
+
+
+	} // update_360001
+
 
 } // end update class
 ?>

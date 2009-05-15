@@ -554,16 +554,19 @@ class Stream {
 	 */
 	private function create_download() { 
 
-		// Build up our object
-		$song_id = $this->media['0']; 
-		$url = Song::play_url($song_id); 
+		// There should only be one here... 
+		foreach ($this->media as $element) { 
+			$type = array_shift($element);
+			$media = new $type(array_shift($element));
+			$url = call_user_func(array($type,'play_url'),$media->id);		
+		
+			// Append the fact we are downloading
+			$url .= '&action=download'; 
 
-		// Append the fact we are downloading
-		$url .= '&action=download'; 
-
-		// Header redirect baby!
-		header("Location: $url"); 
-		exit; 
+			// Header redirect baby!
+			header("Location: $url"); 
+			exit; 
+		} 
 
 	} //create_download
 
