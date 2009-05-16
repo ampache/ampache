@@ -4,6 +4,7 @@
 
 --------------------------------------------------------------------------
   v.3.5.1
+	- Fix endless loop in getid3() with malformed genre tags in mp3s
 	- Fixed show test page always returning false on web path
 	- Update Man page to adhear to newer Debian rules
 	- Fixed issue with Videos being incorrectly registered with stats

@@ -1928,8 +1928,8 @@ class getid3_id3v2 extends getid3_handler
             $return_array['genre'][] = $genre_string;
 
         } else {
-
-            while (strpos($genre_string, '(') !== false) {
+	    //MODIFIED per #466 Bernhard Weyrauch fix endless loop if no ) 
+            while (strpos($genre_string, '(') !== false AND (strpos($genre_string, ')') !== false)) {
 
                 $start_pos = strpos($genre_string, '(');
                 $end_pos   = strpos($genre_string, ')');
