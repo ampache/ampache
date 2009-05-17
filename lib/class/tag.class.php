@@ -425,6 +425,30 @@ class Tag extends database_object {
 	} // get_display
 
 	/**
+	 * count
+	 * This returns the count for the all objects assoicated with this tag
+	 * If a type is specific only counts for said type are returned
+	 */
+	public function count($type='') { 
+
+		if ($type) { 
+			$filter_sql = " AND `object_type`='" . Dba::escape($type) . "'"; 
+		} 
+
+		$results = array(); 
+
+		$sql = "SELECT COUNT(`id`) AS `count`,`object_type` FROM `tag_map` WHERE `tag_id`='" . Dba::escape($this->id) . "'" .  $filter_sql . " GROUP BY `object_type`"; 
+		$db_results = Dba::read($sql); 
+
+		while ($row = Dba::fetch_assoc($db_results)) { 
+			$results[$row['object_type']] = $row['count'];
+		} 
+
+		return $results;
+
+	} // count
+
+	/**
  	 * filter_with_prefs
 	 * This filters the tags based on the users preference
 	 */
