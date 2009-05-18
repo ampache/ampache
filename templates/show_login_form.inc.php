@@ -92,3 +92,5 @@ if (@is_readable(Config::get('prefix') . '/config/motd.php')) {
 	?>
 	</div>
 <?php } ?>
+</body>
+</html>
