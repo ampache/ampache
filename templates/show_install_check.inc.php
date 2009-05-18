@@ -121,7 +121,7 @@
 <td>
 <?php
 	if (!check_mbstring()) { 
-		echo debug_result(_('Multibyte Chracter may not detect correct'),false); 
+		echo debug_result(_('Multibyte Character may not detect correct'),false); 
 	} 
 	else {
 		echo debug_result('',true); 
