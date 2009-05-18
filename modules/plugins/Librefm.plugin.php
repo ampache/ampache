@@ -111,7 +111,7 @@ class Ampachelibrefm {
 		if (!$this->username || !$this->password) { return false; } 
 		
 		// Create our scrobbler with everything this time and then queue it
-		$scrobbler = new scrobbler($this->username,$this->password,$this->hostname,$this->port,$this->path,$this->challenge); 
+		$scrobbler = new scrobbler($this->username,$this->password,$this->hostname,$this->port,$this->path,$this->challenge,'turtle.libre.fm'); 
 
 		// Check to see if the scrobbling works
 		if (!$scrobbler->queue_track($song->f_artist_full,$song->f_album_full,$song->title,time(),$song->time,$song->track)) { 
