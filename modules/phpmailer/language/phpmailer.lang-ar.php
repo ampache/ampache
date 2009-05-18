@@ -1,25 +1,27 @@
 <?php
 /**
- * PHPMailer language file.
- * Arabic Version
- * by : bahjat al mostafa <bahjat983@hotmail.com> */
+* PHPMailer language file: refer to English translation for definitive list
+* Arabic Version, UTF-8
+* by : bahjat al mostafa <bahjat983@hotmail.com>
+*/
 
-$PHPMAILER_LANG = array();
-
-$PHPMAILER_LANG["provide_address"]      = ' íÌÈ Ãä ÊÖÚ Úáì ÇáÃÞá ' .
-                                          'ÚäæÇä ÈÑíÏ ÅáßÊÑæäí ãÓÊÞÈá æÇÍÏ';
-$PHPMAILER_LANG["mailer_not_supported"] = ' ãÑÓá ÇáÈÑíÏ ÛíÑ ãÏÚæã :';
-$PHPMAILER_LANG["execute"]              = 'áÇ íãßä ÊäÝíÐ : ';
-$PHPMAILER_LANG["instantiate"]          = 'áã íÓÊØÚ ÊåíÆÉ ÊÇÈÚ ÇáÈÑíÏ';
-$PHPMAILER_LANG["authenticate"]         = 'ÎØÃ STMP : áã íãáß ÇáÕáÇÍíÉ';
-$PHPMAILER_LANG["from_failed"]          = 'ÇáÚäæÇä ÇáãÑÓá ÇáÊÇáí ÝÔá : ';
-$PHPMAILER_LANG["recipients_failed"]    = 'ÎØÃ STMP : ' .
-                                          'åÄáÇÁ ÇáãÓÊÞÈáæä ÝÔáæÇ : ';
-$PHPMAILER_LANG["data_not_accepted"]    = 'ÎØÃ STMP : ÇáãÚØíÇÊ áã ÊÞÈá .';
-$PHPMAILER_LANG["connect_host"]         = 'ÎØÃ STMP : ÇáÇÊÕÇá ÈãÓÊÖíÝ STMP áã íÊã';
-$PHPMAILER_LANG["file_access"]          = 'áÇ íãßä ÇáæÕæá áãáÝ : ';
-$PHPMAILER_LANG["file_open"]            = 'ÎØÃ ãáÝ : áã íãßä ÝÊÍ ãáÝ :';
-$PHPMAILER_LANG["encoding"]             = 'ÊÔÝíÑ ÛíÑ ãÚÑæÝ : ';
-$PHPMAILER_LANG["signing"]              = 'ÎØÃ ÊÓÌíá : ';
-
+$PHPMAILER_LANG['authenticate']         = 'SMTP Error: Ù„Ù… Ù†Ø³ØªØ·Ø¹ ØªØ£ÙƒÙŠØ¯ Ø§Ù„Ù‡ÙˆÙŠØ©.';
+$PHPMAILER_LANG['connect_host']         = 'SMTP Error: Ù„Ù… Ù†Ø³ØªØ·Ø¹ Ø§Ù„Ø§ØªØµØ§Ù„ Ø¨Ù…Ø®Ø¯Ù… SMTP.';
+$PHPMAILER_LANG['data_not_accepted']    = 'SMTP Error: Ù„Ù… ÙŠØªÙ… Ù‚Ø¨ÙˆÙ„ Ø§Ù„Ù…Ø¹Ù„ÙˆÙ…Ø§Øª .';
+//$PHPMAILER_LANG['empty_message']        = 'Message body empty';
+$PHPMAILER_LANG['encoding']             = 'ØªØ±Ù…ÙŠØ² ØºÙŠØ± Ù…Ø¹Ø±ÙˆÙ: ';
+$PHPMAILER_LANG['execute']              = 'Ù„Ù… Ø£Ø³ØªØ·Ø¹ ØªÙ†ÙÙŠØ° : ';
+$PHPMAILER_LANG['file_access']          = 'Ù„Ù… Ù†Ø³ØªØ·Ø¹ Ø§Ù„ÙˆØµÙˆÙ„ Ù„Ù„Ù…Ù„Ù: ';
+$PHPMAILER_LANG['file_open']            = 'File Error: Ù„Ù… Ù†Ø³ØªØ·Ø¹ ÙØªØ­ Ø§Ù„Ù…Ù„Ù: ';
+$PHPMAILER_LANG['from_failed']          = 'Ø§Ù„Ø¨Ø±ÙŠØ¯ Ø§Ù„ØªØ§Ù„ÙŠ Ù„Ù… Ù†Ø³ØªØ·Ø¹ Ø§Ø±Ø³Ø§Ù„ Ø§Ù„Ø¨Ø±ÙŠØ¯ Ù„Ù‡ : ';
+$PHPMAILER_LANG['instantiate']          = 'Ù„Ù… Ù†Ø³ØªØ·Ø¹ ØªÙˆÙÙŠØ± Ø®Ø¯Ù…Ø© Ø§Ù„Ø¨Ø±ÙŠØ¯.';
+//$PHPMAILER_LANG['invalid_email']        = 'Not sending, email address is invalid: ';
+$PHPMAILER_LANG['mailer_not_supported'] = ' mailer ØºÙŠØ± Ù…Ø¯Ø¹ÙˆÙ….';
+//$PHPMAILER_LANG['provide_address']      = 'You must provide at least one recipient email address.';
+$PHPMAILER_LANG['recipients_failed']    = 'SMTP Error: Ø§Ù„Ø£Ø®Ø·Ø§Ø¡ Ø§Ù„ØªØ§Ù„ÙŠØ© ' .
+                                          'ÙØ´Ù„ ÙÙŠ Ø§Ù„Ø§Ø±Ø³Ø§Ù„ Ù„ÙƒÙ„ Ù…Ù† : ';
+$PHPMAILER_LANG['signing']              = 'Ø®Ø·Ø£ ÙÙŠ Ø§Ù„ØªÙˆÙ‚ÙŠØ¹: ';
+//$PHPMAILER_LANG['smtp_connect_failed']  = 'SMTP Connect() failed.';
+//$PHPMAILER_LANG['smtp_error']           = 'SMTP server error: ';
+//$PHPMAILER_LANG['variable_set']         = 'Cannot set or reset variable: ';
 ?>
