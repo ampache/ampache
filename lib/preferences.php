@@ -58,6 +58,7 @@ function update_preferences($pref_id=0) {
 				$value = Stream::validate_bitrate($value);
 			break;
 			/* MD5 the LastFM & MyStrands so it's not plainTXT */
+			case 'librefm_pass':
 			case 'lastfm_pass':
 				/* If it's our default blanking thing then don't use it */
 				if ($value == '******') { unset($_REQUEST[$name]); break; } 
@@ -244,6 +245,7 @@ function create_preference_input($name,$value) {
 			echo "</select>\n";
 		break;
 		case 'lastfm_pass':
+		case 'librefm_pass':
 			echo "<input type=\"password\" size=\"16\" name=\"$name\" value=\"******\" />";
 		break;
 		case 'playlist_method': 

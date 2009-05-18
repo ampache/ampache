@@ -199,8 +199,7 @@ switch ($_REQUEST['action']) {
 		echo xmlData::tags(array($uid)); 
 	break; 
 	case 'tag_artists':
-		$tag = new tag($_REQUEST['filter']); 
-		$tags = Tag::get_object_tags('artist',$tag->id); 
+		$artists = Tag::get_tag_objects('artist',$_REQUEST['filter']); 
 
                 xmlData::set_offset($_REQUEST['offset']);
                 xmlData::set_limit($_REQUEST['limit']);
@@ -209,8 +208,7 @@ switch ($_REQUEST['action']) {
 		echo xmlData::artists($artists); 	
 	break; 
 	case 'tag_albums':
-		$genre = new Genre($_REQUEST['filter']); 
-		$albums = $genre->get_albums(); 
+		$albums = Tag::get_tag_objects('album',$_REQUEST['filter']); 
 
                 xmlData::set_offset($_REQUEST['offset']);
                 xmlData::set_limit($_REQUEST['limit']);
@@ -219,8 +217,7 @@ switch ($_REQUEST['action']) {
 		echo xmlData::albums($albums); 
 	break;
 	case 'tag_songs': 
-		$genre = new Genre($_REQUEST['filter']); 
-		$songs = $genre->get_songs(); 
+		$songs = Tag::get_tag_objects('song',$_REQUEST['filter']); 
 
                 xmlData::set_offset($_REQUEST['offset']);
                 xmlData::set_limit($_REQUEST['limit']);

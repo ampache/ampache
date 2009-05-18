@@ -1762,7 +1762,23 @@ class Update {
 	 */	
 	public static function update_360001() { 
 
+		// Remove any RIO related information from the database as the plugin has been removed
+		$sql = "DELETE FROM `update_info` WHERE `key` LIKE 'Plugin_Ri%'"; 
+		$db_results = Dba::write($sql); 
 
+		$sql = "DELETE FROM `preference` WHERE `name` LIKE 'rio_%'"; 
+		$db_results = Dba::write($sql); 
+
+                $sql = "SELECT `id` FROM `user`";
+                $db_results = Dba::query($sql);
+
+                User::fix_preferences('-1');
+
+                while ($r = Dba::fetch_assoc($db_results)) {
+                        User::fix_preferences($r['id']);
+                } // while we're fixing the useres stuff
+
+		// self::set_version('db_version','360001'); 
 
 
 	} // update_360001

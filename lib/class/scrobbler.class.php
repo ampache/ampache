@@ -30,12 +30,13 @@ class scrobbler {
         public $submit_url;
         public $queued_tracks;
 	public $reset_handshake = false; 
+	public $scrobble_host = 'post.audioscrobbler.com';
 
         /**
          * Constructor
          * This is the constructer it takes a username and password
          */
-        public function __construct($username, $password,$host='',$port='',$url='',$challenge='') {
+        public function __construct($username, $password,$host='',$port='',$url='',$challenge='',$scrobble_host='') {
 
                 $this->error_msg = '';
                 $this->username = trim($username);
@@ -45,6 +46,7 @@ class scrobbler {
 		$this->submit_port = $port; 
 		$this->submit_url = $url; 
                 $this->queued_tracks = array();
+		if ($scrobble_host) { $this->scrobble_host = $scrobble_host; } 
 
         } // scrobbler
 
@@ -73,7 +75,7 @@ class scrobbler {
          */
         public function handshake() {
 
-                $as_socket = fsockopen('post.audioscrobbler.com', 80, $errno, $errstr, 2);
+                $as_socket = fsockopen($this->scrobble_host, 80, $errno, $errstr, 2);
                 if(!$as_socket) {
                         $this->error_msg = $errstr;
                         return false;
@@ -86,7 +88,7 @@ class scrobbler {
 		$get_string = "GET /?hs=true&p=1.2&c=apa&v=0.1&u=$username&t=$timestamp&a=$auth_token HTTP/1.1\r\n";
                 
 		fwrite($as_socket, $get_string);
-                fwrite($as_socket, "Host: post.audioscrobbler.com\r\n");
+                fwrite($as_socket, "Host: $this->scrobble_host\r\n");
                 fwrite($as_socket, "Accept: */*\r\n\r\n");
 
                 $buffer = '';
@@ -202,7 +204,7 @@ class scrobbler {
                 fwrite($as_socket, $action);
                 fwrite($as_socket, "Host: ".$this->submit_host."\r\n");
                 fwrite($as_socket, "Accept: */*\r\n");
-		fwrite($as_socket, "User-Agent: Ampache/3.4\r\n");
+		fwrite($as_socket, "User-Agent: Ampache/3.6\r\n");
                 fwrite($as_socket, "Content-type: application/x-www-form-urlencoded\r\n");
                 fwrite($as_socket, "Content-length: ".strlen($query_str)."\r\n\r\n");
 

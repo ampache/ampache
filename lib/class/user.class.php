@@ -561,6 +561,14 @@ class User extends database_object {
 			} 
 		} // end if is_installed 
 
+		// Check and see if librefm is loaded and run scrobblizing
+		if (Plugin::is_installed('Libre.FM')) { 
+			$librefm = new Plugin('Librefm'); 
+			if ($lastfm->_plugin->load($this->prefs,$this->id)) {
+				$lastfm->_plugin->submit($song_info,$this->id);
+			}
+		} // end if is_installed 
+
 		// Do this last so the 'last played checks are correct' 
 		Stats::insert('song',$song_id,$user);
 		Stats::insert('album',$song_info->album,$user);
