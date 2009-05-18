@@ -528,6 +528,7 @@ function show_catalog_select($name='catalog',$catalog_id=0,$style='') {
 
 	} // end while
 
+	echo "\t<option value=\"-1\" $selected>All</option>\n";
 	echo "</select>\n";
 
 } // show_catalog_select
@@ -624,7 +625,7 @@ function get_user_icon($name,$title='',$id='') {
 		$name = $name['0']; 
 	} 
 
-	if (!$title) { $title = $name; } 
+	if (!$title) { $title = _(ucfirst($name)); } 
 
 	if ($id) { 
 		$id_element = 'id="' . $id . '"'; 
@@ -668,7 +669,7 @@ function get_user_icon($name,$title='',$id='') {
 
 	} // end if not cached
 
-	$string = "<img src=\"$img_url\" $id_element alt=\"" . ucfirst($title) . "\" title=\"" . ucfirst($title) . "\" $hov_txt/>";
+	$string = "<img src=\"$img_url\" $id_element alt=\"" . $title . "\" title=\"" . $title . "\" $hov_txt/>";
 
 	return $string;
 
