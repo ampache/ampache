@@ -92,5 +92,11 @@ if (@is_readable(Config::get('prefix') . '/config/motd.php')) {
 	?>
 	</div>
 <?php } ?>
+<div id="footer">
+    <a href="http://www.ampache.org/index.php">Ampache v.<?php echo Config::get('version'); ?></a><br />
+    Copyright (c) 2001 - 2009 Ampache.org
+    <?php echo _('Queries:'); ?><?php echo Dba::$stats['query']; ?> <?php echo _('Cache Hits:'); ?><?php echo database_object::$cache_hit; ?>
+</div>
 </body>
 </html>
+
