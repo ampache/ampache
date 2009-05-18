@@ -170,6 +170,38 @@ class xmlData {
 	} // keyed_array
 
 	/**
+	 * tags
+	 * This returns tags to the user, in a pretty xml document with the information
+	 */
+	public static function tags($tags) { 
+
+		if (count($tags) > self::$limit) { 
+			$tags = array_splice($tags,self::$offset,self::$limit); 
+		} 
+
+		$string = ''; 
+
+		foreach ($tags as $tag_id) { 
+			$tag = new Tag($tag_id); 
+			$counts = $tag->count(); 
+			$string .= "<tag id=\"$tag_id\">\n" . 
+					"\t<name><![CDATA[$tag->name]]></name>\n" . 
+					"\t<albums>" . intval($counts['album']) . "</albums>\n" . 
+					"\t<artists>" . intval($counts['artist']) . "</artists>\n" . 
+					"\t<songs>" . intval($counts['songs']) . "</songs>\n" . 
+					"\t<videos>" . intval($counts['video']) . "</videos>\n" . 
+					"\t<playlists>" . intval($count['playlist']) . "</playlists>\n" . 
+					"\t<stream>" . intval($count['live_stream']) . "</stream>\n" . 
+					"</tag>\n"; 
+		} // end foreach 
+		
+		$final = self::_header() . $string . self::_footer(); 
+
+		return $final; 
+
+	} // tags
+
+	/**
 	 * artists
 	 * This takes an array of artists and then returns a pretty xml document with the information 
 	 * we want 

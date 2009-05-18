@@ -202,7 +202,7 @@ class scrobbler {
                 fwrite($as_socket, $action);
                 fwrite($as_socket, "Host: ".$this->submit_host."\r\n");
                 fwrite($as_socket, "Accept: */*\r\n");
-		fwrite($as_socket, "User-Agent: Ampache/3.4\r\n");
+		fwrite($as_socket, "User-Agent: Ampache/3.5\r\n");
                 fwrite($as_socket, "Content-type: application/x-www-form-urlencoded\r\n");
                 fwrite($as_socket, "Content-length: ".strlen($query_str)."\r\n\r\n");
 

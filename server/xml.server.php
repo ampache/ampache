@@ -179,28 +179,27 @@ switch ($_REQUEST['action']) {
 	break; 
 	case 'tags':
 		Browse::reset_filters(); 
-		Browse::set_type('genre'); 
+		Browse::set_type('tag'); 
 		Browse::set_sort('name','ASC'); 
 
 		$method = $_REQUEST['exact'] ? 'exact_match' : 'alpha_match'; 
 		Api::set_filter($method,$_REQUEST['filter']); 
-		$genres = Browse::get_objects(); 
+		$tags = Browse::get_objects(); 
 
                 // Set the offset
                 xmlData::set_offset($_REQUEST['offset']);
 		xmlData::set_limit($_REQUEST['limit']); 
 
 		ob_end_clean(); 
-		echo xmlData::genres($genres); 
+		echo xmlData::tags($tags); 
 	break; 
 	case 'tag':
 		$uid = scrub_in($_REQUEST['filter']); 
 		ob_end_clean();
-		echo xmlData::genres(array($uid)); 
+		echo xmlData::tags(array($uid)); 
 	break; 
 	case 'tag_artists':
-		$genre = new Genre($_REQUEST['filter']); 
-		$artists = $genre->get_artists(); 
+		$artists = Tag::get_tag_objects('artist',$_REQUEST['filter']); 
 
                 xmlData::set_offset($_REQUEST['offset']);
                 xmlData::set_limit($_REQUEST['limit']);
@@ -209,8 +208,7 @@ switch ($_REQUEST['action']) {
 		echo xmlData::artists($artists); 	
 	break; 
 	case 'tag_albums':
-		$genre = new Genre($_REQUEST['filter']); 
-		$albums = $genre->get_albums(); 
+		$albums = Tag::get_tag_objects('album',$_REQUEST['filter']); 
 
                 xmlData::set_offset($_REQUEST['offset']);
                 xmlData::set_limit($_REQUEST['limit']);
@@ -219,8 +217,7 @@ switch ($_REQUEST['action']) {
 		echo xmlData::albums($albums); 
 	break;
 	case 'tag_songs': 
-		$genre = new Genre($_REQUEST['filter']); 
-		$songs = $genre->get_songs(); 
+		$songs = Tag::get_tag_objects('song',$_REQUEST['filter']); 
 
                 xmlData::set_offset($_REQUEST['offset']);
                 xmlData::set_limit($_REQUEST['limit']);

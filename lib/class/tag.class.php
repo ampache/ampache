@@ -349,18 +349,20 @@ class Tag extends database_object {
 	/**
 	 * get_object_tags
 	 * Display all tags that apply to maching target type of the specified id
+	 * UNUSED
 	 */
 	public static function get_object_tags($type, $id) {
 
 		if (!self::validate_type($type)) { return array(); } 		
+		
+		$id = Dba::escape($id); 
 
-		$sql = "SELECT DISTINCT `tag_map`.`id`, `tag`.`name`, `tag_map`.`user` FROM `tag` " . 
-			"LEFT JOIN `tag_map` ON `tag_map`.`id`=`tag`.`map_id` " . 
-			"LEFT JOIN `$type` ON `$type`.`id`=`tag_map`.`object_id` " . 
-			"WHERE `tag_map`.`object_type`='$type'"; 
+		$sql = "SELECT `tag_map`.`id`, `tag`.`name`, `tag_map`.`user` FROM `tag` " . 
+			"LEFT JOIN `tag_map` ON `tag_map`.`tag_id`=`tag`.`id` " . 
+			"WHERE `tag_map`.`object_type`='$type' AND `tag_map`.`object_id`='$id'"; 
 	   
 		$results = array();
-		$db_results = Dba::query($sql);
+		$db_results = Dba::read($sql);
 		
 		while ($row = Dba::fetch_assoc($db_results)) { 
 			$results[] = $row;
@@ -369,6 +371,31 @@ class Tag extends database_object {
 		return $results;
 
 	} // get_object_tags
+
+	/**
+	 * get_tag_objects
+	 * This gets the objects from a specified tag and returns an array of object ids, nothing more
+	 */
+	public static function get_tag_objects($type,$tag_id) { 
+
+		if (!self::validate_type($type)) { return array(); } 
+
+		$tag_id = Dba::escape($id); 
+
+		$sql = "SELECT DISTINCT `tag_map`.`object_id` FROM `tag_map` " . 
+			"WHERE `tag_map`.`tag_id`='$tag_id' AND `tag_map`.`object_type`='$type'"; 
+		$db_results = Dba::read($sql); 
+
+		$results = array(); 
+
+		while ($row = Dba::fetch_assoc($db_results)) { 
+			$results[] = $row['object_id']; 
+		} 
+
+		return $results; 
+
+
+	} // get_tag_objects
 
 	/**
  	 * get_tags
@@ -423,6 +450,30 @@ class Tag extends database_object {
 		return $results; 
 
 	} // get_display
+
+	/**
+	 * count
+	 * This returns the count for the all objects assoicated with this tag
+	 * If a type is specific only counts for said type are returned
+	 */
+	public function count($type='') { 
+
+		if ($type) { 
+			$filter_sql = " AND `object_type`='" . Dba::escape($type) . "'"; 
+		} 
+
+		$results = array(); 
+
+		$sql = "SELECT COUNT(`id`) AS `count`,`object_type` FROM `tag_map` WHERE `tag_id`='" . Dba::escape($this->id) . "'" .  $filter_sql . " GROUP BY `object_type`"; 
+		$db_results = Dba::read($sql); 
+
+		while ($row = Dba::fetch_assoc($db_results)) { 
+			$results[$row['object_type']] = $row['count'];
+		} 
+
+		return $results;
+
+	} // count
 
 	/**
  	 * filter_with_prefs
