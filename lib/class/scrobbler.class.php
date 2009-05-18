@@ -119,12 +119,14 @@ class scrobbler {
                         return false;
                 }
 
-                if(preg_match('/http:\/\/(.*):(\d+)(.*)/', $response[3], $matches)) {
-                        $data['submit_host'] = $matches[1];
-                        $data['submit_port'] = $matches[2];
-                        $data['submit_url'] = $matches[3];
+                if(preg_match('/http:\/\/([^\/]+)\/(.*)$/', $response[3], $matches)) {
+			$host_parts = explode(":",$matches[1]); 
+                        $data['submit_host'] = $host_parts[0];
+                        $data['submit_port'] = $host_parts[1] ? $host_parts[1] : '80'; 
+                        $data['submit_url'] = '/' . $matches[2];
                 } else {
-                        $this->error_msg = "Invalid POST URL returned, unable to continue. Sent:\n$get_string\n----\nReceived:\n" . $buffer; 
+                        $this->error_msg = "Invalid POST URL returned, unable to continue. Sent:\n$get_string\n----\nReceived:\n" . $buffer . 
+				"\n---------\nExpeceted:" . print_r($response,1); 
                         return false;
                 }
 
@@ -142,7 +144,7 @@ class scrobbler {
         public function queue_track($artist, $album, $title, $timestamp, $length,$track) {
 
                 if ($length < 30) {
-                        debug_event('LastFM',"Not queuing track, too short",'5');
+                        debug_event('Scrobbler',"Not queuing track, too short",'5');
                         return false;
                 } 
 

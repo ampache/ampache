@@ -564,8 +564,8 @@ class User extends database_object {
 		// Check and see if librefm is loaded and run scrobblizing
 		if (Plugin::is_installed('Libre.FM')) { 
 			$librefm = new Plugin('Librefm'); 
-			if ($lastfm->_plugin->load($this->prefs,$this->id)) {
-				$lastfm->_plugin->submit($song_info,$this->id);
+			if ($librefm->_plugin->load($this->prefs,$this->id)) {
+				$librefm->_plugin->submit($song_info,$this->id);
 			}
 		} // end if is_installed 
 

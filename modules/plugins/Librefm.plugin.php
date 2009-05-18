@@ -147,7 +147,7 @@ class Ampachelibrefm {
 	 */
 	public function set_handshake($user_id) { 
 	
-		$scrobbler = new scrobbler($this->username,$this->password); 
+		$scrobbler = new scrobbler($this->username,$this->password,'','','','','turtle.libre.fm'); 
 		$data = $scrobbler->handshake(); 
 
 		if (!$data) { 
@@ -176,7 +176,7 @@ class Ampachelibrefm {
 	 * it's passed as a key'd array
 	 */
 	public function load($data,$user_id) { 
-
+		
 		if (strlen(trim($data['librefm_user']))) { 
 			$this->username = trim($data['librefm_user']); 
 		} 

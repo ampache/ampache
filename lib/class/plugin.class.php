@@ -49,7 +49,7 @@ class Plugin {
 	 * This actually loads the config file for the plugin the name of the
 	 * class contained within the config file must be Plugin[NAME OF FILE]
 	 */
-	function _get_info($name) { 
+	public function _get_info($name) { 
 
 		/* Require the file we want */
 		require_once Config::get('prefix') . '/modules/plugins/' . $name . '.plugin.php';
