@@ -58,11 +58,11 @@ switch ($_REQUEST['action']) {
 		// Set the vars on the object
 		AmpacheMail::$recipient = $recipient; 
 		if(function_exists('mb_encode_mimeheader')) {
-			$fullname = mb_encode_mimeheader($GLOBALS['user']->fullname);
+			AmpacheMail::$fullname = mb_encode_mimeheader($GLOBALS['user']->fullname);
 		} else {
-			$fullname = $GLOBALS['user']->fullname;
+			AmpacheMail::$fullname = $GLOBALS['user']->fullname;
 		}
-		AmpacheMail::$to = $fullname . "<" . $GLOBALS['user']->email . ">";
+		AmpacheMail::$to = $GLOBALS['user']->email;
 		AmpacheMail::$subject = scrub_in($_REQUEST['subject']);
 		if(function_exists('mb_eregi_replace')) {
 			AmpacheMail::$message = mb_eregi_replace("\r\n", "\n", scrub_in($_REQUEST['message']));

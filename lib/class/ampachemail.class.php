@@ -27,6 +27,7 @@ class AmpacheMail {
 	public static $fromname;
 	public static $subject; 
 	public static $to;
+	public static $fullname;
 	public static $sender;
 
 	/**
@@ -94,10 +95,11 @@ class AmpacheMail {
 		$mailtype = Config::get('mail_type');
 		$mail = new PHPMailer();
 		
-		$mail->AddAddress(self::$to);
+		$mail->AddAddress(self::$to, self::$fullname);
 		$mail->CharSet	= Config::get('site_charset');
 		$mail->Encoding	= "base64";
 		$mail->From		= self::$sender;
+		$mail->Sender	= self::$sender;
 		$mail->FromName	= self::$fromname;
 		$mail->Subject	= self::$subject;
 		$mail->Body		= self::$message;
