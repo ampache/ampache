@@ -25,10 +25,11 @@ if (Config::get('session_length') >= Config::get('remember_length')) {
 	$remember_disabled = 'disabled="disabled"';
 }
 $htmllang = str_replace("_","-",Config::get('lang'));
+is_rtl(Config::get('lang')) ? $dir = 'rtl' : $dir = 'ltr';
 
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php echo $htmllang; ?>" lang="<?php echo $htmllang; ?>">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php echo $htmllang; ?>" lang="<?php echo $htmllang; ?>" dir="<?php echo $dir; ?>">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=<?php echo Config::get('site_charset'); ?>" />
 <link rel="shortcut icon" href="<?php echo Config::get('web_path'); ?>/favicon.ico" />
