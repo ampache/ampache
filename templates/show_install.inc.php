@@ -19,6 +19,7 @@
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 if (INSTALL != '1') { exit; } 
+$prefix = dirname(__FILE__); 
 $dir = is_rtl($htmllang) ? 'rtl' : 'ltr';
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -43,7 +44,7 @@ $dir = is_rtl($htmllang) ? 'rtl' : 'ltr';
 		</p>
 		<ul>
 			<li><?php echo _("A MySQL Server with a username and password that can create/modify databases"); ?></li>
-			<li><?php echo _("Your webserver has read access to the /sql/ampache.sql file and the /config/ampache.cfg.php.dist file"); ?></li>
+			<li><?php echo sprintf(_("Your webserver has read access to the %s file and the %s file"),$prefix . '/sql/ampache.sql',$prefix . '/config/ampache.cfg.dist'); ?></li>
 		</ul>
 		<p>
 <?php echo _("Once you have ensured that you have the above requirements please fill out the information below. You will only be asked for the required config values. If you would like to make changes to your ampache install at a later date simply edit /config/ampache.cfg.php"); ?>

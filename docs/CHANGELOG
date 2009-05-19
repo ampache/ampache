@@ -4,6 +4,8 @@
 
 --------------------------------------------------------------------------
   v.3.6-Alpha1
+	- Add full path to the files needed by the installation just to 
+		make it a little clearer
 	- Fixed potential endless loop with malformed genre tags in mp3s
 		(Thx Bernhard Weyrauch)
 	- Fixed web path always returning false on /test.php
