@@ -119,7 +119,9 @@ switch ($_REQUEST['action']) {
 		Config::set('lang',$htmllang,'1');
 
 		// We need the charset for the different languages
-		$charsets = array('de_DE' => 'ISO-8859-15',
+		$charsets = array(
+				  'ar_SA' => 'UTF-8',
+				  'de_DE' => 'ISO-8859-15',
 				  'en_US' => 'iso-8859-1',
 				  'en_GB' => 'UTF-8',
 				  'ja_JP' => 'UTF-8',
@@ -192,7 +194,9 @@ switch ($_REQUEST['action']) {
 		Config::set('lang',$htmllang,'1');
 
 		// We need the charset for the different languages
-		$charsets = array('de_DE' => 'ISO-8859-15',
+		$charsets = array(
+				  'ar_SA' => 'UTF-8',
+				  'de_DE' => 'ISO-8859-15',
 				  'en_US' => 'iso-8859-1',
 				  'ja_JP' => 'UTF-8',
 				  'en_GB' => 'UTF-8',
@@ -222,7 +226,9 @@ switch ($_REQUEST['action']) {
 		Config::set('lang',$htmllang,'1');
 
 		// We need the charset for the different languages
-		$charsets = array('de_DE' => 'ISO-8859-15',
+		$charsets = array(
+				  'ar_SA' => 'UTF-8',
+				  'de_DE' => 'ISO-8859-15',
 				  'en_US' => 'iso-8859-1',
 				  'cs_CZ' => 'UTF-8',
 				  'ja_JP' => 'UTF-8',

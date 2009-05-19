@@ -19,7 +19,7 @@
 
 */
 ?>
-<?php show_box_top(sprintf(_('Settings for %s') , $catalog->name . ' (' . $catalog->path . ')')); ?>
+<?php /* HINT: Catalog Name */ show_box_top(sprintf(_('Settings for %s') , $catalog->name . ' (' . $catalog->path . ')')); ?>
 <form method="post" action="<?php echo Config::get('web_path'); ?>/admin/catalog.php" enctype="multipart/form-data">
 <table cellspacing="0" cellpadding="0">
 <tr>

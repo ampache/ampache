@@ -48,6 +48,7 @@ $web_path = Config::get('web_path');
 <h3><?php echo _('User Activated'); ?></h3>
 <p>
 	<?php
+	/* HINT: Start A tag, End A tag */
 	 printf(_('This User ID is activated and can be used %sLogin%s'), '<a href="' . Config::get('web_path'). '/login.php">', '</a>'); ?>
 </p>
 <?php } else { ?>

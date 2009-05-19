@@ -23,7 +23,7 @@
  * It changes depending on where it is 
  */
 ?>
-<?php show_box_top(sprintf(_('%s %s Playlist'), $playlist->f_type, $playlist->name)); ?>
+<?php /* HINT: Playlist Type, Playlist Name */ show_box_top(sprintf(_('%s %s Playlist'), $playlist->f_type, $playlist->name)); ?>
 <div id="information_actions">
 <ul>
 	<li>

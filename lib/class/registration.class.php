@@ -52,6 +52,7 @@ class Registration {
 		} else {
 			$from = _("From: Ampache ");
 		}
+		/* HINT: Site Title */
 		$subject = sprintf(_("New User Registration at %s"), Config::get('site_title'));
 
 		$additional_header = array();

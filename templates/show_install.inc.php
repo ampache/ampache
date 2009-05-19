@@ -19,9 +19,10 @@
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 if (INSTALL != '1') { exit; } 
+$dir = is_rtl($htmllang) ? 'rtl' : 'ltr';
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php echo $htmllang; ?>" lang="<?php echo $htmllang; ?>">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php echo $htmllang; ?>" lang="<?php echo $htmllang; ?>" dir="<?php echo $dir;?>">
 <head>
 <title>Ampache :: For The Love Of Music - Install</title>
 <link rel="stylesheet" href="templates/install.css" type="text/css" media="screen" />

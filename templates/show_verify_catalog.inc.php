@@ -20,6 +20,7 @@
 */
 
 show_box_top();
+/* HINT: Catalog Name */
 printf(_('Updating the %s catalog'), "<strong>[ $catalog->name ]</strong>");
 echo "<br />\n";
 printf(ngettext('%d item found checking tag information', '%d items found checking tag information', $number), $number);

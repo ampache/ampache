@@ -20,6 +20,7 @@
 */
 
 show_box_top();
+/* HINT: Catalog Name */
 printf(_('Starting New Song Search on %s catalog'), "<strong>[$this->name]</strong>"); 
 echo "<br />\n";
 echo _('Found') . ": <span id=\"add_count_" . $this->id ."\">" . _('None') . "</span><br />\n";

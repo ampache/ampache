@@ -47,7 +47,7 @@ fi
 
 case $1 in
 	"--all"|"-a"|"all")
-		xgettext --from-code=UTF-8 --msgid-bugs-address="$MAILADDR" -L php --keyword=gettext_noop -o $POTNAME `find ../../ -name \*.php -type f` `find ../../ -name \*.inc -type f`
+		xgettext --from-code=UTF-8 --add-comment=HINT: --msgid-bugs-address="$MAILADDR" -L php --keyword=gettext_noop -o $POTNAME `find ../../ -name \*.php -type f` `find ../../ -name \*.inc -type f`
 		OLANG=`ls ../ | grep -v base`
 		echo "add database words add to pot file..."
 		cat translation-words.txt >> messages.pot

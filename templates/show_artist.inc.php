@@ -19,9 +19,11 @@
 
 */
 $web_path = Config::get('web_path');
+/* HINT: Artist Fullname */
 $title = sprintf(_('Albums by %s'), $artist->full_name);
 ?>
 <?php
+/* HINT: Object type, Artist Fullname */
 show_box_top(sprintf(gettext('%s by %s'), ucfirst($object_type) ,$artist->f_name),'info-box');
 if (Config::get('ratings')) { 
 ?>
@@ -32,13 +34,13 @@ if (Config::get('ratings')) {
 <div id="information_actions">
 <ul>
 <li>
-	<a href="<?php echo $web_path; ?>/artists.php?action=show_all_songs&amp;artist=<?php echo $artist->id; ?>"><?php echo get_user_icon('view', _("Show All Songs By %s")); ?></a><?php printf(_("Show All Songs By %s"), $artist->f_name); ?>
+	<?php /* HINT: Artist Fullname */ ?><a href="<?php echo $web_path; ?>/artists.php?action=show_all_songs&amp;artist=<?php echo $artist->id; ?>"><?php echo get_user_icon('view', _("Show All Songs By %s")); ?></a><?php printf(_("Show All Songs By %s"), $artist->f_name); ?>
 </li>
 <li>
-	<?php echo Ajax::button('?action=basket&type=artist&id=' . $artist->id,'add',_('Add'),'add_' . $artist->id); ?><?php printf(_('Add All Songs By %s'), $artist->f_name); ?>
+	<?php /* HINT: Artist Fullname */ ?><?php echo Ajax::button('?action=basket&type=artist&id=' . $artist->id,'add',_('Add'),'add_' . $artist->id); ?><?php printf(_('Add All Songs By %s'), $artist->f_name); ?>
 </li>
 <li>
-	<?php echo Ajax::button('?action=basket&type=artist_random&id=' . $artist->id,'random',_('Random'),'random_' . $artist->id); ?><?php printf(_('Add Random Songs By %s'), $artist->f_name); ?>
+	<?php /* HINT: Artist Fullname */ ?><?php echo Ajax::button('?action=basket&type=artist_random&id=' . $artist->id,'random',_('Random'),'random_' . $artist->id); ?><?php printf(_('Add Random Songs By %s'), $artist->f_name); ?>
 </li>
 <?php if (Access::check('interface','50')) { ?>
 <li>

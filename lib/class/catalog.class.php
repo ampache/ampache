@@ -545,12 +545,14 @@ class Catalog extends database_object {
 
 				if (!$file_size) {
 					debug_event('read',"Unable to get filesize for $full_file",'2','ampache-catalog');
+					/* HINT: FullFile */
 					Error::add('catalog_add',sprintf(_('Error: Unable to get filesize for %s'), $full_file));
 				} // file_size check
 
 				if (!is_readable($full_file)) {
 					// not readable, warn user
 					debug_event('read',"$full_file is not readable by ampache",'2','ampache-catalog');
+					/* HINT: FullFile */
 					Error::add('catalog_add', sprintf(_('%s is not readable by ampache'), $full_file));
 					continue;
 				}
@@ -559,6 +561,7 @@ class Catalog extends database_object {
 				if (function_exists('iconv')) {
 					if (strcmp($full_file,iconv(Config::get('site_charset'),Config::get('site_charset'),$full_file)) != '0') {
 						debug_event('read',$full_file . ' has non-' . Config::get('site_charset') . ' characters and can not be indexed, converted filename:' . iconv(Config::get('site_charset'),$full_file),'1');
+						/* HINT: FullFile */
 						Error::add('catalog_add', sprintf(_('%s does not match site charset'), $full_file));
 						continue;
 					}
@@ -1903,6 +1906,7 @@ class Catalog extends database_object {
 			} // end if file exists
 
 			else {
+				/* HINT: Mediafile */
 				Error::add('general',sprintf(_('%s does not exist or is not readable'),$media->file));
 				debug_event('read-error',"$media->file does not exist or is not readable, removing",'5','ampache-catalog');
 				// Let's go ahead and remove it!
@@ -2455,7 +2459,7 @@ class Catalog extends database_object {
 			   count($songs)), count($songs));
 			return true;
 		}
-
+		/* HINT: filename */
 		$reason = sprintf(ngettext('Parsing %s - Not Found: %d Song. Please check your m3u file.', 
 		   'Parsing %s - Not Found: %d Songs. Please check your m3u file.',
 		   count($songs)), $filename, count($songs));

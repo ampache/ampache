@@ -20,7 +20,7 @@
 
 */
 ?>
-<?php show_box_top(sprintf(_('%s IP History'), $working_user->fullname)); ?>
+<?php /* HINT: Username */ show_box_top(sprintf(_('%s IP History'), $working_user->fullname)); ?>
 <div id="information_actions">
 <ul>
 <li>
