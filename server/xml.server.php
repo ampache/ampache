@@ -251,9 +251,11 @@ switch ($_REQUEST['action']) {
 		echo xmlData::songs(array($uid)); 
 	break; 
 	case 'url_to_song': 
-		$url = scrub_in($_REQUEST['url']); 
+		// Don't scrub in we need to give her raw and juicy to the function
+		$url = $_REQUEST['url']; 
 
 		$song_id = Song::parse_song_url($url); 
+
 		ob_end_clean(); 
 		echo xmlData::songs(array($song_id)); 
 	break; 

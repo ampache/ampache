@@ -883,10 +883,10 @@ class Song extends database_object implements media {
 	 */
 	public static function parse_song_url($url) { 
 
-		preg_match("/.+\/play\/index.php\?(.+)/",$url,$matches); 
-		$raw_data = $matches['1']; 
+		// We only care about the question mark stuff
+		$query = parse_url($url,PHP_URL_QUERY); 
 
-		$elements = explode("&",$raw_data); 
+		$elements = explode("&",$query); 
 
 		foreach ($elements as $items) { 
 			list($key,$value) = explode("=",$items); 
@@ -894,6 +894,8 @@ class Song extends database_object implements media {
 				return $value; 
 			} 
 		} // end foreach 	
+
+		return false; 
 
 	} // parse_song_url 
 
