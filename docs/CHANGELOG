@@ -4,6 +4,7 @@
 
 --------------------------------------------------------------------------
   v.3.6-Alpha1
+	- Fix the url to song function
 	- Add full path to the files needed by the installation just to 
 		make it a little clearer
 	- Fixed potential endless loop with malformed genre tags in mp3s

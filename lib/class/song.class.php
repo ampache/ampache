@@ -887,7 +887,7 @@ class Song extends database_object implements media {
 		// We only care about the question mark stuff
 		$query = parse_url($url,PHP_URL_QUERY); 
 
-		$elements = explode("&",unhtmlentities($query)); 
+		$elements = explode("&",$query); 
 
 		foreach ($elements as $items) { 
 			list($key,$value) = explode("=",$items); 

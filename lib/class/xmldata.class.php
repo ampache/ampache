@@ -339,6 +339,9 @@ class xmlData {
 		// Foreach the ids!
 		foreach ($songs as $song_id) { 
 			$song = new Song($song_id); 
+
+			// If the song id is invalid/null
+			if (!$song->id) { continue; } 
 			$song->format(); 
 
 			$tag_string = ''; 

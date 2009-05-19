@@ -27,6 +27,6 @@ $web_path = Config::get('web_path');
 	$tag->format(); 
 ?>
 <span id="click_<?php echo intval($tag->id); ?>" class="<?php echo $tag->f_class; ?>"><?php echo $tag->name; ?></span> 
-<?php echo Ajax::observe('click_' . intval($tag->id),'click',Ajax::action('?page=browse&action=toggle_tag&tag_id=' . intval($tag->id),'')); ?>
+<?php echo Ajax::observe('click_' . intval($tag->id),'click',Ajax::action('?page=tag&action=add_filter&tag_id=' . intval($tag->id),'')); ?>
 <?php } ?>
 <?php Ajax::end_container(); ?>

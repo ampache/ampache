@@ -64,7 +64,11 @@ switch($_REQUEST['action']) {
 		Browse::save_objects(Tag::get_tags(Config::get('offset_limit'),array())); 
 		$keys = array_keys(Browse::get_saved()); 
 		Tag::build_cache($keys); 
-		Browse::show_objects(); 
+		$object_ids = Browse::get_saved(); 
+		show_box_top(_('Tag Cloud'),$class); 
+		require_once Config::get('prefix') . '/templates/show_tagcloud.inc.php'; 
+		show_box_bottom(); 
+		require_once Config::get('prefix') . '/templates/browse_content.inc.php'; 
 	break; 
 	case 'artist':
 		Browse::set_sort('name','ASC');
