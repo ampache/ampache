@@ -22,36 +22,36 @@
 /**
  * Sub-Ajax page, requires AJAX_INCLUDE as one
  */
-if (AJAX_INCLUDE != '1') { exit; } 
+if (AJAX_INCLUDE != '1') { exit; }
 
-switch ($_REQUEST['action']) { 
+switch ($_REQUEST['action']) {
 	case 'show_add_tag':
- 			
+
 	break;
-	case 'add_tag': 
-		Tag::add_tag_map($_REQUEST['type'],$_REQUEST['object_id'],$_REQUEST['tag_id']); 
-	break; 
-	case 'remove_tag': 
-		$tag = new Tag($_REQUEST['tag_id']); 
-		$tag->remove_map($_REQUEST['type'],$_REQUEST['object_id']); 
-	break; 
-	case 'browse_type': 
-		Browse::set_type('tag'); 
-		Browse::set_filter('object_type',$_REQUEST['type'])
-	break; 
-	case 'add_filter': 
+	case 'add_tag':
+		Tag::add_tag_map($_REQUEST['type'],$_REQUEST['object_id'],$_REQUEST['tag_id']);
+	break;
+	case 'remove_tag':
+		$tag = new Tag($_REQUEST['tag_id']);
+		$tag->remove_map($_REQUEST['type'],$_REQUEST['object_id']);
+	break;
+	case 'browse_type':
+		Browse::set_type('tag');
+		Browse::set_filter('object_type',$_REQUEST['type']);
+	break;
+	case 'add_filter':
 
 		// Set browse method
-		Browse::set_type('tag'); 
-		
-		// Retrive current objects of type based on combined filters 
-	break; 
-	default: 
-		$results['rfc3514'] = '0x1'; 
-	break; 
-} // switch on action; 
+		Browse::set_type('tag');
+
+		// Retrive current objects of type based on combined filters
+	break;
+	default:
+		$results['rfc3514'] = '0x1';
+	break;
+} // switch on action;
 
 
 // We always do this
-echo xml_from_array($results); 
+echo xml_from_array($results);
 ?>
