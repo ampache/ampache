@@ -36,24 +36,24 @@
 <tr>
 	<td valign="top">
 		<select name="field">
-		<?php 
-			$fields = Song::get_fields(); 
-			foreach ($fields as $key=>$value) { 
+		<?php
+			$fields = Song::get_fields();
+			foreach ($fields as $key=>$value) {
 				$name = ucfirst(str_replace('_',' ',$key));
 		?>
-			<option name="<?php echo scrub_out($key); ?>"><?php echo scrub_out($name); ?></option>
+			<option value="<?php echo scrub_out($key); ?>"><?php echo scrub_out($name); ?></option>
 		<?php } ?>
 		</select>
 	</td>
 	<td>
 		<select name="operator">
-			<option value="=">=</option>
-			<option value="!=">!=</option>
-			<option value=">">&gt;</option>
-			<option value=">=">&gt;=</option>
-			<option value="<">&lt;</option>
-			<option value="<=">&lt;=</option>
-			<option value="LIKE"><?php echo _('Like'); ?></option>
+			<option value="eq">=</option>
+			<option value="nq">!=</option>
+			<option value="gt">&gt;</option>
+			<option value="gte">&gt;=</option>
+			<option value="lt">&lt;</option>
+			<option value="lte">&lt;=</option>
+			<option value="like"><?php echo _('Like'); ?></option>
 		</select>
 	</td>
 	<td valign="top">
@@ -76,7 +76,7 @@
 	<td colspan="2">
 		<?php echo Ajax::button('?page=random&action=load_rules','cog',_('Load Saved Rules'),'load_random_rules'); ?><?php echo _('Load Saved Rules'); ?>
 	</td>
-	
+
 </tr>
 <tr>
 	<td colspan="4">
