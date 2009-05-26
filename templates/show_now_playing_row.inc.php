@@ -31,13 +31,22 @@ $artist = scrub_out(truncate_with_ellipsis($media->f_artist_full));
       <?php echo scrub_out($np_user->fullname); ?>
     </a>
   </div>
-  
+
   <div class="np_cell cel_rating">
     <label><?php echo _('Rating'); ?></label>
     <div id="rating_<?php echo $media->id; ?>_song">
       <?php Rating::show($media->id,'song'); ?>
     </div>
   </div>
+
+  <?php if (Config::get('show_lyrics')) {?>
+  <div class="np_cell cel_lyrics">
+  	<label>&nbsp;</label>
+  	<a title="<?php echo scrub_out($media->title); ?>" href="<?php echo $web_path; ?>/song.php?action=show_lyrics&amp;song_id=<?php echo $media->id; ?>">
+      <?php echo _('Show Lyrics');?>
+  	</a>
+  </div>
+  <?php } ?>
 </div>
 
 <div class="np_group">

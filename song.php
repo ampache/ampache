@@ -21,18 +21,19 @@
 
 require 'lib/init.php';
 
-show_header(); 
+show_header();
+
+$show_lyrics = Config::get('show_lyrics');
 
 // Switch on Action
-switch ($_REQUEST['action']) { 
-	default: 
-	case 'show_song': 
-		$song = new Song($_REQUEST['song_id']); 
-		$song->format(); 
-		$song->fill_ext_info(); 
-		require_once Config::get('prefix') . '/templates/show_song.inc.php'; 
+switch ($_REQUEST['action']) {
+	default:
+	case 'show_song':
+		$song = new Song($_REQUEST['song_id']);
+		$song->format();
+		$song->fill_ext_info();
+		require_once Config::get('prefix') . '/templates/show_song.inc.php';
 		// does user want to display lyrics?
-		$show_lyrics = Config::get('show_lyrics');
 		if($show_lyrics == 1) {
 			$lyric = new Artist();
 			$return = $lyric->get_song_lyrics($song->id, ucwords($song->f_artist), ucwords($song->title));
@@ -42,9 +43,26 @@ switch ($_REQUEST['action']) {
 			$link .= "</a><br /><br />";
 			require_once Config::get('prefix') . '/templates/show_lyrics.inc.php';
 		}
-	break; 
-} // end data collection 
+	break;
+	case 'show_lyrics':
+		if($show_lyrics == 1) {
+			$song = new Song($_REQUEST['song_id']);
+			$song->format();
+			$song->fill_ext_info();
+			require_once Config::get('prefix') . '/templates/show_lyrics_song.inc.php';
 
-show_footer(); 
+			// get the lyrics
+			$show_lyrics = Config::get('show_lyrics');
+			$lyric = new Artist();
+			$return = $lyric->get_song_lyrics($song->id, ucwords($song->f_artist), ucwords($song->title));
+			$link = '<a href="http://lyricwiki.org/' . rawurlencode(ucwords($song->f_artist)) . ':' . rawurlencode(ucwords($song->title)) . '" target="_blank">';
+			/* HINT: Artist, Song Title */
+			$link .= sprintf(_('%1$s - %2$s Lyrics Detail'), ucwords($song->f_artist), ucwords($song->title));
+			$link .= "</a><br /><br />";
+			require_once Config::get('prefix') . '/templates/show_lyrics.inc.php';
+		}
+} // end data collection
+
+show_footer();
 
 ?>
