@@ -616,7 +616,7 @@ class Query {
 				$sql = "SELECT %%SELECT%% FROM `video` ";
 			break; 
 			case 'tag': 
-				self::set_select("`tag`.`id`"); 
+				self::set_select("DISTINCT(`tag`.`id`)"); 
 				self::set_join('left','tag_map','`tag_map`.`tag_id`','`tag`.`id`',1); 
 				$sql = "SELECT %%SELECT%% FROM `tag` "; 
 			break; 

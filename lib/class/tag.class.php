@@ -380,7 +380,7 @@ class Tag extends database_object {
 
 		if (!self::validate_type($type)) { return array(); } 
 
-		$tag_id = Dba::escape($id); 
+		$tag_id = Dba::escape($tag_id); 
 
 		$sql = "SELECT DISTINCT `tag_map`.`object_id` FROM `tag_map` " . 
 			"WHERE `tag_map`.`tag_id`='$tag_id' AND `tag_map`.`object_type`='$type'"; 
