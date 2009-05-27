@@ -214,7 +214,8 @@ function generate_password($length) {
  */
 function scrub_out($str) {
 
-	if (get_magic_quotes_gpc()) { 
+	//This feature has been DEPRECATED as of PHP 5.3.0
+	if(version_compare(PHP_VERSION, '5.3.0', '<=') AND get_magic_quotes_gpc()) {
 		$str = stripslashes($str);
 	}
 
