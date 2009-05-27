@@ -1,10 +1,10 @@
 Localization Status Report for Ampache.
-Generated: Sat May  9 02:33:18 GMT 2009
+Generated: Wed May 27 22:02:44 GMT 2009
 
 LANG	Trans	Fuzzy	Untrans	Obsolete
 ca_ES	810	20	5	2
 cs_CZ	818	12	5	2
-de_DE	623	119	93	92
+de_DE	744	80	0	0
 el_GR	616	116	103	122
 en_GB	835	0	0	0
 es_ES	549	174	112	0
