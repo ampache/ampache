@@ -849,6 +849,8 @@ class getid3_xiph extends getid3_handler
 
 
     public static function OggPageSegmentLength($ogg_info_array, $segment_number=1) {
+
+	if (!is_array($ogg_info_array['segment_table'])) { $ogg_info_array['segment_table'] = array(); } 
         
         for ($i = 0; $i < $segment_number; $i++) {
             $segment_length = 0;
@@ -859,6 +861,7 @@ class getid3_xiph extends getid3_handler
                 }
             }
         }
+	$segment_length = !$segment_length ? '1' : $segment_length; 
         return $segment_length;
     }
 
