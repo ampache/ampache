@@ -558,7 +558,7 @@ class Catalog extends database_object {
 				// Check to make sure the filename is of the expected charset
 				if (function_exists('iconv')) {
 					if (strcmp($full_file,iconv(Config::get('site_charset'),Config::get('site_charset'),$full_file)) != '0') {
-						debug_event('read',$full_file . ' has non-' . Config::get('site_charset') . ' characters and can not be indexed, converted filename:' . iconv(Config::get('site_charset'),$full_file),'1');
+						debug_event('read',$full_file . ' has non-' . Config::get('site_charset') . ' characters and can not be indexed, converted filename:' . iconv(Config::get('site_charset'),Config::get('site_charset'),$full_file),'1');
 						Error::add('catalog_add', sprintf(_('%s does not match site charset'), $full_file));
 						continue;
 					}
@@ -1808,6 +1808,9 @@ class Catalog extends database_object {
 		$cache = array(); 
 		$songs = array(); 
 
+		// Record that we're caching this stuff so it makes debugging easier
+		debug_event('Verify','Starting Verify of '. $catalog->name . ' caching data...','5'); 
+	
 		/* First get the filenames for the catalog */
 		$sql = "SELECT `id`,`file`,`artist`,`album`,'song' AS `type` FROM `song` WHERE `song`.`catalog`='$catalog_id' ";
 		$db_results = Dba::read($sql); 
