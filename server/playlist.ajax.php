@@ -89,10 +89,11 @@ switch ($_REQUEST['action']) {
 		$playlist = new Playlist($playlist_id); 
 
 		// Itterate through and add them to our new playlist
-		foreach ($objects as $uid=>$object_data) { 
+		foreach ($objects as $object_data) { 
 			// For now only allow songs on here, we'll change this later
-			if ($object_data['1'] == 'song') { 
-				$songs[] = $object_data['0']; 
+			$type = array_shift($object_data);
+			if ($type == 'song') { 
+				$songs[] = array_shift($object_data);  
 			} 
 		} // object_data
 	

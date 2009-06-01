@@ -4,6 +4,8 @@
 
 --------------------------------------------------------------------------
   v.3.5.1
+	- Fix problem with creating new playlists where it doesn't work
+		but appending to an existing did. 
 	- Fixed issue with url_to_song, also cleaned up the code a bit
 	- Fixed issue with Random All Catalogs
 	- Fixed issues with API and Tag methods not working as advertised
