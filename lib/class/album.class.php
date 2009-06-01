@@ -989,7 +989,7 @@ class Album extends database_object {
 
 		$name = 'art.' . $type;  
 
-		Config::get('web_path') . '/image.php?id=' . scrub_out($album_id) . '&auth=' . $sid . '&name=' . $name;
+		return Config::get('web_path') . '/image.php?id=' . scrub_out($album_id) . '&auth=' . $sid . '&name=' . $name;
 
 	} // get_art_url
 
