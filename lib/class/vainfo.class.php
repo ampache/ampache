@@ -270,6 +270,10 @@ class vainfo {
 				$results[$key]['disk'] = substr($results[$key]['disk'],0,$slash_point); 
 			} 
 			/* These are used to generate the correct ID's later */
+				$info['title']		= $info['title']
+							? $info['title']
+							: stripslashes(trim($results[$key]['title']));
+
 				$info['year']		= $info['year']
 							? $info['year']
 							: intval($results[$key]['year']);

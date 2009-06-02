@@ -370,9 +370,11 @@ class Preference {
 					'shoutbox','resize_images',
 					'show_album_art','allow_public_registration',
 					'captcha_public_reg','admin_notify_reg',
-					'use_rss','download','force_http_play',
+					'use_rss','download','force_http_play','cookie_secure',
 					'allow_stream_playback','allow_democratic_playback',
-					'use_auth','allow_localplay_playback','debug','lock_songs'); 
+					'use_auth','allow_localplay_playback','debug','lock_songs',
+					'transcode_m4a','transcode_mp3','transcode_ogg','transcode_flac',
+					'shoutcast_active','httpq_active','show_lyrics'); 
 
 		if (in_array($key,$boolean_array)) { 
 			return true; 
