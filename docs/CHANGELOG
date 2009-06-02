@@ -4,6 +4,8 @@
 
 --------------------------------------------------------------------------
   v.3.6-Alpha1
+        - Add missing operator on tag and rating searches so they will
+                work with other methods (Thx kiehnet@netscape.net)
 	- Add MusicBrainz MBID support to uniqly identify albums and
 		also get more album art (Thx flowerysong)
 	- Fix the url to song function
