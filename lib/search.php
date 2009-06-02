@@ -194,7 +194,7 @@ function search_song($data,$operator,$method,$limit) {
 					$ids[] = $row['object_id']; 
 				} 
 
-				$where_sql .= implode(',',$ids) . ')'; 
+				$where_sql .= implode(',',$ids) . ') ' . $operator; 
 			break;
 			case 'tag': 
 
@@ -209,7 +209,7 @@ function search_song($data,$operator,$method,$limit) {
 					$ids[] = $row['object_id']; 
 				} 
 
-				$where_sql  = " `song`.`id` IN (" . implode(',',$ids) . ")"; 
+				$where_sql  = " `song`.`id` IN (" . implode(',',$ids) . ") $operator"; 
 
 			break; 				
 			default:

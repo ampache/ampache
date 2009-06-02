@@ -4,6 +4,8 @@
 
 --------------------------------------------------------------------------
   v.3.5.1
+	- Add missing operator on tag and rating searches so they will
+		work with other methods (Thx kiehnet@netscape.net)
 	- Fix get_art_url() so it returns something... 
 	- Fix problem with creating new playlists where it doesn't work
 		but appending to an existing did. 
