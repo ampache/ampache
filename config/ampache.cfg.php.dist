@@ -275,9 +275,9 @@ ratings = "true"
 
 ; Album Art Gather Order
 ; Simply arrange the following in the order you would like
-; ampache to search if you want to disable one of the search
-; method simply comment it out valid values are
-; POSSIBLE VALUES: db id3 folder amazon lastfm
+; ampache to search. If you want to disable one of the search
+; methods simply leave it out.
+; POSSIBLE VALUES: db id3 folder amazon lastfm musicbrainz
 ; DEFAULT: db,id3,folder,lastfm
 album_art_order = "db,id3,folder,lastfm"
 

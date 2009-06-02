@@ -4,6 +4,8 @@
 
 --------------------------------------------------------------------------
   v.3.6-Alpha1
+	- Add MusicBrainz MBID support to uniqly identify albums and
+		also get more album art (Thx flowerysong)
 	- Fix the url to song function
 	- Add full path to the files needed by the installation just to 
 		make it a little clearer

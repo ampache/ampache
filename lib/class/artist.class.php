@@ -258,7 +258,7 @@ class Artist extends database_object {
 		// Save our current ID
 		$current_id = $this->id; 
 
-		$artist_id = Catalog::check_artist($data['name']); 
+		$artist_id = Catalog::check_artist($data['name'], $this->mbid); 
 
 		// If it's changed we need to update
 		if ($artist_id != $this->id) { 

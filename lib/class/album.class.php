@@ -577,6 +577,151 @@ class Album extends database_object {
 	} // get_db_art
 
 	/**
+	 * get_musicbrainz_art
+	 * This retrieves art based on MusicBrainz' Advanced Relationships
+	 */
+	public function get_musicbrainz_art($limit='') {
+		$images 	= array();
+		$num_found  = 0;
+		$mbquery    = new MusicBrainzQuery();
+
+		if ($this->mbid) {
+			debug_event('mbz-gatherart', "Album MBID: " . $this->mbid, '5');
+		}
+		else {
+			return $images;
+		}
+
+		$includes = new mbReleaseIncludes();
+		try {
+			$release = $mbquery->getReleaseByID($this->mbid, $includes->urlRelations());
+		} catch (Exception $e) {
+			return $images;
+		}
+
+		$asin = $release->getAsin();
+
+		if ($asin) {
+			debug_event('mbz-gatherart', "Found ASIN: " . $asin, '5');
+			$base_urls = array(
+				"01" => "ec1.images-amazon.com",
+				"02" => "ec1.images-amazon.com",
+				"03" => "ec2.images-amazon.com",
+				"08" => "ec1.images-amazon.com",
+				"09" => "ec1.images-amazon.com",
+			);
+			foreach ($base_urls as $server_num => $base_url) {
+				// to avoid complicating things even further, we only look for large cover art
+				$url = 'http://' . $base_url . '/images/P/' . $asin . '.' . $server_num . '.LZZZZZZZ.jpg';
+				debug_event('mbz-gatherart', "Evaluating Amazon URL: " . $url, '5');
+				$snoopy = new Snoopy();
+				if(Config::get('proxy_host') AND Config::get('proxy_port')) {
+					$snoopy->proxy_user = Config::get('proxy_host');
+					$snoopy->proxy_port = Config::get('proxy_port');
+					$snoopy->proxy_user = Config::get('proxy_user');
+					$snoopy->proxy_pass = Config::get('proxy_pass');
+				}
+				if ($snoopy->fetch($url)) {
+					$num_found++;
+					debug_event('mbz-gatherart', "Amazon URL added: " . $url, '5');
+					$images[] = array(
+						'url'  => $url,
+						'mime' => 'image/jpeg',
+					);
+					if ($num_found >= $limit) {
+						return $images;
+					}
+				}
+			}
+		}
+
+		// The next bit is based directly on the MusicBrainz server code that displays cover art.
+		// I'm leaving in the releaseuri info for the moment, though it's not going to be used. 
+		$coverartsites[] = array(
+			name       => "CD Baby",
+			domain     => "cdbaby.com",
+			regexp     => '@http://cdbaby\.com/cd/(\w)(\w)(\w*)@',
+			imguri     => 'http://cdbaby.name/$matches[1]/$matches[2]/$matches[1]$matches[2]$matches[3].jpg',
+			releaseuri => 'http://cdbaby.com/cd/$matches[1]$matches[2]$matches[3]/from/musicbrainz',
+		);
+		$coverartsites[] = array(
+			name       => "CD Baby",
+			domain     => "cdbaby.name",
+			regexp     => "@http://cdbaby\.name/([a-z0-9])/([a-z0-9])/([A-Za-z0-9]*).jpg@",
+			imguri     => 'http://cdbaby.name/$matches[1]/$matches[2]/$matches[3].jpg',
+			releaseuri => 'http://cdbaby.com/cd/$matches[3]/from/musicbrainz',
+		);
+		$coverartsites[] = array(
+			name       => 'archive.org',
+			domain     => 'archive.org',
+			regexp     => '/^(.*\.(jpg|jpeg|png|gif))$/',
+			imguri     => '$matches[1]',
+			releaseuri => '',
+		);
+		$coverartsites[] = array(
+			name       => "Jamendo",
+			domain     => "www.jamendo.com",
+			regexp     => '/http://www\.jamendo\.com/(\w\w/)?album/(\d+)/',
+			imguri     => 'http://img.jamendo.com/albums/$matches[2]/covers/1.200.jpg',
+			releaseuri => 'http://www.jamendo.com/album/$matches[2]',
+		);
+		$coverartsites[] = array(
+			name       => '8bitpeoples.com',
+			domain     => '8bitpeoples.com',
+			regexp     => '/^(.*)$/',
+			imguri     => '$matches[1]',
+			releaseuri => '',
+		);
+		$coverartsites[] = array(
+			name       => 'Encyclopédisque',
+			domain     => 'encyclopedisque.fr',
+			regexp     => '/http://www.encyclopedisque.fr/images/imgdb/(thumb250|main)/(\d+).jpg/',
+			imguri     => 'http://www.encyclopedisque.fr/images/imgdb/thumb250/$matches[2].jpg',
+			releaseuri => 'http://www.encyclopedisque.fr/',
+		);
+		$coverartsites[] = array(
+			name       => 'Thastrom',
+			domain     => 'www.thastrom.se',
+			regexp     => '/^(.*)$/',
+			imguri     => '$matches[1]',
+			releaseuri => '',
+		);
+		$coverartsites[] = array(
+			name       => 'Universal Poplab',
+			domain     => 'www.universalpoplab.com',
+			regexp     => '/^(.*)$/',
+			imguri     => '$matches[1]',
+			releaseuri => '',
+		);
+		
+		foreach ($release->getRelations($mbRelation->TO_URL) as $ar) {
+			$arurl = $ar->getTargetId();
+			debug_event('mbz-gatherart', "Found URL AR: " . $arurl , '5');
+			foreach ($coverartsites as $casite) {
+				if (strstr($arurl, $casite['domain'])) {
+					debug_event('mbz-gatherart', "Matched coverart site: " . $casite['name'], '5');
+					if (preg_match($casite['regexp'], $arurl, $matches) == 1) {
+						$num_found++;
+						eval("\$url = \"$casite[imguri]\";");
+						debug_event('mbz-gatherart', "Generated URL added: " . $url, '5');
+						$images[] = array(
+							'url'  => $url,
+							'mime' => 'image/jpeg',
+						);
+						if ($num_found >= $limit) {
+							return $images;
+						}
+					}
+				}
+			}
+		}
+
+
+
+		return $images;
+	} // get_musicbrainz_art
+
+	/**
 	 * get_amazon_art
 	 * This takes keywords and performs a search of the Amazon website
 	 * for album art. It returns an array of found objects with mime/url keys

@@ -34,6 +34,8 @@ class Song extends database_object implements media {
 	public $size;
 	public $time;
 	public $track;
+	public $album_mbid;
+	public $artist_mbid;
 	public $type;
 	public $mime;
 	public $played;
@@ -86,6 +88,7 @@ class Song extends database_object implements media {
 		// Song data cache
 		$sql = "SELECT song.id,file,catalog,album,year,artist,".
 				"title,bitrate,rate,mode,size,time,track,played,song.enabled,update_time,tag_map.tag_id,".
+				"mbid,".
 				"addition_time FROM `song` " .
 				"LEFT JOIN `tag_map` ON `tag_map`.`object_id`=`song`.`id` AND `tag_map`.`object_type`='song' " . 
 				"WHERE `song`.`id` IN $idlist";
@@ -138,6 +141,7 @@ class Song extends database_object implements media {
 		/* Grab the basic information from the catalog and return it */
 		$sql = "SELECT song.id,file,catalog,album,year,artist,".
 			"title,bitrate,rate,mode,size,time,track,played,song.enabled,update_time,".
+			"mbid,".
 			"addition_time FROM `song` WHERE `song`.`id` = '$id'";
 		$db_results = Dba::query($sql);
 
@@ -323,7 +327,7 @@ class Song extends database_object implements media {
 		unset($song->catalog,$song->played,$song->enabled,$song->addition_time,$song->update_time,$song->type);
 
 		$string_array = array('title','comment','lyrics'); 
-		$skip_array = array('id','tag_id','mime'); 
+		$skip_array = array('id','tag_id','mime','mb_artistid','mbid'); 
 
 		// Pull out all the currently set vars
 		$fields = get_object_vars($song); 
@@ -369,11 +373,11 @@ class Song extends database_object implements media {
 				case 'artist':
 					// Don't do anything if we've negative one'd this baby
 					if ($value == '-1') { 
-						$value = Catalog::check_artist($data['artist_name']); 
+						$value = Catalog::check_artist($data['artist_name'], $data['mb_artistid']); 
 					} 
 				case 'album':
 					if ($value == '-1') { 
-						$value = Catalog::check_album($data['album_name']); 
+						$value = Catalog::check_album($data['album_name'], $data['year'], $data['disk'], $data['mb_albumid']); 
 					} 
 				case 'title': 
 				case 'track':
@@ -416,6 +420,7 @@ class Song extends database_object implements media {
 		$size		= Dba::escape($new_song->size); 
 		$time		= Dba::escape($new_song->time); 
 		$track		= Dba::escape($new_song->track); 
+		$mbid		= Dba::escape($new_song->mbid);
 		$artist		= Dba::escape($new_song->artist); 
 		$album		= Dba::escape($new_song->album); 
 		$year		= Dba::escape($new_song->year); 
@@ -426,6 +431,7 @@ class Song extends database_object implements media {
 		$sql = "UPDATE `song` SET `album`='$album', `year`='$year', `artist`='$artist', " . 
 			"`title`='$title', `bitrate`='$bitrate', `rate`='$rate', `mode`='$mode', " . 
 			"`size`='$size', `time`='$time', `track`='$track', " . 
+			"`mbid`='$mbid', " .
 			"`update_time`='$update_time' WHERE `id`='$song_id'"; 
 		$db_results = Dba::query($sql); 
 		
@@ -549,6 +555,12 @@ class Song extends database_object implements media {
 		self::_update_item('track',$new_track,$song_id,'50');
 
 	} // update_track
+
+	public static function update_mbid($new_mbid,$song_id) {
+
+		self::_update_item('mbid',$new_mbid,$song_id,'50');
+
+	} // update_mbid
 
 	/**
 	 * update_artist

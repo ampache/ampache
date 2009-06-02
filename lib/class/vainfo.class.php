@@ -192,9 +192,9 @@ class vainfo {
 
 	/**
 	 * get_tag_type
-	 * This takes the result set, and the the tag_order
+	 * This takes the result set, and the tag_order
 	 * As defined by your config file and trys to figure out
-	 * which tag type it should use, if your tag_order
+	 * which tag type(s) it should use, if your tag_order
 	 * doesn't match anything then it just takes the first one
 	 * it finds in the results. 
 	 */
@@ -208,24 +208,26 @@ class vainfo {
 		}
 	
 		/* Foreach through the defined key order
-		 * the first one we find is the first one we use 
+		 * adding them to an ordered array as we go
 		 */
+
+		$i = 0;
 		foreach($order as $key) {
 			if ($results[$key]) {
-				$returned_key = $key;
-				break;
+				$returned_keys[$i++] = $key;
 			}
 		}
 
 		/* If we didn't find anything then default it to the
 		 * first in the results set
+		 * We could also just use the whole array.
 		 */
-		if (!isset($returned_key)) {
+		if (!isset($returned_keys)) {
 			$keys = array_keys($results);
-			$returned_key = $keys['0'];
+			$returned_keys[0] = $keys['0'];
 		}
 
-		return $returned_key;
+		return $returned_keys;
 
 	} // get_tag_type
 
@@ -235,7 +237,7 @@ class vainfo {
 	 * key we've decided on and the filename and returns it in a 
 	 * sanatized format that ampache can actually use
 	 */
-	public static function clean_tag_info($results,$key,$filename) {
+	public static function clean_tag_info($results,$keys,$filename) {
 
 		$info = array();
 
@@ -243,8 +245,6 @@ class vainfo {
 		$wipe_array  = array("","","","");
 
 		$info['file']		= $filename;
-		$info['title']		= stripslashes(trim($results[$key]['title']));
-		$info['comment']	= Dba::escape(str_replace($clean_array,$wipe_array,$results[$key]['comment']));
 
 		/* This are pulled from the info array */
 		$info['bitrate']	= intval($results['info']['bitrate']);
@@ -263,33 +263,80 @@ class vainfo {
 		$info['channels']		= intval($results['info']['channels']);
 
 		// Specific Audio Flags
+		foreach ($keys as $key) {
 		if (!$results[$key]['video_codec']) { 
 			$slash_point = strpos($results[$key]['disk'],'/'); 
 			if ($slash_point !== FALSE) { 
 				$results[$key]['disk'] = substr($results[$key]['disk'],0,$slash_point); 
 			} 
 			/* These are used to generate the correct ID's later */
-			$info['year']		= intval($results[$key]['year']);
-			$info['disk']		= intval($results[$key]['disk']);
-			$info['artist']		= trim($results[$key]['artist']);
-			$info['album']		= trim($results[$key]['album']);
-			$info['genre']		= trim($results[$key]['genre']);
+				$info['year']		= $info['year']
+							? $info['year']
+							: intval($results[$key]['year']);
+
+				$info['disk']		= $info['disk']
+							? $info['disk']
+							: intval($results[$key]['disk']);
+
+				$info['artist']		= $info['artist']
+							? $info['artist']
+							: trim($results[$key]['artist']);
+
+				$info['album']		= $info['album']
+							? $info['album']
+							: trim($results[$key]['album']);
+
+				$info['genre']		= $info['genre']
+							? $info['genre']
+							: trim($results[$key] ['genre']);
+
+				$info['mb_trackid']	= $info['mb_trackid']
+							? $info['mb_trackid']
+							: trim($results[$key]['mb_trackid']);
+
+				$info['mb_albumid']	= $info['mb_albumid']
+							? $info['mb_albumid']
+							: trim($results[$key]['mb_albumid']);
+
+				$info['mb_artistid']	= $info['mb_artistid']
+							? $info['mb_artistid']
+							: trim($results[$key]['mb_artistid']);
+
 			/* @TODO language doesn't import from id3tag. @momo-i */
-			$info['language']	= Dba::escape($results[$key]['language']);
-			if (!empty($results[$key]['unsynchronised lyric'])) { // ID3v2 USLT
-				$info['lyrics']	= str_replace(array("\r\n","\r","\n"), '<br />',strip_tags($results[$key]['unsynchronised lyric']));
-			}
-			else { // Lyrics3 v2.0
-				$info['lyrics']	= str_replace(array("\r\n","\r","\n"), '<br />',strip_tags($results['info']['lyrics']['unsynchedlyrics']));
-			}
-			$info['track']		= intval($results[$key]['track']);
+				$info['language']	= $info['language']
+							? $info['language']
+							: Dba::escape($results[$key]['language']);
+					
+				$info['lyrics']		= $info['lyrics']
+							? $info['lyrics']
+							: str_replace(array("\r\n","\r","\n"), '<br />',strip_tags($results[$key]['unsynchronised lyric']));
+
+				$info['track']		= $info['track'] 
+							? $info['track']
+							: intval($results[$key]['track']);
 		}
 		else { 
-			$info['resolution_x']	= intval($results[$key]['resolution_x']); 
-			$info['resolution_y']	= intval($results[$key]['resolution_y']); 
-			$info['audio_codec']	= Dba::escape($results[$key]['audio_codec']); 
-			$info['video_codec']	= Dba::escape($results[$key]['video_codec']); 
+				$info['resolution_x']	= $info['resolution_x']
+							? $info['resolution_x']
+							: intval($results[$key]['resolution_x']);
+
+				$info['resolution_y']	= $info['resolution_y']
+							? $info['resolution_y']
+							: intval($results[$key]['resolution_y']);
+
+				$info['audio_codec']	= $info['audio_codec']
+							? $info['audio_codec']
+							: Dba::escape($results[$key]['audio_codec']);
+
+				$info['video_codec']	= $info['video_codec']
+							? $info['video_codec']
+							: Dba::escape($results[$key]['video_codec']); 
+			}
 		}
+		// Lyrics3 v2.0
+		$info['lyrics']	= $info['lyrics']
+				? $info['lyrics']
+				: str_replace(array("\r\n","\r","\n"), '<br />',strip_tags($results['info']['lyrics']['unsynchedlyrics']));
 
 		return $info;
 
@@ -631,6 +678,23 @@ class vainfo {
 		
 		} // end foreach
 		
+		$id3v2 = $this->_raw['id3v2'];
+
+		foreach ($id3v2['UFID'] as $ufid) {
+			if ($ufid['ownerid'] == 'http://musicbrainz.org') {
+				$array['mb_trackid'] = $this->_clean_tag($ufid['data'],'');
+			}
+		}
+
+		for ($i = 0, $size = sizeof($id3v2['comments']['text']) ; $i < $size ; $i++) {
+			if ($id3v2['TXXX'][$i]['description'] == 'MusicBrainz Album Id') {
+				$array['mb_albumid'] = $this->_clean_tag($id3v2['comments']['text'][$i],'');
+			}
+			elseif ($id3v2['TXXX'][$i]['description'] == 'MusicBrainz Artist Id') {
+				$array['mb_artistid'] = $this->_clean_tag($id3v2['comments']['text'][$i],'');
+			}
+		}
+
 		return $array;
 
 	} // _parse_id3v2

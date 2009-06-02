@@ -146,6 +146,7 @@ require_once $prefix . '/modules/infotools/Snoopy.class.php';
 require_once $prefix . '/modules/infotools/AmazonSearchEngine.class.php';
 require_once $prefix . '/modules/infotools/lastfm.class.php';
 //require_once $prefix . '/modules/infotools/jamendoSearch.class.php';
+require_once $prefix . '/modules/php_musicbrainz/mbQuery.php';
 
 /* Temp Fixes */
 $results = Preference::fix_preferences($results);

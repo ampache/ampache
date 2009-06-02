@@ -11,8 +11,8 @@
 // +----------------------------------------------------------------------+
 // | getID3() - http://getid3.sourceforge.net or http://www.getid3.org    |
 // +----------------------------------------------------------------------+
-// | Authors: James Heinrich <infoØgetid3*org>                            |
-// |          Allan Hansen <ahØartemis*dk>                                |
+// | Authors: James Heinrich <infoï¿½getid3*org>                            |
+// |          Allan Hansen <ahï¿½artemis*dk>                                |
 // +----------------------------------------------------------------------+
 // | module.tag.id3v2.php                                                 |
 // | module for analyzing ID3v2 tags                                      |
@@ -562,7 +562,7 @@ class getid3_id3v2 extends getid3_handler
             $frame_id_string = substr($parsed_frame['data'], 0, $frame_terminator_pos);
             $parsed_frame['ownerid'] = $frame_id_string;
             $parsed_frame['data'] = substr($parsed_frame['data'], $frame_terminator_pos + strlen("\x00"));
-            unset($parsed_frame['data']);
+            // unset($parsed_frame['data']);
             return true;
         }
 

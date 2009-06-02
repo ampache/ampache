@@ -2004,29 +2004,63 @@ class Catalog extends database_object {
 		}
 
 		// Check to see if we've seen this artist before
-		if (isset(self::$artists[$artist])) {
-			return self::$artists[$artist];
+		if (isset(self::$artists[$artist][$mbid])) {
+			return self::$artists[$artist][$mbid];
 		} // if we've seen this artist before
 
-		/* Setup the checking sql statement */
-		$sql = "SELECT `id` FROM `artist` WHERE `name` LIKE '$artist' ";
+		$exists = false;
+
+		$sql = "SELECT `id` FROM `artist` WHERE `mbid` LIKE '$mbid'";
 		$db_results = Dba::query($sql);
 
-		/* If it's found */
+		// Check for results
 		if ($r = Dba::fetch_assoc($db_results)) {
 			$artist_id = $r['id'];
-		} //if found
+			$exists = true;
+		}
 
-		/* If not found create */
-		elseif (!$readonly) {
+		else { // No exact match based on MBID
+			$sql = "SELECT `id`, `mbid` FROM `artist` WHERE `name` LIKE '$artist'";
+			$db_results = Dba::query($sql);
 
-			$prefix_txt = 'NULL';
 
-			if ($prefix) {
-				$prefix_txt = "'$prefix'";
+			/* If we have results */
+			while ($r = Dba::fetch_assoc($db_results)) {
+				$key = is_null($r['mbid']) ? 'null' : $r['mbid'];
+				$id_array[$key] = $r['id'];
+			} // while
+
+			/* Choose one */
+			if (isset($id_array)) {
+				if ($mbid == '') { // Prefer null entry, otherwise pick the first
+					$key = isset($id_array['null']) ? 'null' : array_shift(array_keys($id_array));
+					$artist_id = $id_array[$key];
+					$exists = true;
+				}
+				elseif (isset($id_array['null'])) {
+					$artist_id = $id_array['null'];
+					$exists = true;
+					if (!$readonly) {
+						$sql = "UPDATE `artist` SET `mbid`='$mbid' WHERE `id`='$artist_id'";
+						$db_results = Dba::query($sql);
+						if (!$db_results) {
+		        	                        Error::add('general',"Updating Artist: $artist");
+		                	        }
+					}
 			}
+				unset($id_array);
+			}
+		} // fuzzy matching
+		
+		/* If not found create */
+		if (!$readonly && !$exists) {
 
-			$sql = "INSERT INTO `artist` (`name`, `prefix`) VALUES ('$artist',$prefix_txt)";
+			$prefix_txt = $prefix ? "'$prefix'" : 'NULL';
+
+			$mbid = $mbid == '' ? 'NULL' : "'$mbid'";
+
+			$sql = "INSERT INTO `artist` (`name`, `prefix`, `mbid`) " .
+			"VALUES ('$artist',$prefix_txt,$mbid)";
 			$db_results = Dba::query($sql);
 			$artist_id = Dba::insert_id();
 
@@ -2036,13 +2070,11 @@ class Catalog extends database_object {
 
 		} // not found
 		// If readonly, and not found return false
-		else {
+		elseif (!$exists) {
 			return false;
 		}
 
-		$array = array($artist => $artist_id);
-		self::$artists = array_merge(self::$artists, $array);
-		unset($array);
+		self::$artists[$artist][$mbid] = $artist_id;
 
 		return $artist_id;
 
@@ -2076,14 +2108,15 @@ class Catalog extends database_object {
 		}
 
 		// Check to see if we've seen this album before
-		if (isset(self::$albums[$album][$album_year][$disk])) {
-			return self::$albums[$album][$album_year][$disk];
+		if (isset(self::$albums[$album][$album_year][$disk][$mbid])) {
+			return self::$albums[$album][$album_year][$disk][$mbid];
 		}
 
 		/* Setup the Query */
 		$sql = "SELECT `id` FROM `album` WHERE trim(`name`) = '$album'";
 		if ($album_year) { $sql .= " AND `year`='$album_year'"; }
 		if ($album_disk) { $sql .= " AND `disk`='$album_disk'"; }
+		if ($mbid) { $sql .= " AND `mbid`='$mbid'"; }
 		if ($prefix) { $sql .= " AND `prefix`='" . Dba::escape($prefix) . "'"; }
 		$db_results = Dba::query($sql);
 
@@ -2104,7 +2137,10 @@ class Catalog extends database_object {
 
 			$prefix_txt = $prefix ? "'$prefix'" : 'NULL';
 
-			$sql = "INSERT INTO `album` (`name`, `prefix`,`year`,`disk`) VALUES ('$album',$prefix_txt,'$album_year','$album_disk')";
+			$mbid = $mbid ? "'$mbid'" : 'NULL';
+
+			$sql = "INSERT INTO `album` (`name`, `prefix`,`year`,`disk`,`mbid`) " .
+			"VALUES ('$album',$prefix_txt,'$album_year','$album_disk',$mbid)";
 			$db_results = Dba::query($sql);
 			$album_id = Dba::insert_id();
 
@@ -2122,7 +2158,7 @@ class Catalog extends database_object {
 		}
 
 		// Save the cache
-		self::$albums[$album][$album_year][$disk] = $album_id; 
+		self::$albums[$album][$album_year][$disk][$mbid] = $album_id; 
 
 		return $album_id;
 
@@ -2184,6 +2220,9 @@ class Catalog extends database_object {
 		$size	 	= $results['size'];
 		$song_time 	= $results['time'];
 		$track	 	= $results['track'];
+		$track_mbid	= $results['mb_trackid'];
+		$album_mbid	= $results['mb_albumid'];
+		$artist_mbid= $results['mb_artistid'];
 		$disk	 	= $results['disk'];
 		$year		= $results['year'];
 		$comment	= $results['comment'];
@@ -2200,8 +2239,8 @@ class Catalog extends database_object {
 		$title		= self::check_title($title,$file);
 		$add_file	= Dba::escape($file);
 
-		$sql = "INSERT INTO `song` (file,catalog,album,artist,title,bitrate,rate,mode,size,time,track,addition_time,year)" .
-			" VALUES ('$add_file','$this->id','$album_id','$artist_id','$title','$bitrate','$rate','$mode','$size','$song_time','$track','$current_time','$year')";
+		$sql = "INSERT INTO `song` (file,catalog,album,artist,title,bitrate,rate,mode,size,time,track,addition_time,year,mbid)" .
+			" VALUES ('$add_file','$this->id','$album_id','$artist_id','$title','$bitrate','$rate','$mode','$size','$song_time','$track','$current_time','$year','$track_mbid')";
 		$db_results = Dba::query($sql);
 
 		if (!$db_results) {

@@ -76,6 +76,7 @@ CREATE TABLE `album` (
   `id` int(11) unsigned NOT NULL auto_increment,
   `name` varchar(255) character set utf8 default NULL,
   `prefix` varchar(32) character set utf8 default NULL,
+  `mbid` varchar(36) default NULL,
   `year` int(4) unsigned NOT NULL default '1984',
   `disk` smallint(5) unsigned default NULL,
   PRIMARY KEY  (`id`),
@@ -132,6 +133,7 @@ CREATE TABLE `artist` (
   `id` int(11) unsigned NOT NULL auto_increment,
   `name` varchar(255) character set utf8 default NULL,
   `prefix` varchar(32) character set utf8 default NULL,
+  `mbid` varchar(36) default NULL,
   PRIMARY KEY  (`id`),
   KEY `name` (`name`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
@@ -716,6 +718,7 @@ CREATE TABLE `song` (
   `size` int(11) unsigned NOT NULL default '0',
   `time` smallint(5) unsigned NOT NULL default '0',
   `track` smallint(5) unsigned default NULL,
+  `mbid` varchar(36) default NULL,
   `played` tinyint(1) unsigned NOT NULL default '0',
   `enabled` tinyint(1) unsigned NOT NULL default '1',
   `update_time` int(11) unsigned default '0',

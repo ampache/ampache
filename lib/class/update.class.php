@@ -323,6 +323,11 @@ class Update {
 
 		$version[] = array('version'=>'350008','description'=>$update_string); 
 
+		$update_string = '- Add MBID (MusicBrainz ID) fields<br />' . 
+				'- Remove useless preferences<br />'; 
+
+		$version[] = array('version'=>'360001','description'=>$update_string); 
+
 
 		return $version;
 
@@ -1758,10 +1763,20 @@ class Update {
 
 	/**
 	 * update_360001
-	 * This adds the mbid id's to the different tables as well as some additional cleanup
+	 * This adds the MB UUIDs to the different tables as well as some additional cleanup
 	 */	
 	public static function update_360001() { 
 
+		
+		$sql = "ALTER TABLE `album` ADD `mbid` CHAR ( 36 ) AFTER `prefix`";
+		$db_results = Dba::write($sql);
+
+		$sql = "ALTER TABLE `artist` ADD `mbid` CHAR ( 36 ) AFTER `prefix`";
+		$db_results = Dba::write($sql);
+
+		$sql = "ALTER TABLE `song` ADD `mbid` CHAR ( 36 ) AFTER `track`";
+		$db_results = Dba::write($sql);
+		
 		// Remove any RIO related information from the database as the plugin has been removed
 		$sql = "DELETE FROM `update_info` WHERE `key` LIKE 'Plugin_Ri%'"; 
 		$db_results = Dba::write($sql); 
@@ -1778,7 +1793,7 @@ class Update {
                         User::fix_preferences($r['id']);
                 } // while we're fixing the useres stuff
 
-		// self::set_version('db_version','360001'); 
+		self::set_version('db_version','360001'); 
 
 
 	} // update_360001
