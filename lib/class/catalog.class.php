@@ -1991,8 +1991,8 @@ class Catalog extends database_object {
 		preg_match($prefix_pattern,$artist,$matches);
 
 		if (count($matches)) {
-			$artist = $matches[2];
-			$prefix = $matches[1];
+			$artist = trim($matches[2]);
+			$prefix = trim($matches[1]);
 		}
 
 		// Check to see if we've seen this artist before
@@ -2063,8 +2063,8 @@ class Catalog extends database_object {
 		preg_match($prefix_pattern,$album,$matches);
 
 		if (count($matches)) {
-			$album = $matches[2];
-			$prefix = $matches[1];
+			$album = trim($matches[2]);
+			$prefix = trim($matches[1]);
 		}
 
 		// Check to see if we've seen this album before
