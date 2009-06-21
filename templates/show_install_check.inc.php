@@ -28,7 +28,13 @@
 <?php
 	if(!check_php_ver()) {
 		if (function_exists('hash_algos')) { $algos = hash_algos(); }
-		$string = phpversion() . " " . _('Hash Function Exists') . " " . print_boolean(function_exists('hash_algos')) . " " . _('SHA256 Support') . " " . print_boolean(in_array('sha256',$algos));
+		if (strtoupper(substr(PHP_OS,0,3)) == 'WIN') { 
+			$version_string = phpversion() . " < PHP 5.3 ";
+		} 
+		else { 
+			$version_string = phpversion() . " "; 
+		} 
+		$string = $version_string . _('Hash Function Exists') . " " . print_boolean(function_exists('hash_algos')) . " " . _('SHA256 Support') . " " . print_boolean(in_array('sha256',$algos));
 		echo debug_result($string,false); 
 		Error::add('install',_('PHP Version')); 
 	} 

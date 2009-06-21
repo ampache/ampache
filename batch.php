@@ -69,5 +69,5 @@ switch ($_REQUEST['action']) {
 $song_files = get_song_files($media_ids); 
 set_memory_limit($song_files['1']+32); 
 send_zip($name,$song_files['0']); 
-
+exit; 
 ?>
