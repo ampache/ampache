@@ -4,6 +4,8 @@
 
 --------------------------------------------------------------------------
   v.3.5.1
+	- Make the PHP error a little clearer for windows users by indicating
+		that their version of PHP is < 5.3 (required for windows)
 	- Fix random methods not working for Localplay
 	- Fix extra space on prefixed albums (Thx ibizaman)
 	- Add missing operator on tag and rating searches so they will
