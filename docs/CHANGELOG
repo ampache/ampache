@@ -4,6 +4,7 @@
 
 --------------------------------------------------------------------------
   v.3.5.1
+	- Fix random methods not working for Localplay
 	- Fix extra space on prefixed albums (Thx ibizaman)
 	- Add missing operator on tag and rating searches so they will
 		work with other methods (Thx kiehnet@netscape.net)

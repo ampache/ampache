@@ -514,6 +514,7 @@ class Stream {
 					// Add check for video support
 				case 'song': 
 				case 'radio': 
+				case 'random': 
 					$media = new $type(array_shift($element)); 
 				break; 
 				default: 
