@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ampache SVN 693\n"
 "Report-Msgid-Bugs-To: translations at ampache.org\n"
-"POT-Creation-Date: 2009-05-06 21:39+0900\n"
+"POT-Creation-Date: 2009-06-24 10:57+0900\n"
 "PO-Revision-Date: 2006-11-14 08:00+0100\n"
 "Last-Translator: Terence Theijn <terence.theijn@gmail.com>\n"
 "Language-Team: Dutch <terence.theijn@gmail.com>\n"
@@ -20,11 +20,13 @@ msgstr ""
 msgid "Error: No Keyword Entered"
 msgstr "Fout: Geen zoekwoord opgegeven"
 
-#: ../../song.php:40
+#. HINT: Artist, Song Title
+#: ../../song.php:42 ../../song.php:60
 #, php-format
 msgid "%1$s - %2$s Lyrics Detail"
 msgstr ""
 
+#. HINT: Artist Fullname
 #: ../../templates/show_album_row.inc.php:23
 #: ../../templates/show_song_row.inc.php:23
 #: ../../templates/show_albums.inc.php:40
@@ -35,8 +37,8 @@ msgstr ""
 #: ../../templates/show_live_streams.inc.php:57
 #: ../../templates/show_playlists.inc.php:34
 #: ../../templates/show_playlists.inc.php:57
-#: ../../templates/show_videos.inc.php:35
-#: ../../templates/show_videos.inc.php:58
+#: ../../templates/show_videos.inc.php:36
+#: ../../templates/show_videos.inc.php:60
 #: ../../templates/show_add_live_stream.inc.php:68
 #: ../../templates/show_catalog_row.inc.php:29
 #: ../../templates/show_video_row.inc.php:23
@@ -50,7 +52,7 @@ msgstr ""
 #: ../../templates/show_recently_played.inc.php:37
 #: ../../templates/show_recently_played.inc.php:80
 #: ../../templates/show_recently_played.inc.php:99
-#: ../../templates/show_artist.inc.php:38
+#: ../../templates/show_artist.inc.php:43
 #: ../../templates/show_album.inc.php:51
 #: ../../templates/show_playlist_song_row.inc.php:22
 #: ../../templates/show_song.inc.php:29
@@ -60,12 +62,13 @@ msgstr ""
 msgid "Add"
 msgstr "Toevoegen"
 
+#. HINT: Artist Fullname
 #: ../../templates/show_album_row.inc.php:24
-#: ../../templates/sidebar_home.inc.php:104
+#: ../../templates/sidebar_home.inc.php:105
 #: ../../templates/show_artist_row.inc.php:24
 #: ../../templates/show_genres.inc.php:52
 #: ../../templates/show_localplay_status.inc.php:44
-#: ../../templates/show_artist.inc.php:41
+#: ../../templates/show_artist.inc.php:48
 #: ../../templates/show_album.inc.php:55
 #: ../../templates/show_playlist_row.inc.php:24
 #: ../../modules/localplay/mpd.controller.php:495
@@ -103,6 +106,8 @@ msgstr "Bulk download"
 msgid "Edit"
 msgstr "Bewerken"
 
+#. HINT: Editing Username preferences
+#. HINT: Username
 #: ../../templates/show_user_preferences.inc.php:28
 #: ../../templates/show_preferences.inc.php:28
 #, php-format
@@ -137,8 +142,9 @@ msgid "Song Information"
 msgstr "Gebruikers informatie"
 
 #: ../../templates/show_song_row.inc.php:43
-#: ../../templates/show_artist.inc.php:50
-#: ../../templates/show_artist.inc.php:51
+#: ../../templates/show_video_row.inc.php:32
+#: ../../templates/show_artist.inc.php:59
+#: ../../templates/show_artist.inc.php:60
 #: ../../templates/show_album.inc.php:76 ../../templates/show_album.inc.php:77
 #: ../../templates/show_playlist_song_row.inc.php:33
 #: ../../templates/show_song.inc.php:32
@@ -160,7 +166,7 @@ msgstr "Pause"
 #: ../../templates/show_localplay_control.inc.php:28
 #: ../../templates/show_manage_democratic.inc.php:57
 #: ../../templates/rightbar.inc.php:25
-#: ../../templates/show_democratic.inc.php:38
+#: ../../templates/show_democratic.inc.php:39
 msgid "Play"
 msgstr "Afspelen"
 
@@ -197,17 +203,17 @@ msgstr "OMSCHRIJVING"
 
 #: ../../templates/show_test.inc.php:45
 #: ../../templates/show_install_check.inc.php:26
-#: ../../templates/show_install_check.inc.php:33
+#: ../../templates/show_install_check.inc.php:39
 msgid "PHP Version"
 msgstr "PHP Versie"
 
 #: ../../templates/show_test.inc.php:51
-#: ../../templates/show_install_check.inc.php:31
+#: ../../templates/show_install_check.inc.php:37
 msgid "Hash Function Exists"
 msgstr "Hash functie bestaat"
 
 #: ../../templates/show_test.inc.php:51
-#: ../../templates/show_install_check.inc.php:31
+#: ../../templates/show_install_check.inc.php:37
 msgid "SHA256 Support"
 msgstr "SHA256 Ondersteuning"
 
@@ -220,8 +226,8 @@ msgstr ""
 "werken."
 
 #: ../../templates/show_test.inc.php:65
-#: ../../templates/show_install_check.inc.php:41
-#: ../../templates/show_install_check.inc.php:46
+#: ../../templates/show_install_check.inc.php:47
+#: ../../templates/show_install_check.inc.php:52
 msgid "Mysql for PHP"
 msgstr "MySQL voor PHP"
 
@@ -234,8 +240,8 @@ msgstr ""
 "vereiste voor Ampache"
 
 #: ../../templates/show_test.inc.php:82
-#: ../../templates/show_install_check.inc.php:54
-#: ../../templates/show_install_check.inc.php:59
+#: ../../templates/show_install_check.inc.php:60
+#: ../../templates/show_install_check.inc.php:65
 msgid "PHP Session Support"
 msgstr "PHP Sessie Ondersteuning"
 
@@ -248,8 +254,8 @@ msgstr ""
 "voor Ampache"
 
 #: ../../templates/show_test.inc.php:99
-#: ../../templates/show_install_check.inc.php:67
-#: ../../templates/show_install_check.inc.php:72
+#: ../../templates/show_install_check.inc.php:73
+#: ../../templates/show_install_check.inc.php:78
 msgid "PHP ICONV Support"
 msgstr "PHP ICONV Ondersteuning"
 
@@ -262,8 +268,8 @@ msgstr ""
 "Ampache"
 
 #: ../../templates/show_test.inc.php:115
-#: ../../templates/show_install_check.inc.php:80
-#: ../../templates/show_install_check.inc.php:85
+#: ../../templates/show_install_check.inc.php:86
+#: ../../templates/show_install_check.inc.php:91
 msgid "PHP PCRE Support"
 msgstr "PHP PCRE Ondersteuning"
 
@@ -276,8 +282,8 @@ msgstr ""
 "is een vereiste voor Ampache"
 
 #: ../../templates/show_test.inc.php:131
-#: ../../templates/show_install_check.inc.php:93
-#: ../../templates/show_install_check.inc.php:98
+#: ../../templates/show_install_check.inc.php:99
+#: ../../templates/show_install_check.inc.php:104
 msgid "PHP PutENV Support"
 msgstr "PHP PutENV Ondersteuning"
 
@@ -292,7 +298,7 @@ msgstr ""
 "van bepaalde onderdelen van Ampache"
 
 #: ../../templates/show_test.inc.php:147
-#: ../../templates/show_install_config.inc.php:91
+#: ../../templates/show_install_config.inc.php:93
 msgid "Ampache.cfg.php Exists"
 msgstr "Ampache.cfg.php Bestaat"
 
@@ -307,7 +313,7 @@ msgstr ""
 "\t niet leesbaar door de webserver."
 
 #: ../../templates/show_test.inc.php:166
-#: ../../templates/show_install_config.inc.php:106
+#: ../../templates/show_install_config.inc.php:108
 msgid "Ampache.cfg.php Configured?"
 msgstr "Ampache.cfg.php Geconfigureerd?"
 
@@ -343,7 +349,7 @@ msgstr ""
 "bestaat en dat we de juiste rechten hebben."
 
 #: ../../templates/show_test.inc.php:223
-#: ../../templates/show_install_config.inc.php:63
+#: ../../templates/show_install_config.inc.php:65
 msgid "Web Path"
 msgstr "Web Directorie"
 
@@ -363,7 +369,7 @@ msgstr "Hoes"
 
 #: ../../templates/show_albums.inc.php:44
 #: ../../templates/show_albums.inc.php:75
-#: ../../templates/sidebar_home.inc.php:106
+#: ../../templates/sidebar_home.inc.php:107
 #: ../../templates/show_edit_song.inc.php:37
 #: ../../templates/show_democratic_playlist.inc.php:57
 #: ../../templates/show_democratic_playlist.inc.php:97
@@ -378,9 +384,10 @@ msgstr "Hoes"
 #: ../../templates/show_disabled_songs.inc.php:58
 #: ../../templates/show_duplicates.inc.php:39
 #: ../../templates/show_duplicates.inc.php:78
+#: ../../templates/show_lyrics_song.inc.php:49
 #: ../../templates/show_playlist_songs.inc.php:44
 #: ../../templates/show_playlist_songs.inc.php:65
-#: ../../templates/show_now_playing_row.inc.php:52
+#: ../../templates/show_now_playing_row.inc.php:61
 msgid "Album"
 msgstr "Album"
 
@@ -388,8 +395,8 @@ msgstr "Album"
 #: ../../templates/show_albums.inc.php:76
 #: ../../templates/show_artists.inc.php:37
 #: ../../templates/show_artists.inc.php:65
-#: ../../templates/sidebar_home.inc.php:80
-#: ../../templates/sidebar_home.inc.php:107
+#: ../../templates/sidebar_home.inc.php:81
+#: ../../templates/sidebar_home.inc.php:108
 #: ../../templates/show_similar_artists.inc.php:33
 #: ../../templates/show_similar_artists.inc.php:86
 #: ../../templates/show_edit_song.inc.php:45
@@ -406,9 +413,10 @@ msgstr "Album"
 #: ../../templates/show_disabled_songs.inc.php:59
 #: ../../templates/show_duplicates.inc.php:38
 #: ../../templates/show_duplicates.inc.php:77
+#: ../../templates/show_lyrics_song.inc.php:56
 #: ../../templates/show_playlist_songs.inc.php:43
 #: ../../templates/show_playlist_songs.inc.php:64
-#: ../../templates/show_now_playing_row.inc.php:59
+#: ../../templates/show_now_playing_row.inc.php:68
 msgid "Artist"
 msgstr "Artiest"
 
@@ -418,7 +426,7 @@ msgstr "Artiest"
 #: ../../templates/show_artists.inc.php:66
 #: ../../templates/show_manage_democratic.inc.php:39
 #: ../../templates/show_popular.inc.php:23
-#: ../../templates/show_genre.inc.php:38 ../../templates/show_stats.inc.php:32
+#: ../../templates/show_genre.inc.php:39 ../../templates/show_stats.inc.php:32
 #: ../../templates/show_stats.inc.php:68
 #: ../../templates/show_genres.inc.php:38
 #: ../../templates/show_genres.inc.php:74 ../../lib/class/browse.class.php:142
@@ -438,8 +446,8 @@ msgstr "Jaar"
 #: ../../templates/show_albums.inc.php:79
 #: ../../templates/show_artists.inc.php:41
 #: ../../templates/show_artists.inc.php:69
-#: ../../templates/show_videos.inc.php:40
-#: ../../templates/show_videos.inc.php:63
+#: ../../templates/show_videos.inc.php:41
+#: ../../templates/show_videos.inc.php:65
 #: ../../templates/show_stats.inc.php:34 ../../templates/show_songs.inc.php:43
 #: ../../templates/show_songs.inc.php:72
 #, fuzzy
@@ -471,7 +479,7 @@ msgstr "Acties"
 #: ../../templates/show_live_streams.inc.php:53
 #: ../../templates/show_playlists.inc.php:53
 #: ../../templates/show_manage_democratic.inc.php:63
-#: ../../templates/show_videos.inc.php:54
+#: ../../templates/show_videos.inc.php:56
 #: ../../templates/show_objects.inc.php:44
 #: ../../templates/rightbar.inc.php:108 ../../templates/show_genres.inc.php:68
 #: ../../templates/show_user_recommendations.inc.php:32
@@ -492,10 +500,10 @@ msgstr "Volledige naam"
 #: ../../templates/show_users.inc.php:39 ../../templates/show_users.inc.php:61
 #: ../../templates/show_edit_user.inc.php:32
 #: ../../templates/show_add_user.inc.php:29
-#: ../../templates/show_install_account.inc.php:61
+#: ../../templates/show_install_account.inc.php:62
 #: ../../templates/show_recently_played.inc.php:41
 #: ../../templates/show_recently_played.inc.php:100
-#: ../../templates/show_login_form.inc.php:57
+#: ../../templates/show_login_form.inc.php:58
 #: ../../templates/show_user_registration.inc.php:73
 #: ../../templates/show_now_playing_row.inc.php:29
 msgid "Username"
@@ -527,6 +535,8 @@ msgstr "Laatste IP-Adres"
 #: ../../templates/show_live_streams.inc.php:40
 #: ../../templates/show_live_streams.inc.php:62
 #: ../../templates/show_manage_democratic.inc.php:40
+#: ../../templates/show_videos.inc.php:42
+#: ../../templates/show_videos.inc.php:66
 #: ../../templates/show_plugins.inc.php:35
 #: ../../templates/show_plugins.inc.php:64
 #: ../../templates/show_democratic_playlist.inc.php:54
@@ -556,15 +566,15 @@ msgid "On-line"
 msgstr "Online"
 
 #: ../../templates/show_users.inc.php:53 ../../templates/show_user.inc.php:22
-#: ../../lib/class/user.class.php:663 ../../lib/class/catalog.class.php:146
+#: ../../lib/class/user.class.php:671 ../../lib/class/catalog.class.php:146
 #: ../../lib/class/catalog.class.php:147 ../../lib/class/catalog.class.php:148
-#: ../../lib/preferences.php:261
+#: ../../lib/preferences.php:263
 msgid "Never"
 msgstr "Nooit"
 
 #: ../../templates/show_users.inc.php:54 ../../templates/show_user.inc.php:23
 #: ../../lib/class/flag.class.php:337 ../../lib/class/localplay.class.php:648
-#: ../../lib/class/user.class.php:667 ../../lib/general.lib.php:338
+#: ../../lib/class/user.class.php:675 ../../lib/general.lib.php:339
 #: ../../modules/localplay/mpd.controller.php:525
 msgid "Unknown"
 msgstr "Onbekend"
@@ -593,8 +603,8 @@ msgstr "e-Mail"
 
 #: ../../templates/show_edit_user.inc.php:55
 #: ../../templates/show_add_user.inc.php:52
-#: ../../templates/show_install_account.inc.php:65
-#: ../../templates/show_login_form.inc.php:61
+#: ../../templates/show_install_account.inc.php:66
+#: ../../templates/show_login_form.inc.php:62
 #: ../../templates/show_user_registration.inc.php:101
 #: ../../modules/localplay/mpd.controller.php:235
 #: ../../modules/localplay/httpq.controller.php:219
@@ -604,7 +614,7 @@ msgstr "Wachtwoord"
 #: ../../templates/show_edit_user.inc.php:64
 #: ../../templates/show_add_user.inc.php:61
 #: ../../templates/show_account.inc.php:46
-#: ../../templates/show_install_account.inc.php:69
+#: ../../templates/show_install_account.inc.php:70
 #: ../../templates/show_user_registration.inc.php:110
 msgid "Confirm Password"
 msgstr "Herhaal uw wachtwoord"
@@ -638,7 +648,7 @@ msgstr "Gast"
 #: ../../templates/show_access_list.inc.php:59
 #: ../../templates/show_manage_shoutbox.inc.php:35
 #: ../../templates/show_manage_shoutbox.inc.php:59
-#: ../../lib/class/democratic.class.php:148 ../../lib/preferences.php:231
+#: ../../lib/class/democratic.class.php:148 ../../lib/preferences.php:232
 #: ../../admin/users.php:126
 msgid "User"
 msgstr "Gebruiker"
@@ -667,7 +677,7 @@ msgstr "Catalogus beheerder"
 #: ../../templates/show_democratic_playlist.inc.php:61
 #: ../../templates/show_democratic_playlist.inc.php:101
 #: ../../templates/show_mail_users.inc.php:32
-#: ../../lib/class/democratic.class.php:157 ../../lib/preferences.php:233
+#: ../../lib/class/democratic.class.php:157 ../../lib/preferences.php:234
 #: ../../admin/users.php:127
 msgid "Admin"
 msgstr "Beheer"
@@ -682,19 +692,19 @@ msgid "Config Preset"
 msgstr "Bevestig verwijdering"
 
 #: ../../templates/show_edit_user.inc.php:93
-#: ../../templates/sidebar_home.inc.php:90
+#: ../../templates/sidebar_home.inc.php:91
 #: ../../templates/show_playtype_switch.inc.php:36
-#: ../../templates/sidebar_modules.inc.php:41 ../../lib/preferences.php:179
+#: ../../templates/sidebar_modules.inc.php:41 ../../lib/preferences.php:180
 #: ../../modules/localplay/mpd.controller.php:491
 #: ../../modules/localplay/httpq.controller.php:488
 msgid "Democratic"
 msgstr "Democratisch"
 
 #: ../../templates/show_edit_user.inc.php:94
-#: ../../templates/sidebar_home.inc.php:99
+#: ../../templates/sidebar_home.inc.php:100
 #: ../../templates/sidebar_localplay.inc.php:32
 #: ../../templates/show_playtype_switch.inc.php:34
-#: ../../templates/sidebar.inc.php:28 ../../lib/preferences.php:182
+#: ../../templates/sidebar.inc.php:28 ../../lib/preferences.php:183
 msgid "Localplay"
 msgstr "Lokaal afspelen"
 
@@ -704,7 +714,7 @@ msgstr "Markeer"
 
 #: ../../templates/show_edit_user.inc.php:96
 #: ../../templates/show_playtype_switch.inc.php:32
-#: ../../lib/preferences.php:176
+#: ../../lib/preferences.php:177
 msgid "Stream"
 msgstr "Stream"
 
@@ -799,8 +809,8 @@ msgstr "Versie"
 #: ../../templates/show_localplay_controllers.inc.php:44
 #: ../../templates/show_user_row.inc.php:46
 #: ../../templates/show_duplicates.inc.php:36
-#: ../../templates/show_duplicates.inc.php:75 ../../lib/preferences.php:165
-#: ../../lib/preferences.php:271
+#: ../../templates/show_duplicates.inc.php:75 ../../lib/preferences.php:166
+#: ../../lib/preferences.php:273
 msgid "Disable"
 msgstr "Deactiveren"
 
@@ -849,17 +859,17 @@ msgstr "Veranderingen opslaan"
 #: ../../templates/show_artists.inc.php:39
 #: ../../templates/show_artists.inc.php:67
 #: ../../templates/sidebar_home.inc.php:33
-#: ../../templates/sidebar_home.inc.php:77
+#: ../../templates/sidebar_home.inc.php:78
 #: ../../templates/show_popular.inc.php:26
-#: ../../templates/show_genre.inc.php:32 ../../templates/show_stats.inc.php:30
+#: ../../templates/show_genre.inc.php:33 ../../templates/show_stats.inc.php:30
 #: ../../lib/ui.lib.php:362 ../../lib/class/browse.class.php:148
 msgid "Albums"
 msgstr "Albums"
 
 #: ../../templates/show_artists.inc.php:40
 #: ../../templates/show_artists.inc.php:68
-#: ../../templates/show_videos.inc.php:39
-#: ../../templates/show_videos.inc.php:62
+#: ../../templates/show_videos.inc.php:40
+#: ../../templates/show_videos.inc.php:64
 #: ../../templates/show_democratic_playlist.inc.php:59
 #: ../../templates/show_democratic_playlist.inc.php:99
 #: ../../templates/show_search.inc.php:72
@@ -880,8 +890,8 @@ msgid "Search Type"
 msgstr "Zoek type"
 
 #: ../../templates/show_duplicate.inc.php:33
-#: ../../templates/show_videos.inc.php:36
-#: ../../templates/show_videos.inc.php:59
+#: ../../templates/show_videos.inc.php:37
+#: ../../templates/show_videos.inc.php:61
 #: ../../templates/show_edit_song.inc.php:31
 #: ../../templates/show_democratic_playlist.inc.php:56
 #: ../../templates/show_democratic_playlist.inc.php:96
@@ -966,14 +976,14 @@ msgstr "Naam liedje"
 
 #: ../../templates/sidebar_home.inc.php:34
 #: ../../templates/show_popular.inc.php:29
-#: ../../templates/show_genre.inc.php:35 ../../templates/show_stats.inc.php:31
+#: ../../templates/show_genre.inc.php:36 ../../templates/show_stats.inc.php:31
 #: ../../lib/ui.lib.php:366 ../../lib/class/browse.class.php:159
-#: ../../lib/class/album.class.php:256
+#: ../../lib/class/album.class.php:257
 msgid "Artists"
 msgstr "Artiesten"
 
 #: ../../templates/sidebar_home.inc.php:35
-#: ../../lib/class/browse.class.php:203
+#: ../../lib/class/browse.class.php:203 ../../browse.php:68
 msgid "Tag Cloud"
 msgstr "Tag wolk"
 
@@ -1013,7 +1023,7 @@ msgid "Unplayed"
 msgstr "Niet afgespeeld"
 
 #: ../../templates/sidebar_home.inc.php:64
-#: ../../templates/show_artist.inc.php:55
+#: ../../templates/show_artist.inc.php:64
 msgid "Show Art"
 msgstr "Afbeelding weergeven"
 
@@ -1021,49 +1031,49 @@ msgstr "Afbeelding weergeven"
 msgid "All Playlists"
 msgstr "Alle afspeellijsten"
 
-#: ../../templates/sidebar_home.inc.php:74
+#: ../../templates/sidebar_home.inc.php:75
 #: ../../templates/show_songs.inc.php:40 ../../templates/show_songs.inc.php:69
 #: ../../templates/show_playlist_songs.inc.php:42
 #: ../../templates/show_playlist_songs.inc.php:63
 msgid "Song Title"
 msgstr "Naam liedje"
 
-#: ../../templates/sidebar_home.inc.php:86
-#: ../../templates/sidebar_home.inc.php:108
+#: ../../templates/sidebar_home.inc.php:87
+#: ../../templates/sidebar_home.inc.php:109
 #: ../../templates/show_manage_democratic.inc.php:34
 #: ../../templates/show_play_selected.inc.php:47 ../../lib/ui.lib.php:321
 msgid "Playlist"
 msgstr "Afspeellijst"
 
-#: ../../templates/sidebar_home.inc.php:88
+#: ../../templates/sidebar_home.inc.php:89
 msgid "Currently Playing"
 msgstr "Nu aan het spelen"
 
-#: ../../templates/sidebar_home.inc.php:101
+#: ../../templates/sidebar_home.inc.php:102
 #: ../../templates/show_live_stream.inc.php:29
 msgid "Import"
 msgstr "Importeren"
 
-#: ../../templates/sidebar_home.inc.php:109
+#: ../../templates/sidebar_home.inc.php:110
 msgid "Advanced"
 msgstr "Geavanceerd"
 
-#: ../../templates/sidebar_home.inc.php:112
+#: ../../templates/sidebar_home.inc.php:113
 #: ../../templates/show_popular.inc.php:22
 #: ../../templates/show_newest.inc.php:22
 msgid "Information"
 msgstr "Informatie"
 
-#: ../../templates/sidebar_home.inc.php:114
+#: ../../templates/sidebar_home.inc.php:115
 #: ../../templates/show_stats.inc.php:24 ../../lib/ui.lib.php:374
 msgid "Statistics"
 msgstr "Statistieken"
 
-#: ../../templates/sidebar_home.inc.php:115
+#: ../../templates/sidebar_home.inc.php:116
 msgid "Newest"
 msgstr "Nieuwste"
 
-#: ../../templates/sidebar_home.inc.php:116
+#: ../../templates/sidebar_home.inc.php:117
 msgid "Popular"
 msgstr "Populair"
 
@@ -1082,8 +1092,8 @@ msgid "Reject"
 msgstr "Wijgeren"
 
 #: ../../templates/show_flag_row.inc.php:33
-#: ../../templates/show_user_row.inc.php:43 ../../lib/preferences.php:164
-#: ../../lib/preferences.php:270
+#: ../../templates/show_user_row.inc.php:43 ../../lib/preferences.php:165
+#: ../../lib/preferences.php:272
 msgid "Enable"
 msgstr "Activeren"
 
@@ -1102,6 +1112,7 @@ msgstr "# Liedjes"
 msgid "Owner"
 msgstr "Eigenaar"
 
+#. HINT: Catalog Name
 #: ../../templates/show_edit_catalog.inc.php:22
 #, php-format
 msgid "Settings for %s"
@@ -1190,7 +1201,7 @@ msgid "Base Playlist"
 msgstr "Basis afspeellijst"
 
 #: ../../templates/show_manage_democratic.inc.php:36
-#: ../../templates/show_democratic.inc.php:28
+#: ../../templates/show_democratic.inc.php:29
 msgid "Cooldown"
 msgstr "Afkoelen"
 
@@ -1208,7 +1219,7 @@ msgid "Level"
 msgstr "Niveau"
 
 #: ../../templates/show_manage_democratic.inc.php:38
-#: ../../lib/preferences.php:255 ../../lib/preferences.php:262
+#: ../../lib/preferences.php:257 ../../lib/preferences.php:264
 msgid "Default"
 msgstr "Standaard"
 
@@ -1361,6 +1372,7 @@ msgstr "Einde"
 msgid "Create ACL"
 msgstr "Maak toegangs niveau aan"
 
+#. HINT: Playlist Type, Playlist Name
 #: ../../templates/show_playlist.inc.php:26
 #, php-format
 msgid "%s %s Playlist"
@@ -1400,8 +1412,8 @@ msgstr "Actieve instanties"
 
 #: ../../templates/sidebar_localplay.inc.php:44
 #: ../../templates/show_gather_art.inc.php:24
-#: ../../templates/show_adds_catalog.inc.php:25 ../../lib/ui.lib.php:571
-#: ../../lib/preferences.php:174 ../../lib/preferences.php:216
+#: ../../templates/show_adds_catalog.inc.php:26 ../../lib/ui.lib.php:571
+#: ../../lib/preferences.php:175 ../../lib/preferences.php:217
 msgid "None"
 msgstr "Geen"
 
@@ -1427,21 +1439,23 @@ msgid "Using Old Password Encryption, Please Reset your Password"
 msgstr "Oude wachtwoord encryptie wordt gebruikt. Sla uw wachtwoord opnieuw op"
 
 #: ../../templates/footer.inc.php:32
+#: ../../templates/show_login_form.inc.php:99
 msgid "Queries:"
 msgstr "Aanvragen:"
 
 #: ../../templates/footer.inc.php:32
+#: ../../templates/show_login_form.inc.php:99
 msgid "Cache Hits:"
 msgstr "Uit cache:"
 
-#: ../../templates/show_videos.inc.php:37
-#: ../../templates/show_videos.inc.php:60
+#: ../../templates/show_videos.inc.php:38
+#: ../../templates/show_videos.inc.php:62
 #: ../../templates/show_search.inc.php:79
 msgid "Codec"
 msgstr "Codec"
 
-#: ../../templates/show_videos.inc.php:38
-#: ../../templates/show_videos.inc.php:61
+#: ../../templates/show_videos.inc.php:39
+#: ../../templates/show_videos.inc.php:63
 msgid "Resolution"
 msgstr "Resolutie"
 
@@ -1540,20 +1554,21 @@ msgstr "Geavanceerde Opties"
 msgid "Search Again"
 msgstr "Opnieuw zoeken"
 
-#: ../../templates/show_clean_catalog.inc.php:23
+#. HINT: Catalog Name
+#: ../../templates/show_clean_catalog.inc.php:24
 #, php-format
 msgid "Cleaning the %s Catalog"
 msgstr "Opschonen van %s Catalog"
 
-#: ../../templates/show_clean_catalog.inc.php:25
+#: ../../templates/show_clean_catalog.inc.php:26
 msgid "Checking"
 msgstr "Bezig met controleren"
 
-#: ../../templates/show_clean_catalog.inc.php:26
+#: ../../templates/show_clean_catalog.inc.php:27
 #: ../../templates/show_run_add_catalog.inc.php:25
 #: ../../templates/show_gather_art.inc.php:25
-#: ../../templates/show_adds_catalog.inc.php:26
-#: ../../templates/show_verify_catalog.inc.php:28
+#: ../../templates/show_adds_catalog.inc.php:27
+#: ../../templates/show_verify_catalog.inc.php:29
 msgid "Reading"
 msgstr "Bezig met lezen"
 
@@ -1613,7 +1628,7 @@ msgid "Flag"
 msgstr "Markeer"
 
 #: ../../templates/show_playtype_switch.inc.php:38
-#: ../../lib/preferences.php:184
+#: ../../lib/preferences.php:185
 msgid "Flash Player"
 msgstr "Flash afspeler"
 
@@ -1621,17 +1636,17 @@ msgstr "Flash afspeler"
 msgid "Preference Administration"
 msgstr "Beheer standaarden"
 
-#: ../../templates/show_install_config.inc.php:33
-#: ../../templates/show_install_lang.inc.php:34
-#: ../../templates/show_install.inc.php:33
-#: ../../templates/show_install_account.inc.php:33
+#: ../../templates/show_install_config.inc.php:34
+#: ../../templates/show_install_lang.inc.php:35
+#: ../../templates/show_install.inc.php:35
+#: ../../templates/show_install_account.inc.php:34
 msgid "Ampache Installation"
 msgstr "Ampache Installatie"
 
-#: ../../templates/show_install_config.inc.php:39
-#: ../../templates/show_install_lang.inc.php:41
-#: ../../templates/show_install.inc.php:41
-#: ../../templates/show_install_account.inc.php:40
+#: ../../templates/show_install_config.inc.php:40
+#: ../../templates/show_install_lang.inc.php:42
+#: ../../templates/show_install.inc.php:43
+#: ../../templates/show_install_account.inc.php:41
 msgid ""
 "This Page handles the installation of the Ampache database and the creation "
 "of the ampache.cfg.php file. Before you continue please make sure that you "
@@ -1641,30 +1656,30 @@ msgstr ""
 "aanmaken van het ampache.cfg.php configuratie bestand. Voordat u verder "
 "gaat, controleer of u voldoet aanonderstaande eisen"
 
-#: ../../templates/show_install_config.inc.php:42
-#: ../../templates/show_install_lang.inc.php:44
-#: ../../templates/show_install.inc.php:44
-#: ../../templates/show_install_account.inc.php:43
+#: ../../templates/show_install_config.inc.php:43
+#: ../../templates/show_install_lang.inc.php:45
+#: ../../templates/show_install.inc.php:46
+#: ../../templates/show_install_account.inc.php:44
 msgid ""
 "A MySQL Server with a username and password that can create/modify databases"
 msgstr ""
 "Een MySQL Server met gebruikersnaam en wachtwoord dat een database kan "
 "aanmaken/wijzigen"
 
-#: ../../templates/show_install_config.inc.php:43
-#: ../../templates/show_install_lang.inc.php:45
-#: ../../templates/show_install.inc.php:45
-msgid ""
-"Your webserver has read access to the /sql/ampache.sql file and the /config/"
-"ampache.cfg.php.dist file"
+#: ../../templates/show_install_config.inc.php:44
+#: ../../templates/show_install_lang.inc.php:46
+#: ../../templates/show_install.inc.php:47
+#: ../../templates/show_install_account.inc.php:45
+#, fuzzy, php-format
+msgid "Your webserver has read access to the %s file and the %s file"
 msgstr ""
 "Uw webserver leesrechten heeft op het bestand /sql/ampache.sql en het "
 "bestand /config/ampache.cfg.php.dist"
 
-#: ../../templates/show_install_config.inc.php:45
-#: ../../templates/show_install_lang.inc.php:48
-#: ../../templates/show_install.inc.php:48
-#: ../../templates/show_install_account.inc.php:46
+#: ../../templates/show_install_config.inc.php:47
+#: ../../templates/show_install_lang.inc.php:49
+#: ../../templates/show_install.inc.php:50
+#: ../../templates/show_install_account.inc.php:47
 msgid ""
 "Once you have ensured that you have the above requirements please fill out "
 "the information below. You will only be asked for the required config "
@@ -1677,18 +1692,18 @@ msgstr ""
 "ampache installatie kan dit door het bestand /config/amache.cfg.php te "
 "bewerken"
 
-#: ../../templates/show_install_config.inc.php:49
-#: ../../templates/show_install.inc.php:53
-#: ../../templates/show_install_account.inc.php:49
+#: ../../templates/show_install_config.inc.php:51
+#: ../../templates/show_install.inc.php:55
+#: ../../templates/show_install_account.inc.php:50
 msgid "Step 1 - Creating and Inserting the Ampache Database"
 msgstr "Stap 1 - Aanmaken en vullen van de Ampache Database"
 
-#: ../../templates/show_install_config.inc.php:50
-#: ../../templates/show_install.inc.php:57
+#: ../../templates/show_install_config.inc.php:52
+#: ../../templates/show_install.inc.php:59
 msgid "Step 2 - Creating the Ampache.cfg.php file"
 msgstr " Stap 2 - Het Ampache.cfg.php bestand aanmaken"
 
-#: ../../templates/show_install_config.inc.php:52
+#: ../../templates/show_install_config.inc.php:54
 msgid ""
 "This steps takes the basic config values and generates the config file. It "
 "will prompt you to download the config file. Please put the downloaded "
@@ -1698,43 +1713,43 @@ msgstr ""
 "bestand aan. Daarna wordt u gevraagd deze te donwloaden. Dit bestand moet u "
 "opslaan op de server in directorie /config"
 
-#: ../../templates/show_install_config.inc.php:54
-#: ../../templates/show_install.inc.php:58
-#: ../../templates/show_install_account.inc.php:51
+#: ../../templates/show_install_config.inc.php:56
+#: ../../templates/show_install.inc.php:60
+#: ../../templates/show_install_account.inc.php:52
 msgid "Step 3 - Setup Initial Account"
 msgstr "Stap 3 - Aanmaken eerste gebruiker"
 
-#: ../../templates/show_install_config.inc.php:58
+#: ../../templates/show_install_config.inc.php:60
 msgid "Generate Config File"
 msgstr "Genereer configuratie bestand"
 
-#: ../../templates/show_install_config.inc.php:67
-#: ../../templates/show_install.inc.php:66
+#: ../../templates/show_install_config.inc.php:69
+#: ../../templates/show_install.inc.php:68
 msgid "Desired Database Name"
 msgstr "Gewenste database naam"
 
-#: ../../templates/show_install_config.inc.php:71
-#: ../../templates/show_install.inc.php:70
+#: ../../templates/show_install_config.inc.php:73
+#: ../../templates/show_install.inc.php:72
 msgid "MySQL Hostname"
 msgstr "MySQL Hostnaam"
 
-#: ../../templates/show_install_config.inc.php:75
+#: ../../templates/show_install_config.inc.php:77
 msgid "MySQL Username"
 msgstr "MySQl Gebruikersnaam"
 
-#: ../../templates/show_install_config.inc.php:79
+#: ../../templates/show_install_config.inc.php:81
 msgid "MySQL Password"
 msgstr "MySQL Wachtwoord"
 
-#: ../../templates/show_install_config.inc.php:84
+#: ../../templates/show_install_config.inc.php:86
 msgid "Write Config"
 msgstr "Schrijf configuratie"
 
-#: ../../templates/show_install_config.inc.php:125
+#: ../../templates/show_install_config.inc.php:127
 msgid "Check for Config"
 msgstr "Configuratie controleren"
 
-#: ../../templates/show_install_config.inc.php:131
+#: ../../templates/show_install_config.inc.php:133
 msgid "Continue to Step 3"
 msgstr "Doorgaan naar Stap 3"
 
@@ -1754,7 +1769,7 @@ msgstr "Gebruiker is offline"
 msgid "Active Playlist"
 msgstr "Huidige afspeellijst"
 
-#: ../../templates/show_user.inc.php:68 ../../templates/header.inc.php:36
+#: ../../templates/show_user.inc.php:68 ../../templates/header.inc.php:37
 #: ../../templates/show_recently_played.inc.php:25
 #: ../../lib/class/ampacherss.class.php:71
 msgid "Recently Played"
@@ -1838,25 +1853,26 @@ msgstr "Server configuratie"
 msgid "Required"
 msgstr "Vereist"
 
-#: ../../templates/show_install_check.inc.php:106
+#: ../../templates/show_install_check.inc.php:112
 msgid "Optional"
 msgstr "Optioneel"
 
-#: ../../templates/show_install_check.inc.php:108
+#: ../../templates/show_install_check.inc.php:114
 #: ../../templates/show_debug.inc.php:80
 msgid "Gettext Support"
 msgstr "Gettext ondersteuning"
 
-#: ../../templates/show_install_check.inc.php:112
+#: ../../templates/show_install_check.inc.php:118
 msgid "Gettext Emulator will be used"
 msgstr "Gettext emulator wordt gebruikt"
 
-#: ../../templates/show_install_check.inc.php:120
+#: ../../templates/show_install_check.inc.php:126
 msgid "Mbstring Support"
 msgstr "Mbstring Ondersteuning"
 
-#: ../../templates/show_install_check.inc.php:124
-msgid "Multibyte Chracter may not detect correct"
+#: ../../templates/show_install_check.inc.php:130
+#, fuzzy
+msgid "Multibyte Character may not detect correct"
 msgstr "Multibyte character kan niet goed worden gedetecteerd"
 
 #: ../../templates/sidebar.inc.php:27 ../../lib/ui.lib.php:309
@@ -1872,20 +1888,20 @@ msgstr "Modules"
 msgid "Logout"
 msgstr "Uitloggen"
 
-#: ../../templates/show_install_lang.inc.php:39
-#: ../../templates/show_install.inc.php:39
+#: ../../templates/show_install_lang.inc.php:40
+#: ../../templates/show_install.inc.php:41
 msgid "Requirements"
 msgstr "Vereisten"
 
-#: ../../templates/show_install_lang.inc.php:54
+#: ../../templates/show_install_lang.inc.php:55
 msgid "Minimum Requirements not met. Unable to Install Ampache."
 msgstr "Minimum eisen zijn niet behaald. Onmogelijk om Ampache te installeren."
 
-#: ../../templates/show_install_lang.inc.php:59
+#: ../../templates/show_install_lang.inc.php:60
 msgid "Choose installation language."
 msgstr "Kies de installatie taal."
 
-#: ../../templates/show_install_lang.inc.php:80
+#: ../../templates/show_install_lang.inc.php:81
 msgid "Start configuration"
 msgstr "Start configuratie"
 
@@ -1899,8 +1915,8 @@ msgstr "Toevoegen aan nieuwe afspeellijst"
 
 #: ../../templates/rightbar.inc.php:54
 #: ../../templates/show_localplay_status.inc.php:47
-#: ../../templates/show_democratic.inc.php:42
 #: ../../templates/show_democratic.inc.php:43
+#: ../../templates/show_democratic.inc.php:44
 msgid "Clear Playlist"
 msgstr "Maak afspeellijst Leeg"
 
@@ -1928,7 +1944,7 @@ msgstr "Verwante tag"
 msgid "More"
 msgstr "Meer"
 
-#: ../../templates/header.inc.php:35
+#: ../../templates/header.inc.php:36
 #: ../../templates/show_localplay_status.inc.php:27
 #: ../../templates/show_now_playing.inc.php:33
 #: ../../lib/class/localplay.class.php:639
@@ -1936,15 +1952,15 @@ msgstr "Meer"
 msgid "Now Playing"
 msgstr "Nu speelt"
 
-#: ../../templates/header.inc.php:61
+#: ../../templates/header.inc.php:62
 msgid "Log out"
 msgstr "Uitloggen"
 
-#: ../../templates/header.inc.php:77
+#: ../../templates/header.inc.php:78
 msgid "Error Config File Out of Date"
 msgstr "Configuratie bestand is verouderd"
 
-#: ../../templates/header.inc.php:78
+#: ../../templates/header.inc.php:79
 #: ../../templates/show_admin_tools.inc.php:92
 #, fuzzy
 msgid "Generate New Config"
@@ -1965,7 +1981,8 @@ msgstr "Prive"
 msgid "Adding a New User"
 msgstr "Nieuwe gebruiker toevoegen"
 
-#: ../../templates/show_genre.inc.php:29
+#. HINT: Genre Name
+#: ../../templates/show_genre.inc.php:30
 #, php-format
 msgid "Viewing %s Genre"
 msgstr "Bekijk %s genre"
@@ -1982,16 +1999,17 @@ msgstr "Registratie"
 msgid "User Activated"
 msgstr "Gebruiker geactiveerd"
 
-#: ../../templates/show_user_activate.inc.php:51
+#. HINT: Start A tag, End A tag
+#: ../../templates/show_user_activate.inc.php:52
 #, php-format
 msgid "This User ID is activated and can be used %sLogin%s"
 msgstr "Dit gebruikers account is geactiveerd en kan gebruikt worden %sLogin%s"
 
-#: ../../templates/show_user_activate.inc.php:54
+#: ../../templates/show_user_activate.inc.php:55
 msgid "Validation Failed"
 msgstr "Validatie mislukt"
 
-#: ../../templates/show_user_activate.inc.php:55
+#: ../../templates/show_user_activate.inc.php:56
 msgid "The validation key used isn't correct"
 msgstr "De validatie sleutel is onjuist"
 
@@ -2023,8 +2041,8 @@ msgid "Gather Art"
 msgstr "Afbeeldingen ophalen"
 
 #: ../../templates/show_create_democratic.inc.php:22
-#: ../../templates/show_democratic.inc.php:33
 #: ../../templates/show_democratic.inc.php:34
+#: ../../templates/show_democratic.inc.php:35
 msgid "Configure Democratic Playlist"
 msgstr "Configureer democratishe afspeellijst"
 
@@ -2136,6 +2154,7 @@ msgstr "Catalogus Grootte"
 msgid "Catalog Time"
 msgstr "Catalogus Tijd"
 
+#. HINT: Username
 #: ../../templates/show_ip_history.inc.php:23
 #, php-format
 msgid "%s IP History"
@@ -2232,6 +2251,7 @@ msgstr "Nummer aanbeveling"
 msgid "Edit existing Shoutbox Post"
 msgstr "Bewerk bestaande shoutbox inzending"
 
+#. HINT: Client link, Object link
 #: ../../templates/show_edit_shout.inc.php:28
 #, php-format
 msgid "Created by: %s for %s"
@@ -2462,11 +2482,11 @@ msgid "Create"
 msgstr "Aanmaken"
 
 #: ../../templates/show_run_add_catalog.inc.php:24
-#: ../../templates/show_adds_catalog.inc.php:25
+#: ../../templates/show_adds_catalog.inc.php:26
 msgid "Found"
 msgstr "Gevonden"
 
-#: ../../templates/show_install.inc.php:55
+#: ../../templates/show_install.inc.php:57
 msgid ""
 "This step creates and inserts the Ampache database, as such please provide a "
 "mysql account with database creation rights. This step may take a while "
@@ -2476,55 +2496,47 @@ msgstr ""
 "met rechten om een database aan te mogen maken. Dit kan even duren naar "
 "gelang de snelheid van uw computer"
 
-#: ../../templates/show_install.inc.php:62
+#: ../../templates/show_install.inc.php:64
 msgid "Insert Ampache Database"
 msgstr "Ampache Database toevoegen"
 
-#: ../../templates/show_install.inc.php:74
+#: ../../templates/show_install.inc.php:76
 msgid "MySQL Administrative Username"
 msgstr "MySQl Administratieve Gebruikersnaam"
 
-#: ../../templates/show_install.inc.php:78
+#: ../../templates/show_install.inc.php:80
 msgid "MySQL Administrative Password"
 msgstr "MySQl Administratieve wachtwoord"
 
-#: ../../templates/show_install.inc.php:82
+#: ../../templates/show_install.inc.php:84
 msgid "Create Database User for New Database"
 msgstr "Maak Database Gebruiker aan voor nieuwe Database"
 
-#: ../../templates/show_install.inc.php:86
+#: ../../templates/show_install.inc.php:88
 msgid "Ampache Database Username"
 msgstr "Ampache Database Gebruikersnaam"
 
-#: ../../templates/show_install.inc.php:90
+#: ../../templates/show_install.inc.php:92
 msgid "Ampache Database User Password"
 msgstr "Ampache Database Gebruikers wachtwoord"
 
-#: ../../templates/show_install.inc.php:94
+#: ../../templates/show_install.inc.php:96
 msgid "Overwrite Existing"
 msgstr "Overschrijve bestaande"
 
-#: ../../templates/show_install.inc.php:98
+#: ../../templates/show_install.inc.php:100
 msgid "Use Existing Database"
 msgstr "Gebruik bestaande database"
 
-#: ../../templates/show_install.inc.php:103
+#: ../../templates/show_install.inc.php:105
 msgid "Insert Database"
 msgstr "Database aanmaken"
 
-#: ../../templates/show_install_account.inc.php:44
-msgid ""
-"Your webserver has read access to the /sql/ampache.sql file and the /config/"
-"ampache.cfg.dist.php file"
-msgstr ""
-"Uw webserver heeft lees rechten op het bestand /sql/ampache.sql en het "
-"bestandampache.cfg.dist.php"
-
-#: ../../templates/show_install_account.inc.php:50
+#: ../../templates/show_install_account.inc.php:51
 msgid "Step 2 - Creating the ampache.cfg.php file"
 msgstr "Stap 2 - Aanmaken van het ampache.cfg.php bestand"
 
-#: ../../templates/show_install_account.inc.php:53
+#: ../../templates/show_install_account.inc.php:54
 msgid ""
 "This step creates your initial Ampache admin account. Once your admin "
 "account has been created you will be directed to the login page"
@@ -2532,11 +2544,11 @@ msgstr ""
 "Deze stap maakt uw initieele administratieve Ampache account aan. Als uw "
 "account gemaakt is wordt u naar de login pagina gestuurt"
 
-#: ../../templates/show_install_account.inc.php:57
+#: ../../templates/show_install_account.inc.php:58
 msgid "Create Admin Account"
 msgstr "Maak een Beheer Account aan"
 
-#: ../../templates/show_install_account.inc.php:74
+#: ../../templates/show_install_account.inc.php:75
 msgid "Create Account"
 msgstr "Maak Account aan"
 
@@ -2726,7 +2738,8 @@ msgstr "Lokale afbeelding"
 msgid "Get Art"
 msgstr "Haal afbeelding op"
 
-#: ../../templates/show_adds_catalog.inc.php:23
+#. HINT: Catalog Name
+#: ../../templates/show_adds_catalog.inc.php:24
 #, php-format
 msgid "Starting New Song Search on %s catalog"
 msgstr "Start nieuwe zoekopdracht voor liedje in %s catalogus"
@@ -2770,7 +2783,8 @@ msgstr "jaren geleden"
 #: ../../templates/show_recently_played.inc.php:101
 #: ../../templates/show_duplicates.inc.php:37
 #: ../../templates/show_duplicates.inc.php:76
-#: ../../templates/show_now_playing_row.inc.php:45
+#: ../../templates/show_lyrics_song.inc.php:42
+#: ../../templates/show_now_playing_row.inc.php:54
 msgid "Song"
 msgstr "Liedje"
 
@@ -2779,63 +2793,70 @@ msgstr "Liedje"
 msgid "Last Played"
 msgstr "Laatst gespeeld"
 
-#: ../../templates/show_artist.inc.php:22
+#. HINT: Artist Fullname
+#: ../../templates/show_artist.inc.php:23
 #, php-format
 msgid "Albums by %s"
 msgstr "Albums bij %s"
 
-#: ../../templates/show_artist.inc.php:25
+#. HINT: Object type, Artist Fullname
+#: ../../templates/show_artist.inc.php:27
 #, php-format
 msgid "%s by %s"
 msgstr "%s door %s"
 
-#: ../../templates/show_artist.inc.php:35
+#. HINT: Artist Fullname
+#: ../../templates/show_artist.inc.php:38
+#: ../../templates/show_artist.inc.php:39
 #, php-format
 msgid "Show All Songs By %s"
 msgstr "Alle liedjes weergeven van %s"
 
-#: ../../templates/show_artist.inc.php:38
+#: ../../templates/show_artist.inc.php:44
 #, php-format
 msgid "Add All Songs By %s"
 msgstr "Alle Liedjes van %s toevoegen"
 
-#: ../../templates/show_artist.inc.php:41
+#: ../../templates/show_artist.inc.php:49
 #, php-format
 msgid "Add Random Songs By %s"
 msgstr "Speel willekeurige liedjes van %s"
 
-#: ../../templates/show_artist.inc.php:45
+#: ../../templates/show_artist.inc.php:53
+#: ../../templates/show_artist.inc.php:54
 #: ../../templates/show_album.inc.php:70 ../../templates/show_album.inc.php:71
 msgid "Update from tags"
 msgstr "Werk bij via tags"
 
-#: ../../templates/show_democratic.inc.php:21
+#. HINT: Democratic Name
+#: ../../templates/show_democratic.inc.php:22
 #, php-format
 msgid "%s Playlist"
 msgstr "%s afspeellijst"
 
-#: ../../templates/show_democratic.inc.php:21
+#: ../../templates/show_democratic.inc.php:22
 #: ../../lib/class/browse.class.php:214
 msgid "Democratic Playlist"
 msgstr "Democratische afspeellijst"
 
-#: ../../templates/show_democratic.inc.php:39
+#: ../../templates/show_democratic.inc.php:40
 msgid "Play Democratic Playlist"
 msgstr "Democratische afspeellijst afspelen"
 
-#: ../../templates/show_verify_catalog.inc.php:23
+#. HINT: Catalog Name
+#: ../../templates/show_verify_catalog.inc.php:24
 #, php-format
 msgid "Updating the %s catalog"
 msgstr "Bijwerken van catalogus %s"
 
-#: ../../templates/show_verify_catalog.inc.php:25
+#: ../../templates/show_verify_catalog.inc.php:26
 #, php-format
 msgid "%d item found checking tag information"
 msgid_plural "%d items found checking tag information"
 msgstr[0] "%d liedje gevonden, bezig met controleren van tag informatie"
 msgstr[1] "%d liedjes gevonden, bezig met controleren van tag informatie"
 
-#: ../../templates/show_verify_catalog.inc.php:27
+#: ../../templates/show_verify_catalog.inc.php:28
 msgid "Verifed"
 msgstr "Geverifieerd"
 
@@ -2872,13 +2893,13 @@ msgstr ""
 "Deze functies zijn niet beschikbaar in de demo. Doordat vorige gebruikers "
 "niet gepaste dingen verzonden."
 
-#: ../../templates/show_album.inc.php:27 ../../lib/class/album.class.php:244
+#: ../../templates/show_album.inc.php:27 ../../lib/class/album.class.php:245
 msgid "Disk"
 msgstr "Schijf"
 
 #: ../../templates/show_album.inc.php:34
-#: ../../lib/class/catalog.class.php:1981
-#: ../../lib/class/catalog.class.php:2052
+#: ../../lib/class/catalog.class.php:1994
+#: ../../lib/class/catalog.class.php:2097
 msgid "Unknown (Orphaned)"
 msgstr "Onbekend (Orphaned)"
 
@@ -2898,12 +2919,13 @@ msgstr "Album hoes verwijderen"
 msgid "Find Album Art"
 msgstr "Album hoes zoeken"
 
+#. HINT: Song Title
 #: ../../templates/show_lyrics.inc.php:33
 #, php-format
 msgid "%s Lyrics"
 msgstr "%s liedteksten"
 
-#: ../../templates/show_lyrics.inc.php:39 ../../lib/class/artist.class.php:358
+#: ../../templates/show_lyrics.inc.php:40 ../../lib/class/artist.class.php:359
 msgid "Sorry Lyrics Not Found."
 msgstr "Geen liedteksten gevonden."
 
@@ -2911,19 +2933,19 @@ msgstr "Geen liedteksten gevonden."
 msgid "Add Localplay Instance"
 msgstr "Lokaal afspelen instantie toevoegen"
 
-#: ../../templates/show_login_form.inc.php:65
+#: ../../templates/show_login_form.inc.php:66
 msgid "Remember Me"
 msgstr "Onthoud mij"
 
-#: ../../templates/show_login_form.inc.php:72
+#: ../../templates/show_login_form.inc.php:73
 msgid "Login"
 msgstr "Inloggen"
 
-#: ../../templates/show_login_form.inc.php:77
+#: ../../templates/show_login_form.inc.php:78
 msgid "Register"
 msgstr "Registreer"
 
-#: ../../templates/show_login_form.inc.php:89
+#: ../../templates/show_login_form.inc.php:90
 msgid "Message of the Day"
 msgstr "Bericht van de dag"
 
@@ -2974,7 +2996,7 @@ msgstr "Bitrate"
 msgid "Last Updated"
 msgstr "Snel Bijwerken"
 
-#: ../../templates/show_song.inc.php:57 ../../lib/class/catalog.class.php:1342
+#: ../../templates/show_song.inc.php:57 ../../lib/class/catalog.class.php:1348
 #: ../../admin/access.php:93
 msgid "Added"
 msgstr "Toegevoegd"
@@ -2989,7 +3011,7 @@ msgid "Remove"
 msgstr "Verwijderen"
 
 #: ../../templates/show_edit_album_row.inc.php:35
-#: ../../lib/class/album.class.php:256 ../../lib/class/album.class.php:257
+#: ../../lib/class/album.class.php:257 ../../lib/class/album.class.php:258
 msgid "Various"
 msgstr "Diverse"
 
@@ -3034,11 +3056,13 @@ msgstr "Schoon alle"
 msgid "Update All"
 msgstr "Werk alle bij"
 
+#. HINT: /data/myNewMusic
 #: ../../templates/show_manage_catalogs.inc.php:38
 #, php-format
 msgid "Add From %s"
 msgstr "Toevoegen van %s"
 
+#. HINT: /data/myUpdatedMusic
 #: ../../templates/show_manage_catalogs.inc.php:40
 #, php-format
 msgid "Update From %s"
@@ -3097,6 +3121,7 @@ msgstr "Eind adres"
 msgid "Key"
 msgstr "Sleutel"
 
+#. HINT: Artist Name
 #: ../../templates/show_rename_artist.inc.php:29
 #, php-format
 msgid "Rename %s"
@@ -3248,6 +3273,10 @@ msgstr "Iconv Support"
 msgid "Current Configuration"
 msgstr "Huidige configuratie"
 
+#: ../../templates/show_now_playing_row.inc.php:46
+msgid "Show Lyrics"
+msgstr "Liedteksten weergeven"
+
 #: ../../templates/sidebar_modules.inc.php:27
 msgid "Localplay Modules"
 msgstr "Lokaal afspeel modules"
@@ -3330,7 +3359,7 @@ msgstr "De opgegeven wachtwoorden komen niet overeen"
 msgid "Error Username already exists"
 msgstr "Fout gebruikersnaam bestaat al"
 
-#: ../../register.php:159
+#: ../../register.php:159 ../../admin/users.php:117
 msgid "Error: Insert Failed"
 msgstr "Fout: Gebruiker kon niet worden aangemaakt"
 
@@ -3338,15 +3367,15 @@ msgstr "Fout: Gebruiker kon niet worden aangemaakt"
 msgid "User Disabled please contact Admin"
 msgstr "Gebruiker gedeactiveerd neem contact op met beheerder"
 
-#: ../../login.php:87
+#: ../../login.php:89
 msgid "Unable to create new account"
 msgstr "Niet in staat om een nieuw account aan te maken"
 
-#: ../../login.php:95
+#: ../../login.php:98
 msgid "No local account found"
 msgstr "Geen lokaal account gevonden"
 
-#: ../../login.php:112
+#: ../../login.php:115
 msgid "User Already Logged in"
 msgstr "Gebruiker is al ingelogd"
 
@@ -3485,12 +3514,12 @@ msgstr "Gespeeld"
 msgid "Primary"
 msgstr "Primair"
 
-#: ../../lib/class/artist.class.php:345
+#: ../../lib/class/artist.class.php:346
 msgid "Fault"
 msgstr "Fout"
 
-#: ../../lib/class/artist.class.php:353 ../../lib/class/catalog.class.php:1234
-#: ../../admin/users.php:142
+#: ../../lib/class/artist.class.php:354 ../../lib/class/catalog.class.php:1240
+#: ../../admin/users.php:143
 msgid "Error"
 msgstr "Fout"
 
@@ -3504,7 +3533,7 @@ msgstr "Fout gebruikersnaam verplicht"
 msgid "Error Passwords don't match"
 msgstr "fout wachtwoorden zijn niet gelijk"
 
-#: ../../lib/class/album.class.php:489 ../../lib/class/catalog.class.php:462
+#: ../../lib/class/album.class.php:490 ../../lib/class/catalog.class.php:462
 msgid "Error: Unable to open"
 msgstr "Fout: Kan niet openen"
 
@@ -3534,154 +3563,159 @@ msgstr "Bezig met Remote Synchronisatie"
 msgid "Error: Unable to change to directory"
 msgstr "Fout: Kan niet naar directorie veranderen"
 
-#: ../../lib/class/catalog.class.php:548
+#. HINT: FullFile
+#: ../../lib/class/catalog.class.php:549
 #, php-format
 msgid "Error: Unable to get filesize for %s"
 msgstr "Fout: Kan bestands grootte niet opvragen voor %s"
 
-#: ../../lib/class/catalog.class.php:554
+#. HINT: FullFile
+#: ../../lib/class/catalog.class.php:556
 #, php-format
 msgid "%s is not readable by ampache"
 msgstr "%s is niet leesbaar voor Ampache"
 
-#: ../../lib/class/catalog.class.php:562
+#. HINT: FullFile
+#: ../../lib/class/catalog.class.php:565
 #, php-format
 msgid "%s does not match site charset"
 msgstr "%s komt niet overeen met de karakterset van de website"
 
-#: ../../lib/class/catalog.class.php:1029
-#: ../../lib/class/catalog.class.php:1922 ../../preferences.php:111
+#: ../../lib/class/catalog.class.php:1032
+#: ../../lib/class/catalog.class.php:1936 ../../preferences.php:111
 #: ../../admin/access.php:109
 msgid "Updated"
 msgstr "Bijgewerkt"
 
-#: ../../lib/class/catalog.class.php:1036
+#: ../../lib/class/catalog.class.php:1039
 msgid "No Update Needed"
 msgstr "Geen update nodig"
 
-#: ../../lib/class/catalog.class.php:1163
+#: ../../lib/class/catalog.class.php:1169
 msgid "Running Remote Update"
 msgstr "Bezig met bijwerken van remote catalogus"
 
-#: ../../lib/class/catalog.class.php:1190
+#: ../../lib/class/catalog.class.php:1196
 msgid "Added Playlist From"
 msgstr "Speellijst toegevoegd van"
 
-#: ../../lib/class/catalog.class.php:1219
+#: ../../lib/class/catalog.class.php:1225
 msgid "Catalog Update Finished"
 msgstr "Bijwerken catalogus Gereed"
 
-#: ../../lib/class/catalog.class.php:1219
+#: ../../lib/class/catalog.class.php:1225
 msgid "Total Time"
 msgstr "Totale Tijd"
 
-#: ../../lib/class/catalog.class.php:1220
+#: ../../lib/class/catalog.class.php:1226
 msgid "Total Songs"
 msgstr "Totaal aantal liedjes"
 
-#: ../../lib/class/catalog.class.php:1220
+#: ../../lib/class/catalog.class.php:1226
 msgid "Songs Per Seconds"
 msgstr "Liedjes per seconde"
 
-#: ../../lib/class/catalog.class.php:1234
+#: ../../lib/class/catalog.class.php:1240
 #, fuzzy
 msgid "Unable to load pear XMLRPC library, make sure XML-RPC is enabled"
 msgstr "Kan XMLRPC library niet laden, controleer of XML-RPC aanstaat"
 
-#: ../../lib/class/catalog.class.php:1272
-#: ../../lib/class/catalog.class.php:1346
-#: ../../lib/class/catalog.class.php:1379
-#: ../../lib/class/catalog.class.php:2343
+#: ../../lib/class/catalog.class.php:1278
+#: ../../lib/class/catalog.class.php:1352
+#: ../../lib/class/catalog.class.php:1385
+#: ../../lib/class/catalog.class.php:2395
 #: ../../lib/class/xmlrpcclient.class.php:64
 #: ../../lib/class/xmlrpcclient.class.php:97
 msgid "Error connecting to"
 msgstr "Fout met connecteren naar"
 
-#: ../../lib/class/catalog.class.php:1272
-#: ../../lib/class/catalog.class.php:1346
-#: ../../lib/class/catalog.class.php:1379
-#: ../../lib/class/catalog.class.php:2343
+#: ../../lib/class/catalog.class.php:1278
+#: ../../lib/class/catalog.class.php:1352
+#: ../../lib/class/catalog.class.php:1385
+#: ../../lib/class/catalog.class.php:2395
 #: ../../lib/class/xmlrpcclient.class.php:64
 #: ../../lib/class/xmlrpcclient.class.php:97
 msgid "Code"
 msgstr "Code"
 
-#: ../../lib/class/catalog.class.php:1272
-#: ../../lib/class/catalog.class.php:1346
-#: ../../lib/class/catalog.class.php:1379
-#: ../../lib/class/catalog.class.php:2343
+#: ../../lib/class/catalog.class.php:1278
+#: ../../lib/class/catalog.class.php:1352
+#: ../../lib/class/catalog.class.php:1385
+#: ../../lib/class/catalog.class.php:2395
 #: ../../lib/class/xmlrpcclient.class.php:64
 msgid "Reason"
 msgstr "Reden"
 
-#: ../../lib/class/catalog.class.php:1301
+#: ../../lib/class/catalog.class.php:1307
 msgid "Completed updating remote catalog(s)"
 msgstr "Klaar met bijwerken van remote catalogus(sen)"
 
-#: ../../lib/class/catalog.class.php:1305
+#: ../../lib/class/catalog.class.php:1311
 msgid "Starting synchronisation of album images"
 msgstr "Bezig met synchronisatie of album afbeeldingen"
 
-#: ../../lib/class/catalog.class.php:1307
+#: ../../lib/class/catalog.class.php:1313
 msgid "Completed synchronisation of album images"
 msgstr "Klaar met synchroniseren van album afbeeldingen"
 
-#: ../../lib/class/catalog.class.php:1375
+#: ../../lib/class/catalog.class.php:1381
 msgid "images synchronized: "
 msgstr "afbeeldingen gesynchroniseerd: "
 
-#: ../../lib/class/catalog.class.php:1506
+#: ../../lib/class/catalog.class.php:1515
 msgid "Catalog Root unreadable, stopping clean"
 msgstr "Catalogus Root onleesbaar, stoppen met opschonen"
 
-#: ../../lib/class/catalog.class.php:1542
+#: ../../lib/class/catalog.class.php:1551
 msgid "Error File Not Found or 0 Bytes:"
 msgstr ""
 
-#: ../../lib/class/catalog.class.php:1564
+#: ../../lib/class/catalog.class.php:1573
 msgid "Error Remote File Not Found or 0 Bytes:"
 msgstr ""
 
-#: ../../lib/class/catalog.class.php:1583
+#: ../../lib/class/catalog.class.php:1592
 msgid "Error All songs would be removed, doing nothing"
 msgstr ""
 
-#: ../../lib/class/catalog.class.php:1611
+#: ../../lib/class/catalog.class.php:1620
 #, fuzzy, php-format
 msgid "Catalog Clean Done. %d file removed."
 msgid_plural "Catalog Clean Done. %d files removed."
 msgstr[0] "Opschoning catalogus gereed"
 msgstr[1] "Opschoning catalogus gereed"
 
-#: ../../lib/class/catalog.class.php:1613
+#: ../../lib/class/catalog.class.php:1622
 msgid "Optimizing Tables"
 msgstr "Optimalizeren tabellen"
 
-#: ../../lib/class/catalog.class.php:1900
+#. HINT: Mediafile
+#: ../../lib/class/catalog.class.php:1914
 #, php-format
 msgid "%s does not exist or is not readable"
 msgstr ""
 
-#: ../../lib/class/catalog.class.php:1922
+#: ../../lib/class/catalog.class.php:1936
 msgid "Update Finished"
 msgstr "Bijwerken gereed"
 
-#: ../../lib/class/catalog.class.php:1922
+#: ../../lib/class/catalog.class.php:1936
 msgid "Checked"
 msgstr "Gecontroleerd"
 
-#: ../../lib/class/catalog.class.php:2441
+#: ../../lib/class/catalog.class.php:2493
 msgid "Playlist creation error."
 msgstr "Fout bij het aanmaak van afspeellijst"
 
-#: ../../lib/class/catalog.class.php:2448
+#: ../../lib/class/catalog.class.php:2500
 #, fuzzy, php-format
 msgid "Playlist Import and Recreate Successful. Total: %d Song"
 msgid_plural "Playlist Import and Recreate Successful. Total: %d Songs"
 msgstr[0] "Afspeellijst import succesvol. Totaal: %d liedjes"
 msgstr[1] "Afspeellijst import succesvol. Totaal: %d liedjes"
 
-#: ../../lib/class/catalog.class.php:2454
+#. HINT: filename
+#: ../../lib/class/catalog.class.php:2506
 #, fuzzy, php-format
 msgid "Parsing %s - Not Found: %d Song. Please check your m3u file."
 msgid_plural "Parsing %s - Not Found: %d Songs. Please check your m3u file."
@@ -3702,12 +3736,13 @@ msgstr "Fout in gebruikersnaam of wachtwoord, probeer het nogmaals."
 msgid "From: Ampache "
 msgstr "Van: Ampache "
 
-#: ../../lib/class/registration.class.php:55
+#. HINT: Site Title
+#: ../../lib/class/registration.class.php:56
 #, php-format
 msgid "New User Registration at %s"
 msgstr "Nieuwe gebruikers registratie op %s"
 
-#: ../../lib/class/registration.class.php:68
+#: ../../lib/class/registration.class.php:69
 #, php-format
 msgid ""
 "Thank you for registering\n"
@@ -3742,7 +3777,7 @@ msgstr ""
 "\n"
 "Nogmaals bedankt voor uw registratie\n"
 
-#: ../../lib/class/registration.class.php:98
+#: ../../lib/class/registration.class.php:99
 #, php-format
 msgid ""
 "A new user has registered\n"
@@ -3761,59 +3796,59 @@ msgstr ""
 "e-Mail: %s\n"
 "\n"
 
-#: ../../lib/general.lib.php:405
+#: ../../lib/general.lib.php:406
 msgid "On"
 msgstr "Aan"
 
-#: ../../lib/general.lib.php:408
+#: ../../lib/general.lib.php:409
 msgid "Off"
 msgstr "Uit"
 
-#: ../../lib/preferences.php:191
+#: ../../lib/preferences.php:192
 msgid "M3U"
 msgstr "M3U"
 
-#: ../../lib/preferences.php:192
+#: ../../lib/preferences.php:193
 msgid "Simple M3U"
 msgstr "Eenvoudige M3U"
 
-#: ../../lib/preferences.php:193
+#: ../../lib/preferences.php:194
 msgid "PLS"
 msgstr "PLS"
 
-#: ../../lib/preferences.php:194
+#: ../../lib/preferences.php:195
 msgid "Asx"
 msgstr "Asx"
 
-#: ../../lib/preferences.php:195
+#: ../../lib/preferences.php:196
 msgid "RAM"
 msgstr "RAM"
 
-#: ../../lib/preferences.php:196
+#: ../../lib/preferences.php:197
 msgid "XSPF"
 msgstr "XSPF"
 
-#: ../../lib/preferences.php:230
+#: ../../lib/preferences.php:231
 msgid "Disabled"
 msgstr "Gedeactiveerd"
 
-#: ../../lib/preferences.php:232
+#: ../../lib/preferences.php:233
 msgid "Manager"
 msgstr "Beheerder"
 
-#: ../../lib/preferences.php:252
+#: ../../lib/preferences.php:254
 msgid "Send on Add"
 msgstr "Verzenden bij toevoegen"
 
-#: ../../lib/preferences.php:253
+#: ../../lib/preferences.php:255
 msgid "Send and Clear on Add"
 msgstr "Verzenden en opgeschonen bij toevoegen"
 
-#: ../../lib/preferences.php:254
+#: ../../lib/preferences.php:256
 msgid "Clear on Send"
 msgstr "Opschonen bij verzenden"
 
-#: ../../lib/preferences.php:263
+#: ../../lib/preferences.php:265
 msgid "Always"
 msgstr "Altijd"
 
@@ -3853,12 +3888,12 @@ msgstr "Onjuist object geselecteerd"
 msgid "Error Invalid Handshake - "
 msgstr "Fout: Ongeldige handshake - "
 
-#: ../../server/xml.server.php:346 ../../server/xml.server.php:395
-#: ../../server/xml.server.php:403
+#: ../../server/xml.server.php:345 ../../server/xml.server.php:394
+#: ../../server/xml.server.php:402
 msgid "Invalid Request"
 msgstr "Ongeldig verzoek"
 
-#: ../../server/xml.server.php:361 ../../server/xml.server.php:374
+#: ../../server/xml.server.php:360 ../../server/xml.server.php:373
 msgid "Media Object Invalid or Not Specified"
 msgstr "Media object is ongeldig of niet gespecificeerd"
 
@@ -3882,7 +3917,7 @@ msgstr "Sessie Verlopen: log aub opnieuw in op"
 msgid "Radio Station Added"
 msgstr "Radio station toegevoegd"
 
-#: ../../install.php:182
+#: ../../install.php:184
 msgid "Error: Config file not found or Unreadable"
 msgstr "Fout: Configuratie bestand niet gevonden of niet leesbaar"
 
@@ -4020,11 +4055,11 @@ msgstr "Afspeellijst bestand"
 msgid "Local Path to Files"
 msgstr "Lokale pad naar bestanden"
 
-#: ../../admin/mail.php:90
+#: ../../admin/mail.php:79
 msgid "E-mail Sent"
 msgstr "e-Mail Verzonden"
 
-#: ../../admin/mail.php:91
+#: ../../admin/mail.php:80
 msgid "Your E-mail was successfully sent."
 msgstr "Uw e-Mail is succesvol verzonden."
 
@@ -4136,40 +4171,52 @@ msgstr "Gebruiker bijgewerkt"
 msgid "updated"
 msgstr "bijgewerkt"
 
-#: ../../admin/users.php:129
+#. HINT: %1 Username, %2 Access num
+#: ../../admin/users.php:130
 msgid "New User Added"
 msgstr "Nieuwer gebruiker toegevoegd"
 
-#: ../../admin/users.php:134
+#: ../../admin/users.php:130
+#, php-format
+msgid "%1$s has been created with an access level of %2$s"
+msgstr ""
+
+#: ../../admin/users.php:135
 msgid "User Enabled"
 msgstr "Gebruiker geactiveerd"
 
-#: ../../admin/users.php:139
+#: ../../admin/users.php:140
 msgid "User Disabled"
 msgstr "Gebruiker gedeactiveerd"
 
-#: ../../admin/users.php:142
+#: ../../admin/users.php:143
 msgid "Unable to Disabled last Administrator"
 msgstr "Onmogelijk om de laatste administrator te deactiveren"
 
-#: ../../admin/users.php:154
+#: ../../admin/users.php:155
 msgid "User Deleted"
 msgstr "Gebruiker verwijderd"
 
-#: ../../admin/users.php:157
+#: ../../admin/users.php:155
+#, fuzzy, php-format
+msgid "%s has been Deleted"
+msgstr " is aangemaakt"
+
+#: ../../admin/users.php:158
 msgid "Delete Error"
 msgstr "Verwijder fout"
 
-#: ../../admin/users.php:157
+#: ../../admin/users.php:158
 msgid "Unable to delete last Admin User"
 msgstr "Kan de laatste admin gebruiker niet verwijderen"
 
-#: ../../admin/users.php:163
+#: ../../admin/users.php:164
 msgid "Deletion Request"
 msgstr "Verwijder verzoek"
 
-#: ../../admin/users.php:164
-msgid "Are you sure you want to permanently delete"
+#: ../../admin/users.php:165
+#, fuzzy, php-format
+msgid "Are you sure you want to permanently delete %s?"
 msgstr "Weet je zeker dat je dit permanent wilt verwijderem"
 
 #: ../../admin/system.php:49
@@ -4183,87 +4230,99 @@ msgid ""
 msgstr ""
 "Uw Database en tabellen zijn bijgewerkt naar de aangegeven karakterset."
 
-#: ../../admin/catalog.php:53 ../../admin/catalog.php:73
-#: ../../admin/catalog.php:98 ../../admin/catalog.php:170
+#: ../../admin/catalog.php:54 ../../admin/catalog.php:74
+#: ../../admin/catalog.php:99 ../../admin/catalog.php:171
 msgid "Catalog Updated"
 msgstr "Bijwerken catalogus gereed"
 
-#: ../../admin/catalog.php:115
+#: ../../admin/catalog.php:116
 msgid "Catalog Deleted"
 msgstr "Catalogus verwijderd"
 
-#: ../../admin/catalog.php:115
+#: ../../admin/catalog.php:116
 msgid "The Catalog and all associated records have been deleted"
 msgstr "De catalogus en alle bijbehorende regels zijn verwijderd"
 
-#: ../../admin/catalog.php:121
+#: ../../admin/catalog.php:122
 msgid "Catalog Delete"
 msgstr "Catalogus verwijderen"
 
-#: ../../admin/catalog.php:121
+#: ../../admin/catalog.php:122
 msgid "Confirm Deletion Request"
 msgstr "Bevestig verwijder verzoek"
 
-#: ../../admin/catalog.php:130
+#: ../../admin/catalog.php:131
 #, fuzzy
 msgid "Song Removed"
 msgid_plural "Songs Removed"
 msgstr[0] "Liedjes verwijderd"
 msgstr[1] "Liedjes verwijderd"
 
-#: ../../admin/catalog.php:133
+#: ../../admin/catalog.php:134
 msgid "No Songs Removed"
 msgstr "Geen liedjes verwijderd"
 
-#: ../../admin/catalog.php:136
+#: ../../admin/catalog.php:137
 #, fuzzy
 msgid "Disabled Song Processed"
 msgid_plural "Disabled Songs Processed"
 msgstr[0] "Gedeactiveerde liedjes verwerkt"
 msgstr[1] "Gedeactiveerde liedjes verwerkt"
 
-#: ../../admin/catalog.php:157
+#: ../../admin/catalog.php:158
 msgid "Catalog Cleaned"
 msgstr "Catalogus opgeschoond"
 
-#: ../../admin/catalog.php:214
+#: ../../admin/catalog.php:202
+msgid "Error: Name and path not specified"
+msgstr ""
+
+#: ../../admin/catalog.php:206
+msgid "Error: Remote selected, but path is not a URL"
+msgstr ""
+
+#: ../../admin/catalog.php:210
+msgid "Error: Remote Catalog specified, but no key provided"
+msgstr ""
+
+#: ../../admin/catalog.php:215
 msgid "Error: Defined Path is inside an existing catalog"
 msgstr "Fout: Het opgegeven pad is binnen een bestaande catalogus"
 
-#: ../../admin/catalog.php:233
+#: ../../admin/catalog.php:234
 msgid "Catalog Created"
 msgstr "Catalogus aangemaakt"
 
-#: ../../admin/catalog.php:250
+#: ../../admin/catalog.php:251
 msgid "Catalog statistics cleared"
 msgstr "Catalogus statistieken opgeschoond"
 
-#: ../../admin/catalog.php:263
+#: ../../admin/catalog.php:264
 msgid "Now Playing Cleared"
 msgstr "Nu speelt opgeschoond"
 
-#: ../../admin/catalog.php:263
+#: ../../admin/catalog.php:264
 msgid "All now playing data has been cleared"
 msgstr "Alle nu speelt data opgeschoond"
 
-#: ../../admin/catalog.php:273
+#: ../../admin/catalog.php:275
 #, fuzzy
 msgid "No Disabled songs found"
 msgstr "Geen gedeactiveerde liedjes gevonden"
 
-#: ../../admin/catalog.php:282
+#: ../../admin/catalog.php:284
 msgid "Delete Catalog"
 msgstr "Verwijder catalogus"
 
-#: ../../admin/catalog.php:282
+#: ../../admin/catalog.php:284
 msgid "Do you really want to delete this catalog?"
 msgstr "Weet je zeker dat je deze catalogus wilt verwijderen?"
 
-#: ../../admin/catalog.php:302
+#: ../../admin/catalog.php:304
 msgid "Album Art Search Finished"
 msgstr "Album afbeelding zoeken beeindigd"
 
-#: ../../bin/print_tags.inc:66
+#: ../../bin/print_tags.inc:68
 msgid ""
 "[print_tags.php.inc]\n"
 "This commandline script will display the tag information for the specified "
@@ -4276,7 +4335,7 @@ msgstr ""
 "weergegeven in Ampache. \n"
 "        \n"
 
-#: ../../bin/print_tags.inc:72
+#: ../../bin/print_tags.inc:74
 msgid "Filename:"
 msgstr "Bestandsnaam:"
 
@@ -4388,9 +4447,12 @@ msgstr "Interface"
 msgid "System"
 msgstr "Systeem"
 
-#: Database words
-msgid "Show Lyrics"
-msgstr "Liedteksten weergeven"
+#~ msgid ""
+#~ "Your webserver has read access to the /sql/ampache.sql file and the /"
+#~ "config/ampache.cfg.dist.php file"
+#~ msgstr ""
+#~ "Uw webserver heeft lees rechten op het bestand /sql/ampache.sql en het "
+#~ "bestandampache.cfg.dist.php"
 
 #~ msgid "files removed"
 #~ msgstr "bestanden verwijderd"

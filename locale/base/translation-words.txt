@@ -105,7 +105,3 @@ msgstr ""
 #: Database words
 msgid "System"
 msgstr ""
-
-#: Database words
-msgid "Show Lyrics"
-msgstr ""

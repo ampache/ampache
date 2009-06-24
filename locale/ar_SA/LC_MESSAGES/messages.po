@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ampache SVN\n"
 "Report-Msgid-Bugs-To: translations at ampache.org\n"
-"POT-Creation-Date: 2009-05-19 10:30+0900\n"
+"POT-Creation-Date: 2009-06-24 10:57+0900\n"
 "PO-Revision-Date: 2009-05-19 07:38+0900\n"
 "Last-Translator: momo-i <webmaster@momo-i.org>\n"
 "Language-Team: Arabic\n"
@@ -21,7 +21,7 @@ msgid "Error: No Keyword Entered"
 msgstr "خطأ : لا يوجد كلمات دخلت"
 
 #. HINT: Artist, Song Title
-#: ../../song.php:41
+#: ../../song.php:42 ../../song.php:60
 #, php-format
 msgid "%1$s - %2$s Lyrics Detail"
 msgstr "%1$s -- كلمات %2$s التفاصيل"
@@ -52,7 +52,7 @@ msgstr "%1$s -- كلمات %2$s التفاصيل"
 #: ../../templates/show_recently_played.inc.php:37
 #: ../../templates/show_recently_played.inc.php:80
 #: ../../templates/show_recently_played.inc.php:99
-#: ../../templates/show_artist.inc.php:40
+#: ../../templates/show_artist.inc.php:43
 #: ../../templates/show_album.inc.php:51
 #: ../../templates/show_playlist_song_row.inc.php:22
 #: ../../templates/show_song.inc.php:29
@@ -64,11 +64,11 @@ msgstr "إضافة"
 
 #. HINT: Artist Fullname
 #: ../../templates/show_album_row.inc.php:24
-#: ../../templates/sidebar_home.inc.php:104
+#: ../../templates/sidebar_home.inc.php:105
 #: ../../templates/show_artist_row.inc.php:24
 #: ../../templates/show_genres.inc.php:52
 #: ../../templates/show_localplay_status.inc.php:44
-#: ../../templates/show_artist.inc.php:43
+#: ../../templates/show_artist.inc.php:48
 #: ../../templates/show_album.inc.php:55
 #: ../../templates/show_playlist_row.inc.php:24
 #: ../../modules/localplay/mpd.controller.php:495
@@ -143,8 +143,8 @@ msgstr "أغنية المعلومات"
 
 #: ../../templates/show_song_row.inc.php:43
 #: ../../templates/show_video_row.inc.php:32
-#: ../../templates/show_artist.inc.php:52
-#: ../../templates/show_artist.inc.php:53
+#: ../../templates/show_artist.inc.php:59
+#: ../../templates/show_artist.inc.php:60
 #: ../../templates/show_album.inc.php:76 ../../templates/show_album.inc.php:77
 #: ../../templates/show_playlist_song_row.inc.php:33
 #: ../../templates/show_song.inc.php:32
@@ -202,17 +202,17 @@ msgstr "افنص"
 
 #: ../../templates/show_test.inc.php:45
 #: ../../templates/show_install_check.inc.php:26
-#: ../../templates/show_install_check.inc.php:33
+#: ../../templates/show_install_check.inc.php:39
 msgid "PHP Version"
 msgstr "PHP الإصدار"
 
 #: ../../templates/show_test.inc.php:51
-#: ../../templates/show_install_check.inc.php:31
+#: ../../templates/show_install_check.inc.php:37
 msgid "Hash Function Exists"
 msgstr "توجد البعثرة"
 
 #: ../../templates/show_test.inc.php:51
-#: ../../templates/show_install_check.inc.php:31
+#: ../../templates/show_install_check.inc.php:37
 msgid "SHA256 Support"
 msgstr "SHA256 الدعم"
 
@@ -225,8 +225,8 @@ msgstr ""
 "Ampache."
 
 #: ../../templates/show_test.inc.php:65
-#: ../../templates/show_install_check.inc.php:41
-#: ../../templates/show_install_check.inc.php:46
+#: ../../templates/show_install_check.inc.php:47
+#: ../../templates/show_install_check.inc.php:52
 msgid "Mysql for PHP"
 msgstr "Mysql لPHP"
 
@@ -239,8 +239,8 @@ msgstr ""
 "Ampache للعمل."
 
 #: ../../templates/show_test.inc.php:82
-#: ../../templates/show_install_check.inc.php:54
-#: ../../templates/show_install_check.inc.php:59
+#: ../../templates/show_install_check.inc.php:60
+#: ../../templates/show_install_check.inc.php:65
 msgid "PHP Session Support"
 msgstr "PHP دعم الدورة"
 
@@ -253,8 +253,8 @@ msgstr ""
 "لAmpache الى العمل."
 
 #: ../../templates/show_test.inc.php:99
-#: ../../templates/show_install_check.inc.php:67
-#: ../../templates/show_install_check.inc.php:72
+#: ../../templates/show_install_check.inc.php:73
+#: ../../templates/show_install_check.inc.php:78
 msgid "PHP ICONV Support"
 msgstr "PHP ICONV دعم "
 
@@ -267,8 +267,8 @@ msgstr ""
 "لAmpache"
 
 #: ../../templates/show_test.inc.php:115
-#: ../../templates/show_install_check.inc.php:80
-#: ../../templates/show_install_check.inc.php:85
+#: ../../templates/show_install_check.inc.php:86
+#: ../../templates/show_install_check.inc.php:91
 msgid "PHP PCRE Support"
 msgstr "PHP PCRE الدعم"
 
@@ -281,8 +281,8 @@ msgstr ""
 "لAmpache."
 
 #: ../../templates/show_test.inc.php:131
-#: ../../templates/show_install_check.inc.php:93
-#: ../../templates/show_install_check.inc.php:98
+#: ../../templates/show_install_check.inc.php:99
+#: ../../templates/show_install_check.inc.php:104
 msgid "PHP PutENV Support"
 msgstr "PHP PutENV دعم "
 
@@ -297,7 +297,7 @@ msgstr ""
 "لا تعمل بشكل صحيح"
 
 #: ../../templates/show_test.inc.php:147
-#: ../../templates/show_install_config.inc.php:91
+#: ../../templates/show_install_config.inc.php:93
 msgid "Ampache.cfg.php Exists"
 msgstr "يجد Ampache.cfg.php"
 
@@ -312,7 +312,7 @@ msgstr ""
 "\t أو أنها ليست في الوقت الراهن يمكن قراءتها من خلال خدمة الويب الخاص بك."
 
 #: ../../templates/show_test.inc.php:166
-#: ../../templates/show_install_config.inc.php:106
+#: ../../templates/show_install_config.inc.php:108
 msgid "Ampache.cfg.php Configured?"
 msgstr "Ampache.cfg.php مشكل؟"
 
@@ -347,7 +347,7 @@ msgstr ""
 "بيانات ampache وأن المستخدم الوصول إلى قاعدة البيانات"
 
 #: ../../templates/show_test.inc.php:223
-#: ../../templates/show_install_config.inc.php:63
+#: ../../templates/show_install_config.inc.php:65
 msgid "Web Path"
 msgstr "الشبكة الدرب"
 
@@ -368,7 +368,7 @@ msgstr "غطاء"
 
 #: ../../templates/show_albums.inc.php:44
 #: ../../templates/show_albums.inc.php:75
-#: ../../templates/sidebar_home.inc.php:106
+#: ../../templates/sidebar_home.inc.php:107
 #: ../../templates/show_edit_song.inc.php:37
 #: ../../templates/show_democratic_playlist.inc.php:57
 #: ../../templates/show_democratic_playlist.inc.php:97
@@ -383,9 +383,10 @@ msgstr "غطاء"
 #: ../../templates/show_disabled_songs.inc.php:58
 #: ../../templates/show_duplicates.inc.php:39
 #: ../../templates/show_duplicates.inc.php:78
+#: ../../templates/show_lyrics_song.inc.php:49
 #: ../../templates/show_playlist_songs.inc.php:44
 #: ../../templates/show_playlist_songs.inc.php:65
-#: ../../templates/show_now_playing_row.inc.php:52
+#: ../../templates/show_now_playing_row.inc.php:61
 msgid "Album"
 msgstr "الألبوم"
 
@@ -393,8 +394,8 @@ msgstr "الألبوم"
 #: ../../templates/show_albums.inc.php:76
 #: ../../templates/show_artists.inc.php:37
 #: ../../templates/show_artists.inc.php:65
-#: ../../templates/sidebar_home.inc.php:80
-#: ../../templates/sidebar_home.inc.php:107
+#: ../../templates/sidebar_home.inc.php:81
+#: ../../templates/sidebar_home.inc.php:108
 #: ../../templates/show_similar_artists.inc.php:33
 #: ../../templates/show_similar_artists.inc.php:86
 #: ../../templates/show_edit_song.inc.php:45
@@ -411,9 +412,10 @@ msgstr "الألبوم"
 #: ../../templates/show_disabled_songs.inc.php:59
 #: ../../templates/show_duplicates.inc.php:38
 #: ../../templates/show_duplicates.inc.php:77
+#: ../../templates/show_lyrics_song.inc.php:56
 #: ../../templates/show_playlist_songs.inc.php:43
 #: ../../templates/show_playlist_songs.inc.php:64
-#: ../../templates/show_now_playing_row.inc.php:59
+#: ../../templates/show_now_playing_row.inc.php:68
 msgid "Artist"
 msgstr "الفنان"
 
@@ -496,10 +498,10 @@ msgstr "الاسم الكامل"
 #: ../../templates/show_users.inc.php:39 ../../templates/show_users.inc.php:61
 #: ../../templates/show_edit_user.inc.php:32
 #: ../../templates/show_add_user.inc.php:29
-#: ../../templates/show_install_account.inc.php:61
+#: ../../templates/show_install_account.inc.php:62
 #: ../../templates/show_recently_played.inc.php:41
 #: ../../templates/show_recently_played.inc.php:100
-#: ../../templates/show_login_form.inc.php:57
+#: ../../templates/show_login_form.inc.php:58
 #: ../../templates/show_user_registration.inc.php:73
 #: ../../templates/show_now_playing_row.inc.php:29
 msgid "Username"
@@ -570,7 +572,7 @@ msgstr "أبدا"
 
 #: ../../templates/show_users.inc.php:54 ../../templates/show_user.inc.php:23
 #: ../../lib/class/flag.class.php:337 ../../lib/class/localplay.class.php:648
-#: ../../lib/class/user.class.php:675 ../../lib/general.lib.php:338
+#: ../../lib/class/user.class.php:675 ../../lib/general.lib.php:339
 #: ../../modules/localplay/mpd.controller.php:525
 msgid "Unknown"
 msgstr "غير معروف"
@@ -599,8 +601,8 @@ msgstr "البريد الإلكتروني"
 
 #: ../../templates/show_edit_user.inc.php:55
 #: ../../templates/show_add_user.inc.php:52
-#: ../../templates/show_install_account.inc.php:65
-#: ../../templates/show_login_form.inc.php:61
+#: ../../templates/show_install_account.inc.php:66
+#: ../../templates/show_login_form.inc.php:62
 #: ../../templates/show_user_registration.inc.php:101
 #: ../../modules/localplay/mpd.controller.php:235
 #: ../../modules/localplay/httpq.controller.php:219
@@ -610,7 +612,7 @@ msgstr "كلمة السر"
 #: ../../templates/show_edit_user.inc.php:64
 #: ../../templates/show_add_user.inc.php:61
 #: ../../templates/show_account.inc.php:46
-#: ../../templates/show_install_account.inc.php:69
+#: ../../templates/show_install_account.inc.php:70
 #: ../../templates/show_user_registration.inc.php:110
 msgid "Confirm Password"
 msgstr "تأكيد كلمة السر"
@@ -687,7 +689,7 @@ msgid "Config Preset"
 msgstr "التهيئة مسبقا"
 
 #: ../../templates/show_edit_user.inc.php:93
-#: ../../templates/sidebar_home.inc.php:90
+#: ../../templates/sidebar_home.inc.php:91
 #: ../../templates/show_playtype_switch.inc.php:36
 #: ../../templates/sidebar_modules.inc.php:41 ../../lib/preferences.php:180
 #: ../../modules/localplay/mpd.controller.php:491
@@ -696,7 +698,7 @@ msgid "Democratic"
 msgstr "الديمقراطية"
 
 #: ../../templates/show_edit_user.inc.php:94
-#: ../../templates/sidebar_home.inc.php:99
+#: ../../templates/sidebar_home.inc.php:100
 #: ../../templates/sidebar_localplay.inc.php:32
 #: ../../templates/show_playtype_switch.inc.php:34
 #: ../../templates/sidebar.inc.php:28 ../../lib/preferences.php:183
@@ -854,7 +856,7 @@ msgstr "حفظ التغييرات"
 #: ../../templates/show_artists.inc.php:39
 #: ../../templates/show_artists.inc.php:67
 #: ../../templates/sidebar_home.inc.php:33
-#: ../../templates/sidebar_home.inc.php:77
+#: ../../templates/sidebar_home.inc.php:78
 #: ../../templates/show_popular.inc.php:26
 #: ../../templates/show_genre.inc.php:33 ../../templates/show_stats.inc.php:30
 #: ../../lib/ui.lib.php:362 ../../lib/class/browse.class.php:148
@@ -976,7 +978,7 @@ msgid "Artists"
 msgstr "الفنانون"
 
 #: ../../templates/sidebar_home.inc.php:35
-#: ../../lib/class/browse.class.php:203
+#: ../../lib/class/browse.class.php:203 ../../browse.php:68
 msgid "Tag Cloud"
 msgstr "الوسم الغيمة"
 
@@ -1016,7 +1018,7 @@ msgid "Unplayed"
 msgstr "غير لعب"
 
 #: ../../templates/sidebar_home.inc.php:64
-#: ../../templates/show_artist.inc.php:57
+#: ../../templates/show_artist.inc.php:64
 msgid "Show Art"
 msgstr "وتبين للفنون"
 
@@ -1024,49 +1026,49 @@ msgstr "وتبين للفنون"
 msgid "All Playlists"
 msgstr "جميع التشغيل"
 
-#: ../../templates/sidebar_home.inc.php:74
+#: ../../templates/sidebar_home.inc.php:75
 #: ../../templates/show_songs.inc.php:40 ../../templates/show_songs.inc.php:69
 #: ../../templates/show_playlist_songs.inc.php:42
 #: ../../templates/show_playlist_songs.inc.php:63
 msgid "Song Title"
 msgstr "عنوان الأغنية"
 
-#: ../../templates/sidebar_home.inc.php:86
-#: ../../templates/sidebar_home.inc.php:108
+#: ../../templates/sidebar_home.inc.php:87
+#: ../../templates/sidebar_home.inc.php:109
 #: ../../templates/show_manage_democratic.inc.php:34
 #: ../../templates/show_play_selected.inc.php:47 ../../lib/ui.lib.php:321
 msgid "Playlist"
 msgstr "التشغيل"
 
-#: ../../templates/sidebar_home.inc.php:88
+#: ../../templates/sidebar_home.inc.php:89
 msgid "Currently Playing"
 msgstr "اللعب في الوقت الحاضر"
 
-#: ../../templates/sidebar_home.inc.php:101
+#: ../../templates/sidebar_home.inc.php:102
 #: ../../templates/show_live_stream.inc.php:29
 msgid "Import"
 msgstr "الواردات"
 
-#: ../../templates/sidebar_home.inc.php:109
+#: ../../templates/sidebar_home.inc.php:110
 msgid "Advanced"
 msgstr "المتقدمة"
 
-#: ../../templates/sidebar_home.inc.php:112
+#: ../../templates/sidebar_home.inc.php:113
 #: ../../templates/show_popular.inc.php:22
 #: ../../templates/show_newest.inc.php:22
 msgid "Information"
 msgstr "معلومات"
 
-#: ../../templates/sidebar_home.inc.php:114
+#: ../../templates/sidebar_home.inc.php:115
 #: ../../templates/show_stats.inc.php:24 ../../lib/ui.lib.php:374
 msgid "Statistics"
 msgstr "احصاءات"
 
-#: ../../templates/sidebar_home.inc.php:115
+#: ../../templates/sidebar_home.inc.php:116
 msgid "Newest"
 msgstr "أحدث"
 
-#: ../../templates/sidebar_home.inc.php:116
+#: ../../templates/sidebar_home.inc.php:117
 msgid "Popular"
 msgstr "الشعبية"
 
@@ -1431,12 +1433,12 @@ msgid "Using Old Password Encryption, Please Reset your Password"
 msgstr "استخدام كلمة السر القديمة التشفير ، الرجاء إعادة تعيين كلمة المرور"
 
 #: ../../templates/footer.inc.php:32
-#: ../../templates/show_login_form.inc.php:98
+#: ../../templates/show_login_form.inc.php:99
 msgid "Queries:"
 msgstr "الأسئلة :"
 
 #: ../../templates/footer.inc.php:32
-#: ../../templates/show_login_form.inc.php:98
+#: ../../templates/show_login_form.inc.php:99
 msgid "Cache Hits:"
 msgstr "مخبأ عدد الزيارات :"
 
@@ -1628,17 +1630,17 @@ msgstr ""
 msgid "Preference Administration"
 msgstr ""
 
-#: ../../templates/show_install_config.inc.php:33
-#: ../../templates/show_install_lang.inc.php:34
-#: ../../templates/show_install.inc.php:34
-#: ../../templates/show_install_account.inc.php:33
+#: ../../templates/show_install_config.inc.php:34
+#: ../../templates/show_install_lang.inc.php:35
+#: ../../templates/show_install.inc.php:35
+#: ../../templates/show_install_account.inc.php:34
 msgid "Ampache Installation"
 msgstr "Ampache التثبيت"
 
-#: ../../templates/show_install_config.inc.php:39
-#: ../../templates/show_install_lang.inc.php:41
-#: ../../templates/show_install.inc.php:42
-#: ../../templates/show_install_account.inc.php:40
+#: ../../templates/show_install_config.inc.php:40
+#: ../../templates/show_install_lang.inc.php:42
+#: ../../templates/show_install.inc.php:43
+#: ../../templates/show_install_account.inc.php:41
 msgid ""
 "This Page handles the installation of the Ampache database and the creation "
 "of the ampache.cfg.php file. Before you continue please make sure that you "
@@ -1647,30 +1649,30 @@ msgstr ""
 "وتتولى هذه الصفحة من Ampache تركيب ، وإنشاء قاعدة بيانات للampache.cfg.php "
 "الملف. قبل المتابعة يرجى التأكد من أن لديك ما يلي الشروط المسبقة"
 
-#: ../../templates/show_install_config.inc.php:42
-#: ../../templates/show_install_lang.inc.php:44
-#: ../../templates/show_install.inc.php:45
-#: ../../templates/show_install_account.inc.php:43
+#: ../../templates/show_install_config.inc.php:43
+#: ../../templates/show_install_lang.inc.php:45
+#: ../../templates/show_install.inc.php:46
+#: ../../templates/show_install_account.inc.php:44
 msgid ""
 "A MySQL Server with a username and password that can create/modify databases"
 msgstr ""
 "وقال خادم MySQL مع اسم المستخدم وكلمة السر التي يمكن أن تخلق / تغيير قواعد "
 "البيانات"
 
-#: ../../templates/show_install_config.inc.php:43
-#: ../../templates/show_install_lang.inc.php:45
-#: ../../templates/show_install.inc.php:46
-msgid ""
-"Your webserver has read access to the /sql/ampache.sql file and the /config/"
-"ampache.cfg.php.dist file"
+#: ../../templates/show_install_config.inc.php:44
+#: ../../templates/show_install_lang.inc.php:46
+#: ../../templates/show_install.inc.php:47
+#: ../../templates/show_install_account.inc.php:45
+#, fuzzy, php-format
+msgid "Your webserver has read access to the %s file and the %s file"
 msgstr ""
 "لقد قرأ الويب الخاص بك للوصول إلى  config/ampache.cfg.php.dist/  الملف وملف  "
 "sql/ampache.sql/"
 
-#: ../../templates/show_install_config.inc.php:45
-#: ../../templates/show_install_lang.inc.php:48
-#: ../../templates/show_install.inc.php:49
-#: ../../templates/show_install_account.inc.php:46
+#: ../../templates/show_install_config.inc.php:47
+#: ../../templates/show_install_lang.inc.php:49
+#: ../../templates/show_install.inc.php:50
+#: ../../templates/show_install_account.inc.php:47
 msgid ""
 "Once you have ensured that you have the above requirements please fill out "
 "the information below. You will only be asked for the required config "
@@ -1682,18 +1684,18 @@ msgstr ""
 "تغييرات في تركيب ampache الخاصة بك في وقت لاحق لمجرد تحرير /config/ampache."
 "cfg.php"
 
-#: ../../templates/show_install_config.inc.php:49
-#: ../../templates/show_install.inc.php:54
-#: ../../templates/show_install_account.inc.php:49
+#: ../../templates/show_install_config.inc.php:51
+#: ../../templates/show_install.inc.php:55
+#: ../../templates/show_install_account.inc.php:50
 msgid "Step 1 - Creating and Inserting the Ampache Database"
 msgstr "الخطوة 1 -- خلق وإدراج قاعدة بيانات Ampache"
 
-#: ../../templates/show_install_config.inc.php:50
-#: ../../templates/show_install.inc.php:58
+#: ../../templates/show_install_config.inc.php:52
+#: ../../templates/show_install.inc.php:59
 msgid "Step 2 - Creating the Ampache.cfg.php file"
 msgstr "الخطوة 2 -- إنشاء ملف Ampache.cfg.php"
 
-#: ../../templates/show_install_config.inc.php:52
+#: ../../templates/show_install_config.inc.php:54
 msgid ""
 "This steps takes the basic config values and generates the config file. It "
 "will prompt you to download the config file. Please put the downloaded "
@@ -1702,43 +1704,43 @@ msgstr ""
 "وتتخذ هذه الخطوات الأساسية والقيم والتهيئة يولد ملف. سوف مطالبتك لتحميل ملف. "
 "يرجى وضع تحميل ملف في /config"
 
-#: ../../templates/show_install_config.inc.php:54
-#: ../../templates/show_install.inc.php:59
-#: ../../templates/show_install_account.inc.php:51
+#: ../../templates/show_install_config.inc.php:56
+#: ../../templates/show_install.inc.php:60
+#: ../../templates/show_install_account.inc.php:52
 msgid "Step 3 - Setup Initial Account"
 msgstr "خطوة 3 -- الإعداد الأولي للحساب"
 
-#: ../../templates/show_install_config.inc.php:58
+#: ../../templates/show_install_config.inc.php:60
 msgid "Generate Config File"
 msgstr "توليد ملف"
 
-#: ../../templates/show_install_config.inc.php:67
-#: ../../templates/show_install.inc.php:67
+#: ../../templates/show_install_config.inc.php:69
+#: ../../templates/show_install.inc.php:68
 msgid "Desired Database Name"
 msgstr "اسم قاعدة البيانات المطلوبة"
 
-#: ../../templates/show_install_config.inc.php:71
-#: ../../templates/show_install.inc.php:71
+#: ../../templates/show_install_config.inc.php:73
+#: ../../templates/show_install.inc.php:72
 msgid "MySQL Hostname"
 msgstr "MySQL المضيف"
 
-#: ../../templates/show_install_config.inc.php:75
+#: ../../templates/show_install_config.inc.php:77
 msgid "MySQL Username"
 msgstr "MySQL اسم المستخدم"
 
-#: ../../templates/show_install_config.inc.php:79
+#: ../../templates/show_install_config.inc.php:81
 msgid "MySQL Password"
 msgstr "MySQL كلمة المرور"
 
-#: ../../templates/show_install_config.inc.php:84
+#: ../../templates/show_install_config.inc.php:86
 msgid "Write Config"
 msgstr "الكتابة التهيئة"
 
-#: ../../templates/show_install_config.inc.php:125
+#: ../../templates/show_install_config.inc.php:127
 msgid "Check for Config"
 msgstr "شيك التهيئة"
 
-#: ../../templates/show_install_config.inc.php:131
+#: ../../templates/show_install_config.inc.php:133
 msgid "Continue to Step 3"
 msgstr "انتقل الى الخطوة 3"
 
@@ -1842,24 +1844,24 @@ msgstr ""
 msgid "Required"
 msgstr "مطلوب"
 
-#: ../../templates/show_install_check.inc.php:106
+#: ../../templates/show_install_check.inc.php:112
 msgid "Optional"
 msgstr "اختياري"
 
-#: ../../templates/show_install_check.inc.php:108
+#: ../../templates/show_install_check.inc.php:114
 #: ../../templates/show_debug.inc.php:80
 msgid "Gettext Support"
 msgstr "Gettext الدعم"
 
-#: ../../templates/show_install_check.inc.php:112
+#: ../../templates/show_install_check.inc.php:118
 msgid "Gettext Emulator will be used"
 msgstr "Gettext المحاكي ستستخدم"
 
-#: ../../templates/show_install_check.inc.php:120
+#: ../../templates/show_install_check.inc.php:126
 msgid "Mbstring Support"
 msgstr "Mbstring الدعم"
 
-#: ../../templates/show_install_check.inc.php:124
+#: ../../templates/show_install_check.inc.php:130
 msgid "Multibyte Character may not detect correct"
 msgstr "لا يجوز للطابع متعدد البايت كشف الصحيح"
 
@@ -1876,20 +1878,20 @@ msgstr "وحدات"
 msgid "Logout"
 msgstr ""
 
-#: ../../templates/show_install_lang.inc.php:39
-#: ../../templates/show_install.inc.php:40
+#: ../../templates/show_install_lang.inc.php:40
+#: ../../templates/show_install.inc.php:41
 msgid "Requirements"
 msgstr "المتطلبات"
 
-#: ../../templates/show_install_lang.inc.php:54
+#: ../../templates/show_install_lang.inc.php:55
 msgid "Minimum Requirements not met. Unable to Install Ampache."
 msgstr "الحد الأدنى من الشروط لم تتحقق. غير قادر على تثبيت Ampache."
 
-#: ../../templates/show_install_lang.inc.php:59
+#: ../../templates/show_install_lang.inc.php:60
 msgid "Choose installation language."
 msgstr "اختيار وتركيب اللغة."
 
-#: ../../templates/show_install_lang.inc.php:80
+#: ../../templates/show_install_lang.inc.php:81
 msgid "Start configuration"
 msgstr "بدء التهيئة"
 
@@ -2472,7 +2474,7 @@ msgstr ""
 msgid "Found"
 msgstr ""
 
-#: ../../templates/show_install.inc.php:56
+#: ../../templates/show_install.inc.php:57
 msgid ""
 "This step creates and inserts the Ampache database, as such please provide a "
 "mysql account with database creation rights. This step may take a while "
@@ -2482,55 +2484,47 @@ msgstr ""
 "حساب الحقوق وإنشاء قاعدة بيانات. هذه الخطوة قد تستغرق بعض الوقت اعتمادا على "
 "سرعة الكمبيوتر"
 
-#: ../../templates/show_install.inc.php:63
+#: ../../templates/show_install.inc.php:64
 msgid "Insert Ampache Database"
 msgstr "تضاف Ampache قاعدة البيانات"
 
-#: ../../templates/show_install.inc.php:75
+#: ../../templates/show_install.inc.php:76
 msgid "MySQL Administrative Username"
 msgstr "MySQL الإدارية اسم المستخدم"
 
-#: ../../templates/show_install.inc.php:79
+#: ../../templates/show_install.inc.php:80
 msgid "MySQL Administrative Password"
 msgstr "MySQL الإدارية كلمة المرور"
 
-#: ../../templates/show_install.inc.php:83
+#: ../../templates/show_install.inc.php:84
 msgid "Create Database User for New Database"
 msgstr "إنشاء قاعدة بيانات المستخدم لقاعدة البيانات الجديدة"
 
-#: ../../templates/show_install.inc.php:87
+#: ../../templates/show_install.inc.php:88
 msgid "Ampache Database Username"
 msgstr "قاعدة بيانات Ampache اسم المستخدم"
 
-#: ../../templates/show_install.inc.php:91
+#: ../../templates/show_install.inc.php:92
 msgid "Ampache Database User Password"
 msgstr "Ampache قاعدة بيانات المستخدم كلمة السر"
 
-#: ../../templates/show_install.inc.php:95
+#: ../../templates/show_install.inc.php:96
 msgid "Overwrite Existing"
 msgstr "فوق القائمة"
 
-#: ../../templates/show_install.inc.php:99
+#: ../../templates/show_install.inc.php:100
 msgid "Use Existing Database"
 msgstr "استخدام قاعدة البيانات القائمة"
 
-#: ../../templates/show_install.inc.php:104
+#: ../../templates/show_install.inc.php:105
 msgid "Insert Database"
 msgstr "تضاف قاعدة البيانات"
 
-#: ../../templates/show_install_account.inc.php:44
-msgid ""
-"Your webserver has read access to the /sql/ampache.sql file and the /config/"
-"ampache.cfg.dist.php file"
-msgstr ""
-"لقد قرأ الويب الخاص بك للوصول إلى /sql/ampache.sql الملف وملف /config/"
-"ampache.cfg.dist.php"
-
-#: ../../templates/show_install_account.inc.php:50
+#: ../../templates/show_install_account.inc.php:51
 msgid "Step 2 - Creating the ampache.cfg.php file"
 msgstr "الخطوة 2 -- إنشاء ملف ampache.cfg.php"
 
-#: ../../templates/show_install_account.inc.php:53
+#: ../../templates/show_install_account.inc.php:54
 msgid ""
 "This step creates your initial Ampache admin account. Once your admin "
 "account has been created you will be directed to the login page"
@@ -2538,11 +2532,11 @@ msgstr ""
 "تخلق هذه الخطوة الاصلية Ampache حساب مشرف. الحساب الإداري الخاص بك مرة واحدة "
 "وقد خلقكم ستوجه إلى صفحة تسجيل الدخول"
 
-#: ../../templates/show_install_account.inc.php:57
+#: ../../templates/show_install_account.inc.php:58
 msgid "Create Admin Account"
 msgstr "إنشاء حساب مشرف"
 
-#: ../../templates/show_install_account.inc.php:74
+#: ../../templates/show_install_account.inc.php:75
 msgid "Create Account"
 msgstr "إنشاء حساب"
 
@@ -2772,7 +2766,8 @@ msgstr ""
 #: ../../templates/show_recently_played.inc.php:101
 #: ../../templates/show_duplicates.inc.php:37
 #: ../../templates/show_duplicates.inc.php:76
-#: ../../templates/show_now_playing_row.inc.php:45
+#: ../../templates/show_lyrics_song.inc.php:42
+#: ../../templates/show_now_playing_row.inc.php:54
 msgid "Song"
 msgstr ""
 
@@ -2794,22 +2789,24 @@ msgid "%s by %s"
 msgstr ""
 
 #. HINT: Artist Fullname
-#: ../../templates/show_artist.inc.php:37
+#: ../../templates/show_artist.inc.php:38
+#: ../../templates/show_artist.inc.php:39
 #, php-format
 msgid "Show All Songs By %s"
 msgstr ""
 
-#: ../../templates/show_artist.inc.php:40
+#: ../../templates/show_artist.inc.php:44
 #, php-format
 msgid "Add All Songs By %s"
 msgstr ""
 
-#: ../../templates/show_artist.inc.php:43
+#: ../../templates/show_artist.inc.php:49
 #, php-format
 msgid "Add Random Songs By %s"
 msgstr ""
 
-#: ../../templates/show_artist.inc.php:47
+#: ../../templates/show_artist.inc.php:53
+#: ../../templates/show_artist.inc.php:54
 #: ../../templates/show_album.inc.php:70 ../../templates/show_album.inc.php:71
 msgid "Update from tags"
 msgstr ""
@@ -2878,8 +2875,8 @@ msgid "Disk"
 msgstr ""
 
 #: ../../templates/show_album.inc.php:34
-#: ../../lib/class/catalog.class.php:1990
-#: ../../lib/class/catalog.class.php:2061
+#: ../../lib/class/catalog.class.php:1994
+#: ../../lib/class/catalog.class.php:2097
 msgid "Unknown (Orphaned)"
 msgstr ""
 
@@ -2913,19 +2910,19 @@ msgstr ""
 msgid "Add Localplay Instance"
 msgstr ""
 
-#: ../../templates/show_login_form.inc.php:65
+#: ../../templates/show_login_form.inc.php:66
 msgid "Remember Me"
 msgstr ""
 
-#: ../../templates/show_login_form.inc.php:72
+#: ../../templates/show_login_form.inc.php:73
 msgid "Login"
 msgstr ""
 
-#: ../../templates/show_login_form.inc.php:77
+#: ../../templates/show_login_form.inc.php:78
 msgid "Register"
 msgstr ""
 
-#: ../../templates/show_login_form.inc.php:89
+#: ../../templates/show_login_form.inc.php:90
 msgid "Message of the Day"
 msgstr ""
 
@@ -3242,6 +3239,10 @@ msgstr ""
 msgid "Current Configuration"
 msgstr ""
 
+#: ../../templates/show_now_playing_row.inc.php:46
+msgid "Show Lyrics"
+msgstr ""
+
 #: ../../templates/sidebar_modules.inc.php:27
 msgid "Localplay Modules"
 msgstr ""
@@ -3544,7 +3545,7 @@ msgid "%s does not match site charset"
 msgstr ""
 
 #: ../../lib/class/catalog.class.php:1032
-#: ../../lib/class/catalog.class.php:1932 ../../preferences.php:111
+#: ../../lib/class/catalog.class.php:1936 ../../preferences.php:111
 #: ../../admin/access.php:109
 msgid "Updated"
 msgstr ""
@@ -3584,7 +3585,7 @@ msgstr ""
 #: ../../lib/class/catalog.class.php:1278
 #: ../../lib/class/catalog.class.php:1352
 #: ../../lib/class/catalog.class.php:1385
-#: ../../lib/class/catalog.class.php:2352
+#: ../../lib/class/catalog.class.php:2395
 #: ../../lib/class/xmlrpcclient.class.php:64
 #: ../../lib/class/xmlrpcclient.class.php:97
 msgid "Error connecting to"
@@ -3593,7 +3594,7 @@ msgstr ""
 #: ../../lib/class/catalog.class.php:1278
 #: ../../lib/class/catalog.class.php:1352
 #: ../../lib/class/catalog.class.php:1385
-#: ../../lib/class/catalog.class.php:2352
+#: ../../lib/class/catalog.class.php:2395
 #: ../../lib/class/xmlrpcclient.class.php:64
 #: ../../lib/class/xmlrpcclient.class.php:97
 msgid "Code"
@@ -3602,7 +3603,7 @@ msgstr ""
 #: ../../lib/class/catalog.class.php:1278
 #: ../../lib/class/catalog.class.php:1352
 #: ../../lib/class/catalog.class.php:1385
-#: ../../lib/class/catalog.class.php:2352
+#: ../../lib/class/catalog.class.php:2395
 #: ../../lib/class/xmlrpcclient.class.php:64
 msgid "Reason"
 msgstr ""
@@ -3651,24 +3652,24 @@ msgid "Optimizing Tables"
 msgstr ""
 
 #. HINT: Mediafile
-#: ../../lib/class/catalog.class.php:1910
+#: ../../lib/class/catalog.class.php:1914
 #, php-format
 msgid "%s does not exist or is not readable"
 msgstr ""
 
-#: ../../lib/class/catalog.class.php:1932
+#: ../../lib/class/catalog.class.php:1936
 msgid "Update Finished"
 msgstr ""
 
-#: ../../lib/class/catalog.class.php:1932
+#: ../../lib/class/catalog.class.php:1936
 msgid "Checked"
 msgstr ""
 
-#: ../../lib/class/catalog.class.php:2450
+#: ../../lib/class/catalog.class.php:2493
 msgid "Playlist creation error."
 msgstr ""
 
-#: ../../lib/class/catalog.class.php:2457
+#: ../../lib/class/catalog.class.php:2500
 #, php-format
 msgid "Playlist Import and Recreate Successful. Total: %d Song"
 msgid_plural "Playlist Import and Recreate Successful. Total: %d Songs"
@@ -3676,7 +3677,7 @@ msgstr[0] ""
 msgstr[1] ""
 
 #. HINT: filename
-#: ../../lib/class/catalog.class.php:2463
+#: ../../lib/class/catalog.class.php:2506
 #, php-format
 msgid "Parsing %s - Not Found: %d Song. Please check your m3u file."
 msgid_plural "Parsing %s - Not Found: %d Songs. Please check your m3u file."
@@ -3736,11 +3737,11 @@ msgid ""
 "\n"
 msgstr ""
 
-#: ../../lib/general.lib.php:405
+#: ../../lib/general.lib.php:406
 msgid "On"
 msgstr ""
 
-#: ../../lib/general.lib.php:408
+#: ../../lib/general.lib.php:409
 msgid "Off"
 msgstr ""
 
@@ -3824,12 +3825,12 @@ msgstr ""
 msgid "Error Invalid Handshake - "
 msgstr ""
 
-#: ../../server/xml.server.php:343 ../../server/xml.server.php:392
-#: ../../server/xml.server.php:400
+#: ../../server/xml.server.php:345 ../../server/xml.server.php:394
+#: ../../server/xml.server.php:402
 msgid "Invalid Request"
 msgstr ""
 
-#: ../../server/xml.server.php:358 ../../server/xml.server.php:371
+#: ../../server/xml.server.php:360 ../../server/xml.server.php:373
 msgid "Media Object Invalid or Not Specified"
 msgstr ""
 
@@ -4244,7 +4245,7 @@ msgstr ""
 msgid "Album Art Search Finished"
 msgstr ""
 
-#: ../../bin/print_tags.inc:66
+#: ../../bin/print_tags.inc:68
 msgid ""
 "[print_tags.php.inc]\n"
 "This commandline script will display the tag information for the specified "
@@ -4253,7 +4254,7 @@ msgid ""
 "        \n"
 msgstr ""
 
-#: ../../bin/print_tags.inc:72
+#: ../../bin/print_tags.inc:74
 msgid "Filename:"
 msgstr ""
 
@@ -4365,6 +4366,9 @@ msgstr ""
 msgid "System"
 msgstr ""
 
-#: Database words
-msgid "Show Lyrics"
-msgstr ""
+#~ msgid ""
+#~ "Your webserver has read access to the /sql/ampache.sql file and the /"
+#~ "config/ampache.cfg.dist.php file"
+#~ msgstr ""
+#~ "لقد قرأ الويب الخاص بك للوصول إلى /sql/ampache.sql الملف وملف /config/"
+#~ "ampache.cfg.dist.php"

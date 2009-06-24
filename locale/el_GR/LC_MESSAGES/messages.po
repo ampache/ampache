@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ampache 3.5.0\n"
 "Report-Msgid-Bugs-To: translations at ampache.org\n"
-"POT-Creation-Date: 2009-05-06 21:39+0900\n"
+"POT-Creation-Date: 2009-06-24 10:57+0900\n"
 "PO-Revision-Date: 2008-08-25 08:43+0900\n"
 "Last-Translator: Ampache <translations at ampache.org>\n"
 "Language-Team: Greek <LL@li.org>\n"
@@ -20,11 +20,13 @@ msgstr ""
 msgid "Error: No Keyword Entered"
 msgstr "Σφάλμα: Δε δώσατε λέξη αναζήτησης"
 
-#: ../../song.php:40
+#. HINT: Artist, Song Title
+#: ../../song.php:42 ../../song.php:60
 #, php-format
 msgid "%1$s - %2$s Lyrics Detail"
 msgstr ""
 
+#. HINT: Artist Fullname
 #: ../../templates/show_album_row.inc.php:23
 #: ../../templates/show_song_row.inc.php:23
 #: ../../templates/show_albums.inc.php:40
@@ -35,8 +37,8 @@ msgstr ""
 #: ../../templates/show_live_streams.inc.php:57
 #: ../../templates/show_playlists.inc.php:34
 #: ../../templates/show_playlists.inc.php:57
-#: ../../templates/show_videos.inc.php:35
-#: ../../templates/show_videos.inc.php:58
+#: ../../templates/show_videos.inc.php:36
+#: ../../templates/show_videos.inc.php:60
 #: ../../templates/show_add_live_stream.inc.php:68
 #: ../../templates/show_catalog_row.inc.php:29
 #: ../../templates/show_video_row.inc.php:23
@@ -50,7 +52,7 @@ msgstr ""
 #: ../../templates/show_recently_played.inc.php:37
 #: ../../templates/show_recently_played.inc.php:80
 #: ../../templates/show_recently_played.inc.php:99
-#: ../../templates/show_artist.inc.php:38
+#: ../../templates/show_artist.inc.php:43
 #: ../../templates/show_album.inc.php:51
 #: ../../templates/show_playlist_song_row.inc.php:22
 #: ../../templates/show_song.inc.php:29
@@ -60,12 +62,13 @@ msgstr ""
 msgid "Add"
 msgstr "Προσθήκη"
 
+#. HINT: Artist Fullname
 #: ../../templates/show_album_row.inc.php:24
-#: ../../templates/sidebar_home.inc.php:104
+#: ../../templates/sidebar_home.inc.php:105
 #: ../../templates/show_artist_row.inc.php:24
 #: ../../templates/show_genres.inc.php:52
 #: ../../templates/show_localplay_status.inc.php:44
-#: ../../templates/show_artist.inc.php:41
+#: ../../templates/show_artist.inc.php:48
 #: ../../templates/show_album.inc.php:55
 #: ../../templates/show_playlist_row.inc.php:24
 #: ../../modules/localplay/mpd.controller.php:495
@@ -103,6 +106,8 @@ msgstr "Διαδοχικό κατέβασμα"
 msgid "Edit"
 msgstr "Επεξεργασία"
 
+#. HINT: Editing Username preferences
+#. HINT: Username
 #: ../../templates/show_user_preferences.inc.php:28
 #: ../../templates/show_preferences.inc.php:28
 #, fuzzy, php-format
@@ -138,8 +143,9 @@ msgid "Song Information"
 msgstr "Πληροφορίες"
 
 #: ../../templates/show_song_row.inc.php:43
-#: ../../templates/show_artist.inc.php:50
-#: ../../templates/show_artist.inc.php:51
+#: ../../templates/show_video_row.inc.php:32
+#: ../../templates/show_artist.inc.php:59
+#: ../../templates/show_artist.inc.php:60
 #: ../../templates/show_album.inc.php:76 ../../templates/show_album.inc.php:77
 #: ../../templates/show_playlist_song_row.inc.php:33
 #: ../../templates/show_song.inc.php:32
@@ -161,7 +167,7 @@ msgstr "Παύση"
 #: ../../templates/show_localplay_control.inc.php:28
 #: ../../templates/show_manage_democratic.inc.php:57
 #: ../../templates/rightbar.inc.php:25
-#: ../../templates/show_democratic.inc.php:38
+#: ../../templates/show_democratic.inc.php:39
 msgid "Play"
 msgstr "Παίξε"
 
@@ -196,17 +202,17 @@ msgstr "ΠΕΡΙΓΡΑΦΗ"
 
 #: ../../templates/show_test.inc.php:45
 #: ../../templates/show_install_check.inc.php:26
-#: ../../templates/show_install_check.inc.php:33
+#: ../../templates/show_install_check.inc.php:39
 msgid "PHP Version"
 msgstr "Έκδοση PHP"
 
 #: ../../templates/show_test.inc.php:51
-#: ../../templates/show_install_check.inc.php:31
+#: ../../templates/show_install_check.inc.php:37
 msgid "Hash Function Exists"
 msgstr ""
 
 #: ../../templates/show_test.inc.php:51
-#: ../../templates/show_install_check.inc.php:31
+#: ../../templates/show_install_check.inc.php:37
 #, fuzzy
 msgid "SHA256 Support"
 msgstr "PHP PCRE Support"
@@ -218,8 +224,8 @@ msgid ""
 msgstr "Δοκιμή της έκδοσης PHP, αν είναι συμβατή με τον Ampache"
 
 #: ../../templates/show_test.inc.php:65
-#: ../../templates/show_install_check.inc.php:41
-#: ../../templates/show_install_check.inc.php:46
+#: ../../templates/show_install_check.inc.php:47
+#: ../../templates/show_install_check.inc.php:52
 msgid "Mysql for PHP"
 msgstr "MySQL για PHP"
 
@@ -230,8 +236,8 @@ msgid ""
 msgstr "Έλεγχος για τις απαραίτητες επεκτάσεις mysql που είναι απαραίτητες"
 
 #: ../../templates/show_test.inc.php:82
-#: ../../templates/show_install_check.inc.php:54
-#: ../../templates/show_install_check.inc.php:59
+#: ../../templates/show_install_check.inc.php:60
+#: ../../templates/show_install_check.inc.php:65
 msgid "PHP Session Support"
 msgstr "Υποστήριξη PHP Session"
 
@@ -244,8 +250,8 @@ msgstr ""
 "δουλέψει ο ampache"
 
 #: ../../templates/show_test.inc.php:99
-#: ../../templates/show_install_check.inc.php:67
-#: ../../templates/show_install_check.inc.php:72
+#: ../../templates/show_install_check.inc.php:73
+#: ../../templates/show_install_check.inc.php:78
 msgid "PHP ICONV Support"
 msgstr "PHP ICONV Support"
 
@@ -256,8 +262,8 @@ msgid ""
 msgstr ""
 
 #: ../../templates/show_test.inc.php:115
-#: ../../templates/show_install_check.inc.php:80
-#: ../../templates/show_install_check.inc.php:85
+#: ../../templates/show_install_check.inc.php:86
+#: ../../templates/show_install_check.inc.php:91
 msgid "PHP PCRE Support"
 msgstr "PHP PCRE Support"
 
@@ -268,8 +274,8 @@ msgid ""
 msgstr "Έλεγχος PHP PCRE Υποστήριξης. Είναι απαραίτητο για τον ampache"
 
 #: ../../templates/show_test.inc.php:131
-#: ../../templates/show_install_check.inc.php:93
-#: ../../templates/show_install_check.inc.php:98
+#: ../../templates/show_install_check.inc.php:99
+#: ../../templates/show_install_check.inc.php:104
 msgid "PHP PutENV Support"
 msgstr "PHP PutENV Support"
 
@@ -284,7 +290,7 @@ msgstr ""
 "ορισμένα χαρακτηριστικά του ampache ίσως δε λειτουργούν σωστά"
 
 #: ../../templates/show_test.inc.php:147
-#: ../../templates/show_install_config.inc.php:91
+#: ../../templates/show_install_config.inc.php:93
 msgid "Ampache.cfg.php Exists"
 msgstr "Υπάρχει ήδη το αρχείο ρυθμίσεων ampache.cfg.php"
 
@@ -299,7 +305,7 @@ msgstr ""
 "δικαιώματα"
 
 #: ../../templates/show_test.inc.php:166
-#: ../../templates/show_install_config.inc.php:106
+#: ../../templates/show_install_config.inc.php:108
 msgid "Ampache.cfg.php Configured?"
 msgstr "Διαμορφώθηκε το αρχείο ampache.cfg.php;"
 
@@ -334,7 +340,7 @@ msgid ""
 msgstr ""
 
 #: ../../templates/show_test.inc.php:223
-#: ../../templates/show_install_config.inc.php:63
+#: ../../templates/show_install_config.inc.php:65
 msgid "Web Path"
 msgstr "Διαδρομή web"
 
@@ -352,7 +358,7 @@ msgstr "Εξώφυλλο"
 
 #: ../../templates/show_albums.inc.php:44
 #: ../../templates/show_albums.inc.php:75
-#: ../../templates/sidebar_home.inc.php:106
+#: ../../templates/sidebar_home.inc.php:107
 #: ../../templates/show_edit_song.inc.php:37
 #: ../../templates/show_democratic_playlist.inc.php:57
 #: ../../templates/show_democratic_playlist.inc.php:97
@@ -367,9 +373,10 @@ msgstr "Εξώφυλλο"
 #: ../../templates/show_disabled_songs.inc.php:58
 #: ../../templates/show_duplicates.inc.php:39
 #: ../../templates/show_duplicates.inc.php:78
+#: ../../templates/show_lyrics_song.inc.php:49
 #: ../../templates/show_playlist_songs.inc.php:44
 #: ../../templates/show_playlist_songs.inc.php:65
-#: ../../templates/show_now_playing_row.inc.php:52
+#: ../../templates/show_now_playing_row.inc.php:61
 msgid "Album"
 msgstr "Άλμπουμ"
 
@@ -377,8 +384,8 @@ msgstr "Άλμπουμ"
 #: ../../templates/show_albums.inc.php:76
 #: ../../templates/show_artists.inc.php:37
 #: ../../templates/show_artists.inc.php:65
-#: ../../templates/sidebar_home.inc.php:80
-#: ../../templates/sidebar_home.inc.php:107
+#: ../../templates/sidebar_home.inc.php:81
+#: ../../templates/sidebar_home.inc.php:108
 #: ../../templates/show_similar_artists.inc.php:33
 #: ../../templates/show_similar_artists.inc.php:86
 #: ../../templates/show_edit_song.inc.php:45
@@ -395,9 +402,10 @@ msgstr "Άλμπουμ"
 #: ../../templates/show_disabled_songs.inc.php:59
 #: ../../templates/show_duplicates.inc.php:38
 #: ../../templates/show_duplicates.inc.php:77
+#: ../../templates/show_lyrics_song.inc.php:56
 #: ../../templates/show_playlist_songs.inc.php:43
 #: ../../templates/show_playlist_songs.inc.php:64
-#: ../../templates/show_now_playing_row.inc.php:59
+#: ../../templates/show_now_playing_row.inc.php:68
 msgid "Artist"
 msgstr "Καλλιτέχνης"
 
@@ -407,7 +415,7 @@ msgstr "Καλλιτέχνης"
 #: ../../templates/show_artists.inc.php:66
 #: ../../templates/show_manage_democratic.inc.php:39
 #: ../../templates/show_popular.inc.php:23
-#: ../../templates/show_genre.inc.php:38 ../../templates/show_stats.inc.php:32
+#: ../../templates/show_genre.inc.php:39 ../../templates/show_stats.inc.php:32
 #: ../../templates/show_stats.inc.php:68
 #: ../../templates/show_genres.inc.php:38
 #: ../../templates/show_genres.inc.php:74 ../../lib/class/browse.class.php:142
@@ -427,8 +435,8 @@ msgstr "Χρόνος"
 #: ../../templates/show_albums.inc.php:79
 #: ../../templates/show_artists.inc.php:41
 #: ../../templates/show_artists.inc.php:69
-#: ../../templates/show_videos.inc.php:40
-#: ../../templates/show_videos.inc.php:63
+#: ../../templates/show_videos.inc.php:41
+#: ../../templates/show_videos.inc.php:65
 #: ../../templates/show_stats.inc.php:34 ../../templates/show_songs.inc.php:43
 #: ../../templates/show_songs.inc.php:72
 #, fuzzy
@@ -460,7 +468,7 @@ msgstr "Ενέργειες"
 #: ../../templates/show_live_streams.inc.php:53
 #: ../../templates/show_playlists.inc.php:53
 #: ../../templates/show_manage_democratic.inc.php:63
-#: ../../templates/show_videos.inc.php:54
+#: ../../templates/show_videos.inc.php:56
 #: ../../templates/show_objects.inc.php:44
 #: ../../templates/rightbar.inc.php:108 ../../templates/show_genres.inc.php:68
 #: ../../templates/show_user_recommendations.inc.php:32
@@ -481,10 +489,10 @@ msgstr "Ονοματεπώνυμο"
 #: ../../templates/show_users.inc.php:39 ../../templates/show_users.inc.php:61
 #: ../../templates/show_edit_user.inc.php:32
 #: ../../templates/show_add_user.inc.php:29
-#: ../../templates/show_install_account.inc.php:61
+#: ../../templates/show_install_account.inc.php:62
 #: ../../templates/show_recently_played.inc.php:41
 #: ../../templates/show_recently_played.inc.php:100
-#: ../../templates/show_login_form.inc.php:57
+#: ../../templates/show_login_form.inc.php:58
 #: ../../templates/show_user_registration.inc.php:73
 #: ../../templates/show_now_playing_row.inc.php:29
 msgid "Username"
@@ -516,6 +524,8 @@ msgstr "Τελευταία IP"
 #: ../../templates/show_live_streams.inc.php:40
 #: ../../templates/show_live_streams.inc.php:62
 #: ../../templates/show_manage_democratic.inc.php:40
+#: ../../templates/show_videos.inc.php:42
+#: ../../templates/show_videos.inc.php:66
 #: ../../templates/show_plugins.inc.php:35
 #: ../../templates/show_plugins.inc.php:64
 #: ../../templates/show_democratic_playlist.inc.php:54
@@ -545,15 +555,15 @@ msgid "On-line"
 msgstr "Συνδεδεμένος"
 
 #: ../../templates/show_users.inc.php:53 ../../templates/show_user.inc.php:22
-#: ../../lib/class/user.class.php:663 ../../lib/class/catalog.class.php:146
+#: ../../lib/class/user.class.php:671 ../../lib/class/catalog.class.php:146
 #: ../../lib/class/catalog.class.php:147 ../../lib/class/catalog.class.php:148
-#: ../../lib/preferences.php:261
+#: ../../lib/preferences.php:263
 msgid "Never"
 msgstr "Ποτέ"
 
 #: ../../templates/show_users.inc.php:54 ../../templates/show_user.inc.php:23
 #: ../../lib/class/flag.class.php:337 ../../lib/class/localplay.class.php:648
-#: ../../lib/class/user.class.php:667 ../../lib/general.lib.php:338
+#: ../../lib/class/user.class.php:675 ../../lib/general.lib.php:339
 #: ../../modules/localplay/mpd.controller.php:525
 msgid "Unknown"
 msgstr "Άγνωστο"
@@ -582,8 +592,8 @@ msgstr "E-mail"
 
 #: ../../templates/show_edit_user.inc.php:55
 #: ../../templates/show_add_user.inc.php:52
-#: ../../templates/show_install_account.inc.php:65
-#: ../../templates/show_login_form.inc.php:61
+#: ../../templates/show_install_account.inc.php:66
+#: ../../templates/show_login_form.inc.php:62
 #: ../../templates/show_user_registration.inc.php:101
 #: ../../modules/localplay/mpd.controller.php:235
 #: ../../modules/localplay/httpq.controller.php:219
@@ -593,7 +603,7 @@ msgstr "Κωδικός"
 #: ../../templates/show_edit_user.inc.php:64
 #: ../../templates/show_add_user.inc.php:61
 #: ../../templates/show_account.inc.php:46
-#: ../../templates/show_install_account.inc.php:69
+#: ../../templates/show_install_account.inc.php:70
 #: ../../templates/show_user_registration.inc.php:110
 msgid "Confirm Password"
 msgstr "Επιβεβαίωση Κωδικού"
@@ -627,7 +637,7 @@ msgstr "Επισκέπτης"
 #: ../../templates/show_access_list.inc.php:59
 #: ../../templates/show_manage_shoutbox.inc.php:35
 #: ../../templates/show_manage_shoutbox.inc.php:59
-#: ../../lib/class/democratic.class.php:148 ../../lib/preferences.php:231
+#: ../../lib/class/democratic.class.php:148 ../../lib/preferences.php:232
 #: ../../admin/users.php:126
 msgid "User"
 msgstr "Χρήστης"
@@ -656,7 +666,7 @@ msgstr "Διαχειριστής Καταλόγων"
 #: ../../templates/show_democratic_playlist.inc.php:61
 #: ../../templates/show_democratic_playlist.inc.php:101
 #: ../../templates/show_mail_users.inc.php:32
-#: ../../lib/class/democratic.class.php:157 ../../lib/preferences.php:233
+#: ../../lib/class/democratic.class.php:157 ../../lib/preferences.php:234
 #: ../../admin/users.php:127
 msgid "Admin"
 msgstr "Διαχειριστής"
@@ -671,19 +681,19 @@ msgid "Config Preset"
 msgstr ""
 
 #: ../../templates/show_edit_user.inc.php:93
-#: ../../templates/sidebar_home.inc.php:90
+#: ../../templates/sidebar_home.inc.php:91
 #: ../../templates/show_playtype_switch.inc.php:36
-#: ../../templates/sidebar_modules.inc.php:41 ../../lib/preferences.php:179
+#: ../../templates/sidebar_modules.inc.php:41 ../../lib/preferences.php:180
 #: ../../modules/localplay/mpd.controller.php:491
 #: ../../modules/localplay/httpq.controller.php:488
 msgid "Democratic"
 msgstr "Δημοκρατική"
 
 #: ../../templates/show_edit_user.inc.php:94
-#: ../../templates/sidebar_home.inc.php:99
+#: ../../templates/sidebar_home.inc.php:100
 #: ../../templates/sidebar_localplay.inc.php:32
 #: ../../templates/show_playtype_switch.inc.php:34
-#: ../../templates/sidebar.inc.php:28 ../../lib/preferences.php:182
+#: ../../templates/sidebar.inc.php:28 ../../lib/preferences.php:183
 msgid "Localplay"
 msgstr "Τοπική Αναπαραγωγή"
 
@@ -694,7 +704,7 @@ msgstr "Μαρκάρισμα"
 
 #: ../../templates/show_edit_user.inc.php:96
 #: ../../templates/show_playtype_switch.inc.php:32
-#: ../../lib/preferences.php:176
+#: ../../lib/preferences.php:177
 msgid "Stream"
 msgstr "Ροή"
 
@@ -790,8 +800,8 @@ msgstr "Έκδοση"
 #: ../../templates/show_localplay_controllers.inc.php:44
 #: ../../templates/show_user_row.inc.php:46
 #: ../../templates/show_duplicates.inc.php:36
-#: ../../templates/show_duplicates.inc.php:75 ../../lib/preferences.php:165
-#: ../../lib/preferences.php:271
+#: ../../templates/show_duplicates.inc.php:75 ../../lib/preferences.php:166
+#: ../../lib/preferences.php:273
 msgid "Disable"
 msgstr "Ανενεργό"
 
@@ -840,17 +850,17 @@ msgstr "Αποθήκευση"
 #: ../../templates/show_artists.inc.php:39
 #: ../../templates/show_artists.inc.php:67
 #: ../../templates/sidebar_home.inc.php:33
-#: ../../templates/sidebar_home.inc.php:77
+#: ../../templates/sidebar_home.inc.php:78
 #: ../../templates/show_popular.inc.php:26
-#: ../../templates/show_genre.inc.php:32 ../../templates/show_stats.inc.php:30
+#: ../../templates/show_genre.inc.php:33 ../../templates/show_stats.inc.php:30
 #: ../../lib/ui.lib.php:362 ../../lib/class/browse.class.php:148
 msgid "Albums"
 msgstr "Άλμπουμς"
 
 #: ../../templates/show_artists.inc.php:40
 #: ../../templates/show_artists.inc.php:68
-#: ../../templates/show_videos.inc.php:39
-#: ../../templates/show_videos.inc.php:62
+#: ../../templates/show_videos.inc.php:40
+#: ../../templates/show_videos.inc.php:64
 #: ../../templates/show_democratic_playlist.inc.php:59
 #: ../../templates/show_democratic_playlist.inc.php:99
 #: ../../templates/show_search.inc.php:72
@@ -871,8 +881,8 @@ msgid "Search Type"
 msgstr "Τύπος Αναζήτησης"
 
 #: ../../templates/show_duplicate.inc.php:33
-#: ../../templates/show_videos.inc.php:36
-#: ../../templates/show_videos.inc.php:59
+#: ../../templates/show_videos.inc.php:37
+#: ../../templates/show_videos.inc.php:61
 #: ../../templates/show_edit_song.inc.php:31
 #: ../../templates/show_democratic_playlist.inc.php:56
 #: ../../templates/show_democratic_playlist.inc.php:96
@@ -957,14 +967,14 @@ msgstr "Τίτλος Τραγουδιού"
 
 #: ../../templates/sidebar_home.inc.php:34
 #: ../../templates/show_popular.inc.php:29
-#: ../../templates/show_genre.inc.php:35 ../../templates/show_stats.inc.php:31
+#: ../../templates/show_genre.inc.php:36 ../../templates/show_stats.inc.php:31
 #: ../../lib/ui.lib.php:366 ../../lib/class/browse.class.php:159
-#: ../../lib/class/album.class.php:256
+#: ../../lib/class/album.class.php:257
 msgid "Artists"
 msgstr "Καλλιτέχνες"
 
 #: ../../templates/sidebar_home.inc.php:35
-#: ../../lib/class/browse.class.php:203
+#: ../../lib/class/browse.class.php:203 ../../browse.php:68
 msgid "Tag Cloud"
 msgstr ""
 
@@ -1005,7 +1015,7 @@ msgid "Unplayed"
 msgstr "Δεν έχουν παιχτεί"
 
 #: ../../templates/sidebar_home.inc.php:64
-#: ../../templates/show_artist.inc.php:55
+#: ../../templates/show_artist.inc.php:64
 msgid "Show Art"
 msgstr "Δείξε Εξώφυλλα"
 
@@ -1013,51 +1023,51 @@ msgstr "Δείξε Εξώφυλλα"
 msgid "All Playlists"
 msgstr "Όλες οι playlists"
 
-#: ../../templates/sidebar_home.inc.php:74
+#: ../../templates/sidebar_home.inc.php:75
 #: ../../templates/show_songs.inc.php:40 ../../templates/show_songs.inc.php:69
 #: ../../templates/show_playlist_songs.inc.php:42
 #: ../../templates/show_playlist_songs.inc.php:63
 msgid "Song Title"
 msgstr "Τίτλος Τραγουδιού"
 
-#: ../../templates/sidebar_home.inc.php:86
-#: ../../templates/sidebar_home.inc.php:108
+#: ../../templates/sidebar_home.inc.php:87
+#: ../../templates/sidebar_home.inc.php:109
 #: ../../templates/show_manage_democratic.inc.php:34
 #: ../../templates/show_play_selected.inc.php:47 ../../lib/ui.lib.php:321
 msgid "Playlist"
 msgstr "Playlist"
 
-#: ../../templates/sidebar_home.inc.php:88
+#: ../../templates/sidebar_home.inc.php:89
 msgid "Currently Playing"
 msgstr "Τώρα παίζουν"
 
-#: ../../templates/sidebar_home.inc.php:101
+#: ../../templates/sidebar_home.inc.php:102
 #: ../../templates/show_live_stream.inc.php:29
 #, fuzzy
 msgid "Import"
 msgstr "Εξαγωγή"
 
-#: ../../templates/sidebar_home.inc.php:109
+#: ../../templates/sidebar_home.inc.php:110
 msgid "Advanced"
 msgstr "Προχωρημένα"
 
-#: ../../templates/sidebar_home.inc.php:112
+#: ../../templates/sidebar_home.inc.php:113
 #: ../../templates/show_popular.inc.php:22
 #: ../../templates/show_newest.inc.php:22
 msgid "Information"
 msgstr "Πληροφορίες"
 
-#: ../../templates/sidebar_home.inc.php:114
+#: ../../templates/sidebar_home.inc.php:115
 #: ../../templates/show_stats.inc.php:24 ../../lib/ui.lib.php:374
 msgid "Statistics"
 msgstr "Στατιστικά"
 
-#: ../../templates/sidebar_home.inc.php:115
+#: ../../templates/sidebar_home.inc.php:116
 #, fuzzy
 msgid "Newest"
 msgstr "Πρόσφατα άλμπουμς"
 
-#: ../../templates/sidebar_home.inc.php:116
+#: ../../templates/sidebar_home.inc.php:117
 msgid "Popular"
 msgstr ""
 
@@ -1076,8 +1086,8 @@ msgid "Reject"
 msgstr "Απόρριψη"
 
 #: ../../templates/show_flag_row.inc.php:33
-#: ../../templates/show_user_row.inc.php:43 ../../lib/preferences.php:164
-#: ../../lib/preferences.php:270
+#: ../../templates/show_user_row.inc.php:43 ../../lib/preferences.php:165
+#: ../../lib/preferences.php:272
 msgid "Enable"
 msgstr "Ενεργό"
 
@@ -1096,6 +1106,7 @@ msgstr "Τραγούδια"
 msgid "Owner"
 msgstr "Ιδιοκτήτης"
 
+#. HINT: Catalog Name
 #: ../../templates/show_edit_catalog.inc.php:22
 #, fuzzy, php-format
 msgid "Settings for %s"
@@ -1184,7 +1195,7 @@ msgid "Base Playlist"
 msgstr "Βασική playlist"
 
 #: ../../templates/show_manage_democratic.inc.php:36
-#: ../../templates/show_democratic.inc.php:28
+#: ../../templates/show_democratic.inc.php:29
 msgid "Cooldown"
 msgstr ""
 
@@ -1202,7 +1213,7 @@ msgid "Level"
 msgstr "Επίπεδο"
 
 #: ../../templates/show_manage_democratic.inc.php:38
-#: ../../lib/preferences.php:255 ../../lib/preferences.php:262
+#: ../../lib/preferences.php:257 ../../lib/preferences.php:264
 msgid "Default"
 msgstr "Προκαθορισμένη"
 
@@ -1357,6 +1368,7 @@ msgstr ""
 msgid "Create ACL"
 msgstr "Δημιουργία λίστας πρόσβασης"
 
+#. HINT: Playlist Type, Playlist Name
 #: ../../templates/show_playlist.inc.php:26
 #, fuzzy, php-format
 msgid "%s %s Playlist"
@@ -1396,8 +1408,8 @@ msgstr "Ενεργό Στιγμιότυπο"
 
 #: ../../templates/sidebar_localplay.inc.php:44
 #: ../../templates/show_gather_art.inc.php:24
-#: ../../templates/show_adds_catalog.inc.php:25 ../../lib/ui.lib.php:571
-#: ../../lib/preferences.php:174 ../../lib/preferences.php:216
+#: ../../templates/show_adds_catalog.inc.php:26 ../../lib/ui.lib.php:571
+#: ../../lib/preferences.php:175 ../../lib/preferences.php:217
 msgid "None"
 msgstr "Κανένα"
 
@@ -1423,22 +1435,24 @@ msgid "Using Old Password Encryption, Please Reset your Password"
 msgstr ""
 
 #: ../../templates/footer.inc.php:32
+#: ../../templates/show_login_form.inc.php:99
 msgid "Queries:"
 msgstr ""
 
 #: ../../templates/footer.inc.php:32
+#: ../../templates/show_login_form.inc.php:99
 msgid "Cache Hits:"
 msgstr ""
 
-#: ../../templates/show_videos.inc.php:37
-#: ../../templates/show_videos.inc.php:60
+#: ../../templates/show_videos.inc.php:38
+#: ../../templates/show_videos.inc.php:62
 #: ../../templates/show_search.inc.php:79
 #, fuzzy
 msgid "Codec"
 msgstr "Κωδικός"
 
-#: ../../templates/show_videos.inc.php:38
-#: ../../templates/show_videos.inc.php:61
+#: ../../templates/show_videos.inc.php:39
+#: ../../templates/show_videos.inc.php:63
 #, fuzzy
 msgid "Resolution"
 msgstr "Εγγραφή"
@@ -1541,20 +1555,21 @@ msgstr "Προχωρημένες Επιλογές"
 msgid "Search Again"
 msgstr "Αναζήτηση πάλι"
 
-#: ../../templates/show_clean_catalog.inc.php:23
+#. HINT: Catalog Name
+#: ../../templates/show_clean_catalog.inc.php:24
 #, fuzzy, php-format
 msgid "Cleaning the %s Catalog"
 msgstr "Καθαρισμός του"
 
-#: ../../templates/show_clean_catalog.inc.php:25
+#: ../../templates/show_clean_catalog.inc.php:26
 msgid "Checking"
 msgstr "Έλεγχος"
 
-#: ../../templates/show_clean_catalog.inc.php:26
+#: ../../templates/show_clean_catalog.inc.php:27
 #: ../../templates/show_run_add_catalog.inc.php:25
 #: ../../templates/show_gather_art.inc.php:25
-#: ../../templates/show_adds_catalog.inc.php:26
-#: ../../templates/show_verify_catalog.inc.php:28
+#: ../../templates/show_adds_catalog.inc.php:27
+#: ../../templates/show_verify_catalog.inc.php:29
 msgid "Reading"
 msgstr "Ανάγνωση"
 
@@ -1614,7 +1629,7 @@ msgid "Flag"
 msgstr "Μαρκάρισμα"
 
 #: ../../templates/show_playtype_switch.inc.php:38
-#: ../../lib/preferences.php:184
+#: ../../lib/preferences.php:185
 msgid "Flash Player"
 msgstr "Αναπαραγωγή Flash"
 
@@ -1622,17 +1637,17 @@ msgstr "Αναπαραγωγή Flash"
 msgid "Preference Administration"
 msgstr "Προτιμήσεις Διαχείρισης"
 
-#: ../../templates/show_install_config.inc.php:33
-#: ../../templates/show_install_lang.inc.php:34
-#: ../../templates/show_install.inc.php:33
-#: ../../templates/show_install_account.inc.php:33
+#: ../../templates/show_install_config.inc.php:34
+#: ../../templates/show_install_lang.inc.php:35
+#: ../../templates/show_install.inc.php:35
+#: ../../templates/show_install_account.inc.php:34
 msgid "Ampache Installation"
 msgstr "Εγκατάσταση"
 
-#: ../../templates/show_install_config.inc.php:39
-#: ../../templates/show_install_lang.inc.php:41
-#: ../../templates/show_install.inc.php:41
-#: ../../templates/show_install_account.inc.php:40
+#: ../../templates/show_install_config.inc.php:40
+#: ../../templates/show_install_lang.inc.php:42
+#: ../../templates/show_install.inc.php:43
+#: ../../templates/show_install_account.inc.php:41
 msgid ""
 "This Page handles the installation of the Ampache database and the creation "
 "of the ampache.cfg.php file. Before you continue please make sure that you "
@@ -1642,30 +1657,30 @@ msgstr ""
 "δημιουργία του αρχείου ρυθμίσεων. Πριν συνεχίσετε, βεβαιωθείτε ότι "
 "ικανοποιείτε τις ακόλουθες προϋποθέσεις"
 
-#: ../../templates/show_install_config.inc.php:42
-#: ../../templates/show_install_lang.inc.php:44
-#: ../../templates/show_install.inc.php:44
-#: ../../templates/show_install_account.inc.php:43
+#: ../../templates/show_install_config.inc.php:43
+#: ../../templates/show_install_lang.inc.php:45
+#: ../../templates/show_install.inc.php:46
+#: ../../templates/show_install_account.inc.php:44
 msgid ""
 "A MySQL Server with a username and password that can create/modify databases"
 msgstr ""
 "Ένας MySQL Server με όνομα χρήστη και κωδικό που μπορεί να δημιουργεί/"
 "τροποποιεί βάσεις"
 
-#: ../../templates/show_install_config.inc.php:43
-#: ../../templates/show_install_lang.inc.php:45
-#: ../../templates/show_install.inc.php:45
-msgid ""
-"Your webserver has read access to the /sql/ampache.sql file and the /config/"
-"ampache.cfg.php.dist file"
+#: ../../templates/show_install_config.inc.php:44
+#: ../../templates/show_install_lang.inc.php:46
+#: ../../templates/show_install.inc.php:47
+#: ../../templates/show_install_account.inc.php:45
+#, fuzzy, php-format
+msgid "Your webserver has read access to the %s file and the %s file"
 msgstr ""
 "Ο webserver έχει δικαιώματα ανάγνωσης στο /sql/ampache.sql αρχείο και στο "
 "αρχείο /config/ampache.cfg.php.dist"
 
-#: ../../templates/show_install_config.inc.php:45
-#: ../../templates/show_install_lang.inc.php:48
-#: ../../templates/show_install.inc.php:48
-#: ../../templates/show_install_account.inc.php:46
+#: ../../templates/show_install_config.inc.php:47
+#: ../../templates/show_install_lang.inc.php:49
+#: ../../templates/show_install.inc.php:50
+#: ../../templates/show_install_account.inc.php:47
 msgid ""
 "Once you have ensured that you have the above requirements please fill out "
 "the information below. You will only be asked for the required config "
@@ -1677,61 +1692,61 @@ msgstr ""
 "για τις επιθυμητές ρυθμίσεις. Αν θελήσετε να κάνετε αργότερα αλλαγές απλώς "
 "επεξεργαστείτε το /config/ampache.cfg.php"
 
-#: ../../templates/show_install_config.inc.php:49
-#: ../../templates/show_install.inc.php:53
-#: ../../templates/show_install_account.inc.php:49
+#: ../../templates/show_install_config.inc.php:51
+#: ../../templates/show_install.inc.php:55
+#: ../../templates/show_install_account.inc.php:50
 msgid "Step 1 - Creating and Inserting the Ampache Database"
 msgstr "Βήμα 1 - Δημιουργία Βάσης Δεδομένων"
 
-#: ../../templates/show_install_config.inc.php:50
-#: ../../templates/show_install.inc.php:57
+#: ../../templates/show_install_config.inc.php:52
+#: ../../templates/show_install.inc.php:59
 msgid "Step 2 - Creating the Ampache.cfg.php file"
 msgstr "Βήμα 2 - Δημιουργία του ampache.cfg.php αρχείου"
 
-#: ../../templates/show_install_config.inc.php:52
+#: ../../templates/show_install_config.inc.php:54
 msgid ""
 "This steps takes the basic config values and generates the config file. It "
 "will prompt you to download the config file. Please put the downloaded "
 "config file in /config"
 msgstr ""
 
-#: ../../templates/show_install_config.inc.php:54
-#: ../../templates/show_install.inc.php:58
-#: ../../templates/show_install_account.inc.php:51
+#: ../../templates/show_install_config.inc.php:56
+#: ../../templates/show_install.inc.php:60
+#: ../../templates/show_install_account.inc.php:52
 msgid "Step 3 - Setup Initial Account"
 msgstr "Βήμα 3 - Δημιουργία αρχικού λογαριασμού"
 
-#: ../../templates/show_install_config.inc.php:58
+#: ../../templates/show_install_config.inc.php:60
 msgid "Generate Config File"
 msgstr "Δημιουργία Αρχείο Ρυθμίσεων"
 
-#: ../../templates/show_install_config.inc.php:67
-#: ../../templates/show_install.inc.php:66
+#: ../../templates/show_install_config.inc.php:69
+#: ../../templates/show_install.inc.php:68
 msgid "Desired Database Name"
 msgstr "Επιθυμητό όνομα βάσης"
 
-#: ../../templates/show_install_config.inc.php:71
-#: ../../templates/show_install.inc.php:70
+#: ../../templates/show_install_config.inc.php:73
+#: ../../templates/show_install.inc.php:72
 msgid "MySQL Hostname"
 msgstr "Όνομα Εξυπηρετητή MySQL"
 
-#: ../../templates/show_install_config.inc.php:75
+#: ../../templates/show_install_config.inc.php:77
 msgid "MySQL Username"
 msgstr "Όνομα χρήστη MySQL"
 
-#: ../../templates/show_install_config.inc.php:79
+#: ../../templates/show_install_config.inc.php:81
 msgid "MySQL Password"
 msgstr "Κωδικός MySQL"
 
-#: ../../templates/show_install_config.inc.php:84
+#: ../../templates/show_install_config.inc.php:86
 msgid "Write Config"
 msgstr "Εγγραφή ρυθμίσεων"
 
-#: ../../templates/show_install_config.inc.php:125
+#: ../../templates/show_install_config.inc.php:127
 msgid "Check for Config"
 msgstr "Έλεγχος για αρχείο ρυθμίσεων"
 
-#: ../../templates/show_install_config.inc.php:131
+#: ../../templates/show_install_config.inc.php:133
 msgid "Continue to Step 3"
 msgstr "Συνεχίστε στο Βήμα 3"
 
@@ -1751,7 +1766,7 @@ msgstr "Ο Χρήστης είναι εκτός τώρα"
 msgid "Active Playlist"
 msgstr "Ενεργή playlist"
 
-#: ../../templates/show_user.inc.php:68 ../../templates/header.inc.php:36
+#: ../../templates/show_user.inc.php:68 ../../templates/header.inc.php:37
 #: ../../templates/show_recently_played.inc.php:25
 #: ../../lib/class/ampacherss.class.php:71
 msgid "Recently Played"
@@ -1837,27 +1852,27 @@ msgstr "Ρύθμιση Εξυπηρετητή"
 msgid "Required"
 msgstr "Απαιτήσεις"
 
-#: ../../templates/show_install_check.inc.php:106
+#: ../../templates/show_install_check.inc.php:112
 #, fuzzy
 msgid "Optional"
 msgstr "Επιλογές RPC"
 
-#: ../../templates/show_install_check.inc.php:108
+#: ../../templates/show_install_check.inc.php:114
 #: ../../templates/show_debug.inc.php:80
 msgid "Gettext Support"
 msgstr ""
 
-#: ../../templates/show_install_check.inc.php:112
+#: ../../templates/show_install_check.inc.php:118
 msgid "Gettext Emulator will be used"
 msgstr ""
 
-#: ../../templates/show_install_check.inc.php:120
+#: ../../templates/show_install_check.inc.php:126
 #, fuzzy
 msgid "Mbstring Support"
 msgstr "Υποστήριξη PHP Session"
 
-#: ../../templates/show_install_check.inc.php:124
-msgid "Multibyte Chracter may not detect correct"
+#: ../../templates/show_install_check.inc.php:130
+msgid "Multibyte Character may not detect correct"
 msgstr ""
 
 #: ../../templates/sidebar.inc.php:27 ../../lib/ui.lib.php:309
@@ -1873,20 +1888,20 @@ msgstr "Λειτουργικές Μονάδες"
 msgid "Logout"
 msgstr "Έξοδος"
 
-#: ../../templates/show_install_lang.inc.php:39
-#: ../../templates/show_install.inc.php:39
+#: ../../templates/show_install_lang.inc.php:40
+#: ../../templates/show_install.inc.php:41
 msgid "Requirements"
 msgstr "Απαιτήσεις"
 
-#: ../../templates/show_install_lang.inc.php:54
+#: ../../templates/show_install_lang.inc.php:55
 msgid "Minimum Requirements not met. Unable to Install Ampache."
 msgstr ""
 
-#: ../../templates/show_install_lang.inc.php:59
+#: ../../templates/show_install_lang.inc.php:60
 msgid "Choose installation language."
 msgstr ""
 
-#: ../../templates/show_install_lang.inc.php:80
+#: ../../templates/show_install_lang.inc.php:81
 msgid "Start configuration"
 msgstr "Έναρξη ρύθμισης"
 
@@ -1900,8 +1915,8 @@ msgstr "Προσθήκη σε νέα playlist"
 
 #: ../../templates/rightbar.inc.php:54
 #: ../../templates/show_localplay_status.inc.php:47
-#: ../../templates/show_democratic.inc.php:42
 #: ../../templates/show_democratic.inc.php:43
+#: ../../templates/show_democratic.inc.php:44
 msgid "Clear Playlist"
 msgstr "Καθαρισμός playlist"
 
@@ -1930,7 +1945,7 @@ msgstr "Σχετικό άλμπουμ"
 msgid "More"
 msgstr "Περισσότερα"
 
-#: ../../templates/header.inc.php:35
+#: ../../templates/header.inc.php:36
 #: ../../templates/show_localplay_status.inc.php:27
 #: ../../templates/show_now_playing.inc.php:33
 #: ../../lib/class/localplay.class.php:639
@@ -1938,15 +1953,15 @@ msgstr "Περισσότερα"
 msgid "Now Playing"
 msgstr "Τώρα παίζει"
 
-#: ../../templates/header.inc.php:61
+#: ../../templates/header.inc.php:62
 msgid "Log out"
 msgstr "Έξοδος"
 
-#: ../../templates/header.inc.php:77
+#: ../../templates/header.inc.php:78
 msgid "Error Config File Out of Date"
 msgstr "Σφάλμα: Παλιό Αρχείο Ρυθμίσεων"
 
-#: ../../templates/header.inc.php:78
+#: ../../templates/header.inc.php:79
 #: ../../templates/show_admin_tools.inc.php:92
 msgid "Generate New Config"
 msgstr "Δημιουργία νέου σετ ρυθμίσεων"
@@ -1966,7 +1981,8 @@ msgstr "Ιδιωτικός"
 msgid "Adding a New User"
 msgstr "Προσθήκη Νέου Χρήστη"
 
-#: ../../templates/show_genre.inc.php:29
+#. HINT: Genre Name
+#: ../../templates/show_genre.inc.php:30
 #, fuzzy, php-format
 msgid "Viewing %s Genre"
 msgstr "Πρόσφατα Είδη"
@@ -1983,16 +1999,17 @@ msgstr "Εγγραφή"
 msgid "User Activated"
 msgstr "Ο Χρήστης ενεργοποιήθηκε"
 
-#: ../../templates/show_user_activate.inc.php:51
+#. HINT: Start A tag, End A tag
+#: ../../templates/show_user_activate.inc.php:52
 #, fuzzy, php-format
 msgid "This User ID is activated and can be used %sLogin%s"
 msgstr "Αυτό το User ID ενεργοποιήθηκε και είναι έτοιμο για χρήση"
 
-#: ../../templates/show_user_activate.inc.php:54
+#: ../../templates/show_user_activate.inc.php:55
 msgid "Validation Failed"
 msgstr "Επικύρωση απέτυχε"
 
-#: ../../templates/show_user_activate.inc.php:55
+#: ../../templates/show_user_activate.inc.php:56
 msgid "The validation key used isn't correct"
 msgstr "Το κλειδί επικύρωσης είναι λάθος"
 
@@ -2024,8 +2041,8 @@ msgid "Gather Art"
 msgstr "Συγκέντρωση εξωφύλλων"
 
 #: ../../templates/show_create_democratic.inc.php:22
-#: ../../templates/show_democratic.inc.php:33
 #: ../../templates/show_democratic.inc.php:34
+#: ../../templates/show_democratic.inc.php:35
 #, fuzzy
 msgid "Configure Democratic Playlist"
 msgstr "Δημιουργία Δημοκρατικής playlist"
@@ -2139,6 +2156,7 @@ msgstr "Μέγεθος Καταλόγου"
 msgid "Catalog Time"
 msgstr "Χρόνος Καταλόγου"
 
+#. HINT: Username
 #: ../../templates/show_ip_history.inc.php:23
 #, fuzzy, php-format
 msgid "%s IP History"
@@ -2235,6 +2253,7 @@ msgstr "Προτεινόμενα Τραγούδια"
 msgid "Edit existing Shoutbox Post"
 msgstr ""
 
+#. HINT: Client link, Object link
 #: ../../templates/show_edit_shout.inc.php:28
 #, php-format
 msgid "Created by: %s for %s"
@@ -2472,11 +2491,11 @@ msgid "Create"
 msgstr "Δημιουργία"
 
 #: ../../templates/show_run_add_catalog.inc.php:24
-#: ../../templates/show_adds_catalog.inc.php:25
+#: ../../templates/show_adds_catalog.inc.php:26
 msgid "Found"
 msgstr "Βρέθηκαν"
 
-#: ../../templates/show_install.inc.php:55
+#: ../../templates/show_install.inc.php:57
 msgid ""
 "This step creates and inserts the Ampache database, as such please provide a "
 "mysql account with database creation rights. This step may take a while "
@@ -2486,56 +2505,48 @@ msgstr ""
 "λογαριασμό mysql με δικαιώματα δημιουργίας βάσης. Αυτό μπορεί να διαρκέσει "
 "λίγο ανάλογα με την ταχύτητα του υπολογιστή σας"
 
-#: ../../templates/show_install.inc.php:62
+#: ../../templates/show_install.inc.php:64
 msgid "Insert Ampache Database"
 msgstr "Εισαγωγή στοιχείων στη βάση"
 
-#: ../../templates/show_install.inc.php:74
+#: ../../templates/show_install.inc.php:76
 msgid "MySQL Administrative Username"
 msgstr "Όνομα Διαχειριστή MySQL"
 
-#: ../../templates/show_install.inc.php:78
+#: ../../templates/show_install.inc.php:80
 msgid "MySQL Administrative Password"
 msgstr "Κωδικός Διαχειριστή MySQL"
 
-#: ../../templates/show_install.inc.php:82
+#: ../../templates/show_install.inc.php:84
 msgid "Create Database User for New Database"
 msgstr "Δημιουργία Χρήστη της νέας βάσης"
 
-#: ../../templates/show_install.inc.php:86
+#: ../../templates/show_install.inc.php:88
 msgid "Ampache Database Username"
 msgstr "Όνομα Χρήστη νέας βάσης"
 
-#: ../../templates/show_install.inc.php:90
+#: ../../templates/show_install.inc.php:92
 msgid "Ampache Database User Password"
 msgstr "Κωδικός Χρήστη νέας βάσης"
 
-#: ../../templates/show_install.inc.php:94
+#: ../../templates/show_install.inc.php:96
 msgid "Overwrite Existing"
 msgstr "Εγγραφή πάνω σε ήδη υπάρχουσα βάση"
 
-#: ../../templates/show_install.inc.php:98
+#: ../../templates/show_install.inc.php:100
 #, fuzzy
 msgid "Use Existing Database"
 msgstr "Εισαγωγή βάσης"
 
-#: ../../templates/show_install.inc.php:103
+#: ../../templates/show_install.inc.php:105
 msgid "Insert Database"
 msgstr "Εισαγωγή βάσης"
 
-#: ../../templates/show_install_account.inc.php:44
-msgid ""
-"Your webserver has read access to the /sql/ampache.sql file and the /config/"
-"ampache.cfg.dist.php file"
-msgstr ""
-"Ο webserver έχει δικαίωμα ανάγνωση των /sql/ampache.sql, /config/ampache.cfg."
-"dist.php αρχείων"
-
-#: ../../templates/show_install_account.inc.php:50
+#: ../../templates/show_install_account.inc.php:51
 msgid "Step 2 - Creating the ampache.cfg.php file"
 msgstr "Βήμα 2- Δημιουργία του ampache.cfg.php αρχείου"
 
-#: ../../templates/show_install_account.inc.php:53
+#: ../../templates/show_install_account.inc.php:54
 msgid ""
 "This step creates your initial Ampache admin account. Once your admin "
 "account has been created you will be directed to the login page"
@@ -2543,11 +2554,11 @@ msgstr ""
 "Αυτό το βήμα δημιουργεί τον αρχικό λογαριασμό Διαχειριστή του Ampache. Μόλις "
 "ο λογαριασμός δημιουργηθεί θα ανακατευθυνθείτε στη σελίδα ειδόδου"
 
-#: ../../templates/show_install_account.inc.php:57
+#: ../../templates/show_install_account.inc.php:58
 msgid "Create Admin Account"
 msgstr "Δημιουργία Λογαριασμού Διαχειριστή"
 
-#: ../../templates/show_install_account.inc.php:74
+#: ../../templates/show_install_account.inc.php:75
 msgid "Create Account"
 msgstr "Δημιουργία Λογαριασμού"
 
@@ -2735,7 +2746,8 @@ msgstr "Εικόνα τοπικά"
 msgid "Get Art"
 msgstr "Βάλε εξώφυλλο"
 
-#: ../../templates/show_adds_catalog.inc.php:23
+#. HINT: Catalog Name
+#: ../../templates/show_adds_catalog.inc.php:24
 #, fuzzy, php-format
 msgid "Starting New Song Search on %s catalog"
 msgstr "Έναρξη Αναζήτησης Νέου τραγουδιού"
@@ -2779,7 +2791,8 @@ msgstr "χρόνια νωρίτερα"
 #: ../../templates/show_recently_played.inc.php:101
 #: ../../templates/show_duplicates.inc.php:37
 #: ../../templates/show_duplicates.inc.php:76
-#: ../../templates/show_now_playing_row.inc.php:45
+#: ../../templates/show_lyrics_song.inc.php:42
+#: ../../templates/show_now_playing_row.inc.php:54
 msgid "Song"
 msgstr "Τραγούδι"
 
@@ -2788,65 +2801,72 @@ msgstr "Τραγούδι"
 msgid "Last Played"
 msgstr "Παίχτηκαν Τελευταία"
 
-#: ../../templates/show_artist.inc.php:22
+#. HINT: Artist Fullname
+#: ../../templates/show_artist.inc.php:23
 #, fuzzy, php-format
 msgid "Albums by %s"
 msgstr "Άλμπουμς από"
 
-#: ../../templates/show_artist.inc.php:25
+#. HINT: Object type, Artist Fullname
+#: ../../templates/show_artist.inc.php:27
 #, php-format
 msgid "%s by %s"
 msgstr ""
 
-#: ../../templates/show_artist.inc.php:35
+#. HINT: Artist Fullname
+#: ../../templates/show_artist.inc.php:38
+#: ../../templates/show_artist.inc.php:39
 #, fuzzy, php-format
 msgid "Show All Songs By %s"
 msgstr "Δείξε όλα τα τραγούδια από"
 
-#: ../../templates/show_artist.inc.php:38
+#: ../../templates/show_artist.inc.php:44
 #, fuzzy, php-format
 msgid "Add All Songs By %s"
 msgstr "Πρόσθεσε όλα τα τραγούδια από"
 
-#: ../../templates/show_artist.inc.php:41
+#: ../../templates/show_artist.inc.php:49
 #, fuzzy, php-format
 msgid "Add Random Songs By %s"
 msgstr "Πρόσθεσε τυχαία τραγούδια από"
 
-#: ../../templates/show_artist.inc.php:45
+#: ../../templates/show_artist.inc.php:53
+#: ../../templates/show_artist.inc.php:54
 #: ../../templates/show_album.inc.php:70 ../../templates/show_album.inc.php:71
 msgid "Update from tags"
 msgstr "Ενημέρωση από tags"
 
-#: ../../templates/show_democratic.inc.php:21
+#. HINT: Democratic Name
+#: ../../templates/show_democratic.inc.php:22
 #, fuzzy, php-format
 msgid "%s Playlist"
 msgstr "Βασική playlist"
 
-#: ../../templates/show_democratic.inc.php:21
+#: ../../templates/show_democratic.inc.php:22
 #: ../../lib/class/browse.class.php:214
 #, fuzzy
 msgid "Democratic Playlist"
 msgstr "Δημιουργία Δημοκρατικής playlist"
 
-#: ../../templates/show_democratic.inc.php:39
+#: ../../templates/show_democratic.inc.php:40
 #, fuzzy
 msgid "Play Democratic Playlist"
 msgstr "Δημιουργία Δημοκρατικής playlist"
 
-#: ../../templates/show_verify_catalog.inc.php:23
+#. HINT: Catalog Name
+#: ../../templates/show_verify_catalog.inc.php:24
 #, fuzzy, php-format
 msgid "Updating the %s catalog"
 msgstr "Ενημέρωση του"
 
-#: ../../templates/show_verify_catalog.inc.php:25
+#: ../../templates/show_verify_catalog.inc.php:26
 #, fuzzy, php-format
 msgid "%d item found checking tag information"
 msgid_plural "%d items found checking tag information"
 msgstr[0] "τραγούδια που ελέγχονται τα tags"
 msgstr[1] "τραγούδια που ελέγχονται τα tags"
 
-#: ../../templates/show_verify_catalog.inc.php:27
+#: ../../templates/show_verify_catalog.inc.php:28
 msgid "Verifed"
 msgstr "Επικυρωμένα"
 
@@ -2878,13 +2898,13 @@ msgid ""
 "used the functionality to post inappropriate materials"
 msgstr ""
 
-#: ../../templates/show_album.inc.php:27 ../../lib/class/album.class.php:244
+#: ../../templates/show_album.inc.php:27 ../../lib/class/album.class.php:245
 msgid "Disk"
 msgstr "Δίσκος"
 
 #: ../../templates/show_album.inc.php:34
-#: ../../lib/class/catalog.class.php:1981
-#: ../../lib/class/catalog.class.php:2052
+#: ../../lib/class/catalog.class.php:1994
+#: ../../lib/class/catalog.class.php:2097
 msgid "Unknown (Orphaned)"
 msgstr "Άγνωστα (Μεμονωμένα)"
 
@@ -2904,12 +2924,13 @@ msgstr "Επαναφορά εξωφύλλου"
 msgid "Find Album Art"
 msgstr "Αναζήτηση εξωφύλλου"
 
+#. HINT: Song Title
 #: ../../templates/show_lyrics.inc.php:33
 #, fuzzy, php-format
 msgid "%s Lyrics"
 msgstr "Δείξε playlist"
 
-#: ../../templates/show_lyrics.inc.php:39 ../../lib/class/artist.class.php:358
+#: ../../templates/show_lyrics.inc.php:40 ../../lib/class/artist.class.php:359
 msgid "Sorry Lyrics Not Found."
 msgstr ""
 
@@ -2917,19 +2938,19 @@ msgstr ""
 msgid "Add Localplay Instance"
 msgstr "Προσθήκη στιγμιοτύπου τοπικής αναπαραγωγής"
 
-#: ../../templates/show_login_form.inc.php:65
+#: ../../templates/show_login_form.inc.php:66
 msgid "Remember Me"
 msgstr "Να με θυμάσαι"
 
-#: ../../templates/show_login_form.inc.php:72
+#: ../../templates/show_login_form.inc.php:73
 msgid "Login"
 msgstr "Είσοδος"
 
-#: ../../templates/show_login_form.inc.php:77
+#: ../../templates/show_login_form.inc.php:78
 msgid "Register"
 msgstr "Εγγραφή"
 
-#: ../../templates/show_login_form.inc.php:89
+#: ../../templates/show_login_form.inc.php:90
 msgid "Message of the Day"
 msgstr "Μήνυμα της Ημέρας"
 
@@ -2977,7 +2998,7 @@ msgstr "Bitrate"
 msgid "Last Updated"
 msgstr "Τελευταία Ενημέρωση"
 
-#: ../../templates/show_song.inc.php:57 ../../lib/class/catalog.class.php:1342
+#: ../../templates/show_song.inc.php:57 ../../lib/class/catalog.class.php:1348
 #: ../../admin/access.php:93
 msgid "Added"
 msgstr "Προστέθηκε"
@@ -2992,7 +3013,7 @@ msgid "Remove"
 msgstr "Αφαίρεση"
 
 #: ../../templates/show_edit_album_row.inc.php:35
-#: ../../lib/class/album.class.php:256 ../../lib/class/album.class.php:257
+#: ../../lib/class/album.class.php:257 ../../lib/class/album.class.php:258
 msgid "Various"
 msgstr "Ποικίλα"
 
@@ -3038,11 +3059,13 @@ msgstr "Καθαρισμός όλων"
 msgid "Update All"
 msgstr "Ενημέρωση όλων"
 
+#. HINT: /data/myNewMusic
 #: ../../templates/show_manage_catalogs.inc.php:38
 #, fuzzy, php-format
 msgid "Add From %s"
 msgstr "Προσθήκη σε"
 
+#. HINT: /data/myUpdatedMusic
 #: ../../templates/show_manage_catalogs.inc.php:40
 #, fuzzy, php-format
 msgid "Update From %s"
@@ -3102,6 +3125,7 @@ msgstr "Τελική Διεύθυνση"
 msgid "Key"
 msgstr "Κλειδί"
 
+#. HINT: Artist Name
 #: ../../templates/show_rename_artist.inc.php:29
 #, fuzzy, php-format
 msgid "Rename %s"
@@ -3254,6 +3278,11 @@ msgstr ""
 msgid "Current Configuration"
 msgstr ""
 
+#: ../../templates/show_now_playing_row.inc.php:46
+#, fuzzy
+msgid "Show Lyrics"
+msgstr "Δείξε playlist"
+
 #: ../../templates/sidebar_modules.inc.php:27
 msgid "Localplay Modules"
 msgstr "Λειτουργικές Μονάδες Τοπικής Αναπαραγωγής"
@@ -3337,7 +3366,7 @@ msgstr "Οι κωδικοί δεν ταιριάζουν"
 msgid "Error Username already exists"
 msgstr "Σφάλμα: Το όνομα Χρήστης υπάρχει ήδη"
 
-#: ../../register.php:159
+#: ../../register.php:159 ../../admin/users.php:117
 msgid "Error: Insert Failed"
 msgstr "Σφάλμα: Η εισαγωγή απέτυχε"
 
@@ -3345,15 +3374,15 @@ msgstr "Σφάλμα: Η εισαγωγή απέτυχε"
 msgid "User Disabled please contact Admin"
 msgstr "Ο Χρήστης απενεργοποιήθηκε. Επικοινωνήστε με το διαχειριστή"
 
-#: ../../login.php:87
+#: ../../login.php:89
 msgid "Unable to create new account"
 msgstr "Αδύνατο να δημιουργηθεί καινούριος λογαριασμός"
 
-#: ../../login.php:95
+#: ../../login.php:98
 msgid "No local account found"
 msgstr "Δε βρέθηκε τοπικός λογαριασμός"
 
-#: ../../login.php:112
+#: ../../login.php:115
 msgid "User Already Logged in"
 msgstr ""
 
@@ -3492,13 +3521,13 @@ msgstr "Σε παύση"
 msgid "Primary"
 msgstr ""
 
-#: ../../lib/class/artist.class.php:345
+#: ../../lib/class/artist.class.php:346
 #, fuzzy
 msgid "Fault"
 msgstr "Προκαθορισμένη"
 
-#: ../../lib/class/artist.class.php:353 ../../lib/class/catalog.class.php:1234
-#: ../../admin/users.php:142
+#: ../../lib/class/artist.class.php:354 ../../lib/class/catalog.class.php:1240
+#: ../../admin/users.php:143
 msgid "Error"
 msgstr "Σφάλμα"
 
@@ -3512,7 +3541,7 @@ msgstr "Σφάλμα: Απαιτείται όνομα χρήστη"
 msgid "Error Passwords don't match"
 msgstr "Σφάλμα: Οι κωδικοί δεν ταιριάζουν"
 
-#: ../../lib/class/album.class.php:489 ../../lib/class/catalog.class.php:462
+#: ../../lib/class/album.class.php:490 ../../lib/class/catalog.class.php:462
 msgid "Error: Unable to open"
 msgstr "Σφάλμα: Αδύνατο να ανοιχτεί"
 
@@ -3542,158 +3571,163 @@ msgstr "Εκτελείται Απομακρυσμένος Συγχρονισμό
 msgid "Error: Unable to change to directory"
 msgstr "Σφάλμα: Αδύνατο να μεταβώ στον κατάλογο"
 
-#: ../../lib/class/catalog.class.php:548
+#. HINT: FullFile
+#: ../../lib/class/catalog.class.php:549
 #, fuzzy, php-format
 msgid "Error: Unable to get filesize for %s"
 msgstr "Σφάλμα: Αδύνατο να υπολογίσω το μέγεθος αρχείου για το"
 
-#: ../../lib/class/catalog.class.php:554
+#. HINT: FullFile
+#: ../../lib/class/catalog.class.php:556
 #, fuzzy, php-format
 msgid "%s is not readable by ampache"
 msgstr "είναι μη αναγνώσιμο από τον ampache"
 
-#: ../../lib/class/catalog.class.php:562
+#. HINT: FullFile
+#: ../../lib/class/catalog.class.php:565
 #, php-format
 msgid "%s does not match site charset"
 msgstr ""
 
-#: ../../lib/class/catalog.class.php:1029
-#: ../../lib/class/catalog.class.php:1922 ../../preferences.php:111
+#: ../../lib/class/catalog.class.php:1032
+#: ../../lib/class/catalog.class.php:1936 ../../preferences.php:111
 #: ../../admin/access.php:109
 msgid "Updated"
 msgstr "Ενημερωμένο"
 
-#: ../../lib/class/catalog.class.php:1036
+#: ../../lib/class/catalog.class.php:1039
 msgid "No Update Needed"
 msgstr "Δε χρειάζεται ενημέρωση"
 
-#: ../../lib/class/catalog.class.php:1163
+#: ../../lib/class/catalog.class.php:1169
 msgid "Running Remote Update"
 msgstr "Εκτελείται Απομακρυσμένη Ενημέρωση"
 
-#: ../../lib/class/catalog.class.php:1190
+#: ../../lib/class/catalog.class.php:1196
 msgid "Added Playlist From"
 msgstr "Η playlist προστέθηκε από"
 
-#: ../../lib/class/catalog.class.php:1219
+#: ../../lib/class/catalog.class.php:1225
 msgid "Catalog Update Finished"
 msgstr "Ολοκληρώθηκε η ενημέρωση του Καταλόγου"
 
-#: ../../lib/class/catalog.class.php:1219
+#: ../../lib/class/catalog.class.php:1225
 msgid "Total Time"
 msgstr ""
 
-#: ../../lib/class/catalog.class.php:1220
+#: ../../lib/class/catalog.class.php:1226
 msgid "Total Songs"
 msgstr "Συνολικά Τραγούδια"
 
-#: ../../lib/class/catalog.class.php:1220
+#: ../../lib/class/catalog.class.php:1226
 msgid "Songs Per Seconds"
 msgstr "Τραγούδια ανά Δευτερόλεπτο"
 
-#: ../../lib/class/catalog.class.php:1234
+#: ../../lib/class/catalog.class.php:1240
 #, fuzzy
 msgid "Unable to load pear XMLRPC library, make sure XML-RPC is enabled"
 msgstr ""
 "Αδύνατη η φόρτωση της βιβλιοθήκης XMLRPC, βεβαιώστε ότι το XML-RPC είναι "
 "ενεργοποιημένο"
 
-#: ../../lib/class/catalog.class.php:1272
-#: ../../lib/class/catalog.class.php:1346
-#: ../../lib/class/catalog.class.php:1379
-#: ../../lib/class/catalog.class.php:2343
+#: ../../lib/class/catalog.class.php:1278
+#: ../../lib/class/catalog.class.php:1352
+#: ../../lib/class/catalog.class.php:1385
+#: ../../lib/class/catalog.class.php:2395
 #: ../../lib/class/xmlrpcclient.class.php:64
 #: ../../lib/class/xmlrpcclient.class.php:97
 msgid "Error connecting to"
 msgstr "Σφάλμα στη σύνδεση με"
 
-#: ../../lib/class/catalog.class.php:1272
-#: ../../lib/class/catalog.class.php:1346
-#: ../../lib/class/catalog.class.php:1379
-#: ../../lib/class/catalog.class.php:2343
+#: ../../lib/class/catalog.class.php:1278
+#: ../../lib/class/catalog.class.php:1352
+#: ../../lib/class/catalog.class.php:1385
+#: ../../lib/class/catalog.class.php:2395
 #: ../../lib/class/xmlrpcclient.class.php:64
 #: ../../lib/class/xmlrpcclient.class.php:97
 msgid "Code"
 msgstr "Κωδικός"
 
-#: ../../lib/class/catalog.class.php:1272
-#: ../../lib/class/catalog.class.php:1346
-#: ../../lib/class/catalog.class.php:1379
-#: ../../lib/class/catalog.class.php:2343
+#: ../../lib/class/catalog.class.php:1278
+#: ../../lib/class/catalog.class.php:1352
+#: ../../lib/class/catalog.class.php:1385
+#: ../../lib/class/catalog.class.php:2395
 #: ../../lib/class/xmlrpcclient.class.php:64
 msgid "Reason"
 msgstr "Αιτία"
 
-#: ../../lib/class/catalog.class.php:1301
+#: ../../lib/class/catalog.class.php:1307
 msgid "Completed updating remote catalog(s)"
 msgstr "Ολοκληρώθηκε η ενημέρωση απομακρυσμένου(ων) καταλόγου(ων)"
 
-#: ../../lib/class/catalog.class.php:1305
+#: ../../lib/class/catalog.class.php:1311
 msgid "Starting synchronisation of album images"
 msgstr ""
 
-#: ../../lib/class/catalog.class.php:1307
+#: ../../lib/class/catalog.class.php:1313
 msgid "Completed synchronisation of album images"
 msgstr ""
 
-#: ../../lib/class/catalog.class.php:1375
+#: ../../lib/class/catalog.class.php:1381
 msgid "images synchronized: "
 msgstr ""
 
-#: ../../lib/class/catalog.class.php:1506
+#: ../../lib/class/catalog.class.php:1515
 msgid "Catalog Root unreadable, stopping clean"
 msgstr "Η Ρίζα των καταλόγων δεν μπορεί να αναγνωσθεί, η εκκαθάριση διακόπηκε"
 
-#: ../../lib/class/catalog.class.php:1542
+#: ../../lib/class/catalog.class.php:1551
 msgid "Error File Not Found or 0 Bytes:"
 msgstr ""
 
-#: ../../lib/class/catalog.class.php:1564
+#: ../../lib/class/catalog.class.php:1573
 msgid "Error Remote File Not Found or 0 Bytes:"
 msgstr ""
 
-#: ../../lib/class/catalog.class.php:1583
+#: ../../lib/class/catalog.class.php:1592
 msgid "Error All songs would be removed, doing nothing"
 msgstr ""
 
-#: ../../lib/class/catalog.class.php:1611
+#: ../../lib/class/catalog.class.php:1620
 #, fuzzy, php-format
 msgid "Catalog Clean Done. %d file removed."
 msgid_plural "Catalog Clean Done. %d files removed."
 msgstr[0] "Η εκκαθάριση των καταλόγων Ολοκληρώθηκε"
 msgstr[1] "Η εκκαθάριση των καταλόγων Ολοκληρώθηκε"
 
-#: ../../lib/class/catalog.class.php:1613
+#: ../../lib/class/catalog.class.php:1622
 msgid "Optimizing Tables"
 msgstr "Βελτιστοποίηση Πινάκων"
 
-#: ../../lib/class/catalog.class.php:1900
+#. HINT: Mediafile
+#: ../../lib/class/catalog.class.php:1914
 #, php-format
 msgid "%s does not exist or is not readable"
 msgstr ""
 
-#: ../../lib/class/catalog.class.php:1922
+#: ../../lib/class/catalog.class.php:1936
 #, fuzzy
 msgid "Update Finished"
 msgstr "Ολοκληρώθηκε η ενημέρωση"
 
-#: ../../lib/class/catalog.class.php:1922
+#: ../../lib/class/catalog.class.php:1936
 msgid "Checked"
 msgstr "Ελέγχθηκαν"
 
-#: ../../lib/class/catalog.class.php:2441
+#: ../../lib/class/catalog.class.php:2493
 #, fuzzy
 msgid "Playlist creation error."
 msgstr "Η playlist δημιουργήθηκε"
 
-#: ../../lib/class/catalog.class.php:2448
+#: ../../lib/class/catalog.class.php:2500
 #, php-format
 msgid "Playlist Import and Recreate Successful. Total: %d Song"
 msgid_plural "Playlist Import and Recreate Successful. Total: %d Songs"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../../lib/class/catalog.class.php:2454
+#. HINT: filename
+#: ../../lib/class/catalog.class.php:2506
 #, php-format
 msgid "Parsing %s - Not Found: %d Song. Please check your m3u file."
 msgid_plural "Parsing %s - Not Found: %d Songs. Please check your m3u file."
@@ -3715,12 +3749,13 @@ msgstr ""
 msgid "From: Ampache "
 msgstr "Αναζήτηση στον Ampache"
 
-#: ../../lib/class/registration.class.php:55
+#. HINT: Site Title
+#: ../../lib/class/registration.class.php:56
 #, fuzzy, php-format
 msgid "New User Registration at %s"
 msgstr "Ημερομηνία Εγγραφής"
 
-#: ../../lib/class/registration.class.php:68
+#: ../../lib/class/registration.class.php:69
 #, php-format
 msgid ""
 "Thank you for registering\n"
@@ -3741,7 +3776,7 @@ msgid ""
 "Thank you for registering\n"
 msgstr ""
 
-#: ../../lib/class/registration.class.php:98
+#: ../../lib/class/registration.class.php:99
 #, php-format
 msgid ""
 "A new user has registered\n"
@@ -3753,59 +3788,59 @@ msgid ""
 "\n"
 msgstr ""
 
-#: ../../lib/general.lib.php:405
+#: ../../lib/general.lib.php:406
 msgid "On"
 msgstr "Ενεργό"
 
-#: ../../lib/general.lib.php:408
+#: ../../lib/general.lib.php:409
 msgid "Off"
 msgstr "Ανενεργό"
 
-#: ../../lib/preferences.php:191
+#: ../../lib/preferences.php:192
 msgid "M3U"
 msgstr "M3U"
 
-#: ../../lib/preferences.php:192
+#: ../../lib/preferences.php:193
 msgid "Simple M3U"
 msgstr "Απλή M3U"
 
-#: ../../lib/preferences.php:193
+#: ../../lib/preferences.php:194
 msgid "PLS"
 msgstr "PLS"
 
-#: ../../lib/preferences.php:194
+#: ../../lib/preferences.php:195
 msgid "Asx"
 msgstr "Asx"
 
-#: ../../lib/preferences.php:195
+#: ../../lib/preferences.php:196
 msgid "RAM"
 msgstr "RAM"
 
-#: ../../lib/preferences.php:196
+#: ../../lib/preferences.php:197
 msgid "XSPF"
 msgstr "XSPF"
 
-#: ../../lib/preferences.php:230
+#: ../../lib/preferences.php:231
 msgid "Disabled"
 msgstr "Απενεργοποιημένο"
 
-#: ../../lib/preferences.php:232
+#: ../../lib/preferences.php:233
 msgid "Manager"
 msgstr "Μάνατζερ"
 
-#: ../../lib/preferences.php:252
+#: ../../lib/preferences.php:254
 msgid "Send on Add"
 msgstr "Στείλε με την προσθήκη"
 
-#: ../../lib/preferences.php:253
+#: ../../lib/preferences.php:255
 msgid "Send and Clear on Add"
 msgstr "Στείλε και καθάρισε με την προσθήκη"
 
-#: ../../lib/preferences.php:254
+#: ../../lib/preferences.php:256
 msgid "Clear on Send"
 msgstr "Καθάρισε με την αποστολή"
 
-#: ../../lib/preferences.php:263
+#: ../../lib/preferences.php:265
 msgid "Always"
 msgstr "Πάντα"
 
@@ -3846,13 +3881,13 @@ msgstr "Κατέβασε τα επιλεγμένα"
 msgid "Error Invalid Handshake - "
 msgstr ""
 
-#: ../../server/xml.server.php:346 ../../server/xml.server.php:395
-#: ../../server/xml.server.php:403
+#: ../../server/xml.server.php:345 ../../server/xml.server.php:394
+#: ../../server/xml.server.php:402
 #, fuzzy
 msgid "Invalid Request"
 msgstr "Αίτημα Διαγραφής"
 
-#: ../../server/xml.server.php:361 ../../server/xml.server.php:374
+#: ../../server/xml.server.php:360 ../../server/xml.server.php:373
 msgid "Media Object Invalid or Not Specified"
 msgstr ""
 
@@ -3876,7 +3911,7 @@ msgstr "Η συνεδρία εξέπνευσε: Παρακαλώ ξαναμπε�
 msgid "Radio Station Added"
 msgstr "Ο Ραδιοφωνικός Σταθμός προστέθηκε"
 
-#: ../../install.php:182
+#: ../../install.php:184
 #, fuzzy
 msgid "Error: Config file not found or Unreadable"
 msgstr "Σφάλμα: Παλιό Αρχείο Ρυθμίσεων"
@@ -4015,11 +4050,11 @@ msgstr "Τύπος playlist"
 msgid "Local Path to Files"
 msgstr "Λειτουργικές Μονάδες Τοπικής Αναπαραγωγής"
 
-#: ../../admin/mail.php:90
+#: ../../admin/mail.php:79
 msgid "E-mail Sent"
 msgstr "Στάλθηκε E-mail"
 
-#: ../../admin/mail.php:91
+#: ../../admin/mail.php:80
 msgid "Your E-mail was successfully sent."
 msgstr "To e-mail στάλθηκε επιτυχώς"
 
@@ -4132,40 +4167,52 @@ msgstr "Ο Χρήστης ενημερώθηκε"
 msgid "updated"
 msgstr "ενημερώθηκε"
 
-#: ../../admin/users.php:129
+#. HINT: %1 Username, %2 Access num
+#: ../../admin/users.php:130
 msgid "New User Added"
 msgstr "Προστέθηκε νέος χρήστης"
 
-#: ../../admin/users.php:134
+#: ../../admin/users.php:130
+#, php-format
+msgid "%1$s has been created with an access level of %2$s"
+msgstr ""
+
+#: ../../admin/users.php:135
 msgid "User Enabled"
 msgstr "Ο Χρήστης ενεργοποιήθηκε"
 
-#: ../../admin/users.php:139
+#: ../../admin/users.php:140
 msgid "User Disabled"
 msgstr "Ο Χρήστης απενεργοποιήθηκε"
 
-#: ../../admin/users.php:142
+#: ../../admin/users.php:143
 msgid "Unable to Disabled last Administrator"
 msgstr "Αδύνατο να απενεργοποιηθεί ο τελευταίος Διαχειριστής"
 
-#: ../../admin/users.php:154
+#: ../../admin/users.php:155
 msgid "User Deleted"
 msgstr "Ο Χρήστης διαγράφηκε"
 
-#: ../../admin/users.php:157
+#: ../../admin/users.php:155
+#, fuzzy, php-format
+msgid "%s has been Deleted"
+msgstr "δημιουργήθηκε"
+
+#: ../../admin/users.php:158
 msgid "Delete Error"
 msgstr "Σφάλμα Διαγραφής"
 
-#: ../../admin/users.php:157
+#: ../../admin/users.php:158
 msgid "Unable to delete last Admin User"
 msgstr "Αδύνατο να διαγράψω τον τελεταίο χρήστη - Διαχειριστή"
 
-#: ../../admin/users.php:163
+#: ../../admin/users.php:164
 msgid "Deletion Request"
 msgstr "Αίτημα Διαγραφής"
 
-#: ../../admin/users.php:164
-msgid "Are you sure you want to permanently delete"
+#: ../../admin/users.php:165
+#, fuzzy, php-format
+msgid "Are you sure you want to permanently delete %s?"
 msgstr "Είστε σίγουροι για την οριστική διαγραφή του"
 
 #: ../../admin/system.php:49
@@ -4178,88 +4225,100 @@ msgid ""
 "currently configured charset"
 msgstr ""
 
-#: ../../admin/catalog.php:53 ../../admin/catalog.php:73
-#: ../../admin/catalog.php:98 ../../admin/catalog.php:170
+#: ../../admin/catalog.php:54 ../../admin/catalog.php:74
+#: ../../admin/catalog.php:99 ../../admin/catalog.php:171
 msgid "Catalog Updated"
 msgstr "Ο Κατάλογος ενημερώθηκε"
 
-#: ../../admin/catalog.php:115
+#: ../../admin/catalog.php:116
 msgid "Catalog Deleted"
 msgstr "Ο κατάλογος διαγράφηκε"
 
-#: ../../admin/catalog.php:115
+#: ../../admin/catalog.php:116
 msgid "The Catalog and all associated records have been deleted"
 msgstr "Ο Κατάλογος και οι συσχετισμένες εγγραφές έχουν διαγραφεί"
 
-#: ../../admin/catalog.php:121
+#: ../../admin/catalog.php:122
 #, fuzzy
 msgid "Catalog Delete"
 msgstr "Ο κατάλογος διαγράφηκε"
 
-#: ../../admin/catalog.php:121
+#: ../../admin/catalog.php:122
 #, fuzzy
 msgid "Confirm Deletion Request"
 msgstr "Αίτημα Διαγραφής"
 
-#: ../../admin/catalog.php:130
+#: ../../admin/catalog.php:131
 #, fuzzy
 msgid "Song Removed"
 msgid_plural "Songs Removed"
 msgstr[0] "Τραγούδια αφαιρέθηκαν"
 msgstr[1] "Τραγούδια αφαιρέθηκαν"
 
-#: ../../admin/catalog.php:133
+#: ../../admin/catalog.php:134
 msgid "No Songs Removed"
 msgstr "Κανένα τραγούδι δεν αφαιρέθηκε"
 
-#: ../../admin/catalog.php:136
+#: ../../admin/catalog.php:137
 #, fuzzy
 msgid "Disabled Song Processed"
 msgid_plural "Disabled Songs Processed"
 msgstr[0] "Επεξεργασμένα απενεργοποιημένα τραγούδια"
 msgstr[1] "Επεξεργασμένα απενεργοποιημένα τραγούδια"
 
-#: ../../admin/catalog.php:157
+#: ../../admin/catalog.php:158
 msgid "Catalog Cleaned"
 msgstr "Ο Κατάλογος καθαρίστηκε"
 
-#: ../../admin/catalog.php:214
+#: ../../admin/catalog.php:202
+msgid "Error: Name and path not specified"
+msgstr ""
+
+#: ../../admin/catalog.php:206
+msgid "Error: Remote selected, but path is not a URL"
+msgstr ""
+
+#: ../../admin/catalog.php:210
+msgid "Error: Remote Catalog specified, but no key provided"
+msgstr ""
+
+#: ../../admin/catalog.php:215
 msgid "Error: Defined Path is inside an existing catalog"
 msgstr ""
 
-#: ../../admin/catalog.php:233
+#: ../../admin/catalog.php:234
 msgid "Catalog Created"
 msgstr "Κατάλογος δημιουργήθηκε"
 
-#: ../../admin/catalog.php:250
+#: ../../admin/catalog.php:251
 msgid "Catalog statistics cleared"
 msgstr "Καθαρίστηκαν τα στατιστικά του καταλόγου"
 
-#: ../../admin/catalog.php:263
+#: ../../admin/catalog.php:264
 msgid "Now Playing Cleared"
 msgstr "Καθαρίστηκαν αυτά που παίζουν τώρα"
 
-#: ../../admin/catalog.php:263
+#: ../../admin/catalog.php:264
 msgid "All now playing data has been cleared"
 msgstr "Όλα τα στοιχεία σχετικά με αυτά που παίζουν τώρα καθαρίστηκαν"
 
-#: ../../admin/catalog.php:273
+#: ../../admin/catalog.php:275
 msgid "No Disabled songs found"
 msgstr "Δεν βρέθηκαν απενεργοποιημένα τραγούδια"
 
-#: ../../admin/catalog.php:282
+#: ../../admin/catalog.php:284
 msgid "Delete Catalog"
 msgstr "Διαγραφή Καταλόγου"
 
-#: ../../admin/catalog.php:282
+#: ../../admin/catalog.php:284
 msgid "Do you really want to delete this catalog?"
 msgstr "Θέλετε σίγουρα να διαγράψετε αυτόν τον κατάλογο;"
 
-#: ../../admin/catalog.php:302
+#: ../../admin/catalog.php:304
 msgid "Album Art Search Finished"
 msgstr "Ολοκληρώθηκε η αναζήτηση εξωφύλλων"
 
-#: ../../bin/print_tags.inc:66
+#: ../../bin/print_tags.inc:68
 msgid ""
 "[print_tags.php.inc]\n"
 "This commandline script will display the tag information for the specified "
@@ -4271,7 +4330,7 @@ msgstr ""
 "συγκεκριμένου αρχείου όπως θα εμφανιστούν στον ampache. \n"
 "\t\n"
 
-#: ../../bin/print_tags.inc:72
+#: ../../bin/print_tags.inc:74
 msgid "Filename:"
 msgstr "Όνομα Αρχείου"
 
@@ -4399,10 +4458,12 @@ msgstr "Περιβάλλον Web"
 msgid "System"
 msgstr "Στοιχείο"
 
-#: Database words
-#, fuzzy
-msgid "Show Lyrics"
-msgstr "Δείξε playlist"
+#~ msgid ""
+#~ "Your webserver has read access to the /sql/ampache.sql file and the /"
+#~ "config/ampache.cfg.dist.php file"
+#~ msgstr ""
+#~ "Ο webserver έχει δικαίωμα ανάγνωση των /sql/ampache.sql, /config/ampache."
+#~ "cfg.dist.php αρχείων"
 
 #~ msgid "files removed"
 #~ msgstr "αρχεία αφαιρέθηκαν"
