@@ -1999,7 +1999,7 @@ class Catalog extends database_object {
 		preg_match($prefix_pattern,$artist,$matches);
 
 		if (count($matches)) {
-			$artist = trimm($matches[2]);
+			$artist = trim($matches[2]);
 			$prefix = trim($matches[1]);
 		}
 
