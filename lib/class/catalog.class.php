@@ -1465,7 +1465,7 @@ class Catalog extends database_object {
 			
 			if ($local_album_id != 0) {
 				// Local album found lets add the cover
-				if(isset($path) AND !eregi("^/", $path)) { $path = "/".$path; }
+				if(isset($path) AND !preg_match("/^\//", $path)) { $path = "/".$path; }
 				debug_event($label, "remote_server: " . $remote_server,'4');
 				$server_path = "http://" . ltrim($remote_server, "http://");
 				$server_path.= $path."/image.php?id=" . $remote_album->id;
@@ -2358,7 +2358,7 @@ class Catalog extends database_object {
 
 		$url = parse_url(Dba::escape($url));
 
-		list($arg,$value) = split('=', $url['query']);
+		list($arg,$value) = explode('=', $url['query']);
 		$token = xmlRpcClient::ampache_handshake($this->path,$this->key);
 		if (!$token) {
 			debug_event('XMLCLIENT','Error No Token returned', 2);

@@ -238,7 +238,7 @@ class mpd {
 
 				// An ERR signals the end of transmission with an error! Let's grab the single-line message.
 				if (strncmp(MPD_RESPONSE_ERR,$response,strlen(MPD_RESPONSE_ERR)) == 0) {
-					list ( $junk, $errTmp ) = split(MPD_RESPONSE_ERR . " ",$response );
+					list ( $junk, $errTmp ) = explode(MPD_RESPONSE_ERR . " ",$response );
 					$this->errStr = strtok($errTmp,"\n");
 				}
 
@@ -705,7 +705,7 @@ class mpd {
         $arName = "";
         $arCounter = -1;
         while ( $arLine ) {
-            list ( $element, $value ) = split(": ",$arLine);
+            list ( $element, $value ) = explode(": ",$arLine);
             if ( $element == "Artist" ) {
             	$arCounter++;
             	$arName = $value;
@@ -732,7 +732,7 @@ class mpd {
         $alName = "";
         $alCounter = -1;
         while ( $alLine ) {
-            list ( $element, $value ) = split(": ",$alLine);
+            list ( $element, $value ) = explode(": ",$alLine);
             if ( $element == "Album" ) {
             	$alCounter++;
             	$alName = $value;
@@ -755,7 +755,7 @@ class mpd {
      *
      */
     function _computeVersionValue($verStr) {
-		list ($ver_maj, $ver_min, $ver_rel ) = split("\.",$verStr);
+		list ($ver_maj, $ver_min, $ver_rel ) = explode(".",$verStr);
 		return ( 100 * $ver_maj ) + ( 10 * $ver_min ) + ( $ver_rel );
     }
 
@@ -808,7 +808,7 @@ class mpd {
 			$plistFile = "";
 			$plCounter = -1;
 			while ( $plistLine ) {
-				list ( $element, $value ) = split(": ",$plistLine);
+				list ( $element, $value ) = explode(": ",$plistLine);
 				if ( $element == "file" ) {
 					$plCounter++;
 					$plistFile = $value;
@@ -838,7 +838,7 @@ class mpd {
 			$stats = array();
 			$statLine = strtok($statStr,"\n");
 			while ( $statLine ) {
-				list ( $element, $value ) = split(": ",$statLine);
+				list ( $element, $value ) = explode(": ",$statLine);
 				$stats[$element] = $value;
 				$statLine = strtok("\n");
 			} 
@@ -852,7 +852,7 @@ class mpd {
 			$status = array();
 			$statusLine = strtok($statusStr,"\n");
 			while ( $statusLine ) {
-				list ( $element, $value ) = split(": ",$statusLine);
+				list ( $element, $value ) = explode(": ",$statusLine);
 				$status[$element] = $value;
 				$statusLine = strtok("\n");
 			}
@@ -871,7 +871,7 @@ class mpd {
 			$this->current_track_id = -1;
 		}
 		if ( ($this->state == MPD_STATE_PLAYING) || ($this->state == MPD_STATE_PAUSED) ) {
-			list ($this->current_track_position, $this->current_track_length ) = split(":",$status['time']);
+			list ($this->current_track_position, $this->current_track_length ) = explode(":",$status['time']);
 		} else {
 			$this->current_track_position = -1;
 			$this->current_track_length = -1;
@@ -909,7 +909,7 @@ class mpd {
 			$statsArray = array();
 			$statsLine = strtok($stats,"\n");
 			while ( $statsLine ) {
-				list ( $element, $value ) = split(": ",$statsLine);
+				list ( $element, $value ) = explode(": ",$statsLine);
 				$statsArray[$element] = $value;
 				$statsLine = strtok("\n");
 			} 
@@ -934,7 +934,7 @@ class mpd {
 			$statusArray = array();
 			$statusLine = strtok($status,"\n");
 			while ( $statusLine ) {
-				list ( $element, $value ) = split(": ",$statusLine);
+				list ( $element, $value ) = explode(": ",$statusLine);
 				$statusArray[$element] = $value;
 				$statusLine = strtok("\n");
 			}

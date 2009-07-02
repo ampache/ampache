@@ -109,7 +109,7 @@ class getid3
 
         // Check memory limit.
         $memory_limit = ini_get('memory_limit');
-        if (eregi('([0-9]+)M', $memory_limit, $matches)) {
+        if (preg_match('/([0-9]+)M/', $memory_limit, $matches)) {
             // could be stored as "16M" rather than 16777216 for example
             $memory_limit = $matches[1] * 1048576;
         }
@@ -1588,7 +1588,7 @@ class getid3_lib
             if ($hex) {
                 $return_string .= str_pad(dechex(ord($string{$i})), 2, '0', STR_PAD_LEFT);
             } else {
-                $return_string .= ' '.(ereg("[\x20-\x7E]", $string{$i}) ? $string{$i} : '¤');
+                $return_string .= ' '.(preg_match("/[\x20-\x7E]/", $string{$i}) ? $string{$i} : '¤');
             }
             if ($spaces) {
                 $return_string .= ' ';

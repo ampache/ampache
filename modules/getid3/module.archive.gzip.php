@@ -153,7 +153,7 @@ class getid3_gzip extends getid3_handler
             //+=========================================+
             // GZIP files may have only one file, with no filename, so assume original filename is current filename without .gz
             
-            $info_gzip_member_header_idx['filename'] = eregi_replace('.gz$', '', @$info['filename']);
+            $info_gzip_member_header_idx['filename'] = preg_replace('/.gz$/', '', @$info['filename']);
             if ($info_gzip_member_header_idx['flags']['filename']) {
                 while (true) {
                     if (ord($buff[$fpointer]) == 0) {

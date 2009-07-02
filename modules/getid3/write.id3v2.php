@@ -1832,15 +1832,15 @@ class getid3_write_id3v2 extends getid3_handler_write
         if ($parts = $this->safe_parse_url($url)) {
             if (($parts['scheme'] != 'http') && ($parts['scheme'] != 'https') && ($parts['scheme'] != 'ftp') && ($parts['scheme'] != 'gopher')) {
                 return false;
-            } elseif (!eregi("^[[:alnum:]]([-.]?[0-9a-z])*\.[a-z]{2,3}$", $parts['host'], $regs) && !IsValidDottedIP($parts['host'])) {
+            } elseif (!preg_match("^/[[:alnum:]]([-.]?[0-9a-z])*\.[a-z]{2,3}$/", $parts['host'], $regs) && !IsValidDottedIP($parts['host'])) {
                 return false;
-            } elseif (!eregi("^([[:alnum:]-]|[\_])*$", $parts['user'], $regs)) {
+            } elseif (!preg_match("/^([[:alnum:]-]|[\_])*$/", $parts['user'], $regs)) {
                 return false;
-            } elseif (!eregi("^([[:alnum:]-]|[\_])*$", $parts['pass'], $regs)) {
+            } elseif (!preg_match("/^([[:alnum:]-]|[\_])*$/", $parts['pass'], $regs)) {
                 return false;
-            } elseif (!eregi("^[[:alnum:]/_\.@~-]*$", $parts['path'], $regs)) {
+            } elseif (!preg_match("/^[[:alnum:]\/_\.@~-]*$/", $parts['path'], $regs)) {
                 return false;
-            } elseif (!eregi("^[[:alnum:]?&=+:;_()%#/,\.-]*$", $parts['query'], $regs)) {
+            } elseif (!preg_match("^/[[:alnum:]?&=+:;_()%#\/,\.-]*$/", $parts['query'], $regs)) {
                 return false;
             } else {
                 return true;

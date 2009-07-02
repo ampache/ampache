@@ -218,7 +218,7 @@ class getid3_lyrics3 extends getid3_handler
     
     
     public static function Lyrics3Timestamp2Seconds($rawtimestamp) {
-        if (ereg('^\\[([0-9]{2}):([0-9]{2})\\]$', $rawtimestamp, $regs)) {
+        if (preg_match('/^\\[([0-9]{2}):([0-9]{2})\\]$/', $rawtimestamp, $regs)) {
             return (int)(($regs[1] * 60) + $regs[2]);
         }
         return false;
@@ -231,7 +231,7 @@ class getid3_lyrics3 extends getid3_handler
         $lyrics_array = explode("\r\n", $lyrics3_data['raw']['LYR']);
         foreach ($lyrics_array as $key => $lyric_line) {
             
-            while (ereg('^(\\[[0-9]{2}:[0-9]{2}\\])', $lyric_line, $regs)) {
+            while (preg_match('/^(\\[[0-9]{2}:[0-9]{2}\\])/', $lyric_line, $regs)) {
                 $this_line_timestamps[] = getid3_lyrics3::Lyrics3Timestamp2Seconds($regs[0]);
                 $lyric_line = str_replace($regs[0], '', $lyric_line);
             }

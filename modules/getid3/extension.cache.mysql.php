@@ -134,7 +134,7 @@ class getid3_cached_mysql extends getID3
             // Short-hands
             $filetime = filemtime($filename);
             $filesize = filesize($filename);
-            $filenam2 = mysql_escape_string($filename);
+            $filenam2 = mysql_real_escape_string($filename, $this->connection);
 
             // Loopup file
             $this->cursor = mysql_query("SELECT `value` FROM `getid3_cache` WHERE (`filename`='".$filenam2."') AND (`filesize`='".$filesize."') AND (`filetime`='".$filetime."')", $this->connection);
@@ -151,7 +151,7 @@ class getid3_cached_mysql extends getID3
 
         // Save result
         if (file_exists($filename)) {
-            $res2 = mysql_escape_string(serialize($result));
+            $res2 = mysql_real_escape_string(serialize($result), $this->connection);
             $this->cursor = mysql_query("INSERT INTO `getid3_cache` (`filename`, `filesize`, `filetime`, `analyzetime`, `value`) VALUES ('".$filenam2."', '".$filesize."', '".$filetime."', '".time()."', '".$res2."')", $this->connection);
         }
         return $result;

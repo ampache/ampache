@@ -258,7 +258,7 @@ switch ($_REQUEST['action']) {
 			$lang = "en_US";
 		}
 		if(strpos($lang, ".")) {
-			$langtmp = split("\.", $lang);
+			$langtmp = explode(".", $lang);
 			$htmllang = $langtmp[0];
 			$charset = $langtmp[1];
 		} else {

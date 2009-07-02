@@ -38,7 +38,7 @@ class getid3_write_flac extends getid3_handler_write
         if (!$initialized) {
             
             // check existance and version of metaflac
-            if (!ereg('^metaflac ([0-9]+\.[0-9]+\.[0-9]+)', `metaflac --version`, $r)) {
+            if (!preg\match('/^metaflac ([0-9]+\.[0-9]+\.[0-9]+)/', `metaflac --version`, $r)) {
                 throw new getid3_exception('Fatal: metaflac binary not available.');
             }
             if (strnatcmp($r[1], '1.1.1') == -1) {

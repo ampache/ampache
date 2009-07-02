@@ -38,7 +38,7 @@ class getid3_write_vorbis extends getid3_handler_write
         if (!$initialized) {
             
             // check existance and version of vorbiscomment
-            if (!ereg('^Vorbiscomment ([0-9]+\.[0-9]+\.[0-9]+)', `vorbiscomment --version 2>&1`, $r)) {
+            if (!preg_match('/^Vorbiscomment ([0-9]+\.[0-9]+\.[0-9]+)/', `vorbiscomment --version 2>&1`, $r)) {
                 throw new getid3_exception('Fatal: vorbiscomment binary not available.');
             }
             if (strnatcmp($r[1], '1.0.0') == -1) {

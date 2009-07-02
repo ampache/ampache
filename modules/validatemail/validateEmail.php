@@ -634,8 +634,8 @@ function validateEmail ( $email, $verbose=0 ) {
 
 	} // if function doesn't exist
     } elseif ($mail_check == "easy") { // easy email address check
-		$pattern = "^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,3})$";
-		if(eregi($pattern, $email)) {
+		$pattern = "/^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,3})$/";
+		if(preg_match($pattern, $email)) {
 			$return[0] = true;
 			$return[1] = "OK";
 		} else {

@@ -662,7 +662,7 @@ class vainfo {
 			 */
 			switch ($tag) { 
 				case 'pos':
-					$el = split('/', $data['0']);
+					$el = explode('/', $data['0']);
 					$array['disk'] = $el[0];
 				break;
 				case 'track_number':
