@@ -684,18 +684,20 @@ class vainfo {
 		
 		$id3v2 = $this->_raw['id3v2'];
 
-		foreach ($id3v2['UFID'] as $ufid) {
-			if ($ufid['ownerid'] == 'http://musicbrainz.org') {
-				$array['mb_trackid'] = $this->_clean_tag($ufid['data'],'');
+		if(!empty($id3v2['UFID'])) {
+			foreach ($id3v2['UFID'] as $ufid) {
+				if ($ufid['ownerid'] == 'http://musicbrainz.org') {
+					$array['mb_trackid'] = $this->_clean_tag($ufid['data'],'');
+				}
 			}
-		}
 
-		for ($i = 0, $size = sizeof($id3v2['comments']['text']) ; $i < $size ; $i++) {
-			if ($id3v2['TXXX'][$i]['description'] == 'MusicBrainz Album Id') {
-				$array['mb_albumid'] = $this->_clean_tag($id3v2['comments']['text'][$i],'');
-			}
-			elseif ($id3v2['TXXX'][$i]['description'] == 'MusicBrainz Artist Id') {
-				$array['mb_artistid'] = $this->_clean_tag($id3v2['comments']['text'][$i],'');
+			for ($i = 0, $size = sizeof($id3v2['comments']['text']) ; $i < $size ; $i++) {
+				if ($id3v2['TXXX'][$i]['description'] == 'MusicBrainz Album Id') {
+					$array['mb_albumid'] = $this->_clean_tag($id3v2['comments']['text'][$i],'');
+				}
+				elseif ($id3v2['TXXX'][$i]['description'] == 'MusicBrainz Artist Id') {
+					$array['mb_artistid'] = $this->_clean_tag($id3v2['comments']['text'][$i],'');
+				}
 			}
 		}
 
