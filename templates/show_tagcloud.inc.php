@@ -29,4 +29,7 @@ $web_path = Config::get('web_path');
 <span id="click_<?php echo intval($tag->id); ?>" class="<?php echo $tag->f_class; ?>"><?php echo $tag->name; ?></span> 
 <?php echo Ajax::observe('click_' . intval($tag->id),'click',Ajax::action('?page=tag&action=add_filter&tag_id=' . intval($tag->id),'')); ?>
 <?php } ?>
+<?php if (!count($object_ids)) { ?>
+<span class="fatalerror"><?php echo _('Not Enough Data'); ?></span>
+<?php } ?>
 <?php Ajax::end_container(); ?>

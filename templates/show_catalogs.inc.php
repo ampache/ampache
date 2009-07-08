@@ -46,6 +46,13 @@
 	<?php require Config::get('prefix') . '/templates/show_catalog_row.inc.php'; ?>
 </tr>
 <?php } ?>
+<tr class="<?php echo flip_class(); ?>">
+<td colspan="6">
+<?php if (!count($object_ids)) { ?>
+	<span class="fatalerror"><?php echo _('Not Enough Data'); ?></span>
+<?php } ?>
+</td>
+</tr>
 <tr class="th-bottom">
 	<th class="cel_catalog"><?php echo _('Name'); ?></th>
 	<th class="cel_path"><?php echo _('Path'); ?></th>
