@@ -111,7 +111,7 @@ if ($auth['success']) {
 
 	if (Config::get('prevent_multiple_logins')) {
 		$current_ip = $user->is_logged_in();
-		if ($current_ip != inet_pton($_SERVER['REMOTE_ADDR'])) {
+		if ($current_ip AND $current_ip != inet_pton($_SERVER['REMOTE_ADDR'])) {
 			Error::add('general',_('User Already Logged in'));
 			require Config::get('prefix') . '/templates/show_login_form.inc.php';
 			exit; 
