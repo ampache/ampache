@@ -20,7 +20,7 @@
 
 */
 if (INSTALL != '1') { exit; } 
-$prefix = dirname(__FILE__); 
+$prefix = realpath(dirname(__FILE__). "/../");
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php echo $htmllang; ?>" lang="<?php echo $htmllang; ?>">
@@ -44,14 +44,14 @@ $prefix = dirname(__FILE__);
  		<li><?php echo sprintf(_("Your webserver has read access to the %s file and the %s file"),$prefix . '/sql/ampache.sql',$prefix . '/config/ampache.cfg.dist'); ?></li>
 
 		</ul>
-		<?php echo _("Once you have ensured that you have the above requirements please fill out the information below. You will only be asked for the required config values. If you would like to make changes to your ampache install at a later date simply edit /config/ampache.cfg.php"); ?>
+		<?php echo sprintf(_('Once you have ensured that you have the above requirements please fill out the information below. You will only be asked for the required config values. If you would like to make changes to your ampache install at a later date simply edit %s'),$prefix . '/config/ampache.cfg.php'); ?>
 	</div>
 
 	<div class="content">
 		<?php echo _("Step 1 - Creating and Inserting the Ampache Database"); ?><br />
 		<strong><?php echo _("Step 2 - Creating the Ampache.cfg.php file"); ?></strong><br />
 		<dl>
-		<dd><?php echo _("This steps takes the basic config values and generates the config file. It will prompt you to download the config file. Please put the downloaded config file in /config"); ?></dd>
+		<dd><?php echo _('This steps takes the basic config values and generates the config file. It will prompt you to download the config file. Please put the downloaded config file in %s'),$prefix . '/config'); ?></dd>
 		</dl>
 		<?php echo _("Step 3 - Setup Initial Account"); ?><br />
 		<?php Error::display('general'); ?>

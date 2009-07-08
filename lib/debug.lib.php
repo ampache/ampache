@@ -196,6 +196,41 @@ function check_config_values($conf) {
 } // check_config_values
 
 /**
+ * check_php_memory
+ * This checks to make sure that the php memory limit is withing the
+ * recommended range, this doesn't take into account the size of your
+ * catalog.
+ */
+function check_php_memory() { 
+
+	$current = ini_get('memory_limit'); 
+	$current = substr($current_memory,0,strlen($current_memory)-1); 
+
+	if (intval($current) < 48) { 
+		return false; 
+	} 
+
+	return true; 
+
+} // check_php_memory
+
+/**
+ * check_php_timelimit
+ * This checks to make sure that the php timelimit is set to some
+ * semi-sane limit, IE greater then 30 seconds
+ */
+function check_php_timelimit() { 
+
+	$current = ini_get('max_execution_time'); 
+	if (intval($current) < 60) { 
+		return false; 
+	} 
+
+	return true; 
+
+} // check_php_timelimit
+
+/**
  * check_putenv
  * This checks to see if we can manually set the
  * memory limit, and other putenvs we need for 
@@ -226,6 +261,12 @@ function check_putenv() {
 	}
 
 	// See if we can override the set_time_limit(); 
+	$current = ini_get('max_execution_time'); 
+	set_time_limit($current+60); 
+
+	if ($current == ini_get('max_execution_time')) { 
+		return false; 
+	} 
 
 
 	return true;

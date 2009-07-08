@@ -4,6 +4,8 @@
 
 --------------------------------------------------------------------------
   v.3.6-Alpha1
+	- Added additional information to installation process 
+	- Fix PHP 5.3 errors (Thx momo-i)
 	- Fix random methods not working for localplay
 	- Fixed extra space on prefixed albums (Thx ibizaman)
         - Add missing operator on tag and rating searches so they will

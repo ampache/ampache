@@ -134,5 +134,30 @@
 	}
 ?>
 </td>
+</tr><tr>
+<td><?php echo _('PHP Memory Limit'); ?>:</td>
+<td>
+<?php 
+	if (!check_php_memory()) { 
+		echo debug_result(_('Memory Limit less then recommended size') . ' ' . ini_get('memory_limit'),false); 
+	} 
+	else { 
+		echo debug_result(ini_get('memory_limit'),true); 
+	} 
+
+?>
+</td>
+</tr><tr>
+<td><?php echo _('PHP Execution timelimit'); ?>:</td>
+<td>
+<?php
+	if (!check_php_timelimit()) { 
+		echo debug_result(_('Execution timelimit less the recommended') . ' ' . ini_get('max_execution_time'),false); 
+	}
+	else { 
+		echo debug_result(ini_get('max_execution_time') . ' ' .  _('seconds'),true); 
+	} 
+?>
+</td>
 </tr>
 </table>
