@@ -27,10 +27,13 @@ if (AJAX_INCLUDE != '1') { exit; }
 switch ($_REQUEST['action']) { 
 	case 'random_albums': 
 		$albums = Album::get_random_albums('6'); 
-		if (count($albums)) { 
+		if (count($albums) AND is_array($albums)) { 
 			ob_start(); 
 			require_once Config::get('prefix') . '/templates/show_random_albums.inc.php'; 
 			$results['random_selection'] = ob_get_clean(); 
+		} 
+		else { 
+			$results['random_selection'] = '<!-- None found -->'; 
 		} 
 	break;
 	case 'reloadnp': 
