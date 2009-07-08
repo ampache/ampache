@@ -63,7 +63,7 @@ if (!isset($uid)) {
 }
 
 /* Misc Housework */
-$user = new User($uid);
+$GLOBALS['user'] = new User($uid); 
 Preference::init(); 
 
 /* If the user has been disabled (true value) */
@@ -91,7 +91,7 @@ if (Config::get('require_session')) {
 
 
 /* Update the users last seen information */
-$user->update_last_seen();
+$GLOBALS['user']->update_last_seen();
 
 /* If we are in demo mode.. die here */
 if (Config::get('demo_mode') || (!Access::check('interface','25') AND !isset($xml_rpc))) {
@@ -271,7 +271,7 @@ if ($_GET['action'] == 'download' AND Config::get('download')) {
 	// Make sure that a good chunk of the song has been played
 	if ($bytesStreamed >= $media->size) {
         	debug_event('Play','Downloaded, Registering stats for ' . $media->title,'5');
-	        $user->update_stats($media->id);
+	        $GLOBALS['user']->update_stats($media->id);
 	} // if enough bytes are streamed
 		
 	fclose($fp); 
@@ -288,7 +288,7 @@ set_time_limit(0);
 
 /* We're about to start record this persons IP */
 if (Config::get('track_user_ip')) { 
-	$user->insert_ip_history();
+	$GLOBALS['user']->insert_ip_history();
 }
 
 // If we've got downsample remote enabled
@@ -301,7 +301,7 @@ if (Config::get('downsample_remote')) {
 
 // If they are downsampling, or if the song is not a native stream or it's non-local
 if ((Config::get('transcode') == 'always' || !$media->native_stream() || $not_local) && Config::get('transcode') != 'never') { 
-	debug_event('Downsample','Starting Downsample...','5');
+	debug_event('Downsample','Starting Downsample {Transcode:' . Config::get('transcode') . '} {Native Stream:' . $media->native_stream() .'} {Not Local:' . $not_local . '}','5');
 	$fp = Stream::start_downsample($media,$lastid,$song_name,$start);
 	$song_name = $media->f_artist_full . " - " . $media->title . "." . $media->type;
 	// Note that this is downsampling
@@ -376,7 +376,7 @@ if($bytes_streamed < $stream_size AND (connection_status() == 0)) {
 if ($bytes_streamed > $min_bytes_streamed AND get_class($media) == 'Song') {
 	debug_event('Play','Registering stats for ' . $media->title,'5'); 
 	
-        $user->update_stats($media->id);
+        $GLOBALS['user']->update_stats($media->id);
 	/* Set the Song as Played if it isn't already */
 	$media->set_played();
 

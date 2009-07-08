@@ -4,6 +4,8 @@
 
 --------------------------------------------------------------------------
   v.3.5.2
+	- Fix issue where the user preferences were not respected by
+		the streaming code due to caching 
 	- Fix issue where prevent multiple logins would prevent all logins
 
 --------------------------------------------------------------------------
