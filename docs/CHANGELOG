@@ -4,6 +4,8 @@
 
 --------------------------------------------------------------------------
   v.3.5.2
+	- Fix issue where rating could get cached and not update the
+		display correctly until a page reload
 	- Fix User Stats having a formating issue and not listing the
 		active playlist correctly
 	- Fix incorrect default ogg transcode target format in the default
