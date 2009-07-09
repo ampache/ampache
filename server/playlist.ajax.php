@@ -98,7 +98,7 @@ switch ($_REQUEST['action']) {
 		} // object_data
 	
 		// Add our new songs
-		$playlist->add_songs($songs); 
+		$playlist->add_songs($songs,'ORDERED'); 
 		$playlist->format(); 
 		$object_ids = $playlist->get_items(); 
 		ob_start(); 
@@ -133,7 +133,7 @@ switch ($_REQUEST['action']) {
 		Ajax::set_include_override(true); 
 
 		// Add our new songs
-		$playlist->add_songs($songs); 
+		$playlist->add_songs($songs,'ORDERED'); 
 		$playlist->format(); 
 		$object_ids = $playlist->get_items(); 
 		ob_start(); 

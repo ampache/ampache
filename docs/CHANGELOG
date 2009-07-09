@@ -4,6 +4,8 @@
 
 --------------------------------------------------------------------------
   v.3.6-Alpha1
+	- Altered the behavior of adding to playlists so that it maintains
+		playlist order rather then using track order
 	- Strip excessive \n's from catalog_update (Thx ascheel)
 	- Fix incorrect default ogg transcode target in base config file
 	- Fix stream user preferences using cached system preferences 

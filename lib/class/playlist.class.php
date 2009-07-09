@@ -314,7 +314,7 @@ class Playlist extends database_object {
 	 * if you want to add a dyn_song you need to use the one shot function
 	 * add_dyn_song
 	 */
-	public function add_songs($song_ids=array()) { 
+	public function add_songs($song_ids=array(),$ordered=false) { 
 
 		/* We need to pull the current 'end' track and then use that to
 		 * append, rather then integrate take end track # and add it to 
@@ -330,7 +330,14 @@ class Playlist extends database_object {
 			/* We need the songs track */
 			$song = new Song($song_id);
 			
-			$track	= Dba::escape($song->track+$base_track);
+			// Based on the ordered prop we use track + base or just $i++
+			if (!$ordered) { 
+				$track	= Dba::escape($song->track+$base_track);
+			} 
+			else { 
+				$i++; 
+				$track = Dba::escape($base_track+$i); 
+			} 
 			$id	= Dba::escape($song->id);
 			$pl_id	= Dba::escape($this->id);
 
