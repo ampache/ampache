@@ -49,14 +49,17 @@ while ($row = Dba::fetch_row($db_results)) {
 	echo "- Starting Clean -"; 	
 	// Clean out dead files
 	$catalog->clean_catalog();
+	echo "------------------\n\n";
 
 	echo "- Starting Verify -"; 
 	// Verify Existing
 	$catalog->verify_catalog($row['0']);
+	echo "-------------------\n\n";
 
 	echo "- Starting Add - \n"; 
 	// Look for new files
 	$catalog->add_to_catalog();
+	echo "----------------\n\n";
 
 } // end foreach 
 
@@ -65,9 +68,7 @@ function ob_html_strip($string) {
 	$string = preg_replace("/update_txt\('.+'\);update_txt\('(.+)','.+'\);/","$1",$string);
 	$string = preg_replace("/update_.+/","",$string); 
 	$string = strip_tags($string); 
-	while (strpos($string,"\n\n") !== false) {
-		$string = str_replace("\n\n", "\n", $string);
-	}
+	$string = preg_replace("/\s+\n/", "\n", $string);
 	return $string; 
 
 } // ob_html_strip
