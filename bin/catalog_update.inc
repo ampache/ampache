@@ -65,6 +65,9 @@ function ob_html_strip($string) {
 	$string = preg_replace("/update_txt\('.+'\);update_txt\('(.+)','.+'\);/","$1",$string);
 	$string = preg_replace("/update_.+/","",$string); 
 	$string = strip_tags($string); 
+	while (strpos($string,"\n\n") !== false) {
+		$string = str_replace("\n\n", "\n", $string);
+	}
 	return $string; 
 
 } // ob_html_strip
