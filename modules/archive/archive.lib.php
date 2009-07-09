@@ -207,7 +207,8 @@ class archive {
 		foreach ($list as $current)
 		{
 			$current = str_replace("\\", "/", $current);
-			$current = preg_replace("/\/+/", "/", $current);
+			// Commented out per #483 I'm pretty sure this should be ok. 
+			//$current = preg_replace("/\/+/", "/", $current);
 			$current = preg_replace("/\/$/", "", $current);
 			if (strstr($current, "*"))
 			{
