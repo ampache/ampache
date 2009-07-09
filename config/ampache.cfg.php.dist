@@ -520,7 +520,7 @@ transcode_flac_target	= mp3
 ;transcode_mp3  	= false
 transcode_mp3_target	= mp3
 ;transcode_ogg 		= false
-transcode_ogg_target	= ogg
+transcode_ogg_target	= mp3
 
 ; These are the commands that will be run to transcode the file
 transcode_cmd_flac 	= "flac -dc %FILE% | lame -b %SAMPLE% -S - - "
