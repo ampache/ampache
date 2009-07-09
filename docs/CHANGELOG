@@ -4,6 +4,9 @@
 
 --------------------------------------------------------------------------
   v.3.6-Alpha1
+	- Added the rating to a single song view
+	- Fix caching issue when updating ratings where they would not
+		display correctly until a page reload
 	- Altered the behavior of adding to playlists so that it maintains
 		playlist order rather then using track order
 	- Strip excessive \n's from catalog_update (Thx ascheel)

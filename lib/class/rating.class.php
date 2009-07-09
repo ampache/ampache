@@ -190,23 +190,23 @@ class Rating extends database_object {
 		if ($score == '-1') {
 			$sql = "DELETE FROM `rating` WHERE `object_id`='$this->id' AND `object_type`='$this->type' " . 
 				"AND `user`='" . Dba::escape($GLOBALS['user']->id) . "'";
-			$db_results = Dba::query($sql);
+			$db_results = Dba::read($sql);
 			return true;
 		}
 
 		/* Check if it exists */
 		$sql = "SELECT `id` FROM `rating` WHERE `object_id`='$this->id' AND `object_type`='$this->type' " . 
 			"AND `user`='" . Dba::escape($GLOBALS['user']->id) . "'";
-		$db_results = Dba::query($sql);
+		$db_results = Dba::read($sql);
 
 		if ($existing = Dba::fetch_assoc($db_results)) { 
 			$sql = "UPDATE `rating` SET `rating`='$score' WHERE `id`='" . $existing['id'] . "'";
-			$db_results = Dba::query($sql);
+			$db_results = Dba::write($sql);
 		}
 		else { 
 			$sql = "INSERT INTO `rating` (`object_id`,`object_type`,`rating`,`user`) VALUES " . 
 				" ('$this->id','$this->type','$score','" . $GLOBALS['user']->id . "')";
-			$db_results = Dba::query($sql);
+			$db_results = Dba::write($sql);
 		} 
 
 		return true;

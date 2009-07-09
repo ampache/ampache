@@ -102,4 +102,17 @@ abstract class database_object {
 
 	} // add_to_cache
 
+	/**
+	 * remove_from_cache
+	 * This function clears something from the cache, there are a few places we need to do this
+	 * in order to have things display correctly
+	 */
+	public static function remove_from_cache($index,$id) { 
+		
+		if (isset(self::$object_cache[$index]) && isset(self::$object_cache[$index][$id])) { 
+			unset(self::$object_cache[$index][$id]); 
+		} 
+
+	} // remove_from_cache
+
 } // end database_object

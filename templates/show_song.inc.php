@@ -18,14 +18,17 @@
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
-$rowparity = flip_class(); 
 $icon = $song->enabled ? 'disable' : 'enable'; 
 $button_flip_state_id = 'button_flip_state_' . $song->id;
 ?>
 <?php show_box_top($song->title . ' ' . _('Details')); ?>
 <dl class="song_details">
+<?php if (Config::get('ratings')) { ?>
+<dt class="<?php echo flip_class(); ?>"><?php echo _('Rating'); ?></dt>
+<dd><div id="rating_<?php echo $song->id; ?>_song"><?php Rating::show($song->id,'song'); ?></div></dd>
+<?php } ?>
 <dt class="<?php echo $rowparity; ?>"><?php echo _('Action'); ?></dt>
-	<dd class"<?php echo $rowparity; ?>">
+	<dd class="<?php echo flip_class(); ?>">
 		<?php echo Ajax::button('?action=basket&type=song&id=' . $song->id,'add',_('Add'),'add_song_' . $song->id); ?>
 		<?php if (Access::check_function('download')) { ?>
 			<a href="<?php echo Song::play_url($song->id); ?>"><?php echo get_user_icon('link',_('Link')); ?></a>
