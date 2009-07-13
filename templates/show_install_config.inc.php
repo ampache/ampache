@@ -41,17 +41,17 @@ $prefix = realpath(dirname(__FILE__). "/../");
 		<br />
 		<ul>
         	<li><?php echo _("A MySQL Server with a username and password that can create/modify databases"); ?></li>
- 		<li><?php echo sprintf(_("Your webserver has read access to the %s file and the %s file"),$prefix . '/sql/ampache.sql',$prefix . '/config/ampache.cfg.dist'); ?></li>
+ 		<li><?php printf(_("Your webserver has read access to the %s file and the %s file"),$prefix . '/sql/ampache.sql',$prefix . '/config/ampache.cfg.dist'); ?></li>
 
 		</ul>
-		<?php echo sprintf(_('Once you have ensured that you have the above requirements please fill out the information below. You will only be asked for the required config values. If you would like to make changes to your ampache install at a later date simply edit %s'),$prefix . '/config/ampache.cfg.php'); ?>
+		<?php printf(_('Once you have ensured that you have the above requirements please fill out the information below. You will only be asked for the required config values. If you would like to make changes to your ampache install at a later date simply edit %s'),$prefix . '/config/ampache.cfg.php'); ?>
 	</div>
 
 	<div class="content">
 		<?php echo _("Step 1 - Creating and Inserting the Ampache Database"); ?><br />
 		<strong><?php echo _("Step 2 - Creating the Ampache.cfg.php file"); ?></strong><br />
 		<dl>
-		<dd><?php echo _('This steps takes the basic config values and generates the config file. It will prompt you to download the config file. Please put the downloaded config file in %s'),$prefix . '/config'); ?></dd>
+		<dd><?php printf(_('This steps takes the basic config values and generates the config file. It will prompt you to download the config file. Please put the downloaded config file in %s'),$prefix.'/config'); ?></dd>
 		</dl>
 		<?php echo _("Step 3 - Setup Initial Account"); ?><br />
 		<?php Error::display('general'); ?>
