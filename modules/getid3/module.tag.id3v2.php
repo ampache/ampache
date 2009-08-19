@@ -3126,6 +3126,7 @@ class getid3_id3v2 extends getid3_handler
             'TCON' => 'genre',
             'TCOP' => 'copyright',
             'TCR'  => 'copyright',
+	    'TDRC' => 'recording_time',
             'TEN'  => 'encoded_by',
             'TENC' => 'encoded_by',
             'TEXT' => 'lyricist',

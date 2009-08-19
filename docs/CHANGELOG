@@ -4,6 +4,7 @@
 
 --------------------------------------------------------------------------
   v.3.6-Alpha1
+        - Add TDRC to list of parsed id3v2 tags
 	- Added the rating to a single song view
 	- Fix caching issue when updating ratings where they would not
 		display correctly until a page reload
