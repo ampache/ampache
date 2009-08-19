@@ -4,6 +4,7 @@
 
 --------------------------------------------------------------------------
   v.3.5.2
+	- Add TDRC to list of parsed id3v2 tags
 	- Fix issue where rating could get cached and not update the
 		display correctly until a page reload
 	- Fix User Stats having a formating issue and not listing the
