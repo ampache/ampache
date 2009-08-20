@@ -95,6 +95,9 @@ class Api {
 	 */
 	public static function handshake($timestamp,$passphrase,$ip,$username='',$version) { 
 
+		// Let them know we're attempting
+		debug_event('API',"Attempting Handshake IP:$ip User:$username Version:$version",'5'); 
+
 		if (intval($version) < self::$version) { 
 			debug_event('API','Login Failed version too old','1'); 
 			Error::add('api','Login Failed version too old'); 
