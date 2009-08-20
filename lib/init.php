@@ -248,13 +248,14 @@ elseif (!Config::get('use_auth')) {
 else { 
 	if (isset($_REQUEST['sid'])) { 
 		session_name(Config::get('session_name')); 
-		session_id(scrub_in($_REQUEST['sessid']));
+		session_id(scrub_in($_REQUEST['sid']));
 		session_start();
 		$GLOBALS['user'] = User::get_from_username($_SESSION['userdata']['username']);
 	}
 	else { 
 		$GLOBALS['user'] = new User(); 
 	} 
+
 } // If NO_SESSION passed
 
 // Load the Preferences from the database

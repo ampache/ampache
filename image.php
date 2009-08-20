@@ -29,7 +29,6 @@
 // this needs to be done a little better, but for now... eah
 define('NO_SESSION','1'); 
 require 'lib/init.php';
-exit; 
 
 // Check to see if they've got an interface session or a valid API session, if not GTFO
 if (!vauth::session_exists('interface',$_COOKIE[Config::get('session_name')]) AND !vauth::session_exists('api',$_REQUEST['auth']) AND !vauth::session_exists('xml-rpc',$_REQUEST['auth'])) { 
@@ -90,7 +89,6 @@ switch ($_REQUEST['type']) {
 		// Attempt to pull art from the database
 		$art = $album->get_art($return_raw);
 		$mime = $art['mime'];
-		
 		if (!$mime) { 
 			header('Content-type: image/jpeg');
 			readfile(Config::get('prefix') . Config::get('theme_path') . '/images/blankalbum.jpg');
