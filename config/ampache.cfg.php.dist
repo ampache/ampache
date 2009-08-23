@@ -250,6 +250,15 @@ ratings = "true"
 ; DEFAULT: false
 ;demo_mode = "false"
 
+; Caching
+; This turns the caching mechanisms on or off, due to a large number of
+; problems with people with very large catalogs and low memory settings
+; this is off by default as it does significantly increase the memory
+; requirments on larger catalogs. If you have the memory this can create
+; a 2-3x speed improvement.
+; DEFAULT: false
+;memory_cache = false
+
 ; Memory Limit
 ; This defines the "Min" memory limit for PHP if your php.ini
 ; has a lower value set Ampache will set it up to this. If you
