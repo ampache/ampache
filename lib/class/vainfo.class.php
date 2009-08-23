@@ -358,6 +358,9 @@ class vainfo {
 
 		$results = array();
 
+		/* Gather Tag information from the filenames */
+		$results['file']	= $this->_parse_filename($this->filename);
+
 		/* Return false if we don't have 
 		 * any tags to look at 
 		 */
@@ -425,8 +428,6 @@ class vainfo {
 
 		} // end foreach
 
-		/* Gather Tag information from the filenames */
-		$results['file']	= $this->_parse_filename($this->filename);
 
 		return $results;
 
