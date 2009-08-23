@@ -4,6 +4,7 @@
 
 --------------------------------------------------------------------------
   v.3.5.2
+	- Added config option to turn caching on/off, Default is off
 	- Fix issue where file tag pattern was ignore if files have no tag
 		structure
 	- Add TDRC to list of parsed id3v2 tags
