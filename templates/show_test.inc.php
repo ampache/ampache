@@ -144,7 +144,7 @@
 	</td>
 </tr> 
 <tr>
-	<td valign="top"><?php echo _('Ampache.cfg.php Exists'); ?></td>
+	<td valign="top"><?php echo sprintf(_("%s is readable"),"ampache.cfg.php"); ?></td>
 	<td valign="top">[ 
 	<?php
 		if (!is_readable($configfile)) { 

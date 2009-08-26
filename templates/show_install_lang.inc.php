@@ -46,7 +46,7 @@ $prefix = realpath(dirname(__FILE__). "/../");
                         <li><?php echo sprintf(_("Your webserver has read access to the %s file and the %s file"),$prefix . '/sql/ampache.sql',$prefix . '/config/ampache.cfg.php.dist'); ?></li>
 		</ul>
 		<p>
-<?php echo sprintf(_("Once you have ensured that you have the above requirements please fill out the information below. You will only be asked for the required config values. If you would like to make changes to your ampache install at a later date simply edit %s"),$prefix . '/config/ampache.cfg.php.dist'); ?>
+<?php echo sprintf(_("Once you have ensured that you have the above requirements please fill out the information below. You will only be asked for the required config values. If you would like to make changes to your ampache install at a later date simply edit %s"),$prefix . '/config/ampache.cfg.php'); ?>
 		</p>
 <?php require_once 'templates/show_install_check.inc.php'; ?>
 </div>

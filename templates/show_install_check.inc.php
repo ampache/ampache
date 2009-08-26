@@ -23,6 +23,20 @@
 <h4><?php echo _('Required'); ?></h4>
 <table border="0" cellspacing="0" cellpadding="3">
 <tr>
+<td><?php echo sprintf(_("%s is readable"),"ampache.cfg.php.dist"); ?></td>
+<td>
+<?php 
+	if (!is_readable($prefix . '/config/ampache.cfg.php.dist')) { 
+		echo debug_result('',false);
+		Error::add('install',sprintf(_("%s is readable"),"ampache.cfg.php.dist")); 
+	}
+	else { 
+		echo debug_result('',true);
+	}
+?>
+</td>
+</tr>
+<tr>
 <td><?php echo _('PHP Version'); ?>:</td>
 <td>
 <?php
