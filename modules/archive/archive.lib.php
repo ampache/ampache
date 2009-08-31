@@ -209,6 +209,7 @@ class archive {
 			$current = str_replace("\\", "/", $current);
 			$current = preg_replace("/\/+/", "/", $current);
 			$current = preg_replace("/\/$/", "", $current);
+			if (substr($current, 0, 1) == "/" ) { $current = "/" . $current; } 
 			if (strstr($current, "*"))
 			{
 				$regex = preg_replace("/([\\\^\$\.\[\]\|\(\)\?\+\{\}\/])/", "\\\\\\1", $current);
