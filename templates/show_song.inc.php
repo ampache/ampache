@@ -18,7 +18,7 @@
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
-$icon = $song->enabled ? 'disable' : 'enable'; 
+$icon = $song->enabled ? 'disable' : 'enable';
 $button_flip_state_id = 'button_flip_state_' . $song->id;
 ?>
 <?php show_box_top($song->title . ' ' . _('Details')); ?>
@@ -40,15 +40,15 @@ $button_flip_state_id = 'button_flip_state_' . $song->id;
 			</span>
 		<?php } ?>
 	</dd>
-<?php 
+<?php
   $songprops[gettext_noop('Title')]   = scrub_out($song->title);
   $songprops[gettext_noop('Artist')]  = $song->f_artist_link;
   $songprops[gettext_noop('Album')]   = $song->f_album_link . " (" . scrub_out($song->year). ")";
   $songprops[gettext_noop('Genre')]   = $song->f_genre_link;
-  $songprops[gettext_noop('Length')]  = scrub_out($song->f_time); 
+  $songprops[gettext_noop('Length')]  = scrub_out($song->f_time);
   $songprops[gettext_noop('Comment')] = scrub_out($song->comment);
   $songprops[gettext_noop('Label')]   = scrub_out($song->label);
-  $songprops[gettext_noop('Song Language')]= scrub_out($song->language); 
+  $songprops[gettext_noop('Song Language')]= scrub_out($song->language);
   $songprops[gettext_noop('Catalog Number')]   = scrub_out($song->catalog_number);
   $songprops[gettext_noop('Bitrate')]   = scrub_out($song->f_bitrate);
   if (Access::check('interface','75')) {
@@ -67,5 +67,6 @@ $button_flip_state_id = 'button_flip_state_' . $song->id;
       echo "<dt class=\"".$rowparity."\">" . _($key) . "</dt><dd class=\"".$rowparity."\">" . $value . "</dd>";
     }
   }
-?> 
+?>
+</dl>
 <?php show_box_bottom(); ?>
