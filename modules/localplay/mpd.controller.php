@@ -352,6 +352,10 @@ class AmpacheMpd extends localplay_controller {
 	public function skip($song) { 
 
 		if (is_null($this->_mpd->SkipTo($song))) { return false; }
+		sleep 2;
+		$this->stop(); 
+		sleep 2; 
+		$this->play(); 
 		return true; 
 
 	} // skip

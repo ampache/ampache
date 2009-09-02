@@ -4,6 +4,7 @@
 
 --------------------------------------------------------------------------
   v.3.6-Alpha1
+	- Fix Localplay API methods (Thx thomasa) 
         - Improve bin/catalog_update.inc to allow only verify, clean or add
                 (Thx ascheel)
 	- Fix issue with batch download and UNC paths (Thx greengeek) 

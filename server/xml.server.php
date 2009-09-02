@@ -336,8 +336,8 @@ switch ($_REQUEST['action']) {
 			case 'prev':
 			case 'play': 
 			case 'stop': 
-				$result_status = $localplay->$command(); 
-				$xml_array = array('localplay'=>array('command'=>array($command=>make_bool($result_status))));
+				$result_status = $localplay->$_REQUEST['command'](); 
+				$xml_array = array('localplay'=>array($_REQUEST['command']=>array($_REQUEST['command']=>make_bool($result_status))));
 				echo xmlData::build_from_array($xml_array); 
 			break; 
 			default:
