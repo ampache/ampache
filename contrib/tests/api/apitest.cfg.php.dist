@@ -1,0 +1,5 @@
+#<?php exit(); ?>#
+ampache_base = "/data/ampache"
+url = "http://localhost"
+username = "utest_user"
+password = "utest_user"
