@@ -34,6 +34,13 @@ class AmpacheApi {
 	private $api_url; 
 	private $api_state; 
 
+	// XML Parser variables
+	private $XML_currentTag;
+	private $XML_parser;
+	private $XML_results; 
+	protected $XML_grabtags = array(); 
+	protected $XML_skiptags = array('root'); 
+
 	/**
 	 * Constructor
 	 * This takes an array of input, if enough information is provided then it will 
@@ -50,6 +57,7 @@ class AmpacheApi {
 		// If we've been READY'd then go ahead and attempt to connect
 		if ($this->state() == 'READY') { 
 			$this->connect();
+		} 
 
 	} // constructor
 
@@ -65,6 +73,8 @@ class AmpacheApi {
 		$passphrase = hash('sha256',$time . $key); 
 
 		$url = $this->api_url . "?action=handshake&timestamp=$timestamp&passphrase=$passphrase&version=350001&user=" . $this->username; 
+
+		
 
 	} // connect
 
@@ -133,6 +143,87 @@ class AmpacheApi {
 
 	} // state
 
+	/**
+	 * send_command
+	 * This sends an API command, with options to the currently connected
+	 * host, and returns a nice clean keyed array 
+	 */
+	public function send_command($command,$options=array()) { 
+
+		if ($this->state != 'READY') { 
+			trigger_error('AmpacheApi::send_command API in non-ready state, unable to send');
+			return false; 
+		} 
+		if (!trim($command)) { 
+			trigger_error('AmpacheApi::send_command no command specified'); 
+			return false; 
+		} 	
+		if (!$this->validate_command($command)) { 
+			trigger_error('AmpacheApi::send_command Invalid/Unknown command ' . $command . ' issued'); 
+			return false; 
+		} 
+
+		$url = $this->api_url . '?action=' . urlencode($command); 
+
+		foreach ($options as $key=>$value) { 
+			if (!trim($key)) { 
+				trigger_error('AmpacheApi::send_command unable to append empty variable to command'); 
+				continue; 
+			} 
+			$url .= '&' . urlencode($key . '=' . $value); 
+		} 
+
+	} // send_command
+
+	/**
+	 * validate_command
+	 * This takes the specified command, and checks it against the known
+	 * commands for the current version of Ampache. If no version is known yet
+	 * This it will return FALSE for everything except ping and handshake. 
+	 */
+	public function validate_command($command) { 
+
+
+
+	} // validate_command
+
+	/////////////////////////// XML PARSER FUNCTIONS /////////////////////////////
+
+	/**
+	 * XML_create_parser
+	 * This creates the xml parser and sets the options
+	 */
+	public function XML_create_parser() { 
+
+		$this->XML_parser = xml_parser_create(); 
+		xml_parser_set_option($this->XML_parser,XML_OPTION_CASE_FOLDING,false); 
+		xml_set_object($this->XML_parser,$this); 
+		xml_set_element_handler($this->XML_parser,'XML_start_element','XML_end_element'); 
+		xml_set_character_data_handler($this->XML_parser,'XML_cdata'); 
+
+	} // XML_create_parser
+
+	/**
+	 * XML_cdata
+	 * This is called for the content of the XML tag
+	 */
+	public function XML_cdata($parser,$cdata) { 
+
+
+	} // XML_cdata
+
+	public function XML_start_element($parser,$tag) { 
+
+		
+
+	} // start_element
+
+	public function XML_end_element($parser,$tag) { 
+
+
+	} // end_element
+
 } // end AmpacheApi class
+
 
 ?>
