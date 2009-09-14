@@ -4,6 +4,7 @@
 
 --------------------------------------------------------------------------
   v.3.6-Alpha1
+	- Add server version to API ping response
 	- Fix Localplay API methods (Thx thomasa) 
         - Improve bin/catalog_update.inc to allow only verify, clean or add
                 (Thx ascheel)

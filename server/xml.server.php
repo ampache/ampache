@@ -87,7 +87,7 @@ switch ($_REQUEST['action']) {
 	break; 
 	case 'ping': 
 		
-		$xmldata = array('version'=>Api::$version); 
+		$xmldata = array('server'=>Config::get('version'),'version'=>Api::$version); 
 
 		// Check and see if we should extend the api sessions (done if valid sess is passed)
 		if (vauth::session_exists('api', $_REQUEST['auth'])) { 
