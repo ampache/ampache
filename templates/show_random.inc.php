@@ -25,45 +25,48 @@
 <tr>
 	<td><?php echo _('Item count'); ?></td>
 	<td>
+		<?php $name = 'random_' . scrub_in($_POST['random']); ${$name} = ' selected="selected"'; ?>
 		<select name="random">
-		<option value="1">1</option>
-		<option value="5" selected="selected">5</option>
-		<option value="10">10</option>
-		<option value="20">20</option>
-		<option value="30">30</option>
-		<option value="50">50</option>
-		<option value="100">100</option>
-		<option value="500">500</option>
-		<option value="1000">1000</option>
-		<option value="-1"><?php echo _('All'); ?></option>
+		<option value="1"<?php echo $random_1; ?>>1</option>
+		<option value="5"<?php echo $random_5; ?>>5</option>
+		<option value="10"<?php echo $random_10; ?>>10</option>
+		<option value="20"<?php echo $random_20; ?>>20</option>
+		<option value="30"<?php echo $random_30; ?>>30</option>
+		<option value="50"<?php echo $random_50; ?>>50</option>
+		<option value="100"<?php echo $random_100; ?>>100</option>
+		<option value="500"<?php echo $random_500; ?>>500</option>
+		<option value="1000"<?php echo $random_1000; ?>>1000</option>
+		<option value="-1" ><?php echo _('All'); ?></option>
 		</select>
 	</td>
 </tr>
 <tr>
 	<td><?php echo _('Length'); ?></td>
 	<td>
+		<?php $name = 'length_' . intval($_POST['length']); ${$name} = ' selected="selected"'; ?>
 		<select name="length">
-			<option value="0"><?php echo _('Unlimited'); ?></option>
-			<option value="15"><?php printf(ngettext('%d minute','%d minutes',15), "15"); ?></option>
-			<option value="30"><?php printf(ngettext('%d minute','%d minutes',30), "30"); ?></option>
-			<option value="60"><?php printf(ngettext('%d hour','%d hours',1), "1"); ?></option>
-			<option value="120"><?php printf(ngettext('%d hour','%d hours',2), "2"); ?></option>
-			<option value="240"><?php printf(ngettext('%d hour','%d hours',4), "4"); ?></option>
-			<option value="480"><?php printf(ngettext('%d hour','%d hours',8), "8"); ?></option>
-			<option value="960"><?php printf(ngettext('%d hour','%d hours',16), "16"); ?></option>
+			<option value="0"<?php echo $length_0; ?>><?php echo _('Unlimited'); ?></option>
+			<option value="15"<?php echo $length_15; ?>><?php printf(ngettext('%d minute','%d minutes',15), "15"); ?></option>
+			<option value="30"<?php echo $length_30; ?>><?php printf(ngettext('%d minute','%d minutes',30), "30"); ?></option>
+			<option value="60"<?php echo $length_60; ?>><?php printf(ngettext('%d hour','%d hours',1), "1"); ?></option>
+			<option value="120"<?php echo $length_120; ?>><?php printf(ngettext('%d hour','%d hours',2), "2"); ?></option>
+			<option value="240"<?php echo $length_240; ?>><?php printf(ngettext('%d hour','%d hours',4), "4"); ?></option>
+			<option value="480"<?php echo $length_480; ?>><?php printf(ngettext('%d hour','%d hours',8), "8"); ?></option>
+			<option value="960"<?php echo $length_960; ?>><?php printf(ngettext('%d hour','%d hours',16), "16"); ?></option>
 		</select>
 	</td>
 </tr>
 <tr>
 	<td><?php echo _('Type'); ?></td>
 	<td>
+		<?php $name = 'type_' . scrub_in($_POST['random_type']); ${$name} = ' selected="selected"'; ?>
 		<select name="random_type">
-			<option value="normal"><?php echo _('Standard'); ?></option>
-			<option value="unplayed"><?php echo _('Less Played'); ?></option>
-			<option value="full_album"><?php echo _('Full Albums'); ?></option>
-			<option value="full_artist"><?php echo _('Full Artist'); ?></option>
+			<option value="normal"<?php echo $type_normal; ?>><?php echo _('Standard'); ?></option>
+			<option value="unplayed"<?php echo $type_unplayed; ?>><?php echo _('Less Played'); ?></option>
+			<option value="full_album"<?php echo $type_full_album; ?>><?php echo _('Full Albums'); ?></option>
+			<option value="full_artist"<?php echo $type_full_artist; ?>><?php echo _('Full Artist'); ?></option>
 			<?php if (Config::get('ratings')) { ?>
-			<option value="high_rating"><?php echo _('Highest Rated'); ?></option>
+			<option value="high_rating"<?php echo $type_high_rating; ?>><?php echo _('Highest Rated'); ?></option>
 			<?php } ?>
 		</select>
 	</td>
@@ -71,19 +74,20 @@
 <tr>
 	<td nowrap="nowrap"><?php echo _('From catalog'); ?></td>
 	<td>
-	<?php show_catalog_select('catalog',''); ?>
+	<?php show_catalog_select('catalog','',$_POST['catalog']); ?>
 	</td>
 </tr>
 <tr>
 	<td><?php echo _('Size Limit'); ?></td>
 	<td>
+		<?php $name = 'size_' . intval($_POST['size_limit']); ${$name} = ' selected="selected"'; ?>
 		<select name="size_limit">
-			<option value="0"><?php echo _('Unlimited'); ?></option>
-			<option value="64">64MB</option>
-			<option value="128">128MB</option>
-			<option value="256">256MB</option>
-			<option value="512">512MB</option>
-			<option value="1024">1024MB</option>
+			<option value="0"<?php echo $size_0; ?>><?php echo _('Unlimited'); ?></option>
+			<option value="64"<?php echo $size_64; ?>>64MB</option>
+			<option value="128"<?php echo $size_128; ?>>128MB</option>
+			<option value="256"<?php echo $size_256; ?>>256MB</option>
+			<option value="512"<?php echo $size_512; ?>>512MB</option>
+			<option value="1024"<?php echo $size_1024; ?>>1024MB</option>
 		</select>
 	</td>
 </tr>
