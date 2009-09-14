@@ -4,6 +4,8 @@
 
 --------------------------------------------------------------------------
   v.3.5.2
+	- Add server version information to API ping command
+	- Fix Localplay API methods (Thx thomasa) 
 	- Improve bin/catalog_update.inc to allow only verify, clean or add
 		(Thx ascheel)
 	- Fix issue with batch download and UNC paths (Thx greengeek)
