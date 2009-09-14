@@ -1,0 +1,921 @@
+/*
+
+ Copyright (c) 2001 - 2007 Ampache.org
+ All rights reserved.
+
+ This program is free software; you can redistribute it and/or
+ modify it under the terms of the GNU General Public License v2
+ as published by the Free Software Foundation
+
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with this program; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+
+*/
+
+
+/************************************************/
+/*    Unify default browsers style rules        */
+/************************************************/
+h1, h2, h3, h4, h5, h6, pre, code { font-size: 1em; line-height: 1em; } /* avoid browser default inconsistent font-sizes */
+ol, ul { list-style: none; }
+table {	border-collapse: separate; border-spacing: 0; }
+*	{ margin: 0; padding: 0; } /* White space reset */
+a img, :link img, :visited img { border: 0; } /* no blue linked image borders */
+
+
+/************************************************/
+/*           General style rules                */
+/************************************************/
+body
+	{
+	background: #000000;
+	color: #DDDDDD;
+	font-family: 'century gothic','lucida grande','trebuchet ms',arial,helvetica,sans-serif;
+	}
+
+#maincontainer
+	{
+	min-width:900px;
+	}
+
+p
+	{
+	margin: 1em 0;
+	}
+
+a
+	{
+	text-decoration: none;
+	}
+
+a, a:visited, a:active
+	{
+	color: #DDDDDD;
+	}
+
+td
+	{
+	padding: 2px;
+	padding-left: 8px;
+	padding-right: 8px;
+	}
+
+th
+	{
+	background-color: #606060;
+	border-top: 1px solid #707070;
+	border-left: 1px solid #707070;
+	border-right: 1px solid #303030;
+	border-bottom: 1px solid #303030;
+	padding-right: 10px;
+	}
+
+tr
+	{
+	background-color: #181818;
+	}
+
+tbody
+	{
+	background-color: #404040;
+	border: 1px solid;
+	}
+
+input, select, textarea, .button, input[type=button], input[type=submit]
+	{
+	color: #DDDDDD;
+	font-family: 'century gothic','lucida grande','trebuchet ms',arial,helvetica,sans-serif;
+	font-size: 14px;
+	font-weight: bold;
+	border: 1px solid #555555;
+	background: #666666;
+	padding: 0 1px;
+	text-decoration:none;
+	}
+
+input[type=button], input[type=submit], .button
+	{
+	cursor: pointer;
+	}
+
+a.button
+	{
+	padding:1px 3px;
+	}
+
+/************************************************/
+/*         Tables (songs lists...)              */
+/************************************************/
+.tabledata .th-top, .tabledata .th-bottom
+	{
+	font-size:1em;
+	vertical-align: top;
+	text-align:center;
+	}
+
+.tableform select
+	{
+	width: 150px; 
+	}
+
+/* table rows */
+.tabledata .odd, .tabledata .odd td, .tabledata .even, .tabledata .even td, .row-highlight
+	{
+	font-size: 13px;
+	}
+
+.tabledata .odd
+	{
+	background: #222222;
+	}
+
+.tabledata .even:hover, .tabledata .odd:hover
+	{
+	background: #1862A1;
+	}
+
+.row-highlight:hover
+	{
+	background: #1862A1;
+	}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/************************************************/
+/*             IE6 behaviors                    */
+/* - csshover2: :hover support on any element   */
+/************************************************/
+body { behavior:url("templates/csshover2.htc"); }
+
+/************************************************/
+/*         Float Clearer                        */
+/************************************************/
+/* float clearing for IE6 */
+* html .clearfix{ height: 1%; overflow: visible; }
+/* float clearing for IE7 */
+/**+html .clearfix{ min-height: 1%; }*/
+/* float clearing for everyone else */
+.clearfix:after{ clear: both; content: "."; display: block; height: 0; visibility: hidden; }
+
+/************************************************/
+/*                XSPF Player                   */
+/************************************************/
+.xspf_player
+	{
+    right: 20px;
+    position: absolute;
+	}
+
+/************************************************/
+/*             Main Container                   */
+/************************************************/
+#maincontainer{}
+
+/************************************************/
+/*             Header                           */
+/************************************************/
+#maincontainer #header
+	{
+	padding: 15px 0 0 15px;
+	}
+
+#maincontainer #headerbox
+	{
+	float: right;
+	font-size: 10px;
+	}
+
+#maincontainer #headerlogo, #maincontainer #headerlogo a
+	{
+	float: left;
+	}
+
+.box_headerbox    {display:table;}
+.box_headerbox #loginInfo {font-weight:bold;display:block;text-align:right;margin-bottom:.3em;}
+
+#play_type_switch
+	{
+	float:left;
+	margin-top:2px;
+	}
+
+/************************************************/
+/*               Content block                  */
+/************************************************/
+#content
+	{
+	margin: 75px 130px 20px 180px;
+	}
+
+/************************************************/
+/*                Footer                        */
+/************************************************/
+#footer
+	{
+	clear:both;
+	text-align:center;
+	padding:3px;
+	}
+
+/************************************************/
+/*                  Sidebar                     */
+/************************************************/
+#sidebar
+	{
+	position: absolute;
+	top: 90px;
+	left: 15px;
+	width: 130px;
+	padding-top: 0px;
+	font-size: 0.9em;
+	background-color: #181818;
+	border: 1px solid #282828;
+	padding: 8px;
+	}
+
+#sidebar select	{	width: 95%; }
+#sidebar input  { vertical-align:middle; }
+#sidebar ul     { list-style:none; }
+#sidebar a      {	text-decoration:none; } 
+
+
+/* For sidebar tabs */
+/********************/
+#sidebar-tabs
+	{
+	}
+
+#sidebar-tabs li.sb1
+	{
+	float: left;
+	padding-left: 3px;
+	padding-right: 2px;
+	}
+
+#sidebar-tabs li.active
+	{
+	margin-top:8px;
+	}
+
+#sidebar-tabs li.active img
+	{
+	margin-top: 4px;
+	position: relative;
+	z-index: 2;
+	}
+
+/* Tabs content */
+/****************/
+#sidebar-page
+	{
+	position: absolute;
+	left: 0;
+	top: 52px;
+	padding-bottom: 0.5em;
+	font-size: 1em;
+	width: 100%;
+	}
+ 
+#sidebar-page ul.sb2
+	{
+	padding:2px 4px;
+	}
+
+#sidebar-page ul.sb2 li
+	{
+	font-weight:bold;
+	padding-bottom: 0.5em;
+	}
+
+#sidebar-page ul.sb2 h4{ padding-bottom: 0.5em; }
+
+#sidebar-page ul.sb3, #sidebar-page div.sb3
+	{
+	font-size:0.8em;
+	font-weight: bold;
+	margin-left:2px;
+	font-weight:normal;
+	color:#5b5b5b;
+	}
+
+#sidebar-page ul.sb3 li
+	{
+	margin:0;
+	padding:0;
+	border:none;
+	font-weight:normal;
+	}
+
+* html #sidebar-page ul.sb3 li{display:inline;} /* fix ie6 */
+
+#sidebar-page .sb3 a
+	{
+	padding:0.1em;
+	color:#5b5b5b;
+	}
+
+#sidebar-page a
+	{
+	display:block;
+	}
+
+#sidebar-page a:hover
+	{
+	/*
+	background:#99ccff;
+	color:#fff;
+	*/
+	}
+
+/* SIDEBAR : Home */
+/******************/
+
+/* SIDEBAR : Browse */
+/********************/
+.alphabet { 
+  background:transparent; /* fix ie bug */
+  font-size:0.95em;
+	font-weight:normal;
+	margin: 0.3em auto;
+	color:#5b5b5b;
+}
+.alphabet span.link { 
+	cursor: pointer;
+	margin: 0;
+	padding:0 5px;
+	font-family: monospace, Courier, Georgia;
+} 
+.alphabet span.active{ background:#5b5b5b; color:#fff; }
+.alphabet span.link:hover { 
+	background: #99ccff;
+	color:#fff;
+} 
+
+#multi_alpha_filter { 
+	width:40px; 
+	margin-bottom:4px;
+} 
+
+/* SIDEBAR : Localplay */
+/***********************/
+.active_instance
+	{
+	background:#99ccff; 
+	}
+
+/* SIDEBAR : Preferences */
+/*************************/
+
+/* SIDEBAR : Admin */
+/*******************/
+#sb_admin_catalogs li.sb_admin_catalogs_ctrls img {margin:0;}
+#sb_admin_catalogs li.sb_admin_catalogs_ctrls a
+	{
+	display:inline; 
+	padding:0; 
+	border:none; 
+	}
+
+/************************************************/
+/*                  XSPF Player                 */
+/************************************************/
+#xspf_player
+	{
+	width:400px;
+	float: left;
+	background:#fff;
+	font-family: Verdana,Helvetica,sans-serif;
+	}
+
+/************************************************/
+/*                  Rightbar                    */
+/************************************************/
+#rightbar
+	{
+	width:110px;
+	float:right;
+	margin-right: 10px;
+	clear:both;
+	padding: 10px;
+	font-size: 0.9em;
+	background-color: #181818;
+	border: 1px solid #282828;
+	}
+
+#rightbar ul                      {	list-style:none; }
+#rightbar a                       { text-decoration:none; }
+
+/* Rightbar Menu */
+#rightbar #rb_action
+	{
+	padding:2px;
+	}
+
+#rightbar #rb_action li         {	display:inline; padding-left: 2px;}
+
+#rightbar li#rb_add, #rightbar li#pl_add             { position:relative; z-index:10;}
+#rightbar li#rb_add:hover, #rightbar li#pl_add:hover {  } 
+/* Rightbar AddItems SubMenu */
+#rightbar li:hover .submenu {	display:block; } 
+#rightbar .submenu
+	{
+	display:none; 	
+	position:absolute;
+	right:0px;
+	top:18px;
+	background-color: #181818;
+	border: 1px solid #282828;
+	font-size:0.7em;
+	width: 100px;
+	}
+
+* html #rightbar .submenu {right:100px;} /* IE6 fix */
+
+#rightbar .submenu a
+	{
+	display:block;
+	padding:0.1em;
+	text-decoration:none;
+	text-align:center;
+	}
+
+#rightbar .submenu a:hover, #rightbar #rb_current_playlist a:hover { background: #1862A1; }
+
+/* Rightbar playlist */
+#rightbar #rb_current_playlist
+	{
+	padding-bottom:0.5em;
+	}
+
+#rightbar #rb_current_playlist li   { position:relative; font-size:0.6em;line-height:14px; color:#5b5b5b; padding-right:20px;}
+#rightbar #rb_current_playlist li a { display:block; padding:0.2em;}
+#rightbar .delitem                  { position:absolute;right:0;top:0; }
+
+/* Rightbar Localplay Controls */
+#rightbar #localplay-control
+	{
+	padding-left: 5px;
+	}
+ 
+#localplay-control span
+	{
+	cursor: pointer; 
+	} 
+
+
+/************************************************/
+/*        Styles for the star ratings           */
+/************************************************/
+.star-rating {
+  position:relative;
+}
+.dynamic-star-rating{
+  width:95px;
+}
+.star-rating ul,
+.star-rating a:hover,
+.star-rating .current-rating
+	{
+	background: url(../images/star_rating.png) left -1000px repeat-x;
+	}
+
+.star-rating ul
+	{
+	position:relative;
+	width:80px;
+	height:15px;
+	overflow:hidden;
+	list-style:none;
+	margin:0;
+	padding:0;
+	background-position: left top;
+	}
+
+.star-rating li
+	{
+	display: inline;
+	}
+
+.star-rating a, .star-rating span, .star-rating .current-rating
+	{
+	position:absolute;
+	top:0;
+	left:0;
+	text-indent:-1000em;
+	height:16px;
+	line-height:16px;
+	outline:none;
+	overflow:hidden;
+	border:none;
+	}
+
+.star-rating .star1 { width:20%; z-index:6; }
+.star-rating .star2 { width:40%; z-index:5; }
+.star-rating .star3 { width:60%; z-index:4; }
+.star-rating .star4 { width:80%; z-index:3; }
+.star-rating .star5 { width:100%; z-index:2;}
+.star-rating .current-rating { z-index:1; background-position: left bottom; }
+
+.star-rating a.star0
+	{
+	left:0px;
+	width:16px;
+	background: url(../../../images/ratings/x_off.png) left top;
+	}
+
+/* hovering effect only for dynamic star rating */
+.dynamic-star-rating a:hover
+	{
+	background-position: left center;
+	}
+
+.dynamic-star-rating a:hover.star0
+	{
+	background: url(../../../images/ratings/x.png) left top;
+	}
+
+.dynamic-star-rating ul
+	{
+	left:16px;
+	}
+
+/************************************************/
+/*              Box Related Styles              */
+/************************************************/
+ 
+.box-title
+	{
+	font-size: 1em;
+	font-weight: bold;
+	padding-bottom: 10px;
+	}
+
+.box-list
+	{
+	padding-right: 10px;
+	}
+
+/* Enclosing Boxes Styles */
+
+.box, .info-box
+	{
+	float:left;
+	clear:left;
+	height:1%; /* IE6 : Holly Hack comes to rescue once again */
+	padding-bottom: 10px;
+	}
+
+.box-inside
+	{
+	background-color: #181818;
+	border: 1px solid #282828;
+	padding: 8px;
+	}
+
+.box-content
+	{
+	background-color: #242424;
+	border: 1px solid #383838;
+	
+	}
+
+.box-top
+	{
+	visibility: hidden;
+	}
+
+.box-left-top
+	{
+	visibility: hidden;
+	}
+
+.box-right-top
+	{
+	visibility: hidden;
+	}
+
+.box-bottom
+	{
+	visibility: hidden;
+	}
+
+.box-left-bottom
+	{
+	visibility: hidden;
+	}
+
+.box-right-bottom
+	{
+	visibility: hidden;
+	}
+
+/* Specific to Info Boxes */
+.info-box .album_art
+	{
+	float:left;
+	font-size: 10px;
+	}
+
+#information_actions { margin-left:5px; font-size:0.7em; } 
+#information_actions h3 { font-size:1.2em; margin:0.2em; }
+
+/* Specific boxes */
+.box_newest_albums  {}
+.box_newest_artists {clear:none;}
+.box_newest_genres  {clear:none;}
+.box_popular_album  {}
+.box_popular_artists {clear:none;}
+.box_popular_genres {clear:none;}
+.box_preferences h4 {color:#000;font:bold 14px Verdana, Helvetica, sans-serif;padding:0.8em 0;}
+
+
+
+	
+
+/* Misc */
+.border 	{ background: #000; }
+.tabledata input, .tabledata select{ margin:2px 0;}
+
+/* specific cells */
+td.cel_cover{padding:6px;}
+.cel_select, .cel_action, .cel_date, .cel_applytoall, .cel_level {text-align:center;}
+/* specific cells : users login state */
+.user_online{background:#0f0;}
+.user_offline{background:#7f0000;}
+.user_disabled{background:#ccc;}
+
+/* specific tables */
+#recently_played .th-bottom {display:none;}
+.box_preferences .th-bottom {display:none;}
+
+/* Inline Editing Tables */
+.inline-edit input, .inline-edit select
+	{
+	font-size: 0.8em; 
+	}
+
+/************************************************/
+/*          Song details                        */
+/************************************************/
+dl.song_details{font-size:0.8em;}
+
+.song_details dt
+	{
+	float:left;
+	clear:both;
+	width:20%;
+	min-width:20%; /*Ie bugfix*/
+	font-weight:bold;
+	}
+
+.song_details dd
+	{
+	float:left;
+	width:79%;
+	min-width:79%; /*Ie bugfix*/
+	margin:0 0 0.2em .3em;
+	padding-left:.2em;
+	}
+
+dt + dd {border-bottom:1px dotted #c0c0c0;}
+dt:hover, dt:hover + dd {background:#9cf;}
+
+/************************************************/
+/*          Albums of the moment                */
+/************************************************/
+.random_album
+	{
+	position:relative;
+	float:left;
+	padding:8px;
+	width:80px;
+	height:95px;
+	font-size: 10px;
+	}
+
+.random_album .play_album
+	{
+	display:none;
+	}
+
+/************************************************/
+/*          Now Playing                         */
+/************************************************/
+#now_playing
+	{
+	}
+
+.np_row {
+	padding: 3px;
+	float:left;
+	clear:both;
+	font-size:0.75em;
+}
+.np_cell {
+  padding-left:5px;
+  margin-left:5px;
+}
+
+.np_row label {
+  display:block;
+  font-weight:bold;
+  margin:2px 0 0 -5px;
+}
+
+.np_group {
+  float:left;
+  padding-right:15px;
+}
+
+.np_row a {
+  font-size:0.8em;
+}
+
+/************************************************/
+/*               Shoutbox                       */
+/************************************************/
+
+#shoutbox
+	{
+	font-size:0.8em;
+	}
+
+#shoutbox div.shout
+	{
+	padding-top:0.5em; 
+	margin:10px 5px 0 0;
+	border-top:1px dotted #c0c0c0;
+	}
+
+#shoutbox div.shout:hover{border-top:1px solid #9cf;}
+
+#shoutbox span.information {}
+#shoutbox .shouttext{display:block;font-size:.9em;margin-top:.5em;}
+img.shoutboximage {	margin:0 3px;}
+
+#shoutbox div.odd{margin-right:20%; text-align:left;}
+#shoutbox div.even{margin-left:20%; text-align:right;}
+#shoutbox .odd img.shoutboximage {float:left;}
+#shoutbox .even img.shoutboximage {float:right;}
+
+/************************************************/
+/*             List Header                      */
+/************************************************/
+.list-header{margin:7px 0; padding:0 4em; text-align:center; font-size: 0.8em;position:relative;} 
+.list-header .prev{position:absolute; top:0; left:0;}
+.list-header .next{position:absolute; top:0; right:0;}
+.list-header .selected{background: #e0e0e0;}
+.list-header .page-nb{padding:1px;border: 1px solid #ccc;text-decoration: none;}
+.list-header .page-nb:hover{background: #d0d0d0;}
+
+/************************************************/
+/*             Errors                           */
+/************************************************/
+.error { 
+	color:#903; 
+}
+
+.fatalerror {
+	display:table-cell;
+	padding:3px;
+	color:#903; 
+	font-weight:bold;
+	font-size:1.2em;
+}
+
+
+/************************************************/
+/*             LocalPlay                        */
+/************************************************/
+.lp_box_ctrl, .lp_box_vol {
+	text-align: center; /*for compatibility, may be controlled by themers now*/
+}
+
+td.lp_current a { 
+	font-weight:bold;
+	text-decoration:none;
+} 
+
+/************************************************/
+/*         Styles for Login template            */
+/************************************************/
+#loginPage #maincontainer
+	{
+	margin-top: 200px;
+	margin-right: auto;
+	margin-left: auto;
+	text-align: center;
+	}
+
+#loginPage #maincontainer #header
+	{
+	margin-right: auto;
+	margin-left: auto;
+	text-align: center;
+	display: table;
+	}
+
+#loginbox
+	{
+	padding: 20px;
+	}
+
+#loginbox h2
+	{
+	padding-bottom: 10px;
+	}
+
+.loginfield
+	{
+	padding: 5px;
+	}
+
+#remembermefield
+	{
+	font-size: 14px;
+	}
+
+#loginPage div.fatalerror
+	{
+	
+	}
+
+#motd
+	{
+	
+	}
+
+/************************************************/
+/*                Misc                          */
+/************************************************/
+.formValidation{
+  margin-top:1em;
+  text-align:center;
+}
+
+.text-box, .confirmation-box {
+	display:table-cell;
+	padding:5px 5px 0 5px;
+	margin-bottom:10px;
+	background:#bbb;
+	border:2px solid #000;
+}
+
+#ajax-loading
+	{
+	position: absolute;  
+	top:60px;
+	left:400px; 
+	width:43px;
+	height:11px;
+	z-index:100;
+	background: url(../images/ajax-loader.gif) no-repeat;
+	display: none;
+	text-indent:-9999em;
+	} 
+
+.information,.information a { 
+	font-size: 0.9em; 
+	font-style: italic; 
+	color: #c0c0c0; 
+} 
