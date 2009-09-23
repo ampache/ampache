@@ -34,6 +34,7 @@ $ajax_url = Config::get('ajax_url');
   <col id="col_genre" />
   <col id="col_track" />
   <col id="col_time" />
+  <col id="col_rating" />
   <col id="col_action" />
 </colgroup>
 <tr class="th-top">
@@ -45,6 +46,11 @@ $ajax_url = Config::get('ajax_url');
 	<th class="cel_genre"><?php echo _('Genre'); ?></th>
 	<th class="cel_track"><?php echo _('Track'); ?></th>
 	<th class="cel_time"><?php echo _('Time'); ?></th>
+<?php if (Config::get('ratings')) {
+        Rating::build_cache('song', $object_ids);
+?>
+        <th class="cel_rating"><?php echo _('Rating'); ?></th>
+<?php } ?>
 	<th class="cel_action"><?php echo _('Action'); ?></th>
 </tr>
 <?php 
