@@ -648,32 +648,15 @@ class vauth {
 	 * http_auth
 	 * This auth method relies on HTTP auth from Apache
 	 * This is not a very secure method of authentication
-	 * defaulted to off. Because if they can load the page they
-	 * are considered to be authenticated we need to look and
-	 * see if their user exists and if not, by golly we just 
-	 * go ahead and created it. NOT SECURE!!!!!
+	 * and defaults to off.
 	 */
 	public static function http_auth($username) { 
 
-	        /* Check if the user exists */
-	        if ($user = User::get_from_username($username)) {
-	                $results['success']     = true;
-	                $results['type']        = 'mysql';
-	                $results['username']    = $username;
-	                $results['name']        = $user->fullname;
-	                $results['email']       = $user->email;
-	                return $results;
-	        }
-
-	        /* If not then we auto-create the entry as a user.. :S */
-	        $user_id = $user->create($username,$username,'',md5(rand()),'25');
-	        $user = new User($user_id);
-
 	        $results['success']     = true;
-	        $results['type']        = 'mysql';
+	        $results['type']        = 'http';
 	        $results['username']    = $username;
-	        $results['name']        = $user->fullname;
-	        $results['email']       = $user->email;
+	        $results['name']        = $username;
+	        $results['email']       = '';
 	        return $results;
 
 	} // http_auth
