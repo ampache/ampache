@@ -1,4 +1,4 @@
-<?php 
+<?php
 /*
 
  Copyright Ampache.org
@@ -20,12 +20,12 @@
 */
 
 define('NO_SESSION','1');
-$path = dirname(__FILE__); 
-$prefix = realpath($path . '/../'); 
+$path = dirname(__FILE__);
+$prefix = realpath($path . '/../');
 require_once $prefix . '/lib/init.php';
 
-echo "- Catalog Update -\n Useage: catalog_update.inc [CATALOG NAME] [-c|-v|-a]\n-c\tClean Catalogs\n-v\tVerify Catalogs\n-a\tAdd to Catalogs\n*Default behavior is to do all 3*\n"; 
-ob_end_flush(); 
+echo "- Catalog Update -\n Usage: catalog_update.inc [CATALOG NAME] [-c|-v|-a]\n-c\tClean Catalogs\n-v\tVerify Catalogs\n-a\tAdd to Catalogs\n*Default behavior is to do all 3*\n";
+ob_end_flush();
 
 $catclean = 0;		//All off by default
 $catverify = 0;
@@ -59,41 +59,41 @@ $sql = "SELECT id FROM catalog";
 if ($where) $sql .= " WHERE $where";
 $db_results = Dba::query($sql);
 
-ob_start("ob_html_strip",'4096',true); 
+ob_start("ob_html_strip",'4096',true);
 
-while ($row = Dba::fetch_row($db_results)) { 
+while ($row = Dba::fetch_row($db_results)) {
 
 	$catalog = new Catalog($row['0']);
-	echo "Reading: $catalog->name \n"; 
+	echo "Reading: $catalog->name \n";
 	if ($catclean == 1) {
 		// Clean out dead files
-		echo "- Starting Clean - \n";   
+		echo "- Starting Clean - \n";
 		$catalog->clean_catalog();
 		echo "------------------\n\n";
 	}
 
 	if ($catverify == 1) {
 		// Verify Existing
-		echo "- Starting Verify - \n"; 
+		echo "- Starting Verify - \n";
 		$catalog->verify_catalog($row['0']);
 		echo "-------------------\n\n";
 	}
- 
+
 	if ($catadd == 1) {
 		// Look for new files
-		echo "- Starting Add - \n"; 
+		echo "- Starting Add - \n";
 		$catalog->add_to_catalog();
 		echo "----------------\n\n";
 	}
 
-} // end foreach 
+} // end foreach
 
-function ob_html_strip($string) { 
+function ob_html_strip($string) {
 
 	$string = preg_replace("/update_txt\('.+'\);update_txt\('(.+)','.+'\);/","$1",$string);
-	$string = preg_replace("/update_.+/","",$string); 
-	$string = strip_tags($string); 
-	return $string; 
+	$string = preg_replace("/update_.+/","",$string);
+	$string = strip_tags($string);
+	return $string;
 
 } // ob_html_strip
 
