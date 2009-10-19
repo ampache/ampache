@@ -70,6 +70,7 @@ function focus(){ document.login.username.focus(); }
 			<?php Error::display('general'); ?>
 
 	    <div class="formValidation">
+    		<a class="button" id="lostpasswordbutton" href="<?php echo Config::get('web_path'); ?>/lostpassword.php"><?php echo _('Lost password'); ?></a>
     		<input class="button" id="loginbutton" type="submit" value="<?php echo _('Login'); ?>" />
   			<input type="hidden" name="referrer" value="<?php echo scrub_out($_SERVER['HTTP_REFERRER']); ?>" />
   			<input type="hidden" name="action" value="login" />
