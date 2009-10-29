@@ -118,7 +118,8 @@ access_control	= "true"
 ; Require Session
 ; If this is set to true ampache will make sure that the URL passed when
 ; attempting to retrieve a song contains a valid Session ID This prevents
-; others from guessing URL's
+; others from guessing URL's. This setting is ignored if you have use_auth
+; disabled. 
 ; DEFAULT: true
 require_session = "true"
 
