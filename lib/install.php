@@ -67,7 +67,7 @@ function install_check_status($configfile) {
 	  to install ampache.
 	*/
 	if (!file_exists($configfile)) {
-		return false;
+		return true;
 	} else {
 		Error::add('general',_('Config file already exists, install is probably completed'));
 	}
