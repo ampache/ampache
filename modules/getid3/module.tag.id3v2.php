@@ -1249,7 +1249,7 @@ class getid3_id3v2 extends getid3_handler
                 $frame_imagetype = substr($parsed_frame['data'], $frame_offset, 3);
                 if (strtolower($frame_imagetype) == 'ima') {
                     // complete hack for mp3Rage (www.chaoticsoftware.com) that puts ID3v2.3-formatted
-                    // MIME type instead of 3-char ID3v2.2-format image type  (thanks xbhoffØpacbell*net)
+                    // MIME type instead of 3-char ID3v2.2-format image type  (thanks xbhoffï¿½pacbell*net)
                     $frame_terminator_pos = @strpos($parsed_frame['data'], "\x00", $frame_offset);
                     $frame_mimetype = substr($parsed_frame['data'], $frame_offset, $frame_terminator_pos - $frame_offset);
                     if (ord($frame_mimetype) === 0) {
@@ -1918,6 +1918,7 @@ class getid3_id3v2 extends getid3_handler
 				$genre_string .= '('.substr($unprocessed, 0, $end_pos).')';
 				$unprocessed = substr($unprocessed, $end_pos + 1);
             }
+            $genre_string .= '('.$unprocessed.')'; // catch the last piece
             unset($unprocessed);
         } elseif (preg_match('/^([0-9]+|CR|RX)$/', $genre_string)) {
         	// some tagging program (including some that use TagLib) fail to include null byte after numeric genre
@@ -1928,8 +1929,8 @@ class getid3_id3v2 extends getid3_handler
             $return_array['genre'][] = $genre_string;
 
         } else {
-	    //MODIFIED per #466 Bernhard Weyrauch fix endless loop if no ) 
-            while (strpos($genre_string, '(') !== false AND (strpos($genre_string, ')') !== false)) {
+	    //MODIFIED per #466 Bernhard Weyrauch fix endless loop if no )
+        	while ((strpos($genre_string, '(') !== false) AND (strpos($genre_string, ')') !== false)) {
 
                 $start_pos = strpos($genre_string, '(');
                 $end_pos   = strpos($genre_string, ')');
@@ -1940,7 +1941,8 @@ class getid3_id3v2 extends getid3_handler
                 $element      = substr($genre_string, $start_pos + 1, $end_pos - ($start_pos + 1));
                 $genre_string = substr($genre_string, 0, $start_pos).substr($genre_string, $end_pos + 1);
 
-                if (getid3_id3v1::LookupGenreName($element)) { // $element is a valid genre id/abbreviation
+				// check that $element seems numeric before passing to getid3_id3v1::LookupGenreName
+				if (is_numeric($element) AND getid3_id3v1::LookupGenreName($element)) { // $element is a valid genre id/abbreviation
 
                     if (empty($return_array['genre']) || !in_array(getid3_id3v1::LookupGenreName($element), $return_array['genre'])) { // avoid duplicate entires
                         $return_array['genre'][] = getid3_id3v1::LookupGenreName($element);
@@ -2306,7 +2308,7 @@ class getid3_id3v2 extends getid3_handler
             'SOS' => 'Somalia',
             'SPL' => 'Seborga',
             'SRG' => 'Suriname',
-            'STD' => 'São Tome and Principe',
+            'STD' => 'Sï¿½o Tome and Principe',
             'SVC' => 'El Salvador',
             'SYP' => 'Syria',
             'SZL' => 'Swaziland',
@@ -2330,13 +2332,13 @@ class getid3_id3v2 extends getid3_handler
             'VND' => 'Viet Nam',
             'VUV' => 'Vanuatu',
             'WST' => 'Samoa',
-            'XAF' => 'Communauté Financière Africaine',
+            'XAF' => 'Communautï¿½ Financiï¿½re Africaine',
             'XAG' => 'Silver',
             'XAU' => 'Gold',
             'XCD' => 'East Caribbean',
             'XDR' => 'International Monetary Fund',
             'XPD' => 'Palladium',
-            'XPF' => 'Comptoirs Français du Pacifique',
+            'XPF' => 'Comptoirs Franï¿½ais du Pacifique',
             'XPT' => 'Platinum',
             'YER' => 'Yemen',
             'YUM' => 'Yugoslavia',
@@ -2776,7 +2778,7 @@ class getid3_id3v2 extends getid3_handler
             'vai' => 'Vai',
             'ven' => 'Venda',
             'vie' => 'Vietnamese',
-            'vol' => 'Volapük',
+            'vol' => 'Volapï¿½k',
             'vot' => 'Votic',
             'wak' => 'Wakashan Languages',
             'wal' => 'Walamo',
