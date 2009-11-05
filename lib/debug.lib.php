@@ -32,36 +32,36 @@
  *  checks the local mysql db and make sure life is good
  */
 function check_database($host,$username,$pass) {
-	
+
 	$dbh = @mysql_connect($host, $username, $pass);
 
 	if (!is_resource($dbh)) {
 		return false;
 	}
-	if (!$host || !$username) { 
+	if (!$host || !$username) {
 		return false;
 	}
-	
-	return $dbh; 
+
+	return $dbh;
 
 } // check_database
 
 /**
  * check_database_inserted
- * checks to make sure that you have inserted the database 
+ * checks to make sure that you have inserted the database
  * and that the user you are using has access to it
  */
-function check_database_inserted($dbh,$db_name) { 
+function check_database_inserted($dbh,$db_name) {
 
 	$sql = "DESCRIBE session";
 	$db_results = Dba::query($sql);
 
-	if (!$db_results) { 
-		return false; 
-	} 
+	if (!$db_results) {
+		return false;
+	}
 
 	// Make sure the whole table is there
-	if (Dba::num_rows($db_results) != '7') { 
+	if (Dba::num_rows($db_results) != '7') {
 		return false;
 	}
 
@@ -79,19 +79,19 @@ function check_php_ver($level=0) {
 	if (floatval(phpversion()) < 5.1) {
 		return false;
 	}
-	
+
 	// Poor windows users if only their OS wasn't behind the times
 	if (strtoupper(substr(PHP_OS,0,3)) == 'WIN' AND floatval(phpversion()) < 5.3) {
-		return false; 
-	} 
+		return false;
+	}
 
 	// Make sure that they have the sha256() algo installed
-	if (!function_exists('hash_algos')) { return false; } 
-	$algos = hash_algos(); 
+	if (!function_exists('hash_algos')) { return false; }
+	$algos = hash_algos();
 
-	if (!in_array('sha256',$algos)) { 
-		return false; 
-	} 
+	if (!in_array('sha256',$algos)) {
+		return false;
+	}
 
 	return true;
 
@@ -101,9 +101,9 @@ function check_php_ver($level=0) {
  * check_php_mysql
  * checks for mysql support by looking for the mysql_query function
  */
-function check_php_mysql() { 
+function check_php_mysql() {
 
-	if (!function_exists('mysql_query')) { 
+	if (!function_exists('mysql_query')) {
 		return false;
 	}
 
@@ -113,12 +113,12 @@ function check_php_mysql() {
 
 /**
  * check_php_session
- * checks to make sure the needed functions 
+ * checks to make sure the needed functions
  * for sessions exist
 */
 function check_php_session() {
 
-	if (!function_exists('session_set_save_handler')) { 
+	if (!function_exists('session_set_save_handler')) {
 		return false;
 	}
 
@@ -130,9 +130,9 @@ function check_php_session() {
  * check_php_iconv
  * checks to see if you have iconv installed
  */
-function check_php_iconv() { 
+function check_php_iconv() {
 
-	if (!function_exists('iconv')) { 
+	if (!function_exists('iconv')) {
 		return false;
 	}
 
@@ -145,13 +145,13 @@ function check_php_iconv() {
  * This makes sure they have pcre (preg_???) support
  * compiled into PHP this is required!
  */
-function check_php_pcre() { 
+function check_php_pcre() {
 
-	if (!function_exists('preg_match')) { 
+	if (!function_exists('preg_match')) {
 		return false;
 	}
 
-	return true; 
+	return true;
 
 } // check_php_pcre
 
@@ -159,30 +159,30 @@ function check_php_pcre() {
  * check_config_values
  * checks to make sure that they have at least set the needed variables
  */
-function check_config_values($conf) { 
-	
-	if (!$conf['database_hostname']) { 
+function check_config_values($conf) {
+
+	if (!$conf['database_hostname']) {
                 return false;
         }
-        if (!$conf['database_name']) { 
-                return false;
-        } 
-        if (!$conf['database_username']) { 
-                return false;
-        } 
-        if (!$conf['database_password']) { 
+        if (!$conf['database_name']) {
                 return false;
         }
-        if (!$conf['session_length']) { 
+        if (!$conf['database_username']) {
                 return false;
         }
-	if (!$conf['session_name']) { 
+        if (!$conf['database_password']) {
+                return false;
+        }
+        if (!$conf['session_length']) {
+                return false;
+        }
+	if (!$conf['session_name']) {
 		return false;
 	}
-	if (!isset($conf['session_cookielife'])) { 
+	if (!isset($conf['session_cookielife'])) {
 		return false;
 	}
-	if (!isset($conf['session_cookiesecure'])) { 
+	if (!isset($conf['session_cookiesecure'])) {
 		return false;
 	}
 	if (isset($conf['debug'])) {
@@ -190,7 +190,7 @@ function check_config_values($conf) {
 		return false;
 	    }
 	}
-	
+
         return true;
 
 } // check_config_values
@@ -201,16 +201,16 @@ function check_config_values($conf) {
  * recommended range, this doesn't take into account the size of your
  * catalog.
  */
-function check_php_memory() { 
+function check_php_memory() {
 
-	$current = ini_get('memory_limit'); 
-	$current = substr($current_memory,0,strlen($current_memory)-1); 
+	$current_memory = ini_get('memory_limit');
+	$current_memory = substr($current_memory,0,strlen($current_memory)-1);
 
-	if (intval($current) < 48) { 
-		return false; 
-	} 
+	if (intval($current_memory) < 48) {
+		return false;
+	}
 
-	return true; 
+	return true;
 
 } // check_php_memory
 
@@ -219,54 +219,54 @@ function check_php_memory() {
  * This checks to make sure that the php timelimit is set to some
  * semi-sane limit, IE greater then 30 seconds
  */
-function check_php_timelimit() { 
+function check_php_timelimit() {
 
-	$current = ini_get('max_execution_time'); 
-	if (intval($current) < 60) { 
-		return false; 
-	} 
+	$current = ini_get('max_execution_time');
+	if (intval($current) < 60) {
+		return false;
+	}
 
-	return true; 
+	return true;
 
 } // check_php_timelimit
 
 /**
  * check_putenv
  * This checks to see if we can manually set the
- * memory limit, and other putenvs we need for 
- * ampache to work correctly 
+ * memory limit, and other putenvs we need for
+ * ampache to work correctly
  */
-function check_putenv() { 
+function check_putenv() {
 
 	/* Check memory */
-	$current = ini_get('memory_limit');
-	$current = substr($current_memory,0,strlen($current_memory)-1);
-	$new_limit = ($current+16) . "M";
-	
+	$current_memory = ini_get('memory_limit');
+	$current_memory = substr($current_memory,0,strlen($current_memory)-1);
+	$new_limit = ($current_memory+16) . "M";
+
 	/* Bump it by 16 megs (for getid3)*/
-	if (!ini_set(memory_limit,$new_limit)) { 
-		return false; 
+	if (!ini_set(memory_limit,$new_limit)) {
+		return false;
 	}
 
 	// Make sure it actually worked
-	$current = ini_get('memory_limit'); 
+	$new_memory = ini_get('memory_limit');
 
-	if ($new_limit != $current) { 
-		return false; 
-	} 
-	
-	/* Check if safe mode is on */
-	if (ini_get('safe_mode')) { 
-		return false; 
+	if ($new_limit != $new_memory) {
+		return false;
 	}
 
-	// See if we can override the set_time_limit(); 
-	$current = ini_get('max_execution_time'); 
-	set_time_limit($current+60); 
+	/* Check if safe mode is on */
+	if (ini_get('safe_mode')) {
+		return false;
+	}
 
-	if ($current == ini_get('max_execution_time')) { 
-		return false; 
-	} 
+	// See if we can override the set_time_limit();
+	$current = ini_get('max_execution_time');
+	set_time_limit($current+60);
+
+	if ($current == ini_get('max_execution_time')) {
+		return false;
+	}
 
 
 	return true;
@@ -277,13 +277,13 @@ function check_putenv() {
  * check_gettext
  * This checks to see if you've got gettext installed
  */
-function check_gettext() { 
+function check_gettext() {
 
-	if (!function_exists('gettext')) { 
-		return false; 
-	} 
+	if (!function_exists('gettext')) {
+		return false;
+	}
 
-	return true; 
+	return true;
 
 } // check_gettext
 
@@ -291,22 +291,22 @@ function check_gettext() {
  * check_mbstring
  * This checks for mbstring support
  */
-function check_mbstring() { 
+function check_mbstring() {
 
-	if (!function_exists('mb_check_encoding')) { 
-		return false; 
-	} 
+	if (!function_exists('mb_check_encoding')) {
+		return false;
+	}
 
-	return true; 
+	return true;
 
-} // check_mbstring 
+} // check_mbstring
 
 /**
  * generate_config
  * This takes an array of results and re-generates the config file
  * this is used by the installer and by the admin/system page
  */
-function generate_config($current) { 
+function generate_config($current) {
 
 	/* Start building the new config file */
 	$distfile = Config::get('prefix') . '/config/ampache.cfg.php.dist';
@@ -328,21 +328,21 @@ function generate_config($current) {
 	        	$value  = $matches[2];
 
 	                /* Put in the current value */
-			if ($key == 'config_version') { 
-				$line = $key . ' = ' . $value; 
-			} 
+			if ($key == 'config_version') {
+				$line = $key . ' = ' . $value;
+			}
 	                elseif (isset($current[$key])) {
 	                	$line = $key . ' = "' . $current[$key] . '"';
 	                        unset($current[$key]);
 			} // if set
-			
+
 		} // if key
 
 	        $final .= $line . "\n";
 
 	} // end foreach line
 
-	return $final; 
+	return $final;
 
 } // generate_config
 
@@ -350,14 +350,14 @@ function generate_config($current) {
  * debug_ok
  * Return an "OK" with the specified string
  */
-function debug_result($comment,$status=false,$value=false) { 
+function debug_result($comment,$status=false,$value=false) {
 
-	$class = $status ? 'ok' : 'notok'; 
-	if (!$value) { 
-		$value = $status ? 'OK' : 'ERROR'; 
-	} 
+	$class = $status ? 'ok' : 'notok';
+	if (!$value) {
+		$value = $status ? 'OK' : 'ERROR';
+	}
 
-	$final = '<span class="' . $class . '">' . scrub_out($value) . '</span> <em>' . $comment . '</em>'; 
+	$final = '<span class="' . $class . '">' . scrub_out($value) . '</span> <em>' . $comment . '</em>';
 
 	return $final;
 
