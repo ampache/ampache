@@ -24,25 +24,25 @@
  * session_exists
  * checks to make sure they've specified a valid session, can handle xmlrpc
  */
-function session_exists($sid,$xml_rpc=0) { 
+function session_exists($sid,$xml_rpc=0) {
 
 	$found = true;
 
 	$sql = "SELECT * FROM `session` WHERE `id` = '$sid'";
 	$db_results = Dba::query($sql);
 
-	if (!Dba::num_rows($db_results)) { 
+	if (!Dba::num_rows($db_results)) {
 		$found = false;
 	}
 
 	/* If we need to check the remote session */
-	if ($xml_rpc) { 
+	if ($xml_rpc) {
 		$server = rawurldecode($_GET['xml_server']);
 		$path	= "/" . rawurldecode($_GET['xml_path']) . "/server/xmlrpc.server.php";
 		$port	= $_GET['xml_port'];
 
 		$path = str_replace("//","/",$path);
-		
+
 		/* Create the XMLRPC client */
 		$client = new XML_RPC_Client($path,$server,$port);
 
@@ -51,18 +51,18 @@ function session_exists($sid,$xml_rpc=0) {
 
 		$query = new XML_RPC_Message('remote_session_verify',array($encoded_sid) );
 
-		/* Log this event */	
-		debug_event('xmlrpc-client',"Checking for Valid Remote Session:$sid",'3'); 
+		/* Log this event */
+		debug_event('xmlrpc-client',"Checking for Valid Remote Session:$sid",'3');
 
 		$response = $client->send($query,30);
 
 		$value = $response->value();
 
-		if (!$response->faultCode()) { 
+		if (!$response->faultCode()) {
 			$data = XML_RPC_Decode($value);
 			$found = $data;
 		}
-		
+
 	} // xml_rpc
 
 	return $found;
@@ -71,10 +71,10 @@ function session_exists($sid,$xml_rpc=0) {
 
 /**
  * extend_session
- * just updates the expire time of the specified session this 
+ * just updates the expire time of the specified session this
  * is used by the the play script after a song finishes
  */
-function extend_session($sid) { 
+function extend_session($sid) {
 
 	$new_time = time() + Config::get('session_length');
 
@@ -90,7 +90,7 @@ function extend_session($sid) {
 	@discussion Run on inputs, stuff that might get stuck in our db
 */
 function scrub_in($str) {
- 
+
         if (!is_array($str)) {
                 return stripslashes( htmlspecialchars( strip_tags($str) ) );
         }
@@ -104,24 +104,24 @@ function scrub_in($str) {
 /*!
 	@function set_memory_limit
 	@discussion this function attempts to change the
-		php memory limit using init_set but it will 
+		php memory limit using init_set but it will
 		never reduce it
 */
-function set_memory_limit($new_limit) { 
+function set_memory_limit($new_limit) {
 
 	/* Check their PHP Vars to make sure we're cool here */
 	// Up the memory
 	$current_memory = ini_get('memory_limit');
 	$current_memory = substr($current_memory,0,strlen($current_memory)-1);
-	if ($current_memory < $new_limit) { 
-	        $php_memory = $new_limit . "M"; 
+	if ($current_memory < $new_limit) {
+	        $php_memory = $new_limit . "M";
 	        ini_set (memory_limit, "$php_memory");
 	        unset($php_memory);
 	}
 
 } // set_memory_limit
 
-/** 
+/**
  * 	get_global_popular
  *	this function gets the current globally popular items
  * 	from the object_count table, depending on type passed
@@ -137,7 +137,7 @@ function get_global_popular($type) {
 	/* Pull the top */
 	$results = $stats->get_top($count,$type);
 
-	foreach ($results as $r) { 
+	foreach ($results as $r) {
 		/* If Songs */
                 if ( $type == 'song' ) {
                         $song = new Song($r['object_id']);
@@ -148,7 +148,7 @@ function get_global_popular($type) {
 	                           	scrub_out(truncate_with_ellipsis($text, Config::get('ellipse_threshold_title')+3)) . "&nbsp;(" . $r['count'] . ")</a>";
 			$items[] = $song;
                 } // if it's a song
-                
+
 		/* If Artist */
                 elseif ( $type == 'artist' ) {
                         $artist = new Artist($r['object_id']);
@@ -161,21 +161,21 @@ function get_global_popular($type) {
 		/* If Album */
                 elseif ( $type == 'album' ) {
                         $album   = new Album($r['object_id']);
-			$album->format(); 
-                        $album->link = "<a href=\"$web_path/albums.php?action=show&amp;album=" . $r['object_id'] . "\" title=\"". scrub_out($album->name) ."\">" . 
+			$album->format();
+                        $album->link = "<a href=\"$web_path/albums.php?action=show&amp;album=" . $r['object_id'] . "\" title=\"". scrub_out($album->name) ."\">" .
                         	           scrub_out(truncate_with_ellipsis($album->name,Config::get('ellipse_threshold_album')+3)) . "&nbsp;(" . $r['count'] . ")</a>";
 			$items[] = $album;
                 } // else not album
 
-		elseif ($type == 'genre') { 
+		elseif ($type == 'genre') {
 			$genre 	 = new Genre($r['object_id']);
-			$genre->format(); 
+			$genre->format();
 			$genre->link = "<a href=\"$web_path/browse.php?action=genre&amp;genre=" . $r['object_id'] . "\" title=\"" . scrub_out($genre->name) . "\">" .
 					scrub_out(truncate_with_ellipsis($genre->name,Config::get('ellipse_threshold_title')+3)) . "&nbsp;(" . $r['count'] . ")</a>";
 			$items[] = $genre;
 		} // end if genre
         } // end foreach
-       
+
         return $items;
 
 } // get_global_popular
@@ -185,26 +185,26 @@ function get_global_popular($type) {
  * This generates a random password, of the specified
  * length
  */
-function generate_password($length) { 
+function generate_password($length) {
 
     $vowels = 'aAeEuUyY12345';
     $consonants = 'bBdDgGhHjJmMnNpPqQrRsStTvVwWxXzZ6789';
     $password = '';
-    
+
     $alt = time() % 2;
 
     for ($i = 0; $i < $length; $i++) {
         if ($alt == 1) {
-            $password .= $consonants[(rand() % 39)];
+            $password .= $consonants[(rand(0,strlen($consonants)-1))];
             $alt = 0;
         } else {
-            $password .= $vowels[(rand() % 17)];
+            $password .= $vowels[(rand(0,strlen($vowels)-1))];
             $alt = 1;
         }
     }
 
     return $password;
-	
+
 } // generate_password
 
 /**
@@ -228,9 +228,9 @@ function scrub_out($str) {
 /**
  * revert_string
  * This returns a scrubed string to it's most normal state
- * Uhh yea better way to do this please? 
+ * Uhh yea better way to do this please?
  */
-function revert_string($string) { 
+function revert_string($string) {
 
 	$string = unhtmlentities($string,ENT_QUOTES,conf('site_charset'));
 	return $string;
@@ -240,24 +240,24 @@ function revert_string($string) {
 /**
  * make_bool
  * This takes a value and returns what I consider to be the correct boolean value
- * This is used instead of settype alone because settype considers 0 and "false" to 
+ * This is used instead of settype alone because settype considers 0 and "false" to
  * be true
  * @package General
  */
-function make_bool($string) { 
+function make_bool($string) {
 
-	if (strcasecmp($string,'false') == 0) { 
+	if (strcasecmp($string,'false') == 0) {
 		return '0';
 	}
 
-	if ($string == '0') { 
+	if ($string == '0') {
 		return '0';
 	}
 
-	if (strlen($string) < 1) { 
+	if (strlen($string) < 1) {
 		return '0';
 	}
-	
+
 	return settype($string,"bool");
 
 } // make_bool
@@ -267,29 +267,29 @@ function make_bool($string) {
  * This function does a dir of ./locale and pulls the names of the
  * different languages installed, this means that all you have to do
  * is drop one in and it will show up on the context menu. It returns
- * in the form of an array of names 
+ * in the form of an array of names
  */
-function get_languages() { 
+function get_languages() {
 
 	/* Open the locale directory */
 	$handle	= @opendir(Config::get('prefix') . '/locale');
 
-	if (!is_resource($handle)) { 
-		debug_event('language','Error unable to open locale directory','1'); 
+	if (!is_resource($handle)) {
+		debug_event('language','Error unable to open locale directory','1');
 	}
 
-	$results = array(); 
+	$results = array();
 
 	/* Prepend English */
 	$results['en_US'] = 'English (US)';
 
-	while ($file = readdir($handle)) { 
+	while ($file = readdir($handle)) {
 
 		$full_file = Config::get('prefix') . '/locale/' . $file;
 
 		/* Check to see if it's a directory */
-		if (is_dir($full_file) AND substr($file,0,1) != '.' AND $file != 'base') { 
-				
+		if (is_dir($full_file) AND substr($file,0,1) != '.' AND $file != 'base') {
+
 			switch($file) {
 				case 'af_ZA'; $name = 'Afrikaans'; break; /* Afrikaans */
 				case 'ca_ES'; $name = 'Catal&#224;'; break; /* Catalan */
@@ -339,7 +339,7 @@ function get_languages() {
 				default: $name = _('Unknown'); break;
 			} // end switch
 
-		
+
 			$results[$file] = $name;
 		}
 
@@ -373,7 +373,7 @@ return sprintf ("%d:%02d", $seconds/60, $seconds % 60);
  * This just contains a key'd array which it checks against to give you the 'tag' name
  * that said pattern code corrasponds to, it returns false if nothing is found
  */
-function translate_pattern_code($code) { 
+function translate_pattern_code($code) {
 
 	$code_array = array('%A'=>'album',
 			'%a'=>'artist',
@@ -383,31 +383,31 @@ function translate_pattern_code($code) {
 			'%t'=>'title',
 			'%y'=>'year',
 			'%o'=>'zz_other');
-	
-	if (isset($code_array[$code])) { 
+
+	if (isset($code_array[$code])) {
 		return $code_array[$code];
 	}
-	
+
 
 	return false;
-	
+
 } // translate_pattern_code
 
 /**
  * print_boolean
  * This function takes a boolean value and then print out  a friendly
- * text message, usefull if you have a 0/1 that you need to turn into 
+ * text message, usefull if you have a 0/1 that you need to turn into
  * a "Off" "On"
  */
-function print_boolean($value) { 
+function print_boolean($value) {
 
 
-	if ($value) { 
-		$string = '<span class="item_on">' . _('On') . '</span>'; 
-	} 
-	else { 
+	if ($value) {
+		$string = '<span class="item_on">' . _('On') . '</span>';
+	}
+	else {
 		$string = '<span class="item_off">' . _('Off') . '</span>';
-	}	
+	}
 
 	return $string;
 
@@ -417,12 +417,12 @@ function print_boolean($value) {
  * invert_boolean
  * This returns the opposite of what you've got
  */
-function invert_boolean($value) { 
-	
-	if (make_bool($value)) { 
+function invert_boolean($value) {
+
+	if (make_bool($value)) {
 		return '0';
 	}
-	else { 
+	else {
 		return '1';
 	}
 
@@ -458,7 +458,7 @@ function __autoload($class) {
                 require_once $file;
                 if (is_callable($class . '::_auto_init')) {
                         call_user_func(array($class, '_auto_init'));
-                }               
+                }
         }
 	// Else log this as a fatal error
         else {
