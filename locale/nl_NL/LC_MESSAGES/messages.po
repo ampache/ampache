@@ -1342,7 +1342,7 @@ msgstr "Klik om het venster te sluiten"
 
 #: ../../templates/show_song_row.inc.php:35
 msgid "Song Information"
-msgstr "Gebruikers informatie"
+msgstr "Lied informatie"
 
 #: ../../templates/show_song_row.inc.php:38
 #: ../../templates/show_album_row.inc.php:45
