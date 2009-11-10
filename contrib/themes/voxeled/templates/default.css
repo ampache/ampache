@@ -1,0 +1,939 @@
+/*
+
+ Copyright (c) Ampache.org
+ All rights reserved.
+
+ This program is free software; you can redistribute it and/or
+ modify it under the terms of the GNU General Public License v2
+ as published by the Free Software Foundation
+
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with this program; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+
+*/
+
+
+/* Defaults */
+* {
+	margin: 0;
+	padding: 0;
+}
+
+h1,h2,h3,h4,h5,h6,p {
+	margin: 0;
+	padding: 10px 0;
+}
+
+h1,h2,h3,h4,h5,h6 {
+	font-family: Verdana;
+}
+
+hr {
+	color: #333;
+	border: 1px solid #121212;
+}
+
+pre {
+	height: auto;
+	overflow-x: scroll;
+}
+
+fieldset {
+	margin: 0;
+	padding: 0;
+	border: 0;
+}
+
+dd {
+	padding-left: 15px;
+}
+
+p {
+	font-size: 9pt;
+}
+
+a {
+	color: #FF9933;
+	text-decoration: none;
+	font-weight: bold;
+}
+
+a:hover {
+	color: #d54e21;
+}
+
+a img {
+	border: none;
+}
+
+a:active {
+	color: #d54e21;
+}
+
+h1 a {
+	font-weight: normal;
+}
+
+blockquote {
+	background: #070707;
+	border: 1px solid #060606;
+	padding: 5px 15px;
+	margin: 10px 10px 5px 15px;
+	font-style: italic;
+	color: #fff;
+}
+
+code {
+	color: #3366cc;
+	font-style: italic;
+}
+
+strong {
+	font-size: 110%;
+}
+
+td { 
+	padding: 0 8px;
+}
+
+th {
+	padding-right: 10px;
+    font-size:13px; 
+    font-weight:bold;
+}
+
+body {
+	text-align: center;
+	margin: 0 auto;
+	padding: 0 0 15px 0;
+	font-family: trebuchet ms, arial, helvetica, sans-serif;
+	font-size: 9pt;
+	background: #000 url(../images/bgbody.jpg) top center no-repeat;
+	width: 960px;
+	text-align: left;
+	padding: 0;
+}
+
+ul {
+	list-style:none;
+}
+
+/* End defaults */
+
+/************************************************/
+/*                XSPF Player                   */
+/************************************************/
+.xspf_player {
+	right: 20px;
+	position: absolute;
+}
+/************************************************/
+/*             Main Container                   */
+/************************************************/
+#maincontainer {
+	clear: both;
+	margin: 5px 15px 0;
+	padding-bottom: 5px;
+	width: 930px;
+}
+/************************************************/
+/*             Header                           */
+/************************************************/
+#header {
+	padding: 0;
+	margin: 0;
+	height: 80px;
+	color: #efefef;
+}
+#headerbox {
+	text-align: right;
+	float: right;
+	margin: 5px 0 0 0;
+}
+#headerlogo {
+	float: left;
+	width: 350px;
+	margin: 0 0 0 0;
+	padding: 0;
+}
+.box_headerbox {
+	display:table;
+}
+.box_headerbox #loginInfo {
+	position:absolute;
+	top:-200px;
+	left:-200px;
+	font-size:0px;
+}
+
+/************************************************/
+/*               Content block                  */
+/************************************************/
+#content {
+	float: left;
+	width: 560px;
+	margin: 0 0 15px 0;
+	padding: 0;
+}
+
+/************************************************/
+/*                Footer                        */
+/************************************************/
+#footer {
+	clear: both;
+	background: #000;
+	border: 1px solid #070707;
+	padding: 15px 15px 10px 15px;
+	float: left;
+	width: 500px;
+	font-size: 9pt;
+	color: #bbb;
+}
+#footer p {
+	font-size: 9pt;
+	color: #bbb;
+	padding: 0;
+}
+/************************************************/
+/*                  Buttons                     */
+/************************************************/
+.button, input[type=button], input[type=submit] {
+	border: 1px solid #fff;
+	border-style: none;
+	font-weight:bold;
+	text-decoration:none;
+	cursor: pointer;
+	font-size:9px;
+	vertical-align:middle;
+}
+/************************************************/
+/*                  Sidebar                     */
+/************************************************/
+#sidebar {
+	margin: 75px 0 0 0;
+	float: right;
+	width: 340px;
+	color: #eee;
+	background: url(../images/bg-trans.png) repeat;
+}
+#sidebar select {
+	width: 95%;
+}
+
+#sidebar a {
+	text-decoration:none;
+}
+/* For sidebar tabs */
+/********************/
+#sidebar-tabs {
+	padding-top 11px;
+}
+
+#sidebar-tabs li.sb1 {
+	display: inline;
+	padding: 0;
+	clear: both;
+	width: 340px;
+	padding-left: 11px;
+	margin-top: 11px;
+}
+#sidebar-tabs li.active {
+	margin-top:0px;
+}
+#sidebar-tabs li.active img {
+	margin-top:0px;
+	position:relative;
+	z-index:2;
+}
+/* Tabs content */
+/****************/
+#sidebar-page {
+	position: absolute;
+	background: url(../images/bg-trans.png) repeat;
+	width: 340px;
+}
+#sidebar-page ul.sb2 {
+	padding-top:2px;
+	padding-left:22px;
+	padding-right:10px;
+}
+#sidebar-page ul.sb2 li {
+	font-weight:bold;
+	margin:10px auto;
+	padding-bottom: 10px;
+}
+#sidebar-page ul.sb2 h4 {
+	padding-bottom: 5px;
+}
+#sidebar-page ul.sb3, #sidebar-page div.sb3 {
+	font-size:10px;
+	margin-left:0px;
+	font-weight:normal;
+}
+#sidebar-page div.sb3 input[type=radio] {
+	margin-left:0px;
+	border:none;
+}
+#sidebar-page ul.sb3 li {
+	margin:0;
+	padding:0;
+	border:none;
+	font-weight:normal;
+}
+* html #sidebar-page ul.sb3 li {
+	display:inline;
+} /* fix ie6 */
+#sidebar-page a {
+	display:block;
+}
+/* SIDEBAR : Home */
+/******************/
+
+/* SIDEBAR : Browse */
+/********************/
+.alphabet {
+	background:transparent; /* fix ie bug */
+	font-size:0.95em;
+	font-weight:normal;
+	margin: 0.3em auto;
+	color:#5b5b5b;
+}
+.alphabet span.link {
+	cursor: pointer;
+	margin: 0;
+	padding:0 5px;
+	font-family: monospace, Courier, Georgia;
+}
+.alphabet span.active {
+	background:#5b5b5b;
+	color:#fff;
+}
+.alphabet span.link:hover {
+	background: #99ccff;
+	color:#fff;
+}
+#multi_alpha_filter {
+	width:40px;
+	margin-bottom:4px;
+}
+/* SIDEBAR : Localplay */
+/***********************/
+.active_instance {
+	background: #000;
+}
+/* SIDEBAR : Preferences */
+/*************************/
+
+/* SIDEBAR : Admin */
+/*******************/
+#sb_admin_catalogs li.sb_admin_catalogs_ctrls img {
+	margin:0;
+}
+#sb_admin_catalogs li.sb_admin_catalogs_ctrls a {
+	display:inline;
+	padding:0;
+	border:none;
+}
+/************************************************/
+/*                  XSPF Player                 */
+/************************************************/
+#xspf_player {
+	width:400px;
+	float: left;
+	background:#fff;
+}
+/************************************************/
+/*                  Rightbar                    */
+/************************************************/
+#rightbar {
+	margin: 75px 0 0 0;
+	width: 340px;
+	color: #eee;
+	background: url(../images/bg-trans.png) repeat;
+}
+#rightbar a {
+	text-decoration:none;
+}
+/* Rightbar Menu */
+#rightbar #rb_action {
+	padding-bottom:11px;
+	padding-left:3px;
+}
+#rightbar #rb_action li {
+	display:inline;
+	margin-left: 11px;
+	padding-top: 11px;
+}
+#rightbar li#rb_add, #rightbar li#pl_add {
+	position:relative;
+	z-index:10;
+}
+#rightbar li#rb_add:hover, #rightbar li#pl_add:hover {
+}
+/* Rightbar AddItems SubMenu */
+#rightbar li:hover .submenu {
+	display:block;
+	color:#000;
+}
+#rightbar .submenu {
+	display:none;
+	position:absolute;
+	left:-15px;
+	top:12px;
+	width:120px;
+	font-size:10px;
+	padding: 5px 5px 5px 5px;
+	background: #000;
+}
+#rightbar .submenu a {
+	display: block;
+	padding: 1px;
+	border-bottom:1px dotted #222;
+	text-align:left;
+}
+#rightbar .submenu a:hover, #rightbar #rb_current_playlist a:hover {
+	background: #111;
+}
+/* Rightbar playlist */
+#rightbar #rb_current_playlist {
+	margin-top: 36px;
+	padding-bottom:10px;
+	padding-left: 6px;
+	padding-right: 0px;
+}
+#rightbar #rb_current_playlist li {
+	position:relative;
+	font-size:10px;
+	line-height:10px;
+	color:#fff;
+	padding-right:20px;
+}
+#rightbar #rb_current_playlist li a {
+	display:block;
+	padding:1px;
+}
+#rightbar .delitem {
+	position:absolute;
+	right:5px;
+	top:0px;
+}
+/* Rightbar Localplay Controls */
+#rightbar #localplay-control {
+	position:fixed;
+	display: block;
+	width: 15px;
+	height: 50%;
+	bottom:0px;
+	right:0px;
+	list-style:none;
+	background:#inherit;
+	font-size:0px;
+	z-index:200;
+}
+#localplay-control span {
+	cursor: pointer;
+}
+/************************************************/
+/*        Styles for the star ratings           */
+/************************************************/
+.star-rating {
+	position:relative;
+}
+.dynamic-star-rating {
+	width:90px;
+}
+.star-rating ul, .star-rating a:hover, .star-rating .current-rating {
+	background: url(../images/ratings/star_rating.gif) left -1000px repeat-x;
+}
+.star-rating ul {
+	position:relative;
+	width:80px;
+	height:15px;
+	overflow:hidden;
+	margin:0;
+	padding:0;
+	background-position: left top;
+}
+.star-rating li {
+	display: inline;
+	padding: 0;
+}
+.star-rating a, .star-rating span, .star-rating .current-rating {
+	padding: 0;
+	position:absolute;
+	top:0;
+	left:0;
+	text-indent:-1000em;
+	height:15px;
+	line-height:15px;
+	outline:none;
+	overflow:hidden;
+	border:none;
+}
+.star-rating .star1 {
+	width:20%;
+	z-index:6;
+}
+.star-rating .star2 {
+	width:40%;
+	z-index:5;
+}
+.star-rating .star3 {
+	width:60%;
+	z-index:4;
+}
+.star-rating .star4 {
+	width:80%;
+	z-index:3;
+}
+.star-rating .star5 {
+	width:100%;
+	z-index:2;
+}
+.star-rating .current-rating {
+	z-index:1;
+	background-position: left bottom;
+}
+.star-rating a.star0 {
+	left:0px;
+	width:16px;
+	background: url(../images/ratings/x_off.gif) left top;
+}
+/* hovering effect only for dynamic star rating */
+.dynamic-star-rating a:hover {
+	background-position: left center;
+}
+.dynamic-star-rating a:hover.star0 {
+	background: url(../images/ratings/x.gif) left top;
+}
+/
+.dynamic-star-rating ul {
+	left:16px;
+}
+/************************************************/
+/*              Box Related Styles              */
+/************************************************/
+ 
+.box-title {
+	font-size:10px;
+	font-weight: bold;
+	padding-bottom: 10px;
+	color:#FFF;
+}
+.box-list {
+}
+/* Enclosing Boxes Styles */
+
+.box, .info-box {
+	background:inherit;
+	color:#FFF;
+	float:left;
+	clear:left;
+	height:1%; /* IE6 : Holly Hack comes to rescue once again */
+}
+.box-inside {
+}
+.box-content {
+}
+.box-top {
+	position:relative;
+}
+.box-left-top {
+	height:5px;
+	width:5px;
+	position:relative;
+	left:0;
+	top:0;
+}
+.box-right-top {
+	height:5px;
+	width:5px;
+	position:absolute;
+	right:0;
+	top:0;
+}
+* html .box-right-top {
+right: expression(-this.parentNode.offsetWidth%2+"px");
+} /* Fixes an IE6 rounding error */
+.box-bottom {
+	position:relative;
+	clear:both;
+}
+.box-left-bottom {
+	height:5px;
+	width:5px;
+	position:relative;
+	left:0;
+	top:0;
+}
+.box-right-bottom {
+ height:5px;
+	width:5px;
+	position:absolute;
+	right:0;
+	top:0;
+}
+* html .box-right-bottom {
+right: expression(-this.parentNode.offsetWidth%2+"px");
+} /* Fixes an IE6 rounding error */
+/* Specific to Info Boxes */
+.info-box {
+	float:left;
+	margin-right:10px;
+}
+.album_art {
+	float:right;
+	margin-right:10px;
+}
+#information_actions {
+	padding: 20px 0px 10px 0px;
+	font-size:10px;
+	line-height: 20px;
+}
+#information_actions h3 {
+	margin: 10px;
+}
+#information_actions ul {
+	margin: 10px;
+}
+
+/* Specific boxes */
+.box_newest_albums {
+}
+.box_newest_artists {
+	clear:none;
+}
+.box_newest_genres {
+	clear:none;
+}
+.box_popular_album {
+}
+.box_popular_artists {
+	clear:none;
+}
+.box_popular_genres {
+	clear:none;
+}
+.box_preferences h4 {
+	font-size:10px;
+	font-weight:bold;
+	padding:5px 0px 10px 0px;
+}
+/************************************************/
+/*         Tables (songs lists...)              */
+/************************************************/
+.tabledata .th-top, .tabledata .th-bottom {
+	vertical-align: center;
+}
+.tableform select {
+	width: 100px;
+}
+/* table rows */
+.tabledata .odd {
+}
+.tabledata .odd td {
+}
+.tabledata .even {
+}
+.tabledata .even td {
+}
+.row-highlight {
+}
+.tabledata .even:hover, .tabledata .odd:hover {
+	background:#111;
+}
+.row-highlight:hover {
+	background:#111;
+}
+/* Misc */
+.border {
+	background: #000;
+}
+.tabledata input, .tabledata select {
+	font-weight:normal;
+	margin:2px 0px 0px 0px;
+	border:1px solid #666;
+}
+/* specific cells */
+td.cel_cover {
+}
+.cel_select, .cel_date, .cel_applytoall, .cel_level {
+	text-align:right;
+}
+.cel_action {
+	text-align:right;
+	padding-right: 0px;
+}
+.cel_action a {
+	padding-right: 11px;
+}
+/* specific cells : users login state */
+.user_online {
+	background:#222;
+}
+.user_offline {
+	background:#C00;
+}
+.user_disabled {
+	background:#ccc;
+}
+/* specific tables */
+#recently_played .th-bottom {
+	display:none;
+}
+.box_preferences .th-bottom {
+	display:none;
+}
+/* Inline Editing Tables */
+.inline-edit input, .inline-edit select {
+	font-size: 10px;
+}
+/************************************************/
+/*          Song details                        */
+/************************************************/
+dl.song_details {
+	font-size:10px;
+}
+.song_details dt {
+	float:left;
+	clear:both;
+	width:20%;
+	min-width:20%; /*Ie bugfix*/
+	font-weight:bold;
+	padding: 2px 0px 0px 0px;
+}
+.song_details dd {
+	float:left;
+	width:79%;
+	min-width:79%; /*Ie bugfix*/
+	padding: 2px 0px 0px 0px;
+}
+dt + dd {
+	border-bottom:1px dotted #666;
+}
+dt:hover, dt:hover + dd {
+	background:#666;
+	color: #fff;
+}
+/************************************************/
+/*          Albums of the moment                */
+/************************************************/
+.random_album {
+	position:relative;
+	float:left;
+	padding-right:10px;
+	width:80px;
+}
+.random_album .play_album {
+	display:none;
+}
+/************************************************/
+/*          Now Playing                         */
+/************************************************/
+#now_playing {
+}
+.np_row {
+	padding: 3px;
+	float:left;
+	font-size:10px;
+	display:block;
+}
+.np_cell {
+	padding-left:5px;
+	margin-left:5px;
+}
+.np_row label {
+	display:block;
+	font-weight:bold;
+	margin:2px 0 0 -5px;
+}
+.np_group {
+	float:left;
+	padding-right:15px;
+}
+.np_row a {
+	font-size:10px;
+}
+/************************************************/
+/*               Shoutbox                       */
+/************************************************/
+
+#shoutbox {
+	font-size:1em;
+}
+#shoutbox div.shout {
+	padding-top:0.5em;
+	margin:10px 5px 0 0;
+	border-top:1px dotted #c0c0c0;
+}
+#shoutbox div.shout:hover {
+	border-top:1px solid #9cf;
+}
+#shoutbox span.information {
+}
+#shoutbox .shouttext {
+	display:block;
+	font-size:.9em;
+	margin-top:.5em;
+}
+img.shoutboximage {
+	margin:0 3px;
+}
+#shoutbox div.odd {
+	margin-right:20%;
+	text-align:left;
+}
+#shoutbox div.even {
+	margin-left:20%;
+	text-align:right;
+}
+#shoutbox .odd img.shoutboximage {
+	float:left;
+}
+#shoutbox .even img.shoutboximage {
+	float:right;
+}
+/************************************************/
+/*             List Header                      */
+/************************************************/
+.list-header {
+	font-size:10px;
+	margin-top: 10px;
+	margin-bottom: 10px;
+	text-align:center;
+	position:relative;
+}
+.list-header .prev {
+	position:absolute;
+	top:0;
+	left:0;
+	font-size:10px;
+	font-weight:bold;
+}
+.list-header .next {
+	position:absolute;
+	top:0;
+	right:0;
+	font-size:10px;
+	font-weight:bold;
+	padding-right:0px;
+}
+.list-header .page-nb {
+	padding: 2px 5px 2px 5px;
+	border: 1px dotted #ccc;
+	text-decoration: none;
+}
+/************************************************/
+/*             Errors                           */
+/************************************************/
+.error {
+	display:block;
+	font-size: 10px;
+	color:#C00;
+}
+.fatalerror {
+	display:table-cell;
+	padding:3px;
+	color:#c00;
+	font-weight:bold;
+	font-size:10px;
+}
+/************************************************/
+/*             LocalPlay                        */
+/************************************************/
+.lp_box_ctrl {
+}
+.lp_box_vol {
+	text-align: center; /*for compatibility, may be controlled by themers now*/
+}
+td.lp_current a {
+	font-weight:bold;
+	text-decoration:none;
+}
+/************************************************/
+/*         Styles for Login template            */
+/************************************************/
+#loginPage #maincontainer {
+	margin:100px auto 0 auto;
+	width:360px;
+	font-size:10px;
+	text-align:center;
+}
+#loginPage #header {
+	padding:0;
+}
+#loginPage #loginbox {
+	background:url(../images/bg_login.png) no-repeat;
+	height:230px;
+}
+#loginPage h2 {
+	color:#fff;
+	padding-top:60px;
+	font-weight: normal;
+}
+.loginfield {
+	text-align:right;
+	padding-top:10px;
+	padding-right:50px;
+}
+.loginfield input.text_input {
+	vertical-align:middle;
+	width:180px;
+}
+.loginfield label {
+	color: #fff;
+	font-weight:bold;
+}
+.loginfield #rememberme {
+	vertical-align:middle;
+	text-align:left;
+	margin-left: auto;
+	margin-right: auto;
+	background:none;
+}
+#loginPage div.fatalerror {
+	padding:5px;
+	margin:10px;
+}
+#motd {
+	background: #fff;
+	color: #222;
+	margin:0 auto 0 auto;
+	width: 360px;
+}
+/************************************************/
+/*                Misc                          */
+/************************************************/
+.formValidation {
+	margin-top:10px;
+	text-align:center;
+}
+.text-box, .confirmation-box {
+	display:table-cell;
+	padding:5px 5px 0 5px;
+	margin-bottom:10px;
+	background:#bbb;
+	border:2px solid #000;
+}
+#ajax-loading {
+	position: absolute;
+	top:25px;
+	left:265px;
+	width:48px;
+	height:48px;
+	z-index:-1;
+	background: url(../images/ajax-loader.gif) no-repeat;
+	display: none;
+	text-indent:-9999em;
+}
+.information, .information a {
+	position:relative;
+	font-size:10px;
+	font-weight:bold;
+}
