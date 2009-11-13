@@ -338,7 +338,7 @@ switch ($_REQUEST['action']) {
 			case 'stop': 
 				$result_status = $localplay->$_REQUEST['command'](); 
 				$xml_array = array('localplay'=>array('command'=>array($_REQUEST['command']=>make_bool($result_status))));
-				echo xmlData::build_from_array($xml_array); 
+				echo xmlData::keyed_array($xml_array); 
 			break; 
 			default:
 				// They are doing it wrong
@@ -364,7 +364,7 @@ switch ($_REQUEST['action']) {
 
 				// If everything was ok
 				$xml_array = array('action'=>$_REQUEST['action'],'method'=>$_REQUEST['method'],'result'=>true); 	
-				echo xmlData::build_from_array($xml_array); 
+				echo xmlData::keyed_array($xml_array); 
 			break; 
 			case 'devote': 
 				$type = 'song'; 
@@ -377,7 +377,7 @@ switch ($_REQUEST['action']) {
 				
 				// Everything was ok
 				$xml_array = array('action'=>$_REQUEST['action'],'method'=>$_REQUEST['method'],'result'=>true); 
-				echo xmlData::build_from_array($xml_array); 
+				echo xmlData::keyed_array($xml_array); 
 			break; 
 			case 'playlist': 
 				$objects = $democratic->get_items(); 
@@ -388,7 +388,7 @@ switch ($_REQUEST['action']) {
 			case 'play': 
 				$url = $democratic->play_url(); 
 				$xml_array = array('url'=>$url); 
-				echo xmlData::build_from_array($xml_array); 
+				echo xmlData::keyed_array($xml_array); 
 			break; 
 			default: 
 				echo xmlData::error('405',_('Invalid Request')); 
