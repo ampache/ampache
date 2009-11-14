@@ -360,7 +360,7 @@ switch ($_REQUEST['action']) {
 					echo xmlData::error('400',_('Media Object Invalid or Not Specified')); 
 					break; 
 				} 
-				$democratic->vote(array('song',$media->id)); 
+				$democratic->vote(array(array('song',$media->id))); 
 
 				// If everything was ok
 				$xml_array = array('action'=>$_REQUEST['action'],'method'=>$_REQUEST['method'],'result'=>true); 	
@@ -372,8 +372,9 @@ switch ($_REQUEST['action']) {
 				if (!$media->id) { 
 					echo xmlData::error('400',_('Media Object Invalid or Not Specified')); 
 				} 
-				
-				$democratic->remove_vote($media->id); 
+
+				$uid = $democratic->get_uid_from_object_id($media->id,$type);
+				$democratic->remove_vote($uid); 
 				
 				// Everything was ok
 				$xml_array = array('action'=>$_REQUEST['action'],'method'=>$_REQUEST['method'],'result'=>true); 
