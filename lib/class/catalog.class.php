@@ -1122,7 +1122,7 @@ class Catalog extends database_object {
                 $album                  = $results['album'];
 		$album_mbid		= $results['mb_albumid']; 
 		$disk			= $results['disk'];
-		$tag			= $results['genre']; 
+		$tags			= $results['genre'];	// multiple genre support makes this an array
 
                 /*
                 * We have the artist/genre/album name need to check it in the tables
@@ -1135,9 +1135,13 @@ class Catalog extends database_object {
                 $new_song->title        = self::check_title($new_song->title,$new_song->file);
 		
 		// Nothing to assign here this is a multi-value doodly
-		self::check_tag($tag,$song->id); 
-		self::check_tag($tag,$new_song->album,'album'); 
-		self::check_tag($tag,$new_song->artist,'artist'); 
+		// multiple genre support
+		foreach ($tags as $tag) {
+			$tag = trim($tag);
+			self::check_tag($tag,$song->id);
+			self::check_tag($tag,$new_song->album,'album');
+			self::check_tag($tag,$new_song->artist,'artist');
+		}
 
 		/* Since we're doing a full compare make sure we fill the extended information */
 		$song->fill_ext_info();
@@ -2226,7 +2230,7 @@ class Catalog extends database_object {
 		$disk	 	= $results['disk'];
 		$year		= $results['year'];
 		$comment	= $results['comment'];
-		$tag		= $results['genre'];
+		$tags		= $results['genre'];	// multiple genre support makes this an array
 		$current_time 	= time();
 		$lyrics 	= ' ';
 
@@ -2250,9 +2254,14 @@ class Catalog extends database_object {
 			
 		$song_id = Dba::insert_id();
 
-		self::check_tag($tag,$song_id);
-		self::check_tag($tag,$album_id,'album'); 
-		self::check_tag($tag,$artist_id,'artist'); 
+		// multiple genre support
+		foreach ($tags as $tag) {
+			$tag = trim($tag);
+			self::check_tag($tag,$song_id);
+			self::check_tag($tag,$album_id,'album'); 
+			self::check_tag($tag,$artist_id,'artist');
+		}
+
 
 		/* Add the EXT information */
 		$sql = "INSERT INTO `song_data` (`song_id`,`comment`,`lyrics`) " .

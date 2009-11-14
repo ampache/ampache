@@ -290,9 +290,19 @@ class vainfo {
 							? $info['album']
 							: trim($results[$key]['album']);
 
-				$info['genre']		= $info['genre']
-							? $info['genre']
-							: trim($results[$key] ['genre']);
+				// multiple genre support
+				if (!$info['genre']) {
+					if (!is_array($results[$key]['genre'])) {
+						// not all tag formats will return an array, but we need one
+						$info['genre'][] = trim($results[$key]['genre']);
+					}
+					else {
+						// if we trim the array we lose everything after 1st entry
+						foreach ($results[$key]['genre'] as $genre) {
+							$info['genre'][] = trim($genre);
+						}
+					}
+				}
 
 				$info['mb_trackid']	= $info['mb_trackid']
 							? $info['mb_trackid']
@@ -598,6 +608,13 @@ class vainfo {
 			
 			/* We need to translate a few of these tags */
 			switch ($tag) { 
+
+				case 'genre':
+					// multiple genre support
+					foreach($data as $foo) {
+						$array['genre'][] = $this->_clean_tag($foo,'');
+					}
+				break;
 				case 'tracknumber':
 					$array['track']	= $this->_clean_tag($data['0']);
 				break;
@@ -607,9 +624,10 @@ class vainfo {
 				case 'date':
 					$array['year']	= $this->_clean_tag($data['0']);
 				break;
+				default:
+					$array[$tag] = $this->_clean_tag($data['0']);
+				break;
 			} // end switch
-
-			$array[$tag] = $this->_clean_tag($data['0']);
 
 		} // end foreach
 
@@ -661,13 +679,18 @@ class vainfo {
 			 * so we now need to account for it :(
 			 */
 			switch ($tag) { 
+				case 'genre':
+					// multiple genre support
+					foreach($data as $genre) {
+						$array['genre'][] = $this->_clean_tag($genre,'');
+					}
+				break;
 				case 'pos':
 					$el = explode('/', $data['0']);
 					$array['disk'] = $el[0];
 				break;
 				case 'track_number':
 					$array['track'] = $this->_clean_tag($data['0'],'');
-				break;	
 				break;
 				case 'comments':
 					$array['comment'] = $this->_clean_tag($data['0'],'');
@@ -714,8 +737,19 @@ class vainfo {
 	private function _parse_ape($tags) { 
 
 		foreach ($tags as $tag=>$data) { 
-			
-			$array[$tag] = $this->_clean_tag($data['0'],$this->_file_encoding);
+			switch ($tag) {
+
+				case 'genre':
+					// multiple genre support
+					foreach($data as $genre) {
+						$array['genre'][] = $this->_clean_tag($genre,'');
+					}
+				break;
+
+				default:
+					$array[$tag] = $this->_clean_tag($data['0'],$this->_file_encoding);
+				break;
+			} // end switch on tag
 
 		} // end foreach tags 
 
