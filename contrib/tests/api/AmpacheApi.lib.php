@@ -33,13 +33,23 @@ class AmpacheApi {
 	// Constructed variables
 	private $api_url; 
 	private $api_state; 
+	private $api_auth; 
 
 	// XML Parser variables
 	private $XML_currentTag;
+	private $XML_subTag; 
 	private $XML_parser;
 	private $XML_results; 
+	private $XML_position=0;  
 	protected $XML_grabtags = array(); 
 	protected $XML_skiptags = array('root'); 
+	protected $XML_parenttags = array('artist','album','song','tag','video','playlist',
+						'auth','version','update','add','clean','songs',
+						'artists','albums','tags','videos','api','playlists');
+
+	// Library static version information
+	protected $LIB_version = '350001'; 
+	private $API_version = ''; 
 
 	/**
 	 * Constructor
@@ -70,11 +80,18 @@ class AmpacheApi {
 		// Setup the handshake
 		$timestamp = time(); 
 		$key = hash('sha256',$this->password); 
-		$passphrase = hash('sha256',$time . $key); 
+		$passphrase = hash('sha256',$timestamp . $key); 
 
-		$url = $this->api_url . "?action=handshake&timestamp=$timestamp&passphrase=$passphrase&version=350001&user=" . $this->username; 
+		$options = array('timestamp'=>$timestamp,'auth'=>$passphrase,'version'=>$this->LIB_version,'user'=>$this->username); 
+	
+		$response = $this->send_command('handshake',$options); 
 
+		$this->parse_response($response); 
 		
+		// We want the first response
+		$results = array_shift($this->get_response()); 
+
+		$this->api_auth = $results['auth']; 
 
 	} // connect
 
@@ -107,9 +124,8 @@ class AmpacheApi {
 			$this->api_secure = $config['api_secure'] ? true : false; 
 		} 
 
-
 		// Once we've loaded the config variables we can build some of the final values
-		$this->api_url = ($this->api_secure ? 'https://' : 'http://') . $this->server; 
+		$this->api_url = ($this->api_secure ? 'https://' : 'http://') . $this->server . '/server/xml.server.php';  
 
 		// See if we have enough to authenticate, if so change the state
 		if ($this->username AND $this->password AND $this->server) { 
@@ -126,7 +142,7 @@ class AmpacheApi {
 	 * the state can be accessed externally so it could be used to check and see 
 	 * where the API is at, at this moment
 	 */
-	public function set_state($state); 
+	public function set_state($state) { 
 
 		// Very simple for now, maybe we'll do something more with this later
 		$this->api_state = strtoupper($state); 
@@ -150,7 +166,7 @@ class AmpacheApi {
 	 */
 	public function send_command($command,$options=array()) { 
 
-		if ($this->state != 'READY') { 
+		if ($this->state() != 'READY') { 
 			trigger_error('AmpacheApi::send_command API in non-ready state, unable to send');
 			return false; 
 		} 
@@ -170,8 +186,17 @@ class AmpacheApi {
 				trigger_error('AmpacheApi::send_command unable to append empty variable to command'); 
 				continue; 
 			} 
-			$url .= '&' . urlencode($key . '=' . $value); 
+			$url .= '&' . urlencode($key) . '=' . urlencode($value); 
 		} 
+
+		// IF Auth is set then we append it so you don't have to think about it, also do username
+		if ($this->api_auth) { 
+			$url .= '&auth=' . urlencode($this->api_auth) . '&username=' . urlencode($this->username); 
+		} 
+
+		$data = file_get_contents($url); 
+
+		return $data; 
 
 	} // send_command
 
@@ -183,9 +208,43 @@ class AmpacheApi {
 	 */
 	public function validate_command($command) { 
 
-
+		return true; 
 
 	} // validate_command
+
+	/**
+	 * parse_response
+	 * This takes an XML document and dumps it into $this->results but before
+	 * it does that it will clean up anything that was there before, so I hope
+	 * you've saved!
+	 */
+	public function parse_response($response) { 
+
+		// Reset the results
+		$this->XML_results = array(); 
+		$this->XML_position = 0; 
+		
+		$this->XML_create_parser(); 
+
+		if (!xml_parse($this->XML_parser,$response)) { 
+			trigger_error('AmpacheApi::parse_response was unable to parse XML document'); 
+			return false; 
+		} 
+
+		xml_parser_free($this->XML_parser); 
+		return true; 
+
+	} // parse_response
+
+	/**
+	 * get_response
+	 * This returns the raw response from the last parsed response
+	 */
+	public function get_response() { 
+
+		return $this->XML_results; 
+
+	} // get_response
 
 	/////////////////////////// XML PARSER FUNCTIONS /////////////////////////////
 
@@ -209,16 +268,47 @@ class AmpacheApi {
 	 */
 	public function XML_cdata($parser,$cdata) { 
 
+		$cdata = trim($cdata); 
+
+		if (!$this->XML_currentTag || !$cdata) { return false; } 
+
+		if ($this->XML_subTag) { 
+			$this->XML_results[$this->XML_position][$this->XML_currentTag][$this->XML_subTag] = $cdata; 
+		} 
+		else { 
+			$this->XML_results[$this->XML_position][$this->XML_currentTag] = $cdata; 
+		} 
+
 
 	} // XML_cdata
 
-	public function XML_start_element($parser,$tag) { 
+	public function XML_start_element($parser,$tag,$attributes) { 
 
+		// Skip it!
+		if (in_array($tag,$this->XML_skiptags)) { return false; } 
 		
+		if (!in_array($tag,$this->XML_parenttags) OR $this->XML_currentTag) { 
+			$this->XML_subTag = $tag; 
+		} 
+		else { 	
+			$this->XML_currentTag = $tag; 
+		} 
+
+		if (count($attributes)) { 
+			$this->XML_results[$this->XML_position][$this->XML_currentTag]['self'] = $attributes; 
+		} 
 
 	} // start_element
 
 	public function XML_end_element($parser,$tag) { 
+
+		if ($tag != $this->XML_currentTag) { 
+			$this->XML_subTag = false; 
+		} 
+		else { 
+			$this->XML_currentTag = false; 
+			$this->XML_position++; 
+		} 
 
 
 	} // end_element
