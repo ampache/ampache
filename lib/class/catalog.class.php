@@ -330,6 +330,12 @@ class Catalog extends database_object {
 			$this->get_album_art('',1);
 		}
 
+		if ($options['parse_m3u'] AND count($this->_playlists)) { 
+			foreach ($this->_playlists as $playlist_file) { 
+				$result = $this->import_m3u($playlist_file); 
+			} 
+		} // if we need to do some m3u-age
+
 		return true;
 
 	} // run_add
@@ -602,7 +608,6 @@ class Catalog extends database_object {
 			echo "\n</script>\n";
 			flush();
 		}
-
 
 		/* Close the dir handle */
 		@closedir($handle);
