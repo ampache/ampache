@@ -4,6 +4,8 @@
 
 --------------------------------------------------------------------------
   v.3.5.2
+	- Sort malformed files into "Unknown (Broken)" rather then leaving
+		them in "Unknown (Orphaned)"
 	- Fix API democratic voting methods (Thx kindachris)
 	- Add server version information to API ping command
 	- Fix Localplay API methods (Thx thomasa) 

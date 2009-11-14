@@ -48,6 +48,7 @@ class vainfo {
 	/* Internal Private */
 	private $_binary_parse	= array(); 
 	private $_pathinfo; 
+	private $_broken = false; 
 
 	/**
 	 * Constructor
@@ -102,7 +103,9 @@ class vainfo {
 			$this->_raw2 = $this->_getID3->analyze($file);
 		}
 		catch (Exception $error) {
-			debug_event('getid3',$error->message,'1');
+			debug_event('getid3',"Broken file $file " . $error->message,'1');
+			$this->_broken = true; 
+			return false; 
 		}
 
 		if(function_exists('mb_detect_encoding')) {
@@ -159,6 +162,13 @@ class vainfo {
 	 * pattern goodness
 	 */
 	public function get_info() {
+
+                // If this is broken, don't waste time figuring it out a second time, just return 
+                // their rotting carcass of a media file back on the pile
+                if ($this->_broken) {
+                        $this->tags = $this->set_broken();
+                        return true;
+                }
 
 		// If we've got a green light try out the binary
 //		if ($this->_binary_parse[$this->_pathinfo['extension']]) { 
@@ -1004,6 +1014,29 @@ class vainfo {
 		return $results; 
 
 	} // mp3_binary_parse
+
+        /**
+         * set_broken
+         * This fills all tag types with Unknown (Broken) 
+         */
+        public function set_broken() {
+                
+                /* Pull In the config option */
+                $order = Config::get('tag_order');
+        
+                if (!is_array($order)) {
+                        $order = array($order);
+                }
+
+                $key = array_shift($order);
+
+                $broken[$key]['title'] = '**BROKEN** ' . $this->filename; 
+                $broken[$key]['album'] = 'Unknown (Broken)'; 
+                $broken[$key]['artist'] = 'Unknown (Broken)'; 
+
+                return $broken; 
+
+        } // set_broken
 
 } // end class vainfo
 ?>
