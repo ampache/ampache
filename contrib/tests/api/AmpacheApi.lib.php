@@ -43,7 +43,7 @@ class AmpacheApi {
 	private $XML_position=0;  
 	protected $XML_grabtags = array(); 
 	protected $XML_skiptags = array('root'); 
-	protected $XML_parenttags = array('artist','album','song','tag','video','playlist',
+	protected $XML_parenttags = array('artist','album','song','tag','video','playlist','result',
 						'auth','version','update','add','clean','songs',
 						'artists','albums','tags','videos','api','playlists');
 
@@ -295,7 +295,12 @@ class AmpacheApi {
 		} 
 
 		if (count($attributes)) { 
-			$this->XML_results[$this->XML_position][$this->XML_currentTag]['self'] = $attributes; 
+			if (!$this->XML_subTag) { 
+				$this->XML_results[$this->XML_position][$this->XML_currentTag]['self'] = $attributes; 
+			}
+			else { 
+				$this->XML_results[$this->XML_position][$this->XML_currentTag][$this->XML_subTag]['self'] = $attributes; 
+			}
 		} 
 
 	} // start_element
