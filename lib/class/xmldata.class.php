@@ -422,6 +422,8 @@ class xmlData {
 	public static function democratic($object_ids=array()) { 
 
 		if (!is_array($object_ids)) { $object_ids = array(); } 
+
+		$democratic = Democratic::get_current_playlist();
 		
 		$string = ''; 
 
@@ -452,13 +454,13 @@ class xmlData {
                                         "\t<time>$song->time</time>\n" .
                                         "\t<mime>$song->mime</mime>\n" .
                                         "\t<url><![CDATA[" . Song::play_url($song->id) . "]]></url>\n" .
-                                        "\t<size>$song->size</size>\n" .
-                                        "\t<art><![CDATA[" . $art_url . "]]></art>\n" .
+                                        "\t<size>$song->size</size>\n" . 
+                                        "\t<art><![CDATA[" . $art_url . "]]></art>\n" . 
                                         "\t<preciserating>" . $rating->preciserating . "</preciserating>\n" .
-                                        "\t<rating>" . $rating->rating . "</rating>\n" .
+					"\t<rating>" . $rating->rating . "</rating>\n" .
 					"\t<vote>" . $democratic->get_vote($row_id) . "</vote>\n" .  
-                                        "</song>\n";
-
+					"</song>\n"; 
+					
 		} // end foreach 
 		
 		$final = self::_header() . $string . self::_footer(); 
