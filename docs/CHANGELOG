@@ -4,6 +4,7 @@
 
 --------------------------------------------------------------------------
   v.3.5.2
+	- Fix API democratic voting methods (Thx kindachris)
 	- Add server version information to API ping command
 	- Fix Localplay API methods (Thx thomasa) 
 	- Improve bin/catalog_update.inc to allow only verify, clean or add
