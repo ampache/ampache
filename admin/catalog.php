@@ -50,7 +50,7 @@ switch ($_REQUEST['action']) {
 				$catalog->add_to_catalog();
 			}
 		}
-		$url 	= Config::get('web_path') . '/admin/index.php';
+		$url 	= Config::get('web_path') . '/admin/catalog.php';
 		$title 	= _('Catalog Updated');
 		$body	= '';
 		show_confirmation($title,$body,$url);
@@ -70,7 +70,7 @@ switch ($_REQUEST['action']) {
 				$catalog->verify_catalog($catalog_id);
 			}
 		}
-		$url	= Config::get('web_path') . '/admin/index.php';
+		$url	= Config::get('web_path') . '/admin/catalog.php';
 		$title	= _('Catalog Updated');
 		$body	= '';
 		show_confirmation($title,$body,$url);
@@ -95,7 +95,7 @@ switch ($_REQUEST['action']) {
 			$catalog->count = 0;
 			$catalog->add_to_catalog($catalog_id);
 		} 		
-		$url	= Config::get('web_path') . '/admin/index.php';
+		$url	= Config::get('web_path') . '/admin/catalog.php';
 		$title	= _('Catalog Updated');
 		$body	= '';
 		show_confirmation($title,$body,$url);
@@ -112,7 +112,7 @@ switch ($_REQUEST['action']) {
 	
 		/* Delete the sucker, we don't need to check perms as thats done above */
 		Catalog::delete($_GET['catalog_id']); 
-		$next_url = Config::get('web_path') . '/admin/index.php';
+		$next_url = Config::get('web_path') . '/admin/catalog.php';
 		show_confirmation(_('Catalog Deleted'),_('The Catalog and all associated records have been deleted'),$next_url);
 	break;
 	case 'show_delete_catalog': 
@@ -133,7 +133,7 @@ switch ($_REQUEST['action']) {
 		else {
 			$body = _('No Songs Removed');
 		}
-		$url	= Config::get('web_path') . '/admin/index.php';
+		$url	= Config::get('web_path') . '/admin/catalog.php';
 		$title	= ngettext('Disabled Song Processed','Disabled Songs Processed',count($song));
 		show_confirmation($title,$body,$url);
 	break;
@@ -154,7 +154,7 @@ switch ($_REQUEST['action']) {
 			} // end foreach catalogs
 		}
 		
-		$url 	= Config::get('web_path') . '/admin/index.php';
+		$url 	= Config::get('web_path') . '/admin/catalog.php';
 		$title	= _('Catalog Cleaned');
 		$body	= '';
 		show_confirmation($title,$body,$url);
@@ -167,7 +167,7 @@ switch ($_REQUEST['action']) {
 		/* Update the catalog */
 		Catalog::update_settings($_REQUEST);
 		
-		$url 	= Config::get('web_path') . '/admin/index.php';
+		$url 	= Config::get('web_path') . '/admin/catalog.php';
 		$title 	= _('Catalog Updated');
 		$body	= '';
 		show_confirmation($title,$body,$url);
@@ -236,7 +236,7 @@ switch ($_REQUEST['action']) {
 			Error::display('catalog_add'); 
 			show_box_bottom(); 
 
-			show_confirmation('','', Config::get('web_path').'/admin/index.php'); 
+			show_confirmation('','', Config::get('web_path').'/admin/catalog.php'); 
 
 		}
 		else {
@@ -247,11 +247,12 @@ switch ($_REQUEST['action']) {
 			if (Config::get('demo_mode')) { access_denied(); break; }
 		
 		Catalog::clear_stats(); 
-		$url	= Config::get('web_path') . '/admin/index.php';
+		$url	= Config::get('web_path') . '/admin/catalog.php';
 		$title	= _('Catalog statistics cleared');
 		$body	= '';
 		show_confirmation($title,$body,$url);
 	break;
+	default: 
 	case 'show_catalogs': 
 		require_once Config::get('prefix') . '/templates/show_manage_catalogs.inc.php'; 
 	break;
@@ -261,7 +262,7 @@ switch ($_REQUEST['action']) {
 	case 'clear_now_playing':
 		if (Config::get('demo_mode')) { access_denied(); break; }
 		Stream::clear_now_playing();
-		show_confirmation(_('Now Playing Cleared'),_('All now playing data has been cleared'),Config::get('web_path') . '/admin/index.php');
+		show_confirmation(_('Now Playing Cleared'),_('All now playing data has been cleared'),Config::get('web_path') . '/admin/catalog.php');
 	break;
 	case 'show_disabled':
 		/* Stop the demo hippies */
@@ -300,13 +301,10 @@ switch ($_REQUEST['action']) {
 			flush(); 
 			$catalog->get_album_art('',1);
 		}
-		$url 	= Config::get('web_path') . '/admin/index.php';
+		$url 	= Config::get('web_path') . '/admin/catalog.php';
 		$title 	= _('Album Art Search Finished');
 		$body	= '';
 		show_confirmation($title,$body,$url);
-		break;
-	default:
-		/* Not sure what to put here anymore */
 	break;
 } // end switch
 
