@@ -419,6 +419,8 @@ class xmlData {
 	public static function democratic($object_ids=array()) { 
 
 		if (!is_array($object_ids)) { $object_ids = array(); } 
+
+		$democratic = Democratic::get_current_playlist();
 		
 		$string = ''; 
 
