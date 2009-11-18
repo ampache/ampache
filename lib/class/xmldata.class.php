@@ -330,10 +330,7 @@ class xmlData {
 	public static function songs($songs) { 
 
 		if (count($songs) > self::$limit OR self::$offset > 0 ) { 
-			debug_event('zzz',print_r($songs,1),1);
-			debug_event('zzz','slicing at ' . self::$offset . ' for ' . self::$limit,'1'); 
 			$songs = array_slice($songs,self::$offset,self::$limit); 
-			debug_event('zzz',print_r($songs,1),1);
 		} 
 
 		Rating::build_cache('song',$songs); 
