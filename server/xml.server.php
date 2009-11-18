@@ -298,11 +298,16 @@ switch ($_REQUEST['action']) {
 	break; 
 	case 'search_songs': 
 		$array['s_all'] = $_REQUEST['filter']; 
-		$results = run_search($array);
 		ob_end_clean(); 
 
 		xmlData::set_offset($_REQUEST['offset']); 
 		xmlData::set_limit($_REQUEST['limit']); 
+		
+		//WARNING!!! This is a horrible hack that has to be here because
+		//Run search references these variables, ooh the huge manatee   
+		unset($_REQUEST['limit'],$_REQUEST['offset']);
+
+		$results = run_search($array);
 
 		echo xmlData::songs($results); 
 	break; 
