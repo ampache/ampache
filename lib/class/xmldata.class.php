@@ -175,7 +175,7 @@ class xmlData {
 	 */
 	public static function tags($tags) { 
 
-		if (count($tags) > self::$limit) { 
+		if (count($tags) > self::$limit OR self::$offset > 0) { 
 			$tags = array_splice($tags,self::$offset,self::$limit); 
 		} 
 
@@ -208,7 +208,7 @@ class xmlData {
 	 */
 	public static function artists($artists) { 
 
-		if (count($artists) > self::$limit) { 
+		if (count($artists) > self::$limit OR self::$offset > 0) { 
 			$artists = array_splice($artists,self::$offset,self::$limit); 
 		} 
 
@@ -245,7 +245,7 @@ class xmlData {
 	 */
 	public static function albums($albums) { 
 
-		if (count($albums) > self::$limit) { 
+		if (count($albums) > self::$limit OR self::$offset > 0 ) { 
 			$albums = array_splice($albums,self::$offset,self::$limit); 
 		} 
 		
@@ -293,7 +293,7 @@ class xmlData {
 	 */
 	public static function playlists($playlists) { 
 
-		if (count($playlists) > self::$limit) { 
+		if (count($playlists) > self::$limit OR self::$offset > 0) { 
 			$playlists = array_slice($playlists,self::$offset,self::$limit); 
 		} 
 
@@ -329,8 +329,11 @@ class xmlData {
 	 */
 	public static function songs($songs) { 
 
-		if (count($songs) > self::$limit) { 
+		if (count($songs) > self::$limit OR self::$offset > 0 ) { 
+			debug_event('zzz',print_r($songs,1),1);
+			debug_event('zzz','slicing at ' . self::$offset . ' for ' . self::$limit,'1'); 
 			$songs = array_slice($songs,self::$offset,self::$limit); 
+			debug_event('zzz',print_r($songs,1),1);
 		} 
 
 		Rating::build_cache('song',$songs); 
@@ -383,7 +386,7 @@ class xmlData {
 	 */
 	public static function videos($videos) { 
 
-                if (count($videos) > self::$limit) {
+                if (count($videos) > self::$limit OR self::$offset > 0) {
                         $videos = array_slice($videos,self::$offset,self::$limit);
                 }
 

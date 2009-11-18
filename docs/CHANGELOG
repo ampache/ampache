@@ -4,6 +4,7 @@
 
 --------------------------------------------------------------------------
   v.3.5.2
+	- Fix limit and offset not working on search_songs API method
 	- Fix import m3u on catalog build so it does something
 	- Fix inconsistent view during catalog operations
 	- Sort malformed files into "Unknown (Broken)" rather then leaving
