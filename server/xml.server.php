@@ -38,7 +38,7 @@ header("Content-Disposition: attachment; filename=information.xml");
 if (!Config::get('access_control')) { 
 	ob_end_clean(); 
 	debug_event('Access Control','Error Attempted to use XML API with Access Control turned off','3'); 
-	echo xmlData::error('501','Access Control not Enabled');
+	echo xmlData::error('501',_('Access Control not Enabled'));
 	exit; 
 }  
 
@@ -49,7 +49,7 @@ if (!Config::get('access_control')) {
 if (!vauth::session_exists('api', $_REQUEST['auth']) AND $_REQUEST['action'] != 'handshake' AND $_REQUEST['action'] != 'ping') {
         debug_event('Access Denied','Invalid Session attempt to API [' . $_REQUEST['action'] . ']','3');
         ob_end_clean();
-        echo xmlData::error('401','Session Expired');
+        echo xmlData::error('401',_('Session Expired'));
         exit();
 }
 
@@ -58,9 +58,9 @@ $session = vauth::get_session_data($_REQUEST['auth']);
 $username = ($_REQUEST['action'] == 'handshake' || $_REQUEST['action'] == 'ping') ? $_REQUEST['user'] : $session['username'];
 
 if (!Access::check_network('init-api',$username,'5')) { 
-        debug_event('Access Denied','Unathorized access attempt to API [' . $_SERVER['REMOTE_ADDR'] . ']', '3');
+        debug_event('Access Denied','Unauthorized access attempt to API [' . $_SERVER['REMOTE_ADDR'] . ']', '3');
         ob_end_clean(); 
-        echo xmlData::error('403','ACL Error');
+        echo xmlData::error('403',_('Unauthorized access attempt to API - ACL Error'));
         exit(); 
 }
 
@@ -69,103 +69,27 @@ if ($_REQUEST['action'] != 'handshake' AND $_REQUEST['action'] != 'ping') {
         $GLOBALS['user'] = User::get_from_username($session['username']);
 } 
 
+// Get the list of possible methods for the Ampache API
+$methods = get_class_methods('api'); 
+
+// Define list of internal functions that should be skipped
+$interal_functions = array('set_filter'); 
+
+// Recurse through them and see if we're calling one of them
+foreach ($methods as $method) { 
+	if (in_array($method,$internal_functions)) { continue; } 	
+
+	// If the method is the same as the action being called
+	// Then let's call this function!
+	if ($_REQUEST['action'] == $method) { 
+		call_user_func(array('api',$method),$_REQUEST);
+		// We only allow a single function to be called, and we assume it's cleaned up!
+		exit; 
+	} 
+
+} // end foreach methods in API 
+
 switch ($_REQUEST['action']) { 
-	case 'handshake': 
-
-		// Send the data we were sent to the API class so it can be chewed on 
-		$token = Api::handshake($_REQUEST['timestamp'],$_REQUEST['auth'],$_SERVER['REMOTE_ADDR'],$_REQUEST['user'],$_REQUEST['version']); 
-		
-		if (!$token) { 
-			ob_end_clean(); 
-			echo xmlData::error('401',_('Error Invalid Handshake - ') . Error::get('api')); 
-		} 
-		else { 
-			ob_end_clean(); 
-			echo xmlData::keyed_array($token); 
-		} 
-
-	break; 
-	case 'ping': 
-		
-		$xmldata = array('server'=>Config::get('version'),'version'=>Api::$version,'compatible'=>'350001'); 
-
-		// Check and see if we should extend the api sessions (done if valid sess is passed)
-		if (vauth::session_exists('api', $_REQUEST['auth'])) { 
-			vauth::session_extend($_REQUEST['auth']); 
-			$xmldata = array_merge(array('session_expire'=>date("r",time()+Config::get('session_length')-60)),$xmldata);
-		} 
-
-		debug_event('API','Ping Received from ' . $_SERVER['REMOTE_ADDR'] . ' :: ' . $_REQUEST['auth'],'5'); 
-
-		ob_end_clean(); 
-		echo xmlData::keyed_array($xmldata); 
-
-	break; 
-	case 'artists': 
-		Browse::reset_filters(); 
-		Browse::set_type('artist'); 
-		Browse::set_sort('name','ASC'); 
-	
-		$method = $_REQUEST['exact'] ? 'exact_match' : 'alpha_match'; 
-		Api::set_filter($method,$_REQUEST['filter']); 
-		Api::set_filter('add',$_REQUEST['add']); 
-		Api::set_filter('update',$_REQUEST['update']); 
-
-		// Set the offset
-		xmlData::set_offset($_REQUEST['offset']); 
-		xmlData::set_limit($_REQUEST['limit']); 
-
-		$artists = Browse::get_objects(); 
-		// echo out the resulting xml document
-		ob_end_clean(); 
-		echo xmlData::artists($artists);
-	break; 
-	case 'artist': 
-		$uid = scrub_in($_REQUEST['filter']); 
-		echo xmlData::artists(array($uid)); 
-	break; 
-	case 'artist_albums': 
-		$artist = new Artist($_REQUEST['filter']); 
-
-		$albums = $artist->get_albums(); 
-
-                // Set the offset
-                xmlData::set_offset($_REQUEST['offset']);
-		xmlData::set_limit($_REQUEST['limit']); 
-		ob_end_clean(); 
-		echo xmlData::albums($albums); 
-	break; 
-	case 'artist_songs': 
-		$artist = new Artist($_REQUEST['filter']); 
-		$songs = $artist->get_songs(); 
-
-		// Set the offset
-		xmlData::set_offset($_REQUEST['offset']); 
-		xmlData::set_limit($_REQUEST['limit']); 
-		ob_end_clean(); 
-		echo xmlData::songs($songs); 
-	break; 
-	case 'albums': 
-		Browse::reset_filters(); 
-		Browse::set_type('album'); 
-		Browse::set_sort('name','ASC'); 
-		$method = $_REQUEST['exact'] ? 'exact_match' : 'alpha_match'; 
-		Api::set_filter($method,$_REQUEST['filter']); 
-		Api::set_filter('add',$_REQUEST['add']); 
-		Api::set_filter('update',$_REQUEST['update']); 
-
-		$albums = Browse::get_objects(); 
-
-                // Set the offset
-                xmlData::set_offset($_REQUEST['offset']);
-		xmlData::set_limit($_REQUEST['limit']); 
-		ob_end_clean(); 
-		echo xmlData::albums($albums); 
-	break; 
-	case 'album': 
-		$uid = scrub_in($_REQUEST['filter']); 
-		echo xmlData::albums(array($uid)); 
-	break; 
 	case 'album_songs': 
 		$album = new Album($_REQUEST['filter']); 
 		$songs = $album->get_songs(); 

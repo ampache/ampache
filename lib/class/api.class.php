@@ -50,15 +50,15 @@ class Api {
 
 		switch ($filter) { 
 			case 'add': 
-	                        // Check for a range, if no range default to gt
-	                        if (strpos('/',$value)) {
-	                                $elements = explode('/',$value);
-	                                Browse::set_filter('add_lt',strtotime($elements['1']));
-	                                Browse::set_filter('add_gt',strtotime($elements['0']));
-	                        }
-	                        else {
-	                                Browse::set_filter('add_gt',strtotime($value));
-	                        }
+				        // Check for a range, if no range default to gt
+				        if (strpos('/',$value)) {
+						$elements = explode('/',$value);
+						Browse::set_filter('add_lt',strtotime($elements['1']));
+						Browse::set_filter('add_gt',strtotime($elements['0']));
+				        }
+				        else {
+						Browse::set_filter('add_gt',strtotime($value));
+				        }
 			break; 
 			case 'update': 
 				// Check for a range, if no range default to gt
@@ -93,10 +93,16 @@ class Api {
 	 * can take a username, if non is passed the ACL must be non-use 
 	 * specific
 	 */
-	public static function handshake($timestamp,$passphrase,$ip,$username='',$version) { 
+	public static function handshake($input) { 
 
-                // Let them know we're attempting
-                debug_event('API',"Attempting Handshake IP:$ip User:$username Version:$version",'5'); 
+		$timestamp = $input['timestamp']; 
+		$passphrase = $input['auth']; 
+		$ip = $_SERVER['REMOTE_ADDR']; 
+		$username = $input['user']; 
+		$version = $input['version']; 
+
+			// Let them know we're attempting
+			debug_event('API',"Attempting Handshake IP:$ip User:$username Version:$version",'5'); 
 
 		if (intval($version) < self::$version) { 
 			debug_event('API','Login Failed version too old','1'); 
@@ -185,7 +191,7 @@ class Api {
 				$db_results = Dba::read($sql);
 				$playlist = Dba::fetch_assoc($db_results); 
 
-				return array('auth'=>$token,
+				echo xmlData::keyed_array(array('auth'=>$token,
 					'api'=>self::$version,
 					'update'=>date("c",$row['update']),
 					'add'=>date("c",$row['add']),
@@ -194,16 +200,147 @@ class Api {
 					'albums'=>$counts['album'],
 					'artists'=>$counts['artist'],
 					'playlists'=>$playlist['playlist'],
-					'videos'=>$vcounts['video']); 
+					'videos'=>$vcounts['video'])); 
 			} // match 
 
 		} // end while
 
 		debug_event('API','Login Failed, unable to match passphrase','1'); 
-		Error::add('api','Invalid Username/Password'); 
-		return false; 
+		xmlData::error('401',_('Error Invalid Handshake - ') . _('Invalid Username/Password')); 
 
-	} // handhsake
+	} // handshake
+
+	/**
+ 	 * ping
+	 * This can be called without being authenticated, it is useful for determining if what the status
+	 * of the server is, and what version it is running/compatible with
+	 */
+	public static function ping($input) { 
+
+		$xmldata = array('server'=>Config::get('version'),'version'=>Api::$version,'compatible'=>'350001');
+
+		// Check and see if we should extend the api sessions (done if valid sess is passed)
+		if (vauth::session_exists('api', $input['auth'])) {
+		        vauth::session_extend($input['auth']);
+		        $xmldata = array_merge(array('session_expire'=>date("r",time()+Config::get('session_length')-60)),$xmldata);
+		}
+
+		debug_event('API','Ping Received from ' . $_SERVER['REMOTE_ADDR'] . ' :: ' . $input['auth'],'5');
+
+		ob_end_clean();
+		echo xmlData::keyed_array($xmldata);
+
+	} // ping
+
+	/**
+	 * artists
+	 * This takes a collection of inputs and returns
+	 * artist objects. This function is deprecated!
+	 * //DEPRECATED
+	 */
+	public static function artists($input) { 
+
+		Browse::reset_filters();
+		Browse::set_type('artist');
+		Browse::set_sort('name','ASC');
+
+		$method = $input['exact'] ? 'exact_match' : 'alpha_match';
+		Api::set_filter($method,$input['filter']);
+		Api::set_filter('add',$input['add']);
+		Api::set_filter('update',$input['update']);
+
+		// Set the offset
+		xmlData::set_offset($input['offset']);
+		xmlData::set_limit($input['limit']);
+
+		$artists = Browse::get_objects();
+		// echo out the resulting xml document
+		ob_end_clean();
+		echo xmlData::artists($artists);
+
+	} // artists
+
+	/**
+	 * artist
+	 * This returns a single artist based on the UID of said artist
+	 * //DEPRECATED
+	 */
+	public static function artist($input) { 
+
+		$uid = scrub_in($input['filter']);
+		echo xmlData::artists(array($uid));
+
+	} // artist
+
+	/**
+	 * artist_albums
+	 * This returns the albums of an artist
+	 */
+	public static function artist_albums($input) { 
+
+		$artist = new Artist($input['filter']);
+
+		$albums = $artist->get_albums();
+
+		// Set the offset
+		xmlData::set_offset($input['offset']);
+		xmlData::set_limit($input['limit']);
+		ob_end_clean();
+		echo xmlData::albums($albums);
+
+	} // artist_albums
+
+	/**
+	 * artist_songs
+	 * This returns the songs of the specified artist
+	 */
+	public static function artist_songs($input) { 
+
+		$artist = new Artist($input['filter']);
+		$songs = $artist->get_songs();
+
+		// Set the offset
+		xmlData::set_offset($input['offset']);
+		xmlData::set_limit($input['limit']);
+		ob_end_clean();
+		echo xmlData::songs($songs);
+
+	} // artist_songs
+
+	/**
+ 	 * albums
+	 * This returns albums based on the provided search filters
+	 */
+	public static function albums($input) { 
+
+		Browse::reset_filters();
+		Browse::set_type('album');
+		Browse::set_sort('name','ASC');
+		$method = $input['exact'] ? 'exact_match' : 'alpha_match';
+		Api::set_filter($method,$input['filter']);
+		Api::set_filter('add',$input['add']);
+		Api::set_filter('update',$input['update']);
+
+		$albums = Browse::get_objects();
+
+		// Set the offset
+		xmlData::set_offset($input['offset']);
+		xmlData::set_limit($input['limit']);
+		ob_end_clean();
+		echo xmlData::albums($albums);
+
+	} // albums
+
+	/**
+	 * album
+	 * This returns a single album based on the UID provided
+	 */
+	public static function album($input) { 
+
+		$uid = scrub_in($input['filter']);
+		echo xmlData::albums(array($uid));
+
+	} // album
 
 } // API class
 ?>
