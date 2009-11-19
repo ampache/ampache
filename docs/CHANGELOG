@@ -4,6 +4,8 @@
 
 --------------------------------------------------------------------------
   v.3.5.2
+	- Fix typo that caused song count to not be set on tag xml response
+	- Fix tag methods so that alpha_match and exact_match work
 	- Fix limit and offset not working on search_songs API method
 	- Fix import m3u on catalog build so it does something
 	- Fix inconsistent view during catalog operations
