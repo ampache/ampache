@@ -90,7 +90,7 @@ if (!function_exists('hash') OR !function_exists('inet_pton') OR (strtoupper(sub
 } 
 
 /** This is the version.... fluf nothing more... **/
-$results['version']		= '3.5.1'. $svn_version; 
+$results['version']		= '3.5.2'. $svn_version; 
 $results['int_config_version']	= '10'; 
 
 $results['raw_web_path']	= $results['web_path'];
