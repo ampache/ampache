@@ -280,7 +280,7 @@ class Query {
 				} 
 			break; 
 			case 'tag': 
-				$valid_array = array('object_type'); 
+				$valid_array = array('object_type','exact_match','alpha_match'); 
 			break; 
 			case 'video': 
 				$valid_array = array('starts_with','exact_match','alpha_match'); 
@@ -953,6 +953,19 @@ class Query {
 				break;
 			} // end filter
 		break; 
+		case 'tag': 
+                        switch ($filter) {
+                                case 'alpha_match':
+                                        $filter_sql = " `tag`.`name` LIKE '%" . Dba::escape($value) . "%' AND ";
+                                break;
+                                case 'exact_match':
+                                        $filter_sql = " `tag`.`name` = '" . Dba::escape($value) . "' AND ";
+                                break;
+                                default:
+                                        // Rien a faire
+                                break;
+                        } // end filter
+                break;
 		case 'video': 
 			switch ($filter) { 
 				case 'alpha_match': 

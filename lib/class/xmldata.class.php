@@ -188,7 +188,7 @@ class xmlData {
 					"\t<name><![CDATA[$tag->name]]></name>\n" . 
 					"\t<albums>" . intval($counts['album']) . "</albums>\n" . 
 					"\t<artists>" . intval($counts['artist']) . "</artists>\n" . 
-					"\t<songs>" . intval($counts['songs']) . "</songs>\n" . 
+					"\t<songs>" . intval($counts['song']) . "</songs>\n" . 
 					"\t<videos>" . intval($counts['video']) . "</videos>\n" . 
 					"\t<playlists>" . intval($count['playlist']) . "</playlists>\n" . 
 					"\t<stream>" . intval($count['live_stream']) . "</stream>\n" . 
