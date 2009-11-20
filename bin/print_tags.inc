@@ -1,3 +1,4 @@
+#!/usr/bin/env php
 <?php
 /*
 
@@ -23,14 +24,36 @@ define('NO_SESSION','1');
 $path = dirname(__FILE__); 
 $prefix = realpath($path . '/../'); 
 require_once $prefix . '/lib/init.php';
+$version = "1.0";
 
-if (count($GLOBALS['argv']) == '1') { $filename = usage(); }
-else { 
+$exts = Config::get('catalog_file_pattern');
+
+$allowexts = preg_split('/\|/', $exts);
+
+if (count($GLOBALS['argv']) == '1') {
+	usage();
+	exit;
+} else { 
 	$filename = $GLOBALS['argv']['1']; 
 	$send_mail = $GLOBALS['argv']['2'];
 }
 
-echo "Reading: $filename\n";
+if(!file_exists($filename)) {
+	print _("File not found.");
+	print "\n";
+	usage();
+	exit;
+}
+
+if(file_check($filename, $allowexts) === false) {
+	print _("File type is not allowd.");
+	print "\n";
+	usage();
+	exit;
+}
+
+printf(_('Reading: %s'), $filename);
+print "\n";
 
 /* Attempt to figure out what catalog it comes from */
 $sql = "SELECT `catalog`.`id` FROM `song` INNER JOIN `catalog` ON `song`.`catalog`=`catalog`.`id` WHERE `song`.`file` LIKE '%" . Dba::escape($filename) . "'";
@@ -40,7 +63,10 @@ $results = Dba::fetch_assoc($db_results);
 $catalog = new Catalog($results['id']);
 
 $info = new vainfo($filename,'','','',$catalog->sort_pattern,$catalog->rename_pattern);
-echo "Using: $catalog->sort_pattern AND $catalog->rename_pattern for file pattern matching\n";
+if(isset($catalog->sort_pattern) AND isset($catalog->rename_pattern)) {
+	printf(_('Using: %s AND %s for file pattern matching'), $catalog->sort_pattern, $catalog->rename_pattern);
+	print "\n";
+}
 $info->get_info();
 $results = $info->tags;
 $results['file'] = $filename;
@@ -56,28 +82,38 @@ if ($send_mail) {
 }
 
 
-echo "Results Seen by GetID3()\n";
+echo _("Results Seen by GetID3()");
+echo "\n";
 print_r($info);
 echo "\n------------------------------------------------------------------\n";
-echo "Results Seen by Ampache using $key\n";
+printf(_('Results Seen by Ampache using %s'), $key[0]);
+echo "\n";
 print_r($ampache_results);
 
-function usage( ) {
-        $text = _( "[print_tags.php.inc]
-This commandline script will display the tag information for the specified filename as it will 
-appear to Ampache. 
-        \n" );
-        echo $text;
-        
-        $text = _( "Filename:" );
-        echo $text;
-        
-        // grab a character ignoring whitespace
-	$input = trim(fgets(STDIN));
+function usage() {
+	global $version;
 
-	return $input;
+	$text  = sprintf(_('%s Version %s'), 'print_tags.inc', $version);
+	$text .= "\n\n";
+	$text .= _('Usage:');
+	$text .= "\n";
+	$text .= _('php print_tags.inc <Filename>');
+	$text .= "\n\n";
 
-}       // usage()
+	return print $text;
+
+}// usage()
+
+function file_check($filename, $allowexts) {
+
+	$pathinfo = pathinfo($filename);
+	$exts = $pathinfo['extension'];
+
+	if(in_array($exts, $allowexts)) {
+		return true;
+	} else {
+		return false;
+	}
+} // file_check()
 
 ?>
-
