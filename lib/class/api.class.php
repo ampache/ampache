@@ -50,15 +50,15 @@ class Api {
 
 		switch ($filter) { 
 			case 'add': 
-				        // Check for a range, if no range default to gt
-				        if (strpos('/',$value)) {
+				       // Check for a range, if no range default to gt
+				       if (strpos('/',$value)) {
 						$elements = explode('/',$value);
 						Browse::set_filter('add_lt',strtotime($elements['1']));
 						Browse::set_filter('add_gt',strtotime($elements['0']));
-				        }
-				        else {
+				       }
+				       else {
 						Browse::set_filter('add_gt',strtotime($value));
-				        }
+				       }
 			break; 
 			case 'update': 
 				// Check for a range, if no range default to gt
@@ -341,6 +341,360 @@ class Api {
 		echo xmlData::albums(array($uid));
 
 	} // album
+
+	/**
+	 * album_songs
+	 * This returns the songs of a specified album
+	 */
+	public static function album_songs($input) { 
+
+			$album = new Album($input['filter']);
+			$songs = $album->get_songs();
+
+			// Set the offset
+			xmlData::set_offset($input['offset']);
+			xmlData::set_limit($input['limit']);
+
+			ob_end_clean();
+			echo xmlData::songs($songs);
+
+	} // album_songs	
+
+	/**
+	 * tags
+	 * This returns the tags based on the specified filter
+	 */
+	public static function tags($input) { 
+
+			Browse::reset_filters();
+			Browse::set_type('tag');
+			Browse::set_sort('name','ASC');
+
+			$method = $input['exact'] ? 'exact_match' : 'alpha_match';
+			Api::set_filter($method,$input['filter']);
+			$tags = Browse::get_objects();
+
+			// Set the offset
+			xmlData::set_offset($input['offset']);
+			xmlData::set_limit($input['limit']);
+
+			ob_end_clean();
+			echo xmlData::tags($tags);
+
+	} // tags
+
+	/**
+	 * tag
+	 * This returns a single tag based on UID
+	 */
+	public static function tag($input) { 
+
+			$uid = scrub_in($input['filter']);
+			ob_end_clean();
+			echo xmlData::tags(array($uid));
+
+	} // tag
+
+	/**
+	 * tag_artists
+	 * This returns the artists assoicated with the tag in question as defined by the UID
+	 */
+	public static function tag_artists($input) { 
+
+			$artists = Tag::get_tag_objects('artist',$input['filter']);
+
+			xmlData::set_offset($input['offset']);
+			xmlData::set_limit($input['limit']);
+
+			ob_end_clean();
+			echo xmlData::artists($artists);
+
+	} // tag_artists
+
+	/**
+	 * tag_albums
+	 * This returns the albums assoicated with the tag in question
+	 */
+	public static function tag_albums($input) { 
+
+			$albums = Tag::get_tag_objects('album',$input['filter']);
+
+			xmlData::set_offset($input['offset']);
+			xmlData::set_limit($input['limit']);
+
+			ob_end_clean();
+			echo xmlData::albums($albums);
+
+	} // tag_albums
+
+	/**
+	 * tag_songs
+	 * returns the songs for this tag
+	 */
+	public static function tag_songs($input) { 
+
+			$songs = Tag::get_tag_objects('song',$input['filter']);
+
+			xmlData::set_offset($input['offset']);
+			xmlData::set_limit($input['limit']);
+
+			ob_end_clean();
+			echo xmlData::songs($songs);
+
+	} // tag_songs
+
+	/**
+	 * songs
+	 * Returns songs based on the specified filter
+	 */
+	public static function songs($input) { 
+
+			Browse::reset_filters();
+			Browse::set_type('song');
+			Browse::set_sort('title','ASC');
+
+			$method = $input['exact'] ? 'exact_match' : 'alpha_match';
+			Api::set_filter($method,$input['filter']);
+			Api::set_filter('add',$input['add']);
+			Api::set_filter('update',$input['update']);
+
+			$songs = Browse::get_objects();
+
+			// Set the offset
+			xmlData::set_offset($input['offset']);
+			xmlData::set_limit($input['limit']);
+
+			ob_end_clean();
+			echo xmlData::songs($songs);
+
+	} // songs
+
+	/**
+	 * song
+	 * returns a single song
+	 */
+	public static function song($input) { 
+
+			$uid = scrub_in($input['filter']);
+
+			ob_end_clean();
+			echo xmlData::songs(array($uid));
+
+	} // song
+
+	/**
+	 * url_to_song
+	 * This takes a url and returns the song object in question
+	 */
+	public static function url_to_song($input) { 
+
+			// Don't scrub in we need to give her raw and juicy to the function
+			$url = $input['url'];
+
+			$song_id = Song::parse_song_url($url);
+
+			ob_end_clean();
+			echo xmlData::songs(array($song_id));
+
+	} // url_to_song
+
+	/**
+ 	 * playlists
+	 * This returns playlists based on the specified filter
+	 */
+	public static function playlists($input) { 
+
+			Browse::reset_filters();
+			Browse::set_type('playlist');
+			Browse::set_sort('name','ASC');
+
+			$method = $input['exact'] ? 'exact_match' : 'alpha_match';
+			Api::set_filter($method,$input['filter']);
+
+			$playlist_ids = Browse::get_objects();
+
+			xmlData::set_offset($input['offset']);
+			xmlData::set_limit($input['limit']);
+
+			ob_end_clean();
+			echo xmlData::playlists($playlist_ids);
+
+	} // playlists
+
+	/**
+	 * playlist
+	 * This returns a single playlist
+	 */
+	public static function playlist($input) { 
+
+			$uid = scrub_in($input['filter']);
+
+			ob_end_clean();
+			echo xmlData::playlists(array($uid));
+
+	} // playlist
+
+	/**
+	 * playlist_songs
+	 * This returns the songs for a playlist
+	 */
+	public static function playlist_songs($input) { 
+
+			$playlist = new Playlist($input['filter']);
+			$items = $playlist->get_items();
+
+			foreach ($items as $object) {
+			        if ($object['type'] == 'song') {
+			                $songs[] = $object['object_id'];
+			        }
+			} // end foreach
+
+			xmlData::set_offset($input['offset']);
+			xmlData::set_limit($input['limit']);
+			ob_end_clean();
+			echo xmlData::songs($songs);
+
+	} // playlist_songs
+
+	/**
+	 * search_songs
+	 * This returns the songs and returns... songs
+	 */
+	public static function search_songs($input) { 
+
+			$array['s_all'] = $input['filter'];
+			ob_end_clean();
+
+			xmlData::set_offset($input['offset']);
+			xmlData::set_limit($input['limit']);
+
+			//WARNING!!! This is a horrible hack that has to be here because
+			//Run search references these variables, ooh the huge manatee
+			unset($input['limit'],$input['offset']);
+
+			$results = run_search($array);
+
+			echo xmlData::songs($results);
+
+	} // search_songs
+
+	/**
+	 * videos
+	 * This returns video objects!
+	 */
+	public static function videos($input) { 
+
+			Browse::reset_filters();
+			Browse::set_type('video');
+			Browse::set_sort('title','ASC');
+
+			$method = $input['exact'] ? 'exact_match' : 'alpha_match';
+			Api::set_filter($method,$input['filter']);
+
+			$video_ids = Browse::get_objects();
+
+			xmlData::set_offset($input['offset']);
+			xmlData::set_limit($input['limit']);
+
+			echo xmlData::videos($video_ids);
+
+	} // videos
+
+	/**
+	 * video	
+	 * This returns a single video
+	 */
+	public static function video($input) { 
+
+			$video_id = scrub_in($input['filter']);
+
+			echo xmlData::videos(array($video_id));
+
+
+	} // video
+
+	/**
+	 * localplay
+	 * This is for controling localplay
+	 */
+	public static function localplay($input) { 
+
+			// Load their localplay instance
+			$localplay = new Localplay(Config::get('localplay_controller'));
+			$localplay->connect();
+
+			switch ($input['command']) {
+			        case 'next':
+			        case 'prev':
+			        case 'play':
+			        case 'stop':
+			                $result_status = $localplay->$input['command']();
+			                $xml_array = array('localplay'=>array('command'=>array($input['command']=>make_bool($result_status))));
+			                echo xmlData::keyed_array($xml_array);
+			        break;
+			        default:
+			                // They are doing it wrong
+			                echo xmlData::error('405',_('Invalid Request'));
+			        break;
+			} // end switch on command
+
+	} // localplay
+
+	/**
+	 * democratic
+	 * This is for controlling democratic play
+	 */
+	public static function democratic($input) { 
+
+			// Load up democratic information
+			$democratic = Democratic::get_current_playlist();
+			$democratic->set_parent();
+
+			switch ($input['method']) {
+			        case 'vote':
+			                $type = 'song';
+			                $media = new $type($input['oid']);
+			                if (!$media->id) {
+			                        echo xmlData::error('400',_('Media Object Invalid or Not Specified'));
+			                        break;
+			                }
+			                $democratic->vote(array(array('song',$media->id)));
+
+			                // If everything was ok
+			                $xml_array = array('action'=>$input['action'],'method'=>$input['method'],'result'=>true);
+			                echo xmlData::keyed_array($xml_array);
+			        break;
+			        case 'devote':
+			                $type = 'song';
+			                $media = new $type($input['oid']);
+			                if (!$media->id) {
+			                        echo xmlData::error('400',_('Media Object Invalid or Not Specified'));
+			                }
+
+			                $uid = $democratic->get_uid_from_object_id($media->id,$type);
+			                $democratic->remove_vote($uid);
+
+			                // Everything was ok
+			                $xml_array = array('action'=>$input['action'],'method'=>$input['method'],'result'=>true);
+			                echo xmlData::keyed_array($xml_array);
+			        break;
+			        case 'playlist':
+			                $objects = $democratic->get_items();
+			                Song::build_cache($democratic->object_ids);
+			                Democratic::build_vote_cache($democratic->vote_ids);
+			                xmlData::democratic($objects);
+			        break;
+			        case 'play':
+			                $url = $democratic->play_url();
+					$xml_array = array('url'=>$url);
+					echo xmlData::keyed_array($xml_array);
+			        break;
+			        default:
+					echo xmlData::error('405',_('Invalid Request'));
+			break;
+		} // switch on method
+
+	} // democratic
 
 } // API class
 ?>
