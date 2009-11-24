@@ -27,13 +27,14 @@
  */
 
 define('NO_SESSION','1');
-$path = dirname(__FILE__); 
-$prefix = realpath($path . '/../'); 
+$path = dirname(__FILE__);
+$prefix = realpath($path . '/../');
 require_once $prefix . '/lib/init.php';
 
 // This is all broken currently so just jump ship
-echo "Writting of Tags to files is not currently supported by Getid3() use at your own risk.\n"; 
-flush(); 
+echo _("Writting of Tags to files is not currently supported by Getid3() use at your own risk.");
+echo "\n";
+flush();
 
 require_once Config::get('prefix') . '/modules/getid3/write.vorbis.php';
 require_once Config::get('prefix') . '/modules/getid3/write.apetag.php';
@@ -42,19 +43,20 @@ require_once Config::get('prefix') . '/modules/getid3/write.flac.php';
 $flag = new Flag();
 $flagged_ids = Flag::get_approved();
 
-if (!count($flagged_ids)) { 
-	echo "No Flagged Songs Found, exiting...\n"; 
-	exit; 
-} 
+if (!count($flagged_ids)) {
+	echo _("No Flagged Songs Found, exiting...");
+	echo "\n";
+	exit;
+}
 
 // Loop through every song that has an approved flag
-foreach($flagged_ids as $flagged){
+foreach($flagged_ids as $flagged) {
 
 	$flag = new Flag($flagged);
 	$song = new Song($flag->object_id);
 
 	// Decide on what type of tag format to use, base on song type(a better way maybe?)
-	switch($song->type){ 
+	switch($song->type) {
 		case 'mp3':
 		case 'mp2':
 		case 'mp1':
@@ -70,16 +72,18 @@ foreach($flagged_ids as $flagged){
 			Flag::fill_tags( &$tagWriter, &$song, 'comment' );
 			break;
 		default:
-			echo 'No Tag';
+			echo _('No Tag');
 	} // end switch 
 	
 	if ( isset($tagWriter) ) {
-		
+
 		// Write out the tag
 		try {
 			$tagWriter->write();
-			echo 'Updated song ' . $song->title . ' by ' . $song->get_artist_name() . "\n"; 
-			flush(); 
+			// HINT: %1$s: title, %2$s: artist_name
+			printf (_('Updated song %1$s by %2$s'), $song->title, $song->get_artist_name());
+			echo "\n";
+			flush();
 			$flag->delete();
 		}
 		catch ( Exception $e ) {
@@ -93,4 +97,3 @@ foreach($flagged_ids as $flagged){
 }
 
 ?>
-

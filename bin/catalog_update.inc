@@ -24,7 +24,8 @@ $path = dirname(__FILE__);
 $prefix = realpath($path . '/../');
 require_once $prefix . '/lib/init.php';
 
-echo "- Catalog Update -\n Usage: catalog_update.inc [CATALOG NAME] [-c|-v|-a]\n-c\tClean Catalogs\n-v\tVerify Catalogs\n-a\tAdd to Catalogs\n*Default behavior is to do all 3*\n";
+usage();
+
 ob_end_flush();
 
 $catclean = 0;		//All off by default
@@ -67,21 +68,24 @@ while ($row = Dba::fetch_row($db_results)) {
 	echo "Reading: $catalog->name \n";
 	if ($catclean == 1) {
 		// Clean out dead files
-		echo "- Starting Clean - \n";
+		echo _("- Starting Clean - ");
+		echo "\n";
 		$catalog->clean_catalog();
 		echo "------------------\n\n";
 	}
 
 	if ($catverify == 1) {
 		// Verify Existing
-		echo "- Starting Verify - \n";
+		echo _("- Starting Verify - ");
+		echo "\n";
 		$catalog->verify_catalog($row['0']);
 		echo "-------------------\n\n";
 	}
 
 	if ($catadd == 1) {
 		// Look for new files
-		echo "- Starting Add - \n";
+		echo _("- Starting Add - ");
+		echo "\n";
 		$catalog->add_to_catalog();
 		echo "----------------\n\n";
 	}
@@ -96,5 +100,20 @@ function ob_html_strip($string) {
 	return $string;
 
 } // ob_html_strip
+
+function usage() {
+	echo _("- Catalog Update -");
+	echo "\n";
+	echo _("Usage: catalog_update.inc [CATALOG NAME] [-c|-v|-a]");
+	echo "\n-c\t";
+	echo _('Clean Catalogs');
+	echo "\n-v\t";
+	echo _('Verify Catalogs');
+	echo "\n-a\t";
+	echo _('Add to Catalogs');
+	echo "\n";
+	echo _("*Default behavior is to do all 3*");
+	echo "\n";
+}
 
 ?>

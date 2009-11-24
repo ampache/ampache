@@ -38,11 +38,11 @@
 $alphabet_prefix = true;
  
 define('NO_SESSION','1');
-$path = dirname(__FILE__); 
-$prefix = realpath($path . '/../'); 
+$path = dirname(__FILE__);
+$prefix = realpath($path . '/../');
 require_once $prefix . '/lib/init.php';
 
-ob_end_clean(); 
+ob_end_clean();
 
 /* First Clean the catalog to we don't try to write anything we shouldn't */
 
@@ -51,33 +51,38 @@ $db_results = Dba::query($sql);
 
 $catalogs = array();
 
-while ($r = Dba::fetch_row($db_results)) { 
-
+while ($r = Dba::fetch_row($db_results)) {
 
 	$catalog = new Catalog($r['0']);
 	$songs = $catalog->get_catalog_files();
 
-	echo "Starting Catalog: " . stripslashes($catalog->name) . "\n";
+	printf (_('Starting Catalog: %s'), stripslashes($catalog->name));
+	echo "\n";
 
 	/* Foreach through each file and find it a home! */
-	foreach ($songs as $song) { 
+	foreach ($songs as $song) {
 		/* Find this poor song a home */
 		$song->format();
 		$song->format_pattern();
 		$directory 	= sort_find_home($song,$catalog->sort_pattern,$catalog->path);
-		$filename 	= $song->f_file; 
+		$filename 	= $song->f_file;
 		$fullpath = $directory . "/" . $filename;
 
 		/* Check for Demo Mode */
-		if ($test_mode) { 
+		if ($test_mode) {
 			/* We're just talking here... no work */
-			echo "Moving File...\n\tSource: $song->file\n\tDest: $fullpath\n";
+			echo _("Moving File...");
+			echo "\n\t";
+			printf (_('Source: %s'), $song->file);
+			echo "\n\t";
+			printf (_('Dest: %s'), $fullpath);
+			echo "\n";
 			flush();
 		}
-		/* We need to actually do the moving (fake it if we are testing) 
+		/* We need to actually do the moving (fake it if we are testing)
 		 * Don't try to move it, if it's already the same friggin thing!
 		 */
-		if ($song->file != $fullpath && strlen($fullpath)) { 
+		if ($song->file != $fullpath && strlen($fullpath)) {
 			sort_move_file($song,$fullpath);
 		}
 
@@ -85,14 +90,13 @@ while ($r = Dba::fetch_row($db_results)) {
 
 } // end foreach catalogs
 
-
 /************** FUNCTIONS *****************/
 /**
  * sort_find_home
  * Get the directory for this file from the catalog and the song info using the sort_pattern 
  * takes into account various artists and the alphabet_prefix
  */
-function sort_find_home($song,$sort_pattern,$base) { 
+function sort_find_home($song,$sort_pattern,$base) {
 
 	$home = rtrim($base,"\/");
 	$home = rtrim($home,"\\");
@@ -103,22 +107,22 @@ function sort_find_home($song,$sort_pattern,$base) {
 	$track	= sort_clean_name($song->track);
 	$title	= sort_clean_name($song->title);
 	$year	= sort_clean_name($song->year);
-	$comment = sort_clean_name($song->comment); 
+	$comment = sort_clean_name($song->comment);
 
 	/* Do the various check */
 	$album_object = new Album($song->album);
-	$album_object->format(); 
-	if ($album_object->artist_count != '1') { 
+	$album_object->format();
+	if ($album_object->artist_count != '1') {
 		$artist = "Various";
 	}
-	
+
 	/* IF we want a,b,c,d we need to know the first element */
-	if ($GLOBALS['alphabet_prefix']) { 
+	if ($GLOBALS['alphabet_prefix']) {
 		$sort_pattern = preg_replace("/\/?%o\//","",$sort_pattern);
 		$first_element = substr($sort_pattern,0,2);
 		$element = sort_element_name($first_element);
 		if (!$element) { $alphabet = 'ZZ'; }
-		else { 	$alphabet = strtoupper(substr(${$element},0,1)); } 
+		else { 	$alphabet = strtoupper(substr(${$element},0,1)); }
 		$alphabet = preg_replace("/[^A-Za-z0-9]/","ZZ",$alphabet);
 
 		$home .= "/$alphabet";
@@ -131,7 +135,7 @@ function sort_find_home($song,$sort_pattern,$base) {
 
 	/* Remove non A-Z0-9 chars */
 	$sort_pattern = preg_replace("[^\\\/A-Za-z0-9\-\_\ \'\,\(\)]","_",$sort_pattern);
-	
+
 	$home .= "/$sort_pattern";
 
 	return $home;
@@ -144,7 +148,7 @@ function sort_find_home($song,$sort_pattern,$base) {
  */
 function sort_element_name($key) { 
 
-	switch ($key) { 
+	switch ($key) {
 		case '%t':
 			return 'title';
 		break;
@@ -160,7 +164,7 @@ function sort_element_name($key) {
 		case '%y':
 			return 'year';
 		break;
-		default: 
+		default:
 		break;
 	} // switch on key
 
@@ -175,7 +179,7 @@ function sort_element_name($key) {
  * Before it is put togeather, this removes / and \ and also
  * once I figure it out, it'll clean other stuff
  */
-function sort_clean_name($string) { 
+function sort_clean_name($string) {
 
 	/* First remove any / or \ chars */
 	$string = preg_replace('/[\/\\\]/','-',$string);
@@ -196,9 +200,9 @@ function sort_clean_name($string) {
  * Instead we cheeseball it and walk through the new dir structure and make
  * sure that the directories exist, once the dirs exist then we do a copy
  * and unlink.. This is a little unsafe, and as such it verifys the copy
- * worked by doing a filesize() before unlinking. 
+ * worked by doing a filesize() before unlinking.
  */
-function sort_move_file($song,$fullname) { 
+function sort_move_file($song,$fullname) {
 
 	$old_dir	= dirname($song->file);
 
@@ -212,21 +216,24 @@ function sort_move_file($song,$fullname) {
 	/* We not need the leading / */
 	unset($data[0]);
 
-	foreach ($data as $dir) { 
-	
+	foreach ($data as $dir) {
+
 		$dir = sort_clean_name($dir);
 		$path .= "/" . $dir;
 
 		/* We need to check for the existance of this directory */
-		if (!is_dir($path)) { 
-			if ($GLOBALS['test_mode']) { 
-				echo "\tMaking $path Directory\n";
+		if (!is_dir($path)) {
+			if ($GLOBALS['test_mode']) {
+				echo "\t";
+				printf (_('Making %s Directory'), $path);
+				echo "\n";
 			}
-			else { 
-				debug_event('mkdir',"Creating $path directory",'5'); 
-				$results = mkdir($path);	
-				if (!$results) { 
-					echo "Error: Unable to create $path move failed\n";
+			else {
+				debug_event('mkdir',"Creating $path directory",'5');
+				$results = mkdir($path);
+				if (!$results) {
+					printf (_('Error: Unable to create %s move failed'), $path);
+					echo "\n";
 					return false;
 				}
 			} // else we aren't in test mode
@@ -235,51 +242,56 @@ function sort_move_file($song,$fullname) {
 	} // foreach dir
 
 	/* Now that we've got the correct directory structure let's try to copy it */
-	if ($GLOBALS['test_mode']) { 
-		echo "\tCopying $file to $directory\n";
+	if ($GLOBALS['test_mode']) {
+		echo "\t";
+		// HINT: %1$s: file, %2$s: directory
+		printf (_('Copying %1$s to %2$s'), $file, $directory);
+		echo "\n";
 		$sql = "UPDATE song SET file='" . Dba::escape($fullname) . "' WHERE id='" . Dba::escape($song->id) . "'";
 		echo "\tSQL: $sql\n";
 		flush(); 
 	}
-	else { 
+	else {
 
 		/* Check for file existance */
-		if (file_exists($fullname)) { 
-			debug_event('file exists','Error: $fullname already exists','1'); 
-			echo "Error: $fullname already exists\n"; 
+		if (file_exists($fullname)) {
+			debug_event('file exists','Error: $fullname already exists','1');
+			printf (_('Error: %s already exists'), $filename);
+			echo "\n";
 			return false;
 		}
-	
+
 		$results = copy($song->file,$fullname);
-		debug_event('copy','Copied ' . $song->file . ' to ' . $fullname,'5'); 
-		
+		debug_event('copy','Copied ' . $song->file . ' to ' . $fullname,'5');
+
 		/* Look for the folder art and copy that as well */
-		if (!Config::get('album_art_preferred_filename') OR strstr(Config::get('album_art_preferred_filename'),"%")) { 
+		if (!Config::get('album_art_preferred_filename') OR strstr(Config::get('album_art_preferred_filename'),"%")) {
 			$folder_art 	= $directory . '/folder.jpg';
 			$old_art 	= $old_dir . '/folder.jpg';
 		}
-		else { 
-			$folder_art 	= $directory . "/" . sort_clean_name(Config::get('album_art_preferred_filename')); 
-			$old_art 	= $old_dir . "/" . sort_clean_name(Config::get('album_art_preferred_filename')); 
+		else {
+			$folder_art 	= $directory . "/" . sort_clean_name(Config::get('album_art_preferred_filename'));
+			$old_art 	= $old_dir . "/" . sort_clean_name(Config::get('album_art_preferred_filename'));
 		}
 
 		debug_event('copy_art','Copied ' . $old_art . ' to ' . $folder_art,'5');
 		@copy($old_art,$folder_art);
-		
-		if (!$results) { echo "Error: Unable to copy file to $fullname\n"; return false; }
+
+		if (!$results) { printf (_('Error: Unable to copy file to %s'), $fullname); echo "\n"; return false; }
 
 		/* Check the filesize */
 		$new_sum = filesize($fullname);
 		$old_sum = filesize($song->file);
 
-		if ($new_sum != $old_sum OR !$new_sum) { 
-			echo "Error: Size Inconsistency, not deleting " . $song->file . "\n"; 
-			return false; 
+		if ($new_sum != $old_sum OR !$new_sum) {
+			printf (_('Error: Size Inconsistency, not deleting %s'), $song->file);
+			echo "\n";
+			return false;
 		} // end if sum's don't match
-		
+
 		/* If we've made it this far it should be safe */
 		$results = unlink($song->file);
-		if (!$results) { echo "Error: Unable to delete " . $song->file . "\n"; }
+		if (!$results) { printf (_('Error: Unable to delete %s'), $song->file); echo "\n"; }
 
 		/* Update the catalog */
 		$sql = "UPDATE song SET file='" . Dba::escape($fullname) . "' WHERE id='" . Dba::escape($song->id) . "'";

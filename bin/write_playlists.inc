@@ -30,48 +30,50 @@ define('NO_SESSION','1');
 require ("../lib/init.php");
 
 
-if (!$GLOBALS['argv']['1'] || $GLOBALS['argv']['1'] == '-h') { usage(); } 
-else { 
-	$dirname	= $GLOBALS['argv']['1']; 
-	$type		= $GLOBALS['argv']['2']; 
-} 
-
+if (!$GLOBALS['argv']['1'] || $GLOBALS['argv']['1'] == '-h') { usage(); }
+else {
+	$dirname	= $GLOBALS['argv']['1'];
+	$type		= $GLOBALS['argv']['2'];
+}
 
 // Make sure the output dir is valid and writeable
-if (!is_writeable($dirname)) { 
-	echo "Error: Directory $dirname not writeable\n"; 
+if (!is_writeable($dirname)) {
+	printf (_('Error: Directory %s not writeable'), $dirname);
+	echo "\n"; 
 }
 
 // Switch on the type of playlist dump we want to do 
 // here
-switch ($type) { 
-	case 'playlists': 
-
-
-	break;
-	case 'artist': 
+switch ($type) {
+	case 'playlists':
 
 	break;
-	default: 
+	case 'artist':
 
-
+	break;
+	default:
 
 	break;
 } // end type switch
 
 /* FUNCTIONS */
-function usage() { 
+function usage() {
+
+$desc1 = _("This will dump a collection of m3u playlists based on type");
+$desc2 = _("Types:");
+$desc3 = _("Dumps all Albums as individual playlists");
+$desc4 = _("Dumps all of your Playlists as m3u's");
+$desc5 = _("Dumps all Artists as individual playlists");
 
 $string = "write_playlists.php.inc [-h] <DIRNAME> <TYPE>
 
-	This will dump a collection of m3u playlists based on type
-	Types:
-		default		Dumps all Albums as individual playlists
-		playlists	Dumps all of your Playlists as m3u's
-		artist		Dumps all Artists as individual playlists\n\n";
+	$desc1
+	$desc2
+		default		$desc3
+		playlists	$desc4
+		artist		$desc5\n\n";
 
 	exit($string); 
 
 } // useage
-
 ?>

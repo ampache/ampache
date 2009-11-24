@@ -39,53 +39,56 @@ $translate = array('local_host'=>'database_hostname',
 	'sess_cookielife'=>'session_cookielife',
 	'sess_cookiesecure'=>'session_cookiesecure'); 
 
-$path = dirname(__FILE__); 
-$prefix = realpath($path . '/../'); 
-$old_config = file_get_contents($prefix . '/config/ampache.cfg.php'); 
+$path = dirname(__FILE__);
+$prefix = realpath($path . '/../');
+$old_config = file_get_contents($prefix . '/config/ampache.cfg.php');
 
-$data = explode("\n",$old_config); 
+$data = explode("\n",$old_config);
 
-echo "Parsing old config file...\n"; 
+echo _("Parsing old config file...");
+echo "\n";
 
-foreach ($data as $line) { 
+foreach ($data as $line) {
 
-	// Replace a # with ; 
-	if ($line['0'] == '#') { 
-		$line = substr_replace($line,";",0,1); 
-	} 
-	
-	foreach ($unmigratable as $option=>$default) { 
-		if (strstr($line,$option) AND !$migrated[$option]) { 
-			$line = $option . " = \"$default\""; 
-			$migrated[$option] = true; 
-		} 
-		elseif (strstr($line,$option)) { 
-			$line = ';' . $line; 
-		} 
-	} 
+	// Replace a # with ;
+	if ($line['0'] == '#') {
+		$line = substr_replace($line,";",0,1);
+	}
 
-	foreach ($translate as $old=>$new) { 
-		if (strstr($line,$old)) { 
-			$line = str_replace($old,$new,$line); 
-		} 
-	} 
+	foreach ($unmigratable as $option=>$default) {
+		if (strstr($line,$option) AND !$migrated[$option]) {
+			$line = $option . " = \"$default\"";
+			$migrated[$option] = true;
+		}
+		elseif (strstr($line,$option)) {
+			$line = ';' . $line;
+		}
+	}
 
-	$new_config .= $line . "\n"; 
+	foreach ($translate as $old=>$new) {
+		if (strstr($line,$old)) {
+			$line = str_replace($old,$new,$line);
+		}
+	}
+
+	$new_config .= $line . "\n";
 
 } // end foreach lines
 
-
-echo "Parse complete, writing\n"; 
+echo _("Parse complete, writing");
+echo "\n";
 
 $handle = fopen($prefix . '/config/ampache.cfg.php','w');
 
-$worked = fwrite($handle,$new_config); 
+$worked = fwrite($handle,$new_config);
 
-if ($worked) { 
-	echo "Write success, config migrated\n"; 
-} 
-else { 
-	echo "Access Denied, config migration failed\n"; 
-} 
+if ($worked) {
+	echo _("Write success, config migrated");
+	echo "\n";
+}
+else {
+	echo _("Access Denied, config migration failed");
+	echo "\n";
+}
 
 ?>

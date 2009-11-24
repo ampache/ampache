@@ -37,39 +37,44 @@ ob_end_clean();
 // If set to true / 1 then it will not prompt!
 //$GLOBALS['i_am_crazy'] = true; 
 
-if (!function_exists('iconv')) { 
-	echo "ERROR: Iconv required for this functionality, quiting\n"; 
-	exit; 
-} 
+if (!function_exists('iconv')) {
+	echo _("ERROR: Iconv required for this functionality, quiting");
+	echo "\n";
+	exit;
+}
 
 // Attempt to figure out what the System Charset is
-$source_encoding = iconv_get_encoding('output_encoding'); 
+$source_encoding = iconv_get_encoding('output_encoding');
 
 // Attempt a simple translation 
-$string = iconv(Config::get('site_charset'),Config::get('site_charset'),'For the Love of Music'); 
-echo "Testing Basic Translation, the two strings below should look the same\n"; 
-echo "Original: For the Love of Music\n"; 
-echo "Translated: $string\n"; 
+$string = sprintf(_('%s For the Love of Music'), iconv(Config::get('site_charset'),Config::get('site_charset')));
+echo _('Testing Basic Translation, the two strings below should look the same');
+echo "\n"; 
+echo _('Original: For the Love of Music');
+echo "\n";
+printf (_('Translated: %s'), $string);
+echo "\n";
 echo "---------------------------------------------------------------------\n"; 
-echo "Input Charset ($source_encoding):";
+printf (_('Input Charset (%s):'), $source_encoding);
 $input = trim(fgets(STDIN));
 
 if (strlen($input) > 0) { $source_encoding = trim($input); }
-echo "Using $source_encoding as source character set\n"; 
-
+printf (_('Using %s as source character set'), $source_encoding);
+echo "\n";
 
 $sql = "SELECT * FROM `catalog` WHERE `catalog_type`='local'"; 
 $db_results = Dba::query($sql); 
 
 while ($row = Dba::fetch_assoc($db_results)) { 
 
-	echo "Checking " . $row['name'] . " (" . $row['path'] . ")\n"; 
+	printf(_('Checking %s (%s)'), $row['name'], $row['path']);
+	echo "\n";
 	charset_directory_correct($row['path']); 	
 
 } // end of the catalogs
 
-echo "Finished checking filenames for valid chacters\n"; 
-
+echo _('Finished checking filenames for valid chacters');
+echo "\n";
 
 /**************************************************
  ****************** FUNCTIONS *********************
@@ -93,52 +98,59 @@ function charset_directory_correct($path) {
 	/* Open up the directory */
         $handle = opendir($path);
 
-	if (!is_resource($handle)) { 
-		echo "ERROR: Unable to open $path\n"; 
-		return false; 
-	} 
+	if (!is_resource($handle)) {
+		printf (_('ERROR: Unable to open %s'), $path);
+		echo "\n";
+		return false;
+	}
 
-	if (!chdir($path)) { 
-		echo "ERROR: Unable to chdir to $path\n"; 
-		return false; 
-	} 
+	if (!chdir($path)) {
+		printf (_('ERROR: Unable to chdir to %s'), $path);
+		echo "\n";
+		return false;
+	}
 
-	while ( false !== ($file = readdir($handle) ) ) { 
+	while ( false !== ($file = readdir($handle) ) ) {
 
-		if ($file == '.' || $file == '..') { continue; } 
+		if ($file == '.' || $file == '..') { continue; }
 
 		$full_file = $path.$slash_type.$file;
 
-		if (is_dir($full_file)) { 
-			charset_directory_correct($full_file); 
-			continue; 
-		} 
+		if (is_dir($full_file)) {
+			charset_directory_correct($full_file);
+			continue;
+		}
 
 		$verify_filename = iconv(Config::get('site_charset'),Config::get('site_charset') . '//IGNORE',$full_file);
 
-		if (strcmp($full_file,$verify_filename) != '0') { 
-			$translated_filename = iconv($source_encoding,Config::get('site_charset') . '//TRANSLIT',$full_file); 
+		if (strcmp($full_file,$verify_filename) != '0') {
+			$translated_filename = iconv($source_encoding,Config::get('site_charset') . '//TRANSLIT',$full_file);
 
 			// Make sure the extension stayed the same
-			if (substr($translated_filename,strlen($translated_filename)-3,3) != substr($full_file,strlen($full_file)-3,3)) { 
-				echo "Translation failure, stripping non-valid characters\n"; 
-				$translated_filename = iconv($source_encoding,Config::get('site_charset') . '//IGNORE',$full_file); 
-			} 
+			if (substr($translated_filename,strlen($translated_filename)-3,3) != substr($full_file,strlen($full_file)-3,3)) {
+				echo _("Translation failure, stripping non-valid characters");
+				echo "\n";
+				$translated_filename = iconv($source_encoding,Config::get('site_charset') . '//IGNORE',$full_file);
+			}
 
-			echo "Attempting to Transcode to " . Config::get('site_charset') . "\n"; 
+			printf (_('Attempting to Transcode to %s'), Config::get('site_charset'));
+			echo "\n";
 			echo "--------------------------------------------------------------------------------------------\n";
-			echo "OLD:$full_file has invalid chars\nNEW:$translated_filename\n"; 
+			printf (_('OLD: %s has invalid chars'), $full_file);
+			echo "\n";
+			printf (_('NEW: %s'), $translated_filename);
+			echo "\n";
 			echo "--------------------------------------------------------------------------------------------\n";
-			if (!$GLOBALS['i_am_crazy']) { 
-				echo "Rename File (Y/N):"; 
-				$input = trim(fgets(STDIN)); 
-				if (strcasecmp($input,'Y') == 0) { charset_rename_file($full_file,$translated_filename); } 
-				else { echo "\n\tNot Renaming...\n\n"; } 
-			} 
-			else { 
-				charset_rename_file($full_file,$translated_filename); 
-			} 
-		} 
+			if (!$GLOBALS['i_am_crazy']) {
+				echo _("Rename File (Y/N):");
+				$input = trim(fgets(STDIN));
+				if (strcasecmp($input,'Y') == 0) { charset_rename_file($full_file,$translated_filename); }
+				else { echo "\n\t"; echo _('Not Renaming...'); echo "\n\n"; }
+			}
+			else {
+				charset_rename_file($full_file,$translated_filename);
+			}
+		}
 
 	} // while reading file
 
@@ -148,54 +160,57 @@ function charset_directory_correct($path) {
  * charset_rename_file
  * This just takes a source / dest and does the renaming
  */
-function charset_rename_file($full_file,$translated_filename) { 
+function charset_rename_file($full_file,$translated_filename) {
 
 	// First break out the base directory name and make sure it exists
 	// incase our crap char is in the directory
-	$directory = dirname($translated_filename); 
+	$directory = dirname($translated_filename);
 	$data = preg_split("/[\/\\\]/",$directory);
-	$path = ''; 
+	$path = '';
 
 	foreach ($data as $dir) {
 
-		$dir = charset_clean_name($dir); 
-		$path .= "/" . $dir; 
+		$dir = charset_clean_name($dir);
+		$path .= "/" . $dir;
 
-		if (!is_dir($path)) { 
-			echo "\tMaking $path directory\n"; 
-			$results = mkdir($path); 
-			if (!$results) { 
-				echo "Error: Unable to create $path move failed, stopping\n"; 
-				return false; 
-			} 
+		if (!is_dir($path)) {
+			echo "\tMaking $path directory\n";
+			$results = mkdir($path);
+			if (!$results) {
+				printf (_('Error: Unable to create %s move failed, stopping'), $path);
+				echo "\n";
+				return false;
+			}
 		} // if the dir doesn't exist
 
 	} // end foreach
 
 	// Now to copy the file
-	$results = copy($full_file,$translated_filename); 
-	
-	if (!$results) { 
-		echo "Error: Copy Failed, not deleteing old file\n"; 
-		return false; 
-	} 
-	
-	$old_sum = filesize($full_file); 
-	$new_sum = filesize($translated_filename); 
+	$results = copy($full_file,$translated_filename);
 
-	if ($old_sum != $new_sum OR !$new_sum) { 
-		echo "Error: Size Inconsistency, not deleting" . $full_file . "\n"; 
-		return false; 
-	} 
+	if (!$results) {
+		echo _('Error: Copy Failed, not deleteing old file');
+		echo "\n";
+		return false;
+	}
 
-	$results = unlink($full_file); 
+	$old_sum = filesize($full_file);
+	$new_sum = filesize($translated_filename);
 
-	if (!$results) { echo "Error: Unable to delete " . $full_file . "\n"; return false; }  
-	
+	if ($old_sum != $new_sum OR !$new_sum) {
+		printf (_('Error: Size Inconsistency, not deleting %s'), $full_file);
+		echo "\n";
+		return false;
+	}
 
-	echo "File Moved...\n\n"; 
+	$results = unlink($full_file);
 
-	return true; 
+	if (!$results) { printf (_('Error: Unable to delete %s'), $full_file); echo "\n"; return false; }
+
+	echo _("File Moved...");
+	echo "\n\n";
+
+	return true;
 
 } // charset_rename_file
 
@@ -218,6 +233,5 @@ function charset_clean_name($string) {
         return $string;
 
 } // charset_clean_name
-
 
 ?>
