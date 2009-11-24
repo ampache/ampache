@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ampache\n"
 "Report-Msgid-Bugs-To: translations at ampache.org\n"
-"POT-Creation-Date: 2009-11-09 10:04+0900\n"
+"POT-Creation-Date: 2009-11-24 09:11+0900\n"
 "PO-Revision-Date: 2009-03-24 18:04+0100\n"
 "Last-Translator: Daniel Nylander <po@danielnylander.se>\n"
 "Language-Team: Swedish <tp-sv@listor.tp-sv.se>\n"
@@ -490,6 +490,15 @@ msgstr "Relaterad artist"
 msgid "Pure Random"
 msgstr "Helt slumpmässigt"
 
+#: ../../lib/class/api.class.php:209
+msgid "Error Invalid Handshake - "
+msgstr "Fel: ogiltig handskakning - "
+
+#: ../../lib/class/api.class.php:209
+#, fuzzy
+msgid "Invalid Username/Password"
+msgstr "Inget användarnamn/lösenord angavs"
+
 #: ../../lib/class/flag.class.php:312
 msgid "Approved"
 msgstr "Godkänd"
@@ -722,7 +731,7 @@ msgstr "Disk"
 msgid "Various"
 msgstr "Diverse"
 
-#: ../../lib/class/album.class.php:490 ../../lib/class/catalog.class.php:462
+#: ../../lib/class/album.class.php:490 ../../lib/class/catalog.class.php:468
 msgid "Error: Unable to open"
 msgstr "Fel: Kunde inte öppna"
 
@@ -738,27 +747,27 @@ msgstr "Fel - lösenorden stämmer inte överens"
 
 #: ../../lib/class/xmlrpcclient.class.php:64
 #: ../../lib/class/xmlrpcclient.class.php:97
-#: ../../lib/class/catalog.class.php:1278
-#: ../../lib/class/catalog.class.php:1352
-#: ../../lib/class/catalog.class.php:1385
-#: ../../lib/class/catalog.class.php:2395
+#: ../../lib/class/catalog.class.php:1288
+#: ../../lib/class/catalog.class.php:1362
+#: ../../lib/class/catalog.class.php:1395
+#: ../../lib/class/catalog.class.php:2410
 msgid "Error connecting to"
 msgstr "Fel vid anslutning till"
 
 #: ../../lib/class/xmlrpcclient.class.php:64
 #: ../../lib/class/xmlrpcclient.class.php:97
-#: ../../lib/class/catalog.class.php:1278
-#: ../../lib/class/catalog.class.php:1352
-#: ../../lib/class/catalog.class.php:1385
-#: ../../lib/class/catalog.class.php:2395
+#: ../../lib/class/catalog.class.php:1288
+#: ../../lib/class/catalog.class.php:1362
+#: ../../lib/class/catalog.class.php:1395
+#: ../../lib/class/catalog.class.php:2410
 msgid "Code"
 msgstr "Kod"
 
 #: ../../lib/class/xmlrpcclient.class.php:64
-#: ../../lib/class/catalog.class.php:1278
-#: ../../lib/class/catalog.class.php:1352
-#: ../../lib/class/catalog.class.php:1385
-#: ../../lib/class/catalog.class.php:2395
+#: ../../lib/class/catalog.class.php:1288
+#: ../../lib/class/catalog.class.php:1362
+#: ../../lib/class/catalog.class.php:1395
+#: ../../lib/class/catalog.class.php:2410
 msgid "Reason"
 msgstr "Anledning"
 
@@ -832,146 +841,146 @@ msgstr[1] "timmar"
 msgid "Running Remote Sync"
 msgstr "Kör fjärrsynkronisering"
 
-#: ../../lib/class/catalog.class.php:469 ../../lib/class/catalog.class.php:512
+#: ../../lib/class/catalog.class.php:475 ../../lib/class/catalog.class.php:518
 msgid "Error: Unable to change to directory"
 msgstr "Fel: Kunde inte byta till katalogen"
 
 #. HINT: FullFile
-#: ../../lib/class/catalog.class.php:549
+#: ../../lib/class/catalog.class.php:555
 #, php-format
 msgid "Error: Unable to get filesize for %s"
 msgstr "Fel: Kunde inte få filstorlek för %s"
 
 #. HINT: FullFile
-#: ../../lib/class/catalog.class.php:556
+#: ../../lib/class/catalog.class.php:562
 #, php-format
 msgid "%s is not readable by ampache"
 msgstr "%s är inte läsbar av ampache"
 
 #. HINT: FullFile
-#: ../../lib/class/catalog.class.php:565
+#: ../../lib/class/catalog.class.php:571
 #, php-format
 msgid "%s does not match site charset"
 msgstr "%s matchar inte systemets teckenuppsättning"
 
-#: ../../lib/class/catalog.class.php:1032
-#: ../../lib/class/catalog.class.php:1936 ../../preferences.php:111
+#: ../../lib/class/catalog.class.php:1038
+#: ../../lib/class/catalog.class.php:1946 ../../preferences.php:111
 #: ../../admin/access.php:109
 msgid "Updated"
 msgstr "Uppdaterad"
 
-#: ../../lib/class/catalog.class.php:1039
+#: ../../lib/class/catalog.class.php:1045
 msgid "No Update Needed"
 msgstr "Ingen uppdatering är nödvändig"
 
-#: ../../lib/class/catalog.class.php:1169
+#: ../../lib/class/catalog.class.php:1179
 msgid "Running Remote Update"
 msgstr "Kör fjärruppdatering"
 
-#: ../../lib/class/catalog.class.php:1196
+#: ../../lib/class/catalog.class.php:1206
 msgid "Added Playlist From"
 msgstr "Lade till spellista från"
 
-#: ../../lib/class/catalog.class.php:1225
+#: ../../lib/class/catalog.class.php:1235
 msgid "Catalog Update Finished"
 msgstr "Kataloguppdatering färdig"
 
-#: ../../lib/class/catalog.class.php:1225
+#: ../../lib/class/catalog.class.php:1235
 msgid "Total Time"
 msgstr "Total tid"
 
-#: ../../lib/class/catalog.class.php:1226
+#: ../../lib/class/catalog.class.php:1236
 msgid "Total Songs"
 msgstr "Totalt antal låtar"
 
-#: ../../lib/class/catalog.class.php:1226
+#: ../../lib/class/catalog.class.php:1236
 msgid "Songs Per Seconds"
 msgstr "Låtar per sekund"
 
-#: ../../lib/class/catalog.class.php:1240 ../../lib/class/artist.class.php:354
+#: ../../lib/class/catalog.class.php:1250 ../../lib/class/artist.class.php:354
 #: ../../admin/users.php:143
 msgid "Error"
 msgstr "Fel"
 
-#: ../../lib/class/catalog.class.php:1240
+#: ../../lib/class/catalog.class.php:1250
 msgid "Unable to load pear XMLRPC library, make sure XML-RPC is enabled"
 msgstr ""
 "Kunde inte läsa in pear XMLRPC-biblioteket. Försäkra dig om att XML-RPC är "
 "aktiverat"
 
-#: ../../lib/class/catalog.class.php:1307
+#: ../../lib/class/catalog.class.php:1317
 msgid "Completed updating remote catalog(s)"
 msgstr "Uppdatering av fjärrkatalog(er) färdig"
 
-#: ../../lib/class/catalog.class.php:1311
+#: ../../lib/class/catalog.class.php:1321
 msgid "Starting synchronisation of album images"
 msgstr "Startar synkronisering av albumbilder"
 
-#: ../../lib/class/catalog.class.php:1313
+#: ../../lib/class/catalog.class.php:1323
 msgid "Completed synchronisation of album images"
 msgstr "Färdigställde synkronisering av albumbilder"
 
-#: ../../lib/class/catalog.class.php:1348 ../../templates/show_song.inc.php:60
+#: ../../lib/class/catalog.class.php:1358 ../../templates/show_song.inc.php:60
 #: ../../admin/access.php:93
 msgid "Added"
 msgstr "Lades till"
 
-#: ../../lib/class/catalog.class.php:1381
+#: ../../lib/class/catalog.class.php:1391
 msgid "images synchronized: "
 msgstr "bilder synkroniserade: "
 
-#: ../../lib/class/catalog.class.php:1515
+#: ../../lib/class/catalog.class.php:1525
 msgid "Catalog Root unreadable, stopping clean"
 msgstr "Katalogroten inte läsbar, stoppar tömning"
 
-#: ../../lib/class/catalog.class.php:1551
+#: ../../lib/class/catalog.class.php:1561
 msgid "Error File Not Found or 0 Bytes:"
 msgstr ""
 
-#: ../../lib/class/catalog.class.php:1573
+#: ../../lib/class/catalog.class.php:1583
 msgid "Error Remote File Not Found or 0 Bytes:"
 msgstr ""
 
-#: ../../lib/class/catalog.class.php:1592
+#: ../../lib/class/catalog.class.php:1602
 msgid "Error All songs would be removed, doing nothing"
 msgstr ""
 
-#: ../../lib/class/catalog.class.php:1620
+#: ../../lib/class/catalog.class.php:1630
 #, fuzzy, php-format
 msgid "Catalog Clean Done. %d file removed."
 msgid_plural "Catalog Clean Done. %d files removed."
 msgstr[0] "Tömning av katalog färdig"
 msgstr[1] "Tömning av katalog färdig"
 
-#: ../../lib/class/catalog.class.php:1622
+#: ../../lib/class/catalog.class.php:1632
 msgid "Optimizing Tables"
 msgstr "Optimerar tabeller"
 
 #. HINT: Mediafile
-#: ../../lib/class/catalog.class.php:1914
+#: ../../lib/class/catalog.class.php:1924
 #, php-format
 msgid "%s does not exist or is not readable"
 msgstr ""
 
-#: ../../lib/class/catalog.class.php:1936
+#: ../../lib/class/catalog.class.php:1946
 msgid "Update Finished"
 msgstr "Uppdateringen är färdig"
 
-#: ../../lib/class/catalog.class.php:1936
+#: ../../lib/class/catalog.class.php:1946
 msgid "Checked"
 msgstr "Kontrollerade"
 
-#: ../../lib/class/catalog.class.php:1994
-#: ../../lib/class/catalog.class.php:2097
+#: ../../lib/class/catalog.class.php:2004
+#: ../../lib/class/catalog.class.php:2107
 #: ../../templates/show_album.inc.php:34
 msgid "Unknown (Orphaned)"
 msgstr "Okänd (föräldralös)"
 
-#: ../../lib/class/catalog.class.php:2493
+#: ../../lib/class/catalog.class.php:2508
 msgid "Playlist creation error."
 msgstr "Fel när spellistan skapades."
 
-#: ../../lib/class/catalog.class.php:2500
+#: ../../lib/class/catalog.class.php:2515
 #, fuzzy, php-format
 msgid "Playlist Import and Recreate Successful. Total: %d Song"
 msgid_plural "Playlist Import and Recreate Successful. Total: %d Songs"
@@ -979,7 +988,7 @@ msgstr[0] "Import och återskapning av spellista lyckades. Totalt: %d låtar"
 msgstr[1] "Import och återskapning av spellista lyckades. Totalt: %d låtar"
 
 #. HINT: filename
-#: ../../lib/class/catalog.class.php:2506
+#: ../../lib/class/catalog.class.php:2521
 #, fuzzy, php-format
 msgid "Parsing %s - Not Found: %d Song. Please check your m3u file."
 msgid_plural "Parsing %s - Not Found: %d Songs. Please check your m3u file."
@@ -1663,12 +1672,12 @@ msgid "Catalog Type"
 msgstr "Katalogtyp"
 
 #: ../../templates/show_edit_catalog.inc.php:44
-#: ../../templates/show_add_catalog.inc.php:60
 msgid "XML-RPC Key"
 msgstr "XML-RPC-nyckel"
 
 #: ../../templates/show_edit_catalog.inc.php:46
 #: ../../templates/show_add_catalog.inc.php:61
+#: ../../templates/show_add_catalog.inc.php:65
 msgid "Required for Remote Catalogs"
 msgstr "Krävs för fjärrkataloger"
 
@@ -1677,12 +1686,12 @@ msgid "Filename pattern"
 msgstr "Filnamnsmönster"
 
 #: ../../templates/show_edit_catalog.inc.php:57
-#: ../../templates/show_add_catalog.inc.php:69
+#: ../../templates/show_add_catalog.inc.php:73
 msgid "Folder Pattern"
 msgstr "Mappmönster"
 
 #: ../../templates/show_edit_catalog.inc.php:57
-#: ../../templates/show_add_catalog.inc.php:69
+#: ../../templates/show_add_catalog.inc.php:73
 msgid "(no leading or ending '/')"
 msgstr "(inga inledande eller avslutande \"/\")"
 
@@ -1846,7 +1855,7 @@ msgid "Clear Catalog Stats"
 msgstr "Töm katalogstatistik"
 
 #: ../../templates/show_admin_tools.inc.php:84
-#: ../../templates/show_add_catalog.inc.php:74
+#: ../../templates/show_add_catalog.inc.php:78
 msgid "Gather Album Art"
 msgstr "Samla albumomslag"
 
@@ -2242,15 +2251,25 @@ msgstr "Lokal"
 msgid "Remote"
 msgstr "Fjärr"
 
+#: ../../templates/show_add_catalog.inc.php:60
+#, fuzzy
+msgid "Remote Catalog Username"
+msgstr "Katalognamn"
+
 #: ../../templates/show_add_catalog.inc.php:64
+#, fuzzy
+msgid "Remote Catalog Password"
+msgstr "Lösenord"
+
+#: ../../templates/show_add_catalog.inc.php:68
 msgid "Filename Pattern"
 msgstr "Filnamnsmönster"
 
-#: ../../templates/show_add_catalog.inc.php:78
+#: ../../templates/show_add_catalog.inc.php:82
 msgid "Build Playlists from m3u Files"
 msgstr "Bygg spellistor från m3u-filer"
 
-#: ../../templates/show_add_catalog.inc.php:84
+#: ../../templates/show_add_catalog.inc.php:88
 msgid "Add Catalog"
 msgstr "Lägg till katalog"
 
@@ -4312,27 +4331,27 @@ msgstr "Katalog skapades"
 msgid "Catalog statistics cleared"
 msgstr "Katalogstatistiken tömdes"
 
-#: ../../admin/catalog.php:264
+#: ../../admin/catalog.php:265
 msgid "Now Playing Cleared"
 msgstr "Spelar nu tömdes"
 
-#: ../../admin/catalog.php:264
+#: ../../admin/catalog.php:265
 msgid "All now playing data has been cleared"
 msgstr "Allt data om Nu spelas har tömts"
 
-#: ../../admin/catalog.php:275
+#: ../../admin/catalog.php:276
 msgid "No Disabled songs found"
 msgstr "Inga inaktiverade låtar hittades"
 
-#: ../../admin/catalog.php:284
+#: ../../admin/catalog.php:285
 msgid "Delete Catalog"
 msgstr "Ta bort katalog"
 
-#: ../../admin/catalog.php:284
+#: ../../admin/catalog.php:285
 msgid "Do you really want to delete this catalog?"
 msgstr "Vill du verkligen ta bort denna katalog?"
 
-#: ../../admin/catalog.php:304
+#: ../../admin/catalog.php:305
 msgid "Album Art Search Finished"
 msgstr "Sökning efter albumomslag färdig"
 
@@ -4400,36 +4419,334 @@ msgstr "E-postmeddelande skickat"
 msgid "Your E-mail was successfully sent."
 msgstr "Ditt e-postmeddelande skickades."
 
-#: ../../server/xml.server.php:80
-msgid "Error Invalid Handshake - "
-msgstr "Fel: ogiltig handskakning - "
+#: ../../server/xml.server.php:41
+#, fuzzy
+msgid "Access Control not Enabled"
+msgstr "Behörighetskontroll"
 
-#: ../../server/xml.server.php:345 ../../server/xml.server.php:394
-#: ../../server/xml.server.php:402
+#: ../../server/xml.server.php:52
+msgid "Session Expired"
+msgstr ""
+
+#: ../../server/xml.server.php:63
+msgid "Unauthorized access attempt to API - ACL Error"
+msgstr ""
+
+#: ../../server/xml.server.php:274 ../../server/xml.server.php:324
+#: ../../server/xml.server.php:332
 msgid "Invalid Request"
 msgstr "Ogiltig begäran"
 
-#: ../../server/xml.server.php:360 ../../server/xml.server.php:373
+#: ../../server/xml.server.php:289 ../../server/xml.server.php:302
 msgid "Media Object Invalid or Not Specified"
 msgstr "Mediaobjektet är ogiltigt eller inte angivet"
 
-#: ../../bin/print_tags.inc:75
-msgid ""
-"[print_tags.php.inc]\n"
-"This commandline script will display the tag information for the specified "
-"filename as it will \n"
-"appear to Ampache. \n"
-"        \n"
+#: ../../bin/delete_disabled.inc:37
+msgid "DEBUG ENABLED WILL NOT DELETE FILES!"
 msgstr ""
-"[print_tags.php.inc]\n"
-"Detta kommandoradsskript kommer att visa tagginformationen för angivet "
-"filnamn som det  \n"
-"kommer att visas i Ampache. \n"
-"        \n"
 
-#: ../../bin/print_tags.inc:81
-msgid "Filename:"
-msgstr "Filnamn:"
+#: ../../bin/delete_disabled.inc:45
+#, php-format
+msgid "Would Delete: %s"
+msgstr ""
+
+#: ../../bin/delete_disabled.inc:49
+#, fuzzy, php-format
+msgid "Deleting: %s"
+msgstr "Läser"
+
+#: ../../bin/write_playlists.inc:41
+#, php-format
+msgid "Error: Directory %s not writeable"
+msgstr ""
+
+#: ../../bin/write_playlists.inc:62
+msgid "This will dump a collection of m3u playlists based on type"
+msgstr ""
+
+#: ../../bin/write_playlists.inc:63
+#, fuzzy
+msgid "Types:"
+msgstr "Typ"
+
+#: ../../bin/write_playlists.inc:64
+msgid "Dumps all Albums as individual playlists"
+msgstr ""
+
+#: ../../bin/write_playlists.inc:65
+msgid "Dumps all of your Playlists as m3u's"
+msgstr ""
+
+#: ../../bin/write_playlists.inc:66
+msgid "Dumps all Artists as individual playlists"
+msgstr ""
+
+#: ../../bin/write_tags.inc:35
+msgid ""
+"Writting of Tags to files is not currently supported by Getid3() use at your "
+"own risk."
+msgstr ""
+
+#: ../../bin/write_tags.inc:47
+msgid "No Flagged Songs Found, exiting..."
+msgstr ""
+
+#: ../../bin/write_tags.inc:75
+#, fuzzy
+msgid "No Tag"
+msgstr "Tagg"
+
+#. HINT: %1$s: title, %2$s: artist_name
+#: ../../bin/write_tags.inc:84
+#, php-format
+msgid "Updated song %1$s by %2$s"
+msgstr ""
+
+#: ../../bin/migrate_config.inc:48
+msgid "Parsing old config file..."
+msgstr ""
+
+#: ../../bin/migrate_config.inc:78
+msgid "Parse complete, writing"
+msgstr ""
+
+#: ../../bin/migrate_config.inc:86
+msgid "Write success, config migrated"
+msgstr ""
+
+#: ../../bin/migrate_config.inc:90
+msgid "Access Denied, config migration failed"
+msgstr ""
+
+#: ../../bin/fix_filenames.inc:41
+msgid "ERROR: Iconv required for this functionality, quiting"
+msgstr ""
+
+#: ../../bin/fix_filenames.inc:50
+#, php-format
+msgid "%s For the Love of Music"
+msgstr ""
+
+#: ../../bin/fix_filenames.inc:51
+msgid "Testing Basic Translation, the two strings below should look the same"
+msgstr ""
+
+#: ../../bin/fix_filenames.inc:53
+msgid "Original: For the Love of Music"
+msgstr ""
+
+#: ../../bin/fix_filenames.inc:55
+#, php-format
+msgid "Translated: %s"
+msgstr ""
+
+#: ../../bin/fix_filenames.inc:58
+#, php-format
+msgid "Input Charset (%s):"
+msgstr ""
+
+#: ../../bin/fix_filenames.inc:62
+#, php-format
+msgid "Using %s as source character set"
+msgstr ""
+
+#: ../../bin/fix_filenames.inc:70
+#, fuzzy, php-format
+msgid "Checking %s (%s)"
+msgstr "Kontrollerar"
+
+#: ../../bin/fix_filenames.inc:76
+msgid "Finished checking filenames for valid chacters"
+msgstr ""
+
+#: ../../bin/fix_filenames.inc:102
+#, fuzzy, php-format
+msgid "ERROR: Unable to open %s"
+msgstr "Fel: Kunde inte öppna"
+
+#: ../../bin/fix_filenames.inc:108
+#, fuzzy, php-format
+msgid "ERROR: Unable to chdir to %s"
+msgstr "Fel: Kunde inte byta till katalogen"
+
+#: ../../bin/fix_filenames.inc:131
+msgid "Translation failure, stripping non-valid characters"
+msgstr ""
+
+#: ../../bin/fix_filenames.inc:136
+#, php-format
+msgid "Attempting to Transcode to %s"
+msgstr ""
+
+#: ../../bin/fix_filenames.inc:139
+#, php-format
+msgid "OLD: %s has invalid chars"
+msgstr ""
+
+#: ../../bin/fix_filenames.inc:141
+#, php-format
+msgid "NEW: %s"
+msgstr ""
+
+#: ../../bin/fix_filenames.inc:145
+msgid "Rename File (Y/N):"
+msgstr ""
+
+#: ../../bin/fix_filenames.inc:148
+#, fuzzy
+msgid "Not Renaming..."
+msgstr "Läser in..."
+
+#: ../../bin/fix_filenames.inc:180
+#, fuzzy, php-format
+msgid "Error: Unable to create %s move failed, stopping"
+msgstr "Fel: Kunde inte byta till katalogen"
+
+#: ../../bin/fix_filenames.inc:192
+msgid "Error: Copy Failed, not deleteing old file"
+msgstr ""
+
+#: ../../bin/fix_filenames.inc:201 ../../bin/sort_files.inc:287
+#, php-format
+msgid "Error: Size Inconsistency, not deleting %s"
+msgstr ""
+
+#: ../../bin/fix_filenames.inc:208 ../../bin/sort_files.inc:294
+#, fuzzy, php-format
+msgid "Error: Unable to delete %s"
+msgstr "Fel: Kunde inte få filstorlek för %s"
+
+#: ../../bin/fix_filenames.inc:210
+#, fuzzy
+msgid "File Moved..."
+msgstr "filer borttagna"
+
+#: ../../bin/sort_files.inc:59
+#, fuzzy, php-format
+msgid "Starting Catalog: %s"
+msgstr "Inställningar för %s"
+
+#: ../../bin/sort_files.inc:74
+msgid "Moving File..."
+msgstr ""
+
+#: ../../bin/sort_files.inc:76
+#, php-format
+msgid "Source: %s"
+msgstr ""
+
+#: ../../bin/sort_files.inc:78
+#, php-format
+msgid "Dest: %s"
+msgstr ""
+
+#: ../../bin/sort_files.inc:228
+#, php-format
+msgid "Making %s Directory"
+msgstr ""
+
+#: ../../bin/sort_files.inc:235
+#, fuzzy, php-format
+msgid "Error: Unable to create %s move failed"
+msgstr "Fel: Kunde inte byta till katalogen"
+
+#. HINT: %1$s: file, %2$s: directory
+#: ../../bin/sort_files.inc:248
+#, php-format
+msgid "Copying %1$s to %2$s"
+msgstr ""
+
+#: ../../bin/sort_files.inc:259
+#, fuzzy, php-format
+msgid "Error: %s already exists"
+msgstr "Fel - användarnamnet används redan"
+
+#: ../../bin/sort_files.inc:280
+#, fuzzy, php-format
+msgid "Error: Unable to copy file to %s"
+msgstr "Fel: Kunde inte få filstorlek för %s"
+
+#: ../../bin/catalog_update.inc:71
+msgid "- Starting Clean - "
+msgstr ""
+
+#: ../../bin/catalog_update.inc:79
+msgid "- Starting Verify - "
+msgstr ""
+
+#: ../../bin/catalog_update.inc:87
+#, fuzzy
+msgid "- Starting Add - "
+msgstr "Radiostation lades till"
+
+#: ../../bin/catalog_update.inc:105
+#, fuzzy
+msgid "- Catalog Update -"
+msgstr "Katalog uppdaterad"
+
+#: ../../bin/catalog_update.inc:107
+msgid "Usage: catalog_update.inc [CATALOG NAME] [-c|-v|-a]"
+msgstr ""
+
+#: ../../bin/catalog_update.inc:109
+#, fuzzy
+msgid "Clean Catalogs"
+msgstr "Töm katalogstatistik"
+
+#: ../../bin/catalog_update.inc:111
+#, fuzzy
+msgid "Verify Catalogs"
+msgstr "Kataloger"
+
+#: ../../bin/catalog_update.inc:113
+#, fuzzy
+msgid "Add to Catalogs"
+msgstr "Lägg till en katalog"
+
+#: ../../bin/catalog_update.inc:115
+msgid "*Default behavior is to do all 3*"
+msgstr ""
+
+#: ../../bin/print_tags.inc:41
+msgid "File not found."
+msgstr ""
+
+#: ../../bin/print_tags.inc:48
+msgid "File type is not allowd."
+msgstr ""
+
+#: ../../bin/print_tags.inc:54
+#, fuzzy, php-format
+msgid "Reading: %s"
+msgstr "Läser"
+
+#: ../../bin/print_tags.inc:66
+#, php-format
+msgid "Using: %s AND %s for file pattern matching"
+msgstr ""
+
+#: ../../bin/print_tags.inc:84
+msgid "Results Seen by GetID3()"
+msgstr ""
+
+#: ../../bin/print_tags.inc:88
+#, php-format
+msgid "Results Seen by Ampache using %s"
+msgstr ""
+
+#: ../../bin/print_tags.inc:95
+#, fuzzy, php-format
+msgid "%s Version %s"
+msgstr "Version"
+
+#: ../../bin/print_tags.inc:97
+#, fuzzy
+msgid "Usage:"
+msgstr "Meddelande"
+
+#: ../../bin/print_tags.inc:99
+msgid "php print_tags.inc <Filename>"
+msgstr ""
 
 #: Database words
 msgid "Allow Downloads"
@@ -4540,11 +4857,24 @@ msgid "System"
 msgstr "System"
 
 #~ msgid ""
+#~ "[print_tags.php.inc]\n"
+#~ "This commandline script will display the tag information for the "
+#~ "specified filename as it will \n"
+#~ "appear to Ampache. \n"
+#~ "        \n"
+#~ msgstr ""
+#~ "[print_tags.php.inc]\n"
+#~ "Detta kommandoradsskript kommer att visa tagginformationen för angivet "
+#~ "filnamn som det  \n"
+#~ "kommer att visas i Ampache. \n"
+#~ "        \n"
+
+#~ msgid "Filename:"
+#~ msgstr "Filnamn:"
+
+#~ msgid ""
 #~ "Your webserver has read access to the /sql/ampache.sql file and the /"
 #~ "config/ampache.cfg.dist.php file"
 #~ msgstr ""
 #~ "Din webbserver har lästillgång till filen /sql/ampache.sql och filen /"
 #~ "config/ampache.cfg.dist.php"
-
-#~ msgid "files removed"
-#~ msgstr "filer borttagna"

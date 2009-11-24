@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ampache 3.5.0\n"
 "Report-Msgid-Bugs-To: translations at ampache.org\n"
-"POT-Creation-Date: 2009-11-09 10:04+0900\n"
+"POT-Creation-Date: 2009-11-24 09:11+0900\n"
 "PO-Revision-Date: 2008-08-25 08:43+0900\n"
 "Last-Translator: Ampache <translations at ampache.org>\n"
 "Language-Team: Greek <LL@li.org>\n"
@@ -495,6 +495,15 @@ msgstr "Σχετικό Καλλιτέχνης"
 msgid "Pure Random"
 msgstr "Στην τύχη"
 
+#: ../../lib/class/api.class.php:209
+msgid "Error Invalid Handshake - "
+msgstr ""
+
+#: ../../lib/class/api.class.php:209
+#, fuzzy
+msgid "Invalid Username/Password"
+msgstr "Δεν ορίστηκε Όνομα Χρήστη/Κωδικός"
+
 #: ../../lib/class/flag.class.php:312
 msgid "Approved"
 msgstr "Εγκρίθηκαν"
@@ -708,7 +717,7 @@ msgstr "Δίσκος"
 msgid "Various"
 msgstr "Ποικίλα"
 
-#: ../../lib/class/album.class.php:490 ../../lib/class/catalog.class.php:462
+#: ../../lib/class/album.class.php:490 ../../lib/class/catalog.class.php:468
 msgid "Error: Unable to open"
 msgstr "Σφάλμα: Αδύνατο να ανοιχτεί"
 
@@ -724,27 +733,27 @@ msgstr "Σφάλμα: Οι κωδικοί δεν ταιριάζουν"
 
 #: ../../lib/class/xmlrpcclient.class.php:64
 #: ../../lib/class/xmlrpcclient.class.php:97
-#: ../../lib/class/catalog.class.php:1278
-#: ../../lib/class/catalog.class.php:1352
-#: ../../lib/class/catalog.class.php:1385
-#: ../../lib/class/catalog.class.php:2395
+#: ../../lib/class/catalog.class.php:1288
+#: ../../lib/class/catalog.class.php:1362
+#: ../../lib/class/catalog.class.php:1395
+#: ../../lib/class/catalog.class.php:2410
 msgid "Error connecting to"
 msgstr "Σφάλμα στη σύνδεση με"
 
 #: ../../lib/class/xmlrpcclient.class.php:64
 #: ../../lib/class/xmlrpcclient.class.php:97
-#: ../../lib/class/catalog.class.php:1278
-#: ../../lib/class/catalog.class.php:1352
-#: ../../lib/class/catalog.class.php:1385
-#: ../../lib/class/catalog.class.php:2395
+#: ../../lib/class/catalog.class.php:1288
+#: ../../lib/class/catalog.class.php:1362
+#: ../../lib/class/catalog.class.php:1395
+#: ../../lib/class/catalog.class.php:2410
 msgid "Code"
 msgstr "Κωδικός"
 
 #: ../../lib/class/xmlrpcclient.class.php:64
-#: ../../lib/class/catalog.class.php:1278
-#: ../../lib/class/catalog.class.php:1352
-#: ../../lib/class/catalog.class.php:1385
-#: ../../lib/class/catalog.class.php:2395
+#: ../../lib/class/catalog.class.php:1288
+#: ../../lib/class/catalog.class.php:1362
+#: ../../lib/class/catalog.class.php:1395
+#: ../../lib/class/catalog.class.php:2410
 msgid "Reason"
 msgstr "Αιτία"
 
@@ -820,149 +829,149 @@ msgstr[1] "ώρα"
 msgid "Running Remote Sync"
 msgstr "Εκτελείται Απομακρυσμένος Συγχρονισμός"
 
-#: ../../lib/class/catalog.class.php:469 ../../lib/class/catalog.class.php:512
+#: ../../lib/class/catalog.class.php:475 ../../lib/class/catalog.class.php:518
 msgid "Error: Unable to change to directory"
 msgstr "Σφάλμα: Αδύνατο να μεταβώ στον κατάλογο"
 
 #. HINT: FullFile
-#: ../../lib/class/catalog.class.php:549
+#: ../../lib/class/catalog.class.php:555
 #, fuzzy, php-format
 msgid "Error: Unable to get filesize for %s"
 msgstr "Σφάλμα: Αδύνατο να υπολογίσω το μέγεθος αρχείου για το"
 
 #. HINT: FullFile
-#: ../../lib/class/catalog.class.php:556
+#: ../../lib/class/catalog.class.php:562
 #, fuzzy, php-format
 msgid "%s is not readable by ampache"
 msgstr "είναι μη αναγνώσιμο από τον ampache"
 
 #. HINT: FullFile
-#: ../../lib/class/catalog.class.php:565
+#: ../../lib/class/catalog.class.php:571
 #, php-format
 msgid "%s does not match site charset"
 msgstr ""
 
-#: ../../lib/class/catalog.class.php:1032
-#: ../../lib/class/catalog.class.php:1936 ../../preferences.php:111
+#: ../../lib/class/catalog.class.php:1038
+#: ../../lib/class/catalog.class.php:1946 ../../preferences.php:111
 #: ../../admin/access.php:109
 msgid "Updated"
 msgstr "Ενημερωμένο"
 
-#: ../../lib/class/catalog.class.php:1039
+#: ../../lib/class/catalog.class.php:1045
 msgid "No Update Needed"
 msgstr "Δε χρειάζεται ενημέρωση"
 
-#: ../../lib/class/catalog.class.php:1169
+#: ../../lib/class/catalog.class.php:1179
 msgid "Running Remote Update"
 msgstr "Εκτελείται Απομακρυσμένη Ενημέρωση"
 
-#: ../../lib/class/catalog.class.php:1196
+#: ../../lib/class/catalog.class.php:1206
 msgid "Added Playlist From"
 msgstr "Η playlist προστέθηκε από"
 
-#: ../../lib/class/catalog.class.php:1225
+#: ../../lib/class/catalog.class.php:1235
 msgid "Catalog Update Finished"
 msgstr "Ολοκληρώθηκε η ενημέρωση του Καταλόγου"
 
-#: ../../lib/class/catalog.class.php:1225
+#: ../../lib/class/catalog.class.php:1235
 msgid "Total Time"
 msgstr ""
 
-#: ../../lib/class/catalog.class.php:1226
+#: ../../lib/class/catalog.class.php:1236
 msgid "Total Songs"
 msgstr "Συνολικά Τραγούδια"
 
-#: ../../lib/class/catalog.class.php:1226
+#: ../../lib/class/catalog.class.php:1236
 msgid "Songs Per Seconds"
 msgstr "Τραγούδια ανά Δευτερόλεπτο"
 
-#: ../../lib/class/catalog.class.php:1240 ../../lib/class/artist.class.php:354
+#: ../../lib/class/catalog.class.php:1250 ../../lib/class/artist.class.php:354
 #: ../../admin/users.php:143
 msgid "Error"
 msgstr "Σφάλμα"
 
-#: ../../lib/class/catalog.class.php:1240
+#: ../../lib/class/catalog.class.php:1250
 #, fuzzy
 msgid "Unable to load pear XMLRPC library, make sure XML-RPC is enabled"
 msgstr ""
 "Αδύνατη η φόρτωση της βιβλιοθήκης XMLRPC, βεβαιώστε ότι το XML-RPC είναι "
 "ενεργοποιημένο"
 
-#: ../../lib/class/catalog.class.php:1307
+#: ../../lib/class/catalog.class.php:1317
 msgid "Completed updating remote catalog(s)"
 msgstr "Ολοκληρώθηκε η ενημέρωση απομακρυσμένου(ων) καταλόγου(ων)"
 
-#: ../../lib/class/catalog.class.php:1311
+#: ../../lib/class/catalog.class.php:1321
 msgid "Starting synchronisation of album images"
 msgstr ""
 
-#: ../../lib/class/catalog.class.php:1313
+#: ../../lib/class/catalog.class.php:1323
 msgid "Completed synchronisation of album images"
 msgstr ""
 
-#: ../../lib/class/catalog.class.php:1348 ../../templates/show_song.inc.php:60
+#: ../../lib/class/catalog.class.php:1358 ../../templates/show_song.inc.php:60
 #: ../../admin/access.php:93
 msgid "Added"
 msgstr "Προστέθηκε"
 
-#: ../../lib/class/catalog.class.php:1381
+#: ../../lib/class/catalog.class.php:1391
 msgid "images synchronized: "
 msgstr ""
 
-#: ../../lib/class/catalog.class.php:1515
+#: ../../lib/class/catalog.class.php:1525
 msgid "Catalog Root unreadable, stopping clean"
 msgstr "Η Ρίζα των καταλόγων δεν μπορεί να αναγνωσθεί, η εκκαθάριση διακόπηκε"
 
-#: ../../lib/class/catalog.class.php:1551
+#: ../../lib/class/catalog.class.php:1561
 msgid "Error File Not Found or 0 Bytes:"
 msgstr ""
 
-#: ../../lib/class/catalog.class.php:1573
+#: ../../lib/class/catalog.class.php:1583
 msgid "Error Remote File Not Found or 0 Bytes:"
 msgstr ""
 
-#: ../../lib/class/catalog.class.php:1592
+#: ../../lib/class/catalog.class.php:1602
 msgid "Error All songs would be removed, doing nothing"
 msgstr ""
 
-#: ../../lib/class/catalog.class.php:1620
+#: ../../lib/class/catalog.class.php:1630
 #, fuzzy, php-format
 msgid "Catalog Clean Done. %d file removed."
 msgid_plural "Catalog Clean Done. %d files removed."
 msgstr[0] "Η εκκαθάριση των καταλόγων Ολοκληρώθηκε"
 msgstr[1] "Η εκκαθάριση των καταλόγων Ολοκληρώθηκε"
 
-#: ../../lib/class/catalog.class.php:1622
+#: ../../lib/class/catalog.class.php:1632
 msgid "Optimizing Tables"
 msgstr "Βελτιστοποίηση Πινάκων"
 
 #. HINT: Mediafile
-#: ../../lib/class/catalog.class.php:1914
+#: ../../lib/class/catalog.class.php:1924
 #, php-format
 msgid "%s does not exist or is not readable"
 msgstr ""
 
-#: ../../lib/class/catalog.class.php:1936
+#: ../../lib/class/catalog.class.php:1946
 #, fuzzy
 msgid "Update Finished"
 msgstr "Ολοκληρώθηκε η ενημέρωση"
 
-#: ../../lib/class/catalog.class.php:1936
+#: ../../lib/class/catalog.class.php:1946
 msgid "Checked"
 msgstr "Ελέγχθηκαν"
 
-#: ../../lib/class/catalog.class.php:1994
-#: ../../lib/class/catalog.class.php:2097
+#: ../../lib/class/catalog.class.php:2004
+#: ../../lib/class/catalog.class.php:2107
 #: ../../templates/show_album.inc.php:34
 msgid "Unknown (Orphaned)"
 msgstr "Άγνωστα (Μεμονωμένα)"
 
-#: ../../lib/class/catalog.class.php:2493
+#: ../../lib/class/catalog.class.php:2508
 #, fuzzy
 msgid "Playlist creation error."
 msgstr "Η playlist δημιουργήθηκε"
 
-#: ../../lib/class/catalog.class.php:2500
+#: ../../lib/class/catalog.class.php:2515
 #, php-format
 msgid "Playlist Import and Recreate Successful. Total: %d Song"
 msgid_plural "Playlist Import and Recreate Successful. Total: %d Songs"
@@ -970,7 +979,7 @@ msgstr[0] ""
 msgstr[1] ""
 
 #. HINT: filename
-#: ../../lib/class/catalog.class.php:2506
+#: ../../lib/class/catalog.class.php:2521
 #, php-format
 msgid "Parsing %s - Not Found: %d Song. Please check your m3u file."
 msgid_plural "Parsing %s - Not Found: %d Songs. Please check your m3u file."
@@ -1661,12 +1670,12 @@ msgid "Catalog Type"
 msgstr "Τύπος Καταλόγου"
 
 #: ../../templates/show_edit_catalog.inc.php:44
-#: ../../templates/show_add_catalog.inc.php:60
 msgid "XML-RPC Key"
 msgstr "XML-RPC Key"
 
 #: ../../templates/show_edit_catalog.inc.php:46
 #: ../../templates/show_add_catalog.inc.php:61
+#: ../../templates/show_add_catalog.inc.php:65
 msgid "Required for Remote Catalogs"
 msgstr "Απαιτείται για απομακρυσμένους Καταλόγους"
 
@@ -1675,12 +1684,12 @@ msgid "Filename pattern"
 msgstr "Σχέδιο ονόματος αρχείου"
 
 #: ../../templates/show_edit_catalog.inc.php:57
-#: ../../templates/show_add_catalog.inc.php:69
+#: ../../templates/show_add_catalog.inc.php:73
 msgid "Folder Pattern"
 msgstr "Σχέδιο ονόματος Φακέλου"
 
 #: ../../templates/show_edit_catalog.inc.php:57
-#: ../../templates/show_add_catalog.inc.php:69
+#: ../../templates/show_add_catalog.inc.php:73
 msgid "(no leading or ending '/')"
 msgstr "χωρίς '/' στην αρχή ή στο τέλος"
 
@@ -1846,7 +1855,7 @@ msgid "Clear Catalog Stats"
 msgstr "Καθαρισμός στατιστικών Καταλόγου"
 
 #: ../../templates/show_admin_tools.inc.php:84
-#: ../../templates/show_add_catalog.inc.php:74
+#: ../../templates/show_add_catalog.inc.php:78
 msgid "Gather Album Art"
 msgstr "Συγκέντρωση εξωφύλλων"
 
@@ -2240,15 +2249,25 @@ msgstr "Τοπικός"
 msgid "Remote"
 msgstr "Απομακρυσμένος"
 
+#: ../../templates/show_add_catalog.inc.php:60
+#, fuzzy
+msgid "Remote Catalog Username"
+msgstr "Όνομα Καταλόγου"
+
 #: ../../templates/show_add_catalog.inc.php:64
+#, fuzzy
+msgid "Remote Catalog Password"
+msgstr "Κωδικός"
+
+#: ../../templates/show_add_catalog.inc.php:68
 msgid "Filename Pattern"
 msgstr "Σχέδιο ονόματος Αρχείου"
 
-#: ../../templates/show_add_catalog.inc.php:78
+#: ../../templates/show_add_catalog.inc.php:82
 msgid "Build Playlists from m3u Files"
 msgstr "Χτίσε playlists από m3u αρχεία"
 
-#: ../../templates/show_add_catalog.inc.php:84
+#: ../../templates/show_add_catalog.inc.php:88
 msgid "Add Catalog"
 msgstr "Προσθήκη Καταλόγου"
 
@@ -4322,27 +4341,27 @@ msgstr "Κατάλογος δημιουργήθηκε"
 msgid "Catalog statistics cleared"
 msgstr "Καθαρίστηκαν τα στατιστικά του καταλόγου"
 
-#: ../../admin/catalog.php:264
+#: ../../admin/catalog.php:265
 msgid "Now Playing Cleared"
 msgstr "Καθαρίστηκαν αυτά που παίζουν τώρα"
 
-#: ../../admin/catalog.php:264
+#: ../../admin/catalog.php:265
 msgid "All now playing data has been cleared"
 msgstr "Όλα τα στοιχεία σχετικά με αυτά που παίζουν τώρα καθαρίστηκαν"
 
-#: ../../admin/catalog.php:275
+#: ../../admin/catalog.php:276
 msgid "No Disabled songs found"
 msgstr "Δεν βρέθηκαν απενεργοποιημένα τραγούδια"
 
-#: ../../admin/catalog.php:284
+#: ../../admin/catalog.php:285
 msgid "Delete Catalog"
 msgstr "Διαγραφή Καταλόγου"
 
-#: ../../admin/catalog.php:284
+#: ../../admin/catalog.php:285
 msgid "Do you really want to delete this catalog?"
 msgstr "Θέλετε σίγουρα να διαγράψετε αυτόν τον κατάλογο;"
 
-#: ../../admin/catalog.php:304
+#: ../../admin/catalog.php:305
 msgid "Album Art Search Finished"
 msgstr "Ολοκληρώθηκε η αναζήτηση εξωφύλλων"
 
@@ -4409,35 +4428,334 @@ msgstr "Στάλθηκε E-mail"
 msgid "Your E-mail was successfully sent."
 msgstr "To e-mail στάλθηκε επιτυχώς"
 
-#: ../../server/xml.server.php:80
-msgid "Error Invalid Handshake - "
+#: ../../server/xml.server.php:41
+#, fuzzy
+msgid "Access Control not Enabled"
+msgstr "Έλεγχος Πρόσβασης"
+
+#: ../../server/xml.server.php:52
+msgid "Session Expired"
 msgstr ""
 
-#: ../../server/xml.server.php:345 ../../server/xml.server.php:394
-#: ../../server/xml.server.php:402
+#: ../../server/xml.server.php:63
+msgid "Unauthorized access attempt to API - ACL Error"
+msgstr ""
+
+#: ../../server/xml.server.php:274 ../../server/xml.server.php:324
+#: ../../server/xml.server.php:332
 #, fuzzy
 msgid "Invalid Request"
 msgstr "Αίτημα Διαγραφής"
 
-#: ../../server/xml.server.php:360 ../../server/xml.server.php:373
+#: ../../server/xml.server.php:289 ../../server/xml.server.php:302
 msgid "Media Object Invalid or Not Specified"
 msgstr ""
 
-#: ../../bin/print_tags.inc:75
-msgid ""
-"[print_tags.php.inc]\n"
-"This commandline script will display the tag information for the specified "
-"filename as it will \n"
-"appear to Ampache. \n"
-"        \n"
+#: ../../bin/delete_disabled.inc:37
+msgid "DEBUG ENABLED WILL NOT DELETE FILES!"
 msgstr ""
-"Αυτό το command line script θα εμφανίσει τις tag πληροφορίες του "
-"συγκεκριμένου αρχείου όπως θα εμφανιστούν στον ampache. \n"
-"\t\n"
 
-#: ../../bin/print_tags.inc:81
-msgid "Filename:"
-msgstr "Όνομα Αρχείου"
+#: ../../bin/delete_disabled.inc:45
+#, php-format
+msgid "Would Delete: %s"
+msgstr ""
+
+#: ../../bin/delete_disabled.inc:49
+#, fuzzy, php-format
+msgid "Deleting: %s"
+msgstr "Ανάγνωση"
+
+#: ../../bin/write_playlists.inc:41
+#, php-format
+msgid "Error: Directory %s not writeable"
+msgstr ""
+
+#: ../../bin/write_playlists.inc:62
+msgid "This will dump a collection of m3u playlists based on type"
+msgstr ""
+
+#: ../../bin/write_playlists.inc:63
+#, fuzzy
+msgid "Types:"
+msgstr "Τύπος"
+
+#: ../../bin/write_playlists.inc:64
+msgid "Dumps all Albums as individual playlists"
+msgstr ""
+
+#: ../../bin/write_playlists.inc:65
+msgid "Dumps all of your Playlists as m3u's"
+msgstr ""
+
+#: ../../bin/write_playlists.inc:66
+msgid "Dumps all Artists as individual playlists"
+msgstr ""
+
+#: ../../bin/write_tags.inc:35
+msgid ""
+"Writting of Tags to files is not currently supported by Getid3() use at your "
+"own risk."
+msgstr ""
+
+#: ../../bin/write_tags.inc:47
+msgid "No Flagged Songs Found, exiting..."
+msgstr ""
+
+#: ../../bin/write_tags.inc:75
+#, fuzzy
+msgid "No Tag"
+msgstr "Επανεγγραφή tags"
+
+#. HINT: %1$s: title, %2$s: artist_name
+#: ../../bin/write_tags.inc:84
+#, php-format
+msgid "Updated song %1$s by %2$s"
+msgstr ""
+
+#: ../../bin/migrate_config.inc:48
+msgid "Parsing old config file..."
+msgstr ""
+
+#: ../../bin/migrate_config.inc:78
+msgid "Parse complete, writing"
+msgstr ""
+
+#: ../../bin/migrate_config.inc:86
+msgid "Write success, config migrated"
+msgstr ""
+
+#: ../../bin/migrate_config.inc:90
+msgid "Access Denied, config migration failed"
+msgstr ""
+
+#: ../../bin/fix_filenames.inc:41
+msgid "ERROR: Iconv required for this functionality, quiting"
+msgstr ""
+
+#: ../../bin/fix_filenames.inc:50
+#, php-format
+msgid "%s For the Love of Music"
+msgstr ""
+
+#: ../../bin/fix_filenames.inc:51
+msgid "Testing Basic Translation, the two strings below should look the same"
+msgstr ""
+
+#: ../../bin/fix_filenames.inc:53
+msgid "Original: For the Love of Music"
+msgstr ""
+
+#: ../../bin/fix_filenames.inc:55
+#, php-format
+msgid "Translated: %s"
+msgstr ""
+
+#: ../../bin/fix_filenames.inc:58
+#, php-format
+msgid "Input Charset (%s):"
+msgstr ""
+
+#: ../../bin/fix_filenames.inc:62
+#, php-format
+msgid "Using %s as source character set"
+msgstr ""
+
+#: ../../bin/fix_filenames.inc:70
+#, fuzzy, php-format
+msgid "Checking %s (%s)"
+msgstr "Έλεγχος"
+
+#: ../../bin/fix_filenames.inc:76
+msgid "Finished checking filenames for valid chacters"
+msgstr ""
+
+#: ../../bin/fix_filenames.inc:102
+#, fuzzy, php-format
+msgid "ERROR: Unable to open %s"
+msgstr "Σφάλμα: Αδύνατο να ανοιχτεί"
+
+#: ../../bin/fix_filenames.inc:108
+#, fuzzy, php-format
+msgid "ERROR: Unable to chdir to %s"
+msgstr "Σφάλμα: Αδύνατο να μεταβώ στον κατάλογο"
+
+#: ../../bin/fix_filenames.inc:131
+msgid "Translation failure, stripping non-valid characters"
+msgstr ""
+
+#: ../../bin/fix_filenames.inc:136
+#, php-format
+msgid "Attempting to Transcode to %s"
+msgstr ""
+
+#: ../../bin/fix_filenames.inc:139
+#, php-format
+msgid "OLD: %s has invalid chars"
+msgstr ""
+
+#: ../../bin/fix_filenames.inc:141
+#, php-format
+msgid "NEW: %s"
+msgstr ""
+
+#: ../../bin/fix_filenames.inc:145
+msgid "Rename File (Y/N):"
+msgstr ""
+
+#: ../../bin/fix_filenames.inc:148
+msgid "Not Renaming..."
+msgstr ""
+
+#: ../../bin/fix_filenames.inc:180
+#, fuzzy, php-format
+msgid "Error: Unable to create %s move failed, stopping"
+msgstr "Σφάλμα: Αδύνατο να μεταβώ στον κατάλογο"
+
+#: ../../bin/fix_filenames.inc:192
+msgid "Error: Copy Failed, not deleteing old file"
+msgstr ""
+
+#: ../../bin/fix_filenames.inc:201 ../../bin/sort_files.inc:287
+#, php-format
+msgid "Error: Size Inconsistency, not deleting %s"
+msgstr ""
+
+#: ../../bin/fix_filenames.inc:208 ../../bin/sort_files.inc:294
+#, fuzzy, php-format
+msgid "Error: Unable to delete %s"
+msgstr "Σφάλμα: Αδύνατο να υπολογίσω το μέγεθος αρχείου για το"
+
+#: ../../bin/fix_filenames.inc:210
+#, fuzzy
+msgid "File Moved..."
+msgstr "αρχεία αφαιρέθηκαν"
+
+#: ../../bin/sort_files.inc:59
+#, fuzzy, php-format
+msgid "Starting Catalog: %s"
+msgstr "Ρυθμίσεις για"
+
+#: ../../bin/sort_files.inc:74
+msgid "Moving File..."
+msgstr ""
+
+#: ../../bin/sort_files.inc:76
+#, php-format
+msgid "Source: %s"
+msgstr ""
+
+#: ../../bin/sort_files.inc:78
+#, php-format
+msgid "Dest: %s"
+msgstr ""
+
+#: ../../bin/sort_files.inc:228
+#, php-format
+msgid "Making %s Directory"
+msgstr ""
+
+#: ../../bin/sort_files.inc:235
+#, fuzzy, php-format
+msgid "Error: Unable to create %s move failed"
+msgstr "Σφάλμα: Αδύνατο να μεταβώ στον κατάλογο"
+
+#. HINT: %1$s: file, %2$s: directory
+#: ../../bin/sort_files.inc:248
+#, php-format
+msgid "Copying %1$s to %2$s"
+msgstr ""
+
+#: ../../bin/sort_files.inc:259
+#, fuzzy, php-format
+msgid "Error: %s already exists"
+msgstr "Σφάλμα: Το όνομα Χρήστης υπάρχει ήδη"
+
+#: ../../bin/sort_files.inc:280
+#, fuzzy, php-format
+msgid "Error: Unable to copy file to %s"
+msgstr "Σφάλμα: Αδύνατο να υπολογίσω το μέγεθος αρχείου για το"
+
+#: ../../bin/catalog_update.inc:71
+msgid "- Starting Clean - "
+msgstr ""
+
+#: ../../bin/catalog_update.inc:79
+msgid "- Starting Verify - "
+msgstr ""
+
+#: ../../bin/catalog_update.inc:87
+#, fuzzy
+msgid "- Starting Add - "
+msgstr "Ο Ραδιοφωνικός Σταθμός προστέθηκε"
+
+#: ../../bin/catalog_update.inc:105
+#, fuzzy
+msgid "- Catalog Update -"
+msgstr "Ο Κατάλογος ενημερώθηκε"
+
+#: ../../bin/catalog_update.inc:107
+msgid "Usage: catalog_update.inc [CATALOG NAME] [-c|-v|-a]"
+msgstr ""
+
+#: ../../bin/catalog_update.inc:109
+#, fuzzy
+msgid "Clean Catalogs"
+msgstr "Καθαρισμός στατιστικών Καταλόγου"
+
+#: ../../bin/catalog_update.inc:111
+#, fuzzy
+msgid "Verify Catalogs"
+msgstr "Καθαρισμός στατιστικών Καταλόγου"
+
+#: ../../bin/catalog_update.inc:113
+#, fuzzy
+msgid "Add to Catalogs"
+msgstr "Προσθήκη καταλόγου"
+
+#: ../../bin/catalog_update.inc:115
+msgid "*Default behavior is to do all 3*"
+msgstr ""
+
+#: ../../bin/print_tags.inc:41
+msgid "File not found."
+msgstr ""
+
+#: ../../bin/print_tags.inc:48
+msgid "File type is not allowd."
+msgstr ""
+
+#: ../../bin/print_tags.inc:54
+#, fuzzy, php-format
+msgid "Reading: %s"
+msgstr "Ανάγνωση"
+
+#: ../../bin/print_tags.inc:66
+#, php-format
+msgid "Using: %s AND %s for file pattern matching"
+msgstr ""
+
+#: ../../bin/print_tags.inc:84
+msgid "Results Seen by GetID3()"
+msgstr ""
+
+#: ../../bin/print_tags.inc:88
+#, php-format
+msgid "Results Seen by Ampache using %s"
+msgstr ""
+
+#: ../../bin/print_tags.inc:95
+#, fuzzy, php-format
+msgid "%s Version %s"
+msgstr "Έκδοση"
+
+#: ../../bin/print_tags.inc:97
+#, fuzzy
+msgid "Usage:"
+msgstr "Μήνυμα"
+
+#: ../../bin/print_tags.inc:99
+msgid "php print_tags.inc <Filename>"
+msgstr ""
 
 #: Database words
 #, fuzzy
@@ -4564,14 +4882,25 @@ msgid "System"
 msgstr "Στοιχείο"
 
 #~ msgid ""
+#~ "[print_tags.php.inc]\n"
+#~ "This commandline script will display the tag information for the "
+#~ "specified filename as it will \n"
+#~ "appear to Ampache. \n"
+#~ "        \n"
+#~ msgstr ""
+#~ "Αυτό το command line script θα εμφανίσει τις tag πληροφορίες του "
+#~ "συγκεκριμένου αρχείου όπως θα εμφανιστούν στον ampache. \n"
+#~ "\t\n"
+
+#~ msgid "Filename:"
+#~ msgstr "Όνομα Αρχείου"
+
+#~ msgid ""
 #~ "Your webserver has read access to the /sql/ampache.sql file and the /"
 #~ "config/ampache.cfg.dist.php file"
 #~ msgstr ""
 #~ "Ο webserver έχει δικαίωμα ανάγνωση των /sql/ampache.sql, /config/ampache."
 #~ "cfg.dist.php αρχείων"
-
-#~ msgid "files removed"
-#~ msgstr "αρχεία αφαιρέθηκαν"
 
 #~ msgid "Genres"
 #~ msgstr "Είδη"

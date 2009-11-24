@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ampache SVN $Rev$\n"
 "Report-Msgid-Bugs-To: translations at ampache.org\n"
-"POT-Creation-Date: 2009-11-09 10:04+0900\n"
+"POT-Creation-Date: 2009-11-24 09:11+0900\n"
 "PO-Revision-Date: 2008-07-14 20:44+0900\n"
 "Last-Translator: momo-i <webmaster at momo-i.org>\n"
 "Language-Team: Japanese\n"
@@ -493,6 +493,14 @@ msgstr "関連するアーティスト"
 msgid "Pure Random"
 msgstr "純粋なランダム"
 
+#: ../../lib/class/api.class.php:209
+msgid "Error Invalid Handshake - "
+msgstr "不正なハンドシェイクエラー - "
+
+#: ../../lib/class/api.class.php:209
+msgid "Invalid Username/Password"
+msgstr "不正なユーザ名/パスワードです"
+
 #: ../../lib/class/flag.class.php:312
 msgid "Approved"
 msgstr "承認"
@@ -724,7 +732,7 @@ msgstr "ディスク"
 msgid "Various"
 msgstr "いくつかの"
 
-#: ../../lib/class/album.class.php:490 ../../lib/class/catalog.class.php:462
+#: ../../lib/class/album.class.php:490 ../../lib/class/catalog.class.php:468
 msgid "Error: Unable to open"
 msgstr "エラー: 開けませんでした"
 
@@ -740,27 +748,27 @@ msgstr "エラー: パスワードが一致しません"
 
 #: ../../lib/class/xmlrpcclient.class.php:64
 #: ../../lib/class/xmlrpcclient.class.php:97
-#: ../../lib/class/catalog.class.php:1278
-#: ../../lib/class/catalog.class.php:1352
-#: ../../lib/class/catalog.class.php:1385
-#: ../../lib/class/catalog.class.php:2395
+#: ../../lib/class/catalog.class.php:1288
+#: ../../lib/class/catalog.class.php:1362
+#: ../../lib/class/catalog.class.php:1395
+#: ../../lib/class/catalog.class.php:2410
 msgid "Error connecting to"
 msgstr "接続中のエラー:"
 
 #: ../../lib/class/xmlrpcclient.class.php:64
 #: ../../lib/class/xmlrpcclient.class.php:97
-#: ../../lib/class/catalog.class.php:1278
-#: ../../lib/class/catalog.class.php:1352
-#: ../../lib/class/catalog.class.php:1385
-#: ../../lib/class/catalog.class.php:2395
+#: ../../lib/class/catalog.class.php:1288
+#: ../../lib/class/catalog.class.php:1362
+#: ../../lib/class/catalog.class.php:1395
+#: ../../lib/class/catalog.class.php:2410
 msgid "Code"
 msgstr "コード"
 
 #: ../../lib/class/xmlrpcclient.class.php:64
-#: ../../lib/class/catalog.class.php:1278
-#: ../../lib/class/catalog.class.php:1352
-#: ../../lib/class/catalog.class.php:1385
-#: ../../lib/class/catalog.class.php:2395
+#: ../../lib/class/catalog.class.php:1288
+#: ../../lib/class/catalog.class.php:1362
+#: ../../lib/class/catalog.class.php:1395
+#: ../../lib/class/catalog.class.php:2410
 msgid "Reason"
 msgstr "理由"
 
@@ -832,152 +840,152 @@ msgstr[0] "時間"
 msgid "Running Remote Sync"
 msgstr "リモート同期実行中"
 
-#: ../../lib/class/catalog.class.php:469 ../../lib/class/catalog.class.php:512
+#: ../../lib/class/catalog.class.php:475 ../../lib/class/catalog.class.php:518
 msgid "Error: Unable to change to directory"
 msgstr "エラー: ディレクトリを変更できませんでした"
 
 #. HINT: FullFile
-#: ../../lib/class/catalog.class.php:549
+#: ../../lib/class/catalog.class.php:555
 #, php-format
 msgid "Error: Unable to get filesize for %s"
 msgstr "エラー: %sのファイルサイズの取得に失敗しました"
 
 #. HINT: FullFile
-#: ../../lib/class/catalog.class.php:556
+#: ../../lib/class/catalog.class.php:562
 #, php-format
 msgid "%s is not readable by ampache"
 msgstr "%sはAmpacheで読み込めません"
 
 #. HINT: FullFile
-#: ../../lib/class/catalog.class.php:565
+#: ../../lib/class/catalog.class.php:571
 #, php-format
 msgid "%s does not match site charset"
 msgstr "%sはサイトのCharsetと一致しません"
 
-#: ../../lib/class/catalog.class.php:1032
-#: ../../lib/class/catalog.class.php:1936 ../../preferences.php:111
+#: ../../lib/class/catalog.class.php:1038
+#: ../../lib/class/catalog.class.php:1946 ../../preferences.php:111
 #: ../../admin/access.php:109
 msgid "Updated"
 msgstr "更新しました"
 
-#: ../../lib/class/catalog.class.php:1039
+#: ../../lib/class/catalog.class.php:1045
 msgid "No Update Needed"
 msgstr "必要な更新はありません"
 
-#: ../../lib/class/catalog.class.php:1169
+#: ../../lib/class/catalog.class.php:1179
 msgid "Running Remote Update"
 msgstr "リモート更新実行中"
 
-#: ../../lib/class/catalog.class.php:1196
+#: ../../lib/class/catalog.class.php:1206
 msgid "Added Playlist From"
 msgstr "次からプレイリストを追加:"
 
-#: ../../lib/class/catalog.class.php:1225
+#: ../../lib/class/catalog.class.php:1235
 msgid "Catalog Update Finished"
 msgstr "カタログ更新完了"
 
-#: ../../lib/class/catalog.class.php:1225
+#: ../../lib/class/catalog.class.php:1235
 msgid "Total Time"
 msgstr "合計時間"
 
-#: ../../lib/class/catalog.class.php:1226
+#: ../../lib/class/catalog.class.php:1236
 msgid "Total Songs"
 msgstr "合計曲"
 
-#: ../../lib/class/catalog.class.php:1226
+#: ../../lib/class/catalog.class.php:1236
 msgid "Songs Per Seconds"
 msgstr "1秒毎の曲"
 
-#: ../../lib/class/catalog.class.php:1240 ../../lib/class/artist.class.php:354
+#: ../../lib/class/catalog.class.php:1250 ../../lib/class/artist.class.php:354
 #: ../../admin/users.php:143
 msgid "Error"
 msgstr "エラー"
 
-#: ../../lib/class/catalog.class.php:1240
+#: ../../lib/class/catalog.class.php:1250
 msgid "Unable to load pear XMLRPC library, make sure XML-RPC is enabled"
 msgstr ""
 "pear XMLRPCライブラリを読み込めませんでした。XML-RPCが有効になっているか確認"
 "してください。"
 
-#: ../../lib/class/catalog.class.php:1307
+#: ../../lib/class/catalog.class.php:1317
 msgid "Completed updating remote catalog(s)"
 msgstr "リモートカタログの更新完了"
 
-#: ../../lib/class/catalog.class.php:1311
+#: ../../lib/class/catalog.class.php:1321
 msgid "Starting synchronisation of album images"
 msgstr "アルバム画像の同期を開始しています"
 
-#: ../../lib/class/catalog.class.php:1313
+#: ../../lib/class/catalog.class.php:1323
 msgid "Completed synchronisation of album images"
 msgstr "アルバム画像の同期が完了しました"
 
-#: ../../lib/class/catalog.class.php:1348 ../../templates/show_song.inc.php:60
+#: ../../lib/class/catalog.class.php:1358 ../../templates/show_song.inc.php:60
 #: ../../admin/access.php:93
 msgid "Added"
 msgstr "追加しました"
 
-#: ../../lib/class/catalog.class.php:1381
+#: ../../lib/class/catalog.class.php:1391
 msgid "images synchronized: "
 msgstr "同期した画像: "
 
-#: ../../lib/class/catalog.class.php:1515
+#: ../../lib/class/catalog.class.php:1525
 msgid "Catalog Root unreadable, stopping clean"
 msgstr "カタログルートに到達できません。クリーンを停止します"
 
-#: ../../lib/class/catalog.class.php:1551
+#: ../../lib/class/catalog.class.php:1561
 msgid "Error File Not Found or 0 Bytes:"
 msgstr "エラー: ファイルが見つからないか0バイトです:"
 
-#: ../../lib/class/catalog.class.php:1573
+#: ../../lib/class/catalog.class.php:1583
 msgid "Error Remote File Not Found or 0 Bytes:"
 msgstr "エラー: リモートファイルが見つからないか0バイトです:"
 
-#: ../../lib/class/catalog.class.php:1592
+#: ../../lib/class/catalog.class.php:1602
 msgid "Error All songs would be removed, doing nothing"
 msgstr "エラー: 全曲削除しようとしましたが何もしていません。"
 
-#: ../../lib/class/catalog.class.php:1620
+#: ../../lib/class/catalog.class.php:1630
 #, php-format
 msgid "Catalog Clean Done. %d file removed."
 msgid_plural "Catalog Clean Done. %d files removed."
 msgstr[0] "カタログのクリーン完了。%dファイルを削除しました。"
 
-#: ../../lib/class/catalog.class.php:1622
+#: ../../lib/class/catalog.class.php:1632
 msgid "Optimizing Tables"
 msgstr "テーブルを最適化中"
 
 #. HINT: Mediafile
-#: ../../lib/class/catalog.class.php:1914
+#: ../../lib/class/catalog.class.php:1924
 #, php-format
 msgid "%s does not exist or is not readable"
 msgstr "%sは存在しないか読み込めません。"
 
-#: ../../lib/class/catalog.class.php:1936
+#: ../../lib/class/catalog.class.php:1946
 msgid "Update Finished"
 msgstr "更新完了"
 
-#: ../../lib/class/catalog.class.php:1936
+#: ../../lib/class/catalog.class.php:1946
 msgid "Checked"
 msgstr "チェック済み"
 
-#: ../../lib/class/catalog.class.php:1994
-#: ../../lib/class/catalog.class.php:2097
+#: ../../lib/class/catalog.class.php:2004
+#: ../../lib/class/catalog.class.php:2107
 #: ../../templates/show_album.inc.php:34
 msgid "Unknown (Orphaned)"
 msgstr "不明(孤立)"
 
-#: ../../lib/class/catalog.class.php:2493
+#: ../../lib/class/catalog.class.php:2508
 msgid "Playlist creation error."
 msgstr "プレイリスト作成エラーです。"
 
-#: ../../lib/class/catalog.class.php:2500
+#: ../../lib/class/catalog.class.php:2515
 #, php-format
 msgid "Playlist Import and Recreate Successful. Total: %d Song"
 msgid_plural "Playlist Import and Recreate Successful. Total: %d Songs"
 msgstr[0] "プレイリストのインポートと再生成に成功しました。合計: %d曲"
 
 #. HINT: filename
-#: ../../lib/class/catalog.class.php:2506
+#: ../../lib/class/catalog.class.php:2521
 #, php-format
 msgid "Parsing %s - Not Found: %d Song. Please check your m3u file."
 msgid_plural "Parsing %s - Not Found: %d Songs. Please check your m3u file."
@@ -1660,12 +1668,12 @@ msgid "Catalog Type"
 msgstr "カタログタイプ"
 
 #: ../../templates/show_edit_catalog.inc.php:44
-#: ../../templates/show_add_catalog.inc.php:60
 msgid "XML-RPC Key"
 msgstr "XML-RPCキー"
 
 #: ../../templates/show_edit_catalog.inc.php:46
 #: ../../templates/show_add_catalog.inc.php:61
+#: ../../templates/show_add_catalog.inc.php:65
 msgid "Required for Remote Catalogs"
 msgstr "リモートカタログの必須項目"
 
@@ -1674,12 +1682,12 @@ msgid "Filename pattern"
 msgstr "ファイル名パターン"
 
 #: ../../templates/show_edit_catalog.inc.php:57
-#: ../../templates/show_add_catalog.inc.php:69
+#: ../../templates/show_add_catalog.inc.php:73
 msgid "Folder Pattern"
 msgstr "フォルダパターン"
 
 #: ../../templates/show_edit_catalog.inc.php:57
-#: ../../templates/show_add_catalog.inc.php:69
+#: ../../templates/show_add_catalog.inc.php:73
 msgid "(no leading or ending '/')"
 msgstr "(先頭がない又は「/」で終わっている)"
 
@@ -1839,7 +1847,7 @@ msgid "Clear Catalog Stats"
 msgstr "カタログステータスをクリア"
 
 #: ../../templates/show_admin_tools.inc.php:84
-#: ../../templates/show_add_catalog.inc.php:74
+#: ../../templates/show_add_catalog.inc.php:78
 msgid "Gather Album Art"
 msgstr "アルバムアートを収集"
 
@@ -2228,15 +2236,23 @@ msgstr "ローカル"
 msgid "Remote"
 msgstr "リモート"
 
+#: ../../templates/show_add_catalog.inc.php:60
+msgid "Remote Catalog Username"
+msgstr "リモートカタログのユーザ名"
+
 #: ../../templates/show_add_catalog.inc.php:64
+msgid "Remote Catalog Password"
+msgstr "リモートカタログのパスワード"
+
+#: ../../templates/show_add_catalog.inc.php:68
 msgid "Filename Pattern"
 msgstr "ファイル名のパターン"
 
-#: ../../templates/show_add_catalog.inc.php:78
+#: ../../templates/show_add_catalog.inc.php:82
 msgid "Build Playlists from m3u Files"
 msgstr "m3uファイルからプレイリストを構築"
 
-#: ../../templates/show_add_catalog.inc.php:84
+#: ../../templates/show_add_catalog.inc.php:88
 msgid "Add Catalog"
 msgstr "カタログを追加"
 
@@ -4270,27 +4286,27 @@ msgstr "カタログを作成しました"
 msgid "Catalog statistics cleared"
 msgstr "カタログ統計を削除しました"
 
-#: ../../admin/catalog.php:264
+#: ../../admin/catalog.php:265
 msgid "Now Playing Cleared"
 msgstr "現在再生中のものをクリアしました"
 
-#: ../../admin/catalog.php:264
+#: ../../admin/catalog.php:265
 msgid "All now playing data has been cleared"
 msgstr "現在再生中のデータは全てクリアされました"
 
-#: ../../admin/catalog.php:275
+#: ../../admin/catalog.php:276
 msgid "No Disabled songs found"
 msgstr "無効にした曲は見つかりませんでした"
 
-#: ../../admin/catalog.php:284
+#: ../../admin/catalog.php:285
 msgid "Delete Catalog"
 msgstr "カタログの削除"
 
-#: ../../admin/catalog.php:284
+#: ../../admin/catalog.php:285
 msgid "Do you really want to delete this catalog?"
 msgstr "このカタログを削除してもよろしいですか？"
 
-#: ../../admin/catalog.php:304
+#: ../../admin/catalog.php:305
 msgid "Album Art Search Finished"
 msgstr "アルバムアート検索が完了しました"
 
@@ -4358,34 +4374,323 @@ msgstr "メール送信"
 msgid "Your E-mail was successfully sent."
 msgstr "メールは送信されました。"
 
-#: ../../server/xml.server.php:80
-msgid "Error Invalid Handshake - "
-msgstr "不正なハンドシェイクエラー - "
+#: ../../server/xml.server.php:41
+msgid "Access Control not Enabled"
+msgstr "アクセスコントロールは有効ではありません"
 
-#: ../../server/xml.server.php:345 ../../server/xml.server.php:394
-#: ../../server/xml.server.php:402
+#: ../../server/xml.server.php:52
+msgid "Session Expired"
+msgstr "セッションの期限切れ"
+
+#: ../../server/xml.server.php:63
+msgid "Unauthorized access attempt to API - ACL Error"
+msgstr "APIへ不正アクセスが試みられました - ACLエラー"
+
+#: ../../server/xml.server.php:274 ../../server/xml.server.php:324
+#: ../../server/xml.server.php:332
 msgid "Invalid Request"
 msgstr "不正なリクエスト"
 
-#: ../../server/xml.server.php:360 ../../server/xml.server.php:373
+#: ../../server/xml.server.php:289 ../../server/xml.server.php:302
 msgid "Media Object Invalid or Not Specified"
 msgstr "メディアオブジェクトは不正か指定されていません"
 
-#: ../../bin/print_tags.inc:75
-msgid ""
-"[print_tags.php.inc]\n"
-"This commandline script will display the tag information for the specified "
-"filename as it will \n"
-"appear to Ampache. \n"
-"        \n"
-msgstr ""
-"[print_tags.php.inc]\n"
-"このコマンドラインスクリプトはAmpacheへ表示されるものとして指定されたファイル"
-"名のタグ情報を表示します。\n"
+#: ../../bin/delete_disabled.inc:37
+msgid "DEBUG ENABLED WILL NOT DELETE FILES!"
+msgstr "デバッグが有効の場合はファイルを削除しません！"
 
-#: ../../bin/print_tags.inc:81
-msgid "Filename:"
-msgstr "ファイル名:"
+#: ../../bin/delete_disabled.inc:45
+#, php-format
+msgid "Would Delete: %s"
+msgstr "削除されます: %s"
+
+#: ../../bin/delete_disabled.inc:49
+#, php-format
+msgid "Deleting: %s"
+msgstr "削除中: %s"
+
+#: ../../bin/write_playlists.inc:41
+#, php-format
+msgid "Error: Directory %s not writeable"
+msgstr "エラー: ディレクトリ%sは書込み不可です"
+
+#: ../../bin/write_playlists.inc:62
+msgid "This will dump a collection of m3u playlists based on type"
+msgstr "これはタイプに基づいたm3uプレイリストの収集をダンプします"
+
+#: ../../bin/write_playlists.inc:63
+msgid "Types:"
+msgstr "タイプ:"
+
+#: ../../bin/write_playlists.inc:64
+msgid "Dumps all Albums as individual playlists"
+msgstr "個々のプレイリストとして全てのアルバムをダンプします"
+
+#: ../../bin/write_playlists.inc:65
+msgid "Dumps all of your Playlists as m3u's"
+msgstr "m3uとして全てのプレイリストをダンプします"
+
+#: ../../bin/write_playlists.inc:66
+msgid "Dumps all Artists as individual playlists"
+msgstr "個々のプレイリストとして全てのアーティストをダンプします"
+
+#: ../../bin/write_tags.inc:35
+msgid ""
+"Writting of Tags to files is not currently supported by Getid3() use at your "
+"own risk."
+msgstr "ファイルへのタグの書き込みはGetid3()で現在サポートされていません。自己責任で利用してください。"
+
+#: ../../bin/write_tags.inc:47
+msgid "No Flagged Songs Found, exiting..."
+msgstr "フラグされた曲はありません。終了します。。。"
+
+#: ../../bin/write_tags.inc:75
+msgid "No Tag"
+msgstr "タグ無し"
+
+#. HINT: %1$s: title, %2$s: artist_name
+#: ../../bin/write_tags.inc:84
+#, php-format
+msgid "Updated song %1$s by %2$s"
+msgstr "%2$sで曲%1$sを更新しました"
+
+#: ../../bin/migrate_config.inc:48
+msgid "Parsing old config file..."
+msgstr "古いコンフィグファイルを解析中。。。"
+
+#: ../../bin/migrate_config.inc:78
+msgid "Parse complete, writing"
+msgstr "解析完了。書込み中"
+
+#: ../../bin/migrate_config.inc:86
+msgid "Write success, config migrated"
+msgstr "書込み成功。コンフィグを統合しました"
+
+#: ../../bin/migrate_config.inc:90
+msgid "Access Denied, config migration failed"
+msgstr "アクセス拒否。コンフィグの統合に失敗しました"
+
+#: ../../bin/fix_filenames.inc:41
+msgid "ERROR: Iconv required for this functionality, quiting"
+msgstr "エラー: Iconvはこの機能で必須です。終了します"
+
+#: ../../bin/fix_filenames.inc:50
+#, php-format
+msgid "%s For the Love of Music"
+msgstr "%s 音楽の愛の為に"
+
+#: ../../bin/fix_filenames.inc:51
+msgid "Testing Basic Translation, the two strings below should look the same"
+msgstr "基本的な翻訳をテストしています。以下の2つの文字が同じか確認してください"
+
+#: ../../bin/fix_filenames.inc:53
+msgid "Original: For the Love of Music"
+msgstr "オリジナル: 音楽の愛の為に"
+
+#: ../../bin/fix_filenames.inc:55
+#, php-format
+msgid "Translated: %s"
+msgstr "翻訳: %s"
+
+#: ../../bin/fix_filenames.inc:58
+#, php-format
+msgid "Input Charset (%s):"
+msgstr "入力文字セット (%s):"
+
+#: ../../bin/fix_filenames.inc:62
+#, php-format
+msgid "Using %s as source character set"
+msgstr "元の文字セットとして%sを使用しています"
+
+#: ../../bin/fix_filenames.inc:70
+#, php-format
+msgid "Checking %s (%s)"
+msgstr "%sをチェックしています(%s)"
+
+#: ../../bin/fix_filenames.inc:76
+msgid "Finished checking filenames for valid chacters"
+msgstr "有効な文字のファイル名チェックを完了しました"
+
+#: ../../bin/fix_filenames.inc:102
+#, php-format
+msgid "ERROR: Unable to open %s"
+msgstr "エラー: %sを開けませんでした"
+
+#: ../../bin/fix_filenames.inc:108
+#, php-format
+msgid "ERROR: Unable to chdir to %s"
+msgstr "エラー: %sへディレクトリを変更できませんでした"
+
+#: ../../bin/fix_filenames.inc:131
+msgid "Translation failure, stripping non-valid characters"
+msgstr "翻訳に失敗しました。不正な文字列を削除しています"
+
+#: ../../bin/fix_filenames.inc:136
+#, php-format
+msgid "Attempting to Transcode to %s"
+msgstr "%sへのトランスコードを試みています"
+
+#: ../../bin/fix_filenames.inc:139
+#, php-format
+msgid "OLD: %s has invalid chars"
+msgstr "旧: %sは不正な文字です"
+
+#: ../../bin/fix_filenames.inc:141
+#, php-format
+msgid "NEW: %s"
+msgstr "新: %s"
+
+#: ../../bin/fix_filenames.inc:145
+msgid "Rename File (Y/N):"
+msgstr "ファイルをリネームしますか？ (Y/N):"
+
+#: ../../bin/fix_filenames.inc:148
+msgid "Not Renaming..."
+msgstr "リネームしません..."
+
+#: ../../bin/fix_filenames.inc:180
+#, php-format
+msgid "Error: Unable to create %s move failed, stopping"
+msgstr "エラー: %sを作成できず移動に失敗しました。停止します"
+
+#: ../../bin/fix_filenames.inc:192
+msgid "Error: Copy Failed, not deleteing old file"
+msgstr "エラー: コピーに失敗しました。古いファイルを削除しません"
+
+#: ../../bin/fix_filenames.inc:201 ../../bin/sort_files.inc:287
+#, php-format
+msgid "Error: Size Inconsistency, not deleting %s"
+msgstr "エラー: サイズの不整合です。%sを削除しません"
+
+#: ../../bin/fix_filenames.inc:208 ../../bin/sort_files.inc:294
+#, php-format
+msgid "Error: Unable to delete %s"
+msgstr "エラー: %sを削除できません"
+
+#: ../../bin/fix_filenames.inc:210
+msgid "File Moved..."
+msgstr "ファイルを移動しました。。。"
+
+#: ../../bin/sort_files.inc:59
+#, php-format
+msgid "Starting Catalog: %s"
+msgstr "カタログの開始: %s"
+
+#: ../../bin/sort_files.inc:74
+msgid "Moving File..."
+msgstr "ファイルを移動中。。。"
+
+#: ../../bin/sort_files.inc:76
+#, php-format
+msgid "Source: %s"
+msgstr "元: %s"
+
+#: ../../bin/sort_files.inc:78
+#, php-format
+msgid "Dest: %s"
+msgstr "先: %s"
+
+#: ../../bin/sort_files.inc:228
+#, php-format
+msgid "Making %s Directory"
+msgstr "%sディレクトリを作成中"
+
+#: ../../bin/sort_files.inc:235
+#, php-format
+msgid "Error: Unable to create %s move failed"
+msgstr "エラー: %sを作成できず移動に失敗しました"
+
+#. HINT: %1$s: file, %2$s: directory
+#: ../../bin/sort_files.inc:248
+#, php-format
+msgid "Copying %1$s to %2$s"
+msgstr "%2$sへ%1$sをコピーしています"
+
+#: ../../bin/sort_files.inc:259
+#, php-format
+msgid "Error: %s already exists"
+msgstr "エラー: %sはすでに存在します"
+
+#: ../../bin/sort_files.inc:280
+#, php-format
+msgid "Error: Unable to copy file to %s"
+msgstr "エラー: %sへファイルをコピーできません"
+
+#: ../../bin/catalog_update.inc:71
+msgid "- Starting Clean - "
+msgstr "- 掃除開始 -"
+
+#: ../../bin/catalog_update.inc:79
+msgid "- Starting Verify - "
+msgstr "- 検証開始 -"
+
+#: ../../bin/catalog_update.inc:87
+msgid "- Starting Add - "
+msgstr "- 追加開始 -"
+
+#: ../../bin/catalog_update.inc:105
+msgid "- Catalog Update -"
+msgstr "- 更新開始 -"
+
+#: ../../bin/catalog_update.inc:107
+msgid "Usage: catalog_update.inc [CATALOG NAME] [-c|-v|-a]"
+msgstr "使用方法: catalog_update.inc [カタログ名] [-c|-v|-a]"
+
+#: ../../bin/catalog_update.inc:109
+msgid "Clean Catalogs"
+msgstr "カタログの掃除"
+
+#: ../../bin/catalog_update.inc:111
+msgid "Verify Catalogs"
+msgstr "カタログの検証"
+
+#: ../../bin/catalog_update.inc:113
+msgid "Add to Catalogs"
+msgstr "カタログへ追加"
+
+#: ../../bin/catalog_update.inc:115
+msgid "*Default behavior is to do all 3*"
+msgstr "* デフォルトの動作は3で全てを実行します *"
+
+#: ../../bin/print_tags.inc:41
+msgid "File not found."
+msgstr "ファイルが見つかりませんでした。"
+
+#: ../../bin/print_tags.inc:48
+msgid "File type is not allowd."
+msgstr "ファイルタイプは許可されていません。"
+
+#: ../../bin/print_tags.inc:54
+#, php-format
+msgid "Reading: %s"
+msgstr "%sを読み込んでいます"
+
+#: ../../bin/print_tags.inc:66
+#, php-format
+msgid "Using: %s AND %s for file pattern matching"
+msgstr "ファイルパターンのマッチに%sと%sを使用しています"
+
+#: ../../bin/print_tags.inc:84
+msgid "Results Seen by GetID3()"
+msgstr "GetID3()での結果を表示"
+
+#: ../../bin/print_tags.inc:88
+#, php-format
+msgid "Results Seen by Ampache using %s"
+msgstr "Ampacheが%sを使用しての結果を表示"
+
+#: ../../bin/print_tags.inc:95
+#, php-format
+msgid "%s Version %s"
+msgstr "%sバージョン%s"
+
+#: ../../bin/print_tags.inc:97
+msgid "Usage:"
+msgstr "使用方法:"
+
+#: ../../bin/print_tags.inc:99
+msgid "php print_tags.inc <Filename>"
+msgstr "php print_tags.inc <ファイル名>"
 
 #: Database words
 msgid "Allow Downloads"
@@ -4494,3 +4799,17 @@ msgstr "インタフェース"
 #: Database words
 msgid "System"
 msgstr "システム"
+
+#~ msgid ""
+#~ "[print_tags.php.inc]\n"
+#~ "This commandline script will display the tag information for the "
+#~ "specified filename as it will \n"
+#~ "appear to Ampache. \n"
+#~ "        \n"
+#~ msgstr ""
+#~ "[print_tags.php.inc]\n"
+#~ "このコマンドラインスクリプトはAmpacheへ表示されるものとして指定されたファ"
+#~ "イル名のタグ情報を表示します。\n"
+
+#~ msgid "Filename:"
+#~ msgstr "ファイル名:"
