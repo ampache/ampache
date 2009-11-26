@@ -1527,25 +1527,24 @@ class getid3_mp3 extends getid3_handler
 
 
     public static function ClosestStandardMP3Bitrate($bit_rate) {
-        
-        static $standard_bit_rates = array (320000, 256000, 224000, 192000, 160000, 128000, 112000, 96000, 80000, 64000, 56000, 48000, 40000, 32000, 24000, 16000, 8000);
-        static $bit_rate_table = array (0=>'-');
-        $round_bit_rate = intval(round($bit_rate, -3));
-        if (!isset($bit_rate_table[$round_bit_rate])) {
-            if ($round_bit_rate > 320000) {
-                $bit_rate_table[$round_bit_rate] = round($bit_rate, -4);
-            } else {
-                $last_bit_rate = 320000;
-                foreach ($standard_bit_rates as $standard_bit_rate) {
-                    $bit_rate_table[$round_bit_rate] = $standard_bit_rate;
-                    if ($round_bit_rate >= $standard_bit_rate - (($last_bit_rate - $standard_bit_rate) / 2)) {
-                        break;
-                    }
-                    $last_bit_rate = $standard_bit_rate;
-                }
+          static $StandardBitrates = array(320000, 256000, 224000, 192000, 160000, 128000, 112000, 96000, 80000, 64000, 56000, 48000, 40000, 32000, 24000, 16000, 8000);
+      static $BitrateTable = array(0=>'-');
+      $roundbitrate = intval(round($bitrate, -3));
+      if (!isset($BitrateTable[$roundbitrate])) {
+         if ($roundbitrate > 320000) {
+            $BitrateTable[$roundbitrate] = round($bitrate, -4);
+         } else {
+            $LastBitrate = 320000;
+            foreach ($StandardBitrates as $StandardBitrate) {
+               $BitrateTable[$roundbitrate] = $LastBitrate;
+               if ($roundbitrate >= $StandardBitrate + (($LastBitrate - $StandardBitrate) / 2)) {
+                  break;
+               }
+               $LastBitrate = $StandardBitrate;
             }
-        }
-        return $bit_rate_table[$round_bit_rate];
+         }
+      }
+      return $BitrateTable[$roundbitrate];    
     }
 
 
