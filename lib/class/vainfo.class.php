@@ -948,7 +948,8 @@ class vainfo {
 		preg_match_all("/\%\w/",$pattern,$elements);
 		
 		$preg_pattern = preg_quote($pattern);
-		$preg_pattern = preg_replace("/\%\w/","(.+)",$preg_pattern);
+		$preg_pattern = preg_replace("/\%[Ty]/","([0-9]+?)",$preg_pattern); 
+		$preg_pattern = preg_replace("/\%\w/","(.+?)",$preg_pattern);
 		$preg_pattern = str_replace("/","\/",$preg_pattern);
 		$preg_pattern = str_replace(" ","\s",$preg_pattern);
 		$preg_pattern = "/" . $preg_pattern . "\..+$/";
