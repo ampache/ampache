@@ -762,7 +762,7 @@ class Album extends database_object {
                foreach ($amazon_base_urls AS $amazon_base) { 
 
 		    	// Create the Search Object
-	        	$amazon = new AmazonSearch(Config::get('amazon_developer_key'), $amazon_base);
+	        	$amazon = new AmazonSearch(Config::get('amazon_developer_public_key'), Config::get('amazon_developer_private_key'), $amazon_base);
 				if(Config::get('proxy_host') AND Config::get('proxy_port')) {
 					$proxyhost = Config::get('proxy_host');
 					$proxyport = Config::get('proxy_port');

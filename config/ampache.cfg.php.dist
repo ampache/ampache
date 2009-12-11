@@ -299,9 +299,12 @@ album_art_order = "db,id3,folder,lastfm"
 show_album_art = "true"
 
 ; Amazon Developer Key
-; This is needed in order to actually use the amazon album art
+; These are needed in order to actually use the amazon album art
+; Your public key is your 'Access Key ID'
+; Your private key is your 'Secret Access Key'
 ; DEFAULT: false
-;amazon_developer_key = ""
+;amazon_developer_public_key = ""
+;amazon_developer_private_key = ""
 
 ; Amazon base urls
 ; An array of Amazon sites to search.

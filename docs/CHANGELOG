@@ -4,6 +4,8 @@
 
 --------------------------------------------------------------------------
   v.3.6-Alpha1
+	- Updated Amazon Album art search to current Amazone API specs 
+		(Thx Vlet)
 	- Fix typo that caused song count to not be set on tag xml response
         - Fix tag methods so that alpha_match and exact_match work
         - Fix limit and offset not working on search_songs API method

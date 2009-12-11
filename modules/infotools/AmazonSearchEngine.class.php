@@ -30,8 +30,8 @@
 */
 class AmazonSearch {
 
-	var $base_url_default = "http://webservices.amazon.com";
-	var $url_suffix = "/onca/xml?";
+	var $base_url_default = "webservices.amazon.com";
+	var $url_suffix = "/onca/xml";
 	var $base_url;
 	var $search;
 	var $token;
@@ -54,12 +54,12 @@ class AmazonSearch {
 	  
 	  	/* If we have a base url then use it */
    		if ($base_url_param != '') {
-			$this->base_url = $base_url_param . $this->url_suffix; 
+			$this->base_url = str_replace('http://', '', $base_url_param); 
 			debug_event('amazon-search-results','Retrieving from ' . $base_url_param . $this->url_suffix,'5');
 		}
 		/* Default Operation */
 		else { 
-			$this->base_url=$this->base_url_default . $this->url_suffix;
+			$this->base_url=$this->base_url_default;
 		    	debug_event('amazon-search-results','Retrieving from DEFAULT','5');
 		}
 		
@@ -140,21 +140,45 @@ class AmazonSearch {
 		@discussion takes terms and a type
 	*/
 	function search($terms, $type='Music') {
-
-		$url = $this->base_url . "Service=AWSECommerceService&SubscriptionId=" . $this->token .
-			"&Operation=ItemSearch&Artist=" . urlencode($terms['artist']) . "&Title=" . urlencode($terms['album']) . 
-			"&Keywords=" . urlencode($terms['keywords']) . "&SearchIndex=" . $type;
+		$params = array();
+		
+		$params['Service'] = 'AWSECommerceService';
+		$params['AWSAccessKeyId'] = $this->public_key;
+		$params['Timestamp'] = gmdate("Y-m-d\TH:i:s\Z");
+		$params['Version'] = '2009-03-31';
+		$params['Operation'] = 'ItemSearch';
+		$params['Artist'] = $terms['artist'];
+		$params['Title'] = $terms['album'];
+		$params['Keywords'] = $terms['keywords'];
+		$params['SearchIndex'] = $type;
+		
+		ksort($params);
+		
+		$canonicalized_query = array();
+		
+		foreach ($params as $param => $value)
+			{
+			$param = str_replace("%7E", "~", rawurlencode($param));
+			$value = str_replace("%7E", "~", rawurlencode($value));
 			
-		debug_event('amazon-search-results',"_currentPage = " .  $this->_currentPage,'3');
-		if($this->_currentPage != 0){
-		  $url = $url . "&ItemPage=" . ($this->_currentPage+1);
-		}
+			$canonicalized_query[] = $param."=".$value;
+			}
+		
+		$canonicalized_query = implode('&', $canonicalized_query);
+		
+		$string_to_sign = 'GET' . "\n" . $this->base_url . "\n" . $this->url_suffix . "\n" . $canonicalized_query;
+		
+		$signature = base64_encode(hash_hmac("sha256", $string_to_sign, $this->private_key, True));
+		
+		$signature = str_replace("%7E", "~", rawurlencode($signature));
+		
+		$url = 'http://' . $this->base_url . $this->url_suffix . '?' . $canonicalized_query . '&Signature=' . $signature;
+		
 		$this->run_search($url);
-
+		
 		unset($this->results['ASIN']);
-
+		
 		return $this->results;
-
 	} // search
     
 	/*!
