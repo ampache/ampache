@@ -34,7 +34,8 @@ class AmazonSearch {
 	var $url_suffix = "/onca/xml";
 	var $base_url;
 	var $search;
-	var $token;
+	var $public_key;
+	var $private_key;
 	var $results=array();  // Array of results
 	var $_parser;   // The XML parser
 	var $_grabtags; // Tags to grab the contents of
@@ -50,7 +51,7 @@ class AmazonSearch {
 	var $_proxy_user=""; // Proxy user
 	var $_proxy_pass=""; // Proxy pass
     
-	function AmazonSearch($token,  $base_url_param = '', $associates_id = 'none') {
+	function AmazonSearch($public_key, $private_key,  $base_url_param = '') {
 	  
 	  	/* If we have a base url then use it */
    		if ($base_url_param != '') {
@@ -63,8 +64,8 @@ class AmazonSearch {
 		    	debug_event('amazon-search-results','Retrieving from DEFAULT','5');
 		}
 		
-		$this->token = $token;
-		$this->associates_id = $associates_id;
+		$this->public_key = $public_key;
+		$this->private_key = $private_key;
 	
 		$this->_grabtags = array(
 			'ASIN', 'ProductName', 'Catalog', 'ErrorMsg',
