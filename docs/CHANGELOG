@@ -4,6 +4,7 @@
 
 --------------------------------------------------------------------------
   v.3.6-Alpha1
+	- Improved File pattern matching (Thx october.rust)
 	- Updated Amazon Album art search to current Amazone API specs 
 		(Thx Vlet)
 	- Fix typo that caused song count to not be set on tag xml response
