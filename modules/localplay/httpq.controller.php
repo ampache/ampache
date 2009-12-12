@@ -516,6 +516,10 @@ class AmpacheHttpq extends localplay_controller {
                                                         break; 
                                                 } // end switch on type 
                                         } // end if results
+					else { 
+						$data['name'] = basename($data['raw']);
+						$data['link'] = basename($data['raw']); 
+					} 
 
                                 break;
                         } // end switch on primary key type
@@ -543,12 +547,17 @@ class AmpacheHttpq extends localplay_controller {
 		$array['repeat']	= $this->_httpq->get_repeat();
 		$array['random']	= $this->_httpq->get_random();
 		$array['track']		= $this->_httpq->get_now_playing();
-
 		$url_data = $this->parse_url($array['track']); 
-		$song = new Song($url_data['oid']);
-		$array['track_title'] 	= $song->title;
-		$array['track_artist'] 	= $song->get_artist_name();
-		$array['track_album']	= $song->get_album_name();
+
+		if (isset($url_data['oid'])) {  
+			$song = new Song($url_data['oid']);
+			$array['track_title'] 	= $song->title;
+			$array['track_artist'] 	= $song->get_artist_name();
+			$array['track_album']	= $song->get_album_name();
+		}
+		else { 
+			$array['track_title']	= basename($array['track']); 
+		} 
 
 		return $array;
 
