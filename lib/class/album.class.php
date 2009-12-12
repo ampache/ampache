@@ -102,7 +102,7 @@ class Album extends database_object {
 		$idlist = '(' . implode(',', $ids) . ')';
 
 		$sql = "SELECT * FROM `album` WHERE `id` IN $idlist";
-		$db_results = Dba::query($sql);
+		$db_results = Dba::read($sql);
 	  
 		while ($row = Dba::fetch_assoc($db_results)) {
 			parent::add_to_cache('album',$row['id'],$row); 
@@ -147,7 +147,7 @@ class Album extends database_object {
 			"INNER JOIN `artist` ON `artist`.`id`=`song`.`artist` " .
 			"LEFT JOIN `album_data` ON `album_data`.`album_id` = `song`.`album` " . 
 			"WHERE `song`.`album`='$this->id' GROUP BY `song`.`album`";
-		$db_results = Dba::query($sql); 
+		$db_results = Dba::read($sql); 
 
 		$results = Dba::fetch_assoc($db_results); 
 
@@ -176,7 +176,7 @@ class Album extends database_object {
 
 		$sql = "SELECT `id` FROM `song` WHERE `album`='$this->id' $artist_sql ORDER BY `track`, `title`";
 		if ($limit) { $sql .= " LIMIT $limit"; }
-		$db_results = Dba::query($sql);
+		$db_results = Dba::read($sql);
 
 		while ($r = Dba::fetch_assoc($db_results)) { 
 			$results[] = $r['id'];
@@ -194,7 +194,7 @@ class Album extends database_object {
 	public function has_art() { 
 
 		$sql = "SELECT `album_id` FROM `album_data` WHERE `album_id`='" . $this->id . "' AND art IS NOT NULL"; 
-		$db_results = Dba::query($sql); 
+		$db_results = Dba::read($sql); 
 
 		if (Dba::fetch_assoc($db_results)) { 
 			$this->has_art = true; 
@@ -214,7 +214,7 @@ class Album extends database_object {
 		$title = Dba::escape($title); 
 
 		$sql = "SELECT `id` FROM `song` WHERE `album`='$this->id' AND `title`='$title'"; 
-		$db_results = Dba::query($sql); 
+		$db_results = Dba::read($sql); 
 
 		$data = Dba::fetch_assoc($db_results); 
 
@@ -543,7 +543,7 @@ class Album extends database_object {
 		$id = Dba::escape($this->id); 
 
 		$sql = "SELECT `thumb` AS `art`,`thumb_mime` AS `art_mime` FROM `album_data` WHERE `album_id`='$id'";
-		$db_results = Dba::query($sql); 
+		$db_results = Dba::read($sql); 
 		
 		$results = Dba::fetch_assoc($db_results); 
 		if (strlen($results['art_mime'])) { 
@@ -564,7 +564,7 @@ class Album extends database_object {
 	public function get_db_art() {
 
 		$sql = "SELECT `art`,`art_mime` FROM `album_data` WHERE `album_id`='$this->id'";
-		$db_results = Dba::query($sql);
+		$db_results = Dba::read($sql);
 
 		$results = Dba::fetch_assoc($db_results);
 
@@ -713,12 +713,11 @@ class Album extends database_object {
 						}
 					}
 				}
-			}
-		}
-
-
+			} // end foreach coverart sites
+		} // end foreach
 
 		return $images;
+
 	} // get_musicbrainz_art
 
 	/**
@@ -871,7 +870,7 @@ class Album extends database_object {
 	function get_random_songs() { 
 
 		$sql = "SELECT `id` FROM `song` WHERE `album`='$this->id' ORDER BY RAND()";
-		$db_results = Dba::query($sql);
+		$db_results = Dba::read($sql);
 
 		while ($r = Dba::fetch_row($db_results)) { 
 			$results[] = $r['0'];
@@ -887,7 +886,6 @@ class Album extends database_object {
 	 * as needed, and then throws down with a flag
 	 */
 	public function update($data) { 
-
 
 		$year 		= $data['year']; 
 		$artist		= $data['artist']; 
@@ -940,7 +938,7 @@ class Album extends database_object {
 	public function clear_art() { 
 	
 		$sql = "UPDATE `album_data` SET `art`=NULL, `art_mime`=NULL, `thumb`=NULL, `thumb_mime`=NULL WHERE `album_id`='$this->id'";
-		$db_results = Dba::query($sql);
+		$db_results = Dba::write($sql);
 
 	} // clear_art
 
@@ -997,7 +995,7 @@ class Album extends database_object {
 
 		$sql = "UPDATE `album_data` SET `thumb`='$data',`thumb_mime`='$mime' " . 
 			"WHERE `album_data`.`album_id`='$album'";
-		$db_results = Dba::query($sql); 
+		$db_results = Dba::write($sql); 
 
 	} // save_resized_art
 
@@ -1009,7 +1007,7 @@ class Album extends database_object {
 	public static function get_random_albums($count=6) {
 
 	        $sql = 'SELECT `id` FROM `album` ORDER BY RAND() LIMIT ' . ($count*2);
-	        $db_results = Dba::query($sql);
+	        $db_results = Dba::read($sql);
 
 	        $in_sql = '`album_id` IN (';
 
@@ -1023,7 +1021,7 @@ class Album extends database_object {
 	        $in_sql = rtrim($in_sql,',') . ')';
 
 	        $sql = "SELECT `album_id`,ISNULL(`art`) AS `no_art` FROM `album_data` WHERE $in_sql";
-	        $db_results = Dba::query($sql);
+	        $db_results = Dba::read($sql);
 	        $results = array();
 
 	        while ($row = Dba::fetch_assoc($db_results)) {
@@ -1059,7 +1057,7 @@ class Album extends database_object {
 	                // Repull it 
 	                $album_id = Dba::escape($data['db']);
 	                $sql = "SELECT * FROM `album_data` WHERE `album_id`='$album_id'";
-	                $db_results = Dba::query($sql);
+	                $db_results = Dba::read($sql);
 	                $row = Dba::fetch_assoc($db_results);
 	                return $row['art'];
 	        } // came from the db
