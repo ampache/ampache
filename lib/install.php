@@ -202,7 +202,7 @@ function install_insert_db($username,$password,$hostname,$database) {
                  if(!empty($pieces[$i]) && $pieces[$i] != "#") {
 			   //FIXME: This is for a DB prefix when we get around to it
 //                         $pieces[$i] = str_replace( "#__", $DBPrefix, $pieces[$i]);
-                         if (!$result = Dba::query ($pieces[$i])) {
+                         if (!$result = Dba::write($pieces[$i])) {
                                  $errors[] = array ( mysql_error(), $pieces[$i] );
                          } // end if
                  } // end if
