@@ -141,7 +141,7 @@ class Stream {
 
 		$sql = "INSERT INTO `session_stream` (`id`,`expire`,`user`) " . 
 			"VALUES('$sid','$expire','$uid')"; 
-		$db_results = Dba::query($sql); 
+		$db_results = Dba::write($sql); 
 
 		if (!$db_results) { return false; } 
 
@@ -161,7 +161,7 @@ class Stream {
 		$time	= time(); 
 
 		$sql = "SELECT * FROM `session_stream` WHERE `id`='$sid' AND `expire` > '$time'"; 
-		$db_results = Dba::query($sql); 
+		$db_results = Dba::write($sql); 
 
 		if ($row = Dba::fetch_assoc($db_results)) { 
 			return true; 
@@ -182,7 +182,7 @@ class Stream {
 
 		$time = time(); 
 		$sql = "DELETE FROM `session_stream` WHERE `expire` < '$time'"; 
-		$db_results = Dba::query($sql); 
+		$db_results = Dba::write($sql); 
 		
 		foreach ($append_array as $append_agent) { 
 			if (strstr(strtoupper($agent),$append_agent)) { 
@@ -194,7 +194,7 @@ class Stream {
 		// We need all of this to run this query
 		if ($ip AND $agent AND $uid AND $sid) { 
 			$sql = "DELETE FROM `session_stream` WHERE `ip`='$ip' AND `agent`='$agent' AND `user`='$uid' AND `id` != '$sid'"; 
-			$db_results = Dba::query($sql); 
+			$db_results = Dba::write($sql); 
 		} 
 
 	} // gc_session 
@@ -214,7 +214,7 @@ class Stream {
 
 		$sql = "UPDATE `session_stream` SET `expire`='$expire', `agent`='$agent', `ip`='$ip' " . 
 			"WHERE `id`='$sid'"; 
-		$db_results = Dba::query($sql); 
+		$db_results = Dba::write($sql); 
 
 		self::gc_session($ip,$agent,$uid,$sid); 
 
@@ -612,7 +612,7 @@ class Stream {
 	                $sql = "SELECT COUNT(*) FROM now_playing, user_preference, preference " .
 	                        "WHERE preference.name = 'play_type' AND user_preference.preference = preference.id " .
 	                        "AND now_playing.user = user_preference.user AND user_preference.value='downsample'";
-	                $db_results = Dba::query($sql);
+	                $db_results = Dba::read($sql);
 	                $results = Dba::fetch_row($db_results);
 
 	                // Current number of active streams (current is already in now playing, worst case make it 1)
@@ -722,7 +722,7 @@ class Stream {
 	        $sql = "DELETE FROM `now_playing` USING `now_playing` " .
 	                "LEFT JOIN `session_stream` ON `session_stream`.`id`=`now_playing`.`id` " .
 	                "WHERE `session_stream`.`id` IS NULL OR `now_playing`.`expire` < '" . time() . "'";
-	        $db_results = Dba::query($sql);
+	        $db_results = Dba::write($sql);
 
 	} // gc_now_playing
 
@@ -753,7 +753,7 @@ class Stream {
 	public static function clear_now_playing() {
 
 	        $sql = "TRUNCATE `now_playing`";
-	        $db_results = Dba::query($sql);
+	        $db_results = Dba::write($sql);
 
 	        return true;
 

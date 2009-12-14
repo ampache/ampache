@@ -111,7 +111,7 @@ class Radio extends database_object implements media {
 
 		$sql = "UPDATE `live_stream` SET `name`='$name',`site_url`='$site_url',`url`='$url'" . 
 			",`frequency`='$frequency',`call_sign`='$call_sign' WHERE `id`='$id'"; 
-		$db_results = Dba::query($sql); 
+		$db_results = Dba::write($sql); 
 
 		return $db_results; 
 
@@ -158,7 +158,7 @@ class Radio extends database_object implements media {
 		// If we've made it this far everything must be ok... I hope
 		$sql = "INSERT INTO `live_stream` (`name`,`site_url`,`url`,`catalog`,`frequency`,`call_sign`) " . 
 			"VALUES ('$name','$site_url','$url','$catalog','$frequency','$call_sign')"; 
-		$db_results = Dba::query($sql); 
+		$db_results = Dba::write($sql); 
 
 		return $db_results;  
 
@@ -173,7 +173,7 @@ class Radio extends database_object implements media {
 		$id = Dba::escape($this->id); 
 
 		$sql = "DELETE FROM `live_stream` WHERE `id`='$id'"; 
-		$db_results = Dba::query($sql); 
+		$db_results = Dba::write($sql); 
 
 		return true; 
 

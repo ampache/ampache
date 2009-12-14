@@ -59,7 +59,7 @@ class Stats {
 
 		$sql = "INSERT INTO `object_count` (`object_type`,`object_id`,`date`,`user`) " . 
 			" VALUES ('$type','$oid','$date','$user')";
-		$db_results = Dba::query($sql);
+		$db_results = Dba::write($sql);
 
 		if (!$db_results) { 
 			debug_event('statistics','Unabled to insert statistics:' . $sql,'3');
@@ -81,7 +81,7 @@ class Stats {
 		$user_id = Dba::escape($user_id);
 
 		$sql = "SELECT * FROM `object_count` WHERE `user`='$user_id' AND `object_type`='song' ORDER BY `date` DESC LIMIT 1"; 
-		$db_results = Dba::query($sql); 
+		$db_results = Dba::read($sql); 
 
 		$results = Dba::fetch_assoc($db_results); 
 
@@ -104,7 +104,7 @@ class Stats {
 
 		$sql = "SELECT * FROM `object_count` WHERE `user`='$user_id' AND `object_type`='song' AND `date`>='$time' " . 
 			"ORDER BY `date` DESC"; 
-		$db_results = Dba::query($sql); 
+		$db_results = Dba::read($sql); 
 
 		$results = array(); 
 
@@ -140,7 +140,7 @@ class Stats {
 		$sql = "SELECT object_id,COUNT(id) AS `count` FROM object_count" . 
 			" WHERE object_type='$type' AND date >= '$date'" .
 			" GROUP BY object_id ORDER BY `count` DESC LIMIT $count";
-		$db_results = Dba::query($sql);
+		$db_results = Dba::read($sql);
 
 		$results = array();
 
@@ -176,7 +176,7 @@ class Stats {
 		$sql = "SELECT object_id,COUNT(id) AS `count` FROM object_count" . 
 			" WHERE object_type='$type' AND date >= '$date' AND user = '$user'" . 
 			" GROUP BY object_id ORDER BY `count` DESC LIMIT $count";
-		$db_results = Dba::query($sql);
+		$db_results = Dba::read($sql);
 		
 		$results = array();
 

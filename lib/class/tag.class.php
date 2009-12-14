@@ -157,7 +157,7 @@ class Tag extends database_object {
 
                 $sql = "SELECT `tag_map`.`id`,`tag_map`.`tag_id`,`tag_map`.`object_id`,`tag_map`.`user` FROM `tag_map` " .
                         "WHERE `tag_map`.`object_type`='$type' AND `tag_map`.`object_id` IN $idlist ";
-		$db_results = Dba::query($sql); 
+		$db_results = Dba::read($sql); 
 
 		$tags = array(); 
 
@@ -331,7 +331,7 @@ class Tag extends database_object {
 		$sql = "SELECT `tag_map`.`tag_id`,`tag_map`.`user` FROM `tag_map` " . 
 			"WHERE `tag_map`.`object_type`='$type' AND `tag_map`.`object_id`='$object_id' " . 
 			"LIMIT $limit"; 
-		$db_results = Dba::query($sql); 
+		$db_results = Dba::read($sql); 
 
 		$results = array(); 
 
@@ -503,7 +503,7 @@ class Tag extends database_object {
 			$sql .= 'username in ('.$req.')';
 		}
 
-		$db_results = Dba::query($sql); 
+		$db_results = Dba::read($sql); 
 
 		$uids=array();
 		$usernames = array();

@@ -65,7 +65,7 @@ class Access {
 
 		/* Grab the basic information from the catalog and return it */
 		$sql = "SELECT * FROM `access_list` WHERE `id`='" . Dba::escape($this->id) . "'";
-		$db_results = Dba::query($sql);
+		$db_results = Dba::read($sql);
 
 		$results = Dba::fetch_assoc($db_results);
 
@@ -125,7 +125,7 @@ class Access {
 		$sql = "UPDATE `access_list` " . 
 			"SET `start`='$start', `end`='$end', `level`='$level', `user`='$user', `key`='$key', " . 
 			"`name`='$name', `type`='$type',`enabled`='$enabled' WHERE `id`='" . Dba::escape($this->id) . "'";
-		$db_results = Dba::query($sql);
+		$db_results = Dba::write($sql);
 
 		return true;
 
@@ -174,7 +174,7 @@ class Access {
 
 		$sql = "INSERT INTO `access_list` (`name`,`level`,`start`,`end`,`key`,`user`,`type`,`enabled`) " . 
 			"VALUES ('$name','$level','$start','$end','$key','$user','$type','$enabled')";
-		$db_results = Dba::query($sql);
+		$db_results = Dba::write($sql);
 
 		return true;
 
@@ -210,7 +210,7 @@ class Access {
 	public static function delete($access_id) { 
 
 		$sql = "DELETE FROM `access_list` WHERE `id`='" . Dba::escape($access_id) . "'";
-		$db_results = Dba::query($sql);
+		$db_results = Dba::write($sql);
 
 	} // delete
 	
@@ -471,12 +471,12 @@ class Access {
 				$key = Dba::escape($key); 
 				$time = time(); 
 				$sql = "SELECT * FROM `session_api` WHERE `id`='$key' AND `expire` > '$time'"; 
-				$db_results = Dba::query($sql); 
+				$db_results = Dba::read($sql); 
 		
 				if (Dba::num_rows($db_results)) { 
 					$time = $time + 3600; 
 					$sql = "UPDATE `session_api` WHERE `id`='$key' SET `expire`='$time'"; 
-					$db_results = Dba::query($sql); 
+					$db_results = Dba::write($sql); 
 					return true; 
 				} 
 

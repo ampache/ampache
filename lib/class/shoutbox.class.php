@@ -46,7 +46,7 @@ class shoutBox {
 		$sticky_id = Dba::escape($shout_id); 
 
 		$sql = "SELECT * FROM `user_shout` WHERE `id`='$shout_id'"; 
-		$db_results = Dba::query($sql); 
+		$db_results = Dba::read($sql); 
 
 		$data = Dba::fetch_assoc($db_results); 
 
@@ -76,7 +76,7 @@ class shoutBox {
 		// Only get as many as we need
 		$limit = intval($limit) - count($shouts); 
 		$sql = "SELECT * FROM `user_shout` WHERE `sticky`='0' ORDER BY `date` DESC LIMIT $limit";  
-		$db_results = Dba::query($sql); 
+		$db_results = Dba::read($sql); 
 
 		while ($row = Dba::fetch_assoc($db_results)) { 
 			$shouts[] = $row['id']; 
@@ -93,7 +93,7 @@ class shoutBox {
 	public static function get_sticky() { 
 
 		$sql = "SELECT * FROM `user_shout` WHERE `sticky`='1' ORDER BY `date` DESC"; 
-		$db_results = Dba::query($sql);
+		$db_results = Dba::read($sql);
 
 		$results = array(); 
 
@@ -165,7 +165,7 @@ class shoutBox {
 
 		$sql = "INSERT INTO `user_shout` (`user`,`date`,`text`,`sticky`,`object_id`,`object_type`) " . 
 			"VALUES ('$user','$date','$text','$sticky','$object_id','$object_type')"; 
-		$db_results = Dba::query($sql); 
+		$db_results = Dba::write($sql); 
 
 		$insert_id = Dba::insert_id(); 
 
@@ -184,7 +184,7 @@ class shoutBox {
 		$sticky 	= make_bool($data['sticky']); 
 
 		$sql = "UPDATE `user_shout` SET `text`='$text', `sticky`='$sticky' WHERE `id`='$id'";
-		$db_results = Dba::query($sql); 
+		$db_results = Dba::write($sql); 
 
 		return true; 
 
@@ -215,7 +215,7 @@ class shoutBox {
                 // Delete the shoutbox post
 		
                 $sql = "DELETE FROM `user_shout` WHERE `id`='$shout_id'";
-                $db_results = Dba::query($sql);
+                $db_results = Dba::write($sql);
 		
 	} // delete
 

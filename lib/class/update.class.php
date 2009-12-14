@@ -61,7 +61,7 @@ class Update {
 	private function _get_info() {
 
 		$sql = "SELECT * FROM `update_info` WHERE `key`='$this->key'";
-		$db_results = Dba::query($sql);
+		$db_results = Dba::read($sql);
 
 		return Dba::fetch_assoc($db_results);		
 
@@ -77,7 +77,7 @@ class Update {
 
 		/* Make sure that update_info exits */
 		$sql = "SHOW TABLES LIKE 'update_info'";
-		$db_results = Dba::query($sql);
+		$db_results = Dba::read($sql);
 		if (!is_resource(Dba::dbh())) { header("Location: test.php"); } 
 
 		// If no table
@@ -90,7 +90,7 @@ class Update {
 		else {
 			// If we've found the update_info table, let's get the version from it
 			$sql = "SELECT * FROM `update_info` WHERE `key`='db_version'";
-			$db_results = Dba::query($sql);
+			$db_results = Dba::read($sql);
 			$results = Dba::fetch_assoc($db_results);
 			$version = $results['value'];
 		} 
@@ -150,7 +150,7 @@ class Update {
 
 		/* Pull all version info */
 		$sql = "SELECT * FROM `update_info`";
-		$db_results = Dba::query($sql);
+		$db_results = Dba::read($sql);
 
 		while ($results = Dba::fetch_assoc($db_results)) { 
 
@@ -439,7 +439,7 @@ class Update {
 	private static function set_version($key,$value) {
 
 		$sql = "UPDATE update_info SET value='$value' WHERE `key`='$key'";
-		$db_results = Dba::query($sql);		
+		$db_results = Dba::write($sql);		
 
 	} //set_version
 
@@ -454,7 +454,7 @@ class Update {
 
 		// Build the User -> ID map using the username as the key
 		$sql = "SELECT `id`,`username` FROM `user`"; 
-		$db_results = Dba::query($sql);
+		$db_results = Dba::read($sql);
 
 		$user_array = array(); 
 

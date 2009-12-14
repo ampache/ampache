@@ -50,7 +50,7 @@ class Random implements media {
 	public static function album() { 
 
 		$sql = "SELECT `id` FROM `album` ORDER BY RAND() LIMIT 1"; 
-		$db_results = Dba::query($sql); 
+		$db_results = Dba::read($sql); 
 
 		$results = Dba::fetch_assoc($db_results); 
 
@@ -65,7 +65,7 @@ class Random implements media {
 	public static function artist() { 
 
 		$sql = "SELECT `id` FROM `artist` ORDER BY RAND() LIMIT 1"; 
-		$db_results = Dba::query($sql); 
+		$db_results = Dba::read($sql); 
 
 		$results = Dba::fetch_assoc($db_results); 
 
@@ -83,7 +83,7 @@ class Random implements media {
 		$sql = "SELECT `playlist`.`id` FROM `playlist` LEFT JOIN `playlist_data` " . 
 			" ON `playlist`.`id`=`playlist_data`.`playlist` WHERE `playlist_data`.`object_id` IS NOT NULL " . 
 			" ORDER BY RAND()"; 
-		$db_results = Dba::query($sql); 
+		$db_results = Dba::read($sql); 
 
 		$results = Dba::fetch_assoc($db_results); 
 
@@ -141,7 +141,7 @@ class Random implements media {
 		$results = array(); 
 
 		$sql = "SELECT `id` FROM `song` ORDER BY RAND() LIMIT $limit"; 
-		$db_results = Dba::query($sql); 
+		$db_results = Dba::read($sql); 
 
 		while ($row = Dba::fetch_assoc($db_results)) { 
 			$results[] = $row['id']; 
@@ -167,7 +167,7 @@ class Random implements media {
 		} 
 
 		$sql = "SELECT `id` FROM `song` $where_sql ORDER BY RAND() LIMIT $limit"; 
-		$db_results = Dba::query($sql); 
+		$db_results = Dba::read($sql); 
 
 		while ($row = Dba::fetch_assoc($db_results)) { 
 	 		$results[] = $row['id']; 
@@ -193,7 +193,7 @@ class Random implements media {
 		} 
 
 		$sql = "SELECT `id` FROM `song` $where_sql ORDER BY RAND() LIMIT $limit"; 
-		$db_results = Dba::query($sql); 
+		$db_results = Dba::read($sql); 
 
 		while ($row = Dba::fetch_assoc($db_results)) { 
 			$results[] = $row['id']; 
@@ -218,7 +218,7 @@ class Random implements media {
 		} 
 
 		$sql = "SELECT `id` FROM `song` $where_sql ORDER BY RAND() LIMIT $limit"; 
-		$db_results = Dba::query($sql); 
+		$db_results = Dba::read($sql); 
 
 		while ($row = Dba::fetch_assoc($db_results)) { 
 			$results[] = $row['id']; 
@@ -273,7 +273,7 @@ class Random implements media {
 			case 'full_album': 
 	                	$query = "SELECT `album`.`id` FROM `song` INNER JOIN `album` ON `song`.`album`=`album`.`id` " . 
 					"WHERE $where GROUP BY `song`.`album` ORDER BY RAND() $limit_sql";
-		                $db_results = Dba::query($query);
+		                $db_results = Dba::read($query);
 		                while ($row = Dba::fetch_assoc($db_results)) {
 		                        $albums_where .= " OR `song`.`album`=" . $row['id'];
 		                }
@@ -283,7 +283,7 @@ class Random implements media {
 			case 'full_artist': 
 	                	$query = "SELECT `artist`.`id` FROM `song` INNER JOIN `artist` ON `song`.`artist`=`artist`.`id` " . 
 					"WHERE $where GROUP BY `song`.`artist` ORDER BY RAND()  $limit_sql";
-		                $db_results = Dba::query($query);
+		                $db_results = Dba::read($query);
 		                while ($row = Dba::fetch_row($db_results)) {
 		                        $artists_where .= " OR song.artist=" . $row[0];
 		                }
@@ -293,7 +293,7 @@ class Random implements media {
 			case 'unplayed': 
 				$uid = Dba::escape($GLOBALS['user']->id); 
 				$sql = "SELECT object_id,COUNT(`id`) AS `total` FROM `object_count` WHERE `user`='$uid' GROUP BY `object_id`";
-				$db_results = Dba::query($sql); 
+				$db_results = Dba::read($sql); 
 
 				$in_sql = "`id` IN (";
 
@@ -310,7 +310,7 @@ class Random implements media {
 			case 'high_rating': 
 				$sql = "SELECT `rating`.`object_id`,`rating`.`rating` FROM `rating` " . 
 					"WHERE `rating`.`object_type`='song' ORDER BY `rating` DESC"; 
-				$db_results = Dba::query($sql); 
+				$db_results = Dba::read($sql); 
 
 				// Get all of the ratings for songs
 				while ($row = Dba::fetch_assoc($db_results)) { 
@@ -349,7 +349,7 @@ class Random implements media {
 		} // end switch on type of random play 
 
 		// Run the query generated above so we can while it
-		$db_results = Dba::query($sql); 
+		$db_results = Dba::read($sql); 
 		$results = array(); 	
 
 		while ($row = Dba::fetch_assoc($db_results)) { 

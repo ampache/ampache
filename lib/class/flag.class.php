@@ -67,7 +67,7 @@ class Flag extends database_object {
 		$idlist = '(' . implode(',',$ids) . ')'; 
 
 		$sql = "SELECT * FROM `flagged` WHERE `id` IN $idlist"; 
-		$db_results = Dba::query($sql); 
+		$db_results = Dba::read($sql); 
 
 		while ($row = Dba::fetch_assoc($db_results)) { 
 			parent::add_to_cache('flagged',$row['id'],$row); 
@@ -140,7 +140,7 @@ class Flag extends database_object {
 		$results = array();
 
 		$sql = "SELECT id FROM flagged ORDER BY date " . $limit;
-		$db_results = Dba::query($sql);
+		$db_results = Dba::read($sql);
 
 		while ($r = Dba::fetch_assoc($db_results)) { 
 			$results[] = $r['id'];
@@ -158,7 +158,7 @@ class Flag extends database_object {
 	public static function get_disabled() { 
 
 		$sql = "SELECT `id` FROM `song` WHERE `enabled`='0'"; 
-		$db_results = Dba::query($sql); 
+		$db_results = Dba::read($sql); 
 
 		$results = array(); 
 		
@@ -180,7 +180,7 @@ class Flag extends database_object {
 		if ($count) { $limit_clause = "LIMIT " . intval($count); } 
 		
 		$sql = "SELECT `id` FROM `flagged` $limit_clause";
-		$db_results = Dba::query($sql);
+		$db_results = Dba::read($sql);
 
 		/* Default it to an array */
 		$results = array();
@@ -201,7 +201,7 @@ class Flag extends database_object {
 	public static function get_approved() { 
 
 		$sql = "SELECT `id` FROM `flagged` WHERE `approved`='1'";
-		$db_results = Dba::query($sql);  
+		$db_results = Dba::read($sql);  
 
 
 		/* Default the results array */
@@ -236,7 +236,7 @@ class Flag extends database_object {
 
 		$sql = "INSERT INTO `flagged` (`object_id`,`object_type`,`flag`,`comment`,`date`,`approved`,`user`) VALUES " . 
 			" ('$id','$type','$flag','$comment','$time','$approved','$user')";
-		$db_results = Dba::query($sql);
+		$db_results = Dba::write($sql);
 
 		return true;
 
@@ -256,7 +256,7 @@ class Flag extends database_object {
 
 		// Delete the row
 		$sql = "DELETE FROM `flagged` WHERE `id`='$this->id'";
-		$db_results = Dba::query($sql);
+		$db_results = Dba::write($sql);
 
 		// Reset the Last-Updated date so that it'll get re-scaned 	
 		$song->update_utime($song->id,1); 
@@ -273,7 +273,7 @@ class Flag extends database_object {
 	 public function approve() { 
 
 		$sql = "UPDATE `flagged` SET `approved`='1' WHERE `id`='$this->id'";
-		$db_results = Dba::query($sql);
+		$db_results = Dba::write($sql);
 
 		$this->approved = 1; 
 

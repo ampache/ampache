@@ -198,7 +198,7 @@ class Plugin {
 		$name = Dba::escape('Plugin_' . $plugin_name); 
 
 		$sql = "SELECT * FROM `update_info` WHERE `key`='$name'"; 
-		$db_results = Dba::query($sql); 
+		$db_results = Dba::read($sql); 
 
 		$results = Dba::fetch_assoc($db_results); 
 		
@@ -213,7 +213,7 @@ class Plugin {
 	function get_ampache_db_version() { 
 
 		$sql = "SELECT * FROM `update_info` WHERE `key`='db_version'"; 
-		$db_results = Dba::query($sql); 
+		$db_results = Dba::read($sql); 
 
 		$results = Dba::fetch_assoc($db_results); 
 
@@ -231,7 +231,7 @@ class Plugin {
 		$version	= Dba::escape($version);
 
 		$sql = "INSERT INTO `update_info` SET `key`='$name', `value`='$version'";
-		$db_results = Dba::query($sql); 
+		$db_results = Dba::read($sql); 
 
 		return true; 
 
@@ -246,7 +246,7 @@ class Plugin {
 		$name	= Dba::escape('Plugin_' . $this->_plugin->name);
 	
 		$sql = "DELETE FROM `update_info` WHERE `key`='$name'"; 
-		$db_results = Dba::query($sql); 
+		$db_results = Dba::read($sql); 
 
 		return true; 
 
