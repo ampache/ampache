@@ -25,35 +25,35 @@
  * and then runs throught $_REQUEST looking for those
  * values and updates them for this user
  */
-function update_preferences($pref_id=0) { 
-	
+function update_preferences($pref_id=0) {
+
 	$pref_user = new User($pref_id);
-	
+
 	/* Get current keys */
 	$sql = "SELECT `id`,`name`,`type` FROM `preference`";
 
 	/* If it isn't the System Account's preferences */
 	if ($pref_id != '-1') { $sql .= " WHERE `catagory` != 'system'"; }
-	
-	$db_results = Dba::query($sql);
+
+	$db_results = Dba::read($sql);
 
 	// Collect the current possible keys
-	while ($r = Dba::fetch_assoc($db_results)) { 
+	while ($r = Dba::fetch_assoc($db_results)) {
 		$results[] = array('id' => $r['id'], 'name' => $r['name'],'type' => $r['type']);
 	} // end collecting keys
 
 	/* Foreach through possible keys and assign them */
-	foreach ($results as $data) { 
+	foreach ($results as $data) {
 		/* Get the Value from POST/GET var called $data */
 		$type 		= $data['type'];
 		$name 		= $data['name'];
 		$apply_to_all	= 'check_' . $data['name'];
-		$new_level	= 'level_' . $data['name']; 
+		$new_level	= 'level_' . $data['name'];
 		$id		= $data['id'];
 		$value 		= scrub_in($_REQUEST[$name]);
 
 		/* Some preferences require some extra checks to be performed */
-		switch ($name) { 
+		switch ($name) {
 			case 'sample_rate':
 				$value = Stream::validate_bitrate($value);
 			break;
@@ -61,24 +61,24 @@ function update_preferences($pref_id=0) {
 			case 'librefm_pass':
 			case 'lastfm_pass':
 				/* If it's our default blanking thing then don't use it */
-				if ($value == '******') { unset($_REQUEST[$name]); break; } 
-				$value = md5($value); 
+				if ($value == '******') { unset($_REQUEST[$name]); break; }
+				$value = md5($value);
 			break;
-			default: 
+			default:
 			break;
 		}
 		/* Run the update for this preference only if it's set */
-		if (isset($_REQUEST[$name])) { 
-			Preference::update($id,$pref_id,$value,$_REQUEST[$apply_to_all]); 
-			if (Access::check('interface','100') AND $_REQUEST[$new_level]) { 
-				Preference::update_level($id,$_REQUEST[$new_level]); 
-			} 
+		if (isset($_REQUEST[$name])) {
+			Preference::update($id,$pref_id,$value,$_REQUEST[$apply_to_all]);
+			if (Access::check('interface','100') AND $_REQUEST[$new_level]) {
+				Preference::update_level($id,$_REQUEST[$new_level]);
+			}
 		}
 
 	} // end foreach preferences
 
 	// Now that we've done that we need to invalidate the cached preverences
-	Preference::clear_from_session(); 
+	Preference::clear_from_session();
 
 } // update_preferences
 
@@ -86,26 +86,26 @@ function update_preferences($pref_id=0) {
  * update_preference
  * This function updates a single preference and is called by the update_preferences function
  */
-function update_preference($user_id,$name,$pref_id,$value) { 
+function update_preference($user_id,$name,$pref_id,$value) {
 
 	$apply_check = "check_" . $name;
-	$level_check = "level_" . $name; 
+	$level_check = "level_" . $name;
 
 	/* First see if they are an administrator and we are applying this to everything */
-	if ($GLOBALS['user']->has_access(100) AND make_bool($_REQUEST[$apply_check])) { 
-		Preference::update_all($pref_id,$value); 
+	if ($GLOBALS['user']->has_access(100) AND make_bool($_REQUEST[$apply_check])) {
+		Preference::update_all($pref_id,$value);
 		return true;
 	}
 
 	/* Check and see if they are an admin and the level def is set */
-	if ($GLOBALS['user']->has_access(100) AND make_bool($_REQUEST[$level_check])) { 
-		Preference::update_level($pref_id,$_REQUEST[$level_check]); 
-	} 
-	
+	if ($GLOBALS['user']->has_access(100) AND make_bool($_REQUEST[$level_check])) {
+		Preference::update_level($pref_id,$_REQUEST[$level_check]);
+	}
+
 	/* Else make sure that the current users has the right to do this */
-	if (Preference::has_access($name)) { 
+	if (Preference::has_access($name)) {
 		$sql = "UPDATE `user_preference` SET `value`='$value' WHERE `preference`='$pref_id' AND `user`='$user_id'";
-		$db_results = Dba::query($sql);
+		$db_results = Dba::write($sql);
 		return true;
 	}
 
@@ -117,23 +117,23 @@ function update_preference($user_id,$name,$pref_id,$value) {
  * create_preference_input
  * takes the key and then creates the correct type of input for updating it
  */
-function create_preference_input($name,$value) { 
+function create_preference_input($name,$value) {
 
 	// Escape it for output
-	$value = scrub_out($value); 
+	$value = scrub_out($value);
 
 	$len = strlen($value);
 	if ($len <= 1) { $len = 8; }
 
-	if (!Preference::has_access($name)) { 
-		if ($value == '1') { 
+	if (!Preference::has_access($name)) {
+		if ($value == '1') {
 			echo "Enabled";
 		}
-		elseif ($value == '0') { 
+		elseif ($value == '0') {
 			echo "Disabled";
 		}
 		else {
-			echo $value; 
+			echo $value;
 		}
 		return;
 	} // if we don't have access to it
@@ -159,7 +159,7 @@ function create_preference_input($name,$value) {
 		case 'rio_global_stats':
 		case 'embed_xspf':
 		case 'direct_link':
-			if ($value == '1') { $is_true = "selected=\"selected\""; } 
+			if ($value == '1') { $is_true = "selected=\"selected\""; }
 			else { $is_false = "selected=\"selected\""; }
 			echo "<select name=\"$name\">\n";
 			echo "\t<option value=\"1\" $is_true>" . _("Enable") . "</option>\n";
@@ -167,27 +167,27 @@ function create_preference_input($name,$value) {
 			echo "</select>\n";
 		break;
 		case 'play_type':
-			if ($value == 'localplay') { $is_local = 'selected="selected"'; } 
-			elseif ($value == 'democratic') { $is_vote = 'selected="selected"'; } 
-			elseif ($value == 'xspf_player') { $is_xspf_player = 'selected="selected"'; } 
-			else { $is_stream = "selected=\"selected\""; } 
+			if ($value == 'localplay') { $is_local = 'selected="selected"'; }
+			elseif ($value == 'democratic') { $is_vote = 'selected="selected"'; }
+			elseif ($value == 'xspf_player') { $is_xspf_player = 'selected="selected"'; }
+			else { $is_stream = "selected=\"selected\""; }
 			echo "<select name=\"$name\">\n";
 			echo "\t<option value=\"\">" . _('None') . "</option>\n";
-			if (Config::get('allow_stream_playback')) { 
+			if (Config::get('allow_stream_playback')) {
 				echo "\t<option value=\"stream\" $is_stream>" . _('Stream') . "</option>\n";
 			}
-			if (Config::get('allow_democratic_playback')) { 
+			if (Config::get('allow_democratic_playback')) {
 				echo "\t<option value=\"democratic\" $is_vote>" . _('Democratic') . "</option>\n";
 			}
-			if (Config::get('allow_localplay_playback')) { 
-				echo "\t<option value=\"localplay\" $is_local>" . _('Localplay') . "</option>\n";	
-			} 
+			if (Config::get('allow_localplay_playback')) {
+				echo "\t<option value=\"localplay\" $is_local>" . _('Localplay') . "</option>\n";
+			}
 			echo "\t<option value=\"xspf_player\" $is_xspf_player>" . _('Flash Player') . "</option>\n";
 			echo "</select>\n";
 		break;
 		case 'playlist_type':
 			$var_name = $value . "_type";
-			${$var_name} = "selected=\"selected\""; 
+			${$var_name} = "selected=\"selected\"";
 			echo "<select name=\"$name\">\n";
 			echo "\t<option value=\"m3u\" $m3u_type>" . _('M3U') . "</option>\n";
 			echo "\t<option value=\"simple_m3u\" $simple_m3u_type>" . _('Simple M3U') . "</option>\n";
@@ -201,12 +201,12 @@ function create_preference_input($name,$value) {
 			$languages = get_languages();
 			$var_name = $value . "_lang";
 			${$var_name} = "selected=\"selected\"";
-			
+
 			echo "<select name=\"$name\">\n";
-			
-			foreach ($languages as $lang=>$name) { 
+
+			foreach ($languages as $lang=>$name) {
 				$var_name = $lang . "_lang";
-				
+
 				echo "\t<option value=\"$lang\" " . ${$var_name} . ">$name</option>\n";
 			} // end foreach
 			echo "</select>\n";
@@ -215,18 +215,18 @@ function create_preference_input($name,$value) {
 			$controllers = Localplay::get_controllers();
 			echo "<select name=\"$name\">\n";
 			echo "\t<option value=\"\">" . _('None') . "</option>\n";
-			foreach ($controllers as $controller) { 
-				if (!Localplay::is_enabled($controller)) { continue; } 
+			foreach ($controllers as $controller) {
+				if (!Localplay::is_enabled($controller)) { continue; }
 				$is_selected = '';
-				if ($value == $controller) { $is_selected = 'selected="selected"'; } 
+				if ($value == $controller) { $is_selected = 'selected="selected"'; }
 				echo "\t<option value=\"" . $controller . "\" $is_selected>" . ucfirst($controller) . "</option>\n";
 			} // end foreach
 			echo "</select>\n";
 		break;
 		case 'localplay_level':
-			if ($value == '25') { $is_user = 'selected="selected"'; } 
-			elseif ($value == '100') { $is_admin = 'selected="selected"'; } 
-			elseif ($value == '50') { $is_manager = 'selected="selected"'; } 
+			if ($value == '25') { $is_user = 'selected="selected"'; }
+			elseif ($value == '100') { $is_admin = 'selected="selected"'; }
+			elseif ($value == '50') { $is_manager = 'selected="selected"'; }
 			echo "<select name=\"$name\">\n";
 			echo "<option value=\"0\">" . _('Disabled') . "</option>\n";
 			echo "<option value=\"25\" $is_user>" . _('User') . "</option>\n";
@@ -237,7 +237,7 @@ function create_preference_input($name,$value) {
 		case 'theme_name':
 			$themes = get_themes();
 			echo "<select name=\"$name\">\n";
-			foreach ($themes as $theme) { 
+			foreach ($themes as $theme) {
 				$is_selected = "";
 				if ($value == $theme['path']) { $is_selected = "selected=\"selected\""; }
 				echo "\t<option value=\"" . $theme['path'] . "\" $is_selected>" . $theme['name'] . "</option>\n";
@@ -248,25 +248,25 @@ function create_preference_input($name,$value) {
 		case 'librefm_pass':
 			echo "<input type=\"password\" size=\"16\" name=\"$name\" value=\"******\" />";
 		break;
-		case 'playlist_method': 
-			${$value} = ' selected="selected"'; 
-			echo "<select name=\"$name\">\n"; 
-			echo "\t<option value=\"send\"$send>" . _('Send on Add') . "</option>\n"; 
-			echo "\t<option value=\"send_clear\"$send_clear>" . _('Send and Clear on Add') . "</option>\n"; 
-			echo "\t<option value=\"clear\"$clear>" . _('Clear on Send') . "</option>\n"; 
-			echo "\t<option value=\"default\"$default>" . _('Default') . "</option>\n"; 
-			echo "</select>\n"; 
+		case 'playlist_method':
+			${$value} = ' selected="selected"';
+			echo "<select name=\"$name\">\n";
+			echo "\t<option value=\"send\"$send>" . _('Send on Add') . "</option>\n";
+			echo "\t<option value=\"send_clear\"$send_clear>" . _('Send and Clear on Add') . "</option>\n";
+			echo "\t<option value=\"clear\"$clear>" . _('Clear on Send') . "</option>\n";
+			echo "\t<option value=\"default\"$default>" . _('Default') . "</option>\n";
+			echo "</select>\n";
 		break;
 		case 'transcode':
-			${$value} = ' selected="selected"'; 
-			echo "<select name=\"$name\">\n"; 
-			echo "\t<option value=\"never\"$never>" . _('Never') . "</option>\n"; 
-			echo "\t<option value=\"default\"$default>" . _('Default') . "</option>\n"; 
-			echo "\t<option value=\"always\"$always>" . _('Always') . "</option>\n"; 
+			${$value} = ' selected="selected"';
+			echo "<select name=\"$name\">\n";
+			echo "\t<option value=\"never\"$never>" . _('Never') . "</option>\n";
+			echo "\t<option value=\"default\"$default>" . _('Default') . "</option>\n";
+			echo "\t<option value=\"always\"$always>" . _('Always') . "</option>\n";
 			echo "</select>\n";
 		break;
 		case 'show_lyrics':
-			if ($value == '1') { $is_true = "selected=\"selected\""; } 
+			if ($value == '1') { $is_true = "selected=\"selected\""; }
 			else { $is_false = "selected=\"selected\""; }
 			echo "<select name=\"$name\">\n";
 			echo "\t<option value=\"1\" $is_true>" . _("Enable") . "</option>\n";
@@ -277,7 +277,7 @@ function create_preference_input($name,$value) {
 			echo "<input type=\"text\" size=\"$len\" name=\"$name\" value=\"$value\" />";
 		break;
 
-	} 
+	}
 
 } // create_preference_input
 

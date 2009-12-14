@@ -20,8 +20,8 @@
 */
 
 define('NO_SESSION','1');
-$path = dirname(__FILE__); 
-$prefix = realpath($path . '/../'); 
+$path = dirname(__FILE__);
+$prefix = realpath($path . '/../');
 require_once $prefix . '/lib/init.php';
 $version = "1.0";
 
@@ -32,8 +32,8 @@ $allowexts = preg_split('/\|/', $exts);
 if (count($GLOBALS['argv']) == '1') {
 	usage();
 	exit;
-} else { 
-	$filename = $GLOBALS['argv']['1']; 
+} else {
+	$filename = $GLOBALS['argv']['1'];
 	$send_mail = $GLOBALS['argv']['2'];
 }
 
@@ -56,7 +56,7 @@ print "\n";
 
 /* Attempt to figure out what catalog it comes from */
 $sql = "SELECT `catalog`.`id` FROM `song` INNER JOIN `catalog` ON `song`.`catalog`=`catalog`.`id` WHERE `song`.`file` LIKE '%" . Dba::escape($filename) . "'";
-$db_results = Dba::query($sql);
+$db_results = Dba::read($sql);
 $results = Dba::fetch_assoc($db_results);
 
 $catalog = new Catalog($results['id']);
@@ -72,7 +72,7 @@ $results['file'] = $filename;
 $key = vainfo::get_tag_type($results);
 $ampache_results = vainfo::clean_tag_info($results,$key,$filename);
 
-if ($send_mail) { 
+if ($send_mail) {
 	$getid3_results = print_r($info,1);
 	$amp_results = print_r($ampache_results,1);
 	$body = $getid3_results . "\n-----\n\n" . $amp_results;

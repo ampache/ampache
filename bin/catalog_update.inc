@@ -58,7 +58,7 @@ if ($where) $where = "($where) AND catalog_type='local'";
 else $where = "catalog_type='local'";
 $sql = "SELECT id FROM catalog";
 if ($where) $sql .= " WHERE $where";
-$db_results = Dba::query($sql);
+$db_results = Dba::read($sql);
 
 ob_start("ob_html_strip",'4096',true);
 

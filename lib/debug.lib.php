@@ -54,7 +54,7 @@ function check_database($host,$username,$pass) {
 function check_database_inserted($dbh,$db_name) {
 
 	$sql = "DESCRIBE session";
-	$db_results = Dba::query($sql);
+	$db_results = Dba::read($sql);
 
 	if (!$db_results) {
 		return false;

@@ -22,10 +22,10 @@
 class AmpacheMail {
 
 	// The message, recipient and from
-	public static $message; 
-	public static $recipient; 
+	public static $message;
+	public static $recipient;
 	public static $fromname;
-	public static $subject; 
+	public static $subject;
 	public static $to;
 	public static $fullname;
 	public static $sender;
@@ -34,7 +34,7 @@ class AmpacheMail {
 	 * Constructor
 	 * This isn't used
 	 */
-	private function __construct($name) { 
+	private function __construct($name) {
 
 		// Rien a faire
 
@@ -45,34 +45,34 @@ class AmpacheMail {
 	 * This returns an array of userid's for people who have e-mail addresses
 	 * based on the passed filter
 	 */
-	public static function get_users($filter) { 
+	public static function get_users($filter) {
 
-		switch ($filter) { 
-			default: 
-			case 'all': 
-				$sql = "SELECT * FROM `user` WHERE `email` IS NOT NULL"; 
+		switch ($filter) {
+			default:
+			case 'all':
+				$sql = "SELECT * FROM `user` WHERE `email` IS NOT NULL";
 			break;
-			case 'users': 
-				$sql = "SELECT * FROM `user` WHERE `access`='25' AND `email` IS NOT NULL"; 
+			case 'users':
+				$sql = "SELECT * FROM `user` WHERE `access`='25' AND `email` IS NOT NULL";
 			break;
-			case 'admins': 
-				$sql = "SELECT * FROM `user` WHERE `access`='100' AND `email` IS NOT NULL"; 
+			case 'admins':
+				$sql = "SELECT * FROM `user` WHERE `access`='100' AND `email` IS NOT NULL";
 			break ;
-			case 'inactive': 
+			case 'inactive':
 				$inactive = time() - (30*86400);
-				$sql = "SELECT * FROM `user` WHERE `last_seen` <= '$inactive' AND `email` IS NOT NULL"; 
-			break; 
+				$sql = "SELECT * FROM `user` WHERE `last_seen` <= '$inactive' AND `email` IS NOT NULL";
+			break;
 		} // end filter switch
-			
-		$db_results = Dba::query($sql); 
-		
-		$results = array(); 
-		
-		while ($row = Dba::fetch_assoc($db_results)) { 
-			$results[] = array('id'=>$row['id'],'fullname'=>$row['fullname'],'email'=>$row['email']); 
-		} 
 
-		return $results;  
+		$db_results = Dba::read($sql);
+
+		$results = array();
+
+		while ($row = Dba::fetch_assoc($db_results)) {
+			$results[] = array('id'=>$row['id'],'fullname'=>$row['fullname'],'email'=>$row['email']);
+		}
+
+		return $results;
 
 	} // get_users
 
@@ -80,9 +80,9 @@ class AmpacheMail {
 	 * add_statistics
 	 * This should be run if we want to add some statistics to this e-mail, appends to self::$message
 	 */
-	public static function add_statistics($methods) { 
+	public static function add_statistics($methods) {
 
-		
+
 
 	} // add_statistics
 
@@ -90,11 +90,11 @@ class AmpacheMail {
 	 * send
 	 * This actually sends the mail, how amazing
 	 */
-	public static function send() { 
+	public static function send() {
 
 		$mailtype = Config::get('mail_type');
 		$mail = new PHPMailer();
-		
+
 		$mail->AddAddress(self::$to, self::$fullname);
 		$mail->CharSet	= Config::get('site_charset');
 		$mail->Encoding	= "base64";

@@ -26,17 +26,17 @@
  * tag information gathered and updated in ampache. Sort_Pattern defines the directory
  * structure and rename_pattern defines the file pattern. This script should allow you
  * to do both or neither. Oooh and allow you to sort with A,B,C,D prefix
- * 
+ *
  * Attempt 1 - Do each file one by one and satisfy the needs of each file by its self (this is going to be slow)
- * Cache information so we don't have to check for every file! 
+ * Cache information so we don't have to check for every file!
  */
 
 /* Don't do anything just tell me what you would do */
-//$test_mode = true; 
+//$test_mode = true;
 
 /* m(__)m */
 $alphabet_prefix = true;
- 
+
 define('NO_SESSION','1');
 $path = dirname(__FILE__);
 $prefix = realpath($path . '/../');
@@ -47,7 +47,7 @@ ob_end_clean();
 /* First Clean the catalog to we don't try to write anything we shouldn't */
 
 $sql = "SELECT `id` FROM `catalog` WHERE `catalog_type`='local'";
-$db_results = Dba::query($sql);
+$db_results = Dba::read($sql);
 
 $catalogs = array();
 
@@ -93,7 +93,7 @@ while ($r = Dba::fetch_row($db_results)) {
 /************** FUNCTIONS *****************/
 /**
  * sort_find_home
- * Get the directory for this file from the catalog and the song info using the sort_pattern 
+ * Get the directory for this file from the catalog and the song info using the sort_pattern
  * takes into account various artists and the alphabet_prefix
  */
 function sort_find_home($song,$sort_pattern,$base) {
@@ -144,9 +144,9 @@ function sort_find_home($song,$sort_pattern,$base) {
 
 /**
  * sort_element_name
- * gets the name of the %? in a yea.. too much beer 
+ * gets the name of the %? in a yea.. too much beer
  */
-function sort_element_name($key) { 
+function sort_element_name($key) {
 
 	switch ($key) {
 		case '%t':
@@ -194,7 +194,7 @@ function sort_clean_name($string) {
 
 /**
  * sort_move_file
- * All this function does is, move the friggin file and then update the database 
+ * All this function does is, move the friggin file and then update the database
  * We can't use the rename() function of PHP because it's functionality depends on the
  * current phase of the moon, the alignment of the planets and my current BAL
  * Instead we cheeseball it and walk through the new dir structure and make
@@ -249,7 +249,7 @@ function sort_move_file($song,$fullname) {
 		echo "\n";
 		$sql = "UPDATE song SET file='" . Dba::escape($fullname) . "' WHERE id='" . Dba::escape($song->id) . "'";
 		echo "\tSQL: $sql\n";
-		flush(); 
+		flush();
 	}
 	else {
 
@@ -295,7 +295,7 @@ function sort_move_file($song,$fullname) {
 
 		/* Update the catalog */
 		$sql = "UPDATE song SET file='" . Dba::escape($fullname) . "' WHERE id='" . Dba::escape($song->id) . "'";
-		$db_results = Dba::query($sql);
+		$db_results = Dba::write($sql);
 
 	} // end else
 

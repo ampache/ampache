@@ -20,14 +20,14 @@
 */
 
 define('NO_SESSION','1');
-$path = dirname(__FILE__); 
-$prefix = realpath($path . '/../'); 
+$path = dirname(__FILE__);
+$prefix = realpath($path . '/../');
 require_once $prefix . '/lib/init.php';
 
-ob_end_clean(); 
+ob_end_clean();
 
 /*
- * Pull the root path of your catalogs one by one 
+ * Pull the root path of your catalogs one by one
  * and then do a directory sweep and check all of the files
  * that would be cataloged and see if they have the correct charset
  * if they don't prompt for a rename, unless $i_am_crazy is true then just
@@ -35,7 +35,7 @@ ob_end_clean();
  */
 
 // If set to true / 1 then it will not prompt!
-//$GLOBALS['i_am_crazy'] = true; 
+//$GLOBALS['i_am_crazy'] = true;
 
 if (!function_exists('iconv')) {
 	echo _("ERROR: Iconv required for this functionality, quiting");
@@ -46,15 +46,15 @@ if (!function_exists('iconv')) {
 // Attempt to figure out what the System Charset is
 $source_encoding = iconv_get_encoding('output_encoding');
 
-// Attempt a simple translation 
+// Attempt a simple translation
 $string = sprintf(_('%s For the Love of Music'), iconv(Config::get('site_charset'),Config::get('site_charset')));
 echo _('Testing Basic Translation, the two strings below should look the same');
-echo "\n"; 
+echo "\n";
 echo _('Original: For the Love of Music');
 echo "\n";
 printf (_('Translated: %s'), $string);
 echo "\n";
-echo "---------------------------------------------------------------------\n"; 
+echo "---------------------------------------------------------------------\n";
 printf (_('Input Charset (%s):'), $source_encoding);
 $input = trim(fgets(STDIN));
 
@@ -62,14 +62,14 @@ if (strlen($input) > 0) { $source_encoding = trim($input); }
 printf (_('Using %s as source character set'), $source_encoding);
 echo "\n";
 
-$sql = "SELECT * FROM `catalog` WHERE `catalog_type`='local'"; 
-$db_results = Dba::query($sql); 
+$sql = "SELECT * FROM `catalog` WHERE `catalog_type`='local'";
+$db_results = Dba::read($sql);
 
-while ($row = Dba::fetch_assoc($db_results)) { 
+while ($row = Dba::fetch_assoc($db_results)) {
 
 	printf(_('Checking %s (%s)'), $row['name'], $row['path']);
 	echo "\n";
-	charset_directory_correct($row['path']); 	
+	charset_directory_correct($row['path']);
 
 } // end of the catalogs
 
@@ -81,11 +81,11 @@ echo "\n";
  **************************************************/
 /**
  * charset_directory_correct
- * This function calls its self recursivly 
+ * This function calls its self recursivly
  * and corrects all of the non-matching filenames
  * it looks at the i_am_crazy var and if not set prompts for change
  */
-function charset_directory_correct($path) { 
+function charset_directory_correct($path) {
 
 	// Correctly detect the slash we need to use here
         if (strstr($path,"/")) {

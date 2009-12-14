@@ -29,7 +29,7 @@ function session_exists($sid,$xml_rpc=0) {
 	$found = true;
 
 	$sql = "SELECT * FROM `session` WHERE `id` = '$sid'";
-	$db_results = Dba::query($sql);
+	$db_results = Dba::read($sql);
 
 	if (!Dba::num_rows($db_results)) {
 		$found = false;
@@ -81,7 +81,7 @@ function extend_session($sid) {
 	if ($_COOKIE['amp_longsess'] == '1') { $new_time = time() + 86400*364; }
 
 	$sql = "UPDATE `session` SET `expire`='$new_time' WHERE `id`='$sid'";
-	$db_results = Dba::query($sql);
+	$db_results = Dba::write($sql);
 
 } // extend_session
 

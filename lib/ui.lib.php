@@ -85,10 +85,10 @@ if (!function_exists('_')) {
  * ngettext
  * checks for ngettext and defines it if it doesn't exist
  */
-if (!function_exists('ngettext')) { 
-	function ngettext($string) { 
-		return $string; 
-	} 
+if (!function_exists('ngettext')) {
+	function ngettext($string) {
+		return $string;
+	}
 } // if no ngettext
 
 /**
@@ -97,11 +97,11 @@ if (!function_exists('ngettext')) {
  * 	that they aren't allowed to
  */
 function access_denied() {
-	
+
 	// Clear any crap we've got up top
-	ob_end_clean(); 
-	require_once Config::get('prefix') . '/templates/show_denied.inc.php'; 
-	exit; 
+	ob_end_clean();
+	require_once Config::get('prefix') . '/templates/show_denied.inc.php';
+	exit;
 
 } // access_denied
 
@@ -119,11 +119,11 @@ function return_referer() {
     }
     else {
     	$file = basename($referer);
-		/* Strip off the filename */	
-    	$referer = substr($referer,0,strlen($referer)-strlen($file));  
+		/* Strip off the filename */
+    	$referer = substr($referer,0,strlen($referer)-strlen($file));
     }
-	
-	if (substr($referer,strlen($referer)-6,6) == 'admin/') { 
+
+	if (substr($referer,strlen($referer)-6,6) == 'admin/') {
 		$file = 'admin/' . $file;
 	}
 
@@ -141,8 +141,8 @@ function return_referer() {
  */
 function truncate_with_ellipsis($text, $max='') {
 
-	$max = $max ? $max : '27'; 
-	
+	$max = $max ? $max : '27';
+
 	/* If we want it to be shorter than three, just throw it back */
 	if ($max > 3) {
 
@@ -171,9 +171,9 @@ function truncate_with_ellipsis($text, $max='') {
  * This shows the header.inc.php, it may do something
  * more in the future
  */
-function show_header() { 
+function show_header() {
 
-	require_once Config::get('prefix') . '/templates/header.inc.php'; 
+	require_once Config::get('prefix') . '/templates/header.inc.php';
 
 } // show_header
 
@@ -203,9 +203,9 @@ function img_resize($image,$size,$type,$album_id) {
 		return $image['raw'];
 	}
 	// Already resized
-	if ($image['db_resized']) { 
-		debug_event('using_resized','using resized image for Album:' . $album_id,'2'); 
-		return $image['raw']; 
+	if ($image['db_resized']) {
+		debug_event('using_resized','using resized image for Album:' . $album_id,'2');
+		return $image['raw'];
 	}
 
 	$image = $image['raw'];
@@ -226,11 +226,11 @@ function img_resize($image,$size,$type,$album_id) {
 	}
 
 	$src = imagecreatefromstring($image);
-	
-	if (!$src) { 
+
+	if (!$src) {
 		debug_event('IMG_RESIZE','Failed to create from string','3');
-		return false; 
-	} 
+		return false;
+	}
 
 	$width = imagesx($src);
 	$height = imagesy($src);
@@ -239,13 +239,13 @@ function img_resize($image,$size,$type,$album_id) {
 	$new_h = $size['height'];
 
 	$img = imagecreatetruecolor($new_w,$new_h);
-	
-	if (!imagecopyresampled($img,$src,0,0,0,0,$new_w,$new_h,$width,$height)) { 
+
+	if (!imagecopyresampled($img,$src,0,0,0,0,$new_w,$new_h,$width,$height)) {
 		debug_event('IMG_RESIZE','Failed to copy resample image','3');
 		return false;
 	}
 
-	ob_start(); 
+	ob_start();
 
 	// determine image type and send it to the client
 	switch ($type) {
@@ -262,19 +262,19 @@ function img_resize($image,$size,$type,$album_id) {
 	}
 
 	// Grab this image data and save it into the thumbnail
-	$data = ob_get_contents(); 
+	$data = ob_get_contents();
 	ob_end_clean();
 
 	// If our image create failed don't save it, just return
-	if (!$data) { 
-		debug_event('IMG_RESIZE','Failed to resize Art from Album:' . $album_id,'3'); 
+	if (!$data) {
+		debug_event('IMG_RESIZE','Failed to resize Art from Album:' . $album_id,'3');
 		return $image;
 	}
 
 	// Save what we've got
-	Album::save_resized_art($data,'image/' . $type,$album_id); 
+	Album::save_resized_art($data,'image/' . $type,$album_id);
 
-	return $data; 
+	return $data;
 
 } // img_resize
 
@@ -293,10 +293,10 @@ function get_location() {
 
 	$location = array();
 
-	if (strlen($_SERVER['PHP_SELF'])) { 
+	if (strlen($_SERVER['PHP_SELF'])) {
 		$source = $_SERVER['PHP_SELF'];
 	}
-	else { 
+	else {
 		$source = $_SERVER['REQUEST_URI'];
 	}
 
@@ -388,8 +388,8 @@ function get_location() {
  * it takes a chunck of the crazy preference array and then displays it out
  * it does not contain the <form> </form> tags
  */
-function show_preference_box($preferences) { 
-	
+function show_preference_box($preferences) {
+
 	require Config::get('prefix') . '/templates/show_preference_box.inc.php';
 
 } // show_preference_box
@@ -432,9 +432,9 @@ function good_email($email) {
 /**
  * show_album_select
  * This displays a select of every album that we've got in Ampache, (it can be hella long) it's used
- * by the Edit page, it takes a $name and a $album_id 
+ * by the Edit page, it takes a $name and a $album_id
  */
-function show_album_select($name='album',$album_id=0,$allow_add=0,$song_id=0) { 
+function show_album_select($name='album',$album_id=0,$allow_add=0,$song_id=0) {
 	// Generate key to use for HTML element ID
 	static $id_cnt;
 	if ($song_id) {
@@ -447,17 +447,17 @@ function show_album_select($name='album',$album_id=0,$allow_add=0,$song_id=0) {
 	echo "<select name=\"$name\" id=\"$key\">\n";
 
 	$sql = "SELECT `id`, `name`, `prefix` FROM `album` ORDER BY `name`";
-	$db_results = Dba::query($sql);
+	$db_results = Dba::read($sql);
 
-	while ($r = Dba::fetch_assoc($db_results)) { 
+	while ($r = Dba::fetch_assoc($db_results)) {
 		$selected = '';
 		$album_name = trim($r['prefix'] . " " . $r['name']);
-		if ($r['id'] == $album_id) { 
+		if ($r['id'] == $album_id) {
 			$selected = "selected=\"selected\"";
 		}
 
 		echo "\t<option value=\"" . $r['id'] . "\" $selected>" . scrub_out($album_name) . "</option>\n";
-		
+
 	} // end while
 
 	if ($allow_add) {
@@ -473,7 +473,7 @@ function show_album_select($name='album',$album_id=0,$allow_add=0,$song_id=0) {
  * show_artist_select
  * This is the same as the album select except it's *gasp* for artists how inventive!
  */
-function show_artist_select($name='artist', $artist_id=0, $allow_add=0, $song_id=0) { 
+function show_artist_select($name='artist', $artist_id=0, $allow_add=0, $song_id=0) {
 	// Generate key to use for HTML element ID
 	static $id_cnt;
 	if ($song_id) {
@@ -483,14 +483,14 @@ function show_artist_select($name='artist', $artist_id=0, $allow_add=0, $song_id
 	}
 
 	echo "<select name=\"$name\" id=\"$key\">\n";
-	
+
 	$sql = "SELECT `id`, `name`, `prefix` FROM `artist` ORDER BY `name`";
-	$db_results = Dba::query($sql);
-	
-	while ($r = Dba::fetch_assoc($db_results)) { 
+	$db_results = Dba::read($sql);
+
+	while ($r = Dba::fetch_assoc($db_results)) {
 		$selected = '';
 		$artist_name = trim($r['prefix'] . " " . $r['name']);
-		if ($r['id'] == $artist_id) { 
+		if ($r['id'] == $artist_id) {
 			$selected = "selected=\"selected\"";
 		}
 
@@ -509,18 +509,18 @@ function show_artist_select($name='artist', $artist_id=0, $allow_add=0, $song_id
 
 /**
  * show_catalog_select
- * Yet another one of these buggers. this shows a drop down of all of your catalogs 
+ * Yet another one of these buggers. this shows a drop down of all of your catalogs
  */
-function show_catalog_select($name='catalog',$catalog_id=0,$style='') { 
+function show_catalog_select($name='catalog',$catalog_id=0,$style='') {
 
 	echo "<select name=\"$name\" style=\"$style\">\n";
 
 	$sql = "SELECT `id`, `name` FROM `catalog` ORDER BY `name`";
-	$db_results = Dba::query($sql);
+	$db_results = Dba::read($sql);
 
-	while ($r = Dba::fetch_assoc($db_results)) { 
+	while ($r = Dba::fetch_assoc($db_results)) {
 		$selected = '';
-		if ($r['id'] == $catalog_id) { 
+		if ($r['id'] == $catalog_id) {
 			$selected = "selected=\"selected\"";
 		}
 
@@ -537,21 +537,21 @@ function show_catalog_select($name='catalog',$catalog_id=0,$style='') {
  * This one is for users! shows a select/option statement so you can pick a user
  * to blame
  */
-function show_user_select($name,$selected='',$style='') { 
+function show_user_select($name,$selected='',$style='') {
 
 	echo "<select name=\"$name\" style=\"$style\">\n";
 	echo "\t<option value=\"\">" . _('All') . "</option>\n";
 
 	$sql = "SELECT `id`,`username`,`fullname` FROM `user` ORDER BY `fullname`";
-	$db_results = Dba::query($sql);
+	$db_results = Dba::read($sql);
 
-	while ($row = Dba::fetch_assoc($db_results)) { 
+	while ($row = Dba::fetch_assoc($db_results)) {
 		$select_txt = '';
-		if ($row['id'] == $selected) { 
+		if ($row['id'] == $selected) {
 			$select_txt = 'selected="selected"';
 		}
 		// If they don't have a full name, revert to the username
-		$row['fullname'] = $row['fullname'] ? $row['fullname'] : $row['username']; 
+		$row['fullname'] = $row['fullname'] ? $row['fullname'] : $row['username'];
 
 		echo "\t<option value=\"" . $row['id'] . "\" $select_txt>" . scrub_out($row['fullname']) . "</option>\n";
 	} // end while users
@@ -565,17 +565,17 @@ function show_user_select($name,$selected='',$style='') {
  * This one is for users! shows a select/option statement so you can pick a user
  * to blame
  */
-function show_playlist_select($name,$selected='',$style='') { 
+function show_playlist_select($name,$selected='',$style='') {
 
 	echo "<select name=\"$name\" style=\"$style\">\n";
 	echo "\t<option value=\"\">" . _('None') . "</option>\n";
 
 	$sql = "SELECT `id`,`name` FROM `playlist` ORDER BY `name`";
-	$db_results = Dba::query($sql);
+	$db_results = Dba::read($sql);
 
-	while ($row = Dba::fetch_assoc($db_results)) { 
+	while ($row = Dba::fetch_assoc($db_results)) {
 		$select_txt = '';
-		if ($row['id'] == $selected) { 
+		if ($row['id'] == $selected) {
 			$select_txt = 'selected="selected"';
 		}
 		// If they don't have a full name, revert to the username
@@ -591,9 +591,9 @@ function show_playlist_select($name,$selected='',$style='') {
  * This function requires the top part of the box
  * it takes title as an optional argument
  */
-function show_box_top($title='',$class='') { 
+function show_box_top($title='',$class='') {
 
-	require Config::get('prefix') . '/templates/show_box_top.inc.php';	
+	require Config::get('prefix') . '/templates/show_box_top.inc.php';
 
 } // show_box_top
 
@@ -602,7 +602,7 @@ function show_box_top($title='',$class='') {
  * This function requires the bottom part of the box
  * it does not take any arguments
  */
-function show_box_bottom() { 
+function show_box_bottom() {
 
 	require Config::get('prefix') . '/templates/show_box_bottom.inc.php';
 
@@ -611,58 +611,58 @@ function show_box_bottom() {
 /**
  * get_user_icon
  * this function takes a name and a returns either a text representation
- * or an <img /> tag 
+ * or an <img /> tag
  */
-function get_user_icon($name,$title='',$id='') { 
-	
+function get_user_icon($name,$title='',$id='') {
+
 	/* Because we do a lot of calls cache the URLs */
-	static $url_cache = array(); 
+	static $url_cache = array();
 
 	// If our name is an array
-	if (is_array($name)) { 
-		$hover_name = $name['1']; 
-		$name = $name['0']; 
-	} 
-
-	if (!$title) { $title = _(ucfirst($name)); } 
-
-	if ($id) { 
-		$id_element = 'id="' . $id . '"'; 
-	} 
-
-	if (isset($url_cache[$name])) { 
-		$img_url = $url_cache[$name]; 
-		$cache_url = true; 
+	if (is_array($name)) {
+		$hover_name = $name['1'];
+		$name = $name['0'];
 	}
-	if (isset($url_cache[$hover_name])) { 
+
+	if (!$title) { $title = _(ucfirst($name)); }
+
+	if ($id) {
+		$id_element = 'id="' . $id . '"';
+	}
+
+	if (isset($url_cache[$name])) {
+		$img_url = $url_cache[$name];
+		$cache_url = true;
+	}
+	if (isset($url_cache[$hover_name])) {
 		$hover_url = $url_cache[$hover_name];
-		$cache_hover = true; 
+		$cache_hover = true;
 	}
-	
-	if (empty($hover_name)) { $cache_hover = true; } 
 
-	if (!isset($cache_url) OR !isset($cache_hover)) { 
+	if (empty($hover_name)) { $cache_hover = true; }
+
+	if (!isset($cache_url) OR !isset($cache_hover)) {
 
 		$icon_name = 'icon_' . $name . '.png';
 
 		/* Build the image url */
-		if (file_exists(Config::get('prefix') . Config::get('theme_path') . '/images/icons/' . $icon_name)) { 
+		if (file_exists(Config::get('prefix') . Config::get('theme_path') . '/images/icons/' . $icon_name)) {
 			$img_url = Config::get('web_path') . Config::get('theme_path') . '/images/icons/' . $icon_name;
 		}
-		else { 
-			$img_url = Config::get('web_path') . '/images/' . $icon_name; 
+		else {
+			$img_url = Config::get('web_path') . '/images/' . $icon_name;
 		}
 
 		/* If Hover, then build its url */
-		if (!empty($hover_name)) { 
+		if (!empty($hover_name)) {
 			$hover_icon = 'icon_' . $hover_name . '.png';
-			if (file_exists(Config::get('prefix') . Config::get('theme_path') . '/images/icons/' . $icon_name)) { 
+			if (file_exists(Config::get('prefix') . Config::get('theme_path') . '/images/icons/' . $icon_name)) {
 				$hov_url = Config::get('web_path') . Config::get('theme_path') . '/images/icons/' . $hover_icon;
 			}
-			else { 
+			else {
 				$hov_url = Config::get('web_path') . '/images/' . $hover_icon;
 			}
-			
+
 			$hov_txt = "onmouseover=\"this.src='$hov_url'; return true;\" onmouseout=\"this.src='$img_url'; return true;\"";
 		} // end hover
 
@@ -676,14 +676,14 @@ function get_user_icon($name,$title='',$id='') {
 
 /**
  * xml_from_array
- * This takes a one dimensional array and 
- * creates a XML document form it for use 
+ * This takes a one dimensional array and
+ * creates a XML document form it for use
  * primarly by the ajax mojo
  */
-function xml_from_array($array,$callback=0,$type='') { 
+function xml_from_array($array,$callback=0,$type='') {
 
 	// If we weren't passed an array then return a blank string
-	if (!is_array($array)) { return ''; } 
+	if (!is_array($array)) { return ''; }
 
 	// The type is used for the different XML docs we pass
 	switch ($type) {
@@ -732,19 +732,19 @@ function xml_from_array($array,$callback=0,$type='') {
 		return $string;
 	break;
 	default:
-		foreach ($array as $key=>$value) { 
-			if (is_numeric($key)) { $key = 'item'; } 
-			if (is_array($value)) { 
+		foreach ($array as $key=>$value) {
+			if (is_numeric($key)) { $key = 'item'; }
+			if (is_array($value)) {
 				$value = xml_from_array($value,1);
 				$string .= "\t<content div=\"$key\">$value</content>\n";
 			}
-			else { 
+			else {
 				/* We need to escape the value */
 				$string .= "\t<content div=\"$key\"><![CDATA[$value]]></content>\n";
 			}
 		// end foreach elements
-	        } 
-		if (!$callback) { 
+	        }
+		if (!$callback) {
 			$string = "<?xml version=\"1.0\" encoding=\"utf-8\" ?>\n<root>\n" . $string . "</root>\n";
 		}
 
@@ -755,7 +755,7 @@ function xml_from_array($array,$callback=0,$type='') {
 
 /**
  * xml_get_header
- * This takes the type and returns the correct xml header 
+ * This takes the type and returns the correct xml header
  */
 function xml_get_header($type){
 	switch ($type){
@@ -776,18 +776,18 @@ function xml_get_header($type){
 	break;
 	case 'xspf':
                 $header = "<?xml version=\"1.0\" encoding=\"utf-8\" ?>\n" .
-			"<!-- XML Generated by Ampache v." .  Config::get('version') . " -->"; 
+			"<!-- XML Generated by Ampache v." .  Config::get('version') . " -->";
                 	"<playlist version = \"1\" xmlns=\"http://xspf.org/ns/0/\">\n ".
                 	"<title>Ampache XSPF Playlist</title>\n" .
                 	"<creator>" . Config::get('site_title') . "</creator>\n" .
                 	"<annotation>" . Config::get('site_title') . "</annotation>\n" .
 	               	"<info>". Config::get('web_path') ."</info>\n" .
                 	"<trackList>\n\n\n\n";
-		return $header;	
+		return $header;
 	break;
 	default:
-		$header = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"; 
-		return $header;	
+		$header = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
+		return $header;
 	break;
 	}
 } //xml_get_header
@@ -821,14 +821,14 @@ function xml_get_footer($type){
  * on the specified require, only works if you
  * don't need to pass data in
  */
-function ajax_include($include) { 
+function ajax_include($include) {
 
-	ob_start(); 
-	require_once Config::get('prefix') . '/templates/' . $include; 
-	$results = ob_get_contents(); 
-	ob_end_clean(); 
+	ob_start();
+	require_once Config::get('prefix') . '/templates/' . $include;
+	$results = ob_get_contents();
+	ob_end_clean();
 
-	return $results; 
+	return $results;
 
 } // ajax_include
 
@@ -836,11 +836,11 @@ function ajax_include($include) {
  * toggle_visible
  * this is identicla to the javascript command that it actually calls
  */
-function toggle_visible($element) { 
+function toggle_visible($element) {
 
-	echo "<script type=\"text/javascript\">\n"; 
-	echo "toggle_visible('$element');"; 
-	echo "\n</script>\n"; 
+	echo "<script type=\"text/javascript\">\n";
+	echo "toggle_visible('$element');";
+	echo "\n</script>\n";
 
 } // toggle_visible
 
@@ -849,14 +849,14 @@ function toggle_visible($element) {
  * This shows the now playing templates and does some garbage colleciont
  * this should really be somewhere else
  */
-function show_now_playing() { 
-	
-	Stream::gc_session(); 
-	Stream::gc_now_playing(); 
+function show_now_playing() {
 
-	$web_path = Config::get('web_path'); 
-	$results = Stream::get_now_playing(); 
-	require_once Config::get('prefix') . '/templates/show_now_playing.inc.php'; 
+	Stream::gc_session();
+	Stream::gc_now_playing();
+
+	$web_path = Config::get('web_path');
+	$results = Stream::get_now_playing();
+	require_once Config::get('prefix') . '/templates/show_now_playing.inc.php';
 
 } // show_now_playing
 

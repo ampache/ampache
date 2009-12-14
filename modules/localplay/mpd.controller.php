@@ -72,7 +72,7 @@ class AmpacheMpd extends localplay_controller {
 	public function is_installed() {
 
                 $sql = "DESCRIBE `localplay_mpd`";
-                $db_results = Dba::query($sql);
+                $db_results = Dba::read($sql);
 
                 return Dba::num_rows($db_results);
 
@@ -93,7 +93,7 @@ class AmpacheMpd extends localplay_controller {
                         "`password` VARCHAR( 255 ) COLLATE utf8_unicode_ci NOT NULL , " .
                         "`access` SMALLINT( 4 ) UNSIGNED NOT NULL DEFAULT '0'" .
                         ") ENGINE = MYISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci";
-                $db_results = Dba::query($sql);
+                $db_results = Dba::write($sql);
 
 		// Add an internal preference for the users current active instance
 		Preference::insert('mpd_active','MPD Active Instance','0','25','integer','internal');
@@ -110,7 +110,7 @@ class AmpacheMpd extends localplay_controller {
 	public function uninstall() {
 
                 $sql = "DROP TABLE `localplay_mpd`";
-                $db_results = Dba::query($sql);
+                $db_results = Dba::write($sql);
 
 		Preference::delete('mpd_active');
 
@@ -142,7 +142,7 @@ class AmpacheMpd extends localplay_controller {
 
 		$sql = "INSERT INTO `localplay_mpd` (`name`,`host`,`port`,`password`,`owner`) " .
 			"VALUES ('$name','$host','$port','$password','$user_id')";
-		$db_results = Dba::query($sql);
+		$db_results = Dba::write($sql);
 
 		return $db_results;
 
@@ -158,7 +158,7 @@ class AmpacheMpd extends localplay_controller {
 
 		// Go ahead and delete this mofo!
 		$sql = "DELETE FROM `localplay_mpd` WHERE `id`='$uid'";
-		$db_results = Dba::query($sql);
+		$db_results = Dba::write($sql);
 
 		return true;
 
@@ -172,7 +172,7 @@ class AmpacheMpd extends localplay_controller {
 	public function get_instances() {
 
 		$sql = "SELECT * FROM `localplay_mpd` ORDER BY `name`";
-		$db_results = Dba::query($sql);
+		$db_results = Dba::read($sql);
 
 		$results = array();
 
@@ -195,7 +195,7 @@ class AmpacheMpd extends localplay_controller {
 		$instance = Dba::escape($instance);
 
 		$sql = "SELECT * FROM `localplay_mpd` WHERE `id`='$instance'";
-		$db_results = Dba::query($sql);
+		$db_results = Dba::read($sql);
 
 		$row = Dba::fetch_assoc($db_results);
 
@@ -216,7 +216,7 @@ class AmpacheMpd extends localplay_controller {
 		$pass	= Dba::escape($data['password']);
 
 		$sql = "UPDATE `localplay_mpd` SET `host`='$host', `port`='$port', `name`='$name', `password`='$pass' WHERE `id`='$uid'";
-		$db_results = Dba::query($sql);
+		$db_results = Dba::write($sql);
 
 		return true;
 

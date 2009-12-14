@@ -15,38 +15,38 @@
 
  You should have received a copy of the GNU General Public License
  along with this program; if not, write to the Free Software
- Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA. 
+ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
 
 /**
  * AmpacheShoutCast
  * This class handles the shoutcast extension this is kind of an ugly controller
- * ooh well you do what you can 
+ * ooh well you do what you can
  */
 class AmpacheShoutCast extends localplay_controller {
 
 	/* Variables */
-	private $version 	= '000001'; 
-	private $description	= 'Outputs to a local shoutcast server'; 
+	private $version 	= '000001';
+	private $description	= 'Outputs to a local shoutcast server';
 
-	private $local_path; 
-	private $pid; 
-	private $playlist; 
+	private $local_path;
+	private $pid;
+	private $playlist;
 
 	// Generated
-	private $files = array(); 
+	private $files = array();
 
 	/**
 	 * Constructor
 	 * This returns the array map for the localplay object
 	 * REQUIRED for Localplay
 	 */
-	public function __construct() { 
+	public function __construct() {
 
 
-		
-	
+
+
 
 	} // AmpacheShoutCast
 
@@ -54,19 +54,19 @@ class AmpacheShoutCast extends localplay_controller {
 	 * get_description
 	 * Returns the description
 	 */
-	public function get_description() { 
+	public function get_description() {
 
-		return $this->description; 
-	
+		return $this->description;
+
 	} // get_description
 
 	/**
 	 * get_version
 	 * This returns the version information
 	 */
-	public function get_version() { 
+	public function get_version() {
 
-		return $this->version; 
+		return $this->version;
 
 	} // get_version
 
@@ -74,10 +74,10 @@ class AmpacheShoutCast extends localplay_controller {
 	 * is_installed
 	 * This returns true or false if MPD controller is installed
 	 */
-	public function is_installed() { 
+	public function is_installed() {
 
                 $sql = "DESCRIBE `localplay_shoutcast`";
-                $db_results = Dba::query($sql);
+                $db_results = Dba::read($sql);
 
                 return Dba::num_rows($db_results);
 
@@ -87,7 +87,7 @@ class AmpacheShoutCast extends localplay_controller {
 	 * install
 	 * This function installs the MPD localplay controller
 	 */
-	public function install() { 
+	public function install() {
 
                 /* We need to create the MPD table */
                 $sql = "CREATE TABLE `localplay_shoutcast` ( `id` INT( 11 ) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY , " .
@@ -98,11 +98,11 @@ class AmpacheShoutCast extends localplay_controller {
                         "`local_root` VARCHAR( 255 ) COLLATE utf8_unicode_ci NOT NULL , " .
                         "`access` SMALLINT( 4 ) UNSIGNED NOT NULL DEFAULT '0'" .
                         ") ENGINE = MYISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci";
-                $db_results = Dba::query($sql);
-		
+                $db_results = Dba::write($sql);
+
 		// Add an internal preference for the users current active instance
-		Preference::insert('shoutcast_active','Shoutcast Active Instance','0','25','integer','internal'); 
-		User::rebuild_all_preferences(); 
+		Preference::insert('shoutcast_active','Shoutcast Active Instance','0','25','integer','internal');
+		User::rebuild_all_preferences();
 
                 return true;
 
@@ -110,14 +110,14 @@ class AmpacheShoutCast extends localplay_controller {
 
 	/**
 	 * uninstall
-	 * This removes the localplay controller 
+	 * This removes the localplay controller
 	 */
-	public function uninstall() { 
+	public function uninstall() {
 
                 $sql = "DROP TABLE `localplay_shoutcast`";
-                $db_results = Dba::query($sql);
+                $db_results = Dba::write($sql);
 
-		Preference::delete('shoutcast_active'); 
+		Preference::delete('shoutcast_active');
 
                 return true;
 
@@ -127,29 +127,29 @@ class AmpacheShoutCast extends localplay_controller {
 	 * add_instance
 	 * This takes key'd data and inserts a new MPD instance
 	 */
-	public function add_instance($data) { 
+	public function add_instance($data) {
 
-		foreach ($data as $key=>$value) { 
-			switch ($key) { 
-				case 'name': 
+		foreach ($data as $key=>$value) {
+			switch ($key) {
+				case 'name':
 				case 'pid':
-				case 'playlist': 
-				case 'local_root': 
-					${$key} = Dba::escape($value); 
+				case 'playlist':
+				case 'local_root':
+					${$key} = Dba::escape($value);
 				break;
-				default: 
+				default:
 
 				break;
-			} // end switch 
+			} // end switch
 		} // end foreach
 
-		$user_id = Dba::escape($GLOBALS['user']->id); 
+		$user_id = Dba::escape($GLOBALS['user']->id);
 
-		$sql = "INSERT INTO `localplay_shoutcast` (`name`,`pid`,`playlist`,`local_root`,`owner`) " . 
+		$sql = "INSERT INTO `localplay_shoutcast` (`name`,`pid`,`playlist`,`local_root`,`owner`) " .
 			"VALUES ('$name','$pid','$playlist','$local_root','$user_id')";
-		$db_results = Dba::query($sql); 
-		
-		return $db_results; 
+		$db_results = Dba::write($sql);
+
+		return $db_results;
 
 	} // add_instance
 
@@ -157,35 +157,35 @@ class AmpacheShoutCast extends localplay_controller {
  	 * delete_instance
 	 * This takes a UID and deletes the instance in question
 	 */
-	public function delete_instance($uid) { 
-		
-		$uid = Dba::escape($uid); 
+	public function delete_instance($uid) {
+
+		$uid = Dba::escape($uid);
 
 		// Go ahead and delete this mofo!
-		$sql = "DELETE FROM `localplay_shoutcast` WHERE `id`='$uid'"; 
-		$db_results = Dba::query($sql); 
+		$sql = "DELETE FROM `localplay_shoutcast` WHERE `id`='$uid'";
+		$db_results = Dba::write($sql);
 
-		return true; 
+		return true;
 
 	} // delete_instance
 
 	/**
  	 * get_instances
-	 * This returns a key'd array of the instance information with 
+	 * This returns a key'd array of the instance information with
 	 * [UID]=>[NAME]
 	 */
-	public function get_instances() { 
+	public function get_instances() {
 
-		$sql = "SELECT * FROM `localplay_shoutcast` ORDER BY `name`"; 
-		$db_results = Dba::query($sql); 
+		$sql = "SELECT * FROM `localplay_shoutcast` ORDER BY `name`";
+		$db_results = Dba::read($sql);
 
-		$results = array(); 
+		$results = array();
 
-		while ($row = Dba::fetch_assoc($db_results)) { 
-			$results[$row['id']] = $row['name']; 
-		} 
+		while ($row = Dba::fetch_assoc($db_results)) {
+			$results[$row['id']] = $row['name'];
+		}
 
-		return $results; 
+		return $results;
 
 	} // get_instances
 
@@ -194,17 +194,17 @@ class AmpacheShoutCast extends localplay_controller {
 	 * This returns the specified instance and all it's pretty variables
 	 * If no instance is passed current is used
 	 */
-	public function get_instance($instance='') { 
+	public function get_instance($instance='') {
 
 		$instance = $instance ? $instance : Config::get('shoutcast_active');
-		$instance = Dba::escape($instance); 
+		$instance = Dba::escape($instance);
 
-		$sql = "SELECT * FROM `localplay_shoutcast` WHERE `id`='$instance'";  
-		$db_results = Dba::query($sql); 
+		$sql = "SELECT * FROM `localplay_shoutcast` WHERE `id`='$instance'";
+		$db_results = Dba::read($sql);
 
-		$row = Dba::fetch_assoc($db_results); 
+		$row = Dba::fetch_assoc($db_results);
 
-		return $row; 
+		return $row;
 
 	} // get_instance
 
@@ -212,18 +212,18 @@ class AmpacheShoutCast extends localplay_controller {
 	 * update_instance
 	 * This takes an ID and an array of data and updates the instance specified
 	 */
-	public function update_instance($uid,$data) { 
+	public function update_instance($uid,$data) {
 
-		$uid 	= Dba::escape($uid); 
+		$uid 	= Dba::escape($uid);
 		$pid	= Dba::escape($data['pid']);
 		$playlist	= Dba::escape($data['playlist']);
-		$name	= Dba::escape($data['name']); 
-		$local_root	= Dba::escape($data['local_root']); 
+		$name	= Dba::escape($data['name']);
+		$local_root	= Dba::escape($data['local_root']);
 
-		$sql = "UPDATE `localplay_shoutcast` SET `pid`='$pid', `playlist`='$playlist', `name`='$name', `local_root`='$local_root' WHERE `id`='$uid'"; 
-		$db_results = Dba::query($sql); 
+		$sql = "UPDATE `localplay_shoutcast` SET `pid`='$pid', `playlist`='$playlist', `name`='$name', `local_root`='$local_root' WHERE `id`='$uid'";
+		$db_results = Dba::write($sql);
 
-		return true; 
+		return true;
 
 	} // update_instance
 
@@ -232,14 +232,14 @@ class AmpacheShoutCast extends localplay_controller {
 	 * This returns a key'd array of [NAME]=>array([DESCRIPTION]=>VALUE,[TYPE]=>VALUE) for the
 	 * fields so that we can on-the-fly generate a form
 	 */
-	public function instance_fields() { 
+	public function instance_fields() {
 
-		$fields['name'] 	= array('description'=>_('Instance Name'),'type'=>'textbox'); 
-		$fields['pid'] 		= array('description'=>_('PID File'),'type'=>'textbox'); 
-		$fields['playlist']	= array('description'=>_('Playlist File'),'type'=>'textbox'); 
-		$fields['local_root']	= array('description'=>_('Local Path to Files'),'type'=>'textbox'); 
+		$fields['name'] 	= array('description'=>_('Instance Name'),'type'=>'textbox');
+		$fields['pid'] 		= array('description'=>_('PID File'),'type'=>'textbox');
+		$fields['playlist']	= array('description'=>_('Playlist File'),'type'=>'textbox');
+		$fields['local_root']	= array('description'=>_('Local Path to Files'),'type'=>'textbox');
 
-		return $fields; 
+		return $fields;
 
 	} // instance_fields
 
@@ -247,64 +247,64 @@ class AmpacheShoutCast extends localplay_controller {
 	 * set_active_instance
 	 * This sets the specified instance as the 'active' one
 	 */
-	public function set_active_instance($uid,$user_id='') { 
+	public function set_active_instance($uid,$user_id='') {
 
 		// Not an admin? bubkiss!
-		if (!$GLOBALS['user']->has_access('100')) { 
-			$user_id = $GLOBALS['user']->id; 
-		} 
+		if (!$GLOBALS['user']->has_access('100')) {
+			$user_id = $GLOBALS['user']->id;
+		}
 
-		$user_id = $user_id ? $user_id : $GLOBALS['user']->id; 
+		$user_id = $user_id ? $user_id : $GLOBALS['user']->id;
 
-		Preference::update('shoutcast_active',$user_id,intval($uid)); 
-		Config::set('shoutcast_active',intval($uid),'1'); 
+		Preference::update('shoutcast_active',$user_id,intval($uid));
+		Config::set('shoutcast_active',intval($uid),'1');
 
-		return true; 
+		return true;
 
-	} // set_active_instance	
+	} // set_active_instance
 
 	/**
 	 * get_active_instance
 	 * This returns the UID of the current active instance
 	 * false if none are active
 	 */
-	public function get_active_instance() { 
+	public function get_active_instance() {
 
 
 	} // get_active_instance
 
 	/**
 	 * add
-	 * This takes a single object and adds it in, it uses the built in 
+	 * This takes a single object and adds it in, it uses the built in
 	 * functions to generate the URL it needs
 	 */
-	public function add($object) { 
+	public function add($object) {
 
-		// Before we add this it must be a mp3 
-		$object->format_type(); 
-		
-		if ($object->mime != 'audio/mpeg') { 
-			debug_event('ShoutCast','Error: Unable to play ' . $this->mime . ' files with shoutcast, skipping','3'); 
-			return false; 
-		} 
-		if ($object->rate != '44100') { 
-			debug_event('Shoutcast','Error: Unable to play ' . $this->rate . ' files with shoutcast, skipping','3'); 
-			return false; 
-		} 
+		// Before we add this it must be a mp3
+		$object->format_type();
+
+		if ($object->mime != 'audio/mpeg') {
+			debug_event('ShoutCast','Error: Unable to play ' . $this->mime . ' files with shoutcast, skipping','3');
+			return false;
+		}
+		if ($object->rate != '44100') {
+			debug_event('Shoutcast','Error: Unable to play ' . $this->rate . ' files with shoutcast, skipping','3');
+			return false;
+		}
 
 
 		// Take the filename and strip off the catalog's root_path and put our
 		// prefix onto it
-		$filename = $object->file; 
-		$catalog = new Catalog($object->catalog); 
+		$filename = $object->file;
+		$catalog = new Catalog($object->catalog);
 
-		if ($this->local_path) { 
-			$filename = str_replace($catalog->path,$this->local_path,$filename); 
-		} 
+		if ($this->local_path) {
+			$filename = str_replace($catalog->path,$this->local_path,$filename);
+		}
 
-		$this->files[] = $filename; 
+		$this->files[] = $filename;
 
-		return true; 
+		return true;
 
 	} // add
 
@@ -313,17 +313,17 @@ class AmpacheShoutCast extends localplay_controller {
 	 * This must take a single ID (as passed by get function) from Ampache
 	 * and delete it from the current playlist
 	 */
-	public function delete_track($object_id) { 
+	public function delete_track($object_id) {
 
 		return true;
 
 	} // delete_track
-	
+
 	/**
 	 * clear_playlist
 	 * This deletes the entire MPD playlist... nuff said
 	 */
-	function clear_playlist() { 
+	function clear_playlist() {
 
 		return true;
 
@@ -334,16 +334,16 @@ class AmpacheShoutCast extends localplay_controller {
 	 * This just tells MPD to start playing, it does not
 	 * take any arguments
 	 */
-	public function play() { 
+	public function play() {
 
 		// If we have no files[] then just Reload the server nothing else
-		if (!count($this->files)) { 
-			$this->send_command('reload'); 
-		} 
-		else { 
-			$this->write_playlist(); 
-			$this->send_command('reload'); 
-		} 
+		if (!count($this->files)) {
+			$this->send_command('reload');
+		}
+		else {
+			$this->write_playlist();
+			$this->send_command('reload');
+		}
 
 		return true;
 
@@ -353,9 +353,9 @@ class AmpacheShoutCast extends localplay_controller {
 	 * stop
 	 * This just stops the shoutcast server
 	 */
-	public function stop() { 
+	public function stop() {
 
-		$this->send_command('stop'); 
+		$this->send_command('stop');
 		return true;
 
 	} // stop
@@ -364,16 +364,16 @@ class AmpacheShoutCast extends localplay_controller {
 	 * skip
 	 * This tells MPD to skip to the specified song
 	 */
-	function skip($song) { 
+	function skip($song) {
 
-		return true; 
+		return true;
 
 	} // skip
 
 	/**
 	 * This tells MPD to increase the volume by 5
 	 */
-	public function volume_up() { 
+	public function volume_up() {
 
 		return true;
 
@@ -382,19 +382,19 @@ class AmpacheShoutCast extends localplay_controller {
 	/**
 	 * This tells MPD to decrese the volume by 5
 	 */
-	public function volume_down() { 
+	public function volume_down() {
 
 		return true;
-		
+
 	} // volume_down
 
 	/**
 	 * next
-	 * This just tells MPD to skip to the next song 
+	 * This just tells MPD to skip to the next song
 	 */
-	public function next() { 
+	public function next() {
 
-		$this->send_command('next'); 
+		$this->send_command('next');
 		return true;
 
 	} // next
@@ -403,20 +403,20 @@ class AmpacheShoutCast extends localplay_controller {
 	 * prev
 	 * This just tells MPD to skip to the prev song
 	 */
-	public function prev() { 
+	public function prev() {
 
 		return true;
-	
+
 	} // prev
 
 	/**
 	 * pause
 	 */
-	public function pause() { 
-		
+	public function pause() {
+
 		return true;
 
-	} // pause 
+	} // pause
 
         /**
         * volume
@@ -433,7 +433,7 @@ class AmpacheShoutCast extends localplay_controller {
         * This tells MPD to set the repeating the playlist (i.e. loop) to either on or off
         */
        public function repeat($state) {
-	
+
        		return true;
 
        } // repeat
@@ -445,7 +445,7 @@ class AmpacheShoutCast extends localplay_controller {
         */
        public function random($onoff) {
 
-		$this->send_command('shuffle'); 
+		$this->send_command('shuffle');
 		return true;
 
        } // random
@@ -465,18 +465,18 @@ class AmpacheShoutCast extends localplay_controller {
 	 * The songs that MPD currently has in it's playlist. This must be
 	 * done in a standardized fashion
 	 */
-	public function get() { 
+	public function get() {
 
 		$songs = $this->get_playlist();
 
-		foreach ($songs as $key=>$file) { 
-			$data['id'] = $key; 
-			$data['raw'] = $file; 
-			$data['name'] = $file; 
-			$results[] = $data; 
+		foreach ($songs as $key=>$file) {
+			$data['id'] = $key;
+			$data['raw'] = $file;
+			$data['name'] = $file;
+			$results[] = $data;
 		}
 
-		return $results; 
+		return $results;
 
 	} // get
 
@@ -485,7 +485,7 @@ class AmpacheShoutCast extends localplay_controller {
 	 * This returns bool/int values for features, loop, repeat and any other features
 	 * That this localplay method support
 	 */
-	public function status() { 
+	public function status() {
 
 		return array();
 
@@ -497,18 +497,18 @@ class AmpacheShoutCast extends localplay_controller {
 	 * a boolean value for the status, to save time this handle
 	 * is stored in this class
 	 */
-	public function connect() { 
-	
+	public function connect() {
+
 		// We should use this oppertunity to setup the current object
-		$info = $this->get_instance(); 
+		$info = $this->get_instance();
 
-		foreach ($info as $key=>$value) { 
-			$this->$key = $value; 
-		} 
+		foreach ($info as $key=>$value) {
+			$this->$key = $value;
+		}
 
-		if (!count($info)) { return false; } 
-	
-		return true; 
+		if (!count($info)) { return false; }
+
+		return true;
 
 	} // connect
 
@@ -516,38 +516,38 @@ class AmpacheShoutCast extends localplay_controller {
 	 * get_pid
 	 * This returns the pid for the current instance
 	 */
-	public function get_pid() { 
+	public function get_pid() {
 
 		// Read and clean!
-		$pid = intval(trim(file_get_contents($this->pid))); 
+		$pid = intval(trim(file_get_contents($this->pid)));
 
-		if (!$pid) { 
-			debug_event('Shoutcast','Unable to read PID from ' . $this->pid,'1'); 
+		if (!$pid) {
+			debug_event('Shoutcast','Unable to read PID from ' . $this->pid,'1');
 		}
 
-		return $pid; 
+		return $pid;
 
 	} // get_pid
 
-	/**	
-	 * write_playlist	
+	/**
+	 * write_playlist
  	 * This takes the files that we've got in our array and writes them out
-	 */ 
-	public function write_playlist() { 
+	 */
+	public function write_playlist() {
 
-		$string = implode("\n",$this->files) . "\n"; 
-		
-		$handle = fopen($this->playlist,'w'); 
+		$string = implode("\n",$this->files) . "\n";
 
-		if (!is_resource($handle)) { 
-			debug_event('Shoutcast','Unable to open ' . $this->playlist . ' for writing playlist file','1'); 
-			return false; 
-		} 
+		$handle = fopen($this->playlist,'w');
 
-		fwrite($handle,$string); 
-		fclose($handle); 
-		
-		return true; 
+		if (!is_resource($handle)) {
+			debug_event('Shoutcast','Unable to open ' . $this->playlist . ' for writing playlist file','1');
+			return false;
+		}
+
+		fwrite($handle,$string);
+		fclose($handle);
+
+		return true;
 
 	} // write_playlist
 
@@ -555,66 +555,66 @@ class AmpacheShoutCast extends localplay_controller {
 	 * get_playlist
 	 * This reads in the playlist and returns an array of filenames
 	 */
-	public function get_playlist() { 
+	public function get_playlist() {
 
-		$data = file_get_contents($this->playlist); 
+		$data = file_get_contents($this->playlist);
 
 		if (!$data) {
-			debug_event('Shoutcast','Unable to open ' . $this->playlist . ' for reading or file empty','1'); 
-			return false; 
-		} 
+			debug_event('Shoutcast','Unable to open ' . $this->playlist . ' for reading or file empty','1');
+			return false;
+		}
 
-		$results = explode("\n",$data); 
+		$results = explode("\n",$data);
 
-		return $results; 
+		return $results;
 
 	} // get_playlist
 
 	/**
 	 * send_command
-	 * This is the single funciton that's used to send commands to the 
+	 * This is the single funciton that's used to send commands to the
 	 * shoutcast server, one function makes it easier to ensure we've escaped our input
 	 */
-	public function send_command($command,$options=array()) { 
+	public function send_command($command,$options=array()) {
 
 		// Just incase someone uses some crazy syntax
-		$command = strtolower($command); 
-		$pid = $this->get_pid(); 
-		if (!$pid) { return false; } 
+		$command = strtolower($command);
+		$pid = $this->get_pid();
+		if (!$pid) { return false; }
 
-		switch ($command) { 
-			case 'hup': 
-				$command = '/bin/kill -l HUP ' . escapeshellarg($pid); 
-				system($command,$return); 
-			break; 
-			case 'reload': 
-				$command = '/bin/kill -l USR1 ' . escapeshellarg($pid); 
-				system($command,$return); 
-			break; 
-			case 'next': 
-				$commend = '/bin/kill -l WINCH ' . escapeshellarg($pid); 
-				system($command,$return); 
-			break; 
-			case 'shuffle': 
-				$command = '/bin/kill -l USR2 ' . escapeshellarg($pid); 
-				system($command,$return); 
-			break; 
-			case 'stop': 
-				$command = '/bin/kill -l TERM ' . escapeshellarg($pid); 
-				system($command,$return); 
-			break; 
-			case 'start': 
-				$command = ''; 
-				system($command,$return); 
-			break; 
-			default: 
-				return false; 
-			break;  
+		switch ($command) {
+			case 'hup':
+				$command = '/bin/kill -l HUP ' . escapeshellarg($pid);
+				system($command,$return);
+			break;
+			case 'reload':
+				$command = '/bin/kill -l USR1 ' . escapeshellarg($pid);
+				system($command,$return);
+			break;
+			case 'next':
+				$commend = '/bin/kill -l WINCH ' . escapeshellarg($pid);
+				system($command,$return);
+			break;
+			case 'shuffle':
+				$command = '/bin/kill -l USR2 ' . escapeshellarg($pid);
+				system($command,$return);
+			break;
+			case 'stop':
+				$command = '/bin/kill -l TERM ' . escapeshellarg($pid);
+				system($command,$return);
+			break;
+			case 'start':
+				$command = '';
+				system($command,$return);
+			break;
+			default:
+				return false;
+			break;
 		} // end switch on the commands we allow
-				
-		debug_event('Shoutcat','Issued ' . $command . ' and received ' . $return,'3'); 
 
-		return false; 
+		debug_event('Shoutcat','Issued ' . $command . ' and received ' . $return,'3');
+
+		return false;
 
 	} // send_command
 

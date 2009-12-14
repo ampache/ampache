@@ -15,10 +15,10 @@
 
  You should have received a copy of the GNU General Public License
  along with this program; if not, write to the Free Software
- Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA. 
+ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
-/** 
+/**
  * Vauth
  * This class handles all of the session related stuff in Ampache
  * it takes over for the vauth libs, and takes some stuff out of other
@@ -33,7 +33,7 @@ class vauth {
 	 * Constructor
 	 * This should never be called
 	 */
-	private function __construct() { 
+	private function __construct() {
 
 		// Rien a faire
 
@@ -44,14 +44,14 @@ class vauth {
 	 * This function is for opening a new session so we just verify that we have
 	 * a database connection, nothing more is needed
 	 */
-	public static function open($save_path,$session_name) { 
+	public static function open($save_path,$session_name) {
 
-		if (!is_resource(Dba::dbh())) { 
-			debug_event('SESSION','Error no database connection session failed','1'); 
-			return false; 
-		} 
+		if (!is_resource(Dba::dbh())) {
+			debug_event('SESSION','Error no database connection session failed','1');
+			return false;
+		}
 
-		return true; 
+		return true;
 
 	} // open
 
@@ -59,9 +59,9 @@ class vauth {
 	 * close
 	 * This is run on the end of a sessoin, nothing to do here for now
 	 */
-	public static function close() { 
+	public static function close() {
 
-		return true; 
+		return true;
 
 	} // close
 
@@ -69,16 +69,16 @@ class vauth {
 	 * read
 	 * This takes a key and then looks in the database and returns the value
 	 */
-	public static function read($key) { 
+	public static function read($key) {
 
-		$results = self::get_session_data($key); 
+		$results = self::get_session_data($key);
 
-		if (!is_array($results)) { 
-			debug_event('SESSION','Error unable to read session from key ' . $key . ' no data found','1'); 
-			return false; 
-		} 
+		if (!is_array($results)) {
+			debug_event('SESSION','Error unable to read session from key ' . $key . ' no data found','1');
+			return false;
+		}
 
-		return $results['value']; 
+		return $results['value'];
 
 	} // read
 
@@ -86,22 +86,22 @@ class vauth {
 	 * write
 	 * This saves the sessoin information into the database
 	 */
-	public static function write($key,$value) { 
+	public static function write($key,$value) {
 
-		if (NO_SESSION_UPDATE == '1') { return true; } 
+		if (NO_SESSION_UPDATE == '1') { return true; }
 
-		$length		= Config::get('session_length'); 
-		$value		= Dba::escape($value); 
-		$key 		= Dba::escape($key); 
+		$length		= Config::get('session_length');
+		$value		= Dba::escape($value);
+		$key 		= Dba::escape($key);
 		// Check to see if remember me cookie is set, if so use remember length, otherwise use the session length
-		$expire		= isset($_COOKIE[Config::get('session_name') . '_remember']) ? time() + Config::get('remember_length') : time() + Config::get('session_length');  
+		$expire		= isset($_COOKIE[Config::get('session_name') . '_remember']) ? time() + Config::get('remember_length') : time() + Config::get('session_length');
 
-		$sql = "UPDATE `session` SET `value`='$value', `expire`='$expire' WHERE `id`='$key'"; 
-		$db_results = Dba::query($sql); 
+		$sql = "UPDATE `session` SET `value`='$value', `expire`='$expire' WHERE `id`='$key'";
+		$db_results = Dba::read($sql);
 
-		debug_event('SESSION','Writing to ' . $key . ' with expire ' . $expire . ' ' . Dba::error(),'6'); 
+		debug_event('SESSION','Writing to ' . $key . ' with expire ' . $expire . ' ' . Dba::error(),'6');
 
-		return $db_results; 
+		return $db_results;
 
 	} // write
 
@@ -109,20 +109,20 @@ class vauth {
 	 * destroy
 	 * This removes the specified session from the database
 	 */
-	public static function destroy($key) { 
+	public static function destroy($key) {
 
-		$key = Dba::escape($key); 
+		$key = Dba::escape($key);
 
-		if (!strlen($key)) { return false; } 
+		if (!strlen($key)) { return false; }
 
 		// Remove anything and EVERYTHING
-		$sql = "DELETE FROM `session` WHERE `id`='$key'"; 
-		$db_results = Dba::query($sql); 
+		$sql = "DELETE FROM `session` WHERE `id`='$key'";
+		$db_results = Dba::write($sql);
 
-		debug_event('SESSION','Deleting Session with key:' . $key,'6'); 
+		debug_event('SESSION','Deleting Session with key:' . $key,'6');
 
 		// Destory our cookie!
-		setcookie(Config::get('session_name'),'',time() - 86400); 
+		setcookie(Config::get('session_name'),'',time() - 86400);
 
 		return true;
 
@@ -132,16 +132,16 @@ class vauth {
 	 * gc
 	 * This function is randomly called and it cleans up the poo
 	 */
-	public static function gc($maxlifetime) { 
+	public static function gc($maxlifetime) {
 
-		$sql = "DELETE FROM `session` WHERE `expire` < '" . time() . "'"; 
-		$db_results = Dba::write($sql); 
+		$sql = "DELETE FROM `session` WHERE `expire` < '" . time() . "'";
+		$db_results = Dba::write($sql);
 
-		$sql = "DELETE FROM `tmp_browse` USING `tmp_browse` LEFT JOIN `session` ON `session`.`id`=`tmp_browse`.`sid` " . 
-			"WHERE `session`.`id` IS NULL"; 
-		$db_results = Dba::write($sql); 
+		$sql = "DELETE FROM `tmp_browse` USING `tmp_browse` LEFT JOIN `session` ON `session`.`id`=`tmp_browse`.`sid` " .
+			"WHERE `session`.`id` IS NULL";
+		$db_results = Dba::write($sql);
 
-		return true; 
+		return true;
 
 	} // gc
 
@@ -151,13 +151,13 @@ class vauth {
 	 * This is the function used for the Ajax logouts, if no id is passed
 	 * it tries to find one from the session
 	 */
-	public static function logout($key='') { 
+	public static function logout($key='') {
 
 		// If no key is passed try to find the session id
-		$key = $key ? $key : session_id(); 
-		
+		$key = $key ? $key : session_id();
+
 		// Nuke the cookie before all else
-		self::destroy($key); 
+		self::destroy($key);
 
 	        // Do a quick check to see if this is an AJAX'd logout request
 	        // if so use the iframe to redirect
@@ -184,7 +184,7 @@ class vauth {
 	                header ('Location: ' . Config::get('web_path') . '/login.php');
 	        }
 
-		exit; 
+		exit;
 
 	} // logout
 
@@ -193,20 +193,20 @@ class vauth {
 	 * This takes a key and returns the raw data from the database, nothing to
 	 * see here move along people
 	 */
-	public static function get_session_data($key) { 
+	public static function get_session_data($key) {
 
-		$key = Dba::escape($key); 
+		$key = Dba::escape($key);
 
-		$sql = "SELECT * FROM `session` WHERE `id`='$key' AND `expire` > '" . time() . "'"; 
-		$db_results = Dba::query($sql); 
+		$sql = "SELECT * FROM `session` WHERE `id`='$key' AND `expire` > '" . time() . "'";
+		$db_results = Dba::read($sql);
 
-		$results = Dba::fetch_assoc($db_results); 
+		$results = Dba::fetch_assoc($db_results);
 
-		if (!count($results)) { 
-			return false; 
-		} 
+		if (!count($results)) {
+			return false;
+		}
 
-		return $results; 
+		return $results;
 
 	} // get_session_data
 
@@ -217,21 +217,21 @@ class vauth {
 	 * same time as a header redirect. As such on view of a login a cookie is set with
 	 * the proper name
 	 */
-	public static function create_cookie() { 
+	public static function create_cookie() {
 
 		/* Setup the cookie prefs before we throw down, this is very important */
-		$cookie_life	= Config::get('cookie_life'); 
-		$cookie_path	= Config::get('cookie_path'); 
-		$cookie_domain	= false; 
-		$cookie_secure	= Config::get('cookie_secure'); 
+		$cookie_life	= Config::get('cookie_life');
+		$cookie_path	= Config::get('cookie_path');
+		$cookie_domain	= false;
+		$cookie_secure	= Config::get('cookie_secure');
 
-		session_set_cookie_params($cookie_life,$cookie_path,$cookie_domain,$cookie_secure); 
+		session_set_cookie_params($cookie_life,$cookie_path,$cookie_domain,$cookie_secure);
 
-		session_name(Config::get('session_name')); 
+		session_name(Config::get('session_name'));
 
 		/* Start the session */
-		self::ungimp_ie(); 
-		session_start(); 
+		self::ungimp_ie();
+		session_start();
 
 	} // create_cookie, just watch out for the cookie monster
 
@@ -239,10 +239,10 @@ class vauth {
 	 * create_remember_cookie
 	 * This function just creates the remember me cookie, nothing special
 	 */
-	public static function create_remember_cookie() { 
+	public static function create_remember_cookie() {
 
-		$remember_length = Config::get('remember_length'); 
-		$session_name = Config::get('session_name'); 
+		$remember_length = Config::get('remember_length');
+		$session_name = Config::get('session_name');
 
 		Config::set('cookie_life',$remember_length,'1');
 		setcookie($session_name . '_remember',"Rappelez-vous, rappelez-vous le 27 mars",time() + $remember_length,'/');
@@ -252,31 +252,31 @@ class vauth {
 	/**
 	 * session_create
 	 * This is called when you want to create a new session
-	 * it takes care of setting the initial cookie, and inserting the first chunk of 
+	 * it takes care of setting the initial cookie, and inserting the first chunk of
 	 * data, nifty ain't it!
 	 */
-	public static function session_create($data) { 
+	public static function session_create($data) {
 
 		// Regenerate the session ID to prevent fixation
-		switch ($data['type']) { 
-			case 'xml-rpc': 
-			case 'api': 
+		switch ($data['type']) {
+			case 'xml-rpc':
+			case 'api':
 				$key = md5(uniqid(rand(), true));
-			break;	
-			case 'mysql': 
-			default: 
-				session_regenerate_id(); 
+			break;
+			case 'mysql':
+			default:
+				session_regenerate_id();
 
 				// Before refresh we don't have the cookie so we have to use session ID
-				$key = session_id(); 
-			break; 
-		} // end switch on data type 
-		
+				$key = session_id();
+			break;
+		} // end switch on data type
+
 	        $username       = Dba::escape($data['username']);
-	        $ip             = $_SERVER['REMOTE_ADDR'] ? Dba::escape(inet_pton($_SERVER['REMOTE_ADDR'])) : '0'; 
+	        $ip             = $_SERVER['REMOTE_ADDR'] ? Dba::escape(inet_pton($_SERVER['REMOTE_ADDR'])) : '0';
 	        $type           = Dba::escape($data['type']);
 	        $value          = Dba::escape($data['value']);
-		$agent		= Dba::escape(substr($_SERVER['HTTP_USER_AGENT'],0,254)); 
+		$agent		= Dba::escape(substr($_SERVER['HTTP_USER_AGENT'],0,254));
 	        $expire         = Dba::escape(time() + Config::get('session_length'));
 
 	        /* We can't have null things here people */
@@ -285,14 +285,14 @@ class vauth {
 	        /* Insert the row */
 	        $sql = "INSERT INTO `session` (`id`,`username`,`ip`,`type`,`agent`,`value`,`expire`) " .
 	                " VALUES ('$key','$username','$ip','$type','$agent','$value','$expire')";
-	        $db_results = Dba::query($sql);
+	        $db_results = Dba::write($sql);
 
 	        if (!$db_results) {
 	                debug_event('SESSION',"Session Creation Failed with Query: $sql and " . Dba::error(),'1');
-			return false; 
+			return false;
 	        }
 
-		debug_event('SESSION','Session Created:' . $key,'6'); 
+		debug_event('SESSION','Session Created:' . $key,'6');
 
 	        return $key;
 
@@ -303,33 +303,33 @@ class vauth {
 	 * This checks for an existing sessoin and if it's still valid then go ahead and start it and return
 	 * true
 	 */
-	public static function check_session() { 
+	public static function check_session() {
 
-		$session_name = Config::get('session_name'); 
+		$session_name = Config::get('session_name');
 
 		// No cookie n go!
 		if (!isset($_COOKIE[$session_name])) { return false; }
 
 		// Check for a remember me
-		if (isset($_COOKIE[$session_name . '_remember'])) { 
-			self::create_remember_cookie(); 
-		} 
+		if (isset($_COOKIE[$session_name . '_remember'])) {
+			self::create_remember_cookie();
+		}
 
 		// Setup the cookie params before we start the session this is vital
 		session_set_cookie_params(
 			Config::get('cookie_life'),
 			Config::get('cookie_path'),
 			Config::get('cookie_domain'),
-			Config::get('cookie_secure')); 
-		
+			Config::get('cookie_secure'));
+
 		// Set name
-		session_name($session_name); 
+		session_name($session_name);
 
 		// Ungimp IE and go
-		self::ungimp_ie(); 
-		session_start(); 
+		self::ungimp_ie();
+		session_start();
 
-		return true; 
+		return true;
 
 	} // check_session
 
@@ -339,51 +339,51 @@ class vauth {
 	 * exists, it also provides an array of key'd data that may be required
 	 * based on the type
 	 */
-	public static function session_exists($type,$key,$data=array()) { 
+	public static function session_exists($type,$key,$data=array()) {
 
 		// Switch on the type they pass
-		switch ($type) { 
-			case 'xml-rpc': 
-			case 'api': 
-				$key = Dba::escape($key); 
-				$time = time(); 
-				$sql = "SELECT * FROM `session` WHERE `id`='$key' AND `expire` > '$time' AND `type`='$type'"; 
-				$db_results = Dba::read($sql); 
+		switch ($type) {
+			case 'xml-rpc':
+			case 'api':
+				$key = Dba::escape($key);
+				$time = time();
+				$sql = "SELECT * FROM `session` WHERE `id`='$key' AND `expire` > '$time' AND `type`='$type'";
+				$db_results = Dba::read($sql);
 
-				if (Dba::num_rows($db_results)) { 
-					return true; 
-				} 
-			break; 
+				if (Dba::num_rows($db_results)) {
+					return true;
+				}
+			break;
 			//FIXME: This should use the IN() mojo and compare against enabled auths
 			case 'interface':
-				$key = Dba::escape($key); 
-				$time = time(); 
-				$sql = "SELECT * FROM `session` WHERE `id`='$key' AND `expire` > '$time' AND `type`!='api' AND `type`!='xml-rpc'"; 
-				$db_results = Dba::read($sql); 
+				$key = Dba::escape($key);
+				$time = time();
+				$sql = "SELECT * FROM `session` WHERE `id`='$key' AND `expire` > '$time' AND `type`!='api' AND `type`!='xml-rpc'";
+				$db_results = Dba::read($sql);
 
-				if (Dba::num_rows($db_results)) { 
-					return true; 
-				} 
-			break; 
-			case 'stream': 
-				$key	= Dba::escape($key); 
-				$ip	= Dba::escape(inet_pton($data['ip'])); 
-				$agent	= Dba::escape($data['agent']); 
-				$sql = "SELECT * FROM `session_stream` WHERE `id`='$key' AND `expire` > '$time' AND `ip`='$ip' AND `agent`='$agent'"; 
-				$db_results = Dba::query($sql); 
+				if (Dba::num_rows($db_results)) {
+					return true;
+				}
+			break;
+			case 'stream':
+				$key	= Dba::escape($key);
+				$ip	= Dba::escape(inet_pton($data['ip']));
+				$agent	= Dba::escape($data['agent']);
+				$sql = "SELECT * FROM `session_stream` WHERE `id`='$key' AND `expire` > '$time' AND `ip`='$ip' AND `agent`='$agent'";
+				$db_results = Dba::read($sql);
 
-				if (Dba::num_rows($db_results)) { 
-					return true; 
-				} 
-				
-			break; 
-			default: 
-				return false; 
-			break; 
+				if (Dba::num_rows($db_results)) {
+					return true;
+				}
+
+			break;
+			default:
+				return false;
+			break;
 		} // type
 
 		// Default to false
-		return false; 
+		return false;
 
 	} // session_exists
 
@@ -392,17 +392,17 @@ class vauth {
 	 * This should really be extend_session but hey you gotta go with the flow
 	 * this takes a SID and extends it's expire
 	 */
-	public static function session_extend($sid) { 
+	public static function session_extend($sid) {
 
-		$sid = Dba::escape($sid); 
+		$sid = Dba::escape($sid);
                 $expire = isset($_COOKIE[Config::get('session_name') . '_remember']) ? time() + Config::get('remember_length') : time() + Config::get('session_length');
 
-		$sql = "UPDATE `session` SET `expire`='$expire' WHERE `id`='$sid'"; 
-		$db_results = Dba::query($sql); 
+		$sql = "UPDATE `session` SET `expire`='$expire' WHERE `id`='$sid'";
+		$db_results = Dba::write($sql);
 
-		debug_event('SESSION','Session:' . $sid . ' Has been Extended to ' . $expire,'6'); 
+		debug_event('SESSION','Session:' . $sid . ' Has been Extended to ' . $expire,'6');
 
-		return $db_results; 
+		return $db_results;
 
 	} // session_extend
 
@@ -410,14 +410,14 @@ class vauth {
 	 * _auto_init
 	 * This function is called when the object is included, this sets up the session_save_handler
 	 */
-	public static function _auto_init() { 
+	public static function _auto_init() {
 
-		if (!function_exists('session_start')) { 
-			header("Location:" . Config::get('web_path') . "/test.php"); 
-			exit; 
-		} 
+		if (!function_exists('session_start')) {
+			header("Location:" . Config::get('web_path') . "/test.php");
+			exit;
+		}
 
-		session_set_save_handler(array('vauth','open'),array('vauth','close'),array('vauth','read'),array('vauth','write'),array('vauth','destroy'),array('vauth','gc')); 
+		session_set_save_handler(array('vauth','open'),array('vauth','close'),array('vauth','read'),array('vauth','write'),array('vauth','destroy'),array('vauth','gc'));
 
 	} // auto init
 
@@ -427,19 +427,19 @@ class vauth {
 	 * some flavor of IE. The detection used here is very conservative so feel free
 	 * to fix it. This only has to be done if we're rolling HTTPS
 	 */
-	public static function ungimp_ie() { 
+	public static function ungimp_ie() {
 
 		// If no https, no ungimpage required
-		if ($_SERVER['HTTPS'] != 'on') { return true; } 
+		if ($_SERVER['HTTPS'] != 'on') { return true; }
 
 		// Try to detect IE
-		$agent = trim($_SERVER['HTTP_USER_AGENT']); 
+		$agent = trim($_SERVER['HTTP_USER_AGENT']);
 
-		if (strstr($agent,'MSIE') || strstr($agent,'Internet Explorer/')) { 
-			session_cache_limiter('public'); 
-		} 
+		if (strstr($agent,'MSIE') || strstr($agent,'Internet Explorer/')) {
+			session_cache_limiter('public');
+		}
 
-		return true; 
+		return true;
 
 	} // ungimp_ie
 
@@ -448,24 +448,24 @@ class vauth {
 	 * This takes a username and password and then returns true or false
 	 * based on what happens when we try to do the auth then
 	 */
-	public static function authenticate($username,$password) { 
+	public static function authenticate($username,$password) {
 
 		// Foreach the auth methods
-		foreach (Config::get('auth_methods') as $method) { 
+		foreach (Config::get('auth_methods') as $method) {
 
 			// Build the function name and call the custom method on this class
-			$function_name = $method . '_auth'; 
-			
-			if (!method_exists('vauth',$function_name)) { continue; } 
+			$function_name = $method . '_auth';
 
-			$results = self::$function_name($username,$password); 
+			if (!method_exists('vauth',$function_name)) { continue; }
+
+			$results = self::$function_name($username,$password);
 
 			// If we achive victory return
-			if ($results['success']) { break; } 
+			if ($results['success']) { break; }
 
-		} // end foreach 
-		
-		return $results; 
+		} // end foreach
+
+		return $results;
 
 	} // authenticate
 
@@ -475,39 +475,39 @@ class vauth {
 	 * and then tries to figure out if it can use the new SHA password hash or if it needs to fall
 	 * back on the mysql method
 	 */
-	private static function mysql_auth($username,$password) { 
+	private static function mysql_auth($username,$password) {
 
-		$username = Dba::escape($username); 
-		$password = Dba::escape($password); 
+		$username = Dba::escape($username);
+		$password = Dba::escape($password);
 
-		if (!strlen($password) OR !strlen($username)) { 
-			Error::add('general',_('Error Username or Password incorrect, please try again')); 
-			return false; 
-		} 
+		if (!strlen($password) OR !strlen($username)) {
+			Error::add('general',_('Error Username or Password incorrect, please try again'));
+			return false;
+		}
 
 		// We have to pull the password in order to figure out how to handle it *cry*
-		$sql = "SELECT `password` FROM `user` WHERE `username`='$username'"; 
-		$db_results = Dba::read($sql); 
-		$row = Dba::fetch_assoc($db_results); 
+		$sql = "SELECT `password` FROM `user` WHERE `username`='$username'";
+		$db_results = Dba::read($sql);
+		$row = Dba::fetch_assoc($db_results);
 
 		// If it's using the old method then roll with that
-		if (substr($row['password'],0,1) == '*' OR strlen($row['password']) < 32) { 
-			$response = self::vieux_mysql_auth($username,$password); 
-			return $response; 
-		} 
+		if (substr($row['password'],0,1) == '*' OR strlen($row['password']) < 32) {
+			$response = self::vieux_mysql_auth($username,$password);
+			return $response;
+		}
 
 		// Use SHA2 now... cooking with fire, SHA3 in 2012 *excitement*
-		$password = hash('sha256',$password); 
-	
-		$sql = "SELECT `username`,`id` FROM `user` WHERE `password`='$password' AND `username`='$username'"; 	
-		$db_results = Dba::read($sql); 
+		$password = hash('sha256',$password);
 
-		$row = Dba::fetch_assoc($db_results); 
+		$sql = "SELECT `username`,`id` FROM `user` WHERE `password`='$password' AND `username`='$username'";
+		$db_results = Dba::read($sql);
 
-		if (!count($row)) { 
-			Error::add('general',_('Error Username or Password incorrect, please try again')); 
-			return false; 
-		} 
+		$row = Dba::fetch_assoc($db_results);
+
+		if (!count($row)) {
+			Error::add('general',_('Error Username or Password incorrect, please try again'));
+			return false;
+		}
 
                 $row['type']        = 'mysql';
                 $row['success']     = true;
@@ -520,17 +520,17 @@ class vauth {
  	 * vieux_mysql_auth
 	 * This is a private function, it should only be called by authenticate
 	 */
-	private static function vieux_mysql_auth($username,$password) { 
+	private static function vieux_mysql_auth($username,$password) {
 
 		$password_check_sql = "PASSWORD('$password')";
 
 		// This has to still be here because lots of people use old_password in their config file
-		$sql = "SELECT `password` FROM `user` WHERE `username`='$username'"; 
-		$db_results = Dba::query($sql); 
-		$row = Dba::fetch_assoc($db_results); 
+		$sql = "SELECT `password` FROM `user` WHERE `username`='$username'";
+		$db_results = Dba::read($sql);
+		$row = Dba::fetch_assoc($db_results);
 
 	        $sql = "SELECT version()";
-	        $db_results = Dba::query($sql);
+	        $db_results = Dba::read($sql);
 	        $version = Dba::fetch_row($db_results);
 	        $mysql_version = substr(preg_replace("/(\d+)\.(\d+)\.(\d+).*/","$1$2$3",$version[0]),0,3);
 
@@ -539,7 +539,7 @@ class vauth {
 	        }
 
 	        $sql = "SELECT `username`,`id` FROM `user` WHERE `username`='$username' AND `password`=$password_check_sql";
-	        $db_results = Dba::query($sql);
+	        $db_results = Dba::read($sql);
 
 	        $results = Dba::fetch_assoc($db_results);
 
@@ -552,14 +552,14 @@ class vauth {
 	                $client = new User($results['id']);
 	                $current_ip = $client->is_logged_in();
 	                if ($current_ip AND $current_ip != inet_pton($_SERVER['REMOTE_ADDR'])) {
-				debug_event('Login','Concurrent Login Failure, attempted to login from ' . $_SERVER['REMOTE_ADDR'] . ' and already logged in','1'); 
+				debug_event('Login','Concurrent Login Failure, attempted to login from ' . $_SERVER['REMOTE_ADDR'] . ' and already logged in','1');
 	                        Error::add('general','User Already Logged in');
 	                        return false;
 	                }
 	        } // if prevent_multiple_logins
 
 	        $results['type']        = 'mysql';
-		$results['password']	= 'old'; 
+		$results['password']	= 'old';
 	        $results['success']     = true;
 
 	        return $results;
@@ -568,7 +568,7 @@ class vauth {
 
 	/**
 	 * ldap_auth
-	 * Step one, connect to the LDAP server and perform a search for teh username provided. 
+	 * Step one, connect to the LDAP server and perform a search for teh username provided.
 	 * If its found, attempt to bind using that username and the password provided.
 	 * Step two, figure out if they are authorized to use ampache:
 	 * TODO: need implimented still:
@@ -576,7 +576,7 @@ class vauth {
 	 *      * require-dn "Grant access if the DN in the directive matches the DN fetched from the LDAP directory"
 	 *      * require-attribute "an attribute fetched from the LDAP directory matches the given value"
 	 */
-	private static function ldap_auth($username,$password) { 
+	private static function ldap_auth($username,$password) {
 
 	        $ldap_username  = Config::get('ldap_username');
 	        $ldap_password  = Config::get('ldap_password');
@@ -632,14 +632,14 @@ class vauth {
 
 	                        } // if we get something good back
 
-	                } // if something was sent back 
+	                } // if something was sent back
 
-	        } // if failed connect 
+	        } // if failed connect
 
 	        /* Default to bad news */
 	        $results['success'] = false;
 	        $results['error'] = "LDAP login attempt failed";
-	
+
 	        return $results;
 
 	} // ldap_auth
@@ -650,7 +650,7 @@ class vauth {
 	 * This is not a very secure method of authentication
 	 * and defaults to off.
 	 */
-	public static function http_auth($username) { 
+	public static function http_auth($username) {
 
 	        $results['success']     = true;
 	        $results['type']        = 'http';

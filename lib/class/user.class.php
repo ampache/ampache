@@ -834,7 +834,7 @@ class User extends database_object {
 
 		/* Get All Preferences for the current user */
 		$sql = "SELECT * FROM `user_preference` WHERE `user`='$user_id'";
-		$db_results = Dba::query($sql);
+		$db_results = Dba::read($sql);
 
 		$results = array();
 
@@ -871,7 +871,7 @@ class User extends database_object {
                 if ($user_id != '-1') {
                         $sql .= " WHERE catagory !='system'";
                 }
-                $db_results = Dba::query($sql);
+                $db_results = Dba::read($sql);
 
                 while ($r = Dba::fetch_assoc($db_results)) {
 
