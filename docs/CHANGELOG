@@ -4,6 +4,8 @@
 
 --------------------------------------------------------------------------
   v.3.6-Alpha1
+	- Finished switching to Dba::read() Dba::write() for database calls
+		(Thx dipsol)
 	- Improved File pattern matching (Thx october.rust)
 	- Updated Amazon Album art search to current Amazone API specs 
 		(Thx Vlet)
