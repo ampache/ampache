@@ -210,14 +210,14 @@ function install_insert_db($username,$password,$hostname,$database) {
 
 	if ($mysql_version >= '500') {
 		$sql = "ALTER DATABASE `" . Dba::escape($database) . "` DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci";
-		$db_results = mysql_query($sql);
+		$db_results = Dba::write($sql);
 	}
 
 	if(Config::get('lang') != 'en_US') {
 		$sql = "UPDATE `preference` SET `value`='" . Config::get('lang') . "' WHERE `id`=31";
-		$db_results = mysql_query($sql);
+		$db_results = Dba::write($sql);
 		$sql = "UPDATE `user_preference` SET `value`='" .Config::get('lang') ."' WHERE `preference`=31";
-		$db_results = mysql_query($sql);
+		$db_results = Dba::write($sql);
 	}
 
 	return true;
