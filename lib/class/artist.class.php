@@ -84,7 +84,7 @@ class Artist extends database_object {
 		$idlist = '(' . implode(',', $ids) . ')';
 
 		$sql = "SELECT * FROM `artist` WHERE `id` IN $idlist";
-		$db_results = Dba::query($sql);
+		$db_results = Dba::read($sql);
 
 	  	while ($row = Dba::fetch_assoc($db_results)) {
 	  		parent::add_to_cache('artist',$row['id'],$row); 
@@ -94,7 +94,7 @@ class Artist extends database_object {
 		if ($extra) { 
 	                $sql = "SELECT `song`.`artist`, COUNT(`song`.`id`) AS `song_count`, COUNT(DISTINCT `song`.`album`) AS `album_count`, SUM(`song`.`time`) AS `time` FROM `song` " .
                         "WHERE `song`.`artist` IN $idlist GROUP BY `song`.`artist`";
-	                $db_results = Dba::query($sql);
+	                $db_results = Dba::read($sql);
 
 			while ($row = Dba::fetch_assoc($db_results)) { 
 				parent::add_to_cache('artist_extra',$row['artist'],$row); 
@@ -114,7 +114,7 @@ class Artist extends database_object {
 
 		$name = Dba::escape($name); 
 		$sql = "SELECT `id` FROM `artist` WHERE `name`='$name'"; 
-		$db_results = Dba::query($sql); 
+		$db_results = Dba::write($sql); 
 
 		$row = Dba::fetch_assoc($db_results); 
 
@@ -135,7 +135,7 @@ class Artist extends database_object {
 
 		$sql = "SELECT `album`.`id` FROM album LEFT JOIN `song` ON `song`.`album`=`album`.`id` " . 
 			"WHERE `song`.`artist`='$this->id' GROUP BY `album`.`id` ORDER BY `album`.`name`,`album`.`disk`,`album`.`year`";
-		$db_results = Dba::query($sql);
+		$db_results = Dba::read($sql);
 
 		while ($r = Dba::fetch_assoc($db_results)) { 
 			$results[] = $r['id'];
@@ -152,7 +152,7 @@ class Artist extends database_object {
 	public function get_songs() { 
 	
 		$sql = "SELECT `song`.`id` FROM `song` WHERE `song`.`artist`='" . Dba::escape($this->id) . "' ORDER BY album, track";
-		$db_results = Dba::query($sql);
+		$db_results = Dba::read($sql);
 
 		while ($r = Dba::fetch_assoc($db_results)) { 
 			$results[] = $r['id'];
@@ -171,7 +171,7 @@ class Artist extends database_object {
                 $results = array();
 
                 $sql = "SELECT `id` FROM `song` WHERE `artist`='$this->id' ORDER BY RAND()";
-                $db_results = Dba::query($sql);
+                $db_results = Dba::read($sql);
 
                 while ($r = Dba::fetch_assoc($db_results)) {
                         $results[] = $r['id'];
@@ -195,7 +195,7 @@ class Artist extends database_object {
 			$uid = Dba::escape($this->id); 
 			$sql = "SELECT `song`.`artist`,COUNT(`song`.`id`) AS `song_count`, COUNT(DISTINCT `song`.`album`) AS `album_count`, SUM(`song`.`time`) AS `time` FROM `song` " . 
 				"WHERE `song`.`artist`='$uid' GROUP BY `song`.`artist`";
-			$db_results = Dba::query($sql);
+			$db_results = Dba::read($sql);
 			$row = Dba::fetch_assoc($db_results); 
 			parent::add_to_cache('artist_extra',$row['artist'],$row); 
 		} 

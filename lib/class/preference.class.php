@@ -65,7 +65,7 @@ class Preference {
 			$user_id	= Dba::escape($user_id); 
 			$sql = "UPDATE `user_preference` SET `value`='$value' " . 
 				"WHERE `preference`='$id'$user_check"; 
-			$db_results = Dba::query($sql); 
+			$db_results = Dba::write($sql); 
 			Preference::clear_from_session();
 			return true; 
 		} 
@@ -94,7 +94,7 @@ class Preference {
 		$level		= Dba::escape($level); 
 
 		$sql = "UPDATE `preference` SET `level`='$level' WHERE `id`='$preference_id'"; 
-		$db_results = Dba::query($sql); 
+		$db_results = Dba::write($sql); 
 
 		return true; 
 
@@ -110,7 +110,7 @@ class Preference {
 		$value		= Dba::escape($value); 
 
 		$sql = "UPDATE `user_preference` SET `value`='$value' WHERE `preference`='$preference_id'"; 
-		$db_results = Dba::query($sql); 
+		$db_results = Dba::write($sql); 
 
 		return true; 
 
@@ -125,7 +125,7 @@ class Preference {
 		// We assume it's the name
 		$name = Dba::escape($preference); 
 		$sql = "SELECT * FROM `preference` WHERE `name`='$name'"; 
-		$db_results = Dba::query($sql); 
+		$db_results = Dba::read($sql); 
 
 		return Dba::num_rows($db_results); 
 
@@ -144,7 +144,7 @@ class Preference {
 		$preference = Dba::escape($preference); 
 
 		$sql = "SELECT `level` FROM `preference` WHERE `name`='$preference'"; 
-		$db_results = Dba::query($sql); 
+		$db_results = Dba::read($sql); 
 		$data = Dba::fetch_assoc($db_results);
 
 		if (Access::check('interface',$data['level'])) { 
@@ -164,7 +164,7 @@ class Preference {
 		$name = Dba::escape($name); 
 
 		$sql = "SELECT `id` FROM `preference` WHERE `name`='$name'"; 
-		$db_results = Dba::query($sql); 
+		$db_results = Dba::read($sql); 
 
 		$row = Dba::fetch_assoc($db_results); 
 
@@ -182,7 +182,7 @@ class Preference {
 		$id = Dba::escape($id); 
 
 		$sql = "SELECT `name` FROM `preference` WHERE `id`='$id'"; 
-		$db_results = Dba::query($sql); 
+		$db_results = Dba::read($sql); 
 
 		$row = Dba::fetch_assoc($db_results); 
 
@@ -198,7 +198,7 @@ class Preference {
 	public static function get_catagories() { 
 
 		$sql = "SELECT `preference`.`catagory` FROM `preference` GROUP BY `catagory` ORDER BY `catagory`"; 
-		$db_results = Dba::query($sql); 
+		$db_results = Dba::read($sql); 
 
 		$results = array(); 
 
@@ -227,7 +227,7 @@ class Preference {
 		$sql = "SELECT `preference`.`name`,`preference`.`description`,`user_preference`.`value` FROM `preference` " . 
 			" INNER JOIN `user_preference` ON `user_preference`.`preference`=`preference`.`id` " . 
 			" WHERE `user_preference`.`user`='$user_id' AND `preference`.`catagory` != 'internal' $user_limit"; 
-		$db_results = Dba::query($sql); 
+		$db_results = Dba::read($sql); 
 
 		$results = array(); 
 
@@ -256,7 +256,7 @@ class Preference {
 
 		$sql = "INSERT INTO `preference` (`name`,`description`,`value`,`level`,`type`,`catagory`) " . 
 			"VALUES ('$name','$description','$default','$level','$type','$catagory')"; 
-		$db_results = Dba::query($sql); 
+		$db_results = Dba::write($sql); 
 
 		if (!$db_results) { return false; } 
 
@@ -280,7 +280,7 @@ class Preference {
 			$sql = "DELETE FROM `preference` WHERE `id`='$id'"; 
                 }
 
-		$db_results = Dba::query($sql); 
+		$db_results = Dba::write($sql); 
 
 		self::rebuild_preferences(); 
 
@@ -295,10 +295,11 @@ class Preference {
 		// First remove garbage
 		$sql = "DELETE FROM `user_preference` USING `user_preference` LEFT JOIN `preference` ON `preference`.`id`=`user_preference`.`preference` " . 
 			"WHERE `preference`.`id` IS NULL"; 
-		$db_results = Dba::query($sql); 
+		$db_results = Dba::write($sql); 
 
 		// Now add anything that we are missing back in, except System
 		$sql = "SELECT * FROM `preference` WHERE `type`!='system'"; 	
+		//FIXME: Uhh WTF shouldn't there be something here??
 
 	} // rebuild_preferences
 

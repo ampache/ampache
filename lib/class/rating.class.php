@@ -121,7 +121,7 @@ class Rating extends database_object {
 		$user_id = Dba::escape($user_id); 
 
 		$sql = "SELECT `rating` FROM `rating` WHERE `user`='$user_id' AND `object_id`='$id' AND `object_type`='$this->type'";
-		$db_results = Dba::query($sql);
+		$db_results = Dba::read($sql);
 		
 		$results = Dba::fetch_assoc($db_results);
 
@@ -150,7 +150,7 @@ class Rating extends database_object {
 		} 
 
 		$sql = "SELECT `rating` FROM `rating` WHERE `object_id`='$id' AND `object_type`='$this->type'";
-		$db_results = Dba::query($sql);
+		$db_results = Dba::read($sql);
 
 		$i = 0;
 

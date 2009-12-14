@@ -143,7 +143,7 @@ class Song extends database_object implements media {
 			"title,bitrate,rate,mode,size,time,track,played,song.enabled,update_time,".
 			"mbid,".
 			"addition_time FROM `song` WHERE `song`.`id` = '$id'";
-		$db_results = Dba::query($sql);
+		$db_results = Dba::read($sql);
 
 		$results = Dba::fetch_assoc($db_results);
 
@@ -167,7 +167,7 @@ class Song extends database_object implements media {
 		} 
 
 		$sql = "SELECT * FROM song_data WHERE `song_id`='$id'";
-		$db_results = Dba::query($sql); 
+		$db_results = Dba::read($sql); 
 
 		$results = Dba::fetch_assoc($db_results); 
 
@@ -286,7 +286,7 @@ class Song extends database_object implements media {
 	public function has_flag() { 
 
 		$sql = "SELECT `id` FROM `flagged` WHERE `object_type`='song' AND `object_id`='$this->id' LIMIT 1";
-		$db_results = Dba::query($sql);
+		$db_results = Dba::read($sql);
 
 		if (Dba::fetch_assoc($db_results)) { 
 			return true;
@@ -433,7 +433,7 @@ class Song extends database_object implements media {
 			"`size`='$size', `time`='$time', `track`='$track', " . 
 			"`mbid`='$mbid', " .
 			"`update_time`='$update_time' WHERE `id`='$song_id'"; 
-		$db_results = Dba::query($sql); 
+		$db_results = Dba::write($sql); 
 		
 
 		$comment 	= Dba::escape($new_song->comment); 
@@ -442,7 +442,7 @@ class Song extends database_object implements media {
 		
 		$sql = "UPDATE `song_data` SET `lyrics`='$lyrics', `language`='$language', `comment`='$comment' " . 
 			"WHERE `song_id`='$song_id'"; 
-		$db_results = Dba::query($sql); 
+		$db_results = Dba::write($sql); 
 
 	} // update_song
 
@@ -632,7 +632,7 @@ class Song extends database_object implements media {
 		$value = Dba::escape($value);
 
 		$sql = "UPDATE `song` SET `$field`='$value' WHERE `id`='$song_id'";
-		$db_results = Dba::query($sql);
+		$db_results = Dba::write($sql);
 
 		return true;
 
@@ -651,7 +651,7 @@ class Song extends database_object implements media {
 		$value = Dba::escape($value); 
 
 		$sql = "UPDATE `song_data` SET `$field`='$value' WHERE `song_id`='$song_id'";
-		$db_results = Dba::query($sql); 
+		$db_results = Dba::write($sql); 
 
 		return true; 
 
@@ -929,7 +929,7 @@ class Song extends database_object implements media {
 			"FROM `object_count` " . 
 			"WHERE `object_type`='song'$user_limit " . 
 			"ORDER BY `object_count`.`date` DESC ";
-		$db_results = Dba::query($sql); 
+		$db_results = Dba::read($sql); 
 
 		$results = array(); 
 		

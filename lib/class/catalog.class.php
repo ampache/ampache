@@ -157,7 +157,7 @@ class Catalog extends database_object {
 	public static function get_catalogs() {
 
 		$sql = "SELECT `id` FROM `catalog` ORDER BY `name`";
-		$db_results = Dba::query($sql);
+		$db_results = Dba::read($sql);
 
 		$results = array();
 
@@ -176,7 +176,7 @@ class Catalog extends database_object {
 	public static function get_catalog_ids() {
 
 		$sql = "SELECT `id` FROM `catalog`";
-		$db_results = Dba::query($sql);
+		$db_results = Dba::read($sql);
 
 		while ($r = Dba::fetch_assoc($db_results)) {
 			$results[] = $r['id'];
@@ -235,10 +235,10 @@ class Catalog extends database_object {
 
 		/* Whip out everything */
 		$sql = "TRUNCATE `object_count`";
-		$db_results = Dba::query($sql);
+		$db_results = Dba::write($sql);
 
 		$sql = "UDPATE `song` SET `played`='0'";
-		$db_results = Dba::query($sql);
+		$db_results = Dba::write($sql);
 
 		return true;
 
@@ -265,7 +265,7 @@ class Catalog extends database_object {
 
 		// Make sure this path isn't already in use by an existing catalog
 		$sql = "SELECT `id` FROM `catalog` WHERE `path`='$path'";
-		$db_results = Dba::query($sql);
+		$db_results = Dba::read($sql);
 
 		if (Dba::num_rows($db_results)) {
 			Error::add('general','Error: Catalog with ' . $path . ' already exists');
@@ -384,19 +384,19 @@ class Catalog extends database_object {
 		$catalog_search = $catalog_id ? "WHERE `catalog`='" . Dba::escape($catalog_id) . "'" : ''; 
 
 		$sql = "SELECT COUNT(`id`),SUM(`time`),SUM(`size`) FROM `song` $catalog_search";
-		$db_results = Dba::query($sql);
+		$db_results = Dba::read($sql);
 		$data = Dba::fetch_row($db_results);
 		$songs	= $data['0'];
 		$time	= $data['1'];
 		$size	= $data['2'];
 
 		$sql = "SELECT COUNT(DISTINCT(`album`)) FROM `song` $catalog_search";
-		$db_results = Dba::query($sql);
+		$db_results = Dba::read($sql);
 		$data = Dba::fetch_row($db_results);
 		$albums = $data['0'];
 
 		$sql = "SELECT COUNT(DISTINCT(`artist`)) FROM `song` $catalog_search";
-		$db_results = Dba::query($sql);
+		$db_results = Dba::read($sql);
 		$data = Dba::fetch_row($db_results);
 		$artists = $data['0'];
 
@@ -418,7 +418,7 @@ class Catalog extends database_object {
 
 		// Count total users
 		$sql = "SELECT COUNT(id) FROM `user`";
-		$db_results = Dba::query($sql);
+		$db_results = Dba::read($sql);
 		$data = Dba::fetch_row($db_results);
 		$results['users'] = $data['0'];
 
@@ -429,7 +429,7 @@ class Catalog extends database_object {
 	                "INNER JOIN user AS u ON s.username = u.username " .
 	                "WHERE s.expire > " . $time . " " .
 	                "AND u.last_seen > " . $last_seen_time;
-		$db_results = Dba::query($sql);
+		$db_results = Dba::read($sql);
 		$data = Dba::fetch_row($db_results);
 
 		$results['connected'] = $data['0'];
@@ -629,7 +629,7 @@ class Catalog extends database_object {
 		$results = array();
 
 		$sql = "SELECT DISTINCT(song.album) FROM `song` WHERE `song`.`catalog`='$id'";
-		$db_results = Dba::query($sql);
+		$db_results = Dba::read($sql);
 
 		while ($r = Dba::fetch_assoc($db_results)) {
 			$results[] = $r['album'];
@@ -731,7 +731,7 @@ class Catalog extends database_object {
 		$results = array();
 
 		$sql = "SELECT DISTINCT(`song`.`album`) FROM `song`  WHERE `song`.`catalog`='$catalog_id'";
-		$db_results = Dba::query($sql);
+		$db_results = Dba::read($sql);
 
 		while ($row = Dba::fetch_assoc($db_results)) {
 			$results[] = $row['album'];
@@ -754,7 +754,7 @@ class Catalog extends database_object {
 		$catalog_id = $catalog_id ? Dba::escape($catalog_id) : Dba::escape($this->id);
 
 		$sql = "SELECT `id` FROM `song` WHERE `catalog`='$catalog_id' AND `enabled`='1'";
-		$db_results = Dba::query($sql);
+		$db_results = Dba::read($sql);
 
 		$results = array(); // return an emty array instead of nothing if no objects
 		while ($r = Dba::fetch_assoc($db_results)) {
@@ -2021,7 +2021,7 @@ class Catalog extends database_object {
 		$exists = false;
 
 		$sql = "SELECT `id` FROM `artist` WHERE `mbid` LIKE '$mbid'";
-		$db_results = Dba::query($sql);
+		$db_results = Dba::read($sql);
 
 		// Check for results
 		if ($r = Dba::fetch_assoc($db_results)) {
@@ -2031,7 +2031,7 @@ class Catalog extends database_object {
 
 		else { // No exact match based on MBID
 			$sql = "SELECT `id`, `mbid` FROM `artist` WHERE `name` LIKE '$artist'";
-			$db_results = Dba::query($sql);
+			$db_results = Dba::read($sql);
 
 
 			/* If we have results */
@@ -2052,7 +2052,7 @@ class Catalog extends database_object {
 					$exists = true;
 					if (!$readonly) {
 						$sql = "UPDATE `artist` SET `mbid`='$mbid' WHERE `id`='$artist_id'";
-						$db_results = Dba::query($sql);
+						$db_results = Dba::write($sql);
 						if (!$db_results) {
 		        	                        Error::add('general',"Updating Artist: $artist");
 		                	        }
@@ -2071,7 +2071,7 @@ class Catalog extends database_object {
 
 			$sql = "INSERT INTO `artist` (`name`, `prefix`, `mbid`) " .
 			"VALUES ('$artist',$prefix_txt,$mbid)";
-			$db_results = Dba::query($sql);
+			$db_results = Dba::write($sql);
 			$artist_id = Dba::insert_id();
 
 			if (!$db_results) {
@@ -2128,7 +2128,7 @@ class Catalog extends database_object {
 		if ($album_disk) { $sql .= " AND `disk`='$album_disk'"; }
 		if ($mbid) { $sql .= " AND `mbid`='$mbid'"; }
 		if ($prefix) { $sql .= " AND `prefix`='" . Dba::escape($prefix) . "'"; }
-		$db_results = Dba::query($sql);
+		$db_results = Dba::read($sql);
 
 		/* If it's found */
 		if ($r = Dba::fetch_assoc($db_results)) {
@@ -2151,7 +2151,7 @@ class Catalog extends database_object {
 
 			$sql = "INSERT INTO `album` (`name`, `prefix`,`year`,`disk`,`mbid`) " .
 			"VALUES ('$album',$prefix_txt,'$album_year','$album_disk',$mbid)";
-			$db_results = Dba::query($sql);
+			$db_results = Dba::write($sql);
 			$album_id = Dba::insert_id();
 
 			if (!$db_results) {
@@ -2251,7 +2251,7 @@ class Catalog extends database_object {
 
 		$sql = "INSERT INTO `song` (file,catalog,album,artist,title,bitrate,rate,mode,size,time,track,addition_time,year,mbid)" .
 			" VALUES ('$add_file','$this->id','$album_id','$artist_id','$title','$bitrate','$rate','$mode','$size','$song_time','$track','$current_time','$year','$track_mbid')";
-		$db_results = Dba::query($sql);
+		$db_results = Dba::write($sql);
 
 		if (!$db_results) {
 			debug_event('insert',"Unable to insert $file -- $sql" . Dba::error(),'5','ampache-catalog');
@@ -2272,7 +2272,7 @@ class Catalog extends database_object {
 		/* Add the EXT information */
 		$sql = "INSERT INTO `song_data` (`song_id`,`comment`,`lyrics`) " .
 			" VALUES ('$song_id','$comment','$lyrics')"; 
-		$db_results = Dba::query($sql);
+		$db_results = Dba::write($sql);
 
 		if (!$db_results) {
 			debug_event('insert',"Unable to insert EXT Info for $file -- $sql",'5','ampache-catalog');
@@ -2295,7 +2295,7 @@ class Catalog extends database_object {
 
 		$sql = "INSERT INTO song (file,catalog,album,artist,title,bitrate,rate,mode,size,time,track,addition_time,year)" .
 			" VALUES ('$url','$song->catalog','$song->album','$song->artist','$title','$song->bitrate','$song->rate','$song->mode','$song->size','$song->time','$song->track','$current_time','$song->year')";
-		$db_results = Dba::query($sql);
+		$db_results = Dba::write($sql);
 
 		if (!$db_results) {
 			debug_event('insert',"Unable to Add Remote $url -- $sql",'5','ampache-catalog');
@@ -2354,7 +2354,7 @@ class Catalog extends database_object {
 		$url = Dba::escape($url);
 
 		$sql = "SELECT `id` FROM `song` WHERE `file`='$url'";
-		$db_results = Dba::query($sql);
+		$db_results = Dba::read($sql);
 
 		if (Dba::num_rows($db_results)) {
 			return true;
@@ -2437,7 +2437,7 @@ class Catalog extends database_object {
 		$full_file = Dba::escape($full_file);
 
 		$sql = "SELECT `id` FROM `song` WHERE `file` = '$full_file'";
-		$db_results = Dba::query($sql);
+		$db_results = Dba::read($sql);
 
 		//If it's found then return true
 		if (Dba::fetch_row($db_results)) {
@@ -2477,7 +2477,7 @@ class Catalog extends database_object {
 
 				/* Search for this filename, cause it's a audio file */
 				$sql = "SELECT `id` FROM `song` WHERE `file` LIKE '%" . Dba::escape($file) . "'";
-				$db_results = Dba::query($sql);
+				$db_results = Dba::read($sql);
 				$results = Dba::fetch_assoc($db_results);
 
 				if (isset($results['id'])) { $songs[] = $results['id']; }
@@ -2488,7 +2488,7 @@ class Catalog extends database_object {
 				$song_id = intval(Song::parse_song_url($value));
 
 				$sql = "SELECT COUNT(*) FROM `song` WHERE `id`='$song_id'";
-				$db_results = Dba::query($sql);
+				$db_results = Dba::read($sql);
 
 				if (Dba::num_rows($db_results)) {
 					$songs[] = $song_id;

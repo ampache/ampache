@@ -973,7 +973,7 @@ class Album extends database_object {
                         " `art_mime` = '" . Dba::escape($mime) . "'" .
         	        ", `album_id` = '$this->id'," . 
 			"`thumb` = NULL, `thumb_mime`=NULL";
-	        $db_results = Dba::query($sql);
+	        $db_results = Dba::write($sql);
 
 		return true;
 
