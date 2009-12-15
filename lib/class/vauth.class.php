@@ -567,6 +567,30 @@ class vauth {
 	} // vieux_mysql_auth
 
 	/**
+	 * local_auth
+	 * Check to make sure the pam_auth function is implemented (module is installed) then check the credentials
+	 */
+	private static function local_auth($username,$password) {
+		if (!function_exists('pam_auth')) {
+				$results['success'] = false;
+				$results['error'] = "The PAM authentication PHP module is not installed.";
+				return $results;
+		}
+		
+		if (pam_auth($username, $password, &$results['error'])) {
+			$results['success'] = true;
+			$results['type'] = 'local';
+			$results['username'] = $username;
+		}
+		else {
+			$results['success'] = false;
+			$results['error'] = "PAM login attempt failed";
+		}
+		
+		return $results;
+	} // local_auth
+
+	/**
 	 * ldap_auth
 	 * Step one, connect to the LDAP server and perform a search for teh username provided.
 	 * If its found, attempt to bind using that username and the password provided.
