@@ -39,8 +39,9 @@ error_reporting(E_ERROR);			// Only show fatal errors in production
 $ampache_path = dirname(__FILE__);
 $prefix = realpath($ampache_path . "/../");
 $configfile = "$prefix/config/ampache.cfg.php";
-require_once $prefix . '/lib/class/config.class.php';
 require_once $prefix . '/lib/general.lib.php';
+require_once $prefix . '/lib/class/config.class.php';
+require_ocne $prefix . '/lib/class/vauth.class.php'; // Fix for synology Fast-CGI __autoload failures in some cases
 
 if (!function_exists('gettext')) {
 	require_once $prefix . '/modules/emulator/gettext.php';
