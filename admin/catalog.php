@@ -197,27 +197,32 @@ switch ($_REQUEST['action']) {
 
 		ob_end_flush(); 
 
-		if (!strlen($_REQUEST['path']) || !strlen($_REQUEST['name'])) { 
+		if (!strlen($_POST['path']) || !strlen($_POST['name'])) { 
 			Error::add('general','Error Name and path not specified'); 
 		} 
 
-		if (substr($_REQUEST['path'],0,7) != 'http://' && $_REQUEST['type'] == 'remote') { 
+		if (substr($_POST['path'],0,7) != 'http://' && $_POST['type'] == 'remote') { 
 			Error::add('general','Error Remote selected, but path is not a URL'); 
 		} 
 		
-		if ($_REQUEST['type'] == 'remote' && !strlen($_REQUEST['key'])) { 
+		if ($_POST['type'] == 'remote' && !strlen($_POST['key'])) { 
 			Error::add('general','Error Remote Catalog specified, but no key provided'); 
 		} 
 
+		if (!Core::form_verify('add_catalog','post')) { 
+			access_denied(); 
+			exit; 
+		} 
+
 		// Make sure that there isn't a catalog with a directory above this one
-		if (Catalog::get_from_path($_REQUEST['path'])) { 
+		if (Catalog::get_from_path($_POST['path'])) { 
 			Error::add('general',_('Error: Defined Path is inside an existing catalog')); 
 		} 
 
 		// If an error hasn't occured
 		if (!Error::occurred()) { 
 
-			$catalog_id = Catalog::Create($_REQUEST); 
+			$catalog_id = Catalog::Create($_POST); 
 
 			if (!$catalog_id) { 
 				require Config::get('prefix') . '/templates/show_add_catalog.inc.php'; 
@@ -227,7 +232,7 @@ switch ($_REQUEST['action']) {
 			$catalog = new Catalog($catalog_id); 
 			
 			// Run our initial add
-			$catalog->run_add($_REQUEST); 
+			$catalog->run_add($_POST); 
 
 			show_box_top(); 
 			echo "<h2>" .  _('Catalog Created') . "</h2>";

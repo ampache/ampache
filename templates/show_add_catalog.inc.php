@@ -30,7 +30,7 @@ $default_sort = "%a/%A";
 <table class="tabledata" cellpadding="0" cellspacing="0">
 <tr>
 	<td><?php echo _('Catalog Name'); ?>: </td>
-	<td><input size="60" type="text" name="name" value="<?php echo $_REQUEST['name']; ?>" /></td>
+	<td><input size="60" type="text" name="name" value="<?php echo scrub_in($_POST['name']); ?>" /></td>
 	<td style="vertical-align:top; font-family: monospace;" rowspan="6">
 		<strong><?php echo _('Auto-inserted Fields'); ?>:</strong><br />
 		%A = <?php echo _('album name'); ?><br />
@@ -45,7 +45,7 @@ $default_sort = "%a/%A";
 
 <tr>
 	<td><?php echo _('Path'); ?>: </td>
-	<td><input size="60" type="text" name="path" value="<?php echo $_REQUEST['path']; ?>" /></td>
+	<td><input size="60" type="text" name="path" value="<?php echo scrub_in($_POST['path']); ?>" /></td>
 </tr>
 <tr>
 	<td><?php echo _('Catalog Type'); ?>: </td>
@@ -80,6 +80,7 @@ $default_sort = "%a/%A";
 </tr>
 </table>
 <div class="formValidation">
+  <?php echo Core::form_register('add_catalog'); ?>
   <input type="hidden" name="action" value="add_catalog" />
   <input class="button" type="submit" value="<?php echo _('Add Catalog'); ?>" />
 </div>

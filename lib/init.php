@@ -41,7 +41,7 @@ $prefix = realpath($ampache_path . "/../");
 $configfile = "$prefix/config/ampache.cfg.php";
 require_once $prefix . '/lib/general.lib.php';
 require_once $prefix . '/lib/class/config.class.php';
-require_ocne $prefix . '/lib/class/vauth.class.php'; // Fix for synology Fast-CGI __autoload failures in some cases
+require_once $prefix . '/lib/class/vauth.class.php'; // Fix for synology Fast-CGI __autoload failures in some cases
 
 if (!function_exists('gettext')) {
 	require_once $prefix . '/modules/emulator/gettext.php';
@@ -91,7 +91,7 @@ if (!function_exists('hash') OR !function_exists('inet_pton') OR (strtoupper(sub
 } 
 
 /** This is the version.... fluf nothing more... **/
-$results['version']		= '3.5.2'. $svn_version; 
+$results['version']		= '3.5.3'. $svn_version; 
 $results['int_config_version']	= '10'; 
 
 $results['raw_web_path']	= $results['web_path'];
@@ -294,4 +294,7 @@ if (Config::get('debug')) {
 	error_reporting(E_ALL);
 }
 
+// Merge GET then POST into REQUEST effectivly striping COOKIE without depending on 
+// a PHP setting change to take affect
+$_REQUEST = array_merge($_GET,$_POST);
 ?>

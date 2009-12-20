@@ -63,6 +63,11 @@ switch ($_REQUEST['action']) {
 			access_denied(); 
 			break;
 		} 
+
+		if (!Core::form_verify('create_democratic')) { 
+			access_denied(); 
+			exit; 
+		} 
 		
 		$democratic = Democratic::get_current_playlist(); 
 

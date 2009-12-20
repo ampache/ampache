@@ -30,6 +30,12 @@ switch ($_REQUEST['action']) {
 			access_denied(); 
 			exit; 
 		} 
+
+		if (!Core::form_verify('add_shout','post')) { 
+			access_denied(); 
+			exit; 
+		} 
+
 		$shout_id = shoutBox::create($_POST); 
 		header("Location:" . Config::get('web_path')); 
 	break; 

@@ -56,6 +56,7 @@ show_box_top(_('Configure Democratic Playlist')); ?>
 </tr>
 </table>
 <div class="formValidation">
+		<?php echo Core::form_register('create_democratic'); ?>
 		<input type="submit" value="<?php echo _('Update'); ?>" />
 </div>
 </form>

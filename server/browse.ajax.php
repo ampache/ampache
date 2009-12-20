@@ -62,10 +62,6 @@ switch ($_REQUEST['action']) {
 	case 'toggle_tag': 
 		$type = $_SESSION['tagcloud_type'] ? $_SESSION['tagcloud_type'] : 'song';
 		Browse::set_type($type); 
-
-		
-
-
 	break; 
 	case 'delete_object': 
 		switch ($_REQUEST['type']) { 

@@ -36,6 +36,7 @@
 <?php } ?>
 <tr>
 	<td>
+		<?php echo Core::form_register('add_shout'); ?>
 		<input type="hidden" name="object_id" value="<?php echo $object->id; ?>" />
 		<input type="hidden" name="object_type" value="<?php echo strtolower(get_class($object)); ?>" />
 		<input type="submit" value="<?php echo _('Create'); ?>" />

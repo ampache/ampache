@@ -3,6 +3,13 @@
 --------------------------------------------------------------------------
 
 --------------------------------------------------------------------------
+  v.3.5.3 
+	- Added local authtype which uses PHP's PAM module
+	- Correct potential security issues due to misuse of REQUEST for write
+		operations rather then POST
+		(Thx Raphael Geissert <geissert@debian.org>)
+
+--------------------------------------------------------------------------
   v.3.5.2 19/11/2009
 	- Fix typo that caused song count to not be set on tag xml response
 	- Fix tag methods so that alpha_match and exact_match work

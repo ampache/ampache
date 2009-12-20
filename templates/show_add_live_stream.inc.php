@@ -65,6 +65,7 @@
 </tr>
 </table>
 <div class="formValidation">
+	<?php echo Core::form_register('add_radio'); ?>
 	<input class="button" type="submit" value="<?php echo _('Add'); ?>" />
 </div>
 </form>

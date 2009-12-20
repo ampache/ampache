@@ -40,6 +40,11 @@ switch ($_REQUEST['action']) {
 			exit; 
 		} 
 
+		if (!Core::form_verify('add_radio','post')) { 
+			access_denied(); 
+			exit; 
+		} 
+
 		// Try to create the sucker
 		$results = Radio::create($_POST); 
 

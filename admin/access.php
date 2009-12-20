@@ -30,10 +30,20 @@ show_header();
 
 switch ($_REQUEST['action']) { 
 	case 'delete_record':
+		if (!Core::form_verify('delete_access')) { 
+			access_denied(); 
+			exit; 
+		} 
 		Access::delete($_REQUEST['access_id']);
 		$url = Config::get('web_path') . '/admin/access.php';
 		show_confirmation(_('Deleted'),_('Your Access List Entry has been removed'),$url);
 	break;
+	case 'show_delete_record': 
+		if (Config::get('demo_mode')) { break; } 
+		$access = new Access($_GET['access_id']); 
+		show_confirmation(_('Deletion Request'),_('Are you sure you want to permanently delete') . ' ' . $access->name,
+			'admin/access.php?action=delete_record&amp;access_id=' . $access->id,1,'delete_access');
+	break; 
 	case 'add_host':
 
 		// Make sure we've got a valid form submission
@@ -103,6 +113,10 @@ switch ($_REQUEST['action']) {
 		} 
 	break;
 	case 'update_record':
+		if (!Core::form_verify('edit_acl')) { 
+			access_denied(); 
+			exit; 
+		} 
 		$access = new Access($_REQUEST['access_id']); 
 		$access->update($_POST);
 		if (!Error::occurred()) { 

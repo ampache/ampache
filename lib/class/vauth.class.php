@@ -74,7 +74,7 @@ class vauth {
 		$results = self::get_session_data($key); 
 
 		if (!is_array($results)) { 
-			debug_event('SESSION','Error unable to read session from key ' . $key . ' no data found','1'); 
+			debug_event('SESSION','Unable to read session from key ' . $key . ', no data found','1'); 
 			return false; 
 		} 
 
@@ -159,30 +159,30 @@ class vauth {
 		// Nuke the cookie before all else
 		self::destroy($key); 
 
-	        // Do a quick check to see if this is an AJAX'd logout request
-	        // if so use the iframe to redirect
-	        if (AJAX_INCLUDE == '1') {
-	                ob_end_clean();
-	                ob_start();
+		// Do a quick check to see if this is an AJAX'd logout request
+		// if so use the iframe to redirect
+		if (AJAX_INCLUDE == '1') {
+			ob_end_clean();
+			ob_start();
 
-	                /* Set the correct headers */
-	                header("Content-type: text/xml; charset=" . Config::get('site_charset'));
-	                header("Content-Disposition: attachment; filename=ajax.xml");
-	                header("Expires: Tuesday, 27 Mar 1984 05:00:00 GMT");
-	                header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
-	                header("Cache-Control: no-store, no-cache, must-revalidate");
-	                header("Pragma: no-cache");
+			/* Set the correct headers */
+			header("Content-type: text/xml; charset=" . Config::get('site_charset'));
+			header("Content-Disposition: attachment; filename=ajax.xml");
+			header("Expires: Tuesday, 27 Mar 1984 05:00:00 GMT");
+			header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
+			header("Cache-Control: no-store, no-cache, must-revalidate");
+			header("Pragma: no-cache");
 
-	                $target = Config::get('web_path') . '/login.php';
-	                $results['rfc3514'] = '<script type="text/javascript">reload_logout("'.$target.'")</script>';
-	                echo xml_from_array($results);
-	        }
+			$target = Config::get('web_path') . '/login.php';
+			$results['rfc3514'] = '<script type="text/javascript">reload_logout("'.$target.'")</script>';
+			echo xml_from_array($results);
+		}
 
 
-	        /* Redirect them to the login page */
-	        if (AJAX_INCLUDE != '1') {
-	                header ('Location: ' . Config::get('web_path') . '/login.php');
-	        }
+		/* Redirect them to the login page */
+		if (AJAX_INCLUDE != '1') {
+			header ('Location: ' . Config::get('web_path') . '/login.php');
+		}
 
 		exit; 
 
@@ -272,29 +272,29 @@ class vauth {
 			break; 
 		} // end switch on data type 
 		
-	        $username       = Dba::escape($data['username']);
-	        $ip             = $_SERVER['REMOTE_ADDR'] ? Dba::escape(inet_pton($_SERVER['REMOTE_ADDR'])) : '0'; 
-	        $type           = Dba::escape($data['type']);
-	        $value          = Dba::escape($data['value']);
+		$username       = Dba::escape($data['username']);
+		$ip             = $_SERVER['REMOTE_ADDR'] ? Dba::escape(inet_pton($_SERVER['REMOTE_ADDR'])) : '0'; 
+		$type           = Dba::escape($data['type']);
+		$value          = Dba::escape($data['value']);
 		$agent		= Dba::escape(substr($_SERVER['HTTP_USER_AGENT'],0,254)); 
-	        $expire         = Dba::escape(time() + Config::get('session_length'));
+		$expire         = Dba::escape(time() + Config::get('session_length'));
 
-	        /* We can't have null things here people */
-	        if (!strlen($value)) { $value = ' '; }
+		/* We can't have null things here people */
+		if (!strlen($value)) { $value = ' '; }
 
-	        /* Insert the row */
-	        $sql = "INSERT INTO `session` (`id`,`username`,`ip`,`type`,`agent`,`value`,`expire`) " .
-	                " VALUES ('$key','$username','$ip','$type','$agent','$value','$expire')";
-	        $db_results = Dba::query($sql);
+		/* Insert the row */
+		$sql = "INSERT INTO `session` (`id`,`username`,`ip`,`type`,`agent`,`value`,`expire`) " .
+			" VALUES ('$key','$username','$ip','$type','$agent','$value','$expire')";
+		$db_results = Dba::query($sql);
 
-	        if (!$db_results) {
-	                debug_event('SESSION',"Session Creation Failed with Query: $sql and " . Dba::error(),'1');
+		if (!$db_results) {
+			debug_event('SESSION',"Session Creation Failed with Query: $sql and " . Dba::error(),'1');
 			return false; 
-	        }
+		}
 
 		debug_event('SESSION','Session Created:' . $key,'6'); 
 
-	        return $key;
+		return $key;
 
 	} // session_create
 
@@ -395,7 +395,7 @@ class vauth {
 	public static function session_extend($sid) { 
 
 		$sid = Dba::escape($sid); 
-                $expire = isset($_COOKIE[Config::get('session_name') . '_remember']) ? time() + Config::get('remember_length') : time() + Config::get('session_length');
+		$expire = isset($_COOKIE[Config::get('session_name') . '_remember']) ? time() + Config::get('remember_length') : time() + Config::get('session_length');
 
 		$sql = "UPDATE `session` SET `expire`='$expire' WHERE `id`='$sid'"; 
 		$db_results = Dba::query($sql); 
@@ -509,8 +509,8 @@ class vauth {
 			return false; 
 		} 
 
-                $row['type']        = 'mysql';
-                $row['success']     = true;
+		$row['type']	= 'mysql';
+		$row['success']     = true;
 
 		return $row;
 
@@ -529,42 +529,66 @@ class vauth {
 		$db_results = Dba::query($sql); 
 		$row = Dba::fetch_assoc($db_results); 
 
-	        $sql = "SELECT version()";
-	        $db_results = Dba::query($sql);
-	        $version = Dba::fetch_row($db_results);
-	        $mysql_version = substr(preg_replace("/(\d+)\.(\d+)\.(\d+).*/","$1$2$3",$version[0]),0,3);
+		$sql = "SELECT version()";
+		$db_results = Dba::query($sql);
+		$version = Dba::fetch_row($db_results);
+		$mysql_version = substr(preg_replace("/(\d+)\.(\d+)\.(\d+).*/","$1$2$3",$version[0]),0,3);
 
-	        if ($mysql_version > "409" AND substr($row['password'],0,1) !== "*") {
-	                $password_check_sql = "OLD_PASSWORD('$password')";
-	        }
+		if ($mysql_version > "409" AND substr($row['password'],0,1) !== "*") {
+			$password_check_sql = "OLD_PASSWORD('$password')";
+		}
 
-	        $sql = "SELECT `username`,`id` FROM `user` WHERE `username`='$username' AND `password`=$password_check_sql";
-	        $db_results = Dba::query($sql);
+		$sql = "SELECT `username`,`id` FROM `user` WHERE `username`='$username' AND `password`=$password_check_sql";
+		$db_results = Dba::query($sql);
 
-	        $results = Dba::fetch_assoc($db_results);
+		$results = Dba::fetch_assoc($db_results);
 
-	        if (!$results) {
-	                Error::add('general',_('Error Username or Password incorrect, please try again'));
-	                return false;
-	        }
+		if (!$results) {
+			Error::add('general',_('Error Username or Password incorrect, please try again'));
+			return false;
+		}
 
-	        if (Config::get('prevent_multiple_logins')) {
-	                $client = new User($results['id']);
-	                $current_ip = $client->is_logged_in();
-	                if ($current_ip AND $current_ip != inet_pton($_SERVER['REMOTE_ADDR'])) {
+		if (Config::get('prevent_multiple_logins')) {
+			$client = new User($results['id']);
+			$current_ip = $client->is_logged_in();
+			if ($current_ip AND $current_ip != inet_pton($_SERVER['REMOTE_ADDR'])) {
 				debug_event('Login','Concurrent Login Failure, attempted to login from ' . $_SERVER['REMOTE_ADDR'] . ' and already logged in','1'); 
-	                        Error::add('general','User Already Logged in');
-	                        return false;
-	                }
-	        } // if prevent_multiple_logins
+				Error::add('general','User Already Logged in');
+				return false;
+			}
+		} // if prevent_multiple_logins
 
-	        $results['type']        = 'mysql';
+		$results['type']        = 'mysql';
 		$results['password']	= 'old'; 
-	        $results['success']     = true;
+		$results['success']     = true;
 
-	        return $results;
+		return $results;
 
 	} // vieux_mysql_auth
+
+	/**
+	 * local_auth
+	 * Check to make sure the pam_auth function is implemented (module is installed) then check the credentials
+	 */
+	private static function local_auth($username,$password) {
+		if (!function_exists('pam_auth')) {
+				$results['success'] = false;
+				$results['error'] = "The PAM authentication PHP module is not installed.";
+				return $results;
+		}
+
+		if (pam_auth($username, $password, &$results['error'])) {
+			$results['success'] = true;
+			$results['type'] = 'local';
+			$results['username'] = $username;
+		}
+		else {
+			$results['success'] = false;
+			$results['error'] = "PAM login attempt failed";
+		}
+
+		return $results;
+	} // local_auth
 
 	/**
 	 * ldap_auth
@@ -578,69 +602,69 @@ class vauth {
 	 */
 	private static function ldap_auth($username,$password) { 
 
-	        $ldap_username  = Config::get('ldap_username');
-	        $ldap_password  = Config::get('ldap_password');
+		$ldap_username  = Config::get('ldap_username');
+		$ldap_password  = Config::get('ldap_password');
 
-	        /* Currently not implemented */
-	        $require_group  = Config::get('ldap_require_group');
+		/* Currently not implemented */
+		$require_group  = Config::get('ldap_require_group');
 
-	        // This is the DN for the users (required)
-	        $ldap_dn        = Config::get('ldap_search_dn');
+		// This is the DN for the users (required)
+		$ldap_dn        = Config::get('ldap_search_dn');
 
-	        // This is the server url (required)
-	        $ldap_url       = Config::get('ldap_url');
+		// This is the server url (required)
+		$ldap_url       = Config::get('ldap_url');
 
-	        // This is the ldap filter string (required)
-	        $ldap_filter    = Config::get('ldap_filter');
+		// This is the ldap filter string (required)
+		$ldap_filter    = Config::get('ldap_filter');
 
-	        //This is the ldap objectclass (required)
-	        $ldap_class     = Config::get('ldap_objectclass');
+		//This is the ldap objectclass (required)
+		$ldap_class     = Config::get('ldap_objectclass');
 
-	        $ldap_name_field        = Config::get('ldap_name_field');
-	        $ldap_email_field       = Config::get('ldap_email_field');
+		$ldap_name_field        = Config::get('ldap_name_field');
+		$ldap_email_field       = Config::get('ldap_email_field');
 
-	        if ($ldap_link = ldap_connect($ldap_url) ) {
+		if ($ldap_link = ldap_connect($ldap_url) ) {
 
-	                /* Set to Protocol 3 */
-	                ldap_set_option($ldap_link, LDAP_OPT_PROTOCOL_VERSION, 3);
+			/* Set to Protocol 3 */
+			ldap_set_option($ldap_link, LDAP_OPT_PROTOCOL_VERSION, 3);
 
-	                // bind using our auth, if we need to, for initial search for username
-	                if (!ldap_bind($ldap_link, $ldap_username, $ldap_password)) {
-	                        $results['success'] = false;
-	                        $results['error'] = "Could not bind to LDAP server.";
-	                        return $results;
-	                } // If bind fails
+			// bind using our auth, if we need to, for initial search for username
+			if (!ldap_bind($ldap_link, $ldap_username, $ldap_password)) {
+				$results['success'] = false;
+				$results['error'] = "Could not bind to LDAP server.";
+				return $results;
+			} // If bind fails
 
-	                $sr = ldap_search($ldap_link, $ldap_dn, "(&(objectclass=$ldap_class)($ldap_filter=$username))");
-	                $info = ldap_get_entries($ldap_link, $sr);
+			$sr = ldap_search($ldap_link, $ldap_dn, "(&(objectclass=$ldap_class)($ldap_filter=$username))");
+			$info = ldap_get_entries($ldap_link, $sr);
 
-	                if ($info["count"] == 1) {
-	                        $user_entry = ldap_first_entry($ldap_link, $sr);
-	                        $user_dn    = ldap_get_dn($ldap_link, $user_entry);
-	                        // bind using the user..
-	                        $retval = ldap_bind($ldap_link, $user_dn, $password);
+			if ($info["count"] == 1) {
+				$user_entry = ldap_first_entry($ldap_link, $sr);
+				$user_dn    = ldap_get_dn($ldap_link, $user_entry);
+				// bind using the user..
+				$retval = ldap_bind($ldap_link, $user_dn, $password);
 
-	                        if ($retval) {
-	                                ldap_close($ldap_link);
-	                                $results['success'] = true;
-	                                $results['type'] = "ldap";
-	                                $results['username'] = $username;
-	                                $results['name'] = $info[0][$ldap_name_field][0];
-	                                $results['email'] = $info[0][$ldap_email_field][0];
+				if ($retval) {
+					ldap_close($ldap_link);
+					$results['success'] = true;
+					$results['type'] = "ldap";
+					$results['username'] = $username;
+					$results['name'] = $info[0][$ldap_name_field][0];
+					$results['email'] = $info[0][$ldap_email_field][0];
 
-	                                return $results;
+					return $results;
 
-	                        } // if we get something good back
+				} // if we get something good back
 
-	                } // if something was sent back 
+			} // if something was sent back 
 
-	        } // if failed connect 
+		} // if failed connect 
 
-	        /* Default to bad news */
-	        $results['success'] = false;
-	        $results['error'] = "LDAP login attempt failed";
+		/* Default to bad news */
+		$results['success'] = false;
+		$results['error'] = "LDAP login attempt failed";
 	
-	        return $results;
+		return $results;
 
 	} // ldap_auth
 
@@ -655,26 +679,26 @@ class vauth {
 	 */
 	public static function http_auth($username) { 
 
-	        /* Check if the user exists */
-	        if ($user = User::get_from_username($username)) {
-	                $results['success']     = true;
-	                $results['type']        = 'mysql';
-	                $results['username']    = $username;
-	                $results['name']        = $user->fullname;
-	                $results['email']       = $user->email;
-	                return $results;
-	        }
+		/* Check if the user exists */
+		if ($user = User::get_from_username($username)) {
+			$results['success']     = true;
+			$results['type']	= 'mysql';
+			$results['username']    = $username;
+			$results['name']	= $user->fullname;
+			$results['email']       = $user->email;
+			return $results;
+		}
 
-	        /* If not then we auto-create the entry as a user.. :S */
-	        $user_id = $user->create($username,$username,'',md5(rand()),'25');
-	        $user = new User($user_id);
+		/* If not then we auto-create the entry as a user.. :S */
+		$user_id = $user->create($username,$username,'',md5(rand()),'25');
+		$user = new User($user_id);
 
-	        $results['success']     = true;
-	        $results['type']        = 'mysql';
-	        $results['username']    = $username;
-	        $results['name']        = $user->fullname;
-	        $results['email']       = $user->email;
-	        return $results;
+		$results['success']     = true;
+		$results['type']        = 'mysql';
+		$results['username']    = $username;
+		$results['name']        = $user->fullname;
+		$results['email']       = $user->email;
+		return $results;
 
 	} // http_auth
 
