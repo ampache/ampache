@@ -41,7 +41,7 @@ class Core {
 	 * This registers a form with a SID, inserts it into the session variables
 	 * and then returns a string for use in the HTML form
 	 */
-	public static function form_register($name) { 
+	public static function form_register($name,$type='post') { 
 
 		// Make ourselves a nice little sid
 		$sid =  md5(uniqid(rand(), true));
@@ -49,7 +49,15 @@ class Core {
 		// Register it
 		$_SESSION['forms'][$name] = array('sid'=>$sid,'expire'=>time() + Config::get('session_length')); 
 
-		$string = '<input type="hidden" name="form_validation" value="' . $sid . '" />'; 
+		switch ($type) { 
+			default: 
+			case 'post': 
+				$string = '<input type="hidden" name="form_validation" value="' . $sid . '" />'; 
+			break; 
+			case 'get': 
+				$string = $sid; 
+			break; 
+		} // end switch on type
 
 		return $string; 
 

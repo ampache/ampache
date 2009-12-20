@@ -72,6 +72,9 @@ $ajax_url = Config::get('ajax_url');
 	<th class="cel_genre"><?php echo _('Genre'); ?></th>
 	<th class="cel_track"><?php echo _('Track'); ?></th>
 	<th class="cel_time"><?php echo _('Time'); ?></th>
+<?php if (Config::get('ratings')) { ?>
+        <th class="cel_rating"><?php echo _('Rating'); ?></th>
+<?php } ?>
 	<th class="cel_action"><?php echo _('Action'); ?></th>
 </tr>
 </table>

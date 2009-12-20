@@ -24,7 +24,7 @@ require 'lib/init.php';
 // Switch on the action 
 switch($_REQUEST['action']) { 
 	case 'update_preferences':
-		if ($_REQUEST['method'] == 'admin' && !Access::check('interface','100')) { 
+		if ($_POST['method'] == 'admin' && !Access::check('interface','100')) { 
 			access_denied(); 
 			exit; 
 		} 
@@ -35,7 +35,7 @@ switch($_REQUEST['action']) {
 		} 
 		
 		/* Reset the Theme */
-		if ($_REQUEST['method'] == 'admin') { 
+		if ($_POST['method'] == 'admin') { 
 			$user_id = '-1'; 
 			$fullname = _('Server'); 
 			$_REQUEST['action'] = 'admin'; 
@@ -63,8 +63,8 @@ switch($_REQUEST['action']) {
                         exit;
                 }
 
-		update_preferences($_REQUEST['user_id']); 
-		header("Location: " . Config::get('web_path') . "/admin/users.php?action=show_preferences&user_id=" . scrub_out($_REQUEST['user_id'])); 
+		update_preferences($_POST['user_id']); 
+		header("Location: " . Config::get('web_path') . "/admin/users.php?action=show_preferences&user_id=" . scrub_out($_POST['user_id'])); 
 	break;
 	case 'admin': 
 		// Make sure only admins here

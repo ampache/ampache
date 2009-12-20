@@ -49,7 +49,7 @@ switch ($_REQUEST['action']) {
 			access_denied(); 
 			break; 
 		} 
-	
+
 		Democratic::delete($_REQUEST['democratic_id']); 
 
 		$title = ''; 
@@ -62,6 +62,11 @@ switch ($_REQUEST['action']) {
 		if (!Access::check('interface','75')) { 
 			access_denied(); 
 			break;
+		} 
+
+		if (!Core::form_verify('create_democratic')) { 
+			access_denied(); 
+			exit; 
 		} 
 		
 		$democratic = Democratic::get_current_playlist(); 

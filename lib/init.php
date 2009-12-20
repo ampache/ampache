@@ -296,4 +296,7 @@ if (Config::get('debug')) {
 	error_reporting(E_ALL);
 }
 
+// Merge GET then POST into REQUEST effectivly striping COOKIE without depending on 
+// a PHP setting change to take affect
+$_REQUEST = array_merge($_GET,$_POST); 
 ?>

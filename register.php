@@ -60,11 +60,11 @@ switch ($_REQUEST['action']) {
 		 * possibly by logging them in right then and there with their current info
 		 * and 'click here to login' would just be a link back to index.php
 		 */
-		$fullname 		= scrub_in($_REQUEST['fullname']);
-		$username		= scrub_in($_REQUEST['username']);
-		$email 			= scrub_in($_REQUEST['email']);
-		$pass1 			= scrub_in($_REQUEST['password_1']);
-		$pass2 			= scrub_in($_REQUEST['password_2']);
+		$fullname 		= scrub_in($_POST['fullname']);
+		$username		= scrub_in($_POST['username']);
+		$email 			= scrub_in($_POST['email']);
+		$pass1 			= scrub_in($_POST['password_1']);
+		$pass2 			= scrub_in($_POST['password_2']);
 
 		/* If we're using the captcha stuff */
 		if (Config::get('captcha_public_reg')) { 

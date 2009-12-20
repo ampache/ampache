@@ -4,6 +4,10 @@
 
 --------------------------------------------------------------------------
   v.3.6-Alpha1
+	- Added local auth method that uses PHP's PAM module
+	- Correct potential security issues due to misuse of REQUEST for write
+		operations rather then POST 
+		(Thx Raphael Geissert <geissert@debian.org>) 
 	- Finished switching to Dba::read() Dba::write() for database calls
 		(Thx dipsol)
 	- Improved File pattern matching (Thx october.rust)

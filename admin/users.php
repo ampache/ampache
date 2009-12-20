@@ -149,7 +149,11 @@ switch ($_REQUEST['action']) {
 		require_once Config::get('prefix') . '/templates/show_edit_user.inc.php';
 	break;
 	case 'confirm_delete':
-			if (Config::get('demo_mode')) { break; }
+		if (Config::get('demo_mode')) { break; }
+		if (!Core::form_verify('delete_user')) { 
+			access_denied(); 
+			exit; 
+		} 
 		$client = new User($_REQUEST['user_id']); 
 		if ($client->delete()) { 
 			show_confirmation(_('User Deleted'), sprintf(_('%s has been Deleted'), $client->username), Config::get('web_path'). "/admin/users.php");
@@ -163,7 +167,7 @@ switch ($_REQUEST['action']) {
 		$client = new User($_REQUEST['user_id']); 
 		show_confirmation(_('Deletion Request'),
 			sprintf(_('Are you sure you want to permanently delete %s?'), $client->fullname),
-			Config::get('web_path')."/admin/users.php?action=confirm_delete&amp;user_id=" . $_REQUEST['user_id'],1);
+			Config::get('web_path')."/admin/users.php?action=confirm_delete&amp;user_id=" . $_REQUEST['user_id'],1,'delete_user');
 	break;
 	/* Show IP History for the Specified User */
 	case 'show_ip_history':
