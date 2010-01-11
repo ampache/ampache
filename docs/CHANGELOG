@@ -3,6 +3,11 @@
 --------------------------------------------------------------------------
 
 --------------------------------------------------------------------------
+  v.3.5.4 
+	- Removed unused/dead files
+	- Correct issue with single song downloads
+
+--------------------------------------------------------------------------
   v.3.5.3 20/12/2009 
 	- Added local authtype which uses PHP's PAM module
 	- Correct potential security issues due to misuse of REQUEST for write

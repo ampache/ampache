@@ -69,7 +69,7 @@ class shoutBox {
 
 		// If we've already got too many stop here
 		if (count($shouts) > $limit) { 
-			$shouts = array_slice(0,$limit,$shouts); 
+			$shouts = array_slice($shouts,0,$limit);
 			return $shouts; 
 		} 
 
@@ -213,7 +213,7 @@ class shoutBox {
         public function delete($shout_id) {
 
                 // Delete the shoutbox post
-		
+		$shout_id = Dba::escape($shout_id); 
                 $sql = "DELETE FROM `user_shout` WHERE `id`='$shout_id'";
                 $db_results = Dba::query($sql);
 		
