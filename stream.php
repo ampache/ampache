@@ -116,7 +116,7 @@ switch ($_REQUEST['action']) {
 		$urls = array($democratic->play_url()); 
 	break;
 	case 'download': 
-		$media_ids[] = $_REQUEST['song_id']; 	
+		$media_ids[] = array('song',scrub_in($_REQUEST['song_id'])); 
 	default:
 	break;
 } // end action switch
