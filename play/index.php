@@ -313,6 +313,8 @@ if ((Config::get('transcode') == 'always' || !$media->native_stream() || $not_lo
 else { 
 	// Send file, possible at a byte offset
 	$fp = fopen($media->file, 'rb');
+	
+	$song_name = $media->f_artist_full . " - " . $media->title . "." . $media->type;
 
 	if (!is_resource($fp)) { 
 		debug_event('Play',"Error: Unable to open $media->file for reading",'2');
