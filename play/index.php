@@ -33,7 +33,7 @@ ob_end_clean();
 /* These parameters had better come in on the url. */
 $uid 		= scrub_in($_REQUEST['uid']);
 $oid	 	= $_REQUEST['song'] ? scrub_in($_REQUEST['song']) : scrub_in($_REQUEST['oid']); 
-$sid 		= scrub_in($_REQUEST['sid']);
+$sid 		= scrub_in($_REQUEST['ssid']);
 $xml_rpc	= scrub_in($_REQUEST['xml_rpc']); 
 $video		= make_bool($_REQUEST['video']); 
 
