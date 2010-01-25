@@ -407,12 +407,6 @@ class Stream {
 	 */
 	public function create_xspf() { 
 
-		$flash_hack = ''; 
-
-		if (isset($_REQUEST['flash_hack'])) { 
-			if (!Config::get('require_session')) { $flash_hack = '&sid=' . session_id(); } 
-		} 
-
 		// Itterate through the songs
 		foreach ($this->media as $element) {
 			$type = array_shift($element); 
@@ -427,13 +421,13 @@ class Stream {
 					$xml['track']['title'] = $media->title;
 					$xml['track']['creator'] = $media->f_artist_full;
 					$xml['track']['info'] = Config::get('web_path') . "/albums.php?action=show&album=" . $media->album;
-					$xml['track']['image'] = Config::get('web_path') . "/image.php?id=" . $media->album . "&thumb=3&sid=" . session_id();
+					$xml['track']['image'] = Config::get('web_path') . "/image.php?id=" . $media->album . "&thumb=3";
 					$xml['track']['album'] = $media->f_album_full;
 					$length = $media->time; 
 				break; 
 			} // type
 
-			$xml['track']['location'] = call_user_func(array($type,'play_url'),$media->id) . $flash_hack;
+			$xml['track']['location'] = call_user_func(array($type,'play_url'),$media->id);
 			$xml['track']['identifier'] = $xml['track']['location'];
 			$xml['track']['duration'] = $length * 1000;
 
