@@ -858,7 +858,7 @@ class Stream {
 	public static function get_base_url() { 
 
                 if (Config::get('require_session')) {
-                        $session_string = 'sid=' . Stream::get_session() . '&';
+                        $session_string = 'ssid=' . Stream::get_session() . '&';
                 }
 
                 $web_path = Config::get('web_path');
