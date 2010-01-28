@@ -210,6 +210,9 @@ if (NO_SESSION != '1' AND Config::get('use_auth')) {
 	/* If they user ID doesn't exist deny them */
 	if (!$GLOBALS['user']->id AND !Config::get('demo_mode')) { vauth::logout(session_id()); exit; } 
 
+	/* Actually extend the session */
+	vauth::session_extend(session_id());
+
 	/* Load preferences and theme */
 	$GLOBALS['user']->update_last_seen();
 }
