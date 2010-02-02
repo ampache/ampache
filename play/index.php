@@ -302,8 +302,8 @@ if (Config::get('downsample_remote')) {
 // If they are downsampling, or if the song is not a native stream or it's non-local
 if ((Config::get('transcode') == 'always' || !$media->native_stream() || $not_local) && Config::get('transcode') != 'never') { 
 	debug_event('Downsample','Starting Downsample {Transcode:' . Config::get('transcode') . '} {Native Stream:' . $media->native_stream() .'} {Not Local:' . $not_local . '}','5');
-	$fp = Stream::start_downsample($media,$lastid,$song_name,$start);
-	$song_name = $media->f_artist_full . " - " . $media->title . "." . $media->type;
+	$fp = Stream::start_downsample($media,$lastid,$media_name,$start);
+	$media_name = $media->f_artist_full . " - " . $media->title . "." . $media->type;
 	// Note that this is downsampling
 	$downsampled_song = true; 
 } // end if downsampling
@@ -334,7 +334,7 @@ if ($start > 0) {
 	}
 	
 	debug_event('Play','Content-Range header recieved, skipping ahead ' . $start . ' bytes out of ' . $media->size,'5');
-	$browser->downloadHeaders($song_name, $media->mime, false, $media->size);
+	$browser->downloadHeaders($media_name, $media->mime, false, $media->size);
 	if (!$downsampled_song) { 
 		fseek( $fp, $start );
 	} 
@@ -348,7 +348,7 @@ if ($start > 0) {
 else {
 	debug_event('Play','Starting stream of ' . $media->file . ' with size ' . $media->size,'5'); 
 	header("Content-Length: $media->size");
-	$browser->downloadHeaders($song_name, $media->mime, false, $media->size);
+	$browser->downloadHeaders($media_name, $media->mime, false, $media->size);
 	$stream_size = $media->size; 
 }
 	

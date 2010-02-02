@@ -4,6 +4,10 @@
 
 --------------------------------------------------------------------------
   v.3.5.4 
+	- Fix httpq not correctly skipping to new song 
+	- Fix refreshing of localplay playlist when an item is skipped to
+	- Fix missing Content-Disposition filename= on non-transcoded songs
+	- Fix refreshing of localplay playlist when an item is removed
 	- Correct issue with some mp3s bitrates not being detected, which
 		in turn breaks length calculations
 	- Removed unused/dead files

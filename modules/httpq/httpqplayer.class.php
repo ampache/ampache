@@ -1,7 +1,7 @@
 <?php 
 /*
 
- Copyright (c) 2001 - 2006 Ampache.org
+ Copyright (c) Ampache.org
  All rights reserved.
 
  This program is free software; you can redistribute it and/or
@@ -29,16 +29,16 @@
  */
 class HttpQPlayer {
 
-  	var $host;
-  	var $port;
-	var $password;
+  	public $host;
+  	public $port;
+	public $password;
 
 	/**
 	 * HttpQPlayer
 	 * This is the constructor, it defaults to localhost
 	 * with port 4800
 	 */	
-	function HttpQPlayer($h = "localhost", $pw = "", $p = 4800) {
+	public function HttpQPlayer($h = "localhost", $pw = "", $p = 4800) {
 
 		$this->host = $h;
 		$this->port = $p;
@@ -52,7 +52,7 @@ class HttpQPlayer {
 	 * $name	Name to be shown in the playlist
 	 * $url		URL of the song
 	 */  	
-  	function add($name, $url) {
+  	public function add($name, $url) {
 
   	  	$args['name'] = urlencode($name);
   	  	$args['url'] = urlencode($url);
@@ -70,7 +70,7 @@ class HttpQPlayer {
 	 * This gets the version of winamp currently
 	 * running, use this to test for a valid connection
 	 */
-	function version() { 
+	public function version() { 
 
 		$args = array(); 
 		$results = $this->sendCommand('getversion',$args); 
@@ -87,7 +87,7 @@ class HttpQPlayer {
 	 * clear
 	 * clear the playlist
 	 */  	
-	function clear() {
+	public function clear() {
 		$args = array();
 		$results = $this->sendCommand("delete", $args);
 
@@ -101,7 +101,7 @@ class HttpQPlayer {
 	 * next
 	 * go to next song
 	 */  	
-	function next() {
+	public function next() {
 
 		$args = array();
 		$results = $this->sendCommand("next", $args);
@@ -116,7 +116,7 @@ class HttpQPlayer {
 	 * prev
 	 * go to previous song
 	 */  	
-	function prev() {
+	public function prev() {
 
 		$args = array();
 		$results = $this->sendCommand("prev", $args);
@@ -131,12 +131,16 @@ class HttpQPlayer {
 	 * skip
 	 * This skips to POS in the playlist
 	 */
-	function skip($pos) { 
+	public function skip($pos) { 
 
 		$args = array('index'=>$pos); 
 		$results = $this->sendCommand('setplaylistpos',$args); 
 
 		if ($results == '0') { return null; } 
+
+		// Now stop start
+		$this->stop(); 
+		$this->play(); 
 
 		return true; 
 
@@ -146,7 +150,7 @@ class HttpQPlayer {
 	 * play
 	 * play the current song
 	 */  	
-	function play() {
+	public function play() {
 
 		$args = array();
 		$results = $this->sendCommand("play", $args);
@@ -221,7 +225,7 @@ class HttpQPlayer {
 	 * delete_pos
 	 * This deletes a specific track
 	 */
-	function delete_pos($track) { 
+	public function delete_pos($track) { 
 	
 		$args = array('index'=>$track); 
 		$results = $this->sendCommand('deletepos',$args); 
@@ -236,7 +240,7 @@ class HttpQPlayer {
 	 * state
 	 * This returns the current state of the httpQ player
 	 */
-	function state() { 
+	public function state() { 
 
 		$args = array(); 
 		$results = $this->sendCommand('isplaying',$args);
@@ -253,7 +257,7 @@ class HttpQPlayer {
 	 * get_volume
 	 * This returns the current volume 
 	 */
-	function get_volume() { 
+	public function get_volume() { 
 
 		$args = array(); 
 		$results = $this->sendCommand('getvolume',$args); 
@@ -272,7 +276,7 @@ class HttpQPlayer {
 	 * volume_up
 	 * This increases the volume by Wimamp's defined amount
 	 */
-	function volume_up() { 
+	public function volume_up() { 
 
 		$args = array(); 
 		$results = $this->sendCommand('volumeup',$args); 
@@ -287,7 +291,7 @@ class HttpQPlayer {
 	 * volume_down
 	 * This decreases the volume by Winamp's defined amount
 	 */
-	function volume_down() { 
+	public function volume_down() { 
 
 		$args = array(); 
 		$results = $this->sendCommand('volumedown',$args); 
@@ -303,7 +307,7 @@ class HttpQPlayer {
 	 * This sets the volume as best it can, we go from a resolution
 	 * of 100 --> 255 so it's a little fuzzy
 	 */
-	function set_volume($value) { 
+	public function set_volume($value) { 
 
 		// Convert it to base 255
 		$value = $value*2.55; 
@@ -320,7 +324,7 @@ class HttpQPlayer {
 	 * clear_playlist
 	 * this flushes the playlist cache (I hope this means clear)
 	 */
-	function clear_playlist() { 
+	public function clear_playlist() { 
 
 		$args = array(); 
 		$results = $this->sendcommand('flushplaylist',$args); 
@@ -335,7 +339,7 @@ class HttpQPlayer {
 	 * get_repeat
 	 * This returns the current state of the repeat 
 	 */
-	function get_repeat() { 
+	public function get_repeat() { 
 
 		$args = array(); 
 		$results = $this->sendCommand('repeat_status',$args); 
@@ -348,7 +352,7 @@ class HttpQPlayer {
 	 * get_random
 	 * This returns the current state of shuffle
 	 */
-	function get_random() { 
+	public function get_random() { 
 
 		$args = array(); 
 		$results = $this->sendCommand('shuffle_status',$args); 
@@ -362,7 +366,7 @@ class HttpQPlayer {
 	 * This returns the file information for the currently
 	 * playing song
 	 */
-	function get_now_playing()  { 
+	public function get_now_playing()  { 
 
 		// First get the current POS
 		$pos = $this->sendCommand('getlistpos',array()); 
@@ -379,7 +383,7 @@ class HttpQPlayer {
 	 * This returns a delimiated string of all of the filenames
 	 * current in your playlist
 	 */
-	function get_tracks() { 
+	public function get_tracks() { 
 
 		// Pull a delimited list of all tracks
 		$results = $this->sendCommand('getplaylistfile',array('delim'=>'::'));
