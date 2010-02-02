@@ -4,6 +4,8 @@
 
 --------------------------------------------------------------------------
   v.3.5.4 
+	- Correct issue with some mp3s bitrates not being detected, which
+		in turn breaks length calculations
 	- Removed unused/dead files
 	- Correct issue with single song downloads
 
