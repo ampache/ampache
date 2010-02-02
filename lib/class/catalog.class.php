@@ -200,7 +200,22 @@ class Catalog extends database_object {
 		$results 		= array_merge(self::count_video($catalog_id),$results); 
 
 		$hours = floor($results['time']/3600);
-		$size = $results['size']/1048576;
+                // Calculate catalog size in bytes, divided by 1000
+                // We do so by first chopping the three least significant decimal digits off
+                // This is needed in case catalog size exceeds 4 GB ( 2 << 31)
+                // The precision lost here is not important, because during
+                // presentation we do not care about less than 0.01 MB.
+                //
+                $sizeStr = (string)$results['size'];
+                if ( strlen( $sizeStr ) > 3 ) {
+			$size = (int)substr( $sizeStr, 0, -3 );
+                }
+                else {
+			$size = 0;
+                }
+                // Now go to MB's, applying a correction for KB first.
+                //
+                $size = ($size / 1.024) / 1024;
 		$days = floor($hours/24);
 		$hours = $hours%24;
 

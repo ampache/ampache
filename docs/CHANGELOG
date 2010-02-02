@@ -4,6 +4,7 @@
 
 --------------------------------------------------------------------------
   v.3.5.4 
+	- Fix catalog size math for catalogs up to 4TB (Thx Joost.t.Hart@planet.nl)
 	- Fix httpq not correctly skipping to new song 
 	- Fix refreshing of localplay playlist when an item is skipped to
 	- Fix missing Content-Disposition filename= on non-transcoded songs
