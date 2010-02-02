@@ -31,6 +31,7 @@ $dir = is_rtl(Config::get('lang')) ? "rtl" : "ltr";
 
 <head>
 <link rel="shortcut icon" href="<?php echo $web_path; ?>/favicon.ico" />
+<link rel="search" type="application/opensearchdescription+xml" title="<?php echo scrub_out(Config::get('site_title')); ?>" href="<?php echo $web_path; ?>/search.php?action=descriptor" />
 <?php
 if (Config::get('use_rss')) { ?>
 <link rel="alternate" type="application/rss+xml" title="<?php echo _('Now Playing'); ?>" href="<?php echo $web_path; ?>/rss.php" />

@@ -55,6 +55,12 @@ switch ($_REQUEST['action']) {
 	default:
 		require_once Config::get('prefix') . '/templates/show_search.inc.php'; 
 	break;
+	case 'descriptor': 
+		// This is a little special we don't want header/footers so trash what we've got in the OB
+		ob_clean(); 
+		require_once Config::get('prefix') . '/templates/show_search_descriptor.inc.php'; 
+		exit; 
+	break; 
 }
 
 /* Show the Footer */

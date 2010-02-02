@@ -4,6 +4,7 @@
 
 --------------------------------------------------------------------------
   v.3.6-Alpha1
+	- Added ability to add Ampache as a search descriptor (Thx Vlet)
 	- Correct issue with single song downloads
 	- Removed old useless files
 	- Added local auth method that uses PHP's PAM module
