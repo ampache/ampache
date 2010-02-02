@@ -4,6 +4,7 @@
 
 --------------------------------------------------------------------------
   v.3.6-Alpha1
+	- Fix refresh of localplay playlist when you delete a track from it
 	- Added ability to add Ampache as a search descriptor (Thx Vlet)
 	- Correct issue with single song downloads
 	- Removed old useless files
