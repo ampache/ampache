@@ -86,6 +86,13 @@ switch ($_REQUEST['action']) {
 			break;
 			case 'skip': 
 				$localplay->skip(intval($_REQUEST['id']));
+				$objects = $localplay->get();
+				ob_start();
+				Browse::set_type('playlist_localplay');
+				Browse::set_static_content(1);
+				Browse::show_objects($objects);
+				$results['browse_content'] = ob_get_contents();
+				ob_end_clean();
 			break;
 			default: 
 				// Nothing

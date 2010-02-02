@@ -4,6 +4,9 @@
 
 --------------------------------------------------------------------------
   v.3.6-Alpha1
+        - Fix httpq not correctly skipping to new song 
+        - Fix refreshing of localplay playlist when an item is skipped to
+        - Fix missing Content-Disposition filename= on non-transcoded songs
 	- Fix refresh of localplay playlist when you delete a track from it
 	- Added ability to add Ampache as a search descriptor (Thx Vlet)
 	- Correct issue with single song downloads
