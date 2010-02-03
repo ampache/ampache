@@ -1,23 +1,8 @@
--- Copyright (c) Ampache.org
--- All rights reserved.
---
--- This program is free software; you can redistribute it and/or
--- modify it under the terms of the GNU General Public License v2
--- as published by the Free Software Foundation.
---
--- This program is distributed in the hope that it will be useful,
--- but WITHOUT ANY WARRANTY; without even the implied warranty of
--- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
--- GNU General Public License for more details.
---
--- You should have received a copy of the GNU General Public License
--- along with this program; if not, write to the Free Software
--- Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 -- MySQL dump 10.11
 --
--- Host: localhost    Database: ampache
+-- Host: localhost    Database: ampachestable
 -- ------------------------------------------------------
--- Server version	5.0.77-1-log
+-- Server version	5.0.81-1-log
 /*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
 /*!40103 SET TIME_ZONE='+00:00' */;
 /*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
@@ -30,8 +15,6 @@
 --
 
 DROP TABLE IF EXISTS `access_list`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
 CREATE TABLE `access_list` (
   `id` int(11) unsigned NOT NULL auto_increment,
   `name` varchar(255) default NULL,
@@ -47,8 +30,7 @@ CREATE TABLE `access_list` (
   KEY `end` (`end`),
   KEY `level` (`level`),
   KEY `enabled` (`enabled`)
-) TYPE=MyISAM AUTO_INCREMENT=5;
-SET character_set_client = @saved_cs_client;
+) TYPE=MyISAM AUTO_INCREMENT=7;
 
 --
 -- Dumping data for table `access_list`
@@ -56,7 +38,7 @@ SET character_set_client = @saved_cs_client;
 
 LOCK TABLES `access_list` WRITE;
 /*!40000 ALTER TABLE `access_list` DISABLE KEYS */;
-INSERT INTO `access_list` VALUES (1,'DEFAULTv4','\0\0\0\0','ÿÿÿÿ',75,'interface',-1,NULL,1),(2,'DEFAULTv4','\0\0\0\0','ÿÿÿÿ',75,'stream',-1,NULL,1),(3,'DEFAULTv6','\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0','ÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿ',75,'interface',-1,NULL,1),(4,'DEFAULTv6','\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0','ÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿ',75,'stream',-1,NULL,1);
+INSERT INTO `access_list` VALUES (1,'DEFAULTv4','\0\0\0\0','ÿÿÿÿ',75,'interface',-1,NULL,1),(2,'DEFAULTv4','\0\0\0\0','ÿÿÿÿ',75,'stream',-1,NULL,1),(3,'DEFAULTv6','\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0','ÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿ',75,'interface',-1,NULL,1),(4,'DEFAULTv6','\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0','ÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿ',75,'stream',-1,NULL,1),(5,'DEFAULTv4','\0\0\0\0','ï¿½ï¿½ï¿½ï¿½',75,'rpc',-1,NULL,1),(6,'DEFAULTv6','\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0','ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½',75,'rpc',-1,NULL,1);
 /*!40000 ALTER TABLE `access_list` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -65,8 +47,6 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `album`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
 CREATE TABLE `album` (
   `id` int(11) unsigned NOT NULL auto_increment,
   `name` varchar(255) default NULL,
@@ -78,7 +58,6 @@ CREATE TABLE `album` (
   KEY `year` (`year`),
   KEY `disk` (`disk`)
 ) TYPE=MyISAM;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Dumping data for table `album`
@@ -94,8 +73,6 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `album_data`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
 CREATE TABLE `album_data` (
   `album_id` int(11) unsigned NOT NULL,
   `art` mediumblob,
@@ -105,7 +82,6 @@ CREATE TABLE `album_data` (
   UNIQUE KEY `album_id` (`album_id`),
   KEY `art_mime` (`art_mime`)
 ) TYPE=MyISAM;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Dumping data for table `album_data`
@@ -121,8 +97,6 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `artist`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
 CREATE TABLE `artist` (
   `id` int(11) unsigned NOT NULL auto_increment,
   `name` varchar(255) default NULL,
@@ -130,7 +104,6 @@ CREATE TABLE `artist` (
   PRIMARY KEY  (`id`),
   KEY `name` (`name`)
 ) TYPE=MyISAM;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Dumping data for table `artist`
@@ -146,8 +119,6 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `artist_data`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
 CREATE TABLE `artist_data` (
   `artist_id` int(11) unsigned NOT NULL,
   `art` mediumblob NOT NULL,
@@ -158,7 +129,6 @@ CREATE TABLE `artist_data` (
   UNIQUE KEY `artist_id` (`artist_id`),
   KEY `art_mime` (`art_mime`)
 ) TYPE=MyISAM;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Dumping data for table `artist_data`
@@ -174,8 +144,6 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `catalog`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
 CREATE TABLE `catalog` (
   `id` int(11) unsigned NOT NULL auto_increment,
   `name` varchar(128) default NULL,
@@ -192,7 +160,6 @@ CREATE TABLE `catalog` (
   PRIMARY KEY  (`id`),
   KEY `enabled` (`enabled`)
 ) TYPE=MyISAM;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Dumping data for table `catalog`
@@ -208,8 +175,6 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `democratic`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
 CREATE TABLE `democratic` (
   `id` int(11) unsigned NOT NULL auto_increment,
   `name` varchar(64) default NULL,
@@ -222,7 +187,6 @@ CREATE TABLE `democratic` (
   KEY `level` (`level`),
   KEY `primary_2` (`primary`)
 ) TYPE=MyISAM;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Dumping data for table `democratic`
@@ -238,8 +202,6 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `dynamic_playlist`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
 CREATE TABLE `dynamic_playlist` (
   `id` int(11) unsigned NOT NULL auto_increment,
   `name` varchar(255) default NULL,
@@ -248,7 +210,6 @@ CREATE TABLE `dynamic_playlist` (
   `type` varchar(128) default NULL,
   PRIMARY KEY  (`id`)
 ) TYPE=MyISAM;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Dumping data for table `dynamic_playlist`
@@ -264,8 +225,6 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `dynamic_playlist_data`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
 CREATE TABLE `dynamic_playlist_data` (
   `id` int(11) unsigned NOT NULL auto_increment,
   `dynamic_id` int(11) unsigned NOT NULL,
@@ -275,7 +234,6 @@ CREATE TABLE `dynamic_playlist_data` (
   `value` varchar(255) default NULL,
   PRIMARY KEY  (`id`)
 ) TYPE=MyISAM;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Dumping data for table `dynamic_playlist_data`
@@ -291,8 +249,6 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `flagged`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
 CREATE TABLE `flagged` (
   `id` int(11) unsigned NOT NULL auto_increment,
   `object_id` int(11) unsigned NOT NULL default '0',
@@ -308,7 +264,6 @@ CREATE TABLE `flagged` (
   KEY `object_type` (`object_type`),
   KEY `user` (`user`)
 ) TYPE=MyISAM;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Dumping data for table `flagged`
@@ -324,8 +279,6 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `ip_history`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
 CREATE TABLE `ip_history` (
   `id` int(11) unsigned NOT NULL auto_increment,
   `user` int(11) NOT NULL,
@@ -337,7 +290,6 @@ CREATE TABLE `ip_history` (
   KEY `date` (`date`),
   KEY `ip` (`ip`)
 ) TYPE=MyISAM;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Dumping data for table `ip_history`
@@ -353,8 +305,6 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `live_stream`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
 CREATE TABLE `live_stream` (
   `id` int(11) unsigned NOT NULL auto_increment,
   `name` varchar(128) default NULL,
@@ -369,7 +319,6 @@ CREATE TABLE `live_stream` (
   KEY `genre` (`genre`),
   KEY `name` (`name`)
 ) TYPE=MyISAM;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Dumping data for table `live_stream`
@@ -385,8 +334,6 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `localplay_httpq`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
 CREATE TABLE `localplay_httpq` (
   `id` int(11) unsigned NOT NULL auto_increment,
   `name` varchar(128) default NULL,
@@ -397,7 +344,6 @@ CREATE TABLE `localplay_httpq` (
   `access` smallint(4) unsigned NOT NULL default '0',
   PRIMARY KEY  (`id`)
 ) TYPE=MyISAM;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Dumping data for table `localplay_httpq`
@@ -413,8 +359,6 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `localplay_mpd`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
 CREATE TABLE `localplay_mpd` (
   `id` int(11) unsigned NOT NULL auto_increment,
   `name` varchar(128) default NULL,
@@ -425,7 +369,6 @@ CREATE TABLE `localplay_mpd` (
   `access` smallint(4) unsigned NOT NULL default '0',
   PRIMARY KEY  (`id`)
 ) TYPE=MyISAM;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Dumping data for table `localplay_mpd`
@@ -441,8 +384,6 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `localplay_shoutcast`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
 CREATE TABLE `localplay_shoutcast` (
   `id` int(11) unsigned NOT NULL auto_increment,
   `name` varchar(128) default NULL,
@@ -453,7 +394,6 @@ CREATE TABLE `localplay_shoutcast` (
   `access` smallint(4) unsigned NOT NULL default '0',
   PRIMARY KEY  (`id`)
 ) TYPE=MyISAM;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Dumping data for table `localplay_shoutcast`
@@ -469,8 +409,6 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `now_playing`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
 CREATE TABLE `now_playing` (
   `id` varchar(64) NOT NULL default '',
   `object_id` int(11) unsigned NOT NULL,
@@ -480,7 +418,6 @@ CREATE TABLE `now_playing` (
   PRIMARY KEY  (`id`),
   KEY `expire` (`expire`)
 ) TYPE=MyISAM;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Dumping data for table `now_playing`
@@ -496,8 +433,6 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `object_count`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
 CREATE TABLE `object_count` (
   `id` int(11) unsigned NOT NULL auto_increment,
   `object_type` enum('album','artist','song','playlist','genre','catalog','live_stream','video') default NULL,
@@ -510,7 +445,6 @@ CREATE TABLE `object_count` (
   KEY `userid` (`user`),
   KEY `date` (`date`)
 ) TYPE=MyISAM;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Dumping data for table `object_count`
@@ -526,8 +460,6 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `playlist`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
 CREATE TABLE `playlist` (
   `id` int(11) unsigned NOT NULL auto_increment,
   `name` varchar(128) default NULL,
@@ -538,7 +470,6 @@ CREATE TABLE `playlist` (
   KEY `name` (`name`),
   KEY `type` (`type`)
 ) TYPE=MyISAM;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Dumping data for table `playlist`
@@ -554,8 +485,6 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `playlist_data`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
 CREATE TABLE `playlist_data` (
   `id` int(11) unsigned NOT NULL auto_increment,
   `playlist` int(11) unsigned NOT NULL default '0',
@@ -565,7 +494,6 @@ CREATE TABLE `playlist_data` (
   PRIMARY KEY  (`id`),
   KEY `playlist` (`playlist`)
 ) TYPE=MyISAM;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Dumping data for table `playlist_data`
@@ -581,8 +509,6 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `preference`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
 CREATE TABLE `preference` (
   `id` int(11) unsigned NOT NULL auto_increment,
   `name` varchar(128) default NULL,
@@ -595,7 +521,6 @@ CREATE TABLE `preference` (
   KEY `catagory` (`catagory`),
   KEY `name` (`name`)
 ) TYPE=MyISAM AUTO_INCREMENT=79;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Dumping data for table `preference`
@@ -612,8 +537,6 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `rating`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
 CREATE TABLE `rating` (
   `id` int(11) unsigned NOT NULL auto_increment,
   `user` int(11) NOT NULL,
@@ -623,7 +546,6 @@ CREATE TABLE `rating` (
   PRIMARY KEY  (`id`),
   KEY `object_id` (`object_id`)
 ) TYPE=MyISAM;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Dumping data for table `rating`
@@ -639,8 +561,6 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `session`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
 CREATE TABLE `session` (
   `id` varchar(64) NOT NULL default '',
   `username` varchar(16) default NULL,
@@ -653,7 +573,6 @@ CREATE TABLE `session` (
   KEY `expire` (`expire`),
   KEY `type` (`type`)
 ) TYPE=MyISAM;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Dumping data for table `session`
@@ -669,8 +588,6 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `session_stream`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
 CREATE TABLE `session_stream` (
   `id` varchar(64) NOT NULL default '',
   `user` int(11) unsigned NOT NULL,
@@ -679,7 +596,6 @@ CREATE TABLE `session_stream` (
   `ip` varbinary(255) default NULL,
   PRIMARY KEY  (`id`)
 ) TYPE=MyISAM;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Dumping data for table `session_stream`
@@ -695,8 +611,6 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `song`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
 CREATE TABLE `song` (
   `id` int(11) unsigned NOT NULL auto_increment,
   `file` varchar(255) default NULL,
@@ -725,7 +639,6 @@ CREATE TABLE `song` (
   KEY `played` (`played`),
   KEY `enabled` (`enabled`)
 ) TYPE=MyISAM;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Dumping data for table `song`
@@ -741,8 +654,6 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `song_data`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
 CREATE TABLE `song_data` (
   `song_id` int(11) unsigned NOT NULL,
   `comment` text,
@@ -752,7 +663,6 @@ CREATE TABLE `song_data` (
   `language` varchar(128) default NULL,
   UNIQUE KEY `song_id` (`song_id`)
 ) TYPE=MyISAM;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Dumping data for table `song_data`
@@ -768,15 +678,12 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `tag`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
 CREATE TABLE `tag` (
   `id` int(11) unsigned NOT NULL auto_increment,
   `name` varchar(255) default NULL,
   UNIQUE KEY `name` (`name`),
   KEY `map_id` (`id`)
 ) TYPE=MyISAM;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Dumping data for table `tag`
@@ -792,8 +699,6 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `tag_map`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
 CREATE TABLE `tag_map` (
   `id` int(11) unsigned NOT NULL auto_increment,
   `tag_id` int(11) unsigned NOT NULL,
@@ -806,7 +711,6 @@ CREATE TABLE `tag_map` (
   KEY `user_id` (`user`),
   KEY `tag_id` (`tag_id`)
 ) TYPE=MyISAM;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Dumping data for table `tag_map`
@@ -822,15 +726,12 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `tmp_browse`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
 CREATE TABLE `tmp_browse` (
   `sid` varchar(128) default NULL,
   `type` varchar(255) default NULL,
   `data` longtext NOT NULL,
   UNIQUE KEY `sid` (`sid`)
 ) TYPE=MyISAM;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Dumping data for table `tmp_browse`
@@ -846,8 +747,6 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `tmp_playlist`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
 CREATE TABLE `tmp_playlist` (
   `id` int(11) unsigned NOT NULL auto_increment,
   `session` varchar(32) default NULL,
@@ -857,7 +756,6 @@ CREATE TABLE `tmp_playlist` (
   KEY `session` (`session`),
   KEY `type` (`type`)
 ) TYPE=MyISAM;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Dumping data for table `tmp_playlist`
@@ -873,8 +771,6 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `tmp_playlist_data`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
 CREATE TABLE `tmp_playlist_data` (
   `id` int(11) unsigned NOT NULL auto_increment,
   `tmp_playlist` int(11) unsigned NOT NULL,
@@ -884,7 +780,6 @@ CREATE TABLE `tmp_playlist_data` (
   PRIMARY KEY  (`id`),
   KEY `tmp_playlist` (`tmp_playlist`)
 ) TYPE=MyISAM;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Dumping data for table `tmp_playlist_data`
@@ -900,14 +795,11 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `update_info`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
 CREATE TABLE `update_info` (
   `key` varchar(128) default NULL,
   `value` varchar(255) default NULL,
   UNIQUE KEY `key` (`key`)
 ) TYPE=MyISAM;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Dumping data for table `update_info`
@@ -924,8 +816,6 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `user`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
 CREATE TABLE `user` (
   `id` int(11) NOT NULL auto_increment,
   `username` varchar(128) default NULL,
@@ -940,7 +830,6 @@ CREATE TABLE `user` (
   PRIMARY KEY  (`id`),
   UNIQUE KEY `username` (`username`)
 ) TYPE=MyISAM;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Dumping data for table `user`
@@ -956,8 +845,6 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `user_catalog`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
 CREATE TABLE `user_catalog` (
   `user` int(11) unsigned NOT NULL,
   `catalog` int(11) unsigned NOT NULL,
@@ -965,7 +852,6 @@ CREATE TABLE `user_catalog` (
   KEY `user` (`user`),
   KEY `catalog` (`catalog`)
 ) TYPE=MyISAM;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Dumping data for table `user_catalog`
@@ -981,8 +867,6 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `user_preference`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
 CREATE TABLE `user_preference` (
   `user` int(11) NOT NULL,
   `preference` int(11) unsigned NOT NULL default '0',
@@ -990,7 +874,6 @@ CREATE TABLE `user_preference` (
   KEY `user` (`user`),
   KEY `preference` (`preference`)
 ) TYPE=MyISAM;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Dumping data for table `user_preference`
@@ -1007,8 +890,6 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `user_shout`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
 CREATE TABLE `user_shout` (
   `id` int(11) unsigned NOT NULL auto_increment,
   `user` int(11) NOT NULL,
@@ -1022,7 +903,6 @@ CREATE TABLE `user_shout` (
   KEY `date` (`date`),
   KEY `user` (`user`)
 ) TYPE=MyISAM;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Dumping data for table `user_shout`
@@ -1038,8 +918,6 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `user_vote`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
 CREATE TABLE `user_vote` (
   `user` int(11) unsigned NOT NULL,
   `object_id` int(11) unsigned NOT NULL,
@@ -1048,7 +926,6 @@ CREATE TABLE `user_vote` (
   KEY `object_id` (`object_id`),
   KEY `date` (`date`)
 ) TYPE=MyISAM;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Dumping data for table `user_vote`
@@ -1064,8 +941,6 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `video`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
 CREATE TABLE `video` (
   `id` int(11) unsigned NOT NULL auto_increment,
   `file` varchar(255) default NULL,
@@ -1088,7 +963,6 @@ CREATE TABLE `video` (
   KEY `addition_time` (`addition_time`),
   KEY `update_time` (`update_time`)
 ) TYPE=MyISAM;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Dumping data for table `video`
@@ -1105,4 +979,4 @@ UNLOCK TABLES;
 /*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2009-05-06  0:00:20
+-- Dump completed on 2010-02-03  0:58:33
