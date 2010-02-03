@@ -80,7 +80,7 @@
 </tr>
 </table>
 <div class="formValidation">
-	<?php Core::form_register('edit_acl'); ?>
+	<?php echo Core::form_register('edit_acl'); ?>
 	<input type="submit" value="<?php echo _('Update'); ?>" />
 </div>
 </form>
