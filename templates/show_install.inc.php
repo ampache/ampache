@@ -19,6 +19,12 @@
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 if (INSTALL != '1') { exit; } 
+
+// Set defaults for the form, if they've already submited something 
+$local_db = $_POST['local_db'] ? scrub_in($_POST['local_db']) : 'ampache'; 
+$local_host = $_POST['local_host'] ? scrub_in($_POST['local_host']) : 'localhost'; 
+$local_username = $_POST['local_username'] ? scrub_in($_POST['local_username']) : 'root'; 
+
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php echo $htmllang; ?>" lang="<?php echo $htmllang; ?>">
@@ -64,15 +70,15 @@ if (INSTALL != '1') { exit; }
 <table>
 <tr>
 	<td class="align"><?php echo _("Desired Database Name"); ?></td>
-	<td><input type="text" name="local_db" value="ampache" /></td>
+	<td><input type="text" name="local_db" value="<?php echo scrub_out($local_db); ?>" /></td>
 </tr>
 <tr>
 	<td class="align"><?php echo _("MySQL Hostname"); ?></td>
-	<td><input type="text" name="local_host" value="localhost" /></td>
+	<td><input type="text" name="local_host" value="<?php echo scrub_out($local_host); ?>" /></td>
 </tr>
 <tr>
 	<td class="align"><?php echo _("MySQL Administrative Username"); ?></td>
-	<td><input type="text" name="local_username" value="root" /></td>
+	<td><input type="text" name="local_username" value="<?php echo scrub_out($local_username); ?>" /></td>
 </tr>
 <tr>
 	<td class="align"><?php echo _("MySQL Administrative Password"); ?></td>

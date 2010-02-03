@@ -13,6 +13,7 @@
 -- You should have received a copy of the GNU General Public License
 -- along with this program; if not, write to the Free Software
 -- Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+
 /*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
 /*!40103 SET TIME_ZONE='+00:00' */;
 /*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
@@ -48,7 +49,7 @@ CREATE TABLE `access_list` (
 
 LOCK TABLES `access_list` WRITE;
 /*!40000 ALTER TABLE `access_list` DISABLE KEYS */;
-INSERT INTO `access_list` VALUES (1,'DEFAULTv4','\0\0\0\0','ÿÿÿÿ',75,'interface',-1,NULL,1),(2,'DEFAULTv4','\0\0\0\0','ÿÿÿÿ',75,'stream',-1,NULL,1),(3,'DEFAULTv6','\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0','ÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿ',75,'interface',-1,NULL,1),(4,'DEFAULTv6','\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0','ÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿ',75,'stream',-1,NULL,1),(5,'DEFAULTv4','\0\0\0\0','ï¿½ï¿½ï¿½ï¿½',75,'rpc',-1,NULL,1),(6,'DEFAULTv6','\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0','ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½',75,'rpc',-1,NULL,1);
+INSERT INTO `access_list` VALUES (1,'DEFAULTv4','\0\0\0\0','ÿÿÿÿ',75,'interface',-1,NULL,1),(2,'DEFAULTv4','\0\0\0\0','ÿÿÿÿ',75,'stream',-1,NULL,1),(3,'DEFAULTv6','\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0','ÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿ',75,'interface',-1,NULL,1),(4,'DEFAULTv6','\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0','ÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿ',75,'stream',-1,NULL,1),(5,'DEFAULTv4','\0\0\0\0','ÿÿÿÿ',75,'rpc',-1,'',0),(6,'DEFAULTv6','\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0','ÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿ',75,'rpc',-1,'',0);
 /*!40000 ALTER TABLE `access_list` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -891,7 +892,7 @@ CREATE TABLE `user_preference` (
 
 LOCK TABLES `user_preference` WRITE;
 /*!40000 ALTER TABLE `user_preference` DISABLE KEYS */;
-INSERT INTO `user_preference` VALUES (-1,1,'1'),(-1,4,'10'),(-1,19,'32'),(-1,22,'Ampache :: Pour l\'Amour de la Musique'),(-1,23,'0'),(-1,24,'1'),(-1,25,'80'),(-1,41,'mpd'),(-1,29,'stream'),(-1,31,'fr_FR'),(-1,32,'m3u'),(-1,33,'classic'),(-1,34,'27'),(-1,35,'27'),(-1,36,'27'),(-1,51,'50'),(-1,40,'100'),(-1,44,'1'),(-1,45,'1'),(-1,46,'1'),(-1,47,'7'),(-1,49,'1'),(-1,52,'8192'),(-1,53,'default'),(-1,55,'default'),(-1,57,''),(-1,69,'0'),(-1,70,'0'),(-1,71,'0'),(-1,72,'0'),(-1,73,''),(-1,74,''),(-1,75,''),(-1,76,''),(-1,77,''),(-1,78,'');
+INSERT INTO `user_preference` VALUES (-1,1,'1'),(-1,4,'10'),(-1,19,'32'),(-1,22,'Ampache :: Pour l\'Amour de la Musique'),(-1,23,'0'),(-1,24,'1'),(-1,25,'80'),(-1,41,'mpd'),(-1,29,'stream'),(-1,31,'en_US'),(-1,32,'m3u'),(-1,33,'classic'),(-1,34,'27'),(-1,35,'27'),(-1,36,'27'),(-1,51,'50'),(-1,40,'100'),(-1,44,'1'),(-1,45,'1'),(-1,46,'1'),(-1,47,'7'),(-1,49,'1'),(-1,52,'8192'),(-1,53,'default'),(-1,55,'default'),(-1,57,''),(-1,69,'0'),(-1,70,'0'),(-1,71,'0'),(-1,72,'0'),(-1,73,''),(-1,74,''),(-1,75,''),(-1,76,''),(-1,77,''),(-1,78,'');
 /*!40000 ALTER TABLE `user_preference` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -989,4 +990,4 @@ UNLOCK TABLES;
 /*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2010-02-03  0:58:33
+-- Dump completed on 2010-02-03  2:17:25
