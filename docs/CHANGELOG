@@ -3,7 +3,7 @@
 --------------------------------------------------------------------------
 
 --------------------------------------------------------------------------
-  v.3.5.4 
+  v.3.5.4 02/02/2010 
 	- Added default RPC ACLs for new installations 
 	- Fix catalog size math for catalogs up to 4TB (Thx Joost.t.Hart@planet.nl)
 	- Fix httpq not correctly skipping to new song 
