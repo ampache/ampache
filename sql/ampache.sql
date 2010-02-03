@@ -1,9 +1,18 @@
--- MySQL dump 10.11
+-- Copyright (c) Ampache.org
+-- All rights reserved.
 --
--- Host: localhost    Database: ampachestable
--- ------------------------------------------------------
--- Server version	5.0.81-1-log
-
+-- This program is free software; you can redistribute it and/or
+-- modify it under the terms of the GNU General Public License v2
+-- as published by the Free Software Foundation.
+--
+-- This program is distributed in the hope that it will be useful,
+-- but WITHOUT ANY WARRANTY; without even the implied warranty of
+-- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+-- GNU General Public License for more details.
+--
+-- You should have received a copy of the GNU General Public License
+-- along with this program; if not, write to the Free Software
+-- Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
