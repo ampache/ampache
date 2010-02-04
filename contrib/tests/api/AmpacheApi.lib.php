@@ -195,7 +195,6 @@ class AmpacheApi {
 		} 
 
 		$data = file_get_contents($url); 
-
 		return $data; 
 
 	} // send_command
@@ -319,6 +318,4 @@ class AmpacheApi {
 	} // end_element
 
 } // end AmpacheApi class
-
-
 ?>
