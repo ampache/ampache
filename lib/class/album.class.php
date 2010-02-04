@@ -496,7 +496,7 @@ class Album extends database_object {
 				$extension = substr($file,strlen($file)-3,4);
 
 				/* If it's an image file */
-				if ($extension == "jpg" || $extension == "gif" || $extension == "png" || $extension == "jp2") { 
+				if ($extension == "jpg" || $extension == "gif" || $extension == "png" || $extension == "jp2" || $extension == "bmp") { 
 
 					if ($extension == 'jpg') { $extension = 'jpeg'; } 
 

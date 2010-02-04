@@ -4,6 +4,7 @@
 
 --------------------------------------------------------------------------
   v.3.6-Alpha1
+	- Add bmp to the list of allowed / supported album art types
 	- Strip extranious whitespace from cmdline catalog update (Thx ascheel)
         - Fix catalog size math for catalogs up to 4TB (Thx Joost.t.Hart@planet.nl) 
         - Fix httpq not correctly skipping to new song 
