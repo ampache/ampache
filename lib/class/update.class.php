@@ -1795,8 +1795,47 @@ class Update {
 
 		self::set_version('db_version','360001');
 
-
 	} // update_360001
+
+	/**
+	 * update_360002
+	 * This update makes changes to the cataloging to accomodate the new method for syncing between
+	 * Ampache instances, could be adapted to sync with whatever for "full" catalog
+	 */
+	public static function update_360002() { 
+
+		// Drop the key from catalog and ACL
+		$sql = "ALTER TABLE `catalog` DROP `key`"; 
+		$db_results = Dba::write($sql); 	
+
+		$sql = "ALTER TABLE `access_list` DROP `key`"; 
+		$db_results = Dba::write($sql); 	
+
+		// Add in Username / Password for catalog - to be used for remote catalogs 
+		$sql = "ALTER TABLE `catalog` ADD `remote_username` VARCHAR ( 255 ) AFTER `user`"; 
+		$db_results = Dba::write($sql); 
+
+		$sql = "ALTER TABLE `catalog` ADD `remote_password` VARCHAR ( 255 ) AFTER `remote_username`"; 
+		$db_results = Dba::write($sql); 
+
+		// Adjust the Filename field in song, make it gi-normous. If someone has anything close to
+		// this file length, they seriously need to reconsider what they are doing. 
+		$sql = "ALTER TABLE `song` CHANGE `file` `file` VARCHAR ( 4096 )"; 
+		$db_results = Dba::write($sql); 
+
+		$sql = "ALTER TABLE `video` CHANGE `file` `file` VARCHAR ( 4096 )"; 
+		$db_results = Dba::write($sql); 
+
+		$sql = "ALTER TABLE `live_stream` CHANGE `url` `url` VARCHAR ( 4096 )"; 
+		$db_results = Dba::write($sql); 
+
+                User::fix_preferences('-1');
+
+                while ($r = Dba::fetch_assoc($db_results)) {
+                        User::fix_preferences($r['id']);
+                } // while we're fixing the useres stuff
+
+	} // update_360002
 
 
 } // end update class
