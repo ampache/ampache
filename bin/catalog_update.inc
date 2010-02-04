@@ -97,6 +97,8 @@ function ob_html_strip($string) {
 	$string = preg_replace("/update_txt\('.+'\);update_txt\('(.+)','.+'\);/","$1",$string);
 	$string = preg_replace("/update_.+/","",$string);
 	$string = strip_tags($string);
+	$string = preg_replace("/[\r\n]+[\s\t]*[\r\n]+/","\n",$string);
+	$string = trim($string);
 	return $string;
 
 } // ob_html_strip
