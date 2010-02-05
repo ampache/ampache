@@ -385,7 +385,7 @@ class Album extends database_object {
 			debug_event("lastfm", "set Proxy", "5");
 			$lastfm->setProxy($proxyhost, $proxyport, $proxyuser, $proxypass);
 		}
-		$raw_data = $lastfm->search($artist,$album); 
+		$raw_data = $lastfm->album_search($artist,$album); 
 
 		if (!count($raw_data)) { return array(); } 
 

@@ -23,6 +23,8 @@
 class LastFMSearch {
 
 	protected $base_url = "http://ws.audioscrobbler.com/1.0/album";
+	protected $base_url_v2 = "http://ws.audioscrobbler.com/2.0/"; 
+	protected $api_key = "d5df942424c71b754e54ce1832505ae2";
 	public $results=array();  // Array of results
 	private $_parser;   // The XML parser
 	protected $_grabtags = array('coverart','large','medium','small');
@@ -113,20 +115,40 @@ class LastFMSearch {
 	} // run_search
     
 	/**
-	 * search
+	 * album_search
 	 * takes terms and a type
 	 */
-	public function search($artist,$album) {
+	public function album_search($artist,$album) {
 
 		$url = $this->base_url . '/' . urlencode($artist) . '/' . urlencode($album) . '/info.xml';		
 		
-		debug_event('lastfm','Searching: ' . $url,'3');
+		debug_event('LastFM','Album Search: ' . $url,'3');
 		
 		$this->run_search($url);
 
 		return $this->results;
 
-	} // search
+	} // album_search
+
+	/**
+	 * artist_search
+	 * Search for an artists information!
+	 * This uses v2 of the API, need to update the rest of this class to use v2
+	 */
+	public function artist_search($artist) { 
+	
+		$url = $this->base_url_v2 . '/?method=artist.getImages&artist=' . urlencode($artist) . '&limit=10';	
+		
+		//FIXME: This should be done by run_search
+		$url .= '&api=' . urlencode($this->api_key); 
+
+		debug_event('LastFM','Album Search: ' . $url,'3');
+
+		$this->run_search($url); 
+
+		return $this->results; 
+
+	} // artist_search 
     
     	/**
  	 * start_element
