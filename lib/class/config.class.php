@@ -28,6 +28,11 @@
  * config overides and/or local configs (for like dba)
  * The class should be a static var in the other classes 
  */
+
+define('BANDWIDTH_LOW', 0);
+define('BANDWIDTH_MEDIUM', 1);
+define('BANDWIDTH_HIGH', 2);
+
 class Config {
 
 	// These are the settings for this specific class

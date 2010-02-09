@@ -918,7 +918,7 @@ class Song extends database_object implements media {
 	 * it uses the popular threshold to figure out how many to pull
 	 * it will only return unique object
 	 */
-	public static function get_recently_played($user_id='') { 
+	public static function get_recently_played($user_id='', $limit=null) { 
 
 		if ($user_id) { 
 			$user_limit = " AND `object_count`.`user`='" . Dba::escape($user_id) . "'"; 
@@ -931,12 +931,15 @@ class Song extends database_object implements media {
 			"ORDER BY `object_count`.`date` DESC ";
 		$db_results = Dba::read($sql); 
 
-		$results = array(); 
+		$results = array();
 		
 		while ($row = Dba::fetch_assoc($db_results)) { 
 			if (isset($results[$row['object_id']])) { continue; } 
-			$results[$row['object_id']] = $row; 
-			if (count($results) > Config::get('popular_threshold')) { break; } 	
+			$results[$row['object_id']] = $row;
+			if (!is_null($limit))
+				if (count($results) > $limit) { break; }
+			else
+				if (count($results) > Config::get('popular_threshold')) { break; } 	
 		} 
 
 		return $results; 

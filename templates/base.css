@@ -25,6 +25,7 @@
  * Tag Definitions
  *****************/
 
+/* why god why!?
 .tag_size1 { 
 	font-size:.6em;
 } 
@@ -37,10 +38,11 @@
 .tag_size4 { 
 	font-size:1.2em; 
 } 
+*/
 
 a.tag_size1, a.tag_size2, a.tag_size3, a.tag_size4 { text-decoration: none; } 
 
-.hover-add:hover { font-weight:900; } 
+/* .hover-add:hover { font-weight:900; } */ /* why god why!? */
 .hover-remove:hover { text-decoration:line-through;} 
 
 /*****************

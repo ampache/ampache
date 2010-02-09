@@ -237,13 +237,11 @@ default_auth_level = "admin"
 ; DEFAULT: true
 ratings = "true"
 
-; ShoutBox
-; Enabling this will allow any user to 'tag' an item and post
-; a comment about it which will then be put on the main pages 
-; shoutbox. Admins are allowed to create 'sticky' shoutbox items
-; POSSIBLE VALUES: false true
-; DEFAULT: false
-;shoutbox = "false" 
+; Index features
+; Vollmer will probably write better stuff here than I will -Vlet
+; POSSIBLE VALUES: shout, played, added, now, random
+; DEFAULT: hmm
+features = "shout, played, added, now, random"
 
 ; This options will turn on/off Demo Mode
 ; If Demo mode is on you can not play songs or update your catalog

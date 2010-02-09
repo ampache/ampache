@@ -1828,12 +1828,21 @@ class Update {
 
 		$sql = "ALTER TABLE `live_stream` CHANGE `url` `url` VARCHAR ( 4096 )"; 
 		$db_results = Dba::write($sql); 
+		
+		// Now add in the min_object_count preference and the random_method
+		$sql = "INSERT INTO `preferences` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
+			"VALUES('bandwidth','1','Bandwidth','100','integer','interface')";
+		$db_results = Dba::write($sql);
+		
+		/* Fix every users preferences */
+		$sql = "SELECT `id` FROM `user`";
+		$db_results = Dba::read($sql);
 
-                User::fix_preferences('-1');
+		User::fix_preferences('-1');
 
-                while ($r = Dba::fetch_assoc($db_results)) {
-                        User::fix_preferences($r['id']);
-                } // while we're fixing the useres stuff
+		while ($r = Dba::fetch_assoc($db_results)) {
+				User::fix_preferences($r['id']);
+		} // while results
 
 	} // update_360002
 
