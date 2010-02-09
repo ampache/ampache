@@ -104,6 +104,8 @@ function search_song($data,$operator,$method,$limit) {
 	$table_sql	= '';
 	$group_sql 	= ' GROUP BY';
 	$select_sql	= ',';
+	$field_sql  = '';
+	$order_sql = '';
 
 	if ($limit > 0) { 
 		$limit_sql = " LIMIT $limit";
@@ -114,25 +116,44 @@ function search_song($data,$operator,$method,$limit) {
 		/* Create correct Value statement based on method */
 
 		$value_string = str_replace("__",$value,$method);
-	
+		
 		switch ($type) { 
-                        case 'all': /* artist, title, and album, anyway.. */
-                                $value_words = explode(' ', $value);
-                                $where_sql .= " ( ";
-                                $ii = 0;
-                                foreach($value_words as $word)
-                                {
-                                    if($ii++ > 0)
-                                        $where_sql .= " AND ";
-                                    $where_sql .= "(song.title LIKE '%$word%' OR album2.name LIKE '%$word%' OR artist2.name LIKE '%$word%' OR
-                                                    song.year LIKE '%$word%' OR song.file LIKE '%$word%' OR tag2.name LIKE '%$word%') ";
-                                }
-                                $where_sql .= " ) $operator";
-                                $table_sql .= " LEFT JOIN `album` as `album2` ON `song`.`album`=`album2`.`id`"; 
-				$table_sql .= " LEFT JOIN `artist` AS `artist2` ON `song`.`artist`=`artist2`.`id`"; 
-				$table_sql .= " LEFT JOIN `tag_map` ON `song`.`id`=`tag_map`.`object_id` AND `tag_map`.`object_type`='song'"; 
-				$table_sql .= " LEFT JOIN `tag` AS `tag2` ON `tag_map`.`tag_id`=`tag2`.`id`"; 
-                        break;
+			case 'all':
+				if (!preg_match('/^[\x{0020}-\x{007E}]+$/', $value)) { // UTF or something
+					$value_words = explode(' ', $value);
+					$where_sql .= " ( ";
+					$ii = 0;
+					
+					foreach($value_words as $word) {
+						if($ii++ > 0)
+							$where_sql .= " AND ";
+						
+						$where_sql .= "(song.title LIKE '%$word%' OR album2.name LIKE '%$word%' OR artist2.name LIKE '%$word%' OR
+										song.year LIKE '%$word%' OR song.file LIKE '%$word%' OR tag2.name LIKE '%$word%') ";
+					}
+					
+					$where_sql .= " ) $operator";
+					$table_sql .= " LEFT JOIN `album` as `album2` ON `song`.`album`=`album2`.`id`";
+					$table_sql .= " LEFT JOIN `artist` AS `artist2` ON `song`.`artist`=`artist2`.`id`"; 
+					$table_sql .= " LEFT JOIN `tag_map` ON `song`.`id`=`tag_map`.`object_id` AND `tag_map`.`object_type`='song'"; 
+					$table_sql .= " LEFT JOIN `tag` AS `tag2` ON `tag_map`.`tag_id`=`tag2`.`id`"; 
+				}
+				else {
+					
+					
+					$where_sql = "song.title SOUNDS LIKE '$value' OR album2.name SOUNDS LIKE '$value' OR artist2.name SOUNDS LIKE '$value'";
+					
+					$field_sql = ", abs(strcmp(soundex('$value'), soundex(artist2.name))) + if('$value' = artist2.name, 0, 1) artist_diff";
+					$field_sql.= ", abs(strcmp(soundex('$value'), soundex(album2.name))) + if('$value' = album2.name, 0, 1) album_diff";
+					$field_sql.= ", abs(strcmp(soundex('$value'), soundex(song.title))) + if('$value' = song.title, 0, 1) song_diff";
+					
+					$table_sql .= " LEFT JOIN `album` as `album2` ON `song`.`album`=`album2`.`id`"; 
+					$table_sql .= " LEFT JOIN `artist` AS `artist2` ON `song`.`artist`=`artist2`.`id`";
+					
+					$order_sql = " ORDER BY artist_diff, album_diff, song_diff, artist2.name, album2.name, song.title";
+				}
+			
+			break;
 			case 'title':
 				$where_sql .= " song.title $value_string $operator";
 			break;
@@ -219,7 +240,7 @@ function search_song($data,$operator,$method,$limit) {
 		
 
 	} // foreach data
-
+	
 	/* Trim off the extra $method's and ,'s then combine the sucka! */
 	$where_sql = rtrim($where_sql,$operator);
 	$group_sql = rtrim($group_sql,',');
@@ -227,15 +248,16 @@ function search_song($data,$operator,$method,$limit) {
 
 	if ($group_sql == ' GROUP BY') { $group_sql = ''; } 
 	
-	$base_sql 	= "SELECT DISTINCT(song.id) $select_sql FROM `song`";
+	$base_sql 	= "SELECT DISTINCT(song.id) $field_sql $select_sql FROM `song`";
 
-	$sql = $base_sql . $table_sql . " WHERE (" . $where_sql . ")" . $group_sql . $limit_sql;
+	$sql = $base_sql . $table_sql . " WHERE (" . $where_sql . ")" . $group_sql . $order_sql . $limit_sql;
 	
 	/**
 	 * Because we might need this for Dynamic Playlist Action 
 	 * but we don't trust users to provide this store it in the
 	 * session where they can't get to it!
 	 */
+	
 	$_SESSION['userdata']['stored_search'] = $sql;
 
 	$db_results = Dba::read($sql);
