@@ -240,17 +240,6 @@ function search_song($data,$operator,$method,$limit) {
 
 	$db_results = Dba::read($sql);
 	
-	// This is just a hack to make it work until we're out of trunk and update is run
-	if (mysql_errno(Dba::dbh()) == 1191)
-		{
-		Dba::read('alter table artist add fulltext(name)');
-		Dba::read('alter table album add fulltext(name)');
-		Dba::read('alter table song add fulltext(title)');
-		
-		$db_results = Dba::read($sql);
-		}
-	// end hack
-	
 	$results = array(); 
 	
 	while ($row = Dba::fetch_assoc($db_results)) { 
