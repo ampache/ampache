@@ -119,39 +119,39 @@ function search_song($data,$operator,$method,$limit) {
 		
 		switch ($type) { 
 			case 'all':
-				$where_sql = " match (artist2.name) against ('$value') or artist2.name sounds like '$value' or";
-				$where_sql.= " match (album2.name) against ('$value') or album2.name sounds like '$value' or";
-				$where_sql.= " match (song.title) against ('$value') or song.title sounds like '$value'";
+				$where_sql = " MATCH (`artist2`.`name`) AGAINST ('$value') OR `artist2`.`name` SOUNDS LIKE '$value' OR";
+				$where_sql.= " MATCH (`album2`.`name`) AGAINST ('$value') OR `album2`.`name` SOUNDS LIKE '$value' OR";
+				$where_sql.= " MATCH (`song`.`title`) AGAINST ('$value') OR `song`.`title` SOUNDS LIKE '$value'";
 				
 				$table_sql = " LEFT JOIN `album` as `album2` ON `song`.`album`=`album2`.`id`";
 				$table_sql.= " LEFT JOIN `artist` AS `artist2` ON `song`.`artist`=`artist2`.`id`";
 				
 				$order_sql = " ORDER BY";
-				$order_sql.= " match (artist2.name) against ('$value') + (soundex(artist2.name)=soundex('$value')) desc,";
-				$order_sql.= " match (album2.name) against ('$value') + (soundex(album2.name)=soundex('$value')) desc,";
-				$order_sql.= " match (song.title) against ('$value') + (soundex(song.title)=soundex('$value')) desc,";
-				$order_sql.= " artist2.name,";
-				$order_sql.= " album2.name,";
-				$order_sql.= " song.track,";
-				$order_sql.= " song.title";
+				$order_sql.= " MATCH (`artist2`.`name`) AGAINST ('$value') + (SOUNDEX(`artist2`.`name`)=SOUNDEX('$value')) DESC,";
+				$order_sql.= " MATCH (`album2`.`name`) AGAINST ('$value') + (SOUNDEX(`album2`.`name`)=SOUNDEX('$value')) DESC,";
+				$order_sql.= " MATCH (`song`.`title`) AGAINST ('$value') + (SOUNDEX(`song`.`title`)=SOUNDEX('$value')) DESC,";
+				$order_sql.= " `artist2`.`name`,";
+				$order_sql.= " `album2`.`name`,";
+				$order_sql.= " `song`.`track`,";
+				$order_sql.= " `song`.`title`";
 			break;
 			case 'title':
-				$where_sql .= " song.title $value_string $operator";
+				$where_sql .= " `song`.`title` $value_string $operator";
 			break;
 			case 'album':
-				$where_sql .= " album.name $value_string $operator";
+				$where_sql .= " `album`.`name` $value_string $operator";
 				$table_sql .= " LEFT JOIN `album` ON `song`.`album`=`album`.`id`";
 			break;
 			case 'artist':
-				$where_sql .= " artist.name $value_string $operator";
+				$where_sql .= " `artist`.`name` $value_string $operator";
 				$table_sql .= " LEFT JOIN `artist` ON `song`.`artist`=`artist`.`id` ";
 			break;
 			case 'year':
 				if (empty($data["year2"]) && is_numeric($data["year"])) {
-					$where_sql .= " song.year $value_string $operator";
+					$where_sql .= " `song`.`year` $value_string $operator";
 				}
 				elseif (!empty($data["year"]) && is_numeric($data["year"]) && !empty($data["year2"]) && is_numeric($data["year2"])) {
-					$where_sql .= " (song.year BETWEEN ".$data["year"]." AND ".$data["year2"].") $operator";
+					$where_sql .= " (`song`.`year` BETWEEN ".$data["year"]." AND ".$data["year2"].") $operator";
 				}
 			break;
 			case 'time': 
@@ -163,7 +163,7 @@ function search_song($data,$operator,$method,$limit) {
 				} 
 			break; 
 			case 'filename':
-				$where_sql .= " song.file $value_string $operator";
+				$where_sql .= " `song`.`file` $value_string $operator";
 			break;
 			case 'comment':
 				$table_sql .= ' INNER JOIN `song_data` ON `song`.`id`=`song_data`.`song_id`';
@@ -176,13 +176,13 @@ function search_song($data,$operator,$method,$limit) {
 			break;
 			case 'minbitrate':
 				$value = intval($value);
-				$where_sql .= " song.bitrate >= ('$value'*1000) $operator";
+				$where_sql .= " `song`.`bitrate` >= ('$value'*1000) $operator";
 			break;
 			case 'rating':
 				$value = intval($value);
 
 				// This is a little more complext, pull a list of IDs that have this average rating
-				$rating_sql = "SELECT `object_id`,AVG(`rating`.`rating`) AS avgrating FROM `rating` " . 
+				$rating_sql = "SELECT `object_id`,AVG(`rating`.`rating`) AS `avgrating` FROM `rating` " . 
 						"WHERE `object_type`='song' GROUP BY `object_id`"; 
 				$db_results = Dba::read($rating_sql); 
 
@@ -229,7 +229,7 @@ function search_song($data,$operator,$method,$limit) {
 
 	if ($group_sql == ' GROUP BY') { $group_sql = ''; } 
 	
-	$base_sql 	= "SELECT DISTINCT(song.id) $field_sql $select_sql FROM `song`";
+	$base_sql 	= "SELECT DISTINCT(`song`.`id`) $field_sql $select_sql FROM `song`";
 
 	$sql = $base_sql . $table_sql . " WHERE " . $where_sql . $group_sql . $order_sql . $limit_sql;
 	
