@@ -130,7 +130,10 @@ function search_song($data,$operator,$method,$limit) {
 				$order_sql.= " match (artist2.name) against ('$value') + (soundex(artist2.name)=soundex('$value')) desc,";
 				$order_sql.= " match (album2.name) against ('$value') + (soundex(album2.name)=soundex('$value')) desc,";
 				$order_sql.= " match (song.title) against ('$value') + (soundex(song.title)=soundex('$value')) desc,";
-				$order_sql.= " song.track";
+				$order_sql.= " artist2.name,";
+				$order_sql.= " album2.name,";
+				$order_sql.= " song.track,";
+				$order_sql.= " song.title";
 			break;
 			case 'title':
 				$where_sql .= " song.title $value_string $operator";
