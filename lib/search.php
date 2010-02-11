@@ -119,40 +119,18 @@ function search_song($data,$operator,$method,$limit) {
 		
 		switch ($type) { 
 			case 'all':
-				if (!preg_match('/^[\x{0020}-\x{007E}]+$/', $value)) { // UTF or something
-					$value_words = explode(' ', $value);
-					$where_sql .= " ( ";
-					$ii = 0;
-					
-					foreach($value_words as $word) {
-						if($ii++ > 0)
-							$where_sql .= " AND ";
-						
-						$where_sql .= "(song.title LIKE '%$word%' OR album2.name LIKE '%$word%' OR artist2.name LIKE '%$word%' OR
-										song.year LIKE '%$word%' OR song.file LIKE '%$word%' OR tag2.name LIKE '%$word%') ";
-					}
-					
-					$where_sql .= " ) $operator";
-					$table_sql .= " LEFT JOIN `album` as `album2` ON `song`.`album`=`album2`.`id`";
-					$table_sql .= " LEFT JOIN `artist` AS `artist2` ON `song`.`artist`=`artist2`.`id`"; 
-					$table_sql .= " LEFT JOIN `tag_map` ON `song`.`id`=`tag_map`.`object_id` AND `tag_map`.`object_type`='song'"; 
-					$table_sql .= " LEFT JOIN `tag` AS `tag2` ON `tag_map`.`tag_id`=`tag2`.`id`"; 
-				}
-				else {
-					
-					
-					$where_sql = "song.title SOUNDS LIKE '$value' OR album2.name SOUNDS LIKE '$value' OR artist2.name SOUNDS LIKE '$value'";
-					
-					$field_sql = ", abs(strcmp(soundex('$value'), soundex(artist2.name))) + if('$value' = artist2.name, 0, 1) artist_diff";
-					$field_sql.= ", abs(strcmp(soundex('$value'), soundex(album2.name))) + if('$value' = album2.name, 0, 1) album_diff";
-					$field_sql.= ", abs(strcmp(soundex('$value'), soundex(song.title))) + if('$value' = song.title, 0, 1) song_diff";
-					
-					$table_sql .= " LEFT JOIN `album` as `album2` ON `song`.`album`=`album2`.`id`"; 
-					$table_sql .= " LEFT JOIN `artist` AS `artist2` ON `song`.`artist`=`artist2`.`id`";
-					
-					$order_sql = " ORDER BY artist_diff, album_diff, song_diff, artist2.name, album2.name, song.title";
-				}
-			
+				$where_sql = " match (artist2.name) against ('$value') or artist2.name sounds like '$value' or";
+				$where_sql.= " match (album2.name) against ('$value') or album2.name sounds like '$value' or";
+				$where_sql.= " match (song.title) against ('$value') or song.title sounds like '$value'";
+				
+				$table_sql = " LEFT JOIN `album` as `album2` ON `song`.`album`=`album2`.`id`";
+				$table_sql.= " LEFT JOIN `artist` AS `artist2` ON `song`.`artist`=`artist2`.`id`";
+				
+				$order_sql = " ORDER BY";
+				$order_sql.= " match (artist2.name) against ('$value') + (soundex(artist2.name)=soundex('$value')) desc,";
+				$order_sql.= " match (album2.name) against ('$value') + (soundex(album2.name)=soundex('$value')) desc,";
+				$order_sql.= " match (song.title) against ('$value') + (soundex(song.title)=soundex('$value')) desc,";
+				$order_sql.= " song.track";
 			break;
 			case 'title':
 				$where_sql .= " song.title $value_string $operator";
@@ -250,8 +228,8 @@ function search_song($data,$operator,$method,$limit) {
 	
 	$base_sql 	= "SELECT DISTINCT(song.id) $field_sql $select_sql FROM `song`";
 
-	$sql = $base_sql . $table_sql . " WHERE (" . $where_sql . ")" . $group_sql . $order_sql . $limit_sql;
-	
+	$sql = $base_sql . $table_sql . " WHERE " . $where_sql . $group_sql . $order_sql . $limit_sql;
+	die($sql);
 	/**
 	 * Because we might need this for Dynamic Playlist Action 
 	 * but we don't trust users to provide this store it in the
@@ -261,7 +239,18 @@ function search_song($data,$operator,$method,$limit) {
 	$_SESSION['userdata']['stored_search'] = $sql;
 
 	$db_results = Dba::read($sql);
-
+	
+	// This is just a hack to make it work until we're out of trunk and update is run
+	if (mysql_errno(Dba::dbh()) == 1191)
+		{
+		Dba::read('alter table artist add fulltext(name)');
+		Dba::read('alter table album add fulltext(name)');
+		Dba::read('alter table song add fulltext(title)');
+		
+		$db_results = Dba::read($sql);
+		}
+	// end hack
+	
 	$results = array(); 
 	
 	while ($row = Dba::fetch_assoc($db_results)) { 
