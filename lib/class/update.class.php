@@ -1829,6 +1829,16 @@ class Update {
 		$sql = "ALTER TABLE `live_stream` CHANGE `url` `url` VARCHAR ( 4096 )"; 
 		$db_results = Dba::write($sql); 
 		
+		// Index the Artist, Album, and Song tables to prepare for Fulltext searches.
+		$sql = "ALTER TABLE `artist` ADD FULLTEXT(`name`)";
+		$db_results = Dba::write($sql);
+		
+		$sql = "ALTER TABLE `album` ADD FULLTEXT(`name`)";
+		$db_results = Dba::write($sql);
+		
+		$sql = "ALTER TABLE `song` ADD FULLTEXT(`title`)";
+		$db_results = Dba::write($sql);
+		
 		// Now add in the min_object_count preference and the random_method
 		$sql = "INSERT INTO `preferences` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
 			"VALUES('bandwidth','1','Bandwidth','100','integer','interface')";

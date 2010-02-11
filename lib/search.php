@@ -229,7 +229,7 @@ function search_song($data,$operator,$method,$limit) {
 	$base_sql 	= "SELECT DISTINCT(song.id) $field_sql $select_sql FROM `song`";
 
 	$sql = $base_sql . $table_sql . " WHERE " . $where_sql . $group_sql . $order_sql . $limit_sql;
-	die($sql);
+	
 	/**
 	 * Because we might need this for Dynamic Playlist Action 
 	 * but we don't trust users to provide this store it in the
