@@ -336,6 +336,9 @@ class Album extends database_object {
 					case 'get_lastfm_art':
 						$data = $this->{$method_name}($limit,$options); 
 					break;
+					case 'get_google_art': 
+						$data = $this->{$method_name}($limit);  
+					break; 
 					default:
 						$data = $this->{$method_name}($limit); 
 					break; 
@@ -412,6 +415,34 @@ class Album extends database_object {
 		return $data; 
 
 	} // get_lastfm_art
+
+	/**
+	 * get_google_art
+	 * This retrieves art by searching google image search
+	 */
+	public function get_google_art($limit='') {
+		$images = array();
+		
+		$search = $this->full_name;
+		
+		if ($this->artist_count == '1')
+			$search = $this->artist_name . ', ' . $search;
+		
+		$search = rawurlencode($search);
+		
+		$html = file_get_contents("http://images.google.com/images?source=hp&q=$search&oq=&um=1&ie=UTF-8&sa=N&tab=wi&start=0&tbo=1");
+		
+		if(preg_match_all("|\ssrc\=\"(http.+?)\"|", $html, $matches, PREG_PATTERN_ORDER))
+			foreach ($matches[1] as $match) {
+				$extension = "image/jpeg";
+				
+				if (strrpos($extension, '.') !== false) $extension = substr($extension, strrpos($extension, '.') + 1);
+				
+				$images[] = array('url' => $match, 'mime' => $extension);
+			}
+		
+		return $images;
+	} // get_google_art
 
 	/*!
 		@function get_id3_art
@@ -737,7 +768,7 @@ class Album extends database_object {
 		if (empty($keywords)) { 		
 			$keywords = $this->full_name;
 			/* If this isn't a various album combine with artist name */
-			if ($this->artist_count == '1') { $keywords .= ' ' . $this->artist; }
+			if ($this->artist_count == '1') { $keywords .= ' ' . $this->artist_name; }
 		}
 			
 		/* Create Base Vars */
