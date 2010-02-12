@@ -430,7 +430,11 @@ class Album extends database_object {
 		
 		$search = rawurlencode($search);
 		
-		$html = file_get_contents("http://images.google.com/images?source=hp&q=$search&oq=&um=1&ie=UTF-8&sa=N&tab=wi&start=0&tbo=1");
+		//$size = ''; // Any
+		$size = '&imgsz=m'; // Medium
+		//$size = '&imgsz=l'; // Large
+		
+		$html = file_get_contents("http://images.google.com/images?source=hp&q=$search&oq=&um=1&ie=UTF-8&sa=N&tab=wi&start=0&tbo=1$size");
 		
 		if(preg_match_all("|\ssrc\=\"(http.+?)\"|", $html, $matches, PREG_PATTERN_ORDER))
 			foreach ($matches[1] as $match) {
