@@ -119,17 +119,33 @@ function search_song($data,$operator,$method,$limit) {
 		
 		switch ($type) { 
 			case 'all':
-				$where_sql = " MATCH (`artist2`.`name`) AGAINST ('$value') OR `artist2`.`name` SOUNDS LIKE '$value' OR";
-				$where_sql.= " MATCH (`album2`.`name`) AGAINST ('$value') OR `album2`.`name` SOUNDS LIKE '$value' OR";
-				$where_sql.= " MATCH (`song`.`title`) AGAINST ('$value') OR `song`.`title` SOUNDS LIKE '$value'";
+				$additional_soundex = false;
+				
+				if (!(strpos($value, '-'))) // if we want a fuzzier search
+					$additional_soundex = true;
+				
+				$where_sql = " MATCH (`artist2`.`name`, `album2`.`name`, `song`.`title`) AGAINST ('$value' IN BOOLEAN MODE)";
+				
+				if ($additional_soundex) {
+					$where_sql.= " OR `artist2`.`name` SOUNDS LIKE '$value'";
+					$where_sql.= " OR `album2`.`name` SOUNDS LIKE '$value'";
+					$where_sql.= " OR `song`.`title` SOUNDS LIKE '$value'";
+				}
 				
 				$table_sql = " LEFT JOIN `album` as `album2` ON `song`.`album`=`album2`.`id`";
 				$table_sql.= " LEFT JOIN `artist` AS `artist2` ON `song`.`artist`=`artist2`.`id`";
 				
 				$order_sql = " ORDER BY";
-				$order_sql.= " MATCH (`artist2`.`name`) AGAINST ('$value') + (SOUNDEX(`artist2`.`name`)=SOUNDEX('$value')) DESC,";
-				$order_sql.= " MATCH (`album2`.`name`) AGAINST ('$value') + (SOUNDEX(`album2`.`name`)=SOUNDEX('$value')) DESC,";
-				$order_sql.= " MATCH (`song`.`title`) AGAINST ('$value') + (SOUNDEX(`song`.`title`)=SOUNDEX('$value')) DESC,";
+				
+				$order_sql.= " MATCH (`artist2`.`name`) AGAINST ('$value' IN BOOLEAN MODE)";
+				if ($additional_soundex) $order_sql.= " + (SOUNDEX(`artist2`.`name`)=SOUNDEX('$value')) DESC,"; else $order_sql.= " DESC,";
+				
+				$order_sql.= " MATCH (`album2`.`name`) AGAINST ('$value' IN BOOLEAN MODE)";
+				if ($additional_soundex) $order_sql.= " + (SOUNDEX(`album2`.`name`)=SOUNDEX('$value')) DESC,"; else $order_sql.= " DESC,";
+				
+				$order_sql.= " MATCH (`song`.`title`) AGAINST ('$value' IN BOOLEAN MODE)";
+				if ($additional_soundex) $order_sql.= " + (SOUNDEX(`song`.`title`)=SOUNDEX('$value')) DESC,"; else $order_sql.= " DESC,";
+				
 				$order_sql.= " `artist2`.`name`,";
 				$order_sql.= " `album2`.`name`,";
 				$order_sql.= " `song`.`track`,";
