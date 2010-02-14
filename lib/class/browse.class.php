@@ -92,6 +92,28 @@ class Browse extends Query {
 
 	} // get_supplemental_objects
 
+	/** 
+	 * is_enabled
+	 * This checks if the specified function/feature
+	 * of browsing is enabled, not sure if this is the best
+	 * way to go about it, but hey. Returns boolean t/f
+	 */
+	public static function is_enabled($item) { 
+	
+		switch ($item) { 
+			case 'show_art': 
+				if (Browse::get_filter('show_art')) { 
+					return true; 
+				} 
+				if (Config::get('bandwidth') > 25) { 
+					return true; 
+				} 
+			break; 
+		} // end switch
+
+		return false; 
+
+	} // is_enabled
 
 	/**
 	 * show_objects
@@ -235,8 +257,11 @@ class Browse extends Query {
 
 	} // _auto_init
 	
-	public static function set_filter_from_request($r)
-	{
+	/**
+ 	 * set_filter_from_request
+	 * //FIXME
+	 */ 
+	public static function set_filter_from_request($r) { 
 	  foreach ($r as $k=>$v) {
 	    //reinterpret v as a list of int
 	    $vl = explode(',', $v);
@@ -253,6 +278,6 @@ class Browse extends Query {
 	      else
 	        self::set_filter($k, $vl);
 	  }
-	}
+	} // set_filter_from_request
 
 } // browse

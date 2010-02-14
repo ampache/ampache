@@ -1840,9 +1840,13 @@ class Update {
 		$db_results = Dba::write($sql);
 		
 		// Now add in the min_object_count preference and the random_method
-		$sql = "INSERT INTO `preferences` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
-			"VALUES('bandwidth','1','Bandwidth','100','integer','interface')";
+		$sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
+			"VALUES ('bandwidth','50','Bandwidth','5','integer','interface')";
 		$db_results = Dba::write($sql);
+
+		$sql = "INSERT INTO `preference` (`name`,`value`,`descriptoin`,`level`,`type`,`catagory`) " . 
+			"VALUES ('features','50','Features','5','integer','interface')"; 
+		$db_results = Dba::write($sql); 
 		
 		/* Fix every users preferences */
 		$sql = "SELECT `id` FROM `user`";

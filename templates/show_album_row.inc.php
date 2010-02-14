@@ -24,16 +24,12 @@
 	<?php echo Ajax::button('?action=basket&type=album_random&id=' . $album->id,'random',_('Random'),'random_album_' . $album->id); ?>
 </td>
 <?php
-  if (Config::get('bandwidth') > BANDWIDTH_LOW) {
-  $name = '[' . $album->f_artist . '] ' . scrub_out($album->full_name);
-  
-  // This should not be hard coded, but it will likely break all the themes. 
-  //$image_size = Config::get('bandwidth') == BANDWIDTH_MEDIUM ? 75 : 128;
-  $image_size = 75;
+if (Browse::is_enabled('show_art')) { 
+	$name = '[' . $album->f_artist . '] ' . scrub_out($album->full_name);
 ?>
 <td class="cel_cover">
         <a href="<?php echo Config::get('web_path'); ?>/albums.php?action=show&amp;album=<?php echo $album->id; ?>">
-                <img height="<?php echo $image_size; ?>" width="<?php echo $image_size; ?>" alt="<?php echo($name) ?>" title="<?php echo($name) ?>" src="<?php echo Config::get('web_path'); ?>/image.php?id=<?php echo $album->id; ?>&amp;thumb=<?php echo Config::get('bandwidth'); ?>" />
+	<img height="75" width="75" alt="<?php echo($name) ?>" title="<?php echo($name) ?>" src="<?php echo Config::get('web_path'); ?>/image.php?id=<?php echo $album->id; ?>&amp;thumb=1" />
         </a>
 </td>
 <?php } ?>
@@ -44,9 +40,11 @@
 <td class="cel_tags"><?php echo $album->f_tags; ?></td>
 <td class="cel_rating" id="rating_<?php echo $album->id; ?>_album"><?php Rating::show($album->id,'album'); ?></td>
 <td class="cel_action">
+	<?php if (Config::get('sociable')) { 
 	<a href="<?php echo Config::get('web_path'); ?>/shout.php?action=show_add_shout&amp;type=album&amp;id=<?php echo $album->id; ?>">
 		<?php echo get_user_icon('comment',_('Post Shout')); ?>
 	</a>
+	<?php } ?>
 	<?php if (Access::check_function('batch_download')) { ?>
 		<a href="<?php echo Config::get('web_path'); ?>/batch.php?action=album&amp;id=<?php echo $album->id; ?>">
 			<?php echo get_user_icon('batch_download',_('Batch Download')); ?>

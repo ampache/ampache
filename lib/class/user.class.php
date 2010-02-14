@@ -197,7 +197,8 @@ class User extends database_object {
 
 		$sql = "SELECT preference.name, preference.description, preference.catagory, preference.level, user_preference.value " .
 			"FROM preference INNER JOIN user_preference ON user_preference.preference=preference.id " .
-			"WHERE user_preference.user='$user_id' " . $user_limit . " ORDER BY preference.catagory, preference.description";
+			"WHERE user_preference.user='$user_id' " . $user_limit . 
+			" ORDER BY preference.catagory, preference.description";
 		
 		$db_results = Dba::read($sql);
 
@@ -207,7 +208,6 @@ class User extends database_object {
 			$admin = false;
 			if ($type == 'system') { $admin = true; }
 			$type_array[$type][$r['name']] = array('name'=>$r['name'],'level'=>$r['level'],'description'=>$r['description'],'value'=>$r['value']);
-			//ksort($type_array[$type]); // sorted this via sql and added sub-category sorting - Vlet
 			$results[$type] = array ('title'=>ucwords($type),'admin'=>$admin,'prefs'=>$type_array[$type]);
 		} // end while
 

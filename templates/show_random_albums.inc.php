@@ -29,15 +29,11 @@ $button = Ajax::button('?page=index&action=random_albums','random',_('Refresh'),
 			$album = new Album($album_id); 
 			$album->format(); 
 			$name = '[' . $album->f_artist . '] ' . scrub_out($album->full_name);
-			
-			// This should not be hard coded, but it will likely break all the themes. 
-			//$image_size = Config::get('bandwidth') == BANDWIDTH_MEDIUM ? 75 : 128;
-			$image_size = 75;
         ?>
         <div class="random_album">
                 <a href="<?php echo $web_path; ?>/albums.php?action=show&amp;album=<?php echo $album_id; ?>">
-                <?php if (Config::get('bandwidth') > BANDWIDTH_LOW) { ?>
-                <img src="<?php echo $web_path; ?>/image.php?thumb=3&amp;id=<?php echo $album_id; ?>&amp;thumb=<?php echo 1; /* This should be dynamic, but until themes are fixed to be more fluid in regards to images, make it static. */ /* Config::get('bandwidth'); */ ?>" width="<?php echo $image_size; ?>" height="<?php echo $image_size; ?>" alt="<?php echo $name; ?>" title="<?php echo $name; ?>" />
+                <?php if (Browse::is_enabled('show_art')) { ?>
+                <img src="<?php echo $web_path; ?>/image.php?thumb=3&amp;id=<?php echo $album_id; ?>" width="80" height="80" alt="<?php echo $name; ?>" title="<?php echo $name; ?>" />
                 <?php } else { ?>
                 <?php echo '[' . $album->f_artist . '] ' . $album->f_name; ?>
                 <?php } ?>

@@ -237,11 +237,12 @@ default_auth_level = "admin"
 ; DEFAULT: true
 ratings = "true"
 
-; Index features
-; Vollmer will probably write better stuff here than I will -Vlet
-; POSSIBLE VALUES: shout, played, added, now, random
-; DEFAULT: hmm
-features = "shout, played, added, now, random"
+; Sociable
+; This turns on / off all of the "social" features of ampache
+; default is on, but if you don't care and just want music
+; turn this off to disable all social features. 
+; DEFAULT: true
+sociable = "true"
 
 ; This options will turn on/off Demo Mode
 ; If Demo mode is on you can not play songs or update your catalog
@@ -288,13 +289,6 @@ features = "shout, played, added, now, random"
 ; POSSIBLE VALUES: db id3 folder amazon lastfm musicbrainz google
 ; DEFAULT: db,id3,folder,lastfm,google
 album_art_order = "db,id3,folder,lastfm,google"
-
-; Album Art 
-; Set this to true if you want album art displayed on pages besides the
-; Single Album view, if you have a slow machine, or limited bandwidth
-; turning this off can vastly improve performance
-; DEFAULT: true
-show_album_art = "true"
 
 ; Amazon Developer Key
 ; These are needed in order to actually use the amazon album art

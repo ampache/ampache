@@ -226,7 +226,8 @@ class Preference {
 		
 		$sql = "SELECT `preference`.`name`,`preference`.`description`,`user_preference`.`value` FROM `preference` " . 
 			" INNER JOIN `user_preference` ON `user_preference`.`preference`=`preference`.`id` " . 
-			" WHERE `user_preference`.`user`='$user_id' AND `preference`.`catagory` != 'internal' $user_limit order by `preference`.`description`"; 
+			" WHERE `user_preference`.`user`='$user_id' AND `preference`.`catagory` != 'internal' $user_limit " . 
+			" ORDER BY `preference`.`description`"; 
 		$db_results = Dba::read($sql); 
 
 		$results = array(); 

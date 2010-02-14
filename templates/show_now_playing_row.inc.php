@@ -23,11 +23,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 $title = scrub_out(truncate_with_ellipsis($media->title));
 $album = scrub_out(truncate_with_ellipsis($media->f_album_full));
 $artist = scrub_out(truncate_with_ellipsis($media->f_artist_full));
-
-// This should not be hard coded, but it will likely break all the themes. 
-//$image_size = Config::get('bandwidth') == BANDWIDTH_MEDIUM ? 75 : 128;
-$image_size = 75;
-
 ?>
 <div class="np_group">
   <div class="np_cell cel_username">
@@ -77,11 +72,11 @@ $image_size = 75;
   </div>
 </div>
 
-<?php if (Config::get('bandwidth') > BANDWIDTH_LOW) { ?>
+<?php if (Browse::is_enabled('show_art')) { ?>
 <div class="np_group">
   <div class="np_cell cel_albumart">
-      <a target="_blank" href="<?php echo $web_path; ?>/image.php?id=<?php echo $media->album; ?>&amp;type=popup&amp;sid=<?php echo session_id(); ?>" onclick="popup_art('<?php echo $web_path; ?>/image.php?id=<?php echo $media->album; ?>&amp;type=popup&amp;sid=<?php echo session_id(); ?>'); return false;">
-        <img align="middle" src="<?php echo $web_path; ?>/image.php?id=<?php echo $media->album; ?>&amp;thumb=<?php echo 1; /* This should be dynamic, but until themes are fixed to be more fluid in regards to images, make it static. */ /* Config::get('bandwidth'); */ ?>&amp;sid=<?php echo session_id(); ?>" alt="<?php echo scrub_out($media->f_album_full); ?>" title="<?php echo scrub_out($media->f_album_full); ?>" height="<?php echo $image_size; ?>" width="<?php echo $image_size; ?>" />
+      <a target="_blank" href="<?php echo $web_path; ?>/image.php?id=<?php echo $media->album; ?>&amp;type=popup" onclick="popup_art('<?php echo $web_path; ?>/image.php?id=<?php echo $media->album; ?>&amp;type=popup'); return false;">
+        <img align="middle" src="<?php echo $web_path; ?>/image.php?id=<?php echo $media->album; ?>&amp;thumb=1&amp;sid=<?php echo session_id(); ?>" alt="<?php echo scrub_out($media->f_album_full); ?>" title="<?php echo scrub_out($media->f_album_full); ?>" height="75" width="75" />
       </a>
   </div>
 </div>

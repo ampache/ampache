@@ -60,6 +60,10 @@ if (Config::get('ratings')) {
 	<a href="<?php echo $web_path; ?>/batch.php?action=artist&id=<?php echo $artist->id; ?>"><?php echo _('Download'); ?></a>
 </li>
 <?php } ?>
+<li>
+        <input type="checkbox" id="show_artist_artCB" <?php echo $string = Browse::get_filter('show_art') ? 'checked="checked"' : ''; ?>/> <?php echo _('Show Art'); ?>
+        <?php echo Ajax::observe('show_artist_artCB','click',Ajax::action('?page=browse&action=browse&key=show_art&value=1&type=album','')); ?>
+</ul>
 </div>
 <?php show_box_bottom(); ?>
 <?php
