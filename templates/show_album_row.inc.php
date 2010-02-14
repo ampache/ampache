@@ -40,7 +40,7 @@ if (Browse::is_enabled('show_art')) {
 <td class="cel_tags"><?php echo $album->f_tags; ?></td>
 <td class="cel_rating" id="rating_<?php echo $album->id; ?>_album"><?php Rating::show($album->id,'album'); ?></td>
 <td class="cel_action">
-	<?php if (Config::get('sociable')) { 
+	<?php if (Config::get('sociable')) { ?>
 	<a href="<?php echo Config::get('web_path'); ?>/shout.php?action=show_add_shout&amp;type=album&amp;id=<?php echo $album->id; ?>">
 		<?php echo get_user_icon('comment',_('Post Shout')); ?>
 	</a>

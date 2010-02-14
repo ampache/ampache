@@ -728,9 +728,9 @@ class Stream {
 	 */
 	public static function insert_now_playing($oid,$uid,$length,$sid,$type) {
 
-	        $time = time()+$length;
+	        $time = intval(time()+$length);
 	        $session_id = Dba::escape($sid);
-		$object_type = 'song'; 
+		$object_type = Dba::escape(strtolower($type));  
 
 	        // Do a replace into ensuring that this client always only has a single row
 	        $sql = "REPLACE INTO `now_playing` (`id`,`object_id`,`object_type`, `user`, `expire`)" .

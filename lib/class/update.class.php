@@ -328,6 +328,14 @@ class Update {
 
 		$version[] = array('version'=>'360001','description'=>$update_string);
 
+		$update_string = '- Add Bandwidth and Feature preferences to simplify how interface is presented<br />' . 
+				'- Change Tables to FULLTEXT() for improved searching<br />' . 
+				'- Increase Filename lengths to 4096<br />' . 
+				'- Remove useless "KEY" reference from ACL and Catalog tables<br />' . 
+				'- Add new Remote User / Remote Password fields to Catalog<br />'; 
+
+		$version[] = array('version'=>'360002','description'=>$update_string); 
+
 
 		return $version;
 
@@ -1857,6 +1865,8 @@ class Update {
 		while ($r = Dba::fetch_assoc($db_results)) {
 				User::fix_preferences($r['id']);
 		} // while results
+	
+		self::set_version('db_version','360002');
 
 	} // update_360002
 

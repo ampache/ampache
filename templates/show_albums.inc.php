@@ -25,7 +25,7 @@ $ajax_url = Config::get('ajax_url');
 <table class="tabledata" cellpadding="0" cellspacing="0">
 <colgroup>
   <col id="col_add" />
-<?php if (Browse::is_enabled('show_art') { ?>
+<?php if (Browse::is_enabled('show_art')) { ?>
   <col id="col_cover" />
 <?php } ?>
   <col id="col_album" />
@@ -38,7 +38,7 @@ $ajax_url = Config::get('ajax_url');
 </colgroup>
 <tr class="th-top">
 	<th class="cel_add"><?php echo _('Add'); ?></th>
-	<?php if (Browse::is_enabled('show_art') { ?>
+	<?php if (Browse::is_enabled('show_art')) { ?>
 	<th class="cel_cover"><?php echo _('Cover'); ?></th>
 	<?php } ?>
 	<th class="cel_album"><?php echo Ajax::text('?page=browse&action=set_sort&type=album&sort=name',_('Album'),'album_sort_name'); ?></th>
@@ -69,7 +69,7 @@ $ajax_url = Config::get('ajax_url');
 <?php } ?>
 <tr class="th-bottom">
 	<th class="cel_add"><?php echo _('Add'); ?></th>
-	<?php if (Browse::is_enabled('show_art') { ?>
+	<?php if (Browse::is_enabled('show_art')) { ?>
 	<th class="cel_cover"><?php echo _('Cover'); ?></th>
 	<?php } ?>
 	<th class="cel_album"><?php echo Ajax::text('?page=browse&action=set_sort&type=album&sort=name',_('Album'),'album_sort_name_bottom'); ?></th>
