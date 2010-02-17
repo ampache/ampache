@@ -1852,7 +1852,7 @@ class Update {
 			"VALUES ('bandwidth','50','Bandwidth','5','integer','interface')";
 		$db_results = Dba::write($sql);
 
-		$sql = "INSERT INTO `preference` (`name`,`value`,`descriptoin`,`level`,`type`,`catagory`) " . 
+		$sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " . 
 			"VALUES ('features','50','Features','5','integer','interface')"; 
 		$db_results = Dba::write($sql); 
 		
