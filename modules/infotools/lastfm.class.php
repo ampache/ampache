@@ -27,7 +27,7 @@ class LastFMSearch {
 	protected $api_key = "d5df942424c71b754e54ce1832505ae2";
 	public $results=array();  // Array of results
 	private $_parser;   // The XML parser
-	protected $_grabtags = array('coverart','large','medium','small');
+	protected $_grabtags = array('size','coverart','large','medium','small');
 	private $_subTag; // Stupid hack to make things come our right
 	private $_currentTag; // Stupid hack to make things come out right
 	private $_proxy_host; // Proxy host
@@ -137,10 +137,10 @@ class LastFMSearch {
 	 */
 	public function artist_search($artist) { 
 	
-		$url = $this->base_url_v2 . '/?method=artist.getImages&artist=' . urlencode($artist) . '&limit=10';	
+		$url = $this->base_url_v2 . '?method=artist.getImages&artist=' . urlencode($artist) . '&limit=10';	
 		
 		//FIXME: This should be done by run_search
-		$url .= '&api=' . urlencode($this->api_key); 
+		$url .= '&api_key=' . urlencode($this->api_key); 
 
 		debug_event('LastFM','Album Search: ' . $url,'3');
 
@@ -156,11 +156,19 @@ class LastFMSearch {
 	 */
 	public function start_element($parser, $tag, $attributes) { 
 
-		if ($tag == 'coverart') { 
+		if ($tag == 'coverart' OR $tag == 'sizes') { 
 			$this->_currentTag = $tag;
 		}
 		if ($tag == 'small' || $tag == 'medium' || $tag == 'large') {
 			$this->_subTag = $tag;
+		} 
+		if ($tag == 'size' AND $attributes['name'] == 'original') { 
+			if (!isset($this->results[$this->_currentTag][$tag])) { 
+				$this->_subTag = $tag; 
+			} 
+		} 
+		elseif ($tag == 'size') { 
+			unset($this->_subTag); 
 		} 
 
 	} // start_element
@@ -170,7 +178,6 @@ class LastFMSearch {
 	 * This is called for the content of an XML tag
 	 */
 	public function cdata($parser, $cdata) {
-
 		if (!$this->_currentTag || !$this->_subTag || !trim($cdata)) { return false; } 
 
 		$tag 	= $this->_currentTag;
@@ -187,6 +194,7 @@ class LastFMSearch {
 	public function end_element($parser, $tag) {
 	
 		if ($tag == 'coverart') { $this->_currentTag = ''; } 
+		if ($tag == 'sizes') { $this->_currentTag = ''; } 
 	
 	} // end_element
 
