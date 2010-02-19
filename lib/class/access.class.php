@@ -119,11 +119,10 @@ class Access {
 		$end	= Dba::escape(inet_pton($data['end'])); 
 		$level	= Dba::escape($data['level']);
 		$user	= $data['user'] ? Dba::escape($data['user']) : '-1'; 
-		$key	= Dba::escape($data['key']);
 		$enabled = make_bool($data['enabled']); 
 		
 		$sql = "UPDATE `access_list` " . 
-			"SET `start`='$start', `end`='$end', `level`='$level', `user`='$user', `key`='$key', " . 
+			"SET `start`='$start', `end`='$end', `level`='$level', `user`='$user', " . 
 			"`name`='$name', `type`='$type',`enabled`='$enabled' WHERE `id`='" . Dba::escape($this->id) . "'";
 		$db_results = Dba::write($sql);
 
@@ -166,14 +165,13 @@ class Access {
 		$start 	= Dba::escape($start); 
 		$end 	= Dba::escape($end);
 		$name	= Dba::escape($data['name']);
-		$key	= Dba::escape($data['key']);
 		$user	= $data['user'] ? Dba::escape($data['user']) : '-1'; 
 		$level	= intval($data['level']);
 		$type	= self::validate_type($data['type']);
 		$enabled = make_bool($data['enabled']); 
 
-		$sql = "INSERT INTO `access_list` (`name`,`level`,`start`,`end`,`key`,`user`,`type`,`enabled`) " . 
-			"VALUES ('$name','$level','$start','$end','$key','$user','$type','$enabled')";
+		$sql = "INSERT INTO `access_list` (`name`,`level`,`start`,`end`,`user`,`type`,`enabled`) " . 
+			"VALUES ('$name','$level','$start','$end','$user','$type','$enabled')";
 		$db_results = Dba::write($sql);
 
 		return true;
