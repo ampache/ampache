@@ -33,7 +33,6 @@ class Access {
 	public $level;
 	public $user;
 	public $type;
-	public $key;
 	public $enabled;
 
 	/**
@@ -245,7 +244,7 @@ class Access {
 	 * and then returns true or false if they have access to this
 	 * the IP is passed as a dotted quad
 	 */
-	public static function check_network($type,$user,$level,$ip='',$key='') { 
+	public static function check_network($type,$user,$level,$ip='') { 
 
 		if (!Config::get('access_control')) { 
 			switch ($type) { 
@@ -261,7 +260,6 @@ class Access {
 		// Clean incomming variables
 		$ip 	= $ip ? Dba::escape(inet_pton($ip)) : Dba::escape(inet_pton($_SERVER['REMOTE_ADDR'])); 
 		$user 	= Dba::escape($user);
-		$key 	= Dba::escape($key);
 		$level	= Dba::escape($level);
 
 		switch ($type) { 
@@ -277,7 +275,7 @@ class Access {
 			case 'xml-rpc':
 				$sql = "SELECT `id` FROM `access_list`" . 
 					" WHERE `start` <= '$ip' AND `end` >= '$ip'" . 
-					" AND  `key` = '$key' AND `level` >= '$level' AND `type`='rpc'";
+					" AND `level` >= '$level' AND `type`='rpc'";
 			break;
 			case 'init-api':
 				$type = 'rpc';

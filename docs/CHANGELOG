@@ -4,6 +4,8 @@
 
 --------------------------------------------------------------------------
   v.3.6-Alpha1
+	- Change Update frequency of catalog display to 1 second rather then
+		%10 reduces cpu load due to javascript excution (Thx Dmole)
 	- Add bmp to the list of allowed / supported album art types
 	- Strip extranious whitespace from cmdline catalog update (Thx ascheel)
         - Fix catalog size math for catalogs up to 4TB (Thx Joost.t.Hart@planet.nl) 

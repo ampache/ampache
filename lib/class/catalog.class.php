@@ -380,8 +380,6 @@ class Catalog extends database_object {
 	 */
 	public static function count_tags($catalog_id=0) { 
 
-//		$catalog_search = $catalog_id ? "WHERE `catalog`='" . Dba::escape($catalog_id) . "'" : ''; 
-
 		$sql = "SELECT COUNT(`id`) FROM `tag`"; 
 		$db_results = Dba::read($sql); 
 
@@ -496,6 +494,9 @@ class Catalog extends database_object {
 		// Ensure that we've got our cache
 		$this->_create_filecache();
 
+		// Set the base "ticker" we will only update ever 5+ seconds
+		$ticker = time(); 
+
 		/* Recurse through this dir and create the files array */
 		while ( false !== ( $file = readdir($handle) ) ) {
 
@@ -598,15 +599,15 @@ class Catalog extends database_object {
 					if ($is_audio_file) { $this->insert_local_song($full_file,$file_size); }
 					else { $this->insert_local_video($full_file,$file_size); } 
 
-					/* Stupid little cutesie thing */
-					$this->count++;
-					if ( !($this->count%10)) {
+					$this->count++; 
+					if ( (time() > $ticker+1)) {
 						$file = str_replace(array('(',')','\''),'',$full_file);
 						echo "<script type=\"text/javascript\">\n";
 						echo "update_txt('" . $this->count ."','add_count_" . $this->id . "');";
 						echo "update_txt('" . addslashes(htmlentities($file)) . "','add_dir_" . $this->id . "');";
 						echo "\n</script>\n";
 						flush();
+						$ticker = time(); 
 					} // update our current state
 
 				} // if it's not an m3u
@@ -683,6 +684,9 @@ class Catalog extends database_object {
 			$albums = array_keys(self::$_art_albums);
 		}
 
+		// Start the ticker
+		$ticker = time(); 
+
 		// Run through them an get the art!
 		foreach ($albums as $album_id) {
 
@@ -717,12 +721,13 @@ class Catalog extends database_object {
 
 			/* Stupid little cutesie thing */
 			$search_count++;
-			if ( !($search_count%5)) {
+			if ( time() > $ticker+1) {
 				echo "<script type=\"text/javascript\">\n";
 				echo "update_txt('" . $search_count ."','count_art_" . $this->id . "');";
 				echo "update_txt('" . addslashes($album->name) . "','read_art_" . $this->id . "');";
 				echo "\n</script>\n";
 				flush();
+				$ticker = time(); 
 			} //echos song count
 				
 			unset($found);
@@ -1553,18 +1558,21 @@ class Catalog extends database_object {
 		// Set to 0 our starting point
 		$dead_files = 0;
 
+		$ticker = time(); 
+
 		/* Recurse through files, put @ to prevent errors poping up */
 		while ($results = Dba::fetch_assoc($db_results)) {
 
 			/* Stupid little cutesie thing */
 			$count++;
-			if (!($count%10)) {
+			if (time() > $ticker+1) {
 				$file = str_replace(array('(',')','\''),'',$results['file']);
 				echo "<script type=\"text/javascript\">\n";
 				echo "update_txt('" . $count ."','clean_count_" . $this->id . "');";
 				echo "update_txt('" . addslashes(htmlentities($file)) . "','clean_dir_" . $this->id . "');";
 				echo "\n</script>\n";
 				flush();
+				$ticker = time(); 
 			} //echos song count
 			
 			/* Also check the file information */
@@ -1886,6 +1894,8 @@ class Catalog extends database_object {
 		// Caching array for album art, save us some time here
 		$album_art_check_cache = array();
 
+		$ticker = time(); 
+
 		/* Recurse through this catalogs files
 		 * and get the id3 tage information,
 		 * if it's not blank, and different in
@@ -1925,13 +1935,14 @@ class Catalog extends database_object {
 
 				/* Stupid little cutesie thing */
 				$count++;
-				if (!($count%10) ) {
+				if (time() > $ticker+1) {
 					$file = str_replace(array('(',')','\''),'',$media->file);
 					echo "<script type=\"text/javascript\">\n";
 					echo "update_txt('" . $count . "','verify_count_" . $catalog_id . "');";
 					echo "update_txt('" . scrub_out($file) . "','verify_dir_" . $catalog_id . "');";
 					echo "\n</script>\n";
 					flush();
+					$ticker = time(); 
 				} //echos song count
 
 			} // end if file exists
