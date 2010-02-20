@@ -37,21 +37,28 @@ if (count($_SERVER['argv']) > 1) {
 
 		if ($_SERVER['argv'][$x] == "-c") {
 			$catclean = 1;
-		} else if ($_SERVER['argv'][$x] == "-v") {
+		} 
+		elseif ($_SERVER['argv'][$x] == "-v") {
 			$catverify = 1;
-		} else if ($_SERVER['argv'][$x] == "-a") {
+		} 
+		elseif ($_SERVER['argv'][$x] == "-a") {
 			$catadd = 1;
-		} else {
+		}
+		elseif ($_SERVER['argv'][$x] == "-g") { 
+			$artadd = 1; 
+		} 
+		else {
 			if ($where) $where .= " OR ";
 			$where .= "name LIKE '%" . Dba::escape(preg_replace("/[^a-z0-9\. -]/i", "", $_SERVER['argv'][$x])) . "%'";
 		}
 	}
 }
 
-if ($catclean == 0 && $catverify == 0 && $catadd == 0) {	//didn't pass any clean/verify/add arguments
+if ($artadd == 0 && $catclean == 0 && $catverify == 0 && $catadd == 0) {	//didn't pass any clean/verify/add arguments
 	$catclean = 1;						//set them all to on
 	$catverify = 1;
 	$catadd = 1;
+	$artadd = 1; 
 }
 
 if ($where) $where = "($where) AND catalog_type='local'";
@@ -60,7 +67,7 @@ $sql = "SELECT id FROM catalog";
 if ($where) $sql .= " WHERE $where";
 $db_results = Dba::read($sql);
 
-ob_start("ob_html_strip",'4096',true);
+ob_start("ob_html_strip",'1024',true);
 
 while ($row = Dba::fetch_row($db_results)) {
 
@@ -90,6 +97,14 @@ while ($row = Dba::fetch_row($db_results)) {
 		echo "----------------\n\n";
 	}
 
+	if ($artadd == 1) { 
+		// Look for album art
+		echo _('Starting Album Art Search');
+		echo "\n"; 
+		$catalog->get_album_art('',1);
+		echo "----------------\n\n";
+	} 
+
 } // end foreach
 
 function ob_html_strip($string) {
@@ -106,15 +121,17 @@ function ob_html_strip($string) {
 function usage() {
 	echo _("- Catalog Update -");
 	echo "\n";
-	echo _("Usage: catalog_update.inc [CATALOG NAME] [-c|-v|-a]");
+	echo _("Usage: catalog_update.inc [CATALOG NAME] [-c|-v|-a|-g]");
 	echo "\n-c\t";
 	echo _('Clean Catalogs');
 	echo "\n-v\t";
 	echo _('Verify Catalogs');
 	echo "\n-a\t";
 	echo _('Add to Catalogs');
-	echo "\n";
-	echo _("*Default behavior is to do all 3*");
+	echo "\n-g\t";
+	echo _('Gather Art');
+	echo "\n"; 
+	echo _("Default behavior is to do all");
 	echo "\n";
 }
 
