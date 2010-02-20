@@ -461,6 +461,9 @@ class Catalog extends database_object {
 	 */
 	public function add_files($path,$options) {
 
+		// Profile the memory a bit
+		debug_event('Memory',memory_get_usage(true)/1024/1024 . "MB",1); 
+
 		// See if we want a non-root path for the add
 		if (isset($options['subdirectory'])) { 
 			$path = $options['subdirectory']; 
@@ -494,6 +497,8 @@ class Catalog extends database_object {
 		// Ensure that we've got our cache
 		$this->_create_filecache();
 
+		debug_event('Memory',memory_get_usage(true)/1024/1024 . "MB",1); 
+
 		// Set the base "ticker" we will only update ever 5+ seconds
 		$ticker = time(); 
 
@@ -504,6 +509,7 @@ class Catalog extends database_object {
 			if (substr($file,0,1) == '.') { continue; }
 
 			debug_event('read',"Starting work on $file inside $path",'5','ampache-catalog');
+			debug_event('Memory',memory_get_usage(true)/1024/1024 . "MB",1); 
 
 			/* Create the new path */
 			$full_file = $path.$slash_type.$file;

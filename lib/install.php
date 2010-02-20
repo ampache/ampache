@@ -111,7 +111,7 @@ function install_check_status($configfile) {
  * this function inserts the database using the username/pass/host provided
  * and reading the .sql file
  */
-function install_insert_db($username,$password,$hostname,$database) {
+function install_insert_db($username,$password,$hostname,$database,$dbuser=false,$dbpass=false) {
 
 	// Make sure that the database name is valid
 	$is_valid = preg_match("/([^\d\w\_\-])/",$database,$matches);
@@ -168,17 +168,18 @@ function install_insert_db($username,$password,$hostname,$database) {
 	} // end if selected and overwrite
 
 	/* Check and see if we should create a user here */
-	if ($_REQUEST['db_user'] == 'create_db_user') {
-		$db_user = scrub_in($_REQUEST['db_username']);
-		$db_pass = scrub_in($_REQUEST['db_password']);
+	if ($_POST['db_user'] == 'create_db_user' || (strlen($dbuser) AND strlen($dbpass))) {
+		
+		$db_user = $_POST['db_username'] ? scrub_in($_POST['db_username']) : $dbuser; 
+		$db_pass = $_POST['db_password'] ? scrub_in($_POST['db_password']) : $dbpass; 
+
+		if (!strlen($db_user) || !strlen($db_pass)) { 
+			Error::add('general','Error: Ampache SQL Username or Password missing'); 
+			return false; 
+		} 
+
 		$sql = "GRANT ALL PRIVILEGES ON " . Dba::escape($database) . ".* TO " .
 			"'" . Dba::escape($db_user) . "'@'" . Dba::escape($hostname) . "' IDENTIFIED BY '" . Dba::escape($db_pass) . "' WITH GRANT OPTION";
-
-		// Check if the password has been set
-		if (!$password) {
-			Error::add('general','Error: Ampache SQL user must have a password');
-			return false;
-		}
 
 		if (!$db_results = @mysql_query($sql, $dbh)) {
 			Error::add('general',"Error: Unable to Insert $db_user with permissions to $database on $hostname " . mysql_error());
@@ -213,7 +214,8 @@ function install_insert_db($username,$password,$hostname,$database) {
 		$db_results = Dba::write($sql);
 	}
 
-	if(Config::get('lang') != 'en_US') {
+	// If they've picked something other then English update default preferences
+	if (Config::get('lang') != 'en_US') {
 		$sql = "UPDATE `preference` SET `value`='" . Config::get('lang') . "' WHERE `id`=31";
 		$db_results = Dba::write($sql);
 		$sql = "UPDATE `user_preference` SET `value`='" .Config::get('lang') ."' WHERE `preference`=31";
