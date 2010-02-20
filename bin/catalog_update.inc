@@ -107,6 +107,8 @@ while ($row = Dba::fetch_row($db_results)) {
 
 } // end foreach
 
+ob_end_flush(); 
+
 function ob_html_strip($string) {
 
 	$string = preg_replace("/update_txt\('.+'\);update_txt\('(.+)','.+'\);/","$1",$string);
