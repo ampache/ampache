@@ -29,20 +29,25 @@ switch ($_REQUEST['action']) {
 
 	break;
 	case 'add_tag':
-		Tag::add_tag_map($_REQUEST['type'],$_REQUEST['object_id'],$_REQUEST['tag_id']);
+		Tag::add_tag_map($_GET['type'],$_GET['object_id'],$_GET['tag_id']);
 	break;
 	case 'remove_tag':
-		$tag = new Tag($_REQUEST['tag_id']);
-		$tag->remove_map($_REQUEST['type'],$_REQUEST['object_id']);
+		$tag = new Tag($_GET['tag_id']);
+		$tag->remove_map($_GET['type'],$_GET['object_id']);
 	break;
 	case 'browse_type':
 		Browse::set_type('tag');
-		Browse::set_filter('object_type',$_REQUEST['type']);
+		Browse::set_filter('object_type',$_GET['type']);
 	break;
 	case 'add_filter':
 
 		// Set browse method
-		Browse::set_type('tag');
+		Browse::set_type('song');
+		Browse::set_filter('tag',$_GET['tag_id']); 
+		$object_ids = Browse::get_objects(); 
+		ob_start(); 
+		Browse::show_objects($object_ids); 
+		$results['browse_content'] = ob_get_clean(); 
 
 		// Retrive current objects of type based on combined filters
 	break;

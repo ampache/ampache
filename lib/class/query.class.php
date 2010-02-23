@@ -268,7 +268,7 @@ class Query {
 			break;
 			case 'artist':
 			case 'song':
-				$valid_array = array('add_lt','add_gt','update_lt','update_gt','exact_match','alpha_match','starts_with');
+				$valid_array = array('add_lt','add_gt','update_lt','update_gt','exact_match','alpha_match','starts_with','tag');
 			break;
 			case 'live_stream':
 				$valid_array = array('alpha_match','starts_with');
@@ -280,7 +280,7 @@ class Query {
 				}
 			break;
 			case 'tag':
-				$valid_array = array('object_type','exact_match','alpha_match');
+				$valid_array = array('tag','object_type','exact_match','alpha_match');
 			break;
 			case 'video':
 				$valid_array = array('starts_with','exact_match','alpha_match');
@@ -816,6 +816,15 @@ class Query {
 		switch (self::$type) {
 		case 'song':
 			switch($filter) {
+				case 'tag': 
+					self::set_join('left','`tag_map`','`tag_map`.`object_id`','`song`.`id`');
+					$filter_sql = " `tag_map`.`object_type`='song' AND ("; 
+					
+					foreach ($value as $tag_id) { 
+						$filter_sql .= "  `tag_map`.`tag_id`='" . Dba::escape($tag_id) . "' AND"; 
+					}
+					$filter_sql = rtrim($filter_sql,'AND') . ') AND '; 
+				break; 
 				case 'exact_match':
 					$filter_sql = " `song`.`title` = '" . Dba::escape($value) . "' AND ";
 				break;
@@ -961,6 +970,9 @@ class Query {
                                 case 'exact_match':
                                         $filter_sql = " `tag`.`name` = '" . Dba::escape($value) . "' AND ";
                                 break;
+				case 'tag': 
+					$filter_sql = " `tag`.`id` = '" . Dba::escape($value) . "' AND "; 
+				break; 
                                 default:
                                         // Rien a faire
                                 break;
