@@ -44,10 +44,10 @@ database_username = username
 ; DEFAULT: ""
 database_password = password
 
-; Length that a session will last, the default is very restrictive
-; at 15min
-; DEFAULT: 1800
-session_length = 1800
+; Length that a session will last expressed in seconds. Default is
+; one hour. 
+; DEFAULT: 3600
+session_length = 3600
 
 ; Length that the session for a single streaming instance will last
 ; the default is two hours. With some clients, and long songs this can 
@@ -59,8 +59,8 @@ stream_length = 7200
 ; last, the default is 7200, same as length. It is up to the administrator
 ; of the box to increase this, for reference 86400 = 1 day 
 ; 604800 = 1 week and 2419200 = 1 month
-; DEAFULT: 7200
-remember_length = 7200
+; DEAFULT: 86400
+remember_length = 86400
 
 ; Name of the Session/Cookie that will sent to the browser
 ; default should be fine
@@ -68,10 +68,12 @@ remember_length = 7200
 session_name = ampache
 
 ; Lifetime of the Cookie, 0 == Forever (until browser close) , otherwise in terms of seconds
+; If you want cookies to last past a browser close set this to a value in seconds. 
 ; DEFAULT: 0
 session_cookielife = 0
 
-; Is the cookie a "secure" cookie?
+; Is the cookie a "secure" cookie? This should only be set to 1 (true) if you are
+; running a secure site (HTTPS). 
 ; DEFAULT: 0
 session_cookiesecure       = 0
 
@@ -80,7 +82,7 @@ session_cookiesecure       = 0
 ; to use and in which order, if auto_create isn't enabled
 ; The user must exist locally. Local method uses PHP's PAM Auth module
 ; DEFAULT: mysql
-; VALUES: mysql,ldap,http, local
+; VALUES: mysql,ldap,http,local
 auth_methods = "mysql"
 
 ;#####################

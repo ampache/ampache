@@ -236,8 +236,8 @@ function install_create_config($web_path,$username,$password,$hostname,$database
 
 	$config_file = Config::get('prefix') . '/config/ampache.cfg.php'; 
 
-	// Make sure it's writeable
-	if (!is_writeable($config_file)) { 
+	// Make sure the directory is writeable OR the empty config file is
+	if (!is_writeable(Config::get('prefix') . '/config/') AND !is_writeable($config_file)) { 
 		/* HINT: Config File */
 		Error::add('general',sprintf(_('%s is not writeable'),$config_file)); 
 		return false; 

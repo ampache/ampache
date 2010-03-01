@@ -726,8 +726,12 @@ class User extends database_object {
 		$this->f_useage = round($total,2) . $name;
 
 		/* Get Users Last ip */
-		$data = $this->get_ip_history(1);
-		$this->ip_history = inet_ntop($data['0']['ip']);
+		if (count($data = $this->get_ip_history(1))) {
+			$this->ip_history = inet_ntop($data['0']['ip']);
+		} 
+		else { 
+			$this->ip_history = _('Not Enough Data'); 
+		} 
 
 	} // format_user
 
