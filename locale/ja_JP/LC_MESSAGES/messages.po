@@ -311,7 +311,7 @@ msgstr "ランダム再生"
 #: ../../templates/sidebar_home.inc.php:109
 #: ../../templates/show_manage_democratic.inc.php:34
 msgid "Playlist"
-msgstr "再生リスト"
+msgstr "プレイリスト"
 
 #: ../../lib/ui.lib.php:324 ../../templates/show_search.inc.php:144
 #: ../../templates/show_search_bar.inc.php:29
@@ -1889,7 +1889,7 @@ msgstr "インスタンス表示"
 
 #: ../../templates/sidebar_localplay.inc.php:38
 msgid "Show Playlist"
-msgstr "再生リストの表示"
+msgstr "プレイリストの表示"
 
 #: ../../templates/sidebar_localplay.inc.php:42
 msgid "Active Instance"
@@ -2529,7 +2529,7 @@ msgstr "表示を無効にしました"
 
 #: ../../templates/sidebar_modules.inc.php:43
 msgid "Manage Playlist"
-msgstr "再生リストの管理"
+msgstr "プレイリストの管理"
 
 #: ../../templates/show_install_config.inc.php:54
 #, php-format
