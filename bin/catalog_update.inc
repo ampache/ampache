@@ -86,8 +86,9 @@ ob_start("ob_html_strip",'1024',true);
 while ($row = Dba::fetch_row($db_results)) {
 
 	$catalog = new Catalog($row['0']);
-	echo "Reading: $catalog->name \n";
+	echo "Reading: $catalog->name";
 	ob_flush(); 
+	echo "\n"; 
 	if ($catclean == 1) {
 		// Clean out dead files
 		echo _("- Starting Clean - ");
