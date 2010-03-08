@@ -24,7 +24,6 @@ $path = dirname(__FILE__);
 $prefix = realpath($path . '/../');
 require_once $prefix . '/lib/init.php';
 
-usage();
 
 ob_end_flush();
 
@@ -32,19 +31,27 @@ $catclean = 0;		//All off by default
 $catverify = 0;
 $catadd = 0;
 
-if (count($_SERVER['argv']) > 1) {
+if (count($_SERVER['argv']) == 0) { 
+	$operations_string = "\n\t- All Catalog Operations"; 
+} 
+
+if (count($_SERVER['argv']) > 0) {
 	for ($x = 1; $x < count($_SERVER['argv']); $x++) {
 
 		if ($_SERVER['argv'][$x] == "-c") {
+			$operations_string .= "\n\t- Catalog Clean";
 			$catclean = 1;
 		} 
 		elseif ($_SERVER['argv'][$x] == "-v") {
+			$operations_string .= "\n\t- Catalog Verify";
 			$catverify = 1;
 		} 
 		elseif ($_SERVER['argv'][$x] == "-a") {
+			$operations_string .= "\n\t- Catalog Add";
 			$catadd = 1;
 		}
 		elseif ($_SERVER['argv'][$x] == "-g") { 
+			$operations_string .= "\n\t- Catalog Art Gather";
 			$artadd = 1; 
 		} 
 		else {
@@ -54,12 +61,19 @@ if (count($_SERVER['argv']) > 1) {
 	}
 }
 
+if (count($_SERVER['argv']) != 0 AND $artadd != 1 && $catclean != 1 && $catverify != 1 && $catadd != 1) {
+        usage();
+	exit; 
+}
+
 if ($artadd == 0 && $catclean == 0 && $catverify == 0 && $catadd == 0) {	//didn't pass any clean/verify/add arguments
 	$catclean = 1;						//set them all to on
 	$catverify = 1;
 	$catadd = 1;
 	$artadd = 1; 
 }
+
+echo "Starting Catalog Operations... $operations_string\n"; 
 
 if ($where) $where = "($where) AND catalog_type='local'";
 else $where = "catalog_type='local'";
@@ -73,6 +87,7 @@ while ($row = Dba::fetch_row($db_results)) {
 
 	$catalog = new Catalog($row['0']);
 	echo "Reading: $catalog->name \n";
+	ob_flush(); 
 	if ($catclean == 1) {
 		// Clean out dead files
 		echo _("- Starting Clean - ");
@@ -106,8 +121,8 @@ while ($row = Dba::fetch_row($db_results)) {
 	} 
 
 } // end foreach
-
 ob_end_flush(); 
+echo "\n"; 
 
 function ob_html_strip($string) {
 
@@ -124,6 +139,8 @@ function usage() {
 	echo _("- Catalog Update -");
 	echo "\n";
 	echo _("Usage: catalog_update.inc [CATALOG NAME] [-c|-v|-a|-g]");
+	echo "\n\t"; 
+	echo _("Default behavior is to do all");
 	echo "\n-c\t";
 	echo _('Clean Catalogs');
 	echo "\n-v\t";
@@ -132,8 +149,8 @@ function usage() {
 	echo _('Add to Catalogs');
 	echo "\n-g\t";
 	echo _('Gather Art');
-	echo "\n"; 
-	echo _("Default behavior is to do all");
+	echo "\n";
+	echo "----------------------------------------------------------";
 	echo "\n";
 }
 
