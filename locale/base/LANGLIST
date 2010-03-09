@@ -1,19 +1,20 @@
 Localization Status Report for Ampache.
-Generated: Tue Feb  9 07:07:12 GMT 2010
+Generated: Mon Mar  8 23:54:33 GMT 2010
 
 LANG	Trans	Fuzzy	Untrans	Obsolete
 ar_SA	258	21	632	6 # This is a test language.
-ca_ES	785	63	63	56
-cs_CZ	793	55	63	55
-de_DE	714	134	63	58
-el_GR	594	155	162	164
-en_GB	810	42	59	56
-es_ES	536	205	170	38
-fr_FR	684	167	60	55
-it_IT	269	235	407	50
-ja_JP	911	0	0	0
-nb_NO	765	81	65	57
-nl_NL	773	76	62	498
-pl_PL	793	55	63	56
-ru_RU	806	42	63	55
-sv_SE	793	55	63	56
+ca_ES	784	64	66	58
+cs_CZ	792	56	66	57
+de_DE	713	135	66	60
+el_GR	593	156	165	166
+en_GB	809	43	62	58
+es_ES	535	206	173	40
+fa_IR	438	210	266	46
+fr_FR	683	168	63	57
+it_IT	269	236	409	50
+ja_JP	908	3	3	2
+nb_NO	764	82	68	59
+nl_NL	772	77	65	500
+pl_PL	792	56	66	58
+ru_RU	805	43	66	66
+sv_SE	792	56	66	58

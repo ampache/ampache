@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ampache 3.5.0\n"
 "Report-Msgid-Bugs-To: translations at ampache.org\n"
-"POT-Creation-Date: 2010-02-09 16:06+0900\n"
+"POT-Creation-Date: 2010-03-09 08:54+0900\n"
 "PO-Revision-Date: 2009-03-24 21:54+0100\n"
 "Last-Translator: \n"
 "Language-Team: French <kde-i18n-doc@lists.kde.org>\n"
@@ -87,7 +87,7 @@ msgid "Invalid Object Selected"
 msgstr "Télécharger la sélection"
 
 #: ../../lib/general.lib.php:339 ../../lib/class/flag.class.php:337
-#: ../../lib/class/localplay.class.php:648 ../../lib/class/user.class.php:694
+#: ../../lib/class/localplay.class.php:648 ../../lib/class/user.class.php:695
 #: ../../templates/show_user.inc.php:23 ../../templates/show_users.inc.php:54
 #: ../../modules/localplay/mpd.controller.php:529
 msgid "Unknown"
@@ -155,21 +155,27 @@ msgstr ""
 msgid "Error: Unable to make Database Connection"
 msgstr "Erreur: Impossible de changer de répertoire"
 
-#: ../../lib/install.php:278
+#. HINT: Config File
+#: ../../lib/install.php:242
+#, fuzzy, php-format
+msgid "%s is not writeable"
+msgstr "%s n'est pas lisible par ampache"
+
+#: ../../lib/install.php:294
 msgid "No Username/Password specified"
 msgstr "Aucun nom d'utilisateur/mot de passe spécifié"
 
-#: ../../lib/install.php:283
+#: ../../lib/install.php:299
 msgid "Passwords do not match"
 msgstr "Les mots de passe ne correspondent pas"
 
-#: ../../lib/preferences.php:165 ../../lib/preferences.php:272
+#: ../../lib/preferences.php:165 ../../lib/preferences.php:288
 #: ../../templates/show_flag_row.inc.php:33
 #: ../../templates/show_user_row.inc.php:43
 msgid "Enable"
 msgstr "Activer"
 
-#: ../../lib/preferences.php:166 ../../lib/preferences.php:273
+#: ../../lib/preferences.php:166 ../../lib/preferences.php:289
 #: ../../templates/show_localplay_controllers.inc.php:44
 #: ../../templates/show_duplicates.inc.php:36
 #: ../../templates/show_duplicates.inc.php:75
@@ -288,19 +294,31 @@ msgstr "Ajouter puis Jouer et Vider la liste de lecture"
 msgid "Clear on Send"
 msgstr "Jouer et vider la liste"
 
-#: ../../lib/preferences.php:257 ../../lib/preferences.php:264
+#: ../../lib/preferences.php:257 ../../lib/preferences.php:280
 #: ../../templates/show_manage_democratic.inc.php:38
 msgid "Default"
 msgstr "Défaut"
 
-#: ../../lib/preferences.php:263 ../../lib/class/user.class.php:690
+#: ../../lib/preferences.php:263 ../../lib/preferences.php:271
+msgid "Low"
+msgstr ""
+
+#: ../../lib/preferences.php:264 ../../lib/preferences.php:272
+msgid "Medium"
+msgstr ""
+
+#: ../../lib/preferences.php:265 ../../lib/preferences.php:273
+msgid "High"
+msgstr ""
+
+#: ../../lib/preferences.php:279 ../../lib/class/user.class.php:691
 #: ../../lib/class/catalog.class.php:146 ../../lib/class/catalog.class.php:147
 #: ../../lib/class/catalog.class.php:148 ../../templates/show_user.inc.php:22
 #: ../../templates/show_users.inc.php:53
 msgid "Never"
 msgstr "Jamais"
 
-#: ../../lib/preferences.php:265
+#: ../../lib/preferences.php:281
 msgid "Always"
 msgstr "Toujours"
 
@@ -365,7 +383,7 @@ msgstr "Module de gestion"
 msgid "Browse Music"
 msgstr "Parcourir"
 
-#: ../../lib/ui.lib.php:362 ../../lib/class/browse.class.php:148
+#: ../../lib/ui.lib.php:362 ../../lib/class/browse.class.php:170
 #: ../../templates/show_stats.inc.php:30
 #: ../../templates/show_artists.inc.php:39
 #: ../../templates/show_artists.inc.php:67
@@ -376,7 +394,7 @@ msgstr "Parcourir"
 msgid "Albums"
 msgstr "Albums"
 
-#: ../../lib/ui.lib.php:366 ../../lib/class/browse.class.php:159
+#: ../../lib/ui.lib.php:366 ../../lib/class/browse.class.php:181
 #: ../../lib/class/album.class.php:257 ../../templates/show_stats.inc.php:31
 #: ../../templates/sidebar_home.inc.php:34
 #: ../../templates/show_genre.inc.php:36
@@ -401,8 +419,8 @@ msgstr "Statistiques"
 msgid "Add New"
 msgstr "Ajouter"
 
-#: ../../lib/ui.lib.php:543 ../../lib/class/access.class.php:408
-#: ../../lib/class/access.class.php:428
+#: ../../lib/ui.lib.php:543 ../../lib/class/access.class.php:404
+#: ../../lib/class/access.class.php:424
 #: ../../templates/show_add_access_current.inc.php:40
 #: ../../templates/show_admin_tools.inc.php:51
 #: ../../templates/show_add_access.inc.php:37
@@ -417,17 +435,17 @@ msgstr "Ajouter"
 msgid "All"
 msgstr "Tout"
 
-#: ../../lib/class/access.class.php:102 ../../lib/class/access.class.php:106
-#: ../../lib/class/access.class.php:146 ../../lib/class/access.class.php:150
+#: ../../lib/class/access.class.php:101 ../../lib/class/access.class.php:105
+#: ../../lib/class/access.class.php:144 ../../lib/class/access.class.php:148
 msgid "Invalid IPv4 / IPv6 Address Entered"
 msgstr "Adresse IPv4 ou IPv6 invalides"
 
-#: ../../lib/class/access.class.php:111 ../../lib/class/access.class.php:112
-#: ../../lib/class/access.class.php:155 ../../lib/class/access.class.php:156
+#: ../../lib/class/access.class.php:110 ../../lib/class/access.class.php:111
+#: ../../lib/class/access.class.php:153 ../../lib/class/access.class.php:154
 msgid "IP Address Version Mismatch"
 msgstr "La version de l'adresse IP ne correspond pas"
 
-#: ../../lib/class/access.class.php:411
+#: ../../lib/class/access.class.php:407
 #: ../../templates/show_add_access_current.inc.php:37
 #: ../../templates/show_add_access.inc.php:34
 #: ../../templates/show_edit_access.inc.php:75
@@ -436,7 +454,7 @@ msgstr "La version de l'adresse IP ne correspond pas"
 msgid "View"
 msgstr "Voir"
 
-#: ../../lib/class/access.class.php:414
+#: ../../lib/class/access.class.php:410
 #: ../../templates/show_add_access_current.inc.php:38
 #: ../../templates/show_add_access.inc.php:35
 #: ../../templates/show_edit_access.inc.php:76
@@ -445,7 +463,7 @@ msgstr "Voir"
 msgid "Read"
 msgstr "Lire"
 
-#: ../../lib/class/access.class.php:417
+#: ../../lib/class/access.class.php:413
 #: ../../templates/show_add_access_current.inc.php:39
 #: ../../templates/show_add_access.inc.php:36
 #: ../../templates/show_edit_access.inc.php:77
@@ -454,12 +472,12 @@ msgstr "Lire"
 msgid "Read/Write"
 msgstr "Lire/Ecrire"
 
-#: ../../lib/class/access.class.php:444
+#: ../../lib/class/access.class.php:440
 #, fuzzy
 msgid "API/RPC"
 msgstr "RPC"
 
-#: ../../lib/class/access.class.php:447
+#: ../../lib/class/access.class.php:443
 #: ../../templates/show_add_access.inc.php:53
 #: ../../templates/show_edit_access.inc.php:36
 #: ../../templates/show_add_access_local.inc.php:50
@@ -468,14 +486,14 @@ msgstr "RPC"
 msgid "Local Network Definition"
 msgstr "Définition de réseau local"
 
-#: ../../lib/class/access.class.php:450
+#: ../../lib/class/access.class.php:446
 #: ../../templates/show_add_access.inc.php:52
 #: ../../templates/show_edit_access.inc.php:35
 #: ../../templates/show_add_access_local.inc.php:51
 msgid "Web Interface"
 msgstr "Interface Web"
 
-#: ../../lib/class/access.class.php:454
+#: ../../lib/class/access.class.php:450
 #: ../../templates/show_add_access.inc.php:51
 #: ../../templates/show_edit_access.inc.php:34
 #: ../../templates/show_add_access_rpc.inc.php:51
@@ -559,7 +577,7 @@ msgstr "Réencoder"
 msgid "Other"
 msgstr "Autre"
 
-#: ../../lib/class/browse.class.php:142 ../../templates/show_albums.inc.php:46
+#: ../../lib/class/browse.class.php:164 ../../templates/show_albums.inc.php:46
 #: ../../templates/show_albums.inc.php:77
 #: ../../templates/show_stats.inc.php:32 ../../templates/show_stats.inc.php:68
 #: ../../templates/show_artists.inc.php:38
@@ -572,55 +590,55 @@ msgstr "Autre"
 msgid "Songs"
 msgstr "Morceaux"
 
-#: ../../lib/class/browse.class.php:154
+#: ../../lib/class/browse.class.php:176
 msgid "Manage Users"
 msgstr "Gérer les utilisateurs"
 
-#: ../../lib/class/browse.class.php:166
+#: ../../lib/class/browse.class.php:188
 #: ../../templates/sidebar_home.inc.php:37
 msgid "Radio Stations"
 msgstr "Stations de Radio"
 
-#: ../../lib/class/browse.class.php:172
+#: ../../lib/class/browse.class.php:194
 #: ../../templates/sidebar_home.inc.php:36
 msgid "Playlists"
 msgstr "Listes de lecture"
 
-#: ../../lib/class/browse.class.php:177
+#: ../../lib/class/browse.class.php:199
 msgid "Playlist Songs"
 msgstr "Chansons de la liste de lecture"
 
-#: ../../lib/class/browse.class.php:182
+#: ../../lib/class/browse.class.php:204
 msgid "Current Playlist"
 msgstr "Liste de lecture actuelle"
 
-#: ../../lib/class/browse.class.php:187
+#: ../../lib/class/browse.class.php:209
 #: ../../templates/show_admin_tools.inc.php:26
 #: ../../templates/show_stats.inc.php:25
 #: ../../templates/sidebar_admin.inc.php:24
 msgid "Catalogs"
 msgstr "Catalogues"
 
-#: ../../lib/class/browse.class.php:192
+#: ../../lib/class/browse.class.php:214
 msgid "Shoutbox Records"
 msgstr "Zone de commentaires"
 
-#: ../../lib/class/browse.class.php:197
+#: ../../lib/class/browse.class.php:219
 msgid "Flagged Records"
 msgstr "Pistes Marquées"
 
-#: ../../lib/class/browse.class.php:203
+#: ../../lib/class/browse.class.php:225
 #: ../../templates/sidebar_home.inc.php:35 ../../browse.php:68
 msgid "Tag Cloud"
 msgstr "Nuage d'étiquettes"
 
-#: ../../lib/class/browse.class.php:209
+#: ../../lib/class/browse.class.php:231
 #: ../../templates/sidebar_home.inc.php:38
 #, fuzzy
 msgid "Videos"
 msgstr "Divers"
 
-#: ../../lib/class/browse.class.php:214
+#: ../../lib/class/browse.class.php:236
 #: ../../templates/show_democratic.inc.php:22
 #, fuzzy
 msgid "Democratic Playlist"
@@ -756,19 +774,41 @@ msgstr "Disque"
 msgid "Various"
 msgstr "Divers"
 
-#: ../../lib/class/album.class.php:490 ../../lib/class/catalog.class.php:485
+#: ../../lib/class/album.class.php:525 ../../lib/class/catalog.class.php:486
 msgid "Error: Unable to open"
 msgstr "Erreur: Impossible d'ouvrir"
 
-#: ../../lib/class/user.class.php:398 ../../admin/users.php:55
+#: ../../lib/class/user.class.php:399 ../../admin/users.php:55
 #: ../../admin/users.php:105
 msgid "Error Username Required"
 msgstr "Erreur: Le nom d'utilisateur est obligatoire"
 
-#: ../../lib/class/user.class.php:402 ../../admin/users.php:58
+#: ../../lib/class/user.class.php:403 ../../admin/users.php:58
 #: ../../admin/users.php:101
 msgid "Error Passwords don't match"
 msgstr "Erreur: Les mots de passe ne correspondent pas"
+
+#: ../../lib/class/user.class.php:733 ../../templates/show_albums.inc.php:67
+#: ../../templates/show_tagcloud.inc.php:33
+#: ../../templates/rightbar.inc.php:108
+#: ../../templates/show_user_recommendations.inc.php:32
+#: ../../templates/show_user_recommendations.inc.php:43
+#: ../../templates/show_user_recommendations.inc.php:54
+#: ../../templates/show_recently_played.inc.php:95
+#: ../../templates/show_artists.inc.php:60
+#: ../../templates/show_objects.inc.php:44
+#: ../../templates/show_songs.inc.php:64
+#: ../../templates/show_live_streams.inc.php:53
+#: ../../templates/show_playlists.inc.php:53
+#: ../../templates/show_user_stats.inc.php:34
+#: ../../templates/show_user_stats.inc.php:47
+#: ../../templates/show_user_stats.inc.php:60
+#: ../../templates/show_catalogs.inc.php:52
+#: ../../templates/show_genres.inc.php:68
+#: ../../templates/show_videos.inc.php:56
+#: ../../templates/show_manage_democratic.inc.php:63
+msgid "Not Enough Data"
+msgstr "Pas assez de données"
 
 #: ../../lib/class/ampacherss.class.php:71 ../../templates/header.inc.php:38
 #: ../../templates/show_recently_played.inc.php:25
@@ -842,170 +882,170 @@ msgstr[1] "heures"
 msgid "Running Remote Sync"
 msgstr "Synchronisation distante en cours"
 
-#: ../../lib/class/catalog.class.php:492 ../../lib/class/catalog.class.php:535
+#: ../../lib/class/catalog.class.php:493 ../../lib/class/catalog.class.php:542
 msgid "Error: Unable to change to directory"
 msgstr "Erreur: Impossible de changer de répertoire"
 
 #. HINT: FullFile
-#: ../../lib/class/catalog.class.php:572
+#: ../../lib/class/catalog.class.php:579
 #, fuzzy, php-format
 msgid "Error: Unable to get filesize for %s"
 msgstr "Erreur: Impossible d'obtenir la taille de fichier de %s"
 
 #. HINT: FullFile
-#: ../../lib/class/catalog.class.php:579
+#: ../../lib/class/catalog.class.php:586
 #, fuzzy, php-format
 msgid "%s is not readable by ampache"
 msgstr "%s n'est pas lisible par ampache"
 
 #. HINT: FullFile
-#: ../../lib/class/catalog.class.php:588
+#: ../../lib/class/catalog.class.php:595
 #, fuzzy, php-format
 msgid "%s does not match site charset"
 msgstr "%s ne correspond pas à l'encodage de caratères du site"
 
-#: ../../lib/class/catalog.class.php:1055
-#: ../../lib/class/catalog.class.php:1963 ../../preferences.php:111
+#: ../../lib/class/catalog.class.php:1066
+#: ../../lib/class/catalog.class.php:1980 ../../preferences.php:111
 #: ../../admin/access.php:123
 msgid "Updated"
 msgstr "Mis à jour"
 
-#: ../../lib/class/catalog.class.php:1062
+#: ../../lib/class/catalog.class.php:1073
 msgid "No Update Needed"
 msgstr "Mise à jour non nécessaire"
 
-#: ../../lib/class/catalog.class.php:1196
+#: ../../lib/class/catalog.class.php:1207
 msgid "Running Remote Update"
 msgstr "Mise à jour distante en cours"
 
-#: ../../lib/class/catalog.class.php:1223
+#: ../../lib/class/catalog.class.php:1234
 msgid "Added Playlist From"
 msgstr "Liste de lecture ajoutée à partir de"
 
-#: ../../lib/class/catalog.class.php:1252
+#: ../../lib/class/catalog.class.php:1263
 msgid "Catalog Update Finished"
 msgstr "Mise à jour du catalogue terminée"
 
-#: ../../lib/class/catalog.class.php:1252
+#: ../../lib/class/catalog.class.php:1263
 msgid "Total Time"
 msgstr "Durée totale"
 
-#: ../../lib/class/catalog.class.php:1253
+#: ../../lib/class/catalog.class.php:1264
 msgid "Total Songs"
 msgstr "Total des morceaux"
 
-#: ../../lib/class/catalog.class.php:1253
+#: ../../lib/class/catalog.class.php:1264
 msgid "Songs Per Seconds"
 msgstr "Morceaux par secondes"
 
-#: ../../lib/class/catalog.class.php:1267 ../../lib/class/artist.class.php:354
+#: ../../lib/class/catalog.class.php:1278 ../../lib/class/artist.class.php:354
 #: ../../admin/users.php:143
 msgid "Error"
 msgstr "Erreur"
 
-#: ../../lib/class/catalog.class.php:1267
+#: ../../lib/class/catalog.class.php:1278
 #, fuzzy
 msgid "Unable to load pear XMLRPC library, make sure XML-RPC is enabled"
 msgstr ""
 "Impossible de charger la bibliothèque XMLRPC, assurez-vous que XML-RPC est "
 "actif"
 
-#: ../../lib/class/catalog.class.php:1305
-#: ../../lib/class/catalog.class.php:1379
-#: ../../lib/class/catalog.class.php:1412
-#: ../../lib/class/catalog.class.php:2427
+#: ../../lib/class/catalog.class.php:1316
+#: ../../lib/class/catalog.class.php:1390
+#: ../../lib/class/catalog.class.php:1423
+#: ../../lib/class/catalog.class.php:2444
 msgid "Error connecting to"
 msgstr "Erreur de connexion à"
 
-#: ../../lib/class/catalog.class.php:1305
-#: ../../lib/class/catalog.class.php:1379
-#: ../../lib/class/catalog.class.php:1412
-#: ../../lib/class/catalog.class.php:2427
+#: ../../lib/class/catalog.class.php:1316
+#: ../../lib/class/catalog.class.php:1390
+#: ../../lib/class/catalog.class.php:1423
+#: ../../lib/class/catalog.class.php:2444
 msgid "Code"
 msgstr "Code"
 
-#: ../../lib/class/catalog.class.php:1305
-#: ../../lib/class/catalog.class.php:1379
-#: ../../lib/class/catalog.class.php:1412
-#: ../../lib/class/catalog.class.php:2427
+#: ../../lib/class/catalog.class.php:1316
+#: ../../lib/class/catalog.class.php:1390
+#: ../../lib/class/catalog.class.php:1423
+#: ../../lib/class/catalog.class.php:2444
 msgid "Reason"
 msgstr "Raison"
 
-#: ../../lib/class/catalog.class.php:1334
+#: ../../lib/class/catalog.class.php:1345
 msgid "Completed updating remote catalog(s)"
 msgstr "Mise à jour de(s) catalogue(s) distant(s) terminée"
 
-#: ../../lib/class/catalog.class.php:1338
+#: ../../lib/class/catalog.class.php:1349
 msgid "Starting synchronisation of album images"
 msgstr "Synchronisation des images d'albums en cours"
 
-#: ../../lib/class/catalog.class.php:1340
+#: ../../lib/class/catalog.class.php:1351
 msgid "Completed synchronisation of album images"
 msgstr "Synchronisation des images d'albums terminée"
 
-#: ../../lib/class/catalog.class.php:1375 ../../templates/show_song.inc.php:60
+#: ../../lib/class/catalog.class.php:1386 ../../templates/show_song.inc.php:60
 #: ../../admin/access.php:103
 msgid "Added"
 msgstr "Ajouté"
 
-#: ../../lib/class/catalog.class.php:1408
+#: ../../lib/class/catalog.class.php:1419
 msgid "images synchronized: "
 msgstr "images synchronisées:"
 
-#: ../../lib/class/catalog.class.php:1542
+#: ../../lib/class/catalog.class.php:1553
 msgid "Catalog Root unreadable, stopping clean"
 msgstr "Le chemin du catalogue est inaccessible, nettoyage stoppé"
 
-#: ../../lib/class/catalog.class.php:1578
+#: ../../lib/class/catalog.class.php:1592
 msgid "Error File Not Found or 0 Bytes:"
 msgstr "Fichier d'erreur non trouvé ou 0 Bytes:"
 
-#: ../../lib/class/catalog.class.php:1600
+#: ../../lib/class/catalog.class.php:1614
 msgid "Error Remote File Not Found or 0 Bytes:"
 msgstr "Fichier d'erreur distant non trouvé ou 0 Bytes:"
 
-#: ../../lib/class/catalog.class.php:1619
+#: ../../lib/class/catalog.class.php:1633
 msgid "Error All songs would be removed, doing nothing"
 msgstr "Erreur toutes  les chansons seraient effacées, ne rien faire"
 
-#: ../../lib/class/catalog.class.php:1647
+#: ../../lib/class/catalog.class.php:1661
 #, fuzzy, php-format
 msgid "Catalog Clean Done. %d file removed."
 msgid_plural "Catalog Clean Done. %d files removed."
 msgstr[0] "Nettoyage de catalogue terminé. %d fichier supprimé"
 msgstr[1] "Nettoyage de catalogue terminé. %d fichiers supprimés"
 
-#: ../../lib/class/catalog.class.php:1649
+#: ../../lib/class/catalog.class.php:1663
 msgid "Optimizing Tables"
 msgstr "Optimisation des tables"
 
 #. HINT: Mediafile
-#: ../../lib/class/catalog.class.php:1941
+#: ../../lib/class/catalog.class.php:1958
 #, php-format
 msgid "%s does not exist or is not readable"
 msgstr "%s n'existe pas ou n'est pas lisible"
 
-#: ../../lib/class/catalog.class.php:1963
+#: ../../lib/class/catalog.class.php:1980
 #, fuzzy
 msgid "Update Finished"
 msgstr "Mise à jour terminée"
 
-#: ../../lib/class/catalog.class.php:1963
+#: ../../lib/class/catalog.class.php:1980
 msgid "Checked"
 msgstr "Vérifiées"
 
-#: ../../lib/class/catalog.class.php:2021
-#: ../../lib/class/catalog.class.php:2124
+#: ../../lib/class/catalog.class.php:2038
+#: ../../lib/class/catalog.class.php:2141
 #: ../../templates/show_album.inc.php:34
 msgid "Unknown (Orphaned)"
 msgstr "Inconnu (orphelin)"
 
-#: ../../lib/class/catalog.class.php:2525
+#: ../../lib/class/catalog.class.php:2542
 #, fuzzy
 msgid "Playlist creation error."
 msgstr "Liste de lecture créée"
 
-#: ../../lib/class/catalog.class.php:2532
+#: ../../lib/class/catalog.class.php:2549
 #, fuzzy, php-format
 msgid "Playlist Import and Recreate Successful. Total: %d Song"
 msgid_plural "Playlist Import and Recreate Successful. Total: %d Songs"
@@ -1015,7 +1055,7 @@ msgstr[1] ""
 "Import et recréation des listes de lecture réussie. Total : %d chansons"
 
 #. HINT: filename
-#: ../../lib/class/catalog.class.php:2538
+#: ../../lib/class/catalog.class.php:2555
 #, fuzzy, php-format
 msgid "Parsing %s - Not Found: %d Song. Please check your m3u file."
 msgid_plural "Parsing %s - Not Found: %d Songs. Please check your m3u file."
@@ -1354,28 +1394,6 @@ msgstr "Vote"
 #: ../../templates/show_catalogs.inc.php:62
 msgid "Actions"
 msgstr "Actions"
-
-#: ../../templates/show_albums.inc.php:67
-#: ../../templates/show_tagcloud.inc.php:33
-#: ../../templates/rightbar.inc.php:108
-#: ../../templates/show_user_recommendations.inc.php:32
-#: ../../templates/show_user_recommendations.inc.php:43
-#: ../../templates/show_user_recommendations.inc.php:54
-#: ../../templates/show_recently_played.inc.php:95
-#: ../../templates/show_artists.inc.php:60
-#: ../../templates/show_objects.inc.php:44
-#: ../../templates/show_songs.inc.php:64
-#: ../../templates/show_live_streams.inc.php:53
-#: ../../templates/show_playlists.inc.php:53
-#: ../../templates/show_user_stats.inc.php:34
-#: ../../templates/show_user_stats.inc.php:47
-#: ../../templates/show_user_stats.inc.php:60
-#: ../../templates/show_catalogs.inc.php:52
-#: ../../templates/show_genres.inc.php:68
-#: ../../templates/show_videos.inc.php:56
-#: ../../templates/show_manage_democratic.inc.php:63
-msgid "Not Enough Data"
-msgstr "Pas assez de données"
 
 #: ../../templates/show_disabled_songs.inc.php:33
 #: ../../templates/show_disabled_songs.inc.php:56
@@ -1849,6 +1867,7 @@ msgstr "Rapide"
 
 #: ../../templates/show_admin_tools.inc.php:60
 #: ../../templates/show_catalog_row.inc.php:33
+#: ../../bin/catalog_update.inc:152
 msgid "Gather Art"
 msgstr "Collecter les jaquettes"
 
@@ -2003,7 +2022,7 @@ msgstr "Débit"
 msgid "Last Updated"
 msgstr "Dernière ajoutée"
 
-#: ../../templates/show_gather_art.inc.php:23
+#: ../../templates/show_gather_art.inc.php:23 ../../bin/catalog_update.inc:118
 msgid "Starting Album Art Search"
 msgstr "Démarrage de la recherche de jaquette d'album"
 
@@ -2195,7 +2214,7 @@ msgid "Refresh"
 msgstr "Rafraichir"
 
 #: ../../templates/show_random_albums.inc.php:24
-#: ../../templates/show_index.inc.php:38
+#: ../../templates/show_index.inc.php:31
 msgid "Albums of the Moment"
 msgstr "Les albums du moment"
 
@@ -2714,10 +2733,6 @@ msgstr "Support Iconv"
 #: ../../templates/show_debug.inc.php:86
 msgid "Current Configuration"
 msgstr "Configuration actuelle"
-
-#: ../../templates/show_embed_xspf.inc.php:54
-msgid "XSPF Player"
-msgstr "Lecteur XSPF"
 
 #: ../../templates/show_add_access.inc.php:22
 #: ../../templates/show_access_list.inc.php:43
@@ -3319,7 +3334,7 @@ msgstr "URL du flux"
 msgid "Catalog"
 msgstr "Catalogues"
 
-#: ../../templates/show_index.inc.php:38
+#: ../../templates/show_index.inc.php:31
 msgid "Loading..."
 msgstr "Chargement..."
 
@@ -4658,46 +4673,46 @@ msgstr "Erreur: Nom d'utilisateur déjà existant"
 msgid "Error: Unable to copy file to %s"
 msgstr "Erreur: Impossible d'obtenir la taille de fichier de %s"
 
-#: ../../bin/catalog_update.inc:71
+#: ../../bin/catalog_update.inc:94
 msgid "- Starting Clean - "
 msgstr ""
 
-#: ../../bin/catalog_update.inc:79
+#: ../../bin/catalog_update.inc:102
 msgid "- Starting Verify - "
 msgstr ""
 
-#: ../../bin/catalog_update.inc:87
+#: ../../bin/catalog_update.inc:110
 #, fuzzy
 msgid "- Starting Add - "
 msgstr "Station de radio ajoutée"
 
-#: ../../bin/catalog_update.inc:107
+#: ../../bin/catalog_update.inc:140
 #, fuzzy
 msgid "- Catalog Update -"
 msgstr "Catalogue mis à jour"
 
-#: ../../bin/catalog_update.inc:109
-msgid "Usage: catalog_update.inc [CATALOG NAME] [-c|-v|-a]"
+#: ../../bin/catalog_update.inc:142
+msgid "Usage: catalog_update.inc [CATALOG NAME] [-c|-v|-a|-g]"
 msgstr ""
 
-#: ../../bin/catalog_update.inc:111
+#: ../../bin/catalog_update.inc:144
+msgid "Default behavior is to do all"
+msgstr ""
+
+#: ../../bin/catalog_update.inc:146
 #, fuzzy
 msgid "Clean Catalogs"
 msgstr "Vider les statistiques des catalogues"
 
-#: ../../bin/catalog_update.inc:113
+#: ../../bin/catalog_update.inc:148
 #, fuzzy
 msgid "Verify Catalogs"
 msgstr "Catalogues"
 
-#: ../../bin/catalog_update.inc:115
+#: ../../bin/catalog_update.inc:150
 #, fuzzy
 msgid "Add to Catalogs"
 msgstr "Ajouter un catalogue"
-
-#: ../../bin/catalog_update.inc:117
-msgid "*Default behavior is to do all 3*"
-msgstr ""
 
 #: ../../bin/print_tags.inc:41
 msgid "File not found."
@@ -4865,6 +4880,9 @@ msgstr "l'Interface"
 #, fuzzy
 msgid "System"
 msgstr "élément"
+
+#~ msgid "XSPF Player"
+#~ msgstr "Lecteur XSPF"
 
 #~ msgid "Play Selected"
 #~ msgstr "Jouer la sélection"
