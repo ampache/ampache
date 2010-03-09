@@ -95,7 +95,7 @@ class vauth {
 		$key 		= Dba::escape($key);
 		// Check to see if remember me cookie is set, if so use remember length, otherwise use the session length
 		$expire		= isset($_COOKIE[Config::get('session_name') . '_remember']) ? time() + Config::get('remember_length') : time() + Config::get('session_length');
-
+		
 		$sql = "UPDATE `session` SET `value`='$value', `expire`='$expire' WHERE `id`='$key'";
 		$db_results = Dba::read($sql);
 
@@ -396,11 +396,12 @@ class vauth {
 
 		$sid = Dba::escape($sid);
                 $expire = isset($_COOKIE[Config::get('session_name') . '_remember']) ? time() + Config::get('remember_length') : time() + Config::get('session_length');
+		$len = $expire - time(); 
 
 		$sql = "UPDATE `session` SET `expire`='$expire' WHERE `id`='$sid'";
 		$db_results = Dba::write($sql);
 
-		debug_event('SESSION','Session:' . $sid . ' Has been Extended to ' . $expire,'6');
+		debug_event('SESSION','Session:' . $sid . ' Has been Extended to ' . date("r",$expire) . ' extension length ' . $len,'6');
 
 		return $db_results;
 
