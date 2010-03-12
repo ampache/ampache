@@ -1924,6 +1924,10 @@ class Catalog extends database_object {
 					$skip = true;
 				}
 
+				if (filemtime($results['file']) <= $media->update_time) { 
+					$skip = true; 
+				} 
+
 				// if the file hasn't been modified since the last_update
 				if (!$skip) {
 
