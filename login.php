@@ -1,4 +1,5 @@
 <?php
+/* vim:set tabstop=8 softtabstop=8 shiftwidth=8 noexpandtab: */
 /*
 
  Copyright (c) Ampache.org
@@ -34,11 +35,11 @@ Preference::init();
  * page if they aren't in the ACL
  */
 if (Config::get('access_control')) { 
-        if (!Access::check_network('interface','','5')) {
-                debug_event('access_denied','Access Denied:' . $_SERVER['REMOTE_ADDR'] . ' is not in the Interface Access list','3');
-                access_denied();
+	if (!Access::check_network('interface','','5')) {
+		debug_event('access_denied','Access Denied:' . $_SERVER['REMOTE_ADDR'] . ' is not in the Interface Access list','3');
+		access_denied();
 		exit(); 
-        }
+	}
 } // access_control is enabled
 
 /* Clean Auth values */
@@ -47,9 +48,9 @@ unset($auth);
 /* Check for posted username and password */
 if ($_POST['username'] && $_POST['password']) {
 
-        if ($_POST['rememberme']) {
+	if ($_POST['rememberme']) {
 		vauth::create_remember_cookie(); 
-        } 
+	} 
 
 	/* If we are in demo mode let's force auth success */
 	if (Config::get('demo_mode')) {
@@ -62,42 +63,42 @@ if ($_POST['username'] && $_POST['password']) {
 		$username = scrub_in($_POST['username']);
 		$password = scrub_in($_POST['password']);
 		$auth = vauth::authenticate($username, $password);
-                $user = User::get_from_username($username);
+		$user = User::get_from_username($username);
 		
 		if (!$auth['success']) { 
 			debug_event('Login',scrub_out($username) . ' attempted to login and failed','1'); 
 		} 
 	
 		if ($user->disabled == '1') { 	
-                	$auth['success'] = false;
+			$auth['success'] = false;
 			Error::add('general',_('User Disabled please contact Admin')); 
 			debug_event('Login',scrub_out($username) . ' is disabled and attempted to login','1'); 
-                } // if user disabled
+		} // if user disabled
 			
-                
+		
 		elseif (!$user->username AND $auth['success']) { 
-			/* This is run if we want to auto_create users who don't exist (usefull for non mysql auth) */                
+			/* This is run if we want to auto_create users who don't exist (usefull for non mysql auth) */		
 			if (Config::get('auto_create')) {
 
 				$access = Config::get('auto_user') ? User::access_name_to_level(Config::get('auto_user')) : '5'; 
-                        	$name = $auth['name'];
-                        	$email = $auth['email'];
-                        
+				$name = $auth['name'];
+				$email = $auth['email'];
+			
 				/* Attempt to create the user */	
 				if (!$user->create($username, $name, $email,hash('sha256',mt_rand()), $access)) {
-                                	$auth['success'] = false;
+					$auth['success'] = false;
 					Error::add('general',_('Unable to create new account')); 
-                            	}
-				else { 
-                        		$user = new User($username);
 				}
-                        } // End if auto_create
+				else { 
+					$user = new User($username);
+				}
+			} // End if auto_create
 
-                        else {
-                            $auth['success'] = false;
-			    Error::add('general',_('No local account found')); 
-                        }
-                } // else user isn't disabled
+			else {
+				$auth['success'] = false;
+				Error::add('general',_('No local account found')); 
+			}
+		} // else user isn't disabled
 
 	} // if we aren't in demo mode
 
@@ -115,7 +116,7 @@ if ($auth['success']) {
 			Error::add('general',_('User Already Logged in'));
 			require Config::get('prefix') . '/templates/show_login_form.inc.php';
 			exit; 
-        	}
+		}
 	} // if prevent_multiple_logins
 
 	// $auth->info are the fields specified in the config file
