@@ -295,11 +295,10 @@ class Catalog extends database_object {
 		$rename_pattern	= Dba::escape($data['rename_pattern']);
 		$sort_pattern	= Dba::escape($data['sort_pattern']);
 		$gather_types	= 'NULL';
-		$key		= $data['key'] ? '\'' . Dba::escape($data['key']) . '\'' : 'NULL';
 
 		// Ok we're good to go ahead and insert this record
-		$sql = "INSERT INTO `catalog` (`name`,`path`,`catalog_type`,`rename_pattern`,`sort_pattern`,`gather_types`,`key`) " .
-			"VALUES ('$name','$path','$catalog_type','$rename_pattern','$sort_pattern',$gather_types,$key)";
+		$sql = "INSERT INTO `catalog` (`name`,`path`,`catalog_type`,`rename_pattern`,`sort_pattern`,`gather_types`) " .
+			"VALUES ('$name','$path','$catalog_type','$rename_pattern','$sort_pattern',$gather_types)";
 		$db_results = Dba::write($sql);
 
 		$insert_id = Dba::insert_id();
