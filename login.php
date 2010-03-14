@@ -45,8 +45,11 @@ if (Config::get('access_control')) {
 /* Clean Auth values */
 unset($auth);
 
-/* Check for posted username and password */
-if ($_POST['username'] && $_POST['password']) {
+/* Check for posted username and password, or appropriate environment
+variable if using HTTP auth */
+if (($_POST['username'] && $_POST['password']) || 
+(in_array('http',Config::get('auth_methods')) && 
+($_SERVER['REMOTE_USER'] || $_SERVER['HTTP_REMOTE_USER']))) {
 
 	if ($_POST['rememberme']) {
 		vauth::create_remember_cookie(); 
@@ -60,8 +63,19 @@ if ($_POST['username'] && $_POST['password']) {
 		$auth['info']['offset_limit']	= 25;
 	}
 	else {
+		if ($_POST['username'] && $_POST['password']) {
 		$username = scrub_in($_POST['username']);
 		$password = scrub_in($_POST['password']);
+		}
+		else {
+			if ($_SERVER['REMOTE_USER']) {
+				$username = $_SERVER['REMOTE_USER'];
+			}
+			else if ($_SERVER['HTTP_REMOTE_USER']) {
+				$username = $_SERVER['HTTP_REMOTE_USER'];
+			}
+			$password = '';
+		}
 		$auth = vauth::authenticate($username, $password);
 		$user = User::get_from_username($username);
 		

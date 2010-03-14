@@ -1,4 +1,5 @@
 <?php 
+/* vim:set tabstop=8 softtabstop=8 shiftwidth=8 noexpandtab: */
 /*
 
  Copyright (c) Ampache.org
@@ -26,5 +27,5 @@
 require_once 'lib/init.php';
 
 // To end a legitimate session, just call logout.
-vauth::logout();
+vauth::logout('',false);
 ?>

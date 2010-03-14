@@ -152,13 +152,19 @@ class vauth {
 	 * This is the function used for the Ajax logouts, if no id is passed
 	 * it tries to find one from the session
 	 */
-	public static function logout($key='') {
+	public static function logout($key='',$relogin=true) {
 
 		// If no key is passed try to find the session id
 		$key = $key ? $key : session_id();
 
 		// Nuke the cookie before all else
 		self::destroy($key);
+		if ((! $relogin) && Config::get('logout_redirect')) {
+			$target = Config::get('logout_redirect');
+		}
+		else {
+			$target = Config::get('web_path') . '/login.php';
+		}
 
 		// Do a quick check to see if this is an AJAX'd logout request
 		// if so use the iframe to redirect
@@ -174,7 +180,6 @@ class vauth {
 			header("Cache-Control: no-store, no-cache, must-revalidate");
 			header("Pragma: no-cache");
 
-			$target = Config::get('web_path') . '/login.php';
 			$results['rfc3514'] = '<script type="text/javascript">reload_logout("'.$target.'")</script>';
 			echo xml_from_array($results);
 		}
@@ -182,7 +187,7 @@ class vauth {
 
 		/* Redirect them to the login page */
 		if (AJAX_INCLUDE != '1') {
-			header ('Location: ' . Config::get('web_path') . '/login.php');
+			header('Location: ' . $target);
 		}
 
 		exit;
@@ -673,19 +678,38 @@ class vauth {
 	/**
 	 * http_auth
 	 * This auth method relies on HTTP auth from Apache
-	 * This is not a very secure method of authentication
-	 * and defaults to off.
 	 */
-	public static function http_auth($username) {
-
+	private static function http_auth($username) {
+		if (($_SERVER['REMOTE_USER'] == $username) || 
+		($_SERVER['HTTP_REMOTE_USER'] == $username)) {
 		$results['success']	= true;
 		$results['type']	= 'http';
 		$results['username']	= $username;
 		$results['name']	= $username;
 		$results['email']	= '';
+		}
+		else {
+			$results['success'] = false;
+			$results['error'] = "HTTP auth: REMOTE_USER not set";
+		}
 		return $results;
-
 	} // http_auth
+
+	/**
+	 * null_auth
+	 * This is the equivalent of the old http_auth and assumes that if you
+	 * can access the page, you're a trusted user.
+	 * This is not a very secure method of authentication, since it allows
+	 * you to log in with an arbitrary username.
+	 */
+	private static function null_auth($username) {
+		$results['success']	= true;
+		$results['type']	= 'null';
+		$results['username']	= $username;
+		$results['name']	= $username;
+		$results['email']	= '';
+		return $results;
+	} // null_auth
 
 } // end of vauth class
 

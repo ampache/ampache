@@ -1,4 +1,5 @@
 <?php
+/* vim:set tabstop=8 softtabstop=8 shiftwidth=8 noexpandtab: */
 /*
 
  Copyright (c) Ampache.org
@@ -178,24 +179,6 @@ ini_set('session.gc_probability','2');
 set_memory_limit($results['memory_limit']);
 
 /**** END Set PHP Vars ****/
-
-/* We have to check for HTTP Auth, only run this if we don't have an ampache session cookie */
-$session_name = Config::get('session_name');
-if (in_array("http",$results['auth_methods']) AND empty($_COOKIE[$session_name])) { 
-
-	$username = scrub_in($_SERVER['PHP_AUTH_USER']);
-	$results = vauth::http_auth($username);
-
-	// We've found someone or were able to create them, go ahead and generate the session
-	if ($results['success']) { 
-		vauth::create_cookie();
-		vauth::session_create($results);
-		$session_name = Config::get('session_name');
-		$_SESSION['userdata'] = $results;
-		$_COOKIE[$session_name] = session_id();
-	} 
-
-} // end if http auth
 
 // If we want a session
 if (NO_SESSION != '1' AND Config::get('use_auth')) { 
