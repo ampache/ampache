@@ -93,9 +93,9 @@ class Artist extends database_object {
 
 		// If we need to also pull the extra information, this is normally only used when we are doing the human display
 		if ($extra) { 
-	                $sql = "SELECT `song`.`artist`, COUNT(`song`.`id`) AS `song_count`, COUNT(DISTINCT `song`.`album`) AS `album_count`, SUM(`song`.`time`) AS `time` FROM `song` " .
-                        "WHERE `song`.`artist` IN $idlist GROUP BY `song`.`artist`";
-	                $db_results = Dba::read($sql);
+			$sql = "SELECT `song`.`artist`, COUNT(`song`.`id`) AS `song_count`, COUNT(DISTINCT `song`.`album`) AS `album_count`, SUM(`song`.`time`) AS `time` FROM `song` " .
+			"WHERE `song`.`artist` IN $idlist GROUP BY `song`.`artist`";
+			$db_results = Dba::read($sql);
 
 			while ($row = Dba::fetch_assoc($db_results)) { 
 				parent::add_to_cache('artist_extra',$row['artist'],$row); 
@@ -163,24 +163,24 @@ class Artist extends database_object {
 
 	} // get_songs
 
-        /**
-         * get_random_songs
+	/**
+	 * get_random_songs
 	 * Gets the songs from this artist in a random order
-         */
-        public function get_random_songs() {
+	 */
+	public function get_random_songs() {
 
-                $results = array();
+		$results = array();
 
-                $sql = "SELECT `id` FROM `song` WHERE `artist`='$this->id' ORDER BY RAND()";
-                $db_results = Dba::read($sql);
+		$sql = "SELECT `id` FROM `song` WHERE `artist`='$this->id' ORDER BY RAND()";
+		$db_results = Dba::read($sql);
 
-                while ($r = Dba::fetch_assoc($db_results)) {
-                        $results[] = $r['id'];
-                }
+		while ($r = Dba::fetch_assoc($db_results)) {
+			$results[] = $r['id'];
+		}
 
-                return $results;
+		return $results;
 
-        } // get_random_songs
+	} // get_random_songs
 
 	/**
 	 * _get_extra info
@@ -212,7 +212,7 @@ class Artist extends database_object {
 
 	/**
 	 * format
-         * this function takes an array of artist
+	 * this function takes an array of artist
 	 * information and reformats the relevent values
 	 * so they can be displayed in a table for example
 	 * it changes the title into a full link.
@@ -220,14 +220,14 @@ class Artist extends database_object {
 	public function format() {
 
 		/* Combine prefix and name, trim then add ... if needed */
-                $name = truncate_with_ellipsis(trim($this->prefix . " " . $this->name),Config::get('ellipse_threshold_artist'));
+		$name = truncate_with_ellipsis(trim($this->prefix . " " . $this->name),Config::get('ellipse_threshold_artist'));
 		$this->f_name = $name;
 		$this->f_full_name = trim($this->prefix . " " . $this->name); 
 
 		// If this is a fake object, we're done here
 		if ($this->_fake) { return true; } 
 
-	        $this->f_name_link = "<a href=\"" . Config::get('web_path') . "/artists.php?action=show&amp;artist=" . $this->id . "\" title=\"" . $this->full_name . "\">" . $name . "</a>";
+		$this->f_name_link = "<a href=\"" . Config::get('web_path') . "/artists.php?action=show&amp;artist=" . $this->id . "\" title=\"" . $this->full_name . "\">" . $name . "</a>";
 		$this->f_link = Config::get('web_path') . '/artists.php?action=show&amp;artist=' . $this->id; 
 
 		// Get the counts 

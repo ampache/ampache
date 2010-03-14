@@ -671,7 +671,7 @@ class Song extends database_object implements media {
 		// Format the filename
 		preg_match("/^.*\/(.*?)$/",$this->file, $short);
 		$this->f_file = htmlspecialchars($short[1]);
-		    
+
 		// Format the album name
 		$this->f_album_full = $this->get_album_name();
 		$this->f_album = truncate_with_ellipsis($this->f_album_full,Config::get('ellipse_threshold_album'));
@@ -719,7 +719,7 @@ class Song extends database_object implements media {
 	 * rename patterns 
 	 */
 	public function format_pattern() { 
-	        
+
 		$extension = ltrim(substr($this->file,strlen($this->file)-4,4),".");
 
 		$catalog = new Catalog($this->catalog); 
@@ -731,23 +731,23 @@ class Song extends database_object implements media {
 			return; 
 		} 
 
-	        /* Create the filename that this file should have */
-	        $album  = $this->f_album_full;
-	        $artist = $this->f_artist_full;
-	        $track  = $this->track;
-	        $title  = $this->title;
-	        $year   = $this->year;
+		/* Create the filename that this file should have */
+		$album  = $this->f_album_full;
+		$artist = $this->f_artist_full;
+		$track  = $this->track;
+		$title  = $this->title;
+		$year   = $this->year;
 
-	        /* Start replacing stuff */
-	        $replace_array = array('%a','%A','%t','%T','%y','/','\\');
-	        $content_array = array($artist,$album,$title,$track,$year,'-','-');
+		/* Start replacing stuff */
+		$replace_array = array('%a','%A','%t','%T','%y','/','\\');
+		$content_array = array($artist,$album,$title,$track,$year,'-','-');
 
-	        $rename_pattern = str_replace($replace_array,$content_array,$catalog->rename_pattern);
+		$rename_pattern = str_replace($replace_array,$content_array,$catalog->rename_pattern);
 	
-	        $rename_pattern = preg_replace("[\-\:\!]","_",$rename_pattern);
+		$rename_pattern = preg_replace("[\-\:\!]","_",$rename_pattern);
 		
 		$this->f_pattern	= $rename_pattern; 
-	        $this->f_file 		= $rename_pattern . "." . $extension;
+		$this->f_file 		= $rename_pattern . "." . $extension;
 
 	} // format_pattern
 
@@ -795,12 +795,12 @@ class Song extends database_object implements media {
 	} // get_from_path
 
 	/**
-	 *       @function       get_rel_path
-	 *       @discussion    returns the path of the song file stripped of the catalog path
+	 *	@function	get_rel_path
+	 *	@discussion	returns the path of the song file stripped of the catalog path
 	 *			used for mpd playback 
 	 */
 	public function get_rel_path($file_path=0,$catalog_id=0) {
-       
+
 		if (!$file_path) { 
 			$info = $this->_get_info();
 			$file_path = $info->file;
@@ -808,12 +808,12 @@ class Song extends database_object implements media {
 		if (!$catalog_id) { 
 			$catalog_id = $info->catalog;
 		}
-	        $catalog = new Catalog( $catalog_id );
-                $info = $catalog->_get_info();
-                $catalog_path = $info->path;
+		$catalog = new Catalog( $catalog_id );
+		$info = $catalog->_get_info();
+		$catalog_path = $info->path;
 		$catalog_path = rtrim($catalog_path, "/");
-                return( str_replace( $catalog_path . "/", "", $file_path ) );
-	       
+		return( str_replace( $catalog_path . "/", "", $file_path ) );
+
 	} // get_rel_path
 
 
@@ -853,9 +853,9 @@ class Song extends database_object implements media {
 	*/
 	function get_info_from_filename($file,$pattern,$tag) { 
 
-                $preg_pattern = str_replace("$tag","(.+)",$pattern);
-                $preg_pattern = preg_replace("/\%\w/",".+",$preg_pattern);
-                $preg_pattern = "/" . str_replace("/","\/",$preg_pattern) . "\..+/";
+		$preg_pattern = str_replace("$tag","(.+)",$pattern);
+		$preg_pattern = preg_replace("/\%\w/",".+",$preg_pattern);
+		$preg_pattern = "/" . str_replace("/","\/",$preg_pattern) . "\..+/";
 
 		preg_match($preg_pattern,$file,$matches);
 
@@ -975,7 +975,7 @@ class Song extends database_object implements media {
 	public function stream_cmd() {
 
 		// Find the target for this transcode
-		$conf_type      = 'transcode_' . $this->type . '_target';
+		$conf_type = 'transcode_' . $this->type . '_target';
 		$stream_cmd = 'transcode_cmd_' . $this->type; 
 		$this->format_type(Config::get($conf_type));
 

@@ -79,9 +79,9 @@ class Stream {
 		$create_function = "create_" . $this->type;	
 
 		// If in the class, call it
-                if (in_array($create_function,$methods)) {
-	                $this->{$create_function}();
-                }
+		if (in_array($create_function,$methods)) {
+			$this->{$create_function}();
+		}
 		// Assume M3u incase they've pooched the type
 		else { 
 			$this->create_m3u();
@@ -256,14 +256,14 @@ class Stream {
 	 */
 	public function create_m3u() { 
 
-	        // Send the client an m3u playlist
-	        header("Cache-control: public");
-	        header("Content-Disposition: filename=ampache_playlist.m3u");
-	        header("Content-Type: audio/x-mpegurl;");
-	        echo "#EXTM3U\n";
+		// Send the client an m3u playlist
+		header("Cache-control: public");
+		header("Content-Disposition: filename=ampache_playlist.m3u");
+		header("Content-Type: audio/x-mpegurl;");
+		echo "#EXTM3U\n";
 
 		// Foreach the songs in this stream object
-	        foreach ($this->media as $element) {
+		foreach ($this->media as $element) {
 			$type = array_shift($element); 
 			$media = new $type(array_shift($element)); 
 			$media->format(); 
@@ -285,7 +285,7 @@ class Stream {
 				break;
 			} 
 			echo call_user_func(array($type,'play_url'),$media->id) . "\n";  
-                } // end foreach
+		} // end foreach
 
 		/* Foreach URLS */
 		foreach ($this->urls as $url) { 
@@ -352,13 +352,13 @@ class Stream {
 	 */
 	public function create_asx() { 
 
-	        header("Cache-control: public");
-        	header("Content-Disposition: filename=ampache_playlist.asx");
+		header("Cache-control: public");
+		header("Content-Disposition: filename=ampache_playlist.asx");
 		header("Content-Type: video/x-ms-wmv;");
  
 		echo "<ASX version = \"3.0\" BANNERBAR=\"AUTO\">\n";
-                echo "<TITLE>Ampache ASX Playlist</TITLE>";
-                
+		echo "<TITLE>Ampache ASX Playlist</TITLE>";
+		
 		foreach ($this->media as $element) {
 			$type = array_shift($element); 
 			$media = new $type(array_shift($element)); 
@@ -375,8 +375,8 @@ class Stream {
 			} // end switch 
 			$url = call_user_func(array($type,'play_url'),$media->id); 
 
-                        echo "<ENTRY>\n";
-                        echo "<TITLE>$name</TITLE>\n";
+			echo "<ENTRY>\n";
+			echo "<TITLE>$name</TITLE>\n";
 			echo "<AUTHOR>$author</AUTHOR>\n";
 			echo "\t\t<COPYRIGHT>".$media->year."</COPYRIGHT>\n";
 			echo "\t\t<DURATION VALUE=\"00:00:".$media->time."\" />\n";
@@ -384,10 +384,10 @@ class Stream {
 			echo "\t\t<PARAM NAME=\"Genre\" Value=\"".$media->get_genre_name()."\" />\n";
 			echo "\t\t<PARAM NAME=\"Composer\" Value=\"".$media->f_artist_full."\" />\n";
 			echo "\t\t<PARAM NAME=\"Prebuffer\" Value=\"false\" />\n";
-        	        echo "<REF HREF = \"". $url . "\" />\n";
-                        echo "</ENTRY>\n";
+			echo "<REF HREF = \"". $url . "\" />\n";
+			echo "</ENTRY>\n";
 			
-                } // end foreach
+		} // end foreach
 
 		/* Foreach urls */
 		foreach ($this->urls as $url) { 
@@ -398,7 +398,7 @@ class Stream {
 			echo "</ENTRY>\n";
 		} // end foreach 
 
-                echo "</ASX>\n";
+		echo "</ASX>\n";
 
 	} // create_asx
 
@@ -434,12 +434,12 @@ class Stream {
 
 			$result .= xmlData::keyed_array($xml,1);
 
-                } // end foreach
+		} // end foreach
 		
 		xmlData::set_type('xspf'); 
 
-	        header("Cache-control: public");
-        	header("Content-Disposition: filename=ampache_playlist.xspf");
+		header("Cache-control: public");
+		header("Content-Disposition: filename=ampache_playlist.xspf");
 		header("Content-Type: application/xspf+xml; charset=utf-8");
 		echo xmlData::header(); 
 		echo $result;
@@ -458,7 +458,7 @@ class Stream {
 		/* Build the extra info we need to have it pass */
 		$play_info = "?action=show&tmpplaylist_id=" . $GLOBALS['user']->playlist->id;
 
-	        // start ugly evil javascript code
+		// start ugly evil javascript code
 		//FIXME: This needs to go in a template, here for now though
 		//FIXME: This preference doesn't even exists, we'll eventually
 		//FIXME: just make it the default
@@ -466,30 +466,30 @@ class Stream {
 			header("Location: ".Config::get('web_path')."/index.php?xspf&play_info=".$GLOBALS['user']->playlist->id);
 		}
 		else {
-	        echo "<html><head>\n";
-	        echo "<title>" . Config::get('site_title') . "</title>\n";
-	        echo "<script language=\"javascript\" type=\"text/javascript\">\n";
-	        echo "<!-- begin\n";
-	        echo "function PlayerPopUp(URL) {\n";
-		// We do a little check here to see if it's a Wii!
-		if (false !== stristr($_SERVER['HTTP_USER_AGENT'], 'Nintendo Wii')) {
-			echo "window.location=URL;\n";
-		} 
-		// Else go ahead and do the normal stuff
-		else {
-		        echo "window.open(URL, 'XSPF_player', 'width=400,height=170,scrollbars=0,toolbar=0,location=0,directories=0,status=0,resizable=0');\n";
-		        echo "window.location = '" .  return_referer() . "';\n";
-		        echo "return false;\n";
-		} 
-	        echo "}\n";
-	        echo "// end -->\n";
-	        echo "</script>\n";
-	        echo "</head>\n";
+			echo "<html><head>\n";
+			echo "<title>" . Config::get('site_title') . "</title>\n";
+			echo "<script language=\"javascript\" type=\"text/javascript\">\n";
+			echo "<!-- begin\n";
+			echo "function PlayerPopUp(URL) {\n";
+			// We do a little check here to see if it's a Wii!
+			if (false !== stristr($_SERVER['HTTP_USER_AGENT'], 'Nintendo Wii')) {
+				echo "window.location=URL;\n";
+			} 
+			// Else go ahead and do the normal stuff
+			else {
+				echo "window.open(URL, 'XSPF_player', 'width=400,height=170,scrollbars=0,toolbar=0,location=0,directories=0,status=0,resizable=0');\n";
+				echo "window.location = '" .  return_referer() . "';\n";
+				echo "return false;\n";
+			} 
+			echo "}\n";
+			echo "// end -->\n";
+			echo "</script>\n";
+			echo "</head>\n";
 
-	        echo "<body onLoad=\"javascript:PlayerPopUp('" . Config::get('web_path') . "/modules/flash/xspf_player.php" . $play_info . "')\">\n";
-	        echo "</body>\n";
-	        echo "</html>\n";
-	    }
+			echo "<body onLoad=\"javascript:PlayerPopUp('" . Config::get('web_path') . "/modules/flash/xspf_player.php" . $play_info . "')\">\n";
+			echo "</body>\n";
+			echo "</html>\n";
+		}
 	} // create_xspf_player
 		
 	/**
@@ -572,10 +572,10 @@ class Stream {
 	 */
 	public function create_ram() { 
 
-                header("Cache-control: public");
-                header("Content-Disposition: filename=ampache_playlist.ram");
-                header("Content-Type: audio/x-pn-realaudio ram;");
-                foreach ($this->media as $element) {
+		header("Cache-control: public");
+		header("Content-Disposition: filename=ampache_playlist.ram");
+		header("Content-Type: audio/x-pn-realaudio ram;");
+		foreach ($this->media as $element) {
 			$type = array_shift($element);
 			echo $url = call_user_func(array($type,'play_url'),array_shift($element)) . "\n"; 
 		} // foreach songs
@@ -590,105 +590,105 @@ class Stream {
 	 */
 	public static function start_downsample(&$song,$now_playing_id=0,$song_name=0,$start=0) {
 	
-	        /* Check to see if bitrates are set if so let's go ahead and optomize! */
-	        $max_bitrate = Config::get('max_bit_rate');
-	        $min_bitrate = Config::get('min_bit_rate');
-	        $time = time();
-	        $user_sample_rate = Config::get('sample_rate');
-	        $browser = new Browser();
+		/* Check to see if bitrates are set if so let's go ahead and optomize! */
+		$max_bitrate = Config::get('max_bit_rate');
+		$min_bitrate = Config::get('min_bit_rate');
+		$time = time();
+		$user_sample_rate = Config::get('sample_rate');
+		$browser = new Browser();
 
-	        if (!$song_name) {
-	                $song_name = $song->f_artist_full . " - " . $song->title . "." . $song->type;
-	        }
+		if (!$song_name) {
+			$song_name = $song->f_artist_full . " - " . $song->title . "." . $song->type;
+		}
 
-	        if ($max_bitrate > 1 AND $min_bitrate < $max_bitrate AND $min_bitrate > 0) {
-	                $last_seen_time = $time - 1200; //20 min.
+		if ($max_bitrate > 1 AND $min_bitrate < $max_bitrate AND $min_bitrate > 0) {
+			$last_seen_time = $time - 1200; //20 min.
 
-	                $sql = "SELECT COUNT(*) FROM now_playing, user_preference, preference " .
-	                        "WHERE preference.name = 'play_type' AND user_preference.preference = preference.id " .
-	                        "AND now_playing.user = user_preference.user AND user_preference.value='downsample'";
-	                $db_results = Dba::read($sql);
-	                $results = Dba::fetch_row($db_results);
+			$sql = "SELECT COUNT(*) FROM now_playing, user_preference, preference " .
+				"WHERE preference.name = 'play_type' AND user_preference.preference = preference.id " .
+				"AND now_playing.user = user_preference.user AND user_preference.value='downsample'";
+			$db_results = Dba::read($sql);
+			$results = Dba::fetch_row($db_results);
 
-	                // Current number of active streams (current is already in now playing, worst case make it 1)
-	                $active_streams = intval($results[0]); 
+			// Current number of active streams (current is already in now playing, worst case make it 1)
+			$active_streams = intval($results[0]); 
 			if (!$active_streams) { $active_streams = '1'; } 
 
-	                /* If only one user, they'll get all available.  Otherwise split up equally. */
-	                $sample_rate = floor($max_bitrate/$active_streams);
+			/* If only one user, they'll get all available.  Otherwise split up equally. */
+			$sample_rate = floor($max_bitrate/$active_streams);
 
-	                /* If min_bitrate is set, then we'll exit if the bandwidth would need to be split up smaller than the min. */
-	                if ($min_bitrate > 1 AND ($max_bitrate/$active_streams) < $min_bitrate) {
+			/* If min_bitrate is set, then we'll exit if the bandwidth would need to be split up smaller than the min. */
+			if ($min_bitrate > 1 AND ($max_bitrate/$active_streams) < $min_bitrate) {
 
-	                        /* Log the failure */
-	                        debug_event('downsample',"Error: Max bandwidith already allocated. $active_streams Active Streams",'2');
-	                        echo "Maximum bandwidth already allocated.  Try again later.";
-	                        exit();
+				/* Log the failure */
+				debug_event('downsample',"Error: Max bandwidith already allocated. $active_streams Active Streams",'2');
+				echo "Maximum bandwidth already allocated.  Try again later.";
+				exit();
 
-	                }
-        	        else {
-	                        $sample_rate = floor($max_bitrate/$active_streams);
-	                } // end else
+			}
+			else {
+				$sample_rate = floor($max_bitrate/$active_streams);
+			} // end else
 
-	                // Never go over the users sample rate 
-	                if ($sample_rate > $user_sample_rate) { $sample_rate = $user_sample_rate; }
+			// Never go over the users sample rate 
+			if ($sample_rate > $user_sample_rate) { $sample_rate = $user_sample_rate; }
 
-	                debug_event('downsample',"Downsampled: $active_streams current active streams, downsampling to $sample_rate",'2');
+			debug_event('downsample',"Downsampled: $active_streams current active streams, downsampling to $sample_rate",'2');
 
-	        } // end if we've got bitrates
+		} // end if we've got bitrates
 
-	        else {
-	                $sample_rate = $user_sample_rate;
-	        }
+		else {
+			$sample_rate = $user_sample_rate;
+		}
 
-	        /* Validate the bitrate */
-	        $sample_rate = self::validate_bitrate($sample_rate);
+		/* Validate the bitrate */
+		$sample_rate = self::validate_bitrate($sample_rate);
 
-	        /* Never Upsample a song */
-	        if (($sample_rate*1000) > $song->bitrate) {
-	                $sample_rate = self::validate_bitrate($song->bitrate/1000);
-	                $sample_ratio = '1';
-	        }
-	        else {
-	                /* Set the Sample Ratio */
-	                $sample_ratio = $sample_rate/($song->bitrate/1000);
-	        }
-	        
+		/* Never Upsample a song */
+		if (($sample_rate*1000) > $song->bitrate) {
+			$sample_rate = self::validate_bitrate($song->bitrate/1000);
+			$sample_ratio = '1';
+		}
+		else {
+			/* Set the Sample Ratio */
+			$sample_ratio = $sample_rate/($song->bitrate/1000);
+		}
+		
 		// Set the new size for the song
 		$song->size  = floor($sample_ratio*$song->size);
 
-	        /* Get Offset */
-	        $offset = ( $start*$song->time )/( $song->size );
-	        $offsetmm = floor($offset/60);
-	        $offsetss = floor($offset-$offsetmm*60);
-	        $offset   = sprintf("%02d.%02d",$offsetmm,$offsetss);
+		/* Get Offset */
+		$offset   = ( $start*$song->time )/( $song->size );
+		$offsetmm = floor($offset/60);
+		$offsetss = floor($offset-$offsetmm*60);
+		$offset   = sprintf("%02d.%02d",$offsetmm,$offsetss);
 
-	        /* Get EOF */
-	        $eofmm  = floor($song->time/60);
-	        $eofss  = floor($song->time-$eofmm*60);
-	        $eof    = sprintf("%02d.%02d",$eofmm,$eofss);
+		/* Get EOF */
+		$eofmm  = floor($song->time/60);
+		$eofss  = floor($song->time-$eofmm*60);
+		$eof    = sprintf("%02d.%02d",$eofmm,$eofss);
 
-	        $song_file = escapeshellarg($song->file);
+		$song_file = escapeshellarg($song->file);
 
-	        /* Replace Variables */
-	        $downsample_command = Config::get($song->stream_cmd());
-	        $downsample_command = str_replace("%FILE%",$song_file,$downsample_command,$file_exists);
-	        $downsample_command = str_replace("%OFFSET%",$offset,$downsample_command,$offset_exists);
-	        $downsample_command = str_replace("%EOF%",$eof,$downsample_command,$eof_exists);
-	        $downsample_command = str_replace("%SAMPLE%",$sample_rate,$downsample_command,$sample_exists);
+		/* Replace Variables */
+		$downsample_command = Config::get($song->stream_cmd());
+		$downsample_command = str_replace("%FILE%",$song_file,$downsample_command,$file_exists);
+		$downsample_command = str_replace("%OFFSET%",$offset,$downsample_command,$offset_exists);
+		$downsample_command = str_replace("%EOF%",$eof,$downsample_command,$eof_exists);
+		$downsample_command = str_replace("%SAMPLE%",$sample_rate,$downsample_command,$sample_exists);
 
 		if (!$file_exists || !$offset_exists || !$eof_exists || !$sample_exists) { 
 			debug_event('downsample','Error: Downsample command missing a varaible values are File:' . $file_exists . ' Offset:' . $offset_exists . ' Eof:' . $eof_exists . ' Sample:' . $sample_exists,'1'); 
 		} 
 
-	        // If we are debugging log this event
-	        $message = "Start Downsample: $downsample_command";
-	        debug_event('downsample',$message,'3');
+		// If we are debugging log this event
+		$message = "Start Downsample: $downsample_command";
+		debug_event('downsample',$message,'3');
 
-	        $fp = popen($downsample_command, 'rb');
+		$fp = popen($downsample_command, 'rb');
 
 		// Return our new handle
-	        return ($fp);
+		return ($fp);
 
 	} // start_downsample
 
@@ -698,8 +698,8 @@ class Stream {
 	 */
 	public static function validate_bitrate($bitrate) {
 
-	        /* Round to standard bitrates */
-	        $sample_rate = 16*(floor($bitrate/16));
+		/* Round to standard bitrates */
+		$sample_rate = 16*(floor($bitrate/16));
 
 		return $sample_rate; 
 
@@ -713,11 +713,11 @@ class Stream {
 	 */
 	public static function gc_now_playing() { 
 
-        	// Remove any now playing entries for session_streams that have been GC'd
-	        $sql = "DELETE FROM `now_playing` USING `now_playing` " .
-	                "LEFT JOIN `session_stream` ON `session_stream`.`id`=`now_playing`.`id` " .
-	                "WHERE `session_stream`.`id` IS NULL OR `now_playing`.`expire` < '" . time() . "'";
-	        $db_results = Dba::write($sql);
+		// Remove any now playing entries for session_streams that have been GC'd
+		$sql = "DELETE FROM `now_playing` USING `now_playing` " .
+			"LEFT JOIN `session_stream` ON `session_stream`.`id`=`now_playing`.`id` " .
+			"WHERE `session_stream`.`id` IS NULL OR `now_playing`.`expire` < '" . time() . "'";
+		$db_results = Dba::write($sql);
 
 	} // gc_now_playing
 
@@ -729,14 +729,14 @@ class Stream {
 	 */
 	public static function insert_now_playing($oid,$uid,$length,$sid,$type) {
 
-	        $time = intval(time()+$length);
-	        $session_id = Dba::escape($sid);
+		$time = intval(time()+$length);
+		$session_id = Dba::escape($sid);
 		$object_type = Dba::escape(strtolower($type));  
 
-	        // Do a replace into ensuring that this client always only has a single row
-	        $sql = "REPLACE INTO `now_playing` (`id`,`object_id`,`object_type`, `user`, `expire`)" .
-	                " VALUES ('$session_id','$oid','$object_type', '$uid', '$time')";
-	        $db_result = Dba::write($sql);
+		// Do a replace into ensuring that this client always only has a single row
+		$sql = "REPLACE INTO `now_playing` (`id`,`object_id`,`object_type`, `user`, `expire`)" .
+			" VALUES ('$session_id','$oid','$object_type', '$uid', '$time')";
+		$db_result = Dba::write($sql);
 
 	} // insert_now_playing
 
@@ -747,10 +747,10 @@ class Stream {
 	  */
 	public static function clear_now_playing() {
 
-	        $sql = "TRUNCATE `now_playing`";
-	        $db_results = Dba::write($sql);
+		$sql = "TRUNCATE `now_playing`";
+		$db_results = Dba::write($sql);
 
-	        return true;
+		return true;
 
 	} // clear_now_playing
 
@@ -764,7 +764,7 @@ class Stream {
 			"FROM `now_playing` " .
 			"LEFT JOIN `session_stream` ON `session_stream`.`id`=`now_playing`.`id` " .
 			"ORDER BY `now_playing`.`expire` DESC";
-	        $db_results = Dba::read($sql);
+		$db_results = Dba::read($sql);
 
 		$results = array(); 
 
@@ -842,10 +842,10 @@ class Stream {
 		} // end switch on method 
 
 		// Load our javascript	
-	        echo "<script type=\"text/javascript\">";
-	        //echo "reload_util();";
-	        echo "reload_util('".$_SESSION['iframe']['target']."');";
-	        echo "</script>";
+		echo "<script type=\"text/javascript\">";
+		//echo "reload_util();";
+		echo "reload_util('".$_SESSION['iframe']['target']."');";
+		echo "</script>";
 
 	} // run_playlist_method
 
@@ -855,15 +855,15 @@ class Stream {
 	 */
 	public static function get_base_url() { 
 
-                if (Config::get('require_session')) {
-                        $session_string = 'ssid=' . Stream::get_session() . '&';
-                }
+		if (Config::get('require_session')) {
+			$session_string = 'ssid=' . Stream::get_session() . '&';
+		}
 
-                $web_path = Config::get('web_path');
+		$web_path = Config::get('web_path');
 
-                if (Config::get('force_http_play') OR !empty(self::$force_http)) {
-                        $web_path = str_replace("https://", "http://",$web_path);
-                }
+		if (Config::get('force_http_play') OR !empty(self::$force_http)) {
+			$web_path = str_replace("https://", "http://",$web_path);
+		}
 		if (Config::get('http_port') != '80') { 
 			if (preg_match("/:(\d+)/",$web_path,$matches)) { 
 				$web_path = str_replace(':' . $matches['1'],':' . Config::get('http_port'),$web_path); 

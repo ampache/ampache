@@ -153,11 +153,11 @@ class Tag extends database_object {
 
 		if (!is_array($ids) OR !count($ids)) { return false; }
 
-                $type = self::validate_type($type);
-                $idlist = '(' . implode(',',$ids) . ')'; 
+		$type = self::validate_type($type);
+		$idlist = '(' . implode(',',$ids) . ')'; 
 
-                $sql = "SELECT `tag_map`.`id`,`tag_map`.`tag_id`,`tag_map`.`object_id`,`tag_map`.`user` FROM `tag_map` " .
-                        "WHERE `tag_map`.`object_type`='$type' AND `tag_map`.`object_id` IN $idlist ";
+		$sql = "SELECT `tag_map`.`id`,`tag_map`.`tag_id`,`tag_map`.`object_id`,`tag_map`.`user` FROM `tag_map` " .
+			"WHERE `tag_map`.`object_type`='$type' AND `tag_map`.`object_id` IN $idlist ";
 		$db_results = Dba::read($sql); 
 
 		$tags = array(); 
@@ -482,8 +482,8 @@ class Tag extends database_object {
 	 */
 	public static function filter_with_prefs($l) {
 
-	   $colors = array('#0000FF',
-	     '#00FF00', '#FFFF00', '#00FFFF','#FF00FF','#FF0000');
+		$colors = array('#0000FF',
+			'#00FF00', '#FFFF00', '#00FFFF','#FF00FF','#FF0000');
 		$prefs = 'tag company'; 
 //		$prefs = Config::get('tags_userlist');
 
@@ -528,7 +528,7 @@ class Tag extends database_object {
 				$i['color'] = $uids[$i['user']];
 				$i['username'] = $usernames[$i['user']];
 				$res[] = $i;
-			}	    
+			}
 		}
 		
 		return $res;

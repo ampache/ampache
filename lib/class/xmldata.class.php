@@ -229,8 +229,8 @@ class xmlData {
 					$tag_string . 
 					"\t<albums>$artist->albums</albums>\n" . 
 					"\t<songs>$artist->songs</songs>\n" . 
-                                        "\t<preciserating>" . $rating->preciserating . "</preciserating>\n" .
-                                        "\t<rating>" . $rating->rating . "</rating>\n" .
+					"\t<preciserating>" . $rating->preciserating . "</preciserating>\n" .
+					"\t<rating>" . $rating->rating . "</rating>\n" .
 					"</artist>\n"; 
 		} // end foreach artists
 
@@ -277,8 +277,8 @@ class xmlData {
 					"\t<disk>$album->disk</disk>\n" . 
 					self::tags_string($album->tags,'album',$album->id) . 
 					"\t<art><![CDATA[$art_url]]></art>\n" . 
-                                        "\t<preciserating>" . $rating->preciserating . "</preciserating>\n" .
-                                        "\t<rating>" . $rating->rating . "</rating>\n" .
+					"\t<preciserating>" . $rating->preciserating . "</preciserating>\n" .
+					"\t<rating>" . $rating->rating . "</rating>\n" .
 					"</album>\n"; 
 		} // end foreach
 
@@ -387,9 +387,9 @@ class xmlData {
 	 */
 	public static function videos($videos) { 
 
-                if (count($videos) > self::$limit OR self::$offset > 0) {
-                        $videos = array_slice($videos,self::$offset,self::$limit);
-                }
+		if (count($videos) > self::$limit OR self::$offset > 0) {
+			$videos = array_slice($videos,self::$offset,self::$limit);
+		}
 
 		$string = ''; 
 
@@ -433,31 +433,31 @@ class xmlData {
 			$song->format(); 
 
 			//FIXME: This is duplicate code and so wrong, functions need to be improved
-                        $tag_string = '';
+			$tag_string = '';
 
-                        $tag = new Tag($song->tags['0']);
-                        $song->genre = $tag->id;
-                        $song->f_genre = $tag->name;
+			$tag = new Tag($song->tags['0']);
+			$song->genre = $tag->id;
+			$song->f_genre = $tag->name;
 
-                        $tag_string = self::tags_string($song->tags,'song',$song->id);
+			$tag_string = self::tags_string($song->tags,'song',$song->id);
 
-                        $rating = new Rating($song_id,'song');
+			$rating = new Rating($song_id,'song');
 
-                        $art_url = Album::get_art_url($song->album,$_REQUEST['auth']);
+			$art_url = Album::get_art_url($song->album,$_REQUEST['auth']);
 
-                        $string .= "<song id=\"$song->id\">\n" .
-                                        "\t<title><![CDATA[$song->title]]></title>\n" .
-                                        "\t<artist id=\"$song->artist\"><![CDATA[$song->f_artist_full]]></artist>\n" .
-                                        "\t<album id=\"$song->album\"><![CDATA[$song->f_album_full]]></album>\n" .
-                                        "\t<genre id=\"$song->genre\"><![CDATA[$song->f_genre]]></genre>\n" .
-                                        $tag_string .
-                                        "\t<track>$song->track</track>\n" .
-                                        "\t<time>$song->time</time>\n" .
-                                        "\t<mime>$song->mime</mime>\n" .
-                                        "\t<url><![CDATA[" . Song::play_url($song->id) . "]]></url>\n" .
-                                        "\t<size>$song->size</size>\n" . 
-                                        "\t<art><![CDATA[" . $art_url . "]]></art>\n" . 
-                                        "\t<preciserating>" . $rating->preciserating . "</preciserating>\n" .
+			$string .= "<song id=\"$song->id\">\n" .
+					"\t<title><![CDATA[$song->title]]></title>\n" .
+					"\t<artist id=\"$song->artist\"><![CDATA[$song->f_artist_full]]></artist>\n" .
+					"\t<album id=\"$song->album\"><![CDATA[$song->f_album_full]]></album>\n" .
+					"\t<genre id=\"$song->genre\"><![CDATA[$song->f_genre]]></genre>\n" .
+					$tag_string .
+					"\t<track>$song->track</track>\n" .
+					"\t<time>$song->time</time>\n" .
+					"\t<mime>$song->mime</mime>\n" .
+					"\t<url><![CDATA[" . Song::play_url($song->id) . "]]></url>\n" .
+					"\t<size>$song->size</size>\n" . 
+					"\t<art><![CDATA[" . $art_url . "]]></art>\n" . 
+					"\t<preciserating>" . $rating->preciserating . "</preciserating>\n" .
 					"\t<rating>" . $rating->rating . "</rating>\n" .
 					"\t<vote>" . $democratic->get_vote($row_id) . "</vote>\n" .  
 					"</song>\n"; 

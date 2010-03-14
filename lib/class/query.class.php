@@ -67,7 +67,7 @@ class Query {
 					unset(self::$_state['filter'][self::$type][$key]);
 				}
 				else {
-				        self::$_state['filter'][self::$type][$key] = 1;
+					self::$_state['filter'][self::$type][$key] = 1;
 				}
 			break;
 			case 'tag':
@@ -107,11 +107,11 @@ class Query {
 				if (self::$_state['filter'][self::$type][$key] AND Access::check('interface','50')) { unset(self::$_state['filter'][self::$type][$key]); }
 				else { self::$_state['filter'][self::$type][$key] = '1'; }
 			break;
-                        default:
-                                // Rien a faire
+			default:
+				// Rien a faire
 				return false;
-                        break;
-                } // end switch
+			break;
+		} // end switch
 
 		// If we've set a filter we need to reset the totals
 		self::reset_total();
@@ -370,9 +370,9 @@ class Query {
 			case 'video':
 				$valid_array = array('title','resolution','length','codec');
 			break;
-                        case 'user':
-                                $valid_array = array('fullname','username','last_seen','create_date');
-                        break;
+			case 'user':
+				$valid_array = array('fullname','username','last_seen','create_date');
+			break;
 		} // end switch
 
 		// If it's not in our list, smeg off!
@@ -583,27 +583,27 @@ class Query {
 		// Only allow it to be set once
 		if (strlen(self::$_state['base'][self::$type])) { return true; }
 
-                switch (self::$type) {
-                        case 'album':
+		switch (self::$type) {
+			case 'album':
 				self::set_select("DISTINCT(`album`.`id`)");
-                                $sql = "SELECT %%SELECT%% FROM `album` ";
-                        break;
-                        case 'artist':
+				$sql = "SELECT %%SELECT%% FROM `album` ";
+			break;
+			case 'artist':
 				self::set_select("DISTINCT(`artist`.`id`)");
-                                $sql = "SELECT %%SELECT%% FROM `artist` ";
-                        break;
-                        case 'user':
+				$sql = "SELECT %%SELECT%% FROM `artist` ";
+			break;
+			case 'user':
 				self::set_select("`user`.`id`");
-                                $sql = "SELECT %%SELECT%% FROM `user` ";
-                        break;
-                        case 'live_stream':
+				$sql = "SELECT %%SELECT%% FROM `user` ";
+			break;
+			case 'live_stream':
 				self::set_select("`live_stream`.`id`");
-                                $sql = "SELECT %%SELECT%% FROM `live_stream` ";
-                        break;
-                        case 'playlist':
+				$sql = "SELECT %%SELECT%% FROM `live_stream` ";
+			break;
+			case 'playlist':
 				self::set_select("`playlist`.`id`");
-                                $sql = "SELECT %%SELECT%% FROM `playlist` ";
-                        break;
+				$sql = "SELECT %%SELECT%% FROM `playlist` ";
+			break;
 			case 'flagged':
 				self::set_select("`flagged`.`id`");
 				$sql = "SELECT %%SELECT%% FROM `flagged` ";
@@ -622,12 +622,12 @@ class Query {
 				$sql = "SELECT %%SELECT%% FROM `tag` ";
 			break;
 			case 'playlist_song':
-                        case 'song':
-                        default:
+			case 'song':
+			default:
 				self::set_select("DISTINCT(`song`.`id`)");
-                                $sql = "SELECT %%SELECT%% FROM `song` ";
-                        break;
-                } // end base sql
+				$sql = "SELECT %%SELECT%% FROM `song` ";
+			break;
+		} // end base sql
 
 		self::$_state['base'][self::$type] = $sql;
 
@@ -838,7 +838,7 @@ class Query {
 				case 'unplayed':
 					$filter_sql = " `song`.`played`='0' AND ";
 				break;
-			        case 'album':
+				case 'album':
 					$filter_sql = " `song`.`album` = '". Dba::escape($value) . "' AND ";
 				break;
 				case 'artist':
@@ -877,7 +877,7 @@ class Query {
 				case 'starts_with':
 					$filter_sql = " `album`.`name` LIKE '" . Dba::escape($value) . "%' AND ";
 				break;
-			        case 'artist':
+				case 'artist':
 					$filter_sql = " `artist`.`id` = '". Dba::escape($value) . "' AND ";
 				break;
 				case 'add_lt':
@@ -964,21 +964,21 @@ class Query {
 			} // end filter
 		break;
 		case 'tag':
-                        switch ($filter) {
-                                case 'alpha_match':
-                                        $filter_sql = " `tag`.`name` LIKE '%" . Dba::escape($value) . "%' AND ";
-                                break;
-                                case 'exact_match':
-                                        $filter_sql = " `tag`.`name` = '" . Dba::escape($value) . "' AND ";
-                                break;
+			switch ($filter) {
+				case 'alpha_match':
+					$filter_sql = " `tag`.`name` LIKE '%" . Dba::escape($value) . "%' AND ";
+				break;
+				case 'exact_match':
+					$filter_sql = " `tag`.`name` = '" . Dba::escape($value) . "' AND ";
+				break;
 				case 'tag': 
 					$filter_sql = " `tag`.`id` = '" . Dba::escape($value) . "' AND "; 
 				break; 
-                                default:
-                                        // Rien a faire
-                                break;
-                        } // end filter
-                break;
+				default:
+					// Rien a faire
+				break;
+			} // end filter
+		break;
 		case 'video':
 			switch ($filter) {
 				case 'alpha_match':
@@ -1106,22 +1106,22 @@ class Query {
 					break;
 				} // end switch
 			break;
-                        case 'user':
-                                switch ($field) {
-                                        case 'username':
-                                                $sql = "`user`.`username`";
-                                        break;
-                                        case 'fullname':
-                                                $sql = "`user`.`fullname`";
-                                        break;
-                                        case 'last_seen':
-                                                $sql = "`user`.`last_seen`";
-                                        break;
-                                        case 'create_date':
-                                                $sql = "`user`.`create_date`";
-                                        break;
-                                } // end switch
-                        break;
+			case 'user':
+				switch ($field) {
+					case 'username':
+						$sql = "`user`.`username`";
+					break;
+					case 'fullname':
+						$sql = "`user`.`fullname`";
+					break;
+					case 'last_seen':
+						$sql = "`user`.`last_seen`";
+					break;
+					case 'create_date':
+						$sql = "`user`.`create_date`";
+					break;
+				} // end switch
+			break;
 			case 'video':
 				switch ($field) {
 					case 'title':
@@ -1186,14 +1186,14 @@ class Query {
 
 			$order_sql = " ORDER BY ";
 
-	                foreach (self::$_state['sort'][self::$type] as $key=>$value) {
-	                        $order_sql .= self::sql_sort($key,$value);
-	                }
-	                // Clean her up
-	                $order_sql = rtrim($order_sql,"ORDER BY ");
-	                $order_sql = rtrim($order_sql,",");
+			foreach (self::$_state['sort'][self::$type] as $key=>$value) {
+				$order_sql .= self::sql_sort($key,$value);
+			}
+			// Clean her up
+			$order_sql = rtrim($order_sql,"ORDER BY ");
+			$order_sql = rtrim($order_sql,",");
 
-	                $sql = $sql . self::get_join_sql() . $where_sql . $order_sql;
+			$sql = $sql . self::get_join_sql() . $where_sql . $order_sql;
 		} // if not simple
 
 		$db_results = Dba::read($sql);
@@ -1208,33 +1208,33 @@ class Query {
 
 	} // resort_objects
 
-        /**
-         * save_objects
-         * This takes the full array of object ides, often passed into show and then
-         * if nessecary it saves them into the session
-         */
-        public static function save_objects($object_ids) {
+	/**
+	 * save_objects
+	 * This takes the full array of object ides, often passed into show and then
+	 * if nessecary it saves them into the session
+	 */
+	public static function save_objects($object_ids) {
 
-                // Saving these objects has two operations, one hold it in
-                // a local variable and then second hold it in a row in the tmp_browse
-                // table
-                self::$_cache['browse'][self::$type] = $object_ids;
+		// Saving these objects has two operations, one hold it in
+		// a local variable and then second hold it in a row in the tmp_browse
+		// table
+		self::$_cache['browse'][self::$type] = $object_ids;
 
-                // Only do this if it's a not a simple browse
-                if (!self::is_simple()) {
-                        $sid = Dba::escape(session_id());
-                        $data = Dba::escape(serialize($object_ids));
+		// Only do this if it's a not a simple browse
+		if (!self::is_simple()) {
+			$sid = Dba::escape(session_id());
+			$data = Dba::escape(serialize($object_ids));
 			$type = Dba::escape(self::$type);
 
-                        $sql = "REPLACE INTO `tmp_browse` SET `data`='$data', `sid`='$sid',`type`='$type'";
-                        $db_results = Dba::write($sql);
+			$sql = "REPLACE INTO `tmp_browse` SET `data`='$data', `sid`='$sid',`type`='$type'";
+			$db_results = Dba::write($sql);
 
-                        self::$total_objects = count($object_ids);
-                } // save it
+			self::$total_objects = count($object_ids);
+		} // save it
 
-                return true;
+		return true;
 
-        } // save_objects
+	} // save_objects
 
 	/**
 	 * _auto_init

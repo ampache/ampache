@@ -246,51 +246,51 @@ class Random implements media {
 		if ($data['genre'][0] != '-1') { 
 			$matchlist['genre'] = $data['genre']; 
 		} 	
-	        
+		
 		/* If they've passed -1 as limit then don't get everything */
-	        if ($data['random'] == "-1") { unset($data['random']); }
-	        else { $limit_sql = "LIMIT " . Dba::escape($limit); }
+		if ($data['random'] == "-1") { unset($data['random']); }
+		else { $limit_sql = "LIMIT " . Dba::escape($limit); }
 
-	        $where = "1=1 ";
-	        if (is_array($matchlist)) { 
-	            foreach ($matchlist as $type => $value) {
-	                        if (is_array($value)) {
-	                                foreach ($value as $v) {
+		$where = "1=1 ";
+		if (is_array($matchlist)) { 
+			foreach ($matchlist as $type => $value) {
+				if (is_array($value)) {
+					foreach ($value as $v) {
 						if (!strlen($v)) { continue; } 
-	                                        $v = Dba::escape($v);
-	                                        if ($v != $value[0]) { $where .= " OR $type='$v' "; }
-	                                        else { $where .= " AND ( $type='$v'"; }
-	                                }
+						$v = Dba::escape($v);
+						if ($v != $value[0]) { $where .= " OR $type='$v' "; }
+						else { $where .= " AND ( $type='$v'"; }
+					}
 					$where .= ")"; 
-	                        }
-	                        elseif (strlen($value)) {
-	                                $value = Dba::escape($value);
-	                                $where .= " AND $type='$value' ";
-	                        }
-	            } // end foreach
+				}
+				elseif (strlen($value)) {
+					$value = Dba::escape($value);
+					$where .= " AND $type='$value' ";
+				}
+			} // end foreach
 		} // end if matchlist
 	
 		switch ($data['random_type']) { 
 			case 'full_album': 
-	                	$query = "SELECT `album`.`id` FROM `song` INNER JOIN `album` ON `song`.`album`=`album`.`id` " . 
+				$query = "SELECT `album`.`id` FROM `song` INNER JOIN `album` ON `song`.`album`=`album`.`id` " . 
 					"WHERE $where GROUP BY `song`.`album` ORDER BY RAND() $limit_sql";
-		                $db_results = Dba::read($query);
-		                while ($row = Dba::fetch_assoc($db_results)) {
-		                        $albums_where .= " OR `song`.`album`=" . $row['id'];
-		                }
-		                $albums_where = ltrim($albums_where," OR");
-		                $sql = "SELECT `song`.`id`,`song`.`size`,`song`.`time` FROM `song` WHERE $albums_where ORDER BY `song`.`album`,`song`.`track` ASC";
+				$db_results = Dba::read($query);
+				while ($row = Dba::fetch_assoc($db_results)) {
+					$albums_where .= " OR `song`.`album`=" . $row['id'];
+				}
+				$albums_where = ltrim($albums_where," OR");
+				$sql = "SELECT `song`.`id`,`song`.`size`,`song`.`time` FROM `song` WHERE $albums_where ORDER BY `song`.`album`,`song`.`track` ASC";
 			break; 
 			case 'full_artist': 
-	                	$query = "SELECT `artist`.`id` FROM `song` INNER JOIN `artist` ON `song`.`artist`=`artist`.`id` " . 
+				$query = "SELECT `artist`.`id` FROM `song` INNER JOIN `artist` ON `song`.`artist`=`artist`.`id` " . 
 					"WHERE $where GROUP BY `song`.`artist` ORDER BY RAND()  $limit_sql";
-		                $db_results = Dba::read($query);
-		                while ($row = Dba::fetch_row($db_results)) {
-		                        $artists_where .= " OR song.artist=" . $row[0];
-		                }
-		                $artists_where = ltrim($artists_where," OR");
-		                $sql = "SELECT song.id,song.size,song.time FROM song WHERE $artists_where ORDER BY RAND()";
-		        break;
+				$db_results = Dba::read($query);
+				while ($row = Dba::fetch_row($db_results)) {
+					$artists_where .= " OR song.artist=" . $row[0];
+				}
+				$artists_where = ltrim($artists_where," OR");
+				$sql = "SELECT song.id,song.size,song.time FROM song WHERE $artists_where ORDER BY RAND()";
+			break;
 			case 'unplayed': 
 				$uid = Dba::escape($GLOBALS['user']->id); 
 				$sql = "SELECT object_id,COUNT(`id`) AS `total` FROM `object_count` WHERE `user`='$uid' GROUP BY `object_id`";
@@ -481,18 +481,18 @@ class Random implements media {
 	 */
 	public static function validate_type($type) { 
 
-                switch ($type) {
+		switch ($type) {
 			case 'default':
-                        case 'genre':
-                        case 'album':
-                        case 'artist':
-                        case 'rated':
+			case 'genre':
+			case 'album':
+			case 'artist':
+			case 'rated':
 				return $type; 
-                        break;
-                        default:
-                                return 'default';
-                        break;
-                } // end switch
+			break;
+			default:
+				return 'default';
+			break;
+		} // end switch
 		
 		return $type; 
 

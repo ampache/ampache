@@ -1126,12 +1126,12 @@ class vainfo {
 	 */
 	public function set_broken() { 
 
-                /* Pull In the config option */
-                $order = Config::get('tag_order');
+		/* Pull In the config option */
+		$order = Config::get('tag_order');
 
-                if (!is_array($order)) {
-                        $order = array($order);
-                }
+		if (!is_array($order)) {
+			$order = array($order);
+		}
 
 		$key = array_shift($order); 
 

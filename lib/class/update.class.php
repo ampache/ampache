@@ -659,15 +659,15 @@ class Update {
 		$sql = "ALTER TABLE `song_ext_data` ADD `label` VARCHAR ( 128 ) NULL, ADD `catalog_number` VARCHAR ( 128 ) NULL, ADD `language` VARCHAR ( 128 ) NULL";
 		$db_results = Dba::write($sql);
 
-                /* Fix every users preferences */
-                $sql = "SELECT `id` FROM `user`";
-                $db_results = Dba::read($sql);
+		/* Fix every users preferences */
+		$sql = "SELECT `id` FROM `user`";
+		$db_results = Dba::read($sql);
 
-                User::fix_preferences('-1');
+		User::fix_preferences('-1');
 
-                while ($r = Dba::fetch_assoc($db_results)) {
-                        User::fix_preferences($r['id']);
-                } // while results
+		while ($r = Dba::fetch_assoc($db_results)) {
+			User::fix_preferences($r['id']);
+		} // while results
 
 		self::set_version('db_version','340001');
 
@@ -769,27 +769,27 @@ class Update {
 		$sql = "ALTER TABLE `rating` CHANGE `user_rating` `rating` ENUM( '-1', '0', '1', '2', '3', '4', '5' ) NOT NULL DEFAULT '0'";
 		$db_results = Dba::write($sql);
 
-                /* Add the rate_limit preference */
-                $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
-                        "VALUES ('rate_limit','8192','Rate Limit','100','integer','streaming')";
-                $db_results = Dba::write($sql);
+		/* Add the rate_limit preference */
+		$sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
+			"VALUES ('rate_limit','8192','Rate Limit','100','integer','streaming')";
+		$db_results = Dba::write($sql);
 
-                /* Add the playlist_method preference and remove it from the user table */
-                $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
-                        "VALUES ('playlist_method','normal','Playlist Method','5','string','streaming')";
-                $db_results = Dba::write($sql);
+		/* Add the playlist_method preference and remove it from the user table */
+		$sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
+			"VALUES ('playlist_method','normal','Playlist Method','5','string','streaming')";
+		$db_results = Dba::write($sql);
 
 		$sql = "ALTER TABLE `update_info` ADD UNIQUE (`key`)";
 		$db_results = Dba::write($sql);
 
-                $sql = "SELECT `id` FROM `user`";
-                $db_results = Dba::read($sql);
+		$sql = "SELECT `id` FROM `user`";
+		$db_results = Dba::read($sql);
 
-                User::fix_preferences('-1');
+		User::fix_preferences('-1');
 
-                while ($r = Dba::fetch_assoc($db_results)) {
-                        User::fix_preferences($r['id']);
-                }
+		while ($r = Dba::fetch_assoc($db_results)) {
+			User::fix_preferences($r['id']);
+		}
 
 		self::set_version('db_version','340003');
 
@@ -804,8 +804,8 @@ class Update {
 	 */
 	public static function update_340004() {
 
-                /* Alter the session.id so that it's 64 */
-                $sql = "ALTER TABLE `session` CHANGE `id` `id` VARCHAR( 64 ) NOT NULL";
+		/* Alter the session.id so that it's 64 */
+		$sql = "ALTER TABLE `session` CHANGE `id` `id` VARCHAR( 64 ) NOT NULL";
 		$db_results = Dba::write($sql);
 
 		/* Add Playlist Related Preferences */
@@ -848,14 +848,14 @@ class Update {
 		$sql = "OPTIMIZE TABLE `album`";
 		$db_results = Dba::write($sql);
 
-                $sql = "SELECT `id` FROM `user`";
-                $db_results = Dba::read($sql);
+		$sql = "SELECT `id` FROM `user`";
+		$db_results = Dba::read($sql);
 
-                User::fix_preferences('-1');
+		User::fix_preferences('-1');
 
-                while ($r = Dba::fetch_assoc($db_results)) {
-                        User::fix_preferences($r['id']);
-                }
+		while ($r = Dba::fetch_assoc($db_results)) {
+			User::fix_preferences($r['id']);
+		}
 
 		// Update our database version now that we are all done
 		self::set_version('db_version','340004');
@@ -885,24 +885,24 @@ class Update {
 		$sql = "SELECT * FROM `preference` WHERE `name`='playlist_method'";
 		$db_results = Dba::read($sql);
 		if (!Dba::num_rows($db_results)) {
-	                /* Add the playlist_method preference and remove it from the user table */
-	                $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
-	                        "VALUES ('playlist_method','default','Playlist Method','5','string','playlist')";
-	                $db_results = Dba::write($sql);
+			/* Add the playlist_method preference and remove it from the user table */
+			$sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
+				"VALUES ('playlist_method','default','Playlist Method','5','string','playlist')";
+			$db_results = Dba::write($sql);
 		}
 
 		// Add in the object_type to the tmpplaylist data table so that we can have non-songs in there
 		$sql = "ALTER TABLE `tmp_playlist_data` ADD `object_type` VARCHAR( 32 ) NULL AFTER `tmp_playlist`";
 		$db_results = Dba::write($sql);
 
-                $sql = "SELECT `id` FROM `user`";
-                $db_results = Dba::read($sql);
+		$sql = "SELECT `id` FROM `user`";
+		$db_results = Dba::read($sql);
 
-                User::fix_preferences('-1');
+		User::fix_preferences('-1');
 
-                while ($r = Dba::fetch_assoc($db_results)) {
-                        User::fix_preferences($r['id']);
-                }
+		while ($r = Dba::fetch_assoc($db_results)) {
+			User::fix_preferences($r['id']);
+		}
 
 		self::set_version('db_version','340005');
 
@@ -934,18 +934,18 @@ class Update {
 		$sql = "DELETE FROM `preference` WHERE `name`='random_method'";
 		$db_results = Dba::write($sql);
 
-                $sql = "SELECT `id` FROM `user`";
-                $db_results = Dba::read($sql);
+		$sql = "SELECT `id` FROM `user`";
+		$db_results = Dba::read($sql);
 
-                User::fix_preferences('-1');
+		User::fix_preferences('-1');
 
-                while ($r = Dba::fetch_assoc($db_results)) {
-                        User::fix_preferences($r['id']);
-                }
+		while ($r = Dba::fetch_assoc($db_results)) {
+			User::fix_preferences($r['id']);
+		}
 
-                self::set_version('db_version','340006');
+		self::set_version('db_version','340006');
 
-                return true;
+		return true;
 
 
 	} // update_340006
@@ -1022,14 +1022,14 @@ class Update {
 		$sql = "DROP TABLE IF EXISTS `ratings`";
 		$db_results = Dba::write($sql);
 
-                $sql = "SELECT `id` FROM `user`";
-                $db_results = Dba::read($sql);
+		$sql = "SELECT `id` FROM `user`";
+		$db_results = Dba::read($sql);
 
-                User::fix_preferences('-1');
+		User::fix_preferences('-1');
 
-                while ($r = Dba::fetch_assoc($db_results)) {
-                        User::fix_preferences($r['id']);
-                }
+		while ($r = Dba::fetch_assoc($db_results)) {
+			User::fix_preferences($r['id']);
+		}
 
 		self::set_version('db_version','340008');
 
@@ -1089,15 +1089,15 @@ class Update {
 		$sql = "UPDATE `preference` SET `description`='Localplay Config' WHERE `name`='localplay_level'";
 		$db_results = Dba::write($sql);
 
-                /* Fix every users preferences */
-                $sql = "SELECT `id` FROM `user`";
-                $db_results = Dba::read($sql);
+		/* Fix every users preferences */
+		$sql = "SELECT `id` FROM `user`";
+		$db_results = Dba::read($sql);
 
-                User::fix_preferences('-1');
+		User::fix_preferences('-1');
 
-                while ($r = Dba::fetch_assoc($db_results)) {
-                        User::fix_preferences($r['id']);
-                } // while results
+		while ($r = Dba::fetch_assoc($db_results)) {
+			User::fix_preferences($r['id']);
+		} // while results
 
 		self::set_version('db_version','340010');
 
@@ -1114,16 +1114,16 @@ class Update {
 	public static function update_340011() {
 
 		// First add the new table for the new session stuff
-                $sql = "CREATE TABLE `session_api` ( " .
-                        "`id` VARCHAR( 64 ) NOT NULL , " .
-                        "`user` INT( 11 ) UNSIGNED NOT NULL , " .
-                        "`agent` VARCHAR( 255 ) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL , " .
+		$sql = "CREATE TABLE `session_api` ( " .
+			"`id` VARCHAR( 64 ) NOT NULL , " .
+			"`user` INT( 11 ) UNSIGNED NOT NULL , " .
+			"`agent` VARCHAR( 255 ) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL , " .
 			"`level` INT( 11 ) UNSIGNED NOT NULL DEFAULT '0', " .
-                        "`expire` INT( 11 ) UNSIGNED NOT NULL , " .
-                        "`ip` INT( 11 ) UNSIGNED NULL , " .
-                        "PRIMARY KEY ( `id` ) " .
-                        ") ENGINE = MYISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci";
-                $db_results = Dba::write($sql);
+			"`expire` INT( 11 ) UNSIGNED NOT NULL , " .
+			"`ip` INT( 11 ) UNSIGNED NULL , " .
+			"PRIMARY KEY ( `id` ) " .
+			") ENGINE = MYISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci";
+		$db_results = Dba::write($sql);
 
 		self::set_version('db_version','340011');
 
@@ -1179,14 +1179,14 @@ class Update {
 		$sql = "UPDATE `access_list` SET `type`='rpc' WHERE `type`='xml-rpc'";
 		$db_results = Dba::write($sql);
 
-                $sql = "SELECT `id` FROM `user`";
-                $db_results = Dba::read($sql);
+		$sql = "SELECT `id` FROM `user`";
+		$db_results = Dba::read($sql);
 
-                User::fix_preferences('-1');
+		User::fix_preferences('-1');
 
-                while ($r = Dba::fetch_assoc($db_results)) {
-                        User::fix_preferences($r['id']);
-                } // while we're fixing the useres stuff
+		while ($r = Dba::fetch_assoc($db_results)) {
+			User::fix_preferences($r['id']);
+		} // while we're fixing the useres stuff
 
 		self::set_version('db_version','340013');
 
@@ -1357,9 +1357,9 @@ class Update {
 			break;
 		} // end mysql charset translation
 
-                // Alter the charset for the entire database
-                $sql = "ALTER DATABASE `" . Config::get('database_name') . "` DEFAULT CHARACTER SET $target_charset COLLATE $target_collation";
-                $db_results = Dba::write($sql);
+		// Alter the charset for the entire database
+		$sql = "ALTER DATABASE `" . Config::get('database_name') . "` DEFAULT CHARACTER SET $target_charset COLLATE $target_collation";
+		$db_results = Dba::write($sql);
 
 		$sql = "SHOW TABLES";
 		$db_results = Dba::read($sql);
@@ -1369,9 +1369,9 @@ class Update {
 			$sql = "DESCRIBE `" . $row['0'] . "`";
 			$describe_results = Dba::read($sql);
 
-                        // Change the tables default charset and colliation
-                        $sql = "ALTER TABLE `" . $row['0'] . "`  DEFAULT CHARACTER SET $target_charset COLLATE $target_collation";
-                        $alter_table = Dba::write($sql);
+			// Change the tables default charset and colliation
+			$sql = "ALTER TABLE `" . $row['0'] . "`  DEFAULT CHARACTER SET $target_charset COLLATE $target_collation";
+			$alter_table = Dba::write($sql);
 
 			// Itterate through the columns of the table
 			while ($table = Dba::fetch_assoc($describe_results)) {
@@ -1641,14 +1641,14 @@ class Update {
 		$sql = "INSERT INTO `user_preference` VALUES (1,69,'0')";
 		$db_results = Dba::write($sql);
 
-                $sql = "SELECT `id` FROM `user`";
-                $db_results = Dba::read($sql);
+		$sql = "SELECT `id` FROM `user`";
+		$db_results = Dba::read($sql);
 
-                User::fix_preferences('-1');
+		User::fix_preferences('-1');
 
-                while ($r = Dba::fetch_assoc($db_results)) {
-                        User::fix_preferences($r['id']);
-                } // while we're fixing the useres stuff
+		while ($r = Dba::fetch_assoc($db_results)) {
+			User::fix_preferences($r['id']);
+		} // while we're fixing the useres stuff
 
 		self::set_version('db_version','350006');
 
@@ -1751,8 +1751,8 @@ class Update {
 		$sql = "ALTER TABLE `video` ADD INDEX (`update_time`)";
 		$db_results = Dba::write($sql);
 
-                $sql = "ALTER TABLE `artist_data` ADD INDEX ( `art_mime` )";
-                $db_results = Dba::write($sql);
+		$sql = "ALTER TABLE `artist_data` ADD INDEX ( `art_mime` )";
+		$db_results = Dba::write($sql);
 
 		$sql = "ALTER TABLE `album_data` ADD INDEX ( `art_mime` )";
 		$db_results = Dba::write($sql);
@@ -1793,14 +1793,14 @@ class Update {
 		$sql = "DELETE FROM `preference` WHERE `name` LIKE 'rio_%'";
 		$db_results = Dba::write($sql);
 
-                $sql = "SELECT `id` FROM `user`";
-                $db_results = Dba::read($sql);
+		$sql = "SELECT `id` FROM `user`";
+		$db_results = Dba::read($sql);
 
-                User::fix_preferences('-1');
+		User::fix_preferences('-1');
 
-                while ($r = Dba::fetch_assoc($db_results)) {
-                        User::fix_preferences($r['id']);
-                } // while we're fixing the useres stuff
+		while ($r = Dba::fetch_assoc($db_results)) {
+			User::fix_preferences($r['id']);
+		} // while we're fixing the useres stuff
 
 		self::set_version('db_version','360001');
 

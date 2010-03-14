@@ -51,15 +51,15 @@ class Api {
 
 		switch ($filter) { 
 			case 'add': 
-				       // Check for a range, if no range default to gt
-				       if (strpos('/',$value)) {
-						$elements = explode('/',$value);
-						Browse::set_filter('add_lt',strtotime($elements['1']));
-						Browse::set_filter('add_gt',strtotime($elements['0']));
-				       }
-				       else {
-						Browse::set_filter('add_gt',strtotime($value));
-				       }
+				// Check for a range, if no range default to gt
+				if (strpos('/',$value)) {
+					$elements = explode('/',$value);
+					Browse::set_filter('add_lt',strtotime($elements['1']));
+					Browse::set_filter('add_gt',strtotime($elements['0']));
+				}
+				else {
+					Browse::set_filter('add_gt',strtotime($value));
+				}
 			break; 
 			case 'update': 
 				// Check for a range, if no range default to gt
@@ -222,8 +222,8 @@ class Api {
 
 		// Check and see if we should extend the api sessions (done if valid sess is passed)
 		if (vauth::session_exists('api', $input['auth'])) {
-		        vauth::session_extend($input['auth']);
-		        $xmldata = array_merge(array('session_expire'=>date("r",time()+Config::get('session_length')-60)),$xmldata);
+			vauth::session_extend($input['auth']);
+			$xmldata = array_merge(array('session_expire'=>date("r",time()+Config::get('session_length')-60)),$xmldata);
 		}
 
 		debug_event('API','Ping Received from ' . $_SERVER['REMOTE_ADDR'] . ' :: ' . $input['auth'],'5');
@@ -545,9 +545,9 @@ class Api {
 			$items = $playlist->get_items();
 
 			foreach ($items as $object) {
-			        if ($object['type'] == 'song') {
-			                $songs[] = $object['object_id'];
-			        }
+				if ($object['type'] == 'song') {
+					$songs[] = $object['object_id'];
+				}
 			} // end foreach
 
 			xmlData::set_offset($input['offset']);
@@ -625,18 +625,18 @@ class Api {
 			$localplay->connect();
 
 			switch ($input['command']) {
-			        case 'next':
-			        case 'prev':
-			        case 'play':
-			        case 'stop':
-			                $result_status = $localplay->$input['command']();
-			                $xml_array = array('localplay'=>array('command'=>array($input['command']=>make_bool($result_status))));
-			                echo xmlData::keyed_array($xml_array);
-			        break;
-			        default:
-			                // They are doing it wrong
-			                echo xmlData::error('405',_('Invalid Request'));
-			        break;
+				case 'next':
+				case 'prev':
+				case 'play':
+				case 'stop':
+					$result_status = $localplay->$input['command']();
+					$xml_array = array('localplay'=>array('command'=>array($input['command']=>make_bool($result_status))));
+					echo xmlData::keyed_array($xml_array);
+				break;
+				default:
+					// They are doing it wrong
+					echo xmlData::error('405',_('Invalid Request'));
+				break;
 			} // end switch on command
 
 	} // localplay
@@ -652,45 +652,45 @@ class Api {
 			$democratic->set_parent();
 
 			switch ($input['method']) {
-			        case 'vote':
-			                $type = 'song';
-			                $media = new $type($input['oid']);
-			                if (!$media->id) {
-			                        echo xmlData::error('400',_('Media Object Invalid or Not Specified'));
-			                        break;
-			                }
-			                $democratic->vote(array(array('song',$media->id)));
+				case 'vote':
+					$type = 'song';
+					$media = new $type($input['oid']);
+					if (!$media->id) {
+						echo xmlData::error('400',_('Media Object Invalid or Not Specified'));
+						break;
+					}
+					$democratic->vote(array(array('song',$media->id)));
 
-			                // If everything was ok
-			                $xml_array = array('action'=>$input['action'],'method'=>$input['method'],'result'=>true);
-			                echo xmlData::keyed_array($xml_array);
-			        break;
-			        case 'devote':
-			                $type = 'song';
-			                $media = new $type($input['oid']);
-			                if (!$media->id) {
-			                        echo xmlData::error('400',_('Media Object Invalid or Not Specified'));
-			                }
+					// If everything was ok
+					$xml_array = array('action'=>$input['action'],'method'=>$input['method'],'result'=>true);
+					echo xmlData::keyed_array($xml_array);
+				break;
+				case 'devote':
+					$type = 'song';
+					$media = new $type($input['oid']);
+					if (!$media->id) {
+						echo xmlData::error('400',_('Media Object Invalid or Not Specified'));
+					}
 
-			                $uid = $democratic->get_uid_from_object_id($media->id,$type);
-			                $democratic->remove_vote($uid);
+					$uid = $democratic->get_uid_from_object_id($media->id,$type);
+					$democratic->remove_vote($uid);
 
-			                // Everything was ok
-			                $xml_array = array('action'=>$input['action'],'method'=>$input['method'],'result'=>true);
-			                echo xmlData::keyed_array($xml_array);
-			        break;
-			        case 'playlist':
-			                $objects = $democratic->get_items();
-			                Song::build_cache($democratic->object_ids);
-			                Democratic::build_vote_cache($democratic->vote_ids);
-			                xmlData::democratic($objects);
-			        break;
-			        case 'play':
-			                $url = $democratic->play_url();
+					// Everything was ok
+					$xml_array = array('action'=>$input['action'],'method'=>$input['method'],'result'=>true);
+					echo xmlData::keyed_array($xml_array);
+				break;
+				case 'playlist':
+					$objects = $democratic->get_items();
+					Song::build_cache($democratic->object_ids);
+					Democratic::build_vote_cache($democratic->vote_ids);
+					xmlData::democratic($objects);
+				break;
+				case 'play':
+					$url = $democratic->play_url();
 					$xml_array = array('url'=>$url);
 					echo xmlData::keyed_array($xml_array);
-			        break;
-			        default:
+				break;
+				default:
 					echo xmlData::error('405',_('Invalid Request'));
 			break;
 		} // switch on method

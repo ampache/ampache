@@ -165,10 +165,10 @@ class Playlist extends database_object {
 
 		while ($row = Dba::fetch_assoc($db_results)) { 
 
-                        $results[] = array('type'=>$row['object_type'],'object_id'=>$row['object_id']);
-                } // end while
+			$results[] = array('type'=>$row['object_type'],'object_id'=>$row['object_id']);
+		} // end while
 
-                return $results;
+		return $results;
 
 	} // get_random_items
 
@@ -385,38 +385,38 @@ class Playlist extends database_object {
 
 	} // set_items
 
-        /**
-         * normalize_tracks
-         * this takes the crazy out of order tracks
-         * and numbers them in a liner fashion, not allowing for
+	/**
+	 * normalize_tracks
+	 * this takes the crazy out of order tracks
+	 * and numbers them in a liner fashion, not allowing for
 	 * the same track # twice, this is an optional funcition
 	 */
-        public function normalize_tracks() { 
+	public function normalize_tracks() { 
 
-                /* First get all of the songs in order of their tracks */
-                $sql = "SELECT `id` FROM `playlist_data` WHERE `playlist`='" . Dba::escape($this->id) . "' ORDER BY `track` ASC";
-                $db_results = Dba::read($sql);
+		/* First get all of the songs in order of their tracks */
+		$sql = "SELECT `id` FROM `playlist_data` WHERE `playlist`='" . Dba::escape($this->id) . "' ORDER BY `track` ASC";
+		$db_results = Dba::read($sql);
 
-                $i = 1;
+		$i = 1;
 		$results = array();
 
-                while ($r = Dba::fetch_assoc($db_results)) { 
-                        $new_data = array();
-                        $new_data['id']         = $r['id'];
-                        $new_data['track']      = $i;
-                        $results[] = $new_data;
-                        $i++;
-                } // end while results
+		while ($r = Dba::fetch_assoc($db_results)) { 
+			$new_data = array();
+			$new_data['id']	= $r['id'];
+			$new_data['track'] = $i;
+			$results[] = $new_data;
+			$i++;
+		} // end while results
 
-                foreach($results as $data) { 
-                        $sql = "UPDATE `playlist_data` SET `track`='" . $data['track'] . "' WHERE" . 
-                                        " `id`='" . $data['id'] . "'";
-                        $db_results = Dba::write($sql);
-                } // foreach re-ordered results
+		foreach($results as $data) { 
+			$sql = "UPDATE `playlist_data` SET `track`='" . $data['track'] . "' WHERE" . 
+					" `id`='" . $data['id'] . "'";
+			$db_results = Dba::write($sql);
+		} // foreach re-ordered results
 
-                return true;
+		return true;
 
-        } // normalize_tracks
+	} // normalize_tracks
 	
 	/**
 	 * delete_track

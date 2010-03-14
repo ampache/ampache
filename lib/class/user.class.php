@@ -240,7 +240,7 @@ class User extends database_object {
 	 */
 	function get_favorites($type) {
 
-	        $web_path = Config::get('web_path');
+		$web_path = Config::get('web_path');
 
 		$results = Stats::get_user(Config::get('popular_threshold'),$type,$this->id,1);
 
@@ -693,7 +693,7 @@ class User extends database_object {
 		else { $this->f_last_seen = date("m\/d\/Y - H:i",$this->last_seen); }
 
 		/* If they have a create date */
-        	if (!$this->create_date) { $this->f_create_date = _('Unknown'); }
+		if (!$this->create_date) { $this->f_create_date = _('Unknown'); }
 		else { $this->f_create_date = date("m\/d\/Y - H:i",$this->create_date); }
 
 		// Base link
@@ -860,56 +860,56 @@ class User extends database_object {
 
 		/* If we aren't the -1 user before we continue grab the -1 users values */
 		if ($user_id != '-1') {
-                        $sql = "SELECT `user_preference`.`preference`,`user_preference`.`value` FROM `user_preference`,`preference` " .
-                                "WHERE `user_preference`.`preference` = `preference`.`id` AND `user_preference`.`user`='-1' AND `preference`.`catagory` !='system'";
-                        $db_results = Dba::read($sql);
+			$sql = "SELECT `user_preference`.`preference`,`user_preference`.`value` FROM `user_preference`,`preference` " .
+				"WHERE `user_preference`.`preference` = `preference`.`id` AND `user_preference`.`user`='-1' AND `preference`.`catagory` !='system'";
+			$db_results = Dba::read($sql);
 			/* While through our base stuff */
-                        while ($r = Dba::fetch_assoc($db_results)) {
+			while ($r = Dba::fetch_assoc($db_results)) {
 				$key = $r['preference'];
-                                $zero_results[$key] = $r['value'];
-                        }
-                } // if not user -1
+				$zero_results[$key] = $r['value'];
+			}
+		} // if not user -1
 
 		// get me _EVERYTHING_
-                $sql = "SELECT * FROM `preference`";
+		$sql = "SELECT * FROM `preference`";
 
 		// If not system, exclude system... *gasp*
-                if ($user_id != '-1') {
-                        $sql .= " WHERE catagory !='system'";
-                }
-                $db_results = Dba::read($sql);
+		if ($user_id != '-1') {
+			$sql .= " WHERE catagory !='system'";
+		}
+		$db_results = Dba::read($sql);
 
-                while ($r = Dba::fetch_assoc($db_results)) {
+		while ($r = Dba::fetch_assoc($db_results)) {
 
 			$key = $r['id'];
 
-                        /* Check if this preference is set */
-                        if (!isset($results[$key])) {
-                                if (isset($zero_results[$key])) {
-                                        $r['value'] = $zero_results[$key];
-                                }
+			/* Check if this preference is set */
+			if (!isset($results[$key])) {
+				if (isset($zero_results[$key])) {
+					$r['value'] = $zero_results[$key];
+				}
 				$value = Dba::escape($r['value']);
-                                $sql = "INSERT INTO user_preference (`user`,`preference`,`value`) VALUES ('$user_id','$key','$value')";
-                                $insert_db = Dba::write($sql);
-                        }
-                } // while preferences
+				$sql = "INSERT INTO user_preference (`user`,`preference`,`value`) VALUES ('$user_id','$key','$value')";
+				$insert_db = Dba::write($sql);
+			}
+		} // while preferences
 
-                /* Let's also clean out any preferences garbage left over */
-                $sql = "SELECT DISTINCT(user_preference.user) FROM user_preference " .
-                        "LEFT JOIN user ON user_preference.user = user.id " .
-                        "WHERE user_preference.user!='-1' AND user.id IS NULL";
-                $db_results = Dba::read($sql);
+		/* Let's also clean out any preferences garbage left over */
+		$sql = "SELECT DISTINCT(user_preference.user) FROM user_preference " .
+			"LEFT JOIN user ON user_preference.user = user.id " .
+			"WHERE user_preference.user!='-1' AND user.id IS NULL";
+		$db_results = Dba::read($sql);
 
-                $results = array();
+		$results = array();
 
-                while ($r = Dba::fetch_assoc($db_results)) {
-                        $results[] = $r['user'];
-                }
+		while ($r = Dba::fetch_assoc($db_results)) {
+			$results[] = $r['user'];
+		}
 
-                foreach ($results as $data) {
-                        $sql = "DELETE FROM user_preference WHERE user='$data'";
-                        $db_results = Dba::write($sql);
-                }
+		foreach ($results as $data) {
+			$sql = "DELETE FROM user_preference WHERE user='$data'";
+			$db_results = Dba::write($sql);
+		}
 
 	} // fix_preferences
 
@@ -976,7 +976,7 @@ class User extends database_object {
 
 		// Delete their shoutbox posts
 		$sql = "DELETE FROM `user_shout` WHERE `user='$this->id'";
-    		$db_results = Dba::write($sql);
+		$db_results = Dba::write($sql);
 
 		// Delete the user itself
 		$sql = "DELETE FROM `user` WHERE `id`='$this->id'";
@@ -1039,12 +1039,12 @@ class User extends database_object {
 
 	} // get_recently_played
 
-        /**
-         * get_ip_history
-         * This returns the ip_history from the
-         * last Config::get('user_ip_cardinality') days
-         */
-        public function get_ip_history($count='',$distinct='') {
+	/**
+	 * get_ip_history
+	 * This returns the ip_history from the
+	 * last Config::get('user_ip_cardinality') days
+	 */
+	public function get_ip_history($count='',$distinct='') {
 
 		$username 	= Dba::escape($this->id);
 		$count		= $count ? intval($count) : intval(Config::get('user_ip_cardinality'));
@@ -1055,21 +1055,21 @@ class User extends database_object {
 
 		if ($distinct) { $group_sql = "GROUP BY `ip`"; }
 
-                /* Select ip history */
-                $sql = "SELECT `ip`,`date` FROM `ip_history`" .
-                        " WHERE `user`='$username'" .
-                        " $group_sql ORDER BY `date` DESC $limit_sql";
-                $db_results = Dba::read($sql);
+		/* Select ip history */
+		$sql = "SELECT `ip`,`date` FROM `ip_history`" .
+			" WHERE `user`='$username'" .
+			" $group_sql ORDER BY `date` DESC $limit_sql";
+		$db_results = Dba::read($sql);
 
-                $results = array();
+		$results = array();
 
-                while ($row = Dba::fetch_assoc($db_results)) {
-                        $results[] = $row;
-                }
+		while ($row = Dba::fetch_assoc($db_results)) {
+			$results[] = $row;
+		}
 
-                return $results;
+		return $results;
 
-        } // get_ip_history
+	} // get_ip_history
 
 	/**
 	 * activate_user
@@ -1084,23 +1084,23 @@ class User extends database_object {
 
 	} // activate_user
 
-       /**
-	* is_xmlrpc
-        * checks to see if this is a valid xmlrpc user
-        */
-        public function is_xmlrpc() {
+	/**
+	 * is_xmlrpc
+	 * checks to see if this is a valid xmlrpc user
+	 */
+	public function is_xmlrpc() {
 
-                /* If we aren't using XML-RPC return true */
-                if (!Config::get('xml_rpc')) {
-                        return false;
-                }
+		/* If we aren't using XML-RPC return true */
+		if (!Config::get('xml_rpc')) {
+			return false;
+		}
 
-                //FIXME: Ok really what we will do is check the MD5 of the HTTP_REFERER
-                //FIXME: combined with the song title to make sure that the REFERER
-                //FIXME: is in the access list with full rights
-                return true;
+		//FIXME: Ok really what we will do is check the MD5 of the HTTP_REFERER
+		//FIXME: combined with the song title to make sure that the REFERER
+		//FIXME: is in the access list with full rights
+		return true;
 
-        } // is_xmlrpc
+	} // is_xmlrpc
 
 	/**
 	 * check_username

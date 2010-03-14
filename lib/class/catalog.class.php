@@ -208,15 +208,15 @@ class Catalog extends database_object {
 		// presentation we do not care about less than 0.01 MB.
 		//
 		$sizeStr = (string)$results['size'];
-                if ( strlen( $sizeStr ) > 3 ) {
+		if ( strlen( $sizeStr ) > 3 ) {
 			$size = (int)substr( $sizeStr, 0, -3 );
-                }
-                else {
+		}
+		else {
 			$size = 0;
-                }
+		}
 		// Now go to MB's, applying a correction for KB first.
-                //
-                $size = ($size / 1.024) / 1024;
+		//
+		$size = ($size / 1.024) / 1024;
 
 		$size = $results['size']/1048576;
 		$days = floor($hours/24);
@@ -348,11 +348,11 @@ class Catalog extends database_object {
 			$this->get_album_art('',1);
 		}
 
-                if ($options['parse_m3u'] AND count($this->_playlists)) { 
-                        foreach ($this->_playlists as $playlist_file) {
-                                $result = $this->import_m3u($playlist_file);
-                        }
-                } // if we need to do some m3u-age
+		if ($options['parse_m3u'] AND count($this->_playlists)) { 
+			foreach ($this->_playlists as $playlist_file) {
+				$result = $this->import_m3u($playlist_file);
+			}
+		} // if we need to do some m3u-age
 
 		return true;
 
@@ -442,9 +442,9 @@ class Catalog extends database_object {
 		$time = time();
 		$last_seen_time = $time - 1200;
 		$sql =  "SELECT count(DISTINCT s.username) FROM session AS s " .
-	                "INNER JOIN user AS u ON s.username = u.username " .
-	                "WHERE s.expire > " . $time . " " .
-	                "AND u.last_seen > " . $last_seen_time;
+			"INNER JOIN user AS u ON s.username = u.username " .
+			"WHERE s.expire > " . $time . " " .
+			"AND u.last_seen > " . $last_seen_time;
 		$db_results = Dba::read($sql);
 		$data = Dba::fetch_row($db_results);
 
@@ -831,7 +831,7 @@ class Catalog extends database_object {
 
 		// Setup the base SQL
 		$sql = "SELECT song.id AS song,artist.id AS artist,album.id AS album,title,COUNT(title) AS ctitle".
-	                " FROM `song` LEFT JOIN `artist` ON `artist`.`id`=`song`.`artist` " . 
+			" FROM `song` LEFT JOIN `artist` ON `artist`.`id`=`song`.`artist` " . 
 			" LEFT JOIN `album` ON `album`.`id`=`song`.`album` $where_sql GROUP BY `song`.`title`";
 		 
 		// Add any Additional constraints
@@ -868,9 +868,9 @@ class Catalog extends database_object {
 	public static function get_duplicate_info($item,$search_type) {
 		// Build the SQL
 		$sql = "SELECT `song`.`id`" .
-	                " FROM song,artist,album".
-	                " WHERE song.artist=artist.id AND song.album=album.id".
-	                " AND song.title= '".Dba::escape($item['title'])."'";
+			" FROM song,artist,album".
+			" WHERE song.artist=artist.id AND song.album=album.id".
+			" AND song.title= '".Dba::escape($item['title'])."'";
 
 		if ($search_type == "artist_title" || $search_type == "artist_album_title") {
 			$sql .="  AND artist.id = '".Dba::escape($item['artist'])."'";
@@ -1128,46 +1128,46 @@ class Catalog extends database_object {
 
 	} // update_video_from_tags
 
-        /**
-         * update_song_from_tags
-         * updates the song info based on tags, this is called from a bunch of different places
+	/**
+	 * update_song_from_tags
+	 * updates the song info based on tags, this is called from a bunch of different places
 	 * and passes in a full fledged song object, so it's a static function
 	 * FIXME: This is an ugly mess, this really needs to be consolidated and cleaned up
 	 */
-        public static function update_song_from_tags($results,$song) {
+	public static function update_song_from_tags($results,$song) {
 
-                /* Setup the vars */
+		/* Setup the vars */
 		$new_song 		= new Song();
-                $new_song->file         = $results['file'];
-                $new_song->title        = $results['title'];
-                $new_song->year         = $results['year'];
-                $new_song->comment      = $results['comment'];
+		$new_song->file		= $results['file'];
+		$new_song->title	= $results['title'];
+		$new_song->year		= $results['year'];
+		$new_song->comment	= $results['comment'];
 		$new_song->language	= $results['language']; 
 		$new_song->lyrics	= $results['lyrics']; 
-                $new_song->bitrate      = $results['bitrate'];
-                $new_song->rate         = $results['rate'];
-                $new_song->mode         = ($results['mode'] == 'cbr') ? 'cbr' : 'vbr'; 
-                $new_song->size         = $results['size'];
-                $new_song->time         = $results['time'];
+		$new_song->bitrate	= $results['bitrate'];
+		$new_song->rate		= $results['rate'];
+		$new_song->mode		= ($results['mode'] == 'cbr') ? 'cbr' : 'vbr'; 
+		$new_song->size		= $results['size'];
+		$new_song->time		= $results['time'];
 		$new_song->mime		= $results['mime']; 
-                $new_song->track        = intval($results['track']); 
+		$new_song->track	= intval($results['track']); 
 		$new_song->mbid		= $results['mb_trackid']; 
-                $artist                 = $results['artist'];
+		$artist			= $results['artist'];
 		$artist_mbid		= $results['mb_artistid']; 
-                $album                  = $results['album'];
+		$album			= $results['album'];
 		$album_mbid		= $results['mb_albumid']; 
 		$disk			= $results['disk'];
 		$tags			= $results['genre'];	// multiple genre support makes this an array
 
-                /*
-                * We have the artist/genre/album name need to check it in the tables
-                * If found then add & return id, else return id
-                */
-                $new_song->artist       = self::check_artist($artist,$artist_mbid);
-                $new_song->f_artist     = $artist;
-                $new_song->album        = self::check_album($album,$new_song->year,$disk,$album_mbid);
-                $new_song->f_album      = $album . " - " . $new_song->year;
-                $new_song->title        = self::check_title($new_song->title,$new_song->file);
+		/*
+		* We have the artist/genre/album name need to check it in the tables
+		* If found then add & return id, else return id
+		*/
+		$new_song->artist	= self::check_artist($artist,$artist_mbid);
+		$new_song->f_artist	= $artist;
+		$new_song->album	= self::check_album($album,$new_song->year,$disk,$album_mbid);
+		$new_song->f_album	= $album . " - " . $new_song->year;
+		$new_song->title	= self::check_title($new_song->title,$new_song->file);
 		
 		// Nothing to assign here this is a multi-value doodly
 		// multiple genre support
@@ -1404,8 +1404,8 @@ class Catalog extends database_object {
 	public function get_remote_album_images($client,$token,$path) {
 		
 		$encoded_key	= new XML_RPC_Value($token,'string');
-		$query_array    = array($encoded_key);
-		$xmlrpc_message = new XML_RPC_Message('xmlrpcserver.get_album_images',$query_array);
+		$query_array	= array($encoded_key);
+		$xmlrpc_message	= new XML_RPC_Message('xmlrpcserver.get_album_images',$query_array);
 		
 		/* Depending upon the size of the target catalog this can be a very slow/long process */
 		set_time_limit(0);
@@ -1683,11 +1683,11 @@ class Catalog extends database_object {
 		$db_results = Dba::write($sql);
 
 		$sql = "DELETE FROM `tag_map` USING `tag_map` LEFT JOIN `album` ON `album`.`id`=`tag_map`.`object_id` " .
-                        "WHERE `tag_map`.`object_type`='album' AND `album`.`id` IS NULL";
+			"WHERE `tag_map`.`object_type`='album' AND `album`.`id` IS NULL";
 		$db_results = Dba::write($sql);
 
 		$sql = "DELETE FROM `tag_map` USING `tag_map` LEFT JOIN `artist` ON `artist`.`id`=`tag_map`.`object_id` " .
-                        "WHERE `tag_map`.`object_type`='artist' AND `artist`.`id` IS NULL";
+			"WHERE `tag_map`.`object_type`='artist' AND `artist`.`id` IS NULL";
 		$db_results = Dba::write($sql);
 
 		$sql = "DELETE FROM `tag_map` USING `tag_map` LEFT JOIN `video` ON `video`.`id`=`tag_map`.`object_id` " . 
@@ -1714,12 +1714,12 @@ class Catalog extends database_object {
 
 		// Clean albums
 		$sql = "DELETE FROM `user_shout` USING `user_shout` LEFT JOIN `album` ON `album`.`id`=`user_shout`.`object_id` " .
-                        "WHERE `album`.`id` IS NULL AND `user_shout`.`object_type`='album'";
+			"WHERE `album`.`id` IS NULL AND `user_shout`.`object_type`='album'";
 		$db_results = Dba::write($sql);
 
 		// Clean artists
 		$sql = "DELETE FROM `user_shout` USING `user_shout` LEFT JOIN `artist` ON `artist`.`id`=`user_shout`.`object_id` " .
-                        "WHERE `artist`.`id` IS NULL AND `user_shout`.`object_type`='artist'";
+			"WHERE `artist`.`id` IS NULL AND `user_shout`.`object_type`='artist'";
 		$db_results = Dba::write($sql);
 
 
@@ -2021,7 +2021,7 @@ class Catalog extends database_object {
 		$db_results = Dba::write($sql);
 
 		$sql = "ANALYZE TABLE `song_data`,`song`,`rating`,`catalog`,`session`,`object_count`,`album`,`album_data`" .
-		        ",`artist`,`ip_history`,`flagged`,`now_playing`,`user_preference`,`tag`,`tag_map`,`tmp_playlist`" .
+			",`artist`,`ip_history`,`flagged`,`now_playing`,`user_preference`,`tag`,`tag_map`,`tmp_playlist`" .
 			",`tmp_playlist_data`,`playlist`,`playlist_data`,`session_stream`,`video`";
 		$db_results = Dba::write($sql);
 
@@ -2093,8 +2093,8 @@ class Catalog extends database_object {
 						$sql = "UPDATE `artist` SET `mbid`='$mbid' WHERE `id`='$artist_id'";
 						$db_results = Dba::write($sql);
 						if (!$db_results) {
-		        	                        Error::add('general',"Updating Artist: $artist");
-		                	        }
+							Error::add('general',"Updating Artist: $artist");
+						}
 					}
 			}
 				unset($id_array);
@@ -2352,9 +2352,9 @@ class Catalog extends database_object {
 	 */
 	public function insert_local_video($file,$filesize) { 
 
-                /* Create the vainfo object and get info */
-                $vainfo         = new vainfo($file,'','','',$this->sort_pattern,$this->rename_pattern);
-                $vainfo->get_info();
+		/* Create the vainfo object and get info */
+		$vainfo	 = new vainfo($file,'','','',$this->sort_pattern,$this->rename_pattern);
+		$vainfo->get_info();
 
 		$tag_name = vainfo::get_tag_type($vainfo->tags); 
 		$results = vainfo::clean_tag_info($vainfo->tags,$tag_name,$file); 
@@ -2438,12 +2438,12 @@ class Catalog extends database_object {
 		$client = new XML_RPC_Client($full_url,$server,$port,$proxy_host,$proxy_port,$proxy_user,$proxy_pass);
 
 		/* encode the variables we need to send over */
-		$encoded_key    = new XML_RPC_Value($token,'string');
-		$encoded_path   = new XML_RPC_Value(Config::get('web_path'),'string');
-		$song_id   = new XML_RPC_Value($value,'int');
+		$encoded_key	= new XML_RPC_Value($token,'string');
+		$encoded_path	= new XML_RPC_Value(Config::get('web_path'),'string');
+		$song_id	= new XML_RPC_Value($value,'int');
 
-		$xmlrpc_message = new XML_RPC_Message('xmlrpcserver.check_song', array($song_id,$encoded_key,$encoded_path));
-		$response = $client->send($xmlrpc_message,30);
+		$xmlrpc_message	= new XML_RPC_Message('xmlrpcserver.check_song', array($song_id,$encoded_key,$encoded_path));
+		$response	= $client->send($xmlrpc_message,30);
 
 		if ($response->faultCode() ) {
 			$error_msg = _("Error connecting to") . " " . $server . " " . _("Code") . ": " . $response->faultCode() . " " . _("Reason") . ": " . $response->faultString();

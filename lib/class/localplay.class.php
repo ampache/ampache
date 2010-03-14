@@ -488,21 +488,21 @@ class Localplay {
 
 	} // prev
 
-       /**
-        * pause
-        * This isn't a required function, it tells the daemon to pause the
-        * song
-        */
-        public function pause() {
+	/**
+	 * pause
+	 * This isn't a required function, it tells the daemon to pause the
+	 * song
+	 */
+	public function pause() {
 
-                if (!$this->_player->pause()) {
-                        debug_event('localplay','Error: Unable to pause song, check ' . $this->type . ' controller','1');
-                        return false;
-                }
+		if (!$this->_player->pause()) {
+			debug_event('localplay','Error: Unable to pause song, check ' . $this->type . ' controller','1');
+			return false;
+		}
 
-                return true;
+		return true;
 
-        } // pause
+	} // pause
 
 	/**
 	 * get_instances

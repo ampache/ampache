@@ -94,24 +94,24 @@ class Access {
 	 */
 	public function update($data) { 
 
-                /* We need to verify the incomming data a littlebit */
-                $start = @inet_pton($data['start']);
-                $end = @inet_pton($data['end']);
+		/* We need to verify the incomming data a littlebit */
+		$start = @inet_pton($data['start']);
+		$end = @inet_pton($data['end']);
 
-                if (!$start AND $data['start'] != '0.0.0.0' AND $data['start'] != '::') {
-                        Error::add('start',_('Invalid IPv4 / IPv6 Address Entered'));
-                        return false;
-                }
-                if (!$end) {
-                        Error::add('end',_('Invalid IPv4 / IPv6 Address Entered'));
-                        return false;
-                }
+		if (!$start AND $data['start'] != '0.0.0.0' AND $data['start'] != '::') {
+			Error::add('start',_('Invalid IPv4 / IPv6 Address Entered'));
+			return false;
+		}
+		if (!$end) {
+			Error::add('end',_('Invalid IPv4 / IPv6 Address Entered'));
+			return false;
+		}
 
-                if (strlen(bin2hex($start)) != strlen(bin2hex($end))) {
-                        Error::add('start',_('IP Address Version Mismatch'));
-                        Error::add('end',_('IP Address Version Mismatch'));
-                        return false;
-                }
+		if (strlen(bin2hex($start)) != strlen(bin2hex($end))) {
+			Error::add('start',_('IP Address Version Mismatch'));
+			Error::add('end',_('IP Address Version Mismatch'));
+			return false;
+		}
 
 		$name	= Dba::escape($data['name']); 
 		$type	= self::validate_type($data['type']); 
@@ -224,14 +224,14 @@ class Access {
 				return Config::get('download'); 
 			break ;
 			case 'batch_download':
-                                if (!function_exists('gzcompress')) {
-                                        debug_event('gzcompress','ZLIB Extensions not loaded, batch download disabled','3');
-                                        return false;
-                                }
-                                if (Config::get('allow_zip_download') AND $GLOBALS['user']->has_access('25')) {
-                                        return Config::get('download');
-                                }
-                        break;
+				if (!function_exists('gzcompress')) {
+					debug_event('gzcompress','ZLIB Extensions not loaded, batch download disabled','3');
+					return false;
+				}
+				if (Config::get('allow_zip_download') AND $GLOBALS['user']->has_access('25')) {
+					return Config::get('download');
+				}
+			break;
 			default:
 				return false; 
 			break;

@@ -191,18 +191,15 @@ class shoutBox {
 
 	} // create
 
-        /**
-         * format
-         * this function takes the object and reformats some values
-         */
+	/**
+	 * format
+	 * this function takes the object and reformats some values
+	 */
 	
-        public function format() {
-	    
-	    if ( $this->sticky == "0" ) { $this->sticky = "No"; } else { $this->sticky = "Yes"; }
-	    
-	    $this->date = date("m\/d\/Y - H:i",$this->date);
-	    	
-	    return true;
+	public function format() {
+		$this->sticky = ($this->sticky == "0") ? 'No' : 'Yes';
+		$this->date = date("m\/d\/Y - H:i", $this->date);
+		return true;
 	
 	} //format
 
@@ -211,12 +208,12 @@ class shoutBox {
 	 * this function deletes a specific shoutbox entry
 	 */
 
-        public function delete($shout_id) {
+	public function delete($shout_id) {
 
-                // Delete the shoutbox post
+		// Delete the shoutbox post
 		$shout_id = Dba::escape($shout_id); 
-                $sql = "DELETE FROM `user_shout` WHERE `id`='$shout_id'";
-                $db_results = Dba::write($sql);
+		$sql = "DELETE FROM `user_shout` WHERE `id`='$shout_id'";
+		$db_results = Dba::write($sql);
 		
 	} // delete
 

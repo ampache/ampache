@@ -127,19 +127,19 @@ E-mail: %s
 	 */
 	public static function show_agreement() { 
 
-	        $filename = Config::get('prefix') . '/config/registration_agreement.php';
+		$filename = Config::get('prefix') . '/config/registration_agreement.php';
 
-	        if (!file_exists($filename)) { return false; } 
+		if (!file_exists($filename)) { return false; } 
 
-	        /* Check for existance */
-	        $fp = fopen($filename,'r');
+		/* Check for existance */
+		$fp = fopen($filename,'r');
 
-	        if (!$fp) { return false; }
+		if (!$fp) { return false; }
 
-	        $data = fread($fp,filesize($filename));
+		$data = fread($fp,filesize($filename));
 
-	        /* Scrub and show */
-	        echo $data;
+		/* Scrub and show */
+		echo $data;
 
 	} // show_agreement
 

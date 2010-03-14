@@ -278,12 +278,12 @@ class vauth {
 			break;
 		} // end switch on data type
 
-		$username       = Dba::escape($data['username']);
-		$ip	     = $_SERVER['REMOTE_ADDR'] ? Dba::escape(inet_pton($_SERVER['REMOTE_ADDR'])) : '0';
-		$type	   = Dba::escape($data['type']);
-		$value	  = Dba::escape($data['value']);
+		$username	= Dba::escape($data['username']);
+		$ip		= $_SERVER['REMOTE_ADDR'] ? Dba::escape(inet_pton($_SERVER['REMOTE_ADDR'])) : '0';
+		$type		= Dba::escape($data['type']);
+		$value		= Dba::escape($data['value']);
 		$agent		= Dba::escape(substr($_SERVER['HTTP_USER_AGENT'],0,254));
-		$expire	 = Dba::escape(time() + Config::get('session_length'));
+		$expire		= Dba::escape(time() + Config::get('session_length'));
 
 		/* We can't have null things here people */
 		if (!strlen($value)) { $value = ' '; }
@@ -517,7 +517,7 @@ class vauth {
 		}
 
 		$row['type']	= 'mysql';
-		$row['success']     = true;
+		$row['success']	= true;
 
 		return $row;
 
@@ -567,7 +567,7 @@ class vauth {
 
 		$results['type']	= 'mysql';
 		$results['password']	= 'old';
-		$results['success']     = true;
+		$results['success']	= true;
 
 		return $results;
 
@@ -647,7 +647,7 @@ class vauth {
 
 			if ($info["count"] == 1) {
 				$user_entry = ldap_first_entry($ldap_link, $sr);
-				$user_dn    = ldap_get_dn($ldap_link, $user_entry);
+				$user_dn = ldap_get_dn($ldap_link, $user_entry);
 				// bind using the user..
 				$retval = ldap_bind($ldap_link, $user_dn, $password);
 

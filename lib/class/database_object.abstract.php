@@ -119,14 +119,14 @@ abstract class database_object {
 
 	} // remove_from_cache
 
-        /**
-         * _auto_init
-         * Load in the cache settings once so we can avoid function calls
-         */
-        public static function _auto_init() {
+	/**
+	 * _auto_init
+	 * Load in the cache settings once so we can avoid function calls
+	 */
+	public static function _auto_init() {
 
-                self::$_enabled = Config::get('memory_cache');
+		self::$_enabled = Config::get('memory_cache');
 
-        } // _auto_init
+	} // _auto_init
 
 } // end database_object

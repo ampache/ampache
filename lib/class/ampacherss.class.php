@@ -184,29 +184,29 @@ class AmpacheRSS {
 			$song->format(); 
 			$amount = intval(time() - $item['date']+2); 
 			$time_place = '0'; 
-		        while ($amount >= 1) {
-		                $final = $amount;
-		                $time_place++;
-	        	        if ($time_place <= 2) {
-	        	                $amount = floor($amount/60);
-		                }
-		                if ($time_place == '3') {
-		                        $amount = floor($amount/24);
-		                }
-		                if ($time_place == '4') {
-		                        $amount = floor($amount/7);
-		                }
-		                if ($time_place == '5') {
-		                        $amount = floor($amount/4);
-		                }
-		                if ($time_place == '6') {
-		                        $amount = floor ($amount/12);
-		                }
-		                if ($time_place > '6') {
-		                        $final = $amount . '+';
-		                        break;
+			while ($amount >= 1) {
+				$final = $amount;
+				$time_place++;
+				if ($time_place <= 2) {
+					$amount = floor($amount/60);
+				}
+				if ($time_place == '3') {
+					$amount = floor($amount/24);
+				}
+				if ($time_place == '4') {
+					$amount = floor($amount/7);
+				}
+				if ($time_place == '5') {
+					$amount = floor($amount/4);
+				}
+				if ($time_place == '6') {
+					$amount = floor ($amount/12);
+				}
+				if ($time_place > '6') {
+					$final = $amount . '+';
+					break;
 				} 
-		        } // end while
+			} // end while
 
 			$time_string = $final . ' ' . $time_unit[$time_place];
 

@@ -113,16 +113,16 @@ class Album extends database_object {
 		if ($extra) { 
 			$sql = "SELECT COUNT(DISTINCT(song.artist)) as artist_count,COUNT(song.id) AS song_count,artist.name AS artist_name" .
 				",artist.prefix AS artist_prefix,album_data.art AS has_art,album_data.thumb AS has_thumb, artist.id AS artist_id,`song`.`album`".
-		                "FROM `song` " .
-		                "INNER JOIN `artist` ON `artist`.`id`=`song`.`artist` " .
-		                "LEFT JOIN `album_data` ON `album_data`.`album_id` = `song`.`album` " .
-		                "WHERE `song`.`album` IN $idlist GROUP BY `song`.`album`";
+				"FROM `song` " .
+				"INNER JOIN `artist` ON `artist`.`id`=`song`.`artist` " .
+				"LEFT JOIN `album_data` ON `album_data`.`album_id` = `song`.`album` " .
+				"WHERE `song`.`album` IN $idlist GROUP BY `song`.`album`";
 
 			$db_results = Dba::read($sql); 
 
 			while ($row = Dba::fetch_assoc($db_results)) { 
-		                $row['has_art'] = make_bool($row['has_art']); 
-		                $row['has_thumb'] = make_bool($row['has_thumb']); 
+				$row['has_art'] = make_bool($row['has_art']); 
+				$row['has_thumb'] = make_bool($row['has_thumb']); 
 				parent::add_to_cache('album_extra',$row['album'],$row); 
 			} // while rows
 		} // if extra
@@ -231,7 +231,7 @@ class Album extends database_object {
 	 */
 	public function format() { 
 
-	        $web_path = Config::get('web_path');
+		$web_path = Config::get('web_path');
 
 		/* Pull the advanced information */
 		$data = $this->_get_extra_info(); 
@@ -251,7 +251,7 @@ class Album extends database_object {
 		$this->f_title		= $full_name; 
 		if ($this->artist_count == '1') { 
 			$artist = scrub_out(truncate_with_ellipsis(trim($this->artist_prefix . ' ' . $this->artist_name),Config::get('ellipse_threshold_artist')));
-		        $this->f_artist_link = "<a href=\"$web_path/artists.php?action=show&amp;artist=" . $this->artist_id . "\" title=\"" . scrub_out($this->artist_name) . "\">" . $artist . "</a>";
+			$this->f_artist_link = "<a href=\"$web_path/artists.php?action=show&amp;artist=" . $this->artist_id . "\" title=\"" . scrub_out($this->artist_name) . "\">" . $artist . "</a>";
 			$this->f_artist = $artist; 
 		}
 		else {
@@ -312,7 +312,7 @@ class Album extends database_object {
 
 		/* Attempt to retrive the album art order */
 		$config_value = Config::get('album_art_order');
-                $class_methods = get_class_methods('Album');		
+		$class_methods = get_class_methods('Album');		
 		
 		/* If it's not set */
 		if (empty($config_value)) { 
@@ -465,7 +465,7 @@ class Album extends database_object {
 		foreach ($this->_songs as $song_id) { 
 			$song = new Song($song_id); 
 			// If we find a good one, stop looking
-		        $getID3 = new getID3();
+			$getID3 = new getID3();
 			try { $id3 = $getID3->analyze($song->file); } 
 			catch (Exception $error) { 
 				debug_event('getid3',$error->message,'1'); 
@@ -520,15 +520,15 @@ class Album extends database_object {
 			debug_event('folder_art',"Opening $dir and checking for Album Art",'3'); 
 
 			/* Open up the directory */
-	                $handle = @opendir($dir);
+			$handle = @opendir($dir);
 
-                	if (!is_resource($handle)) {
+			if (!is_resource($handle)) {
 				Error::add('general',_('Error: Unable to open') . ' ' . $dir); 
 				debug_event('read',"Error: Unable to open $dir for album art read",'2');
-	                }
+			}
 
-	                /* Recurse through this dir and create the files array */
-	                while ( FALSE !== ($file = @readdir($handle)) ) {
+			/* Recurse through this dir and create the files array */
+			while ( FALSE !== ($file = @readdir($handle)) ) {
 				$extension = substr($file,strlen($file)-3,4);
 
 				/* If it's an image file */
@@ -618,8 +618,8 @@ class Album extends database_object {
 	 */
 	public function get_musicbrainz_art($limit='') {
 		$images 	= array();
-		$num_found  = 0;
-		$mbquery    = new MusicBrainzQuery();
+		$num_found	= 0;
+		$mbquery	= new MusicBrainzQuery();
 
 		if ($this->mbid) {
 			debug_event('mbz-gatherart', "Album MBID: " . $this->mbid, '5');
@@ -674,60 +674,60 @@ class Album extends database_object {
 		// The next bit is based directly on the MusicBrainz server code that displays cover art.
 		// I'm leaving in the releaseuri info for the moment, though it's not going to be used. 
 		$coverartsites[] = array(
-			name       => "CD Baby",
-			domain     => "cdbaby.com",
-			regexp     => '@http://cdbaby\.com/cd/(\w)(\w)(\w*)@',
-			imguri     => 'http://cdbaby.name/$matches[1]/$matches[2]/$matches[1]$matches[2]$matches[3].jpg',
-			releaseuri => 'http://cdbaby.com/cd/$matches[1]$matches[2]$matches[3]/from/musicbrainz',
+			name		=> "CD Baby",
+			domain		=> "cdbaby.com",
+			regexp		=> '@http://cdbaby\.com/cd/(\w)(\w)(\w*)@',
+			imguri		=> 'http://cdbaby.name/$matches[1]/$matches[2]/$matches[1]$matches[2]$matches[3].jpg',
+			releaseuri	=> 'http://cdbaby.com/cd/$matches[1]$matches[2]$matches[3]/from/musicbrainz',
 		);
 		$coverartsites[] = array(
-			name       => "CD Baby",
-			domain     => "cdbaby.name",
-			regexp     => "@http://cdbaby\.name/([a-z0-9])/([a-z0-9])/([A-Za-z0-9]*).jpg@",
-			imguri     => 'http://cdbaby.name/$matches[1]/$matches[2]/$matches[3].jpg',
-			releaseuri => 'http://cdbaby.com/cd/$matches[3]/from/musicbrainz',
+			name		=> "CD Baby",
+			domain		=> "cdbaby.name",
+			regexp		=> "@http://cdbaby\.name/([a-z0-9])/([a-z0-9])/([A-Za-z0-9]*).jpg@",
+			imguri		=> 'http://cdbaby.name/$matches[1]/$matches[2]/$matches[3].jpg',
+			releaseuri	=> 'http://cdbaby.com/cd/$matches[3]/from/musicbrainz',
 		);
 		$coverartsites[] = array(
-			name       => 'archive.org',
-			domain     => 'archive.org',
-			regexp     => '/^(.*\.(jpg|jpeg|png|gif))$/',
-			imguri     => '$matches[1]',
-			releaseuri => '',
+			name		=> 'archive.org',
+			domain		=> 'archive.org',
+			regexp		=> '/^(.*\.(jpg|jpeg|png|gif))$/',
+			imguri		=> '$matches[1]',
+			releaseuri	=> '',
 		);
 		$coverartsites[] = array(
-			name       => "Jamendo",
-			domain     => "www.jamendo.com",
-			regexp     => '/http://www\.jamendo\.com/(\w\w/)?album/(\d+)/',
-			imguri     => 'http://img.jamendo.com/albums/$matches[2]/covers/1.200.jpg',
-			releaseuri => 'http://www.jamendo.com/album/$matches[2]',
+			name		=> "Jamendo",
+			domain		=> "www.jamendo.com",
+			regexp		=> '/http://www\.jamendo\.com/(\w\w/)?album/(\d+)/',
+			imguri		=> 'http://img.jamendo.com/albums/$matches[2]/covers/1.200.jpg',
+			releaseuri	=> 'http://www.jamendo.com/album/$matches[2]',
 		);
 		$coverartsites[] = array(
-			name       => '8bitpeoples.com',
-			domain     => '8bitpeoples.com',
-			regexp     => '/^(.*)$/',
-			imguri     => '$matches[1]',
-			releaseuri => '',
+			name		=> '8bitpeoples.com',
+			domain		=> '8bitpeoples.com',
+			regexp		=> '/^(.*)$/',
+			imguri		=> '$matches[1]',
+			releaseuri	=> '',
 		);
 		$coverartsites[] = array(
-			name       => 'Encyclopédisque',
-			domain     => 'encyclopedisque.fr',
-			regexp     => '/http://www.encyclopedisque.fr/images/imgdb/(thumb250|main)/(\d+).jpg/',
-			imguri     => 'http://www.encyclopedisque.fr/images/imgdb/thumb250/$matches[2].jpg',
-			releaseuri => 'http://www.encyclopedisque.fr/',
+			name		=> 'Encyclopédisque',
+			domain		=> 'encyclopedisque.fr',
+			regexp		=> '/http://www.encyclopedisque.fr/images/imgdb/(thumb250|main)/(\d+).jpg/',
+			imguri		=> 'http://www.encyclopedisque.fr/images/imgdb/thumb250/$matches[2].jpg',
+			releaseuri	=> 'http://www.encyclopedisque.fr/',
 		);
 		$coverartsites[] = array(
-			name       => 'Thastrom',
-			domain     => 'www.thastrom.se',
-			regexp     => '/^(.*)$/',
-			imguri     => '$matches[1]',
-			releaseuri => '',
+			name		=> 'Thastrom',
+			domain		=> 'www.thastrom.se',
+			regexp		=> '/^(.*)$/',
+			imguri		=> '$matches[1]',
+			releaseuri	=> '',
 		);
 		$coverartsites[] = array(
-			name       => 'Universal Poplab',
-			domain     => 'www.universalpoplab.com',
-			regexp     => '/^(.*)$/',
-			imguri     => '$matches[1]',
-			releaseuri => '',
+			name		=> 'Universal Poplab',
+			domain		=> 'www.universalpoplab.com',
+			regexp		=> '/^(.*)$/',
+			imguri		=> '$matches[1]',
+			releaseuri	=> '',
 		);
 		
 		foreach ($release->getRelations($mbRelation->TO_URL) as $ar) {
@@ -781,23 +781,23 @@ class Album extends database_object {
 
 		/* Attempt to retrive the album art order */
 		$config_value = Config::get('amazon_base_urls');
-               
+
 		/* If it's not set */
 		if (empty($config_value)) { 
 			$amazon_base_urls = array('http://webservices.amazon.com');
 		}
 		elseif (!is_array($config_value)) { 
-	        	array_push($amazon_base_urls,$config_value);
+			array_push($amazon_base_urls,$config_value);
 		}
 		else { 
 			$amazon_base_urls = array_merge($amazon_base_urls, Config::get('amazon_base_urls'));
 		}
 
-	       /* Foreach through the base urls that we should check */
-               foreach ($amazon_base_urls AS $amazon_base) { 
+		/* Foreach through the base urls that we should check */
+		foreach ($amazon_base_urls AS $amazon_base) { 
 
-		    	// Create the Search Object
-	        	$amazon = new AmazonSearch(Config::get('amazon_developer_public_key'), Config::get('amazon_developer_private_key'), $amazon_base);
+			// Create the Search Object
+			$amazon = new AmazonSearch(Config::get('amazon_developer_public_key'), Config::get('amazon_developer_private_key'), $amazon_base);
 				if(Config::get('proxy_host') AND Config::get('proxy_port')) {
 					$proxyhost = Config::get('proxy_host');
 					$proxyport = Config::get('proxy_port');
@@ -882,7 +882,7 @@ class Album extends database_object {
 				continue;
 			}
 
-	                $data['url'] 	= $result[$key];
+			$data['url'] 	= $result[$key];
 			$data['mime']	= $mime;
 			
 			$images[] = $data;
@@ -893,7 +893,7 @@ class Album extends database_object {
 				} 
 			} 
 
-                } // if we've got something
+		} // if we've got something
 	
 		return $images;
 
@@ -990,12 +990,12 @@ class Album extends database_object {
 		 */
 		if (Config::get('demo_mode')) { return false; } 
 
-                // Check for PHP:GD and if we have it make sure this image is of some size
-        	if (function_exists('ImageCreateFromString')) {
+		// Check for PHP:GD and if we have it make sure this image is of some size
+		if (function_exists('ImageCreateFromString')) {
 			$im = ImageCreateFromString($image);
 			if (imagesx($im) <= 5 || imagesy($im) <= 5 || !$im) {
-	                	return false;
-	               	}
+				return false;
+			}
 		} // if we have PHP:GD
 		elseif (strlen($image) < 5) { 
 			return false; 
@@ -1004,12 +1004,12 @@ class Album extends database_object {
 		// Default to image/jpeg as a guess if there is no passed mime type
 		$mime = $mime ? $mime : 'image/jpeg'; 
 
-                // Push the image into the database
-                $sql = "REPLACE INTO `album_data` SET `art` = '" . Dba::escape($image) . "'," .
-                        " `art_mime` = '" . Dba::escape($mime) . "'" .
-        	        ", `album_id` = '$this->id'," . 
+		// Push the image into the database
+		$sql = "REPLACE INTO `album_data` SET `art` = '" . Dba::escape($image) . "'," .
+			" `art_mime` = '" . Dba::escape($mime) . "'" .
+			", `album_id` = '$this->id'," . 
 			"`thumb` = NULL, `thumb_mime`=NULL";
-	        $db_results = Dba::write($sql);
+		$db_results = Dba::write($sql);
 
 		return true;
 
@@ -1042,33 +1042,33 @@ class Album extends database_object {
 	 */
 	public static function get_random_albums($count=6) {
 
-	        $sql = 'SELECT `id` FROM `album` ORDER BY RAND() LIMIT ' . ($count*2);
-	        $db_results = Dba::read($sql);
+		$sql = 'SELECT `id` FROM `album` ORDER BY RAND() LIMIT ' . ($count*2);
+		$db_results = Dba::read($sql);
 
-	        $in_sql = '`album_id` IN (';
+		$in_sql = '`album_id` IN (';
 
-	        while ($row = Dba::fetch_assoc($db_results)) {
-	                $in_sql .= "'" . $row['id'] . "',";
-	                $total++;
-	        }
+		while ($row = Dba::fetch_assoc($db_results)) {
+			$in_sql .= "'" . $row['id'] . "',";
+			$total++;
+		}
 
-	        if ($total < $count) { return false; }
+		if ($total < $count) { return false; }
 
-	        $in_sql = rtrim($in_sql,',') . ')';
+		$in_sql = rtrim($in_sql,',') . ')';
 
-	        $sql = "SELECT `album_id`,ISNULL(`art`) AS `no_art` FROM `album_data` WHERE $in_sql";
-	        $db_results = Dba::read($sql);
-	        $results = array();
+		$sql = "SELECT `album_id`,ISNULL(`art`) AS `no_art` FROM `album_data` WHERE $in_sql";
+		$db_results = Dba::read($sql);
+		$results = array();
 
-	        while ($row = Dba::fetch_assoc($db_results)) {
-	                $results[$row['album_id']] = $row['no_art'];
-	        } // end for
+		while ($row = Dba::fetch_assoc($db_results)) {
+			$results[$row['album_id']] = $row['no_art'];
+		} // end for
 	
-	        asort($results);
-	        $albums = array_keys($results);
-	        $results = array_slice($albums,0,$count);
+		asort($results);
+		$albums = array_keys($results);
+		$results = array_slice($albums,0,$count);
 	
-	        return $results;
+		return $results;
 
 	} // get_random_albums
 
@@ -1077,66 +1077,66 @@ class Album extends database_object {
 	 * This gets an image for the album art from a source as 
 	 * defined in the passed array. Because we don't know where
 	 * its comming from we are a passed an array that can look like
-	 * ['url']      = URL *** OPTIONAL ***
-	 * ['file']     = FILENAME *** OPTIONAL ***
-	 * ['raw']      = Actual Image data, already captured
+	 * ['url'] 	= URL *** OPTIONAL ***
+	 * ['file']	= FILENAME *** OPTIONAL ***
+	 * ['raw'] 	= Actual Image data, already captured
 	 */
 	public static function get_image_from_source($data) {
 
-	        // Already have the data, this often comes from id3tags
-	        if (isset($data['raw'])) {
-	                return $data['raw'];
-	        }
+		// Already have the data, this often comes from id3tags
+		if (isset($data['raw'])) {
+			return $data['raw'];
+		}
 
-	        // If it came from the database
-	        if (isset($data['db'])) {
-	                // Repull it 
-	                $album_id = Dba::escape($data['db']);
-	                $sql = "SELECT * FROM `album_data` WHERE `album_id`='$album_id'";
-	                $db_results = Dba::read($sql);
-	                $row = Dba::fetch_assoc($db_results);
-	                return $row['art'];
-	        } // came from the db
+		// If it came from the database
+		if (isset($data['db'])) {
+			// Repull it 
+			$album_id = Dba::escape($data['db']);
+			$sql = "SELECT * FROM `album_data` WHERE `album_id`='$album_id'";
+			$db_results = Dba::read($sql);
+			$row = Dba::fetch_assoc($db_results);
+			return $row['art'];
+		} // came from the db
 
-	        // Check to see if it's a URL
-	        if (isset($data['url'])) {
-	                $snoopy = new Snoopy();
+		// Check to see if it's a URL
+		if (isset($data['url'])) {
+			$snoopy = new Snoopy();
 					if(Config::get('proxy_host') AND Config::get('proxy_port')) {
 						$snoopy->proxy_user = Config::get('proxy_host');
 						$snoopy->proxy_port = Config::get('proxy_port');
 						$snoopy->proxy_user = Config::get('proxy_user');
 						$snoopy->proxy_pass = Config::get('proxy_pass');
 					}
-	                $snoopy->fetch($data['url']);
-	                return $snoopy->results;
-	        }
+			$snoopy->fetch($data['url']);
+			return $snoopy->results;
+		}
 
-	        // Check to see if it's a FILE
-	        if (isset($data['file'])) {
-	                $handle = fopen($data['file'],'rb');
-	                $image_data = fread($handle,filesize($data['file']));
-	                fclose($handle);
-	                return $image_data;
-        	}
+		// Check to see if it's a FILE
+		if (isset($data['file'])) {
+			$handle = fopen($data['file'],'rb');
+			$image_data = fread($handle,filesize($data['file']));
+			fclose($handle);
+			return $image_data;
+		}
 	
-	        // Check to see if it is embedded in id3 of a song
-	        if (isset($data['song'])) {
-	                // If we find a good one, stop looking
-	                $getID3 = new getID3();
-	                $id3 = $getID3->analyze($data['song']);
+		// Check to see if it is embedded in id3 of a song
+		if (isset($data['song'])) {
+			// If we find a good one, stop looking
+			$getID3 = new getID3();
+			$id3 = $getID3->analyze($data['song']);
 	
-	                if ($id3['format_name'] == "WMA") {
-	                        return $id3['asf']['extended_content_description_object']['content_descriptors']['13']['data'];
-	                }
-	                elseif (isset($id3['id3v2']['APIC'])) {
-	                        // Foreach incase they have more then one 
-	                        foreach ($id3['id3v2']['APIC'] as $image) {
-	                                return $image['data'];
-	                        }
-	                }
-	        } // if data song
+			if ($id3['format_name'] == "WMA") {
+				return $id3['asf']['extended_content_description_object']['content_descriptors']['13']['data'];
+			}
+			elseif (isset($id3['id3v2']['APIC'])) {
+				// Foreach incase they have more then one 
+				foreach ($id3['id3v2']['APIC'] as $image) {
+					return $image['data'];
+				}
+			}
+		} // if data song
 
-	        return false;
+		return false;
 
 	} // get_image_from_source
 

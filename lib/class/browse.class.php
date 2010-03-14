@@ -156,7 +156,7 @@ class Browse extends Query {
 		} 
 
 		// Set the correct classes based on type
-    		$class = "box browse_".self::$type;
+		$class = "box browse_".self::$type;
 
 		Ajax::start_container('browse_content');
 		// Switch on the type of browsing we're doing
@@ -263,22 +263,25 @@ class Browse extends Query {
 	 * //FIXME
 	 */ 
 	public static function set_filter_from_request($r) { 
-	  foreach ($r as $k=>$v) {
-	    //reinterpret v as a list of int
-	    $vl = explode(',', $v);
-	    $ok = 1;
-	    foreach($vl as $i) {
-	      if (!is_numeric($i)) {
-		$ok = 0;
-		break;
-	      }
-	    }
-	    if ($ok)
-	      if (sizeof($vl) == 1)
-	        self::set_filter($k, $vl[0]);
-	      else
-	        self::set_filter($k, $vl);
-	  }
+		foreach($r as $k=>$v) {
+			//reinterpret v as a list of int
+			$vl = explode(',', $v);
+			$ok = 1;
+			foreach($vl as $i) {
+				if (!is_numeric($i)) {
+					$ok = 0;
+					break;
+				}
+			}
+			if ($ok) {
+				if (sizeof($vl) == 1) {
+					self::set_filter($k, $vl[0]);
+				}
+			}
+			else {
+				self::set_filter($k, $vl);
+			}
+		}
 	} // set_filter_from_request
 
 } // browse

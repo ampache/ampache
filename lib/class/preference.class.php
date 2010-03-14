@@ -83,13 +83,13 @@ class Preference {
 	 */
 	public static function update_level($preference,$level) { 
 
-                // First prepare
-                if (!is_numeric($preference)) { 
-                        $preference_id = self::id_from_name($preference);
-                } 
-                else { 
-                        $preference_id = $preference;
-                } 
+		// First prepare
+		if (!is_numeric($preference)) { 
+			$preference_id = self::id_from_name($preference);
+		} 
+		else { 
+			$preference_id = $preference;
+		} 
 
 		$preference_id 	= Dba::escape($preference_id);
 		$level		= Dba::escape($level); 
@@ -221,9 +221,9 @@ class Preference {
 
 		$user_id = Dba::escape($user_id); 
 
-                if ($user_id != '-1') {
-                        $user_limit = "AND `preference`.`catagory` != 'system'";
-                }
+		if ($user_id != '-1') {
+			$user_limit = "AND `preference`.`catagory` != 'system'";
+		}
 		
 		$sql = "SELECT `preference`.`name`,`preference`.`description`,`user_preference`.`value` FROM `preference` " . 
 			" INNER JOIN `user_preference` ON `user_preference`.`preference`=`preference`.`id` " . 
@@ -272,15 +272,15 @@ class Preference {
 	 */
 	public static function delete($preference) { 
 
-               // First prepare
-                if (!is_numeric($preference)) {
+		// First prepare
+		if (!is_numeric($preference)) {
 			$name = Dba::escape($preference); 
 			$sql = "DELETE FROM `preference` WHERE `name`='$name'"; 
-                }
-                else {
+		}
+		else {
 			$id = Dba::escape($preference); 
 			$sql = "DELETE FROM `preference` WHERE `id`='$id'"; 
-                }
+		}
 
 		$db_results = Dba::write($sql); 
 
@@ -312,22 +312,22 @@ class Preference {
 	 */
 	public static function fix_preferences($results) {
 
-	        $results['auth_methods']        = trim($results['auth_methods'])	? explode(",",$results['auth_methods']) : array(); 
-	        $results['tag_order']           = trim($results['tag_order'])		? explode(",",$results['tag_order']) : array(); 
-	        $results['album_art_order']     = trim($results['album_art_order'])	? explode(",",$results['album_art_order']) : array(); 
-	        if (isset($results['amazin_base_urls']))
-	        	$results['amazon_base_urls']    = trim($results['amazin_base_urls'])	? explode(",",$results['amazon_base_urls']) : array();
-	        else 
+		$results['auth_methods']	= trim($results['auth_methods'])	? explode(",",$results['auth_methods']) : array(); 
+		$results['tag_order']	   = trim($results['tag_order'])		? explode(",",$results['tag_order']) : array(); 
+		$results['album_art_order']     = trim($results['album_art_order'])	? explode(",",$results['album_art_order']) : array(); 
+		if (isset($results['amazin_base_urls']))
+			$results['amazon_base_urls']    = trim($results['amazin_base_urls'])	? explode(",",$results['amazon_base_urls']) : array();
+		else 
 				$results['amazon_base_urls']= array();
 				
-	        foreach ($results as $key=>$data) {
-        		if (!is_array($data)) {
-                	if (strcasecmp($data,"true") == "0") { $results[$key] = 1; }
-                	if (strcasecmp($data,"false") == "0") { $results[$key] = 0; }
-        		}
-	        }
+		foreach ($results as $key=>$data) {
+			if (!is_array($data)) {
+			if (strcasecmp($data,"true") == "0") { $results[$key] = 1; }
+			if (strcasecmp($data,"false") == "0") { $results[$key] = 0; }
+			}
+		}
 
-        	return $results;
+		return $results;
 
 	} // fix_preferences
 
@@ -401,30 +401,30 @@ class Preference {
 			return true; 	
 		} 
 		
-	        /* Get Global Preferences */
+		/* Get Global Preferences */
 		$sql = "SELECT `preference`.`name`,`user_preference`.`value`,`syspref`.`value` AS `system_value` FROM `preference` " . 
 			"LEFT JOIN `user_preference` `syspref` ON `syspref`.`preference`=`preference`.`id` AND `syspref`.`user`='-1' AND `preference`.`catagory`='system' " . 
 			"LEFT JOIN `user_preference` ON `user_preference`.`preference`=`preference`.`id` AND `user_preference`.`user`='$user_id' AND `preference`.`catagory`!='system'"; 
-	        $db_results = Dba::read($sql);
+		$db_results = Dba::read($sql);
 
-	        while ($row = Dba::fetch_assoc($db_results)) {
+		while ($row = Dba::fetch_assoc($db_results)) {
 			$value = $row['system_value'] ? $row['system_value'] : $row['value']; 
-	                $name = $row['name'];
-	                $results[$name] = $value; 
-	        } // end while sys prefs
+			$name = $row['name'];
+			$results[$name] = $value; 
+		} // end while sys prefs
 
-	        /* Set the Theme mojo */
-	        if (strlen($results['theme_name']) > 0) {
-	                $results['theme_path'] = '/themes/' . $results['theme_name'];
-	        }
-	        // Default to the classic theme if we don't get anything from their
-	        // preferenecs because we're going to want at least something otherwise
-	        // the page is going to be really ugly
-	        else {
-	                $results['theme_path'] = '/themes/classic';
-	        }
+		/* Set the Theme mojo */
+		if (strlen($results['theme_name']) > 0) {
+			$results['theme_path'] = '/themes/' . $results['theme_name'];
+		}
+		// Default to the classic theme if we don't get anything from their
+		// preferenecs because we're going to want at least something otherwise
+		// the page is going to be really ugly
+		else {
+			$results['theme_path'] = '/themes/classic';
+		}
 
-	        Config::set_by_array($results,1);
+		Config::set_by_array($results,1);
 		$_SESSION['userdata']['preferences'] = $results; 
 		$_SESSION['userdata']['uid'] = $user_id; 
 
