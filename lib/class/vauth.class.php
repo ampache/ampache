@@ -695,22 +695,6 @@ class vauth {
 		return $results;
 	} // http_auth
 
-	/**
-	 * null_auth
-	 * This is the equivalent of the old http_auth and assumes that if you
-	 * can access the page, you're a trusted user.
-	 * This is not a very secure method of authentication, since it allows
-	 * you to log in with an arbitrary username.
-	 */
-	private static function null_auth($username) {
-		$results['success']	= true;
-		$results['type']	= 'null';
-		$results['username']	= $username;
-		$results['name']	= $username;
-		$results['email']	= '';
-		return $results;
-	} // null_auth
-
 } // end of vauth class
 
 ?>

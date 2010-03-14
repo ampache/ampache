@@ -82,7 +82,7 @@ session_cookiesecure       = 0
 ; to use and in which order, if auto_create isn't enabled
 ; The user must exist locally. Local method uses PHP's PAM Auth module
 ; DEFAULT: mysql
-; VALUES: mysql,ldap,http,local,null
+; VALUES: mysql,ldap,http,local
 auth_methods = "mysql"
 
 ; Logout redirection target
